@@ -1,205 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0BD7B3E1
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3A423FE7;
+	Tue, 24 Jun 2025 01:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750729025; cv=none; b=ZDtbQ4dS+mWfNNi+9fGdPaYkKPecOhf0r1iTKXNWnCUEHsEc9BlSsvYH68aQw/zYzxCZep8JfTYb2AAl2vbsi1l+j7W5i7yeaqFHGwf0JJfXMUDqTpXh5tWuosegfPBjhz0NubcuBF+GSm8FsjT8o7BGCF+k31SwfKE5qlMsyxA=
+	t=1750729210; cv=none; b=S6GGsu4G/6D/Z724xQ4WGZ/RRTuF8IpVKQ7gRfgjVOYyJZsU93K8vWww3Iz0gVA22qGHlb4Sr5U4a2+mc3SabCe9FyFWZJYHpdAhT/9e4tatylvsquEciQXa2r1V2ADVXLLtu5CLWj0PJJgl3WC4cLyyhDLLE5IyGjcZX4AMUcM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750729025; c=relaxed/simple;
-	bh=7cffUjKpvMDCS3GmH1yOQEyxjboJLfZci5Lhpb8OFgQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pT7o760/apMQgdebQY8u96JURK2entpwBd7QcS3cmWi/oHWIlZ+xss7nfl42KUK2+bo3DObiGyAQEoAE/3woI/TktQnG36UNjBcI70iuEF+y2mdOm+lo9TbtAuTNrnRFUwH7faShRrhhSk2DXOxmdCniewQzYQB0b2YYZEIkseE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IJo4R59Y; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IJo4R59Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750729023; x=1782265023;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7cffUjKpvMDCS3GmH1yOQEyxjboJLfZci5Lhpb8OFgQ=;
-  b=IJo4R59Ya1nyRnpiF4pLNb5dNo+bPS3vkVz5PSTD0aEKNaOa56WRujQ7
-   E9lzu9UPXmDNswGeNS2v7+V6j0Wzehfc7YZSwuqYINob5tZVklNgIxXli
-   veGobdfrrjQseucRgpQC4yldqEmenmkyLsEOv08ZcyZuojrg4BaP3/Hvu
-   btql92vengKBfOTWmb+XhKSecrA/S37pLbnpn9F1FxPjh4UIDi+AUwCmH
-   xY6/B9koxWto+SF/m19OoPTxtPqeanY6oOecnMb5n7M54q7/7q9LqLw5c
-   eXTwGaQ1yEeicTytI7bOsjCUC7flED+JcSJ1Z0LWdH+rLjIbGJWVbmLQA
-   Q==;
-X-CSE-ConnectionGUID: PTwt3TchR/aMzp08cgIPrA==
-X-CSE-MsgGUID: 5gqdPrMSTyKyx75eEIdSPw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52825953"
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="52825953"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 18:37:03 -0700
-X-CSE-ConnectionGUID: 5xvq7lJ1R4WcA7Iu1sHW5Q==
-X-CSE-MsgGUID: b22foTNJQ9qlgSrQ+1ry2Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="156333639"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 23 Jun 2025 18:37:01 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uTsao-000RbY-0P;
-	Tue, 24 Jun 2025 01:36:58 +0000
-Date: Tue, 24 Jun 2025 09:36:25 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-	Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
-Subject: net/bpf/test_run.c:370:12: warning: stack frame size (1152) exceeds
- limit (1024) in 'bpf_test_run_xdp_live'
-Message-ID: <202506240921.WNcmLMhg-lkp@intel.com>
+	s=arc-20240116; t=1750729210; c=relaxed/simple;
+	bh=pgiPJLvvmTflKzjDY7E5OaH4sV2YGQ0u+axBomTRsOw=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=lsK+X0EQLxxrpMkX9GsxpnkUlfLyInrveG/3no8RFRj+lKh4bty231TN7K7NPvZvZ9HkFWlLySekdaaxL0ElcKuE3wQL7qs0fgQ73NDSyDmnekXjqPVHz2HLiEzrnmMV+DhrzgV7wcX//RIrc7ZACFYYl3ogreCTp8DCdHd56A4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [10.20.42.24])
+	by gateway (Coremail) with SMTP id _____8Ax3eLuAVpotfobAQ--.24562S3;
+	Tue, 24 Jun 2025 09:39:58 +0800 (CST)
+Received: from [10.20.42.24] (unknown [10.20.42.24])
+	by front1 (Coremail) with SMTP id qMiowMAxzxvqAVpoby8oAQ--.3360S3;
+	Tue, 24 Jun 2025 09:39:56 +0800 (CST)
+Subject: Re: [PATCH v4 2/2] irq/irq-loongarch-ir:Add Redirect irqchip support
+To: Thomas Gleixner <tglx@linutronix.de>, chenhuacai@kernel.org,
+ kernel@xen0n.name, corbet@lwn.net, alexs@kernel.org, si.yanteng@linux.dev,
+ jiaxun.yang@flygoat.com, peterz@infradead.org, wangliupu@loongson.cn,
+ lvjianmin@loongson.cn, maobibo@loongson.cn, siyanteng@cqsoftware.com.cn,
+ gaosong@loongson.cn, yangtiezhu@loongson.cn
+Cc: loongarch@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250610114252.21077-1-zhangtianyang@loongson.cn>
+ <20250610114252.21077-3-zhangtianyang@loongson.cn> <87o6uris6p.ffs@tglx>
+ <9c60326b-f7bd-0b36-3bc5-0ad7d19690f1@loongson.cn> <87v7omooag.ffs@tglx>
+ <fceb603c-6072-2941-15d5-56c8a4b4c32c@loongson.cn> <87jz52nrzo.ffs@tglx>
+From: Tianyang Zhang <zhangtianyang@loongson.cn>
+Message-ID: <a8f2ec4d-2616-17dc-320b-b7ac5ca99255@loongson.cn>
+Date: Tue, 24 Jun 2025 09:39:13 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <87jz52nrzo.ffs@tglx>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-CM-TRANSID:qMiowMAxzxvqAVpoby8oAQ--.3360S3
+X-CM-SenderInfo: x2kd0wxwld05hdqjqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxWFW3ZF1xAF13Ary3XryxZwc_yoWrCw13pF
+	W8K3WxK3ykta1I934Iva1kZa47tw4kKFW5Gr95GFyvy3s0qF1xuF40qFW5Za48Xrs7Zr1j
+	vFZ0vrWq9F98ZabCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6F4UJVW0owAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_
+	Jw1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrw
+	CYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAKI48J
+	MxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI
+	0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y
+	0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxV
+	WUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1l
+	IxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxU2txhDUUUU
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   78f4e737a53e1163ded2687a922fce138aee73f5
-commit: 3f9fe37d9e16a6cfd5f4d1f536686ea71db3196f net: Move per-CPU flush-lists to bpf_net_context on PREEMPT_RT.
-date:   12 months ago
-config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20250624/202506240921.WNcmLMhg-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 875b36a8742437b95f623bab1e0332562c7b4b3f)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240921.WNcmLMhg-lkp@intel.com/reproduce)
+Hi, Thomas
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506240921.WNcmLMhg-lkp@intel.com/
+åœ¨ 2025/6/24 ä¸Šåˆ4:05, Thomas Gleixner å†™é“:
+> On Mon, Jun 23 2025 at 17:33, Tianyang Zhang wrote:
+>> åœ¨ 2025/6/23 ä¸‹åˆ4:27, Thomas Gleixner å†™é“:
+>>> tail is the software managed part of the ringbuffer which is shared with
+>>> the hardware, right?
+>>>
+>>> So even if the compiler would be allowed to reevalutate tail after the
+>>> barrier (it is NOT), then tail would still contain the same value as
+>>> before, no?
+>>>
+>>> The wmb() is required to ensure that the hardware can observe the full
+>>> write of the command _before_ it can observe the update to the tail
+>>> index.
+>>>
+>>> Anything else is voodoo.
+>>>
+>>> Thanks,
+>>>
+>>>           tglx
+>> In my previous understanding, tail'value is actually a part of 'full
+>> write of the command '.
+> Of course. The hardware observes the tail value. If it is not updated
+> then the command is not executed. But these are two distinct things:
+>
+> The invalidate command is written to a location in the command buffer
+> which is determined by tail:
+>
+> 	inv_addr = (struct irde_inv_cmd *)(rqueue->base + tail * sizeof(struct irde_inv_cmd));
+> 	memcpy(inv_addr, cmd, sizeof(struct irde_inv_cmd));
+>
+> requeue::base points to an array of invalidate commands. The array
+> size is INVALID_QUEUE_SIZE. tail is the position in the array to which
+> the software writes the next command. tail is software managed and
+> written to a completely different location via write_queue_tail(...):
+>
+> static phys_addr_t redirect_reg_base = 0x1fe00000;
+>
+> #define REDIRECT_REG_BASE(reg, node) \
+> 	(UNCACHE_BASE | redirect_reg_base | (u64)(node) << NODE_ADDRSPACE_SHIFT | (reg))
+> #define	redirect_reg_queue_tail(node)	REDIRECT_REG_BASE(LOONGARCH_IOCSR_REDIRECT_CQT, (node))
+> #define read_queue_tail(node)		(*((u32 *)(redirect_reg_queue_tail(node))))
+> #define write_queue_tail(node, val)	(*((u32 *)(redirect_reg_queue_tail(node))) = (val))
+>
+> The hardware maintains the head index. It's the last command index the
+> hardware processed. When the hardware observes that head != tail then it
+> processes the next entry and after completion it updates head with the
+> next index. This repeats until head == tail.
+>
+>> We must ensure that tail is updated to the correct value first, and
+>> then write this value into the register (perhaps by adding wmb in
+>> write_queue_tail ).
+> No. The local variable 'tail' is purely local to the CPU and the
+> invalidation hardware does not even know that it exists.
+>
+> There are two things which are relevant to the hardware:
+>
+>     1) command is written to the hardware visible array at index of tail
+>
+>     2) hardware visible tail memory (register) is updated to tail + 1
+>
+> The memory barrier is required to prevent that #2 is written to the
+> hardware _before_ #1 completed and is fully visible to the hardware.
+>
+>> In other words, this is originally to prevent the write register
+>> instruction from being executed out of order before updating tail.
+> No. The barrier is solely for the above #1 vs. #2 ordering.
+>
+> There is a difference between program flow ordering and memory ordering.
+>
+> The hardware _CANNOT_ execute the write _before_ the value it writes is
+> computed. That's enforced by program flow order.
+>
+> So it's always guaranteed that the CPU executes
+>
+>     tail + 1
+>
+> _before_ executing the write to the register because that's a program
+> order dependency.
+>
+> If that would not be guaranteed, then your CPU would have more serious
+> problems than this piece of code. It simply would not even survive the
+> first five instructions in the boot loader.
+>
+> But what's not guaranteed is that consecutive writes become visible to
+> other parts of the system (other CPUs, the invalidation hardware, ....)
+> in the same consecutive order.
+>
+> To ensure that ordering you need a WMB(). If you would have CPU to CPU
+> communication then you would need a RMB() on the reader side to ensure
+> that the command is not read before the tail. In your case the hardware
+> side takes care of that.
+>
+>> The above is just my personal understanding
+> Which might need some slight adjustments :)
+>
+> Thanks,
+>
+>          tglx
 
-All warnings (new ones prefixed by >>):
+Hmm... it seems I confused program-flow-ordering and memory-ordering .
 
-   include/linux/vmstat.h:514:36: warning: arithmetic between different enumeration types ('enum node_stat_item' and 'enum lru_list') [-Wenum-enum-conversion]
-     514 |         return node_stat_name(NR_LRU_BASE + lru) + 3; // skip "nr_"
-         |                               ~~~~~~~~~~~ ^ ~~~
-   include/linux/vmstat.h:519:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     519 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     520 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/vmstat.h:528:43: warning: arithmetic between different enumeration types ('enum zone_stat_item' and 'enum numa_stat_item') [-Wenum-enum-conversion]
-     528 |         return vmstat_text[NR_VM_ZONE_STAT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~ ^
-     529 |                            NR_VM_NUMA_EVENT_ITEMS +
-         |                            ~~~~~~~~~~~~~~~~~~~~~~
-   In file included from net/bpf/test_run.c:17:
-   In file included from include/net/tcp.h:32:
-   In file included from include/net/inet_hashtables.h:26:
-   include/net/ip.h:472:14: warning: default initialization of an object of type 'typeof (rt->dst.expires)' (aka 'const unsigned long') leaves the object uninitialized [-Wdefault-const-init-var-unsafe]
-     472 |                 if (mtu && time_before(jiffies, rt->dst.expires))
-         |                            ^
-   include/linux/jiffies.h:138:26: note: expanded from macro 'time_before'
-     138 | #define time_before(a,b)        time_after(b,a)
-         |                                 ^
-   include/linux/jiffies.h:128:3: note: expanded from macro 'time_after'
-     128 |         (typecheck(unsigned long, a) && \
-         |          ^
-   include/linux/typecheck.h:11:12: note: expanded from macro 'typecheck'
-      11 |         typeof(x) __dummy2; \
-         |                   ^
-   net/bpf/test_run.c:451:26: warning: default initialization of an object of type 'typeof ((kattr->test.data_out))' (aka 'const unsigned long long') leaves the object uninitialized [-Wdefault-const-init-var-unsafe]
-     451 |         void __user *data_out = u64_to_user_ptr(kattr->test.data_out);
-         |                                 ^
-   include/linux/kernel.h:52:2: note: expanded from macro 'u64_to_user_ptr'
-      52 |         typecheck(u64, (x));            \
-         |         ^
-   include/linux/typecheck.h:11:12: note: expanded from macro 'typecheck'
-      11 |         typeof(x) __dummy2; \
-         |                   ^
-   net/bpf/test_run.c:658:25: warning: default initialization of an object of type 'typeof ((kattr->test.data_in))' (aka 'const unsigned long long') leaves the object uninitialized [-Wdefault-const-init-var-unsafe]
-     658 |         void __user *data_in = u64_to_user_ptr(kattr->test.data_in);
-         |                                ^
-   include/linux/kernel.h:52:2: note: expanded from macro 'u64_to_user_ptr'
-      52 |         typecheck(u64, (x));            \
-         |         ^
-   include/linux/typecheck.h:11:12: note: expanded from macro 'typecheck'
-      11 |         typeof(x) __dummy2; \
-         |                   ^
-   net/bpf/test_run.c:755:24: warning: default initialization of an object of type 'typeof ((kattr->test.ctx_in))' (aka 'const unsigned long long') leaves the object uninitialized [-Wdefault-const-init-var-unsafe]
-     755 |         void __user *ctx_in = u64_to_user_ptr(kattr->test.ctx_in);
-         |                               ^
-   include/linux/kernel.h:52:2: note: expanded from macro 'u64_to_user_ptr'
-      52 |         typecheck(u64, (x));            \
-         |         ^
-   include/linux/typecheck.h:11:12: note: expanded from macro 'typecheck'
-      11 |         typeof(x) __dummy2; \
-         |                   ^
-   net/bpf/test_run.c:811:25: warning: default initialization of an object of type 'typeof ((kattr->test.ctx_in))' (aka 'const unsigned long long') leaves the object uninitialized [-Wdefault-const-init-var-unsafe]
-     811 |         void __user *data_in = u64_to_user_ptr(kattr->test.ctx_in);
-         |                                ^
-   include/linux/kernel.h:52:2: note: expanded from macro 'u64_to_user_ptr'
-      52 |         typecheck(u64, (x));            \
-         |         ^
-   include/linux/typecheck.h:11:12: note: expanded from macro 'typecheck'
-      11 |         typeof(x) __dummy2; \
-         |                   ^
-   net/bpf/test_run.c:812:26: warning: default initialization of an object of type 'typeof ((kattr->test.ctx_out))' (aka 'const unsigned long long') leaves the object uninitialized [-Wdefault-const-init-var-unsafe]
-     812 |         void __user *data_out = u64_to_user_ptr(kattr->test.ctx_out);
-         |                                 ^
-   include/linux/kernel.h:52:2: note: expanded from macro 'u64_to_user_ptr'
-      52 |         typecheck(u64, (x));            \
-         |         ^
-   include/linux/typecheck.h:11:12: note: expanded from macro 'typecheck'
-      11 |         typeof(x) __dummy2; \
-         |                   ^
-   net/bpf/test_run.c:844:26: warning: default initialization of an object of type 'typeof ((kattr->test.ctx_out))' (aka 'const unsigned long long') leaves the object uninitialized [-Wdefault-const-init-var-unsafe]
-     844 |         void __user *data_out = u64_to_user_ptr(kattr->test.ctx_out);
-         |                                 ^
-   include/linux/kernel.h:52:2: note: expanded from macro 'u64_to_user_ptr'
-      52 |         typecheck(u64, (x));            \
-         |         ^
-   include/linux/typecheck.h:11:12: note: expanded from macro 'typecheck'
-      11 |         typeof(x) __dummy2; \
-         |                   ^
-   net/bpf/test_run.c:1251:26: warning: default initialization of an object of type 'typeof ((kattr->test.data_in))' (aka 'const unsigned long long') leaves the object uninitialized [-Wdefault-const-init-var-unsafe]
-    1251 |                 void __user *data_in = u64_to_user_ptr(kattr->test.data_in);
-         |                                        ^
-   include/linux/kernel.h:52:2: note: expanded from macro 'u64_to_user_ptr'
-      52 |         typecheck(u64, (x));            \
-         |         ^
-   include/linux/typecheck.h:11:12: note: expanded from macro 'typecheck'
-      11 |         typeof(x) __dummy2; \
-         |                   ^
-   net/bpf/test_run.c:1508:24: warning: default initialization of an object of type 'typeof ((kattr->test.ctx_in))' (aka 'const unsigned long long') leaves the object uninitialized [-Wdefault-const-init-var-unsafe]
-    1508 |         void __user *ctx_in = u64_to_user_ptr(kattr->test.ctx_in);
-         |                               ^
-   include/linux/kernel.h:52:2: note: expanded from macro 'u64_to_user_ptr'
-      52 |         typecheck(u64, (x));            \
-         |         ^
-   include/linux/typecheck.h:11:12: note: expanded from macro 'typecheck'
-      11 |         typeof(x) __dummy2; \
-         |                   ^
->> net/bpf/test_run.c:370:12: warning: stack frame size (1152) exceeds limit (1024) in 'bpf_test_run_xdp_live' [-Wframe-larger-than]
-     370 | static int bpf_test_run_xdp_live(struct bpf_prog *prog, struct xdp_buff *ctx,
-         |            ^
-   15 warnings generated.
+my understanding of the previous issue may not have been right.
 
+Your reply has taught me a great deal, truly appreciate it
 
-vim +/bpf_test_run_xdp_live +370 net/bpf/test_run.c
+Thank you very much
 
-b530e9e1063ed2 Toke Høiland-Jørgensen 2022-03-09  369  
-b530e9e1063ed2 Toke Høiland-Jørgensen 2022-03-09 @370  static int bpf_test_run_xdp_live(struct bpf_prog *prog, struct xdp_buff *ctx,
-b530e9e1063ed2 Toke Høiland-Jørgensen 2022-03-09  371  				 u32 repeat, u32 batch_size, u32 *time)
-b530e9e1063ed2 Toke Høiland-Jørgensen 2022-03-09  372  
+Tianyang
 
-:::::: The code at line 370 was first introduced by commit
-:::::: b530e9e1063ed2b817eae7eec6ed2daa8be11608 bpf: Add "live packet" mode for XDP in BPF_PROG_RUN
-
-:::::: TO: Toke Høiland-Jørgensen <toke@redhat.com>
-:::::: CC: Alexei Starovoitov <ast@kernel.org>
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
