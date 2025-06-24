@@ -1,435 +1,415 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5B6924C669
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 21:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750800560; cv=none; b=ByNLY7KfLyNEhw9zM02XSsybZwjbAY4Ca5RNy2+6FSyMYq5xDo32HJ4/Kdnu1n4UqACnhQ5zolfsm8ZNBGyEFy9Jeebx+mMCzd1KOcF2/9SmkWeMOE2PdijAirO1TqL34PqJCUJdH6Yz4uZ8TRDuPqxm/IWDoOtUhlP5hgV9KsY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750800560; c=relaxed/simple;
-	bh=VyXx4fFOaQFeb9bK6ElzVi1q5/w0iku6joOpmAasf8g=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WONdZFz0Nyl1CkgOzZ3LoXbkkkpC+yzYsACC7+Vg8Xx55DN0EPYRyVWKUjn5M4OT2cjiu9dUHydDN61NcZTqcKsR3Wyuj2K622QDu8Y00Rqa0FiLFtXBYuivYAr0nkB+UJuYt9Z4e//Gb95OY9hb1rrX0sSc/U4O/Bg23eQR18c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fRT1MooT; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829CF18C00;
+	Tue, 24 Jun 2025 21:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.18
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750800649; cv=fail; b=Z+GKsKdMY7fJe0xi76h/kBNdggthOcsWCuSO7km7rl5EOCCyELhdxlch38XZ9cE8jDSwUxKJ4I3465OA/CH6kS334A6pQLNIdB1hvseZnVclNbDp8Ncx21noldUni2cUvVnnoLAr/qDDPJhPn6jBEDpT5DSxmkMtBa3G62DlSBU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750800649; c=relaxed/simple;
+	bh=5dq58xtMuNbLetlPLGg6Yo0W7sVjZ83vHWKR12Na0OU=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=UHtGYkkAAZHsqp/oouon31TpU6gHeCv+8sPPU/5rNpmWU0ibTQNpE5F2IjwSGnBfECqoaJZZ8biMEz2/owJyBNwJGrqmKu3mhQ3P4gCF5sTUX/m57tJeYkovKJVMWv5jdpbBqRtKTKstlCxN0M3RlJipQaJS52F1g/VsHeD/FQU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LTEU/D1+; arc=fail smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fRT1MooT"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-74880a02689so536813b3a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:29:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750800558; x=1751405358; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xxE9lix96X9N66BtdXnY0yxc/Kl8Ep1AKX9YSUGEfMI=;
-        b=fRT1MooTfooQo2mVSSgVzDEJmEdiEULK3bmWRyrRU80/cQAACZnTFlCudT0Vs6ZwTi
-         6Uipn7X2qomXFazIw9en0z1yhqUd4tAD1n+dFV+gtIimntV+XUOO+hVfncvU5ObJgnlz
-         yOOHt11XDHvrDcOlxmn0nLJg6m3ALW49LTEk99Y5Upv+rGiJ+aYAAnBK/RqdodNtjhOQ
-         730l2/8ASmwX0qJD84mkrjGMvuZ/s4ItG9EB3xaQEzJyZyq9mU3z4Gxmh3+97KsviIv+
-         zWIca9AGgGaRCYCu5L2euxojNJ/HvsQpRLlLcmo8djUbu66iELgDGIYjYzeey5nmtbeJ
-         ulxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750800558; x=1751405358;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xxE9lix96X9N66BtdXnY0yxc/Kl8Ep1AKX9YSUGEfMI=;
-        b=joXKWRX9NkEAE2/AIkHu8UTQjtxM0p4rdljcbfkaqmBYfKwdbNH9dnN9WJFvKK8PN1
-         gzfzJXIv4dTIGvmZeHD5rC7LPSMFYCQwGSvMY+FdOtBznWnenigZcA8wmrnErJcLfY+k
-         7bGzxVbXnSBdZ31rWUmfcrMOayvoIzcpUjD9mHOOQ8OEGcc2SfhHX9OWuJV40df9A/DR
-         CyAsHAPrlra8d6JqgWMPdi1dxJvsgoUGjWqTTHV8/QunViRqf1pwNAbZzQalKvkwPAVT
-         BjOZG4zywdbAL0RznUAIS5a8W+CkRXpQv55C3Lx350hQFampecoQHkgJDemczCCJs22Y
-         FJeg==
-X-Forwarded-Encrypted: i=1; AJvYcCUDNVgokISNqqoC6OCqphr+tzGpQgWYRSP4OSFGySkfVxh9Mdn/d92WPWRSNA5TgLBSiG8FClGQNFA1Rgk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzGicn3HmQ5rFL/BAVktQUiBa2jI07M549WV60l+D+e6psqDnZ
-	t7nC+MxRczoLUFu0xQy+33bK2nEGmmHxG5h5e3rjWctcI3vHEWcX0AIgGMMXcH6hnqb4vO0FtWT
-	mnjT2kDbP961nvOtnY2+6AiyZAQ==
-X-Google-Smtp-Source: AGHT+IE6BZe5nugH/R/86Hdqt4E6MGob8B/FNyuMjRFLiB+rvr40sM9D/oFfrZUVpwFwBDBtC9YNTMj2NpkdeB6r9g==
-X-Received: from pfblp17.prod.google.com ([2002:a05:6a00:3d51:b0:746:2ae9:24a])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:3d85:b0:220:21bf:b112 with SMTP id adf61e73a8af0-2207f18e346mr810790637.13.1750800558214;
- Tue, 24 Jun 2025 14:29:18 -0700 (PDT)
-Date: Tue, 24 Jun 2025 14:29:16 -0700
-In-Reply-To: <aFp7j+2VBhHZiKx/@yzhao56-desk.sh.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LTEU/D1+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750800648; x=1782336648;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=5dq58xtMuNbLetlPLGg6Yo0W7sVjZ83vHWKR12Na0OU=;
+  b=LTEU/D1+x54S5E67tA296CQsi4aSJf/4sfL9WvSDmrLKcArhhQlQlr0x
+   WsbLEVgY2NlIIpdMWMfUYDTwZhWY1Ym2hkx00yxHZzbVvj+WAaqPe7UfJ
+   qTn/Oa3yYG+ydTt4jqNRjdzo3zFSp+Fz8mUMEr+e3REdSxaIp7d9c8YNc
+   8GadmR7KayRFctFjnPfgLtYoD7flvLH7vgCWt+6uebC4uFfwU457WIWvb
+   D2GgkqUSkE2DDFoH8x27k+2QBUdbS/eDBEbwFcYcGnaV/Yvo1XAcBZjPU
+   1HP4SGI4Gdw60kfk/V6HzKX8ju9pDwOHGmJfNhkrco+IvstKzF8pPAUPB
+   Q==;
+X-CSE-ConnectionGUID: RCiQIDpIQ5ugD1ucleTBTw==
+X-CSE-MsgGUID: kMm2KifxTyWkcuqg9ncx+A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="53193114"
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="53193114"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 14:30:47 -0700
+X-CSE-ConnectionGUID: nd3Mpi6VQF+HW7lOcZupdw==
+X-CSE-MsgGUID: yAz7ATT9RQCwrQk3MWT1SQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="157524044"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 14:30:46 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 24 Jun 2025 14:30:45 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Tue, 24 Jun 2025 14:30:45 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (40.107.96.77) by
+ edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Tue, 24 Jun 2025 14:30:44 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=RnYJS9086BJMzTZfrbWE2Sco4welT3rFDVrnlCIuAoM6sbt72OA1HhFUfrhbjZVMxMjjPraOFQQyluYX14rvqgkcutv/w4xHU1lQ5S8bHdNOWywi1ysn7i+UJhukKvyRp9Uw+ltyuilJNsHshqJ3DM3lMm1wrX4hg0Xp/XVzO91L4Qj8RAvWPbTBjKUwqreiA2znfYyix4oxU6BAHI3lqIYCUfVTlB4Ogtb4Zrb/HB+EjEjcdn06e29FdQpr3GsWycJFGv5zb0eXvNJT3okq+ldmcNxNke0xVmotBJmC3Vawn0rqA6PItTV50CSktGoCw0EsZb+i0huPTiinsf/E0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=odK6Y6Q5eBrp1KSM+XxDtYd+uKPar5I5YFf1g0+8T6g=;
+ b=fHL/Yn0nslH4kbQEXaGPA9bTY0IDyUZ8Y8W0N4P67UH+zdcOmnxbWH63ymmZIuZMoGf6flDDvVI+5yKVxnfwUQMVI45XyPBUxLLLR4tz0li7bFpw7NQWWvsY4uTMI6yaqn1TNqjN9dh9o8f83cPzaHFdw+UfnWT67s1Bx0dNBboS987LXtC7tTYFrDBNkbMyaJ64+jGwZyAbwodfBDcg3HEuI3AbRr+lUF+0LoOCCFg3Samjvypbq7s2xt5GVGxpBrtTRh3i3c3NKy8pl35jfcEjzVNY6yVAhuZrffg040FlVTl6ERqMEHbOR4BbhVPXuF/i8CNWvSyEZB392PWDRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
+ by DS0PR11MB7629.namprd11.prod.outlook.com (2603:10b6:8:146::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.27; Tue, 24 Jun
+ 2025 21:30:40 +0000
+Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
+ ([fe80::61a:aa57:1d81:a9cf%6]) with mapi id 15.20.8792.034; Tue, 24 Jun 2025
+ 21:30:39 +0000
+Message-ID: <b761e6ec-a874-4d06-8437-a3a717a91abb@intel.com>
+Date: Tue, 24 Jun 2025 14:30:36 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v14 05/32] x86,fs/resctrl: Prepare for more monitor events
+To: Babu Moger <babu.moger@amd.com>, <corbet@lwn.net>, <tony.luck@intel.com>,
+	<Dave.Martin@arm.com>, <james.morse@arm.com>, <tglx@linutronix.de>,
+	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>
+CC: <x86@kernel.org>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
+	<rostedt@goodmis.org>, <paulmck@kernel.org>, <thuth@redhat.com>,
+	<ardb@kernel.org>, <gregkh@linuxfoundation.org>, <seanjc@google.com>,
+	<thomas.lendacky@amd.com>, <pawan.kumar.gupta@linux.intel.com>,
+	<manali.shukla@amd.com>, <perry.yuan@amd.com>, <kai.huang@intel.com>,
+	<peterz@infradead.org>, <xiaoyao.li@intel.com>, <kan.liang@linux.intel.com>,
+	<mario.limonciello@amd.com>, <xin3.li@intel.com>, <gautham.shenoy@amd.com>,
+	<xin@zytor.com>, <chang.seok.bae@intel.com>, <fenghuay@nvidia.com>,
+	<peternewman@google.com>, <maciej.wieczor-retman@intel.com>,
+	<eranian@google.com>, <linux-doc@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <cover.1749848714.git.babu.moger@amd.com>
+ <d68c3abf7cd91381a0d8f75f562da149ddf44011.1749848714.git.babu.moger@amd.com>
+From: Reinette Chatre <reinette.chatre@intel.com>
+Content-Language: en-US
+In-Reply-To: <d68c3abf7cd91381a0d8f75f562da149ddf44011.1749848714.git.babu.moger@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4P220CA0018.NAMP220.PROD.OUTLOOK.COM
+ (2603:10b6:303:115::23) To SJ2PR11MB7573.namprd11.prod.outlook.com
+ (2603:10b6:a03:4d2::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <CAGtprH_Vj=KS0BmiX=P6nUTdYeAZhNEyjrRFXVK0sG=k4gbBMg@mail.gmail.com>
- <aE/q9VKkmaCcuwpU@yzhao56-desk.sh.intel.com> <9169a530e769dea32164c8eee5edb12696646dfb.camel@intel.com>
- <aFDHF51AjgtbG8Lz@yzhao56-desk.sh.intel.com> <6afbee726c4d8d95c0d093874fb37e6ce7fd752a.camel@intel.com>
- <aFIGFesluhuh2xAS@yzhao56-desk.sh.intel.com> <0072a5c0cf289b3ba4d209c9c36f54728041e12d.camel@intel.com>
- <aFkeBtuNBN1RrDAJ@yzhao56-desk.sh.intel.com> <draft-diqzh606mcz0.fsf@ackerleytng-ctop.c.googlers.com>
- <diqzy0tikran.fsf@ackerleytng-ctop.c.googlers.com> <aFp7j+2VBhHZiKx/@yzhao56-desk.sh.intel.com>
-Message-ID: <diqz7c10ltg3.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
-From: Ackerley Tng <ackerleytng@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
-	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
-	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
-	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
-	"vbabka@suse.cz" <vbabka@suse.cz>, "tabba@google.com" <tabba@google.com>, "Du, Fan" <fan.du@intel.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
-	"Weiny, Ira" <ira.weiny@intel.com>, "pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
-	"michael.roth@amd.com" <michael.roth@amd.com>, "Peng, Chao P" <chao.p.peng@intel.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Annapurve, Vishal" <vannapurve@google.com>, 
-	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
-	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "pgonda@google.com" <pgonda@google.com>, 
-	"x86@kernel.org" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|DS0PR11MB7629:EE_
+X-MS-Office365-Filtering-Correlation-Id: d4294ac9-5773-476d-a76c-08ddb3665d99
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?V2tlbG5uTjBGbGg3YVhWUTdIM3RQMTk3RG9Gb0tkOHBkUUJobGp5RWVmcm1u?=
+ =?utf-8?B?UGl2QitLOUs2SFM4QnJHTzRnckdpS3J0VGRITzB4K2RqYW4rVk5MZHVCVldD?=
+ =?utf-8?B?a2pIdkxHT05lQmVtS1F6UFM2ZkFkK0k2SWR6cnEzeXhGM3Jnd01KM3BVc3V6?=
+ =?utf-8?B?bGp5bXpXVEdQT0l3bHhvMUd3dUV3a2pxQ0FzemZRMGRYekpDcmlLbXpsRUly?=
+ =?utf-8?B?UXd2VHFQamVvRlZuRUtxeWRhWkhqUElNbU01WXczeE9kWDgzM1cwVkdWczN2?=
+ =?utf-8?B?M0FNVldBSTQ0S0sxNWpDSmpXRDBsOG0vd2tXY3Q4dXJvSWNzbnVyK2diTis2?=
+ =?utf-8?B?bWhvZysrNDYwdFQvWG1tTUxvVFJqL3NmR2pDOVVSclV3dGFvWUhPNno0c0hx?=
+ =?utf-8?B?ODJONGxrMEd2Vis3REY0ZklxRGZnL1Vjcy85bHduUlpaT1IwVThvQXpBdGRa?=
+ =?utf-8?B?WWcyV2xGdFB5QlZkb0dQemlCMDZweVk5NkkzdFAybmhpdTJMVTFNM3NLMkR0?=
+ =?utf-8?B?QUFvdllvbzFJcS9lMlE1QktwN2tRbW8zSWpKR1VPZnRIT0g1U2MwaS83S0JJ?=
+ =?utf-8?B?Sk1Qck9XNUdNT0syOUZGbzk2aGcrQ1o4UTgrUHh1THk2SUtaWEJRSElkSGRZ?=
+ =?utf-8?B?dnBKVzBXdk1lbEpFL3B0TzVyckxpaTBZZWQ3eDhZZmdQTzVSSVhKSzhCWGFR?=
+ =?utf-8?B?emEzM3FtdVBvbVd6TStBNEdMa0tkZjV0aFZ4SFBsWC91aTZrUlRVQUU4YWhK?=
+ =?utf-8?B?L3JLNGZieTl3Zi9GRVV1WjVnaGNmNzY3c1FUVVRvT2pQNGJHUkVYSVowQXdE?=
+ =?utf-8?B?WTM5a0RUNFdGQnJEckNYQy9wQ2x5KzI5WElLSU9sWkFJZGtGYldJalZDZXJ6?=
+ =?utf-8?B?Sm04R3NwelRTUHFzZmxRcEFzUW9ZQjRkYVQ0aGkwM1dZM0FJdWJ1OTEwWUg2?=
+ =?utf-8?B?MDJ3LzJHWlpDWGFIOVVsZ29ZLzhtTHBLeUd1VUJIRm9YampUVXRjT1NvRGND?=
+ =?utf-8?B?OU5oazhPTkVaa1o1RlNUZ1FpdnFvTDhoMmVKbEFUWE1oM0d2UDVnb2RjYncz?=
+ =?utf-8?B?UjZCdjFVZSs3YXRrU05WamgwZjRYNkJwTkVEUTN0UHNydW5FNjBWVEVYYlBk?=
+ =?utf-8?B?SWV6UXRNU3JSOS9wYms4U0lCUXZsTXRHNmpaNWFNeE5VYmpIcmZDZG1lNmg1?=
+ =?utf-8?B?QW1MK3RaOTBSR1ZvR09lRGx6UGtZTTBPYk1Vb28wRkkweHlYbFljOTA5b3k4?=
+ =?utf-8?B?R1U1a3RNbktzbzNyWHpzUEhaVDV5Q2JIUmdoMmNCUGlqMmVPcTczRC9nd1I3?=
+ =?utf-8?B?OHMyeEpJVG05OWJUeVZha2U3VDBDZE9jdkhPVmV2REQ0ZXRCcVI4SzRBRm82?=
+ =?utf-8?B?LzNYZVZFY3hacUk2R1FwUmtUdjNtTk5qYmNSOGN5blNySmVRL3U2UjM4d3lI?=
+ =?utf-8?B?dGthZ2RBTHh1Y3p3RmJCZXRjalRxU1lqSjZRdXRGeEJuNllvN2g4WnlWdmVQ?=
+ =?utf-8?B?UG95ZnpoU2w0VWVZcndaNDgwR2dRaDBhMkduVm1aUCtKSUF5Mm9ldWVOdjQ2?=
+ =?utf-8?B?TXRYSWlJRnhOTlJhUWJwOXhTZGVBb1k3cFBDN1hGdHJsc1kwNkdZOHpLTTBV?=
+ =?utf-8?B?ay9CUkxLZnJxQVYxK1NuVHd5UG9iS3ZYaDc2RUJVYytqVFhWSEMwekJVaE03?=
+ =?utf-8?B?UFRHME4xd2cwcSsxUC9aeEZTSUNRWmQ4cE1LOXVKMW1vdU5vTVlLc25aMDVB?=
+ =?utf-8?B?V3lYM0lvcDl1V0k2dk8rMHpSTmNsbVU3Q0JRZUxTY05DYzlGODZ4Z2Qyd08w?=
+ =?utf-8?B?OCtaelRoUnJ5UHFZQXVvRzZsYzRrZ0ZPUDNBRHBGb2tvcm5GTWhVUXZqdEFj?=
+ =?utf-8?B?MjlaV0JIWlE0ZTVOdTdYTmR2U3BYWjdaTUd0NjdWallRbG1vRWtOanA3YTh3?=
+ =?utf-8?Q?sBjElcWRsi0=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dFdORlljQTc5clRCMVUrd0RnZlVySHA2dXZmZmtISFRQbWZFdDB4d0dKU3JR?=
+ =?utf-8?B?dUNOVEFMQUZyVWdlYW0yc2l4dStGcnI3ZUVjQ29FUVVtZDBNZ1JMMDA4eVA2?=
+ =?utf-8?B?Sm1JZC9mWjJKUDRMM0JBUms2QXNITUZqdUFLWEoyRmx5K05IRUg0QWZtSmFo?=
+ =?utf-8?B?emszc2Z4MHRKQk5qbllJSzI5RUN6bWxXTHVOZTRRVCt5citFWi9ubVROZ0U0?=
+ =?utf-8?B?dzBESm80QUtuNE1kMExxYlQyc2tnM24wRDd5UU9lbVp5YXMydDlGbVYyRnNp?=
+ =?utf-8?B?eFUyNlRSZFdUVmFUbDJpa2hwRGZDYmRFbFhXdC9DekJzZm9SeEs3SnJVUW1Q?=
+ =?utf-8?B?MTdESjlMVURPWS8zcDVmeHMzU2l6UU8xa1I2M1BtMUllYTF5bFFqQWJkTFEv?=
+ =?utf-8?B?TDIzRVRudzR6ZjNBR1JYdTdjTHJiYTlyVnE4aHRXN0RXeTJ0NS8yUHZ0WFhI?=
+ =?utf-8?B?TXMxeGhHcjNxTVpQYTduMnBSK2M0bzVTZXBFTXJpZ3Q2TG5ETG9QdTlwOVNW?=
+ =?utf-8?B?dGd6VndrbW9pKzZVdkR1eVpGc0FIMUNEM3I1UHpvckUrL2duTFU3Qmg0MkV5?=
+ =?utf-8?B?QWZDM1R4NzZNMStPaEpNRzIyVmswSWl6MUUzYlFKYTFNZkxsYkJPMktCUDBB?=
+ =?utf-8?B?UUdnc1hwTi9UMWVzcmdXRE1kUzhUZ3d2QVZINGF0enpRUmlJMktyc0pYSUdM?=
+ =?utf-8?B?UXY1WE9qVG5vUHp6OFAxRXA1VWtXM0V6Mkc1OGJBNmZRamV4TjJKTENGRGpW?=
+ =?utf-8?B?bXh5clFFUDJPYVdod1UxVXppSXEyeTdMdm00MmJHbmhUTUYwdE8rT2JQdjVp?=
+ =?utf-8?B?NklNMkphK2NpdUt0YjBxZmFkRVpnSlJVY2hVb1BPT21URWlHQzRsUVlKRjcy?=
+ =?utf-8?B?Z2NMU1BLOGhMSGlLZ3JINTE3S1Q1NG1xY0dRVWtaaHhWWlZsUWVrMUpFSTdo?=
+ =?utf-8?B?Q09tWWkzOXJvY0FBSzZ2NUxjd3ByRHY1eVU4Z0hBWk14U1ZkSytQVDlqekpm?=
+ =?utf-8?B?RHd5MXFyc01aQUxQUjhiSmVJV09nVDNLd0J2TS9vWE9QVHcwTTNTdTFVK3FN?=
+ =?utf-8?B?Ty9sNkJOU1h6Q1hSckpHTFhOcFdNVy96eUlRNWVEVlpoVWJHajI2OFVtWHFs?=
+ =?utf-8?B?MzZKQUoxdkg0S3JZQkdsTXR6ZXhjWGdDdjkrY3ZGU1JoTXlVaTNKcEF0cDI4?=
+ =?utf-8?B?NDVhTzdtNE1jN2JQdEtTbGNtV1hLUEk1ZWYxNlB6TDhTeWF4SUZ2aDhaQXB5?=
+ =?utf-8?B?VEdSUnJ2MnpyeU9oNFlOK20zVzZIRmVqei93MzVSS3JrWmNqMnF3YlJoQXNS?=
+ =?utf-8?B?UEc4bWJGWHZjeVNnckZTU1o2QlF2UkpjQ29kUk1oOTd0SFgvZmlIT2d6Zysz?=
+ =?utf-8?B?cm1PZlk2SEZjTFBjQitlWFBHdWpmdUttSDJoUHZMbWRjQkRNZnFyTFFuQUU0?=
+ =?utf-8?B?SGpsZG1zNTFYMXpxNGpkRklXZWVueGVwSFdoRUZvUWNxeFQxZzErcnJMWkUr?=
+ =?utf-8?B?YklEM1MxQTFja2c4ZXRQR0RNK04yMlhrSS9UK1VpM2d0THV6UzJUc0Uza1p0?=
+ =?utf-8?B?elZIQmIwdWVyc0pPcEo2Z2NEQ2pIK1NxeHlRSytPWmVBMWdQTWdQNlBMS050?=
+ =?utf-8?B?bjVqV2dEQmp6K2czbGhtR1lUSjVwQUJYQW9MWStydkREdHkzaVorSWJIbUkw?=
+ =?utf-8?B?MlhhVm8vcDRKcnBhY0lmUVhwbmJjZS9ZU3hxQnF4a1IrSkdrT3RYNDErQ3o2?=
+ =?utf-8?B?dHMzZUdoRFNKd3UrZ241VFJ5WGNGMUpqejVWQlBSSi9ubXc3V2JZdDJDT2dP?=
+ =?utf-8?B?L2V1MlJqSUFWeE9JMENhcFpQbUlmWjFFZVNGSW5uMUcxWVE1bmo5M095SVc5?=
+ =?utf-8?B?OS91alM5cE9lUlVoczlzeHh4cTZCbHZ5b0QyMlNHZEQ5K24yOTV5Rzl0a3N1?=
+ =?utf-8?B?Z2dUQ3F3eG5CZ2crdVkrWi8vTXA5VDhpcS9ZSVN1VjVGYXkzSmI0U3NGRlNX?=
+ =?utf-8?B?bUFqcjhaUjNQMHVhbXRVT1pvVElocmx1UllPUWR1SEJsb016bGFLQkxFM2h1?=
+ =?utf-8?B?Tk5kb0ZPTzZ1bVlZZU4ya2VGQVVVQVlTdkpVMHJ4RDRQRjRPV09Ld0gxTDUy?=
+ =?utf-8?B?UkptRi9iYXdCK3VoOUJPRnpQdjdLcUV4OXAzbVQ4aEhIL0swOHhucGFVd1Y3?=
+ =?utf-8?B?MHc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: d4294ac9-5773-476d-a76c-08ddb3665d99
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 21:30:39.6717
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CTImKj9aRJ1+WPzWdblpFpIeIVzNgG/xDPTSK+dnh+bYsFvZAVJH2DZFcLxkh2koNTmcEd14zxBBBs9D+kFjOO3rGYsOES1GpKEQr/XhcTY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7629
+X-OriginatorOrg: intel.com
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
+Hi Babu/Tony,
 
-> On Mon, Jun 23, 2025 at 03:48:48PM -0700, Ackerley Tng wrote:
->> Ackerley Tng <ackerleytng@google.com> writes:
->> 
->> > Yan Zhao <yan.y.zhao@intel.com> writes:
->> >
->> >> On Wed, Jun 18, 2025 at 08:41:38AM +0800, Edgecombe, Rick P wrote:
->> >>> On Wed, 2025-06-18 at 08:19 +0800, Yan Zhao wrote:
->> >>> > > I don't think a potential bug in KVM is a good enough reason. If we are
->> >>> > > concerned can we think about a warning instead?
->> >>> > > 
->> >>> > > We had talked enhancing kasan to know when a page is mapped into S-EPT in
->> >>> > > the
->> >>> > > past. So rather than design around potential bugs we could focus on having a
->> >>> > > simpler implementation with the infrastructure to catch and fix the bugs.
->> >>> > However, if failing to remove a guest private page would only cause memory
->> >>> > leak,
->> >>> > it's fine. 
->> >>> > If TDX does not hold any refcount, guest_memfd has to know that which private
->> >>> > page is still mapped. Otherwise, the page may be re-assigned to other kernel
->> >>> > components while it may still be mapped in the S-EPT.
->> >>> 
->> >>> KASAN detects use-after-free's like that. However, the TDX module code is not
->> >>> instrumented. It won't check against the KASAN state for it's accesses.
->> >>> 
->> >>> I had a brief chat about this with Dave and Kirill. A couple ideas were
->> >>> discussed. One was to use page_ext to keep a flag that says the page is in-use
->> >> Thanks!
->> >>
->> >> To use page_ext, should we introduce a new flag PAGE_EXT_FIRMWARE_IN_USE,
->> >> similar to PAGE_EXT_YOUNG?
->> >>
->> >> Due to similar issues as those with normal page/folio flags (see the next
->> >> comment for details), TDX needs to set PAGE_EXT_FIRMWARE_IN_USE on a
->> >> page-by-page basis rather than folio-by-folio.
->> >>
->> >> Additionally, it seems reasonable for guest_memfd not to copy the
->> >> PAGE_EXT_FIRMWARE_IN_USE flag when splitting a huge folio?
->> >> (in __folio_split() --> split_folio_to_order(), PAGE_EXT_YOUNG and
->> >> PAGE_EXT_IDLE are copied to the new folios though).
->> >>
->> >> Furthermore, page_ext uses extra memory. With CONFIG_64BIT, should we instead
->> >> introduce a PG_firmware_in_use in page flags, similar to PG_young and PG_idle?
->> >>
->> 
->> I think neither page flags nor page_ext will work for us, but see below.
->> 
->> >>> by the TDX module. There was also some discussion of using a normal page flag,
->> >>> and that the reserved page flag might prevent some of the MM operations that
->> >>> would be needed on guestmemfd pages. I didn't see the problem when I looked.
->> >>> 
->> >>> For the solution, basically the SEAMCALL wrappers set a flag when they hand a
->> >>> page to the TDX module, and clear it when they successfully reclaim it via
->> >>> tdh_mem_page_remove() or tdh_phymem_page_reclaim(). Then if the page makes it
->> >>> back to the page allocator, a warning is generated.
->> >> After some testing, to use a normal page flag, we may need to set it on a
->> >> page-by-page basis rather than folio-by-folio. See "Scheme 1".
->> >> And guest_memfd may need to selectively copy page flags when splitting huge
->> >> folios. See "Scheme 2".
->> >>
->> >> Scheme 1: Set/unset page flag on folio-by-folio basis, i.e.
->> >>         - set folio reserved at tdh_mem_page_aug(), tdh_mem_page_add(),
->> >>         - unset folio reserved after a successful tdh_mem_page_remove() or
->> >>           tdh_phymem_page_reclaim().
->> >>
->> >>         It has problem in following scenario:
->> >>         1. tdh_mem_page_aug() adds a 2MB folio. It marks the folio as reserved
->> >> 	   via "folio_set_reserved(page_folio(page))"
->> >>
->> >>         2. convert a 4KB page of the 2MB folio to shared.
->> >>         2.1 tdh_mem_page_demote() is executed first.
->> >>        
->> >>         2.2 tdh_mem_page_remove() then removes the 4KB mapping.
->> >>             "folio_clear_reserved(page_folio(page))" clears reserved flag for
->> >>             the 2MB folio while the rest 511 pages are still mapped in the
->> >>             S-EPT.
->> >>
->> >>         2.3. guest_memfd splits the 2MB folio into 512 4KB folios.
->> >>
->> >>
->> 
->> Folio flags on their own won't work because they're not precise
->> enough. A folio can be multiple 4K pages, and if a 4K page had failed to
->> unmap, we want to be able to indicate which 4K page had the failure,
->> instead of the entire folio. (But see below)
->> 
->> >> Scheme 2: Set/unset page flag on page-by-page basis, i.e.
->> >>         - set page flag reserved at tdh_mem_page_aug(), tdh_mem_page_add(),
->> >>         - unset page flag reserved after a successful tdh_mem_page_remove() or
->> >>           tdh_phymem_page_reclaim().
->> >>
->> >>         It has problem in following scenario:
->> >>         1. tdh_mem_page_aug() adds a 2MB folio. It marks pages as reserved by
->> >>            invoking "SetPageReserved()" on each page.
->> >>            As the folio->flags equals to page[0]->flags, folio->flags is also
->> >> 	   with reserved set.
->> >>
->> >>         2. convert a 4KB page of the 2MB folio to shared. say, it's page[4].
->> >>         2.1 tdh_mem_page_demote() is executed first.
->> >>        
->> >>         2.2 tdh_mem_page_remove() then removes the 4KB mapping.
->> >>             "ClearPageReserved()" clears reserved flag of page[4] of the 2MB
->> >>             folio.
->> >>
->> >>         2.3. guest_memfd splits the 2MB folio into 512 4KB folios.
->> >>              In guestmem_hugetlb_split_folio(), "p->flags = folio->flags" marks
->> >>              page[4]->flags as reserved again as page[0] is still reserved.
->> >>
->> >>             (see the code in https://lore.kernel.org/all/2ae41e0d80339da2b57011622ac2288fed65cd01.1747264138.git.ackerleytng@google.com/
->> >>             for (i = 1; i < orig_nr_pages; ++i) {
->> >>                 struct page *p = folio_page(folio, i);
->> >>
->> >>                 /* Copy flags from the first page to split pages. */
->> >>                 p->flags = folio->flags;
->> >>
->> >>                 p->mapping = NULL;
->> >>                 clear_compound_head(p);
->> >>             }
->> >>             )
->> >>
->> 
->> Per-page flags won't work because we want to retain HugeTLB Vmemmap
->> Optimization (HVO), which allows subsequent (identical) struct pages to
->> alias to each other. If we use a per-page flag, then HVO would break
->> since struct pages would no longer be identical to each other.
-> Ah, I overlooked HVO.
-> In my testing, neither CONFIG_HUGETLB_PAGE_OPTIMIZE_VMEMMAP_DEFAULT_ON nor
-> hugetlb_free_vmemmap was set.
->
-> With HVO enabled, setting page flags on a per-page basis indeed does not work.
->> 
->> >> [...]
->> 
->> Let me try and summarize the current state of this discussion:
-> Thanks for this summary.
->
->
->> Topic 1: Does TDX need to somehow indicate that it is using a page?
->> 
->> This patch series uses refcounts to indicate that TDX is using a page,
->> but that complicates private-to-shared conversions.
->> 
->> During a private-to-shared conversion, guest_memfd assumes that
->> guest_memfd is trusted to manage private memory. TDX and other users
->> should trust guest_memfd to keep the memory around.
->> 
->> Yan's position is that holding a refcount is in line with how IOMMU
->> takes a refcount when a page is mapped into the IOMMU [1].
->> 
->> Yan had another suggestion, which is to indicate using a page flag [2].
->> 
->> I think we're in agreement that we don't want to have TDX hold a
->> refcount while the page is mapped into the Secure EPTs, but taking a
->> step back, do we really need to indicate (at all) that TDX is using a
->> page?
->> 
->> In [3] Yan said
->> 
->> > If TDX does not hold any refcount, guest_memfd has to know that which
->> > private
->> > page is still mapped. Otherwise, the page may be re-assigned to other
->> > kernel
->> > components while it may still be mapped in the S-EPT.
->> 
->> If the private page is mapped for regular VM use as private memory,
->> guest_memfd is managing that, and the same page will not be re-assigned
->> to any other kernel component. guest_memfd does hold refcounts in
->> guest_memfd's filemap.
-> After kvm_gmem_release(), guest_memfd will return folios to hugetlb, so the same
-> page could be re-assigned to other kernel components that allocate pages from
-> hugetlb.
->
+On 6/13/25 2:04 PM, Babu Moger wrote:
+> From: Tony Luck <tony.luck@intel.com>
 
-Yes, at kvm_gmem_release(), guest_memfd also unmaps all the private and
-shared pages from Secure EPTs, so on successful unmap, all is good, the
-page can and should be reused elsewhere.
+...
 
-On unsuccessful unmap, we can then handle that according to the option
-we pick from below. e.g. if we pick options f or g, the page should
-never be reused elsewhere.
+> @@ -400,25 +400,27 @@ static int domain_setup_ctrlval(struct rdt_resource *r, struct rdt_ctrl_domain *
+>   */
+>  static int arch_domain_mbm_alloc(u32 num_rmid, struct rdt_hw_mon_domain *hw_dom)
+>  {
+> -	size_t tsize;
+> -
+> -	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_TOTAL_EVENT_ID)) {
+> -		tsize = sizeof(*hw_dom->arch_mbm_total);
+> -		hw_dom->arch_mbm_total = kcalloc(num_rmid, tsize, GFP_KERNEL);
+> -		if (!hw_dom->arch_mbm_total)
+> -			return -ENOMEM;
+> -	}
+> -	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID)) {
+> -		tsize = sizeof(*hw_dom->arch_mbm_local);
+> -		hw_dom->arch_mbm_local = kcalloc(num_rmid, tsize, GFP_KERNEL);
+> -		if (!hw_dom->arch_mbm_local) {
+> -			kfree(hw_dom->arch_mbm_total);
+> -			hw_dom->arch_mbm_total = NULL;
+> -			return -ENOMEM;
+> -		}
+> +	size_t tsize = sizeof(*hw_dom->arch_mbm_states[0]);
+> +	enum resctrl_event_id eventid;
+> +	int idx;
+> +
+> +	for_each_mbm_event_id(eventid) {
+> +		if (!resctrl_is_mon_event_enabled(eventid))
+> +			continue;
+> +		idx = MBM_STATE_IDX(eventid);
+> +		hw_dom->arch_mbm_states[idx] = kcalloc(num_rmid, tsize, GFP_KERNEL);
+> +		if (!hw_dom->arch_mbm_states[idx])
+> +			goto cleanup;
+>  	}
+>  
+>  	return 0;
+> +cleanup:
+> +	while (--idx >= 0) {
 
-If we pick other options, then we would have to ensure the page doesn't
-get used elsewhere anyway, so TDX still won't need to hold a refcount
-while using the page?
+(please see note about this pattern below)
 
->> 
->> If the private page is still mapped because there was an unmapping
->> failure, we can discuss that separately under error handling in Topic 2.
->> 
->> With this, can I confirm that we are in agreement that TDX does not need
->> to indicate that it is using a page, and can trust guest_memfd to keep
->> the page around for the VM?
-> I thought it's not a must until I came across a comment from Sean:
-> "Should these bail early if the KVM_BUG_ON() is hit?  Calling into the TDX module
-> after bugging the VM is a bit odd."
-> https://lore.kernel.org/kvm/Z4r_XNcxPWpgjZio@google.com/#t.
->
-> This comment refers to the following scenario:
-> when a 2MB non-leaf entry in the mirror root is zapped with shared mmu_lock,
-> BUG_ON() will be triggered for TDX. But by the time handle_removed_pt() is
-> reached, the 2MB non-leaf entry would have been successfully removed in the
-> mirror root.
->
-> Bailing out early in remove_external_spte() would prevent the removal of 4KB
-> private guest pages in the S-EPT later due to lacking of corresponding entry in
-> the mirror root.
->
-> Since KVM MMU does not hold guest page's ref count, failing to notify TDX about
-> the removal of a guest page could result in a situation where a page still
-> mapped in the S-EPT is freed and re-allocated by the OS. 
->
-> Therefore, indicating that TDX is using a page can be less error-prone, though
-> it does consume more memory.
->
+> +		kfree(hw_dom->arch_mbm_states[idx]);
+> +		hw_dom->arch_mbm_states[idx] = NULL;
+> +	}
+> +
+> +	return -ENOMEM;
+>  }
+>  
+>  static int get_domain_id_from_scope(int cpu, enum resctrl_scope scope)
+> diff --git a/arch/x86/kernel/cpu/resctrl/internal.h b/arch/x86/kernel/cpu/resctrl/internal.h
+> index 5e3c41b36437..44ef0d94131e 100644
+> --- a/arch/x86/kernel/cpu/resctrl/internal.h
+> +++ b/arch/x86/kernel/cpu/resctrl/internal.h
+> @@ -54,15 +54,16 @@ struct rdt_hw_ctrl_domain {
+>   * struct rdt_hw_mon_domain - Arch private attributes of a set of CPUs that share
+>   *			      a resource for a monitor function
+>   * @d_resctrl:	Properties exposed to the resctrl file system
+> - * @arch_mbm_total:	arch private state for MBM total bandwidth
+> - * @arch_mbm_local:	arch private state for MBM local bandwidth
+> + * @arch_mbm_states:	arch private state for each MBM event
 
-This is true, but instead of somehow indicating that the page is used by
-TDX upfront, how about treating this as an error, so we should not bail
-out before first indicating an error on the page, such as using Option f
-or g below. Indicating an error on the page will prevent the case where
-a page still mapped in the S-EPT is freed and reused by the OS elsewhere.
+Duplicate @arch_mbm_states
 
->> Topic 2: How to handle unmapping/splitting errors arising from TDX?
->> 
->> Previously I was in favor of having unmap() return an error (Rick
->> suggested doing a POC, and in a more recent email Rick asked for a
->> diffstat), but Vishal and I talked about this and now I agree having
->> unmapping return an error is not a good approach for these reasons.
->> 
->> 1. Unmapping takes a range, and within the range there could be more
->>    than one unmapping error. I was previously thinking that unmap()
->>    could return 0 for success and the failed PFN on error. Returning a
->>    single PFN on error is okay-ish but if there are more errors it could
->>    get complicated.
->> 
->>    Another error return option could be to return the folio where the
->>    unmapping/splitting issue happened, but that would not be
->>    sufficiently precise, since a folio could be larger than 4K and we
->>    want to track errors as precisely as we can to reduce memory loss due
->>    to errors.
->> 
->> 2. What I think Yan has been trying to say: unmap() returning an error
->>    is non-standard in the kernel.
->> 
->> I think (1) is the dealbreaker here and there's no need to do the
->> plumbing POC and diffstat.
->> 
->> So I think we're all in support of indicating unmapping/splitting issues
->> without returning anything from unmap(), and the discussed options are
->> 
->> a. Refcounts: won't work - mostly discussed in this (sub-)thread
->>    [3]. Using refcounts makes it impossible to distinguish between
->>    transient refcounts and refcounts due to errors.
->> 
->> b. Page flags: won't work with/can't benefit from HVO.
->> 
->> Suggestions still in the running:
->> 
->> c. Folio flags are not precise enough to indicate which page actually
->>    had an error, but this could be sufficient if we're willing to just
->>    waste the rest of the huge page on unmapping error.
-> For 1GB folios, more precise info will be better.
->
->
->> d. Folio flags with folio splitting on error. This means that on
->>    unmapping/Secure EPT PTE splitting error, we have to split the
->>    (larger than 4K) folio to 4K, and then set a flag on the split folio.
->> 
->>    The issue I see with this is that splitting pages with HVO applied
->>    means doing allocations, and in an error scenario there may not be
->>    memory left to split the pages.
-> Could we restore the page structures before triggering unmap?
->
+> + * @arch_mbm_states:	Per-event pointer to the MBM event's saved state.
+> + *			An MBM event's state is an array of struct arch_mbm_state
+> + *			indexed by RMID on x86 or combined CLOSID, RMID on Arm.
 
-Do you mean every time, before unmapping (every conversion, truncation,
-etc), first restore the page structs in preparation for unmap failure,
-then re-optimize HVO after successful unmap?
+The "or combined CLOSID, RMID on Arm" can be dropped from the x86 arch specific
+docs.
 
-Restoring the page structures is quite an expensive operation IIUC,
-involving time and allocations, and it kind of defeats the purpose of
-HVO if we need to keep extra memory around to keep restoring and undoing
-HVO.
+>   *
+>   * Members of this structure are accessed via helpers that provide abstraction.
+>   */
+>  struct rdt_hw_mon_domain {
+>  	struct rdt_mon_domain		d_resctrl;
+> -	struct arch_mbm_state		*arch_mbm_total;
+> -	struct arch_mbm_state		*arch_mbm_local;
+> +	struct arch_mbm_state		*arch_mbm_states[QOS_NUM_L3_MBM_EVENTS];
+>  };
+>  
+>  static inline struct rdt_hw_ctrl_domain *resctrl_to_arch_ctrl_dom(struct rdt_ctrl_domain *r)
+> diff --git a/arch/x86/kernel/cpu/resctrl/monitor.c b/arch/x86/kernel/cpu/resctrl/monitor.c
+> index 07f8ab097cbe..0add57b29a4d 100644
+> --- a/arch/x86/kernel/cpu/resctrl/monitor.c
+> +++ b/arch/x86/kernel/cpu/resctrl/monitor.c
+> @@ -161,18 +161,14 @@ static struct arch_mbm_state *get_arch_mbm_state(struct rdt_hw_mon_domain *hw_do
+>  						 u32 rmid,
+>  						 enum resctrl_event_id eventid)
+>  {
+> -	switch (eventid) {
+> -	case QOS_L3_OCCUP_EVENT_ID:
+> -		return NULL;
+> -	case QOS_L3_MBM_TOTAL_EVENT_ID:
+> -		return &hw_dom->arch_mbm_total[rmid];
+> -	case QOS_L3_MBM_LOCAL_EVENT_ID:
+> -		return &hw_dom->arch_mbm_local[rmid];
+> -	default:
+> -		/* Never expect to get here */
+> -		WARN_ON_ONCE(1);
+> +	struct arch_mbm_state *state;
+> +
+> +	if (!resctrl_is_mbm_event(eventid))
+>  		return NULL;
+> -	}
+> +
+> +	state = hw_dom->arch_mbm_states[MBM_STATE_IDX(eventid)];
+> +
+> +	return state ? &state[rmid] : NULL;
+>  }
+>  
+>  void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_domain *d,
+> @@ -201,14 +197,16 @@ void resctrl_arch_reset_rmid(struct rdt_resource *r, struct rdt_mon_domain *d,
+>  void resctrl_arch_reset_rmid_all(struct rdt_resource *r, struct rdt_mon_domain *d)
+>  {
+>  	struct rdt_hw_mon_domain *hw_dom = resctrl_to_arch_mon_dom(d);
+> -
+> -	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_TOTAL_EVENT_ID))
+> -		memset(hw_dom->arch_mbm_total, 0,
+> -		       sizeof(*hw_dom->arch_mbm_total) * r->num_rmid);
+> -
+> -	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID))
+> -		memset(hw_dom->arch_mbm_local, 0,
+> -		       sizeof(*hw_dom->arch_mbm_local) * r->num_rmid);
+> +	enum resctrl_event_id eventid;
+> +	int idx;
+> +
+> +	for_each_mbm_event_id(eventid) {
+> +		if (!resctrl_is_mon_event_enabled(eventid))
+> +			continue;
+> +		idx = MBM_STATE_IDX(eventid);
+> +		memset(hw_dom->arch_mbm_states[idx], 0,
+> +		       sizeof(struct arch_mbm_state) * r->num_rmid);
 
-Or do you mean only on unmap failure, undo restore page structs to mark
-the error?
+sizeof(struct arch_mbm_state) -> sizeof(*hw_dom->arch_mbm_states[0])?
 
-Because it is expensive, it seems hard for this to work when the unmap
-fails (the machine might be in some dire state already).
+> +	}
+>  }
+>  
+>  static u64 mbm_overflow_count(u64 prev_msr, u64 cur_msr, unsigned int width)
 
->> 
->> e. Some other data structure in guest_memfd, say, a linked list, and a
->>    function like kvm_gmem_add_error_pfn(struct page *page) that would
->>    look up the guest_memfd inode from the page and add the page's pfn to
->>    the linked list.
->>
->>    Everywhere in guest_memfd that does unmapping/splitting would then
->>    check this linked list to see if the unmapping/splitting
->>    succeeded.
->> 
->>    Everywhere in guest_memfd that allocates pages will also check this
->>    linked list to make sure the pages are functional.
->> 
->>    When guest_memfd truncates, if the page being truncated is on the
->>    list, retain the refcount on the page and leak that page.
->>
->> f. Combination of c and e, something similar to HugeTLB's
->>    folio_set_hugetlb_hwpoison(), which sets a flag AND adds the pages in
->>    trouble to a linked list on the folio.
-> That seems like a good idea. If memory allocation for the linked list succeeds,
-> mark the pages within a folio as troublesome; otherwise, mark the entire folio
-> as troublesome.
->
 
-This is already what HugeTLB does for poisoning in
-folio_set_hugetlb_hwpoison(), so if an unmapping error can be treated as
-hardware poisoning, we could re-use all that infrastructure.
+...
 
-> But maybe c is good enough for 2MB folios.
->
+>  void resctrl_offline_ctrl_domain(struct rdt_resource *r, struct rdt_ctrl_domain *d)
+> @@ -4085,32 +4081,34 @@ void resctrl_offline_mon_domain(struct rdt_resource *r, struct rdt_mon_domain *d
+>  static int domain_setup_mon_state(struct rdt_resource *r, struct rdt_mon_domain *d)
+>  {
+>  	u32 idx_limit = resctrl_arch_system_num_rmid_idx();
+> -	size_t tsize;
+> +	size_t tsize = sizeof(*d->mbm_states[0]);
+> +	enum resctrl_event_id eventid;
+> +	int idx;
+>  
+>  	if (resctrl_is_mon_event_enabled(QOS_L3_OCCUP_EVENT_ID)) {
+>  		d->rmid_busy_llc = bitmap_zalloc(idx_limit, GFP_KERNEL);
+>  		if (!d->rmid_busy_llc)
+>  			return -ENOMEM;
+>  	}
+> -	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_TOTAL_EVENT_ID)) {
+> -		tsize = sizeof(*d->mbm_total);
+> -		d->mbm_total = kcalloc(idx_limit, tsize, GFP_KERNEL);
+> -		if (!d->mbm_total) {
+> -			bitmap_free(d->rmid_busy_llc);
+> -			return -ENOMEM;
+> -		}
+> -	}
+> -	if (resctrl_is_mon_event_enabled(QOS_L3_MBM_LOCAL_EVENT_ID)) {
+> -		tsize = sizeof(*d->mbm_local);
+> -		d->mbm_local = kcalloc(idx_limit, tsize, GFP_KERNEL);
+> -		if (!d->mbm_local) {
+> -			bitmap_free(d->rmid_busy_llc);
+> -			kfree(d->mbm_total);
+> -			return -ENOMEM;
+> -		}
+> +
+> +	for_each_mbm_event_id(eventid) {
+> +		if (!resctrl_is_mon_event_enabled(eventid))
+> +			continue;
+> +		idx = MBM_STATE_IDX(eventid);
+> +		d->mbm_states[idx] = kcalloc(idx_limit, tsize, GFP_KERNEL);
+> +		if (!d->mbm_states[idx])
+> +			goto cleanup;
+>  	}
 
-I think it'd be awkward/troublesome to treat different sizes of folios
-differently and I would prefer not to do this.
+Looks like this cleanup pattern is a landmine that this
+series stepped on in patch #13. Any code added here that fails
+and then run the "cleanup" code will either end up with a memory
+leak or accessing an uninitialized variable. 
+>  
+>  	return 0;
+> +cleanup:
+> +	bitmap_free(d->rmid_busy_llc);
+> +	while (--idx >= 0) {
+> +		kfree(d->mbm_states[idx]);
+> +		d->mbm_states[idx] = NULL;
+> +	}
 
->> g. Like f, but basically treat an unmapping error as hardware poisoning.
-> Not sure if hwpoison bit can be used directly.
-> Further investigation is needed.
->
+This pattern should be made safer by not relying on idx, or
+ensure here that idx is initialized correctly.
 
-Would appreciate your assessment on whether an unmapping error can be
-treated as hardware poisoning!
+> +
+> +	return -ENOMEM;
+>  }
+>  
 
->> I'm kind of inclined towards g, to just treat unmapping errors as
->> HWPOISON and buying into all the HWPOISON handling requirements. What do
->> yall think? Can a TDX unmapping error be considered as memory poisoning?
->> 
->>
+Reinette
 
-I have another option h to add: if there is a unmapping error from TDX,
-can it be an indication of compromise, in terms of security? Should TDX
-continue to be trusted to run the TD or other TDs securely? If there is
-some unmapping error, could correctness in the entire host be in
-question?
-
-If either correctness or security is broken, would it be acceptable to
-do a full BUG_ON and crash the system, since neither TDX nor regular VMs
-on the host should trusted to run correctly after this kind of error?
-
->> [1] https://lore.kernel.org/all/aE%2F1TgUvr0dcaJUg@yzhao56-desk.sh.intel.com/
->> [2] https://lore.kernel.org/all/aFkeBtuNBN1RrDAJ@yzhao56-desk.sh.intel.com/
->> [3] https://lore.kernel.org/all/aFIGFesluhuh2xAS@yzhao56-desk.sh.intel.com/
->> [3] https://lore.kernel.org/all/aFJjZFFhrMWEPjQG@yzhao56-desk.sh.intel.com/
