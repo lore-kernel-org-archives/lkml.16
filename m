@@ -1,135 +1,213 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FD92566E2
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 21:05:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 029203074B5;
+	Tue, 24 Jun 2025 21:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750799110; cv=none; b=vANHXoqvJR1QOh4rgMmtKiqvN1mcPBZNDX3Pn8wEset61Hc5EiiiBndJ+XcN67eoxEQQxAxFkO58m7FdERHgxe+mY9DiEWHZtngSZS4r2sdwcS35el+WDliezfRCgQM0NzH0Lpow79H07LGS209rvCqI5itLjSyrX6HlO78Oq0E=
+	t=1750799303; cv=none; b=tKNZqzGSI6lok2LfKTw9ZXwMpfisCd8hvwU0feD/pNjg6X2Uk6GzXDYcoiX4i5Y23Sc8qDC9Ylp7J4imTnN5uTzLXa6rmIov+yAR7RUljvwPWbqhq4/IE6tc14Y3Yz72KDwkYaMFgyMAEwfgTLloCG+XUAvITwQSMqcg0WsaTz0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750799110; c=relaxed/simple;
-	bh=wSUK76HyaArC+FP01RvNk9Ak3Y1YRTgr44GodZEKyKM=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=dLPqzYEE4BVS3HPyClirsEz+UzmM01Jbwai9qucv+rQDYJaF8TBdth7sZBLH9xv9z+AIR6S6+A/u0M+Q9+PcJL6eKEsIxEMvQNTzJN8BVTPpH5GbK+F5oiORFbe2WTXdoeGzPc3z/Eb2tuu/iVNtTNlAZdDaS7dtGlSANcSB+jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=tPtbX5Bx; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
+	s=arc-20240116; t=1750799303; c=relaxed/simple;
+	bh=5EWUFc2b8nxJainkDW3BHcwce42b/kQEtho61D2dvWw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b8McoAq9RPL+cfLk+B2oH64HZldrG+YRsM5G6Z4jNiDXfxyuy/q5TD4PqaQzw3Hsv5v8ARRf5+yOMuzXC0J1SOQL7yAduVrMyQYYdDoi5xg/oc3NX2DRf6qrW8xyoHq6O2+Pk9DVTCm9m/7W/wxq/4Js5gY4L9VhHyj5Y/tdtJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LkD5Fi5N; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="tPtbX5Bx"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ad891bb0957so157679566b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:05:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LkD5Fi5N"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a582e09144so3572834f8f.1;
+        Tue, 24 Jun 2025 14:08:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jacekk.info; s=g2024; t=1750799107; x=1751403907; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=H2zUMtRrxbBSd6ymsb7+7OBAUA/OnzJhM/jzHwFjMYE=;
-        b=tPtbX5BxEc7T8lapBrGwb78DQQIglTMU1ixDm+bgiV35JKbkWkNBoSnWQM0u9C2IEW
-         ml2/Mnme8g+7ac/bDUpnZ3FensBNWk9rqZZxtYmMfFm80D39ALSksbe5lrViZYsD3m8W
-         NEfef7kDWBD0uPVrQ8vR6gWH+wV/GMSH5Jaf1BXF1nL1kl9lzfeaIOP5sjjjXN9SFJv1
-         iUjhJbu3wRs3W4ypZG9/5szTBreIDLwpWuYbAtegcRJo6VLtoFVTzZADt4Ekt/k/pNIg
-         z/x3cG4wE9lbfD9F4IuWXU4Yc/FFfDBMg2sakG8e8a+vr4y/52UIxSQ2mO26CtFFcbW0
-         UdKQ==
+        d=gmail.com; s=20230601; t=1750799299; x=1751404099; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=itvx7IDSqd1Qu+kDl1q7+IKMKfpB6umE1igfQExJBWU=;
+        b=LkD5Fi5N+I14ppWgWswjjpwtA5oG5HAhO32Vdh/aA2o0Sr4FpNavmD2RsI1GhTdnGE
+         ixka0J5TPyufjqaHmmfVUpDjpKxwZEeZBDqm6IF6+VrSaUtN2Xqxunn+l6NWev1TkV3h
+         /iwRacc373o3jBXNd4qRAG41+HvVxXGu0VVS/y8JhiL4PwAWmlu6+a0065NN5dc1HXn/
+         dCQtzyxZGReLbxkJmaZqcRt3+RcQJL3KvPYoMgAdl4L19Zl2Xxd6Q5O5xL0hNhMnbbh0
+         iRozIxb45YEDWAA89mqAoCl1io9DodacF9lwTm0VSnRj9BGoSCMGoaoqmOtBvOVdSao1
+         9UMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750799107; x=1751403907;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=H2zUMtRrxbBSd6ymsb7+7OBAUA/OnzJhM/jzHwFjMYE=;
-        b=Ukh2/qop01qLFp8ypRQktbHYszZEjBmr03EOHg3U0266QDAkVug87QudvhUOZHm8dV
-         Nn9CYYpeeRmPgdsQ8pW+Lv/wnafRHkkYgqlkDZhSz91esFDfVkROPCMVtdLhGgorZtDg
-         ClMIYe1DT1iB9c5Sd61njCQv9Mw1ki+kqtggG/YmRqhrfA8hoN7ajAvxc/EVkLZdu+Ui
-         NrTR4VwU+DmE3PJLBaMiV7Gx745OCg6zhIdGYHVDmX/Wr8B1hzVm2ngZDyRKQvvVPt6L
-         xAxr96lBhrTtQ7e1J0JIRjIJWakqmClu8ilUKj4yXzaEct95r4oISU+u5iLkGefl5gQQ
-         /9+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW1Zw85Sm5eILf/9dtaHqb/5CyaRHH/FrmAH2kHaFi3gSTqdKZ9uobKhC2IODvXNb1eL+Yyz6gYUGEbdJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yygk/68GasXPxADE5zOQ9/4wi/X114UyQkD/wuCzKaFfCrqYJFG
-	3XYN0QO+cd1dpJ70fJ+OPiXCLs922psb1ps9G/A7Y+Yq0lcWwTxo4dD5Ug5f6kzsZA==
-X-Gm-Gg: ASbGncuZRa6DsmHpVM/VowfbHOaK0DYTD6JwuFdQBcdn+2iKZPr47JsBkgswo2M8muN
-	03X6/kUJ/n2EE07ziI1MOraVl4mvcJlzC+1yWXfi/jmkZAidUhUAHhLUU7dzSci4qoq0kjg+9Ym
-	tsye7pTSLBiIaQEynS04XaU1RMxG+g6smFVDRmxESCNjyjbcL0va31uhTCmco+TSqBaccYHvnwV
-	RimoS4j+ARFYUBgnDXqzGM+qSHidlEyFIS+LsMZp9UPwZWP6qkQtJHJxWM4zGpqfHCHC1UrywlL
-	/k9Qtil9717Qej3wp+drAdoJwVAFWaDLVXXUa2dYR1xjQETebB6/5gVekxN2CsIq3/FYnI4=
-X-Google-Smtp-Source: AGHT+IEIZRicbupUDozkVt9UuIKeF94jzcW78MZ2mImR1D+dg4nHqW/ZW+k7y9I1SRWPwxvy6g8L5w==
-X-Received: by 2002:a17:906:4fc5:b0:ad8:85df:865b with SMTP id a640c23a62f3a-ae0bee4f81bmr53130366b.33.1750799106807;
-        Tue, 24 Jun 2025 14:05:06 -0700 (PDT)
-Received: from [10.2.1.100] ([194.53.194.238])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0541bbdf3sm940960666b.137.2025.06.24.14.05.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 14:05:06 -0700 (PDT)
-From: Jacek Kowalski <jacek@jacekk.info>
-X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
-Message-ID: <0407b67d-e63f-4a85-b3b4-1563335607dc@jacekk.info>
-Date: Tue, 24 Jun 2025 23:05:05 +0200
+        d=1e100.net; s=20230601; t=1750799299; x=1751404099;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=itvx7IDSqd1Qu+kDl1q7+IKMKfpB6umE1igfQExJBWU=;
+        b=UUa8OiWUVnAWfgXbG2P8PFLaa9n8eIuYJR5A94fEmtypQCj7m2K97+Y9u2mQCZD+1j
+         cfolXCuc+13SE6n7Hs7u++eNWRM0H3dj5Ck3FoinEIoPmIzNNREAFt1rvDwuvxlLK49L
+         cjERYHAz4SqsgAyABPiebwBhfxUwK4MDegX8HScHgmDSL8kBe8/Kx0CWotlV/f4P1sGj
+         UmbVy5/3pdMSXfUGwC/vYJ1fCQfOc8E+OmIjCIRuxP9l3jLIgNOpfcJ1y/w68U7STmJ+
+         lPiEmu6vZ7OHJhvsY9kDAbgoqbIhTnU/HQmnJOYKZaMXvN0ugboR5oI1QW2nGN+tCON2
+         J2Bg==
+X-Forwarded-Encrypted: i=1; AJvYcCU90HInyE2KEjDiGctTIrcnWqNp/WNFY9w6vOgXU1lW10o2cU5uaxhZsVdWnn4dTjDwVCoUawdYplJ5kq3G@vger.kernel.org, AJvYcCXxD0+UlejHWtiKWG9ZErR7V3CrKXPD6bPudZKmzF+GaxvXDzJ1lF3X0gqh4e2LYC8n0pcGDnsHG62j8R0v@vger.kernel.org
+X-Gm-Message-State: AOJu0YyecSXYJCPLfJLkptn9wOIjgarKGtZUdAwJppb9FKtguxRm5vyB
+	X+3BtgQ3mtYSiNoUwpZCts3QdevGdu2jt2tQPRrhvYNp73Q+vTH5J+DZ
+X-Gm-Gg: ASbGncvO321yC26SO2TCS/JRB8PSksHS+lKdTwdVGAfGnr8lKttlZyVplQD7QtPEIIy
+	DIntDzS0S2TbWHtegvUvGIYFA3tK1ZJT5sB3IYh8utJIY9+DDkFI5gVWCzKeKJnsHuq+7BxU4z3
+	ICEfENKA30JHIpC+cV2HFR3NKWaAcx8Ld1T9AgHXPGViRx5NBtD69d7Ysc3ijgfWpUQMc+kPT1u
+	BqusSHqQrEnUepw7CE7FUxHeo0OY7YGHDkyEA1e5sY4X9BaKlYK9dxZBiy8QdEm2fdRgN0GsCAn
+	GZ1yPQ481Y7YSRfDNCtST/ysBi1wFPeSdbbGe2FAvbJ7VRpih34YH6N1rL1QzaAAtug5I22Fet3
+	jO97mmOBavQs/+OJg7SfgdOnO
+X-Google-Smtp-Source: AGHT+IGwHH+3Fto7qgv3C8c/BdcTcAmM+Clmw2M+ojfy6KRjk/KACDvzw9BkPqhVjXarh8ndrQu0nQ==
+X-Received: by 2002:a05:6000:2407:b0:3a4:ec23:dba7 with SMTP id ffacd0b85a97d-3a6ed66a42amr135573f8f.31.1750799299081;
+        Tue, 24 Jun 2025 14:08:19 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad186sm165755e9.21.2025.06.24.14.08.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 14:08:18 -0700 (PDT)
+Date: Tue, 24 Jun 2025 22:08:16 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>, Michael Ellerman
+ <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao
+ <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Alexander
+ Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan
+ Kara <jack@suse.cz>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Darren Hart
+ <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, Andre Almeida
+ <andrealmeid@igalia.com>, Andrew Morton <akpm@linux-foundation.org>, Dave
+ Hansen <dave.hansen@linux.intel.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org
+Subject: Re: [PATCH 0/5] powerpc: Implement masked user access
+Message-ID: <20250624220816.078f960d@pumpkin>
+In-Reply-To: <20250624182505.GH17294@gate.crashing.org>
+References: <cover.1750585239.git.christophe.leroy@csgroup.eu>
+	<20250622172043.3fb0e54c@pumpkin>
+	<ff2662ca-3b86-425b-97f8-3883f1018e83@csgroup.eu>
+	<20250624131714.GG17294@gate.crashing.org>
+	<20250624175001.148a768f@pumpkin>
+	<20250624182505.GH17294@gate.crashing.org>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] e1000e: ignore factory-default checksum value on
- TGP platform
-To: Simon Horman <horms@kernel.org>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Vlad URSU <vlad@ursu.me>
-References: <91030e0c-f55b-4b50-8265-2341dd515198@jacekk.info>
- <5c75ef9b-12f5-4923-aef8-01d6c998f0af@jacekk.info>
- <20250624194237.GI1562@horms.kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250624194237.GI1562@horms.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
->> Unfortunately some systems have left the factory with an empty
->> checksum. NVM is not modifiable on this platform, hence ignore
->> checksum 0xFFFF on Tiger Lake systems to work around this.
+On Tue, 24 Jun 2025 13:25:05 -0500
+Segher Boessenkool <segher@kernel.crashing.org> wrote:
+
+> Hi!
 > 
-> I think that you need to update the patch description. As of v3 it's
-> the last word of the checksum that is being checked, not the entire
-> checksum.
-
-As I understood it, "sum" is the resulting value while "checksum" is the
-value appended so that the "sum" is equal to some constant.
-
-But my understanding is utterly broken by this line:
-
->> if (checksum != (u16)NVM_SUM) {
-
-Where variable checksum (shall it be "sum"?) that includes
-"checksum" (or maybe checksum word?) from the *checksum* register 
-address (NVM_CHECKSUM_REG) is compared to a constant called "NVM_SUM".
-
-
-Is something like this fine by you:
-
-> Unfortunately some systems have left the factory with an unmodified
-> value of 0xFFFF at register address 0x3F (checksum word location).
-> So on Tiger Lake platform we ignore the computed checksum when such
-> condition is encountered.
-
-?
-
-
->> +#define NVM_CHECKSUM_FACTORY_DEFAULT 0xFFFF
+> On Tue, Jun 24, 2025 at 05:50:01PM +0100, David Laight wrote:
+> > On Tue, 24 Jun 2025 08:17:14 -0500
+> > Segher Boessenkool <segher@kernel.crashing.org> wrote:
+> >   
+> > > On Tue, Jun 24, 2025 at 07:27:47AM +0200, Christophe Leroy wrote:  
+> > > > Ah ok, I overlooked that, I didn't know the cmove instruction, seem 
+> > > > similar to the isel instruction on powerpc e500.    
+> > > 
+> > > cmove does a move (register or memory) when some condition is true.  
+> > 
+> > The destination of x86 'cmov' is always a register (only the source can be
+> > memory - and is probably always read).  
 > 
-> Perhaps it is too long, but I liked Vlad's suggestion of naming this
-> NVM_CHECKSUM_WORD_FACTORY_DEFAULT.
+> Both source operands can be mem, right?  But probably not both at the
+> same time.
 
-I can update it as well once we agree on the wording.
+It only has one 'real' source, but the implementation could easily
+read the destination register and then decide which value to write
+back - rather than doing a conditional write to the register file.
+A conditional write would be a right PITA for the alu result
+forwarding logic
 
 
->> +	if (hw->mac.type == e1000_pch_tgp && nvm_data == NVM_CHECKSUM_FACTORY_DEFAULT) {
 > 
-> Please wrap the line above so it is 80 columns wide or less.
+> > It is a also a computational instruction.  
+> 
+> Terminology...
+> 
+> x86 is not a RISC architecture, or more generally, a load/store
+> architecture.
 
-Wilco.
+It sort of is these days.
+The memory transfers are separate u-ops, so a 'reg += mem' instruction
+is split into two be the decoder.
+Although some u-ops get merged together and executed in one clock,
+obvious example is some 'compare+branch' pairs.
 
--- 
-Best regards,
-   Jacek Kowalski
+> A computational instruction is one that doesn't touch memory or does a
+> branch, or some system function, some supervisor or hypervisor
+> instruction maybe.
+> 
+> x86 does not have many computational insns, most insns can touch
+> memory :-)
+
+Except that the memory 'bit' is executed separately from any alu 'stuff'.
+So for a 'reg += mem' instruction the memory read can be started as soon
+as the registers that contain the address are valid, the 'add' requires
+the memory read have completed and the instruction that generated the
+old value of 'reg' have completed - which could be waiting on all sorts
+of things (like a divide). Once both values are ready the 'add' can be
+executed (provided a suitable alu is available).
+
+ 
+> (The important thing is that most computational insns do not ever cause
+> exceptions, the only exceptions are if you divide by zero or
+> similar :-) )
+> 
+> > It may well always do the register write - hard to detect.
+> > 
+> > There is a planned new instruction that would do a conditional write
+> > to memory - but not on any cpu yet.  
+> 
+> Interesting!  Instructions like the atomic store insns we got for p9,
+> maybe?  They can do minimum/maximum and various kinds of more generic
+> reductions and similar.
+
+I think they are only conditional stores.
+But they do save a conditional branch.
+A late disable of a memory write is far less problematic than a disabled
+register file write. No one minds (too much) about slight delays between
+writes and reads of the same location (reduced by a store to load forwarder)
+but you don't want to lose clocks between adjacent simple alu instructions.
+
+For my sins I re-implemented a soft cpu last year...
+Which doesn't have a 'cmov' :-(
+
+> 
+> > > isel (which is base PowerPC, not something "e500" only) is a
+> > > computational instruction, it copies one of two registers to a third,
+> > > which of the two is decided by any bit in the condition register.  
+> > 
+> > Does that mean it could be used for all the ppc cpu variants?  
+> 
+> No, only things that implement architecture version of 2.03 or later.
+> That is from 2006, so essentially everything that is still made
+> implements it :-)
+> 
+> But ancient things do not.  Both 970 (Apple G5) and Cell BE do not yet
+> have it (they are ISA 2.01 and 2.02 respectively).  And the older p5's
+> do not have it yet either, but the newer ones do.
+> 
+> And all classic PowerPC is ISA 1.xx of course.  Medieval CPUs :-)
+
+That make more sense than the list in patch 5/5.
+
+> 
+> > > But sure, seen from very far off both isel and cmove can be used to
+> > > implement the ternary operator ("?:"), are similar in that way :-)  
+> > 
+> > Which is exactly what you want to avoid speculation.  
+> 
+> There are cheaper / simpler / more effective / better ways to get that,
+> but sure, everything is better than a conditional branch, always :-)
+
+Everything except a TLB miss :-)
+
+And for access_ok() avoiding the conditional is a good enough reason
+to use a 'conditional move' instruction.
+Avoiding speculation is actually free.
+
+> 
+> 
+> Segher
+
