@@ -1,65 +1,68 @@
-Received: from out162-62-57-64.mail.qq.com (out162-62-57-64.mail.qq.com [162.62.57.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C486136;
-	Tue, 24 Jun 2025 03:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF33F6136
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750735679; cv=none; b=HRE+1cbgpm75FYLQXOO8FMAg5H3Zmx8p8ytLbhlrnW5BaCvTg6p+kkyauFbqFXnHELMeh88XFBx+d7SdjoQWrIK4Z5oEOyi395yQ97YyPNcJgp7zJrLAI/77RLN6qyVdsk3vOG2iAiBP/CWlo95haiBjTrHK4riCdCrgNFwsMlM=
+	t=1750735689; cv=none; b=so5904JkIb9RrrhMhSTeFEM22iUzwOUNCwXgbiho4y7V+i3d/gxhecqPOPLxTuxZ0TmORWt3avM3eq7dg2LjfE4Hk0GUg00U1Nr96qZHwxuswHQ/St2e8gd5ghqpOb9kkZbMkbGSSQ3d/ycnQOcq1l8SxMmHIQCQ04ashKQirVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750735679; c=relaxed/simple;
-	bh=RLEIRSjrgC2GMjEJKM5fjLmfrTS5grac6NjsH/mjjro=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=V/EADStwVKi82Yncb0iyg6R/a0Wkes796UAfGFbje+TzyQGSnK9WA6/EKnw2n9VeaAq5K7I327sI4PEUGtIMJJ/4O4xqWNi5d5oUriUnQ1yqQTVsbj88SvD9eocaxlV1jR6q9GPlFbSs6cxCj9eEFRGzm/JbSp0widxPtA2poTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=GUmuRjd3; arc=none smtp.client-ip=162.62.57.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1750735689; c=relaxed/simple;
+	bh=cqw6JEqDhdhKGXINh/3HQ7aZRmYsqeQNrrQ5p0mndV4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MDJziIUYeMprV/Pm4/JxM39+FvpjsrvnHfizi7Q8MDv3LgptoDGrLtrtKtIfpW0Zp3P80Irf3so70CjfH26AQY7jZlzQWzdmbl68s4eDe2syrLUrLFbWqqzbQM9hiXUgrVuBsX9l40kKSPyVcKLfbBwcE8y6hpI85lvejkug5NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YfuXHcO9; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="GUmuRjd3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1750735665; bh=nmo+J8zIdQuvgWJj2E1ulnfVG/wxLiRfXsCfFWon/8k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=GUmuRjd3nhWVu98EGzVnWs8lQ7OfevZtcjTX1f/3j0jXUUz5C1eX/32f1GVZqeKv2
-	 xasKVo9aUyrevSNQv8at2AaBfcFpSOUXcjJg4XKEyTE9qLbNNBniA6AxcjinR0ItUB
-	 jRtBB3eUqNc1zemnBwL1+fldqiJZhYgbX8DYNa7k=
-Received: from VM-222-126-tencentos.localdomain ([14.22.11.162])
-	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
-	id 4DA38C3D; Tue, 24 Jun 2025 11:19:26 +0800
-X-QQ-mid: xmsmtpt1750735166tvilzjywo
-Message-ID: <tencent_DB9950A0D2FA71F96EE7FDDF92F6DE959A09@qq.com>
-X-QQ-XMAILINFO: NxPU7wltX8BLEPcb7EL3STuoaK9zZ8SLjiZxpVXaoqfSsYP5NNnfj5d7L6+5EP
-	 0JAlui+cWm8bjdODdrO4lC6DEylgK7uH1t+GJfICnGSfcGbg3DQgyKpGhZHrhPG45qGg4gfwdfaC
-	 9Efd+JgZ2/6P/5yQl3Fpl+okax/Pf7EwKsr9Wh7FbaGSKWBrBtoqGuqI5X3q0p79NYqh9pnWyHOG
-	 ITf7pXjZirDCBdMFuR6WX2IKIK2Irs2dEYsnMZaG5sh0uCEhfAUB01HN/GHhfN6l5iO+Y4bQgkiY
-	 GLAFoTF/4xHUjoQ0jnVtvgAd2yXS17zScsFoOj7PPJC6yczEvTqcm1H+GEu3FUbmBxLDgCiNLQkV
-	 C5KTG+fpmSKfPfscB++MuwITDC/JUVuktOefuiLupBhE+8BIJ0hl2xFZRMmlSz4XiqO8CipksgU7
-	 tIxA+m/e2oh5aYgkIXgADERU9qJxenIB29gzgZfGqcPb9Z21i+4VxgyxmnWf5Aaxp0yZopwPveWd
-	 4yDZC/dh9yPbV8/vdujxpB3la924zKXslpOx/BeHPg7PVHwNbt2Ca5mF7XdlNsl/KKPpwzCRFguF
-	 oWsC+yXeXZqZ9jj+VyLWY7/nLT1d/KWA56Y4FowNwO4j3la9Ozi5iMHyVDUsBGAamXtEO/I+/G3p
-	 hk3S2KWghlKTvMxG52u/DwGDnaIuPFVHlbD6jrCSwop/vBx9rLRHW+eqjrrUL4xvEfa+jhcfglQo
-	 U8rq9FXhvZUG8aa0U0Sauq1uYJGkDbl6XFIaHFQ8Hz5m/31ogpHQ293cF1XUJwmMnh7fnv5TS3DF
-	 GAlZ4zo5TAGrlvqipm7WNB6jNIhBz8S1Y+qoItoN61eBg4YFRsPDH+PqwjVFqQMZmkaFGEFQ2ym8
-	 bwLLX9PPVCCN/i2TvqNCo8HABcbr8WmDv4tWuknQLtYpgfK37wymOhJn7NxZNoO9yDSd6Xty3k65
-	 0esN+oGR5WxP9xCyz1sacHhJefWFGmi43g1kgnB5Lmm9yuO5Zu3bdpnTZgSwleifBjz1MB7Pl7n0
-	 jmSaWxNPMLTr30bUlP9IGsHXBWJ24=
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: jackysliu <1972843537@qq.com>
-To: lkp@intel.com
-Cc: 1972843537@qq.com,
-	GR-QLogic-Storage-Upstream@marvell.com,
-	James.Bottomley@hansenpartnership.com,
-	jhasan@marvell.com,
-	linux-kernel@vger.kernel.org,
-	linux-scsi@vger.kernel.org,
-	martin.petersen@oracle.com,
-	oe-kbuild-all@lists.linux.dev,
-	skashyap@marvell.com
-Subject: [PATCH] scsi: qedf: fix inconsistent indenting warning 
-Date: Tue, 24 Jun 2025 11:19:19 +0800
-X-OQ-MSGID: <20250624031919.2207851-1-1972843537@qq.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <202506240340.fv6cXpyc-lkp@intel.com>
-References: <202506240340.fv6cXpyc-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YfuXHcO9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750735685;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lduNiml1XRAu/rYd6hqPFR/Za2w+2GO7RpqGcJJcN78=;
+	b=YfuXHcO995/ERHCp4GbLmTf0JgcduuaTWnzRz83KZ2vuX/gexI5t7ZWaxJitXGfXzlViSB
+	PG5YraDv/l2H15IMwuNskmiXbQ4B2o8vqLIRboky4ohyPsfUwvo+XolkcBDnUjEGAPFZI5
+	MNPFCGzqlTJZ96qSpG1XTP7OPScsVxw=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-450-gOKxKQ0AOnSDb6OSJkqpmw-1; Mon,
+ 23 Jun 2025 23:28:03 -0400
+X-MC-Unique: gOKxKQ0AOnSDb6OSJkqpmw-1
+X-Mimecast-MFC-AGG-ID: gOKxKQ0AOnSDb6OSJkqpmw_1750735681
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2249B19560A3;
+	Tue, 24 Jun 2025 03:28:01 +0000 (UTC)
+Received: from dell-per7425-02.rhts.eng.pek2.redhat.com (dell-per7425-02.rhts.eng.pek2.redhat.com [10.73.116.18])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EA73830001A1;
+	Tue, 24 Jun 2025 03:27:53 +0000 (UTC)
+From: Li Wang <liwang@redhat.com>
+To: akpm@linux-foundation.org,
+	lorenzo.stoakes@oracle.com,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	David Hildenbrand <david@redhat.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Keith Lucas <keith.lucas@oracle.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Shuah Khan <shuah@kernel.org>
+Subject: [PATCH v2] ksm_tests: Skip hugepage test when Transparent Hugepages are disabled
+Date: Tue, 24 Jun 2025 11:27:48 +0800
+Message-ID: <20250624032748.393836-1-liwang@redhat.com>
+In-Reply-To: <20250621004808.368878-1-liwang@redhat.com>
+References: <20250621004808.368878-1-liwang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,45 +70,226 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-Fix below inconsistent indenting smatch warning.
+Some systems (e.g. minimal or real-time kernels) may not enable
+Transparent Hugepages (THP), causing MADV_HUGEPAGE to return EINVAL.
+This patch introduces a runtime check using the existing THP sysfs
+interface and skips the hugepage merging test (`-H`) when THP is
+not available.
 
-New smatch warnings:
-drivers/scsi/qedf/qedf_main.c:2814 qedf_prepare_sb() warn: inconsistent
-indenting
+To avoid those failures:
 
-Old smatch warnings:
-drivers/scsi/qedf/qedf_main.c:2816 qedf_prepare_sb() warn: inconsistent indenting
+  # -----------------------------
+  # running ./ksm_tests -H -s 100
+  # -----------------------------
+  # ksm_tests: MADV_HUGEPAGE: Invalid argument
+  # [FAIL]
+  not ok 1 ksm_tests -H -s 100 # exit=2
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202506240340.fv6cXpyc-lkp@intel.com/
+  # --------------------
+  # running ./khugepaged
+  # --------------------
+  # Reading PMD pagesize failed# [FAIL]
+  not ok 1 khugepaged # exit=1
 
-Signed-off-by: jackysliu <1972843537@qq.com>
+  # --------------------
+  # running ./soft-dirty
+  # --------------------
+  # TAP version 13
+  # 1..15
+  # ok 1 Test test_simple
+  # ok 2 Test test_vma_reuse dirty bit of allocated page
+  # ok 3 Test test_vma_reuse dirty bit of reused address page
+  # Bail out! Reading PMD pagesize failed# Planned tests != run tests (15 != 3)
+  # # Totals: pass:3 fail:0 xfail:0 xpass:0 skip:0 error:0
+  # [FAIL]
+  not ok 1 soft-dirty # exit=1
+  # SUMMARY: PASS=0 SKIP=0 FAIL=1
+
+  # -------------------
+  # running ./migration
+  # -------------------
+  # TAP version 13
+  # 1..3
+  # # Starting 3 tests from 1 test cases.
+  # #  RUN           migration.private_anon ...
+  # #            OK  migration.private_anon
+  # ok 1 migration.private_anon
+  # #  RUN           migration.shared_anon ...
+  # #            OK  migration.shared_anon
+  # ok 2 migration.shared_anon
+  # #  RUN           migration.private_anon_thp ...
+  # # migration.c:196:private_anon_thp:Expected madvise(ptr, TWOMEG, MADV_HUGEPAGE) (-1) == 0 (0)
+  # # private_anon_thp: Test terminated by assertion
+  # #          FAIL  migration.private_anon_thp
+  # not ok 3 migration.private_anon_thp
+  # # FAILED: 2 / 3 tests passed.
+  # # Totals: pass:2 fail:1 xfail:0 xpass:0 skip:0 error:0
+  # [FAIL]
+  not ok 1 migration # exit=1
+
+Signed-off-by: Li Wang <liwang@redhat.com>
+Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Joey Gouly <joey.gouly@arm.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Keith Lucas <keith.lucas@oracle.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 ---
- drivers/scsi/qedf/qedf_main.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
-index 8767d9de819f..b46fc510557b 100644
---- a/drivers/scsi/qedf/qedf_main.c
-+++ b/drivers/scsi/qedf/qedf_main.c
-@@ -2810,11 +2810,11 @@ static int qedf_prepare_sb(struct qedf_ctx *qedf)
- 	}
- err:
- for (int i = 0; i < id; i++) {
--fp = &qedf->fp_array[i];
--if (fp->sb_info) {
--qedf_free_sb(qedf, fp->sb_info);
--kfree(fp->sb_info);
--fp->sb_info = NULL;
-+	fp = &qedf->fp_array[i];
-+	if (fp->sb_info) {
-+		qedf_free_sb(qedf, fp->sb_info);
-+		kfree(fp->sb_info);
-+	fp->sb_info = NULL;
+Notes:
+    v1 --> v2:
+        * replaces printf() + return KSFT_SKIP with a standardized
+          ksft_test_result_skip() call and return in soft-dirty.c
+          to avoid test build issue.
+
+ tools/testing/selftests/mm/khugepaged.c   |  5 +++++
+ tools/testing/selftests/mm/ksm_tests.c    |  6 ++++++
+ tools/testing/selftests/mm/migration.c    |  8 ++++++++
+ tools/testing/selftests/mm/soft-dirty.c   |  9 ++++++++-
+ tools/testing/selftests/mm/thp_settings.c | 11 +++++++++++
+ tools/testing/selftests/mm/thp_settings.h |  2 ++
+ 6 files changed, 40 insertions(+), 1 deletion(-)
+
+diff --git a/tools/testing/selftests/mm/khugepaged.c b/tools/testing/selftests/mm/khugepaged.c
+index 8a4d34cce36b..6822eb7ea58e 100644
+--- a/tools/testing/selftests/mm/khugepaged.c
++++ b/tools/testing/selftests/mm/khugepaged.c
+@@ -1190,6 +1190,11 @@ int main(int argc, char **argv)
+ 		.read_ahead_kb = 0,
+ 	};
+ 
++	if (!thp_is_enabled()) {
++		printf("Transparent Hugepages not available\n");
++		return KSFT_SKIP;
++	}
++
+ 	parse_test_type(argc, argv);
+ 
+ 	setbuf(stdout, NULL);
+diff --git a/tools/testing/selftests/mm/ksm_tests.c b/tools/testing/selftests/mm/ksm_tests.c
+index e80deac1436b..b77462b5c240 100644
+--- a/tools/testing/selftests/mm/ksm_tests.c
++++ b/tools/testing/selftests/mm/ksm_tests.c
+@@ -15,6 +15,7 @@
+ #include "../kselftest.h"
+ #include <include/vdso/time64.h>
+ #include "vm_util.h"
++#include "thp_settings.h"
+ 
+ #define KSM_SYSFS_PATH "/sys/kernel/mm/ksm/"
+ #define KSM_FP(s) (KSM_SYSFS_PATH s)
+@@ -527,6 +528,11 @@ static int ksm_merge_hugepages_time(int merge_type, int mapping, int prot,
+ 	unsigned long scan_time_ns;
+ 	int pagemap_fd, n_normal_pages, n_huge_pages;
+ 
++	if (!thp_is_enabled()) {
++		printf("Transparent Hugepages not available\n");
++		return KSFT_SKIP;
++	}
++
+ 	map_size *= MB;
+ 	size_t len = map_size;
+ 
+diff --git a/tools/testing/selftests/mm/migration.c b/tools/testing/selftests/mm/migration.c
+index 1e3a595fbf01..a306f8bab087 100644
+--- a/tools/testing/selftests/mm/migration.c
++++ b/tools/testing/selftests/mm/migration.c
+@@ -5,6 +5,8 @@
+  */
+ 
+ #include "../kselftest_harness.h"
++#include "thp_settings.h"
++
+ #include <strings.h>
+ #include <pthread.h>
+ #include <numa.h>
+@@ -185,6 +187,9 @@ TEST_F_TIMEOUT(migration, private_anon_thp, 2*RUNTIME)
+ 	uint64_t *ptr;
+ 	int i;
+ 
++	if (!thp_is_enabled())
++		SKIP(return, "Transparent Hugepages not available");
++
+ 	if (self->nthreads < 2 || self->n1 < 0 || self->n2 < 0)
+ 		SKIP(return, "Not enough threads or NUMA nodes available");
+ 
+@@ -214,6 +219,9 @@ TEST_F_TIMEOUT(migration, shared_anon_thp, 2*RUNTIME)
+ 	uint64_t *ptr;
+ 	int i;
+ 
++	if (!thp_is_enabled())
++		SKIP(return, "Transparent Hugepages not available");
++
+ 	if (self->nthreads < 2 || self->n1 < 0 || self->n2 < 0)
+ 		SKIP(return, "Not enough threads or NUMA nodes available");
+ 
+diff --git a/tools/testing/selftests/mm/soft-dirty.c b/tools/testing/selftests/mm/soft-dirty.c
+index 8e1462ce0532..8a3f2b4b2186 100644
+--- a/tools/testing/selftests/mm/soft-dirty.c
++++ b/tools/testing/selftests/mm/soft-dirty.c
+@@ -6,8 +6,10 @@
+ #include <stdint.h>
+ #include <malloc.h>
+ #include <sys/mman.h>
++
+ #include "../kselftest.h"
+ #include "vm_util.h"
++#include "thp_settings.h"
+ 
+ #define PAGEMAP_FILE_PATH "/proc/self/pagemap"
+ #define TEST_ITERATIONS 10000
+@@ -78,8 +80,13 @@ static void test_hugepage(int pagemap_fd, int pagesize)
+ {
+ 	char *map;
+ 	int i, ret;
+-	size_t hpage_len = read_pmd_pagesize();
+ 
++	if (!thp_is_enabled()) {
++		ksft_test_result_skip("Transparent Hugepages not available\n");
++		return;
++	}
++
++	size_t hpage_len = read_pmd_pagesize();
+ 	if (!hpage_len)
+ 		ksft_exit_fail_msg("Reading PMD pagesize failed");
+ 
+diff --git a/tools/testing/selftests/mm/thp_settings.c b/tools/testing/selftests/mm/thp_settings.c
+index ad872af1c81a..bad60ac52874 100644
+--- a/tools/testing/selftests/mm/thp_settings.c
++++ b/tools/testing/selftests/mm/thp_settings.c
+@@ -381,3 +381,14 @@ unsigned long thp_shmem_supported_orders(void)
+ {
+ 	return __thp_supported_orders(true);
  }
- }
- kfree(qedf->fp_array);
++
++bool thp_is_enabled(void)
++{
++	if (access(THP_SYSFS, F_OK) != 0)
++		return false;
++
++	int mode = thp_read_string("enabled", thp_enabled_strings);
++
++	/* THP is considered enabled if it's either "always" or "madvise" */
++	return mode == 1 || mode == 3;
++}
+diff --git a/tools/testing/selftests/mm/thp_settings.h b/tools/testing/selftests/mm/thp_settings.h
+index fc131d23d593..6c07f70beee9 100644
+--- a/tools/testing/selftests/mm/thp_settings.h
++++ b/tools/testing/selftests/mm/thp_settings.h
+@@ -84,4 +84,6 @@ void thp_set_read_ahead_path(char *path);
+ unsigned long thp_supported_orders(void);
+ unsigned long thp_shmem_supported_orders(void);
+ 
++bool thp_is_enabled(void);
++
+ #endif /* __THP_SETTINGS_H__ */
 -- 
-2.43.5
+2.49.0
 
