@@ -1,172 +1,111 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2090127AC3D
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:16:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD4127AC48;
+	Tue, 24 Jun 2025 09:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750756590; cv=none; b=QKetLJY9/hl7OMkL8e44a1pjI+cWNXA2QOY5tGSILw6nFax+Tr7/pWQqLViYJX4xHvCGH4m/sPVdq/zTpTJCpMETO0keKM57yu923zk6MV7M7SdcVOyLarVXFjsLNce7F+RxC6TX+V5jT/AfO4DdhIvcaQwubRCK+Id/cCdNgZM=
+	t=1750756615; cv=none; b=HWLMQeWmYi5ph2TihBmkCcLHfHInlTCW9jhTIUI+yiVepGLBo4tH4gzrimNl7p9ShH/PLNrLM7QvsgZaOTVGJ0XigrR6TqtwAx5m3S153lCgC/f+BC8Ne5TtdXEe3xsfcMGUSqRTWXC+NKqe1jBuYwbUozys25KJwAVFCJZ+U3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750756590; c=relaxed/simple;
-	bh=wnAmQMdDCXoqlmWsgdw5/6clJy1HmczPLjoP8hR9Hf4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=A+bX/3uT6U4I/mKwZCeUUIs/jabOi4+yXcTXHBArxNTAgsNpLIwBja01M3E76BdjApvqvhUSviR9mHDZLZpn9mJ3jp462s+zZavodmQNSZkzEuqHxKc4PSKPYWUUthDew3eCaH2Z17KldKi78kywXE19uJVaqsrPMJNcqUkZ7ZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=csIE7w58; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750756615; c=relaxed/simple;
+	bh=1UkrTPngst7ysoOn0/y2t6Rdz+jkdOaSrNS6D53UmbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZQWK0eqE93b8adGTWPgH/BCpsdkuxTaj8Ebv+GzDhbqPhXc4jbrEl3zoXd0IkyYmOPUEN0wwFmZ2NCkjpzevcoCK8WlPZ4lgnAIjrv66yXVLZhLOV3LPWR9RMauZL1uL0JTCin8JgqQuxpqrArbSC3loLaWH/FhC9jHLkmvILhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c1eVO5Lj; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="csIE7w58"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750756588;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dRDMIDIXgLRACs+YNeHt5iGxZKlB+iTc2PU5xCf1s4A=;
-	b=csIE7w58V3HmmytDCHIlsBGsKk3RiTiRFKSv2e62LK29/yiizojUdXbEEkw1rEdQvU49oB
-	cWRw09Z+yqa/WX3eRLFwAe2xyGTx5t+qC4w0UAJkfXKvBrhMNAyaOLnYTNgW2wkWFRUWOS
-	/JH+XWoQ9fCJjc9I24cqgKgUxLTYvLg=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-231-K3Rms64wMO6CGw5KoDtXaw-1; Tue,
- 24 Jun 2025 05:16:22 -0400
-X-MC-Unique: K3Rms64wMO6CGw5KoDtXaw-1
-X-Mimecast-MFC-AGG-ID: K3Rms64wMO6CGw5KoDtXaw_1750756580
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 04FC71800368;
-	Tue, 24 Jun 2025 09:16:20 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.45.224.209])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 679E218002B8;
-	Tue, 24 Jun 2025 09:16:14 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Jani Nikula <jani.nikula@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-	Tvrtko Ursulin <tursulin@ursulin.net>,
-	=?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Christian Koenig <christian.koenig@amd.com>,
-	Huang Rui <ray.huang@amd.com>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	intel-gfx@lists.freedesktop.org,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v11 11/11] drm/i915/psr: Add intel_psr2_panic_force_full_update
-Date: Tue, 24 Jun 2025 11:01:20 +0200
-Message-ID: <20250624091501.257661-12-jfalempe@redhat.com>
-In-Reply-To: <20250624091501.257661-1-jfalempe@redhat.com>
-References: <20250624091501.257661-1-jfalempe@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c1eVO5Lj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750756614; x=1782292614;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1UkrTPngst7ysoOn0/y2t6Rdz+jkdOaSrNS6D53UmbE=;
+  b=c1eVO5LjSb/yussrT2SFDU3lpWW8ljgfAXYZzK6bR4dAwjVYQgMuyVT9
+   7d7OYoX79g12JzT5y9uBtZTGanaihLHGXMa8UFSjDOA5egWtaaMXwF8yM
+   MbOntRPxUxOZfeSWo82xqZo9CS7JqV4zrEW/IS+5cIUz46wHo5AwrHda6
+   unOt4nomXA3f+/3bHcDo+CAPemCNh2FZTTybc/DLLZgPoYr0RykyfQuDo
+   LVJhNcB/RAz8iKf5f7Z3iucutcPLoM1jyB+NQ437CoLbJY8eTGSDQI00m
+   EHXrTTwJ4BX7G+Af3e3s+Sz39OW/0qHN7Z/gK572P4n9s3P+CP5bOaks7
+   Q==;
+X-CSE-ConnectionGUID: R+ZLZZaUShiIYcnMPPV4fQ==
+X-CSE-MsgGUID: LQdtCnb0TzWeu7vLx8NE0A==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56663887"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="56663887"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 02:16:53 -0700
+X-CSE-ConnectionGUID: XEvBU3DYQlOCQIQGZievow==
+X-CSE-MsgGUID: V8wyaJoJTFyROARz7z3xFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="182889254"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by orviesa002.jf.intel.com with SMTP; 24 Jun 2025 02:16:50 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 24 Jun 2025 12:16:48 +0300
+Date: Tue, 24 Jun 2025 12:16:48 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 6/8] usb: typec: ucsi: yoga-c630: correct response for
+ GET_CURRENT_CAM
+Message-ID: <aFptAN0CsQycSc-2@kuha.fi.intel.com>
+References: <20250621-c630-ucsi-v1-0-a86de5e11361@oss.qualcomm.com>
+ <20250621-c630-ucsi-v1-6-a86de5e11361@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250621-c630-ucsi-v1-6-a86de5e11361@oss.qualcomm.com>
 
-When the panic handler is called, configure the psr to send the full
-framebuffer to the monitor, otherwise the panic screen is only
-partially visible.
+On Sat, Jun 21, 2025 at 09:13:01PM +0300, Dmitry Baryshkov wrote:
+> On Lenovo Yoga C630 the EC handles GET_CURRENT_CAM command, but it
+> returns 1 if DisplayPort is active and 0 otherwise. However in order to
+> let UCSI drivers handle AltModes correctly, it should return 0 / 0xff.
+> Correct returned value.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
----
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-v8:
- * Added in v8
+> ---
+>  drivers/usb/typec/ucsi/ucsi_yoga_c630.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+> index 506faf31b6e3a056e067f2bb69f5e9e5ea40e514..76afd128d42a2573ff55433f815c2773462a6426 100644
+> --- a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+> +++ b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+> @@ -111,7 +111,15 @@ static int yoga_c630_ucsi_sync_control(struct ucsi *ucsi,
+>  		return 0;
+>  	}
+>  
+> -	return ucsi_sync_control_common(ucsi, command, cci, data, size);
+> +	ret = ucsi_sync_control_common(ucsi, command, cci, data, size);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* UCSI_GET_CURRENT_CAM is off-by-one on all ports */
+> +	if (UCSI_COMMAND(command) == UCSI_GET_CURRENT_CAM && data)
+> +		((u8 *)data)[0]--;
+> +
+> +	return ret;
+>  }
+>  
+>  static bool yoga_c630_ucsi_update_altmodes(struct ucsi *ucsi,
+> 
+> -- 
+> 2.39.5
 
- drivers/gpu/drm/i915/display/intel_plane.c |  7 +++++++
- drivers/gpu/drm/i915/display/intel_psr.c   | 20 ++++++++++++++++++++
- drivers/gpu/drm/i915/display/intel_psr.h   |  2 ++
- 3 files changed, 29 insertions(+)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_plane.c b/drivers/gpu/drm/i915/display/intel_plane.c
-index f6b6704f77a1..cea27de26fca 100644
---- a/drivers/gpu/drm/i915/display/intel_plane.c
-+++ b/drivers/gpu/drm/i915/display/intel_plane.c
-@@ -58,6 +58,7 @@
- #include "intel_fb_pin.h"
- #include "intel_fbdev.h"
- #include "intel_plane.h"
-+#include "intel_psr.h"
- #include "skl_scaler.h"
- #include "skl_universal_plane.h"
- #include "skl_watermark.h"
-@@ -1320,6 +1321,7 @@ static unsigned int intel_4tile_get_offset(unsigned int width, unsigned int x, u
- static void intel_panic_flush(struct drm_plane *plane)
- {
- 	struct intel_plane_state *plane_state = to_intel_plane_state(plane->state);
-+	struct intel_crtc_state *crtc_state = to_intel_crtc_state(plane->state->crtc->state);
- 	struct intel_plane *iplane = to_intel_plane(plane);
- 	struct intel_display *display = to_intel_display(iplane);
- 	struct drm_framebuffer *fb = plane_state->hw.fb;
-@@ -1327,6 +1329,11 @@ static void intel_panic_flush(struct drm_plane *plane)
- 
- 	intel_bo_panic_finish(intel_fb);
- 
-+	if (crtc_state->enable_psr2_sel_fetch) {
-+		/* Force a full update for psr2 */
-+		intel_psr2_panic_force_full_update(display, crtc_state);
-+	}
-+
- 	/* Flush the cache and don't disable tiling if it's the fbdev framebuffer.*/
- 	if (intel_fb == intel_fbdev_framebuffer(display->fbdev.fbdev)) {
- 		struct iosys_map map;
-diff --git a/drivers/gpu/drm/i915/display/intel_psr.c b/drivers/gpu/drm/i915/display/intel_psr.c
-index 8bee2f592ae7..73bdc54d7831 100644
---- a/drivers/gpu/drm/i915/display/intel_psr.c
-+++ b/drivers/gpu/drm/i915/display/intel_psr.c
-@@ -2889,6 +2889,26 @@ int intel_psr2_sel_fetch_update(struct intel_atomic_state *state,
- 	return 0;
- }
- 
-+void intel_psr2_panic_force_full_update(struct intel_display *display,
-+					struct intel_crtc_state *crtc_state)
-+{
-+	struct intel_crtc *crtc = to_intel_crtc(crtc_state->uapi.crtc);
-+	enum transcoder cpu_transcoder = crtc_state->cpu_transcoder;
-+	u32 val = man_trk_ctl_enable_bit_get(display);
-+
-+	/* SF partial frame enable has to be set even on full update */
-+	val |= man_trk_ctl_partial_frame_bit_get(display);
-+	val |= man_trk_ctl_continuos_full_frame(display);
-+
-+	/* Directly write the register */
-+	intel_de_write_fw(display, PSR2_MAN_TRK_CTL(display, cpu_transcoder), val);
-+
-+	if (!crtc_state->enable_psr2_su_region_et)
-+		return;
-+
-+	intel_de_write_fw(display, PIPE_SRCSZ_ERLY_TPT(crtc->pipe), 0);
-+}
-+
- void intel_psr_pre_plane_update(struct intel_atomic_state *state,
- 				struct intel_crtc *crtc)
- {
-diff --git a/drivers/gpu/drm/i915/display/intel_psr.h b/drivers/gpu/drm/i915/display/intel_psr.h
-index 0cf53184f13f..9b061a22361f 100644
---- a/drivers/gpu/drm/i915/display/intel_psr.h
-+++ b/drivers/gpu/drm/i915/display/intel_psr.h
-@@ -57,6 +57,8 @@ int intel_psr2_sel_fetch_update(struct intel_atomic_state *state,
- 				struct intel_crtc *crtc);
- void intel_psr2_program_trans_man_trk_ctl(struct intel_dsb *dsb,
- 					  const struct intel_crtc_state *crtc_state);
-+void intel_psr2_panic_force_full_update(struct intel_display *display,
-+					struct intel_crtc_state *crtc_state);
- void intel_psr_pause(struct intel_dp *intel_dp);
- void intel_psr_resume(struct intel_dp *intel_dp);
- bool intel_psr_needs_vblank_notification(const struct intel_crtc_state *crtc_state);
 -- 
-2.49.0
-
+heikki
