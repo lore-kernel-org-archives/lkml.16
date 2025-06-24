@@ -1,61 +1,83 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3036F5680;
-	Tue, 24 Jun 2025 02:46:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 07F4B126C05;
+	Tue, 24 Jun 2025 02:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750733174; cv=none; b=kyjaAo1DgSKcLU7c6GgwpAuPBtiHRF0LjIo1LvezzUzztL8BPmr3ZFnesMmNiHXa5PVgqAB/zw3prEf/nNhzW8kFZ9PE7RJONrjJkhMxmhflcuxapZGB3RdGdu6KC8aCURRLLPeud/p212QLwLuEYCDcm87TAqa39J5e9fu9bto=
+	t=1750733201; cv=none; b=cvjdA5NIUloim45FPji44R1QvdQlMA9Z22ZuSFydNA6MzPiI0cqXeUbuuEQzN7BgyswhIXi5eHV3E63mNpDadj99vE/ju5hn6MKqwH6vGILgkGC6E7K0oOXE1XiIPVhuQp+HvCeEXSnaCFfQXEn8tjvIDALI+adCq2RFYjRtcqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750733174; c=relaxed/simple;
-	bh=EjHWaD9DhlxJg5t8c7HONRRxLIGyndgE8Wf80m4Kmis=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LtiakCl52Et4xMuROHO74eXetEltnemg0R0T8+Hm35BmZOaemGmgcZdrmEwVcr63zyslBSamMgK55vITzdcKTQWWHOd5r7yiBGpMFDsDE6jao5JKeXzrFQqaIWyLr03nd8FadVnjN0twL9h3uhtOGEwlQSGxcjDyN3qMUD5hUmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQzERfzF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQzERfzF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D782C4CEEA;
-	Tue, 24 Jun 2025 02:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750733173;
-	bh=EjHWaD9DhlxJg5t8c7HONRRxLIGyndgE8Wf80m4Kmis=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WQzERfzFbi9TYBsOzZGjcurc4NUiaqvGetTgbt7gXN8LrkpwG8h9Q9Wi+Lbv3FkkF
-	 NuFeZx7p1CRYe+IUVZ7y0siwQIFTyDYtmJlXZlJJKLLfT2WjQ3l0bJF6zDxCVNir09
-	 GtJPc7RnnNgcMe/UbGq81VTSr1kjxaPyZncK5a1Lh9aURMVA18tp/njwiBLtBa6UnS
-	 zLba/PrqBsk9CgULPZ19dXd0dGT0yX/NUHXiRcK8anglUenv/MN66ZJQ6ucW7asDx3
-	 IBjLiLjAVcKOo4AmG/nWUQOsd8Y3WG7gta6uQLt5Sb5kUBkYf3j5q0Z6Rgr9V/zBG8
-	 7lQgQ6nP+ccXA==
-Date: Mon, 23 Jun 2025 19:45:39 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, "Jason A . Donenfeld " <Jason@zx2c4.com>,
-	Ard Biesheuvel <ardb@kernel.org>, x86@kernel.org
-Subject: Re: [PATCH] lib/crypto: x86/sha512: Remove unnecessary checks for
- nblocks==0
-Message-ID: <20250624024539.GB7127@sol>
-References: <20250621021549.105357-1-ebiggers@kernel.org>
+	s=arc-20240116; t=1750733201; c=relaxed/simple;
+	bh=UirS17wDlN+uZS5OTCjvwZFQgaINVpMg2H+KdhloJ58=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type; b=BO7RYNHuML7C9s0L4pHeqipMnOWpb5y5FVBsCFPjGWlmZxM9qv07eJ0MFjT/xvPYoI8rK8MpkJnnhZBUgqUmtiA6243Zh8pIt5A9+eBLq3IuMzUJ8eMiexDpOYBMBoe8SYhi6jh/GCqRKx8mLL4+ghKEoze4nAogt7ikmK80hRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from [172.30.20.101] (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id F201F6018E3FA;
+	Tue, 24 Jun 2025 10:46:24 +0800 (CST)
+Message-ID: <cf505dc6-c123-44fd-9ee6-5aac4764f905@nfschina.com>
+Date: Tue, 24 Jun 2025 10:46:24 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250621021549.105357-1-ebiggers@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] fs/resctrl: using guard to simplify lock/unlock code
+Content-Language: en-US
+To: Dave Martin <Dave.Martin@arm.com>,
+ Dan Carpenter <dan.carpenter@linaro.org>
+Cc: tony.luck@intel.com, reinette.chatre@intel.com, james.morse@arm.com,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+In-Reply-To: <aFlvTt+GGSIqgOKH@e133380.arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 20, 2025 at 07:15:49PM -0700, Eric Biggers wrote:
-> Since sha512_blocks() is called only with nblocks >= 1, remove
-> unnecessary checks for nblocks == 0 from the x86 SHA-512 assembly code.
-> 
-> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
-> ---
->  lib/crypto/x86/sha512-avx-asm.S   | 6 +-----
->  lib/crypto/x86/sha512-avx2-asm.S  | 5 +----
->  lib/crypto/x86/sha512-ssse3-asm.S | 6 +-----
->  3 files changed, 3 insertions(+), 14 deletions(-)
+On 2025/6/23 23:14, Dave Martin wrote:
+> Hi,
+>
+> On Mon, Jun 23, 2025 at 07:25:41PM +0800, Su Hui wrote:
+>> Using guard() to replace *unlock* label. guard() is better than goto
+>> unlock patterns and is more concise. No functional changes.
+>>
+>> Signed-off-by: Su Hui <suhui@nfschina.com>
+> How were these cases chosen?
+I chosen the code  that match with "*unlock*:" label.
+>
+> I notice that this patch only handles some straightforward mutex_unlock()
+> cases.  There are other opportunities in some places -- particularly
+> alloc/free patterns.
+Yes, as Dan mentioned[1], there are too many these patterns and I'm not 
+sure how
+much value we can get to do this things. This patch is a try that using 
+guard() to
+remove some  lock/unlock pattern and simplify the lock code.
+> Overall, I'm not totally convinced that backporting the guard()
+> infrastructure into code that wasn't originally written to use it is
+> always worthwhile.
+>
+> If the code is simple, there is not much benefit.  Otherwise, there is
+> a significant chance of unintentionally changing the behaviour of the
+> code (though the exercise may be useful if it identifies actual bugs).
+>
+> Either way, such changes will get in the way of people who are rebasing
+> on top of this code.
+Got it, it's ok to omit this patch. It seems this patch has not enough 
+value.
+> FWIW, this patch looks OK though, and the diffstat looks reasonable.
+> Since this code was recently moved into fs/, diff context noise may be
+> less of a concern.
+Maybe only for some complex lock/unlock code, guard() can bring some value.
+Thanks for your advice!
 
-Applied to https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=libcrypto-next
+[1] 
+https://lore.kernel.org/all/d07fe2d9-3548-43fc-b430-2947eee3145b@suswa.mountain/
 
-- Eric
+Regards,
+Su Hui
+
+
