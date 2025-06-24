@@ -1,217 +1,99 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667A1230996;
-	Tue, 24 Jun 2025 13:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3233C230996;
+	Tue, 24 Jun 2025 13:09:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750770575; cv=none; b=ddDNSGmsKlRd6Ua/OwRsnJsDMi0WtxFbAecA3w7ezjUTgEPekIKoXmd2mT5beklgd7XJenDQ5HzmCJMz9Cq0kXgjKMw3+rZ5ObJemRKgrR1Lew28v+OSdDA4SkCOTF/Xq8Vs199TakqCnItBb5I2zO7XoBn/tGorPlkggY3CQgw=
+	t=1750770582; cv=none; b=GFsADp2HOkIKPTtsg57eA2eSomQyy0gszv2eoe8sZAW61FMHxSs7Xv3MWpVHF41ybTJtJluSZ2lrqS+UxfPrAbViuTgnLdF0ElKR5QyXHIirxwmLb1DWa7+kbnMtNnY8X4EAWrN6+jJu7VHh+UyeCDG5nZwhMw62qR9tnhzGlgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750770575; c=relaxed/simple;
-	bh=Tk8yEI3GZqNwKijiJ5yRZYVzXAGwr9hx9JMC1LACDXU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=IvBtcIU0zzdKBWkehZ0jYphjIeQCrK7jP3JQnumeicPCmlypT3pILyfpUEIGJJwrGCHYXsw6A6TE0I8gcK1jc3kQN/ehZQyXhMwL//pUYML9JY8A3jxqKzagqTQJsqU95ICFQ4GMS8HR5h2/vFbAbOq13QNMyXey9m16RsmB9Y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a5N19+7i; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750770582; c=relaxed/simple;
+	bh=dbXZ7nSfq6fTxFvYT5gu9ItR78nhxwfO9MMCL8FkCSY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sfpITfzBkz5iT0UJTY2IBfxW7c4Ffh252v/0AN7lfoovraaqSrmUFDjU8R0aVtfQ7cK+j91xzadmIJNpJEmrGoI9mAGWvFJEEyvSgJvpqRl3oQJsbSI+Shnkk3kX4svGL0KLyccKkHDYz3i3jypA72uELuS1gqasru7nYC1EGB4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AlTmNgrf; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a5N19+7i"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-453079c1e2eso5932595e9.3;
-        Tue, 24 Jun 2025 06:09:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750770572; x=1751375372; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AxLpALMzmoxpVe3FlifJUdEQ1NnJF0gckla7VIIchZs=;
-        b=a5N19+7ikml0rqizJP6zEqN7qcMoXxD0REyGVS5gBHnxO+GxD1CAJU9YxLE6IpMJsw
-         VVk1zSwlSJzuvySQjudWn38Wc+OHAGxlwxNuFkEKzLcq0lvaS0HS03cLLnWf24wqyV0J
-         tH5WE52ZZ2wM/S5G9foCGWyy8lF8V0MKwWHXLPJh3jctRu98pdJjbZ/eivHUpUSdj76l
-         M+6DXaIJONT6fsFESGEG2ytjFP5LhEFWo5iFXZWEmjhhIPyifc/vUTKJ0udR9VyKjHwd
-         V1f17bNu7HrNMWqx0U2waxzhBPQkdX2lpr8xvTYdxGjsGWvDc8VIGgFCVK4n6aXx7GAh
-         OE5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750770572; x=1751375372;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AxLpALMzmoxpVe3FlifJUdEQ1NnJF0gckla7VIIchZs=;
-        b=dCvdOJWOFzRVdX8I9zHj+MQeAZ3LJ9Xf7qp6sxbdgw5GLOf8EyvARe25FO2RcMUZgN
-         SBeHlm5J63A379lEq6EkGHMVr1M9oTlk3dIvubiUsq4FZh0FrrnphUnUHZcD20w/jp+c
-         ohPEAQG56EU03AUMtDepaP902GC09eNnLIhHOp/wB2Ak9UzLiRcrfsns1jyUwW+jhKRv
-         Oi73sjmxweWWKZb8TOciG1FczDrqWOsF1c+gr7YcU1xYrvqP8Pqdvy4or3zYCPiR0MYR
-         CYqqNatW16y90PWgeeomHNJpT/ltwIi9DPcFjlo01bpyRtZsSqb5QgiRMOk2Sp1jaYwR
-         GfiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7dhKLsthBS/KW2oTtiavtUeYRtJsug4BhlfXoOfH/ydFKbXXoAcZ0kP+E1kblmN1Al9AL3x1NNZUCUA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw203JdhQxKG7EqxQvEWnRGKzVLNSZjsojbdBSTkAvvdgJOpgxx
-	blvXx33YlyamiEiTLJKUEVMww4Oxoqwiy84Hf8ONg4ZdPYCWfst6JUrL
-X-Gm-Gg: ASbGnctyD1r3tph0lHCbFcHKXZu1ATmpUa9mzUTxjnYB95uFFGWlcCUWT8d4pbjjFZr
-	8PumIsEcx04pSYnE/QdCV9wTTmqkbqpKCCCRi0klRrBp7K3TwyNlvAC9lvBYliZZiPuMhXVIeB5
-	auQi/ExVTewhePEMng+y8QU9zleOXMNgSJYjsBHwfBKrnLWutShHBCygbi7R202fgkaY+rTx2GO
-	7dPhitFHkcYXlYXHEM/13/fBvohO/pzGt1RSjvHTvzMbbfyg+HW7AyVQLkRmsChrHoD5k0NQwTf
-	UBeTQZSteSIbILO74MlHBMRqxXfS13y49PBTO8H10jFeoaHz2rX5Yv6lQL1cILQEoNiqMmQt8dC
-	+llccGfwosM+8noyn8BGhdnQ=
-X-Google-Smtp-Source: AGHT+IHsf8cmrP64oRsfpdCr7BlNEA/LhYNMjqGEQaEwBjnK4q7OGcd9CA/AJSrbLZ3SkSDkBXxHvQ==
-X-Received: by 2002:a05:600c:a07:b0:43b:c0fa:f9c4 with SMTP id 5b1f17b1804b1-453659bee9bmr56152845e9.4.1750770571439;
-        Tue, 24 Jun 2025 06:09:31 -0700 (PDT)
-Received: from localhost.localdomain ([156.208.189.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535e97abf6sm174024495e9.6.2025.06.24.06.09.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 06:09:31 -0700 (PDT)
-From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-To: andy@kernel.org,
-	hdegoede@redhat.com,
-	mchehab@kernel.org,
-	sakari.ailus@linux.intel.com,
-	gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	shuah@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	dan.carpenter@linaro.org,
-	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Subject: [PATCH] staging: media: atomisp: remove debug sysfs attributes active_bo and free_bo
-Date: Tue, 24 Jun 2025 16:08:41 +0300
-Message-Id: <20250624130841.34693-1-abdelrahmanfekry375@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AlTmNgrf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750770581; x=1782306581;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dbXZ7nSfq6fTxFvYT5gu9ItR78nhxwfO9MMCL8FkCSY=;
+  b=AlTmNgrfR+vMS/eJuPy3YZpsoGeJsZZ0xeVUalQmBGg88KkCpLRIY+vM
+   I54wX6jEBAY+eMVyLRs03BXq2/UzpAM0kMlXkmMxy+zw7OQs7sS+ZHoXz
+   zstJd9/SpmCGRSkFsTp7zdGY7dANHWnZMPleczQZ+txjIKWmH6lrTGine
+   FAnOjovbXseZk5jQAR2A262wxNTlEP78YKzG+CedvSWmHjppmrpuDvgcW
+   dtShrjbydHiUCrhXw4ZXGP+UxyCwALNVYAxG3PANRI1Z/lp6Rav+strT5
+   1Gnnv/O1pkgmOAq3dylh+r5nW6pzLi/cbVODHjayLs7QctBR2dAe6DomO
+   A==;
+X-CSE-ConnectionGUID: zVFmA7nJT5evOruj/YeCFw==
+X-CSE-MsgGUID: Mo6FWSKlTYqrTVb/bTwB6Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52877055"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="52877055"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 06:09:40 -0700
+X-CSE-ConnectionGUID: zQ5SV2b1Q72K2t9mcS3AZw==
+X-CSE-MsgGUID: Gv+nfDZ9S7effF2Crpc1hw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="152413419"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 06:09:38 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uU3P4-00000009TUa-0b6I;
+	Tue, 24 Jun 2025 16:09:34 +0300
+Date: Tue, 24 Jun 2025 16:09:33 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [RFC 1/2] lib/vsprintf: Add support for pte_t
+Message-ID: <aFqjje91QnAgg2_h@smile.fi.intel.com>
+References: <20250618041235.1716143-1-anshuman.khandual@arm.com>
+ <20250618041235.1716143-2-anshuman.khandual@arm.com>
+ <aFQYVPmStsIIFcMW@pathway.suse.cz>
+ <68cdf649-a273-4d83-b862-6b675a793f18@arm.com>
+ <aFqCmgT1k8daroNZ@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFqCmgT1k8daroNZ@pathway.suse.cz>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-The sysfs attributes active_bo and free_bo expose internal buffer
-state used only for debugging purposes. These are not part of
-any standard kernel ABI and needs to be removed before this
-driver can be moved out of drivers/staging.
+On Tue, Jun 24, 2025 at 12:48:58PM +0200, Petr Mladek wrote:
+> On Fri 2025-06-20 13:32:31, Anshuman Khandual wrote:
+> > On 19/06/25 7:31 PM, Petr Mladek wrote:
 
-- Remove active_bo and free_bo attributes
-- Remove group registration calls form hmm_init() and hmm_cleanup()
+...
 
-Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
----
- drivers/staging/media/atomisp/pci/hmm/hmm.c | 93 +--------------------
- 1 file changed, 3 insertions(+), 90 deletions(-)
+> > Something like BUILD_BUG_ON() against pte_t as either u64 or u32 aka all
+> > the sizes the print format is going to support and it should pass on all
+> > platforms ?
+> 
+> Yes, I had BUILD_BUG_ON() in mind. It would be nice if you check at
+> least the most known architectures.
 
-diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-index 84102c3aaf97..3e5d522125f9 100644
---- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
-+++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-@@ -28,88 +28,6 @@ struct hmm_bo_device bo_device;
- static ia_css_ptr dummy_ptr = mmgr_EXCEPTION;
- static bool hmm_initialized;
- 
--/*
-- * p: private
-- * v: vmalloc
-- */
--static const char hmm_bo_type_string[] = "pv";
--
--static ssize_t bo_show(struct device *dev, struct device_attribute *attr,
--		       char *buf, struct list_head *bo_list, bool active)
--{
--	ssize_t ret = 0;
--	struct hmm_buffer_object *bo;
--	unsigned long flags;
--	int i;
--	long total[HMM_BO_LAST] = { 0 };
--	long count[HMM_BO_LAST] = { 0 };
--	int index1 = 0;
--	int index2 = 0;
--
--	ret = scnprintf(buf, PAGE_SIZE, "type pgnr\n");
--	if (ret <= 0)
--		return 0;
--
--	index1 += ret;
--
--	spin_lock_irqsave(&bo_device.list_lock, flags);
--	list_for_each_entry(bo, bo_list, list) {
--		if ((active && (bo->status & HMM_BO_ALLOCED)) ||
--		    (!active && !(bo->status & HMM_BO_ALLOCED))) {
--			ret = scnprintf(buf + index1, PAGE_SIZE - index1,
--					"%c %d\n",
--					hmm_bo_type_string[bo->type], bo->pgnr);
--
--			total[bo->type] += bo->pgnr;
--			count[bo->type]++;
--			if (ret > 0)
--				index1 += ret;
--		}
--	}
--	spin_unlock_irqrestore(&bo_device.list_lock, flags);
--
--	for (i = 0; i < HMM_BO_LAST; i++) {
--		if (count[i]) {
--			ret = scnprintf(buf + index1 + index2,
--					PAGE_SIZE - index1 - index2,
--					"%ld %c buffer objects: %ld KB\n",
--					count[i], hmm_bo_type_string[i],
--					total[i] * 4);
--			if (ret > 0)
--				index2 += ret;
--		}
--	}
--
--	/* Add trailing zero, not included by scnprintf */
--	return index1 + index2 + 1;
--}
--
--static ssize_t active_bo_show(struct device *dev, struct device_attribute *attr,
--			      char *buf)
--{
--	return bo_show(dev, attr, buf, &bo_device.entire_bo_list, true);
--}
--
--static ssize_t free_bo_show(struct device *dev, struct device_attribute *attr,
--			    char *buf)
--{
--	return bo_show(dev, attr, buf, &bo_device.entire_bo_list, false);
--}
--
--
--static DEVICE_ATTR_RO(active_bo);
--static DEVICE_ATTR_RO(free_bo);
--
--static struct attribute *sysfs_attrs_ctrl[] = {
--	&dev_attr_active_bo.attr,
--	&dev_attr_free_bo.attr,
--	NULL
--};
--
--static struct attribute_group atomisp_attribute_group[] = {
--	{.attrs = sysfs_attrs_ctrl },
--};
--
- int hmm_init(void)
- {
- 	int ret;
-@@ -130,13 +48,7 @@ int hmm_init(void)
- 	 */
- 	dummy_ptr = hmm_alloc(1);
- 
--	if (!ret) {
--		ret = sysfs_create_group(&atomisp_dev->kobj,
--					 atomisp_attribute_group);
--		if (ret)
--			dev_err(atomisp_dev,
--				"%s Failed to create sysfs\n", __func__);
--	}
-+	/* Removed sysfs group registration for active_bo and free_bo attributes */
- 
- 	return ret;
- }
-@@ -145,7 +57,8 @@ void hmm_cleanup(void)
- {
- 	if (dummy_ptr == mmgr_EXCEPTION)
- 		return;
--	sysfs_remove_group(&atomisp_dev->kobj, atomisp_attribute_group);
-+
-+	/* Removed sysfs group remove for active_bo and free_bo attributes */
- 
- 	/* free dummy memory first */
- 	hmm_free(dummy_ptr);
+FWIW, we use static_assert():s in the file, so may be better to use them.
+
 -- 
-2.25.1
+With Best Regards,
+Andy Shevchenko
+
 
