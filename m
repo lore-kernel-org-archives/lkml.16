@@ -1,75 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5932628003A;
-	Tue, 24 Jun 2025 17:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5C352E6D03
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 17:32:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750786345; cv=none; b=FnT4m+Jg+k9pXflFnD5qF1lZbEsjiXgaZOxn+ypFwtX3eZ90k5s4Smg9tOeAnZFT7HqCGVk5WECmdoSNlVz8XbwuF4sQ2FOIKCk5vQOhCHpio82sSXg7H7+l6z9fhwnmkTVKOqcxSMrgUs1zF7lEXcDigCh08LqcUOS9c2Rvynw=
+	t=1750786352; cv=none; b=QII1K1G+ICDVv7IG1oa6bFqW3iuNEAo40cTCGDAjDKxxiusFkXblXJKDy9VDe3svxDapONg8ngsGmhrkpuW51cNEuZoUYvR/3wzgpuSXcphnTCgEy9Sp//b25tFEpGFdDa5qRaJVSSGV2nJP5c0yBVcBOtvpg7hXS7Fhk+Z8B+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750786345; c=relaxed/simple;
-	bh=3Gfoz12u4n3dZw2dpTpLvMAIURpuyh3gULKIlYm11H8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=bfMIkprK75EWLR/EGpVsOpLzJ2im+0xZKuE0LGVSTxwG+20JXaTxJ0/hgkStr4jXga9iNjtQq6SqJWm2l2qwOQl0xyb46nhaDx3HMQShgSukhcQPYVrfq1JH1Re2UfnkmZZ9GLowShcVGwjfvL0j0GRrXSPamZjseCjn0y2qqzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5xThmII; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750786352; c=relaxed/simple;
+	bh=5zXOGQHtuzqMdDTdTVm99Sp0hUHS0qO9OFTXoiOPRec=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FUarCzNXDGib8P2QhyzjLPgY5QFtA5lDk71ozdVnMckM8vyGg5/Z6Vtr7VVoPVbFVQXZx/AGyltHsczHaV+TlwINwlmX/nbGRdklVITKiZyhaZqwiouL7BBtMraeCV1vCc45HGDiqMqJdabVDm+gTPafyYTI/kKkGRohUpobCXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fc/+yBf0; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5xThmII"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DFB3C4CEE3;
-	Tue, 24 Jun 2025 17:32:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750786345;
-	bh=3Gfoz12u4n3dZw2dpTpLvMAIURpuyh3gULKIlYm11H8=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=e5xThmIIQw1Fu5aejPOHOGUnCTT/bJGW5V4Daf1ZsVn6FTucYlmSkizm8sRTduwkC
-	 62a49+eVGqhR/dhZS96Slr+hp54b+yZk7MYfF1Fdd2Kskj59qU6EPfuhWFELdqBCD1
-	 epISL4WmR+8wPDnuM283/LT2+bon2z8FRCI4HVIeyfA5of4vvDJVtmBupgS2KRrt0J
-	 cScVTKYV1ZpTxyyXgww8hGMdoEE5ChQw5Ym7mA8JbrNOsrYZUzNK10MvWDY8iVzxuU
-	 Lhu0U8Hj2g1Mfyu4qT6H+a8TnhuYB5jLBnlEGrgyYDCUeLdAL2uiF+z5lcOowdmnp/
-	 aPBApP5QNTP9g==
-Message-ID: <70e3a367-8d9d-477b-9858-9f2a7b97bbca@kernel.org>
-Date: Tue, 24 Jun 2025 12:32:23 -0500
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fc/+yBf0"
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-6118c1775dbso214466eaf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:32:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750786349; x=1751391149; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=dSGDqT2il9ocDCmHC7EaO2CWRkrvX38ACbyIKYy82e8=;
+        b=Fc/+yBf0pZDPwPb3AsSwFvTvoaL+xqbQA1ZWO1vc3/zveT5gCXivoVLV0r368wNULp
+         Q/7E2yKz9z/c4OmA0Qv5sROfBjz8MfaiIjYOpDqpjFfzRCOkkOzXlwA7PKJ8zndxSYWi
+         lubQ6IC6fcWPuFz/pyrIsVFSvKMvdAjYTbTjd353yE3o6Uid4vEDzfg+tSb6Hl50p5Hp
+         GRhjCZuuHpOt2aziOLU7YfS8nY/KElvo9JzYKaWtTTXo3G+1IrDrSUnZelQ62v4kN0vE
+         pBiCUvJwTG7K/ySVv7+9kfsg1NiOqNt3v/VjqG4Hw7QRDS1gAEnNJxnSc/ZRn20t00nq
+         z39Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750786349; x=1751391149;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dSGDqT2il9ocDCmHC7EaO2CWRkrvX38ACbyIKYy82e8=;
+        b=j91+U9zROhaSi72JNJmLdvsX5AeJdvZ+fCFFjqqO6//QF1elktMPe08MddaUsL4pvS
+         ZqPATV4l4n9I5sxhuwKtUKkzCTaBhsIcH2oF9J0GLPt5E1yyet2TOhLki29oNS/1KnJw
+         L7GMo08A9s9NcAhrmPQQQQ8gcd2zxfDrjlhMNWuMpQh2ri6fG1X+IhYeklbqg6PsJzXk
+         GZivautNQAwEDhtOLgBBQMFgBcnj53UCSWwai7obHBFYMovC85nbVKe7HGq17Q8n6TBq
+         0zJFK6fuDyYWMgXfpwQFS04Qu5Inozt3f3fHqh6HJOD87+1x2AO8RzL1sl6y0oVq+Szd
+         HE6g==
+X-Forwarded-Encrypted: i=1; AJvYcCVu08P8kIFQYZkB9IS+8m6v29Ex2K4uHjfplDrq5eN5GpXjG3dFsZmBfJayhNcKa8yx5j6WMBqvPUFOlOs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YweA9USQk7Pq5JrabU8XouApDo5+qi2ddnzmX716ru1zaCIc3YD
+	Q6BkaOe36ovVTLLWip5PK/k4NZwc2lE7uy0TG4CsT+AuXF3LmRlpL24I8p7l9gWCaMo=
+X-Gm-Gg: ASbGnctBIbltecAUeY3cTUjCApkZaxWbGDNbyS81Kw3nFCpGFwhZDq22IApwBpaazJS
+	qusC/tkq7s80/uaGe+ssohKtj3pLFDpTTGvo3Ja2PZOfOwPQmtDFMA9xLYKfpKCm7D09HCL7eQ7
+	eeh2/mZVQ9MxDXlehg9p7yedtnJS8Kw9kB7gOh64ihTFjAe7QDVTNIkqm+5XXaHUEwQwGQ34WkE
+	rCN86NbxG3zdw++HxTqB5tF6Wd7MAos1o5yES32iSQT426bWCHM/W3LRA39siL4qF8CS+RDKw3q
+	op++BEMde0oOBHYLsvbO0IUhqEepiB7/jfvDhwugx3LFHRtzgy8eRI9ehS5vTMtyGwW0c5NrFI5
+	H2yBO
+X-Google-Smtp-Source: AGHT+IHP57I2IEpZSZTYdkWPLpjlVv9dwCTYMhHj4ANtmM8o/tFTjl/Qtb1NAxmUKgDIueYRW8AITA==
+X-Received: by 2002:a05:6820:1b05:b0:611:5853:3ecb with SMTP id 006d021491bc7-6115b734ecfmr11470941eaf.0.1750786348746;
+        Tue, 24 Jun 2025 10:32:28 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:22c9:dcd3:f442:dd1d])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6115b7f76e9sm1317795eaf.39.2025.06.24.10.32.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 10:32:28 -0700 (PDT)
+Date: Tue, 24 Jun 2025 20:32:26 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org,
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v2] staging: media: atomisp: remove debug sysfs
+ attributes active_bo and free_bo
+Message-ID: <5ce9dac3-0b7a-45d1-8313-2f65165b50e7@suswa.mountain>
+References: <20250624144943.39297-1-abdelrahmanfekry375@gmail.com>
+ <cef03d37-715c-47a8-81d4-0872d505c39b@suswa.mountain>
+ <CAGn2d8ML8eTcN2G18B7FYkapROnOeAKJir5fJvOXDdXTLY43aQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/4] Add 4-bit SPI bus width on target devices
-To: yankei.fong@altera.com, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- Matthew Gerlach <matthew.gerlach@altera.com>
-References: <cover.1750747163.git.yan.kei.fong@altera.com>
-Content-Language: en-US
-From: Dinh Nguyen <dinguyen@kernel.org>
-In-Reply-To: <cover.1750747163.git.yan.kei.fong@altera.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGn2d8ML8eTcN2G18B7FYkapROnOeAKJir5fJvOXDdXTLY43aQ@mail.gmail.com>
 
-On 6/24/25 01:52, yankei.fong@altera.com wrote:
-> From: "Fong, Yan Kei" <yan.kei.fong@altera.com>
-> 
-> Add SPI bus width properties to correctly describe the hardware on the following devices:
->   - Stratix10
->   - Agilex
->   - Agilex5
->   - N5X
-> 
-> Fong, Yan Kei (4):
->    arm64: dts: socfpga: n5x: Add 4-bit SPI bus width
->    arm64: dts: socfpga: stratix10: Add 4-bit SPI bus width
->    arm64: dts: socfpga: agilex: Add 4-bit SPI bus width
->    arm64: dts: socfpga: agilex5: Add 4-bit SPI bus width
-> 
->   arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dts | 2 ++
->   arch/arm64/boot/dts/intel/socfpga_agilex5_socdk.dts    | 2 ++
->   arch/arm64/boot/dts/intel/socfpga_agilex_socdk.dts     | 2 ++
->   arch/arm64/boot/dts/intel/socfpga_n5x_socdk.dts        | 2 ++
->   4 files changed, 8 insertions(+)
+On Tue, Jun 24, 2025 at 07:51:10PM +0300, Abdelrahman Fekry wrote:
+> On Tue, Jun 24, 2025 at 7:31 PM Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> >
+> > On Tue, Jun 24, 2025 at 05:49:43PM +0300, Abdelrahman Fekry wrote:
+> > >  int hmm_init(void)
+> > >  {
+> > >       int ret;
+> > > @@ -130,14 +48,6 @@ int hmm_init(void)
+> > >        */
+> > >       dummy_ptr = hmm_alloc(1);
+> > >
+> > > -     if (!ret) {
+> > > -             ret = sysfs_create_group(&atomisp_dev->kobj,
+> > > -                                      atomisp_attribute_group);
+> > > -             if (ret)
+> > > -                     dev_err(atomisp_dev,
+> > > -                             "%s Failed to create sysfs\n", __func__);
+> > > -     }
+> > > -
+> > >       return ret;
+> >
+> >
+> > It's really unclear how this "return ret;" is supposed to work.  Was
+> > that part of the sysfs_create_group()?
+> >
+> yes , but still it can be set by hmm_bo_device_init so even after removing
+> sysfs_create_group , ret value depends on another function.
 > 
 
-This is for the QSPI driver right? I don't even see the driver using 
-this property. So how would this help?
+You're in too big of a hurry.  Wait for a day between resending patches.
+I have looked at this some more and it turns out that nothing checks the
+error code so the "return ret;" doesn't work.  What do you think we
+should do?
+
+regards,
+dan carpenter
+
