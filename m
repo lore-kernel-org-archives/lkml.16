@@ -1,105 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AFBB231A55
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:42:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4FF20EB;
+	Tue, 24 Jun 2025 06:43:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750747372; cv=none; b=olVdToilUs6xxtzFbCN4VDLIduC6ghDe1jDiTOR5d4rT9EHoq5ebVZkqQoOwfaEWuHRsrI60scmN5G2LBNNIqw1KehzpRUTIx7aOCZv4ZS54X8gO0Vj0W2Dz0yaG3s4/5vox8FArsyjZtkNko3k1DwRxuAAt7CH2IjocxNO3fJY=
+	t=1750747429; cv=none; b=ZOTpNDNw5ABVdkhrFlqeP7TZL8c9pC9U1DZ+N+a2GD9KdEqMqG11Iux/MkmAtaz8fJp7/qXu46ATzMifnqSidd+XrIVYQ+Xb/dnOSagHmpsd8/Yo5dly+79VcHXNNnBV3Ejl69jJtcMJRhFyjYQa8+s8HUA/DtTinjjB4wTgIXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750747372; c=relaxed/simple;
-	bh=onLRsAPAlqNyYp1MJ0vIrTl+4YIOU0c9R/hbGwqKhJs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ycx6S88skIfsdovxrq9TOQoxhWgGYinKqU3uA+dC40VQa9PrT562g+nfbXmWCv6ClXhCr83qkVlRaMd86L/Hz0MyzBlY/9wZOInuAxH4YjkQQhA8uYuEoLWFODiV0JYlNRxs5aUc+xoPx/hOphv1ez72CkA33jkVhvNzzJgB4dc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bnVdFEuJ; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750747429; c=relaxed/simple;
+	bh=L4GYJ7WnogCyoWwbzC3vlkUvWMe6NIeODnHCROyYz7w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o3VFs1Pn9/kpO4raSy6FwQu+SJJ3/SrxHp5UHVjyMGctbARtIYZHw8sTy91ob/9t9PoTWk8ZAicyBSJU+K70yKNVRV+3BSuRVSxVrvvLHB9NdThSLr6+dmVD38cx3sOt3/jW2SirSj2IVf2OwuQ/T9A6/M52lF2hnsfyGzOpZuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hj//vGz2; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bnVdFEuJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750747371; x=1782283371;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=onLRsAPAlqNyYp1MJ0vIrTl+4YIOU0c9R/hbGwqKhJs=;
-  b=bnVdFEuJXaFTWy+axihK6klOLelJGeRzFhZMDAmUvVK5a4r/5FoSuUP6
-   qydk0goMTwNLwPZYIKSYUzlgw7vA4n+Kdcjy84tr18OgkE300hqGEjyEf
-   BoluzsjafiRjyDSUoXfn09gFY/OjxOYHSPFNlBODkbWhr7lIrUn3wUwMj
-   XaY6OYzvqCtuCtToKar3xP7u1SU9+86DxU2RnO8zwbF+ooWgepqzU1V19
-   /ZBpfdLkDjOU+fDYlu7vMvUV4bPzK4hIfi5bvytWicv8BUJqumLrnHkl0
-   9wxKKqCbSvR1KK3ZwQYbPI42DtQtW1AVJHzx8dtUZODqa2tmqW5EKnUgM
-   Q==;
-X-CSE-ConnectionGUID: uHGhEhLQQE+QXqfRr7Merw==
-X-CSE-MsgGUID: qA6EwGlSS1GxG8fX/hU38g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56778564"
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="56778564"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 23:42:51 -0700
-X-CSE-ConnectionGUID: zIIJLWnkSvePKeiZ+NRlUw==
-X-CSE-MsgGUID: LTi3RoF9Rq+ChNs3lCwJLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="151583142"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa009.jf.intel.com with ESMTP; 23 Jun 2025 23:42:47 -0700
-Date: Tue, 24 Jun 2025 14:35:14 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Baolu Lu <baolu.lu@linux.intel.com>
-Cc: jgg@nvidia.com, jgg@ziepe.ca, kevin.tian@intel.com, will@kernel.org,
-	aneesh.kumar@kernel.org, iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org, joro@8bytes.org, robin.murphy@arm.com,
-	shuah@kernel.org, nicolinc@nvidia.com, aik@amd.com,
-	dan.j.williams@intel.com, yilun.xu@intel.com
-Subject: Re: [PATCH v2 2/4] iommufd/viommu: Fix the uninitialized
- iommufd_vdevice::ictx
-Message-ID: <aFpHInZwCC2N34Fh@yilunxu-OptiPlex-7050>
-References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
- <20250623094946.1714996-3-yilun.xu@linux.intel.com>
- <ff1a3fc1-3671-4cff-917f-5ea44bd2451e@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hj//vGz2"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a524caf77eso746973f8f.3;
+        Mon, 23 Jun 2025 23:43:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750747426; x=1751352226; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RnGWam5zbxGBmywUHWKfJKZG4T2bJIUw+axMFwWdT4k=;
+        b=hj//vGz2FWszeYomeCGf15FazUYdx6y+3TDnkudZK75nGHNVykhB/Qe0zaSvhn1oWh
+         yHLQrtPMu8wrQM6Hzk+AwXslmzzJrEOZ6dI+TSiCZgGNY25CVXin7az+sIZ5PrYcxwoO
+         iTY736ocruMhWGx5O6XjksdaFguRbxjXK4LBDoTjlGgDqvE/1G3DS+dxcez56vrDVUdd
+         ADH3ynn5F/wbr1eMDJBGcrHAWfIvml3KO9u1MbhDUKxlSny2lDL1Z/H2dFIBoou95E0Z
+         /UJq4ACrqiHRf6x+bSiE94GmoJM3oapQqb2rDf+MsAvcXVrxG4Nr0wbIWuRUQl+1j+v+
+         +V4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750747426; x=1751352226;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RnGWam5zbxGBmywUHWKfJKZG4T2bJIUw+axMFwWdT4k=;
+        b=ZKQbCbqy8gRn8XzJaI/v+IfLu0cEBL1o8E7zn7b0XXu9BMOD1kPK6Xe+wOkZzPKUPB
+         LP36bRBmfUaY1coeBQwxyLaPj3d+rOF8qmOE4/03Mb4ihg7dsJjnDFrRb1M6rX5fQFIF
+         iVq2fVJaV6W1Rf3c8w2pRk+Ar+uKnep/hqjwG9L10fjPoeE3PnMc0jFqgtlXPwf9D4xv
+         ot39DkYSUyXoUi2uGkgoY8zy26R9MudJb8LGhLytr9anMp5cOaCpM8FtlGMBrkL38afi
+         Oermgj61B6B1BqmRTAx06PnRN/OHmf/InxiyZ9Wrv/NtDoAjo8Pxx06UqSBl+ude9SSd
+         sm9w==
+X-Forwarded-Encrypted: i=1; AJvYcCVzFCs1yID6DJ3yvEA4nGVERUlfM7USioFaZ+GgyMFbDXYF8+/Q6LWLry1qn2geBvtlVYP3wyF3@vger.kernel.org, AJvYcCWFpLNJUFCOVvTKcA4NzDdh9TGW94Av29KJdv5DxCTf2QavggWW+rjb/sRvXgQGp9d6ogXiY3ujnvsWG00=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGyB/+tYWvZa55L4X5MiUBKW3aJeLZjpRMAuri7KGtYmHTHHE4
+	QyjITfsA7ectFOk5vGND7dilIzw1u/7p6JIqHoz5Hc3AaC6HeEsqD0D/
+X-Gm-Gg: ASbGnct8JwMQoXjgdvv8bTPuZLlG1y5ZscfYee0lnpaRA42JsoMebSu4r7VtZhkm2MT
+	ndRM3MnuEDPJ5qF6w1MgKVVHDtZhfpYc2pxqyZSqK4BNadUhMcR0o4YU/sUPtT5VPM63//e7tq5
+	up2xkSGmsOHS399CNwZPOPq0xD9LsMc5pjg5a2MxdxJrzUL/8rg68xmQBNLOoaCr4Q+JUXQwT4i
+	NjXzACWNpLHD1BA4rIvjQZVJ6+QUMjlLLAOSbXOfb64Her6SlPGQR+wFP9JYsuh6VJYbJ1xjulH
+	4fDKT5O5sYp1BbUixt7J6W8S7vdHCfwOewffIxdEY2HINC7AYcSfYwgC69qjuYajs7Ac16ihAne
+	k5OT4wqLetrpeQY4=
+X-Google-Smtp-Source: AGHT+IEQeaNWL+nIfWE8o877o+qJuDgoiHjgEWsSgWkZ36OOPK0iUTjGa9hQ8DIx/XGHHPG6/YNJww==
+X-Received: by 2002:a05:6000:40c9:b0:3a4:eeeb:7e70 with SMTP id ffacd0b85a97d-3a6d12dfaf2mr4410338f8f.4.1750747425810;
+        Mon, 23 Jun 2025 23:43:45 -0700 (PDT)
+Received: from thomas-precision3591.imag.fr ([2001:660:5301:24:8406:1ce9:dc85:fb19])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3a6e8114795sm1110767f8f.92.2025.06.23.23.43.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 23:43:45 -0700 (PDT)
+From: Thomas Fourier <fourier.thomas@gmail.com>
+To: 
+Cc: Thomas Fourier <fourier.thomas@gmail.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Chas Williams <3chas3@gmail.com>,
+	linux-atm-general@lists.sourceforge.net (moderated list:ATM),
+	netdev@vger.kernel.org (open list:ATM),
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2] atm: idt77252: Add missing `dma_map_error()`
+Date: Tue, 24 Jun 2025 08:41:47 +0200
+Message-ID: <20250624064148.12815-3-fourier.thomas@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ff1a3fc1-3671-4cff-917f-5ea44bd2451e@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 24, 2025 at 11:24:02AM +0800, Baolu Lu wrote:
-> On 6/23/25 17:49, Xu Yilun wrote:
-> > Fix the uninitialized iommufd_vdevice::ictx. No code was using this
-> > field before, but later vdevice will use it to sync up with idevice on
-> > destroy paths.
-> > 
-> > Fixes: 0ce5c2477af2 ("iommufd/viommu: Add IOMMUFD_OBJ_VDEVICE and IOMMU_VDEVICE_ALLOC ioctl")
-> > Cc:<stable@vger.kernel.org>
-> > Signed-off-by: Xu Yilun<yilun.xu@linux.intel.com>
-> > ---
-> >   drivers/iommu/iommufd/viommu.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/iommu/iommufd/viommu.c b/drivers/iommu/iommufd/viommu.c
-> > index 01df2b985f02..4577b88c8560 100644
-> > --- a/drivers/iommu/iommufd/viommu.c
-> > +++ b/drivers/iommu/iommufd/viommu.c
-> > @@ -130,6 +130,7 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
-> >   		goto out_put_idev;
-> >   	}
-> > +	vdev->ictx = ucmd->ictx;
-> 
-> iommufd_vdevice::ictx has been removed by this commit:
-> 
-> 6e235a772199 ("iommufd: Drop unused ictx in struct iommufd_vdevice")
-> 
-> in linux-next.
+The DMA map functions can fail and should be tested for errors.
 
-Ah, I see the thread. This patch should be dropped.
+Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+---
+ drivers/atm/idt77252.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Thanks,
-Yilun
+diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
+index 1206ab764ba9..f2e91b7d79f0 100644
+--- a/drivers/atm/idt77252.c
++++ b/drivers/atm/idt77252.c
+@@ -852,6 +852,8 @@ queue_skb(struct idt77252_dev *card, struct vc_map *vc,
+ 
+ 	IDT77252_PRV_PADDR(skb) = dma_map_single(&card->pcidev->dev, skb->data,
+ 						 skb->len, DMA_TO_DEVICE);
++	if (dma_mapping_error(&card->pcidev->dev, IDT77252_PRV_PADDR(skb)))
++		return -ENOMEM;
+ 
+ 	error = -EINVAL;
+ 
+@@ -1857,6 +1859,8 @@ add_rx_skb(struct idt77252_dev *card, int queue,
+ 		paddr = dma_map_single(&card->pcidev->dev, skb->data,
+ 				       skb_end_pointer(skb) - skb->data,
+ 				       DMA_FROM_DEVICE);
++		if (dma_mapping_error(&card->pcidev->dev, paddr))
++			goto outpoolrm;
+ 		IDT77252_PRV_PADDR(skb) = paddr;
+ 
+ 		if (push_rx_skb(card, skb, queue)) {
+@@ -1871,6 +1875,7 @@ add_rx_skb(struct idt77252_dev *card, int queue,
+ 	dma_unmap_single(&card->pcidev->dev, IDT77252_PRV_PADDR(skb),
+ 			 skb_end_pointer(skb) - skb->data, DMA_FROM_DEVICE);
+ 
++outpoolrm:
+ 	handle = IDT77252_PRV_POOL(skb);
+ 	card->sbpool[POOL_QUEUE(handle)].skb[POOL_INDEX(handle)] = NULL;
+ 
+-- 
+2.43.0
 
-> 
-> Thanks,
-> baolu
