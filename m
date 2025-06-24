@@ -1,99 +1,301 @@
-Received: from forward501d.mail.yandex.net (forward501d.mail.yandex.net [178.154.239.209])
+Received: from mailrelay5-3.pub.mailoutpod3-cph3.one.com (mailrelay5-3.pub.mailoutpod3-cph3.one.com [46.30.212.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF241230996;
-	Tue, 24 Jun 2025 12:39:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.209
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C94627A92D
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750768754; cv=none; b=mV1Kpri6Y7/uQMDEFWTBwHlKDzL+DobN+0FLOwpgwC906Nh2Q5SBk3X58ixa172lrFxB21vZ8bS9wAM/in8cgw4/2k0FiKTLn7dV1osMqWQ6jgZ5WOW7dRhMnAWcBYPVHGPySVGZi5KJo5jIuqVPk81XI88+6JFHNnTtBrFJBwI=
+	t=1750768772; cv=none; b=tsupXuyev1Sy5z+Vtbw4BufUmJCFRiiEuqKhRtcw6ZO3pYIb1xOxejceZLGnNduSAdIsGBZC+1XofePb9c4W6Df2D9N9hzUh5Qcw3ZRyyzZr79rVCLTeLQE0t+0VZw+mY7O/t1lMnZ0kEbT383cBC3FoepO/wA701Moc/GoMRTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750768754; c=relaxed/simple;
-	bh=IiZvAA3FleTUiDWA3EVVuuyPPqVxWqgsxdcovX1m2xg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kSVg86QDW3+lZQ5KmKi9nD+xbsRFys3w05PGKtJ7vbF/F1bSQUR9nJQk8YeNl2iNtadk1XCF5a7FTbiMb6G4ZCyzg17SVjhaqdc6ddI24938iriHjKX3FcNzTmUrkISh2z4nk0XWWXAF2jLTlA3OS+8wvNEUHTC3AalTlVWZpbY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=PKF81/DS; arc=none smtp.client-ip=178.154.239.209
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
+	s=arc-20240116; t=1750768772; c=relaxed/simple;
+	bh=SKXNK2Zafi76+EibEJpmGhgohZuq3bLnhcDIWse9mlI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=r4X+dgXN1utmqrleqOgqKRu9BmUzqloQoMI9MTpxlEqgsWCMn9LLjsmeSesCyXmfP95D4HPQSijnNxt0UTubihnaeCQBk1GpeZ54/P2dCfWManYNoi8e90bxs0qRBBir4pqXabQQhowD+xb8M+72hp/asZaxutwLv//T9o1dv+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=a3Nn7EtL; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=WLIrf7Nb; arc=none smtp.client-ip=46.30.212.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="PKF81/DS"
-Received: from mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:832b:0:640:fda5:0])
-	by forward501d.mail.yandex.net (Yandex) with ESMTPS id 0F5F661A1F;
-	Tue, 24 Jun 2025 15:31:10 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 4VSEOs8LaeA0-juFvfTtH;
-	Tue, 24 Jun 2025 15:31:08 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1750768269;
-	bh=KUzUZlPWU3SLSvntobllY0hRQ6erceKcqtakC8llS30=;
-	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
-	b=PKF81/DS5QIdXChUVJRELAbFDbbjMSk6Zhd0TJmV3md1Art5XzZuq8Ua3WNksVxHD
-	 /J327gmOHntnzMqVRBcj5qtBasPiJajsEXHfyOAp8XHJykcWm3KaT5fa3pl6MpjB7G
-	 qu4FRG7y6EK6KCXMxCq/0f4G4TIjcObdueQ6IBgI=
-Authentication-Results: mail-nwsmtp-smtp-production-main-81.klg.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-Date: Tue, 24 Jun 2025 15:31:02 +0300
-From: Onur <work@onurozkan.dev>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Boqun Feng" <boqun.feng@gmail.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <ojeda@kernel.org>,
- <alex.gaynor@gmail.com>, <gary@garyguo.net>, <a.hindborg@kernel.org>,
- <aliceryhl@google.com>, <tmgross@umich.edu>, <dakr@kernel.org>,
- <peterz@infradead.org>, <mingo@redhat.com>, <will@kernel.org>,
- <longman@redhat.com>, <felipe_life@live.com>, <daniel@sedlak.dev>,
- <bjorn3_gh@protonmail.com>, <simona@ffwll.ch>, <airlied@gmail.com>,
- <dri-devel@lists.freedesktop.org>, <lyude@redhat.com>
-Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
-Message-ID: <20250624153102.3961f377@nimda.home>
-In-Reply-To: <DAUM8B2ZUMFQ.25R95W7IDAEHM@kernel.org>
-References: <20250621184454.8354-1-work@onurozkan.dev>
-	<20250621184454.8354-3-work@onurozkan.dev>
-	<DASY7BECFRCT.332X5ZHZMV2W@kernel.org>
-	<aFlQ7K_mYYbrG8Cl@Mac.home>
-	<DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org>
-	<aFlpFQ4ivKw81d-y@Mac.home>
-	<DAU0ELV91E2Q.35FZOII18W44J@kernel.org>
-	<aFmKsE_nJkaVMv0T@tardis.local>
-	<DAUARTYJ118U.YW38OP8TRVO3@kernel.org>
-	<20250624083437.1e50d54c@nimda.home>
-	<DAUM8B2ZUMFQ.25R95W7IDAEHM@kernel.org>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
+	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="a3Nn7EtL";
+	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="WLIrf7Nb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1750768769; x=1751373569;
+	d=konsulko.se; s=rsa1;
+	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
+	 subject:cc:to:from:from;
+	bh=fSXvnx+fgvE5GXly6XPTqjm0PPBXVKwM6V3gQyXQXoE=;
+	b=a3Nn7EtLsaOwYdMf6KyrQwD47cf6wvzuX1rboSdseCHX21hDhh5kWLB6FG+6/cJvgbczTwXwRatcu
+	 AqFRTKSsqdLOlGMX0BEtLNuj41NdIr4ECp+G0oRz58t4DTnT4Mz1lCWpSqcQwR87KobvcVd/+l87Nb
+	 uqoq9TlVWZ32ZHHtfqZy0oZX0h8CdGRjxgoUcDodykxBsNQr6CAP/VWJylirjZhVSkrS26MluP67AX
+	 A2hVluvWoGjl2+4ODBwVnxBEs2VYFeFLePFGFN/BVAUSquDWQrqLy5mLe4oKdLf+bU5/28hDkm34UA
+	 Sb0alqOsre9rQkFyQ+s1jqhoWX6LwnA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1750768769; x=1751373569;
+	d=konsulko.se; s=ed1;
+	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
+	 subject:cc:to:from:from;
+	bh=fSXvnx+fgvE5GXly6XPTqjm0PPBXVKwM6V3gQyXQXoE=;
+	b=WLIrf7NbKfORLJhUNOxmbzsngSnWr4yfo8P110ZeLsm0QbKm7vIlCMNPe/eFPgxGRwuSEV2s7Vb23
+	 qRrfrv1Cw==
+X-HalOne-ID: 4374bbea-50f8-11f0-afc3-d7c209f8bd06
+Received: from slottsdator.home (host-90-238-19-233.mobileonline.telia.com [90.238.19.233])
+	by mailrelay5.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
+	id 4374bbea-50f8-11f0-afc3-d7c209f8bd06;
+	Tue, 24 Jun 2025 12:39:28 +0000 (UTC)
+From: Vitaly Wool <vitaly.wool@konsulko.se>
+To: linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	rust-for-linux@vger.kernel.org,
+	Vitaly Wool <vitaly.wool@konsulko.se>
+Subject: [PATCH v2 2/2] rust: support large align and NUMA ids in allocs
+Date: Tue, 24 Jun 2025 14:39:22 +0200
+Message-Id: <20250624123922.3258215-1-vitaly.wool@konsulko.se>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250624123743.3258032-1-vitaly.wool@konsulko.se>
+References: <20250624123743.3258032-1-vitaly.wool@konsulko.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Tue, 24 Jun 2025 10:20:48 +0200
-"Benno Lossin" <lossin@kernel.org> wrote:
+Add support for large (> PAGE_SIZE) alignments in Rust allocators
+(Kmalloc support for large alignments is limited to the requested
+size, which is a reasonable limitation anyway).
+Besides, add support for NUMA id to Vmalloc.
 
-> On Tue Jun 24, 2025 at 7:34 AM CEST, Onur wrote:
-> > Should we handle this in the initial implementation or leave it for
-> > follow-up patches after the core abstraction of ww_mutex has landed?
-> 
-> Since you're writing these abstractions specifically for usage in
-> drm, I think we should look at the intended use-cases there and then
-> decide on an API.
-> 
-> So maybe Lyude or Dave can chime in :)
-> 
-> If you (or someone else) have another user for this API that needs it
-> ASAP, then we can think about merging this and improve it later. But
-> if we don't have a user, then we shouldn't merge it anyways.
-
-I don't think this is urgent, but it might be better to land the basic
-structure first and improve it gradually I think? I would be happy to
-continue working for the improvements as I don't plan to leave it as
-just the initial version.
-
-I worked on the v5 review notes, but if we are going to consider
-designing a different API, then it doesn't make much sense to send a v6
-patch before finishing the design, which requires additional people in
-the topic. That would also mean some of the ongoing review discussion
-would be wasted.
-
+Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
 ---
+ rust/helpers/slab.c            |  8 +++++--
+ rust/helpers/vmalloc.c         |  4 ++--
+ rust/kernel/alloc.rs           | 28 ++++++++++++++++++++++--
+ rust/kernel/alloc/allocator.rs | 40 +++++++++++++++++++---------------
+ rust/kernel/alloc/kvec.rs      |  3 ++-
+ 5 files changed, 59 insertions(+), 24 deletions(-)
 
-Regards,
-Onur
+diff --git a/rust/helpers/slab.c b/rust/helpers/slab.c
+index a842bfbddcba..221c517f57a1 100644
+--- a/rust/helpers/slab.c
++++ b/rust/helpers/slab.c
+@@ -3,13 +3,17 @@
+ #include <linux/slab.h>
+ 
+ void * __must_check __realloc_size(2)
+-rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
++rust_helper_krealloc(const void *objp, size_t new_size, unsigned long align, gfp_t flags, int nid)
+ {
++	if (WARN_ON(new_size & (align - 1)))
++		return NULL;
+ 	return krealloc(objp, new_size, flags);
+ }
+ 
+ void * __must_check __realloc_size(2)
+-rust_helper_kvrealloc(const void *p, size_t size, gfp_t flags)
++rust_helper_kvrealloc(const void *p, size_t size, unsigned long align, gfp_t flags, int nid)
+ {
++	if (WARN_ON(size & (align - 1)))
++		return NULL;
+ 	return kvrealloc(p, size, flags);
+ }
+diff --git a/rust/helpers/vmalloc.c b/rust/helpers/vmalloc.c
+index 80d34501bbc0..9131279222fa 100644
+--- a/rust/helpers/vmalloc.c
++++ b/rust/helpers/vmalloc.c
+@@ -3,7 +3,7 @@
+ #include <linux/vmalloc.h>
+ 
+ void * __must_check __realloc_size(2)
+-rust_helper_vrealloc(const void *p, size_t size, gfp_t flags)
++rust_helper_vrealloc_node(const void *p, size_t size, unsigned long align, gfp_t flags, int node)
+ {
+-	return vrealloc(p, size, flags);
++	return vrealloc_node(p, size, align, flags, node);
+ }
+diff --git a/rust/kernel/alloc.rs b/rust/kernel/alloc.rs
+index 2e377c52fa07..12a723bf6092 100644
+--- a/rust/kernel/alloc.rs
++++ b/rust/kernel/alloc.rs
+@@ -161,7 +161,30 @@ pub unsafe trait Allocator {
+     fn alloc(layout: Layout, flags: Flags) -> Result<NonNull<[u8]>, AllocError> {
+         // SAFETY: Passing `None` to `realloc` is valid by its safety requirements and asks for a
+         // new memory allocation.
+-        unsafe { Self::realloc(None, layout, Layout::new::<()>(), flags) }
++        unsafe { Self::realloc(None, layout, Layout::new::<()>(), flags, None) }
++    }
++
++    /// Allocate memory based on `layout`, `flags` and `nid`.
++    ///
++    /// On success, returns a buffer represented as `NonNull<[u8]>` that satisfies the layout
++    /// constraints (i.e. minimum size and alignment as specified by `layout`).
++    ///
++    /// This function is equivalent to `realloc` when called with `None`.
++    ///
++    /// # Guarantees
++    ///
++    /// When the return value is `Ok(ptr)`, then `ptr` is
++    /// - valid for reads and writes for `layout.size()` bytes, until it is passed to
++    ///   [`Allocator::free`] or [`Allocator::realloc`],
++    /// - aligned to `layout.align()`,
++    ///
++    /// Additionally, `Flags` are honored as documented in
++    /// <https://docs.kernel.org/core-api/mm-api.html#mm-api-gfp-flags>.
++    fn alloc_node(layout: Layout, flags: Flags, nid: Option<i32>)
++                -> Result<NonNull<[u8]>, AllocError> {
++        // SAFETY: Passing `None` to `realloc` is valid by its safety requirements and asks for a
++        // new memory allocation.
++        unsafe { Self::realloc(None, layout, Layout::new::<()>(), flags, nid) }
+     }
+ 
+     /// Re-allocate an existing memory allocation to satisfy the requested `layout`.
+@@ -201,6 +224,7 @@ unsafe fn realloc(
+         layout: Layout,
+         old_layout: Layout,
+         flags: Flags,
++        nid: Option<i32>,
+     ) -> Result<NonNull<[u8]>, AllocError>;
+ 
+     /// Free an existing memory allocation.
+@@ -216,7 +240,7 @@ unsafe fn free(ptr: NonNull<u8>, layout: Layout) {
+         // SAFETY: The caller guarantees that `ptr` points at a valid allocation created by this
+         // allocator. We are passing a `Layout` with the smallest possible alignment, so it is
+         // smaller than or equal to the alignment previously used with this allocation.
+-        let _ = unsafe { Self::realloc(Some(ptr), Layout::new::<()>(), layout, Flags(0)) };
++        let _ = unsafe { Self::realloc(Some(ptr), Layout::new::<()>(), layout, Flags(0), None) };
+     }
+ }
+ 
+diff --git a/rust/kernel/alloc/allocator.rs b/rust/kernel/alloc/allocator.rs
+index aa2dfa9dca4c..91b36e128b92 100644
+--- a/rust/kernel/alloc/allocator.rs
++++ b/rust/kernel/alloc/allocator.rs
+@@ -58,7 +58,8 @@ fn aligned_size(new_layout: Layout) -> usize {
+ ///
+ /// One of the following: `krealloc`, `vrealloc`, `kvrealloc`.
+ struct ReallocFunc(
+-    unsafe extern "C" fn(*const crate::ffi::c_void, usize, u32) -> *mut crate::ffi::c_void,
++    unsafe extern "C" fn(*const crate::ffi::c_void, usize, usize, u32, i32)
++                        -> *mut crate::ffi::c_void,
+ );
+ 
+ impl ReallocFunc {
+@@ -66,7 +67,7 @@ impl ReallocFunc {
+     const KREALLOC: Self = Self(bindings::krealloc);
+ 
+     // INVARIANT: `vrealloc` satisfies the type invariants.
+-    const VREALLOC: Self = Self(bindings::vrealloc);
++    const VREALLOC: Self = Self(bindings::vrealloc_node);
+ 
+     // INVARIANT: `kvrealloc` satisfies the type invariants.
+     const KVREALLOC: Self = Self(bindings::kvrealloc);
+@@ -87,6 +88,7 @@ unsafe fn call(
+         layout: Layout,
+         old_layout: Layout,
+         flags: Flags,
++        nid: Option<i32>,
+     ) -> Result<NonNull<[u8]>, AllocError> {
+         let size = aligned_size(layout);
+         let ptr = match ptr {
+@@ -100,6 +102,11 @@ unsafe fn call(
+             None => ptr::null(),
+         };
+ 
++        let c_nid = match nid {
++            None => bindings::NUMA_NO_NODE,
++            Some(n) => n,
++        };
++
+         // SAFETY:
+         // - `self.0` is one of `krealloc`, `vrealloc`, `kvrealloc` and thus only requires that
+         //   `ptr` is NULL or valid.
+@@ -110,7 +117,7 @@ unsafe fn call(
+         // - Those functions provide the guarantees of this function.
+         let raw_ptr = unsafe {
+             // If `size == 0` and `ptr != NULL` the memory behind the pointer is freed.
+-            self.0(ptr.cast(), size, flags.0).cast()
++            self.0(ptr.cast(), size, layout.align(), flags.0, c_nid).cast()
+         };
+ 
+         let ptr = if size == 0 {
+@@ -134,9 +141,10 @@ unsafe fn realloc(
+         layout: Layout,
+         old_layout: Layout,
+         flags: Flags,
++        _nid: Option<i32>,
+     ) -> Result<NonNull<[u8]>, AllocError> {
+         // SAFETY: `ReallocFunc::call` has the same safety requirements as `Allocator::realloc`.
+-        unsafe { ReallocFunc::KREALLOC.call(ptr, layout, old_layout, flags) }
++        unsafe { ReallocFunc::KREALLOC.call(ptr, layout, old_layout, flags, None) }
+     }
+ }
+ 
+@@ -151,16 +159,11 @@ unsafe fn realloc(
+         layout: Layout,
+         old_layout: Layout,
+         flags: Flags,
++        nid: Option<i32>,
+     ) -> Result<NonNull<[u8]>, AllocError> {
+-        // TODO: Support alignments larger than PAGE_SIZE.
+-        if layout.align() > bindings::PAGE_SIZE {
+-            pr_warn!("Vmalloc does not support alignments larger than PAGE_SIZE yet.\n");
+-            return Err(AllocError);
+-        }
+-
+         // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
+         // allocated with this `Allocator`.
+-        unsafe { ReallocFunc::VREALLOC.call(ptr, layout, old_layout, flags) }
++        unsafe { ReallocFunc::VREALLOC.call(ptr, layout, old_layout, flags, nid) }
+     }
+ }
+ 
+@@ -175,15 +178,18 @@ unsafe fn realloc(
+         layout: Layout,
+         old_layout: Layout,
+         flags: Flags,
++        _nid: Option<i32>,
+     ) -> Result<NonNull<[u8]>, AllocError> {
+-        // TODO: Support alignments larger than PAGE_SIZE.
+-        if layout.align() > bindings::PAGE_SIZE {
+-            pr_warn!("KVmalloc does not support alignments larger than PAGE_SIZE yet.\n");
+-            return Err(AllocError);
+-        }
++        // if the caller wants to have alignment bigger than PAGE_SIZE
++        // it's only vmalloc we can offer to satisfy that request
++        let alloc_func = if layout.align() > bindings::PAGE_SIZE {
++            ReallocFunc::VREALLOC
++        } else {
++            ReallocFunc::KVREALLOC
++        };
+ 
+         // SAFETY: If not `None`, `ptr` is guaranteed to point to valid memory, which was previously
+         // allocated with this `Allocator`.
+-        unsafe { ReallocFunc::KVREALLOC.call(ptr, layout, old_layout, flags) }
++        unsafe { alloc_func.call(ptr, layout, old_layout, flags, None) }
+     }
+ }
+diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
+index 1a0dd852a468..ef4f977ba012 100644
+--- a/rust/kernel/alloc/kvec.rs
++++ b/rust/kernel/alloc/kvec.rs
+@@ -633,6 +633,7 @@ pub fn reserve(&mut self, additional: usize, flags: Flags) -> Result<(), AllocEr
+                 layout.into(),
+                 self.layout.into(),
+                 flags,
++                None,
+             )?
+         };
+ 
+@@ -1058,7 +1059,7 @@ pub fn collect(self, flags: Flags) -> Vec<T, A> {
+             // the type invariant to be smaller than `cap`. Depending on `realloc` this operation
+             // may shrink the buffer or leave it as it is.
+             ptr = match unsafe {
+-                A::realloc(Some(buf.cast()), layout.into(), old_layout.into(), flags)
++                A::realloc(Some(buf.cast()), layout.into(), old_layout.into(), flags, None)
+             } {
+                 // If we fail to shrink, which likely can't even happen, continue with the existing
+                 // buffer.
+-- 
+2.39.2
+
