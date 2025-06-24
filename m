@@ -1,89 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78A1E307488;
-	Tue, 24 Jun 2025 15:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2189C3074AF;
+	Tue, 24 Jun 2025 15:39:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750779508; cv=none; b=Din8BqXJT1BUHkBgUXsl7s87NDVLe5633LWNZAdbr1BOpaxISJ1pIQE15kzHxxDGx6N8NKrq4HUTRRn+7FJf27U1D4bkLUJeQnu/zj1FuWmKSTej4dUV+Y3ILvMD/tzlyk6JJ0BAPuR21lFRjEpUHEmEAmvoKjMPiOunUSGL/K4=
+	t=1750779592; cv=none; b=MZdUEAlkAeje1v0a+2o/NDR7/Hyfd9/EljjcXot1s6AZjOLZ84l2sZ9frPWSkZxi2TzrpXOYs4pDNYHMYFq2GZNgMqGrt4jBPxdrEz73z30V0ZBJ7j64M8OmNI698xddx9taD8XDWYHqBsL2BtQq2cwJXCOrecVFkafpGHTKvIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750779508; c=relaxed/simple;
-	bh=rXklJ00Z6I5GxsNS607Yboj1efqM7M6krOTzOTuFDY4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TyUaTl1Oyp4+ZmJwa7TrJEptpgCCqTNp3IdYR28oweERnbuPRYHl42yss8KpXSiKsOdtf/PqXkY4nLK+1KXKxkbb4+fLyziZSK00xxa/tTXVd8dpG4+4ZciWdVXD2lqd42Cex9aOv4rykQU85yPScinucTmLnykvjmF6r1lAFJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ddnVBLNI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750779592; c=relaxed/simple;
+	bh=dmEE+XlX7MPX1MaplH5TaaxjlywZ7+g+ztlTKgl/PSc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A2IZHqtpsvHlEZptjByO2nsaX54amXhDi90igqR2LuPrgm4JXeThpx33cxl5yGZYMsyZ811eXhnwqbOP8Clr9HCIssabcFi/2aaLBqdNkPf2WLw8Jm0lq4uyJ8Pcoe0JLupRsuuxS7PAN7axYewTRtEhqh6XjZCxlVzJOm/NvvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lXj8JQoD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ddnVBLNI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D5A4C4CEE3;
-	Tue, 24 Jun 2025 15:38:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750779507;
-	bh=rXklJ00Z6I5GxsNS607Yboj1efqM7M6krOTzOTuFDY4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ddnVBLNIhrnqyoeXv6nLy07w7vBFDKVZ5kNby1Cz3vXgCCgxksm6aeln4z0MXgpDs
-	 DPe6ugwZNo3mpCzUjhqupzKPhNVfxJZ+RSqmETeeeBBZbLIxsmQPlB69TaC/j/TXuA
-	 p8GIlNlSmftKwzGV5tFPsJKiyELa0lalNcsKnm3A=
-Date: Tue, 24 Jun 2025 16:38:25 +0100
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>,
-	srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
-	quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org,
-	quic_chennak@quicinc.com, dri-devel@lists.freedesktop.org,
-	arnd@arndb.de, stable@kernel.org
-Subject: Re: [PATCH v2] misc: fastrpc: Fix channel resource access in
- device_open
-Message-ID: <2025062434-reviving-grumble-1e53@gregkh>
-References: <20250619051026.984361-1-ekansh.gupta@oss.qualcomm.com>
- <kk3jvlwjdzy2mfs6bip7dadrnsoxwksyp2odi3rfxkv4crmwtn@x5qyn4sp2gck>
- <2025062424-dizziness-theft-0502@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lXj8JQoD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 380ADC4CEEE;
+	Tue, 24 Jun 2025 15:39:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750779591;
+	bh=dmEE+XlX7MPX1MaplH5TaaxjlywZ7+g+ztlTKgl/PSc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lXj8JQoDJ77eKebr0UULU4Uwf+0yRuAYZI1bgvbGKIbloD2Bie/gnKkYonQzFFCB7
+	 OEz4R64z/jbCqx5I29ARz07Dvs2mTHXm1a882O1zqyHfVQN3GAW42D9rKRGBPuWh4w
+	 jn1scrjj7m11tZWJEYJ55j0caGJbkqMD7375SvW1l4X8p6Ti494d0p86gF8Qs7eI5u
+	 9EcAyk+TPOz2CpYaAqUC9p5JRYB4gNOrVlGkYlNVYQzNo+BwvPmX5HHqKWOPR965Vg
+	 UkIxpmnHjyJCir2j/GO+Ptl0Egr0K3a/PsobMPOkmHUy6JItsx7aaPFzylUuoShj9+
+	 HVpgm3LusS5Vw==
+Message-ID: <e32c3a47-e32e-4f93-becb-ebad31065b73@kernel.org>
+Date: Tue, 24 Jun 2025 17:39:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025062424-dizziness-theft-0502@gregkh>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/9] dt-bindings: soc: imx-blk-ctrl: add i.MX91
+ blk-ctrl compatible
+To: Frank Li <Frank.li@nxp.com>
+Cc: Joy Zou <joy.zou@nxp.com>, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
+ catalin.marinas@arm.com, will@kernel.org, andrew+netdev@lunn.ch,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
+ ulf.hansson@linaro.org, richardcochran@gmail.com, kernel@pengutronix.de,
+ festevam@gmail.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-pm@vger.kernel.or,
+ ye.li@nxp.com, ping.bai@nxp.com, aisheng.dong@nxp.com
+References: <20250623095732.2139853-1-joy.zou@nxp.com>
+ <20250623095732.2139853-3-joy.zou@nxp.com>
+ <urgfsmkl25woqy5emucfkqs52qu624po6rd532hpusg3fdnyg3@s5iwmhnfsi26>
+ <aFq7WJ3Fqe9p0EhA@lizhi-Precision-Tower-5810>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <aFq7WJ3Fqe9p0EhA@lizhi-Precision-Tower-5810>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 24, 2025 at 04:36:35PM +0100, Greg KH wrote:
-> On Tue, Jun 24, 2025 at 04:27:21PM +0300, Dmitry Baryshkov wrote:
-> > On Thu, Jun 19, 2025 at 10:40:26AM +0530, Ekansh Gupta wrote:
-> > > During rpmsg_probe, fastrpc device nodes are created first, then
-> > > channel specific resources are initialized, followed by
-> > > of_platform_populate, which triggers context bank probing. This
-> > > sequence can cause issues as applications might open the device
-> > > node before channel resources are initialized or the session is
-> > > available, leading to problems. For example, spin_lock is initialized
-> > > after the device node creation, but it is used in device_open,
-> > > potentially before initialization. Move device registration after
-> > > channel resource initialization in fastrpc_rpmsg_probe.
-> > 
-> > You've moved device init, however there is still a possibility for the
-> > context devices to be created, but not bound to the driver (because all
-> > the probings are async). I think instead we should drop the extra
-> > platform driver layer and create and set up corresponding devices
-> > manually. For example, see how it is handled in
-> > host1x_memory_context_list_init(). That function uses iommu-maps, but we
-> > can use OF nodes and iommus instead.
+On 24/06/2025 16:51, Frank Li wrote:
+>>
+>> Why imx91 now has 10 clocks?
+>>
+>> v6 and this has basic issues. The quality of NXP patches decreases :/
+>>
+>>> +        clock-names:
+>>> +          items:
+>>> +            - const: apb
+>>> +            - const: axi
+>>> +            - const: nic
+>>> +            - const: disp
+>>> +            - const: cam
+>>> +            - const: lcdif
+>>> +            - const: isi
+>>> +            - const: csi
+>>
+>> No, look at other bindings how they share clock lists.
 > 
-> Is this a real platform device?  If so, why do you need a second
-> platform driver, what makes this so unique?  If this isn't a platform
-> device, then why not just use the faux bus instead?
+> Sorry, this method is what I suggested. becuase there are pxp between cam
+> and lcdif, can't use simple minItems/maxItems to limit list.
+
+The point is to put new items, so pxp, at the end.
+
 > 
-> It seems that "number of sessions" is a DT property, is that something
-> that is really defined by the hardware?  Or is it just a virtual thing
-> that people are abusing in the DT?
+> If put two lists at top, clock-names list have to dupliate at both top and
+> if-else branch.
 > 
-> And if you really have all these sessions, why not make them real
-> devices, wouldn't that make things simpler?
-
-Oh wait, these are "fake" platform devices under the parent (i.e. real)
-platform device.  That's not good, please don't do that, use the faux
-bus code now instead to properly handle this.  Attempting to create a
-device when open() is called is really really odd...
-
-thanks,
-
-greg k-h
+> If there are better solution, please point me which file have good method
+> to share two totally difference list.
+> 
+Best regards,
+Krzysztof
