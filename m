@@ -1,216 +1,190 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A19279DC8;
-	Tue, 24 Jun 2025 10:40:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD768218ABA;
+	Tue, 24 Jun 2025 10:40:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750761607; cv=none; b=jBdUwDUNri/EOqrm5kjsjiAoJcepYN1RPBHtUPlcI+utZrX4vHGKC8JrfQu7eLk2nZeBez4VVwFHyE1Nb0oKhCptOrJFV/PR/KC60JE9i6+vB0CalgZaD4of8bzBqCRDb8zBo00+kmDjhzkKw8OBYqaEg5PQL6t1y7DxZOHmoug=
+	t=1750761658; cv=none; b=YCqJCI/9eLoBJ5jbfSSTQTLWug++db729SmlXwmal8xXyZ1NFbEjytJwKt5r8N1pRhaH8EYTsT+jiWWvohOcn8D8S9+2Ed/zyz+BTVV8APcuW5MSUsblLIAqc4N6zvVgskio9fnsAZXeRFG9UVl0ZQ0jgb2qzRyYtOvqHSoIr7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750761607; c=relaxed/simple;
-	bh=f8XsI5O1CkfkYFDeROjVLKjcyy9Tl6y4vwZNlHiFsyg=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=RASDgoa9P94TdrpI1W91tg257cW/56rp4OpUy1zGOud0g3K4yQHxX0S4NnDqFOXPTzt99DWWTo4mV97PZ3foJ8ibEnxBZ//EsgrT5YL4ywINwv7OWiwl33cu2UxteQ3f9FGjaOS1iko2dDIx3jJQEq8DLUa4qCf2dMEoKJLqbXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v1IFWcFr; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3q5D0uT4; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750761658; c=relaxed/simple;
+	bh=6d0auCNzoD1CyPxO+pEGu930r8hD35KbHS+ByXKsoHM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mTboY2pO1xVoCE0EbtV6ZDJQap2uiv+O+6Hy7eIJd8JC/NP2iY5rDL5TRWuQZtBego9o0TkbEIcVN6SKWqP51RfqNrDDLs4lJV5UjrUFQsnYZ/qqGsmF4quPmD5aKuK8+4pWd5RV/h0qwClnBxCuKnxTysieAD1rZEw0ILawe4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=l7U7EtDI; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v1IFWcFr";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3q5D0uT4"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750761604;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PmKtYLO9DDYaj9Me5RnB2od40m2nfSC9/3iVyLRTgPc=;
-	b=v1IFWcFrbObYtAZ/RT0Kppv2+R1ysQJUiAOhyBDBdBD7GRafKVhWIJlEp4M1/MAbW7r3Ca
-	o8ExT+FJNwE1MLi5ZHj7mixRk7DPF7y0JESsK+b/BXPx0H36L3GknAlPGKQ80sDZSd8kX8
-	c7tk3xzYOhkh9+PB8l0sOAqBJbObspXXOYombtNTWorYQc/dnlFuIdXCWjoZNydWHsEEfw
-	BxAB1cxurgSdDrVSKVwi91WSkw72/7/zhYIxKx2zfbMR8WyyBWVel7X/khQj5qlBzANr+W
-	waHxljQ3WDmwbOBvDQ6fj/PD/LbBRXtKBrQTzgU9iEnxcn0NlO2wYO/ak4OZtw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750761604;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PmKtYLO9DDYaj9Me5RnB2od40m2nfSC9/3iVyLRTgPc=;
-	b=3q5D0uT4oSfP2VhfCp/l4dQktoBuSpc64H38sBuCNB8bE8D63GfRugryCyLDa3R+2guT87
-	o5CUyJOaQUdlplCw==
-To: Pan Chuang <panchuang@vivo.com>, "Rafael J. Wysocki"
- <rafael@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui
- <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>, Miquel Raynal
- <miquel.raynal@bootlin.com>, Markus Mayer <mmayer@broadcom.com>, Broadcom
- internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
- Florian Fainelli <florian.fainelli@broadcom.com>, Shawn Guo
- <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
- zhanghongchen <zhanghongchen@loongson.cn>, Yinbo Zhu
- <zhuyinbo@loongson.cn>, Amit Kucheria <amitk@kernel.org>, Thara Gopinath
- <thara.gopinath@gmail.com>, Niklas =?utf-8?Q?S=C3=B6derlund?=
- <niklas.soderlund@ragnatech.se>, Geert Uytterhoeven
- <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Heiko
- Stuebner <heiko@sntech.de>, Bartlomiej Zolnierkiewicz
- <bzolnier@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar
- <alim.akhtar@samsung.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Vasily Khoruzhick
- <anarsoul@gmail.com>, Yangtao Li <tiny.windzz@gmail.com>, Chen-Yu Tsai
- <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland
- <samuel@sholland.org>, Thierry Reding <thierry.reding@gmail.com>, Jonathan
- Hunter <jonathanh@nvidia.com>, Kunihiko Hayashi
- <hayashi.kunihiko@socionext.com>, Masami Hiramatsu <mhiramat@kernel.org>,
- Matthias Brugger <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
- <angelogioacchino.delregno@collabora.com>, Srinivas Pandruvada
- <srinivas.pandruvada@linux.intel.com>, Greg KH
- <gregkh@linuxfoundation.org>, Peter Zijlstra <peterz@infradead.org>,
- =?utf-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= <nfraprado@collabora.com>,
- Conor Dooley
- <conor.dooley@microchip.com>, Julien Panis <jpanis@baylibre.com>, Arnd
- Bergmann <arnd@arndb.de>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
- <u.kleine-koenig@baylibre.com>,
- Colin Ian King <colin.i.king@gmail.com>, Raphael Gallais-Pou
- <rgallaispou@gmail.com>, Patrice Chotard <patrice.chotard@foss.st.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>, "Jiri Slaby (SUSE)"
- <jirislaby@kernel.org>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Andrew Morton <akpm@linux-foundation.org>, Costa Shulyupin
- <costa.shul@redhat.com>, Yury Norov <yury.norov@gmail.com>, Cheng-Yang
- Chou <yphbchou0911@gmail.com>, Caleb Sander Mateos
- <csander@purestorage.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- imx@lists.linux.dev, linux-arm-msm@vger.kernel.org,
- linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-sunxi@lists.linux.dev,
- linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: Yangtao Li <frank.li@vivo.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?=
- <u.kleine-koenig@pengutronix.de>, Jonathan Cameron
- <Jonathan.Cameron@Huawei.com>, Pan Chuang <panchuang@vivo.com>
-Subject: Re: [PATCH v6 01/24] genirq/devres: Add
- devm_request_threaded_irq_probe() and devm_request_irq_probe()
-In-Reply-To: <20250623123054.472216-2-panchuang@vivo.com>
-References: <20250623123054.472216-1-panchuang@vivo.com>
- <20250623123054.472216-2-panchuang@vivo.com>
-Date: Tue, 24 Jun 2025 10:13:10 +0200
-Message-ID: <87h605o8vd.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="l7U7EtDI"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O1V2Z9025150;
+	Tue, 24 Jun 2025 10:40:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=IVDBez
+	qnJ2de4ogHnGgH0CYywDLOp7UCzimE3aYXKm4=; b=l7U7EtDIpgKtjmHRfugipg
+	oHqU3oNPgxfQXG/rvMs168Fjjz3BahVYpEMeHbKMQTSmvfOAHLa4+zouw3E1YYzH
+	oLCpKMPi/vefWxZBBDjSgX7SzEAcFAcdQ0weuLlUidZFLAFrPmKacP6blvEyFxxu
+	8BwgXMSvMBRQqDT0A5wb4falzwjLOa/QsAf9XIYDBxfXvPEnFyrXJ/em0QaZP082
+	Ru9R8/bGGL2ds1Lpv5qe0agrBp7oFWOKdOV1icwnravQUPr/uX/iU6t7Q/IDP9uu
+	drBvSOK3f6v0+Aa0Pp+LWI87a+VlH4V7W5M9Ufhbb4yT0EtD2qRVWlsLmZK+s6aw
+	==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dj5tr1rq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 10:40:47 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55OAH4R7031277;
+	Tue, 24 Jun 2025 10:40:46 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e7eyun5k-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 10:40:46 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55OAeiaB35914396
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Jun 2025 10:40:44 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A80EA2004D;
+	Tue, 24 Jun 2025 10:40:44 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 31A6220040;
+	Tue, 24 Jun 2025 10:40:44 +0000 (GMT)
+Received: from thinkpad-T15 (unknown [9.87.159.139])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Tue, 24 Jun 2025 10:40:44 +0000 (GMT)
+Date: Tue, 24 Jun 2025 12:40:42 +0200
+From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual
+ <anshuman.khandual@arm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML
+ <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-s390@vger.kernel.org
+Subject: Re: [RFC PATCH 1/1] mm/debug_vm_pgtable: Use a swp_entry_t input
+ value for swap tests
+Message-ID: <20250624124042.45beda75@thinkpad-T15>
+In-Reply-To: <9bd91df8-e548-4ecc-bd30-f1ab611ecf4c@redhat.com>
+References: <20250623184321.927418-1-gerald.schaefer@linux.ibm.com>
+	<20250623184321.927418-2-gerald.schaefer@linux.ibm.com>
+	<9bd91df8-e548-4ecc-bd30-f1ab611ecf4c@redhat.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: peLw0nyJ3RpBufj0GFzJMnHwIYUJBadY
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA4NyBTYWx0ZWRfX4YGMzFMG9XnG t6uE5WxBCo/dguH8Xieeqb5UxjhEZ/w2qg1CqmHgPvS9TkNO8P8ZvqW8IQr3+KwrYdb+ZDGOTfO jzBCyZ27qWlU7dkgf183B8FV5SdVrknUxao9279DXudrJTALFWpR49FNABVgChwslcE8Kgzqdhe
+ tOTOyGXCJZOq3pCC1mkYTXw3pQijy6+dxmqSTNf9XXth+WazO94uoFmtomp3xNrLHYRtfBf3OvG UOWmm6cqkIJieHyAtGJ0KHIPuFMwnTIUVpqHtDK5T4aBceW85KofEx/FLDnB3Ow/agueJnwOXD3 ltt8rgR+O0AOYsxtJR9RyOlaUK6IeW6ie2QaY4uoA61/zA3Qj2Q7RUH1JhTfHcqMnuSq4IGYUzF
+ yZ3NCLZx9gmRF3KC/GkY/Vug6nftBhkFfbKwasjOa/RZneK1ayT1dHHPE9ryws0HVN6ERzhn
+X-Authority-Analysis: v=2.4 cv=MshS63ae c=1 sm=1 tr=0 ts=685a80af cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8 a=bxlzOkSMlZTX2se0vY4A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-GUID: peLw0nyJ3RpBufj0GFzJMnHwIYUJBadY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_04,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ clxscore=1011 phishscore=0 malwarescore=0 suspectscore=0 adultscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506240087
 
-On Mon, Jun 23 2025 at 20:30, Pan Chuang wrote:
-> +/**
-> + * devm_request_threaded_irq_probe - request irq for a managed device with error msg (recommended in probe)
-> + * @dev:	Device to request interrupt for
-> + * @irq:	Interrupt line to allocate
-> + * @handler:	Function to be called when the IRQ occurs
-> + * @thread_fn:	Function to be called in a threaded interrupt context. NULL
-> + *		for devices which handle everything in @handler
-> + * @irqflags:	Interrupt type flags
-> + * @devname:	An ascii name for the claiming device, dev_name(dev) if NULL
-> + * @dev_id:	A cookie passed back to the handler function
-> + * @info:	Optional additional error log
-> + *
-> + * This is a variant of the devm_request_threaded_irq function.
-> + * It will print an error message by default when the request fails,
-> + * and the consumer can add a special error msg.
-> + *
-> + * Except for the extra @info argument, this function takes the
-> + * same arguments and performs the same function as
-> + * devm_request_threaded_irq(). IRQs requested with this function will be
-> + * automatically freed on driver detach.
+On Mon, 23 Jun 2025 21:10:54 +0200
+David Hildenbrand <david@redhat.com> wrote:
 
-I really have to ask why you need the extra info argument. It's not
-providing any really value.
+> On 23.06.25 20:43, Gerald Schaefer wrote:
+> > The various __pte/pmd_to_swp_entry and __swp_entry_to_pte/pmd helper
+> > functions are expected to operate on swapped PTE/PMD entries, not on
+> > present and mapped entries.
+> > 
+> > Reflect this in the swap tests by using a swp_entry_t as input value,
+> > similar to how it is already done in pte_swap_exclusive_tests().
+> > Move the swap entry creation to init_args() and store it in args, so
+> > it can also be used in other functions.
+> > 
+> > The pte/pmd_swap_tests() are also changed to compare entries instead of
+> > pfn values, because pte/pmd_pfn() helpers are not expected to operate on
+> > swapped entries. E.g. on s390, pmd_pfn() needs different shifts for leaf
+> > (large) and non-leaf PMDs.
+> > 
+> > Also update documentation, to reflect that the helpers operate on
+> > swapped and not mapped entries, and use correct names, i.e.
+> > __swp_to_pte/pmd_entry -> __swp_entry_to_pte/pmd.
+> > 
+> > For consistency, also change pte/pmd_swap_soft_dirty_tests() to use
+> > args->swp_entry instead of a present and mapped PTE/PMD.
+> > 
+> > Signed-off-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+> > ---
+> >   Documentation/mm/arch_pgtable_helpers.rst |  8 ++--
+> >   mm/debug_vm_pgtable.c                     | 55 ++++++++++++++---------
+> >   2 files changed, 38 insertions(+), 25 deletions(-)
+> > 
+> > diff --git a/Documentation/mm/arch_pgtable_helpers.rst b/Documentation/mm/arch_pgtable_helpers.rst
+> > index af245161d8e7..e2ac76202a85 100644
+> > --- a/Documentation/mm/arch_pgtable_helpers.rst
+> > +++ b/Documentation/mm/arch_pgtable_helpers.rst
+> > @@ -242,13 +242,13 @@ SWAP Page Table Helpers
+> >   ========================
+> >   
+> >   +---------------------------+--------------------------------------------------+
+> > -| __pte_to_swp_entry        | Creates a swapped entry (arch) from a mapped PTE |
+> > +| __pte_to_swp_entry        | Creates a swap entry (arch) from a swapped PTE   |  
+> 
+> Maybe something like:
+> 
+> "from a swap (!none && !present) PTE"
+> 
+> or short
+> 
+> "swap PTE".
+> 
+> "swapped" might be misleading.
+> 
+> Same for the other cases below.
 
-What's important when the interrupt request fails?
+Right, it already felt awkward when I wrote it, not sure why I only changed
+it for "swapped entry (arch)". I think I like "swap PTE/PMD", naming the actual
+entries in the page table, vs. "swap entry (arch)", naming the (arch-dependent)
+representation of the swap PTE/PMD as swp_entry_t.
 
-    1) The device, which is identifiable by @devname and/or dev_name(@dev)
+Will change, and also adjust my description, where I also used possibly
+misleading "swapped".
 
-    2) The interrupt number
+> 
+> >   +---------------------------+--------------------------------------------------+
+> > -| __swp_to_pte_entry        | Creates a mapped PTE from a swapped entry (arch) |
+> > +| __swp_entry_to_pte        | Creates a swapped PTE from a swap entry (arch)   |
+> >   +---------------------------+--------------------------------------------------+
+> > -| __pmd_to_swp_entry        | Creates a swapped entry (arch) from a mapped PMD |
+> > +| __pmd_to_swp_entry        | Creates a swap entry (arch) from a swapped PMD   |
+> >   +---------------------------+--------------------------------------------------+
+> > -| __swp_to_pmd_entry        | Creates a mapped PMD from a swapped entry (arch) |
+> > +| __swp_entry_to_pmd        | Creates a swapped PMD from a swap entry (arch)   |
+> >   +---------------------------+--------------------------------------------------+
+> >   | is_migration_entry        | Tests a migration (read or write) swapped entry  |
+> >   +-------------------------------+----------------------------------------------+
+> > diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+> > index 7731b238b534..3b0f83ed6c2e 100644
+> > --- a/mm/debug_vm_pgtable.c
+> > +++ b/mm/debug_vm_pgtable.c
+> > @@ -73,6 +73,8 @@ struct pgtable_debug_args {
+> >   	unsigned long		fixed_pud_pfn;
+> >   	unsigned long		fixed_pmd_pfn;
+> >   	unsigned long		fixed_pte_pfn;
+> > +
+> > +	swp_entry_t		swp_entry;
+> >   };
+> >     
+> 
+> Nothing else jumped at me, so LGTM.
+> 
 
-    3) The error code
-
-If you want to be more expressive then you can also print out the
-handler function symbols, which makes it even more useful to map back
-into the affected driver.
-
-As you cited correctly I said back then:
-
-  "So there is certainly an argument to be made that this particular
-   function should print a well formatted and informative error
-   message."
-
-This particular function is: devm_request_threaded_irq().
-
-IOW, I did not ask you should go an create a new one, right?
-
-The extra @info argument is just proliferating the nonsensical
-information which driver developers put into the output. I just looked
-through a couple of your thermal patches (hint, I had to chase them
-manually because you failed to thread them properly). While most of them
-provide NULL, the two adding 'alarm' are really not providing any useful
-information.
-
-The point is, that the information is aimed at developers and not to be
-helpful for Joe User to identify/fix a problem. If the driver
-developer/maintainer is not able to track back the information (name,
-number, error code) to the driver in question, then the added "foo" info
-is not going to make him any smarter.
-
-If that happens, then being able to map it back to the driver is only 1%
-of the problem analysis, simply because you need to decode the
-underlying problem (DT, vector exhaustion, memory exhaustion ....) to be
-able to address it.
-
-So just make devm_request.*irq() emit a uniform and informative message
-on fail and you can go and remove all the homebrewn useless error prints
-from the drivers.
-
-It does not matter at all if there are duplicated error messages for a
-release or two until all drivers have been cleaned up. This is not the
-common case and only rarely triggered. So what?
-
-> +int devm_request_threaded_irq_probe(struct device *dev, unsigned int irq,
-> +				    irq_handler_t handler, irq_handler_t thread_fn,
-> +				    unsigned long irqflags, const char *devname,
-> +				    void *dev_id, const char *info)
-> +{
-> +	int rc;
-> +
-> +	rc = devm_request_threaded_irq(dev, irq, handler, NULL, irqflags, devname, dev_id);
-
-This is just wrong as you fail to hand in thread_fn.
-
-Q: How was this code ever tested?
-A: Not at all.
-
-> Could you please consider merging the entire series into your branch? 
-
-You're seriously asking that for something which is so obviously broken?
-
-> +	if (rc) {
-> +		return dev_err_probe(dev, rc, "Failed to request %sinterrupt %u %s %s\n",
-> +				     thread_fn ? "threaded " : "", irq, devname ? : dev_name(dev),
-> +				     info ? : "");
-
-This is wrong too because devm_request_threaded_irq() allows you to hand
-in both a hard interrupt and a threaded handler and either one of them
-can be NULL.
-
-So what you want to add in devm_request_threaded_irq() is something like
-this:
-
-	if (rc < 0) {
-		return dev_err_probe(dev, rc, "request_irq(%u) %pS %pS %s\n",
-                        	     handler, thread_fn, devname ? : "");
-        }
-
-dev_err_probe() already prefixes the caller string with 'error ', so
-there is no need for a lenghty 'failed to request ....' novel.
-
-Thanks,
-
-        tglx
+Thanks!
