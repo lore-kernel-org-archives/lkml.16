@@ -1,148 +1,243 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54F55548EE
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EA045009
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750729684; cv=none; b=cw/lRgCN6TyxV3VQOaiXnFG7OqANQc6sO2j2i7i3AetUg9atwSj5JSUmF15s56WQxNhh+ivhjCDPYEc4YWU42aAhQ1pYg3Ao1HWjU4dPlImPIbFTsEZCeSY9nZueg1DsUHDkR+oLId09cFXvd5YOX1Q3CiCjRVnnwt8aqB8suQs=
+	t=1750729716; cv=none; b=iyrxCnwSzb0kHAsHpxJ17XMkup753CYVS41ylkfgYPSbf+uRDcy69wudjC6o+JE9kBKvjZLQpVSXptcJa2pnrmO0d3l3/PFBdeGMvOqIsUaCxBHwKlaZgHM2q/capeCQIZlECLrdhJY32gO0SO3ziMAFrEmCUoZeQzCZeLV8aW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750729684; c=relaxed/simple;
-	bh=4Z+MxAv/E3x5NjkQjYUMOIRkLTz0n3Uji48u5umGecw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=AQyb0yKRtdOOagwNko+sbsFgujBWEzf80F03kG78YAZj/XzNCCYtBzxr/NFjc4OjqiG4k38tZyJ45Dc92PQCJVp58g4DtJO3CCSFDDa7eRH+dY+9HZjeQP6pwivIUOHkvKfmTDYYxiEPuYqGl540KMfYT+h9LWCyh8I4rGP7z7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l2KImsr1; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750729716; c=relaxed/simple;
+	bh=Oy2MkqCfSb1cLEOoWHoyxwCwyFD/W2voZO++JsVhu2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sFkuiSaM3lAJTCtjeTyV54Bu7UQWAQehTou8p5rERU9CrXfwsk8GHaMu5VWz/NrVLvTgxEEmo6SQuA6aUPAfSR29MOMxPamFGH2njRRGeL56MRK7tgHX7vGl1cqi7od5j5YhXuDwPzxGQwVgbZVo5xpFHa9K8v3jmNm8tBtdORc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=VEjg1fZK; arc=none smtp.client-ip=115.124.30.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l2KImsr1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750729683; x=1782265683;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=4Z+MxAv/E3x5NjkQjYUMOIRkLTz0n3Uji48u5umGecw=;
-  b=l2KImsr1Zt4J7QvfLa9TJy9WWJDgqP9Swz736SWNV1LBrJu6Cbu80n6j
-   Ug4/4lXTUeROfR89gWNMnh/2cJ3ggJYqyI50t+kfevbY3/yo7Dqj+paPT
-   k2JsbkklcEm0o2bBLPd3gRKUaLnbxGgMucAv4UZjcUpEUl7aB/ZbdNos7
-   RD2/nr/4vbRIFYEikEg5OzNWNhAdOp2bfunhqkfKPR3oN3fi0R8CUNZbk
-   a9l89MNLz+b30B/TPdmOkB1ZbwG8ME0yzLh7cd5/TFMoZB/9ToCME9kA2
-   9w8Q0Fc9svW0aW/c0ZcQ6A0PU1wqj91lYolu26BfB+siSSLavXtyhCNIm
-   Q==;
-X-CSE-ConnectionGUID: o+sj9fFqQGqPA0svgrsSWQ==
-X-CSE-MsgGUID: dQeOsbnhS/WOxL7hWnRcng==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56625105"
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="56625105"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 18:48:02 -0700
-X-CSE-ConnectionGUID: RSoEG4aUTnmDlrm5pvRcgg==
-X-CSE-MsgGUID: e5EvzGW0Rga6kwHB9fljDg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="152287608"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 23 Jun 2025 18:48:00 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uTslS-000Rbi-2E;
-	Tue, 24 Jun 2025 01:47:58 +0000
-Date: Tue, 24 Jun 2025 09:47:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hao Jia <jiahao1@lixiang.com>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linux Memory Management List <linux-mm@kvack.org>
-Subject: arch/s390/appldata/appldata_mem.c:72:13: warning: stack frame size
- (1040) exceeds limit (1024) in 'appldata_get_mem_data'
-Message-ID: <202506240917.5GatGoT7-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="VEjg1fZK"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750729711; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=SaMsLQ2fPrrgRB+s+C8BVCgq8lpT22xxsjkVAmY/VlA=;
+	b=VEjg1fZKvwXE6Mc3Hs27CVz+5LYux7jVHa2YR87yrPNdUurD8G6wfrN2Ah2ktgCUsegsrzhXXlfAhW7QlN/vfY2zibAkZOAWGuFH9ePO5k/hWp5rYojNHsyg1EM1WEdjga1+8c6yMrljDDcYwT9boU4LzLcujxn3AFBSbX3n2oQ=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0Wee9C9G_1750729710 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 24 Jun 2025 09:48:31 +0800
+Date: Tue, 24 Jun 2025 09:48:30 +0800
+From: Feng Tang <feng.tang@linux.alibaba.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Lance Yang <lance.yang@linux.dev>, Jonathan Corbet <corbet@lwn.net>,
+	linux-kernel@vger.kernel.org, paulmck@kernel.org,
+	john.ogness@linutronix.de
+Subject: Re: [PATCH V2 3/5] sys_info: add help to translate sys_info string
+ to bitmap
+Message-ID: <aFoD7nW-oswoZCT_@U-2FWC9VHC-2323.local>
+References: <20250616010840.38258-1-feng.tang@linux.alibaba.com>
+ <20250616010840.38258-4-feng.tang@linux.alibaba.com>
+ <aFlfCCFZQJ9IJm-8@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <aFlfCCFZQJ9IJm-8@pathway.suse.cz>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   78f4e737a53e1163ded2687a922fce138aee73f5
-commit: e452872b40e3f1fb92adf0d573a0a6a7c9f6ce22 mm: vmscan: split proactive reclaim statistics from direct reclaim statistics
-date:   3 months ago
-config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20250624/202506240917.5GatGoT7-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506240917.5GatGoT7-lkp@intel.com/reproduce)
+On Mon, Jun 23, 2025 at 04:04:56PM +0200, Petr Mladek wrote:
+> On Mon 2025-06-16 09:08:38, Feng Tang wrote:
+> > Bitmap definition is hard to remember and decode. Add sysctl interface
+> > to translate human readable string like "tasks,mem,timer,lock,ftrace,..."
+> > to bitmap.
+> > 
+> > Suggested-by: Petr Mladek <pmladek@suse.com>
+> > Signed-off-by: Feng Tang <feng.tang@linux.alibaba.com>
+> > ---
+> >  include/linux/sys_info.h |  7 +++
+> >  lib/sys_info.c           | 97 ++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 104 insertions(+)
+> > 
+> > diff --git a/include/linux/sys_info.h b/include/linux/sys_info.h
+> > index 79bf4a942e5f..0b49863cd414 100644
+> > --- a/include/linux/sys_info.h
+> > +++ b/include/linux/sys_info.h
+> > @@ -16,5 +16,12 @@
+> >  #define SYS_SHOW_BLOCKED_TASKS		0x00000080
+> >  
+> >  extern void sys_show_info(unsigned long info_mask);
+> > +extern unsigned long sys_info_parse_param(char *str);
+> >  
+> > +#ifdef CONFIG_SYSCTL
+> > +struct ctl_table;
+> > +extern int sysctl_sys_info_handler(const struct ctl_table *ro_table, int write,
+> > +					  void *buffer, size_t *lenp,
+> > +					  loff_t *ppos);
+> > +#endif
+> >  #endif	/* _LINUX_SYS_INFO_H */
+> > diff --git a/lib/sys_info.c b/lib/sys_info.c
+> > index 90a79b5164c9..9693542435ba 100644
+> > --- a/lib/sys_info.c
+> > +++ b/lib/sys_info.c
+> > @@ -5,6 +5,103 @@
+> >  #include <linux/console.h>
+> >  #include <linux/nmi.h>
+> >  
+> > +struct sys_info_name {
+> > +	unsigned long bit;
+> > +	const char *name;
+> > +};
+> > +
+> > +static const char sys_info_avail[] = "tasks,mem,timer,lock,ftrace,all_bt,blocked_tasks";
+> > +
+> > +static const struct sys_info_name  si_names[] = {
+> > +	{ SYS_SHOW_TASK_INFO,	"tasks" },
+> > +	{ SYS_SHOW_MEM_INFO,	"mem" },
+> > +	{ SYS_SHOW_TIMER_INFO,	"timer" },
+> 
+> I see that the naming is a bit inconsistent in using singulars
+> vs. plurals. I suggest to use plulars when it makes sense.
+> It means here:
+> 
+> 	{ SYS_SHOW_TIMERS_INFO,	"timers" },
+> 
+> > +	{ SYS_SHOW_LOCK_INFO,	"lock" },
+> 
+> and here
+> 
+> 	{ SYS_SHOW_LOCKS_INFO,	"locks" },
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506240917.5GatGoT7-lkp@intel.com/
+Will change.
 
-All warnings (new ones prefixed by >>):
+> > +	{ SYS_SHOW_FTRACE_INFO, "ftrace" },
+> > +	{ SYS_SHOW_ALL_CPU_BT,	"all_bt" },
+> > +	{ SYS_SHOW_BLOCKED_TASKS, "blocked_tasks" },
+> > +};
+> 
+> [...]
+> 
+> > +#ifdef CONFIG_SYSCTL
+> > +int sysctl_sys_info_handler(const struct ctl_table *ro_table, int write,
+> > +					  void *buffer, size_t *lenp,
+> > +					  loff_t *ppos)
+> > +{
+> > +	char names[sizeof(sys_info_avail) + 1];
+> > +	struct ctl_table table;
+> > +	unsigned long *si_bits_global;
+> > +	int i, ret, len;
+> > +
+> > +	si_bits_global = ro_table->data;
+> > +
+> > +	if (write) {
+> > +		unsigned long si_bits;
+> > +
+> > +		table = *ro_table;
+> > +		table.data = names;
+> > +		table.maxlen = sizeof(names);
+> > +		ret = proc_dostring(&table, write, buffer, lenp, ppos);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		si_bits = sys_info_parse_param(names);
+> > +		/*
+> > +		 * The access to the global value is not synchronized.
+> > +		 */
+> 
+> Nit, the comment fits on a single line. I would use:
+> 
+> 		/* The access to the global value is not synchronized. */
 
->> arch/s390/appldata/appldata_mem.c:72:13: warning: stack frame size (1040) exceeds limit (1024) in 'appldata_get_mem_data' [-Wframe-larger-than]
-      72 | static void appldata_get_mem_data(void *data)
-         |             ^
-   1 warning generated.
+Yes.
 
+> > +		WRITE_ONCE(*si_bits_global, si_bits);
+> > +		return 0;
+> > +	} else {
+> > +		/* for 'read' operation */
+> > +		bool first = true;
+> > +		char *buf;
+> > +
+> > +		buf = names;
+> > +		for (i = 0; i < ARRAY_SIZE(si_names); i++) {
+> > +			if (*si_bits_global & si_names[i].bit) {
+> > +
+> > +				if (first) {
+> > +					first = false;
+> > +				} else {
+> > +					*buf = ',';
+> > +					buf++;
+> > +				}
+> > +
+> > +				len = strlen(si_names[i].name);
+> > +				strncpy(buf, si_names[i].name, len);
+> 
+> I am afraid of a buffer overflow when people add new entry into
+> si_names[] table but they forget to update sys_info_avail[] string.
+> I would prefer to limit the write to the buffer by the size of the buffer.
 
-vim +/appldata_get_mem_data +72 arch/s390/appldata/appldata_mem.c
+Indeed. In my v3 branch, I have also added a line to warn about it:
 
-^1da177e4c3f415 Linus Torvalds    2005-04-16   65  
-^1da177e4c3f415 Linus Torvalds    2005-04-16   66  
-^1da177e4c3f415 Linus Torvalds    2005-04-16   67  /*
-^1da177e4c3f415 Linus Torvalds    2005-04-16   68   * appldata_get_mem_data()
-^1da177e4c3f415 Linus Torvalds    2005-04-16   69   *
-^1da177e4c3f415 Linus Torvalds    2005-04-16   70   * gather memory data
-^1da177e4c3f415 Linus Torvalds    2005-04-16   71   */
-^1da177e4c3f415 Linus Torvalds    2005-04-16  @72  static void appldata_get_mem_data(void *data)
-^1da177e4c3f415 Linus Torvalds    2005-04-16   73  {
-^1da177e4c3f415 Linus Torvalds    2005-04-16   74  	/*
-^1da177e4c3f415 Linus Torvalds    2005-04-16   75  	 * don't put large structures on the stack, we are
-b1ad171efa089ae Gerald Schaefer   2009-04-23   76  	 * serialized through the appldata_ops_mutex and can use static
-^1da177e4c3f415 Linus Torvalds    2005-04-16   77  	 */
-^1da177e4c3f415 Linus Torvalds    2005-04-16   78  	static struct sysinfo val;
-f8891e5e1f93a12 Christoph Lameter 2006-06-30   79  	unsigned long ev[NR_VM_EVENT_ITEMS];
-^1da177e4c3f415 Linus Torvalds    2005-04-16   80  	struct appldata_mem_data *mem_data;
-^1da177e4c3f415 Linus Torvalds    2005-04-16   81  
-^1da177e4c3f415 Linus Torvalds    2005-04-16   82  	mem_data = data;
-^1da177e4c3f415 Linus Torvalds    2005-04-16   83  	mem_data->sync_count_1++;
-^1da177e4c3f415 Linus Torvalds    2005-04-16   84  
-f8891e5e1f93a12 Christoph Lameter 2006-06-30   85  	all_vm_events(ev);
-f8891e5e1f93a12 Christoph Lameter 2006-06-30   86  	mem_data->pgpgin     = ev[PGPGIN] >> 1;
-f8891e5e1f93a12 Christoph Lameter 2006-06-30   87  	mem_data->pgpgout    = ev[PGPGOUT] >> 1;
-f8891e5e1f93a12 Christoph Lameter 2006-06-30   88  	mem_data->pswpin     = ev[PSWPIN];
-f8891e5e1f93a12 Christoph Lameter 2006-06-30   89  	mem_data->pswpout    = ev[PSWPOUT];
-bb81e6050fdc0f2 Al Viro           2007-03-14   90  	mem_data->pgalloc    = ev[PGALLOC_NORMAL];
-bb81e6050fdc0f2 Al Viro           2007-03-14   91  	mem_data->pgalloc    += ev[PGALLOC_DMA];
-f8891e5e1f93a12 Christoph Lameter 2006-06-30   92  	mem_data->pgfault    = ev[PGFAULT];
-f8891e5e1f93a12 Christoph Lameter 2006-06-30   93  	mem_data->pgmajfault = ev[PGMAJFAULT];
-^1da177e4c3f415 Linus Torvalds    2005-04-16   94  
-^1da177e4c3f415 Linus Torvalds    2005-04-16   95  	si_meminfo(&val);
-^1da177e4c3f415 Linus Torvalds    2005-04-16   96  	mem_data->sharedram = val.sharedram;
-^1da177e4c3f415 Linus Torvalds    2005-04-16   97  	mem_data->totalram  = P2K(val.totalram);
-^1da177e4c3f415 Linus Torvalds    2005-04-16   98  	mem_data->freeram   = P2K(val.freeram);
-^1da177e4c3f415 Linus Torvalds    2005-04-16   99  	mem_data->totalhigh = P2K(val.totalhigh);
-^1da177e4c3f415 Linus Torvalds    2005-04-16  100  	mem_data->freehigh  = P2K(val.freehigh);
-^1da177e4c3f415 Linus Torvalds    2005-04-16  101  	mem_data->bufferram = P2K(val.bufferram);
-11fb998986a72aa Mel Gorman        2016-07-28  102  	mem_data->cached    = P2K(global_node_page_state(NR_FILE_PAGES)
-347ce434d57da80 Christoph Lameter 2006-06-30  103  				- val.bufferram);
-^1da177e4c3f415 Linus Torvalds    2005-04-16  104  
-^1da177e4c3f415 Linus Torvalds    2005-04-16  105  	si_swapinfo(&val);
-^1da177e4c3f415 Linus Torvalds    2005-04-16  106  	mem_data->totalswap = P2K(val.totalswap);
-^1da177e4c3f415 Linus Torvalds    2005-04-16  107  	mem_data->freeswap  = P2K(val.freeswap);
-^1da177e4c3f415 Linus Torvalds    2005-04-16  108  
-1aae0560d160ee6 Heiko Carstens    2013-01-30  109  	mem_data->timestamp = get_tod_clock();
-^1da177e4c3f415 Linus Torvalds    2005-04-16  110  	mem_data->sync_count_2++;
-^1da177e4c3f415 Linus Torvalds    2005-04-16  111  }
-^1da177e4c3f415 Linus Torvalds    2005-04-16  112  
+	/*
+	 * When 'si_names' gets updated,  please make sure the 'sys_info_avail'
+	 * below is updated accordingly.
+	 */
+	static const struct sys_info_name  si_names[] = {
 
-:::::: The code at line 72 was first introduced by commit
-:::::: 1da177e4c3f41524e886b7f1b8a0c1fc7321cac2 Linux-2.6.12-rc2
+But still, better to do some handling in code as you suggested.
 
-:::::: TO: Linus Torvalds <torvalds@ppc970.osdl.org>
-:::::: CC: Linus Torvalds <torvalds@ppc970.osdl.org>
+> Something like (on top of this patch):
+> 
+> --- a/lib/sys_info.c
+> +++ b/lib/sys_info.c
+> @@ -50,7 +50,7 @@ int sysctl_sys_info_handler(const struct ctl_table *ro_table, int write,
+>  	char names[sizeof(sys_info_avail) + 1];
+>  	struct ctl_table table;
+>  	unsigned long *si_bits_global;
+> -	int i, ret, len;
+> +	int i, ret;
+>  
+>  	si_bits_global = ro_table->data;
+>  
+> @@ -72,27 +72,18 @@ int sysctl_sys_info_handler(const struct ctl_table *ro_table, int write,
+>  		return 0;
+>  	} else {
+>  		/* for 'read' operation */
+> -		bool first = true;
+> -		char *buf;
+> +		char *delim = "";
+> +		int len = 0;
+>  
+> -		buf = names;
+> +		names[0] = '\0';
+>  		for (i = 0; i < ARRAY_SIZE(si_names); i++) {
+>  			if (*si_bits_global & si_names[i].bit) {
+> -
+> -				if (first) {
+> -					first = false;
+> -				} else {
+> -					*buf = ',';
+> -					buf++;
+> -				}
+> -
+> -				len = strlen(si_names[i].name);
+> -				strncpy(buf, si_names[i].name, len);
+> -				buf += len;
+> +				len += scnprintf(names + len, sizeof(names) - len,
+> +						 "%s%s", delim, si_names[i].name);
+> +				delim = ",";
+>  			}
+>  
+>  		}
+> -		*buf = '\0';
+>  
+>  		table = *ro_table;
+>  		table.data = names;
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks!
+
+- Feng
+ 
+> Best Regards,
+> Petr
