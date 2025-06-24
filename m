@@ -1,45 +1,45 @@
 Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DB727AC28
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:54:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54E3D27AC34;
+	Tue, 24 Jun 2025 09:54:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750758874; cv=none; b=JP/UgLOS2UIebg2KNB5r+y6tFi0aY0mJOLyuGtH89H5sQjSFkah/mI8EncMseFKNntU7k0+cX1ogzvHTsKCptE3V89vQ2LuFIYVYvM5f7H9AVFBZdiMjkKBwtdnY/aJHAXSm/KV3dfYYzQ3jLWTbfFYD8qStblSR99cEdw+Fcsw=
+	t=1750758874; cv=none; b=G4ONPF/yZN+oPHTAdsjMozpagph+GoDmYy5FxUEXh8Z+3Y+Hk7RWapliq9vUlOsISGXLrwgrKCz/QQWVAunfVmuCDo6RgrQVYkd6jaSskQBnph0iRf7aGzc8r0N5ihQnc9Uf0RNBt9HMt/1lTT5kQOEzI2JQYBqykUszXlmr158=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750758874; c=relaxed/simple;
-	bh=uqkz9n3cXeZ8dWR3V7k1mqJrp/VlUn32LAcNLj9u9Qs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EDdcwwy45JBVMtsGncXV/73Ay1OiWPOm0MTBZ3CV+riqXvLO/uTNwq9PcuIm0ArA+eSl4qVPyD3zG8FaJS/S4UBABU8zHfeU21CLo0KUY9InNUHbNn9qCM+4ghHzEf2quheq6diLhQCbBtCwJmD7y/HjdAXj2Ai7m0ics13hJao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=rwF9Q1CT; arc=none smtp.client-ip=185.226.149.38
+	bh=h6b3Dvy0m1FF/YKgCnBBN4Es7WMUn/3ltvEA8B2lkI8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dFizEJy+i7f+TC2GeX78zsZqYhc42FHTliqxc9U7x32+C2uUEcRf5Y2ijSq5ElI97W0/ACydO5WwSGoP4Y73s8bX6IJ1YCGYe+oBLC2Cc+9zMPU381EQk0Vd+/H10WJ6pvwy9QqmKkzWVtjpqlaEiCxRLX5bcgNCOVWH+FAxY0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=u8Glw/DF; arc=none smtp.client-ip=185.226.149.38
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="rwF9Q1CT"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="u8Glw/DF"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
 	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 	(Exim 4.93)
 	(envelope-from <mhal@rbox.co>)
-	id 1uU0MA-00AvZN-UV; Tue, 24 Jun 2025 11:54:22 +0200
+	id 1uU0M7-00AvYh-Go; Tue, 24 Jun 2025 11:54:19 +0200
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
-	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
-	bh=mb24HdoCl0957wtvOLAlFVXDR/MMgGHlQT3zT4JrkPk=; b=rwF9Q1CTjfwpBGkV52UOkUhx5m
-	7c+srA+xERSbc5QOrn6LO/ZDaAYZOtEbzyG7XTCiCN51Kcq+ZykOOSdm8Z7HKQ+H6qzLbWdzZXkC0
-	HJBbN0J7cUpTmp2FMU0vgQCwu9KCoO/8Rs/e+m4JKLZvGHdYOUH31ijI1i9X4DwE//s/wNtqQlp1O
-	W6vKznZZcVlAaaVR5MFA3vsFXCzdMdi7N+KKMEKgQn6fqnE6/9c0WL2JN9s5NIBrRXxde0fLP29xL
-	O0CMZbnh80GVDcZ8Cm2FTgDMzY1d5nng/rhQ9gZYOR/BD+41FAUPzEA4SkJ5luwFD8edcheeXijJM
-	l/nM9+hA==;
+	s=selector2; h=Cc:To:Content-Transfer-Encoding:Content-Type:MIME-Version:
+	Message-Id:Date:Subject:From; bh=jBuOc98pgrI/yzTm/QMABM9kBiwU1kMFlEWq193r77E=
+	; b=u8Glw/DFBwXcE460G5UOXstjbE3Ina9VfqabOnviDk4Rlvf9//0MKmR4R9Ml5b0ggNj4bz4aq
+	DICbXAubLsufy2T6YJi7wX/qlmryyuubaEffAzOkqFDQqo6/Qxnoi1AkDCEtEnUWSfLlkpFmDBJdm
+	WSsBUG6qSPSDdAJaQ9bEln5TwUfPraHGyiDxd3EUXQA3tuW1VmbuQSHteDAN6AYfafBBDZCkx0K9M
+	v+VeKqqtBjvdvg74pDL+9x3VL1dYzMfNdtPOPxouGKu+brusYEi92+PkuWQWImILYr+seRnUAfHnE
+	4I06AYDK5OXrHL0KuJR4EcHiRSmpk6qWFVRbNw==;
 Received: from [10.9.9.73] (helo=submission02.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
 	(envelope-from <mhal@rbox.co>)
-	id 1uU0MA-0002ZF-JM; Tue, 24 Jun 2025 11:54:22 +0200
+	id 1uU0M7-0005ui-4w; Tue, 24 Jun 2025 11:54:19 +0200
 Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
 	(Exim 4.93)
-	id 1uU0Lk-00FYQf-LG; Tue, 24 Jun 2025 11:53:56 +0200
+	id 1uU0Li-00FYQf-MM; Tue, 24 Jun 2025 11:53:54 +0200
 From: Michal Luczaj <mhal@rbox.co>
-Date: Tue, 24 Jun 2025 11:53:50 +0200
-Subject: [PATCH net-next 3/7] tcp: Drop tcp_splice_state::flags
+Subject: [PATCH net-next 0/7] net: Remove unused function parameters in
+ skbuff.c
+Date: Tue, 24 Jun 2025 11:53:47 +0200
+Message-Id: <20250624-splice-drop-unused-v1-0-cf641a676d04@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,9 +48,10 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-splice-drop-unused-v1-3-cf641a676d04@rbox.co>
-References: <20250624-splice-drop-unused-v1-0-cf641a676d04@rbox.co>
-In-Reply-To: <20250624-splice-drop-unused-v1-0-cf641a676d04@rbox.co>
+X-B4-Tracking: v=1; b=H4sIAKt1WmgC/x3MQQqDMBBG4avIrDuQBCvBq5QugvnbDsgYMloE8
+ e4Gl9/ivYMMVWA0dgdV/MVk0Qb/6Gj6Jf2CJTdTcOHpBh/ZyiwTONel8KabIbNDjxSTD0P01MJ
+ S8ZH9nr5IsbJiX+l9nhdqOeEfbgAAAA==
+X-Change-ID: 20250618-splice-drop-unused-0e4ea8a12681
 To: "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
  Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
@@ -62,37 +63,41 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  Michal Luczaj <mhal@rbox.co>
 X-Mailer: b4 0.14.2
 
-Since skb_splice_bits() does not accept @flags anymore, struct's field
-became unused. Remove it.
+Couple of cleanup patches to get rid of unused function parameters around
+skbuff.c.
 
-No functional change indented.
+Offshot of my question in [1], but way more contained. Found by adding
+"-Wunused-parameter -Wno-error" to KBUILD_CFLAGS and grepping for specific
+skbuff.c warnings.
+
+[1]: https://lore.kernel.org/netdev/972af569-0c90-4585-9e1f-f2266dab6ec6@rbox.co/
 
 Signed-off-by: Michal Luczaj <mhal@rbox.co>
 ---
- net/ipv4/tcp.c | 2 --
- 1 file changed, 2 deletions(-)
+Michal Luczaj (7):
+      net: splice: Drop unused @pipe
+      net: splice: Drop unused @flags
+      tcp: Drop tcp_splice_state::flags
+      af_unix: Drop unix_stream_read_state::splice_flags
+      net: splice: Drop unused @gfp
+      net: splice: Drop nr_pages_max initialization
+      net: skbuff: Drop unused @skb
 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 46997793d87ab40dcd1e1dd041e4641e287e1b7e..b6285fb1369d32541b9f7d660ca33389b7e4da61 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -324,7 +324,6 @@ EXPORT_IPV6_MOD(tcp_sockets_allocated);
- struct tcp_splice_state {
- 	struct pipe_inode_info *pipe;
- 	size_t len;
--	unsigned int flags;
- };
- 
- /*
-@@ -803,7 +802,6 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *ppos,
- 	struct tcp_splice_state tss = {
- 		.pipe = pipe,
- 		.len = len,
--		.flags = flags,
- 	};
- 	long timeo;
- 	ssize_t spliced;
+ .../chelsio/inline_crypto/chtls/chtls_io.c         |  3 +-
+ include/linux/skbuff.h                             |  5 ++--
+ net/core/skbuff.c                                  | 32 ++++++++--------------
+ net/ipv4/ip_output.c                               |  3 +-
+ net/ipv4/tcp.c                                     |  7 ++---
+ net/ipv6/ip6_output.c                              |  3 +-
+ net/kcm/kcmsock.c                                  |  5 ++--
+ net/tls/tls_sw.c                                   |  2 +-
+ net/unix/af_unix.c                                 |  7 ++---
+ 9 files changed, 24 insertions(+), 43 deletions(-)
+---
+base-commit: ee1a0c653f9cad7e2634a39f6c530e12edddf0fc
+change-id: 20250618-splice-drop-unused-0e4ea8a12681
 
+Best regards,
 -- 
-2.49.0
+Michal Luczaj <mhal@rbox.co>
 
