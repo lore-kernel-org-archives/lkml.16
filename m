@@ -1,363 +1,95 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08232E9738
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 131002512DD
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750794407; cv=none; b=Rv7uxNKYV9FPqbRADKAgF3ISfXkxYjNlTUMHC5BQyIIV7ILIss8OpncES87JZAgqMWKLOqheJ8e5clt3Re8V9vuPwmCwfXfqJ6oooYGdYbOYRJZhPrHleqQXR7Ivty+xiTzwa7eBx8G7VsyWRdnlDuFZ1w4ej1zwAFMmnoOYGXg=
+	t=1750794502; cv=none; b=RYdqpdkbh2f5IboSAz/3mTBb6ZPT88dexLK+WeRLMXRDKBLcwGOkEGvtvxFg2tVr+hS3MmMjV7mP7Bfelgf1mLyhlrY3Dm18HU+z9Hh9Dm5I7/71cl6SwZJxmQZP63llakH9uo9BVtDB7UMHXSx2Rcbb2NJyFq7twGmL2B8Fvzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750794407; c=relaxed/simple;
-	bh=/VKNEP0ltWiKSzMv/NxgrMfcRJpj1AtOgeiziegS+qQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HA0GdWqvgkasTxKgBWyVFy1wBzWrJytxNbiFmnBiEGxKCslZBt/YaXz31lunTknpar8A6heTstDcMFe0H+gXHWot2MTC6dTquOdIDJhjntwlTWalBlP/K6sPAYnJvNN5UlVTvli5gecyX2szjEC3axWhoHT0I7WMgqMIUBqCeQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com; spf=pass smtp.mailfrom=embeddedor.com; dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b=VZON7Y3w; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=embeddedor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=embeddedor.com
+	s=arc-20240116; t=1750794502; c=relaxed/simple;
+	bh=6GotpNDPl6kXY95Qph8BUp0563LHJJPy0THk60BPwCo=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=H8XGQt1vctmaKUBU+GHA7KddizsiXf+nuYAAxdS50ITwAhhnVWjKIhYch4WzgrKWFyxC0lp7f3eGpycd26IW0tr0BwizN0uGV9lEEZMPabEDikBNWDc1rimuIDNcZp2OfcDYzUGFfKGERN41MVG2MI93iCYLUokoy0VA9AbuCTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iXvrgX7L; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="VZON7Y3w"
-Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
-	by cmsmtp with ESMTPS
-	id U6NQubiCxMETlU9bRumaFU; Tue, 24 Jun 2025 19:46:45 +0000
-Received: from gator4166.hostgator.com ([108.167.133.22])
-	by cmsmtp with ESMTPS
-	id U9bQuTPV6q3CNU9bQu1cdj; Tue, 24 Jun 2025 19:46:44 +0000
-X-Authority-Analysis: v=2.4 cv=VpfoAP2n c=1 sm=1 tr=0 ts=685b00a4
- a=1YbLdUo/zbTtOZ3uB5T3HA==:117 a=y7jUFFJD1EYPe7d4fIfORw==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7T7KSl7uo7wA:10 a=VwQbUJbxAAAA:8
- a=rxE1pZJS_adTsW7E6NAA:9 a=QEXdDO2ut3YA:10 a=xYX6OU9JNrHFPr8prv8u:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=UrkOMRXh4VU9szWbhUzcUYJTMJCwbEOG1xhSxMr5j/s=; b=VZON7Y3wKm+1ZIJLeb9xH61f7I
-	x938k9LP1QGcL52x2rmYSeSzzv4KES1aUKkox26nbZFXBY9dSnaYpLwQe79DygG6EudIhvBUQqtax
-	OQ2D2UC4UchUOmmjxl5i+8brKQOBp2FllQUHxAALjGbAkjN8G4h8nHkLKVHSpeMFM82jTwBvY+IYi
-	FMjZEskzilCrgW6jOYSVx46EtrC3JvKb5QCWxR2hu7/wShFB9QQr0xHTW0nINlmMVHq0mY2Nza1dS
-	2+CyeU9MZ4lo5STprt7Fy0zd3WB550f3rfOd473ukD3YzgxjRBlrZfxbzoqMJaOzwgNT3ypQ5vEev
-	x8WFnWyg==;
-Received: from [177.238.16.137] (port=33172 helo=[192.168.0.21])
-	by gator4166.hostgator.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <gustavo@embeddedor.com>)
-	id 1uU9bP-00000004Led-076f;
-	Tue, 24 Jun 2025 14:46:43 -0500
-Message-ID: <9782fd09-c6c6-4cac-bcfa-404733ae827a@embeddedor.com>
-Date: Tue, 24 Jun 2025 13:46:32 -0600
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iXvrgX7L"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-235c897d378so7312585ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:48:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750794499; x=1751399299; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FqfSnFWDbYX+XfGG95qXGIQa/IUf7HyXIBVSL1oPA5M=;
+        b=iXvrgX7LxlZuCfOu6RsvjymC6y4ezqYcyHZ81rwVKLStC2Ro8uPEVwWWkIX7c+gWTO
+         eqRhZNf8Knn8byVswwz5LGlRnIC3AjJr57bV2cU++oKAnjd45aHzGa1cxFQga6a1buoP
+         twrArYcw/uh6Gq/ftakiPhMGWM1xj6HoeF01/V5ayaJ+wB7Fw9LNR0+sg7OKouYtOnId
+         +8OI/jxHuZYDxbo9UbdWTmnP6tsvu+D9KRA6w7lIoCrhNWERPhyU3BdvcezCpKcIn68e
+         EHLALC9xux6llqkftURcyKGJIkXsZLJxEN3s1x6ih42ZjCRdCYEPuWSRPPlQqxgekj7i
+         ZVvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750794499; x=1751399299;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FqfSnFWDbYX+XfGG95qXGIQa/IUf7HyXIBVSL1oPA5M=;
+        b=loNy36urrEaPcUPxfTb2VUGXmSg/+UDqvlj+MncWFQWjT2/1ZukS9MId1qkAlmSm45
+         YKH13Ir+tv0n1Ip0wBerAuiMnEGBSFhzFjfQV9Al+KkG7u9pp67YrrA19xl8KRUPbrr7
+         d7AG68k3hCAKx3x1K+P3n/xUS4+Ki37EwlK5AInpknm1AqPAmB8IFm1nvMO2O90lt9BP
+         uyQGJ9lGY/+7njbVHpiJpa/YhwHdsjE9ZBe4dxuSE9Tm0IsdH8VwtJQ/WNKdWuohU80M
+         EGAimGOBfC/6cCEwPFFrGv3wnb7sWEhobijI+ZYJ7TuwWjG0YI8ViEyBcXMjYikrH3hT
+         9aDA==
+X-Forwarded-Encrypted: i=1; AJvYcCWknBKTCEWhxd+apHo3C7kcslHJT2vuKRuXuJxd5uqbsmwEcleI/FY23/q3Ljy1BKGPgsUK2RqrYTK+uUg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcEP0fJE+9YFtik3uSeGPfDkz/pzvBVitW5YyZWMvqwk7R8M+Z
+	clKRQozmuSw50tTlk7AiYOkUoPS4WEt54U3XBydkcfKWTQnne8kIQELuy+vgfgxvxmhyCzOhUa3
+	XIb/9rQ==
+X-Google-Smtp-Source: AGHT+IGpxI8leluMl7D0SzRSyFZPnLIXhC1vo2SBZLbYA6FIywV5P5SjIY/uT1NfQ4kDXoXw/tVSxEHwr2k=
+X-Received: from plle12.prod.google.com ([2002:a17:903:166c:b0:234:ddd7:5c24])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:ec91:b0:235:779:ede0
+ with SMTP id d9443c01a7336-2382405cae0mr10401765ad.35.1750794499470; Tue, 24
+ Jun 2025 12:48:19 -0700 (PDT)
+Date: Tue, 24 Jun 2025 12:48:17 -0700
+In-Reply-To: <aDcHfuAbPMrhI9As@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3][next] acpi: nfit: intel: avoid multiple
- -Wflex-array-member-not-at-end warnings
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Dan Williams <dan.j.williams@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
- Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>,
- Len Brown <lenb@kernel.org>
-Cc: nvdimm@lists.linux.dev, linux-acpi@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
- Kees Cook <kees@kernel.org>
-References: <aEneid7gdAZr1_kR@kspp>
-Content-Language: en-US
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-In-Reply-To: <aEneid7gdAZr1_kR@kspp>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 177.238.16.137
-X-Source-L: No
-X-Exim-ID: 1uU9bP-00000004Led-076f
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.0.21]) [177.238.16.137]:33172
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Org: HG=hgshared;ORG=hostgator;
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfMjLG+AlvU+UlH6N1WOm0Mr6Xnrg8L4QN6+YQGjMjxsxhFu1lp8Qg4UFp8NS1NRsjcMsbV/6R3B/BVQoGkt7RJ6I2EE8lA9FU/U1bz096+W1Dly3hOyR
- YCsoOK0vQFrm1Fw8W6kE2rI5i/59PnYBOGkr0DjOiuB0PPJkr/B6HWeAU2RagNPFTY38zEPxm0OsbpAX2Guj9Yyx7GX+WTYw40hgZHc2YiUGHCNDZLvADcpv
+Mime-Version: 1.0
+References: <20250523001138.3182794-1-seanjc@google.com> <20250523001138.3182794-3-seanjc@google.com>
+ <7cc5cd92-1854-4e0e-93b7-e4eee5991334@intel.com> <aDcHfuAbPMrhI9As@google.com>
+Message-ID: <aFsBAXAbRQTPY45m@google.com>
+Subject: Re: [PATCH v4 2/4] KVM: x86/mmu: Dynamically allocate shadow MMU's
+ hashed page list
+From: Sean Christopherson <seanjc@google.com>
+To: Xiaoyao Li <xiaoyao.li@intel.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Vipin Sharma <vipinsh@google.com>, James Houghton <jthoughton@google.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Hi all,
+On Wed, May 28, 2025, Sean Christopherson wrote:
+> On Wed, May 28, 2025, Xiaoyao Li wrote:
+> > On 5/23/2025 8:11 AM, Sean Christopherson wrote:
+> > > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> > > index cbc84c6abc2e..41da2cb1e3f1 100644
+> > > --- a/arch/x86/kvm/mmu/mmu.c
+> > > +++ b/arch/x86/kvm/mmu/mmu.c
+> > > @@ -3882,6 +3882,18 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
+> > >   	return r;
+> > >   }
+> > > +static int kvm_mmu_alloc_page_hash(struct kvm *kvm)
+> > > +{
+> > > +	typeof(kvm->arch.mmu_page_hash) h;
+> > 
+> > Out of curiousity, it is uncommon in KVM to use typeof() given that we know
+> > what the type actually is. Is there some specific reason?
+> 
+> I'm pretty sure it's a leftover from various experiments.  IIRC, I was trying to
+> do something odd and was having a hard time getting the type right :-)
+> 
+> I'll drop the typeof() in favor of "struct hlist_head *", using typeof here isn't
+> justified and IMO makes the code a bit harder to read.
 
-Friendly ping: who can review or take this, please? :)
-
-Thanks!
--Gustavo
-
-On 11/06/25 13:52, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
-> 
-> Refactor multiple structs that contain flexible-array members in the
-> middle by replacing them with unions.
-> 
-> These changes preserve the memory layout while effectively adjusting
-> it so that the flexible-array member is always treated as the last
-> member.
-> 
-> With these changes, fix a dozen instances of the following type of
-> warning:
-> 
-> drivers/acpi/nfit/intel.c:692:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
-> 
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
-> Changes in v3:
->   - Use union instead of DEFINE_RAW_FLEX().
-> 
-> Changes in v2:
->   - Use DEFINE_RAW_FLEX() instead of __struct_group().
->   - Link: https://lore.kernel.org/linux-hardening/Z-QpUcxFCRByYcTA@kspp/
-> 
-> v1:
->   - Link: https://lore.kernel.org/linux-hardening/Z618ILbAR8YAvTkd@kspp/
-> 
->   drivers/acpi/nfit/intel.c | 132 +++++++++++++++++++++++++++++++-------
->   1 file changed, 108 insertions(+), 24 deletions(-)
-> 
-> diff --git a/drivers/acpi/nfit/intel.c b/drivers/acpi/nfit/intel.c
-> index 3902759abcba..987d427ec2b6 100644
-> --- a/drivers/acpi/nfit/intel.c
-> +++ b/drivers/acpi/nfit/intel.c
-> @@ -55,9 +55,16 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
->   {
->   	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->   	unsigned long security_flags = 0;
-> -	struct {
-> +	/*
-> +	 * This effectively creates a union between the flexible-array member
-> +	 * and any members after _offset_to_fam.
-> +	 */
-> +	union {
->   		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_get_security_state cmd;
-> +		struct {
-> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
-> +			struct nd_intel_get_security_state cmd;
-> +		};
->   	} nd_cmd = {
->   		.pkg = {
->   			.nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
-> @@ -120,9 +127,16 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
->   static int intel_security_freeze(struct nvdimm *nvdimm)
->   {
->   	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-> -	struct {
-> +	/*
-> +	 * This effectively creates a union between the flexible-array member
-> +	 * and any members after _offset_to_fam.
-> +	 */
-> +	union {
->   		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_freeze_lock cmd;
-> +		struct {
-> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
-> +			struct nd_intel_freeze_lock cmd;
-> +		};
->   	} nd_cmd = {
->   		.pkg = {
->   			.nd_command = NVDIMM_INTEL_FREEZE_LOCK,
-> @@ -153,9 +167,16 @@ static int intel_security_change_key(struct nvdimm *nvdimm,
->   	unsigned int cmd = ptype == NVDIMM_MASTER ?
->   		NVDIMM_INTEL_SET_MASTER_PASSPHRASE :
->   		NVDIMM_INTEL_SET_PASSPHRASE;
-> -	struct {
-> +	/*
-> +	 * This effectively creates a union between the flexible-array member
-> +	 * and any members after _offset_to_fam.
-> +	 */
-> +	union {
->   		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_set_passphrase cmd;
-> +		struct {
-> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
-> +			struct nd_intel_set_passphrase cmd;
-> +		};
->   	} nd_cmd = {
->   		.pkg = {
->   			.nd_family = NVDIMM_FAMILY_INTEL,
-> @@ -195,9 +216,16 @@ static int __maybe_unused intel_security_unlock(struct nvdimm *nvdimm,
->   		const struct nvdimm_key_data *key_data)
->   {
->   	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-> -	struct {
-> +	/*
-> +	 * This effectively creates a union between the flexible-array member
-> +	 * and any members after _offset_to_fam.
-> +	 */
-> +	union {
->   		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_unlock_unit cmd;
-> +		struct {
-> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
-> +			struct nd_intel_unlock_unit cmd;
-> +		};
->   	} nd_cmd = {
->   		.pkg = {
->   			.nd_command = NVDIMM_INTEL_UNLOCK_UNIT,
-> @@ -234,9 +262,16 @@ static int intel_security_disable(struct nvdimm *nvdimm,
->   {
->   	int rc;
->   	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-> -	struct {
-> +	/*
-> +	 * This effectively creates a union between the flexible-array member
-> +	 * and any members after _offset_to_fam.
-> +	 */
-> +	union {
->   		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_disable_passphrase cmd;
-> +		struct {
-> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
-> +			struct nd_intel_disable_passphrase cmd;
-> +		};
->   	} nd_cmd = {
->   		.pkg = {
->   			.nd_command = NVDIMM_INTEL_DISABLE_PASSPHRASE,
-> @@ -277,9 +312,16 @@ static int __maybe_unused intel_security_erase(struct nvdimm *nvdimm,
->   	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->   	unsigned int cmd = ptype == NVDIMM_MASTER ?
->   		NVDIMM_INTEL_MASTER_SECURE_ERASE : NVDIMM_INTEL_SECURE_ERASE;
-> -	struct {
-> +	/*
-> +	 * This effectively creates a union between the flexible-array member
-> +	 * and any members after _offset_to_fam.
-> +	 */
-> +	union {
->   		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_secure_erase cmd;
-> +		struct {
-> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
-> +			struct nd_intel_secure_erase cmd;
-> +		};
->   	} nd_cmd = {
->   		.pkg = {
->   			.nd_family = NVDIMM_FAMILY_INTEL,
-> @@ -318,9 +360,16 @@ static int __maybe_unused intel_security_query_overwrite(struct nvdimm *nvdimm)
->   {
->   	int rc;
->   	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-> -	struct {
-> +	/*
-> +	 * This effectively creates a union between the flexible-array member
-> +	 * and any members after _offset_to_fam.
-> +	 */
-> +	union {
->   		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_query_overwrite cmd;
-> +		struct {
-> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
-> +			struct nd_intel_query_overwrite cmd;
-> +		};
->   	} nd_cmd = {
->   		.pkg = {
->   			.nd_command = NVDIMM_INTEL_QUERY_OVERWRITE,
-> @@ -354,9 +403,16 @@ static int __maybe_unused intel_security_overwrite(struct nvdimm *nvdimm,
->   {
->   	int rc;
->   	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
-> -	struct {
-> +	/*
-> +	 * This effectively creates a union between the flexible-array member
-> +	 * and any members after _offset_to_fam.
-> +	 */
-> +	union {
->   		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_overwrite cmd;
-> +		struct {
-> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
-> +			struct nd_intel_overwrite cmd;
-> +		};
->   	} nd_cmd = {
->   		.pkg = {
->   			.nd_command = NVDIMM_INTEL_OVERWRITE,
-> @@ -407,9 +463,16 @@ const struct nvdimm_security_ops *intel_security_ops = &__intel_security_ops;
->   static int intel_bus_fwa_businfo(struct nvdimm_bus_descriptor *nd_desc,
->   		struct nd_intel_bus_fw_activate_businfo *info)
->   {
-> -	struct {
-> +	/*
-> +	 * This effectively creates a union between the flexible-array member
-> +	 * and any members after _offset_to_fam.
-> +	 */
-> +	union {
->   		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_bus_fw_activate_businfo cmd;
-> +		struct {
-> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
-> +			struct nd_intel_bus_fw_activate_businfo cmd;
-> +		};
->   	} nd_cmd = {
->   		.pkg = {
->   			.nd_command = NVDIMM_BUS_INTEL_FW_ACTIVATE_BUSINFO,
-> @@ -518,9 +581,16 @@ static enum nvdimm_fwa_capability intel_bus_fwa_capability(
->   static int intel_bus_fwa_activate(struct nvdimm_bus_descriptor *nd_desc)
->   {
->   	struct acpi_nfit_desc *acpi_desc = to_acpi_desc(nd_desc);
-> -	struct {
-> +	/*
-> +	 * This effectively creates a union between the flexible-array member
-> +	 * and any members after _offset_to_fam.
-> +	 */
-> +	union {
->   		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_bus_fw_activate cmd;
-> +		struct {
-> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
-> +			struct nd_intel_bus_fw_activate cmd;
-> +		};
->   	} nd_cmd = {
->   		.pkg = {
->   			.nd_command = NVDIMM_BUS_INTEL_FW_ACTIVATE,
-> @@ -582,9 +652,16 @@ const struct nvdimm_bus_fw_ops *intel_bus_fw_ops = &__intel_bus_fw_ops;
->   static int intel_fwa_dimminfo(struct nvdimm *nvdimm,
->   		struct nd_intel_fw_activate_dimminfo *info)
->   {
-> -	struct {
-> +	/*
-> +	 * This effectively creates a union between the flexible-array member
-> +	 * and any members after _offset_to_fam.
-> +	 */
-> +	union {
->   		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_fw_activate_dimminfo cmd;
-> +		struct {
-> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
-> +			struct nd_intel_fw_activate_dimminfo cmd;
-> +		};
->   	} nd_cmd = {
->   		.pkg = {
->   			.nd_command = NVDIMM_INTEL_FW_ACTIVATE_DIMMINFO,
-> @@ -688,9 +765,16 @@ static int intel_fwa_arm(struct nvdimm *nvdimm, enum nvdimm_fwa_trigger arm)
->   {
->   	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
->   	struct acpi_nfit_desc *acpi_desc = nfit_mem->acpi_desc;
-> -	struct {
-> +	/*
-> +	 * This effectively creates a union between the flexible-array member
-> +	 * and any members after _offset_to_fam.
-> +	 */
-> +	union {
->   		struct nd_cmd_pkg pkg;
-> -		struct nd_intel_fw_activate_arm cmd;
-> +		struct {
-> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
-> +			struct nd_intel_fw_activate_arm cmd;
-> +		};
->   	} nd_cmd = {
->   		.pkg = {
->   			.nd_command = NVDIMM_INTEL_FW_ACTIVATE_ARM,
-
+Gah, I forgot to switch to address this when applying.  I'll fixup the commit
+and force push; it'll only affect this series (hooray for topic branches).
