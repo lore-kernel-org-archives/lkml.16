@@ -1,150 +1,84 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EA522D9ED;
-	Tue, 24 Jun 2025 15:49:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750780179; cv=pass; b=pG+IC5mvWGewOKtkxmTT2lcds1gmEkCiKyaMZwNPgpUp3arwXyfXcF4jjkSLtAO7xGCwcXaBliEmRd8wGJuZ08OnHOTtZzz1MdBJkG60gYFz5bfLrjjeHWyh+OhjqmDjC2nUmgUYz3ZyFkmJpvz5fBSJ95ujQgx0ygLv7IMyNMk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750780179; c=relaxed/simple;
-	bh=3+XTKpEiNYrYrQNEx7zBBd9tGAKVmroU4kJyUaRvTlY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=i0wHNjNZ9s5rxg8SZZMVrCoHWHSWAdKEOv2lXFmuX/tkl1KdbBGCa0gilSDWCuCVzkWGQ2QamjcxRANSQGUdwIdfzCW/GbtTapWQCZCJTOulXrwu/FAE+fR2B3kceru7M11JaGRDbEqvMmkwoxtuIySbb0eIh9X0w3+Oo8/UF6o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b=Mf+1u2nZ; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E043074A4
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:50:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750780233; cv=none; b=qOWIV6NsrekNubgJVM8SAXYgmNxEDpVCd+f2QollrtCqLKr45zSANx8XlwX6xVLzZ2+OaLAzG0126RPU2ZhVj1XtXKrPvzHGWXF5UZuXdNznyt5k20AOqzxwjPXpkCeTWjccUu+czFIu9O2DtCfQgcgukyuFrpAw8+NSTNIJQc4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750780233; c=relaxed/simple;
+	bh=iFP/xGULGxI+ndT4Flr0p4RRVr1TWyEdJWoJn5wTqkI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i+Cm48L1KJRIYApxhW7eTlUFP0mGtQuR7uSsidokHmgPr9pSwQ5GFfRS27ZC8UHXgwimgTghL/ChW8GIWHvtY/FFxLEvNr9fIgRiwP7f0xMsIpy/pKYHSq1dzL6z4pXO0SIRHU96XudJsMyIVPhcImY2EvbfacShip5127AHNXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tcm2Pq6f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b="Mf+1u2nZ"
-ARC-Seal: i=1; a=rsa-sha256; t=1750780152; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=nhM6xzFKQLignkPZ/NGXslADyUBs01OBDRtEGhcYbEZLQGf8X++La8SK8bC4+Ep+pG4NDeBk7ldt/PmAcUwHLQAhHIBkrJl+G2icqEjZGA88um/8uXeLESnCeveaO2Sqlx2ssV+EZHeA04IQK4nTIlbJQ+7JJzoWL2lDvcLidTg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750780152; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=3+XTKpEiNYrYrQNEx7zBBd9tGAKVmroU4kJyUaRvTlY=; 
-	b=fslOD0wYoTicBABQ5dKJGop85WUGIP8Gf7QKyA66Q36NNT+f9XEPfE6a9cQpNesBZuqe2kgLSDPkO+dfvDn5u9qbPyRpHBivsWb0QxEAVyKVGmpCEzrib0a75B05/cYjHkJhNxrq1JkFsVCMmbClNIhuL/wQtsLnpwLAcWK3ocE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nfraprado@collabora.com;
-	dmarc=pass header.from=<nfraprado@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750780152;
-	s=zohomail; d=collabora.com; i=nfraprado@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=3+XTKpEiNYrYrQNEx7zBBd9tGAKVmroU4kJyUaRvTlY=;
-	b=Mf+1u2nZer5UaeOmVDDAG1ecTp+wTtSEGZa9C3cYt9i/q4ByEvX5DGQq90zHOwAn
-	2/GOLXkRK5exFiNuHju7XzqZIHCmL20orHuNSEIRGWVBLR9FlyMSJlOokbhtLDnXggx
-	bYiEGIiz6n8lHpUWi/XVRSNEguEbKc1oG0rnjXyc=
-Received: by mx.zohomail.com with SMTPS id 1750780149757734.6410007359632;
-	Tue, 24 Jun 2025 08:49:09 -0700 (PDT)
-Message-ID: <c05ff44f1df5276a0a548cbfc7589d45520a54bb.camel@collabora.com>
-Subject: Re: [PATCH v2 00/29] Add support for MT8196 clock controllers
-From: =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" <nfraprado@collabora.com>
-To: Laura Nao <laura.nao@collabora.com>, mturquette@baylibre.com, 
- sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-  matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, 
- p.zabel@pengutronix.de, richardcochran@gmail.com
-Cc: guangjie.song@mediatek.com, wenst@chromium.org,
- linux-clk@vger.kernel.org,  devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,  netdev@vger.kernel.org,
- kernel@collabora.com
-Date: Tue, 24 Jun 2025 11:49:07 -0400
-In-Reply-To: <20250624143220.244549-1-laura.nao@collabora.com>
-References: <20250624143220.244549-1-laura.nao@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tcm2Pq6f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58002C4CEE3;
+	Tue, 24 Jun 2025 15:50:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750780232;
+	bh=iFP/xGULGxI+ndT4Flr0p4RRVr1TWyEdJWoJn5wTqkI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tcm2Pq6f+G2SNXNM55rAR3wgLKi09S1yVeW3PIRrZ81vUFOJXkDQ/1ky6LHWXVSMF
+	 XtKJNqv0MjAsfoZeDWqXghNZBlBwM/8B0ebY81emk2vc4jvNdlHReeqauEAXawOVWV
+	 YjlPNxdoBh5ocuBJwmErA+iY8GgZVuuLxnjYcioU=
+Date: Tue, 24 Jun 2025 16:50:30 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Zijun Hu <zijun_hu@icloud.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+	Zijun Hu <zijun.hu@oss.qualcomm.com>
+Subject: Re: [PATCH RFC] char: misc: Enforce simple minor space division
+Message-ID: <2025062445-procedure-latch-9421@gregkh>
+References: <20250620-rfc_miscdev-v1-1-fda25d502a37@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620-rfc_miscdev-v1-1-fda25d502a37@oss.qualcomm.com>
 
-On Tue, 2025-06-24 at 16:31 +0200, Laura Nao wrote:
-> Add support for MT8196 clock controllers
->=20
-> This patch series introduces support for the clock controllers on the
-> MediaTek MT8196 platform, following up on an earlier submission[1].
->=20
-> MT8196 uses a hardware voting mechanism to control some of the clock
-> muxes
-> and gates, along with a fence register responsible for tracking PLL
-> and mux
-> gate readiness. The series introduces support for these voting and
-> fence
-> mechanisms, and includes drivers for all clock controllers on the
-> platform.
->=20
-> [1]
-> https://lore.kernel.org/all/20250307032942.10447-1-guangjie.song@mediatek=
-.com/
->=20
-> Changes in v2:
-> - Fixed incorrect ID numbering in mediatek,mt8196-clock.h
-> - Improved description for 'mediatek,hardware-voter' in
-> mediatek,mt8196-clock.yaml and mediatek,mt8196-sys-clock.yaml
-> - Added description for '#reset-cells' in mediatek,mt8196-clock.yaml
-> - Added missing mediatek,mt8196-vdisp-ao compatible in
-> mediatek,mt8196-clock.yaml
-> - Fixed license in mediatek,mt8196-resets.h
-> - Fixed missing of_match_table in clk-mt8196-vdisp_ao.c
-> - Squashed commit adding UFS and PEXTP reset controller support
-> - Reordered commits to place reset controller binding before
-> dependent drivers
-> - Added R-b tags
->=20
-> Link to v1:
-> https://lore.kernel.org/all/20250623102940.214269-1-laura.nao@collabora.c=
-om/
->=20
-> AngeloGioacchino Del Regno (1):
-> =C2=A0 dt-bindings: reset: Add MediaTek MT8196 Reset Controller binding
->=20
-> Laura Nao (28):
-> =C2=A0 clk: mediatek: clk-pll: Add set/clr regs for shared PLL enable
-> control
-> =C2=A0 clk: mediatek: clk-pll: Add ops for PLLs using set/clr regs and
-> FENC
-> =C2=A0 clk: mediatek: clk-mux: Add ops for mux gates with set/clr/upd and
-> =C2=A0=C2=A0=C2=A0 FENC
-> =C2=A0 clk: mediatek: clk-mtk: Introduce mtk_clk_get_hwv_regmap()
-> =C2=A0 clk: mediatek: clk-mux: Add ops for mux gates with HW voter and
-> FENC
-> =C2=A0 clk: mediatek: clk-gate: Refactor mtk_clk_register_gate to use
-> =C2=A0=C2=A0=C2=A0 mtk_gate struct
-> =C2=A0 clk: mediatek: clk-gate: Add ops for gates with HW voter
-> =C2=A0 clk: mediatek: clk-mtk: Add MUX_DIV_GATE macro
-> =C2=A0 dt-bindings: clock: mediatek: Describe MT8196 peripheral clock
-> =C2=A0=C2=A0=C2=A0 controllers
-> =C2=A0 clk: mediatek: Add MT8196 apmixedsys clock support
-> =C2=A0 clk: mediatek: Add MT8196 topckgen clock support
-> =C2=A0 clk: mediatek: Add MT8196 topckgen2 clock support
-> =C2=A0 clk: mediatek: Add MT8196 vlpckgen clock support
-> =C2=A0 clk: mediatek: Add MT8196 peripheral clock support
-> =C2=A0 clk: mediatek: Add MT8196 ufssys clock support
-> =C2=A0 clk: mediatek: Add MT8196 pextpsys clock support
-> =C2=A0 clk: mediatek: Add MT8196 adsp clock support
-> =C2=A0 clk: mediatek: Add MT8196 I2C clock support
-> =C2=A0 clk: mediatek: Add MT8196 mcu clock support
-> =C2=A0 clk: mediatek: Add MT8196 mdpsys clock support
-> =C2=A0 clk: mediatek: Add MT8196 mfg clock support
-> =C2=A0 clk: mediatek: Add MT8196 disp0 clock support
-> =C2=A0 clk: mediatek: Add MT8196 disp1 clock support
-> =C2=A0 clk: mediatek: Add MT8196 disp-ao clock support
-> =C2=A0 clk: mediatek: Add MT8196 ovl0 clock support
-> =C2=A0 clk: mediatek: Add MT8196 ovl1 clock support
-> =C2=A0 clk: mediatek: Add MT8196 vdecsys clock support
-> =C2=A0 clk: mediatek: Add MT8196 vencsys clock support
+On Fri, Jun 20, 2025 at 10:53:32PM +0800, Zijun Hu wrote:
+> From: Zijun Hu <zijun.hu@oss.qualcomm.com>
+> 
+> Enforce simple minor space division related to macro MISC_DYNAMIC_MINOR
+> defined as 255 currently:
+> 
+> <  255 : Fixed minor codes
+> == 255 : Indicator to request dynamic minor code
+> >  255 : Dynamic minor codes requested
 
-For the whole series:
+Is this the rule today?  If so, does the now-added tests we have for
+misc device properly test for this?
 
-Reviewed-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
+> This enforcing division also solves misc_register() reentry issue below:
+> 
+> // Suppose both static @dev_A and @dev_B want to request dynamic minors.
+> @dev_A.minor(255) @dev_B.minor(255)
+> 
+> // Register @dev_A then de-register it.
+> @dev_A.minor(255) -> registered -> @dev_A.minor(500) -> de-registered
+> -> @dev_A.minor(500)
+> 
+> // Register @dev_B
+> @dev_B.minor(255) -> registered -> @dev_B.minor(500)
+> 
+> // Register @dev_A again
+> @dev_A.minor(500) -> encounter -EBUSY error since @dev_B has got 500.
 
-(as I internally reviewed it before submission)
+Does this ever really happen?
 
---=20
-Thanks,
+And with the recent changes in the last dev cycle in this code area, is
+it still an issue?
 
-N=C3=ADcolas
+> Side effects:
+> It will be refused to register device whose fixed minor > 255.
+
+Do we have any in-kernel users that are > 255?
+
+thanks,
+
+greg k-h
