@@ -1,126 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775C2126C05;
-	Tue, 24 Jun 2025 17:56:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FDFB2DAFB9;
+	Tue, 24 Jun 2025 17:56:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750787767; cv=none; b=i1Quum4CWS3/NwuKbSMg86Aue/G0dHy/yAb/QkeeLHle7yvsnQMjUmtBs37hU981KBZJp5KJoLE84Dsmqa9AbXQ0aE6i+FhLya6u2MYA0f1n9aWTgSnW3+YfNVu1yEFCIXSnvn7PkR7re++4R0L+afQ4tPivWDVUICCRMGjmtkE=
+	t=1750787804; cv=none; b=F6Yrbznrm3DwrEIqwl/kH/qhJfKM8nryl3yb0ibM8sxgKXPUIuvpD6L6n+fnnd4wjzkRrrRIxf5aAkGImFKWLWNudVblKVmtHSUgQ4tkW4bkHE2iWV+J+mG98qXlJDx18wbYWTfOgNR0RWLyYQSh6idDHUlfkeeFrkzegFZBews=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750787767; c=relaxed/simple;
-	bh=guF7Vvhho0jqz/1Z71mXNiQ+L7CCP+rSBGsLZ9Yc3Nc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d7ni6nasyscxxAzUuKet1NyUFI4J/aT2qsckQ7W2Ve1NyvU2T0G9H6OxQpNaPRs+H/d4VvI6fxDFMaME/Pk/s5y08NjZlXg299pgAkpLCP5HMUVAX4PoJHvKfoK83OOR9Q3IV3kqexOQI5r57KMlY4qaQ9loaiQpTyY8qt3uT4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iTuIU7wS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750787804; c=relaxed/simple;
+	bh=STdjH06ZEoi9PRmrLJP7FLKxed9+IlHUbKgbwftgTek=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WETA2VjBrknumLayat/JPRL9C2MaTBz8Ynh/Y95BQxAk/8mSPu7GdrqXlSFML568ZFJm5G/WDfVgKKikRJ5g3fyrG2wuZFRdPSMDnbx09Js7RVNvAayEhXB2+n+/kyhn0Cf5WM/toEUEIE4JZKYP25zH6xQQmonYlpXDPyohApU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iuZWFt6y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iTuIU7wS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CFDEC4CEE3;
-	Tue, 24 Jun 2025 17:56:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iuZWFt6y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8DD3C4CEF4;
+	Tue, 24 Jun 2025 17:56:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750787767;
-	bh=guF7Vvhho0jqz/1Z71mXNiQ+L7CCP+rSBGsLZ9Yc3Nc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iTuIU7wSrz9WyrTzTPcvHw4r8ekW15ezCVFdTeMkTz1agG4aIAYYhmmYn9A/rLlWa
-	 Ma9qGHuHFU9MyIXbAhN1nhUnzH9OQflEvD10agU1R6SMlIkvLJoJIOhvoRMVUe3T7S
-	 uUbr70yQFkv0MXePnqAe0ofU5kLQx2U55M/1iB1nlqb2V6Z58MFxYI+Vnhf3uWul3q
-	 rqSuLii29MtTxuNkb8wYHfDI1S1TYf5JVT6cxV1uvMAZkmx2+2izrBHsuYA1HHasP6
-	 VYwxQDjtP3onzGnM9e/1AXDwLVQpSH0INz+SWO+brX9+Gcn0Q8lH+ifsjjMGWUmpc6
-	 K+soGrofb6s4A==
-Date: Tue, 24 Jun 2025 10:56:04 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Chun-Tse Shao <ctshao@google.com>, wy.shih90@gmail.com,
-	Ian Rogers <irogers@google.com>, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	tmricht@linux.ibm.com, leo.yan@arm.com, atrajeev@linux.vnet.ibm.com,
-	linux-perf-users@vger.kernel.org,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] perf test: Replace grep perl regexp with awk
-Message-ID: <aFrmtGhq2Di0OrD_@google.com>
-References: <20250620174034.819894-1-ctshao@google.com>
- <e8c28a7e-bc08-4c50-96ca-afe62cfcf9fd@linaro.org>
+	s=k20201202; t=1750787803;
+	bh=STdjH06ZEoi9PRmrLJP7FLKxed9+IlHUbKgbwftgTek=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=iuZWFt6yt3SnNPdQqHHkfWb5c/6qcFToxw9CVQBpihM0nFhHuYLaaMe6FfGfTtBiv
+	 rH5iktqyrE6a5iniGtlrDmpNojLpXeqiBXTcHLPNsHC9gp7EV2DTM6VcObEU3BSVxl
+	 U36zx0MZZxSKxIwAQAkaIFk8AZxCggXtOi4RyIfNhLuY0fsnUanTCbIhC0bUptx0Rp
+	 XcUv1HnjCQbmqBdOFLjurtJY446q3YWEJ1foBeO2eXJLgqHqaU/Sw7PzLlX8daENeU
+	 fC6sS564B57ksOwTobmu4jaNYJp5shaTRSkzLhqvbZ7or/u9QKZnLncWUqVmMcWns/
+	 +iIPREtbKN6DA==
+Received: by mail-oo1-f53.google.com with SMTP id 006d021491bc7-60f24b478e3so2908153eaf.3;
+        Tue, 24 Jun 2025 10:56:43 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUjBCyPFAgWVbBjPX5yYuj9zLh3dhOzQpEaXOkHR0/bpIj2v6X523gNXm5CKYtX5zf0pJkOx4qRvwU3Goji4dk=@vger.kernel.org, AJvYcCUrLY9SkWvW22Bh/LSvCjKApT1V30Xu9GBF0VEhxLNYW1RHa3+l/WiDMpXtPX7h0AXaTDQ1cbfEDpoZ@vger.kernel.org, AJvYcCX85fACMm2z5pgZWxvvtQYrO3/NY8zTLoPXZmtTIE/rhYM4ohYItiPvw7HdRS4Wuu/+Jd4XbPsuFfh1DEOj@vger.kernel.org, AJvYcCXbIM0sgL/Oxjz8OygIL/G2VfkULr7b9UHM5qHZB6xDCKXI/ZvRaIEbNUk2Lk+OrNnRzv4gFoLNl/hPBw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMDivGbmgn7dP5qkHGWr/8uzoVx6O3IwrmrK7IX5wla0qdy1Bm
+	3n7iTNrGX5F07rTS1oxqIWJwE8moik4ywVjRS4lp8NF+ntJwnbT72eTwnMRAhleBbM7xiqZSb4k
+	EA1k70rJdl/wvc94Ss6MbMu9mlBCuzxU=
+X-Google-Smtp-Source: AGHT+IGtZmw+qiUqob8uolYYHaLvj7zQCRMrhowwkQ6uaCuY6yqPQStnuSx1CMSohXJmqc1ErtElSyNm5m+nxc2StOA=
+X-Received: by 2002:a4a:e90a:0:b0:611:31a:6ff5 with SMTP id
+ 006d021491bc7-6115ba3ea53mr12497524eaf.7.1750787802958; Tue, 24 Jun 2025
+ 10:56:42 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e8c28a7e-bc08-4c50-96ca-afe62cfcf9fd@linaro.org>
+References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+ <20250620152425.285683-1-igor.korotin.linux@gmail.com> <aFXbcDKP_jw_Sg5k@cassiopeiae>
+In-Reply-To: <aFXbcDKP_jw_Sg5k@cassiopeiae>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Tue, 24 Jun 2025 19:56:32 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0ggAFg-pcujf5BysNNp3ncStOWruyAemFLJB5=95uu9XA@mail.gmail.com>
+X-Gm-Features: AX0GCFsuxGTM77WPv_Ty8PU9EPeo6p7qzhGvatJp50zVE0gHymfHgjEibVHegIQ
+Message-ID: <CAJZ5v0ggAFg-pcujf5BysNNp3ncStOWruyAemFLJB5=95uu9XA@mail.gmail.com>
+Subject: Re: [PATCH v8 4/9] rust: acpi: add `acpi::DeviceId` abstraction
+To: Danilo Krummrich <dakr@kernel.org>
+Cc: Igor Korotin <igor.korotin.linux@gmail.com>, "Rafael J . Wysocki" <rafael@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Saravana Kannan <saravanak@google.com>, Alex Hung <alex.hung@amd.com>, 
+	Andrew Morton <akpm@linux-foundation.org>, Jakub Kicinski <kuba@kernel.org>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Remo Senekowitsch <remo@buenzli.dev>, 
+	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Xiangfei Ding <dingxiangfei2009@gmail.com>, 
+	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Benno Lossin <lossin@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	Len Brown <lenb@kernel.org>, Trevor Gross <tmgross@umich.edu>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Sat, Jun 21, 2025 at 12:06=E2=80=AFAM Danilo Krummrich <dakr@kernel.org>=
+ wrote:
+>
+> On Fri, Jun 20, 2025 at 04:24:25PM +0100, Igor Korotin wrote:
+> > `acpi::DeviceId` is an abstraction around `struct acpi_device_id`.
+> >
+> > This is used by subsequent patches, in particular the i2c driver
+> > abstractions, to create ACPI device ID tables.
+>
+> I think this should say something like
+>
+>         "Enable drivers to build ACPI device ID tables, to be consumed by=
+ the
+>          corresponding bus abstractions, such as platform or I2C."
+>
+> instead.
+>
+> If we agree, I can change it when applying the patch -- no need to resend=
+.
+>
+> >
+> > Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+>
+> @Rafael: Can I get an ACK for this one, such that I can take it together =
+with
+> all other patches through the driver-core tree?
 
-On Mon, Jun 23, 2025 at 03:12:00PM +0100, James Clark wrote:
-> 
-> 
-> On 20/06/2025 6:40 pm, Chun-Tse Shao wrote:
-> > perl is not universal on all machines and should be replaced with awk,
-> > which is much more common.
-> > 
-> > Before:
-> >    $ perf test "probe libc's inet_pton & backtrace it with ping" -v
-> >    --- start ---
-> >    test child forked, pid 145431
-> >    grep: Perl matching not supported in a --disable-perl-regexp build
-> > 
-> >    FAIL: could not add event
-> >    ---- end(-1) ----
-> >    121: probe libc's inet_pton & backtrace it with ping                 : FAILED!
-> > After:
-> >    $ perf test "probe libc's inet_pton & backtrace it with ping" -v
-> >    121: probe libc's inet_pton & backtrace it with ping                 : Ok
-> > 
-> > Suggested-by: Ian Rogers <irogers@google.com>
-> > Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> > ---
-> >   tools/perf/tests/shell/record+probe_libc_inet_pton.sh | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> > index c4bab5b5cc59..aaa5ee06ae18 100755
-> > --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> > +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-> > @@ -23,7 +23,8 @@ event_pattern='probe_libc:inet_pton(\_[[:digit:]]+)?'
-> >   add_libc_inet_pton_event() {
-> > 
-> >   	event_name=$(perf probe -f -x $libc -a inet_pton 2>&1 | tail -n +2 | head -n -5 | \
-> > -			grep -P -o "$event_pattern(?=[[:space:]]\(on inet_pton in $libc\))")
-> > +			awk -v ep="$event_pattern" -v l="$libc" '$0 ~ ep && $0 ~ \
-> > +			("\\(on inet_pton in " l "\\)") {print $1}')
-> > 
-> >   	if [ $? -ne 0 ] || [ -z "$event_name" ] ; then
-> >   		printf "FAIL: could not add event\n"
-> > --
-> > 2.50.0.rc2.701.gf1e915cc24-goog
-> > 
-> 
-> Minor nit: the underscore in event_pattern (not shown in the diff) never
-> needed to be escaped.
-> 
-> But now we're using awk it gives a warning so we should remove it in case
-> anyone is searching through the output:
-> 
->   awk: warning: escape sequence `\_' treated as plain `_'
-> 
-> Reviewed-by: James Clark <james.clark@linaro.org>
- 
-Thanks for your review.  I'll fold the below change.
+I don't see anything objectionable in it, even though Rust code is
+still kind of outside my confidence zone ATM.
 
----8<---
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index aaa5ee06ae1833de..9bdf47aabe9d738b 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -18,7 +18,7 @@
- libc=$(grep -w libc /proc/self/maps | head -1 | sed -r 's/.*[[:space:]](\/.*)/\1/g')
- nm -Dg $libc 2>/dev/null | grep -F -q inet_pton || exit 254
- 
--event_pattern='probe_libc:inet_pton(\_[[:digit:]]+)?'
-+event_pattern='probe_libc:inet_pton(_[[:digit:]]+)?'
- 
- add_libc_inet_pton_event() {
- 
+Anyway, please feel free to add
 
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+
+to this.
+
+Thanks!
