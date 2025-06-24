@@ -1,114 +1,63 @@
-Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F297B256C60
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:21:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2DE256C60;
+	Tue, 24 Jun 2025 08:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753282; cv=none; b=pYyeYiYennlYWyY7bm5dYT40HWnpBcZZNChB/yFqZjK0wUM+eRYjqqWjttX4r2tDsGktdkUxwwAkoshS14rS25BmayRfK7IaRDO00kksN1/hsjIcRtdW6drO2Rk+sdTHBrnJBnNLgWJCJLH9jt5UYP4wkDhb2XmGeZo0iMMN5A0=
+	t=1750753291; cv=none; b=YlXcZS/zIRiTHrb0ZW/IDMYwaLaF7CDpPPEjJljZL8HaoMQHtXGg4JTxg+8O/iOCzl28Zb6QBWFkPqgFH0OGk8jbmkORcFdl8l0xU6rQWGeTeEPqxv8KRdA2BoMDtN/jtY0zA8fv0nWlF1rLzbxG2jzM3mb7X606YNGRj3wC4Ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753282; c=relaxed/simple;
-	bh=gsGfpqXNBOFQjO7aQm6wp9ReQC8lFVfAO7bBesxeXo8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E03W5KFmUMMLu16i+IcCAdVhtxRekZPWyniRW7EgqP3CECUEmxlM3MW0hvci/mXWR74ep4ikt8Dp4BAoDuY/P17B0oRR5MPmjFLTaZOo10/h58IElB3Ot1YzWOMBB3JEZCSHstEY4KRvdVOks6EbU++h0hbwBy93VsMa34SV6zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=dkthkFLE; arc=none smtp.client-ip=35.89.44.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1750753291; c=relaxed/simple;
+	bh=ZUxYSim8vhgrKSj21zzy+5Spt88HmTvEPFVnqFBYxs0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GIdI01nzZ9QbiVU+f9Ax2rScN88LhuQnB12tWD9S/FGtGBOq7OnRK4x9h2UAMGQptVdJGAyA3sIzR1mr9d6/sBjfMCpt2Yfi0+wXVnMvk7GXDjpQb5L0fuWSyA4HR1kIH7xgEgKp2WUD/DDIGQ04QKKGdC7shInBSK1KmW6jJEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=iYp9hcqx; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="dkthkFLE"
-Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
-	by cmsmtp with ESMTPS
-	id Tp3CuXvrIMETlTyu6ugnnp; Tue, 24 Jun 2025 08:21:18 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id Tyu5u9SYJq3CNTyu6ui62W; Tue, 24 Jun 2025 08:21:18 +0000
-X-Authority-Analysis: v=2.4 cv=VpfoAP2n c=1 sm=1 tr=0 ts=685a5ffe
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=DpAgQTyGaMxhVpyjbg8VpXO/7DZXxVpMMzkTGRiXc+4=; b=dkthkFLERmt5ivr1emUcHhGzE6
-	PM86WmXLAnIpdi4WAQigSrK9QkAXVjJbTGaGu4ifsh4PC30j/2YQ43kLoJIrXTRuawYleMA661B4Q
-	os1yEAHJFZ72dYsQP6PvhIczhC+x7ADZG4FVrFSSUqORcYGSbAkhSEqjGP/AImZVFyl5/jjjTxlKl
-	Kw7DiO8g1caXCiT1+1mO/vpY6NkhYZju9x9XlRdMliWXsUaQsldwoTZG4RpSRbQuAiQfuKIGgyxgc
-	Tm7toRvWAgwt/RhyKozP7yQtxykaPNsA8ab9Q3C8fuydtYvPuXgOQjIfqYP4U0eQ8sqUjBRFUmw5Q
-	GYiko1dA==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:57792 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1uTyu3-00000002J7x-0GE5;
-	Tue, 24 Jun 2025 02:21:15 -0600
-Message-ID: <0cb49e01-0901-4ceb-b352-71230982bb8f@w6rz.net>
-Date: Tue, 24 Jun 2025 01:21:10 -0700
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iYp9hcqx"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=kX+aDmUm6igolpiXgNXgCg/cD6t2NGaw3+p//ISLo3Q=; b=iYp9hcqx4xAC+0WkrlnifTG4Mz
+	cUn+pSx1/5zpt8JU19zea/s0fSQ6x8RSCV4pwydiFdcH64QPDCCNHGBLNIUgpF72fZ4rBEWRQi/VQ
+	Wy0emyklkRwzN9GNtT5ou0HV98fshE9WLPBil6b4Qpd5Dddc4Yx7h7Zw8TzA5KQVQ7kA=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uTyuC-00Glop-49; Tue, 24 Jun 2025 10:21:24 +0200
+Date: Tue, 24 Jun 2025 10:21:24 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Paresh Bhagat <p-bhagat@ti.com>
+Cc: nm@ti.com, vigneshr@ti.com, praneeth@ti.com, kristo@kernel.org,
+	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, khasim@ti.com, v-singh1@ti.com,
+	afd@ti.com, bb@ti.com, devarsht@ti.com
+Subject: Re: [PATCHv4 4/6] arm64: dts: ti: Add support for AM62D2-EVM
+Message-ID: <bf784ce6-aee7-4366-87ab-f0f79f8ef28c@lunn.ch>
+References: <20250623141253.3519546-1-p-bhagat@ti.com>
+ <20250623141253.3519546-5-p-bhagat@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/290] 6.6.95-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250623130626.910356556@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250623130626.910356556@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1uTyu3-00000002J7x-0GE5
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:57792
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 54
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfIjoBb70VTJazSq1VUmfG/ceBbnsuVr1ClcYW818Hk9Q3+Oh8ZODiGrEuS/fqm5mg8u14NBN94kFFkuJyW3jS/zGgBr1NsCAn+ueD8BoQpqOPOdJ0dKV
- xYV6BUMRvMmLyc0jR0/Fs8Bf1m3M0d0KpsBaYMEYVfL/VtfP+Lg0ht5zN8cySRFViq2vHvEy3GXpu3CigI1CC70C+4f0oZHwhQ4=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623141253.3519546-5-p-bhagat@ti.com>
 
-On 6/23/25 06:04, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.95 release.
-> There are 290 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 25 Jun 2025 13:05:53 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.95-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+> +&cpsw_port1 {
+> +	status = "okay";
+> +	phy-mode = "rgmii-rxid";
+> +	phy-handle = <&cpsw3g_phy0>;
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Does the PCB have extra long RX clock lines?
 
-Tested-by: Ron Economos <re@w6rz.net>
+More likely, this should be 'rgmii-id', and you should delete the
+ti,rx-internal-delay in the PHY node, allowing it to insert the 2ns
+delay in the normal way.
 
+	Andrew
