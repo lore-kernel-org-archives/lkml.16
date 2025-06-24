@@ -1,236 +1,223 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9002426CE15;
-	Tue, 24 Jun 2025 16:09:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED4C2770E2;
+	Tue, 24 Jun 2025 16:11:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750781395; cv=none; b=nK0xaYZg+zOyHcZnzedOOppMyo1Phn+yuGbcYqmaGzHJOyKk3qNgHKpc7TWpwSKVxy2TfqiLs8QtgUNj+YDrRSUScQoxuH3+wswvg+GpcKphGHB6wZD+ojeXguj0EwiF+FcAcAgqCIc92aCSG5h9ygJm7ZphwkJ5/Y69qoJlsLM=
+	t=1750781516; cv=none; b=pWMjvRYIYXA4IJjHuvTwN4jiruzu4q5uZ6ijMqyvJu8WIsUy5/f/q7hLZ872Xf9xsOE2Ek3g8qbx0vdaB8qyZh5tQqJl2DZgIafhQ6w9gz/mm6G6eFyixdYYUn+Do9F+9IaWCucjOxYA1oXg81X1Dd9FhDLquyLgSOjX5OqqqaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750781395; c=relaxed/simple;
-	bh=M6uEX7e+Ykhb4ds0M3HNx9O9nYKLer5bd704yut+IuU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oSfbXnE/9MysRLbAyTPSwnSd3JcBqfb3DNiKk2Gyl9tmhgszacWcvW/qyHUmauvUObthkgnrJkyJpMxEB1Q9bGW7RTT3zd7l/qakUZDbpfKyVshT2lbSyDtIRMpRxCpbOxoIy/veKkY44ngS75ZeEnZeyPieNiZ973nIfANF7Jo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MWLt/GVL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750781516; c=relaxed/simple;
+	bh=fVkmw8Fs3qcBPYOvpF6h1H2AvM0Q5BNDPPY4D3k+am4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=SeSeNvrcH0i/FFg2aBtR9QxeG/8i/I+ezniDqJCIeGuxUzwFBvE0SlQKUQI5X1uMyVB82UpFwxP4DbuThZn16ob+CbTlXW83Z7A4Njkf1PyovtfbvXlgYmuqAC9iMxJMz6LQUr2gwP1jok7G08h/75z/W1ynm+R4sbOVCywzi90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Hia1HWjF; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MWLt/GVL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ED1FC4CEE3;
-	Tue, 24 Jun 2025 16:09:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750781395;
-	bh=M6uEX7e+Ykhb4ds0M3HNx9O9nYKLer5bd704yut+IuU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=MWLt/GVLejZ43KnwRu1UDl3fEGUQqlG6u+K52CwQDAq0SwVhc6uO/1a9NMfczx93E
-	 hw8BkGw3qoE/J0/ywWq/wBpLQ8TzMtJjiyv1wHfd2mqYth9WtZd3xKvQKAJkoR6S8Y
-	 KEJ5vDuSi3P48YHP62XdLRTSM9eD8RIrUHJQEUkVGXGT54cx8/oxJblVvMeKtoAfwt
-	 fFMcU4qAZ65HwVSPOkHTzMNlHsBaxUWVs7xXxqgweakBCXWv9HjOdv6/SPDy4OkclX
-	 aqG5BH5ZpFE1VhgbgqeUrNwWo9qzR6hql9mPr1G8jYtDWYL6un7Z73vKtDVuUJHDek
-	 E7yEM7Xv4VfeA==
-Date: Tue, 24 Jun 2025 09:09:53 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
- <horms@kernel.org>, kernel@pengutronix.de, linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v4 0/4] net: selftest: improve test string
- formatting and checksum handling
-Message-ID: <20250624090953.1b6d28e6@kernel.org>
-In-Reply-To: <aFphGj_57XnwyhW1@pengutronix.de>
-References: <20250515083100.2653102-1-o.rempel@pengutronix.de>
-	<20250516184510.2b84fab4@kernel.org>
-	<aFU9o5F4RG3QVygb@pengutronix.de>
-	<20250621064600.035b83b3@kernel.org>
-	<aFk-Za778Bk38Dxn@pengutronix.de>
-	<20250623101920.69d5c731@kernel.org>
-	<aFphGj_57XnwyhW1@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Hia1HWjF"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O8htC3014586;
+	Tue, 24 Jun 2025 16:11:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	qq5tdfdXQ92ZNGX1ZGeJkfBuXvFYi/00rz1OwotkW6M=; b=Hia1HWjFOQUwf2tK
+	NhpmwCLQSL76SBKVZlFSKedYVvJFkJ4OYnc+jTGIq5r5z1Bz3xAae5FJerhO/atR
+	3H6mvi+8/UamZyXv7VJTM7Fjhu67hzWuqdt8YW3zUCv1eAgYJ0k7O6Ttjz+GRkBL
+	ig9VU+GYAJDzynQQdRSB3JhJxfNdHz/0fO4hPxiwQztYphe35RntLMb1B1z+7L+V
+	7ZtOeox26TPAcz/GmF8KeuP9c0T6RNlvweENbpqMkh2dbQeSgRksygx/jFqyE748
+	QINI6szZoTQTISbkYoTOW0jW1gdQ7aoxHdMS16q1Mz3GQibVLGNFt0fTF5anTt3V
+	MkQhow==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f2rpw0mf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 16:11:42 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55OGBfKb026366
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 16:11:41 GMT
+Received: from [10.50.56.215] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 24 Jun
+ 2025 09:11:38 -0700
+Message-ID: <85137a8e-45be-3bb2-d094-79754fa2a8be@quicinc.com>
+Date: Tue, 24 Jun 2025 21:41:35 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.15.1
+Subject: Re: [PATCH 1/5] dt-bindings: media: qcom,sm8550-iris: add non_pixel
+ and resv_region properties
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<abhinav.kumar@linux.dev>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, <linux-media@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250620-video_cb-v1-0-9bcac1c8800c@quicinc.com>
+ <20250620-video_cb-v1-1-9bcac1c8800c@quicinc.com>
+ <x7xskkv6nviz3j7sr5qgs7yt7z6txqwdemfammufwdf6ji3sla@gi2a4aadt6wc>
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+In-Reply-To: <x7xskkv6nviz3j7sr5qgs7yt7z6txqwdemfammufwdf6ji3sla@gi2a4aadt6wc>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=NdDm13D4 c=1 sm=1 tr=0 ts=685ace3e cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=jL3G2h9b1PvCzNpYu-UA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDEzNSBTYWx0ZWRfXw2Q6T2Cq/zSi
+ xzNFh7wP9iitFjtnknc1VvzavBGZaRi+va7DbOOOTgo5oRTVpxLYfFmAcMH3jC3CDgI3/sQnISY
+ 5pAc66xzI3oH4M06qYsm0DsYuT79zUHB7b2vuyraiu7ihA34WCKtrsaZciBl4/vEeCe/M6JFRlh
+ TpkSV9tkkXGGugcBphurYQTIpfscHQcVlvZZ/EKhhvIgTAON0pT6+x8x69JSlVbgZWHS6Lfy6JX
+ ZZaKMiQvlX51jRAjSwKgCpU4cXTH3jleDL1N0/9EtBhKeNnzmUTotAegooEvIquBdhgdWJlZuJL
+ BqkS6bn/eiW92V99UrSUk7QOqm640xyaC4oNsaeAsyVMPzWm8tkslnxHEUgN8A8tOx8GhIrw7Yr
+ MUlHBObaU2TfCi6xRLR5gqfMmroEDCJzkrvtUAAHBr0xxCC6XNkVrtaxugq95F1Wjrm48kD6
+X-Proofpoint-ORIG-GUID: dr1aNnrTRTsCdJ-ir-BW0e_zAtusX9U5
+X-Proofpoint-GUID: dr1aNnrTRTsCdJ-ir-BW0e_zAtusX9U5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_06,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 mlxscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
+ phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=823 adultscore=0
+ clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506240135
 
-On Tue, 24 Jun 2025 10:26:02 +0200 Oleksij Rempel wrote:
-> On Mon, Jun 23, 2025 at 10:19:20AM -0700, Jakub Kicinski wrote:
-> > On Mon, 23 Jun 2025 13:45:41 +0200 Oleksij Rempel wrote:  
-> > > On Sat, Jun 21, 2025 at 06:46:00AM -0700, Jakub Kicinski wrote:  
-> > > > On Fri, 20 Jun 2025 12:53:23 +0200 Oleksij Rempel wrote:  
-> > > > > Let me first describe the setup where this issue was observed and my findings.
-> > > > > The problem occurs on a system utilizing a Microchip DSA driver with an STMMAC
-> > > > > Ethernet controller attached to the CPU port.
-> > > > > 
-> > > > > In the current selftest implementation, the TCP checksum validation fails,
-> > > > > while the UDP test passes. The existing code prepares the skb for hardware
-> > > > > checksum offload by setting skb->ip_summed = CHECKSUM_PARTIAL. For TCP, it sets
-> > > > > the thdr->check field to the complement of the pseudo-header checksum, and for
-> > > > > UDP, it uses udp4_hwcsum. If I understand it correct, this configuration tells
-> > > > > the kernel that the hardware should perform the checksum calculation.
-> > > > > 
-> > > > > However, during testing, I noticed that "rx-checksumming" is enabled by default
-> > > > > on the CPU port, and this leads to the TCP test failure.  Only after disabling
-> > > > > "rx-checksumming" on the CPU port did the selftest pass. This suggests that the
-> > > > > issue is specifically related to the hardware checksum offload mechanism in
-> > > > > this particular setup. The behavior indicates that something on the path
-> > > > > recalculated the checksum incorrectly.    
-> > > > 
-> > > > Interesting, that sounds like the smoking gun. When rx-checksumming 
-> > > > is enabled the packet still reaches the stack right?    
-> > > 
-> > > No. It looks like this packets are just silently dropped, before they was
-> > > seen by the stack. The only counter which confirms presence of this
-> > > frames is HW specific mmc_rx_tcp_err. But it will be increasing even if
-> > > rx-checksumming is disabled and packets are forwarded to the stack.  
-> > 
-> > If you happen to have the docs for the STMMAC instantiation in the SoC
-> > it'd be good to check if discarding frames with bad csum can be
-> > disabled. Various monitoring systems will expect the L4 checksum errors
-> > to appear in nstat, not some obscure ethtool -S counter.  
+
+On 6/21/2025 3:09 AM, Dmitry Baryshkov wrote:
+> On Fri, Jun 20, 2025 at 11:50:51AM +0530, Vikash Garodia wrote:
+>> Existing definition limits the IOVA to an addressable range of 4GiB, and
+>> even within that range, some of the space is used by IO registers,
+>> thereby limiting the available IOVA to even lesser. Video hardware is
+>> designed to emit different stream-ID for pixel and non_pixel buffers,
+>> thereby introduce a non_pixel sub node to handle non_pixel stream-ID.
+>>
+>> With this, both iris and non_pixel device can have IOVA range of 0-4GiB
+>> individually. Certain video usecases like higher video concurrency needs
+>> IOVA higher than 4GiB.
+>>
+>> Add the "resv_region" property, which defines reserved IOVA regions that
+>> are *excluded* from addressable range. Video hardware generates
+>> different stream IDs based on the range of IOVA addresses. Thereby IOVA
+>> addresses for firmware and data buffers need to be non overlapping. For
+>> ex. 0x0-0x25800000 address range is reserved for firmware stream-ID,
+>> while non_pixel (bitstream ) stream-ID can be generated by hardware only
+>> when bitstream buffers IOVA address is from 0x25800000-0xe0000000.
+>>
+>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+>> ---
+>>  .../bindings/media/qcom,sm8550-iris.yaml           | 35 ++++++++++++++++++++++
+>>  1 file changed, 35 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> index c79bf2101812d83b99704f38b7348a9f728dff44..a1e83bae3c36f3a4c58b212ef457905e38091b97 100644
+>> --- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> +++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>> @@ -65,10 +65,45 @@ properties:
+>>        - const: core
+>>  
+>>    iommus:
+>> +    minItems: 1
+>>      maxItems: 2
+>>  
+>>    dma-coherent: true
+>>  
+>> +  resv_region:
 > 
-> Ack. I will it add to my todo.
+> Ugh. Underscores...
+ACK
 > 
-> For proper understanding of STMMAC and other drivers, here is how I currently
-> understand the expected behavior on the receive path, with some open questions:
+>> +    type: object
+>> +    additionalProperties: false
+>> +
+>> +    description:
+>> +      Reserve region specifies regions which should be excluded from IOVA.
+>> +
+>> +    properties:
+>> +      iommu-addresses:
 > 
-> Receive Path Checksum Scenarios
+> Missing type / ref. Also they are only described for reserved memory
+> regions.
+yes, looks like we can drop them from iris schema and rather reference it from
+reserved-memory schema. Awaiting comments on the ongoing discussion here [1]
+
+[1] https://lore.kernel.org/all/4c6233d9-be7b-baf3-fb05-3ea007e35330@quicinc.com/
 > 
-> * No Hardware Verification
->     * The hardware is not configured for RX checksum offload
->       or does not support the packet type, passing the packet to the driver
->       as-is.
->     * Expected driver behavior: The driver should set the packet's state to
->       `CHECKSUM_NONE`, signaling to the kernel that a software checksum
->       validation is required.
+>> +        minItems: 1
+>> +        maxItems: 4
+>> +
+>> +    required:
+>> +      - iommu-addresses
+>> +
+>> +  non_pixel:
+>> +    type: object
+>> +    additionalProperties: false
 > 
-> * Hardware Verifies and Reports All Frames (Ideal Linux Behavior)
->     * The hardware is configured not to drop packets with bad checksums.
->       It verifies the checksum of each packet and reports the result (good
->       or bad) in a status field on the DMA descriptor.
->     * Expected driver behavior: The driver must read the status for every
->       packet.
->         * If the hardware reports the checksum is good, the driver should set
->           the packet's state to `CHECKSUM_UNNECESSARY`.
->         * If the hardware reports the checksum is bad, the driver should set
->           the packet's state to `CHECKSUM_NONE` and still pass it to the
->           kernel.
->     * Open Questions:
->         * When the hardware reports a bad checksum in this mode, should the
->           driver increment `rx_crc_errors` immediately? Or should it only set
->           the packet's state to `CHECKSUM_NONE` and let the kernel stack find
->           the error and increment the counter, in order to avoid
->           double-counting the same error?
-
-Driver can increment its local counter. It doesn't matter much.
-
-But one important distinction, we're talking about layer 3 and up
-checksums. IPv4 checksum, and TCP/UDP checksums. Those are not CRC.
-The HW _should_ discard packets with bad CRC / Layer 2 checksum
-unless the NETIF_F_RXALL feature is enabled.
-
-> * Hardware Verifies and Drops on Error
->     * The hardware's RX checksum engine is active and configured to
->       automatically discard any packet with an incorrect checksum before it is
->       delivered to the driver.
->     * Open Questions:
 > 
->         * When reporting these hardware-level drops, what is the most
->           appropriate existing standard `net_device_stats` counter to use
->           (e.g., `rx_crc_errors`, `rx_errors`)?
+> I still think that these usecases should be described with iommu-maps
+> rather than subnodes. You have a limited set of usecases: "non-pixel",
+> secure buffers, etc. Define an ID for each of those and then allocate a
+> subdevice internally, mapping it to a corresponding set of IOMMUs.
+In secure buffers category, there would be 3 categories -
+pixel/non-pixel/internal. Adding it up with non secure, we would be having 4 sub
+nodes eventually.
+Reading about the usage of iommu-maps, I see there are below limitations. If you
+could suggest a way to handle these,
+1. let say there are 4 stream-ids, iommu-maps does not provide a way to tell
+which stream-id is for which sub hardware block(device) within video, so that
+driver can use it for mapping the corresponding buffers.
+2. defining the masks for different stream-ids.
+3. IOVA address regions - Different stream-ids have non-mappable range, which i
+am specifying via iommu-addresses in sub nodes.
 
-I'd say rx_errors, most likely to be noticed.
+Again, iommu-maps was invented for PCIe case where different stream-id can be
+routed to different iommus. In this case, all stream-id would be managed by same
+iommu.
 
->         * If no existing standard counter is a good semantic fit, add new
->           standard counters?
-
-Given this is behavior we don't want to encourage I think adding a
-standard stat would send the wrong signal.
-
->         * If the "drop on error" feature cannot be disabled independently,
->           and reporting the error via a standard counter is not feasible,
->           does this imply that the entire RX checksum offload feature must be
->           disabled to ensure error visibility?
-
-Probably not, users should also monitor rx_errors.
-
-> * Hardware Provides Full Packet Checksum (`CHECKSUM_COMPLETE`)
->     * The hardware calculates a single checksum over the entire packet and
->       provides this value to the driver, without needing to parse the
->       L3/L4 headers.
-
-Not entire, it skips the base Ethernet header (first 14 bytes)
-
->     * Expected driver behavior: The driver should place the checksum provided
->       by the hardware into the `skb->csum` field and set the packet's state
->       to `CHECKSUM_COMPLETE`.
-
-Correct.
-
-> > > > If so does the frame enter the stack with CHECKSUM_COMPLETE or
-> > > > UNNECESSARY?    
-> > > 
-> > > If rx-checksumming is enabled and packet has supported ethertype,
-> > > then CHECKSUM_UNNECESSARY will be set. Otherwise CHECKSUM_NONE.
-> > >   
-> > > > > When examining the loopbacked frames, I observed that the TCP checksum was
-> > > > > incorrect. Upon further investigation, the xmit helper in net/dsa/tag_ksz.c
-> > > > > includes the following:
-> > > > > 
-> > > > > if (skb->ip_summed == CHECKSUM_PARTIAL && skb_checksum_help(skb))
-> > > > >     return NULL;
-> > > > > 
-> > > > > I assume skb_checksum_help() is intended to calculate the proper checksum when
-> > > > > CHECKSUM_PARTIAL is set, indicating that the software should complete the
-> > > > > checksum before handing it to the hardware. My understanding is that the STMMAC
-> > > > > hardware then calculates the checksum for egress frames if CHECKSUM_PARTIAL is
-> > > > > used.    
-> > > > 
-> > > > stmmac shouldn't touch the frame, note that skb_checksum_help() sets
-> > > > skb->ip_summed = CHECKSUM_NONE; so the skb should no longer be considered
-> > > > for csum offload.    
-> > > 
-> > > It looks like skb_checksum_help(), which is used in tag_ksz.c, generates
-> > > a TCP checksum without accounting for the IP pseudo-header. The
-> > > resulting checksum is then incorrect and is filtered out by the STMMAC
-> > > HW on ingress  
-> > 
-> > The pseudo-header csum is filled in net_test_get_skb(), where it calls
-> > tcp_v4_check(). But I think you're right, it's incorrect. Could you try:
-> > 
-> > diff --git a/net/core/selftests.c b/net/core/selftests.c
-> > index 35f807ea9952..1166dd1ddb07 100644
-> > --- a/net/core/selftests.c
-> > +++ b/net/core/selftests.c
-> > @@ -160,8 +160,10 @@ static struct sk_buff *net_test_get_skb(struct net_device *ndev,
-> >         skb->csum = 0;
-> >         skb->ip_summed = CHECKSUM_PARTIAL;
-> >         if (attr->tcp) {
-> > -               thdr->check = ~tcp_v4_check(skb->len, ihdr->saddr,
-> > -                                           ihdr->daddr, 0);
-> > +               int l4len;
-> > +
-> > +               l4len = skb->tail - skb_transport_header(skb);
-> > +               thdr->check = ~tcp_v4_check(l4len, ihdr->saddr, ihdr->daddr, 0);
-> >                 skb->csum_start = skb_transport_header(skb) - skb->head;
-> >                 skb->csum_offset = offsetof(struct tcphdr, check);
-> >         } else {
-> > 
-> > Or some such?  
+Regards,
+Vikash
 > 
-> Ah, it works now!
+>> +
+>> +    description:
+>> +      Non pixel context bank is needed when video hardware have distinct iommus
+>> +      for non pixel buffers.
 > 
-> So, for my understanding:
-> - does skb_checksum_help() rely on a precalculated and integrated
->   pseudo-header csum?
-> - And is this how typical HW-accelerated checksumming works?
-> - Is this why it is called CHECKSUM_PARTIAL, because only one part of the
->   checksum is pre-calculated?
-
-IDK why it's called PARTIAL, your guess seems reasonable :)
-And yes on the other questions. PARTIAL means the HW is supposed to do
-a csum over a linear buffer and write it where pointed without header
-parsing. Because of how UDP and TCP define the csum for them that means
-the csum field has to be set to the pseudo header csum.
-
-Let me send the fix officially.
+> What does non-pixel mean? Compressed data?
+> 
+>> +
+>> +    properties:
+>> +      iommus:
+>> +        maxItems: 1
+>> +
+>> +      memory-region:
+>> +        maxItems: 1
+>> +
+>> +    required:
+>> +      - iommus
+>> +      - memory-region
+>> +
+>>    operating-points-v2: true
+>>  
+>>    opp-table:
+>>
+>> -- 
+>> 2.34.1
+>>
+> 
