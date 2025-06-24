@@ -1,163 +1,104 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com [209.85.221.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ABC51552FA
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:59:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA6479F2
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750726755; cv=none; b=frEfGEi3L5Z93vwRntBwH27rXHPSo+LKYHOiOx1YIYj4a8lRwFyWOLd69WlybgiogQiWr8FQNZHgo6xDEwATjoamo5VKa62uHcI0cSVz4og9QLA1YJqRikqBK7taVA1eQfbnHcyyprHrW4cU3OQp6VKxupMfjAmwOrczEm4rMl4=
+	t=1750727136; cv=none; b=kuizprsgwjw+ffpAFRPNphctSqpCbXHxWgcd4nSp+m9OSRjepVScyQrapytgeEh0wV7ezH9x9ep0yEr+ggP7FFRkpDU8XaFVbdWd/2ZeSCRgpq+QvYhlxfB10/JqEwMkxqQwwvnnhFiRCkIQ9MnTyrUzCAcxQJ2SfGGEnFUQ9OA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750726755; c=relaxed/simple;
-	bh=JYUAOGvUK29IFunmxLuYweJTMsA9TRZOorHO6S+oXwE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JhiZS7ZckIGtYvQ9/eL3EwKG8QNgy9RbFJUqT8A4hLNkiKiE0tDPneSRF/k+diVHrrgdY++IzoyvlEAjoZ4b8TPpJCFflbBQLTRkat3whJrX0OSPSGu6mXrlsx5ddD8R4/VOJvphj98V3E3hgQjTPu1RrqcJbcRer5tokvgz/7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=dhf4kfKW; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750727136; c=relaxed/simple;
+	bh=HeEBpnczqK98gFBheID0waHXIyf8L8g+U38AEDFIQyI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VrY7T9WEH3shhyYaqG2aGZTZdoZmSkb6GgozXnFE5AIU8ccnkuyL7b2FZZilNsPDqNlktC3ekVe4FlICXX5dJutJgncW9mZC1/z60yQ4CsvR/jIWL97HBqOTYbP/zFE3OLgbe4nCfhaX51k2B6ozDNcnFDezW+qWcZ4cDjrmQ1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y6IL/ZDz; arc=none smtp.client-ip=209.85.221.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="dhf4kfKW"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NIp5Ku031297
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:59:13 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=AxLK5B4OfagnPv6t+o+jFPMN
-	vAJ4a85Lwkz3DtkuD+A=; b=dhf4kfKW/Gs1mSBfdkIuPSPVaA5M2LoXT3ucxJ6K
-	AZqIoHkY/sP//lo8+nPvscCs9GGqG9oGuAuB0TJLht/N0cn3/JQRsse19LhRUUDm
-	Nk+0o4AUcLGANWfwmgSx6I6BYjJeoS5Y3YhzsnsuHlszNCq3s7UFdKgGQtAXsTv8
-	80w69rTyQ1/FCY8WD2yqbOnr1xJ2kFZT2e9YTDHSvYQPhBFZ18BqbBQHF0y7EWlb
-	sfzBYVV/3XyVvrVivm/ObEPq0kOagzwSEODqN42ugvacA6d5Pi7bv4mI5Wbijk4J
-	dP7m1OvOMDAtz8S1tasTTiQ/LdCbVLOwwLFRdgzi2Lhc2A==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47emcmm0se-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:59:13 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d0981315c8so370390685a.0
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 17:59:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750726752; x=1751331552;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6IL/ZDz"
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-532de49b7e2so206851e0c.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:05:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750727134; x=1751331934; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AxLK5B4OfagnPv6t+o+jFPMNvAJ4a85Lwkz3DtkuD+A=;
-        b=omYhtgiMTAsu2uuuisYrSgBcp64LqOAuWBaA4m5BxrMmGqrL/Fo0wmK3CizfjX+adx
-         Yf19iwvPpoyDhtq5YkU5EduEflA4oUTGQifVaxMKY8jGAQ5hHa/KxPQ2ZECzzmhuoNGA
-         dqwKO2mc6nsPUDnmsMKNPYj49IgYdbxPMzaaOJc8VuohplXzXrnYMPmwlhPIFZ6bSquN
-         CDvgiP9nLowSlB7YhhfFZn92vwCdlPWo6hgoDxAkl6H2oyRLEZgHEtj9mdNYTf7BIjT9
-         29jD/j+cLzE8ntxUxN7DEeogFIWDqkStJNvjjpIOlydQn32hSuT5lKVc4F6FkevT91RA
-         4WTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXhvMHy7CG547QKJNLv9YXxgPbipm210pEhszjQEpJTs69JUGSZshhwWlELfHOyr5ITKgdknkrFg/Ul2M0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypZzG8/Lyf+MAcF6wgaFc3brG9Zw52uq0WPPfd9A8fEt8K0g6h
-	Afq3uQBKe2KtB9awZDZ40l5jSEeBoslY+hOGZzWiiYlQnaQ/CCLt75e1PWKwKDLG3Yzh63KqbkZ
-	PKdTKHJREQ3FOY6Hm7qb2Bhla73BKb17KdMoJ6g3QTATJGnMnopdMsZYyCmDrPNfgSAo=
-X-Gm-Gg: ASbGnculzQrzonXR9Pz0fuygFdkSZvS3q6peI3fTg7cRptObXjPrjIrD2CDLKSylcZq
-	db4sf3irus7LooeLpZafxHJI9l1BRgIYGt0D9kIPfrZdh6maHHM+Bltb6W0g1nY5rj881hHUZvl
-	HxKcdDPfvn3KlvDL+Ujzeru87bWPDK/snx+AtaPHbrz2hpZ8hadTU9zfRZWCUiYDpmErTV41BR+
-	3UKwUZDN+/WXXD6/YgcSuuvNJ5e2MfYL6TUvCgx0oj6079Ne5qC4tCjh4x3DiJ+uBNevefVITwt
-	ICi/Nlg8LqlMjhkrylwPzIqh8H7YFBZ21DIJmTQZVk64jEHnkX3dTMzbHyqKCfRrwobUcn5AhNO
-	FMta4FkyGhyxKyPdG3CLm9LJDkVsPemk0V7M=
-X-Received: by 2002:a05:620a:a90b:b0:7d4:f7:3baa with SMTP id af79cd13be357-7d400f74702mr1750091685a.8.1750726751794;
-        Mon, 23 Jun 2025 17:59:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGbrdGvPGdMsxD7cM7pxk9ZTzDk39wxGR/2YWHHePKYKtmHmosEildSYIv+nX67voLtWmHHaA==
-X-Received: by 2002:a05:620a:a90b:b0:7d4:f7:3baa with SMTP id af79cd13be357-7d400f74702mr1750088885a.8.1750726751378;
-        Mon, 23 Jun 2025 17:59:11 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41d71cfsm1622121e87.243.2025.06.23.17.59.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 17:59:10 -0700 (PDT)
-Date: Tue, 24 Jun 2025 03:59:08 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Luca Weiss <luca@lucaweiss.eu>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/4] Start using rpmpd for power domains on MSM8974
-Message-ID: <amfgwjgstu4hoxz4lo7fqrqz5fqtf3r7o6wqvrrjkcfubwrjyz@5i75peprq3wn>
-References: <20250621-msm8974-rpmpd-switch-v1-0-0a2cb303c446@lucaweiss.eu>
+        bh=Wmkeh02O3FeRv42Ev8tu/Bl3qINyE2JFkylUQ/agpEw=;
+        b=Y6IL/ZDzEuLZFMUV6iY3pO7uHKg+rNwLjndqjDb7nL+Md8vkeLnZuQOLI9mZp3cFzm
+         RPuux0S3kJTgjxQg0zP1jHTZoo60yG0DbVUrcwdjSp9JGSlmSuVZDIYwg7T+Z02FqyWN
+         sunh8dUbpwR1CD59t3LhOAPDAON6OcRkE9hzNhB8PvqLSIpebrhFpLfEjf4Yfkqcba3l
+         ONLbJOudq4vO52Wo4UCtYep9Y/DxI2EU5F4B/GtszU/CU+Yg/sVrfuF4BOu5LbdJh+qt
+         4CmZiXbSoYIKrlwCAcOKW4Rwv6pN3sKzp9gLxltbWcbGnaCvEEdqlp5K1oW+FUpmObCG
+         VRQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750727134; x=1751331934;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Wmkeh02O3FeRv42Ev8tu/Bl3qINyE2JFkylUQ/agpEw=;
+        b=YOshkgQ6MQcmSKAHcIBwRY+rNTmFx62aKDe6x2kAaFKxe5HU+iHSvmvVZ0ykKNuhH0
+         iD8F7TwIAw/iwejF0nzNI2gx4GQfVVVSyNfP27Z3ZECsBDaUw/icoc4DwfFmyki5oGjM
+         jfrLOnKIiDxDhfuk3oDgF/PAkuXpUziAfKyOkWpqDOT2YnflU0d1S4sO+9Q6LAfSUK5f
+         BZoJK6Q1eUkbq4GrylObx+9xjygeQfUBl6lIg9fuK9xVto7x2gQY+rsxpraeQ+0GVpH6
+         eAiXHkiLd2nuYU87UY0GAhryzwJURhJETuLin64jedoXPElpuzdN50pYdldjiqmGt4ME
+         ii8A==
+X-Forwarded-Encrypted: i=1; AJvYcCWzqmaVykrWRbyy8TNEEApeiDjt/U7Fr0kF18Er+BEU0UugSJuYhoqxOIy7AuL9nmJcoL1A2LUm2fjyWkU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/VEHYjBbySDswsNcDu1jhw5isgW15uXRD0lnN8vM44PsYOTDw
+	zvCAWppUZXDWhBZoCAmdZ4r8unh6Q1N+j5n/4BVzOYDXf/XNowDv/U8M8STSSmTjEfMWghlAhI1
+	KAsrjFHLyu/bxSg2R3VCiKogs5rmMpyg=
+X-Gm-Gg: ASbGncvS0dNHURvSTqKGXQS72vg/iD+Fze+sM7sY3VM9QTuqcptzLZFqNAQ9cY0kAzy
+	jq89L4DrU573UdwPw7mQgt3xP9zIYlDVZujMBSxSATZbJCt/ECYD2H/ZmmJwHI4ko/nMb1bywR6
+	1Ap7YO/davkCgHyqSdKvJKPfJsyPPeLg3gisvjDfUOZjm9duMeF189mg==
+X-Google-Smtp-Source: AGHT+IEO+e+3lV8g5Vl93wLo7V5HtixLSBUG9hh5kJ0GIJdwxP/WV2y2BnIaTCHIaVZYIloASjI1u/mbF9djBJ+6BVo=
+X-Received: by 2002:a05:6122:78d:b0:530:5996:63a2 with SMTP id
+ 71dfb90a1353d-531ad86d9femr9596660e0c.7.1750727134097; Mon, 23 Jun 2025
+ 18:05:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250621-msm8974-rpmpd-switch-v1-0-0a2cb303c446@lucaweiss.eu>
-X-Proofpoint-GUID: 6UFbu4YbztZHbyhArT_kZC_vi8kUveA3
-X-Proofpoint-ORIG-GUID: 6UFbu4YbztZHbyhArT_kZC_vi8kUveA3
-X-Authority-Analysis: v=2.4 cv=J+eq7BnS c=1 sm=1 tr=0 ts=6859f861 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=dlmhaOwlAAAA:8 a=GRKTxiLP57tiYEfkEIsA:9 a=CjuIK1q_8ugA:10
- a=PEH46H7Ffwr30OY-TuGO:22 a=y4cfut4LVr_MrANMpYTh:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDAwNiBTYWx0ZWRfX2FxL/De9qj4v
- 0pbQa7dUaisiPTWxBCLRDqZJLhlcfkOAwHim+uMQLjuTBv2pZfuhMX0krVMuOsdSp+8EJ3+3v8r
- ff16NVm0PnK6hKhX1N3W05sCTXeVHyhM/OVcSYr886Du0DcpdRwckKJjOzU0zdMPHHrGAl9ElCn
- 2sYyGgF2U89beMbXyegE95ggik+Pa84jv9wbh/ciGEmeKehnpYSkl9f6LG0lWWJgUT3tfFV9EHO
- pTaAGLjMVFi/WzagV73mrOQqKhc5aWQzZMb5ZvcvdcvBu8lPZcRgn7WIL7y9KXB6pCpCJxKlWjV
- eU9E9wyxmDnoAfXlhbT7Y9CPvi7y9D/2iwM5n/RL7tjJdhFhc8onWb71TAK9iu+uoD61c5Q9Q9h
- rOk14Q93ezBilr6vvqzPEQ3VWyHjhQ7mxIcHeY6TXJ5Ms39f2SpQa9nSJ+u4VK2e3qIc3oVH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-23_08,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 mlxlogscore=894 adultscore=0 impostorscore=0 clxscore=1015
- spamscore=0 malwarescore=0 phishscore=0 priorityscore=1501 suspectscore=0
- mlxscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506240006
+References: <cover.1750433500.git.lorenzo.stoakes@oracle.com> <518480ceb48553d3c280bc2b0b5e77bbad840147.1750433500.git.lorenzo.stoakes@oracle.com>
+In-Reply-To: <518480ceb48553d3c280bc2b0b5e77bbad840147.1750433500.git.lorenzo.stoakes@oracle.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Tue, 24 Jun 2025 13:05:23 +1200
+X-Gm-Features: Ac12FXxHr7lCHVAg0CKYT9Vu5jW2rD5YG_mrzrV7mswUqpt7MSvGBlJuyRVYRdo
+Message-ID: <CAGsJ_4zaqCkeG1L4y_=tM+L08h_-hMc04dVQpYWRgf_RUMtGTg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] mm/madvise: thread VMA range state through madvise_behavior
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, 
+	Vlastimil Babka <vbabka@suse.cz>, Jann Horn <jannh@google.com>, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org, Lance Yang <ioworker0@gmail.com>, 
+	SeongJae Park <sj@kernel.org>, Suren Baghdasaryan <surenb@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 21, 2025 at 03:19:55PM +0200, Luca Weiss wrote:
-> Switch over the ADSP PIL to use power-domains instead of a regulator,
-> and have one commit switching over the MSM8974 SoC plus all the devices
-> to use power-domains.
-> 
-> Note, that I'm aware that these changes are not backwards compatible and
-> not really bisectable, but since it only affects the ADSP on these
-
-Why? The cx-supply is handled unconditionally. A single-domain usecase
-is also handled via a special code path. I think this might be
-backwards-compatible, by the pure luck.
-
-> pretty old boards, I say it's fine to have this. Get all the patches
-> into the same release (6.17?) and then we're good again.
-> 
-> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+On Sat, Jun 21, 2025 at 3:33=E2=80=AFAM Lorenzo Stoakes
+<lorenzo.stoakes@oracle.com> wrote:
+>
+> Rather than updating start and a confusing local parameter 'tmp' in
+> madvise_walk_vmas(), instead store the current range being operated upon =
+in
+> the struct madvise_behavior helper object in a range pair and use this
+> consistently in all operations.
+>
+> This makes it clearer what is going on and opens the door to further
+> cleanup now we store state regarding what is currently being operated upo=
+n
+> here.
+>
+> Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 > ---
-> Luca Weiss (4):
->       dt-bindings: remoteproc: qcom,adsp: Make msm8974 use CX as power domain
->       remoteproc: qcom_q6v5_pas: Use resource with CX PD for MSM8974
->       ARM: dts: qcom: msm8974: Sort header includes alphabetically
->       ARM: dts: qcom: msm8974: Start using rpmpd for power domains
-> 
->  .../devicetree/bindings/remoteproc/qcom,adsp.yaml  | 18 ++------
->  .../arm/boot/dts/qcom/qcom-apq8074-dragonboard.dts | 13 ------
->  .../qcom/qcom-msm8974-lge-nexus5-hammerhead.dts    | 12 ------
->  .../boot/dts/qcom/qcom-msm8974-samsung-hlte.dts    | 12 ------
->  .../dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi   | 12 ------
->  arch/arm/boot/dts/qcom/qcom-msm8974.dtsi           | 50 ++++++++++++++++++++--
->  .../dts/qcom/qcom-msm8974pro-fairphone-fp2.dts     |  8 ----
->  arch/arm/boot/dts/qcom/qcom-msm8974pro-htc-m8.dts  | 11 -----
->  .../dts/qcom/qcom-msm8974pro-oneplus-bacon.dts     |  9 ----
->  .../qcom/qcom-msm8974pro-samsung-klte-common.dtsi  | 11 ++---
->  ...qcom-msm8974pro-sony-xperia-shinano-common.dtsi | 12 ------
->  drivers/remoteproc/qcom_q6v5_pas.c                 |  2 +-
->  12 files changed, 56 insertions(+), 114 deletions(-)
-> ---
-> base-commit: 7fa2fb97cd28e1d9670da538095565b6fba83977
-> change-id: 20250621-msm8974-rpmpd-switch-b19b166c02be
-> 
-> Best regards,
-> -- 
-> Luca Weiss <luca@lucaweiss.eu>
-> 
+>  mm/madvise.c | 103 ++++++++++++++++++++++++++++-----------------------
+>  1 file changed, 57 insertions(+), 46 deletions(-)
+>
 
--- 
-With best wishes
-Dmitry
+Reviewed-by: Barry Song <baohua@kernel.org>
+
+Best Regards
+Barry
