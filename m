@@ -1,246 +1,112 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8525527D77B;
-	Tue, 24 Jun 2025 12:32:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750768341; cv=pass; b=KOD5+iw97tIkYY6326RRjEtjJxwGED7jWWqJrSoos+xfGmoOn4+Ldo7UdtzkfVurycZim8iumvrtdSYplJSJwuK3RRqdI5vR01vztlTZneuFI17ojPjyVvls7VZMbc8isKZaVYoeYHTLyVQzu7GAhJyhK9A0/hvdLHUpj09fpgE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750768341; c=relaxed/simple;
-	bh=/IVY3SRvdgqomqV+YcXPg7x2Uj3Au0mfQNdUpIf6cxs=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=OUC2oTh3bBbrJSREEBbmEHV0V7YRyJ6lReBSlQbk5x1oyDs05vTlkMYZYKXeCcFbQtbC+VuPc5FHBoljjhrp7oKQuBU1/3qDjfxBKRaE/+tydbOjkW+ShT4W5zFRbavWbM+33nscdL6u97S4nKkirXU2cXNFfbjlwAnrm/20FUc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=ISpPr20l; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="ISpPr20l"
-ARC-Seal: i=1; a=rsa-sha256; t=1750768302; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Ss7szBl0C6vo5/TtI4TTs/5e8FEcW6SuOFLmtDIZ/tSzqaTsyK0gLgxc41jpiSuaRZ7BqZXfetf4ddWVqGXM27sLVGomXH3uni4Ygcy+Y2wXgQFASKUc8IK+PaGp5T+tDRWB9iEXdx7T95vfgZhXrm9Z3vFB8XglCPMH4MWyAAg=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750768302; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=Ie2joQ92AW905Mdsf8/ZIdEOpEY3fNe+VdtRpB8fjJc=; 
-	b=hRn2P0ElWzxqttX7k1AnHLgwprLRHHn1k0DRjVn+6acu5rpzMNisyZvh7+UrcxzUxbwEnkz220rhJ6Ikot8zQkGiCT3AnYxqajbJfaenUEeQ9bz0J1nYcQfy1dW+5SASmKmda/mh0OIQK66MXsj39Da6VY6u63ubSYrndHNU7JU=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750768302;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=Ie2joQ92AW905Mdsf8/ZIdEOpEY3fNe+VdtRpB8fjJc=;
-	b=ISpPr20lQACBPMWyHmiigWOfLBud7LH+hg2ayxLBHprKY37qRS7jhw4Kocbvv2oT
-	ISCgvv4RkURorlcZSCOg2vTpv3sQE9m5+vAzjoobVbuJw67iSLDh1C5NHYR8EttsxuJ
-	nfdFtkSBxww05OMTQqKTfn21CJzWVQtfnYcEaBHA=
-Received: by mx.zohomail.com with SMTPS id 1750768300488400.79605759042045;
-	Tue, 24 Jun 2025 05:31:40 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1A2222571;
+	Tue, 24 Jun 2025 12:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750768439; cv=none; b=bXfdMTp9VWUzI9fdNuU/iOEIgv5mhoqBHdy3M8ye4ArXKE2e32rCWrm+Cp3s1CMKK42XEPW5idIUO9Dr/y3S4AELk9m0j5KbVNCUj9j1G1zndvHk8E2RBmPlAnEd9VJyRi1hy5dKdnhmWgrMvOnn2CKUX8wHxomkTH8d6jb6ppU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750768439; c=relaxed/simple;
+	bh=ntGwK67tdZVtGMNaU6QKhZxFxF5O/eBDm3EURT/Hu1s=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=HWRwDGhtX6y3Sozu6jPrktwMlfvZweUQKIxwUmmcG6mJvmrMrwkiAB/mmyqzW5n6iWQVb1Hkibp5qvxAbEz17T8U1OAOyKmFb19sIgAkGlZd+mLhA4dIaWz6wu9S2iFAAWRJ75AFrqIEsg+gefYAVyDP2puBhV8/6CPy4aJY4+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bRPQf1J4RzTgmJ;
+	Tue, 24 Jun 2025 20:29:30 +0800 (CST)
+Received: from dggpemf500016.china.huawei.com (unknown [7.185.36.197])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4E544180237;
+	Tue, 24 Jun 2025 20:33:49 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by dggpemf500016.china.huawei.com
+ (7.185.36.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Jun
+ 2025 20:33:48 +0800
+From: Wang Liang <wangliang74@huawei.com>
+To: <davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
+	<pabeni@redhat.com>, <horms@kernel.org>, <dsahern@kernel.org>
+CC: <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>,
+	<wangliang74@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] net: add sysctl ndisc_debug
+Date: Tue, 24 Jun 2025 20:51:15 +0800
+Message-ID: <20250624125115.3926152-1-wangliang74@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
-Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and
- handlers
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <DAU5TAFKJQOF.2DFO7YAHZA4V2@kernel.org>
-Date: Tue, 24 Jun 2025 09:31:24 -0300
-Cc: Boqun Feng <boqun.feng@gmail.com>,
- Alice Ryhl <aliceryhl@google.com>,
- Danilo Krummrich <dakr@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?utf-8?Q?Krzysztof_Wilczy=C2=B4nski?= <kwilczynski@kernel.org>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- linux-pci@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DB7F39EC-5F7D-49DA-BF2B-6200998B45E2@collabora.com>
-References: <20250608-topics-tyr-request_irq-v4-0-81cb81fb8073@collabora.com>
- <20250608-topics-tyr-request_irq-v4-3-81cb81fb8073@collabora.com>
- <aEbJt0YSc3-60OBY@pollux>
- <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com>
- <DAU0NHTHTDG4.2HNEABNAI8GHZ@kernel.org> <aFmPZMLGngAE_IHJ@tardis.local>
- <aFmodsQK6iatXKoZ@tardis.local> <DAU5TAFKJQOF.2DFO7YAHZA4V2@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-X-Mailer: Apple Mail (2.3826.600.51.1.1)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ dggpemf500016.china.huawei.com (7.185.36.197)
 
+Ipv6 ndisc uses ND_PRINTK to print logs. However it only works when
+ND_DEBUG was set in the compilation phase. This patch adds sysctl
+ndisc_debug, so we can change the print switch when system is running and
+get ipv6 ndisc log to debug.
 
+Signed-off-by: Wang Liang <wangliang74@huawei.com>
+---
+ include/net/ndisc.h        | 5 ++---
+ net/ipv6/ndisc.c           | 3 +++
+ net/ipv6/sysctl_net_ipv6.c | 7 +++++++
+ 3 files changed, 12 insertions(+), 3 deletions(-)
 
-> On 23 Jun 2025, at 16:28, Benno Lossin <lossin@kernel.org> wrote:
->=20
-> On Mon Jun 23, 2025 at 9:18 PM CEST, Boqun Feng wrote:
->> On Mon, Jun 23, 2025 at 10:31:16AM -0700, Boqun Feng wrote:
->>> On Mon, Jun 23, 2025 at 05:26:14PM +0200, Benno Lossin wrote:
->>>> On Mon Jun 23, 2025 at 5:10 PM CEST, Alice Ryhl wrote:
->>>>> On Mon, Jun 9, 2025 at 12:47=E2=80=AFPM Danilo Krummrich =
-<dakr@kernel.org> wrote:
->>>>>> On Sun, Jun 08, 2025 at 07:51:08PM -0300, Daniel Almeida wrote:
->>>>>>> +        dev: &'a Device<Bound>,
->>>>>>> +        irq: u32,
->>>>>>> +        flags: Flags,
->>>>>>> +        name: &'static CStr,
->>>>>>> +        handler: T,
->>>>>>> +    ) -> impl PinInit<Self, Error> + 'a {
->>>>>>> +        let closure =3D move |slot: *mut Self| {
->>>>>>> +            // SAFETY: The slot passed to pin initializer is =
-valid for writing.
->>>>>>> +            unsafe {
->>>>>>> +                slot.write(Self {
->>>>>>> +                    inner: Devres::new(
->>>>>>> +                        dev,
->>>>>>> +                        RegistrationInner {
->>>>>>> +                            irq,
->>>>>>> +                            cookie: slot.cast(),
->>>>>>> +                        },
->>>>>>> +                        GFP_KERNEL,
->>>>>>> +                    )?,
->>>>>>> +                    handler,
->>>>>>> +                    _pin: PhantomPinned,
->>>>>>> +                })
->>>>>>> +            };
->>>>>>> +
->>>>>>> +            // SAFETY:
->>>>>>> +            // - The callbacks are valid for use with =
-request_irq.
->>>>>>> +            // - If this succeeds, the slot is guaranteed to be =
-valid until the
->>>>>>> +            // destructor of Self runs, which will deregister =
-the callbacks
->>>>>>> +            // before the memory location becomes invalid.
->>>>>>> +            let res =3D to_result(unsafe {
->>>>>>> +                bindings::request_irq(
->>>>>>> +                    irq,
->>>>>>> +                    Some(handle_irq_callback::<T>),
->>>>>>> +                    flags.into_inner() as usize,
->>>>>>> +                    name.as_char_ptr(),
->>>>>>> +                    slot.cast(),
->>>>>>> +                )
->>>>>>> +            });
->>>>>>> +
->>>>>>> +            if res.is_err() {
->>>>>>> +                // SAFETY: We are returning an error, so we can =
-destroy the slot.
->>>>>>> +                unsafe { core::ptr::drop_in_place(&raw mut =
-(*slot).handler) };
->>>>>>> +            }
->>>>>>> +
->>>>>>> +            res
->>>>>>> +        };
->>>>>>> +
->>>>>>> +        // SAFETY:
->>>>>>> +        // - if this returns Ok, then every field of `slot` is =
-fully
->>>>>>> +        // initialized.
->>>>>>> +        // - if this returns an error, then the slot does not =
-need to remain
->>>>>>> +        // valid.
->>>>>>> +        unsafe { pin_init_from_closure(closure) }
->>>>>>=20
->>>>>> Can't we use try_pin_init!() instead, move request_irq() into the =
-initializer of
->>>>>> RegistrationInner and initialize inner last?
->>>>>=20
->>>>> We need a pointer to the entire struct when calling
->>>>> bindings::request_irq. I'm not sure this allows you to easily get =
-one?
->>>>> I don't think using container_of! here is worth it.
->>>>=20
->>>> There is the `&this in` syntax (`this` is of type `NonNull<Self>`):
->>>>=20
->>>>    try_pin_init!(&this in Self {
->>>>        inner: Devres::new(
->>>>            dev,
->>>>            RegistrationInner {
->>>>                irq,
->>>>                cookie: this.as_ptr().cast(),
->>>>            },
->>>>            GFP_KERNEL,
->>>>        )?,
->>>>        handler,
->>>>        _pin: {
->>>>            to_result(unsafe {
->>>>                bindings::request_irq(
->>>>                    irq,
->>>>                    Some(handle_irq_callback::<T>),
->>>>                    flags.into_inner() as usize,
->>>>                    name.as_char_ptr(),
->>>>                    slot.as_ptr().cast(),
->>>=20
->>> this is "this" instead of "slot", right?
->>>=20
->>>>                )
->>>>            })?;
->>>>            PhantomPinned
->>>>        },
->>>>    })
->>>>=20
->>>> Last time around, I also asked this question and you replied with =
-that
->>>> we need to abort the initializer when `request_irq` returns false =
-and
->>>> avoid running `Self::drop` (thus we can't do it using `pin_chain`).
->>>>=20
->>>> I asked what we could do instead and you mentioned the `_: {}`
->>>> initializers and those would indeed solve it, but we can abuse the
->>>> `_pin` field for that :)
->>>>=20
->>>=20
->>> Hmm.. but if request_irq() fails, aren't we going to call `drop` on
->>> `inner`, which drops the `Devres` which will eventually call
->>> `RegistrationInner::drop()`? And that's a `free_irq()` without
->>> `request_irq()` succeeded.
->>>=20
->>=20
->> This may however work ;-) Because at `request_irq()` time, all it =
-needs
->> is ready, and if it fails, `RegistrationInner` won't construct.
->>=20
->>    try_pin_init!(&this in Self {
->>        handler,
->>        inner: Devres::new(
->>            dev,
->>            RegistrationInner {
->>                // Needs to use `handler` address as cookie, same for
->>                // request_irq().
->>                cookie: &raw (*(this.as_ptr().cast()).handler),
->>                irq: {
->>                     to_result(unsafe { bindings::request_irq(...) =
-})?;
->>  irq
->> }
->>             },
->>             GFP_KERNEL,
->>        )?,
->>        _pin: PhantomPinned
->>    })
->=20
-> Well yes and no, with the Devres changes, the `cookie` can just be the
-> address of the `RegistrationInner` & we can do it this way :)
->=20
-> ---
-> Cheers,
-> Benno
+diff --git a/include/net/ndisc.h b/include/net/ndisc.h
+index 3c88d5bc5eed..481a7fc5d5c1 100644
+--- a/include/net/ndisc.h
++++ b/include/net/ndisc.h
+@@ -60,12 +60,11 @@ enum {
+ 
+ #include <net/neighbour.h>
+ 
+-/* Set to 3 to get tracing... */
+-#define ND_DEBUG 1
++extern u8 ndisc_debug;
+ 
+ #define ND_PRINTK(val, level, fmt, ...)				\
+ do {								\
+-	if (val <= ND_DEBUG)					\
++	if (val <= ndisc_debug)					\
+ 		net_##level##_ratelimited(fmt, ##__VA_ARGS__);	\
+ } while (0)
+ 
+diff --git a/net/ipv6/ndisc.c b/net/ipv6/ndisc.c
+index ecb5c4b8518f..be4bb72b1d61 100644
+--- a/net/ipv6/ndisc.c
++++ b/net/ipv6/ndisc.c
+@@ -83,6 +83,9 @@ static void pndisc_destructor(struct pneigh_entry *n);
+ static void pndisc_redo(struct sk_buff *skb);
+ static int ndisc_is_multicast(const void *pkey);
+ 
++u8 ndisc_debug = 1;
++EXPORT_SYMBOL_GPL(ndisc_debug);
++
+ static const struct neigh_ops ndisc_generic_ops = {
+ 	.family =		AF_INET6,
+ 	.solicit =		ndisc_solicit,
+diff --git a/net/ipv6/sysctl_net_ipv6.c b/net/ipv6/sysctl_net_ipv6.c
+index d2cd33e2698d..c0968f0c5d00 100644
+--- a/net/ipv6/sysctl_net_ipv6.c
++++ b/net/ipv6/sysctl_net_ipv6.c
+@@ -247,6 +247,13 @@ static struct ctl_table ipv6_rotable[] = {
+ 		.proc_handler	= proc_dointvec,
+ 	},
+ #endif /* CONFIG_NETLABEL */
++	{
++		.procname	= "ndisc_debug",
++		.data		= &ndisc_debug,
++		.maxlen		= sizeof(u8),
++		.mode		= 0644,
++		.proc_handler	= proc_dou8vec_minmax
++	},
+ };
+ 
+ static int __net_init ipv6_sysctl_net_init(struct net *net)
+-- 
+2.34.1
 
-
-No, we need this to be the address of the the whole thing (i.e.
-Registration<T>), otherwise you can=E2=80=99t access the handler in the =
-irq
-callback.
-
-
-
-=E2=80=94 Daniel=
