@@ -1,104 +1,143 @@
-Received: from mail44.out.titan.email (mail44.out.titan.email [3.69.224.234])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBCC35975
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=3.69.224.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77DC19D080
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750724244; cv=none; b=F4M+rokbZaND0qADoAVaZM549pkJbEj7KkjRdLDPwYS1MNBliJeqxqnE1MUlkoDJelub/un4uw1O5ltM6K4cNfbQRjgV8TEGTtmsh+RpBZGWCbliP5JHhdA+lt8398Ty05t0YO4Dciy90LTFLETWhyXIM3OC42VrCXWGPUohU9M=
+	t=1750724259; cv=none; b=p4ehuAzoRpcmhNbcgPqkicqKm8D4aiGnlmBzzbUkTTEOlq3ufKtshazD/GtXxkA8cEWimbGK5PMDmlhFVrJ1bwbnUA4zQghEbmVoJwnJGh46lgck+gpoa5mE1EOJWSZhJcM7uHorpu93a0vZPPX82PBMu6tYqn+3V4iRxaK5ccU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750724244; c=relaxed/simple;
-	bh=Oftf5W4I/EXc8/dE5Uq8cLi3ZFqVSS5q7VTSqVAxhMo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bN508BLnoICI3vqCmRhCN6jrwvwh3TMaeF3ZWEGleuMZHgPAwPXf6INI6hnL+0GRlYTRJs3sV4tfcjpeXcAqc7ICbQxmdsw9Xyz4wJ0W059HU5/jYS6l+E6u5lLRRgs6W7rr/VDdRyYQemQHAvYxbCFHD9WDBCLlCV8ldjEVFjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techsingularity.net; spf=pass smtp.mailfrom=techsingularity.net; dkim=pass (1024-bit key) header.d=techsingularity.net header.i=@techsingularity.net header.b=ZjhYus94; arc=none smtp.client-ip=3.69.224.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=techsingularity.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=techsingularity.net
+	s=arc-20240116; t=1750724259; c=relaxed/simple;
+	bh=o+v4lK1Ijp81f8YHyslKho/ngACy3vmkWV/zLRrVAJo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=nnJX36r4fLkdDr6NGR7n1TcrV/kJcNdKAjG9rXiJyVVIVaxTcA2RK/mTsCZYE0vuf+kBUn6oIi9MlWAjoJ7xRCO1IUwskPeE7E+ctAz4ttMtmeIBJwsdQ77oOmelXC08pAqin1DlQJijyZXNAx8aas8oKV2Up4e3hXfZq9IeQkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p55P0z+J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=techsingularity.net header.i=@techsingularity.net header.b="ZjhYus94"
-Received: from localhost (localhost [127.0.0.1])
-	by smtp-out0101.titan.email (Postfix) with ESMTP id 1C55E10004E;
-	Mon, 23 Jun 2025 21:50:12 +0000 (UTC)
-DKIM-Signature: a=rsa-sha256; bh=l/nFCx/0llluEb4kDd+YLQaTel4IbFwefVMIpPfZ3f4=;
-	c=relaxed/relaxed; d=techsingularity.net;
-	h=from:cc:references:mime-version:to:in-reply-to:subject:date:message-id:from:to:cc:subject:date:message-id:in-reply-to:references:reply-to;
-	q=dns/txt; s=titan1; t=1750715411; v=1;
-	b=ZjhYus9479AB8zlDfn3DU4pPwYEGLllIXdh+Oej2Tb58/rckUt+jTTFGgs5lnYDntb/q/rR2
-	Wu/JvUCP3OhOnqy/6E+3njgsWI5Gb1y2Vy+qmfixaSpMqc9wx61Ya3OZyeRKpBJzs4HChP6DO21
-	1PJqCB+S6rszasxk6bf05MxE=
-Received: from mail.blacknight.com (ip-84-203-196-90.broadband.digiweb.ie [84.203.196.90])
-	by smtp-out0101.titan.email (Postfix) with ESMTPA id C41E0100008;
-	Mon, 23 Jun 2025 21:50:10 +0000 (UTC)
-Date: Mon, 23 Jun 2025 22:49:59 +0100
-Feedback-ID: :mgorman@techsingularity.net:techsingularity.net:flockmailId
-From: Mel Gorman <mgorman@techsingularity.net>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Aaron Tomlin <atomlin@atomlin.com>, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	juri.lelli@redhat.com, vincent.guittot@linaro.org, hpa@zytor.com, oleg@redhat.com, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, 
-	vschneid@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] sched: idle: Introduce CPU-specific idle=poll
-Message-ID: <7n6zmi3aaxrwfpvkzbugt3e3274zw3qb2kci4yyq2q6gojb3ku@zh3g4rvnyqzi>
-References: <20250621235745.3994-1-atomlin@atomlin.com>
- <20250623102334.GP1613200@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p55P0z+J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE676C4CEEA;
+	Tue, 24 Jun 2025 00:17:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750724258;
+	bh=o+v4lK1Ijp81f8YHyslKho/ngACy3vmkWV/zLRrVAJo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=p55P0z+JRFL5pp9PD2HqnGNMfSFW7SSI0qHf2U3z3GM7VlrggFqN+vzMDR8a7ZxH8
+	 rEAju40FWlxjaVY/RO+PJ3xVMeMKViCqxLWGQ6VNIvb2yItQacd4O4CQm4kgYS7sEW
+	 3x4VGycouXtbl8pLtC83FgmzzvLdThzLllqYYw1tzDrWAgIttb2Ebjn1fhANRc59aC
+	 ofeRsR9H7M7tniwEE/qcokBerA3CDNK8HMrAuQT0Jgm/xIRW+DlbyFaef8i7h/NHPR
+	 BV3H+Tul0ym9DilUAujzYljY6mQrGYcKjnXv+DaVTgalB7SknhfAGwWQ3q4pv2HFR3
+	 OH+bRecZsFy6A==
+Date: Tue, 24 Jun 2025 09:17:31 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Lance Yang <ioworker0@gmail.com>
+Cc: akpm@linux-foundation.org, zi.li@linux.dev, anna.schumaker@oracle.com,
+ boqun.feng@gmail.com, joel.granados@kernel.org, jstultz@google.com,
+ kent.overstreet@linux.dev, leonylgao@tencent.com,
+ linux-kernel@vger.kernel.org, longman@redhat.com, mhiramat@kernel.org,
+ mingo@redhat.com, mingzhe.yang@ly.com, peterz@infradead.org,
+ rostedt@goodmis.org, senozhatsky@chromium.org, tfiga@chromium.org,
+ will@kernel.org, Lance Yang <lance.yang@linux.dev>
+Subject: Re: [PATCH RFC 1/3] locking/rwsem: make owner helpers globally
+ available
+Message-Id: <20250624091731.f4d3cf296943ce45e97a631f@kernel.org>
+In-Reply-To: <20250612042005.99602-2-lance.yang@linux.dev>
+References: <20250612042005.99602-1-lance.yang@linux.dev>
+	<20250612042005.99602-2-lance.yang@linux.dev>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <20250623102334.GP1613200@noisy.programming.kicks-ass.net>
-X-F-Verdict: SPFVALID
-X-Titan-Src-Out: 1750715411915101861.2117.3965428696989907295@prod-euc1-smtp-out1001.
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.4 cv=HKo5Fptv c=1 sm=1 tr=0 ts=6859cc13
-	a=+XWPlUOTt03IZrtNKHUAqA==:117 a=+XWPlUOTt03IZrtNKHUAqA==:17
-	a=Q9fys5e9bTEA:10 a=CEWIc4RMnpUA:10 a=lX01bCWNPQCBdb-pIg4A:9
-	a=PUjeQqilurYA:10
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 23, 2025 at 12:23:34PM +0200, Peter Zijlstra wrote:
-> On Sat, Jun 21, 2025 at 07:57:45PM -0400, Aaron Tomlin wrote:
-> > Currently, the idle=poll kernel boot parameter applies globally, forcing
-> > all CPUs into a shallow polling idle state to ensure ultra-low latency
-> > responsiveness. While this is beneficial for extremely latency-sensitive
-> > workloads, this global application lacks flexibility and can lead to
-> > significant power inefficiency. This is particularly evident in systems
-> > with a high CPU count, such as those utilising the
-> > Full Dynticks/Adaptive Tick feature (i.e., nohz_full). In such
-> > environments, only a subset of CPUs might genuinely require
-> > sub-microsecond responsiveness, while others, though active, could
-> > benefit from entering deeper idle states to conserve power.
+On Thu, 12 Jun 2025 12:19:24 +0800
+Lance Yang <ioworker0@gmail.com> wrote:
+
+> From: Lance Yang <lance.yang@linux.dev>
 > 
-> Can't we already do this at runtime with pmqos? If you set your latency
-> demand very low, it should end up picking the poll state, no? And you
-> can do this per-cpu.
+> In preparation for extending blocker tracking to support rwsems, make the
+> rwsem_owner() and is_rwsem_reader_owned() helpers globally available for
+> determining if the blocker is a writer or one of the readers.
+> 
 
-Yes, we can. idle=poll can be hazardous in weird ways and it's not like
-pmqos is hard to use. For example, lets say you had a RT application with
-latency constraints running on isolated CPUs while leaving housekeeping
-CPUs alone then it's simply a case of;
+Looks good to me.
 
-        for CPU in $ISOLATED_CPUS; do
-                SYSFS_PARAM="/sys/devices/system/cpu/cpu$CPU/power/pm_qos_resume_latency_us"
-                if [ ! -e $SYSFS_PARAM ]; then
-                        echo "WARNING: Unable to set PM QOS max latency for CPU $CPU\n"
-                        continue
-                fi
-                echo $MAX_EXIT_LATENCY > $SYSFS_PARAM
-                echo "Set PM QOS maximum resume latency on CPU $CPU to ${MAX_EXIT_LATENCY}us"
-        done
- 
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-In too many cases I've seen idle=poll being used when the user didn't know
-PM QOS existed. The most common response I've received is that the latency
-requirements were unknown resulting in much headbanging off the table.
-Don't get me started on the hazards of limiting c-states by index without
-checking that the c-states are or splitting isolated/housekeeping across
-SMT siblings.
+Thanks!
+
+> Signed-off-by: Lance Yang <lance.yang@linux.dev>
+> ---
+>  include/linux/rwsem.h  | 12 ++++++++++++
+>  kernel/locking/rwsem.c |  8 +++++---
+>  2 files changed, 17 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
+> index c8b543d428b0..544853bed5b9 100644
+> --- a/include/linux/rwsem.h
+> +++ b/include/linux/rwsem.h
+> @@ -132,6 +132,18 @@ static inline int rwsem_is_contended(struct rw_semaphore *sem)
+>  	return !list_empty(&sem->wait_list);
+>  }
+>  
+> +#if defined(CONFIG_DEBUG_RWSEMS) || defined(CONFIG_DETECT_HUNG_TASK_BLOCKER)
+> +/*
+> + * Return just the real task structure pointer of the owner
+> + */
+> +extern struct task_struct *rwsem_owner(struct rw_semaphore *sem);
+> +
+> +/*
+> + * Return true if the rwsem is owned by a reader.
+> + */
+> +extern bool is_rwsem_reader_owned(struct rw_semaphore *sem);
+> +#endif
+> +
+>  #else /* !CONFIG_PREEMPT_RT */
+>  
+>  #include <linux/rwbase_rt.h>
+> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+> index 2ddb827e3bea..6cb29442d4fc 100644
+> --- a/kernel/locking/rwsem.c
+> +++ b/kernel/locking/rwsem.c
+> @@ -181,11 +181,11 @@ static inline void rwsem_set_reader_owned(struct rw_semaphore *sem)
+>  	__rwsem_set_reader_owned(sem, current);
+>  }
+>  
+> -#ifdef CONFIG_DEBUG_RWSEMS
+> +#if defined(CONFIG_DEBUG_RWSEMS) || defined(CONFIG_DETECT_HUNG_TASK_BLOCKER)
+>  /*
+>   * Return just the real task structure pointer of the owner
+>   */
+> -static inline struct task_struct *rwsem_owner(struct rw_semaphore *sem)
+> +struct task_struct *rwsem_owner(struct rw_semaphore *sem)
+>  {
+>  	return (struct task_struct *)
+>  		(atomic_long_read(&sem->owner) & ~RWSEM_OWNER_FLAGS_MASK);
+> @@ -194,7 +194,7 @@ static inline struct task_struct *rwsem_owner(struct rw_semaphore *sem)
+>  /*
+>   * Return true if the rwsem is owned by a reader.
+>   */
+> -static inline bool is_rwsem_reader_owned(struct rw_semaphore *sem)
+> +bool is_rwsem_reader_owned(struct rw_semaphore *sem)
+>  {
+>  	/*
+>  	 * Check the count to see if it is write-locked.
+> @@ -205,7 +205,9 @@ static inline bool is_rwsem_reader_owned(struct rw_semaphore *sem)
+>  		return false;
+>  	return rwsem_test_oflags(sem, RWSEM_READER_OWNED);
+>  }
+> +#endif
+>  
+> +#ifdef CONFIG_DEBUG_RWSEMS
+>  /*
+>   * With CONFIG_DEBUG_RWSEMS configured, it will make sure that if there
+>   * is a task pointer in owner of a reader-owned rwsem, it will be the
+> -- 
+> 2.49.0
+> 
+
 
 -- 
-Mel Gorman
-SUSE Labs
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
