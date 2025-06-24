@@ -1,247 +1,212 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2048.outbound.protection.outlook.com [40.107.223.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3762566D9
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:49:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750751392; cv=none; b=YwvQhPNSlrlQxmJAdHcyKYfvmbC7TXZ7Nc4CtqzNN+eDIt9lkVJj9G0HF/NoukJuJ7XeIEhfO6HdUk4UDhJyt75yaaj18ClsCFnxQOA7SE75QJTO1dPfiKQXxt87G27Lza+4r5ALIrwfsuY3vQ7he5Pu70B26ridm2YwIrOs2t8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750751392; c=relaxed/simple;
-	bh=+790H+OZP06IcFIvm6YrSeEXldIMb9hgSxzVzG7Yysc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NRM5hKbFUe+Wpbtzwhf7iGB0s84YzDqDkhwkLHi5aeDo9VqwoJig9jt2yOu8RiF1ZNTZjgGOk5uWYNX/jUDxms1Z2HWtUX1oQjvLEh0GVUYvcIyS/wBY8gi9fFXrZZJLkq4plkd8uJSjOBGfU4izHQ9/qyK4uTLIEdK81SDdIec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VI/ijiW4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11475221FC3
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.48
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750751430; cv=fail; b=G4tfvaVDfi3BkJCqF9wgP9oDV1atdFVZ/UDm//zhrroKZ/wmshw5htFyeTWDAaBy9DORn+7bQ3hEVyXV87/F9stEo4l8SeKd1lJ4xS1eMup8BYkai7YggoDkuYW+aVL+vwOuKnpsAq0xOMJbMX5mdDyc+M/O3rWcuFzecq2ZURs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750751430; c=relaxed/simple;
+	bh=IMEhNud3yp8US8WTTMV10/ziRzVlEkpEdGf5zlsfr10=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=YVFa711YTNBCkF36T/xQJGAIwsM9aFqXHy64g5gAm+1pyxb5Y9yjxAiECWjL5Ck8WmLK0m8K8/pnESJ1xwnOb2euvukWbhqHX0wzEIQmvpYBI5E7HrWeUC3pUaW37YEMo9E4mJaFYLQnOR+B/nwJy32ou+IwCbQtAd8ougZ5uxA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=R6Vf2tUS; arc=fail smtp.client-ip=40.107.223.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VI/ijiW4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750751389;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Up/VrTcRwD+YAjo9pT4ruHxc8Ce1CsMoQfiF4F6wCQg=;
-	b=VI/ijiW4oeS6Y53Ne8B5iQ9r7AW/4W2BWKVK7gIFjV2LB0ChTBvmuEgbYwyNpydHBp/UHr
-	DtdwPGrCiqr6Uqy1+WBuki0qFbeh/zFu4df+ZsRBRd+fR9/86bCV5mVRdHZO69ui4DXlFM
-	wxqK5Yew2YstmcnzqChOmca4lp8QOok=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-631-RhExCqg9OzuoWF7LCd05BQ-1; Tue, 24 Jun 2025 03:49:47 -0400
-X-MC-Unique: RhExCqg9OzuoWF7LCd05BQ-1
-X-Mimecast-MFC-AGG-ID: RhExCqg9OzuoWF7LCd05BQ_1750751386
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a52bfda108so51218f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:49:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750751386; x=1751356186;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Up/VrTcRwD+YAjo9pT4ruHxc8Ce1CsMoQfiF4F6wCQg=;
-        b=OxMODxuM+LckMB0+jXYAz3WQfVxJLkDjxNssPcHJQiM5CvRYDI5V+ZBqe/Bk6h8Hst
-         uLIy2RBv3XSxoX0kku1H8gmJOLmDtxs0LMNXLjIDp4aF81XQkyzEBslhDnnpbSOXE27Z
-         wjHYxxCKX21bwjNcgnt6N5B4MWk90T2IRbyjE7uCPhA8V6NP+Q91f5Unit0YGvz7SjWJ
-         Nw16KFdS3vXyWbDhZzb0JHIil3YfQRSewBm7ZrMJojNTO/QPl0Qv+q0BdCw/8jrGYd06
-         YmbCCy9JA+cyKyyqI6G+B66vF4Msr5L7cFh9wcdnXhxsrjWPwIXq0tz0D+1LIGlSFlNr
-         M+3g==
-X-Forwarded-Encrypted: i=1; AJvYcCXwmE3tNmndc2dYe1IxVizscZkHtnqD32xQ5wSxxKSoiqeY6tR8WLhZbdyWU6RNM0xt4trS3OH757RADbY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykeN2WH4h9Bvq8jXEyTfipA6OkHXxe3gNuc3CJj5Rf9/Dkzry3
-	FytVWwHqEQFJPFlIjZRp5tOHFqhsnuk33eTaS+jXRCzrfgRVo+in9HooFq0kd8kGS6CgrVOyTbY
-	7NiaK7yAScOMGg95xBqNXlKQe7JHu1Gm03+44AXfB974HOfzahFDUbh12SStQWyxQSQ==
-X-Gm-Gg: ASbGnct3wsoyTk8J2xdJCM2z+9LY3dd9jXhZEXkSqU52Et9G3DjyPC29k87XZ/qejli
-	SM3lAMjjbQyNocKdjOXTbszmOF3a2AnmP5k4Z84EH6RIq78A1zd5q3skuQLXoyxF9frxsZi+VSv
-	QK4MylOPh/zn95aqFOB6nPInb65V41iIg1U5YlZQvepCrpTtbJWMZVyMoVGn0MGsfSniHdrMpMQ
-	sjxjoPoXJLSia9Oh66NPJgVj1R/iy8JiBnW9CWr+Ym8t/avm8lssSRi3x+2ao1bb7+/CSdjtl5Q
-	f1ac3tberf0kmjBsCBAGW6GrLh4du8Vk5FJtQTZrpivHf8RWeKE=
-X-Received: by 2002:a05:6000:20c1:b0:3a6:d92f:b7a0 with SMTP id ffacd0b85a97d-3a6d92fbb68mr5810255f8f.58.1750751386323;
-        Tue, 24 Jun 2025 00:49:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFwKdkWBcEmi1MSSCLKYuTVNaP1SUf+Ndsmkr41yqbOB+aWQLfy0QrufxA0X2CvDylZNVoU4w==
-X-Received: by 2002:a05:6000:20c1:b0:3a6:d92f:b7a0 with SMTP id ffacd0b85a97d-3a6d92fbb68mr5810234f8f.58.1750751385902;
-        Tue, 24 Jun 2025 00:49:45 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.4.96])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805eeffsm1246349f8f.34.2025.06.24.00.49.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 00:49:45 -0700 (PDT)
-Date: Tue, 24 Jun 2025 09:49:43 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: luca abeni <luca.abeni@santannapisa.it>
-Cc: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>,
-	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vineeth Pillai <vineeth@bitbyteword.org>
-Subject: Re: SCHED_DEADLINE tasks missing their deadline with
- SCHED_FLAG_RECLAIM jobs in the mix (using GRUB)
-Message-ID: <aFpYl53ZMThWjQai@jlelli-thinkpadt14gen4.remote.csb>
-References: <c91a117401225290fbf0390f2ce78c3e0fb3b2d5.camel@codethink.co.uk>
- <aDgrOWgYKb1_xMT6@jlelli-thinkpadt14gen4.remote.csb>
- <8d6dd3013b05225541821132398cb7615cdd874e.camel@codethink.co.uk>
- <aFFdseGAqImLtVCH@jlelli-thinkpadt14gen4.remote.csb>
- <880890e699117e02d984ba2bb391c63be5fd71e8.camel@codethink.co.uk>
- <aFUqELdqM8VcyNCh@jlelli-thinkpadt14gen4.remote.csb>
- <20250620113745.6833bccb@luca64>
- <20250620161606.2ff81fb1@nowhere>
- <aFV-HEwOTq0a37ax@jlelli-thinkpadt14gen4.remote.csb>
- <20250620185248.634101cc@nowhere>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="R6Vf2tUS"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=l+T6j8cIU11YwZN37la6HMKRVuPHrPuJnpdiZSgE5SZCiB3lx3PgDrPw7heyxi0PAH6J1Y4rSO4qok8C43p3sGlMw4O9DjAV9t4K94elxZIBJQ7A0Qmvpvpfmsy9PLkU74eZOX1cDESV+lc/9OZtdvsEt3TRUTDNYDfo7Jnba1ueeH+U8z+MWSNBMCEocIxuWYh9QalIPhlBg8Xc1wSu/I1JDyz+UnfbS9nA1H4WcKEjZWhB+ST7kFK8nrkJR7w2dYyIz7HM0LMGo6V/JPwqhgS+Pf0zKRD9eLvLDMcgppIaaRIqhNQmp5BxzDsXlSizZNZ38jP3i5iFcHZ2WH6Q4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VUOidMYqP9cgD9GidWzPfIExe2Of2qzn4gtfIsl9okQ=;
+ b=Ec7EiceC4gr223Tl5lAL2Us8qkL3Fz3m6/TsLHxRlwmsYaoHyw+HEREXxIEQF7JfxWsV5UWb6ZJ1fdnSRyVFDo2ujq6p1+bo2Qdkx+vfXOovhhkmnj/xDm8k5AarxwQWgTr21giCj9cSy2mcQ4OIxNLPddI6EMIXZy9vnZGp0i+Xhc+Z6tAIyZtVwZqIy6gFrHI2SNw3lO0hgVY7GFcXXze1Xvn8XBPXu8L2S7zlonJ4vWo+Cff4JyQRsBCBS1pZ9c0+8M2424CBRC2tD4VKhmuB9ISiJN0IopzJ6KjDLxpUQ2C+idzTKLrXQWyv8/TOK1brWzZBIqJKCTIsLUX5/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VUOidMYqP9cgD9GidWzPfIExe2Of2qzn4gtfIsl9okQ=;
+ b=R6Vf2tUSE6oQ0Xsrw4OHWD/XQtczC3NK2NkOQSCTHLgKBPVR8E/enF4AwY0G9S9gGlRHC1s7yJgixfWwN2N9E7X4k+Elt3lCDbK0de4sY9FnvLyyznc8j8kHchCPGSdSkIUwOpNQVvtFWqbMXlirGH/Ht27Fd4QLoMAhlRQ1nJU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from PH7PR12MB5805.namprd12.prod.outlook.com (2603:10b6:510:1d1::13)
+ by IA0PPFFEC453979.namprd12.prod.outlook.com (2603:10b6:20f:fc04::beb) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.25; Tue, 24 Jun
+ 2025 07:50:26 +0000
+Received: from PH7PR12MB5805.namprd12.prod.outlook.com
+ ([fe80::11c7:4914:62f4:f4a3]) by PH7PR12MB5805.namprd12.prod.outlook.com
+ ([fe80::11c7:4914:62f4:f4a3%4]) with mapi id 15.20.8857.022; Tue, 24 Jun 2025
+ 07:50:26 +0000
+Message-ID: <86a44c07-bf95-4e69-8db4-4523833b923d@amd.com>
+Date: Tue, 24 Jun 2025 13:20:09 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH V2 12/13] trace/kscand: Add tracing of scanning and
+ migration
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: AneeshKumar.KizhakeVeetil@arm.com, Hasan.Maruf@amd.com,
+ Michael.Day@amd.com, akpm@linux-foundation.org, bharata@amd.com,
+ dave.hansen@intel.com, david@redhat.com, dongjoo.linux.dev@gmail.com,
+ feng.tang@intel.com, gourry@gourry.net, hannes@cmpxchg.org,
+ honggyu.kim@sk.com, hughd@google.com, jhubbard@nvidia.com,
+ jon.grimm@amd.com, k.shutemov@gmail.com, kbusch@meta.com,
+ kmanaouil.dev@gmail.com, leesuyeon0506@gmail.com, leillc@google.com,
+ liam.howlett@oracle.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ mgorman@techsingularity.net, mingo@redhat.com, nadav.amit@gmail.com,
+ nphamcs@gmail.com, peterz@infradead.org, riel@surriel.com,
+ rientjes@google.com, rppt@kernel.org, santosh.shukla@amd.com,
+ shivankg@amd.com, shy828301@gmail.com, sj@kernel.org, vbabka@suse.cz,
+ weixugc@google.com, willy@infradead.org, ying.huang@linux.alibaba.com,
+ ziy@nvidia.com, Jonathan.Cameron@huawei.com, dave@stgolabs.net,
+ yuanchu@google.com, kinseyho@google.com, hdanton@sina.com
+References: <20250624055617.1291159-1-raghavendra.kt@amd.com>
+ <20250624055617.1291159-13-raghavendra.kt@amd.com>
+ <20250624160958.e36196456a4c8befc99717ba@kernel.org>
+Content-Language: en-US
+From: Raghavendra K T <raghavendra.kt@amd.com>
+In-Reply-To: <20250624160958.e36196456a4c8befc99717ba@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0245.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:21a::10) To PH7PR12MB5805.namprd12.prod.outlook.com
+ (2603:10b6:510:1d1::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620185248.634101cc@nowhere>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR12MB5805:EE_|IA0PPFFEC453979:EE_
+X-MS-Office365-Filtering-Correlation-Id: 77282b62-f371-42be-0872-08ddb2f3c7bd
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L1QxVjZCVDhFU0xCNkZxTFQwTHc0akFaZVNWelIvYlNINlQxTWVaa2hCK29o?=
+ =?utf-8?B?Y1habkJlMGhSWlZDeERsbHdCUVB4VlVhSFJFRU1kRnBUNndUUFJmOUhGMDNl?=
+ =?utf-8?B?N04ydGJUTTZpbWZVWmxLTnJKbGsvajh0dnhUMXZtalZYUWpNN2YrV1BCVHd4?=
+ =?utf-8?B?bTJ2ZGxhK1dDSS9TMzYyRzluaEdRb01GbFRaMjNQK0NSbjMwR2lONFArQTFV?=
+ =?utf-8?B?SmtJTUpKVlBKaXEwd0JCekczZG1aSWFIRTdLVkRRdnpmQ252UFNWTkc2Y0RI?=
+ =?utf-8?B?SG9VMTZPRk5LRkpwZWRCa1BpeFg5M2p2eFQycFpZNG5mRXR5UTF6ajB3SWFy?=
+ =?utf-8?B?SHJjZTlzTHNTVTc4R1NFQ1ZSQzd5OXl5UUlWTnlLalM3VHAwK0lRcUNtWmFt?=
+ =?utf-8?B?RjhiRzZ5OEc4Z2s2WVhnRjNBMWNSaHV4Z1g5d0t2c2pDZ2UrL0lKeXhhczlP?=
+ =?utf-8?B?L0ZvV1dTRHo0dTJrVjVjbFJkemRvSnJJeW0yVnNqSHNyTXZvUWlHNHZ2UG0w?=
+ =?utf-8?B?eUN0WW93MzlpSXRHdldsWml2ZWZnWUR2MHI0NVdiN1pTbmF2d0prY3VRdkpC?=
+ =?utf-8?B?cEt0OWIwaVo5Q0FDY3BQOTEyVTJwR2c4bnI2V2d4NVFyQnVOVk9Dd0tHSkdE?=
+ =?utf-8?B?N004VitqNnZaenZvMFZ2UlVydVpOVFFWL1VpVUo3UVdXcmk0WVVJUCtEcHdJ?=
+ =?utf-8?B?ZC9PM1A0aGNYU2VGMngzMDZiYlBpcmNIeTlKZ3hxRllCSW8zRitSSk1Odldz?=
+ =?utf-8?B?R2JpaE1udXJwVEhIV05temN0Qms4MnFNZTZSUW5VY2FqejVpcDAzSXRlelBv?=
+ =?utf-8?B?cks3VjUvYXlLeHNNTnlxa0NTSmpqeGpTOG92NGc1SWczcGZOb0VsdFJyVUtt?=
+ =?utf-8?B?dWFCa0tZcWVyMGp4cElrSms2OTZ3ZTdsTWEwM3NMb0xQZGU1UXNTamVwQ1NG?=
+ =?utf-8?B?VEdETWQ3L01LQy9saVBYZXpoRlByTjExeVRFb29pY2VMeEZXc3ZkQ0prb1F1?=
+ =?utf-8?B?MFBnRDE0cXY5cnBseFVQdmdPNERQdklTaVNYZEFpMUxyb3JTb2RlUUNHd0o0?=
+ =?utf-8?B?YXJHcERVWnN2VGdSdWlOZCtiSjJyWUlSVlgvaU83U2c1bkFFL1REOGNubGJz?=
+ =?utf-8?B?NmpLQ2prTDVNb2ppMnMwUzdUS09WbE1PbjBxNVNTU2FlQytlSmZkOU5Samp5?=
+ =?utf-8?B?aEkzYXlKNHhiRVBDTmtENmJYN3QzTURoclRFZWNQQWtkckNyYjBNdmNsZW4v?=
+ =?utf-8?B?bGJyQmhhWXZHbnFHR2plcmFRVE1JSjM1Nks3Vnd1RllkdDRQZkJlZGNkQlU3?=
+ =?utf-8?B?OXd6UFVqaFZ1UWJyMElGbXZURFEzczBCS1NIZ3orVExaUW55eE43b3BWb09F?=
+ =?utf-8?B?THFneTQrWXZ5M2Z5R2JTWWF6OXh3UVhKa3B2b2FKOVpKMnMvck5lK2dyeDZL?=
+ =?utf-8?B?NHViaFh6WEhOU2M5MC9wTlkvQlVjTUpjaVpkODlRRklsUkRpZTRZV09ONkF1?=
+ =?utf-8?B?TGZDY1VJaGFXOTBFNjd0TVJ1MWpTTGpWeWhmZlkzYXdwRm9TMEtaVlFBZHRU?=
+ =?utf-8?B?eVZxL0xoOXhlWTI2Z0J3Vk02RjZ2UElkSk5vUlFPTlVaUVF5NjFpNlQxK0dr?=
+ =?utf-8?B?Wi9IVXlQbkM2bVg3aFZlS2xKNW9RRTBEd2QvbEJFNzJTeWFVWjFwQ0RKU3Bn?=
+ =?utf-8?B?S2pYNU1wbm1Ua1BxNU5UNmsvejlLZ21oZU9LSXhid2VZdlhBMG9yY0xvVjRC?=
+ =?utf-8?B?NVQzai9pa0ZRK1d1bmdBRlRtcUlqbGVubkdSbUJuYWI0eHBTUVNqK2NDSEQ3?=
+ =?utf-8?B?Uk1ZSDlROGxZOE9RWnM2VEh6L1pMTnNyT251SWdMclZYZ0VZVzhndHVYRXNi?=
+ =?utf-8?B?aDRkRXh5QUo2d1RrNnI0REJLTkhNaXJkVFNDY29jUytZTzY3V3laUjZ2ZnNV?=
+ =?utf-8?Q?0i0Miv5P7Xo=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB5805.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NldDVVpIM0RhQlVqOG8ySm1kK3JZK0dOTkRpajBjUWJXM3Ezc2NsQ2M0LzBR?=
+ =?utf-8?B?eit1c1MwWm9zL05YdGFsZXQ0bldmYnk2SndHOVl1Si9EeVdlM044TGxRajF4?=
+ =?utf-8?B?SmVrRWpTTlpuVDV2ODVtaEU4QlJMRWhobHIvWHVoMjNoVCt4MmNEcXloMjhj?=
+ =?utf-8?B?aFRVcnN5VVVLK0o2YTdaTmkrWm5YTk9aL2VHQmpnRWhpMWxuN2doUjlFK2My?=
+ =?utf-8?B?T0lEU0E1SDZWL1dodm5CTGZzaGJHa2ZsejU5ZHhzRE5Pd25hcWZESnFtcUhh?=
+ =?utf-8?B?R3B5cXpqYkZVRXdOY1hUMHBXczI3VUk2djdxWVhPZG5LOG1ENzVHcjZlNDFM?=
+ =?utf-8?B?UUQxQmUwQmQrWCs0emM3YXFFb2o1c3RMMTNGQStJWmNMSk9xcjVlYVdLYmNP?=
+ =?utf-8?B?TTZoRDBrM2dPMnE4T0lDZGs5WGZPbzJFMFZrc0IvdmpGa2g0UmFoWE1jcVFy?=
+ =?utf-8?B?dzR4elo0ejJZeitPZmlxdW9vU0NLV0k1Y3pac0hpRWRIcXZsRXpaQTRYc3VI?=
+ =?utf-8?B?Z2M3TG96MEJDb0FMSWZYMjNQc2twck5PclU4cWdrRlVCYXAwMjYxMURibUxS?=
+ =?utf-8?B?aHlNa2lPalFBd015ZDlvU2FKNmhkOUdxaEZGclpaUXJ6VWhuR2RnOFpuRFVO?=
+ =?utf-8?B?ZGVDdW9PbVEwUkUyZ2dlKzhJRmtDeG5ESVlXdnBhZjduNXU4Z3BlVFhLVjQ1?=
+ =?utf-8?B?RHlSY1RXZ1dSZ0JMcngydGhKV2wwcDFWdDRQZnFWSVJiVWpudlBkNWFVQ01C?=
+ =?utf-8?B?cWpzK0ltQmgyMlVxS3NEK2lpWUJWc05OMVNvSmNPL0QyRjJHYWJsMVFSd2VP?=
+ =?utf-8?B?bVJnR2tWSGtPNmNVWjFPNFZIV3lsdkJ6MlRrMmxlZzhIK241bGplN3J6Y2cr?=
+ =?utf-8?B?bWdRdDVzQlF4T3BjREEzdDJLWHpNcjJNcU9obElIZFA0T0s5aGhRRjNxT0Ur?=
+ =?utf-8?B?UHF3Nm8rT0ZxTUg0cEpSTjV5RjE4V2VmNUUzKzBjN0ZnZXVXUWNmbVBTNzVk?=
+ =?utf-8?B?ek1XUFhSelB2czhZSjI3aW5wdS8vKzRhQjNUeE10STJVRkhqc2RlOTRPMjhE?=
+ =?utf-8?B?VHpnUlNLZDdFYnRmK2FucGsxVDdWdnFwTlMzK04xNjZibnZ1SzJhZTRsenZ4?=
+ =?utf-8?B?MGpLU09RdVdaT2FMZUFsSjdrM1JnTXhlWTVmaXFmWkpMdkdYbnlTRWV2VVBP?=
+ =?utf-8?B?aDNXdXBjWU5ZeEYyL000eXZPQkorTmE4SU5udWZRcldTdWNrNEZCUStlUUJY?=
+ =?utf-8?B?dFMyUncvMWpwUjl1MnNsZEhjNGxDUmZrVzhrUUNIUXJLM0p2NTBNYnBuL2hV?=
+ =?utf-8?B?M1RDRC9ZQVc5V3drV1c2TDFXcldzSk5FMVF4MnRPaERIcXZValpRZVFtbnZl?=
+ =?utf-8?B?SXhJVTFvQkVITU9JK2o2M2dJeHZlU2huL1BBU0cvM2JQMUFyT3ZJTkFTWDIv?=
+ =?utf-8?B?WThFRkR3WjkwaU9qekdkK1RJWVl2L0RBb3hKTG9zWUVIZCtQNHR3RVRhSnVR?=
+ =?utf-8?B?b1h4L25iUklmL015LzNkYjVsRmN1WDczRDNZSUNYUTM4VENINXRlYzJJWTVq?=
+ =?utf-8?B?N0ptZnBvTHFGMnFqZDNZWkdydG44NjZXMHdQQ3c1MCtoNXQrNks1UWpLQVFi?=
+ =?utf-8?B?MVY5ckVHL1VFNFVQeGJwazF1WTdaUXZONEJmd2JoUTlpYUE3VE9KVXgzSFFQ?=
+ =?utf-8?B?RDdEYjV2ZlplK0kzVm5ERnBiakl0QUkvTnprczRYeUxKajNZQWxEbzRublUw?=
+ =?utf-8?B?UFFyQmd3amsvd0VhQlFGbFlRM1Z1RXZDVXA2ZVFoTWdvaDlzZEFpMlhBMUtm?=
+ =?utf-8?B?WjF2Sm5xMWFaczF5UlNYWTdkLzFpVnZwSDhqNUVlUndwZmlzM2xMSEVwQ1M1?=
+ =?utf-8?B?Z3dYUzRUUGxqZFkwN25sTHdnK2hRRGQrVUlzdXpTSGEvV0M2aXpjNU5rTzd2?=
+ =?utf-8?B?U1JpcE5HMjB6dEFyQUZTaHdBQlZ4cG92K2ZyYkdPaU1WRWRza1RnaCtWYlZM?=
+ =?utf-8?B?dXZmZ2l5dXhra0VQZTJtNGoxdXk3aVNQUXNwSTRRUDZjUGZleGdHTXNMSHJy?=
+ =?utf-8?B?eTkvdDgyWUhHalpPLzZvN2dRWHFkTWRRVmRPT0ovVGxqMERQbnRHYWgrL1VG?=
+ =?utf-8?Q?2rLgbCjDzJe5g84Jfr5TprMGf?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 77282b62-f371-42be-0872-08ddb2f3c7bd
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB5805.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 07:50:25.8331
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SKZS+QeMyYdwrbn8XrRI/hHS6JJd1cZvQuTzRetSpIGTzsKmTi01iIrkd5iyfy9jh56imvh8UCPzFo6FGjt78Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PPFFEC453979
 
-On 20/06/25 18:52, luca abeni wrote:
-> On Fri, 20 Jun 2025 17:28:28 +0200
-> Juri Lelli <juri.lelli@redhat.com> wrote:
-> 
-> > On 20/06/25 16:16, luca abeni wrote:
-> [...]
-> > > So, I had a look tying to to remember the situation... This is my
-> > > current understanding:
-> > > - the max_bw field should be just the maximum amount of CPU
-> > > bandwidth we want to use with reclaiming... It is rt_runtime_us /
-> > > rt_period_us; I guess it is cached in this field just to avoid
-> > > computing it every time.
-> > >   So, max_bw should be updated only when
-> > >   /proc/sys/kernel/sched_rt_{runtime,period}_us are written
-> > > - the extra_bw field represents an additional amount of CPU
-> > > bandwidth we can reclaim on each core (the original m-GRUB
-> > > algorithm just reclaimed Uinact, the utilization of inactive tasks).
-> > >   It is initialized to Umax when no SCHED_DEADLINE tasks exist and  
-> > 
-> > Is Umax == max_bw from above?
-> 
-> Yes; sorry about the confusion
-> 
-> 
-> > >   should be decreased by Ui when a task with utilization Ui becomes
-> > >   SCHED_DEADLINE (and increased by Ui when the SCHED_DEADLINE task
-> > >   terminates or changes scheduling policy). Since this value is
-> > >   per_core, Ui is divided by the number of cores in the root
-> > > domain... From what you write, I guess extra_bw is not correctly
-> > >   initialized/updated when a new root domain is created?  
-> > 
-> > It looks like so yeah. After boot and when domains are dinamically
-> > created. But, I am still not 100%, I only see weird numbers that I
-> > struggle to relate with what you say above. :)
-> 
-> BTW, when running some tests on different machines I think I found out
-> that 6.11 does not exhibit this issue (this needs to be confirmed, I am
-> working on reproducing the test with different kernels on the same
-> machine)
-> 
-> If I manage to reproduce this result, I think I can run a bisect to the
-> commit introducing the issue (git is telling me that I'll need about 15
-> tests :)
-> So, stay tuned...
 
-The following seem to at least cure the problem after boot. Things are
-still broken after cpusets creation. Moving to look into that, but
-wanted to share where I am so that we don't duplicate work.
 
-Rationale for the below is that we currently end up calling
-__dl_update() with 'cpus' that are not stable yet. So, I tried to move
-initialization after SMP is up (all CPUs have been onlined).
+On 6/24/2025 12:39 PM, Masami Hiramatsu (Google) wrote:
+> On Tue, 24 Jun 2025 05:56:16 +0000
+> Raghavendra K T <raghavendra.kt@amd.com> wrote:
+> 
+>> Add tracing support to track
+>>   - start and end of scanning.
+>>   - migration.
+>>
+>> CC: Steven Rostedt <rostedt@goodmis.org>
+>> CC: Masami Hiramatsu <mhiramat@kernel.org>
+>> CC: linux-trace-kernel@vger.kernel.org
+>>
+>> Signed-off-by: Raghavendra K T <raghavendra.kt@amd.com>
+>> ---
+>>   include/trace/events/kmem.h | 90 +++++++++++++++++++++++++++++++++++++
+>>   mm/kscand.c                 |  8 ++++
+>>   2 files changed, 98 insertions(+)
+>>
+>> diff --git a/include/trace/events/kmem.h b/include/trace/events/kmem.h
+>> index f74925a6cf69..682c4015414f 100644
+>> --- a/include/trace/events/kmem.h
+>> +++ b/include/trace/events/kmem.h
+>> @@ -9,6 +9,96 @@
+>>   #include <linux/tracepoint.h>
+>>   #include <trace/events/mmflags.h>
+>>   
+> 
+> Please make sure the event is not exposed when it is not used.
+> 
+> #ifdef CONFIG_KSCAND
+> 
+> Thank you,
+> 
+[...]
 
----
- kernel/sched/core.c     |  3 +++
- kernel/sched/deadline.c | 39 +++++++++++++++++++++++----------------
- kernel/sched/sched.h    |  1 +
- 3 files changed, 27 insertions(+), 16 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8988d38d46a38..d152f8a84818b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -8470,6 +8470,8 @@ void __init sched_init_smp(void)
- 	init_sched_rt_class();
- 	init_sched_dl_class();
- 
-+	sched_init_dl_servers();
-+
- 	sched_smp_initialized = true;
- }
- 
-@@ -8484,6 +8486,7 @@ early_initcall(migration_init);
- void __init sched_init_smp(void)
- {
- 	sched_init_granularity();
-+	sched_init_dl_servers();
- }
- #endif /* CONFIG_SMP */
- 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index ad45a8fea245e..9f3b3f3592a58 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -1647,22 +1647,6 @@ void dl_server_start(struct sched_dl_entity *dl_se)
- {
- 	struct rq *rq = dl_se->rq;
- 
--	/*
--	 * XXX: the apply do not work fine at the init phase for the
--	 * fair server because things are not yet set. We need to improve
--	 * this before getting generic.
--	 */
--	if (!dl_server(dl_se)) {
--		u64 runtime =  50 * NSEC_PER_MSEC;
--		u64 period = 1000 * NSEC_PER_MSEC;
--
--		dl_server_apply_params(dl_se, runtime, period, 1);
--
--		dl_se->dl_server = 1;
--		dl_se->dl_defer = 1;
--		setup_new_dl_entity(dl_se);
--	}
--
- 	if (!dl_se->dl_runtime)
- 		return;
- 
-@@ -1693,6 +1677,29 @@ void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
- 	dl_se->server_pick_task = pick_task;
- }
- 
-+void sched_init_dl_servers(void)
-+{
-+	int cpu;
-+	struct rq *rq;
-+	struct sched_dl_entity *dl_se;
-+
-+	for_each_online_cpu(cpu) {
-+		u64 runtime =  50 * NSEC_PER_MSEC;
-+		u64 period = 1000 * NSEC_PER_MSEC;
-+
-+		rq = cpu_rq(cpu);
-+		dl_se = &rq->fair_server;
-+
-+		WARN_ON(dl_server(dl_se));
-+
-+		dl_server_apply_params(dl_se, runtime, period, 1);
-+
-+		dl_se->dl_server = 1;
-+		dl_se->dl_defer = 1;
-+		setup_new_dl_entity(dl_se);
-+	}
-+}
-+
- void __dl_server_attach_root(struct sched_dl_entity *dl_se, struct rq *rq)
- {
- 	u64 new_bw = dl_se->dl_bw;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 475bb5998295e..22301c28a5d2d 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -384,6 +384,7 @@ extern void dl_server_stop(struct sched_dl_entity *dl_se);
- extern void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
- 		    dl_server_has_tasks_f has_tasks,
- 		    dl_server_pick_f pick_task);
-+extern void sched_init_dl_servers(void);
- 
- extern void dl_server_update_idle_time(struct rq *rq,
- 		    struct task_struct *p);
--- 
-2.49.0
-
+Sure. Noted. Thank you :)
