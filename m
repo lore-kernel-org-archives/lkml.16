@@ -1,73 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E182D23AB;
-	Tue, 24 Jun 2025 14:16:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8082D1925;
+	Tue, 24 Jun 2025 14:17:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750774618; cv=none; b=aSen2WBj/ttUceTWkHyHIbeF/le1aCo8lyxQcJKiaWf67z0nROw6KoSY3+nUSA61EHYgkI/zcHHedKrrqN5H7CCqfD0ezzIYSeV3RgCyM0TrO9qlcZ4DxA5Uk1LjyudnIDpXF7WB7TcwZ9aQoMDuICT+CfSciQ5P4JgoE7sys40=
+	t=1750774667; cv=none; b=Jpp9Pew265XBT9Z9gVNlbTiVdBIu10wd/FnGfsodwIS+JJhVdtypKvuEtvWSa2xPWDbKEILPm+vefuiIdxYAMfRBCLVZjO1eSj6uHPWM91EPv8a8Ie+tAyw7KE3epCIDFYBCwPOCeAkJ5+e14P7saJlD/4am3i1K8W2i1JaMvT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750774618; c=relaxed/simple;
-	bh=niqvKAOA1YtdPxLgvRid4pHQNRTq534ErZIkeDY04O0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CkyQXIzMO+uoZL1p2hGA60Mx50FwT+ZluB4x0gNLMkkT6jyjIdaokP901Grt2ZMxg12hGEJi5vnutFRxOoOVB9ZwNcTy3DU7jcHUSUEplSH4glbedz3XKBI9ggY+ydmguKTBLoWBY1i0p4OGnrNj58Cxl+FCIhHsNH73SnOv+S8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nnpI2Wes; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750774667; c=relaxed/simple;
+	bh=iPXrS0IxOWIB10FUvXWR3mcxb3hxp86Xzx4nj+som+g=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lg3MI/swQUXKTZVVZu2GLNkoW5qQicwB2rXIEQWnba31/4Yv41oHnoc+eCkDXCe/dIhgKubzbCRxPb7pk0BkOcXTKEsIB5k5aHnnjhyH3JNfdior7KEM7CKrqB7ZJe/+GfeGja5n4eSQLoJMsgXxJwUKMxMXtIckJ6Vd4YhrhFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODbWwKuU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nnpI2Wes"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DF0C4CEE3;
-	Tue, 24 Jun 2025 14:16:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750774617;
-	bh=niqvKAOA1YtdPxLgvRid4pHQNRTq534ErZIkeDY04O0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nnpI2Wesb54bGWxxdvRSeqDjgWo9UiI3vnxWSwBrGlX0s7uU4A4R9O8sa0gJDafqq
-	 IlsHLKQ8v+SNWmGtII9lbUOCpp+ZOjH2KiyQWaxnWF2h0MT4QngMHK7dtu4PDytWBS
-	 jyL9meLoGQXJ1OD1FuHh/mZUvVVoNyXWWxT8o9QQ=
-Date: Tue, 24 Jun 2025 15:16:53 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Drew Hamilton <drew.hamilton@zetier.com>
-Cc: Bin Liu <b-liu@ti.com>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
-Subject: Re: [PATCH] usb: musb: fix gadget state on disconnect
-Message-ID: <2025062456-cameo-directly-fc66@gregkh>
-References: <20250624140930.25887-1-drew.hamilton@zetier.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODbWwKuU"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 75116C4CEE3;
+	Tue, 24 Jun 2025 14:17:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750774666;
+	bh=iPXrS0IxOWIB10FUvXWR3mcxb3hxp86Xzx4nj+som+g=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=ODbWwKuUGhsXKUHDJ5o8DqmBSYfSwD3FH71Qtm5vzP0hchj3mU5VTlieGMnWf8M+7
+	 RM5mTCSAYHngTyUc24iDUesqGKzTBglp4nyw2KTmKkYIczor56fIO5ZiaECpfuvEv6
+	 32SlJUaY0XQ+H+egJ2TEUYN/gfZ2HNWFy584syv3QV7vqxpDcMug8rD/x7odtM/cts
+	 ScpwVEa/tlhx60UbQfSbPMs8255Xp0cZxrUPwkIY+ThqMemzxWnYg+hDG2Z/+CQevX
+	 c8yPCm3ofNF23gJf8PsIoV32QnYXw/0YpZbhH5oAlRilX5FETsqg5P8lrg026yaZqf
+	 IMN0KAL2HhXGQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 632BDC77B7F;
+	Tue, 24 Jun 2025 14:17:46 +0000 (UTC)
+From: Daniel Braunwarth via B4 Relay <devnull+daniel.braunwarth.kuka.com@kernel.org>
+Date: Tue, 24 Jun 2025 16:17:33 +0200
+Subject: [PATCH net-next] net: phy: realtek: add error handling to
+ rtl8211f_get_wol
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624140930.25887-1-drew.hamilton@zetier.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250624-realtek_fixes-v1-1-02a0b7c369bc@kuka.com>
+X-B4-Tracking: v=1; b=H4sIAHyzWmgC/x3L4QpAMBSG4VvR+W3FCeFWJK35xolG25KSe7f8f
+ Hp7HwrwgkB99pDHJUEOl1DmGZlVuwVK5mTiguui4Up56D1im6zcCKqtLXdsrCl1Rek5Pf6QloE
+ conK4I43v+wGPmEg6aQAAAA==
+X-Change-ID: 20250624-realtek_fixes-85f292cfc1a4
+To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Jon Hunter <jonathanh@nvidia.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Daniel Braunwarth <daniel.braunwarth@kuka.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750774665; l=1492;
+ i=daniel.braunwarth@kuka.com; s=20250425; h=from:subject:message-id;
+ bh=OKIaJlj0nrfTAYstQqag45KapLdQ8tvdEWLzdWiNk5s=;
+ b=7mNj/l+AW+0zCELuRDjTpfWfouZu6Wbewt+QQyclvcPC1asqXnBlDWqj8uWlZ3xrwwHxkyl6X
+ 715ddpihqjzCJzZ2pU7DE+OnVKEePScwM2ToCPlTdccU66o9FwZwQOW
+X-Developer-Key: i=daniel.braunwarth@kuka.com; a=ed25519;
+ pk=fTSYKvKU5SCGGLHVz5NaznQ2MbXNWUZzdqPihgCfYms=
+X-Endpoint-Received: by B4 Relay for daniel.braunwarth@kuka.com/20250425
+ with auth_id=388
+X-Original-From: Daniel Braunwarth <daniel.braunwarth@kuka.com>
+Reply-To: daniel.braunwarth@kuka.com
 
-On Tue, Jun 24, 2025 at 10:09:30AM -0400, Drew Hamilton wrote:
-> When unplugging the USB cable or disconnecting a gadget in usb peripheral mode with
-> echo "" > /sys/kernel/config/usb_gadget/<your_gadget>/UDC,
-> /sys/class/udc/musb-hdrc.0/state does not change from USB_STATE_CONFIGURED.
-> 
-> Testing on dwc2/3 shows they both update the state to USB_STATE_NOTATTACHED.
-> 
-> Add calls to usb_gadget_set_state in musb_g_disconnect and musb_gadget_stop
-> to fix both cases.
-> 
-> Tested against 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3.
+From: Daniel Braunwarth <daniel.braunwarth@kuka.com>
 
-Nit, git ids are written as:
-	82f2b0b97b36 ("Linux 6.15-rc6")
-Or you could have used the tag "6.15-rc6" as we all know that, but
-really, this shouldn't be needed at all.
+We should check if the WOL settings was successfully read from the PHY.
 
-What it does show is you missed the many thousands of changes that have
-gone into the tree since -rc6, is this still an issue in 6.16-rc3?
+In case this fails we cannot just use the error code and proceed.
 
-> Co-authored-by: Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
-> Signed-off-by: Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
-> Signed-off-by: Drew Hamilton <drew.hamilton@zetier.com>
+Signed-off-by: Daniel Braunwarth <daniel.braunwarth@kuka.com>
+Reported-by: Jon Hunter <jonathanh@nvidia.com>
+Closes: https://lore.kernel.org/baaa083b-9a69-460f-ab35-2a7cb3246ffd@nvidia.com
+---
+ drivers/net/phy/realtek/realtek_main.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-What commit id does this fix?
+diff --git a/drivers/net/phy/realtek/realtek_main.c b/drivers/net/phy/realtek/realtek_main.c
+index c3dcb62574303374666b46a454cd4e10de455d24..dd0d675149ad7f9730f04ba1aea82e02b15dfb2c 100644
+--- a/drivers/net/phy/realtek/realtek_main.c
++++ b/drivers/net/phy/realtek/realtek_main.c
+@@ -436,9 +436,15 @@ static irqreturn_t rtl8211f_handle_interrupt(struct phy_device *phydev)
+ 
+ static void rtl8211f_get_wol(struct phy_device *dev, struct ethtool_wolinfo *wol)
+ {
++	int wol_events;
++
+ 	wol->supported = WAKE_MAGIC;
+-	if (phy_read_paged(dev, RTL8211F_WOL_SETTINGS_PAGE, RTL8211F_WOL_SETTINGS_EVENTS)
+-	    & RTL8211F_WOL_EVENT_MAGIC)
++
++	wol_events = phy_read_paged(dev, RTL8211F_WOL_SETTINGS_PAGE, RTL8211F_WOL_SETTINGS_EVENTS);
++	if (wol_events < 0)
++		return;
++
++	if (wol_events & RTL8211F_WOL_EVENT_MAGIC)
+ 		wol->wolopts = WAKE_MAGIC;
+ }
+ 
 
-thanks,
+---
+base-commit: f817b6dd2b62d921a6cdc0a3ac599cd1851f343c
+change-id: 20250624-realtek_fixes-85f292cfc1a4
 
-greg k-h
+Best regards,
+-- 
+Daniel Braunwarth <daniel.braunwarth@kuka.com>
+
+
