@@ -1,147 +1,228 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDD62AEED;
-	Tue, 24 Jun 2025 05:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BBAC43AB7
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 05:22:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750742456; cv=none; b=DCk71IuVsajG8elvIVZlxknJ6mgPgXXdmacQWR7jyR1cInkAgbnky6IJ63zMKISwt08e1Tw14hU20iYvMz081zimlx47JRdCwK/TBTNRxQHURJ7M+U06VDRHXWybOGlp0zkm6n2r+BFhHmIr6X+mAFo5fIjiuDWgv5+wmy9S/cs=
+	t=1750742528; cv=none; b=Y227H0EnLe5tmOqMB8bjRJiD9CU8H17ZBire4hUxqtzdYI79pT1JMPtx5emBArCV+6sJIthrbHnEcvtYhnIoL4NI0KMaNVAtmDe1HnNkzV9Dq7ydGeJzFWtxRRpSLH/xpdeMko4CDXM/z29ZagmPZsR39dx+ggvTs79GWG2/1rY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750742456; c=relaxed/simple;
-	bh=NbMlPU76pDn1qjfo5sXua11VvUTm9H84TOJbZoaoR4Q=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sN25zmw/Cgi+VimLECg/cJQLPU5wO1CBbCWscOXjoGaezkKlysRtaQUn3K0kZgSnJonwIdhe9RyX6Tjxch7WM5/wW/Z1H6SPjmvdkeXc+eX68sShbkNaMSKfnd+GsKep+zvC1rLloY+XjVignv9xkp4VQsKnUWj15lwp2TBNxoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bl0sBDn/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750742528; c=relaxed/simple;
+	bh=KtEsaRn2ETJkbhbCSbWLAa5+wM11aEHcRIUaqZZDS2s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NQOzDmtOBaNERS7CniT3EvJgVftzjzeWwbgf1q9ZrlofUuZUOyDsObCyopfLyFru3vyOA+kGA66uoHB9nW+9Nhj3b/f3Ojqx/nvZIaMW+uZe7MAUurOVgpPqKebNlKC4JUAuwI7/AVZL9dLAWOKTCbVILvvEUtqGVamrvKzuZIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4efpwxoB; arc=none smtp.client-ip=209.85.166.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bl0sBDn/"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 521A3C4CEF1;
-	Tue, 24 Jun 2025 05:20:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750742456;
-	bh=NbMlPU76pDn1qjfo5sXua11VvUTm9H84TOJbZoaoR4Q=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=bl0sBDn/pqAbO/7vIzlkMYg/9zUVcgBPwZiTbwjrSQ3cBjoaPm5er8QByV5MrDLA7
-	 2EQ9tFebW9ISNw8ubnmi4U2CegsjCw56Dx7wVnvcV9Rwk2iCUnfk5up2DdI5IwAGO2
-	 OBbL9qtWUawUS/S8F+aWcYoieMc1jpNtZcV1JwIXlvN/4NBM6gLXJnIpzQfpSUWYkf
-	 TBcrgogRc0EFVxnqqVZDEk1XeNp/8KiUdFztkLzuSp1iWBI7MNP2VxaVwJfT85eRyY
-	 uv6sIOFmvl3ZQ5vgLnPPXzqtAEKMtu/OtRg/CjeyhHNG4AP4j34BHS93VcgQX45s4z
-	 J8ZJr6UScp1YA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49889C7EE2A;
-	Tue, 24 Jun 2025 05:20:56 +0000 (UTC)
-From: Yang Li via B4 Relay <devnull+yang.li.amlogic.com@kernel.org>
-Date: Tue, 24 Jun 2025 13:20:44 +0800
-Subject: [PATCH] Bluetooth: hci_event: Add support for handling LE BIG Sync
- Lost event
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4efpwxoB"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-3ddc10f09easo94255ab.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 22:22:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750742526; x=1751347326; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4hOJz+vcYO1Ne6k1cj2BIklVK/EVgqHSD2CylG69hPc=;
+        b=4efpwxoBV5ccqzyp97UEer8P3rmvOECMxQOueJ/oxGdbdD+JIopzVAy7sbSjMcQauC
+         HemGvB+wUw1o9Bxt20AdTFjrqK+YcGYng0TvHLyYUjxbKzftQAbC5KkBrJ6B7T0sIV7R
+         jwGvY4jXq7BsKDJmT1+4P4Qe1mdN0oc4+LP+aU/g5qe2C3X6WArcYO85hCfaF7aJmXMf
+         IjdMZTfXqctyyjhumBtUMVq250EPGL5u/QhibbhQ6Eo+v2NMpEZx+MlRG7Fni7Ph/n3C
+         w3JLBFYCISfbPmBm5lhA7O1nmuX8iozFclImQlRUSA1EXPNJpg3cBFJuFQU5zJlw9wMA
+         d+qQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750742526; x=1751347326;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4hOJz+vcYO1Ne6k1cj2BIklVK/EVgqHSD2CylG69hPc=;
+        b=H9ibv8Eiqz3JCuY+pVSbHk7KygmhgDNCskDzIb2rxy2AcKSyb8AyYvg9pCi9CDJsri
+         6AyJ7K1q73OxelZKcjNPqxXm17Ckgx4gzYhOXs7FJn95YNLyvUc0rzmIaB76y0wiwmtG
+         IHUb5diYu3VmknkYNDhu2IjyR2WwPD3QyhBV6Fmquok+bs0YuPd0zwIDeWQXIDE7/L4u
+         8XaEEw57CdSRkBUA+SOBVh3+D2+Q3z7v5+YSzRFxat9nvZ/ul2Xk7pCRF+kqEz+gB/uP
+         8GzQHO29ojCYpn7jaTRpFZcBtlFo2l1AmqYEJKjb38EsJS7qwa8fp2GkuAE95Dt70PFK
+         j+3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVx/1bhW2TPSNx8mGRyK7xTPyaqw5ljVOQCelD2iXvF+YI3mam4sskgz2oLkYWrX5UxDi1QO8I7JlESbMI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIRLunMGXlbzGVt0XBX6BW96GDdiJKS1YfxLraoSB/oMSkXbIa
+	3KylhEtYvQopGxuvHHJdtIYO8fU/4zEyfT2J1/1GTFFkJCfIIGijm8lHMHG4BR1nVyjCvD4erY3
+	6BMEKOROI3vg1MF3GSdDobnKYnlSHrX3eEps9VrxX
+X-Gm-Gg: ASbGncvvWPRhA0//H8ORO2KpkNOrMM9eJseHxdt8bXp68MqdN4TVwPrGkwZI9ZVJI5l
+	kODkISn7JX/+p3t8rJf3EeTibqwPPOIeqOhEnpkrMkG3CQ6aK5RCkHkm19y+l2M1B+6xNNhkms5
+	D/ELPbbuKYJ5XoVhOEl767ySIw7Y0wD6ma9QgSAokXdrId
+X-Google-Smtp-Source: AGHT+IFVqH7OvylcO+Y1qV4xlPImLec6uOKV0F01y1TW8TSTcJ3ASrVe91IKe2Xd1R9DM6S+4E80byID6TwQBCtI4/4=
+X-Received: by 2002:a05:6e02:3809:b0:3db:854b:9f52 with SMTP id
+ e9e14a558f8ab-3df2a55432dmr1280505ab.7.1750742525777; Mon, 23 Jun 2025
+ 22:22:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-handle_big_sync_lost_event-v1-1-c32ce37dd6a5@amlogic.com>
-X-B4-Tracking: v=1; b=H4sIAKs1WmgC/x3M0QpAMBSA4VfRubaaGeJVpMV2cEqjHYm0d7dcf
- v/F/wJjIGToshcCXsS0+4Qiz8Cuo19QkEsGJVUl60KJFN2GZqLF8OOt2XY+DV7oT6Ft42yty1a
- OCtLgCDjT/c/7IcYPVSYaKGwAAAA=
-To: Marcel Holtmann <marcel@holtmann.org>, 
- Johan Hedberg <johan.hedberg@gmail.com>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>
-Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Yang Li <yang.li@amlogic.com>
-X-Mailer: b4 0.13-dev-f0463
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750742454; l=2539;
- i=yang.li@amlogic.com; s=20240418; h=from:subject:message-id;
- bh=3xOWybT0hvFSOiNGPz4vVsSCR2isMoJtxxrE8KhFyic=;
- b=32qzfmyTCP2aM6DgE1emIRrsb577fcGy9Zd752E4k1VUKQgvSU5vECllJAWiESugLEAJre9dX
- db2PB9JhMGYB8NfmtCzmzs1PRBu1I5oMxPdATGC1snm6pvrCx1BJyRz
-X-Developer-Key: i=yang.li@amlogic.com; a=ed25519;
- pk=86OaNWMr3XECW9HGNhkJ4HdR2eYA5SEAegQ3td2UCCs=
-X-Endpoint-Received: by B4 Relay for yang.li@amlogic.com/20240418 with
- auth_id=180
-X-Original-From: Yang Li <yang.li@amlogic.com>
-Reply-To: yang.li@amlogic.com
+References: <e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com>
+ <f7ea3a430dc2bd77656c50f93283547d1245e2fe.1750730589.git.collin.funk1@gmail.com>
+In-Reply-To: <f7ea3a430dc2bd77656c50f93283547d1245e2fe.1750730589.git.collin.funk1@gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 23 Jun 2025 22:21:53 -0700
+X-Gm-Features: AX0GCFveVTpPnPVsvCk22_5Lnue0d5YCoQm35akDg8ARSVTlDG7uuJgVAjr95I0
+Message-ID: <CAP-5=fW6oMGcGcBgxVWOrkxcPRo1EDVAHe4m0F-ratRkpKjL0w@mail.gmail.com>
+Subject: Re: [PATCH v2] [PATCH] perf build: Specify that shellcheck should use
+ the bash dialect.
+To: Collin Funk <collin.funk1@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	James Clark <james.clark@linaro.org>, Charlie Jenkins <charlie@rivosinc.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Yang Li <yang.li@amlogic.com>
+On Mon, Jun 23, 2025 at 7:06=E2=80=AFPM Collin Funk <collin.funk1@gmail.com=
+> wrote:
+>
+> When someone has a global shellcheckrc file, for example at
+> ~/.config/shellcheckrc, with the directive 'shell=3Dsh', building perf
+> will fail with many shellcheck errors like:
+>
+>     In tests/shell/base_probe/test_adding_kernel.sh line 294:
+>     (( TEST_RESULT +=3D $? ))
+>     ^---------------------^ SC3006 (warning): In POSIX sh, standalone ((.=
+.)) is undefined.
+>
+>     For more information:
+>       https://www.shellcheck.net/wiki/SC3006 -- In POSIX sh, standalone (=
+(..)) is...
+>     make[5]: *** [tests/Build:91: tests/shell/base_probe/test_adding_kern=
+el.sh.shellcheck_log] Error 1
+>
+> Passing the '-s bash' option ensures that it runs correctly regardless
+> of a developers global configuration.
+>
+> This patch adds '-s bash' to the SHELLCHECK variable in Makefile.perf
+> and makes use of the variable consistently.
+>
+> Signed-off-by: Collin Funk <collin.funk1@gmail.com>
+> ---
+>  tools/perf/Build                | 2 +-
+>  tools/perf/Makefile.perf        | 2 +-
+>  tools/perf/arch/x86/Build       | 2 +-
+>  tools/perf/arch/x86/tests/Build | 2 +-
+>  tools/perf/tests/Build          | 2 +-
+>  tools/perf/trace/beauty/Build   | 2 +-
+>  tools/perf/util/Build           | 2 +-
+>  7 files changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/tools/perf/Build b/tools/perf/Build
+> index 06107f1e1d42..e69665bf9dce 100644
+> --- a/tools/perf/Build
+> +++ b/tools/perf/Build
+> @@ -73,7 +73,7 @@ endif
+>
+>  $(OUTPUT)%.shellcheck_log: %
+>         $(call rule_mkdir)
+> -       $(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > =
+$@ || (cat $@ && rm $@ && false)
+> +       $(Q)$(call echo-cmd,test)$(SHELLCHECK) -a -S warning "$<" > $@ ||=
+ (cat $@ && rm $@ && false)
+>
+>  perf-y +=3D $(SHELL_TEST_LOGS)
+>
+> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> index d4c7031b01a7..6810d321ff73 100644
+> --- a/tools/perf/Makefile.perf
+> +++ b/tools/perf/Makefile.perf
+> @@ -252,7 +252,7 @@ endif
+>  ifeq ($(NO_SHELLCHECK),1)
+>    SHELLCHECK :=3D
+>  else
+> -  SHELLCHECK :=3D $(shell which shellcheck 2> /dev/null)
+> +  SHELLCHECK :=3D $(shell which shellcheck 2> /dev/null) -s bash
 
-When the BIS source stops, the controller sends an LE BIG Sync Lost
-event (subevent 0x1E). Currently, this event is not handled, causing
-the BIS stream to remain active in BlueZ and preventing recovery.
+Could we also place the "-a -S warning" warning here too?
 
-Signed-off-by: Yang Li <yang.li@amlogic.com>
----
- include/net/bluetooth/hci.h |  6 ++++++
- net/bluetooth/hci_event.c   | 23 +++++++++++++++++++++++
- 2 files changed, 29 insertions(+)
+Thanks,
+Ian
 
-diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
-index 82cbd54443ac..48389a64accb 100644
---- a/include/net/bluetooth/hci.h
-+++ b/include/net/bluetooth/hci.h
-@@ -2849,6 +2849,12 @@ struct hci_evt_le_big_sync_estabilished {
- 	__le16  bis[];
- } __packed;
- 
-+#define HCI_EVT_LE_BIG_SYNC_LOST 0x1e
-+struct hci_evt_le_big_sync_lost {
-+	__u8    handle;
-+	__u8    reason;
-+} __packed;
-+
- #define HCI_EVT_LE_BIG_INFO_ADV_REPORT	0x22
- struct hci_evt_le_big_info_adv_report {
- 	__le16  sync_handle;
-diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-index 66052d6aaa1d..730deaf1851f 100644
---- a/net/bluetooth/hci_event.c
-+++ b/net/bluetooth/hci_event.c
-@@ -7026,6 +7026,24 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
- 	hci_dev_unlock(hdev);
- }
- 
-+static void hci_le_big_sync_lost_evt(struct hci_dev *hdev, void *data,
-+					    struct sk_buff *skb)
-+{
-+	struct hci_evt_le_big_sync_lost *ev = data;
-+	struct hci_conn *conn;
-+
-+	bt_dev_dbg(hdev, "BIG Sync Lost: big_handle 0x%2.2x", ev->handle);
-+
-+	hci_dev_lock(hdev);
-+
-+	list_for_each_entry(conn, &hdev->conn_hash.list, list) {
-+		if (test_bit(HCI_CONN_BIG_SYNC, &conn->flags))
-+			hci_disconn_cfm(conn, HCI_ERROR_REMOTE_USER_TERM);
-+	}
-+
-+	hci_dev_unlock(hdev);
-+}
-+
- static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
- 					   struct sk_buff *skb)
- {
-@@ -7149,6 +7167,11 @@ static const struct hci_le_ev {
- 		     hci_le_big_sync_established_evt,
- 		     sizeof(struct hci_evt_le_big_sync_estabilished),
- 		     HCI_MAX_EVENT_SIZE),
-+	/* [0x1e = HCI_EVT_LE_BIG_SYNC_LOST] */
-+	HCI_LE_EV_VL(HCI_EVT_LE_BIG_SYNC_LOST,
-+		     hci_le_big_sync_lost_evt,
-+		     sizeof(struct hci_evt_le_big_sync_lost),
-+		     HCI_MAX_EVENT_SIZE),
- 	/* [0x22 = HCI_EVT_LE_BIG_INFO_ADV_REPORT] */
- 	HCI_LE_EV_VL(HCI_EVT_LE_BIG_INFO_ADV_REPORT,
- 		     hci_le_big_info_adv_report_evt,
-
----
-base-commit: bd35cd12d915bc410c721ba28afcada16f0ebd16
-change-id: 20250612-handle_big_sync_lost_event-4c7dc64390a2
-
-Best regards,
--- 
-Yang Li <yang.li@amlogic.com>
-
-
+>  endif
+>
+>  # shellcheck is using in tools/perf/tests/Build with option -a/--check-s=
+ourced (
+> diff --git a/tools/perf/arch/x86/Build b/tools/perf/arch/x86/Build
+> index afae7b8f6bd6..71e2553e5af1 100644
+> --- a/tools/perf/arch/x86/Build
+> +++ b/tools/perf/arch/x86/Build
+> @@ -10,6 +10,6 @@ endif
+>
+>  $(OUTPUT)%.shellcheck_log: %
+>         $(call rule_mkdir)
+> -       $(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (c=
+at $@ && rm $@ && false)
+> +       $(Q)$(call echo-cmd,test)$(SHELLCHECK) -a -S warning "$<" > $@ ||=
+ (cat $@ && rm $@ && false)
+>
+>  perf-test-y +=3D $(SHELL_TEST_LOGS)
+> diff --git a/tools/perf/arch/x86/tests/Build b/tools/perf/arch/x86/tests/=
+Build
+> index 5e00cbfd2d56..fd3af16f63bb 100644
+> --- a/tools/perf/arch/x86/tests/Build
+> +++ b/tools/perf/arch/x86/tests/Build
+> @@ -22,6 +22,6 @@ endif
+>
+>  $(OUTPUT)%.shellcheck_log: %
+>         $(call rule_mkdir)
+> -       $(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (c=
+at $@ && rm $@ && false)
+> +       $(Q)$(call echo-cmd,test)$(SHELLCHECK) -a -S warning "$<" > $@ ||=
+ (cat $@ && rm $@ && false)
+>
+>  perf-test-y +=3D $(SHELL_TEST_LOGS)
+> diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
+> index 2181f5a92148..4a27fde30eb6 100644
+> --- a/tools/perf/tests/Build
+> +++ b/tools/perf/tests/Build
+> @@ -89,7 +89,7 @@ endif
+>
+>  $(OUTPUT)%.shellcheck_log: %
+>         $(call rule_mkdir)
+> -       $(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (c=
+at $@ && rm $@ && false)
+> +       $(Q)$(call echo-cmd,test)$(SHELLCHECK) -a -S warning "$<" > $@ ||=
+ (cat $@ && rm $@ && false)
+>
+>  perf-test-y +=3D $(SHELL_TEST_LOGS)
+>
+> diff --git a/tools/perf/trace/beauty/Build b/tools/perf/trace/beauty/Buil=
+d
+> index f50ebdc445b8..727ce0a5c30a 100644
+> --- a/tools/perf/trace/beauty/Build
+> +++ b/tools/perf/trace/beauty/Build
+> @@ -31,6 +31,6 @@ endif
+>
+>  $(OUTPUT)%.shellcheck_log: %
+>         $(call rule_mkdir)
+> -       $(Q)$(call echo-cmd,test)shellcheck -s bash -a -S warning "$<" > =
+$@ || (cat $@ && rm $@ && false)
+> +       $(Q)$(call echo-cmd,test)$(SHELLCHECK) -a -S warning "$<" > $@ ||=
+ (cat $@ && rm $@ && false)
+>
+>  perf-y +=3D $(SHELL_TEST_LOGS)
+> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+> index 7910d908c814..626a359fee1e 100644
+> --- a/tools/perf/util/Build
+> +++ b/tools/perf/util/Build
+> @@ -421,7 +421,7 @@ endif
+>
+>  $(OUTPUT)%.shellcheck_log: %
+>         $(call rule_mkdir)
+> -       $(Q)$(call echo-cmd,test)shellcheck -a -S warning "$<" > $@ || (c=
+at $@ && rm $@ && false)
+> +       $(Q)$(call echo-cmd,test)$(SHELLCHECK) -a -S warning "$<" > $@ ||=
+ (cat $@ && rm $@ && false)
+>
+>  perf-util-y +=3D $(SHELL_TEST_LOGS)
+>
+> --
+> 2.49.0
+>
