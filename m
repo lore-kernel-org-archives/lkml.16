@@ -1,255 +1,107 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154C72517AA
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 21:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381DF25A2B1;
+	Tue, 24 Jun 2025 21:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750800933; cv=none; b=rAc5ARbcQd2rA3hL96duFX+2OTbJ0L/HNecGTuDx+oXHpqQumdJrMX4X+8Qb71ZuRt86qQmjYIfHH70EnkOIoQJFoHLrE2NzwtD6ratTLbZsxV2BMXZzEiEio9H3Urp0jeN+UpNm3r4LG3zn/U+llAKnyD5WZ+LdFOu9br5pqNI=
+	t=1750801146; cv=none; b=fbExkdWgD+/kFg4ryPeQcgsv8GQ892NWqL+IXAX9RkgZiC9zJVfQ5z8cgTh1MWfmF1CxSyD2wmv1K2Qfkabf0Kc7NhzRlr5r09BxSZtErglFFdaesOKwn9UdruKC0Jk7rfdm/jhI5ATjoJEzWzfAWML36/nTQKtJ32CNoEx4MeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750800933; c=relaxed/simple;
-	bh=DWlWA/JE8g4pKQk7hfbZ/bulSCCdERWfSO6Gs4/t7LE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qVQf0IUfxo3qkXc9mmoV0W7yFufHptaTNvDz+iH4wQV/hDXABdAPmH+FCdhiJBDesTSN0ROlDG7S0TCNgngtPHVT/WZUEsN3QS1Gjw/2XoSY12BjuRwqAJtQA0eXKpqsiDUmCrZqqkPIrtPlvtapXZQuP7g+88RsTGd2h5dg7fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qoxyMshO; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qoxyMshO"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3141a9a6888so855347a91.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:35:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750800929; x=1751405729; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ysz7xzWYPbJ2rojkQKjld0vXtQ8QGdxQ4Q0JRZ61Mg=;
-        b=qoxyMshOwpERTs2tILp7Tej01R4AbprcwqK1FoHcoY0Gj116piuccYl/+SVMAQSBxB
-         dTWg7Ze9YviWFqbga9X5r2fReaBzX/EwvC5kldAZp+j6uOhZmxRJtXv72S/ndkN/cqSt
-         4oo3c03os7LKpI4RFWcJlME4x24ADtS3iT6uKH1Zwaudb72udzOHwZX4qehijuwpYIZp
-         Mg+AwcMv9mG4WcSY1HOTZIgCVR1o9L8Ffq4ctXbBf/+y5SXxjuqGZ6mcl15u4zmkpQtU
-         jpn2n1h8br+DqwwatSe7jXV6ttx9la9xviVfkRCEMFCwVJai7tRkjyHbZKtSjBBKlCIE
-         Xi0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750800929; x=1751405729;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ysz7xzWYPbJ2rojkQKjld0vXtQ8QGdxQ4Q0JRZ61Mg=;
-        b=VuWTRHCTyh8nldAzpoGDieWs7+O+v35k5s69PdIZCS+NfaOMDo4wqxEv4Yu536P9GQ
-         TAlsV4h4a2IruGaXpTT8KD26s+hwfU3EwUvgcIDlYhuLZwdTfHqxgURmRKBYxiYYT5Dy
-         Z/ObKsxSYGEf6//4a75OoZONqiYJwyPXEG0T6xNrpo7hjLpEXMYeE3fPFfyiCK0MZAeN
-         IamXAjw3I6dOiH27K4slIwCtcosCpP37YussZ4xDa2Om4IWgXEt08Zuglo+OV5i+x0WF
-         OJvJ5HdcpihFWJwILZrmQPeIOABfOWPuHTJvA/FVLD5MoqtscjxAAbNBPnUSN6tv0t20
-         kqww==
-X-Gm-Message-State: AOJu0Ywuddoqy/CRaKVsASOsavjaTtEJQMHvhd+niAyLjzlt0HxifXWm
-	ApdO/fiqQxSnikyEwc+L9wkinaSiFPLpprJxD+RLQByk+M0M61ztvIy0wc5Qi8MjSrotIvdTLjg
-	q0SbFHA==
-X-Google-Smtp-Source: AGHT+IHa9B5m8ThSy/pTSRc8TcQm9rTgS6N+TmrPJ1HHMBMkEVG7l2n0g9L4pqVowM6J+0t4K1z0V+x3kPA=
-X-Received: from pjuj6.prod.google.com ([2002:a17:90a:d006:b0:311:4201:4021])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5206:b0:313:27e5:7ff1
- with SMTP id 98e67ed59e1d1-315f25e7231mr577433a91.1.1750800929530; Tue, 24
- Jun 2025 14:35:29 -0700 (PDT)
-Date: Tue, 24 Jun 2025 14:35:27 -0700
-In-Reply-To: <20250530185239.2335185-3-jmattson@google.com>
+	s=arc-20240116; t=1750801146; c=relaxed/simple;
+	bh=Y4l0bh8VQKBCsky1AfAt+0j/ZyivsMcPWV96H9WTLso=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=OldBsxGRXT5bZbpfl80R/FiGSRG6a84zwOOGEnWD1M6kUHWXCECwlyy0hwmi7cHxDxqOKcMqAg+KG5/Nx0NMNjChP44EqNpz6WnWWWHWpcxnW61PZdEgezEslvmL4C3OBmI2oUMaHvCAx0gxq8VqtBzY34RArfDvNvqevoCq110=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uUBLy-0042q4-5A;
+	Tue, 24 Jun 2025 21:38:54 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250530185239.2335185-1-jmattson@google.com> <20250530185239.2335185-3-jmattson@google.com>
-Message-ID: <aFsaH97Qxn7nUA86@google.com>
-Subject: Re: [PATCH v4 2/3] KVM: x86: Provide a capability to disable
- APERF/MPERF read intercepts
-From: Sean Christopherson <seanjc@google.com>
-To: Jim Mattson <jmattson@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+From: "NeilBrown" <neil@brown.name>
+To: =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc: "Song Liu" <song@kernel.org>, bpf@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-security-module@vger.kernel.org, brauner@kernel.org,
+ kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
+ daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
+ jack@suse.cz, kpsingh@kernel.org, mattbobrowski@google.com, m@maowtm.org,
+ =?utf-8?q?G=C3=BCnther?= Noack <gnoack@google.com>
+Subject: Re: [PATCH v5 bpf-next 0/5] bpf path iterator
+In-reply-to: <20250624.xahShi0iCh7t@digikod.net>
+References: <>, <20250624.xahShi0iCh7t@digikod.net>
+Date: Wed, 25 Jun 2025 07:38:53 +1000
+Message-id: <175080113326.2280845.18404947256630567790@noble.neil.brown.name>
 
-On Fri, May 30, 2025, Jim Mattson wrote:
-> Allow a guest to read the physical IA32_APERF and IA32_MPERF MSRs
-> without interception.
-> 
-> The IA32_APERF and IA32_MPERF MSRs are not virtualized. Writes are not
-> handled at all. The MSR values are not zeroed on vCPU creation, saved
-> on suspend, or restored on resume. No accommodation is made for
-> processor migration or for sharing a logical processor with other
-> tasks. No adjustments are made for non-unit TSC multipliers. The MSRs
-> do not account for time the same way as the comparable PMU events,
-> whether the PMU is virtualized by the traditional emulation method or
-> the new mediated pass-through approach.
-> 
-> Nonetheless, in a properly constrained environment, this capability
-> can be combined with a guest CPUID table that advertises support for
-> CPUID.6:ECX.APERFMPERF[bit 0] to induce a Linux guest to report the
-> effective physical CPU frequency in /proc/cpuinfo. Moreover, there is
-> no performance cost for this capability.
-> 
-> Signed-off-by: Jim Mattson <jmattson@google.com>
-> ---
->  Documentation/virt/kvm/api.rst | 23 +++++++++++++++++++++++
->  arch/x86/kvm/svm/svm.c         |  7 +++++++
->  arch/x86/kvm/svm/svm.h         |  2 +-
->  arch/x86/kvm/vmx/vmx.c         |  6 ++++++
->  arch/x86/kvm/vmx/vmx.h         |  2 +-
->  arch/x86/kvm/x86.c             |  8 +++++++-
->  arch/x86/kvm/x86.h             |  5 +++++
->  include/uapi/linux/kvm.h       |  1 +
->  tools/include/uapi/linux/kvm.h |  1 +
->  9 files changed, 52 insertions(+), 3 deletions(-)
+On Wed, 25 Jun 2025, Micka=C3=ABl Sala=C3=BCn wrote:
+> On Fri, Jun 20, 2025 at 02:59:17PM -0700, Song Liu wrote:
+> > Hi Christian, Micka=C3=ABl, and folks,
+> >=20
+> > Could you please share your comments on this version? Does this
+> > look sane?
+>=20
+> This looks good to me but we need to know what is the acceptable next
+> step to support RCU.  If we can go with another _rcu helper, I'm good
+> with the current approach, otherwise we need to figure out a way to
+> leverage the current helper to make it compatible with callers being in
+> a RCU read-side critical section while leveraging safe path walk (i.e.
+> several calls to path_walk_parent).
 
-This needs to be rebased on top of the MSR interception rework, which I've now
-pushed to kvm-x86 next.  Luckily, it's quite painless.  Compile tested only at
-this point (about to throw it onto metal).
+Can you spell out the minimum that you need?
 
-I'd be happy to post a v5 on your behalf (pending your thoughts on my feedback
-to patch 1), unless you want the honors.  The fixup is a wee bit more than I'm
-comfortable doing on-the-fly.
+My vague impression is that you want to search up from a given strut path,
+no further then some other given path, looking for a dentry that matches
+some rule.  Is that correct?
 
----
- Documentation/virt/kvm/api.rst | 23 +++++++++++++++++++++++
- arch/x86/kvm/svm/svm.c         |  5 +++++
- arch/x86/kvm/vmx/vmx.c         |  4 ++++
- arch/x86/kvm/x86.c             |  6 +++++-
- arch/x86/kvm/x86.h             |  5 +++++
- include/uapi/linux/kvm.h       |  1 +
- tools/include/uapi/linux/kvm.h |  1 +
- 7 files changed, 44 insertions(+), 1 deletion(-)
+In general, the original dentry could be moved away from under the
+dentry you find moments after the match is reported.  What mechanisms do
+you have in place to ensure this doesn't happen, or that it doesn't
+matter?
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index f0d961436d0f..13a752b1200f 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -7844,6 +7844,7 @@ Valid bits in args[0] are::
-   #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
-   #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
-   #define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
-+  #define KVM_X86_DISABLE_EXITS_APERFMPERF       (1 << 4)
- 
- Enabling this capability on a VM provides userspace with a way to no
- longer intercept some instructions for improved latency in some
-@@ -7854,6 +7855,28 @@ all such vmexits.
- 
- Do not enable KVM_FEATURE_PV_UNHALT if you disable HLT exits.
- 
-+Virtualizing the ``IA32_APERF`` and ``IA32_MPERF`` MSRs requires more
-+than just disabling APERF/MPERF exits. While both Intel and AMD
-+document strict usage conditions for these MSRs--emphasizing that only
-+the ratio of their deltas over a time interval (T0 to T1) is
-+architecturally defined--simply passing through the MSRs can still
-+produce an incorrect ratio.
-+
-+This erroneous ratio can occur if, between T0 and T1:
-+
-+1. The vCPU thread migrates between logical processors.
-+2. Live migration or suspend/resume operations take place.
-+3. Another task shares the vCPU's logical processor.
-+4. C-states lower thean C0 are emulated (e.g., via HLT interception).
-+5. The guest TSC frequency doesn't match the host TSC frequency.
-+
-+Due to these complexities, KVM does not automatically associate this
-+passthrough capability with the guest CPUID bit,
-+``CPUID.6:ECX.APERFMPERF[bit 0]``. Userspace VMMs that deem this
-+mechanism adequate for virtualizing the ``IA32_APERF`` and
-+``IA32_MPERF`` MSRs must set the guest CPUID bit explicitly.
-+
-+
- 7.14 KVM_CAP_S390_HPAGE_1M
- --------------------------
- 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index ce85f4d6f686..079c0a0b0eaa 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -854,6 +854,11 @@ static void svm_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
- 	svm_set_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW,
- 				  guest_cpuid_is_intel_compatible(vcpu));
- 
-+	if (kvm_aperfmperf_in_guest(vcpu->kvm)) {
-+		svm_disable_intercept_for_msr(vcpu, MSR_IA32_APERF, MSR_TYPE_R);
-+		svm_disable_intercept_for_msr(vcpu, MSR_IA32_MPERF, MSR_TYPE_R);
-+	}
-+
- 	if (sev_es_guest(vcpu->kvm))
- 		sev_es_recalc_msr_intercepts(vcpu);
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 8c16a3aff896..723a22be2514 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4099,6 +4099,10 @@ void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
- 		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
- 		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
- 	}
-+	if (kvm_aperfmperf_in_guest(vcpu->kvm)) {
-+		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_APERF, MSR_TYPE_R);
-+		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_MPERF, MSR_TYPE_R);
-+	}
- 
- 	/* PT MSRs can be passed through iff PT is exposed to the guest. */
- 	if (vmx_pt_mode_is_host_guest())
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 56569ac2e9a4..75c0f52d3c44 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -4580,6 +4580,9 @@ static u64 kvm_get_allowed_disable_exits(void)
- {
- 	u64 r = KVM_X86_DISABLE_EXITS_PAUSE;
- 
-+	if (boot_cpu_has(X86_FEATURE_APERFMPERF))
-+		r |= KVM_X86_DISABLE_EXITS_APERFMPERF;
-+
- 	if (!mitigate_smt_rsb) {
- 		r |= KVM_X86_DISABLE_EXITS_HLT |
- 			KVM_X86_DISABLE_EXITS_CSTATE;
-@@ -6478,7 +6481,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
- 
- 		if (!mitigate_smt_rsb && boot_cpu_has_bug(X86_BUG_SMT_RSB) &&
- 		    cpu_smt_possible() &&
--		    (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
-+		    (cap->args[0] & ~(KVM_X86_DISABLE_EXITS_PAUSE |
-+				      KVM_X86_DISABLE_EXITS_APERFMPERF)))
- 			pr_warn_once(SMT_RSB_MSG);
- 
- 		kvm_disable_exits(kvm, cap->args[0]);
-diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
-index 31ae58b765f3..bcfd9b719ada 100644
---- a/arch/x86/kvm/x86.h
-+++ b/arch/x86/kvm/x86.h
-@@ -546,6 +546,11 @@ static inline bool kvm_cstate_in_guest(struct kvm *kvm)
- 	return kvm->arch.disabled_exits & KVM_X86_DISABLE_EXITS_CSTATE;
- }
- 
-+static inline bool kvm_aperfmperf_in_guest(struct kvm *kvm)
-+{
-+	return kvm->arch.disabled_exits & KVM_X86_DISABLE_EXITS_APERFMPERF;
-+}
-+
- static inline bool kvm_notify_vmexit_enabled(struct kvm *kvm)
- {
- 	return kvm->arch.notify_vmexit_flags & KVM_X86_NOTIFY_VMEXIT_ENABLED;
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 7a4c35ff03fe..aeb2ca10b190 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -644,6 +644,7 @@ struct kvm_ioeventfd {
- #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
- #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
- #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
-+#define KVM_X86_DISABLE_EXITS_APERFMPERF     (1 << 4)
- 
- /* for KVM_ENABLE_CAP */
- struct kvm_enable_cap {
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index d00b85cb168c..7415a3863891 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -618,6 +618,7 @@ struct kvm_ioeventfd {
- #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
- #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
- #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
-+#define KVM_X86_DISABLE_EXITS_APERFMPERF     (1 << 4)
- 
- /* for KVM_ENABLE_CAP */
- struct kvm_enable_cap {
---
+Would it be sufficient to have an iterator which reported successive
+ancestors in turn, or reported that you need to restart because something
+changed?  Would you need to know that a restart happened or would it be
+acceptable to transparently start again at the parent of the starting
+point?
+
+Or do you really need a "one step at a time" interface?
+
+Do you need more complex movements around the tree, or is just walking
+up sufficient?
+
+If this has been discussed or documented elsewhere I'd be happy for you
+just to provide a reference, and I can come back with follow-up
+questions if needed.
+
+Thanks,
+NeilBrown
+
+
+>=20
+> >=20
+> > Thanks,
+> > Song
+> >=20
+> > On Mon, Jun 16, 2025 at 11:11=E2=80=AFPM Song Liu <song@kernel.org> wrote:
+> > >
+> > > In security use cases, it is common to apply rules to VFS subtrees.
+> > > However, filtering files in a subtree is not straightforward [1].
+> > >
+> > > One solution to this problem is to start from a path and walk up the VFS
+> > > tree (towards the root). Among in-tree LSMs, Landlock uses this solutio=
+n.
+> > >
+> >=20
+> > [...]
+> >=20
+>=20
+
