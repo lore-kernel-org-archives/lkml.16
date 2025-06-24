@@ -1,275 +1,235 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011025.outbound.protection.outlook.com [52.101.70.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FC37DA73;
-	Tue, 24 Jun 2025 17:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750784448; cv=fail; b=nngUcXoEB7U70G3PrqP3f5xN++XgMJZbQZ1U/RqIGq5jZ0F1Wld54xQZGq2qh5Ci0qXQ5oj8k7BQz7f6HWeCf6h35tTRXo9eQM3eju3DWzPRHHN61JLB9+l7r+4GWkFcy8ZlUdQxo6j9ZKiaDdIiarebVrLJN4LUXsKYPUGYzEM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750784448; c=relaxed/simple;
-	bh=NlilB4T3NBwzIHKF/Y4DQpoZMA7fy8HHFJHxwtKTrKk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Q8mR0bMearASS71QSbZnyv0FK9os6uzoXMTyOZOUQ3212LHUl7eZgg8TVrvLagmCFUmDAEfT9rXxg92kpoHjonRUCIVaI4xNpCNHiQTluNi9IfYNiQQjmPS/j3ufziVKfQGR5IfmnZVW+ja0w/VeedcB/AprkIyZ00krEbagsDY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=WK7RphHl; arc=fail smtp.client-ip=52.101.70.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07FE4AEE2
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 17:01:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750784510; cv=none; b=DcDGs60tj6WOzK9LnvZYqge0DRgm6TOfrnJDbl6atJ3yaGDs0I3FpfcT9ppw1WXF3z2jZK8hNj++ZSMlBCXd1ATp1Gq96zASsUqoZZzMtKB8pcA+we6u1ufyayK3Y+uYms5yh8JPygiHjAg5vPWsp2iEhx94eYezjEvLwBz6msE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750784510; c=relaxed/simple;
+	bh=C4kR92dvIKSY+mBM1jUDoNxkYmXG2uLSqJkTPCeWNfE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y4wJtDalUNdvD/ZA+dDkyGTnFGnDnqdDkAI3CRxTVKHHSGQMEGw9twq9QLnCvLeUDzc9ydm0IvzoyYbX2zqEa6CFptkDTbbxV1CNSjTd5FoWskNhCecbmv542GXSYre1ODKgc9Z/AcyocM1iUIc6KFAzaM4CZYASw3fNrM5QCKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=aGfYZTtH; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=6/kpi6Ev; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=DVrhu5Kp; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=4vDENtLw; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="WK7RphHl"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=y9OuhAI7cDanL/TtWEm0PUwjOzBBdd6jg4DFwEFjkFAZQnSLSxfQFL0XlsJ0OHK1jTdV6viw7T0y4/pYiepAZVep5Vq2ceOcYNWl7SPkoyZLoamMJPP3bATtBgOMNXWQQxThxTGh5fgpWcDCkz5gNoG180TzIAP/MDfeb7DF5DKIO8AjkydxSMcMfz8z6Y1kUhhkrslqIA4NoZ2lraY+/q/TkvB3HV9RazZ3ogUocS6s9EEsfMkqJXHG8yldG/Bx0aUiT1hrwALeShvqy3SdRp9pKQuMMDqjc+oUUyZ3ZvDI2MBJ9RBnYt4Ysw+1FQjfnwTK4lhE9mjMPCtmVrRklA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=EPMK6/WdonJq0AnMWu1bPLIs1nJFfgHDMi3PbJdNG1U=;
- b=c++gVspUwiNvS1GBPmMU5MKaIQIy75zWifvNe0bT2PsabYvJQmMqCAFac1CFRf0cyX4s6Xvexxl5EJeFxvlWZvybllErrhcs7nnkfUPZNxfLDx/HwnjUFHLtjFn+yE/KASv6DQHTbNMQSkfPwueVCWJPb3ibQ7NF4JvhPnM1Vt6maQtsNJk50sSR39qB6EMENcdJMrMY1l5aeN0FMolL8MB2BXyY2iZGNJcZU115Ne3vDp3mHdSY7oOG5WTOdLr2IpqPFJSyg9xi7drWjKvahrYU7OCcE8RPHW5AtU1ivafc+DoR505MGb9VAOJCYppAXSJmnfehlW46pYuvMQhDQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EPMK6/WdonJq0AnMWu1bPLIs1nJFfgHDMi3PbJdNG1U=;
- b=WK7RphHlO6MSc07+G1Yvq/Gt3wgAcIws+S9FBIQKzKsXHHdgu/sSh3vqrUPSyfG9TI2zyD2ubr0u8eo2LP0BRdzSa2tEPoPvH5ky5lFW1YOCaTzmMsD7Uvjl+GB816CaO4/YaEl2WxXmbYYgpCrHxSi/XtXs/dbhrycYxCOtyNf7V6qSE9xmuhbH45738xvxBWniGf8nmg7NEG/Regf3rHcgmJgGAU3X7d/SfLJxmKEgRL/ElFg3XpEZbJ7xOpH9gmAAd2zxueKj8lzrH0G2yfvfnOZmL1T8FXK/T7qIdeHCejsiKMReTdVV2qsz5hcTZ9BzajFCvnXAxxHcVqmDqQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by VI0PR04MB10710.eurprd04.prod.outlook.com (2603:10a6:800:260::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Tue, 24 Jun
- 2025 17:00:41 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.015; Tue, 24 Jun 2025
- 17:00:40 +0000
-Date: Tue, 24 Jun 2025 13:00:35 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Wei Fang <wei.fang@nxp.com>
-Cc: claudiu.manoil@nxp.com, vladimir.oltean@nxp.com, xiaoning.wang@nxp.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH v2 net-next 3/3] net: enetc: read 64-bit statistics from
- port MAC counters
-Message-ID: <aFrZs17NpJM5SJBU@lizhi-Precision-Tower-5810>
-References: <20250624101548.2669522-1-wei.fang@nxp.com>
- <20250624101548.2669522-4-wei.fang@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624101548.2669522-4-wei.fang@nxp.com>
-X-ClientProxiedBy: AM0PR10CA0122.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:e6::39) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="aGfYZTtH";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="6/kpi6Ev";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="DVrhu5Kp";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="4vDENtLw"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id C21B921213;
+	Tue, 24 Jun 2025 17:01:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750784506; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jvnPT5Z5a27dHW7pH9oYruNRJHKdz8wmk2SLPYe7h00=;
+	b=aGfYZTtHi8BsPxjI87aBM6CtxMfB+SUuX04MXSBTKoQ48bbp+HhYqVaNnxxmofmDn0wURm
+	sLTILjCqS39InPbLkYtXIzipHi3twar5JMzF9PHrrpYS/ShdIEqr82BweJG/r+DIraomjs
+	ariNOXIiI3WR50VD7lETIXlkO5OIyN4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750784506;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jvnPT5Z5a27dHW7pH9oYruNRJHKdz8wmk2SLPYe7h00=;
+	b=6/kpi6EvQoOP4rLTC9kYNbdue4NIBiVchpCGAgEfUzF9SpkLEu8DThSVM6PLPIcyCn0V2U
+	xNDjpoOoLfM6LBBQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750784504; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jvnPT5Z5a27dHW7pH9oYruNRJHKdz8wmk2SLPYe7h00=;
+	b=DVrhu5KpD1jn9Ce8SmOYf1xrIMjBe70CMj5dEq89cGf5FQSso+uiXA9GZ6QNVVjCIE77Wn
+	LoDLckKZ0AVEu6TElIrNEVdlWARnO1xgojAM4pqVBBUMQubsbMnndKyaev96juvPPIhiKx
+	6N0txyImKz2hlBXlsd3mL/OmJvIH1sE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750784504;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=jvnPT5Z5a27dHW7pH9oYruNRJHKdz8wmk2SLPYe7h00=;
+	b=4vDENtLw5sZkd6doWY6u2P2eCoiQBENn2toFOcr8jfWlR9c3j0+S+Q8fSrffnYzc2hdpEH
+	uNYB3GyyLLsurEBw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AB26913A24;
+	Tue, 24 Jun 2025 17:01:44 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id cXx2KfjZWmiBKAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 24 Jun 2025 17:01:44 +0000
+Message-ID: <5a38449e-f50d-4b3d-a0cc-dac551f691e0@suse.cz>
+Date: Tue, 24 Jun 2025 19:01:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|VI0PR04MB10710:EE_
-X-MS-Office365-Filtering-Correlation-Id: 71240fc6-c839-4911-638d-08ddb340a620
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Lme3PqTqhNQrKllxNLn0EWeETnFBz2UvUKnnUFBWEwMBN1R/+E5RB3+5rUAy?=
- =?us-ascii?Q?3ce4fWz7f6sfj/A94U7/QzDO3sdBf/vPx4QxFw+6w1wRzjMrzpmaaZDEHaFj?=
- =?us-ascii?Q?yeFQZgvhhFh7RLxL5dAd+sXnB91bl4Dzr3c5IWTdxR28JJkOjBzHt+K5+ylw?=
- =?us-ascii?Q?8SB1uaUk2GoK917yslqsYxIHJmTn/U+kyKldD0fpVnatGBg68pp/KAyn/Zda?=
- =?us-ascii?Q?fMXR1XNwBnS0tczGpwCeCfxakpuG/seA6InT+Hp6JEK5L1r5qMOD3EOh8/o6?=
- =?us-ascii?Q?gqHsVOIM+5bp9D47cKMub5unrwMwe8iM/7U3S3LE7/2Kq7ElxAPGKpD8O2Qn?=
- =?us-ascii?Q?AFtzTunB5HLqe/XFJyIlhvojs30WEakmKHCo4U4kA6/erFDpWTAI/BVaY86Z?=
- =?us-ascii?Q?iTkny5qJlXu2ylW9spIyxfxjUbiy2EXFes255yRe3NPtFIMAgIsvazV8kFam?=
- =?us-ascii?Q?1tnD96JUYZDilEYDa9ju8nurmDNpL9NdDSVyts2zSFlCuX9wNcCtXYJ0hJBK?=
- =?us-ascii?Q?fMXZ8wl/re2j9FyTwfX6JlTCWaPU7U3ND9/qv0ZGQIDIwS5IIcZ0x6T8nx3q?=
- =?us-ascii?Q?appFt7yszEuzO9DUPLY+FYbXZrWxcIs2j33n+5m3VxGSlTAkSZMocD5N756N?=
- =?us-ascii?Q?TBUJtnuDyI/ZWvxelh1UPb/adaFVoDR2E2VpR24VNeBFFjeFNmKDv4b9NvFX?=
- =?us-ascii?Q?vsYx20jWVj9AFjU14f67fMXjhP8mhj1mE8iY+YxHh85Thw2b6fRzd66hBErN?=
- =?us-ascii?Q?aYDcKV4R2WlgSG2ON6NOqN+JnPsaGPJ7U8Y6xPcmiON8EUcKeRYUxf4Ugikv?=
- =?us-ascii?Q?N9RWfXb4bqc6l1mJVtvM7OvpYS6p8TqgmXHOw6ck+UH3H4diNgikIoHKN/O5?=
- =?us-ascii?Q?FGt+GQtZmTBVzaWeT/MoXKdHLS7ByfuG1OdWF2d+gibIesYcBoUTA1rXnSTz?=
- =?us-ascii?Q?pNchWZPaEOARUqkFcJKDluuXAs6t3pJQNyxoPprXriTuhV/BMRuoC402VHSo?=
- =?us-ascii?Q?GZs3hHNpKzrsyRXJwThI+U1B1XfrQbFq88BAB+l5IJqP1XakWBeFi6wVTQAN?=
- =?us-ascii?Q?tGtSnxxdBOz1LzQiH52KTFiG5M3yVCslmv+2gB45toCf7F5p5MdelrGdr9Fb?=
- =?us-ascii?Q?22zW8WggSSzY9/Ahqdf7YiGf5L0lu8WvmJdnMhDRo1RszLTtK4Aa4Vo7dVaq?=
- =?us-ascii?Q?nLhIEW4n7zpxL9TLp3reo0uFqYi3JeSY+1FPonYcFq7viEvY39nHAo8+ROsb?=
- =?us-ascii?Q?H7MPC7W/zdcCFj1l8MQW7Oa/ejP4paAWfA4VlXxD2oyjA3CGwnrheGLG6kIW?=
- =?us-ascii?Q?VLGvi0NKy+bm4G3w87KXCnJHTzOzZPTFEn70M/lrIz7iHTlAoK5opLFjWbuP?=
- =?us-ascii?Q?aIEHEPo0aE2XwRh7LhiVZNJr5sKFMo/kxyfmT81NZgOveACloMHFDsOcrG9T?=
- =?us-ascii?Q?JcCZdbi1y+nm0ReAA2835lZ/Sjvmotz+EL0EqlwL0RA8I91S3804Xw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?QPF+py8xLYqc20BxPvGOdbcKNLMXFRJf5zR6sb8H4dEmZFIv1SVqpgWR1q43?=
- =?us-ascii?Q?3BwmHNDjzrP+/2rbKPiFkN9c1uNSPN1se36YGdVv2Snr5+p2Hi/PIF7/FrTM?=
- =?us-ascii?Q?IGIZK+4e4ku/AeUqTOfuehOG6OBvxy7F0ZxNHAM6vkYQNGBZxkLXjMfAHRPD?=
- =?us-ascii?Q?XBoCrnFetpdamlXV0hn/G5RWpEbZgoZpTWPfmO0YhV10srV3+x6AeR2Am2SN?=
- =?us-ascii?Q?NoMoxRIKE2qd3nzjcNocahzPOP93elbJvGlVrsGx7FY1i0D88hFm2UJBcXHk?=
- =?us-ascii?Q?whRnqnB7UAOIAslCHVxPWPxItLAjQYwumgmPjvVhviXUoblJ0VJa5a8H3Oqf?=
- =?us-ascii?Q?n2PMx4Vm+ng4AAlW4NHY9evg6qu8qXRpHtlkkQQzEEviNZ5hu8xwBS1tuCP5?=
- =?us-ascii?Q?Ip0F4YH22VswYCMR2u0uTvlXkP3llNz2g/cMQL1s6ft4eDYGrNHXNay2s9we?=
- =?us-ascii?Q?dflKHNIOCo51Yl8MEhMt2wnIfDi1pjSrfUaHRSqw3XTah5ua0O6ahgFD4XRo?=
- =?us-ascii?Q?DM9qfszvzszEeNzsQYlbz+SN46nRVHONeEK+jCSmF1GbZ5MPFHlbmuRt3ChV?=
- =?us-ascii?Q?S4Sye3Jk3CxRFEYrbs1c28X8FOQvf6ITLb+Tiigt/NicPqhWA/b3id7n2NNW?=
- =?us-ascii?Q?4lyG8xfUp52lveFC9Jovvi5iI3m8rLDXCQtJiz+q+VJ8TZdU8jSyAWNCeDbZ?=
- =?us-ascii?Q?/uCxbz8lKKPJDl7MUBNx666mzoLoR2tSNesmWAutpp/H11CEnOZbidwxqf/U?=
- =?us-ascii?Q?tNnufwoyDu4BWjXpkI3VHBCSHP8kibKuICBJLj3DtHAPmCjZDr1oLGeoETIE?=
- =?us-ascii?Q?iEdN4xQZjxecS1lM7zK+lrTO8kd2KDw9Idc2otgrBtTrfrXNCPZgY+0UIoMJ?=
- =?us-ascii?Q?4RByAzR+TET5ACe7egywe8JbYMMqRpEUauzVtRPSeyXp6rxPGkKhLABgirXf?=
- =?us-ascii?Q?rv72ovo7whtl4QdhhexWDu6RfYfBaq/B0c95Y/KWlB9OBLrBaXZhOmp9wbWO?=
- =?us-ascii?Q?ZNQxqzC45QIh8hcvJHlYYB6lwyfITH562SczOanTRkXYO2jYjFIRk3PIxzEO?=
- =?us-ascii?Q?VtfAT27IBODYGRX9kr3Qfdo77CYj80bJLVBBDrf4indEG7DluOx9uXOis/g+?=
- =?us-ascii?Q?xZ25jXPHPGQxg6jYmgfrKDJNGfbHjA8mV0Vuqm90M2rVvV+l0ywVR0/cIaH8?=
- =?us-ascii?Q?DpkEzxtP+a1RKNVomgbGtok/XIAZB4OMcQgNUBEpEKLSCY7NS8N6vZfEX7fW?=
- =?us-ascii?Q?asRGOmSNMv+DkLeySTCZqgJU3qxvAQEggKGNqzoL/8CIflDvycEs/DCStd7P?=
- =?us-ascii?Q?wOS3rhXGS7DmThQl+7Z8UWKEJHz1tdhb7FBvrueZGLW5T6LElqroBXWzR+2a?=
- =?us-ascii?Q?NE8icH1jK5xHrLZ3L4BQkaS99bfAT0XtfJPcCmqI/3cZv6zFRyc+MnVIA2SI?=
- =?us-ascii?Q?lGspe+bIS4qxu2Th83J6u1nYMVrvZJ7XgiI30aYjmCyeWdMgXC/N3CvUCKPd?=
- =?us-ascii?Q?X3Ne9dokvvz0nXrQHSLZzxgKls3R+Bm4HPMaOzaq8IBLQ58G2fNRxlRCWUJE?=
- =?us-ascii?Q?Z3jpzd2Am1YgvBSm33PfWzLL2Ak8jXEK4BwDG4CG?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71240fc6-c839-4911-638d-08ddb340a620
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 17:00:40.6506
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 05SScl2YhHKSE841XOl4nBy/TnoMrf5SIDXAUxJN46INAU90tv44pq4i6PdybtCHekbHS9vUzOPO4V/RIwlWBA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI0PR04MB10710
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/4] mm, madvise: simplify anon_name handling
+Content-Language: en-US
+To: Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ David Hildenbrand <david@redhat.com>, Jann Horn <jannh@google.com>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Colin Cross <ccross@google.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
+ <20250624-anon_name_cleanup-v2-1-600075462a11@suse.cz>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <20250624-anon_name_cleanup-v2-1-600075462a11@suse.cz>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	RCVD_TLS_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:helo]
+X-Spam-Level: 
 
-On Tue, Jun 24, 2025 at 06:15:48PM +0800, Wei Fang wrote:
-> The counters of port MAC are all 64-bit registers, and the statistics of
-> ethtool are u64 type, so replace enetc_port_rd() with enetc_port_rd64()
-> to read 64-bit statistics.
->
-> Signed-off-by: Wei Fang <wei.fang@nxp.com>
-> Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
+On 6/24/25 15:03, Vlastimil Babka wrote:
+> Since the introduction in 9a10064f5625 ("mm: add a field to store names
+> for private anonymous memory") the code to set anon_name on a vma has
+> been using madvise_update_vma() to call replace_anon_vma_name(). Since
+> the former is called also by a number of other madvise behaviours that
+> do not set a new anon_name, they have been passing the existing
+> anon_name of the vma to make replace_vma_anon_name() a no-op.
+> 
+> This is rather wasteful as it needs anon_vma_name_eq() to determine the
+> no-op situations, and checks for when replace_vma_anon_name() is allowed
+> (the vma is anon/shmem) duplicate the checks already done earlier in
+> madvise_vma_behavior(). It has also lead to commit 942341dcc574 ("mm:
+> fix use-after-free when anon vma name is used after vma is freed")
+> adding anon_name refcount get/put operations exactly to the cases that
+> actually do not change anon_name - just so the replace_vma_anon_name()
+> can keep safely determining it has nothing to do.
+> 
+> The recent madvise cleanups made this suboptimal handling very obvious,
+> but happily also allow for an easy fix. madvise_update_vma() now has the
+> complete information whether it's been called to set a new anon_name, so
+> stop passing it the existing vma's name and doing the refcount get/put
+> in its only caller madvise_vma_behavior().
+> 
+> In madvise_update_vma() itself, limit calling of replace_anon_vma_name()
+> only to cases where we are setting a new name, otherwise we know it's a
+> no-op. We can rely solely on the __MADV_SET_ANON_VMA_NAME behaviour and
+> can remove the duplicate checks for vma being anon/shmem that were done
+> already in madvise_vma_behavior().
+> 
+> Additionally, by using vma_modify_flags() when not modifying the
+> anon_name, avoid explicitly passing the existing vma's anon_name and
+> storing a pointer to it in struct madv_behavior or a local variable.
+> This prevents the danger of accessing a freed anon_name after vma
+> merging, previously fixed by commit 942341dcc574.
+> 
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
+With fixed up function names as pointed out by Suren:
 
-> ---
->  .../ethernet/freescale/enetc/enetc_ethtool.c  | 84 +++++++++----------
->  1 file changed, 42 insertions(+), 42 deletions(-)
->
-> diff --git a/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c b/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
-> index 2c9aa94c8e3d..961e76cd8489 100644
-> --- a/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
-> +++ b/drivers/net/ethernet/freescale/enetc/enetc_ethtool.c
-> @@ -320,8 +320,8 @@ static void enetc_get_ethtool_stats(struct net_device *ndev,
->  static void enetc_pause_stats(struct enetc_hw *hw, int mac,
->  			      struct ethtool_pause_stats *pause_stats)
->  {
-> -	pause_stats->tx_pause_frames = enetc_port_rd(hw, ENETC_PM_TXPF(mac));
-> -	pause_stats->rx_pause_frames = enetc_port_rd(hw, ENETC_PM_RXPF(mac));
-> +	pause_stats->tx_pause_frames = enetc_port_rd64(hw, ENETC_PM_TXPF(mac));
-> +	pause_stats->rx_pause_frames = enetc_port_rd64(hw, ENETC_PM_RXPF(mac));
->  }
->
->  static void enetc_get_pause_stats(struct net_device *ndev,
-> @@ -348,31 +348,31 @@ static void enetc_get_pause_stats(struct net_device *ndev,
->  static void enetc_mac_stats(struct enetc_hw *hw, int mac,
->  			    struct ethtool_eth_mac_stats *s)
->  {
-> -	s->FramesTransmittedOK = enetc_port_rd(hw, ENETC_PM_TFRM(mac));
-> -	s->SingleCollisionFrames = enetc_port_rd(hw, ENETC_PM_TSCOL(mac));
-> -	s->MultipleCollisionFrames = enetc_port_rd(hw, ENETC_PM_TMCOL(mac));
-> -	s->FramesReceivedOK = enetc_port_rd(hw, ENETC_PM_RFRM(mac));
-> -	s->FrameCheckSequenceErrors = enetc_port_rd(hw, ENETC_PM_RFCS(mac));
-> -	s->AlignmentErrors = enetc_port_rd(hw, ENETC_PM_RALN(mac));
-> -	s->OctetsTransmittedOK = enetc_port_rd(hw, ENETC_PM_TEOCT(mac));
-> -	s->FramesWithDeferredXmissions = enetc_port_rd(hw, ENETC_PM_TDFR(mac));
-> -	s->LateCollisions = enetc_port_rd(hw, ENETC_PM_TLCOL(mac));
-> -	s->FramesAbortedDueToXSColls = enetc_port_rd(hw, ENETC_PM_TECOL(mac));
-> -	s->FramesLostDueToIntMACXmitError = enetc_port_rd(hw, ENETC_PM_TERR(mac));
-> -	s->CarrierSenseErrors = enetc_port_rd(hw, ENETC_PM_TCRSE(mac));
-> -	s->OctetsReceivedOK = enetc_port_rd(hw, ENETC_PM_REOCT(mac));
-> -	s->FramesLostDueToIntMACRcvError = enetc_port_rd(hw, ENETC_PM_RDRNTP(mac));
-> -	s->MulticastFramesXmittedOK = enetc_port_rd(hw, ENETC_PM_TMCA(mac));
-> -	s->BroadcastFramesXmittedOK = enetc_port_rd(hw, ENETC_PM_TBCA(mac));
-> -	s->MulticastFramesReceivedOK = enetc_port_rd(hw, ENETC_PM_RMCA(mac));
-> -	s->BroadcastFramesReceivedOK = enetc_port_rd(hw, ENETC_PM_RBCA(mac));
-> +	s->FramesTransmittedOK = enetc_port_rd64(hw, ENETC_PM_TFRM(mac));
-> +	s->SingleCollisionFrames = enetc_port_rd64(hw, ENETC_PM_TSCOL(mac));
-> +	s->MultipleCollisionFrames = enetc_port_rd64(hw, ENETC_PM_TMCOL(mac));
-> +	s->FramesReceivedOK = enetc_port_rd64(hw, ENETC_PM_RFRM(mac));
-> +	s->FrameCheckSequenceErrors = enetc_port_rd64(hw, ENETC_PM_RFCS(mac));
-> +	s->AlignmentErrors = enetc_port_rd64(hw, ENETC_PM_RALN(mac));
-> +	s->OctetsTransmittedOK = enetc_port_rd64(hw, ENETC_PM_TEOCT(mac));
-> +	s->FramesWithDeferredXmissions = enetc_port_rd64(hw, ENETC_PM_TDFR(mac));
-> +	s->LateCollisions = enetc_port_rd64(hw, ENETC_PM_TLCOL(mac));
-> +	s->FramesAbortedDueToXSColls = enetc_port_rd64(hw, ENETC_PM_TECOL(mac));
-> +	s->FramesLostDueToIntMACXmitError = enetc_port_rd64(hw, ENETC_PM_TERR(mac));
-> +	s->CarrierSenseErrors = enetc_port_rd64(hw, ENETC_PM_TCRSE(mac));
-> +	s->OctetsReceivedOK = enetc_port_rd64(hw, ENETC_PM_REOCT(mac));
-> +	s->FramesLostDueToIntMACRcvError = enetc_port_rd64(hw, ENETC_PM_RDRNTP(mac));
-> +	s->MulticastFramesXmittedOK = enetc_port_rd64(hw, ENETC_PM_TMCA(mac));
-> +	s->BroadcastFramesXmittedOK = enetc_port_rd64(hw, ENETC_PM_TBCA(mac));
-> +	s->MulticastFramesReceivedOK = enetc_port_rd64(hw, ENETC_PM_RMCA(mac));
-> +	s->BroadcastFramesReceivedOK = enetc_port_rd64(hw, ENETC_PM_RBCA(mac));
->  }
->
->  static void enetc_ctrl_stats(struct enetc_hw *hw, int mac,
->  			     struct ethtool_eth_ctrl_stats *s)
->  {
-> -	s->MACControlFramesTransmitted = enetc_port_rd(hw, ENETC_PM_TCNP(mac));
-> -	s->MACControlFramesReceived = enetc_port_rd(hw, ENETC_PM_RCNP(mac));
-> +	s->MACControlFramesTransmitted = enetc_port_rd64(hw, ENETC_PM_TCNP(mac));
-> +	s->MACControlFramesReceived = enetc_port_rd64(hw, ENETC_PM_RCNP(mac));
->  }
->
->  static const struct ethtool_rmon_hist_range enetc_rmon_ranges[] = {
-> @@ -389,26 +389,26 @@ static const struct ethtool_rmon_hist_range enetc_rmon_ranges[] = {
->  static void enetc_rmon_stats(struct enetc_hw *hw, int mac,
->  			     struct ethtool_rmon_stats *s)
->  {
-> -	s->undersize_pkts = enetc_port_rd(hw, ENETC_PM_RUND(mac));
-> -	s->oversize_pkts = enetc_port_rd(hw, ENETC_PM_ROVR(mac));
-> -	s->fragments = enetc_port_rd(hw, ENETC_PM_RFRG(mac));
-> -	s->jabbers = enetc_port_rd(hw, ENETC_PM_RJBR(mac));
-> -
-> -	s->hist[0] = enetc_port_rd(hw, ENETC_PM_R64(mac));
-> -	s->hist[1] = enetc_port_rd(hw, ENETC_PM_R127(mac));
-> -	s->hist[2] = enetc_port_rd(hw, ENETC_PM_R255(mac));
-> -	s->hist[3] = enetc_port_rd(hw, ENETC_PM_R511(mac));
-> -	s->hist[4] = enetc_port_rd(hw, ENETC_PM_R1023(mac));
-> -	s->hist[5] = enetc_port_rd(hw, ENETC_PM_R1522(mac));
-> -	s->hist[6] = enetc_port_rd(hw, ENETC_PM_R1523X(mac));
-> -
-> -	s->hist_tx[0] = enetc_port_rd(hw, ENETC_PM_T64(mac));
-> -	s->hist_tx[1] = enetc_port_rd(hw, ENETC_PM_T127(mac));
-> -	s->hist_tx[2] = enetc_port_rd(hw, ENETC_PM_T255(mac));
-> -	s->hist_tx[3] = enetc_port_rd(hw, ENETC_PM_T511(mac));
-> -	s->hist_tx[4] = enetc_port_rd(hw, ENETC_PM_T1023(mac));
-> -	s->hist_tx[5] = enetc_port_rd(hw, ENETC_PM_T1522(mac));
-> -	s->hist_tx[6] = enetc_port_rd(hw, ENETC_PM_T1523X(mac));
-> +	s->undersize_pkts = enetc_port_rd64(hw, ENETC_PM_RUND(mac));
-> +	s->oversize_pkts = enetc_port_rd64(hw, ENETC_PM_ROVR(mac));
-> +	s->fragments = enetc_port_rd64(hw, ENETC_PM_RFRG(mac));
-> +	s->jabbers = enetc_port_rd64(hw, ENETC_PM_RJBR(mac));
-> +
-> +	s->hist[0] = enetc_port_rd64(hw, ENETC_PM_R64(mac));
-> +	s->hist[1] = enetc_port_rd64(hw, ENETC_PM_R127(mac));
-> +	s->hist[2] = enetc_port_rd64(hw, ENETC_PM_R255(mac));
-> +	s->hist[3] = enetc_port_rd64(hw, ENETC_PM_R511(mac));
-> +	s->hist[4] = enetc_port_rd64(hw, ENETC_PM_R1023(mac));
-> +	s->hist[5] = enetc_port_rd64(hw, ENETC_PM_R1522(mac));
-> +	s->hist[6] = enetc_port_rd64(hw, ENETC_PM_R1523X(mac));
-> +
-> +	s->hist_tx[0] = enetc_port_rd64(hw, ENETC_PM_T64(mac));
-> +	s->hist_tx[1] = enetc_port_rd64(hw, ENETC_PM_T127(mac));
-> +	s->hist_tx[2] = enetc_port_rd64(hw, ENETC_PM_T255(mac));
-> +	s->hist_tx[3] = enetc_port_rd64(hw, ENETC_PM_T511(mac));
-> +	s->hist_tx[4] = enetc_port_rd64(hw, ENETC_PM_T1023(mac));
-> +	s->hist_tx[5] = enetc_port_rd64(hw, ENETC_PM_T1522(mac));
-> +	s->hist_tx[6] = enetc_port_rd64(hw, ENETC_PM_T1523X(mac));
->  }
->
->  static void enetc_get_eth_mac_stats(struct net_device *ndev,
-> --
-> 2.34.1
->
+Since the introduction in 9a10064f5625 ("mm: add a field to store names
+for private anonymous memory") the code to set anon_name on a vma has
+been using madvise_update_vma() to call replace_anon_vma_name(). Since
+the former is called also by a number of other madvise behaviours that
+do not set a new anon_name, they have been passing the existing
+anon_name of the vma to make replace_anon_vma_name() a no-op.
+
+This is rather wasteful as it needs anon_vma_name_eq() to determine the
+no-op situations, and checks for when replace_anon_vma_name() is allowed
+(the vma is anon/shmem) duplicate the checks already done earlier in
+madvise_vma_behavior(). It has also lead to commit 942341dcc574 ("mm:
+fix use-after-free when anon vma name is used after vma is freed")
+adding anon_name refcount get/put operations exactly to the cases that
+actually do not change anon_name - just so the replace_anon_vma_name()
+can keep safely determining it has nothing to do.
+
+The recent madvise cleanups made this suboptimal handling very obvious,
+but happily also allow for an easy fix. madvise_update_vma() now has the
+complete information whether it's been called to set a new anon_name, so
+stop passing it the existing vma's name and doing the refcount get/put
+in its only caller madvise_vma_behavior().
+
+In madvise_update_vma() itself, limit calling of replace_anon_vma_name()
+only to cases where we are setting a new name, otherwise we know it's a
+no-op. We can rely solely on the __MADV_SET_ANON_VMA_NAME behaviour and
+can remove the duplicate checks for vma being anon/shmem that were done
+already in madvise_vma_behavior().
+
+Additionally, by using vma_modify_flags() when not modifying the
+anon_name, avoid explicitly passing the existing vma's anon_name and
+storing a pointer to it in struct madv_behavior or a local variable.
+This prevents the danger of accessing a freed anon_name after vma
+merging, previously fixed by commit 942341dcc574.
+
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
