@@ -1,81 +1,33 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9EC31FDE33
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D99112E610B;
+	Tue, 24 Jun 2025 16:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750783702; cv=none; b=UDLa/FDoOJrdw3m6dUdUVmjrYm+Ot1L1UUoYSuRfEN9q696Yeddx+YSjhhISGBpsdjkZaluGWYD9aq8dodiA9sSi3cf9OdLre2aqXhYg5/xN3DUROnqa1aZxfd/v8Xfx3FNfLIv4wmpzRQ4JFG9g159BNdJ/Mm392+97YeKCZpw=
+	t=1750783729; cv=none; b=KuoIaMrPDy0+lPWIdvUEYgAv0AIV5DZxukEF665FaKJul3pDgSfpofTEwjXZ6z840+eO5XIyJeVpaBGI6Mb6b5xhw7ASuZxRSIitPLxfI6zltUtswqMCVtF1eMbWpS7yly2yMz3p/bVJK7tLFwo1EbMbKIwRRaPlF/HJMRGuAMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750783702; c=relaxed/simple;
-	bh=EcjENa8GLuvMmolHUGNE7yYjrnaFqfkTdpV4mEqSg7c=;
+	s=arc-20240116; t=1750783729; c=relaxed/simple;
+	bh=oQ1jbpZY26uLhcovpi99AHhjhynbQIDhCOwniw/kLP0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BSp6RcuzoDl+OiP6bI4dYRKV+NxSiMZyaC7ZwUS70/k1a9m6+qpjvY/FmW0o/xx/46f+POulEKMuL9ERtj/rOu/zyA8TqgXdvFKFcXc8tJwedV2/MvcXaPCSDvrKg1K2GglYB82YFp4xQuctoZB3aiMdiww8KP04AnGw+dmj+FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=X6qC2SNn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KvkGKYvY; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=X6qC2SNn; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=KvkGKYvY; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 In-Reply-To:Content-Type; b=iuhwGsEa8SrOAad6pSsBt5GkRTE6DBpbP9hsK6wIgl9zrU1HAweTqPK9X4ZZCFXfuEfBEVUH4kNFL7uGZZJgzmVNAKoumsVnTmiQjkgXrKSRpROYoeFHR+9ZMv/38uffRszrj+IcntkHq8N9/OXSrL5/dU/nsO29iBHjfWVPH8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TfvzZR/f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="X6qC2SNn";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KvkGKYvY";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="X6qC2SNn";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="KvkGKYvY"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 06A8D21204;
-	Tue, 24 Jun 2025 16:48:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750783698; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WQf8Sf0gqvKeBfKMlGsRGcbfsLkMKbWC6xxDiuZcULg=;
-	b=X6qC2SNnTxxCJW8fDFO5WhxyZkTwu44cX4h4SqWDPyBUPt2+Psscts/hOeVYlp+r+CScCZ
-	LN+IwO3PnKVZb5Lw2XTJG8M3372oaFyJl2SO7jJwSf1huC6Wftbw8cezKps0c1b6scCCLV
-	//1dQVkwk7GRgUFtSURwuboBhCPXlq8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750783698;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WQf8Sf0gqvKeBfKMlGsRGcbfsLkMKbWC6xxDiuZcULg=;
-	b=KvkGKYvYabERtfrdspAvzNd4kWzoc5LqJ6q1WyrhZfBEOGwM15GVd4dNbE+jMSI5AIC6cA
-	jRLX/fGIjoYA7OCg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=X6qC2SNn;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=KvkGKYvY
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750783698; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WQf8Sf0gqvKeBfKMlGsRGcbfsLkMKbWC6xxDiuZcULg=;
-	b=X6qC2SNnTxxCJW8fDFO5WhxyZkTwu44cX4h4SqWDPyBUPt2+Psscts/hOeVYlp+r+CScCZ
-	LN+IwO3PnKVZb5Lw2XTJG8M3372oaFyJl2SO7jJwSf1huC6Wftbw8cezKps0c1b6scCCLV
-	//1dQVkwk7GRgUFtSURwuboBhCPXlq8=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750783698;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=WQf8Sf0gqvKeBfKMlGsRGcbfsLkMKbWC6xxDiuZcULg=;
-	b=KvkGKYvYabERtfrdspAvzNd4kWzoc5LqJ6q1WyrhZfBEOGwM15GVd4dNbE+jMSI5AIC6cA
-	jRLX/fGIjoYA7OCg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id DE33B13A24;
-	Tue, 24 Jun 2025 16:48:17 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id hqKkNdHWWmjUJAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Tue, 24 Jun 2025 16:48:17 +0000
-Message-ID: <d6dd13e2-1bd3-4b3f-bb88-781ad79ff358@suse.cz>
-Date: Tue, 24 Jun 2025 18:48:17 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TfvzZR/f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A303AC4CEE3;
+	Tue, 24 Jun 2025 16:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750783728;
+	bh=oQ1jbpZY26uLhcovpi99AHhjhynbQIDhCOwniw/kLP0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TfvzZR/fYpui/a9fNXGb7tsI/EUZhlLeCnYb27CR99Srqf6zNPIOsJlmfeTuFanQd
+	 +U8LSrvF2KJfjmg9Dj8afnFHGuJNPLwcACdFl9oekBU5rVtPUCXwyKp49bEiA6va0G
+	 D822dRBTWbaEg42k/S41DXH5Fm+CLGFZTkyzOG7ykSr4sOkWqV+nX+CXeB3OUOogMJ
+	 +hsktnQLM+lh57CpY8wjn/nzK9UO55m2DoY0PiaAF+ylQ4aV6DjBd16hW7pTGD+Piy
+	 9tWuJ4Lfcrmp1JfhNZoShtc5/hVK1DzqJLhRd0eqhUmr1upBlQhxNkTsFcvNdSBGMt
+	 ys6f6Kg5zVTRA==
+Message-ID: <939129a9-0a93-4539-b651-b08fcddf57b5@kernel.org>
+Date: Tue, 24 Jun 2025 11:48:45 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,170 +35,169 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] mm, madvise: use standard madvise locking in
- madvise_set_anon_name()
+Subject: Re: [PATCH v4 7/8] PCI/VGA: Move check for firmware default out of
+ VGA arbiter
+To: Thomas Zimmermann <tzimmermann@suse.de>,
+ Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Lukas Wunner <lukas@wunner.de>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
+ Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+ Alex Williamson <alex.williamson@redhat.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+ "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
+ "open list:SOUND" <linux-sound@vger.kernel.org>,
+ Daniel Dadap <ddadap@nvidia.com>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250623184757.3774786-1-superm1@kernel.org>
+ <20250623184757.3774786-8-superm1@kernel.org>
+ <f0e70269-b55e-4ac8-b052-da092a177eda@suse.de>
 Content-Language: en-US
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- David Hildenbrand <david@redhat.com>, Jann Horn <jannh@google.com>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Colin Cross <ccross@google.com>,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
- <20250624-anon_name_cleanup-v2-4-600075462a11@suse.cz>
- <667e6631-8e2f-4154-8fcc-55fb5ab49a07@lucifer.local>
-From: Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; keydata=
- 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
- m6M14QORSWTLRg==
-In-Reply-To: <667e6631-8e2f-4154-8fcc-55fb5ab49a07@lucifer.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[oracle.com:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.cz:dkim,suse.cz:mid,suse.cz:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 06A8D21204
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <f0e70269-b55e-4ac8-b052-da092a177eda@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 6/24/25 17:45, Lorenzo Stoakes wrote:
-> On Tue, Jun 24, 2025 at 03:03:48PM +0200, Vlastimil Babka wrote:
->> Use madvise_lock()/madvise_unlock() in madvise_set_anon_name() in the
->> same way as in do_madvise(). This narrows the lock scope a bit and
->> reuses existing functionality. get_lock_mode() already picks the correct
->> MADVISE_MMAP_WRITE_LOCK mode for __MADV_SET_ANON_VMA_NAME so we can just
->> remove the explicit assignment.
+On 6/24/25 4:21 AM, Thomas Zimmermann wrote:
+> 
+> 
+> Am 23.06.25 um 20:47 schrieb Mario Limonciello:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
 >>
->> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> 
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> 
-> This is a nice idea, hadn't thought of it :) aren't we making anon vma name
-> behave now :P
-> 
-> I mean this is a _minor_ difference in functionality in that we will now
-> use mmap_write_lock_killable() and could fail to lock on fatal signal
-> whereas before we unconditionally lock but I think that's fine, and
-> possibly even... desirable actually?
-
-Right! I'll add a note to the changelog. It's changing existing uapi but
-hopefully not in a way that userspace would become broken. I mean even the
-other madvise modes only got killable locks later tat some point after
-introduction, no?
-
-> 
-> At any rate this is all nice, thanks again!
-> 
+>> The x86 specific check for whether a framebuffer belongs to a device
+>> works for display devices as well as VGA devices.  Callers to
+>> video_is_primary_device() can benefit from checking non-VGA display
+>> devices.
+>>
+>> Move the x86 specific check into x86 specific code, and adjust VGA
+>> arbiter to call that code as well. This allows fbcon to find the
+>> right PCI device on systems that don't have VGA devices.
+>>
+>> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 >> ---
->>  mm/madvise.c | 13 +++++++++----
->>  1 file changed, 9 insertions(+), 4 deletions(-)
+>> v4:
+>>   * use helper
+>> ---
+>>   arch/x86/video/video-common.c | 13 ++++++++++++-
+>>   drivers/pci/vgaarb.c          | 36 ++---------------------------------
+>>   2 files changed, 14 insertions(+), 35 deletions(-)
 >>
->> diff --git a/mm/madvise.c b/mm/madvise.c
->> index cae064479cdf908707c45b941bd03d43d095eab6..ee02ccd0315a146cdb3001cd189e03be9e48a2ea 100644
->> --- a/mm/madvise.c
->> +++ b/mm/madvise.c
->> @@ -2082,10 +2082,10 @@ static int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
->>  {
->>  	unsigned long end;
->>  	unsigned long len;
->> +	int error;
->>  	struct madvise_behavior madv_behavior = {
->>  		.mm = mm,
->>  		.behavior = __MADV_SET_ANON_VMA_NAME,
->> -		.lock_mode = MADVISE_MMAP_WRITE_LOCK,
->>  		.anon_name = anon_name,
->>  	};
->>
->> @@ -2106,7 +2106,14 @@ static int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
->>
->>  	madv_behavior.range.start = start;
->>  	madv_behavior.range.end = end;
->> -	return madvise_walk_vmas(&madv_behavior);
+>> diff --git a/arch/x86/video/video-common.c b/arch/x86/video/video- 
+>> common.c
+>> index 81fc97a2a837a..917568e4d7fb1 100644
+>> --- a/arch/x86/video/video-common.c
+>> +++ b/arch/x86/video/video-common.c
+>> @@ -9,6 +9,7 @@
+>>   #include <linux/module.h>
+>>   #include <linux/pci.h>
+>> +#include <linux/screen_info.h>
+>>   #include <linux/vgaarb.h>
+>>   #include <asm/video.h>
+>> @@ -27,6 +28,7 @@ EXPORT_SYMBOL(pgprot_framebuffer);
+>>   bool video_is_primary_device(struct device *dev)
+>>   {
+>> +    struct screen_info *si = &screen_info;
+>>       struct pci_dev *pdev;
+>>       if (!dev_is_pci(dev))
+>> @@ -34,7 +36,16 @@ bool video_is_primary_device(struct device *dev)
+>>       pdev = to_pci_dev(dev);
+>> -    return (pdev == vga_default_device());
+>> +    if (!pci_is_display(pdev))
+>> +        return false;
 >> +
->> +	error = madvise_lock(&madv_behavior);
->> +	if (error)
->> +		return error;
->> +	error = madvise_walk_vmas(&madv_behavior);
->> +	madvise_unlock(&madv_behavior);
+>> +    if (pdev == vga_default_device())
+>> +        return true;
 >> +
->> +	return error;
->>  }
->>
->>  int set_anon_vma_name(unsigned long addr, unsigned long size,
->> @@ -2136,9 +2143,7 @@ int set_anon_vma_name(unsigned long addr, unsigned long size,
->>  			return -ENOMEM;
->>  	}
->>
->> -	mmap_write_lock(mm);
->>  	error = madvise_set_anon_name(mm, addr, size, anon_name);
->> -	mmap_write_unlock(mm);
->>  	anon_vma_name_put(anon_name);
->>
->>  	return error;
->>
->> --
->> 2.50.0
->>
+>> +    if (pdev == screen_info_pci_dev(si))
+>> +        return true;
+>> +
+>> +    return false;
+>>   }
+>>   EXPORT_SYMBOL(video_is_primary_device);
+>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>> index 78748e8d2dbae..15ab58c70b016 100644
+>> --- a/drivers/pci/vgaarb.c
+>> +++ b/drivers/pci/vgaarb.c
+>> @@ -26,12 +26,12 @@
+>>   #include <linux/poll.h>
+>>   #include <linux/miscdevice.h>
+>>   #include <linux/slab.h>
+>> -#include <linux/screen_info.h>
+>>   #include <linux/vt.h>
+>>   #include <linux/console.h>
+>>   #include <linux/acpi.h>
+>>   #include <linux/uaccess.h>
+>>   #include <linux/vgaarb.h>
+>> +#include <asm/video.h>
+>>   static void vga_arbiter_notify_clients(void);
+>> @@ -554,38 +554,6 @@ void vga_put(struct pci_dev *pdev, unsigned int 
+>> rsrc)
+>>   }
+>>   EXPORT_SYMBOL(vga_put);
+>> -static bool vga_is_firmware_default(struct pci_dev *pdev)
+>> -{
+>> -#if defined(CONFIG_X86)
+>> -    u64 base = screen_info.lfb_base;
+>> -    u64 size = screen_info.lfb_size;
+>> -    struct resource *r;
+>> -    u64 limit;
+>> -
+>> -    /* Select the device owning the boot framebuffer if there is one */
+>> -
+>> -    if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
+>> -        base |= (u64)screen_info.ext_lfb_base << 32;
+>> -
+>> -    limit = base + size;
+>> -
+>> -    /* Does firmware framebuffer belong to us? */
+>> -    pci_dev_for_each_resource(pdev, r) {
+>> -        if (resource_type(r) != IORESOURCE_MEM)
+>> -            continue;
+>> -
+>> -        if (!r->start || !r->end)
+>> -            continue;
+>> -
+>> -        if (base < r->start || limit >= r->end)
+>> -            continue;
+>> -
+>> -        return true;
+>> -    }
+>> -#endif
+>> -    return false;
+>> -}
+>> -
+>>   static bool vga_arb_integrated_gpu(struct device *dev)
+>>   {
+>>   #if defined(CONFIG_ACPI)
+>> @@ -623,7 +591,7 @@ static bool vga_is_boot_device(struct vga_device 
+>> *vgadev)
+>>       if (boot_vga && boot_vga->is_firmware_default)
+>>           return false;
+>> -    if (vga_is_firmware_default(pdev)) {
+>> +    if (video_is_primary_device(&pdev->dev)) {
+> 
+> Doesn't this generate a cyclic dependency between vgaarb and video? I 
+> find this call cycle hard to reason about because 
+> vgaarb_default_device() depends on the results of these boot-device 
+> tests. Maybe keep vga_is_firmware_default() and just replace its content 
+> with a call to screen_info_pci_dev().
+> Best regards
+> Thomas
+
+OK, I'll do that, thanks.
+
+> 
+>>           vgadev->is_firmware_default = true;
+>>           return true;
+>>       }
+> 
 
