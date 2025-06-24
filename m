@@ -1,117 +1,130 @@
-Received: from out28-125.mail.aliyun.com (out28-125.mail.aliyun.com [115.124.28.125])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C75372;
-	Tue, 24 Jun 2025 07:03:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.125
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4FB220A5D8;
+	Tue, 24 Jun 2025 07:04:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750748601; cv=none; b=rUNAfw+VQLF5dU/lI3d5k8dPjEaQ95qfe/tuF37j40EELomj8vhH32leU+ccia96GZpDxXiK5l09GK5MCoAyoTu6NeD+YYhwNFgeN8HkcuchJk4oHT3PIpsJvRnSsI7BOHG4OYyKi0iBk+SpWuZOPhn0orRhzbWu6bINnznemUU=
+	t=1750748688; cv=none; b=oCI1Dz5bdjO8SstMb9Eu6cjbvObOX9HjOrK1wgQswGDEd6Nc19MVK0RYcr1u2IWbjRNECeeT4iRptfRH+i8lXCXcHHLQyLniqkaTEf4Z7ZTSIRqNVOueJi/IZpQXwZP5NVnRat8SYwHs7OVzR34hIuFoAiBbUFV+LDX0GP5P3Fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750748601; c=relaxed/simple;
-	bh=5yxFHUftbyV+RMCcFSunsXqR9/ZdNxpPFMQ7e3zC6zc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=k1JoWR6hv5D5gRds6MtIuIZFUS47cUYNEvbhEUx6e9OrDpEKE/uuNvUZH8psCwcwevT607bYkBpXgY+R0DzDo0Bud95t9/o4eNEHHxFu4SEqtFOWjDXUwDx+4sxsihnm5NC76GdryKjHF4YXfgb2TdUJfa500pKaRd43W3ZqahI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
-Received: from ubuntu-VirtualBox..(mailfrom:wangweidong.a@awinic.com fp:SMTPD_---.dVKPy6z_1750748268 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Tue, 24 Jun 2025 14:57:50 +0800
-From: wangweidong.a@awinic.com
-To: broonie@kernel.org
-Cc: colin.i.king@gmail.com,
-	lgirdwood@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-sound@vger.kernel.org,
-	perex@perex.cz,
-	thorsten.blum@linux.dev,
-	tiwai@suse.com,
-	u.kleine-koenig@baylibre.com,
-	wangweidong.a@awinic.com,
-	yijiangtao@awinic.com,
-	zhujun2@cmss.chinamobile.com
-Subject: Re: [PATCH V2] ASoC: codecs: Add calibration function to aw88399 chip
-Date: Tue, 24 Jun 2025 14:57:48 +0800
-Message-ID: <20250624065748.60509-1-wangweidong.a@awinic.com>
-X-Mailer: git-send-email 2.47.0
-In-Reply-To: <aFVgVTIe5oT0MkZy@finisterre.sirena.org.uk>
-References: <aFVgVTIe5oT0MkZy@finisterre.sirena.org.uk>
+	s=arc-20240116; t=1750748688; c=relaxed/simple;
+	bh=3L8zVA2ueuJ98h4O9ApjC8lw44r2R1R4pYIOlzcPuI8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZHZg4Utz5SL4feoCchUMibAo+H1OzoUQqWJezHqISFeMWph16p/od9h4mN7VQ1F8mslVDAn4/Ynee5hvarXHEnvPYoCTlidSJ0PrGzaY27QLbctSXiiYdpc3d06gQ4oO187VI3fxGzw3J/CV2oFQWymqGkpOuAhQMk0H7gevQes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HctFox7l; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HctFox7l"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so47247f8f.1;
+        Tue, 24 Jun 2025 00:04:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750748685; x=1751353485; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=ldoS5jcwhFZyQ+2I13CKfPxsMRdOZ6a+TpT13V19plU=;
+        b=HctFox7lAZajpt3/OKoqmps+BjVWw8vzo3RCTAMlhMhyJvB/lp7uGZQN5q5T6NIWgo
+         E8OS/LaVNcMX1zgInwnqoIk9ZqdoQtWrQA5cobBh0l5VDr1TFVLv0BTwE/pKTqJXVh10
+         +2rN98MOb5QAVuKsUnX3bxxV7DxUjciprFEgYSEAocSfuAdvUMOm0XYEImGSciNgMQ4b
+         YTpXixhoWa941rHp+Kw3N2RJVLZ3VZSHPpZugkDfg9nQOWFedPmLm26TqD0eOO6PAQfI
+         5taiDV66o6A40HLXFYDqANpUVypNMh+sXaFltOsOvT0DRmusM4rdbJNGp86Yte/b9Nz2
+         qaZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750748685; x=1751353485;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ldoS5jcwhFZyQ+2I13CKfPxsMRdOZ6a+TpT13V19plU=;
+        b=K2PLrfWfzVXQ50uZ+9/zefINNtfuBgDEgBg2vNEfzVlNRK/YQ3x891YmenhugtbpM6
+         7qOw/CQqYvirYxbMoHCmweGO5pXw/OdjPgHRZFb+XUKfWsBA7/CfZWPZ0yRHRXuZXDqQ
+         YZHQa+DV+ct4aowaedcxRj3BzLjgLuybZMANdEL1Ldno+ChEXUAjhzdHENX/nhKu+2pA
+         SQPjAGup8mqqbdCXuxx1aeTcXMtcBAlAQFY/ZCfjj6TvhDFIxxmtKI1cTibOjj5dK5A4
+         wA3ci9ZdSI+6n/b7AeVMxxGl7LntNEPp6uyC7WsBhtlAGC48sVnnmN68hJoVWTE57eAI
+         5Hqg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPoEBo6hhAFcXApUZi2Nhrbi2DMenS3ZYSRQLbHoJTKDfMO9Rs/yxdMCFrN3b9zdO69VEAGUkz3Ye+Mg==@vger.kernel.org, AJvYcCVuYohlBeNIKEpd9Zt080BYtIHqtcufZO3ChN6llBt3RBNgh7egYJfnFz2TId7uwtbz7iYf9EHay1G8cOL+@vger.kernel.org, AJvYcCWg4vKwK9aow3i3NR+RFSc1ZYk5f2oIF0K3vpG0YL5ZpGcxzHQmRiwWpgeiY4P3ER4+PIJgxmzk0h/H@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyxi2ZL0RXDL/MNssb3xUijwMF9sWyqIZQIhvPTvsDwSctPtT4e
+	Fis7jtUsG5OwAcWibyzFnHed7yFKY34yk6mEydw7tZF5GodXVK3tk71T
+X-Gm-Gg: ASbGncuNQoGzDQi+bOWlbWw6tRyMP0TA70ZkOu6gGD83rqE36556G954nRHPpgAVnVh
+	3StkN5pSXlxEnjEbxLIbr06s5MFoudqMTuZPCA97VYq48UALnVdyIZxWi+i7F9yBZY89PWmvyUd
+	A4j3g+uIhqHOdkBFHSiC+J+wWDk1vHz7e9FOUaB3MXSKCYWudbQ9f8xDPMTUJ36Uv3dPhKTyqvP
+	XV9bMY/J6hDhsfEzRF36WODroQdk0buyAM2Q2yMKZ8rFEqBglhGoPFeA5jxqYwaYL1jFUmleQea
+	puY/X9StAiyj0rIXJRdi7mzzMkBaDHpOHwf+XQh3l+SNcwTFBbFG3ZxvHO4=
+X-Google-Smtp-Source: AGHT+IFLnIIvnfFaira7QlQiLZpMYoYe8pvFntKV59gZwf40Yu7Kvn30zOxxdw3g68qAAQQUPUQLCg==
+X-Received: by 2002:a05:6000:4284:b0:3a5:2f23:376f with SMTP id ffacd0b85a97d-3a6d129de4cmr13306333f8f.13.1750748684895;
+        Tue, 24 Jun 2025 00:04:44 -0700 (PDT)
+Received: from legfed1 ([2a00:79c0:6bf:b400:47ca:3373:65d:a678])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805d21fsm1131162f8f.23.2025.06.24.00.04.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 00:04:44 -0700 (PDT)
+Date: Tue, 24 Jun 2025 09:04:42 +0200
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: dimitri.fedrau@liebherr.com, Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>, linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v3] pwm: mc33xs2410: add support for temperature sensors
+Message-ID: <20250624070442.GA3383@legfed1>
+References: <20250619-mc33xs2410-hwmon-v3-1-301731e49f8f@liebherr.com>
+ <cviovwci5fgtyina7p7zqjns7cwveivy3vetqhhagwmrlc2gm2@jrqgorif7xff>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cviovwci5fgtyina7p7zqjns7cwveivy3vetqhhagwmrlc2gm2@jrqgorif7xff>
 
-Thank you very much for your review=0D
-=0D
-On Fri, Jun 20, 2025 at 14:21:25PM +0100, broonie@kernel.org wrote:=0D
-> On Fri, Jun 20, 2025 at 07:08:44PM +0800, wangweidong.a@awinic.com wrote:=
-=0D
-=0D
->> +static int aw_cali_svc_dev_cali_re(struct aw88399 *aw88399)=0D
->> +{=0D
->> +	struct aw_device *aw_dev =3D aw88399->aw_pa;=0D
->> +	int ret;=0D
->> +=0D
->> +	mutex_lock(&aw88399->lock);=0D
->> +	aw_cali_svc_run_mute(aw_dev, CALI_RESULT_NORMAL);=0D
->> +=0D
->> +	ret =3D aw_cali_svc_cali_re_mode_enable(aw_dev, true);=0D
->> +	if (ret) {=0D
->> +		dev_err(aw_dev->dev, "start cali re failed\n");=0D
->> +		goto re_mode_err;=0D
->> +	}=0D
->> +=0D
->> +	msleep(3000);=0D
-=0D
-> Callibration takes 3s which is a fairly long time.=0D
-=0D
-This time is because the chip needs to wait for =0D
-the data to stabilise during calibration =0D
-in order to ensure more accurate calibration values.=0D
-I will reduce this time to 1s.=0D
-=0D
->> @@ -1588,6 +1968,13 @@ static int aw88399_re_get(struct snd_kcontrol *kc=
-ontrol,=0D
->>  	struct snd_soc_component *codec =3D snd_soc_kcontrol_component(kcontro=
-l);=0D
->>  	struct aw88399 *aw88399 =3D snd_soc_component_get_drvdata(codec);=0D
->>  	struct aw_device *aw_dev =3D aw88399->aw_pa;=0D
->> +	int ret;=0D
->> +=0D
->> +	if (aw_dev->status) {=0D
->> +		ret =3D aw_cali_svc_dev_cali_re(aw88399);=0D
->> +		if (ret)=0D
->> +			return -EPERM;=0D
->> +	}=0D
-=0D
-> AFAICT it's triggered if the device is powered on and userspace reads=0D
-> the control that reports the callibration value.  That seems like it's a=
-=0D
-> bit too easy to trigger - something like running amixer would read the=0D
-> control and lock the CODEC up for 3s, and I'm guessing that if the CODEC=
-=0D
-> is powered due to audio playing that'd result in disruption to users=0D
-> listening to that audio.  I think it'd be better to have another write=0D
-> only control (or volatile one which reads 0 always) that triggers the=0D
-> calibration when userspace writes to it ("Calibrate Now Switch" or=0D
-> something).  Since the calibration is also directly writable from=0D
-> userspace we can't just use a write to this control.  In general it=0D
-> should always be possible to read controls without disrupting anything=0D
-> else that's going on.=0D
-=0D
-> BTW since the calibration is dynamically done the control should be=0D
-> flagged as volatile.=0D
-I will make the following two changes:=0D
-1.Add an additional "Calib Switch" Kcontrol to =0D
-  indicate whether calibration operations can be performed.=0D
-2.Add "Trigger Calib" to Kcontrol. =0D
-  This Kcontrol is write-only. When calibration is allowed,=0D
-  perform the calibration operation.=0D
-=0D
-Thank you again.=0D
-=0D
-Best regards,=0D
-Weidong Wang=0D
+Hi Uwe,
+
+Am Mon, Jun 23, 2025 at 11:07:24AM +0200 schrieb Uwe Kleine-König:
+> hello Dimitri,
+> 
+> On Thu, Jun 19, 2025 at 07:32:42PM +0200, Dimitri Fedrau via B4 Relay wrote:
+> > @@ -29,6 +30,8 @@
+> >  
+> >  #include <linux/spi/spi.h>
+> >  
+> > +/* ctrl registers */
+> > +
+> >  #define MC33XS2410_GLB_CTRL			0x00
+> >  #define MC33XS2410_GLB_CTRL_MODE		GENMASK(7, 6)
+> >  #define MC33XS2410_GLB_CTRL_MODE_NORMAL		FIELD_PREP(MC33XS2410_GLB_CTRL_MODE, 1)
+> > @@ -51,6 +54,21 @@
+> >  
+> >  #define MC33XS2410_WDT				0x14
+> >  
+> > +#define MC33XS2410_TEMP_WT			0x29
+> > +#define MC33XS2410_TEMP_WT_MASK			GENMASK(7, 0)
+> > +
+> > +/* diag registers */
+> > +
+> > +/* chan in { 1 ... 4 } */
+> > +#define MC33XS2410_OUT_STA(chan)		(0x02 + (chan) - 1)
+> > +#define MC33XS2410_OUT_STA_OTW			BIT(8)
+> > +
+> > +#define MC33XS2410_TS_TEMP_DIE			0x26
+> > +#define MC33XS2410_TS_TEMP_MASK			GENMASK(9, 0)
+> 
+> Keep the registers in address order please
+> 
+Aren't they ? There are "ctrl" and "diag" registers and I didn't mix up
+adresses. There is a comment for each of them when defines start.
+
+> > +/* chan in { 1 ... 4 } */
+> > +#define MC33XS2410_TS_TEMP(chan)		(0x2f + (chan) - 1)
+> 
+> I wonder if it would be cleaner if this was abstracted using mfd. Then
+> the hwmon driver could live in drivers/hwmon
+> 
+I will have a look into auxiliary devices as Guenter proposed in a
+following mail.
+
+> Liebe Grüße
+> Uwe
+
+Viele Grüße
+Dimitri
