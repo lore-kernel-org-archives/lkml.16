@@ -1,131 +1,88 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378FD2D0275
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:11:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777912; cv=none; b=OQM21D+MSzJ4wVZog2weM1za4tq8j19nc7J7IqLa1lvOyteV3GbZpnhs3vK562iDNaaK7A7M5oomir8GLlB7q0HU2H/fYdRtI9WsOvmBoA9UY2LVYVVMQFZxIDu/fujXt63rKsMulj1J1mkW18YZk7ER2ALT/0VF0pB8ctL8H6s=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750777912; c=relaxed/simple;
-	bh=CdAFv/xVUpFnGKJp2gXfaJa/aJLO9CnnuadlnNfNGoM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=W2+kMX6AdjZUyDW5ZRBK5eribn94mZvnEc3SzOXiZpaL0415hV62q8VMxt1BrXxGD03DpdzFA+1B9vUIzFijEyncgqp9EvXheXJFO/wxyKu1kXoEJAfyGluvGDTMU6eH4DbFVdfoPnARFJM6iO/sJzlybZXxFwQyRO6GW0dJLpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IHWnNSXK; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804652D661F;
+	Tue, 24 Jun 2025 15:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750777930; cv=pass; b=W4P8nQfGGHrmjmUJE8xkhIBgp4TV1kfQChHbLvYfJp3WpX/S2cnjcUjbVDTL3vK6VkItJJXQncgNKt1X2LiMlFbLYnEwj+5sI4zsKXsvV0OD9OsbPzj2o9a4tjf1/Jyam/rzwPDFLk/NLiKbub0YkbsP1MRLT0clSsLgIByAsgI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750777930; c=relaxed/simple;
+	bh=kwBZPzxn17JvK+V65zGyJFMJb6zC4Pj40uxCg1alNFo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hYa1qyWNIC8OQ96x79UTWUpHXcRetILiGg98S+dMwldF+VU5ftdy5dUGWc6Xjl/oPs9cxXlivjz5GD1+rD9Mt9xaYseVGAoIdyiJzqn5lCh3ASCSHDQpaRxIjDK8uAIJpUbqfR/FtoF7GQXHbqJoZdtKzMJa/4zSm8pUJyA2ZhQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b=Bf9YSS1G; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IHWnNSXK"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2356ce66d7cso71047925ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:11:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750777910; x=1751382710; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WHKmMEcEYJNjmiM+o7K2OQjNjaHqWv9qs7NUDNHU0tM=;
-        b=IHWnNSXKQ+5a44BpWYlhLElb6mQU9gh4QUmqcjGfDW4DYDkO7FUTxVmQL1UvwdQlec
-         xGpgaZ+kHhOBh4qT6dQdaA7AilV7ZCju/+voU0nPEfR7txr1MnMCyaASK1J1gyUaaWKk
-         7ValI2uG3cZShoRBfSekqz9m+8X87ZJyc7NzobgJhdD8V/NA8A1bFWmOmKIIzGlvsM1o
-         28PDfet/HJk+q7e2zjgEX56B4mjPk22qSVBFHLiZcvXGn23X2G4kE0Jm1P5Z/hwe98ri
-         uW1gCR5JljJwh5H9O/KrhDD9/V9dg1hu9g550pOU5Lh/iS26+tdRkgUU9JAA96yTZzcA
-         rGyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750777910; x=1751382710;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WHKmMEcEYJNjmiM+o7K2OQjNjaHqWv9qs7NUDNHU0tM=;
-        b=XHff7KSnpuDRG/4cmJoe2kWh5UFwgMDyBQmuoS79RfmNW7mQ8aAYZ14Sc0M+zoA76l
-         3IjHnVCZiTGUApZPgt7i3LzpEIuvvrNI2ioPBJUXi2b/XtEmptSn0kgclmJeadYUWtzy
-         XAS7oxBnGFdMlDpmFuxqqCWtHKZs1rrF8fvrudCdC3G/EZTXCGKfph95dxV/BauY4aN4
-         STlHna0DYnX6tChlmsJRTcX9eFUNWhvp2lryUd5IKdRYkVFag9xwwFfqbso1oi0UaB3n
-         h2x/maVrMBV2oUH7NN9kI8BTDi4QfKS+GFy3Km4eEc/QFAWWoD9bhf5YITpoEktNOrAl
-         Ceww==
-X-Forwarded-Encrypted: i=1; AJvYcCWHjLD99pSHL6YzPda0cFc21Mj15vsD0CVa3C5ldAi72eo1ciWhT5CIIx2f3tmEkB48GRAaJXz0d5oEVsI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBxLXQp1WGs5iYlBH4Ah1TwLnQ2aq6UP6dckqnMr47oirofEfu
-	I3EPhU1VIxckaEFhKwoXv2cvw9G9dSl9IklEdR1YwilL26CnTacB1vYIalqmJbDd9HjKFd4ETOW
-	M2+vNEg==
-X-Google-Smtp-Source: AGHT+IGIcs7zWWGHBq54IJpoK0NjWgqGqhr9KSussfq3VS+c6BJCA+ru+8d4BCqJ7jSWww4QOGTH7M3EVhE=
-X-Received: from plbkr7.prod.google.com ([2002:a17:903:807:b0:234:8ec2:bf02])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:f68e:b0:22e:3c2:d477
- with SMTP id d9443c01a7336-237d9917bafmr230431315ad.25.1750777910502; Tue, 24
- Jun 2025 08:11:50 -0700 (PDT)
-Date: Tue, 24 Jun 2025 08:11:49 -0700
-In-Reply-To: <20250624092256.1105524-4-keirf@google.com>
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b="Bf9YSS1G"
+ARC-Seal: i=1; a=rsa-sha256; t=1750777912; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=PbWcPMPdsiBjI5yUuATEXqR6754nuRTTSI93To7cx/Jc83GNnq9oB8Na81keGobkNvVJuGleN5AU6u83eLxxNciNYRfFSI95L6Vc5fN1QrUU5xTmzImF7QmzlVnZdhdZH+f1nC2G4PUdwQscV333ufz/5znCuOLOLqrusgw7Fdc=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1750777912; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=kwBZPzxn17JvK+V65zGyJFMJb6zC4Pj40uxCg1alNFo=; 
+	b=jPeyuZU/ylhALvNgHeFNYAuq4cjuEyvRf7BaqGil6SWCK4Q1Q8fRQyhGaaSH0GIvxaxuPWfhM2LhJtmgxRcn47bCoouuP1Ep01GcYHh+QJQSry2pqKQMuU3SSAHlJX1QPC0zsX4cj8k7e9LG1e4BGp/xiycrROC5fSpumcAybQw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nfraprado@collabora.com;
+	dmarc=pass header.from=<nfraprado@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750777912;
+	s=zohomail; d=collabora.com; i=nfraprado@collabora.com;
+	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
+	bh=kwBZPzxn17JvK+V65zGyJFMJb6zC4Pj40uxCg1alNFo=;
+	b=Bf9YSS1Ga0DU0J+XC2yEcnc1NKTcDJnu0rTxNkBIt6iga3H6/8JOtOI7Qk3mRziO
+	kA8ENF4z2QoaRaCkUJ5RKq8tn+sZwwBDEJ4WNJqXadd6JZGUTC+bHrlFDVsDCYzzYwj
+	ZQnhcFsLz2Q8w8B3LpuJsyt0rmOlis+U8f9PH7fs=
+Received: by mx.zohomail.com with SMTPS id 1750777910578164.21030726920253;
+	Tue, 24 Jun 2025 08:11:50 -0700 (PDT)
+Message-ID: <44767efb5f7eac1e5605dffdf531e805bc06b920.camel@collabora.com>
+Subject: Re: [PATCH v1 0/6] regulator: Add support for MediaTek
+ MT6316/6363/6373 PMICs
+From: =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" <nfraprado@collabora.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	broonie@kernel.org
+Cc: lgirdwood@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org,  matthias.bgg@gmail.com, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org,  kernel@collabora.com
+Date: Tue, 24 Jun 2025 11:11:48 -0400
+In-Reply-To: <20250623120016.108732-1-angelogioacchino.delregno@collabora.com>
+References: 
+	<20250623120016.108732-1-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250624092256.1105524-1-keirf@google.com> <20250624092256.1105524-4-keirf@google.com>
-Message-ID: <aFrANSe6fJOfMpOC@google.com>
-Subject: Re: [PATCH 3/3] KVM: Avoid synchronize_srcu() in kvm_io_bus_register_dev()
-From: Sean Christopherson <seanjc@google.com>
-To: Keir Fraser <keirf@google.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, Eric Auger <eric.auger@redhat.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>, Will Deacon <will@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Li RongQing <lirongqing@baidu.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-ZohoMailClient: External
 
-+Li
+On Mon, 2025-06-23 at 14:00 +0200, AngeloGioacchino Del Regno wrote:
+> This series adds support for three new MediaTek PMICs: MT6316, MT6363
+> and MT6373 and their variants - used in board designs featuring the
+> MediaTek MT8196 Chromebook SoC, or the MT6991 Dimensity 9400
+> Smartphone
+> SoC.
+>=20
+> AngeloGioacchino Del Regno (6):
+> =C2=A0 dt-bindings: regulator: Document MediaTek MT6316 PMIC Regulators
+> =C2=A0 regulator: Add support for MediaTek MT6316 SPMI PMIC Regulators
+> =C2=A0 dt-bindings: regulator: Document MediaTek MT6363 PMIC Regulators
+> =C2=A0 regulator: Add support for MediaTek MT6363 SPMI PMIC Regulators
+> =C2=A0 dt-bindings: regulator: Document MediaTek MT6373 PMIC Regulators
+> =C2=A0 regulator: Add support for MediaTek MT6373 SPMI PMIC Regulators
 
-On Tue, Jun 24, 2025, Keir Fraser wrote:
-> Device MMIO registration may happen quite frequently during VM boot,
-> and the SRCU synchronization each time has a measurable effect
-> on VM startup time. In our experiments it can account for around 25%
-> of a VM's startup time.
-> 
-> Replace the synchronization with a deferred free of the old kvm_io_bus
-> structure.
-> 
-> Signed-off-by: Keir Fraser <keirf@google.com>
-> ---
->  include/linux/kvm_host.h |  1 +
->  virt/kvm/kvm_main.c      | 10 ++++++++--
->  2 files changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 3bde4fb5c6aa..28a63f1ad314 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -205,6 +205,7 @@ struct kvm_io_range {
->  struct kvm_io_bus {
->  	int dev_count;
->  	int ioeventfd_count;
-> +	struct rcu_head rcu;
->  	struct kvm_io_range range[];
->  };
->  
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index eec82775c5bf..b7d4da8ba0b2 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -5924,6 +5924,13 @@ int kvm_io_bus_read(struct kvm_vcpu *vcpu, enum kvm_bus bus_idx, gpa_t addr,
->  }
->  EXPORT_SYMBOL_GPL(kvm_io_bus_read);
->  
-> +static void __free_bus(struct rcu_head *rcu)
-> +{
-> +	struct kvm_io_bus *bus = container_of(rcu, struct kvm_io_bus, rcu);
-> +
-> +	kfree(bus);
-> +}
-> +
->  int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
->  			    int len, struct kvm_io_device *dev)
->  {
-> @@ -5962,8 +5969,7 @@ int kvm_io_bus_register_dev(struct kvm *kvm, enum kvm_bus bus_idx, gpa_t addr,
->  	memcpy(new_bus->range + i + 1, bus->range + i,
->  		(bus->dev_count - i) * sizeof(struct kvm_io_range));
->  	rcu_assign_pointer(kvm->buses[bus_idx], new_bus);
-> -	synchronize_srcu_expedited(&kvm->srcu);
-> -	kfree(bus);
-> +	call_srcu(&kvm->srcu, &bus->rcu, __free_bus);
+For the whole series:
 
-I'm 99% certain this will break ABI.  KVM needs to ensure all readers are guaranteed
-to see the new device prior to returning to userspace.  I'm quite confident there
-are other flows that rely on the synchronization, the vGIC case is simply the one
-that's documented.
+Reviewed-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
 
-https://lore.kernel.org/all/aAkAY40UbqzQNr8m@google.com
+(as I internally reviewed it before submission)
+
+--=20
+Thanks,
+
+N=C3=ADcolas
