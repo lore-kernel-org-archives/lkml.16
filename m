@@ -1,111 +1,136 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E45BA8F5B
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:31:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2FB8F5B;
+	Tue, 24 Jun 2025 11:31:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750764668; cv=none; b=DVptsBYISxkZhmG3RyXLA1aY9NKN5kBh5k4TkO/ik4LJYQwNklSkq0usv4cupxAIGJAl/fCWRDL91TlkKUMrNrrDrOw25cZ8YNhlwMaHvtQP31zy79tUhqWWKiVhumO9C99nTRxZ+SZgF2kfgD5ZdB2EcYTKRFM6PdM4i8/mmFc=
+	t=1750764719; cv=none; b=iDADxVcRQB6FaGv+NMOmaxi71Y+PztECI0jAS3tubx5xQPQ7nJyQXAIB825P+pkP7KK+6BqLSNi5svJvmA/1PjUEEmKCBOP983qziW7nJuTZ/wKMNkP5oi+722yGLKnIafwtwvxvSH07pl8S1XiQPlPA0Hdof1QOKHHg3YYMwfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750764668; c=relaxed/simple;
-	bh=a6FQRtWgdc4H6ouPQjEBGjBObZvMnwOumkGQDBxKJ+s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fe0ovtEOTzEuNLKD05kyq0kiwF758cuRNg2JmELgg9nI91/M/fLddz+W9qIcT5rTcComgGTBAVkBJUeXZtaL6wOuyCLufMtJRfDtgvbqfIYMaDvNqcWXLeAg9bc7CoT2J6g78Nsf/0YvwWAIXIOIX1sOGP1i1iFrDNekkfchCVQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4bRN1m0MS3z10XPc;
-	Tue, 24 Jun 2025 19:26:20 +0800 (CST)
-Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id E58281402EA;
-	Tue, 24 Jun 2025 19:30:56 +0800 (CST)
-Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
- dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 24 Jun 2025 19:30:54 +0800
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemq200002.china.huawei.com (7.202.195.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 24 Jun 2025 19:30:54 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
-	<palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-CC: Alexandre Ghiti <alex@ghiti.fr>, <linux-riscv@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH] riscv: Prevent early kernel panic in instrumented apply_early_boot_alternatives
-Date: Tue, 24 Jun 2025 19:30:42 +0800
-Message-ID: <20250624113042.2123140-1-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1750764719; c=relaxed/simple;
+	bh=2ix86K+vswD1kB1r5fq4O5afvhxAVPsw/9mCx7uD4yk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eCZv3wOsNuwApeahKEDHPyT31ymH+BaLM93Bu/R2q5VIoFeI93XwexucEBqqnlemeM67iz/VamI4iQw0nG18pwtodcmBd0XMIoay1jYs8hSww2TNAwupomDvuqmxXLaRq8J7Hqlt4ECF99aETWKjIHfxofSOABJ+uNQyysyLMUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f42.google.com with SMTP id ada2fe7eead31-4e9c6b44477so2485705137.3;
+        Tue, 24 Jun 2025 04:31:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750764714; x=1751369514;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r8yRZ3F7uXYry7oEC+lchLqsK2A+yzNnqswlmUPTZhs=;
+        b=SoR/gwdl9lVhCz8LI/oqjBpIsaBAI0fP+gUfgvHwv3bcZFWlKQ2OJq5yHYkz2g5o0c
+         4cdjQmDFV4ntsVIyKqOJURlXRtvHmB6aaTa0c3hSn/pk/QbvJAJIhOUFZnCbZ/mywvUi
+         nKNQCYz2k0NbN3x5Tu1EUyUUDECwJIOgLtbPI6oKAKzq1/jo5Kkk66GPOZag+E9tkEvN
+         oWFgk9YGLuNPj062hAVzaSb9BJuiHLDj+xPAzKoWr8HV1Wck+sYhY9MeD971PxjWAFkb
+         cgkYp+gp1+9slPGv8qXaAtiqWNewB09gsRfrYrlXIVDcaLvGDtc+1yQ/6OeASDUPW0zQ
+         V8tw==
+X-Forwarded-Encrypted: i=1; AJvYcCUthKzB3P+qMea2KGdyuPsTpkn/4DiW5MHKA7Z3ywlYouq9+U0yDNAlidOj3yTYwX1HB2oSDcTXWraspi9w@vger.kernel.org, AJvYcCWAxRtyhiM5SpMXyBARwJW+yIqbAE3S0M/3Rnuy9MbD5NkKyMQPrs4bVSiDnFUBFwtB7SWVRK5rWOc0@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFfOpC+Qjh0nLY1IXU1RvM7/gC42PakyNvaznhkYVng7McX6xC
+	XtQodcA0UDrU8JBVFseu8PTY1iUrVklxvVhBPjNuffMR5VYnPNgL2zWwIlVGFLmO
+X-Gm-Gg: ASbGnctFGFrFdBV63o7Qdw+NWUycrmGoaiLXDezEDkwpl/rZrLZZyq1xxvzc1M9Frqo
+	eLsuDYnl1c/saAy5uY5366eRrERB/5/w/dtFfiPBK6obRtNBR64FNnL9IVWajxdwAOywY+ftARl
+	NlmMypUOi07oQaiGevMYY5nkitsEMoDJd5Sxs5YZ+Mp/xwIyYdihzINhew9Tp6jydOZTSbDPEZt
+	8yJIFCF9CJagV66C1AGqeVK3LBFNUJz3U5/G/rDQ13XLniRvHoIsPvujyNMYkOpX9SLdiCqH+YR
+	k1GCZbpNRj+Q1HMYYit1iJbPyxDndrLr9kLl0F6ND5wvxk3LYEUZcf/qp5hL/OISI8DRZzutSWm
+	+N1zkXfh+uwZshFM8Xl0mMA7IxlLV+gCQqUE=
+X-Google-Smtp-Source: AGHT+IHWpMlzDToW5PKwTEQGOBqT4Ax0odlHhK2QKdsyvb0aKxsG/Hw/BJw3taAkUvkEj3hUH6JSlg==
+X-Received: by 2002:a05:6102:570e:b0:4e7:866c:5cd2 with SMTP id ada2fe7eead31-4e9c2a2d75amr10025444137.2.1750764714109;
+        Tue, 24 Jun 2025 04:31:54 -0700 (PDT)
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com. [209.85.222.54])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4e9c2d198d0sm1605756137.5.2025.06.24.04.31.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 04:31:53 -0700 (PDT)
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-87f161d449dso3564315241.3;
+        Tue, 24 Jun 2025 04:31:53 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUxREXlonfE8ApAffg2Qv/j8OCw+R6s1lD1nmHRaN/LVN4bjwZEM6tZp4SILA0TsUBsEZfw/5FGd6CJk91+@vger.kernel.org, AJvYcCVbsfcdv/LhrSkNIiH0x+WGo8X6qxIS4AcXHmDpmrheiD2jVMmvl7x1S5MjXqZ0I6OInKRuIV8UlODw@vger.kernel.org
+X-Received: by 2002:a67:e95a:0:b0:4e6:d7af:a7b1 with SMTP id
+ ada2fe7eead31-4e9c2abb06emr8275997137.10.1750764712984; Tue, 24 Jun 2025
+ 04:31:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
- kwepemq200002.china.huawei.com (7.202.195.90)
+References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org> <20250623-gpio-sysfs-chip-export-v2-8-d592793f8964@linaro.org>
+In-Reply-To: <20250623-gpio-sysfs-chip-export-v2-8-d592793f8964@linaro.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 24 Jun 2025 13:31:41 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdV0W8u30yYfYd2zXhVJn_RZB0ZXj2Qyxasd-XUA4eZJpQ@mail.gmail.com>
+X-Gm-Features: Ac12FXy_H1_Hsj5u-Vk1f1AwQvSuxU4H5mRe_zS6ZcUTz99wb3VN5EsL_uI8z6M
+Message-ID: <CAMuHMdV0W8u30yYfYd2zXhVJn_RZB0ZXj2Qyxasd-XUA4eZJpQ@mail.gmail.com>
+Subject: Re: [PATCH v2 8/9] gpio: sysfs: allow disabling the legacy parts of
+ the GPIO sysfs interface
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
+	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Under FTRACE=y, DYNAMIC_FTRACE=n, and RISCV_ALTERNATIVE_EARLY=n, the kernel
-panics upon returning from _mcount() in the early boot path. This occurs
-during _start_kernel() -> setup_vm() -> apply_early_boot_alternatives().
+Hi Bartosz,
 
-The CC_FLAGS_FTRACE is only removed from alternative.c when
-CONFIG_RISCV_ALTERNATIVE_EARLY=y. Therefore, no function calls should be
-made to alternative.c during early boot in this configuration.
+On Mon, 23 Jun 2025 at 11:01, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Add a Kconfig switch allowing to disable the legacy parts of the GPIO
+> sysfs interface. This means that even though we keep the
+> /sys/class/gpio/ directory, it no longer contains the global
+> export/unexport attribute pair (instead, the user should use the
+> per-chip export/unpexport) nor the gpiochip$BASE entries. This option
+> default to y if GPIO sysfs is enabled but we'll default it to n at some
+> point in the future.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Fixes: a35707c3d850 ("riscv: add memory-type errata for T-Head")
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- arch/riscv/include/asm/alternative.h | 6 ++++++
- arch/riscv/kernel/alternative.c      | 4 ++--
- 2 files changed, 8 insertions(+), 2 deletions(-)
+Thanks for your patch!
 
-diff --git a/arch/riscv/include/asm/alternative.h b/arch/riscv/include/asm/alternative.h
-index 3c2b59b25017..c670b0cc55f4 100644
---- a/arch/riscv/include/asm/alternative.h
-+++ b/arch/riscv/include/asm/alternative.h
-@@ -31,7 +31,13 @@
- #define ALT_ALT_PTR(a)			__ALT_PTR(a, alt_offset)
- 
- void __init apply_boot_alternatives(void);
-+
-+# ifdef CONFIG_RISCV_ALTERNATIVE_EARLY
- void __init apply_early_boot_alternatives(void);
-+# else
-+static inline void apply_early_boot_alternatives(void) { }
-+# endif
-+
- void apply_module_alternatives(void *start, size_t length);
- 
- void riscv_alternative_fix_offsets(void *alt_ptr, unsigned int len,
-diff --git a/arch/riscv/kernel/alternative.c b/arch/riscv/kernel/alternative.c
-index 7eb3cb1215c6..5406c3301627 100644
---- a/arch/riscv/kernel/alternative.c
-+++ b/arch/riscv/kernel/alternative.c
-@@ -205,6 +205,7 @@ void __init apply_boot_alternatives(void)
- 	apply_vdso_alternatives();
- }
- 
-+#ifdef CONFIG_RISCV_ALTERNATIVE_EARLY
- /*
-  * apply_early_boot_alternatives() is called from setup_vm() with MMU-off.
-  *
-@@ -219,12 +220,11 @@ void __init apply_boot_alternatives(void)
-  */
- void __init apply_early_boot_alternatives(void)
- {
--#ifdef CONFIG_RISCV_ALTERNATIVE_EARLY
- 	_apply_alternatives((struct alt_entry *)__alt_start,
- 			    (struct alt_entry *)__alt_end,
- 			    RISCV_ALTERNATIVES_EARLY_BOOT);
--#endif
- }
-+#endif
- 
- #ifdef CONFIG_MODULES
- void apply_module_alternatives(void *start, size_t length)
--- 
-2.43.0
+> --- a/drivers/gpio/gpiolib-sysfs.c
+> +++ b/drivers/gpio/gpiolib-sysfs.c
 
+> @@ -968,6 +994,7 @@ int gpiochip_sysfs_register(struct gpio_device *gdev)
+>
+>         guard(mutex)(&sysfs_lock);
+>
+> +#if IS_ENABLED(CONFIG_GPIO_SYSFS_LEGACY)
+>         /* use chip->base for the ID; it's already known to be unique */
+>         data->cdev_base =3D device_create_with_groups(&gpio_class, parent=
+,
+>                                                     MKDEV(0, 0), data,
+> @@ -979,13 +1006,16 @@ int gpiochip_sysfs_register(struct gpio_device *gd=
+ev)
+>                 kfree(data);
+>                 return err;
+>         }
+> +#endif /* CONFIG_GPIO_SYSFS_LEGACY */
+
+"err" is always declared, but only used in this block.
+Hence if CONFIG_GPIO_SYSFS_LEGACY=3Dn:
+
+    drivers/gpio/gpiolib-sysfs.c: In function =E2=80=98gpiochip_sysfs_regis=
+ter=E2=80=99:
+    drivers/gpio/gpiolib-sysfs.c:962:13: error: unused variable =E2=80=98er=
+r=E2=80=99
+[-Werror=3Dunused-variable]
+      962 |         int err;
+          |             ^~~
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
