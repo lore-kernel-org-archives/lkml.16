@@ -1,131 +1,144 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A8C823774
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFFD017A2F8
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:40:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750732687; cv=none; b=TPE7moGBDEcqTbR17D24T6A5Srx8jRVYj9GixGrSZN+P67BiT2Q4/1Za7jokGK3VqJIifL5z4VbMoBxZbX+Ej7j5InyrxV4tQmmZt+Cr/s8MfDnmB5mTXT94/vPUvQc5k6AsgHMb5EEP83M5TBGlPRqtsORx0mYWjPReuXoQrFg=
+	t=1750732824; cv=none; b=KkbR0faTcVvkGC1kEoEzIUz3E8rdkO7E8KxpPzhUVZjY0WsS0K3AP7F28nOSwyERit2MAXouvB6WkFnKvMaZaZyHHYSPyr2qqCKQuX2N0VWkGFwNNPg2OIoW9QnjHv2CJurfEylGaqHIsCzeM+hfKyiJbVcVrf1pXWOa9OAJLZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750732687; c=relaxed/simple;
-	bh=X+F8/Va5MaJsDqMhZEjM18XX25g+AgZMnj5NbJTY2e0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WFyf0LyaseSPqizvHHDMSYgulYRmXJCXf6126MqKz0b6nc5i3ufTo8q5e25inqud0XImjpLteO6SB5kcN9tTQ4B69WHphtPUL1QiZ1fjvxByArit5la2CVSKdfQPWVLmxSsZgnA9ydUpqhdS7SozSFaUIP0PU6Y2+7e7+PjQlV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QUIKAo9J; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750732824; c=relaxed/simple;
+	bh=enTOF6FIzn9wWsAyYbgHTZ9l+Kvoh1jGzhMq4Ig/1JY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VUO8brQtlcOXSg1vlRAZ9bDvZFBsTLJF2ulPXHm7MQb9KxPEUyg2SHB1Fq0xZOLjus1H/LKfQK9IGVQBxO0GECzViNzeRU3yhWD+MNpK/p51gFlqcim7Z6KkouytTjsNRUfgpMq7CumywkJKh3QuThPCAB/hu4zrOJfdWJmqu8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=auQ/emyc; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QUIKAo9J"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NG1MVh021627
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:38:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=hdLg2oNfmHMNU0HKZgkFa6Rb
-	PHtVFDrUey/Iu/89Txo=; b=QUIKAo9JhqBLFYJdadDzaBuEw3kSDIRoyTKFQhw/
-	OxPlMFW5QQF/JYiWfDoSd9X817w3ECKTSYNUZ8urNSfkx/90Jxm+qRcxy7cVODa1
-	dW+mpGggyirZqYjOqarrHd36BU3SXXHyV9CQ3rz+06MAiWOAYO9UXRDo2lvv1Sfo
-	YNGm74ER7QzTAr76FFrGmtutTjszYSpVn9th5gsuZEs978WMzx28j9p7oN7qfQhT
-	fq60WAEhfy6E8hbm5WeazeW5F5mu8/RBAbUvvC7FkQ1zN6AB6Hai8dj7WyeWjJFt
-	NPmgEJF4H7KZnlgW94Im7wo+zIV+TSL08rVWCmP5DHXNWg==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f2rptr7w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:38:04 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c5cd0f8961so983555085a.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:38:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="auQ/emyc"
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a5828d26e4so733508f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750732820; x=1751337620; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NwpXcIqfYnXwglQhFL6GpMu90ycYFYBcj7QErSUqSgA=;
+        b=auQ/emyc/8mZNSoUU0/QoytTMJPExQbMJTeEVeVoV7v+deakUfMdwPrWHgLSMLiJgN
+         biyfaNkla4q3bkAOHge+NgSL7IW3eHtiLqscqWtKGGR3WNVn7bLmrRHzP9IyHOpUgduq
+         ACrt2JUdC39RG78KRFp3JacKuwUNY7fEocQL0cBinrKdIEH4pn2BGnwCdqf6WDa8VyvP
+         Smi5Gy/kOb6t0YD1SDuQlN7vLisnZiFLTt0HOHsW0Ikvzibk44CsgJAkOocVg5b5zbKp
+         i6CjM0PRKszrur0VHdPgJ4ic5DUMlM1tdUW4h4sV6A+YYQ5WrqzVDf6DyDT9AH6QK2S8
+         OhJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750732684; x=1751337484;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hdLg2oNfmHMNU0HKZgkFa6RbPHtVFDrUey/Iu/89Txo=;
-        b=SrsMAx1+hwRGqgojdsa5cmzQPIfuYu2MNFgtV9hMT6dzj6zTqzqqRQG0byXsx9tL/3
-         9bvFDdHeWLlKT+11jmozSG321nTAC1cMHHq2FEhUXajDkvT6He7luAfqdVlBo3bTYUiI
-         gpF4ec5lw9qhZTI8Jft5f/mu2UqVM0uAXCfLNosp0fgmd0fF/SkY7T8YbEvdKvElHxpT
-         1VcbKpCjmROdGXmB3jHrwLDcpOqm9hIEWYF8vbe7lbYUgHBvpMBOxnCB0M4QGVAtaUVM
-         WiMdCt2Z82UoOHUGFo4SCxctj3b5WZ1Mq+B5c7I6pX1B1D3bIrkP/52cr5xiZgnyaqB7
-         PJpg==
-X-Forwarded-Encrypted: i=1; AJvYcCX3o0+l/uogwuJ99s8MiX1jVzjeDDFFCeCu04w/S+Ov6EZlXS94Bw1hXiqmrG8d0AXG1tbjPCUFyh2fXlY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywom19ovrQMiyPyt76rq5FvjacILIGpWuk9JrE1pNWFue6vhhqU
-	Esf7QL9kgx99232lfdE6FDXYyRCWnQc/hKVOfBQSYU7wi82Oi/M/tk6dN4+0XUnoxufeZ6h1BKj
-	4ebPiagvULy22+y38c+Li7D3JSx70yXX6zkAikzGl6t4aHvbGyvaw5MHhnxIrfAYDqhk=
-X-Gm-Gg: ASbGncuDP87fCtDayFyFWV2DkNtH/LlfxAtQDkbjdQmnh6R1AbdI8BgD3UAh82lrtw2
-	JcM7VX0OvMEUp5OdYbOE+CsILDX8OTGklSQbkmfhq7/6UFBCc7iT7xCP0GvIYT9stSgqYcVG9Sv
-	YisSqBCDaRMc2iZBOPAH6/YJTioFScaT7HHFLGvG4W96mOUkqxUxtamUo8GGch4jNWlAJVbTcCK
-	ohp4Xn86RSkYCI0BEmyuNKYTYWcSgDBl2gt/Ok3UgBDag7XLgWKGrKcSIr8xsEXzst0D+GT/bGn
-	NakRd8cOvGXhr9FdpDTwktOFP9KgmI2bLYBKtZHIBOqQevB2ZX9vfzyjHASWbGcFMqyq+oX5yKA
-	0i9sK/GiySAYeiuFDwm7UScpGB6kASpg6ssA=
-X-Received: by 2002:a05:620a:29d4:b0:7cd:27e7:48c1 with SMTP id af79cd13be357-7d3f995655bmr2433476085a.48.1750732684189;
-        Mon, 23 Jun 2025 19:38:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGmk4ossS3aDlAyhYOxoxigRRcdh8Pf6rHbt2jlN0L4Pq1FMD/jGPhHO0PoS7VAEr/X0dOG3Q==
-X-Received: by 2002:a05:620a:29d4:b0:7cd:27e7:48c1 with SMTP id af79cd13be357-7d3f995655bmr2433473785a.48.1750732683796;
-        Mon, 23 Jun 2025 19:38:03 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-554e6dc186esm1070601e87.114.2025.06.23.19.38.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 19:38:01 -0700 (PDT)
-Date: Tue, 24 Jun 2025 05:37:59 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Ling Xu <quic_lxu5@quicinc.com>
-Cc: srini@kernel.org, amahesh@qti.qualcomm.com, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, andersson@kernel.org,
-        konradybcio@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
-        quic_kuiw@quicinc.com, ekansh.gupta@oss.qualcomm.com,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] misc: fastrpc: add support for gdsp remoteproc
-Message-ID: <loeqgkxkep54mrxwchvypqr3omogwpdukgvfc2dwuhp3ilxkhr@vtgxbgdoy2gu>
-References: <20250622133820.18369-1-quic_lxu5@quicinc.com>
- <20250622133820.18369-4-quic_lxu5@quicinc.com>
+        d=1e100.net; s=20230601; t=1750732820; x=1751337620;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NwpXcIqfYnXwglQhFL6GpMu90ycYFYBcj7QErSUqSgA=;
+        b=SIcrnRsshJWxWDWTG087BrpcxnlLXzuctzcz84BsMFaMOPOHJa0ONkLildrZ/61CeY
+         04BI7Oq/wkIFjF5ADCKUgEl3FA/Zdrjh6x+zrtu8bsOut2FaBEGhz0D9RHZ4ZSzir8O+
+         b25rK7gN/PXAcjU6nlGEvzNd5hbvd7fwpi1he5Ea9sW8hslVtsFjv/y/pCJppaSdhzx1
+         Xkyzl78H9jWbyZ9bIKu04zR393B/z7Kw3QA+BXVEWDZKAvMHMs9EvV2hyNsXexojlZNU
+         9FfpBfVHKz8SGNQXNzBscqBsIBKpzhuPEEZXYSCG/62qib99E1iaIECnmPjyxOLP8Jvj
+         bh5w==
+X-Gm-Message-State: AOJu0YyjBUdlWVf+Q6jPBEwL6WUVvAKMQn4ENoDhWgAr31FJQN+Y3Ld2
+	WoFyMSdBo995x4Sex3E3vOR3xQ4N/4NXzjoy6xcpS6tnRC8pgDM7kGAEi5+7DzLXQxg=
+X-Gm-Gg: ASbGncufkLYJnIRs7PqML1Y30Rv6fr6N4CnBM7WIxWROkh57PfAm0haU2KPCgWHoKbK
+	X8eVt87jQsVOhzSSrbx7gik6kQKb0pT1acOhr9A91aYXuQsaqXUITcnUx4gcEGAlZRx6fNQaEn9
+	szy+OIf0Q6W0zLb/oUovzHLlnuB3YRW9nrU2zxYiEB1WS9RSd75J3Awyii8Trf5GzatLTgeHkeW
+	FtMD2bESrTAoMqhkOhFMvmiglZErFuE725OezQ1jMZzYdmARKamx1oZlS3+txwGUNKBW45+jNRp
+	VUexvHQifONJaZlEUnyWKWeIym2T2BWdemKEvsH8m7uOqmpFHI9g1FBufSmcM7rDZw8=
+X-Google-Smtp-Source: AGHT+IEbqdclaAWUAWaYHwVY2zKq3xTnPeMuXhaeWz6w8mGwqFsDw03lzO3ccYAE94DQmRS/3SPWxA==
+X-Received: by 2002:a05:6000:2486:b0:3a5:3369:52f3 with SMTP id ffacd0b85a97d-3a6d12d736emr3843326f8f.3.1750732820059;
+        Mon, 23 Jun 2025 19:40:20 -0700 (PDT)
+Received: from [10.202.32.28] ([202.127.77.110])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3158a331babsm11877556a91.46.2025.06.23.19.40.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jun 2025 19:40:19 -0700 (PDT)
+Message-ID: <c9467d9e-5cac-49b8-b839-179dc79d0bce@suse.com>
+Date: Tue, 24 Jun 2025 10:40:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250622133820.18369-4-quic_lxu5@quicinc.com>
-X-Authority-Analysis: v=2.4 cv=NdDm13D4 c=1 sm=1 tr=0 ts=685a0f8c cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=lc4KdpPQecCvDiYUKO0A:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDAyMSBTYWx0ZWRfX5xzFb5fMXvm8
- UGgNa4sfMmE3oN5j61guMLnHc+HoUO4jHw4jen0+j0clTtrWDZf49Ni0SFUkmPgZVB4kWcpBw/B
- cYC3Bwa2Ba1OH69WBchDu1alIS0TmWnvjrGKO1/YAGKy9yhKr5uyiC1S2hmUp2y6gu/7dZ2oEce
- 9qhfPs+dA1gQzgAIGFmmXe1nF6CcAqcmdArjOB2c7DRRPyfVjPlI/+2Zs208QOeTt//FC3erMG/
- klXf1JWMSG1lL9ddOQwLYafqT8KwB948NjPZfDBSJ4OLDF35wnd3KfHLtp9vzV+r2NdfQ6pH0/R
- c9EHoyfX1gtFuKVgOMQ2DYkAOMNXr6tRhZTXrQY3uV5o9pwJTDk/TqsLoIzJ4s0mu+1hFvl9TSg
- 3ZtOjkPIV6Pq0TyQIDHPo8Lzzy/uQ0aXXha7XZplXCYF0Fwwe0hHJtsZf8A9qaFQIwfFHupz
-X-Proofpoint-ORIG-GUID: pXU-Zjmci11ZFfYu7upusQjvp2KBujef
-X-Proofpoint-GUID: pXU-Zjmci11ZFfYu7upusQjvp2KBujef
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_01,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 mlxscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
- phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=919 adultscore=0
- clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506240021
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ocfs2: kill osb->system_file_mutex lock
+To: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+ Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
+ Joseph Qi <joseph.qi@linux.alibaba.com>, jiangyiwen <jiangyiwen@huawei.com>,
+ Andrew Morton <akpm@linux-foundation.org>, ocfs2-devel@lists.linux.dev,
+ Diogo Jahchan Koike <djahchankoike@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>
+References: <934355dd-a0b1-4e53-93ac-0a7ae7458051@I-love.SAKURA.ne.jp>
+ <faf70481-09dd-4c7a-bd43-f1e8bec877cb@suse.com>
+ <675ea747-5c05-410c-888c-fe6dd2b48d87@I-love.SAKURA.ne.jp>
+From: Heming Zhao <heming.zhao@suse.com>
+Content-Language: en-US
+In-Reply-To: <675ea747-5c05-410c-888c-fe6dd2b48d87@I-love.SAKURA.ne.jp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 22, 2025 at 07:08:20PM +0530, Ling Xu wrote:
-> The fastrpc driver has support for 5 types of remoteprocs. There are
-> some products which support GDSP remoteprocs. Add changes to support
-> GDSP remoteprocs.
+On 6/24/25 10:17, Tetsuo Handa wrote:
+> On 2025/06/24 10:33, Heming Zhao wrote:
+>>> @@ -112,11 +110,10 @@ struct inode *ocfs2_get_system_file_inode(struct ocfs2_super *osb,
+>>>        inode = _ocfs2_get_system_file_inode(osb, type, slot);
+>>
+>> In my view, the key of commit 43b10a20372d is to avoid calling
+>> _ocfs2_get_system_file_inode() twice, which lead refcnt+1 but no place to
+>> do refcnt-1.
+> 
+> My understanding is that concurrently calling _ocfs2_get_system_file_inode() itself
+> is OK, for the caller of ocfs2_get_system_file_inode() is responsible for calling
+> iput().
 
-Please don't mix code refactoring with adding new features. Split this
-patch accordingly.
+We have different perspectives on calling _ocfs2_get_system_file_inode().
+In the current code logic, _ocfs2_get_system_file_inode() is expected to
+be called only once. Subsequent local system inodes will be retrieved from
+the cache (via get_local_system_inode()).
 
 > 
-> Signed-off-by: Ling Xu <quic_lxu5@quicinc.com>
-> ---
->  drivers/misc/fastrpc.c      | 57 ++++++++++++++++---------------------
->  include/uapi/misc/fastrpc.h | 11 +++++--
->  2 files changed, 33 insertions(+), 35 deletions(-)
+> The problem commit 43b10a20372d fixed is that there was no mechanism to avoid
+> concurrently calling
+> 
+>    *arr = igrab(inode);
+> 
+> which will result in failing to call iput() for raced references when
+> ocfs2_release_system_inodes() is called.
+> 
+>>
+>>>          /* add one more if putting into array for first time */
+>>> -    if (arr && inode) {
+>>> -        *arr = igrab(inode);
+>>> -        BUG_ON(!*arr);
+>>> +    if (inode && arr && !*arr && !cmpxchg(&(*arr), NULL, inode)) {
+>>
+>> Bypassing the refcnt+1 here is not a good idea. We should do refcnt+1
+>> before returning to the caller.
+>>
+>>> +        inode = igrab(inode);
+> 
+> We do refcnt+1 immediately after cmpxchg() succeeds, for
+> ocfs2_release_system_inodes() which clears *arr is the place for
+> doing refcnt-1.
+> 
+>>> +        BUG_ON(!inode);
+>>>        }
+>>> -    mutex_unlock(&osb->system_file_mutex);
+>>>        return inode;
+>>>    }
+>>>    
+>>
 > 
 
--- 
-With best wishes
-Dmitry
+In my view, your patch has logical errors - at least from my perspective,
+I have to vote NAK.
+
+In my view, for this syzbot bug, the better solution is to block/deny write
+operations during the ocfs2 mounting phase.
+There are many syzbot bugs related to writing data during the mounting phase.
+I don't believe there is any reason a user would want to write data before the
+filesystem is mounted.
+
