@@ -1,66 +1,67 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7832A2E7631
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:30:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9319248898
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750793418; cv=none; b=RZrCP3639xhVdP5MB4Qkv/faqG2nY4nkXQBVuqeU9rZWE6ZFbHb8mhDSMOcf3OcS2m/7sVXhXoX+ybMBPpypBEpHGVl0lGFQNTY1QBcQFESqF7liYWAVt0RYBNB5Zj77SthcQfOUnniBeecGCk1ryWgzzi6HyxrTjnHHCHiwZrg=
+	t=1750793448; cv=none; b=TFOYSPR4NuZ3BNDWsoeBQnARIkNNIakd+74+eVDjUrBPqKbYiRxQcJf35OCwzhu6RtaxLMazGlRhLSFs4iBd28Sau8YwXPhaXQWjtVrEXxI1R85z5KBXdeO3mzH5VWJaYBM3g2ekNQKuKuoRlprtNyMTSnZnK87tSRuffW8/rik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750793418; c=relaxed/simple;
-	bh=95kehBe6R8bMjrNG+/GmoU/BYyhXXB9zEn8fo8sl8ZI=;
+	s=arc-20240116; t=1750793448; c=relaxed/simple;
+	bh=X3F+dLhp/1RYHB0JV2VsEO0q97YdigXYU0mSHzIlmR0=;
 	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=qjjSeQKFJ830349aZCWRVbmFEASNWdV3xHteQ+yodYnsaXAgY+Fsjib3pXF/l+/K2N6P1Ds1uIPWpeSkcArwrxeYF6/MMKMN87pB0OpyiG4xUkGrP7ur3DBtz6G0VzXmhtA+AGcpz2Y+j+Vtt+hnnJq2lct3UGamqUW5uTkF6Ww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=WwWGq90+; arc=none smtp.client-ip=209.85.208.44
+	 In-Reply-To:Content-Type; b=clrq2aBl7nS6vCYPU+f10Q6Nx2Os3hc/7/hysUNp6t9wtBQa3KY1hqmKJy+/vSJQ2Ow06JhYUlR2xac9ywdwxfMqhKRxII7lNdU6E196WUP719CNg6gRmFSgePHKLepO4MlTvbl/QevaBpqCpXsEX3LGxXMxH3cPxHxpbeJxarI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=HEKnNKEx; arc=none smtp.client-ip=209.85.208.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="WwWGq90+"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-6088d856c6eso1629589a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:30:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="HEKnNKEx"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-6097d144923so384105a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:30:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jacekk.info; s=g2024; t=1750793415; x=1751398215; darn=vger.kernel.org;
+        d=jacekk.info; s=g2024; t=1750793445; x=1751398245; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=DMpQ9unMD0vkQzXMI0Rh2M7VMEt4C5NAu9LffZ9WmFQ=;
-        b=WwWGq90+NSP3pMUXWJTHWFBjb9IxxAz9wfcjmlwmX+PN0gUzGfjuVwzRv9cL0IWx9g
-         MypweQy2BgApDjzcxRKA0f3DP137QcuiKxUWO7RoPoj2V4JRJUL80+erUWDytYnN2ZEe
-         EX2roreARQ9ECqljy+IdEQHVJTV06M6+f3vF2xtOkUXUG5UwcL6UcBpBBmGPBpJllvfa
-         YKXfnueHEUe2cKiY7RNRzWSnKrdS/JuewkkUYZudpURCZqMsEzOXs5NrmTh6jE2D4tYD
-         j5eoklTgiED1xWlW2YnnUYp7Z+5f7GJ87mI0ml+j7F+5Q4jyc/vskeQGVh5TMBrY1p2H
-         nboA==
+        bh=Or7Q25AbhPUIuP5FJogLrAq14LkOMcW8AbOwVQUU4U0=;
+        b=HEKnNKExPG8INrU9oN/XkKfL6UpbeYXzQfKL+Xi7TbrwZLU15XbWVUGuQ7oqQeRHA9
+         XLuMgiYE0vaueEyaGIIg28pm6E8p8q8TYhcM6amDkAsyZlx3wsP3TRB/T744EKeBQuMr
+         lGML4DlORL1Mcbw6Nhcg+1woxRNZIypONuu/QSmScOO5eS1gqyOQX8H5SqwXqQQs4HXl
+         gltj18OGhFu5ix/j5BDxJDL/b+BGtaUZ26V5Bh7keOhWwWcekwSdvEqYMHd20m2NiuZg
+         YO+v4nWYE/uYbqcscE+UcKGAQqsO8maRh9BLXORYN5fg6McYsg73CVERsgWK8umTKwd6
+         Apew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750793415; x=1751398215;
+        d=1e100.net; s=20230601; t=1750793445; x=1751398245;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:subject:user-agent:mime-version:date:message-id:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DMpQ9unMD0vkQzXMI0Rh2M7VMEt4C5NAu9LffZ9WmFQ=;
-        b=B5ITivj1QJIcwXNUzsv+6z1moB7yPQ2uo79iajW4+x9K1/RAt95k5HTw4S5BfA3LGe
-         6hTJ46MYCHRs5tWHIOR70Tiyc0zp15Ecuu/nHSbEd8W99J8p0jgQ7TzZO6gWQsFGbAsg
-         zTz3qzXA7TtOlOxDpEiqo4B2/TJtv0ZR5lK8S0hMRuR9kYf9yzKHNCkPyqfO5KKCFJpe
-         9zobEOETq+5Mjn7+a9hQJ8nyQjJsfdx15p9jbGb2tQAPSulcTbU2j8G3S/yfTehTj98r
-         ksNbWxaqsbHviQo/cXkf+a5VhhrXpE31wsxxqeVK5UQvDx4RpnD+TBi+cFcUd4X1EJ2g
-         P+0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVGMYUTkCcGGvhygtVq05ZTwOja1DHRfJ5t+idBCFtDU5dHzojWnDqfMWq9Vu91Ro/3iyCr1OLIN2mZQik=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxFEYdU6Lk6NQbpJXMp0t0hg1bpf8tthNuPuHkExyHeLqHZaH4D
-	hbk2f+FA9wXyMw9P1gqAmYAAiXn0B0zpV4rz5uGFn4SdJzliM+UB/UBFVctqDfE9IQ==
-X-Gm-Gg: ASbGncus73nuhpw06meVmAHvr3I/+UDJ83jLHaDtyi0QzZJFhlQ+YUzbUN1wZEjjK61
-	wCBJ0AW7ncF+WVVaF+tSgGVXgzMGifp0+ug8HrYNwUFC9bpVpvQYURYyhDqbx8iOom/pfnqMNtG
-	S7S7g4WQ5lX8pbqP2UzjPwvzkWQG+qdKksZFW70Fg7HA5FgeDsumsXaMTb+YEJWhWtt7lsPxwxb
-	2HrKzbLp9dxUkIqKGtUWylu+XsEzm6lExlGOyVeD/8ABKRlDIuUJdJEmTvs3RRLPW9BiGJlkQhn
-	C8qeI6yZWl9t2Uc5aGgUr2c4Q3k0gZ2YeiBt2rbN3vHMUL0ETutUc6qGWrmxx/7M
-X-Google-Smtp-Source: AGHT+IFezbP2szbIE/wQs/O6ve43dXVC5PTJwpz2lY37bdKGvUZx8jqZCzVi52lj1/qGG/hdQGvRXg==
-X-Received: by 2002:a05:6402:3482:b0:606:a26c:6f46 with SMTP id 4fb4d7f45d1cf-60c4dcd1340mr327a12.19.1750793414839;
-        Tue, 24 Jun 2025 12:30:14 -0700 (PDT)
+        bh=Or7Q25AbhPUIuP5FJogLrAq14LkOMcW8AbOwVQUU4U0=;
+        b=DhTcRAMEJDyPfyAXsU/Wz6cjUFhLT7MWsbH3cUp1eiShIQGP56ZMoKzhq0yxGMjrAw
+         Z/6wJA/GbbCaLiXxHHKfjLIY6MUWRFMlWVP9w60h6U+syJz4inmzmTraGoCyTQgjQWEv
+         bJBNVhgTbI1w/vdN0bVKn0JqdFQwLp1g9czVNKpqzTthU0engmaNxXTSlAiwMLad0Bkp
+         N4aGlViyH7jolPmMiqOoUtkn2o26FoepE8yhXnyDhJwhtPmDcTSFYozEy4qLgesiPnPo
+         ChP/C0NAu8WFhRHOR6ajn2dacpKh/RwirruBoUGfQDGlKYs9ogIA1q4Bks/AYiQYO6nG
+         C/QA==
+X-Forwarded-Encrypted: i=1; AJvYcCVlB+EwjDJUAXt2srz+14ldA+XOgLDBRIEVlgS2c9BxTOPH1bBoh7imhVGE4JeAYCrKGe2b3tL7WQ4iLao=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxyEK2ELcu5xmns8TLFRh7FsNrkpUd5QwNskBBo1euoYHyWTtTc
+	ZEUwo51/Evj78annFoX2zHzgF0ka0n/G2pTHrtCBQ4DWZegyjqymXlS/WcJzy8GxmA==
+X-Gm-Gg: ASbGncv5VN7NaDhpNxktljiekE+LhWfF3MO6LyS/koEtLizxjhd5stPzaAVBRHkT+MI
+	dMBr7gx4vRMcxkGZsY3GWyLD7FS+EnfJ/cb3rB5KQIVbc6ISiYfgQ18JqyqgNNZHM5elZSzCQ8r
+	PVuApuYW1YMRJ1fBQqwYoBTSRc8HigxGi5ftNb3ekVnsxnHicTH7eABOHEl1P0YclZ0slN1kTOc
+	XmH3ti481BLceszvzM2Ifosl9tegGaMY/HE7nJTnULf8kKTmoajTLHqb+44yxO0ADlvkjuPq4E2
+	8Q4DunckkbRc1jqvntClUHbVjYTPqfuUxOY6bF4cmnzu52AbRiYgFnMXeEJUBDauRJgrBRfIdVA
+	=
+X-Google-Smtp-Source: AGHT+IFWrSuPUZPjo4e14unGnQ8k0U6yS6NVsT08IObwRPjCJ/u8xTjt4ObSkbxqTVOZE0pmb+ZVIQ==
+X-Received: by 2002:a05:6402:42d3:b0:604:efcc:bf5c with SMTP id 4fb4d7f45d1cf-60c18a0dc03mr4931792a12.1.1750793445164;
+        Tue, 24 Jun 2025 12:30:45 -0700 (PDT)
 Received: from [192.168.0.114] ([91.196.212.106])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c2f46820asm1455544a12.47.2025.06.24.12.30.14
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054080a54sm928625866b.102.2025.06.24.12.30.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 12:30:14 -0700 (PDT)
+        Tue, 24 Jun 2025 12:30:44 -0700 (PDT)
 From: Jacek Kowalski <jacek@jacekk.info>
 X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
-Message-ID: <9aaa80eb-91bd-4b44-814a-65f740f00d5a@jacekk.info>
-Date: Tue, 24 Jun 2025 21:30:13 +0200
+Message-ID: <96d55057-28f3-4f77-b5ac-6f2b6769aeb5@jacekk.info>
+Date: Tue, 24 Jun 2025 21:30:44 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,7 +69,7 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [PATCH 2/4] e1000e: drop checksum constant cast to u16 in comparisons
+Subject: [PATCH 3/4] igb: drop checksum constant cast to u16 in comparisons
 To: Tony Nguyen <anthony.l.nguyen@intel.com>,
  Przemek Kitszel <przemyslaw.kitszel@intel.com>,
  Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
@@ -86,36 +87,36 @@ Content-Transfer-Encoding: 7bit
 Signed-off-by: Jacek Kowalski <Jacek@jacekk.info>
 Suggested-by: Simon Horman <horms@kernel.org>
 ---
- drivers/net/ethernet/intel/e1000e/ethtool.c | 2 +-
- drivers/net/ethernet/intel/e1000e/nvm.c     | 2 +-
+ drivers/net/ethernet/intel/igb/e1000_82575.c | 2 +-
+ drivers/net/ethernet/intel/igb/e1000_nvm.c   | 2 +-
  2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/e1000e/ethtool.c b/drivers/net/ethernet/intel/e1000e/ethtool.c
-index 9364bc2b4eb1..80435577dc0d 100644
---- a/drivers/net/ethernet/intel/e1000e/ethtool.c
-+++ b/drivers/net/ethernet/intel/e1000e/ethtool.c
-@@ -959,7 +959,7 @@ static int e1000_eeprom_test(struct e1000_adapter *adapter, u64 *data)
+diff --git a/drivers/net/ethernet/intel/igb/e1000_82575.c b/drivers/net/ethernet/intel/igb/e1000_82575.c
+index 64dfc362d1dc..12ad1dc90169 100644
+--- a/drivers/net/ethernet/intel/igb/e1000_82575.c
++++ b/drivers/net/ethernet/intel/igb/e1000_82575.c
+@@ -2372,7 +2372,7 @@ static s32 igb_validate_nvm_checksum_with_offset(struct e1000_hw *hw,
+ 		checksum += nvm_data;
  	}
  
- 	/* If Checksum is not Correct return error else test passed */
--	if ((checksum != (u16)NVM_SUM) && !(*data))
-+	if ((checksum != NVM_SUM) && !(*data))
- 		*data = 2;
- 
- 	return *data;
-diff --git a/drivers/net/ethernet/intel/e1000e/nvm.c b/drivers/net/ethernet/intel/e1000e/nvm.c
-index 56f2434bd00a..d1bc69984d71 100644
---- a/drivers/net/ethernet/intel/e1000e/nvm.c
-+++ b/drivers/net/ethernet/intel/e1000e/nvm.c
-@@ -563,7 +563,7 @@ s32 e1000e_validate_nvm_checksum_generic(struct e1000_hw *hw)
- 		return 0;
- 	}
- 
--	if (checksum != (u16)NVM_SUM) {
+-	if (checksum != (u16) NVM_SUM) {
 +	if (checksum != NVM_SUM) {
- 		e_dbg("NVM Checksum Invalid\n");
- 		return -E1000_ERR_NVM;
+ 		hw_dbg("NVM Checksum Invalid\n");
+ 		ret_val = -E1000_ERR_NVM;
+ 		goto out;
+diff --git a/drivers/net/ethernet/intel/igb/e1000_nvm.c b/drivers/net/ethernet/intel/igb/e1000_nvm.c
+index 2dcd64d6dec3..e654310b1161 100644
+--- a/drivers/net/ethernet/intel/igb/e1000_nvm.c
++++ b/drivers/net/ethernet/intel/igb/e1000_nvm.c
+@@ -636,7 +636,7 @@ s32 igb_validate_nvm_checksum(struct e1000_hw *hw)
+ 		checksum += nvm_data;
  	}
+ 
+-	if (checksum != (u16) NVM_SUM) {
++	if (checksum != NVM_SUM) {
+ 		hw_dbg("NVM Checksum Invalid\n");
+ 		ret_val = -E1000_ERR_NVM;
+ 		goto out;
 -- 
 2.47.2
 
