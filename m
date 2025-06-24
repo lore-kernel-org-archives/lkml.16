@@ -1,41 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 272322F273A;
-	Tue, 24 Jun 2025 15:08:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BAD2F1984;
+	Tue, 24 Jun 2025 15:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777732; cv=none; b=j5s4o/keDybFEIi9l2W21tqxv+1rn1/CSUd4F5W+J4aMflELx7ekm8FI+aH7+6Ltik7qotmyeKlxT0vh2Mi7n48SU9PgbF/9UCHH6u1Y+HmhPot2EZsJE309g1kOfsAqkiAHRGlZE+cLpnVB/zobj2PujE6L8LTKgVWIajr6ZyA=
+	t=1750777731; cv=none; b=U9SUBBcOw8GCxr3PhmXIOaqRKTPbsJEH/K34JJBRVGFWxO0VeBvnu2PSd4NAuiQxbld3TdZHFkiBYl8Lg5f4JstEsdznTdiSCIk6pZ8bVIemfKGh7K9ngFc5chKLzt1R1F/guGbab+/pqwTnCFdimwVxspr6XUTqRp4htO8tSWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750777732; c=relaxed/simple;
-	bh=TYExhak6MbqHe07uVTZCXrE91anp6T9Nx3wR/oydH6A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FXelHb/04l2/jKgbZErd/eGfZmPdQE9hl3h4LCS6tuza/ZDesb5gj+LXZfAw1TP9cN70f9/Wx8w4IMqcdxYK+0L8oesh+1t9NSEBoW+JjmUJuTPTbkNAKLPJhMySrin1xxCl08Q2kggmOky0nojlqTHDk20UTbL/aSGucKgRGIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkHUt0BO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750777731; c=relaxed/simple;
+	bh=NFlza7NMXYr7yoaM4juKHHENgegAA1/AX4WT/TjqqEs=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aOfzl0doZDd7qwZoP4T92Kv0OI4V5CxKGRMzScDaEY/UqUPrCVVgHPYv8QpOaFaZG1Lcbjmp44IcZ2edAgi6Vl5jzbc/hyT4YkwDP3Rs0bBY55tuyQIf9/aCmnAE/Fy7ylZV99XIhOqAt/+GqvyguPrYPOJ4kJVCfIuuTYwaWAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=mzJwNzZB; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkHUt0BO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A184C4CEF3;
-	Tue, 24 Jun 2025 15:08:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750777731;
-	bh=TYExhak6MbqHe07uVTZCXrE91anp6T9Nx3wR/oydH6A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gkHUt0BOl4kdJWPJuX+N6iCKkN0crmgOsB9Pv9Z/Ja0FmiMmpW33R30frxbPGDNuE
-	 P9y3zNltD/wmbnVKljFtu+P4AuO3Owpy+EbN1M8OvhDI8J8ZKJKZlsTX9Drz+iOvHM
-	 hZaLJaJuCtFeU7psc5Ljawff1/CONzAexfB3th2NAFxgq2/ME17zJO6UH92Gl+qOeC
-	 /S1QXg/HeSM/oFEWTM7e7p4Z/GfZ5+i0YWQe2gtUA1eOck+Th6Gw7SKDgvT+RqV+Wu
-	 2Mhsj/ats5pVKzRurtp1ym+gadW9CJ94UUWhGVZCN7NO2GWIkKFIVasw/YS9llTfFj
-	 dAM0BRuq2shfA==
-From: Masahiro Yamada <masahiroy@kernel.org>
-To: linux-kbuild@vger.kernel.org
-Cc: Masahiro Yamada <masahiroy@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 46/66] kconfig: gconf: remove init_tree_model()
-Date: Wed, 25 Jun 2025 00:05:34 +0900
-Message-ID: <20250624150645.1107002-47-masahiroy@kernel.org>
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="mzJwNzZB"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1750777729; x=1782313729;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=NFlza7NMXYr7yoaM4juKHHENgegAA1/AX4WT/TjqqEs=;
+  b=mzJwNzZBzcd8CAqxFIyPsTm9EX/Kc/9SR3WlcpaA6Hak8DOloy8Xl0Xo
+   0StZJeMOyKzi8qnaQ48OPedOy5ZO9AvZXy1Y26147l2fL1JRaaT2Ap2CY
+   Q6tUsyR4lrCgIef/knF5QCTwxMB5dsKOQyvepjKfYjL1C2QN3YOlJW6uc
+   +MgaEXoM8XEcNQUUoMi2Agcdo7v9ejrQ6/hyv/bc7joBy0iZwpLaVfd3f
+   sWfXo0Qw+44fyueZNvYTv0QRRCsIkY+6kGwBdfAGyXwl054eBCO20uj76
+   CKqb5zGYVEVRaqufSpi5ES93VafFbw5S9qbhzwGrXAljPhA1IUbaXBK58
+   Q==;
+X-CSE-ConnectionGUID: 4+RzxTN1Qsa6vG3Bpty4nA==
+X-CSE-MsgGUID: elByiUfvT9SJiDW4RZv8kg==
+X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
+   d="scan'208";a="42688180"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2025 08:08:45 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 24 Jun 2025 08:08:37 -0700
+Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Tue, 24 Jun 2025 08:08:37 -0700
+From: <Ryan.Wanner@microchip.com>
+To: <mturquette@baylibre.com>, <sboyd@kernel.org>,
+	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
+	<claudiu.beznea@tuxon.dev>
+CC: <robh@kernel.org>, <linux-clk@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<varshini.rajendran@microchip.com>
+Subject: [PATCH v2 08/32] clk: at91: clk-programmable: use clk_parent_data
+Date: Tue, 24 Jun 2025 08:08:05 -0700
+Message-ID: <44cbeb6ac133a44e0c09da82434cda10c894a66a.1750182562.git.Ryan.Wanner@microchip.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250624150645.1107002-1-masahiroy@kernel.org>
-References: <20250624150645.1107002-1-masahiroy@kernel.org>
+In-Reply-To: <cover.1750182562.git.Ryan.Wanner@microchip.com>
+References: <cover.1750182562.git.Ryan.Wanner@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,84 +63,70 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Move the relevant code into init_left_tree() or init_right_tree().
+From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Use struct clk_parent_data instead of struct parent_hw as this leads
+to less usage of __clk_get_hw() in SoC specific clock drivers and simpler
+conversion of existing SoC specific clock drivers from parent_names to
+modern clk_parent_data structures.
+
+Signed-off-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+[ryan.wanner@microchip.com: Remove SoC specific changes those will be
+added in a separate commit.]
+Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
 ---
+ drivers/clk/at91/clk-programmable.c | 8 ++++----
+ drivers/clk/at91/pmc.h              | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
- scripts/kconfig/gconf.c | 36 ++++++++++++++++--------------------
- 1 file changed, 16 insertions(+), 20 deletions(-)
-
-diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
-index 32cf6ae0e5f2..0977d906bea6 100644
---- a/scripts/kconfig/gconf.c
-+++ b/scripts/kconfig/gconf.c
-@@ -1245,17 +1245,13 @@ static gboolean visible_func(GtkTreeModel *model, GtkTreeIter  *iter,
- 		(opt_mode == OPT_PROMPT && menu_has_prompt(menu));
- }
- 
--static void init_tree_model(void)
-+static void init_left_tree(void)
+diff --git a/drivers/clk/at91/clk-programmable.c b/drivers/clk/at91/clk-programmable.c
+index 1195fb405503..275ca701f294 100644
+--- a/drivers/clk/at91/clk-programmable.c
++++ b/drivers/clk/at91/clk-programmable.c
+@@ -215,7 +215,7 @@ static const struct clk_ops programmable_ops = {
+ struct clk_hw * __init
+ at91_clk_register_programmable(struct regmap *regmap,
+ 			       const char *name, const char **parent_names,
+-			       struct clk_hw **parent_hws, u8 num_parents, u8 id,
++			       struct clk_parent_data *parent_data, u8 num_parents, u8 id,
+ 			       const struct clk_programmable_layout *layout,
+ 			       u32 *mux_table)
  {
--	tree2 = gtk_tree_store_new(COL_NUMBER,
--					  G_TYPE_STRING, G_TYPE_STRING,
--					  G_TYPE_STRING, G_TYPE_STRING,
--					  G_TYPE_STRING, G_TYPE_STRING,
--					  G_TYPE_POINTER, GDK_TYPE_COLOR,
--					  G_TYPE_BOOLEAN, GDK_TYPE_PIXBUF,
--					  G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
--					  G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
--					  G_TYPE_BOOLEAN);
-+	GtkTreeView *view = GTK_TREE_VIEW(tree1_w);
-+	GtkCellRenderer *renderer;
-+	GtkTreeSelection *sel;
-+	GtkTreeViewColumn *column;
-+	GtkTreeModel *filter;
+@@ -224,7 +224,7 @@ at91_clk_register_programmable(struct regmap *regmap,
+ 	struct clk_init_data init = {};
+ 	int ret;
  
- 	tree1 = gtk_tree_store_new(COL_NUMBER,
- 				   G_TYPE_STRING, G_TYPE_STRING,
-@@ -1266,15 +1262,6 @@ static void init_tree_model(void)
- 				   G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
- 				   G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
- 				   G_TYPE_BOOLEAN);
--}
--
--static void init_left_tree(void)
--{
--	GtkTreeView *view = GTK_TREE_VIEW(tree1_w);
--	GtkCellRenderer *renderer;
--	GtkTreeSelection *sel;
--	GtkTreeViewColumn *column;
--	GtkTreeModel *filter;
+-	if (id > PROG_ID_MAX || !(parent_names || parent_hws))
++	if (id > PROG_ID_MAX || !(parent_names || parent_data))
+ 		return ERR_PTR(-EINVAL);
  
- 	filter = gtk_tree_model_filter_new(GTK_TREE_MODEL(tree1), NULL);
+ 	prog = kzalloc(sizeof(*prog), GFP_KERNEL);
+@@ -233,8 +233,8 @@ at91_clk_register_programmable(struct regmap *regmap,
  
-@@ -1317,6 +1304,16 @@ static void init_right_tree(void)
- 	GtkTreeModel *filter;
- 	gint i;
+ 	init.name = name;
+ 	init.ops = &programmable_ops;
+-	if (parent_hws)
+-		init.parent_hws = (const struct clk_hw **)parent_hws;
++	if (parent_data)
++		init.parent_data = (const struct clk_parent_data *)parent_data;
+ 	else
+ 		init.parent_names = parent_names;
+ 	init.num_parents = num_parents;
+diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
+index 54d472276fc9..34036f2d0578 100644
+--- a/drivers/clk/at91/pmc.h
++++ b/drivers/clk/at91/pmc.h
+@@ -263,7 +263,7 @@ sam9x60_clk_register_frac_pll(struct regmap *regmap, spinlock_t *lock,
  
-+	tree2 = gtk_tree_store_new(COL_NUMBER,
-+				   G_TYPE_STRING, G_TYPE_STRING,
-+				   G_TYPE_STRING, G_TYPE_STRING,
-+				   G_TYPE_STRING, G_TYPE_STRING,
-+				   G_TYPE_POINTER, GDK_TYPE_COLOR,
-+				   G_TYPE_BOOLEAN, GDK_TYPE_PIXBUF,
-+				   G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
-+				   G_TYPE_BOOLEAN, G_TYPE_BOOLEAN,
-+				   G_TYPE_BOOLEAN);
-+
- 	filter = gtk_tree_model_filter_new(GTK_TREE_MODEL(tree2), NULL);
- 
- 	gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER(filter),
-@@ -1439,7 +1436,6 @@ int main(int ac, char *av[])
- 
- 	/* Load the interface and connect signals */
- 	init_main_window(glade_file);
--	init_tree_model();
- 	init_left_tree();
- 	init_right_tree();
- 
+ struct clk_hw * __init
+ at91_clk_register_programmable(struct regmap *regmap, const char *name,
+-			       const char **parent_names, struct clk_hw **parent_hws,
++			       const char **parent_names, struct clk_parent_data *parent_data,
+ 			       u8 num_parents, u8 id,
+ 			       const struct clk_programmable_layout *layout,
+ 			       u32 *mux_table);
 -- 
 2.43.0
 
