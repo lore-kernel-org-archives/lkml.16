@@ -1,371 +1,184 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A5B52E8DF7;
-	Tue, 24 Jun 2025 16:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFA12E9EC7
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:46:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750783566; cv=none; b=Xa48508ePrQPnFEfPgu5YQA6ilKMo2KHVEhABamp5N8Sgldke5lxc05uZknbqghZ+fBic1DpWb9finKtfAX2gLyYicGavapU4KC/oEA9DOGDTwbO4VrvDtXqqzaZCQmBL9bSW85cFzuOHqwmD6gsuY1u0TBHKuTQjgx5MNZIpcY=
+	t=1750783570; cv=none; b=UEWDh/yV9mi0ZXXbCU85FeCppGAlOmilXG5JeL2ap33sVWG/BgJ5j5++XXBBjOO133OeZoBv+pNakJ8WaTDs42XNszXtPvjtgxCdC16aZuy4qWJxjcfEJtT5JGR5Wc1W0gUN5HmxRPclZF4abe6dMzDqPNakr/kBJ6POpsddzKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750783566; c=relaxed/simple;
-	bh=fvS6KQ1HDLpO1EDy8tD3y16ZD9Kbio8lsg6izkoNg9M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IfvT8r5tpH/zR7WMILEIhH13VHtUe8I054Dinj+Eq4JWA0z7VQvOErvBNYr6prSx7okLHOYXOzC0gT/B8w3T+rluvIw4TdXkCsWKJj22r/gzqF5edpY7yVt5e86LlVyQHD2YiYtXUuiL6BfH9x0skpABqWf5dLJpCLsX6hY/zpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A3Z1UC4D; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750783570; c=relaxed/simple;
+	bh=xT5WEmKs+skPQYW6ZtFaw/Iwkz7nzmbw2nOWXgm+CRI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mGM1Z18WicwGiVuZ+yOj/DiZDb23DPpRCPmtAJlXC815+0SVTKEmDBTKbtXt1MEwcgbVfEaVwgdbStGqQuP/U2I+D/C5ujLtBhvsmL6CGirsyhSDuMUNykeOUSP4qee5MWLROTz6ww/ZznQvZBv0iRnYSb97bQkjxFuAXicipxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=js4ug6s5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=U+gomvPt; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Co7WlY2U; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=tGFgrMD+; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A3Z1UC4D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750783564; x=1782319564;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fvS6KQ1HDLpO1EDy8tD3y16ZD9Kbio8lsg6izkoNg9M=;
-  b=A3Z1UC4DvDdDBdOesvPs2ZUq+JceWQFo783Ujnt3W0zvRlvbtJvAzSow
-   ERY7SRXHRSo22capp/TpIZaQDYnNrWaFu/i7n6lVFbCg+6Wj34+eJRuMZ
-   dj3LVNhoh+BjPyJJS98b8yq/g2yFP8dModyQT6LyGvjY7jmtO3upC2rw0
-   AbU+H6EjwEYisWg54M7RZc4PA4ncqmE0Yyu44PTa3Dp2hKwIIxkkXgBil
-   6B03rfPC1T6cPq5jOXmkRkHCY/E+gHf3EIboyrA0dH90o1HBKMxLwBuPx
-   G1C+/1jUc02aHjYnPV3oCNNApfmJzbFVibS+hq6PLWqCjvG5TbeLo4ipA
-   w==;
-X-CSE-ConnectionGUID: AtvTaM3GRpyf6p2UWW7p+g==
-X-CSE-MsgGUID: 6+bDn2H/RHereHq2iPEemw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64091218"
-X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
-   d="scan'208";a="64091218"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 09:46:04 -0700
-X-CSE-ConnectionGUID: Y5Y+VeosRkmDXx66JNMdYg==
-X-CSE-MsgGUID: arUYkRq1T5qMrD10A9862g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
-   d="scan'208";a="152669477"
-Received: from newjersey.igk.intel.com ([10.102.20.203])
-  by fmviesa010.fm.intel.com with ESMTP; 24 Jun 2025 09:46:00 -0700
-From: Alexander Lobakin <aleksander.lobakin@intel.com>
-To: intel-wired-lan@lists.osuosl.org
-Cc: Alexander Lobakin <aleksander.lobakin@intel.com>,
-	Michal Kubiak <michal.kubiak@intel.com>,
-	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Simon Horman <horms@kernel.org>,
-	nxne.cnse.osdt.itp.upstreaming@intel.com,
-	bpf@vger.kernel.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH iwl-next v2 06/12] idpf: add support for nointerrupt queues
-Date: Tue, 24 Jun 2025 18:45:09 +0200
-Message-ID: <20250624164515.2663137-7-aleksander.lobakin@intel.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250624164515.2663137-1-aleksander.lobakin@intel.com>
-References: <20250624164515.2663137-1-aleksander.lobakin@intel.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="js4ug6s5";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="U+gomvPt";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Co7WlY2U";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="tGFgrMD+"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id B9E2821256;
+	Tue, 24 Jun 2025 16:46:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750783567; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CpXFtC8Iv6rfgX4pRY/5PXb78MOPl3YzGyrXQeCKqns=;
+	b=js4ug6s5n+lLLuPEGXHOoRxiFyXAz/QnfxZS32q4H9KZEh47uBndtJJjLBzV2hB3WWJC5V
+	21goP3xSemS7nCLEaEEyhBFIaxCYP1ypkBOa19EanNEOZ5CeKvg5jsXdH6owRt9dZ8ZG3K
+	uasP1yU4EDKkLri93teBrpC8txwwHfE=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750783567;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CpXFtC8Iv6rfgX4pRY/5PXb78MOPl3YzGyrXQeCKqns=;
+	b=U+gomvPtoAUMPof/oAxcsrojSGFb46uTuBM10t7d77bwpHbX9WZ05rhoPGjnYbUoygrRzL
+	MBktCIXFuc1ilOAw==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Co7WlY2U;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=tGFgrMD+
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750783565; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CpXFtC8Iv6rfgX4pRY/5PXb78MOPl3YzGyrXQeCKqns=;
+	b=Co7WlY2UPfo95O0stPVW4AvKOLSCIx7pOZsCeCwYZliIerHRgsd2CGti/g2ntCEC4tzGhR
+	rJ5Kz3npa/kyhuJMsy2iuUHaT2Krt/qjmW7WDBnSZWpPmcqMZUMg1/Prh3fBVlqCA8HdM8
+	hplngL5kNd35yHnDJF8KdS440Chsnh4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750783565;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=CpXFtC8Iv6rfgX4pRY/5PXb78MOPl3YzGyrXQeCKqns=;
+	b=tGFgrMD+U7tMFnQoSw8Pp3iyHiDGab5GmLB2dMdTDy13xOHNbAXdhHurzYPI9iHACZ+zqd
+	ZkyWZwibskyuVKCg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id A428613A24;
+	Tue, 24 Jun 2025 16:46:05 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id v8a3J03WWmhKJAAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 24 Jun 2025 16:46:05 +0000
+Message-ID: <180982f0-7f32-473a-ae7d-62a62e4d5438@suse.cz>
+Date: Tue, 24 Jun 2025 18:46:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] mm, madvise: move madvise_set_anon_name() down the
+ file
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Jann Horn <jannh@google.com>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Colin Cross <ccross@google.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
+ <20250624-anon_name_cleanup-v2-3-600075462a11@suse.cz>
+ <c6240a90-e02a-4ae2-b144-4fbf82aca6ce@redhat.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+Autocrypt: addr=vbabka@suse.cz; keydata=
+ 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
+ m6M14QORSWTLRg==
+In-Reply-To: <c6240a90-e02a-4ae2-b144-4fbf82aca6ce@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: B9E2821256
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.cz:+]
+X-Spam-Score: -4.51
+X-Spam-Level: 
 
-Currently, queues are associated 1:1 with interrupt vectors as it's
-assumed queues are always interrupt-driven. For XDP, we want to use
-Tx queues without interrupts and only do "lazy" cleaning when the number
-of free elements is <= threshold (closest pow-2 to 1/4 of the ring).
-In order to use a queue without an interrupt, idpf still needs to have
-a vector assigned to it to flush descriptors. This vector can be global
-and only one for the whole vport to handle all its noirq queues.
-Always request one excessive vector and configure it in non-interrupt
-mode right away when creating vport, so that it can be used later by
-queues when needed (not only XDP ones).
+On 6/24/25 16:05, David Hildenbrand wrote:
+> On 24.06.25 15:03, Vlastimil Babka wrote:
+> 
+> Personally, I would squash that into #4, given that #4 is pretty small ;)
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
 
-Co-developed-by: Michal Kubiak <michal.kubiak@intel.com>
-Signed-off-by: Michal Kubiak <michal.kubiak@intel.com>
-Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
----
- drivers/net/ethernet/intel/idpf/idpf.h        |  8 +++
- drivers/net/ethernet/intel/idpf/idpf_txrx.h   |  4 ++
- drivers/net/ethernet/intel/idpf/idpf_dev.c    | 11 +++-
- drivers/net/ethernet/intel/idpf/idpf_lib.c    |  2 +-
- drivers/net/ethernet/intel/idpf/idpf_txrx.c   |  8 +++
- drivers/net/ethernet/intel/idpf/idpf_vf_dev.c | 11 +++-
- .../net/ethernet/intel/idpf/idpf_virtchnl.c   | 54 ++++++++++++++-----
- 7 files changed, 81 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/idpf/idpf.h b/drivers/net/ethernet/intel/idpf/idpf.h
-index 99fa506fe536..316b601a03b6 100644
---- a/drivers/net/ethernet/intel/idpf/idpf.h
-+++ b/drivers/net/ethernet/intel/idpf/idpf.h
-@@ -285,6 +285,9 @@ struct idpf_port_stats {
-  * @num_q_vectors: Number of IRQ vectors allocated
-  * @q_vectors: Array of queue vectors
-  * @q_vector_idxs: Starting index of queue vectors
-+ * @noirq_dyn_ctl: register to enable/disable the vector for NOIRQ queues
-+ * @noirq_dyn_ctl_ena: value to write to the above to enable it
-+ * @noirq_v_idx: ID of the NOIRQ vector
-  * @max_mtu: device given max possible MTU
-  * @default_mac_addr: device will give a default MAC to use
-  * @rx_itr_profile: RX profiles for Dynamic Interrupt Moderation
-@@ -329,6 +332,11 @@ struct idpf_vport {
- 	u16 num_q_vectors;
- 	struct idpf_q_vector *q_vectors;
- 	u16 *q_vector_idxs;
-+
-+	void __iomem *noirq_dyn_ctl;
-+	u32 noirq_dyn_ctl_ena;
-+	u16 noirq_v_idx;
-+
- 	u16 max_mtu;
- 	u8 default_mac_addr[ETH_ALEN];
- 	u16 rx_itr_profile[IDPF_DIM_PROFILE_SLOTS];
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.h b/drivers/net/ethernet/intel/idpf/idpf_txrx.h
-index ca98450683dc..4cce3c5c3739 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_txrx.h
-+++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.h
-@@ -57,6 +57,8 @@
- /* Default vector sharing */
- #define IDPF_MBX_Q_VEC		1
- #define IDPF_MIN_Q_VEC		1
-+/* Data vector for NOIRQ queues */
-+#define IDPF_RESERVED_VECS			1
- 
- #define IDPF_DFLT_TX_Q_DESC_COUNT		512
- #define IDPF_DFLT_TX_COMPLQ_DESC_COUNT		512
-@@ -291,6 +293,7 @@ struct idpf_ptype_state {
-  * @__IDPF_Q_HSPLIT_EN: enable header split on Rx (splitq)
-  * @__IDPF_Q_PTP: indicates whether the Rx timestamping is enabled for the
-  *		  queue
-+ * @__IDPF_Q_NOIRQ: queue is polling-driven and has no interrupt
-  * @__IDPF_Q_FLAGS_NBITS: Must be last
-  */
- enum idpf_queue_flags_t {
-@@ -301,6 +304,7 @@ enum idpf_queue_flags_t {
- 	__IDPF_Q_CRC_EN,
- 	__IDPF_Q_HSPLIT_EN,
- 	__IDPF_Q_PTP,
-+	__IDPF_Q_NOIRQ,
- 
- 	__IDPF_Q_FLAGS_NBITS,
- };
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_dev.c b/drivers/net/ethernet/intel/idpf/idpf_dev.c
-index 3fae81f1f988..1aad22903b9d 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_dev.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_dev.c
-@@ -74,7 +74,7 @@ static int idpf_intr_reg_init(struct idpf_vport *vport)
- 	int num_vecs = vport->num_q_vectors;
- 	struct idpf_vec_regs *reg_vals;
- 	int num_regs, i, err = 0;
--	u32 rx_itr, tx_itr;
-+	u32 rx_itr, tx_itr, val;
- 	u16 total_vecs;
- 
- 	total_vecs = idpf_get_reserved_vecs(vport->adapter);
-@@ -118,6 +118,15 @@ static int idpf_intr_reg_init(struct idpf_vport *vport)
- 		intr->tx_itr = idpf_get_reg_addr(adapter, tx_itr);
- 	}
- 
-+	/* Data vector for NOIRQ queues */
-+
-+	val = reg_vals[vport->q_vector_idxs[i] - IDPF_MBX_Q_VEC].dyn_ctl_reg;
-+	vport->noirq_dyn_ctl = idpf_get_reg_addr(adapter, val);
-+
-+	val = PF_GLINT_DYN_CTL_WB_ON_ITR_M | PF_GLINT_DYN_CTL_INTENA_MSK_M |
-+	      FIELD_PREP(PF_GLINT_DYN_CTL_ITR_INDX_M, IDPF_NO_ITR_UPDATE_IDX);
-+	vport->noirq_dyn_ctl_ena = val;
-+
- free_reg_vals:
- 	kfree(reg_vals);
- 
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_lib.c b/drivers/net/ethernet/intel/idpf/idpf_lib.c
-index a7d504a5ea05..caac316bf7f2 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_lib.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_lib.c
-@@ -1100,7 +1100,7 @@ static struct idpf_vport *idpf_vport_alloc(struct idpf_adapter *adapter,
- 	vport->default_vport = adapter->num_alloc_vports <
- 			       idpf_get_default_vports(adapter);
- 
--	num_max_q = max(max_q->max_txq, max_q->max_rxq);
-+	num_max_q = max(max_q->max_txq, max_q->max_rxq) + IDPF_RESERVED_VECS;
- 	vport->q_vector_idxs = kcalloc(num_max_q, sizeof(u16), GFP_KERNEL);
- 	if (!vport->q_vector_idxs)
- 		goto free_vport;
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_txrx.c b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-index 127f3afeb522..e1cdc35e2bfa 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_txrx.c
-@@ -3781,6 +3781,8 @@ static void idpf_vport_intr_dis_irq_all(struct idpf_vport *vport)
- 	struct idpf_q_vector *q_vector = vport->q_vectors;
- 	int q_idx;
- 
-+	writel(0, vport->noirq_dyn_ctl);
-+
- 	for (q_idx = 0; q_idx < vport->num_q_vectors; q_idx++)
- 		writel(0, q_vector[q_idx].intr_reg.dyn_ctl);
- }
-@@ -4024,6 +4026,8 @@ static void idpf_vport_intr_ena_irq_all(struct idpf_vport *vport)
- 		if (qv->num_txq || qv->num_rxq)
- 			idpf_vport_intr_update_itr_ena_irq(qv);
- 	}
-+
-+	writel(vport->noirq_dyn_ctl_ena, vport->noirq_dyn_ctl);
- }
- 
- /**
-@@ -4335,6 +4339,8 @@ static int idpf_vport_intr_init_vec_idx(struct idpf_vport *vport)
- 		for (i = 0; i < vport->num_q_vectors; i++)
- 			vport->q_vectors[i].v_idx = vport->q_vector_idxs[i];
- 
-+		vport->noirq_v_idx = vport->q_vector_idxs[i];
-+
- 		return 0;
- 	}
- 
-@@ -4348,6 +4354,8 @@ static int idpf_vport_intr_init_vec_idx(struct idpf_vport *vport)
- 	for (i = 0; i < vport->num_q_vectors; i++)
- 		vport->q_vectors[i].v_idx = vecids[vport->q_vector_idxs[i]];
- 
-+	vport->noirq_v_idx = vecids[vport->q_vector_idxs[i]];
-+
- 	kfree(vecids);
- 
- 	return 0;
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_vf_dev.c b/drivers/net/ethernet/intel/idpf/idpf_vf_dev.c
-index aba828abcb17..a6993a01a9b0 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_vf_dev.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_vf_dev.c
-@@ -73,7 +73,7 @@ static int idpf_vf_intr_reg_init(struct idpf_vport *vport)
- 	int num_vecs = vport->num_q_vectors;
- 	struct idpf_vec_regs *reg_vals;
- 	int num_regs, i, err = 0;
--	u32 rx_itr, tx_itr;
-+	u32 rx_itr, tx_itr, val;
- 	u16 total_vecs;
- 
- 	total_vecs = idpf_get_reserved_vecs(vport->adapter);
-@@ -117,6 +117,15 @@ static int idpf_vf_intr_reg_init(struct idpf_vport *vport)
- 		intr->tx_itr = idpf_get_reg_addr(adapter, tx_itr);
- 	}
- 
-+	/* Data vector for NOIRQ queues */
-+
-+	val = reg_vals[vport->q_vector_idxs[i] - IDPF_MBX_Q_VEC].dyn_ctl_reg;
-+	vport->noirq_dyn_ctl = idpf_get_reg_addr(adapter, val);
-+
-+	val = VF_INT_DYN_CTLN_WB_ON_ITR_M | VF_INT_DYN_CTLN_INTENA_MSK_M |
-+	      FIELD_PREP(VF_INT_DYN_CTLN_ITR_INDX_M, IDPF_NO_ITR_UPDATE_IDX);
-+	vport->noirq_dyn_ctl_ena = val;
-+
- free_reg_vals:
- 	kfree(reg_vals);
- 
-diff --git a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-index ca846d31a260..3e3fa3df2ac0 100644
---- a/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-+++ b/drivers/net/ethernet/intel/idpf/idpf_virtchnl.c
-@@ -1843,21 +1843,31 @@ int idpf_send_map_unmap_queue_vector_msg(struct idpf_vport *vport, bool map)
- 		struct idpf_txq_group *tx_qgrp = &vport->txq_grps[i];
- 
- 		for (j = 0; j < tx_qgrp->num_txq; j++, k++) {
-+			const struct idpf_tx_queue *txq = tx_qgrp->txqs[j];
-+			const struct idpf_q_vector *vec;
-+			u32 v_idx, tx_itr_idx;
-+
- 			vqv[k].queue_type =
- 				cpu_to_le32(VIRTCHNL2_QUEUE_TYPE_TX);
--			vqv[k].queue_id = cpu_to_le32(tx_qgrp->txqs[j]->q_id);
-+			vqv[k].queue_id = cpu_to_le32(txq->q_id);
- 
--			if (idpf_is_queue_model_split(vport->txq_model)) {
--				vqv[k].vector_id =
--				cpu_to_le16(tx_qgrp->complq->q_vector->v_idx);
--				vqv[k].itr_idx =
--				cpu_to_le32(tx_qgrp->complq->q_vector->tx_itr_idx);
-+			if (idpf_queue_has(NOIRQ, txq))
-+				vec = NULL;
-+			else if (idpf_is_queue_model_split(vport->txq_model))
-+				vec = txq->txq_grp->complq->q_vector;
-+			else
-+				vec = txq->q_vector;
-+
-+			if (vec) {
-+				v_idx = vec->v_idx;
-+				tx_itr_idx = vec->tx_itr_idx;
- 			} else {
--				vqv[k].vector_id =
--				cpu_to_le16(tx_qgrp->txqs[j]->q_vector->v_idx);
--				vqv[k].itr_idx =
--				cpu_to_le32(tx_qgrp->txqs[j]->q_vector->tx_itr_idx);
-+				v_idx = vport->noirq_v_idx;
-+				tx_itr_idx = VIRTCHNL2_ITR_IDX_1;
- 			}
-+
-+			vqv[k].vector_id = cpu_to_le16(v_idx);
-+			vqv[k].itr_idx = cpu_to_le32(tx_itr_idx);
- 		}
- 	}
- 
-@@ -1875,6 +1885,7 @@ int idpf_send_map_unmap_queue_vector_msg(struct idpf_vport *vport, bool map)
- 
- 		for (j = 0; j < num_rxq; j++, k++) {
- 			struct idpf_rx_queue *rxq;
-+			u32 v_idx, rx_itr_idx;
- 
- 			if (idpf_is_queue_model_split(vport->rxq_model))
- 				rxq = &rx_qgrp->splitq.rxq_sets[j]->rxq;
-@@ -1884,8 +1895,17 @@ int idpf_send_map_unmap_queue_vector_msg(struct idpf_vport *vport, bool map)
- 			vqv[k].queue_type =
- 				cpu_to_le32(VIRTCHNL2_QUEUE_TYPE_RX);
- 			vqv[k].queue_id = cpu_to_le32(rxq->q_id);
--			vqv[k].vector_id = cpu_to_le16(rxq->q_vector->v_idx);
--			vqv[k].itr_idx = cpu_to_le32(rxq->q_vector->rx_itr_idx);
-+
-+			if (idpf_queue_has(NOIRQ, rxq)) {
-+				v_idx = vport->noirq_v_idx;
-+				rx_itr_idx = VIRTCHNL2_ITR_IDX_0;
-+			} else {
-+				v_idx = rxq->q_vector->v_idx;
-+				rx_itr_idx = rxq->q_vector->rx_itr_idx;
-+			}
-+
-+			vqv[k].vector_id = cpu_to_le16(v_idx);
-+			vqv[k].itr_idx = cpu_to_le32(rx_itr_idx);
- 		}
- 	}
- 
-@@ -3084,9 +3104,15 @@ int idpf_vport_alloc_vec_indexes(struct idpf_vport *vport)
- {
- 	struct idpf_vector_info vec_info;
- 	int num_alloc_vecs;
-+	u32 req;
- 
- 	vec_info.num_curr_vecs = vport->num_q_vectors;
--	vec_info.num_req_vecs = max(vport->num_txq, vport->num_rxq);
-+	if (vec_info.num_curr_vecs)
-+		vec_info.num_curr_vecs += IDPF_RESERVED_VECS;
-+
-+	req = max(vport->num_txq, vport->num_rxq) + IDPF_RESERVED_VECS;
-+	vec_info.num_req_vecs = req;
-+
- 	vec_info.default_vport = vport->default_vport;
- 	vec_info.index = vport->idx;
- 
-@@ -3099,7 +3125,7 @@ int idpf_vport_alloc_vec_indexes(struct idpf_vport *vport)
- 		return -EINVAL;
- 	}
- 
--	vport->num_q_vectors = num_alloc_vecs;
-+	vport->num_q_vectors = num_alloc_vecs - IDPF_RESERVED_VECS;
- 
- 	return 0;
- }
--- 
-2.49.0
-
+Right, the advantages of pure move commits is that git diff can colorize
+them so it's immediately obvious, and git blame -C or -M can also recognize
+pure moves and ignore them. Mixing moves with changes tends to break these
+heuristics. But if Andrew wants to squash, feel free.
