@@ -1,184 +1,87 @@
-Received: from out30-99.freemail.mail.aliyun.com (out30-99.freemail.mail.aliyun.com [115.124.30.99])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8116F21B9F6;
-	Tue, 24 Jun 2025 04:16:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.99
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F7A21AF0B4
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 04:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750738583; cv=none; b=EbIgIrY0Nc7zqbgYdAfNI0ZZWlC7tK6gMv4l5bDfzxbxX2bw8FqlB5TLTQByF8an0VQRG5kG7kkLKZNnpUlgg5n1Vc9LHYflsTWaXpITBAazcih6B9Ph0Jy810/s0W/btYyVvIJJGzK1J/TE3Jetyue3VGOYoM5bQPbyO+8k5kg=
+	t=1750738990; cv=none; b=UO+JMz71zq76cNgi1snqO34u/4OyFOXov6DgEtYmCM3DTwxNsggB90UhHJZoRj8az94TGYWHVAXUo1V76EviV2HX0/zPESwnPfkQ7hpKPb3WRyjIN/RYP/rS6eN0lhdKOiG3+zvzTt+l4EaVLOostpZ+LYfF1Wim/dOUL90HEzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750738583; c=relaxed/simple;
-	bh=5G65DW5QVEJiCP6BevqgcMH4BJprL0i7tiSazmp4+XU=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=TxqnssdI9dhQ2FRis+EHfFp4Hm3bJrZos2lz1w9aOektwHqqzg5iL2cA6lUkk3ZviLHjZj9fooZrWi9KqCQw1t6qsgx0a2cOIFtii83e7v7nFq3lGhurxhsz7wmQUoefRl+qB6Iho25uDiNdBWh4QTLJ4gBUtsc/C5RXbccjtCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=IOL4zxnU; arc=none smtp.client-ip=115.124.30.99
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="IOL4zxnU"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750738571; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=rax2iaNWOHCKSTHeRONdpsloXVAQJACyDqlDlmBHKYA=;
-	b=IOL4zxnUhxUMIfdtwOPU4ubp9N+hGmb4m52ei0x5WEB8nWp4ESIgh4FpP/qRvd+Gf9WxzgGyBn/T2Rfemf9tsCa+MQBD4fHFyUR3LTmz8LYh6XtqtMf8unx5DFn0ZALwXJCkFcNuvC+1mn1d2l/idKvXWY/enCK4rSeZOI9ZjBY=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0Wef2ct8_1750738566 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 24 Jun 2025 12:16:08 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Shivank Garg <shivankg@amd.com>
-Cc: <seanjc@google.com>,  <david@redhat.com>,  <vbabka@suse.cz>,
-  <willy@infradead.org>,  <akpm@linux-foundation.org>,  <shuah@kernel.org>,
-  <pbonzini@redhat.com>,  <brauner@kernel.org>,  <viro@zeniv.linux.org.uk>,
-  <ackerleytng@google.com>,  <paul@paul-moore.com>,  <jmorris@namei.org>,
-  <serge@hallyn.com>,  <pvorel@suse.cz>,  <bfoster@redhat.com>,
-  <tabba@google.com>,  <vannapurve@google.com>,  <chao.gao@intel.com>,
-  <bharata@amd.com>,  <nikunj@amd.com>,  <michael.day@amd.com>,
-  <yan.y.zhao@intel.com>,  <Neeraj.Upadhyay@amd.com>,
-  <thomas.lendacky@amd.com>,  <michael.roth@amd.com>,  <aik@amd.com>,
-  <jgg@nvidia.com>,  <kalyazin@amazon.com>,  <peterx@redhat.com>,
-  <jack@suse.cz>,  <rppt@kernel.org>,  <hch@infradead.org>,
-  <cgzones@googlemail.com>,  <ira.weiny@intel.com>,  <rientjes@google.com>,
-  <roypat@amazon.co.uk>,  <ziy@nvidia.com>,  <matthew.brost@intel.com>,
-  <joshua.hahnjy@gmail.com>,  <rakie.kim@sk.com>,  <byungchul@sk.com>,
-  <gourry@gourry.net>,  <kent.overstreet@linux.dev>,  <apopple@nvidia.com>,
-  <chao.p.peng@intel.com>,  <amit@infradead.org>,  <ddutile@redhat.com>,
-  <dan.j.williams@intel.com>,  <ashish.kalra@amd.com>,  <gshan@redhat.com>,
-  <jgowans@amazon.com>,  <pankaj.gupta@amd.com>,  <papaluri@amd.com>,
-  <yuzhao@google.com>,  <suzuki.poulose@arm.com>,
-  <quic_eberman@quicinc.com>,  <aneeshkumar.kizhakeveetil@arm.com>,
-  <linux-fsdevel@vger.kernel.org>,  <linux-mm@kvack.org>,
-  <linux-kernel@vger.kernel.org>,  <linux-security-module@vger.kernel.org>,
-  <kvm@vger.kernel.org>,  <linux-kselftest@vger.kernel.org>,
-  <linux-coco@lists.linux.dev>
-Subject: Re: [RFC PATCH v8 5/7] KVM: guest_memfd: Add slab-allocated inode
- cache
-In-Reply-To: <20250618112935.7629-6-shivankg@amd.com> (Shivank Garg's message
-	of "Wed, 18 Jun 2025 11:29:33 +0000")
-References: <20250618112935.7629-1-shivankg@amd.com>
-	<20250618112935.7629-6-shivankg@amd.com>
-Date: Tue, 24 Jun 2025 12:16:06 +0800
-Message-ID: <87ecv9ojuh.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1750738990; c=relaxed/simple;
+	bh=jEHsntUX9cHfo/BuaTSMz7iCtGH6IPgw9BdOjQ1J3bY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RXHMCndkx/FllxXLFPRgVG2WSUD3TOx5RmajZTHK9UHdqvbEPU6/VAwvRYyjY0Z75LNd56VFdm2KFQGgtfUAoKz00LItl9CEvpuU3iLufpZ0Rzl7+9JvND98rLVB/3FshWlbNUkTL5A5TL8I6jfW3aa5935iLgs0i/Tcv0EUvJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A58E6106F;
+	Mon, 23 Jun 2025 21:22:48 -0700 (PDT)
+Received: from [10.163.36.19] (unknown [10.163.36.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9BD8A3F63F;
+	Mon, 23 Jun 2025 21:23:03 -0700 (PDT)
+Message-ID: <f565a64e-62d8-4cb3-b1b1-6de981b1052a@arm.com>
+Date: Tue, 24 Jun 2025 09:53:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 4/9] coresight: Appropriately disable programming
+ clocks
+To: Leo Yan <leo.yan@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: Mike Leach <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250609-arm_cs_fix_clock_v3_public-v3-0-423b3f1f241d@arm.com>
+ <20250609-arm_cs_fix_clock_v3_public-v3-4-423b3f1f241d@arm.com>
+ <e18507cb-bcbf-4cdd-8364-9bce0ea016d5@arm.com>
+ <20250609163840.GL8020@e132581.arm.com>
+Content-Language: en-US
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <20250609163840.GL8020@e132581.arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Shivank Garg <shivankg@amd.com> writes:
 
-> Add dedicated inode structure (kvm_gmem_inode_info) and slab-allocated
-> inode cache for guest memory backing, similar to how shmem handles inodes.
->
-> This adds the necessary allocation/destruction functions and prepares
-> for upcoming guest_memfd NUMA policy support changes.
->
-> Signed-off-by: Shivank Garg <shivankg@amd.com>
-> ---
->  virt/kvm/guest_memfd.c | 51 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->
-> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
-> index 159df462d193..5a1ce6f5e287 100644
-> --- a/virt/kvm/guest_memfd.c
-> +++ b/virt/kvm/guest_memfd.c
-> @@ -17,6 +17,15 @@ struct kvm_gmem {
->  	struct list_head entry;
->  };
->  
-> +struct kvm_gmem_inode_info {
-> +	struct inode vfs_inode;
-> +};
-> +
-> +static inline struct kvm_gmem_inode_info *KVM_GMEM_I(struct inode *inode)
-> +{
-> +	return container_of(inode, struct kvm_gmem_inode_info, vfs_inode);
-> +}
-> +
->  /**
->   * folio_file_pfn - like folio_file_page, but return a pfn.
->   * @folio: The folio which contains this index.
-> @@ -392,8 +401,33 @@ static struct file_operations kvm_gmem_fops = {
->  	.fallocate	= kvm_gmem_fallocate,
->  };
->  
-> +static struct kmem_cache *kvm_gmem_inode_cachep;
-> +
-> +static struct inode *kvm_gmem_alloc_inode(struct super_block *sb)
-> +{
-> +	struct kvm_gmem_inode_info *info;
-> +
-> +	info = alloc_inode_sb(sb, kvm_gmem_inode_cachep, GFP_KERNEL);
-> +	if (!info)
-> +		return NULL;
-> +
-> +	return &info->vfs_inode;
-> +}
-> +
-> +static void kvm_gmem_destroy_inode(struct inode *inode)
-> +{
-> +}
-> +
-> +static void kvm_gmem_free_inode(struct inode *inode)
-> +{
-> +	kmem_cache_free(kvm_gmem_inode_cachep, KVM_GMEM_I(inode));
-> +}
-> +
->  static const struct super_operations kvm_gmem_super_operations = {
->  	.statfs		= simple_statfs,
-> +	.alloc_inode	= kvm_gmem_alloc_inode,
-> +	.destroy_inode	= kvm_gmem_destroy_inode,
-> +	.free_inode	= kvm_gmem_free_inode,
->  };
->  
->  static int kvm_gmem_init_fs_context(struct fs_context *fc)
-> @@ -426,10 +460,26 @@ static int kvm_gmem_init_mount(void)
->  	return 0;
->  }
->  
-> +static void kvm_gmem_init_inode(void *foo)
-> +{
-> +	struct kvm_gmem_inode_info *info = foo;
-> +
-> +	inode_init_once(&info->vfs_inode);
-> +}
-> +
-> +static void kvm_gmem_init_inodecache(void)
-> +{
-> +	kvm_gmem_inode_cachep = kmem_cache_create("kvm_gmem_inode_cache",
-> +						  sizeof(struct kvm_gmem_inode_info),
-> +						  0, SLAB_ACCOUNT,
-> +						  kvm_gmem_init_inode);
 
-Check the return value?
+On 09/06/25 10:08 PM, Leo Yan wrote:
+> On Mon, Jun 09, 2025 at 05:11:21PM +0100, Suzuki Kuruppassery Poulose wrote:
+>> On 09/06/2025 17:00, Leo Yan wrote:
+>>> Some CoreSight components have programming clocks (pclk) and are enabled
+>>> using clk_get() and clk_prepare_enable().  However, in many cases, these
+>>> clocks are not disabled when modules exit and only released by clk_put().
+>>>
+>>> To fix the issue, this commit refactors coresight_get_enable_apb_pclk()
+>>> by replacing clk_get() and clk_prepare_enable() with
+>>> devm_clk_get_enabled() for enabling APB clock.  Callers are updated
+>>> to reuse the returned error value.
+>>>
+>>> With the change, programming clocks are managed as resources in driver
+>>> model layer, allowing clock cleanup to be handled automatically.  As a
+>>> result, manual cleanup operations are no longer needed and are removed
+>>> from the Coresight drivers.
+>>>
+>>> Fixes: 73d779a03a76 ("coresight: etm4x: Change etm4_platform_driver driver for MMIO devices")
+>>
+>> This looks suspicious. This patch covers a lot of components, but the
+>> above commit is only affecting ETMv4 ?
+> 
+> Since commit 73d779a03a76 is the earliest patch that introduced the
+> issue, it has been selected as the fix tag. We assume this will cover
+> any subsequent changes that have the same issue.
 
-And, I'm not a big fan of (logically) one line function encapsulation.
+Although I am not still sure about this patch actually requiring a
+'Fixes:' tag as it just transitions into the device managed clocks
+rather than fixing an existing issue. But choosing the first commit
+makes sense as Leo has explained.
 
-> +}
-> +
->  int kvm_gmem_init(struct module *module)
->  {
->  	kvm_gmem_fops.owner = module;
->  
-> +	kvm_gmem_init_inodecache();
->  	return kvm_gmem_init_mount();
+> 
+>> The patch as such looks good to me.
+> 
+> Thanks for review!
+> 
+>> Suzuki
+> 
 
-kmem_cache_destroy(kvm_gmem_inode_cachep) if kvm_gmem_init_mount()
-return with error?
-
->  }
->  
-> @@ -437,6 +487,7 @@ void kvm_gmem_exit(void)
->  {
->  	kern_unmount(kvm_gmem_mnt);
->  	kvm_gmem_mnt = NULL;
-> +	kmem_cache_destroy(kvm_gmem_inode_cachep);
->  }
->  
->  static int kvm_gmem_migrate_folio(struct address_space *mapping,
-
----
-Best Regards,
-Huang, Ying
