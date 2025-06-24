@@ -1,94 +1,148 @@
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B892512DE
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 21:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754DD256C8A
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 21:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750799377; cv=none; b=YZWcQ15xDccDuGMB6i0tWA4AXGGfmHIiN1C+EMCpa//mobtfkCC6nyI7T9S7hu65o4BkZTPgG7cFgjo9/kc/o7tz3Z8TU0M+Vfy0tZX91kMTiVCkEI51UOfNG/dfviZvN/5535RaFfF90Nf/9qm+BpXJkko7UVQjpO89cLj1NoA=
+	t=1750799505; cv=none; b=OQitWA6gUiUOh3gzUD9B8L4TbxIeo6tK2Cfc0kMYZncsQmt0iZ8Nf0D7aoNQpEv+E2PnieDw3rKg9NI1xThhSdsZCZ6DWfphWffnoPkoGyX35Y8sdBBJZxF/ZDI2C1ETRjzRNttfYgnb6KKMg/JLxc/YiRm4pIymh0xHREOdimE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750799377; c=relaxed/simple;
-	bh=2MF4EJfF3oGBbVNrPMSxxD/94fMu8AcVw/MFpO1v96s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iQcsOdPbTc8aylrDlKIIYRf7EGfiPvZZJu4t7XlH6qfk7idZXC1QamstX428capppXL2Hz8I646hpx1JNwTtP01Wg9jBm0smrq+ZSMIevfbdUQ1WFAo13Eq9/bsim9SdAQmGUmetC2hiLhqA60Gstpz+jCUyAeXQJ4hg6pCTlgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ghZYD+DE; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1750799505; c=relaxed/simple;
+	bh=PFbnWfYExMNiWyWjv+9emyWRUe/yj2S0aeMUTA6DgRQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=JilXfJ8GwI2Lv+WiiLj6yu9R1VmG01YL408TcNztCqWgyvn6xnok13xACsEOamyeWZV+FI5Ewir22ph+USe+TWuBhPZf0ZnkRfLiPxnPfD5+mVPFnNVd/L6lONZJ43JACUUptFmEmZ12WrkfDpwf+JX9ct6ZrPHWORnAcDJLgE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=LiwNQ/kh; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ghZYD+DE"
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32ac42bb4e4so51375091fa.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:09:35 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LiwNQ/kh"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso4518285b3a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:11:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750799373; x=1751404173; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2MF4EJfF3oGBbVNrPMSxxD/94fMu8AcVw/MFpO1v96s=;
-        b=ghZYD+DEGwKL4TOu4Azgugxxc2q5llv1avyytvg5zrIbhf3Es0w/2gjpDx85ARMQRI
-         xTgdRtVM7NEG5zDj4kEXd7gjpVR75MWWwP7YVqwWY8vQz+30j7AeVyiqeMu9tlMdnazG
-         RmWpXRYOQOP67wG++rxsx9mngLKKFWzCRC+uuAeCPsgKsYoNZTEHyVn0hylPjy0ziG4G
-         fKyOdl8sGAVXQb61/5TlJC/Ue+9uuIQjFkxkyZblsWrztI9BKQSlHykFCMNXheoiP9dB
-         I5OvkspaBRFYgxIZQvji1B9fqZkRxfHr/DSM6EcCIvMnGxF94PptoS/CNuuIYIq5VvdO
-         sY3g==
+        d=broadcom.com; s=google; t=1750799504; x=1751404304; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Eo2vufChLx1e55QzOzBwTMNU9Z8LIJfaoAcIHFWzr7Q=;
+        b=LiwNQ/khYCK49AlkADU62XP9aeXqysZtDDLWK3LsWbaE22eCtPCeOSGv6zEeFkzxkJ
+         ng7axil/5AnsTznFEp8bj94zas6V4TrbOsx1x0ZBohOyeXSozWH3E7jC/KTi1AhCl2mB
+         7b18cOfH1NevQJgPKqKUFG+dhS50gQVAwYI0U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750799373; x=1751404173;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2MF4EJfF3oGBbVNrPMSxxD/94fMu8AcVw/MFpO1v96s=;
-        b=GiPr1zgv/lFIZfFffN7IkIne2cf9hkuKHczsHIz2MEE3bbJrTf5Dp+Ae38Ylrx0Rdw
-         Os/8I634nKd01YLNqeVPru5sbUCEwmBPRdMYSzXXkYi648+8I/m1OSJhCpfhgYNI19Ry
-         /UXceGD7CP+F2Fv2LzBPKJk5EnE/Tis/rab8tiG3whLWCexet6qv2v2ckvARPfBJPN3l
-         zTsbyhVkcZNKBL36NuLm7EkyE84zJz9g1oAPcZfnIXT0QCLP3idNCs7nnF9rxlpvP5fB
-         zYq4eWRzq7SJyI0kC4axHgVRKgSftKK/XQY2xt2C2pm2GXP5RIHZ9po4Lm2dbmUlI9nd
-         75nw==
-X-Forwarded-Encrypted: i=1; AJvYcCXL2MZJC+7mVamW0JHgbh2ggAe9IEnxbLzwLFFeK8ujeLFFPDgKDEDMmITya50GHv41UUX2Fo3KOBN148Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzT9TgpblRpq0+2JANvfUGlVriVxaA8cyaddcVNNG/DjOfgFfPw
-	nGKY8c8UEtHjrDe94Eptnz9dMu5eA8iQkWuk5kkUMDKYhd1pKhcuadducQ9dtbmrzBDnV6A+Tjf
-	qkr4yj4T0n1v2dn8k3S9IWyKW4slaFwNIU5oHwrEEUQ==
-X-Gm-Gg: ASbGnctzYJzTXItHY35pkSLPpeSz0KGIuaoAewnywNW/m18fG4XrHcjiHirNvGtH9OK
-	8rjnOU1Yu9GwWcjk3DpWOhOkWZrXECp7H+oui/K9YhOiM63HZt85/V4JXgkYOxSPwQMoBcCopgD
-	sEoGo2mGvvS4myYhBlwJPXU5jDZLyf8z0fNethfY0zb+8E
-X-Google-Smtp-Source: AGHT+IEYzudCBxLtnCVsGpuow7FpUkuw3nptQHQQRtw4oP1UaDU1p87rIunsZtDyNefrBc2V1Z/fJNG42iXx2/2pMso=
-X-Received: by 2002:a2e:909a:0:b0:32b:3cf5:2ff3 with SMTP id
- 38308e7fff4ca-32cc64e822cmr504241fa.22.1750799373290; Tue, 24 Jun 2025
- 14:09:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750799504; x=1751404304;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Eo2vufChLx1e55QzOzBwTMNU9Z8LIJfaoAcIHFWzr7Q=;
+        b=DSMJ572OoqY9A1y6E4fX8JGbqOYGMW1TdG/Ru3gIlhTcgidyTzIT7IJfo8KnlChQx+
+         1p3p56qjLWL5r+NedL/RQjzDQ8MKOReTdWB7OjZgQVPxHrcfr72yS3cdOfIeaBy+gYhs
+         tHZDRW06U1+QG7YnpToWJ07o3Gfpa61eATO0Pa2ZjpQbJFpRCzryld3IgKP0Kn/SB1hK
+         mmcrTT9kYI1d5UiXw+Su5obfe9cQfzOlU1w28k3zC2koS05KgCtJ72G7FfDVmxDHjhlA
+         pU9+PyrbYLP47JvnMJDWlKGIizZWZWjN9VDQcLU+lK5+a1s2BbTr3fgxBk6l25prdsh7
+         Wm6Q==
+X-Forwarded-Encrypted: i=1; AJvYcCU0QtuPfMRa9bURn0xfjcxYRttiJMXZLI4g+3yLu4D+Yw1E20oWL3vawYr1S2rZC36BUsRnCKuOgilTbww=@vger.kernel.org
+X-Gm-Message-State: AOJu0YypeVbdPIUocC/K9tMSsNHiTFFuCCrt9G033hG8xa60pCqGEP6s
+	XpNuKwEdVovc2JFL+kiuMKDRnvHtw74lZXOyJbuu2nseIKvglkXlwg5yhMvNuih3ow==
+X-Gm-Gg: ASbGncsL3uWxcOpka/IXDdRUdT0IYc/n6Pt3m3CppPsI4044wLO3Brm1SN4D7I8FMQx
+	2g9TsdbXinrKcM5ZmYVjXUviLvAAK2hzugi6lB2tmMggkGlSww4Jysel6xhgjjAYryD4fTHHlxE
+	ZGsaE1gfxoLR9/N5BFxW8Q6+BDiPUz2V9hfWvOC9niB37Rok5xsyjQfUNMWCwV8RKupgXyPtRTf
+	4j2l5PFHF4zlw9JjsJCT+I9AR9Fs8jEJRNhFw23cvBrOaiRIOpP594JvBKNfgLE5SvvacNzdYqD
+	Yg+37SZnw/qaVc/hYHBM9sWmN2dubfRS3SFVvUG4y4WlifjO1Gq+DguA+8Vxk48Rdr00yXO9sMq
+	fiwu/xIE0XIqd4Wn/9GlmIQ9wpw==
+X-Google-Smtp-Source: AGHT+IFf3/YeR9gk7+WP5WcaJ4mRmmHJiKPywBy37oskEyKjfGaPDSuW17BELTvjbXXXqhnRst+TYA==
+X-Received: by 2002:a05:6a21:8cc6:b0:21a:eabb:ab93 with SMTP id adf61e73a8af0-2207f19255cmr765020637.6.1750799503649;
+        Tue, 24 Jun 2025 14:11:43 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f1258b55sm9471699a12.61.2025.06.24.14.11.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 14:11:42 -0700 (PDT)
+Message-ID: <9d31a4d7-ffd1-48ca-8df6-0ddc6683a49c@broadcom.com>
+Date: Tue, 24 Jun 2025 14:11:39 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619-iio-adc-ad7380-fix-adi-gain-milli-parsing-v1-1-4c27fb426860@baylibre.com>
- <20250622152506.238c1322@jic23-huawei>
-In-Reply-To: <20250622152506.238c1322@jic23-huawei>
-From: David Lechner <dlechner@baylibre.com>
-Date: Tue, 24 Jun 2025 15:09:22 -0600
-X-Gm-Features: Ac12FXxJ_KHu95Iz336-RQCdSp_KlXcDSn-GDiEWvLzfGuq68UC3oa_NRpx2lIA
-Message-ID: <CAMknhBG0p_ODgKmu2EpWR=0VemZ5yWYVLxdST84YYfruTirK-Q@mail.gmail.com>
-Subject: Re: [PATCH] iio: adc: ad7380: fix adi,gain-milli property parsing
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: Michael Hennerich <michael.hennerich@analog.com>, =?UTF-8?B?TnVubyBTw6E=?= <nuno.sa@analog.com>, 
-	Lars-Peter Clausen <lars@metafoo.de>, Julien Stephan <jstephan@baylibre.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-iio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH stblinux/next] pinctrl: rp1: Implement RaspberryPi RP1
+ pinmux/pinconf support
+To: Andrea della Porta <andrea.porta@suse.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>,
+ Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+References: <8c282b89b1aa8b9e3c00f6bd3980332c47d82df7.1750778806.git.andrea.porta@suse.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <8c282b89b1aa8b9e3c00f6bd3980332c47d82df7.1750778806.git.andrea.porta@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sun, Jun 22, 2025 at 8:25=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
- wrote:
->
-> On Thu, 19 Jun 2025 10:24:22 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
->
-> > Change the data type of the "adi,gain-milli" property from u32 to u16.
-> > The devicetree binding specifies it as uint16, so we need to read it as
-> > such to avoid an -EOVERFLOW error when parsing the property.
-> >
-> > Fixes: c904e6dcf402 ("iio: adc: ad7380: add support for adaq4370-4 and =
-adaq4380-4")
-> > Signed-off-by: David Lechner <dlechner@baylibre.com>
-> Applied to the fixes-togreg branch of iio.git and marked for stable.
->
+On 6/24/25 08:36, Andrea della Porta wrote:
+> The current implementation for the pin controller peripheral
+> on the RP1 chipset supports gpio functionality and just the
+> basic configuration of pin hw capabilities.
+> 
+> Add support for selecting the pin alternate function (pinmux)
+> and full configuration of the pin (pinconf).
+> 
+> Related pins are also gathered into groups.
+> 
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 
-Hmm... looks like this branch hasn't been pushed to kernel.org for a while.
+Linus, can I get an ack or reviewed by tag from you and take that in the 
+next few days to go with the Broadcom ARM SoC pull requests? Thanks!
+-- 
+Florian
