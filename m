@@ -1,71 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 821FA2512F5
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:25:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE49E248F59
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750749918; cv=none; b=UeHOVaJFhIGNurR/nAqlP6DUrtDWHZITuN80jLDZ+Ti5KRmE/T0/GY7j1E1te35RIjbGh9BATOnGWYzJL20kMXLg6fc7lcQbBsgT5u+cGJjFuK0AxahKh5KTC/gmEPM/+88fDjEwray1GhlKW1xXNarENvPoVfRJjYo0xzk4ZMw=
+	t=1750749950; cv=none; b=VbCdo5OPG9es5/BSW9K8UkoaAF5ILtKE8Ac9xTxuUGT4VrD04+EqEA8pVA3Er0j7kChgMRsUA4m9ZxXSpoGZfsi2we8IxdXAt72ol6YgfKhu3fiHIf65zYNBGriKJntIVcwVi0paKZIJhK+fEsdOtQ49rmoSxF66JqwYnoKhuRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750749918; c=relaxed/simple;
-	bh=qTT6SpXUX/0g2pQ5HFQSiMgz0tQTApfNyxJ2okysEzo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=kKlTpzFDUXC9hTwh3CxMmX2u+VNhkRGp4K0vIQD0v5fhOVo7NUdhu8qi94lw1GFxGV3NBMrJJFLsukGgLpClSBXFpsgM0V2DtDJzHlP+vQIcbjomHguAPhD6VNM3y+TiBHwk3ZGhe3GX2HB/tSI9kDNtO+1KjBoQY8qHOfAUsPQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SLVekQZf; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750749950; c=relaxed/simple;
+	bh=Ri2f5BjFFFKOBxurvxfjeGQiE9qDOhTO3lBt58ggkUw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=iugGxmqy0OXLl1thl8yaWNWzdN+4LK50ZQa/GyeXdvLYt7lQZaxMxLGsjmcHQZ+cg5HTo69aQYHmiHwT5FkgfvnjxLrveEFRFbR075YyHjFNHo8PCbtsllG/yg0dA+95hBrgiifDdkNW+6c2yk2x2jkgwPj6crr9Z2i0rD1CSYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=W906KWuA; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SLVekQZf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750749915;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=VgRiV0j85PSRtreLAuxfC6pTAXhw9pPRAHrk5ra/5Es=;
-	b=SLVekQZfJaZMc3VZ+aH0pytnpWd/hLFCEnvQpU1j+jEzrH8FmjmlYd/1WZD5Gv8Ud5/JZW
-	JT7pQK/DWqtNYTAFDbkmBQGr1rn40oNiduEdqVw/x6979IrIsLmCO/4msfCHUGXLYWC1GF
-	cU0jAvhFaSersCjPjfuLSfWzpfvjBes=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-349-iAjSm20lNkikQFgYtNoAmA-1; Tue, 24 Jun 2025 03:25:12 -0400
-X-MC-Unique: iAjSm20lNkikQFgYtNoAmA-1
-X-Mimecast-MFC-AGG-ID: iAjSm20lNkikQFgYtNoAmA_1750749911
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-45311704cdbso34491515e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:25:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W906KWuA"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a575a988f9so62691f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:25:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750749947; x=1751354747; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FtgIGNczssYUGYgBiPeFqClBJjbBAECDcaII7sn4pOg=;
+        b=W906KWuAZuB7TBVSsu5SoCE+FCr3Fp0JXafb7eMB2OCncaPBuDZ1mlAY5xrNPV8sWi
+         WYAWqU3p+Cax1srHns56MJOEnJz/jPRAWhkZF9R2TKCsdzux70msy7dahbtVi1o7ZX5K
+         +uK+m4Q/3tYG2gQVpZzfHEDPcBPEhr5eBx/bpNocmfCEPjNKuFJ+wi4dJvl01fAaUaVi
+         CO7WRm9HYhRn88bbPIbsG7pK8hkW6jjrSCEHU5rwvv09aeNDjp9Wa2vonPkAb/trH9O7
+         9eGt1gIYpcNsSvR9aNmEuuw9NC1EXKAQ2uBcqUfbcNWw7xBD9K/KV+TsSgrceVDWB3ky
+         vQbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750749911; x=1751354711;
-        h=content-transfer-encoding:in-reply-to:from:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VgRiV0j85PSRtreLAuxfC6pTAXhw9pPRAHrk5ra/5Es=;
-        b=vyvZEIptW/vNOxPB9tOwlaj9RbIn//DW7Xs15gW40/EC8yLBcmwunKM34NNSLbiTy0
-         twI+6pE4fFibTPjAuVnBXpcVUJIjK01AdivrWqZIfylBnIhXtNfK5c2oIgSp04a8vevu
-         8RoVmKG8YXPQ3wszUQSt3KIDbU+hzmr3/3OY2atvhQObo0eD4pPEQ5gYdFXIVVfSh2TB
-         ZG/SqPwMYGhFLHzkxQJ9IYza5ICqnTo3tL4xSyjyyLtJdsZRxorZ3cawnls6KeBZ9QmM
-         x3yyjKjE0S46s/M2+l9yr3mvd4/vwbRaZresXCeB27BEN4soqjcrbDvpSJw36gjqf0Mk
-         yicQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW7kxOyPl0di/3XluWTpFAI/YjJHc7kqgjmX21V9VUYAp1Y0z7BxxUuwAAou+j/Ob6OQH74Kq2jAiR9lPI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJmVyRne4XCHBQogeIFN7zhiZbiP94yiT4GoDIod6Gl1gpet+G
-	xY1SCehT4cvERGwp0HZ3l85TxQ3WFRbqtbpVZQlJEGlXSYWxFgLO8kYqyDcXDve3/CgfJ1UnSGz
-	TL/VWiVGBIj6ehki8GB+gyamrqbiEPN8AAvJ3Z8g5wcTmS5cNdz7h8knV9mIEFce+GA==
-X-Gm-Gg: ASbGncs9/ag/TGxFqyhe7cngzVVPJfDy9993QLTIabgy9QE61R2k+FA3dnuNBe8uSK8
-	w/AIRU+N0tZQQj3kQMA7CUpncxD9cmPdLc16ZWGOrRjcuAmGkyWnVliLyx5hS5KcbtdQ5f5lmud
-	iuAR9NpSM4wBrHMKBfgdxO++iX+tcmV8EgxyMK3kijxtFc5StdoXzFOxCEY3+qiXoCsIQFFAWN4
-	LzeV7ZrefsQ054lyi8a4E9o+ViTXmryzTAjtu70DuYc5jlFn0HAx0Z5p0S4SWiF1E2MRDYe/lzt
-	hx5iymPvYW+Dnzd/xE2SKYalm/LdZ5aDX267R5H5Y3bNMNWY0jBbWscDLoipuaoa
-X-Received: by 2002:a05:600c:c168:b0:43d:9f2:6274 with SMTP id 5b1f17b1804b1-4536c253eecmr103886145e9.14.1750749911187;
-        Tue, 24 Jun 2025 00:25:11 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF2um9Qis2AN3HWQ37ati9BBnYWI6SS4ICJEoxMmUlVQC8nuNq4Mjr5VoRjvDjjSGN48+TTXw==
-X-Received: by 2002:a05:600c:c168:b0:43d:9f2:6274 with SMTP id 5b1f17b1804b1-4536c253eecmr103885875e9.14.1750749910798;
-        Tue, 24 Jun 2025 00:25:10 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:f0e:9070:527b:9dff:feef:3874? ([2a01:e0a:f0e:9070:527b:9dff:feef:3874])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8105f93sm1186791f8f.76.2025.06.24.00.25.09
+        d=1e100.net; s=20230601; t=1750749947; x=1751354747;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=FtgIGNczssYUGYgBiPeFqClBJjbBAECDcaII7sn4pOg=;
+        b=kzj+EGTy0+d8aXYTFMlWH4jEW1H6u0Yx+O+Zyrfsw/CMvhrDOmPoDWha7dUgiIFmrL
+         947kMq5NiPDSBZN64uXGOEdMl5l4go5j4CHy/XNhtBJ7i8EVuVnjpp9vuVFRzAEjq7/9
+         FNnI1Q2WRhtqvdkGVloFcILhDzxZUfQ3iVQ2FezwYD1zw1HefcqYOnmQu/AxnB8+YfJ+
+         c/KusclmjBPjEf0LUznBKjw1oxk5gWMg012XYYBUknSEq6zEgQVIOoQF6whkdjJNGJaJ
+         a8vKW4E+Mrp6MgvmrQn6ryRIh4I118p2Y1MWtzq5coe+EJn4KMs8+CVyNKBWQiEMGigB
+         NdqA==
+X-Forwarded-Encrypted: i=1; AJvYcCViI4BtwYROiz/W8vWSMFw9ADe3LfRKexVQ/PMxQk3AENJP1DBgfDcdHWOBSE6BSMIIZ1yv0HSy8C7FBqU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz35/wGMUUREqB+s7YFTf4S0k/dw6bi3p10pBlJ8RWDpGJ3SiVs
+	4tOsRlKC7v391t78jpgyk39ZLgmOmPOn+8YyJgkUFKEM0tWktIl0K0+KVoIuBgmsFVs=
+X-Gm-Gg: ASbGncvRWROE9hcjCrfDFurulwp0WauEyBKdGNwoLbJ4PW9AAFjBp6EA1BOLD+f4pqx
+	5DbYx/HJW9PvD+Mt82DjETNVVbBK8QMm3qZv99FD+Nyb5p97fNZ48MnBm04bsDrOrdYtct4IL6U
+	WzxoC+/8Q2Kt4NtG+wdrxLhl2Mf/dkzOvraHvoXGsOup4r0RFErwbXEqkxbbfkoYz8zAn7BHIOn
+	rnwFMfSjKULDaQf6uxyMLFYfZkFz/vxufO+ZfnjNthaqrLPGA24kVfHDi6uOCRT2PPjavzSIkoG
+	7a1Ig2fgJiaVHoFXAg1t46GyQunovsXqLX70EyzEp0W2YrfFlj2NpQvUyqf+G9zcXHNomfle1xB
+	siJGUXoJjiQfedrNa3Uc1l3nEMc/mpcB+UDSpzdU=
+X-Google-Smtp-Source: AGHT+IFAh6IcPckJtUb2REr21+qkeIcOv+2E3MpGel+3N0TmxwGvyzKEomHombfie38TZXzxxU5RLQ==
+X-Received: by 2002:a05:6000:2084:b0:3a5:3b15:ef52 with SMTP id ffacd0b85a97d-3a6d1192980mr9358226f8f.8.1750749947067;
+        Tue, 24 Jun 2025 00:25:47 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:6fea:600c:ca20:f54a? ([2a01:e0a:3d9:2080:6fea:600c:ca20:f54a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80fed75sm1215020f8f.66.2025.06.24.00.25.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 00:25:09 -0700 (PDT)
-Message-ID: <5e22442e-ddf8-4f5d-b7e4-5e2c9bf783b0@redhat.com>
-Date: Tue, 24 Jun 2025 09:25:08 +0200
+        Tue, 24 Jun 2025 00:25:46 -0700 (PDT)
+Message-ID: <bfba6751-2fd4-4183-b6d4-b1440a4fc98f@linaro.org>
+Date: Tue, 24 Jun 2025 09:25:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,62 +69,93 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: KVM: arm64: vgic-its: Return -ENXIO to invalid
- KVM_DEV_ARM_VGIC_GRP_CTRL attrs
-Content-Language: en-US
-To: David Woodhouse <dwmw2@infradead.org>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Jing Zhang <jingzhangos@google.com>,
- Kunkun Jiang <jiangkunkun@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Sebastian Ott <sebott@redhat.com>, Maxim Levitsky <mlevitsk@redhat.com>,
- Keisuke Nishimura <keisuke.nishimura@inria.fr>,
- linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <bbbddd56135399baf699bc46ffb6e7f08d9f8c9f.camel@infradead.org>
-From: Eric Auger <eauger@redhat.com>
-In-Reply-To: <bbbddd56135399baf699bc46ffb6e7f08d9f8c9f.camel@infradead.org>
-Content-Type: text/plain; charset=UTF-8
+From: neil.armstrong@linaro.org
+Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v1 1/2] phy: mediatek: tphy: Clarify and add kerneldoc to
+ mtk_phy_pdata
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ chunfeng.yun@mediatek.com
+Cc: vkoul@kernel.org, kishon@kernel.org, matthias.bgg@gmail.com,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
+ kernel@collabora.com
+References: <20250623120315.109881-1-angelogioacchino.delregno@collabora.com>
+ <20250623120315.109881-2-angelogioacchino.delregno@collabora.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250623120315.109881-2-angelogioacchino.delregno@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi David,
-
-On 6/23/25 3:22 PM, David Woodhouse wrote:
-> From: David Woodhouse <dwmw@amazon.co.uk>
+On 23/06/2025 14:03, AngeloGioacchino Del Regno wrote:
+> As struct mtk_phy_pdata was almost fully documented, transfer
+> the comments into kerneldoc on top.
+> While at it, also rewrite the comments to both improve the writing
+> writing and the actual information in the documentation, and add a
+> description for the `version` member of the structure.
 > 
-> A preliminary version of a hack to invoke unmap_all_vpes() from an ioctl
-> didn't work very well. We eventually determined this was because we were
-> invoking it on the wrong file descriptor, but not getting an error.
-> 
-> Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-In the corresponding doc (virt/kvm/devices/arm-vgic-its.rst)
-it is said about possible returned values:
-     -ENXIO  ITS not properly configured as required prior to setting
-             this attribute
-which does not exactly match your situation. Shouldn't we also update
-the doc or change the returned value?
-
-Thanks
-
-Eric
-
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 > ---
->  arch/arm64/kvm/vgic/vgic-its.c | 3 +++
->  1 file changed, 3 insertions(+)
+>   drivers/phy/mediatek/phy-mtk-tphy.c | 20 ++++++++++----------
+>   1 file changed, 10 insertions(+), 10 deletions(-)
 > 
-> diff --git a/arch/arm64/kvm/vgic/vgic-its.c b/arch/arm64/kvm/vgic/vgic-its.c
-> index 534049c7c94b..b34f8976c9cc 100644
-> --- a/arch/arm64/kvm/vgic/vgic-its.c
-> +++ b/arch/arm64/kvm/vgic/vgic-its.c
-> @@ -2694,6 +2694,9 @@ static int vgic_its_ctrl(struct kvm *kvm, struct vgic_its *its, u64 attr)
->  	case KVM_DEV_ARM_ITS_RESTORE_TABLES:
->  		ret = abi->restore_tables(its);
->  		break;
-> +	default:
-> +		ret = -ENXIO;
-> +		break;
->  	}
->  
->  	mutex_unlock(&its->its_lock);
+> diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
+> index 644a34bd2b0b..858824b4476e 100644
+> --- a/drivers/phy/mediatek/phy-mtk-tphy.c
+> +++ b/drivers/phy/mediatek/phy-mtk-tphy.c
+> @@ -277,19 +277,19 @@ enum mtk_phy_version {
+>   	MTK_PHY_V3,
+>   };
+>   
+> +/**
+> + * mtk_phy_pdata - SoC specific platform data
+> + * @avoid_rx_sen_degradation: Avoid TX Sensitivity level degradation (MT6795/8173 only)
+> + * @sw_pll_48m_to_26m:        Workaround for V3 IP (MT8195) - switch the 48MHz PLL from
+> + *                            fractional mode to integer to output 26MHz for U2PHY
+> + * @sw_efuse_supported:       Switches off eFuse auto-load from PHY and applies values
+> + *                            read from different nvmem (usually different eFuse array)
+> + *                            that is pointed at in the device tree node for this PHY
+> + * @version:                  PHY IP Version
+> + */
+>   struct mtk_phy_pdata {
+> -	/* avoid RX sensitivity level degradation only for mt8173 */
+>   	bool avoid_rx_sen_degradation;
+> -	/*
+> -	 * workaround only for mt8195, HW fix it for others of V3,
+> -	 * u2phy should use integer mode instead of fractional mode of
+> -	 * 48M PLL, fix it by switching PLL to 26M from default 48M
+> -	 */
+>   	bool sw_pll_48m_to_26m;
+> -	/*
+> -	 * Some SoCs (e.g. mt8195) drop a bit when use auto load efuse,
+> -	 * support sw way, also support it for v2/v3 optionally.
+> -	 */
+>   	bool sw_efuse_supported;
+>   	enum mtk_phy_version version;
+>   };
 
+Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
