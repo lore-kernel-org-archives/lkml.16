@@ -1,150 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E510A27C879
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F9F91F5617;
+	Tue, 24 Jun 2025 10:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750760045; cv=none; b=iu0eQ5WDMcS4irkynkNntltiJQhnTLczPjZtQgXh55GNcnm+llYTnJxKe0mAEvlSgvmCDPgPDhcrKfIfSroPjXPs0uKJVgFkvaxJWkyyXaeBS6IFnpW6aVnPOnhj9rvi9zpIW7P9Zx3pyujxZ1sb2CNVf3bJ8LTW0FxSMe0/zkQ=
+	t=1750760139; cv=none; b=kDhqZQBx3ctgxAm20Mr9kbfE6kyYKpss1vpBJNT7dZpziAcsXQCmo4y4hCB0JJTn5Lq8t1Y0uWSMJMkrznKubaFfKJVfL8RdTSCUOQ5KR8lLlMmOGuvg3oQqIdrovspUJY2PsjHb9w51AyiaLohH9b9pOUKlyILOmNx7qCCWMdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750760045; c=relaxed/simple;
-	bh=GiI2VSijnFCghaiO7yOcCW+FmIFFoXPWegYvrrRwpbo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ltz6cSC0m7V8WSjgDf6tXzSt4Bg7PpbSjTsD9LvBu9Lakp2szr4QWjcMxbLwmWwCMclkoQbF4k1K19r2FUcF187bkZW7XufoddAs4YrZ4Aq9oNf+KMO3SgG35AJXvy1JPVsexN/IXVQ7ipwtRb9Ci6PvgMZgcEIX4chq85E8mfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SEInEzts; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750760139; c=relaxed/simple;
+	bh=DeLoam85p8JWzZhhRxwqxzZCgYEqKHebIJm5/VJzQ+s=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=lR0tQ5TVitkU5I1n6+bgfjaNVaeQd7GOA3jYx6F4IuiwQtufAQCIWWLILq9dDlll0CVb5OpQzfQlYViC57U675ZAm6jR8bjGmgKVYgPkGWs7zDRyfUga0iqQZr4iCQsilghrkrLx7lVt4DwIe2jPZD6671W7d+l2aPqJeucQkBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=t8AJyegL; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hF6qn0i5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SEInEzts"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750760044; x=1782296044;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=GiI2VSijnFCghaiO7yOcCW+FmIFFoXPWegYvrrRwpbo=;
-  b=SEInEztsAiSIM9yKI2O3CrVqvt4bkHtML2zF4bG5XulUzVGe3URaeDsW
-   yHf3Ht630iChFWaOMCcoMVm9GVoBW9icUVp8AA0RWrOZ2wifmGpeCCTAP
-   vW2H0lkMpIVPDRLdLto52jb+cyQ6DvoCUy0cT//pbdnL4yEMq6B27XHx8
-   kJLbIFbF+bpWo84uV0UYvEPTJhvhMNGo9C7ek1PNvtemwp+ArWIuFkdkZ
-   ktrb+iu9lxbkVwK1T4+hdhftgVuVvYhAse7TiLO7EGzsAkK6ttu2dB2ZP
-   7/s7sub0wKGEodHi0YQhRpJzqrHLxWq1ZM3GqSdqTBiO/HWXAr3XHq+SQ
-   A==;
-X-CSE-ConnectionGUID: F1d9UrQYSy6f4XaQ2D/uGg==
-X-CSE-MsgGUID: iebv/h5mSwiZyPPRqWms0A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="64053404"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="64053404"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 03:14:03 -0700
-X-CSE-ConnectionGUID: G3efHSgdTFKrXncrQ+b54Q==
-X-CSE-MsgGUID: PKGul18fS1mB82vJghcxHg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="157375216"
-Received: from rfrazer-mobl3.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.124.223.45])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 03:14:00 -0700
-From: Kai Huang <kai.huang@intel.com>
-To: dave.hansen@intel.com,
-	peterz@infradead.org,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	mingo@redhat.com,
-	hpa@zytor.com,
-	kirill.shutemov@linux.intel.com
-Cc: rick.p.edgecombe@intel.com,
-	pbonzini@redhat.com,
-	seanjc@google.com,
-	x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/virt/tdx: Further fix tdh_vp_enter() calls instrumentable code warning
-Date: Tue, 24 Jun 2025 22:13:51 +1200
-Message-ID: <20250624101351.8019-1-kai.huang@intel.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="t8AJyegL";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hF6qn0i5"
+Date: Tue, 24 Jun 2025 10:05:47 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750760136;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/47q+U2EDYKcMVQQHdah7LamsadCgwZWGnEscz/LxCo=;
+	b=t8AJyegLeyVH/i/um46wV5XG/LrHIxqDgLNZ2D3cgf9dCJva56HWnwoms04OKc7UHGlTrA
+	phvjjAELk6QDi2O8joMc87rMJ7CoChT0HHAPglGxCE5/2xvKBskq97+U0bDzzWnQjLXDxZ
+	jLHpgEsVCw+PF9k4Xyj93ao9BH8Vj0Ay4ddqNFQ8vu4m9LMP04iBOvYn9Nzj6z2CKK6j68
+	F+i0Xa/IIbhKL2LvYoMB1ndjRti0RQvJ3YG1q4RFp23PjZEYBY0RJ56wCebnBvM1zPhTyh
+	KHdJ9ul+gc9kFvvaauZa7W7doMw/u8sroxRGhk+ogiHkvCLAUwwjD3g6FLesOQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750760136;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/47q+U2EDYKcMVQQHdah7LamsadCgwZWGnEscz/LxCo=;
+	b=hF6qn0i5jLJA0Kh3HAmZSgt4gdy2LkU9N/269kLp2HyR3RB5bvq93kYM+CCQIDC8xZl49C
+	3S+tvREVf5eDKVBg==
+From: "tip-bot2 for Pawan Gupta" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/bugs] x86/bugs: Use switch/case in its_apply_mitigation()
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Nikolay Borisov <nik.borisov@suse.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250611-eibrs-fix-v4-4-5ff86cac6c61@linux.intel.com>
+References: <20250611-eibrs-fix-v4-4-5ff86cac6c61@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <175075954773.406.6201068420364124322.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-tdh_vp_enter() needs to be marked noinstr, which means it can't call any
-non-inlined noinstr functions.  Commit e9f17038d814 ("x86/tdx: mark
-tdh_vp_enter() as __flatten") tried to address a build warning caused by
-tdx_tdvpr_pa() not getting inlined.  Unfortunately that commit didn't
-fix the warning completely due to the inconsistent behavior of the
-__flatten annotation.
+The following commit has been merged into the x86/bugs branch of tip:
 
-There are two problems that can come up depending on the compiler and
-config.  One is that tdx_tdvpr_pa() doesn't get inlined, the other is
-that page_to_phys() doesn't get inlined.
+Commit-ID:     7e44909e0ea8346ba08b244ecc275fc3394e2b8e
+Gitweb:        https://git.kernel.org/tip/7e44909e0ea8346ba08b244ecc275fc3394e2b8e
+Author:        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+AuthorDate:    Wed, 11 Jun 2025 10:29:47 -07:00
+Committer:     Borislav Petkov (AMD) <bp@alien8.de>
+CommitterDate: Mon, 23 Jun 2025 12:22:44 +02:00
 
-The __flatten annotation makes the compiler inline all function calls
-that the annotated function makes, and the aforementioned commit assumed
-this is always honored, recursively.  But it turns out it's not always
-true:
+x86/bugs: Use switch/case in its_apply_mitigation()
 
- - Gcc may ignore __flatten when CONFIG_CC_OPTIMIZE_FOR_SIZE=y.
- - Clang doesn't support recursive inlining for __flatten, which can
-   trigger another similar warning when page_to_phys() calls pfn_valid()
-   when CONFIG_DEBUG_VIRTUAL=y.
+Prepare to apply stuffing mitigation in its_apply_mitigation(). This is
+currently only done via retbleed mitigation. Also using switch/case
+makes it evident that mitigation mode like VMEXIT_ONLY doesn't need any
+special handling.
 
-Therefore using __flatten is not the right fix.
-
-To fix the first problem, remove the __flatten for tdh_vp_enter() and
-instead annotate tdx_tdvpr_pa() with __always_inline to make sure it is
-always inlined.
-
-To fix the second problem, change tdx_tdvpr_pa() to use
-PFN_PHYS(page_to_pfn()) instead of page_to_phys() so that there will be
-no more function call inside tdx_tdvpr_pa()[*].
-
-The TDVPR page is always an actual page out of page allocator, so the
-additional warning around pfn_valid() check in page_to_phys() doesn't
-help a lot anyway.  It's not worth complicating the code for such
-warning when CONFIG_DEBUG_VIRTUAL=y.
-
-[*] Since commit cba5d9b3e99d ("x86/mm/64: Make SPARSEMEM_VMEMMAP the
-    only memory model") page_to_pfn() has been a simple macro without
-    any function call.
-
-Fixes: e9f17038d814 ("x86/tdx: mark tdh_vp_enter() as __flatten")
-Signed-off-by: Kai Huang <kai.huang@intel.com>
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+Link: https://lore.kernel.org/20250611-eibrs-fix-v4-4-5ff86cac6c61@linux.intel.com
 ---
- arch/x86/virt/vmx/tdx/tdx.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/bugs.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/virt/vmx/tdx/tdx.c b/arch/x86/virt/vmx/tdx/tdx.c
-index c7a9a087ccaf..f92ceaea2726 100644
---- a/arch/x86/virt/vmx/tdx/tdx.c
-+++ b/arch/x86/virt/vmx/tdx/tdx.c
-@@ -1502,9 +1502,14 @@ static inline u64 tdx_tdr_pa(struct tdx_td *td)
- 	return page_to_phys(td->tdr_page);
- }
+diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
+index 20696ab..e861e88 100644
+--- a/arch/x86/kernel/cpu/bugs.c
++++ b/arch/x86/kernel/cpu/bugs.c
+@@ -1468,15 +1468,21 @@ static void __init its_update_mitigation(void)
  
--static inline u64 tdx_tdvpr_pa(struct tdx_vp *td)
-+static __always_inline u64 tdx_tdvpr_pa(struct tdx_vp *td)
+ static void __init its_apply_mitigation(void)
  {
--	return page_to_phys(td->tdvpr_page);
-+	/*
-+	 * Don't use page_to_phys() because tdh_vp_enter() calls this
-+	 * function from 'noinstr' code, and page_to_phys() can call
-+	 * uninlined functions on some compiler/configs.
-+	 */
-+	return PFN_PHYS(page_to_pfn(td->tdvpr_page));
++	switch (its_mitigation) {
++	case ITS_MITIGATION_OFF:
++	case ITS_MITIGATION_AUTO:
++	case ITS_MITIGATION_VMEXIT_ONLY:
+ 	/* its=stuff forces retbleed stuffing and is enabled there. */
+-	if (its_mitigation != ITS_MITIGATION_ALIGNED_THUNKS)
+-		return;
+-
+-	if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
+-		setup_force_cpu_cap(X86_FEATURE_INDIRECT_THUNK_ITS);
++	case ITS_MITIGATION_RETPOLINE_STUFF:
++		break;
++	case ITS_MITIGATION_ALIGNED_THUNKS:
++		if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
++			setup_force_cpu_cap(X86_FEATURE_INDIRECT_THUNK_ITS);
+ 
+-	setup_force_cpu_cap(X86_FEATURE_RETHUNK);
+-	set_return_thunk(its_return_thunk);
++		setup_force_cpu_cap(X86_FEATURE_RETHUNK);
++		set_return_thunk(its_return_thunk);
++		break;
++	}
  }
  
- /*
-@@ -1518,7 +1523,7 @@ static void tdx_clflush_page(struct page *page)
- 	clflush_cache_range(page_to_virt(page), PAGE_SIZE);
- }
- 
--noinstr __flatten u64 tdh_vp_enter(struct tdx_vp *td, struct tdx_module_args *args)
-+noinstr u64 tdh_vp_enter(struct tdx_vp *td, struct tdx_module_args *args)
- {
- 	args->rcx = tdx_tdvpr_pa(td);
- 
-
-base-commit: b7e21417e1f2c9b2d5c15b0a7d866e810de772aa
--- 
-2.49.0
-
+ #undef pr_fmt
