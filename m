@@ -1,118 +1,182 @@
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FB7291C1A
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD382C325C
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750774196; cv=none; b=POFb3JwOB35sSdJDRGBmdqRhHMzR7Gq8xEEGfxIbB/HYeGPSiSbVyYkrry42euYO1w+1vgcN/lZ5+nVOcJNweTM/GqtSRSgI4cTDjpLzYk3abq45s37dchWwIaHAsPpxEqKVM+nVfJdx1W7Gly2+ox9OIHRdHCksEXxU2hRXiqo=
+	t=1750774210; cv=none; b=XrpzU2c4GVY/tXg0CpvgXJww9AVdsM+cbckaPE1QOZkUBgECHznNNdZusQH+RQdYgg3Zlt+C1kT0Zla6pdB8+1cAG4wYrIrrHvDG8X9mrxlqL+wk/+ptJEDsh7aFEEuZDNZEkpPmoULy9vvHfT0hEI1COklSZ0Oli9KFMTeqEKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750774196; c=relaxed/simple;
-	bh=lC5cRjaojZ5t/DeqN4fUzCwenXZ0a0iWp5ap87muVhM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Uaxr6sbSarfjZCQ3yKkj27h8UrgPkBhLdjww6aCJEdBZwaSdwZ+f9jX0bzMvBQHjvTOI1/Q+iMXUqKTc3SQ4oAZXJkcuo+7sdWIHVF2OjS/IONo6LtBvvrna8kbRnb7Y/rUwkLa7Yyeh3AfhYnk+T7BPoRv+hATpt1Z3Whw4lCk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zetier.com; spf=pass smtp.mailfrom=zetier.com; dkim=pass (2048-bit key) header.d=zetier.com header.i=@zetier.com header.b=SWvRsrU7; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zetier.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zetier.com
+	s=arc-20240116; t=1750774210; c=relaxed/simple;
+	bh=qj/CWqHLyhMEEnGdAVi2FKgDX7NQhEFCDAoqdAeRp2o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T7IlbxcRN1b7PuuOB1Zq640D2bjNJf6IMntBZqnmvqiBWs+qdFti3bShMQlXIiRKnyr5cSGnBBNi9PsrThbqY/BXFOp0VbVNzzzvo20k7Y+vKkqFkUSLfUsGUCt7DnFOlIUhvKfeOUuN0DdqHbVj1Qi21r1fpIn1W3YZ6iHD4a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=Xi27Plsy; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zetier.com header.i=@zetier.com header.b="SWvRsrU7"
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-b34a6d0c9a3so688615a12.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:09:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="Xi27Plsy"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-450dd065828so4658655e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:10:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=zetier.com; s=gm; t=1750774193; x=1751378993; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ur3pkSe32TVriqGAIz7br9BFdD6ELIY4joveCHedb2Y=;
-        b=SWvRsrU72zhFSUL3An21JgXMNui1ef6wozDOevdKciWMA2Ho7t5vwQ/znPdcPUXTOr
-         l2rGTiai4tIIMsOVjziV4sxp/WljqQdk1Yil2mP+f8PdH8ueE68kvCFbnrB2RFPcQgvD
-         HBu2/mYGxwy5kNu7oxZ4jKOQZ1qraHHb9N5rD3hig1Wxw2D9yAGMSccpbSR3hLrU+VG4
-         uzUrRXJzWZ6DBuXX7GQ9N9y0nfbN7osCEJZbvETOrbuWiDRuQvSdKU5rMbYJEOV0Codp
-         W2sgVFP0guqMbRaoM4gNVc4g5FADYbWSg0a7id3bX0rIL8PdO3z/Q+SnJsZNrBV6DQNK
-         lSMA==
+        d=ventanamicro.com; s=google; t=1750774207; x=1751379007; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MQ7CvyZIlkZs87gjY0NM1qz59baVwPwR/W8k37uo164=;
+        b=Xi27PlsyZzSlZ1Hm5UeBtd4XfHF2eUXlrtvOhE/GTof2j8pvV7qU+ulra0manN8uhx
+         SxgEXA1rUtksBTYFws/XJZxJ77ccb0I5fFvOxi7DJLciG6036XIpeYiO0FoSc3W04W6j
+         BgXwyal62Tkb2ouuNDFpJAh2omVWlBw2iLk/7qa/fna46KUZm1t5l0UqvUsPuSL2Gzrf
+         ltiTPj4uRrkL3DABeWm7whb2Sztia4kDmPPZwj6/sbnQbv6cU/2qcJ4QXoRz/Qc/fC5R
+         QgzEfVymKOklYE1rPbn9ynPS7g7Xg6ID6NnCLAuC7oM7q69Wei256jJuOe6Ugr5OEZMB
+         UUAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750774193; x=1751378993;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ur3pkSe32TVriqGAIz7br9BFdD6ELIY4joveCHedb2Y=;
-        b=DncMf3oWc3RcHXD/3O/HiJhCmWolaAd32D6XaVUOZLz4hvfu0TICRbTLqQ2i7NUMhb
-         aYbzKuc4fO8PoV40MyFJpxxqlmxOGQQGWAZDH1TmxooUqCrtF5eeMcSnZYIQz7VBSCDa
-         2m9kbUMm4MhjUdIIlgxfJg+p+hbt0B+jfQqXIQhAaFj/xM2MULHVos/TYPu2hvLrlRKq
-         rIMu1CvmCpq6SK6uQz4iCqwQRlXZi8HFWfV/Zboz2rExt0Q65h2Wmc3oug6BFszvwpfF
-         ebfL/7Efn8OWYSC8TjDoXJkgsd4XmvzKsb7scUKkx8H3IsjsghDQo+H3y+UffDycgPPJ
-         zd8g==
-X-Forwarded-Encrypted: i=1; AJvYcCWBeZEwyKWyEkSe+oR/1Bt+3Beu1h8ydt7gjF+HnexbCmz+ZPNscCAJZDEuMYX4D87+WhynUOPKpDnwIto=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxLQhKEr9u3udr/Ch9ILsc4xDroJCDAVi04FXcs3eJNqGFqdzbI
-	rZGWihDMeY1hxzZkkytbgEco6JldbDrFudEHU2X6MLZFbVbvNJXWqSwjM0g9ay9BzQ==
-X-Gm-Gg: ASbGnctqvT2HuNUWfCQFhASjZV/o9Of871ZrBgYhPPV6wzEE74DCoBueqgY39yD/pgq
-	IaegtCeRnPa5X4qfyfinFJEzOQDDRwZXaI56VW3y6QcCwiplExuWWTfBvn3YQTRoGm/sJXsp7NA
-	RtZg6sx7VeN4/Zq+73b4MvCLe0wYwcjUl3SC/AB9+NxkOeC759J6dJKiXnioPrbHODnazgYZdZW
-	lCYwyaHuF9zFeG7tA6Pc1S+rY6e9zfZ+hbOuYYmVObpnCPJOGj10OQLraKbQoNfQuMUnIOFHRTb
-	O3pO0nC1q23npRNKpPzHYRJu1sqPHdua2GrmwiCwaEHdSMfyRb25MvW13IW48LzGvDNzVXdwKZ5
-	MGU7tP4MYqnNMzxMrN4PyESa+Kkl6iQ6+DNNdH6E1eEnohJPYLYhaNdFxfOF0
-X-Google-Smtp-Source: AGHT+IEEg7l4G6SUorjlq4/b8X8X+akKFfbR+kWJrhsVArb1J01hupz0jyLFc8JQcBOKyckjtmGZIg==
-X-Received: by 2002:a05:6a20:7284:b0:1f5:72eb:8b62 with SMTP id adf61e73a8af0-22026f162a1mr24443721637.20.1750774192878;
-        Tue, 24 Jun 2025 07:09:52 -0700 (PDT)
-Received: from system.mynetworksettings.com (pool-71-126-161-43.washdc.fios.verizon.net. [71.126.161.43])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e42ad8sm1982115b3a.70.2025.06.24.07.09.51
+        d=1e100.net; s=20230601; t=1750774207; x=1751379007;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=MQ7CvyZIlkZs87gjY0NM1qz59baVwPwR/W8k37uo164=;
+        b=ksjV7/9ejL7yMybsIpzVgdCwmgDPACFBcxv+KW3iNRYkdp4fFQcBMiMXBMKPtMfQ1t
+         3URs9yDaHsSGvx2GA4JvaM+Anyja8l5JIcbQTkdFPLmbqMNSTDVHc5k71Gje43vK/MUT
+         i5ZRs5Cz/CrtRGNm7CUOJgjfjm9eP2cKRV0lrAWkn5I9puSDPy6MLvVu5pvzJOJO9p8K
+         d36+ycvPrZT3qcudexCeBJlWLf2TSp7JqqfiNPvZE83blrgunQ+64xpNc+goUue81IGO
+         WmdbU1W2z8kgl+r7XyjV9bNGDQ7oEC1pBOZunI1ax+S7FSyO/Sa6WVxhpxhuXOWcn7hu
+         nJtw==
+X-Forwarded-Encrypted: i=1; AJvYcCUywJRBQFDNgZzS3zJ/Xh+FEPa+BOdPa/aE4Z2emCntG75IZ15HLFdwr+zFtVhZrkHRt8ZZpad8vAID0fM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw2LanadoYGr1WOEePz/cX6cQbCfqnNaQOAdpmeml31N9AnQgCj
+	DEke9Puh9ZiJqFrU+xZTMmJ5VWdxExl11jKJO+nUcJjNm4XHl60gK1JaB6dQTerY2Ho=
+X-Gm-Gg: ASbGncsFuHbN+aDmw3dXDwUvcS9ICh17+KpadwA9QMFOCyjqoSiPXJnSAr5OCtSxCx7
+	GS3ePPZg5uPID8H84Rn2EjAiFjkHu4nT/CPzTCJ0/BL8QKYiF/OuiTG50ZaXtYDWiKifj94JLYN
+	yXajBQ6aKibMlRUufdViDwX739hOS+5+hcTM9E6PZznD5bO5mgjExAW+nIfzprBmuLHIG22z/hU
+	DL+GfpcXiCBEQSIsZAKqn0UvGVlMRyYiNLY3hCvVWi0uAzmjCtMUx0WxN03pu8jx0s3zJAMOGWK
+	x/lScKH80sdlgKfb4/KJTl+FHDk+gEeZMsFE/iUVrywIB0Kgmg==
+X-Google-Smtp-Source: AGHT+IEJeX4diRkZ29kEnrmPsfhU9TcNr2AZ9X1Thlmc1YkCR6UEhFhLrNxHaOV0+h9u10fRDQFJlw==
+X-Received: by 2002:a05:600c:3b24:b0:453:c39:d0a7 with SMTP id 5b1f17b1804b1-453653cf416mr150568745e9.5.1750774206936;
+        Tue, 24 Jun 2025 07:10:06 -0700 (PDT)
+Received: from localhost ([2a02:8308:a00c:e200::5485])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e81106b8sm2090841f8f.91.2025.06.24.07.10.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 07:09:52 -0700 (PDT)
-From: Drew Hamilton <drew.hamilton@zetier.com>
-To: Bin Liu <b-liu@ti.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Drew Hamilton <drew.hamilton@zetier.com>,
-	Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
-Subject: [PATCH] usb: musb: fix gadget state on disconnect
-Date: Tue, 24 Jun 2025 10:09:30 -0400
-Message-Id: <20250624140930.25887-1-drew.hamilton@zetier.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 24 Jun 2025 07:10:05 -0700 (PDT)
+Date: Tue, 24 Jun 2025 16:10:04 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: zhouquan@iscas.ac.cn
+Cc: anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org
+Subject: Re: [PATCH 2/2] KVM: riscv: selftests: Add common supported test
+ cases
+Message-ID: <20250624-d7b4b9ba702fcaf2f42695b1@orel>
+References: <cover.1749810735.git.zhouquan@iscas.ac.cn>
+ <7e8f1272337e8d03851fd3bb7f6fc739e604309e.1749810736.git.zhouquan@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7e8f1272337e8d03851fd3bb7f6fc739e604309e.1749810736.git.zhouquan@iscas.ac.cn>
 
-When unplugging the USB cable or disconnecting a gadget in usb peripheral mode with
-echo "" > /sys/kernel/config/usb_gadget/<your_gadget>/UDC,
-/sys/class/udc/musb-hdrc.0/state does not change from USB_STATE_CONFIGURED.
+On Fri, Jun 13, 2025 at 07:30:13PM +0800, zhouquan@iscas.ac.cn wrote:
+> From: Quan Zhou <zhouquan@iscas.ac.cn>
+> 
+> Some common KVM test cases are supported on riscv now as following:
+> 
+>     access_tracking_perf_test
+>     demand_paging_test
+>     dirty_log_perf_test
+>     dirty_log_test
+>     guest_print_test
+>     kvm_binary_stats_test
+>     kvm_create_max_vcpus
+>     kvm_page_table_test
+>     memslot_modification_stress_test
+>     memslot_perf_test
+>     rseq_test
+>     set_memory_region_test
 
-Testing on dwc2/3 shows they both update the state to USB_STATE_NOTATTACHED.
+Half this list is already build for riscv since they're common. See
+TEST_GEN_PROGS_COMMON. If the other half can be built and run then
+please send a separate patch, not something tacked onto this series,
+since they're all unrelated to the series.
 
-Add calls to usb_gadget_set_state in musb_g_disconnect and musb_gadget_stop
-to fix both cases.
+> 
+> Add missing headers for tests and fix RISCV_FENCE redefinition
+> in `rseq-riscv.h` by using the existing macro from <asm/fence.h>.
+> 
+> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
+> ---
+>  tools/testing/selftests/kvm/Makefile.kvm             | 12 ++++++++++++
+>  .../testing/selftests/kvm/include/riscv/processor.h  |  2 ++
+>  tools/testing/selftests/rseq/rseq-riscv.h            |  3 +--
+>  3 files changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/kvm/Makefile.kvm b/tools/testing/selftests/kvm/Makefile.kvm
+> index 38b95998e1e6..565e191e99c8 100644
+> --- a/tools/testing/selftests/kvm/Makefile.kvm
+> +++ b/tools/testing/selftests/kvm/Makefile.kvm
+> @@ -197,6 +197,18 @@ TEST_GEN_PROGS_riscv += arch_timer
+>  TEST_GEN_PROGS_riscv += coalesced_io_test
+>  TEST_GEN_PROGS_riscv += get-reg-list
+>  TEST_GEN_PROGS_riscv += steal_time
+> +TEST_GEN_PROGS_riscv += access_tracking_perf_test
+> +TEST_GEN_PROGS_riscv += demand_paging_test
+> +TEST_GEN_PROGS_riscv += dirty_log_perf_test
+> +TEST_GEN_PROGS_riscv += dirty_log_test
+> +TEST_GEN_PROGS_riscv += guest_print_test
+> +TEST_GEN_PROGS_riscv += kvm_binary_stats_test
+> +TEST_GEN_PROGS_riscv += kvm_create_max_vcpus
+> +TEST_GEN_PROGS_riscv += kvm_page_table_test
+> +TEST_GEN_PROGS_riscv += memslot_modification_stress_test
+> +TEST_GEN_PROGS_riscv += memslot_perf_test
+> +TEST_GEN_PROGS_riscv += rseq_test
+> +TEST_GEN_PROGS_riscv += set_memory_region_test
+>  
+>  TEST_GEN_PROGS_loongarch += coalesced_io_test
+>  TEST_GEN_PROGS_loongarch += demand_paging_test
+> diff --git a/tools/testing/selftests/kvm/include/riscv/processor.h b/tools/testing/selftests/kvm/include/riscv/processor.h
+> index 162f303d9daa..4cf5ae11760f 100644
+> --- a/tools/testing/selftests/kvm/include/riscv/processor.h
+> +++ b/tools/testing/selftests/kvm/include/riscv/processor.h
+> @@ -9,7 +9,9 @@
+>  
+>  #include <linux/stringify.h>
+>  #include <asm/csr.h>
+> +#include <asm/vdso/processor.h>
+>  #include "kvm_util.h"
+> +#include "ucall_common.h"
 
-Tested against 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3.
+These should be included directly from the tests that need them.
 
-Co-authored-by: Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
-Signed-off-by: Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
-Signed-off-by: Drew Hamilton <drew.hamilton@zetier.com>
----
- drivers/usb/musb/musb_gadget.c | 2 ++
- 1 file changed, 2 insertions(+)
+>  
+>  #define INSN_OPCODE_MASK	0x007c
+>  #define INSN_OPCODE_SHIFT	2
+> diff --git a/tools/testing/selftests/rseq/rseq-riscv.h b/tools/testing/selftests/rseq/rseq-riscv.h
+> index 67d544aaa9a3..06c840e81c8b 100644
+> --- a/tools/testing/selftests/rseq/rseq-riscv.h
+> +++ b/tools/testing/selftests/rseq/rseq-riscv.h
+> @@ -8,6 +8,7 @@
+>   * exception when executed in all modes.
+>   */
+>  #include <endian.h>
+> +#include <asm/fence.h>
+>  
+>  #if defined(__BYTE_ORDER) ? (__BYTE_ORDER == __LITTLE_ENDIAN) : defined(__LITTLE_ENDIAN)
+>  #define RSEQ_SIG   0xf1401073  /* csrr mhartid, x0 */
+> @@ -24,8 +25,6 @@
+>  #define REG_L	__REG_SEL("ld ", "lw ")
+>  #define REG_S	__REG_SEL("sd ", "sw ")
+>  
+> -#define RISCV_FENCE(p, s) \
+> -	__asm__ __volatile__ ("fence " #p "," #s : : : "memory")
+>  #define rseq_smp_mb()	RISCV_FENCE(rw, rw)
+>  #define rseq_smp_rmb()	RISCV_FENCE(r, r)
+>  #define rseq_smp_wmb()	RISCV_FENCE(w, w)
+> -- 
+> 2.34.1
 
-diff --git a/drivers/usb/musb/musb_gadget.c b/drivers/usb/musb/musb_gadget.c
-index 6869c58367f2..caf4d4cd4b75 100644
---- a/drivers/usb/musb/musb_gadget.c
-+++ b/drivers/usb/musb/musb_gadget.c
-@@ -1913,6 +1913,7 @@ static int musb_gadget_stop(struct usb_gadget *g)
- 	 * gadget driver here and have everything work;
- 	 * that currently misbehaves.
- 	 */
-+	usb_gadget_set_state(g, USB_STATE_NOTATTACHED);
- 
- 	/* Force check of devctl register for PM runtime */
- 	pm_runtime_mark_last_busy(musb->controller);
-@@ -2019,6 +2020,7 @@ void musb_g_disconnect(struct musb *musb)
- 	case OTG_STATE_B_PERIPHERAL:
- 	case OTG_STATE_B_IDLE:
- 		musb_set_state(musb, OTG_STATE_B_IDLE);
-+		usb_gadget_set_state(&musb->g, USB_STATE_NOTATTACHED);
- 		break;
- 	case OTG_STATE_B_SRP_INIT:
- 		break;
--- 
-2.34.1
+tools/testing/selftests/rseq isn't under KVM's purview, so this should be
+a separate patch CC'ing the appropriate people and lists.
 
+Thanks,
+drew
