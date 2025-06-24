@@ -1,243 +1,335 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11023103.outbound.protection.outlook.com [40.107.159.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8351EBA09;
-	Tue, 24 Jun 2025 11:46:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750765597; cv=none; b=GspmYx3isoeJXiqc+AzgDhMTmmcGibLgEb8lq89mr5/LSaQJL1UR+FIm14RGUoyZsve11hY74i6KE8eoHbFmjh7lmUT6IYZpK1LOKi0dl9a+GYySsylc/Zg8gCZI3aRC6jqBPNYhLqSDosNK6JnmwDiGfzegQUWgi6bwfzMmc8g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750765597; c=relaxed/simple;
-	bh=Aq9GD2THfqFXMbWItD81A4DWQCtFtMOiUc3S2GCPJMY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uQz0Y/SGZyH9w7IgVIcrE0De1NOEOxT8igufNVwPdKWsMQa9lKbg6HCCish5xh/HoQy4/2uaE4tnHQlv4qX0ODIbDPKQMSwHi/LI1xjAkjj6bhhHs4PWYgbqsWCPZJUhTUuaPcEER/Mxv7SkqrCljl/uQ1fFTBvCtmwW7AoaAUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OsHVH/Wu; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3E561EBA09
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:46:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.103
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750765606; cv=fail; b=hRtO6zxEpt0v6yFsJ4y4QfCxnn1MH1zg8TKhxxFXZjaWCPdxk3/rEdg6W4/Rgm2K1eVWx3zVgQjb1pKTpuuNjaY9TGycu9eLCyCZvPYbWyC6epIlwRE4qCHw+PsE0TI3b6x3ST6WnXBLto6cyEfUuZ9td96LIFQ8/7A/p2WdyP8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750765606; c=relaxed/simple;
+	bh=rPwNxGhM/QFuaGA9zCne+V6G0qiyY6fMeZhEonFW+8E=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version:
+	 References; b=l9cdwQx9sT+LbWV2+Nd+0KUR+lNCcZKmKXlpslcuE/PxD6DvgsWLyLFyhRJbLSrHEu7PdSkz9D5P3RPFcXwg+LkHEIOTxZQhWsAvty1sKyzrai4f2pwFCQ+GtocXfKxv76p/vdgUkrrWAEWxt7FkIJ7cE+mAzpqa2TIBNiT9s+A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=topic.nl; spf=pass smtp.mailfrom=topic.nl; dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b=nODFPU3J; arc=fail smtp.client-ip=40.107.159.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=topic.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=topic.nl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OsHVH/Wu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750765596; x=1782301596;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Aq9GD2THfqFXMbWItD81A4DWQCtFtMOiUc3S2GCPJMY=;
-  b=OsHVH/WuzzAIchm8vrneTB0NzP75WbpC8zE/7tPgkE8sMO8CnhJkFkML
-   fhDhMiKPUQ1E/jKEbk9dMBXpucdXm4Do7Ksz+lKw255PrqIA3278vG+qd
-   glXvtR81qmuQz09r3DKXr7GhPW4XJO51JP4OA0QOUYIexjvhy2eL3ob18
-   AiIMV3IPUq3v/UEF14Wf6n6BtoOPaPhwbvViDerZyWV63jmhTUv6jRMg6
-   F50KaYpY7hgWe71ld0MXXqxpUZ5Hb5oQZ/HJMcyiW3i097XQq6K9KEGBM
-   yIRfJcQ6SshwEP4Q92A/3IovnAovOWpEw8WC8RpSszdlirNJ5Ee2ZCntR
-   w==;
-X-CSE-ConnectionGUID: v+/US/TqQ++WwFPTzfuJfQ==
-X-CSE-MsgGUID: F0X7bjy/QuGVAXcDtszJcw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="63694013"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="63694013"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:46:35 -0700
-X-CSE-ConnectionGUID: Ydx9rhrBQc+u94FJjhhIjQ==
-X-CSE-MsgGUID: zQie7ZLdSTig2uGW7zzDJA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="152400921"
-Received: from ncintean-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.201])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:46:30 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with ESMTP id 3361911F742;
-	Tue, 24 Jun 2025 14:46:27 +0300 (EEST)
-Date: Tue, 24 Jun 2025 11:46:27 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Mehdi Djait <mehdi.djait@linux.intel.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	"Nirujogi, Pratap" <pnirujog@amd.com>,
-	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
-	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
-	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
-	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
-	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
-	Svetoslav.Stoilov@amd.com, Yana.Zheleva@amd.com
-Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
-Message-ID: <aFqQEwdzSY123xps@kekkonen.localdomain>
-References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
- <20250615000915.GQ10542@pendragon.ideasonboard.com>
- <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
- <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
- <20250623220503.GA15951@pendragon.ideasonboard.com>
- <425j7c6xvbbatdhxgjgjawzwfnjmjetg6rpnwfudbtg6qz6nay@dy5ldbuhtbvv>
- <aFp7tuXkU1jayPum@kekkonen.localdomain>
- <aFp78tqHhe_IhV6d@kekkonen.localdomain>
- <20250624102745.GG15951@pendragon.ideasonboard.com>
- <nixg4efp3zkdpd6h7kp6wkvam63batpoknov2nkgu36voks6bk@gzuackzl3l5g>
+	dkim=pass (2048-bit key) header.d=topic.nl header.i=@topic.nl header.b="nODFPU3J"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=fqmX1JVQMX08x6HsNCqzpyQLcLFBO4wj5Yfg7TiqYRxjUJ4/Qg5eEVgEHVrkjgmCjfggIabQ7Ua8oLC85KMr7bLjTsIIRUi/5aahorxml2nMgGTILOUdLIGp9FQFDshvP2774kUjtGc72yjXfBTcjMa1t9sdEfHXBjH1LKtIUH6cPQ3q/wkiLcgbQkisaweJR4mk9ywX/pXp6l2KtOCE7EE+dYZhNThwBNFmD3JFGtUZolNerVDMUqoAziVcNKZ1jIZMktMkAVYVtB78yjFHapxOmOYbh4KioxqyXiyyDix1d5le4kBuIZmdWpiRdzKkN2VBLkKmUygF0h7op3tPSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=fYK8+2XmszCRh2F55WIp3kMHls8HFkHMNQOXqw9CzEY=;
+ b=HBPnmEsYc889GLbz+urkUZR+BfOxnVTC3NeuFV5JJLfaCtFIyNEnWfdP5BEJQalRYvokkUjbXe8hXHrxnWz2KW31dLuYj5WBJB7ggTVBuD4EWXFQGZEYCCBvzDKtsESjHPxFcMihG7PhpSlDAIJlaTHPPMdNV7H/crZce0JXnJdrWh+UJvxERRaQacHtvD6lkxX5JbHMYiAcaZ58dq9KzB8tP0o8eJgE/9jaEzlEwokvPxSvRKy5i8qmZtPUpszeHNAP3S816KRoFEKrcyFCs3cQv5czFG6qa+X60iY8BpKOtaToSeFwr44HaiaORZYmF6y2YyXsjwpcUYpcDeouSw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 13.93.42.39) smtp.rcpttodomain=lists.freedesktop.org smtp.mailfrom=topic.nl;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=topic.nl; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=topic.nl; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fYK8+2XmszCRh2F55WIp3kMHls8HFkHMNQOXqw9CzEY=;
+ b=nODFPU3JiwbTqJWMDgticqf15SgQKCA3oUX//MbqKhHHkA42FMzi8xdqJF83TnWVx7ncA1V6A4zANnJbJygGW50KoLqb0UhslSr8pZLrlfSAnR5Ki6VHROzrQnVjjTG+8icX6m/omIZbqcZerNPM+iqnOdGcyjHr9yRd47kfiParZot8qkF4j1xuwj0+kINrQCQd1yy2i4sA0owOgPd3EpY7e3VcYhcOGbBL1hGEwe8XOZq3DzfddKLllPvlYGjw1r4n+h+UpTSu04dS7FLYjnV8FgeyvEXGJUCZ927ipxGmWgJJCr9vr0oAkwoYTabRr3XPgxjVLr/8KquVb2zzKA==
+Received: from AS4P190CA0005.EURP190.PROD.OUTLOOK.COM (2603:10a6:20b:5de::17)
+ by AM9PR04MB8381.eurprd04.prod.outlook.com (2603:10a6:20b:3b5::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Tue, 24 Jun
+ 2025 11:46:39 +0000
+Received: from AMS0EPF000001AB.eurprd05.prod.outlook.com
+ (2603:10a6:20b:5de:cafe::1b) by AS4P190CA0005.outlook.office365.com
+ (2603:10a6:20b:5de::17) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.17 via Frontend Transport; Tue,
+ 24 Jun 2025 11:46:39 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 13.93.42.39)
+ smtp.mailfrom=topic.nl; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=topic.nl;
+Received-SPF: Pass (protection.outlook.com: domain of topic.nl designates
+ 13.93.42.39 as permitted sender) receiver=protection.outlook.com;
+ client-ip=13.93.42.39; helo=westeu12-emailsignatures-cloud.codetwo.com; pr=C
+Received: from westeu12-emailsignatures-cloud.codetwo.com (13.93.42.39) by
+ AMS0EPF000001AB.mail.protection.outlook.com (10.167.16.151) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8880.14 via Frontend Transport; Tue, 24 Jun 2025 11:46:39 +0000
+Received: from DU2PR03CU002.outbound.protection.outlook.com (40.93.64.27) by westeu12-emailsignatures-cloud.codetwo.com with CodeTwo SMTP Server (TLS12) via SMTP; Tue, 24 Jun 2025 11:46:38 +0000
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=topic.nl;
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com (2603:10a6:20b:24b::14)
+ by DU4PR04MB10984.eurprd04.prod.outlook.com (2603:10a6:10:586::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Tue, 24 Jun
+ 2025 11:46:36 +0000
+Received: from AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2]) by AM8PR04MB7779.eurprd04.prod.outlook.com
+ ([fe80::7417:d17f:8d97:44d2%3]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
+ 11:46:36 +0000
+From: Mike Looijmans <mike.looijmans@topic.nl>
+To: dri-devel@lists.freedesktop.org
+CC: Mike Looijmans <mike.looijmans@topic.nl>,
+	Andrzej Hajda <andrzej.hajda@intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Neil Armstrong <neil.armstrong@linaro.org>,
+	Robert Foss <rfoss@kernel.org>,
+	Simona Vetter <simona@ffwll.ch>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/bridge: ti-sn65dsi83: Improve error reporting and handling
+Date: Tue, 24 Jun 2025 13:45:15 +0200
+Message-ID: <20250624114630.303058-1-mike.looijmans@topic.nl>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR06CA0092.eurprd06.prod.outlook.com
+ (2603:10a6:208:fa::33) To AM8PR04MB7779.eurprd04.prod.outlook.com
+ (2603:10a6:20b:24b::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <nixg4efp3zkdpd6h7kp6wkvam63batpoknov2nkgu36voks6bk@gzuackzl3l5g>
+X-MS-TrafficTypeDiagnostic:
+	AM8PR04MB7779:EE_|DU4PR04MB10984:EE_|AMS0EPF000001AB:EE_|AM9PR04MB8381:EE_
+X-MS-Office365-Filtering-Correlation-Id: 90f82562-e2f2-430e-d45e-08ddb314c7e7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|52116014|1800799024|7416014|376014|366016|38350700014;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?us-ascii?Q?6d6L0ll5RgowXk3rhyXxAzt8WymtNA/FuvC240PL9SOX7MSlyyLuhgejjCK6?=
+ =?us-ascii?Q?WYgjGqdceoBoVRiP4b0+5QEDAOEvr21FAXX82KfGdntV2ycDvMKgTZEhXMNT?=
+ =?us-ascii?Q?4xxdPhCTd8hDygdQ4uWmAG1T90bT0JgEfTJTDPRC/hYY7T93vqQmPwhC1EMi?=
+ =?us-ascii?Q?iPwpb3LyQo84WSRtlxt/eHukVOCpe0UFz9oSIEPdgySFDMpVunv5PYguKCbd?=
+ =?us-ascii?Q?iE9GhP5pNALXouytNvLkrx1Woz+lf3d4uPt/aRJqUaaJqpdPdi72QMCn3zp1?=
+ =?us-ascii?Q?A5mK/R25uX7HVgTscE4tgBr4jVc3h59HTlJ4EKqRnPWmqmxu9+VYLF/cr2kO?=
+ =?us-ascii?Q?1E3AjQy7CWwZiq6eKZKktj2y3Oys8w0ZPQKh0nKWKTzWNg9TvDvZ6iNFR6gJ?=
+ =?us-ascii?Q?oygMdpFClkkYfTY9nLS3qsa15L3+P6xtC1njlFdxdbhDoCUgNmSYWJb/QjQs?=
+ =?us-ascii?Q?/XWJ2o/Qb277PKP69owcIAlesTG8qhlnXMfNwkd0kVPvehqA0dz8w3RuRpVj?=
+ =?us-ascii?Q?KuSwb8vzfpNwYJ41pqBrxfSv1gNgq17lmQ3A6NFwbR6GcFy5DcyleoclepvX?=
+ =?us-ascii?Q?UT52eG9N+wP7zGmV3hvK0jYdUnvb9+Ltl2Pbpk0ou7RMA0FcZ4u8crFKIlo2?=
+ =?us-ascii?Q?9Xy6GjN7FGfjw93h/y/V03dtWPsrWrWVQUW+clwwq6aKy1nbfs+7MbOYqhGg?=
+ =?us-ascii?Q?JCHh6ByALHb6LMRqde+TznQI8Dn+PSt5dln4mo1LbcV+/oIyzuG0dPbbeVBw?=
+ =?us-ascii?Q?FukzdTQb30Y1PpXW/nzVtx1LcYKJiWoOdbmqF6dT/o1izk2cwwg3b10b24qI?=
+ =?us-ascii?Q?ORXMpBuJT6GQ8b+ZDaBTHEkpkTc+3CRbdK3d7C+UgIpRThhYYv0nNZ62bP5L?=
+ =?us-ascii?Q?aEolT+z/ILK7aZOnJQfIQODyrOGrWN/z+dz+KsE2sxcqigGbv4tazcgkJFPp?=
+ =?us-ascii?Q?B9wR5mYgSSc2Lg27yZdX8WmRESeqay+28PdIFBrkGtSVtxVukPv1UjMg2mXz?=
+ =?us-ascii?Q?hatgmrCiz6rIey3CIuUex/PJauqYU0DPb6dOYfWxGB7vtxoyldMYR9cezhJD?=
+ =?us-ascii?Q?pLySaMefBHjvn8Y5VYaFPmCy5gNMonQB/utn5phAC8S5XnSQzDdZyt5xgRR8?=
+ =?us-ascii?Q?T9sRopsFKE1ljjvUG8cWia6s7SiFw747TfFLcIAuy6tLszBUNpBekgEsJorw?=
+ =?us-ascii?Q?EibxdAlHqj+BZT3MUhcMlg7EAz0/1Jg6Y8dHmx81egJRPgnDCTwwUDY3T1OZ?=
+ =?us-ascii?Q?HZHFAslGpucsQzwKY1B9q7KJBe2yh8LdXan7UMebEwBjDd5btjVg+bdQZti+?=
+ =?us-ascii?Q?UMbX4T+HEzh/HDTKjztDT4hS4swBywc9CEb27Wu5cedZV7Elng6iqDCcy38/?=
+ =?us-ascii?Q?uyWeB6mffEuozOlt4017+rh94BbDsDvABZO3qEQZnhsaOiV37xCCXhNRaH42?=
+ =?us-ascii?Q?9q8NUryRxGK3xgtiTr1pChUCDt6PPqnFB6bHWR6RKRbHRqGORHNHyw=3D=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR04MB7779.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(52116014)(1800799024)(7416014)(376014)(366016)(38350700014);DIR:OUT;SFP:1102;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB10984
+X-CodeTwo-MessageID: 4113afed-d9bd-415a-9a30-57deb34b44fe.20250624114638@westeu12-emailsignatures-cloud.codetwo.com
+References:
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.213ecd1f-6e92-42df-b45b-58dd7ea05682@emailsignatures365.codetwo.com>
+X-CodeTwoProcessed: true
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AMS0EPF000001AB.eurprd05.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	284653f6-5fa9-429f-1857-08ddb314c614
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|36860700013|1800799024|376014|82310400026|14060799003|35042699022;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?8M+b8pZMw7dysil8+9Oel0MyvI+zoLzTh8UFIPqZwAjL6N6o7Xj426Mspyks?=
+ =?us-ascii?Q?tA0KX0hRjA3B3vNJVsMJFbb5w3Taw3lHjOW1q2AM43bDOSORsrPvTsGQrWzE?=
+ =?us-ascii?Q?wXtF/5sDmpJW1wY73PYjfwxuRcMtbl3YLkUIhlhoXAQD8Z1BWlEwbB3j25Wi?=
+ =?us-ascii?Q?vaYYSxqJ/f7n7SWXNmwpRW8LrzRda3m5rzcxmE+NMmMwXgR7OaBDToMykdbe?=
+ =?us-ascii?Q?pfU9KPPj/QbfNsS7vxblGHymFlMTtG1xsbtpphv1QE+wpVCUxfV3gJUs4+Vl?=
+ =?us-ascii?Q?1756sDrTMl12FgBof68QZgpSx+c7JWfUOBkzwtP8sVX9XE+YumRzDExuAQcx?=
+ =?us-ascii?Q?7xfBh/KINlpicSV57zlrC6n6pgcR76ZuPo844MeqONWxydH0LnGFqpw0Rcr5?=
+ =?us-ascii?Q?IlVU77KPnSvqi3EyktDluDYU/4oCcnQKUGIDUmJV3X90wmgcf+p23mgtFB9q?=
+ =?us-ascii?Q?ZPduJsOo4E5nSzgc0wLeGC3fCGADl4znO+XtvpWTmLiea7Gbu2188vY9z1vn?=
+ =?us-ascii?Q?cG7ynBkRoK4Pb9pz5A2lZmBnhGvylvoF87F1ExAihd09sAr/eFmbxhy4cOeB?=
+ =?us-ascii?Q?IQZwXnWl3LaQW72/0MDDq725Q/7e+7gbJWJdfk7e84MaedjfBhis/g2eXPT4?=
+ =?us-ascii?Q?cT7oqu6clJyqm3iwMQD1tJ14ogYId8rUpDz+bCArUW6/ZnquCOuI8S3iKygK?=
+ =?us-ascii?Q?TAe6OXTYDj4LFlq0AZSMUuk07KqtYwnORqxi9xoy3iPyAFQn31iGVA0HcOKk?=
+ =?us-ascii?Q?Vkj/F7YHqxBGCqJ/L4jUdc6JewmvFAcMlIaZzZGL75I5pc9zmieLT3IOqRBI?=
+ =?us-ascii?Q?hfK2FnDo5/qhJqh5kMKlNMnKocziw+zIuOjxE1pk0aMQF8WQLIfceb8jU4Dk?=
+ =?us-ascii?Q?NTz9LnYndtLUHLD75Y7PJXBBWq/DOOPyovbYb+LTckTHnabNvqg4FauEifxX?=
+ =?us-ascii?Q?uATcRIcGqK93L0j1FLgoTsSYw9YfRaso+KU/xlETn2lInEIsjbV0zYot0z7Y?=
+ =?us-ascii?Q?039VfaZ0eQ9ozGPHfzWtTnuACmS6m0EatM01B7vuzU7HNcFBlY1Wxt37cU45?=
+ =?us-ascii?Q?bHHtx7LSctzDw36UMe0HCT4iHEjZFNSm68nErOrjY2072qBKJEPdEKFjKRtA?=
+ =?us-ascii?Q?q3olc3r5kQzaTI35pTqdSDS8acaqcKgp+VxXhDDKu73oLeIUH+ahus+nJleC?=
+ =?us-ascii?Q?PXkFmz1HlXqbRTLBBfHSOOiTNVx56P5WyKdzCVXz601BOrvyFO0AY1m2bwtv?=
+ =?us-ascii?Q?x4iYv4F3DHtUbHR8xPC69kRbGWz+BUVPfquzIDVE3xXzCKoU9QfclQg4xiLF?=
+ =?us-ascii?Q?rH6t3Kh6qhJLR1hXBXL+97lPCYWPZRRo2BtuFnykJcd03ZdLJxD60bhxySbb?=
+ =?us-ascii?Q?neCYpbQrtzS0MoPvHmwzwUiVzADNyW8x2T4WWtWdfbVZqjdgFF6EnH8pg3FJ?=
+ =?us-ascii?Q?yckd6SOzHpZEjv7VzQt3eQ25ha8Ms/eoSE8bsbRxvUYdLm7SPFtfnQ=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:13.93.42.39;CTRY:NL;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:westeu12-emailsignatures-cloud.codetwo.com;PTR:westeu12-emailsignatures-cloud.codetwo.com;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(1800799024)(376014)(82310400026)(14060799003)(35042699022);DIR:OUT;SFP:1102;
+X-OriginatorOrg: topic.nl
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 11:46:39.0636
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 90f82562-e2f2-430e-d45e-08ddb314c7e7
+X-MS-Exchange-CrossTenant-Id: 449607a5-3517-482d-8d16-41dd868cbda3
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=449607a5-3517-482d-8d16-41dd868cbda3;Ip=[13.93.42.39];Helo=[westeu12-emailsignatures-cloud.codetwo.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF000001AB.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8381
 
-Hi Mehdi,
+The datasheet advises to wait 5ms after starting the video stream before
+resetting the error registers. The driver only waits 1ms. Change the
+sequence to match the datasheet:
+- Turn on the DSI
+- Wait 5ms
+- Write 0xFF to CSR 0xE5 to clear the error registers
 
-On Tue, Jun 24, 2025 at 01:27:03PM +0200, Mehdi Djait wrote:
-> Hi Laurent, Hi Sakari,
-> 
-> On Tue, Jun 24, 2025 at 01:27:45PM +0300, Laurent Pinchart wrote:
-> > On Tue, Jun 24, 2025 at 10:20:34AM +0000, Sakari Ailus wrote:
-> > > On Tue, Jun 24, 2025 at 10:19:35AM +0000, Sakari Ailus wrote:
-> > > > On Tue, Jun 24, 2025 at 10:35:18AM +0200, Mehdi Djait wrote:
-> > > > > On Tue, Jun 24, 2025 at 01:05:03AM +0300, Laurent Pinchart wrote:
-> > > > > > On Mon, Jun 23, 2025 at 05:51:48PM -0400, Nirujogi, Pratap wrote:
-> > > > > > > On 6/16/2025 6:49 PM, Nirujogi, Pratap wrote:
-> > > > > > > >>> +static int ov05c10_probe(struct i2c_client *client)
-> > > > > > > >>> +{
-> > > > > > > >>> +     struct ov05c10 *ov05c10;
-> > > > > > > >>> +     u32 clkfreq;
-> > > > > > > >>> +     int ret;
-> > > > > > > >>> +
-> > > > > > > >>> +     ov05c10 = devm_kzalloc(&client->dev, sizeof(*ov05c10), 
-> > > > > > > >>> GFP_KERNEL);
-> > > > > > > >>> +     if (!ov05c10)
-> > > > > > > >>> +             return -ENOMEM;
-> > > > > > > >>> +
-> > > > > > > >>> +     struct fwnode_handle *fwnode = dev_fwnode(&client->dev);
-> > > > > > > >>> +
-> > > > > > > >>> +     ret = fwnode_property_read_u32(fwnode, "clock-frequency", 
-> > > > > > > >>> &clkfreq);
-> > > > > > > >>> +     if (ret)
-> > > > > > > >>> +             return  dev_err_probe(&client->dev, -EINVAL,
-> > > > > > > >>> +                                   "fail to get clock freq\n");
-> > > > > > > >>
-> > > > > > > >> Let's try to land
-> > > > > > > >> https://lore.kernel.org/linux-media/20250521104115.176950-1- 
-> > > > > > > >> mehdi.djait@linux.intel.com/
-> > > > > > > >> and replace the code above with devm_v4l2_sensor_clk_get().
-> > > > > > > >>
-> > > > > > > > Ok, we will verify on our side.
-> > > > > > > 
-> > > > > > > We tried using devm_v4l2_sensor_clk_get() and found its required to add 
-> > > > > > > support for software_node to make it work with this driver.
-> > > > > > 
-> > > > > > Why is that ?
-> > > > > > 
-> > > > > > > Please refer 
-> > > > > > > the changes below and let us know if these should be submitted as a 
-> > > > > > > separate patch.
-> > > > > 
-> > > > > The helper is still not merged, so no patch is required.
-> > > > > 
-> > > > > I will see if a change is needed from the helper side or the OV05C10 side.
-> > > > 
-> > > > I wonder if there's a better way to figure out if you're running on a DT or
-> > > > ACPI based system than getting the device's parents and checking which one
-> > > > you find first, DT or ACPI. I think that should work for now at least.
-> > > 
-> > > Or, rather, checking for non-OF node here would probably work the best. I
-> > > wouldn't expect these to be software node based on DT systems ever.
-> > 
-> > Until it happens :-) And we'll handle it then.
-> 
-> So we have the following:
-> 
-> - The problem with this driver is due to lack of proper ACPI
->   description. HW is already shipping and AMD will work on better ACPI
->   description for future models. See [1]
-> 
-> - software_node can also be used on DT systems
-> 
-> [1] https://lore.kernel.org/lkml/0d801367-da24-4596-83d9-08ccd89ca670@redhat.com/
-> 
-> Now going back to the helper. If we want to support this case:
-> 
-> Approach 1: software_node || acpi
-> 
-> --- a/drivers/media/v4l2-core/v4l2-common.c
-> +++ b/drivers/media/v4l2-core/v4l2-common.c
-> @@ -682,16 +682,17 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
->         const char *clk_id __free(kfree) = NULL;
->         struct clk_hw *clk_hw;
->         struct clk *clk;
-> -       bool acpi_node;
-> +       bool acpi_sw_node;
->         u32 rate;
->         int ret;
->  
->         clk = devm_clk_get_optional(dev, id);
->         ret = device_property_read_u32(dev, "clock-frequency", &rate);
-> -       acpi_node = is_acpi_node(dev_fwnode(dev));
-> +       acpi_sw_node = is_acpi_node(dev_fwnode(dev)) ||
-> +                      is_software_node(dev_fwnode(dev));
->  
->         if (clk) {
-> -               if (!ret && acpi_node) {
-> +               if (!ret && acpi_sw_node) {
->                         ret = clk_set_rate(clk, rate);
->                         if (ret) {
->                                 dev_err(dev, "Failed to set clock rate: %u\n",
-> @@ -705,7 +706,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
->         if (ret)
->                 return ERR_PTR(ret);
->  
-> -       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
-> +       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_sw_node)
->                 return ERR_PTR(-ENOENT);
->  
->         if (!id) {
-> 
-> 
-> Approach 2: of_node
-> 
-> --- a/drivers/media/v4l2-core/v4l2-common.c
-> +++ b/drivers/media/v4l2-core/v4l2-common.c
-> @@ -682,16 +682,16 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
->         const char *clk_id __free(kfree) = NULL;
->         struct clk_hw *clk_hw;
->         struct clk *clk;
-> -       bool acpi_node;
-> +       bool of_node;
->         u32 rate;
->         int ret;
->  
->         clk = devm_clk_get_optional(dev, id);
->         ret = device_property_read_u32(dev, "clock-frequency", &rate);
-> -       acpi_node = is_acpi_node(dev_fwnode(dev));
-> +       of_node = is_of_node(dev_fwnode(dev));
->  
->         if (clk) {
-> -               if (!ret && acpi_node) {
-> +               if (!ret && !of_node) {
->                         ret = clk_set_rate(clk, rate);
->                         if (ret) {
->                                 dev_err(dev, "Failed to set clock rate: %u\n",
-> @@ -705,7 +705,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
->         if (ret)
->                 return ERR_PTR(ret);
->  
-> -       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
-> +       if (!IS_ENABLED(CONFIG_COMMON_CLK) || of_node)
->                 return ERR_PTR(-ENOENT);
->  
->         if (!id) {
+Don't read the error register (which may fail), just write 0xff as the
+datasheet suggests.
 
-I'm in favour of the latter but both should be workable.
+The driver creates a timer or IRQ handler that reads the error register,
+which implements the "wait some time and read the register" part.
 
-Speaking of return values, devm_clk_get_optional() may also return
--EPROBE_DEFER. That needs to be handled.
+When using a timer to poll the status register, the timer did not stop
+when the error handler triggers a reset. This has been observed to cause
+a series of multiple resets. Let handle_errors return a bool indicating
+whether all is fine, and only extend the time when it returns true. That
+also allows the IRQ disable call to move to the interrupt routine.
 
-And further on -EPROBE_DEFER, I think the helper should return
--EPROBE_DEFER if the "clock-frequency" property doesn't exist on non-OF
-nodes. That signals the required software nodes required on Intel Windows
-definitions/ipu-bridge or AMD systems aren't in place yet so really probing
-should be deferred. This would allow removing the hacks that return
--EPROBE_DEFER in sensor drivers when no graph endpoint is found.
+When the error handler does trigger, log a message that explains the
+reset cause.
 
--- 
-Regards,
+Fixes: ad5c6ecef27e ("drm: bridge: ti-sn65dsi83: Add error recovery mechani=
+sm")
+Signed-off-by: Mike Looijmans <mike.looijmans@topic.nl>
+---
 
-Sakari Ailus
+ drivers/gpu/drm/bridge/ti-sn65dsi83.c | 50 +++++++++++++++------------
+ 1 file changed, 28 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi83.c b/drivers/gpu/drm/bridge=
+/ti-sn65dsi83.c
+index 033c44326552..6240a9997cc2 100644
+--- a/drivers/gpu/drm/bridge/ti-sn65dsi83.c
++++ b/drivers/gpu/drm/bridge/ti-sn65dsi83.c
+@@ -417,7 +417,7 @@ static void sn65dsi83_reset_work(struct work_struct *ws=
+)
+ 		enable_irq(ctx->irq);
+ }
+=20
+-static void sn65dsi83_handle_errors(struct sn65dsi83 *ctx)
++static bool sn65dsi83_handle_errors(struct sn65dsi83 *ctx)
+ {
+ 	unsigned int irq_stat;
+ 	int ret;
+@@ -430,17 +430,20 @@ static void sn65dsi83_handle_errors(struct sn65dsi83 =
+*ctx)
+=20
+ 	ret =3D regmap_read(ctx->regmap, REG_IRQ_STAT, &irq_stat);
+ 	if (ret || irq_stat) {
+-		/*
+-		 * IRQ acknowledged is not always possible (the bridge can be in
+-		 * a state where it doesn't answer anymore). To prevent an
+-		 * interrupt storm, disable interrupt. The interrupt will be
+-		 * after the reset.
+-		 */
+-		if (ctx->irq)
+-			disable_irq_nosync(ctx->irq);
++		if (ret) {
++			dev_err(ctx->dev, "Communication failure\n");
++		} else {
++			dev_err(ctx->dev, "Error status: 0x%02x\n", irq_stat);
++			/* Clear errors if the chip was still responding */
++			regmap_write(ctx->regmap, REG_IRQ_STAT, irq_stat);
++		}
+=20
+ 		schedule_work(&ctx->reset_work);
++
++		return false;
+ 	}
++
++	return true;
+ }
+=20
+ static void sn65dsi83_monitor_work(struct work_struct *work)
+@@ -448,9 +451,8 @@ static void sn65dsi83_monitor_work(struct work_struct *=
+work)
+ 	struct sn65dsi83 *ctx =3D container_of(to_delayed_work(work),
+ 					     struct sn65dsi83, monitor_work);
+=20
+-	sn65dsi83_handle_errors(ctx);
+-
+-	schedule_delayed_work(&ctx->monitor_work, msecs_to_jiffies(1000));
++	if (sn65dsi83_handle_errors(ctx))
++		schedule_delayed_work(&ctx->monitor_work, msecs_to_jiffies(1000));
+ }
+=20
+ static void sn65dsi83_monitor_start(struct sn65dsi83 *ctx)
+@@ -639,18 +641,13 @@ static void sn65dsi83_atomic_enable(struct drm_bridge=
+ *bridge,
+ 				    struct drm_atomic_state *state)
+ {
+ 	struct sn65dsi83 *ctx =3D bridge_to_sn65dsi83(bridge);
+-	unsigned int pval;
+=20
++	/* Wait 5 ms after starting DSI stream */
++	usleep_range(5000, 5500);
+ 	/* Clear all errors that got asserted during initialization. */
+-	regmap_read(ctx->regmap, REG_IRQ_STAT, &pval);
+-	regmap_write(ctx->regmap, REG_IRQ_STAT, pval);
+-
+-	/* Wait for 1ms and check for errors in status register */
+-	usleep_range(1000, 1100);
+-	regmap_read(ctx->regmap, REG_IRQ_STAT, &pval);
+-	if (pval)
+-		dev_err(ctx->dev, "Unexpected link status 0x%02x\n", pval);
++	regmap_write(ctx->regmap, REG_IRQ_STAT, 0xff);
+=20
++	/* Start checking for errors in status register */
+ 	if (ctx->irq) {
+ 		/* Enable irq to detect errors */
+ 		regmap_write(ctx->regmap, REG_IRQ_GLOBAL, REG_IRQ_GLOBAL_IRQ_EN);
+@@ -929,7 +926,16 @@ static irqreturn_t sn65dsi83_irq(int irq, void *data)
+ {
+ 	struct sn65dsi83 *ctx =3D data;
+=20
+-	sn65dsi83_handle_errors(ctx);
++	if (!sn65dsi83_handle_errors(ctx)) {
++		/*
++		 * IRQ acknowledged is not always possible (the bridge can be in
++		 * a state where it doesn't answer anymore). To prevent an
++		 * interrupt storm, disable interrupt. The interrupt will be
++		 * after the reset.
++		 */
++		disable_irq_nosync(ctx->irq);
++	}
++
+ 	return IRQ_HANDLED;
+ }
+=20
+--=20
+2.43.0
+
+base-commit: 78f4e737a53e1163ded2687a922fce138aee73f5
+branch: linux-master-sn65dsi83-errorhandling
+
+Met vriendelijke groet / kind regards,=0A=
+=0A=
+Mike Looijmans=0A=
+System Expert=0A=
+=0A=
+=0A=
+TOPIC Embedded Products B.V.=0A=
+Materiaalweg 4, 5681 RJ Best=0A=
+The Netherlands=0A=
+=0A=
+T: +31 (0) 499 33 69 69=0A=
+E: mike.looijmans@topic.nl=0A=
+W: www.topic.nl=0A=
+=0A=
+Please consider the environment before printing this e-mail=0A=
