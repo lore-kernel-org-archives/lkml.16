@@ -1,110 +1,105 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from pf-012.whm.fr-par.scw.cloud (pf-012.whm.fr-par.scw.cloud [51.159.173.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8172D4B55;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF16F2D5414;
 	Tue, 24 Jun 2025 14:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.159.173.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750776553; cv=none; b=Fl93anyBb2tHH3IS2vx8LIN0qv/uT0HJn4ODSSAg/p35V1BNN+sni5iHoHGETsRG4GixPiJMv3PxT8NpDIhSw/ShwcIxSdC95a5dP8CgYTK2KDQy58tL2cHQyu0L7rtL4Vz/Urhm5L67wfCEvBekh8FW1rf7AY5DZtrwBX4QXtg=
+	t=1750776553; cv=none; b=tXjQXV/r78Xv935tIeBhPx8RWsLDGLI5oYYy8UB9XI5yqTh06QX5EziRDLYzPylqaOkDg+t98WLmF3PVZVx9Pns4PHhu1cW/tSG+vbAmSzlgpOp3lcrad3IRq3A04mG9Ot9q19djpll5XkSiZ64HP4lqj7CwQWK65LnpY+yW60g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750776553; c=relaxed/simple;
-	bh=k63dUMrxuP+pXkGPYNOLQuLDInZ1Aa1nDtY8Wekcx+c=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=LHJ0gaBFHUygTn/8jkV9iwgMa3GXERsABCyY0PvL/iJbHhdg+1oSnVaq8VkDEDlAlnASr6FoXncSKTAxuaErHaA3AJM7RmkOryOlIw/YmCTC64K2k+ZtYr52XIoulh4iNg0QNPFuuiqOiRVEFBOXxtecXqWJPAvE7NUbRorHTlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bRSQ10dF4z6J69c;
-	Tue, 24 Jun 2025 22:44:09 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id ABC1B140158;
-	Tue, 24 Jun 2025 22:49:08 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml500008.china.huawei.com (7.182.85.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 24 Jun 2025 16:49:08 +0200
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Tue, 24 Jun 2025 16:49:08 +0200
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Li Ming <ming.li@zohomail.com>, "dave@stgolabs.net" <dave@stgolabs.net>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>, "dave.jiang@intel.com"
-	<dave.jiang@intel.com>, "alison.schofield@intel.com"
-	<alison.schofield@intel.com>, "vishal.l.verma@intel.com"
-	<vishal.l.verma@intel.com>, "ira.weiny@intel.com" <ira.weiny@intel.com>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/1] cxl/edac: Fix using wrong repair type to check dram
- event record
-Thread-Topic: [PATCH 1/1] cxl/edac: Fix using wrong repair type to check dram
- event record
-Thread-Index: AQHb4aRbXn0MH+hivkiQkxp6bmOsr7QSaqzw
-Date: Tue, 24 Jun 2025 14:49:08 +0000
-Message-ID: <3f0636a92de94d608276a1f6da17e4d7@huawei.com>
-References: <20250620052924.138892-1-ming.li@zohomail.com>
-In-Reply-To: <20250620052924.138892-1-ming.li@zohomail.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	bh=XSmcinKea+soXlmgc6EymGPV4s+49fMw/x6yfEf4UpE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=fzgvUeuaBnqYRpRfUFAoDaZvjuA3bQHmvVnj0GWj5p+gk+j7J+EALt0uxdb3jlF5Q+NY7Y2gkTdkDd3/D2+aJj54yMWADzluVmSsKjHjuvvTt3MVFmgLEJfqwYcMwJLo01nZS4ubxLznCNjp+HR6ZBHOfT8d9A2TgtA8TXkQGqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr; spf=pass smtp.mailfrom=oss.cyber.gouv.fr; dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b=OHgi/w9Y; arc=none smtp.client-ip=51.159.173.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.cyber.gouv.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.cyber.gouv.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=oss.cyber.gouv.fr header.i=@oss.cyber.gouv.fr header.b="OHgi/w9Y"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=oss.cyber.gouv.fr; s=default; h=Cc:To:Message-Id:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:Subject:Date:From:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=hwtEdFGTH8iYwyCWvuA+AVH/7v/hzPHDC9TpX58Pza0=; b=OHgi/w9YOXcZd89Cx/zcRzQLVv
+	Cn7qs+Yz+57TJ1Eaufap0yB+s5cEQVR27CI5IMMXlDzrqR2WhXc27tuehnmLSqunCSxsom0MiIkHD
+	l2QUyA3UofBzRcAGe0pfBMtDV4mhX5h0+okvF6qC+BgsqrAVCJGl/1jYty/qjFvONOw1j3tA1Ij3e
+	6Rpx74fTqrDnBhwmzZf4tF0gJHTLu/YeWAfWPBRUGA8EoDBCnT2Nr15YK0um2E5ZysPPqnXtsWB+0
+	6A9dl4u25mtOpOrxRRW9HyNB7ew0bnH0CYzORNcgeWa0KBkKKgSL2+tHq5VuZn5kGbtfdHqio8FUM
+	m+3GsiZw==;
+Received: from laubervilliers-658-1-215-187.w90-63.abo.wanadoo.fr ([90.63.246.187]:36435 helo=[10.224.8.110])
+	by pf-012.whm.fr-par.scw.cloud with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+	(Exim 4.98.2)
+	(envelope-from <nicolas.bouchinet@oss.cyber.gouv.fr>)
+	id 1uU4xL-00000008LEa-2tuI;
+	Tue, 24 Jun 2025 16:49:03 +0200
+From: nicolas.bouchinet@oss.cyber.gouv.fr
+Date: Tue, 24 Jun 2025 16:48:51 +0200
+Subject: [PATCH] MAINTAINERS: Add Xiu and myself as Lockdown maintainers
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250624-add_myself_to_lockdown_maintainers-v1-1-bed2bc934666@ssi.gouv.fr>
+X-B4-Tracking: v=1; b=H4sIANK6WmgC/x2NzQqDMBAGX0X23IAGf2hfRUqI5otdqolkpVXEd
+ 2/oYQ5zmTlJkBhCj+KkhA8Lx5CluhU0vmyYoNhlJ13qpmx1raxzZjkEszdbNHMc3y5+g1kshy2
+ DJAptM9Rd5TH4O+XQmuB5/0/653X9ALFWoA50AAAA
+X-Change-ID: 20250624-add_myself_to_lockdown_maintainers-e65b471febf9
+To: Paul Moore <paul@paul-moore.com>
+Cc: Xiu Jianfeng <xiujianfeng@huawei.com>, 
+ =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, 
+ linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+X-Mailer: b4 0.14.2
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - pf-012.whm.fr-par.scw.cloud
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - oss.cyber.gouv.fr
+X-Get-Message-Sender-Via: pf-012.whm.fr-par.scw.cloud: authenticated_id: nicolas.bouchinet@oss.cyber.gouv.fr
+X-Authenticated-Sender: pf-012.whm.fr-par.scw.cloud: nicolas.bouchinet@oss.cyber.gouv.fr
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
 
->-----Original Message-----
->From: Li Ming <ming.li@zohomail.com>
->Sent: 20 June 2025 06:29
->To: dave@stgolabs.net; Jonathan Cameron <jonathan.cameron@huawei.com>;
->dave.jiang@intel.com; alison.schofield@intel.com; vishal.l.verma@intel.com=
-;
->ira.weiny@intel.com; dan.j.williams@intel.com; Shiju Jose
-><shiju.jose@huawei.com>
->Cc: linux-cxl@vger.kernel.org; linux-kernel@vger.kernel.org; Li Ming
-><ming.li@zohomail.com>
->Subject: [PATCH 1/1] cxl/edac: Fix using wrong repair type to check dram e=
-vent
->record
->
->cxl_find_rec_dram() is used to find a DRAM event record based on the input=
-ted
->attributes. Different repair_type of the inputted attributes will check th=
-e DRAM
->event record in different ways.
->When EDAC driver is performing a memory rank sparing, it should use
->CXL_RANK_SPARING rather than CXL_BANK_SPARING as repair_type for DRAM
->event record checking.
->
->Fixes: 588ca944c277 ("cxl/edac: Add CXL memory device memory sparing
->control feature")
->Signed-off-by: Li Ming <ming.li@zohomail.com>
->---
->base-commit: 3c70ec71abdaf4e4fa48cd8fdfbbd864d78235a8 cxl/fixes
+From: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 
-Reviewed-by: Shiju Jose <shiju.jose@huawei.com>
->---
-> drivers/cxl/core/edac.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
->diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c index
->d725ee954199..623aaa4439c4 100644
->--- a/drivers/cxl/core/edac.c
->+++ b/drivers/cxl/core/edac.c
->@@ -1323,7 +1323,7 @@ cxl_mem_get_rec_dram(struct cxl_memdev *cxlmd,
-> 		attrbs.bank =3D ctx->bank;
-> 	break;
-> 	case EDAC_REPAIR_RANK_SPARING:
->-		attrbs.repair_type =3D CXL_BANK_SPARING;
->+		attrbs.repair_type =3D CXL_RANK_SPARING;
-> 		break;
-> 	default:
-> 		return NULL;
->--
->2.34.1
+The Lockdown LSM has been unmaintained for some time now. It requires
+some work to ensure it works as intended.
+
+Xiu Jianfeng and I volunteer to maintain the LSM.
+
+Signed-off-by: Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
+---
+ MAINTAINERS | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0c1d245bf7b84f8a78b811e0c9c5a3edc09edc22..776c7fffcaec08f71faf2740599f0b4570179832 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14060,8 +14060,10 @@ F:	Documentation/admin-guide/LSM/LoadPin.rst
+ F:	security/loadpin/
+ 
+ LOCKDOWN SECURITY MODULE
++M:	Nicolas Bouchinet <nicolas.bouchinet@oss.cyber.gouv.fr>
++M:	Xiu Jianfeng <xiujianfeng@huawei.com>
+ L:	linux-security-module@vger.kernel.org
+-S:	Odd Fixes
++S:	Maintained
+ T:	git https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/lsm.git
+ F:	security/lockdown/
+ 
+
+---
+base-commit: 9fc86a85f36c51dd9e628c82091326151c8ff638
+change-id: 20250624-add_myself_to_lockdown_maintainers-e65b471febf9
+
+Best regards,
+-- 
+Nicolas Bouchinet <nicolas.bouchinet@ssi.gouv.fr>
 
