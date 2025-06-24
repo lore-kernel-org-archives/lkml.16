@@ -1,255 +1,258 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2056.outbound.protection.outlook.com [40.107.92.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC41E19CD01;
-	Tue, 24 Jun 2025 01:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.56
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750729379; cv=fail; b=WKqd5p0ENKaIgCURrV21ss0n46jt7H/mswt1VqJWWRZ8Fp81cdvk8/co5sr6W6P2OeNkPjJblJAlDu8XdxDxHYpG0qlgzSFS9Bw1UqS97L/uQI4AbGWVamki9KoCbULNKgCKvo144WinoL1R69ccrGDgjgEvcr6mI3srsxJL120=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750729379; c=relaxed/simple;
-	bh=RGROFycoQ93rm+ZgwmFqbVuEA/Xf9Z/8YqHMPQBteZA=;
-	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=bKWiE0aUnN/3LQ95JFI/ULJ2vfk++Ax2JLqqyPnR38bhgRUH5yKRHhrLoFEU669AGT5OQAqix6lPNXTlTpeCRMVldX3po+qx6/Pnsq3hmy1gQBEbpdkK6LuhvfOO3xDyAr15MMUmAlX4MGlw0ZhtCYDPeNUUi6efuVSTkimJcn4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LqLRI/bW; arc=fail smtp.client-ip=40.107.92.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B826619DF4A;
+	Tue, 24 Jun 2025 01:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750729389; cv=none; b=PYJbcvOqdNkzBg+sTjimcYYTZUxc2gpB53uAK33WN2mks8nxmhZaLlMWh5/tt67GzSm4zWvkK9bAMKo8oNTEfq4RkDUukYli7yJtxzq53gxxEok/yHYeSOuw3v+MsF8M2QPUrJu70LdCDJRx6B2s1MHyuiY7z9yTVcSZSCswics=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750729389; c=relaxed/simple;
+	bh=mDwbW2RYJLKZSo29Mv3VBBW7ZQVeSfp9v3+qTSW5ZTg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mKgq+FtBYLa2gCgwP84t7p6vPJk6RfBsG8SgL4kFAxLCsaQOACs1s+35MS1SVPTnZgpKraCncHBYloayM/4QB5BjeusJ48AULrA8ph/7cBKkOGqUNRzRXLdI5DKx8BU2cgOYCfF7qQqmktCWPfuhjobXbIMGfoztF2IbNDDSjrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VwfmAOJh; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LqLRI/bW"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LWpSGRODPsvRWg+8qwfwodhrAQUcGUHBTHgXQk9p3QFv2uNhMz0MLVi/74BYpyi0sJcLsMcqOPD7A8CAca8Zf4EcfrOwaX2s3gII2Bj3TT7ZDRnT3M/UHoCBmVNllGjgpopvKYWMXffG45r+TNEsm1D0tyfOiVOIVxr5DBg53ZVnnJ9oYl0yMIj9eclQPK+DZyqndnxAjqQqg5vnfPfvwEvGBDVzjXgpbKw23nMu5NfsiM4upYRYF8bIZuAwIJtsqd+TCd4c1VikXb63C1soyUVoPVP9XWTETAgAY9xUZkS5fj5C2asShEKgvH5i4r50m7x8tL71+jLPKnXR/CaF5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CrrcNtz+1B7DgCLcVyuu1S0O1xGRonbINXsJUmvY/8U=;
- b=ZUfppuYTHqjvq3FAjmKmaN2TqDjizOspmlyFBfGuuMxHjPH1R26jEqwTcPvf+vMeWGWwsTGBCLv+Lc2i2aBBX8HPTB0Suwn6ctboGfvOpMU66MQdeI9hvj/VPjnvLN0egjKfHSi1/elOBxEhDO3SU1aWMHRVip+OBvXF2U/x8Zbx6Gkav99/rLlqPuHFCNDUp5WM9EPr+W7tIgDqZwrUO6uZs7esXrcv8Wpdos40q8EF69eGKDZevFBpxo7iHujJR9cciV+fsHLoLf9npt3HQGx8OXOdDGT+h4WIHlaHWRng+t/yw0+Kk4PIGMFne7FmZrgrmMumaEF7ESQ4yDhOzA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CrrcNtz+1B7DgCLcVyuu1S0O1xGRonbINXsJUmvY/8U=;
- b=LqLRI/bW/XNaEHnigTzBqTlWjNvQPrlP+6lnsPbBpX+znMT2953M/b36S3EyxqWTMTW3v1JH0jodS5o0QJwYATMb48Rae7fqwTIO9HyqFjrHAg/lgtXZShABqqLbqMigaAndRB1NwDlzLgxgjy2geVFFwttWDBfPF8UJcOUJ8SQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com (2603:10b6:610:19f::7)
- by DM3PR12MB9287.namprd12.prod.outlook.com (2603:10b6:8:1ac::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Tue, 24 Jun
- 2025 01:42:54 +0000
-Received: from CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::1e6b:ca8b:7715:6fee]) by CH3PR12MB9194.namprd12.prod.outlook.com
- ([fe80::1e6b:ca8b:7715:6fee%7]) with mapi id 15.20.8857.019; Tue, 24 Jun 2025
- 01:42:54 +0000
-Message-ID: <930fc54c-a88c-49b3-a1a7-6ad9228d84ac@amd.com>
-Date: Tue, 24 Jun 2025 11:42:47 +1000
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [RFC PATCH] PCI: Add quirk to always map ivshmem as write-back
-From: Alexey Kardashevskiy <aik@amd.com>
-To: linux-pci@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
- David Woodhouse <dwmw@amazon.co.uk>,
- Kai-Heng Feng <kai.heng.feng@canonical.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Sean Christopherson
- <seanjc@google.com>, Santosh Shukla <santosh.shukla@amd.com>,
- "Nikunj A. Dadhania" <nikunj@amd.com>,
- "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <20250612082233.3008318-1-aik@amd.com>
- <52f0d07a-b1a0-432c-8f6f-8c9bf59c1843@amd.com>
-Content-Language: en-US
-In-Reply-To: <52f0d07a-b1a0-432c-8f6f-8c9bf59c1843@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SY8P282CA0025.AUSP282.PROD.OUTLOOK.COM
- (2603:10c6:10:29b::30) To CH3PR12MB9194.namprd12.prod.outlook.com
- (2603:10b6:610:19f::7)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VwfmAOJh"
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-74264d1832eso6115038b3a.0;
+        Mon, 23 Jun 2025 18:43:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750729387; x=1751334187; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=DOOiBUETmZUo+2d+xi4iRdjoD85wR+IsmzKEMiNVupo=;
+        b=VwfmAOJh3YD6gK/GMtyb73/aakGDdB8I4oJgA60wM1rZzGeIg8nbD5mihNIr7lv+Fm
+         0aqxSVe3YX5LYvpz1elOFxE0BHkDsRltESoLOZdBss8703xJvjoZQRA2DG01DD+BrbpG
+         g74MwiVU6ly0kcHJLXXmaGt+2M8O9TNHTTcqZBauw6+PGqB7vJbBLItm9RkhylGk0jp9
+         01ODReirylAtRB2ljcSNFapf+YQIvnjDvSwOHktJT43dS7BPocGcBPBx/3H1pr2sbt8r
+         eUVibSNE7EK6B0/+K2+rP/g1p0pVfzwNcrd83EfItyPaTrMq+QblD8kqoLncUapQCztq
+         XmAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750729387; x=1751334187;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DOOiBUETmZUo+2d+xi4iRdjoD85wR+IsmzKEMiNVupo=;
+        b=QEHf3XaZ/zQxV9K8CHIqMH8VjHUCJzGO7YRHa60DQGdwVb3Wy0YK+TxOLCasAp1+Od
+         pO2pjowX9oU1dJQOigmwe2XJ/nWFIPKmyzmOOmBBpQ6yZVEI5Z4hi26bCWpkOso9vQ4a
+         b5G622i8+jnLoV5y6W/vakn7qEvRVPzNXw1WSBg1u1yatIwM7ddZBcGLxNdRtxYDXetD
+         WgPwqXL1vof4b/994/xk9BnwFMuOvsW5W/L2KQaCuxBunMwuowI9HyCplzECWnw9jm5z
+         RSQIfiCTHatCyoWb5MYoE/vodJrMqkqVPqJOBa0g64DMMZp9oDN2jz5Pj9rVbaQxvVRl
+         WKlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV5Rhq0ishmPlpG/AidkwyzPajnbjruPCqeFo99vWE8oH6E6mb5ovUiwWXKnsk2Z76EF+0jG1N8qUVivu8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwFO6M3EIXzJesTvI0ttG+JvUjPz0AqOPmyvlpYM/hvf3BmqREY
+	U8JEOupGZMm8ZeH4eIVYlWQpAhwIMU8VktT79sp+Md1G8JQKXDUBZv5F
+X-Gm-Gg: ASbGnculruMRLHefd+5r5QR+7qiLT9hGtnAjxaHrM4bl+W1SfFq5L9lL+nEwqfjjwuf
+	ItDOPsVVMPLb6FRQIDQkz+/Aus/wga2SSt9GgOpW2vG/53ZorRgSIEgQ3v7UBO1mh6ETfSHJdLR
+	whH+Ca9HFkqh2aGOq+dDRmwO5DRP1GV93S+DdpbEc4aTKLLQvBzfJAVzLYO/5yOUTiOKxUu9XDi
+	wqZqMUsBntBFyqzUD8mO6t4nt3EZv5HiEp1p7J2+ueqllpQuFP6Ej2SXvBLcHqCqWWcTklhnIv/
+	yTzK2HClRZDn0KiAQq8VYmAeEo84tzVqbVjzuysdERtQ2zzhyIqV7jEgUGBo8OdT+Ss=
+X-Google-Smtp-Source: AGHT+IH/XfOfU+AGQ2idPxoT2AAt9ZiHthZsvHDqLYtbe5fUwlrTmYFJxcGC0Nni1nqlnH99RG6CAQ==
+X-Received: by 2002:a05:6a20:e687:b0:216:1ea0:a51e with SMTP id adf61e73a8af0-22026f0379cmr21901325637.41.1750729386869;
+        Mon, 23 Jun 2025 18:43:06 -0700 (PDT)
+Received: from fedora ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c8850d53sm426708b3a.118.2025.06.23.18.43.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 18:43:05 -0700 (PDT)
+Date: Tue, 24 Jun 2025 01:42:58 +0000
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: Jay Vosburgh <jv@jvosburgh.net>
+Cc: netdev@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Nikolay Aleksandrov <razor@blackwall.org>,
+	Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+	Liang Li <liali@redhat.com>
+Subject: Re: [PATCH net] bonding: fix multicast MAC address synchronization
+Message-ID: <aFoCos-vPLfbGoM1@fedora>
+References: <20250523022313.906-1-liuhangbin@gmail.com>
+ <302767.1748034227@famine>
+ <aDQrn8EslaWx_jEA@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB9194:EE_|DM3PR12MB9287:EE_
-X-MS-Office365-Filtering-Correlation-Id: 10b27cf4-44f8-45f3-895b-08ddb2c06fe4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bXJaVDFkTC8weXhOK3VJZE5oSUUvbkliQ2ZZRVdRVkg0N09xMjc4aDFuaExQ?=
- =?utf-8?B?Zkx3c2FxTlZuNExTbml3cmpHWklHN2xOR2FETnhITm5tc2dHTHRhNGpNOW00?=
- =?utf-8?B?VDBDRjN2S1IyNmtJOGhZOXpKekxnOWVlNUtuaWNXTFE0WTVFQjdwa2k3bzg2?=
- =?utf-8?B?aFkxOURYTWF0bXFWaHlBZ3ZpV2pVTlgxU2QvazhGTnJMdHJiMHlTWnhsSDk3?=
- =?utf-8?B?OHFPV3RtNnI2OEpnbW45dUpVVWZPWTNjaVJqaS9INVBZYUJnQkdYOUY3RGNr?=
- =?utf-8?B?eDNuVEtoRDloaHk5cjNiMy9wMThIQXErR2k3dnlnbHl2aVVmQ2JHd1loWU9J?=
- =?utf-8?B?c21teG9mbmVkaDJvRDVwdzVEOGJ4OHdTamV2RW5Xd1BnZEVicCtsck5lNHBM?=
- =?utf-8?B?WGxjdGRpcGh0M3Q5akJwaW5LRWlYK2ljaUFuVGVZL2s1eVE2anBUSHRjdXNH?=
- =?utf-8?B?MDlRTXhwWXpFcnhwQkVJWW1uSWYxQmM3elFQVm9YeDlFcllNaG9rU0hMTDZw?=
- =?utf-8?B?TkFJaG9vREUySkplZllqb1IyTXhmRjB5ZVZDS2hobmJmUGxseW9EcDhJMXJr?=
- =?utf-8?B?Q1ZaL1BEUDkxNFp3SCtWUXdkV0tnMlh3dFhnTVBkazJDdGJTYzdUS0xYZnZI?=
- =?utf-8?B?WDR3RHJSNktkY2pKeTY3a2s1eWhIWkdYdlZiSHdiZWQ0MjBVRFBZYkVsMitn?=
- =?utf-8?B?TU9FVjVxNjdqbG9xK0tlU2RveXVuMGUrYnJlVlhXUFVMMTdIb3FVOTJlL3hJ?=
- =?utf-8?B?NEQ3NldyZDFCTUhQSER1RCtwN0NQcUlIMVRXVzF0eVhsOUh3UjE3M0E5V1V6?=
- =?utf-8?B?RnUxbjFQYjJPS0pJTlZ2UDdqbUZsMW1iYkRsOEg1S2t3U0lxMkZYNGhieHUx?=
- =?utf-8?B?Z3Y1cDcwNFJQZE1BUnp5d3lWNGRTbE1FRFFXajhNTW9JaHNUWkp0NE5xd1JN?=
- =?utf-8?B?bVhIZXk4T1dxSWNTSXVCbGRaOEtjVy9Ja2g1eFRtajBQT2F5MjB6MzJqMGNU?=
- =?utf-8?B?dHE5QUZGME4wYnpTVXpDYUQvcUhIbnoxaDNxQkFVTlBPc1lGNVpLWm83SG4v?=
- =?utf-8?B?WTIxRFI2Tm1VUm1nRVRjN0d1MU11dm5DcWNKek1UMi9kb2dMUGZsWWNSK0dC?=
- =?utf-8?B?ZTF5Mi84c2lZVzJabHlyeVhZQ3A3R1JDK1k4cENHRkVsSVFaaHVaemhSYWY3?=
- =?utf-8?B?R2M4VFhqY3VHdlpPZ1FDSHg1c1ZpSkVjWUNhc0lkYnc5R1ZxR09ycFVEeDdU?=
- =?utf-8?B?TFRhR3JiY0lpY0NtSEtEOVpKeXdUVWtidTdJNS93MUxZOUN2ZkpNaDUwZ2NT?=
- =?utf-8?B?SGVEY0xBTXhnbmhCYmVGYlNSZWxjSFhxOElScUdQRjhqRFU2dms0RCswdzlr?=
- =?utf-8?B?VmRleE9mU1JNcllCN2ZlY0g4Wk1OamdkUVNyZ1MrWThuMWRYVnZUcUEzTXUx?=
- =?utf-8?B?MzNvYVkzUS8zd2N0VDZMOGVNNVFCNkIzc1V4U2x3Q1NXYkJBdXVMVFJlSjRR?=
- =?utf-8?B?MjM3U2h6aGIrUUgyYUIrRkFBVm9UMjU3YWQ1dFZ4NVkxSGppQ0dWSncyU1VG?=
- =?utf-8?B?Q1ZWWmdSajlBMlRISkt6a3ZFYi9vRFBHZkdGSERZK0NvVkVodTRMaTlya3Ft?=
- =?utf-8?B?WXdhMStObDVVUUlINGgwVFplM0ZEcStWc3ljTzJ5L0ZyR3NiQUFYOXVnL3Bv?=
- =?utf-8?B?OUdMejdndUNtTDVqc2JrZktJUUhrR0YxSWZUeFZ2M2ZPNEk5bklXdVBWK0s1?=
- =?utf-8?B?eE11RHV0eE9vcmp0bWNwUHZYcFk0aXkvV3hkU01pTkRDREhjaER0dkpRLy9h?=
- =?utf-8?B?TFZpWlI0aERIZ01jRUh4SzIyWWh0akxhdlRIR3FuNXhHdTNkckt6K3NaQ09C?=
- =?utf-8?B?QWNicGE5dTFMdCtRVTV1Umx2T0g1RFl4Rk43MnV4T2tmT0RRSUZWa0d4WERE?=
- =?utf-8?Q?HMaTJCQTfpQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB9194.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?dVJ5dXNERk9KYUZ4bUphZW80RUpRRzNMcmNRUFBHaVMxNHp0eTN1eElVbk1S?=
- =?utf-8?B?Y2NrWElPd2d3TWM2RDlnaXJOSjFHc1Jjemt5QWsyOG55UUpUS1lNcUo2QmJR?=
- =?utf-8?B?aTQzazMycFhxZGkvcllJblpVcDZzbmsrb09pNC9yVnA1aXB3dVJRS2RJK2lK?=
- =?utf-8?B?QTBzWWY4QUloWC85RVZ2ek9hZ2ZGWUxkUkNtcS9FcEUxNXMyRlpQQ0hRUHBE?=
- =?utf-8?B?b0xGbEZSdng5bU1VcFduTExFNU9XdzFQOU8zTjFqOXpDOGVsbElLMlJsc2RU?=
- =?utf-8?B?Q0YxaHVwTFdtK0FCazY0UU9MZzlONW9vNGxaN3Z1d29DNzROWVU0UnM4bFVK?=
- =?utf-8?B?OEFwTG5sME14Mk5SQTJ5dFdpK0lkY2YxTWJFSUdSVUZZam1rNU5Mb3h1RW9H?=
- =?utf-8?B?ZkFWYlFla3JQZVFpSUtyOUk4Q25iYkhMNVU2bk5Hbm1IR3VEb3JXOUpySGda?=
- =?utf-8?B?aHNyMnRpUWdSN2E0cVQ1YVQxdlFHRW1jd296ZTdQeDVUYTN5L1lYRXdvQjAw?=
- =?utf-8?B?TzJLdnNmSm5MbEw2bkxtdTIwbitxQ3I3UmR2cWFxMTk2MENvNkNUWmErUDda?=
- =?utf-8?B?dlZwZ0FFRVVSMG9pZm85dm11VGQ2OU14TmVPWkNhcmZWeU55NndzcXJwVXVR?=
- =?utf-8?B?eFdJM3ByMmtKamFkZWpJZmd1a2djS3lSRHUrY3U5MU5IcEV0TnRtUWE4SU15?=
- =?utf-8?B?VzVjZE5McmM2T1BkMzIxZ1Nod29GdElueGlSb2tGYXVNYmhIM05kOHQ0RnYy?=
- =?utf-8?B?TEpXWmFIbkkyeGZJSHBLbkJKM003dHlDUlVxaFFEOEMxMVlwbE5LNG9LdVE0?=
- =?utf-8?B?a0hvbGNRYnVMdFVacUVSYnBqTEtPbkUxYWhpWWI2NEFJVGJoOVhEZDBHNjMr?=
- =?utf-8?B?RzhDL1dRcERGVElMTDV0enJsU3kxUmtDMldMZ2pXbysxNVBmOGE2YUhJRXpL?=
- =?utf-8?B?MXpxWGd2aWhyV0xhNDJLOEVwVzNmcUxzd1d4NzB3aWNzL3plc2tCcjZHZVRT?=
- =?utf-8?B?VytTaWVRdHRCTjRCUXlGelJTRDhySVV6ajFFdDllclpodlhmeGVtcFdjQm5N?=
- =?utf-8?B?STFhVThIa0RGQml0MFJOZ0RTejhrK3NqZVRsNnkxVHFaKzJOR05Ib21xNDl2?=
- =?utf-8?B?Q0lXajdlNkl6RkNsMWFzQlZVZjZ1d2V0RmZyNXQxZG9xeFM2OUxKWmFpN1Nq?=
- =?utf-8?B?YmQzcEhuMW9VQVduRXFnV3poTmxYWmFFVjhtb0pLZXB6MnVFd3FlQUJqR09i?=
- =?utf-8?B?ZThEcFZJOHBrY01URk5BUnFsOUtkSHI5dFRJUG1tdS80VGRlOVJsTlBVanhY?=
- =?utf-8?B?Z3BnTThkeFh0TmMweVpTSUh5VThwQUQzT01pUW94NHdlVmYweWdITkJ6UWQy?=
- =?utf-8?B?SFlaY2hLUVFON3dxNHJXM0JhdGdRUU42NFQxM2FhR3RLYUtwemVpR3NjWVpZ?=
- =?utf-8?B?VUVEUThmNy9LRTR2WVI3ZGdQRWh6Rkk2OTRzVmI3OXZJTXpFbGpQMGRIQ0NV?=
- =?utf-8?B?RXZ3SmdWZTNmMGd1UndoRkxMR1NhU3I3cm5odnNwbzFqV0lZZnNBNjkwZ1lZ?=
- =?utf-8?B?MWZMay9HUmtOUjJ4ZlV4SmRGcEdLeDl5SmNqR002YkdkazR0amE0TmVOR0xW?=
- =?utf-8?B?dC9NNkNyVnFFNUFiWVZvK2psR2NDb0JZcVIyUytTNWZCenl4aThHZUVBL0dz?=
- =?utf-8?B?WWVod1d5a2dQZzRxa0xOYWhESmU2SzZFRUxOam1BV200VnFNMTRGc25HR0Zs?=
- =?utf-8?B?TkgwQTNqYS9VTmhwcTd4MHlSSVo0c1ZnclJPZ0grVllLOXNXT1JpSDcwY0Y1?=
- =?utf-8?B?NzlMSzhLNEZWQVJHVmx6WE9RQSsvTkRSclFzdVNQVm5peU5YQi9LdVVsRmdx?=
- =?utf-8?B?YWlXN2FrN0R3QzJMMFcyYzUvM3FYRzB2V0p0WXJGTWxWMDkvdk9PZlBzNHRW?=
- =?utf-8?B?bnJWNGVlVytpUEpJYnpIbkpMT2NMTThjQWx4SWwxVXU4ZDVIZkdFMzk5dWNQ?=
- =?utf-8?B?NXRKdCtMbU04VERhT1ZWenBwY28wZm1jN1duQndRQUpxYWt2Y0w1NzAxelov?=
- =?utf-8?B?bDRWMzlkdDhvR05aZU05U0lGTG0yTmdLQkxLZFk3T0NzNVlDMnpCVWtNTGFo?=
- =?utf-8?Q?VPbyA9BOjMMUzrOAdx4G3FZes?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10b27cf4-44f8-45f3-895b-08ddb2c06fe4
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB9194.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 01:42:54.0700
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tiongESJxVf6Uvj/1wyRAlAWVF2WwiHuaZXVIixc4iDzn8VvSERoFjbAHak8/BP6tPdtA92oIZ4Ta0rd5uvSGA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM3PR12MB9287
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aDQrn8EslaWx_jEA@fedora>
 
-Ping? Thanks,
+Hi Jay,
 
+Any comments?
 
-On 12/6/25 18:27, Alexey Kardashevskiy wrote:
-> Wrong email for Nikunj :) And I missed the KVM ml. Sorry for the noise.
+Hangbin
+On Mon, May 26, 2025 at 08:51:52AM +0000, Hangbin Liu wrote:
+> On Fri, May 23, 2025 at 02:03:47PM -0700, Jay Vosburgh wrote:
+> > Hangbin Liu <liuhangbin@gmail.com> wrote:
+> > 
+> > >There is a corner case where the NS (Neighbor Solicitation) target is set to
+> > >an invalid or unreachable address. In such cases, all the slave links are
+> > >marked as down and set to backup. This causes the bond to add multicast MAC
+> > >addresses to all slaves.
+> > >
+> > >However, bond_ab_arp_probe() later tries to activate a carrier on slave and
+> > >sets it as active. If we subsequently change or clear the NS targets, the
+> > >call to bond_slave_ns_maddrs_del() on this interface will fail because it
+> > >is still marked active, and the multicast MAC address will remain.
+> > 
+> > 	This seems complicated, so, just to make sure I'm clear, the bug
+> > being fixed here happens when:
+> > 
+> > (a) ARP monitor is running with NS target(s), all of which do not
+> > solicit a reply (invalid address or unreachable), resulting in all
+> > interfaces in the bond being marked down
+> > 
+> > (b) while in the above state, the ARP monitor will cycle through each
+> > interface, making them "active" (active-ish, really, just enough for the
+> > ARP mon stuff to work) in turn to check for a response to a probe
 > 
+> Yes
 > 
-> On 12/6/25 18:22, Alexey Kardashevskiy wrote:
->> QEMU Inter-VM Shared Memory (ivshmem) is designed to share a memory
->> region between guest and host. The host creates a file, passes it to QEMU
->> which it presents to the guest via PCI BAR#2. The guest userspace
->> can map /sys/bus/pci/devices/0000:01:02.3/resource2(_wc) to use the region
->> without having the guest driver for the device at all.
->>
->> The problem with this, since it is a PCI resource, the PCI sysfs
->> reasonably enforces:
->> - no caching when mapped via "resourceN" (PTE::PCD on x86) or
->> - write-through when mapped via "resourceN_wc" (PTE::PWT on x86).
->>
->> As the result, the host writes are seen by the guest immediately
->> (as the region is just a mapped file) but it takes quite some time for
->> the host to see non-cached guest writes.
->>
->> Add a quirk to always map ivshmem's BAR2 as cacheable (==write-back) as
->> ivshmem is backed by RAM anyway.
->> (Re)use already defined but not used IORESOURCE_CACHEABLE flag.
->>
->> This does not affect other ways of mapping a PCI BAR, a driver can use
->> memremap() for this functionality.
->>
->> Signed-off-by: Alexey Kardashevskiy <aik@amd.com>
->> ---
->>
->> What is this IORESOURCE_CACHEABLE for actually?
->>
->> Anyway, the alternatives are:
->>
->> 1. add a new node in sysfs - "resourceN_wb" - for mapping as writeback
->> but this requires changing existing (and likely old) userspace tools;
->>
->> 2. fix the kernel to strictly follow /proc/mtrr (now it is rather
->> a recommendation) but Documentation/arch/x86/mtrr.rst says it is replaced
->> with PAT which does not seem to allow overriding caching for specific
->> devices (==MMIO ranges).
->>
->> ---
->>   drivers/pci/mmap.c   | 6 ++++++
->>   drivers/pci/quirks.c | 8 ++++++++
->>   2 files changed, 14 insertions(+)
->>
->> diff --git a/drivers/pci/mmap.c b/drivers/pci/mmap.c
->> index 8da3347a95c4..8495bee08fae 100644
->> --- a/drivers/pci/mmap.c
->> +++ b/drivers/pci/mmap.c
->> @@ -35,6 +35,7 @@ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
->>       if (write_combine)
->>           vma->vm_page_prot = pgprot_writecombine(vma->vm_page_prot);
->>       else
->> +    else if (!(pci_resource_flags(pdev, bar) & IORESOURCE_CACHEABLE))
->>           vma->vm_page_prot = pgprot_device(vma->vm_page_prot);
->>       if (mmap_state == pci_mmap_io) {
->> @@ -46,6 +47,11 @@ int pci_mmap_resource_range(struct pci_dev *pdev, int bar,
->>       vma->vm_ops = &pci_phys_vm_ops;
->> +    if (pci_resource_flags(pdev, bar) & IORESOURCE_CACHEABLE)
->> +        return remap_pfn_range_notrack(vma, vma->vm_start, vma->vm_pgoff,
->> +                           vma->vm_end - vma->vm_start,
->> +                           vma->vm_page_prot);
->> +
->>       return io_remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff,
->>                     vma->vm_end - vma->vm_start,
->>                     vma->vm_page_prot);
->> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
->> index d7f4ee634263..858869ec6612 100644
->> --- a/drivers/pci/quirks.c
->> +++ b/drivers/pci/quirks.c
->> @@ -6335,3 +6335,11 @@ static void pci_mask_replay_timer_timeout(struct pci_dev *pdev)
->>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9750, pci_mask_replay_timer_timeout);
->>   DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_GLI, 0x9755, pci_mask_replay_timer_timeout);
->>   #endif
->> +
->> +static void pci_ivshmem_writeback(struct pci_dev *dev)
->> +{
->> +    struct resource *r = &dev->resource[2];
->> +
->> +    r->flags |= IORESOURCE_CACHEABLE;
->> +}
->> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_REDHAT_QUMRANET, 0x1110, pci_ivshmem_writeback);
+> > 
+> > (c) while the cycling from (b) is occurring, attempts to change a NS
+> > target will fail on the interface that happens to be quasi-"active" at
+> > the moment.
 > 
-
--- 
-Alexey
-
+> Yes, this is because bond_slave_ns_maddrs_del() must ensure the deletion
+> happens on a backup slave only. However, during ARP monitor, it set one of
+> the slaves to active, this causes the deletion of multicast MAC addresses to
+> be skipped on that interface.
+> 
+> > 	Is my summary correct?
+> > 
+> > 	Doesn't the failure scenario also require that arp_validate be
+> > enabled?  Looking at bond_slave_ns_maddrs_{add,del}, they do nothing if
+> > arp_validate is off.
+> 
+> Yes, it need.
+> 
+> > 
+> > >To fix this issue, move the NS multicast address add/remove logic into
+> > >bond_set_slave_state() to ensure multicast MAC addresses are updated
+> > >synchronously whenever the slave state changes.
+> > 
+> > 	Ok, but state change calls happen in a lot more places than the
+> > existing bond_hw_addr_swap(), which is only called during change of
+> > active for active-backup, balance-alb, and balance-tlb.  Are you sure
+> > that something goofy like setting arp_validate and an NS target with the
+> > ARP monitor disabled (or in a mode that disallows it) will behave
+> > rationally?
+> 
+> The slave_can_set_ns_maddr() in slave_set_ns_maddrs could check the bond mode
+> and if the slave is active. But no arp_interval checking. I can add it in the
+> checking to avoid the miss-config. e.g.
+> 
+> diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bond_options.c
+> index 91893c29b899..21116362cc24 100644
+> --- a/drivers/net/bonding/bond_options.c
+> +++ b/drivers/net/bonding/bond_options.c
+> @@ -1241,6 +1241,7 @@ static int bond_option_arp_ip_targets_set(struct bonding *bond,
+>  static bool slave_can_set_ns_maddr(const struct bonding *bond, struct slave *slave)
+>  {
+>         return BOND_MODE(bond) == BOND_MODE_ACTIVEBACKUP &&
+> +              bond->params.arp_interval &&
+>                !bond_is_active_slave(slave) &&
+>                slave->dev->flags & IFF_MULTICAST;
+>  }
+> 
+> > 
+> > >Note: The call to bond_slave_ns_maddrs_del() in __bond_release_one() is
+> > >kept, as it is still required to clean up multicast MAC addresses when
+> > >a slave is removed.
+> > >
+> > >Fixes: 8eb36164d1a6 ("bonding: add ns target multicast address to slave device")
+> > >Reported-by: Liang Li <liali@redhat.com>
+> > >Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+> > >---
+> > > drivers/net/bonding/bond_main.c | 9 ---------
+> > > include/net/bonding.h           | 7 +++++++
+> > > 2 files changed, 7 insertions(+), 9 deletions(-)
+> > >
+> > >diff --git a/drivers/net/bonding/bond_main.c b/drivers/net/bonding/bond_main.c
+> > >index 8ea183da8d53..6dde6f870ee2 100644
+> > >--- a/drivers/net/bonding/bond_main.c
+> > >+++ b/drivers/net/bonding/bond_main.c
+> > >@@ -1004,8 +1004,6 @@ static void bond_hw_addr_swap(struct bonding *bond, struct slave *new_active,
+> > > 
+> > > 		if (bond->dev->flags & IFF_UP)
+> > > 			bond_hw_addr_flush(bond->dev, old_active->dev);
+> > >-
+> > >-		bond_slave_ns_maddrs_add(bond, old_active);
+> > > 	}
+> > > 
+> > > 	if (new_active) {
+> > >@@ -1022,8 +1020,6 @@ static void bond_hw_addr_swap(struct bonding *bond, struct slave *new_active,
+> > > 			dev_mc_sync(new_active->dev, bond->dev);
+> > > 			netif_addr_unlock_bh(bond->dev);
+> > > 		}
+> > >-
+> > >-		bond_slave_ns_maddrs_del(bond, new_active);
+> > > 	}
+> > > }
+> > > 
+> > >@@ -2350,11 +2346,6 @@ int bond_enslave(struct net_device *bond_dev, struct net_device *slave_dev,
+> > > 	bond_compute_features(bond);
+> > > 	bond_set_carrier(bond);
+> > > 
+> > >-	/* Needs to be called before bond_select_active_slave(), which will
+> > >-	 * remove the maddrs if the slave is selected as active slave.
+> > >-	 */
+> > >-	bond_slave_ns_maddrs_add(bond, new_slave);
+> > >-
+> > > 	if (bond_uses_primary(bond)) {
+> > > 		block_netpoll_tx();
+> > > 		bond_select_active_slave(bond);
+> > >diff --git a/include/net/bonding.h b/include/net/bonding.h
+> > >index 95f67b308c19..0041f7a2bd18 100644
+> > >--- a/include/net/bonding.h
+> > >+++ b/include/net/bonding.h
+> > >@@ -385,7 +385,14 @@ static inline void bond_set_slave_state(struct slave *slave,
+> > > 	if (slave->backup == slave_state)
+> > > 		return;
+> > > 
+> > >+	if (slave_state == BOND_STATE_ACTIVE)
+> > >+		bond_slave_ns_maddrs_del(slave->bond, slave);
+> > >+
+> > > 	slave->backup = slave_state;
+> > >+
+> > >+	if (slave_state == BOND_STATE_BACKUP)
+> > >+		bond_slave_ns_maddrs_add(slave->bond, slave);
+> > 
+> > 	This code pattern kind of makes it look like the slave->backup
+> > assignment must happen between the two new if blocks.  I don't think
+> > that's true, and things would work correctly if the slave->backup
+> > assignment happened first (or last).
+> 
+> The slave->backup assignment must happen between the two if blocks, because
+> 
+> bond_slave_ns_maddrs_add/del only do the operation on backup slave.
+> So if a interface become active, we need to call maddrs_del before it set
+> backup state to active. If a interface become backup. We need to call
+> maddrs_add after the backup state set to backup.
+> 
+> I will add a comment in the code.
+> 
+> Thanks
+> Hangbin
+> > 
+> > 	Assuming I'm correct, could you move the assignment so it's not
+> > in the middle?  If, however, it does need to be in the middle, that
+> > deserves a comment explaining why.
+> > 
+> > 	-J
+> > 
+> > >+
+> > > 	if (notify) {
+> > > 		bond_lower_state_changed(slave);
+> > > 		bond_queue_slave_event(slave);
+> > >-- 
+> > >2.46.0
+> > >
+> > 
+> > ---
+> > 	-Jay Vosburgh, jv@jvosburgh.net
