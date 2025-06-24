@@ -1,233 +1,172 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2061.outbound.protection.outlook.com [40.107.237.61])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA092512DD;
-	Tue, 24 Jun 2025 20:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750796668; cv=fail; b=brBT2JR/OKBSyraYxh70R2W5t+7EMtUfHwu5fS9PjiPXAGH5VsX0c01R/mFnLEDqqE2xYQEPUvJRbYQJXvSW3xkjfEZ5oIrXF0nW3NAGNO0Kp8XEBiBHTdbaI3wxZHQL+5uPr8Kl8d3QfhLx8ThFcIQXpHMFzmbb6XoTpFhBWLM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750796668; c=relaxed/simple;
-	bh=UU04REGXC1jgAizfwF8XFPJfydgVqq1JiVlJCGeqfFI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=X7o4DxdkuHTOREJ5xrc7HHqZ0X+pg2prQl/dn7td021FaPAavK1xi9jIh1f/k0lKBsji0uBdfHwYhpxFkUaZTWUGcWX2YpGJhiSAmM4eGWGU228FVmdAY5HUe0bAnglsOzXcjHSPqiRhIkSNEN7/nInSVKIks6/cjy6qr3fNeMA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=mAiq8Cmc; arc=fail smtp.client-ip=40.107.237.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D4152571C9;
+	Tue, 24 Jun 2025 20:25:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750796743; cv=none; b=KvMN2vBCg3O0nsJihqi5GbmPaoDldT06fIgO6sNLtQXjqzVFwHTzxCUDjL7jIblD0swA8Q+7BU6WULwnlkOszGoVabfeQB3MQRIR2Yt1iUCSk3bpw800QLv7sqI5Oa5S7Hqorq8Fcm+uvnzEo7sADYPFBSBNKUjKysn+z+Ov1d0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750796743; c=relaxed/simple;
+	bh=D7CPEpx1S67e7eDiNevj8fbmWkAah/k4UBwRiV31iiE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qIxnbZcVI7U5VSDlGCP+jKNKEpzs1eP2lusNmXEIl6Dk0fouRpVK2+wYgHRSnUA2AJxgeIDOYFo4n1TPmobrfgJQ/5rX7lGtvSUkiJATmn54y97zCaqQZQJdWw9fEbyakIjTCJVNNV1pcDc/tWbH6qZQFqrCwqVLSn6MAfoNQ84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rw+fNrmY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="mAiq8Cmc"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=FGRecN8FiduLOK75w9khmTLscBeorHgS82SbJAObJL4yY0xFBgAUudscGIBZpkMMBhyBwk2bCv9gTnjq5bj48d7W0jJy3U/ToRKVf1FBxbRHu5OySKcCehfULL95kvfjhib5kmarI/esDEc+iE5IhL4sB9OF352jrb9Pw2dFXhSs1AJO8R3fZTLABF17U3ATxtw+GnWkK34Pradn/qhDiAM1Cp/cTAMBbVX5+VLIcXn1qAZxeFrqdEd5pCkW/vVZGBeH1NKQ1toz/qF88JPUELmHg3jJ8axf9mrkUbBr8B/b8MghyUM5L+I7HRwAWOG6Hfe7T+s0IoFoKWsF3L75+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BL+zGerFeSnXS64G8K3LHzli7lcyC6g5eaZhmtwKL10=;
- b=wStgVH5ZGAPA7stxKVTT3bqn/jdkNOXyCYhKPVmLXqiQSZsMXwnFqWwY6aE4wanFcR1qyX1E6JYLuzHAiqVQPym8++TJEZ8TWWK4AjpcAJ2JJ8ApZgdRfnrBZilrvEvBpNZHWbpi/jpRkjYUb1EmqfslmPnfg8vpf7fJ8L6YZIvzcaLtTpOxWiHgtAutNoNlsAsjwHCP3++5+rVJ2XSsNROfb/4HC5632JAG/6MUdzXa6Qsf6OCOd1idYNEL9/c3pR4qyLcdpKOJJxSJ/BSyWDws2LfyPOEeeTc3o/rHLT83iqbGjvuG+duPkUagJnJ9PLKzIdOZCOy1CPyyXj/SRA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BL+zGerFeSnXS64G8K3LHzli7lcyC6g5eaZhmtwKL10=;
- b=mAiq8CmcamSzWAsper3Cq9vYeBDvPXtZZRJ9NP11SJ3Q9oAnbjrXqHOew5o5g+NzeTUKED7iNXdWsAWiCC/y2RWiGj8PBrG4Gj6louQUSA6NsSFCwqa5JnIcSMRl2RdxFIVMWAdf/6FzzXQQW3p81YEmL6XOm5g71ht9Puy+LAs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16)
- by MN2PR12MB4336.namprd12.prod.outlook.com (2603:10b6:208:1df::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Tue, 24 Jun
- 2025 20:24:24 +0000
-Received: from CY5PR12MB6429.namprd12.prod.outlook.com
- ([fe80::1b40:2f7f:a826:3fa0]) by CY5PR12MB6429.namprd12.prod.outlook.com
- ([fe80::1b40:2f7f:a826:3fa0%6]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
- 20:24:24 +0000
-Message-ID: <0efb8ce3-cf71-4a49-8ca9-735019a3a7d8@amd.com>
-Date: Tue, 24 Jun 2025 16:24:21 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
-Content-Language: en-GB
-To: Mehdi Djait <mehdi.djait@linux.intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
- hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
- dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
- jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
- linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
- benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com,
- dantony@amd.com, vengutta@amd.com, Svetoslav.Stoilov@amd.com,
- Yana.Zheleva@amd.com
-References: <20250615000915.GQ10542@pendragon.ideasonboard.com>
- <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
- <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
- <20250623220503.GA15951@pendragon.ideasonboard.com>
- <425j7c6xvbbatdhxgjgjawzwfnjmjetg6rpnwfudbtg6qz6nay@dy5ldbuhtbvv>
- <aFp7tuXkU1jayPum@kekkonen.localdomain>
- <aFp78tqHhe_IhV6d@kekkonen.localdomain>
- <20250624102745.GG15951@pendragon.ideasonboard.com>
- <nixg4efp3zkdpd6h7kp6wkvam63batpoknov2nkgu36voks6bk@gzuackzl3l5g>
- <aFqQEwdzSY123xps@kekkonen.localdomain>
- <aslodzamkbjm6n6oherakch2nyltl6mnncl4mzr4o774oolr4t@hpegah7dq72g>
-From: "Nirujogi, Pratap" <pnirujog@amd.com>
-In-Reply-To: <aslodzamkbjm6n6oherakch2nyltl6mnncl4mzr4o774oolr4t@hpegah7dq72g>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YTBP288CA0010.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:b01:14::23) To CY5PR12MB6429.namprd12.prod.outlook.com
- (2603:10b6:930:3b::16)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rw+fNrmY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E48EC4CEE3;
+	Tue, 24 Jun 2025 20:25:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750796743;
+	bh=D7CPEpx1S67e7eDiNevj8fbmWkAah/k4UBwRiV31iiE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=rw+fNrmYUq7BG6c8/CrN4jU6x+qttjslxJaRpQA+VeMjyaq/59m3d0/yxPZPW+8t7
+	 AaSxIJbYK1zGXs9J17H2ihg63leg8HpFa6atQqJxdP8UTgAEg12WGGednfQQ7Rcg0R
+	 cScgvSzfmxo0PfZXzKVGskwGprzRzJQKXI8zEW+eaxI9LegniL++BQ3bLrkGHO+bHB
+	 nZ6Q3G6KMxRzj/PbLeoQqr7ETr/3UJ3lwnOWzaBD72bKd+kcNWHzU/cS6PSbgE1rw/
+	 HdZzOYikfSCok64mdN5ec96lD5DQsMDnRGjI+swqVRGWyvHmfKt2VgpQ7jsksgJdSf
+	 OFbQmksisB5Pg==
+Message-ID: <e4d49263644f7704074ea0a5149fd834fb3f3603.camel@kernel.org>
+Subject: Re: [PATCH] xfs: report a writeback error on a read() call
+From: Jeff Layton <jlayton@kernel.org>
+To: Matthew Wilcox <willy@infradead.org>
+Cc: Christoph Hellwig <hch@infradead.org>, ying chen <yc1082463@gmail.com>, 
+	djwong@kernel.org, linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ 	linux-fsdevel@vger.kernel.org
+Date: Tue, 24 Jun 2025 16:25:41 -0400
+In-Reply-To: <aFsC2vTJNG7UmfMi@casper.infradead.org>
+References: 
+	<CAN2Y7hyi1HCrSiKsDT+KD8hBjQmsqzNp71Q9Z_RmBG0LLaZxCA@mail.gmail.com>
+	 <aFqyyUk9lO5mSguL@infradead.org>
+	 <c77a55f5ab294be222c8abd86c2b8fddabca9f61.camel@kernel.org>
+	 <aFsC2vTJNG7UmfMi@casper.infradead.org>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ QZIQXVeAA+smfTT0tDrisj1U5x6ZB9b3nBg65kc=
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|MN2PR12MB4336:EE_
-X-MS-Office365-Filtering-Correlation-Id: b1794e68-5a7a-40ad-54d4-08ddb35d1c10
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UWQxRTc4NW1Od0pBODhuMG1mV2xQMWxBbmk0N0ZWTkpxMVdCRjEzeDdIMHRs?=
- =?utf-8?B?TTlMWHlxNmp3RnNpMm5KVHVWamhvVXBFc2xhbTlTcUcvMi82VEc2UlVSQUZy?=
- =?utf-8?B?Vyt4MHNPcmFsMGkwSGZCQmRwVXhXUzlCekZ0MXBHbWFQTjd5TThIcCs5TWkx?=
- =?utf-8?B?TVBnWFlLMVBFNGtUdWY3QXZwMHR4OW52YkQvQWlmUHFOdWZJMzRsQ2kxV3Zu?=
- =?utf-8?B?MEZGQmxmVkYvbkZ4QW1EWmZYTVpVOXQvUTRBMW5GSmVFeWhsTldQMFdYK3dT?=
- =?utf-8?B?M0VlRW5rMVhSbVEyNHlUbkN6REZLZlAvSHRrdFRiZnBWRXI5ampUVlpzeVRI?=
- =?utf-8?B?Skg1TTArSXpZUXl4L055ZW9zSkpKWXMxWm45UGtQMk9BejZMdzF0MnVJQkRD?=
- =?utf-8?B?NHNzbXdkZkQ0OHNPN3p1NWcwUUlUMXlMVjNvdjdNS2tRem4velBBTGo3Z1kx?=
- =?utf-8?B?MVhpMlNrL3hPbDVYQ1VoTFhEWmhDK0pzM0dmQ0czWEhLL2V6Q2UrVytJMDBQ?=
- =?utf-8?B?eFlsdy9oRHR5NGErUThIUmlwQXIyNTlUaXhuM2ZUVVcrL0ZqbmRtUldPTXJQ?=
- =?utf-8?B?aHA3VUh4WkRPM2FoK1VFc3VFZFdSK3p5d2FnQUtENlZHVUVpTnQ5czRuTTVv?=
- =?utf-8?B?Qm83ZndHUXB3aCtsM203NE01RGtTR3NJdlZKNUxVQi9WcFFwMzNqVFNKKzFL?=
- =?utf-8?B?TWI5OXh5bTNqeEdsR2xuSHpoZ0tzV2JzeEVpQ0ZWY0djSlgrTk5pWTNLMmxa?=
- =?utf-8?B?VTJQSG9SMlJQZXgrMlNKNzNxbzd0VE5BQVhQdTJrdWN4NnJ6ZnUxa2pkZ0tu?=
- =?utf-8?B?VHMwRXRMTUZkMEROayt3cGUxSWNubStGQTI5ZjZvN3lpVFhzYUVXcTZUekE2?=
- =?utf-8?B?TzdkTFBIbjlMODViNG8xa3k4RE9DNEF1TnJyYUF4Y2FlWm02SEJjbUVab21P?=
- =?utf-8?B?S1NOV1BBMUdMenpTZzR6c1lBOUVvSWcrNU11OC9zSXRnSE1pRmFFSEhmQ05p?=
- =?utf-8?B?Ym9RU0R4VUtoVUFYL1V2NUtjU2JTVytwcDNJeWZPaHdET2grTXB0bythNzJR?=
- =?utf-8?B?Q1krVUU2bGYra0UyaDF2TmI4KzAxdW9nU2ZuUDI0S2lTRzh0cmwxQ2FGQjhr?=
- =?utf-8?B?Wk1jOXdXcDBMN3lOczJFM1FvdnVFd2RoOXE4anU3MmZTYTY3QVVkejdOM1pY?=
- =?utf-8?B?MkV0UGhzczVINWtqUGpvRnlBaCs3dHBiNmhmL3BUbmRsUy85RC9ndFJscGtp?=
- =?utf-8?B?MzduL3FvR1dCL0lkTG1XNzZtbUhDZWF0L2VHV21kUzN0S2xKRDhsc1JFNkVZ?=
- =?utf-8?B?M21meERDVVdMOUYzSGFZVFMrV2FhZlkwN25tUjFxUkxxQ2VYa1poekxqVnJY?=
- =?utf-8?B?K1NaWHAvQ3l5R3JMTDNHM2YySm1vSzV5eHJ6OStLQjVXNzFhTjc2ME9LcTFl?=
- =?utf-8?B?ekVqaWltYVM2bmtEemJWWjJLaUxtVXNXVXNWejJiTjN2bW04azUzUnRzcDdZ?=
- =?utf-8?B?U3NTNjRnaWM4QlI4dkNMSHUxSWwxUTR1Y2tMbVAyUHRaRjFXbTJwSDRSbDFX?=
- =?utf-8?B?VTZ4NVNKM3JVSkcxM042ZjI2cjVhUDBpNWZZN0w3M2xiWkJYSVdqOUhvanpU?=
- =?utf-8?B?NFpINGV4SXltU2QxdmNJQ3RuUlZZZEhZT2tNcFN4RmFLZlJNWS9uY2wvQ21m?=
- =?utf-8?B?VU9Sa3Bkd01YbVZ2SzZrVnFxbDcrZ09wcVptTFBBQkJaRHEvcklpd0w1RkNU?=
- =?utf-8?B?RGlTaDJzd25lb2pwbk5PczZVMXg3K05veVpPaHZjSWVvY01WTjhnUHQ2MGls?=
- =?utf-8?B?eVJoSkJqR2ord0JtODBKTXNHaExmN1FxYmUwQ2o1MUpCQ3BLUFM4Z3hkczV5?=
- =?utf-8?B?Ti81NEFzSm5xQjN2TkJJZ1d0UUV3MmdHYTRWSkdWNi9BWlhaRWlSQVJtQTVv?=
- =?utf-8?Q?dk/DKddghUY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NlU5MWdYYTIwcjlCVSt5Wkp5NmFRd0ZGUEpzdDV6elRJVXZBVHhCc2pQMitT?=
- =?utf-8?B?dUQ0SjBZbVd6Unc0WGsxL1BrU3o0NmhPQWVKa3hKSklETEZlQkk1dHgrT3c3?=
- =?utf-8?B?OFR0aUZubVFZdTlsc3pXMW50VGxJclZKaW1Ld1RuNkF1eUYrdG1kM0FFajFp?=
- =?utf-8?B?ZHpGTk9iRjdhVDFzYVkreG9hQ2xRMGFOQm10SW9nUmhSM0g1SnpxMGlVK0NJ?=
- =?utf-8?B?L1ZIb0FBZERZWDRzdW1tUUtzV2Q0YWhBQ2NHWlNFdHp5TmhRMVpINHdCNUsx?=
- =?utf-8?B?MWFaWGVKTlp5UzV5ZzFzckluZndRQTZaMnBLak1TeExoZnRIcTk0NEtCOFlr?=
- =?utf-8?B?Skg1QTQzdEhQVkZnekV0RC9USmt1TnRoNFVKNFB2Z04vMFlncnIzMGV6TmZm?=
- =?utf-8?B?VDU2T3dPeHIvM2NZazgyamk1UzBoalk1TTc5Wnl0Z1ZDL3RsOXVMT0cvVUxo?=
- =?utf-8?B?aGdlL01seUNVcy8xazZDVVpIMWZ2cG9BS3A5Q1o3MkE4VkZscUJhTEJOSGZ2?=
- =?utf-8?B?MEk2bEhNdVJCbHBFQkJ3YjFjdERCOUlvOGs4M1VXYlM5eWJFbEZ4QTFMYmRz?=
- =?utf-8?B?eUNpU2t6dDg0YWdUSHMvbU1TYVgrZlRqdXRiUU1UdmFqQ3lzbWRlUGFKMjA0?=
- =?utf-8?B?OEhvdE5aL0FOTnNsS1B1ay9CUnZJbXJDRnp1QjBYQjNSbUxDelp4N01MbjND?=
- =?utf-8?B?NUdEOW0vc2MvOHM5WnJlemswN1FtY2NWMStkellsdDcxMzJVMWZBcDA3Nlc5?=
- =?utf-8?B?MU0xV2xqbTZWTnVGTjZ0TWVub3hDajFRc3hLekpXR25ERk94dU5IeUd4bGdt?=
- =?utf-8?B?aUI0QmY5dENvOUhDQ2ljSk9DWXNBYk96d3N3bVNyTEgwc29PaEkxQVR4aE9D?=
- =?utf-8?B?Y3pkOVY2ZjdJY3Z0L0xEdzlLb3JMOStoUEc3Z1Z0Ym81eXBpRXc5cVNudlV6?=
- =?utf-8?B?OC96eUVDVjFRaEVvNWFuNWlqUFFnK2FhSUJCY2FxNm9wNjdhZ3Yrd21jMWRq?=
- =?utf-8?B?TFcycXpCVDIzeXpWREdLSHNCbWJGWW0zZDFYUUQ4d2VBWTlReFAwNEFUN0Zm?=
- =?utf-8?B?VHlFZmxpTXowaE9aZy9ZNVNDNy9Kb2VTZUhRU0I0a25JUVBEVU03dmtkM3d0?=
- =?utf-8?B?bEk4N1haOU0xYUp2S1F0QXhGbGYrSm1jSTA0dlNmZkJncmpZUnpsL1U0MGtn?=
- =?utf-8?B?WC9BUC9qSGk2cWU0d2Z3cVdYZXBNNUxCU3hNM1UwOVhKWGJnSERQTnBsZHU1?=
- =?utf-8?B?RXZMVDR5eEhBUkRWckdES2RBT1R3VUI5YWxXaTlpK0JZRGJrOVBIZTlnRUpJ?=
- =?utf-8?B?S00wdEluVHZBeHIwbFBGNSsyRHZ5RXZLbkkrVjFGbUZCYUJyMnVFeXcwVW5Y?=
- =?utf-8?B?UGdNbjhSNDRIaVJmZjU1dWNNUzU0ZzNlMXNXcWs0eHA5RU54WFIzQUFWV1Na?=
- =?utf-8?B?dFpHaTRsdk1qSkdRTU9qOUNTYk42aGJheU9JSnBKQTJHcFhiVitxdXdvaFo3?=
- =?utf-8?B?VWRVaHJzT0JnSW5KUnM2NTBNeHFKZlF5QjBpYXdnZSs5UVhCTS9iVlg5YU5l?=
- =?utf-8?B?c2VuYXlTWUxkSnI2dUp0WGtydnJHS0ZNL1RTRGxsSzY0S1JXSldlZzh1aWZO?=
- =?utf-8?B?ek81VUZmbkxsY2pqWG1vODBkQ0JxcHhKTGI4WXljcmlMN2Z3a3hpcFdWYThm?=
- =?utf-8?B?ck5uckxCczhOeUpYMWZONVdXUVVTT2Rqd2dnTDlFRmJPK1E3dnFuQU5vYXEz?=
- =?utf-8?B?NldyYmtTMFUreEFPZDRCMTd3Y294bkVEejg1cmwxZGkrMXF1VStSTW5iUWM5?=
- =?utf-8?B?Qm9wZW5kWkgxZGtJYVIzOU5sZ1ozY1dwSnRVZVFPMUIwT1E4bEY2dzdLaUF0?=
- =?utf-8?B?ZDY3Mklyb0hpaEd0UWJjWTBIZXIyM1JMb1c3eWNRUWEwS29JTnJmMGd4M09Z?=
- =?utf-8?B?Rk5HaFNVem9ieWdzYStnWW4xNUdibmdHZ3YzNWMwN1BPZ2lvTU03Ty82SUlE?=
- =?utf-8?B?b1RFeCtUVkYwY2VuUGJCRzQ2MXFaK0h4b1lrUkVWT2hpY2hiUDJGK2RYUG90?=
- =?utf-8?B?QXhESENrZ21FYUdxVW1YRXVlYnlINy9ZY3FwQ2tnbUpqL2dTTFluQmlJQTIx?=
- =?utf-8?Q?pSFHM2Rss0p/BWPhbMbTfUkEm?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1794e68-5a7a-40ad-54d4-08ddb35d1c10
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6429.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 20:24:24.2927
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GUyztHbVZhbyqzMS3vRyGr51oZ48wSD/ZpdUjZBCWSCquSZYAihAR69X01IHzDRUBA+CblGOUnVbSQrlNOMYUQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4336
 
-Hi Mehdi, Sakari,
+On Tue, 2025-06-24 at 20:56 +0100, Matthew Wilcox wrote:
+> On Tue, Jun 24, 2025 at 02:26:18PM -0400, Jeff Layton wrote:
+> > On Tue, 2025-06-24 at 07:14 -0700, Christoph Hellwig wrote:
+> > > On Sun, Jun 22, 2025 at 08:32:18PM +0800, ying chen wrote:
+> > > > Normally, user space returns immediately after writing data to the
+> > > > buffer cache. However, if an error occurs during the actual disk
+> > > > write operation, data loss may ensue, and there is no way to report
+> > > > this error back to user space immediately. Current kernels may repo=
+rt
+> > > > writeback errors when fsync() is called, but frequent invocations o=
+f
+> > > > fsync() can degrade performance. Therefore, a new sysctl
+> > > > fs.xfs.report_writeback_error_on_read is introduced, which, when se=
+t
+> > > > to 1, reports writeback errors when read() is called. This allows u=
+ser
+> > > > space to be notified of writeback errors more promptly.
+> > >=20
+> > > That's really kernel wide policy and not something magic done by a
+> > > single file system.
+> >=20
+> > ...not to mention that getting an error back on a read for a prior
+> > writeback error would be completely unexpected by most applications.
+>=20
+> Well.  It's somewhat understandable:
+>=20
+> 	write() (returns success)
+> 	writeback happens, error logged
+> 	memory pressure evicts folio
+> 	read() brings folio into page cache
+> 	attempt to read contents fails, error returned
+>=20
+> I'm not sure it's a good solution, but it's plausible.
 
-On 6/24/2025 12:34 PM, Mehdi Djait wrote:
-> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
-> 
-> 
-> Hi Sakari,
-> 
-> On Tue, Jun 24, 2025 at 11:46:27AM +0000, Sakari Ailus wrote:
-> 
-> [...]
-> 
->>
->> I'm in favour of the latter but both should be workable.
->>
->> Speaking of return values, devm_clk_get_optional() may also return
->> -EPROBE_DEFER. That needs to be handled.
->>
-> 
-> Ack.
-> 
->> And further on -EPROBE_DEFER, I think the helper should return
->> -EPROBE_DEFER if the "clock-frequency" property doesn't exist on non-OF
->> nodes. That signals the required software nodes required on Intel Windows
->> definitions/ipu-bridge or AMD systems aren't in place yet so really probing
->> should be deferred. This would allow removing the hacks that return
->> -EPROBE_DEFER in sensor drivers when no graph endpoint is found.
-> 
-> device_property_read_u32() returns the following:
-> 
->   * Return: number of values if @val was %NULL,
->   *         %0 if the property was found (success),
->   *         %-EINVAL if given arguments are not valid,
->   *         %-ENODATA if the property does not have a value,
->   *         %-EPROTO if the property is not an array of numbers,
->   *         %-EOVERFLOW if the size of the property is not as expected.
->   *         %-ENXIO if no suitable firmware interface is present.
-> 
-> 
-> Do you mean something like this in the helper:
-> 
-> if (ret == -ENODATA && !of_node)
->          return ERR_PTR(-EPROBE_DEFER);
-> 
-If I understand correctly, the recommendation is to return -EPROBE_DEFER 
-on !of_node systems when the driver fails to read the clock-frequency 
-property. Kindly confirm.
+Personally, I find it confusing. The range you're trying to read might
+actually be fine if the error happened in a different range.
 
-if (ret && !of_node)
-	return ERR_PTR(-EPROBE_DEFER);
+It also has the same problem as reporting writeback errors on close(),
+in that it's non-deterministic. You might not see an error if writeback
+didn't happen yet. Just because you didn't get an error when reading,
+that doesn't mean that your data is actually safe.
 
-Thanks,
-Pratap
-
-> --
-> Kind Regards
-> Mehdi Djait
-
+Maybe this is ok as an opt-in thing for some workloads, but it does
+have some potential footguns.
+--=20
+Jeff Layton <jlayton@kernel.org>
