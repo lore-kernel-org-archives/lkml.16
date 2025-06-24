@@ -1,175 +1,111 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B322882A9;
-	Tue, 24 Jun 2025 12:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+Received: from mx10.didiglobal.com (mx10.didiglobal.com [111.202.70.125])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id E68E4291C2D;
+	Tue, 24 Jun 2025 12:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.125
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750767320; cv=none; b=akq3a7+drnbHUKaHQaeXSz//+oSY1yYBu/JsHcILh/9mOJMYweOVx6fXcDTLkv42BWFYTt3uLRCWtU8ByZsLNKvWiLX+Knpf7cmOiFjiAuRUx1kRwZ82dH086phwz8ftyCBRjj4oeyfJIia4g+EbEhNXlNatRjTqBSeSHx/mNy4=
+	t=1750767338; cv=none; b=rwYQXQieAOQ4n8vCoFFocmtwRPMxF4gPatwa18Yeabh54ilOz3Um7oJNaU8s482dus0QPAbkrRIGBbE/p3bJJ2djed7F3bwLflyVEyaoHH/0YFJq1RCghy3eOw2zxxVNnnmxeuzun2E15GtDEhNvSzD63V50Lnd3ayj29VNP2t0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750767320; c=relaxed/simple;
-	bh=RS3Ir0XcZ0wtTv3mLgddInGQ7GnUnQCjtJ18Ke5dvSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EI4UQfCC2Fkr2My/SnFt6oE5k4eJI33rOxCH7qDpoZTEfO7VZFAQ1u1+Qd+QF+nGq8PD+/0QsigacnFYBsLn/iAoN92zPMLbigXALUA6nfxUlvAnZ7XIWvWbI9FvXf4T3THvgRl5itZCp0bJrPTtzHSBZXPd+zeou+LXZZwPbW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bNEdlFI4; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750767338; c=relaxed/simple;
+	bh=HYU97oIn0cnVusHQfmzKHAF4vcuj7pXpFBHYR5LJCN0=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
+	 MIME-Version; b=T8NQTKE3ySUTWbI1LmUln0x9myxUvkMpCnnaWC07yTfd+gmyA7q5WIQs/+5/6ntDb/rS21pIg1smiNG1SE/BVkh/Glu4efroE6lXXW8jtjL9EiypcxnYkAMMjJ+9HDeq/hHCrvoMiob6+W2u85bZUoBqgb3xWMcz6nfAPjJOThA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b=ExvA9iRQ; arc=none smtp.client-ip=111.202.70.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bNEdlFI4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750767318; x=1782303318;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=RS3Ir0XcZ0wtTv3mLgddInGQ7GnUnQCjtJ18Ke5dvSs=;
-  b=bNEdlFI43fANoe8ulXaDdFPRH4gM37lQxFNo6tjeXHPqwU/rqHTC3lXi
-   ylK0IMoVf90+m119HgNdZplv4osxeza4LTlM7Xk2fk+pfPR3zjAmlTj8i
-   rxfzBxrpY4cqkP6iSijSsHuISRSHSTGT9YzIF0axvrb1Ui4CARbFBdDfQ
-   ODuVpYe3bz8VOLWjRqpnwcUjY+y1+xOX3T4W1Pt9PM9Hu+aUeWW3O0FyT
-   +6zVNFCwnRCUMw3jk0DRm1FcWeVdhFClIdFVChnENR/gUUXfgW1+/yvbT
-   +uNoR3fNkHBvvN1FQpK8opDi08Jfp2ED/gt+9v9rqBP1PRAqg+khfOJiX
-   w==;
-X-CSE-ConnectionGUID: 1irAqlk9TiWYqzucKT2t0A==
-X-CSE-MsgGUID: norpp/qmSxOmsZczG+F9sw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="78423405"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="78423405"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 05:15:18 -0700
-X-CSE-ConnectionGUID: KMhT0jvkQG6oua368CzdYg==
-X-CSE-MsgGUID: WAduLzKvSmGFelTHd0uYrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="156295716"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa003.jf.intel.com with ESMTP; 24 Jun 2025 05:15:13 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uU2YR-000S5m-0z;
-	Tue, 24 Jun 2025 12:15:11 +0000
-Date: Tue, 24 Jun 2025 20:14:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>, joro@8bytes.org,
-	will@kernel.org, robin.murphy@arm.com, robh@kernel.org,
-	krzk+dt@kernel.org, conor+dt@kernel.org, heiko@sntech.de,
-	nicolas.dufresne@collabora.com, jgg@ziepe.ca
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	iommu@lists.linux.dev, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org, kernel@collabora.com,
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>
-Subject: Re: [PATCH v4 3/5] iommu: Add verisilicon IOMMU driver
-Message-ID: <202506242057.NVRNN4W1-lkp@intel.com>
-References: <20250623153931.158765-4-benjamin.gaignard@collabora.com>
+	dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b="ExvA9iRQ"
+Received: from mail.didiglobal.com (unknown [10.79.64.21])
+	by mx10.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id CCE7B1808ACAE2;
+	Tue, 24 Jun 2025 20:11:22 +0800 (CST)
+Received: from BJ03-ACTMBX-09.didichuxing.com (10.79.71.36) by
+ BJ01-ACTMBX-02.didichuxing.com (10.79.64.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Tue, 24 Jun 2025 20:12:05 +0800
+Received: from BJ03-ACTMBX-07.didichuxing.com (10.79.71.34) by
+ BJ03-ACTMBX-09.didichuxing.com (10.79.71.36) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Tue, 24 Jun 2025 20:12:04 +0800
+Received: from BJ03-ACTMBX-07.didichuxing.com ([fe80::b00b:de35:2067:9787]) by
+ BJ03-ACTMBX-07.didichuxing.com ([fe80::b00b:de35:2067:9787%7]) with mapi id
+ 15.02.1748.010; Tue, 24 Jun 2025 20:12:04 +0800
+X-MD-Sfrom: chentaotao@didiglobal.com
+X-MD-SrcIP: 10.79.64.21
+From: =?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
+To: "tytso@mit.edu" <tytso@mit.edu>, "hch@infradead.org" <hch@infradead.org>,
+	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>, "willy@infradead.org"
+	<willy@infradead.org>, "brauner@kernel.org" <brauner@kernel.org>,
+	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, "tursulin@ursulin.net"
+	<tursulin@ursulin.net>, "airlied@gmail.com" <airlied@gmail.com>
+CC: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-doc@vger.kernel.org"
+	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "chentao325@qq.com" <chentao325@qq.com>,
+	=?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
+Subject: [PATCH v2 1/5] drm/i915: Use kernel_write() in shmem object create
+Thread-Topic: [PATCH v2 1/5] drm/i915: Use kernel_write() in shmem object
+ create
+Thread-Index: AQHb5QEySZaHYPkPAEOiJqqTdRuvag==
+Date: Tue, 24 Jun 2025 12:12:04 +0000
+Message-ID: <20250624121149.2927-2-chentaotao@didiglobal.com>
+In-Reply-To: <20250624121149.2927-1-chentaotao@didiglobal.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623153931.158765-4-benjamin.gaignard@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=didiglobal.com;
+	s=2025; t=1750767104;
+	bh=HYU97oIn0cnVusHQfmzKHAF4vcuj7pXpFBHYR5LJCN0=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type;
+	b=ExvA9iRQ48UNJHdn2HJmucGbjVBK6iaRuGf3d3jl4q7HSZMM/2JCQ2DOEvQdbvmUx
+	 w/KHs9wUtgV8OpV2/A7iliZgFTh9ug/Do0DhJl/F9wIZdiqTuENdalZvn5acDHTyEG
+	 PRXBL55CwnXiRd5I4oRsM2Tf6B28t5W7wZGtDa0o=
 
-Hi Benjamin,
-
-kernel test robot noticed the following build warnings:
-
-[auto build test WARNING on robh/for-next]
-[also build test WARNING on rockchip/for-next arm64/for-next/core linus/master v6.16-rc3 next-20250623]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Benjamin-Gaignard/dt-bindings-vendor-prefixes-Add-Verisilicon/20250623-234734
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250623153931.158765-4-benjamin.gaignard%40collabora.com
-patch subject: [PATCH v4 3/5] iommu: Add verisilicon IOMMU driver
-config: hexagon-allmodconfig (https://download.01.org/0day-ci/archive/20250624/202506242057.NVRNN4W1-lkp@intel.com/config)
-compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506242057.NVRNN4W1-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506242057.NVRNN4W1-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> drivers/iommu/vsi-iommu.c:657:10: warning: variable 'err' is uninitialized when used here [-Wuninitialized]
-     657 |                 return err;
-         |                        ^~~
-   drivers/iommu/vsi-iommu.c:643:9: note: initialize the variable 'err' to silence this warning
-     643 |         int err;
-         |                ^
-         |                 = 0
-   1 warning generated.
-
-
-vim +/err +657 drivers/iommu/vsi-iommu.c
-
-   638	
-   639	static int vsi_iommu_probe(struct platform_device *pdev)
-   640	{
-   641		struct device *dev = &pdev->dev;
-   642		struct vsi_iommu *iommu;
-   643		int err;
-   644	
-   645		iommu = devm_kzalloc(dev, sizeof(*iommu), GFP_KERNEL);
-   646		if (!iommu)
-   647			return -ENOMEM;
-   648	
-   649		iommu->dev = dev;
-   650	
-   651		iommu->regs = devm_platform_ioremap_resource(pdev, 0);
-   652		if (IS_ERR(iommu->regs))
-   653			return -ENOMEM;
-   654	
-   655		iommu->num_clocks = devm_clk_bulk_get_all(dev, &iommu->clocks);
-   656		if  (iommu->num_clocks < 0)
- > 657			return err;
-   658	
-   659		err = clk_bulk_prepare(iommu->num_clocks, iommu->clocks);
-   660		if (err)
-   661			return err;
-   662	
-   663		iommu->irq = platform_get_irq(pdev, 0);
-   664		if (iommu->irq < 0)
-   665			return iommu->irq;
-   666	
-   667		err = devm_request_irq(iommu->dev, iommu->irq, vsi_iommu_irq,
-   668				       IRQF_SHARED, dev_name(dev), iommu);
-   669		if (err)
-   670			goto err_unprepare_clocks;
-   671	
-   672		spin_lock_init(&iommu->lock);
-   673		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-   674		platform_set_drvdata(pdev, iommu);
-   675	
-   676		pm_runtime_set_autosuspend_delay(dev, 100);
-   677		pm_runtime_use_autosuspend(dev);
-   678		pm_runtime_enable(dev);
-   679	
-   680		err = iommu_device_sysfs_add(&iommu->iommu, dev, NULL, dev_name(dev));
-   681		if (err)
-   682			goto err_runtime_disable;
-   683	
-   684		err = iommu_device_register(&iommu->iommu, &vsi_iommu_ops, dev);
-   685		if (err)
-   686			goto err_remove_sysfs;
-   687	
-   688		return 0;
-   689	
-   690	err_remove_sysfs:
-   691		iommu_device_sysfs_remove(&iommu->iommu);
-   692	err_runtime_disable:
-   693		pm_runtime_disable(dev);
-   694	err_unprepare_clocks:
-   695		clk_bulk_unprepare(iommu->num_clocks, iommu->clocks);
-   696		return err;
-   697	}
-   698	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+RnJvbTogVGFvdGFvIENoZW4gPGNoZW50YW90YW9AZGlkaWdsb2JhbC5jb20+DQoNClJlcGxhY2Ug
+dGhlIHdyaXRlX2JlZ2luL3dyaXRlX2VuZCBsb29wIGluDQppOTE1X2dlbV9vYmplY3RfY3JlYXRl
+X3NobWVtX2Zyb21fZGF0YSgpIHdpdGggY2FsbCB0byBrZXJuZWxfd3JpdGUoKS4NCg0KVGhpcyBm
+dW5jdGlvbiBpbml0aWFsaXplcyBzaG1lbS1iYWNrZWQgR0VNIG9iamVjdHMuIGtlcm5lbF93cml0
+ZSgpDQpzaW1wbGlmaWVzIHRoZSBjb2RlIGJ5IHJlbW92aW5nIG1hbnVhbCBmb2xpbyBoYW5kbGlu
+Zy4NCg0KUGFydCBvZiBhIHNlcmllcyByZWZhY3RvcmluZyBhZGRyZXNzX3NwYWNlX29wZXJhdGlv
+bnMgd3JpdGVfYmVnaW4gYW5kDQp3cml0ZV9lbmQgY2FsbGJhY2tzIHRvIHVzZSBzdHJ1Y3Qga2lv
+Y2IgZm9yIHBhc3Npbmcgd3JpdGUgY29udGV4dCBhbmQNCmZsYWdzLg0KDQpTaWduZWQtb2ZmLWJ5
+OiBUYW90YW8gQ2hlbiA8Y2hlbnRhb3Rhb0BkaWRpZ2xvYmFsLmNvbT4NCi0tLQ0KIGRyaXZlcnMv
+Z3B1L2RybS9pOTE1L2dlbS9pOTE1X2dlbV9zaG1lbS5jIHwgMzEgKysrKysrLS0tLS0tLS0tLS0t
+LS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAyMyBkZWxldGlvbnMoLSkN
+Cg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9pOTE1L2dlbS9pOTE1X2dlbV9zaG1lbS5j
+IGIvZHJpdmVycy9ncHUvZHJtL2k5MTUvZ2VtL2k5MTVfZ2VtX3NobWVtLmMNCmluZGV4IDE5YTNl
+YjgyZGM2YS4uZDA4YWRlOTM0ZDE1IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2k5MTUv
+Z2VtL2k5MTVfZ2VtX3NobWVtLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9pOTE1L2dlbS9pOTE1
+X2dlbV9zaG1lbS5jDQpAQCAtNjM3LDggKzYzNyw3IEBAIGk5MTVfZ2VtX29iamVjdF9jcmVhdGVf
+c2htZW1fZnJvbV9kYXRhKHN0cnVjdCBkcm1faTkxNV9wcml2YXRlICppOTE1LA0KIHsNCiAJc3Ry
+dWN0IGRybV9pOTE1X2dlbV9vYmplY3QgKm9iajsNCiAJc3RydWN0IGZpbGUgKmZpbGU7DQotCWNv
+bnN0IHN0cnVjdCBhZGRyZXNzX3NwYWNlX29wZXJhdGlvbnMgKmFvcHM7DQotCWxvZmZfdCBwb3M7
+DQorCWxvZmZfdCBwb3MgPSAwOw0KIAlpbnQgZXJyOw0KIA0KIAlHRU1fV0FSTl9PTihJU19ER0ZY
+KGk5MTUpKTsNCkBAIC02NDksMjkgKzY0OCwxNSBAQCBpOTE1X2dlbV9vYmplY3RfY3JlYXRlX3No
+bWVtX2Zyb21fZGF0YShzdHJ1Y3QgZHJtX2k5MTVfcHJpdmF0ZSAqaTkxNSwNCiAJR0VNX0JVR19P
+TihvYmotPndyaXRlX2RvbWFpbiAhPSBJOTE1X0dFTV9ET01BSU5fQ1BVKTsNCiANCiAJZmlsZSA9
+IG9iai0+YmFzZS5maWxwOw0KLQlhb3BzID0gZmlsZS0+Zl9tYXBwaW5nLT5hX29wczsNCi0JcG9z
+ID0gMDsNCi0JZG8gew0KLQkJdW5zaWduZWQgaW50IGxlbiA9IG1pbl90KHR5cGVvZihzaXplKSwg
+c2l6ZSwgUEFHRV9TSVpFKTsNCi0JCXN0cnVjdCBmb2xpbyAqZm9saW87DQotCQl2b2lkICpmc2Rh
+dGE7DQotDQotCQllcnIgPSBhb3BzLT53cml0ZV9iZWdpbihmaWxlLCBmaWxlLT5mX21hcHBpbmcs
+IHBvcywgbGVuLA0KLQkJCQkJJmZvbGlvLCAmZnNkYXRhKTsNCi0JCWlmIChlcnIgPCAwKQ0KLQkJ
+CWdvdG8gZmFpbDsNCisJZXJyID0ga2VybmVsX3dyaXRlKGZpbGUsIGRhdGEsIHNpemUsICZwb3Mp
+Ow0KIA0KLQkJbWVtY3B5X3RvX2ZvbGlvKGZvbGlvLCBvZmZzZXRfaW5fZm9saW8oZm9saW8sIHBv
+cyksIGRhdGEsIGxlbik7DQorCWlmIChlcnIgPCAwKQ0KKwkJZ290byBmYWlsOw0KIA0KLQkJZXJy
+ID0gYW9wcy0+d3JpdGVfZW5kKGZpbGUsIGZpbGUtPmZfbWFwcGluZywgcG9zLCBsZW4sIGxlbiwN
+Ci0JCQkJICAgICAgZm9saW8sIGZzZGF0YSk7DQotCQlpZiAoZXJyIDwgMCkNCi0JCQlnb3RvIGZh
+aWw7DQotDQotCQlzaXplIC09IGxlbjsNCi0JCWRhdGEgKz0gbGVuOw0KLQkJcG9zICs9IGxlbjsN
+Ci0JfSB3aGlsZSAoc2l6ZSk7DQorCWlmIChlcnIgIT0gc2l6ZSkgew0KKwkJZXJyID0gLUVJTzsN
+CisJCWdvdG8gZmFpbDsNCisJfQ0KIA0KIAlyZXR1cm4gb2JqOw0KIA0KLS0gDQoyLjM0LjENCg==
