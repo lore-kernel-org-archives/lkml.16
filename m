@@ -1,201 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BEB828A703;
-	Tue, 24 Jun 2025 16:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C1C2E174A;
+	Tue, 24 Jun 2025 16:14:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750781643; cv=none; b=fl/b7PszH8oFWWyyz5x9wPSHNGu4BTqmOaeclP8ZMuoh4AsNkzRrysYp79DZdaDZIyl3mIawhEuq9Piv1eVsjX2wfs5XE1NPw403SpVyuB5l5Thqu3QC2jlkQiPYl+olpmm0eY9G86cE7SA8CyNejqVa81NgiyuDwK0tp/ak298=
+	t=1750781670; cv=none; b=MfcEMdgRrQWH5S+DeJ6QcgTqvje8SbVonMb2CZbuj3hHefLcW04IqgykpLb94cGW/jm1344yc3Rm3yQFbMiWwxF66FpM9tMTZf21nMs7yUH2Rd2qzMdVT9hsMOAlgx5qaIecsvFEMCTJoKTzs5LHEeQNbu84TktT1BYXzVteBUg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750781643; c=relaxed/simple;
-	bh=r1n5OG46xNHcBMpmukg6Wmdn3rQnUElhsHxXLiSPcds=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jW/HCXg9PAH+kuzTP/UyB9OAUofWSx4/R1FQMoBzrj1qSp+HnmNSYwSwl8K07i2IERJWXgxJ531/Q31E/Oy84K4DrFvWsJcwo6IzaPZpjaeYqRQUrwd2yjouVIqrv9hZ79YTf1xncoYmUllLS+M+jq8Dxtf9j5JyU8moA4xCDcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cg4Od1RI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750781670; c=relaxed/simple;
+	bh=hMxQT9ivNs17wMcJ69YhVe7QBLHdoqcHGTcyWV1LUM4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q7HMFFr5p8XnrfXq8a1M/WQKV8m4ApC/cSoTY8zXy3HowhMSe1XQvMIL5mNs4rxvU15ccBhrJLEvdvbl7KJx8m6MVxlVgLxWGHfpyYYjofpC8XCOJkyKfp26wD3KcNljggU3noQWtA/oPapDj4ggKunDgcA0aI3/fEH3CrqStgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TaPjP4BC; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cg4Od1RI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AFE8C4CEF4;
-	Tue, 24 Jun 2025 16:14:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750781643;
-	bh=r1n5OG46xNHcBMpmukg6Wmdn3rQnUElhsHxXLiSPcds=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cg4Od1RIy6klZiLWD3j1SGKK/8mEkuSYCUxcpi4oaY9sL9kqyI9xk/XZ7h/TA8HtE
-	 teOBpvJxedcodYmLVgQnIEmZkFoBnZDkIRPcycGVGG4vdVadZEekaCspLI6Lj5/uzT
-	 +S9UTMU+bJxJ6wRTnwn6izeLePvg+nAjGY66UcaAaKe2v0ZQTFCMt3j1KxfjVlw6N1
-	 qnaEfO3NB/OzP95+cJCKjZp+RUI1Z9KU+SX3YX6ekRgqP330Dx/atPGsNLGFi7yu96
-	 l0tuCj5LLbGIfDvngsdTrv/eRAAYGwDksJiTrJ+kFiI14qvWyMQ66AWh/9h2GSXebj
-	 d4JPLMFvAVlvA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 88C04CE0C3C; Tue, 24 Jun 2025 09:14:01 -0700 (PDT)
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: rcu@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	kernel-team@meta.com,
-	rostedt@goodmis.org,
-	"Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH 4/5] srcu: Remove SRCU-lite implementation
-Date: Tue, 24 Jun 2025 09:13:59 -0700
-Message-Id: <20250624161400.867880-4-paulmck@kernel.org>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <e5dd6af2-fdbf-4773-9732-13b84ca13a12@paulmck-laptop>
-References: <e5dd6af2-fdbf-4773-9732-13b84ca13a12@paulmck-laptop>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TaPjP4BC"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ade33027bcfso100490166b.1;
+        Tue, 24 Jun 2025 09:14:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750781667; x=1751386467; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=B2hJc4hUnpKA+D5XoufJNAk6lZn4GYmwTvIaYpB/Ywo=;
+        b=TaPjP4BC82XAPR+0TwG19QdU/kVkctVvSB4ZS9E2PEQ1Op+bYjNJ4ZbfAb3cBy/5ar
+         6+ruBX9GbDEaLIk0kx6Xc4e/3sCXIq7qKUqTlY2HMroX2+qa5Adz2jQR/u9YCPoGTfSe
+         NAyLcQ5Cm7edeBWrTgcfoVQBN6kighkOlr56h7eL+PQ7xyg2uFS7EXKpvVxaAMCVNOcy
+         wOaIcIyGoJ4GNoyiI+BYWNMp/BX8h9Vg4r/Ra6YsoSLhFTmj3jhJGoSQkxq7NXndp6ZY
+         chYX86IziE80K1LtcXgMzlEb/aAIZFNZzPR54mfTxVOpJtp+tfv/E9Pgc/Fr+EbiRaTh
+         im7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750781667; x=1751386467;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=B2hJc4hUnpKA+D5XoufJNAk6lZn4GYmwTvIaYpB/Ywo=;
+        b=cmRVVvasxqf95BVev8FBUijAJRSx2HPo1LDuGy5aZIBvN0SbbXDgt4F400BIP619W3
+         H6t8tZrY8pCRQLsBZbQBC63bd34rX0O247XVlcsg11VCOYivIupOIRtM6rpes1Ap6pzt
+         Uu128EjB1M3QjQWmCWaUpjmsN2babd34IJ5OjR+mlbvJLawDvjKGUsAVi62Bt/ZKZKoR
+         Q7/ygUsoqZE73eF466uIllEofEJ28BLxuIhDF7bbRchVxnZy74RWrLVvWpkG6DttiYde
+         A/U6lGkgEW6wz2IPePw5+nACqSR2tfFGssBo8EhgxmYmJj2UxqaGp0fVgbtvtbl0dQBY
+         TKpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWa4c2J27nnc8crLHHbdPdNfGfKWl3bj7xeVmHMUhaUXGPXqpdDRoKogWPXE+o1LCkU+USzvrzpvGJ5pg==@vger.kernel.org, AJvYcCX6Zn9A1XDTtAPnQ0jnl+rFgeWfnKii9K1kdBe/sKu5t/+njYbYclQIgEMIX7tXU6hEfeeBe5raRvUhRHsY@vger.kernel.org, AJvYcCXqoiugTsIby+S5I8P5i2m6tSR+LkiRKsqc3BnTKlv5L69vFJFZV5DMR5usW90aa0cUAcb+aYADJTZ9@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywz/99v4U5fr78iypsNXQNyMHp48uyyeP1O6z4igVOMkdNlQwK1
+	wfwauTTzQD1Bw3YD/IDkw4s6VukqzjuncTuYugPlLTZO9kcDLJagi8WH
+X-Gm-Gg: ASbGncuYrw/J2Bn3EPvP7XsNfDBboqbkWOFEhmGjR/r8GNUJf+Oix+o3d8qhur8RTCH
+	KLcnCBH9PrSv4l/n20fJ5LCzF1OP4CQM8aUH+4FULcnCbDyUQy4kK2fy6lyicb/7zrjeXM+omRI
+	27dNz0joyGr9xLPdPeOIF/bmelDUwytRm+jiUfyeQcbUUfrbsUuwk/D56fY4I7t3Vp4rn5uUFQe
+	8GUR7HpOl01qroQAz2Vu4jtsjCCSJii9ZzPl87LMJNS/ax63MLcqPzyRNE+fNcg9ypni5bLoAWD
+	dF0CCIhs/6MEHQj9A3FyoXX84N3QniQH44LgicPoNrjr49KmWJzuih7aEm1/QMjjvkrjNyL0wIC
+	7QAJUlEdTcA7WjP176aZRznc5ek/Y1cCL6P0=
+X-Google-Smtp-Source: AGHT+IETVYqdcYw9iMsIySmRYZrHTjx3OIsh3aRt5hqLHb7AOMHCIRNujIA0merX9VFaG5IGMjGEsw==
+X-Received: by 2002:a17:907:d70b:b0:ae0:b06d:1fb1 with SMTP id a640c23a62f3a-ae0b06d2370mr278552966b.37.1750781666584;
+        Tue, 24 Jun 2025 09:14:26 -0700 (PDT)
+Received: from ?IPV6:2a02:8109:8617:d700:9227:164e:14d5:9967? ([2a02:8109:8617:d700:9227:164e:14d5:9967])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053e7c6fdsm888167166b.3.2025.06.24.09.14.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 09:14:26 -0700 (PDT)
+Message-ID: <49977010-65a5-4ad7-b86d-5e779d0de3de@gmail.com>
+Date: Tue, 24 Jun 2025 18:14:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 06/19] dt-bindings: media: i2c: max96717: add support
+ for MAX96793
+To: Cosmin Tanislav <demonsingur@gmail.com>,
+ Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
+ Julien Massot <julien.massot@collabora.com>,
+ Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS"
+ <linux-media@vger.kernel.org>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+ "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>,
+ open "list:GPIO"
+ "SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)"
+ <linux-gpio@vger.kernel.org>, Cosmin Tanislav <cosmin.tanislav@analog.com>
+References: <20250618095858.2145209-1-demonsingur@gmail.com>
+ <20250618095858.2145209-7-demonsingur@gmail.com>
+Content-Language: en-US
+From: Martin Hecht <mhecht73@gmail.com>
+In-Reply-To: <20250618095858.2145209-7-demonsingur@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-This commit removes the SRCU-lite implementation, which has been replaced
-by SRCU-fast.
+Hi Cosmin,
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- include/linux/srcu.h     | 47 ++--------------------------------------
- include/linux/srcutiny.h |  3 ---
- include/linux/srcutree.h | 38 --------------------------------
- 3 files changed, 2 insertions(+), 86 deletions(-)
+I'm preparing a test with Alvium + max96717 + max96716. I can't see away 
+to overwrite cfg settings to force pixel mode or tunnel mode. Any plans 
+to add this? Sometimes it is required to force the other mode than set 
+by pin-strapping.
 
-diff --git a/include/linux/srcu.h b/include/linux/srcu.h
-index c20dacb563e55..cf711a0f440b2 100644
---- a/include/linux/srcu.h
-+++ b/include/linux/srcu.h
-@@ -46,11 +46,11 @@ int init_srcu_struct(struct srcu_struct *ssp);
- /* Values for SRCU Tree srcu_data ->srcu_reader_flavor, but also used by rcutorture. */
- #define SRCU_READ_FLAVOR_NORMAL	0x1		// srcu_read_lock().
- #define SRCU_READ_FLAVOR_NMI	0x2		// srcu_read_lock_nmisafe().
--#define SRCU_READ_FLAVOR_LITE	0x4		// srcu_read_lock_lite().
-+//				0x4		// SRCU-lite is no longer with us.
- #define SRCU_READ_FLAVOR_FAST	0x8		// srcu_read_lock_fast().
- #define SRCU_READ_FLAVOR_ALL   (SRCU_READ_FLAVOR_NORMAL | SRCU_READ_FLAVOR_NMI | \
- 				SRCU_READ_FLAVOR_FAST) // All of the above.
--#define SRCU_READ_FLAVOR_SLOWGP	(SRCU_READ_FLAVOR_LITE | SRCU_READ_FLAVOR_FAST)
-+#define SRCU_READ_FLAVOR_SLOWGP	SRCU_READ_FLAVOR_FAST
- 						// Flavors requiring synchronize_rcu()
- 						// instead of smp_mb().
- void __srcu_read_unlock(struct srcu_struct *ssp, int idx) __releases(ssp);
-@@ -299,33 +299,6 @@ static inline struct srcu_ctr __percpu *srcu_down_read_fast(struct srcu_struct *
- 	return __srcu_read_lock_fast(ssp);
- }
- 
--/**
-- * srcu_read_lock_lite - register a new reader for an SRCU-protected structure.
-- * @ssp: srcu_struct in which to register the new reader.
-- *
-- * Enter an SRCU read-side critical section, but for a light-weight
-- * smp_mb()-free reader.  See srcu_read_lock() for more information.
-- *
-- * If srcu_read_lock_lite() is ever used on an srcu_struct structure,
-- * then none of the other flavors may be used, whether before, during,
-- * or after.  Note that grace-period auto-expediting is disabled for _lite
-- * srcu_struct structures because auto-expedited grace periods invoke
-- * synchronize_rcu_expedited(), IPIs and all.
-- *
-- * Note that srcu_read_lock_lite() can be invoked only from those contexts
-- * where RCU is watching, that is, from contexts where it would be legal
-- * to invoke rcu_read_lock().  Otherwise, lockdep will complain.
-- */
--static inline int srcu_read_lock_lite(struct srcu_struct *ssp) __acquires(ssp)
--{
--	int retval;
--
--	srcu_check_read_flavor_force(ssp, SRCU_READ_FLAVOR_LITE);
--	retval = __srcu_read_lock_lite(ssp);
--	rcu_try_lock_acquire(&ssp->dep_map);
--	return retval;
--}
--
- /**
-  * srcu_read_lock_nmisafe - register a new reader for an SRCU-protected structure.
-  * @ssp: srcu_struct in which to register the new reader.
-@@ -434,22 +407,6 @@ static inline void srcu_up_read_fast(struct srcu_struct *ssp, struct srcu_ctr __
- 	__srcu_read_unlock_fast(ssp, scp);
- }
- 
--/**
-- * srcu_read_unlock_lite - unregister a old reader from an SRCU-protected structure.
-- * @ssp: srcu_struct in which to unregister the old reader.
-- * @idx: return value from corresponding srcu_read_lock_lite().
-- *
-- * Exit a light-weight SRCU read-side critical section.
-- */
--static inline void srcu_read_unlock_lite(struct srcu_struct *ssp, int idx)
--	__releases(ssp)
--{
--	WARN_ON_ONCE(idx & ~0x1);
--	srcu_check_read_flavor(ssp, SRCU_READ_FLAVOR_LITE);
--	srcu_lock_release(&ssp->dep_map);
--	__srcu_read_unlock_lite(ssp, idx);
--}
--
- /**
-  * srcu_read_unlock_nmisafe - unregister a old reader from an SRCU-protected structure.
-  * @ssp: srcu_struct in which to unregister the old reader.
-diff --git a/include/linux/srcutiny.h b/include/linux/srcutiny.h
-index 380260317d98b..51ce25f07930e 100644
---- a/include/linux/srcutiny.h
-+++ b/include/linux/srcutiny.h
-@@ -93,9 +93,6 @@ static inline void __srcu_read_unlock_fast(struct srcu_struct *ssp, struct srcu_
- 	__srcu_read_unlock(ssp, __srcu_ptr_to_ctr(ssp, scp));
- }
- 
--#define __srcu_read_lock_lite __srcu_read_lock
--#define __srcu_read_unlock_lite __srcu_read_unlock
--
- static inline void synchronize_srcu_expedited(struct srcu_struct *ssp)
- {
- 	synchronize_srcu(ssp);
-diff --git a/include/linux/srcutree.h b/include/linux/srcutree.h
-index 8bed7e6cc4c1f..bf44d8d1e69ea 100644
---- a/include/linux/srcutree.h
-+++ b/include/linux/srcutree.h
-@@ -278,44 +278,6 @@ static inline void __srcu_read_unlock_fast(struct srcu_struct *ssp, struct srcu_
- 	RCU_LOCKDEP_WARN(!rcu_is_watching(), "RCU must be watching srcu_read_unlock_fast().");
- }
- 
--/*
-- * Counts the new reader in the appropriate per-CPU element of the
-- * srcu_struct.  Returns an index that must be passed to the matching
-- * srcu_read_unlock_lite().
-- *
-- * Note that this_cpu_inc() is an RCU read-side critical section either
-- * because it disables interrupts, because it is a single instruction,
-- * or because it is a read-modify-write atomic operation, depending on
-- * the whims of the architecture.
-- */
--static inline int __srcu_read_lock_lite(struct srcu_struct *ssp)
--{
--	struct srcu_ctr __percpu *scp = READ_ONCE(ssp->srcu_ctrp);
--
--	RCU_LOCKDEP_WARN(!rcu_is_watching(), "RCU must be watching srcu_read_lock_lite().");
--	this_cpu_inc(scp->srcu_locks.counter); /* Y */
--	barrier(); /* Avoid leaking the critical section. */
--	return __srcu_ptr_to_ctr(ssp, scp);
--}
--
--/*
-- * Removes the count for the old reader from the appropriate
-- * per-CPU element of the srcu_struct.  Note that this may well be a
-- * different CPU than that which was incremented by the corresponding
-- * srcu_read_lock_lite(), but it must be within the same task.
-- *
-- * Note that this_cpu_inc() is an RCU read-side critical section either
-- * because it disables interrupts, because it is a single instruction,
-- * or because it is a read-modify-write atomic operation, depending on
-- * the whims of the architecture.
-- */
--static inline void __srcu_read_unlock_lite(struct srcu_struct *ssp, int idx)
--{
--	barrier();  /* Avoid leaking the critical section. */
--	this_cpu_inc(__srcu_ctr_to_ptr(ssp, idx)->srcu_unlocks.counter);  /* Z */
--	RCU_LOCKDEP_WARN(!rcu_is_watching(), "RCU must be watching srcu_read_unlock_lite().");
--}
--
- void __srcu_check_read_flavor(struct srcu_struct *ssp, int read_flavor);
- 
- // Record reader usage even for CONFIG_PROVE_RCU=n kernels.  This is
--- 
-2.40.1
+BR Martin
+
+On 6/18/25 11:58, Cosmin Tanislav wrote:
+> MAX96793 is a newer variant of the MAX96717 which also supports GMSL3
+> links.
+> 
+> Document this compatibility.
+> 
+> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
+> Acked-by: Rob Herring (Arm) <robh@kernel.org>
+> ---
+>   .../devicetree/bindings/media/i2c/maxim,max96717.yaml          | 3 +++
+>   1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+> index ab46a5f0bd7e..23f611177a87 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
+> @@ -30,6 +30,8 @@ description:
+>   
+>     MAX9295A only supports pixel mode.
+>   
+> +  MAX96793 also supports GMSL3 mode.
+> +
+>   properties:
+>     compatible:
+>       oneOf:
+> @@ -39,6 +41,7 @@ properties:
+>         - items:
+>             - enum:
+>                 - maxim,max96717
+> +              - maxim,max96793
+>             - const: maxim,max96717f
+>   
+>     '#gpio-cells':
 
