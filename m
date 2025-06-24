@@ -1,80 +1,137 @@
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34FD71E32B9
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 18:54:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.145.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D2B26CE3E;
+	Tue, 24 Jun 2025 18:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750791280; cv=none; b=KOL86MAxGqeIm+SHDsts1zG8uT0t/lM/cC0EnsQh31+LZVf+IJFngbo1Uuh/maFbb3a7Q6eSYVXlxp+Vd2tgF9QiFVisUjRsafkh8CB2jir8nIniRsbLEb0WABRY37tKp7mMff7+wkDqRkeS19/YMfRzdVMQcZmNLPhBbe4uQeA=
+	t=1750791426; cv=none; b=m8kAh8dbfSyashy4J724AgdtFMdqcmV24zMUHy+DUczkHGEuiLbFtkXpipw9BYxDrlN2hUwfksa6irYIH9IeYPAPlix0JFG+C/nTyDLwuACNfHtmUaSWWdq+NP7/2Bn8TJ8e3PI7OxpiC8gbionJc52QRSEz5qsVWH7c0V5WYV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750791280; c=relaxed/simple;
-	bh=c/y3xXMbDdtlBwDY0/y4GK/bkN2xFaQdAi2da5gKUyQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JN0TQ+VB3h/O0Bifay1vjHIxsFdZ1ZU61nP2V01PXYkCEmJzV6+bNFrUpzka6b1aXR43WVR3fgV0XZZgyMrfLJEjtNCqvOL7G1/7Ux7NrpVREu/jg49qMlgYwB/w6KYAhorlU7m4iY3U1wV+rSkfNH5iC2cRhS8GpIy6MgGvkxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com; spf=pass smtp.mailfrom=meta.com; dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b=EGIvJZMB; arc=none smtp.client-ip=67.231.145.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fb.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=meta.com
+	s=arc-20240116; t=1750791426; c=relaxed/simple;
+	bh=Wj1BVQK4pHNQLQ0sMBbbYrIKkTxSc9PFKwokZoPHlXM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bl9uD+sJftKABcSLKxs1PAVC8I0hZljERq94QA7F6G3Qy5ckN0vcXg9xx5EotiHo9eqB08KSnbSWvMFKVilivFFWTm5lr+tSJkDJNKDNbdET6yS8BgRUOqIoab/H4FeKMv9+H9ofJQU8OB0J0QeAtgHzkiPXPg2SN76If1kc8Fo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=TFQb859B; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="EGIvJZMB"
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-	by mx0a-00082601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55OI7GqX001557
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:54:37 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=facebook; bh=c
-	/y3xXMbDdtlBwDY0/y4GK/bkN2xFaQdAi2da5gKUyQ=; b=EGIvJZMBV8GTDF/lP
-	H85JjHyaFPqpyh5GNV1W06BKyo1f0m8tNt5R1A0BTsWjkZ7dmBXsNMSpDKVCYxC/
-	2JVK3+vieOlwD18/6CopplOeJugElWAqqwd0il9KT1xt2RdPE6aWI6RaquOqUDZB
-	TlNOhRVLA85/SQuWuN7qA/yufc=
-Received: from mail.thefacebook.com ([163.114.134.16])
-	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 47fkh5nx3r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:54:37 -0700 (PDT)
-Received: from twshared21625.15.frc2.facebook.com (2620:10d:c085:208::f) by
- mail.thefacebook.com (2620:10d:c08b:78::c78f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.2.1748.24; Tue, 24 Jun 2025 18:54:36 +0000
-Received: by devgpu004.nha5.facebook.com (Postfix, from userid 199522)
-	id 8DE441AD75B; Tue, 24 Jun 2025 11:54:26 -0700 (PDT)
-From: Alex Mastro <amastro@fb.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-CC: Alex Mastro <amastro@fb.com>,
-        Alex Williamson
-	<alex.williamson@redhat.com>, <peterx@redhat.com>,
-        <kbusch@kernel.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] vfio/pci: print vfio-device name to fdinfo
-Date: Tue, 24 Jun 2025 11:53:25 -0700
-Message-ID: <20250624185327.1250843-1-amastro@fb.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250624181616.GE72557@ziepe.ca>
-References:
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="TFQb859B"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id CB68F6F3;
+	Tue, 24 Jun 2025 20:56:45 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750791406;
+	bh=Wj1BVQK4pHNQLQ0sMBbbYrIKkTxSc9PFKwokZoPHlXM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TFQb859B027xRHDYUGWO+lbI9pismOo1t9AZDi6IrXt6n/HL/2r0kQfQZXnsPfrDZ
+	 cLzxg6MgXfTkO4snHwWus+L9ei6IhUTwAfMsunrdo+DfZR/QplxFevAGOyqrZQbYKL
+	 pBbfZiUGOze2K+GgWf8gyf/FweiSdpn1dsYsoTqw=
+Date: Tue, 24 Jun 2025 21:56:43 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Frank Li <Frank.li@nxp.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kumar M <anil.mamidala@xilinx.com>, linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	imx@lists.linux.dev, "Guoniu.zhou" <guoniu.zhou@nxp.com>,
+	Stefan Hladnik <stefan.hladnik@gmail.com>,
+	Florian Rebaudo <frebaudo@witekio.com>
+Subject: Re: [PATCH v3 2/2] media: i2c: Add ON Semiconductor AP1302 ISP driver
+Message-ID: <20250624185643.GE20757@pendragon.ideasonboard.com>
+References: <20250623-ap1302-v3-0-c9ca5b791494@nxp.com>
+ <20250623-ap1302-v3-2-c9ca5b791494@nxp.com>
+ <20250623224701.GE15951@pendragon.ideasonboard.com>
+ <aFryrpyDByI6wu5b@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
-Content-Type: text/plain
-X-Proofpoint-GUID: IkJQYUJuodauQ3lAQBIjhJQZqGJCtTvG
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDE1NSBTYWx0ZWRfXywcvGJk+7EEd 2m/s3vYRZCUMJ2nOrYyRFevYXvppv4t/5lHS4FxONQyzmZilwBPgU6RENx0BMrU5hIgm+ukcGZX aO08UX9ZL5lfHd29paw77Q+HnflVeVfp8z8i+kUF+xYZCf95iKqS71spJZWFugnq2UAqT+OOGpU
- SV6m/wMgvsxtap1+iYkt+OupaIoXLyl/1UnkDRbZ9TAKNcYhn3wgSv0dDZc+wDW9jW6/tPixMNw BYLyAq27tzEJ/zh3D8fSthf2tkf2JQHvpu31ff81tohjCxfSI/6ySRs7EAfHp8AWwrP6PqmI5yx hVsbju4rD3gg+sSb8vqkLx7HSscumyPdaJTYwhZ8aW4hCIPAbMt/OVj5NE0Xwvzv58t3PormhzZ
- nCwGN161AtAoGWRde9AFKqSyZGh0lXHP/69MLwzxzKlWJDIbtXuRl0PFdhRyvwTsk7hesM9u
-X-Authority-Analysis: v=2.4 cv=IZeHWXqa c=1 sm=1 tr=0 ts=685af46d cx=c_pps a=CB4LiSf2rd0gKozIdrpkBw==:117 a=CB4LiSf2rd0gKozIdrpkBw==:17 a=6IFa9wvqVegA:10 a=9jRdOu3wAAAA:8 a=y_P49Qpdh_UukDKHNdIA:9 a=ZE6KLimJVUuLrTuGpvhn:22
-X-Proofpoint-ORIG-GUID: IkJQYUJuodauQ3lAQBIjhJQZqGJCtTvG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_06,2025-06-23_07,2025-03-28_01
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aFryrpyDByI6wu5b@lizhi-Precision-Tower-5810>
 
-On Tue, 24 Jun 2025 15:16:16 -0300 Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> There will be a symlink under /sys/class/vfio-xx/XX pointing to the
-> <pci sysfs path>/vfio-dev/X directory
->=20
-> And another symlink under /sys/dev/char/XX:XX doing the same.
+On Tue, Jun 24, 2025 at 02:47:10PM -0400, Frank Li wrote:
+> On Tue, Jun 24, 2025 at 01:47:01AM +0300, Laurent Pinchart wrote:
+> > On Mon, Jun 23, 2025 at 03:17:38PM -0400, Frank Li wrote:
+> > > From: Anil Kumar Mamidala <anil.mamidala@xilinx.com>
+> > >
+> > > The AP1302 is a standalone ISP for ON Semiconductor sensors.
+> > > AP1302 ISP supports single and dual sensor inputs. The driver
+> > > code supports AR1335, AR0144 and AR0330 sensors with single and
+> > > dual mode by loading the corresponding firmware.
+> > >
+> > > Signed-off-by: Anil Kumar Mamidala <anil.mamidala@xilinx.com>
+> > > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > > Signed-off-by: Stefan Hladnik <stefan.hladnik@gmail.com>
+> > > Signed-off-by: Florian Rebaudo <frebaudo@witekio.com>
+> > > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> > > ---
+> > > Change in v3:
+> > > - add extra empty line between difference register define
+> > > - add bits.h
+> > > - use GEN_MASK and align regiser bit define from 31 to 0.
+> > > - add ap1302_sensor_supply
+> > > - add enable gpio
+> > > - update firmware header format
+> >
+> > One of the main issues with this driver is that we need to standardize
+> > the header format. The standardized format will need to be approved by
+> > onsemi as we will need to provide not just a driver, but also a
+> > toolchain that will produce firmwares in the right format. Furthermore,
+> > some time ago the AP1302 firmware was extended with the ability to
+> > dynamically compute PLL parameters IIRC. This needs to be taken into
+> > account.
+> 
+> It is quite common when work with firmwares. Generally, it need version
+> information at header.
+> 
+> The driver need check firmware's API version, if miss match or incompatible,
+> just return and report error.
+> 
+> we can't assume firmware always align driver code because many user just
+> update kernel without update rootfs or firmware package.
 
-Got it, thanks. The issue does seem solved for the vfio cdev case, then.
+Sure, but that's not the point. The point is that there are multiple
+out-of-tree ap1302 driver versions, developed or adapted by different
+SoC vendors. Those variants use firmware files produced by those SoC
+vendors, and they not standard. We need to standardize on a firmware
+format to upstream a driver, and that standardization needs to involve
+the device manufacturer.
 
-Alex
+> > I want to resuscitate this driver and get it merged. There's more work
+> > to do, in collaboration with onsemi, and I haven't had time to tackle
+> > it. If you want to propose a proper design for firmware handling I would
+> > be happy to participate in the discussion.
+> 
+> who is onsemi contact windows.
+> 
+> > > - update raw sensor supply delay time
+> > > - use gpiod_set_value_cansleep() insteand gpiod_set_value()
+> > > - update use latest v4l2 api
+> > > - use ctrl_to_sd() helper function
+> > > - add ap1302_g_volatile_ctrl()
+> > > - remove ap1302_get_fmt()
+> > > - use guard for mutex.
+> > > - use dev_err_probe
+> > > - use devm_add_action_or_reset to simple error handle at probe.
+> > > - use read_poll_timeout() simple dma idle polling.
+> > >
+> > > previous upstream:
+> > > https://lore.kernel.org/linux-media/1631091372-16191-1-git-send-email-anil.mamidala@xilinx.com/
+> > > ---
+> > >  MAINTAINERS                |    1 +
+> > >  drivers/media/i2c/Kconfig  |    9 +
+> > >  drivers/media/i2c/Makefile |    1 +
+> > >  drivers/media/i2c/ap1302.c | 2838 ++++++++++++++++++++++++++++++++++++++++++++
+> > >  4 files changed, 2849 insertions(+)
+> >
+> > [snip]
 
+-- 
+Regards,
+
+Laurent Pinchart
