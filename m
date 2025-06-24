@@ -1,108 +1,168 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C35D252906
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72CB624EA85;
+	Tue, 24 Jun 2025 07:28:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750750120; cv=none; b=tP6xuP/eXeawcAMNgArVEmnmWfx1FMLOpkdkIxIh6zuS4V9hTU6GiLH4XqUZl03bMfJ0074NEuT0k2Qaz2MIUm2Wp1sVEXPVGFGnx+Mn8ncjTqLksxPs2yA2Wo4AVb454JxpVJO8Ht0/tiswC0O/At9F+JsbwWTscmcH2HIsc/o=
+	t=1750750126; cv=none; b=g1WvrpTxne0P6s514wSqk+3FdkitxxclbBJrf805L5gZxrNgLtgUuOnFx6qNrHG3aZySwZICLqUzr9+a511MS3bKfDbEE8n32FdgOYGH6Xl+F5HIpWB90xth81PIGf0V9x4to0jB7UYyx/9ePi+3bgkE8+bfvJONBw+fY9M5Y4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750750120; c=relaxed/simple;
-	bh=TtfC8PQ5NJ7veeU9guOOT4owM20qjxMZAt56llMj1Xw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FWsJsVDm3M08g95/U6BA98O29yThDlYGCnSdYzpzJIAwQwbGEJAoI/Yk8fSO+TqBFRjJOa8nt6C/niHycyAdDcawbfC1Jk4oVbTCursuYFezFeHniwE2SI/TtTn3KrqYvMPgVP1yIsymfAC/FuS0pis2oWB98gE1SBrb6usatxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aKeXnPms; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750750126; c=relaxed/simple;
+	bh=g0pXc/fIN30kvH2Virs4nkVnamuyy0huOlw1+j0TCiE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r5nb35kzmqObpReTOqCii6eV1iMi2sX/JA+0QoalAlHDkCoogWTFBDFgZ5TOygyEfUG5lsz4Qo/v+yiV8uZcSHg6uJ7eHrARBWKj+5wdgvikfLso+x1dMM56zGx2QWBB3mmZe46cuhk9A4T8FYk4B5VC8Wjg4AJqLngX/P6xBts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gukn8GYs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aKeXnPms"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750750120; x=1782286120;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=TtfC8PQ5NJ7veeU9guOOT4owM20qjxMZAt56llMj1Xw=;
-  b=aKeXnPmsXBdciHjO4Oa12j7rAmDexy0MzooiIo+lzOIMW2O2BFk+Wk/u
-   76x+iMbDicGHoxnzt+tCI+TkLTWBZQ/Djr16pVPj7ZnhSyivrftlJxisy
-   51HI6mRT+Lsc6LseahsPZxpzHlxGfeuu16lG7wrpdjZ2df69vVC+lPdnU
-   JPXZOA/EhGPOlwVbfyPQecAVD03Gq8YkR35mKR4i0Tvl7rFgbS/nWLunV
-   vH7b3/xu2IikkEW4Xdlg3x9bS87AwO6/VrZkPKxnt9iTjDqeYgNTYRkuI
-   Ow7Wnlp7h4PyUGSNyWlfRQQoMfqtfo1brZL+1W+dp2BARAeZU0Zu3uF2c
-   A==;
-X-CSE-ConnectionGUID: ltj9rdKrRUiLruy+0FLFBg==
-X-CSE-MsgGUID: od6NDZkrRMCl7Wt/2V3ZcA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="53067734"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="53067734"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:28:39 -0700
-X-CSE-ConnectionGUID: D+4ixqVxQjiaEtGvPBM4fw==
-X-CSE-MsgGUID: xAQVapMkT0OUnaP4a4b1Hg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="152540689"
-Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:28:37 -0700
-From: Alexander Usyskin <alexander.usyskin@intel.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
-	Alexander Usyskin <alexander.usyskin@intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [char-misc-next] mei: bus: fix device leak
-Date: Tue, 24 Jun 2025 10:15:21 +0300
-Message-ID: <20250624071521.1281436-1-alexander.usyskin@intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gukn8GYs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 532B9C4CEE3;
+	Tue, 24 Jun 2025 07:28:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750750126;
+	bh=g0pXc/fIN30kvH2Virs4nkVnamuyy0huOlw1+j0TCiE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gukn8GYs+wpCJs8dwZyrg7QtHcLeHxgvHUf5Q6yYFg2C9BOEmDGLZizI6sGEa26dd
+	 AXs2VFgQ42jn313Jggk4V0ILiINJVwDGLMci1cSQWA/Wnat7vTWZPJqUqLwIF40C2w
+	 DB5SetH/wVRGB4WLiqemm7k1keA5ZvZmhtE6Frd6ifdr8+9XFWkT36y+r7uY0iPWVK
+	 7wqVd1s0PcAv5xA2AqsBduQdkOjE/CGEwb+m9pvBvE3rpcfh+prPNg4r7+X/NZWbZj
+	 vz5KuBRA5M7nLhYwD3ZCbZbORFWCzuMpELU5hnh9Hkq8OxdNOzUNWWy2+/pxZnl9TL
+	 tv2j3pfN4Gt8w==
+Date: Tue, 24 Jun 2025 09:28:43 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Joy Zou <joy.zou@nxp.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	shawnguo@kernel.org, s.hauer@pengutronix.de, catalin.marinas@arm.com, will@kernel.org, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, 
+	ulf.hansson@linaro.org, richardcochran@gmail.com, kernel@pengutronix.de, 
+	festevam@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-pm@vger.kernel.or, frank.li@nxp.com, ye.li@nxp.com, 
+	ping.bai@nxp.com, aisheng.dong@nxp.com
+Subject: Re: [PATCH v6 2/9] dt-bindings: soc: imx-blk-ctrl: add i.MX91
+ blk-ctrl compatible
+Message-ID: <urgfsmkl25woqy5emucfkqs52qu624po6rd532hpusg3fdnyg3@s5iwmhnfsi26>
+References: <20250623095732.2139853-1-joy.zou@nxp.com>
+ <20250623095732.2139853-3-joy.zou@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250623095732.2139853-3-joy.zou@nxp.com>
 
-The bus rescan function creates bus devices for all clients.
-The fixup routine is executed on all devices, unneeded
-devices are removed and fully initialized once set
-is_added flag to 1.
+On Mon, Jun 23, 2025 at 05:57:25PM +0800, Joy Zou wrote:
+> Add new compatible string "fsl,imx91-media-blk-ctrl" for i.MX91,
+> which has different input clocks compared to i.MX93. Update the
+> clock-names list and handle it in the if-else branch accordingly.
+> 
+> Keep the same restriction for the existed compatible strings.
+> 
+> Signed-off-by: Joy Zou <joy.zou@nxp.com>
+> ---
+> Changes for v5:
+> 1. modify the imx93-blk-ctrl binding for imx91 support.
 
-If link to firmware is reset right after all devices are
-initialized, but before fixup is executed, the rescan tries
-to remove devices.
-The is_added flag is not set and the mei_cl_bus_dev_destroy
-returns prematurely.
-Allow to clean up device when is_added flag is unset to
-account for above scenario.
+This is just vague. Anything can be "modify". Why are you doing this?
+What are you doing here?
 
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
----
- drivers/misc/mei/bus.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+> ---
+>  .../soc/imx/fsl,imx93-media-blk-ctrl.yaml     | 55 +++++++++++++++----
+>  1 file changed, 43 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/imx/fsl,imx93-media-blk-ctrl.yaml b/Documentation/devicetree/bindings/soc/imx/fsl,imx93-media-blk-ctrl.yaml
+> index b3554e7f9e76..db5ee65f8eb8 100644
+> --- a/Documentation/devicetree/bindings/soc/imx/fsl,imx93-media-blk-ctrl.yaml
+> +++ b/Documentation/devicetree/bindings/soc/imx/fsl,imx93-media-blk-ctrl.yaml
+> @@ -18,7 +18,9 @@ description:
+>  properties:
+>    compatible:
+>      items:
+> -      - const: fsl,imx93-media-blk-ctrl
+> +      - enum:
+> +          - fsl,imx91-media-blk-ctrl
+> +          - fsl,imx93-media-blk-ctrl
+>        - const: syscon
+>  
+>    reg:
+> @@ -31,21 +33,50 @@ properties:
+>      maxItems: 1
+>  
+>    clocks:
+> +    minItems: 8
+>      maxItems: 10
+>  
+>    clock-names:
+> -    items:
+> -      - const: apb
+> -      - const: axi
+> -      - const: nic
+> -      - const: disp
+> -      - const: cam
+> -      - const: pxp
+> -      - const: lcdif
+> -      - const: isi
+> -      - const: csi
+> -      - const: dsi
+> +    minItems: 8
+> +    maxItems: 10
+>  
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: fsl,imx93-media-blk-ctrl
+> +    then:
+> +      properties:
 
-diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
-index 67176caf5416..f2e5d550c6b4 100644
---- a/drivers/misc/mei/bus.c
-+++ b/drivers/misc/mei/bus.c
-@@ -1430,17 +1430,14 @@ static void mei_cl_bus_dev_stop(struct mei_cl_device *cldev)
-  */
- static void mei_cl_bus_dev_destroy(struct mei_cl_device *cldev)
- {
--
- 	WARN_ON(!mutex_is_locked(&cldev->bus->cl_bus_lock));
- 
--	if (!cldev->is_added)
--		return;
--
--	device_del(&cldev->dev);
-+	if (cldev->is_added) {
-+		device_del(&cldev->dev);
-+		cldev->is_added = 0;
-+	}
- 
- 	list_del_init(&cldev->bus_list);
--
--	cldev->is_added = 0;
- 	put_device(&cldev->dev);
- }
- 
--- 
-2.43.0
+Missing constraints for clocks
+
+> +        clock-names:
+> +          items:
+> +            - const: apb
+> +            - const: axi
+> +            - const: nic
+> +            - const: disp
+> +            - const: cam
+> +            - const: pxp
+> +            - const: lcdif
+> +            - const: isi
+> +            - const: csi
+> +            - const: dsi
+
+Keep list in comon part.
+
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: fsl,imx91-media-blk-ctrl
+
+This should be before if: for imx93. 91 < 93
+
+> +    then:
+> +      properties:
+
+Why imx91 now has 10 clocks?
+
+v6 and this has basic issues. The quality of NXP patches decreases :/
+
+> +        clock-names:
+> +          items:
+> +            - const: apb
+> +            - const: axi
+> +            - const: nic
+> +            - const: disp
+> +            - const: cam
+> +            - const: lcdif
+> +            - const: isi
+> +            - const: csi
+
+No, look at other bindings how they share clock lists.
+
+Best regards,
+Krzysztof
 
