@@ -1,47 +1,41 @@
-Received: from mta22.hihonor.com (mta22.hihonor.com [81.70.192.198])
+Received: from mta21.hihonor.com (mta21.honor.com [81.70.160.142])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9083F76C61
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:59:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.192.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD2D1F9F70
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:59:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=81.70.160.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750737590; cv=none; b=JXJz/VqGqtCPrkRTzvzTAgmIYHiK8PszU7UH3MxWvo1Y51PoFUxHGLDCetgys67RA2BCPEJVYYF/uPTqj+Xbz9qdWEnbGJp++MSC7rJGkyw7ioxcCJVAFMTu2pdnePhxFuJVmzVs6I0ugyzcIFwzSOHBcpZArDuCmiZIcbwUoJI=
+	t=1750737593; cv=none; b=WWq4iuw4B/AvR1nWbOWqUEbzziQiTeE1jav2PUQnZto0i1RGJfS3Z+E4RpoAvyL4vcFyyzDCUVmyg0b+gMWFVR/cEc0ifmfh52JDX0w164kPfGVk8wc8G0OQMGsyuYp6V5pejpMOh8DNYacnXpfneIaXIByIAnvpP0zUk6rMI1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750737590; c=relaxed/simple;
-	bh=92Tnwuqr4k+T+qCkrmDRJABms66kpCGvFOkZuN9INW4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jiBD7uLWTf730dC+OqFvDtLAqLozVmCyJpJ5b1QBHMfjWL6/WcivzhoBGRsQngiU3/Qo9DAQV8ywy3mHBMCmyoghyiZcvRcTJMT/xgNUsbp77n+BudyWDWhm+10nyKhf0ufIFbH56b4ZGCyJmO/vb2pNdc2nwEb5fHFrfb6DH+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b=iLrOmvLj; arc=none smtp.client-ip=81.70.192.198
+	s=arc-20240116; t=1750737593; c=relaxed/simple;
+	bh=+6Dyf3XGuCDAA3JKX/DQd6p1/tGUqomzIOmx8gtbUmU=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NZXBxxv99dsCMeDuyOTaBlFLSCvJsoExutsgSpjo28xRLdwqkuk6wU+9yDO2dYzzvZhlxDVkRkVOnK7pPp7ndlZyuXNLRpnufw3FJcMHIO8blpB1TWdqKXLeJOQW8qsOXJFps1dxvnKHrtCruwTgYw1Z4Hw2qW6WoJFLVlh4XO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com; spf=pass smtp.mailfrom=honor.com; arc=none smtp.client-ip=81.70.160.142
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=honor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=honor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=honor.com header.i=@honor.com header.b="iLrOmvLj"
-dkim-signature: v=1; a=rsa-sha256; d=honor.com; s=dkim;
-	c=relaxed/relaxed; q=dns/txt;
-	h=To:From;
-	bh=NB+vgAifhfNhXjK5PAWYKmYmRUSFZEldDBEXrTnVu/w=;
-	b=iLrOmvLj4NwRaPegflY0zlQNjko/eb2BWvF9rdTjj5UrJ/AGv5vdsvbLjvKeqFZe6jhO5dLuO
-	ah8XZCzKGEiUyDsPgigUpebcj2hqv+TtXE8CnemK46C6jkjCVl6KC54764VHdWxq6dcaT7IlkiC
-	v1yteRM8iwnvKjNsOD+Yq/s=
-Received: from w013.hihonor.com (unknown [10.68.26.19])
-	by mta22.hihonor.com (SkyGuard) with ESMTPS id 4bRB404SKnzYl1nd;
-	Tue, 24 Jun 2025 11:57:36 +0800 (CST)
-Received: from a011.hihonor.com (10.68.31.243) by w013.hihonor.com
- (10.68.26.19) with Microsoft SMTP Server (version=TLS1_2,
+Received: from w003.hihonor.com (unknown [10.68.17.88])
+	by mta21.hihonor.com (SkyGuard) with ESMTPS id 4bRB3n0cNCzYkxsh;
+	Tue, 24 Jun 2025 11:57:25 +0800 (CST)
+Received: from a011.hihonor.com (10.68.31.243) by w003.hihonor.com
+ (10.68.17.88) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Jun
- 2025 11:59:40 +0800
+ 2025 11:59:41 +0800
 Received: from localhost.localdomain (10.144.23.14) by a011.hihonor.com
  (10.68.31.243) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Jun
- 2025 11:59:40 +0800
+ 2025 11:59:41 +0800
 From: wangzijie <wangzijie1@honor.com>
 To: <jaegeuk@kernel.org>, <chao@kernel.org>
 CC: <linux-f2fs-devel@lists.sourceforge.net>, <linux-kernel@vger.kernel.org>,
 	<bintian.wang@honor.com>, <feng.han@honor.com>, <niuzhiguo84@gmail.com>,
 	wangzijie <wangzijie1@honor.com>
-Subject: [f2fs-dev] [PATCH v4 1/2] f2fs: convert F2FS_I_SB to sbi in f2fs_setattr()
-Date: Tue, 24 Jun 2025 11:59:37 +0800
-Message-ID: <20250624035938.3176350-1-wangzijie1@honor.com>
+Subject: [f2fs-dev] [PATCH v4 2/2] f2fs: don't allow unaligned truncation to smaller/equal size on pinned file
+Date: Tue, 24 Jun 2025 11:59:38 +0800
+Message-ID: <20250624035938.3176350-2-wangzijie1@honor.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250624035938.3176350-1-wangzijie1@honor.com>
+References: <20250624035938.3176350-1-wangzijie1@honor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -53,64 +47,42 @@ Content-Type: text/plain
 X-ClientProxiedBy: w010.hihonor.com (10.68.28.113) To a011.hihonor.com
  (10.68.31.243)
 
-Introduce sbi in f2fs_setattr() and convert F2FS_I_SB to it. No logic
-change, just cleanup and prepare to get CAP_BLKS_PER_SEC(sbi).
+To prevent scattered pin block generation, don't allow non-section aligned truncation
+to smaller or equal size on pinned file. But for truncation to larger size, after
+commit 3fdd89b452c2("f2fs: prevent writing without fallocate() for pinned files"),
+we only support overwrite IO to pinned file, so we don't need to consider
+attr->ia_size > i_size case.
 
 Signed-off-by: wangzijie <wangzijie1@honor.com>
 ---
- fs/f2fs/file.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+v4:
+- convert sbi first and apply change
+---
+ fs/f2fs/file.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index 6bd3de64f..209f43653 100644
+index 209f43653..4809f0fd6 100644
 --- a/fs/f2fs/file.c
 +++ b/fs/f2fs/file.c
-@@ -1026,9 +1026,10 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- {
- 	struct inode *inode = d_inode(dentry);
- 	struct f2fs_inode_info *fi = F2FS_I(inode);
-+	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	int err;
- 
--	if (unlikely(f2fs_cp_error(F2FS_I_SB(inode))))
-+	if (unlikely(f2fs_cp_error(sbi)))
- 		return -EIO;
- 
- 	if (unlikely(IS_IMMUTABLE(inode)))
-@@ -1068,12 +1069,11 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	}
- 	if (i_uid_needs_update(idmap, attr, inode) ||
- 	    i_gid_needs_update(idmap, attr, inode)) {
--		f2fs_lock_op(F2FS_I_SB(inode));
-+		f2fs_lock_op(sbi);
- 		err = dquot_transfer(idmap, inode, attr);
- 		if (err) {
--			set_sbi_flag(F2FS_I_SB(inode),
--					SBI_QUOTA_NEED_REPAIR);
--			f2fs_unlock_op(F2FS_I_SB(inode));
-+			set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
-+			f2fs_unlock_op(sbi);
- 			return err;
- 		}
- 		/*
-@@ -1083,7 +1083,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 		i_uid_update(idmap, attr, inode);
- 		i_gid_update(idmap, attr, inode);
- 		f2fs_mark_inode_dirty_sync(inode, true);
--		f2fs_unlock_op(F2FS_I_SB(inode));
-+		f2fs_unlock_op(sbi);
+@@ -1048,6 +1048,17 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+ 			!IS_ALIGNED(attr->ia_size,
+ 			F2FS_BLK_TO_BYTES(fi->i_cluster_size)))
+ 			return -EINVAL;
++		/*
++		 * To prevent scattered pin block generation, we don't allow
++		 * smaller/equal size unaligned truncation for pinned file.
++		 * We only support overwrite IO to pinned file, so don't
++		 * care about larger size truncation.
++		 */
++		if (f2fs_is_pinned_file(inode) &&
++			attr->ia_size <= i_size_read(inode) &&
++			!IS_ALIGNED(attr->ia_size,
++			F2FS_BLK_TO_BYTES(CAP_BLKS_PER_SEC(sbi))))
++			return -EINVAL;
  	}
  
- 	if (attr->ia_valid & ATTR_SIZE) {
-@@ -1144,7 +1144,7 @@ int f2fs_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
- 	f2fs_mark_inode_dirty_sync(inode, true);
- 
- 	/* inode change will produce dirty node pages flushed by checkpoint */
--	f2fs_balance_fs(F2FS_I_SB(inode), true);
-+	f2fs_balance_fs(sbi, true);
- 
- 	return err;
- }
+ 	err = setattr_prepare(idmap, dentry, attr);
 -- 
 2.25.1
 
