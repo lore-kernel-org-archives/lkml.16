@@ -1,132 +1,124 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-io1-f54.google.com (mail-io1-f54.google.com [209.85.166.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5260C2185B1
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:44:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BBE51BC9E2
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:44:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750805045; cv=none; b=Bp0ugwKG2XZpb1egpv+BaLRbqDitY1vlqJ3QVh2+j7mSIVJzHoxO3xZoE6caxMof8slUZX2/c0HKqoMh7PemSL/LUODNpokVVzdrFDdfpyhej5pTar5CCffNvD+QM5wtkwSNns/n2MiDm39Dk9dfXvZlywURcaMGeAXajQLopek=
+	t=1750805102; cv=none; b=Qo2cgTGFY5R7OqP0PGLYcDjc+25bRDXBCG6aMU5rqL+SKvKrvggyE5/lHnF6Ckdm4ycFajekFAf1V9gE93Qed6FgI5IRQ+Fw4TkkR2zzjQeLeUMEiQ8CjnP+T9gcTnefX0BQbxoYvLm0i40VVQAK5AZm015M6+TICxzJ5JVeidg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750805045; c=relaxed/simple;
-	bh=sEjeNz6XVbqxcAMmeIAkOrGragIgi5IlG99hp7QV1qs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=IIUHWztQonaAZidKZ1p+3JJUJrzY2rkchYSOFyYmsAwUXEFtPe6sa4Uvb0WmZwbJYXMfvSWjg5roDUm4D4+NeuRzGdxoEsiJvUBOQTHGmaqKMabH/tjrDvOS7uOGOj9LJZvJmlw8K/inAoqzT/OYAOjklq3JmwsuTWINlZwByE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qAkMi97i; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750805102; c=relaxed/simple;
+	bh=mcJFllEeRF+yE7slrMbAaaS2eHVpby7as1ptgR6ihnM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=edJmpcpg+t2oNdfFlPJK5MBjfhSnFM/6lqM8aMXAHXt4sSXkMgV5g4/KH8NzjIGJS2S2P76rtaiFhO/OthzmD+dsgJN+T221b4z2ER6aJ42aMQhcW30NnCM4JtNlMRY8ZHKDOUWezUQY3CCQkCqD1N3HMPvnKs1OT7k9Qr40Qc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XJchwPpw; arc=none smtp.client-ip=209.85.166.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qAkMi97i"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3138c50d2a0so1283015a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:44:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XJchwPpw"
+Received: by mail-io1-f54.google.com with SMTP id ca18e2360f4ac-8762a0866a3so32457539f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:44:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750805043; x=1751409843; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QlCQKpWDxdcaUfXy65m6pPBMQjRdo74zK+bm+Y7bE4U=;
-        b=qAkMi97iD6ZirZm+nh1OLNaXdnlS1aPG/H0w9b7V6dZjYx2Nkb1x7hRxR1+LaunJU5
-         5Uz/P2BTv9R5vHHYb+Or8JB4l/DGIZsVdJmQNSTyeqdr/RjX4bxmnzZGnYK7vN4ZNcn5
-         j/3F91Typ4isuieTDzeIQol5KP+w3KMmaf/Vpzcc1SQoc/drHopOLB5OBUzpKipwVaVb
-         SMmXptZlE9vE3llN57QflkF46+9N4uP4hSRW8XdyqFZZlGVTlmXCIiMnut/+v+G37zR4
-         725a+6BnUHWhw7vMughkdVXmbO6oL3T0CDQrXBbxTH05xB9R6uH01jn9KviBmCU/9r+o
-         jRsw==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750805098; x=1751409898; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PRXMbmGHv5qc0+GRIglNxAEcLatX5Y9+ZZFfOH/sgcc=;
+        b=XJchwPpww2xDUEi/0t2Go4QNJyfs6gmyh+Z391LHtt1DZvm0jenF9v/wcIE5si5uq4
+         gvdLh7LX+dEqjvzmyblna39xz5ScBmfNT5CW3Y25CZFqRU73Izu2iMYPVMxeHZsBLQEU
+         nqFmsorqSX8vts3ZzSiw4FrcjO5XMkj4S0YVPd7WxM5o4vT7MFxI2R15hU9tNzzYDL2Y
+         GA6ZoxAx2/bX1n7qLjm8+sc3v3ElIAeQd1AtzV6k56OfrgFcM2rL6F4OoOB9erYxbIEl
+         PKtr61OJpnPuGIRbnmQnfsanxJiJfkI7IDqg/vyUc+1ZL35HOi5PRWeR4pS0XJd583qH
+         myYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750805043; x=1751409843;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=QlCQKpWDxdcaUfXy65m6pPBMQjRdo74zK+bm+Y7bE4U=;
-        b=wXwa2yQ1OY8mkIPi660K3DBHBJXfJ8+KnxVpAZxEZgAQv6C2f1YbsZXcMPl3HRb8p4
-         9zo1UWFYETm8JZnGZCezfgIlEy1UHtD6VEqGfeV6oo+ECUpNkGxkwuqE08zuvTrwG/BR
-         GrWqxX8B1dAae77eTh76LOY2LzZsl1HhzVKIhRPKYADo73SHrj53/3aZuTn/I3LZnO5X
-         4MErQ1mcJzm5NpsbMiK7IgWm39BMi3HP2fzvIn/QXQy38g5zlyF5Zub9ipXnFHY2qc1a
-         b/1DhkE9ZIyDU5gzH9IKYga4evlst77C/F/Jdx50z4yNp0VDY2qWMomojs6vCHvHOyhK
-         W3ew==
-X-Forwarded-Encrypted: i=1; AJvYcCWqkqkBi3XoIvPs9WFyFVWDynyhZc5jqtGKkw1NEcyh0Qk3YSNxdZth7S3cz4GFIADdFc+PlIdoaArHAW0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwKRnsDqxLqq8+9y53Qg7OBSWF07G4gJJAWFW9JMSIyb90uI565
-	YtyoUSmGDcp4FE8B2haW/PsUTeN1k/obnyp10PeryMQiqshXFjRZd5XQHjQwSHi8NRRfDbgRLKh
-	8hQEG3Q==
-X-Google-Smtp-Source: AGHT+IEtXTnYI5khsafdjTFFpIwBj1/3o9/0USEjUmDImBmy6nlSHMsznydOMkFks6U8uzEKschpfAm31Us=
-X-Received: from pjbse4.prod.google.com ([2002:a17:90b:5184:b0:314:29b4:453])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d2ce:b0:313:23ed:701
- with SMTP id 98e67ed59e1d1-315f25ce985mr846701a91.4.1750805043666; Tue, 24
- Jun 2025 15:44:03 -0700 (PDT)
-Date: Tue, 24 Jun 2025 15:44:02 -0700
-In-Reply-To: <aE9/ayZNEXoA/ZEE@intel.com>
+        d=1e100.net; s=20230601; t=1750805098; x=1751409898;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PRXMbmGHv5qc0+GRIglNxAEcLatX5Y9+ZZFfOH/sgcc=;
+        b=Vu/FukpPHe/L1F/NmtK25kH0rtUHDr4Qpo8IAcrDfEn6jNFwL9USLDP1t2R5aQDgj5
+         L3yt0of6fRLYD4dqHo4vs5LmegIe2wCS3pdW2/qeL8Gte0C4EjD9FAk2PvBbqmJM8nyX
+         cNEF7XeAYrIItlD58rnY2W1s46SyRwNCcuZKp27xNa08Qq7NwDJojAzFNjErZ9IlLRKS
+         1D9rrRcYxV2OJMaJ3MUjTMhaknFbhuJlxaSPThibj03baA8xOGF+GZIi7YFJoXjIVNWY
+         htPqP87P4QdG9W7U4/3AZG8jetnGHamZIAx4sX56FxhXn7Ne51IbkZZ05WmgGHAv9CZf
+         5XsA==
+X-Forwarded-Encrypted: i=1; AJvYcCU2y9rOEzoaX6P6hpjg/lmMLDOV2+mp5DdOp3d5zHXWKJ4/bPLi33Qvv5PLxjLckffbT/0wdK05EhVRDRo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQd1e7/bzJvixuUIQGzn64akIUTqeUcc4O1uyCq+cYj+dKdQ+s
+	i/V7hKXPFsY/fds/izFqsObmjQ3o5b71zclzdpv7/4GPoJQ4d1oleB19kP6Jpx89S6Jg1zEU36M
+	TN1cP5Fw=
+X-Gm-Gg: ASbGncurlA4qOVJuKj8lQvkjsS42pVF2A1hh5jFmBSYSpjWbDmt4dI5c55Y2fVD9abv
+	9SORyMSittJq/pxraSNsd6qZdlecryshLMvAVIpsQs3sK3COFTWShiLq+EPEGuJxrK1vendj9+T
+	NqCcpoMCDT4uYxkNKTCGFEfW8Bw7ZJivoK6FYxD5uPM6r76ADIVCJxMAC54u7MbxAnlsAjKKbrS
+	s83HD/VDshaovmDMnage7gtUNmyYwlQtb5I4ZpHMjVl1IoYu935Hc2JFD4gPpH2M8mGicj56Ou1
+	ZK5cHDlXelEtG46epJHhdJW8pxjnWNcyUsopQ2YH+YuhzY1i7gXuBQLmzfGVbJqI
+X-Google-Smtp-Source: AGHT+IH7S88HndQYh/y+AH2dYPlp+bphbSdHifv9VXqm4+49L6EVcl77epJmUEAPqt5lk9I3IFqEcg==
+X-Received: by 2002:a05:6602:378e:b0:86d:61:ce7e with SMTP id ca18e2360f4ac-8766b4212damr169849139f.0.1750805098487;
+        Tue, 24 Jun 2025 15:44:58 -0700 (PDT)
+Received: from [127.0.1.1] ([208.115.91.129])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-501c9248983sm1086444173.11.2025.06.24.15.44.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 15:44:58 -0700 (PDT)
+From: David Lechner <dlechner@baylibre.com>
+Date: Tue, 24 Jun 2025 22:44:51 +0000
+Subject: [PATCH] iio: adc: ad7380: remove unused oversampling_ratio getter
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250612081947.94081-1-chao.gao@intel.com> <20250612081947.94081-2-chao.gao@intel.com>
- <0d1e9a86-41aa-46dd-812b-308db5861b16@linux.intel.com> <aE9/ayZNEXoA/ZEE@intel.com>
-Message-ID: <aFsqMnjTCZSBTO3m@google.com>
-Subject: Re: [PATCH 1/2] KVM: x86: Deduplicate MSR interception enabling and disabling
-From: Sean Christopherson <seanjc@google.com>
-To: Chao Gao <chao.gao@intel.com>
-Cc: Dapeng Mi <dapeng1.mi@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, pbonzini@redhat.com
+MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250624-iio-adc-ad7380-remove-unused-oversampling_ratio-getter-v1-1-26cbee356860@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAGIqW2gC/x2NUQqDMBBEryL73YUYo5ZepUgJZk0XaiKbKAXx7
+ l36MTAPHjMnFBKmAo/mBKGDC+ek0N4amN8+RUIOymCN7c1gHTJn9GHWjN3doNCaD8I97YUCapX
+ i1+3DKb7EV3Uj1UqC1DvXdoMdFzKg45vQwt//8XO6rh/EybYUiAAAAA==
+X-Change-ID: 20250624-iio-adc-ad7380-remove-unused-oversampling_ratio-getter-e54413627fe0
+To: Michael Hennerich <michael.hennerich@analog.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, Andy Shevchenko <andy@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ David Lechner <dlechner@baylibre.com>
+X-Mailer: b4 0.14.2
 
-On Mon, Jun 16, 2025, Chao Gao wrote:
-> >> --- a/arch/x86/kvm/vmx/vmx.h
-> >> +++ b/arch/x86/kvm/vmx/vmx.h
-> >> @@ -388,21 +388,13 @@ void vmx_ept_load_pdptrs(struct kvm_vcpu *vcpu);
-> >> =20
-> >>  void vmx_disable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, in=
-t type);
-> >>  void vmx_enable_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int=
- type);
-> >> +void vmx_set_intercept_for_msr(struct kvm_vcpu *vcpu, u32 msr, int ty=
-pe, bool enable);
-> >> =20
-> >>  u64 vmx_get_l2_tsc_offset(struct kvm_vcpu *vcpu);
-> >>  u64 vmx_get_l2_tsc_multiplier(struct kvm_vcpu *vcpu);
-> >> =20
-> >>  gva_t vmx_get_untagged_addr(struct kvm_vcpu *vcpu, gva_t gva, unsigne=
-d int flags);
-> >> =20
-> >> -static inline void vmx_set_intercept_for_msr(struct kvm_vcpu *vcpu, u=
-32 msr,
-> >> -					     int type, bool value)
-> >> -{
-> >> -	if (value)
-> >> -		vmx_enable_intercept_for_msr(vcpu, msr, type);
-> >> -	else
-> >> -		vmx_disable_intercept_for_msr(vcpu, msr, type);
-> >> -}
-> >> -
-> >>  void vmx_update_cpu_dirty_logging(struct kvm_vcpu *vcpu);
-> >> =20
-> >>  /*
-> >
-> >The change looks good to me.=C2=A0
-> >
-> >Reviewed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->=20
-> Thanks.
->=20
-> >
-> >Just curious, is there a preference on using these 3 interfaces? When
-> >should we use the disable/enable interfaces? When should be we use the s=
-et
-> >interface?=C2=A0 or no preference?
->=20
-> I think the set API is to reduce boilerplate code. So, use the set API wh=
-en
-> you need to perform conditional logic, such as
->=20
-> 	if (/*check guest/host caps*/)
-> 		//disable intercept
-> 	else
-> 		//enable intercept
->=20
-> otherwise, use the disable/enable APIs.
+Remove a call to ad7380_get_osr() in ad7380_init_offload_msg. The
+returned value is never used.
 
-Yep.  The preference is to use the API that is most appropriate for the cod=
-e.
-E.g. if the code unconditionally enables/disables interceptions, then it sh=
-ould
-use the appropriate wrapper.
+Signed-off-by: David Lechner <dlechner@baylibre.com>
+---
+I wrote this a while back but it looks like it never got sent so here
+it is now.
+---
+ drivers/iio/adc/ad7380.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
+index d96bd12dfea632b62475d6537c8d6601b042de1f..abcd4cc70074723303b9b67e2b89b0c4b43c6884 100644
+--- a/drivers/iio/adc/ad7380.c
++++ b/drivers/iio/adc/ad7380.c
+@@ -1165,7 +1165,6 @@ static int ad7380_init_offload_msg(struct ad7380_state *st,
+ 	struct spi_transfer *xfer = &st->offload_xfer;
+ 	struct device *dev = &st->spi->dev;
+ 	const struct iio_scan_type *scan_type;
+-	int oversampling_ratio;
+ 	int ret;
+ 
+ 	scan_type = iio_get_current_scan_type(indio_dev,
+@@ -1195,10 +1194,6 @@ static int ad7380_init_offload_msg(struct ad7380_state *st,
+ 		}
+ 	}
+ 
+-	ret = ad7380_get_osr(st, &oversampling_ratio);
+-	if (ret)
+-		return ret;
+-
+ 	xfer->bits_per_word = scan_type->realbits;
+ 	xfer->offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
+ 	xfer->len = AD7380_SPI_BYTES(scan_type) * st->chip_info->num_simult_channels;
+
+---
+base-commit: b57cb7c47e31244bef6612f271c5dc390f761e17
+change-id: 20250624-iio-adc-ad7380-remove-unused-oversampling_ratio-getter-e54413627fe0
+
+Best regards,
+-- 
+David Lechner <dlechner@baylibre.com>
+
