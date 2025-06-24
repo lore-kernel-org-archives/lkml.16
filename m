@@ -1,45 +1,79 @@
-Received: from out-188.mta1.migadu.com (out-188.mta1.migadu.com [95.215.58.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 187851F12E9
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E04B73595C;
+	Tue, 24 Jun 2025 22:51:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750805368; cv=none; b=Q58cwACYgAIIOZpFmomQjxjuLMN/WWNLCVkzzRW9rbGDyuj11wyjuKZfeGNDhDijQIkvuzMjumiozw4iahddLRnpCqan9nu6Ft88Y4f63vedrOiHg6oZye443EFpRnhz7zhTDMNhx5rzd8mR2bVsHNXtGWEioFXlgF6yRxV9dIc=
+	t=1750805463; cv=none; b=qNwlPJGdLn199ERXv77WdU5PinFIJyoW41gqie2EsKdji9zLKZx63cxiCdiXwWQ0ImhkYMzNiNCLb8mEE9T9VjSN1gPRBZGZo43VjZmiM8Pte9go4Yzpju4EZ9xyr0btvpCnIA83QQSiCU5/NIfNVrmGDkwcsZrL9Fossn4OMdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750805368; c=relaxed/simple;
-	bh=swAQJ7D6uR3+UHJ6FyNnFhWOPUR7IHCfJUMioFtwZKw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eZMDLhw0I/zaGquRiwmkQR54QwWdbm4MJKgTg+x56J53UmB1Mlb87wyNhyWnUiM/ukyEVSmOTdrqFWmCmQUf23mGvY9Wo3WzX1zs8N+6SNQjxo7hLRIWHnqMMAQSrQKrZKArrXQDq27ZACVColaXtpOFB82o+CQq2JGw6bzGZPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BrVkqt/S; arc=none smtp.client-ip=95.215.58.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750805463; c=relaxed/simple;
+	bh=T8KBieTxhuZTahVfqdneQX0l34RjkembcNWLTB1cw7Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oFM9W8TlYWx8Qw67wvErFHdB/wkBlJ2oRIIyz+j/iF+kG7Oa1RhFjw1BMXmeUuTiKKaKfroRBZhro8zgqQj0p6+FWaK0Q0rVXlJsWLgNoioIxibE9sWgi8Pu1MdDeLO0c5t2ar3a7YueSpX1yKzbTOOtX6BZLiZYCGRS3idOjXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GZDTmQmo; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BrVkqt/S"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750805353;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=waCMU8XToJ4/O0TuOlz1/Eb71vMnpeZ9I1kTPcvNFP4=;
-	b=BrVkqt/SNYzQXu4buoXkoHww1LOaEqIB5unHnPQSE5xvz3tkkCLr0Gt9P567oEeSyeRePq
-	bBJ0YrvOT+rfTRZVC1Z5hTJYK3+bLAP8l3qJ8IYkdOspcXTgZQmsr1D5FdojOpD0EmMkLh
-	WS072j3hOOSkDOIdBM2YrnryccI12Mc=
-From: David Dai <david.dai@linux.dev>
-To: tj@kernel.org,
-	void@manifault.com,
-	arighi@nvidia.com,
-	changwoo@igalia.com,
-	paulmck@kernel.org
-Cc: david.dai@linux.dev,
-	davidai@meta.com,
-	sched-ext@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	rcu@vger.kernel.org,
-	kernel-team@meta.com
-Subject: [PATCH] sched_ext, rcu: Eject BPF scheduler on RCU CPU stall panic
-Date: Tue, 24 Jun 2025 15:49:06 -0700
-Message-ID: <20250624224906.3662221-1-david.dai@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZDTmQmo"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-601dfef6a8dso9311727a12.1;
+        Tue, 24 Jun 2025 15:51:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750805460; x=1751410260; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2Xczy8xEcTibMyimv1VhRCXIPBpvLafnj4WwxtkKaLA=;
+        b=GZDTmQmoAQnuHJ+MiKwsuv6fv2HSObx+hKA+33JfXuKI2tWDLrt+KqvgK93ZIgFzK6
+         eIzmG3mRRWDEiyRlJ1zHxune1sItaPVQj7YXdERhWl6Da9S2GPktC1Dv3CzWO/D24w2X
+         l14u9ytYYSUjl+yoTtDscwTH/EwjS2NZdnf2jHIax/qw0GfE/oM7VJbM0EVGQuTBqinG
+         5QstY/Z0faKl89Ta1W3QiKIrBPzjNqQ6/+dlvJi4vmxFO+9y0FQy17EZT1T353Ww1GYp
+         SKwYbpf2PqjILwYwb5tlUs/1KZr/xO9oDVtV8aTMnVdWFpzUd0tBlx6kxHAhyg90+pnd
+         xqfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750805460; x=1751410260;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2Xczy8xEcTibMyimv1VhRCXIPBpvLafnj4WwxtkKaLA=;
+        b=ZKisJDw9i67hBtrW/t6/g1ZixbgkT+hJQkti4ZSpguvgq4TYlmL/HPHtr15Xa8DFPF
+         Qu8nRsnMGnXLquABQOyOcvJoEDLk0ijZC8msiKA7tHz1wDvOUd8tme0oWJ7bChEA5bkr
+         9F2lLqO2LniNW3cOjsyfSSDudTeVYOOKBSALGJLdtygM8pOWd/KoyKEqOvtrhlOK0Y2r
+         Hz599PSmOGlytm+H71S+fW9FKfClCzuMS7rgigFhkMm9KyXz1aI03BMVikpeS7SHGCMT
+         7lhYOTT15l2Ydb3edfOvZthkNDW8ABLJONP5y6hnExE+o0GfMdk5STq0nB3dnJZ2yEuE
+         QKFA==
+X-Forwarded-Encrypted: i=1; AJvYcCUG3qtcTGGbiyWahkd2kNsKgmCiNbeSpj0Th0YdU1duw7c0kiWcjYFHbkFsfTKlAZpHARW9twlYJ3XmIsaD@vger.kernel.org, AJvYcCVFBvglGgZDjZOASGaa+l0dt9WRR0X990ZqoGu5JuUBxneFGYrpsQGVsYZ/xZweC949YOhL1wlx6UYw@vger.kernel.org, AJvYcCWZe62JqAlzcueSWo/fMmumgi3G+SF1Tdvc+e+7OcYIK1CB/dXlU1eOQAxFVMoYRHthfZx7U03uUk9mMcvLFQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvXfhiXl/DzCuW8u7vwo3nwqZbqntOyH4oWj+rda3YlZ1YaTGN
+	9g5JaFCGGimSKpNYRBh0x4Lv9xuXc7J2IHJvsN5o+7e2OkWSOr76vvE=
+X-Gm-Gg: ASbGnctwd6iqSaKG8wrK9HUySAWb/T90mm5nPRbDiNVFJwkQ/Eur6RasHCnnuW5gzGQ
+	8klsXLLEmewoCcyWGg0yAbCY2VTopjWJSYHqMcPGUunA7xnO/3/zfge1mbb8Ssq5DD+NCt9RbAN
+	9YlOqidsTMwaSxiMl+aitEB1od6uXeS+otO10Q6u2C8PALYybbFymLXdvBDUM3jjP+C2SzVYVi/
+	v9eEdUAtaZJBDiq1Zclf+dbHh3eZKZICzD3rOVclQH6+OfBbAyus7EPvKRrAYWUitBtRsNBa9qx
+	YakOOqOzsEsL/RzCtkiWOY7IVWqwJg6w/xoSmOyUJlRt5vNoNmfpVA2SRyqloBNADcoBBcs1DYk
+	ywN9h
+X-Google-Smtp-Source: AGHT+IH2S+/FT8sL/swFQVHYZ1kGEg0lc4whDC0ZcBw00Lnz/By+27Z3Dbr2+Mx6hQMUC0xhNC6gyw==
+X-Received: by 2002:a17:907:edcb:b0:ad8:9466:3354 with SMTP id a640c23a62f3a-ae0befc28aemr84127966b.54.1750805459799;
+        Tue, 24 Jun 2025 15:50:59 -0700 (PDT)
+Received: from alex-x1e.localdomain ([84.226.118.249])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0543421e9sm940093666b.185.2025.06.24.15.50.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 15:50:59 -0700 (PDT)
+From: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+	linux-arm-msm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	laurentiu.tudor1@dell.com,
+	abel.vesa@linaro.org,
+	bryan.odonoghue@linaro.org,
+	jens.glathe@oldschoolsolutions.biz,
+	Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
+Subject: [PATCH v1 0/1] arm64: dts: qcom: x1e80100-pmics: Disable pm8010 by default
+Date: Wed, 25 Jun 2025 00:41:19 +0200
+Message-ID: <20250624225056.1056974-1-alex.vinarskis@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,110 +81,26 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-For systems using a sched_ext scheduler and has panic_on_rcu_stall
-enabled, try kicking out the current scheduler before issuing a panic.
+Follow up to previous discussion [1].
 
-While there are numerous reasons for RCU CPU stalls that are not
-directly attributed to the scheduler, deferring the panic gives
-sched_ext an opportunity to provide additional debug info when ejecting
-the current scheduler. Also, handling the event more gracefully allows
-us to potentially recover the system instead of incurring additional
-down time.
+Disable camera specific PMIC pm8010 by default, as some X1E/X1 devices
+do not have one. Platform that utilize it should enable it.
 
-Suggested-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: David Dai <david.dai@linux.dev>
----
- include/linux/sched/ext.h |  2 ++
- kernel/rcu/tree_stall.h   |  7 +++++++
- kernel/sched/ext.c        | 35 +++++++++++++++++++++++++++++++++++
- 3 files changed, 44 insertions(+)
+Affected upstream devices:
+- none
+Affected devices submitted upstream (did not land yet):
+- CRD, as part of CAMSS series by Bryan [2]
 
-diff --git a/include/linux/sched/ext.h b/include/linux/sched/ext.h
-index 8b92842776cb..0cf0915572c9 100644
---- a/include/linux/sched/ext.h
-+++ b/include/linux/sched/ext.h
-@@ -206,12 +206,14 @@ struct sched_ext_entity {
- void sched_ext_free(struct task_struct *p);
- void print_scx_info(const char *log_lvl, struct task_struct *p);
- void scx_softlockup(u32 dur_s);
-+bool scx_rcu_cpu_stall(void);
- 
- #else	/* !CONFIG_SCHED_CLASS_EXT */
- 
- static inline void sched_ext_free(struct task_struct *p) {}
- static inline void print_scx_info(const char *log_lvl, struct task_struct *p) {}
- static inline void scx_softlockup(u32 dur_s) {}
-+static inline bool scx_rcu_cpu_stall(void) { return false; }
- 
- #endif	/* CONFIG_SCHED_CLASS_EXT */
- 
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index 486c00536207..af61b2d0d311 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -134,6 +134,13 @@ static void panic_on_rcu_stall(void)
- {
- 	static int cpu_stall;
- 
-+	/*
-+	 * Attempt to kick out the BPF scheduler if it's installed and defer
-+	 * the panic to give the system a chance to recover.
-+	 */
-+	if (scx_rcu_cpu_stall())
-+		return;
-+
- 	if (++cpu_stall < sysctl_max_rcu_stall_to_panic)
- 		return;
- 
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index bee98fdcdd01..df5b2c952cf7 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -4672,6 +4672,41 @@ bool scx_allow_ttwu_queue(const struct task_struct *p)
- 		p->sched_class != &ext_sched_class;
- }
- 
-+/**
-+ * scx_rcu_cpu_stall - sched_ext RCU CPU stall handler
-+ *
-+ * While there are various reasons why RCU CPU stalls can occur on a system
-+ * that may not be caused by the current BPF scheduler, try kicking out the
-+ * current scheduler in an attempt to recover the system to a good state before
-+ * issuing panics.
-+ */
-+bool scx_rcu_cpu_stall(void)
-+{
-+	struct scx_sched *sch;
-+
-+	rcu_read_lock();
-+
-+	sch = rcu_dereference(scx_root);
-+	if (unlikely(!sch)) {
-+		rcu_read_unlock();
-+		return false;
-+	}
-+
-+	switch (scx_enable_state()) {
-+	case SCX_ENABLING:
-+	case SCX_ENABLED:
-+		break;
-+	default:
-+		rcu_read_unlock();
-+		return false;
-+	}
-+
-+	scx_error(sch, "RCU CPU stall detected!");
-+	rcu_read_unlock();
-+
-+	return true;
-+}
-+
- /**
-  * scx_softlockup - sched_ext softlockup handler
-  * @dur_s: number of seconds of CPU stuck due to soft lockup
+[1] https://lore.kernel.org/linux-arm-msm/519f9e21-466f-4e8b-9bd0-dfe0448920bb@oss.qualcomm.com/
+[2] https://lore.kernel.org/all/20250417-b4-linux-next-25-03-13-dtsi-x1e80100-camss-v7-5-3fd4124cf35a@linaro.org/
+
+Aleksandrs Vinarskis (1):
+  arm64: dts: qcom: x1e80100-pmics: Disable pm8010 by default
+
+ arch/arm64/boot/dts/qcom/x1e80100-pmics.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
 -- 
-2.47.1
+2.48.1
 
