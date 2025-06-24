@@ -1,41 +1,45 @@
 Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 718432E92CC;
-	Tue, 24 Jun 2025 19:23:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E87C22E7F2D;
+	Tue, 24 Jun 2025 19:23:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750793009; cv=none; b=lz3my+gAg8GNN9mRKSXVMnKm51qJwsU9NQaxl0+tkztiyv8FtovZPKZjdO4SCfj5mECZUtfddMovHLxMhJALirdnxXi3J/UMWUhFnUqw5fAC9xlz4OFt8+rKcNJx6HYRdzixMTymLzOQj6W3hXqL38aG9qwMiIxC7jYesLBOLfk=
+	t=1750793021; cv=none; b=Zi3GvfQ5otHDrltRATwCevcATzOCLhg/37gPuBZUCQyXcC4foyCHgNMEsq9I9eq2Ukk+uNDhJoB5RCo6u0fJ2FSgjNwSnxxU1vUU08/RH1sPIGNbyzOSAzdZlXsmfi0cyl7GTGBY3c8kOn9rPLF9PP3bqUQOCflFerU3oB73mH0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750793009; c=relaxed/simple;
-	bh=4gcZEGeqCU5KH0mHQ8wH5/bHF4byvhYkk4/R2n/w+ZQ=;
+	s=arc-20240116; t=1750793021; c=relaxed/simple;
+	bh=PDJpiD77z0skldwDKf4SRzGInU4+zqTVkZ+Ltk5hwrg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fCflTePQh0DpHI7lyFn+C9V0zW2UW7TM0w2zscuLqeBqVr6tHzWdm7R1/lVXwB9wvpqgCjlnBrfd4Q74sP3q0uH5/gCw9gianVWLAQN/KvdpDFodyDXhW/dpiGoZlx+LObDKiPD4fa11zgiLNgfmUsKhnLw8LIIbrJLArsDP2+w=
+	 MIME-Version; b=VS+UUZasUDOXEMrWqDBGOVUKV1+fMZb/m0C3B3CDazvPrPw/lsqdRuHt7coYrV2ctHt0rVAs8ChOsJ5CRUInXt32dToXGYtPoqWzDrOtKNmvjwNFb7UiBf/gqf+5QgOjaPBOv/6ibsB0sfJdYqCQXqftWXlLh5J3tm7Yr30t3D4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: Co+196DCQ7iWD4psg4pROA==
-X-CSE-MsgGUID: /iVkkYnGQRWFJ9DIHF3hJQ==
+X-CSE-ConnectionGUID: HHyCfxgHQG6urX94NMWHEA==
+X-CSE-MsgGUID: vv/z5tRNTHez4vIuHO4g8w==
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 25 Jun 2025 04:23:25 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 25 Jun 2025 04:23:37 +0900
 Received: from mulinux.example.org (unknown [10.26.240.23])
-	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 18137400F738;
-	Wed, 25 Jun 2025 04:23:20 +0900 (JST)
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id 9A27F4003FBF;
+	Wed, 25 Jun 2025 04:23:32 +0900 (JST)
 From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-spi@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+	Nishanth Menon <nm@ti.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	=?UTF-8?q?N=C3=ADcolas=20F=2E=20R=2E=20A=2E=20Prado?= <nfraprado@collabora.com>,
+	Taniya Das <quic_tdas@quicinc.com>,
+	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+	Eric Biggers <ebiggers@google.com>,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Biju Das <biju.das.jz@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 2/6] spi: dt-bindings: Document the RZ/V2H(P) RSPI
-Date: Tue, 24 Jun 2025 20:23:00 +0100
-Message-Id: <20250624192304.338979-3-fabrizio.castro.jz@renesas.com>
+	linux-renesas-soc@vger.kernel.org
+Subject: [PATCH 5/6] arm64: defconfig: Enable the RZ/V2H(P) RSPI driver
+Date: Tue, 24 Jun 2025 20:23:03 +0100
+Message-Id: <20250624192304.338979-6-fabrizio.castro.jz@renesas.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250624192304.338979-1-fabrizio.castro.jz@renesas.com>
 References: <20250624192304.338979-1-fabrizio.castro.jz@renesas.com>
@@ -47,117 +51,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add dt-bindings for the RSPI IP found inside the Renesas RZ/V2H(P)
-SoC.
+Enable the Renesas RZ/V2H(P) RSPI driver for the benefit of
+RZ/V2H(P) based platforms.
 
 Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
 ---
- .../bindings/spi/renesas,rzv2h-rspi.yaml      | 96 +++++++++++++++++++
- 1 file changed, 96 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/renesas,rzv2h-rspi.yaml
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/spi/renesas,rzv2h-rspi.yaml b/Documentation/devicetree/bindings/spi/renesas,rzv2h-rspi.yaml
-new file mode 100644
-index 000000000000..ab27fefc3c3a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/renesas,rzv2h-rspi.yaml
-@@ -0,0 +1,96 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/spi/renesas,rzv2h-rspi.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Renesas RZ/V2H(P) Renesas Serial Peripheral Interface (RSPI)
-+
-+maintainers:
-+  - Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-+
-+allOf:
-+  - $ref: spi-controller.yaml#
-+
-+properties:
-+  compatible:
-+    const: renesas,r9a09g057-rspi # RZ/V2H(P)
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    items:
-+      - description: Idle Interrupt
-+      - description: Error Interrupt
-+      - description: Communication End Interrupt
-+      - description: Receive Buffer Full Interrupt
-+      - description: Transmit Buffer Empty Interrupt
-+
-+  interrupt-names:
-+    items:
-+      - const: idle
-+      - const: error
-+      - const: end
-+      - const: rx
-+      - const: tx
-+
-+  clocks:
-+    maxItems: 3
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+      - const: pclk_sfr
-+      - const: tclk
-+
-+  resets:
-+    maxItems: 2
-+
-+  reset-names:
-+    items:
-+      - const: presetn
-+      - const: tresetn
-+
-+  power-domains:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+  - interrupt-names
-+  - clocks
-+  - clock-names
-+  - resets
-+  - reset-names
-+  - power-domains
-+  - '#address-cells'
-+  - '#size-cells'
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/clock/renesas-cpg-mssr.h>
-+    spi@12800800 {
-+        compatible = "renesas,r9a09g057-rspi";
-+
-+        reg = <0x12800800 0x400>;
-+        interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
-+                     <GIC_SPI 113 IRQ_TYPE_EDGE_RISING>,
-+                     <GIC_SPI 504 IRQ_TYPE_EDGE_RISING>,
-+                     <GIC_SPI 505 IRQ_TYPE_EDGE_RISING>;
-+        interrupt-names = "idle", "error", "end", "rx", "tx";
-+        clocks = <&cpg CPG_MOD 0x5a>,
-+                 <&cpg CPG_MOD 0x5b>,
-+                 <&cpg CPG_MOD 0x5c>;
-+        clock-names = "pclk", "pclk_sfr", "tclk";
-+        resets = <&cpg 0x7f>, <&cpg 0x80>;
-+        reset-names = "presetn", "tresetn";
-+        power-domains = <&cpg>;
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+    };
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 42ec6e4ce407..64e7fdad51fd 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -575,6 +575,7 @@ CONFIG_SPI_ROCKCHIP=y
+ CONFIG_SPI_ROCKCHIP_SFC=m
+ CONFIG_SPI_RPCIF=m
+ CONFIG_SPI_RSPI=m
++CONFIG_SPI_RZV2H_RSPI=m
+ CONFIG_SPI_RZV2M_CSI=m
+ CONFIG_SPI_QCOM_QSPI=m
+ CONFIG_SPI_QUP=y
 -- 
 2.34.1
 
