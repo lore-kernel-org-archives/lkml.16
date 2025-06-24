@@ -1,258 +1,112 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34751F7580
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:32:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+Received: from sgoci-sdnproxy-4.icoremail.net (sgoci-sdnproxy-4.icoremail.net [129.150.39.64])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 072E91F7580;
+	Tue, 24 Jun 2025 10:32:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.150.39.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750761147; cv=none; b=ZpnbZ/6zFkksdf7pvs5XXa4Bw6ldaklKYqPtw+MPcL0YHyoEQlAbGJka8XR4h/ZNi/f3bRFm9Vodxk+pZuQC5mc5u7Z/JuYL5XS1b5i9KqKqzkG6Bfx2U2cX47duL9bZXV2x8zX98FEumVelafZC7AzNlltsuQP2OT6ogEudLPs=
+	t=1750761167; cv=none; b=kshPV9AaR4wpT/QTbawQMAlrxdZzUGtn4rd9dxtclVXTE/m7FTwRKJD0qQOELFMhjeAl4205FLpE9WYGGa07VyIrE6kETbcpWmg26CZaaj0LxaTwP0i5YNQf0Gok0tXl2oKdqBrlJmnnxYCz5d2OmWMrbY3Y8shpeHZ7jZ/hbcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750761147; c=relaxed/simple;
-	bh=97QjSohnV7TFRXHMlexb2Qsf3EZor5C9WloU/sDpTDQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N0e/tdNXBjtL8m0H6zjDg+GeuAThVQwdqunOy0AUk/oBVIRl3WacjkDHlDk7Wbq+UeYobGr3y1fWZsHRtgwYnDGMHxRr+P0a06fFqLFipiuY3kax9hZGMUMqfrilXdMsTV2JMochdBPC4qUhXkUWX7eZztRqxlOcbc2V26/016M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=DKPSsmCJ; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="DKPSsmCJ"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-73972a54919so4272748b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:32:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1750761145; x=1751365945; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+qt1G4xdHuGWkr7FJJKwWLSBjfU2TU/J1+xFmV3PeoE=;
-        b=DKPSsmCJYI4u3j3xDEmzRbcqbuU5pvweia/t4jMvPetsIKfrzXIPrrvNTS3PzEQpBw
-         1yPPAZqqyjljxj+v9q1KNIURKIFiO4wKLjSa5dOxx5ti9GOt2n04+wCRtkhk2OekjSXr
-         NxVW+WigMb8C0idU90PPJXZi/IkAlKIARm/izN88W77k/MxpfRprwXM9BR9l2aF5S6RW
-         ld72CMfT/+cs5gAIGVsGTTWwtYnNAM4kUqwx1qiXuOTfFOOmmApBuKW+SDEoQQwaL2Vf
-         nid3+yvLtPxtQKZrurWwHi4pD6ldgPRGCuCNq3NtVbF98VydTSQNCg2mBvlAeec2j937
-         AUwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750761145; x=1751365945;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+qt1G4xdHuGWkr7FJJKwWLSBjfU2TU/J1+xFmV3PeoE=;
-        b=eQ+6vUSsRsC49qZ50EINagAysWB+ynZL36qfSgQ7ofNto8fNXa2GSLUVGXI03OQDDO
-         8CEGv4RRfD1cf5pWtAXrRG3iHQoE02GKmGOeuQMcRCXbnDA3Ora/pWXq0uyfXY6yT3fq
-         GNlkLXcHbhSEFudHvXBTmfyZGjcMGIJE/gMVKMhRobi56Bj8Q52j2zaF38wG+QuA6KVl
-         85gsID03dQbg6qA0LzGUEElpo2cMTr5MPHdK7WMUW2LWyNBVFYBwhNH774Z4cEG441hk
-         Rcbnqs0zYc2ven7JIcgG6A36zPvpLLv6aOFkYILJSiZUtuFYGAqP3OI2ArU9RPYs7p4z
-         lBJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWlAaWIR1BivDCTzQlcb8oBZypcnGdREkSAzpv09KX/zzVgf1fcRSMTVqaES073soFauYoHG5TcFMdMzXg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzy03iPhXSAWLFaQWf5PZrvPdYlK4rpF1FLMNfpn5Bfl7okeUo2
-	svXo/ejlcl6SilY9oHQVE/H1vfTQ4qPVmK0AoC1DSfm69uyJsbbZLQLsIsJLlb73L9lTKEQuaot
-	R0n04m19+i08qiAKHQWx/BR9N6i45QhZRZ7gBqT1JiQ==
-X-Gm-Gg: ASbGncvO7oQKaKcmFs9ahaIXhL7ytTISxWKUY6zaq5Aslb9ua3auxHOwG4t+p+0gee8
-	Z1JKxUrVpa5bjRLIDeX2BmJNshperRc0OEaG6B7lC2BG0znGoqg3V5tTfa+XwrH3mJ1A8mFYpYi
-	DBc66dVUzxCsKlXEkSO18sYkSXaFl0jyIlLG/9gf8dlWZYWnOsiFi2YT6dSVBg5zyhddk=
-X-Google-Smtp-Source: AGHT+IH4g1PvpyLx7WVlvE2Rf2SzPuo0lTBgVHeaA3gkX79aw74S2PH91wSbnem7obavXSVF9XsoiTDpbAuofP1c8K8=
-X-Received: by 2002:a05:6a20:9144:b0:1f5:7f56:a649 with SMTP id
- adf61e73a8af0-22026e92ae5mr23934878637.13.1750761145008; Tue, 24 Jun 2025
- 03:32:25 -0700 (PDT)
+	s=arc-20240116; t=1750761167; c=relaxed/simple;
+	bh=XDBfBT0G8ICHz1wGxAz8l/WkiP++vKmA+8ZcMiejvcM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YAeJggvFZrl6bZToeY/Edo338mkaxEnZ1q/WeNXNVrAgnRbGee2cJI0CGfviMrMDi/Tx/T7+qxB87t0rTQWwJyGDIcfsZwxXVgjus5+XSdFHQNpWbpevcIgzJh1L2ZiE7ZzrP8vxk+Lkb7bPW0e5/cKLsmcRUIVBH174NNlN5CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=129.150.39.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app1 (Coremail) with SMTP id TAJkCgDn_Q61flpoP7KkAA--.57336S2;
+	Tue, 24 Jun 2025 18:32:23 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: mturquette@baylibre.com,
+	sboyd@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	huangyifeng@eswincomputing.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH v3 0/2] Add driver support for ESWIN eic700 SoC clock controller
+Date: Tue, 24 Jun 2025 18:32:12 +0800
+Message-Id: <20250624103212.287-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618102148.3085214-1-zhangjian.3032@bytedance.com> <63e740bf-cd0c-4671-9254-6846048b0366@molgen.mpg.de>
-In-Reply-To: <63e740bf-cd0c-4671-9254-6846048b0366@molgen.mpg.de>
-From: Zhang Jian <zhangjian.3032@bytedance.com>
-Date: Tue, 24 Jun 2025 18:32:14 +0800
-X-Gm-Features: AX0GCFsx2E4YDWQnsy0elvsMGQiKKzms4nqUpfwtdkeIHeCrPd6S9MlAaN8RRsQ
-Message-ID: <CA+J-oUvm-3G9GRCzjOd+j8K6iNs1piCFAKBNfwih49iFwiB4pA@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH] i2c: aspeed: change debug level in irq handler
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Ryan Chen <ryan_chen@aspeedtech.com>, 
-	Benjamin Herrenschmidt <benh@kernel.crashing.org>, Joel Stanley <joel@jms.id.au>, 
-	Andi Shyti <andi.shyti@kernel.org>, Andrew Jeffery <andrew@codeconstruct.com.au>, 
-	linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, 
-	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgDn_Q61flpoP7KkAA--.57336S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7Ww4fCr43tw4rCr1kKw1xXwb_yoW8CFW7pF
+	4DGryFyr1qvFyxZayxta4rKryrZ3Z7JFWjkrWxZ3WUZasIya48tF4fJa4DAF97Aw1xAw13
+	JF1q9ayrCF4UAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUmjgxUUUUU=
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
 
-Hi Paul;
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-Thanks for your reply and sorry for the late reply, I was trying to
-figure out why this log occurred,
- it's quite hard to reproduce.
+Updates:
 
-I traced all the master and slave states, and eventually found that
-the behavior matches
-the description in commit b4cc1cbba519. The issue has already been
-fixed in that commit
- it was caused by a state machine bug that led to the interrupt not
-being handled correctly.
+  dt-bindings: clock: eswin: Documentation for eic7700 SoC
+  v2 -> v3:
+    1. Update example, drop child node and add '#clock-cells' to the
+       parent node.
+    2. Change parent node from sys-crg to clock-controller for this yaml.
+    3. Drop "syscon", "simple-mfd" to clear warnings/errors by using
+       "make dt_binding_check". And these are not necessary.
 
-see: https://github.com/torvalds/linux/commit/b4cc1cbba519
+  v1 -> v2: Update example, drop child node.
+            Clear warnings/errors for using "make dt_binding_check".
+            Change to the correct format.
 
-(The state transitions between the master and slave here rely on interrupts=
-.
- When the signal waveform is incomplete (such as during power off/on),
-it may cause state errors or brief unresponsiveness, resulting in some
-log prints.)
+  clock: eswin: Add eic7700 clock driver
+  v2 -> v3:
+    1. Add "cpu-default-frequency" definition in yaml for "undocumented
+       ABI".
+    2. Drop Reviewed-by, this is misunderstanding. We have not received
+       such an email.
 
-On Thu, Jun 19, 2025 at 7:18=E2=80=AFAM Paul Menzel <pmenzel@molgen.mpg.de>=
- wrote:
->
-> Dear Jian,
->
->
-> Thank you for the patch.
->
-> Am 18.06.25 um 12:21 schrieb Jian Zhang:
-> > In interrupt context, using dev_err() can potentially cause latency
-> > or affect system responsiveness due to printing to console.
-> >
-> > In our scenario, under certain conditions, i2c1 repeatedly printed
-> > "irq handled !=3D irq. expected ..." around 20 times within 1 second.
->
-> Any idea, why you hit this error at all?
->
-> > Each dev_err() log introduced approximately 10ms of blocking time,
-> > which delayed the handling of other interrupts =E2=80=94 for example, i=
-2c2.
-> >
-> > At the time, i2c2 was performing a PMBus firmware upgrade. The
-> > target device on i2c2 was time-sensitive, and the upgrade protocol
-> > was non-retryable. As a result, the delay caused by frequent error
-> > logging led to a timeout and ultimately a failed firmware upgrade.
-> >
-> > Frequent error printing in interrupt context can be dangerous,
-> > as it introduces latency and interferes with time-critical tasks.
-> > This patch changes the log level from dev_err() to dev_dbg() to
-> > reduce potential impact.
->
-> Thank you for the patch and the problem description. Hiding an error
-> condition behind debug level is also not good, as administrators might
-> miss hardware issues. I do not have a solution. Is there something
-> similar to WARN_ONCE? Maybe the level should be a warning instead of
-> error, because the system is often able to cope with this?
-Yeah, I'm a bit unsure as well. Maybe I can use dev_err_ratelimited()?
+  v1 -> v2: Drop some non-stanard code.
+            Use dev_err_probe() in probe functions.
 
->
-> The code is from 2017, so should be well tested actually, shouldn=E2=80=
-=99t it?
->
-> > Signed-off-by: Jian Zhang <zhangjian.3032@bytedance.com>
-> > ---
-> >   drivers/i2c/busses/i2c-aspeed.c | 18 +++++++++---------
-> >   1 file changed, 9 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-a=
-speed.c
-> > index 1550d3d552ae..38e23c826f39 100644
-> > --- a/drivers/i2c/busses/i2c-aspeed.c
-> > +++ b/drivers/i2c/busses/i2c-aspeed.c
-> > @@ -317,7 +317,7 @@ static u32 aspeed_i2c_slave_irq(struct aspeed_i2c_b=
-us *bus, u32 irq_status)
-> >       switch (bus->slave_state) {
-> >       case ASPEED_I2C_SLAVE_READ_REQUESTED:
-> >               if (unlikely(irq_status & ASPEED_I2CD_INTR_TX_ACK))
-> > -                     dev_err(bus->dev, "Unexpected ACK on read request=
-.\n");
-> > +                     dev_dbg(bus->dev, "Unexpected ACK on read request=
-.\n");
-> >               bus->slave_state =3D ASPEED_I2C_SLAVE_READ_PROCESSED;
-> >               i2c_slave_event(slave, I2C_SLAVE_READ_REQUESTED, &value);
-> >               writel(value, bus->base + ASPEED_I2C_BYTE_BUF_REG);
-> > @@ -325,7 +325,7 @@ static u32 aspeed_i2c_slave_irq(struct aspeed_i2c_b=
-us *bus, u32 irq_status)
-> >               break;
-> >       case ASPEED_I2C_SLAVE_READ_PROCESSED:
-> >               if (unlikely(!(irq_status & ASPEED_I2CD_INTR_TX_ACK))) {
-> > -                     dev_err(bus->dev,
-> > +                     dev_dbg(bus->dev,
-> >                               "Expected ACK after processed read.\n");
-> >                       break;
-> >               }
-> > @@ -354,7 +354,7 @@ static u32 aspeed_i2c_slave_irq(struct aspeed_i2c_b=
-us *bus, u32 irq_status)
-> >               /* Slave was just started. Waiting for the next event. */=
-;
-> >               break;
-> >       default:
-> > -             dev_err(bus->dev, "unknown slave_state: %d\n",
-> > +             dev_dbg(bus->dev, "unknown slave_state: %d\n",
-> >                       bus->slave_state);
-> >               bus->slave_state =3D ASPEED_I2C_SLAVE_INACTIVE;
-> >               break;
-> > @@ -459,7 +459,7 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_=
-bus *bus, u32 irq_status)
-> >
-> >       /* We are in an invalid state; reset bus to a known state. */
-> >       if (!bus->msgs) {
-> > -             dev_err(bus->dev, "bus in unknown state. irq_status: 0x%x=
-\n",
-> > +             dev_dbg(bus->dev, "bus in unknown state. irq_status: 0x%x=
-\n",
-> >                       irq_status);
-> >               bus->cmd_err =3D -EIO;
-> >               if (bus->master_state !=3D ASPEED_I2C_MASTER_STOP &&
-> > @@ -523,7 +523,7 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_=
-bus *bus, u32 irq_status)
-> >                       irq_handled |=3D ASPEED_I2CD_INTR_TX_NAK;
-> >                       goto error_and_stop;
-> >               } else if (unlikely(!(irq_status & ASPEED_I2CD_INTR_TX_AC=
-K))) {
-> > -                     dev_err(bus->dev, "slave failed to ACK TX\n");
-> > +                     dev_dbg(bus->dev, "slave failed to ACK TX\n");
-> >                       goto error_and_stop;
-> >               }
-> >               irq_handled |=3D ASPEED_I2CD_INTR_TX_ACK;
-> > @@ -546,7 +546,7 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_=
-bus *bus, u32 irq_status)
-> >               fallthrough;
-> >       case ASPEED_I2C_MASTER_RX:
-> >               if (unlikely(!(irq_status & ASPEED_I2CD_INTR_RX_DONE))) {
-> > -                     dev_err(bus->dev, "master failed to RX\n");
-> > +                     dev_dbg(bus->dev, "master failed to RX\n");
-> >                       goto error_and_stop;
-> >               }
-> >               irq_handled |=3D ASPEED_I2CD_INTR_RX_DONE;
-> > @@ -577,7 +577,7 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_=
-bus *bus, u32 irq_status)
-> >               goto out_no_complete;
-> >       case ASPEED_I2C_MASTER_STOP:
-> >               if (unlikely(!(irq_status & ASPEED_I2CD_INTR_NORMAL_STOP)=
-)) {
-> > -                     dev_err(bus->dev,
-> > +                     dev_dbg(bus->dev,
-> >                               "master failed to STOP. irq_status:0x%x\n=
-",
-> >                               irq_status);
-> >                       bus->cmd_err =3D -EIO;
-> > @@ -589,7 +589,7 @@ static u32 aspeed_i2c_master_irq(struct aspeed_i2c_=
-bus *bus, u32 irq_status)
-> >               bus->master_state =3D ASPEED_I2C_MASTER_INACTIVE;
-> >               goto out_complete;
-> >       case ASPEED_I2C_MASTER_INACTIVE:
-> > -             dev_err(bus->dev,
-> > +             dev_dbg(bus->dev,
-> >                       "master received interrupt 0x%08x, but is inactiv=
-e\n",
-> >                       irq_status);
-> >               bus->cmd_err =3D -EIO;
-> > @@ -665,7 +665,7 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void=
- *dev_id)
-> >
-> >       irq_remaining &=3D ~irq_handled;
-> >       if (irq_remaining)
-> > -             dev_err(bus->dev,
-> > +             dev_dbg(bus->dev,
-> >                       "irq handled !=3D irq. expected 0x%08x, but was 0=
-x%08x\n",
-> >                       irq_received, irq_handled);
-> >
->
->
-> Kind regards,
->
-> Paul
+Xuyang Dong (2):
+  dt-bindings: clock: eswin: Documentation for eic7700 SoC
+  clock: eswin: Add eic7700 clock driver
 
-Jian.
+ .../bindings/clock/eswin,eic7700-clock.yaml   |   46 +
+ drivers/clk/Kconfig                           |    1 +
+ drivers/clk/Makefile                          |    1 +
+ drivers/clk/eswin/Kconfig                     |   10 +
+ drivers/clk/eswin/Makefile                    |    8 +
+ drivers/clk/eswin/clk-eic7700.c               | 3809 +++++++++++++++++
+ drivers/clk/eswin/clk-eic7700.h               |  194 +
+ drivers/clk/eswin/clk.c                       |  972 +++++
+ drivers/clk/eswin/clk.h                       |  213 +
+ .../dt-bindings/clock/eswin,eic7700-clock.h   |  588 +++
+ 10 files changed, 5842 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/eswin,eic7700-clock.yaml
+ create mode 100644 drivers/clk/eswin/Kconfig
+ create mode 100644 drivers/clk/eswin/Makefile
+ create mode 100644 drivers/clk/eswin/clk-eic7700.c
+ create mode 100644 drivers/clk/eswin/clk-eic7700.h
+ create mode 100644 drivers/clk/eswin/clk.c
+ create mode 100644 drivers/clk/eswin/clk.h
+ create mode 100644 include/dt-bindings/clock/eswin,eic7700-clock.h
+
+--
+2.17.1
+
