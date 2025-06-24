@@ -1,110 +1,135 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0232222CC;
-	Tue, 24 Jun 2025 09:12:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57B91126C05;
+	Tue, 24 Jun 2025 09:13:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750756369; cv=none; b=PgtRQdte4if5bVMfJyjT2jjmCBIRm5TQMq8x4XvV23xOZjoDEfG+WVzzD6fDf73A8IxMk1o/MbQaN/m859zYjeFzyLi09rH+chyh37xgS4S10TH4sQA27RboKPt/YNhACVKcPJEUW0zaA9e1efW25qMjxQFMJ3ONGW9yo+tYuHo=
+	t=1750756404; cv=none; b=k/w3LuS/03qYiahJ225rjqV+cL/8lpPj8cBh+PTmFcXpyx//05sd8G/dP2Zro0tqtZe6X2ftvV0RR1g2VgE2QCoGC42C7jO/m4FdBZ8549eTTjfE1LsekVhhrcVwzfzgNWfUiKEJYLkDpTUb8/a2jRsMNhRatztyLUX/PVIQ4lk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750756369; c=relaxed/simple;
-	bh=IRmW8E9wkUP+rMH9ZOVEDeBjpV9bTyCZE0Xj+QAd1lo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Wl8frDTJR0mGVuXOev9ncAyYIUfaRm0kVzoUjAfRcVmlOheuxTKoG75yRqnT3NsE2wgD3B+iTVG7PWljmiS9jnJJTAfshJO6ETRl9pUNEF7Y8uRNFXAtDq0rInXPuMS7nm0YMyPccC0sqWHP7VvYTWhDyqmG77ClIbTkoSAdtBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=sYNAc6fQ; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750756404; c=relaxed/simple;
+	bh=1rtj4LL8jpBMhqQhtH/QLjHCuuhJHvwXIw7NHRiEGUg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qYIa15tTcMtWBzJCq+mUc2Rfc0jrnB9Vgpon8htQv9uKP+NAwVj6K8P+Ky/7ESksGJOCWk1M2BUB/0gG2PhaIiNUzXyE5w0pDDVZOohTubLMXSaLOSqFIixiofg7FgD1yo5zZ27zKKupvEiq1neDg/QBWDruBgiLp4H/u2MII4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eiuS/zgZ; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sYNAc6fQ"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55O9CgOK1125116;
-	Tue, 24 Jun 2025 04:12:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750756362;
-	bh=uOvDyhprW4ZNM9qZCw2K3MOrcKhNHdJKT56J5HnHGhI=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=sYNAc6fQyYHE2z6m+PvRerlh8W/QzcUMXdw/CkMhoOC/k6SamAOBU6zd6vP8n+0vZ
-	 hP0bgg04l+o/aKJI1Aq1+JAU7M7+riZy3DerRi5GALGFYUnW2bvm4RsrYIdJ/UvdNo
-	 a6LE7g7O+B6+3QUJkqftITFoQm8ycxDsk5V3YqoA=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55O9Cfiq140774
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 24 Jun 2025 04:12:42 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
- Jun 2025 04:12:41 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Tue, 24 Jun 2025 04:12:41 -0500
-Received: from [172.24.227.38] (ula0502350.dhcp.ti.com [172.24.227.38])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55O9CaR31247765;
-	Tue, 24 Jun 2025 04:12:37 -0500
-Message-ID: <bd5ae2e8-eaaa-4d00-bd13-c2fbe0d4b567@ti.com>
-Date: Tue, 24 Jun 2025 14:42:36 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eiuS/zgZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750756403; x=1782292403;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1rtj4LL8jpBMhqQhtH/QLjHCuuhJHvwXIw7NHRiEGUg=;
+  b=eiuS/zgZZ1eCBrEx9tZHikNW5oBNQTiZw/VPWzGCZg6BcMucsaPmRs1G
+   rkQmtmkVwkrdCGX/dxcqo6s3rCKilQUz1pS++tpU3usOkcnN+v/8UspL2
+   WtIgFhXzBmKVmIWS8Tx0VKgrGgGwTb+7w+b+6kFl/bWqT0y3uK+we8FVU
+   6j8NZ+Z86N/moGbqwzwVaXMtZKe+xMZ9pkh6Uzzcn13cZxq1tVbqy2Hwl
+   8k0sS5tkDwBMSp8cUYpIMQvHjCTh+wrxJ7VeoTDMXpWUC1t1I9DuNIy1g
+   OFfstH6cnqPmMVobMI81eaLn/gmCQcFqEb7yRizyl5qeFDgBr9BpjA97Q
+   A==;
+X-CSE-ConnectionGUID: eTV1/814QbCtUi38tuoslA==
+X-CSE-MsgGUID: tfXPIBJkQvKcnsQbIrO8TQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52859295"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="52859295"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 02:13:23 -0700
+X-CSE-ConnectionGUID: ye8MAOSpSBG2969zWUxzDA==
+X-CSE-MsgGUID: cZRg6GkETMmU7UUV+xswBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="152029507"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by orviesa007.jf.intel.com with SMTP; 24 Jun 2025 02:13:20 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 24 Jun 2025 12:13:18 +0300
+Date: Tue, 24 Jun 2025 12:13:18 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 5/8] usb: typec: ucsi: yoga-c630: fake AltModes for port 0
+Message-ID: <aFpsLpuE1VYjxtJy@kuha.fi.intel.com>
+References: <20250621-c630-ucsi-v1-0-a86de5e11361@oss.qualcomm.com>
+ <20250621-c630-ucsi-v1-5-a86de5e11361@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv4 5/6] arm64: dts: ti: Update firmware-name for IPC
-To: Bryan Brattlof <bb@ti.com>
-CC: <nm@ti.com>, <vigneshr@ti.com>, <praneeth@ti.com>, <kristo@kernel.org>,
-        <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <khasim@ti.com>, <v-singh1@ti.com>,
-        <afd@ti.com>, <devarsht@ti.com>
-References: <20250623141253.3519546-1-p-bhagat@ti.com>
- <20250623141253.3519546-6-p-bhagat@ti.com>
- <20250623142952.3aeec366w2lmoswv@bryanbrattlof.com>
-Content-Language: en-US
-From: Paresh Bhagat <p-bhagat@ti.com>
-In-Reply-To: <20250623142952.3aeec366w2lmoswv@bryanbrattlof.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250621-c630-ucsi-v1-5-a86de5e11361@oss.qualcomm.com>
 
-Hi Bryan,
+On Sat, Jun 21, 2025 at 09:13:00PM +0300, Dmitry Baryshkov wrote:
+> EC firmware provides information about partner AltModes and handles the
+> DisplayPort AltMode internally, however it doesn't report AltModes of
+> the port to the host. Fake the DP AltMode for port0 in order to let
+> Linux bind displayport AltMode driver.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-On 23/06/25 19:59, Bryan Brattlof wrote:
-> On June 23, 2025 thus sayeth Paresh Bhagat:
->> Update the firmware-name properties in the dts file to point to new IPC
->> firmware binaries for both the mcu-r5 and c7x core.
->>
-> Same here. This seems like we should have squashed this into 4/6
->
-> ~Bryan
-Yep will do
->
->> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
->> ---
->>   arch/arm64/boot/dts/ti/k3-am62d2-evm.dts | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts b/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
->> index 8fde89ecba67..c98e4c98c956 100644
->> --- a/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
->> +++ b/arch/arm64/boot/dts/ti/k3-am62d2-evm.dts
->> @@ -487,6 +487,7 @@ &mcu_r5fss0_core0 {
->>   	mboxes = <&mailbox0_cluster2 &mbox_mcu_r5_0>;
->>   	memory-region = <&mcu_r5fss0_core0_dma_memory_region>,
->>   			<&mcu_r5fss0_core0_memory_region>;
->> +	firmware-name = "am62d-mcu-r5f0_0-fw";
->>   };
->>   
->>   &c7x_0 {
->> @@ -495,6 +496,7 @@ &c7x_0 {
->>   	mboxes = <&mailbox0_cluster1 &mbox_c7x_0>;
->>   	memory-region = <&c7x_0_dma_memory_region>,
->>   			<&c7x_0_memory_region>;
->> +	firmware-name = "am62d-c71_0-fw";
->>   };
->>   
->>   &cpsw3g {
->> -- 
->> 2.34.1
->>
+> ---
+>  drivers/usb/typec/ucsi/ucsi.h           |  1 +
+>  drivers/usb/typec/ucsi/ucsi_yoga_c630.c | 22 ++++++++++++++++++++++
+>  2 files changed, 23 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
+> index d02f6a3e2f50a4044eb3f22276931017cc624532..b711e1ecc3785eeb34e407e58df939f2d29bdb38 100644
+> --- a/drivers/usb/typec/ucsi/ucsi.h
+> +++ b/drivers/usb/typec/ucsi/ucsi.h
+> @@ -50,6 +50,7 @@ struct dentry;
+>  /* Command Status and Connector Change Indication (CCI) bits */
+>  #define UCSI_CCI_CONNECTOR(_c_)		(((_c_) & GENMASK(7, 1)) >> 1)
+>  #define UCSI_CCI_LENGTH(_c_)		(((_c_) & GENMASK(15, 8)) >> 8)
+> +#define UCSI_SET_CCI_LENGTH(_c_)	((_c_) << 8)
+>  #define UCSI_CCI_NOT_SUPPORTED		BIT(25)
+>  #define UCSI_CCI_CANCEL_COMPLETE	BIT(26)
+>  #define UCSI_CCI_RESET_COMPLETE		BIT(27)
+> diff --git a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+> index 2005f64ebfe43ca2bcada2231ff99c578fdce877..506faf31b6e3a056e067f2bb69f5e9e5ea40e514 100644
+> --- a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+> +++ b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+> @@ -76,6 +76,28 @@ static int yoga_c630_ucsi_sync_control(struct ucsi *ucsi,
+>  				       u32 *cci,
+>  				       void *data, size_t size)
+>  {
+> +	int ret;
+> +
+> +	/*
+> +	 * EC doesn't return connector's DP mode even though it is supported.
+> +	 * Fake it.
+> +	 */
+> +	if (UCSI_COMMAND(command) == UCSI_GET_ALTERNATE_MODES &&
+> +	    UCSI_GET_ALTMODE_GET_CONNECTOR_NUMBER(command) == 1 &&
+> +	    UCSI_ALTMODE_RECIPIENT(command) == UCSI_RECIPIENT_CON &&
+> +	    UCSI_ALTMODE_OFFSET(command) == 0) {
+> +		static const struct ucsi_altmode alt = {
+> +			.svid = USB_TYPEC_DP_SID,
+> +			.mid = USB_TYPEC_DP_MODE,
+> +		};
+> +
+> +		dev_dbg(ucsi->dev, "faking DP altmode for con1\n");
+> +		memset(data, 0, size);
+> +		memcpy(data, &alt, min(sizeof(alt), size));
+> +		*cci = UCSI_CCI_COMMAND_COMPLETE | UCSI_SET_CCI_LENGTH(sizeof(alt));
+> +		return 0;
+> +	}
+> +
+>  	/*
+>  	 * EC can return AltModes present on CON1 (port0, right) for CON2
+>  	 * (port1, left) too. Ignore all requests going to CON2 (it doesn't
+> 
+> -- 
+> 2.39.5
+
+-- 
+heikki
