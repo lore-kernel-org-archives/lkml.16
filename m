@@ -1,87 +1,101 @@
-Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71FC92ECD14;
-	Tue, 24 Jun 2025 19:45:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFC492EACFB
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:45:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750794329; cv=none; b=LeoVdg7vLUC7c2eBTVlCIO6hXMxwuYbf1VzoakzBSnK4V/rhBMqMPXJhoJzQbAHPHQpAVbp2FpOpXBWAfPIcS4ct9k3CixmtYei0sq7fFuE+F9+HaZenfdU4NltS0+0ZBnmw3+1qkg0SI8Hn0R5TJSa4ynI3HbArVmZcWpy90AY=
+	t=1750794352; cv=none; b=HXiEdBchiti+4MLayC2S3bxft1NvSWu7aF2SFlDPUy2zSgEEQ/+MgMiWLGbYK2R0wsIP/+t2PghAGG+Cbn6bxViK2mp71jpABePkGc7mAmbFKBJsS/qRTAdBBYT3GJtz9YUSQvDdnv+7QyhwkL0OUmg+UYAEvJRFgwhvkUAVF2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750794329; c=relaxed/simple;
-	bh=ZqjDB2Afh1JOEWZ27VXE6hu4Cb49XT7xWl99zNUIbMI=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=aFqCzTQRcmeMpxfjjHDOtfS8srQTt1O3jISh0GMa6IoHS81XJzPBp15XTu/Rc0K6I3XXOcUevzuQ+yIvivvkEyiH5UgTx4j91jJ2N1RQHmW7eWIFmDhWyAccaduhHGKSeltHIcMcxvQVea9sMylBxFwNG2tIGjFsyKApvk69h/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=adsYaD+H; arc=none smtp.client-ip=198.47.23.235
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750794352; c=relaxed/simple;
+	bh=kGEnlzNr9Zb878AZa1b7vvDvLKPv+xFVLBc4sy4VEnE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=X4qB/fc5/x9neq0yg6TX4p2gZiwBKlLxEg6MRs9DCqcE+H3E50o63+7cUFtCg2r40O60BYj4gzo5E0wcENFCxKrpR3hGWtzVAxKzOQIHlzYAGkZclXJKLL9oUcCDFhwDxtdP61dYlQsOD/FnGOXuPhVKMH1ugbFBFyrvcwXb6z4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Uvz+GWRp; arc=none smtp.client-ip=209.85.208.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="adsYaD+H"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55OJj9dD1903653;
-	Tue, 24 Jun 2025 14:45:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750794309;
-	bh=DiIFhqT5jW8AL/wFzN9Rpyuf9ZhlNrg18hXKR9LbMhg=;
-	h=From:To:CC:Subject:Date;
-	b=adsYaD+HSv/RKyG89ljvD7giZYLAGExFwWPbENMLWI34k2CY9Owd4JUp7Li+jfj9d
-	 C+q1TR00/PKNBfKpEidlpXoYu7hCNKmE1OQFfXtTApME40WY2eqRwFvyJ55Aex7OOR
-	 qoMHKmBJ5/T6S9B3y4/lKPHi4fyRRq8ZmKAO3TVw=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55OJj9j8562423
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 24 Jun 2025 14:45:09 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
- Jun 2025 14:45:09 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Tue, 24 Jun 2025 14:45:09 -0500
-Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55OJj92a2326408;
-	Tue, 24 Jun 2025 14:45:09 -0500
-From: Judith Mendez <jm@ti.com>
-To: Judith Mendez <jm@ti.com>, Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Tero Kristo <t-kristo@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 0/2] Add reaction control in rti
-Date: Tue, 24 Jun 2025 14:45:07 -0500
-Message-ID: <20250624194509.1314095-1-jm@ti.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uvz+GWRp"
+Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-32addf54a01so8793351fa.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:45:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750794348; x=1751399148; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kGEnlzNr9Zb878AZa1b7vvDvLKPv+xFVLBc4sy4VEnE=;
+        b=Uvz+GWRpTRnT8nKtxhEc/eCo7ZG5NAvzQCPFuUyl+e7x4xx34/OQVluMhmvu2AMSX1
+         afYwoBsuAd1iyqI8sJGGp0VLXRYjybuRn1C+Z3FdRI0+PJyfx05xsjhGZnr1alWI7taj
+         9UY3ldcznOUMO77Dtryz/RDlY5G35wQt1xyq17iL8qSzfDXktUtM97Xk3G7zr0fdxHIa
+         bn03ruHMVzVdAlW8z6EPnIPdDwDbbZ8qHsV9N6XoyxjgUuffNOQeWAr/3W3rlhK3bHyb
+         ui9ne4B1nQQWlcZ7zsAUHBPwBycSu9tDthaM8YesgizqXmRdQFI8fO7AVAkzKn3sQu7S
+         oBlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750794348; x=1751399148;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kGEnlzNr9Zb878AZa1b7vvDvLKPv+xFVLBc4sy4VEnE=;
+        b=jbiOgGnfW0vA2YQiDCE4J97Iph0+ghiNBKBrkdVJ/KMcY96tAEmAq3NtRIOnGDpj2B
+         I+JLyjgy6UwFmzkC8SFLkiZ/6Z0JgmYBLuHHv5kMRjISsCPXG1Ms3JEk0wiM8QeBipz2
+         VGMMYaTk2nkcPhfXLEJ9MYbSflusd0JYg3tfMTLlsmoyskGcwVTx5OBynDOZBoUwpzfY
+         kIKn2QKRkVLUDGJJvsrVNQZopQ6rO/V7bjN3xWquEDQL8ap+X1C1yBJ3qVhqCDO+Fcpi
+         rZPCIPLczmQFiiTcjKwvf4fz+DWLg9UdxTDTCUxmY0rR5ELmh36JAktsM827BlstYsGA
+         oAOw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3b0W8y5gtxTw3DQXvFroMqLu+ODpPaFeoj6Gx4cBUAlkDn6bPfhzy5SerxDfIJcUxrTGReEcrZuGERz4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz3vODEJEwl7kvSw+vn837aWSvg3oDcguDTnFaNBa0H4ZZI4viG
+	Q+dTaT13QEqgl/GsHFUvcLbLJaiW4P1Ws+k1K6Xx+yaLxywE7xxHqRLhZsZlgcvhB+bHmIAMt7l
+	2Qo5K4ebVO+S2Q0FMNM1BBS1PQcZSpaZCQjK2Vr/Kow==
+X-Gm-Gg: ASbGncu6jCAqCdDuWzimKEz3ouir7Kwah73RkaloWzm1sCXnbotvjwn6eldLCdAYYdF
+	nGlg0ZxVHji62GQK0CZagWuOIUmzHGc+IPvo01ocBm9kEhcGzQBuuZs76ZCgBk3Fka0ArbYhqQg
+	Meh3QVjTzSDDAyKF4xrvxvizqYxAKLBw/4PbQVnEf5pCyFaeAS9d+b3Q==
+X-Google-Smtp-Source: AGHT+IFmqiLtBv2UOTh1D8iZHZIySmZyFDbcKWQIsCqDE3SSo4mBAPZZgwKH6/ZLVohgVWg9CA+g75neATAOTu7gWuo=
+X-Received: by 2002:a2e:a7c1:0:b0:32c:a006:29d5 with SMTP id
+ 38308e7fff4ca-32cc6432fc5mr199911fa.9.1750794347783; Tue, 24 Jun 2025
+ 12:45:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+References: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org> <20250624-gpio-mmio-pdata-v1-4-a58c72eb556a@linaro.org>
+In-Reply-To: <20250624-gpio-mmio-pdata-v1-4-a58c72eb556a@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 24 Jun 2025 21:45:36 +0200
+X-Gm-Features: AX0GCFuxMgt5rF_SL0XMbgco8X42yBA-5q-4FLSXTx6fBKQwC2WxaI2emdRh8Cc
+Message-ID: <CACRpkdYTQywBeO_NSdjHZFAc3GizCpM9bSU2W+o59vtkp=Cf8g@mail.gmail.com>
+Subject: Re: [PATCH RFT 4/6] ARM: omap1: ams-delta: use generic device
+ properties for gpio-mmio
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Lee Jones <lee@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, 
+	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+	Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-omap@vger.kernel.org, patches@opensource.cirrus.com, 
+	linux-samsung-soc@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This allows for reaction control in rti driver. Since AM62L SoC [0]
-does not have WWD reset output routed to a ESM module like all other
-K3 SoC's and has a reset signal routed to the reset HW block, add a new
-compatible for AM62L and configure reset reaction for AM62L SoC instead
-of NMI.
+On Tue, Jun 24, 2025 at 3:19=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-This patch has been tested on AM62L EVM [1].
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> The two latch GPIO devices in ams-delta are registered with struct
+> bgpio_pdata passed as platform_data to the gpio-mmio driver. We want to
+> remove the bgpio_pdata from the kernel and the gpio-mmio driver is now
+> also able to get the relevant values from the software node. Set up
+> device properties and switch to using platform_device_info to register
+> the devices as platform_add_devices() doesn't allow us to pass device
+> properties to the driver model.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-[0] https://www.ti.com/product/AM62L
-[1] https://www.ti.com/tool/TMDS62LEVM
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Judith Mendez (2):
-  dt-bindings: watchdog: ti,rti-wdt: Add ti,am62l-rti-wdt compatible
-  watchdog: rti_wdt: Add reaction control to rti
-
- .../bindings/watchdog/ti,rti-wdt.yaml         |  1 +
- drivers/watchdog/rti_wdt.c                    | 31 ++++++++++++++++---
- 2 files changed, 28 insertions(+), 4 deletions(-)
-
--- 
-2.49.0
-
+Yours,
+Linus Walleij
