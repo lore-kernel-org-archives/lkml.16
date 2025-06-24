@@ -1,152 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E4E1519BC
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:54:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDAF21DB148;
+	Tue, 24 Jun 2025 03:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750737242; cv=none; b=lcSVPKfWiJKwrPrZUjHJSQ9fDRSp+xOih6vNBHdUj4KzY5GFgV/Log8aa3i4SxLT3u1ui12k/AV35rxhHjs8LxUwefMbfZOtKAZx/ajcXlm3Z3BPsY52CzmHyc3al3+Ofp+0pq6d01uxmCBoJIyoNzFmNq5wN9j7x2suJBh57Qo=
+	t=1750737451; cv=none; b=s0YLls09KAElZ/XGTDu9yr6HvJombuU7hjiYv8xt1gtKYkEsTUt9UUygrG/bR5K6zyhkDvOWeH2aCReRDsJzIra7pTpem6hrzqn/1aAQb09lSwaamdiXsd5NgIfJX4xpfuVcqbL46YpQbJxNqeXoO8vy2JFm01nQ18/1nJhe2GA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750737242; c=relaxed/simple;
-	bh=+zp+01SDfzTsXgLcc1IKh9CwhBfVEY8cbtVnvppw0BE=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=sX697TbPWTAEipmq9+yksarp/lb+dMAjO2Bp9Jwfg0i0FOroHIN44s4ij5HYEETbwm3MpTRfnZdqC8hyyGf1cINBXRAf/8sRql6NqFPrNaYiSAJV8vjBGELD6b/a7jT4W4hCrJcemAY60emO8fGOhGjXAwaK9txYAZyzP4K/P0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o4hSFtje; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750737451; c=relaxed/simple;
+	bh=eDRLwb46ZJNkUBRm5BBOB9MU9TVVS4hMshWk6nSG+fM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HPcCPe7C8MdjLiZeNBQip2/CU2GYO34o2Lx1Cr6bRRwxuIxnJmFmC+kJ6T1acjDOAdr7OdghvTLcbmrjZPd23Pr4HaPgKaaK95S2d5nN4v+rCtciWYxaRMOBRxhKwqTplyab9QcCMytmhsYWdn84Raeyt6WZKiS2nwTAeCnfnUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GjXHGbQQ; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o4hSFtje"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6CE2C4AF0B;
-	Tue, 24 Jun 2025 03:53:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750737242;
-	bh=+zp+01SDfzTsXgLcc1IKh9CwhBfVEY8cbtVnvppw0BE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=o4hSFtjebE32TZ7PHXVGW5MVeDn3VgfRnHTbQm2o+uKh6MMZQTTqSouiFiTbUEjx6
-	 rxxlDFVHCCywbBYHY8I0YweNyDwPhsZ4kWfcDc9ObONW2k4+nb5Kgb+g7o2aOCZvYk
-	 4xrCrhMhvMbQHcsfyHU1igvYGs0z++kCbmuFetRKMNnlOUCDYMEh00R6UGvyzJBD5v
-	 ttl5U+ZaCxUOA5IAXtstlVj3wxAtj8HafK2EGAg7cSgSPUMzRQpFFxLbU/T0CF/PgW
-	 cTCgfFVyjcL0M+bDx88qmw1LfSnmDYFXkB2ugmBtnTAilV6rxN4sjyuuJUzaevYRmO
-	 FyaSXtwjPqEmA==
-Date: Tue, 24 Jun 2025 12:53:58 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Lance Yang <lance.yang@linux.dev>
-Cc: akpm@linux-foundation.org, zi.li@linux.dev, anna.schumaker@oracle.com,
- boqun.feng@gmail.com, joel.granados@kernel.org, jstultz@google.com,
- kent.overstreet@linux.dev, leonylgao@tencent.com,
- linux-kernel@vger.kernel.org, longman@redhat.com, mingo@redhat.com,
- mingzhe.yang@ly.com, peterz@infradead.org, rostedt@goodmis.org,
- senozhatsky@chromium.org, tfiga@chromium.org, will@kernel.org, Lance Yang
- <ioworker0@gmail.com>
-Subject: Re: [PATCH RFC 2/3] locking/rwsem: clear reader-owner on unlock to
- reduce false positives
-Message-Id: <20250624125358.25a7d4cd5ea02ea0bbe373a6@kernel.org>
-In-Reply-To: <21ef5892-afdf-491e-937f-7821cac63d16@linux.dev>
-References: <20250612042005.99602-1-lance.yang@linux.dev>
-	<20250612042005.99602-3-lance.yang@linux.dev>
-	<20250624092620.3346ac39e882434aafb0b93d@kernel.org>
-	<21ef5892-afdf-491e-937f-7821cac63d16@linux.dev>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GjXHGbQQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750737450; x=1782273450;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eDRLwb46ZJNkUBRm5BBOB9MU9TVVS4hMshWk6nSG+fM=;
+  b=GjXHGbQQwuPptryXi6ORwaah2nJa6MgSOQej3MFnBsnPOOuhALfbOl5o
+   xJ9EYwYq+rioF3FlyfHNkdbNb5QlWfaZYV8/xKb0G16dRBFXc/BbL2RGA
+   f6o5UD4a8kyxufBXxHnMyHQM2+0SS/z/r0quGTQmL50wlJbrQCgmZHR3W
+   zBabLTE0FbPtWvosujaCRLjo1DBCdKWKnQ7OMBQtnQxvy4NKE1Z1Sexqv
+   2E9ZGFCSPrrG9rbtm6r3CeIMoJysviy8QowRFcIG0jOJ5i4fZ/uN6FTAD
+   NXsgjhizl64gKExlOYiJM9UjMrmuNC8oJdsvWRc0qzPNFmHNHK2S8zRBN
+   A==;
+X-CSE-ConnectionGUID: lkuGDu2ESEicfOWL9y5Y5w==
+X-CSE-MsgGUID: HoDDye/nR/CyR/1C2yTKIQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52899989"
+X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
+   d="scan'208";a="52899989"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 20:57:25 -0700
+X-CSE-ConnectionGUID: hTpeXAEMS8WjON5jEVhW+g==
+X-CSE-MsgGUID: 6lr16b0fSsKfY8hjpPXPag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
+   d="scan'208";a="157282861"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 23 Jun 2025 20:57:22 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uTume-000RhN-2P;
+	Tue, 24 Jun 2025 03:57:20 +0000
+Date: Tue, 24 Jun 2025 11:56:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: GalaxySnail <me@glxys.nl>, linux-sound@vger.kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	patches@opensource.cirrus.com,
+	David Rhodes <david.rhodes@cirrus.com>,
+	Richard Fitzgerald <rf@opensource.cirrus.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	GalaxySnail <me@glxys.nl>
+Subject: Re: [PATCH] ALSA: hda: add MODULE_FIRMWARE for cs35l41/cs35l56
+Message-ID: <202506241158.kxrazQoo-lkp@intel.com>
+References: <20250623140030.1539477-2-me@glxys.nl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623140030.1539477-2-me@glxys.nl>
 
-On Tue, 24 Jun 2025 09:44:55 +0800
-Lance Yang <lance.yang@linux.dev> wrote:
+Hi GalaxySnail,
 
-> 
-> 
-> On 2025/6/24 08:26, Masami Hiramatsu (Google) wrote:
-> > On Thu, 12 Jun 2025 12:19:25 +0800
-> > Lance Yang <ioworker0@gmail.com> wrote:
-> > 
-> >> From: Lance Yang <lance.yang@linux.dev>
-> >>
-> >> When CONFIG_DETECT_HUNG_TASK_BLOCKER is enabled, a stale owner pointer in a
-> >> reader-owned rwsem can lead to false positives in blocker tracking.
-> >>
-> >> To mitigate this, let’s try to clear the owner field on unlock, as a NULL
-> >> owner is better than a stale one for diagnostics.
-> > 
-> > Can we merge this to [PATCH 1/3]? It seems that you removed #ifdef and
-> > remove it. This means in anyway we need the feature enabled by DEBUG_RWSEMS.
-> 
-> Thanks for the feedback! I see your point about the dependency ;)
-> 
-> Personlly, I'd perfer to keep them separate. The reasoning is that
-> they addreess two distinct things, and I think splitting them makes
-> this series clearer and easier to review ;)
-> 
-> Patch #1 focuses on "ownership tracking": Its only job is to make
-> the existing owner-related helpers (rwsem_owner(), is_rwsem_reader_owned())
-> globally available when blocker tracking is enabled.
-> 
-> Patch #2, on the other hand, is about "reader-owner cleanup": It
-> introduces a functional change to the unlock path, trying to clear
-> the owner field for reader-owned rwsems.
+kernel test robot noticed the following build errors:
 
-But without clearing the owner, the owner information can be
-broken, right? Since CONFIG_DEBUG_RWSEMS is working as it is,
-I think those cannot be decoupled. For example, comparing the
-result of both DETECT_HUNG_TASK_BLOCKER and DEBUG_RWSEMS are
-enabled and only DETECT_HUNG_TASK_BLOCKER is enabled, the
-result is different.
+[auto build test ERROR on tiwai-sound/for-next]
+[also build test ERROR on tiwai-sound/for-linus linus/master v6.16-rc3 next-20250623]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> 
-> Does this reasoning make sense to you?
+url:    https://github.com/intel-lab-lkp/linux/commits/GalaxySnail/ALSA-hda-add-MODULE_FIRMWARE-for-cs35l41-cs35l56/20250623-220657
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound.git for-next
+patch link:    https://lore.kernel.org/r/20250623140030.1539477-2-me%40glxys.nl
+patch subject: [PATCH] ALSA: hda: add MODULE_FIRMWARE for cs35l41/cs35l56
+config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20250624/202506241158.kxrazQoo-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506241158.kxrazQoo-lkp@intel.com/reproduce)
 
-Sorry, no. I think "reader-owner cleanup" is a part of "ownership
-tracking" as DEBUG_RWSEMS does (and that keeps consistency of
-the ownership tracking behavior same as DEBUG_RWSEM).
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506241158.kxrazQoo-lkp@intel.com/
 
-Thank you,
+All errors (new ones prefixed by >>):
 
-> 
-> Thanks,
-> Lance
-> 
-> > 
-> > Thanks,
-> > 
-> >>
-> >> Signed-off-by: Lance Yang <lance.yang@linux.dev>
-> >> ---
-> >>   kernel/locking/rwsem.c | 10 ++++------
-> >>   1 file changed, 4 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-> >> index 6cb29442d4fc..a310eb9896de 100644
-> >> --- a/kernel/locking/rwsem.c
-> >> +++ b/kernel/locking/rwsem.c
-> >> @@ -205,14 +205,12 @@ bool is_rwsem_reader_owned(struct rw_semaphore *sem)
-> >>   		return false;
-> >>   	return rwsem_test_oflags(sem, RWSEM_READER_OWNED);
-> >>   }
-> >> -#endif
-> >>   
-> >> -#ifdef CONFIG_DEBUG_RWSEMS
-> >>   /*
-> >> - * With CONFIG_DEBUG_RWSEMS configured, it will make sure that if there
-> >> - * is a task pointer in owner of a reader-owned rwsem, it will be the
-> >> - * real owner or one of the real owners. The only exception is when the
-> >> - * unlock is done by up_read_non_owner().
-> >> + * With CONFIG_DEBUG_RWSEMS or CONFIG_DETECT_HUNG_TASK_BLOCKER configured,
-> >> + * it will make sure that the owner field of a reader-owned rwsem either
-> >> + * points to a real reader-owner(s) or gets cleared. The only exception is
-> >> + * when the unlock is done by up_read_non_owner().
-> >>    */
-> >>   static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
-> >>   {
-> >> -- 
-> >> 2.49.0
-> >>
-> > 
-> > 
-> 
+   In file included from include/linux/module.h:22,
+                    from include/linux/device/driver.h:21,
+                    from include/linux/device.h:32,
+                    from include/linux/acpi.h:14,
+                    from sound/pci/hda/cs35l41_hda.c:9:
+>> include/linux/moduleparam.h:24:9: error: expected ',' or ';' before 'static'
+      24 |         static const char __UNIQUE_ID(name)[]                             \
+         |         ^~~~~~
+   include/linux/module.h:168:32: note: in expansion of macro '__MODULE_INFO'
+     168 | #define MODULE_INFO(tag, info) __MODULE_INFO(tag, tag, info)
+         |                                ^~~~~~~~~~~~~
+   include/linux/module.h:299:36: note: in expansion of macro 'MODULE_INFO'
+     299 | #define MODULE_FIRMWARE(_firmware) MODULE_INFO(firmware, _firmware)
+         |                                    ^~~~~~~~~~~
+   sound/pci/hda/cs35l41_hda.c:2116:1: note: in expansion of macro 'MODULE_FIRMWARE'
+    2116 | MODULE_FIRMWARE("cirrus/cs35l41-*.bin")
+         | ^~~~~~~~~~~~~~~
+--
+   In file included from include/linux/module.h:22,
+                    from include/linux/device/driver.h:21,
+                    from include/linux/device.h:32,
+                    from include/linux/acpi.h:14,
+                    from sound/pci/hda/cs35l56_hda.c:9:
+>> include/linux/moduleparam.h:24:9: error: expected ',' or ';' before 'static'
+      24 |         static const char __UNIQUE_ID(name)[]                             \
+         |         ^~~~~~
+   include/linux/module.h:168:32: note: in expansion of macro '__MODULE_INFO'
+     168 | #define MODULE_INFO(tag, info) __MODULE_INFO(tag, tag, info)
+         |                                ^~~~~~~~~~~~~
+   include/linux/module.h:299:36: note: in expansion of macro 'MODULE_INFO'
+     299 | #define MODULE_FIRMWARE(_firmware) MODULE_INFO(firmware, _firmware)
+         |                                    ^~~~~~~~~~~
+   sound/pci/hda/cs35l56_hda.c:1126:1: note: in expansion of macro 'MODULE_FIRMWARE'
+    1126 | MODULE_FIRMWARE("cirrus/cs35l54-*.bin")
+         | ^~~~~~~~~~~~~~~
+--
+   In file included from include/linux/module.h:22,
+                    from include/linux/device/driver.h:21,
+                    from include/linux/device.h:32,
+                    from include/linux/acpi.h:14,
+                    from cs35l41_hda.c:9:
+>> include/linux/moduleparam.h:24:9: error: expected ',' or ';' before 'static'
+      24 |         static const char __UNIQUE_ID(name)[]                             \
+         |         ^~~~~~
+   include/linux/module.h:168:32: note: in expansion of macro '__MODULE_INFO'
+     168 | #define MODULE_INFO(tag, info) __MODULE_INFO(tag, tag, info)
+         |                                ^~~~~~~~~~~~~
+   include/linux/module.h:299:36: note: in expansion of macro 'MODULE_INFO'
+     299 | #define MODULE_FIRMWARE(_firmware) MODULE_INFO(firmware, _firmware)
+         |                                    ^~~~~~~~~~~
+   cs35l41_hda.c:2116:1: note: in expansion of macro 'MODULE_FIRMWARE'
+    2116 | MODULE_FIRMWARE("cirrus/cs35l41-*.bin")
+         | ^~~~~~~~~~~~~~~
+--
+   In file included from include/linux/module.h:22,
+                    from include/linux/device/driver.h:21,
+                    from include/linux/device.h:32,
+                    from include/linux/acpi.h:14,
+                    from cs35l56_hda.c:9:
+>> include/linux/moduleparam.h:24:9: error: expected ',' or ';' before 'static'
+      24 |         static const char __UNIQUE_ID(name)[]                             \
+         |         ^~~~~~
+   include/linux/module.h:168:32: note: in expansion of macro '__MODULE_INFO'
+     168 | #define MODULE_INFO(tag, info) __MODULE_INFO(tag, tag, info)
+         |                                ^~~~~~~~~~~~~
+   include/linux/module.h:299:36: note: in expansion of macro 'MODULE_INFO'
+     299 | #define MODULE_FIRMWARE(_firmware) MODULE_INFO(firmware, _firmware)
+         |                                    ^~~~~~~~~~~
+   cs35l56_hda.c:1126:1: note: in expansion of macro 'MODULE_FIRMWARE'
+    1126 | MODULE_FIRMWARE("cirrus/cs35l54-*.bin")
+         | ^~~~~~~~~~~~~~~
 
+
+vim +24 include/linux/moduleparam.h
+
+730b69d2252595 Rusty Russell  2008-10-22  22  
+^1da177e4c3f41 Linus Torvalds 2005-04-16  23  #define __MODULE_INFO(tag, name, info)					  \
+34182eea36fc1d Rusty Russell  2012-11-22 @24  	static const char __UNIQUE_ID(name)[]				  \
+2aec389e19150e Johan Hovold   2020-11-23  25  		__used __section(".modinfo") __aligned(1)		  \
+898490c010b5d2 Alexey Gladkov 2019-04-29  26  		= __MODULE_INFO_PREFIX __stringify(tag) "=" info
+898490c010b5d2 Alexey Gladkov 2019-04-29  27  
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
