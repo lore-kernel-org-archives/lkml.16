@@ -1,55 +1,55 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
+Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DEAF27BF95
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310F327C16A
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750756990; cv=none; b=FtMov8Q+UJye5aYVnOlPI+NxqHtiS4TXl3TQYcd3yNxHbxaz6C3dk0tYzSsAoZxBccRxH5edvNHO2nuOdnZzt7EEWy+4hk+sEH3B2YjJ0dCJXXPmUqBFspo7UAzi/gu0AJ+hUA1CyjVmcu2hCY0yN3dyJ+0I/3MvX7NDrlz5bsQ=
+	t=1750756992; cv=none; b=tQ+heRWrF7OLTYHrOUxVslMVVucLmxYYkPhPP3wCIE0ps15NfS5v+MTXwlpOGgxsAKGmL4ChtkZEui0nz6KJTVeiMAk6StNxIh6ZetYDbe36gHX9ZHaD+CPUGRWLRlql97f7Kyc9/sLtwse7BWquoF62wemRO8eP/Cf4XR8xSmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750756990; c=relaxed/simple;
-	bh=l3m7FhiLM/McN3mI9q18qHpMk9udwtRdVtDv+3q2NY0=;
+	s=arc-20240116; t=1750756992; c=relaxed/simple;
+	bh=583wsMDBMJrMhyGcOptLAkwUC1sLZ7/fwnjcJ8OxnvE=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=CPD05El86QU6EuWcOXiBsfiK92mklffH2j6D5Ai62Ybf224aa8rdcseQByIW+UHecnI0DM2Hk2pQsuqMzT+Y7BfpmJN2pN4Y/WrAvb64N8kNzVu+QedpVS7ikxc+fxlss5BWW2M+0goPQhaDlDqiJtRCEFT5P/QtW9FrvAL+B/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keirf.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fdRkeQP3; arc=none smtp.client-ip=209.85.128.74
+	 To:Cc:Content-Type; b=AYIngnjCnVI20zc6R81ZWIbrPEncAUW/fODWd/si+Zyc1FBQrOqhluksHWq5+ynfo9zH1YAsrb8kTifFpZ14Dyn7Mugid3Xm3V5Sp42dJ3QQm4dZFRWsDne7hxb2p0kOGVdBgS0KcPgf63MgttXlewmSbgz5cPmUOBZapl473C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--keirf.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gThEaZUq; arc=none smtp.client-ip=209.85.221.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--keirf.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fdRkeQP3"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-4537f56ab74so1406685e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:23:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gThEaZUq"
+Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-3a4f6ba526eso3200909f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:23:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750756987; x=1751361787; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750756989; x=1751361789; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gnkSB92ftCEMF+gRpwfaLkPqS/gljqC5XzxNgYk33lQ=;
-        b=fdRkeQP3MC2sRJwPJoqFXGTHwdXoRgSfaarKB+4yeYuvwstP4LQO5F3zUKnP5h3kRw
-         6FknpGo/yKB6mY49HV1Bsmx+Tgi9I2PlRdtpkAk34yXP9ZQGzZzXYBkOynILajQNAqix
-         FF2yyxFHboR8awt9XSrgEMNr0MJJ0aSmerszkyYTiRGN+16Q7UMsT0ESmUzhkNTwTGCL
-         WykDpqkuCms0blam/zIT3uoiNbxHW18QFGi59yBzw924FWV98fsdsXWRhGjt66Kjkujh
-         evtc73I9RqVmOOZMvlvi1Fee2Dlpv61shxL1ZDmFkM3/jBEVdK80P8Uuj0dxZbc2yg3k
-         INqw==
+        bh=UC6vq5jBb1v1bd72k3pkcapbf6E4MjOjFHfh0Y/a140=;
+        b=gThEaZUqaulHp8CvIs77Pkb5zR6fwiXv9ppwfm6bKgZh/zUVeL/JETqV9pBh3qt7Ei
+         P+PxpqoWipRNQUezVszI/pd9NljmXvJk6AtG1CMXVkKZQQqfOYtjPMMbmjw8dCC+VS1q
+         sbV4AB/DkW4uI6umuLD3cTZX/PtNMapWfSbUnA1rD83sg7oK3gpJPPdQIxUdUMLyOwGx
+         v5roOXZMGgpLY3ES6TySj8sJy0xswP9UiFTZlMS880O4jF8dKjGnlORHbboAl6xRCaQC
+         8Jb38Kb/qR8dC0o6Pm98yBt5jZKT+lhpsujXnJuU/CVStWAJsMC5/FGJ8gyeRyvSWqtL
+         o9Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750756987; x=1751361787;
+        d=1e100.net; s=20230601; t=1750756989; x=1751361789;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gnkSB92ftCEMF+gRpwfaLkPqS/gljqC5XzxNgYk33lQ=;
-        b=cwmhmE51wpZhqS6Akdd07UtwgwgaDI24p2Xr6OZrFsKnzGRP9/DoghB9UmE5w13wFE
-         YOKfN/f/rDJKmJZZwPTWaM9sMG5frXFBBGpKQZD2TghOPpAQls0icYSy2QoNU98B9Pr6
-         SXeBypRYBe/a9+xTBvrL6h9M4vfqAtDU0qLDPAc3itHinrFEAhyP/Ia/5bVHVrr8ZcLL
-         IIhKFPsuyzt95bmRlXdlQfd/Bk8cwWlIjNJisCSZYQ0qF/UDsDjX2/aYZbJdsBoczc7d
-         F8lkvUESEK8FuEPy8pgnPZyHL8Koho/T3Em19HX1m+OxnirMkany1ykaPgDRTHaHTDXr
-         ONzA==
-X-Forwarded-Encrypted: i=1; AJvYcCVQReppyJ8uQbyXH+tMHkV8cl69wLUjV+3ciC24/ZCiyuarYslpjY9T8AQz19XCg0nJgaHY+96qrcne3jQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBe1q6CrQArv4QlF6b2GsrvCeeOE1JRIQKDWhbeNPTFoqS0etD
-	J3y7W9OOcqHgt0pffA3v9Ub0ykY72nNunelTAsbMKs7T9hFf7KVyYrk4cBT16qat44jMyRn1gtf
-	o5Q==
-X-Google-Smtp-Source: AGHT+IENBGL6rEhAk+NNskr4lOMge+pijt5IJ1Z408FeHTt6NB0j+98GwBkWX+DuFsdVnafeh8q4qfdzww==
-X-Received: from wmbel22.prod.google.com ([2002:a05:600c:3e16:b0:450:dcfd:1870])
- (user=keirf job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1c99:b0:440:54ef:dfdc
- with SMTP id 5b1f17b1804b1-453659c9c2amr140402165e9.8.1750756987581; Tue, 24
- Jun 2025 02:23:07 -0700 (PDT)
-Date: Tue, 24 Jun 2025 09:22:53 +0000
+        bh=UC6vq5jBb1v1bd72k3pkcapbf6E4MjOjFHfh0Y/a140=;
+        b=wKZHnb2oP23mP4AJ0vFaht+VyEtzJx0nSGwrL50qUt9umaCPf13uzfoLNt3QC425XM
+         tcBqAf0pWymqWxECwCTfQYT/5lON3FR7pNQ4cicp9c4QYKPcUyLk+Sr5CxYpEUxX8SSl
+         DbG0d3uuZRK+0oF2Y2W73PCNJ+yKZwAMAKdY5JilmdxtP4v0ugq7erLGTH6HKYV28ODR
+         IKkJEt+8YLe/wxXEucU6tQR4E582dz5ZnJj7tr1HOA/gTZcLV2yrTfZGsqN/5a3Rl0Hc
+         8XD5rf7314ihqzteNhbR8hNEgLqyrd3sF6mng1SxJr4beobW820yX3g/yCvW0i0sm6ha
+         JeWw==
+X-Forwarded-Encrypted: i=1; AJvYcCXSJpeBPu25Jua2AiW7LAXgNxDJb2Xm0csAzL89ZRg7kJHIhOl3N2MYvb8BZxBqjkJuvQAVwXFEVwtP7ek=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxlRkXUAQsFVY9HokvHHLoitnEQGyPv7caDqTUp+mwhWLAE1mSa
+	i/NYMUz8S/VBzSE4dKuVYwKyYDsM9o9VaHCV6m2NglVcnbGTh6RT32nRUtQUatJ0ojDA7Y9eOjM
+	yrw==
+X-Google-Smtp-Source: AGHT+IEr7r98giCBtL0yinhHNgdvxQNlG3HKjSDL95dDG4D8sHcl523PslIHgko1ki0lJc9tb1d51y0i9A==
+X-Received: from wmbdt3.prod.google.com ([2002:a05:600c:6303:b0:451:deba:e06f])
+ (user=keirf job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6000:2582:b0:3a4:dc42:a0ac
+ with SMTP id ffacd0b85a97d-3a6d1324294mr13113188f8f.49.1750756989691; Tue, 24
+ Jun 2025 02:23:09 -0700 (PDT)
+Date: Tue, 24 Jun 2025 09:22:54 +0000
 In-Reply-To: <20250624092256.1105524-1-keirf@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250624092256.1105524-1-keirf@google.com>
 X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
-Message-ID: <20250624092256.1105524-2-keirf@google.com>
-Subject: [PATCH 1/3] KVM: arm64: vgic-init: Remove vgic_ready() macro
+Message-ID: <20250624092256.1105524-3-keirf@google.com>
+Subject: [PATCH 2/3] KVM: arm64: vgic: Explicitly implement vgic_dist::ready ordering
 From: Keir Fraser <keirf@google.com>
 To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
 	kvm@vger.kernel.org
@@ -69,55 +69,45 @@ Cc: Eric Auger <eric.auger@redhat.com>, Oliver Upton <oliver.upton@linux.dev>,
 	Keir Fraser <keirf@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-It is now used only within kvm_vgic_map_resources(). vgic_dist::ready
-is already written directly by this function, so it is clearer to
-bypass the macro for reads as well.
+In preparation to remove synchronize_srcu() from MMIO registration,
+remove the distributor's dependency on this implicit barrier by
+direct acquire-release synchronization on the flag write and its
+lock-free check.
 
 Signed-off-by: Keir Fraser <keirf@google.com>
 ---
- arch/arm64/kvm/vgic/vgic-init.c | 5 ++---
- include/kvm/arm_vgic.h          | 1 -
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ arch/arm64/kvm/vgic/vgic-init.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
 diff --git a/arch/arm64/kvm/vgic/vgic-init.c b/arch/arm64/kvm/vgic/vgic-init.c
-index eb1205654ac8..502b65049703 100644
+index 502b65049703..bc83672e461b 100644
 --- a/arch/arm64/kvm/vgic/vgic-init.c
 +++ b/arch/arm64/kvm/vgic/vgic-init.c
-@@ -559,7 +559,6 @@ int vgic_lazy_init(struct kvm *kvm)
-  * Also map the virtual CPU interface into the VM.
-  * v2 calls vgic_init() if not already done.
-  * v3 and derivatives return an error if the VGIC is not initialized.
-- * vgic_ready() returns true if this function has succeeded.
-  */
- int kvm_vgic_map_resources(struct kvm *kvm)
- {
-@@ -568,12 +567,12 @@ int kvm_vgic_map_resources(struct kvm *kvm)
+@@ -567,7 +567,7 @@ int kvm_vgic_map_resources(struct kvm *kvm)
  	gpa_t dist_base;
  	int ret = 0;
  
--	if (likely(vgic_ready(kvm)))
-+	if (likely(dist->ready))
+-	if (likely(dist->ready))
++	if (likely(smp_load_acquire(&dist->ready)))
  		return 0;
  
  	mutex_lock(&kvm->slots_lock);
- 	mutex_lock(&kvm->arch.config_lock);
--	if (vgic_ready(kvm))
-+	if (dist->ready)
- 		goto out;
+@@ -598,14 +598,7 @@ int kvm_vgic_map_resources(struct kvm *kvm)
+ 		goto out_slots;
+ 	}
  
- 	if (!irqchip_in_kernel(kvm))
-diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
-index 4a34f7f0a864..233eaa6d1267 100644
---- a/include/kvm/arm_vgic.h
-+++ b/include/kvm/arm_vgic.h
-@@ -399,7 +399,6 @@ u64 vgic_v3_get_misr(struct kvm_vcpu *vcpu);
- 
- #define irqchip_in_kernel(k)	(!!((k)->arch.vgic.in_kernel))
- #define vgic_initialized(k)	((k)->arch.vgic.initialized)
--#define vgic_ready(k)		((k)->arch.vgic.ready)
- #define vgic_valid_spi(k, i)	(((i) >= VGIC_NR_PRIVATE_IRQS) && \
- 			((i) < (k)->arch.vgic.nr_spis + VGIC_NR_PRIVATE_IRQS))
- 
+-	/*
+-	 * kvm_io_bus_register_dev() guarantees all readers see the new MMIO
+-	 * registration before returning through synchronize_srcu(), which also
+-	 * implies a full memory barrier. As such, marking the distributor as
+-	 * 'ready' here is guaranteed to be ordered after all vCPUs having seen
+-	 * a completely configured distributor.
+-	 */
+-	dist->ready = true;
++	smp_store_release(&dist->ready, true);
+ 	goto out_slots;
+ out:
+ 	mutex_unlock(&kvm->arch.config_lock);
 -- 
 2.50.0.rc2.761.g2dc52ea45b-goog
 
