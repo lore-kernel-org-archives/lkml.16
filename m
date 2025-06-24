@@ -1,163 +1,82 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954112522A2
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:29:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B3D24E014;
+	Tue, 24 Jun 2025 07:29:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750750156; cv=none; b=H7XB+FhHqtYrWF2Fnta8qzvow93VwGgoKdxUyqW7B6NHuwEg+21b7UCUDUxZ0mHs/RbJbqHO3saLxGSDaREGMkQY1XImq7tWmvzF6lawpRm1/KAgGM41O0n0yeMwOkJMoDE6oK2wI6ypCObzlph+G2KAL/tEaYhQVq5/1Jao8ok=
+	t=1750750163; cv=none; b=Qv7+jQzqvEyEjlVhmbjq/N1b8srOeBrhlQ9RgI8lwE8fI/LINDxyjZFl51zxiIBKmFVMQLx5dbdNmT/NrxPh24zt6RziTp94Yh58snxQCGMq/N+A/XPud4Oz6gu4TI6Ff/v5o5w3+aX9HqY4WoDpFeZISJbD9+wL1ANfAG5n5X0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750750156; c=relaxed/simple;
-	bh=TZQo+F/jBHrm9unWexUMY/+GozTBkwRpcJ6ui9uqLyc=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=S7TnLoQk55xE4PaQlPVT+wD3twEx2OIo+jZQnW7UHsszgGe5t4i+G8FyEnUxMlU/HDJOiRvpEZC/UcPh7eFs33Yk+JuY6MWlKmsTVt/JvIFJFNJ2suQoka5rjqLLN2ORoVmr8+mUDWGRbcnvCdpzN/tl4J3cbCdEACvFjvohq9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rRMecQPP; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750750163; c=relaxed/simple;
+	bh=O27h05PvealtzA1SswhnPXVG+5x+RcHWMCkh/jC3fzg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iYTOtlWXvh1iiHZzgSieIqkjMd/EQVVgPoISNzJVB98rSJ56OFFMWnBCO96EwGH0j/RTtQ+zJT3iE+uEUhPCTA+TFbuDyf4BRs9gAnzsOfmncN1pbFoglNnOxFbpIPezrVXjG++7QR/a6KSnMewXqnaaVDtw79CdNZqaenXEuUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPEmQW1i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rRMecQPP"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so70200f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:29:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750750153; x=1751354953; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vXQvyWKGqoA++0+nLyhrIs47IOqxWVGOvjV4paCklaM=;
-        b=rRMecQPPM6eo99rS11ZTMA8WUk+SviQGWWXblh5cE/9MyBo2KBM5zR/sTVx467MmKE
-         6hq5ACWk/569Pj1lBD9s6Tnl16qitdTRxzqjvgzmFKqFwtRx/59DmWrcFh4Z2BqYPFUo
-         rLyWVhkTgyKUtR0ZaV3PTBbW4qUkKwC9VK6SdIFLvfWeajT1H5IUz27bVA865GIF9eDW
-         jCthr0bi3+1PcUVYUguVZukPX++pgAg7G0OalrJTtqbuIyHOBw+ex+yAiqPsWJHh2YKD
-         LmfParo1pl+8/r109AAvziYktRKTOvJdZsj/DF6PH7kNh74STdJUWf6QfGDVWlsc9nGY
-         PzyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750750153; x=1751354953;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=vXQvyWKGqoA++0+nLyhrIs47IOqxWVGOvjV4paCklaM=;
-        b=QP9+WwMKVVBawsbdFvaAF2P4M2g9GhqJxop4b9PJvfhvTtoksRnxqCTnyQTt2mO7zn
-         8jH+PqU8Cd0XBXVqq6SiWcEpjVn/R09ehUcT4Ks/TG/RlBiGPlQJm+csFqx9WhCMz0eq
-         tr0enlHL/K7HVLZHxGnPXQBX1lGVOWTsA/YW5a6lKIDKS24JQfNPi/8GicAZrzdCFjlD
-         nofdXElRVs9clLHlC6pW4fr8Xn93Q19jCuzpnj5Xnqk3naq4q5f/HxIGkVLljAwIlUNP
-         SvPC6Q8lM8A+uctFacDUCbRpgpSKIqCozQXOV2s7Va9frnyAiiJVu6AgTp1s1lJtiR82
-         IVcg==
-X-Forwarded-Encrypted: i=1; AJvYcCXiVLNW1PAK0vHykxXwCbo9qH0a6x7UoQSxu7Tax3ol4x7HSbmGPkqdm7E0glGDu1frbB14pblqXOGrXlk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YypdPA0XRNnQW8RW9sJd0x0vDlsTIvvGenijjUft4mRvui8iPZY
-	UgGuUR3JqnsknUoqVxNpZPwAfxeTJNy2V/37Hlkgfhte1LFvfcpnhHre9ruq4u+d6nQ=
-X-Gm-Gg: ASbGncscCLZGKIdrKD3C5mu6R//UxvPzmuAWJeC5siFU4hT9zuXF22aZXhUidVXKO2h
-	u6y5a3xr745UO88zqrgsdez/PhTUtFYrlnWx3bJhPaVqDLOaH53ttG6HO7Ek/r40LtD9sgZQWM4
-	jYtKI+R42z2U09GwESzDv501syyKd4op8pRM/rsxHD1iE1x4s/4r8pxu+S1yt/61py6V2xmu62Y
-	HM1eej3wbE1RwHfb5/YA0/S19a5PEENVuGjeG5v2mTt8jhemV/36taNJ8DIKssZBrtBUwczpxSB
-	gDxmBktgJyxNepapKQTSIM1zhCB4giejWViBiGYvmwTcy/cswnHRoUA6pe8j7jFlmzh2dsR31MN
-	2m2aujPxFKq09fa2+OK5DZoYsq9XOQJmvhyFS+Jg=
-X-Google-Smtp-Source: AGHT+IFNAvVc0Ym/Nl4SzjssDYkzNoxmE/MYxf9idIfGl+W01JZ50berxeUOTRJ/Uec/VhLDWdvcjg==
-X-Received: by 2002:a5d:64e6:0:b0:3a5:8d0b:600c with SMTP id ffacd0b85a97d-3a6d12bb37emr13160349f8f.3.1750750152898;
-        Tue, 24 Jun 2025 00:29:12 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:6fea:600c:ca20:f54a? ([2a01:e0a:3d9:2080:6fea:600c:ca20:f54a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80f27besm1190928f8f.57.2025.06.24.00.29.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 00:29:12 -0700 (PDT)
-Message-ID: <754d260c-1a31-494e-af06-49f6aae1813f@linaro.org>
-Date: Tue, 24 Jun 2025 09:29:11 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPEmQW1i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D785C4CEEF;
+	Tue, 24 Jun 2025 07:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750750163;
+	bh=O27h05PvealtzA1SswhnPXVG+5x+RcHWMCkh/jC3fzg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qPEmQW1inTq4Rpz5TUtePLSc6M6wPN0iX9FAI+ANN3bNbUoGhlMxDrBNp4HIv9N8O
+	 IfZFoam4LndvThNLZjiuuozIkQldFXvt6eumbSasbO4ll51KjH0wpn7w+p2gDtX4le
+	 SNr5kv6XvlY85pE7L3jZNdA1+qRcUn8eegbfyVTvFCFubK7H1VfA6H140rF76hBRAN
+	 k5AMMfiXVOBLFR6KPhbmH55pm91lEbGhYT4zMSW/D6IO1TbA4sM566MkDttt0VMA+m
+	 697fFdIMkAx7lPtBbZ/GqzgVUgykeoUilBk51aczraYcbmI58+/DmBDu8uGqPobKaX
+	 TjlOImCORjQLQ==
+Date: Tue, 24 Jun 2025 09:29:20 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Joy Zou <joy.zou@nxp.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	shawnguo@kernel.org, s.hauer@pengutronix.de, catalin.marinas@arm.com, will@kernel.org, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, 
+	ulf.hansson@linaro.org, richardcochran@gmail.com, kernel@pengutronix.de, 
+	festevam@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-pm@vger.kernel.or, frank.li@nxp.com, ye.li@nxp.com, 
+	ping.bai@nxp.com, aisheng.dong@nxp.com
+Subject: Re: [PATCH v6 0/9] Add i.MX91 platform support
+Message-ID: <t5lg2iw2ha3xpqnce64k4xgaim3f2shfe4ccgnqggtouzy2lc3@se4e6ldggjtx>
+References: <20250623095732.2139853-1-joy.zou@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: =?UTF-8?B?UmU6IOWbnuimhjogW1BBVENIIDAvN10gQWRkIEFTUEVFRCBQQ0llIFJv?=
- =?UTF-8?Q?ot_Complex_support?=
-To: Jacky Chou <jacky_chou@aspeedtech.com>,
- "bhelgaas@google.com" <bhelgaas@google.com>,
- "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
- "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
- "mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
- "krzk+dt@kernel.org" <krzk+dt@kernel.org>,
- "conor+dt@kernel.org" <conor+dt@kernel.org>, "joel@jms.id.au"
- <joel@jms.id.au>, "andrew@codeconstruct.com.au"
- <andrew@codeconstruct.com.au>, "vkoul@kernel.org" <vkoul@kernel.org>,
- "kishon@kernel.org" <kishon@kernel.org>,
- "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
- "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
- "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
- "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
- "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Cc: "elbadrym@google.com" <elbadrym@google.com>,
- "romlem@google.com" <romlem@google.com>,
- "anhphan@google.com" <anhphan@google.com>, "wak@google.com"
- <wak@google.com>, "yuxiaozhang@google.com" <yuxiaozhang@google.com>,
- BMC-SW <BMC-SW@aspeedtech.com>
-References: <20250613033001.3153637-1-jacky_chou@aspeedtech.com>
- <7178e816-4cb4-49b3-9a1e-1ecd4caa43ed@linaro.org>
- <SEYPR06MB513414A5AE38EE6749A2902C9D7CA@SEYPR06MB5134.apcprd06.prod.outlook.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <SEYPR06MB513414A5AE38EE6749A2902C9D7CA@SEYPR06MB5134.apcprd06.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250623095732.2139853-1-joy.zou@nxp.com>
 
-On 20/06/2025 10:20, Jacky Chou wrote:
->>> This series has been tested on AST2600/AST2700 platforms and enables
->>> PCIe device enumeration and operation.
->>>
->>> Feedback and review are welcome.
->>
->> So it seems all PCIe RC code is bundled in a single driver and there's no PCIe
->> PHY driver code, is there a reason for that ? If yes I think it should be described
->> in the cover letter.
->>
+On Mon, Jun 23, 2025 at 05:57:23PM +0800, Joy Zou wrote:
+> The design of i.MX91 platform is very similar to i.MX93.
+> Extracts the common parts in order to reuse code.
 > 
-> Yes, because our design includes the PCIe RC and the PCIe EPs.
-> The two functions use the same PCIe PHY and are mutually exclusive.
-> And there are different configurations on RC and EP.
-> Therefore, we do not use a phy driver to configure our PCIe but use
-> the phandle of phy syscon to set the RC and EP drivers separately.
+> The mainly difference between i.MX91 and i.MX93 is as follows:
+> - i.MX91 removed some clocks and modified the names of some clocks.
+> - i.MX91 only has one A core.
+> - i.MX91 has different pinmux.
+> - i.MX91 has updated to new temperature sensor same with i.MX95.
+> 
+> ---
+> Changes for v6:
+> - add changelog in per patch.
+> - correct commit message spell for patch #1.
+> - merge rename imx93.dtsi to imx91_93_common.dtsi and move i.MX93
+>   specific part from imx91_93_common.dtsi to imx93.dtsi for patch #3.
+> - modify the commit message for patch #3.
+> - restore copyright time and add modification time for common dtsi for patch #3.
+> - remove unused map0 label in imx91_93_common.dtsi for patch #3.
+> - remove tmu related node for patch #4.
+> - remove unused regulators and pinctrl settings for patch #5.
+> - add new modification for aliases change patch #6.
 
-I don't get why a PHY drive could not exist, it could be used by either
-the RC or EP PCIe driver in an exclusive way.
 
-Neil
+Where are the links to the previous versions? Why are you not using b4?
 
-> 
-> I will add more description in next version.
-> 
-> Thanks,
-> Jacky
-> 
+Best regards,
+Krzysztof
 
