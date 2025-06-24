@@ -1,406 +1,104 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1C8A307494
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836AF307480;
+	Tue, 24 Jun 2025 15:41:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750779642; cv=none; b=Z62c5aiXDeTq35tVB12kZMZrGjplovE4K+zjMWJ/wBpsFzGIRmNY6GQU7pKvJVjeqHGT0sijVBgz03oz+st5X7bom6KM9Yimae35YdT03dyOgoqygx15O5X7bjIeiimvYOoGgefjnLmdHZLPSgzKcdXosN0RfyzOrFwLYGR5g5M=
+	t=1750779660; cv=none; b=QAvXLa6qgEOVx5OdFxou6GXgtVjz4CKuUCAwzSdyOcamP97v2TUQZqhke0ernH1rIFLf2FoI0oXAHLFDbP71nuEt1if3W6CwW7oO3rJiIgQzIopoT+VE8mdk/kfUqHOMcmkHBjbAhSYXt4vqZyHL43y09kwPWEL/0kZZkWucX5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750779642; c=relaxed/simple;
-	bh=XnpF9V+HGec0qPKFQL1pOWAIGdErMOdhXSe1wmF81IM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=P5iCjJeWvMY+XcuvppbBBTn+/0HO6zLRE+vsJQCCu6gxhEnaKLhOk0BEfHBuOlcDHHcK6lzzvV60jy+PoYra5tf8VvbYuFIqHSIMm7sgxsv8dBX7HeMLr5E5qv/k+EPR3ZXasTL6hMzv2f4OBoQ8Jh6mpcgv/7WUOD8k60Sklow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iU969BTN; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750779660; c=relaxed/simple;
+	bh=V4cFT1hqRldsR5zu8HOg3Q2LTneYk9DIMbOYJXD5/V0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=MwKWmF7fKgq/MOHyZpCsMkz3xwYVdFWh9LKNkmCyRLaF49jPa3eCAnqerfdAUvgB1CLb+k3q6XUugkBy/lOZTDuhs5kBV42PTJVUm24gkb0HGsoxOfzC4w+0qKqJrfLY0H89D2MVUpieEi0gJSOJrolmII3rGJYYbZgFaKvlsyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SpBF33O5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iU969BTN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750779639;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=9JAZ9+YCxAR0/JjTzTiIAunISMOF/Pe1+ZV5COze/9k=;
-	b=iU969BTNTx3PUMtuimW1QpAMlFpl4b0VwtRGjcGV3m2A4QEtK42orTLfGO3koAyK+tizah
-	WiDTZZYpn20AIz2qK1ye/hCoyzq0eXx0YEGVpnqA4nk446mnJ8FGLCszPse+mKJa7bJw+k
-	8KFjnq/VEay7NvWKgwRmqQYsaxvmCeM=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-412-ECw6a58bM5umEl-qMoeZwQ-1; Tue, 24 Jun 2025 11:40:37 -0400
-X-MC-Unique: ECw6a58bM5umEl-qMoeZwQ-1
-X-Mimecast-MFC-AGG-ID: ECw6a58bM5umEl-qMoeZwQ_1750779637
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a50816cc58so296686f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:40:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750779637; x=1751384437;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9JAZ9+YCxAR0/JjTzTiIAunISMOF/Pe1+ZV5COze/9k=;
-        b=K6Ffq+TVllYg6r7OAsHXCUnLWjGVq9qL30QNlyhDptZtnh+DDpqChswl6XZ138eFqj
-         oOuBfZESOl26uozp478HHQFlbqqBw8SbCn+Wg45EAxWBKcGNFcsoim40j4BT2f74jRAF
-         zCA/G6ll5D/SeG/SLiri8W7Kc2DGW0VE4l++VvU8uZc9TSipD4axId0DM6QpQxc56UY5
-         XVPAtJazJ+9ElxXI3/rCvN/3LKitBhtR+JV+ZCdSc/rJrjMGkItoToUvCsQQ3NPkp5YA
-         Cs8DBcwC1NSgGscgdWaSpTzgHP9PFuOJOMmOL/q26JcuFIq6ThqRL9Ctm+6t2hP6tfDF
-         5tCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU9TsursUppnSAcdPLxHCDC1v4fD9DzFOnEhisRARlkws6f+uFMTnmWPpd6Klkmne0DrWjUL4FRtphSCAk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxSMSa9O+hmUzGxjKLm1R1DLiXEr44N8Oar/GldyJ0olkn4ydJd
-	67wv0SBNY3/d+DUxJ3Vn5YZC8jA2GI2uqQn9dn9nrN2obb8wpkj7QQ1o2OP0bjFhx+2706OJw9O
-	ZGJ4ltO8vb+zqmvn4f69aAQh8L6HZoKS7b916949C8gDifrTsYB60+GfKwNnItemJHQ==
-X-Gm-Gg: ASbGncvmdlfpphmtOTQOC+FImuaqatyRtd9ceAmSJg5YF15Vzo4TCWNxNEanbJDlM2E
-	ciMB6LACnC8IaNhFT2iHNMi+yOGhRJmkWrN6YPKgiXTx0S9GC7H1tt2ByPhxXUS+iLeuIrIEtos
-	UE3mMCMJrnXtcP3Ojr+sB1yT75L9rIwn+uRy9cd5XGyqSNa0X/gil1CQdV4N0oUN+eCSh9DlhZG
-	ktlXnRmc+0Jm74vhMMnsIpjNo5LfFcm0g6oVM4gY8HDht/HKjWn/X4EoFc4umA+CIQa1Mq7EmVH
-	8u0XhMSj7Tx/RcLECvUGW0QPPORDSSma7/LP0hjPqGcfcP9MTTsHdF8=
-X-Received: by 2002:a05:6000:25f8:b0:3a5:52cc:346e with SMTP id ffacd0b85a97d-3a6d12fb46emr13268377f8f.6.1750779636418;
-        Tue, 24 Jun 2025 08:40:36 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEDjVvUEyvp5075LBY9++tgHeiis3fwb6Y5bXctYH4Q1eiPOA+xqjtUIknppyr14yZGWqEktA==
-X-Received: by 2002:a05:6000:25f8:b0:3a5:52cc:346e with SMTP id ffacd0b85a97d-3a6d12fb46emr13268353f8f.6.1750779635849;
-        Tue, 24 Jun 2025 08:40:35 -0700 (PDT)
-Received: from lleonard-thinkpadp16vgen1.rmtit.csb ([176.201.192.214])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8050e85sm2310847f8f.14.2025.06.24.08.40.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 08:40:35 -0700 (PDT)
-From: Luigi Leonardi <leonardi@redhat.com>
-Date: Tue, 24 Jun 2025 17:40:15 +0200
-Subject: [PATCH net-next v4] vsock/test: Add test for null ptr deref when
- transport changes
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SpBF33O5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D022AC4CEE3;
+	Tue, 24 Jun 2025 15:40:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750779660;
+	bh=V4cFT1hqRldsR5zu8HOg3Q2LTneYk9DIMbOYJXD5/V0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=SpBF33O5DmWK2ju99YB+4lma9jKXpW06Qy7WaO72fUGRR1bwapxUreARlC7ACWT6K
+	 d7vv4X3sGIn9LGbgcTNo3m5HJIra8v37CKiK8VkCbUNooIqlcYyh8VByADcphLjB9W
+	 hYlSLlPFnIJKGwnFPitY38ytqBnIwNYFchiWpKgQFsRDQMDIhi5yhHtaKUrJqUIfhI
+	 M+utXRuCz03/g3TIw4+WeJGu3yf5PFgqTBHYBduyJ+DgVZQ5TroV2E01VPGEMlzJrk
+	 LU61+IsoQyxe1V5snMuI1Aeg04lidkunp9VMazrO8DDzUHZSLfluTSyWQAZA4nsWG6
+	 Cps8jR3ACfGjQ==
+Date: Tue, 24 Jun 2025 10:40:58 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"vkoul@kernel.org" <vkoul@kernel.org>,
+	"kishon@kernel.org" <kishon@kernel.org>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"elbadrym@google.com" <elbadrym@google.com>,
+	"romlem@google.com" <romlem@google.com>,
+	"anhphan@google.com" <anhphan@google.com>,
+	"wak@google.com" <wak@google.com>,
+	"yuxiaozhang@google.com" <yuxiaozhang@google.com>,
+	BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
+Message-ID: <20250624154058.GA1478094@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-test_vsock-v4-1-087c9c8e25a2@redhat.com>
-X-B4-Tracking: v=1; b=H4sIAN7GWmgC/23N3QrCIBwF8FcZXmf4Nbd11XtEhOl/TSINFVmMv
- XviTY26PBx+5ywoQrAQ0aFZUIBso/WuBLFrkJ6UuwG2pmTECGsJJxIniOmSo9d3zKHr1KA7xUS
- LCngGGO1cx07IQcIO5oTOpZlsTD686kumtf83mCkmmHBGrq3SehzYMYCZVNpr/6g7mX1ZKjaWY
- Yq5JoqavuuVND+Wf6ykdGN5sb2gQjEjzCi3v+u6vgGt0YhoJwEAAA==
-X-Change-ID: 20250306-test_vsock-3e77a9c7a245
-To: Stefano Garzarella <sgarzare@redhat.com>, Michal Luczaj <mhal@rbox.co>
-Cc: virtualization@lists.linux.dev, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Hyunwoo Kim <v4bel@theori.io>, 
- Luigi Leonardi <leonardi@redhat.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <SEYPR06MB5134973F678EB5B163DD50809D79A@SEYPR06MB5134.apcprd06.prod.outlook.com>
 
-Add a new test to ensure that when the transport changes a null pointer
-dereference does not occur. The bug was reported upstream [1] and fixed
-with commit 2cb7c756f605 ("vsock/virtio: discard packets if the
-transport changes").
+On Mon, Jun 23, 2025 at 05:41:13AM +0000, Jacky Chou wrote:
 
-KASAN: null-ptr-deref in range [0x0000000000000060-0x0000000000000067]
-CPU: 2 UID: 0 PID: 463 Comm: kworker/2:3 Not tainted
-Workqueue: vsock-loopback vsock_loopback_work
-RIP: 0010:vsock_stream_has_data+0x44/0x70
-Call Trace:
- virtio_transport_do_close+0x68/0x1a0
- virtio_transport_recv_pkt+0x1045/0x2ae4
- vsock_loopback_work+0x27d/0x3f0
- process_one_work+0x846/0x1420
- worker_thread+0x5b3/0xf80
- kthread+0x35a/0x700
- ret_from_fork+0x2d/0x70
- ret_from_fork_asm+0x1a/0x30
+[Apparently you trimmed out some of the lines that show who said what;
+there should be more lines here like:
 
-Note that this test may not fail in a kernel without the fix, but it may
-hang on the client side if it triggers a kernel oops.
+  > On Fri, Jun 13, 2025 at 03:03:55PM +0300, Ilpo Järvinen wrote:
+  > > On Fri, 13 Jun 2025, Jacky Chou wrote:
+]
 
-This works by creating a socket, trying to connect to a server, and then
-executing a second connect operation on the same socket but to a
-different CID (0). This triggers a transport change. If the connect
-operation is interrupted by a signal, this could cause a null-ptr-deref.
+> > > +#include <linux/irqchip/chained_irq.h> #include <linux/irqdomain.h>
 
-Since this bug is non-deterministic, we need to try several times. It
-is reasonable to assume that the bug will show up within the timeout
-period.
+> > > +/* TLP configuration type 0 and type 1 */
+> > > +#define CRG_READ_FMTTYPE(type)		(0x04000000 | (type << 24))
+> > > +#define CRG_WRITE_FMTTYPE(type)		(0x44000000 | (type << 24))
+> > 
+> > These are straight from PCIe spec, right?
+> > 
+> > I think those should come from defines inside
+> > include/uapi/linux/pci_regs.h, there might not be one already, so
+> > you might have to add them.
+> > 
+> > I also think you should actually use the type as boolean, and
+> > return one of the two defines based on it. A helper to do that
+> > might be generic PCI header material as well.
+> > 
+> 
+> Agreed.  This definition is used on TLP header.  Maybe I will try to
+> add some definitions to pci_regs.h or pci.h
 
-If there is a G2H transport loaded in the system, the bug is not
-triggered and this test will always pass.
-
-[1]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/
-
-Suggested-by: Hyunwoo Kim <v4bel@theori.io>
-Suggested-by: Michal Luczaj <mhal@rbox.co>
-Signed-off-by: Luigi Leonardi <leonardi@redhat.com>
----
-This series introduces a new test that checks for a null pointer 
-dereference that may happen when there is a transport change[1]. This 
-bug was fixed in [2].
-
-Note that this test *cannot* fail, it hangs if it triggers a kernel
-oops. The intended use-case is to run it and then check if there is any 
-oops in the dmesg.
-
-This test is based on Hyunwoo Kim's[3] and Michal's python 
-reproducers[4].
-
-[1]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/
-[2]https://lore.kernel.org/netdev/20250110083511.30419-1-sgarzare@redhat.com/
-[3]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/#t
-[4]https://lore.kernel.org/netdev/2b3062e3-bdaa-4c94-a3c0-2930595b9670@rbox.co/
----
-Changes in v4:
-- Addressed Stefano's comments:
-    - Minor style changes
-    - Use `get_transports()` to print a warning when a G2H transport is 
-    loaded
-    - Removed check on second connect: Because the first connect is 
-    interrupted, the socket is in an unspecified state (see man connect) 
-    . This can cause strange and unexpected behaviors (connect returning 
-    success on a non-existing CID).
-
-- Link to v3: 
-https://lore.kernel.org/r/20250611-test_vsock-v3-1-8414a2d4df62@redhat.com
-
-Sorry, this took waaay longer than expected.
-
-Changes in v3:
-Addressed Stefano's and Michal's comments:
-    - Added the splat text to the commit commessage.
-    - Introduced commit hash that fixes the bug.
-    - Not using perror anymore on pthread_* functions.
-    - Listener is just created once.
-
-- Link to v2:
-https://lore.kernel.org/r/20250314-test_vsock-v2-1-3c0a1d878a6d@redhat.com
-
-Changes in v2:
-- Addressed Stefano's comments:
-    - Timeout is now using current_nsec()
-    - Check for return values
-    - Style issues
-- Added Hyunwoo Kim to Suggested-by
-- Link to v1: 
-https://lore.kernel.org/r/20250306-test_vsock-v1-0-0320b5accf92@redhat.com
----
- tools/testing/vsock/Makefile     |   1 +
- tools/testing/vsock/vsock_test.c | 178 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 179 insertions(+)
-
-diff --git a/tools/testing/vsock/Makefile b/tools/testing/vsock/Makefile
-index 6e0b4e95e230500f99bb9c74350701a037ecd198..88211fd132d23ecdfd56ab0815580a237889e7f2 100644
---- a/tools/testing/vsock/Makefile
-+++ b/tools/testing/vsock/Makefile
-@@ -5,6 +5,7 @@ vsock_test: vsock_test.o vsock_test_zerocopy.o timeout.o control.o util.o msg_ze
- vsock_diag_test: vsock_diag_test.o timeout.o control.o util.o
- vsock_perf: vsock_perf.o msg_zerocopy_common.o
- 
-+vsock_test: LDLIBS = -lpthread
- vsock_uring_test: LDLIBS = -luring
- vsock_uring_test: control.o util.o vsock_uring_test.o timeout.o msg_zerocopy_common.o
- 
-diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
-index eb6f54378667ac7ed324f4823e988ec9846e41a3..095705c7b53b7ad38ab3b8bc3cbe54a9eeb76d5c 100644
---- a/tools/testing/vsock/vsock_test.c
-+++ b/tools/testing/vsock/vsock_test.c
-@@ -22,6 +22,8 @@
- #include <signal.h>
- #include <sys/ioctl.h>
- #include <linux/time64.h>
-+#include <pthread.h>
-+#include <fcntl.h>
- 
- #include "vsock_test_zerocopy.h"
- #include "timeout.h"
-@@ -1867,6 +1869,177 @@ static void test_stream_connect_retry_server(const struct test_opts *opts)
- 	close(fd);
- }
- 
-+#define TRANSPORT_CHANGE_TIMEOUT 2 /* seconds */
-+
-+static void *test_stream_transport_change_thread(void *vargp)
-+{
-+	pid_t *pid = (pid_t *)vargp;
-+	int ret;
-+
-+	/* We want this thread to terminate as soon as possible */
-+	ret = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
-+	if (ret) {
-+		fprintf(stderr, "pthread_setcanceltype: %d\n", ret);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	while (true) {
-+		if (kill(*pid, SIGUSR1) < 0) {
-+			perror("kill");
-+			exit(EXIT_FAILURE);
-+		}
-+	}
-+	return NULL;
-+}
-+
-+static void test_transport_change_signal_handler(int signal)
-+{
-+	/* We need a custom handler for SIGUSR1 as the default one terminates the process. */
-+}
-+
-+static void test_stream_transport_change_client(const struct test_opts *opts)
-+{
-+	__sighandler_t old_handler;
-+	pid_t pid = getpid();
-+	pthread_t thread_id;
-+	time_t tout;
-+	int ret, tr;
-+
-+	tr = get_transports();
-+	/* Print a warning if there is a G2H transport loaded.
-+	 * This is on a best effort basis because VMCI can be either G2H and H2G, and there is
-+	 * no easy way to understand it.
-+	 * The bug is present in the loopback transport. However, it does not interfere
-+	 * if it is loaded.
-+	 * The bug we are testing only appears when G2H transports are not loaded.
-+	 */
-+
-+	tr &= ~TRANSPORT_LOOPBACK;
-+	if (tr != 0 && tr != TRANSPORT_VHOST)
-+		fprintf(stderr, "G2H Transport detected. This test will not fail.\n");
-+
-+	old_handler = signal(SIGUSR1, test_transport_change_signal_handler);
-+	if (old_handler == SIG_ERR) {
-+		perror("signal");
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	ret = pthread_create(&thread_id, NULL, test_stream_transport_change_thread, &pid);
-+	if (ret) {
-+		fprintf(stderr, "pthread_create: %d\n", ret);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	control_expectln("LISTENING");
-+
-+	tout = current_nsec() + TRANSPORT_CHANGE_TIMEOUT * NSEC_PER_SEC;
-+	do {
-+		struct sockaddr_vm sa = {
-+			.svm_family = AF_VSOCK,
-+			.svm_cid = opts->peer_cid,
-+			.svm_port = opts->peer_port,
-+		};
-+		int s;
-+
-+		s = socket(AF_VSOCK, SOCK_STREAM, 0);
-+		if (s < 0) {
-+			perror("socket");
-+			exit(EXIT_FAILURE);
-+		}
-+
-+		ret = connect(s, (struct sockaddr *)&sa, sizeof(sa));
-+		/* The connect can fail due to signals coming from the thread.
-+		 * or because the receiver connection queue is full.
-+		 * Ignoring also the latter case because there is no way
-+		 * of synchronizing client's connect and server's accept when
-+		 * connect(s) are constantly being interrupted by signals.
-+		 */
-+		if (ret == -1 && (errno != EINTR && errno != ECONNRESET)) {
-+			perror("connect");
-+			exit(EXIT_FAILURE);
-+		}
-+
-+		/* Set CID to 0 cause a transport change. */
-+		sa.svm_cid = 0;
-+		/* Here we ignore the connect return value because we cannot
-+		 * safely assume that it will *always* fail.
-+		 * This is because the previous connect was interrupted
-+		 * during the connection process. The socket state, as stated
-+		 * in `man connect`, is unspecified and can result in strange
-+		 * behaviors.
-+		 */
-+		connect(s, (struct sockaddr *)&sa, sizeof(sa));
-+
-+		close(s);
-+
-+		control_writeulong(CONTROL_CONTINUE);
-+
-+	} while (current_nsec() < tout);
-+
-+	control_writeulong(CONTROL_DONE);
-+
-+	ret = pthread_cancel(thread_id);
-+	if (ret) {
-+		fprintf(stderr, "pthread_cancel: %d\n", ret);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	/* Wait for the thread to terminate */
-+	ret = pthread_join(thread_id, NULL);
-+	if (ret) {
-+		fprintf(stderr, "pthread_join: %d\n", ret);
-+		exit(EXIT_FAILURE);
-+	}
-+
-+	/* Restore the old handler */
-+	if (signal(SIGUSR1, old_handler) == SIG_ERR) {
-+		perror("signal");
-+		exit(EXIT_FAILURE);
-+	}
-+}
-+
-+static void test_stream_transport_change_server(const struct test_opts *opts)
-+{
-+	int s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
-+
-+	/* Set the socket to be nonblocking because connects that have been interrupted
-+	 * (EINTR) can fill the receiver's accept queue anyway, leading to connect failure.
-+	 * As of today (6.15) in such situation there is no way to understand, from the
-+	 * client side, if the connection has been queued in the server or not.
-+	 */
-+	if (fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0) | O_NONBLOCK) < 0) {
-+		perror("fcntl");
-+		exit(EXIT_FAILURE);
-+	}
-+	control_writeln("LISTENING");
-+
-+	while (control_readulong() == CONTROL_CONTINUE) {
-+		struct sockaddr_vm sa_client;
-+		socklen_t socklen_client = sizeof(sa_client);
-+
-+		/* Must accept the connection, otherwise the `listen`
-+		 * queue will fill up and new connections will fail.
-+		 * There can be more than one queued connection,
-+		 * clear them all.
-+		 */
-+		while (true) {
-+			int client = accept(s, (struct sockaddr *)&sa_client, &socklen_client);
-+
-+			if (client < 0) {
-+				if (errno == EAGAIN)
-+					break;
-+
-+				perror("accept");
-+				exit(EXIT_FAILURE);
-+			}
-+
-+			close(client);
-+		}
-+	}
-+
-+	close(s);
-+}
-+
- static void test_stream_linger_client(const struct test_opts *opts)
- {
- 	int fd;
-@@ -2106,6 +2279,11 @@ static struct test_case test_cases[] = {
- 		.run_client = test_stream_nolinger_client,
- 		.run_server = test_stream_nolinger_server,
- 	},
-+	{
-+		.name = "SOCK_STREAM transport change null-ptr-deref",
-+		.run_client = test_stream_transport_change_client,
-+		.run_server = test_stream_transport_change_server,
-+	},
- 	{},
- };
- 
-
----
-base-commit: 68d019aa14d97f8d57b0f8d203fd3b44db2ba0c7
-change-id: 20250306-test_vsock-3e77a9c7a245
-
-Best regards,
--- 
-Luigi Leonardi <leonardi@redhat.com>
-
+This values might come from the PCIe spec, but unless they are needed
+outside drivers/pci, any #defines should probably go in
+drivers/pci/pci.h.
