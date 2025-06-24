@@ -1,139 +1,131 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56318256D
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C33248F7E
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:11:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750752685; cv=none; b=jhqsGbfMrvzaaV8WVedDURAfWfliRr4h5hjPRCgmhV5DWjRiCsdHvGEhbRau8LbrT8gh1jrIb2iW4x3IfpF4+6+wUHHn+Lgo1PKzepJjVlZoGdbiwmxqYPD9we4s73OkrlgZbuexVX9v9dTqEfZ0EiXVuyd7yHM1pNKN1TSG/Nw=
+	t=1750752701; cv=none; b=kXzy2SHf1LylFghhzhT6S9LiMxoT221FNkH6s9zG8QuVoMcd6vBaUA0RXItRtC/Q5Y7ujnzFm6J70bQu0dWd9w26z9D8xhGzZ5R8tFYZ9ueRpunBWgjelyJ5ahyA80x7QH/LOSKDng/bgnvAtW8OlRYY0G0CfunBMSZ+YFNBU0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750752685; c=relaxed/simple;
-	bh=CDbw7JAaAd0HXAZdAzS1WL4b7LmL8Bi0ELx/uNpOvPw=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=itGYWs5jLz9Ohfn1xpMeKllcF61NWgN11w93N7hBZWwZf4wFg5wsNSwH9vZIJjeGkbztzR1OuLA1b1nHL7/WVHtIE0O4fSzdHXGZ0DZi8IiW2p4l+GBsa9PhpyLo7UVhMNvSdG6PLWaftRKBr+6BfYAXZ5wd4w1TtY3vToHZdwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0rsoSxPP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5Jy3CgFn; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=0rsoSxPP; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5Jy3CgFn; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750752701; c=relaxed/simple;
+	bh=rI0uwKqpI8TL3OkoRjh2LE5DiqTpenA9zQsDRWjrj40=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eP2kghGcaaevJpCxRArCjK1tkiZTXlSOfZXDuDt600knhMQkvo95QEL+zWOFaUNEpasAze1Rk0GO7nQO4gSVE7shrbpCj9udJppxHmiDzw6bLnxdbAZlXgcoExS66+fPOSLqbJLxVOA9JaWmSvueUrbhX8lDRwt+3vq1N/IyxkU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=Ki6sLpFq; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0rsoSxPP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5Jy3CgFn";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="0rsoSxPP";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5Jy3CgFn"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 4607821192;
-	Tue, 24 Jun 2025 08:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750752675; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5AdF4xuhAt3rJskHFdIpyRXilGik+8sjAdWXfveamwc=;
-	b=0rsoSxPPF5+T29CdDMXTf2aVNXsBpGvNBOxKPl6Ys+tabRkwkmtOFC0H2BYQyKQark52cj
-	71nHi5hszJx87fDEFAs1CfGHxz3IXIXpl5F+qf/3T22/nFbi+KtAfxkeQvN7ATDYQ1SyO/
-	zJaASk7Cilded/yUtLMcXDyPJ7IgSRk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750752675;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5AdF4xuhAt3rJskHFdIpyRXilGik+8sjAdWXfveamwc=;
-	b=5Jy3CgFn6f+Bepqw7iYvUEsNJ+Jiaov8+uq6eZlPqOt1HHtj2jVUMAgQUWl/+K2kc/9yk3
-	wQPhzG4aQiWkJ8Dg==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750752675; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5AdF4xuhAt3rJskHFdIpyRXilGik+8sjAdWXfveamwc=;
-	b=0rsoSxPPF5+T29CdDMXTf2aVNXsBpGvNBOxKPl6Ys+tabRkwkmtOFC0H2BYQyKQark52cj
-	71nHi5hszJx87fDEFAs1CfGHxz3IXIXpl5F+qf/3T22/nFbi+KtAfxkeQvN7ATDYQ1SyO/
-	zJaASk7Cilded/yUtLMcXDyPJ7IgSRk=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750752675;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5AdF4xuhAt3rJskHFdIpyRXilGik+8sjAdWXfveamwc=;
-	b=5Jy3CgFn6f+Bepqw7iYvUEsNJ+Jiaov8+uq6eZlPqOt1HHtj2jVUMAgQUWl/+K2kc/9yk3
-	wQPhzG4aQiWkJ8Dg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E5AB013751;
-	Tue, 24 Jun 2025 08:11:14 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 6JHaNqJdWmgaBAAAD6G6ig
-	(envelope-from <tiwai@suse.de>); Tue, 24 Jun 2025 08:11:14 +0000
-Date: Tue, 24 Jun 2025 10:11:14 +0200
-Message-ID: <87sejplftp.wl-tiwai@suse.de>
-From: Takashi Iwai <tiwai@suse.de>
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-Cc: Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Wesley Cheng <quic_wcheng@quicinc.com>,
-	Mark Brown <broonie@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	error27@gmail.com
-Subject: Re: [PATCH] ALSA: qc_audio_offload: Fix missing error code in prepare_qmi_response()
-In-Reply-To: <20250623142639.2938056-1-harshit.m.mogalapalli@oracle.com>
-References: <20250623142639.2938056-1-harshit.m.mogalapalli@oracle.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) Emacs/27.2 Mule/6.0
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="Ki6sLpFq"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32add56e9ddso41950971fa.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:11:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1750752698; x=1751357498; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TnZJLJCW800VkWoC4YxYE6tZ8WAA+yiK65lcySNG5GY=;
+        b=Ki6sLpFqoe+SwV4ivOkWz9nsIPFHyox++9WOBeg6ybSYGbxJ4GPM1uR03G13oPHSMx
+         4/kfCs7q4C39zqV+7RIesENMCoPD6arxC09NavItsGnAfEn1r5C7+Opcci5PUa8CccLg
+         IzT7L8O0nzeFKKxe0DnYuF/PkgTwmklDfJdkNm6S/Vu+I6Xr2iA8bIqgbZlJppSGO449
+         G+HKFCQYiLOHw0yDQyNKAalYA75iUCHOi7do7kKNV+wTqGP9GG9yFEAwSInYUW8Z2Gxz
+         lQsA0Khe/IWYIneao13SoabxbDb4EtxtikA17yeF3bSmVymiL65MYO9orLj5i3igZ2EN
+         TKRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750752698; x=1751357498;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TnZJLJCW800VkWoC4YxYE6tZ8WAA+yiK65lcySNG5GY=;
+        b=ZRNA5qTTs+/q8flrfgNPJRcMbjZTexvzdyIPrB6/GHK9nJzH0GiVXMBpGtkY1aXIQ3
+         guPqvk6mHI1mFvboeh51+i1EIXzp1/eJ+VFZXOWfpZcN9QjrcUw9rULUa5zYPJsDmzXU
+         8YhSGPEJGNnkUkow14OnwSa6BwGc6AosvzjM+k6YNN5LXY8cAtsqp0UxQ+4an8S/5/jN
+         HX1vAbaEV7L3Y3sC5nz0wVxzim+QVKWQfwHuJfp7ch8XpRooCCKgIDd86o3EYqonF3WK
+         pqm00qFzrr3iBZYKNqoFaHtifINSQPjahN7Vhafe9QZS2G4Yz+hykBDpeS/QRzUPWcrN
+         hvow==
+X-Forwarded-Encrypted: i=1; AJvYcCW0vDFeeZt85n6YsbRPStvO4XgflJVbIR2bm5aiOY0VkUjmk4Y5gIqE6l3J5+5QTjapR6LMJu+c4FAZD8A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxAaxIPEudmzy5lDeWa1YxqIxdsK47G4oooDXWFJglBnimgzHAM
+	trYiVvigw2praASYg9CJY5dCAkdvsH8WqDSHi/b21gyGFhhJJr/cfmdU8kN0Nk3LBOaq58Wz8dZ
+	xaM2iFkR+Alng5laaTtpI2AcWQim8GB/ALfH/5nlfGQ==
+X-Gm-Gg: ASbGncvJ7o5/V5YYuTNPcmrBzjhwSSQ3II4DL69BSiZBUD/sUMBfKHwmLKnnCnDLUTz
+	hPDW+NeLyADL/DxAs2Q/Z9nWDWezOQKf67TwF+OuQFQsKBxuQGSXNoIbvXt0IzPOheaCIrTk+I+
+	L3YC3jyGi1YnKQQLBzqkIlvxPhh0MeHhqYOI2uMY1YDWn2LX61dNRszW3ErVaHd54+8g8=
+X-Google-Smtp-Source: AGHT+IHl6yvkOmuagpboELZZTK40KqLlogiqJwZ/l6BnYAAjul2G08F0BtiFYG8ppq0ZNO6KSFx+D/hxcK9JExNI53w=
+X-Received: by 2002:a2e:a7c1:0:b0:32b:533a:ef76 with SMTP id
+ 38308e7fff4ca-32b98e6dc0dmr40907051fa.13.1750752697501; Tue, 24 Jun 2025
+ 01:11:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Flag: NO
-X-Spam-Score: -3.30
-X-Spamd-Result: default: False [-3.30 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MIME_TRACE(0.00)[0:+];
-	RCVD_TLS_ALL(0.00)[];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com,wanadoo.fr];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[perex.cz,suse.com,linuxfoundation.org,quicinc.com,kernel.org,arndb.de,linaro.org,wanadoo.fr,vger.kernel.org,gmail.com];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:mid,linaro.org:email]
-X-Spam-Level: 
+MIME-Version: 1.0
+References: <aC4J9HDo2LKXYG6l@slm.duckdns.org> <CACSyD1MvwPT7i5_PnEp32seeb7X_svdCeFtN6neJ0=QPY1hDsw@mail.gmail.com>
+ <aC90-jGtD_tJiP5K@slm.duckdns.org> <CACSyD1P+wuSP2jhMsLHBAXDxGoBkWzK54S5BRzh63yby4g0OHw@mail.gmail.com>
+ <aDCnnd46qjAvoxZq@slm.duckdns.org> <CACSyD1OWe-PkUjmcTtbYCbLi3TrxNQd==-zjo4S9X5Ry3Gwbzg@mail.gmail.com>
+ <x7wdhodqgp2qcwnwutuuedhe6iuzj2dqzhazallamsyzdxsf7k@n2tcicd4ai3u>
+ <CACSyD1My_UJxhDHNjvRmTyNKHcxjhQr0_SH=wXrOFd+dYa0h4A@mail.gmail.com>
+ <pkzbpeu7w6jc6tzijldiqutv4maft2nyfjsbmobpjfr5kkn27j@e6bflvg7mewi>
+ <CACSyD1MhCaAzycSUSQfirLaLp22mcabVr3jfaRbJqFRkX2VoFw@mail.gmail.com> <jtjtb7sn7kxl7rw7tfdo2sn73rlre4w3iuvbk5hrolyimq7ixx@mo4k6r663tx2>
+In-Reply-To: <jtjtb7sn7kxl7rw7tfdo2sn73rlre4w3iuvbk5hrolyimq7ixx@mo4k6r663tx2>
+From: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Date: Tue, 24 Jun 2025 16:11:01 +0800
+X-Gm-Features: Ac12FXyk0voBgT8_FFyuTzOzG8dPqch39FrARLntQAdqtu502WPmum__939WsjU
+Message-ID: <CACSyD1PhM=U1bxqYeZXHojSRWWPB3Y7j30jLLykjRzLuQQzn2Q@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] cpuset: introduce non-blocking cpuset.mems
+ setting option
+To: =?UTF-8?Q?Michal_Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: Tejun Heo <tj@kernel.org>, Waiman Long <llong@redhat.com>, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, muchun.song@linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 23 Jun 2025 16:26:27 +0200,
-Harshit Mogalapalli wrote:
-> 
-> When snd_soc_usb_find_priv_data() fails, return failure instead of
-> success. While we are at it also use direct returns at first few error
-> paths where there is no additional cleanup needed.
-> 
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/all/Z_40qL4JnyjR4j0O@stanley.mountain/
-> Fixes: 326bbc348298 ("ALSA: usb-audio: qcom: Introduce QC USB SND offloading support")
-> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+()
 
-Thanks, applied now.
+On Thu, Jun 19, 2025 at 8:10=E2=80=AFPM Michal Koutn=C3=BD <mkoutny@suse.co=
+m> wrote:
+>
+> On Thu, Jun 19, 2025 at 11:49:58AM +0800, Zhongkun He <hezhongkun.hzk@byt=
+edance.com> wrote:
+> > In our scenario, when we shrink the allowed cpuset.mems =E2=80=94for ex=
+ample,
+> > from nodes 1, 2, 3 to just nodes 2,3=E2=80=94there may still be a large=
+ number of pages
+> > residing on node 1. Currently, modifying cpuset.mems triggers synchrono=
+us memory
+> > migration, which results in prolonged and unacceptable service downtime=
+ under
+> > cgroup v2. This behavior has become a major blocker for us in adopting
+> > cgroup v2.
+> >
+> > Tejun suggested adding an interface to control the migration rate, and
+> > I plan to try that later.
+>
+> It sounds unnecessarily not work-conserving and in principle adding
+> cond_resched()s (or eventually having a preemptible kernel) should
+> achieve the same. Or how would that project onto service metrics?
+> (But I'm not familiar with this migration path, thus I was asking about
+> the contention points.)
 
+The cond_resched() is already there, please have a look in
+migrate_pages_batch().
 
-Takashi
+The issue(contention ) lies in the fact that, during page migration, the PT=
+E
+is replaced with a migration_entry(). If a task attempts to access such a p=
+age,
+it will be blocked in migration_entry_wait() until the migration completes.
+When a large number of hot pages are involved, this can cause significant
+service disruption due to prolonged blocking.
+
+Thanks
+Zhongkun
+
+>
+> > However, we believe that the cpuset.migrate interface in cgroup v1 is
+> > also sufficient for our use case and is easier to work with.  :)
+>
+> Too easy I think, it'd make cpuset.mems only "advisory" constraint. (I
+> know it could be justified too but perhaps not as a solution to costly
+> migrations.)
+>
+> Michal
