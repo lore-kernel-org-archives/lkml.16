@@ -1,150 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBF826B09D
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C50D1C84DF;
+	Tue, 24 Jun 2025 08:43:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750754617; cv=none; b=iSdgtt6otoLM98AYRL9hVuMEh4sDxoaugDskf3FVojCHGMRE0/N+tTRvDH1NhUYowOdjhxhKqs/peetAuKQ8fzaUvyeit5ARMvsPyG9x/OFx4aymqiMjOwvGMTrBq+833Y82e3rWO13xe5zRbrhP4ZxLEj2zT06lRmgUknOtLQ0=
+	t=1750754637; cv=none; b=fxNSuk8b4xixRh4JgtKsBF1BasOsjfAy+qj/POrrjaA9ks/jbhwoM/pT8hhKeikJKbOb2PjhdtO6raJA9oXN2bXw6Kf2IswtboRVExBP7eAgYyBdGWDMPh7Gu39qREXNOiCIfZKts5cBnwI3RY/7jbOdgnr6gEo1iqZhvEfkHKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750754617; c=relaxed/simple;
-	bh=MDLkdbQKpX6L1kVDTvL1ELhCaxQXJ4VI/AhlIZSDld8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D0OrBWzIyt25RJuawyvbJxFdl80L1/kO0ZEPNeeHgp/EbkSVdjcNLqyXrArsxrvzErjUwdXgwyPInhIh6jMTNyHRL9/t0RURZSH+CUeC+u7oTAnyw1MpVByRJnqZICBfA01pzip0pABOvIGy936WEgK7ysM36g3SUPZ+gyTemXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UAMKcIev; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750754637; c=relaxed/simple;
+	bh=L45NXoZ+NSjgNfFv1Uc2lmPuDY4v3Gli3c8yBbV7E7w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bh/UQfgq51SPSYM+Yk+o84rGWZdwEI9mQPAHVZxRHdc5eClEN2go+tZF+SKb4Q5OAcF7Jfr6oiqeoAWZ+yCa6vUb0uAC1aGiBxpykWqO+hfJsbMKVnQ/zqUmrtvh7Il971A0y8rNp3KUu1Vq2+5d/eDHPf9PbYJgK5aiZbO1Z0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XHVl1BJw; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UAMKcIev"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0753C4CEEF;
-	Tue, 24 Jun 2025 08:43:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750754616;
-	bh=MDLkdbQKpX6L1kVDTvL1ELhCaxQXJ4VI/AhlIZSDld8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UAMKcIevmrWAGtmgySWtqsppLVpApHHKFABFnKmU+gUAJMkxqtAt/xdaKdqIDF5Xp
-	 AEs+qandZ4xy+2todezqmOV48yLpGUbJG6H2F4EGWq1iqN8/P1A4PkIAdjuAMQid9S
-	 6FZsOmYB0ru/vrmp+e+VcqnZrn5B0xO9iyw4+tAIbfPe6MBvIT1iI49qV6Pz/7N/wH
-	 a7D3eMUpJlAXXZw8ManRYYYG8eUyazpp4nHCfRFhY1jNvh6xuAbZOgahNtbqKHG8fB
-	 yWGXz3z1irbQYbBHq0LnsTBxNHAxWi3GUrGaFGJvLvMYpOgb0Se1bMkMOqEfufoh2r
-	 +tukE/FJOyMLA==
-Message-ID: <2ee3d376-bb2d-4f93-93d9-6e017636996b@kernel.org>
-Date: Tue, 24 Jun 2025 10:43:32 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XHVl1BJw"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750754636; x=1782290636;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=L45NXoZ+NSjgNfFv1Uc2lmPuDY4v3Gli3c8yBbV7E7w=;
+  b=XHVl1BJwW5fEfgTbW2fjpBy7RTiwWYDE//WvYkQo7Ljhxv83Ib83MQs/
+   Ol98vf60KqIfIR5ZEKJs/iSSqN8Lahf7ZSoFYFb3oVCl20eljDtZdT7Fx
+   ncNxKIrqNvANmDpklC1n07ATLhX+MqX7+Z94xVYwY+9LLaZBo4lCXl42w
+   f04vQ3F7hU28rPOPz/TbaVuXlMI7elCaaiUr7iPtj7B8Es4g8XviAKkyC
+   DQSZmjV070ah/N/dO4YlKMcZKwXWG4gpoTvOJsam2fCc9QE+dm8w784AW
+   dadPDuy5p10IxZk1l5rhQFl6Soqwe6eKpBDhRMF9hjT3QK1LeoT2ZcgTL
+   g==;
+X-CSE-ConnectionGUID: tldknDeiRs21TRzIeNvquA==
+X-CSE-MsgGUID: AF+S4X9aTN2CQrIyUCGxrA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52214092"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="52214092"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 01:43:56 -0700
+X-CSE-ConnectionGUID: 2vYRGkSnQs618htWM63nfA==
+X-CSE-MsgGUID: OmmttEKCRhOgi6grzXo9MA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="152023769"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by orviesa007.jf.intel.com with SMTP; 24 Jun 2025 01:43:52 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 24 Jun 2025 11:43:51 +0300
+Date: Tue, 24 Jun 2025 11:43:50 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: RD Babiera <rdbabiera@google.com>
+Cc: badhri@google.com, gregkh@linuxfoundation.org,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH v1] usb: typec: altmodes/displayport: do not index
+ invalid pin_assignments
+Message-ID: <aFplRgD8nju9ShAO@kuha.fi.intel.com>
+References: <20250618224943.3263103-2-rdbabiera@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/10] mei: vsc: Drop unused vsc_tp_request_irq() and
- vsc_tp_free_irq()
-To: "Usyskin, Alexander" <alexander.usyskin@intel.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
- "Dr. David Alan Gilbert" <linux@treblig.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250623085052.12347-1-hansg@kernel.org>
- <20250623085052.12347-2-hansg@kernel.org>
- <IA1PR11MB6370FA5EEB2D062349C9BC9AED78A@IA1PR11MB6370.namprd11.prod.outlook.com>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <IA1PR11MB6370FA5EEB2D062349C9BC9AED78A@IA1PR11MB6370.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250618224943.3263103-2-rdbabiera@google.com>
 
-Hi,
-
-On 24-Jun-25 8:06 AM, Usyskin, Alexander wrote:
->> Subject: [PATCH 01/10] mei: vsc: Drop unused vsc_tp_request_irq() and
->> vsc_tp_free_irq()
->>
->> Drop the unused vsc_tp_request_irq() and vsc_tp_free_irq() functions.
->>
+On Wed, Jun 18, 2025 at 10:49:42PM +0000, RD Babiera wrote:
+> A poorly implemented DisplayPort Alt Mode port partner can indicate
+> that its pin assignment capabilities are greater than the maximum
+> value, DP_PIN_ASSIGN_F. In this case, calls to pin_assignment_show
+> will cause a BRK exception due to an out of bounds array access.
 > 
-> This is proposed in
-> https://lkml.org/lkml/2025/6/17/25 "[PATCH] mei: vsc: Remove unused irq functions"
-
-Thank you for pointing that out.
-
-Normally I would say lets go with David's version since that was
-posted first.
-
-But David's patch is missing the removal of the function prototypes
-from vsc-tp.h, so in this case I think we should go with my version.
-
-Regards,
-
-Hans
-
-
-
-
->> Signed-off-by: Hans de Goede <hansg@kernel.org>
->> ---
->>  drivers/misc/mei/vsc-tp.c | 31 -------------------------------
->>  drivers/misc/mei/vsc-tp.h |  3 ---
->>  2 files changed, 34 deletions(-)
->>
->> diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
->> index 267d0de5fade..99a55451e1fc 100644
->> --- a/drivers/misc/mei/vsc-tp.c
->> +++ b/drivers/misc/mei/vsc-tp.c
->> @@ -406,37 +406,6 @@ int vsc_tp_register_event_cb(struct vsc_tp *tp,
->> vsc_tp_event_cb_t event_cb,
->>  }
->>  EXPORT_SYMBOL_NS_GPL(vsc_tp_register_event_cb, "VSC_TP");
->>
->> -/**
->> - * vsc_tp_request_irq - request irq for vsc_tp device
->> - * @tp: vsc_tp device handle
->> - */
->> -int vsc_tp_request_irq(struct vsc_tp *tp)
->> -{
->> -	struct spi_device *spi = tp->spi;
->> -	struct device *dev = &spi->dev;
->> -	int ret;
->> -
->> -	irq_set_status_flags(spi->irq, IRQ_DISABLE_UNLAZY);
->> -	ret = request_threaded_irq(spi->irq, vsc_tp_isr, vsc_tp_thread_isr,
->> -				   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
->> -				   dev_name(dev), tp);
->> -	if (ret)
->> -		return ret;
->> -
->> -	return 0;
->> -}
->> -EXPORT_SYMBOL_NS_GPL(vsc_tp_request_irq, "VSC_TP");
->> -
->> -/**
->> - * vsc_tp_free_irq - free irq for vsc_tp device
->> - * @tp: vsc_tp device handle
->> - */
->> -void vsc_tp_free_irq(struct vsc_tp *tp)
->> -{
->> -	free_irq(tp->spi->irq, tp);
->> -}
->> -EXPORT_SYMBOL_NS_GPL(vsc_tp_free_irq, "VSC_TP");
->> -
->>  /**
->>   * vsc_tp_intr_synchronize - synchronize vsc_tp interrupt
->>   * @tp: vsc_tp device handle
->> diff --git a/drivers/misc/mei/vsc-tp.h b/drivers/misc/mei/vsc-tp.h
->> index 14ca195cbddc..f9513ddc3e40 100644
->> --- a/drivers/misc/mei/vsc-tp.h
->> +++ b/drivers/misc/mei/vsc-tp.h
->> @@ -37,9 +37,6 @@ int vsc_tp_xfer(struct vsc_tp *tp, u8 cmd, const void
->> *obuf, size_t olen,
->>  int vsc_tp_register_event_cb(struct vsc_tp *tp, vsc_tp_event_cb_t event_cb,
->>  			     void *context);
->>
->> -int vsc_tp_request_irq(struct vsc_tp *tp);
->> -void vsc_tp_free_irq(struct vsc_tp *tp);
->> -
->>  void vsc_tp_intr_enable(struct vsc_tp *tp);
->>  void vsc_tp_intr_disable(struct vsc_tp *tp);
->>  void vsc_tp_intr_synchronize(struct vsc_tp *tp);
->> --
->> 2.49.0
+> Prevent for loop in pin_assignment_show from accessing
+> invalid values in pin_assignments by adding DP_PIN_ASSIGN_MAX
+> value in typec_dp.h and using i < DP_PIN_ASSIGN_MAX as a loop
+> condition.
 > 
+> Fixes: 0e3bb7d6894d ("usb: typec: Add driver for DisplayPort alternate mode")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: RD Babiera <rdbabiera@google.com>
+> Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
 
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+
+> ---
+>  drivers/usb/typec/altmodes/displayport.c | 2 +-
+>  include/linux/usb/typec_dp.h             | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
+> index b09b58d7311d..773786129dfb 100644
+> --- a/drivers/usb/typec/altmodes/displayport.c
+> +++ b/drivers/usb/typec/altmodes/displayport.c
+> @@ -677,7 +677,7 @@ static ssize_t pin_assignment_show(struct device *dev,
+>  
+>  	assignments = get_current_pin_assignments(dp);
+>  
+> -	for (i = 0; assignments; assignments >>= 1, i++) {
+> +	for (i = 0; assignments && i < DP_PIN_ASSIGN_MAX; assignments >>= 1, i++) {
+>  		if (assignments & 1) {
+>  			if (i == cur)
+>  				len += sprintf(buf + len, "[%s] ",
+> diff --git a/include/linux/usb/typec_dp.h b/include/linux/usb/typec_dp.h
+> index f2da264d9c14..acb0ad03bdac 100644
+> --- a/include/linux/usb/typec_dp.h
+> +++ b/include/linux/usb/typec_dp.h
+> @@ -57,6 +57,7 @@ enum {
+>  	DP_PIN_ASSIGN_D,
+>  	DP_PIN_ASSIGN_E,
+>  	DP_PIN_ASSIGN_F, /* Not supported after v1.0b */
+> +	DP_PIN_ASSIGN_MAX,
+>  };
+>  
+>  /* DisplayPort alt mode specific commands */
+> 
+> base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+> -- 
+> 2.50.0.rc2.701.gf1e915cc24-goog
+
+-- 
+heikki
