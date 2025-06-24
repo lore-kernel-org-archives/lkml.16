@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A6B02EF673;
-	Tue, 24 Jun 2025 18:07:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3874D2F0C57;
+	Tue, 24 Jun 2025 18:07:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750788477; cv=none; b=JQv/nwX0xjB5e4bgfRZ2PYDetYlLSgJhoybmNQNOvu0omIQHCZLE+2LaZSyyo1AHboQN9j17bACgzvAtPU8JQleZKV4jrlaFDPgGeHMMNdNaBxCe0oN2663SBRJbAKwFI/84Sa3jniJzELLCyMJ1m3uOnmltyvc1817gkjcQgxg=
+	t=1750788478; cv=none; b=AelKRmSRUDk5vRKzmn+G38+15BIaVU0IWp/8JM8tEsWWItfPHbtn9p+xAZhh2nEqGs5IgaCLH5WHPb+pmHoAt+7cBSqepa8NmJiM/UfwEVZ8aSDtDXTMfkViNR3p1ucbI6SpWkdKxOQKMBkIusDnjZAFdpLlquGkHfcbDYoTDRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750788477; c=relaxed/simple;
-	bh=UwfOCXIiRF5YjFm+GxSv5TFdTHHt7yu5YvUXTI5XzBw=;
+	s=arc-20240116; t=1750788478; c=relaxed/simple;
+	bh=HxtRmwoDN4cS08ebLTAEw2XokEa0cnlqfNYikMQE++A=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EuUYRk5LFcFx2DCtPYEVIM0ywlfml+5tQqYiKbdeQYSZYezu68zRl7wNYwzRPe73YMr0OcoV9tz2MutKIuc54xOT8gk2287rGlKYKQHyWtjSGqezwAVqi9Si2sTOHdABTqhXJne8kozAYjgzYAdWHog0dNto54J9UQWhcmskz2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BxeOQpMk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=E3FGckjlmmBKKYM/P80NrS+TIEvmZ9QeXQMeVIZLgrMukB3XfU/8ejYhm9Y+5XRlBGfgLYHbvUqBw9NvRk5Ywdl6xciLPtIbEfRN+l/KFTJM6KJzHj7177l+Gtilqw7p7VRzfyy/20bMiA7p7h5w0B+A9etoyHJK302RJVHcv1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dINPAu4N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BxeOQpMk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86FD7C4CEF0;
-	Tue, 24 Jun 2025 18:07:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dINPAu4N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 916FFC4CEF3;
+	Tue, 24 Jun 2025 18:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750788476;
-	bh=UwfOCXIiRF5YjFm+GxSv5TFdTHHt7yu5YvUXTI5XzBw=;
+	s=k20201202; t=1750788477;
+	bh=HxtRmwoDN4cS08ebLTAEw2XokEa0cnlqfNYikMQE++A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BxeOQpMkeHesCOwlgqnGL47pH1zuXSltfEHgkwNnR93apXTcGKgMta3yfEm8e5R/a
-	 yt7vsIEvjo1LdB3lC3C+IsgQ3T9rzshql+GWwtJ8etDcWOdwG2tnzY4pUN+v7MDSEE
-	 nhDRx2CuOvvH4bac6fF6AoGQYTKopd6gPrKAmu3/UAFOjFiAStwW2LGQee/lJsslns
-	 YfXleYvf0BJIQMKrA4Jd5r5WlRDzLSa6CzgTO0H/hgaLcfJ/V0tWnrlrBHzBHlQrx0
-	 r15Zs+PQTjxPo5/tcDsdnpkpoXVruCIs057CbnjbmHKmNPD4B7TvunHQ6s6QJZjLD7
-	 wLYZDj+gHxfbA==
+	b=dINPAu4N/4PjZNdLJJhrtDN/6Z9d1qrMudgqanq744VWokHK1n/hJ5DGoMWIafE2Y
+	 V356IA7FkgiMN8a8yCmy56a+GRqoj02XXyLdPTdVfPqjUTuRuwiGc/m5/af3ObRPF2
+	 8k1tHoE7goRVpFdU/bn3FtrY7lWK3n1k47X9dpCWbSUJ5wIgdj8+MGncWoP6OZ0v9n
+	 6UVxFCmdT576cBLNdYHmutYLHOqqt+5ViL/+2Bssimd+++fc93wtmg7Wh04BNXVhb6
+	 6i6FuDye80+RwBPZxjSJgIF05NM5NNsz2suoR1VGFWH4whlEjvOULKiu1mQM1z8SVF
+	 vhD/20DTwDmLw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org
 Cc: linux-doc@vger.kernel.org,
@@ -33,9 +33,9 @@ Cc: linux-doc@vger.kernel.org,
 	workflows@vger.kernel.org,
 	tools@kernel.org,
 	Sasha Levin <sashal@kernel.org>
-Subject: [RFC v2 18/22] binder: add detailed IOCTL API specifications
-Date: Tue, 24 Jun 2025 14:07:38 -0400
-Message-Id: <20250624180742.5795-19-sashal@kernel.org>
+Subject: [RFC v2 20/22] block: sysfs API specifications
+Date: Tue, 24 Jun 2025 14:07:40 -0400
+Message-Id: <20250624180742.5795-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250624180742.5795-1-sashal@kernel.org>
 References: <20250624180742.5795-1-sashal@kernel.org>
@@ -47,770 +47,636 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add kernel API specifications to the binder driver using the IOCTL
-specification framework. This provides detailed documentation and
-enables runtime validation of all binder IOCTL interfaces.
+Add documentation to block sysfs specifications.
 
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/android/binder.c        | 701 ++++++++++++++++++++++++++++++++
- include/linux/kernel_api_spec.h |   3 +
- 2 files changed, 704 insertions(+)
+ block/blk-integrity.c | 131 +++++++++++++++++++++++
+ block/blk-sysfs.c     | 243 ++++++++++++++++++++++++++++++++++++++++++
+ block/genhd.c         |  99 +++++++++++++++++
+ 3 files changed, 473 insertions(+)
 
-diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-index c463ca4a8fff8..8879263cdb061 100644
---- a/drivers/android/binder.c
-+++ b/drivers/android/binder.c
-@@ -67,6 +67,7 @@
- #include <linux/task_work.h>
- #include <linux/sizes.h>
- #include <linux/ktime.h>
+diff --git a/block/blk-integrity.c b/block/blk-integrity.c
+index e4e2567061f9d..bfe08c8fab91b 100644
+--- a/block/blk-integrity.c
++++ b/block/blk-integrity.c
+@@ -13,6 +13,8 @@
+ #include <linux/scatterlist.h>
+ #include <linux/export.h>
+ #include <linux/slab.h>
 +#include <linux/kernel_api_spec.h>
++#include <linux/syscall_api_spec.h>
  
- #include <uapi/linux/android/binder.h>
+ #include "blk.h"
  
-@@ -6930,6 +6931,7 @@ static int transaction_log_show(struct seq_file *m, void *unused)
- 	return 0;
+@@ -234,6 +236,29 @@ static ssize_t flag_show(struct device *dev, char *page, unsigned char flag)
+ 	return sysfs_emit(page, "%d\n", !(bi->flags & flag));
  }
  
-+/* Define the actual binder_fops structure */
- const struct file_operations binder_fops = {
- 	.owner = THIS_MODULE,
- 	.poll = binder_poll,
-@@ -6941,6 +6943,695 @@ const struct file_operations binder_fops = {
- 	.release = binder_release,
- };
- 
-+/* Define wrapper for KAPI validation */
-+#ifdef CONFIG_KAPI_RUNTIME_CHECKS
-+static struct file_operations __kapi_wrapped_binder_fops;
-+static struct kapi_fops_wrapper __kapi_wrapper_binder_fops;
-+
-+static void kapi_init_fops_binder_fops(void)
-+{
-+	if (binder_fops.unlocked_ioctl) {
-+		__kapi_wrapped_binder_fops = binder_fops;
-+		__kapi_wrapper_binder_fops.real_fops = &binder_fops;
-+		__kapi_wrapper_binder_fops.wrapped_fops = &__kapi_wrapped_binder_fops;
-+		__kapi_wrapper_binder_fops.real_ioctl = binder_fops.unlocked_ioctl;
-+		__kapi_wrapped_binder_fops.unlocked_ioctl = kapi_ioctl_validation_wrapper;
-+		kapi_register_wrapper(&__kapi_wrapper_binder_fops);
-+	}
-+}
-+#else
-+static inline void kapi_init_fops_binder_fops(void) {}
-+#endif
-+
-+/* IOCTL API Specifications for Binder */
-+
-+DEFINE_KAPI_IOCTL_SPEC(binder_write_read)
-+	KAPI_IOCTL_CMD(BINDER_WRITE_READ)
-+	KAPI_IOCTL_CMD_NAME("BINDER_WRITE_READ")
-+	KAPI_IOCTL_INPUT_SIZE(sizeof(struct binder_write_read))
-+	KAPI_IOCTL_OUTPUT_SIZE(sizeof(struct binder_write_read))
-+	KAPI_IOCTL_FILE_OPS_NAME("binder_fops")
-+	KAPI_DESCRIPTION("Perform read/write operations on binder")
-+	KAPI_LONG_DESC("Main workhorse of binder IPC. Allows writing commands to "
-+		       "binder driver and reading responses. Commands are encoded "
-+		       "in a special protocol format. Both read and write operations "
-+		       "can be performed in a single ioctl call.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+	/* Parameters */
-+	KAPI_PARAM(0, "write_size", "binder_size_t", "Bytes to write")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		KAPI_PARAM_RANGE(0, SZ_4M)	/* Reasonable limit for IPC */
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(1, "write_consumed", "binder_size_t", "Bytes consumed by driver")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		KAPI_PARAM_RANGE(0, SZ_4M)
-+	KAPI_PARAM_END
-+
-+	KAPI_IOCTL_PARAM_USER_BUF(2, "write_buffer", "User buffer with commands", 0)
-+
-+	KAPI_PARAM(3, "read_size", "binder_size_t", "Bytes to read")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		KAPI_PARAM_RANGE(0, SZ_4M)
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(4, "read_consumed", "binder_size_t", "Bytes consumed by driver")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		KAPI_PARAM_RANGE(0, SZ_4M)
-+	KAPI_PARAM_END
-+
-+	KAPI_IOCTL_PARAM_USER_OUT_BUF(5, "read_buffer", "User buffer for responses", 3)
-+
-+	/* Return value */
-+	KAPI_RETURN("int", "0 on success, negative errno on failure")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+		KAPI_RETURN_ERROR_VALUES(((const s64[]){-EFAULT, -EINVAL, -EAGAIN, -EINTR,
-+					      -ENOMEM, -ECONNREFUSED}))
-+		KAPI_RETURN_ERROR_COUNT(6)
-+	KAPI_RETURN_END
-+
-+	/* Errors */
-+	KAPI_ERROR(0, -EFAULT, "EFAULT", "Failed to copy data to/from user space",
-+		   "Check buffer pointers are valid user space addresses")
-+	KAPI_ERROR(1, -EINVAL, "EINVAL", "Invalid parameters",
-+		   "Buffer sizes or commands are invalid")
-+	KAPI_ERROR(2, -EAGAIN, "EAGAIN", "Try again",
-+		   "Non-blocking read with no data available")
-+	KAPI_ERROR(3, -EINTR, "EINTR", "Interrupted by signal",
-+		   "Operation interrupted, should be retried")
-+	KAPI_ERROR(4, -ENOMEM, "ENOMEM", "Out of memory",
-+		   "Unable to allocate memory for operation")
-+	KAPI_ERROR(5, -ECONNREFUSED, "ECONNREFUSED", "Connection refused",
-+		   "Process is being destroyed, no further operations allowed")
-+
-+	KAPI_ERROR_COUNT(6)
-+	KAPI_PARAM_COUNT(6)
-+	KAPI_SINCE_VERSION("3.0")
-+	KAPI_NOTES("This is the primary interface for binder IPC. Most other "
-+		   "ioctls are for configuration and management.")
-+
-+	/* Structure specifications */
-+	KAPI_STRUCT_SPEC(0, binder_write_read, "Read/write operation structure")
-+		KAPI_STRUCT_SIZE(sizeof(struct binder_write_read), __alignof__(struct binder_write_read))
-+		KAPI_STRUCT_FIELD_COUNT(6)
-+
-+		KAPI_STRUCT_FIELD(0, "write_size", KAPI_TYPE_UINT, "binder_size_t",
-+				  "Number of bytes to write")
-+			KAPI_FIELD_OFFSET(offsetof(struct binder_write_read, write_size))
-+			KAPI_FIELD_SIZE(sizeof(binder_size_t))
-+		KAPI_STRUCT_FIELD_END
-+
-+		KAPI_STRUCT_FIELD(1, "write_consumed", KAPI_TYPE_UINT, "binder_size_t",
-+				  "Number of bytes consumed by driver")
-+			KAPI_FIELD_OFFSET(offsetof(struct binder_write_read, write_consumed))
-+			KAPI_FIELD_SIZE(sizeof(binder_size_t))
-+		KAPI_STRUCT_FIELD_END
-+
-+		KAPI_STRUCT_FIELD(2, "write_buffer", KAPI_TYPE_PTR, "binder_uintptr_t",
-+				  "Pointer to write buffer")
-+			KAPI_FIELD_OFFSET(offsetof(struct binder_write_read, write_buffer))
-+			KAPI_FIELD_SIZE(sizeof(binder_uintptr_t))
-+		KAPI_STRUCT_FIELD_END
-+
-+		KAPI_STRUCT_FIELD(3, "read_size", KAPI_TYPE_UINT, "binder_size_t",
-+				  "Number of bytes to read")
-+			KAPI_FIELD_OFFSET(offsetof(struct binder_write_read, read_size))
-+			KAPI_FIELD_SIZE(sizeof(binder_size_t))
-+		KAPI_STRUCT_FIELD_END
-+
-+		KAPI_STRUCT_FIELD(4, "read_consumed", KAPI_TYPE_UINT, "binder_size_t",
-+				  "Number of bytes consumed by driver")
-+			KAPI_FIELD_OFFSET(offsetof(struct binder_write_read, read_consumed))
-+			KAPI_FIELD_SIZE(sizeof(binder_size_t))
-+		KAPI_STRUCT_FIELD_END
-+
-+		KAPI_STRUCT_FIELD(5, "read_buffer", KAPI_TYPE_PTR, "binder_uintptr_t",
-+				  "Pointer to read buffer")
-+			KAPI_FIELD_OFFSET(offsetof(struct binder_write_read, read_buffer))
-+			KAPI_FIELD_SIZE(sizeof(binder_uintptr_t))
-+		KAPI_STRUCT_FIELD_END
-+	KAPI_STRUCT_SPEC_END
-+
-+	KAPI_STRUCT_SPEC_COUNT(1)
-+
-+	/* Side effects */
-+	KAPI_SIDE_EFFECT(0, KAPI_EFFECT_MODIFY_STATE | KAPI_EFFECT_NETWORK,
-+			 "binder transaction queue",
-+			 "Enqueues transactions or commands to target process")
-+		KAPI_EFFECT_CONDITION("write_size > 0")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT(1, KAPI_EFFECT_MODIFY_STATE | KAPI_EFFECT_SCHEDULE,
-+			 "process state",
-+			 "May block waiting for incoming transactions")
-+		KAPI_EFFECT_CONDITION("read_size > 0 && no data available")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT(2, KAPI_EFFECT_RESOURCE_CREATE,
-+			 "binder nodes/refs",
-+			 "May create or destroy binder nodes and references")
-+		KAPI_EFFECT_CONDITION("specific commands")
-+		KAPI_EFFECT_REVERSIBLE
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT(3, KAPI_EFFECT_SIGNAL_SEND,
-+			 "target process",
-+			 "May trigger death notifications to linked processes")
-+		KAPI_EFFECT_CONDITION("death notification")
-+	KAPI_SIDE_EFFECT_END
-+
-+	KAPI_SIDE_EFFECT_COUNT(4)
-+
-+	/* State transitions */
-+	KAPI_STATE_TRANS(0, "transaction",
-+			 "pending in sender", "queued in target",
-+			 "Transaction moves from sender to target's queue")
-+		KAPI_STATE_TRANS_COND("BC_TRANSACTION command")
-+	KAPI_STATE_TRANS_END
-+
-+	KAPI_STATE_TRANS(1, "thread state",
-+			 "running", "waiting for work",
-+			 "Thread blocks waiting for incoming transactions")
-+		KAPI_STATE_TRANS_COND("read with no work available")
-+	KAPI_STATE_TRANS_END
-+
-+	KAPI_STATE_TRANS(2, "binder ref",
-+			 "active", "released",
-+			 "Reference count decremented, may trigger cleanup")
-+		KAPI_STATE_TRANS_COND("BC_RELEASE command")
-+	KAPI_STATE_TRANS_END
-+
-+	KAPI_STATE_TRANS_COUNT(3)
-+KAPI_END_SPEC;
-+
-+DEFINE_KAPI_IOCTL_SPEC(binder_set_max_threads)
-+	KAPI_IOCTL_CMD(BINDER_SET_MAX_THREADS)
-+	KAPI_IOCTL_CMD_NAME("BINDER_SET_MAX_THREADS")
-+	KAPI_IOCTL_INPUT_SIZE(sizeof(__u32))
-+	KAPI_IOCTL_OUTPUT_SIZE(0)
-+	KAPI_IOCTL_FILE_OPS_NAME("binder_fops")
-+	KAPI_DESCRIPTION("Set maximum number of binder threads")
-+	KAPI_LONG_DESC("Sets the maximum number of threads that the binder driver "
-+		       "will request this process to spawn for handling incoming "
-+		       "transactions. The driver sends BR_SPAWN_LOOPER when it needs "
-+		       "more threads.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+	/* Parameters */
-+	KAPI_PARAM(0, "max_threads", "__u32", "Maximum number of threads")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		KAPI_PARAM_RANGE(0, INT_MAX)
-+	KAPI_PARAM_END
-+
-+	/* Return value */
-+	KAPI_RETURN("int", "0 on success, negative errno on failure")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+		KAPI_RETURN_ERROR_VALUES(((const s64[]){-EINVAL, -EFAULT}))
-+		KAPI_RETURN_ERROR_COUNT(2)
-+	KAPI_RETURN_END
-+
-+	/* Errors */
-+	KAPI_ERROR(0, -EINVAL, "EINVAL", "Invalid thread count",
-+		   "Thread count exceeds system limits")
-+	KAPI_ERROR(1, -EFAULT, "EFAULT", "Failed to copy from user",
-+		   "Invalid user pointer provided")
-+
-+	KAPI_ERROR_COUNT(2)
++/*
++ * Sysfs API specifications for integrity attributes
++ */
++DEFINE_SYSFS_API_SPEC(format)
++	KAPI_DESCRIPTION("Metadata format for integrity")
++	KAPI_LONG_DESC("Metadata format for integrity capable block device. "
++		       "E.g. T10-DIF-TYPE1-CRC. This field describes the type of T10 "
++		       "Protection Information that the block device can send and receive. "
++		       "If the device can store application integrity metadata but "
++		       "no T10 Protection Information profile is used, this field "
++		       "contains 'nop'. If the device does not support integrity "
++		       "metadata, this field contains 'none'.")
 +	KAPI_PARAM_COUNT(1)
-+	KAPI_SINCE_VERSION("3.0")
-+KAPI_END_SPEC;
-+
-+DEFINE_KAPI_IOCTL_SPEC(binder_set_context_mgr)
-+	KAPI_IOCTL_CMD(BINDER_SET_CONTEXT_MGR)
-+	KAPI_IOCTL_CMD_NAME("BINDER_SET_CONTEXT_MGR")
-+	KAPI_IOCTL_INPUT_SIZE(0)
-+	KAPI_IOCTL_OUTPUT_SIZE(0)
-+	KAPI_IOCTL_FILE_OPS_NAME("binder_fops")
-+	KAPI_DESCRIPTION("Become the context manager (handle 0)")
-+	KAPI_LONG_DESC("Registers the calling process as the context manager for "
-+		       "this binder domain. The context manager has special handle 0 "
-+		       "and typically implements the service manager. Only one process "
-+		       "per binder domain can be the context manager.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+	/* Return value */
-+	KAPI_RETURN("int", "0 on success, negative errno on failure")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+		KAPI_RETURN_ERROR_VALUES(((const s64[]){-EBUSY, -EPERM, -ENOMEM}))
-+		KAPI_RETURN_ERROR_COUNT(3)
-+	KAPI_RETURN_END
-+
-+	/* Errors */
-+	KAPI_ERROR(0, -EBUSY, "EBUSY", "Context manager already set",
-+		   "Another process is already the context manager")
-+	KAPI_ERROR(1, -EPERM, "EPERM", "Permission denied",
-+		   "Caller lacks permission or wrong UID")
-+	KAPI_ERROR(2, -ENOMEM, "ENOMEM", "Out of memory",
-+		   "Unable to allocate context manager node")
-+
-+	KAPI_ERROR_COUNT(3)
-+	KAPI_PARAM_COUNT(0)
-+	KAPI_SINCE_VERSION("3.0")
-+	KAPI_NOTES("Requires CAP_SYS_NICE or proper SELinux permissions")
-+KAPI_END_SPEC;
-+
-+DEFINE_KAPI_IOCTL_SPEC(binder_set_context_mgr_ext)
-+	KAPI_IOCTL_CMD(BINDER_SET_CONTEXT_MGR_EXT)
-+	KAPI_IOCTL_CMD_NAME("BINDER_SET_CONTEXT_MGR_EXT")
-+	KAPI_IOCTL_INPUT_SIZE(sizeof(struct flat_binder_object))
-+	KAPI_IOCTL_OUTPUT_SIZE(0)
-+	KAPI_IOCTL_FILE_OPS_NAME("binder_fops")
-+	KAPI_DESCRIPTION("Become context manager with extended info")
-+	KAPI_LONG_DESC("Extended version of BINDER_SET_CONTEXT_MGR that allows "
-+		       "specifying additional properties of the context manager "
-+		       "through a flat_binder_object structure.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+	/* Parameters */
-+	KAPI_PARAM(0, "object", "struct flat_binder_object", "Context manager properties")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+		.type = KAPI_TYPE_STRUCT,
-+		.size = sizeof(struct flat_binder_object),
++	KAPI_PARAM(0, "format", "string", "Integrity metadata format")
++		KAPI_PARAM_TYPE(KAPI_TYPE_STRING)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/integrity/format")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
 +	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/integrity/format")
++KAPI_END_SPEC;
 +
-+	/* Return value */
-+	KAPI_RETURN("int", "0 on success, negative errno on failure")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+		KAPI_RETURN_ERROR_VALUES(((const s64[]){-EINVAL, -EFAULT, -EBUSY, -EPERM, -ENOMEM}))
-+		KAPI_RETURN_ERROR_COUNT(5)
-+	KAPI_RETURN_END
-+
-+	/* Errors */
-+	KAPI_ERROR(0, -EINVAL, "EINVAL", "Invalid parameters",
-+		   "Invalid flat_binder_object structure")
-+	KAPI_ERROR(1, -EFAULT, "EFAULT", "Failed to copy from user",
-+		   "Invalid user pointer provided")
-+	KAPI_ERROR(2, -EBUSY, "EBUSY", "Context manager already set",
-+		   "Another process is already the context manager")
-+	KAPI_ERROR(3, -EPERM, "EPERM", "Permission denied",
-+		   "Caller lacks permission or wrong UID")
-+	KAPI_ERROR(4, -ENOMEM, "ENOMEM", "Out of memory",
-+		   "Unable to allocate context manager node")
-+
-+	KAPI_ERROR_COUNT(5)
+ static ssize_t format_show(struct device *dev, struct device_attribute *attr,
+ 			   char *page)
+ {
+@@ -244,6 +269,33 @@ static ssize_t format_show(struct device *dev, struct device_attribute *attr,
+ 	return sysfs_emit(page, "%s\n", blk_integrity_profile_name(bi));
+ }
+ 
++DEFINE_SYSFS_API_SPEC(tag_size)
++	KAPI_DESCRIPTION("Integrity tag size")
++	KAPI_LONG_DESC("Number of bytes of integrity tag space available per "
++		       "protection_interval_bytes, which is typically "
++		       "the device's logical block size. "
++		       "This field describes the size of the application tag "
++		       "if the storage device is formatted with T10 Protection "
++		       "Information and permits use of the application tag.")
 +	KAPI_PARAM_COUNT(1)
-+	KAPI_SINCE_VERSION("4.14")
-+KAPI_END_SPEC;
-+
-+DEFINE_KAPI_IOCTL_SPEC(binder_thread_exit)
-+	KAPI_IOCTL_CMD(BINDER_THREAD_EXIT)
-+	KAPI_IOCTL_CMD_NAME("BINDER_THREAD_EXIT")
-+	KAPI_IOCTL_INPUT_SIZE(0)
-+	KAPI_IOCTL_OUTPUT_SIZE(0)
-+	KAPI_IOCTL_FILE_OPS_NAME("binder_fops")
-+	KAPI_DESCRIPTION("Exit binder thread")
-+	KAPI_LONG_DESC("Notifies the binder driver that this thread is exiting. "
-+		       "The driver will clean up any pending transactions and "
-+		       "remove the thread from the thread pool.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+	/* Return value */
-+	KAPI_RETURN("int", "0 on success, negative errno on failure")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+		KAPI_RETURN_ERROR_VALUES((const s64[]){})
-+		KAPI_RETURN_ERROR_COUNT(0)
-+	KAPI_RETURN_END
-+
-+	KAPI_ERROR_COUNT(0)
-+	KAPI_PARAM_COUNT(0)
-+	KAPI_SINCE_VERSION("3.0")
-+	KAPI_NOTES("Should be called before thread termination to ensure clean shutdown")
-+KAPI_END_SPEC;
-+
-+DEFINE_KAPI_IOCTL_SPEC(binder_version)
-+	KAPI_IOCTL_CMD(BINDER_VERSION)
-+	KAPI_IOCTL_CMD_NAME("BINDER_VERSION")
-+	KAPI_IOCTL_INPUT_SIZE(0)
-+	KAPI_IOCTL_OUTPUT_SIZE(sizeof(struct binder_version))
-+	KAPI_IOCTL_FILE_OPS_NAME("binder_fops")
-+	KAPI_DESCRIPTION("Get binder protocol version")
-+	KAPI_LONG_DESC("Returns the current binder protocol version supported "
-+		       "by the driver. Used for compatibility checking.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+	/* Parameters */
-+	KAPI_PARAM(0, "protocol_version", "__s32", "Binder protocol version")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		KAPI_PARAM_TYPE(KAPI_TYPE_INT)
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_ENUM)
-+		.enum_values = (const s64[]){BINDER_CURRENT_PROTOCOL_VERSION},
-+		.enum_count = 1,
++	KAPI_PARAM(0, "tag_size", "unsigned int", "Tag size in bytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/integrity/tag_size")
++		KAPI_PARAM_RANGE(0, 65535)
++		KAPI_UNITS("bytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
 +	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/integrity/tag_size")
++	KAPI_NOTES("If the device does not support T10 Protection Information (even if the "
++		   "device provides application integrity metadata space), this field is set to 0. "
++		   "The owner of this tag space is the owner of the block device. The filesystem "
++		   "can use this extra space to tag sectors as they see fit. Because the tag space "
++		   "is limited, the block interface allows tagging bigger chunks by way of interleaving. "
++		   "This way, 8*16 bits of information can be attached to a typical 4KB filesystem block.")
++KAPI_END_SPEC;
 +
-+	/* Return value */
-+	KAPI_RETURN("int", "0 on success, negative errno on failure")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+		KAPI_RETURN_ERROR_VALUES(((const s64[]){-EINVAL, -EFAULT}))
-+		KAPI_RETURN_ERROR_COUNT(2)
-+	KAPI_RETURN_END
-+
-+	/* Errors */
-+	KAPI_ERROR(0, -EINVAL, "EINVAL", "Invalid version structure",
-+		   "Invalid user pointer for version structure")
-+	KAPI_ERROR(1, -EFAULT, "EFAULT", "Failed to copy to user",
-+		   "Unable to write version to user space")
-+
-+	KAPI_ERROR_COUNT(2)
+ static ssize_t tag_size_show(struct device *dev, struct device_attribute *attr,
+ 			     char *page)
+ {
+@@ -252,6 +304,26 @@ static ssize_t tag_size_show(struct device *dev, struct device_attribute *attr,
+ 	return sysfs_emit(page, "%u\n", bi->tag_size);
+ }
+ 
++DEFINE_SYSFS_API_SPEC(protection_interval_bytes)
++	KAPI_DESCRIPTION("Protection interval size")
++	KAPI_LONG_DESC("Describes the number of data bytes which are protected by one "
++		       "integrity tuple. Typically the device's logical block size. "
++		       "For example, a 512-byte sector with 8-byte integrity metadata "
++		       "would have a protection interval of 512 bytes.")
 +	KAPI_PARAM_COUNT(1)
-+	KAPI_SINCE_VERSION("3.0")
++	KAPI_PARAM(0, "protection_interval_bytes", "unsigned int", "Protection interval in bytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/integrity/protection_interval_bytes")
++		KAPI_PARAM_RANGE(0, 65536)
++		KAPI_UNITS("bytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/integrity/protection_interval_bytes")
++	KAPI_NOTES("This is typically the same as the device's logical block size")
 +KAPI_END_SPEC;
 +
-+DEFINE_KAPI_IOCTL_SPEC(binder_get_node_info_for_ref)
-+	KAPI_IOCTL_CMD(BINDER_GET_NODE_INFO_FOR_REF)
-+	KAPI_IOCTL_CMD_NAME("BINDER_GET_NODE_INFO_FOR_REF")
-+	KAPI_IOCTL_INPUT_SIZE(sizeof(struct binder_node_info_for_ref))
-+	KAPI_IOCTL_OUTPUT_SIZE(sizeof(struct binder_node_info_for_ref))
-+	KAPI_IOCTL_FILE_OPS_NAME("binder_fops")
-+	KAPI_DESCRIPTION("Get node information for a reference")
-+	KAPI_LONG_DESC("Retrieves information about a binder node given its handle. "
-+		       "Returns the current strong and weak reference counts.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+	/* Parameters */
-+	KAPI_PARAM(0, "handle", "__u32", "Binder handle")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+		.type = KAPI_TYPE_UINT,
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(1, "strong_count", "__u32", "Strong reference count")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		.type = KAPI_TYPE_UINT,
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(2, "weak_count", "__u32", "Weak reference count")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		.type = KAPI_TYPE_UINT,
-+	KAPI_PARAM_END
-+
-+	/* Return value */
-+	KAPI_RETURN("int", "0 on success, negative errno on failure")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+		KAPI_RETURN_ERROR_VALUES(((const s64[]){-EINVAL, -EFAULT, -ENOENT}))
-+		KAPI_RETURN_ERROR_COUNT(3)
-+	KAPI_RETURN_END
-+
-+	/* Errors */
-+	KAPI_ERROR(0, -EINVAL, "EINVAL", "Invalid parameters",
-+		   "Reserved fields must be zero")
-+	KAPI_ERROR(1, -EFAULT, "EFAULT", "Failed to copy data",
-+		   "Invalid user pointer provided")
-+	KAPI_ERROR(2, -ENOENT, "ENOENT", "Handle not found",
-+		   "No node exists for the given handle")
-+
-+	KAPI_ERROR_COUNT(3)
-+	KAPI_PARAM_COUNT(3)
-+	KAPI_SINCE_VERSION("4.14")
-+KAPI_END_SPEC;
-+
-+DEFINE_KAPI_IOCTL_SPEC(binder_get_node_debug_info)
-+	KAPI_IOCTL_CMD(BINDER_GET_NODE_DEBUG_INFO)
-+	KAPI_IOCTL_CMD_NAME("BINDER_GET_NODE_DEBUG_INFO")
-+	KAPI_IOCTL_INPUT_SIZE(sizeof(struct binder_node_debug_info))
-+	KAPI_IOCTL_OUTPUT_SIZE(sizeof(struct binder_node_debug_info))
-+	KAPI_IOCTL_FILE_OPS_NAME("binder_fops")
-+	KAPI_DESCRIPTION("Get debug info for binder nodes")
-+	KAPI_LONG_DESC("Iterates through all binder nodes in the process. "
-+		       "Start with ptr=NULL to get first node, then use "
-+		       "returned ptr for next call. Returns ptr=0 when done.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+	/* Parameters */
-+	KAPI_PARAM(0, "ptr", "binder_uintptr_t", "Node pointer (NULL for first)")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_INOUT)
-+		.type = KAPI_TYPE_PTR,
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(1, "cookie", "binder_uintptr_t", "Node cookie value")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		.type = KAPI_TYPE_UINT,
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(2, "has_strong_ref", "__u32", "Has strong references")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		.type = KAPI_TYPE_UINT,
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		.min_value = 0,
-+		.max_value = 1,
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(3, "has_weak_ref", "__u32", "Has weak references")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		.type = KAPI_TYPE_UINT,
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		.min_value = 0,
-+		.max_value = 1,
-+	KAPI_PARAM_END
-+
-+	/* Return value */
-+	KAPI_RETURN("int", "0 on success, negative errno on failure")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+		KAPI_RETURN_ERROR_VALUES(((const s64[]){-EFAULT, -EINVAL}))
-+		KAPI_RETURN_ERROR_COUNT(2)
-+	KAPI_RETURN_END
-+
-+	/* Errors */
-+	KAPI_ERROR(0, -EFAULT, "EFAULT", "Failed to copy data",
-+		   "Invalid user pointer provided")
-+	KAPI_ERROR(1, -EINVAL, "EINVAL", "Invalid node pointer",
-+		   "Provided ptr is not a valid node")
-+
-+	KAPI_ERROR_COUNT(2)
-+	KAPI_PARAM_COUNT(4)
-+	KAPI_SINCE_VERSION("4.14")
-+KAPI_END_SPEC;
-+
-+DEFINE_KAPI_IOCTL_SPEC(binder_freeze)
-+	KAPI_IOCTL_CMD(BINDER_FREEZE)
-+	KAPI_IOCTL_CMD_NAME("BINDER_FREEZE")
-+	KAPI_IOCTL_INPUT_SIZE(sizeof(struct binder_freeze_info))
-+	KAPI_IOCTL_OUTPUT_SIZE(0)
-+	KAPI_IOCTL_FILE_OPS_NAME("binder_fops")
-+	KAPI_DESCRIPTION("Freeze or unfreeze a binder process")
-+	KAPI_LONG_DESC("Controls whether a process can receive binder transactions. "
-+		       "When frozen, new transactions are blocked. Can wait for "
-+		       "existing transactions to complete with timeout.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+	/* Parameters */
-+	KAPI_PARAM(0, "pid", "__u32", "Process ID to freeze/unfreeze")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+		.type = KAPI_TYPE_UINT,
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		.min_value = 1,
-+		.max_value = PID_MAX_LIMIT,
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(1, "enable", "__u32", "1 to freeze, 0 to unfreeze")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+		.type = KAPI_TYPE_UINT,
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		.min_value = 0,
-+		.max_value = 1,
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(2, "timeout_ms", "__u32", "Timeout in milliseconds (0 = no wait)")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+		.type = KAPI_TYPE_UINT,
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		.min_value = 0,
-+		.max_value = 60000,	/* 1 minute max */
-+	KAPI_PARAM_END
-+
-+	/* Return value */
-+	KAPI_RETURN("int", "0 on success, negative errno on failure")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+		KAPI_RETURN_ERROR_VALUES(((const s64[]){-EINVAL, -EAGAIN, -EFAULT, -ENOMEM}))
-+		KAPI_RETURN_ERROR_COUNT(4)
-+	KAPI_RETURN_END
-+
-+	/* Errors */
-+	KAPI_ERROR(0, -EINVAL, "EINVAL", "Invalid process",
-+		   "Process not found or invalid parameters")
-+	KAPI_ERROR(1, -EAGAIN, "EAGAIN", "Timeout waiting for transactions",
-+		   "Existing transactions did not complete within timeout")
-+	KAPI_ERROR(2, -EFAULT, "EFAULT", "Failed to copy from user",
-+		   "Invalid user pointer provided")
-+	KAPI_ERROR(3, -ENOMEM, "ENOMEM", "Out of memory",
-+		   "Unable to allocate memory for freeze operation")
-+
-+	KAPI_ERROR_COUNT(4)
-+	KAPI_PARAM_COUNT(3)
-+	KAPI_SINCE_VERSION("5.9")
-+	KAPI_NOTES("Requires appropriate permissions to freeze other processes")
-+KAPI_END_SPEC;
-+
-+DEFINE_KAPI_IOCTL_SPEC(binder_get_frozen_info)
-+	KAPI_IOCTL_CMD(BINDER_GET_FROZEN_INFO)
-+	KAPI_IOCTL_CMD_NAME("BINDER_GET_FROZEN_INFO")
-+	KAPI_IOCTL_INPUT_SIZE(sizeof(struct binder_frozen_status_info))
-+	KAPI_IOCTL_OUTPUT_SIZE(sizeof(struct binder_frozen_status_info))
-+	KAPI_IOCTL_FILE_OPS_NAME("binder_fops")
-+	KAPI_DESCRIPTION("Get frozen status of a process")
-+	KAPI_LONG_DESC("Queries whether a process is frozen and if it has "
-+		       "received transactions while frozen. Useful for "
-+		       "debugging frozen process issues.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+	/* Parameters */
-+	KAPI_PARAM(0, "pid", "__u32", "Process ID to query")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+		.type = KAPI_TYPE_UINT,
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		.min_value = 1,
-+		.max_value = PID_MAX_LIMIT,
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(1, "sync_recv", "__u32", "Sync transactions received while frozen")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		.type = KAPI_TYPE_UINT,
-+		KAPI_PARAM_CONSTRAINT("Bit 0: received after frozen, Bit 1: pending during freeze")
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(2, "async_recv", "__u32", "Async transactions received while frozen")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		.type = KAPI_TYPE_UINT,
-+	KAPI_PARAM_END
-+
-+	/* Return value */
-+	KAPI_RETURN("int", "0 on success, negative errno on failure")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+		KAPI_RETURN_ERROR_VALUES(((const s64[]){-EINVAL, -EFAULT}))
-+		KAPI_RETURN_ERROR_COUNT(2)
-+	KAPI_RETURN_END
-+
-+	/* Errors */
-+	KAPI_ERROR(0, -EINVAL, "EINVAL", "Process not found",
-+		   "No binder process found with given PID")
-+	KAPI_ERROR(1, -EFAULT, "EFAULT", "Failed to copy data",
-+		   "Invalid user pointer provided")
-+
-+	KAPI_ERROR_COUNT(2)
-+	KAPI_PARAM_COUNT(3)
-+	KAPI_SINCE_VERSION("5.9")
-+KAPI_END_SPEC;
-+
-+DEFINE_KAPI_IOCTL_SPEC(binder_enable_oneway_spam_detection)
-+	KAPI_IOCTL_CMD(BINDER_ENABLE_ONEWAY_SPAM_DETECTION)
-+	KAPI_IOCTL_CMD_NAME("BINDER_ENABLE_ONEWAY_SPAM_DETECTION")
-+	KAPI_IOCTL_INPUT_SIZE(sizeof(__u32))
-+	KAPI_IOCTL_OUTPUT_SIZE(0)
-+	KAPI_IOCTL_FILE_OPS_NAME("binder_fops")
-+	KAPI_DESCRIPTION("Enable/disable oneway spam detection")
-+	KAPI_LONG_DESC("Controls whether the driver monitors for excessive "
-+		       "oneway transactions that might indicate spam or abuse. "
-+		       "When enabled, BR_ONEWAY_SPAM_SUSPECT is sent when threshold exceeded.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+	/* Parameters */
-+	KAPI_PARAM(0, "enable", "__u32", "1 to enable, 0 to disable")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_IN)
-+		.type = KAPI_TYPE_UINT,
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		.min_value = 0,
-+		.max_value = 1,
-+	KAPI_PARAM_END
-+
-+	/* Return value */
-+	KAPI_RETURN("int", "0 on success, negative errno on failure")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+		KAPI_RETURN_ERROR_VALUES(((const s64[]){-EFAULT}))
-+		KAPI_RETURN_ERROR_COUNT(1)
-+	KAPI_RETURN_END
-+
-+	/* Errors */
-+	KAPI_ERROR(0, -EFAULT, "EFAULT", "Failed to copy from user",
-+		   "Invalid user pointer provided")
-+
-+	KAPI_ERROR_COUNT(1)
+ static ssize_t protection_interval_bytes_show(struct device *dev,
+ 					      struct device_attribute *attr,
+ 					      char *page)
+@@ -275,6 +347,25 @@ static ssize_t read_verify_show(struct device *dev,
+ 	return flag_show(dev, page, BLK_INTEGRITY_NOVERIFY);
+ }
+ 
++DEFINE_SYSFS_API_SPEC(read_verify)
++	KAPI_DESCRIPTION("Read request integrity verification")
++	KAPI_LONG_DESC("Indicates whether the block layer should verify the integrity "
++		       "of read requests serviced by devices that support sending "
++		       "integrity metadata. A value of 1 enables verification, while "
++		       "0 disables it. When enabled, the block layer will check "
++		       "integrity metadata on read operations.")
 +	KAPI_PARAM_COUNT(1)
-+	KAPI_SINCE_VERSION("5.13")
++	KAPI_PARAM(0, "read_verify", "bool", "Enable read integrity verification")
++		KAPI_PARAM_TYPE(KAPI_TYPE_BOOL)
++		KAPI_PERMISSIONS(0644)
++		KAPI_PATH("/sys/block/<disk>/integrity/read_verify")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_RW)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("echo 1 > /sys/block/sda/integrity/read_verify")
++	KAPI_NOTES("This attribute only has effect if the device supports integrity metadata")
 +KAPI_END_SPEC;
 +
-+DEFINE_KAPI_IOCTL_SPEC(binder_get_extended_error)
-+	KAPI_IOCTL_CMD(BINDER_GET_EXTENDED_ERROR)
-+	KAPI_IOCTL_CMD_NAME("BINDER_GET_EXTENDED_ERROR")
-+	KAPI_IOCTL_INPUT_SIZE(0)
-+	KAPI_IOCTL_OUTPUT_SIZE(sizeof(struct binder_extended_error))
-+	KAPI_IOCTL_FILE_OPS_NAME("binder_fops")
-+	KAPI_DESCRIPTION("Get extended error information")
-+	KAPI_LONG_DESC("Retrieves detailed error information from the last "
-+		       "failed binder operation on this thread. Clears the "
-+		       "error after reading.")
-+	KAPI_CONTEXT(KAPI_CTX_PROCESS | KAPI_CTX_SLEEPABLE)
-+
-+	/* Parameters */
-+	KAPI_PARAM(0, "id", "__u32", "Error identifier")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		.type = KAPI_TYPE_UINT,
+ static ssize_t write_generate_store(struct device *dev,
+ 				    struct device_attribute *attr,
+ 				    const char *page, size_t count)
+@@ -288,6 +379,46 @@ static ssize_t write_generate_show(struct device *dev,
+ 	return flag_show(dev, page, BLK_INTEGRITY_NOGENERATE);
+ }
+ 
++DEFINE_SYSFS_API_SPEC(write_generate)
++	KAPI_DESCRIPTION("Write request integrity generation")
++	KAPI_LONG_DESC("Indicates whether the block layer should automatically generate "
++		       "checksums for write requests bound for devices that support "
++		       "receiving integrity metadata. A value of 1 enables generation, "
++		       "while 0 disables it. When enabled, the block layer will compute "
++		       "and attach integrity metadata to write operations.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "write_generate", "bool", "Enable write integrity generation")
++		KAPI_PARAM_TYPE(KAPI_TYPE_BOOL)
++		KAPI_PERMISSIONS(0644)
++		KAPI_PATH("/sys/block/<disk>/integrity/write_generate")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_RW)
 +	KAPI_PARAM_END
-+
-+	KAPI_PARAM(1, "command", "__u32", "Binder command that failed")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		.type = KAPI_TYPE_UINT,
-+	KAPI_PARAM_END
-+
-+	KAPI_PARAM(2, "param", "__s32", "Error parameter (negative errno)")
-+		KAPI_PARAM_FLAGS(KAPI_PARAM_OUT)
-+		KAPI_PARAM_TYPE(KAPI_TYPE_INT)
-+		KAPI_PARAM_CONSTRAINT_TYPE(KAPI_CONSTRAINT_RANGE)
-+		.min_value = -MAX_ERRNO,
-+		.max_value = 0,
-+	KAPI_PARAM_END
-+
-+	/* Return value */
-+	KAPI_RETURN("int", "0 on success, negative errno on failure")
-+		KAPI_RETURN_TYPE(KAPI_TYPE_INT)
-+		KAPI_RETURN_CHECK_TYPE(KAPI_RETURN_ERROR_CHECK)
-+		KAPI_RETURN_ERROR_VALUES(((const s64[]){-EFAULT}))
-+		KAPI_RETURN_ERROR_COUNT(1)
-+	KAPI_RETURN_END
-+
-+	/* Errors */
-+	KAPI_ERROR(0, -EFAULT, "EFAULT", "Failed to copy to user",
-+		   "Invalid user pointer provided")
-+
-+	KAPI_ERROR_COUNT(1)
-+	KAPI_PARAM_COUNT(3)
-+	KAPI_SINCE_VERSION("5.16")
-+	KAPI_NOTES("Error is cleared after reading, subsequent calls return BR_OK")
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("echo 1 > /sys/block/sda/integrity/write_generate")
++	KAPI_NOTES("This attribute only has effect if the device supports integrity metadata")
 +KAPI_END_SPEC;
 +
-+static int kapi_ioctl_specs_init(void)
-+{
-+	return 0;
-+}
++DEFINE_SYSFS_API_SPEC(device_is_integrity_capable)
++	KAPI_DESCRIPTION("Device integrity capability")
++	KAPI_LONG_DESC("Indicates whether a storage device is capable of storing "
++		       "integrity metadata. Set if the device is T10 PI-capable. "
++		       "This flag is set to 1 if the storage media is formatted "
++		       "with T10 Protection Information. If the storage media is "
++		       "not formatted with T10 Protection Information, this flag "
++		       "is set to 0. This is a key indicator for whether the device "
++		       "supports end-to-end data protection using standards like "
++		       "T10 DIF (Data Integrity Field) for SCSI devices.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "device_is_integrity_capable", "bool", "Device integrity capability flag")
++		KAPI_PARAM_TYPE(KAPI_TYPE_BOOL)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/integrity/device_is_integrity_capable")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/integrity/device_is_integrity_capable")
++KAPI_END_SPEC;
 +
-+static void kapi_ioctl_specs_exit(void)
-+{
-+}
-+
- DEFINE_SHOW_ATTRIBUTE(state);
- DEFINE_SHOW_ATTRIBUTE(state_hashed);
- DEFINE_SHOW_ATTRIBUTE(stats);
-@@ -7050,6 +7741,13 @@ static int __init binder_init(void)
- 	if (ret)
- 		return ret;
+ static ssize_t device_is_integrity_capable_show(struct device *dev,
+ 						struct device_attribute *attr,
+ 						char *page)
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index b2b9b89d6967c..8446ed4fc63d8 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -10,6 +10,8 @@
+ #include <linux/backing-dev.h>
+ #include <linux/blktrace_api.h>
+ #include <linux/debugfs.h>
++#include <linux/kernel_api_spec.h>
++#include <linux/syscall_api_spec.h>
  
-+	/* Initialize the wrapped file_operations */
-+	kapi_init_fops_binder_fops();
-+
-+	ret = kapi_ioctl_specs_init();
-+	if (ret)
-+		goto err_kapi_init;
-+
- 	atomic_set(&binder_transaction_log.cur, ~0U);
- 	atomic_set(&binder_transaction_log_failed.cur, ~0U);
+ #include "blk.h"
+ #include "blk-mq.h"
+@@ -51,6 +53,31 @@ queue_var_store(unsigned long *var, const char *page, size_t count)
+ 	return count;
+ }
  
-@@ -7102,6 +7800,9 @@ static int __init binder_init(void)
- 
- err_alloc_device_names_failed:
- 	debugfs_remove_recursive(binder_debugfs_dir_entry_root);
-+	kapi_ioctl_specs_exit();
++DEFINE_SYSFS_API_SPEC(nr_requests)
++	KAPI_DESCRIPTION("Number of allocatable requests")
++	KAPI_LONG_DESC("This controls how many requests may be allocated in the "
++		       "block layer for read or write requests. Note that the total "
++		       "allocated number may be twice this amount, since it applies only "
++		       "to reads or writes (not the accumulated sum). "
++		       "When CONFIG_BLK_CGROUP is enabled, each request queue may have "
++		       "up to N request pools for N block cgroups.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "nr_requests", "unsigned int", "Number of allocatable requests")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0644)
++		KAPI_PATH("/sys/block/<disk>/queue/nr_requests")
++		KAPI_PARAM_RANGE(BLKDEV_MIN_RQ, INT_MAX)
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_RW)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("echo 256 > /sys/block/sda/queue/nr_requests")
++	KAPI_NOTES("To avoid priority inversion through request starvation, a request queue "
++		   "maintains a separate request pool per each cgroup when CONFIG_BLK_CGROUP "
++		   "is enabled, and this parameter applies to each such per-block-cgroup "
++		   "request pool. IOW, if there are N block cgroups, each request queue may "
++		   "have up to N request pools, each independently regulated by nr_requests.")
++KAPI_END_SPEC;
 +
-+err_kapi_init:
- 	binder_alloc_shrinker_exit();
- 
+ static ssize_t queue_requests_show(struct gendisk *disk, char *page)
+ {
+ 	ssize_t ret;
+@@ -89,6 +116,29 @@ queue_requests_store(struct gendisk *disk, const char *page, size_t count)
  	return ret;
-diff --git a/include/linux/kernel_api_spec.h b/include/linux/kernel_api_spec.h
-index 4be9636b19158..ee7371909d0e4 100644
---- a/include/linux/kernel_api_spec.h
-+++ b/include/linux/kernel_api_spec.h
-@@ -863,6 +863,9 @@ struct kernel_api_spec {
- 		.enum_values = values, \
- 		.enum_count = ARRAY_SIZE(values),
+ }
  
-+#define KAPI_PARAM_SIZE_PARAM_IDX(idx) \
-+		.size_param_idx = idx,
++DEFINE_SYSFS_API_SPEC(read_ahead_kb)
++	KAPI_DESCRIPTION("Read-ahead size")
++	KAPI_LONG_DESC("Maximum number of kilobytes to read-ahead for filesystems "
++		       "on this block device. For MADV_HUGEPAGE, the readahead size "
++		       "may exceed this setting since its granularity is based on the "
++		       "hugepage size.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "read_ahead_kb", "unsigned int", "Read-ahead size in kilobytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0644)
++		KAPI_PATH("/sys/block/<disk>/queue/read_ahead_kb")
++		KAPI_PARAM_RANGE(0, ULONG_MAX >> (PAGE_SHIFT - 10))
++		KAPI_UNITS("kilobytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_RW)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("echo 128 > /sys/block/sda/queue/read_ahead_kb")
++	KAPI_NOTES("128 KB for each device is a good starting point, but increasing to "
++		   "4-8 MB might improve performance in environments where sequential "
++		   "reading of large files takes place. Changes are not persistent "
++		   "across reboots unless saved in startup scripts.")
++KAPI_END_SPEC;
 +
- #define KAPI_PARAM_END },
+ static ssize_t queue_ra_show(struct gendisk *disk, char *page)
+ {
+ 	ssize_t ret;
+@@ -124,6 +174,62 @@ queue_ra_store(struct gendisk *disk, const char *page, size_t count)
+ 	return ret;
+ }
  
- /**
++/*
++ * Sysfs API specifications for queue attributes
++ */
++DEFINE_SYSFS_API_SPEC(logical_block_size)
++	KAPI_DESCRIPTION("Logical block size")
++	KAPI_LONG_DESC("This is the smallest unit the storage device can address. "
++		       "It is typically 512 bytes.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "logical_block_size", "unsigned int", "Logical block size in bytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PATH("/sys/block/<disk>/queue/logical_block_size")
++		KAPI_PERMISSIONS(0444)
++		KAPI_PARAM_RANGE(512, 4096)
++		KAPI_UNITS("bytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/queue/logical_block_size")
++KAPI_END_SPEC;
++
++DEFINE_SYSFS_API_SPEC(physical_block_size)
++	KAPI_DESCRIPTION("Physical block size")
++	KAPI_LONG_DESC("This is the smallest unit a physical storage device can "
++		       "write atomically. It is usually the same as the logical block "
++		       "size but may be bigger. One example is SATA drives with 4KB "
++		       "sectors that expose a 512-byte logical block size to the "
++		       "operating system.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "physical_block_size", "unsigned int", "Physical block size in bytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/queue/physical_block_size")
++		KAPI_PARAM_RANGE(512, 4194304)
++		KAPI_UNITS("bytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/queue/physical_block_size")
++KAPI_END_SPEC;
++
++DEFINE_SYSFS_API_SPEC(hw_sector_size)
++	KAPI_DESCRIPTION("Hardware sector size")
++	KAPI_LONG_DESC("This is the hardware sector size of the device, in bytes.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "hw_sector_size", "unsigned int", "Hardware sector size in bytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/queue/hw_sector_size")
++		KAPI_PARAM_RANGE(512, 4194304)
++		KAPI_UNITS("bytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/queue/hw_sector_size")
++KAPI_END_SPEC;
++
+ #define QUEUE_SYSFS_LIMIT_SHOW(_field)					\
+ static ssize_t queue_##_field##_show(struct gendisk *disk, char *page)	\
+ {									\
+@@ -147,7 +253,53 @@ QUEUE_SYSFS_LIMIT_SHOW(virt_boundary_mask)
+ QUEUE_SYSFS_LIMIT_SHOW(dma_alignment)
+ QUEUE_SYSFS_LIMIT_SHOW(max_open_zones)
+ QUEUE_SYSFS_LIMIT_SHOW(max_active_zones)
++DEFINE_SYSFS_API_SPEC(atomic_write_unit_min_bytes)
++	KAPI_DESCRIPTION("Minimum atomic write unit size")
++	KAPI_LONG_DESC("This parameter specifies the smallest block which can "
++		       "be written atomically with an atomic write operation. All "
++		       "atomic write operations must begin at a "
++		       "atomic_write_unit_min boundary and must be multiples of "
++		       "atomic_write_unit_min. This value must be a power-of-two.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "atomic_write_unit_min_bytes", "unsigned int", "Minimum atomic write unit size in bytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/queue/atomic_write_unit_min_bytes")
++		KAPI_PARAM_RANGE(0, ULLONG_MAX)
++		KAPI_UNITS("bytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/nvme0n1/queue/atomic_write_unit_min_bytes")
++	KAPI_NOTES("This value must be a power-of-two. All atomic write operations must "
++		   "begin at a atomic_write_unit_min boundary and must be multiples of "
++		   "atomic_write_unit_min.")
++KAPI_END_SPEC;
++
+ QUEUE_SYSFS_LIMIT_SHOW(atomic_write_unit_min)
++
++DEFINE_SYSFS_API_SPEC(atomic_write_unit_max_bytes)
++	KAPI_DESCRIPTION("Maximum atomic write unit size")
++	KAPI_LONG_DESC("This parameter defines the largest block which can be "
++		       "written atomically with an atomic write operation. This "
++		       "value must be a multiple of atomic_write_unit_min and must "
++		       "be a power-of-two. This value will not be larger than "
++		       "atomic_write_max_bytes.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "atomic_write_unit_max_bytes", "unsigned int", "Maximum atomic write unit size in bytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/queue/atomic_write_unit_max_bytes")
++		KAPI_PARAM_RANGE(0, ULLONG_MAX)
++		KAPI_UNITS("bytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/nvme0n1/queue/atomic_write_unit_max_bytes")
++	KAPI_NOTES("This value must be a multiple of atomic_write_unit_min and must be a "
++		   "power-of-two. This value will not be larger than atomic_write_max_bytes.")
++KAPI_END_SPEC;
++
+ QUEUE_SYSFS_LIMIT_SHOW(atomic_write_unit_max)
+ 
+ #define QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_BYTES(_field)			\
+@@ -161,7 +313,60 @@ static ssize_t queue_##_field##_show(struct gendisk *disk, char *page)	\
+ QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_BYTES(max_discard_sectors)
+ QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_BYTES(max_hw_discard_sectors)
+ QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_BYTES(max_write_zeroes_sectors)
++
++DEFINE_SYSFS_API_SPEC(atomic_write_max_bytes)
++	KAPI_DESCRIPTION("Maximum atomic write size")
++	KAPI_LONG_DESC("This parameter specifies the maximum atomic write "
++		       "size reported by the device. This parameter is relevant "
++		       "for merging of writes, where a merged atomic write "
++		       "operation must not exceed this number of bytes. "
++		       "This parameter may be greater than atomic_write_unit_max_bytes.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "atomic_write_max_bytes", "unsigned int", "Maximum atomic write size in bytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/queue/atomic_write_max_bytes")
++		KAPI_PARAM_RANGE(0, ULLONG_MAX)
++		KAPI_UNITS("bytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/nvme0n1/queue/atomic_write_max_bytes")
++	KAPI_NOTES("This parameter is relevant for merging of writes, where a merged atomic "
++		   "write operation must not exceed this number of bytes. May be greater than "
++		   "atomic_write_unit_max_bytes as atomic_write_unit_max_bytes will be rounded "
++		   "down to a power-of-two and may also be limited by other queue limits such "
++		   "as max_segments. Will not be larger than max_hw_sectors_kb.")
++KAPI_END_SPEC;
++
+ QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_BYTES(atomic_write_max_sectors)
++
++DEFINE_SYSFS_API_SPEC(atomic_write_boundary_bytes)
++	KAPI_DESCRIPTION("Atomic write boundary size")
++	KAPI_LONG_DESC("A device may need to internally split an atomic write I/O "
++		       "which straddles a given logical block address boundary. This "
++		       "parameter specifies the size in bytes of the atomic boundary if "
++		       "one is reported by the device. This value must be a "
++		       "power-of-two and at least the size as in "
++		       "atomic_write_unit_max_bytes.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "atomic_write_boundary_bytes", "unsigned int", "Atomic write boundary size in bytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/queue/atomic_write_boundary_bytes")
++		KAPI_PARAM_RANGE(0, ULLONG_MAX)
++		KAPI_UNITS("bytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/nvme0n1/queue/atomic_write_boundary_bytes")
++	KAPI_NOTES("A device may need to internally split an atomic write I/O which straddles "
++		   "a given logical block address boundary. This specifies the size in bytes of "
++		   "the atomic boundary if one is reported by the device. Must be a power-of-two "
++		   "and at least the size as in atomic_write_unit_max_bytes. Any attempt to merge "
++		   "atomic write I/Os must not result in a merged I/O which crosses this boundary.")
++KAPI_END_SPEC;
++
+ QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_BYTES(atomic_write_boundary_sectors)
+ QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_BYTES(max_zone_append_sectors)
+ 
+@@ -171,7 +376,45 @@ static ssize_t queue_##_field##_show(struct gendisk *disk, char *page)	\
+ 	return queue_var_show(disk->queue->limits._field >> 1, page);	\
+ }
+ 
++DEFINE_SYSFS_API_SPEC(max_sectors_kb)
++	KAPI_DESCRIPTION("Maximum request size (software limit)")
++	KAPI_LONG_DESC("This is the maximum number of kilobytes that the block "
++		       "layer will allow for a filesystem request. Must be smaller than "
++		       "or equal to the maximum size allowed by the hardware. Write 0 "
++		       "to use default kernel settings.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "max_sectors_kb", "unsigned int", "Maximum request size in kilobytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0644)
++		KAPI_PATH("/sys/block/<disk>/queue/max_sectors_kb")
++		KAPI_PARAM_RANGE(0, UINT_MAX)
++		KAPI_UNITS("kilobytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_RW)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("echo 512 > /sys/block/sda/queue/max_sectors_kb")
++	KAPI_NOTES("Must be <= max_hw_sectors_kb")
++KAPI_END_SPEC;
++
+ QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_KB(max_sectors)
++
++DEFINE_SYSFS_API_SPEC(max_hw_sectors_kb)
++	KAPI_DESCRIPTION("Maximum request size (hardware limit)")
++	KAPI_LONG_DESC("This is the maximum number of kilobytes supported in a "
++		       "single data transfer.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "max_hw_sectors_kb", "unsigned int", "Maximum hardware request size in kilobytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/queue/max_hw_sectors_kb")
++		KAPI_PARAM_RANGE(0, UINT_MAX)
++		KAPI_UNITS("kilobytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/queue/max_hw_sectors_kb")
++KAPI_END_SPEC;
++
+ QUEUE_SYSFS_LIMIT_SHOW_SECTORS_TO_KB(max_hw_sectors)
+ 
+ #define QUEUE_SYSFS_SHOW_CONST(_name, _val)				\
+diff --git a/block/genhd.c b/block/genhd.c
+index 8171a6bc3210f..3cbc5418825f0 100644
+--- a/block/genhd.c
++++ b/block/genhd.c
+@@ -26,6 +26,8 @@
+ #include <linux/badblocks.h>
+ #include <linux/part_stat.h>
+ #include <linux/blktrace_api.h>
++#include <linux/kernel_api_spec.h>
++#include <linux/syscall_api_spec.h>
+ 
+ #include "blk-throttle.h"
+ #include "blk.h"
+@@ -1104,6 +1106,25 @@ ssize_t part_stat_show(struct device *dev,
+  * For bio-based device, started from bdev_start_io_acct();
+  * For rq-based device, started from blk_mq_start_request();
+  */
++DEFINE_SYSFS_API_SPEC(inflight)
++	KAPI_DESCRIPTION("I/O requests in progress")
++	KAPI_LONG_DESC("Reports the number of I/O requests currently in progress "
++		       "(pending / in flight) in a device driver. This can be less "
++		       "than the number of requests queued in the block device queue. "
++		       "The report contains 2 fields: one for read requests "
++		       "and one for write requests.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "inflight", "string", "Two unsigned integers: read and write requests in flight")
++		KAPI_PARAM_TYPE(KAPI_TYPE_STRING)
++		KAPI_PATH("/sys/block/<disk>/inflight")
++		KAPI_PERMISSIONS(0444)
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/inflight")
++	KAPI_NOTES("The value type is unsigned int. Related to /sys/block/<disk>/queue/nr_requests")
++KAPI_END_SPEC;
++
+ ssize_t part_inflight_show(struct device *dev, struct device_attribute *attr,
+ 			   char *buf)
+ {
+@@ -1123,6 +1144,28 @@ static ssize_t disk_capability_show(struct device *dev,
+ 	return sysfs_emit(buf, "0\n");
+ }
+ 
++/*
++ * Sysfs API specifications for disk attributes
++ */
++DEFINE_SYSFS_API_SPEC(alignment_offset)
++	KAPI_DESCRIPTION("Physical block alignment offset")
++	KAPI_LONG_DESC("Storage devices may report a physical block size that is "
++		       "bigger than the logical block size. This parameter "
++		       "indicates how many bytes the beginning of the device is "
++		       "offset from the disk's natural alignment.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "alignment_offset", "int", "Alignment offset in bytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_INT)
++		KAPI_PATH("/sys/block/<disk>/alignment_offset")
++		KAPI_PERMISSIONS(0444)
++		KAPI_PARAM_RANGE(0, INT_MAX)
++		KAPI_UNITS("bytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/alignment_offset")
++KAPI_END_SPEC;
++
+ static ssize_t disk_alignment_offset_show(struct device *dev,
+ 					  struct device_attribute *attr,
+ 					  char *buf)
+@@ -1132,6 +1175,27 @@ static ssize_t disk_alignment_offset_show(struct device *dev,
+ 	return sysfs_emit(buf, "%d\n", bdev_alignment_offset(disk->part0));
+ }
+ 
++DEFINE_SYSFS_API_SPEC(discard_alignment)
++	KAPI_DESCRIPTION("Discard alignment offset")
++	KAPI_LONG_DESC("Devices that support discard functionality may "
++		       "internally allocate space in units that are bigger than "
++		       "the exported logical block size. The discard_alignment "
++		       "parameter indicates how many bytes the beginning of the "
++		       "device is offset from the internal allocation unit's "
++		       "natural alignment.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "discard_alignment", "int", "Discard alignment offset in bytes")
++		KAPI_PARAM_TYPE(KAPI_TYPE_INT)
++		KAPI_PATH("/sys/block/<disk>/discard_alignment")
++		KAPI_PERMISSIONS(0444)
++		KAPI_PARAM_RANGE(0, INT_MAX)
++		KAPI_UNITS("bytes")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/discard_alignment")
++KAPI_END_SPEC;
++
+ static ssize_t disk_discard_alignment_show(struct device *dev,
+ 					   struct device_attribute *attr,
+ 					   char *buf)
+@@ -1141,6 +1205,25 @@ static ssize_t disk_discard_alignment_show(struct device *dev,
+ 	return sysfs_emit(buf, "%d\n", bdev_alignment_offset(disk->part0));
+ }
+ 
++DEFINE_SYSFS_API_SPEC(diskseq)
++	KAPI_DESCRIPTION("Disk sequence number")
++	KAPI_LONG_DESC("The diskseq attribute reports the disk sequence number, "
++		       "which is a monotonically increasing number assigned to "
++		       "every drive. Some devices, like the loop device, refresh "
++		       "this number every time the backing file is changed.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "diskseq", "uint64_t", "64-bit disk sequence number")
++		KAPI_PARAM_TYPE(KAPI_TYPE_UINT)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/diskseq")
++		KAPI_PARAM_RANGE(0, ULLONG_MAX)
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/diskseq")
++	KAPI_NOTES("Value type is 64 bit unsigned")
++KAPI_END_SPEC;
++
+ static ssize_t diskseq_show(struct device *dev,
+ 			    struct device_attribute *attr, char *buf)
+ {
+@@ -1149,6 +1232,22 @@ static ssize_t diskseq_show(struct device *dev,
+ 	return sysfs_emit(buf, "%llu\n", disk->diskseq);
+ }
+ 
++DEFINE_SYSFS_API_SPEC(partscan)
++	KAPI_DESCRIPTION("Partition scanning status")
++	KAPI_LONG_DESC("Reports if partition scanning is enabled for the disk. "
++		       "Returns '1' if partition scanning is enabled, or '0' if not.")
++	KAPI_PARAM_COUNT(1)
++	KAPI_PARAM(0, "partscan", "bool", "Partition scanning enabled flag")
++		KAPI_PARAM_TYPE(KAPI_TYPE_BOOL)
++		KAPI_PERMISSIONS(0444)
++		KAPI_PATH("/sys/block/<disk>/partscan")
++		KAPI_PARAM_FLAGS(KAPI_PARAM_SYSFS_READONLY)
++	KAPI_PARAM_END
++	KAPI_SUBSYSTEM("block")
++	KAPI_EXAMPLES("cat /sys/block/sda/partscan")
++	KAPI_NOTES("The value type is a 32-bit unsigned integer, but only '0' and '1' are valid values")
++KAPI_END_SPEC;
++
+ static ssize_t partscan_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
+ {
 -- 
 2.39.5
 
