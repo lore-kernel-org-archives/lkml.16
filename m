@@ -1,85 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E422E1731;
-	Tue, 24 Jun 2025 16:03:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36C082D878A;
+	Tue, 24 Jun 2025 16:04:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750780988; cv=none; b=shBOD3VcYFYfHl2f0eIo1xB5R86oX+SJd++WpELdjUe0oCZA9tE1k+Vm1l16sO44+9kJ1r5SyyS7MvGULsQoKIjEu3cEPhpxln34zEwxuoT5okI2Az2CA3Qnz6ZsBIHGIN2HwRMhkIvqvq+qzrdkdzN8WHyhmA1qUZ6bLFGFgQE=
+	t=1750781068; cv=none; b=gC0WNV660azM5IbtsF0LfttMxOmkrajYgfdD3rB+Ldv1jfpXnUkWyAenGbzp1OdkDsjDbLRoJKcQdhGBJbNNIGWK9jm/FNlOwhOQQxdBBXTph/sG7yK5x3ijWRJdCueGZiiN/m+oraJOeLanp69KWJ0ErviSl5rcpZOi1Yvwoks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750780988; c=relaxed/simple;
-	bh=KV3OmoqbIFpb1DXvXtj2VuD9NpNW4mY2HLxDfq8IF0M=;
+	s=arc-20240116; t=1750781068; c=relaxed/simple;
+	bh=QbCVRBh2Lu2DWsu/OspFLvrpSVg7Vb0ull1pA72H2zE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SfBUZ3vzDV2TzkMHzsb9iQlgrqzk0JObFFR2UAIAYNqf+hYLlgV36MfaOGq8fTnqxKnEh/56LkGumFj5WOpE4cDJ6xGuP0NZrJfNJgGhcdewOTBtdF1et2QKowvR4fFZXT4EIrXoQfVP0QXkIgHI40NQvCT7u+4Lk8tj2BconSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LiQWlWfw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=obzLOqi95bYWIgZQyp15BBDIxbCGFAuI7f1BKN/Qz/54BvUc/08BsMh4Kch+wjYDUy0EcJf3TL6J5LXhxcF8NRl/kwYrIbMwMckmgbrWnjigrKC9LyBjNh9VVR1QSYzHoC7Tqjseb+onXAHLSRQ1fmeIkIq8FB62BFd4F2/PzOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pxJhHrWA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LiQWlWfw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A8F9C4CEF0;
-	Tue, 24 Jun 2025 16:03:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pxJhHrWA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DF1BC4CEE3;
+	Tue, 24 Jun 2025 16:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750780988;
-	bh=KV3OmoqbIFpb1DXvXtj2VuD9NpNW4mY2HLxDfq8IF0M=;
+	s=k20201202; t=1750781068;
+	bh=QbCVRBh2Lu2DWsu/OspFLvrpSVg7Vb0ull1pA72H2zE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LiQWlWfwV8V7sLkemZoKsu0cwJ6bIcmlCznpocInMarpQoeifFuQdfbcn91HnDsGh
-	 cZu+i1Yhb7yVxf6XAgl5tSjvEgnqPwBim6IGIPIDrA6CsgyiEF9Lv02DIHjjCWvJjE
-	 LNAG06rYU+c+zuSn/8UKg7agdqm+m2qiB/V01M2TlJef/hfpM6pN2zlk552rkCvb6p
-	 IUrrgt+0aD5mf3mvvQcSwxAFL7yN8O1dJWQnzB1c3+/+rPQnIdIIEd6Q/vuuNesVbe
-	 raLU0NYRgFcKXmyQStCc8p6skBx/Stk/umfLfFsqGE29qsHAvrNZl1yBV595XVUENo
-	 kuMdf+BaUuBjA==
-Date: Tue, 24 Jun 2025 17:03:04 +0100
-From: Simon Horman <horms@kernel.org>
-To: Jacek Kowalski <jacek@jacekk.info>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] e1000e: ignore factory-default checksum value on
- TGP platform
-Message-ID: <20250624160304.GB5265@horms.kernel.org>
-References: <fe064a2c-31d6-4671-ba30-198d121782d0@jacekk.info>
- <b7856437-2c74-4e01-affa-3bbc57ce6c51@jacekk.info>
- <20250624095313.GB8266@horms.kernel.org>
- <cca5cdd3-79b3-483d-9967-8a134dd23219@jacekk.info>
+	b=pxJhHrWA1IAKtCFz64tYdA190DbEFcxU37tR5p6wbNLYPycUj0Zy3cLlPgm/VdhVQ
+	 uB36eC2CiSE3m6yUPyIrUSfIT3SVZiA/NL7Xox2zUksSymsGbW8fEifGGaRTxv70vI
+	 NH7FvmiKC+D4cuCmVmmeOot6oMsgYxjSadwId5IS4q8YYF5b2vBOJ2B7THpRpDi0OB
+	 oNxcr23ltHETJ+6PuAcGHjmHl9z5dMQ+4G+3dE/JEt4kvbc4iWutLCvZ/3n8/l8Wsn
+	 TnObWWLGYvd2UMUFK7/T2C42G5zh8zSbBSXMi9PbQavNYe/Uz9eZQsdYRcmVL0ttr+
+	 BSxERCJRbX4uw==
+Date: Tue, 24 Jun 2025 18:04:25 +0200
+From: Maxime Ripard <mripard@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, 
+	Michal Wilczynski <m.wilczynski@samsung.com>, Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, 
+	Matt Coster <matt.coster@imgtec.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+	Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski <m.szyprowski@samsung.com>, 
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [GIT PULL] Immutable tag between the pwrseq, drm and pmdomain
+ trees for v6.17-rc1
+Message-ID: <20250624-didactic-inquisitive-axolotl-33c2ce@houat>
+References: <20250624141013.81358-1-brgl@bgdev.pl>
+ <CAMRc=MeKfWsf8T1tJLdj=+7aq0zGpQ07pHd2Mz-Y=Bwae0sAbw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="t7y4wxlov2z67pu2"
 Content-Disposition: inline
-In-Reply-To: <cca5cdd3-79b3-483d-9967-8a134dd23219@jacekk.info>
+In-Reply-To: <CAMRc=MeKfWsf8T1tJLdj=+7aq0zGpQ07pHd2Mz-Y=Bwae0sAbw@mail.gmail.com>
 
-On Tue, Jun 24, 2025 at 02:51:09PM +0200, Jacek Kowalski wrote:
-> > > +	if (hw->mac.type == e1000_pch_tgp && checksum == (u16)NVM_SUM_FACTORY_DEFAULT) {
-> > 
-> > I see that a similar cast is applied to NVM_SUM. But why?
-> > If it's not necessary then I would advocate dropping it.
-> 
-> It's like that since the beginning of git history, tracing back to e1000:
-> 
-> $ git show 1da177e4c3f4:drivers/net/e1000/e1000_hw.c | grep -A 1 EEPROM_SUM
->     if(checksum == (uint16_t) EEPROM_SUM)
->         return E1000_SUCCESS;
-> (...)
-> 
-> 
-> I'd really prefer to keep it as-is here for a moment, since similar
-> constructs are not only here, and then clean them up separately.
-> 
-> Examples instances from drivers/net/ethernet/intel:
-> 
-> e1000/e1000_ethtool.c:  if ((checksum != (u16)EEPROM_SUM) && !(*data))
-> e1000/e1000_hw.c:       if (checksum == (u16)EEPROM_SUM)
-> e1000e/ethtool.c:       if ((checksum != (u16)NVM_SUM) && !(*data))
-> igb/e1000_82575.c:      if (checksum != (u16) NVM_SUM) {
-> igb/e1000_nvm.c:        if (checksum != (u16) NVM_SUM) {
-> igc/igc_nvm.c:  if (checksum != (u16)NVM_SUM) {
 
-Ok. But can we look into cleaning this up as a follow-up?
+--t7y4wxlov2z67pu2
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [GIT PULL] Immutable tag between the pwrseq, drm and pmdomain
+ trees for v6.17-rc1
+MIME-Version: 1.0
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+Hi,
+
+On Tue, Jun 24, 2025 at 04:40:43PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Jun 24, 2025 at 4:10=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
+l> wrote:
+> >
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Here's an immutable tag containing the thead 1520 power sequencing driv=
+er
+> > for the drm and pmdomain trees to pull from.
+> >
+> > Best Regards,
+> > Bartosz Golaszewski
+>=20
+> Just an FYI - there don't seem to be any actual build-time
+> dependencies between this driver and the rest of the code that uses it
+> (thanks to the aux bus usage etc.) so Michal, Ulf et al: you can
+> probably skip the pull if you can rely on this being available in
+> linux-next for run-time testing.
+
+Yeah, I was about to say I don't think we will pull it in DRM. As far as
+I know, it's only about runtime dependencies that will be reconciled
+when all the trees will be merged by Linus.
+
+Maxime
+
+--t7y4wxlov2z67pu2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFrMiQAKCRAnX84Zoj2+
+dsYBAYCu3xP1Pw5J37rmb/byVqOoAoydBCvTz3kfgbVQp3vPUTr0ZD2UbuN+ujlL
+Zkmbkk0BfiUojDX+qMMUGMXoyoaJl+/0kqMvR5GbrFkjXthPpZDq6r6DYHOfahhj
+xLUHbqmIbg==
+=0bcI
+-----END PGP SIGNATURE-----
+
+--t7y4wxlov2z67pu2--
