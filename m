@@ -1,106 +1,271 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA402D1F55
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:40:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E5A22D23AB;
+	Tue, 24 Jun 2025 14:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750776057; cv=none; b=ng6j03pwWtWxny4Wyw99o3uzRVOB/vQxfVkm+bQYgLvj+rHecyKp7BXUNxEb8Zp7gEJDlwkDDQ+c5u8eeaVMb2z9u9yVouoBKEFA/3OZrp+oDGxtc9Q6VFuQatdr9WTT9sIKU1HKH6Ff2WVjW5pG4c4nvscQfKO7dWZ54ICXdwE=
+	t=1750776130; cv=none; b=gjke3TGD4pCd2y3GL986Af2eKNW++2IDHGkGDhUa714Lfyy9yPvTM0/Bt/v7UvcH8FkRDiQgc+xVjt+b6opF+rKwtf1QoOjzsYX750b8CLddEB9m1MM0k9ZggbtdJjdRDQp8iP9dMLWCvQA4UEgtTf3pLn/BxC6iDaJQu4dJ+3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750776057; c=relaxed/simple;
-	bh=EzNCs9Ria+/nsHScn6KKXudzA13G16dAU3b2TbhXQXY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bClw2Lz4LV6v6u3XTzseVAG4VZ6O7iLc5IjOHvoQ8S+SxRWraIGU+DcNM4E6vmFOfNs6XxhNGU2Q22QJaGx1ZdjbMlptXBuljuxSisWImMzps76xjjOxEGon5syG6OsZbRTM7SLDccfXt8e8GN0Jubjgti8JxoilVb7J/JK6HPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dvng8qUo; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750776130; c=relaxed/simple;
+	bh=V1M4ORKLJLIjG57LATbk5936tLU6u1xz5jO3Mt7+sNI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dKHWagWPL1pccvyY25iAQ0OJyhdoyNtIPb6o6uuMe2FREIXDDP1KNPI20s+2pqR5p0Pj5irIj7a5zrSM60n2//Dl57HGs5KROIUnnY5sTkPKVml+lGngfU8imO3SmdnoSkH++d4RMZZOkSk5jMPvVSpEchSeLbJlEroeZZQ4kmw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bfLCv5z6; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dvng8qUo"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553b60de463so5879106e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:40:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfLCv5z6"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7d402c901cbso40839885a.3;
+        Tue, 24 Jun 2025 07:42:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750776054; x=1751380854; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EzNCs9Ria+/nsHScn6KKXudzA13G16dAU3b2TbhXQXY=;
-        b=dvng8qUodpYwB9Rkao4BI7wCKrDuFIdghJQY4ZB/h0bA7MYDdExo9ZRw4bWycAbixC
-         UcJG0Zgg7gGQJTTRz58PGLzshfysFnnpoDoO/U0Z48TQxCeKNtp2x1eaxltD5Zo0nary
-         FyEhfNXkmjAjKQQ041WytH0ukSBdoS20QqlXlkzDxhoYNuZQvE88yXUZk/NIVp10BDvp
-         qHGorhVQjttrFD3ddQMpgmymL6UX7S70XhI52g+mGw3ellr3f7n/43ZnwJPWiqxywJex
-         DmYjVpoK86fZYuwRfs83wLa/RfnTeBLqQR37X6RQIoNg/CnZ037lZAk9JQUehLi8KIl2
-         dFEA==
+        d=gmail.com; s=20230601; t=1750776127; x=1751380927; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=GtB/3XhJ46B/NpEKgpZNrT4UMCjsycvYug2oSPbfSqo=;
+        b=bfLCv5z6p9h9cd4vlfyOSHf9Y7C5GbbuzRMnmn8AHq13lY8BnZTQtvBkKKIFcXWZSX
+         IpybrLjVsQd/XT7VpEPThd4w3HQDygtLF5L1K9Z1I5pdRGzyxYlKvQu1UMRB7BYHtnjC
+         SLRyBED0EJkNo+9x48OdkmDL+W8rmuVQOLNFTsrdWX87iaHH6IQzYAtm6CZF6I+jD6Cs
+         Q4HL3WkqlAskorqTISUOmadnppOGH32LN56NRHiiGpJlA0menrXO2xyLzBkhok6dmHK+
+         RvKNlShuC1pyf9J1LDCwdKrKo0n7O2a/Of6dImVdMelmn5EqslZQRzpFD8cxvDi1O3vq
+         g1NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750776054; x=1751380854;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EzNCs9Ria+/nsHScn6KKXudzA13G16dAU3b2TbhXQXY=;
-        b=XtD07t9zoY7Xv4WHMHa5gZp/ezB7Z7QFM/dUl4GPsQTfImRHaGRKHgHc1V4WZm/TJ2
-         dOO0fryFQxtlcNgqQZV12avX54bUpZxtPcQcqJLSxHuXZEiKqWJjX0upPx7Z68304yfi
-         QiNw3j6W2nCa7yMQQfMnp4h2gc1p+ZdabGD7XKsqwOlVodoDYkCjmgxeVfZJFUR5pRi2
-         fB+x79JQR5FddiJnYX34GTNx50xd0ZeB3V+G9+xna8xIOgPDfG3pmtAadlpTc/YNUGUo
-         IMTz9kfLtgq4Ya1TaVPNbqzfFBoqkUzLIDqk1OX+keCcZZReI0yBC0ryKdBlvUnNtncY
-         5Kkg==
-X-Forwarded-Encrypted: i=1; AJvYcCXRlaDpQameQ6T3mdATcy97x+8lw/W6QHiI2OgNE6Y5x02zxQkN3Bwo3qYGsodDJJ2AOTxWeD6bqQ2LWAs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWfgJMJQNKhjPco8sHReDo1n/wM7WYA3HRPz7rwRowYX5W4gmE
-	4KyD+Tn4du1F+cdR3lbYGjbP2cTOUDUHqQSEgM5bc1LLDWjuLJKCW7SAXhoJiNEyWLxZNSikyAW
-	xRBGgFOgtlnSFviXxEs0YBOIDEPS4GtUW1rpI6pGeTA==
-X-Gm-Gg: ASbGncvPV9XwBTGMEHrTCDUe4shk9DNQN0FL1bliuNibkojTo2tQnSH6UhT1yXZEDxd
-	7iygmVjTM6HXzWPx1J/qM4vS8Vz6MuLb5oszzC/uSQQvTKMZ2ANTfi1IHRNwJtytNkYNb0J94Rw
-	bf6DPsifCSojaencpEg+ew7aGEDs4JgMWNwbC+K6A6xQVBRLz4d1aOULyVqeFzxSn9TFu+Wi7Tg
-	Gk=
-X-Google-Smtp-Source: AGHT+IHoYTMP7f+GMTw3uTP6k4I0Bn231yrpp+uoyy9GCq8Fgqpn1kY4nGbARRHfnOknqCIYL6cW4GTWqP9E24930M8=
-X-Received: by 2002:a05:6512:6ca:b0:553:3621:efee with SMTP id
- 2adb3069b0e04-553e3d07037mr4828362e87.50.1750776053838; Tue, 24 Jun 2025
- 07:40:53 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750776127; x=1751380927;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :feedback-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GtB/3XhJ46B/NpEKgpZNrT4UMCjsycvYug2oSPbfSqo=;
+        b=BT7WVBYjvI+zCRaraP1utQbih17HtwEXAYjYcdBnqw56zJgRkTe/DGCFyRNnOycsCt
+         7eMFrCTJHLkeL4aBqpBPB8q/prMKWjcBWH6lmcqDCXjPIwKyrrZqpnMCDtrptGhHDv4K
+         GeSbT1ntrjUeAik0msF6LiWeokMc9sDYOaGZmkRWC0ABfAEWBdWb8MuobyQCyUvyzedr
+         L9qo1yuj6ZwWkD92JK5t7+d8b77iQj4aWkGC/A3mZ8Uq3rcUVG+20m18wF77VFoCzUKt
+         Z26IfCFaqApInaj2DfLBV6YEICguJ5hTtFvKPrTaPBIiCk2vja6ZdOnmRzuqkrEn+u0B
+         Vkew==
+X-Forwarded-Encrypted: i=1; AJvYcCU/zwkWmVrTRSozgJcGNzPYEy82/nFu+ahRW00ojrUbxEG3qNGEYNWdzyiYp52chrDkXanSGpyIoBpYs50=@vger.kernel.org, AJvYcCXIegfOUCOXurngGxCkPqsJYgpLaYfRMhjjqRg2M0qfToKknym2vdCp4fXwqZA7Caj95ssarCsUe+91@vger.kernel.org, AJvYcCXmPG037OFEQTgT1fFqvAUqA0bqDD82xqmfmMHdsODqAMdPJ48NaRztWA6B/5t5FEfKpLvnWG+IaYOx4Zvipl4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxcY7opb3ZOqt4JyaSQg+WXG7jz8Eh3ngsS/Sr5Vvc6rI/VQ2rV
+	TNZYY/sxyNaVHuRxCAcssRb16GfJzG/0ZD1eEDC4tgBkN5Pwjipt4X3a
+X-Gm-Gg: ASbGncvmgdDCfaSJdVNNphE5XYy8Tq+X1Jf/Nf6Wwz5x0Ga50+Dj8LOnqzSWKQBor/a
+	+TRTu2dFs7JhG1FIHlDWDI1Z30tj3C5XRRDzVY25ZVYdbFMVTEliFMQiY97UG2umGt749lglr77
+	PWRPRSSvvo5ihgfdy+qriHACFT1oQZW4/ld+CWlTmS7MzrmaXmLZX5vQvh0uTlkuft2TA6T3H9g
+	pfIkGOBnegdARwGJh1VHIK4f0zrjFvpB+gnL/WFL8U1oDHMZZj86dtBbnUb3CzASy7vJvSEo5dJ
+	OPEaoBECDq5f3B/r4GQzuLenDAKdkaDD4UsKOd21OGfJJ9Ewe0QpotChShZF0RXdWG2Ca/apYh7
+	Jp6BlMd/Pyu9qfQr1guuCDgBsUQ9dVdhFHE+KC0pFz4HMLgKrYTZp
+X-Google-Smtp-Source: AGHT+IGqn8QSrBn/+r07VLKEUP7DR9SwamJYuczpKcnyFMNqjHFRpwoNy5lg3m6iRp1rsXysqsgRKw==
+X-Received: by 2002:a05:620a:1a06:b0:7d3:abd6:3cab with SMTP id af79cd13be357-7d3f9931d6fmr2391463585a.41.1750776127335;
+        Tue, 24 Jun 2025 07:42:07 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f99a6415sm507451085a.40.2025.06.24.07.42.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 07:42:06 -0700 (PDT)
+Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 544901200043;
+	Tue, 24 Jun 2025 10:42:06 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-12.internal (MEProxy); Tue, 24 Jun 2025 10:42:06 -0400
+X-ME-Sender: <xms:PrlaaCzIITWtK_Q3M6kzh36u9740yD7yvqqNp93T66t5fqiKrwdMXA>
+    <xme:PrlaaOTev_EvXTfTVyCzI15U6Atiaob66jAWkbbi7SxEuYU3HIvkJnGoLc54pvkEN
+    QvoTsuJlKKjkQbdzg>
+X-ME-Received: <xmr:PrlaaEUXg3rePXlcVz9jNfSmlCPw2o50kjuHWWV6Kc3DL14bCAy9xM6MpQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvtdduiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtugfgjgesthekredttddtjeenucfhrhhomhepuehoqhhunhcu
+    hfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucggtffrrghtth
+    gvrhhnpeevgffhueevkedutefgveduuedujeefledthffgheegkeekiefgudekhffggeel
+    feenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsoh
+    hquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedq
+    udejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmh
+    gvrdhnrghmvgdpnhgspghrtghpthhtohepudelpdhmohguvgepshhmthhpohhuthdprhgt
+    phhtthhopegrlhhitggvrhihhhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehloh
+    hsshhinheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrnhhivghlrdgrlhhmvghi
+    uggrsegtohhllhgrsghorhgrrdgtohhmpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthho
+    pegrlhgvgidrghgrhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihse
+    hgrghrhihguhhordhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhn
+    mhgrihhlrdgtohhmpdhrtghpthhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdroh
+    hrgh
+X-ME-Proxy: <xmx:PrlaaIhSOH_mFSFfZEHQ8ORjniKF0G9fEmWZwKEdB-_NARn2axiSoA>
+    <xmx:PrlaaEAYxQYtyc8B3Vri87yY3MozaCdeJSIHYgJvKEZc5hWmNBi3sw>
+    <xmx:PrlaaJJvm1Gj5SIChTJkgUqLJtFhQNYmWByR0i_Pq0BoTC-HrB35FA>
+    <xmx:PrlaaLA-oU6WXLjDC_H821FX1lRpBomx05RME8wiRi_M1QAEXnbHRA>
+    <xmx:PrlaaMyd6svD166k_DsZYMIgrxyW1L9F9G3k5Flnh9eryA8O97fDJgSb>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 24 Jun 2025 10:42:05 -0400 (EDT)
+Date: Tue, 24 Jun 2025 07:42:05 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Benno Lossin <lossin@kernel.org>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?iso-8859-1?Q?Wilczy=B4nski?= <kwilczynski@kernel.org>,
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4 3/6] rust: irq: add support for non-threaded IRQs and
+ handlers
+Message-ID: <aFq5PVhm3ybiw12I@Mac.home>
+References: <aEbJt0YSc3-60OBY@pollux>
+ <CAH5fLghDbrgO2PiKyKZ87UrtouG25xWhVP_YmcgO0fFcnvZRkQ@mail.gmail.com>
+ <DAU0NHTHTDG4.2HNEABNAI8GHZ@kernel.org>
+ <aFmPZMLGngAE_IHJ@tardis.local>
+ <aFmodsQK6iatXKoZ@tardis.local>
+ <DAU5TAFKJQOF.2DFO7YAHZA4V2@kernel.org>
+ <DB7F39EC-5F7D-49DA-BF2B-6200998B45E2@collabora.com>
+ <DAURVNHM7PKM.PLUFKFRVXR25@kernel.org>
+ <CAH5fLggs=mUi0xAEuiLvZrua4qrMYjBDEmyK8xc-kkXVyUKRog@mail.gmail.com>
+ <aFq3P_4XgP0dUrAS@Mac.home>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624141013.81358-1-brgl@bgdev.pl>
-In-Reply-To: <20250624141013.81358-1-brgl@bgdev.pl>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 24 Jun 2025 16:40:43 +0200
-X-Gm-Features: AX0GCFtRDOKAyexKw3msruWQ3iVjYn3wJRU2OMc42QM_NdUIN3Q2ZlDVDbMilcc
-Message-ID: <CAMRc=MeKfWsf8T1tJLdj=+7aq0zGpQ07pHd2Mz-Y=Bwae0sAbw@mail.gmail.com>
-Subject: Re: [GIT PULL] Immutable tag between the pwrseq, drm and pmdomain
- trees for v6.17-rc1
-To: Ulf Hansson <ulf.hansson@linaro.org>, Michal Wilczynski <m.wilczynski@samsung.com>, 
-	Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aFq3P_4XgP0dUrAS@Mac.home>
 
-On Tue, Jun 24, 2025 at 4:10=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> Here's an immutable tag containing the thead 1520 power sequencing driver
-> for the drm and pmdomain trees to pull from.
->
-> Best Regards,
-> Bartosz Golaszewski
+On Tue, Jun 24, 2025 at 07:33:35AM -0700, Boqun Feng wrote:
+> On Tue, Jun 24, 2025 at 02:50:23PM +0100, Alice Ryhl wrote:
+> > On Tue, Jun 24, 2025 at 1:46 PM Benno Lossin <lossin@kernel.org> wrote:
+> > >
+> > > On Tue Jun 24, 2025 at 2:31 PM CEST, Daniel Almeida wrote:
+> > > > On 23 Jun 2025, at 16:28, Benno Lossin <lossin@kernel.org> wrote:
+> > > >> On Mon Jun 23, 2025 at 9:18 PM CEST, Boqun Feng wrote:
+> > > >>>    try_pin_init!(&this in Self {
+> > > >>>        handler,
+> > > >>>        inner: Devres::new(
+> > > >>>            dev,
+> > > >>>            RegistrationInner {
+> > > >>>                // Needs to use `handler` address as cookie, same for
+> > > >>>                // request_irq().
+> > > >>>                cookie: &raw (*(this.as_ptr().cast()).handler),
+> > > >>>                irq: {
+> > > >>>                     to_result(unsafe { bindings::request_irq(...) })?;
+> > > >>>  irq
+> > > >>> }
+> > > >>>             },
+> > > >>>             GFP_KERNEL,
+> > > >>>        )?,
+> > > >>>        _pin: PhantomPinned
+> > > >>>    })
+> > > >>
+> > > >> Well yes and no, with the Devres changes, the `cookie` can just be the
+> > > >> address of the `RegistrationInner` & we can do it this way :)
+> > > >>
+> > > >> ---
+> > > >> Cheers,
+> > > >> Benno
+> > > >
+> > > >
+> > > > No, we need this to be the address of the the whole thing (i.e.
+> > > > Registration<T>), otherwise you can’t access the handler in the irq
+> > > > callback.
+> 
+> You only need the access of `handler` in the irq callback, right? I.e.
+> passing the address of `handler` would suffice (of course you need
+> to change the irq callback as well).
+> 
+> > >
+> > > Gotcha, so you keep the cookie field, but you should still be able to
+> > > use `try_pin_init` & the devres improvements to avoid the use of
+> > > `pin_init_from_closure`.
+> > 
+> > It sounds like this is getting too complicated and that
+> > `pin_init_from_closure` is the simpler way to go.
+> 
+> Even if we use `pin_init_from_closure`, we still need the other
+> `try_pin_init` anyway for `Devres::new()` (or alternatively we can
+> implement a `RegistrationInner::new()`).
+> 
+> Below is what would look like with the Devres changes in mind:
+> 
+> 
+>     try_pin_init!(&this in Self {
+>         handler,
+>         inner: <- Devres::new(
+>             dev,
+>             try_pin_init!( RegistrationInner {
+>                 // Needs to use `handler` address as cookie, same for
+>                 // request_irq().
+>                 cookie: &raw (*(this.as_ptr().cast()).handler),
+> 		// @Benno, would this "this" work here?
+>                 irq: {
+>                      to_result(unsafe { bindings::request_irq(...) })?;
+>                      irq
+> 		}
+>              }),
+>         )?,
+>         _pin: PhantomPinned
+>     })
+> 
+> 
 
-Just an FYI - there don't seem to be any actual build-time
-dependencies between this driver and the rest of the code that uses it
-(thanks to the aux bus usage etc.) so Michal, Ulf et al: you can
-probably skip the pull if you can rely on this being available in
-linux-next for run-time testing.
+Never mind, `dev` is a `Device<Bound>` so it cannot be unbounded during
+the call ;-)
 
-Bartosz
+Regards,
+Boqun
+
+> Besides, working on this made me realize that we have to request_irq()
+> before `Devres::new()`, otherwise we may leak the irq resource,
+> considering the follow code from the current `pin_init_from_closure`
+> approach:
+> 
+>         let closure = move |slot: *mut Self| {
+>             // SAFETY: The slot passed to pin initializer is valid for writing.
+>             unsafe {
+>                 slot.write(Self {
+>                     inner: Devres::new(
+>                         dev,
+>                         RegistrationInner {
+>                             irq,
+>                             cookie: slot.cast(),
+>                         },
+>                         GFP_KERNEL,
+>                     )?,
+>                     handler,
+>                     _pin: PhantomPinned,
+>                 })
+>             };
+> 
+> `dev` can be unbound at here, right? If so, the devm callback will
+> revoke the `RegistrationInner`, `RegistrationInner::drop()` will then
+> call `free_irq()` before `request_irq()`, the best case is that we would
+> request_irq() with no one going to free it.
+> 
+>             // SAFETY:
+>             // - The callbacks are valid for use with request_irq.
+>             // - If this succeeds, the slot is guaranteed to be valid until the
+>             // destructor of Self runs, which will deregister the callbacks
+>             // before the memory location becomes invalid.
+>             let res = to_result(unsafe {
+>                 bindings::request_irq(
+>                     irq,
+>                     Some(handle_irq_callback::<T>),
+>                     flags.into_inner() as usize,
+>                     name.as_char_ptr(),
+>                     slot.cast(),
+>                 )
+>             });
+>             ...
+>         }
+> 
+> So seems to me the order of initialization has to be:
+> 
+> 1. Initialize the `handler`.
+> 2. `request_irq()`, i.e initialize the `RegistrationInner`.
+> 3. `Devres::new()`, i.e initialize the `Devres`.
+> 
+> Regards,
+> Boqun
