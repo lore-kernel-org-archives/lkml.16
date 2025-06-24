@@ -1,90 +1,81 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A112C3769
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:11:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E3CB2D5417;
+	Tue, 24 Jun 2025 14:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750774295; cv=none; b=S2oOPCzULL7zjYM4HOMyJZ2M1GMP7u4rmvKlJDbxMM2+dOLEiQEWVRjLGR3pJwLcRCguGBWsz5wKxrMhPdbE9F5qwLX233X7peI+CUkBOalUJ8I+3wITXOoQ9JzVEO4sm8ONlDiJ3T14MfcE1E1ZN82+KfRfLdeykieJLDxanzw=
+	t=1750774305; cv=none; b=puyJ93YycxigcZpl2Naj/RJ3Wt6/MIJ6Rf2cAPImrdwl9X2sY6TQvmHW3rupctG/20Pn0TFbE2LD5kUP/1y78Jl1361dr2KRCH4DLb3XyEYhdBe9jz+DfyKeK0LFYb4y1c0OY2MWNPA8Vteo+aplUEtPGTFJzt5wGNDJhgzbcWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750774295; c=relaxed/simple;
-	bh=JVFplqwsSQ3zE1ZVwdS/hU7LtAvyp0kA42SNMGfb1YI=;
+	s=arc-20240116; t=1750774305; c=relaxed/simple;
+	bh=tGHeHiwjoKsGIG6+wBj32sI9uH+gmJAY4d57FmjQ2Ik=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cm+XJAwwsN9uksE1zEf0e2F+UqgFRVVeVmOi1/ugVyefrxvTjnqqD4GSnvSriyrMvAg3oMybt6vrOOnwmaxFAY/AD0nmPUeUkyt+5hq//ciz4/hl6uVNTWOCzNMjP6pnMCSYWkxAaS7i0Q8dLfTmU7sqV2EgxhUBrQmbB6XCqz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TLtUKRDz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YeP5Il+w; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=NNRMpDkLX55RXm26zrJr8Lua/6nrbc2qWOtVe1+O7VJVeyYQj9Sw01DOZUEF0EhQxzGk0HhsvIhVuKBMMJiNEiG7xUABqlZVL5/SFDyH4Hn7br6gDmTyAKRNpYXQ8lpMx4OSPcCzGCvG/WCSm91gSes5W9vq1aH3pDjRLRGqhOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IopnrpKs; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TLtUKRDz";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YeP5Il+w"
-Date: Tue, 24 Jun 2025 16:11:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750774292;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PjUSNJBMO+NBHGXbrFO7m3NMv5jpn0HjiAjQvupbPQE=;
-	b=TLtUKRDzrCWby1lUcFpFQCjEm+oAuqTumSYmUcjarD9QPhfU6cpZlel815owYMrOLbcjTU
-	ZW7mJTC74r56TNCKjDtPWjGbGqXWIeSw3cuIdJErYfrgLnMNCkdAE5UwdeXTGhmJVJ3P5Y
-	q3BUcz49yxjiTD++uNCb84Ym6sEH1VpoCcpeA9R4BobiWXiFX1t5dyw7WncjD6wwkd94j6
-	IzJ16E8rIrCw1gviZCMNPth5lPARpHoeK8qmXSNsZri1QRNJ7dirQBRrj45LwVK5e5PcIs
-	SzXnKGYGlD1dDeFwSlagjeroMs2YNHZe9p4B4OqJyfFuEN5amC3/eUOOUtrQZA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750774292;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PjUSNJBMO+NBHGXbrFO7m3NMv5jpn0HjiAjQvupbPQE=;
-	b=YeP5Il+wFMDFn8GvKnUnxIjrb3n+p8xYBQHKxAzStmmgPVJA+axdAcaEsEA72G9j6HnyWr
-	1ti+iOY15gkGfJAw==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: =?utf-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>,
-	Nam Cao <namcao@linutronix.de>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-	Alexandre Ghiti <alex@ghiti.fr>, clrkwllms@kernel.org,
-	rostedt@goodmis.org, linux-rt-devel@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Enable interrupt during exception handling
-Message-ID: <20250624141130.gZVv4WnP@linutronix.de>
-References: <mhng-60581B88-6FC7-4349-96B6-730D908ABF4A@palmerdabbelt-mac>
- <alpine.DEB.2.21.2506240303170.61655@angie.orcam.me.uk>
- <19cf2371-7293-4e71-a17d-669db4c8270a@rivosinc.com>
- <20250624131730.XqPd1HUR@linutronix.de>
- <d135d6cc-5117-4b3a-9abe-2e5fd9e3e490@rivosinc.com>
- <20250624140815.GU1613200@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IopnrpKs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750774304; x=1782310304;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=tGHeHiwjoKsGIG6+wBj32sI9uH+gmJAY4d57FmjQ2Ik=;
+  b=IopnrpKsx3WbzdQQA0yz3tw9FEs0uWmPLgxGUwy2ic1iFXHN7KdTvBX/
+   1VRX35WW1Rjh5YqvIqK7D6mAh4lzBed/UTqazjdnta+4cifmC/sNtGE6j
+   Sm5RlPP9d+DoRWCW+ljpeMv3KxzafQ+oSVRpiBJmxZqvU4nYCZh+ctCCA
+   P+90V952S039lMWPZV6BWoW1ZizB/y34vwGgAlLlkqF2ZPN9w6z19e4rq
+   25EjeRYsP1e7fFIec9lyBSUzcz/WNycQ3INBmSFBlI2bDKIbvEUIj62PV
+   UZ46bwKG8l7ojYdOsGGUxQYqZY4M9meVQBDOIODBqK9Nw4nlqJiHEe9Eh
+   Q==;
+X-CSE-ConnectionGUID: 4b8kfWP8QImCPHijUUK5mg==
+X-CSE-MsgGUID: DJZGTPxrTNaCd/NU28orqA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52985718"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="52985718"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 07:11:44 -0700
+X-CSE-ConnectionGUID: VLzv3fgOQ+63DWmJVWV8+w==
+X-CSE-MsgGUID: 3W/ElTHBTfKag2wBWP7Ehg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="151357240"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP; 24 Jun 2025 07:11:42 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 1D303224; Tue, 24 Jun 2025 17:11:41 +0300 (EEST)
+Date: Tue, 24 Jun 2025 17:11:41 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: gregkh@linuxfoundation.org, linux-serial@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: Re: [PATCH v2 2/5] serial: 8250: extract serial8250_iir_txen_test()
+Message-ID: <aFqyHSaFqUJ6PFXo@black.fi.intel.com>
+References: <20250624080641.509959-1-jirislaby@kernel.org>
+ <20250624080641.509959-3-jirislaby@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250624140815.GU1613200@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250624080641.509959-3-jirislaby@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On 2025-06-24 16:08:15 [+0200], Peter Zijlstra wrote:
-> > >>
-> > >> I also had a series which was doing so for misaligned accesses handling,
-> > >> but after discussion, it was not ok to do so.:
-> > >>
-> > >> https://lore.kernel.org/linux-riscv/20250422094419.GC14170@noisy.programming.kicks-ass.net/
-> > > 
-> > > If I understand that right, exceptions from kernel should be treated as
-> > > NMI, so that lockdep can tell us if exception handlers touch locks.
-> > > 
-> > > But (conditionally) enabling interrupts does not lose us that benefit. It
-> > > is still considered NMI by lockdep.
-> > > 
-> > > Unless I miss something, the patch is fine as is.
-> 
-> I'm confused, you're wanting to conditionally enable interrupts from a
-> kernel exception while its NMI like? *WHY* ?!
+On Tue, Jun 24, 2025 at 10:06:38AM +0200, Jiri Slaby (SUSE) wrote:
+> After commit 795158691cc0 ("serial: 8250: extract
+> serial8250_initialize()"), split serial8250_initialize() even more --
+> the TX enable test part of this code can be separated into
+> serial8250_iir_txen_test().
 
-What we want is to enable interrupt handling if it was enabled before
-the exception occured. So we can send a proper signal on PREEMPT_RT
-without chocking on spinlock_t/ sighand.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Sebastian
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
