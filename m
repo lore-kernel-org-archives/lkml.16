@@ -1,41 +1,66 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D33EE2980A1;
-	Tue, 24 Jun 2025 12:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B63ED2980A1
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750769459; cv=none; b=FQYn8ybd8EA7trxHx4iyv6vsrkzBy2oWAKgZSosSPMYo9QYT0XLewoxtcnc01POHTFd8Nq77+tVHNw1dIBQ2py9S9NSHU34SlLcgygMt16J06JVF/k5nmKUiqeHVTDZ/SCwfKvQ7u01MPD4XL9GqK1IS2PbGo9A4ufna0X39rnY=
+	t=1750769474; cv=none; b=bcBKfXdR2BaMuXghzWy77sQcDHslsMm/jyrwRRcBxHU0ER14DUoyRCVD5jSJdycQ/r+y9rPzMVALe0USRgKl4OgzRGjVhr876PsH/WK31eZmCaF7+xhn/Mbz2HHX3WHS/EESVD7m+HOJIO2qmnUrt1hUM65yLAyS3sBHJgFvqnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750769459; c=relaxed/simple;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MkFYeuY+Y6b+sWAs5XDCidBewyJgPybVprf2/qFk2HOTWFO4JzwQI7L3iG9jVETKOZmU/WLVKONTOkM+rhLdn1+KBCzlyGfC3uVLofEF/mpgzxJ0YASf1FcWWsSrLpvvFokPqdnK2hNzHvZfgzVFGrV/AvTUkbmklu8Vw0KTgnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=TTNLzfxA; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1750769474; c=relaxed/simple;
+	bh=jkT6mfH4uJfqYwc9rvEhzIqTWfZ6q1x0/wb+MeCmz0w=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ntwwcgYxXG6GZ6IknKVeNqL5HmhFdKoCJFv7bFHEI9OJy2CAVu57/aAS66d+t06bc8aXfh2qXP0GKBculdkc5q4FaOEbX6YMkhHrTzYDB5+N2c2D6U946WIFETXcqR3QleG1QFcX6q8zI2O+NZZjjPVUZuJBdrOq77JkQIv3S7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=MVy5FOR4; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="TTNLzfxA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1750769453; x=1751374253; i=rwarsow@gmx.de;
-	bh=HtuFhXI63urBA3dRKYyXQ6GHreCYVeNttV6YM+zDLlM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=TTNLzfxAWPqVorOkmt7tbY+S4KrfvHqhZJo/wnb0c9e1XyORR7eEfls/D8IZD8SD
-	 JB4a7QAcrPzHtRQvbVGlnEpNWiWHkCCr1IrtSe+7C0lEvsQQKp2TeGKo/ZHc6K3Gr
-	 fFgjGu629Mov+rte6Qm352z5f9F9E6LiKkXBh6eSbAgpXO0ucahwXmcnLLF1dY01V
-	 Pto+yGtvDTdLmf0QhQajNBF1ir4RwuJsZ/MyXgBuOWj27fgUJrDlnnTK+UZ/P6PlC
-	 3W6IMCnkCt0y8KiCFfgF7dmUhqJoFw2pkKTbUt5xhVkqNFkC7RFkYG65OzfhcjUQm
-	 HZgTdly39h2dvPUXkw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.200.20] ([46.142.35.16]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M72sJ-1uOF1O0oUJ-00GPtV; Tue, 24
- Jun 2025 14:50:53 +0200
-Message-ID: <1dc07d84-b19e-440b-9a49-6a34cd73f3b5@gmx.de>
-Date: Tue, 24 Jun 2025 14:50:50 +0200
+	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="MVy5FOR4"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so8317961a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 05:51:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jacekk.info; s=g2024; t=1750769471; x=1751374271; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=R8j08AxL8zlJOltWi63caQrmz1cFgG6v1E8nzEyRGUo=;
+        b=MVy5FOR4pHJiIGCZa9Eix15tvZdH1JjvJUR/wWjnsmbfX8HSYQGen7+KGg4NK5AIjN
+         9EKRujwSDBTBa4grQeFUvxr9JELV6Tos13K74Zl677p5QLsqHCu1qgIGcA6evI1ZbVLv
+         U7AvKU4e9ZLsUEaE9yFchujiUdIG0WAy9Xx9QEToAS0OcRRRcRgmnJ3s/R5xZJr87SAI
+         sqsWF3AhF/BrCNL95mTozzBDDHwJfnBkhO745MBW4x2w2ezK45cwEXNyaNErpnahuG2N
+         N5j9CsmtYPbWZ1sbG55QrO3fE3ZyHd9fzEIOwk/z+GofoSpXKPbES5fMZE4LsZIr/Z32
+         WTDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750769471; x=1751374271;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=R8j08AxL8zlJOltWi63caQrmz1cFgG6v1E8nzEyRGUo=;
+        b=lBbhjKte6PBu6F1xBZ6ucTWpNYYR84DOGbfBQzrxvxsIXHm1cncQqyku9wIYpi14Lb
+         fGDUOreuLH/rkn2dpttIZr4Qbb0Mv0k6rKDrafhEOL/twBphfTHQMzHalCiQfFvsxc55
+         42TsTNzvoMfnhqvnpH0cm6pG9OAQ3koUWc8UdIKQIYCxf3/90MeKggChjdW1oXVXLCIy
+         7yuS16VBfI0i7wYb/nZNVOx5N5F7osiJS3VqevUVM4wr37fijQXRUmAMOfaqK9uUCd8H
+         EzrsGJXqbSZV8Ajow/bVtgZfos2ki3yxuDdk2zQVTi59lrLMpwPe05WGRtUc7D13dAFN
+         He0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVea6rXLrs5KeWLwI0yvKV4/MZE+w6sOGgRvDX38T5AXJlT442Hn0zyVZIzUYZqHUUKKrtVS6Oa576PwLQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwfLGhzhtsp0PcGoF9AtsqyHO2oI++HW99LUQhpuvIBWc3FRati
+	13Kt/fJdppshRlHem7i4AI/nY0OL4FezPLAOGABmHNlCH3efvUrAwWnxuFPcE70BBg==
+X-Gm-Gg: ASbGncvzK0lW3qEyY3rSttjya3dXSyX/Ikw5HlTnXwBk/ncFfN5/qEjiIGxA+1cJY/M
+	jEb5/z8WeUhBBuxx+ZloRXoDf+jahyE/54q/oT8Qr03PwF39D4Blg11EMzHq1NF6Dfzeup0w1Ks
+	GMix7X8hN3q9dm2O3TV9H6klw2GBMRa1ofLxDfEfiZ3IBFlVHcodftPwXEflg6DbEfr+k95yJfm
+	RT4Dg1zf+1KfaWRWI9Ql9opQwoNwVe+fbvUCbFmpm81zg16bDM1MEq75dHeCk8AL9RECdLReq5e
+	B46sQpHgViigoYpXg21vRjqHh567/lPas9FOZn3prvivDc9rKPYD7ymjgQ1R8djo
+X-Google-Smtp-Source: AGHT+IGW7ORN9PWnJJjgW+cZ6TowqoJ7MmszMOr+J2FbInVvd3xL3L9vT7lM4Pbi6amiUEIgd5D6GA==
+X-Received: by 2002:a05:6402:4415:b0:607:f31f:26de with SMTP id 4fb4d7f45d1cf-60a1ccad8femr13331076a12.1.1750769470446;
+        Tue, 24 Jun 2025 05:51:10 -0700 (PDT)
+Received: from [192.168.0.114] ([91.196.212.106])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c2f1ae7basm1003980a12.25.2025.06.24.05.51.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 05:51:10 -0700 (PDT)
+From: Jacek Kowalski <jacek@jacekk.info>
+X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
+Message-ID: <cca5cdd3-79b3-483d-9967-8a134dd23219@jacekk.info>
+Date: Tue, 24 Jun 2025 14:51:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,77 +68,50 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.15 000/588] 6.15.4-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250624121449.136416081@linuxfoundation.org>
-From: Ronald Warsow <rwarsow@gmx.de>
-Content-Language: de-DE, en-US
-In-Reply-To: <20250624121449.136416081@linuxfoundation.org>
+Subject: Re: [PATCH v2 2/2] e1000e: ignore factory-default checksum value on
+ TGP platform
+To: Simon Horman <horms@kernel.org>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <fe064a2c-31d6-4671-ba30-198d121782d0@jacekk.info>
+ <b7856437-2c74-4e01-affa-3bbc57ce6c51@jacekk.info>
+ <20250624095313.GB8266@horms.kernel.org>
+Content-Language: en-US
+In-Reply-To: <20250624095313.GB8266@horms.kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:YfHN219fMgd8XtyQpXiI4uiUFd0ajSFLmBBT5maCiSdGcNMm4K9
- jkeTGTIwZF9tL8cBIQheWL5UIqejgDlfs/UNxYTJz/nEKN6pcfolwk2gEY1fX3djZ+QzOmW
- DyO0yD9WqVTU39MLqxEk31awXAoXIdB0melyCHQ+Twyf5oXZ8TzExTQIi/S23QHd02Gdo0K
- KQ7xyNJF0ZkDgEziXiDEw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:gBy6ai+Js54=;RynbtzxjGkVdmOmIqJglyTXcoCz
- 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
 
-Hi Greg
+>> +	if (hw->mac.type == e1000_pch_tgp && checksum == (u16)NVM_SUM_FACTORY_DEFAULT) {
+> 
+> I see that a similar cast is applied to NVM_SUM. But why?
+> If it's not necessary then I would advocate dropping it.
 
-no regressions here on x86_64 (RKL, Intel 11th Gen. CPU)
+It's like that since the beginning of git history, tracing back to e1000:
 
-Thanks
+$ git show 1da177e4c3f4:drivers/net/e1000/e1000_hw.c | grep -A 1 EEPROM_SUM
+     if(checksum == (uint16_t) EEPROM_SUM)
+         return E1000_SUCCESS;
+(...)
 
-Tested-by: Ronald Warsow <rwarsow@gmx.de>
+
+I'd really prefer to keep it as-is here for a moment, since similar 
+constructs are not only here, and then clean them up separately.
+
+Examples instances from drivers/net/ethernet/intel:
+
+e1000/e1000_ethtool.c:  if ((checksum != (u16)EEPROM_SUM) && !(*data))
+e1000/e1000_hw.c:       if (checksum == (u16)EEPROM_SUM)
+e1000e/ethtool.c:       if ((checksum != (u16)NVM_SUM) && !(*data))
+igb/e1000_82575.c:      if (checksum != (u16) NVM_SUM) {
+igb/e1000_nvm.c:        if (checksum != (u16) NVM_SUM) {
+igc/igc_nvm.c:  if (checksum != (u16)NVM_SUM) {
+
+-- 
+Best regards,
+   Jacek Kowalski
 
