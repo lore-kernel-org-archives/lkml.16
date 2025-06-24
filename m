@@ -1,132 +1,273 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE96326A1BE;
-	Tue, 24 Jun 2025 12:17:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CED8291C08
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750767453; cv=none; b=DyO3MtYXSLb3N1pno76dhzwhRgQrOfMgA/dWJRobj0hrNu6NsMbFdRArS0BUL0bfgo4u12g9vEYbQ4dQGa9u0oqkzqZ9hXJwkiQQIfJONLgnB4rUeCnRkgGWSWASnaALhLrbU7RG59HxwQKvEH9AR1LzvC38eTpXIySTng5yIEY=
+	t=1750767503; cv=none; b=RWTYvpTFH0P0D/pZJZRdjNVCxO7cSTKHf4vvKu1ZginkF/6FWwI+plpERuDUn57kDrq5GixKT0UVJ+rzQBjRonKW3leFJWxXA021psjwIB7+2khlf18vo1wDYIeVGmUji/9V/yobwzRfueu05Pl0sLb6mEAabe/c8RDWGFCftFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750767453; c=relaxed/simple;
-	bh=YPvlENJzb+SZNZRarHaAxtpjxGgvC4AgU4VhvFO4EOQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kfiJencgDxpsf+tZN0tznS9YGOrKGl57Xi4lcRYI2LBlMQUZ3lsBB+3CXVgtT4laTBS9+XxwQOyyMHbYKJBHs7JYCmctx/n1aJOexkZyhx7gkDtyMhMyzfCFJ/itzUGGzyyHDo1uC+1D/8cwhwXrHUtnCRTFgP+c5+DFLaiOdAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HNb+hU03; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750767503; c=relaxed/simple;
+	bh=DndF2H368R7JPID8W7hu9MaxsrUk7MRsMn8Na9FB5fM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QO07WbEawYa2qlOJnRZJL74p1XxUjLQco08a8jsQd5LGU2/70Im9MiXiTG8dLcCnZPwh5pd3SIthOT49r2CLEYKNj2Dt16zWFD+44fQZQZYPFV3ZJPCQMZszokz3bgKbjkS2xJOP0LIhPIKCHnMGePtzaql/CCIMxZ1uH+GCn+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZDNdCMeX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xr2OQc0R; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ZDNdCMeX; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=xr2OQc0R; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HNb+hU03"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-54e98f73850so4579026e87.1;
-        Tue, 24 Jun 2025 05:17:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750767450; x=1751372250; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fEDST35ZX0GfIK7s8eSoWDSoiwV7DcfQwsefjsmC8T8=;
-        b=HNb+hU03yjapYwypYb+iHvJavWC9qpsArN2FVrxpo77OQ7S7tuKWRk8Vx13njb0QjU
-         YMicFHSW2tJo9qtsYWHNmctrCMIPybn6WWIbtIaRWQFzZWp3JJ8w5QD8Lrew50ZtCKSP
-         GLx77Sb1hh8Q3bB0BMPd9jtl6Qbb8sG9PpFFmqfGRAkwKY03wYhgOwyI+r+RRzoOdYQU
-         r5sb/oymZTnxusNEhqaJL7n/3KRyyeEgQLaytECfWpfAd1TXOPEhT2RmLRKePXzAqDR/
-         KgkskqypsQRPgSNRz/5/moCTn5bMJyTmuahD5QcsMdpSeX+3GeSJyMNq38A2eTuza2D0
-         17lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750767450; x=1751372250;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fEDST35ZX0GfIK7s8eSoWDSoiwV7DcfQwsefjsmC8T8=;
-        b=xHJRvaDXK5xp61tCIvj1A2Am3qvrzumozJ9x4cYntuL9dYc7Y9E+TPfBJKZE5Z7G+B
-         +Q8H8WNQJmYi2Le1cMiuSbfEzV3N7FcsD+FxV2OeCmGmLhXdTe0rXcNTcOCm6dgEtQtJ
-         bHKWzA5hrsD3ZQZvFf5nLUmTHBbea7dqNnY0SVlwd1S2QlXWIcp9CSgcg0aDlb535GIa
-         R+LY6F/sV9Z0FIdlsU517cyGxr2xUjMdcyCPso6ZvXEwTALIV1VweURxYqsY2yGAMA4/
-         XD19F++2b7M56MN6DYFafEynfr4zyxX+pxSv80nZw3JVxPqNY5epbVZui3JE4+BqtfFj
-         4g7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUlVNQqyFe3PIvgiz7YiDkEpIR/yQnfCGvU+zbtIZsPKIapV8blhFVl1vfrhWsxCTOrBki+iLcuv3Rp2Q==@vger.kernel.org, AJvYcCV7BZdyCLMbasmbMFIfxWGpxbsrse35AZa3D9OXEpnw7hFaQgjFbbpc1VHgBShZjTRTNh+qc9Xdi4IJcng=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywo5h2umHvv6I9h8lP2Zw/XSwfhYNb7mcTSce9CDwh1273b8VX+
-	ZFwXSowHx1UYzEbK0WNPB9fnOG+7KuvsuiszymXZSyuNry7R14Y7afWt578ocZPjpWcVcD8ecig
-	n7MqPiw6+ySKTmz/eiaSM3L0g0Lu60S4=
-X-Gm-Gg: ASbGncuR5EkFn5PnQEHLVZ5L+6Z4EuX45GwBeOzFmZgwH0LhXBVeJKcr+FbKEPE/YRT
-	ZRdOi6ofitzNU3juX+8qMjIYyGu0ux+SXobQ6R8PQpRg1+6vVqJwXfIV3ksGk6lyvhgr3vYSVqs
-	Bst0AlkXmx9kiirRCsukzuIJobnS6k2faDH66Nife9P9ZxqiU5vM/Qsg==
-X-Google-Smtp-Source: AGHT+IHTN7D9jDflZUo9kaDOVnT7WdurkvaNM7vMAAr+3pbTLv/G8VLv5GTnMmXfxECmi8qZbE6HXoW9Ve6MObl0yL8=
-X-Received: by 2002:a05:6512:3684:b0:554:e7f2:d76b with SMTP id
- 2adb3069b0e04-554e7f2d9c8mr2218188e87.56.1750767449540; Tue, 24 Jun 2025
- 05:17:29 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZDNdCMeX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xr2OQc0R";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ZDNdCMeX";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="xr2OQc0R"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9988421196;
+	Tue, 24 Jun 2025 12:18:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750767498; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oA3tRkj5bq2qJ1oYxd2kuL6Q5137FwnQ2VWJigyeHsA=;
+	b=ZDNdCMeXK/1oA+bef4O2b+2HxklGaRVCsy2kSfRa5ucgAySjN7S6x7HNrNC4pMMuoljttS
+	ACQdOe9mF1WcJMmAU9ft37YLfrQbRj03sN/lk2xGSkDrbAZF8GfnGqHJdKJ8rtF8+wmJ/3
+	jglvkWRB1dEPMUJ5VSn1aVDyJyd6fg4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750767498;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oA3tRkj5bq2qJ1oYxd2kuL6Q5137FwnQ2VWJigyeHsA=;
+	b=xr2OQc0RWNXx0QTWhShMnXJHZMJB68lXh2PptWgP3oFy3q1pxfl8F4KFCEWKM2pLltBm9t
+	GQqvjJuzdhVACiAQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750767498; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oA3tRkj5bq2qJ1oYxd2kuL6Q5137FwnQ2VWJigyeHsA=;
+	b=ZDNdCMeXK/1oA+bef4O2b+2HxklGaRVCsy2kSfRa5ucgAySjN7S6x7HNrNC4pMMuoljttS
+	ACQdOe9mF1WcJMmAU9ft37YLfrQbRj03sN/lk2xGSkDrbAZF8GfnGqHJdKJ8rtF8+wmJ/3
+	jglvkWRB1dEPMUJ5VSn1aVDyJyd6fg4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750767498;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=oA3tRkj5bq2qJ1oYxd2kuL6Q5137FwnQ2VWJigyeHsA=;
+	b=xr2OQc0RWNXx0QTWhShMnXJHZMJB68lXh2PptWgP3oFy3q1pxfl8F4KFCEWKM2pLltBm9t
+	GQqvjJuzdhVACiAQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 8906813A24;
+	Tue, 24 Jun 2025 12:18:18 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5CpxIYqXWmihUwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Tue, 24 Jun 2025 12:18:18 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id C73FDA0A03; Tue, 24 Jun 2025 14:18:17 +0200 (CEST)
+Date: Tue, 24 Jun 2025 14:18:17 +0200
+From: Jan Kara <jack@suse.cz>
+To: Song Liu <song@kernel.org>
+Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, kernel-team@meta.com, 
+	andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, 
+	martin.lau@linux.dev, viro@zeniv.linux.org.uk, brauner@kernel.org, jack@suse.cz, 
+	kpsingh@kernel.org, mattbobrowski@google.com, m@maowtm.org, neil@brown.name
+Subject: Re: [PATCH v5 bpf-next 1/5] namei: Introduce new helper function
+ path_walk_parent()
+Message-ID: <htn4tupeslsrhyzrqt7pi34tye7tpp7amziiwflfpluj3u2nhs@e2axcpfuucv5>
+References: <20250617061116.3681325-1-song@kernel.org>
+ <20250617061116.3681325-2-song@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624173114.3be38990@canb.auug.org.au> <CANiq72=nLeuw030T16-vDZT4A_gNyPm7WuXoK_3nFo0h0-eKJQ@mail.gmail.com>
- <aFqTX2oDzacpDpif@pollux> <DAUR75ROUY1Y.1GX6ALNM4FUAX@nvidia.com>
-In-Reply-To: <DAUR75ROUY1Y.1GX6ALNM4FUAX@nvidia.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Tue, 24 Jun 2025 05:16:53 -0700
-X-Gm-Features: AX0GCFu6jHv7VO078YVj9OoV2x2Wac9B8iBYEj9HMNgO-ANW95ZcjtKcVwDykNo
-Message-ID: <CAJ-ks9m-pas1nYSr7GKvREsOKdGOoyW2ru3OKnnjerv9hsWdGw@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the rust tree
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, Lyude Paul <lyude@redhat.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, FUJITA Tomonori <fujita.tomonori@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617061116.3681325-2-song@kernel.org>
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,meta.com,kernel.org,gmail.com,iogearbox.net,linux.dev,zeniv.linux.org.uk,suse.cz,google.com,maowtm.org,brown.name];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -3.80
 
-On Tue, Jun 24, 2025 at 5:14=E2=80=AFAM Alexandre Courbot <acourbot@nvidia.=
-com> wrote:
->
-> On Tue Jun 24, 2025 at 9:00 PM JST, Danilo Krummrich wrote:
-> > On Tue, Jun 24, 2025 at 12:31:52PM +0200, Miguel Ojeda wrote:
-> >> On Tue, Jun 24, 2025 at 9:31=E2=80=AFAM Stephen Rothwell <sfr@canb.auu=
-g.org.au> wrote:
-> >> >
-> >> > error[E0277]: the trait bound `u32: From<DmaTrfCmdSize>` is not sati=
-sfied
-> >>
-> >> > error[E0599]: no method named `as_nanos` found for struct `Delta` in=
- the current scope
-> >>
-> >> > Presumably caused by commit
-> >> >
-> >> >   b7c8d7a8d251 ("rust: enable `clippy::cast_lossless` lint")
-> >>
-> >> The first error, yes -- the `register!` macro was changed to use
-> >> `u32::from()` to avoid an `as` cast in that commit, and while the cast
-> >> is OK converting the new `enum`s like `FalconCoreRev`, `from()`
-> >> isn't`, so we would need to implement `From` explicitly -- Cc'ing
-> >> Danilo, Alexandre, Lyude.
-> >
-> > It's a bit annoying to implement From explicitly for all of them, but i=
-t seems
-> > to be the correct thing to do.
->
-> This might be something `FromPrimitive` will help with eventually, but
-> in the meantime I agree having explicit implementations is a bit
-> cumbersome.
->
-> What I don't understand is why these `as` are problematic - a type like
-> `FalconCoreRev` is `repr(u8)`, so the cast cannot be lossy. I think this
-> is the case for all such instances using the register!() macro.
+On Mon 16-06-25 23:11:12, Song Liu wrote:
+> This helper walks an input path to its parent. Logic are added to handle
+> walking across mount tree.
+> 
+> This will be used by landlock, and BPF LSM.
+> 
+> Suggested-by: Neil Brown <neil@brown.name>
+> Signed-off-by: Song Liu <song@kernel.org>
 
-The use of `as` is problematic because it disempowers the compiler
-from checking that the cast is not lossy. In other words, it is of
-course fine in the case of a `repr(u8)` enum, but if the type changes
-in a way that causes a lossy conversion, the compiler will not warn
-you.
+Looks good to me. Feel free to add:
 
->
-> >
-> > nova-next also contains a couple of cases where the introduction of
-> > `cast_lossless` causes warnings.
-> >
-> > I can implement the From traits and fix up the warnings caused by enabl=
-ing
-> > `cast_lossless` in my tree with subsequent patches, such that we do not=
- have to
-> > carry all this as merge resolution.
->
-> Let me know if you want me to take care of that.
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+One note below:
+
+> -static struct dentry *follow_dotdot(struct nameidata *nd)
+> +/**
+> + * __path_walk_parent - Find the parent of the given struct path
+> + * @path  - The struct path to start from
+> + * @root  - A struct path which serves as a boundary not to be crosses.
+> + *        - If @root is zero'ed, walk all the way to global root.
+> + * @flags - Some LOOKUP_ flags.
+> + *
+> + * Find and return the dentry for the parent of the given path
+> + * (mount/dentry). If the given path is the root of a mounted tree, it
+> + * is first updated to the mount point on which that tree is mounted.
+> + *
+> + * If %LOOKUP_NO_XDEV is given, then *after* the path is updated to a new
+> + * mount, the error EXDEV is returned.
+> + *
+> + * If no parent can be found, either because the tree is not mounted or
+> + * because the @path matches the @root, then @path->dentry is returned
+> + * unless @flags contains %LOOKUP_BENEATH, in which case -EXDEV is returned.
+> + *
+> + * Returns: either an ERR_PTR() or the chosen parent which will have had
+> + * the refcount incremented.
+> + */
+
+The behavior with LOOKUP_NO_XDEV is kind of odd (not your fault) and
+interestingly I wasn't able to find a place that would depend on the path
+being updated in that case. So either I'm missing some subtle detail (quite
+possible) or we can clean that up in the future.
+
+								Honza
+
+> +static struct dentry *__path_walk_parent(struct path *path, const struct path *root, int flags)
+>  {
+> -	struct dentry *parent;
+> -
+> -	if (path_equal(&nd->path, &nd->root))
+> +	if (path_equal(path, root))
+>  		goto in_root;
+> -	if (unlikely(nd->path.dentry == nd->path.mnt->mnt_root)) {
+> -		struct path path;
+> +	if (unlikely(path->dentry == path->mnt->mnt_root)) {
+> +		struct path new_path;
+>  
+> -		if (!choose_mountpoint(real_mount(nd->path.mnt),
+> -				       &nd->root, &path))
+> +		if (!choose_mountpoint(real_mount(path->mnt),
+> +				       root, &new_path))
+>  			goto in_root;
+> -		path_put(&nd->path);
+> -		nd->path = path;
+> -		nd->inode = path.dentry->d_inode;
+> -		if (unlikely(nd->flags & LOOKUP_NO_XDEV))
+> +		path_put(path);
+> +		*path = new_path;
+> +		if (unlikely(flags & LOOKUP_NO_XDEV))
+>  			return ERR_PTR(-EXDEV);
+>  	}
+>  	/* rare case of legitimate dget_parent()... */
+> -	parent = dget_parent(nd->path.dentry);
+> +	return dget_parent(path->dentry);
+> +
+> +in_root:
+> +	if (unlikely(flags & LOOKUP_BENEATH))
+> +		return ERR_PTR(-EXDEV);
+> +	return dget(path->dentry);
+> +}
+> +
+> +/**
+> + * path_walk_parent - Walk to the parent of path
+> + * @path: input and output path.
+> + * @root: root of the path walk, do not go beyond this root. If @root is
+> + *        zero'ed, walk all the way to real root.
+> + *
+> + * Given a path, find the parent path. Replace @path with the parent path.
+> + * If we were already at the real root or a disconnected root, @path is
+> + * not changed.
+> + *
+> + * Returns:
+> + *  0  - if @path is updated to its parent.
+> + *  <0 - if @path is already the root (real root or @root).
+> + */
+> +int path_walk_parent(struct path *path, const struct path *root)
+> +{
+> +	struct dentry *parent;
+> +
+> +	parent = __path_walk_parent(path, root, LOOKUP_BENEATH);
+> +
+> +	if (IS_ERR(parent))
+> +		return PTR_ERR(parent);
+> +
+> +	if (parent == path->dentry) {
+> +		dput(parent);
+> +		return -ENOENT;
+> +	}
+> +	dput(path->dentry);
+> +	path->dentry = parent;
+> +	return 0;
+> +}
+> +
+> +static struct dentry *follow_dotdot(struct nameidata *nd)
+> +{
+> +	struct dentry *parent = __path_walk_parent(&nd->path, &nd->root, nd->flags);
+> +
+> +	if (IS_ERR(parent))
+> +		return parent;
+>  	if (unlikely(!path_connected(nd->path.mnt, parent))) {
+>  		dput(parent);
+>  		return ERR_PTR(-ENOENT);
+>  	}
+> +	nd->inode = nd->path.dentry->d_inode;
+>  	return parent;
+> -
+> -in_root:
+> -	if (unlikely(nd->flags & LOOKUP_BENEATH))
+> -		return ERR_PTR(-EXDEV);
+> -	return dget(nd->path.dentry);
+>  }
+>  
+>  static const char *handle_dots(struct nameidata *nd, int type)
+> diff --git a/include/linux/namei.h b/include/linux/namei.h
+> index 5d085428e471..ca68fa4089e0 100644
+> --- a/include/linux/namei.h
+> +++ b/include/linux/namei.h
+> @@ -85,6 +85,8 @@ extern int follow_down_one(struct path *);
+>  extern int follow_down(struct path *path, unsigned int flags);
+>  extern int follow_up(struct path *);
+>  
+> +int path_walk_parent(struct path *path, const struct path *root);
+> +
+>  extern struct dentry *lock_rename(struct dentry *, struct dentry *);
+>  extern struct dentry *lock_rename_child(struct dentry *, struct dentry *);
+>  extern void unlock_rename(struct dentry *, struct dentry *);
+> -- 
+> 2.47.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
