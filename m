@@ -1,326 +1,187 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2049.outbound.protection.outlook.com [40.107.92.49])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A592989BA
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:59:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750769982; cv=fail; b=I6ByY+USOykEj8rUGLuTp0WnICv5MS77rl2XU6e0ntksyrqhnygOToHqRMSmUGSObj43g9xRqDDi3lwE59x0a3npNFooo5uiwbG9zSGLO33TZkCEQblgYWsJ1Oe03GQBTihy0ERY0nmZttzzIaitorRjpRqzdmhaRtqHIbFustg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750769982; c=relaxed/simple;
-	bh=luBdQFVsbTa+B2xSSqA++bIhOqbPzZBC1oaSBTmU/7I=;
-	h=From:Date:Subject:Content-Type:Message-Id:To:Cc:MIME-Version; b=g+nAi5vg6LDw5AoEXqBPWf4QH+/FBzBueg/RFfEnPHIABtFPfnvobuTbIg4Q9ZCtB736d+Jr7P7AZY8s+QBKsVIhL+Y3pkM0dazVCmntxbFt2NmljbBAlyxHctv6GbxBT4SHUt0bmXIqMr5V1sRQDtIM5PMj65TNLbsmr5HRNo0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=STbX4vHB; arc=fail smtp.client-ip=40.107.92.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8797A28D8FA;
+	Tue, 24 Jun 2025 13:02:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750770142; cv=none; b=L65Ip0GxyP8G9J03a0GhSct9LrKn92L1BorYjxkASI/RH6EVQXcvsiI+1Mrzfxfm7J6Oqkvxz3lFFq/27j7TCdFzfCue8wtdMLT3LlwCAhl8Vya/tDVDWIwyOh8XHWTUUuL6ozNOaiZKIWBZKrRalkhRamPxAGj/ZdURGi6grq8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750770142; c=relaxed/simple;
+	bh=5b48PxvdWOCAFOl31cdiOUwXzDYiUBixnJcaU6ejEl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZnLJpX80LIqk231BKWSkegTj7lQuv1lZ4XoBWfQOTCdkLjcBg7rY4VzXOWrwTfodNYfIyT2oExBjOFY5qt2K9cSfPmxBEIJN8XYK2husn7hQ1ydBWHRtp5ikbGwzSV3qINUJxxc4tD7vOwfp3V0CJzRb7i4JnEFtSkHZwL4DmFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=aoRIx3fg; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="STbX4vHB"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yT59O/lUu8/pC4tN4xsFTWMVxs04gbET2x1UbftejaHgG/BHPnz9R6eRaxZ5j7162cwkrDHIhGXF9RX0yT8omWgWLePYFUsHXXx8pLIQxGDJ4GmMbCHWNUUoMpreF5Ju854eKT/NRc6McMmc3zkdIEApnP7GiMIMdOwsEB1XrPnf5RXdDTvN6EouJmD2sek1ceu45j/UzWibNmk7jLG/SZws9sO7WMIei2NiZ5H/Jl9oUnSPbDVue14YXQieHlmmMepjZLix+62FOnRD/Ddoro9c6fA5oOo65YNOSOmuB9drgN+QoPMR+V4um9Td6ryqMqNeuwblx78RtiO8pGwEoQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=03t/8WnWA/GhPFh/WNwxd7z1KoQVR3e42IzfZqVg2rs=;
- b=wACFzt+/kdPTQZRdFo67O7SsUUPZgB8FJa2vspRqVNdneEXRkTL+TEQaHK8AjZNdCUUEXh3vl9LemHEna/AZ74FBqHwosHNA3rYl02vNzsVNFS8ssqQjIQPReM30+itK64r0ytUPPUJlaq0vKAY1aB9AwA6d6/av+xAAXZWYKZjkyfP8dvZXd0s9o/9hYW5Zqg8vvFD20lW2tGQAZO3z1EsA33+O3XRlBnPPJdOnHHxptCK4qZMJkEOoR3DEJD7HlmzE7hIPAHC/N287UcO7PRaPxfjYr0bDS3q46Tateif2GBhyK9DlMiPPkpDmxPkO9tVX8bmJ56C1U0Km430HfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=03t/8WnWA/GhPFh/WNwxd7z1KoQVR3e42IzfZqVg2rs=;
- b=STbX4vHBSxb61By95Kt72cE8DtvWTJUWT3Y5lyZfwd51iwpACM6jZSRVlRdwRpvMIYu/FmtjwmXzVYafYhHoYmtaUb4plDxDog06IHMikMvXvV7yawFohmINfTwOWYx/xu9fTc+8RbCPS3135ZneyoNQ1mqRhQDuMXSrYxTAQ6SlkrJuh3/GhsjxxLGgL1YUAPqe1dIDKNntrKagWOBawg1RG+RHLrsvwCi306ttE34nWzh2byNoXHG0gpatJ5g5CLvYoa6F+9TycML8Qi7CGGUlruxh/n1+5mNvgoKC47PMPI7r4DY1K+eToneDNeAVtT66mPbVK2BpVqUbX5kInQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by CH3PR12MB7642.namprd12.prod.outlook.com (2603:10b6:610:14a::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.30; Tue, 24 Jun
- 2025 12:59:35 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
- 12:59:35 +0000
-From: Alexandre Courbot <acourbot@nvidia.com>
-Date: Tue, 24 Jun 2025 21:59:19 +0900
-Subject: [PATCH] gpu: nova-core: replace `Duration` with `Delta`
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-nova-delta-v1-1-b37d75a593ac@nvidia.com>
-X-B4-Tracking: v=1; b=H4sIACahWmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDMyMT3bz8skTdlNSckkTdNKO01OQkU4ukVIsUJaCGgqLUtMwKsGHRsbW
- 1ANLn0KdcAAAA
-X-Change-ID: 20250624-nova-delta-f2fecb58be8d
-To: Danilo Krummrich <dakr@kernel.org>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>
-Cc: nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, Alexandre Courbot <acourbot@nvidia.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: OS0PR01CA0185.jpnprd01.prod.outlook.com
- (2603:1096:604:1c5::7) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="aoRIx3fg"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 931CA40E00DE;
+	Tue, 24 Jun 2025 13:02:16 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id ZiMvgR5epIuE; Tue, 24 Jun 2025 13:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1750770130; bh=qZPkqHa+agmymJRsvd0GsTVbCxTMUMcr+mpRiXqakQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=aoRIx3fgKpgg/GXMI6/W9Hmd+BznlUx7ue5dYy0C0q2SvNAtIaPD633WybKPu1esh
+	 CB4zK0IXhrCFI42TRpXxXZee9zy5YrYn/czVpJm/lfzQXt0BghfZW/A8OOLcBOoxOn
+	 AuM7hd/fnVpLOzPYjVn7al3q1nJkMhem6mcb5XEGMI8rb9COkmd2CZQ36x5L+2XcCA
+	 Bq60m/6vlL7kW+1qeZp//k2l5yA7Kfgf3ayaxIBgOBvdOjM8mY0HuNeqL0GZ73kAkn
+	 3cvJJTdI+zjbsvNcAj/MC/zrRtujxnsDSrM3leMhXLlioP7jqFIyZWgA67r7D0AA5I
+	 RSCPAVpbq8kkxjPbmqvSY2uZvCgmq+FfD6GbFc/dYkryFDIoRpsdPyZ97athk/yYcU
+	 yYyi9WbcDlMpJMyibmTGWqVWPjnnAVJIwfUUDVV+fN45xOqQVsV6Gz15EvrUW5qX7K
+	 2HP0Hg/q6+Gd8W6XbE4D1A/zQgqed3bKac6Qpm9/mo6KsnwQq144QF5+3w749UeExg
+	 LwLh1Rl2jX/BGkF5P09ZsZP+X3bqlgDDV92zH+3OzdHLRpLmyUXljRGhuuIkXmot4f
+	 sXdhEXm6mc6sCrH7yCMjffSB2mtEq41jL3H2KE/TSk4wek7rrzUBrZwvBnd9I/YZ1J
+	 4/O0QIDBdQD9HEkRCv7Y85KU=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4743240E019C;
+	Tue, 24 Jun 2025 13:01:59 +0000 (UTC)
+Date: Tue, 24 Jun 2025 15:01:58 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: linux-coco@lists.linux.dev, kvm@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>, Ard Biesheuvel <ardb@kernel.org>,
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>,
+	"open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" <linux-efi@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] x86/sev: let sev_es_efi_map_ghcbs map the caa
+ pages too
+Message-ID: <20250624130158.GIaFqhxjE8-lQqq7mt@fat_crate.local>
+References: <20250602105050.1535272-1-kraxel@redhat.com>
+ <20250602105050.1535272-3-kraxel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|CH3PR12MB7642:EE_
-X-MS-Office365-Filtering-Correlation-Id: 02b540d0-9faf-4f35-ecaa-08ddb31ef83c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|10070799003|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RWpUMGRuRGt0MTlVSkNtcGNKZGxPeUVTZTh0a3UxR0h1emIzTHRvaTVBZ1B2?=
- =?utf-8?B?VDJzSU1uaHdPaDJFRTFJQ1BEMzNMQW1WY1c3STFVVkQwemZIQUJ3REJsbGxX?=
- =?utf-8?B?R0FhdmdqakFIUjJLZGZIdjlDSG53bG1QVFNEUXF1QVlzemJJZVA4ZkIrbmc1?=
- =?utf-8?B?UkpFdmZvRGd1ZGJ2R1A1Z2ZoM3Q2T3VMV2l0dW9oYzZZZkJObi9YbEpBZmtn?=
- =?utf-8?B?Vi9hWWVvNHNhbHZNN2JqWVpoRnByMEJBbjdOVUVjOXc4NjFHTE82SHhCbTJj?=
- =?utf-8?B?MVk4YUdEWHprREQxVEMvZlZqc1Vmd3NxdjFqRlF4WnpOTzhhWS83cGRUR2pv?=
- =?utf-8?B?NEp2UDNEZEphcWpqNUxpQXFUK3lxMnRVMlJZUEo4cFBEeUZJUG5DUEdVOUth?=
- =?utf-8?B?eUhXQkt3NHBjRkkwMjU2cHBPUTRxSzI3dENBYWpvbkZDcDVVUHNWeENJeVEv?=
- =?utf-8?B?YTJWbU8rdnphREc3OUlPbFo1dHk0ZEM2WDVOMnZKNFB4cS9zeStUNC9OVCtW?=
- =?utf-8?B?Z29rOHdJQmJKMnlZRThWTUg2MTZzVTIwbGZPeVFGMDUrYVVBVHdvVmlITjZL?=
- =?utf-8?B?WDZZM1Y4U2wvQTM5WXA0amZteUcwbXg3RmtUdG1tRVZ1R0hnN2JEaFZ3R1B2?=
- =?utf-8?B?RXMxR3gwK3ZsM2h5VXNocHBJeGhwNC9PSUI1OTh5STRtbUhxc0VTMUlQd04x?=
- =?utf-8?B?UUZqbjVuK1UzNHBLdW5tMHdwZUpsVzVUL21jL0xMK2ZkaUVCay9HTEN1aVgz?=
- =?utf-8?B?cExvbmIxOUpRbGVoS0lmK2lGQkFNMFFuVGFvS005SmFVRWRPWTMyU25lQXJL?=
- =?utf-8?B?c2d5Unl3Ym5HOTA0WXZxZkdnTG96Yjk5Umw5Wkc5Zk13b1dQTHQvSFloWnRW?=
- =?utf-8?B?YjNZRElMOHpicUVKZHJHaFB2ZDlPakFnTFpuZmFwVjlCYzdUbmp4YUwvakxy?=
- =?utf-8?B?SEFiTGN1QkR3SWdXT2NJaXV4dm9GU212TFJOQWE1Q0ZhSksybDA1VG9rRGw0?=
- =?utf-8?B?WDE4RWhzTEN6RmV4Sktwa3V4MXJmQW5zMDRiWmkwd3R2VGR5Rkw1SkVsVS9U?=
- =?utf-8?B?QXlLWUczWnY0U2tVdUxwdjlTSm00L1hWV2FqU01seXVFeWE5RDliUlRsMUky?=
- =?utf-8?B?QkYzaEVrQkhsVTdpdm1pZTIwK1BKek1vSUtNb0h5d1U0blpZZktpekxQZEZX?=
- =?utf-8?B?d0k4Y3NwdzhudzBnZUpRalB3d0pLbXIvREg3US9DdllFcjFVVm1DVGJ5ZE41?=
- =?utf-8?B?U3hpSDFxWFRTYUxmaExjUllPV2Ruckxma2NkbkY2akNyVVp3MHVkenVJN0RO?=
- =?utf-8?B?UDRWL0pyRjFHS2hURGdrSk1jOWtlNXRTeUF3Q3RIdWpYOXJpQ3VPVlZ2dCt0?=
- =?utf-8?B?Q2ZoOE1wNlZ4ZERyRVllUjAvc2JsYWYzS2VaM2orcGdZeXNKSU1LUUhCNlNa?=
- =?utf-8?B?clJRSkRUM1RFMVFtQnBMYXBEMDRkeFZEMkVoVENheGthVkdzZXBVemxZMGgw?=
- =?utf-8?B?WmwwUTBGNHNmSjRWT3ZlS2xMenZsSmhBZEJQME5UZDIvZnYrZWFxemZHcHA0?=
- =?utf-8?B?VS9EM2ZGMVBRSWd0OWFDTjB5aWd0L0NGenhVYklDWjlpK0hvUnJyalRjR00v?=
- =?utf-8?B?VENRRDVpai9haFFPNitxZzVNQUxScTcvMTg4b2FVSmdwVy85UGl2dlprK3F0?=
- =?utf-8?B?bHgxQ0pURGY0L0paL3N6QlpoMWMwbk1ZME9aV0JmVzFoOXBZZXVkVFB5b0Nh?=
- =?utf-8?B?Rk9pVVhmeGNzbmZCVDRlZWQxb1ZCRERyYTBjTGM0azZaRmYrRDBwOWVwVVBF?=
- =?utf-8?B?MEx4eFZsUmlxTUpUM2kwYnhBR2JvbjcyVm1kRWpoMi9WMmRPd1YwY0F6eTgr?=
- =?utf-8?B?bTRCQUtMVSt2bDJhc1cyUTY0QmNjdkpRL3MyZ0pBRUtuSW5IbnJpdWVSNEx4?=
- =?utf-8?Q?bJ3BLBVXaLM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?eGdJcXZwbk9Ga3VJTGIwZGNWSC9TZHgreVV3NEpHN3hZTTRzTmxocko1SjE1?=
- =?utf-8?B?Q1FBSjV4bFNBV0F3MG9YblhKSC9CSGFLUGh6b1BSMzczMTZOSWVZY3NZa2hH?=
- =?utf-8?B?OWlxeU1WZG5hTnpSTVNlVkZXc2F6aWpydnpXeG5PL2VWZTVjZWhBaEZVbk5D?=
- =?utf-8?B?RjNNVnVJTDFkTG8vT2Z0OC9HNzFoY0tkR1E5c0FEajkvYlhJUXB5NDlEUXdx?=
- =?utf-8?B?TUdvQzg4MXdnMlBYeW53czZSWDN4VGpJS2FMdzhjd3NQU01FQjVEcUU4QXNj?=
- =?utf-8?B?UE9oT3E3VGpSRWFNamQzWTY3bHJDS3BzMmxSMFU3SVBiUEVlcWZHdy9oQXF3?=
- =?utf-8?B?LzZDMmFpbzFSRFc1ejVmZFExQkQ3cElBbkJ1VkhJdU9ubzZKNHhLZ1UyMHF1?=
- =?utf-8?B?RGFLblluc1RDUjdNTFE5Vk91N2NWdGZ1aW5WN3Z5MS9FdThtSW1hRGdKOSsx?=
- =?utf-8?B?azJPbGJuODh0bnl5Slp1cG5nMXp3ek9DcURjbUhTVURQNlF0VjQ5aHYyaU9Z?=
- =?utf-8?B?dGVLOFlKRVNyd2Q3S2hBL1BaaG9FWUNobjZYbjdPWGZXSERLTXN4QlNxVTN4?=
- =?utf-8?B?MlRrNXJQWG9RdExiV01KOHZqbkRWRVNCZlRXNEN4RkUrZFhDZHpOcmMzTEJr?=
- =?utf-8?B?LzZtWXV3T0hHVDA5TUJTNFFtZzJJaDVnTklTSkh5UWp5V0NPaHVsQVo0dVI4?=
- =?utf-8?B?NmUrc1JLcmJVMmNYbHV0NTZ6Y0s4c2F0VWxtVHNBUEpENElLVVhvazR2MVNm?=
- =?utf-8?B?ZkFkbTkrbC9VQVUxMmREUnc1ZHh6bXdhN1Z1QVhyTHY5aEV3aS9rNnJ0TGlB?=
- =?utf-8?B?d0x5NXhGSzljRjRic0VCeVBzT1JTWVNvTkVkTzRiYW9WcGlhcCtsRlRaTVZV?=
- =?utf-8?B?WDlsVUppMDhCalBMVHFGK2MzTGZNckZQbmdLYy8xV0hBVFhSOUJub2dvUTdJ?=
- =?utf-8?B?OFhjNW4xWGF6THBqNC9TMmd2d3YvWVBPa1R0Vy90WVFDOFJTV1BTblN4eUtB?=
- =?utf-8?B?RTgwYVhEOUdRdU83Y0tRbGorYWdjYS9rSko2K2h2WkQ4Vi9QWWd3WEdvTS9O?=
- =?utf-8?B?QUVIYktzQnRFMmdmTlY1NnhNWTB1RnBiU1AvTGV1NHFLaS8zVGJwdEc5c2RB?=
- =?utf-8?B?U2lTN1NwRW5FcFZOcFVXTDJFb2dMeVZMU2dOVlZYVDd1c3dhbGdUQkU0cm05?=
- =?utf-8?B?VjFMeWNEMmp1SXM2N0s3alMydjY0ekQxRGlLaEF2Rjk5aHVFeGpveld2dEMx?=
- =?utf-8?B?VVZLWDJjVVJ2ekJGdjVyYzUvbWxPVEk2V0NQTGJTZ25RRGYyWTVsYzgrNWJP?=
- =?utf-8?B?ZmZEOC91N28wWlNTaFJ0Y0crUUlvdnFLYmFVYS9YYUlVdEdzQ21xWHM2RXF4?=
- =?utf-8?B?RmdwUWlMT0VPV25NMVl3em11OG5scTd4a3h1K2M1V2FOeEZlNG42Z2xPU2dj?=
- =?utf-8?B?YWR6ZGRuOHZvell2TlZMY2J6ejZNcElxZUZxZHJhQVFoZ0hkMk9kQ0lvR1NV?=
- =?utf-8?B?VEdhK0FybTd0OWV2Y1FZcUI3MjV3WFJTMnR4YjM1RE0wcjRvY05kdndHTHo1?=
- =?utf-8?B?dlY3UGtMNjFmUEd2aE9hRE15ZlBvSXZUaFJBdFpXQzdTKzdQUUFxVktTZkww?=
- =?utf-8?B?dzZxTjRseTcwM3VLeC8vNE00VzdNQ0NJUTA4RzVrdmtld0JzVnkyT0U3UHNp?=
- =?utf-8?B?U29CMklIVXJsRkUvRjl2Nmt2c1drdlhsTWU1RzZ5bEVvZ3hEUkxveHN2STBT?=
- =?utf-8?B?bURaQzVJUzBzZjlGYlM1SmZvTXJaMVU0V3ZCMTNrbUVOK1BHbER3czIzdWFQ?=
- =?utf-8?B?eXhzVmpRZ1ZUblBvVzhrcDg5Qkt3OEJCUmdTOVBEaGhJb00wSFVvQ1VDTnNE?=
- =?utf-8?B?emRoa0cvV0VjS1ZIc25lclREclE5akk3SDdXU0NYaUp5K0NrZlpuUGY0Njdy?=
- =?utf-8?B?VlBNSVRaK01TYmtmYVFCcHJEc2xSbytWbEg3a1VuUnlCR1NsZDhQZFM1MDA2?=
- =?utf-8?B?VzZnWlpnL1FPNHo0UjdMYzZuNHh4OXJZcW0xcnFQR2E1dkRmNmVyZUZTekZ5?=
- =?utf-8?B?VDUyVFhKUXpFMU94WHRGd3JTUGxmaVI0VmkwSnFZN3BUdzRHS1p0SVBMclU5?=
- =?utf-8?B?ZFR2TlVNNmJEUzNnUE9HTVF5a0kySjZ3WHZaYWVNck5DZS84VnV1a0o2U2d5?=
- =?utf-8?Q?kiLWIuWvwjFDNQ/DMB+EJsO+muvTnYtBMhFhZJXwrc+J?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 02b540d0-9faf-4f35-ecaa-08ddb31ef83c
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 12:59:35.5877
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: J12pN6OCvVoU1TZE1Xfo0QlUCQvi7tWvTLFj4PMYiU6L+975KIoPxsZwxgbOMJZjVSLlMFy7SqnJA8ymjPWPcQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7642
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250602105050.1535272-3-kraxel@redhat.com>
 
-The kernel's `Delta` type was not available when the `wait_on` function
-was introduced. Now that it is, switch to it as it is more compact than
-`Duration` and cannot panic.
-
-Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
----
- drivers/gpu/nova-core/falcon.rs           | 12 ++++++------
- drivers/gpu/nova-core/falcon/hal/ga102.rs |  4 ++--
- drivers/gpu/nova-core/gfw.rs              |  5 ++---
- drivers/gpu/nova-core/util.rs             |  8 +++-----
- 4 files changed, 13 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/gpu/nova-core/falcon.rs b/drivers/gpu/nova-core/falcon.rs
-index 07be1c30668c4bef9e073fe6ad49234aceb7fb81..f604e82c98120f2ab0f49b94be928967aa318df4 100644
---- a/drivers/gpu/nova-core/falcon.rs
-+++ b/drivers/gpu/nova-core/falcon.rs
-@@ -3,11 +3,11 @@
- //! Falcon microprocessor base support
- 
- use core::ops::Deref;
--use core::time::Duration;
- use hal::FalconHal;
- use kernel::bindings;
- use kernel::device;
- use kernel::prelude::*;
-+use kernel::time::Delta;
- use kernel::types::ARef;
- 
- use crate::dma::DmaObject;
-@@ -334,7 +334,7 @@ pub(crate) fn new(
-     /// Wait for memory scrubbing to complete.
-     fn reset_wait_mem_scrubbing(&self, bar: &Bar0) -> Result {
-         // TIMEOUT: memory scrubbing should complete in less than 20ms.
--        util::wait_on(Duration::from_millis(20), || {
-+        util::wait_on(Delta::from_millis(20), || {
-             if regs::NV_PFALCON_FALCON_HWCFG2::read(bar, E::BASE).mem_scrubbing_done() {
-                 Some(())
-             } else {
-@@ -349,7 +349,7 @@ fn reset_eng(&self, bar: &Bar0) -> Result {
- 
-         // According to OpenRM's `kflcnPreResetWait_GA102` documentation, HW sometimes does not set
-         // RESET_READY so a non-failing timeout is used.
--        let _ = util::wait_on(Duration::from_micros(150), || {
-+        let _ = util::wait_on(Delta::from_micros(150), || {
-             let r = regs::NV_PFALCON_FALCON_HWCFG2::read(bar, E::BASE);
-             if r.reset_ready() {
-                 Some(())
-@@ -362,7 +362,7 @@ fn reset_eng(&self, bar: &Bar0) -> Result {
- 
-         // TODO[DLAY]: replace with udelay() or equivalent once available.
-         // TIMEOUT: falcon engine should not take more than 10us to reset.
--        let _: Result = util::wait_on(Duration::from_micros(10), || None);
-+        let _: Result = util::wait_on(Delta::from_micros(10), || None);
- 
-         regs::NV_PFALCON_FALCON_ENGINE::alter(bar, E::BASE, |v| v.set_reset(false));
- 
-@@ -453,7 +453,7 @@ fn dma_wr<F: FalconFirmware<Target = E>>(
-             // Wait for the transfer to complete.
-             // TIMEOUT: arbitrarily large value, no DMA transfer to the falcon's small memories
-             // should ever take that long.
--            util::wait_on(Duration::from_secs(2), || {
-+            util::wait_on(Delta::from_secs(2), || {
-                 let r = regs::NV_PFALCON_FALCON_DMATRFCMD::read(bar, E::BASE);
-                 if r.idle() {
-                     Some(())
-@@ -523,7 +523,7 @@ pub(crate) fn boot(
-         }
- 
-         // TIMEOUT: arbitrarily large value, firmwares should complete in less than 2 seconds.
--        util::wait_on(Duration::from_secs(2), || {
-+        util::wait_on(Delta::from_secs(2), || {
-             let r = regs::NV_PFALCON_FALCON_CPUCTL::read(bar, E::BASE);
-             if r.halted() {
-                 Some(())
-diff --git a/drivers/gpu/nova-core/falcon/hal/ga102.rs b/drivers/gpu/nova-core/falcon/hal/ga102.rs
-index 664327f75cf4199cca37d22ca18b2b9abac781f8..4e9af40fee914bfdf89588565d99503971c6af32 100644
---- a/drivers/gpu/nova-core/falcon/hal/ga102.rs
-+++ b/drivers/gpu/nova-core/falcon/hal/ga102.rs
-@@ -1,10 +1,10 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- use core::marker::PhantomData;
--use core::time::Duration;
- 
- use kernel::device;
- use kernel::prelude::*;
-+use kernel::time::Delta;
- 
- use crate::driver::Bar0;
- use crate::falcon::{
-@@ -23,7 +23,7 @@ fn select_core_ga102<E: FalconEngine>(bar: &Bar0) -> Result {
-             .write(bar, E::BASE);
- 
-         // TIMEOUT: falcon core should take less than 10ms to report being enabled.
--        util::wait_on(Duration::from_millis(10), || {
-+        util::wait_on(Delta::from_millis(10), || {
-             let r = regs::NV_PRISCV_RISCV_BCR_CTRL::read(bar, E::BASE);
-             if r.valid() {
-                 Some(())
-diff --git a/drivers/gpu/nova-core/gfw.rs b/drivers/gpu/nova-core/gfw.rs
-index ce03ac9f4d9d63cbfa91807c29efed16f1fa0cc8..d5b68e02d405750b18d634d772f15f413453e80d 100644
---- a/drivers/gpu/nova-core/gfw.rs
-+++ b/drivers/gpu/nova-core/gfw.rs
-@@ -6,10 +6,9 @@
- //! the GPU is considered unusable until this step is completed, so we must wait on it before
- //! performing driver initialization.
- 
--use core::time::Duration;
--
- use kernel::bindings;
- use kernel::prelude::*;
-+use kernel::time::Delta;
- 
- use crate::driver::Bar0;
- use crate::regs;
-@@ -19,7 +18,7 @@
- pub(crate) fn wait_gfw_boot_completion(bar: &Bar0) -> Result {
-     // TIMEOUT: arbitrarily large value. GFW starts running immediately after the GPU is put out of
-     // reset, and should complete in less time than that.
--    util::wait_on(Duration::from_secs(4), || {
-+    util::wait_on(Delta::from_secs(4), || {
-         // Check that FWSEC has lowered its protection level before reading the GFW_BOOT
-         // status.
-         let gfw_booted = regs::NV_PGC6_AON_SECURE_SCRATCH_GROUP_05_PRIV_LEVEL_MASK::read(bar)
-diff --git a/drivers/gpu/nova-core/util.rs b/drivers/gpu/nova-core/util.rs
-index 5cafe0797cd6f9567afb7e1e9af23b961a8a87f6..64fb137607643464ef579481fec19214f3556bd5 100644
---- a/drivers/gpu/nova-core/util.rs
-+++ b/drivers/gpu/nova-core/util.rs
-@@ -1,9 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- 
--use core::time::Duration;
--
- use kernel::prelude::*;
--use kernel::time::Instant;
-+use kernel::time::{Delta, Instant};
- 
- pub(crate) const fn to_lowercase_bytes<const N: usize>(s: &str) -> [u8; N] {
-     let src = s.as_bytes();
-@@ -34,7 +32,7 @@ pub(crate) const fn const_bytes_to_str(bytes: &[u8]) -> &str {
- ///
- /// TODO[DLAY]: replace with `read_poll_timeout` once it is available.
- /// (https://lore.kernel.org/lkml/20250220070611.214262-8-fujita.tomonori@gmail.com/)
--pub(crate) fn wait_on<R, F: Fn() -> Option<R>>(timeout: Duration, cond: F) -> Result<R> {
-+pub(crate) fn wait_on<R, F: Fn() -> Option<R>>(timeout: Delta, cond: F) -> Result<R> {
-     let start_time = Instant::now();
- 
-     loop {
-@@ -42,7 +40,7 @@ pub(crate) fn wait_on<R, F: Fn() -> Option<R>>(timeout: Duration, cond: F) -> Re
-             return Ok(ret);
-         }
- 
--        if start_time.elapsed().as_nanos() > timeout.as_nanos() as i64 {
-+        if start_time.elapsed().as_nanos() > timeout.as_nanos() {
-             return Err(ETIMEDOUT);
-         }
-     }
+I got this now:
 
 ---
-base-commit: 3606620b316c29e3de8ff87b40828c722086a9c9
-change-id: 20250624-nova-delta-f2fecb58be8d
+From: Gerd Hoffmann <kraxel@redhat.com>
+Date: Mon, 2 Jun 2025 12:50:49 +0200
+Subject: [PATCH] x86/sev: Let sev_es_efi_map_ghcbs() map the caa pages too
 
-Best regards,
+OVMF EFI firmware needs access to the CAA page to do SVSM protocol calls. For
+example, when the SVSM implements an EFI variable store, such calls will be
+necessary.
+
+So add that to sev_es_efi_map_ghcbs() and also rename the function to reflect
+the additional job it is doing now.
+
+  [ bp: Massage. ]
+
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Link: https://lore.kernel.org/20250602105050.1535272-3-kraxel@redhat.com
+---
+ arch/x86/coco/sev/core.c       | 15 +++++++++++++--
+ arch/x86/include/asm/sev.h     |  4 ++--
+ arch/x86/platform/efi/efi_64.c |  4 ++--
+ 3 files changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
+index 8375ca7fbd8a..6af3e94ba0ee 100644
+--- a/arch/x86/coco/sev/core.c
++++ b/arch/x86/coco/sev/core.c
+@@ -1045,11 +1045,13 @@ int __init sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
+  * This is needed by the OVMF UEFI firmware which will use whatever it finds in
+  * the GHCB MSR as its GHCB to talk to the hypervisor. So make sure the per-cpu
+  * runtime GHCBs used by the kernel are also mapped in the EFI page-table.
++ *
++ * When running under SVSM the CCA page is needed too, so map it as well.
+  */
+-int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
++int __init sev_es_efi_map_ghcbs_caas(pgd_t *pgd)
+ {
++	unsigned long address, pflags, pflags_enc;
+ 	struct sev_es_runtime_data *data;
+-	unsigned long address, pflags;
+ 	int cpu;
+ 	u64 pfn;
+ 
+@@ -1057,6 +1059,7 @@ int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
+ 		return 0;
+ 
+ 	pflags = _PAGE_NX | _PAGE_RW;
++	pflags_enc = cc_mkenc(pflags);
+ 
+ 	for_each_possible_cpu(cpu) {
+ 		data = per_cpu(runtime_data, cpu);
+@@ -1066,6 +1069,14 @@ int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
+ 
+ 		if (kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags))
+ 			return 1;
++
++		address = per_cpu(svsm_caa_pa, cpu);
++		if (!address)
++			return 1;
++
++		pfn = address >> PAGE_SHIFT;
++		if (kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags_enc))
++			return 1;
+ 	}
+ 
+ 	return 0;
+diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
+index fbb616fcbfb8..5b809f0ef207 100644
+--- a/arch/x86/include/asm/sev.h
++++ b/arch/x86/include/asm/sev.h
+@@ -446,7 +446,7 @@ static __always_inline void sev_es_nmi_complete(void)
+ 	    cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+ 		__sev_es_nmi_complete();
+ }
+-extern int __init sev_es_efi_map_ghcbs(pgd_t *pgd);
++extern int __init sev_es_efi_map_ghcbs_caas(pgd_t *pgd);
+ extern void sev_enable(struct boot_params *bp);
+ 
+ /*
+@@ -554,7 +554,7 @@ static inline void sev_es_ist_enter(struct pt_regs *regs) { }
+ static inline void sev_es_ist_exit(void) { }
+ static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh) { return 0; }
+ static inline void sev_es_nmi_complete(void) { }
+-static inline int sev_es_efi_map_ghcbs(pgd_t *pgd) { return 0; }
++static inline int sev_es_efi_map_ghcbs_caas(pgd_t *pgd) { return 0; }
+ static inline void sev_enable(struct boot_params *bp) { }
+ static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate) { return 0; }
+ static inline int rmpadjust(unsigned long vaddr, bool rmp_psize, unsigned long attrs) { return 0; }
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index e7e8f77f77f8..97e8032db45d 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -216,8 +216,8 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
+ 	 * When SEV-ES is active, the GHCB as set by the kernel will be used
+ 	 * by firmware. Create a 1:1 unencrypted mapping for each GHCB.
+ 	 */
+-	if (sev_es_efi_map_ghcbs(pgd)) {
+-		pr_err("Failed to create 1:1 mapping for the GHCBs!\n");
++	if (sev_es_efi_map_ghcbs_caas(pgd)) {
++		pr_err("Failed to create 1:1 mapping for the GHCBs and CAAs!\n");
+ 		return 1;
+ 	}
+ 
 -- 
-Alexandre Courbot <acourbot@nvidia.com>
+2.43.0
 
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
