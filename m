@@ -1,195 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F01A5239072;
-	Tue, 24 Jun 2025 08:36:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF9D2586EF
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:39:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750754204; cv=none; b=tBpLgI6cnUMJj8RkGVayYGnwmBQWC9YURwPF2XFBo2bcQVhzER50h9UfSlP9dAwSGDre1n+2q2NMURpXQ0tYJnEiz/jAed2+59RUjRqOpmPRbdGwoYh6EKriKmJSSlzirsdWYYUuplghEXIY/yhluqMlOtGZBknkCO6tIC98XQQ=
+	t=1750754379; cv=none; b=K1EDILH+neuY0fZIKo2dT3LEuI9hfpkR5uQBKooEbGG1bi8E26LTxUppPMUaVTW2+BKhozUA0nvzhArBoe98wjgTwWZnab3xKLv6aPMzGySZpaeLfZEP7dOAHHmXjrXaygMdH2wIQi+3zv6yB7wowgR8wtzvvz760WaUtxZHoMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750754204; c=relaxed/simple;
-	bh=FyvEGnr7ym7WA2bZe3VgmH9NtiRgOu7qIJOamXHgDWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c0b30r+oUPiDW3V6Y/bn/QbzvnNXTCsIlD01kLpvuxjB6M2N9fh3Xf84IkI5dsTbLPlscsPF2hIANllUA6RZTSP6AXoweiWIQSq9PHNoCLDVr39Vo0L+EdgssqL9kMtQ0hL8t+u+eMMqentDW9C3lZsPs43e/CgVdpeISwFvl4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DVYWb0mN; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750754379; c=relaxed/simple;
+	bh=DVsCUdKVYcsFTKatDm5synRnxfD9Fb+XLA6NRENVAIQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HZcq4EWHGcyIfzPhhvAam/GfnxD671HlhcRzHtunPWSE0MArFN9NUAM/E42uN7X+MwoE6Fx5XHHcJ54Rhq4OxoskXgBHXxv41+SZyPT56v8oUN5tWWDOAGMCeKpAml2a0RNsktgtV6mga81RaeQ9zAq7+NiDXjgIPcS6EPoGNpk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BHIP9S+J; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DVYWb0mN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750754203; x=1782290203;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=FyvEGnr7ym7WA2bZe3VgmH9NtiRgOu7qIJOamXHgDWE=;
-  b=DVYWb0mNmf2I2jSGmUa6Qb0ZVFYee7AeIrChZSbJwBdBJFQqSLtTpbrL
-   e1Bsz2bbGfqr089YQcEK+WPvEVJJL87OMvelfsNWz9LRU8iYKx0SaHJjV
-   8QbK3exJ3thsULm7OZUDH//xmsCPZkUy5RTRFkwm/MdNDFdol5/eSgD4g
-   2ek3mjnGKJatanrU3p56f873U/L4OTEEHdHzi5J41bngMQOAaofLXWBYA
-   AwjFeHjcTNjMHuvG0FAAys8qOTXS+hkJODq1k0PypWZWXydjbX63jqvTV
-   ol6CKMQ01bxrNKcedgy6GX3mYBB3/MqI7/KAjawNRlbgWCAF5u/sf1fyP
-   w==;
-X-CSE-ConnectionGUID: AZspukSuQRK81Lz5TS+sgA==
-X-CSE-MsgGUID: 0hcOarj9StqTRFg7MvOBrg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52212735"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="52212735"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 01:36:42 -0700
-X-CSE-ConnectionGUID: abL0p+w9RE6OhIAUjgUEiA==
-X-CSE-MsgGUID: uvlsNPgoRli9u2sASf7VXA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="151331392"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 01:36:39 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uTz8u-00000009Q3q-07R9;
-	Tue, 24 Jun 2025 11:36:36 +0300
-Date: Tue, 24 Jun 2025 11:36:35 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Lothar Rubusch <l.rubusch@gmail.com>
-Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
-	corbet@lwn.net, linux-iio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	eraretuya@gmail.com
-Subject: Re: [PATCH v10 6/7] iio: accel: adxl345: extend inactivity time for
- less than 1s
-Message-ID: <aFpjkwfxHq8EGFE5@smile.fi.intel.com>
-References: <20250622155010.164451-1-l.rubusch@gmail.com>
- <20250622155010.164451-7-l.rubusch@gmail.com>
- <aFkpv0CUkateel8q@smile.fi.intel.com>
- <CAFXKEHb9Fbd_UOF90EumEtns82VPhYBrLZ=JtmhVJ4pJsT=q-g@mail.gmail.com>
- <aFpV1f1qapCQunVO@smile.fi.intel.com>
- <CAFXKEHYhXekE29Ljfv=c7oRuzo0irWtJNM7fjW516xQ-ydsm=Q@mail.gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BHIP9S+J"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750754377;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=onzA+wcTvsJpzeYf5prB/BcDYizuukYIYq67f2ch1FM=;
+	b=BHIP9S+JvdivmgyIaXgqn92vEbSGkKATtTHTTwtFXI4TI/3OVj5MwWE9fHAzLJe7dIXkz6
+	jWY8jdQh3nZajZOFJt0GYVw4vedOgRtDfzZLg1CSZGs+U1cbQ44QpVzbyNtlwJXImSxyn+
+	yL7r+8jzx8MkmyoifrLb3A1L4JOQOqM=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-445-F1pYn6MQMua8HEtr_2IMtw-1; Tue, 24 Jun 2025 04:39:35 -0400
+X-MC-Unique: F1pYn6MQMua8HEtr_2IMtw-1
+X-Mimecast-MFC-AGG-ID: F1pYn6MQMua8HEtr_2IMtw_1750754374
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a523ce0bb2so2843542f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:39:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750754374; x=1751359174;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=onzA+wcTvsJpzeYf5prB/BcDYizuukYIYq67f2ch1FM=;
+        b=WN+SlD71tRNwO52+FPL4eYBLv0dRl3eBLRawh3vny3Vyp8QVsvasdyVZe/ZOVDgTMe
+         ceBgR3bUY35mtNQk7SsprBLRODW09W1BLVC1gP036JTvWIA7vJPrK6EHY7mTzl0qW1a7
+         Co/ePtfSgtBwKGvINda7O3+G9Rcb4ZPM1H41gHRddo58XY57T0SK/7XWjDtiftIoQsSM
+         EIjv6ET1nFZfz/iNxnPXMCVvwwtFM346838qwkMvsIDVFGiIhJ+PrKVyOKOtA3G7CnXi
+         GyG2M72Skm76iMkBqYyu/wvx2h2lTNOJOAoY0jvXKUQNnodWAxVGWewUkDyRtNtmBTIC
+         MUYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW50gRPU1MRu4UVG54tdAZq4+a9bfm/67WbZHEUMQfQv+6qyFLfp9JWmQgkVGXN2EHH1R5XLohJMWGV/74=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9Mx9vpaKT6D+TmDolD+yZR0OOOeNOR6nc8cXnoR1Lwxq0uiT5
+	0l9bKOrcMIe0OuzewCM0EkyPQsFwbwSATIz8YoOm7Xswa9i2EdO8TcBizovVkwV+ELLA+y/Flrs
+	zI3fV2uyojkC1aqqvQsJxN/YMLIeZ/kjGvJtgLAvrZHLVCWZaH9YO54TrV8xJJKCbFQ==
+X-Gm-Gg: ASbGncsHoTWosErC2DfKuXEfvrdE4bBW3wsgLjx3Vfw/CN5gZHIDVnrJTdGentK0+GZ
+	4Alq1Ct+JofQsoF9PcclJCEukT3+ES0yta05Ab6bJVhpFMf7sDB/Jn0z1rfJMyyLR404o5uqemJ
+	S8Bsht5opGGCA0pbz4jY/jpqfAs4Ffl+hOwz6Rw4LcOMXReG/KB+vv/89y2wNRZN+ySfvyxKh9P
+	DtKSphLvfSPgCow3ixVFCUCUVdAqpZDPIkwEz3s9HF0BRBVXPZ1sc7xAeghAbeEkjBtD15Ongt9
+	TSZ598MQPFsiB/omfoyjHaVaAi6grA==
+X-Received: by 2002:a05:6000:220e:b0:3a4:fb7e:5fa6 with SMTP id ffacd0b85a97d-3a6d128a495mr12354810f8f.1.1750754373870;
+        Tue, 24 Jun 2025 01:39:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEXACAuieXnf1ff0n3aChzXI+RXODXJppEWVes06kAMCgYriTZilclAie3vgKCk9utLq6WSPw==
+X-Received: by 2002:a05:6000:220e:b0:3a4:fb7e:5fa6 with SMTP id ffacd0b85a97d-3a6d128a495mr12354781f8f.1.1750754373434;
+        Tue, 24 Jun 2025 01:39:33 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2445:d510::f39? ([2a0d:3344:2445:d510::f39])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e810977esm1319156f8f.83.2025.06.24.01.39.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 01:39:33 -0700 (PDT)
+Message-ID: <8d5c6585-bc49-498d-9bb9-91d02e8e793f@redhat.com>
+Date: Tue, 24 Jun 2025 10:39:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v1 1/1] phy: micrel: add Signal Quality Indicator
+ (SQI) support for KSZ9477 switch PHYs
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>,
+ Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>
+Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+ Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org
+References: <20250619133437.1373087-1-o.rempel@pengutronix.de>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250619133437.1373087-1-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAFXKEHYhXekE29Ljfv=c7oRuzo0irWtJNM7fjW516xQ-ydsm=Q@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, Jun 24, 2025 at 10:18:35AM +0200, Lothar Rubusch wrote:
-> On Tue, Jun 24, 2025 at 9:38 AM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > On Mon, Jun 23, 2025 at 11:21:01PM +0200, Lothar Rubusch wrote:
-> > > On Mon, Jun 23, 2025 at 12:17 PM Andy Shevchenko
-> > > <andriy.shevchenko@intel.com> wrote:
-> > > > On Sun, Jun 22, 2025 at 03:50:09PM +0000, Lothar Rubusch wrote:
-
-...
-
-> > > > > -     if (val == 0) {
-> > > > > +     if (val_int == 0 && val_fract == 0) {
-> > >
-> > > The case for 0sec, 0.0 or setting "0" and fract will consequently be
-> > > "0". 0 is an invalid input for this period and sensor, so it will
-> > > default to an optimized period based on given ODR.
-> > >
-> > > > > +             /* Generated inactivity time based on ODR */
-> > > > >               ret = regmap_read(st->regmap, ADXL345_REG_BW_RATE, &regval);
-> > > > >               if (ret)
-> > > > >                       return ret;
-> > > >
-> > > > >               odr = FIELD_GET(ADXL345_BW_RATE_MSK, regval);
-> > > > >               val = clamp(max_boundary - adxl345_odr_tbl[odr][0],
-> > > > >                           min_boundary, max_boundary);
-> > > > > +             st->inact_time_ms = MILLI * val;
-> > > > > +
-> > > > > +             /* Inactivity time in s */
-> > > > > +             return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val);
-> > > > > +     } else if (val_int == 0 && val_fract > 0) {
-> > > >
-> > > > val_fract check is not needed here.
-> > >
-> > > Case for e.g. 0.123, numbers under 1s. This goes into the free-fall register.
-> >
-> > 0.0 is already checked above, and since the val_fract is unsigned this is check
-> > is redundant.
-> >
-> > > > > +             /* time < 1s, free-fall */
-> > > > > +
-> > > > > +             /*
-> > > > > +              * Datasheet max. value is 255 * 5000 us = 1.275000 seconds.
-> > > > > +              *
-> > > > > +              * Recommended values between 100ms and 350ms (0x14 to 0x46)
-> > > > > +              */
-> > > > > +             st->inact_time_ms = DIV_ROUND_UP(val_fract, MILLI);
-> > > > > +
-> > > > > +             return regmap_write(st->regmap, ADXL345_REG_TIME_FF,
-> > > > > +                                 DIV_ROUND_CLOSEST(val_fract, 5));
-> > > > > +     } else if (val_int > 0) {
-> > > >
-> > > > if now is redundant here, right?
-> > >
-> > > So, this will be 1s through 255s. Periods above 1sec. This goes into
-> > > the inactivity register.
-> >
-> > See above,
-> >
+On 6/19/25 3:34 PM, Oleksij Rempel wrote:
+> The KSZ9477 family of switch chips integrates PHYs that support a
+> Signal Quality Indicator (SQI) feature. This feature provides a
+> relative measure of receive signal quality, which approximates the
+> signal-to-noise ratio and can help detect degraded cabling or
+> noisy environments.
 > 
-> I agree, that checking for val_fract is actually done as a sub case of
-> val_int, and only if val_int was 0. So, would the following make it
-> clearer?
+> This commit implements the .get_sqi callback for these embedded PHYs
+> in the Micrel PHY driver. It uses the MMD PMA/PMD device registers
+> (0x01, 0xAC–0xAF) to read raw SQI values from each channel.
 > 
-> if (val_int  == 0) {
->     if (val_fract == 0) {
->         // 0 provided, default values
->     } else {
->         // >0s, e.g. 0.123s, use free-fall register
-> } else {
->     // 1s - 255s, use inactivity register
-> }
+> According to the KSZ9477S datasheet (DS00002392C), section 4.1.11:
+>   - SQI registers update every 2 µs.
+>   - Readings can vary significantly even in stable conditions.
+>   - Averaging 30–50 samples is recommended for reliable results.
 > 
-> Actually - I did not touch that - I saw some places where I'm already
-> using nested if/else in the third level. I guess, by the style advice
-> according to switch/case, this also applies to if/else, right?
+> The implementation:
+>   - Averages 40 samples per channel, with 3 µs delay between reads.
+>   - Polls only channel A for 100BASE-TX links.
+>   - Polls all four channels (A–D) for 1000BASE-T links.
+>   - Returns the *worst* quality (highest raw SQI), inverted to match
+>     the Linux convention where higher SQI indicates better signal quality.
 > 
-> If yes, when the according parts go into another round, I might give
-> it a try to separate as well using helper functions.
+> Since there is no direct MDIO access to the PHYs, communication occurs
+> via SPI, I2C, or MDIO interfaces with the switch core, which then provides
+> an emulated MDIO bus to the integrated PHYs. Due to this level of
+> indirection, and the number of reads required for stable SQI sampling,
+> read latency becomes noticeable.
+> 
+> For example, on an i.MX8MP platform with a KSZ9893R switch connected
+> via SPI, invoking `ethtool` to read the link status takes approximately
+> 200 ms when SQI support is enabled.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+> 
+> This commit currently focuses on single-channel SQI support due to
+> budget constraints that prevent immediate extension of the SQI API for
+> full multichannel functionality. Despite this limitation, the feature
+> still significantly improves diagnostic capabilities for users, and I
+> intend to upstream it in its current form.
 
-You can think through the patches. It might make sense to consider as well this
+AFAICS the commit message reflects the 'wannabe'/future implementation
+and not the actual one included into this patch.
 
-helper_1()
-{
-	// for default
-}
+I think you should reword the commit message, describing the current
+implementation.
 
-helper_2()
-{
-	// for free-fall
-}
+Also it looks like the SQI value is not inverted, I'm unsure if you
+should update the commit message accordingly or actually do the invert
+in the code.
 
-helper_3()
-{
-	// for inactive
-}
+Thanks,
 
-	...
-	if ()
-		helper_1();
-	else if ()
-		helper_2();
-	else
-		helper_3();
-
-
-> > > > > +             /* Time >= 1s, inactivity */
-> > > > > +             st->inact_time_ms = MILLI * val_int;
-> > > > > +
-> > > > > +             return regmap_write(st->regmap, ADXL345_REG_TIME_INACT, val_int);
-> > > > >       }
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Paolo
 
