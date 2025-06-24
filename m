@@ -1,102 +1,160 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A64B2571A5
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 21:12:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B159257AC8
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 21:12:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750799542; cv=none; b=nfNwhlnPpz3mT4ow6SZ8z/HtOSkGqRmSEkjKFpb6EBBNLW5u525MEhKppAkKE08S0u//cD8jPu4R7w+/nSHuVU6ARO68Wq5GPuT0AB6pYq2+cLNRR+QbP3uC4AgURc09yg4X1ZHoAWs1U1IzFCBrRw4pwXNozHeE/OB9EoGcbdE=
+	t=1750799543; cv=none; b=dZaZg0/tr02DdONCdHbI5p7QgUlP5JKxdOQ3f7BW1lacmy2ZlgZnkA5tfLIliqQv9Dai/fDM8xU/Ia2f5o2/AvnSi59OmI69BtO9ghu1/y6twjGDFr38zppbqKb6ZvJZE/pNwhXNlxBULqmhGIEEcIkqki8AMPK3s6VIbixy61s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750799542; c=relaxed/simple;
-	bh=tKgZTGJic7DDJClRHNSXNJlldhKESGMCLrDVwPwAWAM=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=T7/raWAsZc3lWECj/ZbqboFCr3OMRLh+7O6jrCzvEJgJiTttjUgHw2ZS5XSMBycvLtUaS/KR4GaG4bKEXxFowDgVAx8B/Od4s/E4AjIZUxOa6CQcbQyfKIFRZbcKFMTan7lRBpJOVV7IfDM8b3dhqHZ/N5IV4l2CwhoRUaCM4o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=15V4Ho6V; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750799543; c=relaxed/simple;
+	bh=vg1ef1oRFT4Gwpd8ueYyQA6/BOZsNA4oa9AALT0Rbxs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=iJsqtxuJxlh6d8N6xkhJWG1OFf58bLXUbas1fmsqgCHPpwPP0MNCRZY9D2DERWvEbTTfb/WxkL5hB4zk7+kN2/ytqX3saYoPEnAA6nXlzMSMGKTZrR9hvSzA07LEC3QJAHJGt46D/4DTc+QK7dYJSB/VcHdmQpJCBZAG4yY8c/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=KhGnubNm; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="15V4Ho6V"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3141a9a6888so843434a91.3
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KhGnubNm"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-234bfe37cccso13473555ad.0
         for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750799541; x=1751404341; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=LTblawYKlK658c7iR1xjS+JeBZm0UmD7xykgCWSyAGo=;
-        b=15V4Ho6VsiK1FEDI0GyAoR0N+bUjmjVOn9coY6HLbu6GqTsSIP3lRAHIjzpDMAMGbm
-         dZxHtHr8cuu3eePi2fZfYtJ5d5YVhbd1qA4y3dg9q5AKTQUpK8ReaWd6DrG8AzGEYeV9
-         NXItbnsNY+Y6VZKHeBRIqNAVTVpw+Rk+wocOLvA0fgemgJRMUxrzHzASWj+VeN6ldMVK
-         mRieGDZZUkqH2fIGI4woiQaPVG/9dE1xErTvBuJDTxNCNsEDznAneRywvg5yBABXIk4m
-         ZBP3z2F9XKx7kpUwPfxUYAi/j3GfnL5Iif32jWizGjypKXHHb7MUt59tyN843F17sspN
-         xGYg==
+        d=broadcom.com; s=google; t=1750799541; x=1751404341; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=wkIMyFBlVlgs2Ulo4+3BI7DnkrCtZPojDt3EBpbXk+s=;
+        b=KhGnubNmsT7u5pVY+SRS2xFXm4T/sYLMrizOIUh6hmEE9MlBmOdYfembezeB+sKxo9
+         d9VdW8vGnjlDaSfw/RfnyTAdK9xdNVr0QmHNH/CgiaZK/DQ7PmnjySR+2knRYMYTQ1gR
+         vuxT3dfsXGzE15ACBVV9Q9TVQpQVU6xTLiegw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1750799541; x=1751404341;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LTblawYKlK658c7iR1xjS+JeBZm0UmD7xykgCWSyAGo=;
-        b=iZH1v3Y4gHZElb71E+le8+qPMDzfEKOD2kWE7waQdFwpJC2wo6QiBTRzlwn62xh5RR
-         qAyh4mP7kvSXVlkMXq0Y2/NlgMZ9PWBb6fHm/TAmtcn5IXSewu9W+p9/I7m/AbBh6ut3
-         K8cZCyBoKyr5q3UVvt3ggjWbwoI+hvpbk8zFGhAY5Quv8hKgov9/kN4FOe3wTb8G3owh
-         b7ArX2d1pTJ3G7MOJV0U9UxLXGtZowaIR6Z9OsJOzYFIRxf0o9bfPVwH5BCJZxNw/eSS
-         WwDtBnmKEEwKlRbDlPRX5T/zar6gP3sWcUMGLXCNQ2regAKwwo75GjKqYsHbd7ZFttj6
-         OpJQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSGSsuc5Z6dBBZVw9sSRaqWrrM3/Im+b1+1GFrm7JS0VGC/+kiOQC/Xip924ROjaQbc3ZGPyhLFCNR6q0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycaYU2R1xlHaFZFd1iRyEmhGzJm+kcY+rKK6wg2f8fVKUBU9dX
-	W+Xv5quDmufWNhCc3Xa09aH1sLK1usEmsKQkQYIpbd2cENYZD0yhOCjB/6xOuga31TKoW62od5y
-	y6CB3mw==
-X-Google-Smtp-Source: AGHT+IG3IEr0w/PsVAotqZXpqEv9ETF+5RNDU0VZntM9BNZHedOz9L53IuqKEuQ+lV0drKkHvATIIHQsaZ0=
-X-Received: from pjbpt7.prod.google.com ([2002:a17:90b:3d07:b0:312:4274:c4ce])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:51c3:b0:301:9f62:a944
- with SMTP id 98e67ed59e1d1-315f26b8549mr576978a91.33.1750799540905; Tue, 24
- Jun 2025 14:12:20 -0700 (PDT)
-Date: Tue, 24 Jun 2025 14:12:19 -0700
-In-Reply-To: <175079268655.517596.11530108670607154610.b4-ty@google.com>
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:to:subject:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wkIMyFBlVlgs2Ulo4+3BI7DnkrCtZPojDt3EBpbXk+s=;
+        b=Xik4Aqz09uBf9a+bVZNZwrHHJOdtJvh7U28d8kxLanjOWT6j2yJSZOMcjqlj0IBmI8
+         vSpMuK+frTyuRmOa6aM4j7nwJtZ3+JT8EkzD9c7GKZiKbMXIWbvf9VE8I6LfbP0pnljr
+         VzfA0fChq90H3Js6HXaIwbMOXf8lU7WE3xXslXNVxg3yqBXsHYwd+puRBLlU1hBUQ2PN
+         vxhZsjHF1DphPoVF0WE7myO82JlsG5rtzGFVbBbn4jd9YAfsJGwiPiyWgcQD2KrO3A3O
+         WGc9o/7o7f9YpuvJkyu5aeBW89tRHB21OwQG+fv9vBMF6b4NLmPHCegMO3Y0dFdTt+Jn
+         XyKw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgkuhqStwOkSedwityu6hHIo8YZRp+Bht7qrYptrQZRBrEkCkvGevsZHLUdAp1BlrKU5ecsZ3BkwOoj5g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzZGr+ERUZV78o/oFTgTUHJ3yOXudw40w2n4ZcGFyTARyihJXK9
+	BEtIpMLUCUuFd+edKVRmPJ0dIbtB8tTm+EV8OylabTPoCX+2hIa6x5uTWHvZNfPEwQ==
+X-Gm-Gg: ASbGncthHc3ZEUnBYXGYKkot40QJNFr2BGhb+LW8m/SDd+kG14scExmx8tCGSVYUKPh
+	lsUMqnU29AU1ycdyb/ynGiW0PwScD55InGFKL5JpwCwgy36vlwq64XWYPLJCfUv8Y4tVhmH2SlR
+	TuXpVNftxulpDuYc/ztaL7oVN18rk38My0BX4wxwfW7N+pafOqV+GLwXrSBmiW0v4JYRF5VX1X7
+	MnZ+ffxbf1xOONRoobtCnU9BLXsZ8dfuMgo1+vBLQlr7BA59njqpDFLhXTWQ0uefZdpDoPM2cIT
+	VI//vX/3/qwIO9blmXW4HeIYGDrPxITEdnlqDWvairbCA7Sm/Wrq0TXQQ7dbWP4v0sGk72N4B9g
+	ltKo+G6zJTFx7yUxGXfq9peG/yFwy8Xa3r3YJ
+X-Google-Smtp-Source: AGHT+IE8AtKCbRL/Ae95ntUOEV0G/Hz0ZyjAAOPX2JCe7DpKTe3ncgHoFdCvDL7h49ynbDxxbTuKNg==
+X-Received: by 2002:a17:902:d60e:b0:234:f6ba:e681 with SMTP id d9443c01a7336-2382409dfc9mr13529245ad.5.1750799541406;
+        Tue, 24 Jun 2025 14:12:21 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f53d94b1sm23610a91.33.2025.06.24.14.12.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 14:12:20 -0700 (PDT)
+Message-ID: <78106b8c-3f4e-44d0-9828-9b46952f3fa6@broadcom.com>
+Date: Tue, 24 Jun 2025 14:12:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250523001138.3182794-1-seanjc@google.com> <175079268655.517596.11530108670607154610.b4-ty@google.com>
-Message-ID: <aFsUs7-cRCWJ_xc3@google.com>
-Subject: Re: [PATCH v4 0/4] KVM: x86: Dynamically allocate hashed page list
-From: Sean Christopherson <seanjc@google.com>
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Vipin Sharma <vipinsh@google.com>, James Houghton <jthoughton@google.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 stblinux/next 2/2] clk: rp1: Implement remaining clock
+ tree
+To: Andrea della Porta <andrea.porta@suse.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof Wilczynski <kw@linux.com>, Bjorn Helgaas <bhelgaas@google.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Derek Kiernan <derek.kiernan@amd.com>,
+ Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
+ Stefan Wahren <wahrenst@gmx.net>, Herve Codina <herve.codina@bootlin.com>,
+ Luca Ceresoli <luca.ceresoli@bootlin.com>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andrew Lunn
+ <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
+ Dave Stevenson <dave.stevenson@raspberrypi.com>,
+ kernel-list@raspberrypi.com, Matthias Brugger <mbrugger@suse.com>
+References: <c20066500908db854aa4816b40e956296bab526a.1750714412.git.andrea.porta@suse.com>
+ <17e5c6e0c085cfa0bf4b63b639cdc92c6a4c1418.1750714412.git.andrea.porta@suse.com>
+Content-Language: en-US
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
+ xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
+ M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
+ JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
+ PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
+ KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
+ AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
+ IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
+ ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
+ bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
+ Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
+ tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
+ TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
+ zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
+ WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
+ IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
+ U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
+ 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
+ pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
+ MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
+ IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
+ gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
+ obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
+ N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
+ CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
+ C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
+ wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
+ EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
+ fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
+ MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
+ 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
+ 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
+In-Reply-To: <17e5c6e0c085cfa0bf4b63b639cdc92c6a4c1418.1750714412.git.andrea.porta@suse.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 24, 2025, Sean Christopherson wrote:
-> On Thu, 22 May 2025 17:11:34 -0700, Sean Christopherson wrote:
-> > Allocate the hashed list of shadow pages dynamically (separate from
-> > struct kvm), and on-demand.  The hashed list is 32KiB, i.e. absolutely
-> > belongs in a separate allocation, and is worth skipping if KVM isn't
-> > shadowing guest PTEs for the VM.
-> > 
-> > I double checked that padding kvm_arch with a 4KiB array trips the assert,
-> > but padding with 2KiB does not.  So knock on wood, I finally got the assert
-> > right.  Maybe.
-> > 
-> > [...]
+On 6/23/25 14:46, Andrea della Porta wrote:
+> The RP1 clock generator driver currently defines only the fundamental
+> clocks such as the front PLLs for system, audio and video subsystems
+> and the ethernet clock.
 > 
-> Applied to kvm-x86 mmu, thanks!
+> Add the remaining clocks to the tree so as to be completed, which means
+> that the following RP1 peripherals could now consume their specific clocks
+> and be enabled to work (provided that the relevant driver changes for each
+> specific peripheral, if any, are committed):
 > 
-> [1/4] KVM: TDX: Move TDX hardware setup from main.c to tdx.c
->       https://github.com/kvm-x86/linux/commit/1f287a4e7b90
-> [2/4] KVM: x86/mmu: Dynamically allocate shadow MMU's hashed page list
->       https://github.com/kvm-x86/linux/commit/02c6bea57d0d
-> [3/4] KVM: x86: Use kvzalloc() to allocate VM struct
->       https://github.com/kvm-x86/linux/commit/97ad7dd0e53d
-> [4/4] KVM: x86/mmu: Defer allocation of shadow MMU's hashed page list
->       https://github.com/kvm-x86/linux/commit/59ce4bd2996b
+> - ADC
+> - Audio IN/OUT
+> - DMA controller
+> - I2S
+> - MIPI DPI/DSI
+> - PWM
+> - SDIO
+> - UART
+> - Video Encoder
+> 
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 
-New hashes after a force push to fixup the typeof() oddity:
-
-[1/4] KVM: TDX: Move TDX hardware setup from main.c to tdx.c
-      https://github.com/kvm-x86/linux/commit/1f287a4e7b90
-[2/4] KVM: x86/mmu: Dynamically allocate shadow MMU's hashed page list
-      https://github.com/kvm-x86/linux/commit/039ef33e2f93
-[3/4] KVM: x86: Use kvzalloc() to allocate VM struct
-      https://github.com/kvm-x86/linux/commit/ac777fbf064f
-[4/4] KVM: x86/mmu: Defer allocation of shadow MMU's hashed page list
-      https://github.com/kvm-x86/linux/commit/9c4fe6d1509b
+Stephen, can I get an Acked-by or Reviewed-by from you so I can take 
+those changes in the Broadcom ARM SoC pull request that I will submit in 
+the next few days, thanks!
+-- 
+Florian
