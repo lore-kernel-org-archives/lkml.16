@@ -1,155 +1,156 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5D103FB1B
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A76243FB1B
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:06:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750774006; cv=none; b=mrYigC2fIOkZZyAX4ndNXTL+/9ssqiFrXyt3eHa+HDlsceJ5tnkvSsnacUAUIqaq9Ux3Fkgb4wENWiMchQ7JyCm0fCTr+08LPT/axKpnAxgPw0OI1dBAGO1BqCqUIZqAuhxbpvSGhdcX66p0GrBRUw/GxQXbdjv1gOig+HmCPxk=
+	t=1750774012; cv=none; b=HOWYKhRlFYT55k1YvBKXzne8O3S301sRM0krI2199kRUd1pihG0Sz7MSqYgYkqg+i9WlCkm0IvZexGozWxwCcnQ7Ny7Q7I/nxyG7XQ7rXMcGhoDQWlOsF61gGk4BYJr6hX5vnV/3kFkeRfLsqw+LGMPGQj55qMU0hd/mtTy8lEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750774006; c=relaxed/simple;
-	bh=oK4zhMVvpVBXg8QRx4FZyNgS/UDlJgYCSR7WfGsCgNU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JzDOnA7wwssBkAEzFsLni7WYytvcYZmoUpxHwGUQv1S7u5Sc4vFSe6YrFw12LM8t1gmi7OQRu7OxNUCIQpGi9e0KTx2q7z2cV3YrNxDDocBcBR02bFzevn6C0MihucE49tlwm9L+RI0Ai6TVFcvjEzli1tcz3GCnXtCzOb+1Vhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SGFDZW7A; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1750774012; c=relaxed/simple;
+	bh=UJRHi8VtXi0j/haWMkbtDJW892NNvRpaYGNjw5eC2rk=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Im37gq+vdeT+lPf3uCOxY4yJUNhJw1CEGZ7E0dJ3lOHAGn56h0zp33yPivcURQZW8xT0gmsTxXAhLYyFx2Yx+s43GckFrO/hMko52QGBl2lLT9CT4ZmF2i3kMMi43c5gNG8q4U9EnGo84QEydSRdjp2KBQSx8Qcd6B3DAM/PHyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fbFdQ33T; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SGFDZW7A"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fbFdQ33T"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750774003;
+	s=mimecast20190719; t=1750774009;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=FlQqDCzzkR8Q/dh9t/C+sS1tdaGImydBI9fHj1Di4J8=;
-	b=SGFDZW7Ao+AZRquaCSWMyzNBfW03152XvQEcXBt0kQ7k78e/ixRPpY93yOJVZi1MA1S0vP
-	KpOeLx2YzL3trDTi9oOf43GrQ8no9fyevIVLjKiiJHrI1VK1Gjm8wENUyMFZDEZk7O1hkV
-	5BpABtc98tXjuT2m8TLiCMLZa2+n8Lc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=brO5UuNwsnXhxkPr+JOlVZidvfGcar9TQL7N5I3jMjU=;
+	b=fbFdQ33T9njlZocZwr1cXAr2k4IzlNGjrdB3mwHrV8t1h5+xXxui4vuappoNoUoi4pdTnp
+	dmpnQLI5vg4+h/CNn1NjGSStZ2wzcPfd4HNPqG+vbRgq4l10wWFw7GGmutTqnLEI0lM1tG
+	Ohq1uRIE6k/KgYRR8F3aUFt++0H0BXE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-252-ZtVduQ92Myq0FFZZ12xSig-1; Tue, 24 Jun 2025 10:06:41 -0400
-X-MC-Unique: ZtVduQ92Myq0FFZZ12xSig-1
-X-Mimecast-MFC-AGG-ID: ZtVduQ92Myq0FFZZ12xSig_1750774000
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-450d290d542so3517585e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:06:41 -0700 (PDT)
+ us-mta-669-CeehLaTOPqyf9kQgxTeUgw-1; Tue, 24 Jun 2025 10:06:48 -0400
+X-MC-Unique: CeehLaTOPqyf9kQgxTeUgw-1
+X-Mimecast-MFC-AGG-ID: CeehLaTOPqyf9kQgxTeUgw_1750774007
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a56b3dee17so3023835f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:06:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750774000; x=1751378800;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FlQqDCzzkR8Q/dh9t/C+sS1tdaGImydBI9fHj1Di4J8=;
-        b=Ys2Qk0V4LC2btnIxn4//ploirRoummm2+Ay84M4PFpXOKCKOgkWs/mVfuntCVXQ8WR
-         FswqKdhQaNki6xKxD0+Xd5Gahyt5M+1CJFdSn+Ez2h26gY5sRJjE9b97baQzyfcasOxG
-         wLux20zpHpZZu4GHddYx+9HvtuHxfQ5St/p+yqMfXXjUdBMI3jBjATMiUOIjqTBK0X0p
-         8Pibafv/AQWKsSbAXxhV3PEEM0y8cLCzL7lVg1AAMob9Nj7m2f6fuHVgutEnUEB+x22r
-         8eUEwAWNZzUSWkBkpnxGHSoP9JlHfdkGOwt2BARVrl/fGutrcThglCOk2zXj27fqCE+H
-         1SSw==
-X-Forwarded-Encrypted: i=1; AJvYcCXX3lwqSujcALVTGWW5npl+SHCDEAUi1HrWG7EEqTnUStxpflShb9J7BF94NgGeriLn3ihr0OTuboWv/G0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNrqfTEGoJjs6Gs/E//R5gPRQ9W1L85QrQa1gSpEobppwBEcxh
-	Lp0tzl8KU5OvZwQEosF5qIWR8nZUkUWW7fczkVzKYr5Ic7yguE30YjXk7VdnkNUyMEfepbmmshz
-	YzWGuOtpu3PCE4RYTn41z1X6UZ6hHNWSZI97eTFlPQnb3STS8qVL26j/YvF3QUTyakg==
-X-Gm-Gg: ASbGncum7DLwrE184q+yNq804dj8C72j42GR9MnJ+NGmfVPZ7XYYQTQZehWcYTtFhWb
-	nhilAECZIpKI6S0gNXZNFvmdaclw2SPlJFGFyJDDQv03r827bwIwRSrckzs/OZINhCGA8ZMnmGN
-	0K7/DLN+kg+hn9X/lWkhFtzuqGT4QywazCuGDLmrQCCp2ZkpGxBg7oyE5LAecFi3Xo/BP813o8g
-	WbapmjDQpJ3KMIrbl1AAMxYOOmM2/Jfr0lTl/FjnuwLwEa6ylNEWnQ5sL0k6AUY2IT1KBlmtnBu
-	fiwuzcFo7NOCnFeATsnZdoE71jdepCwdr0eHaHYAtoVktDef21tuo34=
-X-Received: by 2002:a05:600c:3b15:b0:453:84a:8cf1 with SMTP id 5b1f17b1804b1-453656bab9bmr138890075e9.33.1750773998283;
-        Tue, 24 Jun 2025 07:06:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEctki2bkk/GnxsrTCuex5cCQSKjV+lRTLjrQarp3XGvl4qos2HAC4hPykSyB+Fpv3Deb/dbw==
-X-Received: by 2002:a05:600c:3b15:b0:453:84a:8cf1 with SMTP id 5b1f17b1804b1-453656bab9bmr138889625e9.33.1750773997874;
-        Tue, 24 Jun 2025 07:06:37 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646fd589sm143520925e9.26.2025.06.24.07.06.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 07:06:37 -0700 (PDT)
-Message-ID: <50eb8b8b-cea3-45f8-96d0-45ab88e10909@redhat.com>
-Date: Tue, 24 Jun 2025 16:06:35 +0200
+        d=1e100.net; s=20230601; t=1750774007; x=1751378807;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=brO5UuNwsnXhxkPr+JOlVZidvfGcar9TQL7N5I3jMjU=;
+        b=lwaluHTpPGWSGyETYmVWpLuVv7b5ximRUTedsmSlwQ48eI2k73LxIZpEEB+iElLuOn
+         PWEIRIBSTHrVYL03vofRdP5N4OQvC5QOLoieMDscmnuqm/PvaQ0Ui2NR1YfXsP52wHUo
+         jLzE9mI8s2yLJYNURCh66oHfVBmOS8WcsIEPIQBTBgE6vm+SzMsSzqfpnEdkQHfiUXQZ
+         WhiOom99ZAyxm0H/b2ppiR8acpkY15QBVhTT3Xbi+HpOg7jkLKo9uMMdr3w06o4XyLlY
+         +h9TL2HNcdz73GG6Bs3e2pJ9J+hADgUsq4LFrpxjul9KNTgbzgwjm5S+et0P1tE/6vGE
+         KfJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJZDYrfK01c7EkvE67wfpHtYBC3IdHfR/X/hhNi/ceru2QaR2XD89Et3elw0RKobp2m0YOFKtjInYRmtM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzTk3mNhmSc8dGvCzjYt+Vsn2VDIcx9bQhvhALEimUQ9pI783t
+	lMlBI9KSLISNTJYQI10wRqbuGffT01fBYi1pm2k7DapAGU7ZyB9B618W6+GSKwlnKx7yhP4HbVI
+	zhWzu4cgih8cEr6Na7+xXGZnDQRp1muj1Q2KPHVmhiddqNyMmMzSz5vByVbwUaBbR9g==
+X-Gm-Gg: ASbGncvqX9r/O72W9zvB7lu91p7YaHQvCZm8fDKW9pa5pukt4joqID0b1+5QD0I4+6k
+	5q2vfOsYjPLP6JfD9anYML6S1L/pYxukV581mdLOEH0a/0MmS9z/PvKFNf/K/5Rp1Z5K2FR20cQ
+	otHZgvAmCUK1DxgXv1sLRAX6wfBSIjVh06HUaVaCzMngQ/qwf5+KsI95ipqgifds0ymUk5d5L1m
+	mMGeSdQ640aEMandZrRjjFql/X5zQDxTpTZXjdVPomYF5UWAM7HQMnFPB/1CWRSSTbgp0XvvwAp
+	yWVGRjxYNMCO4///TVu8KTueEYiVMifuT8hmoDmoQSdj+E8C
+X-Received: by 2002:a05:6000:2f87:b0:3a4:e238:6496 with SMTP id ffacd0b85a97d-3a6e71ff6f8mr3308743f8f.18.1750774005262;
+        Tue, 24 Jun 2025 07:06:45 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEVp06bRQQvPg3FHzH2flFRw42os0cqFBHF8/BB9ghA7E2Q+8IGEbezOEuwDl14iBcDWO2ncg==
+X-Received: by 2002:a05:6000:2f87:b0:3a4:e238:6496 with SMTP id ffacd0b85a97d-3a6e71ff6f8mr3308533f8f.18.1750774003248;
+        Tue, 24 Jun 2025 07:06:43 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.30])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45366b4d0adsm131794625e9.14.2025.06.24.07.06.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 07:06:42 -0700 (PDT)
+Message-ID: <1bc41a7a5bd46860318b0417fa27121758f28448.camel@redhat.com>
+Subject: Re: [PATCH v6 6/6] timers: Exclude isolated cpus from timer migation
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, Waiman Long <longman@redhat.com>
+Date: Tue, 24 Jun 2025 16:06:41 +0200
+In-Reply-To: <878qlhnunz.ffs@tglx>
+References: <20250530142031.215594-1-gmonaco@redhat.com>
+	 <20250530142031.215594-7-gmonaco@redhat.com> <875xgqqrel.ffs@tglx>
+	 <b33dcafca895da1d9c64a7d6ab771952a932e579.camel@redhat.com>
+	 <878qlhnunz.ffs@tglx>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/4] mm, madvise: use standard madvise locking in
- madvise_set_anon_name()
-To: Vlastimil Babka <vbabka@suse.cz>,
- Andrew Morton <akpm@linux-foundation.org>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Jann Horn <jannh@google.com>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Colin Cross <ccross@google.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
- <20250624-anon_name_cleanup-v2-4-600075462a11@suse.cz>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250624-anon_name_cleanup-v2-4-600075462a11@suse.cz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 24.06.25 15:03, Vlastimil Babka wrote:
-> Use madvise_lock()/madvise_unlock() in madvise_set_anon_name() in the
-> same way as in do_madvise(). This narrows the lock scope a bit and
-> reuses existing functionality. get_lock_mode() already picks the correct
-> MADVISE_MMAP_WRITE_LOCK mode for __MADV_SET_ANON_VMA_NAME so we can just
-> remove the explicit assignment.
-> 
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> ---
 
-Acked-by: David Hildenbrand <david@redhat.com>
 
--- 
-Cheers,
+On Tue, 2025-06-24 at 15:20 +0200, Thomas Gleixner wrote:
+> On Tue, Jun 24 2025 at 10:05, Gabriele Monaco wrote:
+>=20
+> Please trim your replies. It's a pain to scroll through 160 quotes
+> lines
+> to find the gist of the mail...
+>=20
+> > On Fri, 2025-06-20 at 19:00 +0200, Thomas Gleixner wrote:
+> > > > +	if ((!housekeeping_cpu(cpu, HK_TYPE_DOMAIN) ||
+> > > > +	=C2=A0=C2=A0=C2=A0=C2=A0 cpuset_cpu_is_isolated(cpu)) &&
+> > > > +	=C2=A0=C2=A0=C2=A0 housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE) &&
+> > > > +	=C2=A0=C2=A0=C2=A0 tick_nohz_cpu_hotpluggable(cpu))
+> > > > +		return 0;
+> > >=20
+> > > Same nonsense as above.
+> > >=20
+> > tmigr_cpu_available is called at boot time and is applying also the
+> > boot time isolation parameters (tmigr_isolated_exclude_cpumask is
+> > only
+> > used by the cpuset code).
+> >=20
+> > Now let's assume a machine booted with the arguments isolcpus=3D0-3
+> > nohz_full=3D5-7.
+> >=20
+> > Without checking for tick_nohz_cpu_hotpluggable() here, we would
+> > not
+> > set the tick cpu (0) as available at boot, ending up in the
+> > unwanted
+> > corner cases discussed in the v5 of the series.
+> >=20
+> > I could remove this call here (which is mostly redundant after
+> > boot)
+> > and enable explicitly the tick cpu in another way, but this still
+> > seems
+> > cleaner to me.
+> >=20
+> > Does it make sense to you? Is the comment in the code unclear?
+>=20
+> It does not make sense and the comment does not change that.
+>=20
+> The point is that tmigr_init() is an early initcall which is invoked
+> before SMP is initialized and APs are brought up.
+>=20
+> At this point CPU0 can neither be isolated nor nohz full for obvious
+> reasons, no?
+>=20
 
-David / dhildenb
+Right, but as far as I understood, the first call to=20
+tmigr_set_cpu_available() happens after the isolcpus parameter has been
+parsed so we know at least cpu0 is going to be isolated.
+
+On my machine it works reliably this way. I'm a bit lost in the init
+code but seeing housekeeping_init() before rcu_init(), which in turn
+should be required for some RCU-related early_initcalls, makes me
+believe this order is guaranteed to be respected.
+Or am I missing something?
+
+Thanks,
+Gabriele
 
