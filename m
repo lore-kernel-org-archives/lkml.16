@@ -1,261 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E913B1876;
-	Tue, 24 Jun 2025 07:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A583C259CA5
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:49:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750751307; cv=none; b=jzHIXju4IlxCmcBsAVs4QV/rN9fxRgIHba6PcxEguK2YSXopiJDfTXM0LA+Z7X/lDFtsXU0G3QZntPxxJimylzxD2BDYJt8aYXfTKP31HvD75fH9PTMpJqy3xwcvTnZ43LEz/sqnpATfir3jjiocyppPDIWqJMxv5mra3mNjdEs=
+	t=1750751391; cv=none; b=KTbDo0qtSbf/nqykjl0dK+1SkfYHgQhh9sIzH5RBjILipD7KECikalU7+B3jjeDcLS3qfiYOw01PsKUAT58pDN07xRWoQ7e9Fhl6wWk5kS5RzKAzB7MPn1ZcSjHbGYt5m2H2tPRfPNFpK7/l5eo1sfmsOAkmCMzzZefirWuIPc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750751307; c=relaxed/simple;
-	bh=87IhusWnFHqddKhc+u8V+JDM2N3zSseDLKZaCid1I40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=maVC0QzgSQ2Ii4p+eyoARxoAqzn4LO4Wwz4Px+C/r0ktRCJfCWii4k8oSMf34dqu7ihRWHP8fGoLfRMUYlud6gpcXFqJzwQlJk2RF7+2r5OCdg0enEJ3SOCEM9DNKBC20mSfqmao21+jzpytljBDjBCMjhxHdSzgo3za+wsYI7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NMUDRSnX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750751391; c=relaxed/simple;
+	bh=4xp2xPZJDUDY92X1KIl/IiLpG/PQaUTTvnUq4UFdyEE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FvUhLJ1GiC5SR7rc97cIsd/VZf7Y2cFXZYBUMjiZ7eTAB7D3aiOyPLwuEjLa2I+IArYrLLDfpdx7hgLYd+LUcq8UVMMa79EYblx5iQTUGBoSK3lm0FuicCoX2HYGAPQ9KoPavQwH+zyoFCUdhJAA87AbpZ6n6xzOoC7TuXEf9O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com; spf=pass smtp.mailfrom=vayavyalabs.com; dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b=Cm0w5dW9; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vayavyalabs.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NMUDRSnX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA07DC4CEEF;
-	Tue, 24 Jun 2025 07:48:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750751306;
-	bh=87IhusWnFHqddKhc+u8V+JDM2N3zSseDLKZaCid1I40=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=NMUDRSnXUpS0q4QJmlAwIads/FCRoiKqHnNK5yRu6FGT5xYQP6Yyy2JTuuvYrjKEF
-	 RTe7bnuTLb/QxEVqPfMPeDrhLqEihckLvvl04TVZX6cCy1T4/IxnCB6vAmDfZB/9n0
-	 LauTe6pP3miPobjsX9ru22b4Ar4ipL9WjEx6PzS6s0oBNpsAj+VAroU8mXeI0ieg/X
-	 zo8VXTdLze62zoSFMpPncIbj8G5Bv7+VLXE/zVaBtMTKn9StAxMiVKpr7Lp3GtsoTt
-	 EeNcsJjhVuz1snW7tVDZpSfyWZc0g1M5APYV8IceaBgdMt3XcMPs+KuNYrC3h+cykC
-	 TkQIIG0jt452g==
-Message-ID: <9bd05709-7702-4b74-85e1-3df25b57c535@kernel.org>
-Date: Tue, 24 Jun 2025 09:48:18 +0200
+	dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b="Cm0w5dW9"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e819aa98e7aso120528276.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=vayavyalabs.com; s=google; t=1750751388; x=1751356188; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a2GgMgmkIgP4lsnQEgW9b05jhOBEpY0FKkTliFZZAZY=;
+        b=Cm0w5dW9hfdydwMGSpxd64uT1g/bXw+bKlOMqkCgD3s6/idU+t41baNPVPjUGOomh2
+         5APYHmjUYMvblqw4l2KBVa7e5V9qD1WyTgfYakc5BSHL0WInn/m2O5Ds5+t212PD8+Dd
+         PVWLUqyfmJ38y85BVw9lrObN+A120KgLN1abI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750751388; x=1751356188;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a2GgMgmkIgP4lsnQEgW9b05jhOBEpY0FKkTliFZZAZY=;
+        b=g79Wwp0lcvEIAXOkyhgWthoWKb0thsq+X+SLWF2Dqr1PiWUhqQatyc48lK4CV5U6qk
+         TWjy/TP/d2wuzw91UJLWTpZlWL5Y+ZdCtV8DBPkufSZaua+6Trwz5r3gQgHuz3onDCxy
+         Pm/PcwShQMR0KoFakr8zKYkwsuiGa2kBj3ucnKg5fqs21igpKiypGCwe5kYyNgcDmMma
+         1tjbjjjJafTx6V/ld7YRsg5dpnpzme0R/UqozExKADtQYSzcDa3P8zCJP0JyyS0bf2KS
+         E9mPrf6u1hJ63ilSMn98AHBFHQ+heBkkJy0k+IqGZFezaHffcbrwmHz4TksSBaflafXd
+         4szQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXMMz/lAvp1XYJ9SNX2Ryi2lCjLb5GA47A7iZXlHzdwCH8GBarESm3qMNZdhV1k5IKV+LPbcS7+5tAGXz4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyl7Gj4LPuxLu7lY7wWQgnx2NtqLarfViK/v8ot8ONF4hdhRWSL
+	xFC3qsShDgSEa109fChn0vQjnEtMiANvEibSKCS2tPs1r4cmO6lANZR7w+hgJtnSHdFcX2iqOGQ
+	RqPwm+Z76jj6S8kkvgP6iHFw1mubg26axE1IIrl4bznRtvMMZcQRJSVY=
+X-Gm-Gg: ASbGnctutHdDW4q1Ml/Q1PGdmV07Fak/uVMoN+DhSvMycWmXvJsM4cpmMXGSyvxqU4H
+	+KSNetT1rx4TFN+Io7ZzYEYfHKoi59DJq/MQZOUYP0zhiRxWd/XEAXiVeNZUIxn3fb3+UMmZbqa
+	JY3RqcvEYvvKJzrKGHwRVcyIvNN1nUl79kHmNqYSAlqT8=
+X-Google-Smtp-Source: AGHT+IHv2WVZ5dtrz0QnXvOVMUjZgn0BsemAVul3jgQVDjh7OOHw30oiyOpFvnzhvWJNYzcwCTPLBstNxqzXGoDdbJo=
+X-Received: by 2002:a05:6902:108e:b0:e85:ed6b:4981 with SMTP id
+ 3f1490d57ef6-e85ed6b4a78mr4950966276.23.1750751388575; Tue, 24 Jun 2025
+ 00:49:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] hwmon: (pmbus) Add support for MPS multi-phase
- mp2869a/mp29612a controllers
-To: tzuhao.wtmh@gmail.com, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Naresh Solanki <naresh.solanki@9elements.com>,
- Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>,
- Michal Simek <michal.simek@amd.com>, Fabio Estevam <festevam@gmail.com>,
- Henry Wu <Henry_Wu@quantatw.com>, Grant Peltier <grantpeltier93@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Cedric Encarnacion <cedricjustine.encarnacion@analog.com>,
- Kim Seer Paller <kimseer.paller@analog.com>,
- Leo Yang <leo.yang.sy0@gmail.com>, Ninad Palsule <ninad@linux.ibm.com>,
- Alex Vdovydchenko <xzeol@yahoo.com>,
- John Erasmus Mari Geronimo <johnerasmusmari.geronimo@analog.com>,
- Nuno Sa <nuno.sa@analog.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Noah Wang <noahwang.wang@outlook.com>,
- Mariel Tinaco <Mariel.Tinaco@analog.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20250624074156.291176-1-Henry_Wu@quantatw.tw>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <20250624074156.291176-1-Henry_Wu@quantatw.tw>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250602053231.403143-1-pavitrakumarm@vayavyalabs.com>
+ <20250602053231.403143-2-pavitrakumarm@vayavyalabs.com> <fae97f84-bdb9-42de-b292-92d2b262f16a@kernel.org>
+ <CALxtO0mpQtqPB0h_Wff2dLGo=Mxk02JJQkK4rn+=TuScNdSfxQ@mail.gmail.com>
+ <3570be5b-cb20-4259-9a9b-959098b902d0@kernel.org> <CALxtO0mH=GwhQxQBsmMQYd+qgAue9WxXN1XWo9BncVJvJk6d8A@mail.gmail.com>
+ <cd6e92af-1304-4078-9ed7-de1cb53c66da@kernel.org> <CALxtO0mVMTWqidSv7LQSQd-rA_TmJy_0xgBSd=mP27kg=AXQRg@mail.gmail.com>
+ <e08b2f76-17b1-4411-a428-b2f0f8a7d7fd@kernel.org> <CALxtO0nReqeGKY+BNCBD10KSGttxxCrFzczxPjfrQM0eXv9Eug@mail.gmail.com>
+ <b207cba7-47d3-43f4-8d59-38df9ec4eec2@kernel.org>
+In-Reply-To: <b207cba7-47d3-43f4-8d59-38df9ec4eec2@kernel.org>
+From: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
+Date: Tue, 24 Jun 2025 13:19:37 +0530
+X-Gm-Features: Ac12FXx9KD4UOHhj75qGAiuyDem7sV7v10kA6Mwb459PbL5ZJU-1N8SzFZSnTsI
+Message-ID: <CALxtO0k3_ib2G-4pL0h5HxHUXgJ=ArNY6eaThEzdsPiYPauDWw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: crypto: Document support for SPAcc
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, herbert@gondor.apana.org.au, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, Ruud.Derwig@synopsys.com, 
+	manjunath.hadli@vayavyalabs.com, adityak@vayavyalabs.com, 
+	Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 24/06/2025 09:41, tzuhao.wtmh@gmail.com wrote:
-> +static int
-> +MP2869A_read_byte_data(struct i2c_client *client, int page, int reg)
-> +{
-> +	switch (reg) {
-> +	case PMBUS_VOUT_MODE:
-> +		/* Enforce VOUT direct format. */
-> +		return PB_VOUT_MODE_DIRECT;
-> +	default:
-> +		return -ENODATA;
-> +	}
-> +}
-> +
-> +static int
-> +MP2869A_identify_vout_format(struct i2c_client *client,
+Hi Krzysztof,
+   My comments are embedded below, appreciate your inputs.
 
-Use Linux coding style, so lowercase for variables, types and functions.
-Everywhere (except when coding style tells you different, so please read
-it).
+Warm regards,
+PK
 
-> +			    struct MP2869A_data *data)
-> +{
-> +	int i, ret;
-> +
-> +	for (i = 0; i < data->info.pages; i++) {
-> +		ret = i2c_smbus_write_byte_data(client, PMBUS_PAGE, i);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		ret = i2c_smbus_read_word_data(client, MP2869A_VOUT_MODE);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		switch (ret & MP2869A_VOUT_MODE_MASK) {
-> +		case MP2869A_VOUT_MODE_VID:
-> +			data->vout_format[i] = vid;
-> +			break;
-> +		default:
-> +		return -EINVAL;
-> +		}
-> +		}
+On Fri, Jun 6, 2025 at 6:34=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
+> wrote:
+>
+> On 06/06/2025 14:58, Pavitrakumar Managutte wrote:
+> > On Fri, Jun 6, 2025 at 4:55=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel=
+.org> wrote:
+> >>
+> >> On 06/06/2025 13:02, Pavitrakumar Managutte wrote:
+> >>> Hi Krzysztof,
+> >>>   Appreciate your inputs and feedback. My comments are embedded below=
+.
+> >>>
+> >>> Warm regards,
+> >>> PK
+> >>>
+> >>> On Wed, Jun 4, 2025 at 7:37=E2=80=AFPM Krzysztof Kozlowski <krzk@kern=
+el.org> wrote:
+> >>>>
+> >>>> On 04/06/2025 14:20, Pavitrakumar Managutte wrote:
+> >>>>>>
+> >>>>>>>>> +
+> >>>>>>>>> +  snps,vspacc-id:
+> >>>>>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
+> >>>>>>>>> +    description: |
+> >>>>>>>>> +      Virtual SPAcc instance identifier.
+> >>>>>>>>> +      The SPAcc hardware supports multiple virtual instances (=
+determined by
+> >>>>>>>>> +      ELP_SPACC_CONFIG_VSPACC_CNT parameter), and this ID is u=
+sed to identify
+> >>>>>>>>> +      which virtual instance this node represents.
+> >>>>>>>>
+> >>>>>>>> No, IDs are not accepted.
+> >>>>>>>
+> >>>>>>> PK: This represents the specific virtual SPAcc that is being used=
+ in
+> >>>>>>> the current configuration. It is used to index into the register =
+banks
+> >>>>>>> and the context memories of the virtual SPAcc that is being used.=
+ The
+> >>>>>>> SPAcc IP can be configured as dedicated virtual SPAccs in
+> >>>>>>> heterogeneous environments.
+> >>>>>>
+> >>>>>> OK. Why registers are not narrowed to only this instance? It feels=
+ like
+> >>>>>> you provide here full register space for multiple devices and then
+> >>>>>> select the bank with above ID.
+> >>>>>
+> >>>>> PK: No, we cant narrow the registers to only this instance since it=
+s
+> >>>>> is just a single SPAcc with multiple virtual SPAcc instances. The s=
+ame
+> >>>>> set of registers(aka register banks) and context memories are
+> >>>>> repeated, but sit at different offset addresses (i*4000 +
+> >>>>> register-offsets). The crypto hardware engine inside is shared by a=
+ll
+> >>>>> the virtual SPAccs. This is very much for a heterogeneous computing
+> >>>>> scenario.
+> >>>>
+> >>>> Then maybe you have one crypto engine? You ask us to guess all of th=
+is,
+> >>>> also because you do not upstream the DTS for real product. Any
+> >>>> mentioning of "virtual" already raises concerns...
+> >>>
+> >>> PK: Yes this is a single crypto engine, maybe I should have detailed
+> >>> that in the cover letter. I will fix that. And what I have pushed in
+> >>
+> >> So one node, thus no need for this entire virtual device split.
+> >
+> > PK: Agreed, its one node for our test case.
+>
+>
+> We do not talk about test case. We talk about this device.
+PK: Sure
+> >
+> >>
+> >>> the patch is my complete DTS. It might need updating depending on the
+> >>
+> >> If this is complete, then obviously "snps,vspacc-id" is not necessary.
+> >
+> > PK: Yes, its one node, to keep things simple. So we pick a virtual
+> > spacc with its vspacc-id for testing. That way we could test all the
+> > virtual spaccs with a single node, on a need basis.
+> >
+> > On the other hand we could create 'n' nodes for 'n' virtual spaccs and
+>
+> You said it is complete, now you said you have 'n' more.
 
-Messed indentation in multiple places.
+PK: I think the mistake from my side was to create 'n' nodes with the
+same base addresses and different Virtual IDs, and misinterpret your
+earlier guidance on this. Instead every "virtual" SPAcc instance can
+be represented with its own DT node, since its base address and IRQ
+numbers are unique. The "virtual" refers to a hardware feature in the
+SPAcc. Each virtual SPAcc, configured at hardware design-time, has its
+own control registers, IRQ numbers and contexts, only the crypto
+hardware is shared.
 
-> +	return 0;
-> +}
-> +
-> +static struct pmbus_driver_info MP2869A_info = {
+>
+> > register 'n' vspacc devices with the crypto subsystem. And bind the
+> > individual nodes with unique vspacc-ids. That might depend on the
+>
+> I don't understand what is "binding" here. Use Linux or DT terminology.
 
-This is const.
+PK: My bad, I will take care of that.
 
-> +	.pages = MP2869A_PAGE_NUM,
-> +	.format[PSC_VOLTAGE_IN] = linear,
-> +	.format[PSC_VOLTAGE_OUT] = direct,
-> +	.format[PSC_TEMPERATURE] = linear,
-> +	.format[PSC_CURRENT_IN] = linear,
-> +	.format[PSC_CURRENT_OUT] = linear,
-> +	.format[PSC_POWER] = linear,
-> +	.m[PSC_VOLTAGE_OUT] = 1,
-> +	.b[PSC_VOLTAGE_OUT] = 0,
-> +	.R[PSC_VOLTAGE_OUT] = -3,
-> +	.func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
-> +		PMBUS_HAVE_IIN | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
-> +		PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_POUT |
-> +		PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT,
-> +	.func[1] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_IOUT |
-> +		PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_POUT | PMBUS_HAVE_TEMP,
-> +	.read_byte_data = MP2869A_read_byte_data,
-> +	.read_word_data = MP2869A_read_word_data,
-> +};
-> +
-> +static int mp2869a_probe(struct i2c_client *client)
-> +{
-> +	struct pmbus_driver_info *info;
-> +	struct MP2869A_data *data;
-> +	int ret;
-> +
-> +	data = devm_kzalloc(&client->dev, sizeof(struct MP2869A_data),
+>
+> > vendor use case, for which we will add incremental support.
+>
+> You did not get the point but you keep saying "yes". This discussion is
+> getting meaningless and you really do not want to listen. You have
+> either incomplete picture here or you have only one node. In both cases
+> virtual ID is not necessary. If you claim virtual ID is necessary, I
+> claim you have here incomplete picture and you are trying to represent
+> one device in multiple nodes. No.
+>
+> Typically one device, one node.
+>
+> NOT one device and 10 virtual nodes representing virtual devices.
 
-sizeof(*)
+PK: Thanks, I believe I finally understand your point.
 
-> +		GFP_KERNEL);
-
-Misaligned. Run checkpatch --srtict
-
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	data->chip_id = (enum chips)(uintptr_t)i2c_get_match_data(client);
-
-These are just wrong or redundant casts. You need only one cast -
-kernel_ulong_t
-
-> +
-> +	memcpy(data->max_phases, mp2869a_max_phases[data->chip_id],
-> +		sizeof(data->max_phases));
-
-Why you cannot just store the pointer?
-
-> +
-> +	memcpy(&data->info, &MP2869A_info, sizeof(*info));
-
-Why you cannot just store the pointer?
-
-> +	info = &data->info;
-> +
-> +
-
-One blank line, not two
-
-> +	/* Identify vout format. */
-> +	ret = MP2869A_identify_vout_format(client, data);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* set the device to page 0 */
-> +	i2c_smbus_write_byte_data(client, PMBUS_PAGE, 0);
-> +
-> +	return pmbus_do_probe(client, info);
-> +}
-> +
-> +static const struct of_device_id __maybe_unused mp2869a_of_match[] = {
-> +	{ .compatible = "mps,mp2869a", .data = (void *)mp2869a },
-> +	{ .compatible = "mps,mp29612a", .data = (void *)mp29612a},
-> +	{}
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, mp2869a_of_match);
-> +
-> +static struct i2c_driver mp2869a_driver = {
-> +	.driver = {
-> +		.name = "mp2869a",
-> +		.of_match_table = mp2869a_of_match,
-> +	},
-> +	.probe = mp2869a_probe,
-> +	.id_table = mp2869a_id,
-> +};
-> +
-> +module_i2c_driver(mp2869a_driver);
-> +
-> +
-
-One blank line, not two. This applies everywhere.
-
-> +MODULE_AUTHOR("Henry Wu <Henry_WU@quantatw.com>");
-> +MODULE_DESCRIPTION("PMBus driver for MPS MP2869A/MP29612A device");
-> +MODULE_LICENSE("GPL");
-> +MODULE_IMPORT_NS(PMBUS);
-
-
-Best regards,
-Krzysztof
+>
+> Amount of ping pongs here is way beyond my patience, so before you
+> respond read that carefully and come with full and accurate hardware
+> description, so we will not have to ping pong trying to get any sort of
+> details.
+>
+> Best regards,
+> Krzysztof
