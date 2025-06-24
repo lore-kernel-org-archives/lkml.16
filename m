@@ -1,59 +1,67 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB45E145355;
-	Tue, 24 Jun 2025 15:51:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4720213A86C
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750780265; cv=none; b=tBu/j2HkFnNDO2tUsXlzZIqqwEONRlq9ffYyo7W8zVzsilrAZP+4nFU8RA+0hSWQb/vpTCD1WKiGZXIUX+ZZy9J5Tk3W+SQv1t/tVE6Sveqcf6pUm9AW3dB228Uqdpmin30TZ9xEyldQq8P2/2IYc31uhZKM5UZs/tFDfR0Wn+c=
+	t=1750780302; cv=none; b=kdCq/hROKBGqlQDwPf1I+KZGYiL9q0kYKxlrpYzR/QjaX6C8Zcc+2Onef0OSeniwT/Sz1CcNwuDqMn0+X7/qIAvNkpnnpUjaAJf3zt4800XZxXdRq4JwOIFOkpTAHY8+tXPuwE2krPDYZ3J/43jLDMar/2WP1vTczWtFgxJssNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750780265; c=relaxed/simple;
-	bh=kJvxkJFb2m2TQQBRPn9W6akGT4m5Eh0lljLjb0hb4Dw=;
+	s=arc-20240116; t=1750780302; c=relaxed/simple;
+	bh=qKs1GOhh/uabY3+/WUpvB3P/Z8lQE4COMzZX2GDKdHM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uTKQr9FsIItYJgC0WeOUqBKnxoqC1AQ9aZeWgofiW8QwvjDuDoKbqPHhi3ZtpHnwQmF/+sh7EFmCKabv7GRwO7gbqM13pIYageUf7F7GAXbVaGsz61wrJRtR8TpL0/tZfwhbSE0d41eHXKFuuk72XscOCls4of3IQ6qWJgUF6mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LW+SQ19a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TfGvdKj2; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=S52Rgqh3wHaFX306QLbYLPv65ePxa0ChI65ruT0byHKkkRYgIBGU2TngVK4Yp/0jBtESvedOmxaXAiOrXvEg23OQjG62g5j949w3K8RSSmAI/b4FLONd4FKIpKQe88bYYOXpcvv18RejuC3ChzdMrXAd/BLhBPZMl5wwqq9WQL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WTUglLsl; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LW+SQ19a";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TfGvdKj2"
-Date: Tue, 24 Jun 2025 17:50:53 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750780259;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LjzWaJlszZfB0Iyg0kS6b0Zp49oz/zJ1JIviTq6SFMM=;
-	b=LW+SQ19aZvzIbswT6KS1HbbIIbExEAtnbVuKpkEmmSZYgyqU9mksm7p2MdbUx0tvVjADn4
-	iuIKfTaCEV9OmFvTSxdY8cODysE2FS1Fobcj/bjsR/YfuzqPszIBdFJQHHTs3VvuFmtHo0
-	LNkt06uwElmgpUjE8YTRr0vHzSlvwEC07dDoSq6gZVfG+4O9vG89QxTuBhr1r+y/WzyECS
-	Vg8ll0W5qgi69MUQjo+IJC2Lv6tMUDo+qLsPLz2JpAg5pZpATHkJhfVCI9OUXkBde5x/gZ
-	cQouXMepfMjLS6GYoHtHGKui23XHD4sufcG2I+Te1rtaM2mn7fW2YUBCCCSHWA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750780259;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LjzWaJlszZfB0Iyg0kS6b0Zp49oz/zJ1JIviTq6SFMM=;
-	b=TfGvdKj2ZV13WApOUMTYTHY3M6KXB7O8jJOBJhvfJGrqiTbeLqwobWNUYp0qxIjKACtpI7
-	f+uDVXceqXaBF1Cg==
-From: Nam Cao <namcao@linutronix.de>
-To: Gabriele Monaco <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Tomas Glozar <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
-	john.ogness@linutronix.de
-Subject: Re: [RFC PATCH v2 09/12] rv: Replace tss monitor with more complete
- sts
-Message-ID: <20250624155053.wOoDw8ff@linutronix.de>
-References: <20250514084314.57976-1-gmonaco@redhat.com>
- <20250514084314.57976-10-gmonaco@redhat.com>
- <20250624073609.OA9Q1V4g@linutronix.de>
- <e2b2e78a9c66973d90a9dbeea83b88b97182c36e.camel@redhat.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WTUglLsl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750780300; x=1782316300;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qKs1GOhh/uabY3+/WUpvB3P/Z8lQE4COMzZX2GDKdHM=;
+  b=WTUglLsl9LM0TGn4L02mQVuQwfiM0JINnmO3NrXKJnAo8D8mW8QvFtrl
+   NyRwobivcRkxdPN2OV6MAyuPYB2Zo5ew+PODCCsNUBdyY9/8QVWg2WXQh
+   5uguACczp0FhCX8VQ15q3wyxiGdFjN4kGpbg+0XEGdswGENZCt4eHUO4P
+   rhBiLRK/FtmkRV8GJxv8mFtZ2sXZDeHU4ipThSg57EZJXX/5WlYOA+4OK
+   ADNGqGaIohDgA/hxDQS2nQLxFCk1IQAd7/OF1VjQZJZPTb3hPh0xHLfUM
+   2zjWhZpmehkBFNVnQqoAy1YYFVTwM+fmgBtHfGCSnoEjayG17I0vGmdxj
+   w==;
+X-CSE-ConnectionGUID: 8A0RQkLJTaqhxLNe0mV6Cw==
+X-CSE-MsgGUID: 8Uz6q9sZSxm/AWNF2sxqVg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="53162922"
+X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
+   d="scan'208";a="53162922"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 08:51:39 -0700
+X-CSE-ConnectionGUID: JYf779btRRexXcIZhi4pVA==
+X-CSE-MsgGUID: 9LfSLyXLTbGHQ6ih9SEUAA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
+   d="scan'208";a="152476394"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 24 Jun 2025 08:51:37 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uU5vq-000SHi-3B;
+	Tue, 24 Jun 2025 15:51:34 +0000
+Date: Tue, 24 Jun 2025 23:51:26 +0800
+From: kernel test robot <lkp@intel.com>
+To: Markus Schneider-Pargmann <msp@baylibre.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: oe-kbuild-all@lists.linux.dev, Vishal Mahaveer <vishalm@ti.com>,
+	Kevin Hilman <khilman@baylibre.com>, Dhruva Gole <d-gole@ti.com>,
+	Sebin Francis <sebin.francis@ti.com>,
+	Kendall Willis <k-willis@ti.com>, Akashdeep Kaur <a-kaur@ti.com>,
+	linux-kernel@vger.kernel.org,
+	Markus Schneider-Pargmann <msp@baylibre.com>
+Subject: Re: [PATCH 2/3] clocksource/drivers/timer-ti-dm: Add clocksource
+ support
+Message-ID: <202506242304.M75bDdRW-lkp@intel.com>
+References: <20250623-topic-ti-dm-clkevt-v6-16-v1-2-b00086761ee1@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,41 +70,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e2b2e78a9c66973d90a9dbeea83b88b97182c36e.camel@redhat.com>
+In-Reply-To: <20250623-topic-ti-dm-clkevt-v6-16-v1-2-b00086761ee1@baylibre.com>
 
-On Tue, Jun 24, 2025 at 04:44:49PM +0200, Gabriele Monaco wrote:
-> As you mentioned, nobody is likely relying on those tracepoints names
-> at the moment, but I would rather be cautious basing userspace tools on
-> some monitors to exist at all.
-> 
-> In my opinion, RV tracepoints are useful as an alternative of
-> reactors/rv userspace tool but cannot be used without considering the
-> RV interface itself (e.g. available_monitors and friends).
-> 
-> We could at least stick to the following assumptions:
-> 1. monitors can change names, be added or removed
-> 2. tracepoints are consistent to monitor names (in available_monitors)
-> 3. the tracepoint structure does not change (i.e. event_/error_, args.)
->    (can change for new monitors types where seen fit)
-> 
-> If in the future we allow the possibility to build RV monitors as BPF
-> programs, we'd probably also allow monitors without tracepoints at all,
-> but I'd say for now those assumptions are sensible.
-> 
-> What do you think?
+Hi Markus,
 
-I would like that. Ideally, the userspace tools only use tracepoints based
-on available_monitors.
+kernel test robot noticed the following build warnings:
 
-However, people may not do that, and just use tracepoints directly.
+[auto build test WARNING on 19272b37aa4f83ca52bdf9c16d5d81bdd1354494]
 
-You could argue that those tools are not correctly designed. Therefore it
-is their fault that the tools are broken after updating kernel.
+url:    https://github.com/intel-lab-lkp/linux/commits/Markus-Schneider-Pargmann/clocksource-drivers-timer-ti-dm-Fix-property-name-in-comment/20250624-032923
+base:   19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+patch link:    https://lore.kernel.org/r/20250623-topic-ti-dm-clkevt-v6-16-v1-2-b00086761ee1%40baylibre.com
+patch subject: [PATCH 2/3] clocksource/drivers/timer-ti-dm: Add clocksource support
+config: arm64-randconfig-002-20250624 (https://download.01.org/0day-ci/archive/20250624/202506242304.M75bDdRW-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250624/202506242304.M75bDdRW-lkp@intel.com/reproduce)
 
-On the other hand, there is this sentiment that we must never break
-userspace.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506242304.M75bDdRW-lkp@intel.com/
 
-I don't know enough to judge this. Maybe @Steven has something to add?
+All warnings (new ones prefixed by >>, old ones prefixed by <<):
 
-Best regards,
-Nam
+>> WARNING: modpost: vmlinux: section mismatch in reference: omap_dm_timer_setup_clocksource+0x634 (section: .text) -> sched_clock_register (section: .init.text)
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
