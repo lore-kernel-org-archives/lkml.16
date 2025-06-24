@@ -1,189 +1,246 @@
 Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335AB26CE3E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D645299ABD
 	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 18:51:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750791091; cv=none; b=WCDboOsc+9pWKJ8PV2aSVQDBDCbMtF2JlaKu+rjdlw+NrbmtX4CSqvGCRUL6wgWGUp71uu82DmSrlYZAvOrKDAiEskCsdlpssqQBuqg9k53EOAjTDtIIz1GyE+J1udo4R4wQh2KQrFhMFEW0UiZwxD1dD/9guP4zNgMB7TSuLWQ=
+	t=1750791092; cv=none; b=Hzffn414+zirQpciFr+Om4IpGCm2Nt62364uKPNZem1tT8qxL1LNI6NgZyxjQV2c5eQzeM95kpmGGH4qRWn4nVxKfAnlGzfMz47wCIoBKJW6mnXpTZD/9GdgJyiJ8zfVo8decOvFJuieDK2xAEZGFh/DZApB3KrbVDYfrKTj4/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750791091; c=relaxed/simple;
-	bh=MUF325R0oiGozTf+4Yo2iE1fnbJVyBm5y8AwePbAnhY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=UxYLJgj9gC6yA8FBwj/RkCLDbYqX9G+zaqkiF8Q8MfoU9SLNop5pDI00JMQn60aq6K4XdH00hqPcNl2iNK+NQqKf1XekffrJ8HA+6YXt3Mk0947SWK2SrxYCjPDIz8wdChLu1fOpQlRv21BpK5UvnR0VS1BcziUJ8dyAAe8YAmo=
+	s=arc-20240116; t=1750791092; c=relaxed/simple;
+	bh=K+1ubdXTQvJ3y7AP8pyMgWti8Z2MztgkeevuOPDWK7Q=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=GFoHYLXRZjlYPZj8f9SbvrqJ+qU6VFMSeaSM0XjV7qlWu3fHvZmg5msrloUrX0JgnYaPF2cX37XYtNd6vpjLjRB5eyOBZzlsYvYfSx5wmFGYsW1BRimpY2zMwooPlB/lKV5DeXIbp2qky063Hlt8tDeL1PuSC1xA8CG+9tESHUU=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddb4a92e80so10557275ab.3
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddd90ca184so7009515ab.0
         for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:51:30 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750791089; x=1751395889;
+        d=1e100.net; s=20230601; t=1750791090; x=1751395890;
         h=to:from:subject:message-id:date:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=y8aq2ifguR0kuoI6ywnkw0QcPiAtx251brKiwRhhGl8=;
-        b=H15kZ5dfMoW/bEpXxmYhtPzsyEHdwGk2tCQjvN3BxwaR1JSYVyQAUvu+dyay5JLQHJ
-         T6I8O0mnOl8qaf7FUmQ2W1IHvuaBb5uZjaShOhXyteN0jgUs5j4yeYOODuD2dXVIFoXU
-         SnJ3l+FSv94sClqkA9EY9hDl/8QXaz3VbJ8l5Rm/qO7hTLKVlvPablIvaytAzXOGYH2+
-         OvmJLaGvRfMrZ8sIs9wEeyggfkqbETKcpTrREoSvlwf86yhTrc28OxKok+GBE5l0kEDR
-         VMJ+L6Lgp4VF7OhZXfCmXPk4IvxM1DtU32bqQWC1SGGMNHlOxfVrmHFdOesqlYqW0fux
-         3LFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWJjgnyEigdPwM2YlYASmjZssBHlC02Kp4aGeQfJTGifz3ZcVG7smt9a5imasvxfo+WScKVWIjt6e09QRU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgWGowiqIPQw2VNbo2NBtR1V/8NCIqPg7oMUqcZjbCCZKB9e6S
-	rfDHCy2uR4ewB2WoujPbhe3Ofa4kYt1J52DrO3U+HSZrbw0pGTIGmOl84lBEEZFE+a8wo5sgSAe
-	TVZEwi73OIZ9VzveVGk2lthx2c7LPAjy6pwmUrLbA5EZBMAcpyeiu1xG4GXs=
-X-Google-Smtp-Source: AGHT+IGvxAnUmk3h+KAd3NNTOuEsKsfc9m5sYSufImUReBuHqVbFpJ2yLD061yEgsMyhKCu34rTYSMwqZ4bK/XxgVOKsvP/iP6HI
+        bh=KptIPdLrONVssSAfLQ4Jd3RDXJtiQLHPC5AKkVycC08=;
+        b=GkoJl2uZbhTxbmdX3x6Rd1PJIep+Rx/ifUJk6A5APrg1XXhdgy68fQqVtHFP9HZWDm
+         1q8pUJP+CShNZOf6R0Ofz78H0RMtCS1yOnpjBKbe3EAdDGKq9UxGIjCMmCouJV5qaX9b
+         n91SSBTfG+9EDeoYu7FwPd+owIoRUOQtasQNTO5xCvW2WMBZ7wH8FXP2iAFZ88douNeV
+         O/SGQuUVcj7vcGZ2qoAcdaDBVUa/ljAm2uaEClimRbw8dPY6osQllVKmLSu7146J+pXa
+         UYpn6ghsjLWRkWC/UclBMhS7SMlspithx989AkKOYLtjx71ILTXmj76/WgrtGd4OUy74
+         0vTA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7GUdRU9+pYnDhxlA5HAcZuEzWESHkTlCEPh1We7VvYMsjQ14iDoA7EORpzXLO9cMgxRJycg7gdOt5Crw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlsAHJypRgdwJ4Qdy2jj4wWaplyFa7GrMhRygaeG1dCXuQ9PkM
+	BPXqBfbb+DLc4H4jWuuz6jociQCrD1Bf0ldWAcHXpyzox+zkUVg8gFDUd/0B6IE/4/nMU3A4fi9
+	COvsAkyN7+mtz8TdZUvcxXS9lI24g5mA9kMwsyLvUucCpLDyUKP3uwSGw3rQ=
+X-Google-Smtp-Source: AGHT+IE4YdoGq7Ae0oz3CX3vyyyJmEpp8RB0che9Wat6YMFbWJOPBPupBOUPqHTivhf48uwLkz6o7KUrZn5oCyb/fq9npnT2MxmS
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1fcc:b0:3dd:f1bb:da0b with SMTP id
- e9e14a558f8ab-3df328a4b96mr2311195ab.7.1750791089420; Tue, 24 Jun 2025
+X-Received: by 2002:a05:6e02:b26:b0:3dd:d155:94cb with SMTP id
+ e9e14a558f8ab-3df328f8928mr2266875ab.7.1750791089663; Tue, 24 Jun 2025
  11:51:29 -0700 (PDT)
 Date: Tue, 24 Jun 2025 11:51:29 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685af3b1.a00a0220.2e5631.0090.GAE@google.com>
-Subject: [syzbot] [ntfs3?] possible deadlock in ntfs_file_mmap_prepare
-From: syzbot <syzbot+a5d1c9dfa91705cd2f6d@syzkaller.appspotmail.com>
-To: almaz.alexandrovich@paragon-software.com, linux-kernel@vger.kernel.org, 
-	ntfs3@lists.linux.dev, syzkaller-bugs@googlegroups.com
+Message-ID: <685af3b1.a00a0220.2e5631.0091.GAE@google.com>
+Subject: [syzbot] [bpf?] [net?] possible deadlock in xsk_notifier (3)
+From: syzbot <syzbot+e67ea9c235b13b4f0020@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bjorn@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, davem@davemloft.net, edumazet@google.com, 
+	horms@kernel.org, jonathan.lemon@gmail.com, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, maciej.fijalkowski@intel.com, 
+	magnus.karlsson@intel.com, netdev@vger.kernel.org, pabeni@redhat.com, 
+	sdf@fomichev.me, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
 Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    5d4809e25903 Add linux-next specific files for 20250620
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17c65b0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=58afc4b78b52b7e3
-dashboard link: https://syzkaller.appspot.com/bug?extid=a5d1c9dfa91705cd2f6d
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1776a182580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17762dd4580000
+HEAD commit:    78f4e737a53e Merge tag 'for-6.16/dm-fixes' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11b48f0c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=12ec1a20ad573841
+dashboard link: https://syzkaller.appspot.com/bug?extid=e67ea9c235b13b4f0020
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
 
 Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/16492bf6b788/disk-5d4809e2.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/7be284ded1de/vmlinux-5d4809e2.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/467d717f0d9c/bzImage-5d4809e2.xz
-mounted in repro #1: https://storage.googleapis.com/syzbot-assets/6f34591c3e45/mount_0.gz
-mounted in repro #2: https://storage.googleapis.com/syzbot-assets/d137199587c7/mount_3.gz
+disk image: https://storage.googleapis.com/syzbot-assets/3ff97b2d201b/disk-78f4e737.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/1968f46c8915/vmlinux-78f4e737.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/3455e371b965/bzImage-78f4e737.xz
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a5d1c9dfa91705cd2f6d@syzkaller.appspotmail.com
+Reported-by: syzbot+e67ea9c235b13b4f0020@syzkaller.appspotmail.com
 
-loop0: detected capacity change from 0 to 4096
+netlink: 4 bytes leftover after parsing attributes in process `syz.1.1331'.
 ======================================================
 WARNING: possible circular locking dependency detected
-6.16.0-rc2-next-20250620-syzkaller #0 Not tainted
+6.16.0-rc3-syzkaller-00042-g78f4e737a53e #0 Not tainted
 ------------------------------------------------------
-syz-executor414/5843 is trying to acquire lock:
-ffff8880739bcd08 (&sb->s_type->i_mutex_key#15){+.+.}-{4:4}, at: inode_lock include/linux/fs.h:869 [inline]
-ffff8880739bcd08 (&sb->s_type->i_mutex_key#15){+.+.}-{4:4}, at: ntfs_file_mmap_prepare+0x599/0x770 fs/ntfs3/file.c:314
+syz.1.1331/11144 is trying to acquire lock:
+ffff888054b136b0 (&xs->mutex){+.+.}-{4:4}, at: xsk_notifier+0x101/0x280 net/xdp/xsk.c:1649
 
 but task is already holding lock:
-ffff888023ca6d60 (&mm->mmap_lock){++++}-{4:4}, at: mmap_write_lock_killable include/linux/mmap_lock.h:374 [inline]
-ffff888023ca6d60 (&mm->mmap_lock){++++}-{4:4}, at: vm_mmap_pgoff+0x1bd/0x4c0 mm/util.c:577
+ffff888052f43d58 (&net->xdp.lock){+.+.}-{4:4}, at: xsk_notifier+0xa4/0x280 net/xdp/xsk.c:1645
 
 which lock already depends on the new lock.
 
 
 the existing dependency chain (in reverse order) is:
 
--> #1 (&mm->mmap_lock){++++}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       gup_fast_fallback+0x22e/0x2270 mm/gup.c:3366
-       iov_iter_extract_user_pages lib/iov_iter.c:1846 [inline]
-       iov_iter_extract_pages+0x35a/0x5e0 lib/iov_iter.c:1909
-       dio_refill_pages fs/direct-io.c:172 [inline]
-       dio_get_page fs/direct-io.c:213 [inline]
-       do_direct_IO fs/direct-io.c:915 [inline]
-       __blockdev_direct_IO+0x1166/0x3490 fs/direct-io.c:1243
-       blockdev_direct_IO include/linux/fs.h:3497 [inline]
-       ntfs_direct_IO+0x20b/0x410 fs/ntfs3/inode.c:813
-       generic_file_read_iter+0x319/0x510 mm/filemap.c:2881
-       do_iter_readv_writev+0x56b/0x7f0 fs/read_write.c:-1
-       vfs_readv+0x253/0x850 fs/read_write.c:1018
-       do_preadv fs/read_write.c:1132 [inline]
-       __do_sys_preadv2 fs/read_write.c:1191 [inline]
-       __se_sys_preadv2+0x179/0x290 fs/read_write.c:1182
+-> #2 (&net->xdp.lock){+.+.}-{4:4}:
+       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
+       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:747
+       xsk_notifier+0xa4/0x280 net/xdp/xsk.c:1645
+       notifier_call_chain+0xbc/0x410 kernel/notifier.c:85
+       call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2230
+       call_netdevice_notifiers_extack net/core/dev.c:2268 [inline]
+       call_netdevice_notifiers net/core/dev.c:2282 [inline]
+       unregister_netdevice_many_notify+0xf9d/0x2700 net/core/dev.c:12077
+       unregister_netdevice_many net/core/dev.c:12140 [inline]
+       unregister_netdevice_queue+0x305/0x3f0 net/core/dev.c:11984
+       register_netdevice+0x18f1/0x2270 net/core/dev.c:11149
+       lapbeth_new_device drivers/net/wan/lapbether.c:420 [inline]
+       lapbeth_device_event+0x5b1/0xbe0 drivers/net/wan/lapbether.c:462
+       notifier_call_chain+0xbc/0x410 kernel/notifier.c:85
+       call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2230
+       call_netdevice_notifiers_extack net/core/dev.c:2268 [inline]
+       call_netdevice_notifiers net/core/dev.c:2282 [inline]
+       __dev_notify_flags+0x12c/0x2e0 net/core/dev.c:9497
+       netif_change_flags+0x108/0x160 net/core/dev.c:9526
+       dev_change_flags+0xba/0x250 net/core/dev_api.c:68
+       devinet_ioctl+0x11d5/0x1f50 net/ipv4/devinet.c:1200
+       inet_ioctl+0x3a7/0x3f0 net/ipv4/af_inet.c:1001
+       sock_do_ioctl+0x118/0x280 net/socket.c:1190
+       sock_ioctl+0x227/0x6b0 net/socket.c:1311
+       vfs_ioctl fs/ioctl.c:51 [inline]
+       __do_sys_ioctl fs/ioctl.c:907 [inline]
+       __se_sys_ioctl fs/ioctl.c:893 [inline]
+       __x64_sys_ioctl+0x18e/0x210 fs/ioctl.c:893
        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+       do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
        entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
--> #0 (&sb->s_type->i_mutex_key#15){+.+.}-{4:4}:
+-> #1 (&dev_instance_lock_key#20){+.+.}-{4:4}:
+       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
+       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:747
+       netdev_lock include/linux/netdevice.h:2756 [inline]
+       netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+       xsk_bind+0x37c/0x1570 net/xdp/xsk.c:1189
+       __sys_bind_socket net/socket.c:1810 [inline]
+       __sys_bind_socket net/socket.c:1802 [inline]
+       __sys_bind+0x1a7/0x260 net/socket.c:1841
+       __do_sys_bind net/socket.c:1846 [inline]
+       __se_sys_bind net/socket.c:1844 [inline]
+       __x64_sys_bind+0x72/0xb0 net/socket.c:1844
+       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+       do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
+       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+-> #0 (&xs->mutex){+.+.}-{4:4}:
        check_prev_add kernel/locking/lockdep.c:3168 [inline]
        check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
-       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
-       inode_lock include/linux/fs.h:869 [inline]
-       ntfs_file_mmap_prepare+0x599/0x770 fs/ntfs3/file.c:314
-       vfs_mmap_prepare include/linux/fs.h:2294 [inline]
-       call_mmap_prepare mm/vma.c:2585 [inline]
-       __mmap_region mm/vma.c:2657 [inline]
-       mmap_region+0xb4a/0x2080 mm/vma.c:2746
-       do_mmap+0xc45/0x10d0 mm/mmap.c:561
-       vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
-       ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
+       validate_chain kernel/locking/lockdep.c:3911 [inline]
+       __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
+       lock_acquire kernel/locking/lockdep.c:5871 [inline]
+       lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
+       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
+       __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:747
+       xsk_notifier+0x101/0x280 net/xdp/xsk.c:1649
+       notifier_call_chain+0xbc/0x410 kernel/notifier.c:85
+       call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2230
+       call_netdevice_notifiers_extack net/core/dev.c:2268 [inline]
+       call_netdevice_notifiers net/core/dev.c:2282 [inline]
+       unregister_netdevice_many_notify+0xf9d/0x2700 net/core/dev.c:12077
+       rtnl_delete_link net/core/rtnetlink.c:3511 [inline]
+       rtnl_dellink+0x3cb/0xa80 net/core/rtnetlink.c:3553
+       rtnetlink_rcv_msg+0x95e/0xe90 net/core/rtnetlink.c:6944
+       netlink_rcv_skb+0x158/0x420 net/netlink/af_netlink.c:2534
+       netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+       netlink_unicast+0x53d/0x7f0 net/netlink/af_netlink.c:1339
+       netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
+       sock_sendmsg_nosec net/socket.c:712 [inline]
+       __sock_sendmsg net/socket.c:727 [inline]
+       ____sys_sendmsg+0xa98/0xc70 net/socket.c:2566
+       ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
+       __sys_sendmsg+0x16d/0x220 net/socket.c:2652
        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+       do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
        entry_SYSCALL_64_after_hwframe+0x77/0x7f
 
 other info that might help us debug this:
+
+Chain exists of:
+  &xs->mutex --> &dev_instance_lock_key#20 --> &net->xdp.lock
 
  Possible unsafe locking scenario:
 
        CPU0                    CPU1
        ----                    ----
-  lock(&mm->mmap_lock);
-                               lock(&sb->s_type->i_mutex_key#15);
-                               lock(&mm->mmap_lock);
-  lock(&sb->s_type->i_mutex_key#15);
+  lock(&net->xdp.lock);
+                               lock(&dev_instance_lock_key#20);
+                               lock(&net->xdp.lock);
+  lock(&xs->mutex);
 
  *** DEADLOCK ***
 
-1 lock held by syz-executor414/5843:
- #0: ffff888023ca6d60 (&mm->mmap_lock){++++}-{4:4}, at: mmap_write_lock_killable include/linux/mmap_lock.h:374 [inline]
- #0: ffff888023ca6d60 (&mm->mmap_lock){++++}-{4:4}, at: vm_mmap_pgoff+0x1bd/0x4c0 mm/util.c:577
+2 locks held by syz.1.1331/11144:
+ #0: ffffffff9034e4a8 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_lock net/core/rtnetlink.c:80 [inline]
+ #0: ffffffff9034e4a8 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_net_lock include/linux/rtnetlink.h:130 [inline]
+ #0: ffffffff9034e4a8 (rtnl_mutex){+.+.}-{4:4}, at: rtnl_dellink+0x277/0xa80 net/core/rtnetlink.c:3545
+ #1: ffff888052f43d58 (&net->xdp.lock){+.+.}-{4:4}, at: xsk_notifier+0xa4/0x280 net/xdp/xsk.c:1645
 
 stack backtrace:
-CPU: 1 UID: 0 PID: 5843 Comm: syz-executor414 Not tainted 6.16.0-rc2-next-20250620-syzkaller #0 PREEMPT(full) 
+CPU: 1 UID: 0 PID: 11144 Comm: syz.1.1331 Not tainted 6.16.0-rc3-syzkaller-00042-g78f4e737a53e #0 PREEMPT(full) 
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
 Call Trace:
  <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_circular_bug+0x2ee/0x310 kernel/locking/lockdep.c:2046
- check_noncircular+0x134/0x160 kernel/locking/lockdep.c:2178
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_circular_bug+0x275/0x350 kernel/locking/lockdep.c:2046
+ check_noncircular+0x14c/0x170 kernel/locking/lockdep.c:2178
  check_prev_add kernel/locking/lockdep.c:3168 [inline]
  check_prevs_add kernel/locking/lockdep.c:3287 [inline]
- validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
- __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
- lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
- down_write+0x96/0x1f0 kernel/locking/rwsem.c:1577
- inode_lock include/linux/fs.h:869 [inline]
- ntfs_file_mmap_prepare+0x599/0x770 fs/ntfs3/file.c:314
- vfs_mmap_prepare include/linux/fs.h:2294 [inline]
- call_mmap_prepare mm/vma.c:2585 [inline]
- __mmap_region mm/vma.c:2657 [inline]
- mmap_region+0xb4a/0x2080 mm/vma.c:2746
- do_mmap+0xc45/0x10d0 mm/mmap.c:561
- vm_mmap_pgoff+0x31b/0x4c0 mm/util.c:579
- ksys_mmap_pgoff+0x51f/0x760 mm/mmap.c:607
+ validate_chain kernel/locking/lockdep.c:3911 [inline]
+ __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
+ lock_acquire kernel/locking/lockdep.c:5871 [inline]
+ lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
+ __mutex_lock_common kernel/locking/mutex.c:602 [inline]
+ __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:747
+ xsk_notifier+0x101/0x280 net/xdp/xsk.c:1649
+ notifier_call_chain+0xbc/0x410 kernel/notifier.c:85
+ call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2230
+ call_netdevice_notifiers_extack net/core/dev.c:2268 [inline]
+ call_netdevice_notifiers net/core/dev.c:2282 [inline]
+ unregister_netdevice_many_notify+0xf9d/0x2700 net/core/dev.c:12077
+ rtnl_delete_link net/core/rtnetlink.c:3511 [inline]
+ rtnl_dellink+0x3cb/0xa80 net/core/rtnetlink.c:3553
+ rtnetlink_rcv_msg+0x95e/0xe90 net/core/rtnetlink.c:6944
+ netlink_rcv_skb+0x158/0x420 net/netlink/af_netlink.c:2534
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x53d/0x7f0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg net/socket.c:727 [inline]
+ ____sys_sendmsg+0xa98/0xc70 net/socket.c:2566
+ ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
+ __sys_sendmsg+0x16d/0x220 net/socket.c:2652
  do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
  entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fd3b0279469
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 21 18 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fff0b2f7dd8 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
-RAX: ffffffffffffffda RBX: 0000200000000080 RCX: 00007fd3b0279469
-RDX: 000000000000000e RSI: 0000000000001000 RDI: 0000200000001000
-RBP: 00002000000000c0 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000000000011 R11: 0000000000000246 R12: 0031656c69662f2e
-R13: 0000200000000040 R14: 431bde82d7b634db R15: 00007fff0b2f7e40
+RIP: 0033:0x7f97c7b8e929
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f97c8abc038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f97c7db5fa0 RCX: 00007f97c7b8e929
+RDX: 0000000000000000 RSI: 0000200000000040 RDI: 0000000000000003
+RBP: 00007f97c7c10b39 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007f97c7db5fa0 R15: 00007fff09d1ae48
  </TASK>
+batman_adv: batadv0: Removing interface: batadv_slave_1
 
 
 ---
@@ -196,10 +253,6 @@ https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
 If the report is already addressed, let syzbot know by replying with:
 #syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
 
 If you want to overwrite report's subsystems, reply with:
 #syz set subsystems: new-subsystem
