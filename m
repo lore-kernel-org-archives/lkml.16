@@ -1,113 +1,72 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BB45227574
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B88A13B284
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:32:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750746455; cv=none; b=BB9rqqsOkjxVxwOYd32zxn7TgMxMXhq/XVLTSFy5xyrWjILi20KqGTqki9kJaO2viE45CTvVU8orI85/y2ooEzvkGwFJmj2XcUWvSwtXIyxlgefggFr+7LBQeHDFZGDwjKquTr6d8OWsVkjnIptocCjBAMH447LSNcIPTILLcqs=
+	t=1750746725; cv=none; b=b4NiCw1ju7YTQAIJ2A24tHszCbeSyTCVDa94FJLE/dPmPNV3/uUECoYteSP9ok12Lv/tKFhX1jLdQZdKnhBz2u43RDkZoIgMrwO5bUpTtdMqC67Eh+rF8uOFEaL3ykxNrUhfnzY2BuGG9dzz6Kcqr1mcJhYBuXS+pJqM4UOZUQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750746455; c=relaxed/simple;
-	bh=xkTiZpv/ASXY9zvmJWSVodQL9KYOVQ0OTX1/kMLhvsU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cdver2a68MgZgdPlLuDYOo1WQJNPZ+m1K8xsoxZ76m2Apn3oOz99JvL3bQLaywOsYBPjVNGejKuK144CeUVMLLx8NtT/uxXjq8Xi7wy85MiRJv9NwOCGIG9NMgwBZnchtD5zK4mNBdyAOC1rwskpMfpnvwtgg3L/XPRQn9zKlbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com; spf=pass smtp.mailfrom=brighamcampbell.com; dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b=BhC0dnY3; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=brighamcampbell.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=brighamcampbell.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=brighamcampbell.com header.i=@brighamcampbell.com header.b="BhC0dnY3"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-2db2f23f174so63561fac.2
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 23:27:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brighamcampbell.com; s=google; t=1750746453; x=1751351253; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jtWuSUmqyfHOpJX4FSI5IleGdX0aakm+epSuzbOI/jM=;
-        b=BhC0dnY3Vct8u+gz2i1t2njCt6rWxqXEv+zJoc++Wnra9150dardgHm9ylXJVlfRw0
-         RXw0k09xwX6Wu2KMEk558E2HYyFnkeAy0Xb45G3Yr2rUbh9oN0JPkv6ILdjQ3bJT6Taw
-         cl7Tk/gTY/9dDptVptLm1zcrLTJVxpKayilSYf3a2fwteTrgvholGFx49EN33UR5pp8R
-         qFwE0q/DzUSZlQf2JeebQAWXKSAg4AkZHAKkDMauMHXAXBW5f8di5gKMEyqbhLR71cbZ
-         jyHrOEYxXBqEtmkS8fMXQu9sIARmn0FOGHtgZB11rUijYOD+gEQkJ9/9SOBhZo66n9kx
-         iHoQ==
+	s=arc-20240116; t=1750746725; c=relaxed/simple;
+	bh=3Ta7cNZ+mYS8kufDyTDnV8ckwApvQxm2UP7jWIP4AHk=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=JAr+7Z6rbqmPQMCnrasEj77YW7z+UQuLrp3u/ZurLrd/wludw58oUhNOTXQ+YhhVo8VBp4ZzcMkaI17WowuPiq5QY1QAQqIlbCi7qdKK0FulVmnnYqug71yn0u2SXRK+dsTwvNnTmbo2e3IgLxZmVT3zLS0u5rxscYK1O4ZuirE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86d1218df67so420873639f.1
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 23:32:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750746453; x=1751351253;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jtWuSUmqyfHOpJX4FSI5IleGdX0aakm+epSuzbOI/jM=;
-        b=K9AeBqSd/CVs2T2meA0yAv0NqIx9UEflY3V1+KbS6Rd8NggL9OqwV1v28p2laX/dCa
-         H+bRUVDGVzc5V5E/qjzsOY5RSBCDQCRlLl94txlhK09/YJiEwC3PB8/ihIds7CVwPNqA
-         4kozcFpA54dcnp2RTHHiFXk2ew/3Vl9ZbuVbCg1LWxyvtmVKMSDR6EHTwJ7aCNS2jFlm
-         l5+YoZ97+242UYB2EfRzetxHZKp7kF+qotD0TwTUgStBRkv0H3JMPo4tAnoY0qQm5WiD
-         zI6eWdkxOVz4l5OOjA1Y2dG8XsV8//0Ri8yHYhw7XvIPvT2Ljb6eTLLmYmncgRqdNkzn
-         tYtg==
-X-Forwarded-Encrypted: i=1; AJvYcCVaHde+PCuRPiYiiRMSpMjLlgoaxDStPxm3fHIKchZ++PpKLAcc1y8cW/8hwod7d2px4f3JxhdvNi+i7kw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDdxZnM4BORLuh5sF379rTQUstXkUVDFLC77C1d7gxJAn857hQ
-	aq/DagSFuPntG06EpRqp3hvBoLQTWHTqfrsL70LmhYf7jKwHDmbTRojHXHZX+Uv4vHM=
-X-Gm-Gg: ASbGnctZrdBr+em0kVNWmDoTdlkRQhtScbRboKK3Uqsdd2Z6IGcN18K5h4zVD1hPHrx
-	qHfsSUfszr9tr+gUFCiHgE2VZvh/2HiXKlrF26lCSx2DDlM+Y8YB8BLUo78oNAXyEg1qvqU5N1a
-	aaIPltXXhVnfwcdmCRaZb+kC8yG1UKGqD621ZvsnKtDi2/KgF60PJ0PoLmff7t7OFcdeJjzYV7B
-	bRXqLDruROtxvxVXwoWBThi6zPY4Hon3UGGs/WFUBEyfACJEjH8BHw2451dxIzuOd6eFejTe7lD
-	YR9pNrOn2MYa3qs/BMGp1fgO3U5Z1uJWNJYnEcpB0X1JGbKqEgxriO11CZPhCaLzAKRD6iIFCk0
-	wwj6mmsWQQ9w6RnSP1xL4G0X6lxw=
-X-Google-Smtp-Source: AGHT+IGXzXncSuwViLxhLF7LjICBNjU3M6FzetwciG96U6KAFP9MbxjiOEvJ2Uymt/tfqzWTPe1Bbg==
-X-Received: by 2002:a05:6870:f699:b0:2d4:e8fd:7ffb with SMTP id 586e51a60fabf-2eeda4d3058mr10282116fac.1.1750746452932;
-        Mon, 23 Jun 2025 23:27:32 -0700 (PDT)
-Received: from acerlaptop.tail542cf.ts.net ([2600:100e:b0c5:b996:8d65:22dd:1f32:69ca])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2ee665ae530sm1957728fac.20.2025.06.23.23.27.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 23:27:32 -0700 (PDT)
-From: Brigham Campbell <me@brighamcampbell.com>
-To: skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
-	linux-kernel@vger.kernel.org (open list)
-Cc: Brigham Campbell <me@brighamcampbell.com>
-Subject: [PATCH] gpu: drm: Replace scnprintf() with sysfs_emit_at()
-Date: Tue, 24 Jun 2025 00:27:27 -0600
-Message-ID: <20250624062728.4424-1-me@brighamcampbell.com>
-X-Mailer: git-send-email 2.50.0
+        d=1e100.net; s=20230601; t=1750746723; x=1751351523;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8HKx8ItN89AGjL7nDr5qVKg0Vt7qL7se5BHwDIqnzP8=;
+        b=qUQljdQ9nGGNmw2k/Q12iOtNFMR7zdXvu76AUi2CyNe15SJhMu8w55fV09ttPBPlAd
+         FdQKB1GYcGag27nJODNQycLLRuXOCnOSfk1hwnARy5L8C7hrF5k9TQ2YEXGfg+BxYOX2
+         QBjNE13hYu8O+6uYHQbCm6SwGfTByayhya2jMvjm1aOVczZP82O7EG9k/gK0vPs9WoNF
+         +LYFoq0sfdY1oHlR2FeuJnONYe7FHMVh3rT7hWUfmZxh/LSMSCKx9JIFaULD3PQK/Cg0
+         YCwsxiti3Z2FrAvlV21I9qQEQ7HUhTVwSA8yluZhAc5qxnPG7l31cPGq6WcV0GrN5qvu
+         G8+g==
+X-Forwarded-Encrypted: i=1; AJvYcCX0U5wTZpgYr1rjhyce+KHzab/fUL7Otl0RHGS2XfaS5BAlaFllNG6eKt77xpsiJKTAT44X9bo7qF6p5Ds=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUwe4377V1f3/YeaHJJdojxl+PiGTkB4dkCaxkLi82vgIeMfkc
+	SF3sjsVsApUbWHDtoeMIw9pbY3jINl4jJi0zrfiZ4TnJRVKXhmaWUsITU51a1MRF+IXith91o+E
+	nW3EvBLWhrgBx6W+DPZeQq7OHymgXjxTMN5yre0MUGCXWzqkCRP8zlbc+OmU=
+X-Google-Smtp-Source: AGHT+IH/mOlliNqfAwSEouLAo8EYuQoSEUu1bg2flpCR8pxbxbTAMmKoljw1jDUj7axtBN+7gr4jiUOq4ObMovRVr1cWuf5WCu8K
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a92:c267:0:b0:3de:25cb:42c2 with SMTP id
+ e9e14a558f8ab-3de38cc4f87mr187833525ab.18.1750746722800; Mon, 23 Jun 2025
+ 23:32:02 -0700 (PDT)
+Date: Mon, 23 Jun 2025 23:32:02 -0700
+In-Reply-To: <tencent_04E8067F098D2ED5AEC04C86E7DA06EC1206@qq.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685a4662.a00a0220.34b642.0013.GAE@google.com>
+Subject: Re: [syzbot] [trace?] KASAN: slab-use-after-free Read in __free_filter
+From: syzbot <syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com>
+To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Replace scnprintf() with sysfs_emit_at() in drivers/gpu/drm/drm_sysfs.c.
-Per kernel documentation, show() should only use sysfs_emit() or
-sysfs_emit_at() when formatting the value to be returned to user space.
+Hello,
 
-Signed-off-by: Brigham Campbell <me@brighamcampbell.com>
----
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-I tested this patch with a device that outputs one specific resolution,
-or "mode" and with a dummy device which has no output modes. I'd
-appreciate Tested-by tags from anyone who can confirm that multi-mode
-graphics adapters work as expected too.
+Reported-by: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com
+Tested-by: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com
 
- drivers/gpu/drm/drm_sysfs.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Tested on:
 
-diff --git a/drivers/gpu/drm/drm_sysfs.c b/drivers/gpu/drm/drm_sysfs.c
-index 60c1f26edb6f..66d1fc804c84 100644
---- a/drivers/gpu/drm/drm_sysfs.c
-+++ b/drivers/gpu/drm/drm_sysfs.c
-@@ -283,8 +283,7 @@ static ssize_t modes_show(struct device *device,
- 
- 	mutex_lock(&connector->dev->mode_config.mutex);
- 	list_for_each_entry(mode, &connector->modes, head) {
--		written += scnprintf(buf + written, PAGE_SIZE - written, "%s\n",
--				    mode->name);
-+		written += sysfs_emit_at(buf, written, "%s\n", mode->name);
- 	}
- 	mutex_unlock(&connector->dev->mode_config.mutex);
- 
--- 
-2.50.0
+commit:         78f4e737 Merge tag 'for-6.16/dm-fixes' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10884b70580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4ad206eb0100c6a2
+dashboard link: https://syzkaller.appspot.com/bug?extid=daba72c4af9915e9c894
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10df7b0c580000
 
+Note: testing is done by a robot and is best-effort only.
