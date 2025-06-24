@@ -1,72 +1,72 @@
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1972823E336
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DED23E336
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750793594; cv=none; b=jc99wB4onwzJolT4lZv+ag4U17OU8b6dEek4l3cjp9uOnIlEDo9GxT2ES0j/1ulpLkGgC29YDpJS1R9TbBp70m8ce3qHPHgiLKIW5DZf6MduWbu1/gDr3C6oZcyH4HzcGPGYwUl/PLomg+n9Q++tczdKbzEdY+KYicgvsIQbTLY=
+	t=1750793632; cv=none; b=Xad9Ndh0eD7MfkGpcfb8223LlfTcZgnhTX/FayGzDlwPIycOsaX84HaxylWSL74PXpNoY9J0R8+yQMtMvhMA/yuJMkay4s6H5g/Rq5Dqsf9c0Zv8m17DcSzK6ZiQSUXhF7nDi4SSQTf7zXT8WIdKsP4v6zUFfJsvq0yawzXqpCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750793594; c=relaxed/simple;
-	bh=+FJOqQLjKA3FPAz9/u6VSLqCQ/dFJns2Rrsa9m0Gy9w=;
+	s=arc-20240116; t=1750793632; c=relaxed/simple;
+	bh=RgseiNL4xvtb+kSI8k8aKXYWnQct2A/yQxTRMzMTBK4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LYAkU4hMmbnSzb1bUunKqmC3xA21qFp5virQ7etwsCJVfRHuFoGTBighNFLX4WFVryuhiHjLWF0PI0XRdEksUgeR5lY1U4yjmaIKGNdmRkR8Sm1jfXknQWLQ1dYbV3/hyye2ie+OYYYDa7G91o/8Jv2TvJi89x6rO9qNj/IKjcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wsa/htUH; arc=none smtp.client-ip=209.85.167.46
+	 To:Cc:Content-Type; b=oATMe9wQt6zMAm8PlmuU+N54NAfunloN/CuMujj+hHnWGFoPFLI8f2QFt2jNFt3P+B38ApiUh7NwLfRFEwtpuq4hxqEjdBE5uSKbltbR6IQPGf01fWfT4A1IRjgSElElgEwwTAz65RTRF02mMJ3pBRI7qo5nEKhybdhfjmAavOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nW1QyYAg; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wsa/htUH"
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54d98aa5981so7774119e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:33:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nW1QyYAg"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-32b49ac6431so7447681fa.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:33:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750793588; x=1751398388; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750793628; x=1751398428; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+FJOqQLjKA3FPAz9/u6VSLqCQ/dFJns2Rrsa9m0Gy9w=;
-        b=wsa/htUHe9gSi9XPBGrBWNnjwlpKes/cqIlTI4N2hWACc3FNgXf1ko/ObhQ1c4xD4b
-         hIZe0PkBOESMZyVu+ka9oNW5Mg3SdKYt+5LluAAVyNJDwdKaDRTzYgPdII+J0wUDzlhV
-         3XPYS1vm7T1KZBKzJf4q+AQDiXLJVDZ5qutbWFRexrgi5JPD4Q7HzZLqoanLweq13tuc
-         AxxAgyvBuabMgLm4Htr1YlRqdSPcPQhNfEd4wssclMbC591W48SNe9MAp4+mvZB66WGH
-         d+ZyWifiP9tN+/pyuAsL56pmzV8MdQ3AQ/Oo5/ffgGCcbcD2URdoKUXH6xpu/HaD/ecu
-         Le/A==
+        bh=RgseiNL4xvtb+kSI8k8aKXYWnQct2A/yQxTRMzMTBK4=;
+        b=nW1QyYAgaAlml33xZDPc4eGWwH6SyJvjst6i7fN5AqmnZKHhvuTlTweXQd8vM3noTi
+         gqUaqjNyiR/NgGVxQAB/JuglHPD+GzCY2s/RnatsqM0noXZ5HARLKdwu41o3riUws+WU
+         LBptUb7sCLr09+A/Ph+TvgjaTzZiitsL6KSeUHUc9qV/mPWF+J80bV0ZrxaEH+0u1AKt
+         W2n1Vb1JmtZomRlaytL8SoPdYDkSzE1GTm4eAbQ+oKDv20NlIdlsP94tuJT65ki+D1D1
+         SrB0Z1sUarnu7VC3chQHDF1V8fjvw5pVo8uOcXXC7JWnzl0Y/o/i32QX9JBxW3C/2DwK
+         ZVCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750793588; x=1751398388;
+        d=1e100.net; s=20230601; t=1750793628; x=1751398428;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+FJOqQLjKA3FPAz9/u6VSLqCQ/dFJns2Rrsa9m0Gy9w=;
-        b=IVYpjPXJaZUt1gFGlBnQy6vqnUguR2vS8gbu+TOtZH8yAOk1A/UQ4x+Y/AmmUwSdXK
-         uCK0WCySr3lAAaWg4/4i+80f4UCoZ7SnDtqqoR0I+x+LZ/T8VoeyIq5RySieaf/rB7rk
-         6ArnmWjEPIL8fESHPX+3IQwHXWqqboLv97RucdfO8AH/QRdb/dcBLjTJa/U1fOU7dn12
-         kCkX7JsmKuJLGUF4DaGfv5Fh96yYgPEzhEoMKZ9koJnAh251opVcSOb80/RWY8991QYu
-         UM4S7c6mrzIaFRTn7moLcqUXeSjwEHUVAX4RGNPy4c7tHHOtt0WyeBOaXkvrB8LaY7+F
-         ocJg==
-X-Forwarded-Encrypted: i=1; AJvYcCUBcq/lSdVH2B9wvLIV/HiODfSa/T6OKfTNDsGP/WB7IyPLbJW2e+a7/aw5RfoxwtQJAFgD51ekCLaRUtg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmRC41ikcyXRmXzOPDXShfjYN+q5lqdAHb+1CL1EIqbQmePPyZ
-	XnFAZhmAK9tWYcdL8HnwHnx+d/G4iZ4fAYGNPcbq15nEm6baP+33gALuLiE95ZJmMVwD5cq2F/i
-	ljhBYrt3WuqF0LzW8UQsckCFTNDoUSO+toJbuvaBNRQ==
-X-Gm-Gg: ASbGncucrwhOEPntzw6bwhsWBPDP/RWNU7Owri6LTe6Aru8DeNOQq7pZzGvEaNvGWP0
-	IdDsAcz9k1Am0t7zrDdxyLPNgoa9qwnmpsJ0j4LislCLB2aU+fKTOIgRocp4tC6z4Z8lSgb0S5k
-	0S0MNjGNzV2WWBJRNbmPoJsHnEd+hBebshFeTKESFQebk=
-X-Google-Smtp-Source: AGHT+IGZ80jgQ5/QaQU6b52jWtgaL9I0ZMEDcbGeKLbU/YqRy3STTYOhxJTbm3ezdLgBlSaDRi5TUbGoCbNvvI8AGuQ=
-X-Received: by 2002:a05:6512:10d2:b0:553:a4a8:b860 with SMTP id
- 2adb3069b0e04-554fdc6cc68mr54809e87.0.1750793588187; Tue, 24 Jun 2025
- 12:33:08 -0700 (PDT)
+        bh=RgseiNL4xvtb+kSI8k8aKXYWnQct2A/yQxTRMzMTBK4=;
+        b=ehZz4CXdgKsF7AZ5AvCZHHlQpCsiEM3cDYxmunL3VeNxnC4y3Ualv9U+bNVX3puPhr
+         2YWicg4MSYFWM+kzo/o7BcVhJfsDEbkbWDFPvfbL6yepZzPwyu/TERPWh5PGIAT4SfqH
+         VN6euAAOFoRyDFW7j6AwbsLyJACRDrr0K4DneDWCo3su/Wjt9oYCmxDqky9jHeK7F5th
+         K/yX+7tG7OLU2LRXXvkibP0OGS1l99Htz41+IxnlFCmerY4p5wDgft3FsaZFV9Lza03r
+         BhmnrTH+U0lqhH+mXRdxco5DeG8GUa6HJ6fU4+5vY3CWw2jja50WHOAgXRYVk5NfN08U
+         Gimw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsOnxfzsCBuseh9wCs3Xk2x05Kci7yWssYhe+84QZLDxVnhp7/wa7d6A9ZAWXLetR6yiCwfP3bTXGyW9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnD1FcqHtwJU70npSwm3lBxqXLNVcQHJ47oKLrBFfTdttFBO2r
+	l4CjaslCt9oY78I1VGDerxiKdTqptka17aDDbrqCZjOHdNLkBsmxDnvGVfvRA9cLhrtwwP6i3Vx
+	UzyOPlXsibtxUlUKPPjVM2Jf+N/+wacZ5g3KgbVg7Zw==
+X-Gm-Gg: ASbGncshC4WQqKcTXmIYFnuBrTa2euyhO0jcvoUbjWm2glqhegIOrpwEpJr/9Bru06w
+	eVX0WOYZEQFh824/l1Gr237BJgU+FltzecoYcWgmWi66STjGzUNBBfkS4k6DY+XWJeJGhJH4dmV
+	CZ74++zx0nO1rCtMJmFjcTY9GA7hTjytbKHTwt2N74yvc=
+X-Google-Smtp-Source: AGHT+IE+bxYIyuJMqpkxoh79XW+22rye1okeR/P8QXw1HMjiNPaRsz9kT4xlc/bQbdb4WxO7oPAcNeoNHJl3BaMancE=
+X-Received: by 2002:a2e:a552:0:b0:32c:bc69:e921 with SMTP id
+ 38308e7fff4ca-32cc649f481mr80321fa.9.1750793628527; Tue, 24 Jun 2025 12:33:48
+ -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org> <20250623-gpio-sysfs-chip-export-v2-3-d592793f8964@linaro.org>
-In-Reply-To: <20250623-gpio-sysfs-chip-export-v2-3-d592793f8964@linaro.org>
+References: <20250623-gpio-sysfs-chip-export-v2-0-d592793f8964@linaro.org> <20250623-gpio-sysfs-chip-export-v2-4-d592793f8964@linaro.org>
+In-Reply-To: <20250623-gpio-sysfs-chip-export-v2-4-d592793f8964@linaro.org>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 24 Jun 2025 21:32:55 +0200
-X-Gm-Features: AX0GCFvObqqxUzSNF4PEsyFmzcRMOPhN1kQfNrt2apYQSOJRHnBBo_oA9pknBOE
-Message-ID: <CACRpkdawmYNjWqeSnYNzdX6OB-avhBs1erydaW9zo2pa2ZB8hQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/9] gpio: sysfs: pass gpiod_data directly to internal
- GPIO sysfs functions
+Date: Tue, 24 Jun 2025 21:33:36 +0200
+X-Gm-Features: AX0GCFtlvzaIjpNNAu1m_g9IoQS1etZ2n88hEJISU_S5woZgvnQy4k4SmPLO_Zw
+Message-ID: <CACRpkdan+5xY6RUbGb1r8OmaB3-xSj_MGGq0oONevqBGay8NYg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/9] gpio: sysfs: don't use driver data in sysfs
+ callbacks for line attributes
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Ahmad Fatoum <a.fatoum@pengutronix.de>, Kent Gibson <warthog618@gmail.com>, 
 	=?UTF-8?Q?Jan_L=C3=BCbbe?= <jlu@pengutronix.de>, Marek Vasut <marex@denx.de>, 
@@ -81,11 +81,19 @@ On Mon, Jun 23, 2025 at 11:00=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
 
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> To make the transition to not using dev_get_drvdata() across line
-> callbacks for sysfs attributes, pass gpiod_data directly to
-> gpio_sysfs_request_irq(), gpio_sysfs_free_irq() and
-> gpio_sysfs_set_active_low() instead of having it wrapped in struct
-> device.
+> Currently each exported GPIO is represented in sysfs as a separate class
+> device. This allows us to simply use dev_get_drvdata() to retrieve the
+> pointer passed to device_create_with_groups() from sysfs ops callbacks.
+>
+> However, we're preparing to add a parallel set of per-line sysfs
+> attributes that will live inside the associated gpiochip group. They are
+> not registered as class devices and so have the parent device passed as
+> argument to their callbacks (the GPIO chip class device).
+>
+> Put the attribute structs inside the GPIO descriptor data and
+> dereference the relevant ones using container_of() in the callbacks.
+> This way, we'll be able to reuse the same code for both the legacy and
+> new GPIO attributes.
 >
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
