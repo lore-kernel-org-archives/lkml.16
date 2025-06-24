@@ -1,65 +1,65 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 720D52D1907
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:32:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DCC2291C37
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:32:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775551; cv=none; b=lFIWYSfBApFexdpeTpXtmx/2A4ZZdF3u5vqDE4y7LdYRUWSnDHONIxZ7mXrdMhd1jPCYsOyelIiTukXcXwiKs0BT5ke4juQbb8Hak7P1/sS9m8v/ypMki04DwqXEl3r3OfdT3Ess+8ARuhT4ucLd4HOi1zkei7uM2kmlK8XsZeo=
+	t=1750775552; cv=none; b=tNGJ0oa1oE5tfKTMY/TlNbUJUlTr0QyqEgsJgdR+/CdDWVPCoOVL+F1Fd7+bQvDZBBDjb2SPRMcYDmtKAmaCl32jWPTW5WeP7fk17hH1OH+P+3fiemsO377T1Ke0M8AA4F4Tw0IwHlHawP0+ALp+wtreoc8c+peLDo+FOms1Grw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775551; c=relaxed/simple;
-	bh=qL9XmUvWaq5tHfaWx1V5LuweXRKdi1ZrjKkrO+YSNmw=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DWTapWdY8dt8Usy6bY8VOIB2s+CTl21tPopUiEjllp3a1nIi+5R88EzeOeyxU7BTzqk3THwLst1j2tBBfQtEr2OKvUskLJf/1V+6XBSN+kU9Hnxd5AqCLBr/k29/IGM6XEbM8yjnQ28unai4FOGunaQ+aS3tuRv3EnfICc5Hj/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0EAFe1RT; arc=none smtp.client-ip=209.85.221.44
+	s=arc-20240116; t=1750775552; c=relaxed/simple;
+	bh=ETdCBVd9dlKlAmlrVMybF4vKOHUekbdvIvNdfOPZpVI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=JqJbWkxHsxe8GTGIF8FyzNbRK4Oa8a6YuDdSL2PCE5OzfMNQW0Kv15mg7ybekMzgTX8jVppFCGmMEzZ2qIWZK4qNPQWJU3gJbBpY2/4Iuox06nX6FnCvzBAvDsUFMSGzac2U9nfzfhwuHXUaHOPrUcX3TmqXO0Ejq1f6pW4QXu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LMMPD4nf; arc=none smtp.client-ip=209.85.128.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0EAFe1RT"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a5257748e1so3623348f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:32:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LMMPD4nf"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-453608ed113so48017735e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:32:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750775548; x=1751380348; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=B/7dQju2CZeLI5d0OlTARaTle2Uj51q+BbaBg8wUzJM=;
-        b=0EAFe1RTEz0BLt/FrR23WBsQ/aUei6oBJohWZ+bO4PLFJXfoMu2YkIyT0GoKf5mpBb
-         OKR0+SqBdouRt/0Js7jjhPgSfFQAPLvh9oKtyUTB3Z39/GVzx1NxbUpUpC0HCcnOgNgm
-         XpfWt7irb0GvgP2LPROhDVCro9/ck0trsCEvA9sRxGPMVk6WB2UvCpfC5Tsl1im87oB9
-         6xvi/JojQKo4jGeP43M9Ygt4ul2NvHpFuf8rBQgWFxoBeudBjnvK5VwslbjFcn+AxMOB
-         Cwja1Gm6Uz/wVIklFt+PjpbjnE91l8bRZRb1trimK/dyRDs41T+hizkO9GpcUP4qrqg/
-         yU/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750775548; x=1751380348;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750775549; x=1751380349; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=B/7dQju2CZeLI5d0OlTARaTle2Uj51q+BbaBg8wUzJM=;
-        b=IqaQNJXWeL+FiQUFEIXb6brgp0QlR9ltkUh08bllyuO1avqibgsvL8lrhAo4P1QEg3
-         uufQ9pc/2tvX1UHghNHTZJqgY40H1jeiqzNZ6RV0IWAVL73Euee4iq59dMjIBg6abzuf
-         QHtCumUttP+YBdyfHr+tGzIVt6GENDaMZPDBxp4TRZO2KGUYNnU97BdeIzP4C4g+Qm2g
-         ESY4B9HwGXMieGNvP5vCUxPw21T5HQedU8MG/TMN5UvlVltn++34oDZTmhIucoHl94fz
-         7MZfv3LLTJKP8B9dihsxOYInQiaz61Z+8Z05XFntQnQJfZkVzdUL+ZhlRtrf8PSzZcDD
-         PhSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVA2mJGfXL2A4RJ4pc4z1UtIpM5kI/EohFDCK7VPniY6A++MO4+Y950T9ONnQ6V7I43YZu4YnniDkrr7Ro=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2a7PQE8C0NEgDLd+G9wIs3XNVyMAq39ct20Q2um6vbDs0FPeJ
-	okGsZsdBccQM1llr3+ASOyqt+icoMtdlZ+Qu+EnDGHQMXvZ/emj5vrev/ewEKGhG5lk=
-X-Gm-Gg: ASbGncvXs445LtCz70KQzx0tOl4k1wYQ7/TgGSCSyg7nbZVTOpMmGEG2ulpZB+JO5fy
-	o1jQvvaGQqrZRgDUd1RHAFLhhsRNlq/I4VlFyrIcsYUe7NcyFlv+6AD6gVbKrzKSFhhfhg/MkVU
-	jbg1RI2336EB8Nuh6eVYWidOkUTw7M+fDu/C40rnkU0BtIO+zqqb0uOPRvLW0kKPjvIomrWOWmJ
-	R2KjclFr/OswRPEEfDSzgd+hYlU+wWUJlqCrWqtxg0B6epbqGlCP94PnGa8YVzb3lh8dzD+dYOY
-	+pGMLJXEDBwP101tAy9tfSMOaoEcfHErjIQGOgbutSybrj2PlBw2oObhcfv/J2jDpBY=
-X-Google-Smtp-Source: AGHT+IHImXCD0PRHI4M7v4iVLzEcYBW7djJvPwpqCRg7wUTNPed+BG1KF5ix/KPWpzBJJQPBFgd2ag==
-X-Received: by 2002:a05:6000:4b0b:b0:3a4:f66a:9d31 with SMTP id ffacd0b85a97d-3a6d12dbda2mr14879216f8f.16.1750775547583;
-        Tue, 24 Jun 2025 07:32:27 -0700 (PDT)
+        bh=lFxv+CSVT1JduUoBwXVfn9STkVHcaXwFmqXMPaWFmWg=;
+        b=LMMPD4nfWmfdt3oxavht3kP9icuM4VZ/jIaW4KZA6XWc1bvgtK1b2P07rsc+zoF7ld
+         pwc3Mph3yYPdAEVlzDzaWA6U+Jre07n2zfPdLlPrav9nJQwSd/VvCpzGwo7dnjAlK5VZ
+         QdUHO5lZdnEi6gU6evxcrZET7MEpwCjE05BHwCOrObyf7wp8Fmdy/F1fKFUVyQa1TIt0
+         H8vp756+bFX5/fkLz7RsR7YTBBgtxHMDBwDjLnq083xyukgD0GUE6ob2ntRCrgWJZHS/
+         bTMaKmbF5IuOuaty+HzI155cUX6KP4iJXuyuYk/JhAC9xb2janfZv18LKuC8HiHrKExj
+         Ts4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750775549; x=1751380349;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lFxv+CSVT1JduUoBwXVfn9STkVHcaXwFmqXMPaWFmWg=;
+        b=t+4G8i7rz09HSF2IUuMjIjFaRdiHYnidAEBU73mNHt21toNbzhdBpYo7AyaY0JyUtl
+         vF229CLZrty8pgs3+Hw7yx0SdsRWwZJTn0Hb64sJlibY1jdIa1Xw+8Zu6gN+mIfAApzt
+         ccezKDBDZ/x5RxBFld34kDl63IK3/WIMdxzsdIPD1STiKPFwmDSHPAed04JjjVOA4oy3
+         2xWWTIfU+t0EzZyQ+5R1CYfILR9qfNFR//VQjyo6S0ujLAFXUH9SepCB7UrlQMIFR7Ih
+         jap9QZPUGi76Pa5qFrsryEnjzkm/O2Q5q9q4Z8c2sOI7HuPm0LA5KumyXT9PJrokQQZ/
+         vsHA==
+X-Forwarded-Encrypted: i=1; AJvYcCX2SK0OzdNb29gcubOY+dDax61M1BeU5ryOPb24i8jEV4exJxRkW8B/yG6JIh4WPZKox9WVNatu8xCro3g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzY2xYDf3h3aYK/ji7RT6pMCItZTZll7R85/Rbv6gYj7t1WwBRD
+	6uuH9DiP3oifRf4z9GxKwoNEOO9baXAdsgtw6F+IBRVFtETwu/n0Q4996gtDL+d/nDE=
+X-Gm-Gg: ASbGnctab1IKmFEvxJ/UuXHsIqpQmAqBFXVoWWKy0Nn73XEu5pn9b+bmGHz43UW7iL/
+	hqJTTolb9Wqrifz7Ahpz0XbKWNH/Zh6EnnvCKhyEqSZYXBEVcInjAdp4U9pY8BBoRHQv6Itynr0
+	PMBs70DX0blMOeg0762kLWyw6FbvdVYXNkuDebFR9J6UNUvSOvL0G6gTnLWAa2k8Z1LsMyQRz+V
+	m7NVClULLqDz1iSlJYQU0Tl1v9CI8gH/zXGnv+hWjiM6G3/7fKJuUwB3FhyLPhjfsKxmxUay16/
+	0dVrdZ9F6ZAvhPQZcCbMKucI9EKbXNdDuEL63a7L7eqq7BSnlUQpTKk+
+X-Google-Smtp-Source: AGHT+IHD4d2ak9CVpp5Gb3Vl//bTvUG78qxypokPSA3JfLjuNCjdx/+p/2yyT5p37+Ky+IXsejzn0Q==
+X-Received: by 2002:a05:600c:3489:b0:453:b44:eb69 with SMTP id 5b1f17b1804b1-4537dfbbd31mr26524705e9.13.1750775548638;
+        Tue, 24 Jun 2025 07:32:28 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:34d2:109c:3293:19e9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ead2a84sm178512935e9.32.2025.06.24.07.32.26
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ead2a84sm178512935e9.32.2025.06.24.07.32.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 07:32:27 -0700 (PDT)
+        Tue, 24 Jun 2025 07:32:28 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 0/5] pwrseq: replace magic numbers with defines for match()
- return values
-Date: Tue, 24 Jun 2025 16:32:17 +0200
-Message-Id: <20250624-pwrseq-match-defines-v1-0-a59d90a951f1@linaro.org>
+Date: Tue, 24 Jun 2025 16:32:18 +0200
+Subject: [PATCH 1/5] pwrseq: thead-gpu: add missing header
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,11 +67,10 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPG2WmgC/x2MQQqEMBAEvyJz3gENGl2/sngIsdU5mNWMqCD+3
- eCxKKouUkSBUptdFLGLyj8kKD4Z+cmFESx9YjK5qXJrSl6OqFh5dpufuMcgAcoOvrRNUcN+QSl
- dYhLnu/119/0AI6qNWWYAAAA=
-X-Change-ID: 20250624-pwrseq-match-defines-aec46817e69e
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250624-pwrseq-match-defines-v1-1-a59d90a951f1@linaro.org>
+References: <20250624-pwrseq-match-defines-v1-0-a59d90a951f1@linaro.org>
+In-Reply-To: <20250624-pwrseq-match-defines-v1-0-a59d90a951f1@linaro.org>
 To: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
  Fu Wei <wefu@redhat.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
  Ulf Hansson <ulf.hansson@linaro.org>, 
@@ -80,49 +79,53 @@ Cc: linux-riscv@lists.infradead.org, linux-pm@vger.kernel.org,
  linux-kernel@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1246;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1282;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=qL9XmUvWaq5tHfaWx1V5LuweXRKdi1ZrjKkrO+YSNmw=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoWrb56VtEbN8jrXfh++pA9Tt/a91zSI2thLGP6
- Zb3X5N2VSWJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFq2+QAKCRARpy6gFHHX
- cs66D/9nnDqDh8+Uk6m4QTPNKsT8dOx6VegPWlRe/pW2j2o1y4gS8tZrc+2iV21gq7fF4mxnmiN
- SZJ+VE3IBUWkbI469tBUamwvJmopwlvIWXBbpvLmns5TuVfg2ziCF6b9f53xUGr0ptLAxC7xt2+
- 6ofUKyshmn4ReWIk/gfyRUG6F20k9fUbxcm0IL0CKHADAcWOhEGdAYBu33Hna7oJTzahusPUZvg
- zGR91MBSHbd4Xxp77OJZRhjuYDIm8kYhYaN16zs08H6GX/OxlJrm2bXf6+qRb10/mu9xZlACjZf
- mVW3bszsPHgUBF8/RPQ/SEO8frUA59kInVGDYJ1J8XgmcLqE8sqfui5C0rREjVHO/Qgr8/CCgi1
- c0sIkUxzX4PjQB8EGSGkks0qHUt0+bwvKoh7mwO20lRlgxCBGSPhybLH5uJ2mHANOBJNHDpzZJI
- wcJ5JG9eCbuNApPD8E22Lr03o/197nRm6I5uGOBXWW5Tt6QgI/kOr04mMYtVR4RZYThbaA3b72S
- pS4feJHuF7MukcvxVQmLyKCrFVbn99hheJXgJsGlzyGDMUiwbS0CrQoJ+YzV/o9I+pFub/k3naU
- XBQK0UV1GCUgIHc9UNYX4IpDnXhF5652trnNl9Iva/DbXSbEUbGAdR+MPdzj27BUa2+W+Lp7aEA
- opBD6qhhZj6HaKw==
+ bh=kuQ4uO8LOxmEAAqs0l/C6pNUD/i2/y1K+eYCkH9r2oE=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoWrb5hTVaHLse7YY4Z8fJIQZKJ3AQgAUmHNQv0
+ VwZwM91+1SJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFq2+QAKCRARpy6gFHHX
+ cujsEADPF8KCWrxiSt3p+cb4oVKfu3+XmlPa8P9/B3GoYcQRJeLWaTiMykmZYCWqLqquF996s5Z
+ wmdFKfXPHda6dYr0UrL6AjoMDT3E2vi7vhx8XCENm0S3SU2IPnmUC6ZoSrRxq4j+pVYbchBLpi6
+ usUAgi/RwAJ+oG36mYWYewQdGX7+2dpMjje5y1awCGwzcscsyg6IxSJDp0puslMfIYTfsh/cfRA
+ fBJIzMW/dlVZW0QZVjXoZHWG6dlQbkAmUEiVURqPeKnia6SAvivPg8D+vyYv4etq5Clv18wCJRI
+ lonF0OYTo0XxK3SAtUTgyuyYbiZr2uUAJDyOvzVgTjaJ+kbz2q7s+ykgusXxpBrhfsx0hxTOsh+
+ Gznzh9pKDozRA9R8QOBdLmHbzqoVvWojoURYiul1T/q/06+CbC7rXfj8z6rH8kaRSBzPE37AIf6
+ V8CKI/Uqz0B7JZCC1rtmFnWW7fFIkZGLD5DPG+rxIJ7y9IZnAtj3sk1vCRM1rHgnX4+1KajRx0H
+ OXe6HlBsNJCmMzP446DYdvuj+DWhCghrCxIRQLl2EQm5vjiYzGhM27jt2ofnYPFw2G+hob+VbSa
+ LmG1m17inHqLh1uVc/ypB5241VTSoK05UHHf8YR9GurlLl5qGyloHhTHqZdiO9zDc/llKFs77po
+ z9GnVX4voR6m3Jw==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-We currently use 0 or 1 as magic numbers returned from the match()
-callback. It's more readable to replace them with proper defines whose
-names indicate the meaning. While at it: fix a build issue with the
-thead-gpu driver I noticed and extend build coverage for the drivers.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+When using kcalloc(), kfree() etc., we need to include linux/slab.h.
+While on some architectures it may work fine because the header is
+pulled in implicitly, on others it triggers the following errors:
+
+drivers/power/sequencing/pwrseq-thead-gpu.c: In function ‘pwrseq_thead_gpu_match’:
+drivers/power/sequencing/pwrseq-thead-gpu.c:147:21: error: implicit declaration of function ‘kcalloc’ [-Wimplicit-function-declaration]
+  147 |         ctx->clks = kcalloc(ctx->num_clks, sizeof(*ctx->clks), GFP_KERNEL);
+
+Fixes: d4c2d9b5b7ce ("power: sequencing: Add T-HEAD TH1520 GPU power sequencer driver")
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
-Bartosz Golaszewski (5):
-      pwrseq: thead-gpu: add missing header
-      pwrseq: extend build coverage for pwrseq drivers with COMPILE_TEST=y
-      pwrseq: add defines for return values of the match() callback
-      pwrseq: qcom-wcn: use new defines for match() return values
-      pwrseq: thead-gpu: use new defines for match() return values
+ drivers/power/sequencing/pwrseq-thead-gpu.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/power/sequencing/Kconfig            |  4 ++--
- drivers/power/sequencing/core.c             |  6 +++---
- drivers/power/sequencing/pwrseq-qcom-wcn.c  |  8 ++++----
- drivers/power/sequencing/pwrseq-thead-gpu.c | 12 +++++++-----
- include/linux/pwrseq/provider.h             |  3 +++
- 5 files changed, 19 insertions(+), 14 deletions(-)
----
-base-commit: d4c2d9b5b7ceed14a3a835fd969bb0699b9608d3
-change-id: 20250624-pwrseq-match-defines-aec46817e69e
+diff --git a/drivers/power/sequencing/pwrseq-thead-gpu.c b/drivers/power/sequencing/pwrseq-thead-gpu.c
+index 3dd27c32020a6d3b551eeaff2859456fed679814..855c6cc4f3b5bd1aa6e93305af0417d5791b092d 100644
+--- a/drivers/power/sequencing/pwrseq-thead-gpu.c
++++ b/drivers/power/sequencing/pwrseq-thead-gpu.c
+@@ -21,6 +21,7 @@
+ #include <linux/of.h>
+ #include <linux/pwrseq/provider.h>
+ #include <linux/reset.h>
++#include <linux/slab.h>
+ 
+ #include <dt-bindings/power/thead,th1520-power.h>
+ 
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.48.1
 
