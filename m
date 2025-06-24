@@ -1,61 +1,41 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6129E2F3C26;
-	Tue, 24 Jun 2025 15:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7422F949D;
+	Tue, 24 Jun 2025 15:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777736; cv=none; b=KdYYKYwDQjUP1pApCxw8qJ6CMzIGiht573522tpmSEWty7PZwZN6mfz96AIeXWf/z/u3hFB6VwW/FilTzBbIX6C6NCp4iwPoMbljStGtCwQc0QPp8mDA8VqIfSJBGALkK3aXom0uQQ0AHQ7BYajH8geY8vu/Bvh22lpo0aQ5geM=
+	t=1750777738; cv=none; b=pNB2ytPjvVnOKny2I7Ou7uOG7PgW43HOxz4PZDnYyKRO/LldpBhyEJ4njeV3XvziTAlmEU2RcieV3kCnfGsr1YvNJQjRUnSj0m48fl6oCMhjYrvply/HBFlKJ39kIn7n2hJSuxzjqUh3c1l24gaPX9NQ9K7Ex24A8QRY61zhYts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750777736; c=relaxed/simple;
-	bh=ewK93IZBE5AdW/boaGsKbjjZ+eEA2xMxJ1F5syBIWcM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G7e9lT9ND9BANpyJPjDczeJXIPTr5ozLnWFnDxY3sX5DJLY7T6DbNm4VFDiEvHTKSP4iEOwr2xk9/o879XEElEFbGmhALx1u/wMrBxTrBrp6HLNLldPeEC9gz7HX8nJ8MWuJUCRLi4IUDbwwVXs2SaSMpkp2N2OlT6hKDgeGJI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=KJ2VTkxP; arc=none smtp.client-ip=68.232.154.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1750777738; c=relaxed/simple;
+	bh=vu6L3/V67OE7+Pil3oqFcjU/RjpFh4fq9CGIuiBcMTc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=HZf60/hBdR3W2Zj9qle6dW/vyzpkcE4Gk419Nlu1yHYm+pukatdkxIY7hVUZm6kidy3bECynahXfpnxUpw5gfacXKvX9AoATjL/JcizDjN8jUDHiIiv5vh7aOUA+AGH2jc7KHxk7l4HfHMJp2WoFFzDY+NBaD9qDFmgZduQrOt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uyzeyyis; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="KJ2VTkxP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1750777734; x=1782313734;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ewK93IZBE5AdW/boaGsKbjjZ+eEA2xMxJ1F5syBIWcM=;
-  b=KJ2VTkxPROhjeUFQh0jpo8dNlY7IILETWrKHSKuL1Sss98P5u5jS2E4F
-   BmJx3K8K2LwUpcpyO1IIPisec/96MWH1uNIMG5HfW+OIEEM7u9RQbNZI9
-   yfPdh+CQJiTafl63v3yYF1Usa9cCUKSFI79quTizE0Xafy9miO7wYAK/a
-   HkV4T4YeB/kSKiz+TcmPh64+Isj0ZGdvrkP+Z5j6PRdEY97pX95FZEUjy
-   GFdez2QpChlixgO1AT4gBylePWkBK/+xvzQesrIHlUilLLIX5N992VdsT
-   EG3Aj6R5UoR/SxbRP1roxNSQWbMMRkLRh4KGghNr3IO0BaBs0hvNwcuWl
-   Q==;
-X-CSE-ConnectionGUID: 4+RzxTN1Qsa6vG3Bpty4nA==
-X-CSE-MsgGUID: JmQSy8bSSGanE8uo8FA/cA==
-X-IronPort-AV: E=Sophos;i="6.16,262,1744095600"; 
-   d="scan'208";a="42688191"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2025 08:08:47 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 24 Jun 2025 08:08:38 -0700
-Received: from ryan-Precision-3630-Tower.microchip.com (10.10.85.11) by
- chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server id
- 15.1.2507.44 via Frontend Transport; Tue, 24 Jun 2025 08:08:38 -0700
-From: <Ryan.Wanner@microchip.com>
-To: <mturquette@baylibre.com>, <sboyd@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>
-CC: <robh@kernel.org>, <linux-clk@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<varshini.rajendran@microchip.com>
-Subject: [PATCH v2 14/32] clk: at91: clk-plldiv: add support for parent_hw
-Date: Tue, 24 Jun 2025 08:08:11 -0700
-Message-ID: <b235fe4435a124cf29b9fb8ada9a81523c0cd161.1750182562.git.Ryan.Wanner@microchip.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uyzeyyis"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 836D7C4CEF1;
+	Tue, 24 Jun 2025 15:08:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750777737;
+	bh=vu6L3/V67OE7+Pil3oqFcjU/RjpFh4fq9CGIuiBcMTc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UyzeyyisF/tF+vA6CNyQGUrZuxMW4F1eSIrqScz3HHQu37ft6M5o4nWLMICOBEDlz
+	 UcdFwOdcc8bkvAit8V1q5YFdo9iMrW9xHB2kCDQnEDmHhPF1T8ok5K2o2d/VWsRSmu
+	 m45HJMIUQjcft/2KojzfBpOC/au2xMFOuCAd4YLeAFcZlsO2/1bhwzE4cNSFU43wa5
+	 ZgwfkbwtZ4hlnWusRASm4NWNftj+mCRQ6Nogi9yeSqaY1c6PvWnB49Fe1MV/QlNeY8
+	 e+nxi4C0o515zh/cAf7gZ5eT16ZTtsmK5iUIeYgMOMCFCFWkssTRYBi5yzehczmQjI
+	 dfH1c5QsOqyXg==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: Masahiro Yamada <masahiroy@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 49/66] kconfig: gconf: inline display_list() into set_view_mode()
+Date: Wed, 25 Jun 2025 00:05:37 +0900
+Message-ID: <20250624150645.1107002-50-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1750182562.git.Ryan.Wanner@microchip.com>
-References: <cover.1750182562.git.Ryan.Wanner@microchip.com>
+In-Reply-To: <20250624150645.1107002-1-masahiroy@kernel.org>
+References: <20250624150645.1107002-1-masahiroy@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,86 +43,56 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
 
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+This function is now only called by set_view_mode(), so inline it
+for simplicity.
 
-Add support for parent_hw in plldiv clock driver.
-With this parent-child relation is described with pointers rather
-than strings making registration a bit faster.
-
-All the SoC based drivers that rely on clk-plldiv were adapted
-to the new API change. The switch itself for SoCs will be done
-in subsequent patches.
-
-Signed-off-by: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-[ryan.wanner@microchip.com: Remove SoC specific changes as they are
-going to be coalesced into one SoC specific commit.]
-Signed-off-by: Ryan Wanner <Ryan.Wanner@microchip.com>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
- drivers/clk/at91/clk-plldiv.c | 11 +++++++----
- drivers/clk/at91/dt-compat.c  |  2 +-
- drivers/clk/at91/pmc.h        |  2 +-
- 3 files changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/at91/clk-plldiv.c b/drivers/clk/at91/clk-plldiv.c
-index ba3a1839a96d..c5d0c6e27397 100644
---- a/drivers/clk/at91/clk-plldiv.c
-+++ b/drivers/clk/at91/clk-plldiv.c
-@@ -72,11 +72,11 @@ static const struct clk_ops plldiv_ops = {
+ scripts/kconfig/gconf.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
+
+diff --git a/scripts/kconfig/gconf.c b/scripts/kconfig/gconf.c
+index a358589535e3..29b73f0bea38 100644
+--- a/scripts/kconfig/gconf.c
++++ b/scripts/kconfig/gconf.c
+@@ -56,7 +56,6 @@ enum {
+ 	COL_NUMBER
+ };
  
- struct clk_hw * __init
- at91_clk_register_plldiv(struct regmap *regmap, const char *name,
--			 const char *parent_name)
-+			 const char *parent_name, struct clk_parent_data *parent_data)
+-static void display_list(void);
+ static void display_tree(GtkTreeStore *store, struct menu *menu);
+ static void display_tree_part(void);
+ 
+@@ -292,8 +291,10 @@ static void set_view_mode(enum view_mode mode)
+ 			else
+ 				browsed = menu_get_parent_menu(selected);
+ 		}
++		gtk_tree_store_clear(tree1);
++		display_tree(tree1, &rootmenu);
++		gtk_tree_view_expand_all(GTK_TREE_VIEW(tree1_w));
+ 		gtk_tree_store_clear(tree2);
+-		display_list();
+ 		if (browsed)
+ 			display_tree(tree2, browsed);
+ 		select_menu(GTK_TREE_VIEW(tree1_w), browsed);
+@@ -980,15 +981,6 @@ static void display_tree_part(void)
+ 	gtk_tree_view_expand_all(GTK_TREE_VIEW(tree2_w));
+ }
+ 
+-/* Display the list in the left frame (split view) */
+-static void display_list(void)
+-{
+-	gtk_tree_store_clear(tree1);
+-
+-	display_tree(tree1, &rootmenu);
+-	gtk_tree_view_expand_all(GTK_TREE_VIEW(tree1_w));
+-}
+-
+ static void fixup_rootmenu(struct menu *menu)
  {
- 	struct clk_plldiv *plldiv;
- 	struct clk_hw *hw;
--	struct clk_init_data init;
-+	struct clk_init_data init = {};
- 	int ret;
- 
- 	plldiv = kzalloc(sizeof(*plldiv), GFP_KERNEL);
-@@ -85,8 +85,11 @@ at91_clk_register_plldiv(struct regmap *regmap, const char *name,
- 
- 	init.name = name;
- 	init.ops = &plldiv_ops;
--	init.parent_names = parent_name ? &parent_name : NULL;
--	init.num_parents = parent_name ? 1 : 0;
-+	if (parent_data)
-+		init.parent_data = (const struct clk_parent_data *)parent_data;
-+	else
-+		init.parent_names = &parent_name;
-+	init.num_parents = 1;
- 	init.flags = CLK_SET_RATE_GATE;
- 
- 	plldiv->hw.init = &init;
-diff --git a/drivers/clk/at91/dt-compat.c b/drivers/clk/at91/dt-compat.c
-index 22bcaa3b28dd..3285e3110b58 100644
---- a/drivers/clk/at91/dt-compat.c
-+++ b/drivers/clk/at91/dt-compat.c
-@@ -724,7 +724,7 @@ of_at91sam9x5_clk_plldiv_setup(struct device_node *np)
- 	if (IS_ERR(regmap))
- 		return;
- 
--	hw = at91_clk_register_plldiv(regmap, name, parent_name);
-+	hw = at91_clk_register_plldiv(regmap, name, parent_name, NULL);
- 	if (IS_ERR(hw))
- 		return;
- 
-diff --git a/drivers/clk/at91/pmc.h b/drivers/clk/at91/pmc.h
-index 519d71652619..df2deb134a8d 100644
---- a/drivers/clk/at91/pmc.h
-+++ b/drivers/clk/at91/pmc.h
-@@ -243,7 +243,7 @@ at91_clk_register_pll(struct regmap *regmap, const char *name,
- 		      const struct clk_pll_characteristics *characteristics);
- struct clk_hw * __init
- at91_clk_register_plldiv(struct regmap *regmap, const char *name,
--			 const char *parent_name);
-+			 const char *parent_name, struct clk_parent_data *parent_data);
- 
- struct clk_hw * __init
- sam9x60_clk_register_div_pll(struct regmap *regmap, spinlock_t *lock,
+ 	struct menu *child;
 -- 
 2.43.0
 
