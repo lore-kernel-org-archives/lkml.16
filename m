@@ -1,75 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from omta36.uswest2.a.cloudfilter.net (omta36.uswest2.a.cloudfilter.net [35.89.44.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA5B630E84D;
-	Tue, 24 Jun 2025 08:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F297B256C60
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:21:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753254; cv=none; b=qq38nhWAMPIB3wvUsDor/LaWwsxR894IaO6NpPhbEPUqPvu3m4KSvjd7KyEidwUbIqdno+mqn+tl8cCI+eVaHpAEAXqTj2qKeWiYbVJe/7dJknIjSgUCspz22tja2Oq+23zLC1i16KJHbwM6z0v1dVudGwaZpK0lXFKG9lvtet0=
+	t=1750753282; cv=none; b=pYyeYiYennlYWyY7bm5dYT40HWnpBcZZNChB/yFqZjK0wUM+eRYjqqWjttX4r2tDsGktdkUxwwAkoshS14rS25BmayRfK7IaRDO00kksN1/hsjIcRtdW6drO2Rk+sdTHBrnJBnNLgWJCJLH9jt5UYP4wkDhb2XmGeZo0iMMN5A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753254; c=relaxed/simple;
-	bh=MT2ajhY7wBsxVe1u0WpkIwXTE93WmbRHqKzUBLSi+Cc=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=g8QpkC3eP3nxJ/0SqkyVZkaQqa12gTJJJbKb262msBu+ZoLMZMEaH1QdeYXEohbd47OTJsk35g4QKjr7X4VUpmxYWzTtyt9RlJF95QonScNC8bs2pbcHU1a05vQ/ZXH3DwTD3CcpRSlX3aeNXgK0XLhymJYJ90+RVxYUaJJeORo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvutBbAf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750753282; c=relaxed/simple;
+	bh=gsGfpqXNBOFQjO7aQm6wp9ReQC8lFVfAO7bBesxeXo8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E03W5KFmUMMLu16i+IcCAdVhtxRekZPWyniRW7EgqP3CECUEmxlM3MW0hvci/mXWR74ep4ikt8Dp4BAoDuY/P17B0oRR5MPmjFLTaZOo10/h58IElB3Ot1YzWOMBB3JEZCSHstEY4KRvdVOks6EbU++h0hbwBy93VsMa34SV6zo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=dkthkFLE; arc=none smtp.client-ip=35.89.44.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvutBbAf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53CC1C4CEE3;
-	Tue, 24 Jun 2025 08:20:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750753254;
-	bh=MT2ajhY7wBsxVe1u0WpkIwXTE93WmbRHqKzUBLSi+Cc=;
-	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
-	b=lvutBbAfVXmj1ZMHbzOxFilI6BH6zaExqSK5o5j/FEuZtLGxwsaYRltqPRVegyhVM
-	 ME/N4uiz9VeS0iNejQTO5huO/BsnLQMQshee4k1gtdsr0Iul6GNhiuXkyQrhkn4u7u
-	 6hJqU5Aflh9wt9xc4e5KdszFH4cIq4Qs+g/o8iaccojclIrjyAXYSavsE2b5y95QBF
-	 /bdUy8ILbBtLS9Kk42ErF2bG1ta/9Z2+XKyLIGRtLQOypGLuhMDfcdftgXvsqSCW5s
-	 YDV5iE68DTJaS/HAwSM5iqACPvWFwZCAp2EtN7AzODZNPoA5G5JsFm6Nr4l+wt7j1y
-	 fT/vdxJb//SHA==
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="dkthkFLE"
+Received: from eig-obgw-5005a.ext.cloudfilter.net ([10.0.29.234])
+	by cmsmtp with ESMTPS
+	id Tp3CuXvrIMETlTyu6ugnnp; Tue, 24 Jun 2025 08:21:18 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id Tyu5u9SYJq3CNTyu6ui62W; Tue, 24 Jun 2025 08:21:18 +0000
+X-Authority-Analysis: v=2.4 cv=VpfoAP2n c=1 sm=1 tr=0 ts=685a5ffe
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=DpAgQTyGaMxhVpyjbg8VpXO/7DZXxVpMMzkTGRiXc+4=; b=dkthkFLERmt5ivr1emUcHhGzE6
+	PM86WmXLAnIpdi4WAQigSrK9QkAXVjJbTGaGu4ifsh4PC30j/2YQ43kLoJIrXTRuawYleMA661B4Q
+	os1yEAHJFZ72dYsQP6PvhIczhC+x7ADZG4FVrFSSUqORcYGSbAkhSEqjGP/AImZVFyl5/jjjTxlKl
+	Kw7DiO8g1caXCiT1+1mO/vpY6NkhYZju9x9XlRdMliWXsUaQsldwoTZG4RpSRbQuAiQfuKIGgyxgc
+	Tm7toRvWAgwt/RhyKozP7yQtxykaPNsA8ab9Q3C8fuydtYvPuXgOQjIfqYP4U0eQ8sqUjBRFUmw5Q
+	GYiko1dA==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:57792 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1uTyu3-00000002J7x-0GE5;
+	Tue, 24 Jun 2025 02:21:15 -0600
+Message-ID: <0cb49e01-0901-4ceb-b352-71230982bb8f@w6rz.net>
+Date: Tue, 24 Jun 2025 01:21:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 24 Jun 2025 10:20:48 +0200
-Message-Id: <DAUM8B2ZUMFQ.25R95W7IDAEHM@kernel.org>
-Cc: "Boqun Feng" <boqun.feng@gmail.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <ojeda@kernel.org>,
- <alex.gaynor@gmail.com>, <gary@garyguo.net>, <a.hindborg@kernel.org>,
- <aliceryhl@google.com>, <tmgross@umich.edu>, <dakr@kernel.org>,
- <peterz@infradead.org>, <mingo@redhat.com>, <will@kernel.org>,
- <longman@redhat.com>, <felipe_life@live.com>, <daniel@sedlak.dev>,
- <bjorn3_gh@protonmail.com>, <simona@ffwll.ch>, <airlied@gmail.com>,
- <dri-devel@lists.freedesktop.org>, <lyude@redhat.com>
-Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Onur" <work@onurozkan.dev>
-X-Mailer: aerc 0.20.1
-References: <20250621184454.8354-1-work@onurozkan.dev>
- <20250621184454.8354-3-work@onurozkan.dev>
- <DASY7BECFRCT.332X5ZHZMV2W@kernel.org> <aFlQ7K_mYYbrG8Cl@Mac.home>
- <DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org> <aFlpFQ4ivKw81d-y@Mac.home>
- <DAU0ELV91E2Q.35FZOII18W44J@kernel.org> <aFmKsE_nJkaVMv0T@tardis.local>
- <DAUARTYJ118U.YW38OP8TRVO3@kernel.org> <20250624083437.1e50d54c@nimda.home>
-In-Reply-To: <20250624083437.1e50d54c@nimda.home>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6.6 000/290] 6.6.95-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250623130626.910356556@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250623130626.910356556@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1uTyu3-00000002J7x-0GE5
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:57792
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 54
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfIjoBb70VTJazSq1VUmfG/ceBbnsuVr1ClcYW818Hk9Q3+Oh8ZODiGrEuS/fqm5mg8u14NBN94kFFkuJyW3jS/zGgBr1NsCAn+ueD8BoQpqOPOdJ0dKV
+ xYV6BUMRvMmLyc0jR0/Fs8Bf1m3M0d0KpsBaYMEYVfL/VtfP+Lg0ht5zN8cySRFViq2vHvEy3GXpu3CigI1CC70C+4f0oZHwhQ4=
 
-On Tue Jun 24, 2025 at 7:34 AM CEST, Onur wrote:
-> Should we handle this in the initial implementation or leave it for
-> follow-up patches after the core abstraction of ww_mutex has landed?
+On 6/23/25 06:04, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.95 release.
+> There are 290 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 25 Jun 2025 13:05:53 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.95-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Since you're writing these abstractions specifically for usage in drm, I
-think we should look at the intended use-cases there and then decide on
-an API.
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-So maybe Lyude or Dave can chime in :)
+Tested-by: Ron Economos <re@w6rz.net>
 
-If you (or someone else) have another user for this API that needs it
-ASAP, then we can think about merging this and improve it later. But if
-we don't have a user, then we shouldn't merge it anyways.
-
----
-Cheers,
-Benno
