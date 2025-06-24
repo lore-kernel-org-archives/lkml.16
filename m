@@ -1,174 +1,356 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ECBD253950;
-	Tue, 24 Jun 2025 08:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D14322069F
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750752367; cv=none; b=IKldt2kJsQgDfGKloAM+Czr2eZ8e9xqizApwqacVnm2gYMtjo4G/7ngFJY5EJUnveuC8Uh1yHkuc5snFEun1HW/GOtiOF/9lVk/h18iCuDzx0+pmWv42nSvIa83JYP8oVkhgE8lS/jM2G4SvGARzZgOgmOka5zhpxugoAfmkVqY=
+	t=1750752369; cv=none; b=Qiw0bDzweXihoLhdsWiCB5z/LCAvpgx8tIOs+fGPWSXVq3zYo0YoVatMx2IKMb/0XdBc9pECTL0bQ4AKP7pj1UDlVNJN8f8Y5MBF/8Bf2M7n6X6D4qzABQb7GmEVp5Axd/bSwHUkpVN1WH6hevoRCUNFKvM4t0gzHEijUcR4mew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750752367; c=relaxed/simple;
-	bh=n500nFU0GBgArjcDyeafUU0aiuWxGbNhBge2jWYqoDg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sDSdqNHKZBjvbx27+tV4iQHBSN6InVnn+FcPA00teiSV98EGXTrzAsfiWVWfcj2N5s/dYit0+fOjsSnPn+UlB7zfxYri7f765PUbA349dQabDnrjhLkMa0EEZZdaw1+lOTHDH2bF/F1yu7G2RRr01xGqwEX+EfIO9L+Kr9Sai28=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from [127.0.0.2] (unknown [210.73.43.2])
-	by APP-03 (Coremail) with SMTP id rQCowADn_FRSXFpoFc3eCA--.42565S2;
-	Tue, 24 Jun 2025 16:05:39 +0800 (CST)
-From: Vivian Wang <wangruikang@iscas.ac.cn>
-Date: Tue, 24 Jun 2025 16:04:46 +0800
-Subject: [PATCH] riscv: cpu_ops_sbi: Use static array for boot_data
+	s=arc-20240116; t=1750752369; c=relaxed/simple;
+	bh=Ah7h8wOcdYjSV31tNGQmqTVpLKLc/cwOyHoKfByryro=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ar0J9u3QJO1ZpXMnudlTvjV3S5IByQacrRx3EOBlBsYEE/HTtSmmUzYcVO0M5O23ywMkJTrPyiuE2o88GrXfi+btqU9ma7BVeGDFy8WPyZujrRI4rMBT8Y9BS0GZGYuRbxWwGq5SOBya1x7vozi62ScqNW/YWZqITfHPbAvGa9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZO9PrqJZ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZO9PrqJZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750752366;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=tppJBTpf5U7C6ZhUseA/Y53OJ6NH6kfGsbKmrLZtR6U=;
+	b=ZO9PrqJZXaKjZCBanhqGrpnXOJDbLWzrA/E++TOjPG2ARbGHoyJe0gECPuxDhuwbmGImZA
+	gGUSRlM1spw/bx6VO614jvBGJ3ppTE51h8x534K3Ir3gHm/Z7N7UGqH5jxYWMxDXoI1t7m
+	05mZfrGvF+384fr+DSOGxJKK9I4W5AQ=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-526-DHSrHljKOriBV8ek364gog-1; Tue, 24 Jun 2025 04:06:03 -0400
+X-MC-Unique: DHSrHljKOriBV8ek364gog-1
+X-Mimecast-MFC-AGG-ID: DHSrHljKOriBV8ek364gog_1750752362
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4f858bc5eso2904299f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:06:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750752361; x=1751357161;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tppJBTpf5U7C6ZhUseA/Y53OJ6NH6kfGsbKmrLZtR6U=;
+        b=oxqMwttoYX7F6ONbrlyY9yCpBxOyIl1arQEKd/YO4Yh/AmTdsOIUeZTWm5MVqjnOcL
+         7bjcdCtEcTUvOUvRkMCUCD76zLz73lcvXt6wZNkLfwgUX1MK9J9Dy5+W5N5S0mXjRNFD
+         8n6SfDjJyob2VIbf1BhXZNDW9tE+UEvU1EJLiIhlwp1RphZU3LrfIOc+slR9pyevKdQF
+         T8Ft7xqhzdtlfsocwcTYrMcsf8Hqt1jZLDe+4pDdFHRXoCp+q0r5+qxWHKObAFol955l
+         WzTzvv1Lq4EtSiE7MrjhTAuYnyPy7tHixTrZXDedIK+itVeU/O2aWohN7e6AbVFMbz/+
+         N8Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCUhQ2MxclNebMEQkRqdD2tjOZ98t96syRjcDgPlzyHT8S2DIAMFlYzqYDuKaKHG8CPgN1ftnLJhHcTMpik=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJszDd1PilS3ghcsBXoreWHuSV4qt5WrRuL7rhoobjGcwLyMx+
+	ZmM1x3JCbqirkjfj/eIxRTipSDtZNYU8vmGjdtoeg/EUfgDVc81iov6fpie1lrLqlgMhQVFQucc
+	jxMvLmLISMWilOjA17us9x6YpsO2IIsi1/ssFFHSi3rnfxcDfbtsUR+QCXHUJ2n2pkQ==
+X-Gm-Gg: ASbGnct1CpB2EZfx7nXdtBrxFl1q+Mw8sg0AeZGUxl76ePYLfT8GJfFXianMhuCmc9Y
+	U2vb677kKtbjS1+02i52Jj6Nt3hF0+zwPvGLmUShfl5UKEyKYOFDQrRB6fcSgqW2MyUHWJdNML/
+	KM3aKW4XtgmvVrosXTBlq8waJFkvzfNMLG4G4eV/l/EwKaTR+TE5LIghyfq8OtDZyRotcHWdVzT
+	SZVDeM68JPtwHEH6Mvc48PKnF13ycxzhsn8e311MbiVSinMwhJyJvKzGOHGrQyACJ3r4YbrgKgF
+	K0nPDz8u+PHNDbA18WVAr+5GTyA7rPKxAeKTyEmXTMlcTrYt
+X-Received: by 2002:a05:6000:310e:b0:3a4:f893:3f03 with SMTP id ffacd0b85a97d-3a6d132c97emr13930023f8f.45.1750752361525;
+        Tue, 24 Jun 2025 01:06:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFYEBIjUpcilFoKp9NigSCHLoUqcEDnQrrsnt8YNSI/zd7K7bBEe/c8JUVgpF01y6bp/3ph5w==
+X-Received: by 2002:a05:6000:310e:b0:3a4:f893:3f03 with SMTP id ffacd0b85a97d-3a6d132c97emr13929979f8f.45.1750752360977;
+        Tue, 24 Jun 2025 01:06:00 -0700 (PDT)
+Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80f2525sm1296307f8f.52.2025.06.24.01.06.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 01:06:00 -0700 (PDT)
+Message-ID: <b33dcafca895da1d9c64a7d6ab771952a932e579.camel@redhat.com>
+Subject: Re: [PATCH v6 6/6] timers: Exclude isolated cpus from timer migation
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, 
+ Anna-Maria Behnsen <anna-maria@linutronix.de>, Frederic Weisbecker
+ <frederic@kernel.org>, Waiman Long <longman@redhat.com>
+Date: Tue, 24 Jun 2025 10:05:59 +0200
+In-Reply-To: <875xgqqrel.ffs@tglx>
+References: <20250530142031.215594-1-gmonaco@redhat.com>
+	 <20250530142031.215594-7-gmonaco@redhat.com> <875xgqqrel.ffs@tglx>
+Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
+ keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
+ 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
+ Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
+ Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
+ xyhmqeUWOzFx5P43S1E1dhsrLWgP
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-riscv-hsm-boot-data-array-v1-1-50b5eeafbe61@iscas.ac.cn>
-X-B4-Tracking: v=1; b=H4sIAB1cWmgC/x3MQQqDQAxA0atI1gbGVEv1KuIiOrFmUUcSkRbx7
- h1cvsX/J7iYikNXnGByqGtaM6qygGnh9S2oMRsoUBOeVKOpTwcu/sExpR0j74xsxj+s4qOl0L7
- GSAS530xm/d7vfriuP7OT6gJrAAAA
-X-Change-ID: 20250624-riscv-hsm-boot-data-array-1d392098bd22
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Alexandre Ghiti <alex@ghiti.fr>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
- Atish Patra <atishp@rivosinc.com>, Anup Patel <anup@brainfault.org>
-Cc: Vivian Wang <uwu@dram.page>, Han Gao <rabenda.cn@gmail.com>, 
- Yao Zi <ziyao@disroot.org>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Vivian Wang <wangruikang@iscas.ac.cn>
-X-Mailer: b4 0.14.2
-X-CM-TRANSID:rQCowADn_FRSXFpoFc3eCA--.42565S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3XFWkZrWkJr4xZF47uw17Jrb_yoW7CFW8pF
-	y5Jr1UWF4kXr1UAw1xtry5ur15Ar1DA3W3JFn7tF1rAF1UGr1UJr1Ut3yIka98tFy8JFy7
-	tr4DZa1xKFyDJaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9E14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-	6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK67AK6r43MxAIw28IcxkI7VAKI4
-	8JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xv
-	wVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjx
-	v20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20E
-	Y4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267
-	AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjWSotUUUUU==
-X-CM-SenderInfo: pzdqw2pxlnt03j6l2u1dvotugofq/
 
-Since commit 6b9f29b81b15 ("riscv: Enable pcpu page first chunk
-allocator"), if NUMA is enabled, the page percpu allocator may be used
-on very sparse configurations, or when requested on boot with
-percpu_alloc=page.
 
-In that case, percpu data gets put in the vmalloc area. However,
-sbi_hsm_hart_start() needs the physical address of a sbi_hart_boot_data,
-and simply assumes that __pa() would work. This causes the just started
-hart to immediately access an invalid address and hang.
 
-Fortunately, struct sbi_hart_boot_data is not too large, so we can
-simply allocate an array for boot_data statically, putting it in the
-kernel image.
+On Fri, 2025-06-20 at 19:00 +0200, Thomas Gleixner wrote:
+> On Fri, May 30 2025 at 16:20, Gabriele Monaco wrote:
+>=20
+> timer migation?
+>=20
+> > The timer migration mechanism allows active CPUs to pull timers
+> > from
+> > idle ones to improve the overall idle time. This is however
+> > undesired
+> > when CPU intensive workloads run on isolated cores, as the
+> > algorithm
+> > would move the timers from housekeeping to isolated cores,
+> > negatively
+> > affecting the isolation.
+> >=20
+> > This effect was noticed on a 128 cores machine running oslat on the
+> > isolated cores (1-31,33-63,65-95,97-127). The tool monopolises
+> > CPUs,
+> > and the CPU with lowest count in a timer migration hierarchy (here
+> > 1
+> > and 65) appears as always active and continuously pulls global
+> > timers,
+> > from the housekeeping CPUs. This ends up moving driver work (e.g.
+> > delayed work) to isolated CPUs and causes latency spikes:
+> >=20
+> > before the change:
+> >=20
+> > =C2=A0# oslat -c 1-31,33-63,65-95,97-127 -D 62s
+> > =C2=A0...
+> > =C2=A0 Maximum:=C2=A0=C2=A0=C2=A0=C2=A0 1203 10 3 4 ... 5 (us)
+> >=20
+> > after the change:
+> >=20
+> > =C2=A0# oslat -c 1-31,33-63,65-95,97-127 -D 62s
+> > =C2=A0...
+> > =C2=A0 Maximum:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 10 4 3 4 3 ... 5 (us)
+>=20
+> It's nice to add numbers, but you should out them at the end _after_
+> you
+> described the change. At this point 'after the change' makes no sense
+> as
+> the reader does not read backwards or jumps around randomly in the
+> text.
+>=20
+> > Exclude isolated cores from the timer migration algorithm, extend
+> > the
+> > concept of unavailable cores, currently used for offline ones, to
+> > isolated ones:
+> > * A core is unavailable if isolated or offline;
+> > * A core is available if isolated and offline;
+> >=20
+> > A core is considered unavailable as isolated if it belongs to:
+> > * the isolcpus (domain) list
+> > * an isolated cpuset
+> > Except if it is:
+> > * in the nohz_full list (already idle for the hierarchy)
+> > * the nohz timekeeper core (must be available to handle global
+> > timers)
+> >=20
+> > Due to how the timer migration algorithm works, any CPU part of the
+> > hierarchy can have their global timers pulled by remote CPUs and
+> > have to
+> > pull remote timers, only skipping pulling remote timers would break
+> > the
+> > logic.
+> > For this reason, we prevent isolated CPUs from pulling remote
+> > global
+>=20
+> s/we//
+>=20
+> > timers, but also the other way around: any global timer started on
+> > an
+> > isolated CPU will run there. This does not break the concept of
+> > isolation (global timers don't come from outside the CPU) and, if
+> > considered inappropriate, can usually be mitigated with other
+> > isolation
+> > techniques (e.g. IRQ pinning).
+>=20
+> > +#if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
+> > +extern int tmigr_isolated_exclude_cpumask(cpumask_var_t
+> > exclude_cpumask);
+>=20
+> s/cpumask_var_t/struct cpumask */
+>=20
+> cpumask_var_t is only for declaration purposes to avoid ifdeffery,
+> but a
+> function always gets a pointer to the cpumask itself.
+>=20
+> > diff --git a/kernel/time/timer_migration.c
+> > b/kernel/time/timer_migration.c
+> > index 25439f961ccf8..a14fbca7457fe 100644
+> > --- a/kernel/time/timer_migration.c
+> > +++ b/kernel/time/timer_migration.c
+> > @@ -10,6 +10,7 @@
+> > =C2=A0#include <linux/spinlock.h>
+> > =C2=A0#include <linux/timerqueue.h>
+> > =C2=A0#include <trace/events/ipi.h>
+> > +#include <linux/sched/isolation.h>
+> > =C2=A0
+> > =C2=A0#include "timer_migration.h"
+> > =C2=A0#include "tick-internal.h"
+> > @@ -1449,6 +1450,13 @@ static int tmigr_cpu_unavailable(unsigned
+> > int cpu)
+> > =C2=A0	int migrator;
+> > =C2=A0	u64 firstexp;
+> > =C2=A0
+> > +	/*
+> > +	 * The tick CPU can be marked as isolated by the cpuset
+> > code, however
+> > +	 * we cannot mark it as unavailable to avoid having no
+> > global migrator
+> > +	 * for the nohz_full CPUs.
+> > +	 */
+> > +	if (!tick_nohz_cpu_hotpluggable(cpu))
+> > +		return 0;
+>=20
+> This is really horribly confusing. This function is also invoked from
+> the CPU offline hotplug callback and in context of CPU hotplug this
+> check makes absolutely no sense at all.
+>=20
+> Please do this check in the smp function call which handles this
+> isolation muck.
+>=20
+> > =C2=A0	raw_spin_lock_irq(&tmc->lock);
+> > =C2=A0	tmc->available =3D false;
+>=20
+> This clearly lacks a check whether available is true or not. If it's
+> false, it must return right here.
+>=20
+> To avoid goto or whatever ugly please convert that locking to a
+> scoped
+> guard in a seperate patch. Then you can simply do
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!tmc->available)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0	=C2=A0 return 0;
+>=20
+> inside the lock scope and the compiler will mop it up for you.
+>=20
+> > =C2=A0	WRITE_ONCE(tmc->wakeup, KTIME_MAX);
+> > @@ -1478,6 +1486,20 @@ static int tmigr_cpu_available(unsigned int
+> > cpu)
+> > =C2=A0	if (WARN_ON_ONCE(!tmc->tmgroup))
+> > =C2=A0		return -EINVAL;
+> > =C2=A0
+> > +	/*
+> > +	 * Domain isolated CPUs don't participate in timer
+> > migration, nohz_full
+> > +	 * CPUs are still part of the hierarchy but are always
+> > considered idle.
+> > +	 * Additionally, the tick CPU during nohz_full cannot be
+> > disabled.
+> > +	 * Checking here guarantees that CPUs isolated at boot
+> > (e.g. isolcpus)
+> > +	 * are not marked as available when they first become
+> > online.
+> > +	 * During runtime, any offline isolated CPU is also not
+> > incorrectly
+> > +	 * marked as available once it gets back online.
+> > +	 */
+> > +	if ((!housekeeping_cpu(cpu, HK_TYPE_DOMAIN) ||
+> > +	=C2=A0=C2=A0=C2=A0=C2=A0 cpuset_cpu_is_isolated(cpu)) &&
+> > +	=C2=A0=C2=A0=C2=A0 housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE) &&
+> > +	=C2=A0=C2=A0=C2=A0 tick_nohz_cpu_hotpluggable(cpu))
+> > +		return 0;
+>=20
+> Same nonsense as above.
+>=20
 
-This fixes NUMA=y SMP boot on Sophgo SG2042.
+Thanks for the review, I agree with moving the check above, but I
+believe this should remain here.
 
-To reproduce on QEMU: Set CONFIG_NUMA=y and CONFIG_DEBUG_VIRTUAL=y, then
-run with:
+tmigr_cpu_available is called at boot time and is applying also the
+boot time isolation parameters (tmigr_isolated_exclude_cpumask is only
+used by the cpuset code).
 
-  qemu-system-riscv64 -M virt -smp 2 -nographic \
-    -kernel arch/riscv/boot/Image \
-    -append "percpu_alloc=page"
+Now let's assume a machine booted with the arguments isolcpus=3D0-3
+nohz_full=3D5-7.
 
-Kernel output:
+Without checking for tick_nohz_cpu_hotpluggable() here, we would not
+set the tick cpu (0) as available at boot, ending up in the unwanted
+corner cases discussed in the v5 of the series.
 
-[    0.000000] Booting Linux on hartid 0
-[    0.000000] Linux version 6.16.0-rc1 (dram@sakuya) (riscv64-unknown-linux-gnu-gcc (GCC) 14.2.1 20250322, GNU ld (GNU Binutils) 2.44) #11 SMP Tue Jun 24 14:56:22 CST 2025
-...
-[    0.000000] percpu: 28 4K pages/cpu s85784 r8192 d20712
-...
-[    0.083192] smp: Bringing up secondary CPUs ...
-[    0.086722] ------------[ cut here ]------------
-[    0.086849] virt_to_phys used for non-linear address: (____ptrval____) (0xff2000000001d080)
-[    0.088001] WARNING: CPU: 0 PID: 1 at arch/riscv/mm/physaddr.c:14 __virt_to_phys+0xae/0xe8
-[    0.088376] Modules linked in:
-[    0.088656] CPU: 0 UID: 0 PID: 1 Comm: swapper/0 Not tainted 6.16.0-rc1 #11 NONE
-[    0.088833] Hardware name: riscv-virtio,qemu (DT)
-[    0.088948] epc : __virt_to_phys+0xae/0xe8
-[    0.089001]  ra : __virt_to_phys+0xae/0xe8
-[    0.089037] epc : ffffffff80021eaa ra : ffffffff80021eaa sp : ff2000000004bbc0
-[    0.089057]  gp : ffffffff817f49c0 tp : ff60000001d60000 t0 : 5f6f745f74726976
-[    0.089076]  t1 : 0000000000000076 t2 : 705f6f745f747269 s0 : ff2000000004bbe0
-[    0.089095]  s1 : ff2000000001d080 a0 : 0000000000000000 a1 : 0000000000000000
-[    0.089113]  a2 : 0000000000000000 a3 : 0000000000000000 a4 : 0000000000000000
-[    0.089131]  a5 : 0000000000000000 a6 : 0000000000000000 a7 : 0000000000000000
-[    0.089155]  s2 : ffffffff8130dc00 s3 : 0000000000000001 s4 : 0000000000000001
-[    0.089174]  s5 : ffffffff8185eff8 s6 : ff2000007f1eb000 s7 : ffffffff8002a2ec
-[    0.089193]  s8 : 0000000000000001 s9 : 0000000000000001 s10: 0000000000000000
-[    0.089211]  s11: 0000000000000000 t3 : ffffffff8180a9f7 t4 : ffffffff8180a9f7
-[    0.089960]  t5 : ffffffff8180a9f8 t6 : ff2000000004b9d8
-[    0.089984] status: 0000000200000120 badaddr: ffffffff80021eaa cause: 0000000000000003
-[    0.090101] [<ffffffff80021eaa>] __virt_to_phys+0xae/0xe8
-[    0.090228] [<ffffffff8001d796>] sbi_cpu_start+0x6e/0xe8
-[    0.090247] [<ffffffff8001a5da>] __cpu_up+0x1e/0x8c
-[    0.090260] [<ffffffff8002a32e>] bringup_cpu+0x42/0x258
-[    0.090277] [<ffffffff8002914c>] cpuhp_invoke_callback+0xe0/0x40c
-[    0.090292] [<ffffffff800294e0>] __cpuhp_invoke_callback_range+0x68/0xfc
-[    0.090320] [<ffffffff8002a96a>] _cpu_up+0x11a/0x244
-[    0.090334] [<ffffffff8002aae6>] cpu_up+0x52/0x90
-[    0.090384] [<ffffffff80c09350>] bringup_nonboot_cpus+0x78/0x118
-[    0.090411] [<ffffffff80c11060>] smp_init+0x34/0xb8
-[    0.090425] [<ffffffff80c01220>] kernel_init_freeable+0x148/0x2e4
-[    0.090442] [<ffffffff80b83802>] kernel_init+0x1e/0x14c
-[    0.090455] [<ffffffff800124ca>] ret_from_fork_kernel+0xe/0xf0
-[    0.090471] [<ffffffff80b8d9c2>] ret_from_fork_kernel_asm+0x16/0x18
-[    0.090560] ---[ end trace 0000000000000000 ]---
-[    1.179875] CPU1: failed to come online
-[    1.190324] smp: Brought up 1 node, 1 CPU
+I could remove this call here (which is mostly redundant after boot)
+and enable explicitly the tick cpu in another way, but this still seems
+cleaner to me.
 
-Cc: stable@vger.kernel.org
-Reported-by: Han Gao <rabenda.cn@gmail.com>
-Fixes: 9a2451f18663 ("RISC-V: Avoid using per cpu array for ordered booting")
-Signed-off-by: Vivian Wang <wangruikang@iscas.ac.cn>
----
- arch/riscv/kernel/cpu_ops_sbi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Does it make sense to you? Is the comment in the code unclear?
 
-diff --git a/arch/riscv/kernel/cpu_ops_sbi.c b/arch/riscv/kernel/cpu_ops_sbi.c
-index e6fbaaf549562d6e9ca63a66371441fe8b230cb3..87d6559448039cdd2e8a604a19bd832ab5a98fc2 100644
---- a/arch/riscv/kernel/cpu_ops_sbi.c
-+++ b/arch/riscv/kernel/cpu_ops_sbi.c
-@@ -18,10 +18,10 @@ const struct cpu_operations cpu_ops_sbi;
- 
- /*
-  * Ordered booting via HSM brings one cpu at a time. However, cpu hotplug can
-- * be invoked from multiple threads in parallel. Define a per cpu data
-+ * be invoked from multiple threads in parallel. Define an array of boot data
-  * to handle that.
-  */
--static DEFINE_PER_CPU(struct sbi_hart_boot_data, boot_data);
-+static struct sbi_hart_boot_data boot_data[NR_CPUS];
- 
- static int sbi_hsm_hart_start(unsigned long hartid, unsigned long saddr,
- 			      unsigned long priv)
-@@ -67,7 +67,7 @@ static int sbi_cpu_start(unsigned int cpuid, struct task_struct *tidle)
- 	unsigned long boot_addr = __pa_symbol(secondary_start_sbi);
- 	unsigned long hartid = cpuid_to_hartid_map(cpuid);
- 	unsigned long hsm_data;
--	struct sbi_hart_boot_data *bdata = &per_cpu(boot_data, cpuid);
-+	struct sbi_hart_boot_data *bdata = &boot_data[cpuid];
- 
- 	/* Make sure tidle is updated */
- 	smp_mb();
+Thanks again,
+Gabriele
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250624-riscv-hsm-boot-data-array-1d392098bd22
-
-Best regards,
--- 
-Vivian "dramforever" Wang
+> > =C2=A0	raw_spin_lock_irq(&tmc->lock);
+>=20
+> Same missing check for available =3D=3D true
+>=20
+> > =C2=A0	trace_tmigr_cpu_available(tmc);
+> > =C2=A0	tmc->idle =3D timer_base_is_idle();
+> > @@ -1489,6 +1511,38 @@ static int tmigr_cpu_available(unsigned int
+> > cpu)
+> > =C2=A0	return 0;
+> > =C2=A0}
+> > =C2=A0
+> > +static void tmigr_remote_cpu_unavailable(void *ignored)
+>=20
+> This is a SMP function call so what's the _remote_ for? It runs on
+> the
+> CPU on which the call is scheduled. Please make it entirely clear
+> what
+> this is about. This is about isolation and not about available. The
+> fact
+> that it sets/clears the availability is just an implementation
+> detail.
+>=20
+> static void timgr_cpu_isolate(void *ignored)
+> {
+> 	unsigned int cpu =3D smp_processor_id();
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /* Big fat comment */
+> 	if (!tick_nohz_cpu_hotpluggable(cpu))
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0	return;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=20
+> 	tmigr_set_cpu_available(cpu);
+> }
+>=20
+> > +{
+> > +	tmigr_cpu_unavailable(smp_processor_id());
+> > +}
+> > +
+> > +static void tmigr_remote_cpu_available(void *ignored)
+> > +{
+> > +	tmigr_cpu_available(smp_processor_id());
+> > +}
+> > +
+> > +int tmigr_isolated_exclude_cpumask(cpumask_var_t exclude_cpumask)
+> > +{
+> > +	cpumask_var_t cpumask;
+> > +	int ret =3D 0;
+> > +
+> > +	lockdep_assert_cpus_held();
+> > +
+> > +	if (!alloc_cpumask_var(&cpumask, GFP_KERNEL))
+> > +		return -ENOMEM;
+> > +
+> > +	cpumask_and(cpumask, exclude_cpumask,
+> > tmigr_available_cpumask);
+> > +	cpumask_and(cpumask, cpumask,
+> > housekeeping_cpumask(HK_TYPE_KERNEL_NOISE));
+> > +	on_each_cpu_mask(cpumask, tmigr_remote_cpu_unavailable,
+> > NULL, 0);
+>=20
+> Why are those function calls async?
+>=20
+> Shouldn't it be guaranteed that the change has been committed once
+> this
+> function returns? If not then this wants a comment why it does not
+> matter.
+>=20
+> Thanks,
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tglx
 
