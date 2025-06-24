@@ -1,64 +1,64 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA0EA2C158F
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:27:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D0E2C3755
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:27:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750771673; cv=none; b=Es/bd4EbHEh0EEhBWBG0kIf7gK3kG6vNV/f9BcSceXB8+CE51+i2mZEAayj3mKHiJEVCtlVLuGj3m8JFlLAIyvD0Uvah8MRSH1dsRY9qS+1oCn1bmYiicWl+0XGLJLoLF/j4TFXyaiWBKemjViegTNkdh1EC5gz4j7xUpdHmRts=
+	t=1750771673; cv=none; b=lLNRcSG7TxTvD6oHchA0Iwb9by0HxJv6uq0MB/Xt5/ShM271dz6TbWRgIFCxcpsgWd5YD0UEoBXmqsPv0JewWk18ShwscUnkGQSt5mA5RuZh+lxxZG7RV5+qxgsLoT8x15wpbaAUib+JRY7iUbV23s8uLgYeG8B1D7nUwLtdIfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750771673; c=relaxed/simple;
-	bh=4sAXU9caGg9f/DjHncEPIA7KaN/pWf+xDxVR7QJuIB0=;
+	bh=UFfRQ2EJYA6t2/ihgwQbY8hF0TN3XoMYDsor98fDvRo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y0ODmsBnjh4rFzAs1tmIlaySKBKgBFThEv9LpUPezcEROUfeb/Xt1reBK7T4F6qotoSrYGGobqjj/gQFIsJ1WCL1dSVszX4qPa6sk86247nvT6fu0y4M1axOsQ0QPR/TBzsMHIoBopMuW/Jle/c4KvAaaMd5ZGOZhbQvrq9ON1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=g9pibnnV; arc=none smtp.client-ip=209.85.128.47
+	 In-Reply-To:To:Cc; b=BiaVT218YPBnkUAwpTxnvkdaxASEqv9hzFU6oBp4hfb9frMvkXNmbOSUiFo+caaK6ARs2zbl6HeocUiyyXQR5rm7LrtPzcavGI8pbUS2WJPNosf9rxJqaktoGWUZ/tDDF449Qb89nxuH01ff29sXtX5fyPKuAoJKttA24H/raEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=j2q0x3e4; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="g9pibnnV"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so3436335e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:27:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="j2q0x3e4"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so3010995e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:27:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750771669; x=1751376469; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750771670; x=1751376470; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=8BZNYZ4uzmMTmFUY45XO1zgtp9A/k49xGz2UfsvZ/gw=;
-        b=g9pibnnVbnZ5kDs6TnGJ4p8A3Z8L0dpa5Ps1Px/0m4eIoCFRDDFWjN/Qz9fMVd2GdW
-         rUIem9tKy38iQqSNXxswBGSEnUxmnEXX6v/WuVOe+UzVnO2wgRptb0KtednuEQM/h2Cw
-         yCgpax2NXm7uEYQ4EvrjT4UaCwg8OuJ/f16LJ3EpPqRKrLO8VwqLI7T7ui3MF0wKJ1Pt
-         9XDGY4bzoMkkPmDtNh8z8scwG2eqqKkuFsM7wcErUGWibpvE1BNUgQTc1Xy/g+R9iRAV
-         6oYFte3bi+rHoSKY3qYeytfYpI52Kw4GrtkE06p1piUpFLqeJzBoSMD61nZblSgx0999
-         MbuQ==
+        bh=7q+y4cuauV8ZEEI+QC1z+4Pk/VGahhcnIIdZRyJGl5s=;
+        b=j2q0x3e4u4wfv7mFt4+MfB5Ey4iA+4TxUVP36g+ELa0kFosIifBgYRzGTZAMFWQs/b
+         JRiyOi+4IdWRKA2fj7Z6qyagDni3iKY0T4DsYPhVak/hVnmkVMFK9JD2Of/YhYVzEy+P
+         17kuGfMUIqcvVjIeaxm8ChMSZIH996xZfJsOuwJwqCjv8maKpF7HCJDVULGS7OkS6Ez3
+         dPXsx37Te9p0FVJkYX5jL+VBpfz2jgMJYtbQONlCvK9OZ/86rPzawOdQO0n0XkCJoUqG
+         lAsx1O0Pp/6ZbSUjHnApsHkiBJ1x1X23cud2FnMx7NnLPKgJD5OLc0lwrrY2KHjgZtHM
+         ya6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750771669; x=1751376469;
+        d=1e100.net; s=20230601; t=1750771670; x=1751376470;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8BZNYZ4uzmMTmFUY45XO1zgtp9A/k49xGz2UfsvZ/gw=;
-        b=WYPQ+OH+cAg3Avs5kVsoF2fncjdBfnnbxh3/1lBJDC21FgmuzGWcCBNBgG/iOWGG9X
-         4cukbiZXSIvsPo1EnekGSn2dslVTWjgxDO09KwfR1zunX609d4RtBsmk8CSXLNmBfsg2
-         cOGLkSpp5sYkcLmZRbs5tEFOGCKlmrTeZ5OUsWVWtqxp5IreJloNq4mpoNQsXppfcjLg
-         vbYnaqk+r2R7Re6XnN9wtGe2yDMAM2wWetZmlqcfOwBDpHZg6O6jlSj+A5FgQd5tbQGd
-         kgGDaHqUTowZWS1vlJNNqkjFZ5PyW72oQgjnJ6GEYJYkm8jM8PQz32ysluukAgSeMjTy
-         aFnQ==
-X-Gm-Message-State: AOJu0YzcM8Zv/JtCp+1IcGxAAggUrByxNaSx9qnOpEOuTA6lSfGbPO5x
-	jLJncBphHP1290YgkcvpIuc2M+9cDRrmlEAeD54qJTgXLrx5jNEsxl8fl2V0TseKdPs=
-X-Gm-Gg: ASbGncv7YUd/zvn3X049doj2wSNaUnRmD+DMoy/qpdJEu7ZKfQzLFlLTzsSYACX5d0/
-	qYjkBumASxdA1cTw4WPl+nIJtMtgLy5OdwL3rbA5wpbS5eowKS2++Ov5cjRNTmThGAc2TfSd8pQ
-	oK0pvnyg+htXY50lno36pWEU0a6S5ZHgpfgs6eYfv9jn7DjFiBtNCLpiEgqB5E6l6AB0REqBDsl
-	59HaQsnFjVytbO354A3NjeyZ0aXuzWXRxApN9/t6EFFcnnVC8Fsatx66WOh33vRSfIRYOLgoy/a
-	HJcasiJlgQAd+Nr0bjH4TcS3iRxClhKT83MWEFbSOinhOAZUsgEU0gY=
-X-Google-Smtp-Source: AGHT+IEUbPKcWbn9NN2y6f1Hc3c97b8DvrWEquHy3uhBBn6lW/jObv1Sw1EXdMfJS/xPuPKek3QNuQ==
-X-Received: by 2002:a05:600c:840f:b0:453:c39:d0d0 with SMTP id 5b1f17b1804b1-4536539c48cmr145546035e9.13.1750771668863;
-        Tue, 24 Jun 2025 06:27:48 -0700 (PDT)
+        bh=7q+y4cuauV8ZEEI+QC1z+4Pk/VGahhcnIIdZRyJGl5s=;
+        b=rPhwGw/cbaiocT+co4gZxnSGm5jL8mUX0m1bNKAW0OjH9Svdv3PcbX7oOYmv4LFe46
+         tbNYBvkcIC/cSNBc09q9sTQ+PT1+up9Nv476KEWqL0pN9zMZoa3diNL8PZm5O1hyriJe
+         ROvDTB6ufBRzt9Al56PA488dlZ0JB0UwmcqDs596Yyw3aPRzA6t3xdvQedFUHMqlC1La
+         KlfiQgjso8CulVj2pq+Chz21yqJ9zaFTrdGlf7L4cg5NGDheGd68FiCjf6GLjaCbJmbw
+         rHwITwJt1xB8a9Sn+UOIxRcuokvgqRBtXWm2zSsqky0AbvmzLl0An2FeZ4EXTvgAOTJ3
+         1q6Q==
+X-Gm-Message-State: AOJu0YzzRi0KhEeacHnsMCJhd84tfl4Of+6mUAS7bb7sN8g/WzyO6XHx
+	qvzG3D7kAPv9J3pF10bDLj0aT51u5hNSnYN3q34/lnLwowyoCsupQ3LiheZe1V4zr6g=
+X-Gm-Gg: ASbGncs7ZcqAs0wIs/pfA4mrSPYZspXuerkaWtDWhj8CXC1hXPlo08lwKRH4Rg/4gDU
+	RK2NnOtRnlsOezeu+ah7JtNmbqY4oaGIDENcujwQFmPOigFSWGoelwVUHCMYW7hL8FCA46XwBxK
+	zATwIbPuYUcsRCzZ/Y8MS4UhuXXZAsD5u9pYfTWW+VOdytr8SCA6fRP+JXSNFOVXNpInmJJlUMC
+	u0ZlBQO1vIE6kiJuJGX/TTo6OA6KD377CVFp+FyWfrPB/zL1QRooRhMtib/eE4OpBxJuwqR9u89
+	e9pDsV4gBwy4TOyqBmNf6wEoY+pTx1l1ZKL3Nr4odhU3iBphBej/AJVHF0SyNDBmsA==
+X-Google-Smtp-Source: AGHT+IGmfcrcXv6qaFxA1auGYNl1GVJJJbUjwBsK+LmrzR1ie3pLAeiZE448ONV4ULqg3P1+gJfQqQ==
+X-Received: by 2002:a05:600c:3542:b0:451:e394:8920 with SMTP id 5b1f17b1804b1-453659edd18mr149902315e9.27.1750771670024;
+        Tue, 24 Jun 2025 06:27:50 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:34d2:109c:3293:19e9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453632312a3sm152588485e9.1.2025.06.24.06.27.47
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453632312a3sm152588485e9.1.2025.06.24.06.27.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 06:27:48 -0700 (PDT)
+        Tue, 24 Jun 2025 06:27:49 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 24 Jun 2025 15:27:37 +0200
-Subject: [PATCH 5/8] gpio: cadence: use lock guards
+Date: Tue, 24 Jun 2025 15:27:38 +0200
+Subject: [PATCH 6/8] gpio: cadence: use new generic GPIO chip API
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,7 +67,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-gpio-mmio-rework-v1-5-aea12209d258@linaro.org>
+Message-Id: <20250624-gpio-mmio-rework-v1-6-aea12209d258@linaro.org>
 References: <20250624-gpio-mmio-rework-v1-0-aea12209d258@linaro.org>
 In-Reply-To: <20250624-gpio-mmio-rework-v1-0-aea12209d258@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -79,113 +79,158 @@ Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
  imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2927;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4868;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=untPBAM91123AoBXnC7kV8/BRVDDOFFauDcUW0X87cQ=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoWqfM13Dq0oK+m+cELMPgv/E6/IQGi1X/lJOCc
- a2U5/8yD9CJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFqnzAAKCRARpy6gFHHX
- ct7uD/sGNCGk7mdxy9ZfPSIWzM1QufC2JrgdiT1Y4C0v/JOJlMDMByILNEMjNuLqPvYwu4UsuXi
- YaTQmzyJRfcrSaMpBo3MLw6yTsNjpbfEj3f0tc6JXKuN63anO0yf/GAHqr8QwbT0pwtHlqQ2+8+
- dao1qn7AP5NrxRlsb4M0FZBu3aTN32jv/7T/s7PL/ccIhaXy9QCmZ2rPYvIw5s9tl3ufYMQewpi
- wfwRzY+d5/hTin8rVg6a2EHUhzg6lSdwlgmXHUk800A9HoObSpf0bu7te+fsVPL8H4LQJkhgf+w
- 8dJhcLVkwQGUbJ4lQf3l22eqiC6H6ypmYV3/kdetNm5+hUzZjw/eeqHr2ZxboZW3S2DJPPQJUVX
- nZw4HQTJ+ifS7tPp8XKWk2bn5l8zQWL6E3S/XmPvhLc1SYXKoz9I4V3U8XB4NVhZYme2ZQQ91HC
- LkgmBLKRb8LTDwmM7TVxVpqxrFl93lY0E9JPkuKOirXbPyWFM4zp+ru9JOa4Ldd7YwFcYaL2CXy
- 3CIQUTblBcFwqb94o+y4qAAWyBzUzjD4QEhX81FS2YtbI2QHT0Iy2hRWsqsVgirNrDi0zoQined
- bpUiuzHCs3kz55dzOzWQLeCyWnEQqPosBKqSmfTwwzXF+BB0ITuGzOHKFwOOCj1n3valTMFGx8x
- i/798StF+aw8Erg==
+ bh=ss3poqXhlzfLiQ3jDcCO7Ok2SGZU2TtFIGp++gjWDXE=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoWqfNhmKPg3fhAoCDk3zfW13JMYx7TnigjXcX2
+ WYivj+S/buJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFqnzQAKCRARpy6gFHHX
+ cukxEADOJBsGcGX2kQ6qOkTQJ1Ttww1F/PBoovmhmVco4RYgvPzBD3oT06ENe65hXmz24vD6Fy3
+ yMJPZN1fuYn5UddaygrS5rHO3A+0DljhVkz7PwE1cTBIs8616DckVet8FtrDXIwJyVzu8x55zMv
+ UfvHiGfccZqbMHhQxVAxz6nQkjOQd3/JDZEtTY/bsANtSfH3f0rSlcqp4jL+pdsaNeZLMJ5LOhW
+ ePIwy8NAzS2tHbIXjK2jMC8jWDX5nZyxQIYwf3pIa7nn4A/JP4tRLXXtiCmN2+Vd3qychphUQTD
+ vQOLstSPzVRsXFyoZRr657j/m2g1Kj7Ayc8xLo2zqLgRMskyq68sCoszsK1AS1GqnFHPx9RxjZ7
+ ab4Sd9xtfeZ1sdjht1VOK74HY+NGAAoUtX3hJN7Q98rNxmlmkZ/cFySw8ninCz2d28q2Ra03X86
+ 3iHV2ABaAIN1fDLQbGqc6ISuTL+Zlj/jCwZFyV/iUcLBoc6NRc3sYGDcPWhSHvyKDXF2uXDX34q
+ m029iuqJcZTJCalVj2hMMG1gtc8YmijWfxgFH0x4AG7Tr10207uV5yilsU7WJUd5y18geyXNaYX
+ jVd2/+nZdV6JvAwWLPEJ0UIwIJmv7pD/TGTPTrNStpuUPVONPnptUrP2YXHv5vJlWmCMUPxzIsC
+ OSOIGxyS07RCzWw==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Simplify the code by using lock guards for the bgpio_lock. While at it:
-move the gpio/driver.h include into its correct place alphabetically.
+Convert the driver to using the new generic GPIO chip interfaces from
+linux/gpio/generic.h.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpio-cadence.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+ drivers/gpio/gpio-cadence.c | 46 ++++++++++++++++++++++++---------------------
+ 1 file changed, 25 insertions(+), 21 deletions(-)
 
 diff --git a/drivers/gpio/gpio-cadence.c b/drivers/gpio/gpio-cadence.c
-index e9dd2564c54f879cf1d49442dfa3db0004473d35..e6ec341d55e9047b2fa8718799ba72d54624388e 100644
+index e6ec341d55e9047b2fa8718799ba72d54624388e..8243eddcd5bbe537bab1bedc72c80ee88839f5d3 100644
 --- a/drivers/gpio/gpio-cadence.c
 +++ b/drivers/gpio/gpio-cadence.c
-@@ -8,8 +8,9 @@
-  *  Boris Brezillon <boris.brezillon@free-electrons.com>
-  */
- 
--#include <linux/gpio/driver.h>
-+#include <linux/cleanup.h>
+@@ -12,6 +12,8 @@
  #include <linux/clk.h>
-+#include <linux/gpio/driver.h>
+ #include <linux/gpio/driver.h>
  #include <linux/interrupt.h>
++#include <linux/gpio/driver.h>
++#include <linux/gpio/generic.h>
  #include <linux/kernel.h>
  #include <linux/module.h>
-@@ -38,29 +39,24 @@ struct cdns_gpio_chip {
- static int cdns_gpio_request(struct gpio_chip *chip, unsigned int offset)
+ #include <linux/platform_device.h>
+@@ -31,7 +33,7 @@
+ #define CDNS_GPIO_IRQ_ANY_EDGE		0x2c
+ 
+ struct cdns_gpio_chip {
+-	struct gpio_chip gc;
++	struct gpio_generic_chip gen_gc;
+ 	void __iomem *regs;
+ 	u32 bypass_orig;
+ };
+@@ -40,7 +42,7 @@ static int cdns_gpio_request(struct gpio_chip *chip, unsigned int offset)
  {
  	struct cdns_gpio_chip *cgpio = gpiochip_get_data(chip);
--	unsigned long flags;
  
--	raw_spin_lock_irqsave(&chip->bgpio_lock, flags);
-+	guard(raw_spinlock)(&chip->bgpio_lock);
+-	guard(raw_spinlock)(&chip->bgpio_lock);
++	guard(gpio_generic_lock)(&cgpio->gen_gc);
  
  	iowrite32(ioread32(cgpio->regs + CDNS_GPIO_BYPASS_MODE) & ~BIT(offset),
  		  cgpio->regs + CDNS_GPIO_BYPASS_MODE);
- 
--	raw_spin_unlock_irqrestore(&chip->bgpio_lock, flags);
- 	return 0;
- }
- 
- static void cdns_gpio_free(struct gpio_chip *chip, unsigned int offset)
+@@ -52,7 +54,7 @@ static void cdns_gpio_free(struct gpio_chip *chip, unsigned int offset)
  {
  	struct cdns_gpio_chip *cgpio = gpiochip_get_data(chip);
--	unsigned long flags;
  
--	raw_spin_lock_irqsave(&chip->bgpio_lock, flags);
-+	guard(raw_spinlock)(&chip->bgpio_lock);
+-	guard(raw_spinlock)(&chip->bgpio_lock);
++	guard(gpio_generic_lock)(&cgpio->gen_gc);
  
  	iowrite32(ioread32(cgpio->regs + CDNS_GPIO_BYPASS_MODE) |
  		  (BIT(offset) & cgpio->bypass_orig),
- 		  cgpio->regs + CDNS_GPIO_BYPASS_MODE);
--
--	raw_spin_unlock_irqrestore(&chip->bgpio_lock, flags);
- }
- 
- static void cdns_gpio_irq_mask(struct irq_data *d)
-@@ -85,13 +81,12 @@ static int cdns_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- {
- 	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
- 	struct cdns_gpio_chip *cgpio = gpiochip_get_data(chip);
--	unsigned long flags;
- 	u32 int_value;
- 	u32 int_type;
+@@ -86,7 +88,7 @@ static int cdns_gpio_irq_set_type(struct irq_data *d, unsigned int type)
  	u32 mask = BIT(d->hwirq);
  	int ret = 0;
  
--	raw_spin_lock_irqsave(&chip->bgpio_lock, flags);
-+	guard(raw_spinlock)(&chip->bgpio_lock);
+-	guard(raw_spinlock)(&chip->bgpio_lock);
++	guard(gpio_generic_lock)(&cgpio->gen_gc);
  
  	int_value = ioread32(cgpio->regs + CDNS_GPIO_IRQ_VALUE) & ~mask;
  	int_type = ioread32(cgpio->regs + CDNS_GPIO_IRQ_TYPE) & ~mask;
-@@ -108,15 +103,12 @@ static int cdns_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	} else if (type == IRQ_TYPE_LEVEL_LOW) {
- 		int_type |= mask;
- 	} else {
--		ret = -EINVAL;
--		goto err_irq_type;
-+		return -EINVAL;
+@@ -142,6 +144,7 @@ static const struct irq_chip cdns_gpio_irqchip = {
+ 
+ static int cdns_gpio_probe(struct platform_device *pdev)
+ {
++	struct gpio_generic_chip_config config = { };
+ 	struct cdns_gpio_chip *cgpio;
+ 	int ret, irq;
+ 	u32 dir_prev;
+@@ -168,32 +171,33 @@ static int cdns_gpio_probe(struct platform_device *pdev)
+ 	 * gpiochip_lock_as_irq:
+ 	 * tried to flag a GPIO set as output for IRQ
+ 	 * Generic GPIO driver stores the direction value internally,
+-	 * so it needs to be changed before bgpio_init() is called.
++	 * so it needs to be changed before gpio_generic_chip_init() is called.
+ 	 */
+ 	dir_prev = ioread32(cgpio->regs + CDNS_GPIO_DIRECTION_MODE);
+ 	iowrite32(GENMASK(num_gpios - 1, 0),
+ 		  cgpio->regs + CDNS_GPIO_DIRECTION_MODE);
+ 
+-	ret = bgpio_init(&cgpio->gc, &pdev->dev, 4,
+-			 cgpio->regs + CDNS_GPIO_INPUT_VALUE,
+-			 cgpio->regs + CDNS_GPIO_OUTPUT_VALUE,
+-			 NULL,
+-			 NULL,
+-			 cgpio->regs + CDNS_GPIO_DIRECTION_MODE,
+-			 BGPIOF_READ_OUTPUT_REG_SET);
++	config.dev = &pdev->dev;
++	config.sz = 4;
++	config.dat = cgpio->regs + CDNS_GPIO_INPUT_VALUE;
++	config.set = cgpio->regs + CDNS_GPIO_OUTPUT_VALUE;
++	config.dirin = cgpio->regs + CDNS_GPIO_DIRECTION_MODE;
++	config.flags = BGPIOF_READ_OUTPUT_REG_SET;
++
++	ret = gpio_generic_chip_init(&cgpio->gen_gc, &config);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Failed to register generic gpio, %d\n",
+ 			ret);
+ 		goto err_revert_dir;
  	}
  
- 	iowrite32(int_value, cgpio->regs + CDNS_GPIO_IRQ_VALUE);
- 	iowrite32(int_type, cgpio->regs + CDNS_GPIO_IRQ_TYPE);
+-	cgpio->gc.label = dev_name(&pdev->dev);
+-	cgpio->gc.ngpio = num_gpios;
+-	cgpio->gc.parent = &pdev->dev;
+-	cgpio->gc.base = -1;
+-	cgpio->gc.owner = THIS_MODULE;
+-	cgpio->gc.request = cdns_gpio_request;
+-	cgpio->gc.free = cdns_gpio_free;
++	cgpio->gen_gc.gc.label = dev_name(&pdev->dev);
++	cgpio->gen_gc.gc.ngpio = num_gpios;
++	cgpio->gen_gc.gc.parent = &pdev->dev;
++	cgpio->gen_gc.gc.base = -1;
++	cgpio->gen_gc.gc.owner = THIS_MODULE;
++	cgpio->gen_gc.gc.request = cdns_gpio_request;
++	cgpio->gen_gc.gc.free = cdns_gpio_free;
  
--err_irq_type:
--	raw_spin_unlock_irqrestore(&chip->bgpio_lock, flags);
- 	return ret;
- }
+ 	clk = devm_clk_get_enabled(&pdev->dev, NULL);
+ 	if (IS_ERR(clk)) {
+@@ -210,7 +214,7 @@ static int cdns_gpio_probe(struct platform_device *pdev)
+ 	if (irq >= 0) {
+ 		struct gpio_irq_chip *girq;
  
+-		girq = &cgpio->gc.irq;
++		girq = &cgpio->gen_gc.gc.irq;
+ 		gpio_irq_chip_set_chip(girq, &cdns_gpio_irqchip);
+ 		girq->parent_handler = cdns_gpio_irq_handler;
+ 		girq->num_parents = 1;
+@@ -226,7 +230,7 @@ static int cdns_gpio_probe(struct platform_device *pdev)
+ 		girq->handler = handle_level_irq;
+ 	}
+ 
+-	ret = devm_gpiochip_add_data(&pdev->dev, &cgpio->gc, cgpio);
++	ret = devm_gpiochip_add_data(&pdev->dev, &cgpio->gen_gc.gc, cgpio);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "Could not register gpiochip, %d\n", ret);
+ 		goto err_revert_dir;
 
 -- 
 2.48.1
