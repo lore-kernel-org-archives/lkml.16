@@ -1,238 +1,558 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B9827FB31;
-	Tue, 24 Jun 2025 11:30:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750764603; cv=fail; b=FYpnElHWRBd/QKz0GmHtU0onS7XWA7JEviiOGAOTJm45XFTrVfMUWVJ4Rl7TJoTc9SVm+6tGlmb41NT8Ci0YVb5yYswZJ15z1XyI1JqsIabXftIbRZTY/zsov8fXZmUhEfInCkLQQCQ9AYZulxZsUbnyMelMRCjAXELienKZzWE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750764603; c=relaxed/simple;
-	bh=kN81sP5h2SxkoYXWopmUYJqDIsi315nY5ooFJONClHk=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=apTGrKCIprcJ/pp3ryehsRyWvhih7mX+dGBjw8Ehn3715e8xVrlbyiNxgBzEF2uXWP3JxfTOeQs0beZt40UuDLeX4DBWKBb+Fu0RN80bGVKHySd322Sffa06smSh3SejCl5HLL5rUsGPm/KgpqMl7Uy2W+sV5qoKKWbwhV/9BGY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FumPB/76; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CEC1A2630;
+	Tue, 24 Jun 2025 11:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750764620; cv=none; b=I7TO4wEqTlgulx6rdplE2/ky2875rHHBi+QX7Xv9ylyBOW67kOtZ4i2axOCjS+2YAXtn0hamviQjYsskknQ0CnJ1I2Nul3kK7I/zB8x0cAh7q2ksr1aNPv12tpULDInTbtd73/0/k+6SKX4n6a+NLyxbGPbSr5nyLr8EsdlqS3w=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750764620; c=relaxed/simple;
+	bh=GkOR0giXf0xzyY8q91WYTj8QMMxhZ74O5ef1yjxhr48=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I7Ng/FFX/iuIR3K4yIlkH9mApY/G+hEWdVEdK+3rsANKUfED56t+raSF6K7sCfncH7liAfYo7+CXlTqFUL5eqIMD4CyNPknOt6FNbj+qA4ACr050XzLdCLIWZKT44BHgHAcqYYs1cPtIVtCJlJktNYi9mR3lKCPRH3AnR0whpBQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=KAVooy1t; arc=none smtp.client-ip=91.218.175.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FumPB/76"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750764602; x=1782300602;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=kN81sP5h2SxkoYXWopmUYJqDIsi315nY5ooFJONClHk=;
-  b=FumPB/76Ur6STs2h/AOEgtTk4bPdvoCUwjs/nnSnzClhFgGa38x1i3+a
-   3Kc6QqjQTPfDqqU69t5lchNaoSM+r3JcXsb7LlNp7vyXeldoZGW31SjEY
-   FQNTA+JashICPJKROI7MeWM4MWtYfdmJUNOOjycZXTjCfb5bUm1Jf9fFk
-   BRFekboWxQ21/a4Daqed9RZxUesMCbPkGlhWFq3SDyqD10Cr0vBF6xTPM
-   xLUxBQYIRVJZO00r0i1nnng/QOKCpF3yDm7kCD4DNUKJhALiXuWwTBsd6
-   5Vwx641+D5uF98oLLY43NTbbyGkUbqkFMdXCtX3s1KUT1F26JXWWfMhYp
-   A==;
-X-CSE-ConnectionGUID: o+pOcnl3QdqpQg8ZMMJWZA==
-X-CSE-MsgGUID: njdY0n2ATbSlVhJSmqx/aA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="70421559"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="70421559"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:29:56 -0700
-X-CSE-ConnectionGUID: CYao6hMhQbC7wYdLdEtQgA==
-X-CSE-MsgGUID: A+iUv9TRRGCBGgoce8JcmQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="152415993"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:29:56 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 24 Jun 2025 04:29:55 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Tue, 24 Jun 2025 04:29:55 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (40.107.237.83)
- by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Tue, 24 Jun 2025 04:29:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=wFIeB7RvlJxo5CDSe7QP5t2pd/felCOgPQ5abtpcjIoyawX9r3VuE44+6Y+UK/300gLi0UeXdMTcV3H2h+s9GB9D0dXcvhzaqSr82pBLbr930tTZGWukqKD8gesLpDG7IuGX9e1v3N7Mp73MyAg8sSJFtsp09hCmchYyige9q2nA8/rp+NZ1+QSgCoqD87ATgthjFTeinO0FO+ebJyNjQp+9anSAcH4jfD0j5iY8nK5a2BZoF7dDaVw8CaEZdrfKwy1JFtAufSf3oYzVFCecj1rHJ9tUGlFx9xPiYKanK9XmJCEZQn3hEewKJ5n5CZjCQDp1LVJdXpRpejKseGfGUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VI3cqYmTEDtvppxl6UCzL0MbWSUMlk6O8vwvE4Nyv7E=;
- b=xrrwcy1Uxe4h0wmlIZuIo0U5vV5wu5wvdWiLa3QqBWhU0raolnUxeuIvM+p1OuGID5MDW7YRatV8YfvMNgLSD/WceJpeUkhE9g4aACSDFhHJbSUU2wvjYXSSK66eAvcYxWarapXRDjpIwST+ipEN+ziOcKhUnqSh/JlLoN9rgQiujj8pC9x17AAMGVCKrAeXpr0FDxy3a+ifJkzz3aE5ld3eJQGIRVYZf8L+aQaaO4wSE4+oPFZt6EKHFEtQW8etZKrjsyg+4EbfBXXvNTO5CM3h7svctt74r78v3ldBPR7FtpnS4tWzED0Md3cJtUdZBH5pbbwZKs5vzaZG/CthAQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BN7PR11MB2708.namprd11.prod.outlook.com (2603:10b6:406:a9::11)
- by DS7PR11MB5967.namprd11.prod.outlook.com (2603:10b6:8:72::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.26; Tue, 24 Jun
- 2025 11:29:52 +0000
-Received: from BN7PR11MB2708.namprd11.prod.outlook.com
- ([fe80::6790:e12f:b391:837d]) by BN7PR11MB2708.namprd11.prod.outlook.com
- ([fe80::6790:e12f:b391:837d%5]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
- 11:29:52 +0000
-Message-ID: <a0343926-1495-4766-a7d2-108d40fe9ea1@intel.com>
-Date: Tue, 24 Jun 2025 14:29:48 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] Revert "mmc: sdhci: Disable SD card clock before changing
- parameters"
-To: Ulf Hansson <ulf.hansson@linaro.org>, <linux-mmc@vger.kernel.org>
-CC: <linux-kernel@vger.kernel.org>, Erick Shepherd <erick.shepherd@ni.com>,
-	<stable@vger.kernel.org>, Jonathan Liu <net147@gmail.com>, "Salvatore
- Bonaccorso" <carnil@debian.org>
-References: <20250624110932.176925-1-ulf.hansson@linaro.org>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
- 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
- 4, Domiciled in Helsinki
-In-Reply-To: <20250624110932.176925-1-ulf.hansson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DU7PR01CA0036.eurprd01.prod.exchangelabs.com
- (2603:10a6:10:50e::25) To BN7PR11MB2708.namprd11.prod.outlook.com
- (2603:10b6:406:a9::11)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="KAVooy1t"
+Message-ID: <68f46d06-c2ba-461b-9d88-8d76f9f84a8f@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750764603;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gunWgAvza6C8N8LdfVqC9cgAoEehC/tiUfvXZIBWAjw=;
+	b=KAVooy1tbew0xMFv+5lb1ZuUEa7hpmUrmKfJLVmNibqkdCFAfr+Jau8uT2vMErv4yUoRZm
+	mH0lLBI90qDMUkGZsxhx5UIFHnUHRhgToxHcvW/inw98xGfA2uOniD7T8twRmW0D0w2SNJ
+	rov6AcmyxbvEdFLYGMNTFA5UYvRAE5E=
+Date: Tue, 24 Jun 2025 12:29:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN7PR11MB2708:EE_|DS7PR11MB5967:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8442b7f1-12da-4e77-3bd1-08ddb3126f75
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?ZkxOQlBzOXhYY3plRWhHVE9ZdXB6ejBlRFFkRlJGVDY1L2N4Z1ArY3FVMmJt?=
- =?utf-8?B?M2k3M2dlVmJRazFXakRsSW5iaG5RajEvUVdNNmFtYnYrQ255V3dhQ05Lbi9v?=
- =?utf-8?B?NFlCUDlUOSsvTzl1QlRsQ0MwdStpQkFpdmxKTXA0RmIxODF4OHdGdm9DZWd2?=
- =?utf-8?B?ejVPdHRPTmNIQkEwTmU3cUNpM2VjQktDdUxSVWNHV29SUDBRU2QxK0hGZmZ0?=
- =?utf-8?B?czdWQjcyeG95YXJhbWgrck9OT3JjQWpyY1M0TW53Vzl4Y05DQmQ5ODcwazlo?=
- =?utf-8?B?L3pJT2hPMHhsMkYwVHg4Ny96UFNROUlUaThXdGhaUzFmNk1BRWlDSXE0VnVD?=
- =?utf-8?B?ZnM3QkdoY0tGM3VnamZRcUVSVWdDUVZXYmRiTHI0THdHd0dHSk9ybkVaejFU?=
- =?utf-8?B?ekVIL0NZQm1sQWdabWRieFF0dDFsRUFmZVJXOHZIWWovTUZ5ZjZRN3FBOWhE?=
- =?utf-8?B?WnVJTTdwTUpsOS9MUnMzeW5FU0E2eHV0cTk5bDdSWXNaZDByVFpwUEtJQnRt?=
- =?utf-8?B?eUYvTGhqWDNpcXE3c0NCTHBzL1VZZlNuZjZEZ0dpM0d3U0VRK3Z5OGplR25l?=
- =?utf-8?B?ZUxkS21nM1BNcFFKZm03Z3Yvbk41M09uQnhSamU3V2NzTEpBcnNyWmIxZXJW?=
- =?utf-8?B?bGVEcndTcDBzUWpmUUowWnJBdHROUllzTXp1eTZhZGVFbEJzTk5IaHN4V0Fr?=
- =?utf-8?B?bjRYSjE3MUtML1g1Y2dUK080dkxZL3BGRWhLODM0c081SWkyVmtvLzA5WjBY?=
- =?utf-8?B?b0xIQlRIL2NZYmFBckRHSENBdXY2cjVyVW9KR094NEhmTFRVV3F4VURKWHJX?=
- =?utf-8?B?ZE9taXdVNkNtTW5STzBYNmRPQkIrUktRQ0VxUUl3SEVhZW9wbUhVOWxpbVQw?=
- =?utf-8?B?aHpoQU42NG1DeVdGd1BZdWNzSXJ5WEpDcmZMQlRaN1lKM1kwNkpDYlZ3bXRS?=
- =?utf-8?B?dUNwUS92dW00TG4xODEwVnYrdS84OGdralM1ZkllQklIQStPekYyZmlSVG91?=
- =?utf-8?B?Y0tBR1J6RVJmSEhFMjFIWGtuVEZnMkkzYmZNMUQ5d2lSTmVEeFUrMThWMHNv?=
- =?utf-8?B?U0NDSWk2dFEyYmlNTFhpZE9mdmMxdFQvUU00b090dVJ6bEtBOTQ1bFdoczJq?=
- =?utf-8?B?MjlTM1ZOZE9ZbEVrV0trOFB2Z0hseHZybnVpUzZVeWpJbGhxR3pwMWNhOGd0?=
- =?utf-8?B?UmRJdGFGdFpOdmlSTFJRWDNUZytlNkdHZlFhYVJDUzZGdEJtUmpiVFk0YURw?=
- =?utf-8?B?Z0Iybmx2RmkzdStwcm5sSHNOUGRSNGhuNCtldWN0TWxLSUxoYVhOU0JnSEp6?=
- =?utf-8?B?V1owelNCUlRuZnU4UGVRVWU1U1ZqK1lnVkNBa3VUTVJrQ3hPSExlTDRKWG44?=
- =?utf-8?B?RzZiVmNtZFM3YjBvUkRQbDhJTTdxU3d6dXMrY3ZLU0dqVHNZcEJ3eUNGeTZo?=
- =?utf-8?B?azlQRTcyS1Z5TUpudHlJbVJsazZyYiszaW4wSnFGZ1RseTIrOG93aElLQXMv?=
- =?utf-8?B?QTlNNTFFdTl4SlZvVDQ5QkFnWHVTSDN6a3FocHlOaktIdTlkNGFvQWRrS2xl?=
- =?utf-8?B?c0tRaEZqOFhkTGZlK2hWU2psWHE4QXIxQ25EdklQenVhSFVQRTkyU0w3WERq?=
- =?utf-8?B?emhqWUliQkw4THBuNzF5MWQ1M0xOc3VGZld0eHZQcEJ5NmRvVFVZUEJ5dllw?=
- =?utf-8?B?L29UUTV1RnVpRmpZaW10Wm5iNFVMZUNpOVlBSjNYdTU5eUZnLzFaN1FzUFFS?=
- =?utf-8?B?bG9CUVB5T0VmeGY0NjM0Yy9xeDczL3BMazg1a1VaV2RWdzRhY0trMzNiaU5F?=
- =?utf-8?Q?NWaEyRCH9+ueGBDxEddpbqNdAC4uDgmCkUe74=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR11MB2708.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dHRjRGpYWmdURHhMeXV4OTBRWmFHUkFYbGozS1NhbGx1RE5MZzBkenl5WXBy?=
- =?utf-8?B?bm92cm0xY01IbkYwTjlnVFpNN3lWNTBOVmkwb3VqdEdmR1o0MlpYMHNFSXJw?=
- =?utf-8?B?MEY2SVpWb05DQjNLREZUY0gveDFEMEdBRmFSR3NCWmh6ejdmbmFsdmtIVG56?=
- =?utf-8?B?MkxLWTJmdmY1Y2tmRUFLVlJ0NzB2NWJidWZpaUo1SnBMRU1IRVJ2V1FXVWdq?=
- =?utf-8?B?YW5DYXVFN25yZ2xQOTZmVE9SOTRoNXQ2eVhVbmxpVndVMUZPRzRsSmV3cDBQ?=
- =?utf-8?B?OTZBNzE1NHBVMEhpWFdMY0pGRWJjbEljSURGSjVZeHc2ZnRpam45N29GL1dy?=
- =?utf-8?B?U2N0bUgzaFZ0eWtGeEdhYTJqUnZabWdYVjNDektraW5DNlhyYkdTMHJ4MGNq?=
- =?utf-8?B?NTBUcnd2SkVKc0VlWHI3Y3BHYVVhaFlWYXdSTUdLc0F6NG1uUXcxTkR4d296?=
- =?utf-8?B?dk1EYm9lK2FhWnZYSVV2S0FvaFVnSGgzdGFyM2JSQTNRdEFpQzFpTDNwRjhM?=
- =?utf-8?B?VHdYMkQ1Nlgrc1FwZHZxa254UGxLVjAyWTAyMXNSMFM5N3NWUEVoT1IvQU1a?=
- =?utf-8?B?a3duVGhjOXBUUHBTQWRSaEt6Uk1CcWZxQzZzdzlRZDFYdFpUUnBVYjNOeEhr?=
- =?utf-8?B?eSs2cnRjdmlRdTY3TnRtWmp4c2ExeTRmejdEUmFMTDA5WThjK3JINktXT1pS?=
- =?utf-8?B?UFJFNGEvbzFuNkVoSFVOVStwbjNVd1ZYNUtGZ2I2WVE5dVl6eEMrK2ZONHdm?=
- =?utf-8?B?ZHBaaFhITWs4R0twNFQ5SDRMZWZhdEcweC9XdWRRWU1NSjNQWEN5Rm81ZkNk?=
- =?utf-8?B?V3lzS1dxbHhBdkhxWEo2S3lMQ2RxYzBzTC9IRGREMkpVajI0U1FMY1VSZXVZ?=
- =?utf-8?B?eEJtU0wyL1lwcG02WC9yRm05MEl2MDZkZ2VMbzFnbElMdXdLTUx5WTFtZm5X?=
- =?utf-8?B?Wnd0RDJ2YldYbWVjNW0wandnTllEY3lnTjNOdXR1K3BZODIrTmxldFNKa3hv?=
- =?utf-8?B?bHFxT3lzQVhEMGxhZDhnRE5ib0xhaHdocnYrUFM0V3VHd3MrUUVoT3k2Z3o4?=
- =?utf-8?B?RzF6YnRZT1NXUDNKaFhRTHQxSFhCb2M4WTdHcnBWNjBzYlFDYUV2TDFuOUd4?=
- =?utf-8?B?L1dJWlB4dEdWb3FJc0ozd1cyYmFmbDdWZWhpbVg4SklFUUZKQ0loUHUwUjMr?=
- =?utf-8?B?c1djK3lvS0dtREU3ZmtaVjQra0VCM2V5bXBZR2w1Ti90NjRqMEgwZ0RpcTZx?=
- =?utf-8?B?VUVDcm90QTV0VE13L3JZZGNtUTN4eVpMRmF4MCttOVExRXpJK1ZkTHl1L2hz?=
- =?utf-8?B?VmFTclk4bHFJdTZqbEpiVEZhYmJST2lKTHQvelRNclVvdE4zK1kyWkVpQUFM?=
- =?utf-8?B?TkxsTi8rTitPR1RoM0xKWS9CY3JjRXdIbGVzY0t0UjlmRzdrVjBRak1PK3BU?=
- =?utf-8?B?TGE4VlNGNmVRbW1zM3pSeEF0WTRJdW1VS01DVGFBbDBBU1BRb2ZYajJubXp2?=
- =?utf-8?B?ZXlpREQ2cllNemtQeFZrMnFYVGVRbU5jc3FjbGwxRmNZcml1Zm1GRzVkNWNT?=
- =?utf-8?B?SjJDM0xNd25JOXJZc3k3NTdTQW44L1Fxa3h1VzI0cXJCZjZnRjdsOUZ5NnQv?=
- =?utf-8?B?TjU2UTNvSlB6eXRIa2daV29WSnpMMjVvZloyV2pVN3VyT2E1czNGblJGMWlk?=
- =?utf-8?B?b0hrT1Y0Z1pTWkxFUThvWDd0dmdxeUlILzAvRXJnUW0rVHh6R1JISG5JbkRR?=
- =?utf-8?B?aEtoanVFZUtNOHpXcHM4U3JTSjJGY0UrblpiNlBJeDU0OVkxV0gwMUNQd3NR?=
- =?utf-8?B?V3NsS1NnYXNuY2VNSUtONG9KWU5pbnl1VTYrODFKdzZDZGJFZTFkU2paUk1k?=
- =?utf-8?B?M0RzTWFyZ2JrSkZLUWZrczllbWtQNE5GcDlVY3A0ZXRHYWhLNFN6WnRYNTNx?=
- =?utf-8?B?Wk9VVlpkb1dyWDh6K24wRzdBRElBSlR0aTJ3WStLZjZVaWxjb2VvMlhZdDls?=
- =?utf-8?B?SkkxS3Rvdy9KUktibUpCL2tML3F1TnMzbEZKUXg3c0ZVWEQ0ditBS2c0T0g5?=
- =?utf-8?B?M2tIblNrRTk3d2RKTWVGOGhzQi9USlA1Z0lkZi8yZjhTajBvVmdMV1NPVVFF?=
- =?utf-8?B?bVNQNTFrb1k5dWpZY0E5Tk0zUm1LVnJlUHhOUFhmZ2xTMEhlYk1MRm9KLzhD?=
- =?utf-8?B?bGc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8442b7f1-12da-4e77-3bd1-08ddb3126f75
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR11MB2708.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 11:29:52.0665
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: dm1mU+jRh6O5fX9YVCiETPAUlQ+V3gESnvbxomwxwsN9Iyp7tcWi8R3Ult3TYK7yN06lTeVpOQ+bfmkNNeAJmg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB5967
-X-OriginatorOrg: intel.com
+Subject: Re: [PATCH net-next v9 11/11] net: ti: prueth: Adds PTP OC Support
+ for AM335x and AM437x
+To: Parvathi Pudi <parvathi@couthit.com>, danishanwar@ti.com,
+ rogerq@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, robh@kernel.org,
+ krzk+dt@kernel.org, conor+dt@kernel.org, ssantosh@kernel.org,
+ richardcochran@gmail.com, s.hauer@pengutronix.de, m-karicheri2@ti.com,
+ glaroque@baylibre.com, afd@ti.com, saikrishnag@marvell.com,
+ m-malladi@ti.com, jacob.e.keller@intel.com, diogo.ivo@siemens.com,
+ javier.carrasco.cruz@gmail.com, horms@kernel.org, s-anna@ti.com,
+ basharath@couthit.com
+Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pratheesh@ti.com,
+ prajith@ti.com, vigneshr@ti.com, praneeth@ti.com, srk@ti.com, rogerq@ti.com,
+ krishna@couthit.com, pmohan@couthit.com, mohan@couthit.com
+References: <20250623135949.254674-1-parvathi@couthit.com>
+ <20250623164236.255083-12-parvathi@couthit.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <20250623164236.255083-12-parvathi@couthit.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 24/06/2025 14:09, Ulf Hansson wrote:
-> It has turned out the trying to strictly conform to the SDHCI specification
-> is causing problems. Let's revert and start over.
+On 23/06/2025 17:42, Parvathi Pudi wrote:
+> From: Roger Quadros <rogerq@ti.com>
 > 
-> This reverts commit fb3bbc46c94f261b6156ee863c1b06c84cf157dc.
+> PRU-ICSS IEP module, which is capable of timestamping RX and
+> TX packets at HW level, is used for time synchronization by PTP4L.
 > 
-> Cc: Erick Shepherd <erick.shepherd@ni.com>
-> Cc: stable@vger.kernel.org
-> Fixes: fb3bbc46c94f ("mmc: sdhci: Disable SD card clock before changing parameters")
-> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-> Reported-by: Jonathan Liu <net147@gmail.com>
-> Reported-by: Salvatore Bonaccorso <carnil@debian.org>
-> Closes: https://bugs.debian.org/1108065
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
+> This change includes interaction between firmware/driver and user
+> application (ptp4l) with required packet timestamps.
+> 
+> RX SOF timestamp comes along with packet and firmware will rise
+> interrupt with TX SOF timestamp after pushing the packet on to the wire.
+> 
+> IEP driver available in upstream linux as part of ICSSG assumes 64-bit
+> timestamp value from firmware.
+> 
+> Enhanced the IEP driver to support the legacy 32-bit timestamp
+> conversion to 64-bit timestamp by using 2 fields as below:
+> - 32-bit HW timestamp from SOF event in ns
+> - Seconds value maintained in driver.
+> 
+> Currently ordinary clock (OC) configuration has been validated with
+> Linux ptp4l.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Andrew F. Davis <afd@ti.com>
+> Signed-off-by: Basharath Hussain Khaja <basharath@couthit.com>
+> Signed-off-by: Parvathi Pudi <parvathi@couthit.com>
 > ---
->  drivers/mmc/host/sdhci.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
+>   drivers/net/ethernet/ti/icssg/icss_iep.c     | 155 ++++++++++++++++++-
+>   drivers/net/ethernet/ti/icssg/icss_iep.h     |  12 ++
+>   drivers/net/ethernet/ti/icssm/icssm_prueth.c |  56 ++++++-
+>   drivers/net/ethernet/ti/icssm/icssm_prueth.h |  11 ++
+>   4 files changed, 230 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 4c6c2cc93c41..3a17821efa5c 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -2065,15 +2065,10 @@ void sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
->  
->  	host->mmc->actual_clock = 0;
->  
-> -	clk = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
-> -	if (clk & SDHCI_CLOCK_CARD_EN)
-> -		sdhci_writew(host, clk & ~SDHCI_CLOCK_CARD_EN,
-> -			SDHCI_CLOCK_CONTROL);
-> +	sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
->  
-> -	if (clock == 0) {
-> -		sdhci_writew(host, 0, SDHCI_CLOCK_CONTROL);
-> +	if (clock == 0)
->  		return;
-> -	}
->  
->  	clk = sdhci_calc_clk(host, clock, &host->mmc->actual_clock);
->  	sdhci_enable_clk(host, clk);
+> diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.c b/drivers/net/ethernet/ti/icssg/icss_iep.c
+> index d0850722814e..85e27cc77a3b 100644
+> --- a/drivers/net/ethernet/ti/icssg/icss_iep.c
+> +++ b/drivers/net/ethernet/ti/icssg/icss_iep.c
+> @@ -14,12 +14,15 @@
+>   #include <linux/of.h>
+>   #include <linux/of_platform.h>
+>   #include <linux/platform_device.h>
+> +#include <linux/timecounter.h>
+> +#include <linux/clocksource.h>
+>   #include <linux/timekeeping.h>
+>   #include <linux/interrupt.h>
+>   #include <linux/of_irq.h>
+>   #include <linux/workqueue.h>
+>   
+>   #include "icss_iep.h"
+> +#include "../icssm/icssm_prueth_ptp.h"
+>   
+>   #define IEP_MAX_DEF_INC		0xf
+>   #define IEP_MAX_COMPEN_INC		0xfff
+> @@ -53,6 +56,14 @@
+>   #define IEP_CAP_CFG_CAPNR_1ST_EVENT_EN(n)	BIT(LATCH_INDEX(n))
+>   #define IEP_CAP_CFG_CAP_ASYNC_EN(n)		BIT(LATCH_INDEX(n) + 10)
+>   
+> +#define IEP_TC_DEFAULT_SHIFT         28
+> +#define IEP_TC_INCR5_MULT            BIT(28)
+> +
+> +/* Polling period - how often iep_overflow_check() is called */
+> +#define IEP_OVERFLOW_CHECK_PERIOD_MS   50
+> +
+> +#define TIMESYNC_SECONDS_COUNT_SIZE    6
+> +
+>   /**
+>    * icss_iep_get_count_hi() - Get the upper 32 bit IEP counter
+>    * @iep: Pointer to structure representing IEP.
+> @@ -87,6 +98,28 @@ int icss_iep_get_count_low(struct icss_iep *iep)
+>   }
+>   EXPORT_SYMBOL_GPL(icss_iep_get_count_low);
+>   
+> +static u64 icss_iep_get_count32(struct icss_iep *iep)
+> +{
+> +	void __iomem *sram = iep->sram;
+> +	u64 v_sec = 0;
+> +	u32 v_ns = 0;
+> +	u64 v = 0;
+> +
+> +	v_ns = icss_iep_get_count_low(iep);
+> +	memcpy_fromio(&v_sec, sram + TIMESYNC_SECONDS_COUNT_OFFSET,
+> +		      TIMESYNC_SECONDS_COUNT_SIZE);
+> +	v = (v_sec * NSEC_PER_SEC) + v_ns;
+
+How can you be sure that the nanoseconds part does belong to the second
+which was read afterwards? In other words, what is the protection for
+the sutiation when an overflow happened right after you read ns but
+before reading of seconds?
+And another question - you copy 6 bytes of seconds counter directly into
+the memory. How will it deal with different endianess?
+
+> +
+> +	return v;
+> +}
+> +
+> +static u64 icss_iep_cc_read(const struct cyclecounter *cc)
+> +{
+> +	struct icss_iep *iep = container_of(cc, struct icss_iep, cc);
+> +
+> +	return icss_iep_get_count32(iep);
+> +}
+> +
+>   /**
+>    * icss_iep_get_ptp_clock_idx() - Get PTP clock index using IEP driver
+>    * @iep: Pointer to structure representing IEP.
+> @@ -280,6 +313,78 @@ static void icss_iep_set_slow_compensation_count(struct icss_iep *iep,
+>   	regmap_write(iep->map, ICSS_IEP_SLOW_COMPEN_REG, compen_count);
+>   }
+>   
+> +/* PTP PHC operations */
+> +static int icss_iep_ptp_adjfine_v1(struct ptp_clock_info *ptp, long scaled_ppm)
+> +{
+> +	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
+> +	s32 ppb = scaled_ppm_to_ppb(scaled_ppm);
+> +	struct timespec64 ts;
+> +	int neg_adj = 0;
+> +	u32 diff, mult;
+> +	u64 adj;
+> +
+> +	mutex_lock(&iep->ptp_clk_mutex);
+> +
+> +	if (ppb < 0) {
+> +		neg_adj = 1;
+> +		ppb = -ppb;
+> +	}
+> +	mult = iep->cc_mult;
+> +	adj = mult;
+> +	adj *= ppb;
+> +	diff = div_u64(adj, 1000000000ULL);
+> +
+> +	ts = ns_to_timespec64(timecounter_read(&iep->tc));
+> +	pr_debug("iep ptp adjfine check at %lld.%09lu\n", ts.tv_sec,
+> +		 ts.tv_nsec);
+> +
+> +	iep->cc.mult = neg_adj ? mult - diff : mult + diff;
+> +
+> +	mutex_unlock(&iep->ptp_clk_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int icss_iep_ptp_adjtime_v1(struct ptp_clock_info *ptp, s64 delta)
+> +{
+> +	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
+> +
+> +	mutex_lock(&iep->ptp_clk_mutex);
+> +	timecounter_adjtime(&iep->tc, delta);
+> +	mutex_unlock(&iep->ptp_clk_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int icss_iep_ptp_gettimeex_v1(struct ptp_clock_info *ptp,
+> +				     struct timespec64 *ts,
+> +				     struct ptp_system_timestamp *sts)
+> +{
+> +	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
+> +	u64 ns;
+> +
+> +	mutex_lock(&iep->ptp_clk_mutex);
+> +	ns = timecounter_read(&iep->tc);
+> +	*ts = ns_to_timespec64(ns);
+> +	mutex_unlock(&iep->ptp_clk_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +static int icss_iep_ptp_settime_v1(struct ptp_clock_info *ptp,
+> +				   const struct timespec64 *ts)
+> +{
+> +	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
+> +	u64 ns;
+> +
+> +	mutex_lock(&iep->ptp_clk_mutex);
+> +	ns = timespec64_to_ns(ts);
+> +	timecounter_init(&iep->tc, &iep->cc, ns);
+> +	mutex_unlock(&iep->ptp_clk_mutex);
+> +
+> +	return 0;
+> +}
+> +
+>   /* PTP PHC operations */
+>   static int icss_iep_ptp_adjfine(struct ptp_clock_info *ptp, long scaled_ppm)
+>   {
+> @@ -669,6 +774,17 @@ static int icss_iep_ptp_enable(struct ptp_clock_info *ptp,
+>   	return -EOPNOTSUPP;
+>   }
+>   
+> +static long icss_iep_overflow_check(struct ptp_clock_info *ptp)
+> +{
+> +	struct icss_iep *iep = container_of(ptp, struct icss_iep, ptp_info);
+> +	unsigned long delay = iep->ovfl_check_period;
+> +	struct timespec64 ts;
+> +
+> +	ts = ns_to_timespec64(timecounter_read(&iep->tc));
+> +
+> +	pr_debug("iep overflow check at %lld.%09lu\n", ts.tv_sec, ts.tv_nsec);
+> +	return (long)delay;
+> +}
+>   static struct ptp_clock_info icss_iep_ptp_info = {
+>   	.owner		= THIS_MODULE,
+>   	.name		= "ICSS IEP timer",
+> @@ -680,6 +796,18 @@ static struct ptp_clock_info icss_iep_ptp_info = {
+>   	.enable		= icss_iep_ptp_enable,
+>   };
+>   
+> +static struct ptp_clock_info icss_iep_ptp_info_v1 = {
+> +	.owner		= THIS_MODULE,
+> +	.name		= "ICSS IEP timer",
+> +	.max_adj	= 10000000,
+> +	.adjfine	= icss_iep_ptp_adjfine_v1,
+> +	.adjtime	= icss_iep_ptp_adjtime_v1,
+> +	.gettimex64	= icss_iep_ptp_gettimeex_v1,
+> +	.settime64	= icss_iep_ptp_settime_v1,
+> +	.enable		= icss_iep_ptp_enable,
+> +	.do_aux_work	= icss_iep_overflow_check,
+> +};
+> +
+>   struct icss_iep *icss_iep_get_idx(struct device_node *np, int idx)
+>   {
+>   	struct platform_device *pdev;
+> @@ -701,6 +829,18 @@ struct icss_iep *icss_iep_get_idx(struct device_node *np, int idx)
+>   	if (!iep)
+>   		return ERR_PTR(-EPROBE_DEFER);
+>   
+> +	if (iep->plat_data->iep_rev == IEP_REV_V1_0) {
+> +		iep->cc.shift = IEP_TC_DEFAULT_SHIFT;
+> +		iep->cc.mult = IEP_TC_INCR5_MULT;
+> +
+> +		iep->cc.read = icss_iep_cc_read;
+> +		iep->cc.mask = CLOCKSOURCE_MASK(64);
+> +
+> +		iep->ovfl_check_period =
+> +			msecs_to_jiffies(IEP_OVERFLOW_CHECK_PERIOD_MS);
+> +		iep->cc_mult = iep->cc.mult;
+> +	}
+> +
+>   	device_lock(iep->dev);
+>   	if (iep->client_np) {
+>   		device_unlock(iep->dev);
+> @@ -795,6 +935,10 @@ int icss_iep_init(struct icss_iep *iep, const struct icss_iep_clockops *clkops,
+>   		icss_iep_enable(iep);
+>   	icss_iep_settime(iep, ktime_get_real_ns());
+>   
+> +	if (iep->plat_data->iep_rev == IEP_REV_V1_0)
+> +		timecounter_init(&iep->tc, &iep->cc,
+> +				 ktime_to_ns(ktime_get_real()));
+> +
+>   	iep->ptp_clock = ptp_clock_register(&iep->ptp_info, iep->dev);
+>   	if (IS_ERR(iep->ptp_clock)) {
+>   		ret = PTR_ERR(iep->ptp_clock);
+> @@ -802,6 +946,9 @@ int icss_iep_init(struct icss_iep *iep, const struct icss_iep_clockops *clkops,
+>   		dev_err(iep->dev, "Failed to register ptp clk %d\n", ret);
+>   	}
+>   
+> +	if (iep->plat_data->iep_rev == IEP_REV_V1_0)
+> +		ptp_schedule_worker(iep->ptp_clock, iep->ovfl_check_period);
+> +
+>   	return ret;
+>   }
+>   EXPORT_SYMBOL_GPL(icss_iep_init);
+> @@ -879,7 +1026,11 @@ static int icss_iep_probe(struct platform_device *pdev)
+>   		return PTR_ERR(iep->map);
+>   	}
+>   
+> -	iep->ptp_info = icss_iep_ptp_info;
+> +	if (iep->plat_data->iep_rev == IEP_REV_V1_0)
+> +		iep->ptp_info = icss_iep_ptp_info_v1;
+> +	else
+> +		iep->ptp_info = icss_iep_ptp_info;
+> +
+>   	mutex_init(&iep->ptp_clk_mutex);
+>   	dev_set_drvdata(dev, iep);
+>   	icss_iep_disable(iep);
+> @@ -1004,6 +1155,7 @@ static const struct icss_iep_plat_data am57xx_icss_iep_plat_data = {
+>   		[ICSS_IEP_SYNC_START_REG] = 0x19c,
+>   	},
+>   	.config = &am654_icss_iep_regmap_config,
+> +	.iep_rev = IEP_REV_V2_1,
+>   };
+>   
+>   static bool am335x_icss_iep_valid_reg(struct device *dev, unsigned int reg)
+> @@ -1057,6 +1209,7 @@ static const struct icss_iep_plat_data am335x_icss_iep_plat_data = {
+>   		[ICSS_IEP_SYNC_START_REG] = 0x11C,
+>   	},
+>   	.config = &am335x_icss_iep_regmap_config,
+> +	.iep_rev = IEP_REV_V1_0,
+>   };
+>   
+>   static const struct of_device_id icss_iep_of_match[] = {
+> diff --git a/drivers/net/ethernet/ti/icssg/icss_iep.h b/drivers/net/ethernet/ti/icssg/icss_iep.h
+> index 0bdca0155abd..f72f1ea9f3c9 100644
+> --- a/drivers/net/ethernet/ti/icssg/icss_iep.h
+> +++ b/drivers/net/ethernet/ti/icssg/icss_iep.h
+> @@ -47,21 +47,29 @@ enum {
+>   	ICSS_IEP_MAX_REGS,
+>   };
+>   
+> +enum iep_revision {
+> +	IEP_REV_V1_0 = 0,
+> +	IEP_REV_V2_1
+> +};
+> +
+>   /**
+>    * struct icss_iep_plat_data - Plat data to handle SoC variants
+>    * @config: Regmap configuration data
+>    * @reg_offs: register offsets to capture offset differences across SoCs
+>    * @flags: Flags to represent IEP properties
+> + * @iep_rev: IEP revision identifier.
+>    */
+>   struct icss_iep_plat_data {
+>   	const struct regmap_config *config;
+>   	u32 reg_offs[ICSS_IEP_MAX_REGS];
+>   	u32 flags;
+> +	enum iep_revision iep_rev;
+>   };
+>   
+>   struct icss_iep {
+>   	struct device *dev;
+>   	void __iomem *base;
+> +	void __iomem *sram;
+>   	const struct icss_iep_plat_data *plat_data;
+>   	struct regmap *map;
+>   	struct device_node *client_np;
+> @@ -70,6 +78,10 @@ struct icss_iep {
+>   	struct ptp_clock_info ptp_info;
+>   	struct ptp_clock *ptp_clock;
+>   	struct mutex ptp_clk_mutex;	/* PHC access serializer */
+> +	u32 cc_mult; /* for the nominal frequency */
+> +	struct cyclecounter cc;
+> +	struct timecounter tc;
+> +	unsigned long ovfl_check_period;
+>   	u32 def_inc;
+>   	s16 slow_cmp_inc;
+>   	u32 slow_cmp_count;
+> diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.c b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+> index 67ee4c72d3d6..7e90f9e71921 100644
+> --- a/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+> +++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.c
+> @@ -39,6 +39,8 @@
+>   #define TX_START_DELAY		0x40
+>   #define TX_CLK_DELAY_100M	0x6
+>   
+> +#define TIMESYNC_SECONDS_BIT_MASK   0x0000ffffffffffff
+> +
+>   static struct prueth_fw_offsets fw_offsets_v2_1;
+>   
+>   static void icssm_prueth_set_fw_offsets(struct prueth *prueth)
+> @@ -642,13 +644,49 @@ irqreturn_t icssm_prueth_ptp_tx_irq_handle(int irq, void *dev)
+>   	return IRQ_HANDLED;
+>   }
+>   
+> +/**
+> + * icssm_iep_get_timestamp_cycles - IEP get timestamp
+> + * @iep: icss_iep structure
+> + * @mem: io memory address
+> + *
+> + * To convert the 10 byte timestamp from firmware
+> + * i.e., nanoseconds part from 32-bit IEP counter(4 bytes)
+> + * seconds part updated by firmware(rev FW_REV1_0) in SRAM
+> + * (6 bytes) into 64-bit timestamp in ns
+> + *
+> + * Return: 64-bit converted timestamp
+> + */
+> +u64 icssm_iep_get_timestamp_cycles(struct icss_iep *iep,
+> +				   void __iomem *mem)
+> +{
+> +	u64 cycles, cycles_sec = 0;
+> +	u32 cycles_ns;
+> +
+> +	memcpy_fromio(&cycles_ns, mem, sizeof(cycles_ns));
+> +	memcpy_fromio(&cycles_sec, mem + 4, sizeof(cycles_sec));
+
+the same question is here - there is a possibility of overflow
+between these 2 reads...
+
+> +
+> +	/*To get the 6 bytes seconds part*/
+> +	cycles_sec = (cycles_sec & TIMESYNC_SECONDS_BIT_MASK);
+> +	cycles = cycles_ns + (cycles_sec * NSEC_PER_SEC);
+> +	cycles = timecounter_cyc2time(&iep->tc, cycles);
+> +
+> +	return cycles;
+> +}
+> +
+>   static u64 icssm_prueth_ptp_ts_get(struct prueth_emac *emac, u32 ts_offs)
+>   {
+>   	void __iomem *sram = emac->prueth->mem[PRUETH_MEM_SHARED_RAM].va;
+>   	u64 cycles;
+>   
+> -	memcpy_fromio(&cycles, sram + ts_offs, sizeof(cycles));
+> -	memset_io(sram + ts_offs, 0, sizeof(cycles));
+> +	if (emac->prueth->fw_data->fw_rev == FW_REV_V1_0) {
+> +		cycles = icssm_iep_get_timestamp_cycles(emac->prueth->iep,
+> +							sram + ts_offs);
+> +		/* 4 bytes of timestamp + 6 bytes of seconds counter */
+> +		memset_io(sram + ts_offs, 0, 10);
+> +	} else {
+> +		memcpy_fromio(&cycles, sram + ts_offs, sizeof(cycles));
+> +		memset_io(sram + ts_offs, 0, sizeof(cycles));
+> +	}
+>   
+>   	return cycles;
+>   }
+> @@ -985,7 +1023,13 @@ int icssm_emac_rx_packet(struct prueth_emac *emac, u16 *bd_rd_ptr,
+>   		    pkt_info->timestamp) {
+>   			src_addr = (void *)PTR_ALIGN((uintptr_t)src_addr,
+>   						     ICSS_BLOCK_SIZE);
+> -			memcpy(&ts, src_addr, sizeof(ts));
+> +			if (emac->prueth->fw_data->fw_rev == FW_REV_V1_0) {
+> +				ts = icssm_iep_get_timestamp_cycles
+> +					(emac->prueth->iep,
+> +					 (void __iomem *)src_addr);
+> +			} else {
+> +				memcpy(&ts, src_addr, sizeof(ts));
+> +			}
+>   			ssh = skb_hwtstamps(skb);
+>   			memset(ssh, 0, sizeof(*ssh));
+>   			ssh->hwtstamp = ns_to_ktime(ts);
+> @@ -2189,6 +2233,9 @@ static int icssm_prueth_probe(struct platform_device *pdev)
+>   		goto netdev_exit;
+>   	}
+>   
+> +	if (prueth->fw_data->fw_rev == FW_REV_V1_0)
+> +		prueth->iep->sram = prueth->mem[PRUETH_MEM_SHARED_RAM].va;
+> +
+>   	/* Make rx interrupt pacing optional so that users can use ECAP for
+>   	 * other use cases if needed
+>   	 */
+> @@ -2396,6 +2443,7 @@ static struct prueth_private_data am335x_prueth_pdata = {
+>   		.fw_name[PRUSS_ETHTYPE_EMAC] =
+>   			"ti-pruss/am335x-pru1-prueth-fw.elf",
+>   	},
+> +	.fw_rev = FW_REV_V1_0,
+>   };
+>   
+>   /* AM437x SoC-specific firmware data */
+> @@ -2409,6 +2457,7 @@ static struct prueth_private_data am437x_prueth_pdata = {
+>   		.fw_name[PRUSS_ETHTYPE_EMAC] =
+>   			"ti-pruss/am437x-pru1-prueth-fw.elf",
+>   	},
+> +	.fw_rev = FW_REV_V1_0,
+>   };
+>   
+>   /* AM57xx SoC-specific firmware data */
+> @@ -2422,6 +2471,7 @@ static struct prueth_private_data am57xx_prueth_pdata = {
+>   		.fw_name[PRUSS_ETHTYPE_EMAC] =
+>   			"ti-pruss/am57xx-pru1-prueth-fw.elf",
+>   	},
+> +	.fw_rev = FW_REV_V2_1,
+>   };
+>   
+>   static const struct of_device_id prueth_dt_match[] = {
+> diff --git a/drivers/net/ethernet/ti/icssm/icssm_prueth.h b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+> index 07c29c560cb9..c409b9a87bdc 100644
+> --- a/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+> +++ b/drivers/net/ethernet/ti/icssm/icssm_prueth.h
+> @@ -302,6 +302,12 @@ enum prueth_mem {
+>   	PRUETH_MEM_MAX,
+>   };
+>   
+> +/* PRU firmware revision*/
+> +enum fw_revision {
+> +	FW_REV_V1_0 = 0,
+> +	FW_REV_V2_1
+> +};
+> +
+>   /* Firmware offsets/size information */
+>   struct prueth_fw_offsets {
+>   	u32 index_array_offset;
+> @@ -336,12 +342,14 @@ enum pruss_device {
+>    * struct prueth_private_data - PRU Ethernet private data
+>    * @driver_data: PRU Ethernet device name
+>    * @fw_pru: firmware names to be used for PRUSS ethernet usecases
+> + * @fw_rev: Firmware revision identifier
+>    * @support_lre: boolean to indicate if lre is enabled
+>    * @support_switch: boolean to indicate if switch is enabled
+>    */
+>   struct prueth_private_data {
+>   	enum pruss_device driver_data;
+>   	const struct prueth_firmware fw_pru[PRUSS_NUM_PRUS];
+> +	enum fw_revision fw_rev;
+>   	bool support_lre;
+>   	bool support_switch;
+>   };
+> @@ -441,6 +449,9 @@ int icssm_emac_add_del_vid(struct prueth_emac *emac,
+>   irqreturn_t icssm_prueth_ptp_tx_irq_handle(int irq, void *dev);
+>   irqreturn_t icssm_prueth_ptp_tx_irq_work(int irq, void *dev);
+>   
+> +u64 icssm_iep_get_timestamp_cycles(struct icss_iep *iep,
+> +				   void __iomem *mem);
+> +
+>   void icssm_emac_mc_filter_bin_allow(struct prueth_emac *emac, u8 hash);
+>   void icssm_emac_mc_filter_bin_disallow(struct prueth_emac *emac, u8 hash);
+>   u8 icssm_emac_get_mc_hash(u8 *mac, u8 *mask);
 
