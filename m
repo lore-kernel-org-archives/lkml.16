@@ -1,72 +1,81 @@
-Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC2E1BC07A;
-	Tue, 24 Jun 2025 14:03:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA042C15B5;
+	Tue, 24 Jun 2025 14:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750773842; cv=none; b=my5UpS72QtlqOzvagoaLcbFWhxI+keKVGZ6GL0EK27qqxLHF9OnjoiS+RvSBdp14at683I3/5QO9cgUK1qKAEp3oyDi2oWalo1fWuiwlqVA+3KRHeO2tgXJCGmadxAjXElEQmogSBDPdoaKNhIlV0s+SjRfNhTIl916uvYXOrTA=
+	t=1750773857; cv=none; b=HFnrYEPwD/MHgqg3s+LClL81qrD4IDXOJpaDSaOpNilF0PoAMKxdZ0vY3weOfE1ATmH/88avG0v7GJPYupw/0Armm/+Vk6ZAg5AWtfxNU+BI6HGmokkFl7RlYw0iT3xGeRSfpaXwMGk9iVQkHLJrmrtQWhCsaUyjjIXqmgYk5gM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750773842; c=relaxed/simple;
-	bh=A3fqxi1Gy38Ugk0YVhHa8CEMOpg2yAhTHWCTcVioxXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IwCf/Z8vsw1JcOfEgXgPPqMJBjvfi7+5TyiCP0ejBRSHz50skh2UGG1Zt5Z+da3rdSW9DE3Ou7EYbXzslnAi7V9KcewD4gDgAwYBHa9OhhrIDqRxpMSUE8jcffHpMv9skyqCD5A3LR3a0azdk1K03kImol0MgVFg6/wack4Terc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf19.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay01.hostedemail.com (Postfix) with ESMTP id 8EF091D7B90;
-	Tue, 24 Jun 2025 14:03:51 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf19.hostedemail.com (Postfix) with ESMTPA id 89D1C20027;
-	Tue, 24 Jun 2025 14:03:47 +0000 (UTC)
-Date: Tue, 24 Jun 2025 10:03:46 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
- <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
- Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
- Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
- Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
- Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
- <akpm@linux-foundation.org>
-Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
- interface
-Message-ID: <20250624100346.37bae8d5@batman.local.home>
-In-Reply-To: <20250619091121.GF1613200@noisy.programming.kicks-ass.net>
-References: <20250611005421.144238328@goodmis.org>
-	<20250611010428.770214773@goodmis.org>
-	<20250618184620.GT1613376@noisy.programming.kicks-ass.net>
-	<20250618150915.3e811f4b@gandalf.local.home>
-	<20250619075008.GU1613376@noisy.programming.kicks-ass.net>
-	<20250619045659.390cc014@batman.local.home>
-	<20250619091121.GF1613200@noisy.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750773857; c=relaxed/simple;
+	bh=/9L6vkupFwbSjfa+qYhoW5NL2QlLgrc+8n6luizeN/A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bShlvEXNV3QynybrTpnNq1jmKQ2pr8Ucp9aQ5x66M5uvF3IqyzyipxwacDjWu8cQCPm1ywEm8sGzRt/dT65peSl9if8/PR7No9t/mbBkYCobDOSaXZ+dDnrHkfOAx65Po5rmj0QJfrHdvKWOc0UuqHYn1qbdjhpm3hkA4uXP6uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hdgJo9fg; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hdgJo9fg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750773856; x=1782309856;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/9L6vkupFwbSjfa+qYhoW5NL2QlLgrc+8n6luizeN/A=;
+  b=hdgJo9fgTMpoQPZa7JkyWy849G01jX9jVcW+Ipl24synSqe34KJo1i6w
+   Erl/7gyT5s33zDgV+P1IUxA3kwdYe+CtRWideD2pgBn9yzjw6qv1/STPU
+   NKfUf3cFlH89textmGBJLnEMRnQ/Qdzi0LI4fbkSworD6anUNJusyGZIg
+   JI3NswXYZezCdCo2NdxGm8Um80Rbp7cKBd0lD/EODCDTDUb5q19SAwKCv
+   jQlU5TijzAH21OheV/ho94WvIL+3nO2aABelElQY/WWcrqkJN4VyiAxQF
+   NjlmLP3wT6ahcfkw++s3A/DUJnfhnRp+/3+FeFvQFcCKZsAkPcl7r467Q
+   A==;
+X-CSE-ConnectionGUID: Pc5qwrjKRSiryQnI75J53w==
+X-CSE-MsgGUID: MrsYSbXxQLe4t5Y2cY5g3g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52984853"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="52984853"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 07:04:14 -0700
+X-CSE-ConnectionGUID: S9y9AU7yRr69IcrBiZ7TVQ==
+X-CSE-MsgGUID: taWOR8i/RV64HLXsWN47+A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="151352258"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 07:04:12 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uU4Ft-00000009UIS-36eD;
+	Tue, 24 Jun 2025 17:04:09 +0300
+Date: Tue, 24 Jun 2025 17:04:09 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>
+Subject: Re: [PATCH v1 0/5] ACPI: proc: A few cleanups
+Message-ID: <aFqwWToG3HBe3rEo@smile.fi.intel.com>
+References: <20250612201321.3536493-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: 89D1C20027
-X-Stat-Signature: b5pscrbs7693m5s7gh6q8bzbh6qkg3hz
-X-Rspamd-Server: rspamout05
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1/ZDcuVGNr6IrYvNwwot/CijvMr9Ql6HhY=
-X-HE-Tag: 1750773827-572531
-X-HE-Meta: U2FsdGVkX1/k3rL43ACSxNa5qBQc9cE/D2z+xFmXn37hoQbG5P66Zk2B5NEEFJukSYAelTM74e8+nxq5wRQqhEkwa53Xp4tT4AgJRevcNJhWKxOXtELL3Qo3gB2h8wKkWBDVLXcYaj/1jMtGQSGutaJxTKUKm+KH0CBXl4Vjn7EDucBUrgciLvAOYDe8Wc1+McguIo6mM9Fzs3n27i3gFK5Z0J0isuFY00OowigNTrI6DqVX8DhCsrLFUg59Ajpva06viqoERpY72RjKFyA19JAC1fDV/0Yu4IdSeYeB7odCcXgXsGqS0Ke6ih4EScckaQ5l+EM/H1fZXCzbFqKeV0ORPGUSAWUihWqdjP5QF3nD8XzwpOoWyPAlwPH7Ai37
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250612201321.3536493-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, 19 Jun 2025 11:11:21 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, Jun 12, 2025 at 11:11:24PM +0300, Andy Shevchenko wrote:
+> While looking into warning related to export.h inclusion, I took
+> the opportunity to make the module up-to-date to the modern APIs.
+> Hence this mini-series. Note, the first patch is to make the used
+> type consistent across the files.
 
-> I feel much of this complication stems from the fact you're wanting to
-> make this perhaps too generic.
+Hmm... Any comments on this? Do I need to do anything?
 
-I want to make it work for perf, ftrace, LTTng and BPF, where each has
-their own requirements, which tends to force making it generic. :-/
+-- 
+With Best Regards,
+Andy Shevchenko
 
--- Steve
+
