@@ -1,153 +1,94 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2345F222590;
-	Tue, 24 Jun 2025 16:18:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D858B256D;
+	Tue, 24 Jun 2025 16:20:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750781929; cv=none; b=HhOeVQbNpP+DxGqR1XM5yoXK5Pwd4GpUbZMlEfq0RwEQSfJVzRCRsq3coS57svAAygi7oXg90bpXfsuHWMWafw3h09cO1HvcnAinhlb/wVomoMcckWQNTv+4AbN7A8b0INjKVDtAK+Ff81AGqKAgjqZ+TTRmAyiryf6jz/EWRcs=
+	t=1750782048; cv=none; b=GDQ0kGuVpKWiEr2u4cupZt7xo3+dnjVa8HYEUas4+JbB7xFOtwTeT6/feOK9wEkLv3LOx7jmIYkZp4B+HgvijbGPOeCefJRoxqX274Wv6cHvCExihoCEYNarJU4egGrRhQLJ/Te51glsN/0KBvV1dJAjk6VYvEliyGw5iuHpieU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750781929; c=relaxed/simple;
-	bh=4ldrUXyzvFR5k0WoR/yiNzjQ9bJModzxmllWvzyOylc=;
+	s=arc-20240116; t=1750782048; c=relaxed/simple;
+	bh=vgXO9YS+euCiMfb3GxJUGStET3NrsENKpSg1ejFRjxo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ICrbz98PL0uqlr7ToPMRGZVphiMgJ85RvPTEHXxqVhzs23T5I63DX5KzzbAlNatrorkQPnasQtuFobG7JRcn6FnUT5XJ1r9zwxRnk9q+DonlP1AsdOmI3uMEVMpS3jFk+Hfd5B1QWiNx330gLa4DX6sLKYwXSjvpK7KwaTTH2xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=YSopkTVs; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=c4E6soRutnYYwo9Hv8Z2rltcj1dVl2tYXPwd4P8ljo1pRxxKiMkHaG3m+ebjR0idIpxXt3d4380zho9X0fWWOujnvTaZLqKPp1E70K83JA3A6cxqeSRwehaNFKEOz1Xzj067wWqS2zIL4rJE+/sd3VFX00APJTPL9SI+NGP4cF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gw45KlEO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="YSopkTVs"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 10293101E8F52;
-	Tue, 24 Jun 2025 18:18:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1750781922; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=Va1GElfn24V2n6z7i0LdkveYRP3tydIp4DA9MSZVvb4=;
-	b=YSopkTVsf/kFOYTvEMza1G7egcTIIvo+xektTod7f03AAchmfAx5yEMRagxZxkA6V8WeuJ
-	o/iCNK7jNRnkOcdN38UfjZXOOvEIJvMPfUdjE6daF2XCr62H4GbyrAMflfg1s+k0CcoAl8
-	Pz1fNMok3tQXa6RwZQq9ogF+TBoecpNLl7uLwhEKbn5PJJXdkSNPQBIbpymNyZopiw1UC9
-	MF9q4zJL+PxNVQ8XmKV/cLnVmfUXImDNG+USsXjBkK0eauYaA3bf/Iq6RX1fFeUlnDfYm1
-	Gi4gMIdh0Y09WezYMjnX/KwJrNX7/W/bacnncr3oULRKzXK5tXuJ7/sGfknpag==
-Date: Tue, 24 Jun 2025 18:18:32 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, kvmarm@lists.cs.columbia.edu,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
-	Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
-	Julien Thierry <julien.thierry.kdev@gmail.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	Andy Gross <agross@kernel.org>
-Subject: Re: [PATCH 5.4 000/222] 5.4.295-rc1 review
-Message-ID: <aFrP2KAE1cws/Hbq@duo.ucw.cz>
-References: <20250623130611.896514667@linuxfoundation.org>
- <CA+G9fYvpJjhNDS1Knh0YLeZSXawx-F4LPM-0fMrPiVkyE=yjFw@mail.gmail.com>
- <2025062425-waggle-jaybird-ef83@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gw45KlEO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B674C4CEE3;
+	Tue, 24 Jun 2025 16:20:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750782047;
+	bh=vgXO9YS+euCiMfb3GxJUGStET3NrsENKpSg1ejFRjxo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Gw45KlEOsLQIi05juzVr3K7KvHLSak8bwqGzhnwZHvtUVP/z5P0V5rQ5ovNmJHIGj
+	 tlN5aC/PaQZ/x9f+q1ci+DqW1R6yLAT2KE9Nbkb2/GUjlbLf4rT7SPvLC40Uu5UHQJ
+	 vWiAabJDo5PUBwxu9LWtEjYwzRFo3Ioo+n06pHz4Htz6ZGTgYHP3EumgXo7vnNUcK/
+	 DgipRUaaTtHQgND+zcyTKlW464SrVkC8LF/Kc5XxoqISINck8rK2f131ijjhctiPgO
+	 Ofl/tMZv1u+9K/yPZJxB6CD/j0vkk2KXtEiFh6YbcI0Omjk8TMfB5moMEaO4NtDW3r
+	 7zB567pYGM3Jw==
+Date: Tue, 24 Jun 2025 18:20:41 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Boqun Feng <boqun.feng@gmail.com>
+Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
+	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
+	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] rust: devres: get rid of Devres' inner Arc
+Message-ID: <aFrQWQp94ZvFQ3SV@cassiopeiae>
+References: <20250622164050.20358-1-dakr@kernel.org>
+ <20250622164050.20358-4-dakr@kernel.org>
+ <aFizv7suXTADJU3f@Mac.home>
+ <aFrBvwFrUGD45TeF@cassiopeiae>
+ <aFrIbRA9b9LOxFQ3@Mac.home>
+ <aFrPKAxHfAetcQzz@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NeDUsWHsbq74XlUI"
-Content-Disposition: inline
-In-Reply-To: <2025062425-waggle-jaybird-ef83@gregkh>
-X-Last-TLS-Session-Version: TLSv1.3
-
-
---NeDUsWHsbq74XlUI
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <aFrPKAxHfAetcQzz@cassiopeiae>
 
-Hi!
+On Tue, Jun 24, 2025 at 06:15:43PM +0200, Danilo Krummrich wrote:
+> Oh, so you meant adding this to the safety comment. Yes, that makes sense. Maybe
+> ScopeGuard works too, as you say.
 
-> > Build regression: stable-rc 5.4.295-rc1 arm kvm init.S Error selected
-> > processor does not support `eret' in ARM mode
-> >=20
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >=20
-> >=20
-> > ## Build errors
-> > arch/arm/kvm/init.S: Assembler messages:
-> > arch/arm/kvm/init.S:109: Error: selected processor does not support
-> > `eret' in ARM mode
-> > arch/arm/kvm/init.S:116: Error: Banked registers are not available
-> > with this architecture. -- `msr ELR_hyp,r1'
-> > arch/arm/kvm/init.S:145: Error: selected processor does not support
-> > `eret' in ARM mode
-> > arch/arm/kvm/init.S:149: Error: selected processor does not support
-> > `eret' in ARM mode
-> > make[2]: *** [scripts/Makefile.build:345: arch/arm/kvm/init.o] Error 1
-> >=20
-> > and
-> > /tmp/cc0RDxs9.s: Assembler messages:
-> > /tmp/cc0RDxs9.s:45: Error: selected processor does not support `smc
-> > #0' in ARM mode
-> > /tmp/cc0RDxs9.s:94: Error: selected processor does not support `smc
-> > #0' in ARM mode
-> > /tmp/cc0RDxs9.s:160: Error: selected processor does not support `smc
-> > #0' in ARM mode
-> > /tmp/cc0RDxs9.s:296: Error: selected processor does not support `smc
-> > #0' in ARM mode
-> > make[3]: *** [/builds/linux/scripts/Makefile.build:262:
-> > drivers/firmware/qcom_scm-32.o] Error 1
->=20
-> That's odd, both clang and gcc don't like this?  Any chance you can do
-> 'git bisect' to track down the offending commit?
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index 2591cacecb7b..afd73a8c6012 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -14,7 +14,7 @@
+     prelude::*,
+     revocable::{Revocable, RevocableGuard},
+     sync::{rcu, Completion},
+-    types::{ARef, ForeignOwnable, Opaque},
++    types::{ARef, ForeignOwnable, ScopeGuard, Opaque},
+ };
+ use core::ops::Deref;
 
-We see this one, too:
+@@ -177,15 +177,15 @@ fn data(&self) -> &Revocable<T> {
+         // hence `ptr` must be a valid pointer to `Inner`.
+         let inner = unsafe { &*ptr.cast::<Inner<T>>() };
 
++        // Ensure that `inner` can't be used anymore after we signal completion of this callback.
++        let inner = ScopeGuard::new_with_data(inner, |inner| inner.devm.complete_all());
++
+         if !inner.data.revoke() {
+             // If `revoke()` returns false, it means that `Devres::drop` already started revoking
+             // `data` for us. Hence we have to wait until `Devres::drop` signals that it
+             // completed revoking `data`.
+             inner.revoke.wait_for_completion();
+         }
+-
+-        // Signal that we're done using `inner`.
+-        inner.devm.complete_all();
+     }
 
+     fn remove_action(&self) -> bool {
 
-/tmp/ccJcop5R.s: Assembler messages:
-2033
-/tmp/ccJcop5R.s:45: Error: selected processor does not support `smc #0' in =
-ARM mode
-2034
-/tmp/ccJcop5R.s:95: Error: selected processor does not support `smc #0' in =
-ARM mode
-2035
-/tmp/ccJcop5R.s:162: Error: selected processor does not support `smc #0' in=
- ARM mode
-2036
-/tmp/ccJcop5R.s:299: Error: selected processor does not support `smc #0' in=
- ARM mode
-2037
-make[2]: *** [scripts/Makefile.build:262: drivers/firmware/qcom_scm-32.o] E=
-rror 1
-2038
-make[2]: *** Waiting for unfinished jobs....
-2039
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/jobs/104520=
-69686
-
-It is probably config-dependend.
-
-https://gitlab.com/cip-project/cip-testing/linux-stable-rc-ci/-/pipelines/1=
-886959470
-
-Best regards,
-								Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---NeDUsWHsbq74XlUI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaFrP2AAKCRAw5/Bqldv6
-8qibAJ9VUVgof6VKLUdQlXbcxcDMnAgf1gCfR41spMnM223GmmrQF68UWgs3GW8=
-=sRvP
------END PGP SIGNATURE-----
-
---NeDUsWHsbq74XlUI--
+Is this what you thought of?
