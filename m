@@ -1,72 +1,91 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A89222571;
-	Tue, 24 Jun 2025 12:42:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DFF22CBF9
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750768944; cv=none; b=lpjlz/G3QhicjYrq3JG2NZrWGnH3hFw4cBQpuTlpPJH5QLZ7WWS91BQtU+gFl6J5syt7jWt2XrQV8NXN0Pftg/PLAQEuFXxS4uf+qgDBmiG2cm4fH9s5hQlOryBU8GoLy//mPOFm1EhgtJXGKz5H3s1FGW3UyY2YXbPBpFiXdBg=
+	t=1750769066; cv=none; b=MQ80x/7c88FDHkAUdcDvrJQ+VOihHxSUMDfzD3ukEKCCUIgY4wogu7oyrMt3O3Mkt4BGx6M4HjOxsSBQJhf31R8fUGceprVEfbyWrFG4KY6+4Kz/MHqG6k+RI5FhNz49CWety8Qc+aV62ZzWWVALg5SuK6ibj72tq5K7jXDzzLg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750768944; c=relaxed/simple;
-	bh=VIVzvuGLxfr6FEARxXBTW3jW4mO77H2gDFFgT8Ut+io=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BcT9ytmcm7pXX8HumYlWO8FBCiPgZShuj6yYaxcKhCsxhSE8jHaaNkfMHg+TyqBX3M2zdPYXws0v3PQYTsRbASSsLHxNLMAklv0NxhV2X9Hk3g8GYExPGJQdDkI09u8xguMgZpkcUcRWxr+Pz0wz8MhxYkTR+nsJnCVlnLeq/eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=ZnPmYoOl; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1750769066; c=relaxed/simple;
+	bh=xKH1I/vrL/pyyYmCDEAIIsVLnzWhz3lMqOmryPR161I=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I5Rq6N7SvBO5/9DI7OYE4jrX8hWshQ3ln30bu+tPI+I3v8IzzMPdri8ZNqMyhvLfdZOk1lMQZ4HmRFfOsmOXjyvlV7CyuU166plYB6w/Tes6X3uu7IXPel6Sfsl4H98Ai1puwwsRq94GaA5iOt43ZB/6P/cUztvkmG/auYjGB+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b=m3S457P9; arc=none smtp.client-ip=99.78.197.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="ZnPmYoOl"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 0164C406FC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1750768936; bh=oD11XIAvJqRoGH2EZZgtZLub3E/yceoBzeCcm0HjK9w=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ZnPmYoOliNLXAjgiNqpuGzcUHCNR4FJRzfHgzfy8KdeufvTwe2ryg1jpnDR7Vol64
-	 BMwv9G8UpXUKaGWBc9BbpkfIovyuGZU87SwLUyPvo9tE0wO0TvNJZVmAn5EHNtaS/M
-	 wfbWVhykEHi5jevC8x4mwJ0v0dwlqMVCBoaGp8MwlRlYekhrPg3MvDhLv/FF1rfg3u
-	 zbkuVVBX29yYVk6WblsAd/xgA6a0ai6RBQTNAMEfVQpMjkOMsLXoyHoIoYVJc1PQT3
-	 /UVJOJtV8oCb2Knv2OSANKhBH94dQOzBymYx0IuOyumBcDW1pBzZ61H6jPe4UJ2RyZ
-	 bPg5RVIac6WIQ==
-Received: from localhost (mdns.lwn.net [45.79.72.68])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 0164C406FC;
-	Tue, 24 Jun 2025 12:42:15 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Bagas Sanjaya <bagasdotme@gmail.com>, Alok Tiwari
- <alok.a.tiwari@oracle.com>, pbonzini@redhat.com, kvm@vger.kernel.org,
- linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH next] Documentation: KVM: fix reference for
- kvm_ppc_resize_hpt and various typos
-In-Reply-To: <aFniQYHCyi4BKVcs@archie.me>
-References: <20250623191152.44118-1-alok.a.tiwari@oracle.com>
- <aFniQYHCyi4BKVcs@archie.me>
-Date: Tue, 24 Jun 2025 06:42:15 -0600
-Message-ID: <87jz5171lk.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=amazon.com header.i=@amazon.com header.b="m3S457P9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazoncorp2;
+  t=1750769065; x=1782305065;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=XdhYht358jnNIuTVyQjBOMeJxFoewBGgDQ3f9ZJ5D4k=;
+  b=m3S457P9Pk1cHQ+XNSirioyikxInwVH5T3Bl9PzJ/J+0HFjDaIyYQ8+9
+   SRCXzRkhPLcps7PkNli5V8LPF7hYla0elPrulEIU/NxfKopdIb0hyRCkk
+   9yG9GtuSH8l1WpTTVO34y/jArrMANVMhb3tFh3E6mi0auPY4EcwQDbDji
+   nYuQbxlTgXhr2UGeyv2j9ScgUgS4u6OXhzZJ0JHJVjgiazu9Zaknf+7m0
+   rg+PG5mM87wBBDdB0hKNd9Xo57mRvVbVFOafHJF4ovDawGL28N5eqk/Pe
+   nULMMi3EQkchZoKfwEUU7QS7DBfFVXas5Fv2xWgix5hj1i6djGZ9Jd9ze
+   g==;
+X-IronPort-AV: E=Sophos;i="6.16,261,1744070400"; 
+   d="scan'208";a="419451125"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 12:44:22 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:32657]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.28.168:2525] with esmtp (Farcaster)
+ id f4877d73-902a-40af-b5b9-7b8e179865b2; Tue, 24 Jun 2025 12:44:21 +0000 (UTC)
+X-Farcaster-Flow-ID: f4877d73-902a-40af-b5b9-7b8e179865b2
+Received: from EX19D001UWA001.ant.amazon.com (10.13.138.214) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 24 Jun 2025 12:44:21 +0000
+Received: from b0be8375a521.amazon.com (10.37.245.7) by
+ EX19D001UWA001.ant.amazon.com (10.13.138.214) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
+ Tue, 24 Jun 2025 12:44:20 +0000
+From: Kohei Enju <enjuk@amazon.com>
+To: <syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com>
+CC: <linux-kernel@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
+Subject: Re: [syzbot] [hams?] KASAN: slab-use-after-free Read in rose_get_neigh
+Date: Tue, 24 Jun 2025 21:43:20 +0900
+Message-ID: <20250624124408.28785-1-enjuk@amazon.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <6807019a.050a0220.380c13.0001.GAE@google.com>
+References: <6807019a.050a0220.380c13.0001.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+X-ClientProxiedBy: EX19D041UWA003.ant.amazon.com (10.13.139.105) To
+ EX19D001UWA001.ant.amazon.com (10.13.138.214)
 
-Bagas Sanjaya <bagasdotme@gmail.com> writes:
+#syz test
 
-> On Mon, Jun 23, 2025 at 12:11:47PM -0700, Alok Tiwari wrote:
->>  If this ioctl is called when a hash table has already been allocated,
->>  with a different order from the existing hash table, the existing hash
->> -table will be freed and a new one allocated.  If this is ioctl is
->> -called when a hash table has already been allocated of the same order
->> +table will be freed and a new one allocated. If this ioctl is called
->> +when a hash table has already been allocated of the same order
->
-> Two spaces between sentences (just to be consistent), please.
-
-Spaces after periods are explicitly documented as something we do not
-"correct" or harass our contributors about.  Please, for the Nth time,
-do not add unnecessary friction to the process of improving our
-documentation.
-
-jon
+diff --git a/net/rose/rose_route.c b/net/rose/rose_route.c
+index 2dd6bd3a3011..a85969e2369f 100644
+--- a/net/rose/rose_route.c
++++ b/net/rose/rose_route.c
+@@ -480,6 +480,7 @@ void rose_rt_device_down(struct net_device *dev)
+ 	struct rose_neigh *s, *rose_neigh;
+ 	struct rose_node  *t, *rose_node;
+ 	int i;
++	unsigned char old_count;
+ 
+ 	spin_lock_bh(&rose_node_list_lock);
+ 	spin_lock_bh(&rose_neigh_list_lock);
+@@ -497,7 +498,8 @@ void rose_rt_device_down(struct net_device *dev)
+ 			t         = rose_node;
+ 			rose_node = rose_node->next;
+ 
+-			for (i = 0; i < t->count; i++) {
++			old_count = t->count;
++			for (i = 0; i < old_count; i++) {
+ 				if (t->neighbour[i] != s)
+ 					continue;
+ 
