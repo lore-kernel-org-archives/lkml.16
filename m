@@ -1,92 +1,100 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21453248F7E
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:08:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750752540; cv=pass; b=YozfLd0s0IsphTSnrRWDyRQXUpbXOgyjV3h0lovNPwUt023DSNuE1jy8URjy+3ZE0mCcTL3DzWTBAnNunAUHT5I6sVr4kS8RD13maa8/JpmpL/yd5dCmXoH+Li6xhVl2aI5ByUQIakPhqt4BArzMU8Gs12zmqpXwLjXTJUORRJM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750752540; c=relaxed/simple;
-	bh=SaFeltjIhffRZcpSoI9ui/Z8/TR17m1v5uOiSvZXsFI=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RpzTrCH0AEMWeORwWfE3SErmy+KtkOV+Ee7Wp5SLxOpU7JFxxka+SI1+IwZO6cgStIz48PH6MovqNYOmmKWOLaId1D6CgXaSALXSLxzjTOR5vaEUTucSgw9Jsh0lWNtwen6bgIQJe+dM6QEsqXvVu9NtLnWrEZkmguTV9S4fuWw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=EameN6R7; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBE41DF98B
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:09:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750752569; cv=none; b=bkLB/fePJ3Xn83vzKivkkQfSGbvSmFV9Ywjl3Q7OE8hG5X6vCh8md9QooyxefRVxbFVL8IpWKFHSdBweAUzPiC/t3uQuWN59sw31CmOD6DULbttmYzdOYy8oSaOgwuvxKOXFhWpwNtYrgYvCOdNrAw/jup3n+V7c2EYTPmVofHw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750752569; c=relaxed/simple;
+	bh=6w7HSZGhK45DPIsbkV62+DwVdsnNAXnxSIWtej5+4dM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=doozjCdoJASowe5NOZxykTM1y5++h9doHlABiUrZI9faB3JUVPVkE+EAmc759tKt4D0L0uG17waxjdjBIfQXfoX3k+VKgJbZz74LeGZmoPTqCIvTsPpqvWHdqqCCVRsDdynWADYP5r4rOzynybyixUkVuy7rOx59sTV7kGPVPBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DdQKv05Y; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="EameN6R7"
-ARC-Seal: i=1; a=rsa-sha256; t=1750752505; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Dqw8vfjrZUk5usJMY3XbRoNyqE+R9NbrFn7I9DpgDkBoaqujDT3RVvAb2hxF3I+gkQ63y7R6c2w2sj8hw9pfUsO7wdWHCWLSViWPW1MM25/zek3jrf0BOEzm5AsDSLSzyA0idBITOjjUwKbNLa9948+e12UIhSml1BiCT5UxaOs=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750752505; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=rQM7oFwr7sChbW7FI+ZavpM60eKYk7PeTWBCwjL44LM=; 
-	b=gikfV8JHINeKgFNlOJ3A5p0dDzj7RI/u+GrwsBy6HcalqhPfKp9mApPvvSv7ydpeYNUS6c4hBzHhX7nOCRrCyELWnt4Ajp0gB9nt6rt5laA9dgZFAlwYVMuLZCNuUyWzzxYENGdfC0Ego17vadqiWjvIt8QOcQWl011ReG+QYZ8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750752505;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=From:From:To:To:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=rQM7oFwr7sChbW7FI+ZavpM60eKYk7PeTWBCwjL44LM=;
-	b=EameN6R7YwbXhDAc5QB+EGxOG20bAo2YKu/b4xwOhwJZg3hG/cj4ZFD9GbIU8z6T
-	MzsH6KIk0C6zt39Lind+l/zA3QBqiDn5DgJelSwQad51TEEtssvmcakgo9+Nc8WsY/T
-	O/6mzgIZjFv+7mpGsqXcuvB0SV1d1ana1os9xUv8=
-Received: by mx.zohomail.com with SMTPS id 1750752500469835.715678127577;
-	Tue, 24 Jun 2025 01:08:20 -0700 (PDT)
-From: Li Chen <me@linux.beauty>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] x86/smpboot: tidy sched-topology and drop useless SMT level
-Date: Tue, 24 Jun 2025 16:08:06 +0800
-Message-ID: <20250624080810.66821-1-me@linux.beauty>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DdQKv05Y"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3a548a73ff2so125142f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:09:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750752566; x=1751357366; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H4LRbvi/Gmtszalnm+pLeOpEJNzEX6Ie3DE8xLsBDqw=;
+        b=DdQKv05YDDnu4nkJLqZzg1kOqSlPdz2OmDXD2vZTMOTtqa+kBsw99nPhph5byrlNdN
+         7uqTR+3inBLkbkblXAzLnXyuWQkf3S0G+Zx8P0wT9algEBUAIPTIun+CFEF5Mj1jyZGD
+         FXANAoZ5yz0l7M6+yvkuokWmoRxzUKGvKyrOc93HQMt+3D3MId4iFiQ1dqGNgks3qKZV
+         xZTNRKxsoLeew2LaX6iEysywM7jONQu8IzGny5EO2evnquJWD3dUP6IDY0ySq69cjVoa
+         BqcMDBpxRCgu3axd23gFygDiHhHLEGuDcE84kNpMJfjkEA7+gZiKJpoCN3sFWurpYf/f
+         0Org==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750752566; x=1751357366;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H4LRbvi/Gmtszalnm+pLeOpEJNzEX6Ie3DE8xLsBDqw=;
+        b=Ufw/CBv9Raci2TAyIwjcelBpk7FhmOel/IaxHKLGV7rJJtjmzxjXTL+0JBrb2ku0sz
+         tuCrmYxlVsaj/YuH+yFdshVTJIQgqp/lTqp/QUB8Q3f40Nb2xmyAbIiwDO0lUuJwbCYe
+         0lRBphf3kxZBDaM4C+Gu7OobuHbA9LGqccGBgeEfL5BeQSm6bNV6towflSqILF8Qr8c9
+         niHIAI+Nnuu86/OPpQEEiERH3RBV4ujACrYOkKyo3bGjD7fExxXtux3YV8/EShCg79Hn
+         GySPaQ4Sda9gzl3FbWOYpfZcwgITYH7q1BmGzGz81hkozbpw5zwbxYddbxcmjMTgkeqW
+         cbtQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV0Nyrae/2QZWzn7fJruTpRRy+qCUy6xO2n1Wqccag/5dCp8RugnkvPlUpOt+xO6fiAvzBRbGMHmcmjk/0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP0ds3fM8qVpQWtuhzGhBLPdtI0v9u7uWN3IzBUjPZhr/KEB/X
+	kvdhrC/dB/MRY6rYKZLS644CVyW4C2UzDcfG2HUOONYrpqrJ0Z+2Lxzx
+X-Gm-Gg: ASbGncuRtqckhdWZ2vQs9kMwqs5kYsCk/4CAqVgegMpt3DdjJeG4PFb7BzlG+JlckL/
+	ygCGxI/t+GF7lSREvlLgmxGFgwdIrFN9jOImgpdxAbY78oOXsRuJHcXKKcBCoD7fUuhwH7FHPFj
+	BI/GSr+UQURLGoWTurPdtgG9s6Z+zNExJ4V4fUzBYWV9pGicezekzWXfjJwN9vBS27RmAMz5Bih
+	/tMSnBX4a6dlI78scK+3HRswPLO9zytv3ekrJhsAqLs9fNTwHl6mA1lcTgCbWllCGJq3uW4pzfF
+	JFwPvO7KWF3K8ZCHvSB71+YDYNUd0mlsOkZXwvZELdrzVuhZNMlevI8AFuxzwaQ8d10leaYD7A9
+	RfpfopSi6ck//rl8r38kChYFB
+X-Google-Smtp-Source: AGHT+IF8IKQNChSNIe1UoqKF0QyQ1YvhqMwCfYdXLtHOm+kn8HxQSARG/apae1/sAFWf4Eg7sjiYsw==
+X-Received: by 2002:a05:6000:4313:b0:3a5:8977:e10f with SMTP id ffacd0b85a97d-3a6d12fc169mr13401694f8f.28.1750752566421;
+        Tue, 24 Jun 2025 01:09:26 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45364703701sm134824385e9.27.2025.06.24.01.09.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 01:09:25 -0700 (PDT)
+Date: Tue, 24 Jun 2025 09:09:23 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: rkrcmar@ventanamicro.com, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Paul Walmsley <paul.walmsley@sifive.com>,
+ aou@eecs.berkeley.edu, Alexandre Ghiti <alex@ghiti.fr>, Atish Patra
+ <atishp@rivosinc.com>, ajones@ventanamicro.com, cleger@rivosinc.com,
+ apatel@ventanamicro.com, thomas.weissschuh@linutronix.de
+Subject: Re: [PATCH v2 0/2] RISC-V: turn sbi_ecall into a variadic macro
+Message-ID: <20250624090923.5521a0f2@pumpkin>
+In-Reply-To: <mhng-C1133FA3-71C3-4ECC-B3BF-13DC7640464D@palmerdabbelt-mac>
+References: <20250619190315.2603194-1-rkrcmar@ventanamicro.com>
+	<mhng-C1133FA3-71C3-4ECC-B3BF-13DC7640464D@palmerdabbelt-mac>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Li Chen <chenl311@chinatelecom.cn>
+On Mon, 23 Jun 2025 15:53:58 -0700 (PDT)
+Palmer Dabbelt <palmer@dabbelt.com> wrote:
 
-This two–patch series cleans up sched-domain topology handling and
-eliminates hundreds of pointless attach/destroy cycles when SMT is
-not available.
+> On Thu, 19 Jun 2025 12:03:12 PDT (-0700), rkrcmar@ventanamicro.com wrote:
+> > v2 has a completely rewritten [1/2], and fixes some missed trailing
+> > zeroes in [2/2].  The fixes in [2/2] are important for v2, because
+> > sbi_ecall doesn't fill the registers with zeroes anymore.  
+> 
+> The SBI spec says "Registers that are not defined in the SBI function 
+> call are not reserved." and I'm not really sure what to make of that.  
+> Specifically: does that mean implementations are allowed to ascribe 
+> custom meaning to those parameters and might start doing stuff if 
+> they're not set to zero?
 
-Patch 1  (from Thomas, unchanged) gets rid of the #ifdef maze in
-build_sched_topology() by statically initialising the topology array.
+Or does it mean they aren't guaranteed to be preserved?
 
-Patch 2  (mine) is a follow-up that simply memmoves the array when
-cpu_smt_num_threads <= 1, so the SMT level never gets created and
-immediately torn down again.
-
-Tested on Qemu.
-
-Li Chen (1):
-  x86/smpboot: avoid SMT domain attach/destroy if SMT is not enabled
-
-Thomas Gleixner (1):
-  x86/smpboot: Decrapify build_sched_topology()
-
- arch/x86/kernel/smpboot.c | 59 +++++++++++++++++++++------------------
- 1 file changed, 32 insertions(+), 27 deletions(-)
-
--- 
-2.49.0
-
+	David
