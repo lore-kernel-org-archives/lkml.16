@@ -1,109 +1,108 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA5419DF4A;
-	Tue, 24 Jun 2025 18:46:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4C423315A;
+	Tue, 24 Jun 2025 18:46:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750790772; cv=none; b=sa9Qu9MsrydImfblGttFSSB1kkiDUbbDc6afA2S3UZYa0bIJ9XfA/9Gp3lK+Ptxuf3CfmCYg6d6dJaBYRq/5bjq6P97fwfGd4+wmLpbPRVzw+WU2RU1H0T1GdVVmu+Xo0LpIEaZF74vu1DNj8lN4tRNDZA4AiI4yAAuJqpBwTaE=
+	t=1750790800; cv=none; b=qY3YqpxVGDajnz7XHyIMptEZNvk6/Oi4t4cwbabbr99bcsN3+LduSO8p79MIhBxJ9f6eIAX/6oJ7A225yz15K1PfHiwv5PR/EQhp5r/NeNjQTXh56dqeyc4AwL7kiipSRfLhZzvRRFdPecCWjMYhXTzMbCroDcSW4uLu3kTiSVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750790772; c=relaxed/simple;
-	bh=xON+1e8LUeEk49u3kbhtpooCftgHAT0Lk8KR3WI4ieo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S8UzUpSaxRzIfnDwOzAoVYB7Q7zTvX5XnzQI5TTSXXT+PO16dlQUQxtgA7VZLMRwHiIpIwZvDoWvbSenzp0StLB7ise/UA7jdPsGSn1Gp4V+ZiD4LaYriJcXaQIt+ClemO5lCgQFwvRzAzKZtq+JXioRGTQJv3V4AyCbUvgwQAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=czkr/+gN; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750790800; c=relaxed/simple;
+	bh=7Kof3VsVQEwAhnIBqaWj3+BD5FpcbbRwilql5guZhTk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W+vQnTxzbxpMNvp3dVAP81KD0sbGx2MZCCqyn5HWRcGQn5hLrWtPBM3gi/23yvOJN4MV2wMyF68tO9JwZYqnHHg0mkktYOYxQh4LEBXVTVliJhZzkRtUAqdgWOgc+0xNVxn0t+uHaX4rEgTKoXIHQPIdvj+gh07PMuVEAniXAi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu; spf=pass smtp.mailfrom=lucaweiss.eu; dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b=fdAFfRwM; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=lucaweiss.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lucaweiss.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="czkr/+gN"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55OIjxq61631233;
-	Tue, 24 Jun 2025 13:45:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750790759;
-	bh=ryKve62wZWyoV8Jf68Qb1NJxYQaLU+F3unuU2gjuvFw=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=czkr/+gN/RPfBFITbT9oUkZqztPreUMZHL54ISw0UlHXGCN9reB5vogrMrRhFcpsc
-	 Wiw9dCFUbCxHW4R6uo+fCgawL39YaWdIv7ijPit6RZgUTqpPczpjOCqjHyQxrTejPC
-	 2hTmXLPSVFn9wZK1AoJVZvRzRVBSC+2yjX/R7ItM=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55OIjxt21801622
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 24 Jun 2025 13:45:59 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
- Jun 2025 13:45:59 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Tue, 24 Jun 2025 13:45:59 -0500
-Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.245])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55OIjtK31993515;
-	Tue, 24 Jun 2025 13:45:55 -0500
-From: Vignesh Raghavendra <vigneshr@ti.com>
-To: Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Emanuele Ghidoli <ghidoliemanuele@gmail.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>,
-        Emanuele Ghidoli
-	<emanuele.ghidoli@toradex.com>,
-        Francesco Dolcini
-	<francesco.dolcini@toradex.com>,
-        <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] arm64: dts: ti: k3-am62p-verdin: Enable pull-ups on I2C_3_HDMI
-Date: Wed, 25 Jun 2025 00:15:50 +0530
-Message-ID: <175079060331.1874839.8272490827438865820.b4-ty@ti.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250529102601.452859-1-ghidoliemanuele@gmail.com>
-References: <20250529102601.452859-1-ghidoliemanuele@gmail.com>
+	dkim=pass (1024-bit key) header.d=lucaweiss.eu header.i=@lucaweiss.eu header.b="fdAFfRwM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=lucaweiss.eu; s=s1;
+	t=1750790789; bh=7Kof3VsVQEwAhnIBqaWj3+BD5FpcbbRwilql5guZhTk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=fdAFfRwM3z2AzSgyy9JisYCxm3OHDo3mBjcJ/1bWgLFPnkJ70qjvO3tEAUpyATx49
+	 4+f0FkeJ2XuE3V5iE3ydpuO47Uf1A6nOSxWOWPul8bbUUEk7X74HXrnClvE6zATtvK
+	 ifMNaQV5uDai3TZayC2pjf5Kz05OBJbZwnz/aXLE=
+Message-ID: <841c41cc-e44d-40c7-9431-a77feaa49b05@lucaweiss.eu>
+Date: Tue, 24 Jun 2025 20:46:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Subject: Re: [PATCH 0/4] Start using rpmpd for power domains on MSM8974
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
+ linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250621-msm8974-rpmpd-switch-v1-0-0a2cb303c446@lucaweiss.eu>
+ <amfgwjgstu4hoxz4lo7fqrqz5fqtf3r7o6wqvrrjkcfubwrjyz@5i75peprq3wn>
+Content-Language: en-US
+From: Luca Weiss <luca@lucaweiss.eu>
+In-Reply-To: <amfgwjgstu4hoxz4lo7fqrqz5fqtf3r7o6wqvrrjkcfubwrjyz@5i75peprq3wn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Emanuele Ghidoli,
+Hi Dmitry,
 
-On Thu, 29 May 2025 12:25:54 +0200, Emanuele Ghidoli wrote:
-> Enable internal bias pull-ups on the SoC-side I2C_3_HDMI that do not have
-> external pull resistors populated on the SoM. This ensures proper
-> default line levels.
+On 24-06-2025 2:59 a.m., Dmitry Baryshkov wrote:
+> On Sat, Jun 21, 2025 at 03:19:55PM +0200, Luca Weiss wrote:
+>> Switch over the ADSP PIL to use power-domains instead of a regulator,
+>> and have one commit switching over the MSM8974 SoC plus all the devices
+>> to use power-domains.
+>>
+>> Note, that I'm aware that these changes are not backwards compatible and
+>> not really bisectable, but since it only affects the ADSP on these
 > 
+> Why? The cx-supply is handled unconditionally. A single-domain usecase
+> is also handled via a special code path. I think this might be
+> backwards-compatible, by the pure luck.
+
+Honestly I have not tried and not looked much. I mostly added this 
+paragraph to avoid the response that this change might break and is not 
+really backwards compatible. If it does (by accident) work with the 
+updated dts without the driver and the other way around, then even better.
+
+Regards
+Luca
+
 > 
-
-I have applied the following to branch ti-k3-dts-next on [1].
-Thank you!
-
-[1/1] arm64: dts: ti: k3-am62p-verdin: Enable pull-ups on I2C_3_HDMI
-      commit: cb2d9c00770e2e6c51864704b5d98c9a0ddccaf9
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
---
-Vignesh
+>> pretty old boards, I say it's fine to have this. Get all the patches
+>> into the same release (6.17?) and then we're good again.
+>>
+>> Signed-off-by: Luca Weiss <luca@lucaweiss.eu>
+>> ---
+>> Luca Weiss (4):
+>>        dt-bindings: remoteproc: qcom,adsp: Make msm8974 use CX as power domain
+>>        remoteproc: qcom_q6v5_pas: Use resource with CX PD for MSM8974
+>>        ARM: dts: qcom: msm8974: Sort header includes alphabetically
+>>        ARM: dts: qcom: msm8974: Start using rpmpd for power domains
+>>
+>>   .../devicetree/bindings/remoteproc/qcom,adsp.yaml  | 18 ++------
+>>   .../arm/boot/dts/qcom/qcom-apq8074-dragonboard.dts | 13 ------
+>>   .../qcom/qcom-msm8974-lge-nexus5-hammerhead.dts    | 12 ------
+>>   .../boot/dts/qcom/qcom-msm8974-samsung-hlte.dts    | 12 ------
+>>   .../dts/qcom/qcom-msm8974-sony-xperia-rhine.dtsi   | 12 ------
+>>   arch/arm/boot/dts/qcom/qcom-msm8974.dtsi           | 50 ++++++++++++++++++++--
+>>   .../dts/qcom/qcom-msm8974pro-fairphone-fp2.dts     |  8 ----
+>>   arch/arm/boot/dts/qcom/qcom-msm8974pro-htc-m8.dts  | 11 -----
+>>   .../dts/qcom/qcom-msm8974pro-oneplus-bacon.dts     |  9 ----
+>>   .../qcom/qcom-msm8974pro-samsung-klte-common.dtsi  | 11 ++---
+>>   ...qcom-msm8974pro-sony-xperia-shinano-common.dtsi | 12 ------
+>>   drivers/remoteproc/qcom_q6v5_pas.c                 |  2 +-
+>>   12 files changed, 56 insertions(+), 114 deletions(-)
+>> ---
+>> base-commit: 7fa2fb97cd28e1d9670da538095565b6fba83977
+>> change-id: 20250621-msm8974-rpmpd-switch-b19b166c02be
+>>
+>> Best regards,
+>> -- 
+>> Luca Weiss <luca@lucaweiss.eu>
+>>
+> 
 
