@@ -1,71 +1,72 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005126F06B
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:46:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6EE293C40
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:47:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750772799; cv=none; b=O58JQWmAYvZUMR1StP9s367N7ksA+L7XGxIXmNuLD1gY/esFjwRkdXHHVmm9Zp/1oEt+qnxF/NXQsl/LWvu1ebVEpJUeYmPTpuY4WB8EcN62r6g1yAh1FAuwXQeRiA+XmzLK2fbYFPlYrSlsIRBqHHNq/NkE+BO4eAmEmMIQpfg=
+	t=1750772831; cv=none; b=PlbS8/GnOmMz4GIA7u1TohpgIexdv2iAdnVen94soeODS1oYIbEVlTQkKe7/2AqRDfCPP/05Ucphu9aVruFyOBU68+348Iqk9dw5h90ZRGb1WGqpXKOK4502btorBkeiosFIciW8eyXXrbMkiTJULl8eHbc7Qo8qPUDQDUiH86w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750772799; c=relaxed/simple;
-	bh=qFIGByMEUAEOSSBSnLYh1bAg5aSZ7BTIORyI7l77KDo=;
+	s=arc-20240116; t=1750772831; c=relaxed/simple;
+	bh=RdblSIpyqHIHC7x9AJFKZ4JmLneV50aZUMQcreRaw+c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XKp1KnRgkm9WJmPm77FaEb3ZwXpnnGqJ3XZMgfhK7/gPln6loViQKMC3gh1tmRpDHiDzaf2O8Lw4YCzbt/yOcI9iwB/ANjqpSPqj99Sh45IFpbgEEjrScYYqsMQhIreyo9bh2eyt1DcS+lT0WDiOuBKooYbFv6tZr05orD3lHjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=VArFSy3Z; arc=none smtp.client-ip=209.85.221.48
+	 Content-Type:Content-Disposition:In-Reply-To; b=LQP+aT+0SPuKkjtX0fT8HsvK1jiKtS0809nk7h14oc59EnChruBDFiBD1Jc4GH+xeAlCE0UhKzpPXjaAyeH1b1yIRIDsHQ1BAnMj903S79WfENTRc7jus6oEajT4Tpvnb33FY0GxRYwkZ/btt/TwPtqQihRNdQjLp1XOR3u0B+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=EZI/MrMO; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="VArFSy3Z"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3a575a988f9so323157f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:46:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="EZI/MrMO"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a5123c1533so2767872f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:47:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750772795; x=1751377595; darn=vger.kernel.org;
+        d=ventanamicro.com; s=google; t=1750772828; x=1751377628; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ohkRZnrz54pdAWpLhDbJvMYBolnW2mbJhdCUdnmMbJk=;
-        b=VArFSy3ZGa2rHx2ImUNrcH3AqgMipuLZsDGeK5wJpMsNk975l9Kp+8uf6jgSQX+sNp
-         omEvfl5+RCgQ84RaEsK+X3xXqMP840LqonBppX60cOmV5mUr7Hmvj4oau03Xn3uS3LF2
-         wwtGpAlPYSq0RymSYbFRkbg3b7n/B6HFLE2kskKz7UM3ps7PveTzIWdvUShzapM/qWbd
-         TuK8sjPCepo4ey2zCETfm8/XTzQFAKbVvfUzBeVCshzpgy49eOBYMQE+p+togmg0XKjV
-         /GVD17dQ3vmODDwDl78gaKTkIKKSzS6yzRe3OXgkGga7KmdIsq8KsAvO/Is0QRVyeleB
-         tnsw==
+        bh=J8PCCubQNcr7nCZVM93eZuCGNtXLAAyFhXBC4cgzvqo=;
+        b=EZI/MrMOfrsiutCQlqKQF3LLKyBKfuhHRsRdWvJXVXU3+VVNLA9lGijlbZXh4IcP7q
+         QMhiRe0da/JI28r9VUf6UTG0LmkroiipoPkSoC1vElk3cMFz9w0K/l7hpOv0wJdG3aZJ
+         kfYabCAlS6mdJDL9otZ2jz2pLC47PzTOktaFYKI1IZiM4PCASv3aTWRFIsOY+J0j6Vx8
+         iwAF3t3lnzRdDcDuiBwMa3JDbOJJQMSVyz2ZIlMBLfzNBbKZI7/RXm1qmsAbBFZRmS/X
+         uJraJVZzYs6Vq+WepBkLXfX7a1hKmVOwchRQMtxzAnXrZsfAtBbKXFhFmVaJUdOIP4Gb
+         o1Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750772795; x=1751377595;
+        d=1e100.net; s=20230601; t=1750772828; x=1751377628;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ohkRZnrz54pdAWpLhDbJvMYBolnW2mbJhdCUdnmMbJk=;
-        b=Pn1WKnxzjQIJYke6X/kwLphb60rWQGgu/FeaIC2CdejdpH8J4by31/xRFPLg+NxiX3
-         lvx+BJS+QjKsIgiRpgj1kNTaMwUX7KNN2wLreAWoOUiI1+kxb5/HCFlPR77YDjIx+fC/
-         rgeXu4lShJOaXvQJ4UEhsMR2+2umkfMDw2pbaAeCnlEMjlXu60G6Mk7T4gEahLBknGWS
-         1mKXfLs6/SXYAcue+n5II5Ejov6G5U+NujlrXeaTsse2YAQ0mvENvT0e/+WHZUq0U92m
-         9YLdXM43tEQR15ILttbk54asEjRYl8Psmp/Yu+X6jOPQBHc6bBprVxh50n6uUIHsfVwJ
-         xEzA==
-X-Forwarded-Encrypted: i=1; AJvYcCXlFSrkHA3Lm5qoSCj2EWgH1H+X8S5EYHqrvfxZbQ3P63hMWKEZayzzk/U5Rh6W5OJceHe1Au0RIB6qhog=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr4yFiX05QMkGGpg1Xz3yaWaZLawt4ecWpnyzMpb9VEzOj6ZUu
-	g3zxbCBSj3dIndyWt5O75LwPQlHaXa5YJV6WhZJW4Qz3vV+1kXK5kMvE75gFVNEFUgY=
-X-Gm-Gg: ASbGncsrPEwd2Kh1IBCY9A+m132QRqpJT6efVynNybjnkjpfhjFCwnuU1HfBmurGK9f
-	RDvLP547hrjrMdG2VSHAlNi1m0bdGgn3tv8B5d4LL5soajZhLcjLrDE6G5MTHYCFv6CobihT6pN
-	6wX/0OOfNSmPLftQWZCtNcan9QUoP3tYVbeREV7AAIJ0k3kl3nI7WbdECKsoNHbVrr+QdvRwa5s
-	/09q6qYYSNzYU+FLcsjQANO3Oly44rzKHwwc6WVWvkWDuYRy72IZ+fMULJZWCb7iHjT7rXOA89z
-	/TJt2vRIW9QTWmcvl4LM48e/WEqpRWP7jscoyxqGZbOpiPycmg==
-X-Google-Smtp-Source: AGHT+IEt7t69RQwxRY3eEXaaUWMwhnlyw5hwc/9b4j97KSvQHGz9sdCKF+wVdRShxiN6h2dbaEha3A==
-X-Received: by 2002:a05:6000:491d:b0:3a1:f564:cd9d with SMTP id ffacd0b85a97d-3a6d12d92e1mr13250210f8f.36.1750772795336;
-        Tue, 24 Jun 2025 06:46:35 -0700 (PDT)
+        bh=J8PCCubQNcr7nCZVM93eZuCGNtXLAAyFhXBC4cgzvqo=;
+        b=OMVMCvAXiqJhxe/RTkyevfdUyoucX7vDSOncdbRVklGWMyvtTvUNZE+yPJbCBUsItN
+         fChq57DMqw94Qz1hLaaIVRwO86zdm1V8+qAFYnxRXc9GxEJemLtXwd/bNRzis/O5JTBl
+         uf9PLASZoFOlK0EJH2rWleR+UjSf6+rTcarHTo6iMqplDJVGZIBk5ipw0XNnPhIumFjk
+         +xf+3yvklBMvc/2aLrzhKG2frtj2d8b/7dAd0iIqF31L5tY15lyE4iiqBqHPsXma9kGi
+         uVV0mjFBr2rEB2v+Z/NBBysFUwC1A3H014PDv03W6odUqU6vdyyfrEGGSnvzbuCRFsy1
+         J8lQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVcyNboAdIVz1CN57Y7wgaOK5JjfPZff4gdvnQkrT02OdHvTAeEjnlvJo7jwGC0jm3nNTG2xshAEbIeZMo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNGn9tN0CVla4nS0a77e/D9ss70PNbB4XQBZpF1CbUwOg/oZH4
+	J0NWTps1iJDo243XfKTQA03OXF4qK22UQmQcE/duyeoVxdK8Nsh/hSypx2/UDaRqCL0=
+X-Gm-Gg: ASbGncvyS6T4BOZVTxT7ef3dqN9I637VeI4RkwKqBE8QtYiRU4QKpTYBV9l9lS7URko
+	3eNNSWgXwENvg/9qFoX+JBBeWklIr9+BJfcfvRHhjccAsQojlSB1awzwDdpp3FQPzB9seU7+apn
+	k19opy9dxcadm0cw4O7tQ9seLFfwSS/IIGuPI4CPmzX85tUxX6gS/1xDtF3+RSwB+vL2m3hKMt+
+	KXjleuEFS3f3juzH+oK/FSu3ECmnjrr84wYfnS6gCXlRQVC24Tr2svOphFPvjLr6at9K6baS0ld
+	aABfKaqYdW/sGl79WynWGfpcM5vA52XrheonY6byynCRxWFlqg==
+X-Google-Smtp-Source: AGHT+IHpMvNqukUYWx9oydnYOB85GNC6fRs2uW/m2DCi770l/WC1aWkrfcHX78PHUx/VK0Unvrw5XA==
+X-Received: by 2002:a05:6000:310f:b0:3a4:e8bc:594 with SMTP id ffacd0b85a97d-3a6d1191de3mr11186332f8f.8.1750772827749;
+        Tue, 24 Jun 2025 06:47:07 -0700 (PDT)
 Received: from localhost ([2a02:8308:a00c:e200::5485])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80f279dsm2047840f8f.64.2025.06.24.06.46.34
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45361461375sm160230815e9.14.2025.06.24.06.47.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 06:46:34 -0700 (PDT)
-Date: Tue, 24 Jun 2025 15:46:33 +0200
+        Tue, 24 Jun 2025 06:47:07 -0700 (PDT)
+Date: Tue, 24 Jun 2025 15:47:06 +0200
 From: Andrew Jones <ajones@ventanamicro.com>
 To: zhouquan@iscas.ac.cn
 Cc: anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
 	palmer@dabbelt.com, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
 	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org
-Subject: Re: [PATCH 3/5] RISC-V: KVM: Allow bfloat16 extension for Guest/VM
-Message-ID: <20250624-08753b120b1b5b7b88416057@orel>
+Subject: Re: [PATCH 4/5] KVM: riscv: selftests: Add Zicbop extension to
+ get-reg-list test
+Message-ID: <20250624-1960ad3d8a1108b04ea85d9d@orel>
 References: <cover.1750164414.git.zhouquan@iscas.ac.cn>
- <effe218d368a37e397b6526f876b33322dbb6e20.1750164414.git.zhouquan@iscas.ac.cn>
+ <3591f5aed544f9026d8375651936e006b57defdb.1750164414.git.zhouquan@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,72 +75,85 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <effe218d368a37e397b6526f876b33322dbb6e20.1750164414.git.zhouquan@iscas.ac.cn>
+In-Reply-To: <3591f5aed544f9026d8375651936e006b57defdb.1750164414.git.zhouquan@iscas.ac.cn>
 
-On Tue, Jun 17, 2025 at 09:10:35PM +0800, zhouquan@iscas.ac.cn wrote:
+On Tue, Jun 17, 2025 at 09:10:42PM +0800, zhouquan@iscas.ac.cn wrote:
 > From: Quan Zhou <zhouquan@iscas.ac.cn>
 > 
-> Extend the KVM ISA extension ONE_REG interface to allow KVM user space
-> to detect and enable Zfbmin/Zvfbfmin/Zvfbfwma extension for Guest/VM.
+> The KVM RISC-V allows Zicbop extension for Guest/VM
+> so add them to get-reg-list test.
 > 
 > Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
 > ---
->  arch/riscv/include/uapi/asm/kvm.h | 3 +++
->  arch/riscv/kvm/vcpu_onereg.c      | 6 ++++++
->  2 files changed, 9 insertions(+)
+>  tools/testing/selftests/kvm/riscv/get-reg-list.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
-> index 56959d277e86..79a5ac86597c 100644
-> --- a/arch/riscv/include/uapi/asm/kvm.h
-> +++ b/arch/riscv/include/uapi/asm/kvm.h
-> @@ -186,6 +186,9 @@ enum KVM_RISCV_ISA_EXT_ID {
->  	KVM_RISCV_ISA_EXT_ZAAMO,
->  	KVM_RISCV_ISA_EXT_ZALRSC,
->  	KVM_RISCV_ISA_EXT_ZICBOP,
-> +	KVM_RISCV_ISA_EXT_ZFBFMIN,
-> +	KVM_RISCV_ISA_EXT_ZVFBFMIN,
-> +	KVM_RISCV_ISA_EXT_ZVFBFWMA,
->  	KVM_RISCV_ISA_EXT_MAX,
+> diff --git a/tools/testing/selftests/kvm/riscv/get-reg-list.c b/tools/testing/selftests/kvm/riscv/get-reg-list.c
+> index a0b7dabb5040..ebdc34b58bad 100644
+> --- a/tools/testing/selftests/kvm/riscv/get-reg-list.c
+> +++ b/tools/testing/selftests/kvm/riscv/get-reg-list.c
+> @@ -83,6 +83,7 @@ bool filter_reg(__u64 reg)
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFH:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZFHMIN:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZICBOM:
+> +	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZICBOP:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZICBOZ:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZICCRSE:
+>  	case KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZICNTR:
+> @@ -253,6 +254,8 @@ static const char *config_id_to_str(const char *prefix, __u64 id)
+>  		return "KVM_REG_RISCV_CONFIG_REG(isa)";
+>  	case KVM_REG_RISCV_CONFIG_REG(zicbom_block_size):
+>  		return "KVM_REG_RISCV_CONFIG_REG(zicbom_block_size)";
+> +	case KVM_REG_RISCV_CONFIG_REG(zicbop_block_size):
+> +		return "KVM_REG_RISCV_CONFIG_REG(zicbop_block_size)";
+>  	case KVM_REG_RISCV_CONFIG_REG(zicboz_block_size):
+>  		return "KVM_REG_RISCV_CONFIG_REG(zicboz_block_size)";
+>  	case KVM_REG_RISCV_CONFIG_REG(mvendorid):
+> @@ -535,6 +538,7 @@ static const char *isa_ext_single_id_to_str(__u64 reg_off)
+>  		KVM_ISA_EXT_ARR(ZFH),
+>  		KVM_ISA_EXT_ARR(ZFHMIN),
+>  		KVM_ISA_EXT_ARR(ZICBOM),
+> +		KVM_ISA_EXT_ARR(ZICBOP),
+>  		KVM_ISA_EXT_ARR(ZICBOZ),
+>  		KVM_ISA_EXT_ARR(ZICCRSE),
+>  		KVM_ISA_EXT_ARR(ZICNTR),
+> @@ -864,6 +868,11 @@ static __u64 zicbom_regs[] = {
+>  	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZICBOM,
 >  };
 >  
-> diff --git a/arch/riscv/kvm/vcpu_onereg.c b/arch/riscv/kvm/vcpu_onereg.c
-> index d444ec9e9e8e..2ba3f2c942ee 100644
-> --- a/arch/riscv/kvm/vcpu_onereg.c
-> +++ b/arch/riscv/kvm/vcpu_onereg.c
-> @@ -65,6 +65,7 @@ static const unsigned long kvm_isa_ext_arr[] = {
->  	KVM_ISA_EXT_ARR(ZCF),
->  	KVM_ISA_EXT_ARR(ZCMOP),
->  	KVM_ISA_EXT_ARR(ZFA),
-> +	KVM_ISA_EXT_ARR(ZFBFMIN),
->  	KVM_ISA_EXT_ARR(ZFH),
->  	KVM_ISA_EXT_ARR(ZFHMIN),
->  	KVM_ISA_EXT_ARR(ZICBOM),
-> @@ -89,6 +90,8 @@ static const unsigned long kvm_isa_ext_arr[] = {
->  	KVM_ISA_EXT_ARR(ZTSO),
->  	KVM_ISA_EXT_ARR(ZVBB),
->  	KVM_ISA_EXT_ARR(ZVBC),
-> +	KVM_ISA_EXT_ARR(ZVFBFMIN),
-> +	KVM_ISA_EXT_ARR(ZVFBFWMA),
->  	KVM_ISA_EXT_ARR(ZVFH),
->  	KVM_ISA_EXT_ARR(ZVFHMIN),
->  	KVM_ISA_EXT_ARR(ZVKB),
-> @@ -170,6 +173,7 @@ static bool kvm_riscv_vcpu_isa_disable_allowed(unsigned long ext)
->  	case KVM_RISCV_ISA_EXT_ZCF:
->  	case KVM_RISCV_ISA_EXT_ZCMOP:
->  	case KVM_RISCV_ISA_EXT_ZFA:
-> +	case KVM_RISCV_ISA_EXT_ZFBFMIN:
->  	case KVM_RISCV_ISA_EXT_ZFH:
->  	case KVM_RISCV_ISA_EXT_ZFHMIN:
->  	case KVM_RISCV_ISA_EXT_ZICBOP:
-> @@ -192,6 +196,8 @@ static bool kvm_riscv_vcpu_isa_disable_allowed(unsigned long ext)
->  	case KVM_RISCV_ISA_EXT_ZTSO:
->  	case KVM_RISCV_ISA_EXT_ZVBB:
->  	case KVM_RISCV_ISA_EXT_ZVBC:
-> +	case KVM_RISCV_ISA_EXT_ZVFBFMIN:
-> +	case KVM_RISCV_ISA_EXT_ZVFBFWMA:
->  	case KVM_RISCV_ISA_EXT_ZVFH:
->  	case KVM_RISCV_ISA_EXT_ZVFHMIN:
->  	case KVM_RISCV_ISA_EXT_ZVKB:
+> +static __u64 zicbop_regs[] = {
+> +	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_CONFIG | KVM_REG_RISCV_CONFIG_REG(zicbop_block_size),
+> +	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZICBOP,
+> +};
+> +
+>  static __u64 zicboz_regs[] = {
+>  	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_CONFIG | KVM_REG_RISCV_CONFIG_REG(zicboz_block_size),
+>  	KVM_REG_RISCV | KVM_REG_SIZE_ULONG | KVM_REG_RISCV_ISA_EXT | KVM_REG_RISCV_ISA_SINGLE | KVM_RISCV_ISA_EXT_ZICBOZ,
+> @@ -1012,6 +1021,8 @@ static __u64 vector_regs[] = {
+>  	 .regs = sbi_sta_regs, .regs_n = ARRAY_SIZE(sbi_sta_regs),}
+>  #define SUBLIST_ZICBOM \
+>  	{"zicbom", .feature = KVM_RISCV_ISA_EXT_ZICBOM, .regs = zicbom_regs, .regs_n = ARRAY_SIZE(zicbom_regs),}
+> +#define SUBLIST_ZICBOP \
+> +	{"zicbop", .feature = KVM_RISCV_ISA_EXT_ZICBOP, .regs = zicbop_regs, .regs_n = ARRAY_SIZE(zicbop_regs),}
+>  #define SUBLIST_ZICBOZ \
+>  	{"zicboz", .feature = KVM_RISCV_ISA_EXT_ZICBOZ, .regs = zicboz_regs, .regs_n = ARRAY_SIZE(zicboz_regs),}
+>  #define SUBLIST_AIA \
+> @@ -1130,6 +1141,7 @@ KVM_ISA_EXT_SIMPLE_CONFIG(zfa, ZFA);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zfh, ZFH);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zfhmin, ZFHMIN);
+>  KVM_ISA_EXT_SUBLIST_CONFIG(zicbom, ZICBOM);
+> +KVM_ISA_EXT_SUBLIST_CONFIG(zicbop, ZICBOP);
+>  KVM_ISA_EXT_SUBLIST_CONFIG(zicboz, ZICBOZ);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(ziccrse, ZICCRSE);
+>  KVM_ISA_EXT_SIMPLE_CONFIG(zicntr, ZICNTR);
+> @@ -1204,6 +1216,7 @@ struct vcpu_reg_list *vcpu_configs[] = {
+>  	&config_zfh,
+>  	&config_zfhmin,
+>  	&config_zicbom,
+> +	&config_zicbop,
+>  	&config_zicboz,
+>  	&config_ziccrse,
+>  	&config_zicntr,
 > -- 
 > 2.34.1
 >
