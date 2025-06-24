@@ -1,66 +1,66 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E141F3074AB
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 434472E11D3
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750781189; cv=none; b=NdZZO3RzVfBTtiL3akCg+mOkIuAFtBI0CvxcF8njZmNkHnMPdk1Rlwm66cBLYXfC1iF+HKc/43Nmh9Ps0A99u4O3vohIWWqXjUG2RR82o0nMJPzw0mH2fGOpWiWYH3RPsKcT8yvWz3MurvVEZ6kGLdd6vOckPoWv3sC02mzzIe4=
+	t=1750781189; cv=none; b=fvpg5HWBK/yRdl3rUZCHZu3PkUBnc1ZBkdqfwe2x9GGvKRTmi6hoh+Lt1KCGLZasMRm6c96r/g2akWiVbkBvPGU5Smps0p5AGQe5FUN9VKj/0QRO38TdUwRD14PXZ0xY/2Z1I1bARxpPTGtqbfipgpsEUi+1+EWAjaDybeudJzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750781189; c=relaxed/simple;
-	bh=xlkLlcSf0h/ZKVboOWy/I0VnhwHvItq4orD9GOCGulY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=VFiTdIlHejA5W9kiVYELZyfSwakIhqe9AVrmvSrqrNZuQOP9jw/R30FgcACuLNOXmjSfEQ225RzeWQHJ5DGfL9fYv0Gmwp9Y6gQ7krxjlH7GTd+ln9rdxreL403R1XnGYnRj+eeeLK3y6H8VMtOeW/a69QpDBn9RfmIhNScBVzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uDPIkN+M; arc=none smtp.client-ip=209.85.221.41
+	bh=ksd+r9cixP2JpFRZLh5NH/QezogKKzVMrSYSuaXgros=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=g3yDcH9ALtsJOL9tS3iCQP84ijL4PzO0cywhMdzruoXU2+RETJUjrZ+oRs6grAYxNPaPT1w6dBVHblY4puI2PxuP1oskiKoaOucjlxklud3086gsnXqbpMwAYk1tgfHKzneb6UxFkYus1BynIX2TY+Adj2K6tky6rPA+sWWS4TI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=WEXrj4bL; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uDPIkN+M"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a4e742dc97so14496f8f.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:06:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="WEXrj4bL"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so4248755e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:06:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750781184; x=1751385984; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1cid1BQIElBt/p0v4bYFzQjvCg76HYy8SFF6cbZxptU=;
-        b=uDPIkN+MxQJODh4HrRhooG1FQJ4LQef7MRE94aUugdM1U4b52i2Av1Yi/G7SYu7kHX
-         cs9vw65qc+H9RawGU8rsA8eNK+o0a8/bPlWm+1KccLM00Ahe1AiK9899wBGnQCfTw4Pr
-         q53Vt0rcYwKtrC4Mz3wtmrnDHrKOvg55gEFHB0yXk2Ejx5DowG9sao8xpkr76yoDRPLO
-         RreRMPn3Ud4dGHk5Yn5e78jj3Dlv5NRJTFmeJktqbMNFfhPgg8rLdy/HqpP9teZRa4P3
-         /Jf1EZXrcZT7lWfBYI22jThmv5oo6cN5IW6T1gQcN1hLN4pjP3YaGlRlCv0Ip81sEPtG
-         O++Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750781184; x=1751385984;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750781185; x=1751385985; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1cid1BQIElBt/p0v4bYFzQjvCg76HYy8SFF6cbZxptU=;
-        b=i0i4K6RCfmUCpW09X2nNjEZffHEWWzBAH4ZJhSb0XXgP6u9LAbljsRb6EXsPcX7Z4S
-         2A8qltFz/E/pjDMHxsK1KJjNDAVbDERqL8+yxt5L/0ksYpwUtGpE29cQRU8WL37sEPJM
-         RzfYQ9tKpizFh1PpMaN1fshZgqAqwsgZlSUUYi6mgZuf+pF7nV39pVWBFcKGZ+3H8duo
-         AYZc41Jn3Mktsog9a7/mZu4ZodjfQcgUSrEZt8iWEWhITx4s7De+L6pfEq3ZaR8ogEVi
-         aKlqXfT8qlEpXSR89Llr/GsZv9QzGqlpiBnEZTOJm1+QPxf19z/LFfktAoUtGz2y7roY
-         JzNQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWjGb0i6qSk0cdkUaZjgK1+SRO0L4u5gGbW3oHaeMkkIvjllRsvyZsBtRCcWPcPPz3/jD012zP7ZBNEckI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyW89PnpeDOJMc3Gb+Y5totI254fzxD5rz0TYbzPtmwPTw2gbo4
-	q0v0c6EJJIFd8GkIbsPnNICLNeUb3hmfpH3xFDvl5WPeUMwQz96yWmwhLgwQt2+afMw=
-X-Gm-Gg: ASbGncur0aX3kp90FyF2zX4uGd2pBal5TLGkk8kB3BcGpGdzhPPrc4asdbDyAsTvSed
-	ea0Oti7McXf2MhOBd/AQ0uNuZ8NaLMBf8SgzQQi9dlkDRrH+ntJyuC1Ul3sG+6QnR0LGH1jv8HZ
-	xfDie6PeMg7HCJU4hyZcxkcF97g/nI/ym98mfqR27VhEG5kQ1PCHGabfjSqeawRmaHTARfx6GNI
-	0Msp/7cTAfYNkVOLncRGcNhxxdLpYxF/LqI68GagGIf3obBfadCuG/89/ks9NJf1rQ5qVVp9F1I
-	Ivlf062xvNNut2+1ugirFFQIjuyJN8ca+5t7HFww6RFAr4zswAFsgFdwMURCXxCpjeJJeRCzfcc
-	H
-X-Google-Smtp-Source: AGHT+IE7QrYdODMg+rQ3Qulq63j+JWzcWyuaiscjncp3n+omTYlc5+kTNiqEaBdrxSFrvdg+ETe++Q==
-X-Received: by 2002:a05:6000:2913:b0:3a5:8934:4959 with SMTP id ffacd0b85a97d-3a6e720e285mr3568635f8f.27.1750781183884;
-        Tue, 24 Jun 2025 09:06:23 -0700 (PDT)
+        bh=mkw37E8JWs02brQAU4juDlznrN1By33E9feiEVoXMro=;
+        b=WEXrj4bLo9SDMW/BgJSeqVjtWUb0IIC8wVQr3W+WTr4wHhdyf6kbd1GocXJaAQH7i0
+         xA4nJkwAn8C9wSAqkqbE7/cGGfSMBiZqb6/UP+8DUIB8PoPlCjIX4Q1HWN+5SeZ/6KbV
+         WPmQ5bqUcElpLsIrG1yd/Pty4oRSK31UIWe1O1RTWb1FPUVU3dnxZncjGFIroREPGMSw
+         TVOFboa/Xzy7hHkDdfjnsnxNSZJ3LKxV7o14/Xnov8Bgc4m4rtAkdLpqQX9u6Zx/s320
+         CMGTAutV1sG5PqAeIEkwDw4C4RMVMdey2vU4tQeST97KjKlz+4SXmMRz0RiQ5fluD0Qu
+         cUmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750781185; x=1751385985;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mkw37E8JWs02brQAU4juDlznrN1By33E9feiEVoXMro=;
+        b=ULlDg76z7zs6BLnFMdJEUVkQmweexrwH0d4uyu7EwXcPqsOzrJODrFQuFZyCf99KEU
+         ihS4RVnEklkDGLJnGaUFJqvZnvapGVkQyl5nH9nz/oDq5fDaFFpXy2NT+X/z9nGdZpPe
+         Yg1jvpqQag09seZrIZUrwrxame9pVlr8wC0QdsbjjmHQb3OXCVCvCqIfZtTmhnRl3xgF
+         Vye5UDZzfLkKutbVGqzNtsFQYc0hEoXRgGiXogzzAJoqFfwtInVQqE0sVGLayAmBV1pk
+         Ax6Q0II9gtTkfi/OrgokA6KZ3ayF5bkbvaW0Lw9zdaUEidW/A03rlkS0zoj3hppkGUVj
+         4w6A==
+X-Forwarded-Encrypted: i=1; AJvYcCW2ltp6RMfcGDMM8633Lpxyr388iF6C1sWGCx803lD1VvkQ8HIK6auzdfTQtQRNVmKXGYaSdstdJovHtqY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwabBu/xljv7vrrGTu9oTOQx8XHMAJNonCIFU3KJjPOkTl47uDl
+	UPrLm35i/u0BP5iCccLziA98wYbnqpiCX4DqpQMNu1VFYNxz8tfzTPapKgoXaBTcM4c=
+X-Gm-Gg: ASbGncusq5psBFXByQA/fYU2s2p0nBir+HDDpmEFLp/3w6KvY/gmKJhAX8aInlMnIPH
+	JxrCy8KIeDgHJvB5JJikzQ+PR+gGl9BEGNDUirvqYSxJqoGqoDm6j2xjCIbes1d42jBS3QMQstb
+	kAvoun4CXdYfA9PlWSI5l9PBT/04ajxag64EKPilF9/YiR5ydBN8oSxm7Z2pnwpLUdNhhWPuAmX
+	BsZy43XqmE+ZiXQFUE2oIrIwY2OhPMMUzgEAV2fjzgjz+nyUN9OJmG2v/UF2ojUkIU9+o45efcr
+	UKnrAvv4iAU0eCMQLWkGYBv9TGxsrNM3EyzTUZ5tDDVVfIJmL12yBdpTGsDIo1oeGaY0QwJKlZZ
+	lOKN9Syw0cJM=
+X-Google-Smtp-Source: AGHT+IEhQzGC8kExWFQeWgM/yDeL09UAxr7lNw3qqiK2IVc702o/A3qxsPe7x/s60KhVtq/Z48a/wQ==
+X-Received: by 2002:a05:600c:4fc5:b0:442:e03b:58a9 with SMTP id 5b1f17b1804b1-453659edd23mr149033095e9.25.1750781185514;
+        Tue, 24 Jun 2025 09:06:25 -0700 (PDT)
 Received: from toaster.baylibre.com ([2a01:e0a:3c5:5fb1:9dad:c694:2b52:ea7d])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-453646cb64csm151933805e9.4.2025.06.24.09.06.23
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-453646cb64csm151933805e9.4.2025.06.24.09.06.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 09:06:23 -0700 (PDT)
+        Tue, 24 Jun 2025 09:06:25 -0700 (PDT)
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v2 0/2] NTB: epf: add vNTB support for Renesas rcar
- platform
-Date: Tue, 24 Jun 2025 18:06:15 +0200
-Message-Id: <20250624-ntb-rcar-support-v2-0-8c0e5cf69c4d@baylibre.com>
+Date: Tue, 24 Jun 2025 18:06:17 +0200
+Subject: [PATCH v2 2/2] NTB: epf: Add Renesas rcar support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,10 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPfMWmgC/x3MQQ5AMBBA0avIrE0iUypcRSyoKbOpZopIxN01l
- m/x/wOJVThBXzygfEmSPWRQWYDbprAyypINVFFTWaoxHDOqmxTTGeOuB7IxXetb6xpDkLOo7OX
- +l8P4vh+x54qEYgAAAA==
-X-Change-ID: 20250624-ntb-rcar-support-e3397f76c532
+Message-Id: <20250624-ntb-rcar-support-v2-2-8c0e5cf69c4d@baylibre.com>
+References: <20250624-ntb-rcar-support-v2-0-8c0e5cf69c4d@baylibre.com>
+In-Reply-To: <20250624-ntb-rcar-support-v2-0-8c0e5cf69c4d@baylibre.com>
 To: Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>, 
  Allen Hubbe <allenbh@gmail.com>
 Cc: ntb@lists.linux.dev, linux-kernel@vger.kernel.org, 
@@ -81,57 +80,64 @@ Cc: ntb@lists.linux.dev, linux-kernel@vger.kernel.org,
  Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>, 
  Jerome Brunet <jbrunet@baylibre.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1448; i=jbrunet@baylibre.com;
- h=from:subject:message-id; bh=xlkLlcSf0h/ZKVboOWy/I0VnhwHvItq4orD9GOCGulY=;
- b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBoWsz8XitbW65TZA5BSG3j7AAxJ1XgMryQBWpCW
- JJZGFjrqiSJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCaFrM/AAKCRDm/A8cN/La
- hTuRD/4qu3puCsQNgW95NrBlI2j7ugbs47thV9vS7IwWYXIeU+7jkSUFYV1h5NwVSBQxc5y8O4a
- nF//2TP0H2gFfLPOnZnclShKUc3/87jGsoX5f3O23NtBKTVrQfLWDWw91bGJp+R+Q1G1h1ywh/k
- dPs+EPuTvcWiUn/eJaD2BdKAswPoXpyPAKu7wVOZpds0h+IVm6hJ25t8NW15EqyykUsGG3yZUbo
- oEvkOXRrtbQY/zFgBYQKkMuxJckauImcPO4+Trb7zakem1pozwOJKvnCQTdLPodLEe0JgmoT6Lm
- 1pZTu9/dUwR08CFEvYgVgixi7uz8twJNAuIIiem7X9cp0DR3e6WWiDmlrSgcl66rbzLm1sTXLbF
- LYlndHEx+14Z8JEr2NnDRYzrfY9JPjYj6JJ09McQWpN99/ACkukjpyfSGSOEHOMnL4qrdSq5Jy+
- ECpm1oYOCLoHMDw96rv71iK4dSWtIetcRXdmrCkMoVwBv9IhqHdgOv3F7QkB0q6yC59n24l+5lg
- A0Q/hOBTzX18ETZvuop/MX9qE/Q8OtJ5bI7Ued21bAwuBpk512fVFp7K9VZNwZOYpyRvySEM0O2
- 5xz7jN4SXKBUD5ADPkh9+JUpaQyfQgjx7zO6OB1xVupE6NSmrFor9FT0FlAkD0jFfgccPYO4rNS
- /u5FJ5NPjsoepUw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1326; i=jbrunet@baylibre.com;
+ h=from:subject:message-id; bh=ksd+r9cixP2JpFRZLh5NH/QezogKKzVMrSYSuaXgros=;
+ b=owEBbQKS/ZANAwAKAeb8Dxw38tqFAcsmYgBoWsz+tpfrxfKmcVzoE4RqWgZDMGhoyDP6ic2R+
+ /FiP9KOq+KJAjMEAAEKAB0WIQT04VmuGPP1bV8btxvm/A8cN/LahQUCaFrM/gAKCRDm/A8cN/La
+ hVD5EACoPMsRVtwtBSevpYMpzypxnVkVwkz7kmmvOasvLnrxvYooXYNDy+/+XkcpX3OclE2dEmY
+ 0+RxsR9Hwpc4wCDzxSmozDy+cAcdVV8zuiKJ4se9WiFzWEFCeOGCiXJTco6mZi86hVdWs/jrAgJ
+ 5Ps/XixjlDgPldUfiE2nMrflGL1wC20daqiS5G4kla7aZ+FuS8GfGcM/ZeLnP8iIfASF1AMgcWs
+ 4ljdzyobJ5KtrTruf+X07ArVG0MafAV8+87Z4cUQbit/bo4IC4k6aag4FHX+YDDlLxQ7lzUf7h+
+ Q/L+YgVrrrawNzTP0l9K9sFFbm4p6FTsK6mTt70cO92UZszCjLjxGYklov+hnkuq9zd7Aj/Pwek
+ VVGweKgdkLZYnEMpWWVLJCPNtb5smtsyrHqxegJlD3TNQvjBwolr11/+uiR1z47FfeTG46kgLwg
+ 0jhO6fnWEZ8DR6UeAmX7AcTRrXbCZHDhgaAKCIOKR3NPpSl/3tu38ZoHuhn3lUEdT/HlXPcrUcW
+ h7o0gVFv/1CqVrYFer+Ej2fLuLnhI9KjvVhrF2lLvJ2YAqZNG/8ryMGEfyh1npPyFEBFXuQY/TK
+ ZUL68GxzoWUvDEswVkyKLQiZ50V+rbYXcVrsDbI4DDV8fYkUFW9m3WCkHApvvZn+JZjHG4ceNsw
+ cQ+O0NtgKQ5y7HQ==
 X-Developer-Key: i=jbrunet@baylibre.com; a=openpgp;
  fpr=F29F26CF27BAE1A9719AE6BDC3C92AAF3E60AED9
 
-This patchset adds support create vNTB link between rcar platforms
-This was tested on rcar gen4.
-
-The changes here are for the RC side of things. The EP side was sent here
-[2]. There is a runtime dependency to get a working vNTB link between the
-two but no compile time dependency. It should be safe for 2 series to go
-along in different trees, even during the same cycle.
-
-It may seem like we are starting straight from v2, but a v1 of PATCH 1 has
-been sent along the v1 of EP side series [1], for illustration. Starting
-from v2 to avoid any confusion.
-
-Changes in v2:
-- Rename barno to barno_map
-- Drop unnecessary default values
-- Actually add rcar support with an product id provided by Renesas
-- Link to v1: https://lore.kernel.org/r/20250505-pci-vntb-bar-mapping-v1-4-0e0d12b2fa71@baylibre.com
-
-[1]: https://lore.kernel.org/r/20250505-pci-vntb-bar-mapping-v1-0-0e0d12b2fa71@baylibre.com
-[2]: https://lore.kernel.org/r/20250603-pci-vntb-bar-mapping-v2-0-fc685a22ad28@baylibre.com
+Add virtual non-transparent bridge support for Renesas rcar platform
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
-Jerome Brunet (2):
-      NTB: epf: Allow arbitrary BAR mapping
-      NTB: epf: Add Renesas rcar support
+ drivers/ntb/hw/epf/ntb_hw_epf.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
- drivers/ntb/hw/epf/ntb_hw_epf.c | 120 +++++++++++++++++++++++-----------------
- 1 file changed, 69 insertions(+), 51 deletions(-)
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250624-ntb-rcar-support-e3397f76c532
+diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c b/drivers/ntb/hw/epf/ntb_hw_epf.c
+index e8eb3adc6cecd2d52235a3f0b6b5a59ec58f1d73..97c9ed7e4dc27dabd21d3f083cc70d55bb280df8 100644
+--- a/drivers/ntb/hw/epf/ntb_hw_epf.c
++++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
+@@ -747,6 +747,16 @@ static const enum pci_barno mx8_map[NTB_BAR_NUM] = {
+ 	[BAR_MW4]	= NO_BAR
+ };
+ 
++static const enum pci_barno rcar_barno[NTB_BAR_NUM] = {
++	[BAR_CONFIG]	= BAR_0,
++	[BAR_PEER_SPAD]	= BAR_0,
++	[BAR_DB]	= BAR_4,
++	[BAR_MW1]	= BAR_2,
++	[BAR_MW2]	= NO_BAR,
++	[BAR_MW3]	= NO_BAR,
++	[BAR_MW4]	= NO_BAR,
++};
++
+ static const struct pci_device_id ntb_epf_pci_tbl[] = {
+ 	{
+ 		PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
+@@ -758,6 +768,11 @@ static const struct pci_device_id ntb_epf_pci_tbl[] = {
+ 		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
+ 		.driver_data = (kernel_ulong_t)mx8_map,
+ 	},
++	{
++		PCI_DEVICE(PCI_VENDOR_ID_RENESAS, 0x0030),
++		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
++		.driver_data = (kernel_ulong_t)rcar_barno,
++	},
+ 	{ },
+ };
+ 
 
-Best regards,
 -- 
-Jerome
+2.47.2
 
