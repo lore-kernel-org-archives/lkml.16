@@ -1,120 +1,110 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+Received: from relay-us1.mymailcheap.com (relay-us1.mymailcheap.com [51.81.35.219])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAFBD5680;
-	Tue, 24 Jun 2025 02:52:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBD618DB0D;
+	Tue, 24 Jun 2025 02:53:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.81.35.219
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750733582; cv=none; b=BJItydNeN2a8oyXPJ8S4TCUvZc9HOsxkGvxZRV4RLpa8Vy+NtVrxUxy7BGIy9KKRXgll4Nt2w2Blu1LEMZoQIb7SAgY3GCValS/f3bxNWJq0XEnukxav5ZEe8reEyiIyECdXHAmu1PlIJrpTvvWApwJVB1jNAl62FE8Dbz7p7T0=
+	t=1750733637; cv=none; b=Fi8F89JKPQFfjw37pdgI+SCc8sX0KlXh5Y63Agzz8JkXhNu/rutk4CeypA75uI8OJNCF0+VKMumIv0Q+EtSDaIGrLhMgsXVJi59+2ZjoRJgIcW+Jl3pt7F8UdAvheLmAdX3qVuC2Y3Hcu9+aq4qeaHZsATT+N59mhtwUvi4JfZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750733582; c=relaxed/simple;
-	bh=vIpLd/cyAmz+XfQiCG2Jf/0TRUcsx5+tJCzFyFnQOAE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=k4qS4Vy57swjc/5YLxXbdDIHqfmGoXoKTfiUs12K0n0ApHX9Du24VdA5g20ABaM+r9HsfoAu3Nj9kc5zGBej0QW71DP4mc6u9Kc9eFMkGcTC7Y0g5Ekdwb3VAeav9ZxSK/Px+WQKRNNQsjagRZu9o2kPZdo50SwWO0BCcH6Flr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 4f899bfc50a611f0b29709d653e92f7d-20250624
-X-CTIC-Tags:
-	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
-	HR_FROM_NAME, HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER
-	HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT
-	HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED
-	SA_TRUSTED, SA_EXISTED, SN_TRUSTED, SN_EXISTED, SPF_NOPASS
-	DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF, GTI_FG_BS
-	GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI
-	AMN_C_BU
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:631ce60d-ce78-4ba6-b1b5-e46cc1369294,IP:0,U
-	RL:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-INFO: VERSION:1.1.45,REQID:631ce60d-ce78-4ba6-b1b5-e46cc1369294,IP:0,URL
-	:0,TC:0,Content:0,EDM:25,RT:0,SF:-5,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:20
-X-CID-META: VersionHash:6493067,CLOUDID:0cad014a6960af960f8faa693fbd8d98,BulkI
-	D:2506241052498Z90EC03,BulkQuantity:0,Recheck:0,SF:17|19|38|66|78|102,TC:n
-	il,Content:0|50,EDM:5,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil
-	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-UUID: 4f899bfc50a611f0b29709d653e92f7d-20250624
-X-User: xiaopei01@kylinos.cn
-Received: from localhost.localdomain [(10.44.16.150)] by mailgw.kylinos.cn
-	(envelope-from <xiaopei01@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1603356935; Tue, 24 Jun 2025 10:52:47 +0800
-From: Pei Xiao <xiaopei01@kylinos.cn>
-To: pkshih@realtek.com,
-	linux-wireless@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Pei Xiao <xiaopei01@kylinos.cn>
-Subject: [PATCH v2] wifi: rtw88: coex: Use bitwise instead of arithmetic operator for flags
-Date: Tue, 24 Jun 2025 10:52:40 +0800
-Message-Id: <c68a8642c325f626ac34ccee71d9d9aa69f0c92c.1750733428.git.xiaopei01@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1750733637; c=relaxed/simple;
+	bh=XtSK3TOHXlH7ADDyxdXV6GzxVcMU/rODkPLFQ0KdjcY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hSNc41LnCyZ2qIBT8racoSUvZxMdo1KQy+z/w7F5/hF46/xuAnEZI44Qg6RPvn2VBKmFYOncvajhKGbNQWccAOh59b7DX2vcaGVPfNldHVDW7HYp6RgPxiUCOlVLG42n+831doK4VyYnPibfFZn2ff3ufzsxfOlSzzumz6qPSfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io; spf=pass smtp.mailfrom=aosc.io; dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b=Kih/o9v+; arc=none smtp.client-ip=51.81.35.219
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aosc.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aosc.io
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="Kih/o9v+"
+Received: from relay5.mymailcheap.com (relay5.mymailcheap.com [159.100.248.207])
+	by relay-us1.mymailcheap.com (Postfix) with ESMTPS id BF6A2213FD;
+	Tue, 24 Jun 2025 02:44:08 +0000 (UTC)
+Received: from relay1.mymailcheap.com (relay1.mymailcheap.com [144.217.248.102])
+	by relay5.mymailcheap.com (Postfix) with ESMTPS id 2DFB1262C0;
+	Tue, 24 Jun 2025 02:44:00 +0000 (UTC)
+Received: from nf1.mymailcheap.com (nf1.mymailcheap.com [51.75.14.91])
+	by relay1.mymailcheap.com (Postfix) with ESMTPS id 77C863E859;
+	Tue, 24 Jun 2025 02:43:52 +0000 (UTC)
+Received: from mail20.mymailcheap.com (mail20.mymailcheap.com [51.83.111.147])
+	by nf1.mymailcheap.com (Postfix) with ESMTPSA id 8AB7C40078;
+	Tue, 24 Jun 2025 02:43:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=aosc.io; s=default;
+	t=1750733031; bh=XtSK3TOHXlH7ADDyxdXV6GzxVcMU/rODkPLFQ0KdjcY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Kih/o9v+9NKplD7w/sDmAGNEykum9Q8z1TM3z0aLoPsVwJmZGr6mWAMjd34eRJFKJ
+	 xWwQ7/3XWvm4yqREeiDTAMocCsp9cS9Aiq03odvYJA4dKHRkmjV4bJq/EPmxy3UUvP
+	 fOaT7ZmNeVplhVF8uVxx7kfTtO1DLKIu7oqzINqM=
+Received: from [19.191.1.9] (unknown [223.76.243.206])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail20.mymailcheap.com (Postfix) with ESMTPSA id 969414082E;
+	Tue, 24 Jun 2025 02:43:47 +0000 (UTC)
+Message-ID: <f032284d-25e4-4192-aeb2-1270e497a830@aosc.io>
+Date: Tue, 24 Jun 2025 10:43:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] cpufreq: loongson3: Support older SMC firmware
+To: Yao Zi <ziyao@disroot.org>, Huacai Chen <chenhuacai@kernel.org>,
+ WANG Xuerui <kernel@xen0n.name>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Kexy Biscuit
+ <kexybiscuit@aosc.io>, loongarch@lists.linux.dev, linux-pm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250623123321.5622-1-ziyao@disroot.org>
+Content-Language: en-US
+From: Mingcong Bai <jeffbai@aosc.io>
+In-Reply-To: <20250623123321.5622-1-ziyao@disroot.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Server: nf1.mymailcheap.com
+X-Rspamd-Queue-Id: 8AB7C40078
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-0.10 / 10.00];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RCVD_COUNT_ONE(0.00)[1];
+	ASN(0.00)[asn:16276, ipnet:51.83.0.0/16, country:FR];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	SPFBL_URIBL_EMAIL_FAIL(0.00)[jeffbai.aosc.io:server fail,ziyao.disroot.org:server fail];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_SOME(0.00)[];
+	TO_DN_SOME(0.00)[]
 
-This silences the following coccinelle warning:
-  WARNING: sum of probable bitmasks, consider |
+Greetings,
 
-Signed-off-by: Pei Xiao <xiaopei01@kylinos.cn>
----
-v2: just replace '+' by '|'. Keep spaces. 
----
- drivers/net/wireless/realtek/rtw88/coex.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+<snip>
+  > This patch adds support for the SMC firmware found on these devices,
+> which I denoted as "SMC-0" in the driver. Boost support is omitted,
+> since determination of cores able to boost requires the driver to couple
+> tightly with micro-architecture details.
+> 
+> For coexistence, I prefixed all SMC-call constants with their SMC
+> versions, and introduced "SMC-0"-specific initialization and
+> frequency-level-setup rountines.
+> 
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
+> ---
+>   drivers/cpufreq/loongson3_cpufreq.c | 287 ++++++++++++++++++++--------
+>   1 file changed, 211 insertions(+), 76 deletions(-)
 
-diff --git a/drivers/net/wireless/realtek/rtw88/coex.c b/drivers/net/wireless/realtek/rtw88/coex.c
-index 64904278ddad..b4dc6ff2c175 100644
---- a/drivers/net/wireless/realtek/rtw88/coex.c
-+++ b/drivers/net/wireless/realtek/rtw88/coex.c
-@@ -1501,28 +1501,28 @@ static u8 rtw_coex_algorithm(struct rtw_dev *rtwdev)
- 		algorithm = COEX_ALGO_HFP;
- 		break;
- 	case           BPM_HID:
--	case BPM_HFP + BPM_HID:
-+	case BPM_HFP | BPM_HID:
- 		algorithm = COEX_ALGO_HID;
- 		break;
--	case BPM_HFP           + BPM_A2DP:
--	case           BPM_HID + BPM_A2DP:
--	case BPM_HFP + BPM_HID + BPM_A2DP:
-+	case BPM_HFP           | BPM_A2DP:
-+	case           BPM_HID | BPM_A2DP:
-+	case BPM_HFP | BPM_HID | BPM_A2DP:
- 		algorithm = COEX_ALGO_A2DP_HID;
- 		break;
--	case BPM_HFP                      + BPM_PAN:
--	case           BPM_HID            + BPM_PAN:
--	case BPM_HFP + BPM_HID            + BPM_PAN:
-+	case BPM_HFP                      | BPM_PAN:
-+	case           BPM_HID            | BPM_PAN:
-+	case BPM_HFP | BPM_HID            | BPM_PAN:
- 		algorithm = COEX_ALGO_PAN_HID;
- 		break;
--	case BPM_HFP           + BPM_A2DP + BPM_PAN:
--	case           BPM_HID + BPM_A2DP + BPM_PAN:
--	case BPM_HFP + BPM_HID + BPM_A2DP + BPM_PAN:
-+	case BPM_HFP           | BPM_A2DP | BPM_PAN:
-+	case           BPM_HID | BPM_A2DP | BPM_PAN:
-+	case BPM_HFP | BPM_HID | BPM_A2DP | BPM_PAN:
- 		algorithm = COEX_ALGO_A2DP_PAN_HID;
- 		break;
- 	case                                BPM_PAN:
- 		algorithm = COEX_ALGO_PAN;
- 		break;
--	case                     BPM_A2DP + BPM_PAN:
-+	case                     BPM_A2DP | BPM_PAN:
- 		algorithm = COEX_ALGO_A2DP_PAN;
- 		break;
- 	case                     BPM_A2DP:
--- 
-2.25.1
+Tested good on an IPASON NL38-N11 (Loongson 3A6000) laptop, core 
+frequencies fluctuate between 250MHz and 2000MHz individually as 
+expected. CPU frequency scaling governors works as expected (performance 
+pins all cores to 2000MHz, the max frequency).
 
+Tested-by: Mingcong Bai <jeffbai@aosc.io>
+
+Best Regards,
+Mingcong Bai
