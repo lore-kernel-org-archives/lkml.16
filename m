@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB96178F37
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5C5204F99
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:40:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750725630; cv=none; b=c04usqAimk4zBpCcH483OM83EhzDlK9eN8Uc93eIrpG9HvxLeRLfY4f/Smq7QyrzagXwH1+NVvICbX/IoPJ6pNjOSPq7in2UMsmDOxPOjWLPZFptkunb3xeBPK3cN88D5UsOPk7gG9LoUpZr0syV2FjEmvBXe2+pWLOsGRJiv84=
+	t=1750725633; cv=none; b=KT/dnjDD7U7NduqKOU6Pm/kk0nmryBLMa5oWtsQXM5eFWQ2w6j7PCDmZBJZv2SRyKk8Et6mnKcEZrMoBrNSh58ZnpUQ3qb3/2EXZR4PnCvnR2q9KzErtNgDZueJVbiFiyESdGJD9MEud6TyeY129XHmgOS6YUMp5SLeOxV9Be0g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750725630; c=relaxed/simple;
-	bh=w3sB/FWB8UBbQCbXByGpeZ5sAhquoadRiHzXW3UWkI4=;
+	s=arc-20240116; t=1750725633; c=relaxed/simple;
+	bh=dLtQNA42iMbpSsSLCp5csx0b9bOIqDZ/GCWrS/GAOlg=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=XW1pQ/1RgtDIsWLPSzBS0wORbgIiyVRxeeKsDX0zh28xsgElLpsq1YZV6axt7i3HW/j6SxiUEXKwxN1ylZUqtQeviTu8LzVQYSHUtDGt6lCMi5NEGhOdfalaiAXo/LNW5v59gioq1v8TuvSj1CLEgqoXYcCA75KnM29ZvqjaJYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JqB0aNaY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=p5UbNpBzb5WXR65/zfD1xwm6uv9xCTdfksVw5z2x4Vj0uxwzSvfb/8G/yRSgAmSfMHYHKxTEl0yXGlHHeybOXZ86qR/txy8Oq3HFuk8ykLEMIiQlSvkcr3arjeHngYy4i+51wfmRZn2PWnvo0YV2s+TjdxISR5Oqmse6l+2m8Zw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkrrOnaW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JqB0aNaY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8F3FC4CEEA;
-	Tue, 24 Jun 2025 00:40:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkrrOnaW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5B85C4CEEA;
+	Tue, 24 Jun 2025 00:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750725630;
-	bh=w3sB/FWB8UBbQCbXByGpeZ5sAhquoadRiHzXW3UWkI4=;
+	s=k20201202; t=1750725631;
+	bh=dLtQNA42iMbpSsSLCp5csx0b9bOIqDZ/GCWrS/GAOlg=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=JqB0aNaYV/FpjQehU4DA/AY2E8KTHPg/D6oM52w1ulDlQZ7sLxkd0hsVDXQ/lDzDd
-	 lqxHDyZlrjHlOoIfqTk0U9hlkA3aA/KSq/06ypnrTdOjwjtLbgHG5gF28DE5xi9b4j
-	 bwAfR+8tdSs8pAze7x/9vbJt4jIB5TVvshv3IWrdxR+RMCkoTEiYxlydPYA1pOuv7g
-	 b8Bcq23zhbdjS/UYveQxgD92J2rWKZP2OaagTkDaOLsZAl1hi76VjvRbHT9NfqOti9
-	 4yRwkCjcG5d6ourqEyhTgtRfo5r8LldPSFuk5D79OwVf9bb824ws2z+9ESRwNcHGwS
-	 nXhlBDxsXRdnQ==
+	b=VkrrOnaWFROkxeh4gq5kv8R9uf3AfO4ro2IbrsHTYk7uy3F+/Kwys019DS6BTLNoE
+	 VNxc5GDROqkszJ3VtljGW8bcd2tUpn2XPzT7BDgMZNl41Y7g9Oad/YWO8ikINaOFIY
+	 FpuD5YKoqMQ6xQCLlC46LmH9N1PKwLs+tgWdXPhjpkIuqHfWvOxwgo9iFtkaH7RSa5
+	 xXpIDhMjCrnT40ktuufKiPe4kj5qWq9TzX2OFN1fbj8WvYTv1OEa6IZlCzlIc5O223
+	 Ax62nw7yUaz+l+gJURB8F/3FFI3J0MMyRSZaS7whLQY990ZcluCS8uv5qRsGOrsxM8
+	 RIqw610UndTcg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAC8339FEB7D;
-	Tue, 24 Jun 2025 00:40:58 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33C1939FEB7D;
+	Tue, 24 Jun 2025 00:41:00 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,14 +37,14 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: do sanity check on fio.new_blkaddr in
- do_write_page()
+Subject: Re: [f2fs-dev] [PATCH v2] f2fs: introduce reserved_pin_section sysfs
+ entry
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <175072565749.3346761.771322544902669081.git-patchwork-notify@kernel.org>
-Date: Tue, 24 Jun 2025 00:40:57 +0000
-References: <20250610031315.1067993-1-chao@kernel.org>
-In-Reply-To: <20250610031315.1067993-1-chao@kernel.org>
+ <175072565899.3346761.9675336685729970783.git-patchwork-notify@kernel.org>
+Date: Tue, 24 Jun 2025 00:40:58 +0000
+References: <20250613055109.2335-1-chao@kernel.org>
+In-Reply-To: <20250613055109.2335-1-chao@kernel.org>
 To: Chao Yu <chao@kernel.org>
 Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
  linux-f2fs-devel@lists.sourceforge.net
@@ -54,29 +54,19 @@ Hello:
 This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Tue, 10 Jun 2025 11:13:15 +0800 you wrote:
-> F2FS-fs (dm-55): access invalid blkaddr:972878540
-> Call trace:
->  dump_backtrace+0xec/0x128
->  show_stack+0x18/0x28
->  dump_stack_lvl+0x40/0x88
->  dump_stack+0x18/0x24
->  __f2fs_is_valid_blkaddr+0x360/0x3b4
->  f2fs_is_valid_blkaddr+0x10/0x20
->  f2fs_get_node_info+0x21c/0x60c
->  __write_node_page+0x15c/0x734
->  f2fs_sync_node_pages+0x4f8/0x700
->  f2fs_write_checkpoint+0x4a8/0x99c
->  __checkpoint_and_complete_reqs+0x7c/0x20c
->  issue_checkpoint_thread+0x4c/0xd8
->  kthread+0x11c/0x1b0
->  ret_from_fork+0x10/0x20
+On Fri, 13 Jun 2025 13:51:09 +0800 you wrote:
+> This patch introduces /sys/fs/f2fs/<dev>/reserved_pin_section for tuning
+> @needed parameter of has_not_enough_free_secs(), if we configure it w/
+> zero, it can avoid f2fs_gc() as much as possible while fallocating on
+> pinned file.
+> 
+> Signed-off-by: Chao Yu <chao@kernel.org>
 > 
 > [...]
 
 Here is the summary with links:
-  - [f2fs-dev] f2fs: do sanity check on fio.new_blkaddr in do_write_page()
-    https://git.kernel.org/jaegeuk/f2fs/c/70b6e8500431
+  - [f2fs-dev,v2] f2fs: introduce reserved_pin_section sysfs entry
+    https://git.kernel.org/jaegeuk/f2fs/c/59c1c89e9ba8
 
 You are awesome, thank you!
 -- 
