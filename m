@@ -1,163 +1,121 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4B862E6D25;
-	Tue, 24 Jun 2025 17:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9942222D2;
+	Tue, 24 Jun 2025 17:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750786844; cv=none; b=bFN2bN9Dn5jX7VTQGVbxB7KHSZJwWVq+Mdwf/2xw9VyR3qKbxkiVJXEcY3f6InCOxbpCyw6uMke9bTyaemoVAbP5sahHe/sA2INy9l10tqtfO+SrYSCUWZVOSCOemDrhGmoQvvkSPHqFNd4v2x9ggWurjYU+WgnBREs4Yl2gKoU=
+	t=1750787069; cv=none; b=g370sOzLqlbvtxii+gWTZ67ps2kouPfQDS2VE+CLB+bKI0q5UuEvO8xRpkDZDaR0U04AMZ927Gn5QILUNHD57w+wCfIdQbDo+z1bt/1znP5d6ppB0jDDPNMOmWoxuPHUm3Z2mMcfRx2Wz1CGMB6kFR0XTKINDRNf+/th61VmInw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750786844; c=relaxed/simple;
-	bh=fQzrbePrYxIhqaVEoVCCnBo8eFypKcmkIBYe9dmZyhw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u/qIFx7beKXM+xYjNMB6uITzjxtDT+RQTF/VKQcMUuICfcS40hdAFylYAC0JECJm6ANaZJWbP+pEMGvIpj4xpE5o3yxgFpvhGbuzd6T7CE9ERDeiUnZqky6Lx8bfxrsPNeygORC4kt+dYb2zPEPHShrUH92q4tpQr40fjlyfuK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kgWw30U3; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750787069; c=relaxed/simple;
+	bh=cHaQbfhGoVHgzh7OltXize9WQGcFfqfH4wv73lVFTiw=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=gGsxkLz/ZXrDBpzn8S+Oc0J5Asb/dngustrJ1hSgLXT12weLhErQ9kRF2mZ8LxBa0+J6a7dmbAQ6IAH9ZatmWPGgM9yZTCSVA3ZK8BWeFlVgSysT8MFV6aFgEeuyjAEeTxfbJOPrXGuz+bZ6eEM2pMamvKpUbY5M5evydMDo42E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=oRoaf3Pe; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kgWw30U3"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-453634d8609so5851175e9.3;
-        Tue, 24 Jun 2025 10:40:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750786840; x=1751391640; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yFpLgdSSuWbM/Fh3sFwagffQ7A+FzIgyJ4W4hLYxV2A=;
-        b=kgWw30U3KWXSPPWBh7Ryng6iJbAAdo4TKyDbxrGFDHyHj1qvhsToHNRtG6vDoWCt7K
-         zSxcNHP4+2X9wULSeI3kcq5lleXL2pw36ZzAd/u0r0ggiITL9EBzoo2fWbh9mVEmLNkE
-         84oY68exoopqhC/GwuVqSqtmSEdWmN4gwo1G+srg5l/lGZcZl9xmvUBnG0Sfi8QQCsYf
-         XEpWkuO2Tcyw+MGpBu/ummqFFmTaD4HoyxMDyPu5mBXimyfi7UG7VKH8w6zQp4oKD4u7
-         CngXFm1b9KJOXdfSYe13EFNv+SAUo8LdAeuW/lXvGsdqNHnvJ37DeL7lRauE5e7XnHU9
-         usGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750786840; x=1751391640;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yFpLgdSSuWbM/Fh3sFwagffQ7A+FzIgyJ4W4hLYxV2A=;
-        b=XPWW8uz71EphmG5mKMDWbBTY0zuEtUrIxEQKSbglhnDr+oCncnv0wYLoKldU23J6jJ
-         N/RjJlDlAXwFXKQXxbi5aX2qz8qR5uL/sCGNBzWpsg0cdoF/+YxVFT6KB72FIeAzc3h9
-         eBLnEjw0kKwiOeKMzJQdTA7nI+699pbgE0f5q+JEYJ5wiYpZS5DPnDTlXLmwPdhWO15M
-         l0ffdarbDK7/M2SQWXdfEJQ+qcAAFKY7ch6wbShSqC2P3wAoc9Pj+8WRW5+oi8oRQFcC
-         VbLpKE/PE/ZNSOkQjRLBII28h4PrZE06RDyshD44duX4Ar9l2ZvXNfQ2lVkM7DObf/Dz
-         JETg==
-X-Forwarded-Encrypted: i=1; AJvYcCVhBbPozQA9tR5HIsZhkSqs9T/Zli/8Ev/1HsAwofbIbSFNNPwgsK852s3WYfkhN8PeViStemCNFEnO@vger.kernel.org, AJvYcCX1+zQw/SGoWATKpe5UM7psccZq9COgk9/gRLbc/LoNhyRRptWULmjJknszEU3ubHmRSFi+xBLU8k3iFy7G@vger.kernel.org
-X-Gm-Message-State: AOJu0YwtowWNoKhEfHEec2sIRkAGsBC6hBHLMCcQh6Y4062g0F/IxvTb
-	yFR0fmsNHDcvcpPDBcj/70nkBnF0gEY2zdyPkFb7fd1DJka1IY6eolek/v3nl/5P
-X-Gm-Gg: ASbGncu9+JyyKidZZ/Bk9uUnLdAvrk7dJzx2k3IsV7rbKmm334wk2FHnWjWuIlspXvA
-	aKyWMREhBzJFf2g6VgHML8Or+1JxOjoeA/E/O6HnjBCGIil96RcjlE2HBWfzGcdQpqWGnSokH2U
-	XmyFaLk5H5jWo2Prvtc8SHC8rV5FLOExMBLtKsZE1VgIDCc0xK8l13L9QbmvPnnVkWPYjdlDp66
-	t5lBvxEQmjVocDbf8mGDLUsX7DKglGfvVCaczVIWIWn7yt54wRlia/sBj0/ES7BwVWGhqSckJEb
-	r4GQafQ+/KokN7xe9s1LgHHTMehG9886bh2CHfgz26z9tTt7Xephytb/pma6owswAw6ve1cQ/IW
-	iI6k/gDQrEc5SfmpXqWUmVpnccIi4f/s=
-X-Google-Smtp-Source: AGHT+IEVL67P7XwnvBMlu06MJ0roiWKvVGQR2VixgMEAacbZGjv8U8Xgvd360NNO5BtpHSEmzXC4fA==
-X-Received: by 2002:a05:600c:3496:b0:442:f4a3:b5f2 with SMTP id 5b1f17b1804b1-453815363d7mr4376015e9.6.1750786839055;
-        Tue, 24 Jun 2025 10:40:39 -0700 (PDT)
-Received: from iku.example.org ([2a06:5906:61b:2d00:a522:16f6:ec97:d332])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646cb692sm149812735e9.2.2025.06.24.10.40.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 10:40:38 -0700 (PDT)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 4/4] arm64: dts: renesas: r9a09g057h44-rzv2h-evk: Enable serial NOR FLASH
-Date: Tue, 24 Jun 2025 18:40:33 +0100
-Message-ID: <20250624174033.475401-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250624174033.475401-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20250624174033.475401-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="oRoaf3Pe"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55OHhRBh1444571
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Tue, 24 Jun 2025 10:43:27 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55OHhRBh1444571
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025062101; t=1750787010;
+	bh=a1n2uboJJ+hHVcRLq9lXyXmrDm82X6mYpb+la8WbKqs=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=oRoaf3Pe6ywPDh5w20TjpU0uhqq4MnKTZMjTI5zPE9nY0Fsy8eGmvSCNGzK+UVxft
+	 9p59NU/V4PF/A86nYQtFHl+NaaglHjxcMr7V1uJa4tNeL5YdoS7JGH8q/FJDZOuZqT
+	 W8UxS5eX23tC9Tdo4BCOJ+Slz11rIKB59jkpdotDas0u1wm+f8S6OALiU4ZDmnadsz
+	 IFeaAjRxEguVEcSMijOfS4QWMd+22mk6NIl/yqnFSy2OL13APJYqyYGK5hpn3CohJb
+	 34E5p18/cnqS58HSyV9py5xDswl29q8uCHe+Si1eQ12y89bUBXKRv41LTLAo/j3Axe
+	 ao3Rvqp0/2rfQ==
+Message-ID: <80ba45cf-2679-471b-ae3d-986697089b75@zytor.com>
+Date: Tue, 24 Jun 2025 10:43:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Xin Li <xin@zytor.com>
+Subject: Re: [PATCH v4 00/19] Enable FRED with KVM VMX
+To: Sean Christopherson <seanjc@google.com>
+Cc: pbonzini@redhat.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, andrew.cooper3@citrix.com,
+        luto@kernel.org, peterz@infradead.org, chao.gao@intel.com,
+        xin3.li@intel.com
+References: <20250328171205.2029296-1-xin@zytor.com>
+ <d243d203-7514-4541-9ea2-1200f7116cc1@zytor.com>
+ <aFrbIgouGiZWf51O@google.com>
+Content-Language: en-US
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <aFrbIgouGiZWf51O@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On 6/24/2025 10:06 AM, Sean Christopherson wrote:
+> On Fri, Mar 28, 2025, Xin Li wrote:
+>> Any chance we could merge FRED ahead of CET?
+> 
+> Probably not?  CET exists is publicly available CPUs.  AFAIK, FRED does not.
 
-Enable MT25QU512ABB8E12 FLASH connected to XSPI.
+Better not, as you said it creates extra effort because FRED does lean a
+bit on CET.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- .../dts/renesas/r9a09g057h44-rzv2h-evk.dts    | 48 +++++++++++++++++++
- 1 file changed, 48 insertions(+)
+I was a bit worried that CET would take longer time than expected...
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
-index f9a0e9aefe7a..1af03cb143ba 100644
---- a/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
-+++ b/arch/arm64/boot/dts/renesas/r9a09g057h44-rzv2h-evk.dts
-@@ -371,6 +371,18 @@ vbus {
- 			pinmux = <RZV2H_PORT_PINMUX(6, 6, 14)>; /* VBUS */
- 		};
- 	};
-+
-+	xspi_pins: xspi0 {
-+		ctrl {
-+			pins = "XSPI0_RESET0N", "XSPI0_CS0N", "XSPI0_CKP";
-+			output-enable;
-+		};
-+
-+		io {
-+			pins = "XSPI0_IO0", "XSPI0_IO1", "XSPI0_IO2", "XSPI0_IO3";
-+			renesas,output-impedance = <3>;
-+		};
-+	};
- };
- 
- &qextal_clk {
-@@ -425,3 +437,39 @@ &usb2_phy1 {
- &wdt1 {
- 	status = "okay";
- };
-+
-+&xspi {
-+	pinctrl-0 = <&xspi_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		vcc-supply = <&reg_1p8v>;
-+		m25p,fast-read;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			partition@0 {
-+				label = "bl2";
-+				reg = <0x00000000 0x00060000>;
-+			};
-+
-+			partition@60000 {
-+				label = "fip";
-+				reg = <0x00060000 0x1fa0000>;
-+			};
-+
-+			partition@2000000 {
-+				label = "user";
-+				reg = <0x2000000 0x2000000>;
-+			};
-+		};
-+	};
-+};
--- 
-2.49.0
+> And CET is (/knock wood) hopefully pretty much ready?  FWIW, I'd really like to
+
+That is also my reading on CET.
+
+> get both CET and FRED virtualization landed by 6.18, i.e. in time for the next
+> LTS.
+
+I love the plan!
+
+FRED is my top priority.  I’ll address all your comments, rebase onto
+kvm-x86/next (you have not updated yet :) ), and send out v5 at an
+appropriate time.
+
+Thanks!
+      Xin
 
