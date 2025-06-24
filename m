@@ -1,157 +1,210 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76D7E1C07C4
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:47:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807E121A433
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750758448; cv=none; b=u2g/fEu2/NgsIe35NXLu4Mlr/D++etLXWrZEbyOu4AzOeYnaa7t0oFBmLNIcUUJ6fNOjjaMdt1WGHZFIz9vzyxBGZWwNpy6HozxFYsNN1/NtWDt7idVbaSke0I56XDIREAVkg0DaD/iEUTrgMmrXZCpQZCcxCpuooiF6svwf+8c=
+	t=1750758467; cv=none; b=RnUpSxMZNOfGIcYbitOuVwc6M/gr2cvrZ0oxuyVaqnpCvtDXFYGu7Zcn1TBJJxjOQ5ujfCB5NN0l3vObDTnhQvP0sTDDnF8KGqgiHVYJSagW3wOV+ZgnxfXmI+ofiIqqqzI1QjqIJstZQ9GeRyA0CjDdluFTQaBXoGzmajhKg84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750758448; c=relaxed/simple;
-	bh=8rR4TgJpip5g/XvJwoVV7iyGd6lp1NNv6BYYgLnbeH0=;
-	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
-	 Subject:Content-Type; b=KKWnmAKguEX/s9lppbG6R3CemrGCvw0PDde01r2n1iE7IFx0fqyPlUxwjZZ5RZXQ9kV5vv/aEjjy3VdQnfjXaQFvTGRLrtJVZVZuSGHuLbq+9xHV0Pk+plS9/X/GzgofZNTxy0FXP00tYYnkOysaXNWO4/HU12Eb3C81yHNaC2c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bRKqT1h2Tz5DBq2;
-	Tue, 24 Jun 2025 17:47:17 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-	by mse-fl2.zte.com.cn with SMTP id 55O9l9iv067596;
-	Tue, 24 Jun 2025 17:47:09 +0800 (+08)
-	(envelope-from xu.xin16@zte.com.cn)
-Received: from mapi (xaxapp02[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Tue, 24 Jun 2025 17:47:11 +0800 (CST)
-Date: Tue, 24 Jun 2025 17:47:11 +0800 (CST)
-X-Zmail-TransId: 2afa685a741fffffffffdb9-d505a
-X-Mailer: Zmail v1.0
-Message-ID: <20250624174711752wxRCqiy0LZGukb1R7z_6D@zte.com.cn>
-In-Reply-To: <910a462a-8d4d-4b5d-941c-ba1396e287dc@kylinos.cn>
-References: 202506181714096412Nvp5B3BkFpi3-CKLQ9ep@zte.com.cn,910a462a-8d4d-4b5d-941c-ba1396e287dc@kylinos.cn
+	s=arc-20240116; t=1750758467; c=relaxed/simple;
+	bh=/jSuHh2C38f1M1bPCzkjiFFc2048REs7I9oM3oF6Xfo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kh9LwmK1yFXj5sC7i5+GjwIq4N1MoFYa5KIxecEdMSnYbIO5bCmQTl1+VvaM5tnYbUdGkVEm/vjXh2PzkyybQpxISL5Ka9jd0HSAbsxR+R4HL7pdJpzisMKfKMFMbD8C/jYblFM77kBQiOtnVDZv2iafaxyAdpOZvU1D71awwBc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K/DR5rnn; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K/DR5rnn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750758464;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=0z8HYNkIOI4XU46KLX1GRdmm2pMYnqtBqt1KaAKwMBw=;
+	b=K/DR5rnn5eihSvQ5/sGB1iLjKB2YbWG8Ft4DjQ7GmSIRvR4hcqv5VDXC4QkzIhk/KrOBvV
+	jDeLtv2r/k6AQOUlkhGlKgkvzXt4F1oBvLtnq4E55XUCGacf5V6j/evC/U/taQkKnkdZVF
+	t25fUmzuSgmKO0hxhw3+QURIDt0vWJw=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-681-wMz6kCCwPq-Ft4OGU5SGFA-1; Tue, 24 Jun 2025 05:47:42 -0400
+X-MC-Unique: wMz6kCCwPq-Ft4OGU5SGFA-1
+X-Mimecast-MFC-AGG-ID: wMz6kCCwPq-Ft4OGU5SGFA_1750758461
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451deff247cso28638535e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:47:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750758461; x=1751363261;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0z8HYNkIOI4XU46KLX1GRdmm2pMYnqtBqt1KaAKwMBw=;
+        b=nJQ79k8brPWoO4JLDsA4z8v3ABgBUTFXI8Kw3UYZQT+7BrWOrbGKhS2mTQa/D2cIfU
+         zutbteopeMYew2NP9G8SWjp3DrfxOSPKVRwxNBFxizrekzgwG5g0mAas7XIsGR/nbVDQ
+         KhWPDLb7Wz9rO+aY58vBDwfVSad80WTo+errJPX+lVNHa7gw1kc8DHDWxFH6vh072jCV
+         H+ugfS03sMpiLwZe0tZGtcSxVlNw8E+xfC5sqU3waoP6NGSQ4Cn25tcB8z6/T0eLIOaJ
+         GN1sy+iGCUZNlNIqL3h7UT6RZh79+sxBAmsUKk6hVE0XP7kpZhYpOVPN1VMryVXXu0LD
+         FJ0w==
+X-Gm-Message-State: AOJu0YyI/IOggnr6zULy3BNoOey6TaOYl3yyZP1kDb4OGRRXbKxBKz88
+	nGVrSXSGWkgCyWZ/qRWyGyqLaA29SsCH1z1YKSKnYWd8diYLNmeOo0akGxIcobXthvy8y4YuCl3
+	Pa8QwyMxKyufiDzT0Ps0EihcWKs7EwkgY56XR+uc8F2TC6XHsIf5SxJv0IVKgDp3Rig==
+X-Gm-Gg: ASbGncuD5CRy9BOtQJmfCbUqZXHlwLRvrPKVkLkUiuEXvPk/oHcSvlPbC7MPGEXQr04
+	/2lt4a0mtSorKpfje3C8IKl6Nz3oOktzWBvDs8SMzmw4iEXAdDkEFCojZIBw+nKjy7bdWWxYHFa
+	/DUFzMaOFe2rEavrv3QoYrSQ/AWAj11VXUoi0C7d8PNBIBrJ+JeYV10SHWXFWi2VOSRuyd3fsiL
+	TV2mV8iE+YxPuoIstz31uH2q8YXH7UGOAV3dH06PYp0y8FLOWoUIAgARE/HULUlQq8v/90VeUvI
+	OY+x4UKwGZ6UpUEWgqWp+YSHKYSHRsT3Nfsc8l/olkdkDCOQtg4djF0=
+X-Received: by 2002:a05:6000:288f:b0:3a4:ce5c:5e8d with SMTP id ffacd0b85a97d-3a6e720662fmr2319349f8f.20.1750758461038;
+        Tue, 24 Jun 2025 02:47:41 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE8djLFNnDpeZNIigPUeQ9PHBQioRlBc2lnCxuo0cWEFFhY9HSOm6C0+7jAYWjZOihkWEhWXg==
+X-Received: by 2002:a05:6000:288f:b0:3a4:ce5c:5e8d with SMTP id ffacd0b85a97d-3a6e720662fmr2319293f8f.20.1750758460552;
+        Tue, 24 Jun 2025 02:47:40 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80f67c4sm1506569f8f.62.2025.06.24.02.47.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 02:47:40 -0700 (PDT)
+Message-ID: <c6a6059d-460b-4f7c-8976-f05b0a58b5e1@redhat.com>
+Date: Tue, 24 Jun 2025 11:47:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <xu.xin16@zte.com.cn>
-To: <xialonglong@kylinos.cn>
-Cc: <david@redhat.com>, <akpm@linux-foundation.org>,
-        <chengming.zhou@linux.dev>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>, <shr@devkernel.io>, <corbet@lwn.net>,
-        <lorenzo.stoakes@oracle.com>, <Liam.Howlett@oracle.com>,
-        <vbabka@suse.cz>
-Subject: =?UTF-8?B?562U5aSNOiBbUEFUQ0ggMS8xXSBtbS9rc206IGFkZCBrc21fcGFnZXNfc2hhcmluZyBmb3IgZWFjaCBwcm9jZXNzIHRvIGNhbGN1bGF0ZSBwcm9maXQgbW9yZSBhY2N1cmF0ZWx5?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 55O9l9iv067596
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 685A7425.000/4bRKqT1h2Tz5DBq2
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: page_ext and memdescs
+To: Matthew Wilcox <willy@infradead.org>, Bharata B Rao <bharata@amd.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ Jonathan.Cameron@huawei.com, dave.hansen@intel.com, gourry@gourry.net,
+ hannes@cmpxchg.org, mgorman@techsingularity.net, mingo@redhat.com,
+ peterz@infradead.org, raghavendra.kt@amd.com, riel@surriel.com,
+ rientjes@google.com, sj@kernel.org, weixugc@google.com,
+ ying.huang@linux.alibaba.com, ziy@nvidia.com, dave@stgolabs.net,
+ nifan.cxl@gmail.com, xuezhengchu@huawei.com, yiannis@zptcorp.com,
+ akpm@linux-foundation.org
+References: <20250616133931.206626-1-bharata@amd.com>
+ <20250616133931.206626-4-bharata@amd.com>
+ <aFAkkOzJius6XiO6@casper.infradead.org>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aFAkkOzJius6XiO6@casper.infradead.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> >>>> and /proc/self/ksm_stat/ to indicate the saved pages of this process.
-> >>>> (not including ksm_zero_pages)
-> >>> Curious, why is updating ksm_process_profit() insufficient and we also
-> >>> have to expose ksm_pages_sharing?
-> >>>
-> >> Since ksm_process_profit() uses ksm_merging_pages(pages_sharing +
-> >> pages_shared) to calculate the profit for individual processes,
-> >>
-> >> while general_profit uses pages_sharing for profit calculation, this can
-> >> lead to the total profit calculated for each process being greater than
-> >> that of general_profit.
-> >>
-> >> Additionally, exposing ksm_pages_sharing under /proc/self/ksm_stat/ may
-> >> be sufficient.
-> >>
-> > Hi,
-> >
-> > Althorugh it's true, however, this patch maybe not okay. It can only ensure
-> > that the sum of each process's profit roughly equals the system's general_profit
-> > , but gives totally wrong profit result for some one process. For example, when
-> > two pages from two different processes are merged, one process's page_shared
-> > increments by +1, while the other's pages_sharing increments by +1, which
-> > resulting in different calculated profits for the two processes, even though
-> > their actual profits are identical. If in more extreme cases, this could even
-> > render a process's profit entirely unreadable.
-> >
-> > Lastly, do we really need each process’s profit sum to perfectly match the general
-> > profit, or we just want a rough estimate of the process’s profit from KSM ?
-> >
-> Hi,
+On 16.06.25 16:05, Matthew Wilcox wrote:
+> On Mon, Jun 16, 2025 at 07:09:30PM +0530, Bharata B Rao wrote:
+>> diff --git a/include/linux/page_ext.h b/include/linux/page_ext.h
+>> index 76c817162d2f..4300c9dbafec 100644
+>> --- a/include/linux/page_ext.h
+>> +++ b/include/linux/page_ext.h
+>> @@ -40,8 +40,25 @@ enum page_ext_flags {
+>>   	PAGE_EXT_YOUNG,
+>>   	PAGE_EXT_IDLE,
+>>   #endif
+>> +	/*
+>> +	 * 32 bits following this are used by the migrator.
+>> +	 * The next available bit position is 33.
+>> +	 */
+>> +	PAGE_EXT_MIGRATE_READY,
+>>   };
+>>   
+>> +#define PAGE_EXT_MIG_NID_WIDTH	10
+>> +#define PAGE_EXT_MIG_FREQ_WIDTH	3
+>> +#define PAGE_EXT_MIG_TIME_WIDTH	18
+>> +
+>> +#define PAGE_EXT_MIG_NID_SHIFT	(PAGE_EXT_MIGRATE_READY + 1)
+>> +#define PAGE_EXT_MIG_FREQ_SHIFT	(PAGE_EXT_MIG_NID_SHIFT + PAGE_EXT_MIG_NID_WIDTH)
+>> +#define PAGE_EXT_MIG_TIME_SHIFT	(PAGE_EXT_MIG_FREQ_SHIFT + PAGE_EXT_MIG_FREQ_WIDTH)
+>> +
+>> +#define PAGE_EXT_MIG_NID_MASK	((1UL << PAGE_EXT_MIG_NID_SHIFT) - 1)
+>> +#define PAGE_EXT_MIG_FREQ_MASK	((1UL << PAGE_EXT_MIG_FREQ_SHIFT) - 1)
+>> +#define PAGE_EXT_MIG_TIME_MASK	((1UL << PAGE_EXT_MIG_TIME_SHIFT) - 1)
 > 
-> In extreme cases, stable nodes may be distributed quite unevenly, which 
-> is due to stable nodes not being per mm, of course.
-> There are also situations where there are 1000 pairs of pages, with the 
-> pages within each pair being identical, while each pair is different 
-> from all other pages.
-> This results in the number of page_sharing and page_shared being the 
-> same. This way, using ksm_merging_pages(page_sharing + page_shared) 
-> averages a 50% error.
-
-In your tests, I don't agree 50% error because your
-assumption that process benefit equals pages_sharing is fundamentally flawed.
-
-The issue lies in what is the most accurate definition of process KSM profit.
-Since stable_node isn't per-mm, we cannot calculate a process's
-benefit solely based on pages_sharing. The cost of stable_node should be split
-fairly among every process sharing this stable_node, rather than being assigned
-to a single individual.
-
-It's inaccurate to claim that when two processes' pages merge into a
-single KSM page, one process gains 4k - sizeof(rmap_item) while
-the other gains 0 ? This is unfair to the second process, as it actively
-participated in the KSM merge.
-
-
-The most accurate and fair profit caculation should be:
-
-    profit = (ksm_merging_pages - united_stable_nodes)*PAGE_SIZE - sizeof(rmap_items)*ksm_rmap_items
-
-where 'united_stable_nodes' is (stable_node)/shared_process. This is too complex.
-
-For example: process A with one page is merged with process B with one page
-
-process A      process B
-    page          page
-     \           /
-      \         /
-       \       /
-        \     /
-        Ksm Page
-
-A: pages_sharing(1), pages_shared(0)
-B: pages_sharing(0), pages_shared(1)
-
-then
-
-profit(A) = (pages_sharing + pages_shared - united_stable_nodes)*4K- sizeof(rmap_items)*ksm_rmap_items
-
-          = (1 + 0 - 1/2)*4k-sizeof(rmap_items)*ksm_rmap_items
-
-          = 0.5*4k - sizeof(rmap_items)*ksm_rmap_items
-
-profit(A) = (pages_sharing + pages_shared - united_stable_nodes)*4K- sizeof(rmap_items)*ksm_rmap_items
-
-	  = (0 + 1 - 1/2)*4k-sizeof(rmap_items)*ksm_rmap_items
-
-          = 0.5*4k - sizeof(rmap_items)*ksm_rmap_items
-
-
-> In practical testing, we may only need to enable KSM for specific 
-> applications and calculate the total benefits of these processes.
-> Since page_shared is also included in the statistics, this may lead to 
-> the calculated benefits being higher than the actual ones.
-> In practical testing, the error may reach 20%. For example, in one test, 
-> the total benefits of all processes were estimated to be around 528MB,
-> while the profit calculated through general_profit was only around 428MB.
-> The theoretical error may be around 50%.
+> OK, so we need to have a conversation about page_ext.  Sorry this is
+> happening to you.  I've kind of skipped over page_ext when talking
+> about folios and memdescs up to now, so it's not that you've missed
+> anything.
 > 
-> If we expose the ksm_pages_sharing for each process, we can not only 
-> calculate the actual benefits
+> As the comment says,
 > 
-> but also determine how many ksm_pages_shared there are by the difference 
-> between ksm_merging_pages and ksm_pages_sharing of each process.
+>   * Page Extension can be considered as an extended mem_map.
+> 
+> and we need to do this because we don't want to grow struct page beyond
+> 64 bytes.  But memdescs are dynamically allocated, so we don't need
+> page_ext any more, and all that code can go away.
+> 
+> lib/alloc_tag.c:struct page_ext_operations page_alloc_tagging_ops = {
+
+In this case, we might not necessarily have an allocated memdesc, for 
+all allocations, though. Think of memory ballooning allocating "offline" 
+pages in the future.
+
+Of course, the easy solution is to not track these non-memdesc allocations.
+
+> mm/page_ext.c:static struct page_ext_operations page_idle_ops __initdata = {
+
+That should be per-folio.
+
+> mm/page_ext.c:static struct page_ext_operations *page_ext_ops[] __initdata = {
+
+That's just the lookup table for the others.
+
+> mm/page_owner.c:struct page_ext_operations page_owner_ops = {
+
+Hm, probably like tagging above.
+
+> mm/page_table_check.c:struct page_ext_operations page_table_check_ops = {
+
+That should be per-folio as well IIUC.
+
+-- 
+Cheers,
+
+David / dhildenb
+
