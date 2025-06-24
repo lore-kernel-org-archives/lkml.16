@@ -1,128 +1,134 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31702222CE;
-	Tue, 24 Jun 2025 06:08:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708BC26ACB;
+	Tue, 24 Jun 2025 06:09:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750745327; cv=none; b=bO98rjr9PjxobgWE4www+OrBfT0nnN+aCsHeDFZ3hlyaP+84Jl54OjBiHnNzFYwsGgLphdiSPQ37KQFDNatg4l3D+UUzlNoXNfOJPtTtawCMfxWrfS802r/l7Kp0yI6PyQ5sEjz6JGvQARDlX8+Aok+DFSuzdMgYFCZ8c0scIVQ=
+	t=1750745352; cv=none; b=oyePkI+4ng6MNE/rPeJu9/Plr+dTSkMCs4zBd3h2mtcHZtgvLhSzZYoU+uQOOMoYPAm/5zWWs9wuDdsb/ZoXejUJVoOhtfSFe6W3SUEZyy5yeiMCy8HS+YAVsQlYXfnFShR60qj5YaBVIUGwgfbQP6CIcMtLRf19WCPEEnwkPOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750745327; c=relaxed/simple;
-	bh=+X9MtZsUcv4GSkC9cyuG5jWSnASNAwoaLQAkoxpRors=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SmjtkiIrorDa+khO6wAr7jOH8sk7BxFjLIvyp72mUfXKWBzRK4PkRmG6U5/3BP9qaSbi7uzLT5JJsh1rylGpqCNNts1yn0xy/9FIsBBoP/Fv+QIz0Qu2WbBHv8+xlFBZt/jPCPeyIx3Y/lh8CrqfGJWmJFFMfZ7EJQr/w6f4ZiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=bleJG0tK; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750745352; c=relaxed/simple;
+	bh=fW7Ckj8ahWnKsa5BdcKtdLsAQ3uxbj3Ysj/czUQcrMI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mB4g+MHPq7GryjnPleV7aLgxHJoZ69feJxeC//O7fMFPyOINuN1r4LloXeAB9wYqcSWxqerKsiGo9K0hAHA8XIhDiHyc0+1DRan5k5Sc/HhDKliBAE9oyEE4n3CB331Z67RlFVPGPA6BtMp7EPkct+swe+Y/2SXxV5xjMOIZN/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EXKpxpmD; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="bleJG0tK"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O68Rmg021627;
-	Tue, 24 Jun 2025 06:08:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=1wDUv5SQjPOU0hH1sA13zx1J
-	1sJ+ZXrjU+iyfsayI5g=; b=bleJG0tKNA7Y2vk2mBcusas5okxzOgSA8X8b8eYg
-	Lpf0fx19vPBLmZAjvB1eSNqHmiESMreHqWI8NTGJ2uddPSp+q4HtchfGfgHujn3C
-	qJb1qCMoFkN/GuSx6xm9mrgyeaCp8nmk9iuBkqDGq01gHb8VeCwvFPNX7as9SrO8
-	l79tRxdOEaOJEcDUoT5TPPlry9NLwM5z7ILHlKdsmdWNK9JpzpNCho5BzL2PFlLP
-	Y9DQp1fquM3RA7z5nVGHi41uvsJmMpcW6z9KL3wocfSbx/QApdotXwI22tbfzDlj
-	RQPznn2BauFkO4JfbM255anW4ymtYwJJ+brwrxjBLVo8Zw==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f2rpu63g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 06:08:42 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55O68fcg017083
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 06:08:41 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 23 Jun 2025 23:08:38 -0700
-Date: Tue, 24 Jun 2025 11:38:34 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-CC: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>, <lumag@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: ipq9574: Fix 'l2' regulator min/max
- voltages
-Message-ID: <aFpA4mk2L/sxlpO1@hu-varada-blr.qualcomm.com>
-References: <20250623113227.1754156-1-quic_varada@quicinc.com>
- <465751c4-a45a-41ce-ab65-ebddb71dd916@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EXKpxpmD"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ad93ff9f714so9826466b.2;
+        Mon, 23 Jun 2025 23:09:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750745349; x=1751350149; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fW7Ckj8ahWnKsa5BdcKtdLsAQ3uxbj3Ysj/czUQcrMI=;
+        b=EXKpxpmDmFdWHeJlhxQgqMsEx97yRO0c10s46apEvX37TUfW1SwNBUCbi0sBQfzW86
+         4WDLUMAIvcWNg37bjMR+S74IRUb9nfdhU18OCr9xDTsme/DzQpyEtkRnGIpVm3nM4YpP
+         8tCmsnxOlfvc4L9P8gBpxl45YhHMbdIazFQfEnscoPjB5LuFTZVKTQ9DwpJnw8wuvGod
+         LPJRegUPhGwmQ2h9xZ9Nhj3cRUi/j9ktitw9QBBji70Bto4iWKrJS8d7Dr+obpv++7ZK
+         a4NGccZiM8Eb3XfgFEqT+7dohwY8yOHmMRc10NB3vM8yayDHLcwwRNqcV/GDuVDyIt2w
+         FAxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750745349; x=1751350149;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fW7Ckj8ahWnKsa5BdcKtdLsAQ3uxbj3Ysj/czUQcrMI=;
+        b=wVkXJWqb9cvV4PXCamceigaVnevfFGdo7bZlLK8ahjzjLMreQlgDYyOLFaO46VXdgT
+         2J2LP8CTtVv0j8wf9PeZ6omhRr96o9peZOsZIWq/6jQx76CR/mxUixrMlL33gpPanFsP
+         BWY8MXR1D1l53JUJWqQhT16LYxjinmg2QGCrjjnuOA8e3peicqZREGgpI32S492GEes9
+         jvyuXdRdgWk2TgXIHvVqYuVzTH7Sd6UYVnSCtmBa533k07gUpLSg70evhKXPut52/fZ9
+         T72cwljY384uKClNYkDafecGUyivm8z3DWg740C5RtAzbpMTqTw1rXZxZWzBI2dD1ylD
+         jUaA==
+X-Forwarded-Encrypted: i=1; AJvYcCVp/IpyZWoixJVdfaibeFT+ECVmNrlplJjzPOP1I3k5s3hjvoRtxqLAGABGhnT9RX/KZmB/G+uNwcXH@vger.kernel.org, AJvYcCX6PD2IboO+KElUn2pleDBa3Qz+PdaRlNUWdTAEdxxwQh4jnQj+MtjKy+YY4BHAZuQK6L7q2NGs9PSOCdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywp3jBJzwWO2hhHL43PszCLfZBygFqcBGWWb80TgoHVCjHvzKv8
+	xymM4XuIUHk8n8RZEa/Mlo6H6/JR9e1JezvqlCfPOfE2L10DJvZZrO+nX+7y9ye2/jEAp9anQ90
+	1Nn18sisDK+aZRMHjF6uKzc26tdhje6g=
+X-Gm-Gg: ASbGncurdFywFYRdc73Kwnw5ZaHvZAMsvdOFa1Vq5ciR3ITqVpkv3+lPJfWvK8JXoTc
+	0TPtcSXPv+SmIWyOrbDDMaviVZV7PD92KMwPwKoSAm6NJJcE+U1u2FZtTfd83xbF/7B9VkKD3wi
+	S2o5T4XhhIlxIMbZv2qd4uRXwiJ6wBxXQ+WeJDsUruch+7Qw==
+X-Google-Smtp-Source: AGHT+IFIgr0ofGUe9CoG/+hPdKQ1x6RXPoUtMHXI2Z6EQ/AleFVzF2M27mcDjxtQoJRPf0KEBzcZLAD1davZ4q/0hRg=
+X-Received: by 2002:a17:906:c113:b0:ae0:66e8:9ddb with SMTP id
+ a640c23a62f3a-ae066e8d717mr1210117566b.19.1750745348429; Mon, 23 Jun 2025
+ 23:09:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <465751c4-a45a-41ce-ab65-ebddb71dd916@oss.qualcomm.com>
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=NdDm13D4 c=1 sm=1 tr=0 ts=685a40ea cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
- a=hBTOza7BeWqvS7caNNMA:9 a=CjuIK1q_8ugA:10 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA1MSBTYWx0ZWRfX0CVzaeCoc96Y
- 887ER8cYDmrk6w0ZpE96cNi79SFSQgawv45fg0GHgg2/OP9zmkVR3cgrjFTrdRkFU8oNdvCo3T8
- UlghGwm/qAXyOZjZNygtkU93iZ+bLYNEmlbMzM+OQkpmSo21/dAV5KqHx3afv6+4SrJ+0z4GoEM
- F+WFE+Q7qAVyD5nzfA2qJgd9mnGpw6+uZGfYH9w4bSuBYN+KdnEpl33DnYibBLoMFcJb4M+u/d8
- ztgSMmlcLz9YzvXMcNc28o7p8N5WDG7Rgix6PTrWj8crxRn5BK8BO06bHLhYjimyJbaZYZ/zSV/
- aLMzFn25ceM2k6iIRBSWA5qyAcqn21mD475Ddte5xAirTe213dVb8xIl6h5IKseY9n5iX8q770Z
- zsVdEok5Uv8GEzkhpiUepPz5BLhYpN1sW3SD3XTq/1rPas9UDW3tUC7Elkm5FEv94DtQhLHj
-X-Proofpoint-ORIG-GUID: QzpYM4SiRXrFgsB4SfmGR7todxqHUuhC
-X-Proofpoint-GUID: QzpYM4SiRXrFgsB4SfmGR7todxqHUuhC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_02,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 mlxscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
- phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=574 adultscore=0
- clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506240051
+References: <20250623211116.1395-1-ansuelsmth@gmail.com>
+In-Reply-To: <20250623211116.1395-1-ansuelsmth@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 24 Jun 2025 09:08:32 +0300
+X-Gm-Features: Ac12FXwFNvcqZKqUD5srAT7_XmAWpE_IZPZsBp_UYx_m4TP8w1QBK-94n1EW-T8
+Message-ID: <CAHp75VcWW=RaHS9Yb8BcK2Jt7qtNOQzA3eDOZQ88RQG63981cQ@mail.gmail.com>
+Subject: Re: [PATCH v15 1/2] math.h: provide rounddown_ull variant for
+ rounddown MACRO
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Lukas Wunner <lukas@wunner.de>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Herbert Xu <herbert@gondor.apana.org.au>, Andy Shevchenko <andy@kernel.org>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org, 
+	linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 23, 2025 at 01:34:22PM +0200, Konrad Dybcio wrote:
-> On 6/23/25 1:32 PM, Varadarajan Narayanan wrote:
-> > The min and max voltages on l2 regulator is 850000uV. This was
-> > incorrectly set at 1800000uV earlier and that affected the
-> > stability of the networking subsystem.
-> >
-> > Fixes: d5506524d9d9 ("arm64: dts: qcom: ipq9574: Add LDO regulator node")
-> > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> > ---
+On Tue, Jun 24, 2025 at 12:11=E2=80=AFAM Christian Marangi <ansuelsmth@gmai=
+l.com> wrote:
 >
-> Shouldn't there be a consumer for it, instead of it being always-on?
+> There is currently a problem with the usage of rounddown MACRO with
 
-The uniphy block is the consumer of this voltage. The PMIC configures it
-to 850000uV based on OTP settings and s/w doesn't change it as uniphy
-doesn't do scaling.
+rounddown() with
 
--Varada
+> u64 dividends. This cause compilation error on specific arch where
 
-> >  arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi b/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
-> > index bdb396afb992..21b04a2c629d 100644
-> > --- a/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
-> > @@ -106,8 +106,8 @@ ipq9574_s1: s1 {
-> >  		};
-> >
-> >  		mp5496_l2: l2 {
-> > -			regulator-min-microvolt = <1800000>;
-> > -			regulator-max-microvolt = <1800000>;
-> > +			regulator-min-microvolt = <850000>;
-> > +			regulator-max-microvolt = <850000>;
-> >  			regulator-always-on;
-> >  			regulator-boot-on;
-> >  		};
-> >
-> > base-commit: 5d4809e25903ab8e74034c1f23c787fd26d52934
+causes
+
+> 64bit division is done on 32bit system.
+
+on the 32-bit
+
+
+> To be more specific GCC try optimize the function and replace it with
+
+to optimize
+
+> __umoddi3 but this is actually not compiled in the kernel.
+
+__umoddi3()
+
+> Example:
+> pwm-airoha.c:(.text+0x8f8): undefined reference to `__umoddi3'
+>
+> To better handle this, introduce a variant of rounddown MACRO,
+
+rounddown(),
+
+> rounddown_ull that can be used exactly for this scenario.
+
+rounddown_ull()
+
+> rounddown_ull new MACRO use the do_div MACRO that do the heavy work of
+
+The rounddown_ull() is a new macro that uses do_div() to do the heavy work =
+of
+
+> handling internally all the magic for 64bit division on 32bit (and
+
+for the 64-bit divisions on the 32-bit platforms (and
+
+> indirectly fix the compilation error).
+
+...
+
+> - Add this patch
+
+Why are math64 APIs not usable here?
+
+--=20
+With Best Regards,
+Andy Shevchenko
