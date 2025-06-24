@@ -1,328 +1,175 @@
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2061.outbound.protection.outlook.com [40.107.220.61])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AD5623909F
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 05:58:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.61
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750744736; cv=fail; b=LW9KLx1EK9HUIYqPXycO23s3TwPfhuKt8zsQP0pVw4/WKYuSiqn0lPw6y4EkXuYD2gbsSy0Gh2Cp0EC//Sna9JCtRcdkjmtnVLr5MaduotZ/fvmOYUrYWB2UmAROKYXjUFzMCD9ERzLWsVtqc6eAWOC37ZHU3UOB9dFWQIZqtA4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750744736; c=relaxed/simple;
-	bh=mi5Ld5J0qeg55sZL7uIeJlWfD3SUESBso3PQvYyKL/I=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SnxmlTCBhYJg/93fonArK4SegX+TxATcWwrgBfGCDkrOKGwN4vtjhX8EziHMimyrgLrf+AGvmUFEw2jxTkimJE/UvXAXvZzZJ4SJbKAmF+8W4XxDhXTnu85qkGtRJfOoyHOa+lvBFBv+QyfXnxGvP0nMSXixCdIn1DhuAU39dOY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3qEME/OO; arc=fail smtp.client-ip=40.107.220.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8450E21A435;
+	Tue, 24 Jun 2025 05:59:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750744752; cv=none; b=UYFxUokafDdPDB3qL5inymowVJpqwFavtTGiUsLY3rEfsQQMmbYWKnE/cFV2jifRvX5PHp1ZULcjchmc6iJtxGcCvsy0u1wNLHKFFZ/cwhMSrsgFdv4Uw+Lg4NcNxC8yND46RuJ2CAPT4YOjPJmJeMhoIvTT2F9Ms8CKRAATyHc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750744752; c=relaxed/simple;
+	bh=tQ+ZxhLq+WnBTT5fj+ECFv0Kj6JPuQkZSgQX+COKdvY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VBWehgmIYuWARWq9LAKLScc+7LxrWI+Y9yXOmQJaFZL3T+0yXzvP7gTnsDc6jcg5o2ulQ9M5z3DkAZJRjm4b87i8WKdDy9k1LVcOO7kp9PxPl5oiCM2lykRh29N9IiIhg1y8y/+BwES7mnbzjV8thOVBS4Lscs2Vh+LSIwRZyaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=d5gSWGCa; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3qEME/OO"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cXU6DrKqPinu+WjXflLJPeCIij5yrVcqXNmVtbDwHNn9khFFUtH03uRbQS0flr3n843L+8O+yWMZiI8fhyibMbeXXH/0nGWphybzWHnbXhVORfTb0UzDuwNRpgBVc5VbPH8YyHe9Rg5iH9OvPVmBcv/kS3LLiQh1pN/Gq44v+ry3F0cLVbBIerr+nRbYcuwQyhqbnAMurYpL00IIk2kaqpMLRLjCjk2HnQaeyENSrggsw529eVZubgBuf0MZrvZrlE6OBNz0qbdm4pEmf3HKvgntE9MhsxE3yBgk0Ou9radfgdnmzne2F2+/hEdDEyPjMcF86x8FrQwv5ucnCsGUEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jPBB6uzuV5RsHsgW28KKO9VKzZHyzSSqRmv8hz2TbHA=;
- b=rSbn27AeLH+LZ+TLrKlh3CTckZnZB6j9N+rwvtIW0xfpb7UhohIPsHmMdaL6Xsp0gMgkseuXSCuZGxc9R/haQOfJs92CwU07TLW0WEBD3v7pJndtCMxI9O+9yupTrGb1+282/07Siw09GGncZbnph7lco6tLhve6HpNsGfKGxXBYFJb7jKM0JQFUdQQrR0za1xMaSLFPYbbEi6/TR/2KlW8EH++HJ3MJuZL/cuhtmCRgQx0jaLNcciaKk3i78SIkIUwILR8iHzVziq75gx1rSSwcbNAhgUp6Jo06t7Yfk++crjIm/o2eM8I3lyMTxHJGupDwu+T7GyS9mkVpvxjhiw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=arm.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jPBB6uzuV5RsHsgW28KKO9VKzZHyzSSqRmv8hz2TbHA=;
- b=3qEME/OOcJp74VZ5R4EdCiw9MZkLajZD/I2e82vypNqknfbncMjp5w4aX0ym3BdEvOo8vdMjZ1dG50JYDOp8bp2AQWImy7QySAKkQuSvAHa+BQ7L+qg5aPRTs05U3oI/ZEfHh0xUgO4jXoPXZZIyYVlHI/PWo0xuvd0J+EqCk+k=
-Received: from BYAPR05CA0101.namprd05.prod.outlook.com (2603:10b6:a03:e0::42)
- by CYYPR12MB9016.namprd12.prod.outlook.com (2603:10b6:930:c4::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 24 Jun
- 2025 05:58:51 +0000
-Received: from SJ5PEPF00000205.namprd05.prod.outlook.com
- (2603:10b6:a03:e0:cafe::cf) by BYAPR05CA0101.outlook.office365.com
- (2603:10b6:a03:e0::42) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.16 via Frontend Transport; Tue,
- 24 Jun 2025 05:58:51 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF00000205.mail.protection.outlook.com (10.167.244.38) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8880.14 via Frontend Transport; Tue, 24 Jun 2025 05:58:50 +0000
-Received: from tunga.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 24 Jun
- 2025 00:58:39 -0500
-From: Raghavendra K T <raghavendra.kt@amd.com>
-To: <raghavendra.kt@amd.com>
-CC: <AneeshKumar.KizhakeVeetil@arm.com>, <Hasan.Maruf@amd.com>,
-	<Michael.Day@amd.com>, <akpm@linux-foundation.org>, <bharata@amd.com>,
-	<dave.hansen@intel.com>, <david@redhat.com>, <dongjoo.linux.dev@gmail.com>,
-	<feng.tang@intel.com>, <gourry@gourry.net>, <hannes@cmpxchg.org>,
-	<honggyu.kim@sk.com>, <hughd@google.com>, <jhubbard@nvidia.com>,
-	<jon.grimm@amd.com>, <k.shutemov@gmail.com>, <kbusch@meta.com>,
-	<kmanaouil.dev@gmail.com>, <leesuyeon0506@gmail.com>, <leillc@google.com>,
-	<liam.howlett@oracle.com>, <linux-kernel@vger.kernel.org>,
-	<linux-mm@kvack.org>, <mgorman@techsingularity.net>, <mingo@redhat.com>,
-	<nadav.amit@gmail.com>, <nphamcs@gmail.com>, <peterz@infradead.org>,
-	<riel@surriel.com>, <rientjes@google.com>, <rppt@kernel.org>,
-	<santosh.shukla@amd.com>, <shivankg@amd.com>, <shy828301@gmail.com>,
-	<sj@kernel.org>, <vbabka@suse.cz>, <weixugc@google.com>,
-	<willy@infradead.org>, <ying.huang@linux.alibaba.com>, <ziy@nvidia.com>,
-	<Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>, <yuanchu@google.com>,
-	<kinseyho@google.com>, <hdanton@sina.com>
-Subject: [RFC PATCH V2 11/13] vmstat: Add vmstat counters
-Date: Tue, 24 Jun 2025 05:56:15 +0000
-Message-ID: <20250624055617.1291159-12-raghavendra.kt@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250624055617.1291159-1-raghavendra.kt@amd.com>
-References: <20250624055617.1291159-1-raghavendra.kt@amd.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="d5gSWGCa"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NKl361014571;
+	Tue, 24 Jun 2025 05:59:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	avD/4RMjlpnVZvRXzcBZ82PYWUxXl/6xOUZ3YTEAuWc=; b=d5gSWGCan3HX8qqd
+	xNgxwr19iahsV9TN9pUK9KlQMCZiB7YCVTdZhGm/BbO6ou2Ts7pWcRbzd/lOnidT
+	R0RRjOHa3bUymLjLHX3grel0K20zIC1U/EtxoMpjiuHtcvQib71ArXTy1GjSoJwH
+	KpvA9mYijBs89+fwt2dlkzwoFXvBry74UhUijjPrFohKe80AQ4GnuSACze1Mw447
+	T94iNm3lhHnC4A7/hZAcuuci91+QYX8yh6PmJqs8ADpLWHnX+N9xVeBqOduJa1mc
+	jMH5E92Sr25EAMRUzFnnTGwBSxWJjh8LCujbOjMtPJceW0ADc/N0Cmpx/HNrsVQm
+	cPSG7g==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f2rpu55f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 05:59:03 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55O5x2NR025411
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 05:59:02 GMT
+Received: from [10.239.29.49] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 23 Jun
+ 2025 22:58:53 -0700
+Message-ID: <9bbd768b-6ee0-4c9a-9835-3a2cda19373b@quicinc.com>
+Date: Tue, 24 Jun 2025 13:58:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] misc: fastrpc: add support for gdsp remoteproc
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <srini@kernel.org>,
+        <amahesh@qti.qualcomm.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <arnd@arndb.de>,
+        <gregkh@linuxfoundation.org>
+CC: <quic_kuiw@quicinc.com>, <ekansh.gupta@oss.qualcomm.com>,
+        <devicetree@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+References: <20250622133820.18369-1-quic_lxu5@quicinc.com>
+ <20250622133820.18369-4-quic_lxu5@quicinc.com>
+ <09bf24d7-2998-4a15-9b9e-ba476fc08a90@oss.qualcomm.com>
+Content-Language: en-US
+From: Ling Xu <quic_lxu5@quicinc.com>
+In-Reply-To: <09bf24d7-2998-4a15-9b9e-ba476fc08a90@oss.qualcomm.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000205:EE_|CYYPR12MB9016:EE_
-X-MS-Office365-Filtering-Correlation-Id: f3c8cd30-f8a2-4a43-9ea0-08ddb2e4319c
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?LPhrc0L55uraJKyXWK+Gu08xJWpDSUbya7vjUcpASaB45PbMMwV7d7Iamp7P?=
- =?us-ascii?Q?TgiJ3c/bvAeEtZoJsltDrRC5CAYdvrYNf65/l8WiqPFm1ZMN5PibfENdMnln?=
- =?us-ascii?Q?eZeyHALtO9tOSJKg9wfekSYauBAYKiAaLFxLhbAQCrdotNm7UWaP4TWeuEv1?=
- =?us-ascii?Q?WBy7fmBTKg8xLPFQE7fNhLJDzRwRb2V5KFga0Bq8BB29NK0jQqlnlyB4y6lD?=
- =?us-ascii?Q?85DokvSRi6SBtQyf4KHXyXPJvYO3tgB/JCXSpUxL0cEMdckVzJfZJyqJMZ7R?=
- =?us-ascii?Q?LTkMkrDQKMWkrdr0WAwM2qb4UVwEDkGYKM6CGJH0lvEyGzSyj976vLq1SREQ?=
- =?us-ascii?Q?rM3vEXm2y/D+sNhEGzuSRMoJnD5fCyY7JcxsITyaldJHSCY9AfMKhLmCJ3bZ?=
- =?us-ascii?Q?oJ140QhytjTFQ068mP2NLH/7tNmQDANEn1AKif8+NHUtVZsmfAoQNWbbZR6h?=
- =?us-ascii?Q?ovVjSyd7ekdCGj0sMZqrSn7kZ/AwceAuaZzuantsCNCifVJUWzvuEY6bF1xU?=
- =?us-ascii?Q?pW51IDowJ3H58yrnktOrEUGk1mNgvUCGdUfEBi2C2lx61wrnT93U9KyJ5Qfk?=
- =?us-ascii?Q?nwM5dDdwT2Vy+zoCSEK/R+nWdzubUh12U8IlHFZcLIBZHkckRwTwQrHPntg4?=
- =?us-ascii?Q?Rqcnkr9SVNAgXQvaBAqlORx8C1a7ehpqe7m5DbGEBpnzZQJUSIvM2k1DvO14?=
- =?us-ascii?Q?JNmAYJM72/kB5tXOKiKV2NSOS2fBmAYomsbiJtme1YcP1+YT9W4Ay3UX20z2?=
- =?us-ascii?Q?kndH+M/spNY9LqAgDxORo+mOT3XBEJsZth8PRJ+LyFVI/VHKtTWtbVrU3SN2?=
- =?us-ascii?Q?jDQ09NixPvw6IFW2/FaQYTOHmbcrgK74JJnrbs9Y3dHRyrqjYxrUm6Up3K0W?=
- =?us-ascii?Q?Ie0DaSXaw1vZpPLOgwQmk1ozYeilVxRxAP1sR7vWGwSZShTZPSt/TF2gd12w?=
- =?us-ascii?Q?PQocfLXfaLEpQwhjW+Jt9EcbFOuc7Djisqk2zOy6nDTd82leqxgkPfCtgC5A?=
- =?us-ascii?Q?THA5f+EKCy1RoICZs8kCndwukSvKmOgkt+IFqnT2votF7yn4GjMDVJYl7NGY?=
- =?us-ascii?Q?vU3gBixswKtmufpKRXVbSWU0ATPdsfSHNR921I2bO9Pt0uuJFEP+rvnAk9qZ?=
- =?us-ascii?Q?PyFyRIz6cytrpxtOJ+wm5lkxXvCGvbId0a+gctT19nrlz8u0XlJismT0e4c6?=
- =?us-ascii?Q?aWQStmV1dNr994P1dA7l+EpaqPEyCpZykT6UrwBLCA66qsZnTYYHwY2pvPcQ?=
- =?us-ascii?Q?FFE3Sv0kOXV1xVBSH784g7wQ0C41Zcxl7mfWtFa9N5SAWNzxsT53Z1P8igjr?=
- =?us-ascii?Q?KI0ZcUoVVnTGgWPLdvWtSNCTvZeZA0Ie51ppmJ3i1u+aC0mQDwdUQ03/8M+5?=
- =?us-ascii?Q?ux33OHMcBs6R0PiGsErA08zRcEzz91s4rHYqwFvdKo6RojHxLGzAaBDzvd2K?=
- =?us-ascii?Q?JwWXKK5xUMB6dMdRC5eRfZHoRZ0QgM2S7u5SanVPmfr8n8at3X2Y2qOSkfYN?=
- =?us-ascii?Q?d/Q+p69d/hgGUC0LXL50y2Ce3lMhLtW4SqhZ?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 05:58:50.9907
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3c8cd30-f8a2-4a43-9ea0-08ddb2e4319c
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF00000205.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYYPR12MB9016
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=NdDm13D4 c=1 sm=1 tr=0 ts=685a3ea7 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10
+ a=7Hdw3R14QpBl625ZrCYA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA0OSBTYWx0ZWRfX1aRlqa5CSTyu
+ e3+qHESNjSlsPI3F/JSN0iYBLaJlNzI/RzRblT8vUDbfDjS0quqab3wWMKIvguxSy3qNYg9+wlI
+ YxgrUTbqUytrm14d9HqeFj0m2xpwzRjVY9UW3ycdEhfV3ZWHVrsGRfa6VQ9aqopAYTgu/BewCmI
+ W3MEQDdBQ2o6+Trvdy/c/WivKAKeMm4yqZCkguywYdCk2EcYNuYl0WUljD4vvgXQdtjwAe+XY5H
+ Ir1Ov/011uXYbPvynT/16C/9xat3s58WaX5cZ3LD/baI3mfAzFjONjXWlO04Mrh0vjjMU/X2Zh/
+ hxoa5BZmfqljciixmdYuJuSaG1WPohtFUKo3Tw30TWhcbN76yMS/D46tlhVA8vailZ2FZjJ4KFP
+ D5xDStm7X6y7pwzg8PUIRGWSKre0aVZ6UwiohCcmIJLYgwx1Us2D0JVnq0wmPnWPwxB2dlIk
+X-Proofpoint-ORIG-GUID: kQYKwsbK4sJy37Gmve63qbzXwNufPS-9
+X-Proofpoint-GUID: kQYKwsbK4sJy37Gmve63qbzXwNufPS-9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_02,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 mlxscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
+ phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999 adultscore=0
+ clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506240049
 
-Add vmstat counter to track scanning, migration and
-type of pages.
+在 6/23/2025 6:28 PM, Konrad Dybcio 写道:
+> On 6/22/25 3:38 PM, Ling Xu wrote:
+>> The fastrpc driver has support for 5 types of remoteprocs. There are
+>> some products which support GDSP remoteprocs. Add changes to support
+>> GDSP remoteprocs.
+> 
+> Commit messages saying "add changes to support xyz" often indicate
+> the problem or the non-obvious solution is not properly described
+> (which is the case here as well)
+> 
+> [...]
+> 
 
-Signed-off-by: Raghavendra K T <raghavendra.kt@amd.com>
----
- include/linux/mm.h            | 11 ++++++++
- include/linux/vm_event_item.h | 10 +++++++
- mm/kscand.c                   | 51 ++++++++++++++++++++++++++++++++++-
- mm/vmstat.c                   | 10 +++++++
- 4 files changed, 81 insertions(+), 1 deletion(-)
+Okay, I will change to
+"Add related domain IDS to support GDSP remoteprocs."
 
-This implementation will change with upcoming changes in vmstat.
+>> +static int fastrpc_get_domain_id(const char *domain)
+>> +{
+>> +	if (strncmp(domain, "adsp", 4) == 0)
+> 
+> if (!strncmp(...)) is the common syntax, although it's obviously
+> not functionally different
+> 
+>> +		return ADSP_DOMAIN_ID;
+>> +	else if (strncmp(domain, "cdsp", 4) == 0)
+>> +		return CDSP_DOMAIN_ID;
+>> +	else if (strncmp(domain, "mdsp", 4) == 0)
+>> +		return MDSP_DOMAIN_ID;
+>> +	else if (strncmp(domain, "sdsp", 4) == 0)
+>> +		return SDSP_DOMAIN_ID;
+>> +	else if (strncmp(domain, "gdsp", 4) == 0)
+>> +		return GDSP_DOMAIN_ID;
+> 
+> FWIW, other places call it G*P*DSP
+> 
+In fastrpc, we call it GDSP to match dsp side.
+because in device,the related path for gdsp images are gdsp and gdsp0.
+> [...]
+> 
+>> --- a/include/uapi/misc/fastrpc.h
+>> +++ b/include/uapi/misc/fastrpc.h
+>> @@ -18,6 +18,14 @@
+>>  #define FASTRPC_IOCTL_MEM_UNMAP		_IOWR('R', 11, struct fastrpc_mem_unmap)
+>>  #define FASTRPC_IOCTL_GET_DSP_INFO	_IOWR('R', 13, struct fastrpc_ioctl_capability)
+>>  
+>> +#define ADSP_DOMAIN_ID (0)
+>> +#define MDSP_DOMAIN_ID (1)
+>> +#define SDSP_DOMAIN_ID (2)
+>> +#define CDSP_DOMAIN_ID (3)
+>> +#define GDSP_DOMAIN_ID (4)
+>> +
+>> +#define FASTRPC_DOMAIN_MAX    4
+> 
+> What are these used for now?
+> 
+To get proper domain IDs for fastrpc_rpmsg_probe etc.
+>>  /**
+>>   * enum fastrpc_map_flags - control flags for mapping memory on DSP user process
+>>   * @FASTRPC_MAP_STATIC: Map memory pages with RW- permission and CACHE WRITEBACK.
+>> @@ -134,10 +142,9 @@ struct fastrpc_mem_unmap {
+>>  };
+>>  
+>>  struct fastrpc_ioctl_capability {
+>> -	__u32 domain;
+>>  	__u32 attribute_id;
+>>  	__u32 capability;   /* dsp capability */
+>> -	__u32 reserved[4];
+>> +	__u32 reserved[5];
+> 
+> This is an ABI break, as the data within structs is well, structured
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index fdda6b16263b..b67d06cbc2ed 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -656,6 +656,17 @@ struct vm_operations_struct {
- 					  unsigned long addr);
- };
- 
-+#ifdef CONFIG_KSCAND
-+void count_kscand_mm_scans(void);
-+void count_kscand_vma_scans(void);
-+void count_kscand_migadded(void);
-+void count_kscand_migrated(void);
-+void count_kscand_migrate_failed(void);
-+void count_kscand_slowtier(void);
-+void count_kscand_toptier(void);
-+void count_kscand_idlepage(void);
-+#endif
-+
- #ifdef CONFIG_NUMA_BALANCING
- static inline void vma_numab_state_init(struct vm_area_struct *vma)
- {
-diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-index 9e15a088ba38..8f324ad73821 100644
---- a/include/linux/vm_event_item.h
-+++ b/include/linux/vm_event_item.h
-@@ -67,6 +67,16 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- 		NUMA_HINT_FAULTS_LOCAL,
- 		NUMA_PAGE_MIGRATE,
- #endif
-+#ifdef CONFIG_KSCAND
-+		KSCAND_MM_SCANS,
-+		KSCAND_VMA_SCANS,
-+		KSCAND_MIGADDED,
-+		KSCAND_MIGRATED,
-+		KSCAND_MIGRATE_FAILED,
-+		KSCAND_SLOWTIER,
-+		KSCAND_TOPTIER,
-+		KSCAND_IDLEPAGE,
-+#endif
- #ifdef CONFIG_MIGRATION
- 		PGMIGRATE_SUCCESS, PGMIGRATE_FAIL,
- 		THP_MIGRATION_SUCCESS,
-diff --git a/mm/kscand.c b/mm/kscand.c
-index abffcb868447..db7b2f940f36 100644
---- a/mm/kscand.c
-+++ b/mm/kscand.c
-@@ -337,6 +337,39 @@ struct attribute_group kscand_attr_group = {
- };
- #endif
- 
-+void count_kscand_mm_scans(void)
-+{
-+	count_vm_numa_event(KSCAND_MM_SCANS);
-+}
-+void count_kscand_vma_scans(void)
-+{
-+	count_vm_numa_event(KSCAND_VMA_SCANS);
-+}
-+void count_kscand_migadded(void)
-+{
-+	count_vm_numa_event(KSCAND_MIGADDED);
-+}
-+void count_kscand_migrated(void)
-+{
-+	count_vm_numa_event(KSCAND_MIGRATED);
-+}
-+void count_kscand_migrate_failed(void)
-+{
-+	count_vm_numa_event(KSCAND_MIGRATE_FAILED);
-+}
-+void count_kscand_slowtier(void)
-+{
-+	count_vm_numa_event(KSCAND_SLOWTIER);
-+}
-+void count_kscand_toptier(void)
-+{
-+	count_vm_numa_event(KSCAND_TOPTIER);
-+}
-+void count_kscand_idlepage(void)
-+{
-+	count_vm_numa_event(KSCAND_IDLEPAGE);
-+}
-+
- static inline int kscand_has_work(void)
- {
- 	return !list_empty(&kscand_scan.mm_head);
-@@ -789,6 +822,9 @@ static int hot_vma_idle_pte_entry(pte_t *pte,
- 		return 0;
- 	}
- 
-+	if (node_is_toptier(srcnid))
-+		count_kscand_toptier();
-+
- 	if (!folio_test_idle(folio) || folio_test_young(folio) ||
- 			mmu_notifier_test_young(mm, addr) ||
- 			folio_test_referenced(folio) || pte_young(pteval)) {
-@@ -802,11 +838,14 @@ static int hot_vma_idle_pte_entry(pte_t *pte,
- 
- 		info = kzalloc(sizeof(struct kscand_migrate_info), GFP_NOWAIT);
- 		if (info && scanctrl) {
-+			count_kscand_slowtier();
- 			info->address = addr;
- 			info->folio = folio;
- 			list_add_tail(&info->migrate_node, &scanctrl->scan_list);
-+			count_kscand_migadded();
- 		}
--	}
-+	} else
-+		count_kscand_idlepage();
- 
- 	folio_set_idle(folio);
- 	folio_put(folio);
-@@ -997,6 +1036,12 @@ static void kmigrated_migrate_mm(struct kmigrated_mm_slot *mm_slot)
- 
- 			ret = kmigrated_promote_folio(info, mm, dest);
- 
-+			/* TBD: encode migrated count here, currently assume folio_nr_pages */
-+			if (!ret)
-+				count_kscand_migrated();
-+			else
-+				count_kscand_migrate_failed();
-+
- 			kfree(info);
- 
- 			cond_resched();
-@@ -1202,6 +1247,7 @@ static unsigned long kscand_scan_mm_slot(void)
- 
- 	for_each_vma(vmi, vma) {
- 		kscand_walk_page_vma(vma, &kscand_scanctrl);
-+		count_kscand_vma_scans();
- 		vma_scanned_size += vma->vm_end - vma->vm_start;
- 
- 		if (vma_scanned_size >= mm_slot_scan_size ||
-@@ -1237,6 +1283,8 @@ static unsigned long kscand_scan_mm_slot(void)
- 
- 	update_mmslot_info = true;
- 
-+	count_kscand_mm_scans();
-+
- 	total = get_slowtier_accesed(&kscand_scanctrl);
- 	target_node = get_target_node(&kscand_scanctrl);
- 
-@@ -1252,6 +1300,7 @@ static unsigned long kscand_scan_mm_slot(void)
- 		kscand_update_mmslot_info(mm_slot, total, target_node);
- 	}
- 
-+
- outerloop:
- 	/* exit_mmap will destroy ptes after this */
- 	mmap_read_unlock(mm);
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 4c268ce39ff2..d32e88e4153d 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1348,6 +1348,16 @@ const char * const vmstat_text[] = {
- 	"numa_hint_faults_local",
- 	"numa_pages_migrated",
- #endif
-+#ifdef CONFIG_KSCAND
-+	"nr_kscand_mm_scans",
-+	"nr_kscand_vma_scans",
-+	"nr_kscand_migadded",
-+	"nr_kscand_migrated",
-+	"nr_kscand_migrate_failed",
-+	"nr_kscand_slowtier",
-+	"nr_kscand_toptier",
-+	"nr_kscand_idlepage",
-+#endif
- #ifdef CONFIG_MIGRATION
- 	"pgmigrate_success",
- 	"pgmigrate_fail",
+this is suggested by Dmitry, I will have a discussion internally.
+> 
+> Konrad
+
 -- 
-2.34.1
+Thx and BRs,
+Ling Xu
 
