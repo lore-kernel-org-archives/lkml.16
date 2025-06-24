@@ -1,241 +1,297 @@
-Received: from AM0PR83CU005.outbound.protection.outlook.com (mail-westeuropeazon11010035.outbound.protection.outlook.com [52.101.69.35])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1ED3256D
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.69.35
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750732960; cv=fail; b=DSEK2DYsKj8rIE0nq84zz/nKj0NWrIH1waIAjmVxlF8GBMMN0/gaF3y+bvAnlRW6H+vK5DLnpcZFlu0jJOkM6Sa66M42HkwqHzm1SvWovGLhTzQsss05sQRryzM5wp9PhsmmV/rPvN/eQ5svaRrnheorffodgX6lTW745XOAW24=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750732960; c=relaxed/simple;
-	bh=izECqI+xY44QYP8YKw7rIx+3l3K23m0Phx8daH/bPgA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Ih0HLq3Y0CHuVdRdzUdsF+5d6D2kOk65Lar3yXXwZaLdNNfYi6NyM8YiovxlaXbwh1h0/pJ7c7et5Q43EHmFW40W6T8XNA2hBmpYZrJawY1CgogR/6pC09KuNK0tgXtKwQGRb3x9CRc4n6dBcPeBikhnHan1KfXQcGgRhWBC8hI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=KH9ZuxQx; arc=fail smtp.client-ip=52.101.69.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8974256D;
+	Tue, 24 Jun 2025 02:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750732992; cv=none; b=WBtEGKdxTC39MbW0Daib9OjLzhLBiQN4/iXjbSB5viL90sDnYR6uqedgvBNbQbPKE+40xMVt7o4TOxpAtFqqw9eQa0gFMugXiT1s4C+sHZOD7qAmyPsYt+XV02D755wNCm1i6A2g5WMKlyIeukhVlZmSYNCVghLMe8nztKY7Q9o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750732992; c=relaxed/simple;
+	bh=9vbcNw9Mbs/3u6hDwSuzlhG9OvZfIjeiZZ4bG4w70gM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MxzxYe5RgQypzdaraQ1siS9bw+sqhQBeKTluYsFTyyH+mZEQzJ9MnMskXje33SSNZ4A5gJiNkFJj1whMF+mWD/XVQGkNFqpTugFkrkylpklVInEwC566H8aOFkJmtnQFShwdQxODkDJukQOnePITFwfZhzcQYo3uEVtgiHWml1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GAyPkHHC; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="KH9ZuxQx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NJFv7mFbCTYupkLF1ECubqpmdTWkOfla1N409PwTmMZ51kv6RvvAOt57v7Myg0meqPbwpuFeM5nLXivHiTQSoMmtK7Ct8u+m692vKUgie/xLLJycP1AR3CFT4BoSxRtyf7TaLLO+sstiXzdTtH6h2zH37oSDIRUjJ7+y2job1oRQvNhUJjgb1dMUf7tVa7mFl95MSyCMUk6aqA7YWeueXvlqDW6b4Wu5anu896weUYzQToJ9nSuV8E+o72BMTrg7EzDEcTeNii8II2n7bEJyEAPlaNPk1ypMdcki3PzOJBvZ9kDP0FFkOIJQUhbqlMp47GpMAYeWp6mcAA8bRfj/tg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Mlx7Wzvck+LDM+vom4QWU8wPz5vyE0oqs558/YD9ALU=;
- b=yCqRHQT+9RicyXETRm8luQzLBGhyPbvPaYIN8UsBFtO1exIOJy8HrG/yQmbMqh6Uujb/0bRfFNnHNBt4j7ZdQMFDeLq7EZuXynF22RPV4Sp1cI4uIFXDZ3Lmx/4yzgqt93Tu00E2K0439IrwHqlk6TwW0O3VIRd58dn1Z+meXv3x7OEmf7C7Gm70jziroPdzYU0fRSLxIe/PbYniIb0wQVHAvz+rvnnDH5+7aZFmQbzXJGJwKpX5YKiOFnCxStM2uz7qlKRXWGcwXHJL1K58YTsyd77/dn406AGaiqtaEa4l+bA3oiUtqaCxzKriMgrxpMDhQ4y03QMqZ1wYlhDRZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Mlx7Wzvck+LDM+vom4QWU8wPz5vyE0oqs558/YD9ALU=;
- b=KH9ZuxQxi1O1LnqxfNe+LpzFUrToAIgN76+6cnKamPGLhI0d71kM2JCYYUVLNbLeebOThfilNL+VNRUkhDlBWj5xyl8IvYE5QcjZAly8bvi+DPK1FRVhDTW+uyLPK0rSmbuFU/TWLQS98GaVd099v27CEq8x1NXQIVkxSXWETexfEBgAvUl0rpUD8VNIq2zQPNQTMEoKBTungFt/EBwbZ6FYcTZC7WWPBc0jz5eYbnzOYMTrC8/qXZWspMFRAh/PNEQoFhmInL83cLskW7fKKU5uiBPlldXAaZOw3j9MF9q5ombDYOwCGZ7WAeSghbbLRhyMNkwraE5CK6CD2/xoZg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
- by AM7PR04MB7112.eurprd04.prod.outlook.com (2603:10a6:20b:113::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Tue, 24 Jun
- 2025 02:42:34 +0000
-Received: from AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90]) by AM7PR04MB7046.eurprd04.prod.outlook.com
- ([fe80::d1ce:ea15:6648:6f90%5]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
- 02:42:34 +0000
-Message-ID: <1d8908b1-b38e-4226-9433-cd9405c7ca63@nxp.com>
-Date: Tue, 24 Jun 2025 10:44:03 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/5] drm/bridge: get the bridge returned by
- drm_bridge_chain_get_first_bridge()
-To: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
- Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Hui Pu <Hui.Pu@gehealthcare.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org
-References: <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-0-0321845fcafb@bootlin.com>
- <20250620-drm-bridge-alloc-getput-drm_bridge_chain_get_first_bridge-v8-2-0321845fcafb@bootlin.com>
- <be6a4d90-2c6e-42be-9948-df1840fd2f83@nxp.com>
- <20250623160903.01c56bfc@booty>
-From: Liu Ying <victor.liu@nxp.com>
-Content-Language: en-US
-In-Reply-To: <20250623160903.01c56bfc@booty>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2P153CA0006.APCP153.PROD.OUTLOOK.COM (2603:1096::16) To
- AM7PR04MB7046.eurprd04.prod.outlook.com (2603:10a6:20b:113::22)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GAyPkHHC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750732991; x=1782268991;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9vbcNw9Mbs/3u6hDwSuzlhG9OvZfIjeiZZ4bG4w70gM=;
+  b=GAyPkHHCENqu8yC+c6yxIsCb6ASi9WjRLRTcqUtzmzAVlaoaYmT54/EL
+   H/Ckr2Ozarvwbe8ISonM73aCRl5/5vz930rrvDaRrWSIXQWIn8d0C7Jon
+   u/zv2EvL1BE88EQlQdFrQ2W/3+21KKt4wHMdrpSGIsDss3+J4gBMpkWRZ
+   6PahuvILgvNm1H8D6QPfTXsjiZI4DL87KRilCflvrafXjVCnfQA9MWog4
+   etqNJFZx1it73W+TD780kWOdVHI293fLSDLP/b1BrQRg3GjHoWciUCJKY
+   9SuG6vYshF9HQ5JKmaOlTVlh/vYDTnwrMIRW6rNXFI5OmAwyhCcDIDQRQ
+   w==;
+X-CSE-ConnectionGUID: AMDKteQoRBOfPjhxAaCduQ==
+X-CSE-MsgGUID: dQ5q7U1rTaS8Qi1P8q8BRQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="78374219"
+X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
+   d="scan'208";a="78374219"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 19:43:10 -0700
+X-CSE-ConnectionGUID: YIvisesFRVWm4WWaUthwAg==
+X-CSE-MsgGUID: 2XPtW4+8QGG1L5+3k6vawA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
+   d="scan'208";a="156350418"
+Received: from unknown (HELO [10.238.128.162]) ([10.238.128.162])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 19:43:06 -0700
+Message-ID: <a1ea7e74-a90a-4961-9f83-ad04e1d7a573@linux.intel.com>
+Date: Tue, 24 Jun 2025 10:43:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM7PR04MB7046:EE_|AM7PR04MB7112:EE_
-X-MS-Office365-Filtering-Correlation-Id: a19c0aa7-dda8-495c-657a-08ddb2c8c5cd
-X-LD-Processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
- =?utf-8?B?NjZ2Y2szWUZqei90SWpBZWdFNDEzUXpndmtjSGZPRUlNL3Q2NjFISmtpU0hx?=
- =?utf-8?B?Z21IRnFES0Z3RStDK0NxdzRYdmZiQTR1d0NRb28wenpaVWt4UnhhbmtWajZw?=
- =?utf-8?B?djhMS3pHcFJEUGtiUWNqTTV6MHBxdjlpRDRaMXZ0RGEwTEs4K1BQSzN2LzFJ?=
- =?utf-8?B?RGJDNzh6dURxZjZvQVJYZzcrY01rNzJSRjZTbzFQU0Q1VDlTTlU5NSs2K2ZU?=
- =?utf-8?B?Z1kwNTJXT1BVMWNmMUJsTi95SEtlOW5JYjVwY0ZJMWZab0gwa2VPVzVaVGht?=
- =?utf-8?B?a0Z0K2tOMHNRdE92amhWZituMDFUWHRMM2tMcHh5S05HUUhKUkRtU25nMXBp?=
- =?utf-8?B?eWtsOHdjSFdsMVRlU1ZXTVN1bm5EZUplVTFiMmVyS1U0c3Y1dDNlNDBoZFVs?=
- =?utf-8?B?Z0NFV3R2QmhWbTR4M1IwMm11N0VpRVgwSmpmZkZzU1JiclZ6MnJCVXhNTEF5?=
- =?utf-8?B?VjF3RGtCS3BkTGF0bHh0SGZYWGR3Y3NCczdrV2pqbHpuMFdGMXVUS0ZPR2NX?=
- =?utf-8?B?WmNYZTFMdnZHZW81Q3RVQ2MwYlloTjEyUGlFQmdNdWtRcGNBdHRNaWV6ZjVi?=
- =?utf-8?B?SVYvY2M3WDhNL0NKR0Y0VExkaUhHNFRlUmRpWjFlMDRzTDdlUmRIZG82b0hu?=
- =?utf-8?B?anVrSm9ZNnV6Tm9qS0tVRUNqZkNZVlhxaXRDU0Z5U3l2Y2hneHpUMEFBVWJL?=
- =?utf-8?B?Rk5RWFh1Z055UFJnY1Avc2RpY2Z4OEhIRmlaSlRpS1BoSjdwNWp0RG1NR1Rq?=
- =?utf-8?B?R2dRcndTamZKRXp6VXBzYUEzTUFUN0I3U3dzQnpJa3dJYUZaeWMrWG5sdmVm?=
- =?utf-8?B?T1c1b2Z2ZHJLMWI5bXJ1dkJ1Y0N5VlFTVlMvVmVuN2Jyd0Y0N3FMczJwS3lm?=
- =?utf-8?B?VEJ5Y2NKTHNNTTYwTVk4SzRPeEV6ZTdhRXgreDcrTFZoOGQ1STdQMWpQbDln?=
- =?utf-8?B?NXV4TW84cHpITk1wYW4wb1hBNFQxODdlckYrRjZMM3hEemhySVc4azhETHdh?=
- =?utf-8?B?UjZWYkpxbXFaek5STzNqNUZGbVZBSU9TYUg1T1hGQ3VZQW5GSE8rd1lod3Vt?=
- =?utf-8?B?YTlySHVPbEpsdkFCYUJJc0FkK3JNeFNaMTdoWThXU0o5Ylo4djh0UFl2eU1m?=
- =?utf-8?B?U0xvZzRBdkFJYWVrNVNFWnJrRWJ6eWdUWXlHazJ6MzNZUUtNMVo5OWtOSUl1?=
- =?utf-8?B?RWVmYnRoOEFRd1N3RlRKYVlMTjJMd0JnU3hoVlV3YWNPVlk2WjlOYUpuSkVU?=
- =?utf-8?B?YVpqalNUUjFrcWFVTFRXWGp4T3cyVFZRUjFNWEtrZmY2ajVxQXBJVEpFSTFE?=
- =?utf-8?B?NFIxcFBVQno2bksvZVFwMjluVENYWG9UT3dibWk4UTB4TWwxNHFDUktscjZu?=
- =?utf-8?B?aUsvcVFkUHBYclEzeEl1ZDF6ZFAwbFplMW9kemVEamlURUhuYnUyVE9xK2RD?=
- =?utf-8?B?MnRtY2I3d1ZFcldwQlFzcmdTdkx4Y1VEK2Z1cmtVbTNsVlQyN0g2MU1sajJ0?=
- =?utf-8?B?NlBaOXpXT0ZFNFQwTzFjTHFoK08xN3czQUlLM25NSXN4czJVSUMySzI2Nnc4?=
- =?utf-8?B?c1V5V09nR0h3eGFwQWsyZmhFdVZtYjQrY3Jab00yeDEzUUQ5Y1FjVlB1SW9p?=
- =?utf-8?B?UHYxc1lLZzB3NzVCWVBVU3Z3NE03WHJVNnJvWDNtQ1VtSk1pZ3MwZlR2T1hV?=
- =?utf-8?B?ZjI1ZmcxbHZMd2c3SmRDOVlaUzkvODEzakhKM2crcDZDT3JYdVJpZloxaFhh?=
- =?utf-8?B?a3ZOY3JTMjJpanAzdEhuQmc3TVhYZ3VHemJPckNBZTZKOXV5b1lmYUZEMWNH?=
- =?utf-8?B?VzY3cmk2eGJZQVFRWVBYVWZwZ3Y3UU0wUnlzSFlyaEFIdlp5MnoxU2E4Tjc3?=
- =?utf-8?B?RlBHeHdGUFZPbGREMjRPNHlZUFJLL00rR2VERnRHV2NMRE1qcGszMXh1MXlw?=
- =?utf-8?Q?YV6auGJiYtQ=3D?=
-X-Forefront-Antispam-Report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7046.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
- =?utf-8?B?RVhHOCt1ZE4zcHZqazFudWxpLzBzVU1MeEdiOU5uMTZucnN0K3ZzQVJFZVdh?=
- =?utf-8?B?ZEd4V2l5eFE0dEJRdzRTYyswMUFGSXZ6NDBldlpMSll4UUEwUkFnRUZhbEsy?=
- =?utf-8?B?N2NtMFF4VTVudkF2anQ1dE1UWUVvZUxDTDFkTHZXQ0E0Uy9BTzZmam9rWElM?=
- =?utf-8?B?bFJxUVFmeVNYSEFKYnV6TWZFdXVwOHpkTWlFejhpMUNIbXhGVXdXZTdVY2pU?=
- =?utf-8?B?eGd4Q2NtaUg2Uk8rbmVTbFByenpGdGFVNUVnaFRzSjRwaWNmZC9hZjE0dXlw?=
- =?utf-8?B?RTBmLzNERjZCVTB4eld4MHpTZVFvd0p6bVQ1QWl6aG53akQ5REo1WThMRzRG?=
- =?utf-8?B?RnZDcnZOMW52aEphSUFtWVVRSHdJVll1b3NxM0xFdG1tc0VpUmhSdVhRRXBX?=
- =?utf-8?B?ZXJ2enp6NGVlcTE3YmxhYWkrLzE1SkRkR1ZuSjhjME1kUjhOTENpNGs3bWpP?=
- =?utf-8?B?VWoxTXBJQlNZa0RKK3ZuRVRrdW5HcjRySlUwM0FqdktQVkFkQnNEQ3h4dzJM?=
- =?utf-8?B?MmUzTWRzVHppUFJmY3YrZkNiQVRhZEo3Z3hZbVAxQ292RzRoeFhhUG9KQ0V0?=
- =?utf-8?B?NS81a2p5bzQvRGZvUU5NZFZoUGNscnBNNWhKemgvWE1tZVE4UkpURjhJRFdk?=
- =?utf-8?B?QXgzZHJEM2JwcUVRRXdlWk1VdXpyNTdxdHFBdmh0MzFHQnNUWk1uT0JYdXls?=
- =?utf-8?B?bUFuclIyemxjN29OL0c2elZESHNMakVPVVJTejdlK214TXJzcFhLTEFmUTc0?=
- =?utf-8?B?UUR0K0tsR2w4QWlhY0p6SThwV242MU5pZllJdDZHR2dRMlJqR2YxZmx5U0Jy?=
- =?utf-8?B?TXIyTGdDRmtIL2VxWmRzZU55dVRmenB1MXZVRzNzS0dKUTNkZ2NMYlJhTTV1?=
- =?utf-8?B?SVpsTFpEODlGM1Y0V0JtRHVXUldJVkZHVU1XeEQzWHQzVjVQOVhJM2VPM1VP?=
- =?utf-8?B?V3ZsKzFCWVllSHJ6V280QXJyOTNOa2FJaTVpTVoxbzVubGJvZU5DRWdhMVFr?=
- =?utf-8?B?cFZIZ2xPSGh1Z0dMWjc1TURtc1RIWUx2T2UzMlM1QVRjUVdoeWtTbkxoNUlO?=
- =?utf-8?B?TmdEbFBzYS85SklXVEVnNUp3WTdjK2dxazBoTmpPMDR1UjJ5MFhCa1pkeVJ3?=
- =?utf-8?B?Qkc3WThqT0hlSlNEMExrU1F1Rkg4NS8xYzNOenFVWXdNWXlobTEwUG5wRm8x?=
- =?utf-8?B?MlJnYTBwdUhyeklTem5tMVV4UVFBWVdpRHFtS1lkQmZpdlJRbnR0b0hHRElz?=
- =?utf-8?B?YjZXRE1qZDcvMFVSV1RiSjRxRHBza2k5ZG9CTEIzeVRNeXJSaUxIVVNaTDVp?=
- =?utf-8?B?OG9tQVhTazM4TGZCM0EraDFuL0lNK2VwZGowOERDbkh2NzAvcEE2UTlLWkJN?=
- =?utf-8?B?K3c4RHlqcm0wK2gxakl2WjhuV0IxTXhCTVF5MGxSWEF5ZGpTR3k4cWdWVG05?=
- =?utf-8?B?dFZjTUdIU2Y2YjZweWxvUjRrdjg3STA5Lyt2THNydk5SNXlYdnZlR20wL2pk?=
- =?utf-8?B?VjhvaC9hREdyNk5ZZmlzR1UrelhMKzR2MGhEaGhvYVdTMzJYdVRJUTJOU1Jm?=
- =?utf-8?B?K3J5aUtrUTRLR1lEaFdGc3BQRzdmWDhJN250dU12Z0xQNkpJMGVWaXdVdjZi?=
- =?utf-8?B?T0NqYmhsazdZZlU5ODF4S09HRzNhMjB1Unh0VjNHU3RldVZ4VHZpZlBva3Iz?=
- =?utf-8?B?WDJwN05lVFFna3JPeVA2dmkveTd3QUk5eTh3d2ZxMUdHYytvNHMxRFJtWFli?=
- =?utf-8?B?ajBFSEtXUUVvTlB1Y2srajJrN0ZOMTVuT3BxRVhkM2dxSkU2UlFwMmxLRDhP?=
- =?utf-8?B?MHNkUnI2QVhOMnZENC9WNEx5MzY1cDdoR2pNVWRhSElRNGtuTmZoTVRZNDNV?=
- =?utf-8?B?NWkvU2hCa2V6OURvdnNjcU1JNHRwcXJ3ay8rUGtybzJOcVE3L0htYkNUenNj?=
- =?utf-8?B?SGRJcmllVjYwOTBGRmtJQmpOcTE4OWNyOWk5OEpvTjdSd2dGSzc5UjdzSWpq?=
- =?utf-8?B?OFZYc3h6VUZmYlBJMVdaWGNEcFQ0djFWeFVBSTJEQkp2NEg4a1VTaENQYTRu?=
- =?utf-8?B?WWdGREF3U2hnVDZNalFjMGhBWGdMWXAwTU5IT0N5WWNxc1JBOG9BeHJCYUgr?=
- =?utf-8?Q?JJ6GVzzhw0khc/OExTE7Tylts?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a19c0aa7-dda8-495c-657a-08ddb2c8c5cd
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7046.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 02:42:34.1215
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CrYfyvHYWxi/lzVtH5mmyeduPcownbbfwyZHzh+CugG0Yzr3iIDXBAGLZa6L2ph2OgGR59A4kdBrbFl/blFItw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR04MB7112
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] x86/traps: Initialize DR7 by writing its
+ architectural reset value
+To: "H. Peter Anvin" <hpa@zytor.com>, "Xin Li (Intel)" <xin@zytor.com>,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org, stable@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, seanjc@google.com,
+ pbonzini@redhat.com, peterz@infradead.org, sohil.mehta@intel.com,
+ brgerst@gmail.com, tony.luck@intel.com, fenghuay@nvidia.com
+References: <20250620231504.2676902-1-xin@zytor.com>
+ <20250620231504.2676902-3-xin@zytor.com>
+ <c526eb25-571e-427a-93e9-3afdaa6ca413@linux.intel.com>
+ <EBD6D476-3014-475A-9467-77CA51755D41@zytor.com>
+From: Ethan Zhao <haifeng.zhao@linux.intel.com>
+Autocrypt: addr=haifeng.zhao@linux.intel.com; keydata=
+ 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
+ 8TCx1OJHpvWFmL4Deq8=
+In-Reply-To: <EBD6D476-3014-475A-9467-77CA51755D41@zytor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 06/23/2025, Luca Ceresoli wrote:
-> Hello Liu,
 
-Luca,
-
-> 
-> On Mon, 23 Jun 2025 10:56:13 +0800
-> Liu Ying <victor.liu@nxp.com> wrote:
-> 
->> On 06/21/2025, Luca Ceresoli wrote:
->>> drm_bridge_chain_get_first_bridge() returns a bridge pointer that the
->>> caller could hold for a long time. Increment the refcount of the returned
->>> bridge and document it must be put by the caller.  
+在 2025/6/24 9:53, H. Peter Anvin 写道:
+> On June 23, 2025 6:41:07 PM PDT, Ethan Zhao <haifeng.zhao@linux.intel.com> wrote:
+>> 在 2025/6/21 7:15, Xin Li (Intel) 写道:
+>>> Initialize DR7 by writing its architectural reset value to always set
+>>> bit 10, which is reserved to '1', when "clearing" DR7 so as not to
+>>> trigger unanticipated behavior if said bit is ever unreserved, e.g. as
+>>> a feature enabling flag with inverted polarity.
+>>>
+>>> Tested-by: Sohil Mehta <sohil.mehta@intel.com>
+>>> Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+>>> Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+>>> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+>>> Acked-by: Sean Christopherson <seanjc@google.com>
+>>> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+>>> Cc: stable@vger.kernel.org
+>>> ---
+>>>
+>>> Change in v4:
+>>> *) Cc stable for backporting, just in case bit 10 of DR7 has become
+>>>      unreserved on new hardware, even though clearing it doesn't
+>>>      currently cause any real issues (Dave Hansen).
+>>>
+>>> Changes in v3:
+>>> *) Reword the changelog using Sean's description.
+>>> *) Explain the definition of DR7_FIXED_1 (Sohil).
+>>> *) Collect TB, RB, AB (PeterZ, Sohil and Sean).
+>>>
+>>> Changes in v2:
+>>> *) Use debug register index 7 rather than DR_CONTROL (PeterZ and Sean).
+>>> *) Use DR7_FIXED_1 as the architectural reset value of DR7 (Sean).
+>>> ---
+>>>    arch/x86/include/asm/debugreg.h | 19 +++++++++++++++----
+>>>    arch/x86/include/asm/kvm_host.h |  2 +-
+>>>    arch/x86/kernel/cpu/common.c    |  2 +-
+>>>    arch/x86/kernel/kgdb.c          |  2 +-
+>>>    arch/x86/kernel/process_32.c    |  2 +-
+>>>    arch/x86/kernel/process_64.c    |  2 +-
+>>>    arch/x86/kvm/x86.c              |  4 ++--
+>>>    7 files changed, 22 insertions(+), 11 deletions(-)
+>>>
+>>> diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
+>>> index 363110e6b2e3..a2c1f2d24b64 100644
+>>> --- a/arch/x86/include/asm/debugreg.h
+>>> +++ b/arch/x86/include/asm/debugreg.h
+>>> @@ -9,6 +9,14 @@
+>>>    #include <asm/cpufeature.h>
+>>>    #include <asm/msr.h>
+>>>    +/*
+>>> + * Define bits that are always set to 1 in DR7, only bit 10 is
+>>> + * architecturally reserved to '1'.
+>>> + *
+>>> + * This is also the init/reset value for DR7.
+>>> + */
+>>> +#define DR7_FIXED_1	0x00000400
+>>> +
+>>>    DECLARE_PER_CPU(unsigned long, cpu_dr7);
+>>>      #ifndef CONFIG_PARAVIRT_XXL
+>>> @@ -100,8 +108,8 @@ static __always_inline void native_set_debugreg(int regno, unsigned long value)
+>>>      static inline void hw_breakpoint_disable(void)
+>>>    {
+>>> -	/* Zero the control register for HW Breakpoint */
+>>> -	set_debugreg(0UL, 7);
+>>> +	/* Reset the control register for HW Breakpoint */
+>>> +	set_debugreg(DR7_FIXED_1, 7);
+>> Given you have it be adhere to SDM about the DR7 reversed bits setting,
 >>
->> To make sure the incremented refcount is decremented once this patch is
->> applied, does it make sense to squash patch 3, 4 and 5 into this one?
-> 
-> I see there is a trade off here between bisectability and patch
-> readability.
-> 
-> However about bisectability the problem is limited for this series. To
-> get an actual get/put imbalance you'd have to be able to remove the
-> bridge, but removing (part of) the bridge chain is not at all supported
-> right now, and it won't be until after chapter 4 of this work (see
-> cover letter).
-> 
-> However I realize there is an issue if:
-> * patch 2 is applied but patches 3/4/5 are not
->   (it does not make sense to apply this series partially, but this
->   might happen when cherry-picking?)
+>> then no reason to leave patch[1/2] to set_debugreg(0, 7) alone.
+>>
+>> did I miss something here ?
+>>
+>>
+>> Thanks,
+>>
+>> Ethan
+>>
+>>
+>>>      	/* Zero-out the individual HW breakpoint address registers */
+>>>    	set_debugreg(0UL, 0);
+>>> @@ -125,9 +133,12 @@ static __always_inline unsigned long local_db_save(void)
+>>>    		return 0;
+>>>      	get_debugreg(dr7, 7);
+>>> -	dr7 &= ~0x400; /* architecturally set bit */
+>>> +
+>>> +	/* Architecturally set bit */
+>>> +	dr7 &= ~DR7_FIXED_1;
+>>>    	if (dr7)
+>>> -		set_debugreg(0, 7);
+>>> +		set_debugreg(DR7_FIXED_1, 7);
+>>> +
+>>>    	/*
+>>>    	 * Ensure the compiler doesn't lower the above statements into
+>>>    	 * the critical section; disabling breakpoints late would not
+>>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+>>> index b4a391929cdb..639d9bcee842 100644
+>>> --- a/arch/x86/include/asm/kvm_host.h
+>>> +++ b/arch/x86/include/asm/kvm_host.h
+>>> @@ -31,6 +31,7 @@
+>>>      #include <asm/apic.h>
+>>>    #include <asm/pvclock-abi.h>
+>>> +#include <asm/debugreg.h>
+>>>    #include <asm/desc.h>
+>>>    #include <asm/mtrr.h>
+>>>    #include <asm/msr-index.h>
+>>> @@ -249,7 +250,6 @@ enum x86_intercept_stage;
+>>>    #define DR7_BP_EN_MASK	0x000000ff
+>>>    #define DR7_GE		(1 << 9)
+>>>    #define DR7_GD		(1 << 13)
+>>> -#define DR7_FIXED_1	0x00000400
+>>>    #define DR7_VOLATILE	0xffff2bff
+>>>      #define KVM_GUESTDBG_VALID_MASK \
+>>> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+>>> index 0f6c280a94f0..27125e009847 100644
+>>> --- a/arch/x86/kernel/cpu/common.c
+>>> +++ b/arch/x86/kernel/cpu/common.c
+>>> @@ -2246,7 +2246,7 @@ EXPORT_PER_CPU_SYMBOL(__stack_chk_guard);
+>>>    static void initialize_debug_regs(void)
+>>>    {
+>>>    	/* Control register first -- to make sure everything is disabled. */
+>>> -	set_debugreg(0, 7);
+>>> +	set_debugreg(DR7_FIXED_1, 7);
+>>>    	set_debugreg(DR6_RESERVED, 6);
+>>>    	/* dr5 and dr4 don't exist */
+>>>    	set_debugreg(0, 3);
+>>> diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+>>> index 102641fd2172..8b1a9733d13e 100644
+>>> --- a/arch/x86/kernel/kgdb.c
+>>> +++ b/arch/x86/kernel/kgdb.c
+>>> @@ -385,7 +385,7 @@ static void kgdb_disable_hw_debug(struct pt_regs *regs)
+>>>    	struct perf_event *bp;
+>>>      	/* Disable hardware debugging while we are in kgdb: */
+>>> -	set_debugreg(0UL, 7);
+>>> +	set_debugreg(DR7_FIXED_1, 7);
+>>>    	for (i = 0; i < HBP_NUM; i++) {
+>>>    		if (!breakinfo[i].enabled)
+>>>    			continue;
+>>> diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
+>>> index a10e180cbf23..3ef15c2f152f 100644
+>>> --- a/arch/x86/kernel/process_32.c
+>>> +++ b/arch/x86/kernel/process_32.c
+>>> @@ -93,7 +93,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode,
+>>>      	/* Only print out debug registers if they are in their non-default state. */
+>>>    	if ((d0 == 0) && (d1 == 0) && (d2 == 0) && (d3 == 0) &&
+>>> -	    (d6 == DR6_RESERVED) && (d7 == 0x400))
+>>> +	    (d6 == DR6_RESERVED) && (d7 == DR7_FIXED_1))
+>>>    		return;
+>>>      	printk("%sDR0: %08lx DR1: %08lx DR2: %08lx DR3: %08lx\n",
+>>> diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+>>> index 8d6cf25127aa..b972bf72fb8b 100644
+>>> --- a/arch/x86/kernel/process_64.c
+>>> +++ b/arch/x86/kernel/process_64.c
+>>> @@ -133,7 +133,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode,
+>>>      	/* Only print out debug registers if they are in their non-default state. */
+>>>    	if (!((d0 == 0) && (d1 == 0) && (d2 == 0) && (d3 == 0) &&
+>>> -	    (d6 == DR6_RESERVED) && (d7 == 0x400))) {
+>>> +	    (d6 == DR6_RESERVED) && (d7 == DR7_FIXED_1))) {
+>>>    		printk("%sDR0: %016lx DR1: %016lx DR2: %016lx\n",
+>>>    		       log_lvl, d0, d1, d2);
+>>>    		printk("%sDR3: %016lx DR6: %016lx DR7: %016lx\n",
+>>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>>> index b58a74c1722d..a9d992d5652f 100644
+>>> --- a/arch/x86/kvm/x86.c
+>>> +++ b/arch/x86/kvm/x86.c
+>>> @@ -11035,7 +11035,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>>>      	if (unlikely(vcpu->arch.switch_db_regs &&
+>>>    		     !(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))) {
+>>> -		set_debugreg(0, 7);
+>>> +		set_debugreg(DR7_FIXED_1, 7);
+>>>    		set_debugreg(vcpu->arch.eff_db[0], 0);
+>>>    		set_debugreg(vcpu->arch.eff_db[1], 1);
+>>>    		set_debugreg(vcpu->arch.eff_db[2], 2);
+>>> @@ -11044,7 +11044,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+>>>    		if (unlikely(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT))
+>>>    			kvm_x86_call(set_dr6)(vcpu, vcpu->arch.dr6);
+>>>    	} else if (unlikely(hw_breakpoint_active())) {
+>>> -		set_debugreg(0, 7);
+>>> +		set_debugreg(DR7_FIXED_1, 7);
+>>>    	}
+>>>      	vcpu->arch.host_debugctl = get_debugctlmsr();
+> It's split up for the benefit of the stable maintainers.
 
-Yes for cherry-picking and bisecting.
+Undeniably split, as observed. :)
 
-> * an entire DRM card is removed where
->   drm_bridge_chain_get_first_bridge() is used by some components
-> 
-> If both happen we'd have a get without put, thus a missing free and a
-> memory leak for the container struct.
 
-Yes, that's a memory leak.
+Thanks,
 
-> 
-> Note that, besides drm_bridge_chain_get_first_bridge() that this
-> series covers, there are various other accessors: see items 1.E.{2..8}
+Ethan
 
-IIUC, without those items addressed, the issue we have is use-after-free,
-but not the memory leak this patch introduces(without squash).
-
-> in cover letter. For some of those there are many more changes to apply
-> because they are called in more places. Squashing them would result in
-> a really large patch that is likely hard to review and manage.
-
-If the squash is done for each item separately and properly, I'd say
-the memory leak issue can be avoided.  I assume patches for each item
-would not be large.
-
-> 
-> So I'll leave the decision to DRM subsystem maintainers. For the time
-> being I'm keeping the current approach given that Maxime already
-> reviewed these patches in the past, not squashed.
-> 
-> Best regards,
-> Luca
-> 
-
+>
 -- 
-Regards,
-Liu Ying
+"firm, enduring, strong, and long-lived"
+
