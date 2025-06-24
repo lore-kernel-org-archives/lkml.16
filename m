@@ -1,149 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B521279DD4;
-	Tue, 24 Jun 2025 09:07:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3E627A918
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750756054; cv=none; b=WYHrFzq1lbZmV4sa5I2zFrV1gy/y22H87TDQqyiByljW7FxQXSlbM+p7AoaBoAGTCqzYNO+3Kzcgopw5+vYvHBDuC3gwgGaDUwDNIwTOLawegO/USJwemNQK2gGKPoddjWtw+67boiqlsuVZTf0h0icAAqLEAegEvIVMU/w0GTM=
+	t=1750756055; cv=none; b=BtPc2mokWhMKS2YUOPp7mdAOCtVU5XSp5gML+rmBaDoWmqvkoxzKYnNBmXevZyIWcNkGlTvp5keCs14g5topQKIndfOPYlolm8sHamact7xemOovYLVjbLswPK1BC85nPWNbjuqJJDh+jAcC9gvZGsGb1f0YsabQoghJRjuQM9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750756054; c=relaxed/simple;
-	bh=LImjdI/yU6Pe3jIPDaALZwPgLQGhX4tSMeDeFG4akNI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U3ifqAVWnsMYfkeVFTk0GuDW0PwA5TZWbf/eR17hOy8OUBEU600rHssvxqaxzKd1kNbkOjISMEbugPDe0b2y09zN0P3CrhZq6gBH7Ykl5XDbWu4pMZIILYggzjftfEvu+FNCUY+8XZZMwt8Rw0HF20ECb3vGZih3lbz9OcjZrRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cXpk7PdQ; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750756055; c=relaxed/simple;
+	bh=sYgFmiwaIhVHwxtrK7josZebbNM9Yb+Z6uYTUURKkio=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=V0Ompss/7NFKYGLweTSwZKsQgmVP1uC6pOkqeJzJkZ13b1SZLqp0hb6kpxoW8dKUYyBFac3hpWKchZnwECwHwkLPqvNZcYZGy+KStRiS1puU4+IfQP+azn+f+G2IoCH0Y2Ta9rRhshL7J21Uvq1WJqxhxUEl5GOKpPOJVQrivtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=a62NCJWA; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cXpk7PdQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750756054; x=1782292054;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=LImjdI/yU6Pe3jIPDaALZwPgLQGhX4tSMeDeFG4akNI=;
-  b=cXpk7PdQSwENHkV7oOU0MfNOcFZOicbs316bmV0E59SSOsh4hW1uvWNs
-   evfUsgU7HcZPFtaOPwbAvx8DF3hRshgyUUuFAnFq3+qq3c0c+3MX8RQrW
-   tKskYvP827GQsmv++UB0q+NsL7uzbTFhpPRkkiSyBxSuHHOgYFd8k5SH6
-   EYRtpBgBcXGsVYoyu4YssaDL1tuoITN5hWkt1cahooxkyrVdZ19DCkoQD
-   WNiyqJ0zBXd0IBQ/UZvQydx2s0B/PpwlY2QRzXmpqe/sRHJE53fLP25eZ
-   G86HoAsoAt+8SvvasfV2s6lYtvjwS9odMZBRyz0BnOPEU4abCgb+r2AOe
-   g==;
-X-CSE-ConnectionGUID: 1Rcl+j4WQn6UljEdQnSivA==
-X-CSE-MsgGUID: +uINwZwvRLKNHKB5WCxiuA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="63251918"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="63251918"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 02:07:33 -0700
-X-CSE-ConnectionGUID: LNJ52oFbQHuKRGfw+S9VOg==
-X-CSE-MsgGUID: mZKINAqeRj+hasMGPN8SIg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="151609097"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by orviesa009.jf.intel.com with SMTP; 24 Jun 2025 02:07:30 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 24 Jun 2025 12:07:28 +0300
-Date: Tue, 24 Jun 2025 12:07:28 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/8] usb: typec: ucsi: add recipient arg to
- update_altmodes() callback
-Message-ID: <aFpq0GutBucmKWLw@kuha.fi.intel.com>
-References: <20250621-c630-ucsi-v1-0-a86de5e11361@oss.qualcomm.com>
- <20250621-c630-ucsi-v1-2-a86de5e11361@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="a62NCJWA"
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O78SQF017397;
+	Tue, 24 Jun 2025 05:07:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=vcme0alBbzcUwfQS2d8BTbLcixl
+	FSRr9ITNPRZlnPHY=; b=a62NCJWAMsgfcBCoEitweuLjP4P/KO1FMnQ08jFU8An
+	UvPqasy8uxiKFb8fy16ec0awIPK6ciGXgyMxb6B7H4Jmw9SK3wvld5UVzvqXG1yb
+	6xa0oXMx6Qp4G+Ey/u8CAcnYtXolKRgD/8YMQlP7g/Cl8ToZmmoYylAIFhfyBV85
+	tp8pRGzNlMDHP7YvLkNfipa+xo9j32KU/8Bp+N0lugOGRUlGDwJAGoZMw9yEo9Po
+	bD9CIxPRhmYx82ycjNPZ+kdsHA0joQ4wQtPA7Cf0DvTbfzOp+2nJ2mm139zT/Ig8
+	lRJzHCHvCA3WRy0SIGkcQMdsMAP2ZHvHIbv0eDW7ClA==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 47f43a6fyt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 05:07:17 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 55O97Gk7012609
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 24 Jun 2025 05:07:16 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Tue, 24 Jun
+ 2025 05:07:16 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Tue, 24 Jun 2025 05:07:16 -0400
+Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.55] (may be forged))
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55O973an007498;
+	Tue, 24 Jun 2025 05:07:05 -0400
+From: Jorge Marques <jorge.marques@analog.com>
+Subject: [PATCH v3 0/3] Add helper methods i3c_writel_fifo() and
+ i3c_readl_fifo()
+Date: Tue, 24 Jun 2025 11:06:03 +0200
+Message-ID: <20250624-i3c-writesl-readsl-v3-0-63ccf0870f01@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250621-c630-ucsi-v1-2-a86de5e11361@oss.qualcomm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHtqWmgC/6WOQQrCMBBFr1KyNpJM2iCuvId0EZNJO1AbSUpUS
+ u9uWly4EDeuhvfh/T8zSxgJEztWM4uYKVEYC6hdxWxvxg45ucIMBDRCg+CkLL9HmjANPKJx5SA
+ clG5UfdG6YUW8RfT02ErPbeGe0hTic9vIsKY/67LkgqMwRloha+f9yYxmCN3ehuta/3bhqwvFB
+ eOdqtFqJfSnu/6S5X/77bIsLyHyb8U1AQAA
+X-Change-ID: 20250620-i3c-writesl-readsl-e2836534b665
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Frank Li
+	<Frank.Li@nxp.com>,
+        =?utf-8?q?Przemys=C5=82aw_Gaj?= <pgaj@cadence.com>
+CC: <linux-i3c@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Jorge
+ Marques <jorge.marques@analog.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750756023; l=1882;
+ i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
+ bh=sYgFmiwaIhVHwxtrK7josZebbNM9Yb+Z6uYTUURKkio=;
+ b=Vm3oRrhkMYynEz43Zx4xGfvcqFrNjWY56+kWwFxkpfGczQb88m+L+QVrvBr0tZLA7Egxl23Ue
+ qq0aKv0r89ZCK1DlLE/1g+JUXQXDJLxIxLFWGPFyhrnFxfGgpf581uN
+X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
+ pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA3NyBTYWx0ZWRfX2S4CK9vnF+XF
+ SVgviLCc/wZwawvSvS+byRoI+dNUx2m8dnXqvCOpXJEul5FC6YJQVEMYkegGPvL2u/irXz55HdX
+ pw2QKaIZYzxwDvgHaMjBndlodFU+KGkS33RtRqA6D3cHmX1zrOtZRcNJ+ON+7l8UbGo2DrzD0/E
+ zxVjGLUKsXZKpux9JC9M6lClG6L1jK1JmIhH8VxBNW3TP/CYkytZTbC4JV5NibuOAS8TxGyCMCi
+ tjV2+bO3vpUbcfdtzAgoSNpvl+WD6PM61s3VM5M9M2S+RYIC31EphQfi7lqIOCQFVKW7oaZhBs7
+ 8tkjRHBTYddEQTrMuDojBMGKSbZ/PCPQPa8aK4g5Ah1LIK4Itgx4si2xdz/t7qli4Cq3Dq0Dg4W
+ vWuHZP2ECcP2tdFcq/m4X5htHRosJTG1Dmmq11lRR656oRIkvMC3SDi0YRac1eaDoCHbJMLN
+X-Authority-Analysis: v=2.4 cv=PuGTbxM3 c=1 sm=1 tr=0 ts=685a6ac5 cx=c_pps
+ a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=gAnH3GRIAAAA:8
+ a=jJBdLOADNryxc0H0sU4A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: pokr7qYinqbZ1JMD7kRHEBlBJYI1lSdK
+X-Proofpoint-GUID: pokr7qYinqbZ1JMD7kRHEBlBJYI1lSdK
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_03,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 priorityscore=1501 phishscore=0 mlxscore=0 mlxlogscore=582
+ malwarescore=0 adultscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
+ suspectscore=0 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506240077
 
-On Sat, Jun 21, 2025 at 09:12:57PM +0300, Dmitry Baryshkov wrote:
-> The update_altmodes() is executed only for connetor's AltModes, because
-> that's what required on the CCG platforms. Other platforms (like Lenovo
-> Yoga C630) requires similar fix for partner's AltModes. Extend
-> update_altmodes() callback to accept the recipient as an argument and
-> move corresponding check to the CCG UCSI driver.
-> 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+The I3C abstraction expects u8 buffers, but some controllers operate with
+a 32-bit bus width FIFO and cannot flag valid bytes individually. To avoid
+reading or writing outside the buffer bounds, use 32-bit accesses where
+possible and apply memcpy for any remaining bytes.
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Add two auxiliary methods to include/linux/i3c/master.h and use in the dw
+and cdns i3c controller drivers. The adi and renesas controller drivers
+will also use these methods.
 
-> ---
->  drivers/usb/typec/ucsi/ucsi.c     | 5 ++---
->  drivers/usb/typec/ucsi/ucsi.h     | 3 ++-
->  drivers/usb/typec/ucsi/ucsi_ccg.c | 4 ++++
->  3 files changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/usb/typec/ucsi/ucsi.c b/drivers/usb/typec/ucsi/ucsi.c
-> index 01ce858a1a2b3466155db340e213c767d1e79479..e913d099f934c7728cb678fc8e21e75ab0a00cce 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.c
-> +++ b/drivers/usb/typec/ucsi/ucsi.c
-> @@ -531,13 +531,12 @@ ucsi_register_altmodes_nvidia(struct ucsi_connector *con, u8 recipient)
->  	 * Update the original altmode table as some ppms may report
->  	 * multiple DP altmodes.
->  	 */
-> -	if (recipient == UCSI_RECIPIENT_CON)
-> -		multi_dp = ucsi->ops->update_altmodes(ucsi, orig, updated);
-> +	multi_dp = ucsi->ops->update_altmodes(ucsi, recipient, orig, updated);
->  
->  	/* now register altmodes */
->  	for (i = 0; i < max_altmodes; i++) {
->  		memset(&desc, 0, sizeof(desc));
-> -		if (multi_dp && recipient == UCSI_RECIPIENT_CON) {
-> +		if (multi_dp) {
->  			desc.svid = updated[i].svid;
->  			desc.vdo = updated[i].mid;
->  		} else {
-> diff --git a/drivers/usb/typec/ucsi/ucsi.h b/drivers/usb/typec/ucsi/ucsi.h
-> index 5a8f947fcece29f98c0458f9eb05c0c5ede2d244..d02f6a3e2f50a4044eb3f22276931017cc624532 100644
-> --- a/drivers/usb/typec/ucsi/ucsi.h
-> +++ b/drivers/usb/typec/ucsi/ucsi.h
-> @@ -82,7 +82,8 @@ struct ucsi_operations {
->  	int (*sync_control)(struct ucsi *ucsi, u64 command, u32 *cci,
->  			    void *data, size_t size);
->  	int (*async_control)(struct ucsi *ucsi, u64 command);
-> -	bool (*update_altmodes)(struct ucsi *ucsi, struct ucsi_altmode *orig,
-> +	bool (*update_altmodes)(struct ucsi *ucsi, u8 recipient,
-> +				struct ucsi_altmode *orig,
->  				struct ucsi_altmode *updated);
->  	void (*update_connector)(struct ucsi_connector *con);
->  	void (*connector_status)(struct ucsi_connector *con);
-> diff --git a/drivers/usb/typec/ucsi/ucsi_ccg.c b/drivers/usb/typec/ucsi/ucsi_ccg.c
-> index e9a9df1431af3a52c00cc456f5c920b9077a1ade..d83a0051c737336af2543fc2f6d53a131ffe9583 100644
-> --- a/drivers/usb/typec/ucsi/ucsi_ccg.c
-> +++ b/drivers/usb/typec/ucsi/ucsi_ccg.c
-> @@ -394,6 +394,7 @@ static void ucsi_ccg_update_get_current_cam_cmd(struct ucsi_ccg *uc, u8 *data)
->  }
->  
->  static bool ucsi_ccg_update_altmodes(struct ucsi *ucsi,
-> +				     u8 recipient,
->  				     struct ucsi_altmode *orig,
->  				     struct ucsi_altmode *updated)
->  {
-> @@ -402,6 +403,9 @@ static bool ucsi_ccg_update_altmodes(struct ucsi *ucsi,
->  	int i, j, k = 0;
->  	bool found = false;
->  
-> +	if (recipient != UCSI_RECIPIENT_CON)
-> +		return false;
-> +
->  	alt = uc->orig;
->  	new_alt = uc->updated;
->  	memset(uc->updated, 0, sizeof(uc->updated));
-> 
-> -- 
-> 2.39.5
+Related thread: https://lore.kernel.org/linux-i3c/aFNziEj7j31xy%2FmY@lizhi-Precision-Tower-5810/
 
+Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+---
+Changes in v3:
+- Update i3c_writel_fifo/i3c_readl_fifo documentation
+- Rename bytes to buffer
+- Update cdns, dw commit messages
+- Link to v2: https://lore.kernel.org/r/20250622-i3c-writesl-readsl-v2-0-2afd34ec6306@analog.com
+
+Changes in v2:
+- Rename to i3c_readl_fifo() and i3c_writel_fifo()
+- Change type u8 *bytes to void *bytes
+- Move methods to internals.h
+- Reword commit messages to include new names and ().
+- Fixup dw read fifo address (master -> master->reg)
+- Link to v1: https://lore.kernel.org/r/20250620-i3c-writesl-readsl-v1-0-e0aa1c014dff@analog.com
+
+---
+Jorge Marques (3):
+      i3c: master: Add inline i3c_readl_fifo() and i3c_writel_fifo()
+      i3c: master: cdns: Use i3c_writel_fifo() and i3c_readl_fifo()
+      i3c: master: dw: Use i3c_writel_fifo() and i3c_readl_fifo()
+
+ drivers/i3c/internals.h              | 37 ++++++++++++++++++++++++++++++++++++
+ drivers/i3c/master/dw-i3c-master.c   | 25 ++++--------------------
+ drivers/i3c/master/i3c-master-cdns.c | 25 +++++-------------------
+ 3 files changed, 46 insertions(+), 41 deletions(-)
+---
+base-commit: 51963783b876a2f493a3eac0ea9eba271cb6809a
+change-id: 20250620-i3c-writesl-readsl-e2836534b665
+
+Best regards,
 -- 
-heikki
+Jorge Marques <jorge.marques@analog.com>
+
