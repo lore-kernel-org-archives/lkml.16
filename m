@@ -1,101 +1,152 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 108A977111;
-	Tue, 24 Jun 2025 13:25:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B11629994E
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:25:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750771509; cv=none; b=JRxaE0jFWbS9cclDi3ujcQ4iJbIRBsaFMwBXHLE2hbGeqQIanVV6p3TjLDQAbFPSoBqeJjryGSIQnsm5jtAF7F+C1jo16z6x8T/NSQ4xxj7EqeXnKXj/2oSsY8cA9bHmCwyL9SeBIN0CBfjkqK5xgSjNSuVbyyRy/H+6GEnC5UE=
+	t=1750771540; cv=none; b=DDpbebh+cus7hPhLMhsY5wz9b34aWlUEgmQsa8VlShq9qRroSW+9YOrUyXZe7gQL6XLmtWYt1f6lqllTT2KDjZwQsLu30SKp+j8i4Gi9AcvZG28iJXws/prY+3d6AQnhGVdnaR5L/kBoI963prZlk5hFTOCgjpmkeU3ZI5+aicM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750771509; c=relaxed/simple;
-	bh=MzfSzjUF95yxpmEYVS+Rj4B5oJS885I5tmi8QnxSL1c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E/LmwUjEH7vG2Qq/8HCmxhGqziSQxeP8tjyW4v+LrWvHw3UqYCELIY/Af/xctnWxcVnf6qPXC1h8O7tlY0YVK5fKO+ckttq2VBGzyJH8kqPZhxZuhPXmwXMBhTct6yq4hINjbSbDYL6qJv5/75O4JUpEoJgzOm2R4z83XARSbs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Gbs6DHX7; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750771540; c=relaxed/simple;
+	bh=O//ctg+SgVaxYLIL04Z2pIwS9W/cpXKX5+4dHW6Gpu0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M1igYxHJBlqOYurRkXgTxcCyLd9jHNIbyiMrghqknZNbDonqxkdsfD3IsfXpTJVemvyc3HNdMQgK8yZQqmvSMSLRFgCcvrurOrFePoTiTTZMDH/zjf8KTRlvAuS8sxKT5dmkO5SmVE7Oyg6h4vWsYF7XcrVjhC0zmg9NaT/gLKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=cbul+x/5; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gbs6DHX7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750771508; x=1782307508;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MzfSzjUF95yxpmEYVS+Rj4B5oJS885I5tmi8QnxSL1c=;
-  b=Gbs6DHX7vJXE+ub0x2b8lJDOrFkLav+EdFE9v89KpqLvNM2MmhJTzZY6
-   H1WyE0Fw9fIvovUKmxQGpOskau1jnnCLfNTQQvkWAxEOpJO42wUJocB6/
-   /lIQT2pVtqprs8RGU9aPU5DZ+d3MOXprLnlq4ErNdIT4tWVhVC0e1hRga
-   YA0BsRkzLREowI35fvyCQAcnKGavSDjp1B+Na/uGMnrvup/EAVl2FDqJu
-   PIiliPgeD5BCxoOYfKEvIGgwaWTePhICBK5sSKvMnVt/nSttFUDDkB8h8
-   v5MpMcZoCV6ri6rRYhqeSHe3Ev0zTAtxJtR3vESOJI/mG4YRC7YzmQTIq
-   w==;
-X-CSE-ConnectionGUID: UqlKvbSKTYWIuYiTG9RM3A==
-X-CSE-MsgGUID: NT40j7w7TBe3uHuXBVKeRA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="78429902"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="78429902"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 06:25:07 -0700
-X-CSE-ConnectionGUID: hjY2OfY9Sy6CJL0qqPCPFA==
-X-CSE-MsgGUID: sgp4haqyTcCmo2ZwpTutYw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="152210127"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 06:25:04 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uU3e0-00000009TgJ-1Uhr;
-	Tue, 24 Jun 2025 16:25:00 +0300
-Date: Tue, 24 Jun 2025 16:24:59 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org,
-	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
-	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-	linux-staging@lists.linux.dev, shuah@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev, dan.carpenter@linaro.org
-Subject: Re: [PATCH] staging: media: atomisp: remove debug sysfs attributes
- active_bo and free_bo
-Message-ID: <aFqnK5nIHilUSxPq@smile.fi.intel.com>
-References: <20250624130841.34693-1-abdelrahmanfekry375@gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="cbul+x/5"
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O8eLEf016718
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:25:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	puqnTEAbiwXXvejvFqHMQDxLMczv/myXUOZnE8pspZY=; b=cbul+x/5zDFIJR/D
+	zoSVQtmbiMSfUxpe5Joqf9z4WRN/GHRJKQ0dBU6x9qEJg99OMKXfIcwBvH3b1xKS
+	ptuT422Jq2dJXuUPeXfMMZZ9nGfBNR7xzhA1qR/x7DySHcMDkT4KHsINHjPxOesO
+	WOucqMNUgflVUTjdXu+Vmb2qpVLOlqXYYceD8zYGd3CROzOoQYzyBk64myVEjB51
+	v5IqA74RHvP/s6bU1ajNvJFPg8ykX9B+aczmvV7f6QqhGuZGIydJrrDG2aIZVKzy
+	z9thC8TevL2Na/Zn9CTrgN8KaVMLSN3ElMgDT1pVpSxE6T4Xxn/aTC2wwa1cOIz7
+	tQn4Ag==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbhqjqb9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:25:37 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d097083cc3so167006585a.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:25:37 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750771537; x=1751376337;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=puqnTEAbiwXXvejvFqHMQDxLMczv/myXUOZnE8pspZY=;
+        b=xK1BBfQRtRfDzW+ZrFuR6LGHZxDjdAePVyH2FENrFqnrUgu64g4DtYnYKAFtHdxW90
+         CqskyUnbBuag9uhpmtAL4L4Lipk3HzYV1Rs+7O6FZs1ahGO9pdr7j7TCVkdjAk6pTXRL
+         kMfJPJY1TcfmMpx0dw7eKgOv4GFVi6/weAiO3f9/dxfxQDc/rBJTVsFOcVWOApZ1UOuY
+         +IlAy9rm49JAFCcrvtRw6QGqZ9PtMaFsBP+6CXk+6MmhgnxhMks+SEqMOG0PX0KzNXDj
+         /rkTCb0/5/DBXpiTbeOQJTbyA+n5+/JcM7x0iA8lQtJs8sk1NudeQb2mRHi5W2BxOcWS
+         Ov3g==
+X-Forwarded-Encrypted: i=1; AJvYcCVB/5+3HQVHQncxkSL6lCTeMiiM1gMCQ/lA7ZfaL9ZXOOi6N+Vh1tCatMQZZmNb1xKBo7vMJO/OLA17Gag=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUDaxADMWh07XEsEZEFGG9Ly0EDnk3ZDMHVM50QyTdE3BEtr+g
+	ZB1C2n7YTx/hLAn8FoGtKOyjgNfVvSOa/Kl1wFaHMQJInybsAcRTPw4b7FXrIwd3JqMT0hNfqFU
+	lZwRItsCIJQk2JIDKKhtCnuSGDXuKWivr8wFJ7WlgEmJ6wvSwkSCEJcGS99hP+CWtISw=
+X-Gm-Gg: ASbGnctfKvDesq0xSNomeis8ivYFuX25ubuQVofzq66aXTaEmjabssJT3/JexATlmWv
+	95stcZNTfeE0f46R7DJoR+LR3M3p+AqScxJkRbvAcsveF6rtPnhGZXGbtpCcaO2BT0cnjye9Tf0
+	4r4H/Wa6Wo4xfD01l/DbOYsj5bDxEJVrgsuWVsha6z7IYcpxjFWZAb8rvP1cbIcldGsepPjgkSt
+	GwobMJg/RG6cUurg6/yDYrU/t9N2MCKhIVJc0OnSd5ph9h2ZokX4zEyV5+YNOQWmWeZpg+uBBVK
+	npJLaSsvhnGdKqXKQzMDAjkPJ/binBgpGW94vAyys0Mthb+dSwX/NIegke2q59fzGeU25ff5sR7
+	bW/E=
+X-Received: by 2002:a05:620a:1b97:b0:7c0:b018:5941 with SMTP id af79cd13be357-7d3f98f6cc8mr773216885a.7.1750771537000;
+        Tue, 24 Jun 2025 06:25:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFdrAg7gq+yCMSKsOWWwPNIbmt3jijAcQ2jxJTGwCS226EaL249p7Qlaj5TFZ6lHgo2gEcMWQ==
+X-Received: by 2002:a05:620a:1b97:b0:7c0:b018:5941 with SMTP id af79cd13be357-7d3f98f6cc8mr773214385a.7.1750771536510;
+        Tue, 24 Jun 2025 06:25:36 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0541b75b0sm864445466b.126.2025.06.24.06.25.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 06:25:36 -0700 (PDT)
+Message-ID: <cdf8428f-1407-4482-b946-804ffcdae3c7@oss.qualcomm.com>
+Date: Tue, 24 Jun 2025 15:25:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624130841.34693-1-abdelrahmanfekry375@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] ARM: dts: qcom: msm8974: Start using rpmpd for power
+ domains
+To: Luca Weiss <luca@lucaweiss.eu>, ~postmarketos/upstreaming@lists.sr.ht,
+        phone-devel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250621-msm8974-rpmpd-switch-v1-0-0a2cb303c446@lucaweiss.eu>
+ <20250621-msm8974-rpmpd-switch-v1-4-0a2cb303c446@lucaweiss.eu>
+ <50b0aa77-4ec5-412f-9ce5-6ec613dd0afb@oss.qualcomm.com>
+ <d31bf707-0f8c-4f55-927a-a08c5310b7be@lucaweiss.eu>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <d31bf707-0f8c-4f55-927a-a08c5310b7be@lucaweiss.eu>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: 57qo9IEXBxWVbzGg6irtMZF_pMsdJv2p
+X-Authority-Analysis: v=2.4 cv=Id+HWXqa c=1 sm=1 tr=0 ts=685aa751 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=wIXcl6-ah0yuBUIPcu0A:9
+ a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-GUID: 57qo9IEXBxWVbzGg6irtMZF_pMsdJv2p
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDExMyBTYWx0ZWRfX/WwW8CbNgDCG
+ KE6OFMSNiJ11dSBMd9EMxJDcI39q8NGN6+vcVR6ih/GucvKWgUWPapplrlFh9qoHMXMg8EiF2pT
+ o/Xc4B7XalYfDr1tuut9JY8wUchYM+F/naNaWGkNbznos+s+I133Rfs/UmoZSu9n2t+ZDFTz1py
+ p9mW/vX8sH1+sa35ASiMCXtnIsLiygF1RTPjcCkohVJGcWW+8E6FuqNHoVgC26wZFT32KXRgfbe
+ z/waQ9fg5JnT/9DSvHQ+tTifrRrITY97czJYVs1D/gEVW0GmRVcLIU0ISlzV9Y7X+XL6F+eEiCL
+ +SkSkNzgOUZdPMzAPjiUVucgb8tHlTb32c0YCxvKFJmuZvCXxStREezuy8a+mKZo0svljV/xU7f
+ SL10lJZvrhctDq5J4EEdqNWO7COwo8SqgIkS8ooqOGC7nh7GRVt+k/AitjE0N6tIpYQ4BpKq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_05,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 priorityscore=1501 mlxlogscore=999 phishscore=0 bulkscore=0
+ clxscore=1015 impostorscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
+ suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506240113
 
-On Tue, Jun 24, 2025 at 04:08:41PM +0300, Abdelrahman Fekry wrote:
-> The sysfs attributes active_bo and free_bo expose internal buffer
-> state used only for debugging purposes. These are not part of
-> any standard kernel ABI and needs to be removed before this
-> driver can be moved out of drivers/staging.
+On 6/23/25 6:44 PM, Luca Weiss wrote:
+> On 23-06-2025 2:39 p.m., Konrad Dybcio wrote:
+>> On 6/21/25 3:19 PM, Luca Weiss wrote:
+>>> Due to historical reasons all msm8974 boards have used the CX power rail
+>>> as regulator instead of going through the power domain framework.
+>>>
+>>> Since rpmpd has gained msm8974 support quite a bit ago, let's start
+>>> using it and replace all usages of pm8841_s2 (CX), pm8841_s4 (GFX) and
+>>> for the boards using pma8084 pma8084_s2 (CX), pma8084_s7 (GFX).
+>>>
+>>> For reference, downstream is using GFX power rail as parent-supply for
+>>> mmcc's OXILI_GDSC GDSC which then is used for GPU, but nothing there is
+>>> modelled upstream.
+>>
+>> if you use an opp table with described rpmpd levels and bind the GFX
+>> domain to gpucc, it should propagate - check it out
 > 
-> - Remove active_bo and free_bo attributes
-> - Remove group registration calls form hmm_init() and hmm_cleanup()
+> I don't *really* understand what you mean here. I'd be happy if you provided an example (or better yet, a patch) for this.
 
-Suggested-by: ?
+sm6115
 
-...
+> 
+> Also msm8974 does not have gpucc, only gcc and mmcc.
 
-> +	/* Removed sysfs group registration for active_bo and free_bo attributes */
+*oh*... right
 
-> +
-> +	/* Removed sysfs group remove for active_bo and free_bo attributes */
+You would then have to somehow selectively bind the OXILI_GDSC to
+VDD_GX, for which I don't know if we have a good interface today..
 
-These comments do not bring a value, no need to have them.
-
-With the above fixed,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Konrad
