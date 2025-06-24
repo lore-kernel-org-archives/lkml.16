@@ -1,706 +1,213 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4366F25CC50;
-	Tue, 24 Jun 2025 09:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DACFB25CC50;
+	Tue, 24 Jun 2025 09:51:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750758665; cv=none; b=ucPEunZ2vQtgjxtmpCD3rGUV8tSMVpLA5fwN93g/HZF00p/rXsi5FgwmOO9ZtKm+u6bQTOPDLpAsJuGFQzaG/aDSX5LjkLqzDNN19rIM1EkRujvpJNprOZwlWwvopOdQ+IMu9CqMVpYuZwAqw4C1D2ON42bWPnXcwisUfO7xqT0=
+	t=1750758676; cv=none; b=cdmBpvPVJqm1Zwf8MTSTyLrjUeOPQbLqqaLrP3mLqRwx+KvHTE0wJYkhemFCPFTzN5Wov6vw07+BN7JE/fKbF+Ok5XLBKUlyKVgjiVblfb3CMxOfKbQbz+hj6rBnZL0Yi8JbLzusa4+b7T6GoP5+3ozjjg7hDnpRn9872LJD2qM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750758665; c=relaxed/simple;
-	bh=1b+26mTU5xl+064eAkD56PwvuJZxQrAwnIdxvfU7ddc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qu8Mpriuy/3GXpvsCHJPQPN48vNHXxOyI2cOyKrnXg6OglufotH3lYYwccreBxrABOJzAXrpJjwDG56XOTobVnyL0d9DO208Q7TqPMgsfqnkNaNRcXgKkvXOPL5yannjyOnsasg2N2kJJYaPcWe0RDXEvW0IQ+s8Tju8rrvZZr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWHuXmwf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750758676; c=relaxed/simple;
+	bh=JYmiyGEacQq75Q27iwEKQgp/kF0padbvVGq+8y+OVa0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PC5UeC2n+kxRKYCCeOMJ2C623OzvJdL0X88o5YcaS+KN11cCIMsabsWt+LCx0QWbxOBhOh/vaBMpXtN8DjCwsX8MAjxGbeu33YlAmUujmFVOxygoRosRZ4XLNG3UgKm5v5KGdXba8VoCBiAUjXW1YurE8rZ88zjFGXIMMT3tsN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=P+RoxOQA; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWHuXmwf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FD52C4CEEE;
-	Tue, 24 Jun 2025 09:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750758664;
-	bh=1b+26mTU5xl+064eAkD56PwvuJZxQrAwnIdxvfU7ddc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SWHuXmwfC/tw2R1495jtLqMvq8YJ9GTw7zOkIQZCOa86NbuHwxOJCcIjnsfrhBJ5a
-	 PVGHBAzEJQ89cMba0Y3aUUkt4r9FI2QTZQ8KgMGFWBnBO1ICRUrKsU7M1Gad3KHm3C
-	 G/UdnyahVNm+gYz6MM8wJCVTCLrlXmS1p9GYTp6cYkiVAmx/xbvKe6BVoz+lacfhpQ
-	 Y2yqGiirGWNumulQQzR9NiQa8mkzLQ7tb50EOKKbkEtUmqjlCIJToDHM6Hwe3HxClQ
-	 HXkKabZfiAmCKEOLYMITtlMQA6QOubivGzbgqPekvX34zQQN4NptS86SxaO66/pKDK
-	 eP8ducGtQPHHg==
-Date: Tue, 24 Jun 2025 11:50:49 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com, 
-	changyuanl@google.com, rppt@kernel.org, dmatlack@google.com, rientjes@google.com, 
-	corbet@lwn.net, rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, 
-	kanie@linux.alibaba.com, ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org, 
-	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com, 
-	roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk, mark.rutland@arm.com, 
-	jannh@google.com, vincent.guittot@linaro.org, hannes@cmpxchg.org, 
-	dan.j.williams@intel.com, david@redhat.com, joel.granados@kernel.org, rostedt@goodmis.org, 
-	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, rafael@kernel.org, 
-	dakr@kernel.org, bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
-	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, bhelgaas@google.com, 
-	wagi@kernel.org, djeffery@redhat.com, stuart.w.hayes@gmail.com, ptyadav@amazon.de
-Subject: Re: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
-Message-ID: <20250624-akzeptabel-angreifbar-9095f4717ca4@brauner>
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-11-pasha.tatashin@soleen.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="P+RoxOQA"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O8xQaw022985;
+	Tue, 24 Jun 2025 09:51:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=qcppdkim1; bh=CxVzBY/H1+RhoLMscX59zfnY1PMC/8fIUY+
+	OGESrTJw=; b=P+RoxOQAp8qhWqZndvy7rh2Q71FI4OoGbXXaDKKDBJc+vv3MklT
+	VgSRh54O8ixq1vN43+bpExg1mnVTa5hIisK4+yxqt7c22Yy8oWPvZjMEOgk4Rsh4
+	L4KNAevHvHHxvPkn5JblDjjHJVNwyRpWDjgvOdW0wEODqlhWTiGLAa9WWkAQ0hLx
+	Z2H224x3Cvx1c9iS8srcM3CtZ124hJhyqr+lP8baAoJUdOao18/eiB7uz85Rw5le
+	slB7MTN0q8SaVugRVYqgYNCtylDhvnML6ZO+kyvIYagsB2IYzSQFiNHvpSsh0EKy
+	r/cRmXskLVoCYro9k7UJrXmmrOGS8G4TxoA==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bgbme5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 09:51:09 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55O9p6uj024161;
+	Tue, 24 Jun 2025 09:51:06 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 47dntktds5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 09:51:06 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55O9p6m0024153;
+	Tue, 24 Jun 2025 09:51:06 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com ([10.213.97.252])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 55O9p5ff024146
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 09:51:06 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 4047106)
+	id 30F2656E; Tue, 24 Jun 2025 15:21:05 +0530 (+0530)
+From: Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
+To: andi.shyti@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+        conor+dt@kernel.org, gregkh@linuxfoundation.org, jirislaby@kernel.org,
+        andersson@kernel.org, konradybcio@kernel.org, johan+linaro@kernel.org,
+        dianders@chromium.org, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-i2c@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org
+Cc: mukesh.savaliya@oss.qualcomm.com, quic_anupkulk@quicinc.com,
+        Viken Dadhaniya <viken.dadhaniya@oss.qualcomm.com>
+Subject: [PATCH v5 0/5] Add support to load QUP SE firmware from
+Date: Tue, 24 Jun 2025 15:20:57 +0530
+Message-Id: <20250624095102.1587580-1-viken.dadhaniya@oss.qualcomm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250515182322.117840-11-pasha.tatashin@soleen.com>
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: F_FlamUoFfvpgJgurMu0z-lMQaPI-l39
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA4MyBTYWx0ZWRfXwST6OOVC5jYz
+ HrygCDUlLWdMBSu4M1yc1ZcIrmRpfCuKFHlVxrB0Rxv+4A9tfnqQ6ADSYxM6XVBNsJayXg7QFZn
+ ncm+/TkI9YfCEwwxAqYLV1ler4YOekrl5BLeWng7Z9nBDKZGP7gqV3NOvIv1MRN41Odgovq5C8h
+ RnFInt69CX2201smfzkkCwdkT+WR+ssq2XnYuc1LrRLTlE19EQsoB+bXJ81MKnzEm513DWZoLaF
+ 4TUzZzQ0Dtr01qflDulW5uBxNyLg4c0wzXvP0VAQ6CnnPIltik7tAAVhzM77axVQYrKCUz3jQVD
+ 9J6DTrzjioJxbnDU74/lrkT5sr2tiy4wdpK2yWWpvgaetHBAmmvafBHILKuOcEFKdeKOS2tIBFC
+ z/t4ElFgMm5iV0e8yS7qnS2kVKn2VSaCWYAjYyGOUSO2j1JmQ1wI8xr9cjXQ85gsxxY/ippA
+X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=685a750e cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=03-ClwGjdYBXaTv5q9oA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: F_FlamUoFfvpgJgurMu0z-lMQaPI-l39
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_03,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1011 suspectscore=0
+ adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ spamscore=0 phishscore=0 mlxlogscore=999 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506240083
 
-On Thu, May 15, 2025 at 06:23:14PM +0000, Pasha Tatashin wrote:
-> Introduce the user-space interface for the Live Update Orchestrator
-> via ioctl commands, enabling external control over the live update
-> process and management of preserved resources.
-> 
-> Create a misc character device at /dev/liveupdate. Access
-> to this device requires the CAP_SYS_ADMIN capability.
-> 
-> A new UAPI header, <uapi/linux/liveupdate.h>, defines the necessary
-> structures. The magic number is registered in
-> Documentation/userspace-api/ioctl/ioctl-number.rst.
-> 
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> ---
->  .../userspace-api/ioctl/ioctl-number.rst      |   1 +
->  drivers/misc/liveupdate/Makefile              |   1 +
->  drivers/misc/liveupdate/luo_ioctl.c           | 199 ++++++++++++
->  include/linux/liveupdate.h                    |  34 +-
->  include/uapi/linux/liveupdate.h               | 300 ++++++++++++++++++
->  5 files changed, 502 insertions(+), 33 deletions(-)
->  create mode 100644 drivers/misc/liveupdate/luo_ioctl.c
->  create mode 100644 include/uapi/linux/liveupdate.h
-> 
-> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> index 7a1409ecc238..279c124048f2 100644
-> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
-> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
-> @@ -375,6 +375,7 @@ Code  Seq#    Include File                                           Comments
->  0xB8  01-02  uapi/misc/mrvl_cn10k_dpi.h                              Marvell CN10K DPI driver
->  0xB8  all    uapi/linux/mshv.h                                       Microsoft Hyper-V /dev/mshv driver
->                                                                       <mailto:linux-hyperv@vger.kernel.org>
-> +0xBA  all    uapi/linux/liveupdate.h                                 <mailto:Pasha Tatashin <pasha.tatashin@soleen.com>
->  0xC0  00-0F  linux/usb/iowarrior.h
->  0xCA  00-0F  uapi/misc/cxl.h                                         Dead since 6.15
->  0xCA  10-2F  uapi/misc/ocxl.h
-> diff --git a/drivers/misc/liveupdate/Makefile b/drivers/misc/liveupdate/Makefile
-> index b4cdd162574f..7a0cd08919c9 100644
-> --- a/drivers/misc/liveupdate/Makefile
-> +++ b/drivers/misc/liveupdate/Makefile
-> @@ -1,4 +1,5 @@
->  # SPDX-License-Identifier: GPL-2.0
-> +obj-y					+= luo_ioctl.o
->  obj-y					+= luo_core.o
->  obj-y					+= luo_files.o
->  obj-y					+= luo_subsystems.o
-> diff --git a/drivers/misc/liveupdate/luo_ioctl.c b/drivers/misc/liveupdate/luo_ioctl.c
-> new file mode 100644
-> index 000000000000..76c687ff650b
-> --- /dev/null
-> +++ b/drivers/misc/liveupdate/luo_ioctl.c
-> @@ -0,0 +1,199 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +/*
-> + * Copyright (c) 2025, Google LLC.
-> + * Pasha Tatashin <pasha.tatashin@soleen.com>
-> + */
-> +
-> +/**
-> + * DOC: LUO ioctl Interface
-> + *
-> + * The IOCTL user-space control interface for the LUO subsystem.
-> + * It registers a misc character device, typically found at ``/dev/liveupdate``,
-> + * which allows privileged userspace applications (requiring %CAP_SYS_ADMIN) to
-> + * manage and monitor the LUO state machine and associated resources like
-> + * preservable file descriptors.
-> + */
-> +
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/errno.h>
-> +#include <linux/file.h>
-> +#include <linux/fs.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/module.h>
-> +#include <linux/uaccess.h>
-> +#include <uapi/linux/liveupdate.h>
-> +#include "luo_internal.h"
-> +
-> +static int luo_ioctl_fd_preserve(struct liveupdate_fd *luo_fd)
-> +{
-> +	struct file *file;
-> +	int ret;
-> +
-> +	file = fget(luo_fd->fd);
-> +	if (!file) {
-> +		pr_err("Bad file descriptor\n");
-> +		return -EBADF;
-> +	}
-> +
-> +	ret = luo_register_file(&luo_fd->token, file);
-> +	if (ret)
-> +		fput(file);
-> +
-> +	return ret;
-> +}
-> +
-> +static int luo_ioctl_fd_unpreserve(u64 token)
-> +{
-> +	return luo_unregister_file(token);
-> +}
-> +
-> +static int luo_ioctl_fd_restore(struct liveupdate_fd *luo_fd)
-> +{
-> +	struct file *file;
-> +	int ret;
-> +	int fd;
-> +
-> +	fd = get_unused_fd_flags(O_CLOEXEC);
-> +	if (fd < 0) {
-> +		pr_err("Failed to allocate new fd: %d\n", fd);
-> +		return fd;
-> +	}
-> +
-> +	ret = luo_retrieve_file(luo_fd->token, &file);
-> +	if (ret < 0) {
-> +		put_unused_fd(fd);
-> +
-> +		return ret;
-> +	}
-> +
-> +	fd_install(fd, file);
-> +	luo_fd->fd = fd;
-> +
-> +	return 0;
-> +}
-> +
-> +static int luo_open(struct inode *inodep, struct file *filep)
-> +{
-> +	if (!capable(CAP_SYS_ADMIN))
-> +		return -EACCES;
-> +
-> +	if (filep->f_flags & O_EXCL)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static long luo_ioctl(struct file *filep, unsigned int cmd, unsigned long arg)
-> +{
-> +	void __user *argp = (void __user *)arg;
-> +	struct liveupdate_fd luo_fd;
-> +	enum liveupdate_state state;
-> +	int ret = 0;
-> +	u64 token;
-> +
-> +	if (_IOC_TYPE(cmd) != LIVEUPDATE_IOCTL_TYPE)
-> +		return -ENOTTY;
-> +
-> +	switch (cmd) {
-> +	case LIVEUPDATE_IOCTL_GET_STATE:
-> +		state = READ_ONCE(luo_state);
-> +		if (copy_to_user(argp, &state, sizeof(luo_state)))
-> +			ret = -EFAULT;
-> +		break;
-> +
-> +	case LIVEUPDATE_IOCTL_EVENT_PREPARE:
-> +		ret = luo_prepare();
-> +		break;
-> +
-> +	case LIVEUPDATE_IOCTL_EVENT_FREEZE:
-> +		ret = luo_freeze();
-> +		break;
-> +
-> +	case LIVEUPDATE_IOCTL_EVENT_FINISH:
-> +		ret = luo_finish();
-> +		break;
-> +
-> +	case LIVEUPDATE_IOCTL_EVENT_CANCEL:
-> +		ret = luo_cancel();
-> +		break;
-> +
-> +	case LIVEUPDATE_IOCTL_FD_PRESERVE:
-> +		if (copy_from_user(&luo_fd, argp, sizeof(luo_fd))) {
-> +			ret = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		ret = luo_ioctl_fd_preserve(&luo_fd);
-> +		if (!ret && copy_to_user(argp, &luo_fd, sizeof(luo_fd)))
-> +			ret = -EFAULT;
-> +		break;
-> +
-> +	case LIVEUPDATE_IOCTL_FD_UNPRESERVE:
-> +		if (copy_from_user(&token, argp, sizeof(u64))) {
-> +			ret = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		ret = luo_ioctl_fd_unpreserve(token);
-> +		break;
-> +
-> +	case LIVEUPDATE_IOCTL_FD_RESTORE:
-> +		if (copy_from_user(&luo_fd, argp, sizeof(luo_fd))) {
-> +			ret = -EFAULT;
-> +			break;
-> +		}
-> +
-> +		ret = luo_ioctl_fd_restore(&luo_fd);
-> +		if (!ret && copy_to_user(argp, &luo_fd, sizeof(luo_fd)))
-> +			ret = -EFAULT;
-> +		break;
-> +
-> +	default:
-> +		pr_warn("ioctl: unknown command nr: 0x%x\n", _IOC_NR(cmd));
-> +		ret = -ENOTTY;
-> +		break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct file_operations fops = {
-> +	.owner          = THIS_MODULE,
-> +	.open           = luo_open,
-> +	.unlocked_ioctl = luo_ioctl,
-> +};
-> +
-> +static struct miscdevice liveupdate_miscdev = {
-> +	.minor = MISC_DYNAMIC_MINOR,
-> +	.name  = "liveupdate",
-> +	.fops  = &fops,
-> +};
+In Qualcomm SoCs, firmware loading for Serial Engines (SE) in the QUP
+hardware has traditionally been managed by TrustZone (TZ). This setup
+handled Serial Engines(SE) assignments and access control permissions,
+ensuring a high level of security but limiting flexibility and
+accessibility.
+ 
+This limitation poses a significant challenge for developers who need more
+flexibility to enable any protocol on any of the SEs within the QUP
+hardware.
+ 
+To address this, we are introducing a change that opens the firmware
+loading mechanism to the Linux environment. This enhancement increases
+flexibility and allows for more streamlined and efficient management. We
+can now handle SE assignments and access control permissions directly
+within Linux, eliminating the dependency on TZ.
+ 
+We propose an alternative method for firmware loading and SE
+ownership/transfer mode configuration based on device tree configuration.
+This method does not rely on other execution environments, making it
+accessible to all developers.
+ 
+For SEs used prior to the kernel, their firmware will be loaded by the
+respective image drivers (e.g., Debug UART, Secure or trusted SE).
+Additionally, the GSI firmware, which is common to all SEs per QUPV3 core,
+will not be loaded by Linux driver but TZ only. At the kernel level, only
+the SE protocol driver should load the respective protocol firmware.
+---
+v4 -> v5:
 
-I'm not sure why people are so in love with character device based apis.
-It's terrible. It glues everything to devtmpfs which isn't namespacable
-in any way. It's terrible to delegate and extremely restrictive in terms
-of extensiblity if you need additional device entries (aka the loop
-driver folly).
+- Added Reviewd-by tag.
+- Resolved kernel test robot error by including the missing bitfield header file.
+- Updated the SE firmware ELF structure name for consistency.
+- Specified _leb4 format for the magic number definition.
+- Updated the email domain from 'quic' to 'oss'.
 
-One stupid question: I probably have asked this before and just swapped
-out that I a) asked this already and b) received an explanation. But why
-isn't this a singleton simple in-memory filesystem with a flat
-hierarchy?
+v4 Link: https://lore.kernel.org/all/20250503111029.3583807-1-quic_vdadhani@quicinc.com/ 
 
-mount -t kexecfs kexecfs /kexecfs
+v3 -> v4: 
 
-So userspace mounts kexecfs (or the kernel does it automagically) and
-then to add fds into that thing you do the following:
+- Drop patch 1 of the v3 series as it has been reviewed and merged.
+- Update the qcom,gsi-dma-allowed property name to qcom,enable-gsi-dma.
+- Remove the full stop from the title.
+- Add a reference to the common schema YAML in the I2C, SPI, and SERIAL
+  YAML files in a single patch and drop the individual patches for protocol YAML.
+- Update the commit message.
+- Resolve kernel test robot warnings.
+- Add a multiline comment in the Copyright section.
+- Remove valid_seg_size and geni_config_common_control functions and add the code inline.
+- Rename read_elf function to geni_read_elf.
+- Add a firmware size check.
+- Assign *pelfseg after finding a match.
+- Break one large condition check into multiple checks to improve code readability.
+- Remove return type documentation for void functions.
+- Update error messages to be more descriptive.
+- Correct indentation.
+- Rename geni_flash_fw_revision function to geni_write_fw_revision.
+- Remove __func__ from all print statements.
+- Move resource_on to the appropriate section after parsing the firmware file.
+- Update variable names and function arguments as suggested.
+- Use FIELD_GET, FIELD_PREP, and GENMASK.
+- Use memcpy_toio() instead of memcpy.
+- Remove duplicate registers and bitmask macros.
+- Remove rsc struct and add required variables in geni_se struct.
+- Add a patch dependency note.
 
-linkat(fd_my_anon_inode_memfd, "", -EBADF, "kexecfs/my_serialized_memfd", AT_EMPTY_PATH)
+v3 Link: https://lore.kernel.org/linux-arm-msm/20250303124349.3474185-1-quic_vdadhani@quicinc.com/ 
 
-which will serialize the fd_my_anon_inode_memfd. You can also do this
-with ioctls on the kexecfs filesystem of course.
+v2 -> v3:
 
-The advantages are:
+- Add a new YAML file for QUP peripheral-specific properties for I2C, SPI, and SERIAL buses.
+- Drop the 'qcom,xfer-mode' property and add the 'qcom,gsi-dma-allowed' property in protocol-specific YAML.
+- Add a reference for the QUP peripheral shared YAML to protocol-specific YAML.
+- Enhance error handling and remove redundant if conditions in the qcom-geni-se.c driver.
+- Remove the ternary operator in the qup_fw_load function.
+- Update function descriptions and use imperative mood in qcom-geni-se.c
+- Load firmware during probe only if the protocol is invalid.
 
-* implement your own lookup permission
-* you're able to use ls -al /kexecfs to see all the things that you
-  serialized in there trivially
-* you're free to turn this into a multi-instance thing so that you can
-  serialize things per-service for example
-* it's naturally hierarchical integrating with systemd a lot more easily
-* profit from fs apis like unlink() and so on to remove entries getting
-  rid of at least complex ioctl()ing for the basic use-cases
+v2 Link: https://lore.kernel.org/linux-kernel/20250124105309.295769-1-quic_vdadhani@quicinc.com/ 
+ 
+v1 -> v2:
 
-> +
-> +static int __init liveupdate_init(void)
-> +{
-> +	int err;
-> +
-> +	err = misc_register(&liveupdate_miscdev);
-> +	if (err < 0) {
-> +		pr_err("Failed to register misc device '%s': %d\n",
-> +		       liveupdate_miscdev.name, err);
-> +	}
-> +
-> +	return err;
-> +}
-> +module_init(liveupdate_init);
-> +
-> +static void __exit liveupdate_exit(void)
-> +{
-> +	misc_deregister(&liveupdate_miscdev);
-> +}
-> +module_exit(liveupdate_exit);
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_AUTHOR("Pasha Tatashin");
-> +MODULE_DESCRIPTION("Live Update Orchestrator");
-> +MODULE_VERSION("0.1");
-> diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
-> index 7afe0aac5ce4..ff4f2ab5c673 100644
-> --- a/include/linux/liveupdate.h
-> +++ b/include/linux/liveupdate.h
-> @@ -10,6 +10,7 @@
->  #include <linux/bug.h>
->  #include <linux/types.h>
->  #include <linux/list.h>
-> +#include <uapi/linux/liveupdate.h>
->  
->  /**
->   * enum liveupdate_event - Events that trigger live update callbacks.
-> @@ -53,39 +54,6 @@ enum liveupdate_event {
->  	LIVEUPDATE_CANCEL,
->  };
->  
-> -/**
-> - * enum liveupdate_state - Defines the possible states of the live update
-> - * orchestrator.
-> - * @LIVEUPDATE_STATE_NORMAL:         Default state, no live update in progress.
-> - * @LIVEUPDATE_STATE_PREPARED:       Live update is prepared for reboot; the
-> - *                                   LIVEUPDATE_PREPARE callbacks have completed
-> - *                                   successfully.
-> - *                                   Devices might operate in a limited state
-> - *                                   for example the participating devices might
-> - *                                   not be allowed to unbind, and also the
-> - *                                   setting up of new DMA mappings might be
-> - *                                   disabled in this state.
-> - * @LIVEUPDATE_STATE_FROZEN:         The final reboot event
-> - *                                   (%LIVEUPDATE_FREEZE) has been sent, and the
-> - *                                   system is performing its final state saving
-> - *                                   within the "blackout window". User
-> - *                                   workloads must be suspended. The actual
-> - *                                   reboot (kexec) into the next kernel is
-> - *                                   imminent.
-> - * @LIVEUPDATE_STATE_UPDATED:        The system has rebooted into the next
-> - *                                   kernel via live update the system is now
-> - *                                   running the next kernel, awaiting the
-> - *                                   finish event.
-> - *
-> - * These states track the progress and outcome of a live update operation.
-> - */
-> -enum liveupdate_state  {
-> -	LIVEUPDATE_STATE_NORMAL = 0,
-> -	LIVEUPDATE_STATE_PREPARED = 1,
-> -	LIVEUPDATE_STATE_FROZEN = 2,
-> -	LIVEUPDATE_STATE_UPDATED = 3,
-> -};
-> -
->  /* Forward declaration needed if definition isn't included */
->  struct file;
->  
-> diff --git a/include/uapi/linux/liveupdate.h b/include/uapi/linux/liveupdate.h
-> new file mode 100644
-> index 000000000000..c673d08a29ea
-> --- /dev/null
-> +++ b/include/uapi/linux/liveupdate.h
-> @@ -0,0 +1,300 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +
-> +/*
-> + * Userspace interface for /dev/liveupdate
-> + * Live Update Orchestrator
-> + *
-> + * Copyright (c) 2025, Google LLC.
-> + * Pasha Tatashin <pasha.tatashin@soleen.com>
-> + */
-> +
-> +#ifndef _UAPI_LIVEUPDATE_H
-> +#define _UAPI_LIVEUPDATE_H
-> +
-> +#include <linux/ioctl.h>
-> +#include <linux/types.h>
-> +
-> +/**
-> + * enum liveupdate_state - Defines the possible states of the live update
-> + * orchestrator.
-> + * @LIVEUPDATE_STATE_NORMAL:         Default state, no live update in progress.
-> + * @LIVEUPDATE_STATE_PREPARED:       Live update is prepared for reboot; the
-> + *                                   LIVEUPDATE_PREPARE callbacks have completed
-> + *                                   successfully.
-> + *                                   Devices might operate in a limited state
-> + *                                   for example the participating devices might
-> + *                                   not be allowed to unbind, and also the
-> + *                                   setting up of new DMA mappings might be
-> + *                                   disabled in this state.
-> + * @LIVEUPDATE_STATE_FROZEN:         The final reboot event
-> + *                                   (%LIVEUPDATE_FREEZE) has been sent, and the
-> + *                                   system is performing its final state saving
-> + *                                   within the "blackout window". User
-> + *                                   workloads must be suspended. The actual
-> + *                                   reboot (kexec) into the next kernel is
-> + *                                   imminent.
-> + * @LIVEUPDATE_STATE_UPDATED:        The system has rebooted into the next
-> + *                                   kernel via live update the system is now
-> + *                                   running the next kernel, awaiting the
-> + *                                   finish event.
-> + *
-> + * These states track the progress and outcome of a live update operation.
-> + */
-> +enum liveupdate_state  {
-> +	LIVEUPDATE_STATE_NORMAL = 0,
-> +	LIVEUPDATE_STATE_PREPARED = 1,
-> +	LIVEUPDATE_STATE_FROZEN = 2,
-> +	LIVEUPDATE_STATE_UPDATED = 3,
-> +};
-> +
-> +/**
-> + * struct liveupdate_fd - Holds parameters for preserving and restoring file
-> + * descriptors across live update.
-> + * @fd:    Input for %LIVEUPDATE_IOCTL_FD_PRESERVE: The user-space file
-> + *         descriptor to be preserved.
-> + *         Output for %LIVEUPDATE_IOCTL_FD_RESTORE: The new file descriptor
-> + *         representing the fully restored kernel resource.
-> + * @flags: Unused, reserved for future expansion, must be set to 0.
-> + * @token: Output for %LIVEUPDATE_IOCTL_FD_PRESERVE: An opaque, unique token
-> + *         generated by the kernel representing the successfully preserved
-> + *         resource state.
-> + *         Input for %LIVEUPDATE_IOCTL_FD_RESTORE: The token previously
-> + *         returned by the preserve ioctl for the resource to be restored.
-> + *
-> + * This structure is used as the argument for the %LIVEUPDATE_IOCTL_FD_PRESERVE
-> + * and %LIVEUPDATE_IOCTL_FD_RESTORE ioctls. These ioctls allow specific types
-> + * of file descriptors (for example memfd, kvm, iommufd, and VFIO) to have their
-> + * underlying kernel state preserved across a live update cycle.
-> + *
-> + * To preserve an FD, user space passes this struct to
-> + * %LIVEUPDATE_IOCTL_FD_PRESERVE with the @fd field set. On success, the
-> + * kernel populates the @token field.
-> + *
-> + * After the live update transition, user space passes the struct populated with
-> + * the *same* @token to %LIVEUPDATE_IOCTL_FD_RESTORE. The kernel uses the @token
-> + * to find the preserved state and, on success, populates the @fd field with a
-> + * new file descriptor referring to the fully restored resource.
-> + */
-> +struct liveupdate_fd {
-> +	int		fd;
-> +	__u32		flags;
-> +	__u64		token;
-> +};
-> +
-> +/* The ioctl type, documented in ioctl-number.rst */
-> +#define LIVEUPDATE_IOCTL_TYPE		0xBA
-> +
-> +/**
-> + * LIVEUPDATE_IOCTL_FD_PRESERVE - Validate and initiate preservation for a file
-> + * descriptor.
-> + *
-> + * Argument: Pointer to &struct liveupdate_fd.
-> + *
-> + * User sets the @fd field identifying the file descriptor to preserve
-> + * (e.g., memfd, kvm, iommufd, VFIO). The kernel validates if this FD type
-> + * and its dependencies are supported for preservation. If validation passes,
-> + * the kernel marks the FD internally and *initiates the process* of preparing
-> + * its state for saving. The actual snapshotting of the state typically occurs
-> + * during the subsequent %LIVEUPDATE_IOCTL_EVENT_PREPARE execution phase, though
-> + * some finalization might occur during %LIVEUPDATE_IOCTL_EVENT_FREEZE.
-> + * On successful validation and initiation, the kernel populates the @token
-> + * field with an opaque identifier representing the resource being preserved.
-> + * This token confirms the FD is targeted for preservation and is required for
-> + * the subsequent %LIVEUPDATE_IOCTL_FD_RESTORE call after the live update. This
-> + * is an I/O read/write operation.
-> + *
-> + * Return: 0 on success (validation passed, preservation initiated), negative
-> + * error code on failure (e.g., unsupported FD type, dependency issue,
-> + * validation failed).
-> + */
-> +#define LIVEUPDATE_IOCTL_FD_PRESERVE					\
-> +	_IOWR(LIVEUPDATE_IOCTL_TYPE, 0x00, struct liveupdate_fd)
-> +
-> +/**
-> + * LIVEUPDATE_IOCTL_FD_UNPRESERVE - Remove a file descriptor from the
-> + * preservation list.
-> + *
-> + * Argument: Pointer to __u64 token.
-> + *
-> + * Allows user space to explicitly remove a file descriptor from the set of
-> + * items marked as potentially preservable. User space provides a pointer to the
-> + * __u64 @token that was previously returned by a successful
-> + * %LIVEUPDATE_IOCTL_FD_PRESERVE call (potentially from a prior, possibly
-> + * cancelled, live update attempt). The kernel reads the token value from the
-> + * provided user-space address.
-> + *
-> + * On success, the kernel removes the corresponding entry (identified by the
-> + * token value read from the user pointer) from its internal preservation list.
-> + * The provided @token (representing the now-removed entry) becomes invalid
-> + * after this call.
-> + *
-> + * This operation can only be called when the live update orchestrator is in the
-> + *  %LIVEUPDATE_STATE_NORMAL state.**
-> + *
-> + * This is an I/O write operation (_IOW), signifying the kernel reads data (the
-> + * token) from the user-provided pointer.
-> + *
-> + * Return: 0 on success, negative error code on failure (e.g., -EBUSY or -EINVAL
-> + * if not in %LIVEUPDATE_STATE_NORMAL, bad address provided, invalid token value
-> + * read, token not found).
-> + */
-> +#define LIVEUPDATE_IOCTL_FD_UNPRESERVE					\
-> +	_IOW(LIVEUPDATE_IOCTL_TYPE, 0x01, __u64)
-> +
-> +/**
-> + * LIVEUPDATE_IOCTL_FD_RESTORE - Restore a previously preserved file descriptor.
-> + *
-> + * Argument: Pointer to &struct liveupdate_fd.
-> + *
-> + * User sets the @token field to the value obtained from a successful
-> + * %LIVEUPDATE_IOCTL_FD_PRESERVE call before the live update. On success,
-> + * the kernel restores the state (saved during the PREPARE/FREEZE phases)
-> + * associated with the token and populates the @fd field with a new file
-> + * descriptor referencing the restored resource in the current (new) kernel.
-> + * This operation must be performed *before* signaling completion via
-> + * %LIVEUPDATE_IOCTL_EVENT_FINISH. This is an I/O read/write operation.
-> + *
-> + * Return: 0 on success, negative error code on failure (e.g., invalid token).
-> + */
-> +#define LIVEUPDATE_IOCTL_FD_RESTORE					\
-> +	_IOWR(LIVEUPDATE_IOCTL_TYPE, 0x02, struct liveupdate_fd)
-> +
-> +/**
-> + * LIVEUPDATE_IOCTL_GET_STATE - Query the current state of the live update
-> + * orchestrator.
-> + *
-> + * Argument: Pointer to &enum liveupdate_state.
-> + *
-> + * The kernel fills the enum value pointed to by the argument with the current
-> + * state of the live update subsystem. Possible states are:
-> + *
-> + * - %LIVEUPDATE_STATE_NORMAL:   Default state; no live update operation is
-> + *                               currently in progress.
-> + * - %LIVEUPDATE_STATE_PREPARED: The preparation phase (triggered by
-> + *                               %LIVEUPDATE_IOCTL_EVENT_PREPARE) has completed
-> + *                               successfully. The system is ready for the
-> + *                               reboot transition initiated by
-> + *                               %LIVEUPDATE_IOCTL_EVENT_FREEZE. Note that some
-> + *                               device operations (e.g., unbinding, new DMA
-> + *                               mappings) might be restricted in this state.
-> + * - %LIVEUPDATE_STATE_UPDATED:  The system has successfully rebooted into the
-> + *                               new kernel via live update. It is now running
-> + *                               the new kernel code and is awaiting the
-> + *                               completion signal from user space via
-> + *                               %LIVEUPDATE_IOCTL_EVENT_FINISH after
-> + *                               restoration tasks are done.
-> + *
-> + * See the definition of &enum liveupdate_state for more details on each state.
-> + * This is an I/O read operation (kernel writes to the user-provided pointer).
-> + *
-> + * Return: 0 on success, negative error code on failure.
-> + */
-> +#define LIVEUPDATE_IOCTL_GET_STATE					\
-> +	_IOR(LIVEUPDATE_IOCTL_TYPE, 0x03, enum liveupdate_state)
-> +
-> +/**
-> + * LIVEUPDATE_IOCTL_EVENT_PREPARE - Initiate preparation phase and trigger state
-> + * saving.
-> + *
-> + * Argument: None.
-> + *
-> + * Initiates the live update preparation phase. This action corresponds to
-> + * the internal %LIVEUPDATE_PREPARE kernel event and can also be triggered
-> + * by writing '1' to ``/sys/kernel/liveupdate/prepare``. This typically
-> + * triggers the main state saving process for items marked via the PRESERVE
-> + * ioctls. This occurs *before* the main "blackout window", while user
-> + * applications (e.g., VMs) may still be running. Kernel subsystems
-> + * receiving the %LIVEUPDATE_PREPARE event should serialize necessary state.
-> + * This command does not transfer data.
-> + *
-> + * Return: 0 on success, negative error code on failure. Transitions state
-> + * towards %LIVEUPDATE_STATE_PREPARED on success.
-> + */
-> +#define LIVEUPDATE_IOCTL_EVENT_PREPARE					\
-> +	_IO(LIVEUPDATE_IOCTL_TYPE, 0x04)
-> +
-> +/**
-> + * LIVEUPDATE_IOCTL_EVENT_FREEZE - Notify subsystems of imminent reboot
-> + * transition.
-> + *
-> + * Argument: None.
-> + *
-> + * Notifies the live update subsystem and associated components that the kernel
-> + * is about to execute the final reboot transition into the new kernel (e.g.,
-> + * via kexec). This action triggers the internal %LIVEUPDATE_FREEZE kernel
-> + * event. This event provides subsystems a final, brief opportunity (within the
-> + * "blackout window") to save critical state or perform last-moment quiescing.
-> + * Any remaining or deferred state saving for items marked via the PRESERVE
-> + * ioctls typically occurs in response to the %LIVEUPDATE_FREEZE event.
-> + *
-> + * This ioctl should only be called when the system is in the
-> + * %LIVEUPDATE_STATE_PREPARED state. This command does not transfer data.
-> + *
-> + * Return: 0 if the notification is successfully processed by the kernel (but
-> + * reboot follows). Returns a negative error code if the notification fails
-> + * or if the system is not in the %LIVEUPDATE_STATE_PREPARED state.
-> + */
-> +#define LIVEUPDATE_IOCTL_EVENT_FREEZE					\
-> +	_IO(LIVEUPDATE_IOCTL_TYPE, 0x05)
-> +
-> +/**
-> + * LIVEUPDATE_IOCTL_EVENT_CANCEL - Cancel the live update preparation phase.
-> + *
-> + * Argument: None.
-> + *
-> + * Notifies the live update subsystem to abort the preparation sequence
-> + * potentially initiated by %LIVEUPDATE_IOCTL_EVENT_PREPARE. This action
-> + * typically corresponds to the internal %LIVEUPDATE_CANCEL kernel event,
-> + * which might also be triggered automatically if the PREPARE stage fails
-> + * internally.
-> + *
-> + * When triggered, subsystems receiving the %LIVEUPDATE_CANCEL event should
-> + * revert any state changes or actions taken specifically for the aborted
-> + * prepare phase (e.g., discard partially serialized state). The kernel
-> + * releases resources allocated specifically for this *aborted preparation
-> + * attempt*.
-> + *
-> + * This operation cancels the current *attempt* to prepare for a live update
-> + * but does **not** remove previously validated items from the internal list
-> + * of potentially preservable resources. Consequently, preservation tokens
-> + * previously generated by successful %LIVEUPDATE_IOCTL_FD_PRESERVE or calls
-> + * generally **remain valid** as identifiers for those potentially preservable
-> + * resources. However, since the system state returns towards
-> + * %LIVEUPDATE_STATE_NORMAL, user space must initiate a new live update sequence
-> + * (starting with %LIVEUPDATE_IOCTL_EVENT_PREPARE) to proceed with an update
-> + * using these (or other) tokens.
-> + *
-> + * This command does not transfer data. Kernel callbacks for the
-> + * %LIVEUPDATE_CANCEL event must not fail.
-> + *
-> + * Return: 0 on success, negative error code on failure. Transitions state back
-> + * towards %LIVEUPDATE_STATE_NORMAL on success.
-> + */
-> +#define LIVEUPDATE_IOCTL_EVENT_CANCEL					\
-> +	_IO(LIVEUPDATE_IOCTL_TYPE, 0x06)
-> +
-> +/**
-> + * LIVEUPDATE_IOCTL_EVENT_FINISH - Signal restoration completion and trigger
-> + * cleanup.
-> + *
-> + * Argument: None.
-> + *
-> + * Signals that user space has completed all necessary restoration actions in
-> + * the new kernel (after a live update reboot). This action corresponds to the
-> + * internal %LIVEUPDATE_FINISH kernel event and may also be triggerable via
-> + * sysfs (e.g., writing '1' to ``/sys/kernel/liveupdate/finish``)
-> + * Calling this ioctl triggers the cleanup phase: any resources that were
-> + * successfully preserved but were *not* subsequently restored (reclaimed) via
-> + * the RESTORE ioctls will have their preserved state discarded and associated
-> + * kernel resources released. Involved devices may be reset. All desired
-> + * restorations *must* be completed *before* this. Kernel callbacks for the
-> + * %LIVEUPDATE_FINISH event must not fail. Successfully completing this phase
-> + * transitions the system state from %LIVEUPDATE_STATE_UPDATED back to
-> + * %LIVEUPDATE_STATE_NORMAL. This command does not transfer data.
-> + *
-> + * Return: 0 on success, negative error code on failure.
-> + */
-> +#define LIVEUPDATE_IOCTL_EVENT_FINISH					\
-> +	_IO(LIVEUPDATE_IOCTL_TYPE, 0x07)
-> +
-> +#endif /* _UAPI_LIVEUPDATE_H */
-> -- 
-> 2.49.0.1101.gccaa498523-goog
-> 
+- Drop the qcom,load-firmware property.
+- Remove the fixed firmware path.
+- Add the 'firmware-name' property in the QUP common driver.
+- Add logic to read the firmware path from the device tree.
+- Resolve kernel test robot warnings.
+- Update the 'qcom,xfer-mode' property description.
+
+v1 Link: https://lore.kernel.org/linux-kernel/20241204150326.1470749-1-quic_vdadhani@quicinc.com/ 
+---
+Viken Dadhaniya (5):
+  dt-bindings: qcom: se-common: Add QUP Peripheral-specific properties
+    for I2C, SPI, and SERIAL bus
+  soc: qcom: geni-se: Add support to load QUP SE Firmware via Linux
+    subsystem
+  i2c: qcom-geni: Load i2c qup Firmware from linux side
+  spi: geni-qcom: Load spi qup Firmware from linux side
+  serial: qcom-geni: Load UART qup Firmware from linux side
+
+ .../bindings/i2c/qcom,i2c-geni-qcom.yaml      |   1 +
+ .../serial/qcom,serial-geni-qcom.yaml         |   1 +
+ .../soc/qcom/qcom,se-common-props.yaml        |  26 ++
+ .../bindings/spi/qcom,spi-geni-qcom.yaml      |   1 +
+ drivers/i2c/busses/i2c-qcom-geni.c            |   8 +-
+ drivers/soc/qcom/qcom-geni-se.c               | 404 +++++++++++++++++-
+ drivers/spi/spi-geni-qcom.c                   |   6 +
+ drivers/tty/serial/qcom_geni_serial.c         |   8 +-
+ include/linux/soc/qcom/geni-se.h              |  32 +-
+ include/linux/soc/qcom/qup-fw-load.h          |  93 ++++
+ 10 files changed, 556 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,se-common-props.yaml
+ create mode 100644 include/linux/soc/qcom/qup-fw-load.h
+
+-- 
+2.34.1
+
