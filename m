@@ -1,94 +1,144 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C16A28E5F8
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:17:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACAB28D8FA
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:19:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750771059; cv=none; b=jyIu9P19FGsIwQPmFsEtvtwWtW57zAKwlprvTqwpsvAndg7ZICVAxqGcxt3zBxnzfJW/mMFxGxYeYDpsNUVjP+Hl6huloI4ijtq+qH+YQsmtRRJ2CmMnQJA/IH6hHKnk92fU6STScM23nOrbrJuH+LMSXy5QaYUrxFaCYl5n2B8=
+	t=1750771165; cv=none; b=Dcod8v9fSERAvWQiTTFyYZivWiqgfROQc0gpH4BFsPwgnc+Gep8twmezCn2lswvQTaYF6mOaXwTa8O0MSEW0q/tpbIij0bL4MfpvZ4iuHoDrZLHs4+czmcLjKn+oG9iNrNvBNQXvtnZcPueP14kP3kMT/moWFMQBqP+yAOLEgGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750771059; c=relaxed/simple;
-	bh=58/OCqpQ7WUDprpGdcjlaMsOB10LaVqKAGJ1TTvEmWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rRtGKYElKZIVF+k0eSX9i1OVyFz+HdLpR/y5i74BjPvBWqvLtzGfZIp2b/e1tzaozUmKAql5JRF3Qzpan+1lvflLmU/Lv5IbIPyC+cBJeGjgklGfCG7Xl9b+mqUdn054G1vseTy//MPn2PDm4FHT2J8+M4LbZPrY56laa7xA7FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dVh7i0sj; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=dj4kO9Hf; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750771165; c=relaxed/simple;
+	bh=RBJgsZUC1nqNrB3wsNH3awWX5gMKJEfJFb9c9F8tuQg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=sC0/tYW2VIAokkj5khY1wsdok8hVq4COZjr4O5kGiWP/ShJkZvF/E2UPiUEc3qeTh3iPpGY1jHxw8cJV0dBHv/xVYJt1f8d4J2PdQdfrjtgVCFA1KDlS5yz4WpCQJSAv9qLdRa8PWC/kQwa5wp4strADQH/RLlDnigHtAMpdO6c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MrkJ6j8u; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dVh7i0sj";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="dj4kO9Hf"
-Date: Tue, 24 Jun 2025 15:17:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750771056;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IieBpWHrUJv1ck4+wSYHEjk5x9SCb1YNYUD3LP0jkSk=;
-	b=dVh7i0sjSNv6aPgxQQ3ZbfR+PVq9/BRCCT5OvFwO4opVw94YOleFduwwtJ7i35s0RY1mcc
-	spkMDXgoW422GwQP6qWPAM0CmCOl+LbO7vvk1oI42cBn31ikvj30RLLzB/lE49oQY7KduT
-	yaBtTMMeKTgHPaDyiijt/qzGrYm/GwVCwNV3HVqKRZ8ljkEzSEesDWoEAEauJ2jnydQSqW
-	KPcM3FdptK4WSd0JK86mxmDCa5fGFnQ4qGNznydbfIm8qeXtSulkG2+3VFtJwFWqnQ8APQ
-	fpYMGkbEodnbIM6uVPLqM2tND7SieEpJZXJ9p+i81HbitX3t4+tQDAplLelxOA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750771056;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IieBpWHrUJv1ck4+wSYHEjk5x9SCb1YNYUD3LP0jkSk=;
-	b=dj4kO9HfCpnvs8yEFiJQ1vwOtBep2CJz4cxkEeFgjILyB6PMaRzRqeRIOnE/DR03iTOxoI
-	CxclgKHT7ijIsMAQ==
-From: Nam Cao <namcao@linutronix.de>
-To: =?iso-8859-1?Q?Cl=E9ment_L=E9ger?= <cleger@rivosinc.com>
-Cc: "Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-	Alexandre Ghiti <alex@ghiti.fr>, bigeasy@linutronix.de,
-	clrkwllms@kernel.org, rostedt@goodmis.org,
-	linux-rt-devel@lists.linux.dev, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Enable interrupt during exception handling
-Message-ID: <20250624131730.XqPd1HUR@linutronix.de>
-References: <mhng-60581B88-6FC7-4349-96B6-730D908ABF4A@palmerdabbelt-mac>
- <alpine.DEB.2.21.2506240303170.61655@angie.orcam.me.uk>
- <19cf2371-7293-4e71-a17d-669db4c8270a@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MrkJ6j8u"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-450cf0120cdso41759665e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750771162; x=1751375962; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gsa/afuzkL/muRZEKJaSmP1G9IRaDNhW+p7U3bAdGsU=;
+        b=MrkJ6j8u+jLoenziiKTqh2kyZ0dwmtdT0pcDZ2Wj1bngH4KGOc2vefKK+3GWHyBmla
+         WB1lFtF/F+OMWeg/ZAPAfHwGeICcjZTMjj+oFk2o6HN6iGGnyrx0Ga85F8N6Ul/G4fgp
+         feUTV3aoKxw+93Hel/9jOjm1uHfQodNz7pZ0vRBVfPeiQgVfuAe6D959XzpOp4bHiA+R
+         f+aFlnWyyKHcvzM2UBR4pvWmuHKsgOV+5UTQISDSefkBJpjTf0uzvfWgBwsajFK+V0mK
+         M2/eUDB3XOIhjffGEAVfS0/j8Lt8+3FKBiEFxDYQSEc8CQT4Zwu/Wy4BjiKxL+4wIJEZ
+         sAYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750771162; x=1751375962;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gsa/afuzkL/muRZEKJaSmP1G9IRaDNhW+p7U3bAdGsU=;
+        b=d02dILCW5EK2QR6H7VejsQU9f6m5CqDj0fhavpu0KQxSopFuyCx0oPEC7AtJsfauqO
+         A9n3+sxn14ctxQ2eT0hgktzKwYU+n74maJI+qCuOjwDPqKcj3R3RoBqx7VWZVdm5/sra
+         SEM35EmGTiXQZ3GIUhFfrqJ3F18WqSWXinnPWhyTP1RKvpG1U5ITlw3Y89IzUtoxoboY
+         dPnXv9bEGTAuAUDAbvMf2TVU+wUwYpPDqdYC9W3ZlyjiSkqDBqHjTNRKjHDsx7NMWAbz
+         q9TItrVQpmnj09RTU0HeHgYZ+RFw7w63BxygrLU+o8QLZwVK4Z2pzNYFrR4ASDaHzFeT
+         Mkag==
+X-Forwarded-Encrypted: i=1; AJvYcCUjabu/eBR+dGxrDW3CLr4WVMnktMIXOZ5+W4lUspyb5SEhCEPOSJ+5pTmEq/kHEXEQLjruLAT6V+LEcDM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz822imNKi6896AHTCZbMOaQPhW85h4xWJXlyGGCaEdh91gBEbK
+	E7r4NE64Xl5HeOkgWne6bNxjRRQET9DBfO7ovrrQi/ZA9KdsxtZzgZYfCN0yFBQtNgk=
+X-Gm-Gg: ASbGncunHSbOKHsenWumpav50jgFDXi8RJou5PxRGYCHiI0CA/bQ+JD+rvrHhDZaMWP
+	4Wrf0QjCz78syGUtgu19Z2wB1v98WUJlWGE7uym9LBo7hnqjmWalcSEezjk6hrBq0jFStPVl0g8
+	haod9debvTrHFGoBxKWEbxx72sdQkrfZC6f4xNd9NN1BMdSOnsOSbGnfdoqVP5j727c/0HoXCVI
+	1O2Tw1JdMNn1XlvexL1dpzJIttM04tDX5qLinrlwAn56xIut0J/n4BWr6jQT7FsS5guVVwT4hmk
+	UJfy/k+g3RkgEmvIgREvvJHfFdpm8w6UhJD5JgrReoCCdYOhSWIwqHmXuuG9HIGFkA==
+X-Google-Smtp-Source: AGHT+IEhufAimrhHUzQr0xQtqQC2Hgx0D1VrIPHbO4Qbkas268U0OlP1XXIhz9Fe5pfneFNyUPhByA==
+X-Received: by 2002:a05:600c:3513:b0:450:cde3:f266 with SMTP id 5b1f17b1804b1-453659cb94bmr143802515e9.22.1750771161882;
+        Tue, 24 Jun 2025 06:19:21 -0700 (PDT)
+Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:34d2:109c:3293:19e9])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646fd74asm141302195e9.22.2025.06.24.06.19.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 06:19:21 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH RFT 0/6] gpio: mmio: remove struct bgpio_pdata
+Date: Tue, 24 Jun 2025 15:19:11 +0200
+Message-Id: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <19cf2371-7293-4e71-a17d-669db4c8270a@rivosinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM+lWmgC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDMyNj3fSCzHzd3FwgUZCSWJKom2hhbJhkaZZqkZJipATUVVCUmpZZATY
+ xWinILUQptrYWAD6NQxlmAAAA
+X-Change-ID: 20250623-gpio-mmio-pdata-a831b96e8dd2
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, 
+ Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Aaro Koskinen <aaro.koskinen@iki.fi>, 
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Tony Lindgren <tony@atomide.com>, 
+ Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+ patches@opensource.cirrus.com, linux-samsung-soc@vger.kernel.org, 
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1805;
+ i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
+ bh=RBJgsZUC1nqNrB3wsNH3awWX5gMKJEfJFb9c9F8tuQg=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoWqXTX/fNaYZzZKf3DgFDCitzH9bRN6VhuKlO+
+ tLHKsv3sa+JAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFql0wAKCRARpy6gFHHX
+ ckkBEAC3x6MUKlDkZ40OSpS/a57sn/SpQw1u6hapoGkV4PIgEA2b0WNC/5vJVsMsJOE7bEo4415
+ d830z2CMbbRl7AA+Q69vBRvmtexOFGW8Zf+5YD9qe2VxlQ+ZhDIdQjF8vG3BBPVfgAAFQLcDvGc
+ 7eqG8XUAQISuMRzX8jx3aCfaSXu89LnAFmfsLWVO2PFZ1lOMNLyC+FBvxMjBtKf9NjbGjX6g9Lt
+ WSs3ihAWqXpsQrMA5j+Sk9pDAAskgyVdnMVP0R1vWn97KCF/aKeXuX3PTKxLgAwkfTtDblPkuAY
+ V59ViJhzoB7/+ecRrLUeW7bXb8iJVSVLxRyqakya85TgiL8a0iAFueJ3mbFURtB3V0dk5bcyhZj
+ j+t7vqzDcp/lOveEU7abAQm6LW4o3s6jbSEGJqmt4zZLlSuoUdnbTQkwh6O22LbvSsPjt9vfwTu
+ ZhWPf8Ul7BSRtjDSrv0G+1pJGMwxzot5HDI0jJKeg0oEd5Mjky6Q8DV6KxWsBQgVKFwB7PE0uE3
+ HMkjg9Zqh1+h6aMeFgiEFlkIL5Fa2g+z5SxKXPOiXBP8ZisOEORPZWaBKGx8H1kOTcrlKz6Yi+s
+ HRSE9OFs+vg4bWEVBmI4/Yxm4hb4THlDk0eY14SpBmXtl8Qdm279L0/AapoAzTPYOAddTSPgtmG
+ kylguGrG3el0upw==
+X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
+ fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-On Tue, Jun 24, 2025 at 01:37:13PM +0200, Clément Léger wrote:
-> On 24/06/2025 04:09, Maciej W. Rozycki wrote:
-> > On Mon, 23 Jun 2025, Palmer Dabbelt wrote:
-> >> I'm kind of split on a Fixes tag here.  One could argue it's a regression, as
-> >> having interrupts disabled during exceptions is going to cause all sorts of
-> >> performance issues for users.  Seems a bit risk to just backport, though...
-> >>
-> >> That said, if nobody noticed then it's probably a good sign nobody is really
-> >> paying attention and we should just backport it before anyone notices...
-> > 
-> >  Oh, someone did notice and it's not only performance, cf. 
-> > <https://lore.kernel.org/r/alpine.DEB.2.21.2501070143250.18889@angie.orcam.me.uk/>.
-> 
-> I also had a series which was doing so for misaligned accesses handling,
-> but after discussion, it was not ok to do so.:
-> 
-> https://lore.kernel.org/linux-riscv/20250422094419.GC14170@noisy.programming.kicks-ass.net/
+I'm working on removing the fields relevant only to gpio-mmio from
+struct gpio_chip. One of the bits that need addressing before we can do
+this is the removal of struct bgpio_pdata from the kernel. Fortunately
+there are only 3 users left treewide.
 
-If I understand that right, exceptions from kernel should be treated as
-NMI, so that lockdep can tell us if exception handlers touch locks.
+This series adds support for parsing of generic device properties to
+gpio-mmio, converts all users to setting up software nodes containing
+relevant values in their property sets and removes struct bgpio_pdata.
 
-But (conditionally) enabling interrupts does not lose us that benefit. It
-is still considered NMI by lockdep.
+As for merging: it would be best for MFD/OMAP/s3c maintainers to ack the
+changes and let me route them through the GPIO tree. I can provide an
+immutable tag if needed.
 
-Unless I miss something, the patch is fine as is.
+Obviously I was only able to build-test the changes so any actual
+verification is appreciated.
+
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+Bartosz Golaszewski (6):
+      gpio: mmio: drop the big-endian platform device variant
+      gpio: mmio: get chip label and GPIO base from device properties
+      mfd: vexpress-sysreg: set-up software nodes for gpio-mmio
+      ARM: omap1: ams-delta: use generic device properties for gpio-mmio
+      ARM: s3c: crag6410: use generic device properties for gpio-mmio
+      gpio: mmio: remove struct bgpio_pdata
+
+ arch/arm/mach-omap1/board-ams-delta.c | 42 ++++++++++++--------------
+ arch/arm/mach-s3c/mach-crag6410.c     | 17 ++++++-----
+ drivers/gpio/gpio-mmio.c              | 57 +++++++++--------------------------
+ drivers/mfd/vexpress-sysreg.c         | 46 +++++++++++++++++-----------
+ include/linux/gpio/driver.h           |  6 ----
+ 5 files changed, 73 insertions(+), 95 deletions(-)
+---
+base-commit: f817b6dd2b62d921a6cdc0a3ac599cd1851f343c
+change-id: 20250623-gpio-mmio-pdata-a831b96e8dd2
 
 Best regards,
-Nam
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
