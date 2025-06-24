@@ -1,63 +1,88 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2DE256C60;
-	Tue, 24 Jun 2025 08:21:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613E1253950;
+	Tue, 24 Jun 2025 08:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753291; cv=none; b=YlXcZS/zIRiTHrb0ZW/IDMYwaLaF7CDpPPEjJljZL8HaoMQHtXGg4JTxg+8O/iOCzl28Zb6QBWFkPqgFH0OGk8jbmkORcFdl8l0xU6rQWGeTeEPqxv8KRdA2BoMDtN/jtY0zA8fv0nWlF1rLzbxG2jzM3mb7X606YNGRj3wC4Ek=
+	t=1750753299; cv=none; b=Ei84/HBqCbwuPVLAaXbORC/5h9tq5YBsXgQ0GZJhyTtfY54ojSQ18cIS8zOcwBYJMJ9pwBopJp3QeRmPObBEAHjCquQY2LFStKlITU6LPhsfJf1JIByyrgNlvY/I8l8U42syywJ4ZtDnELTKuQ0UOdzRosgxWS8RCnFjDGPRXK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753291; c=relaxed/simple;
-	bh=ZUxYSim8vhgrKSj21zzy+5Spt88HmTvEPFVnqFBYxs0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GIdI01nzZ9QbiVU+f9Ax2rScN88LhuQnB12tWD9S/FGtGBOq7OnRK4x9h2UAMGQptVdJGAyA3sIzR1mr9d6/sBjfMCpt2Yfi0+wXVnMvk7GXDjpQb5L0fuWSyA4HR1kIH7xgEgKp2WUD/DDIGQ04QKKGdC7shInBSK1KmW6jJEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=iYp9hcqx; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1750753299; c=relaxed/simple;
+	bh=sMDYw/iEzAAz7E8kipgSoSk+Xe3siOFd54HwBLDS/lw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C6Roo2cnvOkM3PJJcqIpORME+U79ri889HUCT7tZFdm0OiglJfTemcQDPrJHkRPRDUR64KE550XctxiysJKLjz9kMjB6pGqW6aDkkIE7mnaO/9fZxuRW2HUOPG/6kA8Js7stZvU2G9mLAeuKpuX2JuXxiYqU/LzAono3Nfd09AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z2MzqTxI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="iYp9hcqx"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=kX+aDmUm6igolpiXgNXgCg/cD6t2NGaw3+p//ISLo3Q=; b=iYp9hcqx4xAC+0WkrlnifTG4Mz
-	cUn+pSx1/5zpt8JU19zea/s0fSQ6x8RSCV4pwydiFdcH64QPDCCNHGBLNIUgpF72fZ4rBEWRQi/VQ
-	Wy0emyklkRwzN9GNtT5ou0HV98fshE9WLPBil6b4Qpd5Dddc4Yx7h7Zw8TzA5KQVQ7kA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uTyuC-00Glop-49; Tue, 24 Jun 2025 10:21:24 +0200
-Date: Tue, 24 Jun 2025 10:21:24 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Paresh Bhagat <p-bhagat@ti.com>
-Cc: nm@ti.com, vigneshr@ti.com, praneeth@ti.com, kristo@kernel.org,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, khasim@ti.com, v-singh1@ti.com,
-	afd@ti.com, bb@ti.com, devarsht@ti.com
-Subject: Re: [PATCHv4 4/6] arm64: dts: ti: Add support for AM62D2-EVM
-Message-ID: <bf784ce6-aee7-4366-87ab-f0f79f8ef28c@lunn.ch>
-References: <20250623141253.3519546-1-p-bhagat@ti.com>
- <20250623141253.3519546-5-p-bhagat@ti.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z2MzqTxI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34C38C4CEE3;
+	Tue, 24 Jun 2025 08:21:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750753299;
+	bh=sMDYw/iEzAAz7E8kipgSoSk+Xe3siOFd54HwBLDS/lw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Z2MzqTxI3dtLZ7GtsTSYeMod9QaXWm+vcXoL8iaQcrCqlf1k5EKrjFgoyzhTbm9DQ
+	 2dKYoB8gMhemY3752FmjoAUa/O11f/+md/cW03qFT80BXvOHXo6XKwcV/Ah5sEUat0
+	 rngw8dM8a1lnP5BY6oogNa4uQngxhw2R8fMvNhJKUAX3duH8DFom9eu88Z5qK1gKsH
+	 HYBzuIl38GffZQT78sqHTncspRbMsmE9UkOJ/ekXxHcXkfzEIsUAY3H4GauB4fX6jL
+	 6J/E89XR9yeySKbTATQ//O57LFo0fdm6yK4/LTxmLGSFry0jDB5su41mEZqJohGMgo
+	 N9wMXqqxeNHSQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1uTyuO-0000000042t-3zC9;
+	Tue, 24 Jun 2025 10:21:37 +0200
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Jeff Johnson <jjohnson@kernel.org>
+Cc: linux-wireless@vger.kernel.org,
+	ath11k@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+	Baochen Qiang <quic_bqiang@quicinc.com>
+Subject: [PATCH] wifi: ath11k: fix suspend use-after-free after probe failure
+Date: Tue, 24 Jun 2025 10:20:22 +0200
+Message-ID: <20250624082022.15469-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623141253.3519546-5-p-bhagat@ti.com>
+Content-Transfer-Encoding: 8bit
 
-> +&cpsw_port1 {
-> +	status = "okay";
-> +	phy-mode = "rgmii-rxid";
-> +	phy-handle = <&cpsw3g_phy0>;
+Make sure to deregister the PM notifier to avoid a use-after-free on
+suspend in case core initialisation fails (e.g. due to missing
+firmware).
 
-Does the PCB have extra long RX clock lines?
+Fixes: 32d93b51bc7e ("wifi: ath11k: choose default PM policy for hibernation")
+Reported-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Link: https://lore.kernel.org/all/d0cd065c-1cd1-4e56-8c57-60777b1f3664@oss.qualcomm.com/
+Cc: Baochen Qiang <quic_bqiang@quicinc.com>
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+---
+ drivers/net/wireless/ath/ath11k/core.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-More likely, this should be 'rgmii-id', and you should delete the
-ti,rx-internal-delay in the PHY node, allowing it to insert the 2ns
-delay in the normal way.
+diff --git a/drivers/net/wireless/ath/ath11k/core.c b/drivers/net/wireless/ath/ath11k/core.c
+index 22a101136135..eb1f35617c64 100644
+--- a/drivers/net/wireless/ath/ath11k/core.c
++++ b/drivers/net/wireless/ath/ath11k/core.c
+@@ -2581,10 +2581,15 @@ int ath11k_core_init(struct ath11k_base *ab)
+ 	ret = ath11k_core_soc_create(ab);
+ 	if (ret) {
+ 		ath11k_err(ab, "failed to create soc core: %d\n", ret);
+-		return ret;
++		goto err_unregister_pm_notifier;
+ 	}
+ 
+ 	return 0;
++
++err_unregister_pm_notifier:
++	ath11k_core_pm_notifier_unregister(ab);
++
++	return ret;
+ }
+ EXPORT_SYMBOL(ath11k_core_init);
+ 
+-- 
+2.49.0
 
-	Andrew
