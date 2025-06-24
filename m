@@ -1,394 +1,134 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3075722AE76
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 20:39:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 874F63FB1B
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 20:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750797600; cv=none; b=ZNLueKJON7X6XN24343O0vb13I1nbSD4LiH6eXChnR6v59CnPsh9fCij6Vin7SEUZASqNeEayuqX6EiObA7x1TLw5ykEd5gl8KWGk+9XXCtE3Dkfa3h4vs58IpRMRcgHg/xx8z3yW8QZWVcfW2XAxkbNfVeBv42jDcA+k0ZU6cs=
+	t=1750797681; cv=none; b=cZ7JufWrH3pYN862J3CFlPzfHveqnP02w66RtFbHIDb8cfjaq4yf3dksgCO/GUAV1iswY0K8ZRxm3waBgIyOksHBQd1TLbY1MIWCy3xCzYaadYelvZEfj/sCcZn4BUT9dGUifRysBxAzYnWuL37RjFp8S9G3I5nt2cLUnvVl2ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750797600; c=relaxed/simple;
-	bh=TI+vHYColUEeT4cJr1e2MzcYbdEHD7r3/vABuxIVqmM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D3rtMtvCzN6sZ7XPmQ53+ica8J8ykxlQXhnl2bDTtXVhrvbJXG0Jf5JkZ5otlTZisY+eJ5gbpgdg4o6byK+FpK5XlBffr9mIJu//Qe+H/g/uoIPf2+4n52wFhispHnYopfj/sVhnmNccgW4nodbJBWLoXexvHt4LPinPqOLXngk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=QGs+uXnG; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750797681; c=relaxed/simple;
+	bh=k+9iPVrz6CfZoG58QyvK5uEAxAws5zdb8ym5cHLYUH4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IqTxV/zWMaVcvoqsLspvcSvD/SoPVV5VrzamjpvSltW+AmMTvMIElSazd1urFxxlNkmiI2vr4+EyROPKk5zzOb0+HDPT4uEu1k6uP15Xt5sXeTDR2bRHHj5hE1lM8Z1s+n4xUvCyfaKOoes1sxUvECni2FVA3Yx54S1Q8LbAMdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QD7PKNOi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QGs+uXnG"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-3df2fa612c4so11595ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:39:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750797597; x=1751402397; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QDQMvsvxVdcWyKrHAZfBMSMsgkzG99yJx0n1B5k7RVk=;
-        b=QGs+uXnGiodpoCkBnQmbipLLzXsK3pOwieXdWNnySeVqzEv2NqSIrAQ1VyJUlAT/z2
-         BfRvIGKdGKoylR85hR5GVpxTLkRyLCc1kUMee7G3O4NgEOW2t/SxUlGEcOuytGKi+Pod
-         lLfO4mNT9f0pFg1liFA6MqTXlND/1CkVgrtSHLOV44QKy6DD+bMuQwNwZMUamjK8RnG8
-         9Io8uRULmhjW1r4KPLMxQ7PCLp7unbmDQXY7cq0jdYDKPqjNw/ftL7+SQEsTpAt7i22Y
-         heqnRfnN2byGjRqOy58tfVbOmlfvfxw9IF5QgLRNpYy+/aM1X9YsnQcPnxgyLilggGO2
-         cpvA==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QD7PKNOi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750797678;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=9wY3aAgcrJnnreOkNCbnB1YfCEDsO/C9hUi3tU5Px0g=;
+	b=QD7PKNOigGecKCA03C+/7N3hNHWOfCw3ouCafSN6bSOCOszcKjM63OjqkktjRv0JUUPqPM
+	h+rETI6QmOxiUCsKUMbqxX3h1IAtV6LFxv8M4dmLnava2n++x/3ZRB4EzeHduvqDaXsRJ1
+	nmooYREzVoxMX4wRy1R1BVa7JMCJzBI=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-266-y385Yh-RNBCOLx2YrF8NNg-1; Tue, 24 Jun 2025 16:41:17 -0400
+X-MC-Unique: y385Yh-RNBCOLx2YrF8NNg-1
+X-Mimecast-MFC-AGG-ID: y385Yh-RNBCOLx2YrF8NNg_1750797677
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6fb5720eb48so4228456d6.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:41:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750797597; x=1751402397;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QDQMvsvxVdcWyKrHAZfBMSMsgkzG99yJx0n1B5k7RVk=;
-        b=Uv8TdgrzLLvI0Yla3Ejc0L6soK/+pyxB7fyLERF/MXNzAg7GC/P2wziAr6C7vwYdss
-         cVq8Tok60DpsRcqLIX+Oa01tdyZQshh0+lCl5YkOd2lysSEBqr2V46G6r1y6EwXN+yKh
-         +CmYZ3iZ6zUh3SiGWW+GL4oImEHcxbuxQA/6+vqWCnLdy0lyTdQqtYi/iRXdysknzH9x
-         ftTwWV4io2I66+NEb8kp9VXH3QR5NwOrkFbbzaBnzLhtjvU5G2UOXXE0MgGlMC/asPaK
-         RGdDX/EkSqAhzpsw1UN5/dI4IHodAi8IpD46l03TKmwd+gKNZhqkRTZ9kZ+42SnkRqCK
-         MwBA==
-X-Forwarded-Encrypted: i=1; AJvYcCXViREBtp2YixSU8soovfSAlNDLzcg8ZxKEv6TJAX1gFItB85u85a0k2yltNQ5m7PYorY7iNRXAZsuEFtQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnhVR0GrmlN9aig2b+zEE97pQhgFUMtkhqxKFPK4r8qkItyxy7
-	DzERCGDeSl4Ui3koYlagXuCrthANgff5dildLES70c4xS4gj4CbQ7p6f1G8zKmegp9yqn5y0Mf1
-	+nKJ5mprHoRgK7Y+a42uP5/S/XE61A3XCmDVT9MRE
-X-Gm-Gg: ASbGncueXiQEegz425YSDGgiZOAgy4iJkNmL45gGcS3QatBrhgPRFquiTVnwhetNnt3
-	p+Yxr+NBjXqgJ9INMphSSeSEE8NWBjrnUfhpfGCzrQ8Lph7iV/JGZPzu1uq6jtr6FSM2NBqnWD7
-	TkaZ8VfzBlRnuaffsYoZkLjULtEnhOhUO08nC1be4dXH4NbWBtpZTkGCKVvNs87R3I0t03thwwV
-	fT9kSEiPqw=
-X-Google-Smtp-Source: AGHT+IGVDSMl2MQkyFFsjcCckmozHouz4wxqCqe4XuS2McaE4ZXpCGkSqme49d8qpSOgS8+MzRZO76G0zUQOkpKb7fw=
-X-Received: by 2002:a05:6e02:17c9:b0:3dd:d8e6:9545 with SMTP id
- e9e14a558f8ab-3df324c7b18mr1033065ab.14.1750797596854; Tue, 24 Jun 2025
- 13:39:56 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750797677; x=1751402477;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9wY3aAgcrJnnreOkNCbnB1YfCEDsO/C9hUi3tU5Px0g=;
+        b=cP6PNdDxq7hX8rSDcCcwv00/ZNKfFVnjGzGh94cAGANMNztwjbPh6Ic+/Ptl5SBWEo
+         RJUqWBMjdIN5WnOvkIQS1B29Tm6lydPKiuvdm+J4mc+XUclkYJu/KS4bHE9d/76nh3v9
+         FuFyYZsMtuLIrqaFfUYSdZsX5h0IosC01oDdV3jGnIZR//wZOif5VJnnWR16MSmU9yZ2
+         ct0leTzb6l93yDH0pU95hdD87gyenWAAF9puSAFkWWYGSzAixdZqa153r3WZ++NDvvla
+         toVY0uKpgn5pV7mZTGdu6ykesMc6Z7P5qxXQhEvq+JNG+lsxoa9xENY9gr0Rs205+fZx
+         zvsA==
+X-Forwarded-Encrypted: i=1; AJvYcCV0isVaH2vJVHc2kYdWfiy1K2h8YHPkqVsbm8DE3squD/MWSlfpCygH2r1ViO6FxJh+6RI58tKu7prkxYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7ev1iu02sZDkLITl4QLabUVT+oHBb74i9n7AsKXndlePn/17k
+	UgvfZ4N+oq0IJW42V3Pi9vNT3Wk86ltr7YTMN3pRx8L4gXb8RSFFNZtTYQQ43eF+eZiNQeZC0hf
+	MU4eA/qzkYaTE17g+UwA1lFcqVGxT6NIkkxjHJJnXG1ThpLup73CFAlze5XH/WWhM1A==
+X-Gm-Gg: ASbGncsOZWLzD8Pbgfcwv0Q8LH5s15qDKqz3FOlMI8ZqhZw1DQVjkAr4esjweba8Hct
+	7K6F0/zxF3Kzwtdmhi8R8wIGc+5PW1voffqitflcANfkHwoRKLvyYvfurVdCnB+kA4TuTQWz+e5
+	U73ug5XOB3ouXh1qYmfRY2oUWWpgpbrmgJJPJDvoV5fQaYzxB2L7uZM0yOnz6z7XNKlQImCKvvr
+	7xJtSIcNkSWLzsYMQRUTm35VIEhDEBQotzwSRJGx6gqmN6x2N0y2gV7gA5G+Ekqs8N3xCeRtJ0V
+	XL4TDXNbYlXmtK74hQ1FdLu2+lCNUYT6bw==
+X-Received: by 2002:a05:6214:554a:b0:6fb:6129:d6f5 with SMTP id 6a1803df08f44-6fd3887da67mr72486296d6.16.1750797676770;
+        Tue, 24 Jun 2025 13:41:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF5S9LIIzK9+mA9lXLYWbYKd/trucZBeWJrars1+wS2MF8l6jyFMgEhWMuXKpGrcN17UGrc7Q==
+X-Received: by 2002:a05:6214:554a:b0:6fb:6129:d6f5 with SMTP id 6a1803df08f44-6fd3887da67mr72485996d6.16.1750797676378;
+        Tue, 24 Jun 2025 13:41:16 -0700 (PDT)
+Received: from thinkpad2024.redhat.com ([71.217.37.158])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd0957f69bsm60875306d6.96.2025.06.24.13.41.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 13:41:15 -0700 (PDT)
+From: "John B. Wyatt IV" <jwyatt@redhat.com>
+To: Shuah Khan <skhan@linuxfoundation.org>,
+	Thomas Renninger <trenn@suse.com>
+Cc: "John B. Wyatt IV" <jwyatt@redhat.com>,
+	linux-pm@vger.kernel.org,
+	Shuah Khan <shuah@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	"John B. Wyatt IV" <sageofredondo@gmail.com>,
+	"Thorsten Leemhuis" <linux@leemhuis.info>
+Subject: [PATCH] cpupower: Improve Python binding's Makefile
+Date: Tue, 24 Jun 2025 16:41:04 -0400
+Message-ID: <20250624204105.457971-1-jwyatt@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623161930.1421216-1-irogers@google.com> <aFrkQDcKpZilSOpj@google.com>
-In-Reply-To: <aFrkQDcKpZilSOpj@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 24 Jun 2025 13:39:45 -0700
-X-Gm-Features: AX0GCFtktOqExmIbuooAAoWL9gyo3ThexEYilnDytgwkyYcj4s8Qh_Y1LMRdSyo
-Message-ID: <CAP-5=fUUsx+aRE=KeFjc2CUw_ZvEVQ92_fJ=KGE34ep2QozFtw@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] perf debug: Add function symbols to dump_stack
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Howard Chu <howardchu95@gmail.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 24, 2025 at 10:45=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> Hi Ian,
->
-> On Mon, Jun 23, 2025 at 09:19:28AM -0700, Ian Rogers wrote:
-> > Symbolize stack traces by creating a live machine. Add this
-> > functionality to dump_stack and switch dump_stack users to use
-> > it. Switch TUI to use it. Add stack traces to the child test function
-> > which can be useful to diagnose blocked code.
-> >
-> > Example output:
-> > ```
-> > $ perf test -vv PERF_RECORD_
-> > ...
-> >   7: PERF_RECORD_* events & perf_sample fields:
-> >   7: PERF_RECORD_* events & perf_sample fields                       : =
-Running (1 active)
-> > ^C
-> > Signal (2) while running tests.
-> > Terminating tests with the same signal
-> > Internal test harness failure. Completing any started tests:
-> > :  7: PERF_RECORD_* events & perf_sample fields:
-> >
-> > ---- unexpected signal (2) ----
-> >     #0 0x5628ad5570a3 in child_test_sig_handler builtin-test.c:0
-> >     #1 0x7f561de49df0 in __restore_rt libc_sigaction.c:0
-> >     #2 0x7f561de99687 in __internal_syscall_cancel cancellation.c:64
-> >     #3 0x7f561dee5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:=
-72
-> >     #4 0x7f561def1393 in __nanosleep nanosleep.c:26
-> >     #5 0x7f561df02d68 in __sleep sleep.c:55
-> >     #6 0x5628ad5679ab in test__PERF_RECORD perf-record.c:0
-> >     #7 0x5628ad556fb0 in run_test_child builtin-test.c:0
-> >     #8 0x5628ad4f318d in start_command run-command.c:127
-> >     #9 0x5628ad557ef3 in __cmd_test builtin-test.c:0
-> >     #10 0x5628ad5585bf in cmd_test ??:0
-> >     #11 0x5628ad4e5bb0 in run_builtin perf.c:0
-> >     #12 0x5628ad4e5ecb in handle_internal_command perf.c:0
-> >     #13 0x5628ad461383 in main ??:0
-> >     #14 0x7f561de33ca8 in __libc_start_call_main libc_start_call_main.h=
-:74
-> >     #15 0x7f561de33d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:12=
-8
-> >     #16 0x5628ad4619d1 in _start ??:0
-> >
-> > ---- unexpected signal (2) ----
-> >     #0 0x5628ad5570a3 in child_test_sig_handler builtin-test.c:0
-> >     #1 0x7f561de49df0 in __restore_rt libc_sigaction.c:0
-> >     #2 0x7f561dea3a14 in pthread_sigmask@GLIBC_2.2.5 pthread_sigmask.c:=
-45
-> >     #3 0x7f561de49fd9 in __GI___sigprocmask sigprocmask.c:26
-> >     #4 0x7f561df2601b in __longjmp_chk longjmp.c:36
-> >     #5 0x5628ad5570c0 in print_test_result.isra.0 builtin-test.c:0
-> >     #6 0x7f561de49df0 in __restore_rt libc_sigaction.c:0
-> >     #7 0x7f561de99687 in __internal_syscall_cancel cancellation.c:64
-> >     #8 0x7f561dee5f7a in clock_nanosleep@GLIBC_2.2.5 clock_nanosleep.c:=
-72
-> >     #9 0x7f561def1393 in __nanosleep nanosleep.c:26
-> >     #10 0x7f561df02d68 in __sleep sleep.c:55
-> >     #11 0x5628ad5679ab in test__PERF_RECORD perf-record.c:0
-> >     #12 0x5628ad556fb0 in run_test_child builtin-test.c:0
-> >     #13 0x5628ad4f318d in start_command run-command.c:127
-> >     #14 0x5628ad557ef3 in __cmd_test builtin-test.c:0
-> >     #15 0x5628ad5585bf in cmd_test ??:0
-> >     #16 0x5628ad4e5bb0 in run_builtin perf.c:0
-> >     #17 0x5628ad4e5ecb in handle_internal_command perf.c:0
-> >     #18 0x5628ad461383 in main ??:0
-> >     #19 0x7f561de33ca8 in __libc_start_call_main libc_start_call_main.h=
-:74
-> >     #20 0x7f561de33d65 in __libc_start_main@@GLIBC_2.34 libc-start.c:12=
-8
-> >     #21 0x5628ad4619d1 in _start ??:0
-> >   7: PERF_RECORD_* events & perf_sample fields                       : =
-Skip (permissions)
-> > ```
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> Unfortunately it has some build errors so I had to remove it from the
-> tree.  I'll keep the patch 2/2 btw.
->
-> The NO_BACKTRACE=3D1 build caused a trouble like below.
->
->     CC      /tmp/tmp.huqYLzBWIi/util/debug.o
->   util/debug.c: In function '__dump_stack':
->   util/debug.c:323:17: error: implicit declaration of function 'backtrace=
-_symbols_fd' [-Wimplicit-function-declaration]
->     323 |                 backtrace_symbols_fd(stackdump, stackdump_size,=
- fileno(file));
->         |                 ^~~~~~~~~~~~~~~~~~~~
->   make[6]: *** [/usr/local/google/home/namhyung/project/linux/tools/build=
-/Makefile.build:86: /tmp/tmp.huqYLzBWIi/util/debug.o] Error 1
->   make[5]: *** [/usr/local/google/home/namhyung/project/linux/tools/build=
-/Makefile.build:142: util] Error 2
->   make[4]: *** [Makefile.perf:798: /tmp/tmp.huqYLzBWIi/perf-util-in.o] Er=
-ror 2
->   make[4]: *** Waiting for unfinished jobs....
->   make[3]: *** [Makefile.perf:290: sub-make] Error 2
->   make[2]: *** [Makefile:76: all] Error 2
->   make[1]: *** [tests/make:341: make_no_backtrace_O] Error 1
->   make: *** [Makefile:109: build-test] Error 2
->
-> And on 32-bit, it also shows:
->
->     CC      /build/util/debug.o
->   util/debug.c: In function '__dump_stack':
->   util/debug.c:331:28: error: cast from pointer to integer of different s=
-ize [-Werror=3Dpointer-to-int-cast]
->     331 |                 u64 addr =3D (u64)stackdump[i];
->         |                            ^
->
->   cc1: all warnings being treated as errors
->   make[4]: *** [/linux/tools/build/Makefile.build:85: /build/util/debug.o=
-] Error 1
->   make[4]: *** Waiting for unfinished jobs....
->   make[3]: *** [/linux/tools/build/Makefile.build:142: util] Error 2
->   make[2]: *** [Makefile.perf:798: /build/perf-util-in.o] Error 2
->   make[2]: *** Waiting for unfinished jobs....
->   make[1]: *** [Makefile.perf:290: sub-make] Error 2
->   make: *** [Makefile:76: all] Error 2
->
-> Thanks,
-> Namhyung
+Add a few build variables to make it easier for distributions to
+package the bindings. Allow current variables to be overwritten by
+environment variables that are passed to make.
 
-Sorry Namhyung, I accidentally rebased the v1 rather than the v2
-patch. I'll address the issues and repost as v5.
+CCing Thorsten Leemhuis <linux@leemhuis.info>.
 
-Thanks,
-Ian
+Signed-off-by: John B. Wyatt IV <jwyatt@redhat.com>
+Signed-off-by: John B. Wyatt IV <sageofredondo@gmail.com>
+---
+ tools/power/cpupower/bindings/python/Makefile | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-> > ---
-> > v4: Additional addr_location__exit (Namhyung)
-> > v3: Rebase
-> > v2: Fix NO_BACKTRACE=3D1 build (Arnaldo)
-> > ---
-> >  tools/perf/tests/builtin-test.c | 15 +++++++-
-> >  tools/perf/ui/tui/setup.c       |  2 +-
-> >  tools/perf/util/debug.c         | 66 +++++++++++++++++++++++++++------
-> >  tools/perf/util/debug.h         |  1 +
-> >  4 files changed, 71 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin=
--test.c
-> > index 45d3d8b3317a..80375ca39a37 100644
-> > --- a/tools/perf/tests/builtin-test.c
-> > +++ b/tools/perf/tests/builtin-test.c
-> > @@ -6,6 +6,9 @@
-> >   */
-> >  #include <fcntl.h>
-> >  #include <errno.h>
-> > +#ifdef HAVE_BACKTRACE_SUPPORT
-> > +#include <execinfo.h>
-> > +#endif
-> >  #include <poll.h>
-> >  #include <unistd.h>
-> >  #include <setjmp.h>
-> > @@ -231,6 +234,16 @@ static jmp_buf run_test_jmp_buf;
-> >
-> >  static void child_test_sig_handler(int sig)
-> >  {
-> > +#ifdef HAVE_BACKTRACE_SUPPORT
-> > +     void *stackdump[32];
-> > +     size_t stackdump_size;
-> > +#endif
-> > +
-> > +     fprintf(stderr, "\n---- unexpected signal (%d) ----\n", sig);
-> > +#ifdef HAVE_BACKTRACE_SUPPORT
-> > +     stackdump_size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
-> > +     __dump_stack(stderr, stackdump, stackdump_size);
-> > +#endif
-> >       siglongjmp(run_test_jmp_buf, sig);
-> >  }
-> >
-> > @@ -244,7 +257,7 @@ static int run_test_child(struct child_process *pro=
-cess)
-> >
-> >       err =3D sigsetjmp(run_test_jmp_buf, 1);
-> >       if (err) {
-> > -             fprintf(stderr, "\n---- unexpected signal (%d) ----\n", e=
-rr);
-> > +             /* Received signal. */
-> >               err =3D err > 0 ? -err : -1;
-> >               goto err_out;
-> >       }
-> > diff --git a/tools/perf/ui/tui/setup.c b/tools/perf/ui/tui/setup.c
-> > index 16c6eff4d241..022534eed68c 100644
-> > --- a/tools/perf/ui/tui/setup.c
-> > +++ b/tools/perf/ui/tui/setup.c
-> > @@ -108,7 +108,7 @@ static void ui__signal_backtrace(int sig)
-> >
-> >       printf("-------- backtrace --------\n");
-> >       size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
-> > -     backtrace_symbols_fd(stackdump, size, STDOUT_FILENO);
-> > +     __dump_stack(stdout, stackdump, size);
-> >
-> >       exit(0);
-> >  }
-> > diff --git a/tools/perf/util/debug.c b/tools/perf/util/debug.c
-> > index f9ef7d045c92..efc9d2c6448d 100644
-> > --- a/tools/perf/util/debug.c
-> > +++ b/tools/perf/util/debug.c
-> > @@ -14,11 +14,18 @@
-> >  #ifdef HAVE_BACKTRACE_SUPPORT
-> >  #include <execinfo.h>
-> >  #endif
-> > +#include "addr_location.h"
-> >  #include "color.h"
-> > -#include "event.h"
-> >  #include "debug.h"
-> > +#include "event.h"
-> > +#include "machine.h"
-> > +#include "map.h"
-> >  #include "print_binary.h"
-> > +#include "srcline.h"
-> > +#include "symbol.h"
-> > +#include "synthetic-events.h"
-> >  #include "target.h"
-> > +#include "thread.h"
-> >  #include "trace-event.h"
-> >  #include "ui/helpline.h"
-> >  #include "ui/ui.h"
-> > @@ -298,21 +305,58 @@ void perf_debug_setup(void)
-> >       libapi_set_print(pr_warning_wrapper, pr_warning_wrapper, pr_debug=
-_wrapper);
-> >  }
-> >
-> > +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)
-> > +{
-> > +     /* TODO: async safety. printf, malloc, etc. aren't safe inside a =
-signal handler. */
-> > +     pid_t pid =3D getpid();
-> > +     struct machine *machine =3D machine__new_live(/*kernel_maps=3D*/f=
-alse, pid);
-> > +     struct thread *thread =3D NULL;
-> > +
-> > +     if (machine)
-> > +             thread =3D machine__find_thread(machine, pid, pid);
-> > +
-> > +     if (!machine || !thread) {
-> > +             /*
-> > +              * Backtrace functions are async signal safe. Fall back o=
-n them
-> > +              * if machine/thread creation fails.
-> > +              */
-> > +             backtrace_symbols_fd(stackdump, stackdump_size, fileno(fi=
-le));
-> > +             machine__delete(machine);
-> > +             return;
-> > +     }
-> > +
-> > +     for (size_t i =3D 0; i < stackdump_size; i++) {
-> > +             struct addr_location al;
-> > +             u64 addr =3D (u64)stackdump[i];
-> > +
-> > +             addr_location__init(&al);
-> > +             if (!thread__find_map(thread, PERF_RECORD_MISC_USER, addr=
-, &al)) {
-> > +                     addr_location__exit(&al);
-> > +                     continue;
-> > +             }
-> > +
-> > +             al.sym =3D map__find_symbol(al.map, al.addr);
-> > +             if (al.sym)
-> > +                     fprintf(file, "    #%zd %p in %s ", i, stackdump[=
-i], al.sym->name);
-> > +             else
-> > +                     fprintf(file, "    #%zd %p ", i, stackdump[i]);
-> > +
-> > +             map__fprintf_srcline(al.map, al.addr, "", file);
-> > +             fprintf(file, "\n");
-> > +             addr_location__exit(&al);
-> > +     }
-> > +     thread__put(thread);
-> > +     machine__delete(machine);
-> > +}
-> > +
-> >  /* Obtain a backtrace and print it to stdout. */
-> >  #ifdef HAVE_BACKTRACE_SUPPORT
-> >  void dump_stack(void)
-> >  {
-> > -     void *array[16];
-> > -     size_t size =3D backtrace(array, ARRAY_SIZE(array));
-> > -     char **strings =3D backtrace_symbols(array, size);
-> > -     size_t i;
-> > -
-> > -     printf("Obtained %zd stack frames.\n", size);
-> > -
-> > -     for (i =3D 0; i < size; i++)
-> > -             printf("%s\n", strings[i]);
-> > +     void *stackdump[32];
-> > +     size_t size =3D backtrace(stackdump, ARRAY_SIZE(stackdump));
-> >
-> > -     free(strings);
-> > +     __dump_stack(stdout, stackdump, size);
-> >  }
-> >  #else
-> >  void dump_stack(void) {}
-> > diff --git a/tools/perf/util/debug.h b/tools/perf/util/debug.h
-> > index a4026d1fd6a3..6b737e195ce1 100644
-> > --- a/tools/perf/util/debug.h
-> > +++ b/tools/perf/util/debug.h
-> > @@ -85,6 +85,7 @@ void debug_set_display_time(bool set);
-> >  void perf_debug_setup(void);
-> >  int perf_quiet_option(void);
-> >
-> > +void __dump_stack(FILE *file, void **stackdump, size_t stackdump_size)=
-;
-> >  void dump_stack(void);
-> >  void sighandler_dump_stack(int sig);
-> >
-> > --
-> > 2.50.0.rc2.761.g2dc52ea45b-goog
-> >
+diff --git a/tools/power/cpupower/bindings/python/Makefile b/tools/power/cpupower/bindings/python/Makefile
+index 81db39a03efb..4527cd732b42 100644
+--- a/tools/power/cpupower/bindings/python/Makefile
++++ b/tools/power/cpupower/bindings/python/Makefile
+@@ -4,20 +4,22 @@
+ # This Makefile expects you have already run `make install-lib` in the lib
+ # directory for the bindings to be created.
+ 
+-CC := gcc
++CC ?= gcc
++# CFLAGS ?=
++LDFLAGS ?= -lcpupower
+ HAVE_SWIG := $(shell if which swig >/dev/null 2>&1; then echo 1; else echo 0; fi)
+ HAVE_PYCONFIG := $(shell if which python-config >/dev/null 2>&1; then echo 1; else echo 0; fi)
+ 
+-PY_INCLUDE = $(firstword $(shell python-config --includes))
+-INSTALL_DIR = $(shell python3 -c "import site; print(site.getsitepackages()[0])")
++PY_INCLUDE ?= $(firstword $(shell python-config --includes))
++INSTALL_DIR ?= $(shell python3 -c "import site; print(site.getsitepackages()[0])")
+ 
+ all: _raw_pylibcpupower.so
+ 
+ _raw_pylibcpupower.so: raw_pylibcpupower_wrap.o
+-	$(CC) -shared -lcpupower raw_pylibcpupower_wrap.o -o _raw_pylibcpupower.so
++	$(CC) -shared $(LDFLAGS) raw_pylibcpupower_wrap.o -o _raw_pylibcpupower.so
+ 
+ raw_pylibcpupower_wrap.o: raw_pylibcpupower_wrap.c
+-	$(CC) -fPIC -c raw_pylibcpupower_wrap.c $(PY_INCLUDE)
++	$(CC) $(CFLAGS) $(PY_INCLUDE) -fPIC -c raw_pylibcpupower_wrap.c
+ 
+ raw_pylibcpupower_wrap.c: raw_pylibcpupower.swg
+ ifeq ($(HAVE_SWIG),0)
+-- 
+2.49.0
+
