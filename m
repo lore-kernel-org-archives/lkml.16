@@ -1,214 +1,247 @@
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A583C259CA5
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3762566D9
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750751391; cv=none; b=KTbDo0qtSbf/nqykjl0dK+1SkfYHgQhh9sIzH5RBjILipD7KECikalU7+B3jjeDcLS3qfiYOw01PsKUAT58pDN07xRWoQ7e9Fhl6wWk5kS5RzKAzB7MPn1ZcSjHbGYt5m2H2tPRfPNFpK7/l5eo1sfmsOAkmCMzzZefirWuIPc0=
+	t=1750751392; cv=none; b=YwvQhPNSlrlQxmJAdHcyKYfvmbC7TXZ7Nc4CtqzNN+eDIt9lkVJj9G0HF/NoukJuJ7XeIEhfO6HdUk4UDhJyt75yaaj18ClsCFnxQOA7SE75QJTO1dPfiKQXxt87G27Lza+4r5ALIrwfsuY3vQ7he5Pu70B26ridm2YwIrOs2t8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750751391; c=relaxed/simple;
-	bh=4xp2xPZJDUDY92X1KIl/IiLpG/PQaUTTvnUq4UFdyEE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FvUhLJ1GiC5SR7rc97cIsd/VZf7Y2cFXZYBUMjiZ7eTAB7D3aiOyPLwuEjLa2I+IArYrLLDfpdx7hgLYd+LUcq8UVMMa79EYblx5iQTUGBoSK3lm0FuicCoX2HYGAPQ9KoPavQwH+zyoFCUdhJAA87AbpZ6n6xzOoC7TuXEf9O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com; spf=pass smtp.mailfrom=vayavyalabs.com; dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b=Cm0w5dW9; arc=none smtp.client-ip=209.85.219.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=vayavyalabs.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=vayavyalabs.com
+	s=arc-20240116; t=1750751392; c=relaxed/simple;
+	bh=+790H+OZP06IcFIvm6YrSeEXldIMb9hgSxzVzG7Yysc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NRM5hKbFUe+Wpbtzwhf7iGB0s84YzDqDkhwkLHi5aeDo9VqwoJig9jt2yOu8RiF1ZNTZjgGOk5uWYNX/jUDxms1Z2HWtUX1oQjvLEh0GVUYvcIyS/wBY8gi9fFXrZZJLkq4plkd8uJSjOBGfU4izHQ9/qyK4uTLIEdK81SDdIec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VI/ijiW4; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=vayavyalabs.com header.i=@vayavyalabs.com header.b="Cm0w5dW9"
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-e819aa98e7aso120528276.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:49:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=vayavyalabs.com; s=google; t=1750751388; x=1751356188; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a2GgMgmkIgP4lsnQEgW9b05jhOBEpY0FKkTliFZZAZY=;
-        b=Cm0w5dW9hfdydwMGSpxd64uT1g/bXw+bKlOMqkCgD3s6/idU+t41baNPVPjUGOomh2
-         5APYHmjUYMvblqw4l2KBVa7e5V9qD1WyTgfYakc5BSHL0WInn/m2O5Ds5+t212PD8+Dd
-         PVWLUqyfmJ38y85BVw9lrObN+A120KgLN1abI=
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VI/ijiW4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750751389;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Up/VrTcRwD+YAjo9pT4ruHxc8Ce1CsMoQfiF4F6wCQg=;
+	b=VI/ijiW4oeS6Y53Ne8B5iQ9r7AW/4W2BWKVK7gIFjV2LB0ChTBvmuEgbYwyNpydHBp/UHr
+	DtdwPGrCiqr6Uqy1+WBuki0qFbeh/zFu4df+ZsRBRd+fR9/86bCV5mVRdHZO69ui4DXlFM
+	wxqK5Yew2YstmcnzqChOmca4lp8QOok=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-631-RhExCqg9OzuoWF7LCd05BQ-1; Tue, 24 Jun 2025 03:49:47 -0400
+X-MC-Unique: RhExCqg9OzuoWF7LCd05BQ-1
+X-Mimecast-MFC-AGG-ID: RhExCqg9OzuoWF7LCd05BQ_1750751386
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a52bfda108so51218f8f.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:49:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750751388; x=1751356188;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a2GgMgmkIgP4lsnQEgW9b05jhOBEpY0FKkTliFZZAZY=;
-        b=g79Wwp0lcvEIAXOkyhgWthoWKb0thsq+X+SLWF2Dqr1PiWUhqQatyc48lK4CV5U6qk
-         TWjy/TP/d2wuzw91UJLWTpZlWL5Y+ZdCtV8DBPkufSZaua+6Trwz5r3gQgHuz3onDCxy
-         Pm/PcwShQMR0KoFakr8zKYkwsuiGa2kBj3ucnKg5fqs21igpKiypGCwe5kYyNgcDmMma
-         1tjbjjjJafTx6V/ld7YRsg5dpnpzme0R/UqozExKADtQYSzcDa3P8zCJP0JyyS0bf2KS
-         E9mPrf6u1hJ63ilSMn98AHBFHQ+heBkkJy0k+IqGZFezaHffcbrwmHz4TksSBaflafXd
-         4szQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMMz/lAvp1XYJ9SNX2Ryi2lCjLb5GA47A7iZXlHzdwCH8GBarESm3qMNZdhV1k5IKV+LPbcS7+5tAGXz4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl7Gj4LPuxLu7lY7wWQgnx2NtqLarfViK/v8ot8ONF4hdhRWSL
-	xFC3qsShDgSEa109fChn0vQjnEtMiANvEibSKCS2tPs1r4cmO6lANZR7w+hgJtnSHdFcX2iqOGQ
-	RqPwm+Z76jj6S8kkvgP6iHFw1mubg26axE1IIrl4bznRtvMMZcQRJSVY=
-X-Gm-Gg: ASbGnctutHdDW4q1Ml/Q1PGdmV07Fak/uVMoN+DhSvMycWmXvJsM4cpmMXGSyvxqU4H
-	+KSNetT1rx4TFN+Io7ZzYEYfHKoi59DJq/MQZOUYP0zhiRxWd/XEAXiVeNZUIxn3fb3+UMmZbqa
-	JY3RqcvEYvvKJzrKGHwRVcyIvNN1nUl79kHmNqYSAlqT8=
-X-Google-Smtp-Source: AGHT+IHv2WVZ5dtrz0QnXvOVMUjZgn0BsemAVul3jgQVDjh7OOHw30oiyOpFvnzhvWJNYzcwCTPLBstNxqzXGoDdbJo=
-X-Received: by 2002:a05:6902:108e:b0:e85:ed6b:4981 with SMTP id
- 3f1490d57ef6-e85ed6b4a78mr4950966276.23.1750751388575; Tue, 24 Jun 2025
- 00:49:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750751386; x=1751356186;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Up/VrTcRwD+YAjo9pT4ruHxc8Ce1CsMoQfiF4F6wCQg=;
+        b=OxMODxuM+LckMB0+jXYAz3WQfVxJLkDjxNssPcHJQiM5CvRYDI5V+ZBqe/Bk6h8Hst
+         uLIy2RBv3XSxoX0kku1H8gmJOLmDtxs0LMNXLjIDp4aF81XQkyzEBslhDnnpbSOXE27Z
+         wjHYxxCKX21bwjNcgnt6N5B4MWk90T2IRbyjE7uCPhA8V6NP+Q91f5Unit0YGvz7SjWJ
+         Nw16KFdS3vXyWbDhZzb0JHIil3YfQRSewBm7ZrMJojNTO/QPl0Qv+q0BdCw/8jrGYd06
+         YmbCCy9JA+cyKyyqI6G+B66vF4Msr5L7cFh9wcdnXhxsrjWPwIXq0tz0D+1LIGlSFlNr
+         M+3g==
+X-Forwarded-Encrypted: i=1; AJvYcCXwmE3tNmndc2dYe1IxVizscZkHtnqD32xQ5wSxxKSoiqeY6tR8WLhZbdyWU6RNM0xt4trS3OH757RADbY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykeN2WH4h9Bvq8jXEyTfipA6OkHXxe3gNuc3CJj5Rf9/Dkzry3
+	FytVWwHqEQFJPFlIjZRp5tOHFqhsnuk33eTaS+jXRCzrfgRVo+in9HooFq0kd8kGS6CgrVOyTbY
+	7NiaK7yAScOMGg95xBqNXlKQe7JHu1Gm03+44AXfB974HOfzahFDUbh12SStQWyxQSQ==
+X-Gm-Gg: ASbGnct3wsoyTk8J2xdJCM2z+9LY3dd9jXhZEXkSqU52Et9G3DjyPC29k87XZ/qejli
+	SM3lAMjjbQyNocKdjOXTbszmOF3a2AnmP5k4Z84EH6RIq78A1zd5q3skuQLXoyxF9frxsZi+VSv
+	QK4MylOPh/zn95aqFOB6nPInb65V41iIg1U5YlZQvepCrpTtbJWMZVyMoVGn0MGsfSniHdrMpMQ
+	sjxjoPoXJLSia9Oh66NPJgVj1R/iy8JiBnW9CWr+Ym8t/avm8lssSRi3x+2ao1bb7+/CSdjtl5Q
+	f1ac3tberf0kmjBsCBAGW6GrLh4du8Vk5FJtQTZrpivHf8RWeKE=
+X-Received: by 2002:a05:6000:20c1:b0:3a6:d92f:b7a0 with SMTP id ffacd0b85a97d-3a6d92fbb68mr5810255f8f.58.1750751386323;
+        Tue, 24 Jun 2025 00:49:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFwKdkWBcEmi1MSSCLKYuTVNaP1SUf+Ndsmkr41yqbOB+aWQLfy0QrufxA0X2CvDylZNVoU4w==
+X-Received: by 2002:a05:6000:20c1:b0:3a6:d92f:b7a0 with SMTP id ffacd0b85a97d-3a6d92fbb68mr5810234f8f.58.1750751385902;
+        Tue, 24 Jun 2025 00:49:45 -0700 (PDT)
+Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.4.96])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805eeffsm1246349f8f.34.2025.06.24.00.49.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 00:49:45 -0700 (PDT)
+Date: Tue, 24 Jun 2025 09:49:43 +0200
+From: Juri Lelli <juri.lelli@redhat.com>
+To: luca abeni <luca.abeni@santannapisa.it>
+Cc: Marcel Ziswiler <marcel.ziswiler@codethink.co.uk>,
+	linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Vineeth Pillai <vineeth@bitbyteword.org>
+Subject: Re: SCHED_DEADLINE tasks missing their deadline with
+ SCHED_FLAG_RECLAIM jobs in the mix (using GRUB)
+Message-ID: <aFpYl53ZMThWjQai@jlelli-thinkpadt14gen4.remote.csb>
+References: <c91a117401225290fbf0390f2ce78c3e0fb3b2d5.camel@codethink.co.uk>
+ <aDgrOWgYKb1_xMT6@jlelli-thinkpadt14gen4.remote.csb>
+ <8d6dd3013b05225541821132398cb7615cdd874e.camel@codethink.co.uk>
+ <aFFdseGAqImLtVCH@jlelli-thinkpadt14gen4.remote.csb>
+ <880890e699117e02d984ba2bb391c63be5fd71e8.camel@codethink.co.uk>
+ <aFUqELdqM8VcyNCh@jlelli-thinkpadt14gen4.remote.csb>
+ <20250620113745.6833bccb@luca64>
+ <20250620161606.2ff81fb1@nowhere>
+ <aFV-HEwOTq0a37ax@jlelli-thinkpadt14gen4.remote.csb>
+ <20250620185248.634101cc@nowhere>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250602053231.403143-1-pavitrakumarm@vayavyalabs.com>
- <20250602053231.403143-2-pavitrakumarm@vayavyalabs.com> <fae97f84-bdb9-42de-b292-92d2b262f16a@kernel.org>
- <CALxtO0mpQtqPB0h_Wff2dLGo=Mxk02JJQkK4rn+=TuScNdSfxQ@mail.gmail.com>
- <3570be5b-cb20-4259-9a9b-959098b902d0@kernel.org> <CALxtO0mH=GwhQxQBsmMQYd+qgAue9WxXN1XWo9BncVJvJk6d8A@mail.gmail.com>
- <cd6e92af-1304-4078-9ed7-de1cb53c66da@kernel.org> <CALxtO0mVMTWqidSv7LQSQd-rA_TmJy_0xgBSd=mP27kg=AXQRg@mail.gmail.com>
- <e08b2f76-17b1-4411-a428-b2f0f8a7d7fd@kernel.org> <CALxtO0nReqeGKY+BNCBD10KSGttxxCrFzczxPjfrQM0eXv9Eug@mail.gmail.com>
- <b207cba7-47d3-43f4-8d59-38df9ec4eec2@kernel.org>
-In-Reply-To: <b207cba7-47d3-43f4-8d59-38df9ec4eec2@kernel.org>
-From: Pavitrakumar Managutte <pavitrakumarm@vayavyalabs.com>
-Date: Tue, 24 Jun 2025 13:19:37 +0530
-X-Gm-Features: Ac12FXx9KD4UOHhj75qGAiuyDem7sV7v10kA6Mwb459PbL5ZJU-1N8SzFZSnTsI
-Message-ID: <CALxtO0k3_ib2G-4pL0h5HxHUXgJ=ArNY6eaThEzdsPiYPauDWw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: crypto: Document support for SPAcc
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, herbert@gondor.apana.org.au, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, Ruud.Derwig@synopsys.com, 
-	manjunath.hadli@vayavyalabs.com, adityak@vayavyalabs.com, 
-	Bhoomika Kadabi <bhoomikak@vayavyalabs.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620185248.634101cc@nowhere>
 
-Hi Krzysztof,
-   My comments are embedded below, appreciate your inputs.
+On 20/06/25 18:52, luca abeni wrote:
+> On Fri, 20 Jun 2025 17:28:28 +0200
+> Juri Lelli <juri.lelli@redhat.com> wrote:
+> 
+> > On 20/06/25 16:16, luca abeni wrote:
+> [...]
+> > > So, I had a look tying to to remember the situation... This is my
+> > > current understanding:
+> > > - the max_bw field should be just the maximum amount of CPU
+> > > bandwidth we want to use with reclaiming... It is rt_runtime_us /
+> > > rt_period_us; I guess it is cached in this field just to avoid
+> > > computing it every time.
+> > >   So, max_bw should be updated only when
+> > >   /proc/sys/kernel/sched_rt_{runtime,period}_us are written
+> > > - the extra_bw field represents an additional amount of CPU
+> > > bandwidth we can reclaim on each core (the original m-GRUB
+> > > algorithm just reclaimed Uinact, the utilization of inactive tasks).
+> > >   It is initialized to Umax when no SCHED_DEADLINE tasks exist and  
+> > 
+> > Is Umax == max_bw from above?
+> 
+> Yes; sorry about the confusion
+> 
+> 
+> > >   should be decreased by Ui when a task with utilization Ui becomes
+> > >   SCHED_DEADLINE (and increased by Ui when the SCHED_DEADLINE task
+> > >   terminates or changes scheduling policy). Since this value is
+> > >   per_core, Ui is divided by the number of cores in the root
+> > > domain... From what you write, I guess extra_bw is not correctly
+> > >   initialized/updated when a new root domain is created?  
+> > 
+> > It looks like so yeah. After boot and when domains are dinamically
+> > created. But, I am still not 100%, I only see weird numbers that I
+> > struggle to relate with what you say above. :)
+> 
+> BTW, when running some tests on different machines I think I found out
+> that 6.11 does not exhibit this issue (this needs to be confirmed, I am
+> working on reproducing the test with different kernels on the same
+> machine)
+> 
+> If I manage to reproduce this result, I think I can run a bisect to the
+> commit introducing the issue (git is telling me that I'll need about 15
+> tests :)
+> So, stay tuned...
 
-Warm regards,
-PK
+The following seem to at least cure the problem after boot. Things are
+still broken after cpusets creation. Moving to look into that, but
+wanted to share where I am so that we don't duplicate work.
 
-On Fri, Jun 6, 2025 at 6:34=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel.org=
-> wrote:
->
-> On 06/06/2025 14:58, Pavitrakumar Managutte wrote:
-> > On Fri, Jun 6, 2025 at 4:55=E2=80=AFPM Krzysztof Kozlowski <krzk@kernel=
-.org> wrote:
-> >>
-> >> On 06/06/2025 13:02, Pavitrakumar Managutte wrote:
-> >>> Hi Krzysztof,
-> >>>   Appreciate your inputs and feedback. My comments are embedded below=
-.
-> >>>
-> >>> Warm regards,
-> >>> PK
-> >>>
-> >>> On Wed, Jun 4, 2025 at 7:37=E2=80=AFPM Krzysztof Kozlowski <krzk@kern=
-el.org> wrote:
-> >>>>
-> >>>> On 04/06/2025 14:20, Pavitrakumar Managutte wrote:
-> >>>>>>
-> >>>>>>>>> +
-> >>>>>>>>> +  snps,vspacc-id:
-> >>>>>>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >>>>>>>>> +    description: |
-> >>>>>>>>> +      Virtual SPAcc instance identifier.
-> >>>>>>>>> +      The SPAcc hardware supports multiple virtual instances (=
-determined by
-> >>>>>>>>> +      ELP_SPACC_CONFIG_VSPACC_CNT parameter), and this ID is u=
-sed to identify
-> >>>>>>>>> +      which virtual instance this node represents.
-> >>>>>>>>
-> >>>>>>>> No, IDs are not accepted.
-> >>>>>>>
-> >>>>>>> PK: This represents the specific virtual SPAcc that is being used=
- in
-> >>>>>>> the current configuration. It is used to index into the register =
-banks
-> >>>>>>> and the context memories of the virtual SPAcc that is being used.=
- The
-> >>>>>>> SPAcc IP can be configured as dedicated virtual SPAccs in
-> >>>>>>> heterogeneous environments.
-> >>>>>>
-> >>>>>> OK. Why registers are not narrowed to only this instance? It feels=
- like
-> >>>>>> you provide here full register space for multiple devices and then
-> >>>>>> select the bank with above ID.
-> >>>>>
-> >>>>> PK: No, we cant narrow the registers to only this instance since it=
-s
-> >>>>> is just a single SPAcc with multiple virtual SPAcc instances. The s=
-ame
-> >>>>> set of registers(aka register banks) and context memories are
-> >>>>> repeated, but sit at different offset addresses (i*4000 +
-> >>>>> register-offsets). The crypto hardware engine inside is shared by a=
-ll
-> >>>>> the virtual SPAccs. This is very much for a heterogeneous computing
-> >>>>> scenario.
-> >>>>
-> >>>> Then maybe you have one crypto engine? You ask us to guess all of th=
-is,
-> >>>> also because you do not upstream the DTS for real product. Any
-> >>>> mentioning of "virtual" already raises concerns...
-> >>>
-> >>> PK: Yes this is a single crypto engine, maybe I should have detailed
-> >>> that in the cover letter. I will fix that. And what I have pushed in
-> >>
-> >> So one node, thus no need for this entire virtual device split.
-> >
-> > PK: Agreed, its one node for our test case.
->
->
-> We do not talk about test case. We talk about this device.
-PK: Sure
-> >
-> >>
-> >>> the patch is my complete DTS. It might need updating depending on the
-> >>
-> >> If this is complete, then obviously "snps,vspacc-id" is not necessary.
-> >
-> > PK: Yes, its one node, to keep things simple. So we pick a virtual
-> > spacc with its vspacc-id for testing. That way we could test all the
-> > virtual spaccs with a single node, on a need basis.
-> >
-> > On the other hand we could create 'n' nodes for 'n' virtual spaccs and
->
-> You said it is complete, now you said you have 'n' more.
+Rationale for the below is that we currently end up calling
+__dl_update() with 'cpus' that are not stable yet. So, I tried to move
+initialization after SMP is up (all CPUs have been onlined).
 
-PK: I think the mistake from my side was to create 'n' nodes with the
-same base addresses and different Virtual IDs, and misinterpret your
-earlier guidance on this. Instead every "virtual" SPAcc instance can
-be represented with its own DT node, since its base address and IRQ
-numbers are unique. The "virtual" refers to a hardware feature in the
-SPAcc. Each virtual SPAcc, configured at hardware design-time, has its
-own control registers, IRQ numbers and contexts, only the crypto
-hardware is shared.
+---
+ kernel/sched/core.c     |  3 +++
+ kernel/sched/deadline.c | 39 +++++++++++++++++++++++----------------
+ kernel/sched/sched.h    |  1 +
+ 3 files changed, 27 insertions(+), 16 deletions(-)
 
->
-> > register 'n' vspacc devices with the crypto subsystem. And bind the
-> > individual nodes with unique vspacc-ids. That might depend on the
->
-> I don't understand what is "binding" here. Use Linux or DT terminology.
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8988d38d46a38..d152f8a84818b 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -8470,6 +8470,8 @@ void __init sched_init_smp(void)
+ 	init_sched_rt_class();
+ 	init_sched_dl_class();
+ 
++	sched_init_dl_servers();
++
+ 	sched_smp_initialized = true;
+ }
+ 
+@@ -8484,6 +8486,7 @@ early_initcall(migration_init);
+ void __init sched_init_smp(void)
+ {
+ 	sched_init_granularity();
++	sched_init_dl_servers();
+ }
+ #endif /* CONFIG_SMP */
+ 
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index ad45a8fea245e..9f3b3f3592a58 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1647,22 +1647,6 @@ void dl_server_start(struct sched_dl_entity *dl_se)
+ {
+ 	struct rq *rq = dl_se->rq;
+ 
+-	/*
+-	 * XXX: the apply do not work fine at the init phase for the
+-	 * fair server because things are not yet set. We need to improve
+-	 * this before getting generic.
+-	 */
+-	if (!dl_server(dl_se)) {
+-		u64 runtime =  50 * NSEC_PER_MSEC;
+-		u64 period = 1000 * NSEC_PER_MSEC;
+-
+-		dl_server_apply_params(dl_se, runtime, period, 1);
+-
+-		dl_se->dl_server = 1;
+-		dl_se->dl_defer = 1;
+-		setup_new_dl_entity(dl_se);
+-	}
+-
+ 	if (!dl_se->dl_runtime)
+ 		return;
+ 
+@@ -1693,6 +1677,29 @@ void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
+ 	dl_se->server_pick_task = pick_task;
+ }
+ 
++void sched_init_dl_servers(void)
++{
++	int cpu;
++	struct rq *rq;
++	struct sched_dl_entity *dl_se;
++
++	for_each_online_cpu(cpu) {
++		u64 runtime =  50 * NSEC_PER_MSEC;
++		u64 period = 1000 * NSEC_PER_MSEC;
++
++		rq = cpu_rq(cpu);
++		dl_se = &rq->fair_server;
++
++		WARN_ON(dl_server(dl_se));
++
++		dl_server_apply_params(dl_se, runtime, period, 1);
++
++		dl_se->dl_server = 1;
++		dl_se->dl_defer = 1;
++		setup_new_dl_entity(dl_se);
++	}
++}
++
+ void __dl_server_attach_root(struct sched_dl_entity *dl_se, struct rq *rq)
+ {
+ 	u64 new_bw = dl_se->dl_bw;
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 475bb5998295e..22301c28a5d2d 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -384,6 +384,7 @@ extern void dl_server_stop(struct sched_dl_entity *dl_se);
+ extern void dl_server_init(struct sched_dl_entity *dl_se, struct rq *rq,
+ 		    dl_server_has_tasks_f has_tasks,
+ 		    dl_server_pick_f pick_task);
++extern void sched_init_dl_servers(void);
+ 
+ extern void dl_server_update_idle_time(struct rq *rq,
+ 		    struct task_struct *p);
+-- 
+2.49.0
 
-PK: My bad, I will take care of that.
-
->
-> > vendor use case, for which we will add incremental support.
->
-> You did not get the point but you keep saying "yes". This discussion is
-> getting meaningless and you really do not want to listen. You have
-> either incomplete picture here or you have only one node. In both cases
-> virtual ID is not necessary. If you claim virtual ID is necessary, I
-> claim you have here incomplete picture and you are trying to represent
-> one device in multiple nodes. No.
->
-> Typically one device, one node.
->
-> NOT one device and 10 virtual nodes representing virtual devices.
-
-PK: Thanks, I believe I finally understand your point.
-
->
-> Amount of ping pongs here is way beyond my patience, so before you
-> respond read that carefully and come with full and accurate hardware
-> description, so we will not have to ping pong trying to get any sort of
-> details.
->
-> Best regards,
-> Krzysztof
