@@ -1,78 +1,166 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D411C84DF
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF7D1146D6A
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750730124; cv=none; b=f5/DtVsPV18EyU23/dXBjBgeDlwXxYOF6206rzdiH84E1CVwG0bxUH+pjRi6CT/d0M5hlBAi1DiQzQluWJYudQUB3E0gI8YMI/wjVpX/aeTarJIEGDrDkiQxMec89TUSwLlyjA+osYm0DzezYGAvU7HxZWF2tZ8MYdC/gqtGSoo=
+	t=1750730163; cv=none; b=NxisD1d9+2/Cdqy7uFEzKUKifkAtc9ySQP4ixdhKtATNFLFbE/wVZcHAP8RXBMcLPFIqxp5ZMx4UQ31E0LHq3cvmHhVcCdUjQN7Wbe+VAR0Ctg+hvtf9z6FoHbPlkgnTgPxIivIwZojSOJixnBEIneOwwRZRfzIFNR36OSHnxWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750730124; c=relaxed/simple;
-	bh=fjJUluiUV0jFld53GkIQxGvraehfT1fvsKV6Vu5F2es=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RM47SVslI3Oce4zzqTSWjui7zo5CaT1k3o1XOY+sGwpHVtIwZcWIlCB6yqs1g9zC8hxFGO90r9UEpr9bBC8dCITtsGuLul8yfNYhDRVYYJEEzSaoyeB16ead9cWG83URt95jjRT1oUOYF3yShbxyGDN2QR0mC0HkzIsOOWDhtSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55O1tKFn064509;
-	Tue, 24 Jun 2025 10:55:20 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55O1tKE0064505
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 24 Jun 2025 10:55:20 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <1c0f49ac-2634-4126-abcd-7859fc71f134@I-love.SAKURA.ne.jp>
-Date: Tue, 24 Jun 2025 10:55:20 +0900
+	s=arc-20240116; t=1750730163; c=relaxed/simple;
+	bh=5p61nrFwG6OcxRXcfdbvTuN9D8eXZhEFDOpqTbztMdM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a6oa/llyokvUzB7iIpuZIa01LjtScVsmH6jRdmZ/7be/D12dLnJBWTRGkYytyzu6SQWGpLpkDCrp/+51nDitibfAAWxIHrzTlq88j8+fKsiQIiVpIikUDiZ18epQvw6mNPoCY+8CxpBK1b2tpila4Wd1ceyM5Fc9i/ihc0POXH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=R8bwwTuZ; arc=none smtp.client-ip=115.124.30.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="R8bwwTuZ"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750730157; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
+	bh=5FF2Rr9o7Nq8LA+Z0toU4V+eb1i3Wxay65maXg4Jcgo=;
+	b=R8bwwTuZa2k8mcrEocwEz7NIFeU4Ht5CxMr6Fvdr+LI+MJyndc2fpZmU++DE4INh//QoB/lyhMEvGMHUSezAfeo04ucYB8N9R/4Ck9RLqdC876+B1GqXkFSwBa4EaEk3y/+S7eAsPjgYT2ETQUWkWivWputoS0RDJONbYzblB4o=
+Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WeeA.zH_1750730156 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 24 Jun 2025 09:55:56 +0800
+Date: Tue, 24 Jun 2025 09:55:55 +0800
+From: Feng Tang <feng.tang@linux.alibaba.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Lance Yang <lance.yang@linux.dev>, Jonathan Corbet <corbet@lwn.net>,
+	linux-kernel@vger.kernel.org, paulmck@kernel.org,
+	john.ogness@linutronix.de
+Subject: Re: [PATCH V2 4/5] panic: add 'panic_sys_info=' setup option for
+ sysctl and kernel cmdline
+Message-ID: <aFoFq7CJKGxZ-N-9@U-2FWC9VHC-2323.local>
+References: <20250616010840.38258-1-feng.tang@linux.alibaba.com>
+ <20250616010840.38258-5-feng.tang@linux.alibaba.com>
+ <aFltDlSKKCv3Cito@pathway.suse.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ocfs2: kill osb->system_file_mutex lock
-To: Heming Zhao <heming.zhao@suse.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        jiangyiwen <jiangyiwen@huawei.com>,
-        Andrew Morton
- <akpm@linux-foundation.org>,
-        ocfs2-devel@lists.linux.dev,
-        Diogo Jahchan Koike <djahchankoike@gmail.com>
-References: <934355dd-a0b1-4e53-93ac-0a7ae7458051@I-love.SAKURA.ne.jp>
- <faf70481-09dd-4c7a-bd43-f1e8bec877cb@suse.com>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <faf70481-09dd-4c7a-bd43-f1e8bec877cb@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Anti-Virus-Server: fsav201.rs.sakura.ne.jp
-X-Virus-Status: clean
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aFltDlSKKCv3Cito@pathway.suse.cz>
 
-On 2025/06/24 10:33, Heming Zhao wrote:
-> Hello,
+On Mon, Jun 23, 2025 at 05:04:46PM +0200, Petr Mladek wrote:
+> On Mon 2025-06-16 09:08:39, Feng Tang wrote:
+> > Add 'panic_sys_info=' setup which expects string like "tasks,mem,lock,...".
 > 
-> Protecting refcnt with a mutex is the right approach, and commit 43b10a20372d
-> did it properly.
-> However, I don't see how your patch fixes the syzbot report [1]. Could you
-> elaborate on the root cause analysis?
+> This patch actually adds also the sysctl interface. It should be
+> mentioned in the "Subject" and here.
+ 
+I mentioned 'sysctl' in the subjec line, but maybe it's not obvious :)
+
+> That said, it might be better to add the sysctl interface in
+> the previous patch and add just the setup() here.
+
+OK.
+
 > 
-> My review comments are inline below.
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -4541,6 +4541,19 @@
+> >  			Use this option carefully, maybe worth to setup a
+> >  			bigger log buffer with "log_buf_len" along with this.
+> >  
+> > +	panic_sys_info=
 > 
-> [1]: https://syzkaller.appspot.com/bug?extid=1fed2de07d8e11a3ec1b
+> 
+> > +			String of subsystem info to be dumped on panic.
+> 
+> I am not a native speaker but I have troubles to parse the above
+> sentence. See below.
+> > +			It expects string of comma-separated words like
+> > +			"tasks,mem,timer,...", which is a human readable string
+> > +			version of 'panic_print':
+> > +			tasks: print all tasks info
+> > +			mem: print system memory info
+> > +			timer: print timer info
+> > +			lock: print locks info if CONFIG_LOCKDEP is on
+> > +			ftrace: print ftrace buffer
+> > +			all_bt: print all CPUs backtrace (if available in the arch)
+> > +			blocked_tasks: print only tasks in uninterruptible (blocked) state
+> 
+> This blob is hard to parse. I suggest to replace it with something
+> like:
+> 
+> <proposal>
+> 	panic_sys_info= A comma separated list of extra information to be dumped
+> 			on panic.
+> 			Format: val[,val...]
+> 			Where @val can be any of the following:
+> 
+> 			tasks:		print all tasks info
+> 			mem:		print system memory info
+> 			timers:		print timers info
+> 			locks:		print locks info if CONFIG_LOCKDEP is on
+> 			ftrace:		print ftrace buffer
+> 			all_bt:		print all CPUs backtrace (if available in the arch)
+> 			blocked_tasks:	print only tasks in uninterruptible (blocked) state
+> 
+> 			This is a human readable alternative to the 'panic_print' option.
+> </proposal>
 
-My patch does not fix [1]. My patch fixes a bug which syzbot reported at
-https://lkml.kernel.org/r/000000000000ff2d7a0620381afe@google.com
-when testing with Diogo's patch at
-https://syzkaller.appspot.com/x/patch.diff?x=178f93d5980000 for [1].
+Thanks! It's much better.
 
->> Reported-by: Diogo Jahchan Koike <djahchankoike@gmail.com>
-> 'Reported-by' should be: https://syzkaller.appspot.com/bug?extid=1fed2de07d8e11a3ec1b
+> > +
+> >  	parkbd.port=	[HW] Parallel port number the keyboard adapter is
+> >  			connected to, default is 0.
+> >  			Format: <parport#>
+> > diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+> > index dd49a89a62d3..2013afd98605 100644
+> > --- a/Documentation/admin-guide/sysctl/kernel.rst
+> > +++ b/Documentation/admin-guide/sysctl/kernel.rst
+> > @@ -899,6 +899,24 @@ So for example to print tasks and memory info on panic, user can::
+> >    echo 3 > /proc/sys/kernel/panic_print
+> >  
+> >  
+> > +panic_sys_info
+> > +==============
+> > +
+> > +String of subsystem info to be dumped on panic. It expects string of
+> 
+> Same here.
+> 
+> > +comma-separated words like "tasks,mem,timer,...", which is a human
+> > +readable string version of 'panic_print':
+> 
+> I would replace it with:
+> 
+> <proposal>
+> A comma separated list of extra information to be dumped on panic,
+> for example, "tasks,mem,timers,...".  It is a human readable alternative
+> to 'panic_print'. Possible values are:
+> </proposal>
 
-Since there is not yet a bug link for my patch, I don't choose syzbot as reporter.
-Diogo will post a formal patch for fixing [1] after returning from vacation.
+Will change.
 
+> > +
+> > +=============   ===================================================
+> > +tasks           print all tasks info
+> > +mem             print system memory info
+> > +timer           print timer info
+> > +lock            print locks info if CONFIG_LOCKDEP is on
+> > +ftrace          print ftrace buffer
+> > +all_bt          print all CPUs backtrace (if available in the arch)
+> > +blocked_tasks   print only tasks in uninterruptible (blocked) state
+> > +=============   ===================================================
+> > +
+> > +
+> >  panic_on_rcu_stall
+> >  ==================
+> 
+> The rest looks good.
+ 
+Thanks!
+
+- Feng
+
+> Best Regards,
+> Petr
