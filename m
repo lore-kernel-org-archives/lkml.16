@@ -1,132 +1,243 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C1528B4E7
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:42:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8351EBA09;
+	Tue, 24 Jun 2025 11:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750765340; cv=none; b=OdBodUbolLWjTkpVV+dQs02sPVyYj77S/MxLi2vgTkNkU7Fu1aIpfTxlTtZDACLDHXzoEtvn/AzL7fIznD1ULwlkwyLng30sBUPgJYDjPhE6zPS62N8xIBZtHgEPUvOEUoPCkq3c00XW+4wG3LjPlhXFYIyqq1R/bzVqgQkRLCg=
+	t=1750765597; cv=none; b=GspmYx3isoeJXiqc+AzgDhMTmmcGibLgEb8lq89mr5/LSaQJL1UR+FIm14RGUoyZsve11hY74i6KE8eoHbFmjh7lmUT6IYZpK1LOKi0dl9a+GYySsylc/Zg8gCZI3aRC6jqBPNYhLqSDosNK6JnmwDiGfzegQUWgi6bwfzMmc8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750765340; c=relaxed/simple;
-	bh=o9NtCbdEqXVH///YhmYsCyDbtZ2RQ2t50KFUTbDF7Vk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dCreg5PRYdu/CEkg3SYFd0ymPuYgdQE0hLe2r4BtV+r2ZkwdGcmaEFxclpeaeIRE+Om6XYkmruoFgvw03g29EkQnkfTm43Kcpk9GI1fnnnBiCFtor5zio9kIyh2QE9Y6B+XR90b51kEf/ca/LKd69eXwDySghjr4BFPl6kUK3/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l31mpb6+; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750765597; c=relaxed/simple;
+	bh=Aq9GD2THfqFXMbWItD81A4DWQCtFtMOiUc3S2GCPJMY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=uQz0Y/SGZyH9w7IgVIcrE0De1NOEOxT8igufNVwPdKWsMQa9lKbg6HCCish5xh/HoQy4/2uaE4tnHQlv4qX0ODIbDPKQMSwHi/LI1xjAkjj6bhhHs4PWYgbqsWCPZJUhTUuaPcEER/Mxv7SkqrCljl/uQ1fFTBvCtmwW7AoaAUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OsHVH/Wu; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l31mpb6+"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-54e7967cf67so5001414e87.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 04:42:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750765336; x=1751370136; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=5s25fyGVsgH7CUUdiHpgC4SpMceOJi2ulartzmm/61o=;
-        b=l31mpb6+r0ux3+Iojt6x6WBy/DIedw1d31V2I9LZrZwkfXzjIigifOtu2QAAvJiZIG
-         DJcTL/Fwek6eo9dhkAxdbmGMoNruoOndr7CREoKsqBh9KF/iqSQ8LYRxOXFveebUpTOT
-         RmarYAQNI9Dqzw3OgJ92sa0yDsoWvlJAb9Xj/sqSNBVG2q/+psoJHymwiFZvJu2tUvzi
-         q8XZhntjCx5LzhgT6nqM+yDNgHBO8TCHB9J1+cMH//HrOqVZFDbtVETnfqCE2S/QEHXc
-         940b4MkZydZvoH5tzsJ1lLAlcCbMqZso5XuZmin0vh+FpRoMyILO8AhO4UtHnQw1Fu1N
-         zuoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750765336; x=1751370136;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5s25fyGVsgH7CUUdiHpgC4SpMceOJi2ulartzmm/61o=;
-        b=A0oO3um9/cyE8Zje7FurRhXfX9zUFSxaoyir/qtZC6uimM0HXzqMH8dQRGzjFLsa1j
-         26AnS20DXyvbmrW8CwepxofSTTKALJWHeDT4bkL0Zpy9rksuXtF/kEVpKEpjwAyNc/wy
-         yaJiCTUPcmBDS6ye6U3cKgKurBYnC+V5iJyr0/jLCePulzQlW1nnibiexP0WC1NVb6b8
-         /D+Ztc88Q/C6nCwp8HXJvC1X0KcipzZ3U8Wm2NHF+AgH7yF3o44HppvxOlUl8PChD5Z9
-         9yz3+/NC5tWDquJbTz9rwENvHBW6MFbMKIc4Unbr4fQdZy3oveo1XzsodMlNGxxPdIQu
-         T0BQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVEAnHxCALVIHYaxfXHTvSDRrzOfxXCJ70e6Q6nvrG+OlWjhc6mekTc0meNHIntbFydLcgaS/ZAuR5AvA4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyl0/V1vZRUec+duSnfer97TjSMtcr61cWVU1iPsTP3VM0fun/5
-	VYgWfT+GEVBrNcO79bwqLZeBfLQNJgt3450N79jvoK30Kcfp0n0JjLMO
-X-Gm-Gg: ASbGncv1gmoJlITHFXXrVg3tWYfV0Kyzg8ueYg5/6Kbjxn59AQPtnFi4f7oLwwjtnsP
-	76zk3u/Lxk9pR7cODAtPoiUa6WJdWNDtRS6PThHlm4bNcWh2niBPMWlQLLv0IKfW4M2l1gcMGxY
-	qIdVzTLvkRB+3pMs/AGrFxciuH90m7OMFisp4SBaqJ4Lgt9h7UXqnPx260dZCFnogi56o0T4BY3
-	C+qcmOMgz0tbpo/WkFv4bd0r5hxKEt5Y3zqgZ0xBYjNcw1aqVB8tb4CMOlQj9qC/XliNeW0uxJr
-	aRzsCVPW69gO+8E+XphQrKXf7i7iO+OlEB+iYQcQqNSpc40gqo1/eQICPg/g944Zf1ZTlSKNqZN
-	44FUcJKkQtkg=
-X-Google-Smtp-Source: AGHT+IGmukpKZCpvBS9DnXJ5zF/aXj7ll7dmnJzveDXO4jN9B/KEDcKBMAx2bSwr80gt54+0Qzco9w==
-X-Received: by 2002:a05:6512:3ca5:b0:54b:1055:f4c3 with SMTP id 2adb3069b0e04-553e3ba8018mr5596807e87.11.1750765335508;
-        Tue, 24 Jun 2025 04:42:15 -0700 (PDT)
-Received: from pc636 (host-95-203-1-180.mobileonline.telia.com. [95.203.1.180])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553ea450edfsm1430158e87.102.2025.06.24.04.42.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 04:42:14 -0700 (PDT)
-From: Uladzislau Rezki <urezki@gmail.com>
-X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
-Date: Tue, 24 Jun 2025 13:42:12 +0200
-To: David Wang <00107082@163.com>
-Cc: "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-	LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH 1/2] lib/test_vmalloc.c: Use late_initcall() if built-in
- for init ordering
-Message-ID: <aFqPFPmR1sZQzMS0@pc636>
-References: <20250623184035.581229-1-urezki@gmail.com>
- <5686796f.8f47.197a1310b6d.Coremail.00107082@163.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OsHVH/Wu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750765596; x=1782301596;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Aq9GD2THfqFXMbWItD81A4DWQCtFtMOiUc3S2GCPJMY=;
+  b=OsHVH/WuzzAIchm8vrneTB0NzP75WbpC8zE/7tPgkE8sMO8CnhJkFkML
+   fhDhMiKPUQ1E/jKEbk9dMBXpucdXm4Do7Ksz+lKw255PrqIA3278vG+qd
+   glXvtR81qmuQz09r3DKXr7GhPW4XJO51JP4OA0QOUYIexjvhy2eL3ob18
+   AiIMV3IPUq3v/UEF14Wf6n6BtoOPaPhwbvViDerZyWV63jmhTUv6jRMg6
+   F50KaYpY7hgWe71ld0MXXqxpUZ5Hb5oQZ/HJMcyiW3i097XQq6K9KEGBM
+   yIRfJcQ6SshwEP4Q92A/3IovnAovOWpEw8WC8RpSszdlirNJ5Ee2ZCntR
+   w==;
+X-CSE-ConnectionGUID: v+/US/TqQ++WwFPTzfuJfQ==
+X-CSE-MsgGUID: F0X7bjy/QuGVAXcDtszJcw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="63694013"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="63694013"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:46:35 -0700
+X-CSE-ConnectionGUID: Ydx9rhrBQc+u94FJjhhIjQ==
+X-CSE-MsgGUID: zQie7ZLdSTig2uGW7zzDJA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="152400921"
+Received: from ncintean-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.201])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:46:30 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with ESMTP id 3361911F742;
+	Tue, 24 Jun 2025 14:46:27 +0300 (EEST)
+Date: Tue, 24 Jun 2025 11:46:27 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Mehdi Djait <mehdi.djait@linux.intel.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	"Nirujogi, Pratap" <pnirujog@amd.com>,
+	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
+	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
+	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
+	Svetoslav.Stoilov@amd.com, Yana.Zheleva@amd.com
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Message-ID: <aFqQEwdzSY123xps@kekkonen.localdomain>
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <20250615000915.GQ10542@pendragon.ideasonboard.com>
+ <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
+ <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
+ <20250623220503.GA15951@pendragon.ideasonboard.com>
+ <425j7c6xvbbatdhxgjgjawzwfnjmjetg6rpnwfudbtg6qz6nay@dy5ldbuhtbvv>
+ <aFp7tuXkU1jayPum@kekkonen.localdomain>
+ <aFp78tqHhe_IhV6d@kekkonen.localdomain>
+ <20250624102745.GG15951@pendragon.ideasonboard.com>
+ <nixg4efp3zkdpd6h7kp6wkvam63batpoknov2nkgu36voks6bk@gzuackzl3l5g>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5686796f.8f47.197a1310b6d.Coremail.00107082@163.com>
+In-Reply-To: <nixg4efp3zkdpd6h7kp6wkvam63batpoknov2nkgu36voks6bk@gzuackzl3l5g>
 
-On Tue, Jun 24, 2025 at 05:07:15PM +0800, David Wang wrote:
+Hi Mehdi,
+
+On Tue, Jun 24, 2025 at 01:27:03PM +0200, Mehdi Djait wrote:
+> Hi Laurent, Hi Sakari,
 > 
-> At 2025-06-24 02:40:34, "Uladzislau Rezki (Sony)" <urezki@gmail.com> wrote:
-> >When the vmalloc test code is compiled as a built-in, use late_initcall()
-> >instead of module_init() to defer a vmalloc test execution until most
-> >subsystems are up and running.
-> >
-> >It avoids interfering with components that may not yet be initialized
-> >at module_init() time. For example, there was a recent report of memory
-> >profiling infrastructure not being ready early enough leading to kernel
-> >crash.
-> >
-> >By using late_initcall() in the built-in case, we ensure the tests are
-> >run at a safer point during a boot sequence.
-> >
-> >Cc: Harry Yoo <harry.yoo@oracle.com>
-> >Cc: Suren Baghdasaryan <surenb@google.com>
-> >Cc: David Wang <00107082@163.com>
-> >Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> >---
-> > lib/test_vmalloc.c | 4 ++++
-> > 1 file changed, 4 insertions(+)
-> >
-> >diff --git a/lib/test_vmalloc.c b/lib/test_vmalloc.c
-> >index 1b0b59549aaf1..7264781750c96 100644
-> >--- a/lib/test_vmalloc.c
-> >+++ b/lib/test_vmalloc.c
-> >@@ -598,7 +598,11 @@ static int __init vmalloc_test_init(void)
-> > 	return IS_BUILTIN(CONFIG_TEST_VMALLOC) ? 0:-EAGAIN;
-> > }
+> On Tue, Jun 24, 2025 at 01:27:45PM +0300, Laurent Pinchart wrote:
+> > On Tue, Jun 24, 2025 at 10:20:34AM +0000, Sakari Ailus wrote:
+> > > On Tue, Jun 24, 2025 at 10:19:35AM +0000, Sakari Ailus wrote:
+> > > > On Tue, Jun 24, 2025 at 10:35:18AM +0200, Mehdi Djait wrote:
+> > > > > On Tue, Jun 24, 2025 at 01:05:03AM +0300, Laurent Pinchart wrote:
+> > > > > > On Mon, Jun 23, 2025 at 05:51:48PM -0400, Nirujogi, Pratap wrote:
+> > > > > > > On 6/16/2025 6:49 PM, Nirujogi, Pratap wrote:
+> > > > > > > >>> +static int ov05c10_probe(struct i2c_client *client)
+> > > > > > > >>> +{
+> > > > > > > >>> +     struct ov05c10 *ov05c10;
+> > > > > > > >>> +     u32 clkfreq;
+> > > > > > > >>> +     int ret;
+> > > > > > > >>> +
+> > > > > > > >>> +     ov05c10 = devm_kzalloc(&client->dev, sizeof(*ov05c10), 
+> > > > > > > >>> GFP_KERNEL);
+> > > > > > > >>> +     if (!ov05c10)
+> > > > > > > >>> +             return -ENOMEM;
+> > > > > > > >>> +
+> > > > > > > >>> +     struct fwnode_handle *fwnode = dev_fwnode(&client->dev);
+> > > > > > > >>> +
+> > > > > > > >>> +     ret = fwnode_property_read_u32(fwnode, "clock-frequency", 
+> > > > > > > >>> &clkfreq);
+> > > > > > > >>> +     if (ret)
+> > > > > > > >>> +             return  dev_err_probe(&client->dev, -EINVAL,
+> > > > > > > >>> +                                   "fail to get clock freq\n");
+> > > > > > > >>
+> > > > > > > >> Let's try to land
+> > > > > > > >> https://lore.kernel.org/linux-media/20250521104115.176950-1- 
+> > > > > > > >> mehdi.djait@linux.intel.com/
+> > > > > > > >> and replace the code above with devm_v4l2_sensor_clk_get().
+> > > > > > > >>
+> > > > > > > > Ok, we will verify on our side.
+> > > > > > > 
+> > > > > > > We tried using devm_v4l2_sensor_clk_get() and found its required to add 
+> > > > > > > support for software_node to make it work with this driver.
+> > > > > > 
+> > > > > > Why is that ?
+> > > > > > 
+> > > > > > > Please refer 
+> > > > > > > the changes below and let us know if these should be submitted as a 
+> > > > > > > separate patch.
+> > > > > 
+> > > > > The helper is still not merged, so no patch is required.
+> > > > > 
+> > > > > I will see if a change is needed from the helper side or the OV05C10 side.
+> > > > 
+> > > > I wonder if there's a better way to figure out if you're running on a DT or
+> > > > ACPI based system than getting the device's parents and checking which one
+> > > > you find first, DT or ACPI. I think that should work for now at least.
+> > > 
+> > > Or, rather, checking for non-OF node here would probably work the best. I
+> > > wouldn't expect these to be software node based on DT systems ever.
 > > 
-> >+#ifdef MODULE
-> > module_init(vmalloc_test_init)
-> >+#else
-> >+late_initcall(vmalloc_test_init);
+> > Until it happens :-) And we'll handle it then.
 > 
-> >+#endif
+> So we have the following:
+> 
+> - The problem with this driver is due to lack of proper ACPI
+>   description. HW is already shipping and AMD will work on better ACPI
+>   description for future models. See [1]
+> 
+> - software_node can also be used on DT systems
+> 
+> [1] https://lore.kernel.org/lkml/0d801367-da24-4596-83d9-08ccd89ca670@redhat.com/
+> 
+> Now going back to the helper. If we want to support this case:
+> 
+> Approach 1: software_node || acpi
+> 
+> --- a/drivers/media/v4l2-core/v4l2-common.c
+> +++ b/drivers/media/v4l2-core/v4l2-common.c
+> @@ -682,16 +682,17 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+>         const char *clk_id __free(kfree) = NULL;
+>         struct clk_hw *clk_hw;
+>         struct clk *clk;
+> -       bool acpi_node;
+> +       bool acpi_sw_node;
+>         u32 rate;
+>         int ret;
+>  
+>         clk = devm_clk_get_optional(dev, id);
+>         ret = device_property_read_u32(dev, "clock-frequency", &rate);
+> -       acpi_node = is_acpi_node(dev_fwnode(dev));
+> +       acpi_sw_node = is_acpi_node(dev_fwnode(dev)) ||
+> +                      is_software_node(dev_fwnode(dev));
+>  
+>         if (clk) {
+> -               if (!ret && acpi_node) {
+> +               if (!ret && acpi_sw_node) {
+>                         ret = clk_set_rate(clk, rate);
+>                         if (ret) {
+>                                 dev_err(dev, "Failed to set clock rate: %u\n",
+> @@ -705,7 +706,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+>         if (ret)
+>                 return ERR_PTR(ret);
+>  
+> -       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
+> +       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_sw_node)
+>                 return ERR_PTR(-ENOENT);
+>  
+>         if (!id) {
 > 
 > 
-> When MODULE defined,Â  late_initcall is defined as module_init in ./include/linux/module.h
-> I think the MODULE check here is redundant,  (it is clearer though)
+> Approach 2: of_node
 > 
-That was an idea to use MODULE, because late_initcall is designed not
-for module.s It would require the comment then.
+> --- a/drivers/media/v4l2-core/v4l2-common.c
+> +++ b/drivers/media/v4l2-core/v4l2-common.c
+> @@ -682,16 +682,16 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+>         const char *clk_id __free(kfree) = NULL;
+>         struct clk_hw *clk_hw;
+>         struct clk *clk;
+> -       bool acpi_node;
+> +       bool of_node;
+>         u32 rate;
+>         int ret;
+>  
+>         clk = devm_clk_get_optional(dev, id);
+>         ret = device_property_read_u32(dev, "clock-frequency", &rate);
+> -       acpi_node = is_acpi_node(dev_fwnode(dev));
+> +       of_node = is_of_node(dev_fwnode(dev));
+>  
+>         if (clk) {
+> -               if (!ret && acpi_node) {
+> +               if (!ret && !of_node) {
+>                         ret = clk_set_rate(clk, rate);
+>                         if (ret) {
+>                                 dev_err(dev, "Failed to set clock rate: %u\n",
+> @@ -705,7 +705,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
+>         if (ret)
+>                 return ERR_PTR(ret);
+>  
+> -       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
+> +       if (!IS_ENABLED(CONFIG_COMMON_CLK) || of_node)
+>                 return ERR_PTR(-ENOENT);
+>  
+>         if (!id) {
 
---
-Uladzislau Rezki
+I'm in favour of the latter but both should be workable.
+
+Speaking of return values, devm_clk_get_optional() may also return
+-EPROBE_DEFER. That needs to be handled.
+
+And further on -EPROBE_DEFER, I think the helper should return
+-EPROBE_DEFER if the "clock-frequency" property doesn't exist on non-OF
+nodes. That signals the required software nodes required on Intel Windows
+definitions/ipu-bridge or AMD systems aren't in place yet so really probing
+should be deferred. This would allow removing the hacks that return
+-EPROBE_DEFER in sensor drivers when no graph endpoint is found.
+
+-- 
+Regards,
+
+Sakari Ailus
