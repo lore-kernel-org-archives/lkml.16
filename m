@@ -1,138 +1,114 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CD562EBBBF
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 20:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E70426CE23;
+	Tue, 24 Jun 2025 20:30:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750797031; cv=none; b=XiGDBt4cGAMGATIxZVdVYkBJgysWUnyANlMfGl54VNICIyp3GwMQLmho2WCzbqH/wkKxiysiGfmv6jZ2Wv17gwDNYbWG7ik5j5q2sSToqErh3z/vTLSr7iX3j1CSm+A9ZlCHQOzSl5+GbaR1KxLNnZVB40ryXnwsRgp3RZLyDHg=
+	t=1750797049; cv=none; b=GsCNWVpuiTDfo2e0dE3TKMMYxST0o57onWSxTDZiKxS1nSJFoF6/+e1cB8FbT6uq8JGpssZBBPKshDMzSYDyaD/E3xLIb1/yBn0DKLydM74pFwrGVOzRiBOOwYUQsjYr3LAaoTgAXe4Tgq8V6b4kxn3g4pmm+qjpIMLQ5j00SWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750797031; c=relaxed/simple;
-	bh=htQEQ/BzUbGDReOf5LAHoRmRPlTzuA///0KC3V4lOFc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=aRmfWsJLOHzIR2Cn7b4UF533h9S0iKdqiAoe0XPUvOG52ogjugz4IkHDs3Tk36Z/hywO6kDs/+iORW0uLTGzJw9DCSu3Jf6vAMsSGx4yidyA8TK5kubL5+MrBEe7vs1WASXzX/UdH1LvBVVWad4dsixmnFiYLAUtMfpv3CZsDCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-869e9667f58so1091044339f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:30:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750797029; x=1751401829;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6knl0xaS3L51AM1ZsG9RmXp7O5QA7TblObdipk/GWaI=;
-        b=S/XmkHpsTiwRB4zpIkHIyBhrT/LsZkcFFOjrV4xur60wS57IzXxu6RB7wdq6I59sFC
-         1Md/O4ATI6vlllOfL+bIM6jl2jTEkPn7Zo9vMuR+SuFI8Ou3v1Djstv07z23rCY4GZm7
-         BzSHaBjjb08y8VC0d8QIDl7jVHwpAlGwqyiDlQDmbEytTuy+GrSkfXCqiuaz0rP/T5Og
-         9RIY/Aj7oAn0vQ0nHZhY3hnQyTFPrNR7eYwbwum1mcRd1ZSzE4a37SzBopBzmTy+NTT8
-         T/Ln/cL0EeXhwcVIiih/F1ViwZ2ehQ/YV4ry9MgRC7sCi/1ffxzEWHGWNpajWjaDkOmZ
-         FILw==
-X-Forwarded-Encrypted: i=1; AJvYcCWSOX/lO/lhohrKiv/GNKRI+v5NlrM7qLA9m2aR+PFZVNEq2D1KeYvvt+30n6rjwOdchvlgQq3mhrUYWpk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTET5j3BhcFzbkoY/Ed+oA7lcDqXZUCCWOUWURw2rQSGmXtxzD
-	H6MhlRlgVTgMP4sqNs6HfE9qj9H+zrB1NpYm1LBH/CPgxseYDD8c4jbUodDl24s7bYR7Mfq3vbx
-	wUzJq5/JDKC5xl07JjlXbOPlHnjcO1RG7YvsV+AMkHc2igarw6jAHB007lSM=
-X-Google-Smtp-Source: AGHT+IH5de4d25y6CNlVfsK+tP43zSWrtYw23gCA5QZDONUigQy1STLCYjJtal9wLts9ebxBnXhWSL8kr7WxPmyE5pg4p7yHjyyC
+	s=arc-20240116; t=1750797049; c=relaxed/simple;
+	bh=y+bjAAAX0Ofn2Lf/MUjBwYQIZMlmSNiS8DuXQGq1OB0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZZne06KGIjBSp13bQyUU96k5PQ77qnSVzpsbS486J+8/HPAJ9rxrev+D2Q7UPlIkgxq/5vYZb5Jf9cm/8KpI32tfunzJgClT1fZoPr6Zrct8jPkoDHSgaqSCR/q4zP2co46bfRG4ABIPPa4bAehtyAek7k9t13hFt2tpELZdUeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kqIMUNjL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kqIMUNjL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59CC2C4CEE3;
+	Tue, 24 Jun 2025 20:30:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750797048;
+	bh=y+bjAAAX0Ofn2Lf/MUjBwYQIZMlmSNiS8DuXQGq1OB0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=kqIMUNjL3iQkUXSnp9TFoTNRylBMLcEZtyjimsxiuRpZwQWkh+WcUcNc72yz5lfH/
+	 mNeg6/NZVdE8j88oRlt+w6I9/PH7Ka7yyn1+wemXfx6iyx1OUfwTiNkzXB0PPfxSDl
+	 jJuNUGgEtTP2pX3Sij1t51tpRSC1G451sJYrIiNH5VLIBLbxoUrXm08+VUJcBZKYQE
+	 ox9HooJkf/zf9xswYOuCYIsqgfAHVsy5dJ/VLobZg2mAgS90g81+r+bugVEoF2GpgA
+	 wop3ZGTUDts83zcsIZ3N33gBm6DHOkej6YGJ5KMNiO1ll61hvzhbQcpqhCfxNvhtEn
+	 cIJha5V58VOug==
+From: Mario Limonciello <superm1@kernel.org>
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Lukas Wunner <lukas@wunner.de>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+	linux-kernel@vger.kernel.org (open list),
+	iommu@lists.linux.dev (open list:INTEL IOMMU (VT-d)),
+	linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
+	kvm@vger.kernel.org (open list:VFIO DRIVER),
+	linux-sound@vger.kernel.org (open list:SOUND),
+	Daniel Dadap <ddadap@nvidia.com>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: [PATCH v5 0/9] Adjust fbcon console device detection
+Date: Tue, 24 Jun 2025 15:30:33 -0500
+Message-ID: <20250624203042.1102346-1-superm1@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:156c:b0:3dc:87c7:a5b9 with SMTP id
- e9e14a558f8ab-3df329a5a46mr4971615ab.10.1750797029291; Tue, 24 Jun 2025
- 13:30:29 -0700 (PDT)
-Date: Tue, 24 Jun 2025 13:30:29 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685b0ae5.a00a0220.2e5631.009a.GAE@google.com>
-Subject: [syzbot] [wpan?] WARNING in lowpan_xmit (2)
-From: syzbot <syzbot+5b74e0e96f12e3728ec8@syzkaller.appspotmail.com>
-To: alex.aring@gmail.com, davem@davemloft.net, edumazet@google.com, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-wpan@vger.kernel.org, miquel.raynal@bootlin.com, netdev@vger.kernel.org, 
-	pabeni@redhat.com, stefan@datenfreihafen.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-syzbot found the following issue on:
+This series started out as changes to VGA arbiter to try to handle a case
+of a system with 2 GPUs that are not VGA devices [1].  This was discussed
+but decided not to overload the VGA arbiter for non VGA devices.
 
-HEAD commit:    4f4040ea5d3e net: ti: icssg-prueth: Add prp offload suppor..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11630dd4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fab0bcec5be1995b
-dashboard link: https://syzkaller.appspot.com/bug?extid=5b74e0e96f12e3728ec8
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=170cd370580000
+Instead move the x86 specific detection of framebuffer resources into x86
+specific code that the fbcon can use to properly identify the primary
+device. This code is still called from the VGA arbiter, and the logic does
+not change there. To avoid regression default to VGA arbiter and only fall
+back to looking up with x86 specific detection method.
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/64e76754e788/disk-4f4040ea.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/58f25c6cca53/vmlinux-4f4040ea.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/f700f89884c1/bzImage-4f4040ea.xz
+In order for userspace to also be able to discover which device was the
+primary video display device create a new sysfs file 'boot_display'.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+5b74e0e96f12e3728ec8@syzkaller.appspotmail.com
+A matching userspace implementation for this file is available here:
+https://gitlab.freedesktop.org/xorg/lib/libpciaccess/-/merge_requests/39
+https://gitlab.freedesktop.org/xorg/xserver/-/merge_requests/2038
 
-ieee802154 phy0 wpan0: encryption failed: -22
-ieee802154 phy1 wpan1: encryption failed: -22
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 1302 at ./include/linux/skbuff.h:3157 skb_network_header_len include/linux/skbuff.h:3157 [inline]
-WARNING: CPU: 1 PID: 1302 at ./include/linux/skbuff.h:3157 lowpan_header net/ieee802154/6lowpan/tx.c:236 [inline]
-WARNING: CPU: 1 PID: 1302 at ./include/linux/skbuff.h:3157 lowpan_xmit+0xde9/0x1340 net/ieee802154/6lowpan/tx.c:282
-Modules linked in:
-CPU: 1 UID: 0 PID: 1302 Comm: aoe_tx0 Not tainted 6.16.0-rc2-syzkaller-00591-g4f4040ea5d3e #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:skb_network_header_len include/linux/skbuff.h:3157 [inline]
-RIP: 0010:lowpan_header net/ieee802154/6lowpan/tx.c:236 [inline]
-RIP: 0010:lowpan_xmit+0xde9/0x1340 net/ieee802154/6lowpan/tx.c:282
-Code: 48 85 c0 0f 84 38 02 00 00 49 89 c6 e8 00 77 a0 f6 e9 69 f5 ff ff e8 f6 76 a0 f6 90 0f 0b 90 e9 5c f6 ff ff e8 e8 76 a0 f6 90 <0f> 0b 90 e9 2c f7 ff ff e8 da 76 a0 f6 e9 12 fc ff ff 90 0f 0b 90
-RSP: 0018:ffffc9000437f640 EFLAGS: 00010293
-RAX: ffffffff8b1fe568 RBX: ffff8880312e6140 RCX: ffff888027989e00
-RDX: 0000000000000000 RSI: 000000000000ffff RDI: 000000000000ffff
-RBP: ffffc9000437f830 R08: 0000000000000003 R09: 0000000000000000
-R10: ffffc9000437f4f0 R11: fffff5200086fea4 R12: 1ffff1100625cc36
-R13: 0000000000000020 R14: ffff8880312e6140 R15: 000000000000ffff
-FS:  0000000000000000(0000) GS:ffff888125d4f000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fe947dbbf98 CR3: 000000007a4dc000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __netdev_start_xmit include/linux/netdevice.h:5225 [inline]
- netdev_start_xmit include/linux/netdevice.h:5234 [inline]
- xmit_one net/core/dev.c:3828 [inline]
- dev_hard_start_xmit+0x2d4/0x830 net/core/dev.c:3844
- __dev_queue_xmit+0x1adf/0x3a70 net/core/dev.c:4711
- dev_queue_xmit include/linux/netdevice.h:3365 [inline]
- tx+0x6b/0x190 drivers/block/aoe/aoenet.c:62
- kthread+0x1d0/0x3e0 drivers/block/aoe/aoecmd.c:1237
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3f9/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+Mario Limonciello (9):
+  PCI: Add helper for checking if a PCI device is a display controller
+  vfio/pci: Use pci_is_display()
+  vga_switcheroo: Use pci_is_display()
+  iommu/vt-d: Use pci_is_display()
+  ALSA: hda: Use pci_is_display()
+  Fix access to video_is_primary_device() when compiled without
+    CONFIG_VIDEO
+  PCI/VGA: Replace vga_is_firmware_default() with a screen info check
+  fbcon: Use screen info to find primary device
+  PCI: Add a new 'boot_display' attribute
 
+ Documentation/ABI/testing/sysfs-bus-pci |  9 ++++++++
+ arch/parisc/include/asm/video.h         |  2 +-
+ arch/sparc/include/asm/video.h          |  2 ++
+ arch/x86/include/asm/video.h            |  2 ++
+ arch/x86/video/video-common.c           | 13 ++++++++++-
+ drivers/gpu/vga/vga_switcheroo.c        |  2 +-
+ drivers/iommu/intel/iommu.c             |  2 +-
+ drivers/pci/pci-sysfs.c                 | 14 ++++++++++++
+ drivers/pci/vgaarb.c                    | 29 ++-----------------------
+ drivers/vfio/pci/vfio_pci_igd.c         |  3 +--
+ include/linux/pci.h                     | 15 +++++++++++++
+ sound/hda/hdac_i915.c                   |  2 +-
+ sound/pci/hda/hda_intel.c               |  4 ++--
+ 13 files changed, 63 insertions(+), 36 deletions(-)
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+-- 
+2.43.0
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
