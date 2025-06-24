@@ -1,175 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from out30-112.freemail.mail.aliyun.com (out30-112.freemail.mail.aliyun.com [115.124.30.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A732C27AC28;
-	Tue, 24 Jun 2025 09:20:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6535D182BC
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:20:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.112
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750756825; cv=none; b=jKdq+NpBiY0w1pAeF0PXhifisqMTFhr4efYISxWhD+ZYhGXYWe9m8+OKS344aLSYYP1ABHnSCDi88r2VB6laElj3NdPhZXOabrYx+vjm/0VTe0Gpp3LtKGrNPLu3kftcKAZvsQ7wo3RjaGtpyq3WmXO9Wz3grstPXAAR1VfsV6s=
+	t=1750756862; cv=none; b=DH2bA4Wi+p3kzjZpbxctPJphq/CxYABcV0Y75WdP19elwQApBqxpSPPHLkB9e94xIl05xHJihWgBFYQqiDuTzSni0sWhz1MpplFiNz0tXSzfJlGiajTWiOzgMkU61amku8BagY8qdgcdJVXvgp/OTEqyfFl0IT5m4q7aceloclw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750756825; c=relaxed/simple;
-	bh=jZE+IgGesHcyfgzN3nG1+Ne+xiYv2cRxteQP8fTHOXE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kW1nMZGVEanonli86E/w1Ma/J5R5gIP2L3PuF2rB/GiqsWyRvFmLpYcRZvl6mNe/+NBz0rQW+D8jMk3IOfWfyZgzz/ukOHPjFMUSspq99u3HkTX96rBop0MTV0d3OjUCMqBjVCrH44T2a9ScXL4O7AjIlXmVsxXkHwRh9R5txrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=S+txhFkQ; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750756862; c=relaxed/simple;
+	bh=E8SKyUpjetN1J92KOakPpEOAzTB9/3cdczxURfbSM/s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ALo7/0FHZAhRaJyfChF7XLxigT7Ahe+cWkC2IVQkpd5dcUa/WN0hl4zqjTc8b6AgN1n+9Q3xgCxKJ9ob3MJFfcNoL1AXZnMgqy+RvmV8CUv/6Kc3CF+HOtG84MoJqNdDbz756APwTQOvoMqGkplkcAPDEGXqE87k8nBnYUYrhXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Hg1DZeuq; arc=none smtp.client-ip=115.124.30.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="S+txhFkQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750756824; x=1782292824;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=jZE+IgGesHcyfgzN3nG1+Ne+xiYv2cRxteQP8fTHOXE=;
-  b=S+txhFkQM9R/lswsNimIYdK8oHnFHJdZBloZoFdl5ozLY8brwKaM/9kE
-   ljVFV+j/MZpwjDXsOcEOl+JgONI3cMPkBbO0UjZaLT4HXYeuNvsmUPgw/
-   9to3G3KyVCmtf4ZlIPu06QtwH44ThuKu7t1FUG0rkhuzRxZ50QRJ2Jn07
-   0P9xDpxSH4dK+QWc1HL17UuOhm0Dw/cjBFeKwGtNv2x8tuWa+Z0OAZQ/J
-   UZ6pFKSX2IjDI3IOf2m50NRARQglujsKLtUGN/Hy76hKQCJjCbpVBFjNe
-   1+9X3kp2W3uUaWQj5GoohhS16dFt37CL/QVj8/XgFIzwRaihTrutIQCpJ
-   A==;
-X-CSE-ConnectionGUID: Gl+SGGEsScOLUm3+iA7egQ==
-X-CSE-MsgGUID: pgga4psmTYubGiQvJ/RMnQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="55618257"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="55618257"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 02:20:23 -0700
-X-CSE-ConnectionGUID: ouSwOgoxRtml5VKPffnURg==
-X-CSE-MsgGUID: 06FqYvbYTImAMHK+suunGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="151995889"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by fmviesa006.fm.intel.com with SMTP; 24 Jun 2025 02:20:20 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 24 Jun 2025 12:20:19 +0300
-Date: Tue, 24 Jun 2025 12:20:18 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>, linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 7/8] usb: typec: ucsi: yoga-c630: handle USB / HPD
- messages to set port orientation
-Message-ID: <aFpt0j21dOWAnNvR@kuha.fi.intel.com>
-References: <20250621-c630-ucsi-v1-0-a86de5e11361@oss.qualcomm.com>
- <20250621-c630-ucsi-v1-7-a86de5e11361@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Hg1DZeuq"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750756857; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=dLsT6vIUOkiWqe9khgfw1CalTOzKAVaMh9ZCazfucIY=;
+	b=Hg1DZeuqYUekbjQ1e4M6PTJnbIsh4kzQIP/+oPF4FsmdnvnOw8e0adwcFQpVn6bYPp8PV9hZcAwrhh1kNOTwQf4dtRmt1QTU2u/MTSIoNpnvHKxwOSL71Enu0FrbrnteXCSW7lA/GLfzS62NgyIxGE6hqo4bv0dbK7FXvlmfwlQ=
+Received: from 30.74.144.102(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wegbozo_1750756855 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 24 Jun 2025 17:20:56 +0800
+Message-ID: <40e13005-0ed1-4d76-8961-fc6fced06681@linux.alibaba.com>
+Date: Tue, 24 Jun 2025 17:20:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250621-c630-ucsi-v1-7-a86de5e11361@oss.qualcomm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] mm: huge_memory: disallow hugepages if the
+ system-wide THP sysfs settings are disabled
+To: David Hildenbrand <david@redhat.com>, akpm@linux-foundation.org,
+ hughd@google.com
+Cc: ziy@nvidia.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
+ npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com,
+ baohua@kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1750666536.git.baolin.wang@linux.alibaba.com>
+ <adb8d5032ecc7b6935e3197cafffe92cbc7581e6.1750666536.git.baolin.wang@linux.alibaba.com>
+ <a9f77007-78c1-4980-bd31-af5dff741f27@redhat.com>
+ <ae78feb2-d044-41ba-bc4f-e3085428bc10@linux.alibaba.com>
+ <44c805d7-000a-440e-995b-106f324eff15@redhat.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <44c805d7-000a-440e-995b-106f324eff15@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Sat, Jun 21, 2025 at 09:13:02PM +0300, Dmitry Baryshkov wrote:
-> Parse USB / HPD messages from EC in order to set the orientation of the
-> corresponding Type-C port, letting connected USB 3 devices to enjoy
-> SuperSpeed connection rather than beign limited to HighSpeed only (if
-> the orientation didn't match).
+
+
+On 2025/6/24 16:29, David Hildenbrand wrote:
+> On 24.06.25 03:48, Baolin Wang wrote:
+>>
+>>
+>> On 2025/6/23 21:54, David Hildenbrand wrote:
+>>>
+>>>> diff --git a/tools/testing/selftests/mm/khugepaged.c b/tools/testing/
+>>>> selftests/mm/khugepaged.c
+>>>> index 4341ce6b3b38..85bfff53dba6 100644
+>>>> --- a/tools/testing/selftests/mm/khugepaged.c
+>>>> +++ b/tools/testing/selftests/mm/khugepaged.c
+>>>> @@ -501,11 +501,7 @@ static void __madvise_collapse(const char *msg,
+>>>> char *p, int nr_hpages,
+>>>>        printf("%s...", msg);
+>>>> -    /*
+>>>> -     * Prevent khugepaged interference and tests that MADV_COLLAPSE
+>>>> -     * ignores /sys/kernel/mm/transparent_hugepage/enabled
+>>>> -     */
+>>>> -    settings.thp_enabled = THP_NEVER;
+>>>> +    settings.thp_enabled = THP_ALWAYS;
+>>>
+>>>
+>>> Would MADVISE mode also work here? If we don't set MADV_HUGEPAGE, then
+>>> khugepaged should be excluded, correct?
+>>
+>> I tried this, but some test cases failed. As I replied to Barry, it's
+>> because some tests previously set MADV_NOHUGEPAGE, and now there is no
+>> way to clear the MADV_NOHUGEPAGE flag except by setting MADV_HUGEPAGE.
 > 
-> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> Okay, can you add that detail to the patch description. 
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Sure. Will do.
 
-> ---
->  drivers/usb/typec/ucsi/ucsi_yoga_c630.c | 42 +++++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
-> 
-> diff --git a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
-> index 76afd128d42a2573ff55433f815c2773462a6426..f85170417d19cdc5ae39a15e2f97010259ef12f6 100644
-> --- a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
-> +++ b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
-> @@ -7,15 +7,25 @@
->   */
->  #include <linux/auxiliary_bus.h>
->  #include <linux/bitops.h>
-> +#include <linux/bitfield.h>
->  #include <linux/completion.h>
->  #include <linux/container_of.h>
->  #include <linux/module.h>
->  #include <linux/notifier.h>
->  #include <linux/string.h>
->  #include <linux/platform_data/lenovo-yoga-c630.h>
-> +#include <linux/usb/typec_dp.h>
->  
->  #include "ucsi.h"
->  
-> +#define LENOVO_EC_USB_MUX	0x08
-> +
-> +#define USB_MUX_MUXC	GENMASK(1, 0)
-> +#define USB_MUX_CCST	GENMASK(3, 2)
-> +#define USB_MUX_DPPN	GENMASK(7, 4)
-> +#define USB_MUX_HPDS	BIT(8)
-> +#define USB_MUX_HSFL	GENMASK(11, 9)
-> +
->  struct yoga_c630_ucsi {
->  	struct yoga_c630_ec *ec;
->  	struct ucsi *ucsi;
-> @@ -144,6 +154,12 @@ static bool yoga_c630_ucsi_update_altmodes(struct ucsi *ucsi,
->  	return false;
->  }
->  
-> +static void yoga_c630_ucsi_update_connector(struct ucsi_connector *con)
-> +{
-> +	if (con->num == 1)
-> +		con->typec_cap.orientation_aware = true;
-> +}
-> +
->  static const struct ucsi_operations yoga_c630_ucsi_ops = {
->  	.read_version = yoga_c630_ucsi_read_version,
->  	.read_cci = yoga_c630_ucsi_read_cci,
-> @@ -152,8 +168,33 @@ static const struct ucsi_operations yoga_c630_ucsi_ops = {
->  	.sync_control = yoga_c630_ucsi_sync_control,
->  	.async_control = yoga_c630_ucsi_async_control,
->  	.update_altmodes = yoga_c630_ucsi_update_altmodes,
-> +	.update_connector = yoga_c630_ucsi_update_connector,
->  };
->  
-> +static void yoga_c630_ucsi_read_port0_status(struct yoga_c630_ucsi *uec)
-> +{
-> +	int val;
-> +	unsigned int muxc, ccst, dppn, hpds, hsfl;
-> +
-> +	val = yoga_c630_ec_read16(uec->ec, LENOVO_EC_USB_MUX);
-> +
-> +	muxc = FIELD_GET(USB_MUX_MUXC, val);
-> +	ccst = FIELD_GET(USB_MUX_CCST, val);
-> +	dppn = FIELD_GET(USB_MUX_DPPN, val);
-> +	hpds = FIELD_GET(USB_MUX_HPDS, val);
-> +	hsfl = FIELD_GET(USB_MUX_HSFL, val);
-> +
-> +	dev_dbg(uec->ucsi->dev, " mux %04x (muxc %d ccst %d dppn %d hpds %d hsfl %d)\n",
-> +		val,
-> +		muxc, ccst, dppn, hpds, hsfl);
-> +
-> +	if (uec->ucsi->connector && uec->ucsi->connector[0].port)
-> +		typec_set_orientation(uec->ucsi->connector[0].port,
-> +				      ccst == 1 ?
-> +				      TYPEC_ORIENTATION_REVERSE :
-> +				      TYPEC_ORIENTATION_NORMAL);
-> +}
-> +
->  static int yoga_c630_ucsi_notify(struct notifier_block *nb,
->  				 unsigned long action, void *data)
->  {
-> @@ -164,6 +205,7 @@ static int yoga_c630_ucsi_notify(struct notifier_block *nb,
->  	switch (action) {
->  	case LENOVO_EC_EVENT_USB:
->  	case LENOVO_EC_EVENT_HPD:
-> +		yoga_c630_ucsi_read_port0_status(uec);
->  		ucsi_connector_change(uec->ucsi, 1);
->  		return NOTIFY_OK;
->  
-> 
-> -- 
-> 2.39.5
-
--- 
-heikki
+> I suspect we 
+> really want a way to undo what MADV_NOHUGEPAGE/MADV_NOHUGEPAGE did (if 
+> only naming wouldn't be complicated: MADV_DEFAULT_HUGEPAGE, hmmmm).
