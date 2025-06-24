@@ -1,169 +1,130 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09B572D12E7;
-	Tue, 24 Jun 2025 13:56:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870A52D2388
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:58:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750773420; cv=none; b=mo7sr8w4MHWKjh42Qw+Wo6H+n/r8dlTaRAK9ZoVjwVrgt9oDXMwno9U1JHlxbP9vcWCPGq0ANK6grBkl4NjkfWRjxcu5hfVRjLApwIGw8tn+XwoECu5HnasQ7vOIIpAjU6dVV4UAD0THJPLLFe60v5cHR7CZcQAVQvKkXMgYDng=
+	t=1750773491; cv=none; b=dJQTg8hAX3C0CC6Hsr4iPt5V+pOY+Pg7TodZbj5WOiGLrk3kf6VI+1AAm0b/b/CDR4GGOGBWrZVTW7/0veaPBTSePA/kBBcYcdBTLn6jR9wZWloqd4bBx3WtZVSa+J3dJx5Ua+Z6N+vSyoI4U38UME0ga15P1FfJix6q5gFl7IA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750773420; c=relaxed/simple;
-	bh=BpzCqYrZgktHyHFsZFW3UfcXDFM+0KqnOLAMuBNHnj0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fr1X/QkCkW97MDJwspwfBc0Lr2IsDLCf0TLAwyGw36C67KSwe9aBLWQcWdNvNqBiBVzdR3MRWxOJTBx7JR8Jv1zTVv4n0xD6dAKixKFa1sVwpgSCmV7hHInn0J7MV2UzcxC8zU9jBz+ROSnmW8F3J5p4g1hKYu4debuyCc9TmPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ehjJHvjZ; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750773491; c=relaxed/simple;
+	bh=SRjdE7mQm9t+sBYLoVgmd8fzr5KQH8TyP1VOA9ZnGvk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=r+66hTFm+hh/7Jpm6i2vFAG+5GQRQW8GI0VJ77SlBxgJhqrH4iAHwnTXWa3mIL8AC5Ji1NZsG4c9gkm1A641R6gdN3pRshBma5WYJy3SP0QYNHiLonv2kIesqgItLnebsRJOgp+pxXSp1ULgfNIcEluJDNTu4L3EiDPqQAOzL48=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zkLyr3M4; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ehjJHvjZ"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-553c31542b1so4473127e87.2;
-        Tue, 24 Jun 2025 06:56:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zkLyr3M4"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a6e8b1fa37so748117f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:58:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750773413; x=1751378213; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750773488; x=1751378288; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1yABC0w8DEfvFsnNOYqPanr5Sg2H2x2a5U7q3it7HMM=;
-        b=ehjJHvjZ14n/jCUzZJfjUQ7PtAlXWe/lOKEyET3PX3iOC8z8b6dtiQ8YeNXIAw+VnL
-         nqjhnwTKIEd62R4EX0uZZ4jU/g3IGahZfjTyMMqB0FAoIYJOqHF0Iefyq5pbj75CMn6n
-         Ur5JSd6PhXM87RQWXMGewUWwEU+9/43tch61kAtUQBSY7ygX8+U092DEwTp+YIwrff9D
-         Gl0XZRVTqEgG2zRqUmJ3TDGyTpl88CNuXBXbDtCkQ7VcCrsRYOUuSE5OeOgrVHpqIqsZ
-         0WZjX+LnbDEAkDvstVV3v3UNcFpwNf9NGVnFqTrCIvoTM5H8l6N3JzFuewgiTSNiVvSj
-         HFAw==
+        bh=yfdwBnmwXKVxo4fI9YpCbPX/DuxoUKCmsus+7StatJk=;
+        b=zkLyr3M4dif6AUhJ/unJG1Dxli+hAi3LwxS/pQ9gwc6jo0Wqb/L20TS/fWcUZSVojO
+         M7/XpPdfqDyVVMPCGhr4P2rlLo/hsqxy5lz6HmUicJ1YLQGp+3QS+GF9t3fbGpGRS4gh
+         xmxgVA886av4phe83Nvv/aYWyqbWWTsnHSA1nq/NgztXD+tsJkMdmv5BlbVQ48yQRPD7
+         fCHyYilmjNvLVRFsBXuzn9eVWGFFF0FsgIqwOQyIjYv4UT4SNChp03BXOtnTEvvbQAzp
+         +xIRVF7vmvqwL0tkfJtl0NbKlr5Y2EOgn+Z9yse5DkctMGQBDpy6ErxdZ+VEeEd1TpuI
+         EjaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750773413; x=1751378213;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750773488; x=1751378288;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1yABC0w8DEfvFsnNOYqPanr5Sg2H2x2a5U7q3it7HMM=;
-        b=pWbD7S15J9b4CvKgnQK3kl8UTJlh63gDZG0zDUUPp+bh7KCSJfB6FV/6HR5xvlpCq9
-         EPA5ZwJXY2Y/Yci8VlDlFOYet/marivOA43A6TRsE7sKcUCcoKi+Q2bT27embE2WaAbX
-         R884Ogdwc0joVK0oqxeoo2PigDs8oXOz2sptLawctXBCuqkcLCJRRupJ8UxPB5pVC/WW
-         bpYGx+s8m4jgNhGmQ3U1PnegHscYigw85N09xXwOM7dtjtYx4EuyAqjWRZYQkldMjYKN
-         pQNoyw64qwXmNCl95qeZLHVPU1Hg4SDFTJlr/w97H2d7Lh5nM42DOW6xDmC7LsFIJ9Cb
-         KoCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUss42Fndd7cZpSdN8vkH/Qc12nJtHOEQ203pnuJ4bY0zP0iTTk0BYfB75ReS0lnbcWQHDUUNpBHpyk/z7Q@vger.kernel.org, AJvYcCXZZlQfwP180RasaYFDissMTb0uFQy/I63lvIufZt/0f19U00oYixBrEsRTvFCTwY78nSjAFYZ8lXg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzfY/zYWKyGo0Rpb0L0m7Kz1OmaGqpZsYvhLGk2KAriHQV/R38K
-	SQoaVLxTvBBxaONYX+QWmAqrUcl4jpoHYblgCZj7SAD8PcqtXlc4t+7rIb1MInZ5ucoJSCKKnNt
-	wcPQJMjRDY0Y+R5riK/LLTykanea3I90=
-X-Gm-Gg: ASbGnctN8u57KFoL/vLZooevYTikRW9Yo4pD9ccUkFTvP6hO0uX2LMhbzNZDP2zHSP4
-	YK8FEUi2IGyqpYuJ65oprzn/McNtSiRVxqT036iVPA3cdairSZxD/Pf4Fj8PuJYmCV8xrP71PlB
-	y+FTu6+Gkw2wxWSuoZ0G1/+cwEoqDmqi55lvRADycLbEdabe5INRGmRQqMpSUbYajpKHt4szb4d
-	A/Hsg==
-X-Google-Smtp-Source: AGHT+IHXYi6I/UqWOT18oDq+1JOOpyKXM7cogsUpmD7YM+DSdmtZsArE5Lb3v+YDn6Av7/arwxcsKeYaVo5vgs03PuI=
-X-Received: by 2002:a05:6512:b8e:b0:553:37a7:b217 with SMTP id
- 2adb3069b0e04-553e3bf3e5dmr5544673e87.35.1750773412740; Tue, 24 Jun 2025
- 06:56:52 -0700 (PDT)
+        bh=yfdwBnmwXKVxo4fI9YpCbPX/DuxoUKCmsus+7StatJk=;
+        b=YR0NaktnGanaHFpEgtsimAEQWlhUNnzowWSjMr/Hhb+jSnt1g5eASzf7SRMpH6QBlS
+         VUh7eKHaxbl2o4Y1atldIDcB5eZBB97HoHyH0aZdOctUfSdKJINHxGJNTAbU575IAYLB
+         ZP+i1/xk2b0HZIH3xctoYyGvopLV6fQc56S//obgmGkusaZ2pCPBMpMpreFNJTtDnBpP
+         H01bgliBANWhfKBNgHzUicBDpIruMUb/FEY3cqvZh2pfzDqC7qn5gsBSaZ7/EesCTKyV
+         WKzymrCXvA1m9mnCKUkDpuIR68SGEV39DzKZX9xJBxOda38kpR6bAeJqzODLzzL1ei+f
+         DBHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXkMlFKFqHbNW6g1p1zd5wr283OngfKRN2f7hF1QR5iIS0FdeZ3viawwKo2Z+n2kVzwIYp58JwDl6acsYg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxls/ptK3YKT/z0PEGbJf6uxd0mT0v40iM5IQEpD3ahPsT721Vg
+	/2jFs78NsKY2UwcuSGPIuLpowXggr894kxiBgUbtCZXezTSFQBBq5OoB8Ct0nFu9Ma0=
+X-Gm-Gg: ASbGncsUUgJXsstyAM1Gg0sVirDa6GrAY5dCoivZGk7etGcXmTUvfPVgoMPkNQfHUaa
+	jodOLCFw3jGeKaZsfAti3IA9oBVMUbTtkTMot97Ie+r5SdK0RM1ZW78/rK44w+HTNL8BdGK4G7q
+	/mIdW8d+yz2dvtlLgg/XjbzWRBtkKpCkHZrI31M6ghfJwQisQAOeSvNys720SN+Cu609aE2UZQl
+	I0cYlvvbAOFBtB0751ZoDLgXJ8BppM2kwtnM3fNqWxX/Ga1qyN/vKSwopYjz4JoCxKGZxFCU+C2
+	LsVLHkNEor/8GXjyWl8mF+amvPvQZrKzoio5UgBuULEYcNnZVR/KTTIfkTts7g==
+X-Google-Smtp-Source: AGHT+IE2FNywqz+cFb7euMKYbolnteHJlkDlULxTNl06mbXFoTDBF9qk9BsatavRg5P2dnisXCo5bg==
+X-Received: by 2002:a05:6000:4109:b0:3a4:f892:de7f with SMTP id ffacd0b85a97d-3a6d13071e8mr12590091f8f.36.1750773487721;
+        Tue, 24 Jun 2025 06:58:07 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:34d2:109c:3293:19e9])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e811724bsm1966761f8f.100.2025.06.24.06.58.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 06:58:07 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Drew Fustini <drew@pdp7.com>,
+	Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Frank Binns <frank.binns@imgtec.com>,
+	Matt Coster <matt.coster@imgtec.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: (subset) [PATCH v6 0/8] Add TH1520 GPU support with power sequencing
+Date: Tue, 24 Jun 2025 15:58:03 +0200
+Message-ID: <175077347940.80530.12388970181360361507.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
+References: <CGME20250623114429eucas1p1e74e09e74c5873b2f7f01228073be72a@eucas1p1.samsung.com> <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623091929.366357-1-pranav.tyagi03@gmail.com> <2025062343-brilliant-laziness-e2cf@gregkh>
-In-Reply-To: <2025062343-brilliant-laziness-e2cf@gregkh>
-From: Pranav Tyagi <pranav.tyagi03@gmail.com>
-Date: Tue, 24 Jun 2025 19:26:40 +0530
-X-Gm-Features: Ac12FXxXAIMa7msu1Ixldzq9g6VHMyrCm53AQgkcjWXSWvwjIHhI1C4QApdm17g
-Message-ID: <CAH4c4jJtKP_MsqGBgt1kRim_nmWOS=Zd49iNYiHNM2-yDgMv1g@mail.gmail.com>
-Subject: Re: [PATCH] cxl/port: automate cleanup with __free()
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com, 
-	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com, 
-	dan.j.williams@intel.com, ming.li@zohomail.com, rrichter@amd.com, 
-	jeff.johnson@oss.qualcomm.com, peterz@infradead.org, 
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	skhan@linuxfoundation.org, linux-kernel-mentees@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 23, 2025 at 2:57=E2=80=AFPM Greg KH <gregkh@linuxfoundation.org=
-> wrote:
->
-> On Mon, Jun 23, 2025 at 02:49:29PM +0530, Pranav Tyagi wrote:
-> > Use the scope based resource management (defined in linux/cleanup.h) to
-> > automate the lifetime control of struct cxl_endpoint_decoder. This
-> > eliminates the explicit kfree() call and makes the code more robust and
-> > maintainable in presence of early returns.
-> >
-> > Signed-off-by: Pranav Tyagi <pranav.tyagi03@gmail.com>
-> > ---
-> >  drivers/cxl/core/port.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-> > index eb46c6764d20..c35946882b20 100644
-> > --- a/drivers/cxl/core/port.c
-> > +++ b/drivers/cxl/core/port.c
-> > @@ -10,6 +10,7 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/idr.h>
-> >  #include <linux/node.h>
-> > +#include <linux/cleanup.h>
-> >  #include <cxl/einj.h>
-> >  #include <cxlmem.h>
-> >  #include <cxlpci.h>
-> > @@ -1888,14 +1889,14 @@ EXPORT_SYMBOL_NS_GPL(cxl_switch_decoder_alloc, =
-"CXL");
-> >   */
-> >  struct cxl_endpoint_decoder *cxl_endpoint_decoder_alloc(struct cxl_por=
-t *port)
-> >  {
-> > -     struct cxl_endpoint_decoder *cxled;
-> >       struct cxl_decoder *cxld;
-> >       int rc;
-> >
-> >       if (!is_cxl_endpoint(port))
-> >               return ERR_PTR(-EINVAL);
-> >
-> > -     cxled =3D kzalloc(sizeof(*cxled), GFP_KERNEL);
-> > +     struct cxl_endpoint_decoder *cxled __free(kfree) =3D
-> > +             kzalloc(sizeof(*cxled), GFP_KERNEL);
-> >       if (!cxled)
-> >               return ERR_PTR(-ENOMEM);
-> >
-> > @@ -1904,7 +1905,6 @@ struct cxl_endpoint_decoder *cxl_endpoint_decoder=
-_alloc(struct cxl_port *port)
-> >       cxld =3D &cxled->cxld;
-> >       rc =3D cxl_decoder_init(port, cxld);
-> >       if (rc)  {
-> > -             kfree(cxled);
-> >               return ERR_PTR(rc);
-> >       }
-> >
-> > --
-> > 2.49.0
->
-> Note, I can't speak for the maintainers of this subsystem, but
-> generally, making changes like this for no real good reason, for code
-> that has been around for years, is really not needed at all.
->
-> If you fix a bug with it, sure, but changes for the sake of "let's use
-> this new feature" in here really might not be necessary.
->
-> Why not add cleanup.h support to code paths that actually fix existing
-> bugs instead?
->
-> Also, you have added some coding style errors to the code now with this
-> patch, which also is generally not considered a good idea :)
->
-> thanks,
->
-> greg k-h
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Hi Greg,
 
-Thanks for the feedback.
+On Mon, 23 Jun 2025 13:42:38 +0200, Michal Wilczynski wrote:
+> This patch series introduces support for the Imagination IMG BXM-4-64
+> GPU found on the T-HEAD TH1520 SoC. A key aspect of this support is
+> managing the GPU's complex power-up and power-down sequence, which
+> involves multiple clocks and resets.
+> 
+> The TH1520 GPU requires a specific sequence to be followed for its
+> clocks and resets to ensure correct operation. Initial discussions and
+> an earlier version of this series explored managing this via the generic
+> power domain (genpd) framework. However, following further discussions
+> with kernel maintainers [1], the approach has been reworked to utilize
+> the dedicated power sequencing (pwrseq) framework.
+> 
+> [...]
 
-This patch was intended as a cleanup to improve consistency and
-readability, particularly around handling early returns using
-cleanup.h. I followed up on similar prior patches that introduced
-automatic cleanup in this subsystem and aimed to extend that style
-more consistently.
+Applied, thanks!
 
-That said, I understand your concern about changing long-standing
-code without a strong functional reason. I=E2=80=99ll be more careful going
-forward and focus such changes around actual bug fixes.
+[1/8] power: sequencing: Add T-HEAD TH1520 GPU power sequencer driver
+      https://git.kernel.org/brgl/linux/c/d4c2d9b5b7ceed14a3a835fd969bb0699b9608d3
 
-Regards
-Pranav Tyagi
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
