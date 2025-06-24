@@ -1,297 +1,242 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8974256D;
-	Tue, 24 Jun 2025 02:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8901B3398A
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:43:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750732992; cv=none; b=WBtEGKdxTC39MbW0Daib9OjLzhLBiQN4/iXjbSB5viL90sDnYR6uqedgvBNbQbPKE+40xMVt7o4TOxpAtFqqw9eQa0gFMugXiT1s4C+sHZOD7qAmyPsYt+XV02D755wNCm1i6A2g5WMKlyIeukhVlZmSYNCVghLMe8nztKY7Q9o=
+	t=1750733027; cv=none; b=rP6rAt/6rzcWUW6vtusyzQx3KnM8EahsUEQMKHfABxwOctkkjN9i4knW5nto6QYrj1AAFw0q5LGPtn/BksZomAceHUAm+Sdgu8I0enxX+w3PvKXY9ZIQq6ij4DunHJLt9EGXaMET8CkCuYf0SGVfsaI8RrSbBrvNDq2NiHQQD2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750732992; c=relaxed/simple;
-	bh=9vbcNw9Mbs/3u6hDwSuzlhG9OvZfIjeiZZ4bG4w70gM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MxzxYe5RgQypzdaraQ1siS9bw+sqhQBeKTluYsFTyyH+mZEQzJ9MnMskXje33SSNZ4A5gJiNkFJj1whMF+mWD/XVQGkNFqpTugFkrkylpklVInEwC566H8aOFkJmtnQFShwdQxODkDJukQOnePITFwfZhzcQYo3uEVtgiHWml1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GAyPkHHC; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750733027; c=relaxed/simple;
+	bh=FHL+gsjsPdHuYxFfYAjijvJ6tRyazCSteFsgvpJW5HQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y7nI7WJvchBI7KlBaqcd3yGu+00TmaPsrQ0CwCNZDfa6TtiyH6ljTjMTb8gK7cYqKcJ/Rt4BZxmAcUJiIEGw81y9lH7pN10IppwnP6L0Je5M38CM5UOxSrdjhkf+oGvXlgvo+1hUsyUP/r04SC9ou8NNqleP73HquzQCp/VpgI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=N/Q3ScHk; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GAyPkHHC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750732991; x=1782268991;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9vbcNw9Mbs/3u6hDwSuzlhG9OvZfIjeiZZ4bG4w70gM=;
-  b=GAyPkHHCENqu8yC+c6yxIsCb6ASi9WjRLRTcqUtzmzAVlaoaYmT54/EL
-   H/Ckr2Ozarvwbe8ISonM73aCRl5/5vz930rrvDaRrWSIXQWIn8d0C7Jon
-   u/zv2EvL1BE88EQlQdFrQ2W/3+21KKt4wHMdrpSGIsDss3+J4gBMpkWRZ
-   6PahuvILgvNm1H8D6QPfTXsjiZI4DL87KRilCflvrafXjVCnfQA9MWog4
-   etqNJFZx1it73W+TD780kWOdVHI293fLSDLP/b1BrQRg3GjHoWciUCJKY
-   9SuG6vYshF9HQ5JKmaOlTVlh/vYDTnwrMIRW6rNXFI5OmAwyhCcDIDQRQ
-   w==;
-X-CSE-ConnectionGUID: AMDKteQoRBOfPjhxAaCduQ==
-X-CSE-MsgGUID: dQ5q7U1rTaS8Qi1P8q8BRQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="78374219"
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="78374219"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 19:43:10 -0700
-X-CSE-ConnectionGUID: YIvisesFRVWm4WWaUthwAg==
-X-CSE-MsgGUID: 2XPtW4+8QGG1L5+3k6vawA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="156350418"
-Received: from unknown (HELO [10.238.128.162]) ([10.238.128.162])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 19:43:06 -0700
-Message-ID: <a1ea7e74-a90a-4961-9f83-ad04e1d7a573@linux.intel.com>
-Date: Tue, 24 Jun 2025 10:43:03 +0800
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="N/Q3ScHk"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NElXl3026319
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:43:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=KN3XXvaKtZM+YmK/jTYgNUfD
+	5TIEnLm1ZgvjPuBqaac=; b=N/Q3ScHkA8ejc2FoLAPivBDZY5hNDMftlsjPB9ma
+	ER3bqn7xi9t3J+WV8Uffr5IbDMu1+Ck9EJaUhM042yfLQ1oax+kxERBazLauXmVB
+	LfnD6j0uzVsdz5bIlIXPMYlQqSrg73ghFFC4JUnc3bCwQ9ZuUOHiRVIUtbv2FPsw
+	xQBrzJoflyPy3++ZmHt4kdJjkMrR/1pztntBV2USCCK5o3QJiKNmSdsZgg6/kJXm
+	h0dzB7E40GgXoIJeRg1U8IxK8BkBJLhCMA7mGG7fOMMJ6tZhWBK42GXs//wTVNQS
+	ojDKZL6If3CVdbXr1cxG9Tf4IZBPwGiGxOGFHKSpArMWug==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f8ymsjgr-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:43:44 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c760637fe5so712126785a.0
+        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 19:43:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750733023; x=1751337823;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KN3XXvaKtZM+YmK/jTYgNUfD5TIEnLm1ZgvjPuBqaac=;
+        b=Ro/dOsyZGKJ4h5+ERXtdxbsg6kFIgkUu0AYWw8frVkJGaX82TSF0kSc9oLEsIfvBp+
+         60+P3F6+On5Baj7EtmJYf+ixMhueXJurTitw3QH99ReF9O8nQuMUHIcj8VWXo3KLhXM1
+         vq/It2BT4isCOfzEjn1B6GNGiYbOXHuo/AfFSbXQLbQlpPKQ2orbGOKMcj7RTNf50Oce
+         ucuWrJRsnRt3xf8ITs4eY/XQ/bv3XVDe0MXDmaosM9oHuPbF0wHvsupYhNJe/yfHfIBb
+         DHZNmE5aBCtiH84OFnsbO6R2A1P5ULd6Lj+NX2wmah64sGwAkvx06wr2KXLjzkfPf3lR
+         bM+A==
+X-Forwarded-Encrypted: i=1; AJvYcCUNoUK6czZiK8YhGgECAEVgzuEXHQC/UxtpTRx01XjsbLiksbnCy/A2v0J9bipQH0RTxhKzLppAbojycN0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy7sMNbeMJifJ0gLaxFo33NYxVxyjd8cJ9ilQIUWY21H+oWF9mD
+	UBUbR7Sf9DKcGkxHrf0+Dz67xueMzoDkPoTTIY28Tsn1Tpj77u2kwruT9wtESlq46eHgJSu1AIE
+	siJelZT7MBBraaFk4Mf6wix7m500sah/4CHg5HomGA06Gre+dEI9MBASbJxhbzRM8DsI=
+X-Gm-Gg: ASbGncsZomv1mOythOyZjdZsWhHbR/pLjlYOFuY7/Me2Ovw1RbIPUWTYWjAC7SNTfPu
+	AHuBsjyIthPq/Q75kZMNp6MVGkFTW7ULjNXE421SM2RJoyQSnDvCRlJRtzg8nTq7zF+U8dBXTSM
+	usBFCZTc4iO0Bk3Rhp9oOei3TSbhozFxvhG2yg/BN0ZLIFbu/4VzmMDGNVvuEZ2Oq4yycGh/P+p
+	bI8UKPhJ3Ojc7Ov7zmR2KZv+jyvqgfNYXu27ORaMpAw/fPF7MjlclU1aWOG2LQIwXwE29mbCtaw
+	CwTGSalnG1SrXvAwRcOdj81QjkwqgLUQp8hUxVH2w1YNTJbTUHaG21zIczDuXY0g29QYGZwVdKp
+	3N1u2CjCJU8Y+dN1AwXIBTM7HG10mrjvzr38=
+X-Received: by 2002:a05:620a:17a2:b0:7c5:4adb:782a with SMTP id af79cd13be357-7d3f98c7db9mr2276709385a.9.1750733023193;
+        Mon, 23 Jun 2025 19:43:43 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGit7DNQ9/dBe0d3sh4hHnQ03gUGXShhl+f6zGzYJBNK03gLkKyzMUdUA7ErzCdFn1GhoLtsA==
+X-Received: by 2002:a05:620a:17a2:b0:7c5:4adb:782a with SMTP id af79cd13be357-7d3f98c7db9mr2276707285a.9.1750733022781;
+        Mon, 23 Jun 2025 19:43:42 -0700 (PDT)
+Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b97f5916dsm15255841fa.2.2025.06.23.19.43.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 19:43:40 -0700 (PDT)
+Date: Tue, 24 Jun 2025 05:43:39 +0300
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+Cc: Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>, linux-arm-msm@vger.kernel.org,
+        linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        quic_pkumpatl@quicinc.com, kernel@oss.qualcomm.com
+Subject: Re: [PATCH v1 2/2] ASoC: codecs: wsa883x: Handle shared reset GPIO
+ for WSA883x speakers
+Message-ID: <v7oxwbf6xjc2gxeviwe4tayovzasysqig5smk752an74qd2e46@q25ymfyru3ze>
+References: <20250620103012.360794-1-mohammad.rafi.shaik@oss.qualcomm.com>
+ <20250620103012.360794-3-mohammad.rafi.shaik@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] x86/traps: Initialize DR7 by writing its
- architectural reset value
-To: "H. Peter Anvin" <hpa@zytor.com>, "Xin Li (Intel)" <xin@zytor.com>,
- linux-kernel@vger.kernel.org, kvm@vger.kernel.org, stable@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, seanjc@google.com,
- pbonzini@redhat.com, peterz@infradead.org, sohil.mehta@intel.com,
- brgerst@gmail.com, tony.luck@intel.com, fenghuay@nvidia.com
-References: <20250620231504.2676902-1-xin@zytor.com>
- <20250620231504.2676902-3-xin@zytor.com>
- <c526eb25-571e-427a-93e9-3afdaa6ca413@linux.intel.com>
- <EBD6D476-3014-475A-9467-77CA51755D41@zytor.com>
-From: Ethan Zhao <haifeng.zhao@linux.intel.com>
-Autocrypt: addr=haifeng.zhao@linux.intel.com; keydata=
- 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
- 8TCx1OJHpvWFmL4Deq8=
-In-Reply-To: <EBD6D476-3014-475A-9467-77CA51755D41@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250620103012.360794-3-mohammad.rafi.shaik@oss.qualcomm.com>
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDAyMSBTYWx0ZWRfXwD+HsRSIMzs2
+ +FokcsLOyfVAxDY4En5QXVcgBnGwHIWnbHYQbWacgk1/Jv4z/HBVT3xs6+60XhcJju3obuOD6KZ
+ HT9oEZp6xrgqW3MxGOqzZOKHmclzEZ71du+S6eTJ4hNalmBfI7mX2O79fFOBV3Cqn2EMCDKUv6x
+ Ph3X+Z9r4NeJAeUH13RqAZ2RuFlwHaCpXxh9djnLqAz7pl2z5q+p82fns+p18P0GKal0/WZ3ETu
+ cK60K8DoWiugmgahIHIYm6lD+EIkGonGGD/sdboDV75DzTYvOoCz0UMA7YTpMqAJEHjTXdJWEU+
+ YzUGWNArX6coQwvhcrhmY9Ba30QUgZLKtYGth+IQ0DQ9HAYSDBkis6VGNq9VF1603su5ufHtC6r
+ 8Yzbguo74QFXjFz/QqkhUtJQG3CsW6GTEFfIuTlDI7Kvi/cnWzE/pDZiV+Qndl/bqGb0QeiH
+X-Proofpoint-ORIG-GUID: MWno2SYGZG0hF3t6ODnX2fjxJ_h4UdlN
+X-Proofpoint-GUID: MWno2SYGZG0hF3t6ODnX2fjxJ_h4UdlN
+X-Authority-Analysis: v=2.4 cv=GLYIEvNK c=1 sm=1 tr=0 ts=685a10e0 cx=c_pps
+ a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=5E2qFXZqrqlClrV78BEA:9 a=CjuIK1q_8ugA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_01,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ suspectscore=0 spamscore=0 impostorscore=0 clxscore=1015 malwarescore=0
+ bulkscore=0 mlxscore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506240021
 
+On Fri, Jun 20, 2025 at 04:00:12PM +0530, Mohammad Rafi Shaik wrote:
+> On some Qualcomm platforms, such as QCS6490-RB3Gen2 and QCM6490-IDP,
+> multiple WSA8830/WSA8835 speakers share a common reset (shutdown) GPIO.
+> To handle such cases, use the reset controller framework along with the
+> "reset-gpio" driver.
+> 
+> Signed-off-by: Mohammad Rafi Shaik <mohammad.rafi.shaik@oss.qualcomm.com>
+> ---
+>  sound/soc/codecs/wsa883x.c | 57 ++++++++++++++++++++++++++++++++------
+>  1 file changed, 48 insertions(+), 9 deletions(-)
+> 
+> diff --git a/sound/soc/codecs/wsa883x.c b/sound/soc/codecs/wsa883x.c
+> index 13c9d4a6f015..b82b925c1f8d 100644
+> --- a/sound/soc/codecs/wsa883x.c
+> +++ b/sound/soc/codecs/wsa883x.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/printk.h>
+>  #include <linux/regmap.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/reset.h>
+>  #include <linux/slab.h>
+>  #include <linux/soundwire/sdw.h>
+>  #include <linux/soundwire/sdw_registers.h>
+> @@ -468,6 +469,7 @@ struct wsa883x_priv {
+>  	struct sdw_stream_runtime *sruntime;
+>  	struct sdw_port_config port_config[WSA883X_MAX_SWR_PORTS];
+>  	struct gpio_desc *sd_n;
+> +	struct reset_control *sd_reset;
+>  	bool port_prepared[WSA883X_MAX_SWR_PORTS];
+>  	bool port_enable[WSA883X_MAX_SWR_PORTS];
+>  	int active_ports;
+> @@ -1547,6 +1549,44 @@ static const struct hwmon_chip_info wsa883x_hwmon_chip_info = {
+>  	.info	= wsa883x_hwmon_info,
+>  };
+>  
+> +static void wsa883x_reset_powerdown(void *data)
+> +{
+> +	struct wsa883x_priv *wsa883x = data;
+> +
+> +	if (wsa883x->sd_reset)
+> +		reset_control_assert(wsa883x->sd_reset);
+> +	else
+> +		gpiod_direction_output(wsa883x->sd_n, 1);
+> +}
+> +
+> +static void wsa883x_reset_deassert(struct wsa883x_priv *wsa883x)
 
-在 2025/6/24 9:53, H. Peter Anvin 写道:
-> On June 23, 2025 6:41:07 PM PDT, Ethan Zhao <haifeng.zhao@linux.intel.com> wrote:
->> 在 2025/6/21 7:15, Xin Li (Intel) 写道:
->>> Initialize DR7 by writing its architectural reset value to always set
->>> bit 10, which is reserved to '1', when "clearing" DR7 so as not to
->>> trigger unanticipated behavior if said bit is ever unreserved, e.g. as
->>> a feature enabling flag with inverted polarity.
->>>
->>> Tested-by: Sohil Mehta <sohil.mehta@intel.com>
->>> Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
->>> Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
->>> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
->>> Acked-by: Sean Christopherson <seanjc@google.com>
->>> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
->>> Cc: stable@vger.kernel.org
->>> ---
->>>
->>> Change in v4:
->>> *) Cc stable for backporting, just in case bit 10 of DR7 has become
->>>      unreserved on new hardware, even though clearing it doesn't
->>>      currently cause any real issues (Dave Hansen).
->>>
->>> Changes in v3:
->>> *) Reword the changelog using Sean's description.
->>> *) Explain the definition of DR7_FIXED_1 (Sohil).
->>> *) Collect TB, RB, AB (PeterZ, Sohil and Sean).
->>>
->>> Changes in v2:
->>> *) Use debug register index 7 rather than DR_CONTROL (PeterZ and Sean).
->>> *) Use DR7_FIXED_1 as the architectural reset value of DR7 (Sean).
->>> ---
->>>    arch/x86/include/asm/debugreg.h | 19 +++++++++++++++----
->>>    arch/x86/include/asm/kvm_host.h |  2 +-
->>>    arch/x86/kernel/cpu/common.c    |  2 +-
->>>    arch/x86/kernel/kgdb.c          |  2 +-
->>>    arch/x86/kernel/process_32.c    |  2 +-
->>>    arch/x86/kernel/process_64.c    |  2 +-
->>>    arch/x86/kvm/x86.c              |  4 ++--
->>>    7 files changed, 22 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
->>> index 363110e6b2e3..a2c1f2d24b64 100644
->>> --- a/arch/x86/include/asm/debugreg.h
->>> +++ b/arch/x86/include/asm/debugreg.h
->>> @@ -9,6 +9,14 @@
->>>    #include <asm/cpufeature.h>
->>>    #include <asm/msr.h>
->>>    +/*
->>> + * Define bits that are always set to 1 in DR7, only bit 10 is
->>> + * architecturally reserved to '1'.
->>> + *
->>> + * This is also the init/reset value for DR7.
->>> + */
->>> +#define DR7_FIXED_1	0x00000400
->>> +
->>>    DECLARE_PER_CPU(unsigned long, cpu_dr7);
->>>      #ifndef CONFIG_PARAVIRT_XXL
->>> @@ -100,8 +108,8 @@ static __always_inline void native_set_debugreg(int regno, unsigned long value)
->>>      static inline void hw_breakpoint_disable(void)
->>>    {
->>> -	/* Zero the control register for HW Breakpoint */
->>> -	set_debugreg(0UL, 7);
->>> +	/* Reset the control register for HW Breakpoint */
->>> +	set_debugreg(DR7_FIXED_1, 7);
->> Given you have it be adhere to SDM about the DR7 reversed bits setting,
->>
->> then no reason to leave patch[1/2] to set_debugreg(0, 7) alone.
->>
->> did I miss something here ?
->>
->>
->> Thanks,
->>
->> Ethan
->>
->>
->>>      	/* Zero-out the individual HW breakpoint address registers */
->>>    	set_debugreg(0UL, 0);
->>> @@ -125,9 +133,12 @@ static __always_inline unsigned long local_db_save(void)
->>>    		return 0;
->>>      	get_debugreg(dr7, 7);
->>> -	dr7 &= ~0x400; /* architecturally set bit */
->>> +
->>> +	/* Architecturally set bit */
->>> +	dr7 &= ~DR7_FIXED_1;
->>>    	if (dr7)
->>> -		set_debugreg(0, 7);
->>> +		set_debugreg(DR7_FIXED_1, 7);
->>> +
->>>    	/*
->>>    	 * Ensure the compiler doesn't lower the above statements into
->>>    	 * the critical section; disabling breakpoints late would not
->>> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
->>> index b4a391929cdb..639d9bcee842 100644
->>> --- a/arch/x86/include/asm/kvm_host.h
->>> +++ b/arch/x86/include/asm/kvm_host.h
->>> @@ -31,6 +31,7 @@
->>>      #include <asm/apic.h>
->>>    #include <asm/pvclock-abi.h>
->>> +#include <asm/debugreg.h>
->>>    #include <asm/desc.h>
->>>    #include <asm/mtrr.h>
->>>    #include <asm/msr-index.h>
->>> @@ -249,7 +250,6 @@ enum x86_intercept_stage;
->>>    #define DR7_BP_EN_MASK	0x000000ff
->>>    #define DR7_GE		(1 << 9)
->>>    #define DR7_GD		(1 << 13)
->>> -#define DR7_FIXED_1	0x00000400
->>>    #define DR7_VOLATILE	0xffff2bff
->>>      #define KVM_GUESTDBG_VALID_MASK \
->>> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
->>> index 0f6c280a94f0..27125e009847 100644
->>> --- a/arch/x86/kernel/cpu/common.c
->>> +++ b/arch/x86/kernel/cpu/common.c
->>> @@ -2246,7 +2246,7 @@ EXPORT_PER_CPU_SYMBOL(__stack_chk_guard);
->>>    static void initialize_debug_regs(void)
->>>    {
->>>    	/* Control register first -- to make sure everything is disabled. */
->>> -	set_debugreg(0, 7);
->>> +	set_debugreg(DR7_FIXED_1, 7);
->>>    	set_debugreg(DR6_RESERVED, 6);
->>>    	/* dr5 and dr4 don't exist */
->>>    	set_debugreg(0, 3);
->>> diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
->>> index 102641fd2172..8b1a9733d13e 100644
->>> --- a/arch/x86/kernel/kgdb.c
->>> +++ b/arch/x86/kernel/kgdb.c
->>> @@ -385,7 +385,7 @@ static void kgdb_disable_hw_debug(struct pt_regs *regs)
->>>    	struct perf_event *bp;
->>>      	/* Disable hardware debugging while we are in kgdb: */
->>> -	set_debugreg(0UL, 7);
->>> +	set_debugreg(DR7_FIXED_1, 7);
->>>    	for (i = 0; i < HBP_NUM; i++) {
->>>    		if (!breakinfo[i].enabled)
->>>    			continue;
->>> diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
->>> index a10e180cbf23..3ef15c2f152f 100644
->>> --- a/arch/x86/kernel/process_32.c
->>> +++ b/arch/x86/kernel/process_32.c
->>> @@ -93,7 +93,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode,
->>>      	/* Only print out debug registers if they are in their non-default state. */
->>>    	if ((d0 == 0) && (d1 == 0) && (d2 == 0) && (d3 == 0) &&
->>> -	    (d6 == DR6_RESERVED) && (d7 == 0x400))
->>> +	    (d6 == DR6_RESERVED) && (d7 == DR7_FIXED_1))
->>>    		return;
->>>      	printk("%sDR0: %08lx DR1: %08lx DR2: %08lx DR3: %08lx\n",
->>> diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
->>> index 8d6cf25127aa..b972bf72fb8b 100644
->>> --- a/arch/x86/kernel/process_64.c
->>> +++ b/arch/x86/kernel/process_64.c
->>> @@ -133,7 +133,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode,
->>>      	/* Only print out debug registers if they are in their non-default state. */
->>>    	if (!((d0 == 0) && (d1 == 0) && (d2 == 0) && (d3 == 0) &&
->>> -	    (d6 == DR6_RESERVED) && (d7 == 0x400))) {
->>> +	    (d6 == DR6_RESERVED) && (d7 == DR7_FIXED_1))) {
->>>    		printk("%sDR0: %016lx DR1: %016lx DR2: %016lx\n",
->>>    		       log_lvl, d0, d1, d2);
->>>    		printk("%sDR3: %016lx DR6: %016lx DR7: %016lx\n",
->>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->>> index b58a74c1722d..a9d992d5652f 100644
->>> --- a/arch/x86/kvm/x86.c
->>> +++ b/arch/x86/kvm/x86.c
->>> @@ -11035,7 +11035,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->>>      	if (unlikely(vcpu->arch.switch_db_regs &&
->>>    		     !(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))) {
->>> -		set_debugreg(0, 7);
->>> +		set_debugreg(DR7_FIXED_1, 7);
->>>    		set_debugreg(vcpu->arch.eff_db[0], 0);
->>>    		set_debugreg(vcpu->arch.eff_db[1], 1);
->>>    		set_debugreg(vcpu->arch.eff_db[2], 2);
->>> @@ -11044,7 +11044,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->>>    		if (unlikely(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT))
->>>    			kvm_x86_call(set_dr6)(vcpu, vcpu->arch.dr6);
->>>    	} else if (unlikely(hw_breakpoint_active())) {
->>> -		set_debugreg(0, 7);
->>> +		set_debugreg(DR7_FIXED_1, 7);
->>>    	}
->>>      	vcpu->arch.host_debugctl = get_debugctlmsr();
-> It's split up for the benefit of the stable maintainers.
+Please name these two functions in using antonyms (e.g. init/fini,
+powerup / powerdown, assert / deassert, etc).
 
-Undeniably split, as observed. :)
+> +{
+> +	if (wsa883x->sd_reset)
+> +		reset_control_deassert(wsa883x->sd_reset);
+> +	else
+> +		gpiod_direction_output(wsa883x->sd_n, 0);
+> +}
+> +
+> +static int wsa883x_get_reset(struct device *dev, struct wsa883x_priv *wsa883x)
+> +{
+> +	wsa883x->sd_reset = devm_reset_control_get_optional_shared(dev, NULL);
+> +	if (IS_ERR(wsa883x->sd_reset))
+> +		return dev_err_probe(dev, PTR_ERR(wsa883x->sd_reset),
+> +				     "Failed to get reset\n");
+> +	else if (wsa883x->sd_reset)
 
+No need for 'else' here.
 
-Thanks,
+> +		return 0;
+> +	/*
+> +	 * else: NULL, so use the backwards compatible way for powerdown-gpios,
+> +	 * which does not handle sharing GPIO properly.
+> +	 */
+> +	wsa883x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
+> +						GPIOD_FLAGS_BIT_NONEXCLUSIVE | GPIOD_OUT_HIGH);
+> +	if (IS_ERR(wsa883x->sd_n))
+> +		return dev_err_probe(dev, PTR_ERR(wsa883x->sd_n),
+> +				     "Shutdown Control GPIO not found\n");
+> +	return 0;
+> +}
+> +
+>  static int wsa883x_probe(struct sdw_slave *pdev,
+>  			 const struct sdw_device_id *id)
+>  {
+> @@ -1567,13 +1607,9 @@ static int wsa883x_probe(struct sdw_slave *pdev,
+>  	if (ret)
+>  		return dev_err_probe(dev, ret, "Failed to enable vdd regulator\n");
+>  
+> -	wsa883x->sd_n = devm_gpiod_get_optional(dev, "powerdown",
+> -						GPIOD_FLAGS_BIT_NONEXCLUSIVE | GPIOD_OUT_HIGH);
+> -	if (IS_ERR(wsa883x->sd_n)) {
+> -		ret = dev_err_probe(dev, PTR_ERR(wsa883x->sd_n),
+> -				    "Shutdown Control GPIO not found\n");
+> -		goto err;
+> -	}
+> +	ret = wsa883x_get_reset(dev, wsa883x);
+> +	if (ret)
+> +		return ret;
+>  
+>  	dev_set_drvdata(dev, wsa883x);
+>  	wsa883x->slave = pdev;
+> @@ -1596,11 +1632,14 @@ static int wsa883x_probe(struct sdw_slave *pdev,
+>  	pdev->prop.simple_clk_stop_capable = true;
+>  	pdev->prop.sink_dpn_prop = wsa_sink_dpn_prop;
+>  	pdev->prop.scp_int1_mask = SDW_SCP_INT1_BUS_CLASH | SDW_SCP_INT1_PARITY;
+> -	gpiod_direction_output(wsa883x->sd_n, 0);
+> +
+> +	wsa883x_reset_deassert(wsa883x);
+> +	ret = devm_add_action_or_reset(dev, wsa883x_reset_powerdown, wsa883x);
+> +	if (ret)
+> +		return ret;
+>  
+>  	wsa883x->regmap = devm_regmap_init_sdw(pdev, &wsa883x_regmap_config);
+>  	if (IS_ERR(wsa883x->regmap)) {
+> -		gpiod_direction_output(wsa883x->sd_n, 1);
+>  		ret = dev_err_probe(dev, PTR_ERR(wsa883x->regmap),
+>  				    "regmap_init failed\n");
+>  		goto err;
+> -- 
+> 2.34.1
+> 
 
-Ethan
-
->
 -- 
-"firm, enduring, strong, and long-lived"
-
+With best wishes
+Dmitry
