@@ -1,126 +1,139 @@
-Received: from mout.web.de (mout.web.de [212.227.17.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8813D230278;
-	Tue, 24 Jun 2025 18:28:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AE1223316
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 18:31:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750789706; cv=none; b=ewzOPj39dyOzfw5ThUn8hwJTE6QOK+WZ2te5vAA9SA4DhfUxVWw1zkqubkuIN66BuBrp8pjTDK65RdwwFmloLn1iQ92In0UueM+ARK4UNqL7VRAHaNNfNa5OBQ25ZHQpKRWR8J+/BRQ2jgbstwEUlaEvMd01/ucO+LGqX3t38qY=
+	t=1750789892; cv=none; b=XdNP0UIAoCyYalfDCXpLl+FmZJ9WG9N190Te+DHq6Aj3azeTpb0Z4lzfg7hSw2dK65D5JBP6u+8jewL0mKIl/q/J1fHUhb6vK8PDW58o/ppnw5ldcLQ229rLCf81tgBr8D9iP+naKlyzlBKQkaHvqKzQNPnMhKhL8GxIgIEYHVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750789706; c=relaxed/simple;
-	bh=4y1nE6JPRD/KbbMZsgQNG8J1jgQvkKLfsnhSxTtsBBM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XEIRFjD1MFbJt/TbNVAlG8EfaRFAu5wzfrrsneBheA7N0uirvzCIwnwMJgpICF8QjJHH1t4dSgoomlwp6bCBHcdiL2vs8k5Dkpotw4VtZiKQ8DePScqA64DiLBl8KiMfIFB9FN7OaHLYM5OYiaHui++L+gYA8ur7ojrD58rZciQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=cWDVajBX; arc=none smtp.client-ip=212.227.17.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1750789892; c=relaxed/simple;
+	bh=m8J3O7QzYtKHkTJW6LMTlN1rnZ3hXaZDwhHlnyjRWHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bHZapypxtuFufWn/nEYG/efpc7dJfJaL65JGcNATxGm+WKLjLohYTbb17SSLL9XnswlcBfkuyj8yrPfOxjdDcM2Iac75RnNFDq0WwneA25tIu+9jkE28QQr4nNuB+38DASPO+Shgz7DK4YTgKWFz+D3LZdJLrdqIiieb04NjPa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V1/Wgsvb; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="cWDVajBX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1750789699; x=1751394499; i=markus.elfring@web.de;
-	bh=4y1nE6JPRD/KbbMZsgQNG8J1jgQvkKLfsnhSxTtsBBM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=cWDVajBXlEfKKHvl/4Bj1nK4hHE+CJzB5Ao6T0CGVzW7f+uN22oRh/pHaoCje/5O
-	 xB2Ws/IbLXed4yoTl/ukWwFtqSVvClGvGCspJI2J6HusmxNsZ7X5DxRmsR8v6/4iv
-	 CqHI48t/QVH7F2a2Zu0NCGpNtyoAPrxUuo1QxkZ5vzeLjxyieFlUxp4RMuI3FoGF0
-	 zTjlLX2acw03p3KCOMxxha+63OnDOPg6c4LDi3Zfq5CFI5tn0mZghu2j+hu4P6wPO
-	 5xOcfncg5UN9XO4XEGOjMtOgiNl9/CsQtk0WeBW1D3vkfC9Q7BPwYD55to2de2FOQ
-	 xWjaTs0BrmzIs2Ly7g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.200]) by smtp.web.de (mrweb106
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1N8Vop-1uqBaE1089-00xbi7; Tue, 24
- Jun 2025 20:28:19 +0200
-Message-ID: <a7a00125-b393-4283-a7dc-6c80ced8e7e6@web.de>
-Date: Tue, 24 Jun 2025 20:28:18 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V1/Wgsvb"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-40abe6f8f08so4924890b6e.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:31:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750789889; x=1751394689; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GjxEYQ1lbJWp4ECKZKQpz8oozPbUNKZGlrJ6EmAWMmk=;
+        b=V1/WgsvbksR0gweco31aEBMw+5KQsjbsnRt8VFD7eN7CMlaN2YZ6lUkMRpD3YBgF1G
+         qCk8LuBcCDQF6sTxEyNKn/EE0oaHCGDRpWmqHEP2wOxcMzaPg5+ZJvmPiH5A4h9wlqVa
+         SqK5zigWn5SPaSv8LtEL38pr8ShYl8YqSEqenDBukCXtQVIqpSUFS/dWIAgmZCMUFUpi
+         w2fp/Bw7NHYklTolWIoq7SqBuSEbKir8MVoVg81l0B85fbLx/KdGfDnCCMfvWtff6xQ/
+         ELN8M8W7Ve+FIpbloOrZCBTICFCIOYeilORbqDAD7akGtCCOFrLVP04wH8ZEVaSRE0Ck
+         QFGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750789889; x=1751394689;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GjxEYQ1lbJWp4ECKZKQpz8oozPbUNKZGlrJ6EmAWMmk=;
+        b=KhUCgg4qr10Ibi0JepDPRU3LVxMCzsF9VSeFqiiMsV4GI7QsiCxM+bPP4/bCSIGDYA
+         Kgigc0DRF3rUSH8Q/vcUZLBdSAbWru+mn4UUVyw389GlJGr9ud3KOll0zy5d9X/iTU0l
+         Gy6dadIpHFWbP2SY13D+HS0rDsDBrFBLxNt3X091RJg4foDENSKsXmgKo1WQk44qBoZL
+         sW46oCwfCp/HyM3aHEPygJgtAltcsFkxSFConHlhycVIgjQX39fgSwV5Uf0u/HsjbHZn
+         JT8LZNO0R6aP60ygGqaXCP+QfT1M3DIVcAL+n+9m9pt8ASYPBIuxJ3K9kqgUhS4lJDoY
+         VeHw==
+X-Forwarded-Encrypted: i=1; AJvYcCXEvvkr/BbuSkmuvJm/kLY7cnagD32ZgzI5VyY66Vbg6Ys7rTVJ1lynYCSteUh6OijXtE3cJvvRRZ1OKRI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7yLaDG79HFEuVwsZa1RXytjXgY6/A+w48C8IjXPgh/XlaKElo
+	cB5v1jnocxuOt1/PZe5Wq2EJS+x0aS3KozB1GftUi/oQBe9EA/BKwNvHqpJI58CTm+atnrfnLLP
+	knZX/
+X-Gm-Gg: ASbGnctizPJfuCITv4E2tSNqHOvQVmSd1S1kGUvmVqaxhqmpDCpBs/erKbqt4oExPfz
+	N8ojsGHxGB1fHBhvcWNloeUGGCOXSObJDPleJl5y1b3V7ufQhD06dhmaSkaMRpoMtVDUaeV7Dpu
+	FzCqSgjdzNgAY3AU7kF9ULl8W8hGGenPCX1/Tva5JLbuflELwr6StKXuCnHGZFNMeyBmYI5lmpy
+	AP0Kf8yQnRxFsg0n+nuiQvYojaEatVojitvgjw/GcicuoxlgGje82B0Id+AU1+zT6yqvE23VDEv
+	X6FSf37GEVSntqraGVTwNF0WHcVyuAQL2ng8vRkiR+JFuNYLoj+5D974XRnKS4JhDT/Ljg==
+X-Google-Smtp-Source: AGHT+IFwefbh7k0nvQhczietm5nprEfi0G1/PBzQxhLLmXWhfFEBYvdG9Ik5OraSPjQQOjmjLaMTJA==
+X-Received: by 2002:a05:6808:d4e:b0:3f9:76d2:e437 with SMTP id 5614622812f47-40b05bf2641mr317669b6e.20.1750789888699;
+        Tue, 24 Jun 2025 11:31:28 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:22c9:dcd3:f442:dd1d])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40ac6c30481sm1893573b6e.17.2025.06.24.11.31.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 11:31:28 -0700 (PDT)
+Date: Tue, 24 Jun 2025 21:31:26 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org,
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v2] staging: media: atomisp: remove debug sysfs
+ attributes active_bo and free_bo
+Message-ID: <5d579b8c-0676-46d8-a020-77ee91e1e7d3@suswa.mountain>
+References: <20250624144943.39297-1-abdelrahmanfekry375@gmail.com>
+ <cef03d37-715c-47a8-81d4-0872d505c39b@suswa.mountain>
+ <CAGn2d8ML8eTcN2G18B7FYkapROnOeAKJir5fJvOXDdXTLY43aQ@mail.gmail.com>
+ <5ce9dac3-0b7a-45d1-8313-2f65165b50e7@suswa.mountain>
+ <CAGn2d8N8GrRR0FnaB7S2BsPs0HXHhwHfg+q55HbfkMqy1kMGTw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: can: ucan: Use usb_endpoint_type() rather than duplicating its
- implementation
-To: Vincent Mailhol <mailhol.vincent@wanadoo.fr>, linux-can@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
- Chen Ni <nichen@iscas.ac.cn>, Marc Kleine-Budde <mkl@pengutronix.de>
-References: <48e217a7-b90e-4af3-b535-812c449dd3ba@web.de>
- <bf5442d1-34e0-495f-8a56-4e47f53ca4ad@wanadoo.fr>
-Content-Language: en-GB, de-DE
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <bf5442d1-34e0-495f-8a56-4e47f53ca4ad@wanadoo.fr>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:eogUSMfdfyL06eIcE6NZ9gO+a3ORUE7w7oP5lfa2WDczCnt4zEm
- 5Kf2pwezQ3oulQ/ZCKtZq83JPUZKAP1sArDiv24iQZ3/029yKPk6uXlb725LDl03es+X0/W
- OUY7UFN5CkGHHSFf2wjNKQOyil8MjvSFlvj3WZFQIahEOEvfqF5+N/8jjS3uAhEglrjTbd5
- zKPTVKqqKp5bEpI8R/yog==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:4pQOt6DRSKA=;xHjH6PFge6TF5DddpSofkhrcTBt
- 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
- bwH4qDLPCVxAE/r1/2Jqr9K52ws/Q==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGn2d8N8GrRR0FnaB7S2BsPs0HXHhwHfg+q55HbfkMqy1kMGTw@mail.gmail.com>
 
-> Looking at the helpers in linux/usb/ch9.h,
+On Tue, Jun 24, 2025 at 08:49:36PM +0300, Abdelrahman Fekry wrote:
+> On Tue, Jun 24, 2025 at 8:32 PM Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> >
+> > On Tue, Jun 24, 2025 at 07:51:10PM +0300, Abdelrahman Fekry wrote:
+> > > On Tue, Jun 24, 2025 at 7:31 PM Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> > > >
+> > > > On Tue, Jun 24, 2025 at 05:49:43PM +0300, Abdelrahman Fekry wrote:
+> > > > >  int hmm_init(void)
+> > > > >  {
+> > > > >       int ret;
+> > > > > @@ -130,14 +48,6 @@ int hmm_init(void)
+> > > > >        */
+> > > > >       dummy_ptr = hmm_alloc(1);
+> > > > >
+> > > > > -     if (!ret) {
+> > > > > -             ret = sysfs_create_group(&atomisp_dev->kobj,
+> > > > > -                                      atomisp_attribute_group);
+> > > > > -             if (ret)
+> > > > > -                     dev_err(atomisp_dev,
+> > > > > -                             "%s Failed to create sysfs\n", __func__);
+> > > > > -     }
+> > > > > -
+> > > > >       return ret;
+> > > >
+> > > >
+> > > > It's really unclear how this "return ret;" is supposed to work.  Was
+> > > > that part of the sysfs_create_group()?
+> > > >
+> > > yes , but still it can be set by hmm_bo_device_init so even after removing
+> > > sysfs_create_group , ret value depends on another function.
+> > >
+> >
+> > You're in too big of a hurry.  Wait for a day between resending patches.
+> > I have looked at this some more and it turns out that nothing checks the
+> > error code so the "return ret;" doesn't work.  What do you think we
+> > should do?
+> >
+> sorry , will keep the time issue in mind.
+> regarding the "return ret", its now basically returning the error code of
+> hmm_bo_device_init () inside the function , but outside the function
+> scope like you mentioned, no function call to the hmm_init() checks
+> the error code. Thats what you mean right ?
 
-Please take another look at known source code mappings.
+Yes.  Nothing is checking for if hmm_init() fails.  Step through the
+code and verify that nothing crashes or bad happens as a result.
 
-Passing code replacements by APIs (for SmPL)?
-https://lore.kernel.org/cocci/481faa1d-7171-4657-8dc0-c37b153e6eaa@web.de/
-https://sympa.inria.fr/sympa/arc/cocci/2025-06/msg00044.html
+For example, I think hmm_bo_alloc() will print "hmm_bo_device not inited
+yet." and return.  So that's kind of annoying but it's not a crash.
+Search through the rest of the driver and verify how it will behave.
 
-
-> it seems that Coccinelle missed many simplifications.
-
-Would such software transformations become better supported anyhow?
-
-Regards,
-Markus
+regards,
+dan carpenter
