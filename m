@@ -1,160 +1,175 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 117A42D662A;
-	Tue, 24 Jun 2025 16:00:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B608028468E;
+	Tue, 24 Jun 2025 16:00:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750780803; cv=none; b=osH8ectk1LZsBnsMClU6pfBmhmxE4m6PHXZqUAMQKw9jbHpT55qsPx5KUW5RGQj+Ggiofc+e416kopBVat9QTG/czolGzY7IvJjuTe2hr8j8aq0QLI2ON90J1wHdXkna24TZ6Yw85o9EVegQnIv4Qu5ExApbAhVCZL+PCrfnSgc=
+	t=1750780851; cv=none; b=lLSHtB7BLglX06gBi0r5BnLL5M3dBwwcyJD1FEHr48UN+n26+U2v0xr777crhzBaM5XuIASGRIKA3IoUqJ5fzmpfq34PeZG5HWF+1B11PYNLWUzM3Brkw4cKstd4rpLCf/bAO80DgZY7k09L5nUXlpnQwgRI6VdqBYTbynuhgiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750780803; c=relaxed/simple;
-	bh=oAj6M5RJNPj9zPVNfLaIS7Hz87nTWDNolCrwMJkPsAc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vp8XyFMHap45oqZq4hqvL8Ivf5LAlqIov7n3RJtorPqG0MuuVXZ8Drk799R/2Gyt0UuEx1wiTelH9FBnSkCIm7QCVKyrjpscgFm8Jc3ZCk8GFPN7i8ykAWjXejLkKl6K1fAevbFy8oH9zcRHSIWPlQPwdaErAvJCEAQstPkjnU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OdctnZWY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750780851; c=relaxed/simple;
+	bh=Z8jA80S3zwy20ZT2jiHgqV2tMjx8AnSmArLZvzv3nvs=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=jIvYCFPEEdXDwsrhgaTnl7RgP3iysLqlNEyoikFRgyuXqrMbSvf/QbYPj5rnOPcsC/boy8jndYBVXPQZeb9z+Sxnre1OmlWMYfeuYtrnaiNpjDhEuqxV+D6+ZMHHPbmO9se/mdMzT1tjFghuHiHMDO0ksJTl/BkHjvglHiyJee4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gm6qAgWt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OdctnZWY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05257C4CEE3;
-	Tue, 24 Jun 2025 16:00:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gm6qAgWt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B0BC4CEE3;
+	Tue, 24 Jun 2025 16:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750780802;
-	bh=oAj6M5RJNPj9zPVNfLaIS7Hz87nTWDNolCrwMJkPsAc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OdctnZWYTC2OySmeHB0kk3tnxgJZhoD2Eszg4FdDvvp+inSJCTCGaDxjW5Lgqn03T
-	 pCrEQrvJU7EuKdEChDca44k/Bi3meJzZNJ1HpC/L7VmFBlsc8bgdxqXyTHa3BX1LW5
-	 pUdH9oU7w9n+Ipb7C0SZR+f3x91NOtFln7yoANDlOujkjcu/Kg3FPjylHH1BCpoeJh
-	 /ks5EEIbWYW8Gbq0WgH/6rq6+r3SnqtUx/MOaR62bnRhpj97dE0f2ZwGn7WmHwLsln
-	 ijKFARQzyMJ65Ttx9CarMFe0ZyAwVGIGYu+Xd3winavaZacvw087EBZbB8TswaPzMP
-	 gpzs14eDgxrzQ==
-Date: Tue, 24 Jun 2025 16:59:58 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Alok Tiwari <alok.a.tiwari@oracle.com>
-Cc: conor.dooley@microchip.com, daire.mcnamara@microchip.com,
-	mturquette@baylibre.com, sboyd@kernel.org,
-	linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] clk: microchip: mpfs: Fix incorrect MSSPLL ID in error
- message
-Message-ID: <20250624-monotype-disorder-aedee5ef7cfa@spud>
-References: <20250622180352.4151679-1-alok.a.tiwari@oracle.com>
+	s=k20201202; t=1750780851;
+	bh=Z8jA80S3zwy20ZT2jiHgqV2tMjx8AnSmArLZvzv3nvs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Gm6qAgWtekRL84jy+ZUefdYbAADtOsCjYh2ciwsENfw341fbejMX2TDi5cfNJl/CD
+	 ICKJmnx6l8JyjRFSWtI9POmr1Wm/AGdsz5Pr5U+v+/bK9eET9si6UvGoZbdGTiNcGY
+	 rMoSvtffoFcRWzS64WjZ2ACXC71itT8eYiRturXjhUmTbK5UBlDG6Yk5SYMQtDu7wK
+	 /4+dmb4TGispkcEalM5ACbAvfgThuAmVvW9FraoHlJYLc+tLuyYWmCgk91ZGtz9eE1
+	 /WrqqzHy4yc3dXWkx9kNLUgf9DuIbrBFdc4HvBTGck6TEmgsYfUD70HvIsr3MjFq5b
+	 boGBcYNJoyPTA==
+Date: Tue, 24 Jun 2025 11:00:49 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Sai Krishna Musham <sai.krishna.musham@amd.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+	mani@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, cassel@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
+	thippeswamy.havalige@amd.com
+Subject: Re: [PATCH v3 2/2] PCI: amd-mdb: Add support for PCIe RP PERST#
+ signal handling
+Message-ID: <20250624160049.GA1479461@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="kYIau9vyQZzfZ+VS"
-Content-Disposition: inline
-In-Reply-To: <20250622180352.4151679-1-alok.a.tiwari@oracle.com>
-
-
---kYIau9vyQZzfZ+VS
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250618080931.2472366-3-sai.krishna.musham@amd.com>
 
-On Sun, Jun 22, 2025 at 11:03:49AM -0700, Alok Tiwari wrote:
-> The error message in mpfs_clk_register_mssplls() incorrectly
-> printed a constant CLK_MSSPLL_INTERNAL instead of the actual
-> PLL ID that failed to register.
-
-Huh, that's weird. Did you actually encounter this happening, or is this
-some sort of patch based on the output from a tool?
-I ask because I don't see how this could ever actually report a
-constant, when the array it loops over only has a single element.
-Feels like we should just do something like the following (if we do
-anything at all)
-
-Cheers,
-Conor.
-
-diff --git a/drivers/clk/microchip/clk-mpfs.c b/drivers/clk/microchip/clk-m=
-pfs.c
-index c22632a7439c5..ed6d5e6ff98ec 100644
---- a/drivers/clk/microchip/clk-mpfs.c
-+++ b/drivers/clk/microchip/clk-mpfs.c
-@@ -148,22 +148,18 @@ static struct mpfs_msspll_hw_clock mpfs_msspll_clks[]=
- =3D {
- };
-=20
- static int mpfs_clk_register_mssplls(struct device *dev, struct mpfs_msspl=
-l_hw_clock *msspll_hws,
--				     unsigned int num_clks, struct mpfs_clock_data *data)
-+				     struct mpfs_clock_data *data)
- {
--	unsigned int i;
-+	struct mpfs_msspll_hw_clock *msspll_hw =3D &msspll_hws[0];
- 	int ret;
-=20
--	for (i =3D 0; i < num_clks; i++) {
--		struct mpfs_msspll_hw_clock *msspll_hw =3D &msspll_hws[i];
-+	msspll_hw->base =3D data->msspll_base;
-+	ret =3D devm_clk_hw_register(dev, &msspll_hw->hw);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to register msspll id: %d\n",
-+				     CLK_MSSPLL_INTERNAL);
-=20
--		msspll_hw->base =3D data->msspll_base;
--		ret =3D devm_clk_hw_register(dev, &msspll_hw->hw);
--		if (ret)
--			return dev_err_probe(dev, ret, "failed to register msspll id: %d\n",
--					     CLK_MSSPLL_INTERNAL);
--
--		data->hw_data.hws[msspll_hw->id] =3D &msspll_hw->hw;
--	}
-+	data->hw_data.hws[msspll_hw->id] =3D &msspll_hw->hw;
-=20
- 	return 0;
- }
-@@ -386,8 +382,7 @@ static int mpfs_clk_probe(struct platform_device *pdev)
- 	clk_data->dev =3D dev;
- 	dev_set_drvdata(dev, clk_data);
-=20
--	ret =3D mpfs_clk_register_mssplls(dev, mpfs_msspll_clks, ARRAY_SIZE(mpfs_=
-msspll_clks),
--					clk_data);
-+	ret =3D mpfs_clk_register_mssplls(dev, mpfs_msspll_clks, clk_data);
- 	if (ret)
- 		return ret;
-=20
-
->=20
-> Update it to msspll_hw->id for accurate diagnostics
->=20
-> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+On Wed, Jun 18, 2025 at 01:39:31PM +0530, Sai Krishna Musham wrote:
+> Add GPIO based PERST# signal handling for AMD Versal Gen 2 MDB
+> PCIe Root Port.
+> 
+> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
 > ---
->  drivers/clk/microchip/clk-mpfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clk/microchip/clk-mpfs.c b/drivers/clk/microchip/clk=
--mpfs.c
-> index c22632a7439c5..d12b7120f16ff 100644
-> --- a/drivers/clk/microchip/clk-mpfs.c
-> +++ b/drivers/clk/microchip/clk-mpfs.c
-> @@ -160,7 +160,7 @@ static int mpfs_clk_register_mssplls(struct device *d=
-ev, struct mpfs_msspll_hw_c
->  		ret =3D devm_clk_hw_register(dev, &msspll_hw->hw);
->  		if (ret)
->  			return dev_err_probe(dev, ret, "failed to register msspll id: %d\n",
-> -					     CLK_MSSPLL_INTERNAL);
-> +					     msspll_hw->id);
-> =20
->  		data->hw_data.hws[msspll_hw->id] =3D &msspll_hw->hw;
->  	}
-> --=20
-> 2.46.0
->=20
+> Changes in v3:
+> - Implement amd_mdb_parse_pcie_port to parse bridge node for reset-gpios property.
+> 
+> Changes in v2:
+> - Change delay to PCIE_T_PVPERL_MS
 
---kYIau9vyQZzfZ+VS
-Content-Type: application/pgp-signature; name="signature.asc"
+v3 https://lore.kernel.org/r/20250618080931.2472366-1-sai.krishna.musham@amd.com/
+v2 https://lore.kernel.org/r/20250429090046.1512000-1-sai.krishna.musham@amd.com/
+v1 https://lore.kernel.org/r/20250326041507.98232-1-sai.krishna.musham@amd.com/
 
------BEGIN PGP SIGNATURE-----
+> ---
+>  drivers/pci/controller/dwc/pcie-amd-mdb.c | 45 ++++++++++++++++++++++-
+>  1 file changed, 44 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-amd-mdb.c b/drivers/pci/controller/dwc/pcie-amd-mdb.c
+> index 4eb2a4e8189d..b4c5b71900a5 100644
+> --- a/drivers/pci/controller/dwc/pcie-amd-mdb.c
+> +++ b/drivers/pci/controller/dwc/pcie-amd-mdb.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/resource.h>
+>  #include <linux/types.h>
+>  
+> +#include "../../pci.h"
+>  #include "pcie-designware.h"
+>  
+>  #define AMD_MDB_TLP_IR_STATUS_MISC		0x4C0
+> @@ -63,6 +64,7 @@ struct amd_mdb_pcie {
+>  	void __iomem			*slcr;
+>  	struct irq_domain		*intx_domain;
+>  	struct irq_domain		*mdb_domain;
+> +	struct gpio_desc		*perst_gpio;
+>  	int				intx_irq;
+>  };
+>  
+> @@ -284,7 +286,7 @@ static int amd_mdb_pcie_init_irq_domains(struct amd_mdb_pcie *pcie,
+>  	struct device_node *pcie_intc_node;
+>  	int err;
+>  
+> -	pcie_intc_node = of_get_next_child(node, NULL);
+> +	pcie_intc_node = of_get_child_by_name(node, "interrupt-controller");
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFrLfgAKCRB4tDGHoIJi
-0vgFAP9GyzbHnazol+NlKh5je3tRgPsVvN7IpkQiog8B5K4D0QEA2xnruSiwTK/I
-46n97dx2MdGT4uUpeQbsfTsUm0KjmwM=
-=SyNN
------END PGP SIGNATURE-----
+Is this change logically part of the PERST# support?  If not, this
+could be a separate patch.
 
---kYIau9vyQZzfZ+VS--
+>  	if (!pcie_intc_node) {
+>  		dev_err(dev, "No PCIe Intc node found\n");
+>  		return -ENODEV;
+> @@ -402,6 +404,34 @@ static int amd_mdb_setup_irq(struct amd_mdb_pcie *pcie,
+>  	return 0;
+>  }
+>  
+> +static int amd_mdb_parse_pcie_port(struct amd_mdb_pcie *pcie)
+> +{
+> +	struct device *dev = pcie->pci.dev;
+> +	struct device_node *pcie_port_node;
+> +
+> +	pcie_port_node = of_get_next_child_with_prefix(dev->of_node, NULL, "pcie");
+> +	if (!pcie_port_node) {
+> +		dev_err(dev, "No PCIe Bridge node found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	/* Request the GPIO for PCIe reset signal and assert */
+> +	pcie->perst_gpio = devm_fwnode_gpiod_get(dev, of_fwnode_handle(pcie_port_node),
+> +						 "reset", GPIOD_OUT_HIGH, NULL);
+> +	if (IS_ERR(pcie->perst_gpio)) {
+> +		if (PTR_ERR(pcie->perst_gpio) != -ENOENT) {
+> +			of_node_put(pcie_port_node);
+> +			return dev_err_probe(dev, PTR_ERR(pcie->perst_gpio),
+> +					     "Failed to request reset GPIO\n");
+> +		}
+> +		pcie->perst_gpio = NULL;
+> +	}
+> +
+> +	of_node_put(pcie_port_node);
+> +
+> +	return 0;
+> +}
+> +
+>  static int amd_mdb_add_pcie_port(struct amd_mdb_pcie *pcie,
+>  				 struct platform_device *pdev)
+>  {
+> @@ -426,6 +456,14 @@ static int amd_mdb_add_pcie_port(struct amd_mdb_pcie *pcie,
+>  
+>  	pp->ops = &amd_mdb_pcie_host_ops;
+>  
+> +	if (pcie->perst_gpio) {
+> +		mdelay(PCIE_T_PVPERL_MS);
+> +
+> +		/* Deassert the reset signal */
+> +		gpiod_set_value_cansleep(pcie->perst_gpio, 0);
+> +		mdelay(PCIE_T_RRS_READY_MS);
+> +	}
+> +
+>  	err = dw_pcie_host_init(pp);
+>  	if (err) {
+>  		dev_err(dev, "Failed to initialize host, err=%d\n", err);
+> @@ -444,6 +482,7 @@ static int amd_mdb_pcie_probe(struct platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	struct amd_mdb_pcie *pcie;
+>  	struct dw_pcie *pci;
+> +	int ret;
+>  
+>  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+>  	if (!pcie)
+> @@ -454,6 +493,10 @@ static int amd_mdb_pcie_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, pcie);
+>  
+> +	ret = amd_mdb_parse_pcie_port(pcie);
+> +	if (ret)
+> +		return ret;
+> +
+>  	return amd_mdb_add_pcie_port(pcie, pdev);
+>  }
+>  
+> -- 
+> 2.43.0
+> 
