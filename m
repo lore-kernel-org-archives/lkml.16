@@ -1,233 +1,871 @@
-Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95932E6D0F;
-	Tue, 24 Jun 2025 14:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.120
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2162D6613;
+	Tue, 24 Jun 2025 14:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775637; cv=none; b=ZIAXYYYotg7Csk7ceTllTNfgujWttAVOkfaU2AFRDT/egs4ry0Wl9V7zLKiIXgb5NmALwyfR3kQWiqkEomaTou+CJ701fOwsHrXVrU1r6fKF1oHZPsjX78TbfPwKqmoRp+oTl+EubktBtn8O4HKSXz5RJDzVO5R2TiaVuWgB04s=
+	t=1750775633; cv=none; b=mjR4JGWtMoMmnarH1rBBTj9t8YhgaismTIG47W6LGPIc5cgHXZwzZJiXZb33A2+ULp9G2xmFGTBO5FTCEvRqtp84RAW/fxZLjD9rKXtGabg+EnWR9xVD9T5NoqsJAEFfMySHZZ1ube/gxj8uSjctRZA2Zd7fNIZBCe01lycGplE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775637; c=relaxed/simple;
-	bh=d5M/Hk14yChGkT7tf/L/6oDfqdz4CsH3WSwtJxG4I+o=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mhN8jfWjAZ9ZsB7l4i5Ch/qLIzzrre8CXbqq9FIxQ9vcCT/znLb2NBaIPE6H013s5WSJCw0EtFsO0be7h4/DVaFuwkns8dH3ZZB4/QPexc/zObma8sFGU/pejiEazqSjDVNXxj9oi6c90RyPuhCB8depLDQL7PJMjYQp+mQ6Psw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=WNsqZBDE; arc=none smtp.client-ip=185.125.188.120
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1750775633; c=relaxed/simple;
+	bh=rlKXeSiMpDyQcR1zcR8JcmAGakrIL0HOr098FFus6bw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=GhLkeaRSQwXeIVYpw7e1kr7lx7mU91S0VsqkKATq5GZaJnZPjgATbR28pisHyGZTVSW5+4PqsQAGw7Xr1oxD7UIEmvsMtrvbQ58iVHsOHBgOrUHmSLz0ZdaX8ZafmUiHp/bgCx5yQgZ+1UOiWCJQSD0JMOdU/q0z/o6pK07us44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=dr+DOqrg; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="WNsqZBDE"
-Received: from sec2-plucky-amd64.. (lau06-h06-176-136-128-80.dsl.sta.abo.bbox.fr [176.136.128.80])
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="dr+DOqrg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750775629;
+	bh=rlKXeSiMpDyQcR1zcR8JcmAGakrIL0HOr098FFus6bw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dr+DOqrgMuKZ8xr6gaLaKZzUvcVzswPUBgEQcwomb8bNI0yt0Tp20G9gjuTgPutKG
+	 6IgKBJLLsWoNUjdJK5Ydy5xfUkx2IS+IIaMgqtPnSAUE+hp7AfroueVjAmhnw6xdkB
+	 GhZfh3DtAQqv7NjW9aaCdg1PTt5AGvOmSuu/+vi+Su71Q1lE+xLRngcKujsel9tcdy
+	 DBJhlyU+mFiUWTCC2InO9BdrgOhLCC2sK103VDInMbBcDQZYvCOA1EPDkwcoxgHghl
+	 gPoUNVU0c9lddsPQZtfL+px/nlmQ9Q8gCrbgpbxbg4Y6vZ9exduU5ZPxiAlq+iQmqK
+	 vklBWpCqVJ9jw==
+Received: from laura.lan (unknown [IPv6:2001:b07:646b:e2:d2c7:2075:2c3c:38e5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 7A4BD4018F;
-	Tue, 24 Jun 2025 14:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1750775629;
-	bh=X3yVcB/5qVhKayZUa41FaUh8FIUjAjD/QoJab4XolZw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type;
-	b=WNsqZBDEdQ49baJVa2zBQXXd77lSSOW1kTOl4Rm5hknAVwup7AwSx1eR6no8KGF8c
-	 vA04/0hHt9mUrvgsGBjHmOsnz677LX/nJ5I4Os7wyOX9/tpG2cAPggiEZMR5WGrEpk
-	 9qlhuhKtQYPtHVg4Q+CIynLrulYwLW6kqagQa/k86hwJVzU9g6fdFeWwYmbW2x5Y4E
-	 meLRs/6jeLetM6BZsDA65Zd+dRLqhgBvKaGZHKDOaOV33bxdCPVwe32Y8H9YQlq+ko
-	 9OTgkxOMHaiPVJ4TNRcmfiNqh9RQevXlff1WhT+3q5YmcUFQso5IXJHf2fe015KY5W
-	 LY01HJdtwXg/Q==
-From: =?UTF-8?q?Maxime=20B=C3=A9lair?= <maxime.belair@canonical.com>
-To: linux-security-module@vger.kernel.org
-Cc: john.johansen@canonical.com,
-	paul@paul-moore.com,
-	jmorris@namei.org,
-	serge@hallyn.com,
-	mic@digikod.net,
-	kees@kernel.org,
-	stephen.smalley.work@gmail.com,
-	casey@schaufler-ca.com,
-	takedakn@nttdata.co.jp,
-	penguin-kernel@I-love.SAKURA.ne.jp,
-	song@kernel.org,
-	rdunlap@infraread.org,
-	linux-api@vger.kernel.org,
-	apparmor@lists.ubuntu.com,
+	(Authenticated sender: laura.nao)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 4419817E088B;
+	Tue, 24 Jun 2025 16:33:48 +0200 (CEST)
+From: Laura Nao <laura.nao@collabora.com>
+To: mturquette@baylibre.com,
+	sboyd@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	p.zabel@pengutronix.de,
+	richardcochran@gmail.com
+Cc: guangjie.song@mediatek.com,
+	wenst@chromium.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	=?UTF-8?q?Maxime=20B=C3=A9lair?= <maxime.belair@canonical.com>
-Subject: [PATCH v3 3/3] AppArmor: add support for lsm_config_self_policy and lsm_config_system_policy
-Date: Tue, 24 Jun 2025 16:30:42 +0200
-Message-ID: <20250624143211.436045-4-maxime.belair@canonical.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250624143211.436045-1-maxime.belair@canonical.com>
-References: <20250624143211.436045-1-maxime.belair@canonical.com>
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	netdev@vger.kernel.org,
+	kernel@collabora.com,
+	Laura Nao <laura.nao@collabora.com>
+Subject: [PATCH v2 14/29] clk: mediatek: Add MT8196 vlpckgen clock support
+Date: Tue, 24 Jun 2025 16:32:05 +0200
+Message-Id: <20250624143220.244549-15-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250624143220.244549-1-laura.nao@collabora.com>
+References: <20250624143220.244549-1-laura.nao@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Enable users to manage AppArmor policies through the new hooks
-lsm_config_self_policy and lsm_config_system_policy.
+Add support for the MT8196 vlpckgen clock controller, which provides
+muxes and dividers for clock selection in other IP blocks.
 
-lsm_config_self_policy allows stacking existing policies in the kernel.
-This ensures that it can only further restrict the caller and can never
-be used to gain new privileges.
-
-lsm_config_system_policy allows loading or replacing AppArmor policies in
-any AppArmor namespace.
-
-Signed-off-by: Maxime Bélair <maxime.belair@canonical.com>
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Signed-off-by: Laura Nao <laura.nao@collabora.com>
 ---
- security/apparmor/apparmorfs.c         | 31 +++++++++++
- security/apparmor/include/apparmorfs.h |  3 ++
- security/apparmor/lsm.c                | 71 ++++++++++++++++++++++++++
- 3 files changed, 105 insertions(+)
+ drivers/clk/mediatek/Makefile              |   2 +-
+ drivers/clk/mediatek/clk-mt8196-vlpckgen.c | 769 +++++++++++++++++++++
+ 2 files changed, 770 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/mediatek/clk-mt8196-vlpckgen.c
 
-diff --git a/security/apparmor/apparmorfs.c b/security/apparmor/apparmorfs.c
-index 6039afae4bfc..6df43299b045 100644
---- a/security/apparmor/apparmorfs.c
-+++ b/security/apparmor/apparmorfs.c
-@@ -439,6 +439,37 @@ static ssize_t policy_update(u32 mask, const char __user *buf, size_t size,
- 	return error;
- }
- 
-+/**
-+ * aa_profile_load_ns_name - load a profile into the current namespace identified by name
-+ * @name: The name of the namesapce to load the policy in. "" for root_ns
-+ * @name_size: size of @name. 0 For root ns
-+ * @buf: buffer containing the user-provided policy
-+ * @size: size of @buf
-+ * @ppos: position pointer in the file
-+ *
-+ * Returns: 0 on success, negative value on error
+diff --git a/drivers/clk/mediatek/Makefile b/drivers/clk/mediatek/Makefile
+index 0688d7bf4979..24683dd51783 100644
+--- a/drivers/clk/mediatek/Makefile
++++ b/drivers/clk/mediatek/Makefile
+@@ -161,7 +161,7 @@ obj-$(CONFIG_COMMON_CLK_MT8195_VENCSYS) += clk-mt8195-venc.o
+ obj-$(CONFIG_COMMON_CLK_MT8195_VPPSYS) += clk-mt8195-vpp0.o clk-mt8195-vpp1.o
+ obj-$(CONFIG_COMMON_CLK_MT8195_WPESYS) += clk-mt8195-wpe.o
+ obj-$(CONFIG_COMMON_CLK_MT8196) += clk-mt8196-apmixedsys.o clk-mt8196-topckgen.o \
+-				   clk-mt8196-topckgen2.o
++				   clk-mt8196-topckgen2.o clk-mt8196-vlpckgen.o
+ obj-$(CONFIG_COMMON_CLK_MT8365) += clk-mt8365-apmixedsys.o clk-mt8365.o
+ obj-$(CONFIG_COMMON_CLK_MT8365_APU) += clk-mt8365-apu.o
+ obj-$(CONFIG_COMMON_CLK_MT8365_CAM) += clk-mt8365-cam.o
+diff --git a/drivers/clk/mediatek/clk-mt8196-vlpckgen.c b/drivers/clk/mediatek/clk-mt8196-vlpckgen.c
+new file mode 100644
+index 000000000000..23a673dd4c5c
+--- /dev/null
++++ b/drivers/clk/mediatek/clk-mt8196-vlpckgen.c
+@@ -0,0 +1,769 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright (c) 2025 MediaTek Inc.
++ *                    Guangjie Song <guangjie.song@mediatek.com>
++ * Copyright (c) 2025 Collabora Ltd.
++ *                    Laura Nao <laura.nao@collabora.com>
 + */
-+ssize_t aa_profile_load_ns_name(char *name, size_t name_size, const void __user *buf,
-+				size_t size, loff_t *ppos)
-+{
-+	struct aa_ns *ns;
++#include <dt-bindings/clock/mediatek,mt8196-clock.h>
++#include <linux/clk.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
 +
-+	if (name_size == 0)
-+		ns = aa_get_ns(root_ns);
-+	else
-+		ns = aa_lookupn_ns(root_ns, name, name_size);
++#include "clk-mtk.h"
++#include "clk-mux.h"
++#include "clk-pll.h"
 +
-+	if (!ns)
-+		return -EINVAL;
++/* MUX SEL REG */
++#define VLP_CLK_CFG_UPDATE		0x0004
++#define VLP_CLK_CFG_UPDATE1		0x0008
++#define VLP_CLK_CFG_0			0x0010
++#define VLP_CLK_CFG_0_SET		0x0014
++#define VLP_CLK_CFG_0_CLR		0x0018
++#define VLP_CLK_CFG_1			0x0020
++#define VLP_CLK_CFG_1_SET		0x0024
++#define VLP_CLK_CFG_1_CLR		0x0028
++#define VLP_CLK_CFG_2			0x0030
++#define VLP_CLK_CFG_2_SET		0x0034
++#define VLP_CLK_CFG_2_CLR		0x0038
++#define VLP_CLK_CFG_3			0x0040
++#define VLP_CLK_CFG_3_SET		0x0044
++#define VLP_CLK_CFG_3_CLR		0x0048
++#define VLP_CLK_CFG_4			0x0050
++#define VLP_CLK_CFG_4_SET		0x0054
++#define VLP_CLK_CFG_4_CLR		0x0058
++#define VLP_CLK_CFG_5			0x0060
++#define VLP_CLK_CFG_5_SET		0x0064
++#define VLP_CLK_CFG_5_CLR		0x0068
++#define VLP_CLK_CFG_6			0x0070
++#define VLP_CLK_CFG_6_SET		0x0074
++#define VLP_CLK_CFG_6_CLR		0x0078
++#define VLP_CLK_CFG_7			0x0080
++#define VLP_CLK_CFG_7_SET		0x0084
++#define VLP_CLK_CFG_7_CLR		0x0088
++#define VLP_CLK_CFG_8			0x0090
++#define VLP_CLK_CFG_8_SET		0x0094
++#define VLP_CLK_CFG_8_CLR		0x0098
++#define VLP_CLK_CFG_9			0x00a0
++#define VLP_CLK_CFG_9_SET		0x00a4
++#define VLP_CLK_CFG_9_CLR		0x00a8
++#define VLP_CLK_CFG_10			0x00b0
++#define VLP_CLK_CFG_10_SET		0x00b4
++#define VLP_CLK_CFG_10_CLR		0x00b8
++#define VLP_OCIC_FENC_STATUS_MON_0	0x039c
++#define VLP_OCIC_FENC_STATUS_MON_1	0x03a0
 +
-+	int error = policy_update(AA_MAY_LOAD_POLICY | AA_MAY_REPLACE_POLICY,
-+				  buf, size, ppos, ns);
++/* MUX SHIFT */
++#define TOP_MUX_SCP_SHIFT			0
++#define TOP_MUX_SCP_SPI_SHIFT			1
++#define TOP_MUX_SCP_IIC_SHIFT			2
++#define TOP_MUX_SCP_IIC_HS_SHIFT		3
++#define TOP_MUX_PWRAP_ULPOSC_SHIFT		4
++#define TOP_MUX_SPMI_M_TIA_32K_SHIFT		5
++#define TOP_MUX_APXGPT_26M_B_SHIFT		6
++#define TOP_MUX_DPSW_SHIFT			7
++#define TOP_MUX_DPSW_CENTRAL_SHIFT		8
++#define TOP_MUX_SPMI_M_MST_SHIFT		9
++#define TOP_MUX_DVFSRC_SHIFT			10
++#define TOP_MUX_PWM_VLP_SHIFT			11
++#define TOP_MUX_AXI_VLP_SHIFT			12
++#define TOP_MUX_SYSTIMER_26M_SHIFT		13
++#define TOP_MUX_SSPM_SHIFT			14
++#define TOP_MUX_SRCK_SHIFT			15
++#define TOP_MUX_CAMTG0_SHIFT			16
++#define TOP_MUX_CAMTG1_SHIFT			17
++#define TOP_MUX_CAMTG2_SHIFT			18
++#define TOP_MUX_CAMTG3_SHIFT			19
++#define TOP_MUX_CAMTG4_SHIFT			20
++#define TOP_MUX_CAMTG5_SHIFT			21
++#define TOP_MUX_CAMTG6_SHIFT			22
++#define TOP_MUX_CAMTG7_SHIFT			23
++#define TOP_MUX_SSPM_26M_SHIFT			25
++#define TOP_MUX_ULPOSC_SSPM_SHIFT		26
++#define TOP_MUX_VLP_PBUS_26M_SHIFT		27
++#define TOP_MUX_DEBUG_ERR_FLAG_VLP_26M_SHIFT	28
++#define TOP_MUX_DPMSRDMA_SHIFT			29
++#define TOP_MUX_VLP_PBUS_156M_SHIFT		30
++#define TOP_MUX_SPM_SHIFT			0
++#define TOP_MUX_MMINFRA_VLP_SHIFT		1
++#define TOP_MUX_USB_TOP_SHIFT			2
++#define TOP_MUX_SSUSB_XHCI_SHIFT		3
++#define TOP_MUX_NOC_VLP_SHIFT			4
++#define TOP_MUX_AUDIO_H_SHIFT			5
++#define TOP_MUX_AUD_ENGEN1_SHIFT		6
++#define TOP_MUX_AUD_ENGEN2_SHIFT		7
++#define TOP_MUX_AUD_INTBUS_SHIFT		8
++#define TOP_MUX_SPU_VLP_26M_SHIFT		9
++#define TOP_MUX_SPU0_VLP_SHIFT			10
++#define TOP_MUX_SPU1_VLP_SHIFT			11
 +
-+	aa_put_ns(ns);
++/* CKSTA REG */
++#define VLP_CKSTA_REG0			0x0250
++#define VLP_CKSTA_REG1			0x0254
 +
-+	return error >= 0 ? 0 : error;
++/* HW Voter REG */
++#define HWV_CG_9_SET	0x0048
++#define HWV_CG_9_CLR	0x004c
++#define HWV_CG_9_DONE	0x2c24
++#define HWV_CG_10_SET	0x0050
++#define HWV_CG_10_CLR	0x0054
++#define HWV_CG_10_DONE	0x2c28
++
++/* PLL REG */
++#define VLP_AP_PLL_CON3		0x264
++#define VLP_APLL1_TUNER_CON0	0x2a4
++#define VLP_APLL2_TUNER_CON0	0x2a8
++#define VLP_APLL1_CON0		0x274
++#define VLP_APLL1_CON1		0x278
++#define VLP_APLL1_CON2		0x27c
++#define VLP_APLL1_CON3		0x280
++#define VLP_APLL2_CON0		0x28c
++#define VLP_APLL2_CON1		0x290
++#define VLP_APLL2_CON2		0x294
++#define VLP_APLL2_CON3		0x298
++
++#define VLP_PLLEN_ALL		0x080
++#define VLP_PLLEN_ALL_SET	0x084
++#define VLP_PLLEN_ALL_CLR	0x088
++
++#define MT8196_PLL_FMAX		(3800UL * MHZ)
++#define MT8196_PLL_FMIN		(1500UL * MHZ)
++#define MT8196_INTEGER_BITS	8
++
++#define PLL_FENC(_id, _name, _reg, _fenc_sta_ofs, _fenc_sta_bit,\
++			_flags, _pd_reg, _pd_shift,			\
++			_pcw_reg, _pcw_shift, _pcwbits,		\
++			_pll_en_bit) {					\
++		.id = _id,					\
++		.name = _name,					\
++		.reg = _reg,					\
++		.fenc_sta_ofs = _fenc_sta_ofs,			\
++		.fenc_sta_bit = _fenc_sta_bit,			\
++		.flags = _flags,				\
++		.fmax = MT8196_PLL_FMAX,			\
++		.fmin = MT8196_PLL_FMIN,			\
++		.pd_reg = _pd_reg,				\
++		.pd_shift = _pd_shift,				\
++		.pcw_reg = _pcw_reg,				\
++		.pcw_shift = _pcw_shift,			\
++		.pcwbits = _pcwbits,				\
++		.pcwibits = MT8196_INTEGER_BITS,		\
++		.en_reg = VLP_PLLEN_ALL,			\
++		.en_set_reg = VLP_PLLEN_ALL_SET,		\
++		.en_clr_reg = VLP_PLLEN_ALL_CLR,		\
++		.pll_en_bit = _pll_en_bit,			\
++		.ops = &mtk_pll_fenc_clr_set_ops,		\
 +}
 +
- /* .load file hook fn to load policy */
- static ssize_t profile_load(struct file *f, const char __user *buf, size_t size,
- 			    loff_t *pos)
-diff --git a/security/apparmor/include/apparmorfs.h b/security/apparmor/include/apparmorfs.h
-index 1e94904f68d9..fd415afb7659 100644
---- a/security/apparmor/include/apparmorfs.h
-+++ b/security/apparmor/include/apparmorfs.h
-@@ -112,6 +112,9 @@ int __aafs_profile_mkdir(struct aa_profile *profile, struct dentry *parent);
- void __aafs_ns_rmdir(struct aa_ns *ns);
- int __aafs_ns_mkdir(struct aa_ns *ns, struct dentry *parent, const char *name,
- 		     struct dentry *dent);
-+ssize_t aa_profile_load_ns_name(char *name, size_t name_len, const void __user *buf,
-+				size_t size, loff_t *ppos);
++static DEFINE_SPINLOCK(mt8196_clk_vlp_lock);
 +
- 
- struct aa_loaddata;
- 
-diff --git a/security/apparmor/lsm.c b/security/apparmor/lsm.c
-index 9b6c2f157f83..7ca2eb8c0981 100644
---- a/security/apparmor/lsm.c
-+++ b/security/apparmor/lsm.c
-@@ -1275,6 +1275,73 @@ static int apparmor_socket_shutdown(struct socket *sock, int how)
- 	return aa_sock_perm(OP_SHUTDOWN, AA_MAY_SHUTDOWN, sock);
- }
- 
-+/**
-+ * apparmor_lsm_config_self_policy - Stack a profile
-+ * @lsm_id: AppArmor ID (LSM_ID_APPARMOR). Unused here
-+ * @op: operation to perform. Currently, only LSM_POLICY_LOAD is supported
-+ * @buf: buffer containing the user-provided name of the profile to stack
-+ * @size: size of @buf
-+ * @flags: reserved for future use; must be zero
-+ *
-+ * Returns: 0 on success, negative value on error
-+ */
-+static int apparmor_lsm_config_self_policy(u32 lsm_id, u32 op, void __user *buf,
-+				      size_t size, u32 flags)
++static const char * const vlp_scp_parents[] = {
++	"clk26m",
++	"osc_d20",
++	"mainpll_d6",
++	"mainpll_d4",
++	"mainpll_d3",
++	"vlp_apll1"
++};
++
++static const char * const vlp_scp_spi_parents[] = {
++	"clk26m",
++	"osc_d20",
++	"mainpll_d7_d2",
++	"mainpll_d5_d2"
++};
++
++static const char * const vlp_scp_iic_parents[] = {
++	"clk26m",
++	"osc_d20",
++	"mainpll_d5_d4",
++	"mainpll_d7_d2"
++};
++
++static const char * const vlp_scp_iic_hs_parents[] = {
++	"clk26m",
++	"osc_d20",
++	"mainpll_d5_d4",
++	"mainpll_d7_d2",
++	"mainpll_d7"
++};
++
++static const char * const vlp_pwrap_ulposc_parents[] = {
++	"clk26m",
++	"osc_d20",
++	"osc_d14",
++	"osc_d10"
++};
++
++static const char * const vlp_spmi_32k_parents[] = {
++	"clk26m",
++	"clk32k",
++	"osc_d20",
++	"osc_d14",
++	"osc_d10"
++};
++
++static const char * const vlp_apxgpt_26m_b_parents[] = {
++	"clk26m",
++	"osc_d20"
++};
++
++static const char * const vlp_dpsw_parents[] = {
++	"clk26m",
++	"osc_d10",
++	"osc_d7",
++	"mainpll_d7_d4"
++};
++
++static const char * const vlp_dpsw_central_parents[] = {
++	"clk26m",
++	"osc_d10",
++	"osc_d7",
++	"mainpll_d7_d4"
++};
++
++static const char * const vlp_spmi_m_parents[] = {
++	"clk26m",
++	"osc_d20",
++	"osc_d14",
++	"osc_d10"
++};
++
++static const char * const vlp_dvfsrc_parents[] = {
++	"clk26m",
++	"osc_d20"
++};
++
++static const char * const vlp_pwm_vlp_parents[] = {
++	"clk26m",
++	"clk32k",
++	"osc_d20",
++	"osc_d8",
++	"mainpll_d4_d8"
++};
++
++static const char * const vlp_axi_vlp_parents[] = {
++	"clk26m",
++	"osc_d20",
++	"mainpll_d7_d4",
++	"osc_d4",
++	"mainpll_d7_d2"
++};
++
++static const char * const vlp_systimer_26m_parents[] = {
++	"clk26m",
++	"osc_d20"
++};
++
++static const char * const vlp_sspm_parents[] = {
++	"clk26m",
++	"osc_d20",
++	"mainpll_d5_d2",
++	"osc_d2",
++	"mainpll_d6"
++};
++
++static const char * const vlp_srck_parents[] = {
++	"clk26m",
++	"osc_d20"
++};
++
++static const char * const vlp_camtg0_parents[] = {
++	"clk26m",
++	"univpll_192m_d32",
++	"univpll_192m_d16",
++	"clk13m",
++	"osc_d40",
++	"osc_d32",
++	"univpll_192m_d10",
++	"univpll_192m_d8",
++	"univpll_d6_d16",
++	"ulposc3",
++	"osc_d20",
++	"ck2_tvdpll1_d16",
++	"univpll_d6_d8"
++};
++
++static const char * const vlp_camtg1_parents[] = {
++	"clk26m",
++	"univpll_192m_d32",
++	"univpll_192m_d16",
++	"clk13m",
++	"osc_d40",
++	"osc_d32",
++	"univpll_192m_d10",
++	"univpll_192m_d8",
++	"univpll_d6_d16",
++	"ulposc3",
++	"osc_d20",
++	"ck2_tvdpll1_d16",
++	"univpll_d6_d8"
++};
++
++static const char * const vlp_camtg2_parents[] = {
++	"clk26m",
++	"univpll_192m_d32",
++	"univpll_192m_d16",
++	"clk13m",
++	"osc_d40",
++	"osc_d32",
++	"univpll_192m_d10",
++	"univpll_192m_d8",
++	"univpll_d6_d16",
++	"osc_d20",
++	"ck2_tvdpll1_d16",
++	"univpll_d6_d8"
++};
++
++static const char * const vlp_camtg3_parents[] = {
++	"clk26m",
++	"univpll_192m_d32",
++	"univpll_192m_d16",
++	"clk13m",
++	"osc_d40",
++	"osc_d32",
++	"univpll_192m_d10",
++	"univpll_192m_d8",
++	"univpll_d6_d16",
++	"osc_d20",
++	"ck2_tvdpll1_d16",
++	"univpll_d6_d8"
++};
++
++static const char * const vlp_camtg4_parents[] = {
++	"clk26m",
++	"univpll_192m_d32",
++	"univpll_192m_d16",
++	"clk13m",
++	"osc_d40",
++	"osc_d32",
++	"univpll_192m_d10",
++	"univpll_192m_d8",
++	"univpll_d6_d16",
++	"osc_d20",
++	"ck2_tvdpll1_d16",
++	"univpll_d6_d8"
++};
++
++static const char * const vlp_camtg5_parents[] = {
++	"clk26m",
++	"univpll_192m_d32",
++	"univpll_192m_d16",
++	"clk13m",
++	"osc_d40",
++	"osc_d32",
++	"univpll_192m_d10",
++	"univpll_192m_d8",
++	"univpll_d6_d16",
++	"osc_d20",
++	"ck2_tvdpll1_d16",
++	"univpll_d6_d8"
++};
++
++static const char * const vlp_camtg6_parents[] = {
++	"clk26m",
++	"univpll_192m_d32",
++	"univpll_192m_d16",
++	"clk13m",
++	"osc_d40",
++	"osc_d32",
++	"univpll_192m_d10",
++	"univpll_192m_d8",
++	"univpll_d6_d16",
++	"osc_d20",
++	"ck2_tvdpll1_d16",
++	"univpll_d6_d8"
++};
++
++static const char * const vlp_camtg7_parents[] = {
++	"clk26m",
++	"univpll_192m_d32",
++	"univpll_192m_d16",
++	"clk13m",
++	"osc_d40",
++	"osc_d32",
++	"univpll_192m_d10",
++	"univpll_192m_d8",
++	"univpll_d6_d16",
++	"osc_d20",
++	"ck2_tvdpll1_d16",
++	"univpll_d6_d8"
++};
++
++static const char * const vlp_sspm_26m_parents[] = {
++	"clk26m",
++	"osc_d20"
++};
++
++static const char * const vlp_ulposc_sspm_parents[] = {
++	"clk26m",
++	"osc_d2",
++	"mainpll_d4_d2"
++};
++
++static const char * const vlp_vlp_pbus_26m_parents[] = {
++	"clk26m",
++	"osc_d20"
++};
++
++static const char * const vlp_debug_err_flag_parents[] = {
++	"clk26m",
++	"osc_d20"
++};
++
++static const char * const vlp_dpmsrdma_parents[] = {
++	"clk26m",
++	"mainpll_d7_d2"
++};
++
++static const char * const vlp_vlp_pbus_156m_parents[] = {
++	"clk26m",
++	"osc_d2",
++	"mainpll_d7_d2",
++	"mainpll_d7"
++};
++
++static const char * const vlp_spm_parents[] = {
++	"clk26m",
++	"mainpll_d7_d4"
++};
++
++static const char * const vlp_mminfra_parents[] = {
++	"clk26m",
++	"osc_d4",
++	"mainpll_d3"
++};
++
++static const char * const vlp_usb_parents[] = {
++	"clk26m",
++	"mainpll_d9"
++};
++
++static const char * const vlp_usb_xhci_parents[] = {
++	"clk26m",
++	"mainpll_d9"
++};
++
++static const char * const vlp_noc_vlp_parents[] = {
++	"clk26m",
++	"osc_d20",
++	"mainpll_d9"
++};
++
++static const char * const vlp_audio_h_parents[] = {
++	"clk26m",
++	"vlp_apll1",
++	"vlp_apll2"
++};
++
++static const char * const vlp_aud_engen1_parents[] = {
++	"clk26m",
++	"apll1_d8",
++	"apll1_d4"
++};
++
++static const char * const vlp_aud_engen2_parents[] = {
++	"clk26m",
++	"apll2_d8",
++	"apll2_d4"
++};
++
++static const char * const vlp_aud_intbus_parents[] = {
++	"clk26m",
++	"mainpll_d7_d4",
++	"mainpll_d4_d4"
++};
++
++static const char * const vlp_spvlp_26m_parents[] = {
++	"clk26m",
++	"osc_d20"
++};
++
++static const char * const vlp_spu0_vlp_parents[] = {
++	"clk26m",
++	"osc_d20",
++	"mainpll_d4_d4",
++	"mainpll_d4_d2",
++	"mainpll_d7",
++	"mainpll_d6",
++	"mainpll_d5"
++};
++
++static const char * const vlp_spu1_vlp_parents[] = {
++	"clk26m",
++	"osc_d20",
++	"mainpll_d4_d4",
++	"mainpll_d4_d2",
++	"mainpll_d7",
++	"mainpll_d6",
++	"mainpll_d5"
++};
++
++static const struct mtk_mux vlp_muxes[] = {
++	/* VLP_CLK_CFG_0 */
++	MUX_GATE_FENC_CLR_SET_UPD(CLK_VLP_SCP, "vlp_scp", vlp_scp_parents,
++		VLP_CLK_CFG_0, VLP_CLK_CFG_0_SET, VLP_CLK_CFG_0_CLR,
++		0, 3, 7, VLP_CLK_CFG_UPDATE, TOP_MUX_SCP_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_0, 31),
++	MUX_CLR_SET_UPD(CLK_VLP_SCP_SPI, "vlp_scp_spi",
++		vlp_scp_spi_parents, VLP_CLK_CFG_0, VLP_CLK_CFG_0_SET,
++		VLP_CLK_CFG_0_CLR, 8, 2,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_SCP_SPI_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_SCP_IIC, "vlp_scp_iic",
++		vlp_scp_iic_parents, VLP_CLK_CFG_0, VLP_CLK_CFG_0_SET,
++		VLP_CLK_CFG_0_CLR, 16, 2,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_SCP_IIC_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_SCP_IIC_HS, "vlp_scp_iic_hs",
++		vlp_scp_iic_hs_parents, VLP_CLK_CFG_0, VLP_CLK_CFG_0_SET,
++		VLP_CLK_CFG_0_CLR, 24, 3,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_SCP_IIC_HS_SHIFT),
++	/* VLP_CLK_CFG_1 */
++	MUX_CLR_SET_UPD(CLK_VLP_PWRAP_ULPOSC, "vlp_pwrap_ulposc",
++		vlp_pwrap_ulposc_parents, VLP_CLK_CFG_1, VLP_CLK_CFG_1_SET,
++		VLP_CLK_CFG_1_CLR, 0, 2,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_PWRAP_ULPOSC_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_SPMI_M_TIA_32K, "vlp_spmi_32k",
++		vlp_spmi_32k_parents, VLP_CLK_CFG_1, VLP_CLK_CFG_1_SET,
++		VLP_CLK_CFG_1_CLR, 8, 3,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_SPMI_M_TIA_32K_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_APXGPT_26M_B, "vlp_apxgpt_26m_b",
++		vlp_apxgpt_26m_b_parents, VLP_CLK_CFG_1, VLP_CLK_CFG_1_SET,
++		VLP_CLK_CFG_1_CLR, 16, 1,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_APXGPT_26M_B_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_DPSW, "vlp_dpsw",
++		vlp_dpsw_parents, VLP_CLK_CFG_1, VLP_CLK_CFG_1_SET,
++		VLP_CLK_CFG_1_CLR, 24, 2,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_DPSW_SHIFT),
++	/* VLP_CLK_CFG_2 */
++	MUX_CLR_SET_UPD(CLK_VLP_DPSW_CENTRAL, "vlp_dpsw_central",
++		vlp_dpsw_central_parents, VLP_CLK_CFG_2, VLP_CLK_CFG_2_SET,
++		VLP_CLK_CFG_2_CLR, 0, 2,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_DPSW_CENTRAL_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_SPMI_M_MST, "vlp_spmi_m",
++		vlp_spmi_m_parents, VLP_CLK_CFG_2, VLP_CLK_CFG_2_SET,
++		VLP_CLK_CFG_2_CLR, 8, 2,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_SPMI_M_MST_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_DVFSRC, "vlp_dvfsrc",
++		vlp_dvfsrc_parents, VLP_CLK_CFG_2, VLP_CLK_CFG_2_SET,
++		VLP_CLK_CFG_2_CLR, 16, 1,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_DVFSRC_SHIFT),
++	MUX_GATE_FENC_CLR_SET_UPD(CLK_VLP_PWM_VLP, "vlp_pwm_vlp", vlp_pwm_vlp_parents,
++		VLP_CLK_CFG_2, VLP_CLK_CFG_2_SET, VLP_CLK_CFG_2_CLR,
++		24, 3, 31, VLP_CLK_CFG_UPDATE, TOP_MUX_PWM_VLP_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_0, 20),
++	/* VLP_CLK_CFG_3 */
++	MUX_CLR_SET_UPD(CLK_VLP_AXI_VLP, "vlp_axi_vlp",
++		vlp_axi_vlp_parents, VLP_CLK_CFG_3, VLP_CLK_CFG_3_SET,
++		VLP_CLK_CFG_3_CLR, 0, 3,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_AXI_VLP_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_SYSTIMER_26M, "vlp_systimer_26m",
++		vlp_systimer_26m_parents, VLP_CLK_CFG_3, VLP_CLK_CFG_3_SET,
++		VLP_CLK_CFG_3_CLR, 8, 1,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_SYSTIMER_26M_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_SSPM, "vlp_sspm",
++		vlp_sspm_parents, VLP_CLK_CFG_3, VLP_CLK_CFG_3_SET,
++		VLP_CLK_CFG_3_CLR, 16, 3,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_SSPM_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_SRCK, "vlp_srck",
++		vlp_srck_parents, VLP_CLK_CFG_3, VLP_CLK_CFG_3_SET,
++		VLP_CLK_CFG_3_CLR, 24, 1,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_SRCK_SHIFT),
++	/* VLP_CLK_CFG_4 */
++	MUX_GATE_HWV_FENC_CLR_SET_UPD(CLK_VLP_CAMTG0, "vlp_camtg0", vlp_camtg0_parents,
++		VLP_CLK_CFG_4, VLP_CLK_CFG_4_SET, VLP_CLK_CFG_4_CLR,
++		HWV_CG_9_DONE, HWV_CG_9_SET, HWV_CG_9_CLR,
++		0, 4, 7, VLP_CLK_CFG_UPDATE, TOP_MUX_CAMTG0_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_0, 15),
++	MUX_GATE_HWV_FENC_CLR_SET_UPD(CLK_VLP_CAMTG1, "vlp_camtg1", vlp_camtg1_parents,
++		VLP_CLK_CFG_4, VLP_CLK_CFG_4_SET, VLP_CLK_CFG_4_CLR,
++		HWV_CG_9_DONE, HWV_CG_9_SET, HWV_CG_9_CLR,
++		8, 4, 15, VLP_CLK_CFG_UPDATE, TOP_MUX_CAMTG1_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_0, 14),
++	MUX_GATE_HWV_FENC_CLR_SET_UPD(CLK_VLP_CAMTG2, "vlp_camtg2", vlp_camtg2_parents,
++		VLP_CLK_CFG_4, VLP_CLK_CFG_4_SET, VLP_CLK_CFG_4_CLR,
++		HWV_CG_9_DONE, HWV_CG_9_SET, HWV_CG_9_CLR,
++		16, 4, 23, VLP_CLK_CFG_UPDATE, TOP_MUX_CAMTG2_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_0, 13),
++	MUX_GATE_HWV_FENC_CLR_SET_UPD(CLK_VLP_CAMTG3, "vlp_camtg3", vlp_camtg3_parents,
++		VLP_CLK_CFG_4, VLP_CLK_CFG_4_SET, VLP_CLK_CFG_4_CLR,
++		HWV_CG_9_DONE, HWV_CG_9_SET, HWV_CG_9_CLR,
++		24, 4, 31, VLP_CLK_CFG_UPDATE, TOP_MUX_CAMTG3_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_0, 12),
++	/* VLP_CLK_CFG_5 */
++	MUX_GATE_HWV_FENC_CLR_SET_UPD(CLK_VLP_CAMTG4, "vlp_camtg4", vlp_camtg4_parents,
++		VLP_CLK_CFG_5, VLP_CLK_CFG_5_SET, VLP_CLK_CFG_5_CLR,
++		HWV_CG_10_DONE, HWV_CG_10_SET, HWV_CG_10_CLR,
++		0, 4, 7, VLP_CLK_CFG_UPDATE, TOP_MUX_CAMTG4_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_0, 11),
++	MUX_GATE_HWV_FENC_CLR_SET_UPD(CLK_VLP_CAMTG5, "vlp_camtg5", vlp_camtg5_parents,
++		VLP_CLK_CFG_5, VLP_CLK_CFG_5_SET, VLP_CLK_CFG_5_CLR,
++		HWV_CG_10_DONE, HWV_CG_10_SET, HWV_CG_10_CLR,
++		8, 4, 15, VLP_CLK_CFG_UPDATE, TOP_MUX_CAMTG5_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_0, 10),
++	MUX_GATE_HWV_FENC_CLR_SET_UPD(CLK_VLP_CAMTG6, "vlp_camtg6", vlp_camtg6_parents,
++		VLP_CLK_CFG_5, VLP_CLK_CFG_5_SET, VLP_CLK_CFG_5_CLR,
++		HWV_CG_10_DONE, HWV_CG_10_SET, HWV_CG_10_CLR,
++		16, 4, 23, VLP_CLK_CFG_UPDATE, TOP_MUX_CAMTG6_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_0, 9),
++	MUX_GATE_HWV_FENC_CLR_SET_UPD(CLK_VLP_CAMTG7, "vlp_camtg7", vlp_camtg7_parents,
++		VLP_CLK_CFG_5, VLP_CLK_CFG_5_SET, VLP_CLK_CFG_5_CLR,
++		HWV_CG_10_DONE, HWV_CG_10_SET, HWV_CG_10_CLR,
++		24, 4, 31, VLP_CLK_CFG_UPDATE, TOP_MUX_CAMTG7_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_0, 8),
++	/* VLP_CLK_CFG_6 */
++	MUX_CLR_SET_UPD(CLK_VLP_SSPM_26M, "vlp_sspm_26m",
++		vlp_sspm_26m_parents, VLP_CLK_CFG_6, VLP_CLK_CFG_6_SET,
++		VLP_CLK_CFG_6_CLR, 8, 1,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_SSPM_26M_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_ULPOSC_SSPM, "vlp_ulposc_sspm",
++		vlp_ulposc_sspm_parents, VLP_CLK_CFG_6, VLP_CLK_CFG_6_SET,
++		VLP_CLK_CFG_6_CLR, 16, 2,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_ULPOSC_SSPM_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_VLP_PBUS_26M, "vlp_vlp_pbus_26m",
++		vlp_vlp_pbus_26m_parents, VLP_CLK_CFG_6, VLP_CLK_CFG_6_SET,
++		VLP_CLK_CFG_6_CLR, 24, 1,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_VLP_PBUS_26M_SHIFT),
++	/* VLP_CLK_CFG_7 */
++	MUX_CLR_SET_UPD(CLK_VLP_DEBUG_ERR_FLAG, "vlp_debug_err_flag",
++		vlp_debug_err_flag_parents, VLP_CLK_CFG_7, VLP_CLK_CFG_7_SET,
++		VLP_CLK_CFG_7_CLR, 0, 1,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_DEBUG_ERR_FLAG_VLP_26M_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_DPMSRDMA, "vlp_dpmsrdma",
++		vlp_dpmsrdma_parents, VLP_CLK_CFG_7, VLP_CLK_CFG_7_SET,
++		VLP_CLK_CFG_7_CLR, 8, 1,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_DPMSRDMA_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_VLP_PBUS_156M, "vlp_vlp_pbus_156m",
++		vlp_vlp_pbus_156m_parents, VLP_CLK_CFG_7, VLP_CLK_CFG_7_SET,
++		VLP_CLK_CFG_7_CLR, 16, 2,
++		VLP_CLK_CFG_UPDATE, TOP_MUX_VLP_PBUS_156M_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_SPM, "vlp_spm",
++		vlp_spm_parents, VLP_CLK_CFG_7, VLP_CLK_CFG_7_SET,
++		VLP_CLK_CFG_7_CLR, 24, 1,
++		VLP_CLK_CFG_UPDATE1, TOP_MUX_SPM_SHIFT),
++	/* VLP_CLK_CFG_8 */
++	MUX_GATE_FENC_CLR_SET_UPD(CLK_VLP_MMINFRA, "vlp_mminfra", vlp_mminfra_parents,
++		VLP_CLK_CFG_8, VLP_CLK_CFG_8_SET, VLP_CLK_CFG_8_CLR,
++		0, 2, 7, VLP_CLK_CFG_UPDATE1, TOP_MUX_MMINFRA_VLP_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_1, 31),
++	MUX_GATE_FENC_CLR_SET_UPD(CLK_VLP_USB_TOP, "vlp_usb", vlp_usb_parents,
++		VLP_CLK_CFG_8, VLP_CLK_CFG_8_SET, VLP_CLK_CFG_8_CLR,
++		8, 1, 15, VLP_CLK_CFG_UPDATE1, TOP_MUX_USB_TOP_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_1, 30),
++	MUX_GATE_FENC_CLR_SET_UPD(CLK_VLP_USB_XHCI, "vlp_usb_xhci", vlp_usb_xhci_parents,
++		VLP_CLK_CFG_8, VLP_CLK_CFG_8_SET, VLP_CLK_CFG_8_CLR,
++		16, 1, 23, VLP_CLK_CFG_UPDATE1, TOP_MUX_SSUSB_XHCI_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_1, 29),
++	MUX_CLR_SET_UPD(CLK_VLP_NOC_VLP, "vlp_noc_vlp",
++		vlp_noc_vlp_parents, VLP_CLK_CFG_8, VLP_CLK_CFG_8_SET,
++		VLP_CLK_CFG_8_CLR, 24, 2,
++		VLP_CLK_CFG_UPDATE1, TOP_MUX_NOC_VLP_SHIFT),
++	/* VLP_CLK_CFG_9 */
++	MUX_GATE_FENC_CLR_SET_UPD(CLK_VLP_AUDIO_H, "vlp_audio_h", vlp_audio_h_parents,
++		VLP_CLK_CFG_9, VLP_CLK_CFG_9_SET, VLP_CLK_CFG_9_CLR,
++		0, 2, 7, VLP_CLK_CFG_UPDATE1, TOP_MUX_AUDIO_H_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_1, 27),
++	MUX_GATE_FENC_CLR_SET_UPD(CLK_VLP_AUD_ENGEN1, "vlp_aud_engen1", vlp_aud_engen1_parents,
++		VLP_CLK_CFG_9, VLP_CLK_CFG_9_SET, VLP_CLK_CFG_9_CLR,
++		8, 2, 15, VLP_CLK_CFG_UPDATE1, TOP_MUX_AUD_ENGEN1_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_1, 26),
++	MUX_GATE_FENC_CLR_SET_UPD(CLK_VLP_AUD_ENGEN2, "vlp_aud_engen2", vlp_aud_engen2_parents,
++		VLP_CLK_CFG_9, VLP_CLK_CFG_9_SET, VLP_CLK_CFG_9_CLR,
++		16, 2, 23, VLP_CLK_CFG_UPDATE1, TOP_MUX_AUD_ENGEN2_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_1, 25),
++	MUX_GATE_FENC_CLR_SET_UPD(CLK_VLP_AUD_INTBUS, "vlp_aud_intbus", vlp_aud_intbus_parents,
++		VLP_CLK_CFG_9, VLP_CLK_CFG_9_SET, VLP_CLK_CFG_9_CLR,
++		24, 2, 31, VLP_CLK_CFG_UPDATE1, TOP_MUX_AUD_INTBUS_SHIFT,
++		VLP_OCIC_FENC_STATUS_MON_1, 24),
++	/* VLP_CLK_CFG_10 */
++	MUX_CLR_SET_UPD(CLK_VLP_SPVLP_26M, "vlp_spvlp_26m",
++		vlp_spvlp_26m_parents, VLP_CLK_CFG_10, VLP_CLK_CFG_10_SET,
++		VLP_CLK_CFG_10_CLR, 0, 1,
++		VLP_CLK_CFG_UPDATE1, TOP_MUX_SPU_VLP_26M_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_SPU0_VLP, "vlp_spu0_vlp",
++		vlp_spu0_vlp_parents, VLP_CLK_CFG_10, VLP_CLK_CFG_10_SET,
++		VLP_CLK_CFG_10_CLR, 8, 3,
++		VLP_CLK_CFG_UPDATE1, TOP_MUX_SPU0_VLP_SHIFT),
++	MUX_CLR_SET_UPD(CLK_VLP_SPU1_VLP, "vlp_spu1_vlp",
++		vlp_spu1_vlp_parents, VLP_CLK_CFG_10, VLP_CLK_CFG_10_SET,
++		VLP_CLK_CFG_10_CLR, 16, 3,
++		VLP_CLK_CFG_UPDATE1, TOP_MUX_SPU1_VLP_SHIFT),
++};
++
++static const struct mtk_pll_data vlp_plls[] = {
++	PLL_FENC(CLK_VLP_APLL1, "vlp_apll1", VLP_APLL1_CON0, 0x0358, 1, 0,
++		 VLP_APLL1_CON1, 24, VLP_APLL1_CON2, 0, 32, 0),
++	PLL_FENC(CLK_VLP_APLL2, "vlp_apll2", VLP_APLL2_CON0, 0x0358, 0, 0,
++		 VLP_APLL2_CON1, 24, VLP_APLL2_CON2, 0, 32, 1),
++};
++
++static int clk_mt8196_vlp_probe(struct platform_device *pdev)
 +{
-+	char *name = kvmalloc(size, GFP_KERNEL);
-+	long name_size;
-+	int ret;
++	struct clk_hw_onecell_data *clk_data;
++	int r;
++	struct device_node *node = pdev->dev.of_node;
 +
-+	if (!name)
++	clk_data = mtk_alloc_clk_data(ARRAY_SIZE(vlp_muxes) +
++				      ARRAY_SIZE(vlp_plls));
++	if (!clk_data)
 +		return -ENOMEM;
 +
-+	if (op != LSM_POLICY_LOAD || flags)
-+		return -EOPNOTSUPP;
++	r = mtk_clk_register_muxes(&pdev->dev, vlp_muxes, ARRAY_SIZE(vlp_muxes),
++				   node, &mt8196_clk_vlp_lock, clk_data);
++	if (r)
++		goto free_clk_data;
 +
-+	name_size = strncpy_from_user(name, buf, size);
-+	if (name_size < 0)
-+		return name_size;
++	r = mtk_clk_register_plls(node, vlp_plls, ARRAY_SIZE(vlp_plls),
++				  clk_data);
++	if (r)
++		goto unregister_muxes;
 +
-+	ret = aa_change_profile(name, AA_CHANGE_STACK);
++	r = of_clk_add_hw_provider(node, of_clk_hw_onecell_get, clk_data);
++	if (r)
++		goto unregister_plls;
 +
-+	kvfree(name);
++	platform_set_drvdata(pdev, clk_data);
 +
-+	return ret;
++	return r;
++
++unregister_plls:
++	mtk_clk_unregister_plls(vlp_plls, ARRAY_SIZE(vlp_plls), clk_data);
++unregister_muxes:
++	mtk_clk_unregister_muxes(vlp_muxes, ARRAY_SIZE(vlp_muxes), clk_data);
++free_clk_data:
++	mtk_free_clk_data(clk_data);
++
++	return r;
 +}
 +
-+/**
-+ * apparmor_lsm_config_system_policy - Load or replace a system policy
-+ * @lsm_id: AppArmor ID (LSM_ID_APPARMOR). Unused here
-+ * @op: operation to perform. Currently, only LSM_POLICY_LOAD is supported
-+ * @buf: user-supplied buffer in the form "<ns>\0<policy>"
-+ *        <ns> is the namespace to load the policy into (empty string for root)
-+ *        <policy> is the policy to load
-+ * @size: size of @buf
-+ * @flags: reserved for future uses; must be zero
-+ *
-+ * Returns: 0 on success, negative value on error
-+ */
-+static int apparmor_lsm_config_system_policy(u32 lsm_id, u32 op, void __user *buf,
-+				      size_t size, u32 flags)
++static void clk_mt8196_vlp_remove(struct platform_device *pdev)
 +{
-+	loff_t pos = 0; // Partial writing is not currently supported
-+	char name[256];
-+	long name_size;
++	struct clk_hw_onecell_data *clk_data = platform_get_drvdata(pdev);
++	struct device_node *node = pdev->dev.of_node;
 +
-+	if (op != LSM_POLICY_LOAD || flags)
-+		return -EOPNOTSUPP;
-+
-+	name_size = strncpy_from_user(name, buf, 256);
-+	if (name_size < 0)
-+		return name_size;
-+	else if (name_size == 256)
-+		return -E2BIG;
-+
-+	return aa_profile_load_ns_name(name, name_size, buf + name_size + 1,
-+				       size - name_size - 1, &pos);
++	of_clk_del_provider(node);
++	mtk_clk_unregister_plls(vlp_plls, ARRAY_SIZE(vlp_plls), clk_data);
++	mtk_clk_unregister_muxes(vlp_muxes, ARRAY_SIZE(vlp_muxes), clk_data);
++	mtk_free_clk_data(clk_data);
 +}
 +
++static const struct of_device_id of_match_clk_mt8196_vlp_ck[] = {
++	{ .compatible = "mediatek,mt8196-vlpckgen" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, of_match_clk_mt8196_vlp_ck);
 +
- #ifdef CONFIG_NETWORK_SECMARK
- /**
-  * apparmor_socket_sock_rcv_skb - check perms before associating skb to sk
-@@ -1483,6 +1550,10 @@ static struct security_hook_list apparmor_hooks[] __ro_after_init = {
- 	LSM_HOOK_INIT(socket_getsockopt, apparmor_socket_getsockopt),
- 	LSM_HOOK_INIT(socket_setsockopt, apparmor_socket_setsockopt),
- 	LSM_HOOK_INIT(socket_shutdown, apparmor_socket_shutdown),
++static struct platform_driver clk_mt8196_vlp_drv = {
++	.probe = clk_mt8196_vlp_probe,
++	.remove = clk_mt8196_vlp_remove,
++	.driver = {
++		.name = "clk-mt8196-vlpck",
++		.of_match_table = of_match_clk_mt8196_vlp_ck,
++	},
++};
 +
-+	LSM_HOOK_INIT(lsm_config_self_policy, apparmor_lsm_config_self_policy),
-+	LSM_HOOK_INIT(lsm_config_system_policy,
-+		      apparmor_lsm_config_system_policy),
- #ifdef CONFIG_NETWORK_SECMARK
- 	LSM_HOOK_INIT(socket_sock_rcv_skb, apparmor_socket_sock_rcv_skb),
- #endif
++MODULE_DESCRIPTION("MediaTek MT8196 VLP clock generator driver");
++module_platform_driver(clk_mt8196_vlp_drv);
++MODULE_LICENSE("GPL");
 -- 
-2.48.1
+2.39.5
 
