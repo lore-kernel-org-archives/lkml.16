@@ -1,64 +1,66 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C4025C821
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:36:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC64B27F170
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750761396; cv=none; b=NhD9vsvf6zuAsCgYT/INE91WHA1+cv2a2buUXNR+pJELgYNn/ely6CcMq3XfA54B6ZmZ/dxJI1TGcS7FOH8fn6zJAeV4ie8F1M+y3SWrU60khD88uRcr9SO+yA6a9V+Ovlwu9bOeUQ/XAEAjQUn/Tq9uDK14clerJZUC1wp/I+A=
+	t=1750761399; cv=none; b=A4dF9ymAgXIh1JN7sU03jlV9CiGx0iUdo1rzJfhggxkeG8NN0FASr5UVTLsZgMlDjxcvgZyBC3bhbIwuZImatfh1ep53H1Zl6JggWF/YEj/oDmI4plWF+KG3oAF7z5PWSNc15vI0T9s4HKk6r1PnLHZ4qAJbETdgerul2EL9lSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750761396; c=relaxed/simple;
-	bh=s/p1Xv9n0I6aRsXvJfI6PtEEVZffpXSQRtqTJvgA7bo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=P75yx5jnfQSVlZy2zSmGMQHf0ZY9Xhuppnd+XQOBR4hWkUjjxNVllW3UPCEP2CpgoEhUbGP5WwZuKvKOwr0/nRXfoVwdZXsAQpNvJchK5ED7yhFyGhOvXvKHFeNiLh6LFj8UiESM3sVoN6m/cl9ks5Y7Wn6ZYrcRtKeMOknP4wk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HSI9dRYh; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1750761399; c=relaxed/simple;
+	bh=I6Uh0W1U/pEscoVd7miIYAu5wzDsffordzyPGY3jblE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AQcEMm5FuTRvFVYwYevXUnYoH7LLa+OWh1XmJqY74yCP3ayYEM/extUf6Wy72kk3CI6epj3n8wRQL3Xne7sYbpFppROJjZHeiR6bqwnNCFrvmXgeKTDYqg4Vf7z4qX9s/GYIcllZW+iwDH60VcmA8CxoQQBjmRHNq+g1F/wUhIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MTsaeuoh; arc=none smtp.client-ip=209.85.128.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HSI9dRYh"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450d668c2a1so38140995e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:36:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MTsaeuoh"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso44511215e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:36:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750761393; x=1751366193; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mV2F430M3zf1QNtT0HJo3gDR7bQHbqH+Rduaa+AqTs0=;
-        b=HSI9dRYh4OmTep8TZdzSuurajAq9L20OJ9AjaRQ2eD+widQj7r1Yf5p8hYAvN970Ql
-         l5cV7sAvHIDjpvzFdZ3MyvKNMQJNh+960jA1SJ0lzWeucx+WqsMaoplEOQvcH3sZ/RaF
-         4F8OYtShXe98cHB3ddpbTGUCuAZt9oZBA4bAQq8ZAezuv4sQX75Ef06WP/zY9lmX0R7m
-         Qh11z2O+zaOD42QgMr28YYC9hOuJcfsAK4qLDQxd2Z/d4kX+FHS2HgGecRvUCMh27r/V
-         K6DoJXRTh5QVcmGmEs3fM6HtbOG8QfWXAibQKXlSmA4ypc2nrCU6OZ3viWtetQGB7by0
-         dg8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750761393; x=1751366193;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1750761394; x=1751366194; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=mV2F430M3zf1QNtT0HJo3gDR7bQHbqH+Rduaa+AqTs0=;
-        b=EZf2lz5cOWCcF6BLJog5rduLzZ1yyNwamkmXwcA6JyxSP7R7APA9sQVsE7KsdBaED1
-         kIvSJnHhpQOMGGaTuQ72wxzw2+/He3dGcS2FIfAiebOfs5MqP6EBKRNOIRFGbS0xkDrR
-         iUc3uZcuAsW3aH7XaTMsOGrhxxEyf/Tjqje42ZWFwudHunm78zpmCQn0ABMEaoE8C3Nc
-         Z8htfufgLj0tCdWb84+qMRoBoOIsErvlNAn9rvnDIK/QzhHevvsMMDAFlDdCvWdt0DaT
-         uu3qBxPjMjJhRVs1G0NRPpvkUmATNjWJ6gRMxyOYLnrYRT+Zaax3pTL1QVc9My//sPhv
-         Qijg==
-X-Forwarded-Encrypted: i=1; AJvYcCUdldehv9eRFaCRp5bAt/wNVtRQqnCs7N5sq0PHtInoqiNx6F8+p1Ns7rWFN81gA1KdXcF3cPgFRZNHg2A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLtn/wh2OVvSucJylwzwtGfJmsyjpxG6OEg2F+vYMjH0BvoTAO
-	tHuRapEeqokQv2035wQfkH7M6jH46VArxWyANBCv+Hqq8HiF+DggUFNwAUFu5aAdQcY=
-X-Gm-Gg: ASbGncsJOvX4P8y89vr8gNl/RtQii054lcSeE67Eg7OFSsqrnpd3dYzNjnl/QxSmtNk
-	64iiN0O8J9M18Bn9ndd4YXRFMAkmuQilUO3O4JskSIkD9VBFeDx07eCAzSHV9D1ATUoQbcKsgxw
-	eBX5EJZMVJSEKyGB1xKaOyepqFDVVSUFx0UM9OJiO6XZnnAespPonXikM0EIOrlEYT3yZgDgy2p
-	MODMX4Tm8pXj/LfVN3eRgnGRsitxsJA2NwK4zFG1L4dKOJ+flxjD9kMnvYli8XZXHBcRidiPtIz
-	fugtHL9mZp92E1rq8sGlaG5ABncGFo0w5AzvSyTZ/jafmes0e/VKO3kx9JriVPDBWNkyNrg=
-X-Google-Smtp-Source: AGHT+IE0oRQNwaJh1+Up/aJBnSPbbAIWGlweTCtCPOeJbMewjs4LOHGtQALu971QtWWJIuf3LTdG6Q==
-X-Received: by 2002:a05:600c:8b16:b0:43c:f509:2bbf with SMTP id 5b1f17b1804b1-4537b7b9f4bmr27625885e9.15.1750761392859;
-        Tue, 24 Jun 2025 03:36:32 -0700 (PDT)
+        bh=jkMuSosV7oMRxRtp9yYE+2UdziIG4xoxewf16F9X2EY=;
+        b=MTsaeuohoQk6rMfnmVu/5ocbrCIwViKarJ+wRU+41QIl2B2E5VEZej+r9pBCBxwSZq
+         4TmPFyxtmjLJ4Q3t4/ZT5YmJ5JBzfN6sbCVwg/ZBRegEU5APkC7uInrK0tBe19V8xrmq
+         eFSrTWJFbDp+CY5wmFc1gayPNsAnJQPg2Pyg9/RfE4wfTjMM+f9jG8SCbwMBKcQAL4XD
+         F/i9NnYLPDJtduMkY1LsD8mufwXlsbv0Eu0WWE+qXOsK5mEgI6pUYLqWhwrI97sczJcu
+         tDouJ6bNfLyfpKRz7OvgiCWbLadw2TYulyPBZjn+BzMuu4ddCGbYFp2QncodqzMTJBbu
+         K7rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750761394; x=1751366194;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jkMuSosV7oMRxRtp9yYE+2UdziIG4xoxewf16F9X2EY=;
+        b=q48ojoZtcF+FSiVwF1V9QzcvPjQguTjyowlgyPZFT8wLE/jYNNJbeCWpa3RFdTOfSR
+         MVVDWRXGLLE5gfKy7w4c3hrgohL6htgE3GAeHVTNdHiQNH182/00MZGbWe6Fn7MTZoVE
+         N0MAgGnJvEi8xTG/ZVeQWaLzYeAaoDg1g91PlN7dDernpFtusTb4LmL3C+b9jCykk9Kb
+         Ut9M+3MDezGwUV4y6M3wgYyiM+h0MuWNlenvD1KXq1DVhEZI7ICbdbhxukyrXxgbgQr6
+         c7Pt0111XEeZ0Cva2PclJtwcDepRdkAwNBKydmCt5f5P7FSpj/4alC8ddWWRlwMOJJID
+         N37g==
+X-Forwarded-Encrypted: i=1; AJvYcCXB1S7JsBbYCLZSmUhjlmorAC6A51xnnJ+BUssGOxORtixERdQgHZQdRM6m881/M0zfeKA5ruOHqccZOn4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/rcB9VqbV3U39L0jyDgg2s8+rUTncS3bHhJragW8dcKwcS0dV
+	GvcL+E/go5Tx+OU1Mlf+gf4bDh1N1v4aG2vNqg/y14J7t3hm05C0Dfav63rLwJLipKY=
+X-Gm-Gg: ASbGncsvGI1KpXZ8kL6otzvyQcalw1PqNh3YvGmfViyjRLcMJWhEl9SI/D+KAyo9IN+
+	NImrQzRr2UHLbl42kztroCfb0bg6Z3QgKk3v7JelqXNmKjMsGNDp8zhKTuVAcXl3c7mWSf6x3av
+	K3tEWz8ctbq/8v5bMzde62IzMHQifhbrupPexTzK2lInFGq3tGGRszpqcACAQV9wNfBlTnfCCqT
+	f+HrQqMx4LLRz4I9Z9V8rL1cKo3FzpnDgUrr8i1sQ7XWdh77WfjPmtb8ScJ1E7kkpkSInAYmqEe
+	dszJ8C8jQqXCj9uQ/ROFCAx/bbQkIdqe8HuK6yp/AQ0LyuMfQDesCZmEOgpLcVTe5Y1OSoE=
+X-Google-Smtp-Source: AGHT+IE1yzuJW1JyGG/GLYl2/Ucg2KNK2xeS+Q9P5XhB9Map8hlfvdK3p5oXRvu10nUbdGxDztsgdQ==
+X-Received: by 2002:a05:600c:8b14:b0:453:a88:d509 with SMTP id 5b1f17b1804b1-453659ca92cmr182600865e9.10.1750761393938;
+        Tue, 24 Jun 2025 03:36:33 -0700 (PDT)
 Received: from ho-tower-lan.lan ([37.18.136.128])
         by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453646cb641sm143398245e9.3.2025.06.24.03.36.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 03:36:32 -0700 (PDT)
+        Tue, 24 Jun 2025 03:36:33 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
-Subject: [PATCH v3 0/6] spi: spi-fsl-dspi: Target mode improvements
-Date: Tue, 24 Jun 2025 11:35:30 +0100
-Message-Id: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
+Date: Tue, 24 Jun 2025 11:35:31 +0100
+Subject: [PATCH v3 1/6] spi: spi-fsl-dspi: Clear completion counter before
+ initiating transfer
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,10 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAHJ/WmgC/3WO0QqCMBSGX0V23WI76tSueo/oYtMzXeSULYYhv
- ntTiArs8jvwff+ZiUdn0JNTMhOHwXgz2AjpISF1J22L1DSRCTDIWQ5Ab7JHT+00Uj8a2vSSyqo
- qUKHSSigSvdGhNtPWvFwjd8Y/BvfcJgJfr+9auVMLnDLKmSgRUmS1Fue7sdINx8G1a31TBav+q
- aDKlGPBM4Xwra6fBPisC57uJSAmGC8Qaw2ZlOonsSzLCx0Ml+ExAQAA
+Message-Id: <20250624-james-nxp-spi-dma-v3-1-e7d574f5f62c@linaro.org>
+References: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
+In-Reply-To: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
 To: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>, 
  Vladimir Oltean <vladimir.oltean@nxp.com>, Arnd Bergmann <arnd@arndb.de>, 
  Larisa Grigore <larisa.grigore@nxp.com>, Frank Li <Frank.li@nxp.com>, 
@@ -79,73 +80,50 @@ Cc: linux-spi@vger.kernel.org, imx@lists.linux.dev,
  linux-kernel@vger.kernel.org, James Clark <james.clark@linaro.org>
 X-Mailer: b4 0.14.0
 
-Improve usability of target mode by reporting FIFO errors and increasing
-the buffer size when DMA is used. While we're touching DMA stuff also
-switch to non-coherent memory, although this is unrelated to target
-mode.
+In target mode, extra interrupts can be received between the end of a
+transfer and halting the module if the host continues sending more data.
+If the interrupt from this occurs after the reinit_completion() then the
+completion counter is left at a non-zero value. The next unrelated
+transfer initiated by userspace will then complete immediately without
+waiting for the interrupt or writing to the RX buffer.
 
-The first commit is marked as a fix because it can fix intermittent
-issues with existing transfers, rather than the later fixes which
-improve larger than FIFO target mode transfers which would have never
-worked.
+Fix it by resetting the counter before the transfer so that lingering
+values are cleared. This is done after clearing the FIFOs and the
+status register but before the transfer is initiated, so no interrupts
+should be received at this point resulting in other race conditions.
 
-With the combination of the commit to increase the DMA buffer size and
-the commit to use non-coherent memory, the host mode performance figures
-are as follows on S32G3:
-
-  # spidev_test --device /dev/spidev1.0 --bpw 8 --size <test_size> --cpha --iter 10000000 --speed 10000000
-
-  Coherent (4096 byte transfers): 6534 kbps
-  Non-coherent:                   7347 kbps
-
-  Coherent (16 byte transfers):    447 kbps
-  Non-coherent:                    448 kbps
-
-Just for comparison running the same test in XSPI mode:
-
-  4096 byte transfers:            2143 kbps
-  16 byte transfers:               637 kbps
-
-These tests required hacking S32G3 to use DMA in host mode, although
-the figures should be representative of target mode too where DMA is
-used. And the other devices that use DMA in host mode should see similar
-improvements.
-
+Fixes: 4f5ee75ea171 ("spi: spi-fsl-dspi: Replace interruptible wait queue with a simple completion")
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
-Changes in v3:
-- Stub out DMA functions in the driver so no-DMA builds work
-- Link to v2: https://lore.kernel.org/r/20250613-james-nxp-spi-dma-v2-0-017eecf24aab@linaro.org
+ drivers/spi/spi-fsl-dspi.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-Changes in v2:
-- Store status in cur_msg->status rather than adding xfer_status
-- Show exact underflow/overflow flags in error message
-- Rate limit error messages
-- Add a comment about resetting the completion counter prior to transfer
-- Rename dspi_is_fifo_overflow() -> dspi_fifo_error()
-- Add performance figures to cover letter
-- Rebase onto https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git/for-next
-  to avoid some conflicts
-- Link to v1: https://lore.kernel.org/r/20250609-james-nxp-spi-dma-v1-0-2b831e714be2@linaro.org
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 04c88d090c4d..744dfc561db2 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -1122,11 +1122,19 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
+ 		if (dspi->devtype_data->trans_mode == DSPI_DMA_MODE) {
+ 			status = dspi_dma_xfer(dspi);
+ 		} else {
++			/*
++			 * Reset completion counter to clear any extra
++			 * complete()s from spurious interrupts that may have
++			 * happened after the last message's completion but
++			 * before the module was fully in stop mode.
++			 */
++			if (dspi->irq)
++				reinit_completion(&dspi->xfer_done);
++
+ 			dspi_fifo_write(dspi);
+ 
+ 			if (dspi->irq) {
+ 				wait_for_completion(&dspi->xfer_done);
+-				reinit_completion(&dspi->xfer_done);
+ 			} else {
+ 				do {
+ 					status = dspi_poll(dspi);
 
----
-James Clark (5):
-      spi: spi-fsl-dspi: Clear completion counter before initiating transfer
-      spi: spi-fsl-dspi: Store status directly in cur_msg->status
-      spi: spi-fsl-dspi: Stub out DMA functions
-      spi: spi-fsl-dspi: Use non-coherent memory for DMA
-      spi: spi-fsl-dspi: Report FIFO overflows as errors
-
-Larisa Grigore (1):
-      spi: spi-fsl-dspi: Increase DMA buffer size
-
- drivers/spi/spi-fsl-dspi.c | 221 ++++++++++++++++++++++++++++++++-------------
- 1 file changed, 160 insertions(+), 61 deletions(-)
----
-base-commit: 4f326fa6236787ca516ea6eab8e5e9dc5c236f03
-change-id: 20250522-james-nxp-spi-dma-a997ebebfb6b
-
-Best regards,
 -- 
-James Clark <james.clark@linaro.org>
+2.34.1
 
