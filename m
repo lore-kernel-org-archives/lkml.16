@@ -1,190 +1,203 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx.denx.de (mx.denx.de [89.58.32.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD768218ABA;
-	Tue, 24 Jun 2025 10:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFC7218ABA;
+	Tue, 24 Jun 2025 10:41:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750761658; cv=none; b=YCqJCI/9eLoBJ5jbfSSTQTLWug++db729SmlXwmal8xXyZ1NFbEjytJwKt5r8N1pRhaH8EYTsT+jiWWvohOcn8D8S9+2Ed/zyz+BTVV8APcuW5MSUsblLIAqc4N6zvVgskio9fnsAZXeRFG9UVl0ZQ0jgb2qzRyYtOvqHSoIr7Q=
+	t=1750761690; cv=none; b=oybFIIhl6JnAVKuzZ77NFIjizOrMzvbVWkK+4PWOuJpb2HKPq1SzN0Y9eMtCYpz2O70VvyhdNi023WClsDiwYlKnTVCkrv2nixb5trWKqxFhm1gZ5O7zIKxie/j2iytpDZZ/8P7wImeixLz4a5KuS73IEK6EiPOzwMXL/BbwrL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750761658; c=relaxed/simple;
-	bh=6d0auCNzoD1CyPxO+pEGu930r8hD35KbHS+ByXKsoHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mTboY2pO1xVoCE0EbtV6ZDJQap2uiv+O+6Hy7eIJd8JC/NP2iY5rDL5TRWuQZtBego9o0TkbEIcVN6SKWqP51RfqNrDDLs4lJV5UjrUFQsnYZ/qqGsmF4quPmD5aKuK8+4pWd5RV/h0qwClnBxCuKnxTysieAD1rZEw0ILawe4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=l7U7EtDI; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750761690; c=relaxed/simple;
+	bh=mHuFsM00zsmxReWQp0YW0IovyAqAiKaN9vwTtZUpZ1I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qy3O+IYmykWv72EmHLFXfYIcdWS9el4v4Qth8HYkYaaygTPhTvvpBOtPXchcCUfYWATWhBY7FVmGFHy8WMAl+xcH5uE++FgDSfknQaTCrV9vFNJepESy/CRnz3gqOqG1GE2y+32+0V7QkIdor1YgAXjbENqIyw+XLrWpxBAmL7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=O81Rly9R; arc=none smtp.client-ip=89.58.32.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="l7U7EtDI"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O1V2Z9025150;
-	Tue, 24 Jun 2025 10:40:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=IVDBez
-	qnJ2de4ogHnGgH0CYywDLOp7UCzimE3aYXKm4=; b=l7U7EtDIpgKtjmHRfugipg
-	oHqU3oNPgxfQXG/rvMs168Fjjz3BahVYpEMeHbKMQTSmvfOAHLa4+zouw3E1YYzH
-	oLCpKMPi/vefWxZBBDjSgX7SzEAcFAcdQ0weuLlUidZFLAFrPmKacP6blvEyFxxu
-	8BwgXMSvMBRQqDT0A5wb4falzwjLOa/QsAf9XIYDBxfXvPEnFyrXJ/em0QaZP082
-	Ru9R8/bGGL2ds1Lpv5qe0agrBp7oFWOKdOV1icwnravQUPr/uX/iU6t7Q/IDP9uu
-	drBvSOK3f6v0+Aa0Pp+LWI87a+VlH4V7W5M9Ufhbb4yT0EtD2qRVWlsLmZK+s6aw
-	==
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dj5tr1rq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 10:40:47 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55OAH4R7031277;
-	Tue, 24 Jun 2025 10:40:46 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e7eyun5k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 24 Jun 2025 10:40:46 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55OAeiaB35914396
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Jun 2025 10:40:44 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A80EA2004D;
-	Tue, 24 Jun 2025 10:40:44 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 31A6220040;
-	Tue, 24 Jun 2025 10:40:44 +0000 (GMT)
-Received: from thinkpad-T15 (unknown [9.87.159.139])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Tue, 24 Jun 2025 10:40:44 +0000 (GMT)
-Date: Tue, 24 Jun 2025 12:40:42 +0200
-From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Anshuman Khandual
- <anshuman.khandual@arm.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        LKML
- <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-s390@vger.kernel.org
-Subject: Re: [RFC PATCH 1/1] mm/debug_vm_pgtable: Use a swp_entry_t input
- value for swap tests
-Message-ID: <20250624124042.45beda75@thinkpad-T15>
-In-Reply-To: <9bd91df8-e548-4ecc-bd30-f1ab611ecf4c@redhat.com>
-References: <20250623184321.927418-1-gerald.schaefer@linux.ibm.com>
-	<20250623184321.927418-2-gerald.schaefer@linux.ibm.com>
-	<9bd91df8-e548-4ecc-bd30-f1ab611ecf4c@redhat.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="O81Rly9R"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E820C101E9287;
+	Tue, 24 Jun 2025 12:41:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
+	t=1750761677; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 in-reply-to:references; bh=xJNZSdtlkmYSmYR194N6u/IIwvLnmZyLCW5wos6cefs=;
+	b=O81Rly9RWffD1vprGIl6wBGzUIqmAs4FKeptoBWaVbi98DKflcuKrXOi/+WfDxvIkCoNsq
+	B8YX5tAhGPNXO0jpbhC/kdKkicKFvyZVRlXm9SRLc3BF9elb7QkiVxNvlGVnWXvWaPZoQr
+	PKlhnwOnBPAzcW8V9ZXu2vSzAYs5KVeIol/jIMsxD80dsHyb5q7aZto5klDzlZzYDbl6el
+	etk/HqBCVUB8AWsw1JI81+euCWs6ThTGgEJzOSX7wi3rT9UDZx5mGPb4EitnFOo/i+khE7
+	adnF828od6mJWOIBxCGN7Tz1Cq/KZsqsvJCx9U/xUWgwpH7QtOHheeIaEAf45g==
+Date: Tue, 24 Jun 2025 12:41:08 +0200
+From: Pavel Machek <pavel@denx.de>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+	torvalds@linux-foundation.org, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	Julien Thierry <jthierry@redhat.com>,
+	James Morse <james.morse@arm.com>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: [PATCH 5.10 000/355] 5.10.239-rc1 review
+Message-ID: <aFqAxKT6C7idQY32@duo.ucw.cz>
+References: <20250623130626.716971725@linuxfoundation.org>
+ <CA+G9fYt2e-ZGhU57oqWwC1_t2RPgxLCJFVC0Pa8-fYPkZcUvVQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: peLw0nyJ3RpBufj0GFzJMnHwIYUJBadY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA4NyBTYWx0ZWRfX4YGMzFMG9XnG t6uE5WxBCo/dguH8Xieeqb5UxjhEZ/w2qg1CqmHgPvS9TkNO8P8ZvqW8IQr3+KwrYdb+ZDGOTfO jzBCyZ27qWlU7dkgf183B8FV5SdVrknUxao9279DXudrJTALFWpR49FNABVgChwslcE8Kgzqdhe
- tOTOyGXCJZOq3pCC1mkYTXw3pQijy6+dxmqSTNf9XXth+WazO94uoFmtomp3xNrLHYRtfBf3OvG UOWmm6cqkIJieHyAtGJ0KHIPuFMwnTIUVpqHtDK5T4aBceW85KofEx/FLDnB3Ow/agueJnwOXD3 ltt8rgR+O0AOYsxtJR9RyOlaUK6IeW6ie2QaY4uoA61/zA3Qj2Q7RUH1JhTfHcqMnuSq4IGYUzF
- yZ3NCLZx9gmRF3KC/GkY/Vug6nftBhkFfbKwasjOa/RZneK1ayT1dHHPE9ryws0HVN6ERzhn
-X-Authority-Analysis: v=2.4 cv=MshS63ae c=1 sm=1 tr=0 ts=685a80af cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=20KFwNOVAAAA:8 a=VnNF1IyMAAAA:8 a=bxlzOkSMlZTX2se0vY4A:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: peLw0nyJ3RpBufj0GFzJMnHwIYUJBadY
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_04,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- clxscore=1011 phishscore=0 malwarescore=0 suspectscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506240087
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="99H4i/IRjps6Yc2M"
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYt2e-ZGhU57oqWwC1_t2RPgxLCJFVC0Pa8-fYPkZcUvVQ@mail.gmail.com>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Mon, 23 Jun 2025 21:10:54 +0200
-David Hildenbrand <david@redhat.com> wrote:
 
-> On 23.06.25 20:43, Gerald Schaefer wrote:
-> > The various __pte/pmd_to_swp_entry and __swp_entry_to_pte/pmd helper
-> > functions are expected to operate on swapped PTE/PMD entries, not on
-> > present and mapped entries.
-> > 
-> > Reflect this in the swap tests by using a swp_entry_t as input value,
-> > similar to how it is already done in pte_swap_exclusive_tests().
-> > Move the swap entry creation to init_args() and store it in args, so
-> > it can also be used in other functions.
-> > 
-> > The pte/pmd_swap_tests() are also changed to compare entries instead of
-> > pfn values, because pte/pmd_pfn() helpers are not expected to operate on
-> > swapped entries. E.g. on s390, pmd_pfn() needs different shifts for leaf
-> > (large) and non-leaf PMDs.
-> > 
-> > Also update documentation, to reflect that the helpers operate on
-> > swapped and not mapped entries, and use correct names, i.e.
-> > __swp_to_pte/pmd_entry -> __swp_entry_to_pte/pmd.
-> > 
-> > For consistency, also change pte/pmd_swap_soft_dirty_tests() to use
-> > args->swp_entry instead of a present and mapped PTE/PMD.
-> > 
-> > Signed-off-by: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-> > ---
-> >   Documentation/mm/arch_pgtable_helpers.rst |  8 ++--
-> >   mm/debug_vm_pgtable.c                     | 55 ++++++++++++++---------
-> >   2 files changed, 38 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/Documentation/mm/arch_pgtable_helpers.rst b/Documentation/mm/arch_pgtable_helpers.rst
-> > index af245161d8e7..e2ac76202a85 100644
-> > --- a/Documentation/mm/arch_pgtable_helpers.rst
-> > +++ b/Documentation/mm/arch_pgtable_helpers.rst
-> > @@ -242,13 +242,13 @@ SWAP Page Table Helpers
-> >   ========================
-> >   
-> >   +---------------------------+--------------------------------------------------+
-> > -| __pte_to_swp_entry        | Creates a swapped entry (arch) from a mapped PTE |
-> > +| __pte_to_swp_entry        | Creates a swap entry (arch) from a swapped PTE   |  
-> 
-> Maybe something like:
-> 
-> "from a swap (!none && !present) PTE"
-> 
-> or short
-> 
-> "swap PTE".
-> 
-> "swapped" might be misleading.
-> 
-> Same for the other cases below.
+--99H4i/IRjps6Yc2M
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Right, it already felt awkward when I wrote it, not sure why I only changed
-it for "swapped entry (arch)". I think I like "swap PTE/PMD", naming the actual
-entries in the page table, vs. "swap entry (arch)", naming the (arch-dependent)
-representation of the swap PTE/PMD as swp_entry_t.
+Hi!
 
-Will change, and also adjust my description, where I also used possibly
-misleading "swapped".
+> > This is the start of the stable review cycle for the 5.10.239 release.
+> > There are 355 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Wed, 25 Jun 2025 13:05:51 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patc=
+h-5.10.239-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git linux-5.10.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+>=20
+> Regressions on arm64 tinyconfig builds with gcc-12 and clang failed on
+> the Linux stable-rc 5.10.239-rc1.
 
-> 
-> >   +---------------------------+--------------------------------------------------+
-> > -| __swp_to_pte_entry        | Creates a mapped PTE from a swapped entry (arch) |
-> > +| __swp_entry_to_pte        | Creates a swapped PTE from a swap entry (arch)   |
-> >   +---------------------------+--------------------------------------------------+
-> > -| __pmd_to_swp_entry        | Creates a swapped entry (arch) from a mapped PMD |
-> > +| __pmd_to_swp_entry        | Creates a swap entry (arch) from a swapped PMD   |
-> >   +---------------------------+--------------------------------------------------+
-> > -| __swp_to_pmd_entry        | Creates a mapped PMD from a swapped entry (arch) |
-> > +| __swp_entry_to_pmd        | Creates a swapped PMD from a swap entry (arch)   |
-> >   +---------------------------+--------------------------------------------------+
-> >   | is_migration_entry        | Tests a migration (read or write) swapped entry  |
-> >   +-------------------------------+----------------------------------------------+
-> > diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
-> > index 7731b238b534..3b0f83ed6c2e 100644
-> > --- a/mm/debug_vm_pgtable.c
-> > +++ b/mm/debug_vm_pgtable.c
-> > @@ -73,6 +73,8 @@ struct pgtable_debug_args {
-> >   	unsigned long		fixed_pud_pfn;
-> >   	unsigned long		fixed_pmd_pfn;
-> >   	unsigned long		fixed_pte_pfn;
-> > +
-> > +	swp_entry_t		swp_entry;
-> >   };
-> >     
-> 
-> Nothing else jumped at me, so LGTM.
-> 
+Yeah, we see same problems:
 
-Thanks!
+
+814
+  CC      arch/arm64/kernel/asm-offsets.s
+815
+In file included from ./arch/arm64/include/asm/alternative.h:6,
+816
+                 from ./arch/arm64/include/asm/sysreg.h:1050,
+817
+                 from ./arch/arm64/include/asm/cputype.h:194,
+818
+                 from ./arch/arm64/include/asm/cache.h:8,
+819
+                 from ./include/linux/cache.h:6,
+820
+                 from ./include/linux/printk.h:9,
+821
+                 from ./include/linux/kernel.h:17,
+822
+                 from ./include/linux/list.h:9,
+823
+                 from ./include/linux/kobject.h:19,
+824
+                 from ./include/linux/of.h:17,
+825
+                 from ./include/linux/irqdomain.h:35,
+826
+                 from ./include/linux/acpi.h:13,
+827
+                 from ./include/acpi/apei.h:9,
+828
+                 from ./include/acpi/ghes.h:5,
+829
+                 from ./include/linux/arm_sdei.h:8,
+830
+                 from arch/arm64/kernel/asm-offsets.c:10:
+831
+=2E/arch/arm64/include/asm/insn.h: In function 'aarch64_insn_gen_atomic_ld_=
+op':
+832
+=2E/arch/arm64/include/asm/insn.h:26:54: error: 'FAULT_BRK_IMM' undeclared =
+(first use in this function)
+833
+   26 | #define AARCH64_BREAK_FAULT    (AARCH64_BREAK_MON | (FAULT_BRK_IMM =
+<< 5))
+834
+      |                                                      ^~~~~~~~~~~~~
+835
+=2E/arch/arm64/include/asm/insn.h:573:9: note: in expansion of macro 'AARCH=
+64_BREAK_FAULT'
+836
+  573 |  return AARCH64_BREAK_FAULT;
+837
+      |         ^~~~~~~~~~~~~~~~~~~
+838
+=2E/arch/arm64/include/asm/insn.h:26:54: note: each undeclared identifier i=
+s reported only once for each function it appears in
+839
+   26 | #define AARCH64_BREAK_FAULT    (AARCH64_BREAK_MON | (FAULT_BRK_IMM =
+<< 5))
+840
+      |                                                      ^~~~~~~~~~~~~
+841
+=2E/arch/arm64/include/asm/insn.h:573:9: note: in expansion of macro 'AARCH=
+64_BREAK_FAULT'
+842
+  573 |  return AARCH64_BREAK_FAULT;
+843
+      |         ^~~~~~~~~~~~~~~~~~~
+844
+=2E/arch/arm64/include/asm/insn.h: In function 'aarch64_insn_gen_cas':
+845
+=2E/arch/arm64/include/asm/insn.h:26:54: error: 'FAULT_BRK_IMM' undeclared =
+(first use in this function)
+846
+   26 | #define AARCH64_BREAK_FAULT    (AARCH64_BREAK_MON | (FAULT_BRK_IMM =
+<< 5))
+847
+      |                                                      ^~~~~~~~~~~~~
+848
+=2E/arch/arm64/include/asm/insn.h:583:9: note: in expansion of macro 'AARCH=
+64_BREAK_FAULT'
+849
+  583 |  return AARCH64_BREAK_FAULT;
+850
+      |         ^~~~~~~~~~~~~~~~~~~
+851
+make[1]: *** [scripts/Makefile.build:117: arch/arm64/kernel/asm-offsets.s] =
+Error 1
+852
+make: *** [Makefile:1262: prepare0] Error 2
+
+BR,
+										Pavel
+--=20
+DENX Software Engineering GmbH,        Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+
+--99H4i/IRjps6Yc2M
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaFqAxAAKCRAw5/Bqldv6
+8oO2AJ0THdQP/jgUCOPQIWJxokWKjzBWXwCfbnHq/Z5PGgx+mwo8REY3xKum4EY=
+=7i9r
+-----END PGP SIGNATURE-----
+
+--99H4i/IRjps6Yc2M--
