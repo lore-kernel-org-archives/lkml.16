@@ -1,97 +1,101 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fanzine2.igalia.com (fanzine2.igalia.com [213.97.179.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7C42D4B78
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F097626CE0A;
+	Tue, 24 Jun 2025 15:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.97.179.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750778597; cv=none; b=GxoX2vz2LX4cpzSXWU/MHU1IowhI7L1nL3hwRzBTbUj74xrJ9HnbH9+raR2cug4UJ3dtpjV8pV8/eNhgAykTPOjrH7bNUweAv/QTs/Ij7GwklqzGRZtM/a6JbAs/nf6IcExQmxaSRacz1pSMJ1zwu9eUHSyxnNOLwl3/MP7XbVE=
+	t=1750778738; cv=none; b=Ttuo3tyfVlAvmine5hZy8V4YFpHsWLyEESd/0z4rCC6UDb0NA9ehw2W40CJTnJEKT5xOYYL4oQ8XaAT2uqj3QdZNvuybcd0Qybdzww6Ywvc0HFrlyIXV2Dw1XOENwIdSUepiNtBsM6Iks03bqjgIdCV8AzXlNBRv/JmCQ6YiPU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750778597; c=relaxed/simple;
-	bh=OsHzL2QmtaBFsR+icUHxcUjIVSkn08E6eAXih9sMNqw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mvBp86T82rp5PWOnmiamBvDJWUH0r8I+L3ZOKCGVoA4ruBkuukubq68nZf/TQC1x5iKheVuyxuGN8klwxwvtHGLoLH7XzekpbowocPir/xYk/KZSrMvaO7y4z5THn38nboJKMC8DXE6l6bX7y6a16GZ5DdOhogHXj6ZlDv5tIuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UJDGqvKX; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750778738; c=relaxed/simple;
+	bh=RDB7BOcVNFQsZ9nLHPunY0bdsoxOYRyXg2fUAwYtw3c=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hbGvm1gd9nnHxzms0JDQiYheNn4Uhia//VLp1RywZ/JLuc4/6GMPlhihHXNuoi7WTY2HQucM5WuHmZI83xIfWZv/FzlVjtg2LuBCoJp2gVn3yq9ua4O1HS7iCJzf4CZls4fDtmvQItnLh9JUzgCU2EqNy+XdbETc2VVF+vgbZNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=ndXNStgD; arc=none smtp.client-ip=213.97.179.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UJDGqvKX"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-237f270513bso167445ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:23:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750778595; x=1751383395; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OsHzL2QmtaBFsR+icUHxcUjIVSkn08E6eAXih9sMNqw=;
-        b=UJDGqvKXizd0bPQVkaruWr8ZF1ij+HBzYC68KolzrdVma9a9TrhrfUCx0LGO4vF8px
-         AewmRkR0zxzsKTsCcdnuCNqlhjwzwEnPEAyaviQRiywSfKHhiilfCKkXq+1dPEZcPhRs
-         ZSkQsLbp+OCsfRoT3VqM8+Z3hrftJ4tZ9SytFwvX3b/Gu7o9hjUfnJCIO10jASAO4xeY
-         MJuA0aZsRsbM10waYI4n0FuaaqZSh3dCAL21w+Ln3s9waJre93B40MOkOm7LDFwXMdsC
-         c/QQ8Adpxbsj8SkRlBLsFvMWAwW1hlWIo0lyHEY+WgQYpqk9nbLbyNrfW48B6CvWN2JK
-         vURg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750778595; x=1751383395;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OsHzL2QmtaBFsR+icUHxcUjIVSkn08E6eAXih9sMNqw=;
-        b=NYrXJnM281HRKAHu/3wv1qx3XqR12tzsKr/x7oMeJ/EjGQA0S0djO8pbf8UdT7tdAO
-         4GxvhOVfpHQD/XPTLdJHMxB0FHp1fPIz+GuxdxaK70zS37a4jQLj2BCIbSaKMzg7E+TS
-         7dfwtMTNtfVUNTynyltfrPNgB2Qr4gz9PqiwT2XayyFXtgSMKOKSHPHkJtxHJUGl0yJE
-         t1v/a27SUFTisVDXxyT+cV438o4pzXrhA0V3rfseF2JiNz3SCIKsUzsTen1LRnX6v4mP
-         pi9pDYaUl9QDOLOqQMPZVFRs1OA2bndlajKiWV1g5g1w+w7c3CR8a93rVMJBhBDG6rOs
-         IxtQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXmvIthnn2tFI5PJt7lYtPuUUo33HWWAKIxlurGrJB+zq8SNOmkxKr9Pq+rCQuNc72MvVFfaGFNB9dmljs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFD1dPjXAI7Bv67VheyMdQgt8TZHW1KJrqNWcEnbTJspQVvUYT
-	Wg73nL7A7+ioFoF0MNAkuy1pGRi1qzLFcSeNHCotKGjj1s9iBt72qjy0lu+gmw5B4fSNrk8c+jq
-	3x9tQCPA4JX/NCxLeuSLcKDbdqakqS8yKOMfFKaAn
-X-Gm-Gg: ASbGncubGyU+C9MeEtmLzUpbP25P6bq2+hyLIE9NJPVLcJDKzHqS5eSeIPj7aX1X6aI
-	QzJmdLpuX0ya89IKPtogB47oK+HX+ryN+fkbEGOuDr/5c5w+/7YnNwOIqIyOna/adV+aUTfK6o0
-	RSf89TBFxC/pcwjLfUWKGsILyvSNsD+QQ9PDUHdR/0IHT3
-X-Google-Smtp-Source: AGHT+IFuV+2Ga9TSOFwnFolgarENN+7E/Cva5lJLhIeCCIC7hFMvve9M0hq1gAoD+N3ejaHL0KTuSlx8P61f7rAinTQ=
-X-Received: by 2002:a17:902:d551:b0:236:7079:fb10 with SMTP id
- d9443c01a7336-23803e7f04fmr3511785ad.3.1750778594186; Tue, 24 Jun 2025
- 08:23:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="ndXNStgD"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=PvstoqgJKuCADr83IQZCoqGkucmt2FvbOXeCdhd4Z9Q=; b=ndXNStgDLmtQnTCXauCqgZ2jqw
+	LxxxouE10Aq0jU3bPb1rlFmyMXbpuP/XCx5iOzJUTrCPc79M6LxZaCVJtyBKnvd5X83J7OQGWKZRi
+	4RHbxRwYZJ1G33KZLRxUEmJNWI1yU2aUJS12siq0D6dmbe5YPL3Q2tpDYHk0pkSC7aeUMJeBfMc/8
+	qPDE007gkv0MFu+7FL6hZ33a3OQcNvI0xOggZwwC41qNsb8KGCuX3XR2V3wmNjWW7aPWMDD+UP7as
+	YfpiaovGBDPvP5kG0TPOzbqZn5n/xPwKySmePlPuAEhFDdKJxINobxZlKno8OVQKEltUOem3lUg8V
+	EUfMXzPw==;
+Received: from [191.204.192.64] (helo=[192.168.15.100])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1uU5WX-0083ru-DC; Tue, 24 Jun 2025 17:25:25 +0200
+Message-ID: <a85c8fb3-7bb9-4933-a6de-d3fad20dbcdf@igalia.com>
+Date: Tue, 24 Jun 2025 12:25:19 -0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624140159.3929503-1-yuehaibing@huawei.com>
-In-Reply-To: <20250624140159.3929503-1-yuehaibing@huawei.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Tue, 24 Jun 2025 08:23:01 -0700
-X-Gm-Features: AX0GCFuB2FfqPxAOT9GIekGHD_Ki0PPJ74vNDf3L0e2L2VE867xDanye4TA_ga4
-Message-ID: <CAHS8izM-UsaMCmY0Rqudg8-b8ObFFP9Tq0zD8-L7YB7CG2CURA@mail.gmail.com>
-Subject: Re: [PATCH net-next] net: Reoder rxq_idx check in __net_mp_open_rxq()
-To: Yue Haibing <yuehaibing@huawei.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
-	pabeni@redhat.com, horms@kernel.org, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] drm/doc: Fix title underline for "Task
+ information"
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: airlied@gmail.com, simona@ffwll.ch,
+ Krzysztof Karas <krzysztof.karas@intel.com>,
+ Linux Next Mailing List <linux-next@vger.kernel.org>,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ kernel-dev@igalia.com, Stephen Rothwell <sfr@canb.auug.org.au>
+References: <20250619140655.2468014-1-andrealmeid@igalia.com>
+Content-Language: en-US
+From: =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>
+In-Reply-To: <20250619140655.2468014-1-andrealmeid@igalia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 24, 2025 at 6:44=E2=80=AFAM Yue Haibing <yuehaibing@huawei.com>=
- wrote:
->
-> array_index_nospec() clamp the rxq_idx within the range of
-> [0, dev->real_num_rx_queues), move the check before it.
->
-> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+Hi Raag,
 
-Fix looks valid to me. The current code looks wrong because the
-dev->real_num_rx_queues check is done twice, so we'll never hit the
-NL_SET_ERR_MSG.
+Can you give me a Reviewed-by/Acked-by for this series before I push to 
+drm-misc-next?
 
-One side effect of this is that userspace code that does an out of
-range rxq bind will see EINVAL before this patch and it will see an
-ERANGE with a netlink error message after this patch. I think this
-change is fine even though it's a minor uapi change.
+Em 19/06/2025 11:06, André Almeida escreveu:
+> Fix the following warning:
+> 
+> Documentation/gpu/drm-uapi.rst:450: WARNING: Title underline too short.
+> 
+> Task information
+> --------------- [docutils]
+> 
+> Fixes: cd37124b4093 ("drm/doc: Add a section about "Task information" for the wedge API")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: André Almeida <andrealmeid@igalia.com>
+> ---
+> v2: Add Reported-by tag
+> ---
+>   Documentation/gpu/drm-uapi.rst | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
+> index 263e5a97c080..10dea6a1f097 100644
+> --- a/Documentation/gpu/drm-uapi.rst
+> +++ b/Documentation/gpu/drm-uapi.rst
+> @@ -447,7 +447,7 @@ hang is usually the most critical one which can result in consequential hangs or
+>   complete wedging.
+>   
+>   Task information
+> ----------------
+> +----------------
+>   
+>   The information about which application (if any) was involved in the device
+>   wedging is useful for userspace if they want to notify the user about what
+> @@ -728,4 +728,4 @@ Stable uAPI events
+>   From ``drivers/gpu/drm/scheduler/gpu_scheduler_trace.h``
+>   
+>   .. kernel-doc::  drivers/gpu/drm/scheduler/gpu_scheduler_trace.h
+> -   :doc: uAPI trace events
+> \ No newline at end of file
+> +   :doc: uAPI trace events
 
-Reviewed-by: Mina Almasry <almasrymina@google.com>
-
---=20
-Thanks,
-Mina
