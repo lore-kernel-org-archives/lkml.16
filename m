@@ -1,121 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C50D1C84DF;
-	Tue, 24 Jun 2025 08:43:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DD93239072;
+	Tue, 24 Jun 2025 08:44:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750754637; cv=none; b=fxNSuk8b4xixRh4JgtKsBF1BasOsjfAy+qj/POrrjaA9ks/jbhwoM/pT8hhKeikJKbOb2PjhdtO6raJA9oXN2bXw6Kf2IswtboRVExBP7eAgYyBdGWDMPh7Gu39qREXNOiCIfZKts5cBnwI3RY/7jbOdgnr6gEo1iqZhvEfkHKY=
+	t=1750754648; cv=none; b=ah5lw3H5w1o5FMijEI4Yb9AkqMHi4jqaCS7Q5sW4iKace0fuWoSzQWU+xHyXQ01kBw0pFuFqWeygh6QS6qncZjnrtCRUE4hE3LgphxY92prTb0Rsv3mIytvSsWlScxAlNhuRtPjH26wEEpn0a7tyd8Nr4uCJCz/Y4DgJe+fol2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750754637; c=relaxed/simple;
-	bh=L45NXoZ+NSjgNfFv1Uc2lmPuDY4v3Gli3c8yBbV7E7w=;
+	s=arc-20240116; t=1750754648; c=relaxed/simple;
+	bh=SIsgi3afey44s25VI1BTV0rs+6t0jfF1bwFGJw+D9ts=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bh/UQfgq51SPSYM+Yk+o84rGWZdwEI9mQPAHVZxRHdc5eClEN2go+tZF+SKb4Q5OAcF7Jfr6oiqeoAWZ+yCa6vUb0uAC1aGiBxpykWqO+hfJsbMKVnQ/zqUmrtvh7Il971A0y8rNp3KUu1Vq2+5d/eDHPf9PbYJgK5aiZbO1Z0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XHVl1BJw; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=elZmSNrGgkMArYGkSdoNx65K5JWKhWSxEL96Sxvj1bQe96EaOldbNmEpm0fi9n4Dq2Kk5DgkSAv2HWbfJe5g02ztO9qS3R7EuCpnssKqck258LT+EuzwAPTLiOtnQ1+SfuYc15ODEyVLnCZYFvSF500IEsZdkU4x5fOVkd4AbbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JRy59Od4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XHVl1BJw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750754636; x=1782290636;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=L45NXoZ+NSjgNfFv1Uc2lmPuDY4v3Gli3c8yBbV7E7w=;
-  b=XHVl1BJwW5fEfgTbW2fjpBy7RTiwWYDE//WvYkQo7Ljhxv83Ib83MQs/
-   Ol98vf60KqIfIR5ZEKJs/iSSqN8Lahf7ZSoFYFb3oVCl20eljDtZdT7Fx
-   ncNxKIrqNvANmDpklC1n07ATLhX+MqX7+Z94xVYwY+9LLaZBo4lCXl42w
-   f04vQ3F7hU28rPOPz/TbaVuXlMI7elCaaiUr7iPtj7B8Es4g8XviAKkyC
-   DQSZmjV070ah/N/dO4YlKMcZKwXWG4gpoTvOJsam2fCc9QE+dm8w784AW
-   dadPDuy5p10IxZk1l5rhQFl6Soqwe6eKpBDhRMF9hjT3QK1LeoT2ZcgTL
-   g==;
-X-CSE-ConnectionGUID: tldknDeiRs21TRzIeNvquA==
-X-CSE-MsgGUID: AF+S4X9aTN2CQrIyUCGxrA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52214092"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="52214092"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 01:43:56 -0700
-X-CSE-ConnectionGUID: 2vYRGkSnQs618htWM63nfA==
-X-CSE-MsgGUID: OmmttEKCRhOgi6grzXo9MA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="152023769"
-Received: from kuha.fi.intel.com ([10.237.72.152])
-  by orviesa007.jf.intel.com with SMTP; 24 Jun 2025 01:43:52 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 24 Jun 2025 11:43:51 +0300
-Date: Tue, 24 Jun 2025 11:43:50 +0300
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To: RD Babiera <rdbabiera@google.com>
-Cc: badhri@google.com, gregkh@linuxfoundation.org,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: [PATCH v1] usb: typec: altmodes/displayport: do not index
- invalid pin_assignments
-Message-ID: <aFplRgD8nju9ShAO@kuha.fi.intel.com>
-References: <20250618224943.3263103-2-rdbabiera@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JRy59Od4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A439C4CEE3;
+	Tue, 24 Jun 2025 08:44:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750754647;
+	bh=SIsgi3afey44s25VI1BTV0rs+6t0jfF1bwFGJw+D9ts=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JRy59Od4UKvPAbkhyrtaZvicuZmVS2az4oISbzxVl8/AKzhJLPMwS4X54vIpn+WZb
+	 fUtZpimFOJbprq0jXyybDbBfoLPd+0Qtti9H+OTwJqsMWqo0spW6EhZ91kqHKs3eyf
+	 BAzFwajg48Me/SrLr2Ji5x6bMjKW0jce4Knr2qyvHdz2xJaRVX25szqBVQ1EX0PBHB
+	 9WGpaiXirmxn1akyTlbPT33ECk4brv98N28truKgqpej01Koj7HGngjWjOmtuxss8g
+	 jGYYx9jsdruDb1IEtQ5TGm+g13PFUwCxwkZFgTuqvNcQs7V6PuMBUw7UM78gPh38lK
+	 6aVM5iQUPoxIw==
+Date: Tue, 24 Jun 2025 10:44:03 +0200
+From: Christian Brauner <brauner@kernel.org>
+To: syzbot <syzbot+25317a459958aec47bfa@syzkaller.appspotmail.com>
+Cc: jack@suse.cz, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Subject: Re: [syzbot] [fs?] general protection fault in pidfs_free_pid
+Message-ID: <20250624-fratze-fahrgast-a75e524f3ea6@brauner>
+References: <68599c8e.a00a0220.34b642.000f.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250618224943.3263103-2-rdbabiera@google.com>
+In-Reply-To: <68599c8e.a00a0220.34b642.000f.GAE@google.com>
 
-On Wed, Jun 18, 2025 at 10:49:42PM +0000, RD Babiera wrote:
-> A poorly implemented DisplayPort Alt Mode port partner can indicate
-> that its pin assignment capabilities are greater than the maximum
-> value, DP_PIN_ASSIGN_F. In this case, calls to pin_assignment_show
-> will cause a BRK exception due to an out of bounds array access.
+On Mon, Jun 23, 2025 at 11:27:26AM -0700, syzbot wrote:
+> Hello,
 > 
-> Prevent for loop in pin_assignment_show from accessing
-> invalid values in pin_assignments by adding DP_PIN_ASSIGN_MAX
-> value in typec_dp.h and using i < DP_PIN_ASSIGN_MAX as a loop
-> condition.
+> syzbot found the following issue on:
 > 
-> Fixes: 0e3bb7d6894d ("usb: typec: Add driver for DisplayPort alternate mode")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: RD Babiera <rdbabiera@google.com>
-> Reviewed-by: Badhri Jagan Sridharan <badhri@google.com>
+> HEAD commit:    5d4809e25903 Add linux-next specific files for 20250620
+> git tree:       linux-next
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=150ef30c580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=58afc4b78b52b7e3
+> dashboard link: https://syzkaller.appspot.com/bug?extid=25317a459958aec47bfa
+> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a5330c580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c9f6bc580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/16492bf6b788/disk-5d4809e2.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/7be284ded1de/vmlinux-5d4809e2.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/467d717f0d9c/bzImage-5d4809e2.xz
+> 
+> The issue was bisected to:
+> 
+> commit fb0b3e2b2d7f213cb4fde623706f9ed6d748a373
+> Author: Christian Brauner <brauner@kernel.org>
+> Date:   Wed Jun 18 20:53:46 2025 +0000
+> 
+>     pidfs: support xattrs on pidfds
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15a1b370580000
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=17a1b370580000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=13a1b370580000
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+25317a459958aec47bfa@syzkaller.appspotmail.com
+> Fixes: fb0b3e2b2d7f ("pidfs: support xattrs on pidfds")
 
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-
-> ---
->  drivers/usb/typec/altmodes/displayport.c | 2 +-
->  include/linux/usb/typec_dp.h             | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
-> index b09b58d7311d..773786129dfb 100644
-> --- a/drivers/usb/typec/altmodes/displayport.c
-> +++ b/drivers/usb/typec/altmodes/displayport.c
-> @@ -677,7 +677,7 @@ static ssize_t pin_assignment_show(struct device *dev,
->  
->  	assignments = get_current_pin_assignments(dp);
->  
-> -	for (i = 0; assignments; assignments >>= 1, i++) {
-> +	for (i = 0; assignments && i < DP_PIN_ASSIGN_MAX; assignments >>= 1, i++) {
->  		if (assignments & 1) {
->  			if (i == cur)
->  				len += sprintf(buf + len, "[%s] ",
-> diff --git a/include/linux/usb/typec_dp.h b/include/linux/usb/typec_dp.h
-> index f2da264d9c14..acb0ad03bdac 100644
-> --- a/include/linux/usb/typec_dp.h
-> +++ b/include/linux/usb/typec_dp.h
-> @@ -57,6 +57,7 @@ enum {
->  	DP_PIN_ASSIGN_D,
->  	DP_PIN_ASSIGN_E,
->  	DP_PIN_ASSIGN_F, /* Not supported after v1.0b */
-> +	DP_PIN_ASSIGN_MAX,
->  };
->  
->  /* DisplayPort alt mode specific commands */
-> 
-> base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
-> -- 
-> 2.50.0.rc2.701.gf1e915cc24-goog
-
--- 
-heikki
+That is fixed on vfs-6.17.pidfs. :)
