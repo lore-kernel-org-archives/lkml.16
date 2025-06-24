@@ -1,104 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836AF307480;
-	Tue, 24 Jun 2025 15:41:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 291D63074BC
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:41:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750779660; cv=none; b=QAvXLa6qgEOVx5OdFxou6GXgtVjz4CKuUCAwzSdyOcamP97v2TUQZqhke0ernH1rIFLf2FoI0oXAHLFDbP71nuEt1if3W6CwW7oO3rJiIgQzIopoT+VE8mdk/kfUqHOMcmkHBjbAhSYXt4vqZyHL43y09kwPWEL/0kZZkWucX5w=
+	t=1750779695; cv=none; b=bRYbhzXkhHyLxUcKCTaxlgL+5v69nWZkxd2+PXWA4aNEBh1oM/Mm4UFIro3xzjoDPVcmWLbv61wfTgBlAA1VUhSJueh78Z4eTGNH2Cq+nQSsG/JgCsF4mC4D9d/fIxJIK7BgA38aHOb71dHE2pfd3zzr2RsIUvsxvrG7HIBfGto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750779660; c=relaxed/simple;
-	bh=V4cFT1hqRldsR5zu8HOg3Q2LTneYk9DIMbOYJXD5/V0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=MwKWmF7fKgq/MOHyZpCsMkz3xwYVdFWh9LKNkmCyRLaF49jPa3eCAnqerfdAUvgB1CLb+k3q6XUugkBy/lOZTDuhs5kBV42PTJVUm24gkb0HGsoxOfzC4w+0qKqJrfLY0H89D2MVUpieEi0gJSOJrolmII3rGJYYbZgFaKvlsyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SpBF33O5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750779695; c=relaxed/simple;
+	bh=WT4CnKoOoY20N0gNaZZca1PUBZ/SZ0+G6uRWbplt4oE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EcMu71LpFZJtosDpJ3MyZ5eeARHp1HVMi302tXSISxe2EfOFO1/oASWDWpGAiQPwsrdCzHkrr7QxErJhzG9qodTJsrnYApVnO1EIKZL+gbixYHXEjGuAk8HeLKVCNVxVlqkzh8XxHicjea5oLJ4ytS2VizE0My2jhUZzUhMbt34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=EODrfUkF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SpBF33O5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D022AC4CEE3;
-	Tue, 24 Jun 2025 15:40:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750779660;
-	bh=V4cFT1hqRldsR5zu8HOg3Q2LTneYk9DIMbOYJXD5/V0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=SpBF33O5DmWK2ju99YB+4lma9jKXpW06Qy7WaO72fUGRR1bwapxUreARlC7ACWT6K
-	 d7vv4X3sGIn9LGbgcTNo3m5HJIra8v37CKiK8VkCbUNooIqlcYyh8VByADcphLjB9W
-	 hYlSLlPFnIJKGwnFPitY38ytqBnIwNYFchiWpKgQFsRDQMDIhi5yhHtaKUrJqUIfhI
-	 M+utXRuCz03/g3TIw4+WeJGu3yf5PFgqTBHYBduyJ+DgVZQ5TroV2E01VPGEMlzJrk
-	 LU61+IsoQyxe1V5snMuI1Aeg04lidkunp9VMazrO8DDzUHZSLfluTSyWQAZA4nsWG6
-	 Cps8jR3ACfGjQ==
-Date: Tue, 24 Jun 2025 10:40:58 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"joel@jms.id.au" <joel@jms.id.au>,
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
-	"vkoul@kernel.org" <vkoul@kernel.org>,
-	"kishon@kernel.org" <kishon@kernel.org>,
-	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"elbadrym@google.com" <elbadrym@google.com>,
-	"romlem@google.com" <romlem@google.com>,
-	"anhphan@google.com" <anhphan@google.com>,
-	"wak@google.com" <wak@google.com>,
-	"yuxiaozhang@google.com" <yuxiaozhang@google.com>,
-	BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: [PATCH 7/7] pci: aspeed: Add ASPEED PCIe host controller driver
-Message-ID: <20250624154058.GA1478094@bhelgaas>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="EODrfUkF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57435C4CEE3;
+	Tue, 24 Jun 2025 15:41:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750779693;
+	bh=WT4CnKoOoY20N0gNaZZca1PUBZ/SZ0+G6uRWbplt4oE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EODrfUkFsPeaWBpALHDgmVSj13ZKHDjIwd2gw2bI5kP2oeudSD0F4ZGDglIP8okGS
+	 CfY93ijVNOO2KhSc8InbQ4pi8mESVan3mF1B2PyBbTCI4zDud3xOsfLwvWEkUQwiKk
+	 rP0CKl7HY2hJFgsXFdDloz1W54/5c7uL4Y0HT15I=
+Date: Tue, 24 Jun 2025 16:41:31 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Akshay Gupta <akshay.gupta@amd.com>
+Cc: linux-kernel@vger.kernel.org, arnd@arndb.de, Anand.Umarji@amd.com,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+Subject: Re: [PATCH] misc: amd-sbi: Address issues reported in smatch
+Message-ID: <2025062404-overcook-drank-a3ed@gregkh>
+References: <20250530081158.121137-1-akshay.gupta@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <SEYPR06MB5134973F678EB5B163DD50809D79A@SEYPR06MB5134.apcprd06.prod.outlook.com>
+In-Reply-To: <20250530081158.121137-1-akshay.gupta@amd.com>
 
-On Mon, Jun 23, 2025 at 05:41:13AM +0000, Jacky Chou wrote:
-
-[Apparently you trimmed out some of the lines that show who said what;
-there should be more lines here like:
-
-  > On Fri, Jun 13, 2025 at 03:03:55PM +0300, Ilpo Järvinen wrote:
-  > > On Fri, 13 Jun 2025, Jacky Chou wrote:
-]
-
-> > > +#include <linux/irqchip/chained_irq.h> #include <linux/irqdomain.h>
-
-> > > +/* TLP configuration type 0 and type 1 */
-> > > +#define CRG_READ_FMTTYPE(type)		(0x04000000 | (type << 24))
-> > > +#define CRG_WRITE_FMTTYPE(type)		(0x44000000 | (type << 24))
-> > 
-> > These are straight from PCIe spec, right?
-> > 
-> > I think those should come from defines inside
-> > include/uapi/linux/pci_regs.h, there might not be one already, so
-> > you might have to add them.
-> > 
-> > I also think you should actually use the type as boolean, and
-> > return one of the two defines based on it. A helper to do that
-> > might be generic PCI header material as well.
-> > 
+On Fri, May 30, 2025 at 01:41:58PM +0530, Akshay Gupta wrote:
+> Smatch warnings are reported for below commit,
 > 
-> Agreed.  This definition is used on TLP header.  Maybe I will try to
-> add some definitions to pci_regs.h or pci.h
+> Commit bb13a84ed6b7 ("misc: amd-sbi: Add support for CPUID protocol")
+> from Apr 28, 2025 (linux-next), leads to the following Smatch static
+> checker warning:
+> 
+> drivers/misc/amd-sbi/rmi-core.c:132 rmi_cpuid_read() warn: bitwise OR is zero '0xffffffff00000000 & 0xffff'
+> drivers/misc/amd-sbi/rmi-core.c:132 rmi_cpuid_read() warn: potential integer overflow from user 'msg->cpu_in_out << 32'
+> drivers/misc/amd-sbi/rmi-core.c:213 rmi_mca_msr_read() warn: bitwise OR is zero '0xffffffff00000000 & 0xffff'
+> drivers/misc/amd-sbi/rmi-core.c:213 rmi_mca_msr_read() warn: potential integer overflow from user 'msg->mcamsr_in_out << 32'
+> drivers/misc/amd-sbi/rmi-core.c:376 apml_rmi_reg_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
+> drivers/misc/amd-sbi/rmi-core.c:394 apml_mailbox_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
+> drivers/misc/amd-sbi/rmi-core.c:411 apml_cpuid_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
+> drivers/misc/amd-sbi/rmi-core.c:428 apml_mcamsr_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
+> 
+> copy_to/from_user() returns number of bytes, not copied.
+> In case data not copied, return "-EFAULT".
+> 
+> CPUID thread data from input is available at byte 4 & 5, this
+> patch fixes to copy the user data correctly in the argument.
+> 
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/all/aDVyO8ByVsceybk9@stanley.mountain/
+> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
+> Signed-off-by: Akshay Gupta <akshay.gupta@amd.com>
+> ---
+> This patch is created on top of linux-next
 
-This values might come from the PCIe spec, but unless they are needed
-outside drivers/pci, any #defines should probably go in
-drivers/pci/pci.h.
+You are doing multiple things here in the same patch, please break this
+up into a patch series.
+
+thanks,
+
+greg k-h
