@@ -1,226 +1,129 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5996A372
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:26:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C436C258CE7;
+	Tue, 24 Jun 2025 08:26:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753589; cv=none; b=c8TLgaqNIUjAT6+56A0+qHeY6cWHfvwEaanPlhN1blnbLOBoXkaSVsaVnWYYcIu60pdtRC6W7fBhyxAEHxHUB+kjFypGqk+wjyW1M8gVmNmsjtNQGOeRWpSpCkPkCCdom3nLynS2TQv1JnaLTOujekmYep/ObWV5DEEJdvw7MgY=
+	t=1750753593; cv=none; b=dqoJ1aexSPj55Yuc46Vaukldav/TzvLHhYyZWsosfgg6QNEC9H1teMEN8HJ4lUxa+5oz/+9yMDCpOONDtfkNljRTtZIhTTAilD1GJqvx0vo2EJDnZFHX5rbwdkeLiFZgaabx0ssNF8JhTSjgvClAz53QHHAFajV4L6D+KS6QJG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753589; c=relaxed/simple;
-	bh=IeWGG3hyAvbwB6tvfqkj8zEqSmmgUr88kLWUMzQ6I48=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JMSlT9F3PeAIQT8+Z9uSxIyQcUF7G3PmvxIZqNfEpDtTv9ThQRUfhxYvL7fd+phWwyRC1uZ6+/CQApsRUexr7LxNOXq8WteJENkGJrgcMD4KFlDMa74muAbUPhQryaAiXlMAyxgJ5J8rzz4TPaNAX7osFKDSR1vGYa5Drm5igYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uTyyi-0000Bp-H9; Tue, 24 Jun 2025 10:26:04 +0200
-Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uTyyg-00559E-1m;
-	Tue, 24 Jun 2025 10:26:02 +0200
-Received: from ore by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ore@pengutronix.de>)
-	id 1uTyyg-00F6ln-1M;
-	Tue, 24 Jun 2025 10:26:02 +0200
-Date: Tue, 24 Jun 2025 10:26:02 +0200
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v4 0/4] net: selftest: improve test string
- formatting and checksum handling
-Message-ID: <aFphGj_57XnwyhW1@pengutronix.de>
-References: <20250515083100.2653102-1-o.rempel@pengutronix.de>
- <20250516184510.2b84fab4@kernel.org>
- <aFU9o5F4RG3QVygb@pengutronix.de>
- <20250621064600.035b83b3@kernel.org>
- <aFk-Za778Bk38Dxn@pengutronix.de>
- <20250623101920.69d5c731@kernel.org>
+	s=arc-20240116; t=1750753593; c=relaxed/simple;
+	bh=QRgX+NJ29rb6ZeO5bC+li4IIT4vc4Yswth1i3Citlic=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CuoQY7RG35OlWEHQdu3oOrnH+wSCJJJRsajJPggSt78rN+zfd7+A+dA0NTw/mf8KF2T9/JpIWVIG6L7S/BS7QuqbSzlZBsmMUgtVobLOCnoh/6WytJvNakd0vSRM+UTObC9mHQFwA90IWfXiLJwBQvRrwub6PgYwaI1A6IdjB+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FaKz7vu7; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FaKz7vu7"
+Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55O8QQ6l1822877;
+	Tue, 24 Jun 2025 03:26:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750753587;
+	bh=Hvp7xqhrJ8j09Apo35riMe04jFx18ro7DAZaWEWXE64=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=FaKz7vu7Z0Iw/BPAs6Sbjn3LrXN44kbQm0FCTQDv+rWM3CAEeWzYHnkUtG7+iFsQ5
+	 vSYDNXvEVNpPcEmiZyHlGOEDaKCVfN5WSKapWti8PkQgE+cq7V7WobAAigoP1GwHsU
+	 FdlikZT6AaFdXort1WRpOMThh30UlRdJEDAocfUE=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55O8QQvt100529
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 24 Jun 2025 03:26:26 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
+ Jun 2025 03:26:26 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Tue, 24 Jun 2025 03:26:26 -0500
+Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.214])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55O8QPxj1447994;
+	Tue, 24 Jun 2025 03:26:26 -0500
+From: Jayesh Choudhary <j-choudhary@ti.com>
+To: <nm@ti.com>, <vigneshr@ti.com>, <devicetree@vger.kernel.org>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>, <u-kumar1@ti.com>,
+        <j-choudhary@ti.com>
+Subject: [PATCH v2 3/7] arm64: dts: ti: k3-j721s2-main: add DSI & DSI PHY
+Date: Tue, 24 Jun 2025 13:56:15 +0530
+Message-ID: <20250624082619.324851-4-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250624082619.324851-1-j-choudhary@ti.com>
+References: <20250624082619.324851-1-j-choudhary@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250623101920.69d5c731@kernel.org>
-X-Sent-From: Pengutronix Hildesheim
-X-URL: http://www.pengutronix.de/
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, Jun 23, 2025 at 10:19:20AM -0700, Jakub Kicinski wrote:
-> On Mon, 23 Jun 2025 13:45:41 +0200 Oleksij Rempel wrote:
-> > On Sat, Jun 21, 2025 at 06:46:00AM -0700, Jakub Kicinski wrote:
-> > > On Fri, 20 Jun 2025 12:53:23 +0200 Oleksij Rempel wrote:
-> > > > Let me first describe the setup where this issue was observed and my findings.
-> > > > The problem occurs on a system utilizing a Microchip DSA driver with an STMMAC
-> > > > Ethernet controller attached to the CPU port.
-> > > > 
-> > > > In the current selftest implementation, the TCP checksum validation fails,
-> > > > while the UDP test passes. The existing code prepares the skb for hardware
-> > > > checksum offload by setting skb->ip_summed = CHECKSUM_PARTIAL. For TCP, it sets
-> > > > the thdr->check field to the complement of the pseudo-header checksum, and for
-> > > > UDP, it uses udp4_hwcsum. If I understand it correct, this configuration tells
-> > > > the kernel that the hardware should perform the checksum calculation.
-> > > > 
-> > > > However, during testing, I noticed that "rx-checksumming" is enabled by default
-> > > > on the CPU port, and this leads to the TCP test failure.  Only after disabling
-> > > > "rx-checksumming" on the CPU port did the selftest pass. This suggests that the
-> > > > issue is specifically related to the hardware checksum offload mechanism in
-> > > > this particular setup. The behavior indicates that something on the path
-> > > > recalculated the checksum incorrectly.  
-> > > 
-> > > Interesting, that sounds like the smoking gun. When rx-checksumming 
-> > > is enabled the packet still reaches the stack right?  
-> > 
-> > No. It looks like this packets are just silently dropped, before they was
-> > seen by the stack. The only counter which confirms presence of this
-> > frames is HW specific mmc_rx_tcp_err. But it will be increasing even if
-> > rx-checksumming is disabled and packets are forwarded to the stack.
-> 
-> If you happen to have the docs for the STMMAC instantiation in the SoC
-> it'd be good to check if discarding frames with bad csum can be
-> disabled. Various monitoring systems will expect the L4 checksum errors
-> to appear in nstat, not some obscure ethtool -S counter.
+From: Rahul T R <r-ravikumar@ti.com>
 
-Ack. I will it add to my todo.
+Add DT nodes for DPI to DSI Bridge and DSI Phy.
+The DSI bridge is Cadence DSI and the PHY is a
+Cadence DPHY with TI wrapper.
 
+Signed-off-by: Rahul T R <r-ravikumar@ti.com>
+[j-choudhary@ti.com: disable dsi and dphy nodes, rename dphy node]
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-For proper understanding of STMMAC and other drivers, here is how I currently
-understand the expected behavior on the receive path, with some open questions:
-
-Receive Path Checksum Scenarios
-
-* No Hardware Verification
-    * The hardware is not configured for RX checksum offload
-      or does not support the packet type, passing the packet to the driver
-      as-is.
-    * Expected driver behavior: The driver should set the packet's state to
-      `CHECKSUM_NONE`, signaling to the kernel that a software checksum
-      validation is required.
-
-* Hardware Verifies and Reports All Frames (Ideal Linux Behavior)
-    * The hardware is configured not to drop packets with bad checksums.
-      It verifies the checksum of each packet and reports the result (good
-      or bad) in a status field on the DMA descriptor.
-    * Expected driver behavior: The driver must read the status for every
-      packet.
-        * If the hardware reports the checksum is good, the driver should set
-          the packet's state to `CHECKSUM_UNNECESSARY`.
-        * If the hardware reports the checksum is bad, the driver should set
-          the packet's state to `CHECKSUM_NONE` and still pass it to the
-          kernel.
-    * Open Questions:
-        * When the hardware reports a bad checksum in this mode, should the
-          driver increment `rx_crc_errors` immediately? Or should it only set
-          the packet's state to `CHECKSUM_NONE` and let the kernel stack find
-          the error and increment the counter, in order to avoid
-          double-counting the same error?
-
-* Hardware Verifies and Drops on Error
-    * The hardware's RX checksum engine is active and configured to
-      automatically discard any packet with an incorrect checksum before it is
-      delivered to the driver.
-    * Open Questions:
-
-        * When reporting these hardware-level drops, what is the most
-          appropriate existing standard `net_device_stats` counter to use
-          (e.g., `rx_crc_errors`, `rx_errors`)?
-        * If no existing standard counter is a good semantic fit, add new
-          standard counters?
-        * If the "drop on error" feature cannot be disabled independently,
-          and reporting the error via a standard counter is not feasible,
-          does this imply that the entire RX checksum offload feature must be
-          disabled to ensure error visibility?
-
-* Hardware Provides Full Packet Checksum (`CHECKSUM_COMPLETE`)
-    * The hardware calculates a single checksum over the entire packet and
-      provides this value to the driver, without needing to parse the
-      L3/L4 headers.
-    * Expected driver behavior: The driver should place the checksum provided
-      by the hardware into the `skb->csum` field and set the packet's state
-      to `CHECKSUM_COMPLETE`.
-
-Anything I forgot?
-
-> > > If so does the frame enter the stack with CHECKSUM_COMPLETE or
-> > > UNNECESSARY?  
-> > 
-> > If rx-checksumming is enabled and packet has supported ethertype,
-> > then CHECKSUM_UNNECESSARY will be set. Otherwise CHECKSUM_NONE.
-> > 
-> > > > When examining the loopbacked frames, I observed that the TCP checksum was
-> > > > incorrect. Upon further investigation, the xmit helper in net/dsa/tag_ksz.c
-> > > > includes the following:
-> > > > 
-> > > > if (skb->ip_summed == CHECKSUM_PARTIAL && skb_checksum_help(skb))
-> > > >     return NULL;
-> > > > 
-> > > > I assume skb_checksum_help() is intended to calculate the proper checksum when
-> > > > CHECKSUM_PARTIAL is set, indicating that the software should complete the
-> > > > checksum before handing it to the hardware. My understanding is that the STMMAC
-> > > > hardware then calculates the checksum for egress frames if CHECKSUM_PARTIAL is
-> > > > used.  
-> > > 
-> > > stmmac shouldn't touch the frame, note that skb_checksum_help() sets
-> > > skb->ip_summed = CHECKSUM_NONE; so the skb should no longer be considered
-> > > for csum offload.  
-> > 
-> > It looks like skb_checksum_help(), which is used in tag_ksz.c, generates
-> > a TCP checksum without accounting for the IP pseudo-header. The
-> > resulting checksum is then incorrect and is filtered out by the STMMAC
-> > HW on ingress
-> 
-> The pseudo-header csum is filled in net_test_get_skb(), where it calls
-> tcp_v4_check(). But I think you're right, it's incorrect. Could you try:
-> 
-> diff --git a/net/core/selftests.c b/net/core/selftests.c
-> index 35f807ea9952..1166dd1ddb07 100644
-> --- a/net/core/selftests.c
-> +++ b/net/core/selftests.c
-> @@ -160,8 +160,10 @@ static struct sk_buff *net_test_get_skb(struct net_device *ndev,
->         skb->csum = 0;
->         skb->ip_summed = CHECKSUM_PARTIAL;
->         if (attr->tcp) {
-> -               thdr->check = ~tcp_v4_check(skb->len, ihdr->saddr,
-> -                                           ihdr->daddr, 0);
-> +               int l4len;
-> +
-> +               l4len = skb->tail - skb_transport_header(skb);
-> +               thdr->check = ~tcp_v4_check(l4len, ihdr->saddr, ihdr->daddr, 0);
->                 skb->csum_start = skb_transport_header(skb) - skb->head;
->                 skb->csum_offset = offsetof(struct tcphdr, check);
->         } else {
-> 
-> Or some such?
-
-Ah, it works now!
-
-So, for my understanding:
-- does skb_checksum_help() rely on a precalculated and integrated
-  pseudo-header csum?
-- And is this how typical HW-accelerated checksumming works?
-- Is this why it is called CHECKSUM_PARTIAL, because only one part of the
-  checksum is pre-calculated?
-
+diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi b/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
+index 83cf0adb2cb7..e17fffc36248 100644
+--- a/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-j721s2-main.dtsi
+@@ -1795,6 +1795,43 @@ main_spi7: spi@2170000 {
+ 		status = "disabled";
+ 	};
+ 
++	dphy_tx0: phy@4480000 {
++		compatible = "ti,j721e-dphy";
++		reg = <0x0 0x04480000 0x0 0x1000>;
++		clocks = <&k3_clks 363 8>, <&k3_clks 363 14>;
++		clock-names = "psm", "pll_ref";
++		#phy-cells = <0>;
++		power-domains = <&k3_pds 363 TI_SCI_PD_EXCLUSIVE>;
++		assigned-clocks = <&k3_clks 363 14>;
++		assigned-clock-parents = <&k3_clks 363 15>;
++		assigned-clock-rates = <19200000>;
++		status = "disabled";
++	};
++
++	dsi0: dsi@4800000 {
++		compatible = "ti,j721e-dsi";
++		reg = <0x0 0x04800000 0x0 0x100000>, <0x0 0x04710000 0x0 0x100>;
++		clocks = <&k3_clks 154 4>, <&k3_clks 154 1>;
++		clock-names = "dsi_p_clk", "dsi_sys_clk";
++		power-domains = <&k3_pds 154 TI_SCI_PD_EXCLUSIVE>;
++		interrupt-parent = <&gic500>;
++		interrupts = <GIC_SPI 600 IRQ_TYPE_LEVEL_HIGH>;
++		phys = <&dphy_tx0>;
++		phy-names = "dphy";
++		status = "disabled";
++
++		dsi0_ports: ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			port@0 {
++				reg = <0>;
++			};
++			port@1 {
++				reg = <1>;
++			};
++		};
++	};
++
+ 	dss: dss@4a00000 {
+ 		compatible = "ti,j721e-dss";
+ 		reg = <0x00 0x04a00000 0x00 0x10000>, /* common_m */
 -- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.34.1
+
