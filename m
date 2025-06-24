@@ -1,43 +1,36 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FC31F5823
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:58:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E34F1282E1;
+	Tue, 24 Jun 2025 01:59:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750730300; cv=none; b=CUUfurr5jQ/YvJ8rH2NOYCeTh39dxeVlMMYHZzIfeHgOq4DCUeYMpWP1wuJ2bOu9cWVu/ObTRdnD7rOc+zigIpojl+vBTDsDPLNW9PsMRfWB5Uab5hizpB3IjUGrwxRZ0sw9Qef4UXna8mVpzxNyPkbf32B66nNY1uPbo45i7ds=
+	t=1750730376; cv=none; b=MkmAwHxKMDtbYW8mP390PfuLolaxk9wow83Vh5KIneX9iWIkKnkiiwHxQoRVkufF3C7v0385BphjpyxLo+GH3YtySS6VQg0QIGWJuZ0Kj8amuuuL/tfVBbP5fb3YuORPJMhyqxq7eS0IdLg4wWeG73QdZpqOILCWd3aDf73hf/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750730300; c=relaxed/simple;
-	bh=ad1CRdxhimTQoc4mVUECK73MorHW2QAepV0h1yZjQvY=;
+	s=arc-20240116; t=1750730376; c=relaxed/simple;
+	bh=cFYo9JSZgdoMD7bmIa6Q/cBU/txWlDTW2HAL89FwK1o=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HEGy5x4jrPLLVyQhgorSyk3KnZUoXyDEuAjHcY1Eav6zvdHQlNe1rI0apI/w0q4T7qiWBkBq8Qse+fvF3SYN9VpmPO9QlM713AOsOV8JPW81wa+fLx5bmXtF2KVPMQNwDirx6KpMtlEew+gKAwMgopyNfyqjFrhKTJyEePM0m88=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=PtW5XDfi; arc=none smtp.client-ip=115.124.30.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="PtW5XDfi"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750730290; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=Z79fTHSkmTmx2HsAIYRcS2dqelrSRbFVyUYyBEoggcw=;
-	b=PtW5XDfiDo4qTga/atf65PSPlHHvcIxETp3jlua3eghT7tFpbmgHp2Xzohc1NV34br+XrDF/doNZwv4RUkxms3FrvH++yD4JTAvugP+Li/SbQJZq63aUyacbXBrlF8vFRl2RjJg9vzNzjGbKlF9Hbi/QW97/EGNhIPczFBRAn7s=
-Received: from localhost(mailfrom:feng.tang@linux.alibaba.com fp:SMTPD_---0WeeA0u9_1750730289 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 24 Jun 2025 09:58:09 +0800
-Date: Tue, 24 Jun 2025 09:58:08 +0800
-From: Feng Tang <feng.tang@linux.alibaba.com>
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Lance Yang <lance.yang@linux.dev>, Jonathan Corbet <corbet@lwn.net>,
-	linux-kernel@vger.kernel.org, paulmck@kernel.org,
-	john.ogness@linutronix.de
-Subject: Re: [PATCH V2 5/5] panic: add note that panic_print interface is
- deprecated
-Message-ID: <aFoGMI_1I_cZ9O8g@U-2FWC9VHC-2323.local>
-References: <20250616010840.38258-1-feng.tang@linux.alibaba.com>
- <20250616010840.38258-6-feng.tang@linux.alibaba.com>
- <aFlxLK8f276_5TZf@pathway.suse.cz>
+	 Content-Type:Content-Disposition:In-Reply-To; b=C95/Xm9sw+UNntpTYhRjo3N1FGPh/zTpucMEW2vIAKMev2kfVGCSqw4uRTGt5LI5sdZxHtmpEPCcr1NK8SouYgqY2cUcr3ysm3X2q9e6er3W3ggFf6pfq52jbM/SzO/fX0FeYKXrcZIvU1/r33JEcrb3aT0sC7wg4aLaykV5xsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-d1-685a06810df4
+Date: Tue, 24 Jun 2025 10:59:24 +0900
+From: Byungchul Park <byungchul@sk.com>
+To: Qu Wenruo <quwenruo.btrfs@gmx.com>
+Cc: linux-kernel@vger.kernel.org, clm@fb.com, josef@toxicpanda.com,
+	dsterba@suse.com, linux-btrfs@vger.kernel.org,
+	kernel_team@skhynix.com, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, yeoreum.yun@arm.com,
+	yunseong.kim@ericsson.com, gwan-gyeong.mun@intel.com,
+	harry.yoo@oracle.com, ysk@kzalloc.com
+Subject: Re: [RFC] DEPT report on around btrfs, unlink, and truncate
+Message-ID: <20250624015924.GE5820@system.software.com>
+References: <20250623032152.GB70156@system.software.com>
+ <55c8b839-e844-49fe-bedc-948e60f681c7@gmx.com>
+ <20250623081919.GA53365@system.software.com>
+ <474347bb-bbba-4238-8964-299f87de664a@gmx.com>
+ <20250623095250.GA3199@system.software.com>
+ <a93738a1-57af-4eef-9a32-edfc60c7e7b4@gmx.com>
+ <20250624014426.GC5820@system.software.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,59 +39,189 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aFlxLK8f276_5TZf@pathway.suse.cz>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250624014426.GC5820@system.software.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJIsWRmVeSWpSXmKPExsXC9ZZnoW4jW1SGwY4NhhZz1q9hs5jUP4Pd
+	4sKPRiaLi6//MFncX/aMxeLPQ0OLS49XsFtc3jWHzWJx9xsWi0d9b9kt5n4xtPiyehWbxdq/
+	1xgdeD3WzFvD6PHr61U2j4nN79g97t5fyOSxeM9LJo+Fv18we5yY8ZvF4+PTWywe67dcZfGY
+	sHkjq8fnTXIB3FFcNimpOZllqUX6dglcGV9332AqeGZUsXNbRQPjXKUuRk4OCQETiSWH9jPB
+	2a8+soHYLAKqEu2zn7OC2GwC6hI3bvxkBrFFBNQkuk5OAarh4mAWOMAk0TT/PViRsICLxNd7
+	s1hAbF4Bc4mTx9pYQYqEBK4xSWycf5MVIiEocXLmE7AiZqCpf+ZdAprKAWRLSyz/xwERlpdo
+	3jobbBmngIXExZdzGUFsUQFliQPbjjOBzJQQmMwuseDQdTaIqyUlDq64wTKBUXAWkhWzkKyY
+	hbBiFpIVCxhZVjEKZeaV5SZm5pjoZVTmZVboJefnbmIERuCy2j/ROxg/XQg+xCjAwajEw7vD
+	KjJDiDWxrLgy9xCjBAezkgjvIaewDCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8Rt/KU4QE0hNL
+	UrNTUwtSi2CyTBycUg2Mye3iJ5MZvP9xB/QwmldvqmLsdH27Yape6f3kGQJpFyd3zet8Mdf2
+	Ietim39xv40ud231k+g2FLsb0K/7Z1X8/U13PQ2WztC+sJ5X5TbjC2HdJ483WZqe36B1b/HZ
+	j0v0Thlsf//Fcd2UfI3DNZtaricxJOdO3DhjOdOJqLNZvf4vwstm35SYrsRSnJFoqMVcVJwI
+	AD32cjO8AgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsXC5WfdrNvIFpVhcOySksWc9WvYLCb1z2C3
+	uPCjkcni4us/TBb3lz1jsfjz0NDi8NyTrBaXHq9gt7i8aw6bxeLuNywWj/reslvM/WJo8WX1
+	KjaLtX+vMTrweayZt4bR49fXq2weE5vfsXvcvb+QyWPxnpdMHgt/v2D2ODHjN4vHx6e3WDwW
+	v/jA5LF+y1UWjwmbN7J6fN4kF8ATxWWTkpqTWZZapG+XwJXxdfcNpoJnRhU7t1U0MM5V6mLk
+	5JAQMJFY8uojG4jNIqAq0T77OSuIzSagLnHjxk9mEFtEQE2i6+QUoBouDmaBA0wSTfPfgxUJ
+	C7hIfL03iwXE5hUwlzh5rI0VpEhI4BqTxMb5N1khEoISJ2c+AStiBpr6Z94loKkcQLa0xPJ/
+	HBBheYnmrbPBlnEKWEhcfDmXEcQWFVCWOLDtONMERr5ZSCbNQjJpFsKkWUgmLWBkWcUokplX
+	lpuYmWOqV5ydUZmXWaGXnJ+7iREYT8tq/0zcwfjlsvshRgEORiUe3h1WkRlCrIllxZW5hxgl
+	OJiVRHgPOYVlCPGmJFZWpRblxxeV5qQWH2KU5mBREuf1Ck9NEBJITyxJzU5NLUgtgskycXBK
+	NTCuO31gdouCR/OUl6quO78xTzDYsJvlSu+P3pnWZTKNz45z3b/0KNh93t2NOz1+ajQ8P/0w
+	5PHzJbGPFIPv6teayt+On567UEsumIdXuUDrbUXZ1y9tIeGedfeUcg+du+GhUWWVdOlV2Aar
+	/Yt4ijYJ+6quZ7718GHS0X19x9gNvM+mZE/hefNDiaU4I9FQi7moOBEAfv8Vy6MCAAA=
+X-CFilter-Loop: Reflected
 
-On Mon, Jun 23, 2025 at 05:22:20PM +0200, Petr Mladek wrote:
-> On Mon 2025-06-16 09:08:40, Feng Tang wrote:
-> > Long term wise, the 'panic_sys_info' should be the only controlling
-> > interface, which can be referred by other modules.
+On Tue, Jun 24, 2025 at 10:44:26AM +0900, Byungchul Park wrote:
+> On Mon, Jun 23, 2025 at 07:28:38PM +0930, Qu Wenruo wrote:
+> > 在 2025/6/23 19:22, Byungchul Park 写道:
+> > > On Mon, Jun 23, 2025 at 06:22:44PM +0930, Qu Wenruo wrote:
+> > > > 在 2025/6/23 17:49, Byungchul Park 写道:
+> > > > > On Mon, Jun 23, 2025 at 03:20:43PM +0930, Qu Wenruo wrote:
+> > > > > > 在 2025/6/23 12:51, Byungchul Park 写道:
+> > > > > > > Hi folks,
+> > > > > > > 
+> > > > > > > Thanks to Yunseong, we got two DEPT reports in btrfs.  It doesn't mean
+> > > > > > > it's obvious deadlocks, but after digging into the reports, I'm
+> > > > > > > wondering if it could happen by any chance.
+> > > > > > > 
+> > > > > > > 1) The first scenario that I'm concerning is:
+> > > > > > > 
+> > > > > > >      context A            context B
+> > > > > > > 
+> > > > > > >                           do_truncate()
+> > > > > > >                             ...
+> > > > > > >                               btrfs_do_readpage() // with folio lock held
+> > > > > > 
+> > > > > >                                  This one is for data.
+> > > > > 
+> > > > > Do you mean this folio is for data?  Thanks for the confirmation.
+> > > > 
+> > > > Yes, only data folios will go through btrfs_do_readpage().
+> > > > 
+> > > > For metadata, we never go through btrfs_do_readpage(), but
+> > > > read_extent_buffer_pages_nowait().
+> > > > 
+> > > > 
+> > > > > 
+> > > > > > >      do_unlinkat()
+> > > > > > >        ...
+> > > > > > >          push_leaf_right()
+> > > > > > >         btrfs_tree_lock_nested()
+> > > > > > >           down_write_nested(&eb->lock) // hold
+> > > > > 
+> > > > > This is struct extent_buffer's rw_sem.  Right?
+> > > > > 
+> > > > > > >                                 btrfs_get_extent()
+> > > > > > >                                   btrfs_lookup_file_extent()
+> > > > > > >                                     btrfs_search_slot()
+> > > > > > >                                       down_read_nested(&eb->lock) // stuck
+> > > > > > 
+> > > > > >                                          This one is for metadata.
+> > > > >                                                ^
+> > > > >                                        I don't get this actually.
+> > > > > 
+> > > > > This is struct extent_buffer's rw_sem, too.  Cannot this rw_sem be the
+> > > > > same as the rw_sem above in context A?
+> > > > 
+> > > > My bad, I thought you're talking about that down_read_nested()
+> > > > conflicting with folio lock.
+> > > > 
+> > > > But if you're talking about extent_buffer::lock, then the one in context
+> > > > B will wait for the one in context A, and that's expected.
+> > > 
+> > > Sounds good.
+> > > 
+> > > > > > Data and metadata page cache will never cross into each other.
+> > > > > > 
+> > > > > > Thanks,
+> > > > > > Qu
+> > > > > > 
+> > > > > > >           __push_leaf_right()
+> > > > > > >             ...
+> > > > > > >               folio_lock() // stuck
+> > > > > 
+> > > > > Did you mean this folio is always for metadata?
+> > > > 
+> > > > Can you explain more on where this folio_lock() comes from?
+> > > 
+> > > I should also rely on the following stacktrace in the dept report.  I
+> > > asked Yunseong who reported this issue, for the decoded stacktrace, so
+> > > that I can interpret that better.  I will get back once I figure out
+> > > where the wait on PG_locked comes from.
+> > > 
+> > >     [  304.344198][ T7488] [W] dept_page_wait_on_bit(pg_locked_map:0):
+> > >     [  304.344211][ T7488] [<ffff8000823b1d20>] __push_leaf_right+0x8f0/0xc70
+> > 
+> > I believe it's from btrfs_clear_buffer_dirty():
+> > 
+> > As we have a for() loop iterating all the folios of a an extent buffer
+> > (aka, metadata structure), then clear the dirty flags.
+> > 
+> > The same applies to btrfs_mark_buffer_dirty() -> set_extent_buffer_dirty().
 > 
-> Strictly speaking, 'panic_sys_info' is not a complete
-> replacement for 'panic_print' because it does not allow
-> replaying the log buffer during panic.
-
-Indeed, I forgot this part.
-
-> I suggest to add a separate parameter "panic_console_replay"
-> for the missing functionality first. And 'panic_print' will
-> be obsoleted by both 'panic_sys_info' and 'panic_console_replay'.
- 
-Will do.
-
-> > --- a/kernel/panic.c
-> > +++ b/kernel/panic.c
-> > @@ -76,6 +76,13 @@ ATOMIC_NOTIFIER_HEAD(panic_notifier_list);
-> >  EXPORT_SYMBOL(panic_notifier_list);
-> >  
-> >  #ifdef CONFIG_SYSCTL
-> > +static int sysctl_panic_print_handler(const struct ctl_table *table, int write,
-> > +			   void *buffer, size_t *lenp, loff_t *ppos)
-> > +{
-> > +	printk_once("panic: 'panic_print' sysctl interface will be obsoleted by 'panic_sys_info' interface.\n");
-> > +	return proc_doulongvec_minmax(table, write, buffer, lenp, ppos);
-> > +}
-> > +
-> >  static const struct ctl_table kern_panic_table[] = {
-> >  #ifdef CONFIG_SMP
-> >  	{
-> > @@ -107,7 +114,7 @@ static const struct ctl_table kern_panic_table[] = {
-> >  		.data		= &panic_print,
-> >  		.maxlen		= sizeof(unsigned long),
-> >  		.mode		= 0644,
-> > -		.proc_handler	= proc_doulongvec_minmax,
-> > +		.proc_handler	= sysctl_panic_print_handler,
+> Thanks to Yunseong, I figured out this is the case.
 > 
-> This handles only the sysctl interface. We should do something similar
-> also for the "panic_print" command line parameter. It would require
-> using core_param_cb() instead of core_param().
-
-OK, thanks!
-
-- Feng
-
-> >  	},
-> >  	{
-> >  		.procname	= "panic_on_warn",
+> > In that case, the folio is 100% belonging to btree inode thus metadata.
 > 
-> Best Regards,
-> Petr
+> Good to know.
+> 
+> Lastly, is it still good with directly manipulating block devs or
+							^
+						I meant block devs files.
+
+	Byungchul
+
+> stacked file system using loopback devices, from the confliction of
+> folios and extent_buffers?
+> 
+> If you confirm it, this issue can be closed :-) Thanks in advance.
+> 
+> 	Byungchul
+> 
+> > Thus the folio lock can not conflict with a data folio, thus there
+> > should be no deadlock.
+> > 
+> > Thanks,
+> > Qu
+> > 
+> > 
+> > >     [  304.344232][ T7488] stacktrace:
+> > >     [  304.344241][ T7488]       __push_leaf_right+0x8f0/0xc70
+> > >     [  304.344260][ T7488]       push_leaf_right+0x408/0x628
+> > >     [  304.344278][ T7488]       btrfs_del_items+0x974/0xaec
+> > >     [  304.344297][ T7488]       btrfs_truncate_inode_items+0x1c5c/0x2b00
+> > >     [  304.344314][ T7488]       btrfs_evict_inode+0xa4c/0xd38
+> > >     [  304.344335][ T7488]       evict+0x340/0x7b0
+> > >     [  304.344352][ T7488]       iput+0x4ec/0x840
+> > >     [  304.344369][ T7488]       do_unlinkat+0x444/0x59c
+> > >     [  304.344388][ T7488]       __arm64_sys_unlinkat+0x11c/0x260
+> > >     [  304.344407][ T7488]       invoke_syscall+0x88/0x2e0
+> > >     [  304.344425][ T7488]       el0_svc_common.constprop.0+0xe8/0x2e0
+> > >     [  304.344445][ T7488]       do_el0_svc+0x44/0x60
+> > >     [  304.344463][ T7488]       el0_svc+0x50/0x188
+> > >     [  304.344482][ T7488]       el0t_64_sync_handler+0x10c/0x140
+> > >     [  304.344503][ T7488]       el0t_64_sync+0x198/0x19c
+> > > 
+> > > Thanks.
+> > > 
+> > >       Byungchul
+> > > 
+> > > > I didn't see any location where __push_leaf_right() is locking a folio
+> > > > nor the original do_unlinkat().
+> > > > 
+> > > > So here I can only guess the folio is from __push_leaf_right() context,
+> > > > that means it can only be a metadata folio.
+> > > > 
+> > > > > 
+> > > > > If no, it could lead a deadlock in my opinion.  If yes, dept should
+> > > > > assign different classes to folios between data data and metadata.
+> > > > 
+> > > > So far I believe the folio belongs to metadata.
+> > > > 
+> > > > And since btrfs has very different handling of metadata folios, and it's
+> > > > a little confusing that, we also have a btree_inode to handle the
+> > > > metadata page cache, but do not have read_folio() callbacks, it can be a
+> > > > little confusing to some automatic tools.
+> > > > 
+> > > > Thanks,
+> > > > Qu
+> > 
+> > 
