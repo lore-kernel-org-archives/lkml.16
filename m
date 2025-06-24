@@ -1,344 +1,275 @@
-Received: from out-173.mta1.migadu.com (out-173.mta1.migadu.com [95.215.58.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A12F51DED69
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 04:26:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A176136;
+	Tue, 24 Jun 2025 04:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750739172; cv=none; b=ucz8lAb6f51Y78mwStq3o4z+jQV7QbfHZtV6tSXIZ42BaZg2HKrbFo6ljGg+JtKTAoSVzyQiTmpo6stPZUpP1aUZytJUcIOBilFSRAux7Q5sjVyI3FR++57SyEhRBjJ8081tfG24xGQXyUrl2o2RP1PAGjiLBB7WyD6DiBamG5w=
+	t=1750739290; cv=none; b=ht6HfL0OqA/av4aq7vanRI6LMAFN3Sk/LW4L/Lehp4827YTncWR0PaCI00sqe83q36CccQqEaURInNR9dr6win99Dn5hn2HFVLMLmTYE5TUjXeFH1ypZ5ayC8Vg7di919cnev+aSUfK0LFIvXvhfchLPfu4Iez36Ww1+oDnfkZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750739172; c=relaxed/simple;
-	bh=exktilvcb+YolJJZWIerez+exf42hkNhxGbx9JbpW6I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lzTmD8XBOGP59RHut+89wSELVWk30CipWnYL/OzntmF1cyYPphfgXqrX3QIiK4F0w0O4z6VQs6wO95YwxzQiezGRaVRglT4W7x7iaRxso8fZjDebcyNy2F3I+zPpI2KFkKuL7HDzjQFOnMrvnyEyHxat6fNWYTW5zTOt4X/7TMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VF2DTT4r; arc=none smtp.client-ip=95.215.58.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750739290; c=relaxed/simple;
+	bh=qDq+KroKdv6fd4RFczineFXJjUXv3l3EBcPo11dsWpE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=bEpQKluIhQ135AU8d/M/nKbzMuKDbCmfuJNXbyDzhuGopUL+kgxas+zCwrs5q/wfHrZdllwEQk1bxdPxZPXh+5Ow1floEgZGyWZWnb8Us03GaLtt6QfmS+3tM37qD/oymF7+Cra3hB9CW0VEuVmxDT6vYb6fUdsy+60bExaMnco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gFl2xlDt; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VF2DTT4r"
-Message-ID: <b84bf315-5910-41af-bc0e-525b791fcf6f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750739167;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dj/l2G4P8DRQJkrYFE0yWTybZO15BNu5LF18yDVkMNc=;
-	b=VF2DTT4rn4FCtlVR4RaLlCD8flPsJ3DSujACK16HSfnkA3ERX3pmxZa8dK0/uuBC193w9o
-	3Lo9rWI8AnlIlWlkGrkI/urvkSZlMNcvsUYfIcpDoqj39nCgTByEXYcXU+KZ/rIC9mfcOi
-	B98XUirhaA1K2zvN2U+1BI79cVmfLlk=
-Date: Tue, 24 Jun 2025 12:25:44 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFl2xlDt"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-313336f8438so648471a91.0;
+        Mon, 23 Jun 2025 21:28:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750739288; x=1751344088; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RmSIN6ze48fHLAU7HddzL1LXnxd1gMl3vk8ikqqzThg=;
+        b=gFl2xlDtmQGOqWwBSnrd7N6S+kD8Lx2jrCiOLcCoVKwkzRfeBUPR0ABxsVEkfaLeRx
+         y19CvSWZ6dataJOSVoCapPKTbHEV185eHg4yZ2ZKIPmkRO7C5P0va7GCqvaGwc6rbPIW
+         J2NOd0mg1bG69D5rl9iPiZWCbbDsvgOZlQokATI9FxTcoyQ611RkJTacaJ5AztgUG0EV
+         9qiDYCYdQtCwcTwL5MHAlGonbOxEKfIzQYLgyQaP/voQcCcWlToWuZm0KToVlpo9aLLz
+         XjjY02gPUrcuaNqYoVL6/wotvYFitXMoB6iD1BKw6UlN1kh0gCEJTvy50Io25jZEXVz+
+         F/mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750739288; x=1751344088;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RmSIN6ze48fHLAU7HddzL1LXnxd1gMl3vk8ikqqzThg=;
+        b=E2QVfPdMSqB6a+H9hbciy0nWJlTQfBswex8/uK7clK/s/o2YWUFXCN8wSstHGrzQAo
+         003JgjfmrGo4u5yPcUI1C57sxa1sNHrrs0W1afLXFipU3keNkYqgXMSi8oVksH/Qclvs
+         07tCPDn0XObgbfjQhG+gZYC5BCykubiodKT2VhNTIm8+B9aPcSPF/DMyloAx3Nv1od+Y
+         xN4Yg9C7IqkeW74IlBL2gO3ArNB7Frr+VoJprzsFaMZLxbm2pbmmOBMx18XSezLq3sUM
+         jl1F+NqhwX6giIM4vH2f4R0eMt9QAZeurVF1OX67Qeon7Rf3zuBZrTXPgjcPE6c2Td9p
+         ZsQw==
+X-Forwarded-Encrypted: i=1; AJvYcCU2fISER5fCKOmbQrlrRzhkA8YIGOJ2aRRTvmXY5c3D3yhR55kwDGFaNnYbj8acwL7npH9TIHgxTrFKkfCRDtM=@vger.kernel.org, AJvYcCVKLMLN+5LyLKmtnBrR2ya/ByRJB/MOq9Z42xT4NFXb9T116gjXEnuMdcCWvq4oDu3m8XXBVOxN4H/VvjA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx2EuB0jecKvCC5faxiiwafq3IPhRVU9ID/dJzaZddoGuVIOZlK
+	hdTLf11hAI/arV/7FBNPE4b7OuAeVieYxC87znteS86R0sMZu8QGLxPm
+X-Gm-Gg: ASbGncsV2Uwq+tdA8xEd1s1Ml3gYB1ddvGR2h3LKJ4frzt6jEYQjO0QzsQicvUFORVi
+	Qs7ZLJ6w4rXiTLJeaeZnRvNDzp1yxQFHluuqunOI9iCWImK8xF8Srba/Nr19KhVJthlrccoNLaJ
+	zQGOh057bKgKZ/ZJSsNwlm0hvahggAVGTkE/HO4IpG2pqklLpk36z6kuGhqUZ/GBxrYQTcEqXvc
+	HhlO4POXUkXx42qS4Vmrx9ZnQzcfg/qnO/LORgsItVLVbg9GZUWPcfQmgEA3UzW+jleIPtHFtkd
+	Xu/ktcmVBYdep5f6OYQbyZO1OCjtfF9FAxDy2TWQXvU+Poz9HDqgPu8MDGkT4wqQd2RzAOYd3w5
+	umCFrO7BilBWv6HQ=
+X-Google-Smtp-Source: AGHT+IEs6EWS+EoVH2MIVJCKKApIeloHaAs25Uc47CI0bKqoK2OdgPgy0frPAhiLvltO/93opV0rYQ==
+X-Received: by 2002:a17:903:32c3:b0:234:8e54:2d5f with SMTP id d9443c01a7336-237d9ac4532mr88230265ad.13.1750739288464;
+        Mon, 23 Jun 2025 21:28:08 -0700 (PDT)
+Received: from localhost.localdomain ([138.94.103.170])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d874fe39sm96363105ad.251.2025.06.23.21.28.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jun 2025 21:28:08 -0700 (PDT)
+From: "Christian S. Lima" <christiansantoslima21@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	~lkcamp/patches@lists.sr.ht,
+	richard120310@gmail.com
+Subject: [PATCH v8] rust: transmute: Add methods for FromBytes trait
+Date: Tue, 24 Jun 2025 01:28:02 -0300
+Message-ID: <20250624042802.105623-1-christiansantoslima21@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH RFC 3/3] hung_task: extend hung task blocker tracking to
- rwsems
-Content-Language: en-US
-To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc: akpm@linux-foundation.org, zi.li@linux.dev, anna.schumaker@oracle.com,
- boqun.feng@gmail.com, joel.granados@kernel.org, jstultz@google.com,
- kent.overstreet@linux.dev, leonylgao@tencent.com,
- linux-kernel@vger.kernel.org, longman@redhat.com, mingo@redhat.com,
- mingzhe.yang@ly.com, peterz@infradead.org, rostedt@goodmis.org,
- senozhatsky@chromium.org, tfiga@chromium.org, will@kernel.org,
- Lance Yang <ioworker0@gmail.com>
-References: <20250612042005.99602-1-lance.yang@linux.dev>
- <20250612042005.99602-4-lance.yang@linux.dev>
- <20250624125753.1b64a9b0dafbd2bd63239dbc@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <20250624125753.1b64a9b0dafbd2bd63239dbc@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
+The two methods added take a slice of bytes and return those bytes in a
+specific type. These methods are useful when we need to transform the
+stream of bytes into specific type.
 
+The `FromBytesSized` trait was added to make it easier to implement other
+user defined types within the codebase. With the current implementation,
+there's no way to interact without implementing `from_bytes` and
+`from_mut_bytes`for every new type, and this would end up generating a lot
+of duplicate code. By using FromBytesSized as a proxy trait, we can avoid
+this without generating a direct dependecy. If necessary, the user can
+simply implement `FromBytes`if needed. For more context please, check the
+[1] and [2].
 
-On 2025/6/24 11:57, Masami Hiramatsu (Google) wrote:
-> On Thu, 12 Jun 2025 12:19:26 +0800
-> Lance Yang <ioworker0@gmail.com> wrote:
-> 
->> From: Lance Yang <lance.yang@linux.dev>
->>
->> Inspired by mutex blocker tracking[1], and having already extended it to
->> semaphores, let's now add support for reader-writer semaphores (rwsems).
->>
->> The approach is simple: when a task enters TASK_UNINTERRUPTIBLE while
->> waiting for an rwsem, we just call hung_task_set_blocker(). The hung task
->> detector can then query the rwsem's owner to identify the lock holder.
->>
->> Tracking works reliably for writers, as there can only be a single writer
->> holding the lock, and its task struct is stored in the owner field.
->>
->> The main challenge lies with readers. The owner field points to only one
->> of many concurrent readers, so we might lose track of the blocker if that
->> specific reader unlocks, even while others remain. This is not a
->> significant issue, however. In practice, long-lasting lock contention is
->> almost always caused by a writer. Therefore, reliably tracking the writer
->> is the primary goal of this patch series ;)
-> 
-> I think as far as it is reliable, it is better than nothing :) and that
-> can help us to debug some part of kernel crashes.
+[1] https://lore.kernel.org/rust-for-linux/DANSZ6Q476EC.3GY00K717QVUL@nvidia.com/
+[2] https://lore.kernel.org/rust-for-linux/DAOESYD6F287.3U3M64X0S1WN5@nvidia.com/
 
-Yeah! That was the goal. Even if it's not a perfect solution for all
-reader scenarios, it provides much-needed visibility for writes and
-is a good improvement ;)
+Link: https://github.com/Rust-for-Linux/linux/issues/1119
+Suggested-by: Alexandre Courbot <acourbot@nvidia.com>
+Signed-off-by: Christian S. Lima <christiansantoslima21@gmail.com>
+---
+Changes in v2:
+- Rollback the implementation for the macro in the repository and implement
+  methods in trait
+- Link to v2: https://lore.kernel.org/rust-for-linux/20241012070121.110481-1-christiansantoslima21@gmail.com/
 
-> 
->>
->> With this change, the hung task detector can now show blocker task's info
->> like below:
->>
->> [Thu Jun 12 11:01:33 2025] INFO: task rw_sem_thread2:36526 blocked for more than 122 seconds.
->> [Thu Jun 12 11:01:33 2025]       Tainted: G S         O        6.16.0-rc1 #1
->> [Thu Jun 12 11:01:33 2025] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
->> [Thu Jun 12 11:01:33 2025] task:rw_sem_thread2  state:D stack:0     pid:36526 tgid:36526 ppid:2      task_flags:0x208040 flags:0x00004000
->> [Thu Jun 12 11:01:33 2025] Call Trace:
->> [Thu Jun 12 11:01:33 2025]  <TASK>
->> [Thu Jun 12 11:01:33 2025]  __schedule+0x7c7/0x1930
->> [Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ? _raw_spin_lock_irq+0x8a/0xe0
->> [Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  schedule+0x6a/0x180
->> [Thu Jun 12 11:01:33 2025]  schedule_preempt_disabled+0x15/0x30
->> [Thu Jun 12 11:01:33 2025]  rwsem_down_write_slowpath+0x447/0x1090
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_rwsem_down_write_slowpath+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ? __pfx___might_resched+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_thread2_func+0x10/0x10 [rw_sem_test_2]
->> [Thu Jun 12 11:01:33 2025]  down_write+0x125/0x140
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_down_write+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ? msleep+0x91/0xf0
->> [Thu Jun 12 11:01:33 2025]  ? __raw_spin_lock_irqsave+0x8c/0xf0
->> [Thu Jun 12 11:01:33 2025]  thread2_func+0x37/0x70 [rw_sem_test_2]
->> [Thu Jun 12 11:01:33 2025]  kthread+0x39f/0x750
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ret_from_fork+0x25d/0x320
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ret_from_fork_asm+0x1a/0x30
->> [Thu Jun 12 11:01:33 2025]  </TASK>
->> [Thu Jun 12 11:01:33 2025] INFO: task rw_sem_thread2:36526 <writer> blocked on an rw-semaphore likely owned by task rw_sem_thread1:36525 <writer>
->> [Thu Jun 12 11:01:33 2025] task:rw_sem_thread1  state:S stack:0     pid:36525 tgid:36525 ppid:2      task_flags:0x208040 flags:0x00004000
->> [Thu Jun 12 11:01:33 2025] Call Trace:
->> [Thu Jun 12 11:01:33 2025]  <TASK>
->> [Thu Jun 12 11:01:33 2025]  __schedule+0x7c7/0x1930
->> [Thu Jun 12 11:01:33 2025]  ? __pfx___schedule+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ? __mod_timer+0x304/0xa80
->> [Thu Jun 12 11:01:33 2025]  ? irq_work_queue+0x6a/0xa0
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_vprintk_emit+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  schedule+0x6a/0x180
->> [Thu Jun 12 11:01:33 2025]  schedule_timeout+0xfb/0x230
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_schedule_timeout+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_process_timeout+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ? down_write+0xc4/0x140
->> [Thu Jun 12 11:01:33 2025]  msleep_interruptible+0xbe/0x150
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_thread1_func+0x10/0x10 [rw_sem_test_2]
->> [Thu Jun 12 11:01:33 2025]  thread1_func+0x37/0x60 [rw_sem_test_2]
->> [Thu Jun 12 11:01:33 2025]  kthread+0x39f/0x750
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ? __pfx__raw_spin_lock_irq+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ret_from_fork+0x25d/0x320
->> [Thu Jun 12 11:01:33 2025]  ? __pfx_kthread+0x10/0x10
->> [Thu Jun 12 11:01:33 2025]  ret_from_fork_asm+0x1a/0x30
->> [Thu Jun 12 11:01:33 2025]  </TASK>
->>
->> [1] https://lore.kernel.org/all/174046694331.2194069.15472952050240807469.stgit@mhiramat.tok.corp.google.com/
->>
->> Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->> Signed-off-by: Lance Yang <lance.yang@linux.dev>
-> 
-> Looks good to me.
-> 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> BTW, can you also add a patch to extend the test module
-> (samples/hung_task/hung_task_tests.c) to handle the rwsem
-> blocking case ? (reader and writer side)
+Changes in v3:
+- Fix grammar errors
+- Remove repeated tests
+- Fix alignment errors
+- Fix tests not building
+- Link to v3: https://lore.kernel.org/rust-for-linux/20241109055442.85190-1-christiansantoslima21@gmail.com/
 
-Thanks! Will do.
-Lance
+Changes in v4:
+- Removed core::simd::ToBytes
+- Changed trait and methods to safe Add
+- Result<&Self, Error> in order to make safe methods
+- Link to v4: https://lore.kernel.org/rust-for-linux/20250314034910.134463-1-christiansantoslima21@gmail.com/
 
-> 
-> Thank you,
-> 
-> 
->> ---
->>   include/linux/hung_task.h | 18 +++++++++---------
->>   kernel/hung_task.c        | 29 +++++++++++++++++++++++++----
->>   kernel/locking/rwsem.c    | 17 ++++++++++++++++-
->>   3 files changed, 50 insertions(+), 14 deletions(-)
->>
->> diff --git a/include/linux/hung_task.h b/include/linux/hung_task.h
->> index 1bc2b3244613..34e615c76ca5 100644
->> --- a/include/linux/hung_task.h
->> +++ b/include/linux/hung_task.h
->> @@ -21,17 +21,17 @@
->>    * type.
->>    *
->>    * Type encoding:
->> - * 00 - Blocked on mutex        (BLOCKER_TYPE_MUTEX)
->> - * 01 - Blocked on semaphore    (BLOCKER_TYPE_SEM)
->> - * 10 - Blocked on rt-mutex     (BLOCKER_TYPE_RTMUTEX)
->> - * 11 - Blocked on rw-semaphore (BLOCKER_TYPE_RWSEM)
->> + * 00 - Blocked on mutex			(BLOCKER_TYPE_MUTEX)
->> + * 01 - Blocked on semaphore			(BLOCKER_TYPE_SEM)
->> + * 10 - Blocked on rw-semaphore as READER	(BLOCKER_TYPE_RWSEM_READER)
->> + * 11 - Blocked on rw-semaphore as WRITER	(BLOCKER_TYPE_RWSEM_WRITER)
->>    */
->> -#define BLOCKER_TYPE_MUTEX      0x00UL
->> -#define BLOCKER_TYPE_SEM        0x01UL
->> -#define BLOCKER_TYPE_RTMUTEX    0x02UL
->> -#define BLOCKER_TYPE_RWSEM      0x03UL
->> +#define BLOCKER_TYPE_MUTEX		0x00UL
->> +#define BLOCKER_TYPE_SEM		0x01UL
->> +#define BLOCKER_TYPE_RWSEM_READER	0x02UL
->> +#define BLOCKER_TYPE_RWSEM_WRITER	0x03UL
->>   
->> -#define BLOCKER_TYPE_MASK       0x03UL
->> +#define BLOCKER_TYPE_MASK		0x03UL
->>   
->>   #ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
->>   static inline void hung_task_set_blocker(void *lock, unsigned long type)
->> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
->> index d2432df2b905..8708a1205f82 100644
->> --- a/kernel/hung_task.c
->> +++ b/kernel/hung_task.c
->> @@ -23,6 +23,7 @@
->>   #include <linux/sched/debug.h>
->>   #include <linux/sched/sysctl.h>
->>   #include <linux/hung_task.h>
->> +#include <linux/rwsem.h>
->>   
->>   #include <trace/events/sched.h>
->>   
->> @@ -100,6 +101,7 @@ static void debug_show_blocker(struct task_struct *task)
->>   {
->>   	struct task_struct *g, *t;
->>   	unsigned long owner, blocker, blocker_type;
->> +	const char *rwsem_blocked_by, *rwsem_blocked_as;
->>   
->>   	RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "No rcu lock held");
->>   
->> @@ -111,12 +113,20 @@ static void debug_show_blocker(struct task_struct *task)
->>   
->>   	switch (blocker_type) {
->>   	case BLOCKER_TYPE_MUTEX:
->> -		owner = mutex_get_owner(
->> -			(struct mutex *)hung_task_blocker_to_lock(blocker));
->> +		owner = mutex_get_owner(hung_task_blocker_to_lock(blocker));
->>   		break;
->>   	case BLOCKER_TYPE_SEM:
->> -		owner = sem_last_holder(
->> -			(struct semaphore *)hung_task_blocker_to_lock(blocker));
->> +		owner = sem_last_holder(hung_task_blocker_to_lock(blocker));
->> +		break;
->> +	case BLOCKER_TYPE_RWSEM_READER:
->> +	case BLOCKER_TYPE_RWSEM_WRITER:
->> +		owner = (unsigned long)rwsem_owner(
->> +					hung_task_blocker_to_lock(blocker));
->> +		rwsem_blocked_as = (blocker_type == BLOCKER_TYPE_RWSEM_READER) ?
->> +					"reader" : "writer";
->> +		rwsem_blocked_by = is_rwsem_reader_owned(
->> +					hung_task_blocker_to_lock(blocker)) ?
->> +					"reader" : "writer";
->>   		break;
->>   	default:
->>   		WARN_ON_ONCE(1);
->> @@ -134,6 +144,11 @@ static void debug_show_blocker(struct task_struct *task)
->>   			pr_err("INFO: task %s:%d is blocked on a semaphore, but the last holder is not found.\n",
->>   			       task->comm, task->pid);
->>   			break;
->> +		case BLOCKER_TYPE_RWSEM_READER:
->> +		case BLOCKER_TYPE_RWSEM_WRITER:
->> +			pr_err("INFO: task %s:%d is blocked on an rw-semaphore, but the owner is not found.\n",
->> +			       task->comm, task->pid);
->> +			break;
->>   		}
->>   		return;
->>   	}
->> @@ -152,6 +167,12 @@ static void debug_show_blocker(struct task_struct *task)
->>   			pr_err("INFO: task %s:%d blocked on a semaphore likely last held by task %s:%d\n",
->>   			       task->comm, task->pid, t->comm, t->pid);
->>   			break;
->> +		case BLOCKER_TYPE_RWSEM_READER:
->> +		case BLOCKER_TYPE_RWSEM_WRITER:
->> +			pr_err("INFO: task %s:%d <%s> blocked on an rw-semaphore likely owned by task %s:%d <%s>\n",
->> +			       task->comm, task->pid, rwsem_blocked_as, t->comm,
->> +			       t->pid, rwsem_blocked_by);
->> +			break;
->>   		}
->>   		sched_show_task(t);
->>   		return;
->> diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
->> index a310eb9896de..92c6332da401 100644
->> --- a/kernel/locking/rwsem.c
->> +++ b/kernel/locking/rwsem.c
->> @@ -27,6 +27,7 @@
->>   #include <linux/export.h>
->>   #include <linux/rwsem.h>
->>   #include <linux/atomic.h>
->> +#include <linux/hung_task.h>
->>   #include <trace/events/lock.h>
->>   
->>   #ifndef CONFIG_PREEMPT_RT
->> @@ -1065,10 +1066,13 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, long count, unsigned int stat
->>   		wake_up_q(&wake_q);
->>   
->>   	trace_contention_begin(sem, LCB_F_READ);
->> +	set_current_state(state);
->> +
->> +	if (state == TASK_UNINTERRUPTIBLE)
->> +		hung_task_set_blocker(sem, BLOCKER_TYPE_RWSEM_READER);
->>   
->>   	/* wait to be given the lock */
->>   	for (;;) {
->> -		set_current_state(state);
->>   		if (!smp_load_acquire(&waiter.task)) {
->>   			/* Matches rwsem_mark_wake()'s smp_store_release(). */
->>   			break;
->> @@ -1083,8 +1087,12 @@ rwsem_down_read_slowpath(struct rw_semaphore *sem, long count, unsigned int stat
->>   		}
->>   		schedule_preempt_disabled();
->>   		lockevent_inc(rwsem_sleep_reader);
->> +		set_current_state(state);
->>   	}
->>   
->> +	if (state == TASK_UNINTERRUPTIBLE)
->> +		hung_task_clear_blocker();
->> +
->>   	__set_current_state(TASK_RUNNING);
->>   	lockevent_inc(rwsem_rlock);
->>   	trace_contention_end(sem, 0);
->> @@ -1146,6 +1154,9 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
->>   	set_current_state(state);
->>   	trace_contention_begin(sem, LCB_F_WRITE);
->>   
->> +	if (state == TASK_UNINTERRUPTIBLE)
->> +		hung_task_set_blocker(sem, BLOCKER_TYPE_RWSEM_WRITER);
->> +
->>   	for (;;) {
->>   		if (rwsem_try_write_lock(sem, &waiter)) {
->>   			/* rwsem_try_write_lock() implies ACQUIRE on success */
->> @@ -1179,6 +1190,10 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
->>   trylock_again:
->>   		raw_spin_lock_irq(&sem->wait_lock);
->>   	}
->> +
->> +	if (state == TASK_UNINTERRUPTIBLE)
->> +		hung_task_clear_blocker();
->> +
->>   	__set_current_state(TASK_RUNNING);
->>   	raw_spin_unlock_irq(&sem->wait_lock);
->>   	lockevent_inc(rwsem_wlock);
->> -- 
->> 2.49.0
->>
-> 
-> 
+Changes in v5:
+- Changed from Result to Option
+- Removed commentaries
+- Returned trait impl to unsafe
+- Link to v5: https://lore.kernel.org/rust-for-linux/20250320014041.101470-1-christiansantoslima21@gmail.com/
+
+Changes in v6:
+- Add endianess check to doc test and use match to check
+success case
+- Reformulated safety comments
+- Link to v6: https://lore.kernel.org/rust-for-linux/20250330234039.29814-1-christiansantoslima21@gmail.com/
+
+Changes in v7:
+- Add alignment check
+- Link to v7: https://lore.kernel.org/rust-for-linux/20250615072042.133290-1-christiansantoslima21@gmail.com/
+
+Changes in v8:
+- Add the new FromBytesSized trait
+- Change the implementation of FromBytes trait methods
+- Move the cast to pointer earlier and use `is_aligned()` instead manual alignment check
+---
+ rust/kernel/transmute.rs | 100 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 94 insertions(+), 6 deletions(-)
+
+diff --git a/rust/kernel/transmute.rs b/rust/kernel/transmute.rs
+index 1c7d43771a37..832c65a1239c 100644
+--- a/rust/kernel/transmute.rs
++++ b/rust/kernel/transmute.rs
+@@ -9,27 +9,115 @@
+ ///
+ /// It's okay for the type to have padding, as initializing those bytes has no effect.
+ ///
++/// # Examples
++///
++/// ```
++/// use kernel::transmute::FromBytes;
++///
++/// let foo = [1, 2, 3, 4];
++///
++/// let result = u32::from_bytes(&foo)?;
++///
++/// #[cfg(target_endian = "little")]
++/// assert_eq!(*result, 0x4030201);
++///
++/// #[cfg(target_endian = "big")]
++/// assert_eq!(*result, 0x1020304);
++/// ```
++///
+ /// # Safety
+ ///
+ /// All bit-patterns must be valid for this type. This type must not have interior mutability.
+-pub unsafe trait FromBytes {}
++pub unsafe trait FromBytes {
++    /// Converts a slice of bytes to a reference to `Self` when possible.
++    fn from_bytes(bytes: &[u8]) -> Option<&Self>;
++
++    /// Converts a mutable slice of bytes to a reference to `Self` when possible.
++    fn from_mut_bytes(bytes: &mut [u8]) -> Option<&mut Self>
++    where
++        Self: AsBytes;
++}
+ 
+-macro_rules! impl_frombytes {
++/// Just a proxy trait for FromBytes, if you need an implementation for your type use this instead.
++///
++/// # Safety
++///
++/// All bit-patterns must be valid for this type. This type must not have interior mutability.
++pub unsafe trait FromBytesSized: Sized {}
++
++macro_rules! impl_frombytessized {
+     ($($({$($generics:tt)*})? $t:ty, )*) => {
+         // SAFETY: Safety comments written in the macro invocation.
+-        $(unsafe impl$($($generics)*)? FromBytes for $t {})*
++        $(unsafe impl$($($generics)*)? FromBytesSized for $t {})*
+     };
+ }
+ 
+-impl_frombytes! {
++impl_frombytessized! {
+     // SAFETY: All bit patterns are acceptable values of the types below.
+     u8, u16, u32, u64, usize,
+     i8, i16, i32, i64, isize,
+ 
+     // SAFETY: If all bit patterns are acceptable for individual values in an array, then all bit
+     // patterns are also acceptable for arrays of that type.
+-    {<T: FromBytes>} [T],
+-    {<T: FromBytes, const N: usize>} [T; N],
++    {<T: FromBytesSized, const N: usize>} [T; N],
++}
++
++// SAFETY: All bit patterns are acceptable values of the types and in array case if all bit patterns
++// are acceptable for individual values in an array, then all bit patterns are also acceptable
++// for arrays of that type.
++unsafe impl<T> FromBytes for T
++where
++    T: FromBytesSized,
++{
++    fn from_bytes(bytes: &[u8]) -> Option<&Self> {
++        let slice_ptr = bytes.as_ptr().cast::<T>();
++        if bytes.len() == ::core::mem::size_of::<T>() && slice_ptr.is_aligned() {
++            // SAFETY: Since the code checks the size and alignment, the slice is valid.
++            unsafe { Some(&*slice_ptr) }
++        } else {
++            None
++        }
++    }
++
++    fn from_mut_bytes(bytes: &mut [u8]) -> Option<&mut Self>
++    where
++        Self: AsBytes,
++    {
++        let slice_ptr = bytes.as_mut_ptr().cast::<T>();
++        if bytes.len() == ::core::mem::size_of::<T>() && slice_ptr.is_aligned() {
++            // SAFETY: Since the code checks the size and alignment, the slice is valid.
++            unsafe { Some(&mut *slice_ptr) }
++        } else {
++            None
++        }
++    }
++}
++
++// SAFETY: If all bit patterns are acceptable for individual values in an array, then all bit
++// patterns are also acceptable for arrays of that type.
++unsafe impl<T: FromBytes> FromBytes for [T] {
++    fn from_bytes(bytes: &[u8]) -> Option<&Self> {
++        let slice_ptr = bytes.as_ptr().cast::<T>();
++        if bytes.len() % ::core::mem::size_of::<T>() == 0 && slice_ptr.is_aligned() {
++            // SAFETY: Since the code checks the size and alignment, the slice is valid.
++            unsafe { Some(::core::slice::from_raw_parts(slice_ptr, bytes.len())) }
++        } else {
++            None
++        }
++    }
++
++    fn from_mut_bytes(bytes: &mut [u8]) -> Option<&mut Self>
++    where
++        Self: AsBytes,
++    {
++        let slice_ptr = bytes.as_mut_ptr().cast::<T>();
++        if bytes.len() % ::core::mem::size_of::<T>() == 0 && slice_ptr.is_aligned() {
++            // SAFETY: Since the code checks the size and alignment, the slice is valid.
++            unsafe { Some(::core::slice::from_raw_parts_mut(slice_ptr, bytes.len())) }
++        } else {
++            None
++        }
++    }
+ }
+ 
+ /// Types that can be viewed as an immutable slice of initialized bytes.
+-- 
+2.49.0
 
