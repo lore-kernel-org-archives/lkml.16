@@ -1,98 +1,78 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mail-10631.protonmail.ch (mail-10631.protonmail.ch [79.135.106.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 753532DAFCB;
-	Tue, 24 Jun 2025 18:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8E472DAFCB
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 18:52:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.31
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750791120; cv=none; b=ZMJfCA4AEJzwDBtESXfMVyR7tAQBx32Lw4I/I/iHIrwRI9F5rvl5X0MMGf38zfZugZFupiywNaGIH2SOq3BxMByP4Hx1VDdvrrZwABRBosBwBWmVh7JMMiwW6S8V0YkjygyJwoiO78sFrr0gLRCJWoBYHb0ROgMU/IBUjdaP7Ek=
+	t=1750791134; cv=none; b=ILzYqc9fYdf5G4Tvpe6LV080BvLb1ly8fOo4WWjcvEh39wtk3RekmrCCP2zEX2Mu80iGXerLgM8FHnagrdFnvYGV4vltzA9OzPOlKPyVyM5pLXIg6N8fgJ6jAMOtS/nReaLzijwMgYSkVlu8Vtq5fKNkxEpnUbRBYku3acwd2x0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750791120; c=relaxed/simple;
-	bh=tTycH2nU8FqzSxZbW6bO+Av81NiSi/cbfYzoccwfUPc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f6yhrgjBMtSaxccPKexiL3+husBNX9qAhZoZvIvZ0Gr8PFSEfdiCmUH/2yKCO5wFzcubCc4HLLU4lnC3CRiosVqtHaRAd1dxN0zGE6L0bHR+WPFdVr1V1/wwBqkoTYZkdR7TIgg3VfeiPv/eL5i3TJTcpPPM50jcZnBvH0+bkFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Xcni6oT1; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750791134; c=relaxed/simple;
+	bh=aEHzorgiLtvL+11b4j7jEK5C82kRl5YOEdrk/Bem+l8=;
+	h=Date:To:From:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=hhZvkwJ7v8S2pB9WUF3wbB3f6EuTMqsk7PVbyXt0WKKYuhjd4vczZLdDZ4FBARBLvl0KXix2P58RLffDS+v5OFOp6AzbUymlEqyMvtF384k0YIpf+Lj8DXaqwwlT/EcqksA+VuL8YENexXwusdUHcW5iQFNIy1ab5K5c3m2negs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=mpJjS3su; arc=none smtp.client-ip=79.135.106.31
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xcni6oT1"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6rko2rcwweZUsDslFiCZ/96atADm8L+QGmM0MZgbpk0=; b=Xcni6oT11a3lARymFBo/G++cGb
-	61k68L4Qlky8CIACOtprdwVLtXynD7FbCq+TwqTninD54XTQqG+pPlqt7iG6IDc4nXU6stV/50zD+
-	Z+eONVol6MtR+L1BsGHECXhwJ3xQ8vkiBbTgfWpaebGwipgTE/YKVSRad//gX/68rzOjKF1lAJt+k
-	dpN89wUtLQmat9gfyGY4F43caiZQ/XhBJ5WnPjnrfBpusGB8WM7Ml5OvU5n+VvaIs+FL5C5n0vyTg
-	H3lA3+AJHirBKXmMMjVVZuMaAzKEjIcE5wnxFEi30gqx6bB9xBl2bF/oVLpc6sGGwj2KydpTqVf6M
-	vWR8x6NQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uU8kI-00000005Xad-0xel;
-	Tue, 24 Jun 2025 18:51:50 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id EBED930BB6E; Tue, 24 Jun 2025 20:51:48 +0200 (CEST)
-Date: Tue, 24 Jun 2025 20:51:48 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Nam Cao <namcao@linutronix.de>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Cl??ment L??ger <cleger@rivosinc.com>,
-	"Maciej W. Rozycki" <macro@orcam.me.uk>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-	Alexandre Ghiti <alex@ghiti.fr>, clrkwllms@kernel.org,
-	rostedt@goodmis.org, linux-rt-devel@lists.linux.dev,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv: Enable interrupt during exception handling
-Message-ID: <20250624185148.GA1490279@noisy.programming.kicks-ass.net>
-References: <alpine.DEB.2.21.2506240303170.61655@angie.orcam.me.uk>
- <19cf2371-7293-4e71-a17d-669db4c8270a@rivosinc.com>
- <20250624131730.XqPd1HUR@linutronix.de>
- <d135d6cc-5117-4b3a-9abe-2e5fd9e3e490@rivosinc.com>
- <20250624140815.GU1613200@noisy.programming.kicks-ass.net>
- <20250624141130.gZVv4WnP@linutronix.de>
- <20250624141801.GV1613200@noisy.programming.kicks-ass.net>
- <20250624142350.xZ_DdClH@linutronix.de>
- <20250624143458.GW1613200@noisy.programming.kicks-ass.net>
- <20250624153314.2Mwvvjmy@linutronix.de>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="mpJjS3su"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1750791123; x=1751050323;
+	bh=EQbdNO9U4U1CFdHtv+6MGnQvTdN12qRbzSOnfh56dC4=;
+	h=Date:To:From:Cc:Subject:Message-ID:Feedback-ID:From:To:Cc:Date:
+	 Subject:Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=mpJjS3su/I69BuM6ZoJxOZXzWCtt0dCb80asy546fth1qWX+2D41nH/HZ3GWLl0AM
+	 Ob1C9q1ZdmYIGNsrG3DkyLVnLZyGIjX+csYk7aSvlnIxXgyQHQvP5ulPzWTVfUD83B
+	 ugh1rUj7CgDj0owxl6pU7Y/egEKJtXoF4R5MwOBLxWjxF958xyDtj+SdKnaWMQfXTX
+	 kgEtjMJB1pEnRQOE/iuvJz7dMDcFHELAbAyHtBmkZb5Gil9gEE7lR9YFbbgKNS/ZN3
+	 xvbimINx5o+MjiPs6mDSdSaYozNMVaHgTJennXUyqHSH9LkdqfNnUXwsYd3fQf7DFe
+	 3HnhwQ8SRQw7g==
+Date: Tue, 24 Jun 2025 18:51:59 +0000
+To: gregkh@linuxfoundation.org
+From: Bryant Boatright <bryant.boatright@proton.me>
+Cc: linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: place constant to right of logical test
+Message-ID: <aFrzy5UdqURaTrlP@ubuntu-desk>
+Feedback-ID: 74848953:user:proton
+X-Pm-Message-ID: 283a8bf58ed22cf255b9533b352957660eeb84be
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624153314.2Mwvvjmy@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 24, 2025 at 05:33:14PM +0200, Nam Cao wrote:
-> On Tue, Jun 24, 2025 at 04:34:58PM +0200, Peter Zijlstra wrote:
-> > On Tue, Jun 24, 2025 at 04:23:50PM +0200, Sebastian Andrzej Siewior wrote:
-> > > On 2025-06-24 16:18:01 [+0200], Peter Zijlstra wrote:
-> > > > I'm confused, sending signals is for exception from userspace. That has
-> > > > nothing to do with exceptions from kernelspace being NMI like.
-> > > 
-> > > Yes. See the original submission
-> > > 	https://lore.kernel.org/linux-riscv/20250620114346.1740512-1-namcao@linutronix.de/
-> > 
-> > I'm still confused, that code is trying to enable IRQs in the
-> > from-kernel part. That's insane.
-> > 
-> > Can some Risc-V person explain why a from-kernel exception would ever
-> > result in a signal?!?!
-> 
-> Exceptions from kernel do not raise signals. Enabling irqs there is not
-> necessary, I can remove that part.
-> 
-> But for my curiousity, do you mind elaborating why it is insane to enable
-> irqs in from-kernel exception handling?
-> 
-> For "NMI-like" exceptions, (I think) I get it, the context would be messed
-> up. But what about the others, e.g. kernel page faults?
+Adhere to Linux kernel coding style.
 
-The non-NMI exceptions like page-fault are okay. In fact, we hard rely
-on it when kernel space accesses user-space data in a preemptible
-context, it is expected to handle the fault.
+Reported by checkpatch:
 
-My concern was about the NMI like ones -- enabling IRQs for those is
-quite mad.
+WARNING: Comparisons should place the constant on the right side of the
+test
+
+Signed-off-by: Bryant Boatright <bryant.boatright@proton.me>
+---
+ drivers/staging/rtl8723bs/os_dep/os_intfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/staging/rtl8723bs/os_dep/os_intfs.c b/drivers/staging/=
+rtl8723bs/os_dep/os_intfs.c
+index 3cbfc305ede3..909697accb66 100644
+--- a/drivers/staging/rtl8723bs/os_dep/os_intfs.c
++++ b/drivers/staging/rtl8723bs/os_dep/os_intfs.c
+@@ -922,7 +922,7 @@ static int pm_netdev_open(struct net_device *pnetdev, u=
+8 bnormal)
+ =09=09=09mutex_unlock(&(adapter_to_dvobj(padapter)->hw_init_mutex));
+ =09=09}
+ =09} else {
+-=09=09status =3D  (_SUCCESS =3D=3D ips_netdrv_open(padapter)) ? (0) : (-1)=
+;
++=09=09status =3D  (ips_netdrv_open(padapter) =3D=3D _SUCCESS) ? (0) : (-1)=
+;
+ =09}
+=20
+ =09return status;
+--=20
+2.43.0
+
+
