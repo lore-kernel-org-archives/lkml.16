@@ -1,129 +1,112 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47FD428469C;
-	Tue, 24 Jun 2025 10:15:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91534283FE8;
+	Tue, 24 Jun 2025 10:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750760142; cv=none; b=WJJxII6njLcyvuzDUh12n9a2XStaEXnRFpzYNSYb2mFB0zT1MzP0IeJNxBgjdpvpE54A8Um71iWGRvylnQtQsX7v1a3mQYZcuIew8bTog1g3rGqN7hM8wYafkn4xe6tXFiHef62na4zs4mYfSX5Sstx/xYa18L2pkdpRmV+uQ04=
+	t=1750760157; cv=none; b=VbTkON2+81X6VsnnAQMY3gpHrKh8qLZ4KoxvakS+gTFJ0V1RoYSCb7DFDJpldisfXppZ2BFadZ0Zaq76BDrAeOvjWt8WgSTqJFRLc2RE5lQr1O+lep6kj7Ulmt2qHzsPhwHJ1OTUcUm5GkLXY4+Eu4GwZi1D4Y4+DbXWa3o7HLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750760142; c=relaxed/simple;
-	bh=1SODcScY7dgr76pnJHiFTfa5Ghmj+Q7HnnFxPxlr2zI=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=YgTtXW+Yp/lU7W/9fntMdh+fZkzYtVPov/byRjdPT/r48h0/ODuVRSLywq9WR7UsW3NsxthOPDi0Vp7Ysae+KuKfNGSkhenxHV1Kuo92Z4D7OhaWHGK9eQ1YFupVZRIREUa0xIqkbCGaao7IShjjo2Rg76I5wSKXOYtAAKBDMCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iK+z7s2v; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xUjeLyA8; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750760157; c=relaxed/simple;
+	bh=jUQe1mPxBCuPa1ikbnp69FnCdQgJXf3j0k9yd7kqXcc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B2jbeah2wo4CTOJ1jLyTPqxRVNtSX2D47lPcRd7V9ez0rAcuYJD+5WtuLGVT0sQujpVFkvKcodKWFQS8F/EPhW1lFIsQ8oSgZWIyJfYrEaF5GNiFJcZ3M7b+qSVoQLzcuiAVciSbzsAwu5+R/Y3bFJMega14/z91qRKAsACG3NM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hc3dYS6G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iK+z7s2v";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xUjeLyA8"
-Date: Tue, 24 Jun 2025 10:05:46 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750760136;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lIUgE4AxtMAwv/yWvjYUmD8OQAMhYwbDqiEFmt4Qr6g=;
-	b=iK+z7s2vTU8Hit5LvuNuFe1XVCYUi7Z5NPCM7VUBzMLUI2NZEuH3hw0UDDULCSudXXzUso
-	4iIDr7lC0hGqkw3IkSxoWAgRTVTWGdCJTy+shmUqrlnXmZh85050eBrnTcuaRIVYM/Rvbc
-	NkdR6e5qGszt9pHlCMu/0ORhwzyvRURpEXwCT4sGkWSm5sQGsBmKggPCeshJrLnD/KLxw2
-	GG+SSmhwvfOJ/SagTEVOBqOiIXY3PKeJoQbLziJZEmlOzllQzlxBxLL9kSSUGrHQnwv5Vk
-	u7gX0vRXrytIBuLgRufPVQVSspbSyQJz9OMScygIwtOpPQSKqgwQyC6/hH0Btw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750760136;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lIUgE4AxtMAwv/yWvjYUmD8OQAMhYwbDqiEFmt4Qr6g=;
-	b=xUjeLyA8IsB13D6eXuOH8yVIHoQN+fDrJb2i+avWLE7Y1e+TA73JXdQPhjqxDrR/sbkGXU
-	6HTaG8QJ0C3UE2Cg==
-From: "tip-bot2 for Pawan Gupta" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/bugs] x86/bugs: Remove its=stuff dependency on retbleed
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250611-eibrs-fix-v4-6-5ff86cac6c61@linux.intel.com>
-References: <20250611-eibrs-fix-v4-6-5ff86cac6c61@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hc3dYS6G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4A87C4CEE3;
+	Tue, 24 Jun 2025 10:15:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750760157;
+	bh=jUQe1mPxBCuPa1ikbnp69FnCdQgJXf3j0k9yd7kqXcc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hc3dYS6GSnNGauU2coiSaJH7KD4ub0xkkoA/lSwF/xTB3aUXt9iMBENj9Txe7mGDK
+	 wIL89Iy7HDamnQ4h38H6Gs/38Tj1HjfQc2GyqdjRkw+Zc9d+M/xb+0App5Rpoxul+3
+	 heuMi9jcdLe6o8jKeAyr7xlPJaa7uL3HergQRJNw=
+Date: Tue, 24 Jun 2025 11:15:54 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.15 000/780] 6.15.3-rc1 review
+Message-ID: <2025062431-unsorted-morphine-ffd7@gregkh>
+References: <20250617152451.485330293@linuxfoundation.org>
+ <CA+G9fYtUjjrzghRQVUJ5ct9zNK2ROcRVOizpT-ZyjzZGRSUz1Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175075954607.406.7576046067785357125.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYtUjjrzghRQVUJ5ct9zNK2ROcRVOizpT-ZyjzZGRSUz1Q@mail.gmail.com>
 
-The following commit has been merged into the x86/bugs branch of tip:
+On Tue, Jun 24, 2025 at 02:35:45AM +0530, Naresh Kamboju wrote:
+> On Tue, 17 Jun 2025 at 20:58, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 6.15.3 release.
+> > There are 780 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Thu, 19 Jun 2025 15:22:30 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.3-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.15.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> 
+> Regressions on s390 allmodconfig builds with gcc-13 and clang-20 failed on
+> the Linux stable-rc 6.15.4-rc1.
+> 
+> Regressions found on s390
+> * s390, build
+>   - clang-20-allmodconfig
+>   - gcc-13-allmodconfig
+> 
+> Regression Analysis:
+>  - New regression? Yes
+>  - Reproducibility? Yes
+> 
+> Build regression: stable-rc 6.15.4-rc1 s390 allmodconfig
+> sdhci-esdhc-imx.c 'sdhc_esdhc_tuning_restore' defined but not used
+> 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> 
+> ## Build errors
+> drivers/mmc/host/sdhci-esdhc-imx.c:1608:13: error:
+> 'sdhc_esdhc_tuning_restore' defined but not used
+> [-Werror=unused-function]
+>  1608 | static void sdhc_esdhc_tuning_restore(struct sdhci_host *host)
+>       |             ^~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/mmc/host/sdhci-esdhc-imx.c:1586:13: error:
+> 'sdhc_esdhc_tuning_save' defined but not used
+> [-Werror=unused-function]
+>  1586 | static void sdhc_esdhc_tuning_save(struct sdhci_host *host)
+>       |             ^~~~~~~~~~~~~~~~~~~~~~
+> cc1: all warnings being treated as errors
 
-Commit-ID:     e2a9c03192f54bb53a5422bf5106bdc4d04a7426
-Gitweb:        https://git.kernel.org/tip/e2a9c03192f54bb53a5422bf5106bdc4d04a7426
-Author:        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-AuthorDate:    Wed, 11 Jun 2025 10:30:18 -07:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Mon, 23 Jun 2025 12:29:04 +02:00
+Looks like this needs 5846efac138a ("mmc: sdhci-esdhc-imx: fix defined
+but not used warnings"), but that's not quite right either as it fixes a
+different change here, and only applying it still will result in a build
+error.  I'll just drop the offending commit here entirely and wait for a
+working set of patches to be submitted if the authors want them.
 
-x86/bugs: Remove its=stuff dependency on retbleed
+Same for the other branches where this showed up, thanks for the report.
 
-Allow ITS to enable stuffing independent of retbleed. The dependency is only
-on retpoline. It is a valid case for retbleed to be mitigated by eIBRS while
-ITS deploys stuffing at the same time.
+thanks,
 
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/20250611-eibrs-fix-v4-6-5ff86cac6c61@linux.intel.com
----
- arch/x86/kernel/cpu/bugs.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 387610a..31f3db0 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1467,13 +1467,8 @@ static void __init its_update_mitigation(void)
- 		break;
- 	}
- 
--	/*
--	 * retbleed_update_mitigation() will try to do stuffing if its=stuff.
--	 * If it can't, such as if spectre_v2!=retpoline, then fall back to
--	 * aligned thunks.
--	 */
- 	if (its_mitigation == ITS_MITIGATION_RETPOLINE_STUFF &&
--	    retbleed_mitigation != RETBLEED_MITIGATION_STUFF)
-+	    !cdt_possible(spectre_v2_enabled))
- 		its_mitigation = ITS_MITIGATION_ALIGNED_THUNKS;
- 
- 	pr_info("%s\n", its_strings[its_mitigation]);
-@@ -1485,8 +1480,6 @@ static void __init its_apply_mitigation(void)
- 	case ITS_MITIGATION_OFF:
- 	case ITS_MITIGATION_AUTO:
- 	case ITS_MITIGATION_VMEXIT_ONLY:
--	/* its=stuff forces retbleed stuffing and is enabled there. */
--	case ITS_MITIGATION_RETPOLINE_STUFF:
- 		break;
- 	case ITS_MITIGATION_ALIGNED_THUNKS:
- 		if (!boot_cpu_has(X86_FEATURE_RETPOLINE))
-@@ -1495,6 +1488,11 @@ static void __init its_apply_mitigation(void)
- 		setup_force_cpu_cap(X86_FEATURE_RETHUNK);
- 		set_return_thunk(its_return_thunk);
- 		break;
-+	case ITS_MITIGATION_RETPOLINE_STUFF:
-+		setup_force_cpu_cap(X86_FEATURE_RETHUNK);
-+		setup_force_cpu_cap(X86_FEATURE_CALL_DEPTH);
-+		set_return_thunk(call_depth_return_thunk);
-+		break;
- 	}
- }
- 
+greg k-h
