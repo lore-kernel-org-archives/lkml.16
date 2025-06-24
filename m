@@ -1,92 +1,294 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5005C286430;
-	Tue, 24 Jun 2025 16:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E069226CE2C;
+	Tue, 24 Jun 2025 16:52:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750783892; cv=none; b=a29vWjsGVHbLYNrO5cUGqMRCO25/8+cRfORkREzX4h0vVtTTOdADjpwT3+rdflvt68W3ry0ze4pXwC25YacuTMIpbjjJOER5W9o0QcJto6LFPqY6++mdonmR1aR5L0Z1kU3PfcDSib9MaxTgfYl41BL4z62YlSozCI9E+Go7gIc=
+	t=1750783953; cv=none; b=f/Bzs1n4dPWu54Yhf6JNUQFtGDue201LMJGcqxuPN4vECThL16sz4OqeRwEgGyARrap8cjnkGCkUUvRcsaFyP4gOhKm2oFyZXT3q0SeS0gQ+dIbB8MpwsGSkN79nNDaTLjHPCqGuark8oznXxmmCBbrRn3bwyctbRRcYzZAPZKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750783892; c=relaxed/simple;
-	bh=1wSlBTA9NchzeWz0Bz19osXwHKWn6c1flflhLXXn9Q4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PUD9N0JpA+0fiYXiSDQ5rpyf/bB6mv+vkdU1EbzNyUXyu3v6JC2RYDMqWga4d569I9KWE8410Zf0ghWO5CL4lGWvx19ryIG5lUM4J+cgsUMzMAvMbBbTqu32bawEtpH2D4Y/EhHsHEnwFvqQ4qn7zWx4t1rrVyk2U5+bBNHBdfs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJzds/RD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJzds/RD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 858A9C4CEE3;
-	Tue, 24 Jun 2025 16:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750783891;
-	bh=1wSlBTA9NchzeWz0Bz19osXwHKWn6c1flflhLXXn9Q4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TJzds/RDFtYpk28pkYM55SIIh0W+QHJZC5e+VKIbK2VrrtoWqqiL4d3s4wq/8qoOP
-	 D03HN4b91z/Tu8BJXGV4Cmh0Uw3V6kGZ7/NLflTky5C0eJ2Im2cwPw0UmmHAZfytGN
-	 7Op3Z4Ag8aojtbF8zbnx+u3edkoK8AvgXDiQGq8GWsjzybENZfa9BGj8fTGAGDrPN+
-	 VdGimLMnjjmugFk9ExRK+CnwzyEBX3kmfK3hI5Axm92gkjHRoacmeSCIILQapcG6GU
-	 //CLqIlaNyUWCJdnmJxyqIq7KIVQWGxDDSY5BBLY+mAAiU+3C/wNuciyIg+Kd0sNu2
-	 2HZ7m8Im5fubg==
-Date: Tue, 24 Jun 2025 17:51:28 +0100
-From: Simon Horman <horms@kernel.org>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Chas Williams <3chas3@gmail.com>,
-	"moderated list:ATM" <linux-atm-general@lists.sourceforge.net>,
-	"open list:ATM" <netdev@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] atm: idt77252: Add missing `dma_map_error()`
-Message-ID: <20250624165128.GA1562@horms.kernel.org>
-References: <20250624064148.12815-3-fourier.thomas@gmail.com>
+	s=arc-20240116; t=1750783953; c=relaxed/simple;
+	bh=HhQSeOW+UrAhP4tDtsSkqb3r9mIye1Th9CINKqmP5Dc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YCOxDsDy5mZExPGnONWdQ7hcdQAjch8/eIHH57KrpFPOy/EGUUQFcRsQ+KUDuppRx1XfAikZWEccp+dR9KrgyaOQM28OwgqYmzq1A8mF+jj64K5CuVIFBza7fMEahnlWI5gVr3No2fv1eAWMNdZ+h4QRKMUavEnX54vD9AG/mys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1D731AC1;
+	Tue, 24 Jun 2025 09:52:11 -0700 (PDT)
+Received: from [10.57.29.113] (unknown [10.57.29.113])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 929923F58B;
+	Tue, 24 Jun 2025 09:52:24 -0700 (PDT)
+Message-ID: <eb5dd1dd-ae08-4ab6-9bdc-c17e99bbacbd@arm.com>
+Date: Tue, 24 Jun 2025 17:52:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624064148.12815-3-fourier.thomas@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 05/10] accel/rocket: Add IOCTLs for synchronizing
+ memory accesses
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Sumit Semwal <sumit.semwal@linaro.org>,
+ =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+ Sebastian Reichel <sebastian.reichel@collabora.com>,
+ Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+ Kever Yang <kever.yang@rock-chips.com>, Daniel Stone <daniel@fooishbar.org>,
+ Da Xue <da@libre.computer>, Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+ dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+ linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+References: <20250606-6-10-rocket-v7-0-dc16cfe6fe4e@tomeuvizoso.net>
+ <20250606-6-10-rocket-v7-5-dc16cfe6fe4e@tomeuvizoso.net>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250606-6-10-rocket-v7-5-dc16cfe6fe4e@tomeuvizoso.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 24, 2025 at 08:41:47AM +0200, Thomas Fourier wrote:
-> The DMA map functions can fail and should be tested for errors.
+On 2025-06-06 7:28 am, Tomeu Vizoso wrote:
+> The NPU cores have their own access to the memory bus, and this isn't
+> cache coherent with the CPUs.
 > 
-> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+> Add IOCTLs so userspace can mark when the caches need to be flushed, and
+> also when a writer job needs to be waited for before the buffer can be
+> accessed from the CPU.
+> 
+> Initially based on the same IOCTLs from the Etnaviv driver.
+> 
+> v2:
+> - Don't break UABI by reordering the IOCTL IDs (Jeff Hugo)
+> 
+> v3:
+> - Check that padding fields in IOCTLs are zero (Jeff Hugo)
+> 
+> v6:
+> - Fix conversion logic to make sure we use DMA_BIDIRECTIONAL when needed
+>    (Lucas Stach)
+> 
+> Signed-off-by: Tomeu Vizoso <tomeu@tomeuvizoso.net>
+> Reviewed-by: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
 > ---
->  drivers/atm/idt77252.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>   drivers/accel/rocket/rocket_drv.c |  2 +
+>   drivers/accel/rocket/rocket_gem.c | 82 +++++++++++++++++++++++++++++++++++++++
+>   drivers/accel/rocket/rocket_gem.h |  5 +++
+>   include/uapi/drm/rocket_accel.h   | 37 ++++++++++++++++++
+>   4 files changed, 126 insertions(+)
 > 
-> diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
-> index 1206ab764ba9..f2e91b7d79f0 100644
-> --- a/drivers/atm/idt77252.c
-> +++ b/drivers/atm/idt77252.c
-> @@ -852,6 +852,8 @@ queue_skb(struct idt77252_dev *card, struct vc_map *vc,
->  
->  	IDT77252_PRV_PADDR(skb) = dma_map_single(&card->pcidev->dev, skb->data,
->  						 skb->len, DMA_TO_DEVICE);
-> +	if (dma_mapping_error(&card->pcidev->dev, IDT77252_PRV_PADDR(skb)))
-> +		return -ENOMEM;
->  
->  	error = -EINVAL;
->  
-> @@ -1857,6 +1859,8 @@ add_rx_skb(struct idt77252_dev *card, int queue,
->  		paddr = dma_map_single(&card->pcidev->dev, skb->data,
->  				       skb_end_pointer(skb) - skb->data,
->  				       DMA_FROM_DEVICE);
-> +		if (dma_mapping_error(&card->pcidev->dev, paddr))
-> +			goto outpoolrm;
->  		IDT77252_PRV_PADDR(skb) = paddr;
->  
->  		if (push_rx_skb(card, skb, queue)) {
-> @@ -1871,6 +1875,7 @@ add_rx_skb(struct idt77252_dev *card, int queue,
->  	dma_unmap_single(&card->pcidev->dev, IDT77252_PRV_PADDR(skb),
->  			 skb_end_pointer(skb) - skb->data, DMA_FROM_DEVICE);
->  
-> +outpoolrm:
->  	handle = IDT77252_PRV_POOL(skb);
->  	card->sbpool[POOL_QUEUE(handle)].skb[POOL_INDEX(handle)] = NULL;
+> diff --git a/drivers/accel/rocket/rocket_drv.c b/drivers/accel/rocket/rocket_drv.c
+> index 4ab78193c186dfcfc3e323f16c588e85e6a8a334..eb9284ee2511f730afe6a532225c2706ce0e2822 100644
+> --- a/drivers/accel/rocket/rocket_drv.c
+> +++ b/drivers/accel/rocket/rocket_drv.c
+> @@ -62,6 +62,8 @@ static const struct drm_ioctl_desc rocket_drm_driver_ioctls[] = {
+>   
+>   	ROCKET_IOCTL(CREATE_BO, create_bo),
+>   	ROCKET_IOCTL(SUBMIT, submit),
+> +	ROCKET_IOCTL(PREP_BO, prep_bo),
+> +	ROCKET_IOCTL(FINI_BO, fini_bo),
+>   };
+>   
+>   DEFINE_DRM_ACCEL_FOPS(rocket_accel_driver_fops);
+> diff --git a/drivers/accel/rocket/rocket_gem.c b/drivers/accel/rocket/rocket_gem.c
+> index 61b7f970a6885aa13784daa1222611a02aa10dee..07024b6e71bf544dc7f00b008b9afb74b0c4e802 100644
+> --- a/drivers/accel/rocket/rocket_gem.c
+> +++ b/drivers/accel/rocket/rocket_gem.c
+> @@ -113,3 +113,85 @@ int rocket_ioctl_create_bo(struct drm_device *dev, void *data, struct drm_file *
+>   
+>   	return ret;
+>   }
+> +
+> +static inline enum dma_data_direction rocket_op_to_dma_dir(u32 op)
+> +{
+> +	op &= ROCKET_PREP_READ | ROCKET_PREP_WRITE;
+> +
+> +	if (op == ROCKET_PREP_READ)
+> +		return DMA_FROM_DEVICE;
+> +	else if (op == ROCKET_PREP_WRITE)
+> +		return DMA_TO_DEVICE;
+> +	else
+> +		return DMA_BIDIRECTIONAL;
+> +}
+> +
+> +int rocket_ioctl_prep_bo(struct drm_device *dev, void *data, struct drm_file *file)
+> +{
+> +	struct drm_rocket_prep_bo *args = data;
+> +	unsigned long timeout = drm_timeout_abs_to_jiffies(args->timeout_ns);
+> +	struct rocket_device *rdev = to_rocket_device(dev);
+> +	struct drm_gem_object *gem_obj;
+> +	struct drm_gem_shmem_object *shmem_obj;
+> +	bool write = !!(args->op & ROCKET_PREP_WRITE);
+> +	long ret = 0;
+> +
+> +	if (args->op & ~(ROCKET_PREP_READ | ROCKET_PREP_WRITE))
+> +		return -EINVAL;
+> +
+> +	gem_obj = drm_gem_object_lookup(file, args->handle);
+> +	if (!gem_obj)
+> +		return -ENOENT;
+> +
+> +	ret = dma_resv_wait_timeout(gem_obj->resv, dma_resv_usage_rw(write),
+> +				    true, timeout);
+> +	if (!ret)
+> +		ret = timeout ? -ETIMEDOUT : -EBUSY;
+> +
+> +	shmem_obj = &to_rocket_bo(gem_obj)->base;
+> +
+> +	for (unsigned int core = 1; core < rdev->num_cores; core++) {
 
-Hi Thomas,
+Huh? If you need to sync the BO memory ever, then you need to sync it 
+for the same device it was mapped, and certainly not 0 or 2+ times 
+depending on how may cores happen to be enabled. Please throw 
+CONFIG_DMA_API_DEBUG at this.
 
-Can sb_pool_remove() be used here?
-It seems to be the converse of sb_pool_add().
-And safer than the code above.
-But perhaps I'm missing something.
+> +		dma_sync_sgtable_for_cpu(rdev->cores[core].dev, shmem_obj->sgt,
+> +					 rocket_op_to_dma_dir(args->op));
+
+Hmm, the intent of the API is really that the direction for sync should 
+match the direction for map and unmap too; if it was mapped 
+DMA_BIDIRECTIONAL then it should be synced DMA_BIDIRECTIONAL. If you 
+have BOs which are really only used for one-directional purposes then 
+they should be mapped as such at creation.
+
+Does anything actually prevent one thread form trying to read from a 
+buffer while another thread is writing it, and thus the read 
+inintuitively destroying newly-written data (and/or the write 
+unwittingly destroying its own data in FINI_BO because last_cpu_prep_op 
+got overwritten)? Unless there's a significant measurable benefit to 
+trying to be clever here (of which I'm somewhjat doubtful), I would be 
+strongly inclined to just keep things simple and straightforward.
+
+Thanks,
+Robin.
+
+> +	}
+> +
+> +	to_rocket_bo(gem_obj)->last_cpu_prep_op = args->op;
+> +
+> +	drm_gem_object_put(gem_obj);
+> +
+> +	return ret;
+> +}
+> +
+> +int rocket_ioctl_fini_bo(struct drm_device *dev, void *data, struct drm_file *file)
+> +{
+> +	struct rocket_device *rdev = to_rocket_device(dev);
+> +	struct drm_rocket_fini_bo *args = data;
+> +	struct drm_gem_shmem_object *shmem_obj;
+> +	struct rocket_gem_object *rkt_obj;
+> +	struct drm_gem_object *gem_obj;
+> +
+> +	if (args->reserved != 0) {
+> +		drm_dbg(dev, "Reserved field in drm_rocket_fini_bo struct should be 0.\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	gem_obj = drm_gem_object_lookup(file, args->handle);
+> +	if (!gem_obj)
+> +		return -ENOENT;
+> +
+> +	rkt_obj = to_rocket_bo(gem_obj);
+> +	shmem_obj = &rkt_obj->base;
+> +
+> +	WARN_ON(rkt_obj->last_cpu_prep_op == 0);
+> +
+> +	for (unsigned int core = 1; core < rdev->num_cores; core++) {
+> +		dma_sync_sgtable_for_device(rdev->cores[core].dev, shmem_obj->sgt,
+> +					    rocket_op_to_dma_dir(rkt_obj->last_cpu_prep_op));
+> +	}
+> +
+> +	rkt_obj->last_cpu_prep_op = 0;
+> +
+> +	drm_gem_object_put(gem_obj);
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/accel/rocket/rocket_gem.h b/drivers/accel/rocket/rocket_gem.h
+> index e8a4d6213fd80419be2ec8af04583a67fb1a4b75..a52a63cd78339a6150b99592ab5f94feeeb51fde 100644
+> --- a/drivers/accel/rocket/rocket_gem.h
+> +++ b/drivers/accel/rocket/rocket_gem.h
+> @@ -12,12 +12,17 @@ struct rocket_gem_object {
+>   	struct iommu_domain *domain;
+>   	size_t size;
+>   	u32 offset;
+> +	u32 last_cpu_prep_op;
+>   };
+>   
+>   struct drm_gem_object *rocket_gem_create_object(struct drm_device *dev, size_t size);
+>   
+>   int rocket_ioctl_create_bo(struct drm_device *dev, void *data, struct drm_file *file);
+>   
+> +int rocket_ioctl_prep_bo(struct drm_device *dev, void *data, struct drm_file *file);
+> +
+> +int rocket_ioctl_fini_bo(struct drm_device *dev, void *data, struct drm_file *file);
+> +
+>   static inline
+>   struct  rocket_gem_object *to_rocket_bo(struct drm_gem_object *obj)
+>   {
+> diff --git a/include/uapi/drm/rocket_accel.h b/include/uapi/drm/rocket_accel.h
+> index cb1b5934c201160e7650aabd1b3a2b1c77b1fd7b..b5c80dd767be56e9720b51e4a82617a425a881a1 100644
+> --- a/include/uapi/drm/rocket_accel.h
+> +++ b/include/uapi/drm/rocket_accel.h
+> @@ -13,9 +13,13 @@ extern "C" {
+>   
+>   #define DRM_ROCKET_CREATE_BO			0x00
+>   #define DRM_ROCKET_SUBMIT			0x01
+> +#define DRM_ROCKET_PREP_BO			0x02
+> +#define DRM_ROCKET_FINI_BO			0x03
+>   
+>   #define DRM_IOCTL_ROCKET_CREATE_BO		DRM_IOWR(DRM_COMMAND_BASE + DRM_ROCKET_CREATE_BO, struct drm_rocket_create_bo)
+>   #define DRM_IOCTL_ROCKET_SUBMIT			DRM_IOW(DRM_COMMAND_BASE + DRM_ROCKET_SUBMIT, struct drm_rocket_submit)
+> +#define DRM_IOCTL_ROCKET_PREP_BO		DRM_IOW(DRM_COMMAND_BASE + DRM_ROCKET_PREP_BO, struct drm_rocket_prep_bo)
+> +#define DRM_IOCTL_ROCKET_FINI_BO		DRM_IOW(DRM_COMMAND_BASE + DRM_ROCKET_FINI_BO, struct drm_rocket_fini_bo)
+>   
+>   /**
+>    * struct drm_rocket_create_bo - ioctl argument for creating Rocket BOs.
+> @@ -39,6 +43,39 @@ struct drm_rocket_create_bo {
+>   	__u64 offset;
+>   };
+>   
+> +#define ROCKET_PREP_READ        0x01
+> +#define ROCKET_PREP_WRITE       0x02
+> +
+> +/**
+> + * struct drm_rocket_prep_bo - ioctl argument for starting CPU ownership of the BO.
+> + *
+> + * Takes care of waiting for any NPU jobs that might still use the NPU and performs cache
+> + * synchronization.
+> + */
+> +struct drm_rocket_prep_bo {
+> +	/** Input: GEM handle of the buffer object. */
+> +	__u32 handle;
+> +
+> +	/** Input: mask of ROCKET_PREP_x, direction of the access. */
+> +	__u32 op;
+> +
+> +	/** Input: Amount of time to wait for NPU jobs. */
+> +	__s64 timeout_ns;
+> +};
+> +
+> +/**
+> + * struct drm_rocket_fini_bo - ioctl argument for finishing CPU ownership of the BO.
+> + *
+> + * Synchronize caches for NPU access.
+> + */
+> +struct drm_rocket_fini_bo {
+> +	/** Input: GEM handle of the buffer object. */
+> +	__u32 handle;
+> +
+> +	/** Reserved, must be zero. */
+> +	__u32 reserved;
+> +};
+> +
+>   /**
+>    * struct drm_rocket_task - A task to be run on the NPU
+>    *
+> 
+
