@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2FFD1C84CB
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:40:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB96178F37
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:40:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750725629; cv=none; b=Q0FZZv5K9fwbnW1aNSTKiNho9nFhZS6cTLa8IHnWEKSeXEH07cJoARRIb6sgZYhKDcsOKLHXC4LtSQJJ8LdyqG69ovLgOsyL7uw9YYfMJLL1Sff3rRGfKgbX28NFHTOFgpJcc42gdsY9cyef+fSPTi23uALj+AE5XKA7xxQLjd8=
+	t=1750725630; cv=none; b=c04usqAimk4zBpCcH483OM83EhzDlK9eN8Uc93eIrpG9HvxLeRLfY4f/Smq7QyrzagXwH1+NVvICbX/IoPJ6pNjOSPq7in2UMsmDOxPOjWLPZFptkunb3xeBPK3cN88D5UsOPk7gG9LoUpZr0syV2FjEmvBXe2+pWLOsGRJiv84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750725629; c=relaxed/simple;
-	bh=qKo0UmaPptGag6CyO9k3PD/eop53y1VYiyYvNlVqaIA=;
+	s=arc-20240116; t=1750725630; c=relaxed/simple;
+	bh=w3sB/FWB8UBbQCbXByGpeZ5sAhquoadRiHzXW3UWkI4=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=KoBQFzH0fnswdwg1Iw1RjaxjYzShOAi6q5qdw6clxdOAg04UwTvq8Z6sit5Jog4bj//Rie8Nbv7/+oRGzDJpjXDkzABioWr+ruTE+vk+Py0vXOSTo3WpFtZ+Yfivfoozhqcamxh8D5HxXt0HBB4/VAqLbW/8pFp5r2v/OoVi7UQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=osF9Bp2v; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=XW1pQ/1RgtDIsWLPSzBS0wORbgIiyVRxeeKsDX0zh28xsgElLpsq1YZV6axt7i3HW/j6SxiUEXKwxN1ylZUqtQeviTu8LzVQYSHUtDGt6lCMi5NEGhOdfalaiAXo/LNW5v59gioq1v8TuvSj1CLEgqoXYcCA75KnM29ZvqjaJYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JqB0aNaY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="osF9Bp2v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2BAE7C4CEEA;
-	Tue, 24 Jun 2025 00:40:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JqB0aNaY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8F3FC4CEEA;
+	Tue, 24 Jun 2025 00:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750725629;
-	bh=qKo0UmaPptGag6CyO9k3PD/eop53y1VYiyYvNlVqaIA=;
+	s=k20201202; t=1750725630;
+	bh=w3sB/FWB8UBbQCbXByGpeZ5sAhquoadRiHzXW3UWkI4=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=osF9Bp2vZkhsl9BBLuDE1u3SgFdFNRqOK6ibcilEppgMciEZWA+2vZr9FpEQezfXE
-	 0r/eupRjKP87Ex2seyxZoQbXbd1xFIYKrbvDBk6k0p9Le7Ur27TwH1NNPxyql1N40Q
-	 nTovHP3073Slx1GZgJsTNtjfnbNJt/8suI9Z/5y3W1l5GmAJSmPhfFxlVJC6DvS97Z
-	 y99+i4n68MgvCD50anvipS60do9GONXHHOk9bKOxj//blnI9pv1NHVF+y9iPUgl8JL
-	 58pR0X89cxc2Dtrmy2+GxWe23QqIytN+D2rcN5oSuaG2iEsooHP3N9QRUtu0DqNvN5
-	 L3m6ybcAa/QBw==
+	b=JqB0aNaYV/FpjQehU4DA/AY2E8KTHPg/D6oM52w1ulDlQZ7sLxkd0hsVDXQ/lDzDd
+	 lqxHDyZlrjHlOoIfqTk0U9hlkA3aA/KSq/06ypnrTdOjwjtLbgHG5gF28DE5xi9b4j
+	 bwAfR+8tdSs8pAze7x/9vbJt4jIB5TVvshv3IWrdxR+RMCkoTEiYxlydPYA1pOuv7g
+	 b8Bcq23zhbdjS/UYveQxgD92J2rWKZP2OaagTkDaOLsZAl1hi76VjvRbHT9NfqOti9
+	 4yRwkCjcG5d6ourqEyhTgtRfo5r8LldPSFuk5D79OwVf9bb824ws2z+9ESRwNcHGwS
+	 nXhlBDxsXRdnQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70FDA39FEB7D;
-	Tue, 24 Jun 2025 00:40:57 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAC8339FEB7D;
+	Tue, 24 Jun 2025 00:40:58 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,52 +37,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix bio memleak when committing super
- block
+Subject: Re: [f2fs-dev] [PATCH] f2fs: do sanity check on fio.new_blkaddr in
+ do_write_page()
 From: patchwork-bot+f2fs@kernel.org
 Message-Id: 
- <175072565599.3346761.7520240849473534184.git-patchwork-notify@kernel.org>
-Date: Tue, 24 Jun 2025 00:40:55 +0000
-References: <20250607064116.2993239-1-shengyong1@xiaomi.com>
-In-Reply-To: <20250607064116.2993239-1-shengyong1@xiaomi.com>
-To: Sheng Yong <shengyong2021@gmail.com>
-Cc: jaegeuk@kernel.org, chao@kernel.org, shengyong1@xiaomi.com,
- linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net
+ <175072565749.3346761.771322544902669081.git-patchwork-notify@kernel.org>
+Date: Tue, 24 Jun 2025 00:40:57 +0000
+References: <20250610031315.1067993-1-chao@kernel.org>
+In-Reply-To: <20250610031315.1067993-1-chao@kernel.org>
+To: Chao Yu <chao@kernel.org>
+Cc: jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
+ linux-f2fs-devel@lists.sourceforge.net
 
 Hello:
 
 This patch was applied to jaegeuk/f2fs.git (dev)
 by Jaegeuk Kim <jaegeuk@kernel.org>:
 
-On Sat,  7 Jun 2025 14:41:16 +0800 you wrote:
-> From: Sheng Yong <shengyong1@xiaomi.com>
-> 
-> When committing new super block, bio is allocated but not freed, and
-> kmemleak complains:
-> 
->   unreferenced object 0xffff88801d185600 (size 192):
->     comm "kworker/3:2", pid 128, jiffies 4298624992
->     hex dump (first 32 bytes):
->       00 00 00 00 00 00 00 00 80 67 c3 00 81 88 ff ff  .........g......
->       01 08 06 00 00 00 00 00 00 00 00 00 01 00 00 00  ................
->     backtrace (crc 650ecdb1):
->       kmem_cache_alloc_noprof+0x3a9/0x460
->       mempool_alloc_noprof+0x12f/0x310
->       bio_alloc_bioset+0x1e2/0x7e0
->       __f2fs_commit_super+0xe0/0x370
->       f2fs_commit_super+0x4ed/0x8c0
->       f2fs_record_error_work+0xc7/0x190
->       process_one_work+0x7db/0x1970
->       worker_thread+0x518/0xea0
->       kthread+0x359/0x690
->       ret_from_fork+0x34/0x70
->       ret_from_fork_asm+0x1a/0x30
+On Tue, 10 Jun 2025 11:13:15 +0800 you wrote:
+> F2FS-fs (dm-55): access invalid blkaddr:972878540
+> Call trace:
+>  dump_backtrace+0xec/0x128
+>  show_stack+0x18/0x28
+>  dump_stack_lvl+0x40/0x88
+>  dump_stack+0x18/0x24
+>  __f2fs_is_valid_blkaddr+0x360/0x3b4
+>  f2fs_is_valid_blkaddr+0x10/0x20
+>  f2fs_get_node_info+0x21c/0x60c
+>  __write_node_page+0x15c/0x734
+>  f2fs_sync_node_pages+0x4f8/0x700
+>  f2fs_write_checkpoint+0x4a8/0x99c
+>  __checkpoint_and_complete_reqs+0x7c/0x20c
+>  issue_checkpoint_thread+0x4c/0xd8
+>  kthread+0x11c/0x1b0
+>  ret_from_fork+0x10/0x20
 > 
 > [...]
 
 Here is the summary with links:
-  - [f2fs-dev] f2fs: fix bio memleak when committing super block
-    https://git.kernel.org/jaegeuk/f2fs/c/554d9b7242a7
+  - [f2fs-dev] f2fs: do sanity check on fio.new_blkaddr in do_write_page()
+    https://git.kernel.org/jaegeuk/f2fs/c/70b6e8500431
 
 You are awesome, thank you!
 -- 
