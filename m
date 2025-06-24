@@ -1,80 +1,92 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA222505A9;
-	Tue, 24 Jun 2025 07:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A002505A9;
+	Tue, 24 Jun 2025 07:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750749958; cv=none; b=HpZEl7668HLXIvnrH2BM+aPa2tzQCxDx5QTf5QNQDRHdYTL4fvIxwbKhVtlrEqoRN6VgWf+LKOdA9L5waqviqUkbw+B7MUpYoM06PzI6m+lLqb2kvUw+gTvHzpnAQcFe+vw/aK89+YwrVfiVJJ1Y3aDiNvk33jEgm+cCpPifURk=
+	t=1750749965; cv=none; b=TXlBEIBNwP5tAP85AsZO9BWyJpvH3AUYyZMFH/KGznzH4z9xWFsBOpl9GKf2uCGILJX16HOpTS8kFXSB1R81EG5YQW+eIo9dEC2HQrhI/NDfaW2uH5KyRq2rfNBhrefBenyb+ukelVV8ZilEGYesTqkZiAEk0+ZTyBZVaidYozg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750749958; c=relaxed/simple;
-	bh=Bz5Ii0zJE/ipZP4EElPEbkTnDBcsaTJ0zHf9gFoVsdo=;
-	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
-	 Content-Type:Message-ID:Date; b=ZtQll/04/L169qLfQQWGFmxOGXIi1vYYeIQaIqvEwVOpY/Aw1ENM2E4veDUxP8OvKDxQRCtF3VPU2DKPAguyOGD3EVwKk5lZZEgADaIKnW/MBh2guq1RJJ5ZWGhP9uHzWWYOTYQ/nfrQYMFlPR1xlLA6PKfanOWIH6AFtq1ULLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=cyNRVwuN; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+	s=arc-20240116; t=1750749965; c=relaxed/simple;
+	bh=NYdKbcFwu7oY8DRW1Ox6wAWvpbMQxW6/Wp56dk9Iqfk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VUj8TclQqEciwdFN/Liy9UMOFQulnljtEY9RdNlUs0vCKjVD/XzenEBjFVMDhJ1748iFxHzxhorjUUZa68V6GvcNF6YuzMKOwg7iTSjim5cRxSH8W0UurDfraKAnonUb/M4XzLZ9Kv1C6d3+ihjUkwNEO1c9Li9u+v9SglRbmfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UdjVn9cd; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="cyNRVwuN"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55O7PpfuE3226269, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1750749951; bh=0PbM4X9eC5XjnZq9Hz1qoqvvcYIkuH5eCfqPQBYAm+s=;
-	h=From:To:CC:Subject:In-Reply-To:References:MIME-Version:
-	 Content-Type:Message-ID:Date;
-	b=cyNRVwuN84R/GcEtfZsDdP3dtFuLu+9zzCGBRHUc7qzaMNvNcZOCiYqNvhZLotkYx
-	 6Erynhlv6jB/KXpyzxmkaSnniXrUyLzQtAf8Y5s9BLQuRPj//46v89sDWBOG1xMkD/
-	 G7VECfEZFKehIz8Bj/ttMwtETHjXdhA+lpKOcosp1cBSB5nENWLABEohd2NHeRFUzG
-	 mablB9tppyDtjHtBDBx80TbVvYoI2jyEYkdO7cBHGaPh3+8ZDFdqXLUl8qHsraknzI
-	 4OTVNtUbJGMyPxsUaLspwN7gzl+PjGOIi9Jmcsatj+y0tZ35qYk/snlvGorghGTChI
-	 A0ea8XLT+Gz7A==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55O7PpfuE3226269
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Jun 2025 15:25:51 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 24 Jun 2025 15:26:06 +0800
-Received: from [127.0.1.1] (172.21.69.94) by RTEXDAG02.realtek.com.tw
- (172.21.6.101) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 24 Jun
- 2025 15:26:05 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-CC: Thomas Fourier <fourier.thomas@gmail.com>,
-        Ping-Ke Shih
-	<pkshih@realtek.com>, <linux-wireless@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH rtw-next] wifi: rtlwifi: fix possible skb memory leak in `_rtl_pci_rx_interrupt()`.
-In-Reply-To: <20250616105631.444309-4-fourier.thomas@gmail.com>
-References: <20250616105631.444309-4-fourier.thomas@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UdjVn9cd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750749964; x=1782285964;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NYdKbcFwu7oY8DRW1Ox6wAWvpbMQxW6/Wp56dk9Iqfk=;
+  b=UdjVn9cd1VJon0AeEqgcQps/iCuMWdXBRsMAvHH348c35bUShfHi+hw5
+   8QIbWpAEwDyhTw2yU7LXDKBayjurXe23zd2qjyLLD6unUJ6Agvs+bDXOA
+   a7LeIcln3jqOEanavPPkvEoEQgsjoZVW973l3EAuHDNtVFVTNNTeucGJZ
+   v3Or5SMlYr5NHNpHTeABjgjA3Hp2aduX1n9n5uwN+2r61bilcds+BUhUD
+   PJdpUF1jdNzrkm6vioHd918akVisD37qf5pZu08/+Xwn5MvtslI/dM54t
+   V1s5ZKdLKLYKX37S6+jlPCSWGYn0BQx0GY0JPsa2z8xXAB25DtwaedyzL
+   Q==;
+X-CSE-ConnectionGUID: GHo+8Jb3Tve4iuapeCw6mw==
+X-CSE-MsgGUID: ZVAuEtmmROywjcTw0A74+Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56758577"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="56758577"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:26:04 -0700
+X-CSE-ConnectionGUID: E4xcZJouSxS3O/r83nvG8A==
+X-CSE-MsgGUID: AckDEsMeTsiQGcDxfMHqdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="152360952"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 24 Jun 2025 00:26:01 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id A15BE138; Tue, 24 Jun 2025 10:25:59 +0300 (EEST)
+Date: Tue, 24 Jun 2025 10:25:59 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Randolph Ha <rha051117@gmail.com>, linux-i2c@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Mika Westerberg <westeri@kernel.org>
+Subject: Re: [PATCH v1 1/1] i2c: acpi: Replace custom code with
+ device_match_acpi_handle()
+Message-ID: <20250624072559.GB2824380@black.fi.intel.com>
+References: <20250623134521.158447-1-andriy.shevchenko@linux.intel.com>
+ <20250624054508.GA2824380@black.fi.intel.com>
+ <aFpRZoIkQod6g2Dm@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Message-ID: <4029900f-164c-4acd-8bd1-86ae43ccca60@RTEXDAG02.realtek.com.tw>
-Date: Tue, 24 Jun 2025 15:26:05 +0800
-X-ClientProxiedBy: RTEXMBS02.realtek.com.tw (172.21.6.95) To
- RTEXDAG02.realtek.com.tw (172.21.6.101)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <aFpRZoIkQod6g2Dm@smile.fi.intel.com>
 
-Thomas Fourier <fourier.thomas@gmail.com> wrote:
-
-> The function `_rtl_pci_init_one_rxdesc()` can fail even when the new
-> `skb` is passed because of a DMA mapping error.  If it fails, the `skb`
-> is not saved in the rx ringbuffer and thus lost.
+On Tue, Jun 24, 2025 at 10:19:02AM +0300, Andy Shevchenko wrote:
+> On Tue, Jun 24, 2025 at 08:45:08AM +0300, Mika Westerberg wrote:
+> > On Mon, Jun 23, 2025 at 04:45:21PM +0300, Andy Shevchenko wrote:
+> > > Since driver core provides a generic device_match_acpi_handle()
+> > > we may replace the custom code with it.
+> > 
+> > Well okay but now you replace a simple comparison with a function call. I'm
+> > fine with the patch but I also don't think this is an improvement ;-)
 > 
-> Compile tested only
-> 
-> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
-> Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+> The improvement is in using standard API for such cases.
 
-1 patch(es) applied to rtw-next branch of rtw.git, thanks.
+Well ACPI_HANDLE() and comparing handles is also a "standard API".
 
-44c0e191004f wifi: rtlwifi: fix possible skb memory leak in `_rtl_pci_rx_interrupt()`.
+> You may argue on many things that may be open coded in
+> the kernel while we have helpers (in some cases exported)
+> functions that are one-liners or so. Note, the helper also
+> performs an additional check and having an open coded copy
+> may miss such a change. To me it's an improvement.
 
----
-https://github.com/pkshih/rtw.git
+Which is unnecessary check in this case.
 
+But like I said, no objections. I just don't think this improves anything.
