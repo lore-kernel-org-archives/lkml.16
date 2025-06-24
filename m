@@ -1,222 +1,113 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 863432D879C;
-	Tue, 24 Jun 2025 14:50:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F902D8DA0;
+	Tue, 24 Jun 2025 14:50:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750776624; cv=none; b=dX5BtjigclNN5QZaIkfj836kX1VctEt8HqsLNmxgoenUkoiLBKk60RdxPtemN1RAl2PwdNiR3gj8LdAtLIuCvukk5ylBDNLBuMbWjyFXbBKd5JZHaUAQtV44YQxuTpvVYhikAucMSzkd09/12NDeDwhHfRdUa2ysyXPtbC4D4V4=
+	t=1750776645; cv=none; b=bQIzhwYHDF7++1sJ83eP3TK7uhOV4EI9y0Bb8XKswXh/MvR2wDkiPzXSWdiMwgp9ZHio/LmlwjY48CDHEAsCpDBmkni3qcpEFmIZCkTZ06shnaqZz49ZBE3O+S8hWFqjqa8HFRH6sUu32L+mNULRp95Y85ChBztVifeSqpGVqbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750776624; c=relaxed/simple;
-	bh=BLBs6VvptUTipdYqP5sZ+EBtpSjpz67hsxN65i7P6Jk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Aw157kbYhNbyaTG+5Utp4tz+VW42e9FlN6ma5IrTE08NdSj08GmcNACjyMdbpTM7wYSLzf4IwPtNgscbfcxYK1SposqZN8hB6m9RKtguU0kzNs+MwhjIRoZq14hYNhus+0524iM1XuNN3XhcaFGAiLDqLv0aDKQrOQqlwfVDs8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DQmocEus; arc=none smtp.client-ip=209.85.221.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750776645; c=relaxed/simple;
+	bh=HxzdnHlvNmXe+SO45XnlkN/PmfV+l4m2RoOlMEC6YJQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:To:CC; b=A74ZKuPcGuBFfn4f5Fsgiol42awp1MGrZWxlChzUDKPoywe8wcku6BEPlBMX+Bh5X9aOMoYXzhBy0cfd8jmajFDACU1PXqTdQniyA5TnSnPTu3e29SPLr0cKWYI6fxeyO4xQw0D0yfP5Dm7aTeKU3n48OS08veApOwrwFuz963g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=SIKladKI; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQmocEus"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a4e62619afso700318f8f.1;
-        Tue, 24 Jun 2025 07:50:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750776621; x=1751381421; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MLiCLOp03+AJLmaw4roATsJrCtRQMhCkeGidyycUVtg=;
-        b=DQmocEusaKUSWfM1qkLQFiwm12YE1lUruwggFTlPJqBY1msYoU+SMR0D0SVMKZm9Vv
-         uB0sbJ//eGFWE7olTkP5L8JOkzCZgqkHIBhk200LOaS3c88gh/pI0CZFD0Kex11fzXVL
-         3LLCdYLMqH8E4j2S8yIa0A7f74WmlC7gT5CJuJya/QPih3jbObqY+KwWzMz605dEE3Xk
-         Tegf0M4pNwpzZ9caCjrAX6D1Ota1KRtgq4a9z7Ag94JwNPNB7+7pP9yoUXQJxmIcUzM9
-         c85dO3t28puu97a0Y1yeR+bCPiUQXX20Gi6jBden6Ach4LuDzoZADjiU8P3k1uKpXN85
-         EjHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750776621; x=1751381421;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MLiCLOp03+AJLmaw4roATsJrCtRQMhCkeGidyycUVtg=;
-        b=I3wendY0H0mbCF7vGEOTzLdfWyEOCh6s33o60BslZZTuXOQQHumZBbxOoxv54iUlCh
-         U3qkDH4qwMHwKc9qPXv51/+KTfk095d4PoRKQvc0QtQV4Wtq/QqNdt9K0RZOGuyfcj1p
-         S15X6n7OEXyqXm6dR2QPJAjZZyeaHn2MQwhjlZ95ceKLpGZaG36DLgeglIRGvHAN3KSf
-         pNDv9Bd/nbWZ5LYuuTZnAJt83Cm4/FkjwCct8trtMOvcRI+uzZgMrSTVHl3fPGdSTWSi
-         KKwTgGHlDjHVWn7bZc08oElNihuQPQ6f/U/3k+gnPweCR8nFq6Mu1ZUIY5aIFnh2SnfU
-         hPRw==
-X-Forwarded-Encrypted: i=1; AJvYcCX++CexitOYn82Rbi4R/3SWer2/nJSoMFxqtjEblXHjboH1w49jAOTzDWYe+kAP0cpXT8mjfihgR6k8AQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNfYaYgvIeEUoAPJyWkD0y+w0anY2cZavIk2w1fkP45y7nmXN0
-	L/81Rlt9MEAH1MgtAKfV5le9G9MEjGfOPSbK4x0mGa3wsDNEAJKq61iM
-X-Gm-Gg: ASbGncvzftIAIdW2e8JpoQ1r97aO7B1x7qprM+cLaLVeS0ineadf/kLcWx72jFV5m0i
-	WSN4Sb8mUENIaM3rOged8+LIZXt7cIbrXN20d8lGPcwpKE/yvEqMKVu4bIBocvucFB9t1Ecvafm
-	Psqxk0YxXCPWXIhdaztIjcM6FwdT5CIKtJIXfoxFVcR1VV340szYWilXL9FSe9eiU7dMFJ25Ae8
-	wbbBWy0i80yeErV0yaASLpnrkGFzgcL7y/XtQkB+UciZK3CacghxdeHoyRCeTBxBhTYiVNm0iPx
-	k1UWd935cc+oE/KnnHQN80bJHdMFptATkWkLz47rd1D/Aj0O6GT7e61h0NU0wmfKOUlPxQeZGfj
-	l84215bh1Hh4vGzIl6f8x42o=
-X-Google-Smtp-Source: AGHT+IGp7FJxQ3lNRUT+69d4u3yFJMen8jE313LI5u9E0DtmCWAKYJVpQdPQQhXkTON2m4kEE//Lew==
-X-Received: by 2002:a05:6000:2f83:b0:3a4:f7ea:a638 with SMTP id ffacd0b85a97d-3a6d128bc58mr4951035f8f.3.1750776620577;
-        Tue, 24 Jun 2025 07:50:20 -0700 (PDT)
-Received: from localhost.localdomain ([156.208.189.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80ff8b8sm2092841f8f.71.2025.06.24.07.50.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 07:50:19 -0700 (PDT)
-From: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-To: andy@kernel.org,
-	hdegoede@redhat.com,
-	mchehab@kernel.org,
-	sakari.ailus@linux.intel.com,
-	gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-media@vger.kernel.org,
-	linux-staging@lists.linux.dev,
-	skhan@linuxfoundation.org,
-	linux-kernel-mentees@lists.linux.dev,
-	dan.carpenter@linaro.org,
-	Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
-Subject: [PATCH v2] staging: media: atomisp: remove debug sysfs attributes active_bo and free_bo
-Date: Tue, 24 Jun 2025 17:49:43 +0300
-Message-Id: <20250624144943.39297-1-abdelrahmanfekry375@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SIKladKI"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55OEoYj51193065;
+	Tue, 24 Jun 2025 09:50:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750776634;
+	bh=PM7HT1zExkxh5kKrFo2bnq5xJBT6NyNgAUOoBgPhwUk=;
+	h=From:Date:Subject:To:CC;
+	b=SIKladKITRCK8nJra5lZE1g6Ft4k7okHpr5aRJy7hwv9IIMIQSV0g/N2OYfrE2llj
+	 qZRhibhf/kGfb9Hc6eggg7KEUfheN0roKTjPmTBp+RVQ70C9twsT+kd3G8A3gY627g
+	 RjX0ugaEPD+fa+/Pp1xTnG50gEo6/O9K1bcHzheU=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55OEoYZx108841
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 24 Jun 2025 09:50:34 -0500
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
+ Jun 2025 09:50:34 -0500
+Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Tue, 24 Jun 2025 09:50:34 -0500
+Received: from localhost (bb.dhcp.ti.com [128.247.81.12])
+	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55OEoYL11684824;
+	Tue, 24 Jun 2025 09:50:34 -0500
+From: Bryan Brattlof <bb@ti.com>
+Date: Tue, 24 Jun 2025 09:50:33 -0500
+Subject: [PATCH] arm64: dts: ti: k3-am62: copy bootph flags to Linux
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250624-62-uboot-cleanup-v1-1-c36230ab0375@ti.com>
+X-B4-Tracking: v=1; b=H4sIADi7WmgC/x3MQQqAIBBA0avErBuoCY26SrQwG2sgNLQiiO6et
+ HyL/x9IHIUT9MUDkS9JEnxGXRZgV+MXRpmzgSpSlaYGNeE5hXCg3dj4c8d5Yqu165hUCznbIzu
+ 5/+Uwvu8Hp1KXYGIAAAA=
+X-Change-ID: 20250623-62-uboot-cleanup-dbec66f9e257
+To: Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero
+ Kristo <kristo@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-kernel@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Bryan Brattlof <bb@ti.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1004; i=bb@ti.com;
+ h=from:subject:message-id; bh=HxzdnHlvNmXe+SO45XnlkN/PmfV+l4m2RoOlMEC6YJQ=;
+ b=owNCWmg5MUFZJlNZV37u9AAAYn///7bfNrn+bTuX7/w/1Os/n//++t0du/f7Tqu8nT/Z7O+wA
+ RmYHeqABoNAGgA9QNPUAxGjQA0AGgDTIBoAAGgAPSANqDQAA9R6mRpmmCh0DINGhoGQA0yaDEDR
+ kNNMhpoAaBoGQHpADRiaBpo9JpoMgekNMamg9NIAAyGUaeo0Y1PSDJppkBoaGRpkDEAGhoBoBpp
+ oaMEDRpgCANGjQNDQDQA0ZA000AIJUVXwqWEC0xYeLNyMNuX0RaRQQEn0geNGIVIYARL2fuPKCw
+ tGYD0nNrYqkzmONq7PYoBeA1gU3QBQ5/4e4O/0YVgaGdvAda3hzHme7JrrRiH/MjePDrb7fF1eC
+ 1ja8rwgM0qywCEY1vageBu1wCtVtktleMA7zTITuBwbjRCCLaeTmpAXU6+lOPPZlGJVRlEwVF9V
+ 6+KK6l0P67bCTYftdB3JiCgEowQVVPIQZN4rFbMtUwu2OUNfGne9mJJb3j9lCm7QTgH+znYkIjv
+ IpaxQkeoyvtkAFR7zf8SThinJgfRIk2L7rpNx1lPMqPehiek+TnPUpyxlrUca+adzDjrpE+gU0A
+ g48ouQ0IbxULGLI1pLgwUAGYrIQlUMEEvt3q1TAVhRcES7/0xjZWERkEmZ54tYUctBSzB1ANxR5
+ /RbU02q/xdyRThQkFd+7vQ=
+X-Developer-Key: i=bb@ti.com; a=openpgp;
+ fpr=D3D177E40A38DF4D1853FEEF41B90D5D71D56CE0
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The sysfs attributes active_bo and free_bo expose internal buffer
-state used only for debugging purposes. These are not part of
-any standard kernel ABI and needs to be removed before this
-driver can be moved out of drivers/staging.
+To keep things as organized as possible, copy the bootph-all properties
+from U-Boot for the packet DMA controller to indicate it should be
+available during all phases of bootup.
 
-- Remove active_bo and free_bo attributes
-- Remove group registration calls form hmm_init() and hmm_cleanup()
-
-Suggested-by : Hans de Goede <hansg@kernel.org>
-Signed-off-by: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Signed-off-by: Bryan Brattlof <bb@ti.com>
 ---
-v2:
-- Add Suggested-by line
-- Remove unnecessary comments
-v1: https://lore.kernel.org/all/20250624130841.34693-1-abdelrahmanfekry375@gmail.com/
+ arch/arm64/boot/dts/ti/k3-am62-main.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/staging/media/atomisp/pci/hmm/hmm.c | 92 +--------------------
- 1 file changed, 1 insertion(+), 91 deletions(-)
+diff --git a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+index 9e0b6eee9ac77d66869915b2d7bec3e2275c03ea..2a727caf36ec44e4a023c5985d1bad9b80737633 100644
+--- a/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am62-main.dtsi
+@@ -150,6 +150,7 @@ main_pktdma: dma-controller@485c0000 {
+ 				    "ring", "tchan", "rchan", "rflow";
+ 			msi-parent = <&inta_main_dmss>;
+ 			#dma-cells = <2>;
++			bootph-all;
+ 
+ 			ti,sci = <&dmsc>;
+ 			ti,sci-dev-id = <30>;
 
-diff --git a/drivers/staging/media/atomisp/pci/hmm/hmm.c b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-index 84102c3aaf97..0a4d7dd5e6c4 100644
---- a/drivers/staging/media/atomisp/pci/hmm/hmm.c
-+++ b/drivers/staging/media/atomisp/pci/hmm/hmm.c
-@@ -28,88 +28,6 @@ struct hmm_bo_device bo_device;
- static ia_css_ptr dummy_ptr = mmgr_EXCEPTION;
- static bool hmm_initialized;
- 
--/*
-- * p: private
-- * v: vmalloc
-- */
--static const char hmm_bo_type_string[] = "pv";
--
--static ssize_t bo_show(struct device *dev, struct device_attribute *attr,
--		       char *buf, struct list_head *bo_list, bool active)
--{
--	ssize_t ret = 0;
--	struct hmm_buffer_object *bo;
--	unsigned long flags;
--	int i;
--	long total[HMM_BO_LAST] = { 0 };
--	long count[HMM_BO_LAST] = { 0 };
--	int index1 = 0;
--	int index2 = 0;
--
--	ret = scnprintf(buf, PAGE_SIZE, "type pgnr\n");
--	if (ret <= 0)
--		return 0;
--
--	index1 += ret;
--
--	spin_lock_irqsave(&bo_device.list_lock, flags);
--	list_for_each_entry(bo, bo_list, list) {
--		if ((active && (bo->status & HMM_BO_ALLOCED)) ||
--		    (!active && !(bo->status & HMM_BO_ALLOCED))) {
--			ret = scnprintf(buf + index1, PAGE_SIZE - index1,
--					"%c %d\n",
--					hmm_bo_type_string[bo->type], bo->pgnr);
--
--			total[bo->type] += bo->pgnr;
--			count[bo->type]++;
--			if (ret > 0)
--				index1 += ret;
--		}
--	}
--	spin_unlock_irqrestore(&bo_device.list_lock, flags);
--
--	for (i = 0; i < HMM_BO_LAST; i++) {
--		if (count[i]) {
--			ret = scnprintf(buf + index1 + index2,
--					PAGE_SIZE - index1 - index2,
--					"%ld %c buffer objects: %ld KB\n",
--					count[i], hmm_bo_type_string[i],
--					total[i] * 4);
--			if (ret > 0)
--				index2 += ret;
--		}
--	}
--
--	/* Add trailing zero, not included by scnprintf */
--	return index1 + index2 + 1;
--}
--
--static ssize_t active_bo_show(struct device *dev, struct device_attribute *attr,
--			      char *buf)
--{
--	return bo_show(dev, attr, buf, &bo_device.entire_bo_list, true);
--}
--
--static ssize_t free_bo_show(struct device *dev, struct device_attribute *attr,
--			    char *buf)
--{
--	return bo_show(dev, attr, buf, &bo_device.entire_bo_list, false);
--}
--
--
--static DEVICE_ATTR_RO(active_bo);
--static DEVICE_ATTR_RO(free_bo);
--
--static struct attribute *sysfs_attrs_ctrl[] = {
--	&dev_attr_active_bo.attr,
--	&dev_attr_free_bo.attr,
--	NULL
--};
--
--static struct attribute_group atomisp_attribute_group[] = {
--	{.attrs = sysfs_attrs_ctrl },
--};
--
- int hmm_init(void)
- {
- 	int ret;
-@@ -130,14 +48,6 @@ int hmm_init(void)
- 	 */
- 	dummy_ptr = hmm_alloc(1);
- 
--	if (!ret) {
--		ret = sysfs_create_group(&atomisp_dev->kobj,
--					 atomisp_attribute_group);
--		if (ret)
--			dev_err(atomisp_dev,
--				"%s Failed to create sysfs\n", __func__);
--	}
--
- 	return ret;
- }
- 
-@@ -145,7 +55,7 @@ void hmm_cleanup(void)
- {
- 	if (dummy_ptr == mmgr_EXCEPTION)
- 		return;
--	sysfs_remove_group(&atomisp_dev->kobj, atomisp_attribute_group);
-+
- 
- 	/* free dummy memory first */
- 	hmm_free(dummy_ptr);
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250623-62-uboot-cleanup-dbec66f9e257
+
+Best regards,
 -- 
-2.25.1
+Bryan Brattlof <bb@ti.com>
 
