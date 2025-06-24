@@ -1,90 +1,91 @@
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E169D24169B
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:38:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 775BE24169B
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750793908; cv=none; b=AEhuVpamz0xtCa+2O902CZnI2hL5BkmF+rud9VoIwdKjBirNQ49HM/nFSxuyfXR77+9wZdPfKd28GlTrRkJUW2waG2NiaM2HAg0FvAUfrNLTJKyELgKf5JAdD591RiqDZM7dy3afBj1lw8gjWeMbZMXiXym547WgwhMcVefX5vA=
+	t=1750793917; cv=none; b=JvwF6+cd++0iZJNI5+ku9ZuE42d8ud90s6buk2HpfqcbsMe7cQZWlh/dQJU+6+XbG+zJ0CsE90A98rLcreLeSv5LwY7IGbtqQqTzO8G85q1BOoxrn8ut23kVAw1dXRAgbkuKSXRO+OVpRstRSKlXPkdEVBhzd+Eh4wXwoP/vWXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750793908; c=relaxed/simple;
-	bh=PARCicHmYXXJJvSHq7BdmF6uTuIvXzj1nSeDATa3plI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XZHLrZDE3d6mXVNj7Vrsp4Fsbree8SSYo+BjWp1X6o6rz6Xy/rKVGMDwCty1BUkUpk1bsiCh/6hxQj9ddNhNude3Ev84cmNHjjSbMwVq/K+vULGK4QluLFm0WQSRE7LMPX9pEN+udzSoiW8gMknT/A1BtJNM8CgGLg0sUc4pmP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aki1tteR; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750793917; c=relaxed/simple;
+	bh=twptM5Qxux0nrd1AK+HItqru9u5lEnVGglh7RnVcqZQ=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=dgfQw3O59BTCKkPaaTtHrsoKab4pVgtQUgvgncTMrFq2SMwgjdhAnoGHyCZH6M4BvGCWpuSRZg8Kc1XHYU9wiMNyItduyMoU+vJj4yKq6z29EcrxJfXkBJEJQL5cx5GUV6WBsQp1gnPpbCMiBtPp1FlhXAY6ctBHq0oz2zpxB34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yj/Bfpoy; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aki1tteR"
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-551efd86048so845993e87.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:38:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yj/Bfpoy"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3138c50d2a0so1120066a91.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:38:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750793905; x=1751398705; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PARCicHmYXXJJvSHq7BdmF6uTuIvXzj1nSeDATa3plI=;
-        b=aki1tteRXCS+F5x8LBFn8t48QV6TeIWhTzl8CGRqkDZ9AaX+uqHJGOaGAEHgb5EGQU
-         K3SVB+IOVEX8gCmQTuNp2U9O5/HE0SvltTb5PP6xUYkkfjCrdFAe3ATvVrZ3BI27sWJc
-         yJx+tzSVHz8qpKs3PyPQALkxf4pQvLALyuGQL4ubf4EXsVFjFeewg+bPcnXwUUO7LWH8
-         IyhhGdJsNpFJ2/I5x1cw7tar42Qj+dDCqV1YH6XOn+h7OhIsXhraxYoZe/SivoxxPjfI
-         eIfaVqxpOO4HVRIJtG4DUN4+1Dd+xte04tPs1Kv68xTtM1LWA5gCgKIplEnoAdefp2Pp
-         Pi1g==
+        d=google.com; s=20230601; t=1750793916; x=1751398716; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MbmTGb7rJSpyBX4d80hPoeJGIxezKRaodgXxCjrASGg=;
+        b=Yj/Bfpoyb05A/K/RTk1W6rjmW+FPV/lHf49ttHk+WfBtVv3hRFyOXpDSa/h+q3XKY/
+         PbXvzJ217Y+9TQjiRnKIhTXP48UH0NFFNAVkeKa+WFFWhPWq/qBpUOK3kVJltEtFKWEa
+         XfJ9LsMF5PZ152+yInH/9XJABi3Ml7BMAs8pKsW5f7DJHfmqCddPa6AjR9mTwtcKubOI
+         4Gyh0VukXMp6NnqRH5OwqYcZMljsSR+zhQsav+wjvo5rYdtVzrRxzSTslHYAv5NWEk43
+         o0+7lVqSrlGgHGAEQTslgvTbCX694Mx7bjll+0U0Mriri88UAYweotkkuFxKYBPptxD/
+         AivQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750793905; x=1751398705;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PARCicHmYXXJJvSHq7BdmF6uTuIvXzj1nSeDATa3plI=;
-        b=ZZ4jjvQCA778jKRDPt5hpXoWai6DuuJMlOp6Hia+N2QLXkmUVrW9vbd3Ll1YW7e4Ak
-         TXeU+psp3I2Agkh1vWvtjTkKNE0BUZY3EfUIf94RVRdYvAfMNJFC42kXSdHU6ihsU09V
-         WRuKlWnhG6YXVxh8q5HVYa8NXdigdkFdiLvpk4L/65reYSD3aefsV5p1hASsEc5QIbOr
-         yWpwyrQSHQD+m6nkToYymoVtPe2p/XlulRkokL9iPSCiCaJWFtYP8e8Rla7dd/uZlsiL
-         vPvWfAwTaXtWsP2arkMBK+EHe1Cm6/JLGGhk0uh+QkAPKFNPXiXOjkXtfRTz/uTtQJ49
-         RDPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEGT6mfm6oFDxFiRNVUzTF6HiiX6t/Uu8QY4KQMyXRHAZLFmnT0Cl0hehT4BOW9Oc7fPUC3CkhP017IL8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxZEwBS40fE39GOVAmTRCEQqTKS4f5DiZNEfJNZlOrPvMKnU1oI
-	aNELydlkW0G/uVXkwJTMa9yddlOGA4V567Fz9NWv8w/eN6tfXHUwmf5Ts+pxbqKY6JPv/nRQwGC
-	za8VflyZ6PdzhB74/KM8ywlAa7BSSjtNgo37Bke/FHA==
-X-Gm-Gg: ASbGncsXIV1JoXg8a0nOnQXh8Uk0TT+4MReGCV4XU36Yyxef1oybQMZ9uN1E1sienQF
-	CSy5BtjVVvaaucuazIc7rXcWxgd9AZ+EM6PfwQK6nOgZe9UufTNwJkE5053XKpPsYiuxfshd/6d
-	vXvuTHCmQJuCpnEeSm93glbTXQDA2rN17ocdfTsDGinqU=
-X-Google-Smtp-Source: AGHT+IF8PpIrRaMkAe8YKe+Ia199YgjdboowW+LWa9jRIpq65y+WGtSchVD5OIWSHr98VSpp70vsXSL+42eeml7U0lk=
-X-Received: by 2002:a05:6512:124a:b0:553:a456:a0d4 with SMTP id
- 2adb3069b0e04-554fdcfba1fmr47355e87.15.1750793905089; Tue, 24 Jun 2025
- 12:38:25 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750793916; x=1751398716;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MbmTGb7rJSpyBX4d80hPoeJGIxezKRaodgXxCjrASGg=;
+        b=oymcMFE9m9vZAxm9dfNT5Yvt88h2iDe9sQ9z/rmSIexHnzIKmC/8/f07uUlEy6SiQX
+         IyxAcHc6n1swWfs68QfVqYTOMWmA/SH6lAdTE8ajwFXCRSL1iK3TSB1GVg6/zH2I3Yxj
+         7D9dA9BhaKbc/LlbBpXFMVjepQBmV6wajqFfDgqekIzX7c8aKLxlZX0+RsiholDNvAaE
+         6uGDJvcCEVcPHdjb1rxnhxcaKYD68iPCc+VfQnFMHbRTQZQdrlQemzcXHm3DVrvkYfZN
+         RHVUImNvYGCmQlQ+x5fcpMmAyRJkAHLVug/QycjAMqB/Y8qo4sEhV8V2pVtduUg68goo
+         1+fg==
+X-Forwarded-Encrypted: i=1; AJvYcCUNxiC0PZmLRK+KyFVH/aOAc9yZalkRONjLeFkZTYrRNIB3SAqv3jLqwdFuI6WJY8W9rvkjDOgySK0KN68=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycYzxNklBbqdOxTry4LoCVFa0w46+Bkcmnipp2622AhDvjSPjg
+	PBjq8A7KpngD4vnpJTk7Aeg3YqaMtvWBeH5TQ2txuMc/2/Mu28ioEMdngTS1k1ja5Ur5bZspWXi
+	e/coIyA==
+X-Google-Smtp-Source: AGHT+IGZwhCBQvNu/HBaFdGHerB63N3HJcv/7dELpqe76tf9E/2jghrTw8qT08hT6Fhiaf1CGBCMscO32hU=
+X-Received: from pjbse13.prod.google.com ([2002:a17:90b:518d:b0:311:7bc3:2a8d])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2cc6:b0:313:db0b:75db
+ with SMTP id 98e67ed59e1d1-315f26a365amr131836a91.33.1750793915772; Tue, 24
+ Jun 2025 12:38:35 -0700 (PDT)
+Date: Tue, 24 Jun 2025 12:38:16 -0700
+In-Reply-To: <e489252745ac4b53f1f7f50570b03fb416aa2065.camel@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250623222004.280928-1-colin.i.king@gmail.com>
-In-Reply-To: <20250623222004.280928-1-colin.i.king@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 24 Jun 2025 21:38:13 +0200
-X-Gm-Features: AX0GCFtcDtI8whG-VjAJ07P3Ge7S8tTBWu6b5QMCPPumR2NvUwbFL-CwyFKH6Iw
-Message-ID: <CACRpkdb1voqurnhj7TX8h1GPDO9ER_3JyZkDusJ8hz45YzYzHQ@mail.gmail.com>
-Subject: Re: [PATCH][next] pinctrl: eswin: Fix unsigned comparison to less
- than zero issue
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Yulin Lu <luyulin@eswincomputing.com>, Samuel Holland <samuel.holland@sifive.com>, 
-	linux-gpio@vger.kernel.org, kernel-janitors@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <e489252745ac4b53f1f7f50570b03fb416aa2065.camel@infradead.org>
+X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
+Message-ID: <175079198224.513744.6336161745259606181.b4-ty@google.com>
+Subject: Re: KVM: x86/xen: Allow 'out of range' event channel ports in IRQ
+ routing table.
+From: Sean Christopherson <seanjc@google.com>
+To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
+	Ivan Orlov <iorlov@amazon.co.uk>, David Woodhouse <dwmw2@infradead.org>
+Cc: Paul Durrant <paul@xen.org>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	"H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
 
-On Tue, Jun 24, 2025 at 12:20=E2=80=AFAM Colin Ian King <colin.i.king@gmail=
-.com> wrote:
+On Thu, 08 May 2025 13:30:12 -0700, David Woodhouse wrote:
+> To avoid imposing an ordering constraint on userspace, allow 'invalid'
+> event channel targets to be configured in the IRQ routing table.
+> 
+> This is the same as accepting interrupts targeted at vCPUs which don't
+> exist yet, which is already the case for both Xen event channels *and*
+> for MSIs (which don't do any filtering of permitted APIC ID targets at
+> all).
+> 
+> [...]
 
-> The u32 variable voltage is being compared to less than zero and
-> this can never be true. Fix this by making voltage an int type which
-> is the same type as the return from the call to regulator_get_voltage.
->
-> Fixes: 5b797bcc00ef ("pinctrl: eswin: Add EIC7700 pinctrl driver")
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+Applied to kvm-x86 fixes, thanks!
 
-Patch applied!
+[1/1] KVM: x86/xen: Allow 'out of range' event channel ports in IRQ routing table.
+      https://github.com/kvm-x86/linux/commit/a7f4dff21fd7
 
-Yours,
-Linus Walleij
+--
+https://github.com/kvm-x86/kvm-unit-tests/tree/next
