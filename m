@@ -1,64 +1,80 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11012053.outbound.protection.outlook.com [52.101.66.53])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2060.outbound.protection.outlook.com [40.107.244.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B5531B85CC
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 20:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.66.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65916224B12;
+	Tue, 24 Jun 2025 20:02:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.60
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750795249; cv=fail; b=NRa72Bo6sInxVgIoPMNm50AZnSPhE5vfWgVUHriks2kQiSOodLXu058/xMgKztTrMzULoh56Qu52VGFBU9d6R8W4FhAV5z+k2DdFqD8ullLZdaS7SI1ikozPaq00ygnpe1/10BdSJiDIJP2vpuyprT+/kIKnVVGr6WgCfhwvlf0=
+	t=1750795323; cv=fail; b=QfO03dk8PDh/u/I6qgmmtExd9szXvJt/7r7ou5j/Hn5Gar7ejSmOtQftqe6/NDOsyBlaRJ3VAKkIPPIgnjGq4DXWO4sZ1g2qk3d2aCH0WWS9LV8B2i2zSpSV1R650iQD6Y8mRbNtRuHCCbKF56M/ASqvTsC0/DFWYzuFXJ/WJTY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750795249; c=relaxed/simple;
-	bh=nXlIH9ndnW4ixOkY4E1oSw8BSALPQrTCrwojb8b32qk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=kVahsA/JvaIne/i8zeeA+0Zus8bJTnVplobujOmoFVKI8z1iB7FyQe3e/4ZwUJPUxFr5sy+ZMANfDh5fP3l06Opzw7Wd9za8E94kAJb41qtlG0U97lutqMmsNvnhsxzDMZIZk88Lsqptzy1/JTvCxjFslPSpFx6D1RSQb+YPnIQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=MKWEznJ+; arc=fail smtp.client-ip=52.101.66.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1750795323; c=relaxed/simple;
+	bh=N7kuuD1d91dZljNf730McRkNVVTCb7fbMUJ1562OAzc=;
+	h=Message-ID:Date:Subject:From:To:Cc:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=pSFJ/TCCPZxdt8cmfVOtfE2LNelrXxoJ7PfTbJvH+4aLy9GCJZzD5qxyGj6Q8sc6xx1qiMvmTONDi5LsNyXhwI+FtelGyiIQ4hzZ314vx3owtaf8hSjdvpI+AUv+6V8ON6xtBn7ea87GLIDrYvYi7xZDgpupNdshl0vmhFLclSM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Fct24DC2; arc=fail smtp.client-ip=40.107.244.60
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="MKWEznJ+"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Fct24DC2"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Wemzw9FIvL9z1/zq7h6Kbh3mHaipoc+TTEjKwqJPuWDfWX6Zz42QTuRD9A9Gp3sKP3DrDYoo0mkC+8SaSVkavyySg/PUT+ZDXHpeRVAW9YI3IygRh0H4wzoY8aJoLtjzkbx1aRLWXDonHFu0nx9gJnKbst6gbB7/+L434KyFK5DuIGpH/sqngiq0erDcdKr2+q3gNfhJEO4jYe6GIhRjS+GKSobFQo//BLMlGNh3Wi+xYySOhq3FDNbSHJikeS4JokPfd8dTpiSRR87w/1ztKKzk0sEq9xZXXUTalUWqh/UEiKn1v6x/0feb4IjXlIkL1BslBatOaKYmC/P2TmI+nQ==
+ b=yQQUGTe3923jJSrluLDlZkLNW4z5IMi0nRmIaVJJKvb1PucXqIjf0YbWJ90uVqxubP6Er6qKOvon12fdeYHjbR66OZbuIajs9dLt6RYTI2VTpPr9MLjpGXrS31t3BQE5bSI7uDwEsWs/T1qePl6y20s0ApMUOpFk9WEDipKNGmcbFHllLjp2F4jBXqlWuq/a2SUHSSCAxpdLjgCXSVBs2OKcsyri4ImO03TGwj/Xg8uqxfyKaQdVK8qZBH1Av7oLAfzHAi18rFyCK3686Ok8TUdkz3T8OK5+V0XmvJ7/vL4T7u0hf4iUgZsi0+KIwwxYA1ALo3gtOWJde8Jt4PhILw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KFQNOkUlHZFy/Rwa1QRXNum9tjSDFPyd/BYNatuDoKA=;
- b=zCHoxp5Sk3D75CnFcOgBUUWmh+ZkcKNCBsyjBkoIm6XKCYnupHpKLYc7CAAOjQ3ohHrTx/GZIaJesSPB0mLjSRFQPA9hAI/sXzTMnAxERhoUM+xjMny2FnSzLqYarLWz5O29P8NHCqdDRfhavdu0GMliUyFsvp0wlnMDYdxpvlF9k3EyPVEWpAYgZV6UFwVOexkF1OehvJzjv7XWQ0fh3eCLuhzFX3vR32u7DRq1rAZ6hAmi8Drxfq0jcS5LccykQ1vUpVPlli/+NWAiHuXmeZ0B1fWzaBjP5G0cb3DHFPBCBwJNip7hN8TSuFJX72TJrHQtwdEut4nKsCBsGrBgUQ==
+ bh=TCW34otVNaBbUQoUzbx4noIj4Ubpy7nPlbvhQ9QjBHk=;
+ b=ZsZTbncsWIENgN6SiCGnIudN7BJCuc5BUn7InJ92ljpShCtuNSG1XFNR9M1xBWuyqxzcqjWZsXkXf7pVWC9zMHRcE3EEwwvcPOx7eQDxL0wemv3GheTlxNzif7+NKdce57mWbOeQ8QJgqjQ92x5EVVxSej1dCucQpNSXLbnif8FP2jJQZ18QLf6Xyb4EVwIi2iI18QzMLmzjTag/EMPgUA8ddAZpoQGY/PVWx44HMEk45LKzeQPmiFLWcM6XbDkeU5i72eehHbQTY3zH40RqTT+FV/w3RJ2E/hpH98cTOr0XepfijNn/C5OHbzLwk0wRFBPMFChBMH76mLVtAS9CUQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KFQNOkUlHZFy/Rwa1QRXNum9tjSDFPyd/BYNatuDoKA=;
- b=MKWEznJ+v4H6Tj0vpMRLeaUFczWOZ2VwOaUs4fnWMCtCvtMah8Xysd9QuufLXzAleAukMVNFA6BkXL0Y2acPD3SP9U30xDcOvtO8NPjjGNn/R2IMCYOtPSkv8N8shg+nowRkMzOscSV+e0xvONB8tMSrPNYhrNZsKdxXbbii3jPExR7SvyEbx6hlh9EF3CWM902vYOnJLUKfum1PfxP+jmz7qZNyYagDWay/YO5cNY4rmRw9JlnTnp7N+fmt4x7S4jZAybmCv0kpbkZvcDG+IbKb5/e18MtuGfT48dHgTVOubfodiDSEoQWl0QowiwXQmCUY/Anx1dhjgLcqwDTmCQ==
+ bh=TCW34otVNaBbUQoUzbx4noIj4Ubpy7nPlbvhQ9QjBHk=;
+ b=Fct24DC2x+XWOt/Hv4VlOW/nq3ZoIuFXGhdh5q0Fx8SX+B71H2iwMAP5lfIg3UgCD3pM1kz+hiQIS2biOlKouuzgIc58uN7BdMIgcpManNKFmsQpvzh2+JA7M6zuaRkUyZl6enZJgvROpVvQq0/E7F0sXZJkRZO7js5MYd+Tyn4=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DBBPR04MB7899.eurprd04.prod.outlook.com (2603:10a6:10:1e1::21) with
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com (2603:10b6:930:3b::16)
+ by IA1PR12MB8223.namprd12.prod.outlook.com (2603:10b6:208:3f3::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Tue, 24 Jun
- 2025 20:00:44 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.015; Tue, 24 Jun 2025
- 20:00:44 +0000
-Date: Tue, 24 Jun 2025 16:00:40 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
-	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>
-Subject: Re: [PATCH v2 1/2] NTB: epf: Allow arbitrary BAR mapping
-Message-ID: <aFsD6PSapZB5wjQv@lizhi-Precision-Tower-5810>
-References: <20250624-ntb-rcar-support-v2-0-8c0e5cf69c4d@baylibre.com>
- <20250624-ntb-rcar-support-v2-1-8c0e5cf69c4d@baylibre.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624-ntb-rcar-support-v2-1-8c0e5cf69c4d@baylibre.com>
-X-ClientProxiedBy: AM0P190CA0026.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:208:190::36) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.19; Tue, 24 Jun
+ 2025 20:01:56 +0000
+Received: from CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0]) by CY5PR12MB6429.namprd12.prod.outlook.com
+ ([fe80::1b40:2f7f:a826:3fa0%6]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
+ 20:01:56 +0000
+Message-ID: <db804aaf-3842-471b-874a-08d5374a76bf@amd.com>
+Date: Tue, 24 Jun 2025 16:01:51 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Content-Language: en-GB
+From: "Nirujogi, Pratap" <pnirujog@amd.com>
+To: Mehdi Djait <mehdi.djait@linux.intel.com>,
+ Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
+ Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+ hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
+ dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+ jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+ linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+ benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com, king.li@amd.com,
+ dantony@amd.com, vengutta@amd.com, Svetoslav.Stoilov@amd.com,
+ Yana.Zheleva@amd.com
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <20250615000915.GQ10542@pendragon.ideasonboard.com>
+ <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
+ <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
+ <20250623220503.GA15951@pendragon.ideasonboard.com>
+ <425j7c6xvbbatdhxgjgjawzwfnjmjetg6rpnwfudbtg6qz6nay@dy5ldbuhtbvv>
+ <aFp7tuXkU1jayPum@kekkonen.localdomain>
+ <aFp78tqHhe_IhV6d@kekkonen.localdomain>
+ <20250624102745.GG15951@pendragon.ideasonboard.com>
+ <nixg4efp3zkdpd6h7kp6wkvam63batpoknov2nkgu36voks6bk@gzuackzl3l5g>
+ <892063b4-165a-4d6e-a6bd-94ef58c0ee73@amd.com>
+In-Reply-To: <892063b4-165a-4d6e-a6bd-94ef58c0ee73@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YT3PR01CA0089.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:84::20) To CY5PR12MB6429.namprd12.prod.outlook.com
+ (2603:10b6:930:3b::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,322 +82,287 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DBBPR04MB7899:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19c3abdb-9689-4a96-61a3-08ddb359cded
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6429:EE_|IA1PR12MB8223:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7e3540bb-009d-45ac-b2d5-08ddb359f87c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|52116014|1800799024|366016|7053199007|38350700014;
+	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?PWXa+LBQzvfQxlC4TtIJQnQehd94IdP/qR1GJPdP8tBqEV8PmMPnUvoBARtD?=
- =?us-ascii?Q?HqfGPvX2NC+wuVu4slRtDJ2uevjhONhT5ntkuPrDTQ+SXTnBgIsjXaGBRvj9?=
- =?us-ascii?Q?944Ft60vGSVg3WjaF43gMFOlbq6WPKHrPBBgeVDkl48Dfvntk98xaQ0yr94L?=
- =?us-ascii?Q?qc7pCcGXQvp5nMkUSqJspGt/OGgmUhSmbubI0KBdGnbX4Nv6M326VciufT6g?=
- =?us-ascii?Q?Cr278XuVQxuQamaIqFoMD78/H2rr8w3zMnvugSeRHs2g87Y3O9EuLo3HdL0x?=
- =?us-ascii?Q?evU49ZuyBNB4oJWscQIFFxQ6ywdQGWXrsALhUKXKbOQxlE9QSW7sOiby3jlZ?=
- =?us-ascii?Q?ibrPUsYDjckUyJsrCQbkZmaWUIbz8kxRwG9KdQs4p3wFBPIUh25pclyU10bG?=
- =?us-ascii?Q?5TISzoCbjk97JaawvLO9FDtjui2PGCsU8KXzKP9FOC5tke+WtFCUAyghBmpn?=
- =?us-ascii?Q?IywoVU6nUZrlBJC6Ji2uM0qb7WcmFd8KaT7KwtMsTL/Z4/j1hH4i+cU5AIUU?=
- =?us-ascii?Q?BpSVfDUat+hGyN0LrAFzyWZpt8DIIbQFIyhnPBuIzhorSDeMDVpD/5GN1nG4?=
- =?us-ascii?Q?31Q+dXbzz6vfDdyaVU/25QjGbjLiDjCnoA2Kq7x+6M6E1IQ0JPVYCNu72i4A?=
- =?us-ascii?Q?6O3j+Qat8t5CrJgSCs/W4h2fBOD890o/fE+qByI+QmBySXYSC1oq9QIVCJYN?=
- =?us-ascii?Q?2D9lgrPBb55J2wURPje9b0CoQqVTPBv9c39Wbm3p+UTyopxZiYcGiZitCHqT?=
- =?us-ascii?Q?OcQc/yX7b/mnqF5UhiOL7boh69YpNQkejiO0XdeHGS24W0DCoR02MluJeDAv?=
- =?us-ascii?Q?QHWW7YGD/pMeXqE90cpA9fDhZJaeReyoEz9zW7lHONkd4Mfqsh3HvoPwEw0g?=
- =?us-ascii?Q?dLx3J8SsB2bnGuwD6A/4Y9i0fBVilmM+n8USyfpmSqJva9xzenYfRNV2THw4?=
- =?us-ascii?Q?jDuTCvJx9oTNBD+aOZgEuFYbIwanp1PKL4X1wFexfSiA1AuQ0eIF1cZ2INSF?=
- =?us-ascii?Q?TuQzWLuFPqR1lCTjtQ255IvaNsqEX+KMU+IcYy44su/nC9kcF5AxO7SQt8Or?=
- =?us-ascii?Q?7cKu02P2DWt74cWZSxtxzqurkCp/U9FRngQx3yd2QQSpx0umBkpyDV4Cj9zm?=
- =?us-ascii?Q?KNSWChpmMoBG6UK596W/k/Cds3mDdWkuW45Q3QRJzKo2Eny3APUpXMROwquy?=
- =?us-ascii?Q?iXKnn/H4TloG2dfk/Pkn5IrAUWe7yuI8UiDqb528qFAUyN7ye1EeFB27Vk5s?=
- =?us-ascii?Q?geHJ71GM/JOWCqPpSqo2BUoj/pM5mvkOQ/S5ACRpOyYAEHbqHM2+s1JWi6tg?=
- =?us-ascii?Q?kJJ0fd0meAqH8U/L5WJSU3Ur0C386g/LuP/KzBPJvkA3/meKFq/mF31MgiEx?=
- =?us-ascii?Q?qC+3YcU57D9kLkU5Uvaw2bLhwimkXT+BJhj3H8g1rxieHW0JvZkMzpviXdda?=
- =?us-ascii?Q?Ze86R7eoG9eT9eaNrekMB92RSVeQliVx0Hdps09dpxd35dik0ifkyg=3D=3D?=
+	=?utf-8?B?RFNPcnZzaEdxZzJpNm1GTEpsWjdEaEJybXZwZ2Q1UitNeERIQTBmSXArZTF2?=
+ =?utf-8?B?OUtFOFFRM1kwcEdhZnBDaDJvSEhkeGhhUWl2ZHRKYUxEVWpYU3EzRHhDajY2?=
+ =?utf-8?B?TkNFZFpqWDJLWUNyK3JBZUxuenpjeXA0YlVBb1dkU1d2Ums5Q3M5NFZiU0J2?=
+ =?utf-8?B?SjFHYmlwaUs2MkJJWlU1UzNEZ0NadFdrNzNsNzBrNXFWcVRwc3NJUGVlMHdu?=
+ =?utf-8?B?b08va3pYV1NuQnBYZ3UyekdnV3ZEWEM1dnV4L0FsL1JHeVJvcXVGeDlIdFR2?=
+ =?utf-8?B?NHN3Q3hLdWcvcTNteU1RTzRsRjFsVlNENXpIbkRvUzlLdVZld0lUVGlhWDhu?=
+ =?utf-8?B?bHV0N1MzY09jcTFtYjJ4cjFOa2ZDUjRVclV4YjdkYXV5bXhxNGhnMDhxTFFF?=
+ =?utf-8?B?OFNpS0ZvYlF6elVQV2g3QWdzcm5NOWp4clVrb2pFQ0pISXNjRy9UdlZ0WEJJ?=
+ =?utf-8?B?NVIwWm5iWWFndWNUczJTR0ladkFQdnR5Qm1xV0dBemZZbzd3YkVIL0NicVpG?=
+ =?utf-8?B?VGZudVNpSThsN3dqbTlDRTFJU3RMaERpNVlUdm5aK243TnM5YUVHVTl2MWVv?=
+ =?utf-8?B?a09jRWRoOTNkL0g5c2xpSWJQQm1BU3RnKy9IS2ViQ0syUk8yVlRRQm9JVGwz?=
+ =?utf-8?B?enVUbmxZbTFSOVlid1pQakI5ZzlSK2pVYmk0V0U4bzZtejBuTlp5S0l4UWti?=
+ =?utf-8?B?UXQ1ZEQ5WjZLb2U3Ymd0R0ZrdStWdE9GTUN1UkZiL3dZMklTYXgvcGtvVVNC?=
+ =?utf-8?B?TDMyRWRUWFkyWFptWkdKcHBKVjd0SktMaFBiaW16Vzh2N0JZcDVXUFRteDFl?=
+ =?utf-8?B?UnYzc3N3aXVnU2VmSmRYK2JNS2xSWVFKeUUvZGtiSDJUMDBsbitQaXlrYUJJ?=
+ =?utf-8?B?UTlPR0NSZmxnY0c3NmNjYWdiaXkxbHY1NlZ6MEpVaVh4c1d2UmpHaXU3eXZW?=
+ =?utf-8?B?ZjcrR3RjU25DeHYxRjNqNUFncmhvL1hNVGZ0SkFPRE04dUUzVFFUOVhhRGhW?=
+ =?utf-8?B?T3RnR3RPZHBQRHY4Q3VYWFNOeWs2dlkwa0xxRkcyWW5DSzdIb1BCUDh3aHcy?=
+ =?utf-8?B?dW01YitWdkRKVWxmdzc2VmtySVpQUFd4TGQrRy9JVnlCT2ZkakE1RnZCL0J2?=
+ =?utf-8?B?aDNxMTVjeHBtTmFoNkpmNVNLTmVXNWJ2bmRTeWZld0xWck1jdG80d1FDdUZp?=
+ =?utf-8?B?T0ZHbnpzU0kwdHpGNVVYc0VTZVBydS81TVUvbFJUeWQ0YVNMU1FNMzFKMUJV?=
+ =?utf-8?B?QlNtREdjQjY3QmdTV2NEdTVnOWZQdEU0SHZyOERJWkdiTEtmczlGbDRoTzg5?=
+ =?utf-8?B?WjRpUjFBVFhHZzJGVkFaUWtPOUxYd0JjZ0s1MUdzZHB6TTdxSjZZV1l6Nkxy?=
+ =?utf-8?B?M1dKWWJuYVBjdDU4V1ViN2JQUTgxVExMZE5mN0ppWmFyK3U1bUY4VmJDM0hH?=
+ =?utf-8?B?M1p1b0VTMDE4NVIxKzB2Tk1qUE5xQ3p6cTgyVzRxSVRxdUw4dGxCcVZiV0pU?=
+ =?utf-8?B?V0pzWXY2NHpHaklESG1sV2J4VzZnV0JqWEFRMkk2TVNCWTJFVHNkdkF2MXBq?=
+ =?utf-8?B?eEM1cG8ySWsraVU5SW1MSGVBQjZUdGxFVlcrWU9teEMwQ2U5Sk44aU1IYjNW?=
+ =?utf-8?B?cVpsMjRlN2lLS0kwZ0dldXkrYkNGWEVUenNCUFAvQ3o2bTg3U1lsOHo1aWpa?=
+ =?utf-8?B?bGhrSUE4ME9KOFMxZ0UxelhsNkdWTTZSSlV3Nm9MMnFKL0tCdnhyVUZURzFm?=
+ =?utf-8?B?bWJwdHUzUXJ3R0xYTDJIM0VXZ3NQaTMrY3pEVE13ZmlvaTBVeC94OURNWGNy?=
+ =?utf-8?B?L2VmZS8yTHpvSE16UnplNjJXNmNYRTBicTlIQ3lPVk5LM3VHbXFGV1JheFpT?=
+ =?utf-8?Q?o/LhRoNuoUP5J?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(1800799024)(366016)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6429.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?F7RsOF16tILKh6ygjydHsxP/ZWJAtPM5/w1nTBACyADNek7F7WEFcjM3C+Q/?=
- =?us-ascii?Q?8ev9MTZlJagTW3kmA8Hab+6VRA/tCzd5mkNjFmTiVvlMZgh453gdeFZy7/Js?=
- =?us-ascii?Q?O2yOKj4IiZyzzcAPYyJqy/DCex7ShK8IvK0R0F1I0b35IrW/53T6SI+1GNvK?=
- =?us-ascii?Q?m/HtrzNSpyjoi05LHj8XAOVnEQjGirh+sJ86Zvr9VMDdoiCjUSryj2cEE9gd?=
- =?us-ascii?Q?nRjyhEZVE6XMEMp61gxXh5kG5NKx9ZvwklTHtlZtHyL+5N1+ViTzO+FjyLbP?=
- =?us-ascii?Q?VO9/gIW8t5k28CTt07IgI25GtKm2LUG/IYGbYhJqStJa0IdAVcqLeHOHoQoe?=
- =?us-ascii?Q?gA6QH0RupTXwPasS9oTk4HeDEe9foa+Z0ypAnB93Jks0YRhAICGGwxgnJBka?=
- =?us-ascii?Q?wcQSGN8w5T0h5QdSZ/EAu4pvLaCwT/DVN1inC9lkfOFvA0SFBQcqbuQJP8w1?=
- =?us-ascii?Q?1hbWa4i6y7QucAnUjK4eU50pzPKtcjGwmwI8PU0+x0lpgs17TVrg5W6MTVLY?=
- =?us-ascii?Q?/PnsGBZQmGUg8rlMBgA0xhJM0+HfLlNifl81Mgb6YRrr4ss5ufVrxt6Y8WMz?=
- =?us-ascii?Q?WviZyvgPeQA/qh8Wr3+MSkWO/QjSAE3wLHUzuVZKcOSjNJgedQZUGaYRjHl6?=
- =?us-ascii?Q?MDJa7gqlY7Xoz/9rg61BpiD+Buf+i7WPanrtHcFaQI+XYyHKyhyL8PE3+fqi?=
- =?us-ascii?Q?Nu4OSZCvMTdtb0Lc3tnOSeDIZWBUPY07N3ktQGo6xAaYfqhSRfuJgdzoLWPR?=
- =?us-ascii?Q?4G3+xjYaiQvkIPSeKS3YyblkTU+dCp6ktf0Z2FLLPtD3I2Lyu9CrzrIKCylO?=
- =?us-ascii?Q?eq2+HHeVr6IsNpxyJelMNr8enQdAV54sHI0/h4G4O3tWBgN//p+zrJK14PL0?=
- =?us-ascii?Q?2cT5yOPsMvtcPwwOGL3DBkA0i0gveg6d6BooiObX4z+8xfHu5OMwbog5jsWW?=
- =?us-ascii?Q?J5n7vSd7RgoOW9hPFsqTEJ9GzRZxLsCeUNFoBbuYQ0XjkZo410JTa8jcGQP2?=
- =?us-ascii?Q?SwSUyJIJu6Qbe1Ji08rzewwd5xRJLNtnBg/7BvbMyI44l2CEeBdqrJxiiu8/?=
- =?us-ascii?Q?ERLIgwOudU7/ppgWYHUIihl5btK+b2BayrQP+XLQGsRUByBUOADXcgspzuF6?=
- =?us-ascii?Q?6BsBnScSFgd5YLYwFLMlz6vGyU29g+8m0QHomsdhNNf2T6YjO/NLtKyalozQ?=
- =?us-ascii?Q?O0c1mtD9VnjhE37CKLFBxnwTmuTTD/RanSI+PSASOPNgWkrkCOieVsfxyDI4?=
- =?us-ascii?Q?Z2zassO/YtKsHdeISh8QtEmtml7zc2ny/mFcHcH/Fa919rTaiF6rc5kgIxA3?=
- =?us-ascii?Q?BxmTMDP2/ujDrm1wBDbtPOxJv4VMOSyIT2621dlEeKojSXwi8KXG0opcBePq?=
- =?us-ascii?Q?fslN57wsxj6ItuUxZIexSz43B5bIs+vhPcUOYNFi3IpByojhevW72LmCFfCo?=
- =?us-ascii?Q?sKil/b2zLGHxFs68W5P+pNOfW9riLtN/llSPrfzoGmMKABKo5+vC5h4KG7wP?=
- =?us-ascii?Q?Yqw2gNP6Dr+WjeOLz9mQkCtbt5PjjeQE8VTCVNqWU8AzdpmXcnK6TDWdAWLm?=
- =?us-ascii?Q?v0y0lrFCiDnEskZyWeQy9pSDbjsGGegmqz3Zk+7a?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19c3abdb-9689-4a96-61a3-08ddb359cded
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+	=?utf-8?B?RzNRTk4zUit0eWNuWFU2c3RoWHdXSlJmY3JBNUxUSURwL1Q1UUpFbmlpV1FX?=
+ =?utf-8?B?cXFJbWZXSnFHMVRQMkxTY2FhMGtnUG5KN3BnZVF1ZVI0aGl5YW1mWnZDZ0Vo?=
+ =?utf-8?B?VEV4RTM4ZldlQ2JEWXY0S1Q3S01nOGd3R3BYVzlwQ1JHRml1QzB0d05oMW53?=
+ =?utf-8?B?d1BQTlU4MkphWkt6TG1QTThWcU8rNit1d0JHRHBmVmR4a2VTY2hOUDZyM1J1?=
+ =?utf-8?B?RnZlcTNpcGpQRE51dXQ4UDNZTGJVaHJyQmJibk1RNHRvUFJGMkc0eVVXUnBI?=
+ =?utf-8?B?Um5wTkNlbVFqZ0pDVGI5NEg4eEFpK1ExUFhYMWVlSE90YXM0ZEtTTDhXQlJy?=
+ =?utf-8?B?WWRZRTM0a2hmdVgrbVc0VFR2Z1JpUlhrMFlHQzlUbTgxTFE5bEhZeTYwMVIw?=
+ =?utf-8?B?RGllZHVjRklueXNacjBhaCtrZVZLUE1ybjhiaFV6emFaa0lWUEVLMmdRdjkx?=
+ =?utf-8?B?d1FYUEVFOVBCZWpjU3B3em5XRE82NlJNUUg1VlM3WjRnd3ZFUVVXK1VLZlM0?=
+ =?utf-8?B?aGM2bW0rZ0ZHdVE1eVh4ZGwrQVRxMkpWWVRCU1lIc0hOblhmdjlONFJvSTAw?=
+ =?utf-8?B?ZUhyYUppNWdqSHhtQ3p2bFcvelNiaGxubEo0MjduSmw2RTlkcVRZT0Y2dVVW?=
+ =?utf-8?B?N3lrQ1N0K3hGV3FiVGJiN2RRSm5MZmxpSGc2andvVlV4ei9nY0Vhbi9rZnhO?=
+ =?utf-8?B?b0ZEanJXOE5RSHNCQnFBTG1SakpuYVpETkxYSEgvR1MrOUVvT0NhbnRwKzBW?=
+ =?utf-8?B?a3VYcEM0UzZuYldzTUhnNngrSGlORDFiR3F5YlY1TmtUVmU5WWVBSlhVb3F0?=
+ =?utf-8?B?dTFvaG84RXhmMjAvZVJvSlM5S1NIK1djbVhsbXRmcExuY2NiSEN2cWU5N1M5?=
+ =?utf-8?B?dnBESGZsVHFjclBzcEJFd1lxOGQxK2Q4SnovcDRYdUtUVnJWRk5UaVFSbGl0?=
+ =?utf-8?B?SldydXdMWXVEZjdyU0cvTnRiMjhrdHM2OHBISlREL2NEZGc2NUJGS1RWVW1H?=
+ =?utf-8?B?cUVRZm9MaTk1VC93dGtnclJnRlNWSmxuNW1TK3VqNGxaY1ZCYzA1TW83SjE2?=
+ =?utf-8?B?QWc3dEV6RXdYa250azl0MDIrY2plSkxMbkFxVzhxV2xzVnZCeHFLcndEUjY1?=
+ =?utf-8?B?eWNGdXRpT2IzZGtZY01ETDFZNjhQOVcvNTY1N3V6ZGpRNWtMVU5tWDJLQ3Bj?=
+ =?utf-8?B?dTQ4cFVBanovR08xNDVVdFJYb1V2NjVyU3FISlYzRm9RamxRV0RxdzV1QmU4?=
+ =?utf-8?B?eW9qdmFYZFhDOFZIbXR0ZzA1N01YWUFaUzRxR2tOWFpoUHdFanFIcmRzam80?=
+ =?utf-8?B?SkFyZHlhdVU2Q0tRdDFWRDdkallqTG8vOCtINXlSai85bUFHL3lXaGtrTnUx?=
+ =?utf-8?B?V2RBSUJmam5jSGlJYXA5YlNHUHExUnNtU2tpdFpXbE1OVi9ndGduNlU3Uy9w?=
+ =?utf-8?B?QkdTMjNuQjZYUDJrRWl1RFkrVzJya0NBTWdPVEo1bS9iYVpnRlUzT2k1bTZ0?=
+ =?utf-8?B?QVVKL2Z6enlpK0NVd2RmdVVkYW5lWXkzOXA3dy9aUzJ0UUJ4QkRKc0hrN3Na?=
+ =?utf-8?B?VXpZS1c1Ry9MVlhrcWVBK211bXBlaklTa2RUbHM4d0lKNzBxVncvcXAzVzdU?=
+ =?utf-8?B?cGFwWnUrSHpNMVk0TjhXZjRkaXlGOStZYVl4L0twaHZ2Tnp5eVJGcy9zM2to?=
+ =?utf-8?B?Z0lLRTZtb1Qvb2dnM29aMTUwRXRVK3JDelZhdDFCNmdzbDNKUzFyaVpzVGps?=
+ =?utf-8?B?V3ZKMmJoUzFrY1llbVdHeTRVY3dQYkdPWlBlMUNkQWFvK2s3Znd5MW0xd3py?=
+ =?utf-8?B?UGtiWmYyQzdlMDVLeE4ya2FZMXpzNU1vM0FzUVJUaUp5eDhFc2pram5iWlIy?=
+ =?utf-8?B?ZEllQTVCTFd5V3hCMW15RFZadk1TaFVsdUVYVFFsMGEvdmRna01jc3lTVWtL?=
+ =?utf-8?B?Q0FBZld2byt4UXp5Zk5FSER0WjlsMkxvTlIwRmZaZ3VJS2FlUmEwb3JESkpF?=
+ =?utf-8?B?QzJDYmg4RmRZNTIzZzZabyt6M0E1MUVvRlFyNGYxaVpLK2lzUFkvbGVPdkhO?=
+ =?utf-8?B?Y2FYUmRhRlJSK1BCd2t6RVhNNlp4cHZxYVdLNXY4ZE9kekpWcm01Rk1WNHhw?=
+ =?utf-8?Q?YfeBls9B/7l5gW/T/hVIc1Cm9?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e3540bb-009d-45ac-b2d5-08ddb359f87c
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6429.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 20:00:44.7619
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 20:01:56.1564
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GiPCG4uQ9sAQ4fW68ZKfL9S0W0TPFQ2eRZ+JI9GwUi2l+CTjG5AyonbpmT3VphpiaE7Zn1kXfDTABJrc3MuUwQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7899
+X-MS-Exchange-CrossTenant-UserPrincipalName: xJZCdrnfUwF3/TQXaMZw5kuHgzhAHcXSRhhqmhRGd7O9QLH7AKc6AmPAZU8819dPUlemkzJJsJjOiAksI1aLYw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8223
 
-On Tue, Jun 24, 2025 at 06:06:16PM +0200, Jerome Brunet wrote:
-> The NTB epf host driver assumes the BAR number associated with a memory
-> window is just incremented from the BAR number associated with MW1. This
-> seems to have been enough so far but this is not really how the endpoint
-> side work and the two could easily become mis-aligned.
->
-> ntb_epf_mw_to_bar() even assumes that the BAR number is the memory window
-> index + 2, which means the function only returns a proper result if BAR_2
-> is associated with MW1.
->
-> Instead, fully describe and allow arbitrary NTB BAR mapping.
->
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  drivers/ntb/hw/epf/ntb_hw_epf.c | 105 +++++++++++++++++++++-------------------
->  1 file changed, 54 insertions(+), 51 deletions(-)
->
-> diff --git a/drivers/ntb/hw/epf/ntb_hw_epf.c b/drivers/ntb/hw/epf/ntb_hw_epf.c
-> index 00f0e78f685bf7917b02dd8a52b5b35f68d5bb64..e8eb3adc6cecd2d52235a3f0b6b5a59ec58f1d73 100644
-> --- a/drivers/ntb/hw/epf/ntb_hw_epf.c
-> +++ b/drivers/ntb/hw/epf/ntb_hw_epf.c
-> @@ -49,6 +49,7 @@
->  #define NTB_EPF_COMMAND_TIMEOUT	1000 /* 1 Sec */
->
->  enum pci_barno {
-> +	NO_BAR = -1,
->  	BAR_0,
->  	BAR_1,
->  	BAR_2,
-> @@ -57,16 +58,26 @@ enum pci_barno {
->  	BAR_5,
->  };
->
-> +enum epf_ntb_bar {
-> +	BAR_CONFIG,
-> +	BAR_PEER_SPAD,
-> +	BAR_DB,
-> +	BAR_MW1,
-> +	BAR_MW2,
-> +	BAR_MW3,
-> +	BAR_MW4,
-> +	NTB_BAR_NUM,
-> +};
-> +
-> +#define NTB_EPF_MAX_MW_COUNT	(NTB_BAR_NUM - BAR_MW1)
-> +
->  struct ntb_epf_dev {
->  	struct ntb_dev ntb;
->  	struct device *dev;
->  	/* Mutex to protect providing commands to NTB EPF */
->  	struct mutex cmd_lock;
->
-> -	enum pci_barno ctrl_reg_bar;
-> -	enum pci_barno peer_spad_reg_bar;
-> -	enum pci_barno db_reg_bar;
-> -	enum pci_barno mw_bar;
-> +	const enum pci_barno *barno_map;
->
->  	unsigned int mw_count;
->  	unsigned int spad_count;
-> @@ -85,17 +96,6 @@ struct ntb_epf_dev {
->
->  #define ntb_ndev(__ntb) container_of(__ntb, struct ntb_epf_dev, ntb)
->
-> -struct ntb_epf_data {
-> -	/* BAR that contains both control region and self spad region */
-> -	enum pci_barno ctrl_reg_bar;
-> -	/* BAR that contains peer spad region */
-> -	enum pci_barno peer_spad_reg_bar;
-> -	/* BAR that contains Doorbell region and Memory window '1' */
-> -	enum pci_barno db_reg_bar;
-> -	/* BAR that contains memory windows*/
-> -	enum pci_barno mw_bar;
-> -};
-> -
->  static int ntb_epf_send_command(struct ntb_epf_dev *ndev, u32 command,
->  				u32 argument)
->  {
-> @@ -144,7 +144,7 @@ static int ntb_epf_mw_to_bar(struct ntb_epf_dev *ndev, int idx)
->  		return -EINVAL;
->  	}
->
-> -	return idx + 2;
-> +	return ndev->barno_map[BAR_MW1 + idx];
->  }
->
->  static int ntb_epf_mw_count(struct ntb_dev *ntb, int pidx)
-> @@ -413,7 +413,9 @@ static int ntb_epf_mw_set_trans(struct ntb_dev *ntb, int pidx, int idx,
->  		return -EINVAL;
->  	}
->
-> -	bar = idx + ndev->mw_bar;
-> +	bar = ntb_epf_mw_to_bar(ndev, idx);
-> +	if (bar < 0)
-> +		return bar;
->
->  	mw_size = pci_resource_len(ntb->pdev, bar);
->
-> @@ -455,7 +457,9 @@ static int ntb_epf_peer_mw_get_addr(struct ntb_dev *ntb, int idx,
->  	if (idx == 0)
->  		offset = readl(ndev->ctrl_reg + NTB_EPF_MW1_OFFSET);
->
-> -	bar = idx + ndev->mw_bar;
-> +	bar = ntb_epf_mw_to_bar(ndev, idx);
-> +	if (bar < 0)
-> +		return bar;
->
->  	if (base)
->  		*base = pci_resource_start(ndev->ntb.pdev, bar) + offset;
-> @@ -557,8 +561,13 @@ static int ntb_epf_init_dev(struct ntb_epf_dev *ndev)
->  	}
->
->  	ndev->db_valid_mask = BIT_ULL(ndev->db_count) - 1;
-> -	ndev->mw_count = readl(ndev->ctrl_reg + NTB_EPF_MW_COUNT);
->  	ndev->spad_count = readl(ndev->ctrl_reg + NTB_EPF_SPAD_COUNT);
-> +	ndev->mw_count = readl(ndev->ctrl_reg + NTB_EPF_MW_COUNT);
 
-This looks like just move readl() pos, not related this patch.
 
-Frank
-> +
-> +	if (ndev->mw_count > NTB_EPF_MAX_MW_COUNT) {
-> +		dev_err(dev, "Unsupported MW count: %u\n", ndev->mw_count);
-> +		return -EINVAL;
-> +	}
->
->  	return 0;
->  }
-> @@ -596,14 +605,15 @@ static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
->  		dev_warn(&pdev->dev, "Cannot DMA highmem\n");
->  	}
->
-> -	ndev->ctrl_reg = pci_iomap(pdev, ndev->ctrl_reg_bar, 0);
-> +	ndev->ctrl_reg = pci_iomap(pdev, ndev->barno_map[BAR_CONFIG], 0);
->  	if (!ndev->ctrl_reg) {
->  		ret = -EIO;
->  		goto err_pci_regions;
->  	}
->
-> -	if (ndev->peer_spad_reg_bar) {
-> -		ndev->peer_spad_reg = pci_iomap(pdev, ndev->peer_spad_reg_bar, 0);
-> +	if (ndev->barno_map[BAR_PEER_SPAD] != ndev->barno_map[BAR_CONFIG]) {
-> +		ndev->peer_spad_reg = pci_iomap(pdev,
-> +						ndev->barno_map[BAR_PEER_SPAD], 0);
->  		if (!ndev->peer_spad_reg) {
->  			ret = -EIO;
->  			goto err_pci_regions;
-> @@ -614,7 +624,7 @@ static int ntb_epf_init_pci(struct ntb_epf_dev *ndev,
->  		ndev->peer_spad_reg = ndev->ctrl_reg + spad_off  + spad_sz;
->  	}
->
-> -	ndev->db_reg = pci_iomap(pdev, ndev->db_reg_bar, 0);
-> +	ndev->db_reg = pci_iomap(pdev, ndev->barno_map[BAR_DB], 0);
->  	if (!ndev->db_reg) {
->  		ret = -EIO;
->  		goto err_pci_regions;
-> @@ -659,12 +669,7 @@ static void ntb_epf_cleanup_isr(struct ntb_epf_dev *ndev)
->  static int ntb_epf_pci_probe(struct pci_dev *pdev,
->  			     const struct pci_device_id *id)
->  {
-> -	enum pci_barno peer_spad_reg_bar = BAR_1;
-> -	enum pci_barno ctrl_reg_bar = BAR_0;
-> -	enum pci_barno db_reg_bar = BAR_2;
-> -	enum pci_barno mw_bar = BAR_2;
->  	struct device *dev = &pdev->dev;
-> -	struct ntb_epf_data *data;
->  	struct ntb_epf_dev *ndev;
->  	int ret;
->
-> @@ -675,18 +680,10 @@ static int ntb_epf_pci_probe(struct pci_dev *pdev,
->  	if (!ndev)
->  		return -ENOMEM;
->
-> -	data = (struct ntb_epf_data *)id->driver_data;
-> -	if (data) {
-> -		peer_spad_reg_bar = data->peer_spad_reg_bar;
-> -		ctrl_reg_bar = data->ctrl_reg_bar;
-> -		db_reg_bar = data->db_reg_bar;
-> -		mw_bar = data->mw_bar;
-> -	}
-> +	ndev->barno_map = (const enum pci_barno *)id->driver_data;
-> +	if (!ndev->barno_map)
-> +		return -EINVAL;
->
-> -	ndev->peer_spad_reg_bar = peer_spad_reg_bar;
-> -	ndev->ctrl_reg_bar = ctrl_reg_bar;
-> -	ndev->db_reg_bar = db_reg_bar;
-> -	ndev->mw_bar = mw_bar;
->  	ndev->dev = dev;
->
->  	ntb_epf_init_struct(ndev, pdev);
-> @@ -730,30 +727,36 @@ static void ntb_epf_pci_remove(struct pci_dev *pdev)
->  	ntb_epf_deinit_pci(ndev);
->  }
->
-> -static const struct ntb_epf_data j721e_data = {
-> -	.ctrl_reg_bar = BAR_0,
-> -	.peer_spad_reg_bar = BAR_1,
-> -	.db_reg_bar = BAR_2,
-> -	.mw_bar = BAR_2,
-> +static const enum pci_barno j721e_map[NTB_BAR_NUM] = {
-> +	[BAR_CONFIG]	= BAR_0,
-> +	[BAR_PEER_SPAD]	= BAR_1,
-> +	[BAR_DB]	= BAR_2,
-> +	[BAR_MW1]	= BAR_2,
-> +	[BAR_MW2]	= BAR_3,
-> +	[BAR_MW3]	= BAR_4,
-> +	[BAR_MW4]	= BAR_5
->  };
->
-> -static const struct ntb_epf_data mx8_data = {
-> -	.ctrl_reg_bar = BAR_0,
-> -	.peer_spad_reg_bar = BAR_0,
-> -	.db_reg_bar = BAR_2,
-> -	.mw_bar = BAR_4,
-> +static const enum pci_barno mx8_map[NTB_BAR_NUM] = {
-> +	[BAR_CONFIG]	= BAR_0,
-> +	[BAR_PEER_SPAD]	= BAR_0,
-> +	[BAR_DB]	= BAR_2,
-> +	[BAR_MW1]	= BAR_4,
-> +	[BAR_MW2]	= BAR_5,
-> +	[BAR_MW3]	= NO_BAR,
-> +	[BAR_MW4]	= NO_BAR
->  };
->
->  static const struct pci_device_id ntb_epf_pci_tbl[] = {
->  	{
->  		PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
->  		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
-> -		.driver_data = (kernel_ulong_t)&j721e_data,
-> +		.driver_data = (kernel_ulong_t)j721e_map,
->  	},
->  	{
->  		PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x0809),
->  		.class = PCI_CLASS_MEMORY_RAM << 8, .class_mask = 0xffff00,
-> -		.driver_data = (kernel_ulong_t)&mx8_data,
-> +		.driver_data = (kernel_ulong_t)mx8_map,
->  	},
->  	{ },
->  };
->
-> --
-> 2.47.2
->
+On 6/24/2025 2:26 PM, Nirujogi, Pratap wrote:
+> Hi Mehdi, Sakari, Laurent,
+> 
+> On 6/24/2025 7:27 AM, Mehdi Djait wrote:
+>> Caution: This message originated from an External Source. Use proper 
+>> caution when opening attachments, clicking links, or responding.
+>>
+>>
+>> Hi Laurent, Hi Sakari,
+>>
+>> On Tue, Jun 24, 2025 at 01:27:45PM +0300, Laurent Pinchart wrote:
+>>> On Tue, Jun 24, 2025 at 10:20:34AM +0000, Sakari Ailus wrote:
+>>>> On Tue, Jun 24, 2025 at 10:19:35AM +0000, Sakari Ailus wrote:
+>>>>> On Tue, Jun 24, 2025 at 10:35:18AM +0200, Mehdi Djait wrote:
+>>>>>> On Tue, Jun 24, 2025 at 01:05:03AM +0300, Laurent Pinchart wrote:
+>>>>>>> On Mon, Jun 23, 2025 at 05:51:48PM -0400, Nirujogi, Pratap wrote:
+>>>>>>>> On 6/16/2025 6:49 PM, Nirujogi, Pratap wrote:
+>>>>>>>>>>> +static int ov05c10_probe(struct i2c_client *client)
+>>>>>>>>>>> +{
+>>>>>>>>>>> +     struct ov05c10 *ov05c10;
+>>>>>>>>>>> +     u32 clkfreq;
+>>>>>>>>>>> +     int ret;
+>>>>>>>>>>> +
+>>>>>>>>>>> +     ov05c10 = devm_kzalloc(&client->dev, sizeof(*ov05c10),
+>>>>>>>>>>> GFP_KERNEL);
+>>>>>>>>>>> +     if (!ov05c10)
+>>>>>>>>>>> +             return -ENOMEM;
+>>>>>>>>>>> +
+>>>>>>>>>>> +     struct fwnode_handle *fwnode = dev_fwnode(&client->dev);
+>>>>>>>>>>> +
+>>>>>>>>>>> +     ret = fwnode_property_read_u32(fwnode, "clock-frequency",
+>>>>>>>>>>> &clkfreq);
+>>>>>>>>>>> +     if (ret)
+>>>>>>>>>>> +             return  dev_err_probe(&client->dev, -EINVAL,
+>>>>>>>>>>> +                                   "fail to get clock freq\n");
+>>>>>>>>>>
+>>>>>>>>>> Let's try to land
+>>>>>>>>>> https://lore.kernel.org/linux-media/20250521104115.176950-1-
+>>>>>>>>>> mehdi.djait@linux.intel.com/
+>>>>>>>>>> and replace the code above with devm_v4l2_sensor_clk_get().
+>>>>>>>>>>
+>>>>>>>>> Ok, we will verify on our side.
+>>>>>>>>
+>>>>>>>> We tried using devm_v4l2_sensor_clk_get() and found its required 
+>>>>>>>> to add
+>>>>>>>> support for software_node to make it work with this driver.
+>>>>>>>
+>>>>>>> Why is that ?
+>>>>>>>
+>>>>>>>> Please refer
+>>>>>>>> the changes below and let us know if these should be submitted as a
+>>>>>>>> separate patch.
+>>>>>>
+>>>>>> The helper is still not merged, so no patch is required.
+>>>>>>
+>>>>>> I will see if a change is needed from the helper side or the 
+>>>>>> OV05C10 side.
+>>>>>
+>>>>> I wonder if there's a better way to figure out if you're running on 
+>>>>> a DT or
+>>>>> ACPI based system than getting the device's parents and checking 
+>>>>> which one
+>>>>> you find first, DT or ACPI. I think that should work for now at least.
+>>>>
+>>>> Or, rather, checking for non-OF node here would probably work the 
+>>>> best. I
+>>>> wouldn't expect these to be software node based on DT systems ever.
+>>>
+>>> Until it happens :-) And we'll handle it then.
+>>
+>> So we have the following:
+>>
+>> - The problem with this driver is due to lack of proper ACPI
+>>    description. HW is already shipping and AMD will work on better ACPI
+>>    description for future models. See [1]
+>>
+> Thanks Mehdi for clarifying and providing the reference from the 
+> associated x86/platform driver patch.
+> 
+> yes, thats true we have to add software_nodes to mitigate the issue 
+> caused by incomplete description of camera device in ACPI tables.
+> 
+> For future models we are working on a plan to address this issue 
+> following the MIPI DisCo Imaging Spec suggested by Sakari to properly 
+> describe the camera device in ACPI. Please see [A]
+> 
+> Once again thanks everyone for the support!
+> 
+> [A] https://lore.kernel.org/ 
+> lkml/2a9ba94e-7985-4ba9-88c6-45b8cf4d001f@amd.com/
+> 
+>> - software_node can also be used on DT systems
+>>
+>> [1] https://lore.kernel.org/lkml/0d801367- 
+>> da24-4596-83d9-08ccd89ca670@redhat.com/
+>>
+>> Now going back to the helper. If we want to support this case:
+>>
+>> Approach 1: software_node || acpi
+>>
+>> --- a/drivers/media/v4l2-core/v4l2-common.c
+>> +++ b/drivers/media/v4l2-core/v4l2-common.c
+>> @@ -682,16 +682,17 @@ struct clk *devm_v4l2_sensor_clk_get(struct 
+>> device *dev, const char *id)
+>>          const char *clk_id __free(kfree) = NULL;
+>>          struct clk_hw *clk_hw;
+>>          struct clk *clk;
+>> -       bool acpi_node;
+>> +       bool acpi_sw_node;
+>>          u32 rate;
+>>          int ret;
+>>
+>>          clk = devm_clk_get_optional(dev, id);
+>>          ret = device_property_read_u32(dev, "clock-frequency", &rate);
+>> -       acpi_node = is_acpi_node(dev_fwnode(dev));
+>> +       acpi_sw_node = is_acpi_node(dev_fwnode(dev)) ||
+>> +                      is_software_node(dev_fwnode(dev));
+>>
+>>          if (clk) {
+>> -               if (!ret && acpi_node) {
+>> +               if (!ret && acpi_sw_node) {
+>>                          ret = clk_set_rate(clk, rate);
+>>                          if (ret) {
+>>                                  dev_err(dev, "Failed to set clock 
+>> rate: %u\n",
+>> @@ -705,7 +706,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device 
+>> *dev, const char *id)
+>>          if (ret)
+>>                  return ERR_PTR(ret);
+>>
+>> -       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
+>> +       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_sw_node)
+>>                  return ERR_PTR(-ENOENT);
+>>
+>>          if (!id) {
+>>
+>>
+>> Approach 2: of_node
+>>
+>> --- a/drivers/media/v4l2-core/v4l2-common.c
+>> +++ b/drivers/media/v4l2-core/v4l2-common.c
+>> @@ -682,16 +682,16 @@ struct clk *devm_v4l2_sensor_clk_get(struct 
+>> device *dev, const char *id)
+>>          const char *clk_id __free(kfree) = NULL;
+>>          struct clk_hw *clk_hw;
+>>          struct clk *clk;
+>> -       bool acpi_node;
+>> +       bool of_node;
+>>          u32 rate;
+>>          int ret;
+>>
+>>          clk = devm_clk_get_optional(dev, id);
+>>          ret = device_property_read_u32(dev, "clock-frequency", &rate);
+>> -       acpi_node = is_acpi_node(dev_fwnode(dev));
+>> +       of_node = is_of_node(dev_fwnode(dev));
+>>
+>>          if (clk) {
+>> -               if (!ret && acpi_node) {
+>> +               if (!ret && !of_node) {
+>>                          ret = clk_set_rate(clk, rate);
+>>                          if (ret) {
+>>                                  dev_err(dev, "Failed to set clock 
+>> rate: %u\n",
+>> @@ -705,7 +705,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device 
+>> *dev, const char *id)
+>>          if (ret)
+>>                  return ERR_PTR(ret);
+>>
+>> -       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
+>> +       if (!IS_ENABLED(CONFIG_COMMON_CLK) || of_node)
+>>                  return ERR_PTR(-ENOENT);
+>>
+>>          if (!id) {
+>>
+> Thanks for proposing "approach 2 using !swnode", I verified and confirm 
+> it works at my end.
+> 
+sorry,  fixing the typo - I meant "approach 2 using !of_node".
+
+Thanks,
+Pratap
+
+
+> Thanks,
+> Pratap
+>>
+>> -- 
+>> Kind Regards
+>> Mehdi Djait
+> 
+
