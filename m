@@ -1,156 +1,96 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2476F2D5C81
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ABAB2D877C;
+	Tue, 24 Jun 2025 14:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775556; cv=none; b=mudxu8ih4ApOTHQIXQkl8v04yPfRgvXfUGm4JHOr+u+yblMqbS5VaLnaBQCXueVb5EDQqQSewYj/dcdwTI4xT7Ysi2mYz3BAeaEzd1wsUNvNxqOPqDb0Jxzr5t7OAiNt1DY8wDGFOWeabOJd79RQQWF9OzOMpV8jLcKyoTuobM8=
+	t=1750775559; cv=none; b=TQ0PI4gj4OyeCSGSl/1i8mynIkcrY2i66Ds6D3QJMmuEYST4zlHwpUGLPCxqBMMpSwKVXv96woW+joD1Rusnt10a81qTfCVggUtx8AxKQJAhv4003kJNIYTuaoNa3lguAt51RKcFVr4fPhQjDn5wHHtqOjHbAyaiNPI3Av25nnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775556; c=relaxed/simple;
-	bh=iLYKM5JKB26am82HXGWbhN5RKHqdXM5CcMWlQP2QiyI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kzSv6+XcMRSA5ZfH3Rma09PfUuBfHkUyMUn9gOrXE7ot17BBnSx+3ild1k9xLWl0fw1WIovbF1KqPlLG0Kc/lTv/inszUdAXkXDbrJSTn4t437UQNOr6mwax/DwLw+tRjfidVOPIPQRWki9Hbmulv5ik7iR8Wzn3MRHgIc8FTNQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Q3JQBv8A; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750775559; c=relaxed/simple;
+	bh=OIig1hvOgr3Yfn3X9EzxrKMc25cjBmewUAcFdr2bDIo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UKY8R3PHM3ibywoSchClBv2c2ESvyw1r4WhmEzJ100BqPyl/Tx7fD71zltI8n3v9r1w8PucLqhg9vDCJAp8rrtkAVvIIojIYZZW+WIix0YieZ9nbf7Kshb1+1NHHw8TPDfVSVFD3+jUvQrPYPQQGqhyope8ITZkupXGCFQwla+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Au4wojRo; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Q3JQBv8A"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-453608ed113so48019165e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:32:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Au4wojRo"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-235ef62066eso8171525ad.3;
+        Tue, 24 Jun 2025 07:32:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750775553; x=1751380353; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9CNIW5cNjKjCoab6AIakbGKNTJu3VYBmTvjInHO0Kug=;
-        b=Q3JQBv8AbiHZ2nKJ/U8E83dqgOWOuiQ67ojQcO2JcQ4Aod//xFjiNmXqHibKLENrLe
-         Px7TIIUTifkjREXkSoE0sf4B2EnkFa/70NwS1pcPHYugINOcvWcaysXKNf6uag+FFzfI
-         mgcev4nAV8gy00+F/iGS16xszo2McrK3zQLUZc5V5zkbk8WC4VH8DL0A3ye+8+x3KgQy
-         i1GWcavpjE7ApGgV2wSV5KlVZNFZpdbIukq+DYHqr49bw2AZIR+L3+FWOEybQn5LtEY4
-         aeepJPqnwdlELRuKl5n1Yr5XwmqwvHY4EQg0w67AWhPbXVEQ6InslPsBA4CDbjarp2X9
-         xwYA==
+        d=gmail.com; s=20230601; t=1750775556; x=1751380356; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=j0T79Pfy96T4ZzYQAUwEM5a3O5d3tQvoc+ot0z1/UEs=;
+        b=Au4wojRoKX61TEiZ7+NjNonmGCBOkF8W/3z4KsTyDSFv/kh9By2A7Kb2/6ToKC0Ha4
+         zLq64txPk3LEwSRcaMJAZPaRGyrAYop4WYMYVQlF1lD4OO+cKIRfP7vA1ryl2cJi5eZk
+         OCpgp1B+Vow3g2IBPnMvRBhNSzrFp+cd8PaXORzue1ct6xl5hIP49iJ1JkZin3FhMlaq
+         UZd/fE5Knbr3vDk5oqvZ+if0fORddSCsPOJo3OK4jvMF2XpRUvq/zTrH0dhOqgh7iWNX
+         EQ58iDP8kAYN1qbDdbjsDfMUABq2QGUsWUnfOtMsWbxp2rFjYpaJa+1A6tTRs3sPrgox
+         Ntjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750775553; x=1751380353;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750775556; x=1751380356;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9CNIW5cNjKjCoab6AIakbGKNTJu3VYBmTvjInHO0Kug=;
-        b=FaeSyivaElGkhQq7oFdrF0OUu9APtfFzg6Gk1Wi0qTjB049NnsswvF363WM6DvCAxr
-         +GAxauVcBRbwGE/yc56Zrt59B3QYlzk5YGpzEmH8c4jw0Pcv4qHz2WG3ovfSRIg1PDgw
-         F7Xkjet1+pnp77q84mNaJNHa+K8WcBGyVINI6zi1KD9Anq4LQyzV8hys2F+ZvAY1U1/n
-         0BX1FPz/RillQJulQLPn9TxOQM1BX3nGywlVn0yg8nfA0DP2Y9Of9ZYUFz4A+N3igaub
-         6xN6JFB3me8yGRDTA8uS8M0nl7k2x3x5tD5sMOj1DQc+u/cW9cl5OXZ8cprSFESQn77e
-         kaEw==
-X-Forwarded-Encrypted: i=1; AJvYcCWNiO3MGg3m50udRioc59intQDlwsGqeqw6R730WbeinGPZbivOxE6utTuTi8vJFKAxomwZX4zwZUfw6xU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1+Q20atrb34q6wevCfOPPrWss8AcDlOmmnpi8J3HrSm8QnaFX
-	Q4xFW0Zc/+2jg8XzHIJNDbf2kUxw5MSt51xPpbrOVRZM1crIBbspBmRRKsFIcvL7D5M=
-X-Gm-Gg: ASbGncvwtWFCTHkLnoJGEdkBnViGtP7omfn4QcsuRXrSJD9LPtE6Cqo0z1T7WrPNWBA
-	Fmi6ClYQLfTHYhMwNziKlKjcdMqsxccfb6R+/yIuHoG0dH96oPvqqN+BxwicPdwn1Ehg/hD5tTr
-	OwJRmv2PKD4VpqbxxKZ/ZQ/QxI37Goe5M4IcLpb3hQNefDwvCPWyt0WJioEjmaiQ68fAgZrYOap
-	u8w3pvtKEUkN0hZr0mEiLuNT/c0aVCBqtNMy2BKxpJtcslG2SRc4Rd/5ZfuM3nFFNltod0oxHTJ
-	Pt9Q4qLbBISZIHQsrNUyBUBzF/6mmoVfI8Ew6oFSrTQD502nTrp7ZV5v
-X-Google-Smtp-Source: AGHT+IGpuQeND4OkNgfppr4DzG+xyz0jUMqc4qLMdr3DGhKhUgWRg/xb9I4Kd3VA/X3bAzgBxw7ciQ==
-X-Received: by 2002:a05:600c:8594:b0:453:9b3:5b67 with SMTP id 5b1f17b1804b1-453659f8324mr83368095e9.24.1750775553416;
-        Tue, 24 Jun 2025 07:32:33 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:34d2:109c:3293:19e9])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535ead2a84sm178512935e9.32.2025.06.24.07.32.32
+        bh=j0T79Pfy96T4ZzYQAUwEM5a3O5d3tQvoc+ot0z1/UEs=;
+        b=aUmr37Ns6MjjqQ8PP1TLEEPc6GSpqDTh2dAhxiBiT+tOhWR4Fk1vOCyELHNT8ZVC+F
+         H5sG1lz20kEMPEbn3i20Pc2F1YAZr6Kp9PqVkXKDqR6GwaNEUntzUI7U7X0Eaoxz5Brs
+         1OTyeqYtbw2N/2+Nvf+c7ajtn0TplCc1kKdx7UUntoWVJYy4A+eYg6fqIYANNtQfEbl0
+         4UD1KJDHSai5NXtWkjvGm42cfka2dBNF2t/4BOidwMEL0D8xEkeqFer3V25le3i7W5s2
+         zFgiw02MXeDh3VNVTgtvnmQ0Da0uDXPVRfI6YW7IV8SGdkY8FM43QaSRLt9FjxDxleSX
+         glkQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUlafefsr11DLpmIkC1SK7/kCy935O1AXIgZZjVCzF5mLD/MfyToWr/DZKvIck6xdkQ7GNYbh3jDoLJYzY=@vger.kernel.org, AJvYcCWj/U/PSugQeJwEJvdxyEJCddcPQLys6/Xbazubq9kHzGcN/Ev5AUCPoXnoyBnI/PbUTxwBePJKEXJja0U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyG0MDCpffIjtRxdPY86rfQrY7c/GjX8h+Eye8AUl6enM3oVW2b
+	SeFjVSuPEiX9n7rrnRcS8waZBhsz6DM4JwngLd/2VfF1q2A5icWnGFNK
+X-Gm-Gg: ASbGncuJWbQsCf2DeEWMXTPPxJdMJDCZigOVPxQvfzTdhNTyGmKwNHwahW0U9RLJLBm
+	J8KQgKab1mCp3Rsqx577dJ+uvNpT8Q363QyesEnm/Opa8/pwhg1jYJ8B9LQ8PjaqTezmYUzlNPD
+	1valJ4lI53hMUjdJM+x2sEpK8eqVDz+NPw9cZIxkQ98bxKFe6ibxlUArrDdTv5rJlyG0KzHcJWf
+	xYyursGlMD5BLX911pKTtpL9lx5f5NZqpJgT70AjtwaNTrifbsjpuHtNaHyJPOSYMB3pXSPuW7t
+	5NfGTQa17wyucn1W4i95iE0oCbVj0SUIxrqchxJbU3hQ/eCK/52le9h9tybP7fie1LWDiwEFAmy
+	wt66V3XYBGjIJO95RHshNN0mC/bhpsJWBrOkDsJMN7wHFPbYi0Q==
+X-Google-Smtp-Source: AGHT+IFB0OcxXR+rMYUxcMWdJSDTc1Bi+l9EeflhyXF89wkDLaiWhCxHbPwziAX0Lw61qZukehfAMw==
+X-Received: by 2002:a17:903:2311:b0:235:866:9fac with SMTP id d9443c01a7336-237d96b63bfmr280113405ad.2.1750775556394;
+        Tue, 24 Jun 2025 07:32:36 -0700 (PDT)
+Received: from DESKTOP-RD0GVCL.localdomain (124-218-195-161.cm.dynamic.apol.com.tw. [124.218.195.161])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83d0bedsm108923595ad.67.2025.06.24.07.32.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 07:32:32 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 24 Jun 2025 16:32:22 +0200
-Subject: [PATCH 5/5] pwrseq: thead-gpu: use new defines for match() return
- values
+        Tue, 24 Jun 2025 07:32:35 -0700 (PDT)
+From: LiangCheng Wang <zaq14760@gmail.com>
+To: andy@kernel.org
+Cc: zaq14760@gmail.com,
+	hansg@kernel.org,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	gregkh@linuxfoundation.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev
+Subject: Re: [PATCH v4] staging: media: atomisp: fix coding style in ia_css_output.host.c
+Date: Tue, 24 Jun 2025 22:32:21 +0800
+Message-ID: <20250624143221.2371-1-zaq14760@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CAHp75Ve_G=ziR7sJmKw4t3BRASogGQ1kWUsNNNWESFmmS4rVhw@mail.gmail.com>
+References: <CAHp75Ve_G=ziR7sJmKw4t3BRASogGQ1kWUsNNNWESFmmS4rVhw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-pwrseq-match-defines-v1-5-a59d90a951f1@linaro.org>
-References: <20250624-pwrseq-match-defines-v1-0-a59d90a951f1@linaro.org>
-In-Reply-To: <20250624-pwrseq-match-defines-v1-0-a59d90a951f1@linaro.org>
-To: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
- Fu Wei <wefu@redhat.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
- Ulf Hansson <ulf.hansson@linaro.org>, 
- Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: linux-riscv@lists.infradead.org, linux-pm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1879;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=yIgDwVNP75QjxnnqZUB0eGQftgqLdSGUdNGqQ1mRb+U=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBoWrb6qvHHx1tWdZ36+EKv6o8uu1Y32EArBy66E
- w7IaTlvyISJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCaFq2+gAKCRARpy6gFHHX
- csZVD/9fv5ytgmoZV9N33yr8RMxpPBdNHbhkZf5RLOhy3kaBXhDurMDLG8dJ5gKQFjqAlE3EfXF
- eJv5toKg4IJYqISkg5O5CnP2z5+DYZLrVhsvD50ZTLF/SxmuoJr+Nm761WUIotQm/fyaVlG5L16
- YpuTxlQx32/iAfiz5p2zcoR3as535Y4h0/uPtpvx96MA+K4G/8iv3m416K1ucMaFiGKXFhLLdxG
- pAtEFKVWU4znKw8FzQfdwGV5D4Vpx0GpBGSz1VIT1hkhnLjgUgjXMOUmeWuvJtPm+lGH7zp5f/F
- 83VVNmuppn2vC1clDinjXBZxHEyX6X2nZ/tDgXXJr3UI0QeOrJH8cq3Yz9sgkFlHKd/Vw8/N9nA
- G1QqG+Prg1iL8tX0ntGheLYp52P4yVg2LCc+G7T5btmiuvWE9gsU/hU/4eW7ogsbrWHCDwJ1dYj
- i6mxMhkOLxVjNB8GnhbYq3D/kNwAcJHyaUIebLmPmjgf2iaioEnWBTJajwEr0CsJCq851pDlCPg
- 7uQrZiFWMv3OVzsX653lXcONTHxlEZM/yTNo+UcguuyUI66JQY3pRu5H4NHxUwXRtnu01VcND7q
- uZnFMJVi4uupkyRhrVT7h6v7UGwdJhtA0BsQXRbI+gveepJ+I2hjVNjbzRo+SBDsDh6O61455YC
- +QHJk5DawusRH0g==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v4] staging: media: atomisp: fix coding style in ia_css_output.host.c
+In-Reply-To: <20250624-bar-v4-1-9f9f9ae9f868@gmail.com>
 
-Replace the magic numbers with proper defines we now have in the header.
+Dear Andy,
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/power/sequencing/pwrseq-thead-gpu.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+Thank you for your feedback.
 
-diff --git a/drivers/power/sequencing/pwrseq-thead-gpu.c b/drivers/power/sequencing/pwrseq-thead-gpu.c
-index 855c6cc4f3b5bd1aa6e93305af0417d5791b092d..7c82a10ca9f6917e673711c55dd5e58e58dc8f5c 100644
---- a/drivers/power/sequencing/pwrseq-thead-gpu.c
-+++ b/drivers/power/sequencing/pwrseq-thead-gpu.c
-@@ -124,24 +124,25 @@ static int pwrseq_thead_gpu_match(struct pwrseq_device *pwrseq,
- 
- 	/* We only match the specific T-HEAD TH1520 GPU compatible */
- 	if (!of_device_is_compatible(dev->of_node, "thead,th1520-gpu"))
--		return 0;
-+		return PWRSEQ_NO_MATCH;
- 
- 	ret = of_parse_phandle_with_args(dev->of_node, "power-domains",
- 					 "#power-domain-cells", 0, &pwr_spec);
- 	if (ret)
--		return 0;
-+		return PWRSEQ_NO_MATCH;
- 
- 	/* Additionally verify consumer device has AON as power-domain */
- 	if (pwr_spec.np != ctx->aon_node || pwr_spec.args[0] != TH1520_GPU_PD) {
- 		of_node_put(pwr_spec.np);
--		return 0;
-+		return PWRSEQ_NO_MATCH;
- 	}
- 
- 	of_node_put(pwr_spec.np);
- 
- 	/* If a consumer is already bound, only allow a re-match from it */
- 	if (ctx->consumer_node)
--		return ctx->consumer_node == dev->of_node ? 1 : 0;
-+		return ctx->consumer_node == dev->of_node ?
-+				PWRSEQ_MATCH_OK : PWRSEQ_NO_MATCH;
- 
- 	ctx->num_clks = ARRAY_SIZE(clk_names);
- 	ctx->clks = kcalloc(ctx->num_clks, sizeof(*ctx->clks), GFP_KERNEL);
-@@ -163,7 +164,7 @@ static int pwrseq_thead_gpu_match(struct pwrseq_device *pwrseq,
- 
- 	ctx->consumer_node = of_node_get(dev->of_node);
- 
--	return 1;
-+	return PWRSEQ_MATCH_OK;
- 
- err_put_clks:
- 	clk_bulk_put(ctx->num_clks, ctx->clks);
+I will review the entire AtomISP driver for similar style issues.
+If I find more, I will send an updated v5 patch accordingly.
 
--- 
-2.48.1
-
+Best regards,  
+LiangCheng Wang
