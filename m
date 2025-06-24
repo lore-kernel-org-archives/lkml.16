@@ -1,91 +1,110 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A8941A2630;
-	Tue, 24 Jun 2025 13:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B06548EE
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:39:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750772362; cv=none; b=A+3z4X88L+0S2IwEhMw/d72WTA/1fW9FxBQYRuJaIxQNudVnJ0Zz6UScuOTnCArXEsmk0iGS1r1lf5+QAicnfLDbhr66XtkyaR4CeH6ZxtoYMC5AkWWtFN22kGg183NNuj1cJGYZgI9oAXCdvjAryanxtJ71RY60+4/BFTmQRh4=
+	t=1750772372; cv=none; b=bdZ9R9NRKvfJGI4P090WmsbFc3ltckEaWKtkLxCAF1Fcdnkxbx+D+UJ2HkIMCiRZgWS7zUjUVl3AcQbWN2zBo6nOgGyebjpwfs3aonKI2mYK0YNDKbqVHlZcuImF4F92zusXk8AWX0GKY2SoBp/qqZu1DB9knItuugLjBi3W05g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750772362; c=relaxed/simple;
-	bh=lZb/IHd26DlUQs3jSQ3nH8Cd91SGvgfm/EgMMhM+hh4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=K7TL6xL99e8SHmeodAxHTXtk48vkbeGy4FLQCzFWpT9pnyzS1JqhTon+sKVUq9av8xmEsHhBfT8ldC5xBUa2o2u5VXK5LTmF3RFmvNuU1/PDjQC/nqRKdps23KEHxiEtLe4IIsbxi1RNIAwfcDvLy8QRNp7fqsLl++1LFLMtcIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uZsDMoHM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IyPkjMKz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750772372; c=relaxed/simple;
+	bh=ncYNDjhndz7kqcJVLVQbBNAMrG9V+TdPRtP2T4abi2Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H+t9a9VaLzjRV/i2zwAxt/T1lya2IDstpYf4YUMwQUu81xk4arVnSb2ieVvrRTDoevr9KrCXv2sM48hHM1Jv0BlTaH5STkzppOLq/CcHmLDmNebY783awY2PUq2UkkF4KFY3eaehP5THIkcFYovJ/g9LIeMSx2IJL4qSiVAZeDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SFQGJvfu; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uZsDMoHM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IyPkjMKz"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750772355;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=49Y8TwdMNm7b6UQC5sRLMXc9hP1GhIKiDJExsmdPFAI=;
-	b=uZsDMoHMY6aRAchotJEu+PPn0o33QgJf1Y7oOMnaGXRmPT3imdETGoTHC0QCu2IUXSGcQU
-	nxscl3Pn8huwlnxvMtnDdtzNjjuD00+2BhFsxXCXfQw07eFvJg/Q9748M/4kcUU1l058NV
-	dXEDZdPWkiaO7RAead/Ek12eguFow3J8f23Qt3JuCmBuX/ce3DOBihu6M+sKczXUlfkiTq
-	P8DHJTayJfQvWF8QCaL6P3eKbF/CKDXAiE7bfNi/QrxdU2iw2QLcTfbla86K9MjFMQJjEZ
-	Y8oULOLVzgzMRSrfFQEnTmUK8YRPCHBf16BYQ8hOw+9kVrODhiFLTPaPdRpMqQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750772355;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=49Y8TwdMNm7b6UQC5sRLMXc9hP1GhIKiDJExsmdPFAI=;
-	b=IyPkjMKzA6YoRQAOB8ZBnR0QR3riuF6wKcPeUh5/azq6Uj7sLZ7/NUblhx8b343FKKVSU9
-	A8ZfPtyKZT+k1jCA==
-To: Paolo Abeni <pabeni@redhat.com>, LKML <linux-kernel@vger.kernel.org>
-Cc: Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org
-Subject: Re: [patch 08/13] ptp: Split out PTP_PIN_GETFUNC ioctl code
-In-Reply-To: <caef5686-961d-43aa-8141-c9c90ada2307@redhat.com>
-References: <20250620130144.351492917@linutronix.de>
- <20250620131944.218487429@linutronix.de>
- <caef5686-961d-43aa-8141-c9c90ada2307@redhat.com>
-Date: Tue, 24 Jun 2025 15:39:14 +0200
-Message-ID: <87zfdxmf7h.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="SFQGJvfu"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a5828d26e4so806691f8f.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:39:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750772369; x=1751377169; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fxjDIBXMuvdPXWJmF9qZYgeWhojZt27wnvO4wkpwI2w=;
+        b=SFQGJvfux5u8aijYtMK/vQYkkwl0++x6BtcO8fj4bUL/i5L9z4xXy9czHlOocCS4qn
+         38VjBmsFYV0/jkeDj5EF1BCHqRPV+YMfwAZkHF5qKeJ8to7YcQRsze/kdMAGG270gnh2
+         uKF08tEzYYm/n6FwJ6ixDb1a8Fpz7BX/bTqBGqsFtCnwK0Xl4F6fBkCGOSQfPh19agmM
+         xp7iuqkYH6aWYC1XZoK15SIfVA+2WPs8rmJzCrV6DnWCQ9izcmppP8W8fz8UfhpWfwCP
+         gbrDVfmXXyLu4EJIBSUyLlNe5bHTtouYDsqr9Rjfby+EVVv8O96mKyVuNYf8zsqDliZc
+         YqgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750772369; x=1751377169;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fxjDIBXMuvdPXWJmF9qZYgeWhojZt27wnvO4wkpwI2w=;
+        b=opjYPN+8BFENWArw/W2Xi56r7vbz/klomG55dJ8YPLe0ORajVuis73Wj0PLkdSMDNq
+         r4G+C5YVWUBmoRTutMQszmvYulaoF12+qjh351nahyxfTbc90Hww95YkVGGCg7eB2iYe
+         uj3O7povjXGjAcXFdA0xl1W4ikC2hUvOFfJjOsNBB3QkUjLfr0+51ha4JlOB2EC2vGNn
+         BwN6S4cgLtR2G2TAr9t1H6Y1VR7hewtFpVdmeGF/1r3mdADAAZlvOWUh3IE8AR6EhsPn
+         4ZhrBb+QKonr9P+lrb7dOoeSqQLbFyHkhnGYK+hZzJem/JkOemOVjgxQl3vQuSGrCaZy
+         nOiw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTaimqzHPIpT1KHd7b/ZrRLlaf12V/mvRWcfOKB6xEFm8A46aJV3/qSi5UxiwdlE8+CiapULOrO0HL0jQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwgYlcoSJ4e0tgibwuFmnjgh02uIithDUO092mquM2IogQHUdWr
+	VY+gtPxc+bOMyH+NRy5BdAY1CGTjO5vdQVTV0j/9ATx21jyWM2xZ/mvsI17dLtQf3yU=
+X-Gm-Gg: ASbGncuW/5z7HSPARCgLwocSFtyINPxtgZDlnZW4WpdisDZQld6oJLZ9J29GOP6m+j2
+	8uCQh4Dqtz80L+EOiyRJ45HMdZVGXj00axn3ivnn8krPs43Bh9EKY3QdwxwYei2qKp9iM2tSFqJ
+	3eVaO7tQ0PJanPve5iksn/BUZCQfFsTcq8PIhxRr8vCsQqOloRSaa4DjdQ6apOH2gF0mdbFa5U8
+	GBS6xF851e8gAvYk1A/D6pVX/L6HlZa2rxEiEGlztngHPYUM8gUOslPm7fmfzQmvR9fpvXit7Eo
+	9CrlCj7/gdjF5Iy+dOWAiynEq7frLHjmkz6wA+0BjNMFc2CroQAP4wWe7x+46hSZOkL9JTH8ahE
+	uETEgMcy+IOmNdT9Ww4wWtHwzRmJmjrfhOmehRoLYyId7HNgrtbr9
+X-Google-Smtp-Source: AGHT+IHQyrO4iqMSd7VpKmuXfo0VLyy363LPzuPbS8DTxE31tKkFh26zo1Cks2a5Rs5oGEGjiBKI2A==
+X-Received: by 2002:a05:6000:2211:b0:3a5:7875:576 with SMTP id ffacd0b85a97d-3a6d12d737bmr4870971f8f.1.1750772368675;
+        Tue, 24 Jun 2025 06:39:28 -0700 (PDT)
+Received: from localhost (dynamic-2a00-1028-83b8-1e7a-3010-3bd6-8521-caf1.ipv6.o2.cz. [2a00:1028:83b8:1e7a:3010:3bd6:8521:caf1])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a6e805e828sm2040400f8f.32.2025.06.24.06.39.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 06:39:28 -0700 (PDT)
+From: Petr Tesarik <ptesarik@suse.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Morton <akpm@linux-foundation.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Keith Busch <kbusch@kernel.org>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Sagi Grimberg <sagi@grimberg.me>,
+	Jens Axboe <axboe@kernel.dk>,
+	John Garry <john.g.garry@oracle.com>,
+	linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+	linux-kernel@vger.kernel.org (open list),
+	linux-mm@kvack.org (open list:MEMORY MANAGEMENT),
+	Petr Tesarik <ptesarik@suse.com>
+Subject: [PATCH 0/8] update DMA API documentation
+Date: Tue, 24 Jun 2025 15:39:15 +0200
+Message-ID: <20250624133923.1140421-1-ptesarik@suse.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 24 2025 at 11:22, Paolo Abeni wrote:
-> On 6/20/25 3:24 PM, Thomas Gleixner wrote:
->> Continue the ptp_ioctl() cleanup by splitting out the PTP_PIN_GETFUNC ioctl
->> code into a helper function. Convert to lock guard while at it.
->> 
->> No functional change intended.
->> 
->> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
->> ---
->>  drivers/ptp/ptp_chardev.c |   52 ++++++++++++++++++++--------------------------
->>  1 file changed, 23 insertions(+), 29 deletions(-)
->> 
->> --- a/drivers/ptp/ptp_chardev.c
->> +++ b/drivers/ptp/ptp_chardev.c
->> @@ -396,6 +396,28 @@ static long ptp_sys_offset(struct ptp_cl
->>  	return copy_to_user(arg, sysoff, sizeof(*sysoff)) ? -EFAULT : 0;
->>  }
->>  
->> +static long ptp_pin_getfunc(struct ptp_clock *ptp, unsigned int cmd, void __user *arg)
->> +{
->> +	struct ptp_clock_info *ops = ptp->info;
->> +	struct ptp_pin_desc pd;
->> +
->> +	if (copy_from_user(&pd, arg, sizeof(pd)))
->> +		return -EFAULT;
->> +
->> +	if (cmd == PTP_PIN_GETFUNC2 && !mem_is_zero(pd.rsv, sizeof(pd.rsv)))
->> +		return -EINVAL;
->> +	else
->> +		memset(pd.rsv, 0, sizeof(pd.rsv));
->
-> Minor nit: I personally find the 'else' statement after return
-> counter-intuitive and dropping it would save an additional LoC.
+A few documentation updates:
 
-Of course ...
+* remove outdated and confusing parts
+* reduce duplicates
+* update streaming DMA API expectations
+
+Petr Tesarik (8):
+  docs: dma-api: use "DMA API" consistently throughout the document
+  docs: dma-api: replace consistent with coherent
+  docs: dma-api: remove remnants of PCI DMA API
+  docs: dma-api: add a kernel-doc comment for dma_pool_zalloc()
+  docs: dma-api: remove duplicate description of the DMA pool API
+  docs: dma-api: clarify DMA addressing limitations
+  docs: dma-api: update streaming DMA API physical address constraints
+  docs: dma-api: clean up documentation of dma_map_sg()
+
+ Documentation/core-api/dma-api-howto.rst |  36 ++---
+ Documentation/core-api/dma-api.rst       | 173 +++++++----------------
+ Documentation/core-api/mm-api.rst        |   4 +
+ include/linux/dmapool.h                  |   8 ++
+ mm/dmapool.c                             |   6 +-
+ 5 files changed, 85 insertions(+), 142 deletions(-)
+
+-- 
+2.49.0
+
