@@ -1,309 +1,186 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3F4627AC25
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3268623E347;
+	Tue, 24 Jun 2025 09:21:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750756888; cv=none; b=X7+w2mlXNS+cn5zDR8YRj5LtXis3SciwIl8kb3drDQspX+DqqLf8VIr9uPhV12F4U6F5T462JVVc8mt+/mjeIRJgmD0LEHuc0FedngHvZAjHxBgQ60yMCmwfjx/43mHp9/rEO3OXg6ZFiYO7+4GwVtT66mP+vonv9VJz/4O/jAE=
+	t=1750756916; cv=none; b=fqZ81zS1pM9sRh1XwXpV4fnMahJb8N9y3+ses1m1wVaTui4zPYmZzuH/LR1a+OsKyUOxe1O/TNINpMlDgkcZ2moNSQmLS+RAQXYON48+YjIHc1fvA45F4s7CetnX4QOXGyalovcgeacc9o/FZpf9L3J1vrrDI923CgaRoP6S+Sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750756888; c=relaxed/simple;
-	bh=1VmIHrEJi7+TgM2h1vNk30KZb3WSLgma3zwXqeBdNN8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fg++bNkgyBesuC9+rpfEDRoa2rY/to9PcwjasFz4eDu30gs/3ntdUgZL1y5zVNEgl1oAjKv9v6MSnndm0vZ9DdmxIAmO0NsG5vIR2IGZu0+ad4YxmOxI2AuEGUF6OYYy11tIzCNSxRmC0qGcOBc56JhuuW+NZUdObMKvSQQvhC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MSed/gOg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FGlHU6cT; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=MSed/gOg; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=FGlHU6cT; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750756916; c=relaxed/simple;
+	bh=Y9ykpnPfKcHUHs6NNyHG5SYbLx8xRe/y/50hrb078cY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L3SypMDLt8826i7hreD5zDthMBu+culaA8QdbVvMQOQ9V1cBKHPDnWtPPM5CnhcQIqxg2NzevtH8iyM8ukg1SgPCfhS76sn8Wvbm9SEh8+0qtT69IN9KVBFoC9K4gzRtgz/BvILYLsNrQB5z3qpBzU+41R0iV4SwKvEfLZagqRk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XvtgmICy; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MSed/gOg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FGlHU6cT";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="MSed/gOg";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="FGlHU6cT"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 1A1E821186;
-	Tue, 24 Jun 2025 09:21:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750756885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VXfbAXcdsqOmp2mop/iwlMbChu1Cr1eVbF/0uqm/7eM=;
-	b=MSed/gOgqnQMvyfCjYnczvc3IIOJRm+lQ4iB8eDpuvw1Vtq4mmd4zG8FMyXqbx01sGnrtq
-	ta3DPWmRpinGmbl2+JT+z2p1e5Q/iZFa0FoSS67jw8QXEUTrBTCQZIjLaFKFbqxOzJTqMb
-	nYG3v3cNgFwIjYb4Mq+33qblClEHaCg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750756885;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VXfbAXcdsqOmp2mop/iwlMbChu1Cr1eVbF/0uqm/7eM=;
-	b=FGlHU6cT4cAUQ1HfmA3Mhak0dB8Oqk72snpqC3eeFTOY87QFb3LFWnBxyasdPwxoBW8OJT
-	BykEH6NUv5bteDBA==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750756885; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VXfbAXcdsqOmp2mop/iwlMbChu1Cr1eVbF/0uqm/7eM=;
-	b=MSed/gOgqnQMvyfCjYnczvc3IIOJRm+lQ4iB8eDpuvw1Vtq4mmd4zG8FMyXqbx01sGnrtq
-	ta3DPWmRpinGmbl2+JT+z2p1e5Q/iZFa0FoSS67jw8QXEUTrBTCQZIjLaFKFbqxOzJTqMb
-	nYG3v3cNgFwIjYb4Mq+33qblClEHaCg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750756885;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=VXfbAXcdsqOmp2mop/iwlMbChu1Cr1eVbF/0uqm/7eM=;
-	b=FGlHU6cT4cAUQ1HfmA3Mhak0dB8Oqk72snpqC3eeFTOY87QFb3LFWnBxyasdPwxoBW8OJT
-	BykEH6NUv5bteDBA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 773B113751;
-	Tue, 24 Jun 2025 09:21:24 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Iqi5GxRuWmg2GwAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 24 Jun 2025 09:21:24 +0000
-Message-ID: <f0e70269-b55e-4ac8-b052-da092a177eda@suse.de>
-Date: Tue, 24 Jun 2025 11:21:23 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XvtgmICy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750756916; x=1782292916;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Y9ykpnPfKcHUHs6NNyHG5SYbLx8xRe/y/50hrb078cY=;
+  b=XvtgmICyZ0mOmRlkl3wxOhJdDHtJu6BFgyj+PLpnBm88YcflNeQrrXVy
+   nkxjogPE1Yi7/NHxrg7SdPMR6GhvERyO2WnvSJaLRp1Q0WCIzkhpJb/f+
+   8pfGRwBPtmQgxyTrJrVPyMzPxD9ZuRpeOW+JkZBQXLZ8Acy6iXQ9c1niZ
+   2aIhisWJxW5S2f9JeMlTj8yL4GkOf5sEQQctxJxZX74b2Vfh37t8VW6Vx
+   tgulhuLxoSXHgst6/yorNTO6/GWzOCNJC4DV3n3nPA+mVEgkX+XVipj9m
+   IH4YTcfaQZ2CpqNG2+dqq8R4edaUIh9x12GtpqAInxBxve23+FN20aeN3
+   A==;
+X-CSE-ConnectionGUID: dXRuMBVhTtyTgPrlqq8+Hg==
+X-CSE-MsgGUID: dxB4cRmPTtiSgttgOshOCA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56664508"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="56664508"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 02:21:55 -0700
+X-CSE-ConnectionGUID: WWAjkbxmRcOXea07g8oNOQ==
+X-CSE-MsgGUID: stK1ZMvJR/SV0Uw+es8bzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="175465205"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by fmviesa002.fm.intel.com with SMTP; 24 Jun 2025 02:21:51 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 24 Jun 2025 12:21:50 +0300
+Date: Tue, 24 Jun 2025 12:21:50 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 8/8] usb: typec: ucsi: yoga-c630: register DRM HPD bridge
+Message-ID: <aFpuLuzBXgazxecA@kuha.fi.intel.com>
+References: <20250621-c630-ucsi-v1-0-a86de5e11361@oss.qualcomm.com>
+ <20250621-c630-ucsi-v1-8-a86de5e11361@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 7/8] PCI/VGA: Move check for firmware default out of
- VGA arbiter
-To: Mario Limonciello <superm1@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Lukas Wunner <lukas@wunner.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
- Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
- "open list:SOUND" <linux-sound@vger.kernel.org>,
- Daniel Dadap <ddadap@nvidia.com>,
- Mario Limonciello <mario.limonciello@amd.com>
-References: <20250623184757.3774786-1-superm1@kernel.org>
- <20250623184757.3774786-8-superm1@kernel.org>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250623184757.3774786-8-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	TO_DN_ALL(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_CC(0.00)[amd.com,gmail.com,ffwll.ch,wunner.de,linux.intel.com,kernel.org,infradead.org,8bytes.org,arm.com,redhat.com,perex.cz,suse.com,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,nvidia.com];
-	RCVD_COUNT_TWO(0.00)[2];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amd.com:email,suse.de:mid,suse.de:email]
-X-Spam-Level: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250621-c630-ucsi-v1-8-a86de5e11361@oss.qualcomm.com>
 
+On Sat, Jun 21, 2025 at 09:13:03PM +0300, Dmitry Baryshkov wrote:
+> On Qualcomm platforms DisplayPort driver expects to have a drm bridge in
+> the final device on the USB-C chain. Register the DRM HPD bridge in
+> order to fulfill this requirement and to send HPD events to the DRM
+> driver.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Am 23.06.25 um 20:47 schrieb Mario Limonciello:
-> From: Mario Limonciello <mario.limonciello@amd.com>
->
-> The x86 specific check for whether a framebuffer belongs to a device
-> works for display devices as well as VGA devices.  Callers to
-> video_is_primary_device() can benefit from checking non-VGA display
-> devices.
->
-> Move the x86 specific check into x86 specific code, and adjust VGA
-> arbiter to call that code as well. This allows fbcon to find the
-> right PCI device on systems that don't have VGA devices.
->
-> Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 > ---
-> v4:
->   * use helper
-> ---
->   arch/x86/video/video-common.c | 13 ++++++++++++-
->   drivers/pci/vgaarb.c          | 36 ++---------------------------------
->   2 files changed, 14 insertions(+), 35 deletions(-)
->
-> diff --git a/arch/x86/video/video-common.c b/arch/x86/video/video-common.c
-> index 81fc97a2a837a..917568e4d7fb1 100644
-> --- a/arch/x86/video/video-common.c
-> +++ b/arch/x86/video/video-common.c
-> @@ -9,6 +9,7 @@
->   
->   #include <linux/module.h>
->   #include <linux/pci.h>
-> +#include <linux/screen_info.h>
->   #include <linux/vgaarb.h>
->   
->   #include <asm/video.h>
-> @@ -27,6 +28,7 @@ EXPORT_SYMBOL(pgprot_framebuffer);
->   
->   bool video_is_primary_device(struct device *dev)
->   {
-> +	struct screen_info *si = &screen_info;
->   	struct pci_dev *pdev;
->   
->   	if (!dev_is_pci(dev))
-> @@ -34,7 +36,16 @@ bool video_is_primary_device(struct device *dev)
->   
->   	pdev = to_pci_dev(dev);
->   
-> -	return (pdev == vga_default_device());
-> +	if (!pci_is_display(pdev))
-> +		return false;
+>  drivers/usb/typec/ucsi/Kconfig          |  1 +
+>  drivers/usb/typec/ucsi/ucsi_yoga_c630.c | 39 +++++++++++++++++++++++++++++++++
+>  2 files changed, 40 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/ucsi/Kconfig b/drivers/usb/typec/ucsi/Kconfig
+> index 8bf8fefb4f07bccc4be90a4b7f771d91294386b0..52b53bb6dfed28c4272f8ccc5e31601aede29911 100644
+> --- a/drivers/usb/typec/ucsi/Kconfig
+> +++ b/drivers/usb/typec/ucsi/Kconfig
+> @@ -85,6 +85,7 @@ config CROS_EC_UCSI
+>  config UCSI_LENOVO_YOGA_C630
+>  	tristate "UCSI Interface Driver for Lenovo Yoga C630"
+>  	depends on EC_LENOVO_YOGA_C630
+> +	select DRM_AUX_HPD_BRIDGE if DRM_BRIDGE && OF
+>  	help
+>  	  This driver enables UCSI support on the Lenovo Yoga C630 laptop.
+>  
+> diff --git a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+> index f85170417d19cdc5ae39a15e2f97010259ef12f6..0187c1c4b21abc7b5429526ebb4538c28b2e2e77 100644
+> --- a/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+> +++ b/drivers/usb/typec/ucsi/ucsi_yoga_c630.c
+> @@ -12,10 +12,14 @@
+>  #include <linux/container_of.h>
+>  #include <linux/module.h>
+>  #include <linux/notifier.h>
+> +#include <linux/of.h>
+> +#include <linux/property.h>
+>  #include <linux/string.h>
+>  #include <linux/platform_data/lenovo-yoga-c630.h>
+>  #include <linux/usb/typec_dp.h>
+>  
+> +#include <drm/bridge/aux-bridge.h>
 > +
-> +	if (pdev == vga_default_device())
-> +		return true;
+>  #include "ucsi.h"
+>  
+>  #define LENOVO_EC_USB_MUX	0x08
+> @@ -29,6 +33,7 @@
+>  struct yoga_c630_ucsi {
+>  	struct yoga_c630_ec *ec;
+>  	struct ucsi *ucsi;
+> +	struct auxiliary_device *bridge;
+>  	struct notifier_block nb;
+>  	u16 version;
+>  };
+> @@ -193,6 +198,13 @@ static void yoga_c630_ucsi_read_port0_status(struct yoga_c630_ucsi *uec)
+>  				      ccst == 1 ?
+>  				      TYPEC_ORIENTATION_REVERSE :
+>  				      TYPEC_ORIENTATION_NORMAL);
 > +
-> +	if (pdev == screen_info_pci_dev(si))
-> +		return true;
+> +	if (uec->bridge)
+> +		drm_aux_hpd_bridge_notify(&uec->bridge->dev,
+> +					  dppn != 0 ?
+> +					  connector_status_connected :
+> +					  connector_status_disconnected);
 > +
-> +	return false;
->   }
->   EXPORT_SYMBOL(video_is_primary_device);
->   
-> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-> index 78748e8d2dbae..15ab58c70b016 100644
-> --- a/drivers/pci/vgaarb.c
-> +++ b/drivers/pci/vgaarb.c
-> @@ -26,12 +26,12 @@
->   #include <linux/poll.h>
->   #include <linux/miscdevice.h>
->   #include <linux/slab.h>
-> -#include <linux/screen_info.h>
->   #include <linux/vt.h>
->   #include <linux/console.h>
->   #include <linux/acpi.h>
->   #include <linux/uaccess.h>
->   #include <linux/vgaarb.h>
-> +#include <asm/video.h>
->   
->   static void vga_arbiter_notify_clients(void);
->   
-> @@ -554,38 +554,6 @@ void vga_put(struct pci_dev *pdev, unsigned int rsrc)
->   }
->   EXPORT_SYMBOL(vga_put);
->   
-> -static bool vga_is_firmware_default(struct pci_dev *pdev)
-> -{
-> -#if defined(CONFIG_X86)
-> -	u64 base = screen_info.lfb_base;
-> -	u64 size = screen_info.lfb_size;
-> -	struct resource *r;
-> -	u64 limit;
-> -
-> -	/* Select the device owning the boot framebuffer if there is one */
-> -
-> -	if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-> -		base |= (u64)screen_info.ext_lfb_base << 32;
-> -
-> -	limit = base + size;
-> -
-> -	/* Does firmware framebuffer belong to us? */
-> -	pci_dev_for_each_resource(pdev, r) {
-> -		if (resource_type(r) != IORESOURCE_MEM)
-> -			continue;
-> -
-> -		if (!r->start || !r->end)
-> -			continue;
-> -
-> -		if (base < r->start || limit >= r->end)
-> -			continue;
-> -
-> -		return true;
-> -	}
-> -#endif
-> -	return false;
-> -}
-> -
->   static bool vga_arb_integrated_gpu(struct device *dev)
->   {
->   #if defined(CONFIG_ACPI)
-> @@ -623,7 +591,7 @@ static bool vga_is_boot_device(struct vga_device *vgadev)
->   	if (boot_vga && boot_vga->is_firmware_default)
->   		return false;
->   
-> -	if (vga_is_firmware_default(pdev)) {
-> +	if (video_is_primary_device(&pdev->dev)) {
-
-Doesn't this generate a cyclic dependency between vgaarb and video? I 
-find this call cycle hard to reason about because 
-vgaarb_default_device() depends on the results of these boot-device 
-tests. Maybe keep vga_is_firmware_default() and just replace its content 
-with a call to screen_info_pci_dev().
-Best regards
-Thomas
-
->   		vgadev->is_firmware_default = true;
->   		return true;
->   	}
+>  }
+>  
+>  static int yoga_c630_ucsi_notify(struct notifier_block *nb,
+> @@ -237,6 +249,24 @@ static int yoga_c630_ucsi_probe(struct auxiliary_device *adev,
+>  	uec->ec = ec;
+>  	uec->nb.notifier_call = yoga_c630_ucsi_notify;
+>  
+> +	device_for_each_child_node_scoped(&adev->dev, fwnode) {
+> +		u32 port;
+> +
+> +		ret = fwnode_property_read_u32(fwnode, "reg", &port);
+> +		if (ret < 0) {
+> +			dev_err(&adev->dev, "missing reg property of %pfwP\n", fwnode);
+> +			return ret;
+> +		}
+> +
+> +		/* DP is only on port0 */
+> +		if (port != 0)
+> +			continue;
+> +
+> +		uec->bridge = devm_drm_dp_hpd_bridge_alloc(&adev->dev, to_of_node(fwnode));
+> +		if (IS_ERR(uec->bridge))
+> +			return PTR_ERR(uec->bridge);
+> +	}
+> +
+>  	uec->ucsi = ucsi_create(&adev->dev, &yoga_c630_ucsi_ops);
+>  	if (IS_ERR(uec->ucsi))
+>  		return PTR_ERR(uec->ucsi);
+> @@ -255,8 +285,17 @@ static int yoga_c630_ucsi_probe(struct auxiliary_device *adev,
+>  	if (ret)
+>  		goto err_unregister;
+>  
+> +	if (uec->bridge) {
+> +		ret = devm_drm_dp_hpd_bridge_add(&adev->dev, uec->bridge);
+> +		if (ret)
+> +			goto err_ucsi_unregister;
+> +	}
+> +
+>  	return 0;
+>  
+> +err_ucsi_unregister:
+> +	ucsi_unregister(uec->ucsi);
+> +
+>  err_unregister:
+>  	yoga_c630_ec_unregister_notify(uec->ec, &uec->nb);
+>  
+> 
+> -- 
+> 2.39.5
 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
-
+heikki
