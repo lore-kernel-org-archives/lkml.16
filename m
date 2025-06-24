@@ -1,114 +1,108 @@
-Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BC3025394A
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:28:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C35D252906
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750750112; cv=none; b=TOx28nIDfXrzM+t2jXuGQVjBp3F6FePCSmoBe9dseLQB6pbjClQqvMaISHKZypJ3hc9b3af7Ex4b1vqxn6z/6Cxh9cXya7T+JVHQgMzF9+McXoHp7gvTFMkZgydUaZyVoLZvEjLvkvbOshZuqLFNkGNEfYWshzNhwj5G9gHKxEM=
+	t=1750750120; cv=none; b=tP6xuP/eXeawcAMNgArVEmnmWfx1FMLOpkdkIxIh6zuS4V9hTU6GiLH4XqUZl03bMfJ0074NEuT0k2Qaz2MIUm2Wp1sVEXPVGFGnx+Mn8ncjTqLksxPs2yA2Wo4AVb454JxpVJO8Ht0/tiswC0O/At9F+JsbwWTscmcH2HIsc/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750750112; c=relaxed/simple;
-	bh=E0MHYIBtJb1pjGFFLLtjW6ldijZKZX8x+CorPvQl3vU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A+9xKtdludvSb5PH76kyq0rfSZP3wmIXJ6/34Qtwv0Xkkyb4i5yfaf8ftkuCBpOuq0Ub+0nSo7qBRb4KMc/xVkx21hjcf7ST6wESQFFkK2wEtCXYqINEEUzn2Nvus2Kwjcmmz1hS/NwQB9UhgexctE1bvMwcUHWyM9wUN9SMp10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DqFTQJCz; arc=none smtp.client-ip=91.218.175.186
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750750120; c=relaxed/simple;
+	bh=TtfC8PQ5NJ7veeU9guOOT4owM20qjxMZAt56llMj1Xw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FWsJsVDm3M08g95/U6BA98O29yThDlYGCnSdYzpzJIAwQwbGEJAoI/Yk8fSO+TqBFRjJOa8nt6C/niHycyAdDcawbfC1Jk4oVbTCursuYFezFeHniwE2SI/TtTn3KrqYvMPgVP1yIsymfAC/FuS0pis2oWB98gE1SBrb6usatxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aKeXnPms; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DqFTQJCz"
-Date: Tue, 24 Jun 2025 00:28:05 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750750096;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Lc032N2dP+96gZo5C4cwrU+RJ37ABZ5fu4zPpJwktik=;
-	b=DqFTQJCzyv7ZW1hvEieX7Tv1cH2uTdFq+CU5nxIqcXQzUMK7fJNSfc1ljHoatbsDfahyJy
-	A/drSdnfKA4r++oWZYI67rUXxdDdMTS78irjNs8L0Ja5xCl/c9X+xBvTINGbvVjcqLLx4a
-	JKirWyEfgoAsJNKWk2g5AXAJMBIikM8=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Colton Lewis <coltonlewis@google.com>
-Cc: kvm@vger.kernel.org, pbonzini@redhat.com, corbet@lwn.net,
-	linux@armlinux.org.uk, catalin.marinas@arm.com, will@kernel.org,
-	maz@kernel.org, joey.gouly@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, mark.rutland@arm.com, shuah@kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	linux-perf-users@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2 01/23] arm64: cpufeature: Add cpucap for HPMN0
-Message-ID: <aFpThZIE2PxjVAVw@linux.dev>
-References: <aFYAXjzICzgmSyLI@linux.dev>
- <gsntqzza9uxp.fsf@coltonlewis-kvm.c.googlers.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aKeXnPms"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750750120; x=1782286120;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TtfC8PQ5NJ7veeU9guOOT4owM20qjxMZAt56llMj1Xw=;
+  b=aKeXnPmsXBdciHjO4Oa12j7rAmDexy0MzooiIo+lzOIMW2O2BFk+Wk/u
+   76x+iMbDicGHoxnzt+tCI+TkLTWBZQ/Djr16pVPj7ZnhSyivrftlJxisy
+   51HI6mRT+Lsc6LseahsPZxpzHlxGfeuu16lG7wrpdjZ2df69vVC+lPdnU
+   JPXZOA/EhGPOlwVbfyPQecAVD03Gq8YkR35mKR4i0Tvl7rFgbS/nWLunV
+   vH7b3/xu2IikkEW4Xdlg3x9bS87AwO6/VrZkPKxnt9iTjDqeYgNTYRkuI
+   Ow7Wnlp7h4PyUGSNyWlfRQQoMfqtfo1brZL+1W+dp2BARAeZU0Zu3uF2c
+   A==;
+X-CSE-ConnectionGUID: ltj9rdKrRUiLruy+0FLFBg==
+X-CSE-MsgGUID: od6NDZkrRMCl7Wt/2V3ZcA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="53067734"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="53067734"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:28:39 -0700
+X-CSE-ConnectionGUID: D+4ixqVxQjiaEtGvPBM4fw==
+X-CSE-MsgGUID: xAQVapMkT0OUnaP4a4b1Hg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="152540689"
+Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:28:37 -0700
+From: Alexander Usyskin <alexander.usyskin@intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [char-misc-next] mei: bus: fix device leak
+Date: Tue, 24 Jun 2025 10:15:21 +0300
+Message-ID: <20250624071521.1281436-1-alexander.usyskin@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <gsntqzza9uxp.fsf@coltonlewis-kvm.c.googlers.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 23, 2025 at 06:25:38PM +0000, Colton Lewis wrote:
-> Oliver Upton <oliver.upton@linux.dev> writes:
-> 
-> > On Fri, Jun 20, 2025 at 10:13:01PM +0000, Colton Lewis wrote:
-> > > Add a capability for FEAT_HPMN0, whether MDCR_EL2.HPMN can specify 0
-> > > counters reserved for the guest.
-> 
-> > > This required changing HPMN0 to an UnsignedEnum in tools/sysreg
-> > > because otherwise not all the appropriate macros are generated to add
-> > > it to arm64_cpu_capabilities_arm64_features.
-> 
-> > > Signed-off-by: Colton Lewis <coltonlewis@google.com>
-> > > ---
-> > >   arch/arm64/kernel/cpufeature.c | 8 ++++++++
-> > >   arch/arm64/tools/cpucaps       | 1 +
-> > >   arch/arm64/tools/sysreg        | 6 +++---
-> > >   3 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> > > diff --git a/arch/arm64/kernel/cpufeature.c
-> > > b/arch/arm64/kernel/cpufeature.c
-> > > index b34044e20128..278294fdc97d 100644
-> > > --- a/arch/arm64/kernel/cpufeature.c
-> > > +++ b/arch/arm64/kernel/cpufeature.c
-> > > @@ -548,6 +548,7 @@ static const struct arm64_ftr_bits ftr_id_mmfr0[] = {
-> > >   };
-> 
-> > >   static const struct arm64_ftr_bits ftr_id_aa64dfr0[] = {
-> > > +	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
-> > > ID_AA64DFR0_EL1_HPMN0_SHIFT, 4, 0),
-> > >   	S_ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
-> > > ID_AA64DFR0_EL1_DoubleLock_SHIFT, 4, 0),
-> > >   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_NONSTRICT, FTR_LOWER_SAFE,
-> > > ID_AA64DFR0_EL1_PMSVer_SHIFT, 4, 0),
-> > >   	ARM64_FTR_BITS(FTR_HIDDEN, FTR_STRICT, FTR_LOWER_SAFE,
-> > > ID_AA64DFR0_EL1_CTX_CMPs_SHIFT, 4, 0),
-> > > @@ -2896,6 +2897,13 @@ static const struct arm64_cpu_capabilities
-> > > arm64_features[] = {
-> > >   		.matches = has_cpuid_feature,
-> > >   		ARM64_CPUID_FIELDS(ID_AA64MMFR0_EL1, FGT, FGT2)
-> > >   	},
-> > > +	{
-> > > +		.desc = "Allow MDCR_EL2.HPMN = 0",
-> 
-> > This feedback still stands...
-> 
-> > 		.desc = "HPMN0",
-> 
-> > [*] https://lore.kernel.org/kvm/aD4ijUaSGm9b2g5H@linux.dev/
-> 
-> Sorry for ignoring your previous feedback. I looked at the other .desc
-> fields and they had more descriptive English, so I think this one should
-> be more than "FEAT_HPMN0" for consistency.
-> 
-> If you insist I'll change it.
+The bus rescan function creates bus devices for all clients.
+The fixup routine is executed on all devices, unneeded
+devices are removed and fully initialized once set
+is_added flag to 1.
 
-I'm not exactly sold on the merits of using descriptive names for the
-capabilities, as the architecture extension names are exact terms that
-can be related back to documentation.
+If link to firmware is reset right after all devices are
+initialized, but before fixup is executed, the rescan tries
+to remove devices.
+The is_added flag is not set and the mei_cl_bus_dev_destroy
+returns prematurely.
+Allow to clean up device when is_added flag is unset to
+account for above scenario.
 
-Thanks,
-Oliver
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+---
+ drivers/misc/mei/bus.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
+index 67176caf5416..f2e5d550c6b4 100644
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -1430,17 +1430,14 @@ static void mei_cl_bus_dev_stop(struct mei_cl_device *cldev)
+  */
+ static void mei_cl_bus_dev_destroy(struct mei_cl_device *cldev)
+ {
+-
+ 	WARN_ON(!mutex_is_locked(&cldev->bus->cl_bus_lock));
+ 
+-	if (!cldev->is_added)
+-		return;
+-
+-	device_del(&cldev->dev);
++	if (cldev->is_added) {
++		device_del(&cldev->dev);
++		cldev->is_added = 0;
++	}
+ 
+ 	list_del_init(&cldev->bus_list);
+-
+-	cldev->is_added = 0;
+ 	put_device(&cldev->dev);
+ }
+ 
+-- 
+2.43.0
+
