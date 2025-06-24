@@ -1,114 +1,161 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FC223E359
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF4C20EB
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750747091; cv=none; b=gYlja5/IkG13AY3TjQr/90+PyE8PPV6KxYDJ8Zu1G5y5mfA/O0SyhtnZIQdhEZ233PJoddKr2xBpyWo9WfJ9/W21BLa8dqUQb9hZYstr+2bAjudy913SK/cMY5Z9CEH4QIit2/SKghS1EE9nIHvWkxGBP+6z0jB57CZOXlwyypE=
+	t=1750747152; cv=none; b=tjMtTvRmLQvD5+UH4sBKrDV+AiEyBbMZSIeyDwttxicZMexFbbXP0sePuJvF7xQlPiR2K+faTgzsOsWxTc6YZ0UhyO63eveia9Opl8iYbM0FJUAtMUz+n5l1MU0MmOAGjD41azuQXW3uEz8n6Dghs5PUqg7ygCHRBUbq7g6tKnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750747091; c=relaxed/simple;
-	bh=UqT1UTBAsYvRB01kXkmbX0p3Nu6z/Y55LPEAo9YxJwY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hMT/x1ATP/A3thuz8GgMcndyy6R57Koy5EO8Qg0Frc87/Qo0fi3aCl0BeUBDqf9mNKz03njTPk3q45uZdqpe2ZezKFd0sr1mgLpmJNDhGm+VVHbXXOjw6Cp0wzLkm/YKi2qxcJDg2a3Y5H7TTA+9Zb7n2+OLHROubFxHuWR4aLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kFdQFOoC; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kFdQFOoC"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-453749aef9eso151345e9.3
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 23:38:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750747087; x=1751351887; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UqT1UTBAsYvRB01kXkmbX0p3Nu6z/Y55LPEAo9YxJwY=;
-        b=kFdQFOoCEmr6IoMLPSVaYaMOGHHJh2fTIulYqQeMDujwwMIMtgcfzkDkKpKv6JWGAj
-         guO0fasKgsx4sWjD+Q0ip96pr+dz8AnjQQUa2CzVixvvfwxvX6/E48RedAgFZi+DZgDu
-         CXRc5Z8HsXPXifObXJZqrxMXZSoGlFYR2eO6VxW4tZoAp8tKZl4RfuTSHrADqn6Dt3vq
-         wDVecDmWeXAKwSeAmp13CGnlOP/LBT5/hMx2PX8/snA4wIUWw79vHGD4cQNV86edQeEZ
-         Z35GrDayuTX5rliE5f3IW7KQPySGWg5I7n6Nd8Y9moMrY8OtoZjJU8JXLOxinKJovBBW
-         WbxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750747087; x=1751351887;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UqT1UTBAsYvRB01kXkmbX0p3Nu6z/Y55LPEAo9YxJwY=;
-        b=gSvgj0EDZnc1+C39pQI8gG4bsfCgF+gnKsEBqkFE5WLWZAVnUpU7whVt/d94wT5RB5
-         bSRKDo6Q7wLqBUoL//Paoh7K/lTgpJDCn64V6hOVmWfJhUP9Tj6AjBRSw1YX8fEFfUG6
-         Xi4dhlY74sJgtVphx1tLRe1X4HpZ7kOe5Q6ubZE6bWDAi3qBMu7NWgr7lII7EM263pO9
-         aAJSZgCQjWHsBXbRd26ozS2iCcoguS/KD1BKCZ1E+SvNLr8Djh5q2WIasIvrRB/mVNvn
-         B9QaUBohcbwfQS5ReKne3ZFceAui5Bec7Li9ooWTPlguKiloB7N9Ovyul6gVfMEXMApA
-         zdsw==
-X-Forwarded-Encrypted: i=1; AJvYcCWnSuUMFh9ZlRKFyzSweLXYL9syyfugBLVp32jtS0ITXaxDQblVbZGGwtK4tmjldHdZrdf/F21ILV18CTg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNjuTWVZo1FybY61gZn99nm8CmB37KedVf7R4BxpiifIApmWRq
-	0r1z+vVaNFUJDwyhZk0Q7GSTWeHXuVU9p1T0Trsmn4Qhlpiij/mXTZsgYsS4mIq+N38=
-X-Gm-Gg: ASbGncsqBhxCAT0X7qiZc3ghKIhUnlppphU3ZmtvnS12A6eDUQVWN1/PKRTqJAwf4Pj
-	bhGxsHJSGb1HWRYrUKJsnSA9/foToZr75EGvymantNosKgyDU9r6QaOQt8Hu9orSIumdnuC4Lwt
-	IMolr/54CY1NUoa8v4rFjd1gPctHUzhdxBahAMjFxgT1xHscMvvBwB0m490wJivanzn7Be3+1Mv
-	pvu7Uf0okiiTnNEQjWljMM+DzR3ZlY+6BqIE8/Orbf5wdEJU0YsQaPnsVowd3VofDPCojZVxhuX
-	aHMWmbYAV2p9cM/h7SVbRz21BIyfzfREqgPVxjaL5YmwxCiskLc4byDw1SHMB41EDr2YqwoxWf3
-	lTw==
-X-Google-Smtp-Source: AGHT+IGOPbecHGYgB2YysSR5anppdA2xKx7TGTKt6AUrQoPCRTvADAlN3zQqydUylWoqDxWazLJxPA==
-X-Received: by 2002:a05:600c:1d02:b0:445:49e:796b with SMTP id 5b1f17b1804b1-453658bac72mr136170125e9.17.1750747087505;
-        Mon, 23 Jun 2025 23:38:07 -0700 (PDT)
-Received: from [10.1.1.109] ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453647f29bdsm131378405e9.18.2025.06.23.23.38.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 23:38:06 -0700 (PDT)
-Message-ID: <9237a946ada82934ef4c0b5a84162a400fb5a88b.camel@linaro.org>
-Subject: Re: [PATCH v4 00/32] Samsung S2MPG10 PMIC MFD-based drivers
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Sylwester Nawrocki
- <s.nawrocki@samsung.com>, Chanwoo Choi	 <cw00.choi@samsung.com>, Alim
- Akhtar <alim.akhtar@samsung.com>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Russell King	
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon	 <will@kernel.org>, Peter Griffin <peter.griffin@linaro.org>, Tudor
- Ambarus	 <tudor.ambarus@linaro.org>, Will McVicker
- <willmcvicker@google.com>, 	kernel-team@android.com,
- linux-kernel@vger.kernel.org, 	linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, 	linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, 	linux-rtc@vger.kernel.org, Lee Jones
- <lee@kernel.org>
-Date: Tue, 24 Jun 2025 07:38:05 +0100
-In-Reply-To: <202506232219552539103b@mail.local>
-References: <20250409-s2mpg10-v4-0-d66d5f39b6bf@linaro.org>
-	 <20250415160212.GA372032@google.com> <2025041715425693974c6d@mail.local>
-	 <24314441936d97a1892474eacdbbd690612de265.camel@linaro.org>
-	 <905e6cab9932c814a578826329f5e3f944418ef9.camel@linaro.org>
-	 <b193e94f042cf6134d2bed92152c23ee5bba6a26.camel@linaro.org>
-	 <202506232219552539103b@mail.local>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+	s=arc-20240116; t=1750747152; c=relaxed/simple;
+	bh=ju2oYNEca8czLSm6f8d7inxZ2xaRc61DoUM3sWxfQ4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jhWA3OyVUqKbIzvutRDuodJ3NFrvGKMk6del2es9klAPvZwCdYf4kwGgxbPlR1MRyNL40ibXJsSxNn/sFzvw+KyD5ZMkAszgEpguTgZZesckmqGdBwK8EZjxmpSP31fuMCHBVhpnUS0ei80hajVcj9snvteYaRI2rLFlSDr72hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: e6aa22a850c511f0b29709d653e92f7d-20250624
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:2770484f-b5c1-4961-aa8b-578c6852cd52,IP:0,U
+	RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:aba587da02c5fb17bde4a91304be5992,BulkI
+	D:nil,BulkQuantity:0,Recheck:0,SF:80|81|82|83|102,TC:nil,Content:0|52,EDM:
+	-3,IP:nil,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,
+	AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-UUID: e6aa22a850c511f0b29709d653e92f7d-20250624
+Received: from mail.kylinos.cn [(10.44.16.175)] by mailgw.kylinos.cn
+	(envelope-from <zhangzihuan@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 619643263; Tue, 24 Jun 2025 14:38:55 +0800
+Received: from mail.kylinos.cn (localhost [127.0.0.1])
+	by mail.kylinos.cn (NSMail) with SMTP id 7B3E6E008FA5;
+	Tue, 24 Jun 2025 14:38:55 +0800 (CST)
+X-ns-mid: postfix-685A47FF-413388651
+Received: from [172.25.120.24] (unknown [172.25.120.24])
+	by mail.kylinos.cn (NSMail) with ESMTPA id 43B17E008FA4;
+	Tue, 24 Jun 2025 14:38:52 +0800 (CST)
+Message-ID: <06b01251-cb87-4ca7-8cb1-6c90a17ed46d@kylinos.cn>
+Date: Tue, 24 Jun 2025 14:38:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] sched/fair: Fix memory leak in
+ alloc_fair_sched_group()
+To: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+ rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com
+References: <20250623061909.13480-1-zhangzihuan@kylinos.cn>
+ <d99ce13a-3b27-46c8-9d65-99cf979f537f@amd.com>
+From: Zihuan Zhang <zhangzihuan@kylinos.cn>
+In-Reply-To: <d99ce13a-3b27-46c8-9d65-99cf979f537f@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2025-06-24 at 00:19 +0200, Alexandre Belloni wrote:
-> On 16/06/2025 12:33:21+0100, Andr=C3=A9 Draszik wrote:
-> > Hi Alexandre,
-> >=20
-> > On Mon, 2025-05-19 at 15:41 +0100, Andr=C3=A9 Draszik wrote:
-> > >=20
-> > > Lee has kindly merged all the core driver patches.
-> > >=20
-> > > Any chance the rtc changes will make it into the same kernel release?
-> >=20
-> > Friendly ping.
->=20
-> I've applied the patches, I'll try to send them to Linus but there are no
-> guarantee they will make it for this release.
+Hi Prateek,
+Thanks a lot for the careful review and clarification.
 
-Thank you Alexandre!
+=E5=9C=A8 2025/6/24 12:31, K Prateek Nayak =E5=86=99=E9=81=93:
+> On 6/23/2025 11:49 AM, Zihuan Zhang wrote:
+>> alloc_fair_sched_group() allocates per-CPU cfs_rq[] and se[] arrays
+>> for a task group. However, if either allocation fails, or a per-CPU
+>> allocation fails during the loop, the function may leak memory.
+>
+> alloc_fair_sched_group() is only called by sched_create_group()
+> which does a sched_free_group() on failure that calls
+> free_fair_sched_group(). I don't see the memory leak in this scenario.
+> What am I missing?
+>
+You're absolutely right =E2=80=94 I missed the fact that
 
-A.
+`sched_create_group()` will always call `sched_free_group()` on failure,
+which makes my concern about memory leaks in `alloc_fair_sched_group()`=20
+invalid.
+>> This patch fixes the memory leak by:
+>> - Using sizeof(*ptr) instead of sizeof(ptr) for correctness.
+>> - Using the existing free_fair_sched_group() function to clean up
+>> Note: Calling free_fair_sched_group() unconditionally in the failure
+>> path is safe, as kfree(NULL) is a no-op in the kernel. This avoids
+>> duplicating cleanup logic and improves robustness.
+>>
+>> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+>> ---
+>> =C2=A0 kernel/sched/fair.c | 10 +++++-----
+>> =C2=A0 1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 7a14da5396fb..920174245517 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -13372,12 +13372,12 @@ int alloc_fair_sched_group(struct=20
+>> task_group *tg, struct task_group *parent)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct cfs_rq *cfs_rq;>=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 int i;
+>> =C2=A0 -=C2=A0=C2=A0=C2=A0 tg->cfs_rq =3D kcalloc(nr_cpu_ids, sizeof(c=
+fs_rq), GFP_KERNEL);
+>> +=C2=A0=C2=A0=C2=A0 tg->cfs_rq =3D kcalloc(nr_cpu_ids, sizeof(*tg->cfs=
+_rq), GFP_KERNEL);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!tg->cfs_rq)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err;
+>> -=C2=A0=C2=A0=C2=A0 tg->se =3D kcalloc(nr_cpu_ids, sizeof(se), GFP_KER=
+NEL);
+>> +=C2=A0=C2=A0=C2=A0 tg->se =3D kcalloc(nr_cpu_ids, sizeof(*tg->se), GF=
+P_KERNEL);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!tg->se)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err_free_rq;
+>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 tg->shares =3D NICE_0_LOAD;
+>> =C2=A0 @@ -13387,7 +13387,7 @@ int alloc_fair_sched_group(struct=20
+>> task_group *tg, struct task_group *parent)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cfs_rq =3D kzal=
+loc_node(sizeof(struct cfs_rq),
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 GFP_KE=
+RNEL, cpu_to_node(i));
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!cfs_rq)
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 go=
+to err;
+>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 go=
+to err_free_rq;
+>> =C2=A0 =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 se =3D k=
+zalloc_node(sizeof(struct sched_entity_stats),
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 GFP_KERNEL, cpu_to_node(i));
+>> @@ -13402,7 +13402,7 @@ int alloc_fair_sched_group(struct task_group=20
+>> *tg, struct task_group *parent)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 1;
+>> =C2=A0 =C2=A0 err_free_rq:
+>> -=C2=A0=C2=A0=C2=A0 kfree(cfs_rq);
+>
+> This will actually introducing a memory leak. If allocation of "se"
+> fails, the "cfs_rq" won't be linked to "tg" and needs to be freed here.
+>
+>> +=C2=A0=C2=A0=C2=A0 free_fair_sched_group(tg);
+>
+> free_fair_sched_group() doesn't NULL out the "tg->cfs_rq" and "tg->se"
+> after freeing them which now introduces double-free via
+> free_fair_sched_group() on failure in alloc_fair_sched_group().
+>
+Also, thanks for pointing out the potential issue of leaking the
+locally allocated `cfs_rq` if `se` allocation fails, and the risk of
+double free if `free_fair_sched_group()` is called too early.
 
+I will drop this patch and look deeper into the call chain next time
+before proposing such cleanup.
+
+Thanks again for your time and detailed feedback!
+
+>> =C2=A0 err:
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>> =C2=A0 }
+>
+Best regards,
+Zihuan Zhang
