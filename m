@@ -1,130 +1,106 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870A52D2388
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:58:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854772C326D;
+	Tue, 24 Jun 2025 13:58:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750773491; cv=none; b=dJQTg8hAX3C0CC6Hsr4iPt5V+pOY+Pg7TodZbj5WOiGLrk3kf6VI+1AAm0b/b/CDR4GGOGBWrZVTW7/0veaPBTSePA/kBBcYcdBTLn6jR9wZWloqd4bBx3WtZVSa+J3dJx5Ua+Z6N+vSyoI4U38UME0ga15P1FfJix6q5gFl7IA=
+	t=1750773492; cv=none; b=YtwihO/+1LVNi1AtOr0fqW5Rjxj5ftCbZPB+krFYKZ1YbxskSKOFgirbuogE4q/opwOXh27hvrsFuDpI1PudS0Pym6Opxnv1JnERV4nk1Ge43YaUUh1GtiDQnIKv40RobiSTPDBktO88HKHClfpEgu8Dnu2ZeO4lq9N7BzmtmA4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750773491; c=relaxed/simple;
-	bh=SRjdE7mQm9t+sBYLoVgmd8fzr5KQH8TyP1VOA9ZnGvk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r+66hTFm+hh/7Jpm6i2vFAG+5GQRQW8GI0VJ77SlBxgJhqrH4iAHwnTXWa3mIL8AC5Ji1NZsG4c9gkm1A641R6gdN3pRshBma5WYJy3SP0QYNHiLonv2kIesqgItLnebsRJOgp+pxXSp1ULgfNIcEluJDNTu4L3EiDPqQAOzL48=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zkLyr3M4; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750773492; c=relaxed/simple;
+	bh=OLw91X2Is9NUg8+hRFRl/+1tGGpqwE/F/LmJScfzltU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KZ1Xp2RVBpe1NK1OucFWy7pV7RZWo/dW1086n1Qds0Kx/S+uqzocveHK4QAVuutuPvQvnTdLtqpG7nAwFlfbqSnyt+KMR2dFQ6Zvho1dxazCmJdR12lVg2tX71lgHxpyfU0FsNw9bD/iid/ULnAn0x58fGa1qDWNv1Y+6SJt1wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=azZyXKoV; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zkLyr3M4"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a6e8b1fa37so748117f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:58:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750773488; x=1751378288; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yfdwBnmwXKVxo4fI9YpCbPX/DuxoUKCmsus+7StatJk=;
-        b=zkLyr3M4dif6AUhJ/unJG1Dxli+hAi3LwxS/pQ9gwc6jo0Wqb/L20TS/fWcUZSVojO
-         M7/XpPdfqDyVVMPCGhr4P2rlLo/hsqxy5lz6HmUicJ1YLQGp+3QS+GF9t3fbGpGRS4gh
-         xmxgVA886av4phe83Nvv/aYWyqbWWTsnHSA1nq/NgztXD+tsJkMdmv5BlbVQ48yQRPD7
-         fCHyYilmjNvLVRFsBXuzn9eVWGFFF0FsgIqwOQyIjYv4UT4SNChp03BXOtnTEvvbQAzp
-         +xIRVF7vmvqwL0tkfJtl0NbKlr5Y2EOgn+Z9yse5DkctMGQBDpy6ErxdZ+VEeEd1TpuI
-         EjaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750773488; x=1751378288;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yfdwBnmwXKVxo4fI9YpCbPX/DuxoUKCmsus+7StatJk=;
-        b=YR0NaktnGanaHFpEgtsimAEQWlhUNnzowWSjMr/Hhb+jSnt1g5eASzf7SRMpH6QBlS
-         VUh7eKHaxbl2o4Y1atldIDcB5eZBB97HoHyH0aZdOctUfSdKJINHxGJNTAbU575IAYLB
-         ZP+i1/xk2b0HZIH3xctoYyGvopLV6fQc56S//obgmGkusaZ2pCPBMpMpreFNJTtDnBpP
-         H01bgliBANWhfKBNgHzUicBDpIruMUb/FEY3cqvZh2pfzDqC7qn5gsBSaZ7/EesCTKyV
-         WKzymrCXvA1m9mnCKUkDpuIR68SGEV39DzKZX9xJBxOda38kpR6bAeJqzODLzzL1ei+f
-         DBHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXkMlFKFqHbNW6g1p1zd5wr283OngfKRN2f7hF1QR5iIS0FdeZ3viawwKo2Z+n2kVzwIYp58JwDl6acsYg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxls/ptK3YKT/z0PEGbJf6uxd0mT0v40iM5IQEpD3ahPsT721Vg
-	/2jFs78NsKY2UwcuSGPIuLpowXggr894kxiBgUbtCZXezTSFQBBq5OoB8Ct0nFu9Ma0=
-X-Gm-Gg: ASbGncsUUgJXsstyAM1Gg0sVirDa6GrAY5dCoivZGk7etGcXmTUvfPVgoMPkNQfHUaa
-	jodOLCFw3jGeKaZsfAti3IA9oBVMUbTtkTMot97Ie+r5SdK0RM1ZW78/rK44w+HTNL8BdGK4G7q
-	/mIdW8d+yz2dvtlLgg/XjbzWRBtkKpCkHZrI31M6ghfJwQisQAOeSvNys720SN+Cu609aE2UZQl
-	I0cYlvvbAOFBtB0751ZoDLgXJ8BppM2kwtnM3fNqWxX/Ga1qyN/vKSwopYjz4JoCxKGZxFCU+C2
-	LsVLHkNEor/8GXjyWl8mF+amvPvQZrKzoio5UgBuULEYcNnZVR/KTTIfkTts7g==
-X-Google-Smtp-Source: AGHT+IE2FNywqz+cFb7euMKYbolnteHJlkDlULxTNl06mbXFoTDBF9qk9BsatavRg5P2dnisXCo5bg==
-X-Received: by 2002:a05:6000:4109:b0:3a4:f892:de7f with SMTP id ffacd0b85a97d-3a6d13071e8mr12590091f8f.36.1750773487721;
-        Tue, 24 Jun 2025 06:58:07 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:34d2:109c:3293:19e9])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e811724bsm1966761f8f.100.2025.06.24.06.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 06:58:07 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Drew Fustini <drew@pdp7.com>,
-	Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: (subset) [PATCH v6 0/8] Add TH1520 GPU support with power sequencing
-Date: Tue, 24 Jun 2025 15:58:03 +0200
-Message-ID: <175077347940.80530.12388970181360361507.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
-References: <CGME20250623114429eucas1p1e74e09e74c5873b2f7f01228073be72a@eucas1p1.samsung.com> <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="azZyXKoV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750773490; x=1782309490;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=OLw91X2Is9NUg8+hRFRl/+1tGGpqwE/F/LmJScfzltU=;
+  b=azZyXKoV8d6wKOupLSDVLivy1se6bywVrY0XeQxv3YEKYA/GTJPTP7ED
+   JmNKpBfAqZK4zNdhFLGmP+R6MDiIXZ07WqhYRt6VKfAYm/X5FygGid6W2
+   tb/IGxVvBthMWTMFGUOMnq2gjuwizEIxLF5D19Ygb3mK8QO9HTnqANjRO
+   pC6+MBVVnbFh/31xHup8pziCqQ9A6he6KWEg8VVggg6H1kUPZAERgsoXm
+   fmT2novqIauXKOly12QKNbFVaics/cGDXuv3fD4bCEprzVcxYGA/ecg4K
+   n+MMl54Q161cqf6EgIPKV+J9NF6W7MoM6s5ftLCzmuNHflDSgYiYf1nr4
+   w==;
+X-CSE-ConnectionGUID: 1tP+JhaCSpCNFVOWmlH2hA==
+X-CSE-MsgGUID: 1DUvPXLST5aKzFrlnD+NHQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52949189"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="52949189"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 06:58:10 -0700
+X-CSE-ConnectionGUID: 6aYS1MZYT+CDaHZJJpOeFw==
+X-CSE-MsgGUID: rzZicHZZQja4VxplZOuy5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="152043449"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by fmviesa006.fm.intel.com with SMTP; 24 Jun 2025 06:58:07 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 24 Jun 2025 16:58:06 +0300
+Date: Tue, 24 Jun 2025 16:58:06 +0300
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Andrei Kuchynski <akuchynski@chromium.org>
+Cc: Jos Wang <joswang@lenovo.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: displayport: Fix potential deadlock
+Message-ID: <aFqu7jvCwajL2OOE@kuha.fi.intel.com>
+References: <20250624133246.3936737-1-akuchynski@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624133246.3936737-1-akuchynski@chromium.org>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-
-
-On Mon, 23 Jun 2025 13:42:38 +0200, Michal Wilczynski wrote:
-> This patch series introduces support for the Imagination IMG BXM-4-64
-> GPU found on the T-HEAD TH1520 SoC. A key aspect of this support is
-> managing the GPU's complex power-up and power-down sequence, which
-> involves multiple clocks and resets.
+On Tue, Jun 24, 2025 at 01:32:46PM +0000, Andrei Kuchynski wrote:
+> The deadlock can occur due to a recursive lock acquisition of
+> `cros_typec_altmode_data::mutex`.
+> The call chain is as follows:
+> 1. cros_typec_altmode_work() acquires the mutex
+> 2. typec_altmode_vdm() -> dp_altmode_vdm() ->
+> 3. typec_altmode_exit() -> cros_typec_altmode_exit()
+> 4. cros_typec_altmode_exit() attempts to acquire the mutex again
 > 
-> The TH1520 GPU requires a specific sequence to be followed for its
-> clocks and resets to ensure correct operation. Initial discussions and
-> an earlier version of this series explored managing this via the generic
-> power domain (genpd) framework. However, following further discussions
-> with kernel maintainers [1], the approach has been reworked to utilize
-> the dedicated power sequencing (pwrseq) framework.
+> To prevent this, defer the `typec_altmode_exit()` call by scheduling
+> it rather than calling it directly from within the mutex-protected
+> context.
 > 
-> [...]
+> Cc: stable@vger.kernel.org
+> Fixes: b4b38ffb38c9 ("usb: typec: displayport: Receive DP Status Update NAK request exit dp altmode")
+> Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
 
-Applied, thanks!
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-[1/8] power: sequencing: Add T-HEAD TH1520 GPU power sequencer driver
-      https://git.kernel.org/brgl/linux/c/d4c2d9b5b7ceed14a3a835fd969bb0699b9608d3
+> ---
+>  drivers/usb/typec/altmodes/displayport.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
+> index b09b58d7311d..2abbe4de3216 100644
+> --- a/drivers/usb/typec/altmodes/displayport.c
+> +++ b/drivers/usb/typec/altmodes/displayport.c
+> @@ -394,8 +394,7 @@ static int dp_altmode_vdm(struct typec_altmode *alt,
+>  	case CMDT_RSP_NAK:
+>  		switch (cmd) {
+>  		case DP_CMD_STATUS_UPDATE:
+> -			if (typec_altmode_exit(alt))
+> -				dev_err(&dp->alt->dev, "Exit Mode Failed!\n");
+> +			dp->state = DP_STATE_EXIT;
+>  			break;
+>  		case DP_CMD_CONFIGURE:
+>  			dp->data.conf = 0;
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+heikki
