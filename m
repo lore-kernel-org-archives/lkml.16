@@ -1,52 +1,74 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1E3E2586FE
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:19:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27BC4257AF8;
+	Tue, 24 Jun 2025 08:19:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753157; cv=none; b=m4FnVlRVUWZb+lnSxPE+YdhWXYpc4R838oGGgEeOOQ6NWKepIR94r6Mq9cBUwjKThZb0DYWTAbLGQ11E6DQrXcXFEUtdxDYfcLCpjFn1xG716rc36160Hqj1MN6IcAfZ30Z7aCHUouyCfsorpbPuoWMTrEbK2avrye1uzEPHfQ0=
+	t=1750753165; cv=none; b=fEckRT5uDdLnFc6ClUbXLvLOw9oRBqANbJ+yh5Qi2kPir40R2IWK90NSw250NlYwI3lfoR95PyfbjfbB25ElYEK7AW98zX4A2elVrtG1Gzbs5cDJZNnq+E/qOspqKr3bkhecEDGII+M4eYQTQ1r+WoUJZvOBshbDPQ7aVz2teWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753157; c=relaxed/simple;
-	bh=yL2j1876ItKV5RfwVnsodHgDStUVkQIYx65k9vE3WvI=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=W84C9ZGUolRfVk4B4LoekWs568UcG47NUOf6RSm8s1ZB8zCrws/xUmasmnvlZz0KRJjkCUd5LdF3Ql7plfW2XqN4a45c67zty6TJ4BOHxi2Lg1ZoqIxlfXlvihNQR4V08fIQXg8nHHKQpimEIkqqReoAP6M4mw72whvQ0smQywg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JWTmC9+X; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750753165; c=relaxed/simple;
+	bh=lHc4ZAAeqfzHN1X+wVHA/c/Uut3n6yiJSxjoF8fRGM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FJ/otmwa5H0j6sgakZgDWq6rHMOHwGVjhFJT/RaRIV/ydoo7WjDVpHc8Zu5qEMs08BdjCNjSoShjy5aNogCUEbYzASqxsWeonTtsCsAWiqgfUEFUahWvuTjqFi7IFoqUx80KXq8rbCsz5Zqnn3LopFs07jVvKp5KVqsltjcYsUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FguYRCmM; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JWTmC9+X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750753154;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=xDy6AvQbreGo32VdcKEdzgul1ZGWwn4DfyAjOh6GrKU=;
-	b=JWTmC9+XHK2wHv8CIBiN1Ub4UBHcYPQMjtPWTpazM/aBVgrsuxMRfNJJ2r8/7znoYK1jow
-	muY7uGzC2Y60KCLA27BUsW+J1GFc87Np8FtsI8ZHuzKnmrqzjvua7/uXfCMlvUgbgcgXxp
-	mRAu64THIEVN67I0Evn6FjrU3WkzJBw=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-441-bSqnsK-3PnOUK6GkZIcx0w-1; Tue,
- 24 Jun 2025 04:19:10 -0400
-X-MC-Unique: bSqnsK-3PnOUK6GkZIcx0w-1
-X-Mimecast-MFC-AGG-ID: bSqnsK-3PnOUK6GkZIcx0w_1750753149
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 01C861800268;
-	Tue, 24 Jun 2025 08:19:09 +0000 (UTC)
-Received: from ws.net.home (unknown [10.45.226.128])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BB1BF19560A3;
-	Tue, 24 Jun 2025 08:19:06 +0000 (UTC)
-Date: Tue, 24 Jun 2025 10:19:03 +0200
-From: Karel Zak <kzak@redhat.com>
-To: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	util-linux@vger.kernel.org
-Subject: [ANNOUNCE] util-linux v2.41.1
-Message-ID: <wnfaquaapqknjnu2bdvddkp2xbleowfcr2g3cqiewpl54oclmi@mrseflcu5nyk>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FguYRCmM"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a57ae5cb17so2786605f8f.0;
+        Tue, 24 Jun 2025 01:19:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750753162; x=1751357962; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=0HQzhmMwm8dgf3BqJLxWZHwxNCOz9a49V8WdE7r2r9U=;
+        b=FguYRCmMN+dN7u+Zmnwmr8jRuHvOI2IINWyxueJMTglU5f1GOYJ0ad3DShailOqtlx
+         8V4o0kbkZx/flhJYHjJjf4FX/RpQYkfXd0EGqn7gvZoneikZhqfpvmMoPOJYURq1Tc6S
+         OO0a9rEmTc9qUL35tq/SxyiFNrIVomB4YA5njPbEDl03a3LH5XoLEZ7Teg0hgkWD1MGd
+         qtCNz8JnISoM/md9xeFtxFKL3djW2xl46H2Fed1J4dm4eRzE2MxWE+IdN8jPvyaAAoqq
+         ZyQk+aFhRj8819EiWIL8l1Sff0rGbmDEBarMiiyd/C8XvSK7fgGeoUIahXlFG0qQEigg
+         GmZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750753162; x=1751357962;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0HQzhmMwm8dgf3BqJLxWZHwxNCOz9a49V8WdE7r2r9U=;
+        b=SbkV3zORPSc+5y19JyCCDYWWUwV3m/iliHaT/MihuF7em76pG9d2KUfCXNBo1dqMeO
+         ZeQch1maLvGZ78y0DoUEEQZ7qHnIMdIxu6786eeDjkqtAfOpz/QJx1zbty8IkgJSdbpU
+         /et2FesaM1HaOhFCZEwTq2BDF+K6k2Aq/5P/nIQDQiSzpxCvO1IC7UXeWU/dUx4yavoa
+         sE3p6gF1f3MdbtwvPbixEQq2PY6/Ee75XBBShxRnZm7PJbcKmZ6hdLQm1hM8n1sRdA4j
+         YI2anGcuPpfqx0L+s+Z+FjkpSx9wfwtWRNHJ+Tdp5hNJtpghPGtpH+LVB6QFO/C66QIM
+         eNvA==
+X-Forwarded-Encrypted: i=1; AJvYcCVY/x7lKJisVrN8j4iqDc1S2wl0VSSpPV0CPgAZvZSagwarNuKe7WAnLmmoYaGQ7MeLXRcY0L5SojjA7w==@vger.kernel.org, AJvYcCWfsGbShFM4Y/cQplYnh1eVulxeHqvMsc374llnSA538tZGZf5f0oOA1YqBPhJBWpaL8ut45TAcSsnj@vger.kernel.org, AJvYcCX7fSKNqkzKwp8PScMOf7Ob3kyxWT0uKcAXRSSvUMhl2zpTaaUbqV/DCIk/De7VrMdJnHcnj6L49USDavaA@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQBgEgYWefKlU9dLfwRtOrpGsj2PyCWlAGPjYh1Bj3//NdNqi8
+	+SFAp5UJpfklJgCyPu06OWCXUw5DMsI6DHCwJ/GPqe9wNKsJOVwCbTNR
+X-Gm-Gg: ASbGncuAXjK/PwIiwFr6OP2cTcF+8E9zPfcqGLN1e3i/lAqP4Z72UotNGgYXLdOiSZu
+	F5dykkg1kSGsc7xsaRUa4pMaxOZmZDdgWUUyl7oZ+NPT2m5A/pipyYddMUa+VQH4Fum681vcruC
+	KNSSCeoVuLqyep9p18ex2WXFPvLkGncU09PMg2wYCJzRgmSMaPcEHRJWlLVUewAajgTPpMsxGkG
+	jo2FdCpJbZvsHNJELqNagq0JsSQFx1Ddd8MRUUsPb4QeJY3rLIY29yNl3p/ezyuxREv9qEaLgbJ
+	CCXCcJUuEdbTUerZf/RpGF/kyV25YdnuvWPlmkw3pGHGpTBGSveEPZT+PX+U
+X-Google-Smtp-Source: AGHT+IHM8PUchadujkUTWUPCwyBPckulRdVw9/8xANJ2K7NJhCiUFZ9kIVn/HWC58YcEhFgH9pggxA==
+X-Received: by 2002:a05:6000:144e:b0:3a3:6b07:20a1 with SMTP id ffacd0b85a97d-3a6d12deb86mr13227259f8f.40.1750753162353;
+        Tue, 24 Jun 2025 01:19:22 -0700 (PDT)
+Received: from legfed1 ([2a00:79c0:6bf:b400:22ea:3d6a:5919:85f8])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805d21fsm1275485f8f.23.2025.06.24.01.19.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 01:19:22 -0700 (PDT)
+Date: Tue, 24 Jun 2025 10:19:20 +0200
+From: Dimitri Fedrau <dima.fedrau@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: dimitri.fedrau@liebherr.com, Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>, linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
+Subject: Re: [PATCH v3] pwm: mc33xs2410: add support for temperature sensors
+Message-ID: <20250624081920.GA10327@legfed1>
+References: <20250619-mc33xs2410-hwmon-v3-1-301731e49f8f@liebherr.com>
+ <cviovwci5fgtyina7p7zqjns7cwveivy3vetqhhagwmrlc2gm2@jrqgorif7xff>
+ <20250624070442.GA3383@legfed1>
+ <u4aigv7nhsqygisyrhcohq25tvktsukjexng6zddib6kvj6hwl@vaa2pset4qbi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,153 +78,57 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <u4aigv7nhsqygisyrhcohq25tvktsukjexng6zddib6kvj6hwl@vaa2pset4qbi>
 
+Am Tue, Jun 24, 2025 at 09:29:25AM +0200 schrieb Uwe Kleine-König:
+> On Tue, Jun 24, 2025 at 09:04:42AM +0200, Dimitri Fedrau wrote:
+> > Hi Uwe,
+> > 
+> > Am Mon, Jun 23, 2025 at 11:07:24AM +0200 schrieb Uwe Kleine-König:
+> > > hello Dimitri,
+> > > 
+> > > On Thu, Jun 19, 2025 at 07:32:42PM +0200, Dimitri Fedrau via B4 Relay wrote:
+> > > > @@ -29,6 +30,8 @@
+> > > >  
+> > > >  #include <linux/spi/spi.h>
+> > > >  
+> > > > +/* ctrl registers */
+> > > > +
+> > > >  #define MC33XS2410_GLB_CTRL			0x00
+> > > >  #define MC33XS2410_GLB_CTRL_MODE		GENMASK(7, 6)
+> > > >  #define MC33XS2410_GLB_CTRL_MODE_NORMAL		FIELD_PREP(MC33XS2410_GLB_CTRL_MODE, 1)
+> > > > @@ -51,6 +54,21 @@
+> > > >  
+> > > >  #define MC33XS2410_WDT				0x14
+> > > >  
+> > > > +#define MC33XS2410_TEMP_WT			0x29
+> > > > +#define MC33XS2410_TEMP_WT_MASK			GENMASK(7, 0)
+> > > > +
+> > > > +/* diag registers */
+> > > > +
+> > > > +/* chan in { 1 ... 4 } */
+> > > > +#define MC33XS2410_OUT_STA(chan)		(0x02 + (chan) - 1)
+> > > > +#define MC33XS2410_OUT_STA_OTW			BIT(8)
+> > > > +
+> > > > +#define MC33XS2410_TS_TEMP_DIE			0x26
+> > > > +#define MC33XS2410_TS_TEMP_MASK			GENMASK(9, 0)
+> > > 
+> > > Keep the registers in address order please
+> >
+> > Aren't they ? There are "ctrl" and "diag" registers and I didn't mix up
+> > adresses. There is a comment for each of them when defines start.
+> 
+> +#define MC33XS2410_TEMP_WT                     0x29
+> ...
+> +#define MC33XS2410_TS_TEMP_DIE                 0x26
+>
 
-The util-linux stable release 2.41.1 is now available at
-                                  
-  http://www.kernel.org/pub/linux/utils/util-linux/v2.41/
-                                  
-Feedback and bug reports, as always, are welcomed.
-                                  
-  Karel         
+MC33XS2410_TEMP_WT is a "ctrl" register and MC33XS2410_TS_TEMP_DIE is a
+"diag" register. Both register sets start with adress 0. "ctrl" and
+"diag" defines are separated because I didn't want to mix them up.
 
+[...]
 
-util-linux 2.41.1 Release Notes
-===============================
-
-autotools:
-    - don't use wide-character ncurses if --disable-widechar (by Karel Zak)
-
-cfdisk:
-    - fix memory leak and possible NULL dereference [gcc-analyzer] (by Karel Zak)
-
-column:
-    - fix compiler warning for non-widechar compilation (by Karel Zak)
-
-fdformat:
-    - use size_t and ssize_t (by Karel Zak)
-
-fdisk:
-    - fix possible memory leak (by Karel Zak)
-
-fdisk,partx:
-    - avoid strcasecmp() for ASCII-only strings (by Karel Zak)
-
-findmnt:
-    - fix -k option parsing regression (by Karel Zak)
-
-hardlink:
-    - define more function as inline (by Karel Zak)
-    - fix performance regression (inefficient signal evaluation) (by Karel Zak)
-    - Use macro for verbose output (by Karel Zak)
-
-include/cctype:
-    - fix string comparison (by Karel Zak)
-
-include/mount-api-utils:
-    - include linux/unistd.h (by Thomas Weißschuh)
-
-libblkid:
-    - Fix crash while parsing config with libeconf (by Stanislav Brabec)
-    - befs fix underflow (by Milan Broz)
-    - avoid strcasecmp() for ASCII-only strings (by Karel Zak)
-
-libblkid/src/topology/dm:
-    - fix fscanf return value check to match expected number of parsed items (by Mingjie Shen)
-
-libfdisk:
-    - avoid strcasecmp() for ASCII-only strings (by Karel Zak)
-
-libmount:
-    - (subdir) restrict for real mounts only (by Karel Zak)
-    - (subdir) remove unused code (by Karel Zak)
-    - avoid calling memset() unnecessarily (by Karel Zak)
-    - avoid strcasecmp() for ASCII-only strings (by Karel Zak)
-    - fix --no-canonicalize regression (by Karel Zak)
-
-libuuid:
-    - fix uuid_time on macOS without attribute((alias)) (by Eugene Gershnik)
-
-lsblk:
-    - use ID_PART_ENTRY_SCHEME as fallback for PTTYPE (by Karel Zak)
-    - avoid strcasecmp() for ASCII-only strings (by Karel Zak)
-
-lscpu:
-    - fix possible buffer overflow in cpuinfo parser (by Karel Zak)
-    - Fix loongarch op-mode output with recent kernel (by Xi Ruoyao)
-
-lsfd:
-    - (bug fix) scan the protocol field of /proc/net/packet as a hex number (by Masatake YAMATO)
-    - fix the description for PACKET.PROTOCOL column (by Masatake YAMATO)
-
-lsns:
-    - enhance compilation without USE_NS_GET_API (by Karel Zak)
-    - fix undefined reference to add_namespace_for_nsfd #3483 (by Thomas Devoogdt)
-
-meson:
-    - add feature for translated documentation (by Thomas Weißschuh)
-    - remove tinfo dependency from 'more' (by Thomas Weißschuh)
-    - fix manadocs for libsmartcols and libblkid (by Karel Zak)
-    - fix po-man installation (by Karel Zak)
-
-misc:
-    - never include wchar.h (by Karel Zak)
-
-more:
-    - fix broken ':!command' command key (by cgoesche)
-    - fix implicit previous shell_line execution #3508 (by cgoesche)
-
-mount:
-    - (man) add missing word (by Jakub Wilk)
-
-namespace.h:
-    - fix compilation on Linux < 4.10 (by Thomas Devoogdt)
-
-po:
-    - update uk.po (from translationproject.org) (by Yuri Chornoivan)
-    - update sr.po (from translationproject.org) (by Мирослав Николић)
-    - update ro.po (from translationproject.org) (by Remus-Gabriel Chelu)
-    - update pt.po (from translationproject.org) (by Pedro Albuquerque)
-    - update pl.po (from translationproject.org) (by Jakub Bogusz)
-    - update nl.po (from translationproject.org) (by Benno Schulenberg)
-    - update ja.po (from translationproject.org) (by YOSHIDA Hideki)
-    - update hr.po (from translationproject.org) (by Božidar Putanec)
-    - update fr.po (from translationproject.org) (by Frédéric Marchal)
-    - update es.po (from translationproject.org) (by Antonio Ceballos Roa)
-    - update de.po (from translationproject.org) (by Mario Blättermann)
-    - update cs.po (from translationproject.org) (by Petr Písař)
-
-po-man:
-    - merge changes (by Karel Zak)
-    - update sr.po (from translationproject.org) (by Мирослав Николић)
-    - update de.po (from translationproject.org) (by Mario Blättermann)
-
-tests:
-    - (test_mkfds::mapped-packet-socket) add a new parameter, protocol (by Masatake YAMATO)
-
-treewide:
-    - add ul_ to parse_timestamp() function name (by Karel Zak)
-    - add ul_ to parse_switch() function name (by Stanislav Brabec)
-    - add ul_ to parse_size() function name (by Karel Zak)
-    - add ul_ to parse_range() function name (by Karel Zak)
-    - fix optional arguments usage (by Karel Zak)
-    - avoid strcasecmp() for ASCII-only strings (by Karel Zak)
-
-Wipefs:
-    - improve --all descriptions for whole-disks (by Karel Zak)
-
-Misc:
-    - Do not call exit() on code ending in shared libraries (by Cristian Rodríguez)
-    - remove two leftover license lines from colors.{c,h} (by Benno Schulenberg)
-    - remove "Copyright (C) ...." notes from files that claim no copyright (by Benno Schulenberg)
-    - correct the full name of the GPL in various files (by Benno Schulenberg)
-    - Make scols_column_set_data_func docs visible (by FeRD (Frank Dana))
-    - Do not use strerror on shared libraries (by Cristian Rodríguez)
-    - Fix typo in blkdiscard docs (by pls-no-hack)
-    - lib/fileeq.c Fix a typo in message. (by Masanari Iida)
-
--- 
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
+Best regards,
+Dimitri Fedrau
 
