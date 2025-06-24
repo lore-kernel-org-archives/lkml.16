@@ -1,111 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from fout-a5-smtp.messagingengine.com (fout-a5-smtp.messagingengine.com [103.168.172.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1338686347;
-	Tue, 24 Jun 2025 07:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13872248880;
+	Tue, 24 Jun 2025 07:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750749658; cv=none; b=OVGr4luED5sHj0n6XxgBtz5fEg6lH50AQcSU5D9M9WC4fThGwZZHDRtn1QKLWxDeXTIGhZiwFrDhlBrf6JjBzDPLGBzBnCj/bNdY0WskX2bvkPIwDJxZDvsMoQRgjSpyJ1cFmw6aDifpF23bIiHkInbIis8o4D8aILhyfmAWwSE=
+	t=1750749893; cv=none; b=cI7EBZkuZsykQFgAxWFZc/x76PvHbw1ZafRg8icvn9ussE6ceX3Pe3NGR+SyrM00Z4Ew9EVNmdnN8ReR5DTcbTD5RgYs2AGPtjMST9/F7SCmAGq8zl0gwZLOZOuaG8qVVaxZPrVMCVDR9/hOh7CItXNaHITbXtnnN+w8KePbSJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750749658; c=relaxed/simple;
-	bh=HvSZSrdL1NnkCo3Suic53nwcH+R7YoRUxgYQYmv+rkY=;
+	s=arc-20240116; t=1750749893; c=relaxed/simple;
+	bh=LduQloanuZx+tgDxiS24sDj+gjCYzkw7aaOUangnmV4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BG9dBdNAi2vYBJuxJWuCLSTGHPx9PFkFq4ZScTgQGVCoUJMSbkG9S8rBFxEq57WhAVQKOEDJAfYC01actT5ea1sFp1V+oEYRUA5p+XDDftOmIMcxs78hfnzuaoYDhYhmFB+RsbSVCQGZDfWoTtIlfcOiQSV122UH9pv4pbjwNQI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bnDQZLiZ; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=AzEEsqRH5jvnTHXMUcd6qIIUAJeaA2EEQkRMdYUn6OwhQtmJCjpA7Ra4IAoQdERkgu6RHO9qEjTjS1pYoYuZqXxj/hQ8/Ifte97WVmBr9T4EO8OW/kELZe3p0Ra+XBCcxyZGKERqGatAMZd+bq1OfwYAxBnwyXLkhll78riwlTY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com; spf=pass smtp.mailfrom=kroah.com; dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b=GmiGLe2r; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Rxj2tMDK; arc=none smtp.client-ip=103.168.172.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kroah.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kroah.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bnDQZLiZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750749656; x=1782285656;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=HvSZSrdL1NnkCo3Suic53nwcH+R7YoRUxgYQYmv+rkY=;
-  b=bnDQZLiZ/puPxH2BTMN60LV8OIrg91lSvnKE4l3tvp9TYQWEAb+oc5Cl
-   efURaY/Rv76PYo9IGkJgQ+xQ3e8Z7mafNsTDh14z+xzzDMJxia1ougZjo
-   wW3aTsFKkrUWYhJiecTWTLoagCprXpdyW/UYBRBVMt5XcRc5/Ht4AaJgC
-   M4vSqQ3rBkkYxpSi6gRb1HkPwlP8erNCJ4j9gXwqXX2khMP2cmpl4PG1y
-   hC5GZNPEbgmW6nJ1Zq3eyjNo0bBAcXFmE5VK7QAXp84+72HeOPQlwI4ht
-   nnHSrAbGoUJH4C7K8cV2P6IbaOBIyixMxJ980e8ouDFGmTZKcT49nWCs+
-   Q==;
-X-CSE-ConnectionGUID: /+4/nAcTRweoGK4nYie56g==
-X-CSE-MsgGUID: bn3SL3GSSmu+RnOU+qckCg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="53047842"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="53047842"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:20:55 -0700
-X-CSE-ConnectionGUID: tjwPEGqZRY24kUuNOWrP9g==
-X-CSE-MsgGUID: +rYwwwFOSsO/6xuhAWIW+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="156407388"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:20:51 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uTxxX-00000009P4j-3x8d;
-	Tue, 24 Jun 2025 10:20:47 +0300
-Date: Tue, 24 Jun 2025 10:20:47 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Mark Brown <broonie@kernel.org>,
-	linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: Re: [PATCH 2/9] iio: adc: ad_sigma_delta: use u8 instead of uint8_t
-Message-ID: <aFpRz9GtlEYn_UoF@smile.fi.intel.com>
-References: <20250620-iio-adc-ad7173-add-spi-offload-support-v1-0-0766f6297430@baylibre.com>
- <20250620-iio-adc-ad7173-add-spi-offload-support-v1-2-0766f6297430@baylibre.com>
- <aFj5eEvn2uw_HSl0@smile.fi.intel.com>
- <CAMknhBHuJY=8rxgJsMhvRNxZskmPhEZc1jJMQnHzQHFFoucWRA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="GmiGLe2r";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Rxj2tMDK"
+Received: from phl-compute-04.internal (phl-compute-04.phl.internal [10.202.2.44])
+	by mailfout.phl.internal (Postfix) with ESMTP id D95791380CEC;
+	Tue, 24 Jun 2025 03:24:49 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-04.internal (MEProxy); Tue, 24 Jun 2025 03:24:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1750749889; x=1750836289; bh=/DLPc3AqvE
+	lHPw7buUbyDhqu+Ojy4kjlZASoEdJa6ME=; b=GmiGLe2reNQXTMTIxu9QvOY1cB
+	DMj6Pe3tiDRPWrjBpzQerWTJ0DyUxshZZqjvWhb1o+UHFF8j0ro5+zx9HC7FR+eV
+	RKxBEBvAWcUCMlFvTaABk/R3YQHJXCGhEd+3mKQi3k1H1tf8ko0IQ2/UNAb8mK5h
+	4HVtP+9Dg6fosY1aEuByMbbteDu3Z1RstWvStsAfoMEtTgH3WKLi/sOIg9I67Whu
+	NE3aVLAo44xed/4ubIVEsSCESnl6D73zKWd2beDGjWJ+OsD3W6odqpuHyQjC8t0+
+	j4Atl3hDrjnK2jQ5L3LTbyFY80AVOeZSOV6CcpOD4stfrg8U84gChZ/rM1eQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=
+	1750749889; x=1750836289; bh=/DLPc3AqvElHPw7buUbyDhqu+Ojy4kjlZAS
+	oEdJa6ME=; b=Rxj2tMDKmNIpEtX6eAzOk3K0bRfvN8DIecQ0TkiYW7ypmAJCrcN
+	EmuyyseNCkCmm5o/TtSw5bRW8yd/HcssI+J4NgaGZ56SHC85Nt56laylxMo+NKTx
+	QAYv16a9CGCv/InwpkCzPIanGvp2aYYEQUVe/yeFmMw9fkxZ+7v9KYPjJPuavV5T
+	egFQncwsCeouS7OAXIFsNpJtalWQ7Utz9aTosrDTg/z6l3/mHsiSWL+KgW9HlAut
+	GrSsWk1zSQjjVbeFnOk0aWXaQFG7WrMfyHj0G3EO9kVHsJN+znDnMMaxK8iL/LVL
+	PYgvSPsDvkSF6B9brv+vpL5BDFCyG7dMIqw==
+X-ME-Sender: <xms:wVJaaKSe1dKmIqid8BR1rZTo-0pYd50D8kMqWyAIt8lxOSWf2P8ixQ>
+    <xme:wVJaaPz_oXBndr_H2PxagmwrcLo5zfC81S_NqNnbH7jN-BpjNwp0uyOynzqe9oGwD
+    jTQ1g8l_vmhpw>
+X-ME-Received: <xmr:wVJaaH2-pvzBLi9JTLkaT6MIrDoEBL0XjhYwbCbzt2joR7SoqkEojOAy6obZ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgdduledvlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcumffj
+    uceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeehgedvvedvle
+    ejuefgtdduudfhkeeltdeihfevjeekjeeuhfdtueefhffgheekteenucevlhhushhtvghr
+    ufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtg
+    homhdpnhgspghrtghpthhtohepudegpdhmohguvgepshhmthhpohhuthdprhgtphhtthho
+    pehsfhhrsegtrghnsgdrrghuuhhgrdhorhhgrdgruhdprhgtphhtthhopegsrhgruhhnvg
+    hrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhhitggvrhihhhhlsehgohhoghhl
+    vgdrtghomhdprhgtphhtthhopegurghkrheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    eplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthht
+    oheplhhinhhugidqnhgvgihtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoh
+    eprhgvmhhosegsuhgvnhiilhhirdguvghv
+X-ME-Proxy: <xmx:wVJaaGDVQqhw5CAbooaFIMe8A_8rSxnm6mf7MVMo2F7WS-90q48qXQ>
+    <xmx:wVJaaDje7ODcrFj6M5qkHa1AxsmytnU5gt91D-UHz2OP0324trsOZA>
+    <xmx:wVJaaCqKB4H3D8-iso5IRmRJNSWqDw0Gx39ebspGjlVhcv4cYr1ezQ>
+    <xmx:wVJaaGghrfOeEpkudmkdMO9cFtD0FQGms-2yIsQ8zj2PluAIQbI4vQ>
+    <xmx:wVJaaFZ9JQ78lxBC1w0H-4R6ufPJXbgmmnDP333ukjuNEG6aehBQEX99>
+Feedback-ID: i787e41f1:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 24 Jun 2025 03:24:48 -0400 (EDT)
+Date: Tue, 24 Jun 2025 08:24:47 +0100
+From: Greg KH <greg@kroah.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Christian Brauner <brauner@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>,
+	Remo Senekowitsch <remo@buenzli.dev>
+Subject: Re: linux-next: manual merge of the driver-core tree with the
+ vfs-brauner tree
+Message-ID: <2025062437-composite-jaws-2bbf@gregkh>
+References: <20250624144231.3598eb5e@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMknhBHuJY=8rxgJsMhvRNxZskmPhEZc1jJMQnHzQHFFoucWRA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250624144231.3598eb5e@canb.auug.org.au>
 
-On Mon, Jun 23, 2025 at 03:48:30PM -0600, David Lechner wrote:
-> On Mon, Jun 23, 2025 at 12:51 AM Andy Shevchenko
-> <andriy.shevchenko@intel.com> wrote:
-> > On Fri, Jun 20, 2025 at 05:20:08PM -0500, David Lechner wrote:
-> > > Replace uint8_t with u8 in the ad_sigma_delta driver.
-
-...
-
-> > >       unsigned int reset_length = sigma_delta->info->num_resetclks;
-> > > -     uint8_t *buf;
-> > > +     u8 *buf;
-> > >       unsigned int size;
-> > >       int ret;
-> >
-> > Wondering if in the cases like this we may make it to be reversed xmas tree.
+On Tue, Jun 24, 2025 at 02:42:31PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Fine with me as long as Jonathan doesn't mind the noise since it looks
-> like I will be doing a v2 anyway.
+> Today's linux-next merge of the driver-core tree got a conflict in:
+> 
+>   rust/helpers/helpers.c
+> 
+> between commit:
+> 
+>   6efbf978891b ("poll: rust: allow poll_table ptrs to be null")
+> 
+> from the vfs-brauner tree and commit:
+> 
+>   a2801affa710 ("rust: device: Create FwNode abstraction for accessing device properties")
+> 
+> from the driver-core tree.
+> 
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+> 
+> -- 
+> Cheers,
+> Stephen Rothwell
+> 
+> diff --cc rust/helpers/helpers.c
+> index d2887e3b2826,393ad201befb..000000000000
+> --- a/rust/helpers/helpers.c
+> +++ b/rust/helpers/helpers.c
+> @@@ -32,7 -32,7 +32,8 @@@
+>   #include "platform.c"
+>   #include "pci.c"
+>   #include "pid_namespace.c"
+>  +#include "poll.c"
+> + #include "property.c"
+>   #include "rbtree.c"
+>   #include "rcu.c"
+>   #include "refcount.c"
 
-I mean the cases when you touch already the variables and this won't be any
-*additional* churn to what the change has.
-
-> >         unsigned int reset_length = sigma_delta->info->num_resetclks;
-> >         unsigned int size;
-> >         u8 *buf;
-> >         int ret;
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Looks good, thanks!
