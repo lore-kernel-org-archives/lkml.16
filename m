@@ -1,127 +1,272 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464C5190664;
-	Tue, 24 Jun 2025 08:06:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00F7255F2B
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750752414; cv=none; b=IqSlN5ICp5ZeyfMz0tpvP2c97qzm13EUa9weiL/ck1yC0hgJ8Ntw0ELl1Lfo+/ozDWPI/AA1u62KV8EgeqVgozyu9wdcwRIT4vKFynGdNfFCZ1gzgy5z5NAnEbEWlhdn7tGId1jdifTszjmQHWn3X98QTIaccFRKNXel1Dd6ES0=
+	t=1750752456; cv=none; b=N7crsRvk+ZwVTTsFtxgpDYPffcUsMYu8kBoHgn3+T4riiD9/bbxZ5tzt9fWbiSvN5hFfOOAy5vdfcmREVH8F9eqRDVES8QAyycVfy+SJ7dSAO4oOKTqogAywckJ/gsQESTomWOQwNHyig44farXMXty3QNcuLxVhi4nqfX2KAeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750752414; c=relaxed/simple;
-	bh=rONZBqSu0G336QD6fdEcLUvwhyF4RivARlvQIYQaJu0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=LF66IqYHpw0R27vnJmRDyqs+/O2bIJF7AvtXgUgbSiR3QaTLtFLpsg5u3dJZMYc2S8O9dRCk5383zimZGVClb20ksRzDDfAK331fFI06hWb+947XFas26gfMBhu3w8wnrYDlP2AnUGppSfRzICxX/2J5oc9/oOGsjdY4Ms2TG7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G/9oKIGy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750752456; c=relaxed/simple;
+	bh=JgsSBvTnznR09eGd2OJLwNRNa2+FEOtjHzluUypwdYk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sCiE1UVDzm+GhyknTvdidlaXaa7oYeE9ueYB5/1LhM9Kk2OIHXlzPsKmTEp5xF3abZxdEoGYHaD/RrrVerntQhcLOHnpI2tgRMv0eFfSoXUbWcTV2cnKdnZXVxV1s8cBvWDoZYrZkt2KhqTVSRmsvZNrccy7eXJaTkGJPf1k4LA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rmtmp0WD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G/9oKIGy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D05EC4CEEF;
-	Tue, 24 Jun 2025 08:06:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750752413;
-	bh=rONZBqSu0G336QD6fdEcLUvwhyF4RivARlvQIYQaJu0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G/9oKIGypl9sgF5wi0bI6DQWCsjBJW4+FlBDMK61TRiZyAz92va9RLWsu4sdbpB9X
-	 b7/PNne8bE4qUL/cpttYo16r+fGTPKNYruANTu+nXoAd9p8+Wkdk+uy7zr6KMvY1oh
-	 0PyTGm3+jhHFz6gEZOFMmVAQHRgS2CbLmS98RBy2wULZThNEXkVe4R2gZ3OSOhP5X7
-	 Hw7EQc0F4iFxPWEic/GOvMuvRFHk/SYeZ5jax1PQczZqgT1sk4XwDx19xc6gTN9J2+
-	 FmR1FaM5gjjQ/cGBzZVq3ItGp6DXEqvVhiSdlIWfRn3npU8KIT+j0SR+902vy1tLSc
-	 xNnluErWJ81Cg==
-From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-To: gregkh@linuxfoundation.org
-Cc: linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-doc@vger.kernel.org
-Subject: [PATCH v2 5/5] tty: fix tty_port_tty_*hangup() kernel-doc
-Date: Tue, 24 Jun 2025 10:06:41 +0200
-Message-ID: <20250624080641.509959-6-jirislaby@kernel.org>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250624080641.509959-1-jirislaby@kernel.org>
-References: <20250624080641.509959-1-jirislaby@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rmtmp0WD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750752453;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=GM43lz0QpDgErZ/vodO3xCp9zFB0TdFSlvRYH8M5tN0=;
+	b=Rmtmp0WD3ARuQgbEQRk/82nRX7NiGdACXvfyW7V9Cs26WSU0PLnxxMNk8W7TYGheG+s1xs
+	tPuta1+t+nhvVJIlzCN+sHR5ZAV61BE5F2Y82x+hslGhVwtQgZTUecMe6AmnWsLEr9NQUZ
+	OHXYTFHNrRH71pS3TUHgY3s682m1T9I=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-657-8UzUUkQpM9WvWZZ-g7Z_vQ-1; Tue, 24 Jun 2025 04:07:32 -0400
+X-MC-Unique: 8UzUUkQpM9WvWZZ-g7Z_vQ-1
+X-Mimecast-MFC-AGG-ID: 8UzUUkQpM9WvWZZ-g7Z_vQ_1750752451
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a3696a0d3aso2242955f8f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:07:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750752451; x=1751357251;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GM43lz0QpDgErZ/vodO3xCp9zFB0TdFSlvRYH8M5tN0=;
+        b=fDFzm37tGKbEqTOnGT9Phz7rN/FDn72r8LH7Xqsy/ipjnEfasug79/geisPrguHDWf
+         72h/tokwFI6odPZjM0BCxBKteIfewDvXMzuU4kxy9dHV/GOxXJWsaHF+jgHSrO+WBLbf
+         YIyTnP4XkGFD4dw6+a8iNHKKRK8tjveM6SoJfStqfQrlom/CEEfuUFvWBjo4tc3K7SOo
+         6AlJx8xpc2ZyM+zPzw25Ts550/U2pXW5dlq3OnzDz7yZLgOK9MsVqgz+3IVJ8zTrXW7u
+         BIYK50QyFWUCa3jD/KCkqB4IT/cjKzV0OqqqNs8BN2GHvudx12ThVVkIhNUlsg4UsSBn
+         fbhw==
+X-Forwarded-Encrypted: i=1; AJvYcCXlA2QMAiqI0kduJulUQOBsGXj1C1F10gFb3jkQZ+KHa8yQ8LbEvubJrYAQICtKPn9c3knL/f3gaEd4x7Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWGyCHJJMhhwJB1/euC91BBKijZNDTxXjM1aarGbqtApO8zZL6
+	MwY6RF+62f1uMSPvc7FXndF6GpPFmzuc3D9r5GgcQQEGTp1+PchtL5w7rFnYqIMTElHaA8Rtzs3
+	aRWO/fVhTNBZkgZ/pHfKaUQlCwXgQ3g+ZyXp7njF371Nu+5UPVlBaxAVq1PoQpjiL8Q==
+X-Gm-Gg: ASbGncsH1O/GK+zl7v4OnQJh0kiunyBzgSkIyy2l4ub5fJlHXk3xsM8YoJ06HqK3wE2
+	jNdHsnk0KL1xv+rRMajRJvbNB2bhsey735Wukm2kpjVFl5bBxOTnENi44/SXLUBxR2SoQWRH8Rm
+	BjQ9IgQSXt0ZOct67vY0H12f6aT2L9AwYJ578aLDK81x6Ll0oEz+F5SRD4VKckIygC9F9wmzEjF
+	GMUl3tZnVNZ5yMW7KVdqWYZiC562ZmJUO3Nzx5EsDO+PZ1E9oL/t40vqJAjb815oLdrc7FF6b4g
+	b5eqU8rJxtOnnX6MTdYFZP9i5x5mSQsmHU17
+X-Received: by 2002:a05:6000:20c1:b0:3a6:d93e:5282 with SMTP id ffacd0b85a97d-3a6d93e56fdmr6158548f8f.59.1750752450836;
+        Tue, 24 Jun 2025 01:07:30 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF5D9U8DXo9QlBSJgRT7e5NhRpK+cBv0LT+I7AaevAPYPmS1KrfSBpaAuJgjXp8k1Kqwnjs6w==
+X-Received: by 2002:a05:6000:20c1:b0:3a6:d93e:5282 with SMTP id ffacd0b85a97d-3a6d93e56fdmr6158516f8f.59.1750752450393;
+        Tue, 24 Jun 2025 01:07:30 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:84::108? (mischulz23.caps.cit.tum.de. [2a09:80c0:84::108])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8113b00sm1283411f8f.96.2025.06.24.01.07.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 01:07:29 -0700 (PDT)
+Message-ID: <dfd7650d-1154-467d-ae70-c126610413f6@redhat.com>
+Date: Tue, 24 Jun 2025 10:07:29 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] selftests/mm: Fix UFFDIO_API usage with proper
+ two-step feature negotiation
+To: Li Wang <liwang@redhat.com>, akpm@linux-foundation.org,
+ linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+ Bagas Sanjaya <bagasdotme@gmail.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Joey Gouly <joey.gouly@arm.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Keith Lucas <keith.lucas@oracle.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Shuah Khan <shuah@kernel.org>
+References: <20250622081035.378164-1-liwang@redhat.com>
+ <20250624042411.395285-1-liwang@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250624042411.395285-1-liwang@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-The commit below added a new helper, but omitted to move (and add) the
-corressponding kernel-doc. Do it now.
+On 24.06.25 06:24, Li Wang wrote:
+> The current implementation of test_unmerge_uffd_wp() explicitly sets
+> `uffdio_api.features = UFFD_FEATURE_PAGEFAULT_FLAG_WP` before calling
+> UFFDIO_API. This can cause the ioctl() call to fail with EINVAL on kernels
+> that do not support UFFD-WP, leading the test to fail unnecessarily:
+> 
+>    # ------------------------------
+>    # running ./ksm_functional_tests
+>    # ------------------------------
+>    # TAP version 13
+>    # 1..9
+>    # # [RUN] test_unmerge
+>    # ok 1 Pages were unmerged
+>    # # [RUN] test_unmerge_zero_pages
+>    # ok 2 KSM zero pages were unmerged
+>    # # [RUN] test_unmerge_discarded
+>    # ok 3 Pages were unmerged
+>    # # [RUN] test_unmerge_uffd_wp
+>    # not ok 4 UFFDIO_API failed     <-----
+>    # # [RUN] test_prot_none
+>    # ok 5 Pages were unmerged
+>    # # [RUN] test_prctl
+>    # ok 6 Setting/clearing PR_SET_MEMORY_MERGE works
+>    # # [RUN] test_prctl_fork
+>    # # No pages got merged
+>    # # [RUN] test_prctl_fork_exec
+>    # ok 7 PR_SET_MEMORY_MERGE value is inherited
+>    # # [RUN] test_prctl_unmerge
+>    # ok 8 Pages were unmerged
+>    # Bail out! 1 out of 8 tests failed
+>    # # Planned tests != run tests (9 != 8)
+>    # # Totals: pass:7 fail:1 xfail:0 xpass:0 skip:0 error:0
+>    # [FAIL]
+> 
+> This patch improves compatibility and robustness of the UFFD-WP test
+> (test_unmerge_uffd_wp) by correctly implementing the UFFDIO_API
+> two-step handshake as recommended by the userfaultfd(2) man page.
+> 
+> Key changes:
+> 
+> 1. Use features=0 in the initial UFFDIO_API call to query supported
+>     feature bits, rather than immediately requesting WP support.
+> 
+> 2. Skip the test gracefully if:
+>     - UFFDIO_API fails with EINVAL (e.g. unsupported API version), or
+>     - UFFD_FEATURE_PAGEFAULT_FLAG_WP is not advertised by the kernel.
+> 
+> 3. Close the initial userfaultfd and create a new one before enabling
+>     the required feature, since UFFDIO_API can only be called once per fd.
+> 
+> 4. Improve diagnostics by distinguishing between expected and unexpected
+>     failures, using strerror() to report errors.
+> 
+> This ensures the test behaves correctly across a wider range of kernel
+> versions and configurations, while preserving the intended behavior on
+> kernels that support UFFD-WP.
+> 
+> Suggestted-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Li Wang <liwang@redhat.com>
+> Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+> Cc: Bagas Sanjaya <bagasdotme@gmail.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Joey Gouly <joey.gouly@arm.com>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Keith Lucas <keith.lucas@oracle.com>
+> Cc: Ryan Roberts <ryan.roberts@arm.com>
+> Cc: Shuah Khan <shuah@kernel.org>
+> ---
+> 
+> Notes:
+>      v1 --> v2:
+>      	* Close the original userfaultfd and open a new one before enabling features
+>      	* Reworked UFFDIO_API negotiation to follow the official two-step handshake
+> 
+>   .../selftests/mm/ksm_functional_tests.c       | 28 +++++++++++++++++--
+>   1 file changed, 26 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/mm/ksm_functional_tests.c b/tools/testing/selftests/mm/ksm_functional_tests.c
+> index b61803e36d1c..19e5b741893a 100644
+> --- a/tools/testing/selftests/mm/ksm_functional_tests.c
+> +++ b/tools/testing/selftests/mm/ksm_functional_tests.c
+> @@ -393,9 +393,13 @@ static void test_unmerge_uffd_wp(void)
+>   
+>   	/* See if UFFD-WP is around. */
+>   	uffdio_api.api = UFFD_API;
+> -	uffdio_api.features = UFFD_FEATURE_PAGEFAULT_FLAG_WP;
+> +	uffdio_api.features = 0;
+>   	if (ioctl(uffd, UFFDIO_API, &uffdio_api) < 0) {
+> -		ksft_test_result_fail("UFFDIO_API failed\n");
+> +		if (errno == EINVAL)
+> +			ksft_test_result_skip("The API version requested is not supported\n");
+> +		else
+> +			ksft_test_result_fail("UFFDIO_API failed: %s\n", strerror(errno));
+> +
 
-Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Fixes: 2b5eac0f8c6e ("tty: introduce and use tty_port_tty_vhangup() helper")
-Link: https://lore.kernel.org/all/b23d566c-09dc-7374-cc87-0ad4660e8b2e@linux.intel.com/
-Reported-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
----
- Documentation/driver-api/tty/tty_port.rst | 5 +++--
- drivers/tty/tty_port.c                    | 5 -----
- include/linux/tty_port.h                  | 9 +++++++++
- 3 files changed, 12 insertions(+), 7 deletions(-)
+Not sure if that is really required. If UFFDIO_API failed after 
+__NR_userfaultfd worked something unexpected is happening.
 
-diff --git a/Documentation/driver-api/tty/tty_port.rst b/Documentation/driver-api/tty/tty_port.rst
-index 5cb90e954fcf..504a353f2682 100644
---- a/Documentation/driver-api/tty/tty_port.rst
-+++ b/Documentation/driver-api/tty/tty_port.rst
-@@ -42,9 +42,10 @@ TTY Refcounting
- TTY Helpers
- -----------
- 
-+.. kernel-doc::  include/linux/tty_port.h
-+   :identifiers: tty_port_tty_hangup tty_port_tty_vhangup
- .. kernel-doc::  drivers/tty/tty_port.c
--   :identifiers: tty_port_tty_hangup tty_port_tty_wakeup
--
-+   :identifiers: tty_port_tty_wakeup
- 
- Modem Signals
- -------------
-diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
-index 903eebdbe12d..5b4d5fb99a59 100644
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -391,11 +391,6 @@ void tty_port_hangup(struct tty_port *port)
- }
- EXPORT_SYMBOL(tty_port_hangup);
- 
--/**
-- * tty_port_tty_hangup - helper to hang up a tty
-- * @port: tty port
-- * @check_clocal: hang only ttys with %CLOCAL unset?
-- */
- void __tty_port_tty_hangup(struct tty_port *port, bool check_clocal, bool async)
- {
- 	struct tty_struct *tty = tty_port_tty_get(port);
-diff --git a/include/linux/tty_port.h b/include/linux/tty_port.h
-index 021f9a8415c0..332ddb93603e 100644
---- a/include/linux/tty_port.h
-+++ b/include/linux/tty_port.h
-@@ -251,11 +251,20 @@ static inline int tty_port_users(struct tty_port *port)
- 	return port->count + port->blocked_open;
- }
- 
-+/**
-+ * tty_port_tty_hangup - helper to hang up a tty asynchronously
-+ * @port: tty port
-+ * @check_clocal: hang only ttys with %CLOCAL unset?
-+ */
- static inline void tty_port_tty_hangup(struct tty_port *port, bool check_clocal)
- {
- 	__tty_port_tty_hangup(port, check_clocal, true);
- }
- 
-+/**
-+ * tty_port_tty_vhangup - helper to hang up a tty synchronously
-+ * @port: tty port
-+ */
- static inline void tty_port_tty_vhangup(struct tty_port *port)
- {
- 	__tty_port_tty_hangup(port, false, false);
+>   		goto close_uffd;
+>   	}
+>   	if (!(uffdio_api.features & UFFD_FEATURE_PAGEFAULT_FLAG_WP)) {
+> @@ -403,6 +407,26 @@ static void test_unmerge_uffd_wp(void)
+>   		goto close_uffd;
+>   	}
+>   
+> +	/*
+> +	 * UFFDIO_API must only be called once to enable features.
+> +	 * So we close the old userfaultfd and create a new one to
+> +	 * actually enable UFFD_FEATURE_PAGEFAULT_FLAG_WP.
+> +	 */
+> +	close(uffd);
+
+Is that actually required?
+
+The man page explicitly documents:
+
+"       EINVAL A  previous  UFFDIO_API  call already enabled one or more 
+features for this userfaultfd.  Calling UFF‐
+               DIO_API twice, the first time with no features set, is 
+explicitly allowed as per the two-step  feature
+               detection handshake.
+"
+
+So if that doesn't work, something might be broken.
+
+
 -- 
-2.50.0
+Cheers,
+
+David / dhildenb
 
