@@ -1,98 +1,72 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77C227146E
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C30725D201
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:47:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750754737; cv=none; b=gA9VdAPHkVGNB3EVqknsV1EuS3WTZ6N57OeTclOddZoqdcE8cK97f7FjBhWPUK8tsm2QQJk+rC3/6QgEyE2BrtEBUSVeqLR4cMK/p+BcIFjHxH9M9lwZ/8F4xS/QLNve7vsAbXx1YfRc3TRBmyAgzycAEcmIijK4hA4Q8XGXPzE=
+	t=1750754824; cv=none; b=ZxeZLTPLRGLPfKlTimmQ3X2YeL02FJF818iFa9c8Zfz7OHYutBKh5+97Xtu5E35vE9v5VnJawcpY2gpbAtCrA+P/+tMvCpr/MCdOTlO+Yk51PwxcwXLOwUK48htNZqEzR8kJkKFDmcdnkMdI4E/9lR1Lht9uRMSuS/2Bwq8ocvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750754737; c=relaxed/simple;
-	bh=LxScJQ6ro4GvdbdJIKpsHVPgmLgfonuIj3S9IWuHJB8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=MC0k+lvZfy8AFNM0f/tT9eZ0UjP8UoIQGJluOwqfzZGk7o5+b7ulthe4+2S8u07X4PmIatBu8KkuoLl+kBDRioLB9HnhhD01XvPV2EWgPAAz7P2ap20I9uciWJwQ3TszBOAOKvZMyEPkKhdfAxfb5cyd3t/ouDcr//tEKnExiks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+	s=arc-20240116; t=1750754824; c=relaxed/simple;
+	bh=ZTzM8Q7udUhE9DJc6t1DPCQpG014X2G1f7hMSSqOYZ8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=fgGNkQAT1lhXFpfc0Cn7HWTebn0Y6sCOVsEASyO1fj/32acTvCT4Ljh22SFhrf4Z2iz4H0L/U72TPzsQZSfQlhJZ9ezlBYhuzW+RpOqYA4YYm0LVBGelbQCaBUQ4StLRNLMgc4WFu6XOaZ5KZr3kctFVd9LcguwVFOPwicbb+Lk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3df2e89fd03so609175ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:45:35 -0700 (PDT)
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddba1b53e8so1955255ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:47:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750754735; x=1751359535;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
+        d=1e100.net; s=20230601; t=1750754822; x=1751359622;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0Is/Dj6D8uDldr6+hAOeVsyjOW0K7iYI2+3jaozOfMg=;
-        b=w0IQsasi7hzWZvPutW1rPk+U0x+TBXIwKIKbTE2t0/KSmFqEZj3U39aH+fB3dYeNRI
-         dbdL3Y4WYd4nFIgXWsUOqyT/WjObzueD+GgukT0HlOnx3moZMxC4LLiabsXncAr2b7qB
-         v6xr98CUiTmVnScdL+MfId/leSoS1s+WcK9zmdNd6hdHLgC9zn9z7Gp7EmmvbLcgGvBj
-         OKDOHPmgEJZG1pQbfrjFAEyJ93JDcTng2y+LChLI0i4siLL1sTl+GEZcsg51VI7tHOoR
-         HNOCFrQMiMfIK3np+Yev80n5KT1tOdHWziPPZZrZOkIFwCTfgrq16aSndUZiyKVhSSd2
-         KvRg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvFYmigsSI2s4SXI7NYSRg8jMAE7HafYyaFpD/LZlReZAqhLk2SFuOfOjKFNa202r3Kg4UYDtdltEOJf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnxsNle9UXokOweau/wmuvHne42gH/1dK79LoN1NPQm0t9zwo8
-	VtQSSv48jUWwrLc5VbBkdD6F8/VbMtevXqU8w5ze0kgO1DmjQnc9MbafTTiieFn1xv52/uQUdqS
-	ggFurhPXgfro38pgBNnQDcKIWevlyytR0IflIoIwHna//phFwnwQBaZ00xmg=
-X-Google-Smtp-Source: AGHT+IG5LfRE5qH6EyaBOHypODeoHO8Hq5efKEK5vsvSwUfKkRkPu87bZmxLuT8fuVhrg6QLEBN+NufZlQ/qqgCx3x7pM4dupdUN
+        bh=uTy2CkZKKcNnWbVHKSnKqAf2eweC2VZddt1ot+lLKB4=;
+        b=s17rfNBDCCs8JyGXLs/MCm0duhNy1TjtchAqxpbRXX0CpTQVeLOzHmWkLG728X//3S
+         wACA+r85aaDWO29oq0jMG0lcgO/19rNzuD3ER3d0ldvKKIgmz3XEpjH9tsY/G37gBsjl
+         ++8+BG7m8c7Rw5g4S61JoFuTioHGUBX6QobjPy9cFUMiRQjjOk3jc52Mq0Ui7/9eFS8x
+         fBcPna6mgPhqPLbn5uluV3W/1n7lqYlBv1UWPTNmpN12DJcaqvP2mCUmBrZtBvfv1ouB
+         h/lpkIx/XYmSqQ1lua82Rug/16zocFB1eIsk9PWERN1RR2c8TVuo2vr8DiqADCAtM6Qf
+         nBeA==
+X-Forwarded-Encrypted: i=1; AJvYcCVU7ISctB6Cd2HVcaMBZFxh+MOQMyd+uCi4mSB1Ifkks+DedmzdL5HxT1Jk30sGP7MaI8jVTf7Okck/4ps=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFG6YksYz7za/aXN3ElMXZTFWrx1s7BzaIIgcLHB/8dQug+Hf4
+	ZbcODfVuHJPuSgTK9aaYVcoWH7cZwB+ZSn+8+08tvj+ZHpE6VKxTbbkRqx/nQsIJYuVgs8gwRO3
+	bRP34XX77nPitL+Iz9JJV/JC9ahPmyCYaCzG8lQPBCvo1hXQjQDfIDzs5GKM=
+X-Google-Smtp-Source: AGHT+IEKay6LxW0MJy2H3xz6hpoMUwLRlYxiUcY17lfQxxiSt15Pny/0TPr8x7GwSXKRrCgQFS6wqIPLFvLW9DO863h73FWGD2ng
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2482:b0:3dd:d6d5:62c0 with SMTP id
- e9e14a558f8ab-3de38ca32eemr200271985ab.12.1750754735044; Tue, 24 Jun 2025
- 01:45:35 -0700 (PDT)
-Date: Tue, 24 Jun 2025 01:45:35 -0700
-In-Reply-To: <20250624-serienweise-bezeugen-0f2a5ecd5d76@brauner>
+X-Received: by 2002:a05:6e02:32c1:b0:3dc:8b29:30bc with SMTP id
+ e9e14a558f8ab-3de38cc3076mr178273585ab.21.1750754822258; Tue, 24 Jun 2025
+ 01:47:02 -0700 (PDT)
+Date: Tue, 24 Jun 2025 01:47:02 -0700
+In-Reply-To: <20250624082559.1616-1-hdanton@sina.com>
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685a65af.050a0220.2303ee.0008.GAE@google.com>
-Subject: Re: [syzbot] [fs?] general protection fault in pidfs_free_pid
-From: syzbot <syzbot+25317a459958aec47bfa@syzkaller.appspotmail.com>
-To: brauner@kernel.org
-Cc: brauner@kernel.org, jack@suse.cz, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	viro@zeniv.linux.org.uk
+Message-ID: <685a6606.a00a0220.2e5631.0064.GAE@google.com>
+Subject: Re: [syzbot] [trace?] KASAN: slab-use-after-free Read in __free_filter
+From: syzbot <syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com>
+To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 
-> On Mon, Jun 23, 2025 at 11:27:26AM -0700, syzbot wrote:
->> Hello,
->> 
->> syzbot found the following issue on:
->> 
->> HEAD commit:    5d4809e25903 Add linux-next specific files for 20250620
->> git tree:       linux-next
->> console+strace: https://syzkaller.appspot.com/x/log.txt?x=150ef30c580000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=58afc4b78b52b7e3
->> dashboard link: https://syzkaller.appspot.com/bug?extid=25317a459958aec47bfa
->> compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a5330c580000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12c9f6bc580000
->> 
->> Downloadable assets:
->> disk image: https://storage.googleapis.com/syzbot-assets/16492bf6b788/disk-5d4809e2.raw.xz
->> vmlinux: https://storage.googleapis.com/syzbot-assets/7be284ded1de/vmlinux-5d4809e2.xz
->> kernel image: https://storage.googleapis.com/syzbot-assets/467d717f0d9c/bzImage-5d4809e2.xz
->> 
->> The issue was bisected to:
->> 
->> commit fb0b3e2b2d7f213cb4fde623706f9ed6d748a373
->> Author: Christian Brauner <brauner@kernel.org>
->> Date:   Wed Jun 18 20:53:46 2025 +0000
->> 
->>     pidfs: support xattrs on pidfds
->> 
->> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15a1b370580000
->> final oops:     https://syzkaller.appspot.com/x/report.txt?x=17a1b370580000
->> console output: https://syzkaller.appspot.com/x/log.txt?x=13a1b370580000
->> 
->> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->> Reported-by: syzbot+25317a459958aec47bfa@syzkaller.appspotmail.com
->> Fixes: fb0b3e2b2d7f ("pidfs: support xattrs on pidfds")
->
-> #syz test: 
->
-> #syz test: https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git vfs-6.17.pidfs
+Hello,
 
-Command #1:
-want either no args or 2 args (repo, branch), got 4
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
+Reported-by: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com
+Tested-by: syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         78f4e737 Merge tag 'for-6.16/dm-fixes' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=149eedd4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4ad206eb0100c6a2
+dashboard link: https://syzkaller.appspot.com/bug?extid=daba72c4af9915e9c894
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=12ceedd4580000
+
+Note: testing is done by a robot and is best-effort only.
