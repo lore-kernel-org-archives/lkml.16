@@ -1,157 +1,93 @@
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D01755680
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:46:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.111
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA72A6EB79;
+	Tue, 24 Jun 2025 02:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750733222; cv=none; b=H7OZqfYqDQPJzaLbiCM75hTPNtnC0/+SZv8bAAn43PEo4lUNoygXl5XkBwudd1ONIkKHWBiXTkPZIrqjg0AGqpkQQCl7xczl5clArlQHyb42+iep8qXbeakoAZnpBL7HU9gBBC0l4iuphjlaqSXmTE6AzcDfsYe30bcjjAlDRaw=
+	t=1750733284; cv=none; b=QuXLYDOJf6oTbPdFAbz9zYpRTgIWlx+B6n2uv7IS01/zPmoD3h265EeLJ+edG+baLtqPovmVDCVvUaUzbNO2NeVBTt1bLibTnD+HTXIEHOF69uR3D5d2Z57lljuJTlmS3Q1kbi7sxnHgIFwIPwWsvRZrSFb+LXxzN3d9eBib39o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750733222; c=relaxed/simple;
-	bh=SuAlKzQOoC3dlHb/6U/fUV+iL2+x+I1elPAkeQyvqPI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=XoscF/1DBFBnQkmggtTMh39Vks8xxAFLWC/BFbGayhCWiXMmC4jItrcPS6xh42h8xi9ragWSG62DbRNwYXZ9j/tqgn0b5S5XX+FE9tnw4/YGAIV/VnJ6rCo2mO1iFqZxyFGgDa9qGoV3O/pazBPIrUNhQqa94FxG3S/8dVwLNYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=RJgCFtU5; arc=none smtp.client-ip=115.124.30.111
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1750733284; c=relaxed/simple;
+	bh=0ZETP/chWGG4T9JGaFbl9fh8M/SzCRMYDw4aVpfGbeo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nbuaUd/BvCMNduuI7DSLXRpLzYt1Mht3VdRhHHz/WLWkC77/6Wpof4NKfFbIWNfKvsxT/PUJZ4wJg+WTtV4SHlXzwwEUfT8nDhZWniXDOUs/J530ZRElf7sXPqYMS/FQBbbepINI/3mQ9AsUF2PRtAaRaDrWIkSTWgulrlsySnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P8VT+Qfs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="RJgCFtU5"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750733216; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=EuFm/S2kcfuA/k9NxIggqP6DKi+9r/AflvcKbobw8vk=;
-	b=RJgCFtU5yV4c1Zxg46KCRTUzl4o//H8mEiBK6L0+xmCGJxq+wnxpl5EiTCdrIUx8bC7nhXodKZwA+g5jicCDis0N7QEBrXIIe4wQpWvSsyCjSgREBh4iSX4wuJkzHcRQJ0f4uGHE/TKfamizEdmmYDEnihpGzR9XOsoZ0q/tUWU=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0Weefnzt_1750733205 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 24 Jun 2025 10:46:55 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: "Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com>
-Cc: "linux-mm@kvack.org" <linux-mm@kvack.org>,  "akpm@linux-foundation.org"
- <akpm@linux-foundation.org>,  "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>,  "Yasunori Gotou (Fujitsu)"
- <y-goto@fujitsu.com>,  Ingo Molnar <mingo@redhat.com>,  Peter Zijlstra
- <peterz@infradead.org>,  Juri Lelli <juri.lelli@redhat.com>,  Vincent
- Guittot <vincent.guittot@linaro.org>,  Dietmar Eggemann
- <dietmar.eggemann@arm.com>,  Steven Rostedt <rostedt@goodmis.org>,  Ben
- Segall <bsegall@google.com>,  Mel Gorman <mgorman@suse.de>,  Valentin
- Schneider <vschneid@redhat.com>,  kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH RFC] mm: memory-tiering: Fix PGPROMOTE_CANDIDATE accounting
-In-Reply-To: <47f42c60-9752-4bc6-9079-627b6e0b9cfc@fujitsu.com> (Zhijian Li's
-	message of "Mon, 23 Jun 2025 08:54:28 +0000")
-References: <20250619075245.3272384-1-lizhijian@fujitsu.com>
-	<87ldpn2afw.fsf@DESKTOP-5N7EMDA>
-	<47f42c60-9752-4bc6-9079-627b6e0b9cfc@fujitsu.com>
-Date: Tue, 24 Jun 2025 10:46:44 +0800
-Message-ID: <87ms9xonzf.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P8VT+Qfs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 421FEC4CEEA;
+	Tue, 24 Jun 2025 02:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750733284;
+	bh=0ZETP/chWGG4T9JGaFbl9fh8M/SzCRMYDw4aVpfGbeo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=P8VT+QfsmFyNCARIa6+zv5GeEdHmGYz4b2CXf2QnLCgg2XjI+QzVHFQwaE54p21fT
+	 1LCZ7fSSZ2/nlpVQyeKmcrVqpGzdILXyh4DkrsBuW0Jm2+lMKrL2NYPCa2F1u7qiRq
+	 pmGy+v9rQbqcPMJ5c7Ar9+5dM1PmAGXhnP1d40AksQRUnbL04k4TUW/iADQsjNci5R
+	 /M7bl9YM8W8DfDHtijhEjzPSFgXIzwYJGmERAy0H9kLYjCZywd5ELycQkRygA06DgI
+	 eFstFLW0coTU18586ApXLRLRIQwaVckxTiXEMn3hF5HMSifi0iGk/xafn/MCD06Y2v
+	 j10n7GKclAZ1w==
+Date: Mon, 23 Jun 2025 19:47:30 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
+	"Jason A . Donenfeld " <Jason@zx2c4.com>,
+	=?iso-8859-1?Q?Ren=E9?= van Dorst <opensource@vdorst.com>,
+	linux-mips@vger.kernel.org, llvm@lists.linux.dev,
+	stable@vger.kernel.org, kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] lib/crypto: mips/chacha: Fix clang build and remove
+ unneeded byteswap
+Message-ID: <20250624024730.GC7127@sol>
+References: <20250619225535.679301-1-ebiggers@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619225535.679301-1-ebiggers@kernel.org>
 
-"Zhijian Li (Fujitsu)" <lizhijian@fujitsu.com> writes:
+On Thu, Jun 19, 2025 at 03:55:35PM -0700, Eric Biggers wrote:
+> The MIPS32r2 ChaCha code has never been buildable with the clang
+> assembler.  First, clang doesn't support the 'rotl' pseudo-instruction:
+> 
+>     error: unknown instruction, did you mean: rol, rotr?
+> 
+> Second, clang requires that both operands of the 'wsbh' instruction be
+> explicitly given:
+> 
+>     error: too few operands for instruction
+> 
+> To fix this, align the code with the real instruction set by (1) using
+> the real instruction 'rotr' instead of the nonstandard pseudo-
+> instruction 'rotl', and (2) explicitly giving both operands to 'wsbh'.
+> 
+> To make removing the use of 'rotl' a bit easier, also remove the
+> unnecessary special-casing for big endian CPUs at
+> .Lchacha_mips_xor_bytes.  The tail handling is actually
+> endian-independent since it processes one byte at a time.  On big endian
+> CPUs the old code byte-swapped SAVED_X, then iterated through it in
+> reverse order.  But the byteswap and reverse iteration canceled out.
+> 
+> Tested with chacha20poly1305-selftest in QEMU using "-M malta" with both
+> little endian and big endian mips32r2 kernels.
+> 
+> Fixes: 49aa7c00eddf ("crypto: mips/chacha - import 32r2 ChaCha code from Zinc")
+> Cc: stable@vger.kernel.org
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202505080409.EujEBwA0-lkp@intel.com/
+> Signed-off-by: Eric Biggers <ebiggers@kernel.org>
+> ---
+> 
+> This applies on top of other pending lib/crypto patches and can be
+> retrieved from git at:
+> 
+>     git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git mips-chacha-fix
+> 
+>  lib/crypto/mips/chacha-core.S | 20 +++++++-------------
+>  1 file changed, 7 insertions(+), 13 deletions(-)
 
-> On 20/06/2025 14:28, Huang, Ying wrote:
->> Li Zhijian <lizhijian@fujitsu.com> writes:
->> 
->>> Goto-san reported confusing pgpromote statistics where
->>> the pgpromote_success count significantly exceeded pgpromote_candidate.
->>> The issue manifests under specific memory pressure conditions:
->>> when top-tier memory (DRAM) is exhausted by memhog and allocation begins
->>> in lower-tier memory (CXL). After terminating memhog, the stats show:
->> 
->> The above description is confusing.  The page promotion occurs when the
->> size of the top-tier free space is large enough (after killing the
->> memhog above).  The accessed lower-tier memory will be promoted upon
->> accessing to take full advantage of the more expensive top-tier memory.
->
-> Yeah, that's what the promotion does.
->
-> Let's clarify the reproducer steps specifically(thanks Goto-san for the reproducer):
-> On a system with three nodes (nodes 0-1: DRAM 4GB, node 2: NVDIMM 4GB):
->
-> # Enable demotion only
-> echo 1 > /sys/kernel/mm/numa/demotion_enabled
-> numactl -m 0-1 memhog -r200 3500M >/dev/null &
-> pid=$!
-> sleep 2
-> numactl memhog -r100 2500M >/dev/null &
-> sleep 10
-> kill -9 $pid
-> # Enable promotion
-> echo 2 > /proc/sys/kernel/numa_balancing
->
-> # After a few seconds, we observe `pgpromote_candidate < pgpromote_success`
->
-> In this scenario, after terminating the first memhog, the conditions
-> for pgdat_free_space_enough() are quickly met, triggering promotion.
-> However, these migrated pages are only accounted for in PGPROMOTE_SUCCESS, not in PGPROMOTE_CANDIDATE.
+Applied to https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git/log/?h=libcrypto-next
 
-Yes.  This is the expected behavior of current implementation.
-
->
->> 
->>> $ grep -e pgpromote /proc/vmstat
->>> pgpromote_success 2579
->>> pgpromote_candidate 1
->>>
->>> This update increments PGPROMOTE_CANDIDATE within the free space branch
->>> when a promotion decision is made, which may alter the mechanism of the
->>> rate limit. Consequently, it becomes easier to reach the rate limit than
->>> it was previously.
->>>
->>> For example:
->>> Rate Limit = 100 pages/sec
->>> Scenario:
->>>    T0: 90 free-space migrations
->>>    T0+100ms: 20-page migration request
->>>
->>> Before:
->>>    Rate limit is *not* reached: 0 + 20 = 20 < 100
->>>    PGPROMOTE_CANDIDATE: 20
->>> After:
->>>    Rate limit is reached: 90 + 20 = 110 > 100
->>>    PGPROMOTE_CANDIDATE: 110
->> 
->> Yes.  The rate limit will be influenced by the change.  So, more tests
->> may be needed to verify it will not incurs regressions.
->
->
-> Testing this might be challenging due to workload dependencies. Do you
-> have any recommended workloads for evaluation?
-
-Some in-memory database should be good workloads, for example, redis, etc.
-
-> Alternatively, could we could rely on the LKP project for impact assessment(Current patch has not really tested
-> by LKP due to a compiling error, I will post a V2 soon).
-
-LKP has some basic workload to test this, for example, pmbench with
-Gauss-ih access pattern.
-
-> However, regarding the rate limit change itself, I consider this patch
-> logically correct. As stated in the numa_promotion_rate_limit()
-> comment:
->> "For memory tiering mode, too high promotion/demotion throughput may hurt application latency."
-> It seems there is no justification for excluding
-> pgdat_free_space_enough() triggered promotions from the rate limiting
-> mechanism.
-
-In fact, we don't rate limit promotion if there are enough free space on
-fast memory to fill the fast memory quickly.  I think that it's
-necessary to prevent the fast memory from under-utilized ASAP.
-
->
->
->> 
->>>
->>> Reported-by: Yasunori Gotou (Fujitsu) <y-goto@fujitsu.com>
->>> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-
-[snip]
-
----
-Best Regards,
-Huang, Ying
+- Eric
