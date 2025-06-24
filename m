@@ -1,157 +1,173 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57461FDA94;
-	Tue, 24 Jun 2025 16:20:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA042288CB
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750782057; cv=none; b=b+9FFZN2Ik0YPQ6rBuLtM4Et2L9uaZ0NnMGJLkNxncm3ckI183DkMAXjVjxlI7GT/0bvIxLcQEiONF80ChC0z0LAJNgHybN0oU1swH5RD7MIltJqncbjDzD/k/4zJiSZhhRuKK6Vn9NpKqjiZqmPbopFXvnsVSuDiMWSJe+dv3E=
+	t=1750782193; cv=none; b=QwT6s1UJiCOAQ5scSgoD1WxIjz09w+33P2bKTKeMAWXJ692MQF1NTfSn9VdBvBAj0YUhBpNaP44YoR2pyVY2r57O1ryN/mcQkvUKeD8Oxete+ylngV/Cpz7+2t+78DsTPFws7EgpxRvdpHDGwtodhJC7hILiDoxwrPkiW76tG0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750782057; c=relaxed/simple;
-	bh=QBZg28W/fBUTxa5iv7HE7VIvLqKke02D7Qw8NzurT3o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kQgcDqki2aG7AzVZINOwy3O4oyFCesYYrjKeSdU9rT8zCxq6W5IdEk1hBY/cTOUk/emAct+czcSWmm8Ip6WCWxsnbDlF1bwPSuQtekyvGR8DCFpyOrOMYM37FOnKR0zsQhFkNWUmcZybTo0woKh39x7jDUerZhDyHSpnJQX0Gwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PdJYe4SS; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750782193; c=relaxed/simple;
+	bh=1Rc21hdBhJ2gdI2HBkCH5J1X95BOgohLovrNBhxWY4k=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=agCfhmGiG1pEr4YM9Lnn+JNRqGvuChl+k+jAHAkt0xiUG5m0qN1+uTZeIlHXwkdCdlbzQSYFXOx2TKedP/a7Jw5SdRvahtpuzBN8FrijziH7o5E15IuEz9lgwhAqxHJaobAUwadDiJZwlvf34G6lORVtkXiwVdkif6iB1WV+isw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IhnnQEl0; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdJYe4SS"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4535fbe0299so31011795e9.3;
-        Tue, 24 Jun 2025 09:20:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750782054; x=1751386854; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pBPEC7Udike9uc6BfC0QMKbP5KqggcKqpjSgmkMdnKY=;
-        b=PdJYe4SS2WUlwqqR5GYlvkAKX5YE8WC5P3IKbjkRQqo72VfC438NXsgyQ3h3R2WCD+
-         ZpYa2Y1QfspELICwBbwuhSN+86zYqMkKfHU0zW48EBdUwElantQ2cVWg/T2gFL+S3nGm
-         BBO9vDMpXyE4RUFIw4iSeh5hPo88xhF4uwRzHYZZx5BzCE+PUuScI1AdUyODZkitRcMo
-         d1cpZ9M54YzjWmp8YJNSwtr2D+vLHSUOd62akAk+b1j+OoGQ6G7RPH4Lre/7oC0zX7kE
-         WY6GQ233lmitAcqnyWUvJPyviEzwmtMSK42wvg1IpwWuJ2S00EAzbptxF4rfHALGIN/9
-         D88g==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IhnnQEl0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750782190;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SQ1cJVJB4QesCVy0GBfFAaNnQlE6Nxw4fvJZ0MPFAG0=;
+	b=IhnnQEl0fEs+s4L62/2sWx7PNrSzF11NZiCN+a+2M75iJwcYsRCjxJrrNzF966gyYqjE/e
+	macwr3kV+Xb3Pbgkry+/X2sA1Ql9zSS6aYygt46HnMtTrTy/2meE5+wsl22j8CGMBCIDdH
+	q1TQfmy6Nvb0+0LrvPgqp4YCNNEQRZI=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-237-1U0cl4aHNcaC3ZipVUHd8w-1; Tue, 24 Jun 2025 12:23:07 -0400
+X-MC-Unique: 1U0cl4aHNcaC3ZipVUHd8w-1
+X-Mimecast-MFC-AGG-ID: 1U0cl4aHNcaC3ZipVUHd8w_1750782186
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86cf14fd106so74848139f.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:23:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750782054; x=1751386854;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pBPEC7Udike9uc6BfC0QMKbP5KqggcKqpjSgmkMdnKY=;
-        b=fEwTFcLCs4k5JAJBFktSDz0RD2YGXfZNwx/tE/mEkBfeU9xorQcULdTTnHXrXEWBvh
-         utN9fSFOjTGC4zVv9BL0up7lY8T2iy9bUcEXUG5KdN8UrtFFDIMfh4rAdf2nx+8a30MR
-         wzGodQQLIAHqsU25E0YdzEhLTivVgMvJNAKM498wW4djqT4VypE2lXUIYj9Y4AvVnbwo
-         8Gszn+O35QU872qBIInv8o2EtcpWKMT1yLjMQYcWEqwEI0Roo40pnOoFGKSST1TDGv2r
-         2wvIfN8roH1UV3J1dKh4FtJLTLg/ciaqLBqfMBLUSJwhOSAOzE3G48kP41yqN/EGOUCx
-         b7Og==
-X-Forwarded-Encrypted: i=1; AJvYcCUFY+95IfEMMLsaEOsgB+7OKLDFPtBjcDq7yKQ1Pq/b1yE0kErfU/J/t3C6FQfyUKQZ/iqK4udJU3n1@vger.kernel.org, AJvYcCUbIAt8w7VKqd/GXRERcM24Fx/b8w8UStCIdvH6GhhJGitUTqGRin0OVwqgPSCmFIoAjQl31QgekZsRSfus@vger.kernel.org, AJvYcCV3+GxZT0QxoUR8ildV0PiFhK9Ex/PtELq9zjLF1aEBt4JW/u6Kv/0RiDGyM1ssNrQ0Sxmw0cYOw+iBYQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwiwGX+Z/eivia1j/ARXFwZVJSNmvFw/Pf6RKqBcCi8OJAaeEVN
-	BZKQj2Vcocg/yudFHCOql4Re2jTgXB5lOzY406aTc3ukRVBarc+X2XwB
-X-Gm-Gg: ASbGnctpqZCOhnlb45lmtO+1rUQsn+OW4JNvhsOFtY0SRKeeZAUtpdgxZEhPvoMcS/H
-	Yc49EoJ8K2O6RpU6OPI3PfuE+uuJ7lyvT22OIn0p6W7tNpVS93ZmKLQXVm8hAOrfg2JrQmsCXwD
-	wNC9jK7iL0RUrVQHqN4eQlfohrGjtkyDxf/zXykQ98IkYhm0KtmtVlkXW0e0RmAOLbmgoDbMQG+
-	3MhEwe161IwUFgWyTaRhOJJBj9zerAq5cV+bSCRffFb+MvFmSjXFQPyiNHP1lQ+Zubz4zUwrFx2
-	tk2oPb+57AC+lVb2An3NwwmgDv9hZCAkyGmxWpt6W42VPBCmM4kTP2o3VHyo0pZ4TjRS
-X-Google-Smtp-Source: AGHT+IF6pE2IAJ7Y1LDV5YWms/8jtl6+meXsDEGvoE2TkHeD+D5JYR9IpOTJZUfa+CipAih/vfpv8g==
-X-Received: by 2002:a05:600c:a016:b0:450:ceb2:67dd with SMTP id 5b1f17b1804b1-45365a0026dmr149159215e9.33.1750782053900;
-        Tue, 24 Jun 2025 09:20:53 -0700 (PDT)
-Received: from [192.168.0.100] ([188.27.131.45])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4535eac8c41sm183195695e9.26.2025.06.24.09.20.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 09:20:53 -0700 (PDT)
-Message-ID: <f6847b24-aa57-4ce5-995f-03b3056f88a1@gmail.com>
-Date: Tue, 24 Jun 2025 19:20:48 +0300
+        d=1e100.net; s=20230601; t=1750782186; x=1751386986;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SQ1cJVJB4QesCVy0GBfFAaNnQlE6Nxw4fvJZ0MPFAG0=;
+        b=GtgdslbEqmlEXAQKzuGX3kTe153zd2TLILj/DjU4/wCojqggELLL1wsWycAciuDnsQ
+         skZ3/6lDcok/KKGFnlyPlQGl6Q/CkIl7HZB7uW6O7OW9XHzd1Y4at7t96kD/evFBoIFQ
+         NxwV34NMPYXytlQA/XOR+3d6dk8QkEao66V0hgfSeYBbhEAwUYnWspDJrZpuFfBZJND2
+         w9xuQIZHZjETWUl7jaqkuNbAvxG+uiBGZ15qO9+7FKFV3BJYGmrpZfWVv0y6++oi7WBQ
+         RSLX0xLdGDWvIhrO72r11G84fZ18fB1y+Igm8t7rdy59r6TG6w4cPCk2hyHwGCRc6jdl
+         0nBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXpJPgTb+8sP5+E7PLKxZmNIL5TAoR21fUHjPj0tIRugqAvPdqZyj3zZvHCVlPNf3esLf0KfN8CSVN9ywo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKpRag8u6oNmZdm50xzgOpAYVHiY1e5gyVA5naHiD6s7zCdj5T
+	3lGnfsTQj0iOG7gkrp8pINmYkqPOxIC6yUpLnsYM9fDJwu0yHYBiY7IaFNwTlpMRyFGRdLv/URo
+	q505h1YRGuqwAO58OidNS34xeE7bFe8RgaulLat+q4/wlNL327x9UmnUaORany0hlCQ==
+X-Gm-Gg: ASbGnct87+JQ58I4/qEEgfx9Mb7URyiqjghSo1Th80Zny9D/m7XHN/HbjYcOjztVbHw
+	sQzKuPRH2/IJ8AGapSUs6/Z9luAmo0/SgcoM7Dw8BBF/wRRHhDQ+F9C0yhtaRKd/3bResIKnSh2
+	ermFQ6S4vB6hhgDH6DpyEfpldvGyI53rKIW24HRAbKXIm4jwatPVYNG/kXxT5dt2N3ZvIhS0NSQ
+	VhdJZL2qjcAZIN2ixCAajI2qufNC/zs23Rlj83dbtYIPXH2firULwWYoVUngfJpAMiiUWKreigL
+	Hd6440dINHeznQjvHuY0lpZzbA==
+X-Received: by 2002:a05:6602:640f:b0:875:b57e:a0fc with SMTP id ca18e2360f4ac-8762d1becf7mr503746739f.3.1750782186459;
+        Tue, 24 Jun 2025 09:23:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGTnsp2pZHJe4II+8eyu4oI1Cg1b4CQFUWx851KUXDAmhSM9KEnJdvxhnVMCr2Icu2bDJRVwA==
+X-Received: by 2002:a05:6602:640f:b0:875:b57e:a0fc with SMTP id ca18e2360f4ac-8762d1becf7mr503745439f.3.1750782185914;
+        Tue, 24 Jun 2025 09:23:05 -0700 (PDT)
+Received: from redhat.com ([38.15.36.11])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-5019e04e4c6sm2307707173.89.2025.06.24.09.23.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 09:23:04 -0700 (PDT)
+Date: Tue, 24 Jun 2025 10:23:03 -0600
+From: Alex Williamson <alex.williamson@redhat.com>
+To: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Alex Mastro <amastro@fb.com>, peterx@redhat.com, kbusch@kernel.org,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfio/pci: print vfio-device name to fdinfo
+Message-ID: <20250624102303.75146159.alex.williamson@redhat.com>
+In-Reply-To: <20250624005605.GA72557@ziepe.ca>
+References: <20250623-vfio-fdinfo-v1-1-c9cec65a2922@fb.com>
+	<20250623161831.12109402.alex.williamson@redhat.com>
+	<20250624005605.GA72557@ziepe.ca>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/19] dt-bindings: media: i2c: max96717: add support
- for MAX96793
-To: Martin Hecht <mhecht73@gmail.com>,
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
- Julien Massot <julien.massot@collabora.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS"
- <linux-media@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)"
- <linux-arm-kernel@lists.infradead.org>,
- "open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>,
- open "list:GPIO"
- "SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)"
- <linux-gpio@vger.kernel.org>, Cosmin Tanislav <cosmin.tanislav@analog.com>
-References: <20250618095858.2145209-1-demonsingur@gmail.com>
- <20250618095858.2145209-7-demonsingur@gmail.com>
- <49977010-65a5-4ad7-b86d-5e779d0de3de@gmail.com>
-From: Cosmin Tanislav <demonsingur@gmail.com>
-Content-Language: en-US
-In-Reply-To: <49977010-65a5-4ad7-b86d-5e779d0de3de@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
+On Mon, 23 Jun 2025 21:56:05 -0300
+Jason Gunthorpe <jgg@ziepe.ca> wrote:
 
-
-On 6/24/25 7:14 PM, Martin Hecht wrote:
-> Hi Cosmin,
+> On Mon, Jun 23, 2025 at 04:18:31PM -0600, Alex Williamson wrote:
+> > > Alternatively, if we wanted to normalize show_fdinfo formatting, this
+> > > could instead hoist the print formatting up into vfio_main.c, and call
+> > > an optional vfio_device_ops->instance_name() to get the name. I opted
+> > > not to do this here due to unfamiliarity with other vfio drivers, but am
+> > > open to changing it.  
+> > 
+> > TBH, I don't think we need a callback, just use dev_name() in
+> > vfio_main.  
 > 
-> I'm preparing a test with Alvium + max96717 + max96716. I can't see away 
-> to overwrite cfg settings to force pixel mode or tunnel mode. Any plans 
-> to add this? Sometimes it is required to force the other mode than set 
-> by pin-strapping.
+> IMHO this should really be the name of /dev/vfio/XX file and not
+> something made up like event fd uses.
 > 
-> BR Martin
+> The file was opened via /dev/vfio/XX, that is what lsof should report..
 > 
+> For the legacy route this effectively gives you the iommu group.
 
-Hi Martin.
+We don't need fdinfo for this, right?  The group is clearly visible in
+/proc/PID/fd:
 
-Pixel/tunnel mode is chosen automatically based on HW capabilities
-routing, formats, etc.
+# ls -l | grep vfio
+lrwx------. 1 qemu qemu 64 Jun 24 09:27 32 -> /dev/vfio/16
+lrwx------. 1 qemu qemu 64 Jun 24 09:27 33 -> /dev/vfio/vfio
+lrwx------. 1 qemu qemu 64 Jun 24 09:27 34 -> anon_inode:kvm-vfio
+lrwx------. 1 qemu qemu 64 Jun 24 09:27 35 -> anon_inode:[vfio-device]
+lrwx------. 1 qemu qemu 64 Jun 24 09:27 38 -> /dev/vfio/2
+lrwx------. 1 qemu qemu 64 Jun 24 09:27 39 -> anon_inode:[vfio-device]
+lrwx------. 1 qemu qemu 64 Jun 24 09:27 44 -> anon_inode:[vfio-device]
+lrwx------. 1 qemu qemu 64 Jun 24 09:27 49 -> /dev/vfio/12
+lrwx------. 1 qemu qemu 64 Jun 24 09:27 50 -> anon_inode:[vfio-device]
+lrwx------. 1 qemu qemu 64 Jun 24 09:27 55 -> /dev/vfio/4
+lrwx------. 1 qemu qemu 64 Jun 24 09:27 56 -> anon_inode:[vfio-device]
 
-I don't plan on adding a way to force it, since the presumption
-is that the serdes framework will pick the best use case available, as
-long as all the data can make its way to the PHY.
+An iommufd/vfio-cdev VM even more clearly shows the devices:
 
-Forcing pixel/tunnel mode shouldn't be done via device-tree since it's
-not related to the way hardware is wired up to the rest of the system.
+# ls -l | grep vfio
+lrwx------. 1 root root 64 Jun 24 10:06 23 -> /dev/vfio/devices/vfio7
+lrwx------. 1 root root 64 Jun 24 10:06 24 -> anon_inode:kvm-vfio
+lrwx------. 1 root root 64 Jun 24 10:06 30 -> /dev/vfio/devices/vfio8
 
-> On 6/18/25 11:58, Cosmin Tanislav wrote:
->> MAX96793 is a newer variant of the MAX96717 which also supports GMSL3
->> links.
->>
->> Document this compatibility.
->>
->> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
->> Acked-by: Rob Herring (Arm) <robh@kernel.org>
->> ---
->>   .../devicetree/bindings/media/i2c/maxim,max96717.yaml          | 3 +++
->>   1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/ 
->> maxim,max96717.yaml b/Documentation/devicetree/bindings/media/i2c/ 
->> maxim,max96717.yaml
->> index ab46a5f0bd7e..23f611177a87 100644
->> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
->> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
->> @@ -30,6 +30,8 @@ description:
->>     MAX9295A only supports pixel mode.
->> +  MAX96793 also supports GMSL3 mode.
->> +
->>   properties:
->>     compatible:
->>       oneOf:
->> @@ -39,6 +41,7 @@ properties:
->>         - items:
->>             - enum:
->>                 - maxim,max96717
->> +              - maxim,max96793
->>             - const: maxim,max96717f
->>     '#gpio-cells':
+I think we're specifically trying to gain visibility to the
+anon_inode:[vfio-device] in the legacy case.
+
+The @name passed to anon_inode_getfile_fmode() is described as the name
+of the "class", which is why I think we used the static
+"[vfio-device]", but I see KVM breaks the mold, adding the vcpu_id:
+
+	snprintf(name, sizeof(name), "kvm-vcpu-stats:%d", vcpu->vcpu_id);
+
+We could do something similar, but maybe fdinfo is the better option,
+and if it is then dev_name() seems like the useful thing to add there
+(though we could add more than one thing).
+
+> For the new route this will give you the struct device.
 > 
+> The userspace can deduce more information, like the actual PCI BDF, by
+> mapping the name through sysfs.
+
+I don't really know what the rules are here, whether we're able to
+report information for convenience or we should strive for the absolute
+most concise reference.  cdev and group information is available
+without fdinfo.
+
+> I would have guessed this is already happening automatically as part
+> of the cdev mechanism? Maybe we broken it when we changed the inode to
+> use unmap mapping range?
+> 
+> > The group interface always requires the name, in some cases
+> > it can require further information, but we seem to have forgotten that
+> > in the cdev interface anyway :-\  
+> 
+> ?
+
+I don't recall if or how we accounted for the concept of vf_tokens in
+the cdev model and I don't see evidence that we did.  For instance
+vfio_pci_validate_vf_token() is only called from vfio_pci_core_match(),
+which is called as match through the vfio_device_ops, but only from
+vfio_group_ioctl_get_device_fd().  So using cdev, it appears we don't
+have the same opt-in requirement when using a VF where the PF is
+managed by a vfio-pci userspace driver.  Thanks,
+
+Alex
 
