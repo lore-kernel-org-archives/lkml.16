@@ -1,132 +1,98 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82ACA307483;
-	Tue, 24 Jun 2025 21:46:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 913F1259CB3;
+	Tue, 24 Jun 2025 21:50:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750801621; cv=none; b=Mi+mWV+C0B4hs6X9SCQUb5dg+65lEAFRUhuu/9oIAfdikUBFwY45NDMGbnDEmDcSBTnbXYRhz8g0oH837AbQn1qLUT/hSN7nNqkBwLyX90lDBtsVRI9bK0Di9rmRW6oUUGq/6yTnssjbCT2+lvqLR3spAqT4dd3tGhDGRlfSQyA=
+	t=1750801835; cv=none; b=pmKlaHSrIFbQLcWmAQ7HH6khthP+1vFrnJdJEJhZxUMV4d5O0gxhnj314tyAeRbCqJ5IzLXSxw6Dzsyj7w+htyE0B7Qf7ah+ot0KkePwq1kGYuGtRoqqkyuMnyRY2ksIUBBPqlXKXAXAqyyvPgNX1g6DuDYO0mkA/duqwtxTTzY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750801621; c=relaxed/simple;
-	bh=H96UaVMZ2NjDXytS4I6LKdfHpQjgJ55mU0qGKk2dKRo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MRG+nsDrk/OB0t4YpI2Leh/+KHS7XDUM67/A1l9cYODq+QVhESo/8MFbTR5Zv5zF0QlO3zA9HX5D3C5pAEyMpizPD27Qch2F7wyp4+dWELaZ2k4S43pn6JYHliM79CUKUZpq9rNSsB66FGghnFut08pN0h4/lnxUiHW+pVDtYrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b7itt1C9; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7itt1C9"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e85e06a7f63so2218363276.1;
-        Tue, 24 Jun 2025 14:46:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750801618; x=1751406418; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4X4FkzK1vIHXXkT/xfwGQHLL5/iBSkQzdD5mcVSep68=;
-        b=b7itt1C99Wtjsp5rW4vMLwRS59E1C6ISD22RZvKGlrKLBY6A7Dkkfj9nDCPBKQdz8e
-         AdwjvHV9vXPFsf42sjfbxmi8CXaNoPJP/sbucZbQTVSKJT4ZRDY6YJHq8wR0OPUlGdiE
-         lVRHRMielmE33JYMwrIrNSWPChpEM+WfL/ROJ4fW8Mfrm8wsdv9GQau5uhrtH5Ea5SL/
-         0gClT19CF9R09clqK33pNjQoT9DQT0C8vchar2x3QQi3q52mYjcIxvySKUgcxVJHC2pf
-         L95zbvpLww0Z9qO/wjZDTvvJnKKsSUwNCeNQQ9vRp6h9+mvbR7LQgy9Dulw2MZOxtndZ
-         mJSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750801618; x=1751406418;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4X4FkzK1vIHXXkT/xfwGQHLL5/iBSkQzdD5mcVSep68=;
-        b=aMZmJiiEosJB79tF/W32at0tc3B3inEVb3hzgbFExqN0rfKx2Ffl5iVS/ccjHyChbQ
-         +WDDpb8NG9cxzebcXWr/C4smW+9fMpBJpNuslh1+1hrBXrS7RHM8TC00R4yRCEQnar5Q
-         g8FnnAiLl9YQf0H7NW5jClS1adYOaINbogFoYGcZZU1+iSZNRN0vtQj+TwPe+JbHwUQd
-         0bezGe2gsV4o5ZG2AhgEBJx09GZDMX3JTxmwwgqw7iUcdoxhyf3ox+0KLGHvTrZ+4E0/
-         j3SRHGks+nkrTp6fTmsIX2TCIKEjUqzCPWfxYzBX3/YwegMx24mliUCutC9C19bKiNeE
-         HexQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUzd0hjcLiRpYQNHXUaCMPB2zjjnkaFYQBPphhBQ9hJt1RCNa13mLTSrSQijC4NPdV4J/45m4/fgms=@vger.kernel.org, AJvYcCWBkkZhXqoFL+Qmmk3Yle+aPPTnRxQ2vthKAa3Bc3y6rYc2ZEqJ9P7HCp/C2Z78Rh0zFqjjSKu48XaKhv7l@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaGtyqb0zPY+9GZmT+j/LfGWZsdiXPR/78LYHHsl7i8HmTBlDT
-	g3KPICFAlj6tjrGIAgOIh5pQNaBgYflGI/sIx2/hMuJ6yiwyLDssGD6H
-X-Gm-Gg: ASbGnct88cg0246nsUUWTL+k/Ce2wZTtKwdHCdVJwwwcQM70lVSUrSw6znPAarpRwPk
-	R/gzqTernqRL0XZCPZ2ML76UhIvbKqWkK5uhyNsw3dp4FYJR+prTdnF8bNM/IAP2BuvmVX/Vye+
-	cD/JoaAz+UuAHHxRsx0MbinKZVYdbbIQlLgTPIPGIVwbF91jTVQ7JKvsyGop1FB+BcCxfINUpKv
-	KsRrClO1Qz0CArJYEi4BLDez4MeIGrNgncYyxzMfydTb6DJTF033xxN5JgdLm0HcNhV7RcBVoWA
-	mOXvYMzr2XUCbjrUaBZDT3D9vLM14vCQhdZd8qhFLP+0w7wAT4RnLl9RD4yxqw==
-X-Google-Smtp-Source: AGHT+IGuHgYXMzcha0KcT+CIr9rLcM40d+eszdLfZC66yc2GwoBIh+Acn+v3VdIm2K4NgvN4YvrwrA==
-X-Received: by 2002:a05:6902:2401:b0:e85:ea51:fd00 with SMTP id 3f1490d57ef6-e86017a7b85mr539913276.6.1750801618260;
-        Tue, 24 Jun 2025 14:46:58 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:44::])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842aaba56csm3270264276.3.2025.06.24.14.46.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 14:46:57 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Robert Richter <rrichter@amd.com>
-Cc: Gregory Price <gourry@gourry.net>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	Terry Bowman <terry.bowman@amd.com>,
-	linux-cxl@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
-Subject: Re: [PATCH] [HACK] drop zen5_init checks due to segfault
-Date: Tue, 24 Jun 2025 14:46:54 -0700
-Message-ID: <20250624214656.96471-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <aFo68StiDKzLjNdS@rric.localdomain>
-References: 
+	s=arc-20240116; t=1750801835; c=relaxed/simple;
+	bh=ZSkB+ub3q81ogKAZ6R3Jrke3PKT4q1GPBEWVpJfap0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c4OpW0E///wX+r17H8AFiPxg2Wk/Nw7aFWfjROU4E92P/cV+Z4WoTZ0dOER0OouyLvm8mosmqAqYusNt+BzMzgM3LwrS1b5rCWISUpgGnJRjgVDcTXNJ5EZeOZEANmoDY3bXx2nnV4P57CQ1tGCPYRNTa/cYNbi/8LaIJe84hYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 55OLbO3g015495;
+	Tue, 24 Jun 2025 16:37:25 -0500
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 55OLbDMs015480;
+	Tue, 24 Jun 2025 16:37:13 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Tue, 24 Jun 2025 16:37:12 -0500
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: David Laight <david.laight.linux@gmail.com>
+Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andre Almeida <andrealmeid@igalia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 0/5] powerpc: Implement masked user access
+Message-ID: <20250624213712.GI17294@gate.crashing.org>
+References: <cover.1750585239.git.christophe.leroy@csgroup.eu> <20250622172043.3fb0e54c@pumpkin> <ff2662ca-3b86-425b-97f8-3883f1018e83@csgroup.eu> <20250624093258.4906c0e0@pumpkin>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624093258.4906c0e0@pumpkin>
+User-Agent: Mutt/1.4.2.3i
 
-On Tue, 24 Jun 2025 07:43:13 +0200 Robert Richter <rrichter@amd.com> wrote:
+Hi!
 
-> On 17.06.25 13:33:18, Joshua Hahn wrote:
-> > I was hoping for some help in understanding your explanation here -- I don't
-> > think I can see where the dependency appears. (In particular, I'm having
-> > trouble understanding where the efi_rts_wq dependnecy matters during the
-> > cxl_zen5_init function). 
+On Tue, Jun 24, 2025 at 09:32:58AM +0100, David Laight wrote:
+> > So GCC uses the 'unlikely' variant of the branch instruction to force 
+> > the correct prediction, doesn't it ?
 > 
-> Here a temporary patch with an explanation in the description:
+> Nope...
+> Most architectures don't have likely/unlikely variants of branches.
 
-Hi Robert,
+In GCC, "likely" means 80%. "Very likely" means 99.95%.  Most things get
+something more appropriate than such coarse things predicted.
 
-Thank you for this patch! I just tested on my machine, and can confirm that
-this does indeed fix the problem. I'm not sure if this will be folded into
-the rest of the patchset or if it will be its own, but I will add my
-signatures below.
+Most of the time GCC uses these predicted branch probabilities to lay
+out code in such a way that the fall-through path is the expected one.
 
-Thank you again, Have a great day!
+Target backends can do special things with it as well, but usually that
+isn't necessary.
 
-Tested-by: Joshua Hahn <joshua.hahnjy@gmail.com>
-Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+There are many different predictors.  GCC usually can predict things
+not bad by just looking at the shape of the code, using various
+heuristics.  Things like profile-guided optimisation allow to use a
+profile from an actual execution to optimise the code such that it will
+work faster (assuming that future executions of the code will execute
+similarly!)
 
-> From a540b814d48574b67a9aaa97a5d7536c61d4deda Mon Sep 17 00:00:00 2001
-> From: Robert Richter <rrichter@amd.com>
-> Date: Tue, 13 May 2025 15:02:16 +0200
-> Subject: [PATCH] cxl/acpi: Prepare use of EFI runtime services
-> 
-> In order to use EFI runtime services, esp. ACPI PRM which uses the
-> efi_rts_wq workqueue, initialize EFI before CXL ACPI.
-> 
-> There is a subsys_initcall order dependency if driver is builtin:
-> 
->  subsys_initcall(cxl_acpi_init);
->  subsys_initcall(efisubsys_init);
-> 
-> Prevent the efi_rts_wq workqueue being used by cxl_acpi_init() before
-> its allocation. Use subsys_initcall_sync(cxl_acpi_init) to always run
-> efisubsys_init() first.
-> 
-> Reported-by: Gregory Price <gourry@gourry.net>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
+You also can use __builtin_expect() in the source code, to put coarse
+static prediction in.  That is what the kernel "{un,}likely" macros do.
 
-[...snip...]
+If the compiler knows some branch is not very predictable, it can
+optimise the code knowing that.  Like, it could use other strategies
+than conditional branches.
 
-Sent using hkml (https://github.com/sjp38/hackermail)
+On old CPUs something like "this branch is taken 50% of the time" makes
+it a totally unpredictable branch.  But if say it branches exactly every
+second time, it is 100% predicted correctly by more advanced predictors,
+not just 50%.
+
+To properly model modern branch predictors we need to record a "how
+predictable is this branch" score as well for every branch, not just a
+"how often does it branch instead of falling through" score.  We're not
+there yet.
+
+
+Segher
