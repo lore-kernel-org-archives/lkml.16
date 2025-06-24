@@ -1,176 +1,238 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2051.outbound.protection.outlook.com [40.107.93.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB561CAA4
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750727621; cv=none; b=GKVyYXiLjKGwSnuYbF0llmPk+GFUyUk8nlcRnPJMYWzkjdA8OMgtLnxXCGszI4Q6l1zMFvoILwXh9WUjpalxAJKhqGEfpGBZP7BQuhdYfrRGoMnkbK1S9odtClrF3I2ixbyL7sbOFnOJ7z3tMsmZ3EKuWwLru4I2G0ouIkdZSzU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750727621; c=relaxed/simple;
-	bh=VGy/OrSdS+zEFlmp155vWuQT9qZwR0kehtJ/PDkK2tU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sgv+VToMYkwKeDBJUkIqm6F8N7fMeJ1Oz6Dpx8DDC8HhE7Ori2r7ObNvQIQQVrbpnM7DkbsteuUTl8LbWk8YsZyoXq6I8iZf3p89TLwbVPa/+NxgmNpeJZnnNqxClPPrvC3FpB1fsnbvHPk1i+v5bGulUcIlkTe4ps/Q6BCoJu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=a0qZF8Sm; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62269219ED;
+	Tue, 24 Jun 2025 01:16:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750727809; cv=fail; b=F39kSECD95aiWhnnO+aU58vmwXgMzovIqyAOoQgrxOh2ru5/KFjn/srTnxkTEu4djBewCl8E4ijC6xnl+gnKChB7Ef/yQFxQ1vs0G7AegeOiMubX5t3BcVWT9Btib1jFLHlb/TZwOa/nDk27TMo321YlucUsk9fkNakAwF3JW2M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750727809; c=relaxed/simple;
+	bh=KpOR9l8/V89d9fEmfiQF5j5uJ2SAnt/ZspnusNHDlY4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=iLalbo3s0K13ThbXsHC9llrsVetQNK9Sx6yrO1N5x+KMUQufpUQm5nZ/j3elplnSuZojJNNrB2LTaZDirUcH3f5cSTSwGOU0WYNX9MWfFxRS1iICI/LGWP6aza7vfduN/AQTIa8iO+/ebGqQSAvzqUGGwoQuMVHINu9pJYQH/QE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=AnEK3K0n; arc=fail smtp.client-ip=40.107.93.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="a0qZF8Sm"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55NJBsQH020768
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:13:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=omXN1QrVaEAiubR5W6h2cDwi
-	TSFzei86M2WLLnOPK30=; b=a0qZF8SmTs7735/XCiRuZZs4mxqKXYVSoc7aUyPx
-	dcDwp4CPxO+lr7gNSHJQNWdbUBs2mel9+vucNtHy3iLhzGw8Md3N9hfwsnk/+t4x
-	a+zSXB4CwkrgaTy+GJVyPL6nB/eNaxYG4aHm+OytwYR+TtxF7Zd4k+VuRdJgP0Qh
-	+W+S8vf/MYauBLwbktii/LMppVIY9lk/1rPyChuUfWXvzHoPU4WzHRarhgPSvgZ3
-	gVD//TB+PbhkraPwmK9Gnz8ZoTLCjlLBZoCD11NG6whfNLupawYo0khaL4pMqou/
-	I/qvJDXRNTw+emFi8j4o0oFkwkoIdpS5BttrRiDvJS5qtA==
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f4b3t8fx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:13:38 +0000 (GMT)
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6fabb9286f9so105595606d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 23 Jun 2025 18:13:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750727617; x=1751332417;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=omXN1QrVaEAiubR5W6h2cDwiTSFzei86M2WLLnOPK30=;
-        b=EfH7b6Sx82Ck8m5pDtrX2sGUnhsKVmzrmtHO300NXVaJ4VqGlLwJxmy/10gAOxZSrt
-         FBEjup637DHe9vAoUvqi72shK6eO94hRseybugdf7LGLNaPlcQWUbSHNBQdGQeuuagm/
-         jJIzf3M1/lFXcafHlEDyCOl2CbNgbydpwao58f4afq9uYcPlCh1tjHG+lPK68F/mbTum
-         eE0yragzah0GLxbZDSXGSDDuKgS/7hrC6QTreiXnRBZSNro5UHyDl09zg0Y1HrS6tADj
-         R/xlxjZaJYFHZ0oYDT+qk8CWXxT6WIpCdneQxpetcXNyyYLFOgpyFMJaWlW+a0TADvyR
-         bD5g==
-X-Forwarded-Encrypted: i=1; AJvYcCUsmAuCEjKr3c2aICz6BoOu4VWwqXRnEFPmyZqY0OCeIAEbA/0/avH5rAXR1sGcmEsCXDRzPctnnXbWrrM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5eo9lcXHfRcg/vU3qDKUEGTXetO/6HKjFE8qgWgDqUw4ATRme
-	oJvwd8nTs1drA/oHl/tzOxvubwGzjSkKX43o7U0oeIyoWzzBtNK+FQ/LjO6zfu2qPLcUDeoSY6H
-	MSXYy/eJI1xu92BkNYk7PCC8wjhDjcuV2YXqSLIhZjpFQv0hXvmMoEPGnHD3WF/RixWI=
-X-Gm-Gg: ASbGncv6F1QPLz1c37v/e5D1uUpX4lxgw4wamxgt57V/h1gG/n8punC/msuK7Dji4Jb
-	C4aRa72wDOTZ44ZeBD8lJVQEjkIVz8BJns3prdXbsBBmqLrbvebGzWCGm0GAH6L9xhjF14oTHBF
-	7zxxXmjZn1KnkA2tGR9SA1RQdqRRvFliSDSwArAw5APx4++xIY89GLWcZLxEX9lkNsFYqG7maD5
-	JLvUpjrT6OAQ/RdvcXVNfiZzGRs5TJFpdYpK6tAfn9aG1CDKF1qSs6pC+CqYMZBzw7NmQYUBaJj
-	u6jk11Y06nmul+87ZmhCqmjZXLSrB0zajdH64XG4059/LcJdRM1xtLmDeP4I5qK9EAgygNlZMD5
-	gtj/RnEefBVi2Q08FD5Job5odMOTIjtpuAjQ=
-X-Received: by 2002:a05:6214:4885:b0:6fa:9f9b:8df0 with SMTP id 6a1803df08f44-6fd0a534772mr247011496d6.20.1750727617396;
-        Mon, 23 Jun 2025 18:13:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHf0auLpYN0CUaZzjP0PLyXb21cf4Pz4vSa1TJZLvFhizd8MrDZr4jH9F8IbE472UXCsUvp7g==
-X-Received: by 2002:a05:6214:4885:b0:6fa:9f9b:8df0 with SMTP id 6a1803df08f44-6fd0a534772mr247011186d6.20.1750727616959;
-        Mon, 23 Jun 2025 18:13:36 -0700 (PDT)
-Received: from umbar.lan (2001-14ba-a0c3-3a00-264b-feff-fe8b-be8a.rev.dnainternet.fi. [2001:14ba:a0c3:3a00:264b:feff:fe8b:be8a])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b980dd1bcsm14793011fa.95.2025.06.23.18.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 18:13:36 -0700 (PDT)
-Date: Tue, 24 Jun 2025 04:13:34 +0300
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Johan Hovold <johan@kernel.org>
-Cc: Bjorn Andersson <andersson@kernel.org>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] firmware: qcom: uefisecapp: add support for R/O
- UEFI vars
-Message-ID: <diarijcqernpm4v5s6u22jep3gzdrzy7o4dtw5wzmlec75og6y@wlbyjbtvnv3s>
-References: <20250621-more-qseecom-v2-0-6e8f635640c5@oss.qualcomm.com>
- <20250621-more-qseecom-v2-2-6e8f635640c5@oss.qualcomm.com>
- <aFloifxONXnQbVg6@hovoldconsulting.com>
- <aFlps9iUcD42vN4w@hovoldconsulting.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="AnEK3K0n"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=GEXoLPBKLD9iMi3Taqq/XikwM6ykSavWGXablZYMhVMjLPJ7ACCMDn2KQAFGlKA2zeoznefvDGGn/eEGirCflRE/xvDqU0N1FZDEQ5xY/zfa5GKlK4evOrVO926gIrwSAhOugO9qGqdxz1xoIZjnlW5oLjw/tNSQ/gxgIEtehOcre6bMKN2ejb8DxTWn+5Gcy08dG4E2uhE+jDzcIx8XG6f6skXdbvudZdgyRCmzLxOCGdwTXxy9VcEHfDT68ts3/xDl6ERz61JNmPCSyNH3U2mlEQwCSvAwnGj3PW0LJBJYyW+lW0UHa/+VQzUIFuVwRpzri0xAVo6dQEd4l/Jnew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VkgWOrwcKajsmItDAl2UZozV1/PvnYZb+T7BSuq7GKo=;
+ b=ychUjq4/tF4XD2h+U43EndhaIXqJkA8l4l3wAqj3aBZtTcP0L3ywov+09Ez2P9YyQjP0mM3K3pQSBZHi0EnXDjDB4LVCE5wuBDUm6Qxf9zOUB8BjbGM0/zLGHuT6HINn7QVKpxFUh9CGe1Zpq5mRi0D+D+GNK/hto0Oe9ia38nTzPP/tnMOW+5kUPMbiuhAq203309hxAi2mNiCuJHLdPMKeiP5oKM9dchPWUFeSbIigG0/HwXyQzXOyL3wDYRhwDHPOrwMY9Joj02k+tFsXYIrINgKqbj1OUy1jAd2Z/exUsrTnbNrQPLEWuRgdcJ0tKt5+KJ0UsFWE9l1GSwpQ2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=VkgWOrwcKajsmItDAl2UZozV1/PvnYZb+T7BSuq7GKo=;
+ b=AnEK3K0nC0BsZBV5LeuAo16MWoCEfKxrUQHG+aLuGCeeIOv2jXcuAmcxPRP/fKwS7lajTjjRNUeOZacb6bzn7TF3pmYW1aDenFmW51NQuF2ydw5XtCdgSjxir5xkG/Qlbhdtq8i980ImGGKtzJnDTnyYlQxQyZHC+3XJlor2+TBDZCBW2FyAKFVFMC7y7GTkUg3RK+FSTcRaUScXe4kveffV+witsyI2S+wn1/D8UiZErTMOxzgLQzIo0ijnSt3U0V+6AP4GuT+juCphZcTGe09MeHCAvgVMwH16b3FAbHDRw+8sZIFsYOGBB1LwLfe/1K3YTcHG+DKgQKDWA/YYEA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY8PR12MB7705.namprd12.prod.outlook.com (2603:10b6:930:84::9)
+ by MW4PR12MB7360.namprd12.prod.outlook.com (2603:10b6:303:21a::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.20; Tue, 24 Jun
+ 2025 01:16:44 +0000
+Received: from CY8PR12MB7705.namprd12.prod.outlook.com
+ ([fe80::4457:c7f7:6ed2:3dcf]) by CY8PR12MB7705.namprd12.prod.outlook.com
+ ([fe80::4457:c7f7:6ed2:3dcf%7]) with mapi id 15.20.8857.022; Tue, 24 Jun 2025
+ 01:16:44 +0000
+Date: Tue, 24 Jun 2025 11:16:38 +1000
+From: Alistair Popple <apopple@nvidia.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-mm@kvack.org, nvdimm@lists.linux.dev, 
+	Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>, 
+	Stefano Stabellini <sstabellini@kernel.org>, Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>, 
+	Dan Williams <dan.j.williams@intel.com>, Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>, 
+	Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, 
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>, 
+	Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>, 
+	Pedro Falcato <pfalcato@suse.de>
+Subject: Re: [PATCH RFC 07/14] fs/dax: use vmf_insert_folio_pmd() to insert
+ the huge zero folio
+Message-ID: <cneygxe547b73gcfyjqfgdv2scxjeluwj5cpcsws4gyhx7ejgr@nxkrhie7o2th>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-8-david@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617154345.2494405-8-david@redhat.com>
+X-ClientProxiedBy: SYBPR01CA0091.ausprd01.prod.outlook.com
+ (2603:10c6:10:3::31) To CY8PR12MB7705.namprd12.prod.outlook.com
+ (2603:10b6:930:84::9)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFlps9iUcD42vN4w@hovoldconsulting.com>
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDAwOCBTYWx0ZWRfX2Prfx422IjTV
- xUyFeHz1Fnv8lUsPXmPVL78/SrdWVa5x8F7ce6U4Z8qcSdHNjoFMqIdWB/AcTZQcT2UBLB6EUKc
- VBTyM4qUFdfxqC3fMMsX5zC4cRmIQIMiY0uE1Ji8ZQ1DOjM+Jppex6D7OWiOhXlQIkewRk0fXix
- eH2pKmzVcJKDeh5zmKPOqGZCfgHnGMJDU+fgz/7hFmerR4OZtOpHhWS88Ew6NFi0eSpkrIgPeY+
- F/ed1B1Lb4jobQUjbyWlfGXBZO3Co7iWox3wzJ0SZgM2eLaBkivN9olrR5GjpWo5FbnL3We63SB
- J1ViVuKgZ+sKXGbWE1TG/dSVPBZ+a4WSQNM+c02CKTzwTpQBOUD+55ynv7NsZURrB0D55I8keg7
- 2QXIGExuLct7zJoOuROzuophMBihE9MWnN85ZBkBDdHRYayepqm8F2CtTC1Bx63yKjF/MwHQ
-X-Proofpoint-ORIG-GUID: S-clbjohoJJb2of2_EY0IyS87oAm3-nh
-X-Proofpoint-GUID: S-clbjohoJJb2of2_EY0IyS87oAm3-nh
-X-Authority-Analysis: v=2.4 cv=A8BsP7WG c=1 sm=1 tr=0 ts=6859fbc2 cx=c_pps
- a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=kl57v_HrwZeO2vo7P20A:9 a=CjuIK1q_8ugA:10
- a=1HOtulTD9v-eNWfpl4qZ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-23_08,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0
- phishscore=0 adultscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506240008
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY8PR12MB7705:EE_|MW4PR12MB7360:EE_
+X-MS-Office365-Filtering-Correlation-Id: 29106d87-fe44-4d54-a123-08ddb2bcc7fe
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|7416014|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?SBsi3Onb/yPW9qEv0BkI913QxivHCu7eDcb4rmr2lsHoVJ3R9QtcKHJonpdF?=
+ =?us-ascii?Q?aWlSN4bmQpy5kuNIOl6mT5IuNsTYfHYpscWHgxf2h5nLbe8JZM8ViqhGaNqS?=
+ =?us-ascii?Q?iMh3mHHVN465bTYbCshBnK+J0nThMExjrq9ZQVpwC5klMpsk4o5l9ZZQwEHr?=
+ =?us-ascii?Q?emEAMibF9HXZtQ7ucuJLS799LF2j0QgPFNeegrjXgTig+H0xC2NXVbo7BW+7?=
+ =?us-ascii?Q?7kzVmKyOa2H1t13IAghugwpIRujL3RmDJ1SVbI1R5SUL4U5F47yzPJY2yvfQ?=
+ =?us-ascii?Q?bsj+/kNELdNhYvno492X+Ed4NGfIJ/6sQoG7Fmr+uFjIPEbP4cEdaXEPOT15?=
+ =?us-ascii?Q?GJ1Squz0wHzTvUouYMP0hVs1Kg/lWhY/2vFdhu3LqqsbqEOYuFR9wZ5+24WZ?=
+ =?us-ascii?Q?ha2gEpKRSjDUBh4M9dak4WzeUlr+rDyUXAhItgtnv48R9XH9y36mTz+jsgyZ?=
+ =?us-ascii?Q?PyMyQC1Cc0GguzVrllYl1GSnaNz4tRbcThph53IrYeP5tA4nPdjDXp5z7FVt?=
+ =?us-ascii?Q?ez9l7lLI7aHBq6tRtozLFPHZJxew2YDjMurzzrTJAHEGiUcdh62VHDlRU1mJ?=
+ =?us-ascii?Q?Owo1E/h/YXGdyyEAOcSxbBOBJ20wrzU3UrSTU4cRrwZDpima08wx9UXfu0MH?=
+ =?us-ascii?Q?AuXgPPV3LUnAWH39DB2zlc/2F06ZLQML8gF0qCw6dDODhEPDB99oOvSe1sC1?=
+ =?us-ascii?Q?Q6/Y8JPXdetfnV//WPseapSYz10f5wr8PH7ehd8ZZAKaMi/xAoh3YJrSKAaL?=
+ =?us-ascii?Q?Z1kZlXm4Pebwfb98zXvQFV+A4QyxaGGHKJEO7j21pS64fY2MKjQzr6/v92Z7?=
+ =?us-ascii?Q?fj8RDbNGyOp0uemoVdvWj56CObi9/R9W7k384h0DilL/qigw4mIVSB8ZBJjX?=
+ =?us-ascii?Q?vAwwECtrCEXFy5LObEIQct48kJPWjiQVlKcByjMMyEHwnnXJMPdXCV+VTwiE?=
+ =?us-ascii?Q?UVhUD7Qplg7c5oIkHBMG3XTfYOMiPSWDh3TtL+XJDkAOXQnx9uRIky9V5vO+?=
+ =?us-ascii?Q?RBAb+U6mG8P1M1ysrFpRf9c/QnALDbeReK61CvVrqJMeuJPygYRWfwqoHvPt?=
+ =?us-ascii?Q?sCw0uqJr0me2uxEtirFWGET9JLTilKl1hcgrUalqx2SRILcvX9DLoGkkrj0W?=
+ =?us-ascii?Q?rehli47t79n5YuEkMcclTc2ls1g7kvMlJ0DeNr3bWQwIbouIeaVEW6lN4qvS?=
+ =?us-ascii?Q?RV/x5+7ljjCRTMTPPKcKtUuLWuSHtKQZ8yshIELhfBzpsjX65gUWIcQYws0J?=
+ =?us-ascii?Q?xMZps6uOk7HZBERA5iWqVPKZbMQgdYSDUL9I0oGNjSVrNd3Rm6nldeqqDCAy?=
+ =?us-ascii?Q?aGpbVHbTEDXKPdKOo6ykOYCWWrg3emw1xca31pziekISNCPPmHA8gRrSFE7J?=
+ =?us-ascii?Q?OyDOI0Pxf/ymf7SVTjhTVneycwUqb5k85rohdKtF7MoaWM/bsyJADfi6lNmM?=
+ =?us-ascii?Q?JQWXsmwgyXs=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY8PR12MB7705.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(7416014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?lNtyZpYjYpOo3YOyyJkWy9LJ30ISxkDgc8ZJmqUaRyRAVR/4GRt0EzEZjemp?=
+ =?us-ascii?Q?nvBOpe6hyOKcQccuQ1uQqlbJM3GC3QWtM3SqEJt0ydL6jpUy03Ml7vZTcZXc?=
+ =?us-ascii?Q?Kb8hVv5M3yTqBUZltS4wgIVLhShgPR73axUya6SgiO/6vGq6N1uq+GXu/jGr?=
+ =?us-ascii?Q?ere1YAgtVq+3Smi7PV1O4cMFf/nwoJaJYCYL6/CgXrbXyTTwA5l5iXpV7EnC?=
+ =?us-ascii?Q?HCzRNv6PHM2K3qSq/SRbFMDVIrCkx48Xu+mPTwrXcdMaql/pvxZ2kBn5OiJa?=
+ =?us-ascii?Q?+Du95rXFEZjfw+2ZtXoz8Ovo6+/oYDseNr1UoDfXy0oz70UkLzCQZFXEyZNA?=
+ =?us-ascii?Q?CIHTdIVoTMlosGxMQbpH3y6oZWTC9qTyLa6eQLawlvKHIrxUKT5xLdwkPgve?=
+ =?us-ascii?Q?FJaGHPlXbb+ZNlEbkILOIxVmP96tt5YmvVchR+yYqpOnGM8QIjQ07iYETyLt?=
+ =?us-ascii?Q?tg86c8iR8AoTFZC506NDXZuuGEhYXtPasb87VVn/66q8+Z/oPYycpjDcxSY2?=
+ =?us-ascii?Q?0qThwu6AdeZzfSgzzcsYHg56W4k4h3lkF6dCO7giO/K6z16ze0p33uEZM7rp?=
+ =?us-ascii?Q?dyShl1ZuK8/ttpOS0IUxozbh162bo1OFTUXxTQ2xuOUwYlTz61XrB9+KTCo+?=
+ =?us-ascii?Q?CbJLOcFzOXHmqktvPspO8yZrMotz4zbnw2p6rPzNpFj74wp8ugS87sJeLPNr?=
+ =?us-ascii?Q?aIv3MrhWfWIbrAYUiCpddcb80ayNX5W8sjrce0gfZD2CBz/QtgWBLVkWwSpH?=
+ =?us-ascii?Q?0LM1y07kJFtsBpAykF5CVE5PmseLQT0P0AXaKRYu+SaFt5RUaLZJ7MxCK+bT?=
+ =?us-ascii?Q?8NzrsSqcHOFfEtUJW1/78dVDTQoDIdZ8An99Cl4aOa53It/1n7b1FvfgW1Tn?=
+ =?us-ascii?Q?IRT9OiirwCv1b7fcu/lmO0gphTdde+R62n0NwFgDj6cZd2PnVg7c/vY+rQJb?=
+ =?us-ascii?Q?ZZOW0E9gyyfJdll9dMXDBRnta3KNBt0Uy45XuLPn7xfuCvcQz4xAHDhrxaK7?=
+ =?us-ascii?Q?84AT+E/GT9jpiX/z5CFjTaaSQk0Qx5Bql7gMsWyPfESUJiIFxVaKj/WUzPx+?=
+ =?us-ascii?Q?5RK7ggWcjrlXXDEqnb6XC9OmmlcOymQiD62OQLyqxzUsjR1XxgLUrAHBe+Cy?=
+ =?us-ascii?Q?KMsuzVBQhSAamF02zceiUc2hgfF69uyL2x5Jp0XBpyxX968/0kUg5Y13GUdl?=
+ =?us-ascii?Q?72VgTHvykb8dOY5zeF/78gZ7yNLYP4IUu8X1rw7jn/cFXTYTTZx/zoD9MU3e?=
+ =?us-ascii?Q?SQ1dxxFDetXyCPgCHpHMIS6W3jbphQvAoqMb2vO7m8RpMdAjAG833WsIJqKZ?=
+ =?us-ascii?Q?4wiO76g49ewF2al94AUqtBQFw7/JPYx7/oiMaKAXdodPfv7F9tL7/wD/X9OX?=
+ =?us-ascii?Q?0GwdnXUCHZjZzwFPKqardRM/Cw3FA9zgiw5CbUHyQVMJXecTVwVsZXCq0SXq?=
+ =?us-ascii?Q?q5y9Dg4uH3wa80kYJ1unmTZcpdOiFV8KKC2QWnFwS9PCSEu92mLXMU+mctph?=
+ =?us-ascii?Q?Fvq0v7dDACZ0VsTcsfyp5sHEkdmrz7sMivxhNMw1eppoMq8FIFZErptPgAy5?=
+ =?us-ascii?Q?RAAUJhQbo2E/Vt6FPs9cTVCXyAvp1S3NutRVaH0E?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 29106d87-fe44-4d54-a123-08ddb2bcc7fe
+X-MS-Exchange-CrossTenant-AuthSource: CY8PR12MB7705.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 01:16:43.9036
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: cgkZWTaKFKSys0KPQUnH8g1dqJoGQwZpWsLPvQgk3YCRsj3BsofPPjGI0WcsgWQgy8+Xx+FBwBmSaGPpSGHOPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB7360
 
-On Mon, Jun 23, 2025 at 04:50:27PM +0200, Johan Hovold wrote:
-> On Mon, Jun 23, 2025 at 04:45:30PM +0200, Johan Hovold wrote:
-> > On Sat, Jun 21, 2025 at 10:56:11PM +0300, Dmitry Baryshkov wrote:
-> > > For some platforms (e.g. Lenovo Yoga C630) we don't yet know a way to
-> > > update variables in the permanent storage. However being able to read
-> > > the vars is still useful as it allows us to get e.g. RTC offset.
-> > > 
-> > > Add a quirk for QSEECOM specifying that UEFI variables for this platform
-> > > should be registered in read-only mode.
-> > > 
-> > > Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-> > > ---
-> > >  drivers/firmware/qcom/qcom_qseecom_uefisecapp.c | 18 +++++++++++++++++-
-> > >  include/linux/firmware/qcom/qcom_qseecom.h      |  2 ++
-> > >  2 files changed, 19 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c b/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c
-> > > index 98a463e9774bf04f2deb0f7fa1318bd0d2edfa49..05f700dcb8cf3189f640237ff0e045564abb8264 100644
-> > > --- a/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c
-> > > +++ b/drivers/firmware/qcom/qcom_qseecom_uefisecapp.c
-> > > @@ -792,6 +792,12 @@ static efi_status_t qcuefi_query_variable_info(u32 attr, u64 *storage_space, u64
-> > >  	return status;
-> > >  }
-> > >  
-> > > +static const struct efivar_operations qcom_efivars_ro_ops = {
-> > > +	.get_variable = qcuefi_get_variable,
-> > > +	.get_next_variable = qcuefi_get_next_variable,
-> > > +	.query_variable_info = qcuefi_query_variable_info,
-> > > +};
-> > 
-> > It looks like the efivars implementation does not support read-only
-> > efivars and this will lead to NULL pointer dereferences whenever you try
-> > to write a variable.
+On Tue, Jun 17, 2025 at 05:43:38PM +0200, David Hildenbrand wrote:
+> Let's convert to vmf_insert_folio_pmd().
 > 
-> Ok, efivarfs seems to support it, but you'd crash when setting a
-> variable from the kernel (e.g. from the RTC driver).
-
-Ack, I'll fix it.
-
+> In the unlikely case there is already something mapped, we'll now still
+> call trace_dax_pmd_load_hole() and return VM_FAULT_NOPAGE.
 > 
-> > Also not sure how useful it is to only be able to read variables,
-> > including for the RTC where you'll end up with an RTC that's always
-> > slightly off due to drift (even if you can set it when booting into
-> > Windows or possibly from the UEFI setup).
-> > 
-> > Don't you have any SDAM blocks in the PMICs that you can use instead for
-> > a proper functioning RTC on these machines?
+> That should probably be fine, no need to add special cases for that.
 
-I'd rather not poke into an SDAM, especially since we don't have docs
-which SDAM blocks are used and which are not.
+I'm not sure about that. Consider dax_iomap_pmd_fault() -> dax_fault_iter() ->
+dax_pmd_load_hole(). It calls split_huge_pmd() in response to VM_FAULT_FALLBACK
+which will no longer happen, what makes that ok?
 
-I think the slightly drifted RTC is still much better than ending up
-with an RTC value which is significantly off, because it was set via the
-file modification time.
-
-Anyway, let me pick up some more patches in the next revision, maybe it
-would be more obvious why I'd like to get R/O support.
-
--- 
-With best wishes
-Dmitry
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  fs/dax.c | 47 ++++++++++-------------------------------------
+>  1 file changed, 10 insertions(+), 37 deletions(-)
+> 
+> diff --git a/fs/dax.c b/fs/dax.c
+> index 4229513806bea..ae90706674a3f 100644
+> --- a/fs/dax.c
+> +++ b/fs/dax.c
+> @@ -1375,51 +1375,24 @@ static vm_fault_t dax_pmd_load_hole(struct xa_state *xas, struct vm_fault *vmf,
+>  		const struct iomap_iter *iter, void **entry)
+>  {
+>  	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
+> -	unsigned long pmd_addr = vmf->address & PMD_MASK;
+> -	struct vm_area_struct *vma = vmf->vma;
+>  	struct inode *inode = mapping->host;
+> -	pgtable_t pgtable = NULL;
+>  	struct folio *zero_folio;
+> -	spinlock_t *ptl;
+> -	pmd_t pmd_entry;
+> -	unsigned long pfn;
+> +	vm_fault_t ret;
+>  
+>  	zero_folio = mm_get_huge_zero_folio(vmf->vma->vm_mm);
+>  
+> -	if (unlikely(!zero_folio))
+> -		goto fallback;
+> -
+> -	pfn = page_to_pfn(&zero_folio->page);
+> -	*entry = dax_insert_entry(xas, vmf, iter, *entry, pfn,
+> -				  DAX_PMD | DAX_ZERO_PAGE);
+> -
+> -	if (arch_needs_pgtable_deposit()) {
+> -		pgtable = pte_alloc_one(vma->vm_mm);
+> -		if (!pgtable)
+> -			return VM_FAULT_OOM;
+> -	}
+> -
+> -	ptl = pmd_lock(vmf->vma->vm_mm, vmf->pmd);
+> -	if (!pmd_none(*(vmf->pmd))) {
+> -		spin_unlock(ptl);
+> -		goto fallback;
+> +	if (unlikely(!zero_folio)) {
+> +		trace_dax_pmd_load_hole_fallback(inode, vmf, zero_folio, *entry);
+> +		return VM_FAULT_FALLBACK;
+>  	}
+>  
+> -	if (pgtable) {
+> -		pgtable_trans_huge_deposit(vma->vm_mm, vmf->pmd, pgtable);
+> -		mm_inc_nr_ptes(vma->vm_mm);
+> -	}
+> -	pmd_entry = folio_mk_pmd(zero_folio, vmf->vma->vm_page_prot);
+> -	set_pmd_at(vmf->vma->vm_mm, pmd_addr, vmf->pmd, pmd_entry);
+> -	spin_unlock(ptl);
+> -	trace_dax_pmd_load_hole(inode, vmf, zero_folio, *entry);
+> -	return VM_FAULT_NOPAGE;
+> +	*entry = dax_insert_entry(xas, vmf, iter, *entry, folio_pfn(zero_folio),
+> +				  DAX_PMD | DAX_ZERO_PAGE);
+>  
+> -fallback:
+> -	if (pgtable)
+> -		pte_free(vma->vm_mm, pgtable);
+> -	trace_dax_pmd_load_hole_fallback(inode, vmf, zero_folio, *entry);
+> -	return VM_FAULT_FALLBACK;
+> +	ret = vmf_insert_folio_pmd(vmf, zero_folio, false);
+> +	if (ret == VM_FAULT_NOPAGE)
+> +		trace_dax_pmd_load_hole(inode, vmf, zero_folio, *entry);
+> +	return ret;
+>  }
+>  #else
+>  static vm_fault_t dax_pmd_load_hole(struct xa_state *xas, struct vm_fault *vmf,
+> -- 
+> 2.49.0
+> 
