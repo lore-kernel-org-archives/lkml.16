@@ -1,99 +1,89 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [160.30.148.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 685DE3398A
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E359923BE;
+	Tue, 24 Jun 2025 02:18:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.30.148.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750731433; cv=none; b=B9vmCqlqd0RudE83gde8Y2zAxcP1QeIn0lbj713nmVePQOoR10qXdUCirT7MuFroN7KWr3OZ7MB9jtU3Cz6lGjL97rNEDj8owk/SLYnjeC7mHPgeMMbG5HW/MuS/cA7NQCUTq/lQ3sNfkWbNIASCUa/79RrS5BBNPrvib6nDIwo=
+	t=1750731537; cv=none; b=ANv8zMYNHvNrQDsfwYyohX/x5LAr2mESya5tKen7U946AO4fTuOVdZku3cLFTVhaqzMhxpHCe6R/DKPO7QzHeHeaVlolJQ7Waj6StptB8x7riTkWmzIn9k3Q+vo8J9ij5vtVwd0I1Vi/Ylj9BZwyggaKL/nLQVfvSsSPSgOjlXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750731433; c=relaxed/simple;
-	bh=aCc8bsAkjQYdVRheiUTB3DBXq/DyOIV/EGkjk16hu4k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=B0XiDy0mtOjsMdP9gET/T1vl8TQQNuUxcIV/fNc+xbUx7dQLkkvO37pS22RqCU8V56s7ViAlT+O5/OWauMcuDpPrurDBx2Esfj4sBWmWd/WeEbx8i4EEiOY9myjKADB9yyMXWbMky7wagAZq6Fikfil1qULSExv+TEgD2i77Asw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55O2HAWr070810;
-	Tue, 24 Jun 2025 11:17:10 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55O2H9Zr070806
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Tue, 24 Jun 2025 11:17:09 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <675ea747-5c05-410c-888c-fe6dd2b48d87@I-love.SAKURA.ne.jp>
-Date: Tue, 24 Jun 2025 11:17:09 +0900
+	s=arc-20240116; t=1750731537; c=relaxed/simple;
+	bh=R1OK7e99Vg7ltRnz0BT+Vs0V+tPexjh7mJ2T+pFxwbo=;
+	h=Date:Message-ID:In-Reply-To:References:Mime-Version:From:To:Cc:
+	 Subject:Content-Type; b=kWoXgMJ5XK5gA5j6J52fF7OLtGn1Qvo9wOzRcpmvY9Bahg2GAXz/aVobrtJYSJ7ciLlsH/nV89ZyIsSFxj0x7r6l+MLStDRUp+naa1z3RLnha88PtkkC/M8KBHdlVwv4/95gvAoyQCq7ssGL9YJ6FSh+LZMDH4iVVaBwaOhQeSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=160.30.148.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4bR7t32ngRz5DXWj;
+	Tue, 24 Jun 2025 10:18:51 +0800 (CST)
+Received: from szxlzmapp02.zte.com.cn ([10.5.231.79])
+	by mse-fl1.zte.com.cn with SMTP id 55O2IYeG096824;
+	Tue, 24 Jun 2025 10:18:34 +0800 (+08)
+	(envelope-from yang.yang29@zte.com.cn)
+Received: from mapi (szxlzmapp04[null])
+	by mapi (Zmail) with MAPI id mid14;
+	Tue, 24 Jun 2025 10:18:35 +0800 (CST)
+Date: Tue, 24 Jun 2025 10:18:35 +0800 (CST)
+X-Zmail-TransId: 2b06685a0afbffffffffc7c-f4ac5
+X-Mailer: Zmail v1.0
+Message-ID: <20250624101835869AZSKLr2_kXapp5khYIQ7H@zte.com.cn>
+In-Reply-To: <20250619225152603EIiJTlhHy4mFMv1dVTzue@zte.com.cn>
+References: 20250619211843633h05gWrBDMFkEH6xAVm_5y@zte.com.cn,20250619225152603EIiJTlhHy4mFMv1dVTzue@zte.com.cn
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] ocfs2: kill osb->system_file_mutex lock
-To: Heming Zhao <heming.zhao@suse.com>, Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        jiangyiwen <jiangyiwen@huawei.com>,
-        Andrew Morton
- <akpm@linux-foundation.org>,
-        ocfs2-devel@lists.linux.dev,
-        Diogo Jahchan Koike <djahchankoike@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>
-References: <934355dd-a0b1-4e53-93ac-0a7ae7458051@I-love.SAKURA.ne.jp>
- <faf70481-09dd-4c7a-bd43-f1e8bec877cb@suse.com>
-Content-Language: en-US
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-In-Reply-To: <faf70481-09dd-4c7a-bd43-f1e8bec877cb@suse.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Anti-Virus-Server: fsav104.rs.sakura.ne.jp
-X-Virus-Status: clean
+Mime-Version: 1.0
+From: <yang.yang29@zte.com.cn>
+To: <wang.yaxin@zte.com.cn>, <fan.yu9@zte.com.cn>
+Cc: <bsingharora@gmail.com>, <akpm@linux-foundation.org>, <david@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-doc@vger.kernel.org>, <wang.yong12@zte.com.cn>,
+        <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>,
+        <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
+        <ye.xingchen@zte.com.cn>, <xu.xin16@zte.com.cn>,
+        <jiang.kun2@zte.com.cn>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCBsaW51eCBuZXh0XSB0b29scy9hY2NvdW50aW5nL2RlbGF5dG9wOiBhZGQgZGVsYXl0b3AKIHRvIHJlY29yZCB0b3AtbiB0YXNrIGRlbGF5?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl1.zte.com.cn 55O2IYeG096824
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 685A0B0B.001/4bR7t32ngRz5DXWj
 
-On 2025/06/24 10:33, Heming Zhao wrote:
->> @@ -112,11 +110,10 @@ struct inode *ocfs2_get_system_file_inode(struct ocfs2_super *osb,
->>       inode = _ocfs2_get_system_file_inode(osb, type, slot);
-> 
-> In my view, the key of commit 43b10a20372d is to avoid calling
-> _ocfs2_get_system_file_inode() twice, which lead refcnt+1 but no place to
-> do refcnt-1.
+> For latency-sensitive scenarios, such as industrial control, communications,
+> or automotive, I think this tool is useful. And it may be better if it support
+> showing whole delay of system by reading PSI, just like the first few lines of
+> information output by the top command.
 
-My understanding is that concurrently calling _ocfs2_get_system_file_inode() itself
-is OK, for the caller of ocfs2_get_system_file_inode() is responsible for calling
-iput().
+Another suggestion, we can provide a new command to control the display of
+either the total memory delay for tasks or detailed memory delays. This approach
+offers two benefits: first, it better aligns with PSI results; second, it offers choices
+for users with different interests (e.g., some users may not have enabled or are
+not concerned about swap delay). The implementation can follow the dynamic
+command approach similar to top.
 
-The problem commit 43b10a20372d fixed is that there was no mechanism to avoid
-concurrently calling
+If it's OK to you, may send follow-up patch. For the initial patch:
+> + * delaytop.c - task delay monitoring tool.
+> + * This tool provides real-time monitoring and statistics of
+> + * system, container, and task-level delays, including CPU,
+Since the tool cover 'system' delay, we may say:
+delaytop.c - system-wide delay monitoring tool.
 
-  *arr = igrab(inode);
+> + * This tool provides real-time monitoring and statistics of
+> + * system, container, and task-level delays, including CPU,
+> + * memory, IO, and IRQ and delay accounting. It supports both
+I am confused with the words 'and delay accouting', they are all
+delays.
 
-which will result in failing to call iput() for raced references when
-ocfs2_release_system_inodes() is called.
+> +	if (bind(fd, (struct sockaddr *) &local, sizeof(local)) < 0) {
+> +		close(fd); 
+> +		return -1;
+We better tell user what happend, and pelase check other code
+that may also fail.
 
-> 
->>         /* add one more if putting into array for first time */
->> -    if (arr && inode) {
->> -        *arr = igrab(inode);
->> -        BUG_ON(!*arr);
->> +    if (inode && arr && !*arr && !cmpxchg(&(*arr), NULL, inode)) {
-> 
-> Bypassing the refcnt+1 here is not a good idea. We should do refcnt+1
-> before returning to the caller.
-> 
->> +        inode = igrab(inode);
-
-We do refcnt+1 immediately after cmpxchg() succeeds, for
-ocfs2_release_system_inodes() which clears *arr is the place for
-doing refcnt-1.
-
->> +        BUG_ON(!inode);
->>       }
->> -    mutex_unlock(&osb->system_file_mutex);
->>       return inode;
->>   }
->>   
-> 
-
+> +	rc = recv(nl_sd, &resp, sizeof(resp), 0);
+Please check if close(nl_sd) is called.
