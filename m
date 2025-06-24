@@ -1,203 +1,184 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DFC7218ABA;
-	Tue, 24 Jun 2025 10:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9861C28466F;
+	Tue, 24 Jun 2025 10:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750761690; cv=none; b=oybFIIhl6JnAVKuzZ77NFIjizOrMzvbVWkK+4PWOuJpb2HKPq1SzN0Y9eMtCYpz2O70VvyhdNi023WClsDiwYlKnTVCkrv2nixb5trWKqxFhm1gZ5O7zIKxie/j2iytpDZZ/8P7wImeixLz4a5KuS73IEK6EiPOzwMXL/BbwrL4=
+	t=1750761713; cv=none; b=hwIPKSsReP576RVVOP2zrs2nfwecI+M2+jPCtT+UctBJDoXrHV1fpsGgfiGmOyoMoLZIKUe7Ma6CMDofKHCm+H5lNnJU12vWefqnfKU0gvRb+ae2MBm5P6ecSqSOzgwbeSyF3yS2n63jUTgcHihKgRLli/p6BO5CAxxjyLjMlD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750761690; c=relaxed/simple;
-	bh=mHuFsM00zsmxReWQp0YW0IovyAqAiKaN9vwTtZUpZ1I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qy3O+IYmykWv72EmHLFXfYIcdWS9el4v4Qth8HYkYaaygTPhTvvpBOtPXchcCUfYWATWhBY7FVmGFHy8WMAl+xcH5uE++FgDSfknQaTCrV9vFNJepESy/CRnz3gqOqG1GE2y+32+0V7QkIdor1YgAXjbENqIyw+XLrWpxBAmL7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=O81Rly9R; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1750761713; c=relaxed/simple;
+	bh=K/6nYeBo/6GMRm/IJUluTXarB6TXhlyTShmGZg83qWE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Cf/WonWyU9bJ8hhq+8IpJOp+WXOr6eQHnWfVqbBlMkmF2z4+nC5IclA6aY5xNfvNO0GVGZSWo4i7nf2qIuNVUY4k4+OrjEbVgMQo/IF5DXZ6BZnqJ3ufixR6NHnH84BrEVbHXvSrH9GvdJe2JWC4epRIOOUHELMEGk15yZBjnXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lo61+Wpa; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="O81Rly9R"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id E820C101E9287;
-	Tue, 24 Jun 2025 12:41:10 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1750761677; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=xJNZSdtlkmYSmYR194N6u/IIwvLnmZyLCW5wos6cefs=;
-	b=O81Rly9RWffD1vprGIl6wBGzUIqmAs4FKeptoBWaVbi98DKflcuKrXOi/+WfDxvIkCoNsq
-	B8YX5tAhGPNXO0jpbhC/kdKkicKFvyZVRlXm9SRLc3BF9elb7QkiVxNvlGVnWXvWaPZoQr
-	PKlhnwOnBPAzcW8V9ZXu2vSzAYs5KVeIol/jIMsxD80dsHyb5q7aZto5klDzlZzYDbl6el
-	etk/HqBCVUB8AWsw1JI81+euCWs6ThTGgEJzOSX7wi3rT9UDZx5mGPb4EitnFOo/i+khE7
-	adnF828od6mJWOIBxCGN7Tz1Cq/KZsqsvJCx9U/xUWgwpH7QtOHheeIaEAf45g==
-Date: Tue, 24 Jun 2025 12:41:08 +0200
-From: Pavel Machek <pavel@denx.de>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	Julien Thierry <jthierry@redhat.com>,
-	James Morse <james.morse@arm.com>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: [PATCH 5.10 000/355] 5.10.239-rc1 review
-Message-ID: <aFqAxKT6C7idQY32@duo.ucw.cz>
-References: <20250623130626.716971725@linuxfoundation.org>
- <CA+G9fYt2e-ZGhU57oqWwC1_t2RPgxLCJFVC0Pa8-fYPkZcUvVQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lo61+Wpa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750761711; x=1782297711;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=K/6nYeBo/6GMRm/IJUluTXarB6TXhlyTShmGZg83qWE=;
+  b=Lo61+WpaeIm/kV3D1KRFGlJPvGy7APcRPa0Wps9go/hmsMtp6fIhqjeS
+   5XbWeLfisqUrTr+IaqWnbeHiBDrWho9BJ1e2Yix73ZZ8wXDC8GzVR2ZO2
+   VJlhQQsW8jVdTlqUYAtSDyzwJrEdUqRzfCErslZ8WJWaHzeAsqGDf0QTX
+   SKpCM3z1i4793AWPiPkH30psLHZ3A6xFc4jA5gdn/W2RrI0S5qE6qCVNo
+   6ljBhbsFlpUEBjImdaWxfdPblaeBh/tKyqvn6+ca6P+DHrbA2gcRtvRG7
+   iIzqIkGPkJycf88T8WcpqHAgkqq3OGsPLiXO/y6RU7QToiBqP8jCEFKAX
+   A==;
+X-CSE-ConnectionGUID: mXSlqwPYSKWtSl1RuZW4tg==
+X-CSE-MsgGUID: cY7QUJpVSQGuYE6jt9Sl8g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="53090922"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="53090922"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 03:36:03 -0700
+X-CSE-ConnectionGUID: eTgT9tTeQLSNO23lmfZECQ==
+X-CSE-MsgGUID: rXky3VK0QF+HIv5mLeALbA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="152007753"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.16])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 03:36:00 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Tue, 24 Jun 2025 13:35:57 +0300 (EEST)
+To: Xiang Shen <turyshen@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, acelan.kao@canonical.com, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: intel-vbtn: Fix code style issues
+In-Reply-To: <hlsev7jydwejtdlyay6e6f53yorf2aguhxykscuukqfxugg7ff@hmmpcg7s4sx6>
+Message-ID: <83b27cc9-3544-4fd5-4ece-a46f422ec6fe@linux.intel.com>
+References: <20250620003849.54442-1-turyshen@gmail.com> <fdb9c21f-aada-498a-92ec-bc48aceeb76e@kernel.org> <hlsev7jydwejtdlyay6e6f53yorf2aguhxykscuukqfxugg7ff@hmmpcg7s4sx6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="99H4i/IRjps6Yc2M"
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYt2e-ZGhU57oqWwC1_t2RPgxLCJFVC0Pa8-fYPkZcUvVQ@mail.gmail.com>
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Type: text/plain; charset=US-ASCII
 
+On Sun, 22 Jun 2025, Xiang Shen wrote:
+> On Fri, Jun 20, 2025 at 12:00:03PM +1000, Hans de Goede wrote:
+> > On 20-Jun-25 2:38 AM, Xiang Shen wrote:
+> > > Fix checkpatch code style errors:
+> > > 
+> > > ERROR: do not use assignment in if condition
+> > > +	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
+> > > 
+> > > ERROR: do not use assignment in if condition
+> > > +	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
+> > > 
+> > > Signed-off-by: Xiang Shen <turyshen@gmail.com>
+> > 
+> > Thank you for your patch, but this change really does not make
+> > the code more readable.
+> > 
+> > The contrary the suggested changes are making the code harder
+> > to read, so NACK.
+> > 
+> > Note checkpatch is just a tool, sometimes there are good reasons
+> > to deviate from the style checks done by checkpatch.
+> > 
+> > Next time when submitting a patch to fix checkpatch issues please
+> > take a look at the resulting code after the patch and only submit
+> > the patch upstream if it actually is an improvement.
+> > 
+> > Regards,
+> > 
+> > Hans
+> > 
+> Hi Hans,
+> 
+> Thanks for the feedback. 
+> 
+> That's fine if breaking the "rule" is the only way to keep the file readable.
+> 
+> However, there are only three files (x86/sony-laptop.c and 
+> x86/dell/dell_rbu.c) out of 273 files in the whole drivers/platform 
+> folder that have such an error. 
 
---99H4i/IRjps6Yc2M
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-Hi!
+Please don't call correct code "error" even if checkpatch may label it as 
+such. The goal is NOT and will never be to have zero checkpatch warnings.
 
-> > This is the start of the stable review cycle for the 5.10.239 release.
-> > There are 355 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Wed, 25 Jun 2025 13:05:51 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patc=
-h-5.10.239-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git linux-5.10.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
->=20
-> Regressions on arm64 tinyconfig builds with gcc-12 and clang failed on
-> the Linux stable-rc 5.10.239-rc1.
+The fact that the checkpatch "rule" is broken only a few times does not 
+mean those 3 places have a problem, it just tells it's good rule for the
+general case. So I won't accept using such numbers as a leverage against 
+the few places just for the sake of silencing checkpatch.
 
-Yeah, we see same problems:
+> Perhaps there are other approaches to make them more readable without 
+> breaking the rule.
 
+Perhaps, but I'm not sure the effort spent to find one is worthwhile 
+investment.
 
-814
-  CC      arch/arm64/kernel/asm-offsets.s
-815
-In file included from ./arch/arm64/include/asm/alternative.h:6,
-816
-                 from ./arch/arm64/include/asm/sysreg.h:1050,
-817
-                 from ./arch/arm64/include/asm/cputype.h:194,
-818
-                 from ./arch/arm64/include/asm/cache.h:8,
-819
-                 from ./include/linux/cache.h:6,
-820
-                 from ./include/linux/printk.h:9,
-821
-                 from ./include/linux/kernel.h:17,
-822
-                 from ./include/linux/list.h:9,
-823
-                 from ./include/linux/kobject.h:19,
-824
-                 from ./include/linux/of.h:17,
-825
-                 from ./include/linux/irqdomain.h:35,
-826
-                 from ./include/linux/acpi.h:13,
-827
-                 from ./include/acpi/apei.h:9,
-828
-                 from ./include/acpi/ghes.h:5,
-829
-                 from ./include/linux/arm_sdei.h:8,
-830
-                 from arch/arm64/kernel/asm-offsets.c:10:
-831
-=2E/arch/arm64/include/asm/insn.h: In function 'aarch64_insn_gen_atomic_ld_=
-op':
-832
-=2E/arch/arm64/include/asm/insn.h:26:54: error: 'FAULT_BRK_IMM' undeclared =
-(first use in this function)
-833
-   26 | #define AARCH64_BREAK_FAULT    (AARCH64_BREAK_MON | (FAULT_BRK_IMM =
-<< 5))
-834
-      |                                                      ^~~~~~~~~~~~~
-835
-=2E/arch/arm64/include/asm/insn.h:573:9: note: in expansion of macro 'AARCH=
-64_BREAK_FAULT'
-836
-  573 |  return AARCH64_BREAK_FAULT;
-837
-      |         ^~~~~~~~~~~~~~~~~~~
-838
-=2E/arch/arm64/include/asm/insn.h:26:54: note: each undeclared identifier i=
-s reported only once for each function it appears in
-839
-   26 | #define AARCH64_BREAK_FAULT    (AARCH64_BREAK_MON | (FAULT_BRK_IMM =
-<< 5))
-840
-      |                                                      ^~~~~~~~~~~~~
-841
-=2E/arch/arm64/include/asm/insn.h:573:9: note: in expansion of macro 'AARCH=
-64_BREAK_FAULT'
-842
-  573 |  return AARCH64_BREAK_FAULT;
-843
-      |         ^~~~~~~~~~~~~~~~~~~
-844
-=2E/arch/arm64/include/asm/insn.h: In function 'aarch64_insn_gen_cas':
-845
-=2E/arch/arm64/include/asm/insn.h:26:54: error: 'FAULT_BRK_IMM' undeclared =
-(first use in this function)
-846
-   26 | #define AARCH64_BREAK_FAULT    (AARCH64_BREAK_MON | (FAULT_BRK_IMM =
-<< 5))
-847
-      |                                                      ^~~~~~~~~~~~~
-848
-=2E/arch/arm64/include/asm/insn.h:583:9: note: in expansion of macro 'AARCH=
-64_BREAK_FAULT'
-849
-  583 |  return AARCH64_BREAK_FAULT;
-850
-      |         ^~~~~~~~~~~~~~~~~~~
-851
-make[1]: *** [scripts/Makefile.build:117: arch/arm64/kernel/asm-offsets.s] =
-Error 1
-852
-make: *** [Makefile:1262: prepare0] Error 2
+> > > ---
+> > >  drivers/platform/x86/intel/vbtn.c | 38 +++++++++++++++++--------------
+> > >  1 file changed, 21 insertions(+), 17 deletions(-)
+> > > 
+> > > diff --git a/drivers/platform/x86/intel/vbtn.c b/drivers/platform/x86/intel/vbtn.c
+> > > index 232cd12e3c9f..bcc97b06844e 100644
+> > > --- a/drivers/platform/x86/intel/vbtn.c
+> > > +++ b/drivers/platform/x86/intel/vbtn.c
+> > > @@ -160,30 +160,34 @@ static void notify_handler(acpi_handle handle, u32 event, void *context)
+> > >  
+> > >  	guard(mutex)(&priv->mutex);
+> > >  
+> > > -	if ((ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event))) {
+> > > +	ke = sparse_keymap_entry_from_scancode(priv->buttons_dev, event);
+> > > +	if (ke) {
+> > >  		if (!priv->has_buttons) {
+> > >  			dev_warn(&device->dev, "Warning: received 0x%02x button event on a device without buttons, please report this.\n",
+> > >  				 event);
+> > >  			return;
+> > >  		}
+> > >  		input_dev = priv->buttons_dev;
+> > > -	} else if ((ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
+> > > -		if (!priv->has_switches) {
+> > > -			/* See dual_accel_detect.h for more info */
+> > > -			if (priv->dual_accel)
+> > > -				return;
+> > > -
+> > > -			dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
+> > > -			ret = input_register_device(priv->switches_dev);
+> > > -			if (ret)
+> > > -				return;
+> > > -
+> > > -			priv->has_switches = true;
+> > > -		}
+> > > -		input_dev = priv->switches_dev;
+> > >  	} else {
+> > > -		dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
+> > > -		return;
+> > > +		ke = sparse_keymap_entry_from_scancode(priv->switches_dev, event);
+> > > +		if (ke) {
+> > > +			if (!priv->has_switches) {
+> > > +				/* See dual_accel_detect.h for more info */
+> > > +				if (priv->dual_accel)
+> > > +					return;
+> > > +
+> > > +				dev_info(&device->dev, "Registering Intel Virtual Switches input-dev after receiving a switch event\n");
+> > > +				ret = input_register_device(priv->switches_dev);
+> > > +				if (ret)
+> > > +					return;
+> > > +
+> > > +				priv->has_switches = true;
+> > > +			}
+> > > +			input_dev = priv->switches_dev;
+> > > +		} else {
+> > > +			dev_dbg(&device->dev, "unknown event index 0x%x\n", event);
+> > > +			return;
+> > > +		}
+> > >  	}
+> > >  
+> > >  	if (priv->wakeup_mode) {
+> > 
+> 
 
-BR,
-										Pavel
---=20
-DENX Software Engineering GmbH,        Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+-- 
+ i.
 
---99H4i/IRjps6Yc2M
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCaFqAxAAKCRAw5/Bqldv6
-8oO2AJ0THdQP/jgUCOPQIWJxokWKjzBWXwCfbnHq/Z5PGgx+mwo8REY3xKum4EY=
-=7i9r
------END PGP SIGNATURE-----
-
---99H4i/IRjps6Yc2M--
