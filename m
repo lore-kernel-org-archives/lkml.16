@@ -1,164 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 562F53595C
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 20:53:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942DD3595C;
+	Tue, 24 Jun 2025 20:54:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750798396; cv=none; b=qUq5tHPALbjsUcLJ4sFscTTCeTVtBXLmhx8aRyXAPERwFmeAobvZTt5xCjYQLXXQA9b6gfvAQO4MsJoEqITYdkOWXgFYpM3qXQAWi0D++VIMn3vowIr6TzyVKf12SQa6w0kitEsQqheP+RFlYA21sOEx/ckJ7Ycf3bzNwxYanQc=
+	t=1750798483; cv=none; b=ME6HVRQ/lZaY8/zFrHUSDqgToQTdgVUadMv619SdeYF5PYU2+h7gcHV+v1Eo1UHlgB2gouoPmhvxolXmydgVV20KXOFQjezPASsX03egiGASaHmNJYJf0kV+xssJCGGytX6kAwOHA3DtgyDY5YflBavFbSlqFWyt57AVBBklzms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750798396; c=relaxed/simple;
-	bh=kM/IfC/U8zaIW8FhwAjzCQVFNIYN0QjG4pYF0m7Ihgo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NoIZ9HOJSj6DowKFgBmCvahlG+AZIzN5uXbf8NTXWZKEfKX7D3/kNxVnw0anSn+/CmD5JSJu0O0rWSUzb4BmktA8DCakaZXPGwFG2MpPnIJT8xf5DcGwPX9IQFMDn7CNQ+pTzUakqu3DHMNnASoRZK5vzxtW2YGn4KxVjqx2Tm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LowicbtJ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750798483; c=relaxed/simple;
+	bh=HagKa+zInK0BmkImfeWWekMyfV3wf6Bb1IstPRmg81k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=E/EFtTghrwEsmP6bHA30ZMDH6b3Mj5VjSwhidKeBNmKe6eFZQGKMTzU7IqIA6BhrPR/1WAWNUKqf4xr9I3M+/C9/qYJit/uNPpVxqMOy89pKpGBmKYHH6GKBDKfGkbly76z0txLcjle2PoEn/f7kfSbkkFP+Z61RqCOu3IrZ878=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZAU5j4Tp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LowicbtJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750798388;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=J11ds042ECzs7H3dbgHbcrEw+iFqu0r/26P/J9h7Qko=;
-	b=LowicbtJLXfayoHA+m+u3AIH/VtwEOkY707zjtYLCxjlu91xCu1xM60Wx4XfZ9ILEzgUaf
-	K1m5RkWiI/BpGZQYw7DPcc9RDgLOoFuK1WoZp/JiwDWhxlhMzmTN/ZVhGqV8bXkRgaSfFa
-	MLBS03P4nTvupXNmxDn12LzwYeNWiME=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-589-yEZ8IQw2P0SuplnaPVr37g-1; Tue, 24 Jun 2025 16:51:17 -0400
-X-MC-Unique: yEZ8IQw2P0SuplnaPVr37g-1
-X-Mimecast-MFC-AGG-ID: yEZ8IQw2P0SuplnaPVr37g_1750798277
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c790dc38b4so43409185a.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:51:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750798276; x=1751403076;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=J11ds042ECzs7H3dbgHbcrEw+iFqu0r/26P/J9h7Qko=;
-        b=XqydBFx+GGTbb+XVQ7t69oa6ZnVhbwLQZ3tWtUdV1SGZO7aPId/6ClQ3VI77uByWf2
-         dM/ta+kZGK2SKBtslwTHQ2dSVz5vAF5SExFAsNWILf5NVxeEmESMRQ+PXdnqHRYxFpFt
-         9hHQE8mNar0nV24w21M2SkGM08YC9bNN4GL3ocj85b2gBjDyXuvzkUxA1f0smVjmH9lT
-         AD/HIRmOUjLplIJGJwvMJ3nnZSOCtZ1O3/rmCzQKi2WqsaHhSWZPVLJ1ZLT0wkZUouff
-         +OVDen329wjt0MkkDgEZ1OKUAQkU/R5c+4TxX6tBbMU2rl1Y8TYib605F5GO8TGUpBfR
-         euLA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjnLTh9BT7hBjLfDSYvFz+Dt+JbvBJRJchHLud8DzHU7bmGYC2WkGJH2mpgf/K4kW/on68H+xRNL3HOAM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWmh9Ccz+pRsXPuIw6FClzi6cl1SWTb3YF1Dv3nHaoIYQmcWv8
-	IwJaiPJL9sX1GtX5iOvIdD1WBcoK3ZBAzZTgxXTFlBUKOUMEvCyxo0HudTQD4j0c1lqkrAXgzHR
-	IlRST97wcjcX/qPVnCMwV0EX8DiZWFbOZOKq6Uk1VL/U00mLeKR7deaKStTPxVUsb61vR+zNiLA
-	==
-X-Gm-Gg: ASbGncuc4Ht0Tb8jR4/f3rU99lfR6zPS3vGJrgi6/ckP1//d+YNod9IP/QcTw/udjt+
-	VA46+moiJ10O/7z4KbZO2QJP6cswoD96Z3trw9wrQ7MTQehDd0xgDr8WOWIonWP7vrajEe0BtX8
-	pLxBoTz8BL40GI2uJC3rs+sVZK4JG6bZh8WpSkiq7iX2jnPiaDOcoiEswY4w2pf6rLT31NoClOW
-	eTwqSlWZSI0/niN856L5mniVpx7giwZpUOWmAUTsBbDzqPD0JIVoFKBwABRsmJq3Eb5cQgUBNY7
-	VzL9esQFr/LaAA==
-X-Received: by 2002:a05:620a:2907:b0:7d3:f8b8:b1ce with SMTP id af79cd13be357-7d429964b36mr55473485a.27.1750798276423;
-        Tue, 24 Jun 2025 13:51:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGXB0NjNPJFhxsKe8ZP75Mk2G2kMyPcL9xehXKcPoe5G89surWH97a5ZybNtffg/Gvuki7iBg==
-X-Received: by 2002:a05:620a:2907:b0:7d3:f8b8:b1ce with SMTP id af79cd13be357-7d429964b36mr55469885a.27.1750798275985;
-        Tue, 24 Jun 2025 13:51:15 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f999c07bsm548154585a.4.2025.06.24.13.51.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 13:51:15 -0700 (PDT)
-Date: Tue, 24 Jun 2025 16:51:12 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
- mappings
-Message-ID: <aFsPwLB41_3VDvtY@x1.local>
-References: <aFHWbX_LTjcRveVm@x1.local>
- <20250617231807.GD1575786@nvidia.com>
- <aFH76GjnWfeHI5fA@x1.local>
- <aFLvodROFN9QwvPp@x1.local>
- <20250618174641.GB1629589@nvidia.com>
- <aFMQZru7l2aKVsZm@x1.local>
- <20250619135852.GC1643312@nvidia.com>
- <aFQkxg08fs7jwXnJ@x1.local>
- <20250619184041.GA10191@nvidia.com>
- <aFsMhnejq4fq6L8N@x1.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZAU5j4Tp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFDD7C4CEE3;
+	Tue, 24 Jun 2025 20:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750798483;
+	bh=HagKa+zInK0BmkImfeWWekMyfV3wf6Bb1IstPRmg81k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=ZAU5j4TpYOBUpealazdefpiefsh0gw8AqvGbJWfEtN2LrF6qUFOAbptb73ghMt8Ha
+	 q6GuDiZ7C0JsXwKtdTIzp/pvN+R3dFkzqaYHB0/OWJx4T44vnUih3MvZxL77InzDNk
+	 dU4ZEvtfNuY145wn/8gbXyCUn39Lwk82+3wQfWHDK2nYgnELFytYw52CrvBaNy1rJC
+	 3lc7SqAvcygN0ml/mhYCYsDk64PLZWTkhE2OhnrdJryvhO4XjX8BepqZHP6GyVfmUY
+	 2rI5kpHYvHWoBcS0+1cRJ4iuzxU4OcFxeC/P/SsU04KDCLkigSH18QvFYy1Ot233mI
+	 cA03uGw6QGg+g==
+Date: Tue, 24 Jun 2025 15:54:41 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jiwei Sun <sjiwei@163.com>
+Cc: macro@orcam.me.uk, ilpo.jarvinen@linux.intel.com, bhelgaas@google.com,
+	linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+	lukas@wunner.de, ahuang12@lenovo.com, sunjw10@lenovo.com,
+	jiwei.sun.bj@qq.com, sunjw10@outlook.com,
+	Andrew <andreasx0@protonmail.com>,
+	Matthew W Carlis <mattc@purestorage.com>,
+	Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH v4 0/2] PCI: Fix the issue of failed speed limit lifting
+Message-ID: <20250624205441.GA1528511@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFsMhnejq4fq6L8N@x1.local>
+In-Reply-To: <20250123055155.22648-1-sjiwei@163.com>
 
-On Tue, Jun 24, 2025 at 04:37:26PM -0400, Peter Xu wrote:
-> On Thu, Jun 19, 2025 at 03:40:41PM -0300, Jason Gunthorpe wrote:
-> > Even with this new version you have to decide to return PUD_SIZE or
-> > bar_size in pci and your same reasoning that PUD_SIZE make sense
-> > applies (though I would probably return bar_size and just let the core
-> > code cap it to PUD_SIZE)
+[+cc Andrew, Matthew, Sathy]
+
+On Thu, Jan 23, 2025 at 01:51:53PM +0800, Jiwei Sun wrote:
+> From: Jiwei Sun <sunjw10@lenovo.com>
 > 
-> Yes.
+> Since commit de9a6c8d5dbf ("PCI/bwctrl: Add pcie_set_target_speed() to set
+> PCIe Link Speed"), there are two potential issues in the function
+> pcie_failed_link_retrain().
 > 
-> Today I went back to look at this, I was trying to introduce this for
-> file_operations:
+> (1) The macro PCIE_LNKCTL2_TLS2SPEED() and PCIE_LNKCAP_SLS2SPEED() just
+> use the link speed field of the registers. However, there are many other
+> different function fields in the Link Control 2 Register or the Link
+> Capabilities Register. If the register value is directly used by the two
+> macros, it may cause getting an error link speed value (PCI_SPEED_UNKNOWN).
 > 
-> 	int (*get_mapping_order)(struct file *, unsigned long, size_t);
+> (2) In the pcie_failed_link_retrain(), the local variable lnkctl2 is not
+> changed after reading from PCI_EXP_LNKCTL2. It might cause that the
+> removing 2.5GT/s downstream link speed restriction codes are not executed.
 > 
-> It looks almost good, except that it so far has no way to return the
-> physical address for further calculation on the alignment.
+> In order to avoid the above-mentioned potential issues, only keep link
+> speed field of the two registers before using and reread the Link Control 2
+> Register before using.
 > 
-> For THP, VA is always calculated against pgoff not physical address on the
-> alignment.  I think it's OK for THP, because every 2M THP folio will be
-> naturally 2M aligned on the physical address, so it fits when e.g. pgoff=0
-> in the calculation of thp_get_unmapped_area_vmflags().
+> This series focuses on the first patch of the original series [1]. The
+> second one of the original series will submitted via the other single
+> patch.
 > 
-> Logically it should even also work for vfio-pci, as long as VFIO keeps
-> using the lower 40 bits of the device_fd to represent the bar offset,
-> meanwhile it'll also require PCIe spec asking the PCI bars to be mapped
-> aligned with bar sizes.
+> [1] https://lore.kernel.org/linux-pci/tencent_DD9CBE5B44210B43A04EF8DAF52506A08509@qq.com/
+> ---
+> v4 changes:
+>  - rename the variable name in the macro
 > 
-> But from an API POV, get_mapping_order() logically should return something
-> for further calculation of the alignment to get the VA.  pgoff here may not
-> always be the right thing to use to align to the VA: after all, pgtable
-> mapping is about VA -> PA, the only reasonable and reliable way is to align
-> VA to the PA to be mappped, and as an API we shouldn't assume pgoff is
-> always aligned to PA address space.
+> v3 changes:
+>  - add fix tag in the commit messages of first patch
+>  - add an empty line after the local variable definition in the macro
+>  - adjust the position of reading the Link Control 2 register in the code
 > 
-> Any thoughts?
+> v2 changes:
+>  - divide the two issues into different patches
+>  - get fixed inside the macros
+> 
+> Jiwei Sun (2):
+>   PCI: Fix the wrong reading of register fields
+>   PCI: Adjust the position of reading the Link Control 2 register
+> 
+>  drivers/pci/pci.h    | 32 +++++++++++++++++++-------------
+>  drivers/pci/quirks.c |  6 ++++--
+>  2 files changed, 23 insertions(+), 15 deletions(-)
 
-I should have listed current viable next steps..  We have at least these
-options:
+Sorry, this totally slipped through the cracks.  I applied both of
+these to pci/enumeration for v6.17.
 
-(a) Ignore this issue, keep the get_mapping_order() interface like above,
-    as long as it works for vfio-pci
+Andrew reported tripping over this issue fixed by the first patch, and
+Lukas also posted a similar patch [1] to fix it, so I updated the
+commit log as below to include details of Andrew's report.
 
-    I don't like this option.  I prefer the API (if we're going to
-    introduce one) to be applicable no matter how pgoff would be mapped to
-    PAs.  I don't like the API to rely on specific driver on specific spec
-    (in this case, PCI).
+As Lukas did, I added a stable tag but made it for v6.13+ (not v6.12+)
+because I think the actual problem showed up with de9a6c8d5dbf
+("PCI/bwctrl: Add pcie_set_target_speed() to set PCIe Link Speed"),
+not with f68dea13405c ("PCI: Revert to the original speed after PCIe
+failed link retraining").
 
-(b) I can make the new API like this instead:
+[1] https://lore.kernel.org/r/1c92ef6bcb314ee6977839b46b393282e4f52e74.1750684771.git.lukas@wunner.de
 
-    int (*get_mapping_order)(struct file *, unsigned long, unsigned long *, size_t);
 
-    where I can return a *phys_pgoff altogether after the call returned the
-    order to map in retval.  But that's very not pretty if not ugly.
+    PCI: Fix link speed calculation on retrain failure
 
-(c) Go back to what I did with the current v1, addressing comments and keep
-    using get_unmapped_area() until we know a better way.
+    When pcie_failed_link_retrain() fails to retrain, it tries to revert to the
+    previous link speed.  However it calculates that speed from the Link
+    Control 2 register without masking out non-speed bits first.
 
-I'll vote for (c), but I'm open to suggestions.
+    PCIE_LNKCTL2_TLS2SPEED() converts such incorrect values to
+    PCI_SPEED_UNKNOWN (0xff), which in turn causes a WARN splat in
+    pcie_set_target_speed():
 
-Thanks,
+      pci 0000:00:01.1: [1022:14ed] type 01 class 0x060400 PCIe Root Port
+      pci 0000:00:01.1: broken device, retraining non-functional downstream link at 2.5GT/s
+      pci 0000:00:01.1: retraining failed
+      WARNING: CPU: 1 PID: 1 at drivers/pci/pcie/bwctrl.c:168 pcie_set_target_speed
+      RDX: 0000000000000001 RSI: 00000000000000ff RDI: ffff9acd82efa000
+      pcie_failed_link_retrain
+      pci_device_add
+      pci_scan_single_device
 
--- 
-Peter Xu
+    Mask out the non-speed bits in PCIE_LNKCTL2_TLS2SPEED() and
+    PCIE_LNKCAP_SLS2SPEED() so they don't incorrectly return PCI_SPEED_UNKNOWN.
 
