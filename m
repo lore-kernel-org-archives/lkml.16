@@ -1,184 +1,150 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from out30-101.freemail.mail.aliyun.com (out30-101.freemail.mail.aliyun.com [115.124.30.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E332580D1;
-	Tue, 24 Jun 2025 08:26:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25C9925178E;
+	Tue, 24 Jun 2025 08:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753603; cv=none; b=gPuifzIsJGvdkFX1DGtMbTCb1C+BUqUMg9fwtaTBl+p90orbMNAFLTHV6F+zhpsgtmOo5douEwy5QiDgFOM7IG5yFLDDUAsqowpApNAk8+dZWwrxA6PGNIPN1HWOrFx9O9k/ZCcXXvwgBiL3k4yAmTQYTdjrNgRpvwIvEjRRLy0=
+	t=1750753618; cv=none; b=t7Qa11ztwit2T4SpkvORHYPuoZo3KdV98cq+sEq1V81hfKIYZX3uOdapuqA35hAh1lt/62BfflBxrLQVXrKO3XFNthYo3CX9d25HTHQW/m0o0R53P6SnDhrFRpi6dp02GhSXFGqaQQyOQlkCYf9mWS7NzzCIJCms61u5+x2aZc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753603; c=relaxed/simple;
-	bh=pB6TeHVvGW/lzTRG9TVHTLZMxp/beOWTtzRN2s2zK5c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MsGZ3YV0uC7X8v7sPv3f0hU2xKlsmotK/OMrRYJV8fynhzilAGy/iWVUFXa8osDhdtcw4YrrBEewXD2SbuUcZl/IS6YYPTzn149lf45u4QcwVZrX+0cw/0DX6m4U8J8V2typssp1myGHqtNS41P++HFufRJLOwwtgKz8MryGc0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=En39445K; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750753618; c=relaxed/simple;
+	bh=sGsf4i3YBdkKLiqYjEz90SpoxBUWvcqZ/WqYvmvx/Fg=;
+	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=iAh4oXr4ErmhW39qMuGkMY6BAGcROVXh+SxWzyUuncvg6rRK6FWszRa/UxJ0PlpJl9nUrNzsK6iKQmTAfFK0ay7w57nHjff8vOVikyIw3u+iEGw3LUZPBlf9InP4pdOslJUa5MX1l1c5QmcrqstUOwkcGHiFX9IIlC6YNy50x2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=xq+e0shC; arc=none smtp.client-ip=115.124.30.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="En39445K"
-Received: from lelvem-sh02.itg.ti.com ([10.180.78.226])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55O8QWcs1109074;
-	Tue, 24 Jun 2025 03:26:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750753592;
-	bh=0qhBswGbMNvWeYkOf/T6ZsXPUsq70ZJr1FxaO+nhZus=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=En39445KDBwj46er6sRdmKv8GSsXSiTcVdQRj5bfsCvSnH5N4lmUYvUw10+JCNl54
-	 jhzkVOF5eC+B2hNFzFK7I3vv7hoSw/HZr9ZB/NwNIXJXCmiAfcXtfASp/2ynqEZ2Bj
-	 8nb8a7tx3276jus5cdJimfpZD/Stw4BO1qSXoLQo=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-	by lelvem-sh02.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55O8QW1R1551313
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 24 Jun 2025 03:26:32 -0500
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
- Jun 2025 03:26:31 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Tue, 24 Jun 2025 03:26:31 -0500
-Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.214])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55O8QUJG1448073;
-	Tue, 24 Jun 2025 03:26:30 -0500
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: <nm@ti.com>, <vigneshr@ti.com>, <devicetree@vger.kernel.org>
-CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devarsht@ti.com>, <u-kumar1@ti.com>,
-        <j-choudhary@ti.com>
-Subject: [PATCH v2 6/7] arm64: dts: ti: k3-j721s2-common-proc-board: Enable DisplayPort-1
-Date: Tue, 24 Jun 2025 13:56:18 +0530
-Message-ID: <20250624082619.324851-7-j-choudhary@ti.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250624082619.324851-1-j-choudhary@ti.com>
-References: <20250624082619.324851-1-j-choudhary@ti.com>
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="xq+e0shC"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750753607; h=Message-ID:Subject:Date:From:To;
+	bh=qETiyRDq01cZyiTdnYUireDBSsJWh8qcYkIgG1vIyng=;
+	b=xq+e0shCKgtWhi3tEpP9KtOlwLTnHucP6OlrfyOpoNvh2XiqhpDpMRLdynbvfCAC9j9IjaLqsweTTXTS0wbg9hjd9gwYzf4r07OJSrLYrNKJtYlIQnM6qi5NtVic02umxj1ZJAjB8+2acmlb+Xfo/WT1ouJXAMh0X5YIpEnzwNk=
+Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0Weg0EcI_1750753606 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Tue, 24 Jun 2025 16:26:46 +0800
+Message-ID: <1750753518.4877846-3-xuanzhuo@linux.alibaba.com>
+Subject: Re: [PATCH net v2 1/2] virtio-net: xsk: rx: fix the frame's length check
+Date: Tue, 24 Jun 2025 16:25:18 +0800
+From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
+To: Bui Quang Minh <minhquangbui99@gmail.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>,
+ Jason Wang <jasowang@redhat.com>,
+ =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>,
+ Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>,
+ virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ Bui Quang Minh <minhquangbui99@gmail.com>,
+ netdev@vger.kernel.org
+References: <20250621144952.32469-1-minhquangbui99@gmail.com>
+ <20250621144952.32469-2-minhquangbui99@gmail.com>
+In-Reply-To: <20250621144952.32469-2-minhquangbui99@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-Enable DSI display for J721S2 EVM.
+On Sat, 21 Jun 2025 21:49:51 +0700, Bui Quang Minh <minhquangbui99@gmail.com> wrote:
+> When calling buf_to_xdp, the len argument is the frame data's length
+> without virtio header's length (vi->hdr_len). We check that len with
+>
+> 	xsk_pool_get_rx_frame_size() + vi->hdr_len
+>
+> to ensure the provided len does not larger than the allocated chunk
+> size. The additional vi->hdr_len is because in virtnet_add_recvbuf_xsk,
+> we use part of XDP_PACKET_HEADROOM for virtio header and ask the vhost
+> to start placing data from
+>
+> 	hard_start + XDP_PACKET_HEADROOM - vi->hdr_len
+> not
+> 	hard_start + XDP_PACKET_HEADROOM
+>
+> But the first buffer has virtio_header, so the maximum frame's length in
+> the first buffer can only be
+>
+> 	xsk_pool_get_rx_frame_size()
+> not
+> 	xsk_pool_get_rx_frame_size() + vi->hdr_len
+>
+> like in the current check.
+>
+> This commit adds an additional argument to buf_to_xdp differentiate
+> between the first buffer and other ones to correctly calculate the maximum
+> frame's length.
+>
+> Fixes: a4e7ba702701 ("virtio_net: xsk: rx: support recv small mode")
+> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
 
-Add the endpoint nodes to describe connection from:
-DSS => DSI Bridge => DSI to eDP bridge => DisplayPort-1
+Reviewed-by: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
 
-Set status for all required nodes for DisplayPort-1 as 'okay'.
-
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
----
- .../dts/ti/k3-j721s2-common-proc-board.dts    | 89 +++++++++++++++++++
- 1 file changed, 89 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
-index 793d50344fad..efe857a50bb1 100644
---- a/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-j721s2-common-proc-board.dts
-@@ -93,6 +93,29 @@ vdd_sd_dv: gpio-regulator-TLV71033 {
- 			 <3300000 0x1>;
- 	};
- 
-+	dp1_pwr_3v3: regulator-dp1-prw {
-+		compatible = "regulator-fixed";
-+		regulator-name = "dp1-pwr";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpio = <&exp4 1 GPIO_ACTIVE_HIGH>; /* P1 - DP1_PWR_SW_EN */
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+	dp1: connector-dp1 {
-+		compatible = "dp-connector";
-+		label = "DP1";
-+		type = "full-size";
-+		dp-pwr-supply = <&dp1_pwr_3v3>;
-+
-+		port {
-+			dp1_connector_in: endpoint {
-+				remote-endpoint = <&dp1_out>;
-+			};
-+		};
-+	};
-+
- 	transceiver1: can-phy1 {
- 		compatible = "ti,tcan1043";
- 		#phy-cells = <0>;
-@@ -563,3 +586,69 @@ &main_mcan5 {
- 	pinctrl-0 = <&main_mcan5_pins_default>;
- 	phys = <&transceiver4>;
- };
-+
-+&dss {
-+	/*
-+	 * DSS on J721S2-EVM supports DP on VP0 and DSI on VP2.
-+	 * These clock assignments are chosen to enable the following outputs:
-+	 * VP0 - DisplayPort SST
-+	 * VP2 - DSI
-+	 */
-+	status = "okay";
-+	assigned-clocks = <&k3_clks 158 2>,
-+			  <&k3_clks 158 14>;
-+	assigned-clock-parents = <&k3_clks 158 3>,
-+				 <&k3_clks 158 16>;
-+};
-+
-+&dss_ports {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	port@2 {
-+		reg = <2>;
-+		dpi2_out: endpoint {
-+			remote-endpoint = <&dsi0_in>;
-+		};
-+	};
-+};
-+
-+&dsi0_ports {
-+	port@0 {
-+		reg = <0>;
-+		dsi0_out: endpoint {
-+			remote-endpoint = <&dp1_in>;
-+		};
-+	};
-+
-+	port@1 {
-+		reg = <1>;
-+		dsi0_in: endpoint {
-+			remote-endpoint = <&dpi2_out>;
-+		};
-+	};
-+};
-+
-+&dsi_edp_bridge_ports {
-+	port@0 {
-+		reg = <0>;
-+		dp1_in: endpoint {
-+			remote-endpoint = <&dsi0_out>;
-+		};
-+	};
-+
-+	port@1 {
-+		reg = <1>;
-+		dp1_out: endpoint {
-+			remote-endpoint = <&dp1_connector_in>;
-+		};
-+	};
-+};
-+
-+&dphy_tx0 {
-+	status = "okay";
-+};
-+
-+&dsi0 {
-+	status = "okay";
-+};
--- 
-2.34.1
-
+> ---
+>  drivers/net/virtio_net.c | 22 ++++++++++++++++++----
+>  1 file changed, 18 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
+> index e53ba600605a..1eb237cd5d0b 100644
+> --- a/drivers/net/virtio_net.c
+> +++ b/drivers/net/virtio_net.c
+> @@ -1127,15 +1127,29 @@ static void check_sq_full_and_disable(struct virtnet_info *vi,
+>  	}
+>  }
+>
+> +/* Note that @len is the length of received data without virtio header */
+>  static struct xdp_buff *buf_to_xdp(struct virtnet_info *vi,
+> -				   struct receive_queue *rq, void *buf, u32 len)
+> +				   struct receive_queue *rq, void *buf,
+> +				   u32 len, bool first_buf)
+>  {
+>  	struct xdp_buff *xdp;
+>  	u32 bufsize;
+>
+>  	xdp = (struct xdp_buff *)buf;
+>
+> -	bufsize = xsk_pool_get_rx_frame_size(rq->xsk_pool) + vi->hdr_len;
+> +	/* In virtnet_add_recvbuf_xsk, we use part of XDP_PACKET_HEADROOM for
+> +	 * virtio header and ask the vhost to fill data from
+> +	 *         hard_start + XDP_PACKET_HEADROOM - vi->hdr_len
+> +	 * The first buffer has virtio header so the remaining region for frame
+> +	 * data is
+> +	 *         xsk_pool_get_rx_frame_size()
+> +	 * While other buffers than the first one do not have virtio header, so
+> +	 * the maximum frame data's length can be
+> +	 *         xsk_pool_get_rx_frame_size() + vi->hdr_len
+> +	 */
+> +	bufsize = xsk_pool_get_rx_frame_size(rq->xsk_pool);
+> +	if (!first_buf)
+> +		bufsize += vi->hdr_len;
+>
+>  	if (unlikely(len > bufsize)) {
+>  		pr_debug("%s: rx error: len %u exceeds truesize %u\n",
+> @@ -1260,7 +1274,7 @@ static int xsk_append_merge_buffer(struct virtnet_info *vi,
+>
+>  		u64_stats_add(&stats->bytes, len);
+>
+> -		xdp = buf_to_xdp(vi, rq, buf, len);
+> +		xdp = buf_to_xdp(vi, rq, buf, len, false);
+>  		if (!xdp)
+>  			goto err;
+>
+> @@ -1358,7 +1372,7 @@ static void virtnet_receive_xsk_buf(struct virtnet_info *vi, struct receive_queu
+>
+>  	u64_stats_add(&stats->bytes, len);
+>
+> -	xdp = buf_to_xdp(vi, rq, buf, len);
+> +	xdp = buf_to_xdp(vi, rq, buf, len, true);
+>  	if (!xdp)
+>  		return;
+>
+> --
+> 2.43.0
+>
