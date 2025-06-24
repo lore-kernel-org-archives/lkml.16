@@ -1,110 +1,80 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776672CCC1
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E1626CE11;
+	Tue, 24 Jun 2025 19:56:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750794703; cv=none; b=cThzzgH1fhkQCidHRp7xSaua5rpS++xDhXuMpXExW0jcL2in6hBPv2DjLbD0IHeoiUv/DISwfYTuO27VXiJCgFBEmwxaa0yBakujVb+HSA/D+xvZCpsTxIg7Np66r26eLQQzW/DkHG7PMGw8KcPN4C56yguV9a07xedW39aj3Fs=
+	t=1750794974; cv=none; b=rHJeHwkQ3GiWOzFUiP70kZ+vzbuvp1sq5B41LnGa9To3h6eCKONoa7E81UaNIixefOSfYeiWbLsG0UvG7auk1U6AL2+cmJlIFcQPcM9qjt8HkfQrFlk7VYj3fYulD0Slhz195TYvyd8nb7uWqfmQStEzKl5xLONFyToH4A7tpGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750794703; c=relaxed/simple;
-	bh=B/ULaHUETU6DovdIQRhQ/RyujC0Dkl9fSx3NjtmEe7Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HEL4qEkxrKwVl4rjf3Njjp8lx3nlZVK2ARTH9168o9bADF78kq/qaGA78fG8p+pcjCL7ldTp9iw+9LLLHQZFOunjRuOPDY7LBlKakVt40oHEBerakbgqW3FR8RBRO/w318hmDTEY/a463iXJeVdKjj5j6XBaNcAJbNry51V7Ir0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bx4nC00S; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750794974; c=relaxed/simple;
+	bh=zTEiSDhPnb/SmNQlci8Du6ozlroH9HA2n8hti67QsGA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zesh7QUuP7BUgZ3axsIJM1MFue/xv2DpE99hmqG6tZLFNBuPmJd2srd05cuxBaPyjXThCY6yZGtE3YVSFfqM3/+q4OgD0NPA/+nb4Vq6S+tCzBj+RVK/uob5oKo1KTOfr/eV537+JDhpSC0iOjXPzoToHakH3Dp1E1MUzzkx95A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZF5Jkk8i; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bx4nC00S"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-553dceb345eso6392792e87.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:51:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750794699; x=1751399499; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B/ULaHUETU6DovdIQRhQ/RyujC0Dkl9fSx3NjtmEe7Q=;
-        b=bx4nC00S1X0r3LL2R/hiqiaf8/D6l8Q6+/3VxcLz6FsOkAcJu15PLb3a11a5Ea3Pum
-         ILW8cMasruwTlIVvM8njMKJA9urHb5nK3ePOPakW19RW/ieOjdzAJ57Z7ul4OPDxKFFx
-         soZK1wyh7s2ydB2jZS0f66zZ2qhb70eQDaj3v/iVqxpA5T5XnLZqgtXjJ9cJYJC+CoDR
-         qEnkJAIG41ScY4k8Bk1eWej5sRj5cKZJltwtuxvyFU44zGBbABPhGOCLbBi4bgZymI7H
-         ztnf4+U0rK/C+O6sAqhPW2QMGm+2Mt0ZhpuCUa9WePXAd4hqJzPl4qgnnqsTJ2M4AxKL
-         23Xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750794699; x=1751399499;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B/ULaHUETU6DovdIQRhQ/RyujC0Dkl9fSx3NjtmEe7Q=;
-        b=Y5woJxsMWO4DMk/ovyiCN85F9R/PLtJGMZ1aFjM/xbt97K4VrO73rpU5S+5koP25on
-         +onP37+rQ6N2JBn6QLzDImzTLblxu1Xz16LFxKev2yysUAuCSbCJrIvTEdD6j4Cn/Piu
-         twVgkNruAhqTEaiJYLchz87HYzXQeYIQ2Yl/ZrUvoDHoH1U74afFlCC0rxy6Zt2lmYRP
-         ri7DGy/DnuKoz2ZEeZ5OkCwZwmb2dvKX3bSD0cFsWUbXkD3e/BoDzm92ZyLMbnwi2dE/
-         IN7fYEhKaSCsMGpmB0gTG6m+x4g5itxICfLLojlt8d5Ad+1OPYtsKchFdtdKdd6uDqJj
-         5ndQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1gvcNccsvOqqKxr2/PTg0KoB517Hhj4007QsCD3nFCTYVdZnKhSdJWPQb/JKGPmCEB5iV0a73IXQ3cA4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKDGGfsN497YM7QMQwKxDdp/Ujk5rWULm6Y8A1WlBze24I1MGm
-	j/PP1kya8Si+rYFOVog/DovYrYTnFepAifHHNIv4XP93d2nUEwBYKpuKWO4WK4O7eqhIOqJlqbh
-	gzgXOFaAyZw8qioj3yu/6Ur+bIXSjPXXqnsyEplYBVg==
-X-Gm-Gg: ASbGnctKvUSS58HBL7XQc1w2i+NR6L6pVEBf+zDscHpPy8NYCVbxK30Iz08Js9RjyUg
-	VjVDlNxUZuec/4pvikwFQn/9H/klvGkhZtjK+Ox1gj31PX/ifzouhFNnzFbeDGLQSt/mOkxxNPB
-	Y1QeV6SfJbPLp6h3O1f9esywzgV89d0lx3TtV9uoeWmxQ=
-X-Google-Smtp-Source: AGHT+IE7ZhidhDycmbWSPBv1SXukyv4UOsTnptIV0NVFDdvfjdJisylDEZywOQMLRXTZuVgtEJHSpJFFFA3MmjtlJ4s=
-X-Received: by 2002:a05:6512:3b9d:b0:553:358e:72a8 with SMTP id
- 2adb3069b0e04-554fdd5d263mr47305e87.38.1750794699262; Tue, 24 Jun 2025
- 12:51:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZF5Jkk8i"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=kdFFQM8DBnlzbNbR3IoBJ1KwDp3c0vUeXIeHUg3TCw8=; b=ZF5Jkk8i+is9uJTE8UJbADAUvr
+	IkKqs8NFBHcMEBYhHFAxtEif+Yu12Dv1F0dKdubRerUvKuJRkJ/bEJqrc1ybbVqCKhQIZpii2EpEC
+	0xC3BkXvB7qW6G2l7cPnai4O4NCt7uF2NjqBhXLFLN/8hJ/IrjTrSgwZp2TUUQUAstEK1PLqmGwyM
+	sMzpy0EhjfbDCoGoq/o/WKji4PPjPe6Ronx2TA+W4N9HTez1kyJXaHzuahK0C2i5UAtmbrqlo9+Yc
+	PXtQuRJ3cMGugqsfymgfHPFhL+e0s9i30lVp5boZJUCwDdudup8sDAgcTiCFySoipNJf1t3LvZCSv
+	88tAJd6g==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uU9kY-00000007WLb-3f9v;
+	Tue, 24 Jun 2025 19:56:10 +0000
+Date: Tue, 24 Jun 2025 20:56:10 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: Jeff Layton <jlayton@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>, ying chen <yc1082463@gmail.com>,
+	djwong@kernel.org, linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] xfs: report a writeback error on a read() call
+Message-ID: <aFsC2vTJNG7UmfMi@casper.infradead.org>
+References: <CAN2Y7hyi1HCrSiKsDT+KD8hBjQmsqzNp71Q9Z_RmBG0LLaZxCA@mail.gmail.com>
+ <aFqyyUk9lO5mSguL@infradead.org>
+ <c77a55f5ab294be222c8abd86c2b8fddabca9f61.camel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624-gpio-mmio-rework-v1-0-aea12209d258@linaro.org>
-In-Reply-To: <20250624-gpio-mmio-rework-v1-0-aea12209d258@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 24 Jun 2025 21:51:27 +0200
-X-Gm-Features: AX0GCFuix9QqcfdydgWIF-t3O-vbnn63nX5F5wQyNw4KZuxuAr9t5L-dWlGRbto
-Message-ID: <CACRpkdYdZQ4rKXPbiUve4n-p6q+HG4QS_oFkY1JDkJeqP4mZwg@mail.gmail.com>
-Subject: Re: [PATCH 0/8] gpio: move generic GPIO chip fields out of the
- top-level gpio_chip struct
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c77a55f5ab294be222c8abd86c2b8fddabca9f61.camel@kernel.org>
 
-On Tue, Jun 24, 2025 at 3:27=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Tue, Jun 24, 2025 at 02:26:18PM -0400, Jeff Layton wrote:
+> On Tue, 2025-06-24 at 07:14 -0700, Christoph Hellwig wrote:
+> > On Sun, Jun 22, 2025 at 08:32:18PM +0800, ying chen wrote:
+> > > Normally, user space returns immediately after writing data to the
+> > > buffer cache. However, if an error occurs during the actual disk
+> > > write operation, data loss may ensue, and there is no way to report
+> > > this error back to user space immediately. Current kernels may report
+> > > writeback errors when fsync() is called, but frequent invocations of
+> > > fsync() can degrade performance. Therefore, a new sysctl
+> > > fs.xfs.report_writeback_error_on_read is introduced, which, when set
+> > > to 1, reports writeback errors when read() is called. This allows user
+> > > space to be notified of writeback errors more promptly.
+> > 
+> > That's really kernel wide policy and not something magic done by a
+> > single file system.
+> 
+> ...not to mention that getting an error back on a read for a prior
+> writeback error would be completely unexpected by most applications.
 
-> The conversion of GPIO drivers to using the new line value setters is
-> moving nicely along and we're on track to have all the existing
-> providers converted upstream after the next merge window. There's
-> another piece of technical debt that bothers me - the fact that struct
-> gpio_chip contains a bunch of fields that are only relevant to the
-> generic GPIO chip implementation from gpio-mmio.c.
->
-> Let's work towards moving them out of struct gpio_chip and into their
-> own struct gpio_generic_chip. Doing this in a single series would
-> require some ~40 commits which is way too many to review at a time.
-> There are also users of gpio-mmio under drivers/pinctrl/ and
-> drivers/mfd/ which would require cross-subsystem merges. I think it's
-> better to do this in stages over 3 release cycles. This series adds a
-> new API for gpio-mmio users, hiding the implementation details and
-> converts the first set of GPIO drivers. Once upstream, we'll convert all
-> remaining users and once that's done, we'll move all the
-> gpio-mmio-specific fields to the new structure, convert the internals to
-> using them and remove bgpio_init(). The last step will be done in a
-> backward-compatible way, not affecting the users.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Well.  It's somewhat understandable:
 
-I'm in. And I know you will push through with it as well.
-Patch 1/8 looks like a dream, approved.
+	write() (returns success)
+	writeback happens, error logged
+	memory pressure evicts folio
+	read() brings folio into page cache
+	attempt to read contents fails, error returned
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
+I'm not sure it's a good solution, but it's plausible.
