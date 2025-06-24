@@ -1,218 +1,1270 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAD126CE01
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:34:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35677307484
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750779271; cv=none; b=HMxbiqPQq8wdm+msmyzW0V2QgdXeInWGLaZrZAt90d/4pIteEFeBi7rrY+kz5yvsEhGJzcFwo3h9dlAHdKh9TkWZYGOfucp7bKrfA922i3Au5t5Ucocx52Bxwmx5pNB2PdvVQxp3dD50RCQlQEHG/36vWTH1feMMdZCCod3l9sQ=
+	t=1750779298; cv=none; b=FgffTZlOgh1EtoUUKKue/UKY4sJtYVqSDBgr3H0rfITzZ4vZgqca18YxYv/812XEkPr9LEYbhaZdkZ+wQPxu8OknommINLueO+/FFSZkFeBpRfJGNq/QEuFRcy3p6RwOLsoqhSUmX2xX9p/qPYPFHBqO+NX97R6aOKz6c9mi6Ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750779271; c=relaxed/simple;
-	bh=SGgzbGCmXeXBsxVmZQGsWAKziVz62vfg3/s+kHQ/2nU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SoitQWT2BGke6h9NrHlQ2ZWNUJPaEZ7LXGWGmuLYi+mC3UMwTssB4dIcbXTZdxPy6Ibb+U+BNtdT0J+u7VPKK1O1K1iTv3WqFT0JOxJDuuMai+LNN4fl/3/jsk01ENMl6wMbJRijRGrSVhds7Z33nsNRqXIV6gPAfgoOlreazYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YYjOhwuB; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750779298; c=relaxed/simple;
+	bh=GR1BgZvAyocAszsSKJsOFm7pV4qA0wMWl177NmVLFyg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=qiPdHiHQkoPz/7oTrXMlWVCU/cdWhPeKwRCO/g5YNufv/MOqFneEwAQKbFqfD9OIZqtfdpzy0mk4ErQd1Q34pgqJB9EN5zQipHOi2qy32UVW3wb9adLxyHrBgt/vWcXSoh8JrsCRYLgqv8Q2fqPPfgRSA/E62t4qikDHQdRg4u0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=f8L2k8TO; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YYjOhwuB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750779268;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=RcLpQIGOHnObqeC9JE4WrzqVitzt8nhGtyf8y+j3oKs=;
-	b=YYjOhwuB8unigFceDLIc9+Jk7cuifrVmySXAe2FrVC9YA0m98BufvgroDj0JaaeuvHFLHC
-	31Sb1EMIi8BgRYGOsehq3MJk8rZmiv1wIEKlabz4K8vTFvGa3526H6+T1mTK7p1IF5DbBa
-	jcPKeefJpBUFE4yCC490dcI247cQet0=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-622-yhM9mzmcPrWcAHJR_FnJ7A-1; Tue, 24 Jun 2025 11:34:26 -0400
-X-MC-Unique: yhM9mzmcPrWcAHJR_FnJ7A-1
-X-Mimecast-MFC-AGG-ID: yhM9mzmcPrWcAHJR_FnJ7A_1750779265
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-451dda846a0so42080045e9.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:34:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="f8L2k8TO"
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-adb2e9fd208so102908566b.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:34:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1750779291; x=1751384091; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Exp84snFrQHG/l6iM7x4THGMsNmZE6up3UdQaRw+XRU=;
+        b=f8L2k8TOvByL2HS/kLf40FpNlYpDep7px59nRd52qDcQL/cOQFxEQxxS/8SZWPVW9m
+         Mu8uvexQnHep69Ruf+Thj8EDeTVdiQvqoejIxrXIf6Mt6hY3mf/zv5vMtS3vjxgaZhhm
+         WF5k13wm6hUbk5Dphwgr1Oq83ptJVI264X1mwJjCzkVOmSaO9hAHLNOkljBG4FeiEq+d
+         Diqyxi9lTpCc7gI6PchrvhBuwF05ZkKVP4nbwTieXrpG6kmHbFUyXUZfdk1fLea2kToS
+         sWdcgp3+2UvkpAosCKGvfwGkaKWpCOnnpDAjqU1GNolENfpz7lW1FuuaaNHGszG5Ya3J
+         l+EQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750779265; x=1751384065;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=RcLpQIGOHnObqeC9JE4WrzqVitzt8nhGtyf8y+j3oKs=;
-        b=vhkutkC8BMDMnjxoFElHdy/uInZyTwzUKpEz+dmiL6Ezh8H8lcGlvRpyGgfSXfI8+e
-         rGs9QO5FNDH11VAKoHRkuYnhiXUWr1huKGCFRdOmbQbzJKEopYaKzNpHkUSBcnk3brfR
-         QRys1cN8AeiU53JABBQzs9cCVu2mbXi+JIeo/bkegXOxxhaFgoUFyXEZnxqqp3kJ0BOd
-         jtckMLBVbPFksf92DZwtI1bZIqejZBguFhrmtMViJyG8T+qiJffwBK/9gdySXBCI3dao
-         UEpF9eWGoI8cYYk2Z5d4CbePuwAQL4RZq/KD26xv58eKx4J1UZ/gm7h96HV6TcZcck+n
-         h7JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2xJcSwaWQUBjjMlHV5ZZQVug2pF4r2V3FX0WyIkhJPq8ma8M7v8aqnyoR8xWnpEKQPPE+ANhC1PSG+dA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1NHAVrt9MYJtzUtpsuhuc8ozUD1N0e5vpHlmKKCelOR8Xf/Pa
-	uCJTk70iyl62yi6YSJW9TaLSuGd61VsuOsksQUC2fA6rx6kpU8IjleiBeYYV1WEAiwQk2y2uXjd
-	8jaULT3LLO/tL077XoF9NG5STqCDD4sxd47F8fr8jSt/KCjWUg4vw2gtDKQJ651XLDg==
-X-Gm-Gg: ASbGncumr8ryZYwYRncjY+gZpyKk5Lq0TLt6LeVCpMamy5/oOaAWE8pwhBDTUBV8bML
-	lXCvex5uuFLVKZ3j0MlTJnyaVzvoYjXEWZ3ukzZmuKpjae51+HmTWCZo0WhMLBxCpGvsVX5jl/W
-	HMJz/WmcoKIuOOeGK4HDhkb9UHRRpafJEJ2KqtscKhkAQeqOMhTovTGhd2YO/nDBHMxBUKnFNqs
-	7fe4NOpmr5omaYO3IUkbebHeBDJGny1I53iODkWB2pLkX9gHmuzo1ofMhWlQjaKXheRHFFgbJv6
-	7YMCoBKqh3UbOsvqOcb79mOB8v4JyPZyADGWl/Lp7z8Y3MTsOj3v+Kk=
-X-Received: by 2002:a05:6000:644:b0:3a1:fa6c:4735 with SMTP id ffacd0b85a97d-3a6d12de9f5mr15286835f8f.35.1750779265340;
-        Tue, 24 Jun 2025 08:34:25 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IH6Ygv2yKeSOnyksLf8xOR4yHKXMKNiKsSWotC4sSpeb23NQbCgX43VhwnxwPvnUhGhaM9S2Q==
-X-Received: by 2002:a05:6000:644:b0:3a1:fa6c:4735 with SMTP id ffacd0b85a97d-3a6d12de9f5mr15286806f8f.35.1750779264907;
-        Tue, 24 Jun 2025 08:34:24 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453755e7d1dsm62924635e9.10.2025.06.24.08.34.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 08:34:24 -0700 (PDT)
-Message-ID: <2c19a6cf-0b42-477b-a672-ed8c1edd4267@redhat.com>
-Date: Tue, 24 Jun 2025 17:34:23 +0200
+        d=1e100.net; s=20230601; t=1750779291; x=1751384091;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Exp84snFrQHG/l6iM7x4THGMsNmZE6up3UdQaRw+XRU=;
+        b=VqEva1cQi9E1V3gjixxQX97Lf+nWc4nEwrNsJtv/b/U+TEjol4wKQMROI0RAYWJs3j
+         LrK89D2uKhrNPiFK1RBcHtPl45ZvZ/S6Lal/LvPwA+PV1Eq3aFnvyBVrD5wAv9pge9U0
+         GMlJx8S7LMRvfk32kHJGQMJCYUyFTv4uSKJL/tu3c3yjTJR9H5Q0I1YOxsdkHTaiH6Bt
+         Pg/HD2EW496hfiG7ER3TEEPenAP+MQ4XFt0216we8HhGG/TPvRbu3soiIM57z3TpyLcU
+         IedM34danFZxTUEEsP0gdMzDdvMpT6XGBfyUMn7fTimXdMnsgLnKfd9mx5ERioiN7qrz
+         2Klg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTYqTrNcO2zWscVM5JQUSACd/mmbYrlw0dZa4Ae+QtP7Ia2dkNGthyIVlmutUbk4dkyhZNzhODH4WVbec=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx3zLFm7TS6a07gDLkeRJs3KK7kBK0fDv1zsawHiVZv3ONudzoJ
+	gWuMrZK8nlDJlbLJIekjDfJxQfc5B8VyzgYmIKfVqw+8sX4YAWIQIRE5sZHvW8SpbFE=
+X-Gm-Gg: ASbGncuNih6iUPopEESOvrLdtv+uv7hhtz3ce2y8ypF/ZO6K71Cwjunyc8+/sND16BF
+	qDoawpWUMC+b7OiNbXKCckmdCtBU0qyrpoGhbT4DiEd+yoGyVP8t36nODOHa/KSgMs3LLFVdnsw
+	ibqU2Jz7vZC1lMJhPjZjEKjTMfOtKCcrtPJ+gpPyhNxmSCOkHCyCe9lYlvbVzvzRdV9ixnZHkpA
+	UM0OdlduAqi1IGadXf1sFU5hvA+dievzZw+wWTYbSRHl9hvX3gAfjPAIvK30WSAYD7AfYiMZfN4
+	jXbA5stABsDO1ak818qlFQJVozhVqa+Z9oUBYFH2MHI5g9tS42mheicAdL6GyQZi0K2UOJg1/Wk
+	3sDR+fYH4Vq+c9QmOOSz9H09mHPcBx3/l
+X-Google-Smtp-Source: AGHT+IG0S295o/tpcWGhgolzbtQFVowreocykqzh8BjHlBUMEjGOCYw73hierfLyZoEQ5L1Sf9BHjw==
+X-Received: by 2002:a17:907:ec0e:b0:ad2:46b2:78b2 with SMTP id a640c23a62f3a-ae0bc06adf2mr44003766b.18.1750779291252;
+        Tue, 24 Jun 2025 08:34:51 -0700 (PDT)
+Received: from localhost (host-79-23-237-223.retail.telecomitalia.it. [79.23.237.223])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae08598b7a8sm461745666b.184.2025.06.24.08.34.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 08:34:50 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>,
+	Phil Elwell <phil@raspberrypi.com>,
+	Dave Stevenson <dave.stevenson@raspberrypi.com>,
+	kernel-list@raspberrypi.com,
+	Matthias Brugger <mbrugger@suse.com>
+Subject: [PATCH stblinux/next] pinctrl: rp1: Implement RaspberryPi RP1 pinmux/pinconf support
+Date: Tue, 24 Jun 2025 17:36:22 +0200
+Message-ID: <8c282b89b1aa8b9e3c00f6bd3980332c47d82df7.1750778806.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
- folios during reclamation
-To: Lance Yang <ioworker0@gmail.com>
-Cc: 21cnbao@gmail.com, akpm@linux-foundation.org,
- baolin.wang@linux.alibaba.com, chrisl@kernel.org, kasong@tencent.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-riscv@lists.infradead.org,
- lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, v-songbaohua@oppo.com,
- x86@kernel.org, ying.huang@intel.com, zhengtangquan@oppo.com
-References: <a694398c-9f03-4737-81b9-7e49c857fcbe@redhat.com>
- <20250624152654.38145-1-ioworker0@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250624152654.38145-1-ioworker0@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 24.06.25 17:26, Lance Yang wrote:
-> On 2025/6/24 20:55, David Hildenbrand wrote:
->> On 14.02.25 10:30, Barry Song wrote:
->>> From: Barry Song <v-songbaohua@oppo.com>
-> [...]
->>> diff --git a/mm/rmap.c b/mm/rmap.c
->>> index 89e51a7a9509..8786704bd466 100644
->>> --- a/mm/rmap.c
->>> +++ b/mm/rmap.c
->>> @@ -1781,6 +1781,25 @@ void folio_remove_rmap_pud(struct folio *folio,
->>> struct page *page,
->>>    #endif
->>>    }
->>> +/* We support batch unmapping of PTEs for lazyfree large folios */
->>> +static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
->>> +            struct folio *folio, pte_t *ptep)
->>> +{
->>> +    const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->>> +    int max_nr = folio_nr_pages(folio);
->>
->> Let's assume we have the first page of a folio mapped at the last page
->> table entry in our page table.
-> 
-> Good point. I'm curious if it is something we've seen in practice ;)
+The current implementation for the pin controller peripheral
+on the RP1 chipset supports gpio functionality and just the
+basic configuration of pin hw capabilities.
 
-I challenge you to write a reproducer :P I assume it might be doable 
-through simple mremap().
+Add support for selecting the pin alternate function (pinmux)
+and full configuration of the pin (pinconf).
 
-> 
->>
->> What prevents folio_pte_batch() from reading outside the page table?
-> 
-> Assuming such a scenario is possible, to prevent any chance of an
-> out-of-bounds read, how about this change:
-> 
-> diff --git a/mm/rmap.c b/mm/rmap.c
-> index fb63d9256f09..9aeae811a38b 100644
-> --- a/mm/rmap.c
-> +++ b/mm/rmap.c
-> @@ -1852,6 +1852,25 @@ static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
->   	const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->   	int max_nr = folio_nr_pages(folio);
->   	pte_t pte = ptep_get(ptep);
-> +	unsigned long end_addr;
-> +
-> +	/*
-> +	 * To batch unmap, the entire folio's PTEs must be contiguous
-> +	 * and mapped within the same PTE page table, which corresponds to
-> +	 * a single PMD entry. Before calling folio_pte_batch(), which does
-> +	 * not perform boundary checks itself, we must verify that the
-> +	 * address range covered by the folio does not cross a PMD boundary.
-> +	 */
-> +	end_addr = addr + (max_nr * PAGE_SIZE) - 1;
-> +
-> +	/*
-> +	 * A fast way to check for a PMD boundary cross is to align both
-> +	 * the start and end addresses to the PMD boundary and see if they
-> +	 * are different. If they are, the range spans across at least two
-> +	 * different PMD-managed regions.
-> +	 */
-> +	if ((addr & PMD_MASK) != (end_addr & PMD_MASK))
-> +		return false;
+Related pins are also gathered into groups.
 
-You should not be messing with max_nr = folio_nr_pages(folio) here at 
-all. folio_pte_batch() takes care of that.
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+---
+ drivers/pinctrl/pinctrl-rp1.c | 1049 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 1044 insertions(+), 5 deletions(-)
 
-Also, way too many comments ;)
-
-You may only batch within a single VMA and within a single page table.
-
-So simply align the addr up to the next PMD, and make sure it does not 
-exceed the vma end.
-
-ALIGN and friends can help avoiding excessive comments.
-
+diff --git a/drivers/pinctrl/pinctrl-rp1.c b/drivers/pinctrl/pinctrl-rp1.c
+index 07d54bb6bc19..d300f28c52cd 100644
+--- a/drivers/pinctrl/pinctrl-rp1.c
++++ b/drivers/pinctrl/pinctrl-rp1.c
+@@ -10,9 +10,16 @@
+ 
+ #include <linux/gpio/driver.h>
+ #include <linux/of_irq.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinmux.h>
+ #include <linux/platform_device.h>
++#include <linux/seq_file.h>
+ #include <linux/regmap.h>
+ 
++#include "pinmux.h"
++#include "pinconf.h"
++#include "pinctrl-utils.h"
++
+ #define MODULE_NAME "pinctrl-rp1"
+ #define RP1_NUM_GPIOS	54
+ #define RP1_NUM_BANKS	3
+@@ -135,6 +142,104 @@ static const struct reg_field rp1_pad_fields[] = {
+ 	[RP1_PAD_OUT_DISABLE]		= REG_FIELD(0, 7, 7),
+ };
+ 
++#define FUNC(f) \
++	[func_##f] = #f
++#define RP1_MAX_FSEL 8
++#define PIN(i, f0, f1, f2, f3, f4, f5, f6, f7, f8) \
++	[i] = { \
++		.funcs = { \
++			func_##f0, \
++			func_##f1, \
++			func_##f2, \
++			func_##f3, \
++			func_##f4, \
++			func_##f5, \
++			func_##f6, \
++			func_##f7, \
++			func_##f8, \
++		}, \
++	}
++
++#define LEGACY_MAP(n, f0, f1, f2, f3, f4, f5) \
++	[n] = { \
++		func_gpio, \
++		func_gpio, \
++		func_##f5, \
++		func_##f4, \
++		func_##f0, \
++		func_##f1, \
++		func_##f2, \
++		func_##f3, \
++	}
++
++enum funcs {
++	func_alt0,
++	func_alt1,
++	func_alt2,
++	func_alt3,
++	func_alt4,
++	func_gpio,
++	func_alt6,
++	func_alt7,
++	func_alt8,
++	func_none,
++	func_aaud,
++	func_dpi,
++	func_dsi0_te_ext,
++	func_dsi1_te_ext,
++	func_gpclk0,
++	func_gpclk1,
++	func_gpclk2,
++	func_gpclk3,
++	func_gpclk4,
++	func_gpclk5,
++	func_i2c0,
++	func_i2c1,
++	func_i2c2,
++	func_i2c3,
++	func_i2c4,
++	func_i2c5,
++	func_i2c6,
++	func_i2s0,
++	func_i2s1,
++	func_i2s2,
++	func_ir,
++	func_mic,
++	func_pcie_clkreq_n,
++	func_pio,
++	func_proc_rio,
++	func_pwm0,
++	func_pwm1,
++	func_sd0,
++	func_sd1,
++	func_spi0,
++	func_spi1,
++	func_spi2,
++	func_spi3,
++	func_spi4,
++	func_spi5,
++	func_spi6,
++	func_spi7,
++	func_spi8,
++	func_uart0,
++	func_uart1,
++	func_uart2,
++	func_uart3,
++	func_uart4,
++	func_uart5,
++	func_vbus0,
++	func_vbus1,
++	func_vbus2,
++	func_vbus3,
++	func__,
++	func_count = func__,
++	func_invalid = func__,
++};
++
++struct rp1_pin_funcs {
++	u8 funcs[RP1_FSEL_COUNT];
++};
++
+ struct rp1_iobank_desc {
+ 	int min_gpio;
+ 	int num_gpios;
+@@ -173,6 +278,389 @@ struct rp1_pinctrl {
+ 	raw_spinlock_t irq_lock[RP1_NUM_BANKS];
+ };
+ 
++/* pins are just named GPIO0..GPIO53 */
++#define RP1_GPIO_PIN(a) PINCTRL_PIN(a, "gpio" #a)
++static struct pinctrl_pin_desc rp1_gpio_pins[] = {
++	RP1_GPIO_PIN(0),
++	RP1_GPIO_PIN(1),
++	RP1_GPIO_PIN(2),
++	RP1_GPIO_PIN(3),
++	RP1_GPIO_PIN(4),
++	RP1_GPIO_PIN(5),
++	RP1_GPIO_PIN(6),
++	RP1_GPIO_PIN(7),
++	RP1_GPIO_PIN(8),
++	RP1_GPIO_PIN(9),
++	RP1_GPIO_PIN(10),
++	RP1_GPIO_PIN(11),
++	RP1_GPIO_PIN(12),
++	RP1_GPIO_PIN(13),
++	RP1_GPIO_PIN(14),
++	RP1_GPIO_PIN(15),
++	RP1_GPIO_PIN(16),
++	RP1_GPIO_PIN(17),
++	RP1_GPIO_PIN(18),
++	RP1_GPIO_PIN(19),
++	RP1_GPIO_PIN(20),
++	RP1_GPIO_PIN(21),
++	RP1_GPIO_PIN(22),
++	RP1_GPIO_PIN(23),
++	RP1_GPIO_PIN(24),
++	RP1_GPIO_PIN(25),
++	RP1_GPIO_PIN(26),
++	RP1_GPIO_PIN(27),
++	RP1_GPIO_PIN(28),
++	RP1_GPIO_PIN(29),
++	RP1_GPIO_PIN(30),
++	RP1_GPIO_PIN(31),
++	RP1_GPIO_PIN(32),
++	RP1_GPIO_PIN(33),
++	RP1_GPIO_PIN(34),
++	RP1_GPIO_PIN(35),
++	RP1_GPIO_PIN(36),
++	RP1_GPIO_PIN(37),
++	RP1_GPIO_PIN(38),
++	RP1_GPIO_PIN(39),
++	RP1_GPIO_PIN(40),
++	RP1_GPIO_PIN(41),
++	RP1_GPIO_PIN(42),
++	RP1_GPIO_PIN(43),
++	RP1_GPIO_PIN(44),
++	RP1_GPIO_PIN(45),
++	RP1_GPIO_PIN(46),
++	RP1_GPIO_PIN(47),
++	RP1_GPIO_PIN(48),
++	RP1_GPIO_PIN(49),
++	RP1_GPIO_PIN(50),
++	RP1_GPIO_PIN(51),
++	RP1_GPIO_PIN(52),
++	RP1_GPIO_PIN(53),
++};
++
++#define PIN_ARRAY(...) \
++	(const unsigned int []) {__VA_ARGS__}
++#define PIN_ARRAY_SIZE(...) \
++	(sizeof((unsigned int[]) {__VA_ARGS__}) / sizeof(unsigned int))
++#define RP1_GROUP(name, ...) \
++	PINCTRL_PINGROUP(#name, PIN_ARRAY(__VA_ARGS__), \
++			 PIN_ARRAY_SIZE(__VA_ARGS__))
++
++static const struct pingroup rp1_gpio_groups[] = {
++	RP1_GROUP(uart0, 14, 15),
++	RP1_GROUP(uart0_ctrl, 4, 5, 6, 7, 16, 17),
++	RP1_GROUP(uart1, 0, 1),
++	RP1_GROUP(uart1_ctrl, 2, 3),
++	RP1_GROUP(uart2, 4, 5),
++	RP1_GROUP(uart2_ctrl, 6, 7),
++	RP1_GROUP(uart3, 8, 9),
++	RP1_GROUP(uart3_ctrl, 10, 11),
++	RP1_GROUP(uart4, 12, 13),
++	RP1_GROUP(uart4_ctrl, 14, 15),
++	RP1_GROUP(uart5_0, 30, 31),
++	RP1_GROUP(uart5_0_ctrl, 32, 33),
++	RP1_GROUP(uart5_1, 36, 37),
++	RP1_GROUP(uart5_1_ctrl, 38, 39),
++	RP1_GROUP(uart5_2, 40, 41),
++	RP1_GROUP(uart5_2_ctrl, 42, 43),
++	RP1_GROUP(uart5_3, 48, 49),
++	RP1_GROUP(sd0, 22, 23, 24, 25, 26, 27),
++	RP1_GROUP(sd1, 28, 29, 30, 31, 32, 33),
++	RP1_GROUP(i2s0, 18, 19, 20, 21),
++	RP1_GROUP(i2s0_dual, 18, 19, 20, 21, 22, 23),
++	RP1_GROUP(i2s0_quad, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27),
++	RP1_GROUP(i2s1, 18, 19, 20, 21),
++	RP1_GROUP(i2s1_dual, 18, 19, 20, 21, 22, 23),
++	RP1_GROUP(i2s1_quad, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27),
++	RP1_GROUP(i2s2_0, 28, 29, 30, 31),
++	RP1_GROUP(i2s2_0_dual, 28, 29, 30, 31, 32, 33),
++	RP1_GROUP(i2s2_1, 42, 43, 44, 45),
++	RP1_GROUP(i2s2_1_dual, 42, 43, 44, 45, 46, 47),
++	RP1_GROUP(i2c4_0, 28, 29),
++	RP1_GROUP(i2c4_1, 34, 35),
++	RP1_GROUP(i2c4_2, 40, 41),
++	RP1_GROUP(i2c4_3, 46, 47),
++	RP1_GROUP(i2c6_0, 38, 39),
++	RP1_GROUP(i2c6_1, 51, 52),
++	RP1_GROUP(i2c5_0, 30, 31),
++	RP1_GROUP(i2c5_1, 36, 37),
++	RP1_GROUP(i2c5_2, 44, 45),
++	RP1_GROUP(i2c5_3, 49, 50),
++	RP1_GROUP(i2c0_0, 0, 1),
++	RP1_GROUP(i2c0_1, 8, 9),
++	RP1_GROUP(i2c1_0, 2, 3),
++	RP1_GROUP(i2c1_1, 10, 11),
++	RP1_GROUP(i2c2_0, 4, 5),
++	RP1_GROUP(i2c2_1, 12, 13),
++	RP1_GROUP(i2c3_0, 6, 7),
++	RP1_GROUP(i2c3_1, 14, 15),
++	RP1_GROUP(i2c3_2, 22, 23),
++	RP1_GROUP(dpi_16bit, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
++		  11, 12, 13, 14, 15, 16, 17, 18, 19),
++	RP1_GROUP(dpi_16bit_cpadhi, 0, 1, 2, 3, 4, 5, 6, 7, 8,
++		  12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24),
++	RP1_GROUP(dpi_16bit_pad666, 0, 1, 2, 3, 5, 6, 7, 8, 9,
++		  12, 13, 14, 15, 16, 17, 21, 22, 23, 24, 25),
++	RP1_GROUP(dpi_18bit, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
++		  11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21),
++	RP1_GROUP(dpi_18bit_cpadhi, 0, 1, 2, 3, 4, 5, 6, 7, 8,
++		  9, 12, 13, 14, 15, 16, 17, 20, 21, 22, 23, 24,
++		  25),
++	RP1_GROUP(dpi_24bit, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
++		  11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
++		  22, 23, 24, 25, 26, 27),
++	RP1_GROUP(spi0, 9, 10, 11),
++	RP1_GROUP(spi0_quad, 0, 1, 9, 10, 11),
++	RP1_GROUP(spi1, 19, 20, 21),
++	RP1_GROUP(spi2, 1, 2, 3),
++	RP1_GROUP(spi3, 5, 6, 7),
++	RP1_GROUP(spi4, 9, 10, 11),
++	RP1_GROUP(spi5, 13, 14, 15),
++	RP1_GROUP(spi6_0, 28, 29, 30),
++	RP1_GROUP(spi6_1, 40, 41, 42),
++	RP1_GROUP(spi7_0, 46, 47, 48),
++	RP1_GROUP(spi7_1, 49, 50, 51),
++	RP1_GROUP(spi8_0, 37, 38, 39),
++	RP1_GROUP(spi8_1, 49, 50, 51),
++	RP1_GROUP(aaud_0, 12, 13),
++	RP1_GROUP(aaud_1, 38, 39),
++	RP1_GROUP(aaud_2, 40, 41),
++	RP1_GROUP(aaud_3, 49, 50),
++	RP1_GROUP(aaud_4, 51, 52),
++	RP1_GROUP(vbus0_0, 28, 29),
++	RP1_GROUP(vbus0_1, 34, 35),
++	RP1_GROUP(vbus1, 42, 43),
++	RP1_GROUP(vbus2, 50, 51),
++	RP1_GROUP(vbus3, 52, 53),
++	RP1_GROUP(mic_0, 25, 26, 27),
++	RP1_GROUP(mic_1, 34, 35, 36),
++	RP1_GROUP(mic_2, 37, 38, 39),
++	RP1_GROUP(mic_3, 46, 47, 48),
++	RP1_GROUP(ir, 2, 3),
++};
++
++#define GRP_ARRAY(...) \
++	(const char * []) {__VA_ARGS__}
++#define GRP_ARRAY_SIZE(...) \
++	(sizeof((char *[]) {__VA_ARGS__}) / sizeof(char *))
++#define RP1_FNC(f, ...) \
++	[func_##f] = PINCTRL_PINFUNCTION(#f, GRP_ARRAY(__VA_ARGS__), \
++					 GRP_ARRAY_SIZE(__VA_ARGS__))
++#define RP1_NULL_FNC(f) \
++	[func_##f] = PINCTRL_PINFUNCTION(#f, NULL, 0)
++#define RP1_ALL_LEGACY_PINS \
++		"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", \
++		"gpio5", "gpio6", "gpio7", "gpio8", "gpio9", \
++		"gpio10", "gpio11", "gpio12", "gpio13", "gpio14", \
++		"gpio15", "gpio16", "gpio17", "gpio18", "gpio19", \
++		"gpio20", "gpio21", "gpio22", "gpio32", "gpio24", \
++		"gpio25", "gpio26", "gpio27"
++#define RP1_ALL_PINS RP1_ALL_LEGACY_PINS, \
++		"gpio28", "gpio29", "gpio30", "gpio31", "gpio32", \
++		"gpio33", "gpio34", "gpio35", "gpio36", "gpio37", \
++		"gpio38", "gpio39", "gpio40", "gpio41", "gpio42", \
++		"gpio43", "gpio44", "gpio45", "gpio46", "gpio47", \
++		"gpio48", "gpio49", "gpio50", "gpio51", "gpio52", \
++		"gpio53"
++
++static const struct pinfunction rp1_func_names[] = {
++	RP1_NULL_FNC(alt0),
++	RP1_NULL_FNC(alt1),
++	RP1_NULL_FNC(alt2),
++	RP1_NULL_FNC(alt3),
++	RP1_NULL_FNC(alt4),
++	RP1_FNC(gpio, RP1_ALL_PINS),
++	RP1_NULL_FNC(alt6),
++	RP1_NULL_FNC(alt7),
++	RP1_NULL_FNC(alt8),
++	RP1_NULL_FNC(none),
++	RP1_FNC(aaud, "aaud_0", "aaud_1", "aaud_2", "aaud_3", "aaud_4",
++		"gpio12", "gpio13", "gpio38", "gpio39", "gpio40", "gpio41",
++		"gpio49", "gpio50", "gpio51", "gpio52"),
++	RP1_FNC(dpi, "dpi_16bit", "dpi_16bit_cpadhi",
++		"dpi_16bit_pad666", "dpi_18bit, dpi_18bit_cpadhi",
++		"dpi_24bit", RP1_ALL_LEGACY_PINS),
++	RP1_FNC(dsi0_te_ext, "gpio16", "gpio38", "gpio46"),
++	RP1_FNC(dsi1_te_ext, "gpio17", "gpio39", "gpio47"),
++	RP1_FNC(gpclk0, "gpio4", "gpio20"),
++	RP1_FNC(gpclk1, "gpio5", "gpio18", "gpio21"),
++	RP1_FNC(gpclk2, "gpio6"),
++	RP1_FNC(gpclk3, "gpio32", "gpio34", "gpio46"),
++	RP1_FNC(gpclk4, "gpio33", "gpio43"),
++	RP1_FNC(gpclk5, "gpio42", "gpio44", "gpio47"),
++	RP1_FNC(i2c0, "i2c0_0", "i2c0_1", "gpio0", "gpio1", "gpio8", "gpio9"),
++	RP1_FNC(i2c1, "i2c1_0", "i2c1_1", "gpio2", "gpio3", "gpio10", "gpio11"),
++	RP1_FNC(i2c2, "i2c2_0", "i2c2_1", "gpio4", "gpio5", "gpio12", "gpio13"),
++	RP1_FNC(i2c3, "i2c3_0", "i2c3_1", "i2c3_2", "gpio6", "gpio7", "gpio14",
++		"gpio15", "gpio22", "gpio23"),
++	RP1_FNC(i2c4, "i2c4_0", "i2c4_1", "i2c4_2", "i2c4_3", "gpio28",
++		"gpio29", "gpio34", "gpio35", "gpio40", "gpio41", "gpio46",
++		"gpio47"),
++	RP1_FNC(i2c5, "i2c5_0", "i2c5_1", "i2c5_2", "i2c5_3", "gpio30",
++		"gpio31", "gpio36", "gpio37", "gpio44", "gpio45", "gpio49",
++		"gpio50"),
++	RP1_FNC(i2c6, "i2c6_0", "i2c6_1", "gpio38", "gpio39", "gpio51",
++		"gpio52"),
++	RP1_FNC(i2s0, "i2s0", "i2s0_dual", "i2s0_quad", "gpio18", "gpio19",
++		"gpio20", "gpio21", "gpio22", "gpio23", "gpio24", "gpio25",
++		"gpio26", "gpio27"),
++	RP1_FNC(i2s1, "i2s1", "i2s1_dual", "i2s1_quad", "gpio18", "gpio19",
++		"gpio20", "gpio21", "gpio22", "gpio23", "gpio24", "gpio25",
++		"gpio26", "gpio27"),
++	RP1_FNC(i2s2, "i2s2_0", "i2s2_0_dual", "i2s2_1", "i2s2_1_dual",
++		"gpio28", "gpio29", "gpio30", "gpio31", "gpio32", "gpio33",
++		"gpio42", "gpio43", "gpio44", "gpio45", "gpio46", "gpio47"),
++	RP1_FNC(ir, "gpio2", "gpio3"),
++	RP1_FNC(mic, "mic_0", "mic_1", "mic_2", "mic_3", "gpio25", "gpio26",
++		"gpio27", "gpio34", "gpio35", "gpio36", "gpio37", "gpio38",
++		"gpio39", "gpio46", "gpio47", "gpio48"),
++	RP1_FNC(pcie_clkreq_n, "gpio36", "gpio37", "gpio48", "gpio53"),
++	RP1_FNC(pio, RP1_ALL_LEGACY_PINS),
++	RP1_FNC(proc_rio, RP1_ALL_PINS),
++	RP1_FNC(pwm0, "gpio12", "gpio13", "gpio14", "gpio15", "gpio18",
++		"gpio19"),
++	RP1_FNC(pwm1, "gpio34", "gpio35", "gpio40", "gpio41", "gpio44",
++		"gpio45", "gpio48"),
++	RP1_FNC(sd0, "sd0", "gpio22", "gpio23", "gpio24", "gpio25", "gpio26",
++		"gpio27"),
++	RP1_FNC(sd1, "sd1", "gpio28", "gpio29", "gpio30", "gpio31", "gpio32",
++		"gpio33"),
++	RP1_FNC(spi0, "spi0", "spi0_quad", "gpio0", "gpio1", "gpio2", "gpio3",
++		"gpio7", "gpio8", "gpio9", "gpio10", "gpio11"),
++	RP1_FNC(spi1, "spi1", "gpio19", "gpio20", "gpio21", "gpio16", "gpio17",
++		"gpio18", "gpio27"),
++	RP1_FNC(spi2, "spi2", "gpio0", "gpio1", "gpio2", "gpio3", "gpio24"),
++	RP1_FNC(spi3, "spi3", "gpio4", "gpio5", "gpio6", "gpio7", "gpio25"),
++	RP1_FNC(spi4, "spi4", "gpio8", "gpio9", "gpio10", "gpio11"),
++	RP1_FNC(spi5, "spi5", "gpio12", "gpio13", "gpio14", "gpio15", "gpio26"),
++	RP1_FNC(spi6, "spi6_0", "spi6_1", "gpio28", "gpio29", "gpio30",
++		"gpio31", "gpio32", "gpio33", "gpio40", "gpio41", "gpio42",
++		"gpio43", "gpio44", "gpio45"),
++	RP1_FNC(spi7, "spi7_0", "spi7_1", "gpio45", "gpio46", "gpio47",
++		"gpio48", "gpio49", "gpio50", "gpio51", "gpio53"),
++	RP1_FNC(spi8, "spi8_0", "spi8_1", "gpio35", "gpio36", "gpio37",
++		"gpio38", "gpio39", "gpio49", "gpio50", "gpio51", "gpio52",
++		"gpio53"),
++	RP1_FNC(uart0, "uart0", "uart0_ctrl", "gpio4", "gpio5", "gpio6",
++		"gpio7", "gpio14", "gpio15", "gpio16", "gpio17"),
++	RP1_FNC(uart1, "uart1", "uart1_ctrl", "gpio0", "gpio1", "gpio2",
++		"gpio3"),
++	RP1_FNC(uart2, "uart2", "uart2_ctrl", "gpio4", "gpio5", "gpio6",
++		"gpio7"),
++	RP1_FNC(uart3, "uart3", "uart3_ctrl", "gpio8", "gpio9", "gpio10",
++		"gpio11"),
++	RP1_FNC(uart4, "uart4", "uart4_ctrl", "gpio12", "gpio13", "gpio14",
++		"gpio15"),
++	RP1_FNC(uart5, "uart5_0", "uart5_0_ctrl", "uart5_1", "uart5_1_ctrl",
++		"uart5_2", "uart5_2_ctrl", "uart5_3"),
++	RP1_FNC(vbus0, "vbus0_0", "vbus0_1", "gpio28", "gpio29", "gpio34",
++		"gpio35"),
++	RP1_FNC(vbus1, "vbus1", "gpio42", "gpio43"),
++	RP1_FNC(vbus2, "vbus2", "gpio50", "gpio51"),
++	RP1_FNC(vbus3, "vbus3", "gpio52", "gpio53"),
++	RP1_NULL_FNC(invalid),	//[func_invalid] = "?"
++};
++
++static const struct rp1_pin_funcs rp1_gpio_pin_funcs[] = {
++	PIN(0, spi0, dpi, uart1, i2c0, _, gpio, proc_rio, pio, spi2),
++	PIN(1, spi0, dpi, uart1, i2c0, _, gpio, proc_rio, pio, spi2),
++	PIN(2, spi0, dpi, uart1, i2c1, ir, gpio, proc_rio, pio, spi2),
++	PIN(3, spi0, dpi, uart1, i2c1, ir, gpio, proc_rio, pio, spi2),
++	PIN(4, gpclk0, dpi, uart2, i2c2, uart0, gpio, proc_rio, pio, spi3),
++	PIN(5, gpclk1, dpi, uart2, i2c2, uart0, gpio, proc_rio, pio, spi3),
++	PIN(6, gpclk2, dpi, uart2, i2c3, uart0, gpio, proc_rio, pio, spi3),
++	PIN(7, spi0, dpi, uart2, i2c3, uart0, gpio, proc_rio, pio, spi3),
++	PIN(8, spi0, dpi, uart3, i2c0, _, gpio, proc_rio, pio, spi4),
++	PIN(9, spi0, dpi, uart3, i2c0, _, gpio, proc_rio, pio, spi4),
++	PIN(10, spi0, dpi, uart3, i2c1, _, gpio, proc_rio, pio, spi4),
++	PIN(11, spi0, dpi, uart3, i2c1, _, gpio, proc_rio, pio, spi4),
++	PIN(12, pwm0, dpi, uart4, i2c2, aaud, gpio, proc_rio, pio, spi5),
++	PIN(13, pwm0, dpi, uart4, i2c2, aaud, gpio, proc_rio, pio, spi5),
++	PIN(14, pwm0, dpi, uart4, i2c3, uart0, gpio, proc_rio, pio, spi5),
++	PIN(15, pwm0, dpi, uart4, i2c3, uart0, gpio, proc_rio, pio, spi5),
++	PIN(16, spi1, dpi, dsi0_te_ext, _, uart0, gpio, proc_rio, pio, _),
++	PIN(17, spi1, dpi, dsi1_te_ext, _, uart0, gpio, proc_rio, pio, _),
++	PIN(18, spi1, dpi, i2s0, pwm0, i2s1, gpio, proc_rio, pio, gpclk1),
++	PIN(19, spi1, dpi, i2s0, pwm0, i2s1, gpio, proc_rio, pio, _),
++	PIN(20, spi1, dpi, i2s0, gpclk0, i2s1, gpio, proc_rio, pio, _),
++	PIN(21, spi1, dpi, i2s0, gpclk1, i2s1, gpio, proc_rio, pio, _),
++	PIN(22, sd0, dpi, i2s0, i2c3, i2s1, gpio, proc_rio, pio, _),
++	PIN(23, sd0, dpi, i2s0, i2c3, i2s1, gpio, proc_rio, pio, _),
++	PIN(24, sd0, dpi, i2s0, _, i2s1, gpio, proc_rio, pio, spi2),
++	PIN(25, sd0, dpi, i2s0, mic, i2s1, gpio, proc_rio, pio, spi3),
++	PIN(26, sd0, dpi, i2s0, mic, i2s1, gpio, proc_rio, pio, spi5),
++	PIN(27, sd0, dpi, i2s0, mic, i2s1, gpio, proc_rio, pio, spi1),
++	PIN(28, sd1, i2c4, i2s2, spi6, vbus0, gpio, proc_rio, _, _),
++	PIN(29, sd1, i2c4, i2s2, spi6, vbus0, gpio, proc_rio, _, _),
++	PIN(30, sd1, i2c5, i2s2, spi6, uart5, gpio, proc_rio, _, _),
++	PIN(31, sd1, i2c5, i2s2, spi6, uart5, gpio, proc_rio, _, _),
++	PIN(32, sd1, gpclk3, i2s2, spi6, uart5, gpio, proc_rio, _, _),
++	PIN(33, sd1, gpclk4, i2s2, spi6, uart5, gpio, proc_rio, _, _),
++	PIN(34, pwm1, gpclk3, vbus0, i2c4, mic, gpio, proc_rio, _, _),
++	PIN(35, spi8, pwm1, vbus0, i2c4, mic, gpio, proc_rio, _, _),
++	PIN(36, spi8, uart5, pcie_clkreq_n, i2c5, mic, gpio, proc_rio, _, _),
++	PIN(37, spi8, uart5, mic, i2c5, pcie_clkreq_n, gpio, proc_rio, _, _),
++	PIN(38, spi8, uart5, mic, i2c6, aaud, gpio, proc_rio, dsi0_te_ext, _),
++	PIN(39, spi8, uart5, mic, i2c6, aaud, gpio, proc_rio, dsi1_te_ext, _),
++	PIN(40, pwm1, uart5, i2c4, spi6, aaud, gpio, proc_rio, _, _),
++	PIN(41, pwm1, uart5, i2c4, spi6, aaud, gpio, proc_rio, _, _),
++	PIN(42, gpclk5, uart5, vbus1, spi6, i2s2, gpio, proc_rio, _, _),
++	PIN(43, gpclk4, uart5, vbus1, spi6, i2s2, gpio, proc_rio, _, _),
++	PIN(44, gpclk5, i2c5, pwm1, spi6, i2s2, gpio, proc_rio, _, _),
++	PIN(45, pwm1, i2c5, spi7, spi6, i2s2, gpio, proc_rio, _, _),
++	PIN(46, gpclk3, i2c4, spi7, mic, i2s2, gpio, proc_rio, dsi0_te_ext, _),
++	PIN(47, gpclk5, i2c4, spi7, mic, i2s2, gpio, proc_rio, dsi1_te_ext, _),
++	PIN(48, pwm1, pcie_clkreq_n, spi7, mic, uart5, gpio, proc_rio, _, _),
++	PIN(49, spi8, spi7, i2c5, aaud, uart5, gpio, proc_rio, _, _),
++	PIN(50, spi8, spi7, i2c5, aaud, vbus2, gpio, proc_rio, _, _),
++	PIN(51, spi8, spi7, i2c6, aaud, vbus2, gpio, proc_rio, _, _),
++	PIN(52, spi8, _, i2c6, aaud, vbus3, gpio, proc_rio, _, _),
++	PIN(53, spi8, spi7, _, pcie_clkreq_n, vbus3, gpio, proc_rio, _, _),
++};
++
++static const u8 legacy_fsel_map[][8] = {
++	LEGACY_MAP(0, i2c0, _, dpi, spi2, uart1, _),
++	LEGACY_MAP(1, i2c0, _, dpi, spi2, uart1, _),
++	LEGACY_MAP(2, i2c1, _, dpi, spi2, uart1, _),
++	LEGACY_MAP(3, i2c1, _, dpi, spi2, uart1, _),
++	LEGACY_MAP(4, gpclk0, _, dpi, spi3, uart2, i2c2),
++	LEGACY_MAP(5, gpclk1, _, dpi, spi3, uart2, i2c2),
++	LEGACY_MAP(6, gpclk2, _, dpi, spi3, uart2, i2c3),
++	LEGACY_MAP(7, spi0, _, dpi, spi3, uart2, i2c3),
++	LEGACY_MAP(8, spi0, _, dpi, _, uart3, i2c0),
++	LEGACY_MAP(9, spi0, _, dpi, _, uart3, i2c0),
++	LEGACY_MAP(10, spi0, _, dpi, _, uart3, i2c1),
++	LEGACY_MAP(11, spi0, _, dpi, _, uart3, i2c1),
++	LEGACY_MAP(12, pwm0, _, dpi, spi5, uart4, i2c2),
++	LEGACY_MAP(13, pwm0, _, dpi, spi5, uart4, i2c2),
++	LEGACY_MAP(14, uart0, _, dpi, spi5, uart4, _),
++	LEGACY_MAP(15, uart0, _, dpi, spi5, uart4, _),
++	LEGACY_MAP(16, _, _, dpi, uart0, spi1, _),
++	LEGACY_MAP(17, _, _, dpi, uart0, spi1, _),
++	LEGACY_MAP(18, i2s0, _, dpi, _, spi1, pwm0),
++	LEGACY_MAP(19, i2s0, _, dpi, _, spi1, pwm0),
++	LEGACY_MAP(20, i2s0, _, dpi, _, spi1, gpclk0),
++	LEGACY_MAP(21, i2s0, _, dpi, _, spi1, gpclk1),
++	LEGACY_MAP(22, sd0, _, dpi, _, _, i2c3),
++	LEGACY_MAP(23, sd0, _, dpi, _, _, i2c3),
++	LEGACY_MAP(24, sd0, _, dpi, _, _, spi2),
++	LEGACY_MAP(25, sd0, _, dpi, _, _, spi3),
++	LEGACY_MAP(26, sd0, _, dpi, _, _, spi5),
++	LEGACY_MAP(27, sd0, _, dpi, _, _, _),
++};
++
++static const char * const irq_type_names[] = {
++	[IRQ_TYPE_NONE] = "none",
++	[IRQ_TYPE_EDGE_RISING] = "edge-rising",
++	[IRQ_TYPE_EDGE_FALLING] = "edge-falling",
++	[IRQ_TYPE_EDGE_BOTH] = "edge-both",
++	[IRQ_TYPE_LEVEL_HIGH] = "level-high",
++	[IRQ_TYPE_LEVEL_LOW] = "level-low",
++};
++
++static bool persist_gpio_outputs = true;
++module_param(persist_gpio_outputs, bool, 0644);
++MODULE_PARM_DESC(persist_gpio_outputs, "Enable GPIO_OUT persistence when pin is freed");
++
+ static const struct rp1_iobank_desc rp1_iobanks[RP1_NUM_BANKS] = {
+ 	/*         gpio   inte    ints     rio    pads */
+ 	{  0, 28, 0x0000, 0x011c, 0x0124, 0x0000, 0x0004 },
+@@ -180,7 +668,7 @@ static const struct rp1_iobank_desc rp1_iobanks[RP1_NUM_BANKS] = {
+ 	{ 34, 20, 0x8000, 0x811c, 0x8124, 0x8000, 0x8004 },
+ };
+ 
+-static int rp1_pinconf_set(struct rp1_pin_info *pin,
++static int rp1_pinconf_set(struct pinctrl_dev *pctldev,
+ 			   unsigned int offset, unsigned long *configs,
+ 			   unsigned int num_configs);
+ 
+@@ -194,6 +682,16 @@ static struct rp1_pin_info *rp1_get_pin(struct gpio_chip *chip,
+ 	return NULL;
+ }
+ 
++static struct rp1_pin_info *rp1_get_pin_pctl(struct pinctrl_dev *pctldev,
++					     unsigned int offset)
++{
++	struct rp1_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++
++	if (pc && offset < RP1_NUM_GPIOS)
++		return &pc->pins[offset];
++	return NULL;
++}
++
+ static void rp1_input_enable(struct rp1_pin_info *pin, int value)
+ {
+ 	regmap_field_write(pin->pad[RP1_PAD_IN_ENABLE], !!value);
+@@ -335,10 +833,10 @@ static int rp1_gpio_direction_output(struct gpio_chip *chip, unsigned int offset
+ static int rp1_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
+ 			       unsigned long config)
+ {
+-	struct rp1_pin_info *pin = rp1_get_pin(chip, offset);
++	struct rp1_pinctrl *pc = gpiochip_get_data(chip);
+ 	unsigned long configs[] = { config };
+ 
+-	return rp1_pinconf_set(pin, offset, configs,
++	return rp1_pinconf_set(pc->pctl_dev, offset, configs,
+ 			       ARRAY_SIZE(configs));
+ }
+ 
+@@ -490,6 +988,29 @@ static void rp1_gpio_irq_ack(struct irq_data *data)
+ 	regmap_field_write(pin->gpio[RP1_GPIO_CTRL_IRQRESET_SET], 1);
+ }
+ 
++static int rp1_gpio_irq_set_affinity(struct irq_data *data, const struct cpumask *dest, bool force)
++{
++	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
++	struct rp1_pinctrl *pc = gpiochip_get_data(chip);
++	const struct rp1_iobank_desc *bank;
++	struct irq_data *parent_data = NULL;
++	int i;
++
++	for (i = 0; i < 3; i++) {
++		bank = &rp1_iobanks[i];
++		if (data->hwirq >= bank->min_gpio &&
++		    data->hwirq < bank->min_gpio + bank->num_gpios) {
++			parent_data = irq_get_irq_data(pc->irq[i]);
++			break;
++		}
++	}
++
++	if (parent_data && parent_data->chip->irq_set_affinity)
++		return parent_data->chip->irq_set_affinity(parent_data, dest, force);
++
++	return -EINVAL;
++}
++
+ static struct irq_chip rp1_gpio_irq_chip = {
+ 	.name = MODULE_NAME,
+ 	.irq_enable = rp1_gpio_irq_enable,
+@@ -498,18 +1019,394 @@ static struct irq_chip rp1_gpio_irq_chip = {
+ 	.irq_ack = rp1_gpio_irq_ack,
+ 	.irq_mask = rp1_gpio_irq_disable,
+ 	.irq_unmask = rp1_gpio_irq_enable,
++	.irq_set_affinity = rp1_gpio_irq_set_affinity,
+ 	.flags = IRQCHIP_IMMUTABLE,
+ 	GPIOCHIP_IRQ_RESOURCE_HELPERS,
+ };
+ 
++static int rp1_pctl_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	return ARRAY_SIZE(rp1_gpio_groups) + ARRAY_SIZE(rp1_gpio_pins);
++}
++
++static const char *rp1_pctl_get_group_name(struct pinctrl_dev *pctldev,
++					   unsigned int selector)
++{
++	unsigned int ngroups = ARRAY_SIZE(rp1_gpio_groups);
++
++	if (selector < ngroups)
++		return rp1_gpio_groups[selector].name;
++
++	return rp1_gpio_pins[selector - ngroups].name;
++}
++
++static enum funcs rp1_get_fsel_func(unsigned int pin, unsigned int fsel)
++{
++	if (pin < RP1_NUM_GPIOS) {
++		if (fsel < RP1_FSEL_COUNT)
++			return rp1_gpio_pin_funcs[pin].funcs[fsel];
++		else if (fsel == RP1_FSEL_NONE)
++			return func_none;
++	}
++	return func_invalid;
++}
++
++static int rp1_pctl_get_group_pins(struct pinctrl_dev *pctldev,
++				   unsigned int selector,
++				   const unsigned int **pins,
++				   unsigned int *num_pins)
++{
++	unsigned int ngroups = ARRAY_SIZE(rp1_gpio_groups);
++
++	if (selector < ngroups) {
++		*pins = rp1_gpio_groups[selector].pins;
++		*num_pins = rp1_gpio_groups[selector].npins;
++	} else {
++		*pins = &rp1_gpio_pins[selector - ngroups].number;
++		*num_pins = 1;
++	}
++
++	return 0;
++}
++
++static void rp1_pctl_pin_dbg_show(struct pinctrl_dev *pctldev,
++				  struct seq_file *s,
++				  unsigned int offset)
++{
++	struct rp1_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++	struct gpio_chip *chip = &pc->gpio_chip;
++	struct rp1_pin_info *pin = rp1_get_pin_pctl(pctldev, offset);
++	u32 fsel = rp1_get_fsel(pin);
++	enum funcs func = rp1_get_fsel_func(offset, fsel);
++	int value = rp1_get_value(pin);
++	int irq = irq_find_mapping(chip->irq.domain, offset);
++
++	seq_printf(s, "function %s (%s) in %s; irq %d (%s)",
++		   rp1_func_names[fsel].name, rp1_func_names[func].name,
++		   value ? "hi" : "lo",
++		   irq, irq_type_names[pin->irq_type]);
++}
++
++static void rp1_pctl_dt_free_map(struct pinctrl_dev *pctldev,
++				 struct pinctrl_map *maps, unsigned int num_maps)
++{
++	int i;
++
++	for (i = 0; i < num_maps; i++)
++		if (maps[i].type == PIN_MAP_TYPE_CONFIGS_PIN)
++			kfree(maps[i].data.configs.configs);
++
++	kfree(maps);
++}
++
++static int rp1_pctl_legacy_map_func(struct rp1_pinctrl *pc,
++				    struct device_node *np, u32 pin, u32 fnum,
++				    struct pinctrl_map *maps,
++				    unsigned int *num_maps)
++{
++	struct pinctrl_map *map = &maps[*num_maps];
++	enum funcs func;
++
++	if (fnum >= ARRAY_SIZE(legacy_fsel_map[0])) {
++		dev_err(pc->dev, "%pOF: invalid brcm,function %d\n", np, fnum);
++		return -EINVAL;
++	}
++
++	if (pin < ARRAY_SIZE(legacy_fsel_map)) {
++		func = legacy_fsel_map[pin][fnum];
++	} else if (fnum < 2) {
++		func = func_gpio;
++	} else {
++		dev_err(pc->dev, "%pOF: invalid brcm,pins value %d\n",
++			np, pin);
++		return -EINVAL;
++	}
++
++	map->type = PIN_MAP_TYPE_MUX_GROUP;
++	map->data.mux.group = rp1_pctl_get_group_name(pc->pctl_dev,
++						      ARRAY_SIZE(rp1_gpio_groups)
++						      + pin);
++	map->data.mux.function = rp1_func_names[func].name;
++	(*num_maps)++;
++
++	return 0;
++}
++
++static int rp1_pctl_legacy_map_pull(struct rp1_pinctrl *pc,
++				    struct device_node *np, u32 pin, u32 pull,
++				    struct pinctrl_map *maps,
++				    unsigned int *num_maps)
++{
++	struct pinctrl_map *map = &maps[*num_maps];
++	enum pin_config_param param;
++	unsigned long *configs;
++
++	switch (pull) {
++	case RP1_PUD_OFF:
++		param = PIN_CONFIG_BIAS_DISABLE;
++		break;
++	case RP1_PUD_DOWN:
++		param = PIN_CONFIG_BIAS_PULL_DOWN;
++		break;
++	case RP1_PUD_UP:
++		param = PIN_CONFIG_BIAS_PULL_UP;
++		break;
++	default:
++		dev_err(pc->dev, "%pOF: invalid brcm,pull %d\n", np, pull);
++		return -EINVAL;
++	}
++
++	configs = kzalloc(sizeof(*configs), GFP_KERNEL);
++	if (!configs)
++		return -ENOMEM;
++
++	configs[0] = pinconf_to_config_packed(param, 0);
++	map->type = PIN_MAP_TYPE_CONFIGS_PIN;
++	map->data.configs.group_or_pin = rp1_gpio_pins[pin].name;
++	map->data.configs.configs = configs;
++	map->data.configs.num_configs = 1;
++	(*num_maps)++;
++
++	return 0;
++}
++
++static int rp1_pctl_dt_node_to_map(struct pinctrl_dev *pctldev,
++				   struct device_node *np,
++				   struct pinctrl_map **map,
++				   unsigned int *num_maps)
++{
++	struct rp1_pinctrl *pc = pinctrl_dev_get_drvdata(pctldev);
++	struct property *pins, *funcs, *pulls;
++	int num_pins, num_funcs, num_pulls, maps_per_pin;
++	struct pinctrl_map *maps;
++	unsigned long *configs = NULL;
++	const char *function = NULL;
++	unsigned int reserved_maps;
++	int num_configs = 0;
++	int i, err;
++	u32 pin, func, pull;
++
++	/* Check for legacy pin declaration */
++	pins = of_find_property(np, "brcm,pins", NULL);
++
++	if (!pins) /* Assume generic bindings in this node */
++		return pinconf_generic_dt_node_to_map_all(pctldev, np, map, num_maps);
++
++	funcs = of_find_property(np, "brcm,function", NULL);
++	if (!funcs)
++		of_property_read_string(np, "function", &function);
++
++	pulls = of_find_property(np, "brcm,pull", NULL);
++	if (!pulls)
++		pinconf_generic_parse_dt_config(np, pctldev, &configs, &num_configs);
++
++	if (!function && !funcs && !num_configs && !pulls) {
++		dev_err(pc->dev,
++			"%pOF: no function, brcm,function, brcm,pull, etc.\n",
++			np);
++		return -EINVAL;
++	}
++
++	num_pins = pins->length / 4;
++	num_funcs = funcs ? (funcs->length / 4) : 0;
++	num_pulls = pulls ? (pulls->length / 4) : 0;
++
++	if (num_funcs > 1 && num_funcs != num_pins) {
++		dev_err(pc->dev,
++			"%pOF: brcm,function must have 1 or %d entries\n",
++			np, num_pins);
++		return -EINVAL;
++	}
++
++	if (num_pulls > 1 && num_pulls != num_pins) {
++		dev_err(pc->dev,
++			"%pOF: brcm,pull must have 1 or %d entries\n",
++			np, num_pins);
++		return -EINVAL;
++	}
++
++	maps_per_pin = 0;
++	if (function || num_funcs)
++		maps_per_pin++;
++	if (num_configs || num_pulls)
++		maps_per_pin++;
++	reserved_maps = num_pins * maps_per_pin;
++	maps = kcalloc(reserved_maps, sizeof(*maps), GFP_KERNEL);
++	if (!maps)
++		return -ENOMEM;
++
++	*num_maps = 0;
++
++	for (i = 0; i < num_pins; i++) {
++		err = of_property_read_u32_index(np, "brcm,pins", i, &pin);
++		if (err)
++			goto out;
++		if (num_funcs) {
++			err = of_property_read_u32_index(np, "brcm,function",
++							 (num_funcs > 1) ? i : 0,
++							 &func);
++			if (err)
++				goto out;
++			err = rp1_pctl_legacy_map_func(pc, np, pin, func,
++						       maps, num_maps);
++		} else if (function) {
++			err = pinctrl_utils_add_map_mux(pctldev, &maps,
++							&reserved_maps, num_maps,
++							rp1_gpio_groups[pin].name,
++							function);
++		}
++
++		if (err)
++			goto out;
++
++		if (num_pulls) {
++			err = of_property_read_u32_index(np, "brcm,pull",
++							 (num_pulls > 1) ? i : 0,
++							 &pull);
++			if (err)
++				goto out;
++			err = rp1_pctl_legacy_map_pull(pc, np, pin, pull,
++						       maps, num_maps);
++		} else if (num_configs) {
++			err = pinctrl_utils_add_map_configs(pctldev, &maps,
++							    &reserved_maps, num_maps,
++							    rp1_gpio_groups[pin].name,
++							    configs, num_configs,
++							    PIN_MAP_TYPE_CONFIGS_PIN);
++		}
++
++		if (err)
++			goto out;
++	}
++
++	*map = maps;
++
++	return 0;
++
++out:
++	rp1_pctl_dt_free_map(pctldev, maps, reserved_maps);
++	return err;
++}
++
++static const struct pinctrl_ops rp1_pctl_ops = {
++	.get_groups_count = rp1_pctl_get_groups_count,
++	.get_group_name = rp1_pctl_get_group_name,
++	.get_group_pins = rp1_pctl_get_group_pins,
++	.pin_dbg_show = rp1_pctl_pin_dbg_show,
++	.dt_node_to_map = rp1_pctl_dt_node_to_map,
++	.dt_free_map = rp1_pctl_dt_free_map,
++};
++
++static int rp1_pmx_free(struct pinctrl_dev *pctldev, unsigned int offset)
++{
++	struct rp1_pin_info *pin = rp1_get_pin_pctl(pctldev, offset);
++	u32 fsel = rp1_get_fsel(pin);
++
++	/* Return all pins to GPIO_IN, unless persist_gpio_outputs is set */
++	if (persist_gpio_outputs && fsel == RP1_FSEL_GPIO)
++		return 0;
++
++	rp1_set_dir(pin, RP1_DIR_INPUT);
++	rp1_set_fsel(pin, RP1_FSEL_GPIO);
++
++	return 0;
++}
++
++static int rp1_pmx_get_functions_count(struct pinctrl_dev *pctldev)
++{
++	return func_count;
++}
++
++static const char *rp1_pmx_get_function_name(struct pinctrl_dev *pctldev,
++					     unsigned int selector)
++{
++	return (selector < func_count) ? rp1_func_names[selector].name : NULL;
++}
++
++static int rp1_pmx_get_function_groups(struct pinctrl_dev *pctldev,
++				       unsigned int selector,
++				       const char * const **groups,
++				       unsigned * const num_groups)
++{
++	*groups = rp1_func_names[selector].groups;
++	*num_groups = rp1_func_names[selector].ngroups;
++
++	return 0;
++}
++
++static int rp1_pmx_set(struct pinctrl_dev *pctldev, unsigned int func_selector,
++		       unsigned int group_selector)
++{
++	struct rp1_pin_info *pin;
++	const unsigned int *pins;
++	const u8 *pin_funcs;
++	unsigned int num_pins;
++	int offset, fsel;
++
++	rp1_pctl_get_group_pins(pctldev, group_selector, &pins, &num_pins);
++
++	for (offset = 0; offset < num_pins; ++offset) {
++		pin = rp1_get_pin_pctl(pctldev, pins[offset]);
++		/* func_selector is an enum funcs, so needs translation */
++		if (func_selector >= RP1_FSEL_COUNT) {
++			/* Convert to an fsel number */
++			pin_funcs = rp1_gpio_pin_funcs[pin->num].funcs;
++			for (fsel = 0; fsel < RP1_FSEL_COUNT; fsel++) {
++				if (pin_funcs[fsel] == func_selector)
++					break;
++			}
++		} else {
++			fsel = (int)func_selector;
++		}
++
++		if (fsel >= RP1_FSEL_COUNT && fsel != RP1_FSEL_NONE)
++			return -EINVAL;
++
++		rp1_set_fsel(pin, fsel);
++	}
++
++	return 0;
++}
++
++static void rp1_pmx_gpio_disable_free(struct pinctrl_dev *pctldev,
++				      struct pinctrl_gpio_range *range,
++				      unsigned int offset)
++{
++	(void)rp1_pmx_free(pctldev, offset);
++}
++
++static int rp1_pmx_gpio_set_direction(struct pinctrl_dev *pctldev,
++				      struct pinctrl_gpio_range *range,
++				      unsigned int offset,
++				      bool input)
++{
++	struct rp1_pin_info *pin = rp1_get_pin_pctl(pctldev, offset);
++
++	rp1_set_dir(pin, input);
++	rp1_set_fsel(pin, RP1_FSEL_GPIO);
++
++	return 0;
++}
++
++static const struct pinmux_ops rp1_pmx_ops = {
++	.free = rp1_pmx_free,
++	.get_functions_count = rp1_pmx_get_functions_count,
++	.get_function_name = rp1_pmx_get_function_name,
++	.get_function_groups = rp1_pmx_get_function_groups,
++	.set_mux = rp1_pmx_set,
++	.gpio_disable_free = rp1_pmx_gpio_disable_free,
++	.gpio_set_direction = rp1_pmx_gpio_set_direction,
++};
++
+ static void rp1_pull_config_set(struct rp1_pin_info *pin, unsigned int arg)
+ {
+ 	regmap_field_write(pin->pad[RP1_PAD_PULL], arg & 0x3);
+ }
+ 
+-static int rp1_pinconf_set(struct rp1_pin_info *pin, unsigned int offset,
++static int rp1_pinconf_set(struct pinctrl_dev *pctldev, unsigned int offset,
+ 			   unsigned long *configs, unsigned int num_configs)
+ {
++	struct rp1_pin_info *pin = rp1_get_pin_pctl(pctldev, offset);
+ 	u32 param, arg;
+ 	int i;
+ 
+@@ -584,8 +1481,140 @@ static int rp1_pinconf_set(struct rp1_pin_info *pin, unsigned int offset,
+ 	return 0;
+ }
+ 
++static int rp1_pinconf_get(struct pinctrl_dev *pctldev, unsigned int offset,
++			   unsigned long *config)
++{
++	struct rp1_pin_info *pin = rp1_get_pin_pctl(pctldev, offset);
++	enum pin_config_param param = pinconf_to_config_param(*config);
++	u32 padctrl;
++	u32 arg;
++
++	if (!pin)
++		return -EINVAL;
++
++	switch (param) {
++	case PIN_CONFIG_INPUT_ENABLE:
++		regmap_field_read(pin->pad[RP1_PAD_IN_ENABLE], &padctrl);
++		arg = !!padctrl;
++		break;
++	case PIN_CONFIG_OUTPUT_ENABLE:
++		regmap_field_read(pin->pad[RP1_PAD_OUT_DISABLE], &padctrl);
++		arg = !padctrl;
++		break;
++	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
++		regmap_field_read(pin->pad[RP1_PAD_SCHMITT], &padctrl);
++		arg = !!padctrl;
++		break;
++	case PIN_CONFIG_SLEW_RATE:
++		regmap_field_read(pin->pad[RP1_PAD_SLEWFAST], &padctrl);
++		arg = !!padctrl;
++		break;
++	case PIN_CONFIG_DRIVE_STRENGTH:
++		regmap_field_read(pin->pad[RP1_PAD_DRIVE], &padctrl);
++		switch (padctrl) {
++		case RP1_PAD_DRIVE_2MA:
++			arg = 2;
++			break;
++		case RP1_PAD_DRIVE_4MA:
++			arg = 4;
++			break;
++		case RP1_PAD_DRIVE_8MA:
++			arg = 8;
++			break;
++		case RP1_PAD_DRIVE_12MA:
++			arg = 12;
++			break;
++		}
++		break;
++	case PIN_CONFIG_BIAS_DISABLE:
++		regmap_field_read(pin->pad[RP1_PAD_PULL], &padctrl);
++		arg = ((padctrl == RP1_PUD_OFF));
++		break;
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		regmap_field_read(pin->pad[RP1_PAD_PULL], &padctrl);
++		arg = ((padctrl == RP1_PUD_DOWN));
++		break;
++
++	case PIN_CONFIG_BIAS_PULL_UP:
++		regmap_field_read(pin->pad[RP1_PAD_PULL], &padctrl);
++		arg = ((padctrl == RP1_PUD_UP));
++		break;
++	default:
++		return -ENOTSUPP;
++	}
++
++	*config = pinconf_to_config_packed(param, arg);
++
++	return 0;
++}
++
++static int rp1_pinconf_group_get(struct pinctrl_dev *pctldev, unsigned int selector,
++				 unsigned long *config)
++{
++	const unsigned int *pins;
++	unsigned int npins;
++	int ret;
++
++	ret = rp1_pctl_get_group_pins(pctldev, selector, &pins, &npins);
++	if (ret < 0)
++		return ret;
++
++	if (!npins)
++		return -ENODEV;
++
++	ret = rp1_pinconf_get(pctldev, pins[0], config);
++
++	return ret;
++}
++
++static int rp1_pinconf_group_set(struct pinctrl_dev *pctldev, unsigned int selector,
++				 unsigned long *configs, unsigned int num_configs)
++{
++	const unsigned int *pins;
++	unsigned int npins;
++	int ret, i;
++
++	ret = rp1_pctl_get_group_pins(pctldev, selector, &pins, &npins);
++	if (ret < 0)
++		return ret;
++
++	for (i = 0; i < npins; i++) {
++		ret = rp1_pinconf_set(pctldev, pins[i], configs, num_configs);
++		if (ret < 0)
++			return ret;
++	}
++
++	return 0;
++}
++
++static const struct pinconf_ops rp1_pinconf_ops = {
++	.is_generic = true,
++	.pin_config_get = rp1_pinconf_get,
++	.pin_config_set = rp1_pinconf_set,
++	.pin_config_group_get = rp1_pinconf_group_get,
++	.pin_config_group_set = rp1_pinconf_group_set,
++};
++
++static struct pinctrl_desc rp1_pinctrl_desc = {
++	.name = MODULE_NAME,
++	.pins = rp1_gpio_pins,
++	.npins = ARRAY_SIZE(rp1_gpio_pins),
++	.pctlops = &rp1_pctl_ops,
++	.pmxops = &rp1_pmx_ops,
++	.confops = &rp1_pinconf_ops,
++	.owner = THIS_MODULE,
++};
++
++static struct pinctrl_gpio_range rp1_pinctrl_gpio_range = {
++	.name = MODULE_NAME,
++	.npins = RP1_NUM_GPIOS,
++};
++
+ static const struct of_device_id rp1_pinctrl_match[] = {
+-	{ .compatible = "raspberrypi,rp1-gpio" },
++	{
++		.compatible = "raspberrypi,rp1-gpio",
++		.data = &rp1_pinconf_ops,
++	},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, rp1_pinctrl_match);
+@@ -742,6 +1771,11 @@ static int rp1_pinctrl_probe(struct platform_device *pdev)
+ 		raw_spin_lock_init(&pc->irq_lock[i]);
+ 	}
+ 
++	pc->pctl_dev = devm_pinctrl_register(dev, &rp1_pinctrl_desc, pc);
++	if (IS_ERR(pc->pctl_dev))
++		return dev_err_probe(dev, PTR_ERR(pc->pctl_dev),
++				     "Could not register pin controller\n");
++
+ 	girq = &pc->gpio_chip.irq;
+ 	girq->chip = &rp1_gpio_irq_chip;
+ 	girq->parent_handler = rp1_gpio_irq_handler;
+@@ -771,6 +1805,11 @@ static int rp1_pinctrl_probe(struct platform_device *pdev)
+ 	if (err)
+ 		return dev_err_probe(dev, err, "could not add GPIO chip\n");
+ 
++	pc->gpio_range = rp1_pinctrl_gpio_range;
++	pc->gpio_range.base = pc->gpio_chip.base;
++	pc->gpio_range.gc = &pc->gpio_chip;
++	pinctrl_add_gpio_range(pc->pctl_dev, &pc->gpio_range);
++
+ 	return 0;
+ }
+ 
 -- 
-Cheers,
-
-David / dhildenb
+2.35.3
 
