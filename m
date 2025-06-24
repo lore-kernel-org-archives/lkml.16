@@ -1,71 +1,39 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807E121A433
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB4527AC31
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:47:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750758467; cv=none; b=RnUpSxMZNOfGIcYbitOuVwc6M/gr2cvrZ0oxuyVaqnpCvtDXFYGu7Zcn1TBJJxjOQ5ujfCB5NN0l3vObDTnhQvP0sTDDnF8KGqgiHVYJSagW3wOV+ZgnxfXmI+ofiIqqqzI1QjqIJstZQ9GeRyA0CjDdluFTQaBXoGzmajhKg84=
+	t=1750758476; cv=none; b=EO0G2wYUGWAmZ08dmsskLL2D68vGSeeSep/iO7uuc7IHk8EJSWQ79vVV4lNwVaPiz8duwVv+lN/G9SeK8UTC+cyOpbY8uec2b7khjATSNKzpwroyTKjGWRIREW0BaEO1xyDRaYeBF0POcZ30bItD3DcCBKQ77yuloEMvLlXfJFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750758467; c=relaxed/simple;
-	bh=/jSuHh2C38f1M1bPCzkjiFFc2048REs7I9oM3oF6Xfo=;
+	s=arc-20240116; t=1750758476; c=relaxed/simple;
+	bh=4H52kGuSG7WtFol6hS2JqX50bqOF0sOZH7H769qjDps=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kh9LwmK1yFXj5sC7i5+GjwIq4N1MoFYa5KIxecEdMSnYbIO5bCmQTl1+VvaM5tnYbUdGkVEm/vjXh2PzkyybQpxISL5Ka9jd0HSAbsxR+R4HL7pdJpzisMKfKMFMbD8C/jYblFM77kBQiOtnVDZv2iafaxyAdpOZvU1D71awwBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K/DR5rnn; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=hRfim0ljLzipaGHO+FZFcDHQBm1znkYVUmNb86cvYQx96fZgQV6UcguSBDpAIVNVeaxjoV4QoXbmqGDGQm0XrNIqPuzBTe2dLC74P95o7GAP9nh7WLwPbyzXbJ8a5Y8K25MplToIAguOk3VUtmDZiVRkjW8g+YnInFXaO140yaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=LM1KqDf3; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K/DR5rnn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750758464;
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="LM1KqDf3"
+Received: from [192.168.42.116] (pd9e59880.dip0.t-ipconnect.de [217.229.152.128])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id 514E92FC01F5;
+	Tue, 24 Jun 2025 11:47:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1750758469;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0z8HYNkIOI4XU46KLX1GRdmm2pMYnqtBqt1KaAKwMBw=;
-	b=K/DR5rnn5eihSvQ5/sGB1iLjKB2YbWG8Ft4DjQ7GmSIRvR4hcqv5VDXC4QkzIhk/KrOBvV
-	jDeLtv2r/k6AQOUlkhGlKgkvzXt4F1oBvLtnq4E55XUCGacf5V6j/evC/U/taQkKnkdZVF
-	t25fUmzuSgmKO0hxhw3+QURIDt0vWJw=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-681-wMz6kCCwPq-Ft4OGU5SGFA-1; Tue, 24 Jun 2025 05:47:42 -0400
-X-MC-Unique: wMz6kCCwPq-Ft4OGU5SGFA-1
-X-Mimecast-MFC-AGG-ID: wMz6kCCwPq-Ft4OGU5SGFA_1750758461
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-451deff247cso28638535e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 02:47:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750758461; x=1751363261;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0z8HYNkIOI4XU46KLX1GRdmm2pMYnqtBqt1KaAKwMBw=;
-        b=nJQ79k8brPWoO4JLDsA4z8v3ABgBUTFXI8Kw3UYZQT+7BrWOrbGKhS2mTQa/D2cIfU
-         zutbteopeMYew2NP9G8SWjp3DrfxOSPKVRwxNBFxizrekzgwG5g0mAas7XIsGR/nbVDQ
-         KhWPDLb7Wz9rO+aY58vBDwfVSad80WTo+errJPX+lVNHa7gw1kc8DHDWxFH6vh072jCV
-         H+ugfS03sMpiLwZe0tZGtcSxVlNw8E+xfC5sqU3waoP6NGSQ4Cn25tcB8z6/T0eLIOaJ
-         GN1sy+iGCUZNlNIqL3h7UT6RZh79+sxBAmsUKk6hVE0XP7kpZhYpOVPN1VMryVXXu0LD
-         FJ0w==
-X-Gm-Message-State: AOJu0YyI/IOggnr6zULy3BNoOey6TaOYl3yyZP1kDb4OGRRXbKxBKz88
-	nGVrSXSGWkgCyWZ/qRWyGyqLaA29SsCH1z1YKSKnYWd8diYLNmeOo0akGxIcobXthvy8y4YuCl3
-	Pa8QwyMxKyufiDzT0Ps0EihcWKs7EwkgY56XR+uc8F2TC6XHsIf5SxJv0IVKgDp3Rig==
-X-Gm-Gg: ASbGncuD5CRy9BOtQJmfCbUqZXHlwLRvrPKVkLkUiuEXvPk/oHcSvlPbC7MPGEXQr04
-	/2lt4a0mtSorKpfje3C8IKl6Nz3oOktzWBvDs8SMzmw4iEXAdDkEFCojZIBw+nKjy7bdWWxYHFa
-	/DUFzMaOFe2rEavrv3QoYrSQ/AWAj11VXUoi0C7d8PNBIBrJ+JeYV10SHWXFWi2VOSRuyd3fsiL
-	TV2mV8iE+YxPuoIstz31uH2q8YXH7UGOAV3dH06PYp0y8FLOWoUIAgARE/HULUlQq8v/90VeUvI
-	OY+x4UKwGZ6UpUEWgqWp+YSHKYSHRsT3Nfsc8l/olkdkDCOQtg4djF0=
-X-Received: by 2002:a05:6000:288f:b0:3a4:ce5c:5e8d with SMTP id ffacd0b85a97d-3a6e720662fmr2319349f8f.20.1750758461038;
-        Tue, 24 Jun 2025 02:47:41 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE8djLFNnDpeZNIigPUeQ9PHBQioRlBc2lnCxuo0cWEFFhY9HSOm6C0+7jAYWjZOihkWEhWXg==
-X-Received: by 2002:a05:6000:288f:b0:3a4:ce5c:5e8d with SMTP id ffacd0b85a97d-3a6e720662fmr2319293f8f.20.1750758460552;
-        Tue, 24 Jun 2025 02:47:40 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80f67c4sm1506569f8f.62.2025.06.24.02.47.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 02:47:40 -0700 (PDT)
-Message-ID: <c6a6059d-460b-4f7c-8976-f05b0a58b5e1@redhat.com>
-Date: Tue, 24 Jun 2025 11:47:38 +0200
+	 in-reply-to:in-reply-to:references:references;
+	bh=on//GmR4nzs5aJ9qGxop0qW8vJ8usF/fHdQ8L17zNjw=;
+	b=LM1KqDf3fR0y1TyHEUX8QqwDi3SSHYjWIP0lxmQyKJoyocpL4YTl/mmqBIrwD0NoptgjQF
+	ElxvAoTphlq+YqFptwRKeq2YRmuJRBepdG/Ygkxc7EvSFlaJyHvbXYSfJ6Sst96JYF9nxr
+	xZxsOMhXEN5szeUbp2BA3XsmnSRZuWo=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <f551abbd-b901-4779-9bd9-c87981690460@tuxedocomputers.com>
+Date: Tue, 24 Jun 2025 11:47:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,138 +41,177 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: page_ext and memdescs
-To: Matthew Wilcox <willy@infradead.org>, Bharata B Rao <bharata@amd.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- Jonathan.Cameron@huawei.com, dave.hansen@intel.com, gourry@gourry.net,
- hannes@cmpxchg.org, mgorman@techsingularity.net, mingo@redhat.com,
- peterz@infradead.org, raghavendra.kt@amd.com, riel@surriel.com,
- rientjes@google.com, sj@kernel.org, weixugc@google.com,
- ying.huang@linux.alibaba.com, ziy@nvidia.com, dave@stgolabs.net,
- nifan.cxl@gmail.com, xuezhengchu@huawei.com, yiannis@zptcorp.com,
- akpm@linux-foundation.org
-References: <20250616133931.206626-1-bharata@amd.com>
- <20250616133931.206626-4-bharata@amd.com>
- <aFAkkOzJius6XiO6@casper.infradead.org>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 1/1] drm/amd/display: Add quirk to force backlight type on
+ some TUXEDO devices
+To: Mario Limonciello <mario.limonciello@amd.com>,
+ Rodrigo Siqueira <siqueira@igalia.com>
+Cc: "Wentland, Harry" <Harry.Wentland@amd.com>,
+ "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+ "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+ "Koenig, Christian" <Christian.Koenig@amd.com>,
+ "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Hung, Alex" <Alex.Hung@amd.com>, "Wheeler, Daniel" <Daniel.Wheeler@amd.com>
+References: <20250409163029.130651-1-wse@tuxedocomputers.com>
+ <20250409163029.130651-2-wse@tuxedocomputers.com>
+ <08ceaa42-a12c-4bd4-bb75-b71126a60688@tuxedocomputers.com>
+ <dnu7mbrw7fs4qvwi2alvgrqvonsrucrq7hgxgkqyyqn5djzkkj@c7grkpftjbw4>
+ <8c048899-e307-4229-8165-fa70d001176e@amd.com>
+ <293be5bc-11ad-49b8-a549-864ce4016f14@tuxedocomputers.com>
+ <2de286af-fcfe-414c-b951-384e1acae89f@amd.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aFAkkOzJius6XiO6@casper.infradead.org>
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <2de286af-fcfe-414c-b951-384e1acae89f@amd.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 16.06.25 16:05, Matthew Wilcox wrote:
-> On Mon, Jun 16, 2025 at 07:09:30PM +0530, Bharata B Rao wrote:
->> diff --git a/include/linux/page_ext.h b/include/linux/page_ext.h
->> index 76c817162d2f..4300c9dbafec 100644
->> --- a/include/linux/page_ext.h
->> +++ b/include/linux/page_ext.h
->> @@ -40,8 +40,25 @@ enum page_ext_flags {
->>   	PAGE_EXT_YOUNG,
->>   	PAGE_EXT_IDLE,
->>   #endif
->> +	/*
->> +	 * 32 bits following this are used by the migrator.
->> +	 * The next available bit position is 33.
->> +	 */
->> +	PAGE_EXT_MIGRATE_READY,
->>   };
->>   
->> +#define PAGE_EXT_MIG_NID_WIDTH	10
->> +#define PAGE_EXT_MIG_FREQ_WIDTH	3
->> +#define PAGE_EXT_MIG_TIME_WIDTH	18
->> +
->> +#define PAGE_EXT_MIG_NID_SHIFT	(PAGE_EXT_MIGRATE_READY + 1)
->> +#define PAGE_EXT_MIG_FREQ_SHIFT	(PAGE_EXT_MIG_NID_SHIFT + PAGE_EXT_MIG_NID_WIDTH)
->> +#define PAGE_EXT_MIG_TIME_SHIFT	(PAGE_EXT_MIG_FREQ_SHIFT + PAGE_EXT_MIG_FREQ_WIDTH)
->> +
->> +#define PAGE_EXT_MIG_NID_MASK	((1UL << PAGE_EXT_MIG_NID_SHIFT) - 1)
->> +#define PAGE_EXT_MIG_FREQ_MASK	((1UL << PAGE_EXT_MIG_FREQ_SHIFT) - 1)
->> +#define PAGE_EXT_MIG_TIME_MASK	((1UL << PAGE_EXT_MIG_TIME_SHIFT) - 1)
-> 
-> OK, so we need to have a conversation about page_ext.  Sorry this is
-> happening to you.  I've kind of skipped over page_ext when talking
-> about folios and memdescs up to now, so it's not that you've missed
-> anything.
-> 
-> As the comment says,
-> 
->   * Page Extension can be considered as an extended mem_map.
-> 
-> and we need to do this because we don't want to grow struct page beyond
-> 64 bytes.  But memdescs are dynamically allocated, so we don't need
-> page_ext any more, and all that code can go away.
-> 
-> lib/alloc_tag.c:struct page_ext_operations page_alloc_tagging_ops = {
 
-In this case, we might not necessarily have an allocated memdesc, for 
-all allocations, though. Think of memory ballooning allocating "offline" 
-pages in the future.
+Am 24.06.25 um 07:45 schrieb Mario Limonciello:
+> On 6/24/2025 12:42 AM, Werner Sembach wrote:
+>> Hi Mario,
+>>
+>> Am 23.06.25 um 21:42 schrieb Limonciello, Mario:
+>>> On 6/23/25 2:13 PM, Rodrigo Siqueira wrote:
+>>>> On 06/23, Werner Sembach wrote:
+>>>>> gentle bump
+>>>>>
+>>>>> Am 09.04.25 um 18:27 schrieb Werner Sembach:
+>>>>>> The display backlight on TUXEDO Polaris AMD Gen2 and Gen3 with panels
+>>>>>> BOE 2420 and BOE 2423 must be forced to pwn controlled to be able to
+>>>>>> control the brightness.
+>>>>>>
+>>>>>> This could already be archived via a module parameter, but this patch adds
+>>>>>> a quirk to apply this by default on the mentioned device + panel
+>>>>>> combinations.
+>>>>>>
+>>>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>>>> Cc: stable@vger.kernel.org
+>>>>>> ---
+>>>>>>     .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 32 ++++++++++++ ++++++-
+>>>>>>     1 file changed, 31 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/ 
+>>>>>> drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>>>>>> index 39df45f652b32..2bad6274ad8ff 100644
+>>>>>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>>>>>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>>>>>> @@ -1625,11 +1625,13 @@ static bool dm_should_disable_stutter(struct 
+>>>>>> pci_dev *pdev)
+>>>>>>     struct amdgpu_dm_quirks {
+>>>>>>         bool aux_hpd_discon;
+>>>>>>         bool support_edp0_on_dp1;
+>>>>>> +    bool boe_2420_2423_bl_force_pwm;
+>>>>>>     };
+>>>>>>     static struct amdgpu_dm_quirks quirk_entries = {
+>>>>>>         .aux_hpd_discon = false,
+>>>>>> -    .support_edp0_on_dp1 = false
+>>>>>> +    .support_edp0_on_dp1 = false,
+>>>>>> +    .boe_2420_2423_bl_force_pwm = false
+>>>>>>     };
+>>>>>>     static int edp0_on_dp1_callback(const struct dmi_system_id *id)
+>>>>>> @@ -1644,6 +1646,12 @@ static int aux_hpd_discon_callback(const struct 
+>>>>>> dmi_system_id *id)
+>>>>>>         return 0;
+>>>>>>     }
+>>>>>> +static int boe_2420_2423_bl_force_pwm_callback(const struct 
+>>>>>> dmi_system_id *id)
+>>>>>> +{
+>>>>>> +    quirk_entries.boe_2420_2423_bl_force_pwm = true;
+>>>>>> +    return 0;
+>>>>>> +}
+>>>>>> +
+>>>>>>     static const struct dmi_system_id dmi_quirk_table[] = {
+>>>>>>         {
+>>>>>>             .callback = aux_hpd_discon_callback,
+>>>>>> @@ -1722,6 +1730,20 @@ static const struct dmi_system_id 
+>>>>>> dmi_quirk_table[] = {
+>>>>>>                 DMI_MATCH(DMI_PRODUCT_NAME, "HP EliteBook 665 16 inch G11 
+>>>>>> Notebook PC"),
+>>>>>>             },
+>>>>>>         },
+>>>>>> +    {
+>>>>>> +        // TUXEDO Polaris AMD Gen2
+>>>>>> +        .callback = boe_2420_2423_bl_force_pwm_callback,
+>>>>>> +        .matches = {
+>>>>>> +            DMI_MATCH(DMI_BOARD_NAME, "GMxNGxx"),
+>>>>>> +        },
+>>>>>> +    },
+>>>>>> +    {
+>>>>>> +        // TUXEDO Polaris AMD Gen3
+>>>>>> +        .callback = boe_2420_2423_bl_force_pwm_callback,
+>>>>>> +        .matches = {
+>>>>>> +            DMI_MATCH(DMI_BOARD_NAME, "GMxZGxx"),
+>>>>>> +        },
+>>>>>> +    },
+>>>>>>         {}
+>>>>>>         /* TODO: refactor this from a fixed table to a dynamic option */
+>>>>>>     };
+>>>>>> @@ -3586,6 +3608,7 @@ static void update_connector_ext_caps(struct 
+>>>>>> amdgpu_dm_connector *aconnector)
+>>>>>>         struct amdgpu_device *adev;
+>>>>>>         struct drm_luminance_range_info *luminance_range;
+>>>>>>         int min_input_signal_override;
+>>>>>> +    u32 panel;
+>>>>>>         if (aconnector->bl_idx == -1 ||
+>>>>>>             aconnector->dc_link->connector_signal != SIGNAL_TYPE_EDP)
+>>>>>> @@ -3610,6 +3633,13 @@ static void update_connector_ext_caps(struct 
+>>>>>> amdgpu_dm_connector *aconnector)
+>>>>>>             caps->aux_support = false;
+>>>>>>         else if (amdgpu_backlight == 1)
+>>>>>>             caps->aux_support = true;
+>>>>>> +    else if (amdgpu_backlight == -1 &&
+>>>>>> +         quirk_entries.boe_2420_2423_bl_force_pwm) {
+>>>>>> +        panel = drm_edid_get_panel_id(aconnector->drm_edid);
+>>>>>> +        if (panel == drm_edid_encode_panel_id('B', 'O', 'E', 0x0974) ||
+>>>>>> +            panel == drm_edid_encode_panel_id('B', 'O', 'E', 0x0977))
+>>>>>> +            caps->aux_support = false;
+>>>>>> +    }
+>>>> It lgtm,
+>>>>
+>>>> Additionally, I believe this is safe to merge since it only affects a
+>>>> specific device. Perhaps display folks would like to include this as
+>>>> part of this week's promotion? Anyway, Cc other devs from the display.
+>>>>
+>>>> Reviewed-by: Rodrigo Siqueira <siqueira@igalia.com>
+>>> That's a bit odd that aux based B/L control wouldn't work. Are these
+>>> both OLED panels?  What debugging have you done thus far with them?
+>>> What kernel base?
+>>>
+>>> Could you repro on 6.16-rc3?
+>>
+>> Sadly our archive is missing this panel + device combination. This patch is 
+>> based on our install script that sets this fix via boot parameters since the 
+>> release of these devices.
+>>
+>> So the quirk is field proven, but I can't actively test it anymore.
+>>
+>> Best regards,
+>>
+>> Werner
+>>
+>
+> Do you recall what kernel version you were doing it with?  I'm just wondering 
+> if AUX brightness control had a bug with such a kernel.
+We shipped the device in 2021 with Ubuntu focal, so the kernel probably was 5.8 
+or 5.11 (in theory it also could have been 5.4 or whatever the Ubuntu OEM kernel 
+was at that time).
+>
+> Do you have this panel on some other hardware perhaps? 
+Probably not. I will ask however.
+> Or could you send a call out to get some testing done?
 
-Of course, the easy solution is to not track these non-memdesc allocations.
+An idea I also had in the past to plug this and similar holes in your archive, 
+but no "process" for this in place yet.
 
-> mm/page_ext.c:static struct page_ext_operations page_idle_ops __initdata = {
+Best regards,
 
-That should be per-folio.
+Werner
 
-> mm/page_ext.c:static struct page_ext_operations *page_ext_ops[] __initdata = {
-
-That's just the lookup table for the others.
-
-> mm/page_owner.c:struct page_ext_operations page_owner_ops = {
-
-Hm, probably like tagging above.
-
-> mm/page_table_check.c:struct page_ext_operations page_table_check_ops = {
-
-That should be per-folio as well IIUC.
-
--- 
-Cheers,
-
-David / dhildenb
-
+>
+>>>
+>>>>>>         if (caps->aux_support)
+>>>>>> aconnector->dc_link->backlight_control_type = BACKLIGHT_CONTROL_AMD_AUX;
+>
