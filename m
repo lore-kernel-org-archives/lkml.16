@@ -1,158 +1,104 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABE632E7632
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 18:58:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0102E7645
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 18:58:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750791495; cv=none; b=gIuUNinpJAdSF68FWL/miEXKJ1aDOkl6lJFHAGwOwIAV6Q9HnIVh8PvjKlBDe8avraW5SgBDL5oG/z9KfHBKecDHtvdWhuxSD9qFm5UIKw97DQP7B8Ab2NXL/i/b4nfnljte7t9LOlnsKJkA5jhJkpxuDnzV47RabMICCp7K5sI=
+	t=1750791509; cv=none; b=td5f/uXW3rki39BFPK7L0olh+ABInV4Ppp3mclmTBnpy11pn7G/KF2hgoLFeUJx+cJvRzmV5AGlYcgQwXZb3Euw2t85yqx/cImkki5hw3wM5KqR1DJF2I8M0JDV/tbifVyeMU4NYedRCP4hvX5vJBpZnQ80y6t83E6Y6tDj8CcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750791495; c=relaxed/simple;
-	bh=npWwWKZPd5rdEqfk5ixF6kz+HcjFPiAMk+Q3wRxBc94=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VdeeMv2KWup3DbSOvUK+bJUrz8xKV3R4eJnjyFL3JdAMGxUOZM9CHhv18R2yOejgG7qikBDBuTIWmVAZj9psN8j5zlSXT5rLtnJMHvNzfJowx5uyBGcogBGI05H5nfc3b5o6ehzHPAoRY0J4+0UBn2F6Zbk/prVDRVzkZpx0iJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TWE7unGS; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750791509; c=relaxed/simple;
+	bh=1euhTr1m2G8OQzQdrKy8My4UoIQ7gLuT2G550ln9JUM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UwP13G9eepFOmZTxL0Vv5Bi/YYQlOkzNKHh0/vY7JEdIXnwH4rqJOXbX4oLstsVYd4Iwg4u1xrY6FyRNLT24ZGxD+yMw56W5nn0VU4Qzdv3vXpP/0OWitbKkpdaUcarxzvIUwtcSVKJluwvF+5vpTfw7+YRc9DwuH8VPq6e2tGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=c827gbcI; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TWE7unGS"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-32b7f41d3e6so1744891fa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:58:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="c827gbcI"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6fabe9446a0so7783696d6.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:58:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750791492; x=1751396292; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=h7ui9krklnTDspgMC7AGFpPjhbbUuQIxEzApTtxeYDw=;
-        b=TWE7unGSOuUxfA+RiQdEGtRaCAkTg6IrkT6bSQZThodttjPogdODQZyNfBW7I0xwJu
-         nfX0au6WniRbRkA6iSosgwB2XHlBrOB8l1Ir84cbw6EE3+4nKpyPpjKEBG02qm7+HCo+
-         4G6OYmTl6sdT0zTlxTzay5ScHkIele/6R3nM3bspbLGecKP8S1shvdHOE3nG2fb5FlR8
-         4uB6+uMXvRdf39Cg8vJYEGKJ15dUAzj5hpGFkdKIHqmcwMN/TK1PsAsps7MqQJySIPSa
-         FslFK2BVGdK36mkdfYhLdoalgGuUOd1ZQu0ByZOY/HlAEki88ioL6yFpb8L4yP6knnQe
-         thlQ==
+        d=ziepe.ca; s=google; t=1750791506; x=1751396306; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=/dPp8G4B6NbKyt49W8JBKu/RwFw1JJYSMb2wc/ipDrg=;
+        b=c827gbcI/fKUBgrBkKz1q1ByPM5kuZTugw44g/ZayhjByUzo/dVeYWx0RzYS9Xbvsv
+         mRrob7+RXy4y9I+ed6JojPN3otwuZXRoN5DZzKm9OjxB/uc9yLSM13K+KbDuinaIhdbQ
+         Ejzst+nWYiGgDlR/Rhx6lvqNA1NpaxPTzYmF5pZEcYzANpZr3pe65aY/IhC/wMEysgmf
+         aepe/kFxIGxVE/puJ6psLWcqSP6yF1c7lND1ddsHE5gsHzneUVj8zKkv4dY2/LH0PAQg
+         N6UiAJ8IVoTT2UvoRiqi2ra9SLJjNHyY25CvwR7W+VGuS55ePhdHU4Ybk8VFo3UCIaA/
+         LzGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750791492; x=1751396292;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=h7ui9krklnTDspgMC7AGFpPjhbbUuQIxEzApTtxeYDw=;
-        b=lq2ER2MRGJPp0rOd3Kf26ggQHn1NBbhyP/1LU6/+IKD16xtpSka5FNGt9eEKMbob1r
-         /dvPLmQiUX3sn8mlKIwFZN1faJbTVHJptHXe19WjQiP2xZM6IryPYpV5IAShbmrmvGY+
-         J7G8dSkuSyF8+m3IpuXISfpHlizLX4IHRCUCyc0a2HW6CmgndvSodSphhJSAhgLZKfip
-         MpNxFQ1DyKVaYDv2oyVo7DuJvfqFfVWfcc57cwncykzOcaLRvwMS2ocKf77l91TZjZJF
-         xcAzRjXYqYh5oTqTIdyRJ4uaofagtfVrkJdk/6cqxE8/2jPtRQK/EzReWOXhzYqwBMN+
-         wW1g==
-X-Forwarded-Encrypted: i=1; AJvYcCW/tI3TrYwjzBzQra/hX82TAu/mqkY5SSk0zPux/3TUe13Excv0Xv2v8RRglAC4gUB1kwgxwJeXQsDAT+A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZFFe5v0z6M6EGiWbdNUQjg+7BVTr2g87ZmS1Bjd+QLR0KFP14
-	y2VXejurjv4kdgypaafFqVhuog+mpfLkBvcA7n+QRzXYjTh/wl2tXM9yke/WQJP8SMv0GBc5BMR
-	3WzjIcEs/CdeLy+8+ZdLOS2vtw822XuJQyTCp2CHV2w==
-X-Gm-Gg: ASbGnctVmxBaqTi69OjEvhG2Uo92qNqGaDbZ4ClvXmr//6tn6dlkF3Stvs/gW8UQwoL
-	iXk/M4obbw9qbMWsej8U7uYaVzbXKPKC1aGbqHS/oStoHP1xwmvONJGkxJh/Ld4NXyEUUnbIu7u
-	+/97rBib9CdiTwASZhxpJxSVeZ+A9B8s9tDJR/g5+M8BY=
-X-Google-Smtp-Source: AGHT+IFHkwtjvOJNCrFEWstn9L634lZ8TSAnodhGn+aKzDIVOJMa02nwLbdMCDdRl+xviZehHHIuiwGlHeUOdx9D6us=
-X-Received: by 2002:a05:651c:214b:b0:32c:a690:724b with SMTP id
- 38308e7fff4ca-32cb968d882mr10090081fa.19.1750791491756; Tue, 24 Jun 2025
- 11:58:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750791506; x=1751396306;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/dPp8G4B6NbKyt49W8JBKu/RwFw1JJYSMb2wc/ipDrg=;
+        b=X0X8P57iIS4KaB2ihXdV0oxW6KNFBVtlnX4bER5+J699/6HWwM4Fc6D7RTc/blLQ9x
+         yn1niLRDXJ0hSX5ZO45V80u+AeSoG4Y2YMuUYQrlvklsC87U1kjiwIJd6OijTixIZwBd
+         5Z2gE47/aMtbP9OC/7BkRn+8Wr0IiDiG8wX1OieEccwRCSzDLvxJz+ZUM1LyEYYCPOin
+         /V7NKplALGEa4qqxuxfiHvngOrYZCfFSjn9PErHBR2OHZsivJ6BeSBSsRemsI7mj6fjH
+         b5///NCMRenEIGj9MU1jMTDRoGdlCM2lgVfTfbH05pcofIiwLJkiMGR6AynpJsztWaQp
+         4nJw==
+X-Forwarded-Encrypted: i=1; AJvYcCV4dTHb9TMxTrwvpUfEZSJG4G1YEGa1SiekpbbdPSvjWPg16V1TRYaZ2hvlzBj1cgahRTbsoYuEplGfULQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMa9M/zclvw9AKn8CTJELr5Y8jKfJJF3u+ZySUeJjpzdqx0Yv0
+	YBwhuRP84sWz8YlnnZtiYo6lDv4Trf+bMGxBZSuPxQB4soo77WwfXSvbgD0A2TKZe9K/TrQf+x4
+	gaDMh
+X-Gm-Gg: ASbGncviccyU55a47LiWPgJdpFvqF2b75PJtL/IHp3Guz//+N7BfjEbyDox/lvrFIj5
+	wY6G5SUbj9AHPl/qYvL1PB+f4kV29j9nRoXSWCkVtyWV6f87COHQ3Ia1C1q2EQzjEqOs8CIxQgR
+	jInKLpAEGbj1Va3SaxSs/iyPriau2CKfrabcOJhjBZx3Ld9HqhBPS6f0KAkEjVHosLPYqvYUwM6
+	dcPedGueM7gWV4nbxCB9bBohPpjuCRl77W0xdEe51r3lBAdCy3ghxUOeisYr9c+CtW67sVl3O3V
+	XnDt6gC1MJ2FTYWIIrzqJSagSfygV2pasg3VfpNaR8Qsj/z2Jepd5988az/SzfFxF/SSPj9DaWH
+	CFpx1hRtFwmeTws9fM6Lp/cDtaNgWwVviV8WH7w==
+X-Google-Smtp-Source: AGHT+IFz3e1ntqjNO1Li+kLYqmbgAsr0uEr0UDFV5QwNps+7VApXi86JZ/fZAMhsoeN1Ap5x/7nhoQ==
+X-Received: by 2002:a05:6214:4283:b0:6e8:f433:20a8 with SMTP id 6a1803df08f44-6fd5ef29729mr1069556d6.9.1750791506488;
+        Tue, 24 Jun 2025 11:58:26 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd095ca02bsm59491686d6.125.2025.06.24.11.58.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 11:58:26 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uU8qf-00000000tXN-2UjT;
+	Tue, 24 Jun 2025 15:58:25 -0300
+Date: Tue, 24 Jun 2025 15:58:25 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Alex Mastro <amastro@fb.com>
+Cc: Alex Williamson <alex.williamson@redhat.com>, peterx@redhat.com,
+	kbusch@kernel.org, kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfio/pci: print vfio-device name to fdinfo
+Message-ID: <20250624185825.GA213144@ziepe.ca>
+References: <20250624181616.GE72557@ziepe.ca>
+ <20250624185327.1250843-1-amastro@fb.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618095858.2145209-1-demonsingur@gmail.com> <20250618095858.2145209-5-demonsingur@gmail.com>
-In-Reply-To: <20250618095858.2145209-5-demonsingur@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 24 Jun 2025 20:58:00 +0200
-X-Gm-Features: AX0GCFv3Y0xzvM4_ytzUY9wWsLoaPRcLNq10rxfdsma9gTvF5iQYKz-0B24NXH0
-Message-ID: <CACRpkdYwBAaEi--y64oVwVcAMH9z0LO5ZG_fvNK-CuxdERiYBQ@mail.gmail.com>
-Subject: Re: [PATCH v4 04/19] dt-bindings: media: i2c: max96717: add support
- for pinctrl/pinconf
-To: Cosmin Tanislav <demonsingur@gmail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>, 
-	Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>, 
-	=?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, 
-	Julien Massot <julien.massot@collabora.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, 
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS" <linux-media@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
-	"moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>, 
-	"open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>, 
-	"open list:GPIO SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)" <linux-gpio@vger.kernel.org>, Cosmin Tanislav <cosmin.tanislav@analog.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624185327.1250843-1-amastro@fb.com>
 
-Hi Cosmin,
+On Tue, Jun 24, 2025 at 11:53:25AM -0700, Alex Mastro wrote:
+> On Tue, 24 Jun 2025 15:16:16 -0300 Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > There will be a symlink under /sys/class/vfio-xx/XX pointing to the
+> > <pci sysfs path>/vfio-dev/X directory
+> > 
+> > And another symlink under /sys/dev/char/XX:XX doing the same.
+> 
+> Got it, thanks. The issue does seem solved for the vfio cdev case, then.
 
-thanks for your patch! Overall this looks good!
+I wonder if we could arrange things so that if the cdev path is turned
+on then the device FD created by the ioctl would report the same
+/dev/vfio/X information? I've never looked at how this works, but
+maybe it is easy?
 
-On Wed, Jun 18, 2025 at 11:59=E2=80=AFAM Cosmin Tanislav <demonsingur@gmail=
-.com> wrote:
+Even if userspace is not using the cdev it does exist and is still
+logically affiliated with the ioctl FD.
 
-> MAX96717 is capable of configuring various pin properties.
->
-> Add pinctrl/pinconf properties to support this usecase.
->
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-(...)
-> +      slew-rate:
-> +        description: |
-> +          Slew rate.
-> +          0 - Fastest
-> +          1 - Fast
-> +          2 - Slow
-> +          3 - Slowest
-> +        maximum: 3
+Then we'd have a nice consistent user experience.
 
-Would be great to have some SI units on this? Like how many milliseconds
-etc.
-
-> +      maxim,jitter-compensation:
-> +        type: boolean
-> +        description: Enables jitter compensation.
-
-What does that mean?
-
-> +      maxim,gmsl-tx:
-> +        type: boolean
-> +        description: Enable transmitting pin value to GMSL link.
-> +
-> +      maxim,gmsl-rx:
-> +        type: boolean
-> +        description: Enable receiving pin value from GMSL link.
-> +
-> +      maxim,gmsl-tx-id:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          Identifier used while transmitting value to GMSL link.
-> +          Default value matches the pin number.
-> +        minimum: 0
-> +        maximum: 31
-> +
-> +      maxim,gmsl-rx-id:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description:
-> +          Identifier used while receiving value from GMSL link.
-> +          Default value matches the pin number.
-> +        minimum: 0
-> +        maximum: 31
-
-Maybe add some words about what an GMSL link is somewhere?
-
-> +      maxim,rclkout-clock:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: |
-> +          Clock value.
-> +          0 - XTAL / 1 =3D 25MHz
-> +          1 - XTAL / 2 =3D 12.5MHz
-> +          2 - XTAL / 4 =3D 6.25MHz
-> +          3 - Reference PLL output
-> +        minimum: 0
-> +        maximum: 3
-
-I'm no expert but isn't this something the clock framework has some standar=
-d
-binding for? assigned-clock-rates?
-
-Yours,
-Linus Walleij
+Jason
