@@ -1,80 +1,77 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E1626CE11;
-	Tue, 24 Jun 2025 19:56:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D3E233704
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:57:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750794974; cv=none; b=rHJeHwkQ3GiWOzFUiP70kZ+vzbuvp1sq5B41LnGa9To3h6eCKONoa7E81UaNIixefOSfYeiWbLsG0UvG7auk1U6AL2+cmJlIFcQPcM9qjt8HkfQrFlk7VYj3fYulD0Slhz195TYvyd8nb7uWqfmQStEzKl5xLONFyToH4A7tpGY=
+	t=1750795037; cv=none; b=KdGDRwDHyCSlBOu2oDtE3YIjWvgv4d+YRw+Zkfj8t036t4QKBKYry77no7YgrC1wu/HrcGbBJJF7vmH6JfvLkzZY47B/LqR/duDAJd/vL2hsTcKVwHcjiY9iWVKUsRFhlBf/HjwDFYAzwMWzMELdi23UOcQlrldoqAIEdCucoZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750794974; c=relaxed/simple;
-	bh=zTEiSDhPnb/SmNQlci8Du6ozlroH9HA2n8hti67QsGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zesh7QUuP7BUgZ3axsIJM1MFue/xv2DpE99hmqG6tZLFNBuPmJd2srd05cuxBaPyjXThCY6yZGtE3YVSFfqM3/+q4OgD0NPA/+nb4Vq6S+tCzBj+RVK/uob5oKo1KTOfr/eV537+JDhpSC0iOjXPzoToHakH3Dp1E1MUzzkx95A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=ZF5Jkk8i; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750795037; c=relaxed/simple;
+	bh=c/xR1210WNkMjaEddRyUd3VIYNyGW7UT6fUIt9VWbHc=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=PMEIJRSeItllh9hzPok5Y0c5jUmrR3CFhvfG7Kd8s7/iN5ZEIVttNnvqIJuDhG4SoV+pipcssopsFV2be6mJZs/CtZ7h84nIJlT5uVJmTTU2j5QN4tPEw51ombOUkyl63hpcWeYFWIJs7eg7gkASPowig03CVyIDBoWRZ8F5nv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zyDortGZ; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZF5Jkk8i"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=kdFFQM8DBnlzbNbR3IoBJ1KwDp3c0vUeXIeHUg3TCw8=; b=ZF5Jkk8i+is9uJTE8UJbADAUvr
-	IkKqs8NFBHcMEBYhHFAxtEif+Yu12Dv1F0dKdubRerUvKuJRkJ/bEJqrc1ybbVqCKhQIZpii2EpEC
-	0xC3BkXvB7qW6G2l7cPnai4O4NCt7uF2NjqBhXLFLN/8hJ/IrjTrSgwZp2TUUQUAstEK1PLqmGwyM
-	sMzpy0EhjfbDCoGoq/o/WKji4PPjPe6Ronx2TA+W4N9HTez1kyJXaHzuahK0C2i5UAtmbrqlo9+Yc
-	PXtQuRJ3cMGugqsfymgfHPFhL+e0s9i30lVp5boZJUCwDdudup8sDAgcTiCFySoipNJf1t3LvZCSv
-	88tAJd6g==;
-Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uU9kY-00000007WLb-3f9v;
-	Tue, 24 Jun 2025 19:56:10 +0000
-Date: Tue, 24 Jun 2025 20:56:10 +0100
-From: Matthew Wilcox <willy@infradead.org>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: Christoph Hellwig <hch@infradead.org>, ying chen <yc1082463@gmail.com>,
-	djwong@kernel.org, linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] xfs: report a writeback error on a read() call
-Message-ID: <aFsC2vTJNG7UmfMi@casper.infradead.org>
-References: <CAN2Y7hyi1HCrSiKsDT+KD8hBjQmsqzNp71Q9Z_RmBG0LLaZxCA@mail.gmail.com>
- <aFqyyUk9lO5mSguL@infradead.org>
- <c77a55f5ab294be222c8abd86c2b8fddabca9f61.camel@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zyDortGZ"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2356ce55d33so12899145ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:57:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750795036; x=1751399836; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BENYVyjj2zucOOe4fuLRvkzQyNfHSRq657VEghHqQ9U=;
+        b=zyDortGZ3sJQvCsVrr4z/nBzJ/l4HfYNOVE1n4BrNa4VDHL1elXxOXFTxZ2lPIZYQs
+         MY4/zZqBmE5mEpbgJiGIClAvxJ9S+faLNchXsIYRvSYXt5qkG7eeBGVkxSDAckJfClCk
+         ydPyzY92SmfySe9HB5AsFcIKvfgOjU2Iubrvt/pBwYT118JXy5u/yfZv68yqojqvuPfd
+         DiqDTDt1M1otE0omTGv7YeV2rL8xP5PZ/mLrpXnjT3ensuhq3cH+Mc0gjYPTqtbb6EUU
+         nDjZ9Hhc3JaVcH7Abv9FgHAkUp6BxQ9LLN98Ewm6LkH/eRVLxnKRlou6R/4IdcXfEfNL
+         AD8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750795036; x=1751399836;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BENYVyjj2zucOOe4fuLRvkzQyNfHSRq657VEghHqQ9U=;
+        b=BPCnDZw0CkUZmmMIVWaJTdy8q0iqwlKQvd1ivw+dWAjppy0+sFydVFxtyaHmlKfHvx
+         ZGLzQfrR0T8wzDNNoeAsEsOL/nlD4oAT/F4UX03jBJ6tIua/k0VATTAcHjGsphzYiSb7
+         eh7C7Nqc2jf4srIk2JKFEivrjidBux1c/OuHQUo/aAjeAqjbg7x1ccG0/WwMyfoI3Xtq
+         QvSwMo7J+5XUqKGiqt03fBKC9j50pEhaWfbLskoWNiDrnbJPohlEMAc0gDOK3X5W4SH0
+         vK/gcQ51qtIy+lYcMltflEpehP2QWKjkyJI/V3EMxUkUkPUZ/TPbttaWi/I9BlJckC4U
+         eK3w==
+X-Forwarded-Encrypted: i=1; AJvYcCU5fOl7TiHwbtYcZUs7pxa/luGDfRDjP2HaDdw3bJIqAbBmvF9k02Ah9u1b+7zxGiJxFUTvxmX2vk7FZ80=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDgF71PxTdVvpubd11Q4sheQshNFCalJhp9f4VGDvLhpgZqf+v
+	zZhFOWS5gweQeDTZBlIfKn5cVxQhmiNIwaqDRPfb1oPbjk7gJ81tpAkI1tOanNTgJl4SHERyIuF
+	icJmXQA==
+X-Google-Smtp-Source: AGHT+IFVpnsXXGmHpzDvt07TImcej4CtxG1K5AUbuX4pJYUSHacGai39W7FIKq2088irF9CIPs9QCTN8XOs=
+X-Received: from plbix22.prod.google.com ([2002:a17:902:f816:b0:234:46ed:43f1])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2bcc:b0:235:5a9:976f
+ with SMTP id d9443c01a7336-23824030ccdmr12589825ad.24.1750795035894; Tue, 24
+ Jun 2025 12:57:15 -0700 (PDT)
+Date: Tue, 24 Jun 2025 19:57:14 +0000
+In-Reply-To: <diqzv7pdq5lc.fsf@ackerleytng-ctop.c.googlers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c77a55f5ab294be222c8abd86c2b8fddabca9f61.camel@kernel.org>
+Mime-Version: 1.0
+References: <20250602172317.10601-1-shivankg@amd.com> <diqzv7pdq5lc.fsf@ackerleytng-ctop.c.googlers.com>
+Message-ID: <aFsDGvK98BRXOu1h@google.com>
+Subject: Re: [PATCH] KVM: guest_memfd: Remove redundant kvm_gmem_getattr implementation
+From: Sean Christopherson <seanjc@google.com>
+To: Ackerley Tng <ackerleytng@google.com>
+Cc: Shivank Garg <shivankg@amd.com>, pbonzini@redhat.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bharata@amd.com, tabba@google.com
+Content-Type: text/plain; charset="us-ascii"
 
-On Tue, Jun 24, 2025 at 02:26:18PM -0400, Jeff Layton wrote:
-> On Tue, 2025-06-24 at 07:14 -0700, Christoph Hellwig wrote:
-> > On Sun, Jun 22, 2025 at 08:32:18PM +0800, ying chen wrote:
-> > > Normally, user space returns immediately after writing data to the
-> > > buffer cache. However, if an error occurs during the actual disk
-> > > write operation, data loss may ensue, and there is no way to report
-> > > this error back to user space immediately. Current kernels may report
-> > > writeback errors when fsync() is called, but frequent invocations of
-> > > fsync() can degrade performance. Therefore, a new sysctl
-> > > fs.xfs.report_writeback_error_on_read is introduced, which, when set
-> > > to 1, reports writeback errors when read() is called. This allows user
-> > > space to be notified of writeback errors more promptly.
-> > 
-> > That's really kernel wide policy and not something magic done by a
-> > single file system.
+On Mon, Jun 02, 2025, Ackerley Tng wrote:
 > 
-> ...not to mention that getting an error back on a read for a prior
-> writeback error would be completely unexpected by most applications.
+> Reviewed-By: Ackerley Tng <ackerleytng@google.com>
 
-Well.  It's somewhat understandable:
+Ackerley,
 
-	write() (returns success)
-	writeback happens, error logged
-	memory pressure evicts folio
-	read() brings folio into page cache
-	attempt to read contents fails, error returned
-
-I'm not sure it's a good solution, but it's plausible.
+FYI, your mail doesn't appear to have made it to the lists, e.g. isn't available
+on lore.  I don't see anything obviously wrong (though that means almost nothing).
+Hopefully it's just a one-off glitch?
