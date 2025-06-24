@@ -1,141 +1,158 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C1C2E174A;
-	Tue, 24 Jun 2025 16:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891F42405EB;
+	Tue, 24 Jun 2025 16:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750781670; cv=none; b=MfcEMdgRrQWH5S+DeJ6QcgTqvje8SbVonMb2CZbuj3hHefLcW04IqgykpLb94cGW/jm1344yc3Rm3yQFbMiWwxF66FpM9tMTZf21nMs7yUH2Rd2qzMdVT9hsMOAlgx5qaIecsvFEMCTJoKTzs5LHEeQNbu84TktT1BYXzVteBUg=
+	t=1750781709; cv=none; b=HLx/4rPlQ7YQgq03oeZ+ltvk7oVqeZFDaWEOy3okzNbpwtCJM9h1ZsPbGrl3zIe/4uNfCiy9qT1x3vaI3mv4zFPrGefqRcR3HAiekHgTTrJQqXktLXnfGq20ByvQogNIu9RgPsjG/4bpPGArqnLYgmQU2+5JEyt8DUGTIUDwiYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750781670; c=relaxed/simple;
-	bh=hMxQT9ivNs17wMcJ69YhVe7QBLHdoqcHGTcyWV1LUM4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q7HMFFr5p8XnrfXq8a1M/WQKV8m4ApC/cSoTY8zXy3HowhMSe1XQvMIL5mNs4rxvU15ccBhrJLEvdvbl7KJx8m6MVxlVgLxWGHfpyYYjofpC8XCOJkyKfp26wD3KcNljggU3noQWtA/oPapDj4ggKunDgcA0aI3/fEH3CrqStgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TaPjP4BC; arc=none smtp.client-ip=209.85.218.44
+	s=arc-20240116; t=1750781709; c=relaxed/simple;
+	bh=lvGwQAAObMcMpnGSVKYiVQnRJ15AOjLbSCae8dPzrUE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S8StAmCtOIYqMmuLbaqRA5ef6GMQGhHJmLF9UCUXjlhr9lO8HP8LIWAZTR1vkphUbYy6yvPYqJDZ8zv/wd2so6xi6cyOqG/6mOL1XLjFqKvlxVt03SQic7976lIhR9clKLXQvokuj3E+gbOO56G1+Y2YynUj1ksE9/Ij6WyAKbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bedy3yV8; arc=none smtp.client-ip=209.85.214.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TaPjP4BC"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ade33027bcfso100490166b.1;
-        Tue, 24 Jun 2025 09:14:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bedy3yV8"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-23602481460so7816575ad.0;
+        Tue, 24 Jun 2025 09:15:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750781667; x=1751386467; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B2hJc4hUnpKA+D5XoufJNAk6lZn4GYmwTvIaYpB/Ywo=;
-        b=TaPjP4BC82XAPR+0TwG19QdU/kVkctVvSB4ZS9E2PEQ1Op+bYjNJ4ZbfAb3cBy/5ar
-         6+ruBX9GbDEaLIk0kx6Xc4e/3sCXIq7qKUqTlY2HMroX2+qa5Adz2jQR/u9YCPoGTfSe
-         NAyLcQ5Cm7edeBWrTgcfoVQBN6kighkOlr56h7eL+PQ7xyg2uFS7EXKpvVxaAMCVNOcy
-         wOaIcIyGoJ4GNoyiI+BYWNMp/BX8h9Vg4r/Ra6YsoSLhFTmj3jhJGoSQkxq7NXndp6ZY
-         chYX86IziE80K1LtcXgMzlEb/aAIZFNZzPR54mfTxVOpJtp+tfv/E9Pgc/Fr+EbiRaTh
-         im7g==
+        d=gmail.com; s=20230601; t=1750781707; x=1751386507; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NOFa14hzPvC6t+oIp0DexT1UxNfRS4Cl15Pgd6Dy9Oc=;
+        b=bedy3yV8ASaKB6pPQpywKeazSqLRtPBDK1ZD257lN+Fy86jw7SEEM7lDAtRciw8ntj
+         YaY/d83k4zy7Jabc/TSYaY7UZNBIu5SCmGclUvZoYXnczuNhadDf11oTW4VQz+xDtfQG
+         q0fNgJYUx7/2AGp3gDIVr7GHeK/fnSOEAfFP32mQgijB1GKjjFfV3CkWwpdiVfadaLwJ
+         5d/mdqXb++yDUUvfCbUjHF8N7b32DxvHlasJADgsQfoS1TSgx+Guf1+wRXBiM3KG1Vn6
+         ceR4RPMRLaM/KrEwCW4ncw5KhOQNRX05JC4OQu060/8BPtDcdKnNUsRaUerTd2/oz+Bw
+         q7Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750781667; x=1751386467;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B2hJc4hUnpKA+D5XoufJNAk6lZn4GYmwTvIaYpB/Ywo=;
-        b=cmRVVvasxqf95BVev8FBUijAJRSx2HPo1LDuGy5aZIBvN0SbbXDgt4F400BIP619W3
-         H6t8tZrY8pCRQLsBZbQBC63bd34rX0O247XVlcsg11VCOYivIupOIRtM6rpes1Ap6pzt
-         Uu128EjB1M3QjQWmCWaUpjmsN2babd34IJ5OjR+mlbvJLawDvjKGUsAVi62Bt/ZKZKoR
-         Q7/ygUsoqZE73eF466uIllEofEJ28BLxuIhDF7bbRchVxnZy74RWrLVvWpkG6DttiYde
-         A/U6lGkgEW6wz2IPePw5+nACqSR2tfFGssBo8EhgxmYmJj2UxqaGp0fVgbtvtbl0dQBY
-         TKpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWa4c2J27nnc8crLHHbdPdNfGfKWl3bj7xeVmHMUhaUXGPXqpdDRoKogWPXE+o1LCkU+USzvrzpvGJ5pg==@vger.kernel.org, AJvYcCX6Zn9A1XDTtAPnQ0jnl+rFgeWfnKii9K1kdBe/sKu5t/+njYbYclQIgEMIX7tXU6hEfeeBe5raRvUhRHsY@vger.kernel.org, AJvYcCXqoiugTsIby+S5I8P5i2m6tSR+LkiRKsqc3BnTKlv5L69vFJFZV5DMR5usW90aa0cUAcb+aYADJTZ9@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywz/99v4U5fr78iypsNXQNyMHp48uyyeP1O6z4igVOMkdNlQwK1
-	wfwauTTzQD1Bw3YD/IDkw4s6VukqzjuncTuYugPlLTZO9kcDLJagi8WH
-X-Gm-Gg: ASbGncuYrw/J2Bn3EPvP7XsNfDBboqbkWOFEhmGjR/r8GNUJf+Oix+o3d8qhur8RTCH
-	KLcnCBH9PrSv4l/n20fJ5LCzF1OP4CQM8aUH+4FULcnCbDyUQy4kK2fy6lyicb/7zrjeXM+omRI
-	27dNz0joyGr9xLPdPeOIF/bmelDUwytRm+jiUfyeQcbUUfrbsUuwk/D56fY4I7t3Vp4rn5uUFQe
-	8GUR7HpOl01qroQAz2Vu4jtsjCCSJii9ZzPl87LMJNS/ax63MLcqPzyRNE+fNcg9ypni5bLoAWD
-	dF0CCIhs/6MEHQj9A3FyoXX84N3QniQH44LgicPoNrjr49KmWJzuih7aEm1/QMjjvkrjNyL0wIC
-	7QAJUlEdTcA7WjP176aZRznc5ek/Y1cCL6P0=
-X-Google-Smtp-Source: AGHT+IETVYqdcYw9iMsIySmRYZrHTjx3OIsh3aRt5hqLHb7AOMHCIRNujIA0merX9VFaG5IGMjGEsw==
-X-Received: by 2002:a17:907:d70b:b0:ae0:b06d:1fb1 with SMTP id a640c23a62f3a-ae0b06d2370mr278552966b.37.1750781666584;
-        Tue, 24 Jun 2025 09:14:26 -0700 (PDT)
-Received: from ?IPV6:2a02:8109:8617:d700:9227:164e:14d5:9967? ([2a02:8109:8617:d700:9227:164e:14d5:9967])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053e7c6fdsm888167166b.3.2025.06.24.09.14.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 09:14:26 -0700 (PDT)
-Message-ID: <49977010-65a5-4ad7-b86d-5e779d0de3de@gmail.com>
-Date: Tue, 24 Jun 2025 18:14:22 +0200
+        d=1e100.net; s=20230601; t=1750781707; x=1751386507;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NOFa14hzPvC6t+oIp0DexT1UxNfRS4Cl15Pgd6Dy9Oc=;
+        b=NHUhA0n9xsRy4pr3nLB6qPMaBtfG9gXZ2kAwdQV+X6DNO/p1NxWuefiTtHZQEnsDXP
+         JjvA4Sshm+FzAOLBs9O1rjfDgPNmf91uNeaOwlhURnXzSqT02SB9fbYSKClrqKWCgTS7
+         cM4FCISfP7me6EEwkegXAAZxt2OxhuYhAzyPUSkrStg0YV0d36GuA4xreJTmZvz90i6+
+         keA9rWDC0Bnwo2tX8OrnXSaetYjnnH4HOwDeWX2xbz3yv2q3B5ODixcl7k4eamUNGsFG
+         pFMk+UXdTw96+3RVDMAVRbFlvPQdGIDwujwU38blu1VxTxMjHyn4BDd9yfODHZFKYyqm
+         e0Lw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDOsEI/NagvGvFUeAZGBiyvtLgD+bWbLROPUAvjlh984HtkzLDo4EuwjessB6S88g6V9dxuHDxtfE=@vger.kernel.org, AJvYcCUwKSoY0HqV6YhtgMXRLakBmBa4NxQ+6Swa435h8sm5h1OF1VlMWYfCQFKc3x5F88Vvb2zzRUpJYz2YEA4=@vger.kernel.org, AJvYcCV7mY8J5LU/ivXHRX7FWxblj0v2S5ncq2sEtNJqxwv6iqY4dffV7u/KaGsJl/i1ft3il1yx6qkxLd4DiQPZRM+Igw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVH7CbR+574UC3fJb2VQVZXzSpJV0D8PpYFatCWmlc1lUwp/G/
+	GJZcU2PqpkAKwFNSTKFbkkTdZim3pUY4izDTIFhKjlJrVN3AbPLxApXv
+X-Gm-Gg: ASbGncupjfVMfz9qe5/LkWqHDvn/gmqLAQQSiPbwP9OUghXAz2akZAWf5WtNSEINjII
+	LyFkTpP7Y0XNkYjZpcrtW2YWvwdIXG7XxOLPNtaIVU2w8vs0iN6UzTN9q2oV37e6blKDNYE9NUB
+	zEiToDohcQhDRuelTcxZKvAxhROtphOp3rtlW5+EVwf6Pb7dgEdT/KL8zejxvz8wTuxS6reC7Rv
+	ZsB+vsvbqHw0INUOMUylXP2xVvhfY54vbgHB59SrJ08+I+JJZrMgIhBlXlHzjYMWLGUDLVumoaO
+	qyU9BYNZVBIoU7nbUURdiju+7E/ntxm3UAd0NUrq8tR4MF3uf6Rfo00Rjas=
+X-Google-Smtp-Source: AGHT+IHG7rYkinFLRzsG4MwI6gkoEJZsqgBi83L3LCSzHE9voyWIDchNPTp5X+xH8/2vrw7ovBDS3g==
+X-Received: by 2002:a17:902:f54f:b0:235:ea0d:ae23 with SMTP id d9443c01a7336-2381ddd180dmr3846685ad.6.1750781706256;
+        Tue, 24 Jun 2025 09:15:06 -0700 (PDT)
+Received: from hiagonb ([67.159.246.222])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d839618esm115515765ad.33.2025.06.24.09.15.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 09:15:05 -0700 (PDT)
+Date: Tue, 24 Jun 2025 13:15:00 -0300
+From: Hiago De Franco <hiagofranco@gmail.com>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
+	linux-remoteproc@vger.kernel.org, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Hiago De Franco <hiago.franco@toradex.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@oss.nxp.com>, daniel.baluta@nxp.com,
+	iuliana.prodan@oss.nxp.com,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v5 2/3] remoteproc: imx_rproc: skip clock enable when
+ M-core is managed by the SCU
+Message-ID: <20250624161500.odnopjv5jqvyyus2@hiagonb>
+References: <20250617193450.183889-1-hiagofranco@gmail.com>
+ <20250617193450.183889-3-hiagofranco@gmail.com>
+ <aFlvqK6SHvWHIpMn@p14s>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 06/19] dt-bindings: media: i2c: max96717: add support
- for MAX96793
-To: Cosmin Tanislav <demonsingur@gmail.com>,
- Tomi Valkeinen <tomi.valkeinen+renesas@ideasonboard.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
- Julien Massot <julien.massot@collabora.com>,
- Sakari Ailus <sakari.ailus@linux.intel.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: "open list:MAXIM GMSL2 SERIALIZERS AND DESERIALIZERS"
- <linux-media@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
- "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)"
- <linux-arm-kernel@lists.infradead.org>,
- "open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>,
- open "list:GPIO"
- "SUBSYSTEM:Keyword:(devm_)?gpio_(request|free|direction|get|set)"
- <linux-gpio@vger.kernel.org>, Cosmin Tanislav <cosmin.tanislav@analog.com>
-References: <20250618095858.2145209-1-demonsingur@gmail.com>
- <20250618095858.2145209-7-demonsingur@gmail.com>
-Content-Language: en-US
-From: Martin Hecht <mhecht73@gmail.com>
-In-Reply-To: <20250618095858.2145209-7-demonsingur@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFlvqK6SHvWHIpMn@p14s>
 
-Hi Cosmin,
+Hi Mathieu,
 
-I'm preparing a test with Alvium + max96717 + max96716. I can't see away 
-to overwrite cfg settings to force pixel mode or tunnel mode. Any plans 
-to add this? Sometimes it is required to force the other mode than set 
-by pin-strapping.
-
-BR Martin
-
-On 6/18/25 11:58, Cosmin Tanislav wrote:
-> MAX96793 is a newer variant of the MAX96717 which also supports GMSL3
-> links.
+On Mon, Jun 23, 2025 at 09:15:52AM -0600, Mathieu Poirier wrote:
+> Hi Hiago,
 > 
-> Document this compatibility.
+> On Tue, Jun 17, 2025 at 04:34:49PM -0300, Hiago De Franco wrote:
+> > From: Hiago De Franco <hiago.franco@toradex.com>
+> > 
+> > For the i.MX8X and i.MX8 family SoCs, when the M-core is powered up
+> > by the bootloader, M-core and Linux are in same SCFW (System Controller
+> > Firmware) partition, so linux has permission to control M-core.
 > 
-> Signed-off-by: Cosmin Tanislav <demonsingur@gmail.com>
-> Acked-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->   .../devicetree/bindings/media/i2c/maxim,max96717.yaml          | 3 +++
->   1 file changed, 3 insertions(+)
+> Ok
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> index ab46a5f0bd7e..23f611177a87 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> +++ b/Documentation/devicetree/bindings/media/i2c/maxim,max96717.yaml
-> @@ -30,6 +30,8 @@ description:
->   
->     MAX9295A only supports pixel mode.
->   
-> +  MAX96793 also supports GMSL3 mode.
-> +
->   properties:
->     compatible:
->       oneOf:
-> @@ -39,6 +41,7 @@ properties:
->         - items:
->             - enum:
->                 - maxim,max96717
-> +              - maxim,max96793
->             - const: maxim,max96717f
->   
->     '#gpio-cells':
+> > 
+> > But when M-core is started, the SCFW will automatically enable the clock
+> 
+> I find the "But when M-core is started" part confusing.  Started by who?  And
+> are you making a distinction between "powered up" and "started"?  It is not
+> possible for someone that doesn't have HW documentation to understand what is
+> going on.
 
+Ok, understood, I will improve this in the next revision. Just to make
+clear, I am talking about Cortex-A bootloader starting Cortex-M (U-Boot
+bootaux command in this case). This means powered up, started and
+running.
+
+> 
+> > and configure the rate, and any users that want to enable the clock will
+> > get error 'LOCKED' from SCFW. So current imx_rproc.c probe function
+> > fails because clk_prepare_enable also fails. With that, the M-core power
+> > domain is powered off when it is still running, causing a SCU (System
+> > Controller Unit) fault reset, and the system restarts.
+> > 
+> > To address the issue, ignore handling the clk for i.MX8X and i.MX8 M-core,
+> > because SCFW will automatically enable and configure the clock.
+> > 
+> > Suggested-by: Peng Fan <peng.fan@nxp.com>
+> > Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> > Signed-off-by: Hiago De Franco <hiago.franco@toradex.com>
+> > ---
+> > v4 -> v5:
+> >  - Unchanged.
+> > v3 -> v4:
+> >  - Unchanged.
+> > v2 -> v3:
+> >  - Unchanged.
+> > v1 -> v2:
+> >  - Commit description updated, as suggested. Fixed Peng Fan email.
+> > ---
+> >  drivers/remoteproc/imx_rproc.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+> > index 74299af1d7f1..627e57a88db2 100644
+> > --- a/drivers/remoteproc/imx_rproc.c
+> > +++ b/drivers/remoteproc/imx_rproc.c
+> > @@ -1029,8 +1029,8 @@ static int imx_rproc_clk_enable(struct imx_rproc *priv)
+> >  	struct device *dev = priv->dev;
+> >  	int ret;
+> >  
+> > -	/* Remote core is not under control of Linux */
+> > -	if (dcfg->method == IMX_RPROC_NONE)
+> > +	/* Remote core is not under control of Linux or it is managed by SCU API */
+> > +	if (dcfg->method == IMX_RPROC_NONE || dcfg->method == IMX_RPROC_SCU_API)
+> >  		return 0;
+> >  
+> >  	priv->clk = devm_clk_get(dev, NULL);
+> > -- 
+> > 2.39.5
+> > 
