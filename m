@@ -1,77 +1,84 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77D3E233704
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:57:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80713233704;
+	Tue, 24 Jun 2025 19:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750795037; cv=none; b=KdGDRwDHyCSlBOu2oDtE3YIjWvgv4d+YRw+Zkfj8t036t4QKBKYry77no7YgrC1wu/HrcGbBJJF7vmH6JfvLkzZY47B/LqR/duDAJd/vL2hsTcKVwHcjiY9iWVKUsRFhlBf/HjwDFYAzwMWzMELdi23UOcQlrldoqAIEdCucoZw=
+	t=1750795111; cv=none; b=hQgAVtmuV3M7q6SexO4a+66nKKeKDuwGc8wrlj9EQhe7itvpkhpLRjiD+ScUrjcTMgvdXQbR8+Ye8+swkbpwUszpsoaz3C+XGtLfsy1/HqEJWVUFgg2YV95y3rcWbr/MC44sKgujVlJfOXyh8xXe43YGPy8FA4tdo9kYKZI17CA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750795037; c=relaxed/simple;
-	bh=c/xR1210WNkMjaEddRyUd3VIYNyGW7UT6fUIt9VWbHc=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=PMEIJRSeItllh9hzPok5Y0c5jUmrR3CFhvfG7Kd8s7/iN5ZEIVttNnvqIJuDhG4SoV+pipcssopsFV2be6mJZs/CtZ7h84nIJlT5uVJmTTU2j5QN4tPEw51ombOUkyl63hpcWeYFWIJs7eg7gkASPowig03CVyIDBoWRZ8F5nv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zyDortGZ; arc=none smtp.client-ip=209.85.214.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750795111; c=relaxed/simple;
+	bh=j0vyV5ZmzurIYUrPHsurEPqH/5kj2C4t7I1/Lljwchs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bZoBTRkr8EAXF+3L8QRiehGQrd3w4wosES/g8MsTX0kxFUIKyN8RQVxbT4fbdm4SQNmMeP6z5MHGPmkNq+4299Ja8LqulTyjC3xvCyrbo/X/Hx1z0SZjPyHJVHpm8wQZlTxbI4viuqRZGTVkZbffSj4GwDVMPqYsQ6PSfY57UzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qlGhK6AP; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zyDortGZ"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2356ce55d33so12899145ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:57:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750795036; x=1751399836; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=BENYVyjj2zucOOe4fuLRvkzQyNfHSRq657VEghHqQ9U=;
-        b=zyDortGZ3sJQvCsVrr4z/nBzJ/l4HfYNOVE1n4BrNa4VDHL1elXxOXFTxZ2lPIZYQs
-         MY4/zZqBmE5mEpbgJiGIClAvxJ9S+faLNchXsIYRvSYXt5qkG7eeBGVkxSDAckJfClCk
-         ydPyzY92SmfySe9HB5AsFcIKvfgOjU2Iubrvt/pBwYT118JXy5u/yfZv68yqojqvuPfd
-         DiqDTDt1M1otE0omTGv7YeV2rL8xP5PZ/mLrpXnjT3ensuhq3cH+Mc0gjYPTqtbb6EUU
-         nDjZ9Hhc3JaVcH7Abv9FgHAkUp6BxQ9LLN98Ewm6LkH/eRVLxnKRlou6R/4IdcXfEfNL
-         AD8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750795036; x=1751399836;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BENYVyjj2zucOOe4fuLRvkzQyNfHSRq657VEghHqQ9U=;
-        b=BPCnDZw0CkUZmmMIVWaJTdy8q0iqwlKQvd1ivw+dWAjppy0+sFydVFxtyaHmlKfHvx
-         ZGLzQfrR0T8wzDNNoeAsEsOL/nlD4oAT/F4UX03jBJ6tIua/k0VATTAcHjGsphzYiSb7
-         eh7C7Nqc2jf4srIk2JKFEivrjidBux1c/OuHQUo/aAjeAqjbg7x1ccG0/WwMyfoI3Xtq
-         QvSwMo7J+5XUqKGiqt03fBKC9j50pEhaWfbLskoWNiDrnbJPohlEMAc0gDOK3X5W4SH0
-         vK/gcQ51qtIy+lYcMltflEpehP2QWKjkyJI/V3EMxUkUkPUZ/TPbttaWi/I9BlJckC4U
-         eK3w==
-X-Forwarded-Encrypted: i=1; AJvYcCU5fOl7TiHwbtYcZUs7pxa/luGDfRDjP2HaDdw3bJIqAbBmvF9k02Ah9u1b+7zxGiJxFUTvxmX2vk7FZ80=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDgF71PxTdVvpubd11Q4sheQshNFCalJhp9f4VGDvLhpgZqf+v
-	zZhFOWS5gweQeDTZBlIfKn5cVxQhmiNIwaqDRPfb1oPbjk7gJ81tpAkI1tOanNTgJl4SHERyIuF
-	icJmXQA==
-X-Google-Smtp-Source: AGHT+IFVpnsXXGmHpzDvt07TImcej4CtxG1K5AUbuX4pJYUSHacGai39W7FIKq2088irF9CIPs9QCTN8XOs=
-X-Received: from plbix22.prod.google.com ([2002:a17:902:f816:b0:234:46ed:43f1])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2bcc:b0:235:5a9:976f
- with SMTP id d9443c01a7336-23824030ccdmr12589825ad.24.1750795035894; Tue, 24
- Jun 2025 12:57:15 -0700 (PDT)
-Date: Tue, 24 Jun 2025 19:57:14 +0000
-In-Reply-To: <diqzv7pdq5lc.fsf@ackerleytng-ctop.c.googlers.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qlGhK6AP"
+Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55OJwDXV1948702;
+	Tue, 24 Jun 2025 14:58:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750795093;
+	bh=j0vyV5ZmzurIYUrPHsurEPqH/5kj2C4t7I1/Lljwchs=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=qlGhK6APXZqIsnO7iYTlc8TdmTa7/XSSCw0lg39j7fQKlh18BIOGEJVqU3GrEiXou
+	 8GDjfVX5DrKKJkM8VCp3GOkYfCpH8qyuEHdF9aszxWddTgiCVXawSn/e0PajHAAfpg
+	 //XbkfN998Q5lV5KqHgsmgYVn6uG1a2fWUR4zjfI=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55OJwDsn1846791
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 24 Jun 2025 14:58:13 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
+ Jun 2025 14:58:12 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Tue, 24 Jun 2025 14:58:13 -0500
+Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55OJwD7F2340216;
+	Tue, 24 Jun 2025 14:58:13 -0500
+Message-ID: <14f89780-87b4-4ade-98db-08e2a1a123c7@ti.com>
+Date: Tue, 24 Jun 2025 14:58:13 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250602172317.10601-1-shivankg@amd.com> <diqzv7pdq5lc.fsf@ackerleytng-ctop.c.googlers.com>
-Message-ID: <aFsDGvK98BRXOu1h@google.com>
-Subject: Re: [PATCH] KVM: guest_memfd: Remove redundant kvm_gmem_getattr implementation
-From: Sean Christopherson <seanjc@google.com>
-To: Ackerley Tng <ackerleytng@google.com>
-Cc: Shivank Garg <shivankg@amd.com>, pbonzini@redhat.com, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bharata@amd.com, tabba@google.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Add reaction control in rti
+To: Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck
+	<linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Tero Kristo <t-kristo@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+        <linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20250624194509.1314095-1-jm@ti.com>
+Content-Language: en-US
+From: Judith Mendez <jm@ti.com>
+In-Reply-To: <20250624194509.1314095-1-jm@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Mon, Jun 02, 2025, Ackerley Tng wrote:
-> 
-> Reviewed-By: Ackerley Tng <ackerleytng@google.com>
+Hi all,
 
-Ackerley,
+On 6/24/25 2:45 PM, Judith Mendez wrote:
+> This allows for reaction control in rti driver. Since AM62L SoC [0]
+> does not have WWD reset output routed to a ESM module like all other
+> K3 SoC's and has a reset signal routed to the reset HW block, add a new
+> compatible for AM62L and configure reset reaction for AM62L SoC instead
+> of NMI.
 
-FYI, your mail doesn't appear to have made it to the lists, e.g. isn't available
-on lore.  I don't see anything obviously wrong (though that means almost nothing).
-Hopefully it's just a one-off glitch?
+Please ignore these patches. I will resend with a Tero's correct email
+address, sorry for the noise.
+
+~ Judith
+
