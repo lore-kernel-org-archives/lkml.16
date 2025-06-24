@@ -1,129 +1,81 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B20F927C16A;
-	Tue, 24 Jun 2025 12:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6A1128E576;
+	Tue, 24 Jun 2025 12:23:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750767798; cv=none; b=GNkFvi4sYZ/TlN2bBhHxfr+u/kdVUEo95Dqgncd94ym89jm3n+sC59q10VTcSICx/zxJ5Ixl0tBM/a267lpYXdBe5MY/SVrXJ9lfeYMlY+9jI+Nxd0p46InEXDX6tF4ZFzITrBgvGEkhSMpijMaG/KaJFxraTrcYD+brHbRPUOM=
+	t=1750767801; cv=none; b=SFaM6/ngsZymr3XbBeavarUuElhOOXRk7SclOvTSf2SaL2snqBsVFQxgiSq8IoMUxD1FyjtVIQPb4qpT7lY7lFs+rPrtIB4J//4lsXDmcreCj9EQ5J5v8yK9yonnDNEthYzJZbgRRFdmHm9UA59dtsGSuu0EPpVFxNszlO72iA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750767798; c=relaxed/simple;
-	bh=DJLQ/wsgbW5YsyUuj/JMv+HiJkZGQWsoKjoZKL9PAF0=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=q4dSypT+plyYAm+G9QONlZzFxKwp2KPmUhsLX172PdhgFU4C+fE7am783e1jwap35VzL0ZLb74+ozU7F/+fQtPsVVd3Di6AotxFnaUXym8PHlBV0DYZogGN4KOVsfTN2FJjKln3L8zgh8YO1Jquc6xKNT6y+M/XFmG7YVX+qCPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=xwq0zz82; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=P8p7FkFT; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750767801; c=relaxed/simple;
+	bh=k7CB2mm5XvGp1gKkpn4RX3zrwfN8DJKxj80du2EqrtU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AS/fCA9cCGXm9n3tE78symqfcJg5b9QQArleStpn20pyLbL0Ijciqp7sZ1DAkitZOK//O0V9DJKazgDC7PFqaEDXLTEbwL4E7Q5u9ct37LGJ8p+SJ65fNE0AT/MWP5VuWEqtkHi2lWWJlZJFaGA3sRHP2IyIQEvTB0WQ34+o25s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=S2Um+0qp; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="xwq0zz82";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="P8p7FkFT"
-Date: Tue, 24 Jun 2025 12:23:11 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750767792;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Eu6GFFcWQoMP32EqVRc/cloGCBIUDAzTjm2vKavalFc=;
-	b=xwq0zz82tcOV5IlwsSNxaZ4TJq76qphov0VzsPFQSmWgzJJu1j1ExIaqidWRCESaaGLHTD
-	CQGUtSA+xyIKa9dlgbr9PAKMTf1qvhcdP/AZam2dTA1xC1Mvh2amGUn4xWZDexShIMDtrG
-	eIDiK7KoBsOxhb7rRsX7nI+Ro1jW8+i5KnMNquH7RbgPln61e8ywxWJjdJbKO9vMMWLsiO
-	LeOpwVSRyGHK0dt0weEgPLc9ldTjnZjKsXUUIc6TVKO/xwe+7yfkmbF2n4tsCzJHKgJh43
-	g66lY7q0yD7oD1EUb1JBvgDaLbSdaTV5lodDg3G/E6c/nRyUiyJfSpptOeZzuQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750767792;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Eu6GFFcWQoMP32EqVRc/cloGCBIUDAzTjm2vKavalFc=;
-	b=P8p7FkFTDtTSQM3UOcWuwoZGIvhOc18X4jfpYzw533hI4E3D1FusgHNh6WSzFcrQEb0EnD
-	hb4NSJkUY62vVgCQ==
-From: "tip-bot2 for Pawan Gupta" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/bugs] x86/bugs: Allow ITS stuffing in eIBRS+retpoline mode also
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250611-eibrs-fix-v4-7-5ff86cac6c61@linux.intel.com>
-References: <20250611-eibrs-fix-v4-7-5ff86cac6c61@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S2Um+0qp"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=u2DmQaokTW2/gnjH2cgnlfjmMToaryjzjXcqnXsp80s=; b=S2Um+0qpagjVrhSQsPtu/Y9Ki/
+	qT4VCiz5D6Hf7xDHltAe+KRt7fHQLqHv0UCpc9w1zthcz8KjmNZ2CVeMcpCwT/TJqEXysR8c9CwDu
+	vqzHC65Fq240pfKWV3nGQhGhzdCTpTIGbZvyf/Z0ZGRBRPGNbX1WRxPt034gUSlPqPHkBj9DzWuNS
+	BaFAqEYcflqmFmayixuy5iaOWNh4p7Tih0ACK126a0Z16IkyVDVQOtz91tRsBCpCpTvEzylIiHonW
+	zakG4Ry8rOhUB7dD3NNe9m2JxYVEHbBSgzM+IbcRxItxFOPiXEyubfjCK2Ty3Fxr3Hi91Y7XGbXMY
+	Jyayik5A==;
+Received: from willy by casper.infradead.org with local (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uU2g7-00000006YWM-2gs3;
+	Tue, 24 Jun 2025 12:23:07 +0000
+Date: Tue, 24 Jun 2025 13:23:07 +0100
+From: Matthew Wilcox <willy@infradead.org>
+To: =?utf-8?B?6ZmI5rab5rab?= Taotao Chen <chentaotao@didiglobal.com>
+Cc: "tytso@mit.edu" <tytso@mit.edu>,
+	"hch@infradead.org" <hch@infradead.org>,
+	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+	"brauner@kernel.org" <brauner@kernel.org>,
+	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+	"tursulin@ursulin.net" <tursulin@ursulin.net>,
+	"airlied@gmail.com" <airlied@gmail.com>,
+	"linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"chentao325@qq.com" <chentao325@qq.com>
+Subject: Re: [PATCH v2 1/5] drm/i915: Use kernel_write() in shmem object
+ create
+Message-ID: <aFqYq-tLtjZjU0Ko@casper.infradead.org>
+References: <20250624121149.2927-1-chentaotao@didiglobal.com>
+ <20250624121149.2927-2-chentaotao@didiglobal.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175076779110.406.9820573204118095413.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250624121149.2927-2-chentaotao@didiglobal.com>
 
-The following commit has been merged into the x86/bugs branch of tip:
+On Tue, Jun 24, 2025 at 12:12:04PM +0000, 陈涛涛 Taotao Chen wrote:
+> +++ b/drivers/gpu/drm/i915/gem/i915_gem_shmem.c
+> @@ -637,8 +637,7 @@ i915_gem_object_create_shmem_from_data(struct drm_i915_private *i915,
+>  {
+>  	struct drm_i915_gem_object *obj;
+>  	struct file *file;
+> -	const struct address_space_operations *aops;
+> -	loff_t pos;
+> +	loff_t pos = 0;
+>  	int err;
 
-Commit-ID:     ab9f2388e0b99cd164ddbd74a6133d3070e2788d
-Gitweb:        https://git.kernel.org/tip/ab9f2388e0b99cd164ddbd74a6133d3070e2788d
-Author:        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-AuthorDate:    Wed, 11 Jun 2025 10:30:33 -07:00
-Committer:     Borislav Petkov (AMD) <bp@alien8.de>
-CommitterDate: Tue, 24 Jun 2025 14:12:41 +02:00
+I think 'err' needs to become ssize_t to avoid writes larger than 2GB
+from being misinterpreted as errors.
 
-x86/bugs: Allow ITS stuffing in eIBRS+retpoline mode also
-
-After a recent restructuring of the ITS mitigation, RSB stuffing can no longer
-be enabled in eIBRS+Retpoline mode. Before ITS, retbleed mitigation only
-allowed stuffing when eIBRS was not enabled. This was perfectly fine since
-eIBRS mitigates retbleed.
-
-However, RSB stuffing mitigation for ITS is still needed with eIBRS. The
-restructuring solely relies on retbleed to deploy stuffing, and does not allow
-it when eIBRS is enabled. This behavior is different from what was before the
-restructuring. Fix it by allowing stuffing in eIBRS+retpoline mode also.
-
-Fixes: 61ab72c2c6bf ("x86/bugs: Restructure ITS mitigation")
-Closes: https://lore.kernel.org/lkml/20250519235101.2vm6sc5txyoykb2r@desk/
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Link: https://lore.kernel.org/20250611-eibrs-fix-v4-7-5ff86cac6c61@linux.intel.com
----
- arch/x86/kernel/cpu/bugs.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/bugs.c b/arch/x86/kernel/cpu/bugs.c
-index 31f3db0..bdef2c9 100644
---- a/arch/x86/kernel/cpu/bugs.c
-+++ b/arch/x86/kernel/cpu/bugs.c
-@@ -1126,7 +1126,8 @@ static inline bool cdt_possible(enum spectre_v2_mitigation mode)
- 	    !IS_ENABLED(CONFIG_MITIGATION_RETPOLINE))
- 		return false;
- 
--	if (mode == SPECTRE_V2_RETPOLINE)
-+	if (mode == SPECTRE_V2_RETPOLINE ||
-+	    mode == SPECTRE_V2_EIBRS_RETPOLINE)
- 		return true;
- 
- 	return false;
-@@ -1281,7 +1282,7 @@ static void __init retbleed_update_mitigation(void)
- 
- 	if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF &&
- 	    !cdt_possible(spectre_v2_enabled)) {
--		pr_err("WARNING: retbleed=stuff depends on spectre_v2=retpoline\n");
-+		pr_err("WARNING: retbleed=stuff depends on retpoline\n");
- 		retbleed_mitigation = RETBLEED_MITIGATION_NONE;
- 	}
- 
-@@ -1454,6 +1455,7 @@ static void __init its_update_mitigation(void)
- 		its_mitigation = ITS_MITIGATION_OFF;
- 		break;
- 	case SPECTRE_V2_RETPOLINE:
-+	case SPECTRE_V2_EIBRS_RETPOLINE:
- 		/* Retpoline+CDT mitigates ITS */
- 		if (retbleed_mitigation == RETBLEED_MITIGATION_STUFF)
- 			its_mitigation = ITS_MITIGATION_RETPOLINE_STUFF;
