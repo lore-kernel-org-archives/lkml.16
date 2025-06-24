@@ -1,171 +1,103 @@
-Received: from out203-205-221-210.mail.qq.com (out203-205-221-210.mail.qq.com [203.205.221.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F1392D23B8;
-	Tue, 24 Jun 2025 14:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBE22D5C60
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775731; cv=none; b=uniD5J4EVEAfE6vj06nb7eMjRNMbkstx+8B/C4TURmM/cebAHyg0Qo+WQQpjsYh7UIbzVe9Jeo2NQ2Z9PLeBEOIeuhbaFgE4nj1A5dZm8n2AnugiWsIGdUoYWdBA7WhGxPxXXmtPs1iDCW5itr7nXi6YOHxblP47Yv35RMxBVv0=
+	t=1750775745; cv=none; b=A8YXPyjDE4W+9czkHL+UwNp714+/Z8lXCWSYqbpdfi4obUqnM6k+QsbRDTWBXJ1lz/xttPS9DjULFtlM+SvlLZXpumCwk0MNQiMIDORdcB1mqeL+D7wrM7jNt/PcduMEhegQGzxcuPFksmHXeAnGAd2iXcnGcdnldTKoz/ij5yE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775731; c=relaxed/simple;
-	bh=XWUoSHK9ZFJwMOXvEylhqSbkKPrkssdXq5HfgyRyxVU=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=oSsvXiXNS/3RYABCdI5xjwNHYEhUIjAECDOKCegzNt/nAJuAxQxbmEXoDny0jsbI7Qy1zVkqm2UKQW0wa2tv36BnJgpHTCcndKbR84KwXWXfD77o4q0ZShEL36KmvhcdJtmLwSyxbRDLJuAbDCCatuPvoG3u/6hqooVvbJiTgKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=kOZAN9rz; arc=none smtp.client-ip=203.205.221.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1750775745; c=relaxed/simple;
+	bh=f8Ttbth1lSRYVk3cS849KWdm0sE/OLPquEEzCqknLrE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TVGFEKBvUE1A+E7+ze/GoAqtr3Rw8Txg0Mex5/L9GfZTi6i/8fdAU3c7NMkNEiVnvcl5lhpcU8xAr3KGxLufUi/nRh2oY4aWLE88Zh2ov11cihKbKWj6mNVVSzSSXucsd0UkI3q7dNFsiDkbnR0qh+W2FOvq83kZb+u9YFBqo98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=01ub9wTb; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="kOZAN9rz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1750775422; bh=WzKuairL6klH+H3Pk4Z77kBpxk6VjGhy/vtLbAwqk5I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=kOZAN9rzKb1q9tF3m9+4tgSWGTydQYU7tqSKNjd8QI5toYZBZXpCMs+yLA/jrGFWz
-	 MztBaNrGn4q8RGvK4URp+blG7wJJa6rmSmb9KAa5lprZ+fxfm+F1IWS4fBYbofnGM1
-	 3n1eVUXGYwc1ZtWplOyca7bJ4Rh6gPHC7UZuv0o0=
-Received: from pek-lxu-l1.corp.ad.wrs.com ([111.198.228.63])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 7922C4AA; Tue, 24 Jun 2025 22:30:18 +0800
-X-QQ-mid: xmsmtpt1750775418tjjf65ee2
-Message-ID: <tencent_C857B761776286CB137A836B096C03A34405@qq.com>
-X-QQ-XMAILINFO: N+vldBj843eNUXLV7XGtfaVgQimuVCxUrR6sPDEC+V9drvLoQjxq8Pv10JL9qj
-	 QWzIDij1izxZ3rRoaZUVLlAyN78/87L7WCOVeezIiR9vKaFN4jYeNutAnPJxqdfFSlooFVszfigi
-	 2iuCejs/o3458aXvQPAxDSMAsUQzall0XG7XUDmTSkSeyEUWm0/4D8hn5g/NbyTwTezC67hKjr9r
-	 nRNb4JowPS/u7WJ/YFK84gsTtPSm6U526ThhyJV6twb38qd1iaeIfi0DzzQm1MYiY3EOTm/DKivB
-	 UGJahcbWwZ9oPBC2RW6WRGFj45SdSfeMVFtv23iO5vzSYjujgKTM+IhOQcuv67Gd62jsCUmlCdxM
-	 q1PmxA1WYrnbXnklyLrCHM55rxP07C0ZZjJvUxcmIl5Xf6eZsK4/NFTgTQq/QDrSyaHOINRAFAQs
-	 7fQ4m1iFCQPlfS1UdA2mfSTO7yDXfqYrYD4Rtild/wxcji8mlGccDglqHvNvKjD+J73syu8NQquj
-	 yijzY8Jd1ccEryqr6g+lmJ3e349WLTXVvMTwKem93BS5g/dqa6zy2Y6E+wYxOMKbV1WNSvngSjdv
-	 vE8cLw2b2zrDPbA8klrDw1b5MegVOC2qAoxCwV+Dzx1Ww4aebWsxpMPrYCPPQD4e3XInI64RUtOE
-	 Iu4n+CzWJ4Z5pmf8e3p90k1KJwrZwv6lFijBKGqQUzIlq2bTc5bAllVwAKKDpDvJ8voFm1GivxZH
-	 BfskME/+hrVx3S9rD8S+TYMu70w4Wf4rCXt/9X1P1pxTKkue5D7ikiqtxqtn6Kd7W2WAQSbiEGel
-	 bhTYNbsIz9eMc571bglMHK2dPuvJIN75KiXtQIdlp8lYwbN4xM8h+jOskOWYcjvCInaztB4FBdIA
-	 LSG5+RFEotLgRjBO4lL2pdTcb7MplQauzOrBwOFcFSbycHlA8OzS4HlYJv72PNFoq1rxOrpSVp0S
-	 I9xgWT0/rkfJOk7l0DslLYiCnEuTySlS1hsWaa8ctNZpVsXNayHr1KhosOUgeCh9bqpHRcYPZDNF
-	 onVL95pQ==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+fa90fcaa28f5cd4b1fc1@syzkaller.appspotmail.com
-Cc: clm@fb.com,
-	dsterba@suse.com,
-	josef@toxicpanda.com,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com,
-	wqu@suse.com
-Subject: [PATCH next] btrfs: fix deadlock in btrfs_read_chunk_tree
-Date: Tue, 24 Jun 2025 22:30:12 +0800
-X-OQ-MSGID: <20250624143011.327069-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <685aa401.050a0220.2303ee.0009.GAE@google.com>
-References: <685aa401.050a0220.2303ee.0009.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="01ub9wTb"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a58ef58a38so170531cf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:35:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750775741; x=1751380541; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=f8Ttbth1lSRYVk3cS849KWdm0sE/OLPquEEzCqknLrE=;
+        b=01ub9wTbh7IuTKWtOT88YxNBAOS4ETujN45Wi7eX+ECtWzD69ZlAQbCHrR29bJ/Of4
+         u2dc5M4HdmSTIJBtxhH8obs4WlzCmafRQ6FOT2sqpjvOxmrBA2OwCjW89Z7/k9F5tqch
+         3CT7I1Pn8ZaaDDhNuPvOZAC4hyeRDc0HLbiHSc0WvhoscfGYtrn1+Dgqw9u+dwFs5Hsc
+         IBi+2iNR52LvCmKRO55xybTKoOFpDu6QI6F4oMMVuazYQIv2ZQJ4WBvZu7Tb74D99Y5L
+         zTVhh37CDDQQShRaAGbE/jTqOZxcOA+djMG0AoeZcnKFrawDwATnhIaDdLCmkg0LSQVB
+         RVVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750775741; x=1751380541;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f8Ttbth1lSRYVk3cS849KWdm0sE/OLPquEEzCqknLrE=;
+        b=EsT2qWtzbFPLl43S1mpJDLycMbqk284neLz6aTq29dN9KTbGYzU5gFGmG6KW4CiDlx
+         LFiRmTUZp1AXbNFbdr6cr3O1hBZvbeZPrTgYaitEuRXX3czRGat65oZnew270ILuyoY9
+         QR/kDqPDl3aQQ3evfrMOhGFsRyRW9/gF6a8IRGKLY2WXSdJC2Unl9IcLsOAk8vz0lCx3
+         UyvCYmiZYMdxjXC/NDg/bZ0UgmeaVr03ig5rNMGwIEHEWMxYiTr3qm9T2r+XjRrcWK1l
+         pTQZAkQxpaaGuzIoFzPU9q61PKIjcYTQvOYMkTBG8SwJuV3qOMTu6C0/lAm87UaePN+z
+         ++sw==
+X-Forwarded-Encrypted: i=1; AJvYcCVUafY0hfVyv/cVwXHVpQ9gpVGA00Uy0CwOdjNUlUtbS/ZXGRxMwAKX9I+tbPiT/hzhfa5ciMDfpBc+JrQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWjHy57FdGgtmhPuMK5ofzLzzri7O7t9a/goVy59gxrNu30Ix8
+	eNqm7ivD+B4riEqOkdHhfYZCN8LaE7ORzYdl2vtcM3LGrl/fqiPX1ONGU+bbEuSagw9vtHB5F/H
+	k44tE6Fa3i3A+1EnD3mq/VfuYfZcFEohgkBJkvApo
+X-Gm-Gg: ASbGncta19N9/YeEBKkxbQW8a+Jlf0xoPFfYU50nIwt/mPp3Q69QJwvAf0M4smRjNXx
+	j1Zc5VIhF9ifN2bn9mFoUlZSGym+o6ikPV4FSyB0tctlfxM3m+l3ZZQSgzAxX2sUap+KWuH4pHq
+	LL/eQjDTXAmBBH5YtbXCz1lUao+lw3+T6pA8I3kM5Z86SEG8vFZnBe2mKkNzUEMy6S1uJlE1fag
+	w==
+X-Google-Smtp-Source: AGHT+IGbOLiPnX+SI3NX8t68TwtbOo+6EbrT73IrWaYyPOLlCVLXFVqD60N/63lknLZQNwp34KEetvwdECwuYczVKR4=
+X-Received: by 2002:ac8:5f8a:0:b0:476:f1a6:d8e8 with SMTP id
+ d75a77b69052e-4a7b16ecdfemr3417201cf.11.1750775740423; Tue, 24 Jun 2025
+ 07:35:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
+ <20250624-anon_name_cleanup-v2-4-600075462a11@suse.cz> <50eb8b8b-cea3-45f8-96d0-45ab88e10909@redhat.com>
+In-Reply-To: <50eb8b8b-cea3-45f8-96d0-45ab88e10909@redhat.com>
+From: Suren Baghdasaryan <surenb@google.com>
+Date: Tue, 24 Jun 2025 07:35:27 -0700
+X-Gm-Features: Ac12FXxBF1N0o_kUn37BSxDHGqpaUKTMuV-y5KNe5HB1rThBZBc_dSO4sDsZPxo
+Message-ID: <CAJuCfpGjkkpWnb_BB2gKZpitop_VmsasS6dgGGeXpPaDzuNmXA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] mm, madvise: use standard madvise locking in madvise_set_anon_name()
+To: David Hildenbrand <david@redhat.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Jann Horn <jannh@google.com>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
+	Colin Cross <ccross@google.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Remove the lock uuid_mutex outside of sget_fc() to avoid the deadlock
-reported by [1].
+On Tue, Jun 24, 2025 at 7:06=E2=80=AFAM David Hildenbrand <david@redhat.com=
+> wrote:
+>
+> On 24.06.25 15:03, Vlastimil Babka wrote:
+> > Use madvise_lock()/madvise_unlock() in madvise_set_anon_name() in the
+> > same way as in do_madvise(). This narrows the lock scope a bit and
+> > reuses existing functionality. get_lock_mode() already picks the correc=
+t
+> > MADVISE_MMAP_WRITE_LOCK mode for __MADV_SET_ANON_VMA_NAME so we can jus=
+t
+> > remove the explicit assignment.
+> >
+> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+> > ---
+>
+> Acked-by: David Hildenbrand <david@redhat.com>
 
-[1]
--> #1 (&type->s_umount_key#41/1){+.+.}-{4:4}:
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       down_write_nested+0x9d/0x200 kernel/locking/rwsem.c:1693
-       alloc_super+0x204/0x970 fs/super.c:345
-       sget_fc+0x329/0xa40 fs/super.c:761
-       btrfs_get_tree_super fs/btrfs/super.c:1867 [inline]
-       btrfs_get_tree_subvol fs/btrfs/super.c:2059 [inline]
-       btrfs_get_tree+0x4c6/0x12d0 fs/btrfs/super.c:2093
-       vfs_get_tree+0x8f/0x2b0 fs/super.c:1804
-       do_new_mount+0x24a/0xa40 fs/namespace.c:3902
-       do_mount fs/namespace.c:4239 [inline]
-       __do_sys_mount fs/namespace.c:4450 [inline]
-       __se_sys_mount+0x317/0x410 fs/namespace.c:4427
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
+Reviewed-by: Suren Baghdasaryan <surenb@google.com>
 
--> #0 (uuid_mutex){+.+.}-{4:4}:
-       check_prev_add kernel/locking/lockdep.c:3168 [inline]
-       check_prevs_add kernel/locking/lockdep.c:3287 [inline]
-       validate_chain+0xb9b/0x2140 kernel/locking/lockdep.c:3911
-       __lock_acquire+0xab9/0xd20 kernel/locking/lockdep.c:5240
-       lock_acquire+0x120/0x360 kernel/locking/lockdep.c:5871
-       __mutex_lock_common kernel/locking/mutex.c:602 [inline]
-       __mutex_lock+0x182/0xe80 kernel/locking/mutex.c:747
-       btrfs_read_chunk_tree+0xef/0x2170 fs/btrfs/volumes.c:7462
-       open_ctree+0x17f2/0x3a10 fs/btrfs/disk-io.c:3458
-       btrfs_fill_super fs/btrfs/super.c:984 [inline]
-       btrfs_get_tree_super fs/btrfs/super.c:1922 [inline]
-       btrfs_get_tree_subvol fs/btrfs/super.c:2059 [inline]
-       btrfs_get_tree+0xc6f/0x12d0 fs/btrfs/super.c:2093
-       vfs_get_tree+0x8f/0x2b0 fs/super.c:1804
-       do_new_mount+0x24a/0xa40 fs/namespace.c:3902
-       do_mount fs/namespace.c:4239 [inline]
-       __do_sys_mount fs/namespace.c:4450 [inline]
-       __se_sys_mount+0x317/0x410 fs/namespace.c:4427
-       do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
-       do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
-       entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-other info that might help us debug this:
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock(&type->s_umount_key#41/1);
-                               lock(uuid_mutex);
-                               lock(&type->s_umount_key#41/1);
-  lock(uuid_mutex);
-
- *** DEADLOCK ***
-
-Fixes: 7aacdf6feed1 ("btrfs: delay btrfs_open_devices() until super block is created")
-Reported-by: syzbot+fa90fcaa28f5cd4b1fc1@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=fa90fcaa28f5cd4b1fc1
-Tested-by: syzbot+fa90fcaa28f5cd4b1fc1@syzkaller.appspotmail.com
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- fs/btrfs/super.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
-diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
-index 237e60b53192..c2ce1eb53ad7 100644
---- a/fs/btrfs/super.c
-+++ b/fs/btrfs/super.c
-@@ -1864,11 +1864,10 @@ static int btrfs_get_tree_super(struct fs_context *fc)
- 	fs_devices = device->fs_devices;
- 	fs_info->fs_devices = fs_devices;
- 
-+	mutex_unlock(&uuid_mutex);
- 	sb = sget_fc(fc, btrfs_fc_test_super, set_anon_super_fc);
--	if (IS_ERR(sb)) {
--		mutex_unlock(&uuid_mutex);
-+	if (IS_ERR(sb))
- 		return PTR_ERR(sb);
--	}
- 
- 	set_device_specific_options(fs_info);
- 
-@@ -1887,6 +1886,7 @@ static int btrfs_get_tree_super(struct fs_context *fc)
- 		 * But the fs_info->fs_devices is not opened, we should not let
- 		 * btrfs_free_fs_context() to close them.
- 		 */
-+		mutex_lock(&uuid_mutex);
- 		fs_info->fs_devices = NULL;
- 		mutex_unlock(&uuid_mutex);
- 
-@@ -1906,6 +1906,7 @@ static int btrfs_get_tree_super(struct fs_context *fc)
- 		 */
- 		ASSERT(fc->s_fs_info == NULL);
- 
-+		mutex_lock(&uuid_mutex);
- 		ret = btrfs_open_devices(fs_devices, mode, sb);
- 		mutex_unlock(&uuid_mutex);
- 		if (ret < 0) {
--- 
-2.43.0
-
+>
+> --
+> Cheers,
+>
+> David / dhildenb
+>
