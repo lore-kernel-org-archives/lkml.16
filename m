@@ -1,90 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952E52CA8;
-	Tue, 24 Jun 2025 16:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9ED72CA8
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750781743; cv=none; b=PoDyzWKt3b3TsTiZfnlnRQrOdHEQ7u9pl1D8vN8+nfhtiwEZbcAW3vo+eRW1aeYMkO0raHSUM3YyawCS/+UBCB/6j0ByIMNchKr1BvCQDYJJTtP5Y1MU4w5lOpCATNh8CxAJheqMirOhoZK6SCR49xThX7QqvFYNpRWsvCdTyEQ=
+	t=1750781757; cv=none; b=aMLDnYboL10Bds6gWpbmEeVPMp5L/+AsioDJU/wOoCNB4qIwQ/4CvPsKLZ5Hg0ZX+WFjHKhGH61uDMh3sAS2ib2guO9aQVIsSA8ThdmHL1oWZkZMkhu7yPXcDUeInTYP2DwS0eMWi/vdkC01yUckjZNFyRwGeVsDQ6KpRuxzCes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750781743; c=relaxed/simple;
-	bh=57KGGXFeYzK3SWKuPuzos71t2DB02nUIsE5M3fgI7hw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Usraz2iRleMblEpbSLJGk10IycYfCpk69+1VXy2vb2eX/ZrFUtTm+/CGyXElYxeKi3ua5ndeZiUs8eGpPWLtCq/OukgNa+U6UeBSo2C93JhVzUw2YkHxcqtR0KBcQ99gKGS5ZytaQli/nB3WR+ZEASknB4417GK017JLFZohdtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZLEobQR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750781757; c=relaxed/simple;
+	bh=cnqRmP3MWftqLsVV3rIWse2EOfNLNh9JhYIyXhzOGog=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dKSF4ojy8vdpsbtAz5+mph8OTl90eBuvTY2BXxSuBxAYMDylSBQ1fVtDHwD2UMxEhRozSRjLBMHIC4BtkLlKq9CVawMHDA5BtMs9Tkg3/ixxlAZvgrlh0MbKDxPC/Qn1h2fk6E5TmKc1X7u2+KjTxOG7ZGjAFNmimonv/SDUDJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=VJP8ug+t; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZLEobQR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EB27C4CEE3;
-	Tue, 24 Jun 2025 16:15:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750781743;
-	bh=57KGGXFeYzK3SWKuPuzos71t2DB02nUIsE5M3fgI7hw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UZLEobQROqAuzu4WGUq3ilnyh0W3kf7mHHZLhm59Bq+kmmatsj9yzu6Vz7vWpQUZ3
-	 ZMKHK1O6dphmww8tlmC9n0JJYD7HDSq98/onavbNuW0BKxtI9b2PDfy+hxL1079pLK
-	 I825s0pdnz7Ib7A1502mkKCoqocwCD0UZ2hwsBaKJYhraDX4AStrq8UVEhEGDfwONJ
-	 Lyro5JtRvr4SjQKVxfI/0ks6LaPXYUE2DSvnu1jKC0SlEvZPZwAxG6+u9ZsWoMEAS0
-	 o0Sy1FuogCmKsTUdqWD7lhHltZCF8CD8+NFINHff9hFG0VCjLOpFdvfYQ+AKKb7ERy
-	 cbALbi6aTGErg==
-Date: Tue, 24 Jun 2025 18:15:36 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
-	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] rust: devres: get rid of Devres' inner Arc
-Message-ID: <aFrPKAxHfAetcQzz@cassiopeiae>
-References: <20250622164050.20358-1-dakr@kernel.org>
- <20250622164050.20358-4-dakr@kernel.org>
- <aFizv7suXTADJU3f@Mac.home>
- <aFrBvwFrUGD45TeF@cassiopeiae>
- <aFrIbRA9b9LOxFQ3@Mac.home>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="VJP8ug+t"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O8wVo2014954
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:15:54 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	Qyfhlor21ICWZh+rc4+fdzgPyjA2dUWzPSk1D9SVOxw=; b=VJP8ug+t6fivQjJ9
+	2HdIITE3R/FvdMiFv/sFzLfYQdjlR6LZfI0tk+12LkzUfCaWvffmwc90exzRsxKK
+	UnvVLM0QdfIFKK+CvwZyvict5EgEX4l+GIzBh+GhR8MSXn2oiaR4/+EXpwiN/sQa
+	e4l8j0Y9W72UPEnouis0Zg28oux4KNQ2zXElHUE+oSMvlgF9qw74nBZ46+2+rqnb
+	TOdKOpXc0klR2Ak36eoxs8eTTBQvXx/CjBDtfPduiIA4CSIorzhA+cINUYInl5ee
+	Y+H4INM1M28qQRnvek+Qna+bQ6Mc0dwgilAqPxMJroBoYT5qmIF94fsCByFje5pz
+	EdjfSA==
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f2rpw12c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:15:54 +0000 (GMT)
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2356ce66d7cso71969585ad.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:15:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750781753; x=1751386553;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qyfhlor21ICWZh+rc4+fdzgPyjA2dUWzPSk1D9SVOxw=;
+        b=VW/L8vWaBOROFdChMN2L2BIJMArOd9YdyBiTFVFZdm3lxKHSv5O0ZK64/xt1EmO1EE
+         FYt9IU0aN3afJRkWYh2J+w1n7diav5UM9Mi09mNLtbYhPwSEEnDol1jWcYOpOWw+bNpK
+         tYrvscVajw8xj4l6RokHj6CUCaa2hb1Zm6pfxFfwyTkRaCFVFwtPgkIjOyfROfl7n3i2
+         PyzbSTMdSmndJZfy4KPUFVxW31/5oUEbaqkpoPSjNrI68/57bDAlajv/bY8PUbZMlSPz
+         1rKuVHpht8SNwmGh2BJp5yUSR0fEcGvpeLBx3qFbhtIM3zOyAfAEFsNVyV7F2NFi8DEt
+         CV/A==
+X-Forwarded-Encrypted: i=1; AJvYcCViipxJX0YE9H5CJm0/Gw1m3oOhqGHMsLuLJMgy5/fFaHntaLSvqqP90OSGTYBdQ6SD33AoRbR7MOqNiVg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxSSQon5TvdevFpJyDEx0tBKEQxx70FBaWqsQy0kYyntlojJLqI
+	5CYDOXfjFkv8SASXw/HFldu0W2tEY3pG/utT+SaWqeJoJIeLn6DymJeo+GjppLezTT4K62NVIQ8
+	ipD8BqNDdGBnAK3TAwI1Cl/fxG7eKz0OxRYfjd5dN4gEQMdbCOfB2ZDxtsX4NLwkRC5q9mChmYn
+	Y=
+X-Gm-Gg: ASbGnct71UUf49/n7NL10YGyf1Yxj/vr352AAAh8aqUeVlLIu51Emrh2avTMMMt6Kax
+	xymjunHfZlx1X2Ave9BEMbv6JR5C/qbTlEyGQk+ux6eR4IA3wQ2unIXVQmMwDQMKDKAwS/6T52o
+	/bx+ydZXecboZoK8bynGXf3sq36b0Fe6cQX6dimPH6bkPrXuernAJJlIrY6y+SgXgn+tg3ZPr/J
+	/Up4EkV+HvQYHEOjjkBPd1u1HpX5KtvwDBkTEMwdcgPGhd+hIEX1baOR3634y6Cup2EG2n5gwZm
+	Smel4sw1EpC6T691fYZNl+OFBUAI4rj4SeJQjfT48V6Uo+5AiIpbLI2dsjkE4DCXSpTScxInYVM
+	ojkgcMNCJ/tDLgxQ=
+X-Received: by 2002:a17:902:fc44:b0:234:e655:a632 with SMTP id d9443c01a7336-237d9b19e2cmr287442545ad.51.1750781752988;
+        Tue, 24 Jun 2025 09:15:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH3GDtY6uAafIPWUwLJ9fdR1mlv1odipIGVPfHXlQOfWlJDASFtqBzLLuEVdFTlA964kKvR6g==
+X-Received: by 2002:a17:902:fc44:b0:234:e655:a632 with SMTP id d9443c01a7336-237d9b19e2cmr287442015ad.51.1750781752475;
+        Tue, 24 Jun 2025 09:15:52 -0700 (PDT)
+Received: from [192.168.1.111] (c-73-202-227-126.hsd1.ca.comcast.net. [73.202.227.126])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8695440sm113338745ad.185.2025.06.24.09.15.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 09:15:52 -0700 (PDT)
+Message-ID: <377affe8-fa88-4ade-9cf8-aaeaaabee679@oss.qualcomm.com>
+Date: Tue, 24 Jun 2025 09:15:51 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFrIbRA9b9LOxFQ3@Mac.home>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: ath11k: fix suspend use-after-free after probe
+ failure
+To: Johan Hovold <johan@kernel.org>, Johan Hovold <johan+linaro@kernel.org>
+Cc: Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
+        ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+        Baochen Qiang <quic_bqiang@quicinc.com>
+References: <20250624082022.15469-1-johan+linaro@kernel.org>
+ <aFpingRwP3foaKJ9@hovoldconsulting.com>
+ <43b978a5-c1c3-450d-8340-dc1a6dddc884@oss.qualcomm.com>
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <43b978a5-c1c3-450d-8340-dc1a6dddc884@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=NdDm13D4 c=1 sm=1 tr=0 ts=685acf3a cx=c_pps
+ a=JL+w9abYAAE89/QcEU+0QA==:117 a=e70TP3dOR9hTogukJ0528Q==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=qSSGdmx9Lv0nWuJ4rdQA:9
+ a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10 a=324X-CrmTo6CU4MGRt3R:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDEzNiBTYWx0ZWRfX2T6I2XmLEtTX
+ /+X+3ERbirpzTHdIBKl4zeBQLuK3/i0m/zdPnunwl4vPpNAINDxHseQIhgRrBZhS54jhm6tsnNV
+ s6aDEAAwTc0mOrG24UqQnjFtkdAeIBW0tVQUyhjEFRjNULW2L+Godj+aigyTi3aLUoB/CwAePt4
+ 5+UIUnFzM/Y6aEcXnponn4DvMGLUsgNGfAXe+0om4NaSWHEAnZoTXHe8UnHX3jaAH7qkioeAlsi
+ jDk/5pAeWbcFpKEUm7UXXZfrxPuxAIjuZfnAG6FpMN8rKFN9tumuFVEYakl3YWLkX0NLv8SRA08
+ yGSynaFExJ/hvQYxCRWV/eZnZJ9OVHVE+22rhAx+ydfMc2poFohwb9SKFPfJcnf487dC5eReoCI
+ YF3joHioH7bk8FE2tu6zAK7cewn7M3rkaoE8oQCaO7v5gwsQ7dw6utIXkFfOUph2J1Eeo+5d
+X-Proofpoint-ORIG-GUID: UdeyvGbCH3sisyO8RMILip-OmST_AfGq
+X-Proofpoint-GUID: UdeyvGbCH3sisyO8RMILip-OmST_AfGq
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_06,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 mlxscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
+ phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999 adultscore=0
+ clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506240136
 
-On Tue, Jun 24, 2025 at 08:46:53AM -0700, Boqun Feng wrote:
-> On Tue, Jun 24, 2025 at 05:18:23PM +0200, Danilo Krummrich wrote:
-> > On Sun, Jun 22, 2025 at 06:54:07PM -0700, Boqun Feng wrote:
-> > > I think you also need to mention that `inner` only remains valid until
-> > > `inner.devm.complete_all()` unblocks `Devres::drop()`, because after
-> > > `Devres::drop()`'s `devm.wait_for_completion()` returns, `inner` may be
-> > > dropped or freed.
-> > 
-> > I think of it the other way around: The invariant guarantees that `inner` is
-> > *always* valid.
-> > 
-> > The the `drop_in_place(inner)` call has to justify that it upholds this
-> > invariant, by ensuring that at the time it is called no other code that accesses
-> > `inner` can ever run.
-> > 
-> > Defining it the other way around would make the `inner()` accessor unsafe.
+On 6/24/2025 8:11 AM, Jeff Johnson wrote:
+> On 6/24/2025 1:32 AM, Johan Hovold wrote:
+>> On Tue, Jun 24, 2025 at 10:20:22AM +0200, Johan Hovold wrote:
+>>> Make sure to deregister the PM notifier to avoid a use-after-free on
+>>> suspend in case core initialisation fails (e.g. due to missing
+>>> firmware).
+>>
+>> Not sure it matters in this case, but forgot to include:
+>>
+>> Tested-on: WCN6855 hw2.0 WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
 > 
-> Maybe I wasn't clear enough, I meant in the following function:
+> I'll add that.
+> I'll also change the Link: to Closes: per checkpatch:
 > 
->     unsafe extern "C" fn devres_callback(ptr: *mut kernel::ffi::c_void) {
-> -        let ptr = ptr as *mut DevresInner<T>;
-> -        // Devres owned this memory; now that we received the callback, drop the `Arc` and hence the
-> -        // reference.
-> -        // SAFETY: Safe, since we leaked an `Arc` reference to devm_add_action() in
-> -        //         `DevresInner::new`.
-> -        let inner = unsafe { Arc::from_raw(ptr) };
-> +        // SAFETY: In `Self::new` we've passed a valid pointer to `Inner` to `devm_add_action()`,
-> +        // hence `ptr` must be a valid pointer to `Inner`.
-> +        let inner = unsafe { &*ptr.cast::<Inner<T>>() };
-> 
-> ^ this `inner` was constructed by reborrowing from `ptr`, but it should
-> only be used before the following `inner.devm.complete_all()`...
+> WARNING:BAD_REPORTED_BY_LINK: Reported-by: should be immediately followed by Closes: with a URL to the report
 
-Oh, so you meant adding this to the safety comment. Yes, that makes sense. Maybe
-ScopeGuard works too, as you say.
+Please check pending patch:
+https://git.kernel.org/pub/scm/linux/kernel/git/ath/ath.git/commit/?h=pending&id=2418079880408c5ae0b2a93f72af044eaff18cb6
