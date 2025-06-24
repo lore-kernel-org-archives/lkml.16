@@ -1,38 +1,38 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C2D32DFA4E;
-	Tue, 24 Jun 2025 14:33:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B0A2E11C2;
+	Tue, 24 Jun 2025 14:33:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775625; cv=none; b=C3ghg7b+Q4cWSpjUtPSNRdlM0f6Xe0RBXnRDwvB11L5tZbpv/iDJ43eTuWLu+c4fBqRVJlL1juPZKPEVIQxPkyXayruQmyXknapLaz7PWgBLgr77PlsWQPByz1MyMs4vMvfxuvBOCakI2AzV6bI3GBOF8gWfca3X6dHWGVQt7R4=
+	t=1750775627; cv=none; b=EzLa00ZU1wcsZfhusgMXvvt17HlhsE1cNUO02trT7i9j5sBSiSnp7CXhroM7iUgym+gBYWfUag6X/Ye9ivouq1TutnoC2wT5BuNVv7jjl8NrLxaVTEf6BevS5Y8ar8LyW2aJcTKhQVaN7Od3owk84EaM8uYlXwEg3wiA3Ftgba4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775625; c=relaxed/simple;
-	bh=r5c5hsCWKX10tYNXoxH3x5wqBhztaL6jU+1Ll1bHld4=;
+	s=arc-20240116; t=1750775627; c=relaxed/simple;
+	bh=bf++AAMVsRdlK8ZXZIEoCdT5vXCmrXzvterr8licGP4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VQIRrmm8uClQbuJnXOT59TbhUn9S5xmwTku3lT2KqHYFsSQlXlsSd0jkBrUBfpF+o2QkiTAPgvM/tEK5qPzhYN7rFpcDbQlPTA3nCN7sJJBZ9PQRIJUJeBd91zX6gmGj9+pjunAQGU/U1fC0jKsJ3gKScoTr4k54DlD4hBLuNes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LGM6ze92; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version; b=qRxhrIejPREYxOqSvL5m2sKHG2cOwmm5na8aE7e/1pxFKvAGbuVy6IYOuHyimE9RyaKtw/ybd1KbzUvuart2tALgzpvzvmaABmCcZzrruZFwPpBxzLADeFYME96lLNDrNSPkTJNCwXk4cca4xerFC6QUq8uK/2w/eNEyZw2gU1s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=kCGVLLUZ; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LGM6ze92"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="kCGVLLUZ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750775621;
-	bh=r5c5hsCWKX10tYNXoxH3x5wqBhztaL6jU+1Ll1bHld4=;
+	s=mail; t=1750775624;
+	bh=bf++AAMVsRdlK8ZXZIEoCdT5vXCmrXzvterr8licGP4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LGM6ze92hhNZTJRTWWdp/J+3r6PDly4J4ML2T9hv/jDfuo8v2hH1aTF2H91C69boE
-	 8XO4kNLZDK1DJT5mNNCIq2W0eOBFTiu8xwD1lfU2TseDPG6mYtgCQ4pVvVmHijSzxY
-	 U/toFgFDgkeyVFnuovcBfS7v0p+49hy4GKm8svj7aSSEMK/gnclqu5RLsh+4hmZXoC
-	 kD/XkOY0YCo5IeMQU8DHOP0L7oNcCZXkB7pOEhMoBgrstTfLAAvbQlho0M1lD7+HU2
-	 vmI4PmnJGa5n31XqtAYhTKsfExw6TgolEs3a2TxjLilF6vcaNBF0z6Dgm7sFqleMx0
-	 syETI1Rtwn/VA==
+	b=kCGVLLUZPg6n83RiJw/QUn1WmQlLddpQMsa6yq9QG+f5fV/C5cN1DWLBwaOonmXKl
+	 KNeefaUGGC8JkLlIJJxIo/cYj0NzjDj4QTWXNw/BD3qOU++bQNadvcR4+qhdtFqrbh
+	 iXjuPgUZILvITrwnLO0pFMB+i9L4Q+prR5gw5vs7gGlBtx0KbU72VyOyxauwPiX4A6
+	 rGeEs9tdeSJU+dPqQ90Yd86/y9RN5IGBES1N9asHZqFiF+sHUDiHgcrJP/vPEv5lak
+	 Cipgpyk4fzltEeFaSnUOfu1gKpFwVif8HTh7CTMGOdtMVjd72ldszZ021gq0/pumzE
+	 3tToasGptiOzA==
 Received: from laura.lan (unknown [IPv6:2001:b07:646b:e2:d2c7:2075:2c3c:38e5])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: laura.nao)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7F2DC17E1560;
-	Tue, 24 Jun 2025 16:33:40 +0200 (CEST)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 3114C17E088B;
+	Tue, 24 Jun 2025 16:33:43 +0200 (CEST)
 From: Laura Nao <laura.nao@collabora.com>
 To: mturquette@baylibre.com,
 	sboyd@kernel.org,
@@ -53,9 +53,9 @@ Cc: guangjie.song@mediatek.com,
 	netdev@vger.kernel.org,
 	kernel@collabora.com,
 	Laura Nao <laura.nao@collabora.com>
-Subject: [PATCH v2 08/29] clk: mediatek: clk-mtk: Add MUX_DIV_GATE macro
-Date: Tue, 24 Jun 2025 16:31:59 +0200
-Message-Id: <20250624143220.244549-9-laura.nao@collabora.com>
+Subject: [PATCH v2 10/29] dt-bindings: reset: Add MediaTek MT8196 Reset Controller binding
+Date: Tue, 24 Jun 2025 16:32:01 +0200
+Message-Id: <20250624143220.244549-11-laura.nao@collabora.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250624143220.244549-1-laura.nao@collabora.com>
 References: <20250624143220.244549-1-laura.nao@collabora.com>
@@ -67,48 +67,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On MT8196, some clocks use one register for parent selection and
-gating, and a separate register for frequency division. Since composite
-clocks can combine a mux, divider, and gate in a single entity, add a
-macro to simplify registration of such clocks by combining parent
-selection, frequency scaling, and enable control into one definition.
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Add a binding for the PEXTP0/1 and UFS reset controllers found in
+the MediaTek MT8196 Chromebook SoC.
+
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Signed-off-by: Laura Nao <laura.nao@collabora.com>
 ---
- drivers/clk/mediatek/clk-mtk.h | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ .../reset/mediatek,mt8196-resets.h            | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 include/dt-bindings/reset/mediatek,mt8196-resets.h
 
-diff --git a/drivers/clk/mediatek/clk-mtk.h b/drivers/clk/mediatek/clk-mtk.h
-index e2cefd9bc5b8..3498505b616e 100644
---- a/drivers/clk/mediatek/clk-mtk.h
-+++ b/drivers/clk/mediatek/clk-mtk.h
-@@ -176,6 +176,25 @@ struct mtk_composite {
- 		.flags = 0,						\
- 	}
- 
-+#define MUX_DIV_GATE(_id, _name, _parents,		\
-+		_mux_reg, _mux_shift, _mux_width,	\
-+		_div_reg, _div_shift, _div_width,	\
-+		_gate_reg, _gate_shift) {		\
-+		.id            = _id,			\
-+		.name          = _name,			\
-+		.parent_names  = _parents,		\
-+		.num_parents   = ARRAY_SIZE(_parents),	\
-+		.mux_reg       = _mux_reg,		\
-+		.mux_shift     = _mux_shift,		\
-+		.mux_width     = _mux_width,		\
-+		.divider_reg   = _div_reg,		\
-+		.divider_shift = _div_shift,		\
-+		.divider_width = _div_width,		\
-+		.gate_reg      = _gate_reg,		\
-+		.gate_shift    = _gate_shift,		\
-+		.flags         = CLK_SET_RATE_PARENT,	\
-+	}
+diff --git a/include/dt-bindings/reset/mediatek,mt8196-resets.h b/include/dt-bindings/reset/mediatek,mt8196-resets.h
+new file mode 100644
+index 000000000000..46ced0850d91
+--- /dev/null
++++ b/include/dt-bindings/reset/mediatek,mt8196-resets.h
+@@ -0,0 +1,26 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++/*
++ * Copyright (c) 2025 Collabora Ltd.
++ * Author: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
++ */
 +
- int mtk_clk_register_composites(struct device *dev,
- 				const struct mtk_composite *mcs, int num,
- 				void __iomem *base, spinlock_t *lock,
++#ifndef _DT_BINDINGS_RESET_CONTROLLER_MT8196
++#define _DT_BINDINGS_RESET_CONTROLLER_MT8196
++
++/* PEXTP0 resets */
++#define MT8196_PEXTP0_RST0_PCIE0_MAC		0
++#define MT8196_PEXTP0_RST0_PCIE0_PHY		1
++
++/* PEXTP1 resets */
++#define MT8196_PEXTP1_RST0_PCIE1_MAC		0
++#define MT8196_PEXTP1_RST0_PCIE1_PHY		1
++#define MT8196_PEXTP1_RST0_PCIE2_MAC		2
++#define MT8196_PEXTP1_RST0_PCIE2_PHY		3
++
++/* UFS resets */
++#define MT8196_UFSAO_RST0_UFS_MPHY		0
++#define MT8196_UFSAO_RST1_UFS_UNIPRO		1
++#define MT8196_UFSAO_RST1_UFS_CRYPTO		2
++#define MT8196_UFSAO_RST1_UFSHCI		3
++
++#endif  /* _DT_BINDINGS_RESET_CONTROLLER_MT8196 */
 -- 
 2.39.5
 
