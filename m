@@ -1,117 +1,132 @@
-Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CA8A3074A6
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 396943074AE
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750778876; cv=none; b=HjsSTk3LFHXAghemhbBiZTeJjBo2Yrgb6sRPuTOEPFo5pwIrgGnD192KDds5+Qt+cR54JsPvxcUo68gmqBpR807xESb+3F5PKATHgYHXNCLx2aidxNPbG2ieLUyJelwdUMJyc9d4OeDvw035j7lRIrVvrWmAMP3qc3tU4n8fMeI=
+	t=1750778894; cv=none; b=Z0DSxSPg/EvYbWunhaDqhGIBu1pQ2u05fOpBb1HBZdKCe1bZdA+uFXqGeQlD3ce8uMF9H2vdZ7aByEhzDANn3NYmVvfPexEsZ+jW2DPFNYFctnyhK4L+LkaipvVdUAT0cvfG+tWMWcSXyx1ki6TBWvuAG/Vw/9IRLdUjmGxTZ9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750778876; c=relaxed/simple;
-	bh=MepxRO2ogI5XQ3ZUzw1gcXY64ic46PvTDY+KYhuA9P0=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rjlUVuzrYfnqF5C8cIUgwM8HWoWGiJQqHwCxicE/0XI7xFs+Wk8sDhMqkIon6sOKaaMp0Q24u4p/8BS2+kJ8d6MGiJ8qWuyHzjXu/1Bx/Il+0xEhRb5131siGhu+dclWcMYijNtP3sAHXtvg3rqN5wRAPnXr9nnkTVfRH2W8tWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WZK6ZJ3A; arc=none smtp.client-ip=209.85.214.201
+	s=arc-20240116; t=1750778894; c=relaxed/simple;
+	bh=Dd2F0B0ISEzWA7LaglJfD+xCcbLb19kfhcNyzezrUFw=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=fqe/wZ8yjODx40jSaDtmnORGFY6lgvg8O0XLicu9buR/A0ZIHwWbYmAjkA84IwLYFHxMJVvsHoSZe8XVzEzzEna/qiokDChtberGeo/bIyvxXrvOI8qCtigkQgG1ZBa6LYY6XPDI8otnbABIi8JClCKSl3DTX+WhpXzPjUee4kk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wE0zUlpy; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WZK6ZJ3A"
-Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2358de17665so48208135ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:27:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wE0zUlpy"
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-451d2037f1eso34287315e9.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:28:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750778874; x=1751383674; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ozpzeYt4xTkvHRuQkIJTdoQYtXmcQ7LICuVmYRW9gk=;
-        b=WZK6ZJ3AuiGdvP2b+SBCaWG2/HwwkhXTBNXfMqnckLRQMPj0MJ4iZ14Hmp7ZdULO+X
-         DslGD5rMmwc6tWFnbIFSQzHR16uUTpRLwPi7KaAhdE7EBprCSyzT0Dtx8nI84pDwcqNk
-         zYBrRrQTWp5ZrjAb+2LUgUD3S4ki7FqBl3QGomQ5bOgxJWrFhUAUVvPsQy/eVLZJVPqB
-         uoVml+AG9ETMzACojMoKizPs0JQu64axF4SZJMV6N/QtqESGESuMJ7cwfUI4g0LJ7dvX
-         ssg4lzk41nqtojkamz36RhZVOV9VYnQ9hefZhYPxWTZ/8V8utCGKB1x0/KIL2YSWvnBY
-         Scog==
+        d=google.com; s=20230601; t=1750778890; x=1751383690; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=BqGXDhYSlvCrZbEH9Cv6es5PlTzM9evZxVnOZeB/MNc=;
+        b=wE0zUlpyMM8d88qIZgDCcVUocUPz02fEeo02LWlsa8j/QTRoZj/0yBZIUHvmm4oyU+
+         v/QL61nwg4AReugzai8+gZbabDv/WGey6tjq4hzdKLSVm/AcUrsBTF+8d16uzPJwNRvp
+         caYlex7ifGSVPzjl8gdDT6/KxPREKVTSmhWtWu8l9cGCNyRezel/A/WXJKLligNhMLBR
+         UcTKTefMp599UkhYFdA37j4A/x6gJyGncdYqyxRg9y7XCDyVEXcNoX33dGHA51W2Yq59
+         TYnSBRT77ting4ujQLi+B3ae+NSRE4PghUxTaiC1ibcYouU8LVFuaRnM5Lua2vtlVIx0
+         T+sA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750778874; x=1751383674;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ozpzeYt4xTkvHRuQkIJTdoQYtXmcQ7LICuVmYRW9gk=;
-        b=V7RUUjBKi2zm8dGx+jzQ51cotDFS3WSFTPZ5bx+FjXHllmta8S/Guwe6+OBVyS+Kvu
-         mgIukuvRsh9yBkruw+cRmuz2nIOjT9/hKib+3zySOB2tQF5btU53yysOwxR91BDf/bfh
-         bmEDbzxEpJD3DdedUqO9bObgT3BrpmQI4CHaKsb5+8lUoRd+bbBJXo2QwKkYSsXekjfO
-         GHgFQnX5k1fBsS+vGrCQUsNmNO2MsV5cKWAaYuDZR+/q/Qe0RLAMPY2/IAXIXKAJjyCk
-         vebcMvMxmrnnkck1fa5Zo1KcQP0VkS6oAsDgoODRnm01pbunMj0ZWLZIPIdCWy582J6B
-         50vQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPutvwJJZczHhxPCDhuXSQc/Xl8jVdGYRHGV20yVCzJz9cCD/4FQvFyIQMPW/67ZteRT6DuIORPBM3ywQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOlQ/7O5830W1TXZIf7AjxaQqQqNIrO2piprFZ94rJQB952yF9
-	9BV+ZUJCbjydKf4kWvCVrUFg/YoRwSY6lBltIjDMiV5TjZVZr+CcDuwMW+GL6/NeTNqhYGOZvMj
-	EC7HeoQ==
-X-Google-Smtp-Source: AGHT+IFUejh1pO/KNNRbnpHWhaff//dtVImgTpNy+o6XsUzk8HP9FdRsW+ItyD5wajOAd09IzHcqdYMV9uY=
-X-Received: from plbky5.prod.google.com ([2002:a17:902:f985:b0:223:f7e6:116d])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:902:dac6:b0:236:7165:6ecf
- with SMTP id d9443c01a7336-237d9a7c3a9mr312281565ad.38.1750778873740; Tue, 24
- Jun 2025 08:27:53 -0700 (PDT)
-Date: Tue, 24 Jun 2025 08:27:52 -0700
-In-Reply-To: <20250328171205.2029296-7-xin@zytor.com>
+        d=1e100.net; s=20230601; t=1750778890; x=1751383690;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BqGXDhYSlvCrZbEH9Cv6es5PlTzM9evZxVnOZeB/MNc=;
+        b=ux8nlktKhix5CAvogFxbValNJT5sTXWTSWOkAtU0mWkFFu+BnjGd0j6NP3Rzko5Vhx
+         aIf5FjK9XAUGy5ZsFKVoaMR6cQjjVhTdoPFpZ2Q1DiirWMPfDXK5VF7k/cholXVYF9na
+         7PBDgVQsBo2/eV58cUa5cube+XqFEc+QEYxuLkVrgVyZ1hL3DwIcMhxYRThBBhGIm27V
+         d0dGElQtzmiiu37tPG2ZfclHZSu9jH7QZV2CgR6N9XJgSD5a834jIbUxDLVhTmQR5tOW
+         1WqIvp5TfX/tmFGmbfDWiGNhHu2m3S7yQuQ8lc2Ux+axJYXxPM1Qe68nHZGwdpVb41BN
+         bKkg==
+X-Forwarded-Encrypted: i=1; AJvYcCUT1EY+KMdI+B8hzCAf4vlBQtQHXo6ZoDfawGeF7IH8E8/QNAzLwWPbBRM2NkHvSuuerCmdBp8Ga5gMh4Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoDm92/b0TdoXx5thFhYXIPimi4/VidytJdj48zrLj5PKshWoE
+	G4C0EtZg4atUASwHF5mdR90+SlBCWHvF2wNcE3cnmHEKafVHcEdYc83l2PtBLjShN9hohGwKv46
+	zS8Pl9vqNEN3g75xbzg==
+X-Google-Smtp-Source: AGHT+IHMf6+raYFA7ySd9EOL3L/GCJqSmyssi+lARWuqdtFQtng4gPOM0JqrpSdAJ63ohOD6ZI1hFzGmAu/7bIE=
+X-Received: from wmrn35.prod.google.com ([2002:a05:600c:5023:b0:450:dd5c:6cd3])
+ (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:1e8b:b0:43d:77c5:9c1a with SMTP id 5b1f17b1804b1-453653a3984mr181253065e9.4.1750778890698;
+ Tue, 24 Jun 2025 08:28:10 -0700 (PDT)
+Date: Tue, 24 Jun 2025 15:27:54 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250328171205.2029296-1-xin@zytor.com> <20250328171205.2029296-7-xin@zytor.com>
-Message-ID: <aFrD-Pn9cmHcVxWs@google.com>
-Subject: Re: [PATCH v4 06/19] KVM: VMX: Set FRED MSR interception
-From: Sean Christopherson <seanjc@google.com>
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: pbonzini@redhat.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, corbet@lwn.net, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, andrew.cooper3@citrix.com, luto@kernel.org, 
-	peterz@infradead.org, chao.gao@intel.com, xin3.li@intel.com
-Content-Type: text/plain; charset="us-ascii"
+X-B4-Tracking: v=1; b=H4sIAPrDWmgC/3WNQQ6CMBBFr0Jm7RhaA4or72FYDHUKTYSBVquG9
+ O5W9i7fS/77KwT2jgOcixU8RxecTBn0rgAz0NQzultm0KWuylodUWZanozWy4ieXkim6k5sa0u kIa9mz9a9t+K1zTy48BD/2Q6i+tn/rahQIWluGrZ06EhfepH+znsjI7QppS/3BG9drwAAAA==
+X-Change-Id: 20250617-opaque-from-raw-ac5b8ef6faa2
+X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1782; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=Dd2F0B0ISEzWA7LaglJfD+xCcbLb19kfhcNyzezrUFw=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoWsQDO4H7Uc99vI+/NQXVnCqQ0zwkewq/nEH9F
+ ZHfpAlsfs2JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaFrEAwAKCRAEWL7uWMY5
+ RmKCD/9KzIHB/0Bwb5Tbi86a+ap+B6v9Th83f8rJ4H+bjGAULY3/bnpn7/ifAl50NGXQzM9LSJY
+ v8AKtlBzlOOKwBh4CDVhHjnQkP8if2W3Hlub42KE8aUMk8tKAuMhyqUft27wGEhfi3etqLFCObp
+ QvrVv8S5+xhSevIDYDFSxNHZFleo0bec8P1Qcvp4wj4VjNcDQfKaeVyCzt8hhM2hGT/CMWYoEgE
+ Jmww4psDMOo4BtIPOqaMK/L4PTNX8qCOGRe/xH8SqOIgcWgJjw7vGq/Wj/AwxXnFIDSzjbh+xQK
+ ruN+aEZHTHs6L6diBnDQG265pEX3RAI4+/T1aIClhslEi/Mz3V5UKrK5WFle1I2fPnL/alG368x
+ Ozy9S1XEkl8oc7d+J0DbM6QSqeDPIS/XucQtuWj0qgohWQNmr4Q/w+DEH3ColkJLnjBRBGqTZcX
+ VlMXS6QlMRLkYuxrOFbV5Pnxn3Lksh4CuicQK8r+RZ8hWSmbfZS7ZpPUVDihyn83Nwf0GBysTre
+ fZyW+rlK1pUT+65cuYAh755/0+Bm7ToeybUvOl6qE/zQvtm511tpbTz2KY9O+dcFU4ppYho6n3y
+ 4nNlL5NUXcCPCmhlUaffKBiIY1DypR0qQwbExRkGOj9XGVXw1H7qS04yJ5x42wkHyYxESsgKFct vLVCfrkt2HGtQ9w==
+X-Mailer: b4 0.14.2
+Message-ID: <20250624-opaque-from-raw-v2-0-e4da40bdc59c@google.com>
+Subject: [PATCH v2 0/2] Add Opaque::cast_from
+From: Alice Ryhl <aliceryhl@google.com>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Miguel Ojeda <ojeda@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Mar 28, 2025, Xin Li (Intel) wrote:
-> @@ -7935,6 +7945,34 @@ static void update_intel_pt_cfg(struct kvm_vcpu *vcpu)
->  		vmx->pt_desc.ctl_bitmask &= ~(0xfULL << (32 + i * 4));
->  }
->  
-> +static void vmx_set_intercept_for_fred_msr(struct kvm_vcpu *vcpu)
-> +{
+Since commit b20fbbc08a36 ("rust: check type of `$ptr` in
+`container_of!`") we have enforced that the field pointer passed to
+container_of! must match the declared field. This caused mismatches when
+using a pointer to bindings::x for fields of type Opaque<bindings::x>.
 
-This function should short-circult on
+This situation encourages the user to simply pass field.cast() to the
+container_of! macro, but this is not great because you might
+accidentally pass a *mut bindings::y when the field type is
+Opaque<bindings::x>, which would be wrong.
 
-	if (!kvm_cpu_cap_has(X86_FEATURE_FRED))
-		return;
+To help catch this kind of mistake, add a new Opaque::cast_from that
+wraps a raw pointer in Opaque without changing the inner type. Also
+rename raw_get() to cast_into() for naming consistency.
 
-Functionally, it shouldn't matter.  It's mostly for documentation purposes, and
-to avoid doing unnecessary work.
+Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+---
+Changes in v2:
+- Use new naming, and rename raw_get().
+- Link to v1: https://lore.kernel.org/r/20250617-opaque-from-raw-v1-1-a2e99efa3ba2@google.com
 
-> +	bool flag = !guest_cpu_cap_has(vcpu, X86_FEATURE_FRED);
+---
+Alice Ryhl (2):
+      rust: types: add Opaque::cast_from
+      rust: types: rename Opaque::raw_get to cast_into
 
-"flag" is unnecessarily ambiguous (eww, I see that the exiting PT code does that).
-I like "set", as it has (hopefully) obvious polarity, and aligns with the function
-being called.
+ rust/kernel/configfs.rs                |  2 +-
+ rust/kernel/drm/device.rs              |  4 +---
+ rust/kernel/drm/gem/mod.rs             |  4 +---
+ rust/kernel/init.rs                    |  6 +++---
+ rust/kernel/lib.rs                     |  7 +++++++
+ rust/kernel/list.rs                    |  2 +-
+ rust/kernel/list/impl_list_item_mod.rs |  4 ++--
+ rust/kernel/time/hrtimer.rs            |  4 ++--
+ rust/kernel/types.rs                   | 11 ++++++++---
+ rust/kernel/workqueue.rs               |  2 +-
+ 10 files changed, 27 insertions(+), 19 deletions(-)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250617-opaque-from-raw-ac5b8ef6faa2
 
-> +
-> +	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_RSP1, MSR_TYPE_RW, flag);
-> +	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_RSP2, MSR_TYPE_RW, flag);
-> +	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_RSP3, MSR_TYPE_RW, flag);
-> +	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_STKLVLS, MSR_TYPE_RW, flag);
-> +	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_SSP1, MSR_TYPE_RW, flag);
-> +	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_SSP2, MSR_TYPE_RW, flag);
-> +	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_SSP3, MSR_TYPE_RW, flag);
-> +	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_CONFIG, MSR_TYPE_RW, flag);
-> +
-> +	/*
-> +	 * IA32_FRED_RSP0 and IA32_PL0_SSP (a.k.a. IA32_FRED_SSP0) are only used
-> +	 * for delivering events when running userspace, while KVM always runs in
-> +	 * kernel mode (the CPL is always 0 after any VM exit), thus KVM can run
-> +	 * safely with guest IA32_FRED_RSP0 and IA32_PL0_SSP.
-> +	 *
-> +	 * As a result, no need to intercept IA32_FRED_RSP0 and IA32_PL0_SSP.
-> +	 *
-> +	 * Note, save and restore of IA32_PL0_SSP belong to CET supervisor context
-> +	 * management no matter whether FRED is enabled or not.  So leave its
-> +	 * state management to CET code.
-> +	 */
-> +	vmx_set_intercept_for_msr(vcpu, MSR_IA32_FRED_RSP0, MSR_TYPE_RW, flag);
-> +}
+Best regards,
+-- 
+Alice Ryhl <aliceryhl@google.com>
+
