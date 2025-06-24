@@ -1,202 +1,238 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE1B239E7A;
-	Tue, 24 Jun 2025 20:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955E7239E7A;
+	Tue, 24 Jun 2025 20:35:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750797295; cv=none; b=CVfSxfcj7/4t4wA7JbJma24njKvbNVFZ0EANrgrUEj92Qjcv+9Gne6tx5V8Pq8fEX10LEDqh3cYUcFwNV6dxoEu55TAUVtUUGijrliNz/qDL+D5uoIbWuyB5j73TOJoMf4geDE717eYj4jgz/08e+a4aLhNn5bwUDyABoWZBvkw=
+	t=1750797327; cv=none; b=Pb7NsyDJr6pEvTF7aaxP25bgHzCD3gUVS1qhoW8turq5uCBJcz3s6Wta2SmrSBg9/wZwSKXMtShcH1AsoQoDMV1XIK0nvohhnQFWdf6W/xcm6V6Pu3wfmjJEL4VsKeUs60BiGZIFBvgu9wwpxYCRlV5H6o1o08/T67ulB7KPRPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750797295; c=relaxed/simple;
-	bh=K5j/6oYH1KXNC9To2vN2BHAaftVspd2uOYN2OIC6GO4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oFuZ+ZKootmtWkFF/tXxMqw/JIsR6nzXBapLMBBt15bdYtaJw8GlA8CMRu3V3DQM+K8CfOx8gwJRVVbX4pJQHix8WR+7RUGOCQAK1RYl6xtzFMRUnKTjclzZ116sXXdMq1OAWfZ6ylWKmWWus+CvgC9TSvU/Me52T4og+920CYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iqgj/Cnu; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750797327; c=relaxed/simple;
+	bh=c0hAH11k/pzP9SZ9HzIUTlESiZ1K6d35PYqZnTwH+eM=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=uJiBuriY7KFar2rd71v598mnw5fj/dgLcqQP30T2lnuf4gowV7sBmp66L0oGzyVovPXzJbTvzdHDSpnABzZTUXbmtzSpeLNDdK8HB/NJ2OQD1vCUIU7wHfybLCQbJj9bcc53EPi+SLDFsFPvi1OiY3XRbCHkK5/Bp/4qeR7Puek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SArgutJI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Y/XCoSa1; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqgj/Cnu"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a6cdc27438so4926396f8f.2;
-        Tue, 24 Jun 2025 13:34:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750797292; x=1751402092; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/P31FkjAx4pu5r0Cc+j+q8zUgTSwo2qpyckK87E9/Z8=;
-        b=iqgj/CnuUjTON84B0f5OH3wUybvkbMqOEEmCXx2hIjaS9vYIH3B9bBGbbV6qfUao6J
-         syoAziknLZk4Q7T7R6Vo4Yt60dgmsD71KJHIA2b9ZAitGI2UO102fmNuuwaVbspiXfhk
-         us349pk+OslWpCAQvOfbbLVReeO6zE9dqXDZpPaizY/NzZM226Cmx4RTe7TLUJu+i8b2
-         wjU2KDaJue+ETQ9zMr6xeel1RGmpvNt+Bd8f+huTIBWS9VWxjpgwiBvr8/yvudmtmtyq
-         MWioXvo/b3ORx8O3J9zffqQHVWhl6kJJfq+JcRAIwm6WS710n9vbm8e89HLiU5AcW0kw
-         JnfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750797292; x=1751402092;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/P31FkjAx4pu5r0Cc+j+q8zUgTSwo2qpyckK87E9/Z8=;
-        b=CuU5bRRLfdHUxAqKVaRogN4Sx6xJTeA7144BBenDhqN/PodYQ7UvTGgvW6B2IPbSZp
-         +EnmNFG6CnA487tu7EJ06t13b5lUna1334lM7EdKK4eyDfP2rTe0rrAdMvlfyXnVdgDI
-         NtM7DfVYL3agNambknQu3JkFfs83a+vjZLv9Os4DlsrX8auOi8Uh1vtbgFkpjOv6XHqY
-         JSfwqtOzpQlWEqdKP4Xw36RsRUbH5x5oVkkLimOa8S1qM8SxM8YITnNFeOEk02axeeHR
-         ckyih2X4HYeVuF/9sopZijdKtTeWFtlbB680dH6/6eJrcqw0GIvTzPU7sLHybYjmG/bS
-         8vLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUJ94NtjbNSpF5uIjzbxMRF9SAwVLxHGaADRTGKPRM8W68k6ZWSneIi4iy8x5cJ9u81PJCbu+Yxr7bF41c=@vger.kernel.org, AJvYcCUMWpvJFEwWLpyypy/x/qmvaA+ts+OlyysPrGLby6vUAsW/lVhmpa3UUW8uPPOPigB1z8JiTEcptCf9Qkg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy4YVQJLnzw+skz1FvKvh+iL+uuxJVod3l5fDos2X1DImdp9lBs
-	GCWEQ4MePojq69LY9btHcAv9Tn+SqhR+lIr9pg5SE95+JcW5wHKBuTgD2ttmXXD4znPGaDCivSw
-	GbDGk/X+es0bJH7HVQ4AWcuvzChwRW5U=
-X-Gm-Gg: ASbGncsMWku89UotnzK/nBR3n5TTZE/7nXVV8BYNYyou+MqYDixzZezK2nvC+KbkLf+
-	YH0VaGbVhEG0H36LZcQN01DqQ1M8/Gnbk/nErgHPE6ilBl5fYInnOgXnLk+t469q7g1yZTudQcB
-	UM+rFpisT0s05xl2K1GSKkGi/5CGn9WrTxTDnW3X66DI9/KwFNIVK4gxnh
-X-Google-Smtp-Source: AGHT+IEV419En0GlqpLoJ8SBerrB6DWTd/TY+ANk1ZKcthKUJ+wHqD0h7wu3BMWEAEQRtnffePWDGFo4o8WrgncRw/A=
-X-Received: by 2002:a05:6000:258a:b0:3a3:66cb:d530 with SMTP id
- ffacd0b85a97d-3a6ed5fd86emr128337f8f.23.1750797291826; Tue, 24 Jun 2025
- 13:34:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SArgutJI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Y/XCoSa1"
+Date: Tue, 24 Jun 2025 20:35:22 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750797323;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=OghVQubO3Zyamo2+5v6BhdfWd7yc9KWHiIblg5Emyt0=;
+	b=SArgutJInKVuU4hKNMUfcrJtKEPt7Er+/xcL+Ado601KLAqCKlUjX8zfujl2zQZ9K4Mobc
+	IUFbaJ6k/s/TyHel1gmeXnGeg4/lyPxh5xghQ5GD1hVrzGT2dOkkBWrkuSIVzHnk4sOD9k
+	0dAbkxLXqxaBzuvbrRIpu3igP+EVNgZlLdOEN8WAEzjbxEGSNz0qiUr4qN6Gbgf+1PRc39
+	0B3uhN6o3z+lCB7aen1PW2UAaI62taTif7GkrB8Dv4lvvQjpnQRU4IeS768Uyu8F6KCjfY
+	nCNIWAnwCdKa9AAk2zcj7zmJJ1Zd/LyT+vnkvipbYH3nyHZugTaaZvbS0jOnvw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750797323;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=OghVQubO3Zyamo2+5v6BhdfWd7yc9KWHiIblg5Emyt0=;
+	b=Y/XCoSa1pm0D8it4T/usI19TzfNF/qNgq9cxFJKPmG7vzZg2kk8RTJwzgkY8sfP+Q5dAla
+	mnDJWfzbNBLG6FDQ==
+From: "tip-bot2 for Xin Li (Intel)" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/urgent] x86/traps: Initialize DR7 by writing its
+ architectural reset value
+Cc: "Xin Li (Intel)" <xin@zytor.com>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "H. Peter Anvin (Intel)" <hpa@zytor.com>, Sohil Mehta <sohil.mehta@intel.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+ Sean Christopherson <seanjc@google.com>, stable@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1750352394.git.mehdi.djait@linux.intel.com>
-In-Reply-To: <cover.1750352394.git.mehdi.djait@linux.intel.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 24 Jun 2025 21:34:24 +0100
-X-Gm-Features: Ac12FXx0vHYgR-BnxEQyuVMUWfTz2mWS13uRhkyRpoiBisvCV4emCeCrZyaLNFo
-Message-ID: <CA+V-a8s1wNrgxKJv2KGq_dLXRW2o4Q30TND=0mQs1jG1t7rS+g@mail.gmail.com>
-Subject: Re: [PATCH v1 00/55] media: Add a helper for obtaining the clock producer
-To: Mehdi Djait <mehdi.djait@linux.intel.com>
-Cc: laurent.pinchart@ideasonboard.com, sakari.ailus@linux.intel.com, 
-	akinobu.mita@gmail.com, stanislaw.gruszka@linux.intel.com, 
-	hdegoede@redhat.com, arnd@arndb.de, alain.volmat@foss.st.com, 
-	andrzej.hajda@intel.com, benjamin.mugnier@foss.st.com, 
-	dave.stevenson@raspberrypi.com, hansg@kernel.org, hverkuil@xs4all.nl, 
-	jacopo.mondi@ideasonboard.com, jonas@kwiboo.se, 
-	kieran.bingham@ideasonboard.com, khalasa@piap.pl, mani@kernel.org, 
-	m.felsch@pengutronix.de, martink@posteo.de, mattwmajewski@gmail.com, 
-	matthias.fend@emfend.at, mchehab@kernel.org, michael.riesch@collabora.com, 
-	naush@raspberrypi.com, nicholas@rothemail.net, nicolas.dufresne@collabora.com, 
-	paul.elder@ideasonboard.com, dan.scally@ideasonboard.com, pavel@kernel.org, 
-	petrcvekcz@gmail.com, rashanmu@gmail.com, ribalda@chromium.org, 
-	rmfrfs@gmail.com, zhengsq@rock-chips.com, slongerbeam@gmail.com, 
-	sylvain.petinot@foss.st.com, s.nawrocki@samsung.com, 
-	tomi.valkeinen@ideasonboard.com, umang.jain@ideasonboard.com, 
-	zhi.mao@mediatek.com, linux-kernel@vger.kernel.org, 
-	linux-media@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <175079732220.406.9335430223954818839.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 19, 2025 at 7:00=E2=80=AFPM Mehdi Djait <mehdi.djait@linux.inte=
-l.com> wrote:
->
-> Hello everyone,
->
-> Here is my v1 for the new helper v4l2_devm_sensor_clk_get()
->
-> Any testing of the patches is GREATLY APPRECIATED! Especially the two
-> drivers with the special ACPI case:
-> 1) OV8865
-> 2) OV2680
->
->
-> Background
-> ----------
->
-> A reference to the clock producer is not available to the kernel
-> in ACPI-based platforms but the sensor drivers still need them.
->
-> devm_clk_get() will return an error and the probe function will fail.
->
->
-> Solution
-> --------
->
-> Introduce a generic helper for v4l2 sensor drivers on both DT- and ACPI-b=
-ased
-> platforms.
->
-> This helper behaves the same as clk_get_optional() except where there is
-> no clock producer like in ACPI-based platforms.
->
-> For ACPI-based platforms the function will read the "clock-frequency"
-> ACPI _DSD property and register a fixed frequency clock with the frequenc=
-y
-> indicated in the property.
->
->
-> Solution for special ACPI case
-> ------------------------------
->
-> This function also handles the special ACPI-based system case where:
->
-> 1) The clock-frequency _DSD property is present.
-> 2) A reference to the clock producer is present, where the clock is provi=
-ded
-> by a camera sensor PMIC driver (e.g. int3472/tps68470.c)
->
-> In this case try to set the clock-frequency value to the provided clock.
->
->
-> RFC History
-> -----------
->
-> RFC v4 -> RFC v5:
-> Suggested by Arnd Bergmann:
->         - removed IS_REACHABLE(CONFIG_COMMON_CLK). IS_REACHABLE() is actu=
-ally
->         discouraged [1]. COFIG_COMMON_CLK is a bool, so IS_ENABLED() will=
- be the
->         right solution here
-> Suggested by Hans de Goede:
->         - added handling for the special ACPI-based system case, where
->           both a reference to the clock-provider and the _DSD
->           clock-frequency are present.
->         - updated the function's kernel-doc and the commit msg
->           to mention this special case.
-> Link RFC v4: https://lore.kernel.org/linux-media/20250321130329.342236-1-=
-mehdi.djait@linux.intel.com/
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/c=
-ommit/Documentation/kbuild/kconfig-language.rst?h=3Dnext-20250513&id=3D700b=
-d25bd4f47a0f4e02e0a25dde05f1a6b16eea
->
-> RFC v3 -> RFC v4:
-> Suggested by Laurent:
->         - removed the #ifdef to use IS_REACHABLE(CONFIG_COMMON_CLK)
->         - changed to kasprintf() to allocate the clk name when id is NULL=
- and
->           used the __free(kfree) scope-based cleanup helper when
->           defining the variable to hold the allocated name
-> Link v3: https://lore.kernel.org/linux-media/20250321093814.18159-1-mehdi=
-.djait@linux.intel.com/
->
-> RFC v2 -> RFC v3:
-> - Added #ifdef CONFIG_COMMON_CLK for the ACPI case
-> Link v2: https://lore.kernel.org/linux-media/20250310122305.209534-1-mehd=
-i.djait@linux.intel.com/
->
-> RFC v1 -> RFC v2:
-> Suggested by Sakari:
->     - removed clk_name
->     - removed the IS_ERR() check
->     - improved the kernel-doc comment and commit msg
-> Link v1: https://lore.kernel.org/linux-media/20250227092643.113939-1-mehd=
-i.djait@linux.intel.com
->
-> Mehdi Djait (55):
->   media: v4l2-common: Add a helper for obtaining the clock producer
->   Documentation: media: camera-sensor: Mention
->     v4l2_devm_sensor_clk_get() for obtaining the clock
->   media: i2c: imx219: Use the v4l2 helper for obtaining the clock
->   media: i2c: mt9p031: Use the v4l2 helper for obtaining the clock
->   media: i2c: ov2659: Use the v4l2 helper for obtaining the clock
->   media: i2c: ov2685: Use the v4l2 helper for obtaining the clock
->   media: i2c: ov5640: Use the v4l2 helper for obtaining the clock
->   media: i2c: ov5645: Use the v4l2 helper for obtaining the clock
+The following commit has been merged into the x86/urgent branch of tip:
 
-For all the above,
+Commit-ID:     fa7d0f83c5c4223a01598876352473cb3d3bd4d7
+Gitweb:        https://git.kernel.org/tip/fa7d0f83c5c4223a01598876352473cb3d3bd4d7
+Author:        Xin Li (Intel) <xin@zytor.com>
+AuthorDate:    Fri, 20 Jun 2025 16:15:04 -07:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Tue, 24 Jun 2025 13:15:52 -07:00
 
-Reviewed-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+x86/traps: Initialize DR7 by writing its architectural reset value
 
-Cheers,
-Prabhakar
+Initialize DR7 by writing its architectural reset value to always set
+bit 10, which is reserved to '1', when "clearing" DR7 so as not to
+trigger unanticipated behavior if said bit is ever unreserved, e.g. as
+a feature enabling flag with inverted polarity.
+
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Sean Christopherson <seanjc@google.com>
+Tested-by: Sohil Mehta <sohil.mehta@intel.com>
+Cc:stable@vger.kernel.org
+Link: https://lore.kernel.org/all/20250620231504.2676902-3-xin%40zytor.com
+---
+ arch/x86/include/asm/debugreg.h | 19 +++++++++++++++----
+ arch/x86/include/asm/kvm_host.h |  2 +-
+ arch/x86/kernel/cpu/common.c    |  2 +-
+ arch/x86/kernel/kgdb.c          |  2 +-
+ arch/x86/kernel/process_32.c    |  2 +-
+ arch/x86/kernel/process_64.c    |  2 +-
+ arch/x86/kvm/x86.c              |  4 ++--
+ 7 files changed, 22 insertions(+), 11 deletions(-)
+
+diff --git a/arch/x86/include/asm/debugreg.h b/arch/x86/include/asm/debugreg.h
+index 363110e..a2c1f2d 100644
+--- a/arch/x86/include/asm/debugreg.h
++++ b/arch/x86/include/asm/debugreg.h
+@@ -9,6 +9,14 @@
+ #include <asm/cpufeature.h>
+ #include <asm/msr.h>
+ 
++/*
++ * Define bits that are always set to 1 in DR7, only bit 10 is
++ * architecturally reserved to '1'.
++ *
++ * This is also the init/reset value for DR7.
++ */
++#define DR7_FIXED_1	0x00000400
++
+ DECLARE_PER_CPU(unsigned long, cpu_dr7);
+ 
+ #ifndef CONFIG_PARAVIRT_XXL
+@@ -100,8 +108,8 @@ static __always_inline void native_set_debugreg(int regno, unsigned long value)
+ 
+ static inline void hw_breakpoint_disable(void)
+ {
+-	/* Zero the control register for HW Breakpoint */
+-	set_debugreg(0UL, 7);
++	/* Reset the control register for HW Breakpoint */
++	set_debugreg(DR7_FIXED_1, 7);
+ 
+ 	/* Zero-out the individual HW breakpoint address registers */
+ 	set_debugreg(0UL, 0);
+@@ -125,9 +133,12 @@ static __always_inline unsigned long local_db_save(void)
+ 		return 0;
+ 
+ 	get_debugreg(dr7, 7);
+-	dr7 &= ~0x400; /* architecturally set bit */
++
++	/* Architecturally set bit */
++	dr7 &= ~DR7_FIXED_1;
+ 	if (dr7)
+-		set_debugreg(0, 7);
++		set_debugreg(DR7_FIXED_1, 7);
++
+ 	/*
+ 	 * Ensure the compiler doesn't lower the above statements into
+ 	 * the critical section; disabling breakpoints late would not
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index b4a3919..639d9bc 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -31,6 +31,7 @@
+ 
+ #include <asm/apic.h>
+ #include <asm/pvclock-abi.h>
++#include <asm/debugreg.h>
+ #include <asm/desc.h>
+ #include <asm/mtrr.h>
+ #include <asm/msr-index.h>
+@@ -249,7 +250,6 @@ enum x86_intercept_stage;
+ #define DR7_BP_EN_MASK	0x000000ff
+ #define DR7_GE		(1 << 9)
+ #define DR7_GD		(1 << 13)
+-#define DR7_FIXED_1	0x00000400
+ #define DR7_VOLATILE	0xffff2bff
+ 
+ #define KVM_GUESTDBG_VALID_MASK \
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 0f6c280..27125e0 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -2246,7 +2246,7 @@ EXPORT_PER_CPU_SYMBOL(__stack_chk_guard);
+ static void initialize_debug_regs(void)
+ {
+ 	/* Control register first -- to make sure everything is disabled. */
+-	set_debugreg(0, 7);
++	set_debugreg(DR7_FIXED_1, 7);
+ 	set_debugreg(DR6_RESERVED, 6);
+ 	/* dr5 and dr4 don't exist */
+ 	set_debugreg(0, 3);
+diff --git a/arch/x86/kernel/kgdb.c b/arch/x86/kernel/kgdb.c
+index 102641f..8b1a973 100644
+--- a/arch/x86/kernel/kgdb.c
++++ b/arch/x86/kernel/kgdb.c
+@@ -385,7 +385,7 @@ static void kgdb_disable_hw_debug(struct pt_regs *regs)
+ 	struct perf_event *bp;
+ 
+ 	/* Disable hardware debugging while we are in kgdb: */
+-	set_debugreg(0UL, 7);
++	set_debugreg(DR7_FIXED_1, 7);
+ 	for (i = 0; i < HBP_NUM; i++) {
+ 		if (!breakinfo[i].enabled)
+ 			continue;
+diff --git a/arch/x86/kernel/process_32.c b/arch/x86/kernel/process_32.c
+index a10e180..3ef15c2 100644
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -93,7 +93,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode,
+ 
+ 	/* Only print out debug registers if they are in their non-default state. */
+ 	if ((d0 == 0) && (d1 == 0) && (d2 == 0) && (d3 == 0) &&
+-	    (d6 == DR6_RESERVED) && (d7 == 0x400))
++	    (d6 == DR6_RESERVED) && (d7 == DR7_FIXED_1))
+ 		return;
+ 
+ 	printk("%sDR0: %08lx DR1: %08lx DR2: %08lx DR3: %08lx\n",
+diff --git a/arch/x86/kernel/process_64.c b/arch/x86/kernel/process_64.c
+index 8d6cf25..b972bf7 100644
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -133,7 +133,7 @@ void __show_regs(struct pt_regs *regs, enum show_regs_mode mode,
+ 
+ 	/* Only print out debug registers if they are in their non-default state. */
+ 	if (!((d0 == 0) && (d1 == 0) && (d2 == 0) && (d3 == 0) &&
+-	    (d6 == DR6_RESERVED) && (d7 == 0x400))) {
++	    (d6 == DR6_RESERVED) && (d7 == DR7_FIXED_1))) {
+ 		printk("%sDR0: %016lx DR1: %016lx DR2: %016lx\n",
+ 		       log_lvl, d0, d1, d2);
+ 		printk("%sDR3: %016lx DR6: %016lx DR7: %016lx\n",
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index b58a74c..a9d992d 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -11035,7 +11035,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 
+ 	if (unlikely(vcpu->arch.switch_db_regs &&
+ 		     !(vcpu->arch.switch_db_regs & KVM_DEBUGREG_AUTO_SWITCH))) {
+-		set_debugreg(0, 7);
++		set_debugreg(DR7_FIXED_1, 7);
+ 		set_debugreg(vcpu->arch.eff_db[0], 0);
+ 		set_debugreg(vcpu->arch.eff_db[1], 1);
+ 		set_debugreg(vcpu->arch.eff_db[2], 2);
+@@ -11044,7 +11044,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
+ 		if (unlikely(vcpu->arch.switch_db_regs & KVM_DEBUGREG_WONT_EXIT))
+ 			kvm_x86_call(set_dr6)(vcpu, vcpu->arch.dr6);
+ 	} else if (unlikely(hw_breakpoint_active())) {
+-		set_debugreg(0, 7);
++		set_debugreg(DR7_FIXED_1, 7);
+ 	}
+ 
+ 	vcpu->arch.host_debugctl = get_debugctlmsr();
