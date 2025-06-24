@@ -1,83 +1,119 @@
-Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A10B2E2EE2
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:05:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B4E223DE1
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:07:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750791917; cv=none; b=TszEIaY8q69ltHPX4KLQxPJ0GUeoEJynd2PDKKCiEq1TxKMd6RNf0QTO/7f6JcQktqrZgPoxHr6jmLfJngu5pgMwszhnhx5YBtrwKd01XaJ3fxfwgR2diibIlge1Xfvy/OGJugFcwtbsGNrm+Xia5a6Qxfo9jkeNXyRRrtSXnM8=
+	t=1750792078; cv=none; b=MbjOfRInIDxUqJPjVIjRwn8dUT0T3UhrKQTHUxKMQu+ybZrZ1Qq/oibPcQz+ZDKr/EoqjZJkoIvpRXiOjYD9TPlHrRHUhL81g8IsX2D3UgsS5J9UE3MUwKkKCOHxHOR8iATMTRsT5l8ptnCvGFSMnqAAdezR4p/sqj5GNr6SEaA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750791917; c=relaxed/simple;
-	bh=n3gPP5ter8z/G2UK+N8u5iPsNH1l9p6GeoNFT2fHCLI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=umB5ZsfO/evaiEPpSt4beRn0idedAdGrU1FqENdMJQzsteHzKHDRulr8xhoHpRi8U26D6wa6dHwjHVG4E3pgtSxQYkodHKGm03si2a860kpIWOkoRi8swpqHXa2w2B9bnwOZTuPKi8jvqnhV5F8C1NgQ9qP0P/h4acDxe/Lumnw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=UQQwoqXE; arc=none smtp.client-ip=185.125.25.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1750792078; c=relaxed/simple;
+	bh=sxIRZ7U7XYll/So+u7OsleqjjWxUynavdKFiDTxCkKU=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:Content-Type; b=kkHkTIn9w1BMChzgLke5tqszPf6x+rrtwaJFX+jJiADTnxpyvMngL+Wa3AxpEmSaA2hgaUMpMo6D8p2P3VOXPRsZPx37UHGGTpokKJOA6x4h5cbnoEetQj9Gw8r6ZABz9cYkJZs+xys86zrCryfK23K0qEcvmtQsygc46Ipv+1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=kquHlrsy; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="UQQwoqXE"
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bRYn45ytMzV6v;
-	Tue, 24 Jun 2025 20:46:00 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1750790760;
-	bh=u1rRYMTWI2GRDd2TE9wM30VWfP4sJX0NGJS6BmSAJtM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UQQwoqXEpxtEJCOHOk2/X9CWB1KzMUyxiRIvB/4YzrwwoneL5tl9zyvuzpwFXI361
-	 sLM702qxP1UsO/Y9b+ljbx52e28Loed5fXRuzmGrjQnGZnOVhlTlHfKrzjGq1IA9cu
-	 ML8DLRd9DdBy5QQhRjKWspMBAf7cHbjjAxG3NIr4=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bRYn358gbzMBy;
-	Tue, 24 Jun 2025 20:45:59 +0200 (CEST)
-Date: Tue, 24 Jun 2025 20:45:58 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Song Liu <song@kernel.org>
-Cc: bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, brauner@kernel.org, 
-	kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org, 
-	daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	kpsingh@kernel.org, mattbobrowski@google.com, m@maowtm.org, neil@brown.name, 
-	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
-Subject: Re: [PATCH v5 bpf-next 0/5] bpf path iterator
-Message-ID: <20250624.xahShi0iCh7t@digikod.net>
-References: <20250617061116.3681325-1-song@kernel.org>
- <CAPhsuW5uu8cOYJWJ3Gne+ixpiWVAby1hZOnUgsXcFASEhV4Xhg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="kquHlrsy"
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60c4521ae2cso620577a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:07:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jacekk.info; s=g2024; t=1750792074; x=1751396874; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-language:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eJQJ0Vu8gTyCcrO4fPQFn2fQBjqLwI2YwZex6LvwDks=;
+        b=kquHlrsyZNigQeEcwCrzO0nX88AcfO9ed6AGqBtxnCtCaQdu9XbkrUbXTzJOH+YTOS
+         rvmXRTYESsAVyhKA9eUAZN8mL1DeVAMo2UH55Npb2UZxCH+QRsPd7Gmvbj4DtWuP3EzC
+         VPhyYYIJNVqemC7PYEGAd+jxhvBnYoEPRxE7rrI1ffTXIrJ4rdD9wnCseCLnOLe+EIai
+         6HdRDcR4DWLg3GQGApNGm0WpWj6Vqxwy0IqIFYZ2YF8hw4QzLXVEKf5dTZdMK87jFO/a
+         w5tQg0O19hr01r0DjnVHg2sNXleGpX89WwEdbbK3kDZd6XBao+64D6ekDhVKoIHMpxZH
+         afgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750792074; x=1751396874;
+        h=content-transfer-encoding:content-language:cc:to:subject:user-agent
+         :mime-version:date:message-id:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eJQJ0Vu8gTyCcrO4fPQFn2fQBjqLwI2YwZex6LvwDks=;
+        b=QcYzSmVAax+W3rcIYqpQEaCtR6DhYnKLvoDC0zg8Rr98LiRhr/BYHwFfkYfi4secMg
+         28rmpGLy/oI1fHchth6+JX/XR/QPZYbRea/ALrgYrMLxWqSRZw/nICIuiBJpuEs3oEMd
+         /osgo4fRam23AWwhFRkGhRzpuGjxw2ZSWfmIdtC9wqjfW6XqBTk3hb6rZjj6r3sPzw0X
+         vs/tZ+bNyJvnrLR6Nogk/S0hO7IQIlDUQJQ6qSzy4UYT6zt9O25iI1FWh6c57+6YwRlC
+         GWwxT91f5ZEZb/LKwig93vm6mFtyNQ7U+Btp7zZr5S3voIaUOYN7POLa2eW2PXcem25f
+         uzzA==
+X-Forwarded-Encrypted: i=1; AJvYcCXeRqR4ivuPDTyaH+5uX15JSAFSq//i1y/fNk6hFXyJvtQXkMxKEtY2Xex1lPCxYTuYtTsY0NjKj9SsiCY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk4TLM+mbsWAX3mHWYirZFE/o25S3LkZuotmdPICC+vZqEygKW
+	l83dR8MNfv10tCjFjmgSpkWHgOFB+22IpNEem94s6sTCgGjN/3xVVEz2DiolpyIj1A==
+X-Gm-Gg: ASbGnctfsm/FYYA1Asw/foc8U3L+5xfk3sRvdm9RU4lxTMje3w1s6+wRAjaMu1toWh0
+	4LASdZV41Nh2tfcOJVx5THmvkPFlXp23g29D9QdiZwHnuqamCrvgg2pTqbgmXuS6h+zs7GqoL5z
+	hU+cqR6tVmlbqCsXgvNkny8hh4pGXrnLgMgxXZ4KJI6UDoBb4PNNrnY7ULmIMRdgrud+Q94ajH8
+	IzgGyqCLIa93kW22+Su4d91rFWMzvvRrGTAwlaVUs3Q0ogdRs6e73NqfDPMKUJxfXfcgcBm4LiN
+	b+CYv26tCrO/suPsduXJq4BJJGARollAguVrnBXkmR6CIKQ4/qVx3um+Pz2HMIVzxgW2p7P+imI
+	=
+X-Google-Smtp-Source: AGHT+IGdso6nJiUlE/UjdgGSmYH2YhJqVjspC86fwFUyasVpFQXUKxKTYUHp5V8lCpYT3UTfmnZPNA==
+X-Received: by 2002:a17:906:33d0:b0:ae0:66e8:9ddb with SMTP id a640c23a62f3a-ae0be86cb38mr41522566b.19.1750792073935;
+        Tue, 24 Jun 2025 12:07:53 -0700 (PDT)
+Received: from [192.168.0.114] ([91.196.212.106])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0b7f473b0sm63844466b.6.2025.06.24.12.07.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 12:07:53 -0700 (PDT)
+From: Jacek Kowalski <jacek@jacekk.info>
+X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
+Message-ID: <91030e0c-f55b-4b50-8265-2341dd515198@jacekk.info>
+Date: Tue, 24 Jun 2025 21:07:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW5uu8cOYJWJ3Gne+ixpiWVAby1hZOnUgsXcFASEhV4Xhg@mail.gmail.com>
-X-Infomaniak-Routing: alpha
+User-Agent: Mozilla Thunderbird
+Subject: [PATCH v3 1/2] e1000e: disregard NVM checksum on tgp when valid
+ checksum mask is not set
+To: Tony Nguyen <anthony.l.nguyen@intel.com>,
+ Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+ Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jun 20, 2025 at 02:59:17PM -0700, Song Liu wrote:
-> Hi Christian, Mickaël, and folks,
-> 
-> Could you please share your comments on this version? Does this
-> look sane?
+As described by Vitaly Lifshits:
 
-This looks good to me but we need to know what is the acceptable next
-step to support RCU.  If we can go with another _rcu helper, I'm good
-with the current approach, otherwise we need to figure out a way to
-leverage the current helper to make it compatible with callers being in
-a RCU read-side critical section while leveraging safe path walk (i.e.
-several calls to path_walk_parent).
+> Starting from Tiger Lake, LAN NVM is locked for writes by SW, so the
+> driver cannot perform checksum validation and correction. This means
+> that all NVM images must leave the factory with correct checksum and
+> checksum valid bit set. Since Tiger Lake devices were the first to have
+> this lock, some systems in the field did not meet this requirement.
+> Therefore, for these transitional devices we skip checksum update and
+> verification, if the valid bit is not set.
 
-> 
-> Thanks,
-> Song
-> 
-> On Mon, Jun 16, 2025 at 11:11 PM Song Liu <song@kernel.org> wrote:
-> >
-> > In security use cases, it is common to apply rules to VFS subtrees.
-> > However, filtering files in a subtree is not straightforward [1].
-> >
-> > One solution to this problem is to start from a path and walk up the VFS
-> > tree (towards the root). Among in-tree LSMs, Landlock uses this solution.
-> >
-> 
-> [...]
-> 
+Signed-off-by: Jacek Kowalski <Jacek@jacekk.info>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Reviewed-by: Vitaly Lifshits <vitaly.lifshits@intel.com>
+Fixes: 4051f68318ca9 ("e1000e: Do not take care about recovery NVM checksum")
+Cc: stable@vger.kernel.org
+---
+v1 -> v2: updated patch description
+v2 -> v3: no changes
+ drivers/net/ethernet/intel/e1000e/ich8lan.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/net/ethernet/intel/e1000e/ich8lan.c b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+index 364378133526..df4e7d781cb1 100644
+--- a/drivers/net/ethernet/intel/e1000e/ich8lan.c
++++ b/drivers/net/ethernet/intel/e1000e/ich8lan.c
+@@ -4274,6 +4274,8 @@ static s32 e1000_validate_nvm_checksum_ich8lan(struct e1000_hw *hw)
+ 			ret_val = e1000e_update_nvm_checksum(hw);
+ 			if (ret_val)
+ 				return ret_val;
++		} else if (hw->mac.type == e1000_pch_tgp) {
++			return 0;
+ 		}
+ 	}
+ 
+-- 
+2.47.2
