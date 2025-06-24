@@ -1,114 +1,71 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6326A283CA0;
-	Tue, 24 Jun 2025 10:47:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4DF27A90F;
+	Tue, 24 Jun 2025 10:47:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750762032; cv=none; b=sn02BOuYrpMiRp4fNaFeT0lN875H8sM9bLjzkMIe9bkqUJSYyDDrsxsygNBRrcdAk0j/8gmc9a08WtqEcaaGiFNFSDrclH3BrA3cbUq4amEoyz6UJMotuwdBOgDiCY1FJWmnh45m8KapKMuZy2Zxl1RVIuPbknzY3pf5JTVMqzg=
+	t=1750762060; cv=none; b=c6FT1pUBaQEoek3wqeGnMX/LCjvF37SZGV2YS7ChcwOLmLuCTMmr7Ozgbz0chSU/NZ+3h+5ikCHn7Qi5ugapsY2x+SybVP+wTRDZuDy1zkGvx2UNOhhrvEUPxgCjzSFvpT+S5cI5DA9Uyiv0U86saF5HlKlWO0lDutU7UiCRVy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750762032; c=relaxed/simple;
-	bh=q9YNLRyxz8U7WyFP8P37wvG+tQymx7Vu2sHvl8qoV8A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PO+4GxrBcy4eo0Uhoj9zvB9vltYbUH4SWVpv8S6TFUaQi9rBauhOgtw0KBPX7qQfOA7hF0t5HL2P9SulQ8sg7Y3b82dSHO9hLEiV6P0jPLnSsO9V++xLSOfxINFuTU5FMFcx8w0a9Sq+2wnGzDSdo+ShJf6FDgRVUqvYwxXDZvI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E8beRxSP; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750762060; c=relaxed/simple;
+	bh=oDvB194LUMC8lVLAW2ksZ5zyAStqluCRp9yUkhSN6vY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lXq6gxGG1pG3HVwgOOjo2FsaIKPBnXmbBE2zwlEpx33r3R+jx+a0h9CIQNs1r4cHsaOMBf3jAYhF6hjQjNpXEkdvCzsnvg35VoT61t7unWyKkU2s+sY3XoVkzt+uHIP3VGSwijgmTF46k2TXAL0p93S47vcnIbAjbX2L4o+sai8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNkLeoWX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E8beRxSP"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-234bfe37cccso3195515ad.0;
-        Tue, 24 Jun 2025 03:47:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750762030; x=1751366830; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q9YNLRyxz8U7WyFP8P37wvG+tQymx7Vu2sHvl8qoV8A=;
-        b=E8beRxSPQ6d2P9yLyUkbMginVI2cNla0l72mrBuipYASdmVRhYAar5NyyFi4xm1+BY
-         EI37OHtbXETIa7oQ8PK1at4mDQPjlWFAL3/a7TqlyAn6Xz2uSv1RQD8/o+KJt3Iilbix
-         Q4DVyKdaZTBmQiAxC3fj0J4aME5jmTbxrGb72OXyIIcDx2GrljvT3yMq1arNhZQsFh9K
-         jadIUczfObseyY0ggoKiBqd6OGMpOE2ilnDmCufoG0sj/ayZ0RJYPZu5tIJ152Xv9El8
-         1dHD+QAWenhnZL10PsMX1sNIwwL1yKwivXE+Cp08ZZljSgnkTzDkkuZ1pa8qHnKl9nCZ
-         OmtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750762030; x=1751366830;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q9YNLRyxz8U7WyFP8P37wvG+tQymx7Vu2sHvl8qoV8A=;
-        b=fGe/QbB9srdX9D0RG2XoNZb0+j9XfJN21TDqDvzitd/vYf0CHR9z/XOiqlV1aoSjRx
-         KPVU84PgF7MDNJPKZ2b853mfU25GPooGl9+xeDwCxOv1WODkIa13jO4t7O7+wrE5dqsP
-         7HHz6pMV9c8sgdBufy21/J+yDG3qzskoVFTL/NaHEmFEdyrHhG8kLknLl1my3nLfBaxo
-         XfbPNTjSUNaZwkAqbVMnY/u2frRUbcxERZbIz1tjFO8ibDyaP8adpuCDHYD1OT1zQ+pu
-         jwegR9L135WA4cn9gsOf3KJyaKHcRS8ziTEOset93wGzLWhTeR11dWjtgQJSfH8rwLOo
-         fLjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOFjFbyH5+B4bUK/Qzf9t+e9DkURSp2vxX79zjWOtteSrxJQylimS/3rA7pXm7mnL9AsG5fttl2m61Pv4=@vger.kernel.org, AJvYcCUiW+Ah6bkkjsbXCbG33VnYDMFb2z9fCiIsDrtIddv/l4hC+Fjdi/dyKl3cKmwKTR9L67a/pUTKbJaasoMaDCWl@vger.kernel.org
-X-Gm-Message-State: AOJu0YwwyG+U7wR9qQcUZcecazrvtwBcD4F6KDsznKiQftEUHw1A01gQ
-	+IUdz6EzINkwiaML1s7rTGQzMtD+aScOaqPbYx+kkzq0jfae2iv8NApc
-X-Gm-Gg: ASbGncvSJ8OS3u7+yK4gIUNqvT8T+qcwhsU+PEz5nNfE8BHYvnP8k4oJzQ34O0NX2Oi
-	ezhcQ94xpHS0KhGvrDqYVxw+sfbGdWZAV3KtbGGilqJhldhHoJSuB7RdCqMYhDt+nB90EhWDlJr
-	gsG0bULzRdchkarSSzeWIFIZwc1bwBIkGMdEx3fg1NecCr3YEAzeIC0UAjG534ykkZLey+FchFa
-	SXlw5X1GEZertsW8bcKkYR7Z04QZadkFjl0HAh7UuZLU79vjPuYofjurJFI6RBbQgnsOLc72wi1
-	TGdwW22BmzyVY/VnpPWuKWou2UJWaV5D9S9VObkUdcumFN/yb1hEs5pV3VxqkHbwLBUGYNtPgx7
-	NJzoN5A==
-X-Google-Smtp-Source: AGHT+IEAuZlnLUM/Oq3ydavrFM6HAFPj4rQDIaVo8ArRUvugCEeLHAbS8fik1d5nYG9tGqisHGfz/g==
-X-Received: by 2002:a17:902:e54a:b0:234:f6ba:e681 with SMTP id d9443c01a7336-237d97628bfmr283468345ad.5.1750762030536;
-        Tue, 24 Jun 2025 03:47:10 -0700 (PDT)
-Received: from DESKTOP-GIED850.localdomain ([111.202.167.6])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d860fb58sm102904785ad.99.2025.06.24.03.47.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 03:47:10 -0700 (PDT)
-From: wang lian <lianux.mm@gmail.com>
-To: lorenzo.stoakes@oracle.com
-Cc: Liam.Howlett@oracle.com,
-	akpm@linux-foundation.org,
-	brauner@kernel.org,
-	david@redhat.com,
-	gkwang@linx-info.com,
-	jannh@google.com,
-	lianux.mm@gmail.com,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-mm@kvack.org,
-	p1ucky0923@gmail.com,
-	ryncsn@gmail.com,
-	shuah@kernel.org,
-	sj@kernel.org,
-	vbabka@suse.cz,
-	zijing.zhang@proton.me
-Subject: Re: [PATCH] selftests: add basic test for MADV_POPULATE_(READ|WRITE)
-Date: Tue, 24 Jun 2025 18:46:54 +0800
-Message-ID: <20250624104654.4418-1-lianux.mm@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <4af59ef8-bbea-48f7-a207-8a92284fc34d@lucifer.local>
-References: <4af59ef8-bbea-48f7-a207-8a92284fc34d@lucifer.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNkLeoWX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63D08C4CEE3;
+	Tue, 24 Jun 2025 10:47:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750762060;
+	bh=oDvB194LUMC8lVLAW2ksZ5zyAStqluCRp9yUkhSN6vY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tNkLeoWX5Brsg8jmefTS3BhKcP4yHwsVQV97uEXhkEb99wKmDEdEQGpMou65IrWyu
+	 KqoUeqBOgC0Z6QzvUy1PBMlW+Ntvcp2NHHW9MJTp3fTslJf805EOp+gzEiy3M85oHF
+	 oU7UHxjfWPg0LQ9W3qCu4aUYySjtcEkrtPXqRWaAQAZHaowQ/ISL2oLkacMOhTPoYz
+	 yoY0e4y08Fup2HHS0nDxD99SY2Dbk4SErlKvXcmW2FZZ7qb/GLVT8grCbAAGdww9qd
+	 NfRBcwKsrLbTAXv6UJCGQ6OGKCt6lM3Q5H/1HzDsOt7w0QNvhYTgjZY74+iTH2P42+
+	 YfVw58go9PkAg==
+Date: Tue, 24 Jun 2025 11:47:35 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Woojung Huh <woojung.huh@microchip.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	Russell King <rmk+kernel@armlinux.org.uk>,
+	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
+	Rengarajan Sundararajan <Rengarajan.S@microchip.com>,
+	kernel@pengutronix.de, linux-kernel@vger.kernel.org,
+	netdev@vger.kernel.org, UNGLinuxDriver@microchip.com,
+	Phil Elwell <phil@raspberrypi.org>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>
+Subject: Re: [PATCH net-next v1 1/1] net: usb: lan78xx: annotate checksum
+ assignment to silence sparse warnings
+Message-ID: <20250624104735.GD8266@horms.kernel.org>
+References: <20250620084618.1857662-1-o.rempel@pengutronix.de>
+ <20250623164913.474be2b3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623164913.474be2b3@kernel.org>
 
-On Mon, Jun 24, 2025 at 00:00:00 +0000, Lorenzo Stoakes wrote:
-> Sorry if it seemed harsh, I appreciate the first patch can be difficult
-> (I still remember mine!) but hopefully it's clear the focus is on
-> getting things right technically and this is all :)
->
-> Overall I think something more like a generalised test of
-> process_madvise() behaviour would be most valuable, as David suggested?
+On Mon, Jun 23, 2025 at 04:49:13PM -0700, Jakub Kicinski wrote:
+> On Fri, 20 Jun 2025 10:46:18 +0200 Oleksij Rempel wrote:
+> > -		skb->csum = ntohs((u16)(rx_cmd_b >> RX_CMD_B_CSUM_SHIFT_));
+> > +		__be16 csum_raw;
+> > +
+> > +		csum_raw = (__force __be16)(rx_cmd_b >> RX_CMD_B_CSUM_SHIFT_);
+> > +		skb->csum = (__force __wsum)ntohs(csum_raw);
+> 
+> You can avoid the __force __be16 if you switch the variable to be u16
+> and then htons instead of ntohs
 
-Thank you for your helpful and constructive feedback.
-
-I understand that getting things right technically is critical, and I
-really appreciate your guidance and encouragement as I work on my
-first patch.
-
-I will revise the patch based on the suggestion to generalize the test
-for `process_madvise()` behavior, as David proposed.
-
-Thanks again to everyone for the insightful comments and support!
-
-Best regards,
-wang lian
-
+Ok, now I am confused.
+What is the endian of these integers?
