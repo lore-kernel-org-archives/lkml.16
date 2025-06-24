@@ -1,182 +1,117 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from out28-125.mail.aliyun.com (out28-125.mail.aliyun.com [115.124.28.125])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD24227E8F;
-	Tue, 24 Jun 2025 07:03:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33C75372;
+	Tue, 24 Jun 2025 07:03:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.28.125
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750748590; cv=none; b=HW9XjA1Jvw8FMkwKqNFMbhN+bp8aXFO0f9fPs2n5kiApiQRC1E97xO2AGaCLc7kKeBk2Uv0d5oQ58okZzD7VE+nZN/1Mr75blMXRq/0kN9BhePD1h9DKy15y4kn6MBLLAv88xctNsChr6RHS7WkSHiQkZCvA2tdiee+5QItpSAw=
+	t=1750748601; cv=none; b=rUNAfw+VQLF5dU/lI3d5k8dPjEaQ95qfe/tuF37j40EELomj8vhH32leU+ccia96GZpDxXiK5l09GK5MCoAyoTu6NeD+YYhwNFgeN8HkcuchJk4oHT3PIpsJvRnSsI7BOHG4OYyKi0iBk+SpWuZOPhn0orRhzbWu6bINnznemUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750748590; c=relaxed/simple;
-	bh=F5wbZ0hJ0JoYIWdMRRqSqMD0TydLNMWlujeCLdfcppU=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=rqoI2G77VI+rH0TqjIQ0YAEDzmVu5T7vl4BH+UFk3rUsx39Vw/r2rp7Aep/IWoYHh9KQEezQcVJfFQ53vZfgU+aRzLlPlumQ2yn13fapWksIpXcUPG4A3/AV/F/qj9tX39SZZ0wE+xENhiqYeixqtoYT9o3Eongro0eR70v6rVY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bRG990pWsz6DB68;
-	Tue, 24 Jun 2025 15:02:21 +0800 (CST)
-Received: from frapeml100007.china.huawei.com (unknown [7.182.85.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id E90FC1404A6;
-	Tue, 24 Jun 2025 15:03:04 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (7.182.85.71) by
- frapeml100007.china.huawei.com (7.182.85.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 24 Jun 2025 09:03:04 +0200
-Received: from frapeml500008.china.huawei.com ([7.182.85.71]) by
- frapeml500008.china.huawei.com ([7.182.85.71]) with mapi id 15.01.2507.039;
- Tue, 24 Jun 2025 09:03:04 +0200
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To: liulongfang <liulongfang@huawei.com>, "alex.williamson@redhat.com"
-	<alex.williamson@redhat.com>, "jgg@nvidia.com" <jgg@nvidia.com>, "Jonathan
- Cameron" <jonathan.cameron@huawei.com>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linuxarm@openeuler.org" <linuxarm@openeuler.org>
-Subject: RE: [PATCH v4 1/3] migration: update BAR space size
-Thread-Topic: [PATCH v4 1/3] migration: update BAR space size
-Thread-Index: AQHb2dGm67ktikNh8k6km+yGJfGW1bQR963A
-Date: Tue, 24 Jun 2025 07:03:04 +0000
-Message-ID: <3ec5ffdee2f64c74a82093c06612f59b@huawei.com>
-References: <20250610063251.27526-1-liulongfang@huawei.com>
- <20250610063251.27526-2-liulongfang@huawei.com>
-In-Reply-To: <20250610063251.27526-2-liulongfang@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1750748601; c=relaxed/simple;
+	bh=5yxFHUftbyV+RMCcFSunsXqR9/ZdNxpPFMQ7e3zC6zc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k1JoWR6hv5D5gRds6MtIuIZFUS47cUYNEvbhEUx6e9OrDpEKE/uuNvUZH8psCwcwevT607bYkBpXgY+R0DzDo0Bud95t9/o4eNEHHxFu4SEqtFOWjDXUwDx+4sxsihnm5NC76GdryKjHF4YXfgb2TdUJfa500pKaRd43W3ZqahI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com; spf=pass smtp.mailfrom=awinic.com; arc=none smtp.client-ip=115.124.28.125
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=awinic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=awinic.com
+Received: from ubuntu-VirtualBox..(mailfrom:wangweidong.a@awinic.com fp:SMTPD_---.dVKPy6z_1750748268 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Tue, 24 Jun 2025 14:57:50 +0800
+From: wangweidong.a@awinic.com
+To: broonie@kernel.org
+Cc: colin.i.king@gmail.com,
+	lgirdwood@gmail.com,
+	linux-kernel@vger.kernel.org,
+	linux-sound@vger.kernel.org,
+	perex@perex.cz,
+	thorsten.blum@linux.dev,
+	tiwai@suse.com,
+	u.kleine-koenig@baylibre.com,
+	wangweidong.a@awinic.com,
+	yijiangtao@awinic.com,
+	zhujun2@cmss.chinamobile.com
+Subject: Re: [PATCH V2] ASoC: codecs: Add calibration function to aw88399 chip
+Date: Tue, 24 Jun 2025 14:57:48 +0800
+Message-ID: <20250624065748.60509-1-wangweidong.a@awinic.com>
+X-Mailer: git-send-email 2.47.0
+In-Reply-To: <aFVgVTIe5oT0MkZy@finisterre.sirena.org.uk>
+References: <aFVgVTIe5oT0MkZy@finisterre.sirena.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-
-
-> -----Original Message-----
-> From: liulongfang <liulongfang@huawei.com>
-> Sent: Tuesday, June 10, 2025 7:33 AM
-> To: alex.williamson@redhat.com; jgg@nvidia.com; Shameerali Kolothum
-> Thodi <shameerali.kolothum.thodi@huawei.com>; Jonathan Cameron
-> <jonathan.cameron@huawei.com>
-> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
-> linuxarm@openeuler.org; liulongfang <liulongfang@huawei.com>
-> Subject: [PATCH v4 1/3] migration: update BAR space size
->=20
-> On the new hardware platform, the live migration configuration region
-> is moved from VF to PF. The VF's own configuration space is
-> restored to the complete 64KB, and there is no need to divide the
-> size of the BAR configuration space equally.
->=20
-> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
-> ---
->  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 36 ++++++++++++++-----
->  1 file changed, 27 insertions(+), 9 deletions(-)
->=20
-> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> index 2149f49aeec7..b16115f590fd 100644
-> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> @@ -1250,6 +1250,28 @@ static struct hisi_qm *hisi_acc_get_pf_qm(struct
-> pci_dev *pdev)
->  	return !IS_ERR(pf_qm) ? pf_qm : NULL;
->  }
->=20
-> +static size_t hisi_acc_get_resource_len(struct vfio_pci_core_device *vde=
-v,
-> +					unsigned int index)
-> +{
-> +	struct hisi_acc_vf_core_device *hisi_acc_vdev =3D
-> +			hisi_acc_drvdata(vdev->pdev);
-> +
-> +	/*
-> +	 * On the old HW_V3 device, the ACC VF device BAR2
-> +	 * region encompasses both functional register space
-> +	 * and migration control register space.
-> +	 * only the functional region should be report to Guest.
-> +	 *
-> +	 * On the new HW device, the migration control register
-> +	 * has been moved to the PF device BAR2 region.
-> +	 * The VF device BAR2 is entirely functional register space.
-> +	 */
-> +	if (hisi_acc_vdev->pf_qm->ver =3D=3D QM_HW_V3)
-> +		return (pci_resource_len(vdev->pdev, index) >> 1);
-> +
-> +	return pci_resource_len(vdev->pdev, index);
-> +}
-> +
->  static int hisi_acc_pci_rw_access_check(struct vfio_device *core_vdev,
->  					size_t count, loff_t *ppos,
->  					size_t *new_count)
-> @@ -1260,8 +1282,9 @@ static int hisi_acc_pci_rw_access_check(struct
-> vfio_device *core_vdev,
->=20
->  	if (index =3D=3D VFIO_PCI_BAR2_REGION_INDEX) {
->  		loff_t pos =3D *ppos & VFIO_PCI_OFFSET_MASK;
-> -		resource_size_t end =3D pci_resource_len(vdev->pdev, index) /
-> 2;
-> +		resource_size_t end;
->=20
-> +		end =3D hisi_acc_get_resource_len(vdev, index);
->  		/* Check if access is for migration control region */
->  		if (pos >=3D end)
->  			return -EINVAL;
-> @@ -1282,8 +1305,9 @@ static int hisi_acc_vfio_pci_mmap(struct
-> vfio_device *core_vdev,
->  	index =3D vma->vm_pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
->  	if (index =3D=3D VFIO_PCI_BAR2_REGION_INDEX) {
->  		u64 req_len, pgoff, req_start;
-> -		resource_size_t end =3D pci_resource_len(vdev->pdev, index) /
-> 2;
-> +		resource_size_t end;
->=20
-> +		end =3D PAGE_ALIGN(hisi_acc_get_resource_len(vdev, index));
-
-I think I have commented on this before. The above PAGE_ALIGN will change t=
-he=20
-behavior on HW_V3 with 64K PAGE_SIZE kernel. The end will become 64K which
-is not what we want on HW_V3. Could you please check that again.
-
-Thanks,
-Shameer
-
->  		req_len =3D vma->vm_end - vma->vm_start;
->  		pgoff =3D vma->vm_pgoff &
->  			((1U << (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
-> @@ -1330,7 +1354,6 @@ static long hisi_acc_vfio_pci_ioctl(struct
-> vfio_device *core_vdev, unsigned int
->  	if (cmd =3D=3D VFIO_DEVICE_GET_REGION_INFO) {
->  		struct vfio_pci_core_device *vdev =3D
->  			container_of(core_vdev, struct vfio_pci_core_device,
-> vdev);
-> -		struct pci_dev *pdev =3D vdev->pdev;
->  		struct vfio_region_info info;
->  		unsigned long minsz;
->=20
-> @@ -1345,12 +1368,7 @@ static long hisi_acc_vfio_pci_ioctl(struct
-> vfio_device *core_vdev, unsigned int
->  		if (info.index =3D=3D VFIO_PCI_BAR2_REGION_INDEX) {
->  			info.offset =3D
-> VFIO_PCI_INDEX_TO_OFFSET(info.index);
->=20
-> -			/*
-> -			 * ACC VF dev BAR2 region consists of both
-> functional
-> -			 * register space and migration control register
-> space.
-> -			 * Report only the functional region to Guest.
-> -			 */
-> -			info.size =3D pci_resource_len(pdev, info.index) / 2;
-> +			info.size =3D hisi_acc_get_resource_len(vdev,
-> info.index);
->=20
->  			info.flags =3D VFIO_REGION_INFO_FLAG_READ |
->  					VFIO_REGION_INFO_FLAG_WRITE |
-> --
-> 2.24.0
-
+Thank you very much for your review=0D
+=0D
+On Fri, Jun 20, 2025 at 14:21:25PM +0100, broonie@kernel.org wrote:=0D
+> On Fri, Jun 20, 2025 at 07:08:44PM +0800, wangweidong.a@awinic.com wrote:=
+=0D
+=0D
+>> +static int aw_cali_svc_dev_cali_re(struct aw88399 *aw88399)=0D
+>> +{=0D
+>> +	struct aw_device *aw_dev =3D aw88399->aw_pa;=0D
+>> +	int ret;=0D
+>> +=0D
+>> +	mutex_lock(&aw88399->lock);=0D
+>> +	aw_cali_svc_run_mute(aw_dev, CALI_RESULT_NORMAL);=0D
+>> +=0D
+>> +	ret =3D aw_cali_svc_cali_re_mode_enable(aw_dev, true);=0D
+>> +	if (ret) {=0D
+>> +		dev_err(aw_dev->dev, "start cali re failed\n");=0D
+>> +		goto re_mode_err;=0D
+>> +	}=0D
+>> +=0D
+>> +	msleep(3000);=0D
+=0D
+> Callibration takes 3s which is a fairly long time.=0D
+=0D
+This time is because the chip needs to wait for =0D
+the data to stabilise during calibration =0D
+in order to ensure more accurate calibration values.=0D
+I will reduce this time to 1s.=0D
+=0D
+>> @@ -1588,6 +1968,13 @@ static int aw88399_re_get(struct snd_kcontrol *kc=
+ontrol,=0D
+>>  	struct snd_soc_component *codec =3D snd_soc_kcontrol_component(kcontro=
+l);=0D
+>>  	struct aw88399 *aw88399 =3D snd_soc_component_get_drvdata(codec);=0D
+>>  	struct aw_device *aw_dev =3D aw88399->aw_pa;=0D
+>> +	int ret;=0D
+>> +=0D
+>> +	if (aw_dev->status) {=0D
+>> +		ret =3D aw_cali_svc_dev_cali_re(aw88399);=0D
+>> +		if (ret)=0D
+>> +			return -EPERM;=0D
+>> +	}=0D
+=0D
+> AFAICT it's triggered if the device is powered on and userspace reads=0D
+> the control that reports the callibration value.  That seems like it's a=
+=0D
+> bit too easy to trigger - something like running amixer would read the=0D
+> control and lock the CODEC up for 3s, and I'm guessing that if the CODEC=
+=0D
+> is powered due to audio playing that'd result in disruption to users=0D
+> listening to that audio.  I think it'd be better to have another write=0D
+> only control (or volatile one which reads 0 always) that triggers the=0D
+> calibration when userspace writes to it ("Calibrate Now Switch" or=0D
+> something).  Since the calibration is also directly writable from=0D
+> userspace we can't just use a write to this control.  In general it=0D
+> should always be possible to read controls without disrupting anything=0D
+> else that's going on.=0D
+=0D
+> BTW since the calibration is dynamically done the control should be=0D
+> flagged as volatile.=0D
+I will make the following two changes:=0D
+1.Add an additional "Calib Switch" Kcontrol to =0D
+  indicate whether calibration operations can be performed.=0D
+2.Add "Trigger Calib" to Kcontrol. =0D
+  This Kcontrol is write-only. When calibration is allowed,=0D
+  perform the calibration operation.=0D
+=0D
+Thank you again.=0D
+=0D
+Best regards,=0D
+Weidong Wang=0D
