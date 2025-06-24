@@ -1,143 +1,109 @@
-Received: from mx.treblig.org (mx.treblig.org [46.235.229.95])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE701EEA5D
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.229.95
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57D801F3B9E
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750763862; cv=none; b=VkIcmg9337Pk3TZr+FBTA0UOQt61eaEsesPdC+vb9OJUZzVO9n0gYsgKyG9OUP8Zr6WvatbvQMLipGvNtBDC7RBB+QNa8mqdjTssDPvGzTSisChqXyt9bpV1Fg8yZOyVo1w1lYLEzR54eJNjNTydk1CmYvICKf32cNCJoHH6M1g=
+	t=1750763919; cv=none; b=cTVHHbi9vI3yFKRX8fZy3HINNx4LM+6KzjShPJX2xI+vQqpQWZA8nT3PJb4A/3hZuV3GKnXt3Mwtc8vVZgVRy6C4QBugKvozpU4i66elbyp8SpB/ZxwpxoicntRom2CsABY8O5B8SrMv/wyjCuKi3ZS+YQJG7ygRWiPizoH+0Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750763862; c=relaxed/simple;
-	bh=TWCQSXlqS0oYCQKX5vXnBkXZqPX6pMuj8xu6/6UTIFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jx3uF4orJf+lysdlNNaC+Rq1ISawk2jOgs3jhnPUfLQOsFgnVenYI4W6rqCKEeIJyzBqI+v5m8QBmscWNXMQaFfSkhOZXQe3zn1NYw10G13/fcAKQCeyiMaF5amZZOoAW/tLfm+04tu3/BS9KJ2b0xeVJ9L8oe6MP/99G7eX1rg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org; spf=pass smtp.mailfrom=treblig.org; dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b=ZhCFvAHr; arc=none smtp.client-ip=46.235.229.95
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=treblig.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=treblig.org
+	s=arc-20240116; t=1750763919; c=relaxed/simple;
+	bh=1ap+QjOY8hp1HnLTsr/YMx4rqJ5F5CXHENt+R0rpaes=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gFd8bE2Gh8I4gVdCJOXsn2WunjuWb2t2qXmlNg4HZztfZogckdf6Xh/mShBlNY2QbKQjBliFfhVaF9VqmHXwAMAljLScyl11Ky2wYqK41DRW8c+yCCBFEyHsZauTscrMJzT3J7NmjWQHghGnnzVKO8sT2aLkX6BT7X4G2pkUAbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=maM7tyZJ; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=treblig.org header.i=@treblig.org header.b="ZhCFvAHr"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=treblig.org
-	; s=bytemarkmx; h=Content-Type:MIME-Version:Message-ID:Subject:From:Date:From
-	:Subject; bh=4w0jGmjYB58yoIcY+MBPOFLj0Xm9wtH0W0ob4h2UOKs=; b=ZhCFvAHrLOPV6kmO
-	BHLy7nWmyO8bsvA1UIQ+DCS3bieKWoaV9A5aJuNy/LcaALgvBqLoehhNMjZjWP3K+3VIV0K+Ojt5h
-	LgdhIqNq9UwJuwK26PEt9fITCiWIlHfLSfLoBhI+8vwxyFGiCOHdZB7Nlhuyn1Hp4uZK7uNCOT7be
-	BVY/8Sg95OJMNV+2QBr9XTcv1WRs98rKD/Tiemj/fDrmuD57R6bCjzr76hGzx/P8e8kacOFqya0lo
-	fFbLkcz4e+4+fL+N0jtwCoxxKa96YA0aVkv884ddNaE23N/B66ITji84Z923tJughN0I6vx5J+WNO
-	/OSFVju4YLUCV4j2PA==;
-Received: from dg by mx.treblig.org with local (Exim 4.96)
-	(envelope-from <dg@treblig.org>)
-	id 1uU1eW-00Ba2f-2w;
-	Tue, 24 Jun 2025 11:17:24 +0000
-Date: Tue, 24 Jun 2025 11:17:24 +0000
-From: "Dr. David Alan Gilbert" <linux@treblig.org>
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: alexander.usyskin@intel.com, arnd@arndb.de, gregkh@linuxfoundation.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="maM7tyZJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750763918; x=1782299918;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1ap+QjOY8hp1HnLTsr/YMx4rqJ5F5CXHENt+R0rpaes=;
+  b=maM7tyZJa8fupRGfLc9gGQiX/YgaNbr8tZR3XW8oY9K525HG25IUFWIm
+   Bvxi4d3cjMYjrH5NVJtj2pZCKq4LqHly7JGaYFmJJ2o7Zl+KY2f48XVwo
+   IdlKSWssPnn8PA4BVcnn7eEcjqRyNQJRSk6A1uNFWXF8WwHM5flXgAQzz
+   aFuPfR8dSPOEFe2IZZnMYmvdpW7Qwk/XtRXc+icyuFEny37UX27A208wj
+   n5M8Cohs+olkQZX8shcH/3Z52AuBbi8PxDTOfQ53BEQdOGfB4h7m0BHOP
+   pZy119u8lIP24admnkHE0M3BCnZsNWAsvC4J+f3J6gYWap8T1PAoPQnGC
+   g==;
+X-CSE-ConnectionGUID: wlW6ONX9QM2zSVlbZM7HBA==
+X-CSE-MsgGUID: P2zN6/1USxmG9OqZsrOECQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="53136036"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="53136036"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:18:38 -0700
+X-CSE-ConnectionGUID: xYKLToauRQKMjPuCh/RVUg==
+X-CSE-MsgGUID: g/95QdzwTCGqHo5A/I1WzA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="175488488"
+Received: from sannilnx-dsk.jer.intel.com ([10.12.231.107])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:18:36 -0700
+From: Alexander Usyskin <alexander.usyskin@intel.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Reuven Abliyev <reuven.abliyev@intel.com>,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mei: vsc: Remove unused irq functions
-Message-ID: <aFqJRIQkw624nQFf@gallifrey>
-References: <20250617003450.118751-1-linux@treblig.org>
- <30565c88-fb3c-4970-a7c8-bb81200a13aa@redhat.com>
+Subject: [char-misc-next v2] mei: bus: fix device leak
+Date: Tue, 24 Jun 2025 14:05:20 +0300
+Message-ID: <20250624110520.1403597-1-alexander.usyskin@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <30565c88-fb3c-4970-a7c8-bb81200a13aa@redhat.com>
-X-Chocolate: 70 percent or better cocoa solids preferably
-X-Operating-System: Linux/6.1.0-34-amd64 (x86_64)
-X-Uptime: 11:16:45 up 57 days, 19:30,  1 user,  load average: 0.02, 0.02, 0.00
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Transfer-Encoding: 8bit
 
-* Hans de Goede (hdegoede@redhat.com) wrote:
-> Hi David,
-> 
-> On 17-Jun-25 2:34 AM, linux@treblig.org wrote:
-> > From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> > 
-> > vsc_tp_request_irq() and vsc_tp_free_irq() last uses were removed in 2024
-> > by
-> > commit 9b5e045029d8 ("mei: vsc: Don't stop/restart mei device during system
-> > suspend/resume")
-> > 
-> > Remove them.
-> > 
-> > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
-> 
-> Alexander pointed me at this patch because I just posted
-> almost the same patch:
-> 
-> https://lore.kernel.org/lkml/20250623085052.12347-2-hansg@kernel.org/
-> 
-> Normally I would say lets go with your (David's) version since
-> you posted your patch first.
-> 
-> But your patch is missing the removal of the function prototypes
-> from vsc-tp.h, so in this case I think we should go with my version.
+The bus rescan function creates bus devices for all clients.
+The fixup routine is executed on all devices, unneeded
+devices are removed and fully initialized once set
+is_added flag to 1.
 
-Oops, yep that makes sense to me.
+If link to firmware is reset right after all devices are
+initialized, but before fixup is executed, the rescan tries
+to remove devices.
+The is_added flag is not set and the mei_cl_bus_dev_destroy
+returns prematurely.
+Allow to clean up device when is_added flag is unset to
+account for above scenario.
 
-Thanks,
+Fixes: 6009595a66e4 ("mei: bus: link client devices instead of host clients")
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+---
+ drivers/misc/mei/bus.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-Dave
-
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
-> > ---
-> >  drivers/misc/mei/vsc-tp.c | 31 -------------------------------
-> >  1 file changed, 31 deletions(-)
-> > 
-> > diff --git a/drivers/misc/mei/vsc-tp.c b/drivers/misc/mei/vsc-tp.c
-> > index 267d0de5fade..99a55451e1fc 100644
-> > --- a/drivers/misc/mei/vsc-tp.c
-> > +++ b/drivers/misc/mei/vsc-tp.c
-> > @@ -406,37 +406,6 @@ int vsc_tp_register_event_cb(struct vsc_tp *tp, vsc_tp_event_cb_t event_cb,
-> >  }
-> >  EXPORT_SYMBOL_NS_GPL(vsc_tp_register_event_cb, "VSC_TP");
-> >  
-> > -/**
-> > - * vsc_tp_request_irq - request irq for vsc_tp device
-> > - * @tp: vsc_tp device handle
-> > - */
-> > -int vsc_tp_request_irq(struct vsc_tp *tp)
-> > -{
-> > -	struct spi_device *spi = tp->spi;
-> > -	struct device *dev = &spi->dev;
-> > -	int ret;
-> > -
-> > -	irq_set_status_flags(spi->irq, IRQ_DISABLE_UNLAZY);
-> > -	ret = request_threaded_irq(spi->irq, vsc_tp_isr, vsc_tp_thread_isr,
-> > -				   IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> > -				   dev_name(dev), tp);
-> > -	if (ret)
-> > -		return ret;
-> > -
-> > -	return 0;
-> > -}
-> > -EXPORT_SYMBOL_NS_GPL(vsc_tp_request_irq, "VSC_TP");
-> > -
-> > -/**
-> > - * vsc_tp_free_irq - free irq for vsc_tp device
-> > - * @tp: vsc_tp device handle
-> > - */
-> > -void vsc_tp_free_irq(struct vsc_tp *tp)
-> > -{
-> > -	free_irq(tp->spi->irq, tp);
-> > -}
-> > -EXPORT_SYMBOL_NS_GPL(vsc_tp_free_irq, "VSC_TP");
-> > -
-> >  /**
-> >   * vsc_tp_intr_synchronize - synchronize vsc_tp interrupt
-> >   * @tp: vsc_tp device handle
-> 
+diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
+index 67176caf5416..f2e5d550c6b4 100644
+--- a/drivers/misc/mei/bus.c
++++ b/drivers/misc/mei/bus.c
+@@ -1430,17 +1430,14 @@ static void mei_cl_bus_dev_stop(struct mei_cl_device *cldev)
+  */
+ static void mei_cl_bus_dev_destroy(struct mei_cl_device *cldev)
+ {
+-
+ 	WARN_ON(!mutex_is_locked(&cldev->bus->cl_bus_lock));
+ 
+-	if (!cldev->is_added)
+-		return;
+-
+-	device_del(&cldev->dev);
++	if (cldev->is_added) {
++		device_del(&cldev->dev);
++		cldev->is_added = 0;
++	}
+ 
+ 	list_del_init(&cldev->bus_list);
+-
+-	cldev->is_added = 0;
+ 	put_device(&cldev->dev);
+ }
+ 
 -- 
- -----Open up your eyes, open up your mind, open up your code -------   
-/ Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \ 
-\        dave @ treblig.org |                               | In Hex /
- \ _________________________|_____ http://www.treblig.org   |_______/
+2.43.0
+
