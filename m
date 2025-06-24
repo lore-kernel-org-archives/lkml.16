@@ -1,31 +1,22 @@
-Received: from out30-132.freemail.mail.aliyun.com (out30-132.freemail.mail.aliyun.com [115.124.30.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D32023741
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:45:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.132
+Received: from mail.nfschina.com (unknown [42.101.60.213])
+	by smtp.subspace.kernel.org (Postfix) with SMTP id 029F135946;
+	Tue, 24 Jun 2025 01:45:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=42.101.60.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750729528; cv=none; b=FnBfQ5YoeiwNdtmseE4B/0zPg7b7h3M1VyJZ5Yisft4lAhEib324xWfzoTijnJhZ+uVdtGSZFU78QcS6qUkNNPzR+hUI1vaHUKNIfl+OsizaQjM4CCcZpnK/GhitCuxHicbF+vLV5PJu1WykX39goPBfWa1p2dKp6o8IZjXTh+c=
+	t=1750729551; cv=none; b=cUsHTSsc4iD4fbx8whdMBmltzE5zv+lkgC9hZqF5tbgoUnPxnyje69dOYItDiaRKq+HE29L+ssVQH7It9gWppvrPW1DPjMttBPP3yx745UzL0Ugvy1wuzCtWa8hUdlRqknTvpCbD9NBn66bX093OkxAKwha2lq7R/7E/Bt/zNdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750729528; c=relaxed/simple;
-	bh=V8p6Ile1Qslw6+bYmsCHL1aeo8AA1boIDjX+5aOst8g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V64EAbjV1HhqL02gynm8fs5wYKhfXl2rKl6LuPcon8Sq1cs8F3jQxWmN1T5pUWq+jJajwZQSeiwk5kXyZDmUoEdXlD+0iou1pzQnJ6/NAwL/6/n4uS5QeMqcvKfGt3o3kTzC9BtEA3ug9O0KpYr45f2qwTd7jY++d9XwGoAoplI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=VnEU7Ojg; arc=none smtp.client-ip=115.124.30.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="VnEU7Ojg"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750729523; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=RSCsckg9B5BzyioYNc3r3odeKoGUQhJwGtt4Gh8aEqw=;
-	b=VnEU7Ojg74/TxtfUw0l598MwA7P+GDanfTIU52t6woA3e8oysB7DHOSn98ol9ywHSsU/oADPym6v3tbssWt/Pa3yODdlrQg7O6p9MuLGPxhELnX9ULtN+yu8SahcMm8oAJT5kB7sq5lFfoTq9PHLjC70zod38x1sXeJphmVTA5Y=
-Received: from 30.74.144.102(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WeeLADL_1750729522 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 24 Jun 2025 09:45:23 +0800
-Message-ID: <1431ef64-ed73-4a47-884f-5a803ce25e28@linux.alibaba.com>
-Date: Tue, 24 Jun 2025 09:45:22 +0800
+	s=arc-20240116; t=1750729551; c=relaxed/simple;
+	bh=0KsG6VEkfuLsV8DfBKaGxYfpc6BQCqoyEyq5ihFr1q0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type; b=rBs9NCjojuzUYpgvL1djPv/iDFMVq5MxOy90Xp8jgjH0CySWGJqCloGFkeMeMkh2ojNmm31qdkrmtqGL2TYDu8CPnCHjsVlttbwFDVOoMJN2NQ0KoowVpkGGcBsPxmHtSJ65gmeIpZVtpXlLgkvjyNfNKtpZZgPhGhePNgo45KA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com; spf=pass smtp.mailfrom=nfschina.com; arc=none smtp.client-ip=42.101.60.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nfschina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nfschina.com
+Received: from [172.30.20.101] (unknown [180.167.10.98])
+	by mail.nfschina.com (MailData Gateway V2.8.8) with ESMTPSA id 3866B60105F15;
+	Tue, 24 Jun 2025 09:45:28 +0800 (CST)
+Message-ID: <7975be21-045e-4b2b-9c73-79aba5b683db@nfschina.com>
+Date: Tue, 24 Jun 2025 09:45:27 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,80 +24,86 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] mm: huge_memory: disallow hugepages if the
- system-wide THP sysfs settings are disabled
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, hughd@google.com, david@redhat.com,
- ziy@nvidia.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1750666536.git.baolin.wang@linux.alibaba.com>
- <adb8d5032ecc7b6935e3197cafffe92cbc7581e6.1750666536.git.baolin.wang@linux.alibaba.com>
- <17180060-91a4-4957-a6aa-8e8adaf50ae8@lucifer.local>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <17180060-91a4-4957-a6aa-8e8adaf50ae8@lucifer.local>
+Subject: Re: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
+Content-Language: en-US
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: chuck.lever@oracle.com, jlayton@kernel.org, neil@brown.name,
+ okorniev@redhat.com, Dai.Ngo@oracle.com, tom@talpey.com,
+ linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel-janitors@vger.kernel.org, Su Hui <suhui@nfschina.com>
+X-MD-Sfrom: suhui@nfschina.com
+X-MD-SrcIP: 180.167.10.98
+From: Su Hui <suhui@nfschina.com>
+In-Reply-To: <148c69b4-4cf7-4112-97e8-6a5c23505638@suswa.mountain>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+On 2025/6/23 23:47, Dan Carpenter wrote:
+> On Mon, Jun 23, 2025 at 08:22:27PM +0800, Su Hui wrote:
+>> Using guard() to replace *unlock* label. guard() makes lock/unlock code
+>> more clear. Change the order of the code to let all lock code in the
+>> same scope. No functional changes.
+>>
+>> Signed-off-by: Su Hui <suhui@nfschina.com>
+>> ---
+>>   fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
+>>   1 file changed, 48 insertions(+), 51 deletions(-)
+>>
+>> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+>> index ba9d326b3de6..2d92adf3e6b0 100644
+>> --- a/fs/nfsd/nfscache.c
+>> +++ b/fs/nfsd/nfscache.c
+>> @@ -489,7 +489,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned int start,
+>>   
+>>   	if (type == RC_NOCACHE) {
+>>   		nfsd_stats_rc_nocache_inc(nn);
+>> -		goto out;
+>> +		return rtn;
+>>   	}
+>>   
+>>   	csum = nfsd_cache_csum(&rqstp->rq_arg, start, len);
+>> @@ -500,64 +500,61 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsigned int start,
+>>   	 */
+>>   	rp = nfsd_cacherep_alloc(rqstp, csum, nn);
+>>   	if (!rp)
+>> -		goto out;
+>> +		return rtn;
+>>   
+>>   	b = nfsd_cache_bucket_find(rqstp->rq_xid, nn);
+>> -	spin_lock(&b->cache_lock);
+>> -	found = nfsd_cache_insert(b, rp, nn);
+>> -	if (found != rp)
+>> -		goto found_entry;
+>> -	*cacherep = rp;
+>> -	rp->c_state = RC_INPROG;
+>> -	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+>> -	spin_unlock(&b->cache_lock);
+>> +	scoped_guard(spinlock, &b->cache_lock) {
+>> +		found = nfsd_cache_insert(b, rp, nn);
+>> +		if (found == rp) {
+>> +			*cacherep = rp;
+>> +			rp->c_state = RC_INPROG;
+>> +			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+>> +			goto out;
+> It took me a while to figure out why we've added a goto here.  In the
+> original code this "goto out;" was a "spin_unlock(&b->cache_lock);".
+> The spin_unlock() is more readable because you can immediately see that
+> it's trying to drop the lock where a "goto out;" is less obvious about
+> the intention.
 
+Does "break;" be better in this place?  Meaning Break this lock guard scope.
 
-On 2025/6/23 18:26, Lorenzo Stoakes wrote:
-> On Mon, Jun 23, 2025 at 04:28:08PM +0800, Baolin Wang wrote:
->> When invoking thp_vma_allowable_orders(), the TVA_ENFORCE_SYSFS flag is not
->> specified, we will ignore the THP sysfs settings. Whilst it makes sense for the
->> callers who do not specify this flag, it creates a odd and surprising situation
->> where a sysadmin specifying 'never' for all THP sizes still observing THP pages
->> being allocated and used on the system.
->>
->> The motivating case for this is MADV_COLLAPSE. The MADV_COLLAPSE will ignore
->> the system-wide Anon THP sysfs settings, which means that even though we have
->> disabled the Anon THP configuration, MADV_COLLAPSE will still attempt to collapse
->> into a Anon THP. This violates the rule we have agreed upon: never means never.
->>
->> Currently, besides MADV_COLLAPSE not setting TVA_ENFORCE_SYSFS, there is only
->> one other instance where TVA_ENFORCE_SYSFS is not set, which is in the
->> collapse_pte_mapped_thp() function, but I believe this is reasonable from its
->> comments:
->>
->> "
->> /*
->>   * If we are here, we've succeeded in replacing all the native pages
->>   * in the page cache with a single hugepage. If a mm were to fault-in
->>   * this memory (mapped by a suitably aligned VMA), we'd get the hugepage
->>   * and map it by a PMD, regardless of sysfs THP settings. As such, let's
->>   * analogously elide sysfs THP settings here.
->>   */
->> if (!thp_vma_allowable_order(vma, vma->vm_flags, 0, PMD_ORDER))
->> "
->>
->> Another rule for madvise, referring to David's suggestion: “allowing for
->> collapsing in a VM without VM_HUGEPAGE in the "madvise" mode would be fine".
->>
->> To address this issue, the current strategy should be:
->>
->> If no hugepage modes are enabled for the desired orders, nor can we enable them
->> by inheriting from a 'global' enabled setting - then it must be the case that
->> all desired orders either specify or inherit 'NEVER' - and we must abort.
->>
->> Meanwhile, we should fix the khugepaged selftest for MADV_COLLAPSE by enabling
->> THP.
-> 
-> Thanks! Sounds good.
->>
->> Suggested-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> 
-> Appreciate it though I'm not so bothered about attribution :) but just to say,
-> of course the 'never' stuff is David's idea (and a good one!) :)
+But as NeillBrown suggestion[1], this patch will be replaced by several 
+patches.
 
-Yes, I should also add:
+No matter what, this "goto out;" will be removed in the next v2 patchset.
 
-Suggested-by: David Hildenbrand <david@redhat.com>
+> I think this patch works fine, but I'm not sure it's an improvement.
 
->> Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-> 
-> LGTM so:
-> 
-> Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Got it, thanks for your suggestions!
 
-Thanks.
+[1] 
+https://lore.kernel.org/all/175072435698.2280845.12079422273351211469@noble.neil.brown.name/
 
+regards,
+Su Hui
