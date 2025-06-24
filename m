@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA992D321D
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:18:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4ED2D1F42
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:19:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750774735; cv=none; b=VHzzr6T604LR6bei8z4srPBLfIQfURhcTXER3sWP6cJWDnJAkRjVUdvSyhtBoigBJkJ4Ajv2bS5DgBBC9OfA8NPqDQ4XXgZqiq+f/sQAgmVMRzkiadJrhcTwQviLjSrl1a/uhokfB06ooZ/Yd3DxUjxZ7+XAQHABLhXWefwV38c=
+	t=1750774760; cv=none; b=dltR94Ka3QnwQ2UX8n2X94335MdLqNLtq10yaHqqMbKjnnFMGlA6rOd98cnYkn+n3ETTevCYmSa2NhciSd2yhk7rgGh0kZB806ePRRIhKK7eBgcA8lU34uUxqc+mvSlT+2wtg31DHchudNUxCfbMKA6eH2NQh4a3+PHs4ZInMFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750774735; c=relaxed/simple;
-	bh=wlzegHMQtoHuKF3Oe9ZMLorLoGNAfb7HrIptnLROpW4=;
+	s=arc-20240116; t=1750774760; c=relaxed/simple;
+	bh=+O2XMJoIFYapG4jpDaxlSd2Kzerwe59/bvMlnOv9D9o=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=uHwyMxxNwHRL9ILpq0y7Beh86ruRwmmnywxAGQGIV8m0RyELorIzt4jgfZeVhO2LbsTocqUG9ikwmy9SF3zFE1qX6CTTNif0XZ1HhtT3iH0D4f+yhtnDPY75qCo7n0nxF84OKqcfHcCOLpHPVHrUnK857wdieQfFZmYi7Uv8MRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OPBya4mZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qVndCSqjdZ4e8mDY8YytLyViMxPUCAJ+KZgo5fVXef5ZKtNKLoJB5hvdc23O6gZRb9NyqEvA2/vXvnUVdihAd3xu+Tpxe8P+jMJOvAMASJLvkpDCWYQHSZt9/Cniorcym5mhQuqzP8bjftBHKIthkv2uRSZEYlgjg7K97OMoBEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tWprPhtI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OPBya4mZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C733C4CEF0;
-	Tue, 24 Jun 2025 14:18:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tWprPhtI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EC39C4CEE3;
+	Tue, 24 Jun 2025 14:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750774734;
-	bh=wlzegHMQtoHuKF3Oe9ZMLorLoGNAfb7HrIptnLROpW4=;
+	s=k20201202; t=1750774759;
+	bh=+O2XMJoIFYapG4jpDaxlSd2Kzerwe59/bvMlnOv9D9o=;
 	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=OPBya4mZVeDK8tIPUakpMZXp6TeRWI9z0mnsr1usATCwrmA2ia8D890+5eC0pW+eg
-	 hOets0zptRdM1Uq+Mdv4mj9Gh7F8PzAUjfkSOVucAUbVC9tpII1kOV/0AedhxWIaLZ
-	 uE0otjh3danJMerS0Av4kLgYgbtqB8ljzB1Xn+Yovw/XrGTWVkb04D9bccLbFYsU0+
-	 5PG5TWy8fT5IHXP/c8gryH0MJdew0qSmzddwnPiXQYJnuo9hG7iQd5ekDHptk1onmB
-	 eO9LKqa3vxe2dSNp0s9lF/HT+EwZzD4jFfnA9Z/IILEMVCvzwd6IMZuc8eP7yBNnFW
-	 N05mztJt+O5pg==
-Message-ID: <b69b9567-846d-451c-8645-50b6a4b74ac1@kernel.org>
-Date: Tue, 24 Jun 2025 22:18:51 +0800
+	b=tWprPhtIjJVwH89Vitnol25HwtwQCcdvJv5BuEtOP/ugno79OURNQxg5hpHmN526z
+	 ZaIhB2CH+kBiq6EOKGVlHFa+vsnNqOw2tcPtHgi6bMZWP2mBRAa2xRIJ72iTEQy/tn
+	 jrR7RY/W1O3EjbnCC9gyRP65kYGHORjWLNpKWc83Kv67Or1+cV4gfDXhCKeNcHy+zx
+	 /hjiCFz0qjhfxQTXX1gkJvokcEwLnRZGc91FFUY2rXCiYAYgZOzUgxA01xpFUI+HIE
+	 M6yLIau/CZNtv5GykPUtDlJWKUaib58vHk2DJKrclkSwHEQ6pAqfxFxTtOpe1QNISD
+	 Rr6otHifx9uuw==
+Message-ID: <1c6a9b6c-8bce-4a02-9dbb-a883e74c0045@kernel.org>
+Date: Tue, 24 Jun 2025 22:19:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,19 +38,23 @@ User-Agent: Mozilla Thunderbird
 Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
  linux-kernel@vger.kernel.org, bintian.wang@honor.com, feng.han@honor.com,
  niuzhiguo84@gmail.com
-Subject: Re: [f2fs-dev] [PATCH v4 1/2] f2fs: convert F2FS_I_SB to sbi in
- f2fs_setattr()
+Subject: Re: [f2fs-dev] [PATCH v4 2/2] f2fs: don't allow unaligned truncation
+ to smaller/equal size on pinned file
 To: wangzijie <wangzijie1@honor.com>, jaegeuk@kernel.org
 References: <20250624035938.3176350-1-wangzijie1@honor.com>
+ <20250624035938.3176350-2-wangzijie1@honor.com>
 Content-Language: en-US
 From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250624035938.3176350-1-wangzijie1@honor.com>
+In-Reply-To: <20250624035938.3176350-2-wangzijie1@honor.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 2025/6/24 11:59, wangzijie wrote:
-> Introduce sbi in f2fs_setattr() and convert F2FS_I_SB to it. No logic
-> change, just cleanup and prepare to get CAP_BLKS_PER_SEC(sbi).
+> To prevent scattered pin block generation, don't allow non-section aligned truncation
+> to smaller or equal size on pinned file. But for truncation to larger size, after
+> commit 3fdd89b452c2("f2fs: prevent writing without fallocate() for pinned files"),
+> we only support overwrite IO to pinned file, so we don't need to consider
+> attr->ia_size > i_size case.
 > 
 > Signed-off-by: wangzijie <wangzijie1@honor.com>
 
