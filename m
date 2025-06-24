@@ -1,107 +1,132 @@
-Received: from neil.brown.name (neil.brown.name [103.29.64.221])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381DF25A2B1;
-	Tue, 24 Jun 2025 21:39:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82ACA307483;
+	Tue, 24 Jun 2025 21:46:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750801146; cv=none; b=fbExkdWgD+/kFg4ryPeQcgsv8GQ892NWqL+IXAX9RkgZiC9zJVfQ5z8cgTh1MWfmF1CxSyD2wmv1K2Qfkabf0Kc7NhzRlr5r09BxSZtErglFFdaesOKwn9UdruKC0Jk7rfdm/jhI5ATjoJEzWzfAWML36/nTQKtJ32CNoEx4MeQ=
+	t=1750801621; cv=none; b=Mi+mWV+C0B4hs6X9SCQUb5dg+65lEAFRUhuu/9oIAfdikUBFwY45NDMGbnDEmDcSBTnbXYRhz8g0oH837AbQn1qLUT/hSN7nNqkBwLyX90lDBtsVRI9bK0Di9rmRW6oUUGq/6yTnssjbCT2+lvqLR3spAqT4dd3tGhDGRlfSQyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750801146; c=relaxed/simple;
-	bh=Y4l0bh8VQKBCsky1AfAt+0j/ZyivsMcPWV96H9WTLso=;
-	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
-	 References:Date:Message-id; b=OldBsxGRXT5bZbpfl80R/FiGSRG6a84zwOOGEnWD1M6kUHWXCECwlyy0hwmi7cHxDxqOKcMqAg+KG5/Nx0NMNjChP44EqNpz6WnWWWHWpcxnW61PZdEgezEslvmL4C3OBmI2oUMaHvCAx0gxq8VqtBzY34RArfDvNvqevoCq110=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
-Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
-	by neil.brown.name with esmtp (Exim 4.95)
-	(envelope-from <mr@neil.brown.name>)
-	id 1uUBLy-0042q4-5A;
-	Tue, 24 Jun 2025 21:38:54 +0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1750801621; c=relaxed/simple;
+	bh=H96UaVMZ2NjDXytS4I6LKdfHpQjgJ55mU0qGKk2dKRo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MRG+nsDrk/OB0t4YpI2Leh/+KHS7XDUM67/A1l9cYODq+QVhESo/8MFbTR5Zv5zF0QlO3zA9HX5D3C5pAEyMpizPD27Qch2F7wyp4+dWELaZ2k4S43pn6JYHliM79CUKUZpq9rNSsB66FGghnFut08pN0h4/lnxUiHW+pVDtYrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b7itt1C9; arc=none smtp.client-ip=209.85.219.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7itt1C9"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e85e06a7f63so2218363276.1;
+        Tue, 24 Jun 2025 14:46:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750801618; x=1751406418; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4X4FkzK1vIHXXkT/xfwGQHLL5/iBSkQzdD5mcVSep68=;
+        b=b7itt1C99Wtjsp5rW4vMLwRS59E1C6ISD22RZvKGlrKLBY6A7Dkkfj9nDCPBKQdz8e
+         AdwjvHV9vXPFsf42sjfbxmi8CXaNoPJP/sbucZbQTVSKJT4ZRDY6YJHq8wR0OPUlGdiE
+         lVRHRMielmE33JYMwrIrNSWPChpEM+WfL/ROJ4fW8Mfrm8wsdv9GQau5uhrtH5Ea5SL/
+         0gClT19CF9R09clqK33pNjQoT9DQT0C8vchar2x3QQi3q52mYjcIxvySKUgcxVJHC2pf
+         L95zbvpLww0Z9qO/wjZDTvvJnKKsSUwNCeNQQ9vRp6h9+mvbR7LQgy9Dulw2MZOxtndZ
+         mJSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750801618; x=1751406418;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4X4FkzK1vIHXXkT/xfwGQHLL5/iBSkQzdD5mcVSep68=;
+        b=aMZmJiiEosJB79tF/W32at0tc3B3inEVb3hzgbFExqN0rfKx2Ffl5iVS/ccjHyChbQ
+         +WDDpb8NG9cxzebcXWr/C4smW+9fMpBJpNuslh1+1hrBXrS7RHM8TC00R4yRCEQnar5Q
+         g8FnnAiLl9YQf0H7NW5jClS1adYOaINbogFoYGcZZU1+iSZNRN0vtQj+TwPe+JbHwUQd
+         0bezGe2gsV4o5ZG2AhgEBJx09GZDMX3JTxmwwgqw7iUcdoxhyf3ox+0KLGHvTrZ+4E0/
+         j3SRHGks+nkrTp6fTmsIX2TCIKEjUqzCPWfxYzBX3/YwegMx24mliUCutC9C19bKiNeE
+         HexQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUzd0hjcLiRpYQNHXUaCMPB2zjjnkaFYQBPphhBQ9hJt1RCNa13mLTSrSQijC4NPdV4J/45m4/fgms=@vger.kernel.org, AJvYcCWBkkZhXqoFL+Qmmk3Yle+aPPTnRxQ2vthKAa3Bc3y6rYc2ZEqJ9P7HCp/C2Z78Rh0zFqjjSKu48XaKhv7l@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaGtyqb0zPY+9GZmT+j/LfGWZsdiXPR/78LYHHsl7i8HmTBlDT
+	g3KPICFAlj6tjrGIAgOIh5pQNaBgYflGI/sIx2/hMuJ6yiwyLDssGD6H
+X-Gm-Gg: ASbGnct88cg0246nsUUWTL+k/Ce2wZTtKwdHCdVJwwwcQM70lVSUrSw6znPAarpRwPk
+	R/gzqTernqRL0XZCPZ2ML76UhIvbKqWkK5uhyNsw3dp4FYJR+prTdnF8bNM/IAP2BuvmVX/Vye+
+	cD/JoaAz+UuAHHxRsx0MbinKZVYdbbIQlLgTPIPGIVwbF91jTVQ7JKvsyGop1FB+BcCxfINUpKv
+	KsRrClO1Qz0CArJYEi4BLDez4MeIGrNgncYyxzMfydTb6DJTF033xxN5JgdLm0HcNhV7RcBVoWA
+	mOXvYMzr2XUCbjrUaBZDT3D9vLM14vCQhdZd8qhFLP+0w7wAT4RnLl9RD4yxqw==
+X-Google-Smtp-Source: AGHT+IGuHgYXMzcha0KcT+CIr9rLcM40d+eszdLfZC66yc2GwoBIh+Acn+v3VdIm2K4NgvN4YvrwrA==
+X-Received: by 2002:a05:6902:2401:b0:e85:ea51:fd00 with SMTP id 3f1490d57ef6-e86017a7b85mr539913276.6.1750801618260;
+        Tue, 24 Jun 2025 14:46:58 -0700 (PDT)
+Received: from localhost ([2a03:2880:25ff:44::])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842aaba56csm3270264276.3.2025.06.24.14.46.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 14:46:57 -0700 (PDT)
+From: Joshua Hahn <joshua.hahnjy@gmail.com>
+To: Robert Richter <rrichter@amd.com>
+Cc: Gregory Price <gourry@gourry.net>,
+	Alison Schofield <alison.schofield@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Dave Jiang <dave.jiang@intel.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	Terry Bowman <terry.bowman@amd.com>,
+	linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Fabio M. De Francesco" <fabio.m.de.francesco@linux.intel.com>
+Subject: Re: [PATCH] [HACK] drop zen5_init checks due to segfault
+Date: Tue, 24 Jun 2025 14:46:54 -0700
+Message-ID: <20250624214656.96471-1-joshua.hahnjy@gmail.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <aFo68StiDKzLjNdS@rric.localdomain>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "NeilBrown" <neil@brown.name>
-To: =?utf-8?q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc: "Song Liu" <song@kernel.org>, bpf@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-security-module@vger.kernel.org, brauner@kernel.org,
- kernel-team@meta.com, andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@linux.dev, viro@zeniv.linux.org.uk,
- jack@suse.cz, kpsingh@kernel.org, mattbobrowski@google.com, m@maowtm.org,
- =?utf-8?q?G=C3=BCnther?= Noack <gnoack@google.com>
-Subject: Re: [PATCH v5 bpf-next 0/5] bpf path iterator
-In-reply-to: <20250624.xahShi0iCh7t@digikod.net>
-References: <>, <20250624.xahShi0iCh7t@digikod.net>
-Date: Wed, 25 Jun 2025 07:38:53 +1000
-Message-id: <175080113326.2280845.18404947256630567790@noble.neil.brown.name>
+Content-Transfer-Encoding: 8bit
 
-On Wed, 25 Jun 2025, Micka=C3=ABl Sala=C3=BCn wrote:
-> On Fri, Jun 20, 2025 at 02:59:17PM -0700, Song Liu wrote:
-> > Hi Christian, Micka=C3=ABl, and folks,
-> >=20
-> > Could you please share your comments on this version? Does this
-> > look sane?
->=20
-> This looks good to me but we need to know what is the acceptable next
-> step to support RCU.  If we can go with another _rcu helper, I'm good
-> with the current approach, otherwise we need to figure out a way to
-> leverage the current helper to make it compatible with callers being in
-> a RCU read-side critical section while leveraging safe path walk (i.e.
-> several calls to path_walk_parent).
+On Tue, 24 Jun 2025 07:43:13 +0200 Robert Richter <rrichter@amd.com> wrote:
 
-Can you spell out the minimum that you need?
+> On 17.06.25 13:33:18, Joshua Hahn wrote:
+> > I was hoping for some help in understanding your explanation here -- I don't
+> > think I can see where the dependency appears. (In particular, I'm having
+> > trouble understanding where the efi_rts_wq dependnecy matters during the
+> > cxl_zen5_init function). 
+> 
+> Here a temporary patch with an explanation in the description:
 
-My vague impression is that you want to search up from a given strut path,
-no further then some other given path, looking for a dentry that matches
-some rule.  Is that correct?
+Hi Robert,
 
-In general, the original dentry could be moved away from under the
-dentry you find moments after the match is reported.  What mechanisms do
-you have in place to ensure this doesn't happen, or that it doesn't
-matter?
+Thank you for this patch! I just tested on my machine, and can confirm that
+this does indeed fix the problem. I'm not sure if this will be folded into
+the rest of the patchset or if it will be its own, but I will add my
+signatures below.
 
-Would it be sufficient to have an iterator which reported successive
-ancestors in turn, or reported that you need to restart because something
-changed?  Would you need to know that a restart happened or would it be
-acceptable to transparently start again at the parent of the starting
-point?
+Thank you again, Have a great day!
 
-Or do you really need a "one step at a time" interface?
+Tested-by: Joshua Hahn <joshua.hahnjy@gmail.com>
+Reviewed-by: Joshua Hahn <joshua.hahnjy@gmail.com>
 
-Do you need more complex movements around the tree, or is just walking
-up sufficient?
+> From a540b814d48574b67a9aaa97a5d7536c61d4deda Mon Sep 17 00:00:00 2001
+> From: Robert Richter <rrichter@amd.com>
+> Date: Tue, 13 May 2025 15:02:16 +0200
+> Subject: [PATCH] cxl/acpi: Prepare use of EFI runtime services
+> 
+> In order to use EFI runtime services, esp. ACPI PRM which uses the
+> efi_rts_wq workqueue, initialize EFI before CXL ACPI.
+> 
+> There is a subsys_initcall order dependency if driver is builtin:
+> 
+>  subsys_initcall(cxl_acpi_init);
+>  subsys_initcall(efisubsys_init);
+> 
+> Prevent the efi_rts_wq workqueue being used by cxl_acpi_init() before
+> its allocation. Use subsys_initcall_sync(cxl_acpi_init) to always run
+> efisubsys_init() first.
+> 
+> Reported-by: Gregory Price <gourry@gourry.net>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
 
-If this has been discussed or documented elsewhere I'd be happy for you
-just to provide a reference, and I can come back with follow-up
-questions if needed.
+[...snip...]
 
-Thanks,
-NeilBrown
-
-
->=20
-> >=20
-> > Thanks,
-> > Song
-> >=20
-> > On Mon, Jun 16, 2025 at 11:11=E2=80=AFPM Song Liu <song@kernel.org> wrote:
-> > >
-> > > In security use cases, it is common to apply rules to VFS subtrees.
-> > > However, filtering files in a subtree is not straightforward [1].
-> > >
-> > > One solution to this problem is to start from a path and walk up the VFS
-> > > tree (towards the root). Among in-tree LSMs, Landlock uses this solutio=
-n.
-> > >
-> >=20
-> > [...]
-> >=20
->=20
-
+Sent using hkml (https://github.com/sjp38/hackermail)
