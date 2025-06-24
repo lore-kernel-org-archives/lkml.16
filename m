@@ -1,82 +1,82 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1B3257435
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0EC2C15B0
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:04:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750770248; cv=none; b=eSfWRTkcdXHtM/xDV21fkFnJezy6RDCZUi8HqIsY/qdHurfVDHuxLUgqL4hfkmAkcNuSQKyRVeIBaP+G0nZQF8Qan5VZfjVnuFY3rZRiHmh2tnZJ560iVp7DHpEG3RpzAbW/g4XNbAm9Rl+kS0t8Q8eIwuVGX3IPZ8SKemIsXzo=
+	t=1750770253; cv=none; b=MN+VbTWS7ZpH4NfFKAvEc59DsseYSe9knB45ePVMiqKSkkQJCGKRqBaSkzXyrU6WuEVhqeb5yA/1ZyAgF2TwnphAWbsaiPM02kQxvL7RdrHPRomkaWaaiAJV00N5X8TlrGzlr9iv17DdicvLkHLLkLk69x8GywAjyOEqmu+pa4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750770248; c=relaxed/simple;
-	bh=rRAO5JDl/GFSSyC/skOkwiCLgk5I6TM14uLkwKcXPaA=;
+	s=arc-20240116; t=1750770253; c=relaxed/simple;
+	bh=fkOsy+t+qaACcx9sjCgoEdlw5N/duW/gWOdJkLKYnUc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=iUcfzHeTC8i98QCO8lRBU01eHSpl+AWo+l1Ayf+EhdnLCPCA0B346Jmj9Ce7OtWsWglxc04wbKH64mO2jT/sfvdbc1g4+s804RfIQSbkirrq/vEbc1goXtIRla6507nY3+a7t0j/et+ZPQysoggXcu/M0/Na9GS50w8XDWTm2Bw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ruYd/FUD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=n3ZF4xdc; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ruYd/FUD; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=n3ZF4xdc; arc=none smtp.client-ip=195.135.223.130
+	 In-Reply-To:To:Cc; b=V7fscJYjZudSt2VoxdVlzjqefr8ZtcMV41j8OFWAI/BRO5SdUWuzUVLF3yobcSd3q3hLH/FOlfNzISqX8pTXEhukeU18TzjzlcpD2jwR2B/UfW/qcBVIQxPrTF11IVJ22CIaBfQ6GOJa1P6H2l2DJF8r2OYlhMcNHJ77Oo4Vrh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sFg8rAI7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ct7iXai7; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=sFg8rAI7; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Ct7iXai7; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ruYd/FUD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="n3ZF4xdc";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ruYd/FUD";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="n3ZF4xdc"
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sFg8rAI7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ct7iXai7";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="sFg8rAI7";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Ct7iXai7"
 Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 37DA9211E4;
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4B2071F74A;
 	Tue, 24 Jun 2025 13:03:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
 	t=1750770238; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8Ch+zCO8SYGhDyPI51jKs0XFTLHSpFudRVEK6OHgTHg=;
-	b=ruYd/FUDPfpI3FqCdM3DfkW10+Y1GSceaVdQJ7//oONLzXmX3KkkXZtYmsKsmIVGhDe2Kg
-	7dPr0ahTNhJKkgNknFBYFjyZiS0+4feikC7wchFdDs1AxJ2FunHdR/dVF3B8xMSVdJUOzJ
-	G1lbiJ1s1PymzSK1TZhDA/F5QMLp6oc=
+	bh=4xVVugloGygpGatajnAlg5Wq+hCv948n+P1il18F82E=;
+	b=sFg8rAI7nDBvs7LWKTvjKpmUl+wpaBSlEAnV5/6mlv4eBYEVr+Fgw7ysfWx8h4+47JQY6j
+	Kl53owziDE61kyVquaLL7TA31joFDYuVLduNxulP0TZG4Xo17KrQVwaksqFXrMvcEQbTc1
+	gpTajf2cIMFeXI/kzD52bLnvxayURjI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
 	s=susede2_ed25519; t=1750770238;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8Ch+zCO8SYGhDyPI51jKs0XFTLHSpFudRVEK6OHgTHg=;
-	b=n3ZF4xdcktsWGFJYdYoEt0qgrl0uegOmDEt2ex/mM0iA7aktx3GO+7IDdaK0cAeqdC837m
-	n3uKYUElrRVH2BBw==
-Authentication-Results: smtp-out1.suse.de;
+	bh=4xVVugloGygpGatajnAlg5Wq+hCv948n+P1il18F82E=;
+	b=Ct7iXai7wbCRYsRsmYN8DwzI4s9dyPzK0Q/56Xldm5ZfTsad4vYKfFigrJ3yGpEVDu0Q4R
+	jZ6DWZfYlSKF1tAw==
+Authentication-Results: smtp-out2.suse.de;
 	none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
 	t=1750770238; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8Ch+zCO8SYGhDyPI51jKs0XFTLHSpFudRVEK6OHgTHg=;
-	b=ruYd/FUDPfpI3FqCdM3DfkW10+Y1GSceaVdQJ7//oONLzXmX3KkkXZtYmsKsmIVGhDe2Kg
-	7dPr0ahTNhJKkgNknFBYFjyZiS0+4feikC7wchFdDs1AxJ2FunHdR/dVF3B8xMSVdJUOzJ
-	G1lbiJ1s1PymzSK1TZhDA/F5QMLp6oc=
+	bh=4xVVugloGygpGatajnAlg5Wq+hCv948n+P1il18F82E=;
+	b=sFg8rAI7nDBvs7LWKTvjKpmUl+wpaBSlEAnV5/6mlv4eBYEVr+Fgw7ysfWx8h4+47JQY6j
+	Kl53owziDE61kyVquaLL7TA31joFDYuVLduNxulP0TZG4Xo17KrQVwaksqFXrMvcEQbTc1
+	gpTajf2cIMFeXI/kzD52bLnvxayURjI=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
 	s=susede2_ed25519; t=1750770238;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=8Ch+zCO8SYGhDyPI51jKs0XFTLHSpFudRVEK6OHgTHg=;
-	b=n3ZF4xdcktsWGFJYdYoEt0qgrl0uegOmDEt2ex/mM0iA7aktx3GO+7IDdaK0cAeqdC837m
-	n3uKYUElrRVH2BBw==
+	bh=4xVVugloGygpGatajnAlg5Wq+hCv948n+P1il18F82E=;
+	b=Ct7iXai7wbCRYsRsmYN8DwzI4s9dyPzK0Q/56Xldm5ZfTsad4vYKfFigrJ3yGpEVDu0Q4R
+	jZ6DWZfYlSKF1tAw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 207A213A9D;
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 339E013ACE;
 	Tue, 24 Jun 2025 13:03:58 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id CFSmBz6iWmjqYQAAD6G6ig
+	id aAtTDD6iWmjqYQAAD6G6ig
 	(envelope-from <vbabka@suse.cz>); Tue, 24 Jun 2025 13:03:58 +0000
 From: Vlastimil Babka <vbabka@suse.cz>
-Date: Tue, 24 Jun 2025 15:03:47 +0200
-Subject: [PATCH v2 3/4] mm, madvise: move madvise_set_anon_name() down the
- file
+Date: Tue, 24 Jun 2025 15:03:48 +0200
+Subject: [PATCH v2 4/4] mm, madvise: use standard madvise locking in
+ madvise_set_anon_name()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,7 +85,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-anon_name_cleanup-v2-3-600075462a11@suse.cz>
+Message-Id: <20250624-anon_name_cleanup-v2-4-600075462a11@suse.cz>
 References: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
 In-Reply-To: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
 To: Andrew Morton <akpm@linux-foundation.org>, 
@@ -122,96 +122,59 @@ X-Spam-Level:
 X-Spam-Flag: NO
 X-Spam-Score: -8.30
 
-Preparatory change so that we can use madvise_lock()/unlock() in the
-function without forward declarations or more thorough shuffling.
+Use madvise_lock()/madvise_unlock() in madvise_set_anon_name() in the
+same way as in do_madvise(). This narrows the lock scope a bit and
+reuses existing functionality. get_lock_mode() already picks the correct
+MADVISE_MMAP_WRITE_LOCK mode for __MADV_SET_ANON_VMA_NAME so we can just
+remove the explicit assignment.
 
 Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 ---
- mm/madvise.c | 64 ++++++++++++++++++++++++++++++------------------------------
- 1 file changed, 32 insertions(+), 32 deletions(-)
+ mm/madvise.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/mm/madvise.c b/mm/madvise.c
-index 7e8819b5e9a0f183213ffe19d7e52bd5fda5f49d..cae064479cdf908707c45b941bd03d43d095eab6 100644
+index cae064479cdf908707c45b941bd03d43d095eab6..ee02ccd0315a146cdb3001cd189e03be9e48a2ea 100644
 --- a/mm/madvise.c
 +++ b/mm/madvise.c
-@@ -133,38 +133,6 @@ static int replace_anon_vma_name(struct vm_area_struct *vma,
- 
- 	return 0;
- }
--
--static int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
--		unsigned long len_in, struct anon_vma_name *anon_name)
--{
--	unsigned long end;
--	unsigned long len;
--	struct madvise_behavior madv_behavior = {
--		.mm = mm,
--		.behavior = __MADV_SET_ANON_VMA_NAME,
--		.lock_mode = MADVISE_MMAP_WRITE_LOCK,
--		.anon_name = anon_name,
--	};
--
--	if (start & ~PAGE_MASK)
--		return -EINVAL;
--	len = (len_in + ~PAGE_MASK) & PAGE_MASK;
--
--	/* Check to see whether len was rounded up from small -ve to zero */
--	if (len_in && !len)
--		return -EINVAL;
--
--	end = start + len;
--	if (end < start)
--		return -EINVAL;
--
--	if (end == start)
--		return 0;
--
--	madv_behavior.range.start = start;
--	madv_behavior.range.end = end;
--	return madvise_walk_vmas(&madv_behavior);
--}
- #else /* CONFIG_ANON_VMA_NAME */
- static int replace_anon_vma_name(struct vm_area_struct *vma,
- 				 struct anon_vma_name *anon_name)
-@@ -2109,6 +2077,38 @@ static inline bool is_valid_name_char(char ch)
- 		!strchr(ANON_VMA_NAME_INVALID_CHARS, ch);
- }
- 
-+static int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
-+		unsigned long len_in, struct anon_vma_name *anon_name)
-+{
-+	unsigned long end;
-+	unsigned long len;
-+	struct madvise_behavior madv_behavior = {
-+		.mm = mm,
-+		.behavior = __MADV_SET_ANON_VMA_NAME,
-+		.lock_mode = MADVISE_MMAP_WRITE_LOCK,
-+		.anon_name = anon_name,
-+	};
-+
-+	if (start & ~PAGE_MASK)
-+		return -EINVAL;
-+	len = (len_in + ~PAGE_MASK) & PAGE_MASK;
-+
-+	/* Check to see whether len was rounded up from small -ve to zero */
-+	if (len_in && !len)
-+		return -EINVAL;
-+
-+	end = start + len;
-+	if (end < start)
-+		return -EINVAL;
-+
-+	if (end == start)
-+		return 0;
-+
-+	madv_behavior.range.start = start;
-+	madv_behavior.range.end = end;
-+	return madvise_walk_vmas(&madv_behavior);
-+}
-+
- int set_anon_vma_name(unsigned long addr, unsigned long size,
- 		      const char __user *uname)
+@@ -2082,10 +2082,10 @@ static int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
  {
+ 	unsigned long end;
+ 	unsigned long len;
++	int error;
+ 	struct madvise_behavior madv_behavior = {
+ 		.mm = mm,
+ 		.behavior = __MADV_SET_ANON_VMA_NAME,
+-		.lock_mode = MADVISE_MMAP_WRITE_LOCK,
+ 		.anon_name = anon_name,
+ 	};
+ 
+@@ -2106,7 +2106,14 @@ static int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
+ 
+ 	madv_behavior.range.start = start;
+ 	madv_behavior.range.end = end;
+-	return madvise_walk_vmas(&madv_behavior);
++
++	error = madvise_lock(&madv_behavior);
++	if (error)
++		return error;
++	error = madvise_walk_vmas(&madv_behavior);
++	madvise_unlock(&madv_behavior);
++
++	return error;
+ }
+ 
+ int set_anon_vma_name(unsigned long addr, unsigned long size,
+@@ -2136,9 +2143,7 @@ int set_anon_vma_name(unsigned long addr, unsigned long size,
+ 			return -ENOMEM;
+ 	}
+ 
+-	mmap_write_lock(mm);
+ 	error = madvise_set_anon_name(mm, addr, size, anon_name);
+-	mmap_write_unlock(mm);
+ 	anon_vma_name_put(anon_name);
+ 
+ 	return error;
 
 -- 
 2.50.0
