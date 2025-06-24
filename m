@@ -1,250 +1,142 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 237A42522A7
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:28:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D856253B47;
+	Tue, 24 Jun 2025 07:28:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750750089; cv=none; b=nc89zdO1rS6ydtoWdnSATHV0rmRqEkxRifjIVTq443X017G9ORTsbrWE8/Cq1k10+sHtkc5M0C9reehFWtZrLaYwODZZUEi2Ogw4Esi3MxjThxoced/V+M3FmCU0z214GDeSPlWuDBJtfUUtPein6w9x9K6y3vVe2cGLg9N+gGQ=
+	t=1750750092; cv=none; b=Km+UVoTT/eK9QAOabAQAbl4TV/MPC/QklqAaxYwL8e6ptTtoWgSbGcifjsG8tHUBlEjIUraE1HwNXQOnxoPj5f/aaflSwGnLWLiEqokxibyzhXfGy1URTa9BIJB32j/ea6kueD3ZR4LBVhFed90iX0oDJbS9Oxrt1VFuNoSr+r0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750750089; c=relaxed/simple;
-	bh=eGI/2RJcl3HWt8QpFl6AlxB+0kL0VYThRxtUaOMY8vU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=DMfI36AQQvoQpdJl2oBV7GDxga3RoTJuA8Rbb10c8V0vcUPLQGYk0m+R0Zg9XRZsrGUi/VmeWiZqdmMfAZgghoWA3VCaQESLVRQMxhsaLfFvJAoMmEispVd2SNQHJorc2KM303kT8eTwpQXhVTesO4UYiHqPOYWqhAdOMg1w6Ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mcySBAT5; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750750092; c=relaxed/simple;
+	bh=UpuqpA1vESFJrEGfO1lC4nqQldZ8FEUumluvqyaDbBk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hrVITrr7jg7EIf1FKNK1nRNvtn1yEWeiiITTBLO+SpE90YXzd2WjcGtPLd5WCOayBEMc1vs/JvwfRqbdhvN5wk5bx6pjtCHT60DnPy/YJzFyplkaKTf7YH14wwCLWB1X7+IVABQuBTfnKPAKywbFRw2ZqaBHxU6PnB52PjpYRmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VQoBOm1u; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mcySBAT5"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3a522224582so45241f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:28:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750750085; x=1751354885; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NZ+Ey73e1w44lbC3w0VcbTTtAhvrBPf9nerbBI+C4fk=;
-        b=mcySBAT5Jrw+78HmwWHDOF/IXEpAz+NQ56jTpvQP18h8QQhdtLhD1Igd2o8yHZuX3j
-         ge2CYgARu7m6CAm+RWXE/gcvf2Yl5v9+FzJxGBILmJFxL8vkAS7FRtPyQ9Zh0UgEDn8f
-         NDXo34iGPvgqZgKMWnoQ0sSQRBepEpZNV/SdtQEdCjcnKVQtiro02pomra7w0RB5etfW
-         ucDNrQoTvLCYgDY3xqk20q84njEVz72N2Pf30Q3NgfjhkxaexaT50q57SbQGFD9tDVNo
-         u2D+sp4YdqMzip2UxjWu5nH7ztBXW/bOFiIXltGluB7Y7ekjNJaet4C9qJl2pdLCYpkS
-         FgSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750750085; x=1751354885;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NZ+Ey73e1w44lbC3w0VcbTTtAhvrBPf9nerbBI+C4fk=;
-        b=cLqMpEqaJmtCIz+LM/T4dgvQvhqL5g5xyKUFpeYDbD/Zvcmz/bmWh4MjcasTD2C2UF
-         /0qpQyAJrJbOrcjHRQKbSua4l5AwuDK4QVXAKKh4mJMYnAry09iJ2hRlH3Wjb7vLXf5u
-         GmMJoGohOWQe+xLPg33LGoKl9eIvf5fOwUlAhDJ1A4RlIYMKYDT5rgw1idADmzA7FNZ3
-         5GuseqT9PmV5/FNMnGinsI1Gq9P5pkhc+Y+WlWXD5HZmrAZ0VWWRjfK+ehn5mWFWYTn9
-         7rFqjFHeGvm2JhvM7Hmbgwvf7VBkzKUuznnTJqy1cIIBhyi9+mia1rYjHqhVyfGR52d8
-         Dpow==
-X-Forwarded-Encrypted: i=1; AJvYcCU2MNLK8c4m3XVs6M7koGV7lnCQ7BcmvJ+YFApCGI01uSLPKFY/u+nCR0I4JDstgYnrtT8YRFW3FcIUafE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrMXdCViO4hA9e41PQseWef+PFyaRK8/ViQYbUhOQ3aBZb7hR3
-	nR7XUFPkHrzhEZCOd1tiMcAzgdy18OXML1/Vr5fYISm3oGM7+FQXOKy7ce88JLDxXqU=
-X-Gm-Gg: ASbGnctZqf6qhfEdpVVdjQlvcxZ3P8lP/+nUMGlirU+1nOEuI1O8DYPvDU6kH+w44IW
-	AxY0y8WqsCYUbfoit3nYDKEejigDF+bwcuv40Uc7DbxVuHmpWHEWIBUAEp4nCzeJpWD7oSNPMmm
-	dFlhFeXg5xh6iSSsXvbMogoDig282GS+8hl1DnFCnp88fR56b8Xck+2+HYb2MLR5AOw+wsigaWX
-	vlqpZiArsa1c1RYEa45IIjOJqrua6cTf3aiYLuIxECNs9HDOjOUOourrp/K2aNy5FvZNXD+BKf6
-	u0JBqG2tJYpEJhR43p7E3YMi7XXALoHmr9vCMpLtaARswN0rJsTJTooxF1uJ8cZc1/tq4J/nGsx
-	JVZnPS9ylwdX8AXj8wPArPhfSoLNewei15/AwaHE=
-X-Google-Smtp-Source: AGHT+IG0LntEwTlFHFmNmL2P11XMbrWbJ4Hrr4lC9yhAzGFG33fGfZoe9KQDKcPk08xD6i9MHwDWGA==
-X-Received: by 2002:a05:6000:40cb:b0:3a5:8a68:b815 with SMTP id ffacd0b85a97d-3a6d12e68ccmr12188188f8f.46.1750750085304;
-        Tue, 24 Jun 2025 00:28:05 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:6fea:600c:ca20:f54a? ([2a01:e0a:3d9:2080:6fea:600c:ca20:f54a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45365af83easm126469055e9.25.2025.06.24.00.28.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 00:28:04 -0700 (PDT)
-Message-ID: <7cba4f34-3ea7-4ddc-b2f6-f7d8f286472e@linaro.org>
-Date: Tue, 24 Jun 2025 09:28:04 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VQoBOm1u"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750750091; x=1782286091;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=UpuqpA1vESFJrEGfO1lC4nqQldZ8FEUumluvqyaDbBk=;
+  b=VQoBOm1uPuTdsZ3ADKs6GM/2mj4roeU+5cwnLuzrAZTdQ4iMYZf1mIHD
+   D593yxPbQtkN4NyQX/u2qj8/fvKZI4Gj+7vIesExR3ioUszkiX0QVUPLR
+   cMxM8OpLn3c/pmVZNkMQNtFjnQeVosSzWizgrQr1Dbsxr+BEXqmB8wYli
+   dsf+Q7l5BcqVXc3z3P2pQ+ls2h2Mn1x9kFgW2N4io0quocmHYNfNL8ZJH
+   xkHOnpxXJW5aBFaveXyQJ2fKDK50b4HthwTLsjvAauCZ4rCO91QrwsyFH
+   T0WjDjHO+vM5uwkKT9qvHd1L51edOTRZeNv1w6K+47JfOiFeZwv2fheXM
+   w==;
+X-CSE-ConnectionGUID: A+DgpJoERG2qzfuIz2IkpA==
+X-CSE-MsgGUID: 71ZKqBfeT02lAJHoIcgxjA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="64037746"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="64037746"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:28:10 -0700
+X-CSE-ConnectionGUID: Z71nk8nYRuilM5ZhEUrI1g==
+X-CSE-MsgGUID: 9J55saeBROyC+lAS1DxVoA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="189035512"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:28:07 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uTy4Y-00000009PAK-47rV;
+	Tue, 24 Jun 2025 10:28:02 +0300
+Date: Tue, 24 Jun 2025 10:28:02 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Lothar Rubusch <l.rubusch@gmail.com>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
+	dlechner@baylibre.com, nuno.sa@analog.com, andy@kernel.org,
+	corbet@lwn.net, linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+	eraretuya@gmail.com
+Subject: Re: [PATCH v10 3/7] iio: accel: adxl345: add activity event feature
+Message-ID: <aFpTgoEIkWorp_pQ@smile.fi.intel.com>
+References: <20250622155010.164451-1-l.rubusch@gmail.com>
+ <20250622155010.164451-4-l.rubusch@gmail.com>
+ <aFkfjAekGJTU5o71@smile.fi.intel.com>
+ <CAFXKEHbGThKzMxg=aZMgVEZ2S2hUoGAOoE5wu_vCuzEPqL0+cA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v1 2/2] phy: mediatek: tphy: Cleanup and document slew
- calibration
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- chunfeng.yun@mediatek.com
-Cc: vkoul@kernel.org, kishon@kernel.org, matthias.bgg@gmail.com,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
- kernel@collabora.com
-References: <20250623120315.109881-1-angelogioacchino.delregno@collabora.com>
- <20250623120315.109881-3-angelogioacchino.delregno@collabora.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <20250623120315.109881-3-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAFXKEHbGThKzMxg=aZMgVEZ2S2hUoGAOoE5wu_vCuzEPqL0+cA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On 23/06/2025 14:03, AngeloGioacchino Del Regno wrote:
-> While it's true that, generally, the T-PHY V3 does not support the
-> slew calibration process, some minor versions of it actually do,
-> moreover, some SoCs may not support this even though the version
-> of the PHY IP does.
-> 
-> The reference clock and rate coefficient parameters are used only
-> for slew calibration: move those to platform data, then document
-> and change the checks in hs_slew_rate_calibrate() to perform the
-> calibration only if:
->   - EYE value was not supplied (pre-calculated calibration); and
->   - Slew reference clock value is present (not zero); and
->   - Slew coefficient is present (not zero).
-> 
-> Moreover, change the probe function to always check if both the
-> slew reference clock and coefficient properties are present and,
-> if not, assign the value from platform data (which, as reminder,
-> if not added means that it's zero!), instead of checking the PHY
-> IP version.
-> 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->   drivers/phy/mediatek/phy-mtk-tphy.c | 45 +++++++++++++++++------------
->   1 file changed, 27 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-> index 858824b4476e..e5ce1255d735 100644
-> --- a/drivers/phy/mediatek/phy-mtk-tphy.c
-> +++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-> @@ -210,8 +210,6 @@
->   #define P2F_USB_FM_VALID	BIT(0)
->   #define P2F_RG_FRCK_EN		BIT(8)
->   
-> -#define U3P_REF_CLK		26	/* MHZ */
-> -#define U3P_SLEW_RATE_COEF	28
->   #define U3P_SR_COEF_DIVISOR	1000
->   #define U3P_FM_DET_CYCLE_CNT	1024
->   
-> @@ -285,12 +283,16 @@ enum mtk_phy_version {
->    * @sw_efuse_supported:       Switches off eFuse auto-load from PHY and applies values
->    *                            read from different nvmem (usually different eFuse array)
->    *                            that is pointed at in the device tree node for this PHY
-> + * @slew_ref_clk_mhz:         Default reference clock (in MHz) for slew rate calibration
-> + * @slew_rate_coefficient:    Coefficient for slew rate calibration
->    * @version:                  PHY IP Version
->    */
->   struct mtk_phy_pdata {
->   	bool avoid_rx_sen_degradation;
->   	bool sw_pll_48m_to_26m;
->   	bool sw_efuse_supported;
-> +	u8 slew_ref_clock_mhz;
-> +	u8 slew_rate_coefficient;
->   	enum mtk_phy_version version;
->   };
->   
-> @@ -686,12 +688,14 @@ static void hs_slew_rate_calibrate(struct mtk_tphy *tphy,
->   	int fm_out;
->   	u32 tmp;
->   
-> -	/* HW V3 doesn't support slew rate cal anymore */
-> -	if (tphy->pdata->version == MTK_PHY_V3)
-> -		return;
-> -
-> -	/* use force value */
-> -	if (instance->eye_src)
-> +	/*
-> +	 * If a fixed HS slew rate (EYE) value was supplied, don't run the
-> +	 * calibration sequence and prefer using that value instead; also,
-> +	 * if there is no reference clock for slew calibration or there is
-> +	 * no slew coefficient, this means that the slew rate calibration
-> +	 * sequence is not supported.
-> +	 */
-> +	if (instance->eye_src || !tphy->src_ref_clk || !tphy->src_coef)
->   		return;
->   
->   	/* enable USB ring oscillator */
-> @@ -1516,12 +1520,16 @@ static const struct phy_ops mtk_tphy_ops = {
->   
->   static const struct mtk_phy_pdata tphy_v1_pdata = {
->   	.avoid_rx_sen_degradation = false,
-> +	.slew_ref_clock_mhz = 26,
-> +	.slew_rate_coefficient = 28,
->   	.version = MTK_PHY_V1,
->   };
->   
->   static const struct mtk_phy_pdata tphy_v2_pdata = {
->   	.avoid_rx_sen_degradation = false,
->   	.sw_efuse_supported = true,
-> +	.slew_ref_clock_mhz = 26,
-> +	.slew_rate_coefficient = 28,
->   	.version = MTK_PHY_V2,
->   };
->   
-> @@ -1532,6 +1540,8 @@ static const struct mtk_phy_pdata tphy_v3_pdata = {
->   
->   static const struct mtk_phy_pdata mt8173_pdata = {
->   	.avoid_rx_sen_degradation = true,
-> +	.slew_ref_clock_mhz = 26,
-> +	.slew_rate_coefficient = 28,
->   	.version = MTK_PHY_V1,
->   };
->   
-> @@ -1561,7 +1571,7 @@ static int mtk_tphy_probe(struct platform_device *pdev)
->   	struct resource *sif_res;
->   	struct mtk_tphy *tphy;
->   	struct resource res;
-> -	int port;
-> +	int port, ret;
->   
->   	tphy = devm_kzalloc(dev, sizeof(*tphy), GFP_KERNEL);
->   	if (!tphy)
-> @@ -1591,15 +1601,14 @@ static int mtk_tphy_probe(struct platform_device *pdev)
->   		}
->   	}
->   
-> -	if (tphy->pdata->version < MTK_PHY_V3) {
-> -		tphy->src_ref_clk = U3P_REF_CLK;
-> -		tphy->src_coef = U3P_SLEW_RATE_COEF;
-> -		/* update parameters of slew rate calibrate if exist */
-> -		device_property_read_u32(dev, "mediatek,src-ref-clk-mhz",
-> -					 &tphy->src_ref_clk);
-> -		device_property_read_u32(dev, "mediatek,src-coef",
-> -					 &tphy->src_coef);
-> -	}
-> +	/* Optional properties for slew calibration variation */
-> +	ret = device_property_read_u32(dev, "mediatek,src-ref-clk-mhz", &tphy->src_ref_clk);
-> +	if (ret)
-> +		tphy->src_ref_clk = tphy->pdata->slew_ref_clock_mhz;
-> +
-> +	ret = device_property_read_u32(dev, "mediatek,src-coef", &tphy->src_coef);
-> +	if (ret)
-> +		tphy->src_coef = tphy->pdata->slew_rate_coefficient;
->   
->   	port = 0;
->   	for_each_child_of_node_scoped(np, child_np) {
+On Mon, Jun 23, 2025 at 10:57:39PM +0200, Lothar Rubusch wrote:
+> On Mon, Jun 23, 2025 at 11:34 AM Andy Shevchenko
+> <andriy.shevchenko@intel.com> wrote:
+> > On Sun, Jun 22, 2025 at 03:50:06PM +0000, Lothar Rubusch wrote:
 
-Reviewed-by: Neil Armstrong <neil.armstrong@linaro.org>
+...
+
+> > > +     case IIO_EV_TYPE_MAG:
+> > > +             return adxl345_read_mag_config(st, dir,
+> > > +                                            ADXL345_ACTIVITY);
+> >
+> > It looks like you set the editor to wrap at 72 characters, but here the single
+> > line less than 80! Note that the limit is *exactly* 80 character.
+> >
+> 
+> I have my setup adjusted to 80 characters. Anyway, the cases here is
+> different, it needs
+> to be seen in context of the follow up patches. I tried to prepare the
+> patches now in a way
+> where changes are mostly "added". Is this correct and desired patch preparation?
+> 
+> In the particular case, this patch now adds ACTIVITY. A follow up
+> patch will add INACTIVITY.
+> Since this is still building up, it will add yet another argument to
+> those functions, i.e.
+> > > +             return adxl345_write_mag_config(st, dir,
+> > > +                                             ADXL345_ACTIVITY,
+> 
+> will become, later
+> > >               return adxl345_write_mag_config(st, dir,
+> > >                                               ADXL345_ACTIVITY,
+> > > +                                             ADXL345_INACTIVITY,
+
+Yeah, but with the difference that you still remove the added line in the case
+above (as this example is not the same as what we are talking about).
+
+I think you wanted more something like
+
+		return adxl345_read_mag_config(st, dir,
+					       ADXL345_ACTIVITY);
+
+ito become
+
+		return adxl345_read_mag_config(st, dir,
+					       ADXL345_INACTIVITY,
+					       ADXL345_ACTIVITY);
+
+> To make the change more additive, I did linebreaks earlier than 80
+> characters. Is this
+> legitimate in this case?
+
+I think so.
+
+> If so, I'll keep all related formatting as is (and will only change
+> the other requests).
+
+Sure.
+
+> Otherwise, I can do it differently and adopt all the formatting
+> changes to prioritize 80 characters.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
