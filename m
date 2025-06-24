@@ -1,88 +1,94 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC66E283FF4
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B180C238C2A
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750793817; cv=none; b=WRNp5ITnp/UHU0a6u5aEW4ECY006gNZa/HehXG7I9HDOu07vJRxMW2tdeVRM7/zdanfK8EMmYraEnYXrFjQCrjS3QeN2k9ZwGHAh/klM+Uji7wwRAdhz7DtL5kIbn14px+82geQD8gKs5fWG+33TSLsC8sK3YhY2j0FEk0biIJM=
+	t=1750793824; cv=none; b=Qppt3V0zaiKWtBKeFwKBKA8Om6hemN7XIux/CaxzZ0yrJ7ww2PHizMkgv80QIf2PC+SHwB/OAuMGsUTlaN8n/ckFh4L6nmR7TSWzjwIW8WGn5LP04HroKo56wp/UPs3IM9Od64p6pkoUPx3JrYCwZM9NKMzn+HnwySiAoJq0NLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750793817; c=relaxed/simple;
-	bh=j/dlt5NY1sEevXbFRYWQdOfVqrxkNincuVvtIcU8akk=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=AwbwumxtWoSHEgoGkA0HxV4e2yrkyk6WJR//9PkN6cMhgwjUXjTzUGgSg3d53xZM09LqFWT51/7JH8gMW2u2T0yFucURAwLPgDQL/HW8esV6LAUk31EZTA0qfobMdAUuqkVWudb14G3LN9qXvFmfrXa/zgnj29KHUc6aiaVdgC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gbikuS0l; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750793824; c=relaxed/simple;
+	bh=JZqxzc3n4hGVaiBbeSBreJZxmERoCl0/CXAHzC0ay4o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ncOHlRKx4RqJ2JEHlKWPi8ECIbK0qctn+MbF1qXq9hdqbfS+uoYEtPATCSJPcB1VbZVw2/ddv8l4FkORKttyuzkwQCjCqLhOXNjSNuqLoxIkrFGA4FWM5jb68OHtNNrOE9QS5yqF5R08CRWKOSHevBT9yko9WS7Veyo5DUDoqF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=D0xgjMWO; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gbikuS0l"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3132c1942a1so7830878a91.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:36:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D0xgjMWO"
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-553be4d2fbfso5815797e87.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:37:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750793814; x=1751398614; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=viMSycPBqiPur3+TWdDYuhle0MIOLpvl/Uol+qz3flA=;
-        b=gbikuS0lFtr1wo0YL/0s0z7eAtK96pusWYNJslLiW4wn0YyA5yUx6br1rLR6pop9Hq
-         oTNGUpTec4KgeTucQtQwVpLvG30dRv/IbFGxv+5o7FHeTSRiM3clfY0OHhc+AV1fswYb
-         1A8nq1SSNoyxjOpSxpDW6R6pg+Ktvcg8PaVuijOxkXBVbDAK0js9dy0JSjX6/WlCVhol
-         AGvCWik7yddSaBpfuVpEj+pvIoHKSAYpyeYtR8dEaTMNrteUAkb52F5TpX+Ra4mCKJnF
-         udenBOvBDF6hwKFzYffTncMwEJlapN/0BRercnJmHOrsHxqZVkYlnLJ5kbCO2ztIVK9x
-         dktg==
+        d=linaro.org; s=google; t=1750793821; x=1751398621; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xWx4ZbqmjuoN+GAAAjyTNAW/3x01CyhLbr2HZXGfdww=;
+        b=D0xgjMWOyF3KHvczmtjAV3Q/PiM35tiT+5D8J6tO7JPh05UGPOywZMG+fMt7vRhYuz
+         7HcBz1tUlIrYq9uRP0Zmd9e46VdOSIBjgSpFO34DhgDBOXa9nSMtNtr4ypfzA2HBPP0f
+         9vcqIj3nThANA6Yo1us8puJgZ24UqGwTSjMU2/kXkdf3cHupoDcUWXD1fLYzau32TooL
+         yc/1yfams5wPvtzARw8RjLi11HtgZxQdCrfvDO12lksbSxV5j6A0qg7Gws1SR+pDexCc
+         tuQeJfHDts/Pa143m0mkQ+Q+xgy2ea3hUyy44tGbRw3iuv6W8EInnOqQ6RjjiYF5/1/D
+         nCgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750793814; x=1751398614;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=viMSycPBqiPur3+TWdDYuhle0MIOLpvl/Uol+qz3flA=;
-        b=GSKz8BC/dyelt372VyIpoqu3eacPkj6drwCkJUyzeJcj12FECVeDJGm8evp1T16Yf9
-         lmxoHtGBD+Ube28PI6pxSB3BVrjlNWLn0CujL2ie0JOoz2Y0WyxeB7GJ4CBrTVhyXQ79
-         T2Xl+RyURerUi7/fX76RCzOGjb85AmScluqlyLxIJc+oQ66W90BXmk1JHMPPtisPNKuq
-         pIY/AM6dpoyzMF0zFaPj8C43G5PKESFrN84J39RhmqWbLwzrRUeUjSVwSg/VQkDFygnM
-         Bed5UnjYv2+xze54/o1jAsh9a5/Yubawg4xsxsqdTB159fRPOO4bZNLYvm5OqAXs52zX
-         wDpA==
-X-Gm-Message-State: AOJu0YzH0IABwLt8b+TkX8xv0xw1n87i1VL/EA3AUF4BZAxf/k77fW46
-	T5xQ+n1u9+Lsy8UsKSjPAd17asGci6mMANw8YquW9ecbiYkGROaiKnP1oWihrms4vWEzmBsJlHS
-	wOgDc2Q==
-X-Google-Smtp-Source: AGHT+IFRkQQ2myYZZnKFJSslcKWO07YibtuViIOb3x6ZN/PHZPWcw4jA+Uawc7SEfK6LvysgQOH01TybSVA=
-X-Received: from pjvf5.prod.google.com ([2002:a17:90a:da85:b0:2fc:e37d:85dc])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2e87:b0:315:6f2b:ce5a
- with SMTP id 98e67ed59e1d1-315f2623ca2mr171587a91.11.1750793813797; Tue, 24
- Jun 2025 12:36:53 -0700 (PDT)
-Date: Tue, 24 Jun 2025 12:36:26 -0700
-In-Reply-To: <aEylI-O8kFnFHrOH@google.com>
+        d=1e100.net; s=20230601; t=1750793821; x=1751398621;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xWx4ZbqmjuoN+GAAAjyTNAW/3x01CyhLbr2HZXGfdww=;
+        b=kW09Wm+BSD1M1Rv0Mndj0qY5C/xQZEGg+H2BLwXKDRQCcIRjz/XPkqZoQhnthu1kH5
+         38e1qM20aDap208PIRSgmtuw9rlEaJAimcvvC2j0zYrV1104/cAE1K+5V6hSDDZuhIqq
+         AtvsR0z0RZL4oysjAKrHZeekCRvJNrST7c+VSf371VwM1QJ/IvsCKFnbmUJK1kwNHYnb
+         1BrptPvFrrKSyFHWkQBwFxH+fmEDa2obLkx1laNr2QNv/ve/41hweO6KJJw4zoixny7O
+         Z+aOwaKXUb+2wd4737Jw0qCqvn5S4hs6LFvGLTXQ56f1eBGuAo0n/Rw0awmxrGB8MRcm
+         44yg==
+X-Forwarded-Encrypted: i=1; AJvYcCWtbHOWjLG5rkvHLnczjwEWeqxA76dwhSyMwNiySbekcscul835Xgbc+dEzlNEHQizEWl/qpCbdpMVjxR0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzOSUjfc4i/JD8C6mQZZHpEV2tAjs0mkmVZbbPfSXI35nHyWF4O
+	DJmE9Oi7dj/wKUVpzR6pAqQUAYpfTQLaOk8CrQWg1PR90Bvru6GFz+lh9MrBQF+rxF7DHeZtz54
+	Jn9k3ApYjrT2fr77UlpUxGB6+FYv8Xj9xUfV+T0Mb5w==
+X-Gm-Gg: ASbGncsNTu+1muZk2j/fYYU0x5W2VxczZR/eUJqJ//2YBQ0g8dJ0QNNZOuaSmvePP74
+	csfrSZEbTBbzx8u6++jTGu8Dv+OAjVybPN/iAosjJyZRKN8pv/2YE+GzQx56qewMpO1i54MktSa
+	spAvz6u4JCiaRF1/85AHpg3PGqWipx+94q0wvR6ZRGg8cFlUG0jq9Nxg==
+X-Google-Smtp-Source: AGHT+IGTAkz9C4D85zB1kQRLKN+kg1CzqDWzK8T7Zq3cCjKU/bU0Pgyf3W2KemMQkOy8Ax3B2qtJIPcdQTQB2/vKgbg=
+X-Received: by 2002:a05:6512:114e:b0:553:2dce:3aac with SMTP id
+ 2adb3069b0e04-554fdcd71acmr54580e87.16.1750793820825; Tue, 24 Jun 2025
+ 12:37:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <aEylI-O8kFnFHrOH@google.com>
-X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
-Message-ID: <175079250757.516293.17591190576479567167.b4-ty@google.com>
-Subject: Re: [RFC PATCH] KVM: x86: Dynamically allocate bitmap to fix
- -Wframe-larger-than error
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, 
-	avinashlalotra <abinashlalotra@gmail.com>
-Cc: linux-kernel@vger.kernel.org, vkuznets@redhat.com, pbonzini@redhat.com, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	avinashlalotra <abinashsinghlalotra@gmail.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20250624-k230-return-check-v1-0-6b4fc5ba0c41@whut.edu.cn>
+In-Reply-To: <20250624-k230-return-check-v1-0-6b4fc5ba0c41@whut.edu.cn>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 24 Jun 2025 21:36:49 +0200
+X-Gm-Features: AX0GCFtQ1H1_4Ze356zkPlmDngrt4CualoQkn-4hS5it00YgmSIZZpN3pwFkejw
+Message-ID: <CACRpkda0w6GthVHe+iMGBG-5QKrF-3yP_8o6M4_xeJWsU=8h_A@mail.gmail.com>
+Subject: Re: [PATCH 0/2] pinctrl: canaan: k230: Fix DT parsing and
+ registration order
+To: Ze Huang <huangze@whut.edu.cn>
+Cc: Ze Huang <18771902331@163.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Yao Zi <ziyao@disroot.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 13, 2025, Sean Christopherson wrote:                                
-> Use a preallocated per-vCPU bitmap for tracking the unpacked set of vCPUs     
-> being targeted for Hyper-V's paravirt TLB flushing.  If KVM_MAX_NR_VCPUS      
-> is set to 4096 (which is allowed even for MAXSMP=n builds), putting the       
-> vCPU mask on-stack pushes kvm_hv_flush_tlb() past the default FRAME_WARN      
-> limit.
-> 
-> [...]
+On Mon, Jun 23, 2025 at 6:11=E2=80=AFPM Ze Huang <huangze@whut.edu.cn> wrot=
+e:
 
-Applied my version to kvm-x86 fixes, thanks!
+> This patch set fixes two issues in the Canaan K230 pinctrl driver:
+>
+> 1. Adds a NULL check for the "pinmux" property in the device tree parser =
+to
+>    prevent potential NULL pointer dereference, and fixes a typo in the
+>    match table comment.
+>
+> 2. Moves the DT parsing step before pinctrl registration to ensure that
+>    pin resources are fully initialized before being used.
+>
+> Signed-off-by: Ze Huang <huangze@whut.edu.cn>
 
-[1/1] KVM: x86/hyper-v: Use preallocated per-vCPU buffer for de-sparsified vCPU masks
-      https://github.com/kvm-x86/linux/commit/4bbcc07a56e6
+Patches applied!
 
---
-https://github.com/kvm-x86/kvm-unit-tests/tree/next
+Yours,
+Linus Walleij
