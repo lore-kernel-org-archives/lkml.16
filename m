@@ -1,121 +1,130 @@
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D32AA2114;
-	Tue, 24 Jun 2025 00:14:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.75.126.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1F1DDC5;
+	Tue, 24 Jun 2025 00:14:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750724054; cv=none; b=NWIY3MmTRHBZL+rsE8EwRP9x6t5JLU1+yRG+zcV/llHX97v1piyF3lfvzHSZIGG35FT7q1eldCYSa9ZXjk8SAOv99wZDUwDuTeUgpMJ49tAvTdZVUbtKJtNAjU6hjPSdsAzvOKKPPumS9wMHMlGQFHhy1vqbLL4nsv8ApISrEf8=
+	t=1750724089; cv=none; b=mGEPgu8smx++/SBvOpBonLuw3HWymuPqbRpAMOaYt+ozcj9ZS3ORVouumeWm+fcZ/flIkvsLLVdX53yBXusjuE+2IKFvg0OcPVu8cooecQCSPrLhIhSf+y12j5i8ZJs9HgL1s/JR/s+WTivDewDejyJiiXc0gOCrjDd+tVpB11Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750724054; c=relaxed/simple;
-	bh=kjhl/ZlXGHdFlX33+fCNQzvWOD46B42IZ6JdnNIm6K0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=WtDS5sUdOEYxkENbxqR09x7LqV1tb5lM/a6scKWqCY6/9PA63rDwDDGLwtvFuq6PT7wVTCy8AMUKE+dAwAj7N8FVXQZXZOIbJzWPaxcBT/CuGSnhIsv1M0KE0KWGnpC1Oabs1n8ZjoKOYMGDzD0krsGUoW6dJ2lahL/YgvvTPJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com; spf=pass smtp.mailfrom=realtek.com; dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b=EZRxG1sa; arc=none smtp.client-ip=211.75.126.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=realtek.com header.i=@realtek.com header.b="EZRxG1sa"
-X-SpamFilter-By: ArmorX SpamTrap 5.80 with qID 55O0E62N02234004, This message is accepted by code: ctloc85258
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=realtek.com; s=dkim;
-	t=1750724046; bh=kjhl/ZlXGHdFlX33+fCNQzvWOD46B42IZ6JdnNIm6K0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:Content-Transfer-Encoding:MIME-Version;
-	b=EZRxG1sa6DZgC3n37NcLkGINdXakq8JaR6RcYTkJSgHZ77lW50lGyT3+YNGwhStnK
-	 zTkqFYKa4C6ZF8wloOymHYK5seYYsoCJPgzAF+MVHrqdYk5fUGr4YYyXkQ5BvhPZIn
-	 AV76DXEEjz0AhPprMqkO5OUm9ZrfxYn0pdj43MEGBUzYX+bM30Z2kUHLkv+KCoR55w
-	 3eHsH28BWOFGZsjqaK7eTPbpSSwxF0NljA+hTOU/r4QFpojteiP/QtKLROuN07IYYi
-	 YxXN8TIHLFXYIQx8bSGKJshULtqqdpg4mL+vnqo/t3/iPWYA+Pno1ijTz3C+hVtqga
-	 AqgL1Fkxs9xYQ==
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/3.13/5.93) with ESMTPS id 55O0E62N02234004
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 24 Jun 2025 08:14:06 +0800
-Received: from RTEXMBS05.realtek.com.tw (172.21.6.98) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+	s=arc-20240116; t=1750724089; c=relaxed/simple;
+	bh=mvd7HYgY3y0Jlw/lagENjsSyorxq5oI63ILlkLx617U=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=O232mtQwzL+49zaWKNxI+lxV1i+akDJeIErXtuRb7E9J5dKNx4p4IW4EhxmyFUd+oNJaJLv1jKjOu/K308kgPF6pHr0LTyXxR1gYI0Dj+waEnNXQySIaf/X87LkaUjtd7BaK0cVoCignDkiLAOGJtqHWp/Vv3knsKc6rVseRdZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bR57s2dyKz2QVJT;
+	Tue, 24 Jun 2025 08:15:37 +0800 (CST)
+Received: from kwepemf100013.china.huawei.com (unknown [7.202.181.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id 7435D140294;
+	Tue, 24 Jun 2025 08:14:42 +0800 (CST)
+Received: from DESKTOP-F6Q6J7K.china.huawei.com (10.174.175.220) by
+ kwepemf100013.china.huawei.com (7.202.181.12) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 24 Jun 2025 08:14:19 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXMBS05.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Tue, 24 Jun 2025 08:14:19 +0800
-Received: from RTEXDAG02.realtek.com.tw ([fe80::1d65:b3df:d72:eb25]) by
- RTEXDAG02.realtek.com.tw ([fe80::1d65:b3df:d72:eb25%5]) with mapi id
- 15.01.2507.035; Tue, 24 Jun 2025 08:14:19 +0800
-From: Ping-Ke Shih <pkshih@realtek.com>
-To: Bitterblue Smith <rtl8821cerfe2@gmail.com>,
-        Bernie Huang
-	<phhuang@realtek.com>,
-        Fedor Pchelkin <boddah8794@gmail.com>
-CC: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [Bug report] rtw89: 8852b: IO_PAGE_FAULTs with beacon filter feature enabled
-Thread-Topic: [Bug report] rtw89: 8852b: IO_PAGE_FAULTs with beacon filter
- feature enabled
-Thread-Index: AQHbrfBpW2AH+n1rZEuyFH6rIsW1k7Olc7dQgAAnAYCAAXKcUIAf2VeAgAEkbICACRO4gIA/xfYAgAD40hA=
-Date: Tue, 24 Jun 2025 00:14:19 +0000
-Message-ID: <b06f906cbdee403f9aa9442a5d7cab29@realtek.com>
-References: <uidltsdsuujrczrtzgerhh5cw2tztxktfen6yvztnc7gttzgvk@jccomj7f4gul>
- <148ed65c53be4ef29246d372dd0fef8e@realtek.com>
- <z54thedngt3wnhr5bfer3yg7id2c4uqgw2jjvyausv6p66ys4k@guqol77fpugz>
- <dcf695a6621f43e38a20eb860194191a@realtek.com>
- <7injzacfmvhrugcovyxkn4elnaxnzg27c26zmcqzrwhottyk7e@ap5ellaozcg4>
- <419811cccd774d38b5a9c0bbcdf5dfbe@realtek.com>
- <42783d9a032143bfb67ea969ee0b805d@realtek.com>
- <ed0b9b6f-f480-40ec-b4d5-453c78bd8a5c@gmail.com>
-In-Reply-To: <ed0b9b6f-f480-40ec-b4d5-453c78bd8a5c@gmail.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ 15.2.1544.11; Tue, 24 Jun 2025 08:14:40 +0800
+From: Fan Gong <gongfan1@huawei.com>
+To: Fan Gong <gongfan1@huawei.com>, Zhu Yikai <zhuyikai1@h-partners.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "David S.
+ Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
+ Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	<linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas
+	<helgaas@kernel.org>, luosifu <luosifu@huawei.com>, Xin Guo
+	<guoxin09@huawei.com>, Shen Chenyang <shenchenyang1@hisilicon.com>, Zhou
+ Shuai <zhoushuai28@huawei.com>, Wu Like <wulike1@huawei.com>, Shi Jing
+	<shijing34@huawei.com>, Meny Yossefi <meny.yossefi@huawei.com>, Gur Stavi
+	<gur.stavi@huawei.com>, Lee Trager <lee@trager.us>, Michael Ellerman
+	<mpe@ellerman.id.au>, Suman Ghosh <sumang@marvell.com>, Przemek Kitszel
+	<przemyslaw.kitszel@intel.com>, Joe Damato <jdamato@fastly.com>, Christophe
+ JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH net-next v04 0/8] net: hinic3: Add a driver for Huawei 3rd gen NIC - management interfaces
+Date: Tue, 24 Jun 2025 08:14:21 +0800
+Message-ID: <cover.1750665915.git.zhuyikai1@h-partners.com>
+X-Mailer: git-send-email 2.21.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
+ kwepemf100013.china.huawei.com (7.202.181.12)
 
-Qml0dGVyYmx1ZSBTbWl0aCA8cnRsODgyMWNlcmZlMkBnbWFpbC5jb20+IHdyb3RlOg0KPiBPbiAx
-NC8wNS8yMDI1IDA2OjI5LCBCZXJuaWUgSHVhbmcgd3JvdGU6DQo+ID4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0NCj4gPiBGcm9tOiBQaW5nLUtlIFNoaWggPHBrc2hpaEByZWFsdGVrLmNvbT4N
-Cj4gPiBTZW50OiBUaHVyc2RheSwgTWF5IDgsIDIwMjUgODo1OSBBTQ0KPiA+IFRvOiBGZWRvciBQ
-Y2hlbGtpbiA8Ym9kZGFoODc5NEBnbWFpbC5jb20+DQo+ID4gQ2M6IEJlcm5pZSBIdWFuZyA8cGho
-dWFuZ0ByZWFsdGVrLmNvbT47IGxpbnV4LXdpcmVsZXNzQHZnZXIua2VybmVsLm9yZzsgbGludXgt
-a2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiA+IFN1YmplY3Q6IFJFOiBbQnVnIHJlcG9ydF0gcnR3
-ODk6IDg4NTJiOiBJT19QQUdFX0ZBVUxUcyB3aXRoIGJlYWNvbiBmaWx0ZXIgZmVhdHVyZSBlbmFi
-bGVkDQo+ID4NCj4gPiBGZWRvciBQY2hlbGtpbiA8Ym9kZGFoODc5NEBnbWFpbC5jb20+IHdyb3Rl
-Og0KPiA+Pj4gT24gVGh1LCAxNy4gQXByIDAxOjA1LCBQaW5nLUtlIFNoaWggd3JvdGU6DQo+ID4+
-Pj4gRmVkb3IgUGNoZWxraW4gPGJvZGRhaDg3OTRAZ21haWwuY29tPiB3cm90ZToNCj4gPj4+Pj4N
-Cj4gPj4+Pj4gT24gV2VkLCAxNi4gQXByIDAwOjQ5LCBQaW5nLUtlIFNoaWggd3JvdGU6DQo+ID4+
-Pj4+PiBBcyBiaXNlY3Rpb24sIGNhbiBJIHN1bW1hcml6ZSBhcyBiZWxvdyB0YWJsZT8NCj4gPj4+
-Pj4+DQo+ID4+Pj4+PiAgICAgZDU2YzI2MWU1MiAgICAgICAgICAgZmlybXdhcmUgICAgICAgICAg
-ICAgSU9fUEFHRV9GQVVMVA0KPiA+Pj4+Pj4gICAgKENRTSBzdXBwb3J0KQ0KPiA+Pj4+Pj4gICAt
-LS0tLS0tLS0tLS0tLS0gICAgICAtLS0tLS0tLS0tLSAgICAgICAgICAtLS0tLS0tLS0tLS0tLS0t
-LQ0KPiA+Pj4+Pj4gICAgICAgbyAgICAgICAgICAgICAgICAgMC4yOS4yOS43ICAgICAgICAgICAg
-ICAgICAgeWVzDQo+ID4+Pj4+PiAgICAgICBvICAgICAgICAgICAgICAgICAwLjI5LjI5LjUgICAg
-ICAgICAgICAgICAgICBubw0KPiA+Pj4+Pj4gICAgICAgeCAgICAgICAgICAgICAgICAgMC4yOS4y
-OS43ICAgICAgICAgICAgICAgICAgbm8NCj4gPj4+Pj4+ICAgICAgIHggICAgICAgICAgICAgICAg
-IDAuMjkuMjkuNSAgICAgICAgICAgICAgICAgIG5vDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gSWYgdGhp
-cyB0YWJsZSBpcyBjb3JyZWN0LCB3ZSB3aWxsIGNoZWNrIHRoZSBiZWFjb24gZmlsdGVyIGZlYXR1
-cmUgaW4gZmlybXdhcmUuDQo+ID4+Pj4+Pg0KPiA+Pj4+Pg0KPiA+Pj4+PiBZZXMsIGl0IGNvcnJl
-Y3RseSBkZXNjcmliZXMgdGhlIHNpdHVhdGlvbi4gTXkgc3VzcGljaW9uIGN1cnJlbnRseQ0KPiA+
-Pj4+PiBmYWxscyBvbiB0aGUgYmVhY29uIGZpbHRlciBmZWF0dXJlIGluIGZpcm13YXJlLCB0b28u
-DQo+ID4+Pj4NCj4gPj4+PiBDb3VsZCB5b3UgaGVscCB0byB0ZXN0IHdoZW4gd2UgaGF2ZSB1cGRh
-dGVkIGZpcm13YXJlPw0KPiA+Pj4+DQo+ID4+Pg0KPiA+Pj4gSGksDQo+ID4+Pg0KPiA+Pj4gV2Vy
-ZSB5b3UgYWJsZSB0byByZXByb2R1Y2Ugb3IgdHJhY2sgZG93biB0aGUgcHJvYmxlbT8NCj4gPg0K
-PiA+PiBZZXMsIHdlIGhhdmUgcmVwcm9kdWNlZCB0aGlzIHByb2JsZW0sIGFuZCB3ZSBmb3VuZCBz
-ZW5kaW5nIGZpcm13YXJlIGNvbW1hbmQgZHVyaW5nIGRlZXAgUFMgbW9kZSB3aWxsDQo+IHJhaXNl
-IElPX1BBR0VfRkFVTFQuIFdpdGggYmVsb3cgc2V0dGluZyB0byBkaXNhYmxlIGRlZXAgUFMgPiBt
-b2RlLCB0aGUgc3ltcHRvbSBjYW4gZGlzYXBwZWFyLg0KPiA+DQo+ID4+ICAgcnR3ODlfY29yZS5r
-byBkaXNhYmxlX3BzX21vZGU9eQ0KPiA+DQo+ID4+IE5vdyB3ZSBhcmUgYXJyYW5naW5nIENBVC1D
-IGVxdWlwbWVudCB0byBjYXB0dXJlIHNpZ25hbHMgaW4gUENJRSBidXMgdG8gc2VlIHdoYXQgaGFw
-cGVucyBhdCB0aGF0IG1vbWVudC4NCj4gPg0KPiA+PiBPbmUgcG9zc2libGUgc29sdXRpb24gKHdv
-cmthcm91bmQpIGlzIHRvIGF2b2lkIHNlbmRpbmcgZmlybXdhcmUgY29tbWFuZHMgZHVyaW5nIGRl
-ZXAgUFMgbW9kZSwgYmVmb3JlDQo+IHdlIGZvdW5kIG91dCB0aGUgcm9vdCBjYXVzZS4NCj4gPg0K
-PiA+IEhpIEZlZG9yLA0KPiA+DQo+ID4gQ291bGQgeW91IHBsZWFzZSBjaGVjayB3aGV0aGVyIHRo
-ZSBhdHRhY2hlZCBmaXJtd2FyZSBmaXhlcyB0aGlzIGlzc3VlPw0KPiA+IFRoZSBmaXJtd2FyZSB2
-ZXJzaW9uIHNob3VsZCBiZSAxLjI5LjI5LjkuDQo+IEJ5IHRoZSB3YXksIHdoYXQgZG9lcyB0aGUg
-Zmlyc3QgbnVtYmVyIG1lYW4/IFRoZSBwcmV2aW91cyB2ZXJzaW9uIHdhcw0KPiAwLjI5LjI5Ljgu
-IEkgd291bGQgZXhwZWN0IG9ubHkgdGhlIGxhc3QgbnVtYmVyIHRvIGNoYW5nZSBmb3IgdGhpcyBi
-dWcgZml4Lg0KDQpUaGlzIGZpcm13YXJlIGlzIGZvciB0ZXN0aW5nIG9ubHkuIFRoZSBmb3JtYWwg
-ZmlybXdhcmUgc2hvdWxkIGJlIDAuMjkuMjkueC4gDQoNCg==
+This is the 2/3 patch of the patch-set described below.
+
+The patch-set contains driver for Huawei's 3rd generation HiNIC
+Ethernet device that will be available in the future.
+
+This is an SRIOV device, designed for data centers.
+Initially, the driver only supports VFs.
+
+Following the discussion over RFC01, the code will be submitted in
+separate smaller patches where until the last patch the driver is
+non-functional. The RFC02 submission contains overall view of the entire
+driver but every patch will be posted as a standalone submission.
+
+Changes:
+
+PATCH 02 V01: https://lore.kernel.org/netdev/cover.1749561390.git.root@localhost.localdomain
+
+PATCH 02 V02: https://lore.kernel.org/netdev/cover.1749718348.git.zhuyikai1@h-partners.com
+* Fix build allmodconfig warning (patchwork)
+* Update cover-letter changes information.
+
+PATCH 02 V03: https://lore.kernel.org/netdev/cover.1750054732.git.zhuyikai1@h-partners.com
+* Use refcount_*() instead of atomic_*() (Jakub Kicinski)
+* Consistency fixes : HIG->HIGH, BAR45->BAR4/5 , etc (ALOK TIWARI)
+* Code format fixes : use \n before return, remove extra spaces (ALOK TIWARI)
+* Remove hinic3_request_irq redundant error print (ALOK TIWARI)
+* Modify hinic3_wq_create error print (ALOK TIWARI)
+
+PATCH 02 V04:
+* Break it up into smaller patches (Jakub Kicinski)
+
+Fan Gong (8):
+  hinic3: Async Event Queue interfaces
+  hinic3: Complete Event Queue interfaces
+  hinic3: Command Queue framework
+  hinic3: Command Queue interfaces
+  hinic3: TX & RX Queue coalesce interfaces
+  hinic3: Mailbox framework
+  hinic3: Mailbox management interfaces
+  hinic3: Interrupt request configuration
+
+ drivers/net/ethernet/huawei/hinic3/Makefile   |   4 +-
+ .../net/ethernet/huawei/hinic3/hinic3_cmdq.c  | 912 ++++++++++++++++++
+ .../net/ethernet/huawei/hinic3/hinic3_cmdq.h  | 156 +++
+ .../ethernet/huawei/hinic3/hinic3_common.c    |  31 +
+ .../ethernet/huawei/hinic3/hinic3_common.h    |  27 +
+ .../net/ethernet/huawei/hinic3/hinic3_csr.h   |  79 ++
+ .../net/ethernet/huawei/hinic3/hinic3_eqs.c   | 803 +++++++++++++++
+ .../net/ethernet/huawei/hinic3/hinic3_eqs.h   | 130 +++
+ .../ethernet/huawei/hinic3/hinic3_hw_cfg.c    |  43 +
+ .../ethernet/huawei/hinic3/hinic3_hw_comm.c   |  31 +
+ .../ethernet/huawei/hinic3/hinic3_hw_comm.h   |  13 +
+ .../ethernet/huawei/hinic3/hinic3_hw_intf.h   |  36 +
+ .../net/ethernet/huawei/hinic3/hinic3_hwif.c  | 153 ++-
+ .../net/ethernet/huawei/hinic3/hinic3_hwif.h  |  16 +
+ .../net/ethernet/huawei/hinic3/hinic3_irq.c   | 137 ++-
+ .../net/ethernet/huawei/hinic3/hinic3_main.c  |  65 +-
+ .../net/ethernet/huawei/hinic3/hinic3_mbox.c  | 843 +++++++++++++++-
+ .../net/ethernet/huawei/hinic3/hinic3_mbox.h  | 127 +++
+ .../ethernet/huawei/hinic3/hinic3_nic_dev.h   |  14 +-
+ .../huawei/hinic3/hinic3_queue_common.h       |   1 +
+ .../net/ethernet/huawei/hinic3/hinic3_wq.c    | 109 +++
+ .../net/ethernet/huawei/hinic3/hinic3_wq.h    |  11 +
+ 22 files changed, 3726 insertions(+), 15 deletions(-)
+ create mode 100644 drivers/net/ethernet/huawei/hinic3/hinic3_cmdq.c
+ create mode 100644 drivers/net/ethernet/huawei/hinic3/hinic3_cmdq.h
+ create mode 100644 drivers/net/ethernet/huawei/hinic3/hinic3_csr.h
+ create mode 100644 drivers/net/ethernet/huawei/hinic3/hinic3_eqs.c
+ create mode 100644 drivers/net/ethernet/huawei/hinic3/hinic3_eqs.h
+
+
+base-commit: 5e95c0a3a55aea490420bd6994805edb050cc86b
+-- 
+2.43.0
+
