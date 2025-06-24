@@ -1,85 +1,109 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79ACA42065
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:55:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E9E24A06F;
+	Tue, 24 Jun 2025 06:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750748122; cv=none; b=FXG0qbYNKxIaxYPaFCLoezENUCMLBKM4h7+U+vBRrkFNwSz79fKBSINPsQZlNwdNngoyEw+vd782c+QgpHfc93mtsVIXJ6O3w526RVBQkFo/A+0NyLA5DwF329jbDBydN7myABODcoMDFAujFLYsQEsAaEHUHlBbJyI551mvTsU=
+	t=1750748125; cv=none; b=G0B6M9t0JoIoW4MOzu0a9I1V2qXxS//KAEC0yG9galdJlo8O00bWWwm/zJ/gm5CAAafL+RCGjVsPjWoIE71B1m8ljm0pnMXZn0U+FbPlggviWdc582ywcg3fclnS1tA3M6/lu+XJwO7Jj8Zn/vDWn/JwjXvjzZX3H1ccInSS9P4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750748122; c=relaxed/simple;
-	bh=tXHl/fqunYnn9miDE1bZcQNgfI8xMAEVRtl7KrUO6C8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KGe+FmA4OImJxVRu85YOd7lDySvVbcM3GogMgGG6fSZedGH6r25peAcqmpiGl3JlA+bGmWIEZt7E8Wpfln1p30r6hl4rcsOHfrIpvLgu6IxpCiIWPUFYiqZ7IsQ/atoA9fDjcpOebYRFfF/cl6pJbOeKmUXZGSvmB6KAAUGZ+/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mfdqEhHT; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750748125; c=relaxed/simple;
+	bh=aPPh+HmFQqsfhDNkaSovjYdAsLIQKoKFRNEszaYKM68=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JjlZzdMobR7m/dgYvhtSAtW8sSWvsJnECrSMTAsxDJeRTyUDi57Y9BEu2AbAwzWIi92Kn2N28m2LrehbYcHJRNzaQNrOtNFlOIEYEAZgJgZFcavyfCMBHfsQ8mXHrO9SwMKZRD2WzldZvm93hW6BPO6qJQiI6+oHwKC+E91Zz30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=HyuE10GG; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mfdqEhHT"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="HyuE10GG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750748121; x=1782284121;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=tXHl/fqunYnn9miDE1bZcQNgfI8xMAEVRtl7KrUO6C8=;
-  b=mfdqEhHTp6oig5U1AhL4eQcynP6TXATqztrCJrey8YFCjsbgGqeVUKvx
-   7GMI4sIrcShcn45nnPH2wyMl7BUxmBaz+/Vp/KxafY6SHur7pDNoUq9YS
-   ffFggWgLFgdAlBRvwzGRm23p4GqasKjqCAZWDYW/YuJOmKLOxl5MY6L+V
-   3serwyjp+y+zTHjx7ba9QB3jsommPZaAGNLjaAZZ4XK8NzcMNeWtVnsyn
-   RgUCjUGjRyYwL9wrLKdRHP+VJaOmrq+F3pBIweLI4SZ77+4hO76wZVG3s
-   sadHt06WcWcT0Bm/+6GqkFknp1Kzkem9cyczhpB2N89NCFYO/eLX2/vCM
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1750748123; x=1782284123;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=aPPh+HmFQqsfhDNkaSovjYdAsLIQKoKFRNEszaYKM68=;
+  b=HyuE10GGiW2NVPnG96q7TJH/XQ4ugFHuqNfMXxjwK/dt9ZHfOUeUVtPv
+   WD32ruAPGWAn2svCZf1yU0KU/O6xj8x1pYGwti3KsYxeIWZd1l4wj7ftt
+   hpH50v6qWaKixDsfjncfEE2xY6KxR27jn0ZBSlouQN9vR2JSIrsDXsKey
+   c85LXbPskGunSC5opTfqC53qOdz5KRh0K9ObD8gO2JMvv4raxWrrpvwAe
+   UBUF5lq91N6UUxbHU/7GI4ULezbQjohiDwCutBlNunUkhKLOquo2/zry9
+   VZPcQcAmLuIbHg3O8ktlOTFop8wQQq7UFmVunAKmx2AjJ4SFMBnX6ukxe
    Q==;
-X-CSE-ConnectionGUID: 19Ig1l+BSPiEQPNApDn9DA==
-X-CSE-MsgGUID: CYIqTr+/QmKlkYlbOZ6P6Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="52200145"
+X-CSE-ConnectionGUID: 0bOzDgvpTueJpEwYn8gY3g==
+X-CSE-MsgGUID: oaqHzgTcTD68xEvHbKUqEA==
 X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="52200145"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jun 2025 23:55:20 -0700
-X-CSE-ConnectionGUID: J+lBBPhlSe66ItEBZ8CM5w==
-X-CSE-MsgGUID: GxudAC+RSpqdHxvxokPFZg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,260,1744095600"; 
-   d="scan'208";a="151967165"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa006.fm.intel.com with ESMTP; 23 Jun 2025 23:55:17 -0700
-Date: Tue, 24 Jun 2025 14:47:44 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: jgg@nvidia.com, jgg@ziepe.ca, kevin.tian@intel.com, will@kernel.org,
-	aneesh.kumar@kernel.org
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org, joro@8bytes.org,
-	robin.murphy@arm.com, shuah@kernel.org, nicolinc@nvidia.com,
-	aik@amd.com, dan.j.williams@intel.com, baolu.lu@linux.intel.com,
-	yilun.xu@intel.com
-Subject: Re: [PATCH v2 3/4] iommufd: Destroy vdevice on idevice destroy
-Message-ID: <aFpKEO7/+Xf6Wu+d@yilunxu-OptiPlex-7050>
-References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
- <20250623094946.1714996-4-yilun.xu@linux.intel.com>
+   d="scan'208";a="210622141"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Jun 2025 23:55:22 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Mon, 23 Jun 2025 23:54:51 -0700
+Received: from hyd-ld-i35088a.microchip.com (10.10.85.11) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
+ 15.1.2507.44 via Frontend Transport; Mon, 23 Jun 2025 23:54:48 -0700
+From: shravan kumar <shravan.chippa@microchip.com>
+To: <sakari.ailus@linux.intel.com>, <mchehab@kernel.org>
+CC: <kieran.bingham@ideasonboard.com>, <linux-media@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <conor.dooley@microchip.com>,
+	<valentina.fernandezalanis@microchip.com>, <praveen.kumar@microchip.com>,
+	<shravan.chippa@microchip.com>
+Subject: [PATCH] media: i2c: imx334: add support for additional test patterns
+Date: Tue, 24 Jun 2025 12:24:38 +0530
+Message-ID: <20250624065438.2021044-1-shravan.chippa@microchip.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623094946.1714996-4-yilun.xu@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-> +void iommufd_vdevice_destroy(struct iommufd_object *obj)
-> +{
-> +	struct iommufd_vdevice *vdev =
-> +		container_of(obj, struct iommufd_vdevice, obj);
-> +
-> +	mutex_lock(&vdev->idev->igroup->lock);
-> +	iommufd_vdevice_abort(obj);
-> +	mutex_unlock(&vdev->idev->igroup->lock);
-> +	wake_up_interruptible_all(&vdev->ictx->destroy_wait);
+From: Shravan Chippa <shravan.chippa@microchip.com>
 
-Should change to
+Added support for three additional test patterns in the
+IMX334 driver: Black and Grey Bars, Black Color, and White Color.
 
-        wake_up_interruptible_all(&vdev->viommu->ictx->destroy_wait);
+Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
+---
+ drivers/media/i2c/imx334.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-since vdev->ictx will be deleted.
+diff --git a/drivers/media/i2c/imx334.c b/drivers/media/i2c/imx334.c
+index 846b9928d4e8..43dd7edb48c8 100644
+--- a/drivers/media/i2c/imx334.c
++++ b/drivers/media/i2c/imx334.c
+@@ -118,6 +118,9 @@
+ #define IMX334_REG_TP			CCI_REG8(0x329e)
+ #define IMX334_TP_COLOR_HBARS		0xa
+ #define IMX334_TP_COLOR_VBARS		0xb
++#define IMX334_TP_BLACK			0x0
++#define IMX334_TP_WHITE			0x1
++#define IMX334_TP_BLACK_GREY		0xC
+ 
+ #define IMX334_TPG_EN_DOUT		CCI_REG8(0x329c)
+ #define IMX334_TP_ENABLE		0x1
+@@ -398,12 +401,18 @@ static const char * const imx334_test_pattern_menu[] = {
+ 	"Disabled",
+ 	"Vertical Color Bars",
+ 	"Horizontal Color Bars",
++	"Black and Grey Bars",
++	"Black Color",
++	"White Color",
+ };
+ 
+ static const int imx334_test_pattern_val[] = {
+ 	IMX334_TP_DISABLE,
+ 	IMX334_TP_COLOR_HBARS,
+ 	IMX334_TP_COLOR_VBARS,
++	IMX334_TP_BLACK_GREY,
++	IMX334_TP_BLACK,
++	IMX334_TP_WHITE,
+ };
+ 
+ static const struct cci_reg_sequence raw10_framefmt_regs[] = {
+-- 
+2.34.1
 
-Thanks,
-Yilun
