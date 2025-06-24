@@ -1,38 +1,45 @@
-Received: from unicom145.biz-email.net (unicom145.biz-email.net [210.51.26.145])
+Received: from out0-193.mail.aliyun.com (out0-193.mail.aliyun.com [140.205.0.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D41117D7;
-	Tue, 24 Jun 2025 03:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.51.26.145
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DFFC126C03
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 03:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750734107; cv=none; b=jOfiVeusqzbW7ZVvzQh5ongk/FIrHsScRJERly7o4u/MglxQaF9QPYt2iqgiemZTPIPNBCH09DYOrBRojEiadgT89AuTuQb+6MDa01QiZ4S1yqN3hMFwBXc5XmrQ2Gtjcx+xUSfleJdCeQ3CW6TSN8glCkHRqRTCCgzFKb/mgNU=
+	t=1750734203; cv=none; b=g4ewVaIZzCwQERVaFaizB/Bj0gowXZV9E9wz+l3a3dC2GAx9gNVoeeW5i96P4uw4Evt5CGNbeCe3ubwm3Old52X5OcykQ8fCiOzGHPxItSlxW2ABOs9rEyFg4BLOz0H85qAggvg0uWONlzhOHF+cOJWZvAS2Xo6Uesy20rP4DuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750734107; c=relaxed/simple;
-	bh=MsA08rbTxeFhJz/WzNmdbbmzaVE+0kJASkfsGnUl/UI=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=TiW2fU1UIBTiQ49MMYRl5qde36yF6lf3YbMmrp9CbsOtxcHhoFFpQQ2sSBXmmF6eOloC7GPW2cgvIbpso9APU0eDVNR9TCnuVCGy3xFxlgs5iJjpNEg8ou/E6JKZwGYbJAuiDUB9/Y2R/GL2TAf4whDEgVajnfHEE3W7UG7CRf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com; spf=pass smtp.mailfrom=inspur.com; arc=none smtp.client-ip=210.51.26.145
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=inspur.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=inspur.com
-Received: from jtjnmail201612.home.langchao.com
-        by unicom145.biz-email.net ((D)) with ASMTP (SSL) id 202506241100305413;
-        Tue, 24 Jun 2025 11:00:30 +0800
-Received: from localhost.localdomain.com (10.94.6.249) by
- jtjnmail201612.home.langchao.com (10.100.2.12) with Microsoft SMTP Server id
- 15.1.2507.57; Tue, 24 Jun 2025 11:00:29 +0800
-From: chuguangqing <chuguangqing@inspur.com>
-To: Tony Nguyen <anthony.l.nguyen@intel.com>, Przemek Kitszel
-	<przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-CC: <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<intel-wired-lan@lists.osuosl.org>
-Subject: Re: Re: [PATCH 1/1] check the ioremap return value first (supplementary CC)
-Date: Tue, 24 Jun 2025 10:58:52 +0800
-Message-ID: <20250624025915.1692-1-chuguangqing@inspur.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <3bf6df3b-affe-4f10-8b05-29f3393d19e0@intel.com>
-References: <3bf6df3b-affe-4f10-8b05-29f3393d19e0@intel.com>
+	s=arc-20240116; t=1750734203; c=relaxed/simple;
+	bh=x54Hgd8Vb+9uKtEoLHQMTz4ODUR4o+1AOHqMpq8qAJM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=DONccDg69odA2W+7ZwGn8xkdny3Ja7HQnNvl8Sfo038bopicFNuznE1ArPKbUcL40LTlosvmV32dhVUX3K0IXdQJ+4QsFrWPT4teZS7iVE1fHfPVilAfWQkErMBtNb/FTcQy+zdc5ZYBiEoajWJbwNpZBcV39UwMCavQMUcwc4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=Exouejk+; arc=none smtp.client-ip=140.205.0.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="Exouejk+"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1750734197; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=h+0mi8eC+J3xUw5Xo5AFUvG9XykWYO6OhaS3iBZj/a4=;
+	b=Exouejk+B+rI6efZq6es2rVxCtfNbJj07VR2RIqnM1DWXDKAOQhMBFRHTjeO0XeVXZUixmhWImnHNm6G2WV7zwDt8eMrqZZ20RV1xKzfvoz89W2tYCHopHaFu6Y6hngoR4qrYSoAg2h9erL7Lb9v3q+dZJFSEotHY75xu/IPQc4=
+Received: from localhost(mailfrom:henry.hj@antgroup.com fp:SMTPD_---.dVBuTMH_1750734196 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Tue, 24 Jun 2025 11:03:16 +0800
+From: "Henry Huang" <henry.hj@antgroup.com>
+To: tj@kernel.org
+Cc:  <arighi@nvidia.com>,
+   <changwoo@igalia.com>,
+  "Henry Huang" <henry.hj@antgroup.com>,
+  "=?UTF-8?B?6LCI6Ym06ZSL?=" <henry.tjf@antgroup.com>,
+   <linux-kernel@vger.kernel.org>,
+   <sched-ext@lists.linux.dev>,
+   <void@manifault.com>,
+  "=?UTF-8?B?WWFuIFlhbihjYWlsaW5nKQ==?=" <yanyan.yan@antgroup.com>
+Subject: Re: [PATCH v3] sched_ext: include SCX_OPS_TRACK_MIGRATION
+Date: Tue, 24 Jun 2025 11:03:14 +0800
+Message-ID: <20250624030314.48808-1-henry.hj@antgroup.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <aFmWGi8n1ndB1K_M@slm.duckdns.org>
+References: <aFmWGi8n1ndB1K_M@slm.duckdns.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,11 +47,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-tUid: 2025624110031415c3819e8b85ca5c6989f831ba4e68d
-X-Abuse-Reports-To: service@corp-email.com
-Abuse-Reports-To: service@corp-email.com
-X-Complaints-To: service@corp-email.com
-X-Report-Abuse-To: service@corp-email.com
 
-First of all, thank you for your reply. Yes, this patch doesn't change anything substantial. It's merely for demonstrating good programming practices, so you can decide whether to apply it or not.
+On Mon, 23 Jun 2025 07:59:54 -1000, Tejun Heo wrote:
+> It's rather odd to invoke runnable/quiescent on these transitions as the
+> runnable state isn't actually changing and the events end up triggering for
+> all the migration operations that SCX does internally.
+>
+> In the head message (BTW, if it's just a single patch, it'd be better to
+> include all the context in the patch description), you said that this is
+> needed to udpate percpu data structures when tasks migrate. Wouldn't you be
+> able to do that by tracking whether the current CPU is different from the
+> previous one from ops.running()?
+
+We will traverse the per-CPU map information in ops.select_cpu() to select
+the appropriate CPU. To reduce the competition for the rq spinlock, tasks are
+likely to run on the CPU selected by ops.select_cpu().
+
+However, I can think of two scenarios where passive migration may occur:
+1. set_task_allowed_cpus
+2. cpu_stop
+There may also be some passive migration scenarios that we haven't thought of.
+This could lead to incorrect information in the per-CPU map. Therefore,
+we hope to track enqueue_task_scx and dequeue_task_scx to ensure that the
+information in the per-CPU map is accurate.
+
+-- 
+Henry
+
