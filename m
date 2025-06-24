@@ -1,152 +1,146 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36A6372
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335CC2376EF
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:04:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750748688; cv=none; b=aCRMxtz3YVxlDTSyW3um2+0Sw4SZqvHA60DP+WFpsuhRaV6gYKuF2Mf+8YV56EtYgUylkVr0237WUmo8D/tfjmeNHPIuanHMcsCOeKYmZBE/06Ciyj4SrcJ4HJwJC93WM2GWhsoYU8Hq/SVljGwp7/BO76FF0Ut3y0Jkq3l6mo4=
+	t=1750748697; cv=none; b=YtcDaEKrpuwDJnGi5eJbyZSV35Fm1G/uub7JbUfMZLGOOMoN7Pl6F8Ho1n8WgDS5ecYJ0JRND107HPFGV8b+zjyAUNeexcrCbUdh0dDrghaN4p9ybINBKJtEOpAew+FkmjCWPl6XV4iav+E1rrzQ/Zkc6vNh5XHqiYUqM7qSFf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750748688; c=relaxed/simple;
-	bh=XNIc3kjYQjwXXUBYl3GyECf4oKKi0byLqTBYhJEe+0E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q1F6IKQxJF3fd/inmWRRch3UbHPvDiDXfxUqyns6rDtq4T6x0QLaHvdyvKP3OCq6kj9jJp/NHaZWhsbyAzXhym9Mc59suGBK3DvCbh/L/1+CCgZdfClt3HSEpc1UGQ0sVBd5Zs07fGmPCi1ttRZT6zsp5tpEmY7zB9Jo7EbC51g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=qyeOMxAV; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+	s=arc-20240116; t=1750748697; c=relaxed/simple;
+	bh=WQIe86JuUNhj2gkklQzuWuDuGEmfX2qJAnjURmdjQsM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AsCdO+zOKZLbbD/WGdlsg2SeqThqxjd+y5L+xC0b/6UTuWTSbGP9aYS0gM2mSnhrw9kH3LbzDx6+ndUhGgnt6kfHVymuZ7QiDFf1GPMpOgEkZsqK8tO+/Ud6C9wG0bWr7u6udG59pKQtOdAqqa8W8IIrlwD2usCIs6+Uyw4qs64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FZSQcD8M; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="qyeOMxAV"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ad93ff9f714so17501766b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:04:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FZSQcD8M"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b34a6d0c9a3so194397a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 00:04:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1750748684; x=1751353484; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HLbitD9Yz365jr3BdIqraX9XTg2iaE+GPbMQNtnpays=;
-        b=qyeOMxAVfGluDNmUE2YUVwQ5UogysrKhUtf0vcZtebOiPukoLQj8nPbzzrNYFgYF4z
-         fS6aWdrpNHCWgZywfpBZeWB13JIvRlvYTsM7110xWRr4kZLexKfIinD6WRxzrwJRcgkx
-         pFAa0AjI0UfUaYYtiqrvEHURaIfgu1YdDmFsM8+0LDFWnpCQq1DGJ3i7yuqQXxI50y0S
-         ehtWKFpZv7V7BWWibGXVl97mUwmbGTm0vyyIG31e3YHqhTxp9pmbODJJ11wmSCEeP96J
-         dioFwdF6xm1fiqD1//P0o/2Bh4ogPQ7XAKvBbW1ysLqx5jD4Rejx/liTsdTT2g7ElX6q
-         g5mw==
+        d=gmail.com; s=20230601; t=1750748694; x=1751353494; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NFaPEwYqVk8swUeuusja02739T2S2QTaLE27xP5T8F4=;
+        b=FZSQcD8ME2w5VKmeooMc/wLzXIF1QaS6AuHZLMZDiRnWh5KyO6AwKYzYFXPpbhRCK7
+         UaPQsClgQxpMhsYfDA+Ejmm1ckKxbatFMR96b8UOopYRz/Y05HVN5IGRyxwgo0In9Jzq
+         jomJwPthW7Ex8VVccEH2Ymhf9J0TqQEazn0IQ43YzSQ+VOs0YgzxeCK4/va0SingnQRD
+         QraRihidsCkXgk5dr6ooTBJxs4dZg13s1+bucBpyVoyohmWwg20uv6SdEEdWboQftnxG
+         krHdh7tQ4kHZbc27706rK7AjZplwUZGzD+xyPbZ2mvbZ0Tm+KA8KRdC8UvSqU7d1Wg4v
+         n7Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750748684; x=1751353484;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HLbitD9Yz365jr3BdIqraX9XTg2iaE+GPbMQNtnpays=;
-        b=NFFfRCW1ewf5Cjol/28qr7BFk98CsdvWecbEWBIf8b2XKR8Tq9JhnEb1Pf9L2gBawL
-         WvDmtjUxPO7aoQ//IMGgtkUagl3K2NHjQHFgYpa5GFpa5drJTlqXCt5fah3xPfH5W4Mv
-         laG9XJtV5zbUWFVrdxuOepXk+iKjRfLGMlkOJfkC2znBVoPrII+D7FglannetwFjlVSz
-         qnaFvQxD54ykRPTFFHZkC4uyIoF/V4LAxsyPnl9OUGNkigeW7qr1zzPdZw8lpv+Kco8s
-         hLaaecTQdsEAH1r1hSx6viCp2kGDFA4lsXEvsXTgd15UjG1oJgLJEs/NJg2QiHrbMBOG
-         EOXw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhjTzy/82X61ZNquu9qiKhcn9P5Kx+OBue3840JSDKoGwS4d+MRxUIo0LhiDO7Cz4CvnbU6DakjE6Qdgg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+xCnzD/Ud63nPrWz90uqa+QYufkRizhTE/4aCEyD5ZIj26hvE
-	ffYUSPLTpFIu/Sa1UtNUQ417N6Zk7Ul4GfFxnnQGolLAiFqkyvppTWN/gYcct9bd00E=
-X-Gm-Gg: ASbGnctFKubuuqOtoJFtvM3CulhEkYFQ1AxBAvf1e4MrAOftij9mtpNSxu/r8l4XJha
-	or5UoX27p8XRnWzVTi1cDkeVJGvzNno3KHSMqzyUW/9Jcm0S2HrTVbqHZBrx7+9jY0JiXWpRNP6
-	sDXs/4KhK+fwGHFWxcNVc8K1A85UglRn/bpVr6vDIfsD1OSoIbJULsytHN1hbxnCEEEL3C7WYs5
-	9Xxgvy9N+8iADWYcLwuddh8vb7cJBqpvhK1QW66/D+6Fti05cJA9yH4bpQZUyXUpiq99+wW3vOu
-	dmDc18GiEmaoNV2fslrFuLADylZPgaEnpCUPrzhrDx27hbKiimmGNb31sfaVH9cj3+Lowf+POOH
-	JRhHvXQ==
-X-Google-Smtp-Source: AGHT+IH9JmPa7BbH+tgIB0uoiJ2JP68fJ2WltDdUQv4ZUEycK4uvEtfSZLwyJj/VT7FzXEaxap3DCQ==
-X-Received: by 2002:a17:906:6a05:b0:ace:cc7f:8abe with SMTP id a640c23a62f3a-ae057b39bdfmr1676502066b.31.1750748683722;
-        Tue, 24 Jun 2025 00:04:43 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.110])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053ecbf72sm817956566b.47.2025.06.24.00.04.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 00:04:42 -0700 (PDT)
-Message-ID: <c51b2b64-24a7-4e14-bdd8-c4a356423100@tuxon.dev>
-Date: Tue, 24 Jun 2025 10:04:40 +0300
+        d=1e100.net; s=20230601; t=1750748694; x=1751353494;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NFaPEwYqVk8swUeuusja02739T2S2QTaLE27xP5T8F4=;
+        b=f54arSMtMu1dIYLVTrtvZ0G3T/pVO4HIFFS2wawhT4ECl7JiX27bttBS41H8ugRQ3i
+         WAA0IWwSbQNvS1WK/n96ugqDqsPEnzq8aVSNpoqvbL95GMbDgT79+zl9iugaImsNDOoO
+         IZHHcrZZ+Dg3PBWVsikofPMEDpmzjmSXlzDYTLOo1y9yu3d0RmmqO/46Wu44LelwNaqv
+         vbhxbSvfXiucVx+q+JcyP3ZDSz7kA4f2nSSeiWkiUXy1bVkd1n4sTBOf6Zc+foIqOyWL
+         zWWYOMkgDkpqH5OdVNzCHj6mcfYEuNo+c7Q4v4kY5GOdJJtMdDjRotxO0zRv4Y5gOGOj
+         MeXQ==
+X-Gm-Message-State: AOJu0YxCbRk2JWdfCTUtLvcvKBWuOu5Ahj4YAhUiYjsMqiYe4IKT517x
+	nKQqmEem2A3+M2Y0+/ehw5/mcppH3CCEWRJsfQtBm9cF9+YcP6XZNjLy
+X-Gm-Gg: ASbGncuwilWzWsbtPhm1iirLL19mXjHAsgz7TdMZ1dSofjbOcX2JzpRqcqG+HVjSWPD
+	p95lguX+fMMiVh5/p1DKz1capIZPnFjeP9R1gAwxP1+jMuT4IiV37g03PuMCP/MRq5tEZA0yIX5
+	Nz6NIP/C8Ot9TFAqsYaKeJ+A/pU0s38BWry8Zd45nmr04a0XosMDnt5ku7KCrKm4vatfSVVXEdg
+	n9Vo2HcJ00EkbuhlZ1D+evixdkCuMvAYiicxth1y+kyFnTWn2GI1m3y1yt6Nmqws3f61XQ9JIy/
+	plQG56wk7YcUQQ0gdVZIv1iGpFpMc6QuCHYm8Ew2y7fGimVJKPhvH8enVntjvlsb6lsIZgVpHCn
+	mmGoI
+X-Google-Smtp-Source: AGHT+IEhlwIsSspUcRAJkdSSVmCisgdMIL1hyOAtY/muUDQ/EBJGGCf1AuTRLdemhb2h+4QRgwCiMA==
+X-Received: by 2002:a17:90b:3cc5:b0:312:959:dc4d with SMTP id 98e67ed59e1d1-3159d6260efmr25628648a91.7.1750748694011;
+        Tue, 24 Jun 2025 00:04:54 -0700 (PDT)
+Received: from seokw-960QHA.lan ([210.100.209.148])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159e06acfesm10479145a91.36.2025.06.24.00.04.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 00:04:53 -0700 (PDT)
+From: Ryan Chung <seokwoo.chung130@gmail.com>
+To: jgross@suse.com,
+	sstabellini@kernel.org,
+	oleksandr_tyshchenko@epam.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-kernel-mentees@lists.linux.dev,
+	Ryan Chung <seokwoo.chung130@gmail.com>
+Subject: [PATCH v2] xen-pciback: Replace scnprintf() with sysfs_emit_at()
+Date: Tue, 24 Jun 2025 16:04:42 +0900
+Message-ID: <20250624070443.11740-1-seokwoo.chung130@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] clk: at91: sam9x7: update pll clk ranges
-To: Varshini Rajendran <varshini.rajendran@microchip.com>,
- mturquette@baylibre.com, sboyd@kernel.org, nicolas.ferre@microchip.com,
- alexandre.belloni@bootlin.com, linux-clk@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Patrice Vilchez <Patrice.Vilchez@microchip.com>
-References: <20250610084503.69749-1-varshini.rajendran@microchip.com>
-From: Claudiu Beznea <claudiu.beznea@tuxon.dev>
-Content-Language: en-US
-In-Reply-To: <20250610084503.69749-1-varshini.rajendran@microchip.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi, Varshini,
+This change uses sysfs_emit() API usage for sysfs 'show'
+functions as recommended from Documentation/filesystems/sysfs.rst.
 
-On 10.06.2025 11:45, Varshini Rajendran wrote:
-> Update the min, max ranges of the PLL clocks according to the latest
-> datasheet to be coherent in the driver. This patch apparently solves
-> issues in obtaining the right sdio frequency.
-> 
-> Fixes: 33013b43e271 ("clk: at91: sam9x7: add sam9x7 pmc driver")
-> Suggested-by: Patrice Vilchez <Patrice.Vilchez@microchip.com>
-> Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-> ---
->  drivers/clk/at91/sam9x7.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/clk/at91/sam9x7.c b/drivers/clk/at91/sam9x7.c
-> index cbb8b220f16b..ffab32b047a0 100644
-> --- a/drivers/clk/at91/sam9x7.c
-> +++ b/drivers/clk/at91/sam9x7.c
-> @@ -61,44 +61,44 @@ static const struct clk_master_layout sam9x7_master_layout = {
->  
->  /* Fractional PLL core output range. */
->  static const struct clk_range plla_core_outputs[] = {
-> -	{ .min = 375000000, .max = 1600000000 },
-> +	{ .min = 800000000, .max = 1600000000 },
->  };
->  
->  static const struct clk_range upll_core_outputs[] = {
-> -	{ .min = 600000000, .max = 1200000000 },
-> +	{ .min = 600000000, .max = 960000000 },
->  };
->  
->  static const struct clk_range lvdspll_core_outputs[] = {
-> -	{ .min = 400000000, .max = 800000000 },
-> +	{ .min = 600000000, .max = 1200000000 },
->  };
->  
->  static const struct clk_range audiopll_core_outputs[] = {
-> -	{ .min = 400000000, .max = 800000000 },
-> +	{ .min = 600000000, .max = 1200000000 },
->  };
->  
->  static const struct clk_range plladiv2_core_outputs[] = {
-> -	{ .min = 375000000, .max = 1600000000 },
-> +	{ .min = 800000000, .max = 1600000000 },
->  };
->  
->  /* Fractional PLL output range. */
->  static const struct clk_range plla_outputs[] = {
-> -	{ .min = 732421, .max = 800000000 },
-> +	{ .min = 400000000, .max = 800000000 },
->  };
->  
->  static const struct clk_range upll_outputs[] = {
-> -	{ .min = 300000000, .max = 600000000 },
-> +	{ .min = 300000000, .max = 480000000 },
->  };
->  
->  static const struct clk_range lvdspll_outputs[] = {
-> -	{ .min = 10000000, .max = 800000000 },
-> +	{ .min = 175000000, .max = 550000000 },
->  };
->  
->  static const struct clk_range audiopll_outputs[] = {
-> -	{ .min = 10000000, .max = 800000000 },
-> +	{ .min = 0, .max = 300000000 },
+No functional change intended.
+Signed-off-by: Ryan Chung <seokwoo.chung130@gmail.com>
+---
+ drivers/xen/xen-pciback/pci_stub.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Is this min value something valid?
+diff --git a/drivers/xen/xen-pciback/pci_stub.c b/drivers/xen/xen-pciback/pci_stub.c
+index 5c2f829d5b0b..045e74847fe6 100644
+--- a/drivers/xen/xen-pciback/pci_stub.c
++++ b/drivers/xen/xen-pciback/pci_stub.c
+@@ -1261,7 +1261,7 @@ static ssize_t slots_show(struct device_driver *drv, char *buf)
+ 		if (count >= PAGE_SIZE)
+ 			break;
+ 
+-		count += scnprintf(buf + count, PAGE_SIZE - count,
++		count += sysfs_emit_at(buf, count,
+ 				   "%04x:%02x:%02x.%d\n",
+ 				   pci_dev_id->domain, pci_dev_id->bus,
+ 				   PCI_SLOT(pci_dev_id->devfn),
+@@ -1290,7 +1290,7 @@ static ssize_t irq_handlers_show(struct device_driver *drv, char *buf)
+ 		if (!dev_data)
+ 			continue;
+ 		count +=
+-		    scnprintf(buf + count, PAGE_SIZE - count,
++		    sysfs_emit_at(buf, count,
+ 			      "%s:%s:%sing:%ld\n",
+ 			      pci_name(psdev->dev),
+ 			      dev_data->isr_on ? "on" : "off",
+@@ -1375,7 +1375,7 @@ static ssize_t quirks_show(struct device_driver *drv, char *buf)
+ 		if (count >= PAGE_SIZE)
+ 			goto out;
+ 
+-		count += scnprintf(buf + count, PAGE_SIZE - count,
++		count += sysfs_emit_at(buf, count,
+ 				   "%02x:%02x.%01x\n\t%04x:%04x:%04x:%04x\n",
+ 				   quirk->pdev->bus->number,
+ 				   PCI_SLOT(quirk->pdev->devfn),
+@@ -1391,7 +1391,7 @@ static ssize_t quirks_show(struct device_driver *drv, char *buf)
+ 			if (count >= PAGE_SIZE)
+ 				goto out;
+ 
+-			count += scnprintf(buf + count, PAGE_SIZE - count,
++			count += sysfs_emit_at(buf, count,
+ 					   "\t\t%08x:%01x:%08x\n",
+ 					   cfg_entry->base_offset +
+ 					   field->offset, field->size,
+@@ -1462,7 +1462,7 @@ static ssize_t permissive_show(struct device_driver *drv, char *buf)
+ 		if (!dev_data || !dev_data->permissive)
+ 			continue;
+ 		count +=
+-		    scnprintf(buf + count, PAGE_SIZE - count, "%s\n",
++		    sysfs_emit_at(buf, count, "%s\n",
+ 			      pci_name(psdev->dev));
+ 	}
+ 	spin_unlock_irqrestore(&pcistub_devices_lock, flags);
+@@ -1521,7 +1521,7 @@ static ssize_t allow_interrupt_control_show(struct device_driver *drv,
+ 		if (!dev_data || !dev_data->allow_interrupt_control)
+ 			continue;
+ 		count +=
+-		    scnprintf(buf + count, PAGE_SIZE - count, "%s\n",
++		    sysfs_emit_at(buf, count, "%s\n",
+ 			      pci_name(psdev->dev));
+ 	}
+ 	spin_unlock_irqrestore(&pcistub_devices_lock, flags);
+-- 
+2.43.0
 
-Thank you,
-Claudiu
