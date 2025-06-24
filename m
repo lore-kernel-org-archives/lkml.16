@@ -1,45 +1,45 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2085.outbound.protection.outlook.com [40.107.236.85])
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2085.outbound.protection.outlook.com [40.107.95.85])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916D42989AC;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C57202E0B72;
 	Tue, 24 Jun 2025 14:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.85
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.85
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750774606; cv=fail; b=WKlmdMCd54E6KpfehBjFvZSIUzCpOqTPW/rNxQDLqmb7oBpEKk0gyuB9oH8F0HQQ56YASZX0AD/GI/HJAZIMDQiWkjDvxAqJGMmAOz/VjDdToHQwIhVCGhyKRrz9uDw3PlyBy+Hu1nh32xbuIv4taQ2FFokk+qv2Gx+PJXJJxGY=
+	t=1750774606; cv=fail; b=VfaP70Ygagvvxz0z21dlaVRqpgBhxQgcTGtLZbweYINj80Bv8eSggvfQTkqi6kNgVneDDn9qiIP6bXM6jPZJNe1E2tWIdkEvjGU8dIjuRDYhYgQoxha3lsi1natXB3bWVBjnZ01bhTNmWEp/lxBAh05UU8yFQFWOfE6BD8fSAqQ=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750774606; c=relaxed/simple;
-	bh=8ALPE6Ne8lOfto6UQvYd7q4YRXjlSCHU68EMK7OrLG4=;
+	bh=yKLBPeSrnTP0I6c//Q571rSafa6MIhhkBOa6hnTx+OI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=jMhzxb555lYiW03tmIErASDGiPVEgx/IQL/nZRetqtSQwvU7bwRGLtfP81UnCCu0kXIA6mj3R4cl9jaSfo7lnI7dWKBPqPf2mhJ8lWiazB0/5sXR/PFJKGDYN66C2kMQHmJgr6JNR7tBIppTcBkN+8SY5tN/KVGfPoGxcc+58jM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2mBWg7b6; arc=fail smtp.client-ip=40.107.236.85
+	 In-Reply-To:To:CC; b=rZtwBV75wcCySEpTx9je6RdBhKEiDoWd/TTWUv/se+TRKSsbrD69mdgkyuw7fWg8oCEYv4eK8fSyRMFCrON2MWf/oN64UVHKm0yAbq+w5yJA2vyQWW+HOIidLLPo9/mddklvf+O6XBCQNgN6tqQzDKzKvHI9gDWjiRzubpmxP6o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=et1Smrlk; arc=fail smtp.client-ip=40.107.95.85
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2mBWg7b6"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="et1Smrlk"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MO1KHUA3c4ehgiG9wCXXyN0kHPk9NYYLvjpmjzp/H0mmG3FjPkktxEPG8bURfFTUfKw3wXNsMEXMsOaSY8aG0SJmphql7sRCEaBQWUDXBkl4mwuBJpIwmJwFreGsEvpwOuxuLrBu/yDTfssUq9Gix4uS3vo7n1aPheKGH6h8DCNsSz/89LmYhVmrBv/GWj8VZBr20XwGh4SSf+bAvsGCNgxgmL5tBR945nrpL1khNDw9JCOsx9raQNnc2xvjiZP6haHFvn/PK676iGq4OVUhCvK7xpgatHekn01/aOVe8AptEVt5yp5igFMBL3f3KzX4Oa84Ecm2fiUbOONkbqufSw==
+ b=B9uIX/QdZIqvanmQ9LMIMk9R75lM2bP5PsfoVXCN/i0DqvY6Fw8xmx5DQVziBRQRD3RH3q+p0wFvPk5/gLVh9/X+gpZ+WdgXM6gWZadWgBSxjkwtoYQ84DzoP5aGb/4ar3gDrotIrXyVHhxyUKlNfrRfI+ADfu2Hk7KWB7NhjG8nFbPQxyTIWQG7g/52CfCynzzBxwjDEJr3ZaHo4eDEXf/9aV7HgT/nKGTTT7xJBOFG/4f7ppqhSjf/dICYvgL4YxtuxV4j/KzwL0YLG0kGCIrTKr0/xC9w6ZwESHT1XJbHuQaP7DSlqu2LzWhNhHtWUVSEmXvkdDTs2Yn6fXYtow==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BMbFx41w4ZFMJEabi0w0o3IwTQ6GqieaGiCOEtE6Lro=;
- b=rRswEgMa2o7GmUlnjjMTEToyFkc2Z0SSBDHFpYo4O9QI341got3rVwvxjVDpjiBqwPtIkaT3IukaKChutRhBE+kl2vxlw/9SDL/B7qPASAnlQTwMwOP1ls7eeB6dG1KrjQkzwMyE9fA2mdU0/Hs26Oj1T/CZsulXfEqDprVtZbF95rXkUqyUQu5d7O1hoQSc5IkHlsnzINGDwq15btonHvet74nf3Oar3po2zu77SB2YhOx5x6FAnyNKMAJc4UoWTPctvG+Osnh5CIi8FNLb0rp0iZ7bA3RjeZbWYBTiaFX1DFUvvgcxw+tely+o+oUqMIYfGSnrQ20OU9MC5Qh4mQ==
+ bh=ybO7Lsblyw2k+njvFMV3qSECHZYxwPKRlogOcMUaWug=;
+ b=NuyMtJi1xtGMjK6QJ8KsYHjqT4BQgZFn2naV7GF7gAPJez3ec/8XSoUEEk0fLSxvxXTbiIzL+211HNSStQoFLtd7fs1+EhnHlWXdoi0Q/EAwwkNzvhCiFT8XCxsi/ksqZUsqq8HRD9hoo9OZHYaLnSUXir+tRG9xMjcrVf7rc2RQQA4iGnviCG3VHuT9SgaWzaXxLxS5DVi9LIq24h9Sm5yoT20qb/DAUFjKfUnd8R85rt02lyvN1JyuVgfzALlKg60TDCM7V8Szz3KHAxF7eB8PgjYE2bIZFFpI2QVmIDkPvE1BM+pvLjdqouBG3zOs9pcj9sGWtIg+X8xlvGt41w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BMbFx41w4ZFMJEabi0w0o3IwTQ6GqieaGiCOEtE6Lro=;
- b=2mBWg7b67PCWY3OUae6uMvY1bBN011EXMxAxojANqYHjv0i8VN98Oi9sL14uYTE8vgeX0f+93LVhKLoHboLuna1i39wAKcPck0QKiUxFnCKHGCrcJ2L00ElXi5gn8iM7cbvAYH+tefZngF7QNCVlzDfV5VRLK2hWGFsZJvxxYG0=
-Received: from BYAPR05CA0045.namprd05.prod.outlook.com (2603:10b6:a03:74::22)
- by PH0PR12MB5678.namprd12.prod.outlook.com (2603:10b6:510:14e::22) with
+ bh=ybO7Lsblyw2k+njvFMV3qSECHZYxwPKRlogOcMUaWug=;
+ b=et1Smrlkpa95n8YDi5vH89DVjasf6kqfZKeHKT+eiwbVidL7hat0D9OnxRgW9us4jUX2f2ySlpdNt0ujUjQMbLTR+dIskTC7qBYw6hW+2r/8tVUF58crb4ZIGRIyunwA3f5N5NR0ESmJUniLrgn523p3HiEvPf6Nrd8sva75v0A=
+Received: from MW4PR03CA0229.namprd03.prod.outlook.com (2603:10b6:303:b9::24)
+ by CY8PR12MB7100.namprd12.prod.outlook.com (2603:10b6:930:60::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Tue, 24 Jun
- 2025 14:16:39 +0000
-Received: from SJ1PEPF00001CE6.namprd03.prod.outlook.com
- (2603:10b6:a03:74:cafe::8b) by BYAPR05CA0045.outlook.office365.com
- (2603:10b6:a03:74::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.16 via Frontend Transport; Tue,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.18; Tue, 24 Jun
+ 2025 14:16:40 +0000
+Received: from SJ1PEPF00001CEA.namprd03.prod.outlook.com
+ (2603:10b6:303:b9:cafe::dc) by MW4PR03CA0229.outlook.office365.com
+ (2603:10b6:303:b9::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.29 via Frontend Transport; Tue,
  24 Jun 2025 14:16:39 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
@@ -48,16 +48,16 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00001CE6.mail.protection.outlook.com (10.167.242.22) with Microsoft
+ SJ1PEPF00001CEA.mail.protection.outlook.com (10.167.242.26) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
  15.20.8880.14 via Frontend Transport; Tue, 24 Jun 2025 14:16:39 +0000
 Received: from [127.0.1.1] (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 24 Jun
- 2025 09:16:33 -0500
+ 2025 09:16:36 -0500
 From: Yazen Ghannam <yazen.ghannam@amd.com>
-Date: Tue, 24 Jun 2025 14:16:09 +0000
-Subject: [PATCH v4 14/22] x86/mce: Separate global and per-CPU quirks
+Date: Tue, 24 Jun 2025 14:16:12 +0000
+Subject: [PATCH v4 17/22] x86/mce: Unify AMD DFR handler with MCA Polling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,7 +66,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250624-wip-mca-updates-v4-14-236dd74f645f@amd.com>
+Message-ID: <20250624-wip-mca-updates-v4-17-236dd74f645f@amd.com>
 References: <20250624-wip-mca-updates-v4-0-236dd74f645f@amd.com>
 In-Reply-To: <20250624-wip-mca-updates-v4-0-236dd74f645f@amd.com>
 To: <x86@kernel.org>, Tony Luck <tony.luck@intel.com>, "Rafael J. Wysocki"
@@ -79,68 +79,87 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE6:EE_|PH0PR12MB5678:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e9eed87-c377-4a09-4992-08ddb329bc67
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CEA:EE_|CY8PR12MB7100:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5963fec1-79dd-4428-bb67-08ddb329bc7e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WnhjcjBUSGVWT2hzV0lwV1lHeUtVWG5TV3JoTzRDSmc4RXRWL3VxTHpiNUZp?=
- =?utf-8?B?R0NDZjB3L1A3WnFJRzJkRWFqYk1mL3lMcUp6ejZvT1pJV0RyemdWVENGR3JL?=
- =?utf-8?B?SzBydDdRVEpKcTBHdzMwa29wTENoc3Y0RkJEcUkvaFoyc094dTlwM3oxQzAx?=
- =?utf-8?B?VWFhV0txTlZjMVR1am55WEVBaHRMZzRYM1NNaGdBWDdzQURldzc2TENZYmJi?=
- =?utf-8?B?aUg2aklVTkxaOGZVb3ZoNkpNR2xEd3Rid29ONytXMm1nYnRUWWora1ZiaS9U?=
- =?utf-8?B?QkxvaUhSeDA2dFpLZENzL3BEY0I3a0dSd3d6UlJOUGkzeWJlZnFDSEFJYzNX?=
- =?utf-8?B?RFhaaWdtclRYZDRrdVJXWFF1MXdXa0VOSzFMUnFvUW5sS0ZtRXRHcUtvaHla?=
- =?utf-8?B?OCtidHhHd2JFUmtMWEd0QitPMkpiRzRERFpMZ1dUUkk3VWpzZnM3MUZQSUxh?=
- =?utf-8?B?RFpwaWU3S1M1ajZkdElPWnBycC85Y3VkdVlqL21VSXNCWFhIQUNkcXdKZ01B?=
- =?utf-8?B?ZW9GckxBZzdoZFVod0xPZEtpbTJiUm9xWmpldE5OdGZMcng1aWxUOFhQcnY4?=
- =?utf-8?B?MG9tbWxRYktZSVEwTEY0OGt2KzRxWUsremsrRUtHS1pLMzhmckc3Vk9uVGgw?=
- =?utf-8?B?TVI1b052cWV5NFdOMjBuTEhVTG53OUZRKzJEQ1dTWU1ZMFltL2JRWmVydDdX?=
- =?utf-8?B?Q0RMUmR6NUFTeDhNejhFNmNibWRNa0dvbEpQZ3RNSEZDZnlJM1luWnZ3a3Jl?=
- =?utf-8?B?TXdMR2hkRlhMM0FtUnZybkI2YkRYditDNUJzMG1QWkV4SDA3YXdGTFNwM1l4?=
- =?utf-8?B?bnBOUzNsVVIxbU5Ra3hNZEZYeU03ZE1FS0RBaTZtLzArK01RcmowTkFkQ3pJ?=
- =?utf-8?B?VFRWTXlxb1diT3phVG02cFVGaXFVMWlTbk1LTnJza1ZnQ29GYWNkZlArRDV2?=
- =?utf-8?B?aTJHdkpYZ28vWWlmYk9QanBYL21XRS9qSmJ3TGZxYXJHaFJCdktQSDZ2TlJy?=
- =?utf-8?B?Z2ZSZEJYZCt1dDR2UVB0eS9OWTRxeFl1K0F0UDRNd3dLbTRsV3Z5RlJmcytY?=
- =?utf-8?B?QVJRTHFXZnovbW1qRDRXYTBWUlU4VG14cmM3R09XcHVzQ1hPK3dnZHYwU3p2?=
- =?utf-8?B?a0VlRS9EWlVheEZtelIzR0thSXhLSCs4Mk1ld0hyVzA4VzRvOEVTeXM0ckhM?=
- =?utf-8?B?U0hQand4bUdLdFhHMU9xU1ZJSGRGU1dtdjBzTTZKRFNMYlRBaDNEVkVDV1ZD?=
- =?utf-8?B?K0pZZ0FPcWd1WGhOaGY5dW12OXg4czlBYlVTb3AwR3ZVWldTZnZzSktFY3hM?=
- =?utf-8?B?NmhWVHhIM3RITFJ1RzR5RXdpaFFFT0szRGE3UVJhNm9GVEhZQnB0QThzRC9p?=
- =?utf-8?B?TURwdnBiUkNqZWpsUTgyTml2WnZ4QTlaeGluK2g2czNYRGhuUzNoWXZzdWJU?=
- =?utf-8?B?cUwxOVJTMG12SFkwSCsvb0JucklId0g1RFNDL2tzTDJKbXI1d0hoM1Z6SzdO?=
- =?utf-8?B?MmovL1pCd1huNk5YOU1Zci9pR240WXB3aFV2bWJmZHVVN1BRajBTbUNURmVr?=
- =?utf-8?B?RmxiVUJwVnNMR0VmejNyZzVuM1lGZm80alBUUzFuQkROQVhBakhaMFQvTVI4?=
- =?utf-8?B?NWpTWldxMVNCQnN5K0l6cmtDU21KUzIwdGx4Z2dDNXkyZStjNUJYS2RadDVq?=
- =?utf-8?B?K3d6c1dHaHNlVHRqZ1pjbms0dzhjS2NtYlhiVFYwclRvOE5ZdE1oL243dHRl?=
- =?utf-8?B?M210aGVWY25LVG5wQ3ptekR3VFgwaVhNNnNXOUhyVW9YNHZsYk91ZTZjb0Nw?=
- =?utf-8?B?eGpESnIrZVdhbkI0b3RidC9UQWxhNElzenVqcUh1VnZTeXBDbGx6cEthaCtY?=
- =?utf-8?B?WGNBY3A4Ync4VmZVSEU4bDZ0NStMYWs5Q2pyaitkYWFhVitTVGlkOCtCMHB0?=
- =?utf-8?B?WUFZM2JzbW05Sko2QjlwVnlzaEVuMXRLTnRPYWUvdEhYSzlFRjBrSTd6QzY1?=
- =?utf-8?B?VWhockkrNW1xK0RjTGRFYU9xYzVwa1ZwNmxjdnVnQ1UwazZTTStWa2FCcWlx?=
- =?utf-8?B?TldqK2ZMbUNla3k1emVRQU5qRFd2YlVtakVWdz09?=
+	=?utf-8?B?bmNzVllaM0VIUzFZckVGVkVLUWtQVXFWRjVtSHczOVZ1ekptbmU3VGsvMXd3?=
+ =?utf-8?B?dGV3QVZWclRmeGVWQnhIS0tXdnRETGR4ZFJOcGI5K2ZjTWgzNUFkNkJBUGVz?=
+ =?utf-8?B?dFo1eUxQK01CcTdaVVJNUDlDUU0wRE1IWEUrRWl1TVZYNXJDWWVZQXNOQ0F1?=
+ =?utf-8?B?MkEwVU4xSUtVMEFrN2dxdmJPVXZvNmdKZ2hmY3p6U0NyczMzYVZRbjFFUXEy?=
+ =?utf-8?B?WDlSZzlKNWIzRGVMYW1WaFMwMlFlVHFTSEdvdm1yOUJUcGZaSU5oa2ppSHFj?=
+ =?utf-8?B?Wi84YzBsa1R1ZURwcm5kTHladHNpSVhmRi83TGRiNXF6L0c0M2RsSmFxTkJK?=
+ =?utf-8?B?NlVBQThFVlVXMWtpMWlUWXdLNGtIK3dlRys0cERJYWFTL3gvQ3FQOUV1a2Q4?=
+ =?utf-8?B?VUd4ZWZWc2czc3FaWnB5UGM3SFdHRzR3b2IrNjdQdlRJdnR5M0k3N0t0dTZv?=
+ =?utf-8?B?V05nZ3JsSWhsajdMWGxaL1EzUVY0cHZQWmprc3o5SW13bjJaWGRvUTdndy9u?=
+ =?utf-8?B?UmxKWDFMOEhRT3FQbUhxZTZkV3ZQUUZCa1NlVi9hYmFVU0V1bFkwZ3NyZlVs?=
+ =?utf-8?B?Y0RpYkJmcWw0emtGbXZDeHBpR2pkSkF6UTh6eW45M1c0cWd4cjhtYllodDVs?=
+ =?utf-8?B?ZkJnUHhiMHVKWmcxbnhkK1RLNGd0WHpGTWMvcTZQZ1JuY2s3YWVyMXZROCtK?=
+ =?utf-8?B?Z2lkbFJaSCtvdnZqbUcwM1RqcjI2bE1iNkRCbTVIbThGdHRWeGJoeXFmeXQ3?=
+ =?utf-8?B?em15VEdDOFB4M2FVUlZZajFUaFNLbUVNU1l2RWVvdDVLUTdTOWMweTdXR2RU?=
+ =?utf-8?B?VUYrcmYvRHRHWnF1emI3UlEzRWRveHRlRHR1MWpxbWtqdXEzSVhwd0p4UGlu?=
+ =?utf-8?B?WmdmVmFUR3RHZVdEOWowT3BlVjcxbGwwajhkVS94eHgyTEhwT1p6cHNmbGRw?=
+ =?utf-8?B?STQ5RlU0eEJ2REhPTFZmendFdkl0d1A2MVhpUWJHdzdoREN5UnhiQi8rUFRS?=
+ =?utf-8?B?ZWtWei9yQmxlUVh1aEFHVXlOdklxR1ZlLzhaNmpuMjNYMTZuU1RsNm9mSFRh?=
+ =?utf-8?B?c08rMHBUUVFVREpHZzNZZzhEdTdtbUxwOHZVQnV4TXlYYjBDM0dCY3NqaXkx?=
+ =?utf-8?B?bG0vd1c2Z0Z1L3ZqVElMb01LcTM0QUZrcG9LUDlwK2xQbElBTGVpNXRKY0ww?=
+ =?utf-8?B?bDFmYjNpTXVPM1NYakFxMnBLTmVjaEYvZC9va2xpaHpTSUI5Zno3eXpsSC95?=
+ =?utf-8?B?WnpZaDJkZ0hlKzhQMmRtK08zcUwxVFp6ZnhtN3kzeThEVmpkSHJpemJCeFNq?=
+ =?utf-8?B?UUZiUDhqSndNRUpyNjA1U3dDMVRBaVdhMkZiTGU3WnY3SzBsMWJOWUZLdXRu?=
+ =?utf-8?B?Zjg0b3BTVzQ1SmdBMlh5MGttTnVGUjViTjB1ZU9rRjVUN1kxV1ErZ2RVVDdO?=
+ =?utf-8?B?cTY2aWVwT2swVko0UXhwK3QraUtmbllwYk03aEJBQmhxb1F4ZGxPWG8wcW1a?=
+ =?utf-8?B?VXV4OVkzQXlXV1laTGNaTGVMNjV2R2ZRVGZ5WngrWEd0UkpiUmpZbjl5Y2Z3?=
+ =?utf-8?B?VUt4YkJzbTBkTFZ5NTlpNlA5aHNrNm1abjVKNEVpMDZWNDZ1aXFQMlZ1RFZ3?=
+ =?utf-8?B?THpYb1g2SlpNUy9UdnFmbkVBQlV4UkdVOXBIK0xtekgrWXNJbllKYnZDSm55?=
+ =?utf-8?B?eXdPRGY1UHFoSmdhUFFmTGhzUVFQenNaMnMvQk4zNXZKWFcxclJ3bkJ3ZDYv?=
+ =?utf-8?B?MXRHRmFUNDVlRzNwYXB5VVJUOXFOeTF5RGtpY044aW9JUDllNWdETUJVeHY5?=
+ =?utf-8?B?alkzTWlpWVRrTU0wYm50b2RQazlOY2M5c01PZW80UkRnNW9JRDNMektLZFhF?=
+ =?utf-8?B?d3F1WkdnQkxPcGlKVGJCZDc5SjdKeVBLNHIvY3Foc3ljYlJFL3dWMGhEcHFT?=
+ =?utf-8?B?aFdYOUhVNlQ0TDFhSnFLSWc0U3BlNUFZRzRFMko2Um9wMHkwZFV5b1VtOVls?=
+ =?utf-8?B?T05hWFlWMUJnMDhFUUFJOTVmRm9tSzlnTVMxcExvU0ZGQWptT3hGdmNReTJ1?=
+ =?utf-8?B?VU1XNkZ6UDBPQkxUdXgyY1B4ME1HSkgzWkI2QT09?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 14:16:39.1134
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 14:16:39.2590
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e9eed87-c377-4a09-4992-08ddb329bc67
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5963fec1-79dd-4428-bb67-08ddb329bc7e
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00001CE6.namprd03.prod.outlook.com
+	SJ1PEPF00001CEA.namprd03.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5678
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7100
 
-Many quirks are global configuration settings and a handful apply to
-each CPU.
+AMD systems optionally support a deferred error interrupt. The interrupt
+should be used as another signal to trigger MCA polling. This is similar
+to how other MCA interrupts are handled.
 
-Move the per-CPU quirks to vendor init to execute them on each online
-CPU. Set the global quirks during BSP-only init so they're only executed
-once and early.
+Deferred errors do not require any special handling related to the
+interrupt, e.g. resetting or rearming the interrupt, etc.
+
+However, Scalable MCA systems include a pair of registers, MCA_DESTAT
+and MCA_DEADDR, that should be checked for valid errors. This check
+should be done whenever MCA registers are polled. Currently, the
+deferred error interrupt does this check, but the MCA polling function
+does not.
+
+Call the MCA polling function when handling the deferred error
+interrupt. This keeps all "polling" cases in a common function.
+
+Call the polling function only for banks that have the deferred error
+interrupt enabled.
+
+Add an SMCA status check helper. This will do the same status check and
+register clearing that the interrupt handler has done. And it extends
+the common polling flow to find AMD deferred errors.
+
+Remove old code whose functionality is already covered in the common MCA
+code.
 
 Reviewed-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
 Tested-by: Tony Luck <tony.luck@intel.com>
@@ -150,234 +169,271 @@ Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
 
 Notes:
     Link:
-    https://lore.kernel.org/r/20250415-wip-mca-updates-v3-10-8ffd9eb4aa56@amd.com
+    https://lore.kernel.org/r/20250415-wip-mca-updates-v3-13-8ffd9eb4aa56@amd.com
     
     v3->v4:
-    * Add newline in mce_amd_feature_init().
-    * Remove __mcheck_cpu_apply_quirks().
-    * Update code comment ref. __mcheck_cpu_apply_quirks().
+    * Add kflag for checking DFR registers.
     
     v2->v3:
-    * Update code comment.
     * Add tags from Qiuxu and Tony.
     
     v1->v2:
-    * New in v2.
+    * Keep code comment.
+    * Log directly from helper function rather than pass values.
+    
+    Link:
+    https://lore.kernel.org/r/20250213-wip-mca-updates-v2-13-3636547fe05f@amd.com
+    
+    v2->v3:
+    * Add tags from Qiuxu and Tony.
+    
+    v1->v2:
+    * Keep code comment.
+    * Log directly from helper function rather than pass values.
 
- arch/x86/kernel/cpu/mce/amd.c   | 24 +++++++++++++
- arch/x86/kernel/cpu/mce/core.c  | 79 +++++++++++------------------------------
- arch/x86/kernel/cpu/mce/intel.c | 18 ++++++++++
- 3 files changed, 62 insertions(+), 59 deletions(-)
+ arch/x86/include/asm/mce.h     |   6 +++
+ arch/x86/kernel/cpu/mce/amd.c  | 103 ++---------------------------------------
+ arch/x86/kernel/cpu/mce/core.c |  50 +++++++++++++++++++-
+ 3 files changed, 59 insertions(+), 100 deletions(-)
 
+diff --git a/arch/x86/include/asm/mce.h b/arch/x86/include/asm/mce.h
+index 31e3cb550fb3..7d6588195d56 100644
+--- a/arch/x86/include/asm/mce.h
++++ b/arch/x86/include/asm/mce.h
+@@ -165,6 +165,12 @@
+  */
+ #define MCE_IN_KERNEL_COPYIN	BIT_ULL(7)
+ 
++/*
++ * Indicates that handler should check and clear Deferred error registers
++ * rather than common ones.
++ */
++#define MCE_CHECK_DFR_REGS	BIT_ULL(8)
++
+ /*
+  * This structure contains all data related to the MCE log.  Also
+  * carries a signature to make it easier to find from external
 diff --git a/arch/x86/kernel/cpu/mce/amd.c b/arch/x86/kernel/cpu/mce/amd.c
-index d55c4b5f5354..28dc36cdd137 100644
+index 0c789fa1ae4c..9d4d0169713b 100644
 --- a/arch/x86/kernel/cpu/mce/amd.c
 +++ b/arch/x86/kernel/cpu/mce/amd.c
-@@ -648,6 +648,28 @@ static void disable_err_thresholding(struct cpuinfo_x86 *c, unsigned int bank)
- 		wrmsrq(MSR_K7_HWCR, hwcr);
- }
+@@ -56,6 +56,7 @@ static bool thresholding_irq_en;
  
-+static void amd_apply_quirks(struct cpuinfo_x86 *c)
-+{
-+	struct mce_bank *mce_banks = this_cpu_ptr(mce_banks_array);
-+
-+	/* This should be disabled by the BIOS, but isn't always */
-+	if (c->x86 == 15 && this_cpu_read(mce_num_banks) > 4) {
-+		/*
-+		 * disable GART TBL walk error reporting, which
-+		 * trips off incorrectly with the IOMMU & 3ware
-+		 * & Cerberus:
-+		 */
-+		clear_bit(10, (unsigned long *)&mce_banks[4].ctl);
-+	}
-+
-+	/*
-+	 * Various K7s with broken bank 0 around. Always disable
-+	 * by default.
-+	 */
-+	if (c->x86 == 6 && this_cpu_read(mce_num_banks))
-+		mce_banks[0].ctl = 0;
-+}
-+
- /* cpu init entry point, called from mce.c with preempt off */
- void mce_amd_feature_init(struct cpuinfo_x86 *c)
- {
-@@ -655,6 +677,8 @@ void mce_amd_feature_init(struct cpuinfo_x86 *c)
- 	u32 low = 0, high = 0, address = 0;
- 	int offset = -1;
+ struct mce_amd_cpu_data {
+ 	mce_banks_t     thr_intr_banks;
++	mce_banks_t     dfr_intr_banks;
+ };
  
-+	amd_apply_quirks(c);
-+
- 	mce_flags.amd_threshold	 = 1;
- 
- 	for (bank = 0; bank < this_cpu_read(mce_num_banks); ++bank) {
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index a723c7886eae..4f6af060a395 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -1807,8 +1807,9 @@ static void __mcheck_cpu_mce_banks_init(void)
- 		struct mce_bank *b = &mce_banks[i];
- 
- 		/*
--		 * Init them all, __mcheck_cpu_apply_quirks() is going to apply
--		 * the required vendor quirks before
-+		 * Init them all by default.
-+		 *
-+		 * The required vendor quirks will be applied before
- 		 * __mcheck_cpu_init_prepare_banks() does the final bank setup.
+ static DEFINE_PER_CPU_READ_MOSTLY(struct mce_amd_cpu_data, mce_amd_data);
+@@ -300,8 +301,10 @@ static void smca_configure(unsigned int bank, unsigned int cpu)
+ 		 * APIC based interrupt. First, check that no interrupt has been
+ 		 * set.
  		 */
- 		b->ctl = -1ULL;
-@@ -1884,18 +1885,6 @@ static void __mcheck_cpu_init_prepare_banks(void)
+-		if ((low & BIT(5)) && !((high >> 5) & 0x3))
++		if ((low & BIT(5)) && !((high >> 5) & 0x3)) {
++			__set_bit(bank, this_cpu_ptr(&mce_amd_data)->dfr_intr_banks);
+ 			high |= BIT(5);
++		}
  
- static void apply_quirks_amd(struct cpuinfo_x86 *c)
- {
--	struct mce_bank *mce_banks = this_cpu_ptr(mce_banks_array);
--
--	/* This should be disabled by the BIOS, but isn't always */
--	if (c->x86 == 15 && this_cpu_read(mce_num_banks) > 4) {
--		/*
--		 * disable GART TBL walk error reporting, which
--		 * trips off incorrectly with the IOMMU & 3ware
--		 * & Cerberus:
--		 */
--		clear_bit(10, (unsigned long *)&mce_banks[4].ctl);
--	}
--
- 	if (c->x86 < 0x11 && mca_cfg.bootlog < 0) {
- 		/*
- 		 * Lots of broken BIOS around that don't clear them
-@@ -1904,13 +1893,6 @@ static void apply_quirks_amd(struct cpuinfo_x86 *c)
- 		mca_cfg.bootlog = 0;
- 	}
+ 		this_cpu_ptr(mce_banks_array)[bank].lsb_in_status = !!(low & BIT(8));
  
--	/*
--	 * Various K7s with broken bank 0 around. Always disable
--	 * by default.
--	 */
--	if (c->x86 == 6 && this_cpu_read(mce_num_banks))
--		mce_banks[0].ctl = 0;
--
- 	/*
- 	 * overflow_recov is supported for F15h Models 00h-0fh
- 	 * even though we don't have a CPUID bit for it.
-@@ -1924,23 +1906,10 @@ static void apply_quirks_amd(struct cpuinfo_x86 *c)
- 
- static void apply_quirks_intel(struct cpuinfo_x86 *c)
- {
--	struct mce_bank *mce_banks = this_cpu_ptr(mce_banks_array);
--
- 	/* Older CPUs (prior to family 6) don't need quirks. */
- 	if (c->x86_vfm < INTEL_PENTIUM_PRO)
- 		return;
- 
--	/*
--	 * SDM documents that on family 6 bank 0 should not be written
--	 * because it aliases to another special BIOS controlled
--	 * register.
--	 * But it's not aliased anymore on model 0x1a+
--	 * Don't ignore bank 0 completely because there could be a
--	 * valid event later, merely don't write CTL0.
--	 */
--	if (c->x86_vfm < INTEL_NEHALEM_EP && this_cpu_read(mce_num_banks))
--		mce_banks[0].init = false;
--
- 	/*
- 	 * All newer Intel systems support MCE broadcasting. Enable
- 	 * synchronization with a one second timeout.
-@@ -1978,29 +1947,6 @@ static void apply_quirks_zhaoxin(struct cpuinfo_x86 *c)
- 	}
+@@ -794,37 +797,6 @@ bool amd_mce_usable_address(struct mce *m)
+ 	return false;
  }
  
--/* Add per CPU specific workarounds here */
--static void __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
+-static void __log_error(unsigned int bank, u64 status, u64 addr, u64 misc)
 -{
--	struct mca_config *cfg = &mca_cfg;
+-	struct mce_hw_err err;
+-	struct mce *m = &err.m;
 -
--	switch (c->x86_vendor) {
--	case X86_VENDOR_AMD:
--		apply_quirks_amd(c);
--		break;
--	case X86_VENDOR_INTEL:
--		apply_quirks_intel(c);
--		break;
--	case X86_VENDOR_ZHAOXIN:
--		apply_quirks_zhaoxin(c);
--		break;
+-	mce_prep_record(&err);
+-
+-	m->status = status;
+-	m->misc   = misc;
+-	m->bank   = bank;
+-	m->tsc	 = rdtsc();
+-
+-	if (m->status & MCI_STATUS_ADDRV) {
+-		m->addr = addr;
+-
+-		smca_extract_err_addr(m);
 -	}
 -
--	if (cfg->monarch_timeout < 0)
--		cfg->monarch_timeout = 0;
--	if (cfg->bootlog != 0)
--		cfg->panic_timeout = 30;
+-	if (mce_flags.smca) {
+-		rdmsrq(MSR_AMD64_SMCA_MCx_IPID(bank), m->ipid);
+-
+-		if (m->status & MCI_STATUS_SYNDV) {
+-			rdmsrq(MSR_AMD64_SMCA_MCx_SYND(bank), m->synd);
+-			rdmsrq(MSR_AMD64_SMCA_MCx_SYND1(bank), err.vendor.amd.synd1);
+-			rdmsrq(MSR_AMD64_SMCA_MCx_SYND2(bank), err.vendor.amd.synd2);
+-		}
+-	}
+-
+-	mce_log(&err);
 -}
 -
- static bool __mcheck_cpu_ancient_init(struct cpuinfo_x86 *c)
+ DEFINE_IDTENTRY_SYSVEC(sysvec_deferred_error)
  {
- 	if (c->x86 != 5)
-@@ -2259,6 +2205,23 @@ void mca_bsp_init(struct cpuinfo_x86 *c)
+ 	trace_deferred_error_apic_entry(DEFERRED_ERROR_VECTOR);
+@@ -834,75 +806,10 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_deferred_error)
+ 	apic_eoi();
+ }
  
- 	if (cap & MCG_SER_P)
- 		mca_cfg.ser = 1;
+-/*
+- * Returns true if the logged error is deferred. False, otherwise.
+- */
+-static inline bool
+-_log_error_bank(unsigned int bank, u32 msr_stat, u32 msr_addr, u64 misc)
+-{
+-	u64 status, addr = 0;
+-
+-	rdmsrq(msr_stat, status);
+-	if (!(status & MCI_STATUS_VAL))
+-		return false;
+-
+-	if (status & MCI_STATUS_ADDRV)
+-		rdmsrq(msr_addr, addr);
+-
+-	__log_error(bank, status, addr, misc);
+-
+-	wrmsrq(msr_stat, 0);
+-
+-	return status & MCI_STATUS_DEFERRED;
+-}
+-
+-static bool _log_error_deferred(unsigned int bank, u32 misc)
+-{
+-	if (!_log_error_bank(bank, mca_msr_reg(bank, MCA_STATUS),
+-			     mca_msr_reg(bank, MCA_ADDR), misc))
+-		return false;
+-
+-	/*
+-	 * Non-SMCA systems don't have MCA_DESTAT/MCA_DEADDR registers.
+-	 * Return true here to avoid accessing these registers.
+-	 */
+-	if (!mce_flags.smca)
+-		return true;
+-
+-	/* Clear MCA_DESTAT if the deferred error was logged from MCA_STATUS. */
+-	wrmsrq(MSR_AMD64_SMCA_MCx_DESTAT(bank), 0);
+-	return true;
+-}
+-
+-/*
+- * We have three scenarios for checking for Deferred errors:
+- *
+- * 1) Non-SMCA systems check MCA_STATUS and log error if found.
+- * 2) SMCA systems check MCA_STATUS. If error is found then log it and also
+- *    clear MCA_DESTAT.
+- * 3) SMCA systems check MCA_DESTAT, if error was not found in MCA_STATUS, and
+- *    log it.
+- */
+-static void log_error_deferred(unsigned int bank)
+-{
+-	if (_log_error_deferred(bank, 0))
+-		return;
+-
+-	/*
+-	 * Only deferred errors are logged in MCA_DE{STAT,ADDR} so just check
+-	 * for a valid error.
+-	 */
+-	_log_error_bank(bank, MSR_AMD64_SMCA_MCx_DESTAT(bank),
+-			      MSR_AMD64_SMCA_MCx_DEADDR(bank), 0);
+-}
+-
+ /* APIC interrupt handler for deferred errors */
+ static void amd_deferred_error_interrupt(void)
+ {
+-	unsigned int bank;
+-
+-	for (bank = 0; bank < this_cpu_read(mce_num_banks); ++bank)
+-		log_error_deferred(bank);
++	machine_check_poll(MCP_TIMESTAMP, &this_cpu_ptr(&mce_amd_data)->dfr_intr_banks);
+ }
+ 
+ static void reset_block(struct threshold_block *block)
+diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+index a0aaf0abd798..dc5ddddceb22 100644
+--- a/arch/x86/kernel/cpu/mce/core.c
++++ b/arch/x86/kernel/cpu/mce/core.c
+@@ -687,7 +687,10 @@ static noinstr void mce_read_aux(struct mce_hw_err *err, int i)
+ 		m->misc = mce_rdmsrq(mca_msr_reg(i, MCA_MISC));
+ 
+ 	if (m->status & MCI_STATUS_ADDRV) {
+-		m->addr = mce_rdmsrq(mca_msr_reg(i, MCA_ADDR));
++		if (m->kflags & MCE_CHECK_DFR_REGS)
++			m->addr = mce_rdmsrq(MSR_AMD64_SMCA_MCx_DEADDR(i));
++		else
++			m->addr = mce_rdmsrq(mca_msr_reg(i, MCA_ADDR));
+ 
+ 		/*
+ 		 * Mask the reported address by the reported granularity.
+@@ -714,6 +717,43 @@ static noinstr void mce_read_aux(struct mce_hw_err *err, int i)
+ 
+ DEFINE_PER_CPU(unsigned, mce_poll_count);
+ 
++/*
++ * We have three scenarios for checking for Deferred errors:
++ *
++ * 1) Non-SMCA systems check MCA_STATUS and log error if found.
++ * 2) SMCA systems check MCA_STATUS. If error is found then log it and also
++ *    clear MCA_DESTAT.
++ * 3) SMCA systems check MCA_DESTAT, if error was not found in MCA_STATUS, and
++ *    log it.
++ */
++static bool smca_should_log_poll_error(enum mcp_flags flags, struct mce_hw_err *err)
++{
++	struct mce *m = &err->m;
 +
-+	switch (c->x86_vendor) {
-+	case X86_VENDOR_AMD:
-+		apply_quirks_amd(c);
-+		break;
-+	case X86_VENDOR_INTEL:
-+		apply_quirks_intel(c);
-+		break;
-+	case X86_VENDOR_ZHAOXIN:
-+		apply_quirks_zhaoxin(c);
-+		break;
++	/*
++	 * If this is a deferred error found in MCA_STATUS, then clear
++	 * the redundant data from the MCA_DESTAT register.
++	 */
++	if (m->status & MCI_STATUS_VAL) {
++		if (m->status & MCI_STATUS_DEFERRED)
++			mce_wrmsrq(MSR_AMD64_SMCA_MCx_DESTAT(m->bank), 0);
++
++		return true;
 +	}
 +
-+	if (mca_cfg.monarch_timeout < 0)
-+		mca_cfg.monarch_timeout = 0;
-+	if (mca_cfg.bootlog != 0)
-+		mca_cfg.panic_timeout = 30;
- }
- 
- /*
-@@ -2278,8 +2241,6 @@ void mcheck_cpu_init(struct cpuinfo_x86 *c)
- 
- 	__mcheck_cpu_cap_init();
- 
--	__mcheck_cpu_apply_quirks(c);
--
- 	if (!mce_gen_pool_init()) {
- 		mca_cfg.disabled = 1;
- 		pr_emerg("Couldn't allocate MCE records pool!\n");
-diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
-index efcf21e9552e..ae9417d634ac 100644
---- a/arch/x86/kernel/cpu/mce/intel.c
-+++ b/arch/x86/kernel/cpu/mce/intel.c
-@@ -468,8 +468,26 @@ static void intel_imc_init(struct cpuinfo_x86 *c)
- 	}
- }
- 
-+static void intel_apply_quirks(struct cpuinfo_x86 *c)
-+{
 +	/*
-+	 * SDM documents that on family 6 bank 0 should not be written
-+	 * because it aliases to another special BIOS controlled
-+	 * register.
-+	 * But it's not aliased anymore on model 0x1a+
-+	 * Don't ignore bank 0 completely because there could be a
-+	 * valid event later, merely don't write CTL0.
-+	 *
-+	 * Older CPUs (prior to family 6) can't reach this point and already
-+	 * return early due to the check of __mcheck_cpu_ancient_init().
++	 * If the MCA_DESTAT register has valid data, then use
++	 * it as the status register.
 +	 */
-+	if (c->x86_vfm < INTEL_NEHALEM_EP && this_cpu_read(mce_num_banks))
-+		this_cpu_ptr(mce_banks_array)[0].init = false;
++	m->status = mce_rdmsrq(MSR_AMD64_SMCA_MCx_DESTAT(m->bank));
++
++	if (!(m->status & MCI_STATUS_VAL))
++		return false;
++
++	m->kflags |= MCE_CHECK_DFR_REGS;
++	return true;
 +}
 +
- void mce_intel_feature_init(struct cpuinfo_x86 *c)
+ /*
+  * Newer Intel systems that support software error
+  * recovery need to make additional checks. Other
+@@ -740,6 +780,9 @@ static bool should_log_poll_error(enum mcp_flags flags, struct mce_hw_err *err)
  {
-+	intel_apply_quirks(c);
- 	intel_init_cmci();
- 	intel_init_lmce();
- 	intel_imc_init(c);
+ 	struct mce *m = &err->m;
+ 
++	if (mce_flags.smca)
++		return smca_should_log_poll_error(flags, err);
++
+ 	/* If this entry is not valid, ignore it. */
+ 	if (!(m->status & MCI_STATUS_VAL))
+ 		return false;
+@@ -837,7 +880,10 @@ void machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
+ 		/*
+ 		 * Clear state for this bank.
+ 		 */
+-		mce_wrmsrq(mca_msr_reg(i, MCA_STATUS), 0);
++		if (m->kflags & MCE_CHECK_DFR_REGS)
++			mce_wrmsrq(MSR_AMD64_SMCA_MCx_DESTAT(i), 0);
++		else
++			mce_wrmsrq(mca_msr_reg(i, MCA_STATUS), 0);
+ 	}
+ 
+ 	/*
 
 -- 
 2.49.0
