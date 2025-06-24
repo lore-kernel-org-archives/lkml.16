@@ -1,275 +1,233 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2047.outbound.protection.outlook.com [40.107.237.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46A176136;
-	Tue, 24 Jun 2025 04:28:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750739290; cv=none; b=ht6HfL0OqA/av4aq7vanRI6LMAFN3Sk/LW4L/Lehp4827YTncWR0PaCI00sqe83q36CccQqEaURInNR9dr6win99Dn5hn2HFVLMLmTYE5TUjXeFH1ypZ5ayC8Vg7di919cnev+aSUfK0LFIvXvhfchLPfu4Iez36Ww1+oDnfkZg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750739290; c=relaxed/simple;
-	bh=qDq+KroKdv6fd4RFczineFXJjUXv3l3EBcPo11dsWpE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=bEpQKluIhQ135AU8d/M/nKbzMuKDbCmfuJNXbyDzhuGopUL+kgxas+zCwrs5q/wfHrZdllwEQk1bxdPxZPXh+5Ow1floEgZGyWZWnb8Us03GaLtt6QfmS+3tM37qD/oymF7+Cra3hB9CW0VEuVmxDT6vYb6fUdsy+60bExaMnco=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gFl2xlDt; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3D738F6F
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 04:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750739496; cv=fail; b=rNHfZdUkY1gTFiluIy1qH0soUfIKnwHt5D/InUwy6FLtXrpGTthuadHzUrcuVux3h6KR5GaESB2O5MMzpPmMUe2LGBU0ocWi0fq+Rm29P10zvbLWFcDHHV4hbXCSTSlItIvcjtDePLOCopJdI20LLgFAS/eH+liZWAa2jOjuoV4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750739496; c=relaxed/simple;
+	bh=Pxp5nXhZ7gdLiX8kRm1pNGuRlmtrNhDmEbr1g+mh1dk=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=NvEVqSD3lFds0gQ07JkMNf+90/qI2JaQ3iumeX6XuwWHUmlHgbQFJHmAVt32wlAbeuHJv+1RA07CJ5kQ71iaHTslLmR6CSOeFnvoUOX8y6oZJrZYzQO1B8agIIeVEjxFeqZfnrzVtnirDqZdLqzhf6QhnYppWb+/z3Yz1M3BsDg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=LZ1dpAUK; arc=fail smtp.client-ip=40.107.237.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gFl2xlDt"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-313336f8438so648471a91.0;
-        Mon, 23 Jun 2025 21:28:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750739288; x=1751344088; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RmSIN6ze48fHLAU7HddzL1LXnxd1gMl3vk8ikqqzThg=;
-        b=gFl2xlDtmQGOqWwBSnrd7N6S+kD8Lx2jrCiOLcCoVKwkzRfeBUPR0ABxsVEkfaLeRx
-         y19CvSWZ6dataJOSVoCapPKTbHEV185eHg4yZ2ZKIPmkRO7C5P0va7GCqvaGwc6rbPIW
-         J2NOd0mg1bG69D5rl9iPiZWCbbDsvgOZlQokATI9FxTcoyQ611RkJTacaJ5AztgUG0EV
-         9qiDYCYdQtCwcTwL5MHAlGonbOxEKfIzQYLgyQaP/voQcCcWlToWuZm0KToVlpo9aLLz
-         XjjY02gPUrcuaNqYoVL6/wotvYFitXMoB6iD1BKw6UlN1kh0gCEJTvy50Io25jZEXVz+
-         F/mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750739288; x=1751344088;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RmSIN6ze48fHLAU7HddzL1LXnxd1gMl3vk8ikqqzThg=;
-        b=E2QVfPdMSqB6a+H9hbciy0nWJlTQfBswex8/uK7clK/s/o2YWUFXCN8wSstHGrzQAo
-         003JgjfmrGo4u5yPcUI1C57sxa1sNHrrs0W1afLXFipU3keNkYqgXMSi8oVksH/Qclvs
-         07tCPDn0XObgbfjQhG+gZYC5BCykubiodKT2VhNTIm8+B9aPcSPF/DMyloAx3Nv1od+Y
-         xN4Yg9C7IqkeW74IlBL2gO3ArNB7Frr+VoJprzsFaMZLxbm2pbmmOBMx18XSezLq3sUM
-         jl1F+NqhwX6giIM4vH2f4R0eMt9QAZeurVF1OX67Qeon7Rf3zuBZrTXPgjcPE6c2Td9p
-         ZsQw==
-X-Forwarded-Encrypted: i=1; AJvYcCU2fISER5fCKOmbQrlrRzhkA8YIGOJ2aRRTvmXY5c3D3yhR55kwDGFaNnYbj8acwL7npH9TIHgxTrFKkfCRDtM=@vger.kernel.org, AJvYcCVKLMLN+5LyLKmtnBrR2ya/ByRJB/MOq9Z42xT4NFXb9T116gjXEnuMdcCWvq4oDu3m8XXBVOxN4H/VvjA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx2EuB0jecKvCC5faxiiwafq3IPhRVU9ID/dJzaZddoGuVIOZlK
-	hdTLf11hAI/arV/7FBNPE4b7OuAeVieYxC87znteS86R0sMZu8QGLxPm
-X-Gm-Gg: ASbGncsV2Uwq+tdA8xEd1s1Ml3gYB1ddvGR2h3LKJ4frzt6jEYQjO0QzsQicvUFORVi
-	Qs7ZLJ6w4rXiTLJeaeZnRvNDzp1yxQFHluuqunOI9iCWImK8xF8Srba/Nr19KhVJthlrccoNLaJ
-	zQGOh057bKgKZ/ZJSsNwlm0hvahggAVGTkE/HO4IpG2pqklLpk36z6kuGhqUZ/GBxrYQTcEqXvc
-	HhlO4POXUkXx42qS4Vmrx9ZnQzcfg/qnO/LORgsItVLVbg9GZUWPcfQmgEA3UzW+jleIPtHFtkd
-	Xu/ktcmVBYdep5f6OYQbyZO1OCjtfF9FAxDy2TWQXvU+Poz9HDqgPu8MDGkT4wqQd2RzAOYd3w5
-	umCFrO7BilBWv6HQ=
-X-Google-Smtp-Source: AGHT+IEs6EWS+EoVH2MIVJCKKApIeloHaAs25Uc47CI0bKqoK2OdgPgy0frPAhiLvltO/93opV0rYQ==
-X-Received: by 2002:a17:903:32c3:b0:234:8e54:2d5f with SMTP id d9443c01a7336-237d9ac4532mr88230265ad.13.1750739288464;
-        Mon, 23 Jun 2025 21:28:08 -0700 (PDT)
-Received: from localhost.localdomain ([138.94.103.170])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d874fe39sm96363105ad.251.2025.06.23.21.28.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jun 2025 21:28:08 -0700 (PDT)
-From: "Christian S. Lima" <christiansantoslima21@gmail.com>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	~lkcamp/patches@lists.sr.ht,
-	richard120310@gmail.com
-Subject: [PATCH v8] rust: transmute: Add methods for FromBytes trait
-Date: Tue, 24 Jun 2025 01:28:02 -0300
-Message-ID: <20250624042802.105623-1-christiansantoslima21@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="LZ1dpAUK"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=WBXDewS1oWXtPLvdFG5f2ql5YK7vfzFKzTQ0mWgg2+DqU7rGEUnW3LJvtHvw0ReS1w1Z7vH7etRjZbHeiTekcJtGWTGk5+RsoQAsugC3hWaxrMUoLnGbLgp/oECIzFjCm1onkq+tI3n6KWzCfeMGFTp7jjSnnlvvRpLrsZFxsFEEjMMUYL6MudFRqhDHruhtBla0y1ktL+iFBcIWey3QeP2uaiofBzepS3BfeabupNhbD9T5GpIEfnCQf3rYX59seU2GrZjuduMJHZ/BgGOAmAojvyWgyhysUNopH3ygrDN+yPEW/37+CYlcbFwnFGG+x1tsK2QRIWgN9J4lYq+VdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Xvi2/6aH2FVsYmT4OOqRI+ZX0nJQUbcIPACezxiyWKw=;
+ b=lZXnOc/awHzbBkaJ37ptUiOcOu5msl3QpfQj5wu9OPupCjetrowm989KPaI1tDdpDIHqmyi6RvvN/EqnaqIP5A2i0nolgJWtV4mG5SPYmtbIlXG5sto1tjmYiywfqt9QGXu6vQ3QFbDEd2vrl8CVPIjtSbWbepuxxaxfVm33ntEjHbXuAZO7PZcmmjWiBIuiBkYjM5UpSs5geG1XT/r8Xy2IytR9AMCGozVjTKzQzxywhpyLBUYSB4zCFec2CpJdA57AMhqMLbTfcgd/W6FpI3dQCu2TfkCfEteXh6f1MlrL78E/uED94MC9R/n6UXR+cffWR+9GUpojsnnpipwHUA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Xvi2/6aH2FVsYmT4OOqRI+ZX0nJQUbcIPACezxiyWKw=;
+ b=LZ1dpAUKqNUfyPtNsHCXfqlHh5ayAWNqJA5WkfvKODakQt5fNmeAtfK80tGEiJVw7eQquvM/yBGJwTkSfmaDe0gBLe8Vj7BgctUjZ/v7dLc1IXw/XQo9Juh7+NrClZjbdBXa0pjQHylmAON1DZUgNrMqSWM0rCU+VJREz8SWE2I=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from CH3PR12MB8658.namprd12.prod.outlook.com (2603:10b6:610:175::8)
+ by IA0PR12MB8861.namprd12.prod.outlook.com (2603:10b6:208:487::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Tue, 24 Jun
+ 2025 04:31:30 +0000
+Received: from CH3PR12MB8658.namprd12.prod.outlook.com
+ ([fe80::d5cc:cc84:5e00:2f42]) by CH3PR12MB8658.namprd12.prod.outlook.com
+ ([fe80::d5cc:cc84:5e00:2f42%4]) with mapi id 15.20.8835.025; Tue, 24 Jun 2025
+ 04:31:30 +0000
+Message-ID: <d99ce13a-3b27-46c8-9d65-99cf979f537f@amd.com>
+Date: Tue, 24 Jun 2025 10:01:22 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] sched/fair: Fix memory leak in
+ alloc_fair_sched_group()
+To: Zihuan Zhang <zhangzihuan@kylinos.cn>
+Cc: linux-kernel@vger.kernel.org, mingo@redhat.com, peterz@infradead.org,
+ juri.lelli@redhat.com, vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+ rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com
+References: <20250623061909.13480-1-zhangzihuan@kylinos.cn>
+Content-Language: en-US
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20250623061909.13480-1-zhangzihuan@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN4P287CA0118.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:c01:2b0::7) To CH3PR12MB8658.namprd12.prod.outlook.com
+ (2603:10b6:610:175::8)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8658:EE_|IA0PR12MB8861:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9abea738-5bfd-41b7-b193-08ddb2d7fd7a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZkVDNnNjV21PSW5ZRWROK0dueWxVTkVUOEN2Z2lXS1FmV0k4ZVpMVzA2cy9U?=
+ =?utf-8?B?Y2lKQ21neEtCeE4wMUZxWGV1UnZPaTZoQUloSU1FTGNhL2tSaFZXWjcvd1FC?=
+ =?utf-8?B?T2oyd0puSEhVcCtHSE5YZWxFZ1ZIbVBSMUVzdmplVWp5Q3NBdFl3VHBqSStP?=
+ =?utf-8?B?c3BpZGlRcHkzU1Vta1dhU3lac1RQQnpteXZNWlVseWJ6aVRXT3cvcDdVbWhS?=
+ =?utf-8?B?MnJWOTQ4Um15UzArakJhZFJFTW9XMWJGWmc1ZjF5cDVjbDJVZE9jdXVvN3lL?=
+ =?utf-8?B?d24zK3BpaXZkbWxXa0xVUzJCTWRCRWNxWEVvTjhGbk5GOXpRUlZnVFZtTTE3?=
+ =?utf-8?B?UVYydlVsQUdzNTFaRk9BMW44Y1FSSUN6RkZDblh2MnZUWVdlZ1F3WStOOTJX?=
+ =?utf-8?B?NXZLV0N4N2lWQVN1UHZ3Q0wyM1JoMCtzaDZqV1I3NFlCVFFqK1hXVldRc3Nh?=
+ =?utf-8?B?dW9melgyakFteW5ELzhrcytNS2Nwa1R2UStCRDJQTGNodzFtaTdUTmVuS1J2?=
+ =?utf-8?B?MFpMYUo0aHBmQ28rZzQzbjJQVW9SaTd3ZkZuT3Z0ZTlmL01LZXlsbGF0ZFE5?=
+ =?utf-8?B?c3k5NHJKdTNzd01YUkRXQUYwU3h5MnFMNVhnVWttMEdiSkNjeGFGaXJVTUdY?=
+ =?utf-8?B?OFlQdDFtS051eklBVmVsWmJyMlFVYTl1U0J2MmJlN1ZIdjVlVnF2dnFYVUln?=
+ =?utf-8?B?aFl0NVpqRG1HQUJkeENJQkJRc1BPcWF1UlVob1RKZjUxSWtuZm5LbnFLNmw4?=
+ =?utf-8?B?RVhtamwzZkpNTUlabHo1dm12WFlTY3VEYkNUdkVBSzdpd2VLRE5xZmFKTnFj?=
+ =?utf-8?B?TlZlTzhaRWZmQXJxVFcwWXB4WjEyZ0xnMkhoZFFNdUZQamFVbUkwYXhXbTNP?=
+ =?utf-8?B?bkdTK2lJTUhYWk9Fa0lTckJNQ1BDRGNZTmk2d1JLcktyand5M1JMSlEzb0g2?=
+ =?utf-8?B?Si9lR1NYTGRyT0xHK0YvN1RWZGZ1RFVEbjJIQkFVYVV6L3hoYjBabTFxRSsv?=
+ =?utf-8?B?SWVQemtETmZyMnNIZ25mbXpKbEVOdE9YK2ZuUzRYcmtpa1Y5N0ppOVZDeWZm?=
+ =?utf-8?B?YUxDL0ZXajgyRGM0SG44S3UvOXR5YnBXMWdhbzROM2M2blNZMTVZRXpqK3Q0?=
+ =?utf-8?B?eXpSS2g1c21tdFNidzFOZnRGQ3lKZS80WkNzQTBuYzFhUXJjeHNpc3lDbmRJ?=
+ =?utf-8?B?SWE4d282NjU2eVFqeGUveWlST3JXcHhoMGQ3RTBucXhSbmVhY2NvNTdvdUph?=
+ =?utf-8?B?UjNJaEdZNWNwV0tTWVVqMWg2M3QxTHpvUDlwMWNDYlY1Q2JZOWRXekN4T1Zr?=
+ =?utf-8?B?Z0ZyRDFWVnVYZG1tNllkcGtLNkVybitZWm4ySFRXbTgwWFVqaUNxV0puRm4v?=
+ =?utf-8?B?QjM3MW1LeWloWkNFd3Mvd09sb2VmYVg2N2ZUNmpPbWFjMGRVbzRjSGlkdjFV?=
+ =?utf-8?B?VUZVbFRiS2FBaVpUVm11MTVLYks2ZzRHb293TTFNQ2F0eCtwN2k3anV1VUVv?=
+ =?utf-8?B?VGlEdVF5ZzZrc05xS0oxRGxxTlltOXBxMXdFdHhDeVNKNGpjRnlVRjYzZzgr?=
+ =?utf-8?B?WkJmajV0TWI4cmhicmlSWk9mb3A3SkZFUllrUUc0THN3cEFpUndvR3Y5T0h3?=
+ =?utf-8?B?V1NDZTNGTFR3MWQyS09MSEkrUWZLcTNzUDd5NVpwK1V0SXdRYUVVODluSFhp?=
+ =?utf-8?B?di94amdndFBaUDlMc0h6eUp5eTBmTUpMZmhKaThObmVsT2JzeDVtOHNjcitY?=
+ =?utf-8?B?ZVZYcWJDQ3YwRkZ2UHR5SDVUaStrNElkOTR3Vzc3NExGVmF1SlpjYXQ5QitF?=
+ =?utf-8?B?RERzTXhwaFlGQmJsVDhVUkJIYWNLVUpBK1B1TUYxcERUc1dRbFMyNEszVlNP?=
+ =?utf-8?B?SVNKVE0vcUZscG5JSlFSemsyVWFoaVpFV3dBbmphNithY3AvbnpRUzB6V1Ft?=
+ =?utf-8?Q?mMdgpmiyqOQ=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8658.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?bU0xMWZ0TXNOSE0yS1ZITkdJei9xZE9saHJ5OEgwR0prbDFPREhzM25jazVM?=
+ =?utf-8?B?MUgvU1RSTlJJZDVTMmZJTmtGY1N5WE41MWxkMEo1d09oa2lMb0hoZCt0VHA2?=
+ =?utf-8?B?NDY3ZmdkMVcraC8yYzVuWmhLVXhNZnBkMHR2VzVPQ0F6bVpvcnFLN0p3VEI4?=
+ =?utf-8?B?OEZlOCt1VE5pRk03Vm9POHBORzV0bUkvT0dXKys3QU1oRW5xaHdIalZKN1Qr?=
+ =?utf-8?B?N2hHS0ZacmpvY2dJRm1raXE0VXJxRTN0ejBlZjJZQ01heXpabkgwYjVFYjdv?=
+ =?utf-8?B?cFUrWUpISFVBMGpqQi9aL3ZUOHFMZTR2Y1pOMjB5NjFTakU2NG1hdEFNVU5Q?=
+ =?utf-8?B?QXFBdXVkQzFPNDZmQlB4eUtVL0VnU09nRVVHYWRrR3VnQU5YSzBnbm1hdHRa?=
+ =?utf-8?B?K3Yxa3plZEZmRkl4UERMcHZOQVU3ZE1QM0pqQnhvRGhldWlYU0ZRZlVEb2hl?=
+ =?utf-8?B?TDhUdVdnRkRWYVRRZFRoMVl5V25SMEV0TWxXdmJkaW9UTk04dTJFQmhyOFp2?=
+ =?utf-8?B?SnY2RndmRWZ4MS9yQ0xpZDQ1SVhOSWRBb0xkaGJGZXBWdTR1aVRQaTkzZGpl?=
+ =?utf-8?B?R1p4VWpKQXVPYVQ1Und1L0hCeUxVdGJFdzNNNnFxb2xsbUpPNVFMR0dQRWls?=
+ =?utf-8?B?ZURKby9IUTFLVkRQSmVrMXhDaVllVGo4VzRYQVVyQ2poVk5tYzBsRmdEbm5p?=
+ =?utf-8?B?WTE5RkFRWkNuVENiUzUraklVY3BWREF2L1BOcTBSTXVyZzlreFJLRHJEcXRm?=
+ =?utf-8?B?TUZJaVlFREFyNW5HVmVpUTR2YVhaTE51Rlc1dXU2SlN0eERZWGd3MjI4b0JV?=
+ =?utf-8?B?NFNEVzBud2I4OGVYbXBiL3J6UG12dllLK0QxRXRQZXI1dnJUWE5UNWNDNlJN?=
+ =?utf-8?B?M1Q2VFhQdzNwditRbGpqb3N5azlZYjNibjIxeURpSndhYzU4cmJ5TUV3KzFm?=
+ =?utf-8?B?QjJtOE5pQ1BOWUtTWGF6OERSUXZ1TXNrSzgxeVBzUTVSZWJBSXB5cnVUcEwx?=
+ =?utf-8?B?aXQ5RHluQVZ4eVhva2NYdlcyQW43QVViRmcwUmMwUVB3ZmlDYnhQdjJyaXQ0?=
+ =?utf-8?B?MXNYdmpIcDFHbFU5YlEwMXNBMnRKZUtpSkpNUlFpZEVJUjhkNXVtVE9YeXU5?=
+ =?utf-8?B?UlVrMHZublREY1MrT2toSkRNdGcyTzVMZ29NTVptWmwvZDdDaEZyUFVpWnpK?=
+ =?utf-8?B?YjN4MjVvK0JMZFYxUFgwaXVaV2dDcWxNUUZZMm5hQ0R6R0xVVys1OTMzYjJH?=
+ =?utf-8?B?QVNPcUQ1RkdYQ0FHeEo2eFVqMXhIQzA1dTN6K1pPWktuQjBra3dGMjVST213?=
+ =?utf-8?B?emQ2QXFVaGdobmpsSk9UcDQ4QzE5UytkaVU3TWU1dXFYNDBXYkUzeGNVZTZL?=
+ =?utf-8?B?TjFvWjZBMDdTQ1M4MnY0TDIrVjExZmpjSENWT0lsQ0lVMmpwWXY5cm5jRWVs?=
+ =?utf-8?B?RloyQlQrT21uNTRmTXVkRmk2TmZRVDNHaDk2Y0gzS0h6eUp3aVNjdkJKdHNY?=
+ =?utf-8?B?V0l0VlZuRTZxd0dXWUp5dEFIclNIQXdVNmJOd0pvcTlrYXNxcWtWNUJTYzNp?=
+ =?utf-8?B?dDd1YURIUGJGdVRSWWdxZnpJcjZhcVc1NWMyeEljaUI1T1g0bk9PMDJEc3h5?=
+ =?utf-8?B?Vi9wUTZLY1R3QWdhRk9aVlo1R0tpaXNGQzZaQkt1YXNxTkcwalg0L3V2T2Q5?=
+ =?utf-8?B?NVlmZFowQTZYODJEazVZZkluVXVzMVlPN2JNaFRaR0NzcTFsUVhnaUtldFlE?=
+ =?utf-8?B?bEJYZXlHdmRodXhLQkRVN1NweVo4QmMrOVBMMnJWb0ZsOTlLOWl4T0h5RWlW?=
+ =?utf-8?B?eklHRnFPRDY2aWlXSnh4WVdpa0ZQQlhUWUJPVVA1NkpLcy9RU1BmbHozNXls?=
+ =?utf-8?B?aHFiUXlnaS9iemUyNHB5ODZsYUdJMkxmUFJzYTIzQktoN1BldUJkOEFZS0N0?=
+ =?utf-8?B?SWxnaDNVNUF2RVphM0M1M2JsbGJkTlI4QlBlOVI0d1haTUcvcXBkaXh4NDN2?=
+ =?utf-8?B?dDBxR2NDQUZ2Q3M2VzdUcnJpRW9YeGhUNE44UUdiMGo3aGl4WFBWVFRVeEFL?=
+ =?utf-8?B?OHJSWHAyR2hBd1FEZExLRXhsL1JNRlNoS29wRU5NaEwrMjJSeGlXQnJSd1Rn?=
+ =?utf-8?Q?uniOfNSLukb2y231XsGct8oMf?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9abea738-5bfd-41b7-b193-08ddb2d7fd7a
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8658.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 04:31:29.9808
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 7WhVTTVEkj75N8XT7vJCTgaDRCYa9rMUym6mpbTT0Y3B0AI4EcOnihfYocAyBAzf70FmO4W9oQAnwChUQFd6mQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8861
 
-The two methods added take a slice of bytes and return those bytes in a
-specific type. These methods are useful when we need to transform the
-stream of bytes into specific type.
+On 6/23/2025 11:49 AM, Zihuan Zhang wrote:
+> alloc_fair_sched_group() allocates per-CPU cfs_rq[] and se[] arrays
+> for a task group. However, if either allocation fails, or a per-CPU
+> allocation fails during the loop, the function may leak memory.
 
-The `FromBytesSized` trait was added to make it easier to implement other
-user defined types within the codebase. With the current implementation,
-there's no way to interact without implementing `from_bytes` and
-`from_mut_bytes`for every new type, and this would end up generating a lot
-of duplicate code. By using FromBytesSized as a proxy trait, we can avoid
-this without generating a direct dependecy. If necessary, the user can
-simply implement `FromBytes`if needed. For more context please, check the
-[1] and [2].
+alloc_fair_sched_group() is only called by sched_create_group()
+which does a sched_free_group() on failure that calls
+free_fair_sched_group(). I don't see the memory leak in this scenario.
+What am I missing?
 
-[1] https://lore.kernel.org/rust-for-linux/DANSZ6Q476EC.3GY00K717QVUL@nvidia.com/
-[2] https://lore.kernel.org/rust-for-linux/DAOESYD6F287.3U3M64X0S1WN5@nvidia.com/
+> This patch fixes the memory leak by:
+> - Using sizeof(*ptr) instead of sizeof(ptr) for correctness.
+> - Using the existing free_fair_sched_group() function to clean up
+> Note: Calling free_fair_sched_group() unconditionally in the failure
+> path is safe, as kfree(NULL) is a no-op in the kernel. This avoids
+> duplicating cleanup logic and improves robustness.
+> 
+> Signed-off-by: Zihuan Zhang <zhangzihuan@kylinos.cn>
+> ---
+>   kernel/sched/fair.c | 10 +++++-----
+>   1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 7a14da5396fb..920174245517 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -13372,12 +13372,12 @@ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
+>   	struct cfs_rq *cfs_rq;>   	int i;
+>   
+> -	tg->cfs_rq = kcalloc(nr_cpu_ids, sizeof(cfs_rq), GFP_KERNEL);
+> +	tg->cfs_rq = kcalloc(nr_cpu_ids, sizeof(*tg->cfs_rq), GFP_KERNEL);
+>   	if (!tg->cfs_rq)
+>   		goto err;
+> -	tg->se = kcalloc(nr_cpu_ids, sizeof(se), GFP_KERNEL);
+> +	tg->se = kcalloc(nr_cpu_ids, sizeof(*tg->se), GFP_KERNEL);
+>   	if (!tg->se)
+> -		goto err;
+> +		goto err_free_rq;
+>   
+>   	tg->shares = NICE_0_LOAD;
+>   
+> @@ -13387,7 +13387,7 @@ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
+>   		cfs_rq = kzalloc_node(sizeof(struct cfs_rq),
+>   				      GFP_KERNEL, cpu_to_node(i));
+>   		if (!cfs_rq)
+> -			goto err;
+> +			goto err_free_rq;
+>   
+>   		se = kzalloc_node(sizeof(struct sched_entity_stats),
+>   				  GFP_KERNEL, cpu_to_node(i));
+> @@ -13402,7 +13402,7 @@ int alloc_fair_sched_group(struct task_group *tg, struct task_group *parent)
+>   	return 1;
+>   
+>   err_free_rq:
+> -	kfree(cfs_rq);
 
-Link: https://github.com/Rust-for-Linux/linux/issues/1119
-Suggested-by: Alexandre Courbot <acourbot@nvidia.com>
-Signed-off-by: Christian S. Lima <christiansantoslima21@gmail.com>
----
-Changes in v2:
-- Rollback the implementation for the macro in the repository and implement
-  methods in trait
-- Link to v2: https://lore.kernel.org/rust-for-linux/20241012070121.110481-1-christiansantoslima21@gmail.com/
+This will actually introducing a memory leak. If allocation of "se"
+fails, the "cfs_rq" won't be linked to "tg" and needs to be freed here.
 
-Changes in v3:
-- Fix grammar errors
-- Remove repeated tests
-- Fix alignment errors
-- Fix tests not building
-- Link to v3: https://lore.kernel.org/rust-for-linux/20241109055442.85190-1-christiansantoslima21@gmail.com/
+> +	free_fair_sched_group(tg);
 
-Changes in v4:
-- Removed core::simd::ToBytes
-- Changed trait and methods to safe Add
-- Result<&Self, Error> in order to make safe methods
-- Link to v4: https://lore.kernel.org/rust-for-linux/20250314034910.134463-1-christiansantoslima21@gmail.com/
+free_fair_sched_group() doesn't NULL out the "tg->cfs_rq" and "tg->se"
+after freeing them which now introduces double-free via
+free_fair_sched_group() on failure in alloc_fair_sched_group().
 
-Changes in v5:
-- Changed from Result to Option
-- Removed commentaries
-- Returned trait impl to unsafe
-- Link to v5: https://lore.kernel.org/rust-for-linux/20250320014041.101470-1-christiansantoslima21@gmail.com/
+>   err:
+>   	return 0;
+>   }
 
-Changes in v6:
-- Add endianess check to doc test and use match to check
-success case
-- Reformulated safety comments
-- Link to v6: https://lore.kernel.org/rust-for-linux/20250330234039.29814-1-christiansantoslima21@gmail.com/
-
-Changes in v7:
-- Add alignment check
-- Link to v7: https://lore.kernel.org/rust-for-linux/20250615072042.133290-1-christiansantoslima21@gmail.com/
-
-Changes in v8:
-- Add the new FromBytesSized trait
-- Change the implementation of FromBytes trait methods
-- Move the cast to pointer earlier and use `is_aligned()` instead manual alignment check
----
- rust/kernel/transmute.rs | 100 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 94 insertions(+), 6 deletions(-)
-
-diff --git a/rust/kernel/transmute.rs b/rust/kernel/transmute.rs
-index 1c7d43771a37..832c65a1239c 100644
---- a/rust/kernel/transmute.rs
-+++ b/rust/kernel/transmute.rs
-@@ -9,27 +9,115 @@
- ///
- /// It's okay for the type to have padding, as initializing those bytes has no effect.
- ///
-+/// # Examples
-+///
-+/// ```
-+/// use kernel::transmute::FromBytes;
-+///
-+/// let foo = [1, 2, 3, 4];
-+///
-+/// let result = u32::from_bytes(&foo)?;
-+///
-+/// #[cfg(target_endian = "little")]
-+/// assert_eq!(*result, 0x4030201);
-+///
-+/// #[cfg(target_endian = "big")]
-+/// assert_eq!(*result, 0x1020304);
-+/// ```
-+///
- /// # Safety
- ///
- /// All bit-patterns must be valid for this type. This type must not have interior mutability.
--pub unsafe trait FromBytes {}
-+pub unsafe trait FromBytes {
-+    /// Converts a slice of bytes to a reference to `Self` when possible.
-+    fn from_bytes(bytes: &[u8]) -> Option<&Self>;
-+
-+    /// Converts a mutable slice of bytes to a reference to `Self` when possible.
-+    fn from_mut_bytes(bytes: &mut [u8]) -> Option<&mut Self>
-+    where
-+        Self: AsBytes;
-+}
- 
--macro_rules! impl_frombytes {
-+/// Just a proxy trait for FromBytes, if you need an implementation for your type use this instead.
-+///
-+/// # Safety
-+///
-+/// All bit-patterns must be valid for this type. This type must not have interior mutability.
-+pub unsafe trait FromBytesSized: Sized {}
-+
-+macro_rules! impl_frombytessized {
-     ($($({$($generics:tt)*})? $t:ty, )*) => {
-         // SAFETY: Safety comments written in the macro invocation.
--        $(unsafe impl$($($generics)*)? FromBytes for $t {})*
-+        $(unsafe impl$($($generics)*)? FromBytesSized for $t {})*
-     };
- }
- 
--impl_frombytes! {
-+impl_frombytessized! {
-     // SAFETY: All bit patterns are acceptable values of the types below.
-     u8, u16, u32, u64, usize,
-     i8, i16, i32, i64, isize,
- 
-     // SAFETY: If all bit patterns are acceptable for individual values in an array, then all bit
-     // patterns are also acceptable for arrays of that type.
--    {<T: FromBytes>} [T],
--    {<T: FromBytes, const N: usize>} [T; N],
-+    {<T: FromBytesSized, const N: usize>} [T; N],
-+}
-+
-+// SAFETY: All bit patterns are acceptable values of the types and in array case if all bit patterns
-+// are acceptable for individual values in an array, then all bit patterns are also acceptable
-+// for arrays of that type.
-+unsafe impl<T> FromBytes for T
-+where
-+    T: FromBytesSized,
-+{
-+    fn from_bytes(bytes: &[u8]) -> Option<&Self> {
-+        let slice_ptr = bytes.as_ptr().cast::<T>();
-+        if bytes.len() == ::core::mem::size_of::<T>() && slice_ptr.is_aligned() {
-+            // SAFETY: Since the code checks the size and alignment, the slice is valid.
-+            unsafe { Some(&*slice_ptr) }
-+        } else {
-+            None
-+        }
-+    }
-+
-+    fn from_mut_bytes(bytes: &mut [u8]) -> Option<&mut Self>
-+    where
-+        Self: AsBytes,
-+    {
-+        let slice_ptr = bytes.as_mut_ptr().cast::<T>();
-+        if bytes.len() == ::core::mem::size_of::<T>() && slice_ptr.is_aligned() {
-+            // SAFETY: Since the code checks the size and alignment, the slice is valid.
-+            unsafe { Some(&mut *slice_ptr) }
-+        } else {
-+            None
-+        }
-+    }
-+}
-+
-+// SAFETY: If all bit patterns are acceptable for individual values in an array, then all bit
-+// patterns are also acceptable for arrays of that type.
-+unsafe impl<T: FromBytes> FromBytes for [T] {
-+    fn from_bytes(bytes: &[u8]) -> Option<&Self> {
-+        let slice_ptr = bytes.as_ptr().cast::<T>();
-+        if bytes.len() % ::core::mem::size_of::<T>() == 0 && slice_ptr.is_aligned() {
-+            // SAFETY: Since the code checks the size and alignment, the slice is valid.
-+            unsafe { Some(::core::slice::from_raw_parts(slice_ptr, bytes.len())) }
-+        } else {
-+            None
-+        }
-+    }
-+
-+    fn from_mut_bytes(bytes: &mut [u8]) -> Option<&mut Self>
-+    where
-+        Self: AsBytes,
-+    {
-+        let slice_ptr = bytes.as_mut_ptr().cast::<T>();
-+        if bytes.len() % ::core::mem::size_of::<T>() == 0 && slice_ptr.is_aligned() {
-+            // SAFETY: Since the code checks the size and alignment, the slice is valid.
-+            unsafe { Some(::core::slice::from_raw_parts_mut(slice_ptr, bytes.len())) }
-+        } else {
-+            None
-+        }
-+    }
- }
- 
- /// Types that can be viewed as an immutable slice of initialized bytes.
 -- 
-2.49.0
+Thanks and Regards,
+Prateek
 
