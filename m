@@ -1,114 +1,142 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B24241C84CF
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FFC1C5D7A;
+	Tue, 24 Jun 2025 08:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750752886; cv=none; b=oJo2QjbO9WU9l2VfIcUtc/xLjJz0W3M72LoSdEKZEEHhf1/526B+rQpJooKCYFVCpsXMS0O8mq/ENgQSm9o6xDROf5/r8jskPdYHm2FC+qWoTWw5H7RH8W814DfqQ54xGSd4DJnpCrqzfVC3RX8Z54G1i2zmlhcFz3M6awSrqCI=
+	t=1750752916; cv=none; b=IS6Knjui+56oIGYdI8GRySPeoTUKzx3ukjYVzn+CosQmQGDnGMviV3vIYlcNQC1q3nTsyJQH4d3U74Y4EEQ2lxjjK1m6OtztSmrSO+G3suxY5jDfcSV/pgmTUHq56Y7Vj6aZP/l5FSGNZJHr9oeQ7RUvUFPRRjYM/p/ch3qOLA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750752886; c=relaxed/simple;
-	bh=RkBf4nk4I8KtM3ZkoAWYf2hke9fkRxO44SbopsToU6Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lcs4KxLPAj5n6/kZU42CJoH6c7WxWmzEUkwJ7+mqEzRWdYlJPpGPjAFiN+n4ZXWow30zB20gFuRmxxCpT5eq8n5rH1l+FQapA0utMMgb7TUlhRKRnMplPFiaQbf6ojxqgoI28Jdaxa6rbzWyeV5QE560b1S4iu4aou1fgNr24qI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=o2YHCizk; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1750752916; c=relaxed/simple;
+	bh=rgVyY4/YTQrAfm/pNuYNRBSarkZNCyC8P0/M3qGNqqs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ojWY3k+X6ihZ3dc4nQE1Q+1JbAGNNDuh4wJ8n+mGzfgTfXX0P8OIve/vl6MYsiDi6YfZ05n38YekDjFpchjNZcEwbu6+fYNdiLinguSomXnRBCcTtfbWZr/nwM+x3oDkZQ81Vk0kqHAp255DYohj/pgytjaC0LGpUmztGnys0qw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7zemyC+; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="o2YHCizk"
-Received: from eig-obgw-5009a.ext.cloudfilter.net ([10.0.29.176])
-	by cmsmtp with ESMTPS
-	id Ts17uOomwVkcRTynjuAxpO; Tue, 24 Jun 2025 08:14:43 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id Tyniuhbgf5IQGTynjuASwD; Tue, 24 Jun 2025 08:14:43 +0000
-X-Authority-Analysis: v=2.4 cv=Y+7+sAeN c=1 sm=1 tr=0 ts=685a5e73
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=ggxXCZzoyZzpBF6JAq1N0F4D1piByx1D18khDkcCG2g=; b=o2YHCizkW1Anl8FTlVJE+ldGkt
-	INBjDEFp9gDkn6MKBnQX7uH2GdeXw8VaCtpDRFASPm/GCqYDC8kPyIeN2pi5YZG9hJycHziGXV1VI
-	suAiIpLyIjtM8f5Sx5KmEKSGZ75Qw/ZfsAJliD+80keYYM5ibIINjMDPaoi5QKnwKUZgH/LqzwJbr
-	efT4gKq5EB45atkhdQN1vVG51tPkL9eJXbHHxikjuvJHvuzsA4A931Bhh3XcA/xH4QLEUnylLo/+d
-	JPzNVBICyTmxbj/aJbgg7LLI79++yUocjwkGwsEZE1OddfFCcDT77frb9iP2PNhjPhUzgZ1LN+wBC
-	s4ldrxrg==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:50842 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1uTyng-00000002Fxl-1IcI;
-	Tue, 24 Jun 2025 02:14:40 -0600
-Message-ID: <c8508b09-97e6-4cda-92d9-e11f27d7d73b@w6rz.net>
-Date: Tue, 24 Jun 2025 01:14:35 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7zemyC+"
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-453426170b6so35829785e9.1;
+        Tue, 24 Jun 2025 01:15:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750752913; x=1751357713; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7IpxvpdxasY3jjseo9IC3sZp16HwyYtH5hX5eKgsCpQ=;
+        b=W7zemyC+8wcljneTFKc7IXOPM3fixe06z7wMSiikfJI5ZiSps0pl1sPrnBX/KvHo2E
+         kvaE8F17dcAFPZnSgvuVlTUG/IIhyxD9/bgo56bb0n2zGfm8E7OaSlxgMObXKt9tBnss
+         24T6ky2zoQrHWSf05To2umIyqTX+t+97tkhmgRkH5ENolsFK2RMelLa3Tim8Qh83D74f
+         7IBr+dPAQgsqAjoQQtYKuN0SEyLJ05WkyX6raZpQG5uCndr4Caqlw+ErSu9tcVZG2yKH
+         tb/B/+MX32oKiEfSmefGu+zE0zAt1MlEYo6oG+BvlWYOPlg7tdHQg6ntNhQRtTGQ2QWz
+         K4kA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750752913; x=1751357713;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7IpxvpdxasY3jjseo9IC3sZp16HwyYtH5hX5eKgsCpQ=;
+        b=hgF26JrzssfTvLbDX+5bFRNOpyQemlIrLipwJ6Srzy4mdYwM+i3b2TJgHFEBbJhdWK
+         6Cn2Atl7Sj9ieCiBPpItER9z+iCeAne06oZlkMg4HO4QFjbxaSrALrxCl8cCHJ/Sd5NT
+         rAHYHU740WBf0w0SvjGU5ApJWVyWbaSILeiGvY3Lx0qd8g+RYL3cu42weLjyDgPMSWQi
+         DZe45cnnBxP+R7pDzzAQWjVTMXOnjiq1BWasYmojLYRlBR7jrzkA5sQjyKGHDQ2Wf8Ci
+         uBipc5NbmJqGJUhFKbsarZ+NpPC330MVvRFTvhqQg5Yb9v5Q2DeOkFh2JsWaD/q5yH3L
+         vaKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+ltBlP5Pzr+ItLJylvI/6ZBdrzHdPccfAU3uIfPDPsl3W/ykYAV6+5dQslJhQvsBRfEpsvpc59RhZ@vger.kernel.org, AJvYcCW/luR5cmp9NmDo78KOHOepbSgklLMlMU8nxhWhp5IJ74E73Ea5/KZXWCDdSM5eBjCPYGAAtY9me5NU09zY@vger.kernel.org, AJvYcCWj/Qrjmob2xvBFD+O7q3Zv3TJyYYhz0tXqndRezEoNpg4UkKpQLvHenvsDZPdZXT8GR0xCZ+aw65Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCWaA7teFd43LWBlCQhsQj8H0s+uiqDCqKy2awDeWW6t/4FT/R
+	Ykb3gYH1Y3Io6NHCpTzQdlG4r4zHAYWSbycxeTlhfkJdvRR7P21YIZyh
+X-Gm-Gg: ASbGncvKJFx/XVXm6LsQrVS6Vr2Qp9y8rvzBKHYlq8yl8kb9GcOs740AVZAjAehtup/
+	ZiEnT0sNSwBCd3CvoziZL9xRD5I3COw2umugc2aDKcHRKms+oBS41hfnArSHZu6597BBLprBwIj
+	M6sGgfRWw056qhPTPuNbQTuy6KbUDbW1wQUV57nr8cnGxfAlqcG/3AKUj1sym7QjVJPGx6s6GoG
+	myc0fbPjOeMXOB0Q0j90syBh6fdsNlQPLVa+Vf2Sp73487nkE3i04w6vp5DynkpiAUd1THc/ke6
+	q3No7IGpda1/yompd5gKaV4y+o1RmcLkLhkp0l/Gb3S/7pf8FFx5T0omcOZ5k6G3pdH4ateFPzj
+	NtgwQJk6EhI8=
+X-Google-Smtp-Source: AGHT+IGvxrxlLh/IwQsIqKE+iOFfbQrBMsh0pdGERhzrpVOADG+J1YSMUlf9uAMDMIBmyIUIZuLkng==
+X-Received: by 2002:a05:6000:2382:b0:3a5:1241:afde with SMTP id ffacd0b85a97d-3a6e71cba31mr2270832f8f.9.1750752912995;
+        Tue, 24 Jun 2025 01:15:12 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.24])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e810977esm1261465f8f.83.2025.06.24.01.15.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 01:15:12 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	hpa@zytor.com,
+	corbet@lwn.net
+Cc: luto@kernel.org,
+	peterz@infradead.org,
+	ardb@kernel.org,
+	jan.kiszka@siemens.com,
+	kbingham@kernel.org,
+	kirill.shutemov@linux.intel.com,
+	michael.roth@amd.com,
+	rick.p.edgecombe@intel.com,
+	brijesh.singh@amd.com,
+	sandipan.das@amd.com,
+	jgross@suse.com,
+	thomas.lendacky@amd.com,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	linux-efi@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: Re: [PATCHv2 0/3] x86: Make 5-level paging support unconditional for x86-64
+Date: Tue, 24 Jun 2025 08:11:15 +0000
+Message-ID: <20250624081400.2284-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250516091534.3414310-1-kirill.shutemov@linux.intel.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/414] 6.12.35-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250623130642.015559452@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250623130642.015559452@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1uTyng-00000002Fxl-1IcI
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:50842
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 35
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfN8DxGh3bvBwH9Wh8w5pskAHAs1y6d1Ei4VXoAdzRpc22T8wfBaBXsTs8htAu3zAuQuJOrUfb9PnlhnRaFXc25o7W1o65y778zXMsfhCtdPSgnRXbqI8
- 771//4bZN7OvCY9PNsqv5cFPfowT9MntVjXVM+pHadA1Umotjpc8Lq0g7mDJqs9QNx6RzXUejlQP3iHd5CIggbvNouZ1D/Xyg2g=
+Content-Transfer-Encoding: 8bit
 
-On 6/23/25 06:02, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.35 release.
-> There are 414 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+>Both Intel and AMD CPUs support 5-level paging, which is expected to
+>become more widely adopted in the future.
 >
-> Responses should be made by Wed, 25 Jun 2025 13:05:53 +0000.
-> Anything received after that time might be too late.
+>Remove CONFIG_X86_5LEVEL.
 >
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.35-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
+>In preparation to that remove CONFIG_DYNAMIC_MEMORY_LAYOUT and make
+>SPARSEMEM_VMEMMAP the only memory model.
 >
-> thanks,
+>v2:
+> - Fix 32-bit build by wrapping p4d_set_huge() and p4d_clear_huge() in
+>   #if CONFIG_PGTABLE_LEVELS > 4;
+> - Rebased onto current tip/master;
 >
-> greg k-h
+>Kirill A. Shutemov (3):
+>  x86/64/mm: Always use dynamic memory layout
+>  x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory model
+>  x86/64/mm: Make 5-level paging support unconditional
+>
+> Documentation/arch/x86/cpuinfo.rst            |  8 ++---
+> .../arch/x86/x86_64/5level-paging.rst         |  9 ------
+> arch/x86/Kconfig                              | 32 ++-----------------
+> arch/x86/Kconfig.cpufeatures                  |  4 ---
+> arch/x86/boot/compressed/pgtable_64.c         | 11 ++-----
+> arch/x86/boot/header.S                        |  4 ---
+> arch/x86/boot/startup/map_kernel.c            |  5 +--
+> arch/x86/include/asm/page_64.h                |  2 --
+> arch/x86/include/asm/page_64_types.h          | 11 -------
+> arch/x86/include/asm/pgtable_64_types.h       | 24 --------------
+> arch/x86/kernel/alternative.c                 |  2 +-
+> arch/x86/kernel/head64.c                      |  4 ---
+> arch/x86/kernel/head_64.S                     |  2 --
+> arch/x86/mm/init.c                            |  4 ---
+> arch/x86/mm/init_64.c                         |  9 +-----
+> arch/x86/mm/pgtable.c                         |  2 +-
+> drivers/firmware/efi/libstub/x86-5lvl.c       |  2 +-
+> scripts/gdb/linux/pgtable.py                  |  4 +--
+> 18 files changed, 13 insertions(+), 126 deletions(-)
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+I think i am too late, however this is completely wrong. There are still processors that doesn't support
+5-level paging which is mordern. We may call those processors old, however they are still common and used.
 
-Tested-by: Ron Economos <re@w6rz.net>
+So this patch seem too early for that. Some intel core-i5 and core-i7 doesn't support 5-level paging at all.
 
+This will break x86_64 cpus that doesn't support 5-level paging.
