@@ -1,103 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A87D23E336;
-	Tue, 24 Jun 2025 13:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 841E22C3268
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:52:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750773058; cv=none; b=rttg3ztKm4bMfoUbIPanbYC8Kn+l06WLjk94zTcWhl8jUC78s9J3KxdHrVqF0HqXBLh5CfK3BiMuTSN3HNCWJ+tk8VKhZPuoeIZ2T5a/zZ5FDlROhMVlW+3K8BqSeWiVDJ4HevZE2ll96suX6LxPiIjye1KDu6vP1PVgKgwtmkI=
+	t=1750773148; cv=none; b=oSU1wuOci+g2fCoYXNttHouTk3BQsVCWIWHvW1bldCpB+/sUM0rB55JzbKqFucWN+5gsdfzc44eM5PO5UVQsKvrt++2qFtWeJ10m+F1H7lL8ZdZWR8IZvTxgBH3M+MA1vtn/ib4/ohspmLIqeyPFrm2DQbrRrl31gWQfbYv6CWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750773058; c=relaxed/simple;
-	bh=0u8rfWjQgNMd3JSn2W3AZTA1DNb5PlWDUIQ/f/uQPQU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Vvj3NSW8xw0Lmfqpo+pBilf9VTOfp7AdAAs8KmXckEE45PlvPvZ4VvrfqL4fuRYqCOmhrbpvDclYhurFwSHPLqV+3kbwQBRsFeTy7iS6SIGwI95qI+ZJZwUis5NbdQf5gRTDligyjICbxPq+sdsUR+pVlH4zN0A9TpTlWfspavU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KwtN/2eW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KwtN/2eW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DD9B4C4CEE3;
-	Tue, 24 Jun 2025 13:50:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750773056;
-	bh=0u8rfWjQgNMd3JSn2W3AZTA1DNb5PlWDUIQ/f/uQPQU=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=KwtN/2eWAgx7EDn19yJiPPcCpd2+xiWhCVq4w8a7Ho4oIsFVbikMF51qaMs9CDdqi
-	 4+w8sSP85tPnDxSVCr9RptU7wMy/Nqqrxh9xRXObIerRSiIf/NAMuHmR3TONMZSh8q
-	 EwDGs60Tlq0wXn63Syd4IzqQKi+TklyuTp4LxgS0yn50cRy3v0jKlSYqShT0GD03EN
-	 i1qEySVm7QEJhZci+1TKWb+2eOHIHxgtz2xD4dJwHudpNhQEoH0pj3fJV06mVKMShR
-	 p90YT5tEbbNJehkGVf/BoKrqvxCYEh2YJ+SjTQcB9v00T799eBPzBaGIMkO0iFo+dh
-	 jbjRrttE+nInQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AE0C71157;
-	Tue, 24 Jun 2025 13:50:56 +0000 (UTC)
-From: Nathan Lynch via B4 Relay <devnull+nathan.lynch.amd.com@kernel.org>
-Date: Tue, 24 Jun 2025 08:50:44 -0500
-Subject: [PATCH] lib: packing: Include necessary headers
+	s=arc-20240116; t=1750773148; c=relaxed/simple;
+	bh=oXZ8co1e8mmwl9zX6KlK8xWZmne+5OdHNz2El37jtVM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OwDM4mkuqXRjnGWGCYiqUKhW0ZNljhDEvS0JZ6QsK5vKLii9o6cQ49vNQ9oSg2Y3j8DEFQ/V1eFiuH5z7QW9z0RqzbQgsntw34qboZAvrAt7iB8HxxjndiM6g4tA6DdJaRwd8YDqpvnf4FGX6nEwVmPbdepB3V9okexwDjB1AZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddafe52d04so166681715ab.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:52:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750773145; x=1751377945;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uin6lLcwohm4lv9WyITuwcyVt/c+X4e6jvHm3Unx2MU=;
+        b=aSIJINfltCYvxxIymawoKgbGlzgSBRVxG0uFMlR6hLMZcJ/ZpjhLOCXWMGvnKIAjJR
+         NTI0MhnS/8LbgQtanl47fKzmOaQ6G+RxzAPLi26p5+06vZ1tvLgviOYmPJGuhAhSRPjG
+         5B9DVbf1/NuTiE/AT7VtvykAFLFTLJD+kfID/7uJwpXopq5esF9khA6vZcO6h+vaVssG
+         ROqeyb42PGyXXWHqCvitzXtRJS13KbNhKOCYtRHaNz0duimuWh4o/ppHiX4XBLqlJT2q
+         Zjygb0UBa8v1WHeA2jmDMI3OgRsqcTFNNDWADOwuyeAZdWHZ+pfujCpKB0mZEyxF0Xd9
+         KBag==
+X-Forwarded-Encrypted: i=1; AJvYcCVvs3vYmnaVJds8iH8dF3RLT+fIdL6VzJvQcjICmuG4xaxTDBoPzcPv/1CBKOaa+wb4TklPfU9OdRYdhAI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzA3/adV2p2GCmO9uW2Aq+/DmOWa8OkYh7TinOPVCcNaQrUd6cw
+	mf22uDKBLNFVWaju/U6Uq5iKinmauMi1urTXqSPGFPsKqkx3xOGseD+/jZ21JSZl0hyc/SCw77q
+	9c5p843GWORjFMIHOmzpATTLN6+tw3pAQIY/cxSZNTrgGXXOwHkxNLSIrXjo=
+X-Google-Smtp-Source: AGHT+IHvKvf/vVCdxwI030nwml5wrDQ6tlpXgTpPK6b9n0FXCh1L+iUC7/Lp70pNFIbf6gAfOug2uCJ+XPGVXDcG1bXFt78OzyPB
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250624-packing-includes-v1-1-c23c81fab508@amd.com>
-X-B4-Tracking: v=1; b=H4sIADOtWmgC/x3MQQqAIBBA0avIrBNKNKKrRItyxhoKE6UIxLsnL
- d/i/wyJIlOCUWSI9HDiy1d0jQC7L34jyVgNqlWm7ZWWYbEH+02yt+eNlKRBo/XakcOhh5qFSI7
- ffznNpXwe61EOYgAAAA==
-X-Change-ID: 20250624-packing-includes-5d544b1efd86
-To: Vladimir Oltean <olteanv@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Nathan Lynch <nathan.lynch@amd.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750773056; l=1124;
- i=nathan.lynch@amd.com; s=20241010; h=from:subject:message-id;
- bh=1ATmUuW12KVE9D3wPQ8yQHOTVuSIERg6h39NE9Fw3aU=;
- b=MCdarkHUxzygavkxODWUEUPh919s6qS4cud9Js0mf9mhf3nB8iySPhbIPLiptdn8Dt04gpKzc
- dds3LJ/Fj87BQiwrZReydyBFp7UXuZfCALw1r2AnszssNfMKYt3rtU3
-X-Developer-Key: i=nathan.lynch@amd.com; a=ed25519;
- pk=ZR637UTGg5YLDj56cxFeHdYoUjPMMFbcijfOkAmAnbc=
-X-Endpoint-Received: by B4 Relay for nathan.lynch@amd.com/20241010 with
- auth_id=241
-X-Original-From: Nathan Lynch <nathan.lynch@amd.com>
-Reply-To: nathan.lynch@amd.com
+X-Received: by 2002:a05:6e02:1a2b:b0:3dd:c1ed:d901 with SMTP id
+ e9e14a558f8ab-3de38cd92b9mr212604135ab.21.1750773145639; Tue, 24 Jun 2025
+ 06:52:25 -0700 (PDT)
+Date: Tue, 24 Jun 2025 06:52:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685aad99.a00a0220.2e5631.007a.GAE@google.com>
+Subject: [syzbot] Monthly hfs report (Jun 2025)
+From: syzbot <syzbot+list8132deb081c630ffb070@syzkaller.appspotmail.com>
+To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-From: Nathan Lynch <nathan.lynch@amd.com>
+Hello hfs maintainers/developers,
 
-packing.h uses ARRAY_SIZE(), BUILD_BUG_ON_MSG(), min(), max(), and
-sizeof_field() without including the headers where they are defined,
-potentially causing build failures.
+This is a 31-day syzbot report for the hfs subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/hfs
 
-Fix this in packing.h and sort the result.
+During the period, 1 new issues were detected and 0 were fixed.
+In total, 46 issues are still open and 23 have already been fixed.
 
-Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
----
- include/linux/packing.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Some of the still happening issues:
 
-diff --git a/include/linux/packing.h b/include/linux/packing.h
-index 0589d70bbe0434c418f41b842f92b3300a107762..20ae4d452c7bb4069eb625ba332d617c2a840193 100644
---- a/include/linux/packing.h
-+++ b/include/linux/packing.h
-@@ -5,8 +5,12 @@
- #ifndef _LINUX_PACKING_H
- #define _LINUX_PACKING_H
- 
--#include <linux/types.h>
-+#include <linux/array_size.h>
- #include <linux/bitops.h>
-+#include <linux/build_bug.h>
-+#include <linux/minmax.h>
-+#include <linux/stddef.h>
-+#include <linux/types.h>
- 
- #define GEN_PACKED_FIELD_STRUCT(__type) \
- 	struct packed_field_ ## __type { \
+Ref  Crashes Repro Title
+<1>  90790   Yes   kernel BUG in hfs_write_inode
+                   https://syzkaller.appspot.com/bug?extid=97e301b4b82ae803d21b
+<2>  17637   Yes   kernel BUG in __hfsplus_setxattr
+                   https://syzkaller.appspot.com/bug?extid=1107451c16b9eb9d29e6
+<3>  13270   Yes   possible deadlock in hfsplus_get_block
+                   https://syzkaller.appspot.com/bug?extid=b7ef7c0c8d8098686ae2
+<4>  8079    Yes   KMSAN: uninit-value in hfsplus_cat_case_cmp_key
+                   https://syzkaller.appspot.com/bug?extid=50d8672fea106e5387bb
+<5>  4225    Yes   KMSAN: uninit-value in hfsplus_delete_cat
+                   https://syzkaller.appspot.com/bug?extid=fdedff847a0e5e84c39f
+<6>  4084    Yes   possible deadlock in hfs_find_init (2)
+                   https://syzkaller.appspot.com/bug?extid=e390d66dda462b51fde1
+<7>  4039    Yes   KMSAN: uninit-value in hfsplus_attr_bin_cmp_key
+                   https://syzkaller.appspot.com/bug?extid=c6d8e1bffb0970780d5c
+<8>  3875    Yes   KMSAN: uninit-value in hfs_find_set_zero_bits
+                   https://syzkaller.appspot.com/bug?extid=773fa9d79b29bd8b6831
+<9>  3134    Yes   KASAN: slab-out-of-bounds Read in hfsplus_uni2asc
+                   https://syzkaller.appspot.com/bug?extid=076d963e115823c4b9be
+<10> 2893    Yes   KMSAN: uninit-value in hfsplus_lookup
+                   https://syzkaller.appspot.com/bug?extid=91db973302e7b18c7653
 
 ---
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250624-packing-includes-5d544b1efd86
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Best regards,
--- 
-Nathan Lynch <nathan.lynch@amd.com>
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
 
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
 
+You may send multiple commands in a single email message.
