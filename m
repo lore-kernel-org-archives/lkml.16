@@ -1,277 +1,248 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628C5257435
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:03:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0EE23A58B
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:03:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750770203; cv=none; b=oNnHViT+J16DmcEcfA4yBbHg9rjH5UZqDJcxOVJeOxWYqc8X3iqQddNEnDdmMFxlnE+iyVqYvmTwuTsqSFBUTCWsF4yWdGcID61yC/UcT1HRxSBNjGfdJhOClWh8iLF7tkkf4dwiOL9w6FhnA/0K8vOxNiWoJkT/Ru6NwGSHJ8w=
+	t=1750770241; cv=none; b=oNkUyOf67OUrus2WctAqy+jQmd6CaGJhH9ejOxjUN2/Ram62/cJgwa5XaIMFpz5/p3EyuXUS/9NDbl1Xl2ICssxuXXmykZ4AAldZFMn1xKVmgrD/asR1EDk/c13130BETy7RcEhN4bg7XRaNryXQZHkAss4R+tuSbrNwZ4+wrtI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750770203; c=relaxed/simple;
-	bh=75wsxsNgUyNQLyNdOc9A1QsWJWj6M0Lsclil2BJlKdc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NySh9gnm2gSuGzNnQeDDVteaYrWLfR66k2aCd2rP+2ouQGPDfzYVEHgJ8/m3wbQqFgnv7PfXv/JbIwwp4/ubXU6TwzOfbsycroRWapSp1Djwe88M6DUAdifL8Vg2e1cIuqc67hMk2HJIgoAOwBb9sl1a6vuffz1V3dh/QHXxnz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=E6C4+HLo; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750770241; c=relaxed/simple;
+	bh=O0v3zy9h53nrdU6xpyXTFsCZQCpRbBEsVqLNjLyT+k4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=tMCp7oakyd6W04DkhYKzw0SHihOP5k5bskG2k4Rqeh4lsEiIGuSd+iLNxlAFqFIbwPro8xgKhwFo0TWJvjV2FDMTH1tk5MEcFZ6dO4rcxDizR3BIb8TlMEszxaWybYrSNYCckNFgQkPNaR32QIZE3NtgKBSMzM/9zqGQeM9WPgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OnTBERMi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=31gfkjTw; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=OnTBERMi; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=31gfkjTw; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="E6C4+HLo"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O6YMrT022517
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:03:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	B+NZqPiRQVJEnBQ7mFloFIHp+/MaZrKBFhk4xTqfODM=; b=E6C4+HLoH+r9i57e
-	juXN7kW0j3QayiUIYps7g0PhEgfaO12q5iqKmYQYlv5L78GmZxG9RzARxPCYY1QB
-	utmbZL9WtE1tnlT9DFKNcXuuztX/aaAa97xSs+7gQiTm2bphoH+x6SZwiMlLkPlt
-	6EMjk6pImSH47uPvKdFsHQr6rD4xqok+e555bUiOoz/rm6vrwFVzZX0QIS7hNtKy
-	qAplA+YThw/CxCZfTzxJj+GZIfejKT2aACV0kgXD+z4RYjM2dPCYKn7gXDvUahWQ
-	IFQbItGhJIxvhdMQIfgY5jGMrlbl7us7TwKR/fH832hlMKunswNSEfH9RGfVcKUw
-	8t8lVA==
-Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f2rpvcb7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:03:20 +0000 (GMT)
-Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-235dd77d11fso51243285ad.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:03:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750770199; x=1751374999;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B+NZqPiRQVJEnBQ7mFloFIHp+/MaZrKBFhk4xTqfODM=;
-        b=DZA6nV3g19LEQVcB775v/a85l+QQ4eymIVdYnQTL1aS0RH3HEy4eFueh9YRPOaKCtQ
-         6LsFwsUQkswOZTB06rDxzT5smDYJAdQB38NSgjOknEXeoDirQZge24tykvE3rV0UsK+D
-         2Q2hwGZ81ejcs1Atwvxiu+LbFrzy2iFPd1o/qMa85cnWC3y77Bzp6d0xFvFqsUb3WprG
-         TmnDSAL0ZG6hJGtX9xruW2hlaPLyadpiAPplTZaVkZ+SM9UJWOCPhRCt48RaiFnGlNer
-         k5gcC+z4klNC3y0mO3EtQqLUTLUb2SAR6HwR0Qpb3X3Ih8dWyyJEXwu/XGXK8l1105eJ
-         1mjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVOQCkDxxoR43VF2F7dvyHLXIg2SGc14Nygf293+SBIk1vF2afE318zbD1ghKdxoLuf5EAyk6hRDT38maI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/VgpJ/oJ9AWXiWfH9ZzRlgu5TeoMUZPG4EcqG6ROZW2Ddxm+8
-	O/3pI/eJRuoRYKLRK59IG+DWxd29+cxXvu7D6WSRhjt+1dF8Q/KY2RXiCMYWzRhBPhYw7HpXQ4D
-	Kce1R+t/EzQ819BnYnsu7DnegSRG4d1cWcHlI8gEhajwzkwEsoNYc1O435VQBYmrvJM8=
-X-Gm-Gg: ASbGncs+b8oI2gjN08Ekc2L7MiTyV2VsZuGClqzFzQoDgMuz3/Gy4OvplaEorwyRUFL
-	OuCFSrdTAR/w0eJrqopSohSUjFmcjd7BpOySzyV8r2CQYOpCp7ppB6Hj+Juzaa4RdwokcqGty+h
-	qkey3Z+MxlJ1kLFtEVwdgwLermu1qCimUT4S9fwvZYJTLx8/dYmWQZ/9FfeHf97RRULSEFIEpoV
-	tr5r5ee46junGHzv8Xzk4NNJwvWRLuab+lHTwekWZxOuQCnXU/W/nclBZz5Hk2Dat6ARdtCRCKa
-	BJ2kTYxh1gB8YX8oE5pDBOGmMbpcXFLMQE77bIN8NG0ZWTQ+BFJw6lO3Fw==
-X-Received: by 2002:a17:903:4b27:b0:234:d292:be8f with SMTP id d9443c01a7336-237d9779db6mr254755725ad.1.1750770198583;
-        Tue, 24 Jun 2025 06:03:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHI6fYyc4+LHFjvwoJMDaFlLmDYoZJBOOAxpL9d40WBBKJB6HOruCK5F8CKlq5GaxX3zM+yAA==
-X-Received: by 2002:a17:903:4b27:b0:234:d292:be8f with SMTP id d9443c01a7336-237d9779db6mr254755155ad.1.1750770198110;
-        Tue, 24 Jun 2025 06:03:18 -0700 (PDT)
-Received: from [192.168.0.126] ([175.101.107.119])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86f701csm107251445ad.217.2025.06.24.06.03.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 06:03:17 -0700 (PDT)
-Message-ID: <2c9ce2ed-c21d-496d-9563-237547142a29@oss.qualcomm.com>
-Date: Tue, 24 Jun 2025 18:33:14 +0530
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OnTBERMi";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="31gfkjTw";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="OnTBERMi";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="31gfkjTw"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 0FEA11F45F;
+	Tue, 24 Jun 2025 13:03:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750770238; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2v6v5+BvY+B1K5nIDIeewe2c1YreYO69aop0s8USUaA=;
+	b=OnTBERMiagKgL9XhfAbv49QeE7mzaeaYso2cAxCly+1yuhp2jGpMhg94n8K5yKg7YsXx9y
+	ATXwdp8fHov4F3hIhT2QPVpL2YsrLz+rpHxNemZtG41UqMaR2PjekEjF5gNk+uAcBjZrF0
+	R68TX9x/8iDohCZ390rDJ2n9tOi6YwY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750770238;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2v6v5+BvY+B1K5nIDIeewe2c1YreYO69aop0s8USUaA=;
+	b=31gfkjTwatQpCNGJncOFN1rbOBGYaSooNrYb1zeM5NS34c0A4f/Un/z9tBTarRlCYtDdYx
+	nLdJqeQMY4RZUiBA==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750770238; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2v6v5+BvY+B1K5nIDIeewe2c1YreYO69aop0s8USUaA=;
+	b=OnTBERMiagKgL9XhfAbv49QeE7mzaeaYso2cAxCly+1yuhp2jGpMhg94n8K5yKg7YsXx9y
+	ATXwdp8fHov4F3hIhT2QPVpL2YsrLz+rpHxNemZtG41UqMaR2PjekEjF5gNk+uAcBjZrF0
+	R68TX9x/8iDohCZ390rDJ2n9tOi6YwY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750770238;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2v6v5+BvY+B1K5nIDIeewe2c1YreYO69aop0s8USUaA=;
+	b=31gfkjTwatQpCNGJncOFN1rbOBGYaSooNrYb1zeM5NS34c0A4f/Un/z9tBTarRlCYtDdYx
+	nLdJqeQMY4RZUiBA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ED19B13A96;
+	Tue, 24 Jun 2025 13:03:57 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 2BKVOT2iWmjqYQAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Tue, 24 Jun 2025 13:03:57 +0000
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Tue, 24 Jun 2025 15:03:45 +0200
+Subject: [PATCH v2 1/4] mm, madvise: simplify anon_name handling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/4] usb: dwc3: core: Introduce glue callbacks for
- flattened implementations
-To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250610091357.2983085-1-krishna.kurapati@oss.qualcomm.com>
- <20250610091357.2983085-2-krishna.kurapati@oss.qualcomm.com>
- <20250623232433.apv23svbaql7ce4u@synopsys.com>
-Content-Language: en-US
-From: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
-In-Reply-To: <20250623232433.apv23svbaql7ce4u@synopsys.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Authority-Analysis: v=2.4 cv=NdDm13D4 c=1 sm=1 tr=0 ts=685aa218 cx=c_pps
- a=IZJwPbhc+fLeJZngyXXI0A==:117 a=yWXLeC16oIbqf35128AjHQ==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=-jcnzw04F3U9awwRRK4A:9
- a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDEwOSBTYWx0ZWRfXx3UX2+rjO0TA
- JUyhYJ2Cby0Uf+SnKF0wF43H91Pz0/tQigjTSLtq6mquysDgRPw7+rpFFyDkVYnvtW+l+sC0/F3
- 0jkm3W4pktb9nruixhuixoGukuRZGu4z7pI4FiCMvgCyvgL0DOm+YEHhRZBnMAhbqNyTqWDuhAd
- tZDiivFIYsbOFY3jIPRIZPPzQerOrMc9tJFmLMzYFXGkiVDSpVRf2KlEvMRpM8rFcwg05H7JHkf
- BgvDmRWlLspxigWKwwdlbFWBULz67dgbD1t/58kfsYfkILi2oXUdWh4E2IZtBbdCpzEk/hEE5g2
- H5weqQlIsGcasW8ORHjclWy82D6FS0ocA5ZHu7ILFr2xatyMkZwsI48S9BIVdh62YOtpCfXLEUz
- xiApECDfZeq0qHaDyOD65uYNo1BYWlw/ciNAQJh2lgYBI837GNpgmkyS8scfqAwo939PllAA
-X-Proofpoint-ORIG-GUID: E5MIGhXimGiJYQ5v0h0l-RKbrgtV-k4e
-X-Proofpoint-GUID: E5MIGhXimGiJYQ5v0h0l-RKbrgtV-k4e
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_05,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 mlxscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
- phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999 adultscore=0
- clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506240109
+Message-Id: <20250624-anon_name_cleanup-v2-1-600075462a11@suse.cz>
+References: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
+In-Reply-To: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
+To: Andrew Morton <akpm@linux-foundation.org>, 
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, 
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+ David Hildenbrand <david@redhat.com>, Jann Horn <jannh@google.com>, 
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, 
+ Michal Hocko <mhocko@suse.com>, Colin Cross <ccross@google.com>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+ Vlastimil Babka <vbabka@suse.cz>
+X-Mailer: b4 0.14.2
+X-Spamd-Result: default: False [-8.30 / 50.00];
+	REPLY(-4.00)[];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RL7wgbib1ih6q11z93xiyrfhpt)];
+	FROM_EQ_ENVFROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:email,suse.cz:mid]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -8.30
 
+Since the introduction in 9a10064f5625 ("mm: add a field to store names
+for private anonymous memory") the code to set anon_name on a vma has
+been using madvise_update_vma() to call replace_anon_vma_name(). Since
+the former is called also by a number of other madvise behaviours that
+do not set a new anon_name, they have been passing the existing
+anon_name of the vma to make replace_vma_anon_name() a no-op.
 
+This is rather wasteful as it needs anon_vma_name_eq() to determine the
+no-op situations, and checks for when replace_vma_anon_name() is allowed
+(the vma is anon/shmem) duplicate the checks already done earlier in
+madvise_vma_behavior(). It has also lead to commit 942341dcc574 ("mm:
+fix use-after-free when anon vma name is used after vma is freed")
+adding anon_name refcount get/put operations exactly to the cases that
+actually do not change anon_name - just so the replace_vma_anon_name()
+can keep safely determining it has nothing to do.
 
-On 6/24/2025 4:54 AM, Thinh Nguyen wrote:
-> On Tue, Jun 10, 2025, Krishna Kurapati wrote:
->> In certain situations like role switching, the glue layers need to be
->> informed of these events, so that they can take any necessary action.
->> But in non-flattened implementations, the glue drivers have no data on
->> when the core driver probe was successful post invoking of_platform_
->> populate. Now that the core driver supports flattened implementations
->> as well, introduce vendor callbacks that can be passed on from glue to
->> core before invoking dwc3_core_probe.
->>
->> Introduce callbacks to notify glue layer of role_switch and run_stop
->> changes. These can be used by flattened implementation of Qualcomm
->> glue layer to generate connect/disconnect events in controller during
->> cable connect and run stop modifications by udc in device mode.
->>
->> Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
->> ---
->>   drivers/usb/dwc3/core.c   |  1 +
->>   drivers/usb/dwc3/core.h   | 26 ++++++++++++++++++++++++++
->>   drivers/usb/dwc3/drd.c    |  1 +
->>   drivers/usb/dwc3/gadget.c |  1 +
->>   4 files changed, 29 insertions(+)
->>
->> diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
->> index 2bc775a747f2..c01b15e3710f 100644
->> --- a/drivers/usb/dwc3/core.c
->> +++ b/drivers/usb/dwc3/core.c
->> @@ -2351,6 +2351,7 @@ static int dwc3_probe(struct platform_device *pdev)
->>   		return -ENOMEM;
->>   
->>   	dwc->dev = &pdev->dev;
->> +	dwc->glue_ops = NULL;
->>   
->>   	probe_data.dwc = dwc;
->>   	probe_data.res = res;
->> diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
->> index d5b985fa12f4..a803884be4ed 100644
->> --- a/drivers/usb/dwc3/core.h
->> +++ b/drivers/usb/dwc3/core.h
->> @@ -992,6 +992,17 @@ struct dwc3_scratchpad_array {
->>   	__le64	dma_adr[DWC3_MAX_HIBER_SCRATCHBUFS];
->>   };
->>   
->> +/*
-> 
-> Let's keep consistent with the doc style /**
-> 
+The recent madvise cleanups made this suboptimal handling very obvious,
+but happily also allow for an easy fix. madvise_update_vma() now has the
+complete information whether it's been called to set a new anon_name, so
+stop passing it the existing vma's name and doing the refcount get/put
+in its only caller madvise_vma_behavior().
 
-ACK.
+In madvise_update_vma() itself, limit calling of replace_anon_vma_name()
+only to cases where we are setting a new name, otherwise we know it's a
+no-op. We can rely solely on the __MADV_SET_ANON_VMA_NAME behaviour and
+can remove the duplicate checks for vma being anon/shmem that were done
+already in madvise_vma_behavior().
 
->> + * struct dwc3_glue_ops - The ops indicate the notifications that
->> + *				need to be passed on to glue layer
->> + * @notify_set_role: Notify glue of role switch notifications
->> + * @notify_run_stop: Notify run stop enable/disable information to glue
->> + */
->> +struct dwc3_glue_ops {
->> +	void	(*notify_set_role)(struct dwc3 *dwc, enum usb_role role);
->> +	void	(*notify_run_stop)(struct dwc3 *dwc, bool is_on);
-> 
-> Use pre_ or prep_ prefix instead of notify_ indicating callbacks for
->glue driver to perform updates before set_role or run_stop.
+Additionally, by using vma_modify_flags() when not modifying the
+anon_name, avoid explicitly passing the existing vma's anon_name and
+storing a pointer to it in struct madv_behavior or a local variable.
+This prevents the danger of accessing a freed anon_name after vma
+merging, previously fixed by commit 942341dcc574.
 
-ACK. Will change it accordingly.
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/madvise.c | 37 +++++++++++++------------------------
+ 1 file changed, 13 insertions(+), 24 deletions(-)
 
-> 
->> +};
->> +
->>   /**
->>    * struct dwc3 - representation of our controller
->>    * @drd_work: workqueue used for role swapping
->> @@ -1168,6 +1179,7 @@ struct dwc3_scratchpad_array {
->>    * @wakeup_pending_funcs: Indicates whether any interface has requested for
->>    *			 function wakeup in bitmap format where bit position
->>    *			 represents interface_id.
->> + * @glue_ops: Vendor callbacks for flattened device implementations.
->>    */
->>   struct dwc3 {
->>   	struct work_struct	drd_work;
->> @@ -1400,6 +1412,8 @@ struct dwc3 {
->>   	struct dentry		*debug_root;
->>   	u32			gsbuscfg0_reqinfo;
->>   	u32			wakeup_pending_funcs;
->> +
->> +	struct dwc3_glue_ops	*glue_ops;
-> 
-> Use const, and move this closer on top. Perhaps below gadget_driver.
-> 
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 4491bf080f55d6d1aeffb2ff0b8fdd28904af950..fca0e9b3e844ad766e83ac04cc0d7f4099c74005 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -176,25 +176,29 @@ static int replace_anon_vma_name(struct vm_area_struct *vma,
+ }
+ #endif /* CONFIG_ANON_VMA_NAME */
+ /*
+- * Update the vm_flags on region of a vma, splitting it or merging it as
+- * necessary.  Must be called with mmap_lock held for writing;
+- * Caller should ensure anon_name stability by raising its refcount even when
+- * anon_name belongs to a valid vma because this function might free that vma.
++ * Update the vm_flags and/or anon_name on region of a vma, splitting it or
++ * merging it as necessary. Must be called with mmap_lock held for writing.
+  */
+ static int madvise_update_vma(vm_flags_t new_flags,
+ 		struct madvise_behavior *madv_behavior)
+ {
+-	int error;
+ 	struct vm_area_struct *vma = madv_behavior->vma;
+ 	struct madvise_behavior_range *range = &madv_behavior->range;
+ 	struct anon_vma_name *anon_name = madv_behavior->anon_name;
++	bool set_new_anon_name = madv_behavior->behavior == __MADV_SET_ANON_VMA_NAME;
+ 	VMA_ITERATOR(vmi, madv_behavior->mm, range->start);
+ 
+-	if (new_flags == vma->vm_flags && anon_vma_name_eq(anon_vma_name(vma), anon_name))
++	if (new_flags == vma->vm_flags && (!set_new_anon_name ||
++			anon_vma_name_eq(anon_vma_name(vma), anon_name)))
+ 		return 0;
+ 
+-	vma = vma_modify_flags_name(&vmi, madv_behavior->prev, vma,
++	if (set_new_anon_name)
++		vma = vma_modify_flags_name(&vmi, madv_behavior->prev, vma,
+ 			range->start, range->end, new_flags, anon_name);
++	else
++		vma = vma_modify_flags(&vmi, madv_behavior->prev, vma,
++			range->start, range->end, new_flags);
++
+ 	if (IS_ERR(vma))
+ 		return PTR_ERR(vma);
+ 
+@@ -203,11 +207,8 @@ static int madvise_update_vma(vm_flags_t new_flags,
+ 	/* vm_flags is protected by the mmap_lock held in write mode. */
+ 	vma_start_write(vma);
+ 	vm_flags_reset(vma, new_flags);
+-	if (!vma->vm_file || vma_is_anon_shmem(vma)) {
+-		error = replace_anon_vma_name(vma, anon_name);
+-		if (error)
+-			return error;
+-	}
++	if (set_new_anon_name)
++		return replace_anon_vma_name(vma, anon_name);
+ 
+ 	return 0;
+ }
+@@ -1313,7 +1314,6 @@ static int madvise_vma_behavior(struct madvise_behavior *madv_behavior)
+ 	int behavior = madv_behavior->behavior;
+ 	struct vm_area_struct *vma = madv_behavior->vma;
+ 	vm_flags_t new_flags = vma->vm_flags;
+-	bool set_new_anon_name = behavior == __MADV_SET_ANON_VMA_NAME;
+ 	struct madvise_behavior_range *range = &madv_behavior->range;
+ 	int error;
+ 
+@@ -1403,18 +1403,7 @@ static int madvise_vma_behavior(struct madvise_behavior *madv_behavior)
+ 	/* This is a write operation.*/
+ 	VM_WARN_ON_ONCE(madv_behavior->lock_mode != MADVISE_MMAP_WRITE_LOCK);
+ 
+-	/*
+-	 * madvise_update_vma() might cause a VMA merge which could put an
+-	 * anon_vma_name, so we must hold an additional reference on the
+-	 * anon_vma_name so it doesn't disappear from under us.
+-	 */
+-	if (!set_new_anon_name) {
+-		madv_behavior->anon_name = anon_vma_name(vma);
+-		anon_vma_name_get(madv_behavior->anon_name);
+-	}
+ 	error = madvise_update_vma(new_flags, madv_behavior);
+-	if (!set_new_anon_name)
+-		anon_vma_name_put(madv_behavior->anon_name);
+ out:
+ 	/*
+ 	 * madvise() returns EAGAIN if kernel resources, such as
 
-ACK.
+-- 
+2.50.0
 
->>   };
->>   
->>   #define INCRX_BURST_MODE 0
->> @@ -1614,6 +1628,18 @@ void dwc3_event_buffers_cleanup(struct dwc3 *dwc);
->>   int dwc3_core_soft_reset(struct dwc3 *dwc);
->>   void dwc3_enable_susphy(struct dwc3 *dwc, bool enable);
->>   
->> +static inline void dwc3_notify_set_role(struct dwc3 *dwc, enum usb_role role)
->> +{
->> +	if (dwc->glue_ops && dwc->glue_ops->notify_set_role)
->> +		dwc->glue_ops->notify_set_role(dwc, role);
->> +}
->> +
->> +static inline void dwc3_notify_run_stop(struct dwc3 *dwc, bool is_on)
->> +{
->> +	if (dwc->glue_ops && dwc->glue_ops->notify_run_stop)
->> +		dwc->glue_ops->notify_run_stop(dwc, is_on);
->> +}
->> +
->>   #if IS_ENABLED(CONFIG_USB_DWC3_HOST) || IS_ENABLED(CONFIG_USB_DWC3_DUAL_ROLE)
->>   int dwc3_host_init(struct dwc3 *dwc);
->>   void dwc3_host_exit(struct dwc3 *dwc);
->> diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
->> index 7977860932b1..408551768a95 100644
->> --- a/drivers/usb/dwc3/drd.c
->> +++ b/drivers/usb/dwc3/drd.c
->> @@ -464,6 +464,7 @@ static int dwc3_usb_role_switch_set(struct usb_role_switch *sw,
->>   		break;
->>   	}
->>   
->> +	dwc3_notify_set_role(dwc, role);
-> 
-> This should be done in __dwc3_set_mode(). Perhaps right before setting
-> PRTCAPDIR?
-> 
-
-Qualcomm glue driver needs ROLE (device /host and none) information. Set 
-mode gives device and host mode information. So added set_role callback 
-to get cable disconnect information.
-
->>   	dwc3_set_mode(dwc, mode);
->>   	return 0;
->>   }
->> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
->> index 321361288935..73bed11bccaf 100644
->> --- a/drivers/usb/dwc3/gadget.c
->> +++ b/drivers/usb/dwc3/gadget.c
->> @@ -2641,6 +2641,7 @@ static int dwc3_gadget_run_stop(struct dwc3 *dwc, int is_on)
->>   	if (saved_config)
->>   		dwc3_writel(dwc->regs, DWC3_GUSB2PHYCFG(0), reg);
->>   
->> +	dwc3_notify_run_stop(dwc, is_on);
-> 
-> This should be done right before writing to DCTL.run_stop.
-> 
-
-ACK.
-
->>   	reg = dwc3_readl(dwc->regs, DWC3_DCTL);
->>   	if (is_on) {
->>   		if (DWC3_VER_IS_WITHIN(DWC3, ANY, 187A)) {
->> -- 
->> 2.34.1
->>
-> 
-
-Thanks for the review Thinh.
-
-Regards,
-Krishna,
