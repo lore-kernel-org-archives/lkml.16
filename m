@@ -1,266 +1,179 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012001.outbound.protection.outlook.com [52.101.71.1])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993E92E764E;
-	Tue, 24 Jun 2025 18:58:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.1
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750791529; cv=fail; b=DbZ1tHw7w5pORS9T0inznM0CVqBfak1LgyIhJ9XbZiE7Bb7VYh9rH9PnM2D17Hnfx+UdqWGRgkfGCqNE5M1AXqB4oLBDPYrHJxmDryeWgQgCJPgedSzlmNknQOyp/RJdGHJ1096/xs8/sZ+xMfuQCbMRXvZcER28XbCpSSgdh0s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750791529; c=relaxed/simple;
-	bh=KV60q+vh2IvFY6dxytTpQ+saX95LLAEFk3y1/gH/GRs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=EJV9FHmAq7dC9och8pAuHxPWbL5ULN4+2lzGsphJPD8QA3JGKqzVi/7DQ3B/KExH9fHFX4LlDDR4ER6dHshOIU955bvTU2UOpUniuiVJOmE5yW1hR6iNmF8gajrVIzZnicYV/CYdJ9bti/cslvK2dUqHc1jEfokUCTBD8yMslKQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=fail (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Kr14/E6k reason="signature verification failed"; arc=fail smtp.client-ip=52.101.71.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71688307496;
+	Tue, 24 Jun 2025 19:00:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750791643; cv=none; b=gdNdrEP6TLIuhTGm2noJl+Se6cSuYHTJaBX4NDlmmjBPh3H9ZVqPNabKjikaBEHtQi7GfU2K0SHklXspVUW/NxvGGZPAG+GDl20NG4hOAGsmPNKRbVVZtDxabb5RDeu3WLQQUQWhgTiZoUjuM/FPsEwQuuLa7hgmCFrYEd80fwg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750791643; c=relaxed/simple;
+	bh=dek6edVzC9rHjfF3sdmCDOihMrRX2UkHtRQT5JT/Tlg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aYDY33lhcMCHvg0lnXP8WWKo0HciVL2JtbyDrDsrQejcHCK0va8Dt0WYe/I3kubZnY8oHYtQnqQtYxo7bg/lVY8eV35jkGogRqlG+E5sDKkn3D7TCrXJXqVuPA7BrcusCclEO7xgoLhW1umj42xLmteYMfjXP3SveeNWoVrzfy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=lCWpzA1N; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Kr14/E6k"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=PbzFi/a5neZyKsY6S0TiJ74a1lcnSDKcZzPRZMUAw4RvqrB76dHvpE1JwaB3xxqz9tz9ngZ37DFSHBw8y1rOn9QobvnfeeKMkB4hVQtZLj9M/luSgx+AXN7NXIYUHrH5n7kC0XgzuyOACucHRcbX/qXdla/jkD1DjXX5UiGTSiFSytHnTyPkLuOte4dZek5c+0ap+/myx8T/fw+D9zfsfy8+JNP8YnlJSv3BzwelYy6o4IzInsHuCtp1aBj7a8NZbLrTfzwvjoMphFuV+RzZcpS3EIOq+bxj64zByMv9dc9UWSbDI/GybSZSSNz1VOtzxie+mIj92JkluKJgkVguFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BIQe0nTd7MrWPAt0NFtCI6vjaSnm+C3/drwF3FVOeu0=;
- b=cGzibwhPflsQxB1yL9XnJrhZ69mUNrsnCKBO0almC92mku/JJF9KE1U5K1r0Vw0bGu3s1bjP4Es6GHfD0RDt3qJDvFS+1zYwHELKbHCufFb/TH2I8/T/eJZvFBHPLwZRFAj2xI1XbocCTsWE8PHmH4UhOwVgE76fBCR2AVZnlW2cRbJrQpRLPw3hRoXmvVf0x3GebeYsKDOeNdHhU8xxonzUTX77kF3Pnow8VA+B6x/twr7qateW0RQQsqxv4RUQdVMOG6J9AynxtCseWK7bVryjCMyeFn2g7SK5rRN4YlIRmgHxhGNboQ8Lrm8MOPfP8rSQkp8cxgphpDdbg5/eUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BIQe0nTd7MrWPAt0NFtCI6vjaSnm+C3/drwF3FVOeu0=;
- b=Kr14/E6k5McOLHoEagbXe+KSpCM6jF1THnGv5kr+Q+DAjEQS+swNAN7LgcymqCAgu3UxTpFQ/tNYpHYLhkeZ0n/aPrniKMJDb+aIcNySQXyZJKMpDv5V/tYfj7Y400lZspntUtKiYGKbCrZXlaoAKImaElfXGmK11a1Heau9r9uL23OlEoPWTCLbsUwjPdFhvd9q5QS/bhyILf3Pi09LxXhlfF9bjDluIc1Q4pK+r3c2bP3zloPBCyO8InjBsYrzpduOKFbcXCmD7YSAnxcQTsJSJw/7cBMTaBDdAJ/fpteuwtW/SDYOivm42BNH49bN8Mcc6suaFQ/6P+kRTygV1g==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by AS8PR04MB7912.eurprd04.prod.outlook.com (2603:10a6:20b:2ae::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Tue, 24 Jun
- 2025 18:58:44 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.015; Tue, 24 Jun 2025
- 18:58:44 +0000
-Date: Tue, 24 Jun 2025 14:58:39 -0400
-From: Frank Li <Frank.li@nxp.com>
-To: Steffen =?iso-8859-1?Q?B=E4tz?= <steffen@innosonix.de>
-Cc: stable@vger.kernel.org, Srinivas Kandagatla <srini@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] nvmem: imx-ocotp: fix MAC address byte length
-Message-ID: <aFr1X5mhZxQpLiUv@lizhi-Precision-Tower-5810>
-References: <20250623171003.1875027-1-steffen@innosonix.de>
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250623171003.1875027-1-steffen@innosonix.de>
-X-ClientProxiedBy: AS4P189CA0008.EURP189.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d7::9) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="lCWpzA1N"
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with UTF8SMTPSA id AAC856F3;
+	Tue, 24 Jun 2025 21:00:21 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750791621;
+	bh=dek6edVzC9rHjfF3sdmCDOihMrRX2UkHtRQT5JT/Tlg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lCWpzA1N+IwYJHIAQlIOneNrl9lrGyjbq+XlQWJEGMuxGXiKrmihpNIkRi6cYzKxt
+	 zRDXZUTk2KrrXU/FDK8sbLxTymOk4DJC3Xut3mXCyUvk3XY4SnlgdneJ86aFohTHTH
+	 dJ7KLWQFVv/x23y3W5lzGTTMPhNyZMXd52gZBj+k=
+Date: Tue, 24 Jun 2025 22:00:18 +0300
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: "Nirujogi, Pratap" <pnirujog@amd.com>
+Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+	sakari.ailus@linux.intel.com, hverkuil@xs4all.nl,
+	bryan.odonoghue@linaro.org, krzk@kernel.org,
+	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
+	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
+	Svetoslav.Stoilov@amd.com, Yana.Zheleva@amd.com,
+	Mehdi Djait <mehdi.djait@linux.intel.com>
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Message-ID: <20250624190018.GF20757@pendragon.ideasonboard.com>
+References: <20250609194321.1611419-1-pratap.nirujogi@amd.com>
+ <20250615000915.GQ10542@pendragon.ideasonboard.com>
+ <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
+ <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
+ <20250623220503.GA15951@pendragon.ideasonboard.com>
+ <163655af-2a3d-4489-ac7a-4ee31d3980e2@amd.com>
+ <20250624001942.GF15951@pendragon.ideasonboard.com>
+ <d2a1d937-9db2-46e4-bc73-f810a3e86f20@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS8PR04MB7912:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22ac3d4c-7309-4e47-674b-08ddb3512495
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|366016|1800799024|52116014|7053199007|13003099007|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?R/f/idw4vqs/yW5Dllkbk274xbFPH0qv3V8pq/YHKwbYWjbrWPlHVV7ac6?=
- =?iso-8859-1?Q?1stA2+HKBlehgraRLZzXfOAFMjP5iF1O94hwE9sooSTSBVxx68G/bgS8uT?=
- =?iso-8859-1?Q?ZMV/KwxZJDu61dy/jGCasP/ZuG8+k/YY+f97H+nxuOHJ1tv4R+zO8TdExj?=
- =?iso-8859-1?Q?2F+na2khIQ+lifCm5gnDV8jQbyqIogRCLDM2P4rhuLWxHcXI7yXBU+pqZu?=
- =?iso-8859-1?Q?P2S6VExe+b4qIxWB9uFctUl5m8q8nX1ScRQr2xWrcIwXODt1jxQQ7qxntD?=
- =?iso-8859-1?Q?U17JGMQm9OZiFKrf9lrnRoC5odTYJhjIDF4Z8anlDBC4iDLjrl1BU9GCpL?=
- =?iso-8859-1?Q?O3y9G1wqCpEllb/ZOO9NNsOOh/ZOV9FHQhxA0zdMA4Sv6flKpAcP4OoYIN?=
- =?iso-8859-1?Q?cTH89cDbYk+mSE5sy2v/cELmEGKyL1y+xJyitRq+GHn+P/yUSOGNfGZgkL?=
- =?iso-8859-1?Q?J/Ai194hFLUtjrC882hOSfbmJewMNZoSyc0OZJlVDigLabQCaewRpV9q9a?=
- =?iso-8859-1?Q?t0HZ2+lmz13OfHA6uW1L0jn7Ep/Gk9f0NrXguj9ot6dewo53KOqavW2cMj?=
- =?iso-8859-1?Q?u/ofxCv7w5LSdb6NUo6KgHHunoKS3XDZ++3Z949f5iBrDF/5+frdhNIvF0?=
- =?iso-8859-1?Q?B6BSzA1KKSUcJgJ8lMo5D6dCVBxXecRBRGt8J07bxi9k2oxjGXf5ZiK3x3?=
- =?iso-8859-1?Q?DLUV83TwsNyjm+ErRU+zCVIiZQePLmjb4TcBU7kyQyR13oTfoWzps4PKOt?=
- =?iso-8859-1?Q?kqcolUeKBPAm2xLR4ZxCJHRZNyW93NVEMskVT3KNPfevEn89i3S7ONHgtb?=
- =?iso-8859-1?Q?rXo9BiwzrnGDpk/87NLNN7scRQ0lPRLoCNfF0/uj5H63qJo+7Ou/+46b2u?=
- =?iso-8859-1?Q?MGvqsvthP1atZhwQQdWx6aMOE2nOv3d0rXVf9MqV1fFvm6eq7FWjvu69L2?=
- =?iso-8859-1?Q?rskgCg6mCrB1W/AgRhAVuYB0Jm5yRaj6dW4qEIzuWnSKQRD2ipRJKLC+BD?=
- =?iso-8859-1?Q?D2Jpe405SDmPonDdheCH4smTLxampQvDMkpfmY9ol9e8YiRYceQUX2u8BR?=
- =?iso-8859-1?Q?7ZMN00OhMpWdiBkWZqB2RciyORx9Ady1zwVJi7OHkp61toPLjIO2VJD1h6?=
- =?iso-8859-1?Q?jwe2T8h4I78LqvmJTXm87NyJ7c+qO5WKnO6XsBkvDKoU8wwS/Acvf2uhkd?=
- =?iso-8859-1?Q?LeIVlOHb4jI6GP+aGcLhbq8yhE6JAJETkcV4+2VTx6U1MLs9qCSTlKeJG5?=
- =?iso-8859-1?Q?CRvGdZ93g2ZD8YMkVdV95JO7L00lrNszQFPzm5RIkf1s89okZ2kvxi5VA1?=
- =?iso-8859-1?Q?1CHgliHVUqlWbcehPZIeYF/VXWvi0LnwmsAbtX1mZeHqOEG9FZ6pTK0KLC?=
- =?iso-8859-1?Q?2c1pJvU7Mi0ByW12XP7M6Bm3Lx51Kv9sUcsoKoezoxcNdno0Yq/BB8WdAT?=
- =?iso-8859-1?Q?43fqdXKQV9/X3nvgv1KMZUiPylKszcvRhLIn/x8M0h4yHgcaKVNwoOkj4D?=
- =?iso-8859-1?Q?A=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024)(52116014)(7053199007)(13003099007)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?xf3zDpgkUxofuxnIyKt04AUvqg0yJv99Z5rsdQMA8Iap1o0J1vmlcWv5++?=
- =?iso-8859-1?Q?W9u0RjDAtunfhl6Jew7hYZlKjjGV4ShOafe3AYmU3lEV9YOZkaBcDmn0u+?=
- =?iso-8859-1?Q?3udPY5PX3DzyPKiIIha6c6ghzdRJkKOnwwZLM2xfBAJWw9mtjeq3dwQNws?=
- =?iso-8859-1?Q?fADlOGVJHs9kI5xCWRZ4Yn1NSDAx/kbkUXasC/BtiAfAcp0juLRlGObqxb?=
- =?iso-8859-1?Q?78tDEPMRWGdXgTPuiTAXWVbZOLrUsa8T+UW8GB55iA+XCVgX/vYOKJ/6S8?=
- =?iso-8859-1?Q?eJ2X7DXDnIGr4+UvoTvPTBpny6GNVTRRYTx0XExTV5GKXZhlIkzNpYDIde?=
- =?iso-8859-1?Q?BL+ZWIhyhR9YTw0/YJQ5Sz1BM+V238PWxhBH+pPXqYg4u36ZqP8wiA6DPe?=
- =?iso-8859-1?Q?73TBV0eP7O3F8W6aCSPDCjVJb5A3m1/Z56G21Ca1GEvkGyMt2tADcUxLJy?=
- =?iso-8859-1?Q?Zq635dgzCptZ9UnZCP/h9+JwLkzaTDYxk2Ux9fAWz5eVl7dYO9I7vIr3ou?=
- =?iso-8859-1?Q?RIc5rA5CiTLv/br1UkPxDmbNH0whIPfGVpToFJa2eweCPcrufmNB/yMY2O?=
- =?iso-8859-1?Q?+itrCWiIBHAHlGCCE5Lg4oLeAvqiPpNJ73X07NqyJJ4ui4YDBOKCsnkOTV?=
- =?iso-8859-1?Q?CDqYRLEB7Kqa0pnXG6DvhzDOJP0ZeHTc/N1oJ9FWTHbNrCkJLLAEg3KXZM?=
- =?iso-8859-1?Q?tbNU+DttdQyc3ax8zila4CM9jQSFZ3vW10+yr5uLLKdpoK5OEN8fWG2BWf?=
- =?iso-8859-1?Q?OdmtNKqu4xui2tAi++fyzs7JU2xM8sAAlckuIKD81OR8BQzcyitQIGOWkK?=
- =?iso-8859-1?Q?k6cHuZD6YI3ruIFb91z5kjJ+24wUjQPUNQCD/Fk8rQj2WSQIFSsCwVMXVV?=
- =?iso-8859-1?Q?dpk5kV/kCRytGBRCUzeakbKz7LJQ/hbVf/bVR5KmCqnB8st2EvKZxGQCg7?=
- =?iso-8859-1?Q?MAVXDsYQeb51QhMDcnkTKeuBzapgnMWKrHQngetV0co2L+AwFK+QuKWbRg?=
- =?iso-8859-1?Q?6caTQ28mE2gRCBTVvx+jUOMzjK3UIK+b0A2Le5YVoFf02bS4Gr1LZH0v56?=
- =?iso-8859-1?Q?+Kz6MXe0kOjTCTPI9wJvPqyNdW6cBTGWDMuyc3Vvw7iureduL4fkm5mpzZ?=
- =?iso-8859-1?Q?pQyLEBUUCOymgVHehdM7uJ35/GoUIAoAH5J9pQEX5eGGuz53VZK7pOMgf7?=
- =?iso-8859-1?Q?r7hZ1EPC/SN+E4MGGefamrgkajkcpQXqxqRdONZwhOnVgb0XJRAmiwWzcd?=
- =?iso-8859-1?Q?yLluwqITIV0YHgPPg2Cu9j+4g8dBuw7gg7RxpJ8LgUbk0s41BcOQk+e93X?=
- =?iso-8859-1?Q?po8WwAD+WSLF6dSxtwTsg00fbVOMlFxH0sApnIHkyzM1U/vu7ZGI7mHtMC?=
- =?iso-8859-1?Q?3MSvw6QqU9WZQhhRwtG+axiavVTWEK0iH/5JW1BxtUjFoAqDW7etTwE3gL?=
- =?iso-8859-1?Q?5AXLrw90dw1m/Hwhp+gjU+uP/dxkH7y0WjS+lQPJXqOqSRUXDVpmL6NFf0?=
- =?iso-8859-1?Q?USC5KEdhiYTKJHeztv8383nzx9U56kRpbX6I8mV0UN4dRSmFVvvqeO/M4u?=
- =?iso-8859-1?Q?FsCBufSvItMC2dWJ6CxWDapVuTu01xxOScWkedf/u60AFcNzR2UnMD1o0N?=
- =?iso-8859-1?Q?4Oh7yv8XdMUkBrqOpD3+4pbwocpnCEFOsW?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22ac3d4c-7309-4e47-674b-08ddb3512495
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 18:58:44.7017
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2eL9VqDIRV5/HwSWpV0IeXPueRsUT0IXrdNhG3h2zX5ZKIXzeAeamyGQRFOKUbEev+O75u/hFQgJC+PELxr3AQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7912
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <d2a1d937-9db2-46e4-bc73-f810a3e86f20@amd.com>
 
-On Mon, Jun 23, 2025 at 07:09:55PM +0200, Steffen Bätz wrote:
-> The commit "13bcd440f2ff nvmem: core: verify cell's raw_len" caused an
-> extension of the "mac-address" cell from 6 to 8 bytes due to word_size
-> of 4 bytes.
->
-> Thus, the required byte swap for the mac-address of the full buffer length,
-> caused an trucation of the read mac-address.
-> From the original address 70:B3:D5:14:E9:0E to 00:00:70:B3:D5:14
->
-> After swapping only the first 6 bytes, the mac-address is correctly passed
-> to the upper layers.
+On Tue, Jun 24, 2025 at 02:49:36PM -0400, Nirujogi, Pratap wrote:
+> On 6/23/2025 8:19 PM, Laurent Pinchart wrote:
+> > On Mon, Jun 23, 2025 at 07:28:46PM -0400, Nirujogi, Pratap wrote:
+> >> On 6/23/2025 6:05 PM, Laurent Pinchart wrote:
+> >>> On Mon, Jun 23, 2025 at 05:51:48PM -0400, Nirujogi, Pratap wrote:
+> >>>> On 6/16/2025 6:49 PM, Nirujogi, Pratap wrote:
+> >>>>>>> +static int ov05c10_probe(struct i2c_client *client)
+> >>>>>>> +{
+> >>>>>>> +     struct ov05c10 *ov05c10;
+> >>>>>>> +     u32 clkfreq;
+> >>>>>>> +     int ret;
+> >>>>>>> +
+> >>>>>>> +     ov05c10 = devm_kzalloc(&client->dev, sizeof(*ov05c10),
+> >>>>>>> GFP_KERNEL);
+> >>>>>>> +     if (!ov05c10)
+> >>>>>>> +             return -ENOMEM;
+> >>>>>>> +
+> >>>>>>> +     struct fwnode_handle *fwnode = dev_fwnode(&client->dev);
+> >>>>>>> +
+> >>>>>>> +     ret = fwnode_property_read_u32(fwnode, "clock-frequency",
+> >>>>>>> &clkfreq);
+> >>>>>>> +     if (ret)
+> >>>>>>> +             return  dev_err_probe(&client->dev, -EINVAL,
+> >>>>>>> +                                   "fail to get clock freq\n");
+> >>>>>>
+> >>>>>> Let's try to land
+> >>>>>> https://lore.kernel.org/linux-media/20250521104115.176950-1-
+> >>>>>> mehdi.djait@linux.intel.com/
+> >>>>>> and replace the code above with devm_v4l2_sensor_clk_get().
+> >>>>>>
+> >>>>> Ok, we will verify on our side.
+> >>>>
+> >>>> We tried using devm_v4l2_sensor_clk_get() and found its required to add
+> >>>> support for software_node to make it work with this driver.
+> >>>
+> >>> Why is that ?
+> >>
+> >> Its because the i2c_client device is initialized with swnode in the
+> >> x86/platform driver.
+> >>
+> >> https://github.com/torvalds/linux/blob/master/drivers/platform/x86/amd/amd_isp4.c#L235
+> > 
+> > So there's no information provided in the _DSD for the sensor ?
+> 
+> yes, camera device was not properly described in the current model, we 
+> are going to address this issue for future models following the MIPI 
+> DisCo Imaging spec.
 
-suggested commit message:
+Any idea how far in the future that will be ? I suppose it won't be done
+overnight, how many new machine models will get to the market with a
+need for a platform driver ?
 
-The commit "13bcd440f2ff nvmem: core: verify cell's raw_len" caused an
-extension of the "mac-address" cell from 6 to 8 bytes due to word_size
-of 4 bytes. This led to a required byte swap of the full buffer length,
-which caused truncation of the mac-address when read.
+Will the Windows driver team also switch to MIPI DisCo Imaging ?
 
-Previously, the mac-address was incorrectly truncated from 70:B3:D5:14:E9:0E
-to 00:00:70:B3:D5:14.
+> > Looking at that platform driver, it matches the device based on the
+> > sensor ACPI HID only ("OMNI5C10"). That doesn't seem quite right, I
+> > think you need a DMI match as well. You can't assume that OMNI5C10,
+> > which identifies the sensor, will always map to specific platform
+> > integration data (connected to an AMD ISP, using a particular link
+> > frequency, ...), can you ?
+> 
+> Initally we had dmi checks, but as the driver matured through review 
+> iterations, we switched to ACPI driver approach and felt the bus 
+> traversal to find the matching HID device and dmi checks are no longer 
+> required. The (_HID, "OMNI5C10") used is specific to this platform and 
+> shouldn't be impacting other platform even though the dmi checks are 
+> skipped. Please see [A].
 
-Fix the issue by swapping only the first 6 bytes to correctly pass the
-mac-address to the upper layers.
+How do you guarantee that the same sensor will not be used with the
+OMNI5C10 ACPI HID on another AMD-based laptop that would require a
+different link frequency or use a different number of data lanes ?
 
->
-> Fixes: 13bcd440f2ff ("nvmem: core: verify cell's raw_len")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Steffen Bätz <steffen@innosonix.de>
-> ---
-> v3:
-> - replace magic number 6 with ETH_ALEN
-> - Fix misleading indentation and properly group 'mac-address' statements
-> v2:
-> - Add Cc: stable@vger.kernel.org as requested by Greg KH's patch bot
->  drivers/nvmem/imx-ocotp-ele.c | 6 +++++-
->  drivers/nvmem/imx-ocotp.c     | 6 +++++-
->  2 files changed, 10 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/nvmem/imx-ocotp-ele.c b/drivers/nvmem/imx-ocotp-ele.c
-> index ca6dd71d8a2e..9ef01c91dfa6 100644
-> --- a/drivers/nvmem/imx-ocotp-ele.c
-> +++ b/drivers/nvmem/imx-ocotp-ele.c
-> @@ -12,6 +12,7 @@
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> +#include <linux/if_ether.h>	/* ETH_ALEN */
->
->  enum fuse_type {
->  	FUSE_FSB = BIT(0),
-> @@ -118,9 +119,12 @@ static int imx_ocotp_cell_pp(void *context, const char *id, int index,
->  	int i;
->
->  	/* Deal with some post processing of nvmem cell data */
-> -	if (id && !strcmp(id, "mac-address"))
-> +	if (id && !strcmp(id, "mac-address")) {
-> +		if (bytes > ETH_ALEN)
-> +			bytes = ETH_ALEN;
+> [A] https://lore.kernel.org/lkml/8d892845-e134-4553-a6af-55d785c1ae98@amd.com/
+> 
+> >>>> Please refer
+> >>>> the changes below and let us know if these should be submitted as a
+> >>>> separate patch.
+> >>>
+> >>> Mehdi, do you have any comment ?
+> >>>
+> >>>> ---
+> >>>> @@ -645,16 +645,16 @@ struct clk *devm_v4l2_sensor_clk_get(struct device
+> >>>> *dev, const char *id)
+> >>>>            const char *clk_id __free(kfree) = NULL;
+> >>>>            struct clk_hw *clk_hw;
+> >>>>            struct clk *clk;
+> >>>> -       bool acpi_node;
+> >>>> +       bool is_node;
+> >>>>            u32 rate;
+> >>>>            int ret;
+> >>>>
+> >>>>            clk = devm_clk_get_optional(dev, id);
+> >>>>            ret = device_property_read_u32(dev, "clock-frequency", &rate);
+> >>>> -       acpi_node = is_acpi_node(dev_fwnode(dev));
+> >>>> +       is_node = is_acpi_node(dev_fwnode(dev)) || is_software_node(dev_fwnode(dev));
+> >>>>
+> >>>>            if (clk) {
+> >>>> -               if (!ret && acpi_node) {
+> >>>> +               if (!ret && is_node) {
+> >>>>                            ret = clk_set_rate(clk, rate);
+> >>>>                            if (ret) {
+> >>>>                                    dev_err(dev, "Failed to set clock rate: %u\n",
+> >>>> @@ -668,7 +668,7 @@ struct clk *devm_v4l2_sensor_clk_get(struct device
+> >>>> *dev, const char *id)
+> >>>>            if (ret)
+> >>>>                    return ERR_PTR(ret);
+> >>>>
+> >>>> -       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !acpi_node)
+> >>>> +       if (!IS_ENABLED(CONFIG_COMMON_CLK) || !is_node)
+> >>>>                    return ERR_PTR(-ENOENT);
+> >>>>
+> >>>>            if (!id) {
+> >>>> ----
 
-bytes = min(bytes, ETH_ALEN);
+-- 
+Regards,
 
-Frank
-
->  		for (i = 0; i < bytes / 2; i++)
->  			swap(buf[i], buf[bytes - i - 1]);
-> +	}
->
->  	return 0;
->  }
-> diff --git a/drivers/nvmem/imx-ocotp.c b/drivers/nvmem/imx-ocotp.c
-> index 79dd4fda0329..1343cafc37cc 100644
-> --- a/drivers/nvmem/imx-ocotp.c
-> +++ b/drivers/nvmem/imx-ocotp.c
-> @@ -23,6 +23,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/delay.h>
-> +#include <linux/if_ether.h>	/* ETH_ALEN */
->
->  #define IMX_OCOTP_OFFSET_B0W0		0x400 /* Offset from base address of the
->  					       * OTP Bank0 Word0
-> @@ -227,9 +228,12 @@ static int imx_ocotp_cell_pp(void *context, const char *id, int index,
->  	int i;
->
->  	/* Deal with some post processing of nvmem cell data */
-> -	if (id && !strcmp(id, "mac-address"))
-> +	if (id && !strcmp(id, "mac-address")) {
-> +		if (bytes > ETH_ALEN)
-> +			bytes = ETH_ALEN;
->  		for (i = 0; i < bytes / 2; i++)
->  			swap(buf[i], buf[bytes - i - 1]);
-> +	}
->
->  	return 0;
->  }
-> --
-> 2.43.0
->
->
-> --
->
->
-> *innosonix GmbH*
-> Hauptstr. 35
-> 96482 Ahorn
-> central: +49 9561 7459980
-> www.innosonix.de <http://www.innosonix.de>
->
-> innosonix GmbH
-> Geschäftsführer:
-> Markus Bätz, Steffen Bätz
-> USt.-IdNr / VAT-Nr.: DE266020313
-> EORI-Nr.:
-> DE240121536680271
-> HRB 5192 Coburg
-> WEEE-Reg.-Nr. DE88021242
+Laurent Pinchart
