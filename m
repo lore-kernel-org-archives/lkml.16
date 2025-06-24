@@ -1,317 +1,255 @@
-Received: from mx.denx.de (mx.denx.de [89.58.32.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC05230270;
-	Tue, 24 Jun 2025 21:33:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.58.32.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154C72517AA
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 21:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750800832; cv=none; b=nvZKCWOox2bTmxnCZPR6qRWSPZa5jGcc7+Tx+rutjZI+FGdGVkZO/In8u/zlnG37AhR9+G8TTHOxhoE8nOVyA0FOFNsWB2nDL5V5bxOUwZUZyfQeTdSaH+Pz80rasFG0pLsBbGME0mB8Asx/uLuyj4QSXrkWJ8gLWY5/ZF20/5k=
+	t=1750800933; cv=none; b=rAc5ARbcQd2rA3hL96duFX+2OTbJ0L/HNecGTuDx+oXHpqQumdJrMX4X+8Qb71ZuRt86qQmjYIfHH70EnkOIoQJFoHLrE2NzwtD6ratTLbZsxV2BMXZzEiEio9H3Urp0jeN+UpNm3r4LG3zn/U+llAKnyD5WZ+LdFOu9br5pqNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750800832; c=relaxed/simple;
-	bh=XvV2LFwwGDVCD40N53CynB35B7zAILqG5eY1mC/1fLk=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=D6J/dNnhkVHoM9Ch13C7+gcZsQpTfmIlTDWNp0N8k5rX2ancKg1GoD9WzwC7/JMjzYrm7gv1/GbTz0kS1f0U8qoT1/fzVn1H8/J2fLdr9/cQZQx1atBTSOYwENRWcRrXBrAsAA0rD2c9onJNf0D+WN921uRKmCbJboU04a8FXiY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de; spf=pass smtp.mailfrom=denx.de; dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b=BhtecKHF; arc=none smtp.client-ip=89.58.32.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=denx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=denx.de
+	s=arc-20240116; t=1750800933; c=relaxed/simple;
+	bh=DWlWA/JE8g4pKQk7hfbZ/bulSCCdERWfSO6Gs4/t7LE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=qVQf0IUfxo3qkXc9mmoV0W7yFufHptaTNvDz+iH4wQV/hDXABdAPmH+FCdhiJBDesTSN0ROlDG7S0TCNgngtPHVT/WZUEsN3QS1Gjw/2XoSY12BjuRwqAJtQA0eXKpqsiDUmCrZqqkPIrtPlvtapXZQuP7g+88RsTGd2h5dg7fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qoxyMshO; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=denx.de header.i=@denx.de header.b="BhtecKHF"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 813B0101DC30D;
-	Tue, 24 Jun 2025 23:33:44 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=denx.de; s=mx-20241105;
-	t=1750800826; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 in-reply-to:references; bh=4UhNAC3lKdYVhIoChsWVA+SRZl7G6DDkisMf4TzuHdo=;
-	b=BhtecKHFSH40sq5dBlZLZSkAGauBEg3kEus/1IipfnwaDjZu3QDaNMxlbQJV2bOLttJivj
-	7qsER9CSOEEC+QIH4qDqBcFgCnG2Dkykui8GOkUjvQHhr9z+yFkw5eJlXMmA4mb/TxnNfI
-	FH4uSgDuaUwm/zX0NCVeN9r6+Wo9DvNpwWnJNWWGnE+w2ULZHPnSvB2h84fwVg7rkUm+eK
-	blREfwEWax3TCwtFSTs55KLhW6Bjvo44vTOlPgdFLbHdbabb7XqcuwQaHo9Uh13vQFSbel
-	C+h3F6hw2krNjW3lZsoeogcpPoQuuEwOhrIqGtqUtdzq236ivTUwd1Gky8OAig==
-Date: Tue, 24 Jun 2025 23:33:42 +0200
-From: Lukasz Majewski <lukma@denx.de>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
- <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>, Richard Cochran
- <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, Stefan Wahren
- <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>
-Subject: Re: [net-next v13 05/11] net: mtip: Add net_device_ops functions to
- the L2 switch driver
-Message-ID: <20250624233342.5fdb37af@wsk>
-In-Reply-To: <c82c19a6-fd0f-4efe-9d93-838b52102ff4@redhat.com>
-References: <20250622093756.2895000-1-lukma@denx.de>
-	<20250622093756.2895000-6-lukma@denx.de>
-	<c82c19a6-fd0f-4efe-9d93-838b52102ff4@redhat.com>
-Organization: denx.de
-X-Mailer: Claws Mail 3.19.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qoxyMshO"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3141a9a6888so855347a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:35:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750800929; x=1751405729; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=8ysz7xzWYPbJ2rojkQKjld0vXtQ8QGdxQ4Q0JRZ61Mg=;
+        b=qoxyMshOwpERTs2tILp7Tej01R4AbprcwqK1FoHcoY0Gj116piuccYl/+SVMAQSBxB
+         dTWg7Ze9YviWFqbga9X5r2fReaBzX/EwvC5kldAZp+j6uOhZmxRJtXv72S/ndkN/cqSt
+         4oo3c03os7LKpI4RFWcJlME4x24ADtS3iT6uKH1Zwaudb72udzOHwZX4qehijuwpYIZp
+         Mg+AwcMv9mG4WcSY1HOTZIgCVR1o9L8Ffq4ctXbBf/+y5SXxjuqGZ6mcl15u4zmkpQtU
+         jpn2n1h8br+DqwwatSe7jXV6ttx9la9xviVfkRCEMFCwVJai7tRkjyHbZKtSjBBKlCIE
+         Xi0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750800929; x=1751405729;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8ysz7xzWYPbJ2rojkQKjld0vXtQ8QGdxQ4Q0JRZ61Mg=;
+        b=VuWTRHCTyh8nldAzpoGDieWs7+O+v35k5s69PdIZCS+NfaOMDo4wqxEv4Yu536P9GQ
+         TAlsV4h4a2IruGaXpTT8KD26s+hwfU3EwUvgcIDlYhuLZwdTfHqxgURmRKBYxiYYT5Dy
+         Z/ObKsxSYGEf6//4a75OoZONqiYJwyPXEG0T6xNrpo7hjLpEXMYeE3fPFfyiCK0MZAeN
+         IamXAjw3I6dOiH27K4slIwCtcosCpP37YussZ4xDa2Om4IWgXEt08Zuglo+OV5i+x0WF
+         OJvJ5HdcpihFWJwILZrmQPeIOABfOWPuHTJvA/FVLD5MoqtscjxAAbNBPnUSN6tv0t20
+         kqww==
+X-Gm-Message-State: AOJu0Ywuddoqy/CRaKVsASOsavjaTtEJQMHvhd+niAyLjzlt0HxifXWm
+	ApdO/fiqQxSnikyEwc+L9wkinaSiFPLpprJxD+RLQByk+M0M61ztvIy0wc5Qi8MjSrotIvdTLjg
+	q0SbFHA==
+X-Google-Smtp-Source: AGHT+IHa9B5m8ThSy/pTSRc8TcQm9rTgS6N+TmrPJ1HHMBMkEVG7l2n0g9L4pqVowM6J+0t4K1z0V+x3kPA=
+X-Received: from pjuj6.prod.google.com ([2002:a17:90a:d006:b0:311:4201:4021])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5206:b0:313:27e5:7ff1
+ with SMTP id 98e67ed59e1d1-315f25e7231mr577433a91.1.1750800929530; Tue, 24
+ Jun 2025 14:35:29 -0700 (PDT)
+Date: Tue, 24 Jun 2025 14:35:27 -0700
+In-Reply-To: <20250530185239.2335185-3-jmattson@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/CJrMgWIo4Z=lmZ0vE4F4UWW";
- protocol="application/pgp-signature"; micalg=pgp-sha512
-X-Last-TLS-Session-Version: TLSv1.3
+Mime-Version: 1.0
+References: <20250530185239.2335185-1-jmattson@google.com> <20250530185239.2335185-3-jmattson@google.com>
+Message-ID: <aFsaH97Qxn7nUA86@google.com>
+Subject: Re: [PATCH v4 2/3] KVM: x86: Provide a capability to disable
+ APERF/MPERF read intercepts
+From: Sean Christopherson <seanjc@google.com>
+To: Jim Mattson <jmattson@google.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 
---Sig_/CJrMgWIo4Z=lmZ0vE4F4UWW
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 30, 2025, Jim Mattson wrote:
+> Allow a guest to read the physical IA32_APERF and IA32_MPERF MSRs
+> without interception.
+> 
+> The IA32_APERF and IA32_MPERF MSRs are not virtualized. Writes are not
+> handled at all. The MSR values are not zeroed on vCPU creation, saved
+> on suspend, or restored on resume. No accommodation is made for
+> processor migration or for sharing a logical processor with other
+> tasks. No adjustments are made for non-unit TSC multipliers. The MSRs
+> do not account for time the same way as the comparable PMU events,
+> whether the PMU is virtualized by the traditional emulation method or
+> the new mediated pass-through approach.
+> 
+> Nonetheless, in a properly constrained environment, this capability
+> can be combined with a guest CPUID table that advertises support for
+> CPUID.6:ECX.APERFMPERF[bit 0] to induce a Linux guest to report the
+> effective physical CPU frequency in /proc/cpuinfo. Moreover, there is
+> no performance cost for this capability.
+> 
+> Signed-off-by: Jim Mattson <jmattson@google.com>
+> ---
+>  Documentation/virt/kvm/api.rst | 23 +++++++++++++++++++++++
+>  arch/x86/kvm/svm/svm.c         |  7 +++++++
+>  arch/x86/kvm/svm/svm.h         |  2 +-
+>  arch/x86/kvm/vmx/vmx.c         |  6 ++++++
+>  arch/x86/kvm/vmx/vmx.h         |  2 +-
+>  arch/x86/kvm/x86.c             |  8 +++++++-
+>  arch/x86/kvm/x86.h             |  5 +++++
+>  include/uapi/linux/kvm.h       |  1 +
+>  tools/include/uapi/linux/kvm.h |  1 +
+>  9 files changed, 52 insertions(+), 3 deletions(-)
 
-Hi Paolo,
+This needs to be rebased on top of the MSR interception rework, which I've now
+pushed to kvm-x86 next.  Luckily, it's quite painless.  Compile tested only at
+this point (about to throw it onto metal).
 
-> On 6/22/25 11:37 AM, Lukasz Majewski wrote:
-> > This patch provides callbacks for struct net_device_ops for MTIP
-> > L2 switch.
-> >=20
-> > Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> >=20
-> > ---
-> > Changes for v13:
-> > - New patch - created by excluding some code from large (i.e. v12
-> > and earlier) MTIP driver
-> > ---
-> >  .../net/ethernet/freescale/mtipsw/mtipl2sw.c  | 273
-> > ++++++++++++++++++ 1 file changed, 273 insertions(+)
-> >=20
-> > diff --git a/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c
-> > b/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c index
-> > 5142f647d939..813cd39d6d56 100644 ---
-> > a/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c +++
-> > b/drivers/net/ethernet/freescale/mtipsw/mtipl2sw.c @@ -43,6 +43,15
-> > @@=20
-> >  #include "mtipl2sw.h"
-> > =20
-> > +static void swap_buffer(void *bufaddr, int len)
-> > +{
-> > +	int i;
-> > +	unsigned int *buf =3D bufaddr;
-> > +
-> > +	for (i =3D 0; i < len; i +=3D 4, buf++)
-> > +		swab32s(buf);
-> > +}
-> > +
-> >  /* Set the last buffer to wrap */
-> >  static void mtip_set_last_buf_to_wrap(struct cbd_t *bdp)
-> >  {
-> > @@ -444,6 +453,128 @@ static void mtip_config_switch(struct
-> > switch_enet_private *fep) fep->hwp + ESW_IMR);
-> >  }
-> > =20
-> > +static netdev_tx_t mtip_start_xmit_port(struct sk_buff *skb,
-> > +					struct net_device *dev,
-> > int port) +{
-> > +	struct mtip_ndev_priv *priv =3D netdev_priv(dev);
-> > +	struct switch_enet_private *fep =3D priv->fep;
-> > +	unsigned short status;
-> > +	struct cbd_t *bdp;
-> > +	void *bufaddr;
-> > +
-> > +	spin_lock_bh(&fep->hw_lock);
-> > +
-> > +	if (!fep->link[0] && !fep->link[1]) {
-> > +		/* Link is down or autonegotiation is in progress.
-> > */
-> > +		netif_stop_queue(dev);
-> > +		spin_unlock_bh(&fep->hw_lock);
-> > +		return NETDEV_TX_BUSY;
-> > +	}
-> > +
-> > +	/* Fill in a Tx ring entry */
-> > +	bdp =3D fep->cur_tx;
-> > +
-> > +	status =3D bdp->cbd_sc;
-> > +
-> > +	if (status & BD_ENET_TX_READY) {
-> > +		/* All transmit buffers are full. Bail out.
-> > +		 * This should not happen, since dev->tbusy should
-> > be set.
-> > +		 */
-> > +		netif_stop_queue(dev);
-> > +		dev_err(&fep->pdev->dev, "%s: tx queue full!.\n",
-> > dev->name);
-> > +		spin_unlock_bh(&fep->hw_lock);
-> > +		return NETDEV_TX_BUSY;
-> > +	}
-> > +
-> > +	/* Clear all of the status flags */
-> > +	status &=3D ~BD_ENET_TX_STATS;
-> > +
-> > +	/* Set buffer length and buffer pointer */
-> > +	bufaddr =3D skb->data;
-> > +	bdp->cbd_datlen =3D skb->len;
-> > +
-> > +	/* On some FEC implementations data must be aligned on
-> > +	 * 4-byte boundaries. Use bounce buffers to copy data
-> > +	 * and get it aligned.spin
-> > +	 */
-> > +	if ((unsigned long)bufaddr & MTIP_ALIGNMENT) {
-> > +		unsigned int index;
-> > +
-> > +		index =3D bdp - fep->tx_bd_base;
-> > +		memcpy(fep->tx_bounce[index],
-> > +		       (void *)skb->data, skb->len);
-> > +		bufaddr =3D fep->tx_bounce[index];
-> > +	}
-> > +
-> > +	if (fep->quirks & FEC_QUIRK_SWAP_FRAME)
-> > +		swap_buffer(bufaddr, skb->len);
-> > +
-> > +	/* Save skb pointer. */
-> > +	fep->tx_skbuff[fep->skb_cur] =3D skb;
-> > +
-> > +	fep->skb_cur =3D (fep->skb_cur + 1) & TX_RING_MOD_MASK;
-> > +
-> > +	/* Push the data cache so the CPM does not get stale memory
-> > +	 * data.
-> > +	 */
-> > +	bdp->cbd_bufaddr =3D dma_map_single(&fep->pdev->dev, bufaddr,
-> > +					  MTIP_SWITCH_TX_FRSIZE,
-> > +					  DMA_TO_DEVICE);
-> > +	if (unlikely(dma_mapping_error(&fep->pdev->dev,
-> > bdp->cbd_bufaddr))) {
-> > +		dev_err(&fep->pdev->dev,
-> > +			"Failed to map descriptor tx buffer\n");
-> > +		dev->stats.tx_errors++;
-> > +		dev->stats.tx_dropped++;
-> > +		dev_kfree_skb_any(skb);
-> > +		goto err;
-> > +	}
-> > +
-> > +	/* Send it on its way.  Tell FEC it's ready, interrupt
-> > when done,
-> > +	 * it's the last BD of the frame, and to put the CRC on
-> > the end.
-> > +	 */
-> > +
-> > +	status |=3D (BD_ENET_TX_READY | BD_ENET_TX_INTR
-> > +			| BD_ENET_TX_LAST | BD_ENET_TX_TC);
-> > +
-> > +	/* Synchronize all descriptor writes */
-> > +	wmb();
-> > +	bdp->cbd_sc =3D status;
-> > +
-> > +	netif_trans_update(dev);
-> > +	skb_tx_timestamp(skb);
-> > +
-> > +	/* Trigger transmission start */
-> > +	writel(MCF_ESW_TDAR_X_DES_ACTIVE, fep->hwp + ESW_TDAR);
-> > +
-> > +	dev->stats.tx_bytes +=3D skb->len;
-> > +	/* If this was the last BD in the ring,
-> > +	 * start at the beginning again.
-> > +	 */
-> > +	if (status & BD_ENET_TX_WRAP)
-> > +		bdp =3D fep->tx_bd_base;
-> > +	else
-> > +		bdp++;
-> > +
-> > +	if (bdp =3D=3D fep->dirty_tx) {
-> > +		fep->tx_full =3D 1;
-> > +		netif_stop_queue(dev); =20
->=20
-> You may want to stop the queue earlier, i.e. when 75% or the like of
-> the tx ring is full. Also you can use netif_txq_maybe_stop() - with
-> txq =3D=3D netdev_get_tx_queue(dev, 0)
+I'd be happy to post a v5 on your behalf (pending your thoughts on my feedback
+to patch 1), unless you want the honors.  The fixup is a wee bit more than I'm
+comfortable doing on-the-fly.
 
-There are two main reasons why the netif queue management is so rugged:
+---
+ Documentation/virt/kvm/api.rst | 23 +++++++++++++++++++++++
+ arch/x86/kvm/svm/svm.c         |  5 +++++
+ arch/x86/kvm/vmx/vmx.c         |  4 ++++
+ arch/x86/kvm/x86.c             |  6 +++++-
+ arch/x86/kvm/x86.h             |  5 +++++
+ include/uapi/linux/kvm.h       |  1 +
+ tools/include/uapi/linux/kvm.h |  1 +
+ 7 files changed, 44 insertions(+), 1 deletion(-)
 
-1. Due to simplicity - this driver is not using txq (queues), so I
-cannot use APIs using as input argument queues. That is why functions
-accepting only struct netdev pointer are used.
-
-2. My feeling is that I would need to use queues abstraction only for
-one queue - so this would be extra code overhead. I'm trying to
-upstream driver which in fact has very simple internals (i.e. ringbuf
-with 16 descriptors for tx/rx).
-
->=20
-> [...]
-> > +static void mtip_timeout(struct net_device *dev, unsigned int
-> > txqueue) +{
-> > +	struct mtip_ndev_priv *priv =3D netdev_priv(dev);
-> > +	struct switch_enet_private *fep =3D priv->fep;
-> > +	struct cbd_t *bdp;
-> > +	int i;
-> > +
-> > +	dev->stats.tx_errors++;
-> > +
-> > +	if (IS_ENABLED(CONFIG_SWITCH_DEBUG)) {
-> > +		dev_info(&dev->dev, "%s: transmit timed out.\n",
-> > dev->name);
-> > +		dev_info(&dev->dev,
-> > +			 "Ring data: cur_tx %lx%s, dirty_tx %lx
-> > cur_rx: %lx\n",
-> > +			 (unsigned long)fep->cur_tx,
-> > +			 fep->tx_full ? " (full)" : "",
-> > +			 (unsigned long)fep->dirty_tx,
-> > +			 (unsigned long)fep->cur_rx);
-> > +
-> > +		bdp =3D fep->tx_bd_base;
-> > +		dev_info(&dev->dev, " tx: %u buffers\n",
-> > TX_RING_SIZE);
-> > +		for (i =3D 0; i < TX_RING_SIZE; i++) {
-> > +			dev_info(&dev->dev, "  %08lx: %04x %04x
-> > %08x\n",
-> > +				 (kernel_ulong_t)bdp, bdp->cbd_sc,
-> > +				 bdp->cbd_datlen,
-> > (int)bdp->cbd_bufaddr);
-> > +			bdp++;
-> > +		}
-> > +
-> > +		bdp =3D fep->rx_bd_base;
-> > +		dev_info(&dev->dev, " rx: %lu buffers\n",
-> > +			 (unsigned long)RX_RING_SIZE);
-> > +		for (i =3D 0 ; i < RX_RING_SIZE; i++) {
-> > +			dev_info(&dev->dev, "  %08lx: %04x %04x
-> > %08x\n",
-> > +				 (kernel_ulong_t)bdp,
-> > +				 bdp->cbd_sc, bdp->cbd_datlen,
-> > +				 (int)bdp->cbd_bufaddr);
-> > +			bdp++;
-> > +		} =20
->=20
-> Here you are traversing both rings without any lock, which looks race
-> prone.
-
-I will add  spin_{un}lock_bh(&fep->hw_lock); (this is only code used
-for debugging, not production)
-
->=20
-> /P
->=20
-
-
-
-
-Best regards,
-
-Lukasz Majewski
-
+diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+index f0d961436d0f..13a752b1200f 100644
+--- a/Documentation/virt/kvm/api.rst
++++ b/Documentation/virt/kvm/api.rst
+@@ -7844,6 +7844,7 @@ Valid bits in args[0] are::
+   #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
+   #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
+   #define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
++  #define KVM_X86_DISABLE_EXITS_APERFMPERF       (1 << 4)
+ 
+ Enabling this capability on a VM provides userspace with a way to no
+ longer intercept some instructions for improved latency in some
+@@ -7854,6 +7855,28 @@ all such vmexits.
+ 
+ Do not enable KVM_FEATURE_PV_UNHALT if you disable HLT exits.
+ 
++Virtualizing the ``IA32_APERF`` and ``IA32_MPERF`` MSRs requires more
++than just disabling APERF/MPERF exits. While both Intel and AMD
++document strict usage conditions for these MSRs--emphasizing that only
++the ratio of their deltas over a time interval (T0 to T1) is
++architecturally defined--simply passing through the MSRs can still
++produce an incorrect ratio.
++
++This erroneous ratio can occur if, between T0 and T1:
++
++1. The vCPU thread migrates between logical processors.
++2. Live migration or suspend/resume operations take place.
++3. Another task shares the vCPU's logical processor.
++4. C-states lower thean C0 are emulated (e.g., via HLT interception).
++5. The guest TSC frequency doesn't match the host TSC frequency.
++
++Due to these complexities, KVM does not automatically associate this
++passthrough capability with the guest CPUID bit,
++``CPUID.6:ECX.APERFMPERF[bit 0]``. Userspace VMMs that deem this
++mechanism adequate for virtualizing the ``IA32_APERF`` and
++``IA32_MPERF`` MSRs must set the guest CPUID bit explicitly.
++
++
+ 7.14 KVM_CAP_S390_HPAGE_1M
+ --------------------------
+ 
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index ce85f4d6f686..079c0a0b0eaa 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
+@@ -854,6 +854,11 @@ static void svm_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
+ 	svm_set_intercept_for_msr(vcpu, MSR_IA32_SYSENTER_ESP, MSR_TYPE_RW,
+ 				  guest_cpuid_is_intel_compatible(vcpu));
+ 
++	if (kvm_aperfmperf_in_guest(vcpu->kvm)) {
++		svm_disable_intercept_for_msr(vcpu, MSR_IA32_APERF, MSR_TYPE_R);
++		svm_disable_intercept_for_msr(vcpu, MSR_IA32_MPERF, MSR_TYPE_R);
++	}
++
+ 	if (sev_es_guest(vcpu->kvm))
+ 		sev_es_recalc_msr_intercepts(vcpu);
+ 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 8c16a3aff896..723a22be2514 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4099,6 +4099,10 @@ void vmx_recalc_msr_intercepts(struct kvm_vcpu *vcpu)
+ 		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C6_RESIDENCY, MSR_TYPE_R);
+ 		vmx_disable_intercept_for_msr(vcpu, MSR_CORE_C7_RESIDENCY, MSR_TYPE_R);
+ 	}
++	if (kvm_aperfmperf_in_guest(vcpu->kvm)) {
++		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_APERF, MSR_TYPE_R);
++		vmx_disable_intercept_for_msr(vcpu, MSR_IA32_MPERF, MSR_TYPE_R);
++	}
+ 
+ 	/* PT MSRs can be passed through iff PT is exposed to the guest. */
+ 	if (vmx_pt_mode_is_host_guest())
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 56569ac2e9a4..75c0f52d3c44 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -4580,6 +4580,9 @@ static u64 kvm_get_allowed_disable_exits(void)
+ {
+ 	u64 r = KVM_X86_DISABLE_EXITS_PAUSE;
+ 
++	if (boot_cpu_has(X86_FEATURE_APERFMPERF))
++		r |= KVM_X86_DISABLE_EXITS_APERFMPERF;
++
+ 	if (!mitigate_smt_rsb) {
+ 		r |= KVM_X86_DISABLE_EXITS_HLT |
+ 			KVM_X86_DISABLE_EXITS_CSTATE;
+@@ -6478,7 +6481,8 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+ 
+ 		if (!mitigate_smt_rsb && boot_cpu_has_bug(X86_BUG_SMT_RSB) &&
+ 		    cpu_smt_possible() &&
+-		    (cap->args[0] & ~KVM_X86_DISABLE_EXITS_PAUSE))
++		    (cap->args[0] & ~(KVM_X86_DISABLE_EXITS_PAUSE |
++				      KVM_X86_DISABLE_EXITS_APERFMPERF)))
+ 			pr_warn_once(SMT_RSB_MSG);
+ 
+ 		kvm_disable_exits(kvm, cap->args[0]);
+diff --git a/arch/x86/kvm/x86.h b/arch/x86/kvm/x86.h
+index 31ae58b765f3..bcfd9b719ada 100644
+--- a/arch/x86/kvm/x86.h
++++ b/arch/x86/kvm/x86.h
+@@ -546,6 +546,11 @@ static inline bool kvm_cstate_in_guest(struct kvm *kvm)
+ 	return kvm->arch.disabled_exits & KVM_X86_DISABLE_EXITS_CSTATE;
+ }
+ 
++static inline bool kvm_aperfmperf_in_guest(struct kvm *kvm)
++{
++	return kvm->arch.disabled_exits & KVM_X86_DISABLE_EXITS_APERFMPERF;
++}
++
+ static inline bool kvm_notify_vmexit_enabled(struct kvm *kvm)
+ {
+ 	return kvm->arch.notify_vmexit_flags & KVM_X86_NOTIFY_VMEXIT_ENABLED;
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 7a4c35ff03fe..aeb2ca10b190 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -644,6 +644,7 @@ struct kvm_ioeventfd {
+ #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
+ #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
+ #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
++#define KVM_X86_DISABLE_EXITS_APERFMPERF     (1 << 4)
+ 
+ /* for KVM_ENABLE_CAP */
+ struct kvm_enable_cap {
+diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
+index d00b85cb168c..7415a3863891 100644
+--- a/tools/include/uapi/linux/kvm.h
++++ b/tools/include/uapi/linux/kvm.h
+@@ -618,6 +618,7 @@ struct kvm_ioeventfd {
+ #define KVM_X86_DISABLE_EXITS_HLT            (1 << 1)
+ #define KVM_X86_DISABLE_EXITS_PAUSE          (1 << 2)
+ #define KVM_X86_DISABLE_EXITS_CSTATE         (1 << 3)
++#define KVM_X86_DISABLE_EXITS_APERFMPERF     (1 << 4)
+ 
+ /* for KVM_ENABLE_CAP */
+ struct kvm_enable_cap {
 --
-
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
-
---Sig_/CJrMgWIo4Z=lmZ0vE4F4UWW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCgAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAmhbGbYACgkQAR8vZIA0
-zr1nQAf8DbYsGNqHDbFPU8PQZ/XrmTtF041853WB8TNnJwaOsUnvvoywrOrdDFqt
-9jzOpwf2AB6RZB1BDHGVyzNeOHW1UdfkrAL/z5Ko7r9Nx5vkicMSFTX+Orf1NJtX
-FCHTxYxx0uN/rbHUmKXaqgN9pvXc+AlpoB7eC/v2CJnvbSMF8S3iklvBhpJ6YVm/
-LQS/WjrmKmJSL+NZO5hy3TaMbsLi3Hv4yQAao4xmYDf7JG5xcy+VewQSv8+CY1Fj
-T4a91/L5+ueoyZ1Pwlnzr/RrRrhnHKspVRIrnexH1dQJ2oCUB3X1KmsSC+yjIDAb
-pC4DEXZZu3VOA+HDAikhW8tGF5DM4A==
-=HTk3
------END PGP SIGNATURE-----
-
---Sig_/CJrMgWIo4Z=lmZ0vE4F4UWW--
