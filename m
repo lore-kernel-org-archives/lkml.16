@@ -1,114 +1,150 @@
-Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D27257455
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAFAA258CD3;
+	Tue, 24 Jun 2025 08:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750752462; cv=none; b=LxvPzc4GI+ywolfHtgXBaMFL0uG200+1xdCJdZyFE08hJS/Nbt7ku1LA80StwbGttuTtVvo0IzAR8JPw1bWKiP4ZviWNyOOy4A9Yv5LdQPqz6OfGRVVo79bMGnnHKCVTM1bZX/Zrz484H5JzoFlKb9Al4N9k0BRaWcZ1lPazrXY=
+	t=1750752474; cv=none; b=Bui/XxNbbIs5p54eA6+pJyuBx/2ACgI6ZPweVTHNgSat4wMmT/ThnFMW8w+epjGE0rNNNg742ie7mc3Wdx2CAYfmYKlcfbv0Aqd6vdo9pSTOSINwSogCoFmWEK8i58EGOVF6LzD03sHTB5xvHifYXGJyyKAjHmQos/wFXDSLQCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750752462; c=relaxed/simple;
-	bh=bcr7ZsoDIxCVOP86HeZSlurtef12X/747KFw9IGHX20=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mgibz7ItIyUU06G5dhj73Qmegad86jLWCFulTmM+UirTFgeMDJgDHQ1g9SODvCkDLJRZ+m3+BSxnYwcWNk4gA0ScR1WOEGOqcoxMv7gYgY8VtAEZU9LZqpkErQmWHz27nYpjzYjxXkAZLKnRGgBQto9J9ZpIYkXs09SklTI2tZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=Fao41GU0; arc=none smtp.client-ip=44.202.169.39
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1750752474; c=relaxed/simple;
+	bh=0QRWHiDqC8FV9e1rfprHiI4IeP9cKbV5jQQ+ztFKzJs=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jIFx8m8cL/dadWPlNf1zxG5ffhG3vxj4T3dfkN2dlNuMIxd1DDgtSeHfEjn9vCwGrgXEc8jq2fM20cFb2Q7tUBUJQYp01AiB2e0W1GXnCwzI2NtKLGj4izRvr7JS7+xKgtQrL5NK7Tz7KSzKeX8BRm4EGx9+b8Ew6QZQ8G45eEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AGoPYd7S; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="Fao41GU0"
-Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
-	by cmsmtp with ESMTPS
-	id TieTuMQRSVkcRTygmuAvM5; Tue, 24 Jun 2025 08:07:33 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id TygluAHA1h9ZxTygluyiHl; Tue, 24 Jun 2025 08:07:31 +0000
-X-Authority-Analysis: v=2.4 cv=GODDEfNK c=1 sm=1 tr=0 ts=685a5cc4
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=xFO6NK3ONdTJZbcH9gQ3lLvShx7ldiwcq/fdKK4epLE=; b=Fao41GU0zgS/RAeXpf/hDrCEgw
-	D3aFqiPqy7avOdaCzGQynxn0XaCohepOU2VLvWAbgA76NLv72RuKCRv+Rdj8unqQ3Zwj17aQiEuuE
-	CLOkLDgZW7L4hfzYY+6exAwNBxD0TM2f+s1kMGA59VRYqikzfcx2+gpSFA3auAZkIjoh8frdljpgO
-	Sk4LsUkSX0jyvEAFnT6hn/dgoBUtR4awqHN9m/KchvKSDMoUy1CNR56X0Lh4Pda0lgdCPz+YGZT5+
-	C7oovy8V8yW/0P5AVM3Onq1kAxYT5Osh2EY+7jmQIeoLnkKkps8CMNlQSVx2UK+7RIZiaYsw7isZX
-	x/vZBMTQ==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:47784 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1uTygi-00000002D2m-2Sr4;
-	Tue, 24 Jun 2025 02:07:28 -0600
-Message-ID: <e14cda6a-d50b-4b7a-81c0-4c2e5fb8b447@w6rz.net>
-Date: Tue, 24 Jun 2025 01:07:24 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGoPYd7S"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a4f379662cso4098208f8f.0;
+        Tue, 24 Jun 2025 01:07:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750752471; x=1751357271; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aEKaHr7bzVOBX6mtsl4IPvcEgrMN7hu031sel/DT8/Y=;
+        b=AGoPYd7S6AZZlsb0FZ2wkrKL+9KbJhM/1rpYJR5aIiJG7tUsYWvjgQIy6IAax/CrX6
+         uPyhof3OULjmssvgmo7s9whgGgsIPV/QmvB2OVV5rqm/K3lepdJUj6lKJqY+FeAmAYNp
+         mKTs7E5iClzDiS2a7+2XSjLbcG/gG4Asdu4Pk1XH1X9hIEI8+pNVIh05itTz72K5JBoC
+         PLo2c7cdiMBR9ijoCqhkRpqbG5K/1GwzT7us9xeYtnW06uJie7TsPmZvomgt0cGS+YmJ
+         lEbkJdWDvNaFZ3PRoqcuv0eGd4EVfyxzq+CRTlpetUVtPjyQRQ8VlSWyfDpSfKjt2wAc
+         22+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750752471; x=1751357271;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aEKaHr7bzVOBX6mtsl4IPvcEgrMN7hu031sel/DT8/Y=;
+        b=gQXNRT56ZCy2Eeilg0PLXKpqS/9yob/CP/U4O9RtoMB8qjmokGgNtd5hb7PUF8X8/i
+         rrstrCCB69UmFaD3StOg8WXtzcmgCnbBiTMwdm5QKwYZ/mqWNWVJSVaL5py3gOxuoN04
+         z/fpoG21zvWXEm/CKAGHzoREjntUiVGi0aZDkulD8AzsqQNjVjdDKjAVQDXBl6mhF+gv
+         Szm8QW4ZQB1xryY+H2COBRP69AGoKFMYf98xmaWEg65UbsC8EEa0PPPvupQzoDJryC9Y
+         L9Z8GqG2iwn64LpdJp4WZF7hhv3Olu032jxKhsu8zSxTXw5NngGuKp+QOYQfSkIP3ts8
+         /KJw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJDYbwnPG1vjWWheocOn0GYwR6pcIJ5hDf1kWq6cdKN/SS/EJqWGdYpR7tWIDKWYE9HAN8XGLjLEq92To4@vger.kernel.org, AJvYcCVi2t5/ToeXjexedpACaTbTYyIP27mP4jEyg09e/v/qAC5JKoEBTyYWtwRcSVXppObKO06VeNEjE+KbGjL2@vger.kernel.org
+X-Gm-Message-State: AOJu0YyzkxRC+Lo42dbrvs/8liazFLELF4KOZ0HfQsvnyu2uN37RFeY8
+	ULAkBCIeGs6FhkJHnGZ+qBh9ZMv33jiD2Xj/SkMCTRKIU5eeCRpcIqMK
+X-Gm-Gg: ASbGnctYqdns3WhOaaxeQgDblMlkoWTxHYXwj7fP5O2DSwMfHHVVaVUYoNLbXi+n6En
+	n2uziu2ZyVKR+os0SPemhGn6qMLSOoEJ2kBSGnw5WZmeLLEKAFRRceKs7EWvstiddbCBNZ8gtp5
+	TGGofAzMI3qMIrD2PV9/LDq9eZKQD/AP+4ww7XoJpCoC7ni7dkl3XALvVkuf/JgZbPQnrvFdeZ2
+	4f1R+wGebIt5H3vI6c7aaPx7Ba7tGxJYZkwFU25X/vYPrjCmL7nQcDcN6wg2ROw3xR5CE/35uPQ
+	NFBFKTMfDOj4pruLXH+IYizBHn01Hn4m6ZiiUptTZhuqQTw4t289YjpdsCia7d6QhzUM2ExpNna
+	agH66a/plr5X34EQl3dViM6aJ
+X-Google-Smtp-Source: AGHT+IGj40J3gYQNZuNyHWQXqC5QGveSgT4VbYt/zXOwee83nuPUMNJqpNFfTApYGAVg7P7wmmNZYg==
+X-Received: by 2002:a05:6000:4028:b0:3a5:27ba:47c7 with SMTP id ffacd0b85a97d-3a6d12eb400mr12534935f8f.48.1750752470752;
+        Tue, 24 Jun 2025 01:07:50 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45366b4d0adsm122345145e9.14.2025.06.24.01.07.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 01:07:50 -0700 (PDT)
+Date: Tue, 24 Jun 2025 09:07:48 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Michael Ellerman
+ <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao
+ <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, Alexander
+ Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan
+ Kara <jack@suse.cz>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
+ <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Darren Hart
+ <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, Andre Almeida
+ <andrealmeid@igalia.com>, Andrew Morton <akpm@linux-foundation.org>, Dave
+ Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org
+Subject: Re: [PATCH 2/5] uaccess: Add speculation barrier to
+ copy_from_user_iter()
+Message-ID: <20250624090748.056382c4@pumpkin>
+In-Reply-To: <2f569008-dd66-4bb6-bf5e-f2317bb95e10@csgroup.eu>
+References: <cover.1750585239.git.christophe.leroy@csgroup.eu>
+	<f4b2a32853b5daba7aeac9e9b96ec1ab88981589.1750585239.git.christophe.leroy@csgroup.eu>
+	<CAHk-=wj4P6p1kBVW7aJbWAOGJZkB7fXFmwaXLieBRhjmvnWgvQ@mail.gmail.com>
+	<2f569008-dd66-4bb6-bf5e-f2317bb95e10@csgroup.eu>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.15 000/592] 6.15.4-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250623130700.210182694@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250623130700.210182694@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1uTygi-00000002D2m-2Sr4
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:47784
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 16
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfPyvrPoi1+iFhvi6bixntYvzoG4rjKJkYCO+QBm21aJ7hYyQSEZyVNv3w/Fvvye4DmeRCLh36wJL7jtNHwZRp+TkukGBuLy8ai3zCc9g78Odi9A3GvgD
- zwLa/B1HFAqv4JXpuTN1N/58HBLk2wwqtTP1vSfjlfecZxPzfHo6MWl2cAtjl18Sk5OS1re6FcfEDP5VhvITVadZU8eMcxtBAj4=
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On 6/23/25 05:59, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.15.4 release.
-> There are 592 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 25 Jun 2025 13:05:55 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.4-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Tue, 24 Jun 2025 07:49:03 +0200
+Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+> Le 22/06/2025 =C3=A0 18:57, Linus Torvalds a =C3=A9crit=C2=A0:
+> > On Sun, 22 Jun 2025 at 02:52, Christophe Leroy
+> > <christophe.leroy@csgroup.eu> wrote: =20
+> >>
+> >> The results of "access_ok()" can be mis-speculated. =20
+> >=20
+> > Hmm. This code is critical. I think it should be converted to use that
+> > masked address thing if we have to add it here. =20
+>=20
+> Ok, I'll add it.
+>=20
+> >=20
+> > And at some point this access_ok() didn't even exist, because we check
+> > the addresses at iter creation time. So this one might be a "belt and
+> > suspenders" check, rather than something critical.
+> >=20
+> > (Although I also suspect that when we added ITER_UBUF we might have
+> > created cases where those user addresses aren't checked at iter
+> > creation time any more).
+> >  =20
+>=20
+> Let's take the follow path as an exemple:
+>=20
+> snd_pcm_ioctl(SNDRV_PCM_IOCTL_WRITEI_FRAMES)
+>    snd_pcm_common_ioctl()
+>      snd_pcm_xferi_frames_ioctl()
+>        snd_pcm_lib_write()
+>          __snd_pcm_lib_xfer()
+>            default_write_copy()
+>              copy_from_iter()
+>                _copy_from_iter()
+>                  __copy_from_iter()
+>                    iterate_and_advance()
+>                      iterate_and_advance2()
+>                        iterate_iovec()
+>                          copy_from_user_iter()
+>=20
+> As far as I can see, none of those functions check the accessibility of=20
+> the iovec. Am I missing something ?
 
-Tested-by: Ron Economos <re@w6rz.net>
+The import_ubuf() in do_transfer() ought to contain one.
+But really you want the one in copy_from_user_iter() rather than the outer =
+one.
+
+Mind you that code is horrid.
+The code only ever copies a single buffer, so could be much shorter.
+And is that deep call chain really needed for the very common case of one b=
+uffer.
+
+	David
+
+
+>=20
+> Christophe
 
