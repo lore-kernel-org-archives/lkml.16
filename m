@@ -1,146 +1,98 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C019426E14C
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 23:31:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 683AC26B0B6;
+	Tue, 24 Jun 2025 23:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750807868; cv=none; b=DA7xD3e6vwkhEUTMbN1RKCc4gIvcxbtEfutRpd9CsIYuTOOXssMoaFnZsrGxI1xhCupILm+AcqVUV1N35H/nW4EG7awk88BM41NZHApFnT3mgCkHDxXxjXXVGAQx3SOe5wh6l9ULdm0ToXNf5V6QAZzadr632/djqqegANRRyU4=
+	t=1750807909; cv=none; b=lmrvMuKEKLhDcCLKEyJJJNwn4vPgYs+b3xpCvYIL6puiXQjIqD8Xg2sT6QxF88jvDliic5u2+EHpgncIUrTtg342lVCQAZeGJ6CFuXfAAS2/typCxKQnYRVfgh6jpURr+ICFn3toeUocLLoygjMSOGjrNWd8iSK369jr/xZDQIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750807868; c=relaxed/simple;
-	bh=nX0YHqLfleKwgIkQRR7zhOtfTngLBmfTmLBeKNNNlEE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iAxEqNBzlYQSuy49qFPFoLumE1uADoA/lTgfZAjr/CO2tyYDayegpfjqRFtHt+Ce9POkspMvOvgAXyHWo4+l9/VL0dKa0bsK2wa+wNpymSrdSWAJ6sF6QOWGYXhwW0TvPfQVP2a4cv4JEmsEVPlq26ha/ddwyL1qL6weyh1lsIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2TC6O+zQ; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750807909; c=relaxed/simple;
+	bh=wAMDHm88X5DnFfTxjTMlZawEVZqAwKU/UMzX5RRrhEw=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qQ5phYTIopve9Q6Md5JE7xgYS6nOjy/DIOdeuVwrmKXy3bF7CCFugbzOWNI454WBrb03LRrZvOiPTI8TWH+nK1Ffxok4UoImdRT6Zk/8GHqTGi8yFIe1BjUQR2zWB6TlH/PFtd5HW7ewYj/q94/spjW5252Otk8Uk5lQu0OehE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=Y6jvrWrI; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2TC6O+zQ"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3138e65efe2so883128a91.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:31:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="Y6jvrWrI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750807866; x=1751412666; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/hcbVM3hgEz99lahHzlfgB8IEMKnnphGvT38Gwa/j0=;
-        b=2TC6O+zQBDMKTLEHc7NlNjSwCu4fdZiDiuopWC1IHdW9W19w2bwNtvSvbDOm8DJpV2
-         r4BZ9pQTRmWWiRNx/xpKy7PgUS6RUq1EMBDIRLb6rYOih+9STBxvHjIGwinq+/Sbnwwi
-         jfsWXR62O2TZiVl9BevkMRhS51wcIE2CvKG5XjhNhnuuq9nJc+UhYqqgJ6+Zwap7D0pr
-         8ipYIV9R/xVhT6tau2XiWQSWCEFhqX3yXzSuZnonwYmAgtRjTeTQQxuIue81LucGcly3
-         AfviJrrPPUb2W2WqbvmkNyBB34+fGUX+QNxHgEgW4+fRjLutxkU5xqdfG+nUEwZDjwgy
-         LmZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750807866; x=1751412666;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/hcbVM3hgEz99lahHzlfgB8IEMKnnphGvT38Gwa/j0=;
-        b=wfgaVk6T/p4XZwKyWcO5qIWSAvNi/7dk+AbKkmEauWRdAemnBAI+RRRoGSLIC7nN2b
-         1xWF95ab62d3maY+6N5C06L0+FZTwgax/LYxxi6B1ubCVC+qsd9Uw77UrAeeel3U1+hK
-         PKkMIcuiY5al+LM+WdbXfCO2SH9qX4TlbL8B0Nuw7qyoPdN8m7AG/FrWeHgGg9R76Z8V
-         JV4q/cPc8FnriTu3qYyAWgU7Usm3ikuX2SLouv5Ds/ZfHCfAB/1OFQMtM8C4uN2iCaVx
-         btrA3zMbrsTrb0/ol21+4RjOIKpg0ZK5519/OwLCTRbdGr9s24bJ8ybS0/yGq1GLKghB
-         y9kA==
-X-Gm-Message-State: AOJu0Yzai0WsNvMl5XDNiOevylTQkzKYIPseRgDEFnq4aYNSLIu82aD/
-	AmpSJEoFgus8pBu+5B7l2Z+j/RxKRhBPo+egxkZ3soRNbqVbMwf/m3vwSAH/NVDs1VBFScwxmnS
-	+XGKJDw==
-X-Google-Smtp-Source: AGHT+IFOA5I0fytY1fxsbAPIcxCuXX1tMxsiYvby57eByHBNqJwSR1UKppPsacZEWlYJTkj1qwxGne4E8Ak=
-X-Received: from pjbhl6.prod.google.com ([2002:a17:90b:1346:b0:311:e71e:3fb9])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d008:b0:312:1b53:5e98
- with SMTP id 98e67ed59e1d1-315f26c401fmr891263a91.34.1750807865998; Tue, 24
- Jun 2025 16:31:05 -0700 (PDT)
-Date: Tue, 24 Jun 2025 16:31:04 -0700
-In-Reply-To: <20250530185239.2335185-3-jmattson@google.com>
+	d=codeconstruct.com.au; s=2022a; t=1750807905;
+	bh=wAMDHm88X5DnFfTxjTMlZawEVZqAwKU/UMzX5RRrhEw=;
+	h=Subject:From:To:Date:In-Reply-To:References;
+	b=Y6jvrWrI5GNZ8lXWo//Q5UUJUo0iIL68eNHWVPCv70YpSP9TgqLYIqrhLciejhrJ4
+	 sr7IxwJDOYd14/Uvs+JF68Am0yAqaZfy2MqMB36oE1tNHNGmRA/3XoCLPqnM9Mif3O
+	 g8GYNQ1O7JgeKupftTkehLa/o0vmjTAUa30cVSD827oJ3ezXewbD59Go4c7BycZDW2
+	 PENUZQ9mEIVg1qqezl7FA93VIgUQ3gB2899NYCNjre75vK6P1yByCpAtVcCnrYYxJ3
+	 8FsitDufw47hob7JSjlkvJUg23ARqKE8K3Qw44qXdJM7JAk283yaT8sihzjwLfCXyn
+	 54yrE/oJjuR8A==
+Received: from [192.168.68.112] (unknown [180.150.112.166])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 2B1F7640CD;
+	Wed, 25 Jun 2025 07:31:43 +0800 (AWST)
+Message-ID: <c41c3dfc38c1adc5d544e365de355579d42f90b5.camel@codeconstruct.com.au>
+Subject: Re: [PATCH 7/8] mmc: sdhci-of-aspeed: Remove timing phase
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Cool Lee <cool_lee@aspeedtech.com>, "adrian.hunter@intel.com"
+ <adrian.hunter@intel.com>, "ulf.hansson@linaro.org"
+ <ulf.hansson@linaro.org>,  "joel@jms.id.au" <joel@jms.id.au>,
+ "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, 
+ "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+ "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+ "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, BMC-SW <BMC-SW@aspeedtech.com>
+Date: Wed, 25 Jun 2025 09:01:42 +0930
+In-Reply-To: <SEYPR06MB7072FC07B4EFC03BB25B537F957CA@SEYPR06MB7072.apcprd06.prod.outlook.com>
+References: <20250615035803.3752235-1-cool_lee@aspeedtech.com>
+	 <20250615035803.3752235-8-cool_lee@aspeedtech.com>
+	 <9c85755a8aff6e6f8a5548f0b5e758dce7d6353e.camel@codeconstruct.com.au>
+	 <SEYPR06MB7072FC07B4EFC03BB25B537F957CA@SEYPR06MB7072.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250530185239.2335185-1-jmattson@google.com> <20250530185239.2335185-3-jmattson@google.com>
-Message-ID: <aFs1OL8QybDRUQkF@google.com>
-Subject: Re: [PATCH v4 2/3] KVM: x86: Provide a capability to disable
- APERF/MPERF read intercepts
-From: Sean Christopherson <seanjc@google.com>
-To: Jim Mattson <jmattson@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
 
-On Fri, May 30, 2025, Jim Mattson wrote:
-> @@ -7790,6 +7791,28 @@ all such vmexits.
->  
->  Do not enable KVM_FEATURE_PV_UNHALT if you disable HLT exits.
->  
-> +Virtualizing the ``IA32_APERF`` and ``IA32_MPERF`` MSRs requires more
-> +than just disabling APERF/MPERF exits. While both Intel and AMD
-> +document strict usage conditions for these MSRs--emphasizing that only
-> +the ratio of their deltas over a time interval (T0 to T1) is
-> +architecturally defined--simply passing through the MSRs can still
-> +produce an incorrect ratio.
-> +
-> +This erroneous ratio can occur if, between T0 and T1:
-> +
-> +1. The vCPU thread migrates between logical processors.
-> +2. Live migration or suspend/resume operations take place.
-> +3. Another task shares the vCPU's logical processor.
-> +4. C-states lower thean C0 are emulated (e.g., via HLT interception).
-> +5. The guest TSC frequency doesn't match the host TSC frequency.
-> +
-> +Due to these complexities, KVM does not automatically associate this
-> +passthrough capability with the guest CPUID bit,
-> +``CPUID.6:ECX.APERFMPERF[bit 0]``. Userspace VMMs that deem this
-> +mechanism adequate for virtualizing the ``IA32_APERF`` and
-> +``IA32_MPERF`` MSRs must set the guest CPUID bit explicitly.
+On Fri, 2025-06-20 at 10:23 +0000, Cool Lee wrote:
+>=20
+> > > The timing phase is no more needed since the auto tuning is
+> > > applied.
+> > >=20
+> >=20
+> > I feel this is unwise: we're now ignoring constraints set in the
+> > devicetree.
+> > Auto-tuning is fine, but I think that should be a feature that new
+> > platforms can
+> > exploit by default. Older platforms that do specify the phase
+> > values via the
+> > devicetree can be converted at the leisure of their maintainers (by
+> > removing
+> > the phase properties).
+> >=20
+> > Support needs to remain in the driver until there are no (aspeed-
+> > based)
+> > devicetrees specifying the phases.
+> The timing phase only works on AST2600 or newer platform which has
+> added a delay cell in the RTL.
+> The older platform AST2500, AST2400 doesn't support the timing phase.
+> It supposed no effect on older platform.=20
+> The old manner that a static timing value customized from devicetree
+> is inconvenient because customer needs to check waveform associated
+> with each delay taps. Once the emmc parts changed, a fixed timing
+> value may not work. That's why auto tune here instead of a static
+> value.
 
-Question: what do we want to do about nested?  Due to differences between SVM
-and VMX at the time you posted your patches, this series _as posted_ will do
-nested passthrough for SVM, but not VMX (before the MSR rework, SVM auto-merged
-bitmaps for all MSRs in svm_direct_access_msrs).
+Sure, I understand that auto-tuning is more convenient, but in my view,
+there's no reason to remove support for static phase values for now. On
+the contrary, switching entirely to auto-tuning risks regressions for
+existing platforms that do specify static values.
 
-As I've got it locally applied, neither SVM nor VMX will do passthrough to L2.
-I'm leaning toward allowing full passthrough, because (a) it's easy, (b) I can't
-think of any reason not to, and (c) SVM's semi-auto-merging logic means we could
-*unintentinally* do full passthrough in the future, in the unlikely event that
-KVM added passthrough support for an MSR in the same chunk as APERF and MPERF.
+Can you please drop the patch for now? We can revisit removing static
+value support in the future.
 
-This would be the extent of the changes (I think, haven't tested yet).
-
-diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
-index 749f7b866ac8..b7fd2e869998 100644
---- a/arch/x86/kvm/svm/nested.c
-+++ b/arch/x86/kvm/svm/nested.c
-@@ -194,7 +194,7 @@ void recalc_intercepts(struct vcpu_svm *svm)
-  * Hardcode the capacity of the array based on the maximum number of _offsets_.
-  * MSRs are batched together, so there are fewer offsets than MSRs.
-  */
--static int nested_svm_msrpm_merge_offsets[6] __ro_after_init;
-+static int nested_svm_msrpm_merge_offsets[7] __ro_after_init;
- static int nested_svm_nr_msrpm_merge_offsets __ro_after_init;
- typedef unsigned long nsvm_msrpm_merge_t;
- 
-@@ -216,6 +216,8 @@ int __init nested_svm_init_msrpm_merge_offsets(void)
-                MSR_IA32_SPEC_CTRL,
-                MSR_IA32_PRED_CMD,
-                MSR_IA32_FLUSH_CMD,
-+               MSR_IA32_APERF,
-+               MSR_IA32_MPERF,
-                MSR_IA32_LASTBRANCHFROMIP,
-                MSR_IA32_LASTBRANCHTOIP,
-                MSR_IA32_LASTINTFROMIP,
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index c69df3aba8d1..b8ea1969113d 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -715,6 +715,12 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
-        nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
-                                         MSR_IA32_FLUSH_CMD, MSR_TYPE_W);
- 
-+       nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
-+                                        MSR_IA32_APERF, MSR_TYPE_R);
-+
-+       nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
-+                                        MSR_IA32_MPERF, MSR_TYPE_R);
-+
-        kvm_vcpu_unmap(vcpu, &map);
- 
-        vmx->nested.force_msr_bitmap_recalc = false;
+Andrew
