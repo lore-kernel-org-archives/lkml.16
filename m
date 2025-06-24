@@ -1,182 +1,90 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1681E3074B0
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:28:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B34F2DAFBD;
+	Tue, 24 Jun 2025 15:28:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750778896; cv=none; b=Nlc+fj5J3zHgmfgaTJzLM+RW2ylf9kSYjIKCQkvxJrgYfcvq7w6EJQeOQbFBP91xXAs1WwldLp0d3/aiCZo0qCTZ3E/f2faxnP8/trY1x0aVAYGO63IUd27kr3InA8DTP/Kscn6ycF+i7QfFCts/O9WO4sk+kU+muojW5MokDcM=
+	t=1750778898; cv=none; b=HWywMPk3DKvbvZkMqjn6iNWyDSQj4WXLEa1etuCtRRfVarqeimwGvpuz4pjEya08sjXVkFLD1bDaMFyUA9Ymq+TNNCBHvkMwn/mD/SvwEY6JA6J9fZMk1OWiLxXMx7utRVjj24P1x/AWP+fW104a0Q98DL6ayIymQQTXSN711F4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750778896; c=relaxed/simple;
-	bh=UKHD3G4rOgDMdX6aaHCQ5ty9+jr+2OmN4FyKUXHUJ7o=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=E+CPo+xuTv3vVmRRmO01n9vgbbxQbNlNDWC8pj2OCs68VZ65JkNh2cI2B3nsh4qPEXDo2h3K6744biIZTRsrk9gOaSJTxmGBxw5Cqg30GMpaTc4490M/Y2cncp4GOlmgb3JqObQqKKbpRkc5Ds+nsPmPi/cNjplq0IRj7y4ImmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3E2uSi1+; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
+	s=arc-20240116; t=1750778898; c=relaxed/simple;
+	bh=Pl3NFZyhrvklSpvN1eF/J9iEI8F8auASAYz/1jCX/eI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=iNQZUZNBTZWkTikUfsmXM7B1zJU6Sd6XzaxYrVTpK3mt3510AXwTlE4WHsvcEd4vis8QHlZTw/ZB5IKXjc2OTJd5NkudvPWlu9yx1ClTAse0OKQvsbfnK9kwGy+XQjbeWkrLBwczuRi2ga8zWPgzK9Zu27BhFp6ub4ZZ4Yt/dkQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aX667HMm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3E2uSi1+"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4532514dee8so4944455e9.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:28:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750778893; x=1751383693; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=268YGudOLyzzoA4+F9RG1rGF98DFDgP0BD2ClWynzVY=;
-        b=3E2uSi1+7AjtoD69SnU24BF3C+r4pTVNE5wC54m1Y+SQ+TP+S+O3rJrkdKZEtwny5r
-         vpF/vI7Plji4VIIQ/qIFQCH1VAKkUR22GdBJBZT84xzUqGcncHn9HQEPhiAuElTH6tsJ
-         stLJvZXYCcFN2pGCBcYdxH0jIXfGeZgafDCAte9MaPAsgLwivl7QALz2C+xlIcSryYZ9
-         OhfXh6XKO54gGCXBmf3aqYOj6E+QJ9qRZpQ4PlXe5dELrEdYaBkrYrAzgYRlKvlSQ0Sk
-         4zmsp/s+INkO1+3raK2+mhGbRKZMxqFlzglKvBQCLeyWQX+/Cg6T0lPUh+tMpOPg4kFO
-         jkqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750778893; x=1751383693;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=268YGudOLyzzoA4+F9RG1rGF98DFDgP0BD2ClWynzVY=;
-        b=YkAF9FwlRuMMEt1e13e7HpG5ETbC2W4w149qAcrwKQG7OWOOr+wzOtXln7g8AR/Tzk
-         Z2U9PrlQx9a42EsqEFUjidMHW31XusmMeqBh1MD9nnOy/geNSjqY828PPVsw+zcAFrQt
-         4gVb20NBeBFAxidbK8rvlECfO6sV8Xv//XVgx3VQAbAy1sW7G9WdHHJxDDoDzRGd+ga+
-         +KFo9VquAXeVaqOwPronXLwc8+BhCLc7/0u2Vaj/jSK/Sa7hK7xrpmoJYSGJJvY/w3ut
-         Vs8Gq+bqiFdOWpKAOoAFEv1L374W8Je0t6KmpFCcqDu+VfZhGKpBj2uzvJdHsL1VaPHj
-         Q+vg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmCGxyDuKRq+jCKMNEFMheVyB/QahcnZ4PA1j7Sq5E1Kc2VvKTFlcl+DyIlVXqG5FeWlDYSeAG/vfHjqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOh2VufiBCYe9zDhRW78W8wZAMS//bewTzQP71SOGTEeDEMv/u
-	99viwYOFeYF3OKEzW8NK2QM1+v5dRZze/xNM/mcZi115jD3XWEHmOwV9SDmCSxJairJFEg0t1+/
-	C40KpLJwtv6tbqnCMdw==
-X-Google-Smtp-Source: AGHT+IFRghdo+WYPgOzlG89g2MwJ0GNK8NS58YpS9ZrVk3kDSULxLxHjWMq12+4IBf8MTm6C9hKbVV0h3QJmhgk=
-X-Received: from wmqb16.prod.google.com ([2002:a05:600c:4e10:b0:442:f482:bba5])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:468b:b0:442:f98e:f37 with SMTP id 5b1f17b1804b1-453658ba2e3mr152984835e9.21.1750778893234;
- Tue, 24 Jun 2025 08:28:13 -0700 (PDT)
-Date: Tue, 24 Jun 2025 15:27:55 +0000
-In-Reply-To: <20250624-opaque-from-raw-v2-0-e4da40bdc59c@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aX667HMm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BF9FC4CEE3;
+	Tue, 24 Jun 2025 15:28:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750778896;
+	bh=Pl3NFZyhrvklSpvN1eF/J9iEI8F8auASAYz/1jCX/eI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=aX667HMmD7Y51beRdU5f4Hd584kRCoEk7KvoexSEew+t+eRh1pj1fR9UYQkqZHZfh
+	 fWZBuBKFpWbUuR18ZgET27bcKTR21VWtudD2h/MiJg6xbrWNzJmKi4wWdNJxp8UTpF
+	 cLfLjNx7iOPtPZpUkfu58+hbZmJ888pu5bFPuQLLNe3jewq+aBRDEgJjvD7ycC26mJ
+	 gerZK14v2YkZRrVmf2+j4+xZpI9yO8HqO8Rg7b5p731cuNj3lCL5h1fcWXBFxZrqNF
+	 KCL0s7tmxxejQDhFnb583lC+8Fm9OWcJ3n4gkCCspwZLuTbTLsDNKxeUPWTTXNkXBe
+	 /ynLZbIg6aNbg==
+Date: Tue, 24 Jun 2025 10:28:14 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"vkoul@kernel.org" <vkoul@kernel.org>,
+	"kishon@kernel.org" <kishon@kernel.org>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"elbadrym@google.com" <elbadrym@google.com>,
+	"romlem@google.com" <romlem@google.com>,
+	"anhphan@google.com" <anhphan@google.com>,
+	"wak@google.com" <wak@google.com>,
+	"yuxiaozhang@google.com" <yuxiaozhang@google.com>,
+	BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: =?utf-8?B?5Zue6KaG?= =?utf-8?Q?=3A?= [PATCH 5/7] ARM: dts:
+ aspeed-g6: Add PCIe RC node
+Message-ID: <20250624152814.GA1477818@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250624-opaque-from-raw-v2-0-e4da40bdc59c@google.com>
-X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4181; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=UKHD3G4rOgDMdX6aaHCQ5ty9+jr+2OmN4FyKUXHUJ7o=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBoWsQI3fRyJmSfbo5uoJ7SjbdkZKEsYCZTdbQdR
- YPphOlK6AuJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaFrECAAKCRAEWL7uWMY5
- RkmfD/4v+apEcxlclEj9RjgLcqodC11eQ8VtxGUU8tBr9QuZmGmMpy+RHyT60OgnsVVRtmI1XoN
- NioPnTrHaMWYVTv7kKo+w50Gf9WnV3bJov4+sQZl5e3CyCXzHyoNfhiY+sabhDQS8rIkL6Gq6VZ
- mZChFqzDKCOJF8M8tq4Flzh4MUg19LH2h8Upha4CNf6sMOX1oItiCiOQBk/mLs7R8vsU6xcxqdA
- oXClVKOEzUcEj5n+OXxRSV92FPS0AVxbSIGUn4DABRMoFIgLYEqGNME6lxbe8sjGcqVziyJx0l7
- V2xOmYcdCPg2e4h93ck0TzMJzvFx4tj7qonYvfqP/RHXIdhxv27md85HjckuLIeSgmUr8QOSw1m
- bLNyEzazsCU1O4CPwTs8QpJ01DoVUwWgRCxPWRLgM2Cft6riSHMD1J0Iduww+MJ14/D1f7aDVPl
- shM6sHL6GPi+y5RtaAD3NVnDTGSf0hZHiDC+1Eb0P7RCwElzWSPswuRKNJ5vORP3T5uMl5AFXSi
- hLiNDbfHAPClVJAghwblMiI+xV1YEU7igUCd78Gdre/HDrzEdaBWEwDA75waefxDqp++djRWw8p
- OUb18XDQXs7RUbbpW7Bts05YF60VjXcaGjpFE6p7ZTq5kxe+AbSJUzk4qmEzWsROomMRmLeLutu +ont2Zp5Oo3ZwnA==
-X-Mailer: b4 0.14.2
-Message-ID: <20250624-opaque-from-raw-v2-1-e4da40bdc59c@google.com>
-Subject: [PATCH v2 1/2] rust: types: add Opaque::cast_from
-From: Alice Ryhl <aliceryhl@google.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Miguel Ojeda <ojeda@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?q?Bj=C3=B6rn_Roy_Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SEYPR06MB51343F38D4F9C130A4CE3FED9D7CA@SEYPR06MB5134.apcprd06.prod.outlook.com>
 
-Since commit b20fbbc08a36 ("rust: check type of `$ptr` in
-`container_of!`") we have enforced that the field pointer passed to
-container_of! must match the declared field. This caused mismatches when
-using a pointer to bindings::x for fields of type Opaque<bindings::x>.
+On Fri, Jun 20, 2025 at 05:24:39AM +0000, Jacky Chou wrote:
+> > > +				resets = <&syscon ASPEED_RESET_H2X>,
+> > > +					 <&syscon ASPEED_RESET_PCIE_RC_O>;
+> > > +				reset-names = "h2x", "perst";
+> > 
+> > PERST# is clearly a per-Root Port item since it's a signal on the
+> > PCIe connector.  Can you separate this and any other per-Root Port
+> > things into a Root Port stanza to leave open the possibility of
+> > future hardware that supports multiple Root Ports in the RC?
+> 
+> The PCIe RC that designed by us is only one root port.
 
-This situation encourages the user to simply pass field.cast() to the
-container_of! macro, but this is not great because you might
-accidentally pass a *mut bindings::y when the field type is
-Opaque<bindings::x>, which would be wrong.
+Yes.  But this driver may be used in the future for other RCs that
+include more than one Root Port, and it would be good if that didn't
+require structural changes to the DT.  Also, there are RCs from other
+vendors that include more than one Root Port, and I'd like all the DTs
+and drivers to have similar structure.
 
-To help catch this kind of mistake, add a new Opaque::cast_from that
-wraps a raw pointer in Opaque without changing the inner type. Also
-update the docs to reflect this as well as some existing users.
-
-Signed-off-by: Alice Ryhl <aliceryhl@google.com>
----
- rust/kernel/drm/device.rs  | 4 +---
- rust/kernel/drm/gem/mod.rs | 4 +---
- rust/kernel/lib.rs         | 7 +++++++
- rust/kernel/types.rs       | 5 +++++
- 4 files changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/rust/kernel/drm/device.rs b/rust/kernel/drm/device.rs
-index 624d7a4c83ead64b93325189f481d9b37c3c6eae..5731746eaea63296f418e34892e05c9960c45a90 100644
---- a/rust/kernel/drm/device.rs
-+++ b/rust/kernel/drm/device.rs
-@@ -135,11 +135,9 @@ pub(crate) fn as_raw(&self) -> *mut bindings::drm_device {
-     ///
-     /// `ptr` must be a valid pointer to a `struct device` embedded in `Self`.
-     unsafe fn from_drm_device(ptr: *const bindings::drm_device) -> *mut Self {
--        let ptr: *const Opaque<bindings::drm_device> = ptr.cast();
--
-         // SAFETY: By the safety requirements of this function `ptr` is a valid pointer to a
-         // `struct drm_device` embedded in `Self`.
--        unsafe { crate::container_of!(ptr, Self, dev) }.cast_mut()
-+        unsafe { crate::container_of!(Opaque::cast_from(ptr), Self, dev) }.cast_mut()
-     }
- 
-     /// Not intended to be called externally, except via declare_drm_ioctls!()
-diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
-index 4cd69fa84318c3ff2cec57949e9bab05559a3c2f..6f914ae0a5aade12a50eb15a029362d4d636bf76 100644
---- a/rust/kernel/drm/gem/mod.rs
-+++ b/rust/kernel/drm/gem/mod.rs
-@@ -125,11 +125,9 @@ fn as_raw(&self) -> *mut bindings::drm_gem_object {
-     }
- 
-     unsafe fn as_ref<'a>(self_ptr: *mut bindings::drm_gem_object) -> &'a Self {
--        let self_ptr: *mut Opaque<bindings::drm_gem_object> = self_ptr.cast();
--
-         // SAFETY: `obj` is guaranteed to be in an `Object<T>` via the safety contract of this
-         // function
--        unsafe { &*crate::container_of!(self_ptr, Object<T>, obj) }
-+        unsafe { &*crate::container_of!(Opaque::cast_from(self_ptr), Object<T>, obj) }
-     }
- }
- 
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 6b4774b2b1c37f4da1866e993be6230bc6715841..529ce907499679997415cbaa6a97ac3939587a11 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -204,6 +204,13 @@ fn panic(info: &core::panic::PanicInfo<'_>) -> ! {
- 
- /// Produces a pointer to an object from a pointer to one of its fields.
- ///
-+/// If you encounter a type mismatch due to the [`Opaque`] type, then use [`Opaque::raw_get`] or
-+/// [`Opaque::cast_from`] to resolve the mismatch.
-+///
-+/// [`Opaque`]: crate::types::Opaque
-+/// [`Opaque::raw_get`]: crate::types::Opaque::raw_get
-+/// [`Opaque::cast_from`]: crate::types::Opaque::cast_from
-+///
- /// # Safety
- ///
- /// The pointer passed to this macro, and the pointer returned by this macro, must both be in
-diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-index 22985b6f69820d6df8ff3aae0bf815fad36a9d92..82e0c6fa5646dfd2aea52c8fe9ada769ad427e50 100644
---- a/rust/kernel/types.rs
-+++ b/rust/kernel/types.rs
-@@ -413,6 +413,11 @@ pub const fn get(&self) -> *mut T {
-     pub const fn raw_get(this: *const Self) -> *mut T {
-         UnsafeCell::raw_get(this.cast::<UnsafeCell<MaybeUninit<T>>>()).cast::<T>()
-     }
-+
-+    /// The opposite operation of [`Opaque::raw_get`].
-+    pub const fn cast_from(this: *const T) -> *const Self {
-+        this.cast()
-+    }
- }
- 
- /// Types that are _always_ reference counted.
-
--- 
-2.50.0.714.g196bf9f422-goog
-
+Bjorn
