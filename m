@@ -1,111 +1,68 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFBB627FB31
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+Received: from gate.crashing.org (gate.crashing.org [63.228.1.57])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC6532A1A4;
+	Tue, 24 Jun 2025 13:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.228.1.57
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750771988; cv=none; b=fQL4oP+BaFvdy+0WV7VyZZbeyBRg4FZGZqh9aOu4dyiO33R5zgL7F+whuAn8KnMK0VRP9y9Mz5JS6rwlt3QtvMP/gzaDnkPz9kIh7wq/GfPPbZES+OkFx5Qe86qp9KQ8m19rQcU+qh/MutTa+qKAQ3JSAAVlM1Cu/RS4kmFoZ6A=
+	t=1750772096; cv=none; b=p2zAUHgQCuzBVVejIex1mo47f1DtNR0/h3KppzEsmECf5+nCaBkDyBK4sEU1q+e5291FXYRHDaRfMMTKhdYDVfsTVYtDYKK18Ht9iuAc8SQJAmIl/3nAe1BKUixG1YMyios1ZWIo8UElQmlezQZLO6bLTsnrZ8dIy1V2WvUb7dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750771988; c=relaxed/simple;
-	bh=2aYjxn/XjyqfROJtwhDsYywKfhT/JjZo+9HmvBofW1o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BH4gZeNxmOz6ZCOXSOQ1HvhyUhAXIX6xjBxQUZ3ez4c9Qd3zb55Oa3pP2YcyH1orRBteYNXyhh6SieSNx3+/Frpc+/yb8LQ074O038kHEDXbj89dyVANSPEk++j5+s7C/QyUewVJCsqB8cnCZEe9mPLXRPKj8tmTl6jw+IZ30yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=K/ReQUi3; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K/ReQUi3"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-acbb85ce788so87001266b.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:33:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750771985; x=1751376785; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tkj6v/oyYjnLDQvdndgBTk2Muh6SQTWgkcZpBQ/t9Hg=;
-        b=K/ReQUi3eOOJcY1jqxMDEaPmV8o/99W2V21rfnkTbPHZBkJL70o+rihqgCxoynfV0m
-         EwZFTtQXi9Qenv+w4ZKIRfxQYZXycEnsb5dlofEYuDhrljHNypCqQ1TmXCB5Mjvodej5
-         05vro4Rk4zdHEv7uC3l0wjr48IgKTuaH5+3/Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750771985; x=1751376785;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Tkj6v/oyYjnLDQvdndgBTk2Muh6SQTWgkcZpBQ/t9Hg=;
-        b=T0XhEukll8QshC72r+GX6aDZ0IRhnhSzcTaupMgelQRxwdpfoySZJa5CQ2fVdZV19W
-         Cbw2lrGRupzmLlRzJKs8cMQLGmI0uAFh+XaKKhBDLIEvRmdVDYAW4dqsRsS/ItcKdpF0
-         +rAc7EMFJ5KD9lTPHs3unw4iKlhUboPtiPcda89J+2Y+VFIion+8kArnTWNJFimeDzKw
-         a1Hwyo4o6DIR+4eYU1RCqIY6ftni16rv5tkamiBb/gYnL8l/hPXLZNgBJeOkt1EZHaSy
-         OD2bOI3Y3/hxCfbCq3bAIERrBn7hi3hdpWWz+qlyjnUl9nOmoW3dLgdkto+QZ3XEHaS3
-         XQhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUjWtyntUB6m4979HaaBSDfwggGlfICTEb9LSV/oI7b0DKGumMxSzdVqIy+SYKGOw5TWe9D+pnhw/HO8I8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOgoOG7z1oWqGSJvYCwCJQmj7BWwt5bMoi639V59rvPnQ8efKn
-	8LlKP5zO0EhMSWkM+vJG8Vv+DrZGl/gb+MR5NdWFcPgFcNieEex6UI8MIHotI+pqaQ==
-X-Gm-Gg: ASbGncvTHibmzh6Mbtn9nZVq2SFmlL5Di6FYB37v5Q9XuKOTYqmWnCXTzc6qyrN1Oad
-	49SL4Q/Shue3MoPZjskFcu76m/UxYTAO9nDUKFHR4k7h2mXLqFwc4ZXVPAXC61lvLyjvRpEUij6
-	rJ1qnsJ9M5HbcYtgexkGkPviFhAC9meAi5PFf8oL+ez7PFB/5xqfg4Bzf/cRk53iVuqk6W2L+nq
-	Djn+Hw94gciqUbxnxgEzfonY7oFVirYZO25RL444hnqhU9DO1HCSqH9BOjoFlyhWD1gopNgsCTP
-	NcLqdodzy3dsIKRxjNnFjL26/0N21FyjezlTXVvwZcs3/mWTx+KnpOtDM1M93JT3Jl4uZlzemrC
-	cjkdAeCgKwWX/5glTuN9vA/dU0A6xdezZRoz4RJHkvEg6iTtXKZz0
-X-Google-Smtp-Source: AGHT+IEe0SD7CtPOT2GsU04+3bSuhfq+kqQCtC4tVp5owq6ZynhgbyzhdLvK/T4ZiLjHJSHP8BIZCw==
-X-Received: by 2002:a17:907:948a:b0:ade:bf32:b05a with SMTP id a640c23a62f3a-ae0576a05f2mr1363893566b.0.1750771985028;
-        Tue, 24 Jun 2025 06:33:05 -0700 (PDT)
-Received: from akuchynski.c.googlers.com.com (72.144.91.34.bc.googleusercontent.com. [34.91.144.72])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053edc0f5sm888265966b.59.2025.06.24.06.33.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 06:33:04 -0700 (PDT)
-From: Andrei Kuchynski <akuchynski@chromium.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Jos Wang <joswang@lenovo.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Andrei Kuchynski <akuchynski@chromium.org>,
-	stable@vger.kernel.org
-Subject: [PATCH] usb: typec: displayport: Fix potential deadlock
-Date: Tue, 24 Jun 2025 13:32:46 +0000
-Message-ID: <20250624133246.3936737-1-akuchynski@chromium.org>
-X-Mailer: git-send-email 2.50.0.rc2.761.g2dc52ea45b-goog
+	s=arc-20240116; t=1750772096; c=relaxed/simple;
+	bh=l8hlToF1Oci/MZLkd/37EWZi6SIO9bMm5mseHYujdR4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iBA5Fq6YIjLRjcG8/HcZJhvV+2khNq6mGL7IIL0NVV5EDu6guq/JX3Q3L3waq8W6RqLekqIT2pmhbzH9P/MgpUCWYjmM4tUx2UISV6G+VbcqFryQFCMLJWUPy2sVE2ig2DNwj2JEfphUtemQ4gxDy0SfI1c9/VbsHJra1mJOMc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org; spf=pass smtp.mailfrom=kernel.crashing.org; arc=none smtp.client-ip=63.228.1.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.crashing.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.crashing.org
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+	by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 55ODHH69017475;
+	Tue, 24 Jun 2025 08:17:17 -0500
+Received: (from segher@localhost)
+	by gate.crashing.org (8.14.1/8.14.1/Submit) id 55ODHFe6017474;
+	Tue, 24 Jun 2025 08:17:15 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date: Tue, 24 Jun 2025 08:17:14 -0500
+From: Segher Boessenkool <segher@kernel.crashing.org>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: David Laight <david.laight.linux@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Andre Almeida <andrealmeid@igalia.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH 0/5] powerpc: Implement masked user access
+Message-ID: <20250624131714.GG17294@gate.crashing.org>
+References: <cover.1750585239.git.christophe.leroy@csgroup.eu> <20250622172043.3fb0e54c@pumpkin> <ff2662ca-3b86-425b-97f8-3883f1018e83@csgroup.eu>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ff2662ca-3b86-425b-97f8-3883f1018e83@csgroup.eu>
+User-Agent: Mutt/1.4.2.3i
 
-The deadlock can occur due to a recursive lock acquisition of
-`cros_typec_altmode_data::mutex`.
-The call chain is as follows:
-1. cros_typec_altmode_work() acquires the mutex
-2. typec_altmode_vdm() -> dp_altmode_vdm() ->
-3. typec_altmode_exit() -> cros_typec_altmode_exit()
-4. cros_typec_altmode_exit() attempts to acquire the mutex again
+On Tue, Jun 24, 2025 at 07:27:47AM +0200, Christophe Leroy wrote:
+> Ah ok, I overlooked that, I didn't know the cmove instruction, seem 
+> similar to the isel instruction on powerpc e500.
 
-To prevent this, defer the `typec_altmode_exit()` call by scheduling
-it rather than calling it directly from within the mutex-protected
-context.
+cmove does a move (register or memory) when some condition is true.
+isel (which is base PowerPC, not something "e500" only) is a
+computational instruction, it copies one of two registers to a third,
+which of the two is decided by any bit in the condition register.
 
-Cc: stable@vger.kernel.org
-Fixes: b4b38ffb38c9 ("usb: typec: displayport: Receive DP Status Update NAK request exit dp altmode")
-Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
----
- drivers/usb/typec/altmodes/displayport.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+But sure, seen from very far off both isel and cmove can be used to
+implemente the ternary operator ("?:"), are similar in that way :-)
 
-diff --git a/drivers/usb/typec/altmodes/displayport.c b/drivers/usb/typec/altmodes/displayport.c
-index b09b58d7311d..2abbe4de3216 100644
---- a/drivers/usb/typec/altmodes/displayport.c
-+++ b/drivers/usb/typec/altmodes/displayport.c
-@@ -394,8 +394,7 @@ static int dp_altmode_vdm(struct typec_altmode *alt,
- 	case CMDT_RSP_NAK:
- 		switch (cmd) {
- 		case DP_CMD_STATUS_UPDATE:
--			if (typec_altmode_exit(alt))
--				dev_err(&dp->alt->dev, "Exit Mode Failed!\n");
-+			dp->state = DP_STATE_EXIT;
- 			break;
- 		case DP_CMD_CONFIGURE:
- 			dp->data.conf = 0;
--- 
-2.50.0.rc2.761.g2dc52ea45b-goog
 
+Segher
