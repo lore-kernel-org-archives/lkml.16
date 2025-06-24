@@ -1,107 +1,116 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39AC17A2E2
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D22529A9C3;
+	Tue, 24 Jun 2025 19:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750793472; cv=none; b=FgVI4QWufyT1TR9eii4C8WASMjvGREyC9TP6RXSJyEAVKY8kFSnkpqQyQ1BIOzos/EHdTNDyRqVrGfCWUnSHnvdbWW9L9YVUcnmdnwnvqOR05kfrFFXndlCcGJW7bsiohr6ezl9p+Wt9XVGBUomzyyc9ZH30wNAb0tpjwLEPdCc=
+	t=1750793493; cv=none; b=WCUeQWZZi9tY18hhV4R4yox6s/Rsrt0fqpDiQSSCBELMhyU0w4mg6v5bKv2BDEzS+8aoB2nqyPNXFnngVRAYqD/t18tBosFyKxCEfn+cIF5dgtHzV69IYerr8eqSOqUKwvM5Fujy7SJ1ltYLv9UoZ2uG0qYXlLXJvBytY87b0ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750793472; c=relaxed/simple;
-	bh=/unps/Zj+Fo5fjYrblFijTt7uQ/0xgDzX3gU/IlPovE=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=mQAITR+fgjCe7Rus29X/pFG0/eRt19bgPhk7UCLl1zv3MW6wZTxndHfHw/GTGgs8tmMCrnYpmtlYZZ2synHPz+B/NwvLlIq6nZK5YJL2583+IQiB+sVbcoZvGbu44ZLVnpxC1bfSCIwoiwA+c6uF3i+9MQWEgGCMXvFNQjUaE1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info; spf=pass smtp.mailfrom=jacekk.info; dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b=a6EUyojw; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jacekk.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jacekk.info
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jacekk.info header.i=@jacekk.info header.b="a6EUyojw"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ade4679fba7so147132166b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:31:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jacekk.info; s=g2024; t=1750793469; x=1751398269; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BUUktOVf8Mcbc6vJVhkswLwRwVDucF8ZH8DrIAMKlHE=;
-        b=a6EUyojw+/uMOt//RbCowJDGdxeuOvCF9SDuEnBEdTMV+smcuvMk0bJh1Nt6bLsKen
-         Sry9KPj5ntuYYxKEfR+Tx3mfyJ77BvPCFTeOATibvJs7SlMlSnmPflFpIYsw56q3TAlC
-         9kck/I+fEniv6xyfJz5ebwIvwlA2AfL32A8BxkF8bMMANY9B1MhHzxyIYcZmAfKJptG5
-         OT7TfQewP6bM/mRtO/juscBtKnAHDdqtTBnc4RBksbu8wMyX7p2qMIzJ3St9XNmcBmqI
-         QyIVxFKojwtSr65jue33xs/05UMCNHKbflujMreJR+shW41p1bCek5I6EZeLyuNbVesJ
-         l5uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750793469; x=1751398269;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BUUktOVf8Mcbc6vJVhkswLwRwVDucF8ZH8DrIAMKlHE=;
-        b=ZN4js0lgZnMhAE78yYbLS9wxtM1SnVAg9qtoyoENGmsOpOHBC1HNHtT7oZOvTsele4
-         R/xYRhmYbtZ3hKj0c+xLSoqAOFjfyxTOXG0tyoUVMVe8rk8i36PwIf9LulauJUmCRML/
-         leaEjBLZMQR0V6YRHA3QKoVlDrU6lv+bLW3KJvZKQ//2o0fJZhFUUufYqebSctVmR2v9
-         Ab5iOd6OQUZy2MPv+xZ+unVkRJCOwj18TeR7fy8NhHmwq0MOos8T0XwB03fubbIhH39f
-         vz/ZcUBfLCNfT0JUWOI1gotAaIswen6AlEV3Z0OLw0XBWPtEAKER/ebms3MDV8PfnPxP
-         6fFg==
-X-Forwarded-Encrypted: i=1; AJvYcCXIEWy7ncZPa7bU7Ho7ZWtyEujBslw9X/MVhNIMtKbkfMa2cuVLQEDw6QY9blQzZtWRXajDjedxFWt0rJU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTUokenewuryEEhstxKD4smMZ/L37xUw+DlOpFPNxauuJP13jq
-	2BTF4glopW8c74bNkzO72VGgifr4lJG1cEkWcbC4tT7xORUqXbZsCVtAsqnKW8CRyA==
-X-Gm-Gg: ASbGncuDwY/Pbn/nE87iVgb0jFr5bi7yKp7e+zm7i/jGa8yVnTjBk0iqVY581BKoqSy
-	v0DvUrawyNMHVbtsO7LBDot4KZ6+wvJur/Klmot+28MUY/mS+OnjJ0yBVu2GFw/4Sk9pEs876q+
-	/fScGeOnRLkKQOg0oYeGZq0N2ZOjev/vw0mYnJqhSvCFHI58ZzslUP6dGXJgiPVQEXtd+A+pYlY
-	5gMfENAeqQQelFW4cI2W9FJp/PiutOFWMnZEONlgT26ST9MsE+YNR0MUyw6wok29NF3ZMHTEsJl
-	2P/sd5xbYahF6YrlAQvdY0yhjCt/Ij1hfcFM4qMeuKu2qbC4ABeccByYT1ZanjS9
-X-Google-Smtp-Source: AGHT+IGLQgQrFQXmzCZ57AkjARniUBs6D5iqeQVWxWnIx//eINokE70nU4ML3YSxsa95lxOmkG/l4Q==
-X-Received: by 2002:a17:906:cada:b0:ae0:ad5c:4185 with SMTP id a640c23a62f3a-ae0bf21d078mr38361966b.57.1750793469403;
-        Tue, 24 Jun 2025 12:31:09 -0700 (PDT)
-Received: from [192.168.0.114] ([91.196.212.106])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0a0aa1ceesm243467366b.70.2025.06.24.12.31.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 12:31:09 -0700 (PDT)
-From: Jacek Kowalski <jacek@jacekk.info>
-X-Google-Original-From: Jacek Kowalski <Jacek@jacekk.info>
-Message-ID: <5589e73f-2f18-4c08-8d10-0498555dd6be@jacekk.info>
-Date: Tue, 24 Jun 2025 21:31:08 +0200
+	s=arc-20240116; t=1750793493; c=relaxed/simple;
+	bh=gANlxRF2zdP1sktj1/IctJiz1DtjRXxYfySJYboqpfI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OrTBLvW/vTOSz7TarSNO/6LJbZXD1Pbk+i1t267D5xwTLTv8B+l/pmBcPxWxKSizXNtaW+Fr69TWFhfzO1HRnoTDB3xrjRpt0ASON32MYds8B0yLDAWNKBJswO0jQ62esltdaPpXhw5FzYlToJ9coQj90UagWmChfWbuC9YrXe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf06.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 22750809C3;
+	Tue, 24 Jun 2025 19:31:29 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf06.hostedemail.com (Postfix) with ESMTPA id B26872000E;
+	Tue, 24 Jun 2025 19:31:26 +0000 (UTC)
+Date: Tue, 24 Jun 2025 15:31:25 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+ Jonathan Corbet <corbet@lwn.net>, Masami Hiramatsu <mhiramat@kernel.org>,
+ linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Ingo Molnar
+ <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Tomas Glozar
+ <tglozar@redhat.com>, Juri Lelli <jlelli@redhat.com>,
+ john.ogness@linutronix.de
+Subject: Re: [RFC PATCH v2 09/12] rv: Replace tss monitor with more complete
+ sts
+Message-ID: <20250624153125.56eab22a@batman.local.home>
+In-Reply-To: <20250624155053.wOoDw8ff@linutronix.de>
+References: <20250514084314.57976-1-gmonaco@redhat.com>
+	<20250514084314.57976-10-gmonaco@redhat.com>
+	<20250624073609.OA9Q1V4g@linutronix.de>
+	<e2b2e78a9c66973d90a9dbeea83b88b97182c36e.camel@redhat.com>
+	<20250624155053.wOoDw8ff@linutronix.de>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: [PATCH 4/4] igc: drop checksum constant cast to u16 in comparisons
-To: Tony Nguyen <anthony.l.nguyen@intel.com>,
- Przemek Kitszel <przemyslaw.kitszel@intel.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-Cc: intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <46b2b70d-bf53-4b0a-a9f3-dfd8493295b9@jacekk.info>
-Content-Language: en-US
-In-Reply-To: <46b2b70d-bf53-4b0a-a9f3-dfd8493295b9@jacekk.info>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: B26872000E
+X-Rspamd-Server: rspamout08
+X-Stat-Signature: cdk5t6dxj7s4h9hnmwxmiguqxgs4kmkr
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX19xx8Qq6pIitKLQlSLGjZW19IMlUGEbQ1g=
+X-HE-Tag: 1750793486-273157
+X-HE-Meta: U2FsdGVkX1+cxL1G8r9Css4NkKaN4UGBNh6NjBEhfGXBFHGvLXob/QbsmCDysyoHkmBOyfFsbsw4dmsD1tR69OVfx+BTlGCNAPrA1Od+cy+oVsTbkUN6TFcFAwuPkl8hkjCJ7YwBRxcjzLkV1U54PJp7OKOFGPFM0ut2VXA2HZqV53DgjzJKn7g5cxgUXzvfKrQX5sWBVFwj3hr/hwCtUAcn8wjVqgcpXLcNgETcmpq5sq0pPhu03GmAp3SRoRTkEDJcw6bSf6Za4uzKBPJTcfAmMWfA5nsJpRkAu3STHGIKwLq+2jut/INlHOI7cLWHMTmbkebrn+vdIheFY/o+SK4Ub5QMp3rsvWKYUkFQmBz/X7srUtpkqTvO4+nQKQOhdJmJcLBSa9+LP54VJNuYqQ==
 
-Signed-off-by: Jacek Kowalski <Jacek@jacekk.info>
-Suggested-by: Simon Horman <horms@kernel.org>
----
- drivers/net/ethernet/intel/igc/igc_nvm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, 24 Jun 2025 17:50:53 +0200
+Nam Cao <namcao@linutronix.de> wrote:
 
-diff --git a/drivers/net/ethernet/intel/igc/igc_nvm.c b/drivers/net/ethernet/intel/igc/igc_nvm.c
-index efd121c03967..c4fb35071636 100644
---- a/drivers/net/ethernet/intel/igc/igc_nvm.c
-+++ b/drivers/net/ethernet/intel/igc/igc_nvm.c
-@@ -123,7 +123,7 @@ s32 igc_validate_nvm_checksum(struct igc_hw *hw)
- 		checksum += nvm_data;
- 	}
- 
--	if (checksum != (u16)NVM_SUM) {
-+	if (checksum != NVM_SUM) {
- 		hw_dbg("NVM Checksum Invalid\n");
- 		ret_val = -IGC_ERR_NVM;
- 		goto out;
--- 
-2.47.2
+> I would like that. Ideally, the userspace tools only use tracepoints based
+> on available_monitors.
+> 
+> However, people may not do that, and just use tracepoints directly.
+> 
+> You could argue that those tools are not correctly designed. Therefore it
+> is their fault that the tools are broken after updating kernel.
+> 
+> On the other hand, there is this sentiment that we must never break
+> userspace.
+> 
+> I don't know enough to judge this. Maybe @Steven has something to add?
 
+So WRT tracepoints, it's the same as a tree falling in the woods[1].
+
+If a user space ABI "breaks" but no user space tooling notices, did it
+really break?
+
+The answer is "No".
+
+As for tracepoints, its fine to change them until it's not ;-)
+
+We had only one case that a tracepoint change broke user space where
+Linus reverted that change [2]. That was because powertop hard coded
+the addresses to the tracepoint field offsets and didn't use the format
+files (what libtraceevent gives you). And I removed an unused common
+field, which shifted everything and broke powertop.
+
+But I converted powertop to use libtraceevent, waited a few year until
+all the major distros provided the new powertop, and then I removed the
+field. Guess what? Nobody noticed. (And old powertop would still break).
+
+BPF taps into most tracepoints that change all the time. I'm cleaning
+up unused tracepoints which included a couple that were left around to
+"not break old BPF programs". I replied, if an old BPF program relies on
+that tracepoint, keeping it around (but not used) is *worse* than
+having that BPF program break. That's because that BPF program is
+still broken (it's expecting that unused tracepoint to fire) but now
+it's getting garbage for output (that being no output!). It's worse
+because it's "silently failing" and the user may be relying on
+something they don't know is broken.
+
+So yeah, change the tracepoint when the code its tracing changes. That
+way any tooling depending on it, knows that it can no longer depend on
+it.
+
+Anything using tracepoints are pretty much tied to the kernel anyway,
+and when the kernel updates, the tooling that is relying on it also
+needs to be updated otherwise it's not getting the information it is
+expecting. That most definitely includes monitors.
+
+
+-- Steve
+
+
+[1] https://en.wikipedia.org/wiki/If_a_tree_falls_in_a_forest_and_no_one_is_around_to_hear_it,_does_it_make_a_sound%3F
+[2] https://lwn.net/Articles/442113/
