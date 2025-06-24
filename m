@@ -1,218 +1,292 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from neil.brown.name (neil.brown.name [103.29.64.221])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1F65182BC
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:15:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215C5182BC;
+	Tue, 24 Jun 2025 22:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.29.64.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750803351; cv=none; b=Grb31ahdZt+jwBFyrtTXK883OdWV4pW+g+L1BXiXzQV7S47isli0+li7w1NV38qNRB23zR/OwOtSoYsynUp09YrkRmtFBegQJIg1aiuuo8TfsvoybzA2rV4FnyLhivhb1RVbiZY1koD6g2zqqXMOwy1L1Gisi4x/e3Rmw+3vovk=
+	t=1750803362; cv=none; b=Xaf02rR+4AZcnHC32h0hqVgposCW7u29FhzanQtBFHRJNGz3nbp4nZ8YAAMu0KGlBOtKTtCOIUJFPhfdUn/q1LDIo/nwu9goct6C97y5iFdAjJJimlY6POtI8PcgiCFejs0ct844kHtnlSo61X+hBEGKHSQg8DOVA5aoN84IKPo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750803351; c=relaxed/simple;
-	bh=gwlSQUo9b3loZtV5PPRtTwSVR7W7Hsv9ks2xYKkqm9Y=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GApIihtlFa90PC9C2R/APKmHMer9Pe2sE/7wXStvuk3Z/VgftftPeHIRi2jTjZb3v8hOzOaR2iPq+wT1/IStukl18sXU+wevSYb5gXDq0CX4betUh59Xfgmu+LvBaCD4FRUp8QQWzlPAzUdHLdUYSdZnRn+eSHesSK79h/QpGBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ksJaTaO6; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ctshao.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ksJaTaO6"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311ae2b6647so819803a91.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:15:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750803349; x=1751408149; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=L9H8rsZhOzIt+UI6UH9Y+2ZDnDaptTpBgxdxZU1WPLg=;
-        b=ksJaTaO6b5GibAQ6aXWFVxvaN3cFfC5SX55PR4X2p6FAA4kWzGJSVqbggEurokOZpI
-         es5hXpdX7ZEMNR7hdun/j3mS3FHPdbDUu7kTXmYXlUXVMIgtztqbgfYWcwWegaKqysOZ
-         mhlRqRNHxarH0dOUGA7uxByBSXUSvKu6T3vdOtY8j4d1kLJDNKeEjwc4Q70pxXd500Iq
-         Da+ZJ2Hd3gTYYwB9mqpT18vvY8wqSqjUh6AdIqFJiS/4xAXbdz3HhN7cMoz2GqKPtpmL
-         jEjrsjzO0qXgcZitHjbt/RsGDx+uKhSZEJZJLwzvFDswtPkTpoWMInvF84pb8OCoJME/
-         3pNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750803349; x=1751408149;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=L9H8rsZhOzIt+UI6UH9Y+2ZDnDaptTpBgxdxZU1WPLg=;
-        b=SC0L1Bd4hHKEWQRaGWK8QLIvFgf0cdcYfR/ITkArMpp7u3cVVEx+QGrakeewNAFuxs
-         /QPtQ64C933Np6brZWcsaFudLyLUA/ilcTRhI19RiSwOAeF9qEbiH+RLXP4fqJfdqMzT
-         eH0vGcvIWCoxcOHyN+8de+pHhkIy592quRHWE+sfpRe/7ANDWcjAa6fc1ubHkdGLbaB9
-         jgwyLlV/fJ213y14IdJgJa7cXPXXYOtwJ9zARoGj69p9ZbSGOFhPxBINYCoUDDaSNRO+
-         W7DznRJbHzEbRO7x/2fUH1ztQ+jW7Rr45FjJ1U1CgTGJ+l6gvZ/Bpwk2sEUyO1iQifHI
-         WS1g==
-X-Gm-Message-State: AOJu0YxwON8ddp8EqyQTpARsL0HP7ebLnyq9YkBHXP1/5lkpCVs1z01d
-	EZWPp61PJgpbyyD4JxQ+k5hpF5SlPtdZ+dXVbhWcZnxvSDVBoe9bxqylnaLd5RJ3S7bZQ88J2Mo
-	yhjq6rn7yU/NqthgJ3VmyEqKhdgjdWESZxYpgR1AHHYzo+tGeJ9lg8Fxjikon91xHRnJ1ourhKM
-	002DTH6W26aRl9d92G9AdSPJLVJBrS7dfaDI7Za3GPcpkU
-X-Google-Smtp-Source: AGHT+IHN0X75O1jyQ0O5RrXXUq94SnNifv8XciuoFnzyWufKBYKYIO8kqQ/AmI4Lk1cbTKzSMkhD5VoerdI=
-X-Received: from pjbsz14.prod.google.com ([2002:a17:90b:2d4e:b0:2fc:2c9c:880])
- (user=ctshao job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2709:b0:313:2adc:b4c4
- with SMTP id 98e67ed59e1d1-315f26b2ebdmr706693a91.24.1750803349222; Tue, 24
- Jun 2025 15:15:49 -0700 (PDT)
-Date: Tue, 24 Jun 2025 15:14:58 -0700
+	s=arc-20240116; t=1750803362; c=relaxed/simple;
+	bh=razYr1e3o6cY9CMOfpwypwB3zJ252AOYeEy9dtVsivA=;
+	h=Content-Type:MIME-Version:From:To:Cc:Subject:In-reply-to:
+	 References:Date:Message-id; b=afRgWzfnnhVU6h9cn/0E9ht+e4nAapGudeDqKDpow1p7exPw0xO+bBuLiwAZ8yEs0D8hsbqR15HMCVTYERTIq5WYr4O5bsWW3gJ5kxO6BdeHUJnQ9w0R6FxLkAR8wDoRJyds2Kj5+EtP/CLK3EA2SS6RktUrbcfEcUG0YPRxIe4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name; spf=pass smtp.mailfrom=neil.brown.name; arc=none smtp.client-ip=103.29.64.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=brown.name
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neil.brown.name
+Received: from 196.186.233.220.static.exetel.com.au ([220.233.186.196] helo=home.neil.brown.name)
+	by neil.brown.name with esmtp (Exim 4.95)
+	(envelope-from <mr@neil.brown.name>)
+	id 1uUBvk-0043lo-Ug;
+	Tue, 24 Jun 2025 22:15:52 +0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
-Message-ID: <20250624221545.1711008-1-ctshao@google.com>
-Subject: [PATCH v3] perf stat: Fix uncore aggregation number
-From: Chun-Tse Shao <ctshao@google.com>
-To: linux-kernel@vger.kernel.org
-Cc: wy.shih90@gmail.com, Chun-Tse Shao <ctshao@google.com>, Ian Rogers <irogers@google.com>, 
-	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, james.clark@linaro.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+From: "NeilBrown" <neil@brown.name>
+To: "Chuck Lever" <chuck.lever@oracle.com>
+Cc: "Su Hui" <suhui@nfschina.com>, jlayton@kernel.org, okorniev@redhat.com,
+ Dai.Ngo@oracle.com, tom@talpey.com, linux-nfs@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] nfsd: Using guard() to simplify nfsd_cache_lookup()
+In-reply-to: <cecf4793-d737-4501-a306-0c5a74daaf30@oracle.com>
+References: <>, <cecf4793-d737-4501-a306-0c5a74daaf30@oracle.com>
+Date: Wed, 25 Jun 2025 08:15:51 +1000
+Message-id: <175080335129.2280845.12285110458405652015@noble.neil.brown.name>
 
-Follow up:
-lore.kernel.org/CAP-5=fVDF4-qYL1Lm7efgiHk7X=_nw_nEFMBZFMcsnOOJgX4Kg@mail.gmail.com/
+On Wed, 25 Jun 2025, Chuck Lever wrote:
+> On 6/23/25 8:19 PM, NeilBrown wrote:
+> > On Mon, 23 Jun 2025, Su Hui wrote:
+> >> Using guard() to replace *unlock* label. guard() makes lock/unlock code
+> >> more clear. Change the order of the code to let all lock code in the
+> >> same scope. No functional changes.
+> >=20
+> > While I agree that this code could usefully be cleaned up and that you
+> > have made some improvements, I think the use of guard() is a nearly
+> > insignificant part of the change.  You could easily do exactly the same
+> > patch without using guard() but having and explicit spin_unlock() before
+> > the new return.  That doesn't mean you shouldn't use guard(), but it
+> > does mean that the comment explaining the change could be more usefully
+> > focused on the "Change the order ..." part, and maybe explain what that
+> > is important.
+> >=20
+> > I actually think there is room for other changes which would make the
+> > code even better:
+> > - Change nfsd_prune_bucket_locked() to nfsd_prune_bucket().  Have it
+> >   take the lock when needed, then drop it, then call
+> >   nfsd_cacherep_dispose() - and return the count.
+> > - change nfsd_cache_insert to also skip updating the chain length stats
+> >   when it finds a match - in that case the "entries" isn't a chain
+> >   length. So just  lru_put_end(), return.  Have it return NULL if
+> >   no match was found
+> > - after the found_entry label don't use nfsd_reply_cache_free_locked(),
+> >   just free rp.  It has never been included in any rbtree or list, so it
+> >   doesn't need to be removed.
+> > - I'd be tempted to have nfsd_cache_insert() take the spinlock itself
+> >   and call it under rcu_read_lock() - and use RCU to free the cached
+> >   items.=20
+> > - put the chunk of code after the found_entry label into a separate
+> >   function and instead just return RC_REPLY (and maybe rename that
+> >   RC_CACHED).  Then in nfsd_dispatch(), if RC_CACHED was returned, call
+> >   that function that has the found_entry code.
+> >=20
+> > I think that would make the code a lot easier to follow.  Would you like
+> > to have a go at that - I suspect it would be several patches - or shall
+> > I do it?
+>=20
+> I'm going to counsel some caution.
+>=20
+> nfsd_cache_lookup() is a hot path. Source code readability, though
+> important, is not the priority in this area.
+>=20
+> I'm happy to consider changes to this function, but the bottom line is
+> patches need to be accompanied by data that show that proposed code
+> modifications do not negatively impact performance. (Plus the usual
+> test results that show no impact to correctness).
+>=20
+> That data might include:
+> - flame graphs that show a decrease in CPU utilization
+> - objdump output showing a smaller instruction cache footprint
+>   and/or short instruction path lengths
+> - perf results showing better memory bandwidth
+> - perf results showing better branch prediction
+> - lockstat results showing less contention and/or shorter hold
+>   time on locks held in this path
+>=20
+> Macro benchmark results are also welcome: equal or lower latency for
+> NFSv3 operations, and equal or higher I/O throughput.
+>=20
+> The benefit for the scoped_guard construct is that it might make it more
+> difficult to add code that returns from this function with a lock held.
+> However, so far that hasn't been an issue.
+>=20
+> Thus I'm not sure there's a lot of strong technical justification for
+> modification of this code path. But, you might know of one -- if so,
+> please make sure that appears in the patch descriptions.
+>=20
+> What is more interesting to me is trying out more sophisticated abstract
+> data types for the DRC hashtable. rhashtable is one alternative; so is
+> Maple tree, which is supposed to handle lookups with more memory
+> bandwidth efficiency than walking a linked list.
+>=20
 
-The patch adds unit aggregation during evsel merge the aggregated uncore
-counters. Change the name of the column to `ctrs` and `counters` for
-json mode.
+While I generally like rhashtable there is an awkwardness.  It doesn't
+guarantee that an insert will always succeed.  If you get lots of new
+records that hash to the same value, it will start failing insert
+requests until is hash re-hashed the table with a new seed.  This is
+intended to defeat collision attacks.  That means we would need to drop
+requests sometimes.  Maybe that is OK.  The DRC could be the target of
+collision attacks so maybe we really do want to drop requests if
+rhashtable refuses to store them.
 
-Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
-cpumask="0,120"
-Before:
-  perf stat -e clockticks -I 1000 --per-socket
-  #           time socket cpus             counts unit events
-       1.001085024 S0        1         9615386315      clockticks
-       1.001085024 S1        1         9614287448      clockticks
-  perf stat -e clockticks -I 1000 --per-node
-  #           time node   cpus             counts unit events
-       1.001029867 N0        1         3205726984      clockticks
-       1.001029867 N1        1         3205444421      clockticks
-       1.001029867 N2        1         3205234018      clockticks
-       1.001029867 N3        1         3205224660      clockticks
-       1.001029867 N4        1         3205207213      clockticks
-       1.001029867 N5        1         3205528246      clockticks
-After:
-  perf stat -e clockticks -I 1000 --per-socket
-  #           time socket ctrs             counts unit events
-       1.001026071 S0       12         9619677996      clockticks
-       1.001026071 S1       12         9618612614      clockticks
-  perf stat -e clockticks -I 1000 --per-node
-  #           time node   ctrs             counts unit events
-       1.001027449 N0        4         3207251859      clockticks
-       1.001027449 N1        4         3207315930      clockticks
-       1.001027449 N2        4         3206981828      clockticks
-       1.001027449 N3        4         3206566126      clockticks
-       1.001027449 N4        4         3206032609      clockticks
-       1.001027449 N5        4         3205651355      clockticks
+I think the other area that could use improvement is pruning old entries.
+I would not include RC_INPROG entries in the lru at all - they are
+always ignored, and will be added when they are switched to RCU_DONE.
+I'd generally like to prune less often in larger batches, but removing
+each of the batch from the rbtree could hold the lock for longer than we
+would like.  I wonder if we could have an 'old' and a 'new' rbtree and
+when the 'old' gets too old or the 'new' get too full, we extract 'old',
+move 'new' to 'old', and outside the spinlock we free all of the moved
+'old'.
 
-Suggested-by: Ian Rogers <irogers@google.com>
-Signed-off-by: Chun-Tse Shao <ctshao@google.com>
----
-v3:
-  Rename the column to `ctrs` and `counters` in json mode.
+But if we switched to rhashtable, we probably wouldn't need an lru -
+just walk the entire table occasionally - there would be little conflict
+with concurrent lookups.
 
-v2: https://lore.kernel.org/20250612225324.3315450-1-ctshao@google.com/
-  Rename the column to `aggr_nr`.
-  Remove unnecessary comment.
+But as you say, measuring would be useful.  Hopefully the DRC lookup
+would be small contribution to the total request time, so we would need
+to measure just want happens in the code to compare different versions.
 
-v1: https://lore.kernel.org/20250611233239.3098064-1-ctshao@google.com/
+NeilBrown
 
- tools/perf/util/stat-display.c | 34 +++++++++++++++++-----------------
- tools/perf/util/stat.c         |  2 +-
- 2 files changed, 18 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-index 729ad5cd52cb..9cb5245a92aa 100644
---- a/tools/perf/util/stat-display.c
-+++ b/tools/perf/util/stat-display.c
-@@ -50,15 +50,15 @@ static int aggr_header_lens[] = {
- };
-
- static const char *aggr_header_csv[] = {
--	[AGGR_CORE] 	= 	"core,cpus,",
--	[AGGR_CACHE]	= 	"cache,cpus,",
--	[AGGR_CLUSTER]	= 	"cluster,cpus,",
--	[AGGR_DIE] 	= 	"die,cpus,",
--	[AGGR_SOCKET] 	= 	"socket,cpus,",
--	[AGGR_NONE] 	= 	"cpu,",
--	[AGGR_THREAD] 	= 	"comm-pid,",
--	[AGGR_NODE] 	= 	"node,",
--	[AGGR_GLOBAL] 	=	""
-+	[AGGR_CORE]	=	"core,ctrs,",
-+	[AGGR_CACHE]	=	"cache,ctrs,",
-+	[AGGR_CLUSTER]	=	"cluster,ctrs,",
-+	[AGGR_DIE]	=	"die,ctrs,",
-+	[AGGR_SOCKET]	=	"socket,ctrs,",
-+	[AGGR_NONE]	=	"cpu,",
-+	[AGGR_THREAD]	=	"comm-pid,",
-+	[AGGR_NODE]	=	"node,",
-+	[AGGR_GLOBAL]	=	""
- };
-
- static const char *aggr_header_std[] = {
-@@ -304,7 +304,7 @@ static void print_aggr_id_std(struct perf_stat_config *config,
- 		return;
- 	}
-
--	fprintf(output, "%-*s %*d ", aggr_header_lens[idx], buf, 4, aggr_nr);
-+	fprintf(output, "%-*s %*d ", aggr_header_lens[idx], buf, /*strlen("ctrs")*/ 4, aggr_nr);
- }
-
- static void print_aggr_id_csv(struct perf_stat_config *config,
-@@ -366,27 +366,27 @@ static void print_aggr_id_json(struct perf_stat_config *config, struct outstate
- {
- 	switch (config->aggr_mode) {
- 	case AGGR_CORE:
--		json_out(os, "\"core\" : \"S%d-D%d-C%d\", \"aggregate-number\" : %d",
-+		json_out(os, "\"core\" : \"S%d-D%d-C%d\", \"counters\" : %d",
- 			id.socket, id.die, id.core, aggr_nr);
- 		break;
- 	case AGGR_CACHE:
--		json_out(os, "\"cache\" : \"S%d-D%d-L%d-ID%d\", \"aggregate-number\" : %d",
-+		json_out(os, "\"cache\" : \"S%d-D%d-L%d-ID%d\", \"counters\" : %d",
- 			id.socket, id.die, id.cache_lvl, id.cache, aggr_nr);
- 		break;
- 	case AGGR_CLUSTER:
--		json_out(os, "\"cluster\" : \"S%d-D%d-CLS%d\", \"aggregate-number\" : %d",
-+		json_out(os, "\"cluster\" : \"S%d-D%d-CLS%d\", \"counters\" : %d",
- 			id.socket, id.die, id.cluster, aggr_nr);
- 		break;
- 	case AGGR_DIE:
--		json_out(os, "\"die\" : \"S%d-D%d\", \"aggregate-number\" : %d",
-+		json_out(os, "\"die\" : \"S%d-D%d\", \"counters\" : %d",
- 			id.socket, id.die, aggr_nr);
- 		break;
- 	case AGGR_SOCKET:
--		json_out(os, "\"socket\" : \"S%d\", \"aggregate-number\" : %d",
-+		json_out(os, "\"socket\" : \"S%d\", \"counters\" : %d",
- 			id.socket, aggr_nr);
- 		break;
- 	case AGGR_NODE:
--		json_out(os, "\"node\" : \"N%d\", \"aggregate-number\" : %d",
-+		json_out(os, "\"node\" : \"N%d\", \"counters\" : %d",
- 			id.node, aggr_nr);
- 		break;
- 	case AGGR_NONE:
-@@ -1317,7 +1317,7 @@ static void print_header_interval_std(struct perf_stat_config *config,
- 	case AGGR_CLUSTER:
- 	case AGGR_CACHE:
- 	case AGGR_CORE:
--		fprintf(output, "#%*s %-*s cpus",
-+		fprintf(output, "#%*s %-*s ctrs",
- 			INTERVAL_LEN - 1, "time",
- 			aggr_header_lens[config->aggr_mode],
- 			aggr_header_std[config->aggr_mode]);
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 355a7d5c8ab8..b0205e99a4c9 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -526,7 +526,7 @@ static int evsel__merge_aggr_counters(struct evsel *evsel, struct evsel *alias)
- 		struct perf_counts_values *aggr_counts_a = &ps_a->aggr[i].counts;
- 		struct perf_counts_values *aggr_counts_b = &ps_b->aggr[i].counts;
-
--		/* NB: don't increase aggr.nr for aliases */
-+		ps_a->aggr[i].nr += ps_b->aggr[i].nr;
-
- 		aggr_counts_a->val += aggr_counts_b->val;
- 		aggr_counts_a->ena += aggr_counts_b->ena;
---
-2.50.0.714.g196bf9f422-goog
+> Anyway, have fun, get creative, and let's see what comes up.
+>=20
+>=20
+> >> Signed-off-by: Su Hui <suhui@nfschina.com>
+> >> ---
+> >>  fs/nfsd/nfscache.c | 99 ++++++++++++++++++++++------------------------
+> >>  1 file changed, 48 insertions(+), 51 deletions(-)
+> >>
+> >> diff --git a/fs/nfsd/nfscache.c b/fs/nfsd/nfscache.c
+> >> index ba9d326b3de6..2d92adf3e6b0 100644
+> >> --- a/fs/nfsd/nfscache.c
+> >> +++ b/fs/nfsd/nfscache.c
+> >> @@ -489,7 +489,7 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsign=
+ed int start,
+> >> =20
+> >>  	if (type =3D=3D RC_NOCACHE) {
+> >>  		nfsd_stats_rc_nocache_inc(nn);
+> >> -		goto out;
+> >> +		return rtn;
+> >>  	}
+> >> =20
+> >>  	csum =3D nfsd_cache_csum(&rqstp->rq_arg, start, len);
+> >> @@ -500,64 +500,61 @@ int nfsd_cache_lookup(struct svc_rqst *rqstp, unsi=
+gned int start,
+> >>  	 */
+> >>  	rp =3D nfsd_cacherep_alloc(rqstp, csum, nn);
+> >>  	if (!rp)
+> >> -		goto out;
+> >> +		return rtn;
+> >> =20
+> >>  	b =3D nfsd_cache_bucket_find(rqstp->rq_xid, nn);
+> >> -	spin_lock(&b->cache_lock);
+> >> -	found =3D nfsd_cache_insert(b, rp, nn);
+> >> -	if (found !=3D rp)
+> >> -		goto found_entry;
+> >> -	*cacherep =3D rp;
+> >> -	rp->c_state =3D RC_INPROG;
+> >> -	nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+> >> -	spin_unlock(&b->cache_lock);
+> >> +	scoped_guard(spinlock, &b->cache_lock) {
+> >> +		found =3D nfsd_cache_insert(b, rp, nn);
+> >> +		if (found =3D=3D rp) {
+> >> +			*cacherep =3D rp;
+> >> +			rp->c_state =3D RC_INPROG;
+> >> +			nfsd_prune_bucket_locked(nn, b, 3, &dispose);
+> >> +			goto out;
+> >> +		}
+> >> +		/* We found a matching entry which is either in progress or done. */
+> >> +		nfsd_reply_cache_free_locked(NULL, rp, nn);
+> >> +		nfsd_stats_rc_hits_inc(nn);
+> >> +		rtn =3D RC_DROPIT;
+> >> +		rp =3D found;
+> >> +
+> >> +		/* Request being processed */
+> >> +		if (rp->c_state =3D=3D RC_INPROG)
+> >> +			goto out_trace;
+> >> +
+> >> +		/* From the hall of fame of impractical attacks:
+> >> +		 * Is this a user who tries to snoop on the cache?
+> >> +		 */
+> >> +		rtn =3D RC_DOIT;
+> >> +		if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+> >> +			goto out_trace;
+> >> =20
+> >> +		/* Compose RPC reply header */
+> >> +		switch (rp->c_type) {
+> >> +		case RC_NOCACHE:
+> >> +			break;
+> >> +		case RC_REPLSTAT:
+> >> +			xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+> >> +			rtn =3D RC_REPLY;
+> >> +			break;
+> >> +		case RC_REPLBUFF:
+> >> +			if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+> >> +				return rtn; /* should not happen */
+> >> +			rtn =3D RC_REPLY;
+> >> +			break;
+> >> +		default:
+> >> +			WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+> >> +		}
+> >> +
+> >> +out_trace:
+> >> +		trace_nfsd_drc_found(nn, rqstp, rtn);
+> >> +		return rtn;
+> >> +	}
+> >> +out:
+> >>  	nfsd_cacherep_dispose(&dispose);
+> >> =20
+> >>  	nfsd_stats_rc_misses_inc(nn);
+> >>  	atomic_inc(&nn->num_drc_entries);
+> >>  	nfsd_stats_drc_mem_usage_add(nn, sizeof(*rp));
+> >> -	goto out;
+> >> -
+> >> -found_entry:
+> >> -	/* We found a matching entry which is either in progress or done. */
+> >> -	nfsd_reply_cache_free_locked(NULL, rp, nn);
+> >> -	nfsd_stats_rc_hits_inc(nn);
+> >> -	rtn =3D RC_DROPIT;
+> >> -	rp =3D found;
+> >> -
+> >> -	/* Request being processed */
+> >> -	if (rp->c_state =3D=3D RC_INPROG)
+> >> -		goto out_trace;
+> >> -
+> >> -	/* From the hall of fame of impractical attacks:
+> >> -	 * Is this a user who tries to snoop on the cache? */
+> >> -	rtn =3D RC_DOIT;
+> >> -	if (!test_bit(RQ_SECURE, &rqstp->rq_flags) && rp->c_secure)
+> >> -		goto out_trace;
+> >> -
+> >> -	/* Compose RPC reply header */
+> >> -	switch (rp->c_type) {
+> >> -	case RC_NOCACHE:
+> >> -		break;
+> >> -	case RC_REPLSTAT:
+> >> -		xdr_stream_encode_be32(&rqstp->rq_res_stream, rp->c_replstat);
+> >> -		rtn =3D RC_REPLY;
+> >> -		break;
+> >> -	case RC_REPLBUFF:
+> >> -		if (!nfsd_cache_append(rqstp, &rp->c_replvec))
+> >> -			goto out_unlock; /* should not happen */
+> >> -		rtn =3D RC_REPLY;
+> >> -		break;
+> >> -	default:
+> >> -		WARN_ONCE(1, "nfsd: bad repcache type %d\n", rp->c_type);
+> >> -	}
+> >> -
+> >> -out_trace:
+> >> -	trace_nfsd_drc_found(nn, rqstp, rtn);
+> >> -out_unlock:
+> >> -	spin_unlock(&b->cache_lock);
+> >> -out:
+> >>  	return rtn;
+> >>  }
+> >> =20
+> >> --=20
+> >> 2.30.2
+> >>
+> >>
+> >=20
+>=20
+>=20
+> --=20
+> Chuck Lever
+>=20
 
