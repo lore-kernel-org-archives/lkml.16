@@ -1,27 +1,28 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013019.outbound.protection.outlook.com [40.107.162.19])
+Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011058.outbound.protection.outlook.com [40.107.130.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB36286D4E;
-	Tue, 24 Jun 2025 10:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE047286D5C;
+	Tue, 24 Jun 2025 10:53:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.58
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750762425; cv=fail; b=WT26rw0zjnArSfAOrfjSKfMgDHIYErLPDP8bP4MWjXUC2EkeaZf/6G0jdgKxA85K4V3t958jdb94qtwjCWxa6csdX+Xfbwk9dL3gYZhkcbPfQFLKDHrSXql1I7aPID/6iAMU0bDyVlye5KSraqrbj1uUy/jsxcG3okVxIKACpDw=
+	t=1750762426; cv=fail; b=BD7fJ/e3iwPt+mXDQf1XvvgZMv+2ymLTtIx0j/KffgHe4PtvjTIUNKYmF5D/3+kzkbXfHgjRpPafM/9VIzIH4ItxvL5ijZiwiwgLmh3y9seIyffekYmdqBjNI6LDJQ6rn9y0wHuHqABwo9wJIlOhV9HcNEWrFtaEwqCriyZXQmA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750762425; c=relaxed/simple;
-	bh=U9E/hhUR2xYzWugNxJmJGCcHVrHkwaU5t09dWVYudyM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=W+Lvqe9g6H9rzcsjzVC/imHZNqpjCGsAKJT8qdmqSyQ5FgdTNxgfBC9OnC1KhUkQIuyCk0xCG/SsM55ZU51jaJlQCsixnAYpA73jITP6D1ngrWNK/+hc8PjjzYECOSO2I9vkbcnuZyaUMCUsYZJY+7Ho0B6TSeOaF2DU+KK7iBU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=lGELpFiG; arc=fail smtp.client-ip=40.107.162.19
+	s=arc-20240116; t=1750762426; c=relaxed/simple;
+	bh=ySmdgbjjWwzam3PMv1W5Jw7m0nltGPcZ1Z8QHn/jQ3Q=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=PnW8F/cO4QCS30csaI/1O92+Tl+Y/IbQFf1cW4UcfIMcKd/Ti4J8wNwxK3Mj2NSbWueDZZP+VdtR0IS1hck2/5KGRxUfDsG1pOaDfgxVrcbuhrKFz3fryl78ZLCWJ3iWJpqHGtdsPPg2sAP6+Gx3W/4ltkNeVJ1BLEA12WD/xws=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com; spf=fail smtp.mailfrom=leica-geosystems.com; dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b=cMzRwScY; arc=fail smtp.client-ip=40.107.130.58
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=leica-geosystems.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=leica-geosystems.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="lGELpFiG"
+	dkim=pass (1024-bit key) header.d=leica-geosystems.com header.i=@leica-geosystems.com header.b="cMzRwScY"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SShFqIxnn9sxJXyi5C39SUxGGcCu3s/xNMYgo1IAWL6ESVWuj4ft+o7yG8Ay4FFjOzD5xwRDyMIihyJ8lSJsvRNm6UtQXN6VdzW7GE45l4EPlqY5g1Uaj0qvB6dGOhtU083P5XGpWdTGVH7ItruBsaHiRDahw//yoR6EoJ6SEbA06vtId9cISbHzsTPvSTwuXPu0hhyFOoUPapGpsjE+cx7qFMYbagbz7qePmHCnhuagLsDzrpumzwPGhHt4UMIrC0b8WYH6WVYNYnNTHpCp+wNUeT8c6ZkPPl2jlLr3oT6pZpqC7+nn8ErP0225EpOAYhQLZIUv00Ys+IjiBo6LNQ==
+ b=IZ3yOp1mDLVty04HtQF335P8BILCeALs0Wp3fAarQ1iZLOvP48ExjrHadZkGlbGybUgUp2EfOaFg8u9ftQih7h+9EVlOh3ImuvdXTyMa57nK9FUnG6UZF3v2Pp2WTrW6uRwmSdaiR4OY22JEFfGOwL1TAtqSAB2F2t22OIgKcxgJeOuPWs5jdqsWYTFvw2r8Q6SNn4Kr6a2pDU5qaXGvkTG/fhRhXgHYJrWPqa9jvebNRJ7IVcRU+Y4cFRIRbeJ/9jKY5JEhW71nUdVj5gxLwpQY1bIftVANFexDNFceM9eOOhvN2f35VLz2Br0idRkUvvneQJ6hAdjhey1BLrGG6A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=x1SOwFystKE2ge9VOH9hZodBnZUTd3lqqDhPpMuPs5Q=;
- b=uoqDVwSuiL6qlWqtfbyzbAJLAVXjRX69panb31z9p3IzRpwBvbnS39sQadZYQwEylh98BE0Qu4jPemIDRticjIPZ1sF9OXZobaurUjvMWOGIPJi44loKubTTF0h+mV9FdwK4hB6XkvISXZZfPFrgovGsbcF7aFhW1wkZr2MLv+jWRrAx/Ok8piY7BXMGSyiQTDrXKfmiQ2PKcyO0ZAfzbIiI7nSaf2FlttSwBsVK+Cpnsv8vwwh380dx0zj2XN78htOiEFx6RhJNt1HWQ6KKyC8qAI6FVcW70CptxjsRQmlSxNA0rT958UY/2FsXnxYxSjyolkSkrjkl9XPHF1tgYQ==
+ bh=93AtsQcPW0Y617Zyhl2dB8W5wyfiml0H6iqU6IKuvLY=;
+ b=B9w4FsZxFyF+/+QkfCCRApv4JRaQIUcJOz5tIac7nvZLQ7gU3vrGLqoPhCKrPnbthnyQ0Yza7Us7CxIU4VLXC+ea45uj5pb0VpeMbz+nK++3UTCr5H7w0QHJsB6QVlbUowsHz32vQjnAOE0fQN5gYR8zGneabBoBfqe25WAmBDSM8OLyHj/IUW3dD2U2NUMQRz9UsOt63NAKMwTSLgxCm3To3f3rTZjCpEEWG5RxX1LNs0G3p7SyWkNpTc9tae8C++WWGb11cS6S07pTrxMJiqR3GiB2RDqIJ2ENX3RVmki9yH1XYhezvqFOU/rt0ylUrgJxNgXYpQXD/ABzYOaIsQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  193.8.40.94) smtp.rcpttodomain=vger.kernel.org
  smtp.mailfrom=leica-geosystems.com; dmarc=pass (p=reject sp=reject pct=100)
@@ -30,18 +31,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=leica-geosystems.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x1SOwFystKE2ge9VOH9hZodBnZUTd3lqqDhPpMuPs5Q=;
- b=lGELpFiG0MZIvFrcxQwLV4VXcCNt2l4ArObEw2PERI1VmEtSM31Il8180efWukSL30f6DsjnDOMmPLhl4CflFfO8rEcnqaq4cps9ThjODDfYtSOV8zJ+P+QaS5fSjZlJIfG/3pT/astS+6xbkr2v1ifn3bqiC1CVZmo5DEneTqU=
-Received: from AM0PR10CA0028.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:17c::38)
- by DB9PR06MB8122.eurprd06.prod.outlook.com (2603:10a6:10:291::23) with
+ bh=93AtsQcPW0Y617Zyhl2dB8W5wyfiml0H6iqU6IKuvLY=;
+ b=cMzRwScYuq5T2C2DR62Q356fneZTzUOxVWVV5Is8e3b/tVm5OM6Bqw/SyirTEyETn9Kbuq5ycID/HM5cSnImS7Yj+2uAR47/GDgzOwFmeEbs985DF5/MfiJvwDPzxj3ETFpygL41xZPkN6Lw9Mub6SMBzFiqgZ7vFYG//lHijk8=
+Received: from AM0PR10CA0023.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:17c::33)
+ by AM7PR06MB6705.eurprd06.prod.outlook.com (2603:10a6:20b:1a4::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Tue, 24 Jun
- 2025 10:53:40 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Tue, 24 Jun
+ 2025 10:53:41 +0000
 Received: from AMS0EPF000001A7.eurprd05.prod.outlook.com
- (2603:10a6:208:17c:cafe::10) by AM0PR10CA0028.outlook.office365.com
- (2603:10a6:208:17c::38) with Microsoft SMTP Server (version=TLS1_3,
+ (2603:10a6:208:17c:cafe::c0) by AM0PR10CA0023.outlook.office365.com
+ (2603:10a6:208:17c::33) with Microsoft SMTP Server (version=TLS1_3,
  cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.30 via Frontend Transport; Tue,
- 24 Jun 2025 10:53:40 +0000
+ 24 Jun 2025 10:53:41 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 193.8.40.94)
  smtp.mailfrom=leica-geosystems.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=leica-geosystems.com;
@@ -51,14 +52,13 @@ Received-SPF: Pass (protection.outlook.com: domain of leica-geosystems.com
 Received: from hexagon.com (193.8.40.94) by
  AMS0EPF000001A7.mail.protection.outlook.com (10.167.16.234) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8880.14 via Frontend Transport; Tue, 24 Jun 2025 10:53:40 +0000
+ 15.20.8880.14 via Frontend Transport; Tue, 24 Jun 2025 10:53:41 +0000
 Received: from aherlnxbspsrv01.lgs-net.com ([10.60.34.116]) by hexagon.com with Microsoft SMTPSVC(10.0.17763.1697);
 	 Tue, 24 Jun 2025 12:53:40 +0200
 From: Johannes Schneider <johannes.schneider@leica-geosystems.com>
-Subject: [PATCH v2 0/2] usb: dwc3: Fix TRB reclaim regression and clean up
- reclaim logic
-Date: Tue, 24 Jun 2025 12:53:11 +0200
-Message-Id: <20250624-dwc3-fix-gadget-mtp-v2-0-0e2d9979328f@leica-geosystems.com>
+Date: Tue, 24 Jun 2025 12:53:13 +0200
+Subject: [PATCH v2 2/2] usb: dwc3: gadget: Simplify TRB reclaim logic by
+ removing redundant 'chain' argument
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,11 +67,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAJeDWmgC/32NTQ6DIBSEr2JY9zWASn9WvUfjAuGJJFUMj9gaw
- 91LPUCX32Tmm50RRo/E7tXOIq6efJgLyFPFzKhnh+BtYSa5bLmSAuzb1DD4DzhtHSaY0gK14Te
- tdH9tjGJluUQsjcP67AqPnlKI23Gyil/637cK4KCbFpXF4SL6/vFCbzQ4DLRRwonOJkysyzl/A
- Z+h8hbBAAAA
-X-Change-ID: 20250621-dwc3-fix-gadget-mtp-3c09a6ab84c6
+Message-Id: <20250624-dwc3-fix-gadget-mtp-v2-2-0e2d9979328f@leica-geosystems.com>
+References: <20250624-dwc3-fix-gadget-mtp-v2-0-0e2d9979328f@leica-geosystems.com>
+In-Reply-To: <20250624-dwc3-fix-gadget-mtp-v2-0-0e2d9979328f@leica-geosystems.com>
 To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>, 
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Pengutronix Kernel Team <kernel@pengutronix.de>, 
@@ -79,121 +77,118 @@ Cc: Pengutronix Kernel Team <kernel@pengutronix.de>,
  stable@vger.kernel.org, bsp-development.geo@leica-geosystems.com, 
  Johannes Schneider <johannes.schneider@leica-geosystems.com>
 X-Mailer: b4 0.14.2
-X-OriginalArrivalTime: 24 Jun 2025 10:53:40.0072 (UTC) FILETIME=[3E96CE80:01DBE4F6]
+X-OriginalArrivalTime: 24 Jun 2025 10:53:40.0119 (UTC) FILETIME=[3E9DFA70:01DBE4F6]
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF000001A7:EE_|DB9PR06MB8122:EE_
-X-MS-Office365-Filtering-Correlation-Id: d9211e6f-4442-45fa-7065-08ddb30d613c
+X-MS-TrafficTypeDiagnostic: AMS0EPF000001A7:EE_|AM7PR06MB6705:EE_
+X-MS-Office365-Filtering-Correlation-Id: 76775d22-3dc2-42fc-0a40-08ddb30d61e8
 X-SET-LOWER-SCL-SCANNER: YES
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?OHpzQ2Z1L2tBZ3BJU1pkbzZzRU0wRHVFc1E2QTByRXBHM0lQUTJ5KzlEQitJ?=
- =?utf-8?B?VE9MOGF3cS83OTFqQzY2amFHY005eTJNYXFXa3JlZEFkUGc0aUUxWHIzTlk3?=
- =?utf-8?B?WGZHY1YxOXVYSzlsTnZaMlNkNkhUYWJBa25rVlYrQkhrUUUrbCtpV1YvZkly?=
- =?utf-8?B?UlQ5TEtkL3lGcVNBTjVXRnFURWVRWXhPUVMzS3laWEY4RHBzOVJXeGszY0cw?=
- =?utf-8?B?MFdpelZsZGJ3Z2luc2ZxUEZIeVp4RFBWYytHYXR4UkVIek1CRytMczY2QkE5?=
- =?utf-8?B?ZXRnWUhUclpVMUtGOWRMMXlFQ0NyYTJCQ3VJRzlvaFkxb2Y4NjJVNTg5TlhZ?=
- =?utf-8?B?L0MrMm9HcTVkSmxzdDl0OWRhTDRydHo1cWNGU1JTREJKYXB3ektXT3RQeEMz?=
- =?utf-8?B?andoeGl3cnFmanNMMmM2b2xGdWJjQUMzZ2h6UzZwMnV2THdrcmc0M0FQQ21a?=
- =?utf-8?B?aXp2WEFMQ2Qwa1BJT2dFV3RFRDFleUZkL1pURG5FOWFvd2V2VnNkWXZRV0Rz?=
- =?utf-8?B?R1VHNVdrekptTlpXZVh0dU9VQ3JVOHFMZG9ycnVPbkU1Qk5uQ2hVZ3N6WTZZ?=
- =?utf-8?B?QXNjWURUSnNlRUE1TFg2Q20zQW5DSHBKaEgxOUh0Q1p0QkRtamc2NXI1VGpV?=
- =?utf-8?B?dTBzYVdHWklUTTdGLzlIK1pqS1p6ck8wdW5CTUhQRWhGLzNqV1JXb1h6Q1Fy?=
- =?utf-8?B?dWsrbTA0MnRKalZOeDRWOEQwblB2TXRxWTJrVlFWb3RMdS95SDhOMXhYanla?=
- =?utf-8?B?dTRsRUFRVHlIbnZMV0YxbzhHdXRialRCY3ErdDgvdXUxVWQ2OVh5ZWtDZEZV?=
- =?utf-8?B?YUN1c0txWnpKdXlleFhJTnFJMStmNEN2TVQ3NHVkWkxZVGtkL2ZucWNvUzRW?=
- =?utf-8?B?WEo4NytRaTVrQ2VESU5zU1dtTFRBQ01mTlN4WkticTNXOTZRRmRTRHdyemx1?=
- =?utf-8?B?T0RZV2M1c2VMSUNDa2wzR3FFSHJqWW03K3hScFdubDFlZFoxUXBUZW5aRWJX?=
- =?utf-8?B?Ui9IY3Z3UUJUM3ljS2VVQVUzOEc4NTNBMEMwVVZrT3pvdDB3eU1ISlNHTjh2?=
- =?utf-8?B?T0NkWWZ0NzJxMEFyaTBnREdrMGlpL3RXcGtwamV4S2NObnJ3ZnZmeEtodldj?=
- =?utf-8?B?MjFmM3A1RC82bDVKZFFub3BRckJzbWh2Y2lsam5iK3Y3M2hYZWRoejhqdHZU?=
- =?utf-8?B?TVZLVXBVbFFSRjBHM0N3UENuVmlVTENtMkFyTkVQS1o1cE1QZnFkVlRmQmRs?=
- =?utf-8?B?ZUZFb0NwZEt6eFh3R0h3SmhUaUtnUStvbUgwRldBOEZielVXQ2l1ZDh1Q05s?=
- =?utf-8?B?NTNGdGNGQUl1SXZTV1NtWUphOUxZd09LU21VMVBJdUd5SUFOa052TWFCWWFw?=
- =?utf-8?B?V3VZNU93ZDhuMjdoV0NpMDNNUXdROEFrOW5jUTU1Z2dMaHNDUHVUL0VnNC9K?=
- =?utf-8?B?d2haVXNvblUxUnZvdDRtRW9qR0J2M3pGblFWQkdlWmVGWnBSUGRyTmhrWU9N?=
- =?utf-8?B?QjB3NUp6endrODhuZFFPYTRjT1NoWStyamp5K3ovUm5IdWN6QXhIVkFyVGtS?=
- =?utf-8?B?VDQxbXJsUHJaQ2FiaEJWaGlqcSsxSDBldDNqWHFNa1FhNExBY1FqNk9sSXRM?=
- =?utf-8?B?VzhRdXVtSy9QL0h2aFlGV29pUFpFUGFGN3RtVFBlQ0xoQXRsbmNBNEpNbHNJ?=
- =?utf-8?B?TlBGblo0ZzhBNUppQ0tlWmtHYno0NVhnNkpjS3ZJSXFHVnRiVW81ZDRoUUtM?=
- =?utf-8?B?T3UvVUNPRkxxS0dLeG9SM2t5QjJDUE4yNGtzZ0t0MFZBTGd6UHdTcjR3VlNM?=
- =?utf-8?B?T2IzRHJMc3pKalVFbmU3NWZBdlkzOTF0Z2ZjS3FvOVBXQVEvR0huMzMvaTFW?=
- =?utf-8?B?QlBHVkRIaDZFMExYd25lcXBLV0NuNElnK2phZS9JQkQ1RVB3VzIxUFErREow?=
- =?utf-8?B?dUZsQWpxK25pU2ZjOUZiVUNZUFZTQWprUURZY0h1MzBoVFM2SzJ2ancwMXFv?=
- =?utf-8?B?WS9jTUlHcjhrNkNndGNkUlh3TmszZVd6YjJEMUEwTVdIdisvTDlqSWxqVXRR?=
- =?utf-8?B?YUdZeGRoTzZOSkNDcGxoNFpJS1Q5ZUZGam5zUT09?=
+	=?utf-8?B?T0YzWVFWR09RSEd0ZWZ5RThEc1ZWMUhTUUIvNUw0YkViR3hCNWNvYTJhZW05?=
+ =?utf-8?B?dEpmWGwrbmN3TlZUN3JPVnZVd0tZUE10SDdKRjRqWFJkck1qSzlPYzV2azZl?=
+ =?utf-8?B?WjIrUjJyQ0VmdkN3WFlyN2IwOGxOdmNFMTRnVFFJV09zYy9PWkpJZUlaVTFx?=
+ =?utf-8?B?OWdHdUxObFBGZzZleHZCbG9OYTg4TzdQOVF1SjFuaGN2YkNidmtncHQ1czVx?=
+ =?utf-8?B?b3g5b3A2RTEzek9KNmExdkpsMXJMMmFBd05UcmZqbUorbU9ZQk5PUERnTkM4?=
+ =?utf-8?B?VWxtYXVyaytFSS85YitSaUtmSUN6QkZZOXZSTEg2b1VwUVZGTFYxYmdxNXNO?=
+ =?utf-8?B?bDdNcFl4S3NRRlJMZHJlU3VIQ1JPc24zQWkybUtKMUlqeE03SEk1Q2daSEF2?=
+ =?utf-8?B?dC9tcmlSdzlqTVRCU2VoWW5CY0xBZ3JVVGZOTjJndjhtNFB4SHV4RjlURnI2?=
+ =?utf-8?B?SkpuUUpveFBkWTlGblVoSlYzZ053N3llc0hVQTJzUEcyNTdrMHdSQ293ZnNT?=
+ =?utf-8?B?SWJoVHpXSlhydXNCRnVBSlpmN0t2YWRvaW1COGEzVFp3Qmc4RUxMQ0FIbThF?=
+ =?utf-8?B?R2lFdE1UMStWRHNUSUk3dGtiMmZQMHNMQ0NvM2FhYm41THY5azlpTGJuTkRq?=
+ =?utf-8?B?aGcvemp4MFlJQUY4ODRGTE1ocVM2QzlzRUJaWW11Yld3MnJpcWsxNXkyMlBw?=
+ =?utf-8?B?VGppUUJEUzg5N0diWUtteXVPVS83V2xBNGptMmRIV2JrQjdBeFZqTkVPNUhS?=
+ =?utf-8?B?R0w5WEdKMnA1bWQ3b0RJaGJQU1I1aUxnVk1yYTFQZUFuWi9XMG1kckw5bW10?=
+ =?utf-8?B?dnM5R215MEV3cXEyOWxRYS9oM1Z1emF3SFV0cGhXNG9McjFDUk9idUdVOE03?=
+ =?utf-8?B?b2dZRlhXeXdQV2t6QUZPVWxzays4U0U1bkhpUmZ4aWhGMExmMlZKeWJwZWJr?=
+ =?utf-8?B?Q1d2ajJtc0lDUnZIb3Z5NHptOTVoN05rZUwwcWw1d1Bxa0JPdm5wRWx2dGRP?=
+ =?utf-8?B?dzZhSWxNRkU2YWEvb242WHpKU2lGeDVuc0FSUmZ1eU5Od1hjc3VZMXZsNGI1?=
+ =?utf-8?B?MTV2NE12MGpWZ1VHd0EzY3ZjREtVQnlvMTZ0ajVpNmgyRWdKR2xtUTFESmxx?=
+ =?utf-8?B?Z2oyWG54RFpJTEp1cndTV1VaTzVyaVBLMnVBaWF1YlFaMEVuUGxLbUx3dWUr?=
+ =?utf-8?B?Z2tSSUdrZE9MZGhtOEZLWENqZ3JpTE5tVFA1UkovVjRhTTlQRjQvdVJwcUht?=
+ =?utf-8?B?cXJzUkN0TmZDTy9nVU11a0pncnpvWHBad3RBMnVpOWtqQ04wNkFVODJPTjFD?=
+ =?utf-8?B?RXkzZkNhaFZ1akJYSWx6QVVTNTJBSWJhbUxTdEhqSkhlanRYcEgwRUI5WTNo?=
+ =?utf-8?B?YWMxY0ZvYm9vaWRXT3pDQkRuZ3FPK2ZjL0U3eFZLZGNxNkZocVFaemhtRlNT?=
+ =?utf-8?B?Ylh3S0lObEpCSXFpeEF1SXNCZ3FCTlRUTUpQTEllSjNQc1pDeEtOanpIbFNY?=
+ =?utf-8?B?U1crRGtQQkZjUnIyZklpK2xReWg0RFNrakljb3U1UXpwZHhUek4zWk5GWTk2?=
+ =?utf-8?B?VGtvbUxXT0N0bEJvSGo4R043a3hvTE5LMVZyNVRDcC8xbnNvNUdMYU1MaUtk?=
+ =?utf-8?B?aHpmdElvdVAzYjhpVlc4V2FlWjVibkt5K0VjT0Q4VjI2WGdlQ2tpSHBxeEVv?=
+ =?utf-8?B?RVIyb0dOQis5aW1vRTJ5ZTA4bHd4SUgzZTRrajZmTEd6OWZiZG82MDRraVBa?=
+ =?utf-8?B?NFJuWi9LVGZjd1crNy9HK0diN29lWHpIYXg5QjIvTWpDYnNHNXFwbWdZQVFI?=
+ =?utf-8?B?UlVqMzMrK2UvLzRVTVhXaXdweHNERjNnMkNqRlNJT25JMnV0RWVkZW10Q1dJ?=
+ =?utf-8?B?WUtRdHhjT2I5bllzeXFSYXRhTGM4b3dBdkdLNzJIZ0VaZFpvYXFROHIySWxi?=
+ =?utf-8?B?SkZSUCtOcTh1MDMwR3RGd2I1SFJjUGFIYjFYendEcVhCWjJVR1crQUIrS1dw?=
+ =?utf-8?B?TGdzTFhRQ1ZqSFo1dm02R1RaYk5hcXZaTWJsdHBjZ0Z1SEtDSVRISUVvTkRN?=
+ =?utf-8?Q?DcydAn?=
 X-Forefront-Antispam-Report:
 	CIP:193.8.40.94;CTRY:CH;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:hexagon.com;PTR:ahersrvdom50.leica-geosystems.com;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
 X-OriginatorOrg: leica-geosystems.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 10:53:40.2847
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 10:53:41.4017
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d9211e6f-4442-45fa-7065-08ddb30d613c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 76775d22-3dc2-42fc-0a40-08ddb30d61e8
 X-MS-Exchange-CrossTenant-Id: 1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=1b16ab3e-b8f6-4fe3-9f3e-2db7fe549f6a;Ip=[193.8.40.94];Helo=[hexagon.com]
 X-MS-Exchange-CrossTenant-AuthSource:
 	AMS0EPF000001A7.eurprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR06MB8122
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR06MB6705
 
-Hoi,
+Now that the TRB reclaim logic always inspects the TRB's CHN (Chain) bit
+directly to determine whether a TRB is part of a chain, the explicit
+'chain' parameter passed into dwc3_gadget_ep_reclaim_completed_trb()
+is no longer necessary.
 
-This patch series fixes a subtle regression introduced in the recent
-scatter-gather cleanup for the DWC3 USB gadget driver, and follows up
-with two clean-up patches to simplify and clarify related logic.
+This cleanup simplifies the reclaim code by avoiding duplication of
+chain state tracking, and makes the reclaim logic rely entirely on the
+hardware descriptor flags — which are already present and accurate at
+this stage.
 
-Background:
+No functional changes intended.
 
-Commit 61440628a4ff ("usb: dwc3: gadget: Cleanup SG handling") removed
-some redundant state tracking in the DWC3 gadget driver, including how
-scatter-gather TRBs are reclaimed after use. However, the reclaim logic
-began relying on the TRB CHN (chain) bit to determine whether TRBs
-belonged to a chain — which led to missed TRB reclamation in some
-cases.
-
-This broke userspace-facing protocols like MTP (Media Transfer Protocol)
-when used via FunctionFS, causing incomplete transfers due to skipped
-zero-length packets (ZLPs) or improperly reclaimed short TRBs.
-
-The "offending" chunk from 61440628a4ff:
-80                 ret = dwc3_gadget_ep_reclaim_completed_trb(dep, req,
-81 -                               trb, event, status, true);
-82 +                               trb, event, status,
-83 +                               !!(trb->ctrl & DWC3_TRB_CTRL_CHN));
-
-Patch 1 fixes the issue by ensuring the HWO bit is always cleared
-on reclaimed TRBs, regardless of the CHN bit.
-
-Patches 2 and 3 follow up with simplifications:
-- Patch 2 removes the now-redundant `chain` argument to the reclaim function
-- Patch 3 simplifies the logic in `dwc3_needs_extra_trb()` to make the conditions easier to read and maintain
-
-All three patches have been tested on a imx8mp based hardware, with
-userspace MTP (viveris/uMTP-Responder) over FunctionFS and resolve the
-regression while preserving the recent cleanup work.
-
+Acked-by: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 Signed-off-by: Johannes Schneider <johannes.schneider@leica-geosystems.com>
 ---
-Changes in v2:
-- dropped Patch 3, as it did change the logic
-- CC to stable
-- Link to v1: https://lore.kernel.org/r/20250621-dwc3-fix-gadget-mtp-v1-0-a45e6def71bb@leica-geosystems.com
+ drivers/usb/dwc3/gadget.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
----
-Johannes Schneider (2):
-      usb: dwc3: gadget: Fix TRB reclaim logic for short transfers and ZLPs
-      usb: dwc3: gadget: Simplify TRB reclaim logic by removing redundant 'chain' argument
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 99fbd29d8f46d30df558ceb23d2afe7187b4244c..a4a2bf273f943fa112f49979297023a732e0af2e 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -3497,7 +3497,7 @@ static void dwc3_gadget_free_endpoints(struct dwc3 *dwc)
+ 
+ static int dwc3_gadget_ep_reclaim_completed_trb(struct dwc3_ep *dep,
+ 		struct dwc3_request *req, struct dwc3_trb *trb,
+-		const struct dwc3_event_depevt *event, int status, int chain)
++		const struct dwc3_event_depevt *event, int status)
+ {
+ 	unsigned int		count;
+ 
+@@ -3549,7 +3549,8 @@ static int dwc3_gadget_ep_reclaim_completed_trb(struct dwc3_ep *dep,
+ 	if ((trb->ctrl & DWC3_TRB_CTRL_HWO) && status != -ESHUTDOWN)
+ 		return 1;
+ 
+-	if (event->status & DEPEVT_STATUS_SHORT && !chain)
++	if (event->status & DEPEVT_STATUS_SHORT &&
++	    !(trb->ctrl & DWC3_TRB_CTRL_CHN))
+ 		return 1;
+ 
+ 	if ((trb->ctrl & DWC3_TRB_CTRL_ISP_IMI) &&
+@@ -3576,8 +3577,7 @@ static int dwc3_gadget_ep_reclaim_trb_sg(struct dwc3_ep *dep,
+ 		trb = &dep->trb_pool[dep->trb_dequeue];
+ 
+ 		ret = dwc3_gadget_ep_reclaim_completed_trb(dep, req,
+-				trb, event, status,
+-				!!(trb->ctrl & DWC3_TRB_CTRL_CHN));
++				trb, event, status);
+ 		if (ret)
+ 			break;
+ 	}
 
- drivers/usb/dwc3/gadget.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
----
-base-commit: d0c22de9995b624f563bc5004d44ac2655712a56
-change-id: 20250621-dwc3-fix-gadget-mtp-3c09a6ab84c6
-
-Best regards,
 -- 
-Johannes Schneider <johannes.schneider@leica-geosystems.com>
+2.34.1
 
