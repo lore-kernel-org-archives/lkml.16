@@ -1,72 +1,90 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11020077.outbound.protection.outlook.com [52.101.84.77])
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC69626CE1C;
-	Tue, 24 Jun 2025 15:45:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3F626CE1C
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750779960; cv=fail; b=hUU5PMwzdQW6knmUMLKHdwXGbY4CXTnMNsptBnx+DFeEi8ZxeP72gSnGrLhov4ndirFl6FUfbJtbUNZ+tugcNQa8RSliDVLhRLYywh760LCA0VADWsbATtwmsFYl7Je70q5TL4k0RiE/B331LHPhHeg3qBZps5Ts4s4u8nEKzH4=
+	t=1750779980; cv=fail; b=fOa/Fwi7IM3nEijC7Lc7K7l3wPPsULXJvzUYx+YNc2E/TStSiSRHS1RGCD3HGSWXKmuDgfag0ZeXyWh9oqnA9D4v2PFEpDuN2Kb2H4XMFh3q05v8DZU/en01U6GbacZwx0JQmWNQ22HGbe+YGRrTtSs7AGIRWaV1enIcuhDy7ws=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750779960; c=relaxed/simple;
-	bh=c6jc7WEjLzifUqVTVDc5nzAZptRIvuSch01KO31SWvQ=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Nbw5jxy4ZJaZiUXPGcsfVnWDNGJh1FtbU/H3/tncU5s6/3oCsrmtnyDN4e9PudXA6g+Il9j85yLnQH9a4aNCd1ItlFVI92hLvIZviDtkLr594Ym/JUJXq0R4BXbOS9OMzbFopBZp5fK9k5eaYBmHsdVrxw/m5WE69/IiyTvL1vw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uclouvain.be; spf=pass smtp.mailfrom=uclouvain.be; dkim=pass (2048-bit key) header.d=uclouvain.be header.i=@uclouvain.be header.b=L3hnoaOH; arc=fail smtp.client-ip=52.101.84.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=uclouvain.be
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uclouvain.be
+	s=arc-20240116; t=1750779980; c=relaxed/simple;
+	bh=1SyGcEuZTiuRXg7nxNohA6435yUYZxn5Uq6Rgs1/kd8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=ZDi8xIjDXffh1aYmfJKGzcU85T49OiK6PYxUqtGFnqDS+FsNjSxNooOG0J/xyyJ64iJRqDELWUfWgViKT0U74sqffBwqHKRy+OTXhMu35RpkKeph6KGHbmntwvDqfB+jUboL4yCd52nSTGI3lQlB9/vJVUGWy//RiTh6bNjKwjc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=agTe6CaT; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Kc99u0sI; arc=fail smtp.client-ip=205.220.177.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=uclouvain.be header.i=@uclouvain.be header.b="L3hnoaOH"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="agTe6CaT";
+	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Kc99u0sI"
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55OFMkiG007393;
+	Tue, 24 Jun 2025 15:46:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
+	:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=corp-2025-04-25; bh=lTAGLixXmfqsLoH+93
+	AtHZchQ5ZviIOOC2uxccaM10s=; b=agTe6CaT6CJlxbwZ9ifky54DXqN6Yv4r3C
+	crd6IgTaHBjWeQE2y8WIn4iobaNUvk8jUgvU3dfMTbxSphmFQJfx8N5vggnddc8u
+	iZRvUu35pcJS3YMxnRGlywcpe0BBcXtJv+J3vrbFK0a1uM2i2dHe0tWfdFCGPqfC
+	gpxRQMweA5Ul7PJVyv1giG/lqoJiwV0+yDQp7kmxsDgtxmhWPv77Ak3NqLbyH+3u
+	wNjDQruBlxF7Rfn78DcxhurS4xzd28n5vkSj7uWVfvSuCQFs3gLcifofubQH1gO+
+	2tBMvNfnh/w7TrZh3n+RRz4e43jXJrUh7CXaDiEa5QntTLxnGQaQ==
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47egummdgu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Jun 2025 15:46:01 +0000 (GMT)
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55OEVmch002571;
+	Tue, 24 Jun 2025 15:46:01 GMT
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12on2053.outbound.protection.outlook.com [40.107.243.53])
+	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 47ehpda3mv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 24 Jun 2025 15:46:00 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ygKXR9A/YneLqpnsVF1VS6WFS2P9j4HlUV7hpyi2n45w59Awpzkh4L/q5O0tDHYRdkrZuDs+yb/5cBViYrjfUTZpP1XwVOMGAiNW6QKKJrMkx34XXuAlbbq2MdxFOuKwrRHFQ/x4idcau0SMTMa+runN8Ss/0+BRIEW98kgRnmptasZfnFXTyI7MtYXvHqenPpyIge2H7CqhS03OiZ2lBshki8lXcIe16skHiWy7BjMavu18xdnNFLXTlD2g+KH4SP/WHFzYoovIC4BtVyEe9AKJEBHZsYjwiXdzVurVpG3A6I3+1QHPJzgKttx1yrzVljwlqk77ya367NU/Dw9RTQ==
+ b=QBPh1/rBXHXCLz0CFOheKwS+zWVGd5nBwWsgarBENekFp3Ll5Om89pAOmk64o2R9PZVf3PpcHcHJd2i97+xgsouJq15at4dO3sj25XLnKHlhDt1YNT4zV+TfdEcHM1G7zD0McDdAlrd/mOmTVvkgQPMjbo4YGPWcyx8DP5RCqmnJ3uQ561l7P9r5fjy2nV3FVEjal+sGnXIJWFLv9DQ3/rZW/xdlhg0r5Wzf8xH5wEkz96UFuFNC0zGOzi0BvtCF8vbMF2r8YCKFef+5AHzqrojO4+IAWupAv4uwI9Ltn9VpMctD+KWTliyESsl+PJoYmTxukP/vTS7EuA42aD02Cg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WoEsdSjzEZiEYLqPr7ngIF1UXlqYq6vibJs7zdtoOcE=;
- b=oLO8tmxn/2ElCfdgWQ8QKt1xLW7MSxGPhFJQs86HKH1DPZqj7BWhG05Tx5wDikaijsnma5fJLeiOpLGKnJX+O8KsPb62RtXoKbUwi5GVZDOvmY4quQ8Oqjekv7zA17ChE1Tvdp7CVCb14xkzYD/jpxBHJAc2yAVSpYdd6VmJ5DeRDhJSGvOGLMoUJNPPrN1sJZJDsa3vAHh7aa6r9QRMfL8k8wR1YRSqkx8XRaRnlLIJvjcmk7ER8uPkoDAlWoo+1mvKFYoIiG0n3wyfbCXsUZ9I1dkr3WrFcS+cS49QNJUo1fcFClpmxzTyH6hN+OCESVlPDc/DRiT9jCnqYMtnxQ==
+ bh=lTAGLixXmfqsLoH+93AtHZchQ5ZviIOOC2uxccaM10s=;
+ b=BiHvlucn8IRxh/crdmtShLg4XoznZreNiYd8QkhjH89RSh93BhEgOYes/2rgU21UYkdA0/szEL8iTSVbKoKbH9fCLAj8PxKYTMp5JoctDPpDQJLAtqhX3GfM50/SwV9QLkMikioz14W9U/Ru1RHfDPRjz7KdkPGQGt2dXgqP/y1B+7VQQhxLLGZX8t0QH2Hoks/qsuxH1+a++91Utb9IDuzeUPSLg39FfcKz/sJGFnlgn9zrOngLZTzE5hxd+3LOYiz+hucrJXt/mEFv+99RaWxoqIoPfoT/NFmhr9O7tj6QJlyElw709EkH9DMpQegZBwUPD9W++MaoU1V1bHmIPA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=uclouvain.be; dmarc=pass action=none header.from=uclouvain.be;
- dkim=pass header.d=uclouvain.be; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uclouvain.be;
- s=selector1;
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WoEsdSjzEZiEYLqPr7ngIF1UXlqYq6vibJs7zdtoOcE=;
- b=L3hnoaOHQsfR3KZD18PeszSN+ANcybA3zDoPIvj+//WltUyRLfF+DGcDSHxZG95p0SQfq1MkINx03WuajIJwMJlfcUC2jILVfUV09Y1o1SzxZgBy1mofB/FmessmgZuGAOD/+wcE6H4q1O1267MbJvxGjGEj8/wvAXsHeTO0Z9fx8uxrx9o530wjKvhzFK9AsYn7SbYK9GyUcFaz7k9DBByNSxZkqb6ep6n2Eq3zY9seMhxEd5TKFfGemuiHWuhNzbZAlIV2fEg7t9sgYFEyR5tGt/1+R0rhG6IHGFFNTewto02pxeKYz+KVIWBllzoYwOggR+SeieRRu6QUWxGNPg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=uclouvain.be;
-Received: from AS8PR03MB9047.eurprd03.prod.outlook.com (2603:10a6:20b:5b6::13)
- by VI1PR03MB9988.eurprd03.prod.outlook.com (2603:10a6:800:1c6::16) with
+ bh=lTAGLixXmfqsLoH+93AtHZchQ5ZviIOOC2uxccaM10s=;
+ b=Kc99u0sIgqYwePmKNY0yxlirBAqOlC2VvkuF4Cc1RCbqHA2iJwtK5AA3NENyW7M5n8FRZTOq3hfIV6H/g6YPSzAv8U71SiNYPdAFZinsjqxdqzmHodXQ6zloc48m+Na7D3Wn9s6h2YqW/voNeobMJ3Bpq81jdorIISK1TVb9Zeg=
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
+ by CH0PR10MB4860.namprd10.prod.outlook.com (2603:10b6:610:db::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.25; Tue, 24 Jun
- 2025 15:45:52 +0000
-Received: from AS8PR03MB9047.eurprd03.prod.outlook.com
- ([fe80::c90e:deef:6dcf:538c]) by AS8PR03MB9047.eurprd03.prod.outlook.com
- ([fe80::c90e:deef:6dcf:538c%4]) with mapi id 15.20.8835.027; Tue, 24 Jun 2025
- 15:45:52 +0000
-Message-ID: <bc40326f-db40-4657-84a7-152def2ca9e3@uclouvain.be>
-Date: Tue, 24 Jun 2025 17:46:53 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/5] power: supply: add support for max77759 fuel gauge
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Dimitri Fedrau <dima.fedrau@gmail.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>,
- Tudor Ambarus <tudor.ambarus@linaro.org>,
- Alim Akhtar <alim.akhtar@samsung.com>, linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
-References: <20250523-b4-gs101_max77759_fg-v4-0-b49904e35a34@uclouvain.be>
- <20250523-b4-gs101_max77759_fg-v4-2-b49904e35a34@uclouvain.be>
- <CADrjBPqOMOyHP=aQ1+fg2X58NWRp-=MJBRZfpbEhQsTzaZ9LHw@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Antoine <t.antoine@uclouvain.be>
-In-Reply-To: <CADrjBPqOMOyHP=aQ1+fg2X58NWRp-=MJBRZfpbEhQsTzaZ9LHw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: ZR2P278CA0077.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:65::6) To AS8PR03MB9047.eurprd03.prod.outlook.com
- (2603:10a6:20b:5b6::13)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Tue, 24 Jun
+ 2025 15:45:57 +0000
+Received: from DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
+ ([fe80::2650:55cf:2816:5f2%6]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
+ 15:45:57 +0000
+Date: Tue, 24 Jun 2025 16:45:55 +0100
+From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+To: Vlastimil Babka <vbabka@suse.cz>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        David Hildenbrand <david@redhat.com>, Jann Horn <jannh@google.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>,
+        Colin Cross <ccross@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] mm, madvise: use standard madvise locking in
+ madvise_set_anon_name()
+Message-ID: <667e6631-8e2f-4154-8fcc-55fb5ab49a07@lucifer.local>
+References: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
+ <20250624-anon_name_cleanup-v2-4-600075462a11@suse.cz>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624-anon_name_cleanup-v2-4-600075462a11@suse.cz>
+X-ClientProxiedBy: LO4P123CA0001.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:150::6) To DM4PR10MB8218.namprd10.prod.outlook.com
+ (2603:10b6:8:1cc::16)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,352 +92,167 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AS8PR03MB9047:EE_|VI1PR03MB9988:EE_
-X-MS-Office365-Filtering-Correlation-Id: b107f508-706a-4a23-dcde-08ddb33632d8
+X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CH0PR10MB4860:EE_
+X-MS-Office365-Filtering-Correlation-Id: f4af56cb-2086-469a-2c2a-08ddb3363649
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|366016|10070799003|376014|1800799024;
+	BCL:0;ARA:13230040|7416014|1800799024|376014|366016|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RHFZTlBPVnk3Z1d3ZDdWYzlKemJmWGYzNWdkZjU1Unl5QTBlSm9sWWxpendK?=
- =?utf-8?B?czV5a3QzZzc3aDk2MHFVSjJ0QlhoZ2ZSU21TREQ0MDB6cjJCa0dVb0ErTzJF?=
- =?utf-8?B?NDY0ajR0RktJNkVxWlJENy9YMGJmK05KZjQ5VHlUejNZQ1cxQXRpbUtjbEFa?=
- =?utf-8?B?SC9UeWM5d1RsRkZsMGp5OWF4SitQYnNkb3paRjMvcjRwcVlxcVI1RDgrVExM?=
- =?utf-8?B?MmF1b3RzN1E0bHlqVGhSWUtCVERhekFIUk9BL2hub0tJVDJkN3NLQWtGWWs1?=
- =?utf-8?B?UzF4dWlMSHNRRVRidGloWFAvbnJKRHR4QjJSc1FzSnUyVlJ4Umc0YUFlK2Vk?=
- =?utf-8?B?NTJvZi9Ua0pCUzg3MWZhZEd2bkNGV05YZG94bzRYeEx4dmdhM3NHalR6bG5y?=
- =?utf-8?B?RkppbzJGQzRFWU4wcW9rdTZtY25ST3loRmtGMVViTERjV3pnR2xTNXRwUHVD?=
- =?utf-8?B?R3BQbDJnY3drU05lK2JHYkdKSnlmZFVRYTdXZnZDVUZHbXhxeTNqTXRGdFlX?=
- =?utf-8?B?TVBFcVp3TTVIYlZxYTY1VkRBZUl3TkhFNnEzdWJTdUEzZTkybnBiaVg2M1Fn?=
- =?utf-8?B?OHFBb2N5MXRwaWc5YUdPQW1mQnpWR244TXJlM1hQN2drQ0hkSTM2ZjlHYnE5?=
- =?utf-8?B?Rnd3bUlUN1hNdVhRLzJ1U3JZZDdwQXE2SG5lVnAzYzhKb1ZHb2xQWXBlRTIw?=
- =?utf-8?B?VHUrNDVaT05WelNXdHA5ekZEbjNId0tzT1hJNEUrTUF2T1BXbDFsbnNWdVBx?=
- =?utf-8?B?MmhMWG1idHRtUGxaNklWMU9IcjJHaFJnWDRFVEV0bnMzTG9TV0hGWDV2bnBx?=
- =?utf-8?B?eUE0VDFPN2JncmpkMUpGaVNLSUNzZGo3R0lvalVjVzllUTN3QXE2MnAyUDFj?=
- =?utf-8?B?UDRKRFdoVXhoY2ZpRVJFOHMvcUVadmRMdTJlajFYU3pxc2pXMDlpKzhHRm1M?=
- =?utf-8?B?K2ZqRmtuczZROW5JWFRIdVBiSWpzbVNlQjFpS3pEd2Z0SXo1aUJ3STNkNDNw?=
- =?utf-8?B?WnpQcytQeGllVU5jUzVEcytETVp5M0NubGFuQnVOdCtuWnFTVWZQNHhad2tV?=
- =?utf-8?B?TlJ4c1UyZytnaWNlNzEyRXFuYmh6YWxxaDAyT0RzVGtxNU9UR3NNNUo1N2No?=
- =?utf-8?B?TytYbldBUUZDa1oyUmd1dzFvY2NvV0NQRnBwS0lqenQxNlB3TTJLTTZCd1Y0?=
- =?utf-8?B?bWUwU1NZYlRhUGh4eEpTUHJEb3YycFJtUTRSTmk2NzljUGxOcFhmc3RMY0pT?=
- =?utf-8?B?L3A4akdXWlZzNVo4VVY1VTBjUGJyTXZmb2pTc1pGeXBSTjA2NG5hVUhqQ1d2?=
- =?utf-8?B?Mk9EbElhUXNQc25qYlN6ck5lR0dtNzk4NS9jYXd4bkJ2eUlpS3g4WktmaVpk?=
- =?utf-8?B?by9XbDZIcUNWWC91dEp3VDJiZHNMSENOMUg4czhWcEhac2lBQlBzSGVCRDJu?=
- =?utf-8?B?aFcwOWNrM0JoQW43bzdXNTZOYWRsTHo0S21QTkNpcmsvU0U2WTJtUnErV3Uv?=
- =?utf-8?B?UCtPK3RsYjV6Wm9vSEUreGpLZ0xSYXg0NGwvS0JTMjFYM1QvMEZHa3dBNmVu?=
- =?utf-8?B?UXZTdERMZnZhMVRYVnhlNDdRdHNSNjliY0VDOUxxaGV5b0RORDZWU3Yrejd5?=
- =?utf-8?B?VFFyYmFGRmw4M2hMdU1kOEZwbFFuRGtWSklzRFdFNU9xSjlVSm1MbDhIMmJF?=
- =?utf-8?B?VG54R01KTmVCR00vazNVQVBkQUFvZWZDQ1hUV20rR0I4U05xOVA0RUtUcEhJ?=
- =?utf-8?B?WkNrTndzNGM2MUFWSVhFQnFrM1U1TmZOUTVEZ2RHK2NlS2JTYUFrbTNDNUxQ?=
- =?utf-8?Q?qApWvCue0/h3yqQEJeAwPTEAtnsXd81RmLIjo=3D?=
+	=?us-ascii?Q?DAtzreR9kMMEbAtx1hKz4WegI1dGwkj4bCTWpFO9dovM5fjQA+bgg6q7io7p?=
+ =?us-ascii?Q?yNkkE2MHUVmS1SqcWlTGTGKUlxIgqHXlrC5GeKOTqwjGJ3XIT798DiwdaVst?=
+ =?us-ascii?Q?+FFf5WHKrzLH7actLG0WOWfJwocvR53XlALAdgwOl3fdePYJUEUeC3gvjMj4?=
+ =?us-ascii?Q?5cnTLsNwUkfK2sYiclOvkC5Q2zCkRDQF3s7YNJZH1wGZS2JR/a/zrWEfbUYZ?=
+ =?us-ascii?Q?tjcLXbS0FxoeiuP124I5e9Hvv2yJtYv/sQKLCr4uyuToLSI8TCkP+V59l140?=
+ =?us-ascii?Q?Vf5hfLpHbbn+sDwHfJt/xWqLJV29e0tdczpNXniIrocArRL4yHImJIQ9f9Dn?=
+ =?us-ascii?Q?T58Vp7Sk2tupctlp71Z6jAABrjqhkbCL+2hThJOyOqakVxf8rMN3TcCh9qLs?=
+ =?us-ascii?Q?sSlw6PcquFK2u6P6uFikeG2K7Wi6+pOIZy8sbQi8p/hnuPbhIMFa8vDQC2FG?=
+ =?us-ascii?Q?UMh7SkaHB6YXf4GmLCHDTxqvti/B5FLyJlc+zP9XZmwB7ctlx/jWHlfpju6K?=
+ =?us-ascii?Q?2RRlv0EzldPGXmsGDulyxT0fF26UAiTSl35mtth+T+xQ6/pAxFS1/HwMsIzK?=
+ =?us-ascii?Q?rOQkQhuQrOozIRWF/ODSq4bn5iE6paUJictTLPv7lcmgblLyIYHSPdpOAw6r?=
+ =?us-ascii?Q?HVaQYdbdb2rXFMLWrgJlzqCtRPjm6glk8mSL8pTzMNdz6NPMtCZKxxxi1UVh?=
+ =?us-ascii?Q?3sGBZywp5ghkIIzxtkMujoDXyNZVSGCERkE3DjDkPnrOqHR7Wy3qpJP3pbO3?=
+ =?us-ascii?Q?8WuWhlssNoHKLjLaCwxj9/7vsuMUrl6zq6XGDwZNYH5GF2msM9HSftRD3Ryx?=
+ =?us-ascii?Q?u5VEViUaP6oJiLzBThPJ/t2ut7A47910HZO+2jQR8xcASfN4Eocq0ev/HdZ0?=
+ =?us-ascii?Q?CL2mLKWbGdWrN/2HsNrWgD+qm3xtnRftddkKpNQCVgMST+X3k1PNwP2a7kYE?=
+ =?us-ascii?Q?wTEBrkStm26XUUhYbe2U3c/wvNVC6CCS4DxaZlikYq17IthJ+VLmQ39AFek7?=
+ =?us-ascii?Q?PU8CZo49/ikBU99lsmXRQgz2OCgYMf9luXv44yQEvbuZYiCXoXBbYJ6kdNsn?=
+ =?us-ascii?Q?CwkAfqu9gcXFfab5w7DQ/eK/9jYGYUwAK12e+y0Ra7/AzJbq6moQv8bE9YmX?=
+ =?us-ascii?Q?jKTSUAsoITa1lxv6TsVGq/HAGes/6fCcxHi47Q0ez7Zz9JkiFdaZncWtZr+2?=
+ =?us-ascii?Q?G73NRdgmKW7E1s9+3wUgcicbfuLh+bJq0GxtbxWgt8UcR+X1ndYW+6T2/LbG?=
+ =?us-ascii?Q?gabbKUdAbTqSxKhiVWYfQvtY0D8Yoi1qOuyGyicduTwyxB+1/GAJO1E/X/9a?=
+ =?us-ascii?Q?TAqkpIxaHOYquZyOb4ZF1sztYt9sXk1szjZsxyP+u/Ot5QDqL9LDo6vgSxQq?=
+ =?us-ascii?Q?jYT/HkPEf4cFrrqYXuo6EqBcd8CTfuBdbiZS6f4ENZZmrsRsUdjZviWme2G8?=
+ =?us-ascii?Q?bR1ZHVKbEMQ=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AS8PR03MB9047.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(10070799003)(376014)(1800799024);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?djZvRHpBdFliSzh0Mk5ZWVM1NUszNHZaZlFnRlJpc1U0b294bWpyd25XNHo3?=
- =?utf-8?B?THNjWjRaYmZLQmJ1T3dVaUtSTHgycUFvM0JIdW9sUzJpK0tlNnY2cmUxY0dk?=
- =?utf-8?B?Sm83cHhORHNqbXUwUUNVQ2dXNUE4Z2wvRk5Qck5sYm1pUSsrdjlrYUVQZWNB?=
- =?utf-8?B?WWtiakdoQzlJT3cwZ05pSDZpb2E2R0tvbmFhNDJkQmdQLzZIUHRLcGE2ZDUx?=
- =?utf-8?B?U1BSb0hHbmRKNTBNQnhIS1huNldqaXdGZCtESjlmcjBMOC9SeWRJZHI1K1Zt?=
- =?utf-8?B?T3VQWFVObUxkS25DMEdTU3g1dzlWcnNhQmczT1ZxNzlRYUVLYUJmb2orVjNv?=
- =?utf-8?B?Q3BoMFRyeUY2TWVVcFJnVk5FS3AvcFhtNWRIbnV5M0hDV1g3SEl0TE9xbnVY?=
- =?utf-8?B?NHlkSlBYbGhlU2VMUUgwUTBodFpRN0FYOUJONHBCbEh1U2U3bFBEMmRRaWVo?=
- =?utf-8?B?bmpRRVlmSEpEcEh2em5uSnkxcDRoTzJDemZ3TWM5T3VIRG93cHlSVi9VTmVY?=
- =?utf-8?B?R3dSa21mWFljK3ZyckdkWHkrZ0RocHVYTm5pc3RTOElMVXRSNEJ1anBEemRJ?=
- =?utf-8?B?TFk4VTMzZjFQT1F4clVWOHNGMDlud0Z3cEhoWTAzbHpoYkFNZmFTWnpDUFR3?=
- =?utf-8?B?S2o0emZ3S2RndXZpVFJZcUk0eTRrYlVRU3NwOG53eWM5aUZpZVFIYjZ0RnNE?=
- =?utf-8?B?Y0VTL0VJUzVpdEFDZy9aOEYzbFJ4bVhzbzV1QmJSR0E3M0lFZlJmREtwNFJV?=
- =?utf-8?B?M1JyZndqU1Q1MXNpM0JtaDQ1NGFnRCs0N2NnTnJyUzZHN1FTZllDY2ZKRk1s?=
- =?utf-8?B?MG9QODYwUUs4bUpwVUFFRVhKN2tVY0VjbVBMMm1OOE5pWFhRWHRkd04wZm4y?=
- =?utf-8?B?UUQ0L0RSaWlqbER6NFhPcEZCaEFzNHZaQmdnTnR5UTVBakpBUlFobFBnd1F0?=
- =?utf-8?B?bE1DNFJVenpOSWxPMDArbEVreUxab2hJUzJETFJZZ1pkcFRTVTdxbUlKZFR2?=
- =?utf-8?B?TC9hMlcwQnJQMHcveGdkY3p3ZG9jUjc2VkxIL3BXd3JtblFmendPTzFyR1Yr?=
- =?utf-8?B?aGFtbTNHNUtjT2pPWGMwYTlLc21QQW1MYi8rZ0ZEV2tteUhHdzJUNk5mZHBi?=
- =?utf-8?B?eU9Wc0w3aXBCNlEwbGRmVVc0V1J2bzBjVmVTUTQ2NlA0bmlWOHBQUFAwZXlB?=
- =?utf-8?B?Rjhha1BQQkE1NFdWbTE1YktxcnpxTWIyV1M0a2hibU1GMTk1SmEzUm4xcW5q?=
- =?utf-8?B?NTVMZnNkNmFGY1piZlYzc0dCZlhQSmxyNm01L3dDWXlJMlR3ckZWVVM1NGZl?=
- =?utf-8?B?a2VUSjZXZTd0dGh5eEl4ZUIzTHdMemZybndmYzFpbDlnNklva1N1Q0hUbFFF?=
- =?utf-8?B?TGdSUUc4UXhDZ0duNkcxSFVxQ2lzVWE1RDFlRGgvVlRrK0dzM2F5VWpucnVL?=
- =?utf-8?B?bmx1LzA2QVlTdVFpeDN5UUNWOEVic25NS2RReUdncXhCK05seWFKclgwNlhW?=
- =?utf-8?B?eXhtZFdGOXdHVWZqNnN5cXBHYUNoKzIxdyt3M2xsTmlnNVdLVWtOOWYremY5?=
- =?utf-8?B?OGk5TjlMVzhhMUIxa3I2UU9JMGNvOTd1WVowcGtQdW5za1ZKaDVsYldZRG9Q?=
- =?utf-8?B?NnN6NDhobDFZSmRZM2d4NnRtM01BdXVHakZuc3VOYUJQaXVyVCs0b0YvZERi?=
- =?utf-8?B?YTJZelZreVJ1T013ZVN0SlJuUEI4R1c5VG5LSnpEaVhBQXlmR2d2SFFEQ3lM?=
- =?utf-8?B?djRiV0prRk1rQ0RkbHBnTk0wRlphMGhnTVVKUFpNZFh3UWhhM1B2WjZvQnNv?=
- =?utf-8?B?d2V2UFpTZm5RajhmQjExRDNXOXAyQlY3TjRKKzk4NEM3QW9wemlFWmVrQkNj?=
- =?utf-8?B?OWVUZVRZZlVNQnFqU0c5SythSVlHZXNEVEVjTEdPWjloS2Rja2w0alNiV3dK?=
- =?utf-8?B?Zk13cXdqd3owaW1raVdMbHVVVlMySWk0UlZqalRtZ2IxVmpTNG5nSGlva3Nu?=
- =?utf-8?B?UTYvL1VMRGJJZ2I2SGwzRHBzZHU5WXBqZEtSSzVNQk83MHpya2tyQW54bmVs?=
- =?utf-8?B?ZEMwWG0wRHg4OUFTSmRBU20rdjh4alV1aFlia3A0SHE5dW5ibG45akZLaU9U?=
- =?utf-8?B?cTJRWTZsVndHdlR0THE3RHFNMXZTQXM4OTA5aHdCMG45ZlNNMG83cGxOM3o5?=
- =?utf-8?B?T0Z5QVh4WDFmRnV1Q0N3azZ0OVA0bkxnN1c3RGpQTVFxbWNCSUlkVS9Db0M4?=
- =?utf-8?B?RVZCNG5YNU1CajlJUGh2TkJGeWZBPT0=?=
-X-OriginatorOrg: uclouvain.be
-X-MS-Exchange-CrossTenant-Network-Message-Id: b107f508-706a-4a23-dcde-08ddb33632d8
-X-MS-Exchange-CrossTenant-AuthSource: AS8PR03MB9047.eurprd03.prod.outlook.com
+	=?us-ascii?Q?J5w52+lZixIum4mP/zIMgYdYJaX6pb8Z91kmlDNhquW5M0vKXVj7+qY/bEeC?=
+ =?us-ascii?Q?QGB3vfXHdJ8Bi2z7gvnmaUpf4jIXXOnv/cCOHpBysnSPEeLT/Gvt4Io8smv3?=
+ =?us-ascii?Q?maNUyN5+b8fflmXKCBBHkxl3eXJhEf7fJLtM8rORhoW+mVXFhiOUlVigJhyi?=
+ =?us-ascii?Q?EQZFMYbqHPHdfK3THaxZxULvvaMrWQIFfF7352Ac4kbm+MaVY9aQOQbTQIMh?=
+ =?us-ascii?Q?HC5asY9lhLoWnWuO6YL6Jg6Irq2Nj/F3xxZW6s5VFKpXfZbPgDJp4ajtlO0h?=
+ =?us-ascii?Q?VE8KOXdDxUSly0lGHta3wC7INowiZFVsKdBJOQuWvls2thpximK85IxiAI5F?=
+ =?us-ascii?Q?ontxX9ihYCHoVAMBDsKW/33LjxtNBELFLqtFL5OfJO/tOz8iokzQR0iAl0nD?=
+ =?us-ascii?Q?z9tTE1hBnDMc7ATyw7jOc1TT0OjSJo270N4uCtt7pIF5JFM37F2t6fow4+Vs?=
+ =?us-ascii?Q?JbG/B0mWJvOtiAUjdjnYnylSQ3s4Bf2KU0GhuoJxBXQUJekuEstB2Qkv33FF?=
+ =?us-ascii?Q?dm1BDEZqtvC8QLCxSD/W2Jvuc1/jFKI3o7g6bMs35CHEfuVh+vWMZCT1HUIu?=
+ =?us-ascii?Q?BsiQCeUyM1VMYYtddSDSXovTunfdnQj2WW/9ysp7ZmTjZwE5ZpYRd3/eOVdK?=
+ =?us-ascii?Q?GF5mBwfrj6iPdA7TyOLEDsKYzqjCxHpwozfS3C5vnF8wKaT4jn1hQeL5J8lh?=
+ =?us-ascii?Q?iRcTxPPCwCYeDoG/ni+Nez0+bzhm8ji85gS1E5s4CR/7f264ZByUGs+mvEdv?=
+ =?us-ascii?Q?xZC+0uDgMH8vSJqqv4vFb+70JSxybgVsObuM4tgudsy/qd3/lFqceVk/gA4q?=
+ =?us-ascii?Q?qooAh04V0AaF6aeMHsmZt9bckCYPu7TC6JGzeIGkVtJlNNn3NsnmokL171bp?=
+ =?us-ascii?Q?3HsyzsT9LZdAkf7RYwv/fVryLUiMztZDJrMaHgxvWMpO7/hp/Dfd7sksxzMI?=
+ =?us-ascii?Q?ReSq39dUQoPXcS303zE/kcszwCjXz2Zo7QeyfUqXT5t4BC97DybJls2qufw/?=
+ =?us-ascii?Q?McZVagipcnMApeNd7BPpAx6NAiDGlWGnKc3ogDRyXJSw0VfUSBlrmkdXZCpr?=
+ =?us-ascii?Q?cb4nbS7QtjBaW75EA6dJUpQlwZA+jMTzkQfmhKm2EZDzxCiYsEwoZanGmWAX?=
+ =?us-ascii?Q?LkxTKHH2dVyC5ELLE0I86kFh90Zvf1z1qEQmJx7uuBgJeexZXcUsuvKYj4LS?=
+ =?us-ascii?Q?gGsM5DJ97IZcTj3SPGOP8hNiDpMgCiZN5y0Zm8PDj+d05t07SsheW7lfjLXz?=
+ =?us-ascii?Q?hMcNZbt+ch70EC6dWTFg7NsWrzwEGWxJmsEFmtlJSbd4SgxtP0OummXjzzl3?=
+ =?us-ascii?Q?KcCa9gJLXhGUT0LN41V+NZkHqRjHnPtc5nM/WgbmQFDpalCgGjT6FNuXR+Cc?=
+ =?us-ascii?Q?EpqLYSt2bp6CsqKUAxiRSO6JvpDnHLd+9+8NUvEQvI9tenedVq9berPny+cR?=
+ =?us-ascii?Q?dYQanKsNqYwb0IUQgiszgvMQVMzP71f6Zhpp7pUnaCdLKmRQV6XFQ+uGFePb?=
+ =?us-ascii?Q?c/Wx/3nIdlVHbzFPU0IQQTdOzCEgs1xwNZ9LobP8FzO7z3Ryj4AdWWTTUH3y?=
+ =?us-ascii?Q?eFZm6A8tBoCrMflkmUK1gx9nyYmeqn0C3DA/rWVCX4igstlBrPzUOjAcKNXM?=
+ =?us-ascii?Q?jw=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
+	0GaNVJVpvc0M2ftD81wZ/uShvCEqgyO077qneO9RmU3lWGyo2VHdrjhDAsyEM79IbOmJAsCbtvtdksihDVLBauMyBSLLf2PQFc0VSv+Kg/nrBKiYYCvrJszqNnYo2LTieG9OrsuW49+SX+G0ZB1yL/qXB4iwb1DNcaxPzCkJgMksWUYu19vv2N+VDhE8KEh80dSISOIUsAHMcJQW/Qxyl9K5yN8mXNGZcLsLxZ85Rqu6xJzrJHmRvnrBcpXb8NJswi8DAlxAAL09LSH1XG6Fzp+STnKQ7vlFYQlvE1Di6Dftg3Oi4tnv8khOHp9i7DVJTGSrCfjMmn9ioA7AyOLxNP94GpE/Dr2As950tK/3oCKiDQOuua8sK7cGMfQeS93ljEBkPea1orjD5fVFGlHF5yLG/LCNPdAWR9cqw5OmN4HIsQuSpyfaIrtFhWe76Q/vBifatTsV+CYak6FllJUs2GZJyyvLwnR89bAzcsHXiCGMvrGzw0LV4QWsKox5SaeLJL4SqokK/46mcJnRGPZnRk/FBjch2KdotxO18VjiCvoW+vQKcQ0qA+q+RHE2RTuJOrekwC08EAoQfezkJifqKWiEuXcJwWYGepGKXr60ZPw=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f4af56cb-2086-469a-2c2a-08ddb3363649
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 15:45:52.0942
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 15:45:57.7753
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 7ab090d4-fa2e-4ecf-bc7c-4127b4d582ec
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yG3BeSlcDIZnOjRvl7WcmK0Gnwm5iarW2YAiNPyK5Zl37Wd9m7hcPCBmH3f3N5fQARCZEYOcqIwmymcLo7N+yw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR03MB9988
+X-MS-Exchange-CrossTenant-UserPrincipalName: BYw3s3FkCHhFCe3sPaN2GgUQjQSBLnonD7NrJ0bS8qR5P05XXcepuhdqyeqd91ZKOfiVeqk9d46N9k4Crj86XE0QMsNwqAQ3cZQf911tJjg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR10MB4860
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_06,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2505160000 definitions=main-2506240132
+X-Proofpoint-ORIG-GUID: 8VLbBst0y_zATkSGh3Kl36djCNjP62J0
+X-Proofpoint-GUID: 8VLbBst0y_zATkSGh3Kl36djCNjP62J0
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDEzMiBTYWx0ZWRfXyzpLtCFawRK8 4viKx6w3MV+b+Nv97ZGbNO28xFxD2yYHSdJCl+deGPkxXJUy+gjXIbxQ/Xp+BFmOaAeX3QTeNvF Y3gH7sSFQZHRzS/t/0eC2TXZ1DFcyPrYG7yzXDb4OJYrCnd2R3Sj4kTWyYkDpcITzVZTze5PVF6
+ ODa3jnWMjFuEC6mGVYpcnQdStu0Dc9/AP8BcQGoXO/K/1icgDnzPWQOxKCnjyToAzrw2BsUhqwv bKkh/rSV7RZMzlcF6sfgtORYgX4RDs8zyQ0LpLbHkmAyhagGL/3bj0MGk6zy7DU7FLaZw8kDDrM j45mCuu2KUDfKh4I4efM/7zyZ1d+NM86I1jaMLcoA6UiN4Si0aeAhwyMnYlt39VHyDHitopdEJ7
+ zOnO1kqY3F/DfgSCoPAjdVHaOW1Y7vazI1NDkk2WPHYQVyGrx0xOoLWWwFRkGmIgaodxv5E8
+X-Authority-Analysis: v=2.4 cv=S5rZwJsP c=1 sm=1 tr=0 ts=685ac83a b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=6eWqkTHjU83fiwn7nKZWdM+Sl24=:19 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19
+ a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=GoEa3M9JfhUA:10 a=yPCof4ZbAAAA:8 a=Z5dEeDZ-bys1F5YNRK4A:9 a=CjuIK1q_8ugA:10
 
-
-
-On 6/6/25 1:40 PM, Peter Griffin wrote:
-> Hi Thomas,
-> 
-> Thanks for your patch and working to get fuel gauge functional on
-> Pixel 6! I've tried to do quite an in-depth review comparing with the
-> downstream driver.
-Hi Peter,
-
-Thank you very much for the in-depth review!
-
-> On Fri, 23 May 2025 at 13:52, Thomas Antoine via B4 Relay
-> <devnull+t.antoine.uclouvain.be@kernel.org> wrote:
->>
->> From: Thomas Antoine <t.antoine@uclouvain.be>
->>
->> The interface of the Maxim MAX77759 fuel gauge has a lot of common with the
->> Maxim MAX1720x. A major difference is the lack of non-volatile memory
->> slave address. No slave is available at address 0xb of the i2c bus, which
->> is coherent with the following driver from google: line 5836 disables
->> non-volatile memory for m5 gauge.
->>
->> Link: https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef474573cc8629cc1d121eb6a81ab68c/max1720x_battery.c
->>
->> Other differences include the lack of V_BATT register to read the battery
->> level. The voltage must instead be read from V_CELL, the lowest voltage of
->> all cells. The mask to identify the chip is different. The computation of
->> the charge must also be changed to take into account TASKPERIOD, which
->> can add a factor 2 to the result.
->>
->> Add support for the MAX77759 by taking into account all of those
->> differences based on chip type.
->>
->> Do not advertise temp probes using the non-volatile memory as those are
->> not available.
->>
->> The regmap was proposed by André Draszik in
->>
->> Link: https://lore.kernel.org/all/d1bade77b5281c1de6b2ddcb4dbbd033e455a116.camel@linaro.org/
-> 
-> I think it would be worth noting in the commit message this is basic
-> initial support for the M5 gauge in MAX77759, and things like loading
-> & saving the m5 model aren't implemented yet.
-> 
-> That's important as some values such as the REPSOC register value used
-> for POWER_SUPPLY_PROP_CAPACITY show the result after all processing
-> including ModelGauge mixing etc, so these values won't be as accurate
-> as downstream.
-
-I will add that to the next version.
-
->>[...]
->> +static const enum power_supply_property max77759_battery_props[] = {
->> +       POWER_SUPPLY_PROP_PRESENT,
-> 
-> I checked the register values match downstream - this looks correct
-> 
->> +       POWER_SUPPLY_PROP_CAPACITY,
-> 
-> I checked the register offset matchs downstream. The value reported
-> varies a bit versus downstream. As mentioned above that is likely due
-> to the REPSOC register reporting after mixing with the m5 model which
-> is not loaded currently. Also the application specific values and cell
-> characterization information used by the model isn't configured
-> currently (see link below in _TEMP property below for the initial fuel
-> gauge params used by downstream.
+On Tue, Jun 24, 2025 at 03:03:48PM +0200, Vlastimil Babka wrote:
+> Use madvise_lock()/madvise_unlock() in madvise_set_anon_name() in the
+> same way as in do_madvise(). This narrows the lock scope a bit and
+> reuses existing functionality. get_lock_mode() already picks the correct
+> MADVISE_MMAP_WRITE_LOCK mode for __MADV_SET_ANON_VMA_NAME so we can just
+> remove the explicit assignment.
 >
+> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
 
-I have dumped the model written to my phone by a userdebug stock android.
-If you think it is necessary, I can implement model loading where the
-model is passed in the devicetree for next version.
+Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
->> +       POWER_SUPPLY_PROP_VOLTAGE_NOW,
-> 
-> I checked the register offset matchs downstream. Values reported look sensible.
-> 
->> +       POWER_SUPPLY_PROP_CHARGE_FULL,
-> 
-> Downstream has a slightly different implementation than upstream for
-> this property. See here
-> https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef474573cc8629cc1d121eb6a81ab68c/max1720x_battery.c#2244
+This is a nice idea, hadn't thought of it :) aren't we making anon vma name
+behave now :P
+
+I mean this is a _minor_ difference in functionality in that we will now
+use mmap_write_lock_killable() and could fail to lock on fatal signal
+whereas before we unconditionally lock but I think that's fine, and
+possibly even... desirable actually?
+
+At any rate this is all nice, thanks again!
+
+> ---
+>  mm/madvise.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 >
-
-Indeed, the main difference seems to be to use FULLCAPNOM instead of
-FULLCAP. I will check out to see if both differ in value.
-
- 
->> +       POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN,
-> 
-> I checked the register offset value is correct. However this is
-> reporting 3000000 and downstream reports 4524000. I checked and it's
-> just converting the register reset value of DESIGNCAP which is 0xbb8.
-> 
-> This is listed as a "application specific" value, so it maybe we just
-> need to write the correct initial value to DESIGNCAP (see TEMP section
-> below)
-> 
-
-The value  3000000 is the default value which will be set after a hardware
-reset. I was able to extract the init sequence from a stock android.
-It indeed writes the DESIGNCAP value. Here is a summary of the registers
-written to upon a hardware reset. When (DTS) is written next to it,
-it means that the value is exactly the same as given by the table in
-maxim,cos-a1-2k at the link
-https://android.googlesource.com/kernel/gs/+/refs/heads/android-gs-raviole-5.10-android15/arch/arm64/boot/dts/google/gs101-oriole-battery-data.dtsi
-
-  "0x05 0x0000" #REPCAP
-  "0x2a 0x0839" #RELAXCFG (DTS)
-  "0x60 0x0080" #COMMAND UNLOCK_CFG
-  "0x48 0x5722" #VFSOC0 (Value read from reg 0xff)
-  "0x28 0x260e" #LEARNCFG (DTS)
-  "0x1d 0x4217" #CONFIG (DTS)
-  "0xbb 0x0090" #CONFIG2 (DTS)
-  "0x13 0x5f00" #FULLSOCTHR (DTS)
-  "0x35 0x08e8" #FULLCAPREP
-  "0x18 0x08d6" #DESIGNCAP (DTS)
-  "0x46 0x0c80" #DPACC
-  "0x45 0x0094" #DQACC
-  "0x00 0x0002" #STATUS
-  "0x23 0x0905" #FULLCAPNOM
-  "0x3a 0xa561" #VEMPTY (DTS)
-  "0x12 0x2f80" #QRTABLE0 (DTS)
-  "0x22 0x1400" #QRTABLE1 (DTS)
-  "0x32 0x0680" #QRTABLE2 (DTS)
-  "0x42 0x0580" #QRTABLE3 (DTS)
-  "0x38 0x03bc" #RCOMP0
-  "0x39 0x0c02" #TCOMPO
-  "0x3c 0x2d00" #TASKPERIOD (DTS)
-  "0x1e 0x05a0" #ICHGTERM (DTS)
-  "0x2c 0xed51" #TGAIN (DTS)
-  "0x2d 0x1eba" #TOFF (DTS)
-  "0x2b 0x3870" #MISCCFG (DTS)
-  "0x04 0x0000" #ATRATE (DTS)
-  "0xb6 0x06c3" #CV_MIXCAP (value = 75% of FULLCAPNOM)
-  "0xb7 0x0600" #CV_HALFTIME
-  "0x49 0x2241" #CONVGCFG (DTS)
-  "0x60 0x0000" #COMMAND LOCK_CFG
-  "0xb9 0x0014" #CURVE (DTS)
-  "0x29 0xc623" #FILTERCFG (DTS)
-  "0x2e 0x0400" #CGAIN (hard coded)
-  "0xbb 0x00b0" #CONFIG2 (DTS | 0x0020)
-  "0x02 0x0780" #TALRTTH
-  "0x00 0x0000" #STATUS
-  "0x17 0x9320" #CYCLES
-
-As can be seen, most values come directly from the devicetree but some
-are not present in there or differ from the value given in the devicetree.
-
-Without a similar init, charge and temperature will be non-functional
-other values will most likely be wrong.
-The fuel gauge stays powered through reboot so it doesn't reset even
-when switching from android to linux, meaning that without any hardware
-crash (e.g. empty batterry), the chip will look perfectly initialized.
-A hardware reset of the fuel gauge can be forced by writing to
-/proc/sysrq-trigger or by writing 0xf to 0x60.
-
-I am unsure about what to do about this initalization, especially for values
-which slightly differ from the devicetree. I think for next version, I
-will have the same parameters be passed in the devicetree like android.
-(except maybe IAvgEmpty which seems to be unused in the downsteam driver?)
-
->> +       POWER_SUPPLY_PROP_CHARGE_AVG,
-> 
-> This property isn't reported downstream. The value is changing and not
-> just the reset value. I noticed REPSOC is an output of the ModelGauge
-> algorithm so it is likely not to be completely accurate.
-> 
->> +       POWER_SUPPLY_PROP_TEMP,
-> 
-> I checked the register offset value is correct. However the
-> temperature is always being reported as the register reset value of
-> 220. This is for obvious reasons quite an important one to report
-> correctly.
-> 
-> I started debugging this a bit, and it is caused by an incorrectly
-> configured CONFIG (0x1D) register. In particular the TEX[8] bit is 1
-> on reset in this register which means temperature measurements are
-> written from the host AP. When this bit is set to 0, measurements on
-> the AIN pin are converted to a temperature value and stored in the
-> Temperature register (I then saw values of 360 and the value
-> changing).
-> 
-> See here for the bits in that CONFIG register
-> https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef474573cc8629cc1d121eb6a81ab68c/max_m5_reg.h#403
-> 
-> In downstream all these initial register settings are taken from DT
-> here  https://android.googlesource.com/kernel/google-modules/raviole-device/+/refs/heads/android14-gs-pixel-6.1/arch/arm64/boot/dts/google/gs101-fake-battery-data.dtsi#27
-> 
-> For temperature when TEX=0, TGAIN, TOFF and TCURVE registers should
-> also be configured to adjust the temperature measurement.
-> 
-> I think it would likely be worth initialising all the fuel gauge
-> registers referenced in maxim,fg-params as that includes some of the
-> application specific values for DESIGNCAP, also some of the cell
-> characterization information, and hopefully we will get more accurate
-> values from the fuel gauge generally.
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index cae064479cdf908707c45b941bd03d43d095eab6..ee02ccd0315a146cdb3001cd189e03be9e48a2ea 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -2082,10 +2082,10 @@ static int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
+>  {
+>  	unsigned long end;
+>  	unsigned long len;
+> +	int error;
+>  	struct madvise_behavior madv_behavior = {
+>  		.mm = mm,
+>  		.behavior = __MADV_SET_ANON_VMA_NAME,
+> -		.lock_mode = MADVISE_MMAP_WRITE_LOCK,
+>  		.anon_name = anon_name,
+>  	};
 >
-
-See previous comment.
-
->> +       POWER_SUPPLY_PROP_CURRENT_NOW,
-> 
-> I checked the register offset matches downstream. Values reported look
-> reasonable.
-> 
->> +       POWER_SUPPLY_PROP_CURRENT_AVG,
-> 
-> I checked the register offset matches downstream. Values reported look
-> reasonable.
-> 
->> +       POWER_SUPPLY_PROP_MODEL_NAME,
-> 
-> This property isn't reported downstream.
-
-Is this a problem?
-
->> [...]
->>  /*
->>   * Current and temperature is signed values, so unsigned regs
->>   * value must be converted to signed type
->> @@ -390,16 +507,36 @@ static int max1720x_battery_get_property(struct power_supply *psy,
->>                 val->intval = max172xx_percent_to_ps(reg_val);
->>                 break;
->>         case POWER_SUPPLY_PROP_VOLTAGE_NOW:
->> -               ret = regmap_read(info->regmap, MAX172XX_BATT, &reg_val);
->> -               val->intval = max172xx_voltage_to_ps(reg_val);
->> +               if (info->id == MAX1720X_ID) {
->> +                       ret = regmap_read(info->regmap, MAX172XX_BATT, &reg_val);
->> +                       val->intval = max172xx_voltage_to_ps(reg_val);
-> 
-> I think MAX1720X using MAX172XX_BATT register is likely a bug as the
-> downstream driver uses MAX172XX_VCELL for that variant  see here
-> https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef474573cc8629cc1d121eb6a81ab68c/max1720x.h#304
+> @@ -2106,7 +2106,14 @@ static int madvise_set_anon_name(struct mm_struct *mm, unsigned long start,
 >
-
-Based on the comments from Sebastian Reichel, it seems that it is
-downstream which is wrong:
-https://lore.kernel.org/all/4cahu6dog7ly4ww6xyjmjigjfxs4m55mrnym2bjmzskscfvk34@guazy6wxbzfh/
-
-> Having said that, if we do need to cope with differing register
-> offsets for the different fuel gauge variants it would be nicer to
-> abstract them in a way similar to the downstream driver. See here
-> https://android.googlesource.com/kernel/google-modules/bms/+/1a68c36bef474573cc8629cc1d121eb6a81ab68c/max_m5.c#1235
-> I think that would be more scalable in supporting multiple variants in
-> one driver. Otherwise we will have an explosion of if(id==blah) else
-> if (id==blah) in the driver.
+>  	madv_behavior.range.start = start;
+>  	madv_behavior.range.end = end;
+> -	return madvise_walk_vmas(&madv_behavior);
+> +
+> +	error = madvise_lock(&madv_behavior);
+> +	if (error)
+> +		return error;
+> +	error = madvise_walk_vmas(&madv_behavior);
+> +	madvise_unlock(&madv_behavior);
+> +
+> +	return error;
+>  }
 >
-> kind regards,
-> 
-> Peter
-
-
-I completely agree about the need for abstraction if we want to keep both
-chips in the same driver. I will try to implement that for next version.
-Best regards,
-Thomas
+>  int set_anon_vma_name(unsigned long addr, unsigned long size,
+> @@ -2136,9 +2143,7 @@ int set_anon_vma_name(unsigned long addr, unsigned long size,
+>  			return -ENOMEM;
+>  	}
+>
+> -	mmap_write_lock(mm);
+>  	error = madvise_set_anon_name(mm, addr, size, anon_name);
+> -	mmap_write_unlock(mm);
+>  	anon_vma_name_put(anon_name);
+>
+>  	return error;
+>
+> --
+> 2.50.0
+>
