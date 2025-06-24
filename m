@@ -1,92 +1,189 @@
-Received: from mx10.didiglobal.com (mx10.didiglobal.com [111.202.70.125])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 98FF722CBC6;
-	Tue, 24 Jun 2025 12:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=111.202.70.125
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCA9291C0A
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750767160; cv=none; b=bMmM5M30Oe1O3t98mpUyMn1b8GjYYYWALKWYmhCUbnSz1NgJ+gltLXl9GxxsVHgi17azK5YnTKH/gQm9xoH3xCLMrWBqnqrj5JAALRJFC3rUpbFaRpWqO0lmEdWRZVMSgbTntWO+cdGV2jzoRQpt2dsrpXsd6pXs6RV79awsruw=
+	t=1750767162; cv=none; b=hlxcdnGFlQLmNuORmRczEn/IrtXYrXuftZxyIjrOusbI9kOwy2MdHqYsyLzyDhhAD3vaJOsxo3X9vtSUAhhzDh5z+kf/86kYM0/NrVNxSBADekFbENtGABlMngQ0ho5pBdQzTkXF2Er/ovJwQfCmnVYsWMVWwtYsg///wpCuaf8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750767160; c=relaxed/simple;
-	bh=iuF1ZOur63OjUvd6ybvJnLgKwbJ3U/NzwPXRo3n32rY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:Content-Type:
-	 MIME-Version; b=SS5AkFix8Cyu8iw9MmoHgPV5VY3hTtic3ey1Sd1GVebT1DRRDf2sLSbW8qYq8qQ6iNxPV8a4Qa8vibkbCb39VDXSBqIB/4n1+29JA6Rm6SelDIIsrWlNjCZPuV3SVmiPK7YEmUBXiSZojjbZKPzOw/Q3hy9Y6gZ/wsx058BE+Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com; spf=pass smtp.mailfrom=didiglobal.com; dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b=jG1fTpFZ; arc=none smtp.client-ip=111.202.70.125
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=didiglobal.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=didiglobal.com
+	s=arc-20240116; t=1750767162; c=relaxed/simple;
+	bh=SgIr6L2oaejeRbPLRrIj9CqtuNxh2Fdf51nqwD2Vq24=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p1Jq2+qnyvivzmWqG4qtxrbsa7a8VXNEEZVfllBUJiPHcr4ErBUgL7S9q2XIQ6eRzI7jpDkiwzYs0TPusTSSeJedh8f02Yvk8zUjfqX4CrCdPUdUxpHy26M2zZPiwhkU4wdlocneOXESEYGiP1SQ8JIvQGMXVkuCwM6YD2eme2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TfHcsq2q; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=didiglobal.com header.i=@didiglobal.com header.b="jG1fTpFZ"
-Received: from mail.didiglobal.com (unknown [10.79.65.20])
-	by mx10.didiglobal.com (MailData Gateway V2.8.8) with ESMTPS id 3B0B71808ACADD;
-	Tue, 24 Jun 2025 20:11:29 +0800 (CST)
-Received: from BJ02-ACTMBX-08.didichuxing.com (10.79.65.15) by
- BJ02-ACTMBX-02.didichuxing.com (10.79.65.20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 24 Jun 2025 20:12:11 +0800
-Received: from BJ03-ACTMBX-07.didichuxing.com (10.79.71.34) by
- BJ02-ACTMBX-08.didichuxing.com (10.79.65.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Tue, 24 Jun 2025 20:12:11 +0800
-Received: from BJ03-ACTMBX-07.didichuxing.com ([fe80::b00b:de35:2067:9787]) by
- BJ03-ACTMBX-07.didichuxing.com ([fe80::b00b:de35:2067:9787%7]) with mapi id
- 15.02.1748.010; Tue, 24 Jun 2025 20:12:11 +0800
-X-MD-Sfrom: chentaotao@didiglobal.com
-X-MD-SrcIP: 10.79.65.20
-From: =?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
-To: "tytso@mit.edu" <tytso@mit.edu>, "hch@infradead.org" <hch@infradead.org>,
-	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>, "willy@infradead.org"
-	<willy@infradead.org>, "brauner@kernel.org" <brauner@kernel.org>,
-	"jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, "tursulin@ursulin.net"
-	<tursulin@ursulin.net>, "airlied@gmail.com" <airlied@gmail.com>
-CC: "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
-	"linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "chentao325@qq.com" <chentao325@qq.com>,
-	=?gb2312?B?s8LMzszOIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
-Subject: [PATCH v2 5/5] ext4: declare support for FOP_DONTCACHE
-Thread-Topic: [PATCH v2 5/5] ext4: declare support for FOP_DONTCACHE
-Thread-Index: AQHb5QE2ZjIKcQrU5kGPOqcDpxUbGg==
-Date: Tue, 24 Jun 2025 12:12:10 +0000
-Message-ID: <20250624121149.2927-6-chentaotao@didiglobal.com>
-In-Reply-To: <20250624121149.2927-1-chentaotao@didiglobal.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TfHcsq2q"
+Message-ID: <3c13dd5f-a7e8-4bc0-a6bc-58e444ae1269@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750767147;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ufwUJ5807HlWNFaJ9enoEVMoAwLoNn56DtDJy9HaZOg=;
+	b=TfHcsq2qmFAxYR05LzB7neMWzDqTRKQD0bzRMo3ryVqaSPkk6jDi5MltfyqOJXBuLE/zuT
+	HtiSuioa5u1ZruaLY0JaXoQe/GJer7B440rfQQWY4rWRTSmINf9FECYUm7YKJTzLq585Rc
+	P4R4cHZ3Q3E6ge4lo4cRQVz6s+46xJo=
+Date: Tue, 24 Jun 2025 13:12:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=didiglobal.com;
-	s=2025; t=1750767111;
-	bh=iuF1ZOur63OjUvd6ybvJnLgKwbJ3U/NzwPXRo3n32rY=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type;
-	b=jG1fTpFZ5DZ3tvJBBpHiw+NcCQv4XiH7nagDsfHKhol3W/U+kb7vKldOhO7jBL3pp
-	 RxJTpSe2q3R/f5c6cru5v8cqEeQmrQEfxebUH3R6/qe2L9xn1IfGNMxKbvlG0CMej/
-	 MWF3ZmON8QiK9ShSKWFSJqmAkMqCtXz1mbNVHfOg=
+Subject: Re: [net-next, 06/10] bng_en: Add backing store support
+To: Vikas Gupta <vikas.gupta@broadcom.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ michael.chan@broadcom.com, pavan.chebbi@broadcom.com,
+ vsrama-krishna.nemani@broadcom.com,
+ Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
+ Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+References: <20250618144743.843815-1-vikas.gupta@broadcom.com>
+ <20250618144743.843815-7-vikas.gupta@broadcom.com>
+ <decb802a-7327-4a9a-8a4a-74970474f42c@linux.dev>
+ <CAHLZf_uByWcXJmdo++fPM=o1GyZZ9pEZmSx8bSy4wbSiGcLDnA@mail.gmail.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+In-Reply-To: <CAHLZf_uByWcXJmdo++fPM=o1GyZZ9pEZmSx8bSy4wbSiGcLDnA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-RnJvbTogVGFvdGFvIENoZW4gPGNoZW50YW90YW9AZGlkaWdsb2JhbC5jb20+DQoNClNldCB0aGUg
-Rk9QX0RPTlRDQUNIRSBmbGFnIGluIGV4dDRfZmlsZV9vcGVyYXRpb25zIHRvIGluZGljYXRlIHRo
-YXQNCmV4dDQgc3VwcG9ydHMgSU9DQl9ET05UQ0FDSEUgaGFuZGxpbmcgaW4gYnVmZmVyZWQgd3Jp
-dGUgcGF0aHMuDQoNClBhcnQgb2YgYSBzZXJpZXMgcmVmYWN0b3JpbmcgYWRkcmVzc19zcGFjZV9v
-cGVyYXRpb25zIHdyaXRlX2JlZ2luIGFuZA0Kd3JpdGVfZW5kIGNhbGxiYWNrcyB0byB1c2Ugc3Ry
-dWN0IGtpb2NiIGZvciBwYXNzaW5nIHdyaXRlIGNvbnRleHQgYW5kDQpmbGFncy4NCg0KU2lnbmVk
-LW9mZi1ieTogVGFvdGFvIENoZW4gPGNoZW50YW90YW9AZGlkaWdsb2JhbC5jb20+DQotLS0NCiBm
-cy9leHQ0L2ZpbGUuYyB8IDMgKystDQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwg
-MSBkZWxldGlvbigtKQ0KDQpkaWZmIC0tZ2l0IGEvZnMvZXh0NC9maWxlLmMgYi9mcy9leHQ0L2Zp
-bGUuYw0KaW5kZXggMjFkZjgxMzQ3MTQ3Li4yNzRiNDFhNDc2YzggMTAwNjQ0DQotLS0gYS9mcy9l
-eHQ0L2ZpbGUuYw0KKysrIGIvZnMvZXh0NC9maWxlLmMNCkBAIC05NzcsNyArOTc3LDggQEAgY29u
-c3Qgc3RydWN0IGZpbGVfb3BlcmF0aW9ucyBleHQ0X2ZpbGVfb3BlcmF0aW9ucyA9IHsNCiAJLnNw
-bGljZV93cml0ZQk9IGl0ZXJfZmlsZV9zcGxpY2Vfd3JpdGUsDQogCS5mYWxsb2NhdGUJPSBleHQ0
-X2ZhbGxvY2F0ZSwNCiAJLmZvcF9mbGFncwk9IEZPUF9NTUFQX1NZTkMgfCBGT1BfQlVGRkVSX1JB
-U1lOQyB8DQotCQkJICBGT1BfRElPX1BBUkFMTEVMX1dSSVRFLA0KKwkJCSAgRk9QX0RJT19QQVJB
-TExFTF9XUklURSB8DQorCQkJICBGT1BfRE9OVENBQ0hFLA0KIH07DQogDQogY29uc3Qgc3RydWN0
-IGlub2RlX29wZXJhdGlvbnMgZXh0NF9maWxlX2lub2RlX29wZXJhdGlvbnMgPSB7DQotLSANCjIu
-MzQuMQ0K
+On 24/06/2025 11:29, Vikas Gupta wrote:
+> On Thu, Jun 19, 2025 at 6:32 PM Vadim Fedorenko
+> <vadim.fedorenko@linux.dev> wrote:
+>>
+>> On 18/06/2025 15:47, Vikas Gupta wrote:
+>>> Backing store or context memory on the host helps the
+>>> device to manage rings, stats and other resources.
+>>> Context memory is allocated with the help of ring
+>>> alloc/free functions.
+>>>
+>>> Signed-off-by: Vikas Gupta <vikas.gupta@broadcom.com>
+>>> Reviewed-by: Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>
+>>> Reviewed-by: Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+>>> ---
+>>>    drivers/net/ethernet/broadcom/bnge/bnge.h     |  18 +
+>>>    .../ethernet/broadcom/bnge/bnge_hwrm_lib.c    | 168 +++++++++
+>>>    .../ethernet/broadcom/bnge/bnge_hwrm_lib.h    |   4 +
+>>>    .../net/ethernet/broadcom/bnge/bnge_rmem.c    | 337 ++++++++++++++++++
+>>>    .../net/ethernet/broadcom/bnge/bnge_rmem.h    | 153 ++++++++
+>>>    5 files changed, 680 insertions(+)
+>>>
+>>> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge.h b/drivers/net/ethernet/broadcom/bnge/bnge.h
+>>> index 60af0517c45e..01f64a10729c 100644
+>>> --- a/drivers/net/ethernet/broadcom/bnge/bnge.h
+>>> +++ b/drivers/net/ethernet/broadcom/bnge/bnge.h
+>>> @@ -9,6 +9,7 @@
+>>>
+>>>    #include <linux/etherdevice.h>
+>>>    #include "../bnxt/bnxt_hsi.h"
+>>> +#include "bnge_rmem.h"
+>>>
+>>>    #define DRV_VER_MAJ 1
+>>>    #define DRV_VER_MIN 15
+>>> @@ -52,6 +53,13 @@ enum {
+>>>        BNGE_FW_CAP_VNIC_RE_FLUSH                       = BIT_ULL(26),
+>>>    };
+>>>
+>>> +enum {
+>>> +     BNGE_EN_ROCE_V1                                 = BIT_ULL(0),
+>>> +     BNGE_EN_ROCE_V2                                 = BIT_ULL(1),
+>>> +};
+>>> +
+>>> +#define BNGE_EN_ROCE         (BNGE_EN_ROCE_V1 | BNGE_EN_ROCE_V2)
+>>> +
+>>>    struct bnge_dev {
+>>>        struct device   *dev;
+>>>        struct pci_dev  *pdev;
+>>> @@ -89,6 +97,16 @@ struct bnge_dev {
+>>>    #define BNGE_STATE_DRV_REGISTERED      0
+>>>
+>>>        u64                     fw_cap;
+>>> +
+>>> +     /* Backing stores */
+>>> +     struct bnge_ctx_mem_info        *ctx;
+>>> +
+>>> +     u64                     flags;
+>>>    };
+>>>
+>>> +static inline bool bnge_is_roce_en(struct bnge_dev *bd)
+>>> +{
+>>> +     return bd->flags & BNGE_EN_ROCE;
+>>> +}
+>>> +
+>>>    #endif /* _BNGE_H_ */
+>>> diff --git a/drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.c b/drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.c
+>>> index 567376a407df..e5f32ac8a69f 100644
+>>> --- a/drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.c
+>>> +++ b/drivers/net/ethernet/broadcom/bnge/bnge_hwrm_lib.c
+>>> @@ -10,6 +10,7 @@
+>>>    #include "../bnxt/bnxt_hsi.h"
+>>>    #include "bnge_hwrm.h"
+>>>    #include "bnge_hwrm_lib.h"
+>>> +#include "bnge_rmem.h"
+>>>
+>>>    int bnge_hwrm_ver_get(struct bnge_dev *bd)
+>>>    {
+>>> @@ -211,3 +212,170 @@ int bnge_hwrm_func_drv_unrgtr(struct bnge_dev *bd)
+>>>                return rc;
+>>>        return hwrm_req_send(bd, req);
+>>>    }
+>>> +
+>>> +static void bnge_init_ctx_initializer(struct bnge_ctx_mem_type *ctxm,
+>>> +                                   u8 init_val, u8 init_offset,
+>>> +                                   bool init_mask_set)
+>>> +{
+>>> +     ctxm->init_value = init_val;
+>>> +     ctxm->init_offset = BNGE_CTX_INIT_INVALID_OFFSET;
+>>> +     if (init_mask_set)
+>>> +             ctxm->init_offset = init_offset * 4;
+>>> +     else
+>>> +             ctxm->init_value = 0;
+>>> +}
+>>> +
+>>> +static int bnge_alloc_all_ctx_pg_info(struct bnge_dev *bd, int ctx_max)
+>>> +{
+>>> +     struct bnge_ctx_mem_info *ctx = bd->ctx;
+>>> +     u16 type;
+>>> +
+>>> +     for (type = 0; type < ctx_max; type++) {
+>>> +             struct bnge_ctx_mem_type *ctxm = &ctx->ctx_arr[type];
+>>> +             int n = 1;
+>>> +
+>>> +             if (!ctxm->max_entries)
+>>> +                     continue;
+>>> +
+>>> +             if (ctxm->instance_bmap)
+>>> +                     n = hweight32(ctxm->instance_bmap);
+>>> +             ctxm->pg_info = kcalloc(n, sizeof(*ctxm->pg_info), GFP_KERNEL);
+>>> +             if (!ctxm->pg_info)
+>>> +                     return -ENOMEM;
+>>
+>> It's a bit hard to be absolutely sure without full chain of calls, but
+>> it looks like some of the memory can be leaked in case of allocation
+>> fail. Direct callers do not clear allocated contextes in the error path.
+> 
+> After the allocation of context memory, it could be in use by the
+> hardware, so it is always safer
+> to clean it up when we finally deregister from the firmware. The
+> bnge_fw_unregister_dev() function
+> handles memory freeing via bnge_free_ctx_mem(), instead of freeing up by caller.
+> I hope this clarifies your concern.
+
+Yeah, I have found cleaning calls in the other patches, thanks
+
+> 
+>>
+>>> +     }
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+
