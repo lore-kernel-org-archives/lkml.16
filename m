@@ -1,247 +1,146 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2CA26C387;
-	Tue, 24 Jun 2025 23:31:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C019426E14C
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 23:31:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750807866; cv=none; b=qSY1cINlg/XtrUJrRkEyK3G0rFzDeETqIEicZUt7yo3fdeqSXHXmFWxbolZRQaWDZz1J9lK3fDxk6iKVb3t11chLXWKjuUboZBVlf9sVpOVv1T5UHbCKiqhN+fUdiHeyvg03gdLUPRkkckjIfcR9OCndZo2nzuJUaaVYi8cIyu8=
+	t=1750807868; cv=none; b=DA7xD3e6vwkhEUTMbN1RKCc4gIvcxbtEfutRpd9CsIYuTOOXssMoaFnZsrGxI1xhCupILm+AcqVUV1N35H/nW4EG7awk88BM41NZHApFnT3mgCkHDxXxjXXVGAQx3SOe5wh6l9ULdm0ToXNf5V6QAZzadr632/djqqegANRRyU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750807866; c=relaxed/simple;
-	bh=QafC5mA9OIeERazoLVuIgRlflPW5pbEU11IEB7bs09M=;
-	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=LgIpQqfZ3Tbdk/DsIfmaVrk3Y+ynpP3tMLedhX/ExnmHcD1+ALjtDXQ6LD11Q2oC/CDybAD66NWV86mSgMdU0jymql3qcGiLeHhfMxXUkcaidS2iJwsnntD8inEd29Ncdq+VzXIpriZRTeEs1p9mbjwAY6NdfwzvN53252bXhRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OXGshkSM; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kt2wLFlt; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750807868; c=relaxed/simple;
+	bh=nX0YHqLfleKwgIkQRR7zhOtfTngLBmfTmLBeKNNNlEE=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=iAxEqNBzlYQSuy49qFPFoLumE1uADoA/lTgfZAjr/CO2tyYDayegpfjqRFtHt+Ce9POkspMvOvgAXyHWo4+l9/VL0dKa0bsK2wa+wNpymSrdSWAJ6sF6QOWGYXhwW0TvPfQVP2a4cv4JEmsEVPlq26ha/ddwyL1qL6weyh1lsIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2TC6O+zQ; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OXGshkSM";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kt2wLFlt"
-Date: Tue, 24 Jun 2025 23:31:00 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750807861;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=ntOrh/trKQXMHXPChqHzkmvXaUhkHxnTK+rRriucFxQ=;
-	b=OXGshkSM/vIzb/9K/zyJHmNfR7eIZQUXFsHGM6W6I+Ri7qrPHRvwHQiXr4Q1hBaeAg0mO8
-	ilwxSpJM0wjZlPpsqpN9UJoj8Lo4liI4VkClj4eGHd9bsy3Citdkpz2imheyURdhUGdcdd
-	1KJLWbpV/Qr06YWrap+vC+JXHM9dCG6zRdCQkWWkr2p/21XQ7te5BoTdbLMIMaR0C9kdGl
-	hn6Le5Mtn6k8CCFcCGQN1GY4UCEYji8MrNiX5r88+iPxerehiOBYbGOff1J4UtVmKi485V
-	jUj/diDW9awj1UllyMVIAX+tHdUJiiz3YlNmhJnjNAU8moV5HoWfVSlhxrikyg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750807861;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-	bh=ntOrh/trKQXMHXPChqHzkmvXaUhkHxnTK+rRriucFxQ=;
-	b=kt2wLFlt/T8lB6zHrw9ljAAkie8VRIXApHbem9vnBHUbajzVQ0ubYBVxO08zTWUGBU6sPY
-	9aZuAzCMUyMvysBg==
-From: "tip-bot2 for Chao Gao" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/fpu] x86/fpu/xstate: Differentiate default features for
- host and guest FPUs
-Cc: "Chang S. Bae" <chang.seok.bae@intel.com>,
- Sean Christopherson <seanjc@google.com>, Chao Gao <chao.gao@intel.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, John Allen <john.allen@amd.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2TC6O+zQ"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3138e65efe2so883128a91.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:31:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750807866; x=1751412666; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O/hcbVM3hgEz99lahHzlfgB8IEMKnnphGvT38Gwa/j0=;
+        b=2TC6O+zQBDMKTLEHc7NlNjSwCu4fdZiDiuopWC1IHdW9W19w2bwNtvSvbDOm8DJpV2
+         r4BZ9pQTRmWWiRNx/xpKy7PgUS6RUq1EMBDIRLb6rYOih+9STBxvHjIGwinq+/Sbnwwi
+         jfsWXR62O2TZiVl9BevkMRhS51wcIE2CvKG5XjhNhnuuq9nJc+UhYqqgJ6+Zwap7D0pr
+         8ipYIV9R/xVhT6tau2XiWQSWCEFhqX3yXzSuZnonwYmAgtRjTeTQQxuIue81LucGcly3
+         AfviJrrPPUb2W2WqbvmkNyBB34+fGUX+QNxHgEgW4+fRjLutxkU5xqdfG+nUEwZDjwgy
+         LmZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750807866; x=1751412666;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=O/hcbVM3hgEz99lahHzlfgB8IEMKnnphGvT38Gwa/j0=;
+        b=wfgaVk6T/p4XZwKyWcO5qIWSAvNi/7dk+AbKkmEauWRdAemnBAI+RRRoGSLIC7nN2b
+         1xWF95ab62d3maY+6N5C06L0+FZTwgax/LYxxi6B1ubCVC+qsd9Uw77UrAeeel3U1+hK
+         PKkMIcuiY5al+LM+WdbXfCO2SH9qX4TlbL8B0Nuw7qyoPdN8m7AG/FrWeHgGg9R76Z8V
+         JV4q/cPc8FnriTu3qYyAWgU7Usm3ikuX2SLouv5Ds/ZfHCfAB/1OFQMtM8C4uN2iCaVx
+         btrA3zMbrsTrb0/ol21+4RjOIKpg0ZK5519/OwLCTRbdGr9s24bJ8ybS0/yGq1GLKghB
+         y9kA==
+X-Gm-Message-State: AOJu0Yzai0WsNvMl5XDNiOevylTQkzKYIPseRgDEFnq4aYNSLIu82aD/
+	AmpSJEoFgus8pBu+5B7l2Z+j/RxKRhBPo+egxkZ3soRNbqVbMwf/m3vwSAH/NVDs1VBFScwxmnS
+	+XGKJDw==
+X-Google-Smtp-Source: AGHT+IFOA5I0fytY1fxsbAPIcxCuXX1tMxsiYvby57eByHBNqJwSR1UKppPsacZEWlYJTkj1qwxGne4E8Ak=
+X-Received: from pjbhl6.prod.google.com ([2002:a17:90b:1346:b0:311:e71e:3fb9])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d008:b0:312:1b53:5e98
+ with SMTP id 98e67ed59e1d1-315f26c401fmr891263a91.34.1750807865998; Tue, 24
+ Jun 2025 16:31:05 -0700 (PDT)
+Date: Tue, 24 Jun 2025 16:31:04 -0700
+In-Reply-To: <20250530185239.2335185-3-jmattson@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Message-ID: <175080786079.406.9724622795864506479.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250530185239.2335185-1-jmattson@google.com> <20250530185239.2335185-3-jmattson@google.com>
+Message-ID: <aFs1OL8QybDRUQkF@google.com>
+Subject: Re: [PATCH v4 2/3] KVM: x86: Provide a capability to disable
+ APERF/MPERF read intercepts
+From: Sean Christopherson <seanjc@google.com>
+To: Jim Mattson <jmattson@google.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
 
-The following commit has been merged into the x86/fpu branch of tip:
+On Fri, May 30, 2025, Jim Mattson wrote:
+> @@ -7790,6 +7791,28 @@ all such vmexits.
+>  
+>  Do not enable KVM_FEATURE_PV_UNHALT if you disable HLT exits.
+>  
+> +Virtualizing the ``IA32_APERF`` and ``IA32_MPERF`` MSRs requires more
+> +than just disabling APERF/MPERF exits. While both Intel and AMD
+> +document strict usage conditions for these MSRs--emphasizing that only
+> +the ratio of their deltas over a time interval (T0 to T1) is
+> +architecturally defined--simply passing through the MSRs can still
+> +produce an incorrect ratio.
+> +
+> +This erroneous ratio can occur if, between T0 and T1:
+> +
+> +1. The vCPU thread migrates between logical processors.
+> +2. Live migration or suspend/resume operations take place.
+> +3. Another task shares the vCPU's logical processor.
+> +4. C-states lower thean C0 are emulated (e.g., via HLT interception).
+> +5. The guest TSC frequency doesn't match the host TSC frequency.
+> +
+> +Due to these complexities, KVM does not automatically associate this
+> +passthrough capability with the guest CPUID bit,
+> +``CPUID.6:ECX.APERFMPERF[bit 0]``. Userspace VMMs that deem this
+> +mechanism adequate for virtualizing the ``IA32_APERF`` and
+> +``IA32_MPERF`` MSRs must set the guest CPUID bit explicitly.
 
-Commit-ID:     7bc4ed75f2d664c5a96d1f0874c41431a84c62b2
-Gitweb:        https://git.kernel.org/tip/7bc4ed75f2d664c5a96d1f0874c41431a84c62b2
-Author:        Chao Gao <chao.gao@intel.com>
-AuthorDate:    Thu, 22 May 2025 08:10:04 -07:00
-Committer:     Dave Hansen <dave.hansen@linux.intel.com>
-CommitterDate: Tue, 24 Jun 2025 13:46:32 -07:00
+Question: what do we want to do about nested?  Due to differences between SVM
+and VMX at the time you posted your patches, this series _as posted_ will do
+nested passthrough for SVM, but not VMX (before the MSR rework, SVM auto-merged
+bitmaps for all MSRs in svm_direct_access_msrs).
 
-x86/fpu/xstate: Differentiate default features for host and guest FPUs
+As I've got it locally applied, neither SVM nor VMX will do passthrough to L2.
+I'm leaning toward allowing full passthrough, because (a) it's easy, (b) I can't
+think of any reason not to, and (c) SVM's semi-auto-merging logic means we could
+*unintentinally* do full passthrough in the future, in the unlikely event that
+KVM added passthrough support for an MSR in the same chunk as APERF and MPERF.
 
-Currently, guest and host FPUs share the same default features. However,
-the CET supervisor xstate is the first feature that needs to be enabled
-exclusively for guest FPUs. Enabling it for host FPUs leads to a waste of
-24 bytes in the XSAVE buffer.
+This would be the extent of the changes (I think, haven't tested yet).
 
-To support "guest-only" features, add a new structure to hold the
-default features and sizes for guest FPUs to clearly differentiate them
-from those for host FPUs.
-
-Add two helpers to provide the default feature masks for guest and host
-FPUs. Default features are derived by applying the masks to the maximum
-supported features.
-
-Note that,
-1) for now, guest_default_mask() and host_default_mask() are identical.
-This will change in a follow-up patch once guest permissions, default
-xfeatures, and fpstate size are all converted to use the guest defaults.
-
-2) only supervisor features will diverge between guest FPUs and host
-FPUs, while user features will remain the same [1][2]. So, the new
-vcpu_fpu_config struct does not include default user features and size
-for the UABI buffer.
-
-An alternative approach is adding a guest_only_xfeatures member to
-fpu_kernel_cfg and adding two helper functions to calculate the guest
-default xfeatures and size. However, calculating these defaults at runtime
-would introduce unnecessary overhead.
-
-Suggested-by: Chang S. Bae <chang.seok.bae@intel.com>
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Chao Gao <chao.gao@intel.com>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: John Allen <john.allen@amd.com>
-Link: https://lore.kernel.org/kvm/aAwdQ759Y6V7SGhv@google.com/ [1]
-Link: https://lore.kernel.org/kvm/9ca17e1169805f35168eb722734fbf3579187886.camel@intel.com/ [2]
-Link: https://lore.kernel.org/all/20250522151031.426788-2-chao.gao%40intel.com
----
- arch/x86/include/asm/fpu/types.h | 26 +++++++++++++++++++++++++-
- arch/x86/kernel/fpu/core.c       |  1 +-
- arch/x86/kernel/fpu/init.c       |  1 +-
- arch/x86/kernel/fpu/xstate.c     | 32 +++++++++++++++++++++++++------
- 4 files changed, 54 insertions(+), 6 deletions(-)
-
-diff --git a/arch/x86/include/asm/fpu/types.h b/arch/x86/include/asm/fpu/types.h
-index 1c94121..abd193a 100644
---- a/arch/x86/include/asm/fpu/types.h
-+++ b/arch/x86/include/asm/fpu/types.h
-@@ -552,6 +552,31 @@ struct fpu_guest {
- };
- 
- /*
-+ * FPU state configuration data for fpu_guest.
-+ * Initialized at boot time. Read only after init.
-+ */
-+struct vcpu_fpu_config {
-+	/*
-+	 * @size:
-+	 *
-+	 * The default size of the register state buffer in guest FPUs.
-+	 * Includes all supported features except independent managed
-+	 * features and features which have to be requested by user space
-+	 * before usage.
-+	 */
-+	unsigned int size;
-+
-+	/*
-+	 * @features:
-+	 *
-+	 * The default supported features bitmap in guest FPUs. Does not
-+	 * include independent managed features and features which have to
-+	 * be requested by user space before usage.
-+	 */
-+	u64 features;
-+};
-+
-+/*
-  * FPU state configuration data. Initialized at boot time. Read only after init.
+diff --git a/arch/x86/kvm/svm/nested.c b/arch/x86/kvm/svm/nested.c
+index 749f7b866ac8..b7fd2e869998 100644
+--- a/arch/x86/kvm/svm/nested.c
++++ b/arch/x86/kvm/svm/nested.c
+@@ -194,7 +194,7 @@ void recalc_intercepts(struct vcpu_svm *svm)
+  * Hardcode the capacity of the array based on the maximum number of _offsets_.
+  * MSRs are batched together, so there are fewer offsets than MSRs.
   */
- struct fpu_state_config {
-@@ -606,5 +631,6 @@ struct fpu_state_config {
+-static int nested_svm_msrpm_merge_offsets[6] __ro_after_init;
++static int nested_svm_msrpm_merge_offsets[7] __ro_after_init;
+ static int nested_svm_nr_msrpm_merge_offsets __ro_after_init;
+ typedef unsigned long nsvm_msrpm_merge_t;
  
- /* FPU state configuration information */
- extern struct fpu_state_config fpu_kernel_cfg, fpu_user_cfg;
-+extern struct vcpu_fpu_config guest_default_cfg;
+@@ -216,6 +216,8 @@ int __init nested_svm_init_msrpm_merge_offsets(void)
+                MSR_IA32_SPEC_CTRL,
+                MSR_IA32_PRED_CMD,
+                MSR_IA32_FLUSH_CMD,
++               MSR_IA32_APERF,
++               MSR_IA32_MPERF,
+                MSR_IA32_LASTBRANCHFROMIP,
+                MSR_IA32_LASTBRANCHTOIP,
+                MSR_IA32_LASTINTFROMIP,
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index c69df3aba8d1..b8ea1969113d 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -715,6 +715,12 @@ static inline bool nested_vmx_prepare_msr_bitmap(struct kvm_vcpu *vcpu,
+        nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
+                                         MSR_IA32_FLUSH_CMD, MSR_TYPE_W);
  
- #endif /* _ASM_X86_FPU_TYPES_H */
-diff --git a/arch/x86/kernel/fpu/core.c b/arch/x86/kernel/fpu/core.c
-index ea13858..aa72523 100644
---- a/arch/x86/kernel/fpu/core.c
-+++ b/arch/x86/kernel/fpu/core.c
-@@ -37,6 +37,7 @@ DEFINE_PER_CPU(u64, xfd_state);
- /* The FPU state configuration data for kernel and user space */
- struct fpu_state_config	fpu_kernel_cfg __ro_after_init;
- struct fpu_state_config fpu_user_cfg __ro_after_init;
-+struct vcpu_fpu_config guest_default_cfg __ro_after_init;
- 
- /*
-  * Represents the initial FPU state. It's mostly (but not completely) zeroes,
-diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
-index 99db41b..ff988b9 100644
---- a/arch/x86/kernel/fpu/init.c
-+++ b/arch/x86/kernel/fpu/init.c
-@@ -205,6 +205,7 @@ static void __init fpu__init_system_xstate_size_legacy(void)
- 	fpu_kernel_cfg.default_size = size;
- 	fpu_user_cfg.max_size = size;
- 	fpu_user_cfg.default_size = size;
-+	guest_default_cfg.size = size;
- }
- 
- /*
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 9aa9ac8..7c5f9f1 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -743,6 +743,9 @@ static int __init init_xstate_size(void)
- 	fpu_user_cfg.default_size =
- 		xstate_calculate_size(fpu_user_cfg.default_features, false);
- 
-+	guest_default_cfg.size =
-+		xstate_calculate_size(guest_default_cfg.features, compacted);
++       nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
++                                        MSR_IA32_APERF, MSR_TYPE_R);
 +
- 	return 0;
- }
- 
-@@ -763,6 +766,7 @@ static void __init fpu__init_disable_system_xstate(unsigned int legacy_size)
- 	fpu_kernel_cfg.default_size = legacy_size;
- 	fpu_user_cfg.max_size = legacy_size;
- 	fpu_user_cfg.default_size = legacy_size;
-+	guest_default_cfg.size = legacy_size;
- 
- 	/*
- 	 * Prevent enabling the static branch which enables writes to the
-@@ -773,6 +777,21 @@ static void __init fpu__init_disable_system_xstate(unsigned int legacy_size)
- 	fpstate_reset(x86_task_fpu(current));
- }
- 
-+static u64 __init host_default_mask(void)
-+{
-+	/* Exclude dynamic features, which require userspace opt-in. */
-+	return ~(u64)XFEATURE_MASK_USER_DYNAMIC;
-+}
++       nested_vmx_set_intercept_for_msr(vmx, msr_bitmap_l1, msr_bitmap_l0,
++                                        MSR_IA32_MPERF, MSR_TYPE_R);
 +
-+static u64 __init guest_default_mask(void)
-+{
-+	/*
-+	 * Exclude dynamic features, which require userspace opt-in even
-+	 * for KVM guests.
-+	 */
-+	return ~(u64)XFEATURE_MASK_USER_DYNAMIC;
-+}
-+
- /*
-  * Enable and initialize the xsave feature.
-  * Called once per system bootup.
-@@ -855,12 +874,13 @@ void __init fpu__init_system_xstate(unsigned int legacy_size)
- 	fpu_user_cfg.max_features = fpu_kernel_cfg.max_features;
- 	fpu_user_cfg.max_features &= XFEATURE_MASK_USER_SUPPORTED;
+        kvm_vcpu_unmap(vcpu, &map);
  
--	/* Clean out dynamic features from default */
--	fpu_kernel_cfg.default_features = fpu_kernel_cfg.max_features;
--	fpu_kernel_cfg.default_features &= ~XFEATURE_MASK_USER_DYNAMIC;
--
--	fpu_user_cfg.default_features = fpu_user_cfg.max_features;
--	fpu_user_cfg.default_features &= ~XFEATURE_MASK_USER_DYNAMIC;
-+	/*
-+	 * Now, given maximum feature set, determine default values by
-+	 * applying default masks.
-+	 */
-+	fpu_kernel_cfg.default_features = fpu_kernel_cfg.max_features & host_default_mask();
-+	fpu_user_cfg.default_features   = fpu_user_cfg.max_features & host_default_mask();
-+	guest_default_cfg.features      = fpu_kernel_cfg.max_features & guest_default_mask();
- 
- 	/* Store it for paranoia check at the end */
- 	xfeatures = fpu_kernel_cfg.max_features;
+        vmx->nested.force_msr_bitmap_recalc = false;
