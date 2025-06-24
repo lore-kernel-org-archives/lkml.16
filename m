@@ -1,103 +1,132 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EBE22D5C60
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 14:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C07F2D4B55;
+	Tue, 24 Jun 2025 14:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750775745; cv=none; b=A8YXPyjDE4W+9czkHL+UwNp714+/Z8lXCWSYqbpdfi4obUqnM6k+QsbRDTWBXJ1lz/xttPS9DjULFtlM+SvlLZXpumCwk0MNQiMIDORdcB1mqeL+D7wrM7jNt/PcduMEhegQGzxcuPFksmHXeAnGAd2iXcnGcdnldTKoz/ij5yE=
+	t=1750775803; cv=none; b=VLxaZ6ng8DvpevW47mjbqn++gHZ9GBPlG2QUHipjTKBTHayCNQaHwDZKjjQNSvC+1LwvpYY2v2+3lNY6jNhobvwNexYBzmZOE1nbGLRuDodDSlZlnFU7bEfaQp9AHI+KRt0FZBOF+ZTb5rmkOcmpGu2vyuzKIxPt41W7MQXvX4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750775745; c=relaxed/simple;
-	bh=f8Ttbth1lSRYVk3cS849KWdm0sE/OLPquEEzCqknLrE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TVGFEKBvUE1A+E7+ze/GoAqtr3Rw8Txg0Mex5/L9GfZTi6i/8fdAU3c7NMkNEiVnvcl5lhpcU8xAr3KGxLufUi/nRh2oY4aWLE88Zh2ov11cihKbKWj6mNVVSzSSXucsd0UkI3q7dNFsiDkbnR0qh+W2FOvq83kZb+u9YFBqo98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=01ub9wTb; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750775803; c=relaxed/simple;
+	bh=cGvID7iNjFw3hCX2Q3UbTMYpmXpoJ9L97AGMCmURFBM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PUyO20NSCzRya7/C9wlbrMz32GUpa2CAVfsFFAwOY+i4OFSsZitGUPsVjemlIFtaeMJAqjhxdEVKuO1VtIFi0SfYzxop8HrODsyRDm91/NDAo+4Kv+PtQv/0xGviYGC/mpwgXeOVeAur7uhLiCFhGm1JYJNM5wURYHgfdgD0ujg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iqKAuJL8; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="01ub9wTb"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4a58ef58a38so170531cf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 07:35:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqKAuJL8"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-313bb9b2f5bso629524a91.3;
+        Tue, 24 Jun 2025 07:36:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750775741; x=1751380541; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f8Ttbth1lSRYVk3cS849KWdm0sE/OLPquEEzCqknLrE=;
-        b=01ub9wTbh7IuTKWtOT88YxNBAOS4ETujN45Wi7eX+ECtWzD69ZlAQbCHrR29bJ/Of4
-         u2dc5M4HdmSTIJBtxhH8obs4WlzCmafRQ6FOT2sqpjvOxmrBA2OwCjW89Z7/k9F5tqch
-         3CT7I1Pn8ZaaDDhNuPvOZAC4hyeRDc0HLbiHSc0WvhoscfGYtrn1+Dgqw9u+dwFs5Hsc
-         IBi+2iNR52LvCmKRO55xybTKoOFpDu6QI6F4oMMVuazYQIv2ZQJ4WBvZu7Tb74D99Y5L
-         zTVhh37CDDQQShRaAGbE/jTqOZxcOA+djMG0AoeZcnKFrawDwATnhIaDdLCmkg0LSQVB
-         RVVg==
+        d=gmail.com; s=20230601; t=1750775801; x=1751380601; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KTVh9NYfR7GuqBMwngWQvuBj18Bm8G+r3At4Sh1jKm4=;
+        b=iqKAuJL8FUSbhwZurIa11DcRuPpGUo7Y9cDFyBj1A1uhgNHjkdMKZkN5UTPunmuGMt
+         Q0FGXs+sOxnrzfdDssyolAlgn8WDfz/IlW6rPaZ8dI6vCA44lrpkh0VUfjrEpna3h7rr
+         TwVAjeYleGBfvqIUstlRZxO7fDGLgzSUSNc85S3GMb1AnUxxVLAFJD+paO4Y4j5VoF7L
+         de/2r8ibM6UjPZFIjugcTL59KQ/+KDTjjqvRxQKsn222SVKjH/KDROEYIyxNvSW5kT8Z
+         S+FjqDrD0e43IrVYiOBpamdM2P1BjvdnURgbbQ9VpkBnO3KAAhFi4r2wmDTT08y41i8V
+         9lJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750775741; x=1751380541;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f8Ttbth1lSRYVk3cS849KWdm0sE/OLPquEEzCqknLrE=;
-        b=EsT2qWtzbFPLl43S1mpJDLycMbqk284neLz6aTq29dN9KTbGYzU5gFGmG6KW4CiDlx
-         LFiRmTUZp1AXbNFbdr6cr3O1hBZvbeZPrTgYaitEuRXX3czRGat65oZnew270ILuyoY9
-         QR/kDqPDl3aQQ3evfrMOhGFsRyRW9/gF6a8IRGKLY2WXSdJC2Unl9IcLsOAk8vz0lCx3
-         UyvCYmiZYMdxjXC/NDg/bZ0UgmeaVr03ig5rNMGwIEHEWMxYiTr3qm9T2r+XjRrcWK1l
-         pTQZAkQxpaaGuzIoFzPU9q61PKIjcYTQvOYMkTBG8SwJuV3qOMTu6C0/lAm87UaePN+z
-         ++sw==
-X-Forwarded-Encrypted: i=1; AJvYcCVUafY0hfVyv/cVwXHVpQ9gpVGA00Uy0CwOdjNUlUtbS/ZXGRxMwAKX9I+tbPiT/hzhfa5ciMDfpBc+JrQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWjHy57FdGgtmhPuMK5ofzLzzri7O7t9a/goVy59gxrNu30Ix8
-	eNqm7ivD+B4riEqOkdHhfYZCN8LaE7ORzYdl2vtcM3LGrl/fqiPX1ONGU+bbEuSagw9vtHB5F/H
-	k44tE6Fa3i3A+1EnD3mq/VfuYfZcFEohgkBJkvApo
-X-Gm-Gg: ASbGncta19N9/YeEBKkxbQW8a+Jlf0xoPFfYU50nIwt/mPp3Q69QJwvAf0M4smRjNXx
-	j1Zc5VIhF9ifN2bn9mFoUlZSGym+o6ikPV4FSyB0tctlfxM3m+l3ZZQSgzAxX2sUap+KWuH4pHq
-	LL/eQjDTXAmBBH5YtbXCz1lUao+lw3+T6pA8I3kM5Z86SEG8vFZnBe2mKkNzUEMy6S1uJlE1fag
-	w==
-X-Google-Smtp-Source: AGHT+IGbOLiPnX+SI3NX8t68TwtbOo+6EbrT73IrWaYyPOLlCVLXFVqD60N/63lknLZQNwp34KEetvwdECwuYczVKR4=
-X-Received: by 2002:ac8:5f8a:0:b0:476:f1a6:d8e8 with SMTP id
- d75a77b69052e-4a7b16ecdfemr3417201cf.11.1750775740423; Tue, 24 Jun 2025
- 07:35:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750775801; x=1751380601;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KTVh9NYfR7GuqBMwngWQvuBj18Bm8G+r3At4Sh1jKm4=;
+        b=ZUK5dM8ChkLE+DsxuXPi02KCGQQOlTwbnjOYnL+6fRYtuhJ50HxbIn3Meyo0ZTJe+e
+         0LRr5tEmFz2LUZD5Ym5n4p+7ayCXdX3DVknEIqZiqNQeFh7ogpEMIKCiareFlHhF92hU
+         xvm7eF9stDOKF+6HbyU3auk+reklg8Dh2bgCqICkuaznapXQANMD9Czqxvxxsjv3VgFC
+         of5X06HXlyFVJDJLhL8B55hjDO0jbPS04gkibM3M1GMgJoxJwyIXqnVb52bcQ6as7zmb
+         Nan4qDFcDSLBe6E6/nDDrkFbnGw375FC92Pjw0lhpb/1fuT/6qPuuxX0y/7og7BZgoQH
+         sKnA==
+X-Forwarded-Encrypted: i=1; AJvYcCUoaj0ZnB+vlQ8wOoTuRl/O6vqdMGAEQ3osET4v7CG/uMp9b5V7DHjrAplrOttbE2lydUA=@vger.kernel.org, AJvYcCWbHbjlNwK71pl1nicsExZ89oDikCk5Y2JpJhbP06BSIAAZ5ve28ubixWB1sKn6kgVI0sGhphO5@vger.kernel.org, AJvYcCX0aTObQ1ZhztYQWnVhezKJCugn57Ew0lDonFKJsf8VwwrJT6ccV+p2uSM1DWA/2jKZQvXc1n6je+yHy9mG@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+VUT2nk0BjfwQqKo8XwJx+id1OZjWe/BXLhkaAuBCYdYfVlfj
+	M59YYcCVPZqHXlbEDB1Fh7dmMJpuH7FjawdWaSUmOao6b2okfAXRBUN1
+X-Gm-Gg: ASbGncsjcafBBbA0m1B7c0ix3jgkFIuYdzs577pS4JB+hirAGsM0L+Nqq9K1EhP4GJt
+	JZN6VcCmtW5DzbV1hA74InWKpz/LzfOJpPlv+ZdOA61tEgFzyikBheGA3BbCPE9gF1Q2MtxyLMs
+	Zx4zeIZQMZ14c2QgC6KfI88r1Hcfd9/AUGDaLS753I113kGVSd2HDSCQavSad/wwCGUnGf47PI7
+	xd9uhw10NjcmqBINB4QI17Nwzzhzp5fCiEXFXxtOOcvZ0+MGpdn9NaWoj84ficdrhs67aPL0NX4
+	gQMDuTZEZdmWwJIWW+ZZVs6vvk+9BIADXhTcqG3sAf0THtlXqfMqeRAXGL7ZyjKKnueFmF2IdY+
+	xu29z65GuQ7YsBVSB8tpzQ2mF3WJD4iFtYtbIYzo0
+X-Google-Smtp-Source: AGHT+IHS9vDnuU2WNVX8FwC7SNF+yJeYaFCaub11naFV+gQ6pgp9/gLGfgnq2n1F7kLFckIWmcXERw==
+X-Received: by 2002:a17:90b:4a86:b0:313:1e60:584d with SMTP id 98e67ed59e1d1-3159d636181mr26151303a91.11.1750775801107;
+        Tue, 24 Jun 2025 07:36:41 -0700 (PDT)
+Received: from ?IPV6:2001:ee0:4f0e:fb30:1f60:cc25:9268:94fb? ([2001:ee0:4f0e:fb30:1f60:cc25:9268:94fb])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3159e07cedbsm11714380a91.42.2025.06.24.07.36.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 07:36:40 -0700 (PDT)
+Message-ID: <88387a67-98a4-4179-b685-18c2098fcdda@gmail.com>
+Date: Tue, 24 Jun 2025 21:36:32 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624-anon_name_cleanup-v2-0-600075462a11@suse.cz>
- <20250624-anon_name_cleanup-v2-4-600075462a11@suse.cz> <50eb8b8b-cea3-45f8-96d0-45ab88e10909@redhat.com>
-In-Reply-To: <50eb8b8b-cea3-45f8-96d0-45ab88e10909@redhat.com>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Tue, 24 Jun 2025 07:35:27 -0700
-X-Gm-Features: Ac12FXxBF1N0o_kUn37BSxDHGqpaUKTMuV-y5KNe5HB1rThBZBc_dSO4sDsZPxo
-Message-ID: <CAJuCfpGjkkpWnb_BB2gKZpitop_VmsasS6dgGGeXpPaDzuNmXA@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] mm, madvise: use standard madvise locking in madvise_set_anon_name()
-To: David Hildenbrand <david@redhat.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, 
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Jann Horn <jannh@google.com>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, 
-	Colin Cross <ccross@google.com>, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v2 1/2] virtio-net: xsk: rx: fix the frame's length
+ check
+To: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, virtualization@lists.linux.dev,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20250621144952.32469-1-minhquangbui99@gmail.com>
+ <20250621144952.32469-2-minhquangbui99@gmail.com>
+ <5fb3c0e4-759c-4f56-8a78-e599c891f618@redhat.com>
+Content-Language: en-US
+From: Bui Quang Minh <minhquangbui99@gmail.com>
+In-Reply-To: <5fb3c0e4-759c-4f56-8a78-e599c891f618@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 24, 2025 at 7:06=E2=80=AFAM David Hildenbrand <david@redhat.com=
-> wrote:
->
-> On 24.06.25 15:03, Vlastimil Babka wrote:
-> > Use madvise_lock()/madvise_unlock() in madvise_set_anon_name() in the
-> > same way as in do_madvise(). This narrows the lock scope a bit and
-> > reuses existing functionality. get_lock_mode() already picks the correc=
-t
-> > MADVISE_MMAP_WRITE_LOCK mode for __MADV_SET_ANON_VMA_NAME so we can jus=
-t
-> > remove the explicit assignment.
-> >
-> > Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-> > ---
->
-> Acked-by: David Hildenbrand <david@redhat.com>
+On 6/24/25 17:02, Paolo Abeni wrote:
+> On 6/21/25 4:49 PM, Bui Quang Minh wrote:
+>> When calling buf_to_xdp, the len argument is the frame data's length
+>> without virtio header's length (vi->hdr_len). We check that len with
+>>
+>> 	xsk_pool_get_rx_frame_size() + vi->hdr_len
+>>
+>> to ensure the provided len does not larger than the allocated chunk
+>> size. The additional vi->hdr_len is because in virtnet_add_recvbuf_xsk,
+>> we use part of XDP_PACKET_HEADROOM for virtio header and ask the vhost
+>> to start placing data from
+>>
+>> 	hard_start + XDP_PACKET_HEADROOM - vi->hdr_len
+>> not
+>> 	hard_start + XDP_PACKET_HEADROOM
+>>
+>> But the first buffer has virtio_header, so the maximum frame's length in
+>> the first buffer can only be
+>>
+>> 	xsk_pool_get_rx_frame_size()
+>> not
+>> 	xsk_pool_get_rx_frame_size() + vi->hdr_len
+>>
+>> like in the current check.
+>>
+>> This commit adds an additional argument to buf_to_xdp differentiate
+>> between the first buffer and other ones to correctly calculate the maximum
+>> frame's length.
+>>
+>> Fixes: a4e7ba702701 ("virtio_net: xsk: rx: support recv small mode")
+> It looks like the checks in the blamed commit above are correct and the
+> bug has been added with commit 99c861b44eb1f ("virtio_net: xsk: rx:
+> support recv merge mode")???
 
-Reviewed-by: Suren Baghdasaryan <surenb@google.com>
+AFAICS, the small mode has only 1 buffer per frame and that buffer is 
+quite the same as first buffer in mergeable mode. That buffer still has 
+virtio header (though it's smaller than in mergeable case), so the 
+remaining space for data is only xsk_pool_get_rx_frame_size() not 
+xsk_pool_get_rx_frame_size() + vi->hdr_len.
 
->
-> --
-> Cheers,
->
-> David / dhildenb
->
+Thanks,
+Quang Minh.
