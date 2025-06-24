@@ -1,67 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BADE42D8DC4;
-	Tue, 24 Jun 2025 15:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9092D877C;
+	Tue, 24 Jun 2025 15:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750778310; cv=none; b=lZxGd95g7a6Cc/vNGPh9vIHPDWroW5dJwExXiASJUAKIXzGUue6vnEaCGebr+TZQ+z3PQKrzh3uscreulKGyOUUWPqDqTIjFp9ewUaszgeAApT50w12ahKt/K6gvwesB6Ql7Z3VHwqNLlbxeLdv6pCpXonk5LSgzB6WddB3wAoI=
+	t=1750778408; cv=none; b=YLkP8jiME8HvaSz26ry5B1zt1q1LaFe29yVnVazo9e3ACwDxcAYIsErim4gxz1LXqxqkBqWg7nzxger8dOm1eHU0Am/Vb3HMF/jbajBDTSzqspzXn7HedHgQ6TeggI1eK0J9sTbHpOOhBBoAy38hZHBPy839KBKH8VLIdXAA4hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750778310; c=relaxed/simple;
-	bh=4bDKQc8ZdrkM28JhnaFABoCB0feiVBRNt+Kx9AsEEEw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QOs/Qbdo9GK/1yN4U+ugDAgFtwrZdpvzsJGjA2wgBdk304jvxrDj33PvLYu8vfmkDm6j3JFk1b4Q/DWDJcr5tEfLNyLGTbCrYWxgLiCprretyiw0DYN+ieSkcOyGhpozxKMf+yWChA3MylC0Qoy/jzTiFAieiXVe+7duKAYEEvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQlJUGTV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750778408; c=relaxed/simple;
+	bh=9WOZ2U16bU4qdb2Fyo3eqQ8m2kp6QdcIvW61S3g6rps=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ElqGipHq/qSoJAs+5vjQ+sARPef0RpK8RCeIhe3Z+1LiyRbIcqD5w6Mn1Ypt2099SbKVbbEpjXinByw88dLL4ZsOW8ZED/i8rnFhxubkJFHPury05c5lhPdGX29gIKQuTTYpPGMbCEbwaDSjb+B2pLRESCk2BTDc67diA1LZqAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KSfGRXfM; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQlJUGTV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85640C4CEE3;
-	Tue, 24 Jun 2025 15:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750778310;
-	bh=4bDKQc8ZdrkM28JhnaFABoCB0feiVBRNt+Kx9AsEEEw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lQlJUGTVjwVdmwf6czfXHbVrjXEoNzFfJwmRD0Bu8b8mU0n/llu9SSgZW/lHasjax
-	 +s8nQIhdj8kszM/pdS70uqcq7wpKMghXaLAEkyKcavPClxKbMIHsx/F66wuUa0/1R5
-	 GlfUUQ+ryaaAu2CN5u0yDvI7PA8Ux3kzdYggTVEEhrAbv97YyVjyk1dwbxn6Tc5Ndr
-	 vCbffXChwdqUsl/kM8I1FitAu2gSPBylUA7eUb6dwCFr7aNt1Rr7B0p2qVCK+AnAgE
-	 SjEQMoAruKQ7QzxOX4SmDJjqvAoowu3CxKTlZFebgDstPBCZ5CnSl/j2DElxOGy3/B
-	 l2fesWBbQGYHg==
-Date: Tue, 24 Jun 2025 17:18:23 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com,
-	tmgross@umich.edu, david.m.ertman@intel.com, ira.weiny@intel.com,
-	leon@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 3/4] rust: devres: get rid of Devres' inner Arc
-Message-ID: <aFrBvwFrUGD45TeF@cassiopeiae>
-References: <20250622164050.20358-1-dakr@kernel.org>
- <20250622164050.20358-4-dakr@kernel.org>
- <aFizv7suXTADJU3f@Mac.home>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSfGRXfM"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-237311f5a54so54551795ad.2;
+        Tue, 24 Jun 2025 08:20:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750778407; x=1751383207; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3Gn79PJLQC7ePGyYkvVQEXF99s8ix0dYxp4JZA4p7J4=;
+        b=KSfGRXfMK2CYLZrhVn3IbefZcvy/xwRisMZdBOh5SEjRjy0BiiUcEaGybD8UFLlB3k
+         6dNrk7FINxGxqby9MVFk6+qTIAxCDIRl69ibIPmd8bQqYqruYzIJG+RJnGL7bF23/z50
+         HhaU0w+YdBpz+RkL3pMZUG7yNvHnSwmbpk/K1ffT20ekj0PqLGJsyI8izcpnOM0x1j7K
+         EQVQD4gBDVvWz4SZd8z1ZepUSSe+rTqyRIglKXsP6BElyhAJjIp1Zl2V2nz//6PsmMiS
+         Ven1OYU14gtWXMmq807Qnees7CxYS/mh+2CFEDqZwffgCFGKgjb3rjK97YWvPk/R5YVa
+         ZzSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750778407; x=1751383207;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3Gn79PJLQC7ePGyYkvVQEXF99s8ix0dYxp4JZA4p7J4=;
+        b=sUtc1n+MNGwCnstU+rtl+WajnPFxtsn9j8l/9YVfSjZqVR7yl4pB9X3tACfd5lelZb
+         jglt8v2YY4PTjb28kRat05lmE4yOt7e1FOL9tiK/SJTluKvFu2NLVRbTL2OuEzIR/XK2
+         MZJWYLVHf5lfkLp1h8nnjjJO0W53tSd9CHx1Bd3u8C2anu36AYPrkM7+Bv/xNjFp59h4
+         cqQkTQvnbuXaUjLU9nadkyWkDQOX2tRWK326oJJFPpabXiTfmZSjZEsYKxulkioRlPA6
+         DqBck39mDrIwWvSfvq8is3kfBxH5zsjM2+SSF7lx0BD2096SiG6YzCJli8r/yF0S02Dw
+         nj+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV6t40YHp516pU/AV7ejKu3QeUNu/vSv+bstDrea+9kbzKn22Se66RD5hLaOCduqig0cxx2+6YA+k1Bkjc=@vger.kernel.org, AJvYcCXl1bJWxdmlmq2sM6h7ia7hBpT3MlF3nJ0AlWamNbERtpp3hrOzt1qs+QzOuGndgXC45WkHMzdFmYJiX64=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuZBjyrmVgnZK2oZwYp4p96bSrTfwYPVoyEOwkBdrM/aHphl2S
+	yaCxMd/zGXYptLh6zvOWXzRR8BTSx9/ky6hi5qHwTG93HP9lG5UWMjDr
+X-Gm-Gg: ASbGnctIU8qzfuDlkpmfSx5Zajk84OWHHxKSUCvVVCRJ9cyWkud988w/eHdsA46MeLj
+	Z3EjwoZISS3SRoVNwO4J8YYS1lgKDUGTcRO5BsI+lJcnEAlm6wWgVHdFa94x4R3vx7mywJXgMIp
+	PL3Dy6MfmjF0KrrIBf/8rwHZPjuH9YnzdLuCs0hullWe7hXwcwLM/kB9jmrDOGMxXowiKx4DVzh
+	sFTZ0jgzwKBb7mHERFqxuTW2FXF7IJKjmMTF1YfB9mBKJS5WQkO4HSFkKAvHQlPMTFs4A43o50h
+	glrIEQ81DIMRorheBWl/RZUaM/U3GizNmjd6FVByQ5Q7wCj5mt7RX5tc6GhHJ56O2ucT1Auafd3
+	+uXr8UzBPCqv5HCxL2bpyNZjBJfhlgsNZNl0FnbH1HsW7l+Mu/g==
+X-Google-Smtp-Source: AGHT+IH1Csh1hHtPrY2L0DzN9wun8J1kFW3ajVUEsxPwcR2fKElwEotatpGo0o+Bff9Z9QctMzExug==
+X-Received: by 2002:a17:902:da8c:b0:236:6e4f:d439 with SMTP id d9443c01a7336-237d9965716mr267845215ad.23.1750778406609;
+        Tue, 24 Jun 2025 08:20:06 -0700 (PDT)
+Received: from DESKTOP-RD0GVCL.localdomain (124-218-195-161.cm.dynamic.apol.com.tw. [124.218.195.161])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8672498sm111979465ad.166.2025.06.24.08.20.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 08:20:06 -0700 (PDT)
+From: LiangCheng Wang <zaq14760@gmail.com>
+To: andy@kernel.org
+Cc: zaq14760@gmail.com,
+	hansg@kernel.org,
+	mchehab@kernel.org,
+	sakari.ailus@linux.intel.com,
+	gregkh@linuxfoundation.org,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev
+Subject: Re: [PATCH v4] staging: media: atomisp: fix coding style in ia_css_output.host.c
+Date: Tue, 24 Jun 2025 23:19:58 +0800
+Message-ID: <20250624152000.489-1-zaq14760@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <CAHp75Ve_G=ziR7sJmKw4t3BRASogGQ1kWUsNNNWESFmmS4rVhw@mail.gmail.com>
+References: <CAHp75Ve_G=ziR7sJmKw4t3BRASogGQ1kWUsNNNWESFmmS4rVhw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFizv7suXTADJU3f@Mac.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 22, 2025 at 06:54:07PM -0700, Boqun Feng wrote:
-> I think you also need to mention that `inner` only remains valid until
-> `inner.devm.complete_all()` unblocks `Devres::drop()`, because after
-> `Devres::drop()`'s `devm.wait_for_completion()` returns, `inner` may be
-> dropped or freed.
+Subject: Re: [PATCH v4] staging: media: atomisp: fix coding style in ia_css_output.host.c
+In-Reply-To: <CAHp75Ve_G=ziR7sJmKw4t3BRASogGQ1kWUsNNNWESFmmS4rVhw@mail.gmail.com>
 
-I think of it the other way around: The invariant guarantees that `inner` is
-*always* valid.
+Dear Andy,
 
-The the `drop_in_place(inner)` call has to justify that it upholds this
-invariant, by ensuring that at the time it is called no other code that accesses
-`inner` can ever run.
+Thank you for your suggestion.
 
-Defining it the other way around would make the `inner()` accessor unsafe.
+You're right — the driver is quite large and contains many similar issues.  
+To keep the patches manageable and easier to review, I plan to split the cleanup into multiple smaller patches.  
+I'll start by submitting a series of patches, each focusing on a specific file or type of issue.
+
+Since I’m contributing in my free time outside of work, I may need to spread the cleanup over several days.  
+I’ll do my best to keep the patches consistent and focused.
+
+Thanks again for your guidance.
+
+Best regards,  
+LiangCheng Wang
