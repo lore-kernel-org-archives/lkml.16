@@ -1,139 +1,110 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 579464AEE2
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 17:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9150E22A4F0;
+	Tue, 24 Jun 2025 17:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750784548; cv=none; b=Zzeukw5DWCwWxv1HhoQlX01cVQjvpjoGH8Sopwx9TG8wx08xVQ1AsQebLUnFbYUNPgo4uxf71YX7k83ORGUGDemJx5cE15sG0JsfyaJ17QzklD7FxwabQzscZm29v2dEpYaiU1Z+OFnL3O+n9bPk+DzdWWWYLnYrC4k/jWLRINk=
+	t=1750784552; cv=none; b=rNtme9TsfAf+sLJ814BggbjrhKKVXs07aA614yx4Dko61NmANMMxaX7oAW5TEnYQHL4XT4bl7tx6mUolDU6nlaS4jaZ4FBQEChpu5IaghX1NFRF+1tYE6kyqxhyBcWwytu/f54vgZU3Bp724ByCQDVOpbj2yPJiaXyJ+7O/Ve/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750784548; c=relaxed/simple;
-	bh=rVT5B2iWZZr9OKkNpthk5FE/RUvJxgj/XBpIPkA+dVY=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=I4crjkuz0EymfxN/GHY5VNE4UaWNZmF/BWWN6ka21lcLq3qSPWzjHhdyC7TbvSDqY6VbsOYs1B+/zqoc4WTehqZerG9icJ1BEhEPxWM/Q3icy8d8TthcGiI9v2JJ12uJ6YaC+hpfGddjiBw4NOwZJjl4ufoRQoDJnsJ2GAv50p4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddbec809acso10300645ab.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:02:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750784546; x=1751389346;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RLFH6eoxt7bnwcvodcPHkdsqctyfANQtqy/+9gnynnQ=;
-        b=jLfaSl2TcW413MHhVqK7r7LqzDw3rYT4yHrg/x0DrSS3W5Ogm5Y6fdzXfl4vjmGgDB
-         d/p2P/JpLlImPnEZnEhgfsHMo07m92YpYsBJ7xtwWpuz+GF9O6DkDVfzVC+3gD5+K4W5
-         i498JqOwf61YtULXumS4Xb2jD56yR3IR1hsHUtdKmN9TFX261FgVDiWsrtDpvHCPkqEJ
-         L1RxXR9HpsYJ0N1uU/Ib4KvnKvxZJwkGcefOFzTzqTlU5gFa4pzeZD248rOFnS/e8VLm
-         qyo3v5vrgjL9tssGSe4/P95uhrbyF3nSu54qEdE3nRjMgdK7M03oyv2vhHHFWhiurJkl
-         IaVg==
-X-Forwarded-Encrypted: i=1; AJvYcCV1dHQ18+E9RhxKlS9sFOs1QW0rKC0C79HPWDocLMM0uM8tzpS9fOs/xDs/itP3CRP57jSGCMRM9E+hqeU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywexg8reTvJggg2VFN30gF9QEuIb+Typ3z+T76/0Pgo885+NgDl
-	Rijx1X5DcVAXjnv8qx4Vu14eG1Hsmv4RB3SOeaUxdlwH7D3HZHGgNMBfC6fI2HFu/biN4iIxn4S
-	ELQA5+yVXUDjyuLjh3v1z1T1XOrM+b684Uil0eM0S7Lh/O4542/QIHcuWxIY=
-X-Google-Smtp-Source: AGHT+IFALlkKleQrrNMPzjarn8EpBeg13EQeNdOqET3QREb0fiA0vwwaEcVn7iiFB8i08VNs4qk2heQG9gVsU6i5dFCiuESZbVvx
+	s=arc-20240116; t=1750784552; c=relaxed/simple;
+	bh=d4OBpBu6hw1KDprnFdRVmV5CvEfQ//NZYDFWukP17pk=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DZ4PzpoAMTEMZ1aNAQHR8uIWxeoB0JFlF+DBd20vPcfa10HGRKiprbAKLjyg0hdfZB1Gt8Axd68YiZwAn+dZ4l0QqJ8th+K6eaFagZEAyZSbTX3OXojjugvYdwZYbFblmm9LIVb1huXhdip5jnBtm4bfGwCAAFzASyjCRVDGizM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oTtc8QNV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oTtc8QNV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BABFC4CEE3;
+	Tue, 24 Jun 2025 17:02:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750784551;
+	bh=d4OBpBu6hw1KDprnFdRVmV5CvEfQ//NZYDFWukP17pk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=oTtc8QNV8oFEiQElaJ2CWLUj9R+gB1KyUp+AXB3Lm5QdzjPNSzVnVtPemnTy/UAaU
+	 Sr/0QN3tUcdBrwAC7mrO0gI2HUJaM2eGIer7PjH5NVzJDY8r/WbHHgi02r2zhQ36IM
+	 Tim15ufyv+fXalJlBgPhMGTpCLksT62dtT5VCBatN8Yaer0i+hkzh9OvNiWNn7Rwas
+	 3bGJlA9ecNonS1A8Nl2eGIAOex0oDoAYiOsMYiwmqfwKFe2AHntbmFctpBpc6m0ACI
+	 gJf1pK+fhq0n+jaQUIhOl6LYW455kb6OQdhoNyrNEMNWZGTiupPkurh2VPbAqiWtlt
+	 P26Re1PWYMyaA==
+Received: from [193.57.185.11] (helo=lobster-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uU72S-009awv-KE;
+	Tue, 24 Jun 2025 18:02:28 +0100
+Date: Tue, 24 Jun 2025 18:02:27 +0100
+Message-ID: <877c11f4yk.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Yeoreum Yun <yeoreum.yun@arm.com>,
+	pcc@google.com,
+	will@kernel.org,
+	broonie@kernel.org,
+	anshuman.khandual@arm.com,
+	joey.gouly@arm.com,
+	yury.khrustalev@arm.com,
+	oliver.upton@linux.dev,
+	frederic@kernel.org,
+	akpm@linux-foundation.org,
+	surenb@google.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v9 03/10] arm64/kvm: expose FEAT_MTE_TAGGED_FAR feature to guest
+In-Reply-To: <aFrTcGt-g5sc-uv0@arm.com>
+References: <20250618084513.1761345-1-yeoreum.yun@arm.com>
+	<20250618084513.1761345-4-yeoreum.yun@arm.com>
+	<86ldppc86c.wl-maz@kernel.org>
+	<aFrTcGt-g5sc-uv0@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:3b83:b0:3dd:c4ed:39c0 with SMTP id
- e9e14a558f8ab-3de38c159a7mr227556445ab.1.1750784546405; Tue, 24 Jun 2025
- 10:02:26 -0700 (PDT)
-Date: Tue, 24 Jun 2025 10:02:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685ada22.a00a0220.2e5631.0089.GAE@google.com>
-Subject: [syzbot] [fs?] WARNING in minix_rename
-From: syzbot <syzbot+a65e824272c5f741247d@syzkaller.appspotmail.com>
-To: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 193.57.185.11
+X-SA-Exim-Rcpt-To: catalin.marinas@arm.com, yeoreum.yun@arm.com, pcc@google.com, will@kernel.org, broonie@kernel.org, anshuman.khandual@arm.com, joey.gouly@arm.com, yury.khrustalev@arm.com, oliver.upton@linux.dev, frederic@kernel.org, akpm@linux-foundation.org, surenb@google.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hello,
+On Tue, 24 Jun 2025 17:33:52 +0100,
+Catalin Marinas <catalin.marinas@arm.com> wrote:
+> 
+> Hi Marc,
+> 
+> On Wed, Jun 18, 2025 at 05:43:07PM +0100, Marc Zyngier wrote:
+> > In general, please use a patch title format that matches the one used
+> > for the subsystem. For KVM, that'd be "KVM: arm64: Expose ..."/
+> [...]
+> > >  	case SYS_ID_AA64PFR2_EL1:
+> > > -		/* We only expose FPMR */
+> > > -		val &= ID_AA64PFR2_EL1_FPMR;
+> > > +		mask = ID_AA64PFR2_EL1_FPMR;
+> > > +
+> > > +		if (kvm_has_mte(vcpu->kvm))
+> > > +			mask |= ID_AA64PFR2_EL1_MTEFAR;
+> > > +
+> > > +		val &= mask;
+> > 
+> > I don't think there is a need for an extra variable, and you could
+> > follow the pattern established in this file by writing this as:
+> > 
+> > 	val &= (ID_AA64PFR2_EL1_FPMR |
+> > 		(kvm_has_mte(vcpu->kvm) ? ID_AA64PFR2_EL1_MTEFAR : 0));
+> > 
+> > Not a big deal though.
+> 
+> I can make the changes locally. Are you ok with the patch otherwise?
 
-syzbot found the following issue on:
+Yup, that'd fine by me. With this fixed:
 
-HEAD commit:    78f4e737a53e Merge tag 'for-6.16/dm-fixes' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10b29182580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28cc6f051378bb16
-dashboard link: https://syzkaller.appspot.com/bug?extid=a65e824272c5f741247d
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1446370c580000
+Acked-by: Marc Zyngier <maz@kernel.org>
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/560a423a60ad/disk-78f4e737.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/9e97e18d85b9/vmlinux-78f4e737.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/a147a5a27c6e/bzImage-78f4e737.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/2c4c332ed1d0/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=12276b70580000)
+	M.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+a65e824272c5f741247d@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 6388 at fs/inode.c:417 drop_nlink+0xc5/0x110 fs/inode.c:417
-Modules linked in:
-CPU: 0 UID: 0 PID: 6388 Comm: syz.6.27 Not tainted 6.16.0-rc3-syzkaller-00042-g78f4e737a53e #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:drop_nlink+0xc5/0x110 fs/inode.c:417
-Code: 78 07 00 00 be 08 00 00 00 e8 c7 35 e8 ff f0 48 ff 83 78 07 00 00 5b 41 5c 41 5e 41 5f 5d e9 42 01 29 09 cc e8 fc da 86 ff 90 <0f> 0b 90 eb 81 44 89 f1 80 e1 07 80 c1 03 38 c1 0f 8c 5b ff ff ff
-RSP: 0018:ffffc900030c7a30 EFLAGS: 00010293
-RAX: ffffffff82397124 RBX: ffff888055405aa8 RCX: ffff88802da29e00
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: ffffffff8f9fe1f7 R09: 1ffffffff1f3fc3e
-R10: dffffc0000000000 R11: fffffbfff1f3fc3f R12: 1ffff1100aa80b5e
-R13: 0000000000000000 R14: ffff888055405af0 R15: dffffc0000000000
-FS:  00007fb57180a6c0(0000) GS:ffff888125c83000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fb571809f98 CR3: 0000000032278000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- inode_dec_link_count include/linux/fs.h:2634 [inline]
- minix_rename+0x3cf/0x700 fs/minix/namei.c:222
- vfs_rename+0xb99/0xec0 fs/namei.c:5137
- do_renameat2+0x878/0xc50 fs/namei.c:5286
- __do_sys_rename fs/namei.c:5333 [inline]
- __se_sys_rename fs/namei.c:5331 [inline]
- __x64_sys_rename+0x82/0x90 fs/namei.c:5331
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fb57098e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fb57180a038 EFLAGS: 00000246 ORIG_RAX: 0000000000000052
-RAX: ffffffffffffffda RBX: 00007fb570bb6080 RCX: 00007fb57098e929
-RDX: 0000000000000000 RSI: 00002000000001c0 RDI: 0000200000001980
-RBP: 00007fb570a10b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000001 R14: 00007fb570bb6080 R15: 00007fffa5abc5a8
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+-- 
+Jazz isn't dead. It just smells funny.
