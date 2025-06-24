@@ -1,92 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5A002505A9;
-	Tue, 24 Jun 2025 07:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 826F957C9F;
+	Tue, 24 Jun 2025 07:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750749965; cv=none; b=TXlBEIBNwP5tAP85AsZO9BWyJpvH3AUYyZMFH/KGznzH4z9xWFsBOpl9GKf2uCGILJX16HOpTS8kFXSB1R81EG5YQW+eIo9dEC2HQrhI/NDfaW2uH5KyRq2rfNBhrefBenyb+ukelVV8ZilEGYesTqkZiAEk0+ZTyBZVaidYozg=
+	t=1750750074; cv=none; b=AEdlQo14RVTWaCg4MpV5c791MdYyaFvuE76CmQVHuLmUOp1RVyzJkDnVGI7y9602V9TTd1SutyLhW9138tlpcuvEJuAClVYQpN0jiYxYZeWxw05vLTmy4f+MjzxqDaE2J0qwRz7gQhynM7i9x08f/EAM+bgFn4Zan5AQyZC9U4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750749965; c=relaxed/simple;
-	bh=NYdKbcFwu7oY8DRW1Ox6wAWvpbMQxW6/Wp56dk9Iqfk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VUj8TclQqEciwdFN/Liy9UMOFQulnljtEY9RdNlUs0vCKjVD/XzenEBjFVMDhJ1748iFxHzxhorjUUZa68V6GvcNF6YuzMKOwg7iTSjim5cRxSH8W0UurDfraKAnonUb/M4XzLZ9Kv1C6d3+ihjUkwNEO1c9Li9u+v9SglRbmfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UdjVn9cd; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750750074; c=relaxed/simple;
+	bh=2VRlaahf+tQJQsFz0DN32NcUbTYYVROMUttudjfToi8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uV7n2xDrHnqp9KOXz+wyvBNuNcZJQsBLuNjygqi6oAxqcnJjoAPO7Rlo24BJ5XkvYA6jQNoOUUcanEspQUjIHznJ9IeF6ocByFzXCxVCu5fZbPoPjTVqkk/wuYOryx6i6B5ba7nPftA2T+Ht0rZWY/U68hTwU8rek3jEoLv+yV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=MARKBIXl; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UdjVn9cd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750749964; x=1782285964;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NYdKbcFwu7oY8DRW1Ox6wAWvpbMQxW6/Wp56dk9Iqfk=;
-  b=UdjVn9cd1VJon0AeEqgcQps/iCuMWdXBRsMAvHH348c35bUShfHi+hw5
-   8QIbWpAEwDyhTw2yU7LXDKBayjurXe23zd2qjyLLD6unUJ6Agvs+bDXOA
-   a7LeIcln3jqOEanavPPkvEoEQgsjoZVW973l3EAuHDNtVFVTNNTeucGJZ
-   v3Or5SMlYr5NHNpHTeABjgjA3Hp2aduX1n9n5uwN+2r61bilcds+BUhUD
-   PJdpUF1jdNzrkm6vioHd918akVisD37qf5pZu08/+Xwn5MvtslI/dM54t
-   V1s5ZKdLKLYKX37S6+jlPCSWGYn0BQx0GY0JPsa2z8xXAB25DtwaedyzL
-   Q==;
-X-CSE-ConnectionGUID: GHo+8Jb3Tve4iuapeCw6mw==
-X-CSE-MsgGUID: ZVAuEtmmROywjcTw0A74+Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="56758577"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="56758577"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 00:26:04 -0700
-X-CSE-ConnectionGUID: E4xcZJouSxS3O/r83nvG8A==
-X-CSE-MsgGUID: AckDEsMeTsiQGcDxfMHqdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="152360952"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 24 Jun 2025 00:26:01 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id A15BE138; Tue, 24 Jun 2025 10:25:59 +0300 (EEST)
-Date: Tue, 24 Jun 2025 10:25:59 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Randolph Ha <rha051117@gmail.com>, linux-i2c@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Mika Westerberg <westeri@kernel.org>
-Subject: Re: [PATCH v1 1/1] i2c: acpi: Replace custom code with
- device_match_acpi_handle()
-Message-ID: <20250624072559.GB2824380@black.fi.intel.com>
-References: <20250623134521.158447-1-andriy.shevchenko@linux.intel.com>
- <20250624054508.GA2824380@black.fi.intel.com>
- <aFpRZoIkQod6g2Dm@smile.fi.intel.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="MARKBIXl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750750065;
+	bh=2VRlaahf+tQJQsFz0DN32NcUbTYYVROMUttudjfToi8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MARKBIXlPxz2c3Aj7cq2Yj9Ci3qEsh1TvnReud096eqPVZ1zy9JEPDEDb5Rw7TZgY
+	 nmVnhzQkDecSH1xqCEx+zfoLAGVG+bJ1KUjr8vS1pfECnXeGo6AmRcvWr6xas3T55Z
+	 xdA+r2ds2AAhQ6gXDMZnpuoCgD9yhe0tg/CtBKmzqNxUETe7foLF/woYD6yZ/TPUmX
+	 eeVNbV9UF2DnbuBAf2NBaUUWRJfN7F+bKOBLDr1VzJwgXHJ0/UsfN1EV4nb7yJBDpm
+	 qFKULyxZjxxldJ/ddg5NzqsZ+zAR6H4ZPn1M5jS0hdKUTCY0gTUiFD6/Rg87X1NwLd
+	 cHR1Y9d+vmjfA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9811517E0EA4;
+	Tue, 24 Jun 2025 09:27:44 +0200 (CEST)
+Message-ID: <480c78cc-076f-44e2-bd90-1dcc91a235ee@collabora.com>
+Date: Tue, 24 Jun 2025 09:27:43 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <aFpRZoIkQod6g2Dm@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/2] dt-bindings: mfd: Add binding for MediaTek MT6363
+ series SPMI PMIC
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: lee@kernel.org, linux-kernel@vger.kernel.org, conor+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, krzk+dt@kernel.org,
+ linux-mediatek@lists.infradead.org, matthias.bgg@gmail.com,
+ kernel@collabora.com, devicetree@vger.kernel.org
+References: <20250623120038.108891-1-angelogioacchino.delregno@collabora.com>
+ <20250623120038.108891-2-angelogioacchino.delregno@collabora.com>
+ <175068852802.3230004.1923972457454728043.robh@kernel.org>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <175068852802.3230004.1923972457454728043.robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 24, 2025 at 10:19:02AM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 24, 2025 at 08:45:08AM +0300, Mika Westerberg wrote:
-> > On Mon, Jun 23, 2025 at 04:45:21PM +0300, Andy Shevchenko wrote:
-> > > Since driver core provides a generic device_match_acpi_handle()
-> > > we may replace the custom code with it.
-> > 
-> > Well okay but now you replace a simple comparison with a function call. I'm
-> > fine with the patch but I also don't think this is an improvement ;-)
+Il 23/06/25 16:22, Rob Herring (Arm) ha scritto:
 > 
-> The improvement is in using standard API for such cases.
+> On Mon, 23 Jun 2025 14:00:37 +0200, AngeloGioacchino Del Regno wrote:
+>> Add a binding for the MediaTek MT6363/6373 (and similar) multi
+>> function PMICs connected over SPMI.
+>>
+>> These PMICs are found on board designs using newer MediaTek SoCs,
+>> such as the Dimensity 9400 Smartphone chip, or the Chromebook
+>> MT8196 chip.
+>>
+>> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+>> ---
+>>   .../bindings/mfd/mediatek,mt6363.yaml         | 98 +++++++++++++++++++
+>>   1 file changed, 98 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/mediatek,mt6363.yaml
+>>
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/mediatek,mt6363.yaml:
 
-Well ACPI_HANDLE() and comparing handles is also a "standard API".
+Yeah, sorry about not adding the information at the very beginning (but I suspect
+the bot would still complain), but anyway that's because this series depends on the
+one that actually introduces the bindings for the regulators that are referenced in
+here...
 
-> You may argue on many things that may be open coded in
-> the kernel while we have helpers (in some cases exported)
-> functions that are one-liners or so. Note, the helper also
-> performs an additional check and having an open coded copy
-> may miss such a change. To me it's an improvement.
+https://lore.kernel.org/all/20250623120016.108732-1-angelogioacchino.delregno@collabora.com
 
-Which is unnecessary check in this case.
 
-But like I said, no objections. I just don't think this improves anything.
+Cheers,
+Angelo
+
+
+> 	Error in referenced schema matching $id: http://devicetree.org/schemas/regulator/mediatek,mt6363-regulator.yaml
+> 	Tried these paths (check schema $id if path is wrong):
+> 	/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/mediatek,mt6363-regulator.yaml
+> 	/usr/local/lib/python3.11/dist-packages/dtschema/schemas/regulator/mediatek,mt6363-regulator.yaml
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/mfd/mediatek,mt6363.example.dtb: pmic@4 (mediatek,mt6363): regulators: 'oneOf' conditional failed, one must be fixed:
+> 	{'compatible': ['mediatek,mt6363-regulator']} should not be valid under {'description': "Can't find referenced schema: http://devicetree.org/schemas/regulator/mediatek,mt6363-regulator.yaml#"}
+> 	{'compatible': ['mediatek,mt6363-regulator']} should not be valid under {'description': "Can't find referenced schema: http://devicetree.org/schemas/regulator/mediatek,mt6373-regulator.yaml#"}
+> 	from schema $id: http://devicetree.org/schemas/mfd/mediatek,mt6363.yaml#
+> Documentation/devicetree/bindings/mfd/mediatek,mt6363.example.dtb: /example-0/spmi/pmic@4/regulators: failed to match any schema with compatible: ['mediatek,mt6363-regulator']
+> 
+> doc reference errors (make refcheckdocs):
+> 
+> See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250623120038.108891-2-angelogioacchino.delregno@collabora.com
+> 
+> The base for the series is generally the latest rc1. A different dependency
+> should be noted in *this* patch.
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+> 
+> pip3 install dtschema --upgrade
+> 
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your schema.
+> 
+
+
