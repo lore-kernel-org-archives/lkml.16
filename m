@@ -1,212 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2A0182BC;
-	Tue, 24 Jun 2025 13:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30652290D85
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:08:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750770334; cv=none; b=bsv3e1j0T8aO0gRfD9V0pIy6vgXAKD7wId82i+byILxZSvWx5ileEP63kcjuTUn5PaR9xNd30RF/5hjFNmw9zfScfapy31chOX77uMk6vpCC2xZXC+VUVUnQJElzk8rXHCL0bKYCC/3xuqkOtSROwjhEist4V/2zMMJDfSgBqyk=
+	t=1750770496; cv=none; b=GuPg4y6d9ySlPj6l0p9FfSZ1VkwMb1zh7yRO3Z7ySXN3xdHSQFuaIiw9/LecsJoPuh+GSwc5tnf5+jCJx7OcXwt9ZhSr+Cydd6IcXTL4oOyXHl/+CEOcQf/sxcjydttNsYDtKewFZtsuW3hLwO9qlM1wqrdzvIRR3VYEuNNh208=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750770334; c=relaxed/simple;
-	bh=kGyeSWwPfNqY8c6qb1h6FLEVc9UbMJzgCLbeazagA7s=;
+	s=arc-20240116; t=1750770496; c=relaxed/simple;
+	bh=UKxlJQaFnl6/rA88dWIe9uoyiDa1SHW784EYsw3dMrQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NGpdCEDSxUbWh+I3VZF+32g84c95RWt+PyyoMLBzrDuEaRgfdst7DyO9RgccQN42upgVRLeqcTuj6Hn7Tit7+8eNdAPx3fUJE5B+/MBgzG30WK9XlK0gpr4UNRtRDkOrvrfC7C9vdP3Rbx86Nae/lDFeL95cnb5Y3xaXLXJ9iKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XtgBVdTI; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=unDcczdDSS1UuHBh0KkyzfCT+fwGz0TnisMVNy1iUHw7j/jr65Wx9w9fnzI0LQRluWprqju2ejqJ1TGselfD6eFPoHqsEnxy30aXjdTTwPLFyvJDzi1Nq8TI4gBrN4u0EtvDIQRYSvWMRVF07FBfn3HnBu5nSP4WANgl50eFzyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=O1VND6E1; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XtgBVdTI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750770333; x=1782306333;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=kGyeSWwPfNqY8c6qb1h6FLEVc9UbMJzgCLbeazagA7s=;
-  b=XtgBVdTIsC6FO0JhBOtUe5Rxbgg7/U5WO2mSHJUMceV/aUrE6artdMLc
-   uezbx4bIRjfvwGNb/BSFs/XunyCEEOsmPvwCqXn+4W1ik+ltdgFocdtSL
-   1DpCQGk19uIhReVjDePpa1jOzfef8wK6fk4+ZkmkHrpMr1HCfeOcjt4YI
-   WIMRaLPFO/bnLgHB2YVq87csT7oI450hYGPeio7AEHV8AJDdJ6bfaXQLD
-   A9ENBhui/LFZUkPW/DW4xVqzHUUBFbmkq9XYk3TcRA5SeGHH1+p6EKGdQ
-   qH0oCL8yNv9zS77aLdmfBQ3xBsOQ1QvUlI6QhCkSBtiwU5ND0VtborHW+
-   w==;
-X-CSE-ConnectionGUID: b5r2D6evSwiwZTnyyiaLqQ==
-X-CSE-MsgGUID: hXSDTVIiRhWB22ROi4TQCg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64436179"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="64436179"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 06:05:33 -0700
-X-CSE-ConnectionGUID: yx5S08Y/Tj22QfpDWdefuQ==
-X-CSE-MsgGUID: i9+uPxK2STCA4XdUDpP6OA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="182787385"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 06:05:29 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uU3L4-00000009TQw-0NDt;
-	Tue, 24 Jun 2025 16:05:26 +0300
-Date: Tue, 24 Jun 2025 16:05:25 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Lukas Wunner <lukas@wunner.de>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Andy Shevchenko <andy@kernel.org>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v15 2/2] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <aFqilRNwsUafDtOm@smile.fi.intel.com>
-References: <20250623211116.1395-1-ansuelsmth@gmail.com>
- <20250623211116.1395-2-ansuelsmth@gmail.com>
- <CAHp75VcEJ0w5rcyq_DSHHunYanU5S9OgnRz1t8XervXqGQCX4w@mail.gmail.com>
- <685a64d5.df0a0220.1f9a42.38b0@mx.google.com>
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="O1VND6E1"
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4a6f6d52af7so3662441cf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:08:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1750770494; x=1751375294; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iohPe+c6ZnzjeGz7SNDU9v8Z6P04ovt1VqFpt7Vikhc=;
+        b=O1VND6E1I1G6Kku1PC3mZll1oGkatGWH0Gu7RfzVgNEWWDT9SJoJyRFRY0EJnv/aTG
+         61bm5NxRNyvLrG3bTapG97cYTYJ/gmH5yGOBna3A6CbRMt3St2DPTpF1XsuG+hAY1Lvy
+         Drus+CtUuInH4yjnu7e0j4qwl2hVl0WTAhbTTmrCNwmEHheUIvKNMQw3Fh0/o5TQJ0PP
+         GhCzJHX8WnzK8nSUGdYENFybJpA5JCJ0U0esgEM2ojsMIwKx2tMiMavIFYXCIIr3PQOY
+         rb251LRy97dWdNTnZkH275BrqCqxkln17cPC+0rueoEMSQr602WN8IraD1D4DZ6E6omz
+         OITQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750770494; x=1751375294;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iohPe+c6ZnzjeGz7SNDU9v8Z6P04ovt1VqFpt7Vikhc=;
+        b=L6xIkqyZiUSSeOgzZ+m8TFi+pDr/TWcd0M3LoHQzb48F2q84t5/zku9U+Ut0mViMU+
+         zg6F1bzHQwzdyfT/sfRmWNdh64OTUmkoZVDk0U8+x6mjfdE7zk+pcTxsTCSA6KS2rTqQ
+         8qIvmAh7w5DkC1plbap9ESzkD/udlonfkJV2zBrS/Z3iPQQx/mNYK+y5I64udCeT9rJi
+         c/NPwq9D5SMaxpbDQW7adUkaykN3bn8BnyONc9DP+Y1J8XhZQRcDV175FhzHd/1LC0qI
+         CKkGScOkVa+Z/Vlrl9KN3xxtAg2swgQCh3uA1birwPck/mOQdoM68GK+wrterZtjP+lb
+         CEZg==
+X-Forwarded-Encrypted: i=1; AJvYcCWXJnRNKW0gjcQHyHBrpTegLpESvj6V5VznSfSyeNWLbEvVlAtsjLYStMwqENTBtVoRhsAl6vMbs+9ZezQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDz3gcsakIE1Q7iLZOIqQrHhk8XK8XVXv8uDoUm+jsOyKQfCwT
+	S2h5at5qR3f40b62No0sEQMwNxnKRosaG5fMN0UPEoSCaBu03i/htd4Xt9rB7Belj7A=
+X-Gm-Gg: ASbGncvwu52jhvMY7vdpDf6rVzpsLNDSIh0WkK0nCAUjX3n/qwXFiKHl822Z/bLhNAH
+	Vx2xWL8nhxMWhlxDjebHi2oTmDmqGIz1qbHenVXoArpyeLfC0/G1jYWM0TeT9Hl0PRh0dlzZ42U
+	6GNm7kHN/rOgxIPTS0wfqvvNaqmy2R04JswlnTZaSNv5Dx7MyHl3eNQblTtm3gYL8O9dCHKelFA
+	nkxNrs+M44q69ubjdu3oq0fnU2yUbO8il9hA37q+xxjJKNxS8WW6fqaX0yOhGXpxRZFX9lM6Yny
+	wpdDhwdB2GU6TWlihvqTncLvkeGKbvGBZHwk1cHkBYHO/F8MfAmZUFxDOhW2DkLrzC12+81AnAW
+	mb3qFdtcMPraP3/Uj4HjVmrmwU855q7UQ5QInVQ==
+X-Google-Smtp-Source: AGHT+IHef3kdB4cDi6psPYyte+3aNmtbl/eIlBlt7fvZpJKrO+q9+X8gBnos6r+TRXvWNp7iSK1pIg==
+X-Received: by 2002:a05:620a:1a06:b0:7c5:562d:cd02 with SMTP id af79cd13be357-7d3f992de50mr2307168585a.41.1750770493042;
+        Tue, 24 Jun 2025 06:08:13 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f99a80adsm499866985a.46.2025.06.24.06.08.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 06:08:12 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uU3Nj-00000000dPJ-362W;
+	Tue, 24 Jun 2025 10:08:11 -0300
+Date: Tue, 24 Jun 2025 10:08:11 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Alexey Kardashevskiy <aik@amd.com>
+Cc: Vishal Annapurve <vannapurve@google.com>, Fuad Tabba <tabba@google.com>,
+	Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+	linux-fsdevel@vger.kernel.org, ajones@ventanamicro.com,
+	akpm@linux-foundation.org, amoorthy@google.com,
+	anthony.yznaga@oracle.com, anup@brainfault.org,
+	aou@eecs.berkeley.edu, bfoster@redhat.com,
+	binbin.wu@linux.intel.com, brauner@kernel.org,
+	catalin.marinas@arm.com, chao.p.peng@intel.com,
+	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com,
+	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com,
+	fan.du@intel.com, fvdl@google.com, graf@amazon.com,
+	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
+	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
+	james.morse@arm.com, jarkko@kernel.org, jgowans@amazon.com,
+	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
+	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
+	kent.overstreet@linux.dev, kirill.shutemov@intel.com,
+	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
+	mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
+	michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
+	nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
+	palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
+	pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
+	pgonda@google.com, pvorel@suse.cz, qperret@google.com,
+	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
+	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
+	quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com,
+	quic_tsoni@quicinc.com, richard.weiyang@gmail.com,
+	rick.p.edgecombe@intel.com, rientjes@google.com,
+	roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com,
+	shuah@kernel.org, steven.price@arm.com, steven.sistare@oracle.com,
+	suzuki.poulose@arm.com, thomas.lendacky@amd.com,
+	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
+	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
+	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
+	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
+Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
+ KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
+Message-ID: <20250624130811.GB72557@ziepe.ca>
+References: <cover.1747264138.git.ackerleytng@google.com>
+ <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
+ <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
+ <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
+ <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
+ <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
+ <9502503f-e0c2-489e-99b0-94146f9b6f85@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <685a64d5.df0a0220.1f9a42.38b0@mx.google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <9502503f-e0c2-489e-99b0-94146f9b6f85@amd.com>
 
-On Tue, Jun 24, 2025 at 10:41:54AM +0200, Christian Marangi wrote:
-> On Tue, Jun 24, 2025 at 09:37:26AM +0300, Andy Shevchenko wrote:
-> > On Tue, Jun 24, 2025 at 12:11 AM Christian Marangi <ansuelsmth@gmail.com> wrote:
+On Tue, Jun 24, 2025 at 06:23:54PM +1000, Alexey Kardashevskiy wrote:
 
-...
-
-> > > +config PWM_AIROHA
-> > > +       tristate "Airoha PWM support"
-> > > +       depends on ARCH_AIROHA || COMPILE_TEST
-> > 
-> > > +       depends on OF
-> > 
-> > There is nothing dependent on this. If you want to enable run-time,
-> > why not using this in conjunction with the COMPILE_TEST?
-
-Yes, I understand that. Maybe you should have dropped versioning of the series
-:-)
-
-> > > +       select REGMAP_MMIO
-
-...
-
-> > > +#include <linux/bitfield.h>
-> > > +#include <linux/bitops.h>
-> > > +#include <linux/err.h>
-> > 
-> > > +#include <linux/gpio.h>
-> > 
-> > Have you had a chance to read the top of that header file?
-> > No, just no. This header must not be used in the new code.
+> Now, I am rebasing my RFC on top of this patchset and it fails in
+> kvm_gmem_has_safe_refcount() as IOMMU holds references to all these
+> folios in my RFC.
 > 
-> As you can see by the changelog this is very old code so I wasn't
-> aware.
+> So what is the expected sequence here? The userspace unmaps a DMA
+> page and maps it back right away, all from the userspace? The end
+> result will be the exactly same which seems useless. And IOMMU TLB
+> is going to be flushed on a page conversion anyway (the RMPUPDATE
+> instruction does that). All this is about AMD's x86 though.
 
-Understood.
+The iommu should not be using the VMA to manage the mapping. It should
+be directly linked to the guestmemfd in some way that does not disturb
+its operations. I imagine there would be some kind of invalidation
+callback directly to the iommu.
 
-> > > +#include <linux/io.h>
-> > > +#include <linux/iopoll.h>
-> > > +#include <linux/math64.h>
-> > > +#include <linux/mfd/syscon.h>
-> > > +#include <linux/module.h>
-> > 
-> > > +#include <linux/of.h>
-> > 
-> > Nothing is used from this header. You actually missed mod_devicetable.h.
-> > 
-> > > +#include <linux/platform_device.h>
-> > > +#include <linux/pwm.h>
-> > > +#include <linux/regmap.h>
-> > 
-> > Missing headers, such as types.h.
-> > Please, follow the IWYU principle.
-> 
-> Aside from types do you have hint of other missing header?
+Presumably that invalidation call back can include a reason for the
+invalidation (addr change, shared/private conversion, etc)
 
-Just above :-)
+I'm not sure how we will figure out which case is which but guestmemfd
+should allow the iommu to plug in either invalidation scheme..
 
-> Do you have a tool to identify the missing header?
+Probably invalidation should be a global to the FD thing, I imagine
+that once invalidation is established the iommu will not be
+incrementing page refcounts.
 
-Unfortunately no tool available, this is just by experience of reviewing code
-and doing some cleanups in include/ area.
-
-The rule of thumb, for anythin you use, check which header provides that type
-or API. But OTOH don't be too pedantic about it, types.h, for example, covers
-a lot of basic kernel types and many compiler attributes and so on, no need
-to take care of those separately.
-
-TL;DR: you should go through your code and check it.
-
-...
-
-> > > +       u64 initialized;
-> > 
-> > Is it bitmap? This looks really weird, at least a comment is a must to
-> > explain why 64-bit for the variable that suggests (by naming) only a
-> > single bit.
-> 
-> There could be 33 PWM channel so it doesn't fit a u32. This is why u64.
-> I feel bitmap might be overkill for the task but if requested, I will
-> change it.
-
-Why? It has a shortcuts for unsigned long, so it should give you no difference
-on 64-bit compilation. 32-bit might suffer a bit, but if you curious you may
-check it. The ask here is only based on the variable naming and unclearness of
-how many bits are in use. Also bitmap will help to understand the code better.
-
-For instance, here
-
-	DEFINE_BITMAP(initialized, 33); // or rather a definition for 33
-
-will give immediate understanding how this is used and what are the limits.
-With u64 it;s unclear what you will do with a potential garbage in the upper
-bits, for example.
-
-So, let's say I prefer to see bitmap types and APIs here based on the above
-examples.
-
-...
-
-> > This entire function reminds me of something from util_macros.h or
-> > bsearch.h or similar. Can you double check that you really can't
-> > utilise one of those?
-> 
-> I checked and bsearch can't be used and and for util_macros the closest
-> can't be used. As explained in previous revision, it's not simply a
-> matter of finding the closest value but it's about finding a value that
-> is closest to the period_ns and only with that condition satisfied one
-> closest to the duty. We can't mix them as search for the closest of
-> both.
-
-Perhaps adding a comment on top to summarize this, or did I miss it?
-
-...
-
-> > > +       pc->buckets[bucket].used &= ~BIT_ULL(hwpwm);
-> > 
-> > Oh, why do you need 'used' to be also 64-bit?
-
-Right, but I mean why does each of the buckets require a 64-bit value? Can it
-be handled in a single bitmap or so?
-
-Or is it used like a cluster of the PWMs in one bucket?
-It feels like bitmap APIs can also improve the implementation here.
-
-> In the extreme case, a bucket can be used by all 33 PWM channel.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jason
