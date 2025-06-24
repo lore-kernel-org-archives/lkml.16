@@ -1,172 +1,161 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D960B25C70F;
-	Tue, 24 Jun 2025 08:33:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EAB125C82C;
+	Tue, 24 Jun 2025 08:33:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753985; cv=none; b=ocJwTPE2Ygb0i9vZSepUk2Tal56vq30pn/XzeJwqMMGUc0FajiCDD2a6y7+c6ErtjJsMPtNsSAVcCw6IiNIa9gkUR1QyE6L3iYTXeQUebcO/TmnLowa2xDb3MCrzn9DbiZPxKPE7bGNog9neTO34N4oPf9S4U1OJAgWDUZXfQg4=
+	t=1750753986; cv=none; b=j8siAq/ixnRmEt81XYO7I/xwm7Q5/oxhDFlJdxgHuMi8UZK4CkkQPbOASXQ+v3uSS66YyHeQEFhz+/3zqfEi19lYGpKZo9ztaf8OubCz6KKwULaPgyTsataP/3cA43ZJhm13j8b6vgfO7+66Ng3HiBIGmSl6Jd6aqL+tSF1Z+7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753985; c=relaxed/simple;
-	bh=kcXxuLYDeFqIEPL+ofXn+D0asrg1ymOU8WT5ZTAyRIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s57WfDOVt0wNTNZL1JpfhwHXjhw6ygYz2pl9n5bJ3Tw1hnhgZpD8IKThZ/hdQk8XvqqfXulpGvOvo7M3fcFQzoZP5nV16cnlWkwJ/xp1TraQSFbExp+s1DNPBlU3JrET8TSyfQW8/ZnuByHYzBsOTtDqQ5aEZhwGww+HYtfdRGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dk/Fi2ya; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750753986; c=relaxed/simple;
+	bh=6d9ilZKlt54Cy4GygVeA1BUh6llNTH6aW8oKt2FPRxk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WlCoE+qL61Rz3mMqeSnn7z7x5dJnMczyy09QRo2z84iZYHDtxr6/lMnrDCS5RMkFU3aa+z8mEDJX01pMnqA4DMIMSIkyhD8ebj2TOgZabgkxBV1vi9JFDWhz/Tx5d9AnKrNVPFCocLgSaoL1wg9MJCu/xhrR10Ih6EtKRz8SA9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dzj9ABnR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dk/Fi2ya"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a5257748e1so3298429f8f.2;
-        Tue, 24 Jun 2025 01:33:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750753980; x=1751358780; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HAcUzdSSJoRNC6czCmlN0ZjREWVQ1d/qdtR05/VTcrw=;
-        b=Dk/Fi2ya7akwEiL5+2r2pGSe0N98l6VyzXSVeTcW0iMzXxcSYCjpKqGg9i5a9BnGkV
-         q7cCF4bHpYBRYULmUJaNuXb1n91QNtVsb9KJvX4p3uWNJFO4A+Q1mMubz1GPJHzDsh58
-         WdNs2C+bC+LUsC+gVT8qazf0nSdIhk4sZxjHgkxgMASL6QwImkOyiJTcA5o86gMvZHEF
-         DAT0jOQED75oQS9r5sSjitJuq7CI7tOIVSy2PTlaYSFFToxsTM2fCnmT0iR4HcjeLT9+
-         27kEOpRS9/qBwfpRUW7jBdyOR++VM0Nrs3fnPJRgsxlu6eW3nMEqcuTmMCLiqWYgk+2K
-         anAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750753980; x=1751358780;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HAcUzdSSJoRNC6czCmlN0ZjREWVQ1d/qdtR05/VTcrw=;
-        b=WCSnnYNWTt/2NrQ91GLQnSwf4STdeuffWGEHmgo4RGeMb66SVsW16Kg/gCY9+kUwyN
-         l8KTwza0Nq4hHJTb1uekVBQXFARennqy6kpA+ilp+BYT3zdO1k27RcoUTbsoFIH7SbX4
-         AXLJhH5ERVmKdmuLCbW2KqDe0Eu9N7O9nsxM5aaH6EgmuDQp71tz2zP/Ihs3bt5FVlJ2
-         jGViFJMn9Hu/KWvk+m0YYV5iuyo2hKzgeKMJYTj4Lpp9I4QR0G2LcuYoKWJnUGsICNF8
-         YuXjzMLzZtt0evpXrBBcdKkusw2PNkoY72Khsmc6j1YcDCxiIDfVTNwJBorQ84R0ko1j
-         Qmag==
-X-Forwarded-Encrypted: i=1; AJvYcCWMrfqbjj0DsFapRRIxkbCxZGt3Iis9nyLwRF/UIfBkzb1ogjv5odLGXXwKRigv2K4kgiJ7IOMtxZraOLzb@vger.kernel.org, AJvYcCXmkghB5daATBMPKjuA5ZdcdcZmugkF5icEJMYsRlB3RchYOyeOvajw6r/SSpoEQ/uxRPFhIsa3bS8OvSco@vger.kernel.org
-X-Gm-Message-State: AOJu0YwE0VHylL0ToEpkFidNGiCh0zaAk8k8ZGitTIWVGDlZMmCmICPc
-	15/Gc73pqWPTCE0DqKuXLUyJSEdd/b6MGkliOkblsYhpLSxBcfoBy9YG
-X-Gm-Gg: ASbGncsGmBtvZm+5C7vUMaOOKtKlo1yX8T+ifZPgmSHTuooHF9tpYWpU7Tj8aw/jUlQ
-	nHSFHyTJCbVCnFfl+Q3RZGwpuXTXl+bxkL/dfvLa1Ts6s1b4T15pqkU67KnWmt0PDGVUZuQ19iX
-	QIWqb7e5K+0gnV3aTzJy7gVXkwi+KQ8wwdjZwb3NKPimMCgrvoh90RVyUs5tn0lVEg/UrGUr0uA
-	VjgQmL5h/cHJybBFGt//46Ci9QzfQPZTcec0AaBaerZEMQ6Qgyc5yyrnqc4OlAtGhGjpt2vSFnJ
-	qf56CTXNsLD0M0KsdmHg4oKJ8Mk589Q7OzeT8c8RqztfzFsYR6oMB6v7+jIvP1Mrr88ll9gLceQ
-	KVxgsOoL9ejT9HNyArRD1Zm65
-X-Google-Smtp-Source: AGHT+IFa8wKlAMcVrotXu5zgRzJw7hFatpGh+UkLiPFv+ni6YiXds6pDi5irzSKPmq0uy7jsxhYgzw==
-X-Received: by 2002:a05:6000:645:b0:3a4:fefb:c8d3 with SMTP id ffacd0b85a97d-3a6d130e802mr13287583f8f.40.1750753979983;
-        Tue, 24 Jun 2025 01:32:59 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e810caefsm1285937f8f.87.2025.06.24.01.32.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 01:32:59 -0700 (PDT)
-Date: Tue, 24 Jun 2025 09:32:58 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
- <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan
- <maddy@linux.ibm.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Christian
- Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Thomas Gleixner
- <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
- <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, Davidlohr Bueso
- <dave@stgolabs.net>, Andre Almeida <andrealmeid@igalia.com>, Andrew Morton
- <akpm@linux-foundation.org>, Dave Hansen <dave.hansen@linux.intel.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 0/5] powerpc: Implement masked user access
-Message-ID: <20250624093258.4906c0e0@pumpkin>
-In-Reply-To: <ff2662ca-3b86-425b-97f8-3883f1018e83@csgroup.eu>
-References: <cover.1750585239.git.christophe.leroy@csgroup.eu>
-	<20250622172043.3fb0e54c@pumpkin>
-	<ff2662ca-3b86-425b-97f8-3883f1018e83@csgroup.eu>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dzj9ABnR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C469CC4CEEF;
+	Tue, 24 Jun 2025 08:33:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750753985;
+	bh=6d9ilZKlt54Cy4GygVeA1BUh6llNTH6aW8oKt2FPRxk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Dzj9ABnRS80dywSl2xcQvuz60BjS/EzVRE/7sQoofkNYQ7RofCuvsObKAXpaQaHhY
+	 zXC0Z9eZQx9FnJKQkn5I3NuTOAOoCzPH53F+3rfQps4BK8S9K3JinrQOaMWzdUPfEX
+	 k5fJq+MzTJDDQZEzILWEIpIPCwhhSXqC1RWwgpyeQoBLjzzKySewQVrL5o6fKCS7DZ
+	 M5XqquZLWD0jRbVTRuQhkN6xqIGL8HazkCLVHd0jg0WbeGDbdDRajTMzQktlQ5yuwM
+	 RbpXXibS/6NldZc7u1AAeN0S3EseToLZxoWwhYt22I98mvRMDa3ZbOp/W7O3DVuTQ3
+	 jT0iISOUpT7eA==
+Message-ID: <ea0d8afb-4d64-4fc5-996b-452420e750da@kernel.org>
+Date: Tue, 24 Jun 2025 10:33:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] dt-bindings: media: qcom,sm8550-iris: add non_pixel
+ and resv_region properties
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
+ Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <abhinav.kumar@linux.dev>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250620-video_cb-v1-0-9bcac1c8800c@quicinc.com>
+ <20250620-video_cb-v1-1-9bcac1c8800c@quicinc.com>
+ <a35d3928-8ac6-49ab-8689-16ba69afe197@kernel.org>
+ <2bd17ab5-950c-4260-ae7c-9ba9a6441496@oss.qualcomm.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <2bd17ab5-950c-4260-ae7c-9ba9a6441496@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-On Tue, 24 Jun 2025 07:27:47 +0200
-Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
-
-> Le 22/06/2025 =C3=A0 18:20, David Laight a =C3=A9crit=C2=A0:
-> > On Sun, 22 Jun 2025 11:52:38 +0200
-> > Christophe Leroy <christophe.leroy@csgroup.eu> wrote:
-> >  =20
-> >> Masked user access avoids the address/size verification by access_ok().
-> >> Allthough its main purpose is to skip the speculation in the
-> >> verification of user address and size hence avoid the need of spec
-> >> mitigation, it also has the advantage to reduce the amount of
-> >> instructions needed so it also benefits to platforms that don't
-> >> need speculation mitigation, especially when the size of the copy is
-> >> not know at build time. =20
-> >=20
-> > It also removes a conditional branch that is quite likely to be
-> > statically predicted 'the wrong way'. =20
->=20
-> But include/asm-generic/access_ok.h defines access_ok() as:
->=20
-> 	#define access_ok(addr, size) likely(__access_ok(addr, size))
->=20
-> So GCC uses the 'unlikely' variant of the branch instruction to force=20
-> the correct prediction, doesn't it ?
-
-Nope...
-Most architectures don't have likely/unlikely variants of branches.
-So all gcc can do is decide which path is the fall-through and
-whether the branch is forwards or backwards.
-Additionally unless there is code in both the 'if' and 'else' clauses
-the [un]likely seems to have no effect.
-So on simple cpu that predict 'backwards branches taken' you can get
-the desired effect - but it may need an 'asm comment' to force the
-compiler to generate the required branches (eg forwards branch directly
-to a backwards unconditional jump).
-
-On x86 it is all more complicated.
-I think the pre-fetch code is likely to assume 'not taken' (but might
-use stale info on the cache line).
-The predictor itself never does 'static prediction' - it is always
-based on the referenced branch prediction data structure.
-So, unless you are in a loop (eg running a benchmark!) there is pretty
-much a 50% chance of a branch mispredict.
-
-I've been trying to benchmark different versions of the u64 * u64 / u64
-function - and I think mispredicted branches make a big difference.
-I need to sit down and sequence the test cases so that I can see
-the effect of each branch!
-
->=20
-> >  =20
-> >> Unlike x86_64 which masks the address to 'all bits set' when the
-> >> user address is invalid, here the address is set to an address in
-> >> the gap. It avoids relying on the zero page to catch offseted
-> >> accesses. On book3s/32 it makes sure the opening remains on user
-> >> segment. The overcost is a single instruction in the masking. =20
-> >=20
-> > That isn't true (any more).
-> > Linus changed the check to (approx):
-> > 	if (uaddr > TASK_SIZE)
-> > 		uaddr =3D TASK_SIZE;
-> > (Implemented with a conditional move) =20
->=20
-> Ah ok, I overlooked that, I didn't know the cmove instruction, seem=20
-> similar to the isel instruction on powerpc e500.
-
-It got added for the 386 - I learnt 8086 :-)
-I suspect x86 got there first...
-
-Although called 'conditional move' I very much suspect the write is
-actually unconditional.
-So the hardware implementation is much the same as 'add carry' except
-the ALU operation is a simple multiplex.
-Which means it is unlikely to be speculative.
-
-	David
+On 20/06/2025 19:27, Konrad Dybcio wrote:
+> On 6/20/25 8:39 AM, Krzysztof Kozlowski wrote:
+>> On 20/06/2025 08:20, Vikash Garodia wrote:
+>>> Existing definition limits the IOVA to an addressable range of 4GiB, and
+>>> even within that range, some of the space is used by IO registers,
+>>> thereby limiting the available IOVA to even lesser. Video hardware is
+>>> designed to emit different stream-ID for pixel and non_pixel buffers,
+>>> thereby introduce a non_pixel sub node to handle non_pixel stream-ID.
+>>>
+>>> With this, both iris and non_pixel device can have IOVA range of 0-4GiB
+>>> individually. Certain video usecases like higher video concurrency needs
+>>> IOVA higher than 4GiB.
+>>>
+>>> Add the "resv_region" property, which defines reserved IOVA regions that
+>>> are *excluded* from addressable range. Video hardware generates
+>>> different stream IDs based on the range of IOVA addresses. Thereby IOVA
+>>> addresses for firmware and data buffers need to be non overlapping. For
+>>> ex. 0x0-0x25800000 address range is reserved for firmware stream-ID,
+>>> while non_pixel (bitstream ) stream-ID can be generated by hardware only
+>>> when bitstream buffers IOVA address is from 0x25800000-0xe0000000.
+>>>
+>>> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+>>> ---
+>>>  .../bindings/media/qcom,sm8550-iris.yaml           | 35 ++++++++++++++++++++++
+>>>  1 file changed, 35 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>>> index c79bf2101812d83b99704f38b7348a9f728dff44..a1e83bae3c36f3a4c58b212ef457905e38091b97 100644
+>>> --- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>>> +++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
+>>> @@ -65,10 +65,45 @@ properties:
+>>>        - const: core
+>>>  
+>>>    iommus:
+>>> +    minItems: 1
+>>
+>> As discussed in other patchset, this needs clear explanation, so
+>> imperfect patch won't be used in future discussions as argument to take
+>> more of such things.
+>>
+>>>      maxItems: 2
+>>>  
+>>>    dma-coherent: true
+>>>  
+>>> +  resv_region:
+>>
+>> DTS coding style. Anyway, regions go with memory-region bindings. Use that.
+> 
+> On a tangent, FWIW this is a discussion related to this patchset that
+> never got much attention:
+> 
+> https://lore.kernel.org/linux-devicetree/9439182e-3338-4d57-aa02-b621bc9498a3@oss.qualcomm.com/
 
 
->=20
-> Christophe
->=20
+There is no patchset above, just email describing a problem. It did not
+get attention maybe because of usual kernel process: show the code, we
+do not have time to comment on every problem or idea.
 
+Best regards,
+Krzysztof
