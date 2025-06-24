@@ -1,162 +1,100 @@
-Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7897279DC0
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3760D15D5B6;
+	Tue, 24 Jun 2025 08:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750755504; cv=none; b=gr13xJTD3TMscxXk0Umb4zZSij4upu5XFMIn94dpb7f57awRXrt9cdTe1xttslpfHMbXjfZeWQ+ybBPWEF/FrDwRGnOmAOCjJgwND9FlnV6Xk+uqMbE6gnEubCptoSrM5X18LPrU08jihe0Zap80c9WfoB8yOJuIVmF/5GLfuTo=
+	t=1750755587; cv=none; b=n3NPlzhY52lVgGHHVZR6oVwdf3Wi2NuEleADZzxzrykLvfMiqHft9bn4S/SXTvN9/vGU5t0LDrtPc6mL3ppsjkSuHrtk8k1CTAxoron4Zsl7R0jIjoxo1PAAOv4VaNtaSOjrsN4tSopBEavhM8p5uhmEm6/m732hXsx+UAQmR14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750755504; c=relaxed/simple;
-	bh=z7pZpVg9bbzKFUytnHEdtO+X0K7JV1n75P8PifDbNKs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=M7n472jvXM1kRbDP4IrsWcDvOOwhPi5GJnxrRsQjPt4nBApJIAHuPjv0jnyhBrEPF0o7nAG+cqRFdi8RcFQcZ8FQDsi8J0QNE9HktG9xsImQoGY+8mQAs14+OhiESCBlUTrXFCJGvmSUA4gZtOtNYFCzCnsHFaO1nexhmIYNK4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=AJ25IAOl; arc=none smtp.client-ip=198.47.23.234
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750755587; c=relaxed/simple;
+	bh=yZFxyIAuExIajMICXIDkvYr+tk6OEv4UoehSsM1OZPo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gF3495ihUmGwu4dwdeCOTqLOp6bFbolpEDmEzgExeqtc39VlfrL53ArDd/If8QoxwMCVYnpKvdh8IFFlU8JjjmZcyMzcEhJvNEXK65zsX8iQluGPYkWauQBwW+Ra/0bTGm+atkXGx8l5j73eCDxAYAwcW4rI6KSfPAruk26h3wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ICuYSK64; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AJ25IAOl"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55O8vWP61121744;
-	Tue, 24 Jun 2025 03:57:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750755452;
-	bh=2l2agDUcGCSyKxDLs6NR6MqFKMe3CHcKqyBvkrUhjTc=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=AJ25IAOluXbK+27BW9HM9nakczDJRw6UlmWurqCvM3LDSmfHmb68/bV2utH+tNtVq
-	 GnapRyNIfttA2BzfuJDETkFE34uAfZj/6p2NtjOCor/NqK09HyPMot4ioXYWWTxA8l
-	 whVsdRDFsf+d4uUAl2jOLqK0I3kGqW+u3yN8FMAU=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55O8vWww123172
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 24 Jun 2025 03:57:32 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
- Jun 2025 03:57:31 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Tue, 24 Jun 2025 03:57:31 -0500
-Received: from [172.24.227.214] (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [172.24.227.214])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55O8vO1U1488786;
-	Tue, 24 Jun 2025 03:57:25 -0500
-Message-ID: <11d85064-1a86-4084-af7d-0e9ee03b549a@ti.com>
-Date: Tue, 24 Jun 2025 14:27:23 +0530
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ICuYSK64"
+Received: from ideasonboard.com (mob-5-90-136-88.net.vodafone.it [5.90.136.88])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 05FC8741;
+	Tue, 24 Jun 2025 10:59:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750755567;
+	bh=yZFxyIAuExIajMICXIDkvYr+tk6OEv4UoehSsM1OZPo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ICuYSK64HUNJyoSFFDeLhcYn4WpNS0iS+GCT/c9p5hmS2zgKCoW97zB/uwbH5NlmM
+	 axn9kn943AvOg20bd7y1UdLHTHfihz27ABqB4nip4qpFMD2D6GJbTdDqcM70iPNmSA
+	 xCN9zcXpf2vn/Bw4+N7ECeA89946dSvfLeJ87E3g=
+Date: Tue, 24 Jun 2025 10:59:36 +0200
+From: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+To: Zhang Shurong <zhang_shurong@foxmail.com>
+Cc: jacopo@jmondi.org, mchehab@kernel.org, u.kleine-koenig@pengutronix.de, 
+	hverkuil@xs4all.nl, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] media: rj54n1cb0c: Fix memleak in rj54n1_probe()
+Message-ID: <sg5qdszxw2jl3m7kv3aofeokks3yxajbsjmk7vnawwmyu6n55p@q4mi5jndwpsm>
+References: <tencent_C32D0CB0210F2605605435098E9BFC5AD107@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 15/17] drm/bridge: cdns-dsi: Fix event mode
-To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-        Jyri Sarha
-	<jyri.sarha@iki.fi>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Vinod Koul
-	<vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Andrzej Hajda
-	<andrzej.hajda@intel.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Robert
- Foss <rfoss@kernel.org>,
-        Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Jernej
- Skrabec <jernej.skrabec@gmail.com>,
-        Dmitry Baryshkov <lumag@kernel.org>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>,
-        Francesco Dolcini <francesco@dolcini.it>,
-        Aradhya Bhatia <aradhya.bhatia@linux.dev>,
-        Devarsh Thakkar <devarsht@ti.com>,
-        Parth Pancholi <parth.pancholi@toradex.com>
-References: <20250618-cdns-dsi-impro-v4-0-862c841dbe02@ideasonboard.com>
- <20250618-cdns-dsi-impro-v4-15-862c841dbe02@ideasonboard.com>
-Content-Language: en-US
-From: Jayesh Choudhary <j-choudhary@ti.com>
-In-Reply-To: <20250618-cdns-dsi-impro-v4-15-862c841dbe02@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <tencent_C32D0CB0210F2605605435098E9BFC5AD107@qq.com>
 
-Hello Tomi,
+Hello Zhang
 
-On 18/06/25 15:29, Tomi Valkeinen wrote:
-> The timings calculation gets it wrong for DSI event mode, resulting in
-> too large hbp value. Fix the issue by taking into account the
-> pulse/event mode difference.
-> 
-> Tested-by: Parth Pancholi <parth.pancholi@toradex.com>
-> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+On Tue, Jun 24, 2025 at 04:27:24PM +0800, Zhang Shurong wrote:
+> rj54n1_probe() won't clean all the allocated resources in fail
+> path, which may causes the memleaks. Add v4l2_ctrl_handler_free() to
+> prevent memleak.
+>
+> Fixes: f187352dcd45 ("media: i2c: Copy rj54n1cb0c soc_camera sensor driver")
+> Signed-off-by: Zhang Shurong <zhang_shurong@foxmail.com>
 
-Reviewed-by: Jayesh Choudhary <j-choudhary@ti.com>
+Thanks for addressing my comments on the previous version
+
+Reviewed-by: Jacopo Mondi <jacopo.mondi@ideasonboard.com>
+
+Thanks
+  j
 
 > ---
->   drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 31 +++++++++++++++++---------
->   1 file changed, 20 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-> index 07f8d5f5c2aa..3bc4d011b4c6 100644
-> --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-> +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-> @@ -418,7 +418,8 @@
->   #define DSI_OUTPUT_PORT			0
->   #define DSI_INPUT_PORT(inputid)		(1 + (inputid))
->   
-> -#define DSI_HBP_FRAME_OVERHEAD		12
-> +#define DSI_HBP_FRAME_PULSE_OVERHEAD	12
-> +#define DSI_HBP_FRAME_EVENT_OVERHEAD	16
->   #define DSI_HSA_FRAME_OVERHEAD		14
->   #define DSI_HFP_FRAME_OVERHEAD		6
->   #define DSI_HSS_VSS_VSE_FRAME_OVERHEAD	4
-> @@ -487,23 +488,31 @@ static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
->   
->   	bpp = mipi_dsi_pixel_format_to_bpp(output->dev->format);
->   
-> -	dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp + (sync_pulse ? 0 : dpi_hsa),
-> -					 bpp, DSI_HBP_FRAME_OVERHEAD);
-> +	if (sync_pulse) {
-> +		dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp, bpp,
-> +						 DSI_HBP_FRAME_PULSE_OVERHEAD);
->   
-> -	if (sync_pulse)
-> -		dsi_cfg->hsa =
-> -			dpi_to_dsi_timing(dpi_hsa, bpp, DSI_HSA_FRAME_OVERHEAD);
-> +		dsi_cfg->hsa = dpi_to_dsi_timing(dpi_hsa, bpp,
-> +						 DSI_HSA_FRAME_OVERHEAD);
-> +	} else {
-> +		dsi_cfg->hbp = dpi_to_dsi_timing(dpi_hbp + dpi_hsa, bpp,
-> +						 DSI_HBP_FRAME_EVENT_OVERHEAD);
+> Changes in v2:
+> - Fixed compile error
+> Changes in v3:
+> - Fixed coding style warnings identified by scripts/checkpatch.pl
+> Changes in v4:
+> - remove empty line between signed-off message and Fixes tag
+> - Moved ctrl_handler assignment after the error check
+> - Used existing error label for better code flow
+> ---
+>  drivers/media/i2c/rj54n1cb0c.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/media/i2c/rj54n1cb0c.c b/drivers/media/i2c/rj54n1cb0c.c
+> index b7ca39f63dba..6dfc91216851 100644
+> --- a/drivers/media/i2c/rj54n1cb0c.c
+> +++ b/drivers/media/i2c/rj54n1cb0c.c
+> @@ -1329,10 +1329,13 @@ static int rj54n1_probe(struct i2c_client *client)
+>  			V4L2_CID_GAIN, 0, 127, 1, 66);
+>  	v4l2_ctrl_new_std(&rj54n1->hdl, &rj54n1_ctrl_ops,
+>  			V4L2_CID_AUTO_WHITE_BALANCE, 0, 1, 1, 1);
+> -	rj54n1->subdev.ctrl_handler = &rj54n1->hdl;
+> -	if (rj54n1->hdl.error)
+> -		return rj54n1->hdl.error;
+>
+> +	if (rj54n1->hdl.error) {
+> +		ret = rj54n1->hdl.error;
+> +		goto err_free_ctrl;
+> +	}
 > +
-> +		dsi_cfg->hsa = 0;
-> +	}
->   
->   	dsi_cfg->hact = dpi_to_dsi_timing(dpi_hact, bpp, 0);
->   
->   	dsi_cfg->hfp = dpi_to_dsi_timing(dpi_hfp, bpp, DSI_HFP_FRAME_OVERHEAD);
->   
-> -	dsi_cfg->htotal = dsi_cfg->hbp + DSI_HBP_FRAME_OVERHEAD;
-> -	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-> -		dsi_cfg->htotal += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
-> +	dsi_cfg->htotal = dsi_cfg->hact + dsi_cfg->hfp + DSI_HFP_FRAME_OVERHEAD;
->   
-> -	dsi_cfg->htotal += dsi_cfg->hact;
-> -	dsi_cfg->htotal += dsi_cfg->hfp + DSI_HFP_FRAME_OVERHEAD;
-> +	if (sync_pulse) {
-> +		dsi_cfg->htotal += dsi_cfg->hbp + DSI_HBP_FRAME_PULSE_OVERHEAD;
-> +		dsi_cfg->htotal += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
-> +	} else {
-> +		dsi_cfg->htotal += dsi_cfg->hbp + DSI_HBP_FRAME_EVENT_OVERHEAD;
-> +	}
->   
->   	return 0;
->   }
-> 
+> +	rj54n1->subdev.ctrl_handler = &rj54n1->hdl;
+>  	rj54n1->clk_div		= clk_div;
+>  	rj54n1->rect.left	= RJ54N1_COLUMN_SKIP;
+>  	rj54n1->rect.top	= RJ54N1_ROW_SKIP;
+> --
+> 2.39.5
+>
