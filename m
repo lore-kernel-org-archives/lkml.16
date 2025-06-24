@@ -1,68 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0EF2E7632;
-	Tue, 24 Jun 2025 14:16:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E182D23AB;
+	Tue, 24 Jun 2025 14:16:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750774611; cv=none; b=T85H80RCShjsaTgUBeeDR0ZrGhczjD7/obtQ8dpdHHyYqBwZZ23dk/RC21H2MfENG0bd1CAkxhOiSFRRV/dm97eKRsj+HWeU8M5PPubHcK7Gi5xm6cu1MgxtAA7V1BZTwoKiGzOhWIKRTuloP4svVgsBjhix6OcXNyf2yFE7Kv4=
+	t=1750774618; cv=none; b=aSen2WBj/ttUceTWkHyHIbeF/le1aCo8lyxQcJKiaWf67z0nROw6KoSY3+nUSA61EHYgkI/zcHHedKrrqN5H7CCqfD0ezzIYSeV3RgCyM0TrO9qlcZ4DxA5Uk1LjyudnIDpXF7WB7TcwZ9aQoMDuICT+CfSciQ5P4JgoE7sys40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750774611; c=relaxed/simple;
-	bh=17L7ponko88riHevvmIv4qyXvYBhLHE4wx7OmbK6EWE=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ZkLO0v1K9mk+0E068mAvIgAKVgoFaLqgUMrS+YDu1dIcCwKD51XQB9bzfJtbwjHJ4RdGfn74MRdK9WxXZI0/VU6uUdlUTxR4qJrHjjMeuYPwM0dXjGd6GQM/dp7v7yGKPgtGhD4EJkoXs7QRBH1wFC66TzIoF7YvTEwQRjRN62M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rwZ94aLG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750774618; c=relaxed/simple;
+	bh=niqvKAOA1YtdPxLgvRid4pHQNRTq534ErZIkeDY04O0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CkyQXIzMO+uoZL1p2hGA60Mx50FwT+ZluB4x0gNLMkkT6jyjIdaokP901Grt2ZMxg12hGEJi5vnutFRxOoOVB9ZwNcTy3DU7jcHUSUEplSH4glbedz3XKBI9ggY+ydmguKTBLoWBY1i0p4OGnrNj58Cxl+FCIhHsNH73SnOv+S8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nnpI2Wes; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rwZ94aLG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D975C4CEE3;
-	Tue, 24 Jun 2025 14:16:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750774610;
-	bh=17L7ponko88riHevvmIv4qyXvYBhLHE4wx7OmbK6EWE=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=rwZ94aLG2J34d46JgW0UgzuNCLWzIl4Y9DSwUBVeWF1Hv0EeLF7YKKf2IGQ0OfD3y
-	 VCTTCqu6wSdbLk66Y/kn6YmgTiJp2VQCJ0nEUca78qnlsIRvQasldl8ftDVosrnUmq
-	 W2CAHMSvdQ8nqiW5XKd6ogdFjeVOqkwZiGHaLjMqMk/ZdmfK8oxko+pqsyZ0U+nUtX
-	 Aysu1zT5gozraHT8acwjE1A2m4PwEbQEtqb5Lt1W+2Vfi/HO6InMhDNYbXlqDyDLK0
-	 g5/2k7pZqvZTDAOJ5W+QYnCl+sEncFly2ldAd8c9clIXcayPrF/xaRWVDjCotoj+XW
-	 kwJaycCf1Z/vg==
-Message-ID: <f90d39de-d24b-4006-aa09-71bcce5e4eb4@kernel.org>
-Date: Tue, 24 Jun 2025 22:16:47 +0800
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nnpI2Wes"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17DF0C4CEE3;
+	Tue, 24 Jun 2025 14:16:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750774617;
+	bh=niqvKAOA1YtdPxLgvRid4pHQNRTq534ErZIkeDY04O0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nnpI2Wesb54bGWxxdvRSeqDjgWo9UiI3vnxWSwBrGlX0s7uU4A4R9O8sa0gJDafqq
+	 IlsHLKQ8v+SNWmGtII9lbUOCpp+ZOjH2KiyQWaxnWF2h0MT4QngMHK7dtu4PDytWBS
+	 jyL9meLoGQXJ1OD1FuHh/mZUvVVoNyXWWxT8o9QQ=
+Date: Tue, 24 Jun 2025 15:16:53 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Drew Hamilton <drew.hamilton@zetier.com>
+Cc: Bin Liu <b-liu@ti.com>, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
+Subject: Re: [PATCH] usb: musb: fix gadget state on disconnect
+Message-ID: <2025062456-cameo-directly-fc66@gregkh>
+References: <20250624140930.25887-1-drew.hamilton@zetier.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: chao@kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] docs: f2fs: fix typos in f2fs.rst
-To: Yuanye Ma <yuanye.ma20@gmail.com>, jaegeuk@kernel.org,
- linux-f2fs-devel@lists.sourceforge.net
-References: <20250618225546.104949-1-yuanye.ma20@gmail.com>
-Content-Language: en-US
-From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250618225546.104949-1-yuanye.ma20@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624140930.25887-1-drew.hamilton@zetier.com>
 
-On 2025/6/19 06:55, Yuanye Ma wrote:
-> This patch fixes two minor typos in Documentation/filesystems/f2fs.rst:
+On Tue, Jun 24, 2025 at 10:09:30AM -0400, Drew Hamilton wrote:
+> When unplugging the USB cable or disconnecting a gadget in usb peripheral mode with
+> echo "" > /sys/kernel/config/usb_gadget/<your_gadget>/UDC,
+> /sys/class/udc/musb-hdrc.0/state does not change from USB_STATE_CONFIGURED.
 > 
-> - "ramdom" → "random"
-> - "reenable" → "re-enable"
+> Testing on dwc2/3 shows they both update the state to USB_STATE_NOTATTACHED.
 > 
-> The changes improve spelling and consistency in the documentation.
+> Add calls to usb_gadget_set_state in musb_g_disconnect and musb_gadget_stop
+> to fix both cases.
 > 
-> These issues were identified using the 'codespell' tool with the
-> following command:
-> 
->    $ find Documentation/ -path Documentation/translations -prune -o \
->      -name '*.rst' -print | xargs codespell
-> 
-> Signed-off-by: Yuanye Ma <yuanye.ma20@gmail.com>
+> Tested against 82f2b0b97b36ee3fcddf0f0780a9a0825d52fec3.
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+Nit, git ids are written as:
+	82f2b0b97b36 ("Linux 6.15-rc6")
+Or you could have used the tag "6.15-rc6" as we all know that, but
+really, this shouldn't be needed at all.
 
-Thanks,
+What it does show is you missed the many thousands of changes that have
+gone into the tree since -rc6, is this still an issue in 6.16-rc3?
+
+> Co-authored-by: Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
+> Signed-off-by: Yehowshua Immanuel <yehowshua.immanuel@twosixtech.com>
+> Signed-off-by: Drew Hamilton <drew.hamilton@zetier.com>
+
+What commit id does this fix?
+
+thanks,
+
+greg k-h
