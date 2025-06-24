@@ -1,106 +1,88 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from smtp153-162.sina.com.cn (smtp153-162.sina.com.cn [61.135.153.162])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20E0A258CE8;
-	Tue, 24 Jun 2025 08:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4C9258CDA
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:26:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=61.135.153.162
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750753621; cv=none; b=VMQwlK0m0fxD07y81nh/NSH02SS4QTMrgyGClgNrwh2TgVp0LKqIYZFUhyeDFj0jiryghN7l7eMSDzJo71gegwKF9fVHvoFkeODIpSIh5o8uwkAq9Ok/CBLNiFStQIse7vK2ByMfEyNSYkOPBRPr5+AYrK9RJTZHTdcPQuwyVk4=
+	t=1750753624; cv=none; b=WKy3q8WPvpSX2azkOSVpWUieJeX2K9YQXPocLAXMc+Z7/3wL72qLkQvakww+Vjyr+LzZ59gSbAduM4FcVSulnGMy02KgzW58L49uGw1cgh4z/k2qjuGSZLGTP8NGdKpjWrnZ+Rx9PbuHd/4wAwmKAWprLAnqI0YPwz+ySnWh/ok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750753621; c=relaxed/simple;
-	bh=MkhaNNhb/Nnu9+FEGNMen7PIoUiQXmzj3D47cfEMJU4=;
-	h=Message-ID:Subject:Date:From:To:Cc:References:In-Reply-To; b=AHmKkQl11eIzw+wkdgySVJ9XX/TjHMVDKSe8JRSrWL5ySxPmvi+XZR3sUz/+MzjJ/JGz4J7Mm6b3IYngtvSwheWTyJahlicFiBOpXK+AKXNW9KZmjaxfrl6jWTnduS7kTw/Rf/nYemzg/cbJIIlAcyy+xKdDuEqikR34qvZAcpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=MNtZQFKi; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="MNtZQFKi"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750753615; h=Message-ID:Subject:Date:From:To;
-	bh=IH71r0a24x4p09xci6xK0RIn16ZYIq9aUYduNMvc6Vc=;
-	b=MNtZQFKi96X4+NCXZ+zAUIcw3kfotjZ9xKPZcTxGHotnziCmn7U/13XWQVy1+9VpXS8Da8bE63MmEidF2hHa97nYEzQ3ZiuqdCfK0xNYiPEMgE+LKYQdJ2/mSFvwo4YpmW78GTvRSagWELD8lC56QqgWhrYMeNPHevWVfSdKtcI=
-Received: from localhost(mailfrom:xuanzhuo@linux.alibaba.com fp:SMTPD_---0Weg--9u_1750753614 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 24 Jun 2025 16:26:55 +0800
-Message-ID: <1750753610.4544265-4-xuanzhuo@linux.alibaba.com>
-Subject: Re: [PATCH net v2 2/2] virtio-net: xsk: rx: move the xdp->data adjustment to buf_to_xdp()
-Date: Tue, 24 Jun 2025 16:26:50 +0800
-From: Xuan Zhuo <xuanzhuo@linux.alibaba.com>
-To: Bui Quang Minh <minhquangbui99@gmail.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>,
- Jason Wang <jasowang@redhat.com>,
- =?utf-8?q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>,
- John Fastabend <john.fastabend@gmail.com>,
- virtualization@lists.linux.dev,
- linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org,
- Bui Quang Minh <minhquangbui99@gmail.com>,
- netdev@vger.kernel.org
-References: <20250621144952.32469-1-minhquangbui99@gmail.com>
- <20250621144952.32469-3-minhquangbui99@gmail.com>
-In-Reply-To: <20250621144952.32469-3-minhquangbui99@gmail.com>
+	s=arc-20240116; t=1750753624; c=relaxed/simple;
+	bh=MK/0sV9iPODGMfIvaSoqDQLATEj45R3OjlM3rNrtZLI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ox1Qz1ipeGJXMnJhV9GIcYuOCmTUs89pCYb729lxKp7M9PS7uwBN1adbAm0TJquToxtxS+W0D3druJxI6HGF5tIyw+n2C+lOuLHQ84m2/JRF3iLSfSVFGQXbpTojzSG5V9P3xfIjTBaocQwnGoLAsSJE4FJVwV9Qabj3WAwRXvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=61.135.153.162
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.31) with ESMTP
+	id 685A612100006786; Tue, 24 Jun 2025 16:26:11 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 3424196816267
+X-SMAIL-UIID: CA572E708C92455AB66B99258C176F7C-20250624-162611-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+daba72c4af9915e9c894@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [trace?] KASAN: slab-use-after-free Read in __free_filter
+Date: Tue, 24 Jun 2025 16:25:58 +0800
+Message-ID: <20250624082559.1616-1-hdanton@sina.com>
+In-Reply-To: <6859ea24.a00a0220.2e5631.0044.GAE@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sat, 21 Jun 2025 21:49:52 +0700, Bui Quang Minh <minhquangbui99@gmail.com> wrote:
-> This commit does not do any functional changes. It moves xdp->data
-> adjustment for buffer other than first buffer to buf_to_xdp() helper so
-> that the xdp_buff adjustment does not scatter over different functions.
->
-> Signed-off-by: Bui Quang Minh <minhquangbui99@gmail.com>
+> Date: Mon, 23 Jun 2025 16:58:28 -0700
+> syzbot found the following issue on:
+> 
+> HEAD commit:    86731a2a651e Linux 6.16-rc3
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1611eb0c580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4ad206eb0100c6a2
+> dashboard link: https://syzkaller.appspot.com/bug?extid=daba72c4af9915e9c894
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13b16dd4580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17c7bb0c580000
 
+#syz test
 
-
-> ---
->  drivers/net/virtio_net.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/net/virtio_net.c b/drivers/net/virtio_net.c
-> index 1eb237cd5d0b..4e942ea1bfa3 100644
-> --- a/drivers/net/virtio_net.c
-> +++ b/drivers/net/virtio_net.c
-> @@ -1159,7 +1159,19 @@ static struct xdp_buff *buf_to_xdp(struct virtnet_info *vi,
->  		return NULL;
->  	}
->
-> -	xsk_buff_set_size(xdp, len);
-> +	if (first_buf) {
-> +		xsk_buff_set_size(xdp, len);
-> +	} else {
-> +		/* This is the same as xsk_buff_set_size but with the adjusted
-> +		 * xdp->data.
-> +		 */
-> +		xdp->data = xdp->data_hard_start + XDP_PACKET_HEADROOM;
-> +		xdp->data -= vi->hdr_len;
-> +		xdp->data_meta = xdp->data;
-> +		xdp->data_end = xdp->data + len;
-> +		xdp->flags = 0;
-> +	}
-> +
->  	xsk_buff_dma_sync_for_cpu(xdp);
->
->  	return xdp;
-> @@ -1284,7 +1296,7 @@ static int xsk_append_merge_buffer(struct virtnet_info *vi,
->  			goto err;
->  		}
->
-> -		memcpy(buf, xdp->data - vi->hdr_len, len);
-> +		memcpy(buf, xdp->data, len);
->
->  		xsk_buff_free(xdp);
->
-> --
-> 2.43.0
->
+--- x/kernel/trace/trace_events_filter.c
++++ y/kernel/trace/trace_events_filter.c
+@@ -1429,6 +1429,7 @@ static void filter_free_subsystem_filter
+ 	struct trace_event_file *file;
+ 	struct filter_head *head;
+ 	struct filter_list *item;
++	int free_filter = 1;
+ 
+ 	head = kmalloc(sizeof(*head), GFP_KERNEL);
+ 	if (!head)
+@@ -1442,6 +1443,7 @@ static void filter_free_subsystem_filter
+ 
+ 	item->filter = filter;
+ 	list_add_tail(&item->list, &head->list);
++	free_filter = 0;
+ 
+ 	list_for_each_entry(file, &tr->events, list) {
+ 		if (file->system != dir)
+@@ -1467,7 +1469,8 @@ static void filter_free_subsystem_filter
+ 			continue;
+ 		__free_subsystem_filter(file);
+ 	}
+-	__free_filter(filter);
++	if (free_filter)
++		__free_filter(filter);
+ }
+ 
+ int filter_assign_type(const char *type)
+--
