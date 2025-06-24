@@ -1,137 +1,242 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DEC25BEE4;
-	Tue, 24 Jun 2025 12:07:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516CE1F5617;
+	Tue, 24 Jun 2025 12:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750766846; cv=none; b=sdFDamhivUXE1ujgcdftzi/zHKqFSqbLP/acVh4zzwBsDnkkqyfxZ51MynIw5drAz95jbwqbLebc3rzemPBzW9GYjETQkOm6YGCpv4Ky3wPRKWKXkSuo/Y4u5dyPIw0tdvYnSDytb0vBeHZIGBEUYfY/zgJtbHw1W74pKoDZ1Po=
+	t=1750766956; cv=none; b=IjiQt8QPQ6y+SUPdm+0ge6kmYnL73pZz03mDFrSygeZjphsJI4yKEFabji3AQFiqcajUZWgBz0qxsi5qkT6cGl7/Ms0e2b6ChgDlkKJb8Id17ffeGhkBFwXMyfunLilOdOqvUPXnHdsu9gOKM1Pa9xid/nShOdy9La0tolgpGbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750766846; c=relaxed/simple;
-	bh=Hhc9+eEwxLWNcOtSwz+89PdUqpx628Ulqc2CV7BV51I=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iftDhOe7H73rBtSt67wzWgoN9mwMnw9HdiRz86z0O3Fz08qzNoya7PKR0j9xZuNS6xtjnChgSALaPzAXl+pHincSPl1uuRBCVh3aSNl/q5ggKvzlh7zlLHfhmEtGNgPiqcZNMDvjK57uoK4D3Q5Dy1MEIz6EAkR3WPUn3nCAMag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j+7wp1OM; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750766956; c=relaxed/simple;
+	bh=/vAqvIEqJPIi0Da0SxWzNOxYlkISJ45iZrs1A/XX4sQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=oXdW+TPOYXtw8kspudmQwsATXLvLVogBSTMN7N37mLg4NZfYxRYJcRg8s+dK5eUmCBVynw2k8Mh76g6XfgNoeIII3bp3iFD1pmuF2UdxmgNHnLklhBQa5/iC2VVNCaOrrPkdxZS/fWc3PAO7oWpp126tarmdzvOUhWAhbYI1wd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YjKp9ENB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j+7wp1OM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750766845; x=1782302845;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Hhc9+eEwxLWNcOtSwz+89PdUqpx628Ulqc2CV7BV51I=;
-  b=j+7wp1OM7oTSBZvbW/he+lDq0GahwNS7TQnfP78BtHLmvnj1WVhxZTuQ
-   dNoqd+ZmESub8b/PvQD3CDBA0zqMnsYhsljm8vMdkuqOFp8aOnH91osHa
-   1jZXh+GuJj+kxtzheRD90gR5mCaMT3yf2Uo4IKZf4a5tRVN7E7Z8FosbE
-   SgDGpqfIKAv88vlJQgoSO3/qe+rQq7CY+g/o5Wx2CX0L4i0GsRITEEdK8
-   6WMocYI2GS6VIRYZs5zBTwikC++3XaDwqfiHSrHS2vlqEjcbt+63Wf4UI
-   y39DC18LHKTKSLioeLMuPKmc3ZktuR0yfl5RX7VWw2mvzRjLKydJeizvh
-   w==;
-X-CSE-ConnectionGUID: AkgeqjvXTpSJPqCXlxmthA==
-X-CSE-MsgGUID: 4Prz/HDgRUKBDL4nV9Fx1w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="63604102"
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="63604102"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 05:07:24 -0700
-X-CSE-ConnectionGUID: WIGBv54MQ/CqmccVAA5cdw==
-X-CSE-MsgGUID: YezupBD2Sf+Z/OYkyyxvtQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
-   d="scan'208";a="151641624"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.16])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 05:07:20 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Tue, 24 Jun 2025 15:07:16 +0300 (EEST)
-To: andi.shyti@kernel.org
-cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, andi.shyti@kernel.org, 
-    rdunlap@infradead.org, Hans de Goede <hdegoede@redhat.com>, 
-    sfr@canb.auug.org.au, linux-next@vger.kernel.org, 
-    linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, benjamin.chan@amd.com, bin.du@amd.com, 
-    gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
-Subject: Re: [PATCH v4 3/3] platform/x86: Use i2c adapter name to fix build
- errors
-In-Reply-To: <570c7765-b3bc-77cd-dddb-d19e85611114@linux.intel.com>
-Message-ID: <2a74c711-0d9c-8013-dc92-82ffd0d7d416@linux.intel.com>
-References: <20250609155601.1477055-1-pratap.nirujogi@amd.com> <20250609155601.1477055-4-pratap.nirujogi@amd.com> <570c7765-b3bc-77cd-dddb-d19e85611114@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YjKp9ENB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 231BEC4CEE3;
+	Tue, 24 Jun 2025 12:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750766956;
+	bh=/vAqvIEqJPIi0Da0SxWzNOxYlkISJ45iZrs1A/XX4sQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YjKp9ENB80dSE47uAe2UMoR15d4+qFJrSpCmManquFuhtQabx4Jj37DnElEFqDyF7
+	 pQ3/Q+2vfinH5iCyatHNsenznD07gKqCF5gEeyaV5PZ2ELgrhy5cxp5H7fGB44VBSA
+	 SfUKRSU3+pWkKYnNv1d12BKx1VbBQGp/0iZaST6vN2wT6vnu2R0EEPdvS6aznCYPAO
+	 v6BArlObt8uwaXxYaiHjzNzS63MFz1APnx9CNjEhPI5saCaGW3hLfAACsMN4ArFYzY
+	 RNSuGu0R0MOK6mvoAxmgHnUxUfgjOIgdEp1TF3HDvWX2M9vogpRnmA5g3CueU/WUC1
+	 8ODFhjq4xEGFQ==
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6070293103cso9713828a12.0;
+        Tue, 24 Jun 2025 05:09:16 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU7kePAmvlz+KH+a1ZY4hA7sUKV7mJL8CJwsVIWL4InDEOSX4POpyMqhwuPlVmybpr2/cesAM9/Lvera4dB@vger.kernel.org, AJvYcCVtsbWrUTVQ9g9uZ/1+vnjndT6M6wKhJmYlfc+l5PSBebNrGU5jkpL3gOFjXWQ3YU4KHMg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxckzj/0ZoOs+aNBtx2REWpUy2U4XdoBOwNLbXXmh7VEOHXcQa2
+	v1lYx9253M0H5svXZlvmsTLLYFCJCO9GHbEtJ2rNKMDFXqZaLJJoeTxiLyZcQFmE4QWS1l4g6PX
+	BQQyrNoyQMmgmLR75cgoz9KVWI73BT8k=
+X-Google-Smtp-Source: AGHT+IEveyCryxR0Z96AZhwmOCgZi8eKVX7D3TPLzSH1SnTfi0MTzrer7b/f9zklQ8gZxs+eyrySxOrrhUkPfF0fehU=
+X-Received: by 2002:a05:6402:1eca:b0:60c:3c23:2950 with SMTP id
+ 4fb4d7f45d1cf-60c3c232b00mr1090202a12.8.1750766954698; Tue, 24 Jun 2025
+ 05:09:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-586974884-1750766836=:943"
+References: <20250528104032.1237415-1-jianghaoran@kylinos.cn>
+ <CAEyhmHTg3xNMBrSxXQj96pvfD83t6_RHRT_GGtbBzOpAKztDpw@mail.gmail.com> <68ec5a7f3cc63dc19397b3ce0649716e0fac8d49.camel@kylinos.cn>
+In-Reply-To: <68ec5a7f3cc63dc19397b3ce0649716e0fac8d49.camel@kylinos.cn>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Tue, 24 Jun 2025 20:09:01 +0800
+X-Gmail-Original-Message-ID: <CAAhV-H5NrGb9ofaKdqUQ3Qc6RK3c=Ngy6KsxX2GaOqUb0SQRdw@mail.gmail.com>
+X-Gm-Features: AX0GCFtD9EvAyNu7eh4iPlep1b-5L2uW3s302vwNzQO9z7kJzBC_8U1UEiAYI6I
+Message-ID: <CAAhV-H5NrGb9ofaKdqUQ3Qc6RK3c=Ngy6KsxX2GaOqUb0SQRdw@mail.gmail.com>
+Subject: Re: [PATCH] LoongArch: BPF: Optimize the calculation method of
+ jmp_offset in the emit_bpf_tail_call function
+To: jianghaoran <jianghaoran@kylinos.cn>
+Cc: Hengqi Chen <hengqi.chen@gmail.com>, loongarch@lists.linux.dev, bpf@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel@xen0n.name, yangtiezhu@loongson.cn, 
+	haoluo@google.com, jolsa@kernel.org, sdf@fomichev.me, kpsingh@kernel.org, 
+	john.fastabend@gmail.com, yonghong.song@linux.dev, song@kernel.org, 
+	eddyz87@gmail.com, martin.lau@linux.dev, andrii@kernel.org, 
+	daniel@iogearbox.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Hi, Haoran,
 
---8323328-586974884-1750766836=:943
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+On Fri, May 30, 2025 at 9:22=E2=80=AFAM jianghaoran <jianghaoran@kylinos.cn=
+> wrote:
+>
+>
+>
+>
+>
+> =E5=9C=A8 2025-05-29=E6=98=9F=E6=9C=9F=E5=9B=9B=E7=9A=84 10:02 +0800=EF=
+=BC=8CHengqi Chen=E5=86=99=E9=81=93=EF=BC=9A
+> > Hi Haoran,
+> >
+> > On Wed, May 28, 2025 at 6:40=E2=80=AFPM Haoran Jiang <
+> > jianghaoran@kylinos.cn
+> > > wrote:
+> > > For a ebpf subprog JIT=EF=BC=8Cthe last call bpf_int_jit_compile
+> > > function will
+> > > directly enter the skip_init_ctx process. At this point,
+> > > out_offset =3D -1,
+> > > the jmp_offset in emit_bpf_tail_call is calculated
+> > > by #define jmp_offset (out_offset - (cur_offset)) is a negative
+> > > number,
+> > > which does not meet expectations.The final generated assembly
+> > > as follow.
+> > >
+> > > 54:     bgeu            $a2, $t1, -8        # 0x0000004c
+> > > 58:     addi.d          $a6, $s5, -1
+> > > 5c:     bltz            $a6, -16            # 0x0000004c
+> > > 60:     alsl.d          $t2, $a2, $a1, 0x3
+> > > 64:     ld.d            $t2, $t2, 264
+> > > 68:     beq             $t2, $zero, -28     # 0x0000004c
+> > >
+> > > Before apply this patch, the follow test case will reveal soft
+> > > lock issues.
+> > >
+> > > cd tools/testing/selftests/bpf/
+> > > ./test_progs --allow=3Dtailcalls/tailcall_bpf2bpf_1
+> > >
+> > > dmesg:
+> > > watchdog: BUG: soft lockup - CPU#2 stuck for 26s!
+> > > [test_progs:25056]
+> > >
+> >
+> > This is a known issue. Does this change pass all tailcall tests ?
+> > If not, please refer to the tailcall hierarchy patchset([1]).
+> > We should address it once and for all. Thanks.
+Do you mean you will update this patch?
 
-Hi Andi,
+Huacai
 
-(ping)
-
-It seems by now people are starting to send workaround fixes (build only=20
-with =3Dm) as this series is still pending and compile is breaking because=
-=20
-of it.
-
-I'm fine with you taking the entire series through i2c, or just let me=20
-know if you want me to take it through pdx86 tree instead.
-
-On Tue, 10 Jun 2025, Ilpo J=E4rvinen wrote:
-> On Mon, 9 Jun 2025, Pratap Nirujogi wrote:
->=20
-> > Use adapater->name inplace of adapter->owner->name to fix
-> > build issues when CONFIG_MODULES is not defined.
-> >=20
-> > Fixes: 90b85567e457 ("platform/x86: Add AMD ISP platform config for OV0=
-5C10")
-> > Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > Link: https://lore.kernel.org/all/04577a46-9add-420c-b181-29bad582026d@=
-infradead.org
-> > Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> > Signed-off-by: Pratap Nirujogi <pratap.nirujogi@amd.com>
-> > ---
-> >  drivers/platform/x86/amd/amd_isp4.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/platform/x86/amd/amd_isp4.c b/drivers/platform/x86=
-/amd/amd_isp4.c
-> > index 0cc01441bcbb..9f291aeb35f1 100644
-> > --- a/drivers/platform/x86/amd/amd_isp4.c
-> > +++ b/drivers/platform/x86/amd/amd_isp4.c
-> > @@ -11,6 +11,7 @@
-> >  #include <linux/mutex.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/property.h>
-> > +#include <linux/soc/amd/isp4_misc.h>
-> >  #include <linux/string.h>
-> >  #include <linux/types.h>
-> >  #include <linux/units.h>
-> > @@ -151,7 +152,7 @@ MODULE_DEVICE_TABLE(acpi, amdisp_sensor_ids);
-> > =20
-> >  static inline bool is_isp_i2c_adapter(struct i2c_adapter *adap)
-> >  {
-> > -=09return !strcmp(adap->owner->name, "i2c_designware_amdisp");
-> > +=09return !strcmp(adap->name, AMDISP_I2C_ADAP_NAME);
-> >  }
-> > =20
-> >  static void instantiate_isp_i2c_client(struct amdisp_platform *isp4_pl=
-atform,
->=20
-> Acked-by: Ilpo J=E4rvinen <ilpo.jarvinen@linux.intel.com>
->=20
-> Andi, do you want to take this fix series through i2c tree or do you=20
-> prefer me to take them through pdx86 tree?
-
-
---=20
- i.
-
---8323328-586974884-1750766836=:943--
+> >
+> >   [1]:
+> > https://lore.kernel.org/bpf/20240714123902.32305-1-hffilwlqm@gmail.com/
+> >
+> > Thanks,I'll keep looking into these patches.
+> > > Signed-off-by: Haoran Jiang <
+> > > jianghaoran@kylinos.cn
+> > > >
+> > > ---
+> > >  arch/loongarch/net/bpf_jit.c | 28 +++++++++-------------------
+> > >  1 file changed, 9 insertions(+), 19 deletions(-)
+> > >
+> > > diff --git a/arch/loongarch/net/bpf_jit.c
+> > > b/arch/loongarch/net/bpf_jit.c
+> > > index fa1500d4aa3e..d85490e7de89 100644
+> > > --- a/arch/loongarch/net/bpf_jit.c
+> > > +++ b/arch/loongarch/net/bpf_jit.c
+> > > @@ -208,9 +208,7 @@ bool bpf_jit_supports_far_kfunc_call(void)
+> > >         return true;
+> > >  }
+> > >
+> > > -/* initialized on the first pass of build_body() */
+> > > -static int out_offset =3D -1;
+> > > -static int emit_bpf_tail_call(struct jit_ctx *ctx)
+> > > +static int emit_bpf_tail_call(int insn, struct jit_ctx *ctx)
+> > >  {
+> > >         int off;
+> > >         u8 tcc =3D tail_call_reg(ctx);
+> > > @@ -220,9 +218,8 @@ static int emit_bpf_tail_call(struct
+> > > jit_ctx *ctx)
+> > >         u8 t2 =3D LOONGARCH_GPR_T2;
+> > >         u8 t3 =3D LOONGARCH_GPR_T3;
+> > >         const int idx0 =3D ctx->idx;
+> > > -
+> > > -#define cur_offset (ctx->idx - idx0)
+> > > -#define jmp_offset (out_offset - (cur_offset))
+> > > +       int tc_ninsn =3D 0;
+> > > +       int jmp_offset =3D 0;
+> > >
+> > >         /*
+> > >          * a0: &ctx
+> > > @@ -232,8 +229,11 @@ static int emit_bpf_tail_call(struct
+> > > jit_ctx *ctx)
+> > >          * if (index >=3D array->map.max_entries)
+> > >          *       goto out;
+> > >          */
+> > > +       tc_ninsn =3D insn ? ctx->offset[insn+1] - ctx-
+> > > >offset[insn] :
+> > > +               ctx->offset[0];
+> > >         off =3D offsetof(struct bpf_array, map.max_entries);
+> > >         emit_insn(ctx, ldwu, t1, a1, off);
+> > > +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
+> > >         /* bgeu $a2, $t1, jmp_offset */
+> > >         if (emit_tailcall_jmp(ctx, BPF_JGE, a2, t1, jmp_offset)
+> > > < 0)
+> > >                 goto toofar;
+> > > @@ -243,6 +243,7 @@ static int emit_bpf_tail_call(struct
+> > > jit_ctx *ctx)
+> > >          *       goto out;
+> > >          */
+> > >         emit_insn(ctx, addid, REG_TCC, tcc, -1);
+> > > +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
+> > >         if (emit_tailcall_jmp(ctx, BPF_JSLT, REG_TCC,
+> > > LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+> > >                 goto toofar;
+> > >
+> > > @@ -254,6 +255,7 @@ static int emit_bpf_tail_call(struct
+> > > jit_ctx *ctx)
+> > >         emit_insn(ctx, alsld, t2, a2, a1, 2);
+> > >         off =3D offsetof(struct bpf_array, ptrs);
+> > >         emit_insn(ctx, ldd, t2, t2, off);
+> > > +       jmp_offset =3D tc_ninsn - (ctx->idx - idx0);
+> > >         /* beq $t2, $zero, jmp_offset */
+> > >         if (emit_tailcall_jmp(ctx, BPF_JEQ, t2,
+> > > LOONGARCH_GPR_ZERO, jmp_offset) < 0)
+> > >                 goto toofar;
+> > > @@ -263,22 +265,11 @@ static int emit_bpf_tail_call(struct
+> > > jit_ctx *ctx)
+> > >         emit_insn(ctx, ldd, t3, t2, off);
+> > >         __build_epilogue(ctx, true);
+> > >
+> > > -       /* out: */
+> > > -       if (out_offset =3D=3D -1)
+> > > -               out_offset =3D cur_offset;
+> > > -       if (cur_offset !=3D out_offset) {
+> > > -               pr_err_once("tail_call out_offset =3D %d,
+> > > expected %d!\n",
+> > > -                           cur_offset, out_offset);
+> > > -               return -1;
+> > > -       }
+> > > -
+> > >         return 0;
+> > >
+> > >  toofar:
+> > >         pr_info_once("tail_call: jump too far\n");
+> > >         return -1;
+> > > -#undef cur_offset
+> > > -#undef jmp_offset
+> > >  }
+> > >
+> > >  static void emit_atomic(const struct bpf_insn *insn, struct
+> > > jit_ctx *ctx)
+> > > @@ -916,7 +907,7 @@ static int build_insn(const struct bpf_insn
+> > > *insn, struct jit_ctx *ctx, bool ext
+> > >         /* tail call */
+> > >         case BPF_JMP | BPF_TAIL_CALL:
+> > >                 mark_tail_call(ctx);
+> > > -               if (emit_bpf_tail_call(ctx) < 0)
+> > > +               if (emit_bpf_tail_call(i, ctx) < 0)
+> > >                         return -EINVAL;
+> > >                 break;
+> > >
+> > > @@ -1342,7 +1333,6 @@ struct bpf_prog
+> > > *bpf_int_jit_compile(struct bpf_prog *prog)
+> > >         if (tmp_blinded)
+> > >                 bpf_jit_prog_release_other(prog, prog =3D=3D
+> > > orig_prog ? tmp : orig_prog);
+> > >
+> > > -       out_offset =3D -1;
+> > >
+> > >         return prog;
+> > >
+> > > --
+> > > 2.43.0
+> > >
+>
+>
