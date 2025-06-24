@@ -1,67 +1,63 @@
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2058.outbound.protection.outlook.com [40.107.101.58])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2088.outbound.protection.outlook.com [40.107.237.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30E7292910;
-	Tue, 24 Jun 2025 12:13:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E707A291C0D;
+	Tue, 24 Jun 2025 12:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.88
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750767231; cv=fail; b=oQS+JtapOUMRSbnOBeYVTzsLD0IibhH/r3+SwkLNMa2CTXsDbKNo3TyxGkFeGsek51aUjhjqwbDS/hYWQxBezetKk5o4RRlXDaIP92MOeKW9+NUZQkcrtCV0qFZ5gwIHf6w4NN6H8M1TmImTxajjvKQxOL5JuemnTCYP5OJP4j4=
+	t=1750767240; cv=fail; b=pTDZKtmR/Kfy3MDSnuxxR0SmUHro3Fe6Rzd6l7JzGlD9JIPhEFzHgLND70Yxxkh8i5zZvu/K5GHN5OsUAVmfmUgloP7uEW5SEUBmHd0AUkErNvTAhtitpsv6XIk5Pf69AJGkT8wxicIjITV9T2wlmzYkOjLWK0K+2KcX8xLE2AU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750767231; c=relaxed/simple;
-	bh=h/uVcETKC+3cGUzYGi4JWJzRSwkZpokJFdBJLWvU1P0=;
+	s=arc-20240116; t=1750767240; c=relaxed/simple;
+	bh=aqGv8x8xiCRuVokmXHPFXh0YmUkYQcz84Ac/ouQdmOY=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pt6yFeNSby7tXTSz1NPtqpPk4ASVcmACGQav85CftYVTnT2xPHLPrdGH+7k+8svluwsJNeAHhHrPQSCKvyWKZYLKmlktcyv5Gsj5MhNEh94/a7L05zIgni42XcWBVdWPhct+cbFZXj9VeU8h+KG+1cfUfXhR/P0wuaalwiMxg6U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=go59ibZ7; arc=fail smtp.client-ip=40.107.101.58
+	 MIME-Version:Content-Type; b=IXeSgbb8YoyByWw2qD6blmgkHJRX9sm2NIhej3bcSY/W2FdRX1gYrP3UZUvl0LztRRB75Ig4ipLVI0j3Q7EZGXm1hkKnhSmwzBtXFWTTYcNFxeG4p8ovsgrUMYLsREOM8nwhB/BaZ8dFI8Rk1QTx7Yx3n6DHUFPyZkns52XmiPc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Bf6Ehnkq; arc=fail smtp.client-ip=40.107.237.88
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="go59ibZ7"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Bf6Ehnkq"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JN4PodQ+6BpI1zt1sg0rSRBOTaSPv0RWQ/N0UK7UdKd07i4qAtnK5/Ujo6JLb3V+Guwe71nJyeRWr8QiwGvNyz/SIMNp9mACm+5O0Whfhg7iMXHtwt6vgTX4G6geG4hRLwad/X+OVE/PFEVWyxC+IucKchl6tr+Mp1t0Tc3WkatDJ/pXQwenoPE+tPiFyWZLCBsHDOziuq2m1nlYjsR3V0aiTPBDrVg8hztHm/D/c06/k0NjcsC9Q6JXfSdepyYv114/ZX+76IvCIm2rrimJUOfMPhD+KRn+vtncfSbpCO8gtlcZExBNJMnt4y//xyHEvXcMn/x+Fh0u6phXXshdLg==
+ b=kY2OQLo+7LF4JSGSpiI9ud5s4jQVe03wUg8vqpzSfBgwz6lckzUD5QZRC9DYetM8vKqYi5ZZr0ZQgmvcymfW+PG6iPxQUfGC0Uwd2GjDKMB3cKgVDvrPJHsn7kbMyoLsyOQCKwAxcyze5rjo/bH1uGUdn5zAIrhkXBxCnqJZk/MzYCb0C5ijKIS7S+E4B48OhSBmfgySziN81PwkFa2vP8LdfilLCI/8SV2qyDYWhjgNvcuJp4YTfPWOKiujDFxWfxSLKBlGI87bQIbJtimQizDLdp1sTiNbC0/o/EK2mfLwhskoKP1zmJBnlaJRHO0gMeOGi5OszxNvI1vfhTgL5w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oEM1AFwIxmqwEmxJg+E8KJNyIe2JtRP6v/yV8Zdz8VU=;
- b=y6KxEvL+k8p044A97xF+cQgigDpSDIbJ1OeHBzjeqZpQ3I+7ZaZ2hMZA9vn6Qyp1t5Gcdoep36/XQNQ4cdfCIQpeKteRlSfyTk/qLVMXPPu5FnBycPYY5mQITfFyTb4ATHlDwgauKos6tpzA+IQ8r1zIhpYTtW380PuTVCl5Yr3lWegsLZQQDoAe1sRHDutr3/YxGhXtKwutun3J2vlby9qKc7N673HwB+CG/3ZDtG7xLjdFeS00B1wUdMkNRs8sUX7NOoQz6vCcGwVQuO48pJueOdLYTQGR3mOE+vdGrO4dxcz8HSyZ93kopXmEixQwkePf85Qkp614dYrvfLJeWw==
+ bh=LFx/dmppJWhrBmtc7FTHrJmb3RhB//ITRFbLXMcp5W0=;
+ b=ZhWI4ft4HHJIDZo+r/yoqQOFRGL7atmwLWzADo4+jLONFq9HIdzvu4b8NNAUEON7gQU6OQf04Iz3s3tyX/82olUyIC35DzYHgQZVzsbUar3VcxjX/wzHtQtZk3xmKtpnY/is45GqpZTkOD1F505nVh3VXHkbWalzAbJ8Mb3s5cay/oieC2oXEaK7THbxA6T2TVG09hXSMkdfjKNM2dnkjXNJDX4hWLiqkAFMjrsxRee0hDyLRkaYXZx1KsdTHttNdi1ODWyBBcQkG1+nW+KKxuRY5Bi4jSzSrs/0zQdCZ+2qKhZpMbELHytI5Xfqn17Q4A15est9M8ofQFZaE/RyZQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=davemloft.net smtp.mailfrom=amd.com;
  dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
  header.from=amd.com; dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oEM1AFwIxmqwEmxJg+E8KJNyIe2JtRP6v/yV8Zdz8VU=;
- b=go59ibZ7Z+MVAgOwW0CUDnhj56pTDNgrQDVmybqp0J0uWNpIpsOA7kHkKhXj0nM6DJUzMFc/NS4m56ivtN18GWWJgEj68RtYXIA2E8CF0MTP84u9IE47koN3+eB7yNO9bvpfmuYgUqhvkVcxxvMTCcsve4mn8q2VxLwnqEsG29k=
-Received: from CH0PR03CA0368.namprd03.prod.outlook.com (2603:10b6:610:119::17)
- by DM4PR12MB7645.namprd12.prod.outlook.com (2603:10b6:8:107::16) with
+ bh=LFx/dmppJWhrBmtc7FTHrJmb3RhB//ITRFbLXMcp5W0=;
+ b=Bf6EhnkqTzAaI3yChQS1UgsPMOAwe7bzCASdO8emkzRIqUJwUoKrGlvDfEq2nICHOMl8BhHmXPFWSb0xx9JruEAg9qiOjujiCPHSgU93S9h9IM8Zv6YzgDVXkkpET4Q2mnp222s2RUptJy3N4JrLK3dqm2H8UXosoIBGFB3Efms=
+Received: from BN9PR03CA0722.namprd03.prod.outlook.com (2603:10b6:408:110::7)
+ by CH3PR12MB8658.namprd12.prod.outlook.com (2603:10b6:610:175::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Tue, 24 Jun
- 2025 12:13:42 +0000
-Received: from CH3PEPF0000000E.namprd04.prod.outlook.com
- (2603:10b6:610:119:cafe::ab) by CH0PR03CA0368.outlook.office365.com
- (2603:10b6:610:119::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.17 via Frontend Transport; Tue,
- 24 Jun 2025 12:13:42 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.26; Tue, 24 Jun
+ 2025 12:13:51 +0000
+Received: from BN3PEPF0000B075.namprd04.prod.outlook.com
+ (2603:10b6:408:110:cafe::a9) by BN9PR03CA0722.outlook.office365.com
+ (2603:10b6:408:110::7) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.27 via Frontend Transport; Tue,
+ 24 Jun 2025 12:13:51 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
 Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CH3PEPF0000000E.mail.protection.outlook.com (10.167.244.42) with Microsoft
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ BN3PEPF0000B075.mail.protection.outlook.com (10.167.243.120) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8880.14 via Frontend Transport; Tue, 24 Jun 2025 12:13:41 +0000
-Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ 15.20.8880.14 via Frontend Transport; Tue, 24 Jun 2025 12:13:50 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 24 Jun
- 2025 07:13:40 -0500
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB06.amd.com
- (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 24 Jun
- 2025 07:13:40 -0500
+ 2025 07:13:49 -0500
 Received: from xhdabhijitg41x.xilinx.com (10.180.168.240) by
  SATLEXMB03.amd.com (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39
- via Frontend Transport; Tue, 24 Jun 2025 07:13:36 -0500
+ via Frontend Transport; Tue, 24 Jun 2025 07:13:45 -0500
 From: Abhijit Gangurde <abhijit.gangurde@amd.com>
 To: <shannon.nelson@amd.com>, <brett.creeley@amd.com>, <davem@davemloft.net>,
 	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
@@ -70,9 +66,9 @@ CC: <allen.hubbe@amd.com>, <nikhil.agarwal@amd.com>,
 	<linux-rdma@vger.kernel.org>, <netdev@vger.kernel.org>,
 	<linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Abhijit Gangurde
 	<abhijit.gangurde@amd.com>
-Subject: [PATCH v3 03/14] net: ionic: Export the APIs from net driver to support device commands
-Date: Tue, 24 Jun 2025 17:43:04 +0530
-Message-ID: <20250624121315.739049-4-abhijit.gangurde@amd.com>
+Subject: [PATCH v3 05/14] net: ionic: Provide interrupt allocation support for the RDMA driver
+Date: Tue, 24 Jun 2025 17:43:06 +0530
+Message-ID: <20250624121315.739049-6-abhijit.gangurde@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250624121315.739049-1-abhijit.gangurde@amd.com>
 References: <20250624121315.739049-1-abhijit.gangurde@amd.com>
@@ -84,182 +80,243 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
+Received-SPF: None (SATLEXMB03.amd.com: abhijit.gangurde@amd.com does not
+ designate permitted sender hosts)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PEPF0000000E:EE_|DM4PR12MB7645:EE_
-X-MS-Office365-Filtering-Correlation-Id: 666c28fd-7597-4936-e3d9-08ddb3188ed1
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B075:EE_|CH3PR12MB8658:EE_
+X-MS-Office365-Filtering-Correlation-Id: 783a5a8e-9a9b-4b60-ce1a-08ddb3189477
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|7416014|376014|1800799024|82310400026|921020;
+	BCL:0;ARA:13230040|376014|7416014|36860700013|82310400026|1800799024|921020;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?6WwQXTrnX1ny9hLSCoyeZXiguT8HjEoKsQi6yv1ae6y9RbW2P4XRmzNwtX2V?=
- =?us-ascii?Q?nhU0Acoy6YDp5262cDEb+CRB9+6+kj9E8LsvfbDdzjUjb3+2Pjtur4lhSt7O?=
- =?us-ascii?Q?KuJ1i0cd1jDSVmGjXrHmUNGiKh4S1kubWogbcGhGYrrK6Xp/tbxZB2X3jvN/?=
- =?us-ascii?Q?UV+d12ohbBooe/nFMXwkLg3RuU8I5gjDd2kfVW0ahGmN3CDDLMa4LiQY6kox?=
- =?us-ascii?Q?C5rdOmlpk5lpDycBu/HiTOHIBMtucCO+D5rAFJWpgJk//LpBThoFfTtfIiM8?=
- =?us-ascii?Q?CgljpLH9FJe7FWOpm88cfHYx0OtU4IZ3wEbaVsZCep5KxzCYvwaK68Fc4OaC?=
- =?us-ascii?Q?jdlO8B4y400XqEtUIk8SPf56idi/BW/BuBDpa426NcGQNQNp+N++oxKH/znX?=
- =?us-ascii?Q?vwgj9wdP8fyQZLPFQ2lMq5LUi4vlMLPWTxyRzmjVwypUcry8fBakdgAUb62C?=
- =?us-ascii?Q?oYmjLqrINN19xme6EaClgX0apoM7fpVVT7G4LY9S4ouvOQrj7j0ZmHZk7S6t?=
- =?us-ascii?Q?z6rR4zJlcjfUKbDQIdcuSXx78S1GiWDyySX9Ppz+PAmiMSh3LJB0vFBarLhZ?=
- =?us-ascii?Q?LjtfTfnzLxzQ7OJQ1/hoGNY8eAuFL1E/LdvJxeCqsN/nXe4ZY7bbPUJ6U9hh?=
- =?us-ascii?Q?k4//gQdQjWARaAjLQHeU/6wZ1nPOd1oKJZZwsOetCfcOM1BMbKE7MQx3HtxQ?=
- =?us-ascii?Q?B5HhiJH2ZoN/emlZquk/FCbii5wwVef9ZEDxoXPwyurHg422O4llWArGCKb4?=
- =?us-ascii?Q?n2Hp4i1PYXdKF9orMv5KrTvDqSdUkwn4O7lqucJQaoCmYcP2qHOrikctTecG?=
- =?us-ascii?Q?rRJoyh6+mUA6qlQLD4zpFj5DYoRdi7Mp1XHyhZLuGMMJ2izOamLqaB6NIaUH?=
- =?us-ascii?Q?0Ca/E3HgVEZgGbpcmht/cMxunREtXYqlEQn67fJALwH3x6wnVnKaRiB5ZZDe?=
- =?us-ascii?Q?SFLkeK/XJ8hh6QiVOF5GtOv+x6OGOpew8jfIKnO8N9OdzyoggLXtg1QqfdnL?=
- =?us-ascii?Q?wPBi9A6wSwcehRPgF1fPFu6kb3QU5cSWRTFDusEYVZFA7u8j+qm3A9lOCJj7?=
- =?us-ascii?Q?RwtRUwEZ5pRjlb5eu9I8A74SZt9IZiE7T3Ck2ZNYBG4RnQCIcdkfLO59/xus?=
- =?us-ascii?Q?t8p7C+5ZSivpvpRLD6qNdNwJDDLwyOx372A3hq2vWcoJ30VZayAYaS7LR46j?=
- =?us-ascii?Q?zL69DpSeCrztdLxjHfjIi+sEhpgmMy3TW1d8otG4CqNx6SwTDRjgQnmxOFio?=
- =?us-ascii?Q?gFZLPqigga1fDXi+8wwG9tj2anp9QwHCiLWkdTpyVa/nhtIrxC/iBaHhuhyu?=
- =?us-ascii?Q?T+ilBWFX6Xs7fdG40H7R99P7/XeBXz+8JAs7uz7UYrNQ8LewvHgfVo6q5/Z3?=
- =?us-ascii?Q?GqmmfjcjKdJCfkXp4qcOwBE3VlPaHTJaC35kHgqZ6vI631ywFaoUmwQp+WqK?=
- =?us-ascii?Q?KtoKJmVTidPo3agpznHNi5MSYKBo6Jbdvv63bDMiA2Rdj1yfniRn6Lep6fRn?=
- =?us-ascii?Q?Qfj8WhOQtb3CY81sjN3fW8ZWqkv+92FbTTzO3AfaB5bnhf+2yhWdYCqmjQ?=
+	=?us-ascii?Q?J1X6qAb8p4JST/+EhVSu8BV+VSkzh2HcPNpJ0ruUBYbvJYbPU1oHF/PhhCzc?=
+ =?us-ascii?Q?z86sfB635+9I/JcMF3j7f266mPBNBe0fc25kQxR6Mw6M7+QqmFKkL2p9QNhV?=
+ =?us-ascii?Q?o3vNKLwxp8pSKV9OVqzdVkw1Isc0KQIxApI0XuqP0WUgwlTiJATY17qbZfw/?=
+ =?us-ascii?Q?nWz13aTuuszn4U5zJFm7+APc00iTWgXrMhNp0Gw36rMEG7VC5tqUNzYnqa/5?=
+ =?us-ascii?Q?APW4Tddu6y8EVKmNKdgLU1bdhLPZoQpJ60S0pYcHT10j5iG09Cc/emQKUQOP?=
+ =?us-ascii?Q?9NtOPqQu8FBVTokorQ8gvvzxZ4XxslVrBeO4wv0ebn3i394feCQJSSRSd80I?=
+ =?us-ascii?Q?If+P17uaVU8m3OmMqxCYGCoMG74PfxXBaMTAEQOPfFOuObEXlVpwAF7n+h+s?=
+ =?us-ascii?Q?VxSoFEIcYND4Q9BDL4+fXRPjAXeH/M/8+6Af90J5zRdASL2Aaq4AeQQzSS3V?=
+ =?us-ascii?Q?TmkcTZ1HPP/eNaA9zTiNnPPhueLRnvyRNZe1u3JP82m/mXn7RqcKIStJqrRq?=
+ =?us-ascii?Q?iLrKRYu6B+VrXMeuLfYuOH4XdWHcTIVn5nIUgqTKNjMR49wmALrKjdFWKAax?=
+ =?us-ascii?Q?bqzP2AmRbW1Nr2CcLn2V/PWx/M4TUnt/GDFWNVR6MJY5JS0rR57w8RdEJ20F?=
+ =?us-ascii?Q?/byhQtLCpOx/DCwL0p76s3CknGsIyPK7DYxrgMoca/kun3Kno/Ckkiticx4B?=
+ =?us-ascii?Q?79XtJUCLCx/bRmgTQ/WC7IqGcGFXPqbHnwfKft6UrX8uRX3ktBR13LMOiNJW?=
+ =?us-ascii?Q?NxE9jg2UXY8l1ZHb10KOufO3zQUBwjTjKPwN7qLnEBprG6X7/VfEbay7lNHK?=
+ =?us-ascii?Q?aeWucLR9iUmlkA/51n52He61IDHWUX9ubrgq8LpQrhF6Q7zGRcaOzSIOtWen?=
+ =?us-ascii?Q?oF53ELet1x//lu88K6/T2TjujG+wHpwNkIkoFNUmuxQNPG3+kGzpwjqCJPs4?=
+ =?us-ascii?Q?ofZC5kGECwM2gTDNtScrGczM6qrX7mNqKNyrju70k+UEx0rdvOd5iw5nvV/L?=
+ =?us-ascii?Q?NfR+9YpfcIZ1JinGfpVh62IC0ezpgUuTKYIPmq6BzPpmXJhLQ0O618AQTTyW?=
+ =?us-ascii?Q?frfBCBAMR7q+LEffb2VWl+8n66Sy3pQnCG9MzgIQEFNLCPPCD/8GnUAHjxBv?=
+ =?us-ascii?Q?t3wGoYoS0YIaGORYpXU3A7GjRvoSo/KWr8kf53AxZcDkfOryVFSIybSMsKsD?=
+ =?us-ascii?Q?ORVhQ6+OByigiCuKqsIAknnohrjAzC55OsT1TIi5JOX7s+MKvX7cE+sODpVP?=
+ =?us-ascii?Q?PZr/IS80C64j3jKNFQ6INbtoOc04VdrgPVj/YURZX9HG5bs2+EIA5NOML4AE?=
+ =?us-ascii?Q?fSrs8lCrkKKwUFTzJqjk4dSHAmJM24GQ0Aw+rXX9rwzlbsLt4BtHoSgSDyu6?=
+ =?us-ascii?Q?p6hb63IK7CiLowB1RwveDvN9UNebR7mkAQiGVkF1iQXGVv8bJPBo5dhf/wy5?=
+ =?us-ascii?Q?uklsVMHj02ZY4WIHu/QnkWNiKkGEdvD7FmMo9m4KtoYeyYLBOJZ7ApX4i554?=
+ =?us-ascii?Q?EVH3j1nMAPGUMMu78Oyjjjqtcwl9lkGp2J5TDjRd2SWDQHHw0iPJCmIP+A?=
  =?us-ascii?Q?=3D=3D?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(7416014)(376014)(1800799024)(82310400026)(921020);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(7416014)(36860700013)(82310400026)(1800799024)(921020);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 12:13:41.2599
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 12:13:50.7521
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 666c28fd-7597-4936-e3d9-08ddb3188ed1
+X-MS-Exchange-CrossTenant-Network-Message-Id: 783a5a8e-9a9b-4b60-ce1a-08ddb3189477
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	CH3PEPF0000000E.namprd04.prod.outlook.com
+	BN3PEPF0000B075.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7645
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8658
 
-RDMA driver needs to establish admin queues to support admin operations.
-Export the APIs to send device commands for the RDMA driver.
+RDMA driver needs an interrupt for an event queue. Export
+function from net driver to allocate an interrupt.
 
 Reviewed-by: Shannon Nelson <shannon.nelson@amd.com>
 Signed-off-by: Abhijit Gangurde <abhijit.gangurde@amd.com>
 ---
- drivers/net/ethernet/pensando/ionic/ionic.h   |  7 ----
- .../net/ethernet/pensando/ionic/ionic_api.h   | 36 +++++++++++++++++++
- .../net/ethernet/pensando/ionic/ionic_dev.h   |  1 +
- .../net/ethernet/pensando/ionic/ionic_main.c  |  4 ++-
- 4 files changed, 40 insertions(+), 8 deletions(-)
+ .../net/ethernet/pensando/ionic/ionic_api.h   | 43 +++++++++++++++++++
+ .../net/ethernet/pensando/ionic/ionic_dev.h   | 13 ------
+ .../net/ethernet/pensando/ionic/ionic_lif.c   | 38 ++++++++--------
+ 3 files changed, 62 insertions(+), 32 deletions(-)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic.h b/drivers/net/ethernet/pensando/ionic/ionic.h
-index 04f00ea94230..85198e6a806e 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic.h
-+++ b/drivers/net/ethernet/pensando/ionic/ionic.h
-@@ -65,16 +65,9 @@ struct ionic {
- 	int watchdog_period;
- };
- 
--struct ionic_admin_ctx {
--	struct completion work;
--	union ionic_adminq_cmd cmd;
--	union ionic_adminq_comp comp;
--};
--
- int ionic_adminq_post(struct ionic_lif *lif, struct ionic_admin_ctx *ctx);
- int ionic_adminq_wait(struct ionic_lif *lif, struct ionic_admin_ctx *ctx,
- 		      const int err, const bool do_msg);
--int ionic_adminq_post_wait(struct ionic_lif *lif, struct ionic_admin_ctx *ctx);
- int ionic_adminq_post_wait_nomsg(struct ionic_lif *lif, struct ionic_admin_ctx *ctx);
- void ionic_adminq_netdev_err_print(struct ionic_lif *lif, u8 opcode,
- 				   u8 status, int err);
 diff --git a/drivers/net/ethernet/pensando/ionic/ionic_api.h b/drivers/net/ethernet/pensando/ionic/ionic_api.h
-index f9fcd1b67b35..d75902ca34af 100644
+index e0b766d1769f..5fd23aa8c5a1 100644
 --- a/drivers/net/ethernet/pensando/ionic/ionic_api.h
 +++ b/drivers/net/ethernet/pensando/ionic/ionic_api.h
-@@ -5,6 +5,8 @@
- #define _IONIC_API_H_
- 
- #include <linux/auxiliary_bus.h>
-+#include "ionic_if.h"
-+#include "ionic_regs.h"
- 
- /**
-  * struct ionic_aux_dev - Auxiliary device information
-@@ -18,4 +20,38 @@ struct ionic_aux_dev {
- 	struct auxiliary_device adev;
+@@ -32,6 +32,29 @@ struct ionic_admin_ctx {
+ 	union ionic_adminq_comp comp;
  };
  
-+/**
-+ * struct ionic_admin_ctx - Admin command context
-+ * @work:       Work completion wait queue element
-+ * @cmd:        Admin command (64B) to be copied to the queue
-+ * @comp:       Admin completion (16B) copied from the queue
-+ */
-+struct ionic_admin_ctx {
-+	struct completion work;
-+	union ionic_adminq_cmd cmd;
-+	union ionic_adminq_comp comp;
-+};
++#define IONIC_INTR_INDEX_NOT_ASSIGNED	-1
++#define IONIC_INTR_NAME_MAX_SZ		32
 +
 +/**
-+ * ionic_adminq_post_wait - Post an admin command and wait for response
++ * struct ionic_intr_info - Interrupt information
++ * @name:          Name identifier
++ * @rearm_count:   Interrupt rearm count
++ * @index:         Interrupt index position
++ * @vector:        Interrupt number
++ * @dim_coal_hw:   Interrupt coalesce value in hardware units
++ * @affinity_mask: CPU affinity mask
++ * @aff_notify:    context for notification of IRQ affinity changes
++ */
++struct ionic_intr_info {
++	char name[IONIC_INTR_NAME_MAX_SZ];
++	u64 rearm_count;
++	unsigned int index;
++	unsigned int vector;
++	u32 dim_coal_hw;
++	cpumask_var_t *affinity_mask;
++	struct irq_affinity_notify aff_notify;
++};
++
+ /**
+  * ionic_adminq_post_wait - Post an admin command and wait for response
+  * @lif:        Logical interface
+@@ -63,4 +86,24 @@ int ionic_error_to_errno(enum ionic_status_code code);
+  */
+ void ionic_request_rdma_reset(struct ionic_lif *lif);
+ 
++/**
++ * ionic_intr_alloc - Reserve a device interrupt
 + * @lif:        Logical interface
-+ * @ctx:        API admin command context
++ * @intr:       Reserved ionic interrupt structure
 + *
-+ * Post the command to an admin queue in the ethernet driver.  If this command
-+ * succeeds, then the command has been posted, but that does not indicate a
-+ * completion.  If this command returns success, then the completion callback
-+ * will eventually be called.
++ * Reserve an interrupt index and get irq number for that index.
 + *
 + * Return: zero or negative error status
 + */
-+int ionic_adminq_post_wait(struct ionic_lif *lif, struct ionic_admin_ctx *ctx);
++int ionic_intr_alloc(struct ionic_lif *lif, struct ionic_intr_info *intr);
 +
 +/**
-+ * ionic_error_to_errno - Transform ionic_if errors to os errno
-+ * @code:       Ionic error number
++ * ionic_intr_free - Release a device interrupt index
++ * @lif:        Logical interface
++ * @intr:       Interrupt index
 + *
-+ * Return:      Negative OS error number or zero
++ * Mark the interrupt index unused so that it can be reserved again.
 + */
-+int ionic_error_to_errno(enum ionic_status_code code);
++void ionic_intr_free(struct ionic_lif *lif, int intr);
 +
  #endif /* _IONIC_API_H_ */
 diff --git a/drivers/net/ethernet/pensando/ionic/ionic_dev.h b/drivers/net/ethernet/pensando/ionic/ionic_dev.h
-index c8c710cfe70c..bc26eb8f5779 100644
+index bc26eb8f5779..68cf4da3c6b3 100644
 --- a/drivers/net/ethernet/pensando/ionic/ionic_dev.h
 +++ b/drivers/net/ethernet/pensando/ionic/ionic_dev.h
-@@ -12,6 +12,7 @@
+@@ -274,19 +274,6 @@ struct ionic_queue {
+ 	char name[IONIC_QUEUE_NAME_MAX_SZ];
+ } ____cacheline_aligned_in_smp;
  
- #include "ionic_if.h"
- #include "ionic_regs.h"
-+#include "ionic_api.h"
+-#define IONIC_INTR_INDEX_NOT_ASSIGNED	-1
+-#define IONIC_INTR_NAME_MAX_SZ		32
+-
+-struct ionic_intr_info {
+-	char name[IONIC_INTR_NAME_MAX_SZ];
+-	u64 rearm_count;
+-	unsigned int index;
+-	unsigned int vector;
+-	u32 dim_coal_hw;
+-	cpumask_var_t *affinity_mask;
+-	struct irq_affinity_notify aff_notify;
+-};
+-
+ struct ionic_cq {
+ 	struct ionic_lif *lif;
+ 	struct ionic_queue *bound_q;
+diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+index 146659f6862a..f89b458bd20a 100644
+--- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
++++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
+@@ -244,29 +244,36 @@ static int ionic_request_irq(struct ionic_lif *lif, struct ionic_qcq *qcq)
+ 				0, intr->name, &qcq->napi);
+ }
  
- #define IONIC_MAX_TX_DESC		8192
- #define IONIC_MAX_RX_DESC		16384
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_main.c b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-index daf1e82cb76b..60fc232338b9 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_main.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_main.c
-@@ -72,7 +72,7 @@ static const char *ionic_error_to_str(enum ionic_status_code code)
+-static int ionic_intr_alloc(struct ionic_lif *lif, struct ionic_intr_info *intr)
++int ionic_intr_alloc(struct ionic_lif *lif, struct ionic_intr_info *intr)
+ {
+ 	struct ionic *ionic = lif->ionic;
+-	int index;
++	int index, err;
+ 
+ 	index = find_first_zero_bit(ionic->intrs, ionic->nintrs);
+-	if (index == ionic->nintrs) {
+-		netdev_warn(lif->netdev, "%s: no intr, index=%d nintrs=%d\n",
+-			    __func__, index, ionic->nintrs);
++	if (index == ionic->nintrs)
+ 		return -ENOSPC;
+-	}
+ 
+ 	set_bit(index, ionic->intrs);
+ 	ionic_intr_init(&ionic->idev, intr, index);
+ 
++	err = ionic_bus_get_irq(ionic, intr->index);
++	if (err < 0) {
++		clear_bit(index, ionic->intrs);
++		return err;
++	}
++
++	intr->vector = err;
++
+ 	return 0;
+ }
++EXPORT_SYMBOL_NS(ionic_intr_alloc, "NET_IONIC");
+ 
+-static void ionic_intr_free(struct ionic *ionic, int index)
++void ionic_intr_free(struct ionic_lif *lif, int index)
+ {
+-	if (index != IONIC_INTR_INDEX_NOT_ASSIGNED && index < ionic->nintrs)
+-		clear_bit(index, ionic->intrs);
++	if (index != IONIC_INTR_INDEX_NOT_ASSIGNED && index < lif->ionic->nintrs)
++		clear_bit(index, lif->ionic->intrs);
+ }
++EXPORT_SYMBOL_NS(ionic_intr_free, "NET_IONIC");
+ 
+ static void ionic_irq_aff_notify(struct irq_affinity_notify *notify,
+ 				 const cpumask_t *mask)
+@@ -401,7 +408,7 @@ static void ionic_qcq_intr_free(struct ionic_lif *lif, struct ionic_qcq *qcq)
+ 	irq_set_affinity_hint(qcq->intr.vector, NULL);
+ 	devm_free_irq(lif->ionic->dev, qcq->intr.vector, &qcq->napi);
+ 	qcq->intr.vector = 0;
+-	ionic_intr_free(lif->ionic, qcq->intr.index);
++	ionic_intr_free(lif, qcq->intr.index);
+ 	qcq->intr.index = IONIC_INTR_INDEX_NOT_ASSIGNED;
+ }
+ 
+@@ -511,13 +518,6 @@ static int ionic_alloc_qcq_interrupt(struct ionic_lif *lif, struct ionic_qcq *qc
+ 		goto err_out;
  	}
- }
  
--static int ionic_error_to_errno(enum ionic_status_code code)
-+int ionic_error_to_errno(enum ionic_status_code code)
- {
- 	switch (code) {
- 	case IONIC_RC_SUCCESS:
-@@ -114,6 +114,7 @@ static int ionic_error_to_errno(enum ionic_status_code code)
- 		return -EIO;
+-	err = ionic_bus_get_irq(lif->ionic, qcq->intr.index);
+-	if (err < 0) {
+-		netdev_warn(lif->netdev, "no vector for %s: %d\n",
+-			    qcq->q.name, err);
+-		goto err_out_free_intr;
+-	}
+-	qcq->intr.vector = err;
+ 	ionic_intr_mask_assert(lif->ionic->idev.intr_ctrl, qcq->intr.index,
+ 			       IONIC_INTR_MASK_SET);
+ 
+@@ -546,7 +546,7 @@ static int ionic_alloc_qcq_interrupt(struct ionic_lif *lif, struct ionic_qcq *qc
+ 	return 0;
+ 
+ err_out_free_intr:
+-	ionic_intr_free(lif->ionic, qcq->intr.index);
++	ionic_intr_free(lif, qcq->intr.index);
+ err_out:
+ 	return err;
+ }
+@@ -741,7 +741,7 @@ static int ionic_qcq_alloc(struct ionic_lif *lif, unsigned int type,
+ err_out_free_irq:
+ 	if (flags & IONIC_QCQ_F_INTR) {
+ 		devm_free_irq(dev, new->intr.vector, &new->napi);
+-		ionic_intr_free(lif->ionic, new->intr.index);
++		ionic_intr_free(lif, new->intr.index);
  	}
- }
-+EXPORT_SYMBOL_NS(ionic_error_to_errno, "NET_IONIC");
- 
- static const char *ionic_opcode_to_str(enum ionic_cmd_opcode opcode)
- {
-@@ -480,6 +481,7 @@ int ionic_adminq_post_wait(struct ionic_lif *lif, struct ionic_admin_ctx *ctx)
- {
- 	return __ionic_adminq_post_wait(lif, ctx, true);
- }
-+EXPORT_SYMBOL_NS(ionic_adminq_post_wait, "NET_IONIC");
- 
- int ionic_adminq_post_wait_nomsg(struct ionic_lif *lif, struct ionic_admin_ctx *ctx)
- {
+ err_out_free_page_pool:
+ 	page_pool_destroy(new->q.page_pool);
 -- 
 2.43.0
 
