@@ -1,36 +1,36 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 021663FE7;
-	Tue, 24 Jun 2025 01:26:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A614B1FC8;
+	Tue, 24 Jun 2025 01:27:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750728374; cv=none; b=JahFou4qS0jdqbHcI2/fYbpQXuHb84hzAc7y6G04McoRZfrAPSnlAssvzzWWpX+DUacPiT8htJ6lU8tqUprG6MWq1aoU/xzNbZk9VPA2TitP9YAC80x+KQjm58YLWOkNYKpetuYzgmhbpo0/q0VYYRbQOlQmDJm0irahufumqBw=
+	t=1750728432; cv=none; b=giYzR3dNvPYj8fqnW4ZZyhrM5eiGqOq8n0s9ZlLYdKT3XSttv8eMuN5ryPiVvFloeOnFUJ6MC7oYfgdHPDx6ofdtFdn8EUs58SJrpju+Jnvy1H3G8lfhNoROq1gIvybtD3fTnHKAdIK06nzGVq1vFXlBSUBaWeFwQxI6a27+2t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750728374; c=relaxed/simple;
-	bh=aGnwgqdy4FtSjBe3EoNg9qVtk9DivJD9Nzt4l0iIhBo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=XsFmUwuSY7GHkNr73izrM/Ld5mqgNABSgQr/SCkk26j3Irf6+2wDBlSUiB08TMKx3IhvGiwfd6yAN6cs7YZ/GedJtfdxYK+ZD0JJciCfR1HBaK9L1T1Ku6OxaqxxLuVYE7SO7SXqPYB8DXekleW/E/xOc80if7lp2HgYZIgASRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+	s=arc-20240116; t=1750728432; c=relaxed/simple;
+	bh=fBtxcZ7KMES+AZ3RMX7I7JpObBGSwEBH1l98Sl1mQ0g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Sbw4KAtNRx8vHyEToRVE5aPUm/ZkheTJ9JXqledto32nVqav+FXX3sk1Xii73KLjoZawOtSwA8V9r2Cng7Y5uDTbUDa2rtFV4ucaLBjWPqk6ZOJn+/2H3zey1mgzuso5xqhYuhFcmO4q59nwypBWwZExujOWlH5zc7nuQ12xD0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4bR6ch0Mjmz2Cff7;
-	Tue, 24 Jun 2025 09:22:12 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bR6j14xLgztRqp;
+	Tue, 24 Jun 2025 09:25:57 +0800 (CST)
 Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 046CB140294;
-	Tue, 24 Jun 2025 09:26:09 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 0DA121401E9;
+	Tue, 24 Jun 2025 09:27:07 +0800 (CST)
 Received: from huawei.com (10.175.124.27) by dggpemf500002.china.huawei.com
  (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 24 Jun
- 2025 09:26:07 +0800
+ 2025 09:27:06 +0800
 From: Yue Haibing <yuehaibing@huawei.com>
-To: <jhs@mojatatu.com>, <xiyou.wangcong@gmail.com>, <jiri@resnulli.us>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>, <horms@kernel.org>, <yuehaibing@huawei.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next] net/sched: Remove unused functions
-Date: Tue, 24 Jun 2025 09:43:27 +0800
-Message-ID: <20250624014327.3686873-1-yuehaibing@huawei.com>
+To: <pablo@netfilter.org>, <kadlec@netfilter.org>, <kuba@kernel.org>,
+	<yuehaibing@huawei.com>
+CC: <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next] netfilter: x_tables: Remove unused functions xt_{in|out}name()
+Date: Tue, 24 Jun 2025 09:44:32 +0800
+Message-ID: <20250624014432.3708190-1-yuehaibing@huawei.com>
 X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -43,158 +43,40 @@ Content-Type: text/plain
 X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
  dggpemf500002.china.huawei.com (7.185.36.57)
 
-Since commit c54e1d920f04 ("flow_offload: add ops to tc_action_ops for
-flow action setup") these are unused.
+Since commit 2173c519d5e9 ("audit: normalize NETFILTER_PKT")
+these are unused, so can be removed.
 
 Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
 ---
- include/net/tc_act/tc_csum.h   | 9 ---------
- include/net/tc_act/tc_ct.h     | 9 ---------
- include/net/tc_act/tc_gate.h   | 9 ---------
- include/net/tc_act/tc_mpls.h   | 9 ---------
- include/net/tc_act/tc_police.h | 9 ---------
- include/net/tc_act/tc_sample.h | 9 ---------
- include/net/tc_act/tc_vlan.h   | 9 ---------
- 7 files changed, 63 deletions(-)
+ include/linux/netfilter/x_tables.h | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/include/net/tc_act/tc_csum.h b/include/net/tc_act/tc_csum.h
-index 68269e4581b7..2515da0142a6 100644
---- a/include/net/tc_act/tc_csum.h
-+++ b/include/net/tc_act/tc_csum.h
-@@ -18,15 +18,6 @@ struct tcf_csum {
- };
- #define to_tcf_csum(a) ((struct tcf_csum *)a)
+diff --git a/include/linux/netfilter/x_tables.h b/include/linux/netfilter/x_tables.h
+index f39f688d7285..77c778d84d4c 100644
+--- a/include/linux/netfilter/x_tables.h
++++ b/include/linux/netfilter/x_tables.h
+@@ -51,21 +51,11 @@ static inline struct net_device *xt_in(const struct xt_action_param *par)
+ 	return par->state->in;
+ }
  
--static inline bool is_tcf_csum(const struct tc_action *a)
+-static inline const char *xt_inname(const struct xt_action_param *par)
 -{
--#ifdef CONFIG_NET_CLS_ACT
--	if (a->ops && a->ops->id == TCA_ID_CSUM)
--		return true;
--#endif
--	return false;
+-	return par->state->in->name;
 -}
 -
- static inline u32 tcf_csum_update_flags(const struct tc_action *a)
+ static inline struct net_device *xt_out(const struct xt_action_param *par)
  {
- 	u32 update_flags;
-diff --git a/include/net/tc_act/tc_ct.h b/include/net/tc_act/tc_ct.h
-index 77f87c622a2e..e6b45cb27ebf 100644
---- a/include/net/tc_act/tc_ct.h
-+++ b/include/net/tc_act/tc_ct.h
-@@ -92,13 +92,4 @@ static inline void
- tcf_ct_flow_table_restore_skb(struct sk_buff *skb, unsigned long cookie) { }
- #endif
+ 	return par->state->out;
+ }
  
--static inline bool is_tcf_ct(const struct tc_action *a)
+-static inline const char *xt_outname(const struct xt_action_param *par)
 -{
--#if defined(CONFIG_NET_CLS_ACT) && IS_ENABLED(CONFIG_NF_CONNTRACK)
--	if (a->ops && a->ops->id == TCA_ID_CT)
--		return true;
--#endif
--	return false;
+-	return par->state->out->name;
 -}
 -
- #endif /* __NET_TC_CT_H */
-diff --git a/include/net/tc_act/tc_gate.h b/include/net/tc_act/tc_gate.h
-index c8fa11ebb397..c1a67149c6b6 100644
---- a/include/net/tc_act/tc_gate.h
-+++ b/include/net/tc_act/tc_gate.h
-@@ -51,15 +51,6 @@ struct tcf_gate {
- 
- #define to_gate(a) ((struct tcf_gate *)a)
- 
--static inline bool is_tcf_gate(const struct tc_action *a)
--{
--#ifdef CONFIG_NET_CLS_ACT
--	if (a->ops && a->ops->id == TCA_ID_GATE)
--		return true;
--#endif
--	return false;
--}
--
- static inline s32 tcf_gate_prio(const struct tc_action *a)
+ static inline unsigned int xt_hooknum(const struct xt_action_param *par)
  {
- 	s32 tcfg_prio;
-diff --git a/include/net/tc_act/tc_mpls.h b/include/net/tc_act/tc_mpls.h
-index 721de4f5733a..d452e5e94fd0 100644
---- a/include/net/tc_act/tc_mpls.h
-+++ b/include/net/tc_act/tc_mpls.h
-@@ -27,15 +27,6 @@ struct tcf_mpls {
- };
- #define to_mpls(a) ((struct tcf_mpls *)a)
- 
--static inline bool is_tcf_mpls(const struct tc_action *a)
--{
--#ifdef CONFIG_NET_CLS_ACT
--	if (a->ops && a->ops->id == TCA_ID_MPLS)
--		return true;
--#endif
--	return false;
--}
--
- static inline u32 tcf_mpls_action(const struct tc_action *a)
- {
- 	u32 tcfm_action;
-diff --git a/include/net/tc_act/tc_police.h b/include/net/tc_act/tc_police.h
-index 283bde711a42..490d88cb5233 100644
---- a/include/net/tc_act/tc_police.h
-+++ b/include/net/tc_act/tc_police.h
-@@ -44,15 +44,6 @@ struct tc_police_compat {
- 	struct tc_ratespec	peakrate;
- };
- 
--static inline bool is_tcf_police(const struct tc_action *act)
--{
--#ifdef CONFIG_NET_CLS_ACT
--	if (act->ops && act->ops->id == TCA_ID_POLICE)
--		return true;
--#endif
--	return false;
--}
--
- static inline u64 tcf_police_rate_bytes_ps(const struct tc_action *act)
- {
- 	struct tcf_police *police = to_police(act);
-diff --git a/include/net/tc_act/tc_sample.h b/include/net/tc_act/tc_sample.h
-index b5d76305e854..abd163ca1864 100644
---- a/include/net/tc_act/tc_sample.h
-+++ b/include/net/tc_act/tc_sample.h
-@@ -17,15 +17,6 @@ struct tcf_sample {
- };
- #define to_sample(a) ((struct tcf_sample *)a)
- 
--static inline bool is_tcf_sample(const struct tc_action *a)
--{
--#ifdef CONFIG_NET_CLS_ACT
--	return a->ops && a->ops->id == TCA_ID_SAMPLE;
--#else
--	return false;
--#endif
--}
--
- static inline __u32 tcf_sample_rate(const struct tc_action *a)
- {
- 	return to_sample(a)->rate;
-diff --git a/include/net/tc_act/tc_vlan.h b/include/net/tc_act/tc_vlan.h
-index 904eddfc1826..3f5e9242b5e8 100644
---- a/include/net/tc_act/tc_vlan.h
-+++ b/include/net/tc_act/tc_vlan.h
-@@ -26,15 +26,6 @@ struct tcf_vlan {
- };
- #define to_vlan(a) ((struct tcf_vlan *)a)
- 
--static inline bool is_tcf_vlan(const struct tc_action *a)
--{
--#ifdef CONFIG_NET_CLS_ACT
--	if (a->ops && a->ops->id == TCA_ID_VLAN)
--		return true;
--#endif
--	return false;
--}
--
- static inline u32 tcf_vlan_action(const struct tc_action *a)
- {
- 	u32 tcfv_action;
+ 	return par->state->hook;
 -- 
 2.34.1
 
