@@ -1,151 +1,229 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30652290D85
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:08:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE7B298992
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750770496; cv=none; b=GuPg4y6d9ySlPj6l0p9FfSZ1VkwMb1zh7yRO3Z7ySXN3xdHSQFuaIiw9/LecsJoPuh+GSwc5tnf5+jCJx7OcXwt9ZhSr+Cydd6IcXTL4oOyXHl/+CEOcQf/sxcjydttNsYDtKewFZtsuW3hLwO9qlM1wqrdzvIRR3VYEuNNh208=
+	t=1750770510; cv=none; b=u1zFCRx9AMEqvkioymrV2xpIrgoW0O2C46w+zxf1oXV3wXLPMmbYCELRZ9B5c5z4fk0d0JdnrNTywM6QxVEZ3pBRfoiQtAWv3mRbBE22hUbICxcxvGAsfWpadXp/u1uwHhoTwX1T65s/MowQVr93oalTh1Vm1w5G9rploJS6DTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750770496; c=relaxed/simple;
-	bh=UKxlJQaFnl6/rA88dWIe9uoyiDa1SHW784EYsw3dMrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=unDcczdDSS1UuHBh0KkyzfCT+fwGz0TnisMVNy1iUHw7j/jr65Wx9w9fnzI0LQRluWprqju2ejqJ1TGselfD6eFPoHqsEnxy30aXjdTTwPLFyvJDzi1Nq8TI4gBrN4u0EtvDIQRYSvWMRVF07FBfn3HnBu5nSP4WANgl50eFzyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=O1VND6E1; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
+	s=arc-20240116; t=1750770510; c=relaxed/simple;
+	bh=OWhxjim2hzRwp44IATiri7aWjY41RYVfuAGrMg9lkKY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hlBKrTZOS7IyEOOkz234dq2x05ELpCZ3ISDeDXD6uV3VqNHf+6z4asajd0k+BGW7J9DxGKcqAtNaoSvW7HAXh/xd39m1FewsYY4o50VfMntXkOu8cFXxal+sLQrNVd2+0bvNtsOZoyNAo7+fGuij9pirOcpAKIHcLNbl6BYEQBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=QbZx1uyl; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="O1VND6E1"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-4a6f6d52af7so3662441cf.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:08:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1750770494; x=1751375294; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iohPe+c6ZnzjeGz7SNDU9v8Z6P04ovt1VqFpt7Vikhc=;
-        b=O1VND6E1I1G6Kku1PC3mZll1oGkatGWH0Gu7RfzVgNEWWDT9SJoJyRFRY0EJnv/aTG
-         61bm5NxRNyvLrG3bTapG97cYTYJ/gmH5yGOBna3A6CbRMt3St2DPTpF1XsuG+hAY1Lvy
-         Drus+CtUuInH4yjnu7e0j4qwl2hVl0WTAhbTTmrCNwmEHheUIvKNMQw3Fh0/o5TQJ0PP
-         GhCzJHX8WnzK8nSUGdYENFybJpA5JCJ0U0esgEM2ojsMIwKx2tMiMavIFYXCIIr3PQOY
-         rb251LRy97dWdNTnZkH275BrqCqxkln17cPC+0rueoEMSQr602WN8IraD1D4DZ6E6omz
-         OITQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="QbZx1uyl"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O77GQW015721
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:08:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	GXCLZ7wAY3gbFYvClwpaaAkNVDWwCvFGSPtbvkJl6S4=; b=QbZx1uylK1oDoaHE
+	AxheQ3bLH0vLEbfkRRSrZr/l2/yYim17/kmALfwpQKFR+X7ovIUY+p+RU1+vC2X5
+	16iDRtyt4ZtNqI5TQ3L9yhwhFrAByVNva9qHM7gfny2S9up19BvOq6IeuWY8wYBR
+	LVNGeTg/p3/rL63xnhH4ICX3TOjSiWEiI6v1bOtNBAZQRzGeA9Drh6rO2C3uoPMG
+	UX4/IRvcJTzQHoHMWehZfO/2pQ/FhCv0SvK2L5cRcsJWUK5mNfn4ovwOQr+AkjIn
+	3nObZbjWy0cXguNZsKogCNwLcEPrDKXEvNE/gosHHSTce7idiG0uCHwontU8EFH2
+	c3cdoA==
+Received: from mail-pg1-f197.google.com (mail-pg1-f197.google.com [209.85.215.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47evc5najf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 13:08:28 +0000 (GMT)
+Received: by mail-pg1-f197.google.com with SMTP id 41be03b00d2f7-b2c37558eccso342116a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 06:08:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750770494; x=1751375294;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iohPe+c6ZnzjeGz7SNDU9v8Z6P04ovt1VqFpt7Vikhc=;
-        b=L6xIkqyZiUSSeOgzZ+m8TFi+pDr/TWcd0M3LoHQzb48F2q84t5/zku9U+Ut0mViMU+
-         zg6F1bzHQwzdyfT/sfRmWNdh64OTUmkoZVDk0U8+x6mjfdE7zk+pcTxsTCSA6KS2rTqQ
-         8qIvmAh7w5DkC1plbap9ESzkD/udlonfkJV2zBrS/Z3iPQQx/mNYK+y5I64udCeT9rJi
-         c/NPwq9D5SMaxpbDQW7adUkaykN3bn8BnyONc9DP+Y1J8XhZQRcDV175FhzHd/1LC0qI
-         CKkGScOkVa+Z/Vlrl9KN3xxtAg2swgQCh3uA1birwPck/mOQdoM68GK+wrterZtjP+lb
-         CEZg==
-X-Forwarded-Encrypted: i=1; AJvYcCWXJnRNKW0gjcQHyHBrpTegLpESvj6V5VznSfSyeNWLbEvVlAtsjLYStMwqENTBtVoRhsAl6vMbs+9ZezQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDz3gcsakIE1Q7iLZOIqQrHhk8XK8XVXv8uDoUm+jsOyKQfCwT
-	S2h5at5qR3f40b62No0sEQMwNxnKRosaG5fMN0UPEoSCaBu03i/htd4Xt9rB7Belj7A=
-X-Gm-Gg: ASbGncvwu52jhvMY7vdpDf6rVzpsLNDSIh0WkK0nCAUjX3n/qwXFiKHl822Z/bLhNAH
-	Vx2xWL8nhxMWhlxDjebHi2oTmDmqGIz1qbHenVXoArpyeLfC0/G1jYWM0TeT9Hl0PRh0dlzZ42U
-	6GNm7kHN/rOgxIPTS0wfqvvNaqmy2R04JswlnTZaSNv5Dx7MyHl3eNQblTtm3gYL8O9dCHKelFA
-	nkxNrs+M44q69ubjdu3oq0fnU2yUbO8il9hA37q+xxjJKNxS8WW6fqaX0yOhGXpxRZFX9lM6Yny
-	wpdDhwdB2GU6TWlihvqTncLvkeGKbvGBZHwk1cHkBYHO/F8MfAmZUFxDOhW2DkLrzC12+81AnAW
-	mb3qFdtcMPraP3/Uj4HjVmrmwU855q7UQ5QInVQ==
-X-Google-Smtp-Source: AGHT+IHef3kdB4cDi6psPYyte+3aNmtbl/eIlBlt7fvZpJKrO+q9+X8gBnos6r+TRXvWNp7iSK1pIg==
-X-Received: by 2002:a05:620a:1a06:b0:7c5:562d:cd02 with SMTP id af79cd13be357-7d3f992de50mr2307168585a.41.1750770493042;
-        Tue, 24 Jun 2025 06:08:13 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f99a80adsm499866985a.46.2025.06.24.06.08.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 06:08:12 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.97)
-	(envelope-from <jgg@ziepe.ca>)
-	id 1uU3Nj-00000000dPJ-362W;
-	Tue, 24 Jun 2025 10:08:11 -0300
-Date: Tue, 24 Jun 2025 10:08:11 -0300
-From: Jason Gunthorpe <jgg@ziepe.ca>
-To: Alexey Kardashevskiy <aik@amd.com>
-Cc: Vishal Annapurve <vannapurve@google.com>, Fuad Tabba <tabba@google.com>,
-	Ackerley Tng <ackerleytng@google.com>, kvm@vger.kernel.org,
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, x86@kernel.org,
-	linux-fsdevel@vger.kernel.org, ajones@ventanamicro.com,
-	akpm@linux-foundation.org, amoorthy@google.com,
-	anthony.yznaga@oracle.com, anup@brainfault.org,
-	aou@eecs.berkeley.edu, bfoster@redhat.com,
-	binbin.wu@linux.intel.com, brauner@kernel.org,
-	catalin.marinas@arm.com, chao.p.peng@intel.com,
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com,
-	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com,
-	fan.du@intel.com, fvdl@google.com, graf@amazon.com,
-	haibo1.xu@intel.com, hch@infradead.org, hughd@google.com,
-	ira.weiny@intel.com, isaku.yamahata@intel.com, jack@suse.cz,
-	james.morse@arm.com, jarkko@kernel.org, jgowans@amazon.com,
-	jhubbard@nvidia.com, jroedel@suse.de, jthoughton@google.com,
-	jun.miao@intel.com, kai.huang@intel.com, keirf@google.com,
-	kent.overstreet@linux.dev, kirill.shutemov@intel.com,
-	liam.merwick@oracle.com, maciej.wieczor-retman@intel.com,
-	mail@maciej.szmigiero.name, maz@kernel.org, mic@digikod.net,
-	michael.roth@amd.com, mpe@ellerman.id.au, muchun.song@linux.dev,
-	nikunj@amd.com, nsaenz@amazon.es, oliver.upton@linux.dev,
-	palmer@dabbelt.com, pankaj.gupta@amd.com, paul.walmsley@sifive.com,
-	pbonzini@redhat.com, pdurrant@amazon.co.uk, peterx@redhat.com,
-	pgonda@google.com, pvorel@suse.cz, qperret@google.com,
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com,
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com,
-	quic_pheragu@quicinc.com, quic_svaddagi@quicinc.com,
-	quic_tsoni@quicinc.com, richard.weiyang@gmail.com,
-	rick.p.edgecombe@intel.com, rientjes@google.com,
-	roypat@amazon.co.uk, rppt@kernel.org, seanjc@google.com,
-	shuah@kernel.org, steven.price@arm.com, steven.sistare@oracle.com,
-	suzuki.poulose@arm.com, thomas.lendacky@amd.com,
-	usama.arif@bytedance.com, vbabka@suse.cz, viro@zeniv.linux.org.uk,
-	vkuznets@redhat.com, wei.w.wang@intel.com, will@kernel.org,
-	willy@infradead.org, xiaoyao.li@intel.com, yan.y.zhao@intel.com,
-	yilun.xu@intel.com, yuzenghui@huawei.com, zhiquan1.li@intel.com
-Subject: Re: [RFC PATCH v2 04/51] KVM: guest_memfd: Introduce
- KVM_GMEM_CONVERT_SHARED/PRIVATE ioctls
-Message-ID: <20250624130811.GB72557@ziepe.ca>
-References: <cover.1747264138.git.ackerleytng@google.com>
- <d3832fd95a03aad562705872cbda5b3d248ca321.1747264138.git.ackerleytng@google.com>
- <CA+EHjTxtHOgichL=UvAzczoqS1608RSUNn5HbmBw2NceO941ng@mail.gmail.com>
- <CAGtprH8eR_S50xDnnMLHNCuXrN2Lv_0mBRzA_pcTtNbnVvdv2A@mail.gmail.com>
- <CA+EHjTwjKVkw2_AK0Y0-eth1dVW7ZW2Sk=73LL9NeQYAPpxPiw@mail.gmail.com>
- <CAGtprH_Evyc7tLhDB0t0fN+BUx5qeqWq8A2yZ5-ijbJ5UJ5f-g@mail.gmail.com>
- <9502503f-e0c2-489e-99b0-94146f9b6f85@amd.com>
+        d=1e100.net; s=20230601; t=1750770507; x=1751375307;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GXCLZ7wAY3gbFYvClwpaaAkNVDWwCvFGSPtbvkJl6S4=;
+        b=MNkIUFIIgQ/zPNP92ZEMNnGSuwylsrbMhwaXEl1ibB+8bnqPjHGtOgeNhqvTuMch9h
+         FWxiOwyJY8gAg8kzSXZ5FUDQEYXfpbnT2H6L7JaBJG/6WI4JE0GCe+EVY+3g6zWavwdn
+         I42LakqwR75Mq6MrZmyC9dqenNw7tWJjki5QtmIjZr0iVpIxyVgiUkoX3fbSsOlxEahI
+         vMMoJgwjRpZXYpv8uyy5bwrLwIvp5X+OEficLVHQWXF9PkX3lc62Wu0HGTAtuc5Bx1Ap
+         NBEojR0OKYj+zPGdLPtrbEGy2m9i+d+JkwBBWb1qeL7R+g3P8oj4PDU7Re5Za9anGcW5
+         wByw==
+X-Forwarded-Encrypted: i=1; AJvYcCXNQQtzD1DaIklWBx9G87HJU1lB+kJNedMOjX+Yx59GaNPDSDUeYCJh7ZWGU2qPbSswZ7hQDbV38NIm5Tk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwA+dGCCkZdj9BgCEd9xqXgH1cZTzNz6lCXPjj30t+SEFvE4I3c
+	/ldCifMZyCPKzNw7mwZOvfnWx4q27G2tAJ6MbLFht3uDrS5TwmqbqkYYjXE/AbyPPMFMcw548LU
+	MNcd/J6y//HIJnbISrLfs2vJCnL1j8q9aE6h5SjxeAtLo8e2OOXXHD4RRIdmpcOsPDWA=
+X-Gm-Gg: ASbGnct48U9vrpsm4in5VE9gr/OpQqAnyKa/fKPwkdEkiOk2qESh0tENm0zFhUpexUc
+	Wc9WRV3AuYR6Dnb8zlRGt7o3FLSNL96ioklQRS7oQdnmWKsqlgPKVZSCCGbbYAaEd+/nrj1Oo+e
+	tl0GesIc1BnkGb6bj+KW1x4kA5M8Kc0zkRScsYbATD9Cju5+aq36FUFbaYWPX+8k2g11syO2J/D
+	t/YOhPqCEditFn3Y6K0q1YYjMn7eooFG6ByoQv7A4vbAhJTQOq/t6AH7mEWiom1C4Ge5mz7L6F3
+	MA/rBT3XEpaXmV5GnC38oq9YP/lxEcoNYaikvU9qA1mRR/xqfOpgnhqBCCyS7qdp5mmp7fykUQ=
+	=
+X-Received: by 2002:a05:6a00:9a0:b0:749:93d:b098 with SMTP id d2e1a72fcca58-7490db4278fmr17729271b3a.22.1750770507033;
+        Tue, 24 Jun 2025 06:08:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFaLKteWP9POVkOhi2cCkGrtK+lX6AAeVvFFXqxc3EwlHw8pY4QVWlpLKOHl1nNiBko7q5DOw==
+X-Received: by 2002:a05:6a00:9a0:b0:749:93d:b098 with SMTP id d2e1a72fcca58-7490db4278fmr17729252b3a.22.1750770506624;
+        Tue, 24 Jun 2025 06:08:26 -0700 (PDT)
+Received: from [192.168.0.126] ([2401:fb00:ffff:fffc:0:1:ac11:493f])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c88721b9sm1836215b3a.150.2025.06.24.06.08.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 06:08:26 -0700 (PDT)
+Message-ID: <72f9de63-dc19-4467-b883-8637f95a8e82@oss.qualcomm.com>
+Date: Tue, 24 Jun 2025 18:38:22 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9502503f-e0c2-489e-99b0-94146f9b6f85@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] usb: dwc3: qcom: Facilitate autosuspend during
+ host mode
+To: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250610091357.2983085-1-krishna.kurapati@oss.qualcomm.com>
+ <20250610091357.2983085-4-krishna.kurapati@oss.qualcomm.com>
+ <20250623235856.b2jwgf5j6yup2sww@synopsys.com>
+Content-Language: en-US
+From: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+In-Reply-To: <20250623235856.b2jwgf5j6yup2sww@synopsys.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: Cu1RV7iiOSag6nEW7tjEfxCnAbffy4ng
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDExMCBTYWx0ZWRfXyQ7cSIlXI+JA
+ aNry3iN33cGqHombUzNsP5AqFsfgOeHWFfRlY5XKdUYkRzJKh3+i+c0+3NskTffi/FyfebWATTQ
+ S/ywbcrZ1Dq3Lc7Km8Rt7IyJPV0pnDg7ANklujye6tdjC+EHVn3ue7KV/3GbtZeG/fp+sjYkcib
+ asUVNsgUb4xuUirula3v+9hxh54j1V9WT7fDk5rOJX3cAEGMIaXa5CN7VNX1OsWhZJ6F/1oxitw
+ OYRyFp4mYbFjc1JxEt8mdtpb8uyoSBfi5z2BdYp/jtDae9jHyyzkMl812nbJme+mU51mUuWZgos
+ QwxJlMzkoqNJvARI2mRDrZQYBHCxc4DzPaiQZ4AS8Z4dHozn1AvE5Mv6c42T9zgnXmp4YzAg8cg
+ vgC+Y8rBooLA2yrwGqGWSUEZJpuHakUqXn9bAkDVb5G9dIvjzJW/yGI+Jz0/JQAKihfakZXc
+X-Authority-Analysis: v=2.4 cv=caHSrmDM c=1 sm=1 tr=0 ts=685aa34c cx=c_pps
+ a=rz3CxIlbcmazkYymdCej/Q==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=biFwQZO8mOkSj3tXal0A:9 a=QEXdDO2ut3YA:10
+ a=bFCP_H2QrGi7Okbo017w:22
+X-Proofpoint-ORIG-GUID: Cu1RV7iiOSag6nEW7tjEfxCnAbffy4ng
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_05,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 mlxlogscore=999 suspectscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 phishscore=0 clxscore=1015 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506240110
 
-On Tue, Jun 24, 2025 at 06:23:54PM +1000, Alexey Kardashevskiy wrote:
 
-> Now, I am rebasing my RFC on top of this patchset and it fails in
-> kvm_gmem_has_safe_refcount() as IOMMU holds references to all these
-> folios in my RFC.
+
+On 6/24/2025 5:29 AM, Thinh Nguyen wrote:
+> On Tue, Jun 10, 2025, Krishna Kurapati wrote:
+>> When in host mode, it is intended that the controller goes to suspend
+>> state to save power and wait for interrupts from connected peripheral
+>> to wake it up. This is particularly used in cases where a HID or Audio
+>> device is connected. In such scenarios, the usb controller can enter
+>> auto suspend and resume action after getting interrupts from the
+>> connected device.
+>>
+>> Allow autosuspend for and xhci device and allow userspace to decide
+>> whether to enable this functionality.
+>>
+>> a) Register to usb-core notifications in set_role vendor callback to
+>> identify when root hubs are being created. Configure them to
+>> use_autosuspend.
+>>
+>> b) Identify usb core notifications where the HCD is being added and
+>> enable autosuspend for that particular xhci device.
+>>
+>> Signed-off-by: Krishna Kurapati <krishna.kurapati@oss.qualcomm.com>
+
+
+[...]
+
+>> +static int dwc3_xhci_event_notifier(struct notifier_block *nb,
+>> +				    unsigned long event, void *ptr)
+>> +{
+>> +	struct dwc3_qcom  *qcom	= container_of(nb, struct dwc3_qcom, xhci_nb);
+>> +	struct dwc3	  *dwc	= &qcom->dwc;
+>> +	struct usb_bus	  *ubus	= ptr;
+>> +	struct usb_hcd	  *hcd;
+>> +
+>> +	if (!dwc->xhci)
+>> +		goto done;
+>> +
+>> +	hcd = platform_get_drvdata(dwc->xhci);
+>> +	if (!hcd)
+>> +		goto done;
+>> +
+>> +	if (event != USB_BUS_ADD)
+>> +		goto done;
+>> +
+>> +	if (strcmp(dev_name(ubus->sysdev), dev_name(dwc->sysdev)) != 0)
 > 
-> So what is the expected sequence here? The userspace unmaps a DMA
-> page and maps it back right away, all from the userspace? The end
-> result will be the exactly same which seems useless. And IOMMU TLB
-> is going to be flushed on a page conversion anyway (the RMPUPDATE
-> instruction does that). All this is about AMD's x86 though.
+> Can this be false? If possible, I'd like to avoid these pointers and
+> strcmp here.
+> 
 
-The iommu should not be using the VMA to manage the mapping. It should
-be directly linked to the guestmemfd in some way that does not disturb
-its operations. I imagine there would be some kind of invalidation
-callback directly to the iommu.
+Needed this to identify if the dwc3 pointer corresponds to this glue or 
+not. This can be false.
 
-Presumably that invalidation call back can include a reason for the
-invalidation (addr change, shared/private conversion, etc)
+BTW, Dmitry suggested to just do "runtime_use_autosuspend" inside probe 
+of xhci-plat.c and remove this logic. Hope that would be fine ?
 
-I'm not sure how we will figure out which case is which but guestmemfd
-should allow the iommu to plug in either invalidation scheme..
+>> +		goto done;
+>> +
+>> +	if (event == USB_BUS_ADD) {
+> 
+> This condition is redundant when you have the check a few lines above.
+> 
 
-Probably invalidation should be a global to the FD thing, I imagine
-that once invalidation is established the iommu will not be
-incrementing page refcounts.
+ACK.
 
-Jason
+>> +		/*
+>> +		 * Identify instant of creation of primary hcd and
+>> +		 * mark xhci as autosuspend capable at this point.
+>> +		 */
+>> +		pm_runtime_use_autosuspend(&dwc->xhci->dev);
+>> +	}
+>> +
+>> +done:
+>> +	return NOTIFY_DONE;
+>> +}
+>> +
+>>   static void dwc3_qcom_set_role_notifier(struct dwc3 *dwc, enum usb_role next_role)
+>>   {
+>>   	struct dwc3_qcom *qcom = to_dwc3_qcom(dwc);
+>> @@ -659,12 +694,22 @@ static void dwc3_qcom_set_role_notifier(struct dwc3 *dwc, enum usb_role next_rol
+>>   		return;
+>>   	}
+>>   
+>> -	if (qcom->current_role == USB_ROLE_DEVICE &&
+>> -	    next_role != USB_ROLE_DEVICE)
+>> +	if (qcom->current_role == USB_ROLE_NONE) {
+>> +		if (next_role == USB_ROLE_DEVICE) {
+>> +			dwc3_qcom_vbus_override_enable(qcom, true);
+>> +		} else if (next_role == USB_ROLE_HOST) {
+>> +			qcom->xhci_nb.notifier_call = dwc3_xhci_event_notifier;
+>> +			usb_register_notify(&qcom->xhci_nb);
+>> +		}
+>> +	} else if (qcom->current_role == USB_ROLE_DEVICE &&
+>> +		   next_role != USB_ROLE_DEVICE) {
+>>   		dwc3_qcom_vbus_override_enable(qcom, false);
+>> -	else if ((qcom->current_role != USB_ROLE_DEVICE) &&
+>> -		 (next_role == USB_ROLE_DEVICE))
+>> -		dwc3_qcom_vbus_override_enable(qcom, true);
+>> +	} else if (qcom->current_role == USB_ROLE_HOST) {
+>> +		if (next_role == USB_ROLE_NONE)
+>> +			usb_unregister_notify(&qcom->xhci_nb);
+>> +		else if (next_role == USB_ROLE_DEVICE)
+>> +			dwc3_qcom_vbus_override_enable(qcom, true);
+> 
+> We don't unregister the notifier when switching from host to device?
+> 
+
+ACK. My bad, missed it.
+
+Thanks for the review.
+
+Regards,
+Krishna,
