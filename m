@@ -1,88 +1,89 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804652D661F;
-	Tue, 24 Jun 2025 15:12:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750777930; cv=pass; b=W4P8nQfGGHrmjmUJE8xkhIBgp4TV1kfQChHbLvYfJp3WpX/S2cnjcUjbVDTL3vK6VkItJJXQncgNKt1X2LiMlFbLYnEwj+5sI4zsKXsvV0OD9OsbPzj2o9a4tjf1/Jyam/rzwPDFLk/NLiKbub0YkbsP1MRLT0clSsLgIByAsgI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750777930; c=relaxed/simple;
-	bh=kwBZPzxn17JvK+V65zGyJFMJb6zC4Pj40uxCg1alNFo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hYa1qyWNIC8OQ96x79UTWUpHXcRetILiGg98S+dMwldF+VU5ftdy5dUGWc6Xjl/oPs9cxXlivjz5GD1+rD9Mt9xaYseVGAoIdyiJzqn5lCh3ASCSHDQpaRxIjDK8uAIJpUbqfR/FtoF7GQXHbqJoZdtKzMJa/4zSm8pUJyA2ZhQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b=Bf9YSS1G; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D95C2D662E;
+	Tue, 24 Jun 2025 15:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750778106; cv=none; b=KAJqlegru49nbR3V7fqE4sCitx9tym8LmTsVs4lxI/S/mx5tt6Pg7l/uvuvq7mO7gx/RE9vxQwBzdcuo5hqRqMvLwXck6Jg0QmugF1oUNIRHmbUVPbw6KDUCBAnmQVYKUheuFDdSDU2TIph+nsZSRHEHCLAPgtPLKWVSgzBd6KA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750778106; c=relaxed/simple;
+	bh=wVK+GSLm6XiLw79qxtYwtbRz7qh9vbwkDzohKaPdBEA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=twuY2OFRmIz5OP1KeLuEZWVJSnkSLf3mS9mRYd4T19pqAUTyGkWxbsj8N/5MN8Gv0+NEzcQ9nG9MEOvmQr7aR3HU+SKQqayX/pF7cOGryiU6L7qrhMnc5L9KT7CWEkBTI/c9tGvwQta0cPeGOnnyFTr8veAvg1yFvIpd3fNbEnU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=jsHC5u0e; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nfraprado@collabora.com header.b="Bf9YSS1G"
-ARC-Seal: i=1; a=rsa-sha256; t=1750777912; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=PbWcPMPdsiBjI5yUuATEXqR6754nuRTTSI93To7cx/Jc83GNnq9oB8Na81keGobkNvVJuGleN5AU6u83eLxxNciNYRfFSI95L6Vc5fN1QrUU5xTmzImF7QmzlVnZdhdZH+f1nC2G4PUdwQscV333ufz/5znCuOLOLqrusgw7Fdc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750777912; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=kwBZPzxn17JvK+V65zGyJFMJb6zC4Pj40uxCg1alNFo=; 
-	b=jPeyuZU/ylhALvNgHeFNYAuq4cjuEyvRf7BaqGil6SWCK4Q1Q8fRQyhGaaSH0GIvxaxuPWfhM2LhJtmgxRcn47bCoouuP1Ep01GcYHh+QJQSry2pqKQMuU3SSAHlJX1QPC0zsX4cj8k7e9LG1e4BGp/xiycrROC5fSpumcAybQw=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nfraprado@collabora.com;
-	dmarc=pass header.from=<nfraprado@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750777912;
-	s=zohomail; d=collabora.com; i=nfraprado@collabora.com;
-	h=Message-ID:Subject:Subject:From:From:To:To:Cc:Cc:Date:Date:In-Reply-To:References:Content-Type:Content-Transfer-Encoding:MIME-Version:Message-Id:Reply-To;
-	bh=kwBZPzxn17JvK+V65zGyJFMJb6zC4Pj40uxCg1alNFo=;
-	b=Bf9YSS1Ga0DU0J+XC2yEcnc1NKTcDJnu0rTxNkBIt6iga3H6/8JOtOI7Qk3mRziO
-	kA8ENF4z2QoaRaCkUJ5RKq8tn+sZwwBDEJ4WNJqXadd6JZGUTC+bHrlFDVsDCYzzYwj
-	ZQnhcFsLz2Q8w8B3LpuJsyt0rmOlis+U8f9PH7fs=
-Received: by mx.zohomail.com with SMTPS id 1750777910578164.21030726920253;
-	Tue, 24 Jun 2025 08:11:50 -0700 (PDT)
-Message-ID: <44767efb5f7eac1e5605dffdf531e805bc06b920.camel@collabora.com>
-Subject: Re: [PATCH v1 0/6] regulator: Add support for MediaTek
- MT6316/6363/6373 PMICs
-From: =?ISO-8859-1?Q?N=EDcolas?= "F. R. A. Prado" <nfraprado@collabora.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	broonie@kernel.org
-Cc: lgirdwood@gmail.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org,  matthias.bgg@gmail.com, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org,  kernel@collabora.com
-Date: Tue, 24 Jun 2025 11:11:48 -0400
-In-Reply-To: <20250623120016.108732-1-angelogioacchino.delregno@collabora.com>
-References: 
-	<20250623120016.108732-1-angelogioacchino.delregno@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="jsHC5u0e"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Message-ID:Date:MIME-Version:Subject:To:From:
+	Content-Type; bh=jXGxqTq/dX2Xt7HBwc+U4rbUlcNtOS2Fk6iyBC7fSYI=;
+	b=jsHC5u0er1iQNhlLRZGBiIIjWREj5L9w4wED7dPXvxcRH/otOk9WgPXqsixitv
+	6WwDvv/pPyN/Tp8MSwBGTcDL1a5DJvlu52o9S07Zg/k+/fKXmx9L3z1UNNG4nuil
+	O/JBtO0Bdyrpu2Y6qPr+yYvdvW0qIG5v/BBjpjaDrzLkc=
+Received: from [IPV6:240e:b8f:919b:3100:5951:e2f3:d3e5:8d13] (unknown [])
+	by gzsmtp5 (Coremail) with SMTP id QCgvCgD3f8OywFpoVKdDAA--.9457S2;
+	Tue, 24 Jun 2025 23:13:55 +0800 (CST)
+Message-ID: <e4ce09f4-e70a-4975-a311-40a89df43f7a@163.com>
+Date: Tue, 24 Jun 2025 23:13:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/3] PCIe: Refactor link speed configuration with
+ unified macro
+To: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
+ kwilczynski@kernel.org, mani@kernel.org, ilpo.jarvinen@linux.intel.com,
+ jingoohan1@gmail.com
+Cc: robh@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250607155545.806496-1-18255117159@163.com>
+Content-Language: en-US
+From: Hans Zhang <18255117159@163.com>
+In-Reply-To: <20250607155545.806496-1-18255117159@163.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:QCgvCgD3f8OywFpoVKdDAA--.9457S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Xw4DtF4rWrWkGF1xZrWUurg_yoWkWrXEvF
+	y7tFy7Cr4UtrZ3Za4ayr43ZryrAay8Gr45AF18tw4rtFyavF4DCF1DurWDXa48WFsxGF4D
+	JFn8Zr18Awn7CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUmL9UUUUUU==
+X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwx2o2havwMwdwAAsL
 
-On Mon, 2025-06-23 at 14:00 +0200, AngeloGioacchino Del Regno wrote:
-> This series adds support for three new MediaTek PMICs: MT6316, MT6363
-> and MT6373 and their variants - used in board designs featuring the
-> MediaTek MT8196 Chromebook SoC, or the MT6991 Dimensity 9400
-> Smartphone
-> SoC.
->=20
-> AngeloGioacchino Del Regno (6):
-> =C2=A0 dt-bindings: regulator: Document MediaTek MT6316 PMIC Regulators
-> =C2=A0 regulator: Add support for MediaTek MT6316 SPMI PMIC Regulators
-> =C2=A0 dt-bindings: regulator: Document MediaTek MT6363 PMIC Regulators
-> =C2=A0 regulator: Add support for MediaTek MT6363 SPMI PMIC Regulators
-> =C2=A0 dt-bindings: regulator: Document MediaTek MT6373 PMIC Regulators
-> =C2=A0 regulator: Add support for MediaTek MT6373 SPMI PMIC Regulators
+Dear Ilpo,
 
-For the whole series:
+Gentle ping.
 
-Reviewed-by: N=C3=ADcolas F. R. A. Prado <nfraprado@collabora.com>
+Best regards,
+Hans
 
-(as I internally reviewed it before submission)
+On 2025/6/7 23:55, Hans Zhang wrote:
+> This series standardizes PCIe link speed handling across multiple drivers
+> by introducing a common conversion macro PCIE_SPEED2LNKCTL2_TLS(). The
+> changes eliminate redundant speed-to-register mappings and simplify code
+> maintenance:
+> 
+> The refactoring improves code consistency and reduces conditional
+> branching, while maintaining full backward compatibility with existing
+> speed settings.
+> 
+> ---
+> Changes for v2:
+> - s/PCIE_SPEED2LNKCTL2_TLS_ENC/PCIE_SPEED2LNKCTL2_TLS
+> - The patch commit message were modified.
+> ---
+> 
+> Hans Zhang (3):
+>    PCI: Add PCIE_SPEED2LNKCTL2_TLS conversion macro
+>    PCI: dwc: Simplify link speed configuration with macro
+>    PCI/bwctrl: Replace legacy speed conversion with shared macro
+> 
+>   drivers/pci/controller/dwc/pcie-designware.c | 18 +++---------------
+>   drivers/pci/pci.h                            |  9 +++++++++
+>   drivers/pci/pcie/bwctrl.c                    | 19 +------------------
+>   3 files changed, 13 insertions(+), 33 deletions(-)
+> 
+> 
+> base-commit: ec7714e4947909190ffb3041a03311a975350fe0
 
---=20
-Thanks,
-
-N=C3=ADcolas
