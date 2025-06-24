@@ -1,142 +1,127 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3FFC1C5D7A;
-	Tue, 24 Jun 2025 08:15:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9ECE24C07F;
+	Tue, 24 Jun 2025 08:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750752916; cv=none; b=IS6Knjui+56oIGYdI8GRySPeoTUKzx3ukjYVzn+CosQmQGDnGMviV3vIYlcNQC1q3nTsyJQH4d3U74Y4EEQ2lxjjK1m6OtztSmrSO+G3suxY5jDfcSV/pgmTUHq56Y7Vj6aZP/l5FSGNZJHr9oeQ7RUvUFPRRjYM/p/ch3qOLA0=
+	t=1750752927; cv=none; b=LBa2HyKeptlZk6UUCuLVWPAOV4N/elfMFg7wZHt212zrVfpTlDEDnky8BUg+KLqpMouXoh8VhURMm9JtVlfjZFPEDmNIC8FOnsimbFNKGAc/vNG4Gxx7WfmVsknCvsHERh1biIUtrl5fk0SZghwA/2RrPYgkQwqDmk/4tqu/Y7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750752916; c=relaxed/simple;
-	bh=rgVyY4/YTQrAfm/pNuYNRBSarkZNCyC8P0/M3qGNqqs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ojWY3k+X6ihZ3dc4nQE1Q+1JbAGNNDuh4wJ8n+mGzfgTfXX0P8OIve/vl6MYsiDi6YfZ05n38YekDjFpchjNZcEwbu6+fYNdiLinguSomXnRBCcTtfbWZr/nwM+x3oDkZQ81Vk0kqHAp255DYohj/pgytjaC0LGpUmztGnys0qw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W7zemyC+; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750752927; c=relaxed/simple;
+	bh=HwaTKVji+bgkEoA8dzy4lL9nPio7UEZWmzbRFw6DAY4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=icx+9zgdsc6ndaU0i1vpj1U/GmjKcdPXZPxKY8wB7z+I/iCzMZ1dfgLuD8YLy8Rfmh5YXBS+ZSxMgVWaqr3/jjfkqmPfYFamgvP5l1BzzHHpZvHkZX4lzWZGCQuRguLCBBIbyZHAUWwJDhxbRK/4OKHSEfcjO6H9NUe9XuR+hXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L6dxxKGQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W7zemyC+"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-453426170b6so35829785e9.1;
-        Tue, 24 Jun 2025 01:15:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750752913; x=1751357713; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7IpxvpdxasY3jjseo9IC3sZp16HwyYtH5hX5eKgsCpQ=;
-        b=W7zemyC+8wcljneTFKc7IXOPM3fixe06z7wMSiikfJI5ZiSps0pl1sPrnBX/KvHo2E
-         kvaE8F17dcAFPZnSgvuVlTUG/IIhyxD9/bgo56bb0n2zGfm8E7OaSlxgMObXKt9tBnss
-         24T6ky2zoQrHWSf05To2umIyqTX+t+97tkhmgRkH5ENolsFK2RMelLa3Tim8Qh83D74f
-         7IBr+dPAQgsqAjoQQtYKuN0SEyLJ05WkyX6raZpQG5uCndr4Caqlw+ErSu9tcVZG2yKH
-         tb/B/+MX32oKiEfSmefGu+zE0zAt1MlEYo6oG+BvlWYOPlg7tdHQg6ntNhQRtTGQ2QWz
-         K4kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750752913; x=1751357713;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7IpxvpdxasY3jjseo9IC3sZp16HwyYtH5hX5eKgsCpQ=;
-        b=hgF26JrzssfTvLbDX+5bFRNOpyQemlIrLipwJ6Srzy4mdYwM+i3b2TJgHFEBbJhdWK
-         6Cn2Atl7Sj9ieCiBPpItER9z+iCeAne06oZlkMg4HO4QFjbxaSrALrxCl8cCHJ/Sd5NT
-         rAHYHU740WBf0w0SvjGU5ApJWVyWbaSILeiGvY3Lx0qd8g+RYL3cu42weLjyDgPMSWQi
-         DZe45cnnBxP+R7pDzzAQWjVTMXOnjiq1BWasYmojLYRlBR7jrzkA5sQjyKGHDQ2Wf8Ci
-         uBipc5NbmJqGJUhFKbsarZ+NpPC330MVvRFTvhqQg5Yb9v5Q2DeOkFh2JsWaD/q5yH3L
-         vaKQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV+ltBlP5Pzr+ItLJylvI/6ZBdrzHdPccfAU3uIfPDPsl3W/ykYAV6+5dQslJhQvsBRfEpsvpc59RhZ@vger.kernel.org, AJvYcCW/luR5cmp9NmDo78KOHOepbSgklLMlMU8nxhWhp5IJ74E73Ea5/KZXWCDdSM5eBjCPYGAAtY9me5NU09zY@vger.kernel.org, AJvYcCWj/Qrjmob2xvBFD+O7q3Zv3TJyYYhz0tXqndRezEoNpg4UkKpQLvHenvsDZPdZXT8GR0xCZ+aw65Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCWaA7teFd43LWBlCQhsQj8H0s+uiqDCqKy2awDeWW6t/4FT/R
-	Ykb3gYH1Y3Io6NHCpTzQdlG4r4zHAYWSbycxeTlhfkJdvRR7P21YIZyh
-X-Gm-Gg: ASbGncvKJFx/XVXm6LsQrVS6Vr2Qp9y8rvzBKHYlq8yl8kb9GcOs740AVZAjAehtup/
-	ZiEnT0sNSwBCd3CvoziZL9xRD5I3COw2umugc2aDKcHRKms+oBS41hfnArSHZu6597BBLprBwIj
-	M6sGgfRWw056qhPTPuNbQTuy6KbUDbW1wQUV57nr8cnGxfAlqcG/3AKUj1sym7QjVJPGx6s6GoG
-	myc0fbPjOeMXOB0Q0j90syBh6fdsNlQPLVa+Vf2Sp73487nkE3i04w6vp5DynkpiAUd1THc/ke6
-	q3No7IGpda1/yompd5gKaV4y+o1RmcLkLhkp0l/Gb3S/7pf8FFx5T0omcOZ5k6G3pdH4ateFPzj
-	NtgwQJk6EhI8=
-X-Google-Smtp-Source: AGHT+IGvxrxlLh/IwQsIqKE+iOFfbQrBMsh0pdGERhzrpVOADG+J1YSMUlf9uAMDMIBmyIUIZuLkng==
-X-Received: by 2002:a05:6000:2382:b0:3a5:1241:afde with SMTP id ffacd0b85a97d-3a6e71cba31mr2270832f8f.9.1750752912995;
-        Tue, 24 Jun 2025 01:15:12 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.24])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e810977esm1261465f8f.83.2025.06.24.01.15.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 01:15:12 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	hpa@zytor.com,
-	corbet@lwn.net
-Cc: luto@kernel.org,
-	peterz@infradead.org,
-	ardb@kernel.org,
-	jan.kiszka@siemens.com,
-	kbingham@kernel.org,
-	kirill.shutemov@linux.intel.com,
-	michael.roth@amd.com,
-	rick.p.edgecombe@intel.com,
-	brijesh.singh@amd.com,
-	sandipan.das@amd.com,
-	jgross@suse.com,
-	thomas.lendacky@amd.com,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: Re: [PATCHv2 0/3] x86: Make 5-level paging support unconditional for x86-64
-Date: Tue, 24 Jun 2025 08:11:15 +0000
-Message-ID: <20250624081400.2284-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250516091534.3414310-1-kirill.shutemov@linux.intel.com>
-References: 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L6dxxKGQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3CFC4CEE3;
+	Tue, 24 Jun 2025 08:15:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750752926;
+	bh=HwaTKVji+bgkEoA8dzy4lL9nPio7UEZWmzbRFw6DAY4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=L6dxxKGQso4wElJaNT51uwIbJIqV846eaL9Mxoo0vcG9o/cebZYL+QVkatHfbIGeF
+	 hcH6l7y2durn507DO1dJMuFaWpIPn6kQEiDeaJn6fDJOnRybSgOoBo/oa+ABKVqlJO
+	 BSIDVtcWikMLGh9SSYSdGqAMtMXFEjEuQKwSZMLc+zBMXTeGSoJp8LxYsbzABwiYsI
+	 ZgUMwP9vQVRJlC8eaAi5PXbnOZ+9A47/xGiFjUhHH9Lk+LjAmqmsAwddYSAxTQFlP2
+	 o0Uw/uAUeMKoWDbInpWnFqmdKAg1ZyiV+XVhHg1Td1Q5zKYaP88TmhokbXI6qXGsXD
+	 JnloA9wcPRPgw==
+Message-ID: <b0463cf0-9fbe-4b7a-b1fc-bdfdbb6bc780@kernel.org>
+Date: Tue, 24 Jun 2025 10:15:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: actions: use devm_clk_get_enabled()
+To: Qi Han <hanqi@vivo.com>, linus.walleij@linaro.org, afaerber@suse.de,
+ mani@kernel.org
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250624062220.21997-1-hanqi@vivo.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250624062220.21997-1-hanqi@vivo.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
->Both Intel and AMD CPUs support 5-level paging, which is expected to
->become more widely adopted in the future.
->
->Remove CONFIG_X86_5LEVEL.
->
->In preparation to that remove CONFIG_DYNAMIC_MEMORY_LAYOUT and make
->SPARSEMEM_VMEMMAP the only memory model.
->
->v2:
-> - Fix 32-bit build by wrapping p4d_set_huge() and p4d_clear_huge() in
->   #if CONFIG_PGTABLE_LEVELS > 4;
-> - Rebased onto current tip/master;
->
->Kirill A. Shutemov (3):
->  x86/64/mm: Always use dynamic memory layout
->  x86/64/mm: Make SPARSEMEM_VMEMMAP the only memory model
->  x86/64/mm: Make 5-level paging support unconditional
->
-> Documentation/arch/x86/cpuinfo.rst            |  8 ++---
-> .../arch/x86/x86_64/5level-paging.rst         |  9 ------
-> arch/x86/Kconfig                              | 32 ++-----------------
-> arch/x86/Kconfig.cpufeatures                  |  4 ---
-> arch/x86/boot/compressed/pgtable_64.c         | 11 ++-----
-> arch/x86/boot/header.S                        |  4 ---
-> arch/x86/boot/startup/map_kernel.c            |  5 +--
-> arch/x86/include/asm/page_64.h                |  2 --
-> arch/x86/include/asm/page_64_types.h          | 11 -------
-> arch/x86/include/asm/pgtable_64_types.h       | 24 --------------
-> arch/x86/kernel/alternative.c                 |  2 +-
-> arch/x86/kernel/head64.c                      |  4 ---
-> arch/x86/kernel/head_64.S                     |  2 --
-> arch/x86/mm/init.c                            |  4 ---
-> arch/x86/mm/init_64.c                         |  9 +-----
-> arch/x86/mm/pgtable.c                         |  2 +-
-> drivers/firmware/efi/libstub/x86-5lvl.c       |  2 +-
-> scripts/gdb/linux/pgtable.py                  |  4 +--
-> 18 files changed, 13 insertions(+), 126 deletions(-)
+On 24/06/2025 08:22, Qi Han wrote:
+> Use devm_clk_get_enabled() to simplify the code.
+> 
+> Change-Id: I0902c50e50db565381c65e8d8a7f1481e82b271a
 
-I think i am too late, however this is completely wrong. There are still processors that doesn't support
-5-level paging which is mordern. We may call those processors old, however they are still common and used.
+Please run scripts/checkpatch.pl on the patches and fix reported
+warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+patches and (probably) fix more warnings. Some warnings can be ignored,
+especially from --strict run, but the code here looks like it needs a
+fix. Feel free to get in touch if the warning is not clear.
 
-So this patch seem too early for that. Some intel core-i5 and core-i7 doesn't support 5-level paging at all.
+> Signed-off-by: Qi Han <hanqi@vivo.com>
+> ---
+>  drivers/pinctrl/actions/pinctrl-owl.c | 11 ++---------
+>  1 file changed, 2 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/actions/pinctrl-owl.c b/drivers/pinctrl/actions/pinctrl-owl.c
+> index 86f3d5c69e36..a66739a27489 100644
+> --- a/drivers/pinctrl/actions/pinctrl-owl.c
+> +++ b/drivers/pinctrl/actions/pinctrl-owl.c
+> @@ -941,18 +941,13 @@ int owl_pinctrl_probe(struct platform_device *pdev,
+>  		return PTR_ERR(pctrl->base);
+>  
+>  	/* enable GPIO/MFP clock */
+> -	pctrl->clk = devm_clk_get(&pdev->dev, NULL);
+> +	pctrl->clk = devm_clk_get_enabled(&pdev->dev, NULL);
+> +
 
-This will break x86_64 cpus that doesn't support 5-level paging.
+Why are you introducing whitespace changes?
+
+Are you sure that you are not introducing same bugs as other vivo
+patches? Do you understand the issue with this scripting work?
+
+Best regards,
+Krzysztof
