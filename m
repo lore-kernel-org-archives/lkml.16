@@ -1,109 +1,102 @@
-Received: from out30-119.freemail.mail.aliyun.com (out30-119.freemail.mail.aliyun.com [115.124.30.119])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45CE72580D2
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.119
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4F827AC31;
+	Tue, 24 Jun 2025 09:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750759061; cv=none; b=YBZkLhS5zORPEUB9ykRRRb/nkoFcmn3/R7Ag8SZnsGNi70S1CfoRKA0IrTShkygsfiQ6UAl/B356Rqj+Co5z++3o43J9KfNryOHnGpHMYD+VlkhsbtvM7VaZZ0W702/gAHcVn8CYbBQEXxxlXD0Txh6aEzgoOzfZUcw5ZmNPfu0=
+	t=1750759070; cv=none; b=q3uEtGIdXSQBGblmeLaT2n7MaLladnbmI1eSWHVcPTIj0EnizymJd2cICBy0G1RaK6ZTITFv3rFhziidxxUGZvTDxgcmBquCC4SvQIKpqvh1j5jqur6tAtdu/ClFbkA2fUK2hwnqU2m3OuEYcV0DFzKLlm3ESCAe6hVRGfjTVbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750759061; c=relaxed/simple;
-	bh=1XBVB3eb1tiQqyGdoFEHDqt5hVaBqmfIEf5oWaUPC38=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EYM+sd0lPZHAqi27UfmD0Bklj0vgM/Ir4tEhmjhJIo62fK56PRRdVHoPrjT2B+JzW2CLvjIlkmrDV9QjGN15qpCm+GstnfCYoQYA7pYmat39B51I878hZhE9DfCN2Cy8YOqqO9lmYPOlbNLEK1Bp/Jvd6tAnL35QZ6sdP1N0uYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=pXHkkyRn; arc=none smtp.client-ip=115.124.30.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1750759070; c=relaxed/simple;
+	bh=246J1mNhyuBtXFqi+2FZKzXXx4yvDDpbkBVQ4CMgHPg=;
+	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
+	 To:Date:Message-ID; b=j5hPNYGlr5AQf/q6qU9HTnFx03VjQGa9bwN1N8HdTBOAC4EvdBpFA34Zu+Cv42BrQHKKuGenlt8RARuQGSmaj973Pw4mbQeWsJfhc6KBRmGA1Rt3WH3pU5PvI7eKdkQFQS/df0WnaLTGb1Q2r2FmUPl1G/LKDBdb8ttStcWR1TU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=m2pgCdyX; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="pXHkkyRn"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750759054; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=3geTY9Lg0SUAa3yFGCcB0qvuVBnVvAoChOzavuhTgtQ=;
-	b=pXHkkyRnnbmpHkRCJvxo0hPIY3CBAPK+wWI9ZLtr/bEXNOjjdisuMg+XkOFV2qgXT9v11o2URy6IS+WeTB96GCZP5g7KaT+/pW+maxerM05fS4emecunbkOGC4B3713NxKo9n7XQZEQ+jPFpqEfzWkkrvRIasYJ2RPAnb/24Lo4=
-Received: from 30.74.144.102(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WegcnpY_1750759053 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Tue, 24 Jun 2025 17:57:34 +0800
-Message-ID: <e666835e-4c15-4f5a-bab1-f27e0c438f16@linux.alibaba.com>
-Date: Tue, 24 Jun 2025 17:57:33 +0800
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="m2pgCdyX"
+Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 26A237F0;
+	Tue, 24 Jun 2025 11:57:30 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1750759050;
+	bh=246J1mNhyuBtXFqi+2FZKzXXx4yvDDpbkBVQ4CMgHPg=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=m2pgCdyXz41Nyt8uYIqBNl9b+rEqUU7GS8cLfn9KohEu8l9F0eu3Ibun43HuxvsKd
+	 40DqbE/Gpi+31bzrfQyhpPk+cAWo0MoNVV+hcWvTDD9gO0CEy3HSW2QAKxZVZYn0he
+	 HNQwmJHbZAurW+nfATnoMruSyFxa+2yTWeZHT57s=
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] mm: huge_memory: disallow hugepages if the
- system-wide THP sysfs settings are disabled
-To: Dev Jain <dev.jain@arm.com>, akpm@linux-foundation.org, hughd@google.com,
- david@redhat.com
-Cc: ziy@nvidia.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com,
- npache@redhat.com, ryan.roberts@arm.com, baohua@kernel.org,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1750666536.git.baolin.wang@linux.alibaba.com>
- <adb8d5032ecc7b6935e3197cafffe92cbc7581e6.1750666536.git.baolin.wang@linux.alibaba.com>
- <8912e179-601a-4677-b2f6-14f40d488d98@arm.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <8912e179-601a-4677-b2f6-14f40d488d98@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250624065438.2021044-1-shravan.chippa@microchip.com>
+References: <20250624065438.2021044-1-shravan.chippa@microchip.com>
+Subject: Re: [PATCH] media: i2c: imx334: add support for additional test patterns
+From: Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, conor.dooley@microchip.com, valentina.fernandezalanis@microchip.com, praveen.kumar@microchip.com, shravan.chippa@microchip.com
+To: mchehab@kernel.org, sakari.ailus@linux.intel.com, shravan kumar <shravan.chippa@microchip.com>
+Date: Tue, 24 Jun 2025 10:57:44 +0100
+Message-ID: <175075906452.3871677.12511426007175753529@ping.linuxembedded.co.uk>
+User-Agent: alot/0.9.1
 
+Hi Shravan
 
+Quoting shravan kumar (2025-06-24 07:54:38)
+> From: Shravan Chippa <shravan.chippa@microchip.com>
+>=20
+> Added support for three additional test patterns in the
+> IMX334 driver: Black and Grey Bars, Black Color, and White Color.
+>=20
+> Signed-off-by: Shravan Chippa <shravan.chippa@microchip.com>
+> ---
+>  drivers/media/i2c/imx334.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>=20
+> diff --git a/drivers/media/i2c/imx334.c b/drivers/media/i2c/imx334.c
+> index 846b9928d4e8..43dd7edb48c8 100644
+> --- a/drivers/media/i2c/imx334.c
+> +++ b/drivers/media/i2c/imx334.c
+> @@ -118,6 +118,9 @@
+>  #define IMX334_REG_TP                  CCI_REG8(0x329e)
+>  #define IMX334_TP_COLOR_HBARS          0xa
+>  #define IMX334_TP_COLOR_VBARS          0xb
+> +#define IMX334_TP_BLACK                        0x0
+> +#define IMX334_TP_WHITE                        0x1
+> +#define IMX334_TP_BLACK_GREY           0xC
 
-On 2025/6/24 16:41, Dev Jain wrote:
-> 
-> On 23/06/25 1:58 pm, Baolin Wang wrote:
->> When invoking thp_vma_allowable_orders(), the TVA_ENFORCE_SYSFS flag 
->> is not
->> specified, we will ignore the THP sysfs settings. Whilst it makes 
->> sense for the
->> callers who do not specify this flag, it creates a odd and surprising 
->> situation
->> where a sysadmin specifying 'never' for all THP sizes still observing 
->> THP pages
->> being allocated and used on the system.
->>
->> The motivating case for this is MADV_COLLAPSE. The MADV_COLLAPSE will 
->> ignore
->> the system-wide Anon THP sysfs settings, which means that even though 
->> we have
->> disabled the Anon THP configuration, MADV_COLLAPSE will still attempt 
->> to collapse
->> into a Anon THP. This violates the rule we have agreed upon: never 
->> means never.
->>
->> Currently, besides MADV_COLLAPSE not setting TVA_ENFORCE_SYSFS, there 
->> is only
->> one other instance where TVA_ENFORCE_SYSFS is not set, which is in the
->> collapse_pte_mapped_thp() function, but I believe this is reasonable 
->> from its
->> comments:
->>
->> "
->> /*
->>   * If we are here, we've succeeded in replacing all the native pages
->>   * in the page cache with a single hugepage. If a mm were to fault-in
->>   * this memory (mapped by a suitably aligned VMA), we'd get the hugepage
->>   * and map it by a PMD, regardless of sysfs THP settings. As such, let's
->>   * analogously elide sysfs THP settings here.
->>   */
->> if (!thp_vma_allowable_order(vma, vma->vm_flags, 0, PMD_ORDER))
-> 
-> So the behaviour now is: First check whether THP settings converge to 
-> never.
-> Then, if enforce_sysfs is not set, return immediately. So in this 
-> khugepaged
-> code will it be better to call __thp_vma_allowable_orders()? If the sysfs
-> settings are changed to never before hitting collapse_pte_mapped_thp(),
-> then right now we will return SCAN_VMA_CHECK from here, whereas, the 
-> comment
-> says "regardless of sysfs THP settings", which should include "regardless
-> of whether the sysfs settings say never".
+This should be lower case to match the other hex constants (0xc)
 
-Sounds reasonable to me. Thanks.
+I also wonder if this list should be in register address order ... but
+then it won't match the menu items ...
 
-I will change thp_vma_allowable_order() to __thp_vma_allowable_orders() 
-in the collapse_pte_mapped_thp() function to maintain consistency with 
-the original logic.
-
-Lorenzo and David, how do you think? Thanks.
+> =20
+>  #define IMX334_TPG_EN_DOUT             CCI_REG8(0x329c)
+>  #define IMX334_TP_ENABLE               0x1
+> @@ -398,12 +401,18 @@ static const char * const imx334_test_pattern_menu[=
+] =3D {
+>         "Disabled",
+>         "Vertical Color Bars",
+>         "Horizontal Color Bars",
+> +       "Black and Grey Bars",
+> +       "Black Color",
+> +       "White Color",
+>  };
+> =20
+>  static const int imx334_test_pattern_val[] =3D {
+>         IMX334_TP_DISABLE,
+>         IMX334_TP_COLOR_HBARS,
+>         IMX334_TP_COLOR_VBARS,
+> +       IMX334_TP_BLACK_GREY,
+> +       IMX334_TP_BLACK,
+> +       IMX334_TP_WHITE,
+>  };
+> =20
+>  static const struct cci_reg_sequence raw10_framefmt_regs[] =3D {
+> --=20
+> 2.34.1
+>
