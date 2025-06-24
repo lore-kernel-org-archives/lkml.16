@@ -1,127 +1,78 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD2D223741;
-	Tue, 24 Jun 2025 01:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59D411C84DF
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:55:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750730113; cv=none; b=oNlFcLLWT3q3GZ0vq3dJVjBqWeoVmhWkqrBSfQxX2DeHrMoxPyVSzEKNczCvWQFWiJ9mfQlGWRr5/XRmuOjm5qz8eRZaNb6DVz8vxhLBcA7+gR91MNDJnh6mjKSG/B4vcbdYpx7FGiHypzG2GmpApmR3uZUsB6f2X+7DZ2h0tdk=
+	t=1750730124; cv=none; b=f5/DtVsPV18EyU23/dXBjBgeDlwXxYOF6206rzdiH84E1CVwG0bxUH+pjRi6CT/d0M5hlBAi1DiQzQluWJYudQUB3E0gI8YMI/wjVpX/aeTarJIEGDrDkiQxMec89TUSwLlyjA+osYm0DzezYGAvU7HxZWF2tZ8MYdC/gqtGSoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750730113; c=relaxed/simple;
-	bh=2ISrvwIgX3jixWuefaXZJkNIcgEtijnZyZas0qVkkuw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cUk68mWCNce9XpoOec/0LevIYtlG81eAKanwLqp7TOpwPcteFecGh+hD3VqlW6nmI5tVQjtQ1UUHvB6Fs2OWC7/Yd4oUmM6d+kgUFDlKcc+jvlcDb/ymTFHnyUSKurdZo7eqEqEOQC1jbG7e11WCswyDY2vNp2xYgTJAyTJ1WGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-0d-685a05782dd9
-Date: Tue, 24 Jun 2025 10:54:58 +0900
-From: Byungchul Park <byungchul@sk.com>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: Mina Almasry <almasrymina@google.com>,
-	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
-	willy@infradead.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kernel_team@skhynix.com, kuba@kernel.org,
-	ilias.apalodimas@linaro.org, harry.yoo@oracle.com, hawk@kernel.org,
-	akpm@linux-foundation.org, davem@davemloft.net,
-	john.fastabend@gmail.com, andrew+netdev@lunn.ch, toke@redhat.com,
-	tariqt@nvidia.com, edumazet@google.com, pabeni@redhat.com,
-	saeedm@nvidia.com, leon@kernel.org, ast@kernel.org,
-	daniel@iogearbox.net, lorenzo.stoakes@oracle.com,
-	Liam.Howlett@oracle.com, vbabka@suse.cz, rppt@kernel.org,
-	surenb@google.com, mhocko@suse.com, horms@kernel.org,
-	linux-rdma@vger.kernel.org, bpf@vger.kernel.org,
-	vishal.moola@gmail.com, hannes@cmpxchg.org, jackmanb@google.com
-Subject: Re: [PATCH net-next v6 9/9] page_pool: access ->pp_magic through
- struct netmem_desc in page_pool_page_is_pp()
-Message-ID: <20250624015458.GD5820@system.software.com>
-References: <20250620041224.46646-1-byungchul@sk.com>
- <20250620041224.46646-10-byungchul@sk.com>
- <ce5b4b18-9934-41e3-af04-c34653b4b5fa@redhat.com>
- <20250623101622.GB3199@system.software.com>
- <460ACE40-9E99-42B8-90F0-2B18D2D8C72C@nvidia.com>
- <a8d40a05-db4c-400f-839b-3c6159a1feab@redhat.com>
- <41e68e52-5747-4b18-810d-4b20ada01c9a@gmail.com>
- <CAHS8izPRVBhz+55DJQw1yjBdWqAUo7y4T6StsyD_dkL3X1wcGQ@mail.gmail.com>
- <69762ce3-ead1-4324-ba33-9839efbe31e7@gmail.com>
+	s=arc-20240116; t=1750730124; c=relaxed/simple;
+	bh=fjJUluiUV0jFld53GkIQxGvraehfT1fvsKV6Vu5F2es=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RM47SVslI3Oce4zzqTSWjui7zo5CaT1k3o1XOY+sGwpHVtIwZcWIlCB6yqs1g9zC8hxFGO90r9UEpr9bBC8dCITtsGuLul8yfNYhDRVYYJEEzSaoyeB16ead9cWG83URt95jjRT1oUOYF3yShbxyGDN2QR0mC0HkzIsOOWDhtSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55O1tKFn064509;
+	Tue, 24 Jun 2025 10:55:20 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55O1tKE0064505
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Tue, 24 Jun 2025 10:55:20 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <1c0f49ac-2634-4126-abcd-7859fc71f134@I-love.SAKURA.ne.jp>
+Date: Tue, 24 Jun 2025 10:55:20 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <69762ce3-ead1-4324-ba33-9839efbe31e7@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG/e+cnXMcDY7L8p8S0SpKS62QerMLIwgO3VQMSftgKw9t5SVm
-	2SwKLSGSvNAFalpNIp0XWE2ds0zqaF7ooqysmeZslthNS8ums8s2ifz243mf93neDy9DyKrF
-	gYw69QivSVUmyykJKfkyqyRUK05QrfwxwkKxsYqCSqcWyvotYiiuMCP4PtFDw1hzKwU3S8YJ
-	KO7IIeGHcZKA9y0OGipNO8BeOkhCw9k6AhwFbRTk5bgIuD8xTMNpi0EEneZ8MVyavEVAXVY/
-	Dc/vFlPQV/VHDINCHgntunIS7PkKaNHPhfHHnxE0G+tEMH7+GgUXrXoKBnLsCKxNDhKKsvMR
-	GBttYnA53RlFj/poxWKu6fMIwdWUd4u4et0bmtObjnLVhhAu12YlOFPFOYozjV6gud6XDRTX
-	dsVFcvWWMRGXd2aY4r69f01yI41dFGes6SK5J/pmOtovQbIhiU9WZ/Ca8E17JaoJ4TZ1+INU
-	25PbgbLQJ0ku8mUwG4ELv+aI/3FrVj3pYZJdgvVD/bSHKXYpttkmCA/7s8vxp1eCW5cwBNtC
-	4a/vnnkXZrNa7HIMek1Sdi3OuygQHpOM7SZw+806enrgh9uvvvMuEO7UqetWt4lxcxAu+81M
-	ywvwmdoib44vuxE/sL322uewi/ADc6vIk4nZNgYbDW+p6avn4YcGG1mI/HQzKnQzKnT/K3Qz
-	KvSIrEAydWpGilKdHBGmykxVa8P2p6WYkPuVSk9O7bGg0c5YAbEMks+SWiLjVTKxMiM9M0VA
-	mCHk/lJhc5xKJk1SZh7nNWmJmqPJfLqAghhSHiBdPX4sScYeUB7hD/H8YV7zbypifAOzULjk
-	LaxQCNk3Ohevjd4+0B1sdvgEnFBHj8X0x7tMRYnOW0PYfqo3csuL+LL566IUDcfu9ah+BR+0
-	S3f+DImMPI47nLu3VY+OmrcGvDJoG1cve3pPUbBu12WfNSsHohbWD/eGJnxMCbRmHuq606d2
-	7k+relgbsa8k0ScuODdmfW9grJxMVylXhRCadOVfzLhcDUYDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG+e+cnXMcrY5Hy4MFwiqspBsUvd3EROokFHa1IqhRhzZ0KlvZ
-	LCpr0kXSLgrVnDUTc85itdbcwjSOpVmSsdKmVg7TaRh5ycRb2ZxEfnt43t/z+/RSGJMrDqWU
-	SUd5dZI8UUZIcMnWtbrFWvE+xbKqBWCw3CegdEgLxR6HGAxmO4KB4RYSfr6oIaCwYBADQ30G
-	Dr8sIxh0VLeRUGrdAq33vDiUXyjDoO3KKwKyMkYxeDb8g4RzDpMIqvJrxfDOni2G3JEiDMrS
-	PSS8f2og4Mv9cTF4hSwcavUlOLRmR0G1cRYMvvmO4IWlTASDl/MJyHEZCfia0YrAVdWGQ97Z
-	bASWCrcYRod8jryXX8io+VzV9x6Ms5U0iTin/jPJGa3HuMemRVym24VxVvMlgrP2Xye5T43l
-	BPfq5ijOOR0/RVyW7gfB9XU041xPRQPBFXb1ijiLrQGPY/ZJ1h3mE5WpvHpp5EGJYlh4SKR8
-	k2pbMutROuqWZKIAiqVXsDXpTnwi4/R81tjlIScyQYezbvcwNpGD6Qi2+6Pg6yUURlcTbG/7
-	W/8giNayo21ePySlV7FZOQI2ATF0E8bWFpaRk4dAtvZWu3+A+axjt10+iPLl2WzxH2qyDmN1
-	T/L8ngB6Pfvc3ezHZ9Jz2ef2GtFVNF0/xaSfYtL/N+mnmIwIN6NgZVKqSq5MXLlEk6BIS1Jq
-	lxxKVlmR71funRq75kAD7zcJiKaQbJrUsWavghHLUzVpKgGxFCYLlgrRuxWM9LA87QSvTj6g
-	PpbIawQ0m8JlIdLYeP4gQx+RH+UTeD6FV/+7iqiA0HTUWHJa+eGSe7wAizcVfZon7HRqTTfs
-	21K3n+QLHlzcHaSb8duQvOHuFV2LPD8u7lHrnJNPwpxDzMLje5r6YhvGVLuQJZzqrKhf76nz
-	hpy5Y4+S2s7sjwlU1TFmBcGf37w6NmZxtMadELFhR29d5Jbiyv5K2+sV1tz+zojAjd+UIzJc
-	o5AvX4SpNfK/8tmQEicDAAA=
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] ocfs2: kill osb->system_file_mutex lock
+To: Heming Zhao <heming.zhao@suse.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        jiangyiwen <jiangyiwen@huawei.com>,
+        Andrew Morton
+ <akpm@linux-foundation.org>,
+        ocfs2-devel@lists.linux.dev,
+        Diogo Jahchan Koike <djahchankoike@gmail.com>
+References: <934355dd-a0b1-4e53-93ac-0a7ae7458051@I-love.SAKURA.ne.jp>
+ <faf70481-09dd-4c7a-bd43-f1e8bec877cb@suse.com>
+Content-Language: en-US
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <faf70481-09dd-4c7a-bd43-f1e8bec877cb@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Anti-Virus-Server: fsav201.rs.sakura.ne.jp
+X-Virus-Status: clean
 
-On Mon, Jun 23, 2025 at 07:14:41PM +0100, Pavel Begunkov wrote:
-> On 6/23/25 18:28, Mina Almasry wrote:
-> > On Mon, Jun 23, 2025 at 10:05 AM Pavel Begunkov <asml.silence@gmail.com> wrote:
-> ...>> As you said, it's just a sanity check, all page pool pages should
-> > > be freed by the networking code. It checks the ownership with
-> > > netmem_is_pp(), which is basically the same as page_pool_page_is_pp()
-> > > but done though some aliasing.
-> > > 
-> > > static inline bool netmem_is_pp(netmem_ref netmem)
-> > > {
-> > >          return (netmem_get_pp_magic(netmem) & PP_MAGIC_MASK) == PP_SIGNATURE;
-> > > }
-> > > 
-> > > I assume there is no point in moving the check to skbuff.c as it
-> > > already does exactly same test, but we can probably just kill it.
-> > > 
-> > 
-> > Even if we do kill it, maybe lets do that in a separate patch, and
-> > maybe a separate series. I would recommend not complicating this one?
-> FWIW, the discussion somewhat mentioned "long term", but I'm not
-> suggesting actually removing it, it serves the purpose. And in
-> long term the helper will be converted to use page->type / etc.
-> without touching pp fields, that should reduce the degree of
-> ugliness and make it more acceptable for keeping in mm.
-
-Agree.
-
-	Byungchul
+On 2025/06/24 10:33, Heming Zhao wrote:
+> Hello,
 > 
-> > Also, AFAIU, this is about removing/moving the checks in
-> > bad_page_reason() and page_expected_state()? I think this check does
-> > fire sometimes. I saw at least 1 report in the last year of a
-> > bad_page_reason() check firing because the page_pool got its
-> > accounting wrong and released a page to the buddy allocator early, so
-> > maybe that new patch that removes that check should explain why this
-> > check is no longer necessary.
+> Protecting refcnt with a mutex is the right approach, and commit 43b10a20372d
+> did it properly.
+> However, I don't see how your patch fixes the syzbot report [1]. Could you
+> elaborate on the root cause analysis?
 > 
-> --
-> Pavel Begunkov
+> My review comments are inline below.
+> 
+> [1]: https://syzkaller.appspot.com/bug?extid=1fed2de07d8e11a3ec1b
+
+My patch does not fix [1]. My patch fixes a bug which syzbot reported at
+https://lkml.kernel.org/r/000000000000ff2d7a0620381afe@google.com
+when testing with Diogo's patch at
+https://syzkaller.appspot.com/x/patch.diff?x=178f93d5980000 for [1].
+
+>> Reported-by: Diogo Jahchan Koike <djahchankoike@gmail.com>
+> 'Reported-by' should be: https://syzkaller.appspot.com/bug?extid=1fed2de07d8e11a3ec1b
+
+Since there is not yet a bug link for my patch, I don't choose syzbot as reporter.
+Diogo will post a formal patch for fixing [1] after returning from vacation.
+
