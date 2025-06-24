@@ -1,72 +1,52 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00F7255F2B
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D27257455
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750752456; cv=none; b=N7crsRvk+ZwVTTsFtxgpDYPffcUsMYu8kBoHgn3+T4riiD9/bbxZ5tzt9fWbiSvN5hFfOOAy5vdfcmREVH8F9eqRDVES8QAyycVfy+SJ7dSAO4oOKTqogAywckJ/gsQESTomWOQwNHyig44farXMXty3QNcuLxVhi4nqfX2KAeI=
+	t=1750752462; cv=none; b=LxvPzc4GI+ywolfHtgXBaMFL0uG200+1xdCJdZyFE08hJS/Nbt7ku1LA80StwbGttuTtVvo0IzAR8JPw1bWKiP4ZviWNyOOy4A9Yv5LdQPqz6OfGRVVo79bMGnnHKCVTM1bZX/Zrz484H5JzoFlKb9Al4N9k0BRaWcZ1lPazrXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750752456; c=relaxed/simple;
-	bh=JgsSBvTnznR09eGd2OJLwNRNa2+FEOtjHzluUypwdYk=;
+	s=arc-20240116; t=1750752462; c=relaxed/simple;
+	bh=bcr7ZsoDIxCVOP86HeZSlurtef12X/747KFw9IGHX20=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sCiE1UVDzm+GhyknTvdidlaXaa7oYeE9ueYB5/1LhM9Kk2OIHXlzPsKmTEp5xF3abZxdEoGYHaD/RrrVerntQhcLOHnpI2tgRMv0eFfSoXUbWcTV2cnKdnZXVxV1s8cBvWDoZYrZkt2KhqTVSRmsvZNrccy7eXJaTkGJPf1k4LA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rmtmp0WD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=Mgibz7ItIyUU06G5dhj73Qmegad86jLWCFulTmM+UirTFgeMDJgDHQ1g9SODvCkDLJRZ+m3+BSxnYwcWNk4gA0ScR1WOEGOqcoxMv7gYgY8VtAEZU9LZqpkErQmWHz27nYpjzYjxXkAZLKnRGgBQto9J9ZpIYkXs09SklTI2tZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=Fao41GU0; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rmtmp0WD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750752453;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=GM43lz0QpDgErZ/vodO3xCp9zFB0TdFSlvRYH8M5tN0=;
-	b=Rmtmp0WD3ARuQgbEQRk/82nRX7NiGdACXvfyW7V9Cs26WSU0PLnxxMNk8W7TYGheG+s1xs
-	tPuta1+t+nhvVJIlzCN+sHR5ZAV61BE5F2Y82x+hslGhVwtQgZTUecMe6AmnWsLEr9NQUZ
-	OHXYTFHNrRH71pS3TUHgY3s682m1T9I=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-657-8UzUUkQpM9WvWZZ-g7Z_vQ-1; Tue, 24 Jun 2025 04:07:32 -0400
-X-MC-Unique: 8UzUUkQpM9WvWZZ-g7Z_vQ-1
-X-Mimecast-MFC-AGG-ID: 8UzUUkQpM9WvWZZ-g7Z_vQ_1750752451
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a3696a0d3aso2242955f8f.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 01:07:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750752451; x=1751357251;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=GM43lz0QpDgErZ/vodO3xCp9zFB0TdFSlvRYH8M5tN0=;
-        b=fDFzm37tGKbEqTOnGT9Phz7rN/FDn72r8LH7Xqsy/ipjnEfasug79/geisPrguHDWf
-         72h/tokwFI6odPZjM0BCxBKteIfewDvXMzuU4kxy9dHV/GOxXJWsaHF+jgHSrO+WBLbf
-         YIyTnP4XkGFD4dw6+a8iNHKKRK8tjveM6SoJfStqfQrlom/CEEfuUFvWBjo4tc3K7SOo
-         6AlJx8xpc2ZyM+zPzw25Ts550/U2pXW5dlq3OnzDz7yZLgOK9MsVqgz+3IVJ8zTrXW7u
-         BIYK50QyFWUCa3jD/KCkqB4IT/cjKzV0OqqqNs8BN2GHvudx12ThVVkIhNUlsg4UsSBn
-         fbhw==
-X-Forwarded-Encrypted: i=1; AJvYcCXlA2QMAiqI0kduJulUQOBsGXj1C1F10gFb3jkQZ+KHa8yQ8LbEvubJrYAQICtKPn9c3knL/f3gaEd4x7Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWGyCHJJMhhwJB1/euC91BBKijZNDTxXjM1aarGbqtApO8zZL6
-	MwY6RF+62f1uMSPvc7FXndF6GpPFmzuc3D9r5GgcQQEGTp1+PchtL5w7rFnYqIMTElHaA8Rtzs3
-	aRWO/fVhTNBZkgZ/pHfKaUQlCwXgQ3g+ZyXp7njF371Nu+5UPVlBaxAVq1PoQpjiL8Q==
-X-Gm-Gg: ASbGncsH1O/GK+zl7v4OnQJh0kiunyBzgSkIyy2l4ub5fJlHXk3xsM8YoJ06HqK3wE2
-	jNdHsnk0KL1xv+rRMajRJvbNB2bhsey735Wukm2kpjVFl5bBxOTnENi44/SXLUBxR2SoQWRH8Rm
-	BjQ9IgQSXt0ZOct67vY0H12f6aT2L9AwYJ578aLDK81x6Ll0oEz+F5SRD4VKckIygC9F9wmzEjF
-	GMUl3tZnVNZ5yMW7KVdqWYZiC562ZmJUO3Nzx5EsDO+PZ1E9oL/t40vqJAjb815oLdrc7FF6b4g
-	b5eqU8rJxtOnnX6MTdYFZP9i5x5mSQsmHU17
-X-Received: by 2002:a05:6000:20c1:b0:3a6:d93e:5282 with SMTP id ffacd0b85a97d-3a6d93e56fdmr6158548f8f.59.1750752450836;
-        Tue, 24 Jun 2025 01:07:30 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF5D9U8DXo9QlBSJgRT7e5NhRpK+cBv0LT+I7AaevAPYPmS1KrfSBpaAuJgjXp8k1Kqwnjs6w==
-X-Received: by 2002:a05:6000:20c1:b0:3a6:d93e:5282 with SMTP id ffacd0b85a97d-3a6d93e56fdmr6158516f8f.59.1750752450393;
-        Tue, 24 Jun 2025 01:07:30 -0700 (PDT)
-Received: from ?IPV6:2a09:80c0:84::108? (mischulz23.caps.cit.tum.de. [2a09:80c0:84::108])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8113b00sm1283411f8f.96.2025.06.24.01.07.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 01:07:29 -0700 (PDT)
-Message-ID: <dfd7650d-1154-467d-ae70-c126610413f6@redhat.com>
-Date: Tue, 24 Jun 2025 10:07:29 +0200
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="Fao41GU0"
+Received: from eig-obgw-6003a.ext.cloudfilter.net ([10.0.30.151])
+	by cmsmtp with ESMTPS
+	id TieTuMQRSVkcRTygmuAvM5; Tue, 24 Jun 2025 08:07:33 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id TygluAHA1h9ZxTygluyiHl; Tue, 24 Jun 2025 08:07:31 +0000
+X-Authority-Analysis: v=2.4 cv=GODDEfNK c=1 sm=1 tr=0 ts=685a5cc4
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=Wh1V8bzkS9CpCxOpQUxp:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=xFO6NK3ONdTJZbcH9gQ3lLvShx7ldiwcq/fdKK4epLE=; b=Fao41GU0zgS/RAeXpf/hDrCEgw
+	D3aFqiPqy7avOdaCzGQynxn0XaCohepOU2VLvWAbgA76NLv72RuKCRv+Rdj8unqQ3Zwj17aQiEuuE
+	CLOkLDgZW7L4hfzYY+6exAwNBxD0TM2f+s1kMGA59VRYqikzfcx2+gpSFA3auAZkIjoh8frdljpgO
+	Sk4LsUkSX0jyvEAFnT6hn/dgoBUtR4awqHN9m/KchvKSDMoUy1CNR56X0Lh4Pda0lgdCPz+YGZT5+
+	C7oovy8V8yW/0P5AVM3Onq1kAxYT5Osh2EY+7jmQIeoLnkKkps8CMNlQSVx2UK+7RIZiaYsw7isZX
+	x/vZBMTQ==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:47784 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1uTygi-00000002D2m-2Sr4;
+	Tue, 24 Jun 2025 02:07:28 -0600
+Message-ID: <e14cda6a-d50b-4b7a-81c0-4c2e5fb8b447@w6rz.net>
+Date: Tue, 24 Jun 2025 01:07:24 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,199 +54,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] selftests/mm: Fix UFFDIO_API usage with proper
- two-step feature negotiation
-To: Li Wang <liwang@redhat.com>, akpm@linux-foundation.org,
- linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
- Bagas Sanjaya <bagasdotme@gmail.com>,
- Catalin Marinas <catalin.marinas@arm.com>,
- Dave Hansen <dave.hansen@linux.intel.com>, Joey Gouly <joey.gouly@arm.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Keith Lucas <keith.lucas@oracle.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Shuah Khan <shuah@kernel.org>
-References: <20250622081035.378164-1-liwang@redhat.com>
- <20250624042411.395285-1-liwang@redhat.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 6.15 000/592] 6.15.4-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250623130700.210182694@linuxfoundation.org>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250624042411.395285-1-liwang@redhat.com>
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250623130700.210182694@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1uTygi-00000002D2m-2Sr4
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:47784
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 16
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfPyvrPoi1+iFhvi6bixntYvzoG4rjKJkYCO+QBm21aJ7hYyQSEZyVNv3w/Fvvye4DmeRCLh36wJL7jtNHwZRp+TkukGBuLy8ai3zCc9g78Odi9A3GvgD
+ zwLa/B1HFAqv4JXpuTN1N/58HBLk2wwqtTP1vSfjlfecZxPzfHo6MWl2cAtjl18Sk5OS1re6FcfEDP5VhvITVadZU8eMcxtBAj4=
 
-On 24.06.25 06:24, Li Wang wrote:
-> The current implementation of test_unmerge_uffd_wp() explicitly sets
-> `uffdio_api.features = UFFD_FEATURE_PAGEFAULT_FLAG_WP` before calling
-> UFFDIO_API. This can cause the ioctl() call to fail with EINVAL on kernels
-> that do not support UFFD-WP, leading the test to fail unnecessarily:
-> 
->    # ------------------------------
->    # running ./ksm_functional_tests
->    # ------------------------------
->    # TAP version 13
->    # 1..9
->    # # [RUN] test_unmerge
->    # ok 1 Pages were unmerged
->    # # [RUN] test_unmerge_zero_pages
->    # ok 2 KSM zero pages were unmerged
->    # # [RUN] test_unmerge_discarded
->    # ok 3 Pages were unmerged
->    # # [RUN] test_unmerge_uffd_wp
->    # not ok 4 UFFDIO_API failed     <-----
->    # # [RUN] test_prot_none
->    # ok 5 Pages were unmerged
->    # # [RUN] test_prctl
->    # ok 6 Setting/clearing PR_SET_MEMORY_MERGE works
->    # # [RUN] test_prctl_fork
->    # # No pages got merged
->    # # [RUN] test_prctl_fork_exec
->    # ok 7 PR_SET_MEMORY_MERGE value is inherited
->    # # [RUN] test_prctl_unmerge
->    # ok 8 Pages were unmerged
->    # Bail out! 1 out of 8 tests failed
->    # # Planned tests != run tests (9 != 8)
->    # # Totals: pass:7 fail:1 xfail:0 xpass:0 skip:0 error:0
->    # [FAIL]
-> 
-> This patch improves compatibility and robustness of the UFFD-WP test
-> (test_unmerge_uffd_wp) by correctly implementing the UFFDIO_API
-> two-step handshake as recommended by the userfaultfd(2) man page.
-> 
-> Key changes:
-> 
-> 1. Use features=0 in the initial UFFDIO_API call to query supported
->     feature bits, rather than immediately requesting WP support.
-> 
-> 2. Skip the test gracefully if:
->     - UFFDIO_API fails with EINVAL (e.g. unsupported API version), or
->     - UFFD_FEATURE_PAGEFAULT_FLAG_WP is not advertised by the kernel.
-> 
-> 3. Close the initial userfaultfd and create a new one before enabling
->     the required feature, since UFFDIO_API can only be called once per fd.
-> 
-> 4. Improve diagnostics by distinguishing between expected and unexpected
->     failures, using strerror() to report errors.
-> 
-> This ensures the test behaves correctly across a wider range of kernel
-> versions and configurations, while preserving the intended behavior on
-> kernels that support UFFD-WP.
-> 
-> Suggestted-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Li Wang <liwang@redhat.com>
-> Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-> Cc: Bagas Sanjaya <bagasdotme@gmail.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Joey Gouly <joey.gouly@arm.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Keith Lucas <keith.lucas@oracle.com>
-> Cc: Ryan Roberts <ryan.roberts@arm.com>
-> Cc: Shuah Khan <shuah@kernel.org>
-> ---
-> 
-> Notes:
->      v1 --> v2:
->      	* Close the original userfaultfd and open a new one before enabling features
->      	* Reworked UFFDIO_API negotiation to follow the official two-step handshake
-> 
->   .../selftests/mm/ksm_functional_tests.c       | 28 +++++++++++++++++--
->   1 file changed, 26 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/mm/ksm_functional_tests.c b/tools/testing/selftests/mm/ksm_functional_tests.c
-> index b61803e36d1c..19e5b741893a 100644
-> --- a/tools/testing/selftests/mm/ksm_functional_tests.c
-> +++ b/tools/testing/selftests/mm/ksm_functional_tests.c
-> @@ -393,9 +393,13 @@ static void test_unmerge_uffd_wp(void)
->   
->   	/* See if UFFD-WP is around. */
->   	uffdio_api.api = UFFD_API;
-> -	uffdio_api.features = UFFD_FEATURE_PAGEFAULT_FLAG_WP;
-> +	uffdio_api.features = 0;
->   	if (ioctl(uffd, UFFDIO_API, &uffdio_api) < 0) {
-> -		ksft_test_result_fail("UFFDIO_API failed\n");
-> +		if (errno == EINVAL)
-> +			ksft_test_result_skip("The API version requested is not supported\n");
-> +		else
-> +			ksft_test_result_fail("UFFDIO_API failed: %s\n", strerror(errno));
-> +
+On 6/23/25 05:59, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.15.4 release.
+> There are 592 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 25 Jun 2025 13:05:55 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.4-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.15.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Not sure if that is really required. If UFFDIO_API failed after 
-__NR_userfaultfd worked something unexpected is happening.
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
->   		goto close_uffd;
->   	}
->   	if (!(uffdio_api.features & UFFD_FEATURE_PAGEFAULT_FLAG_WP)) {
-> @@ -403,6 +407,26 @@ static void test_unmerge_uffd_wp(void)
->   		goto close_uffd;
->   	}
->   
-> +	/*
-> +	 * UFFDIO_API must only be called once to enable features.
-> +	 * So we close the old userfaultfd and create a new one to
-> +	 * actually enable UFFD_FEATURE_PAGEFAULT_FLAG_WP.
-> +	 */
-> +	close(uffd);
-
-Is that actually required?
-
-The man page explicitly documents:
-
-"       EINVAL A  previous  UFFDIO_API  call already enabled one or more 
-features for this userfaultfd.  Calling UFF‐
-               DIO_API twice, the first time with no features set, is 
-explicitly allowed as per the two-step  feature
-               detection handshake.
-"
-
-So if that doesn't work, something might be broken.
-
-
--- 
-Cheers,
-
-David / dhildenb
+Tested-by: Ron Economos <re@w6rz.net>
 
