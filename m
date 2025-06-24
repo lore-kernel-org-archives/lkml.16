@@ -1,76 +1,77 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C03B91DE8B3;
-	Tue, 24 Jun 2025 00:49:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEDF1531C8;
+	Tue, 24 Jun 2025 00:49:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750726183; cv=none; b=ICVxz/ZxWN62CGToLtHN3TgaiFBsfUWURl1bKs3nO+0kymRiNKNPNLr6w3/h5nd2T3IBcttsB3bMzwJM0dAwYtADSN5Nh6TurzG3r4Q2RQ2MTye11Bxx8MHh1GU89Nj2zttDxM+Va7d1Z8ZIAjxRR4ylaMOPKYIXHp9x/CpTHak=
+	t=1750726189; cv=none; b=osL2zv93xSAspNpvzNFdulxNLKbyXW7gV5Nxj3cDyAAGJQM7Fj96sUryZP3uzyfeL7Chh7I1I5NWG8u7mDWmhEcRihKVDiimDOJd5EruznBPb6LuhmkmJyy+orsn9bgBJnP2R8ZR8IRgj9ry/rMoxVpGmvd3/blaugT0rKFPoy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750726183; c=relaxed/simple;
-	bh=RKieSCMnnxr7Bp9MnznRAfCwf58nBx31lL4xjTswCxM=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=F8nE2Kev/UeOsjqcxGS98AtEOMCSaj+TCJQ0omHoQscbRDSDNEYoui37cJypQFGPDUjyXITyyO9AElgSEMk9QdDlrPdCzOiBMkaWFOvCjvlzHY6fqJY3gt2NWdfHlfNYSgOkw9+RGLYgvzCVSz/7/GQ2tZ0SpxVRw9H+L65+xbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S+iQYPtW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750726189; c=relaxed/simple;
+	bh=l6bL4ooYHBmAM34XGQ5KcRXT/b1jW8PZcoXDsVaUvF8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=VQapqMoZgWrA2urITH6gNMzICPGZzYE/VMqQbixblWr132RJRgF5iyG0i1Lya9RtTQ3P0aRNsJQ+Cxprc/5D6Q8xKWiqvU1sLZ3mNiFdQavp9PGodoU3M4D+YhAjsifVquU2KvroK4LTEhK+zSP2G8k66rig7rHah3hgEcPADnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Nx5PwA5v; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S+iQYPtW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FDE5C4CEF2;
-	Tue, 24 Jun 2025 00:49:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750726183;
-	bh=RKieSCMnnxr7Bp9MnznRAfCwf58nBx31lL4xjTswCxM=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=S+iQYPtWM51notqk7uZ/u1i1LoXV32gP27oIzHnOpl6/R2ljV/Kb17OiJGmWPb0Fq
-	 u0I2pr257XTSdklQwM7BI8tJ1I/VHmP1TVXXw1y9i/TWMS0ZkHJPW/DqHzWL1t7IU7
-	 1P8Hd4twovsBP0NIpmy7iEkxVEZFh7u71FySHTaVUmWUx7nNjZHpEVZxij5pINAEFI
-	 IeuodNdzIKTX2+wCl4zj8jfvCtV6XOWqIHFTqSVuIASPyyS4xiyES9YuEGm4oGg2np
-	 qPtLH9N2PCFfSirpL97OxYssI3n2XKPa0eTSoIpHdUrzaj22Np4sR30LfcjbgUbuOV
-	 fm1B3xuDOCPdQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E0839FEB7D;
-	Tue, 24 Jun 2025 00:50:11 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Nx5PwA5v"
+Received: from [127.0.0.1] (c-76-133-66-138.hsd1.ca.comcast.net [76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 55O0nN8K1144767
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 23 Jun 2025 17:49:23 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 55O0nN8K1144767
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025062101; t=1750726164;
+	bh=l6bL4ooYHBmAM34XGQ5KcRXT/b1jW8PZcoXDsVaUvF8=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=Nx5PwA5vDohBi/OvvjEnT04gh5KrdbsCOIQCJCRka/POZQqiUZUfflY09VDUexW0l
+	 75TuY7xHhlXTWEXzGw58Gyax11dSiLjv13Wprio38uD5dVpDqkXKVYNYnCEKAZ+RUO
+	 AWhXlah7NbY89k0SKNzp2ybqRT3lWrSvecINEHVZdVWqvE4Te0ZjGdWt4+mW4Lcnsr
+	 HhicpbQlK8OLSZKkrhIqX+WDWudDTk1AwgGxP9IVMXiB07fbBIuhdZGsS4ojOCZKE8
+	 n3RwbRvuNlI58C9LnvLaQWX7+VrVUDjmHBjdA0pv8ZtoreLSDlK3FmgoTG8TkRW+vY
+	 w8arb7wTz6Uaw==
+Date: Mon, 23 Jun 2025 17:49:22 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Khalid Ali <khaliidcaliy@gmail.com>, brgerst@gmail.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        ubizjak@gmail.com
+CC: x86@kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v1_0/3=5D_x86/boot=3A_Supply_boot=5Fpa?=
+ =?US-ASCII?Q?ram_in_rdi_instead_of_rsi_from_startup=5F64=28=29?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250623183917.13132-1-khaliidcaliy@gmail.com>
+References:  <20250623183917.13132-1-khaliidcaliy@gmail.com>
+Message-ID: <DE5A95F1-CACB-4CF5-B459-3DFEC294DDD9@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] Revert "riscv: Define TASK_SIZE_MAX for __access_ok()"
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <175072621024.3349808.1646542677101843866.git-patchwork-notify@kernel.org>
-Date: Tue, 24 Jun 2025 00:50:10 +0000
-References: <20250619155858.1249789-1-namcao@linutronix.de>
-In-Reply-To: <20250619155858.1249789-1-namcao@linutronix.de>
-To: Nam Cao <namcao@linutronix.de>
-Cc: linux-riscv@lists.infradead.org, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, alex@ghiti.fr,
- linux-kernel@vger.kernel.org, rtm@csail.mit.edu, stable@vger.kernel.org
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On June 23, 2025 11:39:09 AM PDT, Khalid Ali <khaliidcaliy@gmail=2Ecom> wro=
+te:
+>> This is also invoked by some external bootloaders that boot the ELF=20
+>> image directly, even though this is strongly discouraged=2E
+>>
+>> Therefore this patchset is NAKed with extreme prejudice=2E
+>
+>Thanks both of you peter and brian,
+>
+>however, the boot protocol document saying "%rsi must hold the base addre=
+ss of the struct boot_params",
+>it doesn't mention why=2E Maybe the document needs update to justify the =
+reasons=2E I wouldn't have known it=20
+>if you didn't tell me, so this shouldn't confuse anyone else=2E
+>
+>Thanks=20
+>Khalid Ali
 
-This patch was applied to riscv/linux.git (fixes)
-by Palmer Dabbelt <palmer@dabbelt.com>:
-
-On Thu, 19 Jun 2025 17:58:58 +0200 you wrote:
-> This reverts commit ad5643cf2f69 ("riscv: Define TASK_SIZE_MAX for
-> __access_ok()").
-> 
-> This commit changes TASK_SIZE_MAX to be LONG_MAX to optimize access_ok(),
-> because the previous TASK_SIZE_MAX (default to TASK_SIZE) requires some
-> computation.
-> 
-> [...]
-
-Here is the summary with links:
-  - Revert "riscv: Define TASK_SIZE_MAX for __access_ok()"
-    https://git.kernel.org/riscv/c/890ba5be6335
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+It is a *protocol*=2E An interface=2E "Because the interface specification=
+ says so" is really all the justification you need; otherwise you have to h=
+unt down *every* user of the interface and verify your change=2E=20
