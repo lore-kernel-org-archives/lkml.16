@@ -1,110 +1,139 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9E7527C179;
-	Tue, 24 Jun 2025 09:51:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEFB28153C;
+	Tue, 24 Jun 2025 09:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750758710; cv=none; b=RIm0xoiaIQ1kY5UtSJlw24IzafPtUkHPvoctRYjqpsVe2l3AUC3vlgAuTOlM3Pt9mHM26gcV0hWD5lCC3pOtScUFlonPY0pp/s0KQVrscuZwTKJqNbyp9VYOCD7IbbweKtNs9epSI7qulIMDegnsUBMZ2crEB3Ys6xKVWXVgVJg=
+	t=1750758722; cv=none; b=bJ4+q89o8w0e2b+1jY88IJNjj1U/YOdc7nGx6QpZ6NzqBPRH7COpdkZD6hAl6b73Tt0/zkNzzoAvXF9nZY352+Y2+VDuJYw+bXnBzBz6kHsIO87+V6f3lMlpB0yuyixjzYHy96uXcTORMZbjbGwOQbzOMEKsyaRHGYE7UyMj5HQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750758710; c=relaxed/simple;
-	bh=V6caY+WeVL5rrT2vcH49ZSQhs2y7KlfWXKArD8x44sc=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=F3nID5MGQG9lRtfXnmICyRn6HehnSroSwwqToKukB5PKGCqjbcywnZ0J21dMWiiIppOcpWBqA/slcSvJYmmM0gD4+cxEeEFWFdNJQaQ70me/fiOkE1oFlGrrDgppnlo2PP2kOV8hGGrUtgyd7GLFMDNTeTJtfJcrChxPhH0hx2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=VxDJZA+3; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1750758722; c=relaxed/simple;
+	bh=DyTqvvC5w0LlJ53hj5jWsIBFTgWw9yuBsl7G33hvSfg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VA/ThpJuPq+VRsbQkLC8ZE2WbchDDhfynDNUgO1a3SshRqEl5254S+XZZCV2AmD20mfxoVP7tJao1ksZfuLKXQrQJfWuytxBYn7McLPbKPnfcPfXxID+FbskeAuxwvVbvihHAXEDDDqMU/H2zBJBVu2ghVXCcsNoM/+hmSi7Wwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=pqpWzMVg; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=UW9BFEoj reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="VxDJZA+3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1750758703;
-	bh=CXzbPmxpnN2WK8X4zwGzyPSKDkERV47aIX6ni2Jy2sk=;
-	h=Date:From:To:Cc:Subject:From;
-	b=VxDJZA+3kZ7uSOgYQAfbG+psG36GBRVcsLps3ffqSn0D0t1y4q1nknTFtRyZHbSOt
-	 oGI5MvNghlgx6cdhBQuwIW5MMhgSp0mdYhK2Z2w2e85/ex27QkqUtmKMhPbUNYFmSm
-	 /VR/+v3fzeSkoZByUHWC4IKgy5LCGBaDHF5n1QH9YWNeOsYKeoD0OQLRbduzcnhbS7
-	 5oZ8no5ciaoFeVWoTmfeG6y1U7X5htS7zCVQt0uSDCpc80EYs81GvjbIWO5YgiE1eR
-	 tGTfK4940dZ3IKWfWi5/UUF54JR1+W5DenBQ5LVpSvoloXuxuCGbklYum6blj6b6/D
-	 j/MnJkiPHtPgA==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bRKwb2S4Lz4wbY;
-	Tue, 24 Jun 2025 19:51:43 +1000 (AEST)
-Date: Tue, 24 Jun 2025 19:51:42 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andreas Hindborg <a.hindborg@kernel.org>, Danilo Krummrich
- <dakr@kernel.org>
-Cc: Alexandre Courbot <acourbot@nvidia.com>, FUJITA Tomonori
- <fujita.tomonori@gmail.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: manual merge of the rust-timekeeping tree with the
- drm-nova tree
-Message-ID: <20250624195142.1050e147@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="pqpWzMVg";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="UW9BFEoj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1750758718; x=1782294718;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=LMGvq5izqaCufxhRiVPujUUpUHBSgsiKUBqKnX7JNlQ=;
+  b=pqpWzMVgr1KalmMaGBldwDi3deJLgANoMJ+w+NIxC18Ua3/n2io51Ku+
+   f7moq1sPjEwQLXTxkMToc9DoE7fgxMIvkjQhCDWJNMICJfwXEPJOaOULP
+   sSvEWApEa73my2dlJbytQOjFygHEJO031BvA5pctbX477vPLHvpOlWdUJ
+   /S4kwal5SHX+ON0P07nhM4OkwFn9FGyH2ChEu6nvfHr3rMqxrPYRQ0Co+
+   zRoF6mvHf+UPGI+2pkryR4SvQm0LPndZoPjos4QRJOGUalGodVpDWrWas
+   gvRy1wxSiLpGX9WPApkuJzaga7oYaawXLbe18TLfmgSLZj2mr6g9zxiMy
+   A==;
+X-CSE-ConnectionGUID: KICRVeP3QlulX/kotH1+Xg==
+X-CSE-MsgGUID: ezbuiKoOR1GHGp04JT8P3w==
+X-IronPort-AV: E=Sophos;i="6.16,261,1744063200"; 
+   d="scan'208";a="44815220"
+Received: from vmailcow01.tq-net.de ([10.150.86.48])
+  by mx1.tq-group.com with ESMTP; 24 Jun 2025 11:50:44 +0200
+X-CheckPoint: {685A74F4-1B-497D558D-EBA6F5A1}
+X-MAIL-CPID: AC4B4CD97CD6F92F69E614E9AA2668BB_3
+X-Control-Analysis: str=0001.0A006371.685A750A.0024,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 01D4F160CB8;
+	Tue, 24 Jun 2025 11:50:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
+	s=dkim; t=1750758640;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LMGvq5izqaCufxhRiVPujUUpUHBSgsiKUBqKnX7JNlQ=;
+	b=UW9BFEojEvhcAZFnETze/5ThQTbY1gX9IZ4v9Ih5NDKtzX864wBUtU+4nJceSZ2NEgOh66
+	XTfqzpvZDNav3qidBA6Xpfb36ZDO49P5Oc5bYAn84Y+AJXD4rGLsf5ATUVIthkx5zz65WY
+	KUqZVolQDhb5ve8iTSSkPTjX2VBklFgwm3Q6/djjDiJZAoVuW5Uyxna+qKebtMq2PqOD/f
+	nF0ZgV9FvjQ0IIhJyPlVJGMcWIIAoQhRj7mQqYY8h1ovgJFoA9Ltsk95yNK0O4uJhY2zUP
+	YBRvVWkDIVQ3+VJJPz0nPVP3r0uvANNQEdpiW4dX+9+WP90hKtCzHyic7VEeug==
+Message-ID: <ba1fba45aef0264d1215c3abac1d74e3ad2c33f2.camel@ew.tq-group.com>
+Subject: Re: [PATCH net-next 4/4] checkpatch: check for comment explaining
+ rgmii(|-rxid|-txid) PHY modes
+From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, Maxime Chevallier
+ <maxime.chevallier@bootlin.com>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
+ Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andy
+ Whitcroft <apw@canonical.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>, Joe Perches <joe@perches.com>,
+ Jonathan Corbet <corbet@lwn.net>, Nishanth Menon <nm@ti.com>,  Vignesh
+ Raghavendra <vigneshr@ti.com>, Siddharth Vadapalli <s-vadapalli@ti.com>,
+ Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
+ linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
+Date: Tue, 24 Jun 2025 11:50:35 +0200
+In-Reply-To: <a0904f35-8f26-4278-9090-9bbeef905ef7@lunn.ch>
+References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	 <16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
+	 <20250415131548.0ae3b66f@fedora.home>
+	 <a0904f35-8f26-4278-9090-9bbeef905ef7@lunn.ch>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/nVl8cyxu_C0E=cuITrlAQCf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-Last-TLS-Session-Version: TLSv1.3
 
---Sig_/nVl8cyxu_C0E=cuITrlAQCf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Tue, 2025-04-15 at 15:12 +0200, Andrew Lunn wrote:
+>=20
+> > My Perl-fu isn't good enough for me to review this properly... I think
+> > though that Andrew mentioned something along the lines of 'Comment
+> > should include PCB somewhere', but I don't know if this is easily
+> > doable with checkpatch though.
+>=20
+> Maybe make it into a patchset, and change a few DTS files to match the
+> condition. e.g.
+>=20
+> arm/boot/dts/nxp/ls/ls1021a-tsn.dts:/* RGMII delays added via PCB traces =
+*/
+> arm/boot/dts/nxp/ls/ls1021a-tsn.dts-&enet2 {
+> arm/boot/dts/nxp/ls/ls1021a-tsn.dts-    phy-mode =3D "rgmii";
+> arm/boot/dts/nxp/ls/ls1021a-tsn.dts-    status =3D "okay";
+>=20
+> This example is not great, but...
+> arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi-                         p=
+hy-mode =3D "rgmii";
+> arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi:                         /=
+* 2ns RX delay is implemented on PCB */
+> arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi-                         t=
+x-internal-delay-ps =3D <2000>;
+> arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi-                         r=
+x-internal-delay-ps =3D <0>;
+>=20
+> There is one more i know of somewhere which i cannot find at the
+> moment which uses rgmii-rxid or rgmii-txid, an has a comment about
+> delay.
+>=20
+> 	Andrew
 
-Hi all,
+FWIW, I've decided against including the comment changes in this series for=
+ now
+(going to send a v2 in a moment), as non-functional changes just to improve
+style or make checkpatch happy are often frowned upon as unnecessary churn.
 
-After merging the rust-timekeeping tree, today's linux-next build
-(x86_64 allmodconfig) failed like this:
+Best,
+Matthias
 
-error[E0599]: no method named `as_nanos` found for struct `Delta` in the cu=
-rrent scope
-  --> drivers/gpu/nova-core/util.rs:45:33
-   |
-45 |         if start_time.elapsed().as_nanos() > timeout.as_nanos() as i64=
- {
-   |                                 ^^^^^^^^ method not found in `Delta`
 
-error: aborting due to 1 previous error
-
-For more information about this error, try `rustc --explain E0599`.
-
-Caused by commits
-
-  2ed94606a0fe ("rust: time: Rename Delta's methods from as_* to into_*")
-  768dfbfc98e2 ("rust: time: Make Instant generic over ClockSource")
-
-interacting with commit
-
-  a03c9bd953c2 ("gpu: nova-core: add helper function to wait on condition")
-
-from the drm-nova tree.
-
-I tried to fix it up, but this lead down a rabbit hole and my rust
-skills are poor, so I just dropped the rust-timekeeping tree for today.
-A merge resolution would be appreciated.
 
 --=20
-Cheers,
-Stephen Rothwell
-
---Sig_/nVl8cyxu_C0E=cuITrlAQCf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhadS4ACgkQAVBC80lX
-0Gz6qAgAnGN53FN6d50U7Uko/vUr5+ulVsG549M4a6h6jJtBM0BGcEXZI2p584Q8
-0uehYZfj700O708kJqZwK+PQaRWcWE0V2heK7wWhrnIsBnzPEeCu9xdxLDdra+bO
-Inh3tugCHvLpJU92L7d73g5ar48HZgFzWZswxunMGz71Y/6IWvztBpGwkf4xv0wN
-ENKmKUPewZ6yfNUhi9xB3yNC7ynpC/qZzEa5PD0eVj6P3wDtQyiaI9Lr1QlawYmt
-ulBfzeEjRurYn2rWJcs7e2cKvco+mxaD3WkYsBOHfeq0Jg39y4QDaMBgCk7madFc
-HVloSS6ZPAPaPl133zIuuBPa0bLTQQ==
-=9ZnQ
------END PGP SIGNATURE-----
-
---Sig_/nVl8cyxu_C0E=cuITrlAQCf--
+TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
+any
+Amtsgericht M=C3=BCnchen, HRB 105018
+Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
+neider
+https://www.tq-group.com/
