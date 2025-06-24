@@ -1,371 +1,159 @@
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB4627F170
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 10:39:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7035279DC8;
+	Tue, 24 Jun 2025 10:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750761578; cv=none; b=IGWJ4DW9OthMmIXIk85RXdlxtEwxmjaf5mkAZkR13TKkdIrKaOL9N/yUeGfcmT2xpBm+1qPzfmUsfG3RFIefBLhu7woEjT2Rmds3rm+18v82jjspO7XEe9yKOexjgryqtvlQwOUUOfOW0bZ20FsSuQwTQezOs/moLFklHlht/Go=
+	t=1750761602; cv=none; b=eLTli0ktk3OGSdwkj2alWoYQ8YmJslW6yqHy7UHSCIvE9Tg0kR6pxHvM0IpooNpT6Sxu4dNOak/E0lYqNLeL18ilC+CgH5KxulYX2hVDTR/QJm6mKwGoELT0nyqupjrfAlTQx70eEyjAH6BiFCReUsW9sibijuWmAeh+yqjDiXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750761578; c=relaxed/simple;
-	bh=vBJLZNAHooP4IOM6n8TgqMa840kebKgDz3cj1MEXl/4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QCq/nVKub7u57SgATtaIWY0AjE/IVmjgJCNYFRwyAYUVljsekthu0rhBL2r50cnvz252sah6J/PqAawLAvjhb4103FPOSQeqA5fnLf+stnFrVduwBBnl0iP09zpPsH1PXEjpCvHNZ5UybzukQ0KTOXsBvDM+o6tHJqgrzcf8gwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=nJQxH2ZR; arc=none smtp.client-ip=60.244.123.138
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+	s=arc-20240116; t=1750761602; c=relaxed/simple;
+	bh=XgW7u+cppxBGsC7FwEGR//C0SsF7znnagrv2bfxGCNI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MIYGnR0wJFgmQoG8Stwu37juTISodHNejUqEkbWZiED/gyDhE4YTpRtiljUVNPsu/bi+62jTNzdCnchF3B0wQ4p3RUY+djTycGFG1bOvHPCkv89V4geCP9SGU7vdVgY9kF85Y8zizCDckBtwo8epcsuMRfY28jCHMd9CSnXN8oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=IAttkQBD; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="nJQxH2ZR"
-X-UUID: 824fd9fc50e711f0b910cdf5d4d8066a-20250624
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=EsdaN36gSjFpobSTWfbMh7p5nojTzYYXEfOQtA2pVNQ=;
-	b=nJQxH2ZRDsql5sL1JcI75F+IRBdEur9GMgvL/tI2nOSGl1ZSNy5To6mkc6lVtOZbV6/US3PTxnCwLzRnstQfTPPhg2ST4Yalsc6rynmd7iNjsvsVLf2WN6/596VRjxhl1cs8tDN5mZ8Mj29KNKyYGxDxLgnZNG0byKHBoFlGSLk=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.2,REQID:baf2036c-6b72-47ae-9404-28aed0942181,IP:0,UR
-	L:0,TC:0,Content:0,EDM:-30,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-30
-X-CID-META: VersionHash:9eb4ff7,CLOUDID:d2e68114-6a0e-4a76-950f-481909c914a4,B
-	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0|50,EDM:2,IP:nil
-	,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:
-	1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR
-X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: 824fd9fc50e711f0b910cdf5d4d8066a-20250624
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
-	(envelope-from <jason-jh.lin@mediatek.com>)
-	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1874043995; Tue, 24 Jun 2025 18:39:30 +0800
-Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.39; Tue, 24 Jun 2025 18:39:28 +0800
-Received: from mtksitap99.mediatek.inc (10.233.130.16) by
- mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1258.39 via Frontend Transport; Tue, 24 Jun 2025 18:39:28 +0800
-From: Jason-JH Lin <jason-jh.lin@mediatek.com>
-To: Chun-Kuang Hu <chunkuang.hu@kernel.org>, AngeloGioacchino Del Regno
-	<angelogioacchino.delregno@collabora.com>
-CC: Matthias Brugger <matthias.bgg@gmail.com>, Jason-JH Lin
-	<jason-jh.lin@mediatek.com>, Nancy Lin <nancy.lin@mediatek.com>, Singo Chang
-	<singo.chang@mediatek.com>, Paul-PL Chen <paul-pl.chen@mediatek.com>,
-	Yongqiang Niu <yongqiang.niu@mediatek.com>, Zhenxing Qin
-	<zhenxing.qin@mediatek.com>, Xiandong Wang <xiandong.wang@mediatek.com>,
-	Sirius Wang <sirius.wang@mediatek.com>, Xavier Chang
-	<xavier.chang@mediatek.com>, Jarried Lin <jarried.lin@mediatek.com>, Fei Shao
-	<fshao@chromium.org>, Chen-yu Tsai <wenst@chromium.org>,
-	<linux-kernel@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<Project_Global_Chrome_Upstream_Group@mediatek.com>
-Subject: [PATCH v2] soc: mediatek: mtk-mutex: Fix confusing usage of MUTEX_MOD2
-Date: Tue, 24 Jun 2025 18:39:03 +0800
-Message-ID: <20250624103928.408194-1-jason-jh.lin@mediatek.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="IAttkQBD"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55OAdrQc1138040;
+	Tue, 24 Jun 2025 05:39:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750761593;
+	bh=1UndgjPOX1TCSZCvOeL9kzhOH9nzk/4CegsNiR3QXeQ=;
+	h=Date:Subject:To:CC:References:From:In-Reply-To;
+	b=IAttkQBDiEJkOHEDXHW7005DUZQuTbMFNZRmHM/51KZe3O/UWLyeI6xH4ipGx5q/t
+	 WDGQwOiybs4H2rRBnLYoUAK5H4LaAM6MzcinXU6ykw1sAxcTNe39nQ666dUOUM2nYN
+	 92UEYeue8BTdelqz0Qp6gvm/Z7gdGaOWpzCfUnPc=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55OAdrwh4136188
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Tue, 24 Jun 2025 05:39:53 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
+ Jun 2025 05:39:52 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Tue, 24 Jun 2025 05:39:52 -0500
+Received: from [172.24.227.38] (ula0502350.dhcp.ti.com [172.24.227.38])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55OAdl6T1625959;
+	Tue, 24 Jun 2025 05:39:48 -0500
+Message-ID: <c4362d9e-62a4-4c28-b1cd-c338467f92ae@ti.com>
+Date: Tue, 24 Jun 2025 16:09:47 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-MTK: N
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv4 2/6] dt-bindings: arm: ti: Add bindings for AM62D2 SoC
+To: Krzysztof Kozlowski <krzk@kernel.org>, <nm@ti.com>, <vigneshr@ti.com>,
+        <praneeth@ti.com>
+CC: <kristo@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <khasim@ti.com>, <v-singh1@ti.com>, <afd@ti.com>, <bb@ti.com>,
+        <devarsht@ti.com>
+References: <20250623141253.3519546-1-p-bhagat@ti.com>
+ <20250623141253.3519546-3-p-bhagat@ti.com>
+ <2e26a403-fac2-4217-8525-24e39d4c92c5@kernel.org>
+Content-Language: en-US
+From: Paresh Bhagat <p-bhagat@ti.com>
+In-Reply-To: <2e26a403-fac2-4217-8525-24e39d4c92c5@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-The usage of MUTEX_MOD1 and MUTEX_MOD2 for calculating mod settings
-over 32 has been confusing. To improve consistency and clarity, these
-defines need to fit into the same MUTEX_MOD define as possible.
+Hi Krzysztof,
 
-However, MUTEX_MOD1 cannot be directly used for all SoCs because,
-for example, the mod1 register (0x34) of MT2712 is not adjacent to
-its mod0 register (0x2c). To address this, a `mutex_mod1_reg` field
-is introduced in the mutex driver data structure. This allows all
-SoCs to use a unified MUTEX_MOD to determine their register offsets.
+Thanks for the review.
 
-With this change, the separate usage of MUTEX_MOD1 and MUTEX_MOD2 is
-eliminated, simplifying the logic for obtaining offsets and mod IDs.
+On 23/06/25 19:55, Krzysztof Kozlowski wrote:
+> On 23/06/2025 16:12, Paresh Bhagat wrote:
+>> The AM62D2 SoC belongs to the K3 Multicore SoC architecture with DSP core
+>> targeted for applications needing high-performance Digital Signal
+>> Processing. It is used in applications like automotive audio systems,
+>> professional sound equipment, radar and radio for aerospace, sonar in
+>> marine devices, and ultrasound in medical imaging. It also supports
+>> precise signal analysis in test and measurement tools.
+> Drop all marketing stuff.
+>
+>> Some highlights of AM62D2 SoC are:
+> This is not a product brochure.
+>
+> A nit, subject: drop second/last, redundant "bindings". The
+> "dt-bindings" prefix is already stating that these are bindings.
+> See also:
+> https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
 
-Signed-off-by: Jason-JH Lin <jason-jh.lin@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
----
- drivers/soc/mediatek/mtk-mutex.c | 109 ++++++++++++++++---------------
- 1 file changed, 56 insertions(+), 53 deletions(-)
 
-diff --git a/drivers/soc/mediatek/mtk-mutex.c b/drivers/soc/mediatek/mtk-mutex.c
-index aaa965d4b050..38179e8cd98f 100644
---- a/drivers/soc/mediatek/mtk-mutex.c
-+++ b/drivers/soc/mediatek/mtk-mutex.c
-@@ -17,16 +17,35 @@
- 
- #define MT2701_MUTEX0_MOD0			0x2c
- #define MT2701_MUTEX0_SOF0			0x30
-+#define MT2701_MUTEX0_MOD1			0x34
-+
- #define MT8183_MUTEX0_MOD0			0x30
-+#define MT8183_MUTEX0_MOD1			0x34
- #define MT8183_MUTEX0_SOF0			0x2c
- 
- #define DISP_REG_MUTEX_EN(n)			(0x20 + 0x20 * (n))
- #define DISP_REG_MUTEX(n)			(0x24 + 0x20 * (n))
- #define DISP_REG_MUTEX_RST(n)			(0x28 + 0x20 * (n))
--#define DISP_REG_MUTEX_MOD(mutex_mod_reg, n)	(mutex_mod_reg + 0x20 * (n))
--#define DISP_REG_MUTEX_MOD1(mutex_mod_reg, n)	((mutex_mod_reg) + 0x20 * (n) + 0x4)
-+/*
-+ * Some SoCs may have multiple MUTEX_MOD registers as more than 32 mods
-+ * are present, hence requiring multiple 32-bits registers.
-+ *
-+ * The mutex_table_mod fully represents that by defining the number of
-+ * the mod sequentially, later used as a bit number, which can be more
-+ * than 0..31.
-+ *
-+ * In order to retain compatibility with older SoCs, we perform R/W on
-+ * the single 32 bits registers, but this requires us to translate the
-+ * mutex ID bit accordingly.
-+ */
-+#define DISP_REG_MUTEX_MOD(mutex, id, n) ({ \
-+	const typeof(mutex) _mutex = (mutex); \
-+	u32 _offset = (id) < 32 ? \
-+		      _mutex->data->mutex_mod_reg : \
-+		      _mutex->data->mutex_mod1_reg; \
-+	_offset + 0x20 * (n); \
-+})
- #define DISP_REG_MUTEX_SOF(mutex_sof_reg, n)	(mutex_sof_reg + 0x20 * (n))
--#define DISP_REG_MUTEX_MOD2(n)			(0x34 + 0x20 * (n))
- 
- #define INT_MUTEX				BIT(1)
- 
-@@ -334,6 +353,7 @@ struct mtk_mutex_data {
- 	const u8 *mutex_table_mod;
- 	const u16 *mutex_sof;
- 	const u16 mutex_mod_reg;
-+	const u16 mutex_mod1_reg;
- 	const u16 mutex_sof_reg;
- 	const bool no_clk;
- };
-@@ -714,6 +734,7 @@ static const struct mtk_mutex_data mt2701_mutex_driver_data = {
- 	.mutex_mod = mt2701_mutex_mod,
- 	.mutex_sof = mt2712_mutex_sof,
- 	.mutex_mod_reg = MT2701_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT2701_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT2701_MUTEX0_SOF0,
- };
- 
-@@ -721,6 +742,7 @@ static const struct mtk_mutex_data mt2712_mutex_driver_data = {
- 	.mutex_mod = mt2712_mutex_mod,
- 	.mutex_sof = mt2712_mutex_sof,
- 	.mutex_mod_reg = MT2701_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT2701_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT2701_MUTEX0_SOF0,
- };
- 
-@@ -728,6 +750,7 @@ static const struct mtk_mutex_data mt6795_mutex_driver_data = {
- 	.mutex_mod = mt8173_mutex_mod,
- 	.mutex_sof = mt6795_mutex_sof,
- 	.mutex_mod_reg = MT2701_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT2701_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT2701_MUTEX0_SOF0,
- };
- 
-@@ -735,6 +758,7 @@ static const struct mtk_mutex_data mt8167_mutex_driver_data = {
- 	.mutex_mod = mt8167_mutex_mod,
- 	.mutex_sof = mt8167_mutex_sof,
- 	.mutex_mod_reg = MT2701_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT2701_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT2701_MUTEX0_SOF0,
- 	.no_clk = true,
- };
-@@ -743,6 +767,7 @@ static const struct mtk_mutex_data mt8173_mutex_driver_data = {
- 	.mutex_mod = mt8173_mutex_mod,
- 	.mutex_sof = mt2712_mutex_sof,
- 	.mutex_mod_reg = MT2701_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT2701_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT2701_MUTEX0_SOF0,
- };
- 
-@@ -750,6 +775,7 @@ static const struct mtk_mutex_data mt8183_mutex_driver_data = {
- 	.mutex_mod = mt8183_mutex_mod,
- 	.mutex_sof = mt8183_mutex_sof,
- 	.mutex_mod_reg = MT8183_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT8183_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT8183_MUTEX0_SOF0,
- 	.mutex_table_mod = mt8183_mutex_table_mod,
- 	.no_clk = true,
-@@ -757,6 +783,7 @@ static const struct mtk_mutex_data mt8183_mutex_driver_data = {
- 
- static const struct mtk_mutex_data mt8186_mdp_mutex_driver_data = {
- 	.mutex_mod_reg = MT8183_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT8183_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT8183_MUTEX0_SOF0,
- 	.mutex_table_mod = mt8186_mdp_mutex_table_mod,
- };
-@@ -765,6 +792,7 @@ static const struct mtk_mutex_data mt8186_mutex_driver_data = {
- 	.mutex_mod = mt8186_mutex_mod,
- 	.mutex_sof = mt8186_mutex_sof,
- 	.mutex_mod_reg = MT8183_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT8183_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT8183_MUTEX0_SOF0,
- };
- 
-@@ -772,12 +800,14 @@ static const struct mtk_mutex_data mt8188_mutex_driver_data = {
- 	.mutex_mod = mt8188_mutex_mod,
- 	.mutex_sof = mt8188_mutex_sof,
- 	.mutex_mod_reg = MT8183_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT8183_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT8183_MUTEX0_SOF0,
- };
- 
- static const struct mtk_mutex_data mt8188_vpp_mutex_driver_data = {
- 	.mutex_sof = mt8188_mutex_sof,
- 	.mutex_mod_reg = MT8183_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT8183_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT8183_MUTEX0_SOF0,
- 	.mutex_table_mod = mt8188_mdp_mutex_table_mod,
- };
-@@ -786,6 +816,7 @@ static const struct mtk_mutex_data mt8192_mutex_driver_data = {
- 	.mutex_mod = mt8192_mutex_mod,
- 	.mutex_sof = mt8183_mutex_sof,
- 	.mutex_mod_reg = MT8183_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT8183_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT8183_MUTEX0_SOF0,
- };
- 
-@@ -793,12 +824,14 @@ static const struct mtk_mutex_data mt8195_mutex_driver_data = {
- 	.mutex_mod = mt8195_mutex_mod,
- 	.mutex_sof = mt8195_mutex_sof,
- 	.mutex_mod_reg = MT8183_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT8183_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT8183_MUTEX0_SOF0,
- };
- 
- static const struct mtk_mutex_data mt8195_vpp_mutex_driver_data = {
- 	.mutex_sof = mt8195_mutex_sof,
- 	.mutex_mod_reg = MT8183_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT8183_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT8183_MUTEX0_SOF0,
- 	.mutex_table_mod = mt8195_mutex_table_mod,
- };
-@@ -807,6 +840,7 @@ static const struct mtk_mutex_data mt8365_mutex_driver_data = {
- 	.mutex_mod = mt8365_mutex_mod,
- 	.mutex_sof = mt8183_mutex_sof,
- 	.mutex_mod_reg = MT8183_MUTEX0_MOD0,
-+	.mutex_mod1_reg = MT8183_MUTEX0_MOD1,
- 	.mutex_sof_reg = MT8183_MUTEX0_SOF0,
- 	.no_clk = true,
- };
-@@ -859,7 +893,7 @@ void mtk_mutex_add_comp(struct mtk_mutex *mutex,
- 	struct mtk_mutex_ctx *mtx = container_of(mutex, struct mtk_mutex_ctx,
- 						 mutex[mutex->id]);
- 	unsigned int reg;
--	unsigned int sof_id;
-+	unsigned int sof_id, mod_id;
- 	unsigned int offset;
- 
- 	WARN_ON(&mtx->mutex[mutex->id] != mutex);
-@@ -890,18 +924,11 @@ void mtk_mutex_add_comp(struct mtk_mutex *mutex,
- 		sof_id = MUTEX_SOF_DP_INTF1;
- 		break;
- 	default:
--		if (mtx->data->mutex_mod[id] < 32) {
--			offset = DISP_REG_MUTEX_MOD(mtx->data->mutex_mod_reg,
--						    mutex->id);
--			reg = readl_relaxed(mtx->regs + offset);
--			reg |= 1 << mtx->data->mutex_mod[id];
--			writel_relaxed(reg, mtx->regs + offset);
--		} else {
--			offset = DISP_REG_MUTEX_MOD2(mutex->id);
--			reg = readl_relaxed(mtx->regs + offset);
--			reg |= 1 << (mtx->data->mutex_mod[id] - 32);
--			writel_relaxed(reg, mtx->regs + offset);
--		}
-+		offset = DISP_REG_MUTEX_MOD(mtx, mtx->data->mutex_mod[id], mutex->id);
-+		mod_id = mtx->data->mutex_mod[id] % 32;
-+		reg = readl_relaxed(mtx->regs + offset);
-+		reg |= BIT(mod_id);
-+		writel_relaxed(reg, mtx->regs + offset);
- 		return;
- 	}
- 
-@@ -917,6 +944,7 @@ void mtk_mutex_remove_comp(struct mtk_mutex *mutex,
- 	struct mtk_mutex_ctx *mtx = container_of(mutex, struct mtk_mutex_ctx,
- 						 mutex[mutex->id]);
- 	unsigned int reg;
-+	unsigned int mod_id;
- 	unsigned int offset;
- 
- 	WARN_ON(&mtx->mutex[mutex->id] != mutex);
-@@ -936,18 +964,11 @@ void mtk_mutex_remove_comp(struct mtk_mutex *mutex,
- 						  mutex->id));
- 		break;
- 	default:
--		if (mtx->data->mutex_mod[id] < 32) {
--			offset = DISP_REG_MUTEX_MOD(mtx->data->mutex_mod_reg,
--						    mutex->id);
--			reg = readl_relaxed(mtx->regs + offset);
--			reg &= ~(1 << mtx->data->mutex_mod[id]);
--			writel_relaxed(reg, mtx->regs + offset);
--		} else {
--			offset = DISP_REG_MUTEX_MOD2(mutex->id);
--			reg = readl_relaxed(mtx->regs + offset);
--			reg &= ~(1 << (mtx->data->mutex_mod[id] - 32));
--			writel_relaxed(reg, mtx->regs + offset);
--		}
-+		offset = DISP_REG_MUTEX_MOD(mtx, mtx->data->mutex_mod[id], mutex->id);
-+		mod_id = mtx->data->mutex_mod[id] % 32;
-+		reg = readl_relaxed(mtx->regs + offset);
-+		reg &= ~BIT(mod_id);
-+		writel_relaxed(reg, mtx->regs + offset);
- 		break;
- 	}
- }
-@@ -1023,7 +1044,7 @@ int mtk_mutex_write_mod(struct mtk_mutex *mutex,
- 	struct mtk_mutex_ctx *mtx = container_of(mutex, struct mtk_mutex_ctx,
- 						 mutex[mutex->id]);
- 	unsigned int reg;
--	u32 reg_offset, id_offset = 0;
-+	u32 offset, mod_id;
- 
- 	WARN_ON(&mtx->mutex[mutex->id] != mutex);
- 
-@@ -1033,34 +1054,16 @@ int mtk_mutex_write_mod(struct mtk_mutex *mutex,
- 		return -EINVAL;
- 	}
- 
--	/*
--	 * Some SoCs may have multiple MUTEX_MOD registers as more than 32 mods
--	 * are present, hence requiring multiple 32-bits registers.
--	 *
--	 * The mutex_table_mod fully represents that by defining the number of
--	 * the mod sequentially, later used as a bit number, which can be more
--	 * than 0..31.
--	 *
--	 * In order to retain compatibility with older SoCs, we perform R/W on
--	 * the single 32 bits registers, but this requires us to translate the
--	 * mutex ID bit accordingly.
--	 */
--	if (mtx->data->mutex_table_mod[idx] < 32) {
--		reg_offset = DISP_REG_MUTEX_MOD(mtx->data->mutex_mod_reg,
--						mutex->id);
--	} else {
--		reg_offset = DISP_REG_MUTEX_MOD1(mtx->data->mutex_mod_reg,
--						 mutex->id);
--		id_offset = 32;
--	}
-+	offset = DISP_REG_MUTEX_MOD(mtx, mtx->data->mutex_table_mod[idx], mutex->id);
-+	mod_id = mtx->data->mutex_table_mod[idx] % 32;
- 
--	reg = readl_relaxed(mtx->regs + reg_offset);
-+	reg = readl_relaxed(mtx->regs + offset);
- 	if (clear)
--		reg &= ~BIT(mtx->data->mutex_table_mod[idx] - id_offset);
-+		reg &= ~BIT(mod_id);
- 	else
--		reg |= BIT(mtx->data->mutex_table_mod[idx] - id_offset);
-+		reg |= BIT(mod_id);
- 
--	writel_relaxed(reg, mtx->regs + reg_offset);
-+	writel_relaxed(reg, mtx->regs + offset);
- 
- 	return 0;
- }
--- 
-2.43.0
+Will fix this in next version. Thanks
+>
+>
+>
+>> * Quad-Cortex-A53s (running up to 1.4GHz) in a single cluster. Dual/Single
+>>    core variants are provided in the same package to allow HW compatible
+>>    designs.
+>> * One Device manager Cortex-R5F for system power and resource management,
+>>    and one Cortex-R5F for Functional Safety or general-purpose usage.
+>> * DSP with Matrix Multiplication Accelerator(MMA) (up to 2 TOPS) based on
+>>    single core C7x.
+>> * 3x Multichannel Audio Serial Ports (McASP) Up to 4/6/16 Serial Data Pins
+>>    which can Transmit and Receive Clocks up to 50MHz, with multi-channel I2S
+>>    and TDM Audio inputs and outputs.
+>> * Integrated Giga-bit Ethernet switch supporting up to a total of two
+>>    external ports with TSN capable to enable audio networking features such
+>>    as, Ethernet Audio Video Bridging (eAVB) and Dante.
+>> * 9xUARTs, 5xSPI, 6xI2C, 2xUSB2, 3xCAN-FD, 3x eMMC and SD, OSPI memory
+>>    controller, 1x CSI-RX-4L for Camera, eCAP/eQEP, ePWM, among other
+>>    peripherals.
+>> * Dedicated Centralized Hardware Security Module with support for secure
+>>    boot, debug security and crypto acceleration and trusted execution
+>>    environment.
+>> * One 32 bit DDR Subsystem that supports LPDDR4, DDR4 memory types.
+>> * Low power mode support: Partial IO support for CAN/GPIO/UART wakeup.
 
+I will refine the first two paragraphs to be very concise.
+
+
+>>
+>> This SoC is of part K3 AM62x family, which includes the AM62A and AM62P
+>> variants. While the AM62A and AM62D are largely similar, the AM62D is
+>> specifically targeted for general-purpose DSP applications, whereas the
+>> AM62A focuses on edge AI workloads. A key distinction is that the AM62D
+>> does not include multimedia components such as the video encoder/decoder,
+>> MJPEG encoder, Vision Processing Accelerator (VPAC) for image signal
+>> processing, or the display subsystem. Additionally, the AM62D has a
+>> different pin configuration compared to the AM62A, which impacts
+>> embedded software development.
+
+
+This section is important as it clarifies the difference between AM62a 
+and AM62d, as we are reusing AM62a dtsi files for AM62d. Let me know if 
+you need a shorter version.
+
+
+>>
+>> This adds dt bindings for TI's AM62D2 family of devices.
+>>
+>> More details about the SoCs can be found in the Technical Reference Manual:
+>> https://www.ti.com/lit/pdf/sprujd4
+>>
+>> Signed-off-by: Paresh Bhagat <p-bhagat@ti.com>
+>
+> And what happened with the previous comments?
+
+
+Yep there were some indentation problems earlier, which is fixed in this 
+version. There was also an ack from Conor Dooley in v3. I will include that.
+
+
+>
+> Reach internally TI so they will coach you how to send patches upstream.
+>
+> Best regards,
+> Krzysztof
