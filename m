@@ -1,143 +1,237 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7042BFC62
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 15:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43AA2D2380;
+	Tue, 24 Jun 2025 15:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750778139; cv=none; b=OArBnc62Fd7kAaqDuB0dp0n83zN/LbdB4QPCl74YuHiSP3Zmp6w5C4YlbKOt2fw38FG6rEBBQKZ+KEYB5SpgA88wOjGPhf2tf6fkd8jXqNzNuE/LRg5iZ5ug6wHIKktKSULEYODMvbR6Kc4F37z+LOG6pcWLxQUIdbNSyXzABpg=
+	t=1750778194; cv=none; b=FKeB/DHbgmXONbgIuSWjhe6qq0e+G9bsqxtLk6FP7jwAwd3fhHvXKxWNKE6SAd7VhSX/aIz5PwswUJkKeLENtOY9/75HXvzjAj200ikuAGPvmalhd9yQBBdQZ/pIyh77b3/lk9T8XXZpf4YCmrNajRyEN3+TzwjBIfmKbFCdlGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750778139; c=relaxed/simple;
-	bh=ZrdxuWG7+LFoBk2IWmpfoUdLdIZz43RgZ3fNnrL1bTs=;
+	s=arc-20240116; t=1750778194; c=relaxed/simple;
+	bh=2HwvlF2LYWERMPVKFChh7P5jnSjjJLwyRgHLxB0Oddc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ckTiBCHFug+CHOM62s0EkmbfCIdFpim9ognOMjJku2roUgzNjdIyWJ8Fxno+77+hOK26xssEsGzc7WbWgoUYGjaZ8ROsU1H1X0l4VX9fxTIBwpWwKcWhLgp74eaLyFeB38GoXakcW18eSovdwzlmBwiFqDWYXe/9t6+8GQR3+EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=D4O5FtOA; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 To:Cc:Content-Type; b=lazDXaSte+79S9mzl/azeCfnD3hWMQ+Fq++s7fQoSMRJqboYza3YYjKy/e+B15MYVLd+0bBbgpXHkefl2kaurh1FUI2q4pBJAlUrnUwZ+nplSMaMDyVhpqsmIBEcFBSKI/Q8MV3nRkOQinWgKUU8Pr3vq8B/lJQtjJgXpNz2rfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lvRymQg2; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="D4O5FtOA"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ae0a420431bso222512366b.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:15:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvRymQg2"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-607cc1a2bd8so8346828a12.2;
+        Tue, 24 Jun 2025 08:16:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1750778135; x=1751382935; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=eLkoFblRVcI4qlzicS3evY0eDoBrk4ZSgrPnvsJhZ+Q=;
-        b=D4O5FtOA9Yt2WDFWzF48V0lhRyzjRMI77+3uvTWdycEfvkhBTQCW/8m6kmska5RZ42
-         RTDPKfRjckSNgMzaXL1YIA1WY5+wqFsb/GlwARfZx+/K90ZnjB9hAIjDqlJ5RroKPv0B
-         jL6sADr7ILu0b8cQK+jCNQ57unCHF2lLFa5Lg=
+        d=gmail.com; s=20230601; t=1750778191; x=1751382991; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xz6lF9XniltLisPEnyJriOyTCQCRxSp9Qc6C+GjVXIs=;
+        b=lvRymQg2IpLc5oDCR+GFDazyhzKh7roA5U2NyEBCupXzR64Yl24+L4y1xcMpJ0XB+3
+         +/AHa3sh0vR1FlZIcNXF0aC47d8IcqVjEp9VmnYn1Q8+6BC+5R1iSfKmlEeSD7vaGOxN
+         EOYZJnPU7BJXoM6oUkmEnc6qh2vANgsewIsNTi5UPumed/IaK01ElSHKELhYnuXaWqDR
+         QdRbe57i/sPKHB9HATFAqieIEZCg5eGzPeMePHw8klh+K1wv0mabYOltcMe8+T2J9Bgq
+         yc05A7lpR3sgFgHNN5cJXvhTm4nF1muBe/O9YtSY9T28qVv7e0oAIekbOjNJTvaTT4z0
+         NmZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750778135; x=1751382935;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eLkoFblRVcI4qlzicS3evY0eDoBrk4ZSgrPnvsJhZ+Q=;
-        b=ZC+kintpir6RbtX5TFy18HwpyfRwLtZiDZqrZVQe+cFFct7WHIuE6kaO+csq1g8Qka
-         GhEYEu+rzPPRdxaDl/wm3DEhdwEgJfsHC66H3irXS+OswnzaArbPTiBsJfLRmvJ1tYr5
-         6OE53EBd1YXaH85AnZ4A5CggqVNuvjzpp/nTuX782W1BYFZGel24ZHAbp/5uezfnnpT9
-         3jjMs7N9DFtpCEZYelqxq8VcopSBRXhZ8tfnnIavHoXnN0fUGcgV0VFxVb+aMM2eYZBC
-         qIx+i/5JKy+P1amKXRgqPmQW04J18agRENMtHqBTcfGWZwATmfnoz9o2rdmaO7JKgGqm
-         1/WQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXO3pwPN1BHw8IRfd3+hqnebhqEIO+xNVp4oxtIYLcVc9p7/JoSeaFjrDljPefLD7+ZXEuhskRIQIs4hjc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyS8S8L6YoPr++Xg8aHk9rjqXp2MxgUdd0ITuSGEAm6Y7eJBkqX
-	etUeKPA8Ny73yNLL6Qep18dZv7WRsegZtxrxGGVnM43n0j70jKSqUzA5UK85SB2wgbZJyf1F2PX
-	hhVWJJIg=
-X-Gm-Gg: ASbGncu2OGQed4D8S904n1Hrz7CIiTTUT+8//0ELfezqbTFmJ7c9a9EQi32xwBYgN3O
-	FbL8cN1e0Xf37coqRvyvHCFU96AorV7vWeCMszpURQWaU2hphqblaU5gVr+/+2eeo7bORnHsQyG
-	QoMXLGnSqTAsGKk8vVE64aXTUnqF2BYO0W7cQW7c+vmLnfM8B7DxG4muWQe5/GZBiAIqi9v+XKf
-	OxBxjgr7wTXy54nLpHbq7V5maxSAf3z/BmvMAALt3JZZVeKK7NdGAEe1B+ulsOxO9dzxqAEWC1O
-	eL4ET15mMjBxhmdAC9KAIcajhhn7tht4nZUIX/AUumUQDTZc34LR8Zjt53He3K9xaKpHoDovgyZ
-	cQAgdhLfo0gzyMh8Nc6lzuf+BSjLrtu6A2nsP
-X-Google-Smtp-Source: AGHT+IEzJTHPe/6wmovstaOb3scg6OvjcDRQxWNHFKPblkcNuWZDBXMHeNghfGiem3EtEcUkLkGbYQ==
-X-Received: by 2002:a17:907:3dac:b0:ae0:a116:b9d3 with SMTP id a640c23a62f3a-ae0a116c3efmr491215566b.60.1750778134988;
-        Tue, 24 Jun 2025 08:15:34 -0700 (PDT)
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com. [209.85.208.54])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0b4968246sm65391766b.18.2025.06.24.08.15.32
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 08:15:33 -0700 (PDT)
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-601dfef6a8dso8698447a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 08:15:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU+5bFjLiA4GykzABXtypc7uo4YYWvG7FwzKjc/6ACTG6G0dMnV8CY0UZP9PD+FrPRqGpJqaNkfQeHJSes=@vger.kernel.org
-X-Received: by 2002:a05:6402:4308:b0:608:330a:9f67 with SMTP id
- 4fb4d7f45d1cf-60a1d1a2ecamr15042057a12.32.1750778131214; Tue, 24 Jun 2025
- 08:15:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750778191; x=1751382991;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xz6lF9XniltLisPEnyJriOyTCQCRxSp9Qc6C+GjVXIs=;
+        b=hon+LHMyx1gF6R38An0cNXZkVnPjeMTDL2BB/HLBPhwSjxA3yXPEgWt/5UDutHuBef
+         CfiIXHbCvq1lFvOuK9pJN3M29DBmAd9yJPYuyyBYmdPm7KAHWxRSCrqTdOS/HWJeyUoQ
+         b8eJDw8D+dRI9Uz84krE6MGEYm0zdGy+zXY04g5/RfMk7IMGnMfbo/VzNZXOAvzZL4FA
+         XvNn5jMZrpRtubDY0lPjHB7LwQEOZd4CVfvpsPSrfjqitjdE/FUNqrpkQ0INeEdBdPAb
+         0ORQppOzIYiUiVdI2txs5t9qi0oJVtSg99bOqHFLvTRaIhRdCgZOBGYA+veZI2AG0gm+
+         M/Rg==
+X-Forwarded-Encrypted: i=1; AJvYcCU4JBCtBy+ia4asaEox+cV1/W1ff7XP7QYjb2Sb91TArXzJJLzeUIP4V7l3fAuMEL7PgfvekylVLPHE@vger.kernel.org, AJvYcCW+99RxePhxmhJtxQRj2I+isLAoEnlN9OD5iyRGYQ8vB2xNHm9lpbDI5TSUhV1ydSgQN/mMPHNQvf4bwi2q@vger.kernel.org, AJvYcCW7R5UWnx08WJv0sJOBh7qBqCGzsYcWCxk0pXEiGxpMRKF/k4jmi4Kv2GjiqlD4C0QMVNhX6Kns+NDl@vger.kernel.org, AJvYcCXa+l2yafG6C26OOqxFJOkmhabRFptuK7Q2CU3sMGX60qpQXhEXyzZWotywLfCXpFprNR7CMdccxkd1u0KtrZoQzTE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzyz9Gx/gdFUnpBqIX8dP/3SalytRJEVf5XTHF3GhIQ5qM9BJZK
+	g8KyG9dk4S7NsOZYUBc8XB12oENml+fwPWeXVnJD7p9h8jntsoMS0Rty18aPzNXxcW8/NOX1fyi
+	CbzNUouE7whA13ADoddPzU7ZiSFwnib0=
+X-Gm-Gg: ASbGnctt4g43OoiImEEiBEH/aQjWXhJa/XnKIm+7VOBZGPVYGIV+e2toTw9bZEmUYp8
+	aHPEMw3668LErFgPZPX3WVWKhJ0bf4zCvMysn76ibnuQqz006m5cHjclpmlWxfrDCc5nZG6wcwE
+	z68nS6rEKQCEkOWW3+tIXqPPdh4Lp0TB743/ICzbGT3j6tjSypJVo3+KUZ
+X-Google-Smtp-Source: AGHT+IG+Z5NuC4RG8ReXh+ijI0QVvcrGpC6q73clRUZr6aJi8i6CQO+smzxdbdwirUDg+z0XbAcVWnQEOSlhWZ83ilc=
+X-Received: by 2002:a05:6402:1d53:b0:604:5bba:61a0 with SMTP id
+ 4fb4d7f45d1cf-60a1cf2d130mr14287673a12.23.1750778190705; Tue, 24 Jun 2025
+ 08:16:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1750585239.git.christophe.leroy@csgroup.eu>
- <f4b2a32853b5daba7aeac9e9b96ec1ab88981589.1750585239.git.christophe.leroy@csgroup.eu>
- <CAHk-=wj4P6p1kBVW7aJbWAOGJZkB7fXFmwaXLieBRhjmvnWgvQ@mail.gmail.com> <2f569008-dd66-4bb6-bf5e-f2317bb95e10@csgroup.eu>
-In-Reply-To: <2f569008-dd66-4bb6-bf5e-f2317bb95e10@csgroup.eu>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 24 Jun 2025 08:15:14 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh+zcmrHM5ryM=_71vEwjaRjwRHVgFu8WRG5xsgu3ku+A@mail.gmail.com>
-X-Gm-Features: Ac12FXyiIOMeVWX36Mt87GnZfIOR3ssqbql1oPQlXRyO409zF_tN4rQRqufbqcw
-Message-ID: <CAHk-=wh+zcmrHM5ryM=_71vEwjaRjwRHVgFu8WRG5xsgu3ku+A@mail.gmail.com>
-Subject: Re: [PATCH 2/5] uaccess: Add speculation barrier to copy_from_user_iter()
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>, 
-	Naveen N Rao <naveen@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>, 
-	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, Andre Almeida <andrealmeid@igalia.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, David Laight <david.laight.linux@gmail.com>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-fsdevel@vger.kernel.org, 
-	linux-mm@kvack.org
+References: <20250530171841.423274-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250530171841.423274-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <TY3PR01MB11346A62FDF84C5F2C1240BBF8677A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <CA+V-a8sZfTgOENXfR2NnykgjGHd+2-vS9Jk-dNLWTVQyAGbQTw@mail.gmail.com> <TYCPR01MB11332F40696148C7216866D3B8670A@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYCPR01MB11332F40696148C7216866D3B8670A@TYCPR01MB11332.jpnprd01.prod.outlook.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 24 Jun 2025 16:16:03 +0100
+X-Gm-Features: AX0GCFtI-IF1eAXq4c-T_qlior0_QFH7KRpC7NQJfzxetksCcBYQKOzsOlDjoug
+Message-ID: <CA+V-a8txzBEwSSNEgoPkxBGAoQDrdGFtnYoLo49SqN-aZUUVXw@mail.gmail.com>
+Subject: Re: [PATCH v6 4/4] drm: renesas: rz-du: mipi_dsi: Add support for
+ RZ/V2H(P) SoC
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	"laurent.pinchart" <laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 23 Jun 2025 at 22:49, Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
+On Mon, Jun 16, 2025 at 11:54=E2=80=AFAM Biju Das <biju.das.jz@bp.renesas.c=
+om> wrote:
 >
+>
+>
+> > -----Original Message-----
+> > From: Lad, Prabhakar <prabhakar.csengg@gmail.com>
+> > Sent: Monday, June 16, 2025 11:48 AM
+> > To: Biju Das <biju.das.jz@bp.renesas.com>
+> > Cc: Geert Uytterhoeven <geert+renesas@glider.be>; Andrzej Hajda
+> > <andrzej.hajda@intel.com>; Neil Armstrong <neil.armstrong@linaro.org>;
+> > Robert Foss <rfoss@kernel.org>; laurent.pinchart
+> > <laurent.pinchart@ideasonboard.com>; Jonas Karlman <jonas@kwiboo.se>;
+> > Jernej Skrabec <jernej.skrabec@gmail.com>; Maarten Lankhorst
+> > <maarten.lankhorst@linux.intel.com>; Maxime Ripard <mripard@kernel.org>=
+;
+> > Thomas Zimmermann <tzimmermann@suse.de>; David Airlie <airlied@gmail.co=
+m>;
+> > Simona Vetter <simona@ffwll.ch>; Rob Herring <robh@kernel.org>; Krzyszt=
+of
+> > Kozlowski <krzk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>;
+> > Michael Turquette <mturquette@baylibre.com>; Stephen Boyd
+> > <sboyd@kernel.org>; Magnus Damm <magnus.damm@gmail.com>; dri-
+> > devel@lists.freedesktop.org; devicetree@vger.kernel.org; linux-
+> > kernel@vger.kernel.org; linux-renesas-soc@vger.kernel.org; linux-
+> > clk@vger.kernel.org; Fabrizio Castro <fabrizio.castro.jz@renesas.com>;
+> > Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > Subject: Re: [PATCH v6 4/4] drm: renesas: rz-du: mipi_dsi: Add support =
+for
+> > RZ/V2H(P) SoC
 > >
-> > (Although I also suspect that when we added ITER_UBUF we might have
-> > created cases where those user addresses aren't checked at iter
-> > creation time any more).
+> > Hi Biju,
 > >
+> > Thank you for the review.
+> >
+> > On Fri, Jun 13, 2025 at 7:17=E2=80=AFAM Biju Das <biju.das.jz@bp.renesa=
+s.com>
+> > wrote:
+> > >
+> > > Hi Prabhakar,
+> > >
+> > > > -----Original Message-----
+> > > > From: Prabhakar <prabhakar.csengg@gmail.com>
+> > > > Sent: 30 May 2025 18:19
+> > > > Subject: [PATCH v6 4/4] drm: renesas: rz-du: mipi_dsi: Add support
+> > > > for RZ/V2H(P) SoC
+> > > >
+> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > >
+> > > > Add DSI support for Renesas RZ/V2H(P) SoC.
+> > > >
+> > > > Co-developed-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
+> > > > Signed-off-by: Lad Prabhakar
+> > > > <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > ---
+> > > > v5->v6:
+> > > > - Made use of GENMASK() macro for PLLCLKSET0R_PLL_*,
+> > > >   PHYTCLKSETR_* and PHYTHSSETR_* macros.
+> > > > - Replaced 10000000UL with 10 * MEGA
+> > > > - Renamed mode_freq_hz to mode_freq_khz in rzv2h_dsi_mode_calc
+> > > > - Replaced `i -=3D 1;` with `i--;`
+> > > > - Renamed RZV2H_MIPI_DPHY_FOUT_MIN_IN_MEGA to
+> > > >   RZV2H_MIPI_DPHY_FOUT_MIN_IN_MHZ and
+> > > >   RZV2H_MIPI_DPHY_FOUT_MAX_IN_MEGA to
+> > > >   RZV2H_MIPI_DPHY_FOUT_MAX_IN_MHZ.
+> > > >
+> > > > v4->v5:
+> > > > - No changes
+> > > >
+> > > > v3->v4
+> > > > - In rzv2h_dphy_find_ulpsexit() made the array static const.
+> > > >
+> > > > v2->v3:
+> > > > - Simplifed V2H DSI timings array to save space
+> > > > - Switched to use fsleep() instead of udelay()
+> > > >
+> > > > v1->v2:
+> > > > - Dropped unused macros
+> > > > - Added missing LPCLK flag to rzv2h info
+> > > > ---
+> > > >  .../gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c    | 345
+> > ++++++++++++++++++
+> > > >  .../drm/renesas/rz-du/rzg2l_mipi_dsi_regs.h   |  34 ++
+> > > >  2 files changed, 379 insertions(+)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > > > b/drivers/gpu/drm/renesas/rz- du/rzg2l_mipi_dsi.c index
+> > > > a31f9b6aa920..ea554ced6713 100644
+> > > > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > > > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_mipi_dsi.c
+> > > > @@ -5,6 +5,7 @@
+> > > >   * Copyright (C) 2022 Renesas Electronics Corporation
+> > > >   */
+> > > >  #include <linux/clk.h>
+> > > > +#include <linux/clk/renesas-rzv2h-dsi.h>
+> > > >  #include <linux/delay.h>
+> > > >  #include <linux/io.h>
+> > > >  #include <linux/iopoll.h>
+> > <snip>
+> > > > +
+> > > > +static int rzv2h_dphy_conf_clks(struct rzg2l_mipi_dsi *dsi, unsign=
+ed
+> > long mode_freq,
+> > > > +                             u64 *hsfreq_millihz) {
+> > > > +     struct rzv2h_plldsi_parameters *dsi_parameters =3D &dsi-
+> > >dsi_parameters;
+> > > > +     unsigned long status;
+> > > > +
+> > > > +     if (dsi->mode_calc.mode_freq_khz !=3D mode_freq) {
+> > > > +             status =3D rzv2h_dphy_mode_clk_check(dsi, mode_freq);
+> > > > +             if (status !=3D MODE_OK) {
+> > > > +                     dev_err(dsi->dev, "No PLL parameters found fo=
+r
+> > mode clk %lu\n",
+> > > > +                             mode_freq);
+> > > > +                     return -EINVAL;
+> > > > +             }
+> > > > +     }
+> > > > +
+> > > > +     clk_set_rate(dsi->vclk, dsi->mode_calc.mode_freq_hz);
+> > >
+> > > Not sure, Can we use the DSI divider required based on the data rate
+> > > (vclk, bpp and numlanes) here
+> > >
+> > > and then the set parent clk of PLLDSI as well here (dsi->vclk * the
+> > divider value) ??
+> > >
+> > > 24MHZ->PLL DSI->DSI DIVIDER->VCLOCK
+> > >
+> > > Maybe then the clock framework has all the information for setting
+> > PLL_DSI and DSI_DIVIDER clks??
+> > >
+> > Can you please elaborate here with a detailed example.
 >
-> Let's take the follow path as an exemple:
+> There will be determine_clk followed by set_clock for setting new rate fo=
+r PLL DSI(dsi->vclk * the divider value)
+> For eg:  vclk_max =3D 187.5 MHz, DSI Divider required =3D 16
+> Then set PLL_DSI =3D 187.5 * 16 MHz using clk_set.
 >
-> snd_pcm_ioctl(SNDRV_PCM_IOCTL_WRITEI_FRAMES)
->    snd_pcm_common_ioctl()
->      snd_pcm_xferi_frames_ioctl()
->        snd_pcm_lib_write()
->          __snd_pcm_lib_xfer()
->            default_write_copy()
->              copy_from_iter()
->                _copy_from_iter()
->                  __copy_from_iter()
->                    iterate_and_advance()
->                      iterate_and_advance2()
->                        iterate_iovec()
->                          copy_from_user_iter()
->
-> As far as I can see, none of those functions check the accessibility of
-> the iovec. Am I missing something ?
+This will trigger the algorithm twice, so I'll go with the current
+approach which is optimal.
 
-So we still to do this checking at creation time (see import_iovec ->
-__import_iovec, and import_ubuf).
-
-In the path you give as an example, the check happens at that
-"do_transfer()" stage when it does
-
-        err = import_ubuf(type, (__force void __user *)data, bytes, &iter);
-
-but yeah, it's very non-obvious (see __snd_pcm_lib_xfer(), which calls
-writer() which is either interleaved_copy() or noninterleaved_copy(),
-and then they do that do_transfer() thing which does that
-import_ubuf() thing.
-
-So *because* you were supposed to have checked your iov_iters
-beforehand, the actual iter code itself at some point just used
-__copy_to_user() directly with no checking at all.
-
-And that all was really *much* too subtle, and Al fixed this a few
-years ago (see commit 09fc68dc66f7: "iov_iter: saner checks on
-copyin/copyout")
-
-                  Linus
+Cheers,
+Prabhakar
