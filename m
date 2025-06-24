@@ -1,252 +1,174 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90B927A46B
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93376251792
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 09:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750756007; cv=none; b=kh7UL0gE34faywm/qqQ7/ll+1fe1Dh4ZfnWQbbyrk17i7HozSkHHNZzOUZ+LvVLU/OVmMintuGkTvS8EJH1Oh+8dSabGg3m0trDAinRzzK41iPTVFnG+8SSGgGXRFuhhrx3NemUgouyBBadli0gguZl3066GnNRxgIi9+FxMd6I=
+	t=1750756054; cv=none; b=K8cJHU0lGhLyAUb8Lk7LmgYTx2Q95/IdC/Dfs7YUAqKRv6YG+PQs9Sy//q1fRMInrjvV3gE5xDQ0EQQ7xHYB3B9ShTtFHfdljaZYN3ArxkPq1dAA1Zy5IOHTeIUFO/hZOJF5QwThONt8ZZHVZHGP+fnAIjCS+wxXewsnOGGC8bA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750756007; c=relaxed/simple;
-	bh=oxW2aAAfKBhOjlWbxlJ/FAtpZq04AOHQ+xCrx3SgYHY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NjPLPxenXSRBCioFTcFCeVnCiW6asafP8Gr368UKKOSZyGhRCXPql3hJKG5c5VDfpsuP8IOWzKJ4RoEOZDAXKL6EViqTgYmJ59rJ9llu4+G54AAIX0p4PdQ6QP9hpOL7KX8yCWPDZwDmYQiDpClcXUknZ01frKLd8koFbAv9c3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=xi/QlwlW; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Y9LCmN9J; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=E5mo4GVk; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=oREfj0fF; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750756054; c=relaxed/simple;
+	bh=0h1B/EXtyfjip0W6o3w7xdrYftaObTtcOMMwc/DNLCM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=YQ0LGEy41YLAvXtmnl7BL/P2WKBAPnB9RLIU5gHwlog4kYNxr7kQUGB+UnHCRzGsFu95mad2b94Gko5kS3Ca8t2x923DeiM2L21802tGlYbUJ4NN1IGrlZXtfL8+HDexMN1N+U+6e1phmwq/h1REgyoHeahydQyKesIo31bVByU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=vtvJ78HK; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="xi/QlwlW";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Y9LCmN9J";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="E5mo4GVk";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="oREfj0fF"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id D7A7A21174;
-	Tue, 24 Jun 2025 09:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750756003; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9lICjNkiewMZFMzrpHfU5ovumYbwTZRme9bMEyMsD/M=;
-	b=xi/QlwlWq8NLVSwyspSzkPKvKMA6Uvj8/W9IFdzSFQMZ+ayNwxoQ7cp2wwdex97PvJgFlo
-	x2f/4oVPrxX02VMjazKS8ra2I9oaBaKqNmT3rxbP2v97idRqli2arNKpl/rNn7z5z2COdO
-	7+ljTlARtsgKwvd1zlhYhRoTz1XsnuM=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750756003;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9lICjNkiewMZFMzrpHfU5ovumYbwTZRme9bMEyMsD/M=;
-	b=Y9LCmN9JTWkqSIjoqHkEfxTSRml/p11vY01knXb//RDebqmAaD1GQiHEbhGpors9cm5R2y
-	CTBVZa09ODuiO0Bw==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=E5mo4GVk;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=oREfj0fF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750756002; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9lICjNkiewMZFMzrpHfU5ovumYbwTZRme9bMEyMsD/M=;
-	b=E5mo4GVk3aRBGPmQF64SGv7r/9Z7BrhMxT4Br3ozs8DXcDb//Oxu3nHGSXqq7o7Mb7CLZo
-	IMLqC5HhH2wB7OabuAKDxSBbULfeVUwIiW40R1/IDWT12tchJxMWR5KfDDB9oIDWVupYrc
-	wnYgtTWRX1PCzt/kDQ6JBbhPNcnau4c=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750756002;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=9lICjNkiewMZFMzrpHfU5ovumYbwTZRme9bMEyMsD/M=;
-	b=oREfj0fFjtCcmySuYyx4a2eVlsi9oKqRPyLTW1pAnJyz47RDYq0CXOXEI70b1LsSzPwU5h
-	OgkxMNrQ9mrgSXBQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 35F1213A24;
-	Tue, 24 Jun 2025 09:06:42 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id gHhlC6JqWmhnFgAAD6G6ig
-	(envelope-from <tzimmermann@suse.de>); Tue, 24 Jun 2025 09:06:42 +0000
-Message-ID: <6dedf895-1681-4fe3-8ca4-68fd05070ef2@suse.de>
-Date: Tue, 24 Jun 2025 11:06:41 +0200
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="vtvJ78HK"
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55O6i84M016383;
+	Tue, 24 Jun 2025 05:07:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=i4IeI
+	J8yn+pHeHifgHBvLNv1j95vL/lajmEMjYmg9Fw=; b=vtvJ78HKc3gYphvn3frE3
+	vvlGXlOtzg54eWA5fpkkihZ1Xo5fb0MfSvK/BLC9CQCYawqqkCo625FoLwKOZNvy
+	6w6dJcugGppFUJIbgvWuwdYYGcF9qPKLYGybcIiT+KiiEJKFYBTEKEBWSIxK3NHl
+	bfoJr0xt1I2CLnsmLLm6h3cLWnnbDKgnZHDhMoufTFECopdWJ/afairZDmn8YRD3
+	oWvmObnOe1qP/lWWIOYx4Cr7tqD0U9ljncsadNf3ancAV4N5mN5+kzZLUXfPGqg9
+	75HNtypUyLESwGSbmdh/OOwKvviW57F445b2f+UlchiM8oCmxBhFyYuj3tw1jWii
+	g==
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 47dpk9eny2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 24 Jun 2025 05:07:18 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 55O97H4T012615
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 24 Jun 2025 05:07:17 -0400
+Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
+ ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Tue, 24 Jun 2025 05:07:17 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
+ ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Tue, 24 Jun 2025 05:07:17 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Tue, 24 Jun 2025 05:07:17 -0400
+Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.55] (may be forged))
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55O973ap007498;
+	Tue, 24 Jun 2025 05:07:11 -0400
+From: Jorge Marques <jorge.marques@analog.com>
+Date: Tue, 24 Jun 2025 11:06:05 +0200
+Subject: [PATCH v3 2/3] i3c: master: cdns: Use i3c_writel_fifo() and
+ i3c_readl_fifo()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/8] Fix access to video_is_primary_device() when
- compiled without CONFIG_VIDEO
-To: Mario Limonciello <superm1@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Lukas Wunner <lukas@wunner.de>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, David Woodhouse <dwmw2@infradead.org>,
- Lu Baolu <baolu.lu@linux.intel.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Alex Williamson <alex.williamson@redhat.com>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INTEL IOMMU (VT-d)" <iommu@lists.linux.dev>,
- "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- "open list:VFIO DRIVER" <kvm@vger.kernel.org>,
- "open list:SOUND" <linux-sound@vger.kernel.org>,
- Daniel Dadap <ddadap@nvidia.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- kernel test robot <lkp@intel.com>
-References: <20250623184757.3774786-1-superm1@kernel.org>
- <20250623184757.3774786-7-superm1@kernel.org>
-Content-Language: en-US
-From: Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- xsBNBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAHNJ1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPsLAjgQTAQgAOAIb
- AwULCQgHAgYVCgkICwIEFgIDAQIeAQIXgBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftODH
- AAoJEGgNwR1TC3ojx1wH/0hKGWugiqDgLNXLRD/4TfHBEKmxIrmfu9Z5t7vwUKfwhFL6hqvo
- lXPJJKQpQ2z8+X2vZm/slsLn7J1yjrOsoJhKABDi+3QWWSGkaGwRJAdPVVyJMfJRNNNIKwVb
- U6B1BkX2XDKDGffF4TxlOpSQzdtNI/9gleOoUA8+jy8knnDYzjBNOZqLG2FuTdicBXblz0Mf
- vg41gd9kCwYXDnD91rJU8tzylXv03E75NCaTxTM+FBXPmsAVYQ4GYhhgFt8S2UWMoaaABLDe
- 7l5FdnLdDEcbmd8uLU2CaG4W2cLrUaI4jz2XbkcPQkqTQ3EB67hYkjiEE6Zy3ggOitiQGcqp
- j//OwE0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRHUE9eosYb
- T6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgTRjP+qbU6
- 3Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+RdhgATnWW
- GKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zbehDda8lv
- hFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r12+lqdsA
- EQEAAcLAdgQYAQgAIAIbDBYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJftOH6AAoJEGgNwR1T
- C3ojVSkIALpAPkIJPQoURPb1VWjh34l0HlglmYHvZszJWTXYwavHR8+k6Baa6H7ufXNQtThR
- yIxJrQLW6rV5lm7TjhffEhxVCn37+cg0zZ3j7zIsSS0rx/aMwi6VhFJA5hfn3T0TtrijKP4A
- SAQO9xD1Zk9/61JWk8OysuIh7MXkl0fxbRKWE93XeQBhIJHQfnc+YBLprdnxR446Sh8Wn/2D
- Ya8cavuWf2zrB6cZurs048xe0UbSW5AOSo4V9M0jzYI4nZqTmPxYyXbm30Kvmz0rYVRaitYJ
- 4kyYYMhuULvrJDMjZRvaNe52tkKAvMevcGdt38H4KSVXAylqyQOW5zvPc4/sq9c=
-In-Reply-To: <20250623184757.3774786-7-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_DN_ALL(0.00)[];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FREEMAIL_CC(0.00)[amd.com,gmail.com,ffwll.ch,wunner.de,linux.intel.com,kernel.org,infradead.org,8bytes.org,arm.com,redhat.com,perex.cz,suse.com,lists.freedesktop.org,vger.kernel.org,lists.linux.dev,nvidia.com,intel.com];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	MID_RHS_MATCH_FROM(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RLqbkuqg11osc55coksncbnarj)];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:dkim,suse.de:mid,suse.de:email,intel.com:email]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: D7A7A21174
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
+Message-ID: <20250624-i3c-writesl-readsl-v3-2-63ccf0870f01@analog.com>
+References: <20250624-i3c-writesl-readsl-v3-0-63ccf0870f01@analog.com>
+In-Reply-To: <20250624-i3c-writesl-readsl-v3-0-63ccf0870f01@analog.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Frank Li
+	<Frank.Li@nxp.com>,
+        =?utf-8?q?Przemys=C5=82aw_Gaj?= <pgaj@cadence.com>
+CC: <linux-i3c@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        "Jorge
+ Marques" <jorge.marques@analog.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750756023; l=2207;
+ i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
+ bh=0h1B/EXtyfjip0W6o3w7xdrYftaObTtcOMMwc/DNLCM=;
+ b=F1IjRYp3Q0ELCStfPrS7g51UhC7/jgUgw14x+qaqyVvt6dWadVRF6/X7P3mUpWb2BCoV18AL6
+ 40bLuzCmPHEBbRr1ooWDw3Z601MzklzOty9xBgsHYFl0zbpvSN4OyUI
+X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
+ pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=aclhnQot c=1 sm=1 tr=0 ts=685a6ac6 cx=c_pps
+ a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=gAnH3GRIAAAA:8 a=HIdXEUdWjxm5DSZX9lgA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI0MDA3NyBTYWx0ZWRfX7beYt5zqI7jB
+ djo/m4mL2oY/hy7/JKN/r0TcwcPK9bHUUAb7WH8TOZd/FZ8z1eToqB8bHxSEhqHSMBDxWg/L0Kk
+ qJbZbf4sZYB/z/nFjh1+/1PGdZJo47YostQEGqEtgcrxoZBwtSPegYstTyf1pE22sz+uPFg2Vt0
+ /0KaxG+ma5PJX2hMQdUU09iZeXFsFNyZVOXVqsapOg2JJUAZ1l75L/ufJF/Qq1akGMtuNiBvcIV
+ cxf5NNUOuPnhC5rjDOfGdeq7vVqzsB2sdqL9LceweuHonmY5Q+2CG01ty4ww5e9cm29e1FWQaEP
+ DVBeg0n3KqhrhoA8jvOYylFIYB7O4hZXx7o1xgGkpmrO8zTpVBjWJ4C1AdmGVz29UpQbPZ5jdcP
+ Hz7QXhcrB5DteaUvWgqzdhZ5sZ/7VzHVzrLFywAQlQz2h0RqQr1RdajsgzNc8M/+09uHPL+k
+X-Proofpoint-ORIG-GUID: G789YaPys_ZBzYqe3cU5W8fn3Eo0Z0Au
+X-Proofpoint-GUID: G789YaPys_ZBzYqe3cU5W8fn3Eo0Z0Au
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-24_03,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 spamscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ lowpriorityscore=0 suspectscore=0 mlxlogscore=807 phishscore=0 adultscore=0
+ mlxscore=0 priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506240077
 
+Use common inline i3c_writel_fifo()/i3c_readl_fifo() methods to
+simplify code since the FIFO of controller is a 32bit width.
 
+Signed-off-by: Jorge Marques <jorge.marques@analog.com>
+---
+ drivers/i3c/master/i3c-master-cdns.c | 25 +++++--------------------
+ 1 file changed, 5 insertions(+), 20 deletions(-)
 
-Am 23.06.25 um 20:47 schrieb Mario Limonciello:
-> From: Mario Limonciello <mario.limonciello@amd.com>
->
-> When compiled without CONFIG_VIDEO the architecture specific
-> implementations of video_is_primary_device() include prototypes and
-> assume that video-common.c will be linked. Guard against this so that the
-> fallback inline implementation that returns false will be used when
-> compiled without CONFIG_VIDEO.
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202506221312.49Fy1aNA-lkp@intel.com/
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-> ---
-> v4:
->   * new patch
-> ---
->   arch/parisc/include/asm/video.h | 2 +-
->   arch/sparc/include/asm/video.h  | 2 ++
->   arch/x86/include/asm/video.h    | 2 ++
->   3 files changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/parisc/include/asm/video.h b/arch/parisc/include/asm/video.h
-> index c5dff3223194a..a9d50ebd6e769 100644
-> --- a/arch/parisc/include/asm/video.h
-> +++ b/arch/parisc/include/asm/video.h
-> @@ -6,7 +6,7 @@
->   
->   struct device;
->   
-> -#if defined(CONFIG_STI_CORE)
-> +#if defined(CONFIG_STI_CORE) && defined(CONFIG_VIDEO)
->   bool video_is_primary_device(struct device *dev);
->   #define video_is_primary_device video_is_primary_device
->   #endif
-> diff --git a/arch/sparc/include/asm/video.h b/arch/sparc/include/asm/video.h
-> index a6f48f52db584..773717b6d4914 100644
-> --- a/arch/sparc/include/asm/video.h
-> +++ b/arch/sparc/include/asm/video.h
-> @@ -19,8 +19,10 @@ static inline pgprot_t pgprot_framebuffer(pgprot_t prot,
->   #define pgprot_framebuffer pgprot_framebuffer
->   #endif
->   
-> +#ifdef CONFIG_VIDEO
->   bool video_is_primary_device(struct device *dev);
->   #define video_is_primary_device video_is_primary_device
-> +#endif
->   
->   static inline void fb_memcpy_fromio(void *to, const volatile void __iomem *from, size_t n)
->   {
-> diff --git a/arch/x86/include/asm/video.h b/arch/x86/include/asm/video.h
-> index 0950c9535fae9..08ec328203ef8 100644
-> --- a/arch/x86/include/asm/video.h
-> +++ b/arch/x86/include/asm/video.h
-> @@ -13,8 +13,10 @@ pgprot_t pgprot_framebuffer(pgprot_t prot,
->   			    unsigned long offset);
->   #define pgprot_framebuffer pgprot_framebuffer
->   
-> +#ifdef CONFIG_VIDEO
->   bool video_is_primary_device(struct device *dev);
->   #define video_is_primary_device video_is_primary_device
-> +#endif
->   
->   #include <asm-generic/video.h>
->   
+diff --git a/drivers/i3c/master/i3c-master-cdns.c b/drivers/i3c/master/i3c-master-cdns.c
+index fd3752cea654954ed1e37337754e45fddbbbf68e..321c04d2109ec1951f2b07a9d1b88c6aaf055c95 100644
+--- a/drivers/i3c/master/i3c-master-cdns.c
++++ b/drivers/i3c/master/i3c-master-cdns.c
+@@ -23,6 +23,8 @@
+ #include <linux/spinlock.h>
+ #include <linux/workqueue.h>
+ 
++#include "../internals.h"
++
+ #define DEV_ID				0x0
+ #define DEV_ID_I3C_MASTER		0x5034
+ 
+@@ -427,25 +429,13 @@ to_cdns_i3c_master(struct i3c_master_controller *master)
+ static void cdns_i3c_master_wr_to_tx_fifo(struct cdns_i3c_master *master,
+ 					  const u8 *bytes, int nbytes)
+ {
+-	writesl(master->regs + TX_FIFO, bytes, nbytes / 4);
+-	if (nbytes & 3) {
+-		u32 tmp = 0;
+-
+-		memcpy(&tmp, bytes + (nbytes & ~3), nbytes & 3);
+-		writesl(master->regs + TX_FIFO, &tmp, 1);
+-	}
++	i3c_writel_fifo(master->regs + TX_FIFO, bytes, nbytes);
+ }
+ 
+ static void cdns_i3c_master_rd_from_rx_fifo(struct cdns_i3c_master *master,
+ 					    u8 *bytes, int nbytes)
+ {
+-	readsl(master->regs + RX_FIFO, bytes, nbytes / 4);
+-	if (nbytes & 3) {
+-		u32 tmp;
+-
+-		readsl(master->regs + RX_FIFO, &tmp, 1);
+-		memcpy(bytes + (nbytes & ~3), &tmp, nbytes & 3);
+-	}
++	i3c_readl_fifo(master->regs + RX_FIFO, bytes, nbytes);
+ }
+ 
+ static bool cdns_i3c_master_supports_ccc_cmd(struct i3c_master_controller *m,
+@@ -1330,12 +1320,7 @@ static void cdns_i3c_master_handle_ibi(struct cdns_i3c_master *master,
+ 	buf = slot->data;
+ 
+ 	nbytes = IBIR_XFER_BYTES(ibir);
+-	readsl(master->regs + IBI_DATA_FIFO, buf, nbytes / 4);
+-	if (nbytes % 3) {
+-		u32 tmp = __raw_readl(master->regs + IBI_DATA_FIFO);
+-
+-		memcpy(buf + (nbytes & ~3), &tmp, nbytes & 3);
+-	}
++	i3c_readl_fifo(master->regs + IBI_DATA_FIFO, buf, nbytes);
+ 
+ 	slot->len = min_t(unsigned int, IBIR_XFER_BYTES(ibir),
+ 			  dev->ibi->max_payload_len);
 
 -- 
---
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Frankenstrasse 146, 90461 Nuernberg, Germany
-GF: Ivo Totev, Andrew Myers, Andrew McDonald, Boudien Moerman
-HRB 36809 (AG Nuernberg)
+2.49.0
 
