@@ -1,176 +1,101 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BE92290D8F
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:29:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3B5329825B;
+	Tue, 24 Jun 2025 12:29:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750768183; cv=none; b=R+UlUMN6I/ah91Fu+LFDG3yYy8hRX5aGqm7WE0dKUvs7E956P45wR7qRVVcvTrtTLT6Gc0D7Opr7sMJ1eEijYhyuxyPRwyQZrxOUhhnEmthRV6hAeRv94zU8NKKUzFujmNpPwSYlLGlbgNM1g2vBA6oWib16UCF6bwgMxGKNYvA=
+	t=1750768186; cv=none; b=Znl3DVrjg5QkccFB2Xqwc5Fa2EPKmeKoH9dHVNFJZKqOV7a8l2Lkt/4l/0E0sroxe0XqvwNCkVjCoyxYkBXS/bmbvIkrVolQU5gyPrUdbWzPYDnuuFec7b+T/lzQtqs+TCpLdH1TrOtPezaCCzDzm907hGH+ZrKuibk1GPwi200=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750768183; c=relaxed/simple;
-	bh=tk5me8Uo9bpIzNKntTtMT+cM4Cb5YcZ3GuSYHhb0qxI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cD8UDBPJGRuitLmdyekSCfryUZzD5jicR+ql1iIRV8mKBdRHsQXsLuYha1qFtbw5zeBSPGortgvirYCKmV3fozcwKdF70P0nW7YZFJriZhsDtW4Xgdf8Rq6CSkBQAt+/oKuNSF2+58RMDtf6xdHvnh5UILHroBS/UHtyOaYhXLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hLy2KAf9; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750768186; c=relaxed/simple;
+	bh=8WAPJMaT3RPf5H8MPe+6Y+/A6cCV8GHnSu9zGp/405I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=o4JtKFoUs+4LPfwOKnie47BnZTDM9vV3qHX5ytI0+3qJIebJAgw/bMjGvntjxW+Kxg3s/HuHgXHECL5z0wQWSuFsDRo/RALY8lP1bYEHIcuvUUjb3CVebYwJGFUCgd7VgZDsbhoaqN5dyuexDVLL9rO/H6pUn/OQ4s0ZG5dVkK0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=qctFoLm4; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hLy2KAf9"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a4ebbfb18fso255366f8f.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 05:29:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750768179; x=1751372979; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=v8z72Xk/UQR8s3JCoKhbizomWVQUM7xOfiqftVGVa0M=;
-        b=hLy2KAf9k5PsGzVxG6N321kxYZuaCWp63iRrakULfGwHhJg1h3podUmDb8CxH7YfnY
-         P0v93f7DmoeFVhugKPs+jnL+VuAqTQ8BMpZ2UNFfDhi8viQTOsQkeNQLAvcw98zkWuIn
-         hM2Z0RHGiVO3yyVopCRCMzFNIV38yPJAJxFT06H/1l0XgbqK6w6CWnN3t3GVI+RCzeiy
-         nUNEdZ7/ZjD+ehWoA6SR6zA6lRwXwH/ZS/KSaWcZYa7qjYkMdIy9P25VjxLr6wOHElDj
-         jT1329mgiwlp6OzNSEygeqdeP+LvtJF31HVBZl5K+f4nlnAfvAI+xPArAxWv+ZCPhamm
-         Gl0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750768179; x=1751372979;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=v8z72Xk/UQR8s3JCoKhbizomWVQUM7xOfiqftVGVa0M=;
-        b=Mqn0ErsD2Jl4ojnCEwmmF0cvh++umQX2iuJ6uSJe+W5/anbXGdXAfsAXb1kZd9uoi7
-         Mm63FuR4CDwYLvSgT1PXEFjQhb9i4p5jJlozzKdMh+hB07rN81fWaSxKVTeuUkBGvgql
-         0eBKwuG1LSXxTtQDsM6ldt1DI1YZ98fqHhY656R847V6Sn39/LWrkqhWAuAQ8l4+O6+L
-         oI0Eqb66tkoaPOgUfd1b8gJbsL1atG6b9W3FJb3r4QchxoPGpB19ZgEpW2Owc9rUZMFp
-         c4BZMLfEJyrNYRLSuHdnkIuNINx8+Px5KEwZAKpJ0zbW8mMGrdn9anSZQJYi7ur8hRts
-         piYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWR1DH3cPHIc34zpfBaUzZ5o9p6wUj0e58U0tuw5LV0nvhgymP2mr+G+4NYpAWzcyCajL8e6rQvBAUeVu0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWIRO0z7hxehtudK0PzxckBDFLtovVeZTdAZaTeNA3mmwXKfmO
-	jmH3z0Kdqm9QlA3Kpvhe5vMVB5iRc7d3m+Xf74MJHw0xQDrRH9OhXJO7sLVsZeoAS7oe3V4FKrf
-	F5hjk
-X-Gm-Gg: ASbGncvUiOMHBjbVipw4cSjiKAkIuS6zdnG8FQ8FpbRzBdkIt1WZUsdO0NPH5a6EbXe
-	NJApBaS8RJmSfuPpMVT10rtTCkTmWTVyVoE0i1ijQ3iYnPY8/0lPmpt0eW4RfIrEt0AWwUQ8LGi
-	XF3V/Hu7R5AZhnp0FPFOvIFtKt8E6SfSFYzk83ky5UpVnf8BQSrE6yLoRyA00mHqoAS1ZSBczrH
-	pajztVzwE1vN9uoz6NfRjzddIjwYEOz5IUjjyL91MHsggTx4coW4oJB2sKQgXnmsX5JkFgS+CQd
-	0hKg4l24435Q2FziP0P3ZvBfcu7K8tztaMpVOLyqj5t6ElvZGgdD0Ivkcl7+9isDgEUdmBYQ8mu
-	6qvgjVHc=
-X-Google-Smtp-Source: AGHT+IFHsJjw7S1n5plNZ6prP3gOPmZZg2elF58BZkzaQ51gZ2FoYGybedifRMo1uu++mNZdpaalmw==
-X-Received: by 2002:a05:6000:230e:b0:3a4:f7d9:9617 with SMTP id ffacd0b85a97d-3a6d1185238mr4945874f8f.0.1750768179508;
-        Tue, 24 Jun 2025 05:29:39 -0700 (PDT)
-Received: from kuoka.. ([178.197.222.89])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8051f58sm1899941f8f.12.2025.06.24.05.29.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 05:29:39 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>
-Subject: [PATCH v2] arm64: dts: qcom: x1-crd: add USB DisplayPort audio
-Date: Tue, 24 Jun 2025 14:29:34 +0200
-Message-ID: <20250624122933.54776-2-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="qctFoLm4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750768182;
+	bh=8WAPJMaT3RPf5H8MPe+6Y+/A6cCV8GHnSu9zGp/405I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=qctFoLm4S1HCsLWt+Nk4SlF4ZMzxRq0J4jEg964rH2UaOfmjM/0VmQirKWRj4WuOA
+	 huRpTjdECUX+l4o6iHyG+0OXYZdHwNFKJeAC9xD1euHK0orJ+VHKk7U9zyiNBRlyP6
+	 UXzKdJq0WKtLNzcwNbqErR5o+SFtReDu6R1IJApUmYTVEX/7HR+2/8bQtBOz2tPw0n
+	 qu0DDoTIg5SOKyEUIW9+BQYniSd7/4R8Xo0qfqkk0SNe0cvt2/9Hgw8tAM7tN37r/c
+	 nPFyHNW2XQzDOoFPN6rFJZTy8Cs4pmbkWcl3L79XmsL0tUCiGxoK669wiYhG1P3kiI
+	 aJiy31f9T0lmw==
+Received: from benjamin-XPS-13-9310.. (unknown [IPv6:2a01:e0a:120:3210:ed49:23ab:f92:d8a4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: benjamin.gaignard)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 8B6F517E0FDB;
+	Tue, 24 Jun 2025 14:29:42 +0200 (CEST)
+From: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+To: nicolas.dufresne@collabora.com,
+	p.zabel@pengutronix.de,
+	mchehab@kernel.org,
+	hverkuil@xs4all.nl
+Cc: linux-media@vger.kernel.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	kernel@collabora.com,
+	Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Subject: [PATCH] media: verisilicon: Export only needed pixels formats.
+Date: Tue, 24 Jun 2025 14:29:38 +0200
+Message-ID: <20250624122938.62004-1-benjamin.gaignard@collabora.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1657; i=krzysztof.kozlowski@linaro.org;
- h=from:subject; bh=tk5me8Uo9bpIzNKntTtMT+cM4Cb5YcZ3GuSYHhb0qxI=;
- b=owEBbQKS/ZANAwAKAcE3ZuaGi4PXAcsmYgBoWpote8z4iv4bjWIG0UeW4eGTUo8NnG2d502Yt
- AXLXLw+rlCJAjMEAAEKAB0WIQTd0mIoPREbIztuuKjBN2bmhouD1wUCaFqaLQAKCRDBN2bmhouD
- 11I8EACDBePA7awX8UOJtFcjhDnyLPagf5PiaMTbrU4f+mFW7o/Ql6FomEAVI9AA4DyE7m+X9N1
- MByvokeP6qP6R8aTa8CefTj9y5DraCxwFTyNHdRvCAhatPJI3EnzLcLi/VlnVhY45lgr6Udh1EV
- 8sUvKLncuG+k/6wfhuJlF6hNt3pIMgsZofx9PUBXyt4sI+xkhuKOmSf/bKil0yQND4adK0NgBiE
- 3F9f7yL1JIkdrF4ypJiyf8W1b/VHyOnRDQFs+e1WFMj1YtjOfcTAH9b2XZ6IdiDL8BC4K0Dq2YU
- wIpUZSJvbyJnXsVCHitVwiJuZIVMBNXubh3XhAVFLDM/hn0M5M0fmFZArKTHbBK6QM91DF0oNsw
- TqaepC9wfVLpwLjnlxfKuZFN7A1BEyJtgpsV/H3/8xT0erWlMB8BvuuJXCCs35i+s7jahpj5MeI
- hogdGusmwPG5KdlzU0F3SfA6Bov373klUvP3PUOqpoZ8taE5jKe+psg4JtLBNxvYtXOLtYmlEpX
- 7Whyrv8crZDYnDsQ3GS0OHWV/NCB2oxwqscfSM55JGfi4mYuVZ5NG2vzvS80dJSV+2nBKUjjYGa
- qbZg93gy09Rf1C/vJRJyiW+H6mFHPjMUuaD9U3Q/Jw0b51r09PCVkFlS0JuUFHH9bz25ck+JF3c vD0g5pAGdnswG/g==
-X-Developer-Key: i=krzysztof.kozlowski@linaro.org; a=openpgp; fpr=9BD07E0E0C51F8D59677B7541B93437D3B41629B
 Content-Transfer-Encoding: 8bit
 
-Add support for playing audio over USB DisplayPort (the two left USB-C
-ports on the CRD device).
+When enumerating the pixels formats check if the context
+request to only export post-processed pixels formats.
+The exception is when V4L2_FMTDESC_FLAG_ENUM_ALL is set, we
+need to export all pixels formats.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
+Fixes: bcd4f091cf1e ("media: verisilicon: Use V4L2_FMTDESC_FLAG_ENUM_ALL flag")
 ---
+ drivers/media/platform/verisilicon/hantro_v4l2.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Changes since v1:
-1. Rebase (x1-crd.dtsi appeared)
-2. Re-order cpu/codec
-3. Add blank line before status for mdss_dp
-4. Tags
----
- arch/arm64/boot/dts/qcom/x1-crd.dtsi | 36 ++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/x1-crd.dtsi b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
-index c9f0d5052670..ffef25719f27 100644
---- a/arch/arm64/boot/dts/qcom/x1-crd.dtsi
-+++ b/arch/arm64/boot/dts/qcom/x1-crd.dtsi
-@@ -219,6 +219,38 @@ sound {
- 				"VA DMIC3", "MIC BIAS1",
- 				"TX SWR_INPUT1", "ADC2_OUTPUT";
+diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c b/drivers/media/platform/verisilicon/hantro_v4l2.c
+index 7c3515cf7d64..7869faf921f4 100644
+--- a/drivers/media/platform/verisilicon/hantro_v4l2.c
++++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
+@@ -222,6 +222,7 @@ static int vidioc_enum_fmt(struct file *file, void *priv,
+ 	unsigned int num_fmts, i, j = 0;
+ 	bool skip_mode_none, enum_all_formats;
+ 	u32 index = f->index & ~V4L2_FMTDESC_FLAG_ENUM_ALL;
++	bool need_postproc = ctx->need_postproc;
  
-+		displayport-0-dai-link {
-+			link-name = "DisplayPort0 Playback";
-+
-+			codec {
-+				sound-dai = <&mdss_dp0>;
-+			};
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai DISPLAY_PORT_RX_0>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+
-+		displayport-1-dai-link {
-+			link-name = "DisplayPort1 Playback";
-+
-+			codec {
-+				sound-dai = <&mdss_dp1>;
-+			};
-+
-+			cpu {
-+				sound-dai = <&q6apmbedai DISPLAY_PORT_RX_1>;
-+			};
-+
-+			platform {
-+				sound-dai = <&q6apm>;
-+			};
-+		};
-+
- 		wcd-playback-dai-link {
- 			link-name = "WCD Playback";
+ 	/*
+ 	 * If the V4L2_FMTDESC_FLAG_ENUM_ALL flag is set, we want to enumerate all
+@@ -230,6 +231,9 @@ static int vidioc_enum_fmt(struct file *file, void *priv,
+ 	enum_all_formats = !!(f->index & V4L2_FMTDESC_FLAG_ENUM_ALL);
+ 	f->index = index;
  
-@@ -1124,6 +1156,8 @@ &mdss {
- };
- 
- &mdss_dp0 {
-+	sound-name-prefix = "DisplayPort0";
++	if (enum_all_formats)
++		need_postproc = HANTRO_AUTO_POSTPROC;
 +
- 	status = "okay";
- };
+ 	/*
+ 	 * When dealing with an encoder:
+ 	 *  - on the capture side we want to filter out all MODE_NONE formats.
+@@ -242,7 +246,7 @@ static int vidioc_enum_fmt(struct file *file, void *priv,
+ 	 */
+ 	skip_mode_none = capture == ctx->is_encoder;
  
-@@ -1132,6 +1166,8 @@ &mdss_dp0_out {
- };
- 
- &mdss_dp1 {
-+	sound-name-prefix = "DisplayPort1";
-+
- 	status = "okay";
- };
- 
+-	formats = hantro_get_formats(ctx, &num_fmts, HANTRO_AUTO_POSTPROC);
++	formats = hantro_get_formats(ctx, &num_fmts, need_postproc);
+ 	for (i = 0; i < num_fmts; i++) {
+ 		bool mode_none = formats[i].codec_mode == HANTRO_MODE_NONE;
+ 		fmt = &formats[i];
 -- 
-2.48.1
+2.43.0
 
