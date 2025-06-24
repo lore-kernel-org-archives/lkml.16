@@ -1,245 +1,192 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2045.outbound.protection.outlook.com [40.107.95.45])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E10627A931;
-	Tue, 24 Jun 2025 12:03:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750766640; cv=fail; b=XLmHE0kGIo9lj+9ZG3ZIYG0L+s4wT/eo9CBCB6ObXlQY7f7m7jjp9QXRG3IVMQZjjv8H7mrtkS0IkjizibwE/t0npo952bpopTgT2IntxcSyxvrAHM1cocuFOb8RkvDwhfWSj0B7JaynO2bc8qZKFwB2du0LCSWMXToXqnlq69M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750766640; c=relaxed/simple;
-	bh=NK8I1l2Ri4NdH+qHL0XJEKBXgxW/zPaNeyke8t9XYP0=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=AdWZKr212+oFfcfLYNvlZjwa1/L/D0sHP22kFPC2rQWHb5SIvpLWkREbFrbous4pkFQL2qoGmUOpmP5UxWDKyTO9BC1sWG7NkFcpJ8wkXzfHm1iYbvk+cQZITRnOi2ZTRNpz82QpetEha8JRMOA6fkvouMGBmh3RjNJAmzM14uM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=GFkAlEQN; arc=fail smtp.client-ip=40.107.95.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18D2F27AC3C
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 12:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750766765; cv=none; b=vEZP0Ozafea9v54G4SWMxIfxQpLcWK+HfJF7orv9FsFHfFh3/upDye2oP72+mcygnZsUrHvQWwbJT9+e+O02CEgwzpNuY70ikmUFMi3fJUGTaH9yw+LfQgGRGc7CsCjfHgmT9l9h7Y/XcTmFEKuS7jt1LdzcGOo6HzSLbzD55/c=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750766765; c=relaxed/simple;
+	bh=cRmpRfemqqA/+yXgtDpnfKpTjig+icCUPqTL/uuKBy4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tLWiDJCtk6HV9twrtNKBJQWAtvDOvoXZQXzYimrZCSP/L2ZvaZ7KU8It7nRWxYAL3akuIFtZqcpN7HnR7ucq1nMBMXPZ7SBFI2GVlH9tzY6+nTYM7KUUdK63q5eVOVMCgpgkn6bFd602NWjva/1/dohjLpTCL5UB5oDE2wGPHsw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T2RiHJhs; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="GFkAlEQN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OOYQGrKeok31pC8Ko6cRd8wV4uvp6ChYcNxb924/6xMRpKDyLcLy0Ho5Y9MhagUeuUl0tymXi1GHE5ju8ZEGjBsMAye5SaSY1aD0BJZfSUYE6lmT5XIkDGiGUitVmMjBXrPPiLn1cQFN9G22Rv4zvgLAzCF5p0ofy3G9OQ+nqdAUxdwZI/DXSrkhG5QtL7A1DeyMzDhsF8Q/DQAJq5uxKKJaVvFhNP87dDLvi/2NH2NHaUL9Q/m0vIm8p+qhxS3HKqcs00jmSGvuuo3OStuGOXRXuCcL3tORl5ZTmxyzcLeCOjX0npF0kxLEyWcuhLHug2Frm/Vea/uVEQ59itKdfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kdoOlRIX+2iwVqDLp5uMr/u2jv7iASewh3PwUZAax3Q=;
- b=Xwz2gJMegAND6wgwRT/2R+CBojvuaUmdYae52xLOicLPP9VT1vrbOCsXFJwaYgnnVIUs+Z2k9ntdP2an/BPcq7EruQZDOOhE6CosRveRukj3cJiDMzAltbscddoS0Fxpxmdn2J3XSvWOZvKPgeSf+kwgNfbCOBcsjVDY5jO+2e/tp69jekIVhxdZyB3vI8qLXSXpJPK83hp0x3ABYI8LqZoinzBlLXBtfql7fW6LkjDaxFng9NmKT/fWA8A0SKYOqBR6zSbPVLvwLhZj1e0qnXMoT+9Asx0VHVc0cgrSYnoY73QdQa6OV4hY1bE2Y5piIuIOIWMtD4Au15f8BpM85Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kdoOlRIX+2iwVqDLp5uMr/u2jv7iASewh3PwUZAax3Q=;
- b=GFkAlEQNNNn0KytIyOI3Qayyt8yAB6fcRaVUnS6Y9S78XbwMNlvBzQxLZUlixB13zDqRSJXNEzf/oXiF22eCjc9INhD2NWRf18Kl0nJcNtdy2WR/UsT1KDw+xQE1CQyBI0+Y+3s2ZJ8sfCg+ZTCgnPUcrEv67mQMaLD1+1lM0g64eMMBuCYv5fjJNTVa2J0abB82E4BLGWcfghxm9MdkzICcU8GC03m9rsr3ihNdwGNqDyyZ07XE1wV730BemZnabK9zuS3LHobR5xVI+uxCfnZ9OC57oXijOrOtUxR/jKJVcfU2nMBkzN25Zbd5wlgSFuiq5PXDr9jxK0OMt4+alA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
- by IA1PR12MB6410.namprd12.prod.outlook.com (2603:10b6:208:38a::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Tue, 24 Jun
- 2025 12:03:54 +0000
-Received: from CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
- ([fe80::6e37:569f:82ee:3f99%4]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
- 12:03:53 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 24 Jun 2025 21:03:48 +0900
-Message-Id: <DAUQZ1TY9VT3.UJEFQ96157DJ@nvidia.com>
-Cc: "Danilo Krummrich" <dakr@kernel.org>, "FUJITA Tomonori"
- <fujita.tomonori@gmail.com>, "Linux Kernel Mailing List"
- <linux-kernel@vger.kernel.org>, "Linux Next Mailing List"
- <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the rust-timekeeping tree with the
- drm-nova tree
-From: "Alexandre Courbot" <acourbot@nvidia.com>
-To: "Andreas Hindborg" <a.hindborg@kernel.org>, "Stephen Rothwell"
- <sfr@canb.auug.org.au>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
-References: <iuo4BpdTglZkpW9Xyy1ehjFspmj3ay0q7iejyeOShBG0HLZmIrhzIpi0eG_wBv71ZPPCgh2lcn2BOsrFHOegfg==@protonmail.internalid> <20250624195142.1050e147@canb.auug.org.au> <87ecv94ay9.fsf@kernel.org>
-In-Reply-To: <87ecv94ay9.fsf@kernel.org>
-X-ClientProxiedBy: OS7PR01CA0191.jpnprd01.prod.outlook.com
- (2603:1096:604:250::10) To CH2PR12MB3990.namprd12.prod.outlook.com
- (2603:10b6:610:28::18)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T2RiHJhs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750766762;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=+uT2QrEu3JBacOK9/mwO5Vgn+kaJFcPAQ/50NYPay6A=;
+	b=T2RiHJhstKrDLHGP3Ua7OCXWd+gxMm+x0aGR/4zXR6bxt6FlsvCMwaZaLOG5WN5GBZKYy0
+	S18fLd1qXHjzzl7OQBv3c7rBCmXFtco/PMd1UKwx94SzZB0dgUakhDbZY1hEc6udIqqZzv
+	W5sj+Kbj6OShVGRaSVqsXarBBT/Y9rM=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-267-Dyz6Wj9vODy5LByDO_ws0g-1; Tue, 24 Jun 2025 08:06:00 -0400
+X-MC-Unique: Dyz6Wj9vODy5LByDO_ws0g-1
+X-Mimecast-MFC-AGG-ID: Dyz6Wj9vODy5LByDO_ws0g_1750766759
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-452ff9e054eso1873955e9.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 05:06:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750766759; x=1751371559;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=+uT2QrEu3JBacOK9/mwO5Vgn+kaJFcPAQ/50NYPay6A=;
+        b=ISUpwf/ONeofp2LKSnqKdq0GSVDKaa9bb54u7LluW01+dhsbzsfJQCNQspo/zMOFw+
+         9EGDI9qBjeTBfI+juDHRhw33wQRTHkOROKjJRr3Bq2uj/cAOoz1NoMEUDRHlHZZXDR3F
+         ReZUQqd4cc4EJZrE9irRWBlRjhlQ/8qVqgsIOTZXBPEhICm139J0qNNOETYi8Fa2Jh65
+         wr4cB5h20GraLKpeHRgDfySNKgEbLbyfl3YyOpscEw7NeiPdmUQoSNm1cY+x7eFaK8Zt
+         eDTdXULh1/kk0K1h+rlYAINPLaT8hhyw/0CgvM+APyl9IlhNBZ+ZWR1i7fdfOhwm32Nr
+         WJCw==
+X-Forwarded-Encrypted: i=1; AJvYcCWrPYdBB+wDIyax3sLN62WJQZXi1j5e+i0fr9Y5eLUUA19ar9eMV/eI3zkozW+Ms1rxwQW2zDH6AFD84a4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK6WMbs1cwARR4VC39n1Rf0jhOj5l3rz73RFdtTVrNfGV623Zp
+	7xvznxpb1AMHSOK5CidpjDIbiAvHkotP4v5yJeFAUYXzQsFYe6e/dViaIXhtxTmnjOaZdXcvs76
+	oiywFiUoYSsfX9SlNXj0slansU6jrx57zYMqnR3jCFFbI9TTS1Qwyo+ve/74M9fyASw==
+X-Gm-Gg: ASbGncvGef5gyCewHBuIq/0usorW2F9rosL12Mez+58Gobi7Mojn3pzsBBvZxkou30D
+	jeBM0F3YctRBjmuQLqtTmq30jUWphX8MwM/gav5Kx5cKRVujDAy2N2fuJPX3w4WSwPhzuSGYcR/
+	jcBR0mYtQx/caKQWckpNesF4t2LDIXLPzr6h2Mxe1HrMXOfN+JzouF7RQvDblOn5rvsCj06r2zA
+	gx/KlHqOFWgWDQgwYX/eOxvZ0qJprfCj5HdzEaOLvcpF44dxhK9p8JchX448SSIZ8Ig044/qvCd
+	CLLZtcyr/+7oVdHB9LQ5j/lYK1XHIpJe0Ph00Jhm6vIOsrEXnP1C9IM=
+X-Received: by 2002:a05:600c:1546:b0:453:1058:f8c1 with SMTP id 5b1f17b1804b1-45365392159mr156614385e9.3.1750766759239;
+        Tue, 24 Jun 2025 05:05:59 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IELryh1kt+1zAYTxf1LpvxqF7CDIIWxDENNxcO8+DQqC72gxoFR9I0jUhp/amk23QomNeU7aA==
+X-Received: by 2002:a05:600c:1546:b0:453:1058:f8c1 with SMTP id 5b1f17b1804b1-45365392159mr156613545e9.3.1750766758614;
+        Tue, 24 Jun 2025 05:05:58 -0700 (PDT)
+Received: from ?IPV6:2a09:80c0:192:0:5dac:bf3d:c41:c3e7? ([2a09:80c0:192:0:5dac:bf3d:c41:c3e7])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4537ab293d8sm32060615e9.28.2025.06.24.05.05.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 05:05:58 -0700 (PDT)
+Message-ID: <08ace5ea-ca09-4506-8ebd-016e8061c51b@redhat.com>
+Date: Tue, 24 Jun 2025 14:05:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|IA1PR12MB6410:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4e014f37-445b-484e-d9d8-08ddb3173051
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|10070799003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QmU2T0hvVDBUdzJyTFNQUDFJUndJaWtoUldvazVHdDVSRjY5QzhpUkRwazZ6?=
- =?utf-8?B?ck1nakdDTHQ0ZUJzc2NBdzZuTmt0WDdoaHpQZUh3ZlY1cXBiUDQzbWRzSUJ5?=
- =?utf-8?B?UHB1N2t3azB5MlJPVi9hbUdyeXpYTTNONy9BWHdWL1ZmbnA5bDNCSXR3M3Z4?=
- =?utf-8?B?N2pXNlJXNWRaTFR2NUczdVd2SThxYytkcTRYTGNwb3d3RjF4UGZvY01YWGZ0?=
- =?utf-8?B?S2cwNGcyR3Bqc20reFJQclRGeFprTlcxcFcyaGF1ek1aQ0lVelE4NUQ3Y0VD?=
- =?utf-8?B?Ynd6a2tXZFdkTDVwSHlzOElFKzJjYkd2aUlFcXBDdGhyUUp6ODlYdUlhQ3k4?=
- =?utf-8?B?Y2ZIRzI0V0xOM3d3cS9hc3ZBTm05RVNldlZFVEFoQ1VYUUVIS1JtYy9ocmxl?=
- =?utf-8?B?c0xhL1FPMVQyV05HWU81WXF1S1JpOC9Pak1pdWhBTlJPaUUxaEM3NWFXb0dv?=
- =?utf-8?B?NFN2VXJDWTVqYnNDMHJjVURhUHVIVG12N09OT1NCVWZ5ajU3L3lrY3QyOTVP?=
- =?utf-8?B?NzJqSUtCUmVSQnlkVzZNc3lyc2wrTzdaeGQ5a1JYSXIxNXIvcmFCcXV4QThr?=
- =?utf-8?B?MUppLzMrV21TM3JYekxDdVU4UVZ1aVc5KytmNlpoblBIRHhQdHI0WGZtOFhL?=
- =?utf-8?B?MFV5WitQb2ZXdnp1bjBQQ1J6U3hPY3Y4VmRFZUN1cW93TlpiMVhYV2xMSklp?=
- =?utf-8?B?Vk1scFpZS3hyTXEzYXU1Y1dBZGNxSUZGNTZoSlN5SzY0UTJ6VkdmMEFCVzhn?=
- =?utf-8?B?bzJPNHYzcnJnOXpzbDJYNjhETWJnVmxWY3FjYmVpVG9BWGwvQzJBZVZuVE8z?=
- =?utf-8?B?SUR4OVhkVWRSN05LeGliNk1yMW5mMFVtK0E4WmRnUG5yQlJpR1VobHlQcmMy?=
- =?utf-8?B?WTh3VnA5UlZxamdsQ3loWittK0UwcE1wRXJpNXgzZTN3VGdnbzJaT2NFZ2d6?=
- =?utf-8?B?bytneENiU2RzdGFNMWNKcStlLzBOQUIzZXhYRVdsTU9LMCtuMkVESkF5eUFp?=
- =?utf-8?B?QzdUL1RnQjArd3QvMk8xV0g4UnRYbkttUHdHeGdlQ0Y1dmg3eWllbERnQ2U1?=
- =?utf-8?B?SUFxZmFiSmJsWDByNEw5RklkR3pNZkZmeGRHc1Q1Y3JqQWg2ZVVnWlVydUxT?=
- =?utf-8?B?eGNmS3hYdzA3TStJTE13ZStJWDNlRGMzODcrM1M4MGRHMWFKbmNSUGJFVE9z?=
- =?utf-8?B?cWtCR0JEZVZUbE5FMXlpSjRjQW12UzNPUmFvYXNKeUNNVEVCR1hXVG1QVmV4?=
- =?utf-8?B?cVR1OFBRempBclhmODlLQWR0T2hDKzJ4dnVPcGJHMjJEeGVXb0tNbFZVUnVW?=
- =?utf-8?B?V2twa3dFU0RZM1h2emk2bUJqT3RISTliK1Q5YVhmQjZQemE2T3RJL3JBbmdt?=
- =?utf-8?B?R3MxcDVWVi80UEhrUVpFeGdaaWpyLzFIa3gxYVdPWTl2dzZEN2pmejUreW8r?=
- =?utf-8?B?SnQyajRKSHZkZmpLeWlVOE5SVnV4bDEvY2JHdDNTdHpLYUxOWVZPOFRCZmt0?=
- =?utf-8?B?S0NoY1RqODJsMlozdW5jaUZ4eEZqendXSmhEVW9TWnkrY0FORjZlUUpvUFMx?=
- =?utf-8?B?QWhJY0ZQbTdLai9yVFF3Y00wMmRDNXRtYzZQVmpDYUh1NzJwUTYzOE9ydHlv?=
- =?utf-8?B?L2x2SUhNUUkzWFpyUk01SGVicWFZV1pRSUMzYURVSE5PeDVzWHQyWUprdEU0?=
- =?utf-8?B?cTVQekRJeGpIOEJCcjJ4U3dsK0tSWHBnR3JESDNnOURwcXN2WlpXdG9IZmV5?=
- =?utf-8?B?d09tdlRJU1pIYy95UlVoTnFQTTFkTWFnYVZhV1N0RGNBMDhSOWFHVGx4S0dx?=
- =?utf-8?B?SmJSb2hOTTFLSmt6SFlRK0JkQ1JJdndTR1pJUFRESXJuSFEreVIyZW1RY3Yv?=
- =?utf-8?B?MEEvNFFkNU9hSFE5YXNlYzB2SldmL0xYclNiNndFSFRaNmlXQWZjVllkby9j?=
- =?utf-8?Q?nPyFVUNUxfU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(10070799003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MFdnZ2VBTW1hQnJoZlRBMXJhQ05GcDIwS1hIakJWQXZrTWtEV1ZCRDZzN0tU?=
- =?utf-8?B?UTNiOUJlTDlYM294SWoxeVlTMjJNRVRZWmQyNGZFMGYrZDV5bzR1SUZFbE5L?=
- =?utf-8?B?cjRsTnN5YW9qc05IdlNNaCtFRGpacW9lZGZtdDNxeGoxZmhCZ2h3WWZYMnNB?=
- =?utf-8?B?ZDhwVnM1SjY0N2Y2NVRYanFkbHRhUUNwM2xmUHVEbG5WVno4VHI0UlhnZ0Nq?=
- =?utf-8?B?bGYrdm96YnJJaENMbjFoK3hyVm5RRVYrREZ0anJGWVpGaktoU0FlS3FYVW12?=
- =?utf-8?B?c2VUVFdtMXlPbUl6WG9ESkdRZmtwRVFHNXRZSG1uSnlYQmRuMzZBOVZRMkxU?=
- =?utf-8?B?cmVVYXp5cDlkY0lCRWlKTGpCUmRCc09IRE9hWUZlWER6VjNtZUNXSjBySXRN?=
- =?utf-8?B?RjY5T1RveEcvQTZCSDF6Q2J3bTU1cytYMFIrVHR6dG1yNmRxSk9rZUMyRThG?=
- =?utf-8?B?a3VqeUI3WXlaaUNZellHMWcxWkI5YWF6amhRNFYyektLa0d3YU9YVHMvT2lZ?=
- =?utf-8?B?V0cycEw5VlVyZ0hkZmIwcThBVk51QXVMODZzTWVMZkg0UmI5dzRRbmJacjVQ?=
- =?utf-8?B?TzQyN1MvMEwyNHNDRkZVdDI4eVI2eDhMU254QXNnZjk4YVYwR0FPUjVHc3k2?=
- =?utf-8?B?cjFnVU9adWlodGVIZzVxeVJDd3dwdWgyalZqa0xzdndLL2Evd3NCVTI2YWhy?=
- =?utf-8?B?eWNZM2FOUytyOVkzNzZRVkZMMi9PZ25RdVRzWkd3dFV0b2FwYnRqTGt6ZTRR?=
- =?utf-8?B?bDJoVEdqVm4yWU94blplT2EwQS9GR1g2UkY1UDlFOGRSSjdmb1BiTGZ2NUY2?=
- =?utf-8?B?Y3RZU29vMkJkamk0YkZRQ1czL09DM1JrWUZBd25Sa0xBUXJxakFoZzNxcDhh?=
- =?utf-8?B?SFRPOFMyeDl4Yi9tS0hiYnUrSzB4cmR1WUs0V3NURXJ4Ui9KdHdIUFBabmhP?=
- =?utf-8?B?aVkzSE1xMTZIdHo2VnV0ZnpURG1YaG8zbzdycUZlOFNCUzh4YXQ1QkJoaEd5?=
- =?utf-8?B?UURmUGhLRURzRXZVOUowTmpjQ0lFcThTY2pndHQzbWxxbmVZVENMajVCemEv?=
- =?utf-8?B?ajdlVncwMU52R2MzWHQva1M0ZTYvbnFwWThYV0cyR1QxaHI3Nmw2RlNMQ29q?=
- =?utf-8?B?MlVUWHBIc0xDT0taaFV0SVBhWkhWZ3ZoVG5iaks3KzdSM2VKd0tVRWJMd0ZX?=
- =?utf-8?B?dlk3aVB6TXdPeTRLQm5tQ2ZkejgwZ2JUOHBaTTk2QnFYdnNCVlZHYS9nNElp?=
- =?utf-8?B?M0FONE1IOStpS1lXTXd4U0pvMjY2WGt3b3dSS09obHJiMkhXdjlrbm1zbVlE?=
- =?utf-8?B?N0oyMUs4Q1Jxd0ZBT25DKzdIWDF6WDc3NTRjMjFFbFJpZkpBUGE4cEZJYkV3?=
- =?utf-8?B?OUk5TzU2eWt1Rm0wWXo1K2xnbVV2dkxDK3Z6bkZ0MVBjcktYYnk4S3NhVHUw?=
- =?utf-8?B?VVhnb1pycDFZOVVSMkVydlQ1TDViNWFWMUk3ZHhsSnh6TVQ1bmVuanloL2VJ?=
- =?utf-8?B?VDhQMTgzSm5COUQvdm1NQ3piZjU3dkZVT2tOMWtGbkpsU1JBTGlHZzIvcm5t?=
- =?utf-8?B?YWVEazVCVml3RkpGWXMzems4K3hqdFVRQ21JNys0YVNCNTNnRTdVRVlaUk05?=
- =?utf-8?B?M1FBUDNSMUoxcUdIWmNGdkpoOC9MRFVBd3FqaDF0bzJqSWNFWThFQ1pkb28x?=
- =?utf-8?B?U1RXYmkyQzBDQ29Fb0RnWVhxSEdaaTlmYWZpMlYzRmJNUWhxTjYyejFQejd1?=
- =?utf-8?B?SzJWZmdaMnovZUR6VEFpbzZuanhpSEVPOGRTRHJScjkyT3dESGJPUURKeHZN?=
- =?utf-8?B?RVpKZ2VoS0thOXpJTCs0UFlwL0pnSUJleCtjUFZJdThTOSt5WnRtdHgyQWZP?=
- =?utf-8?B?S0xVZmxBdVR6d1hBV3V2dW50RE9xOE1MQ3lWRUcxMTNpTEhsejF2NmxWYzVN?=
- =?utf-8?B?dEN5bm9MeVc4cjJUM3MxcDNGcHA3MXZjanZKczJ6SDIreU9PREYzV3d6TXZv?=
- =?utf-8?B?WTN0TElpTi83R3BrYVY2Q21XV3BsNzlwbG1GaTdSeG10UC8rZnFCaFNjNDFR?=
- =?utf-8?B?blZDbGRmUnZkQ1pZelk2SjBSMmN4M2E2Q1ppMHB4dHdRYXNnVnRTOXJIbXQ5?=
- =?utf-8?B?RjVXYmtGemlaYzRlMk55VWdnZjljQXBtM25YNThpeTc3aDVMSmJ3SzF3d3lC?=
- =?utf-8?Q?RiHJWrGCIuFaCJd1DdeeXIEp0e2Cxm9ZxKd54EddSBWH?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4e014f37-445b-484e-d9d8-08ddb3173051
-X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 12:03:53.5528
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kRrei3EBJFYSnhwietXqndw9XJTrRFstRKbItIUEjZxd3G6njXLeNE4Ha1qJQZQymCINKBX+5oLXMIl4aA687w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6410
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 00/11] mm/mremap: introduce more mergeable mremap via
+ MREMAP_RELOCATE_ANON
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Pedro Falcato <pfalcato@suse.de>,
+ Andrew Morton <akpm@linux-foundation.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Jann Horn <jannh@google.com>, "Liam R . Howlett" <Liam.Howlett@oracle.com>,
+ Suren Baghdasaryan <surenb@google.com>, Matthew Wilcox
+ <willy@infradead.org>, Rik van Riel <riel@surriel.com>,
+ Harry Yoo <harry.yoo@oracle.com>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>, Nico Pache <npache@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Jakub Matena <matenajakub@gmail.com>, Wei Yang <richard.weiyang@gmail.com>,
+ Barry Song <baohua@kernel.org>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1749473726.git.lorenzo.stoakes@oracle.com>
+ <7e51e1e2-7272-48d5-9457-40ab87ad7694@redhat.com>
+ <b65dd020-5e02-4863-8994-def576e3d3dd@redhat.com>
+ <76zi626uk53dtfzmezzt6cfz45ansam2gpcumddqxnipnw5jkh@qwfzoxgi255b>
+ <68d8c7ad-aea0-4556-be63-9b67d70e4386@redhat.com>
+ <58560256-58da-4fa6-a953-d2c4695ffba8@lucifer.local>
+ <tc466z77itm7qps5exnelcp57dabnvn2gtd2tigutaivulmowh@4n74ymr5yxtg>
+ <c1586ce3-e354-4b8d-aaa4-5f9899faae88@lucifer.local>
+ <5ff81ef9-e755-4a75-bcce-92c4a4d1da6e@redhat.com>
+ <7ae2e19c-10f6-4121-bc15-dd07c11b197a@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <7ae2e19c-10f6-4121-bc15-dd07c11b197a@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue Jun 24, 2025 at 8:48 PM JST, Andreas Hindborg wrote:
-> "Stephen Rothwell" <sfr@canb.auug.org.au> writes:
->
->> Hi all,
->>
->> After merging the rust-timekeeping tree, today's linux-next build
->> (x86_64 allmodconfig) failed like this:
->>
->> error[E0599]: no method named `as_nanos` found for struct `Delta` in the=
- current scope
->>   --> drivers/gpu/nova-core/util.rs:45:33
->>    |
->> 45 |         if start_time.elapsed().as_nanos() > timeout.as_nanos() as =
-i64 {
->>    |                                 ^^^^^^^^ method not found in `Delta=
-`
->>
->> error: aborting due to 1 previous error
->>
->> For more information about this error, try `rustc --explain E0599`.
->>
->> Caused by commits
->>
->>   2ed94606a0fe ("rust: time: Rename Delta's methods from as_* to into_*"=
-)
->>   768dfbfc98e2 ("rust: time: Make Instant generic over ClockSource")
->>
->> interacting with commit
->>
->>   a03c9bd953c2 ("gpu: nova-core: add helper function to wait on conditio=
-n")
->>
->> from the drm-nova tree.
->>
->> I tried to fix it up, but this lead down a rabbit hole and my rust
->> skills are poor, so I just dropped the rust-timekeeping tree for today.
->> A merge resolution would be appreciated.
->
-> I would suggest the following:
->
-> diff --git a/drivers/gpu/nova-core/util.rs b/drivers/gpu/nova-core/util.r=
-s
-> index 5cafe0797cd6..24cbf3f4cc39 100644
-> --- a/drivers/gpu/nova-core/util.rs
-> +++ b/drivers/gpu/nova-core/util.rs
-> @@ -3,7 +3,7 @@
->  use core::time::Duration;
-> =20
->  use kernel::prelude::*;
-> -use kernel::time::Instant;
-> +use kernel::time::{Instant, Monotonic};
-> =20
->  pub(crate) const fn to_lowercase_bytes<const N: usize>(s: &str) -> [u8; =
-N] {
->      let src =3D s.as_bytes();
-> @@ -35,14 +35,14 @@ pub(crate) const fn const_bytes_to_str(bytes: &[u8]) =
--> &str {
->  /// TODO[DLAY]: replace with `read_poll_timeout` once it is available.
->  /// (https://lore.kernel.org/lkml/20250220070611.214262-8-fujita.tomonor=
-i@gmail.com/)
->  pub(crate) fn wait_on<R, F: Fn() -> Option<R>>(timeout: Duration, cond: =
-F) -> Result<R> {
-> -    let start_time =3D Instant::now();
-> +    let start_time =3D Instant::<Monotonic>::now();
-> =20
->      loop {
->          if let Some(ret) =3D cond() {
->              return Ok(ret);
->          }
-> =20
-> -        if start_time.elapsed().as_nanos() > timeout.as_nanos() as i64 {
-> +        if start_time.elapsed().into_nanos() > timeout.as_nanos() as i64=
- {
->              return Err(ETIMEDOUT);
->          }
->      }
->
-> For the Nova people: You might consider if it makes sense to take a
-> `kernel::time::Delta<C>` for the timeout.
 
-It probably does now that it is available. I'm willing to do it this
-cycle if we can find a way to not break the build. Should we have a tag
-to merge into nova-next or something?
+>>>>
+>>>> Or: separate but maybe awful idea, but if the problem is the number of VMAs
+>>>> maybe we could try harder based on the map count? i.e if
+>>>> map_count > (max_map_count / 2), try to relocate anon.
+>>>
+>>> Interesting, though that'd make some things randomly merge and other stuff not,
+>>> and you really have to consistently do this stuff to make things mergeable.
+>>
+>> Yes, I'd prefer if we can make it more predictable.
+>>
+>> (Of course, the VMA region size could also be used as an input to a policy.
+>> e.g., small move -> much fragmentation -> merge, large move -> less
+>> fragmentation -> don't care. Knowing about the use cases that use mremap()
+>> of anon memory and how they might be affected could be very valuable. Maybe
+>> it's mostly moving a handful of pages where we most care about this
+>> optimization?).
+> 
+> I think fundamentally there are two problems:
+> 
+> 1. Unexpected VMA fragmentation leading to later mremap() failure.
+> 2. Unnecessary VMA proliferation.
+> 
+> So we could fix 1 with a 'allow multiple VMAs to be moved if no resize'
+> patch.
+
+Yes. Which might end up easier (well, okay, different level of 
+complexity, at least not messing with folio->)
+
+And of course the relocate anon stuff is about 2.
+> 
+> In theory we could combine it, but things could become complicated as then
+> it's mulitple VMA/anon_vma merges.
+
+Yes.
+
+-- 
+Cheers,
+
+David / dhildenb
+
