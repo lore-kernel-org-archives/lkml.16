@@ -1,248 +1,184 @@
-Received: from forward502d.mail.yandex.net (forward502d.mail.yandex.net [178.154.239.210])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC9A79F2;
-	Tue, 24 Jun 2025 05:34:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.210
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A91E2CCC1
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 05:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750743296; cv=none; b=RzpqdRAa+mhB+61mQ7GTZSM2B4UOulTpZm3LIZ/cdYBkyZaYFPAhfLAD0BoMHTQr1eKL7FWMkRoDL6b13nCDmZ7q7g2DDiNL3mAGz0WTPgdqybMZLYIbwuMJC8kyRWd4mw0y+6seIZlxKKr+IHyKoWlij5pHlypZ4izyysWpSW4=
+	t=1750743778; cv=none; b=UEvzlOoZFvnPrJUsFA2rPpiLOoshPkeGHEq1rmUDsHjn2VHKrEM2VfHvS4fqi4/zI5S6VggktHTHPR+jILgNL3KODTE6WdX9qk+2gErO380qtjzHRGrpl/KVYSkbB3L66Ls/fiCsnZcW6lNcn+xCHN3xLAnmLkm98G7ZS0KeKDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750743296; c=relaxed/simple;
-	bh=lra60Ls2eKXsXJk06ybPuj1zDNkCSmk0022rbcjgbOw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=spzDJBVJ+iga7tSWmMydg+ZeuGoRPKE6zV1u6WgSF987rtXJSTBmBOp+EbRc4Qx5Y6MXzQPY3tMZoS+ZP6tcJM27MFM7ZH8veOM/GAkdTcmWNQC/eiK2ZNx+3j72PoJC+8tbNspfRXbN+D8+jnOCcu6sRQIzRVN6yPYG4RebXN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=otevBcHE; arc=none smtp.client-ip=178.154.239.210
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
+	s=arc-20240116; t=1750743778; c=relaxed/simple;
+	bh=pBVDBJMWgHEeT/npgaJjL9yuAWvX2n7SOWwcLAGWe74=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VOn/IWqFuKiRdpxu2Cy01IJrmQdIgTGNdAs7z6fnooflmCpYq5CtNNbT0DUKx+bsIlEy1xxp9Fq/XLo3mbqIDI4gn8bn445RPcO5rCYKnnAGUE7a952ksaPT6NBuvyzfVWbUAfWzpymRiMaa5Y5EkFs9nkHpMLmCUkTBHBucoqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=uc6RlC6T; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="otevBcHE"
-Received: from mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:82a4:0:640:9cc1:0])
-	by forward502d.mail.yandex.net (Yandex) with ESMTPS id A5509618BE;
-	Tue, 24 Jun 2025 08:34:44 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id dYLDVH5LgmI0-qFurcHQw;
-	Tue, 24 Jun 2025 08:34:43 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1750743283;
-	bh=xgCDRYHkt6LzTAG6GH5/CdfqgQ9u0lD5pfFMgfxmQdk=;
-	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
-	b=otevBcHEZsniS3eCzAaT4D3+qYH1IZ7OzE2mP5sD9BGO5O+3g3aJjNmu0F79z+Uvo
-	 R2hYw2qFVTSCwIIYx96hsOZVU8Jmxg4XZs7GlD/gVDsL9POzqg103ZrWUJCKN8ZcTD
-	 mBlB6WblmMQUPDUOITxgqxgg7WyJv7Kzh1jX6jS4=
-Authentication-Results: mail-nwsmtp-smtp-production-main-59.klg.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-Date: Tue, 24 Jun 2025 08:34:37 +0300
-From: Onur <work@onurozkan.dev>
-To: "Benno Lossin" <lossin@kernel.org>
-Cc: "Boqun Feng" <boqun.feng@gmail.com>, <linux-kernel@vger.kernel.org>,
- <rust-for-linux@vger.kernel.org>, <ojeda@kernel.org>,
- <alex.gaynor@gmail.com>, <gary@garyguo.net>, <a.hindborg@kernel.org>,
- <aliceryhl@google.com>, <tmgross@umich.edu>, <dakr@kernel.org>,
- <peterz@infradead.org>, <mingo@redhat.com>, <will@kernel.org>,
- <longman@redhat.com>, <felipe_life@live.com>, <daniel@sedlak.dev>,
- <bjorn3_gh@protonmail.com>, <simona@ffwll.ch>, <airlied@gmail.com>,
- <dri-devel@lists.freedesktop.org>, <lyude@redhat.com>
-Subject: Re: [PATCH v5 2/3] implement ww_mutex abstraction for the Rust tree
-Message-ID: <20250624083437.1e50d54c@nimda.home>
-In-Reply-To: <DAUARTYJ118U.YW38OP8TRVO3@kernel.org>
-References: <20250621184454.8354-1-work@onurozkan.dev>
-	<20250621184454.8354-3-work@onurozkan.dev>
-	<DASY7BECFRCT.332X5ZHZMV2W@kernel.org>
-	<aFlQ7K_mYYbrG8Cl@Mac.home>
-	<DATYHYJVPL3L.3NLMH7PPHYU9@kernel.org>
-	<aFlpFQ4ivKw81d-y@Mac.home>
-	<DAU0ELV91E2Q.35FZOII18W44J@kernel.org>
-	<aFmKsE_nJkaVMv0T@tardis.local>
-	<DAUARTYJ118U.YW38OP8TRVO3@kernel.org>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="uc6RlC6T"
+Received: from [192.168.42.116] (pd9e59880.dip0.t-ipconnect.de [217.229.152.128])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id E706F2FC00B9;
+	Tue, 24 Jun 2025 07:42:50 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1750743772;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gBZO04i9/G8+ysvlzg9hxG4aEGL+xeuLUkUYEOF8MAQ=;
+	b=uc6RlC6TZyU0fSz5WAtbCUCORVO6jvoWTDxIwu+b+7X+1CkZ7uP9+FCgj0rM8yKlGy2ldM
+	f4euqFyG7fqzjgR/g1QrOGSumgZGfJXzc9QRLevir+fwMAOA3KPph9pPMTP9NnblJnRZRg
+	9LmQOJ3NxqQcs5pm7gtw3vY+jm0ku4o=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <293be5bc-11ad-49b8-a549-864ce4016f14@tuxedocomputers.com>
+Date: Tue, 24 Jun 2025 07:42:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] drm/amd/display: Add quirk to force backlight type on
+ some TUXEDO devices
+To: "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+ Rodrigo Siqueira <siqueira@igalia.com>
+Cc: "Wentland, Harry" <Harry.Wentland@amd.com>,
+ "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+ "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+ "Koenig, Christian" <Christian.Koenig@amd.com>,
+ "airlied@gmail.com" <airlied@gmail.com>, "simona@ffwll.ch"
+ <simona@ffwll.ch>,
+ "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Hung, Alex" <Alex.Hung@amd.com>, "Wheeler, Daniel" <Daniel.Wheeler@amd.com>
+References: <20250409163029.130651-1-wse@tuxedocomputers.com>
+ <20250409163029.130651-2-wse@tuxedocomputers.com>
+ <08ceaa42-a12c-4bd4-bb75-b71126a60688@tuxedocomputers.com>
+ <dnu7mbrw7fs4qvwi2alvgrqvonsrucrq7hgxgkqyyqn5djzkkj@c7grkpftjbw4>
+ <8c048899-e307-4229-8165-fa70d001176e@amd.com>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <8c048899-e307-4229-8165-fa70d001176e@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On Tue, 24 Jun 2025 01:22:05 +0200
-"Benno Lossin" <lossin@kernel.org> wrote:
+Hi Mario,
 
-> On Mon Jun 23, 2025 at 7:11 PM CEST, Boqun Feng wrote:
-> > On Mon, Jun 23, 2025 at 05:14:37PM +0200, Benno Lossin wrote:
-> >> On Mon Jun 23, 2025 at 4:47 PM CEST, Boqun Feng wrote:
-> >> > On Mon, Jun 23, 2025 at 03:44:58PM +0200, Benno Lossin wrote:
-> >> >> I didn't have a concrete API in mind, but after having read the
-> >> >> abstractions more, would this make sense?
-> >> >> 
-> >> >>     let ctx: &WwAcquireCtx = ...;
-> >> >>     let m1: &WwMutex<T> = ...;
-> >> >>     let m2: &WwMutex<Foo> = ...;
-> >> >> 
-> >> >>     let (t, foo, foo2) = ctx
-> >> >>         .begin()
-> >> >>         .lock(m1)
-> >> >>         .lock(m2)
-> >> >>         .lock_with(|(t, foo)| &*foo.other)
-> >> >>         .finish();
-> >> >> 
-> >> >
-> >> > Cute!
-> >> >
-> >> > However, each `.lock()` will need to be polymorphic over a tuple
-> >> > of locks that are already held, right? Otherwise I don't see how
-> >> > `.lock_with()` knows it's already held two locks. That sounds
-> >> > like a challenge for implementation.
-> >> 
-> >> I think it's doable if we have 
-> >> 
-> >>     impl WwActiveCtx {
-> >
-> > I think you mean *WwAcquireCtx*
-> 
-> Oh yeah.
-> 
-> >>         fn begin(&self) -> WwActiveCtx<'_, ()>;
-> >>     }
-> >> 
-> >>     struct WwActiveCtx<'a, Locks> {
-> >>         locks: Locks,
-> >
-> > This probably need to to be Result<Locks>, because we may detect
-> > -DEADLOCK in the middle.
-> >
-> >     let (a, c, d) = ctx.begin()
-> >         .lock(a)
-> >         .lock(b) // <- `b` may be locked by someone else. So we
-> > should // drop `a` and switch `locks` to an `Err(_)`.
-> >         .lock(c) // <- this should be a no-op if `locks` is an
-> > `Err(_)`. .finish();
-> 
-> Hmm, I thought that we would go for the `lock_slow_path` thing, but
-> maybe that's the wrong thing to do? Maybe `lock` should return a
-> result? I'd have to see the use-cases...
-> 
-> >>         _ctx: PhantomData<&'a WwAcquireCtx>,
-> >
-> > We can still take a reference to WwAcquireCtx here I think.
-> 
-> Yeah we have to do that in order to call lock on the mutexes.
-> 
-> >>     }
-> >> 
-> >>     impl<'a, Locks> WwActiveCtx<'a, Locks>
-> >>     where
-> >>         Locks: Tuple
-> >>     {
-> >>         fn lock<'b, T>(
-> >>             self,
-> >>             lock: &'b WwMutex<T>,
-> >>         ) -> WwActiveCtx<'a, Locks::Append<WwMutexGuard<'b, T>>>;
-> >> 
-> >>         fn lock_with<'b, T>(
-> >>             self,
-> >>             get_lock: impl FnOnce(&Locks) -> &'b WwMutex<T>,
-> >>         ) -> WwActiveCtx<'a, Locks::Append<WwMutexGuard<'b, T>>>;
-> >>         // I'm not 100% sure that the lifetimes will work out...
-> >
-> > I think we can make the following work?
-> >
-> >     impl<'a, Locks> WwActiveCtx<'a, Locks>
-> >     where
-> >         Locks: Tuple
-> >     {
-> >         fn lock_with<T>(
-> > 	    self,
-> > 	    get_lock: impl FnOnce(&Locks) -> &WmMutex<T>,
-> > 	) -> WwActiveCtx<'a, Locks::Append<WmMutexGuard<'a, T>>
-> >     }
-> >
-> > because with a `WwActiveCtx<'a, Locks>`, we can get a `&'a Locks`,
-> > which will give us a `&'a WmMutex<T>`, and should be able to give
-> > us a `WmMutexGuard<'a, T>`.
-> 
-> I think this is more restrictive, since this will require that the
-> mutex is (potentially) locked for `'a` (you can drop the guard
-> before, but you can't drop the mutex itself). So again concrete
-> use-cases should inform our choice here.
-> 
-> >>         fn finish(self) -> Locks;
-> >>     }
-> >> 
-> >>     trait Tuple {
-> >>         type Append<T>;
-> >> 
-> >>         fn append<T>(self, value: T) -> Self::Append<T>;
-> >>     }
-> >> 
-> >
-> > `Tuple` is good enough for its own, if you could remember, we have
-> > some ideas about using things like this to consolidate multiple
-> > `RcuOld` so that we can do one `synchronize_rcu()` for `RcuOld`s.
-> 
-> Yeah that's true, feel free to make a patch or good-first-issue, I
-> won't have time to create a series.
-> 
-> >>     impl Tuple for () {
-> >>         type Append<T> = (T,);
-> >> 
-> >>         fn append<T>(self, value: T) -> Self::Append<T> {
-> >>             (value,)
-> >>         }
-> >>     }
-> >>     
-> >>     impl<T1> Tuple for (T1,) {
-> >>         type Append<T> = (T1, T);
-> >> 
-> >>         fn append<T>(self, value: T) -> Self::Append<T> {
-> >>             (self.0, value,)
-> >>         }
-> >>     }
-> >> 
-> >>     impl<T1, T2> Tuple for (T1, T2) {
-> >>         type Append<T> = (T1, T2, T);
-> >> 
-> >>         fn append<T>(self, value: T) -> Self::Append<T> {
-> >>             (self.0, self.1, value,)
-> >>         }
-> >>     }
-> >> 
-> >>     /* these can easily be generated by a macro */
-> >> 
-> >> > We also need to take into consideration that the user want to
-> >> > drop any lock in the sequence? E.g. the user acquires a, b and
-> >> > c, and then drop b, and then acquires d. Which I think is
-> >> > possible for ww_mutex.
-> >> 
-> >> Hmm what about adding this to the above idea?:
-> >> 
-> >>     impl<'a, Locks> WwActiveCtx<'a, Locks>
-> >>     where
-> >>         Locks: Tuple
-> >>     {
-> >>         fn custom<L2>(self, action: impl FnOnce(Locks) -> L2) ->
-> >> WwActiveCtx<'a, L2>; }
-> >> 
-> >> Then you can do:
-> >> 
-> >>     let (a, c, d) = ctx.begin()
-> >>         .lock(a)
-> >>         .lock(b)
-> >>         .lock(c)
-> >>         .custom(|(a, _, c)| (a, c))
-> >>         .lock(d)
-> >>         .finish();
-> >> 
-> >
-> > Seems reasonable. But we still need to present this to the end user
-> > to see how much they like it. For ww_mutex I think the major user
-> > is DRM, so add them into Cc list.
-> 
-> Yeah let's see some use-cases :)
+Am 23.06.25 um 21:42 schrieb Limonciello, Mario:
+> On 6/23/25 2:13 PM, Rodrigo Siqueira wrote:
+>> On 06/23, Werner Sembach wrote:
+>>> gentle bump
+>>>
+>>> Am 09.04.25 um 18:27 schrieb Werner Sembach:
+>>>> The display backlight on TUXEDO Polaris AMD Gen2 and Gen3 with panels
+>>>> BOE 2420 and BOE 2423 must be forced to pwn controlled to be able to
+>>>> control the brightness.
+>>>>
+>>>> This could already be archived via a module parameter, but this patch adds
+>>>> a quirk to apply this by default on the mentioned device + panel
+>>>> combinations.
+>>>>
+>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>>>> Cc: stable@vger.kernel.org
+>>>> ---
+>>>>     .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 32 ++++++++++++++++++-
+>>>>     1 file changed, 31 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>>>> index 39df45f652b32..2bad6274ad8ff 100644
+>>>> --- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>>>> +++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+>>>> @@ -1625,11 +1625,13 @@ static bool dm_should_disable_stutter(struct pci_dev *pdev)
+>>>>     struct amdgpu_dm_quirks {
+>>>>     	bool aux_hpd_discon;
+>>>>     	bool support_edp0_on_dp1;
+>>>> +	bool boe_2420_2423_bl_force_pwm;
+>>>>     };
+>>>>     static struct amdgpu_dm_quirks quirk_entries = {
+>>>>     	.aux_hpd_discon = false,
+>>>> -	.support_edp0_on_dp1 = false
+>>>> +	.support_edp0_on_dp1 = false,
+>>>> +	.boe_2420_2423_bl_force_pwm = false
+>>>>     };
+>>>>     static int edp0_on_dp1_callback(const struct dmi_system_id *id)
+>>>> @@ -1644,6 +1646,12 @@ static int aux_hpd_discon_callback(const struct dmi_system_id *id)
+>>>>     	return 0;
+>>>>     }
+>>>> +static int boe_2420_2423_bl_force_pwm_callback(const struct dmi_system_id *id)
+>>>> +{
+>>>> +	quirk_entries.boe_2420_2423_bl_force_pwm = true;
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>>     static const struct dmi_system_id dmi_quirk_table[] = {
+>>>>     	{
+>>>>     		.callback = aux_hpd_discon_callback,
+>>>> @@ -1722,6 +1730,20 @@ static const struct dmi_system_id dmi_quirk_table[] = {
+>>>>     			DMI_MATCH(DMI_PRODUCT_NAME, "HP EliteBook 665 16 inch G11 Notebook PC"),
+>>>>     		},
+>>>>     	},
+>>>> +	{
+>>>> +		// TUXEDO Polaris AMD Gen2
+>>>> +		.callback = boe_2420_2423_bl_force_pwm_callback,
+>>>> +		.matches = {
+>>>> +			DMI_MATCH(DMI_BOARD_NAME, "GMxNGxx"),
+>>>> +		},
+>>>> +	},
+>>>> +	{
+>>>> +		// TUXEDO Polaris AMD Gen3
+>>>> +		.callback = boe_2420_2423_bl_force_pwm_callback,
+>>>> +		.matches = {
+>>>> +			DMI_MATCH(DMI_BOARD_NAME, "GMxZGxx"),
+>>>> +		},
+>>>> +	},
+>>>>     	{}
+>>>>     	/* TODO: refactor this from a fixed table to a dynamic option */
+>>>>     };
+>>>> @@ -3586,6 +3608,7 @@ static void update_connector_ext_caps(struct amdgpu_dm_connector *aconnector)
+>>>>     	struct amdgpu_device *adev;
+>>>>     	struct drm_luminance_range_info *luminance_range;
+>>>>     	int min_input_signal_override;
+>>>> +	u32 panel;
+>>>>     	if (aconnector->bl_idx == -1 ||
+>>>>     	    aconnector->dc_link->connector_signal != SIGNAL_TYPE_EDP)
+>>>> @@ -3610,6 +3633,13 @@ static void update_connector_ext_caps(struct amdgpu_dm_connector *aconnector)
+>>>>     		caps->aux_support = false;
+>>>>     	else if (amdgpu_backlight == 1)
+>>>>     		caps->aux_support = true;
+>>>> +	else if (amdgpu_backlight == -1 &&
+>>>> +		 quirk_entries.boe_2420_2423_bl_force_pwm) {
+>>>> +		panel = drm_edid_get_panel_id(aconnector->drm_edid);
+>>>> +		if (panel == drm_edid_encode_panel_id('B', 'O', 'E', 0x0974) ||
+>>>> +		    panel == drm_edid_encode_panel_id('B', 'O', 'E', 0x0977))
+>>>> +			caps->aux_support = false;
+>>>> +	}
+>> It lgtm,
+>>
+>> Additionally, I believe this is safe to merge since it only affects a
+>> specific device. Perhaps display folks would like to include this as
+>> part of this week's promotion? Anyway, Cc other devs from the display.
+>>
+>> Reviewed-by: Rodrigo Siqueira <siqueira@igalia.com>
+> That's a bit odd that aux based B/L control wouldn't work.  Are these
+> both OLED panels?  What debugging have you done thus far with them?
+> What kernel base?
+>
+> Could you repro on 6.16-rc3?
 
+Sadly our archive is missing this panel + device combination. This patch is 
+based on our install script that sets this fix via boot parameters since the 
+release of these devices.
 
-Should we handle this in the initial implementation or leave it for
-follow-up patches after the core abstraction of ww_mutex has landed?
+So the quirk is field proven, but I can't actively test it anymore.
 
----
+Best regards,
 
-Regards,
-Onur
+Werner
+
+>
+>>>>     	if (caps->aux_support)
+>>>>     		aconnector->dc_link->backlight_control_type = BACKLIGHT_CONTROL_AMD_AUX;
