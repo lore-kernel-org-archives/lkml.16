@@ -1,139 +1,342 @@
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from OS8PR02CU002.outbound.protection.outlook.com (mail-japanwestazon11022111.outbound.protection.outlook.com [40.107.75.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BEFB28153C;
-	Tue, 24 Jun 2025 09:51:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750758722; cv=none; b=bJ4+q89o8w0e2b+1jY88IJNjj1U/YOdc7nGx6QpZ6NzqBPRH7COpdkZD6hAl6b73Tt0/zkNzzoAvXF9nZY352+Y2+VDuJYw+bXnBzBz6kHsIO87+V6f3lMlpB0yuyixjzYHy96uXcTORMZbjbGwOQbzOMEKsyaRHGYE7UyMj5HQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750758722; c=relaxed/simple;
-	bh=DyTqvvC5w0LlJ53hj5jWsIBFTgWw9yuBsl7G33hvSfg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VA/ThpJuPq+VRsbQkLC8ZE2WbchDDhfynDNUgO1a3SshRqEl5254S+XZZCV2AmD20mfxoVP7tJao1ksZfuLKXQrQJfWuytxBYn7McLPbKPnfcPfXxID+FbskeAuxwvVbvihHAXEDDDqMU/H2zBJBVu2ghVXCcsNoM/+hmSi7Wwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=pqpWzMVg; dkim=fail (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b=UW9BFEoj reason="key not found in DNS"; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BC327C872;
+	Tue, 24 Jun 2025 09:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.75.111
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750758775; cv=fail; b=BOeg0gj1GHW5SkUCPNxt6JzuTymNGUA1hS6strBNM44XmxrfO/uOf0r8+lDanGJsAVtBv5ANuucAEKd/UrugRBSo4JNUJUI39yZ2iCzhXaAW12U62wz3waBCZomVb3ePtlCCqS6YXh6fdc1WQLyg61clVjFCy/SVSmvKH++SKuU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750758775; c=relaxed/simple;
+	bh=QDxWcSKQEhbfNY5AjEJ+ssadqupjiRGDJCVykaUm4JI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=IFj6m8eibgbYtixQU3rnzOtxUs3fFgdQknRvlhz03mW2jDdWhXN94+80/6f0JDfKcl/A4NEYEjJixySGa0N0jk2fWH3TVRdPUmf7sN7jaclbze+Ntc16fSr3UQIc62Sw0ZoYctWJMf+86MRSwEWnVetUHkTCYzpMstsTQ9ryW0w=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=bYHJnNd9; arc=fail smtp.client-ip=40.107.75.111
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="pqpWzMVg";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ew.tq-group.com header.i=@ew.tq-group.com header.b="UW9BFEoj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1750758718; x=1782294718;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=LMGvq5izqaCufxhRiVPujUUpUHBSgsiKUBqKnX7JNlQ=;
-  b=pqpWzMVgr1KalmMaGBldwDi3deJLgANoMJ+w+NIxC18Ua3/n2io51Ku+
-   f7moq1sPjEwQLXTxkMToc9DoE7fgxMIvkjQhCDWJNMICJfwXEPJOaOULP
-   sSvEWApEa73my2dlJbytQOjFygHEJO031BvA5pctbX477vPLHvpOlWdUJ
-   /S4kwal5SHX+ON0P07nhM4OkwFn9FGyH2ChEu6nvfHr3rMqxrPYRQ0Co+
-   zRoF6mvHf+UPGI+2pkryR4SvQm0LPndZoPjos4QRJOGUalGodVpDWrWas
-   gvRy1wxSiLpGX9WPApkuJzaga7oYaawXLbe18TLfmgSLZj2mr6g9zxiMy
-   A==;
-X-CSE-ConnectionGUID: KICRVeP3QlulX/kotH1+Xg==
-X-CSE-MsgGUID: ezbuiKoOR1GHGp04JT8P3w==
-X-IronPort-AV: E=Sophos;i="6.16,261,1744063200"; 
-   d="scan'208";a="44815220"
-Received: from vmailcow01.tq-net.de ([10.150.86.48])
-  by mx1.tq-group.com with ESMTP; 24 Jun 2025 11:50:44 +0200
-X-CheckPoint: {685A74F4-1B-497D558D-EBA6F5A1}
-X-MAIL-CPID: AC4B4CD97CD6F92F69E614E9AA2668BB_3
-X-Control-Analysis: str=0001.0A006371.685A750A.0024,ss=1,re=0.000,recu=0.000,reip=0.000,cl=1,cld=1,fgs=0
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 01D4F160CB8;
-	Tue, 24 Jun 2025 11:50:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ew.tq-group.com;
-	s=dkim; t=1750758640;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LMGvq5izqaCufxhRiVPujUUpUHBSgsiKUBqKnX7JNlQ=;
-	b=UW9BFEojEvhcAZFnETze/5ThQTbY1gX9IZ4v9Ih5NDKtzX864wBUtU+4nJceSZ2NEgOh66
-	XTfqzpvZDNav3qidBA6Xpfb36ZDO49P5Oc5bYAn84Y+AJXD4rGLsf5ATUVIthkx5zz65WY
-	KUqZVolQDhb5ve8iTSSkPTjX2VBklFgwm3Q6/djjDiJZAoVuW5Uyxna+qKebtMq2PqOD/f
-	nF0ZgV9FvjQ0IIhJyPlVJGMcWIIAoQhRj7mQqYY8h1ovgJFoA9Ltsk95yNK0O4uJhY2zUP
-	YBRvVWkDIVQ3+VJJPz0nPVP3r0uvANNQEdpiW4dX+9+WP90hKtCzHyic7VEeug==
-Message-ID: <ba1fba45aef0264d1215c3abac1d74e3ad2c33f2.camel@ew.tq-group.com>
-Subject: Re: [PATCH net-next 4/4] checkpatch: check for comment explaining
- rgmii(|-rxid|-txid) PHY modes
-From: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, Maxime Chevallier
- <maxime.chevallier@bootlin.com>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Andy
- Whitcroft <apw@canonical.com>, Dwaipayan Ray <dwaipayanray1@gmail.com>,
- Lukas Bulwahn <lukas.bulwahn@gmail.com>, Joe Perches <joe@perches.com>,
- Jonathan Corbet <corbet@lwn.net>, Nishanth Menon <nm@ti.com>,  Vignesh
- Raghavendra <vigneshr@ti.com>, Siddharth Vadapalli <s-vadapalli@ti.com>,
- Roger Quadros <rogerq@kernel.org>, Tero Kristo <kristo@kernel.org>,
- linux-doc@vger.kernel.org,  linux-kernel@vger.kernel.org,
- netdev@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
-Date: Tue, 24 Jun 2025 11:50:35 +0200
-In-Reply-To: <a0904f35-8f26-4278-9090-9bbeef905ef7@lunn.ch>
-References: <cover.1744710099.git.matthias.schiffer@ew.tq-group.com>
-	 <16a08c72ec6cf68bbe55b82d6fb2f12879941f16.1744710099.git.matthias.schiffer@ew.tq-group.com>
-	 <20250415131548.0ae3b66f@fedora.home>
-	 <a0904f35-8f26-4278-9090-9bbeef905ef7@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="bYHJnNd9"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KBPgVwA5brMfM0xd/im4fqd0wHEsOty+HjdilgbBFx1K0hM94hrKDozj3Lpwf2xiPApBQiqXweY0wMVWzpchjhwWPmkzsTYnQdbYTTfnUHnOj9MEBX171jU1jtyHBORZXhNIjZBPwXkplE4Vkk9RtHAxYg+P4oH58/oD531qyvp3G+r0Ri/+GiWGHAh9f+nmGYmOJyp/pCPqB9Cv9jNRRY5nnBG6EOi62iTlwdqmX3DvmALyh6+2xBFuQK4CpuVFx4H4D79XUPDjJSruO3QgvFfS+vs0ppY20VxY0MxPBm81p6nF3qT37oZ+stGyU/RaKgIOHdtz2uOT7x+WOCH1Bw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=CwW8uf+BB4BZXI8vAlkZuTxklr4X8urRQOVNEDuBKGo=;
+ b=srgVvL749PFrajK7v4k1cqWjeR9Zayk3Gn29rSUdIJF0X9PCmLLjr39ch8AmKlJxdQqsCy08xGkYANUa4AZlB5cOL+m+aeu/YAgQzRzjxDZ8ywBWlLGsNPtYQrNEvrsqqz+a7xS9WAnKgTo17cJp+MENs30WTonvursWkeSamnFvQzE9xqlcH9olvKJ0AJFMrYeKxiCinfjnr1CF6fbcfY8ot/1YBOdQ4/7SaKDi6Q+TgDSnMNXtjhPlzkfqpL0b+4qD/dVNoBkatwGCq6v+lntpPI3BOTlsF92PigZ0wHVOw9lvQZ8kGrEmal/mmeMj9c+eRQjApGEl3gDip+SUHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CwW8uf+BB4BZXI8vAlkZuTxklr4X8urRQOVNEDuBKGo=;
+ b=bYHJnNd9y0gYFhE8KHH/rr9PXT7zoCb/graonbt7x/jJXD9rm8f6vjrE0aKfe/2T3ujp29sLYKcmiQqJ2vqcH+8TrvnhbA3C3bUohNStlFq58Z7a2BoUpxet37Ciq0pbuPIGe9rVOUaQ/pNRYzBfyy+Hi1dRZR7lff6OBmrOkdDc8j4Ickx9u6qb1LPGnE94601hTM1JP1LMkcEER0+AAWQZKq9dStPjlO2dkKvp33nbIMI989kannkcrBD4IcVwr9PDaciAjiY9OBTOTwrmYAz2/UOV6XRtJUtem048I+3tO6cQwTEi4ORsVr9SIvEomldgXyYzH+Bbk+YWaOhVYA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by JH0PR03MB8333.apcprd03.prod.outlook.com (2603:1096:990:4c::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Tue, 24 Jun
+ 2025 09:52:49 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::ac4e:718:3b03:3123%2]) with mapi id 15.20.8857.026; Tue, 24 Jun 2025
+ 09:52:48 +0000
+Message-ID: <d7502989-dbfd-40d8-8a4e-8e194eefb523@amlogic.com>
+Date: Tue, 24 Jun 2025 17:52:44 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] spi: Add Amlogic SPISG driver
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzk@kernel.org>, Sunny Luo <sunny.luo@amlogic.com>,
+ Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: linux-amlogic@lists.infradead.org, linux-spi@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250623-spisg-v3-0-c731f57e289c@amlogic.com>
+ <20250623-spisg-v3-2-c731f57e289c@amlogic.com>
+ <682a48fc-8451-46e5-b3a8-5ad7c237588e@kernel.org>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <682a48fc-8451-46e5-b3a8-5ad7c237588e@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TYWPR01CA0023.jpnprd01.prod.outlook.com
+ (2603:1096:400:aa::10) To TYZPR03MB6896.apcprd03.prod.outlook.com
+ (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Last-TLS-Session-Version: TLSv1.3
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|JH0PR03MB8333:EE_
+X-MS-Office365-Filtering-Correlation-Id: 447d6bc1-8b53-44dd-86f1-08ddb304e0a2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SHZydldPK0RaeVZlZFRQRk01dE4rYkpUL05JWVdjdmNreVNHSVc0LzF0RCty?=
+ =?utf-8?B?b0Vna2tUKy9YVllVZEg5VWYrZ0NqT0R1WFUzNUZsbXpTZkFjOW5uaG5DekJH?=
+ =?utf-8?B?R3cxbU9mVGdGbys2L2JoOHh1bk0yUHR2d3ZDZnF6RHlCZTZhSFpxMGxyNzZn?=
+ =?utf-8?B?RTRhalJ3RlJSenozRERXcXJBODFEVjhOQUFhOE5HaXk4SkZ1MGM1Z1dpN1Vv?=
+ =?utf-8?B?NGpXcTBmMzRWYUU1a3UzNTRSV2NQTGdmRlVwaDdGR21NT0QwUXd0MStpVExq?=
+ =?utf-8?B?b2dCRUVIYVFYcTFLa3JHdG1hRFhSaCsyL1hRdmNjTlM2RmNsUnhwZXYyRFBW?=
+ =?utf-8?B?Q01IbmZtMFBySlVHTGFMOGF0c3pTRmNNOTUwclBSM1FycW8xK0dJalcrMTRM?=
+ =?utf-8?B?NGMraytZaVZwdFQxclVqWGcwaEFucDA2N2x2ZSswR25OazBoQnBiOWFZTWpj?=
+ =?utf-8?B?cHB3QWlZQW5rMy9qL2hJNDc4UWU3L2lWM3lFN0x1ekpLSTErRmJoczA3d1FI?=
+ =?utf-8?B?dFdtbytheXdZZ1d6cTljb3V6aUNEaWx6c0FPY0JvbmVON0FrWTdxMmlwYldU?=
+ =?utf-8?B?dnNoazlLblNuYnFtbmpHR09SSnRWaXJ5em1nbDFJLzlaT3RsMWI2VWtrMzRZ?=
+ =?utf-8?B?ZnF1ZDc1WVpJRCtuTzVXcVhJUTF5U1JSdmh4a29ZbE40NWNMT3J5SWpVajdD?=
+ =?utf-8?B?eGk5cVhoYzdOZHhSQUFSem8xdmRsY3psNDdMK1JuQ21DbGJiYU54L0d5NzQz?=
+ =?utf-8?B?dVd0MzRyZWk3akx5VjV5S0ZrUW9hN1h3d2F2ZjhPWGhaZUJFU1ppOXoydWN1?=
+ =?utf-8?B?SVhwelIzdFpCSXJ5VCszMDd4YktQSXRjRHFGTjVMN2RCSWY5T1ZGVmxRQnRK?=
+ =?utf-8?B?eUdJSGxLTWd2SzFhQ2kvZFV2RnBQWUxmYmRQTVNyU2tTSHU2dFl5MXFvOUty?=
+ =?utf-8?B?OTNWWU5iVHhPMWVkNjBONmZCZklvc1YrWDZoYnh0WXFOcnhpTWFWeDJ3SFR2?=
+ =?utf-8?B?ckJOdFF3aXpIYU9QQ2FIMGZnZTljYVJlRjgyWjFkb2dOSzN6bjMwNHpyUUJL?=
+ =?utf-8?B?TnNvZldjNTdiWnhkRlV5U2dWUElKbWV5R0VxSlhrR2VFMGhQc0kzQUhhOFkr?=
+ =?utf-8?B?clozbmg2endMbFMrOFlzbmh2Y3FveHBWK0xmQVpoUk1nOEdDVHJaN1hKNmpV?=
+ =?utf-8?B?RUVvejRYYk82ZlNoc0VEWTdlVFdaKyt1cFllbnhDMmM0TkJYbUxIZVQvdDEr?=
+ =?utf-8?B?d3QvWDVLMkJZdVVicHR5cEp0alVCUDFyWTFtZ3VpQ2llZG45VkEraUJBVDJ2?=
+ =?utf-8?B?TWRtQVJ6VkpsTE45UWEyWDN3UStWYUMvV3RpU1BVZHozTE9UUVd1dVAxVVdQ?=
+ =?utf-8?B?ZWlFZjNMK2hCcGxYc3dJcFBFajQrbnZ6dnE3L3JPRGVrZmhVZkhpZ1h3QnpW?=
+ =?utf-8?B?aS9pVW9ERDczbFl0amVLQUZXOHlEbmZaL0VBWEJ6K2xKeE5ZTUxRTi96clBQ?=
+ =?utf-8?B?cng2MEU3a3ZVeHQrWnhEc2lSNDhEN2lwS1BiZlhEdmxqSXkxL25qT2dsdzZ1?=
+ =?utf-8?B?RDV1ZVlRNUNOOTM4NTU1UGNtTzVRVzJ0ekJBMzB2YUNZcENhbCtsVkpnRDM4?=
+ =?utf-8?B?eDNhMnhXdDNTWE9NMGhVRlNDcHhyR3I1NG9ZK0k2VkpTbzZxbUxrVUFPOU5Y?=
+ =?utf-8?B?VUpabExxdUo3R2srVWZsZGVobzMvZjhaQ1AvR0E2REJIN3Y3NFZjQUh6NVow?=
+ =?utf-8?B?RjhIUkp5SEpCRWVvUFBUQTh4ckt4M1hyK3E0WXpQYXFxRHY2TU56OFA3UFcw?=
+ =?utf-8?B?elpVd1BmbzlsMjB3TkFvMlFFeGhCUDIrNG05VTJiUnRVV2N4NU5BVHlzd1Q4?=
+ =?utf-8?B?MzN0NUxXZC9mR3hDWThXcFM5Vkc5VHdVNmVCQlRkMk4rb293dU5FWXdGaDZn?=
+ =?utf-8?Q?6NrUiJxe+1E=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?OTlHcUtvaklVOXdVRGtaUmFoY3hxQWF1TktrTHN4R3Y2WnhJZHhXQ3cyMXRZ?=
+ =?utf-8?B?aDZiNktmUmZmdmlNRENoNG93U09qTnpuTEp1UWk5cE5DUnNNVkphM0Z3U2FK?=
+ =?utf-8?B?YWJ4NUI2RmVtVXNvZGJoRHRFYUM3RmR5a0pTbTJTN000WGNPMWRpVk9yM2hH?=
+ =?utf-8?B?a25ZTS9qQS9jTnZ5NXV2NTNMRitGZmxRcHFhMFBDRlJJTEx4UGxTOTRWVXJr?=
+ =?utf-8?B?cTA5T3VTOXhycVdoWWVtaG56aHMyczhGdU5CM3dkV3JIVDdHMFVhYWxDU1JQ?=
+ =?utf-8?B?RVArOVN4cU1ySGFxejh1R243Nk9iTktUUmovdXZhVGlvUkdXOHprWlpzSCtS?=
+ =?utf-8?B?WWVMQ2VScEl0R3paVThHcXhIV3NkcHRwK1U2cHpjWmZzTnRwUEJ5cEN3SHBQ?=
+ =?utf-8?B?K3JBTFFObEc4VXYvZ2d4eS9meHFUR0lSdHkzeXVWUkJSSmNIWGVDS1pnVHdj?=
+ =?utf-8?B?Q08rYy9vV3R6amNrUkpmdGUycS9HZHZjQ3d5QUNORjVnLzhVM3R3WjZReEpZ?=
+ =?utf-8?B?akJTTjV6eWdQTnU1MnJwS2VQUlY1YVNFL1pwUk1FRWg0SzNoZWdpT1BxVWNt?=
+ =?utf-8?B?azBiRW1rV0tCdzlLVUY2Wm1uQ014eDRGUE1Lakw2Z0VyN1R0bUpiT21tajcw?=
+ =?utf-8?B?czJRek4vdjYwMS9vZ1VPQWE1Ums5cENpYzM3Z2ZOZFAyVnRBTGhZRHkxUjJn?=
+ =?utf-8?B?RlNQOFE1aUgvdDVXMEk3VjV4aXM4ci90WXRqRWVDOEdLbGVrRGkvaHJvYmV6?=
+ =?utf-8?B?aUdMTHFFSjNTZUl2SDFnTll6QlVEN1d3dUd0U0lVeHN4OG5nUzJjZGFrcVA1?=
+ =?utf-8?B?QmZ0T1kyczdTRno4YnNMT09aWWhCYTlpUWpQVWdmbzZQenpXRnhheXpLMUQ4?=
+ =?utf-8?B?S3Qxc0gzdHllalU0TThMVmRLaWJDek5Pbm5kaUtOT3E0UnExa0E1R3ZJWDBW?=
+ =?utf-8?B?aTEvWkJWNEhtVlhkaCtlN0hERVV1UXNrQkwrNi9rVXRXQktpZ1BNNnRNNUpo?=
+ =?utf-8?B?NDllRmE3ZnAzdkI2MkIyM1VGbkREa09VNVpkNTFtanF2cUl3Mjd1WTJIZXRy?=
+ =?utf-8?B?MExpelBmN24rKzVGcFkwcTl2SWJYVHh0akhqU1gvZnpaeHhvSGI3YklJQ3Uz?=
+ =?utf-8?B?U0NGN2NzVFpkK3NoNktNeUtXREV3bjREcDY1dThsNElmUDdScCtLc1ZRbnQ0?=
+ =?utf-8?B?V2tncUpPdHRWM0w4Z0hGSlBmRjNnY3VNMURGUGxOblhnQ1BkMncxVksvcmI4?=
+ =?utf-8?B?YjRoV0dDcUhRSXNON1puMWNRRzlsWWxlZE85aFB5Sm9ZUCtLaEIyOCtDT0tC?=
+ =?utf-8?B?QU95QlRSU1pYL2o2N2xwZFZCM2phZ3VsanZ0WHhJWmcvZk1CenJRTGw3VE4v?=
+ =?utf-8?B?UjJkc29EMHJHWmFFdXE3N0xHT0NNbEZSTkhVakF0N1IxTzZRaTZCZmhmbWtQ?=
+ =?utf-8?B?TXdMYXB0bmo4MmMxZXIxTDRsenREUEZNd3ZNSHZWUTgxSzBxWUNIWlA3Qm5q?=
+ =?utf-8?B?enVxbnlwZk5tOUQremFLL0xvYmhCODhjUVo5TS80OC96TWNiZktkREJjL3pX?=
+ =?utf-8?B?U3hSTzdydUg5Tnd4K0RiaDBTclNqcm15UHhLd3ZNTmpoK2t4b25QRDVrVjRk?=
+ =?utf-8?B?TkZkdHZJN2l5RDBtMUdUZUc4N2Fhd1YxRkJYalNPaGJIOFBTQ3FGUFp2RVZF?=
+ =?utf-8?B?cTVsTXV1bTlqcHZwditsemIwd05QZTF1QjJ0dzNYc1VRNms3WWkzY3UzNUhy?=
+ =?utf-8?B?RFFSNDI2RSt5ZmFFM2NBNXVobEgxMUVwUG5sUUtodEFqckZiNWNDak5CY3Mz?=
+ =?utf-8?B?Y2ZjeWwyMmpxZkh4TktiRDl2VzdQdk9xamR3UFZCR3oxUTlsTjdDU25JTGU0?=
+ =?utf-8?B?cjZmRGxOeUFzUGNGeW5yWlNOTENYa0MwMTdibWh1U3RIRDA0SGVBUGJSWkRh?=
+ =?utf-8?B?ZmtpVXZhOUtYQWpIR2Y0OUs4ZFVsRkdGVk5DVTJ3QzJCRDNLUGpMVDRXQ1pH?=
+ =?utf-8?B?bmZXOHdYdm81bGsyajIyYnl0eHRsUGRmYUhVbWZxNkRXc2N4RWg5UWdCVUxX?=
+ =?utf-8?B?b1BnRDRCbGFHZkJ0NjJoL1VzU1I5QXVOREtZWFZ4ZVJWMTNkejFTVFd3Y1JS?=
+ =?utf-8?B?N25mNkRBSzk0WUZlQWVtM2FIMW1GT1czTmtFSk5EbVVmdS9iZmlGR3lVZkVG?=
+ =?utf-8?B?WEE9PQ==?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 447d6bc1-8b53-44dd-86f1-08ddb304e0a2
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 09:52:48.8651
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zbZw5UlJZNi8v0yaT0Zm3SWDHGjf5eAcUzvW0bS0OBdrIsJUee+rzu4RLmFFc3Iz+xvBKNnIoiG4WW/ECdvkRHh7EABM/xUVQQKATf1chL8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: JH0PR03MB8333
 
-On Tue, 2025-04-15 at 15:12 +0200, Andrew Lunn wrote:
->=20
-> > My Perl-fu isn't good enough for me to review this properly... I think
-> > though that Andrew mentioned something along the lines of 'Comment
-> > should include PCB somewhere', but I don't know if this is easily
-> > doable with checkpatch though.
->=20
-> Maybe make it into a patchset, and change a few DTS files to match the
-> condition. e.g.
->=20
-> arm/boot/dts/nxp/ls/ls1021a-tsn.dts:/* RGMII delays added via PCB traces =
-*/
-> arm/boot/dts/nxp/ls/ls1021a-tsn.dts-&enet2 {
-> arm/boot/dts/nxp/ls/ls1021a-tsn.dts-    phy-mode =3D "rgmii";
-> arm/boot/dts/nxp/ls/ls1021a-tsn.dts-    status =3D "okay";
->=20
-> This example is not great, but...
-> arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi-                         p=
-hy-mode =3D "rgmii";
-> arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi:                         /=
-* 2ns RX delay is implemented on PCB */
-> arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi-                         t=
-x-internal-delay-ps =3D <2000>;
-> arm64/boot/dts/freescale/imx8mp-skov-reva.dtsi-                         r=
-x-internal-delay-ps =3D <0>;
->=20
-> There is one more i know of somewhere which i cannot find at the
-> moment which uses rgmii-rxid or rgmii-txid, an has a comment about
-> delay.
->=20
-> 	Andrew
+Hi Krzysztof,
+    Thanks for your reply.
 
-FWIW, I've decided against including the comment changes in this series for=
- now
-(going to send a v2 in a moment), as non-functional changes just to improve
-style or make checkpatch happy are often frowned upon as unnecessary churn.
+On 2025/6/23 17:17, Krzysztof Kozlowski wrote:
+> [ EXTERNAL EMAIL ]
+> 
+> On 23/06/2025 10:53, Xianwei Zhao via B4 Relay wrote:
+>> From: Sunny Luo <sunny.luo@amlogic.com>
+>>
+>> Introduced support for the new SPI IP (SPISG) driver. The SPISG is
+>> a communication-oriented SPI controller from Amlogic,supporting
+>> three operation modes: PIO, block DMA, and scatter-gather DMA.
+>>
+>> Signed-off-by: Sunny Luo <sunny.luo@amlogic.com>
+>> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>> ---
+>>   drivers/spi/Kconfig             |   9 +
+>>   drivers/spi/Makefile            |   1 +
+>>   drivers/spi/spi-amlogic-spisg.c | 876 ++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 886 insertions(+)
+>>
+>> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
+>> index c51da3fc3604..e11341df2ecf 100644
+>> --- a/drivers/spi/Kconfig
+>> +++ b/drivers/spi/Kconfig
+>> @@ -99,6 +99,15 @@ config SPI_AMLOGIC_SPIFC_A1
+>>          This enables master mode support for the SPIFC (SPI flash
+>>          controller) available in Amlogic A1 (A113L SoC).
+>>
+>> +config SPI_AMLOGIC_SPISG
+>> +     tristate "Amlogic SPISG controller"
+>> +     depends on COMMON_CLK
+>> +     depends on ARCH_MESON || COMPILE_TEST
+>> +     help
+>> +       This enables master mode support for the SPISG (SPI scatter-gather
+>> +       communication controller), which is available on platforms such as
+>> +       Amlogic A4 SoCs.
+>> +
+>>   config SPI_APPLE
+>>        tristate "Apple SoC SPI Controller platform driver"
+>>        depends on ARCH_APPLE || COMPILE_TEST
+>> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
+>> index 4ea89f6fc531..b74e3104d71f 100644
+>> --- a/drivers/spi/Makefile
+>> +++ b/drivers/spi/Makefile
+>> @@ -20,6 +20,7 @@ obj-$(CONFIG_SPI_ALTERA)            += spi-altera-platform.o
+>>   obj-$(CONFIG_SPI_ALTERA_CORE)                += spi-altera-core.o
+>>   obj-$(CONFIG_SPI_ALTERA_DFL)         += spi-altera-dfl.o
+>>   obj-$(CONFIG_SPI_AMLOGIC_SPIFC_A1)   += spi-amlogic-spifc-a1.o
+>> +obj-$(CONFIG_SPI_AMLOGIC_SPISG)              += spi-amlogic-spisg.o
+>>   obj-$(CONFIG_SPI_APPLE)                      += spi-apple.o
+>>   obj-$(CONFIG_SPI_AR934X)             += spi-ar934x.o
+>>   obj-$(CONFIG_SPI_ARMADA_3700)                += spi-armada-3700.o
+>> diff --git a/drivers/spi/spi-amlogic-spisg.c b/drivers/spi/spi-amlogic-spisg.c
+>> new file mode 100644
+>> index 000000000000..2f2982154d49
+>> --- /dev/null
+>> +++ b/drivers/spi/spi-amlogic-spisg.c
+>> @@ -0,0 +1,876 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/*
+>> + * Driver for Amlogic SPI communication Scatter-Gather Controller
+>> + *
+>> + * Copyright (C) 2025 Amlogic, Inc. All rights reserved
+>> + *
+>> + * Author: Sunny Luo <sunny.luo@amlogic.com>
+>> + * Author: Xianwei Zhao <xianwei.zhao@amlogic.com>
+>> + */
+>> +
+>> +#include <linux/bitfield.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/device.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/dma-mapping.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/pm_domain.h>
+> 
+> cacheflush
+> 
+>> +#include <linux/platform_device.h>
+>> +#include <linux/spi/spi.h>
+>> +#include <linux/types.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/reset.h>
+> 
+> So this you take to reset device... but your device does not have any
+> resets! Just look at your binding.
+> 
 
-Best,
-Matthias
+Will add resets prop in binding.
 
+>> +#include <linux/pinctrl/consumer.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/cacheflush.h>
+> 
+> Where do you use it?
+> 
+Will remove it.
+>> +#include <linux/regmap.h>
+> 
+> Actually several other headers looks unused. I am not going to keep
+> checking one by one - you should check and do not include irrelevant
+> headers.
+> 
 
+Will do.
 
---=20
-TQ-Systems GmbH | M=C3=BChlstra=C3=9Fe 2, Gut Delling | 82229 Seefeld, Germ=
-any
-Amtsgericht M=C3=BCnchen, HRB 105018
-Gesch=C3=A4ftsf=C3=BChrer: Detlef Schneider, R=C3=BCdiger Stahl, Stefan Sch=
-neider
-https://www.tq-group.com/
+>> +
+>> +static int aml_spisg_probe(struct platform_device *pdev)
+>> +{
+>> +     struct spi_controller *ctlr;
+>> +     struct spisg_device *spisg;
+>> +     struct device *dev = &pdev->dev;
+>> +     void __iomem *base;
+>> +     int ret, irq;
+>> +
+>> +     const struct regmap_config aml_regmap_config = {
+>> +             .reg_bits = 32,
+>> +             .val_bits = 32,
+>> +             .reg_stride = 4,
+>> +             .max_register = SPISG_MAX_REG,
+>> +     };
+>> +
+>> +     if (of_property_read_bool(dev->of_node, "slave"))
+> 
+> "slave" is not a bool. You want to check for child presence, don't you?
+> You need to use appropriate API for that otherwise you just add one of
+> the issues which was being fixed recently.
+> 
+
+The correct property name  should be "spi-salve". I will fix it.
+
+>> +             ctlr = spi_alloc_target(dev, sizeof(*spisg));
+>> +     else
+>> +             ctlr = spi_alloc_host(dev, sizeof(*spisg));
+>> +     if (!ctlr)
+>> +             return dev_err_probe(dev, -ENOMEM, "controller allocation failed\n");
+>> +
+> 
+> 
+> 
+>> +
+>> +static struct platform_driver amlogic_spisg_driver = {
+>> +     .probe = aml_spisg_probe,
+>> +     .remove = aml_spisg_remove,
+>> +     .driver  = {
+>> +             .name = "amlogic-spisg",
+>> +             .of_match_table = of_match_ptr(amlogic_spisg_of_match),
+> 
+> So now you will have warnings... drop of_match_ptr.
+> 
+
+Will drop it.
+
+> Both suggest you send us some old code, instead of working on something
+> recent.
+> 
+
+The following is the link of my first version:
+https://lore.kernel.org/all/20250604-spisg-v1-0-5893dbe9d953@amlogic.com/
+
+>> +             .pm = &amlogic_spisg_pm_ops,
+>> +     },
+>> +};
+>> +
+>> +module_platform_driver(amlogic_spisg_driver);
+>> +
+>> +MODULE_DESCRIPTION("Amlogic SPI Scatter-Gather Controller driver");
+>> +MODULE_AUTHOR("Sunny Luo <sunny.luo@amlogic.com>");
+>> +MODULE_LICENSE("GPL");
+>>
+> 
+> 
+> Best regards,
+> Krzysztof
