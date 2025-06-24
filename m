@@ -1,127 +1,89 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.133])
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD1A3074AE;
-	Tue, 24 Jun 2025 22:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC2E2586FE;
+	Tue, 24 Jun 2025 22:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750804567; cv=none; b=fn3zB0AAY6+GPi8VpTRygL8lzcjxFToVcg8hE6x8+3ZA0ZiPqXWcPYFYIjtTRD8kFCXXOufH3cRHBxYSnazZMErSObk14vRfAZp/ZkJKdJPR++vtNe/uo8lhoj32+pHNsAsCh4Y6BMQSTCu+DKfExKE9D+NykfTshnJXuy3rats=
+	t=1750804587; cv=none; b=GhxYUVshtlhPTI8x6xUkUMHgM2RZ4lnCS/T1igHfCKvL2bVKzYF6BkM7O0gfqlqkquY99z8J1mN7PzNMDDAkEeDxkPlCPwI7oP89/c8dBSJr8riNLuZ4JmlC1UqaC4UywCnfAdsoZ5g1QCY9fxmOAanHBthXYwfVce3S/FlErpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750804567; c=relaxed/simple;
-	bh=1eED4mBxxa41vGVxedCAPzdxMNfIB9r1fcfLhnFfTog=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hzVQgcf05MsdE2tcyKx7awuhPg+RWq6umY2nUtbdAlGgGoMlRGjdDJM3CaRXgm4xjBGabVMxDBQ2D+H13g77+xbZchTfYeADt1ejpWgF33DvP/hI0BQslhe3sZ4RDDZgg2rRZhCBLPY7hQTdcLMDv8K8TIzLC2HGRa5Kg07G4AM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=mfWXTP1R; arc=none smtp.client-ip=212.227.126.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="mfWXTP1R"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
-	s=s1-ionos; t=1750804563; x=1751409363; i=christian@heusel.eu;
-	bh=k84MJ9mlpMMXjFPHzH7zdej7Q7ifP2HIEnnm12B0cgg=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:In-Reply-To:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=mfWXTP1RreVwXcuBH2ykPJj66SnBYfy8ewI7d2aaOeESk2xPCE0eUVQO3WjAQ/2x
-	 LX3FoWUgxF0E8/+J4EXu8nx9nBZn9vwFcpCFBwL2WDIGYsW8KxVXSE36Ao8gjcYUt
-	 vc3juZQTqKQD32L0viaRiJyJvzbY7GFemswsO55mMUp3dFAYHVsfXUd4RTPYfxXRv
-	 ms07ExJzfTA9fzuOscwB0HndPwB45rR94NBf8cgIyuQ3XtyviRrOKEurXYzGfAWM6
-	 XfzquxIc2aCahVX/ZEqY4pPUy1D8A5bQ4luymhAOB8ossHDHg7EeYQK+LhN/u7WJ+
-	 nATHb/MHJhAlKJBElQ==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([89.244.90.39]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MkYLW-1vAeHu0hzy-00nH2w; Wed, 25 Jun 2025 00:20:40 +0200
-Date: Wed, 25 Jun 2025 00:20:36 +0200
-From: Christian Heusel <christian@heusel.eu>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, 
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, 
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, 
-	hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.15 000/588] 6.15.4-rc2 review
-Message-ID: <77c62de0-8236-46b9-a94a-8bc68873cffd@heusel.eu>
-References: <20250624121449.136416081@linuxfoundation.org>
+	s=arc-20240116; t=1750804587; c=relaxed/simple;
+	bh=7L5rEGVO3mrtPyc5RGQpu5ReOYLzXADuN7/STbDJ1jw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P2qURzRhTuv+jEMEN4rTe5tu5WK8ycrn+XVUPa5YNWz8ol7Fpip6td4Al3Oe4UHLL78Slarafb9BlERKwKou0JkjQGCxjHr0PnjjNShMjP7yfvB/GuenL+mNyCN+ONJd5SUZ24cDBdaugt9zS5azD8h2enjax2iFIA5JU/zhxVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay01.hostedemail.com (Postfix) with ESMTP id 9DB5F1D8A29;
+	Tue, 24 Jun 2025 22:36:21 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id B628337;
+	Tue, 24 Jun 2025 22:36:17 +0000 (UTC)
+Date: Tue, 24 Jun 2025 18:36:16 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org, x86@kernel.org, Masami Hiramatsu
+ <mhiramat@kernel.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jiri
+ Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Thomas
+ Gleixner <tglx@linutronix.de>, Andrii Nakryiko <andrii@kernel.org>, Indu
+ Bhagat <indu.bhagat@oracle.com>, "Jose E. Marchesi" <jemarch@gnu.org>, Beau
+ Belgrave <beaub@linux.microsoft.com>, Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, Andrew Morton
+ <akpm@linux-foundation.org>
+Subject: Re: [PATCH v10 06/14] unwind_user/deferred: Add deferred unwinding
+ interface
+Message-ID: <20250624183616.5b0a3ddc@batman.local.home>
+In-Reply-To: <20250618184620.GT1613376@noisy.programming.kicks-ass.net>
+References: <20250611005421.144238328@goodmis.org>
+	<20250611010428.770214773@goodmis.org>
+	<20250618184620.GT1613376@noisy.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="nturzagk3ts5ndbq"
-Content-Disposition: inline
-In-Reply-To: <20250624121449.136416081@linuxfoundation.org>
-X-Provags-ID: V03:K1:UTT0E38s87OzCdAygoU8p56GP4oApCv4yiNnw4v3qWs7Ly8eVk/
- lQzZATJn9BN9GRpbXUi/VJMjUnfiMIGlvoNyzsskp+FpU8GsOmLz9doN7T/VpkNuUnQBG3B
- tpbs+OYWR+MsV9br8o55StL4svvGDUEOtFUGCGiyWBaJRJ+dAw6P8A1DmBNRzwgFAX6dzWp
- ktWh2P2VwUk2iAnfSLaFw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:YrarjtneV4c=;vJnEpwAEy0LcytAt9yOGOYQtsQ3
- a2c8iqet12T+SKcWO40jHxi/qQxhEdhVOOpN7gCg0YqRw43srD8Txzt8/kwwFYi7AYmVdMoHP
- gUY54AglvqqIiuJl9hSzlsIBVN36jCc9A7DsN2Qahc3vmHd2i5jSnFkV/etDe8Gn9UfDozc8j
- KMlu6ZzRrHMqb4vdS6+97U9gEtDgQJSbMB+LE7VauqFa0u53w3Ke4jmRxegbBKDqecn7fgABx
- CrupENbV6zRnxHirnBArvqMqcxXzwZ858CRCKizDB39hhatOr8AJfiIKTJAzrtOJgSC8NxQwo
- NotuNaufuu5YQVkPoC87P9hYg700vxOzn86q5OClojv/BVMnI176E9BiMN2UC5mP/QC1uCrqz
- eFHcfnsrJDLER4bG+x7IgxHRP7E982ZyPjQgXZqgew/bw4HDRsBPlluqEaqrP9Otta1wqZz3u
- 17OgUJVJs2wngZwaFde/2lQK9BCRFB3aBidSVsQIwMduEq8glJerOLyS3OM90u7u3IaOM5Zwz
- uQZdLkGC2lxcauJMkFNgb34kvDWZ9dy6CFwOs2g9/yrNtzCHghEYz17cwx4Izw39vAkjVZUP3
- Yr2C9ilR0cyZ+8K0TZI4yjQIPau7jXZEGauCBIrZTK7VNS55GY8Ncu1yNU+jfGgIftj0DkJZf
- HNf/VkAPOkOj27Wjtuwysl3xCCv8dzs8w7XWH7qjCd3hPDFy7dskwmNBuqk1pdiD6n1ZH0hwd
- 4cPwF6U38XYq/KLi3jMNe+aEK3qKh9QaUUXMGQAm2+0bnLXMTj/8amdVY/IVAcylmOMMS9tGj
- G0Ra1I36v9DYL/7suLe1xz/beNE7ehfFONLKJ1CGg9TA+utSw4zZmlxGxubcJ/7DFdlxKK6yU
- Zcwey/05XhZEok7AyOKa/YEqBtYh4GZM70qtddHydgK8fGn+UgteZZQqENynOEOjYOBSO8lRq
- vNI+ivaspCS9Axa6zrrRzB5HMEvMTWA50cGt8LmHg8vvviTMNph/cfnEs5JQV+swlE+CjR2Wx
- Tm+61QuuWKl/sgPudqDJYQvoV2EwPCEaTuDx3ovoWV6aawsmfkLxDxkMPW+sERCGpPf0+VNaU
- q05QS1ZFPC8vvPLsSJhZhavte4EjISzL7XQqEJFhxLHMbubcX8zITqfXtVQJ6l5YjhzjVVmxw
- u2yveG+q2kcU9nb4X1lqNPHoZpQCHJVpdfSvcwO2/s0RYoF3qvdyE9yKdm0VKXdTRqi1o2MSR
- eZygDOCNt6czoI+G5ckIW2rwFQ76bHMhSjk+tStojulzFedyiiU4HPlzdB7omDMOJJJWr6ftN
- Gi/3y6fXLniGu0hnCuWwZV91xSDl67U+HwSLp8XQx9rDoGRGLQo7+sfqutRmqsL63W2FZ0X0W
- DAFcx5gJ4ayMGdYRu4DdSBx7Wdv+T5U83SLGm6AhNCmWDIn5lI4V+q6GTC
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: B628337
+X-Stat-Signature: 9hbaj66wbm19opkqqp641h9p5jtsypgb
+X-Rspamd-Server: rspamout07
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX18kjCDdOfEldqCgG+Xb3ujrKQBHryBilNc=
+X-HE-Tag: 1750804577-207013
+X-HE-Meta: U2FsdGVkX1/qbrG10wqZmAfL6ElwAmwibtJjC1FxVLGSItuYoSR5syVwERHRqjHABd/xNiX6DA4hZCE/YhCX76No8uxwuK+g4ZPVSdvA0jJoy/gzSsd/PUCf0JOYCLHXBug0M750+oUlAIZ+577hjUTrahdgY3PlfI34CDdVfK8kDVYpxJmAsuYPY37FXjd85NVxM3hKsOn3vBf0WxFxE6Vk/EmbBb4KMSYHNDnVvKmGJBBJ7ngq42U9VfuKyqk10/xstuIIsz5CXHNvb71SLN0V6zXDjoLpp5Xxl9cAxMJG04WDTweOfRFFIdE8dsDHGGeEzQ6NwFUGI0g2jmokq3ax2DzhqCTwksqauDAv6IHhwOFMVEHXFkKsoBmL8rfx
 
+On Wed, 18 Jun 2025 20:46:20 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
---nturzagk3ts5ndbq
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 6.15 000/588] 6.15.4-rc2 review
-MIME-Version: 1.0
+> >  static __always_inline void unwind_exit_to_user_mode(void)
+> >  {
+> >  	if (unlikely(current->unwind_info.cache))
+> >  		current->unwind_info.cache->nr_entries = 0;
+> > +	current->unwind_info.timestamp = 0;  
+> 
+> Surely clearing that timestamp is only relevant when there is a cache
+> around? Better to not add this unconditional write to the exit path.
+> 
+> >  }
 
-On 25/06/24 01:30PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.15.4 release.
-> There are 588 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->=20
-> Responses should be made by Thu, 26 Jun 2025 12:13:28 +0000.
-> Anything received after that time might be too late.
+Note, the timestamp could be there if the cache failed to allocate, and
+we would still want to clear the timestamp. I did turn this into:
 
-Tested-by: Christian Heusel <christian@heusel.eu>
+static __always_inline void unwind_reset_info(void)
+{
+	/* Exit out early if this was never used */
+	if (likely(!current->unwind_info.timestamp))
+		return;
 
-Tested on a ThinkPad E14 Gen 3 with a AMD Ryzen 5 5500U CPU and on the
-Steam Deck (LCD variant) aswell as a Framework Desktop.
+	if (current->unwind_info.cache)
+		current->unwind_info.cache->nr_entries = 0;
+	current->unwind_info.timestamp = 0;
+}
 
---nturzagk3ts5ndbq
-Content-Type: application/pgp-signature; name="signature.asc"
+For this patch, but later patches will give us the bitmask to check.
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmhbJLQACgkQwEfU8yi1
-JYUW4xAAy3RZvpiOmTLoN9GNNxzlO8mUorLkvDo/9nQlrTQKVyScD8fDVTolEOnf
-SddZR2ozuGN0uPsjp2j/yuQW9qR7ftwMrAQftBmvID3huSqfxMjEq9ukZxACd5bu
-ElhniZZmWguGH2JtuVHwIWtnzwyNqMgX3b7zRqMuyQcSwn+GZ09569AZ494Y+IDj
-cA83UmeASPS9dbZmS51QxU396GbwaGzYqonDes96hYZR8jd4tTCJmCcdS3d9JGBV
-O1OQxTqpW1H1zJODhIGWN2ImVOLYjKSKX/HpZ0nPnausAb+Q12yFbocQ86zG4DeU
-ZeKHeGEPJtJAsJP+BFR9CUGkwMgxlzAsewG/5DJUaGuH8yQQlHQmzGsRkzdD4/cr
-8AStrVPozU/peVHMovwy/4I0q9OwQzEU50d9LsR16qu3bGcaIIiRtg6iKOid9ygA
-Hm0qhACamtp4vck9duk1YjvlWngbbJmizywZOZUlxhQ715t3XcS7b+T9fic+XanO
-WoSypOtLK7eyu4RnRYGXg9JrIFEBbp1cX6SxqWjaEnwMMATFfZNgUERfX5DzTN+S
-rrR2zbMQnjDZuJcm1P8C+YkzE6z33gqdRW5Ls/qHTSzdddjqj2E8Q/WY9a7RHkDu
-oKMLqTdRfyk2rF3vRCoEkUscyvN8Lq9BCI3UtFOG46u51kpkJm4=
-=aWbh
------END PGP SIGNATURE-----
-
---nturzagk3ts5ndbq--
+-- Steve
