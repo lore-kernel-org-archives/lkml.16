@@ -1,390 +1,276 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE4CD3074AE;
-	Tue, 24 Jun 2025 22:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C65C258CD4;
+	Tue, 24 Jun 2025 22:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750804397; cv=none; b=Vx6OiMXAcmqCYJZfZz55U/cq+uV4KyNJAdOplS5g2TOjXaF528swqgbTLSuwK1bttYviy9Dz2cNOb+n4dgDnBQrMM9dNudY3PyGE/7PbpaZUdlCJxGk5+cISz59gzXaqOZM9UktwIEpIAKNczx3vCijnRKiQZzxHRX/nT3ecWks=
+	t=1750804423; cv=none; b=J7n8nn2hnHlPfrO2AC9Iyt6MAKgczVYMJsHTl53XLhqrhDTQxftQ7aFtN4zIgiQymbw963XSL8yqrj2wQqufMhh0bCWlmMBg1mAX2G6e4aUmTnsGmCke5J4uZgOSzQ2FYLccrVfY/fe7a07TMsWdc7nN5LSEE6nUmUr5UxbkBEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750804397; c=relaxed/simple;
-	bh=qqsLtwIT4qxU4K+cteeeR4I1NfXqbVh6Rfi797SclZc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tAPBIxanqy84vAjnFmjs3kCcA1lKUOmjt0VTEumrmV4j0Rih7Gz7upBp/yPDm8xLx++3rAy6uAs6ZeOyJRnejyugjhgnm0WiA2LzrXHxMgUjF7GC6x/e6FjIaVvMosAq3DzhKTpfTAOfAQ1biFSlhPZNrNYbBok50jn/spxt174=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R0QHymvc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750804423; c=relaxed/simple;
+	bh=/DmYF2BciHt7EB8YLnW6/AL61cBPxEUMGFv4bYqsL/E=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=K75/0o6PunPk5FJlQBr/ak3HromBDBDUunRF98OOOa6ZxyfPQAVW5jQjtpcjxnbKQD0Edi6Gs8PmfmHyrbudm1q1fA/2lloyG+9MEVd9pp4I552vBoha0KVMfKE7brr1VIw+tpz16YlvtuRDQt8FHYD3ML5QZTKE7j2WJdk5KyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EtFlio7e; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R0QHymvc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79DAFC4CEE3;
-	Tue, 24 Jun 2025 22:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750804397;
-	bh=qqsLtwIT4qxU4K+cteeeR4I1NfXqbVh6Rfi797SclZc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R0QHymvcqE8bSbo7a5ZCaMfLocL+lI+alJWG0sqJkDMvGi6LhGUwJKwraLqve24Uo
-	 7/PCOIGj/vWYPyFWNRddNsV9e03cPmkfTNQBX1/6KS2XQuKDuHuS9q6b3/7EGDBv7P
-	 hKgbr0LUnRUJsZ6waCkiwPVdOLWNa8SSsmXCnogDGXTATykPWYdetghtMu/3HPdqom
-	 LYwQRKjHqtt+pzQhlBwJmes7/f3qUQQWkV8HAen2ElHn9HWQ4XzvcSgwEuygzEJpxw
-	 L1daQvdO44f2/uXvqF6kVXiK2r94ZqW2zIX/sxkaeUZW+MxLAmnMcdxiEmdveK+v/I
-	 thc8y2Zh9IDyA==
-From: SeongJae Park <sj@kernel.org>
-To: Bijan Tabatabai <bijan311@gmail.com>
-Cc: SeongJae Park <sj@kernel.org>,
-	damon@lists.linux.dev,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	david@redhat.com,
-	ziy@nvidia.com,
-	matthew.brost@intel.com,
-	joshua.hahnjy@gmail.com,
-	rakie.kim@sk.com,
-	byungchul@sk.com,
-	gourry@gourry.net,
-	ying.huang@linux.alibaba.com,
-	apopple@nvidia.com,
-	bijantabatab@micron.com,
-	venkataravis@micron.com,
-	emirakhur@micron.com,
-	ajayjoshi@micron.com,
-	vtavarespetr@micron.com
-Subject: Re: [RFC PATCH v2 2/2] mm/damon/paddr: Allow multiple migrate targets
-Date: Tue, 24 Jun 2025 15:33:08 -0700
-Message-ID: <20250624223310.55786-1-sj@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <CAMvvPS5kgOJtb6U+9TwEqSDYn0R2FG6rAPWjS98hAdHr4jkKbg@mail.gmail.com>
-References: 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtFlio7e"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-73a5c41a71aso597180a34.0;
+        Tue, 24 Jun 2025 15:33:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750804420; x=1751409220; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yIJQWPyhbpn21c48R2P6HcFwdTMTp7D7RyUvH0r10/I=;
+        b=EtFlio7eo22GIQQSwiKUcNwce70ggvKlOfpcw1P1e/NLK0isq9p2YMGW1imV4xvlrm
+         2MRI0CO3DvMDMEL/OP7WNX6vWZRoz2OpUsE+HRs6HTrAqLdsLRLiCOHX8YcamSWy9s/T
+         3kxUPHXkN3+xMEtCJ2Mj0zzZmUwkLCC58TIPj1XxGkqSgInM3FVaNyO1hHD5xoYnnoE0
+         90W31OEMDxhtPlVeCzsdbBwS4pA3y9zLF5D3KueDwib+y0oWJxWP1D7iaPm01ISvmFJ4
+         2D9jFwF6wXOXxgRWwOb1Pvl+lvfv98VkftCCbdiJK0eNMkFvP9r4sFVE7ogMtXU/Lp93
+         h74Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750804420; x=1751409220;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yIJQWPyhbpn21c48R2P6HcFwdTMTp7D7RyUvH0r10/I=;
+        b=lvxZ41gs1WCpoXmhRZb0eJ79U0mAbA1MRhQI1bUotFHeF2/Yb3SzkQ7zIGosmb6xxz
+         IRhE2uzEwDSv6HVy8+tr4rGU5/qfqLmg3SwShZ3rpWIuvPzABGrPPfAtKEnVaX8DyQYU
+         mAO/aWUm/rlpRqdQTWLvIB+ve+4TmRl6Nhv3xG74AihtSF86htF0TI0qNo2zj5+26k6E
+         aJjHxoJoTlfNlcmFkyFRUQUFmXoric6H0SUxkuzIRk+EEd2Zm5VwvSbdx7B5b1087hEZ
+         /wBJ7tZPLcuAY8O99jBqq5MBTeh2TM6wywgy9bTjE5M6YbgO8rEsKVJj/It/vkoT/+Xa
+         WvGA==
+X-Forwarded-Encrypted: i=1; AJvYcCVomPmoHwJQwfb9sypomMyiXPBa4dkKpOrZkEp0M4TIJF6tDieWIB2TSgqYAYhVOCllNdBqEOnH@vger.kernel.org, AJvYcCWFarCSGNRSLj12rFPgOYXMHEi8ietWQzCv3uYEttv1WVHj8iFKxnG+2EPVRPUupQnMeHGiY81rF0EarG4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzbUa6YkUp+3kLCeqML+pXBnuKeRwREb0+mrBIIWVEsjz2nLIW7
+	9ky3oFLiiG2nusaNG9/x1nbVfjkek+a0K7jYoHP4qo7aHUJaCZ9GgKnZ
+X-Gm-Gg: ASbGncsBqxLvkPspMJ0wVnQhLau8LO1EjyzRIheTtXUMCO7N6jl3dBQrhPgXJauVFVM
+	uHtqfz2kdWAM8bn+S4WmXMTBzhqAWNX2+BSR5JRtQk1mIEZNvqO+o+JNBszBLRemNUSSCO3gmTe
+	cKIGKgVbrJxOOdUesiR4x4CU0Ex0FO5yxJ2dEJK3ObyKeBjmCXD+OrAdwUKPtBRSTotZnOjBRHB
+	ZNT/hz3PAMwyLRoQ+I46npyGZ4osPXda3vnJs4Ay57Zz+9Dq2z89qY7D6qsFqdcUXq7/CDh3D7S
+	QRMh7/DPVJ3/VmvTEFcRwMa3bFGclPk2+026HogawIVbsw97h7VFD0aEeXITtSSHO6A5ua+JPZx
+	7435WWMycQfpclwbEAtq1ENblO2P/5E0fM1APEK8GYIHYtBByvQ==
+X-Google-Smtp-Source: AGHT+IFuaJRe3iVbxPQwoRzc8SofGj1CS1U/L7vI+C+P5TVRo85HxCRvtPuQnTVUKB7u+1P7acOImA==
+X-Received: by 2002:a05:6830:8209:b0:73a:90ee:53ea with SMTP id 46e09a7af769-73adc549343mr426786a34.9.1750804420295;
+        Tue, 24 Jun 2025 15:33:40 -0700 (PDT)
+Received: from ?IPV6:2603:8080:7400:36da:f36b:6513:fc98:48c4? ([2603:8080:7400:36da:f36b:6513:fc98:48c4])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a90aee8ecsm2034738a34.10.2025.06.24.15.33.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 15:33:39 -0700 (PDT)
+Message-ID: <f34cec6a-67f4-444c-8807-5fbf3c4335b7@gmail.com>
+Date: Tue, 24 Jun 2025 17:33:38 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] bonding: Improve the accuracy of LACPDU transmissions
+From: Carlos Bilbao <carlos.bilbao.osdev@gmail.com>
+To: Jay Vosburgh <jv@jvosburgh.net>, Tonghao Zhang <tonghao@bamaicloud.com>
+Cc: carlos.bilbao@kernel.org, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, sforshee@kernel.org,
+ bilbao@vt.edu
+References: <20250618195309.368645-1-carlos.bilbao@kernel.org>
+ <341249BC-4A2E-4C90-A960-BB07FAA9C092@bamaicloud.com>
+ <2487616.1750799732@famine> <32313811-2215-41c3-852f-8e257487dfb6@gmail.com>
+Content-Language: en-US
+In-Reply-To: <32313811-2215-41c3-852f-8e257487dfb6@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On Tue, 24 Jun 2025 11:01:46 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
+On 6/24/25 17:27, Carlos Bilbao wrote:
 
-> On Mon, Jun 23, 2025 at 7:34 PM SeongJae Park <sj@kernel.org> wrote:
-> >
-> > On Mon, 23 Jun 2025 18:15:00 -0500 Bijan Tabatabai <bijan311@gmail.com> wrote:
-> >
-> > [...]
-> > > Hi SeongJae,
-> > >
-> > > I really appreciate your detailed response.
-> > > The quota auto-tuning helps, but I feel like it's still not exactly
-> > > what I want. For example, I think a quota goal that stops migration
-> > > based on the memory usage balance gets quite a bit more complicated
-> > > when instead of interleaving all data, we are just interleaving *hot*
-> > > data. I haven't looked at it extensively, but I imagine it wouldn't be
-> > > easy to identify how much data is hot in the paddr setting,
-> >
-> > I don't think so, and I don't see why you think so.  Could you please
-> > elaborate?
-> 
-> Elaborated below.
-> 
-> > > especially
-> > > because the regions can contain a significant amount of unallocated
-> > > data.
-> >
-> > In the case, unallocated data shouldn't be accessed at all, so the region will
-> > just look cold to DAMON.
-> 
-> "Significant" was too strong of a word, but if physical memory is
-> fragmented, couldn't there be a non-negligible amount of unallocated
-> memory in a hot region? If so, I think it would mean that you cannot
-> simply take a sum of the sizes of the hot regions in each node to
-> compute how the hot data is interleaved because those regions may
-> contain unallocated memory that shouldn't count for that calculation.
-> Does that make sense?
-> 
-> It's very possible I might be overthinking this and it won't be an
-> issue in practice. It might be best to not worry about it until it
-> becomes an issue in practice.
+> Hello both,
+>
+> On 6/24/25 16:15, Jay Vosburgh wrote:
+>> Tonghao Zhang <tonghao@bamaicloud.com> wrote:
+>>
+>>>
+>>>
+>>>> 2025年6月19日 03:53，carlos.bilbao@kernel.org 写道：
+>>>>
+>>>> From: Carlos Bilbao <carlos.bilbao@kernel.org>
+>>>>
+>>>> Improve the timing accuracy of LACPDU transmissions in the bonding 
+>>>> 802.3ad
+>>>> (LACP) driver. The current approach relies on a decrementing 
+>>>> counter to
+>>>> limit the transmission rate. In our experience, this method is 
+>>>> susceptible
+>>>> to delays (such as those caused by CPU contention or soft lockups) 
+>>>> which
+>>>> can lead to accumulated drift in the LACPDU send interval. Over 
+>>>> time, this
+>>>> drift can cause synchronization issues with the top-of-rack (ToR) 
+>>>> switch
+>>>> managing the LAG, manifesting as lag map flapping. This in turn can 
+>>>> trigger
+>>>> temporary interface removal and potential packet loss.
+>>     So, you're saying that contention or soft lockups are causing
+>> the queue_delayed_work() of bond_3ad_state_machine_handler() to be
+>> scheduled late, and, then, because the LACPDU TX limiter is based on the
+>> number of state machine executions (which should be every 100ms), it is
+>> then late sending LACPDUs?
+>>
+>>     If the core problem is that the state machine as a whole isn't
+>> running regularly, how is doing a clock-based time check reliable?  Or
+>> should I take the word "improve" from the Subject literally, and assume
+>> it's making things "better" but not "totally perfect"?
+>>
+>>     Is the sync issue with the TOR due to missing / delayed LACPDUs,
+>> or is there more to it?  At the fast LACP rate, the periodic timeout is
+>> 3 seconds for a nominal 1 second LACPDU interval, which is fairly
+>> generous.
 
-So, I understand this is not a problem for only this migration-based
-interleaving approach, but general DAMON accuracy on physical address space.
 
-I agree.  DAMON's region-based mechanism provides only best effort results, and
-depending on the workloads, virtual address space based monitoring has chances
-to work better than physical address space.  Whether the accuracy level is
-acceptable or not would depend on use case.  What I can say at the moment is,
-there are use cases of physical address based DAMON, and we are working further
-for making it better.  Recent monitoring intervals auto-tuning was one such
-efforts.
+Also, I didn’t ignore your comments -- I agree there’s a deeper issue at
+the state machine level. I’m looking into it and will get back to y'all.
 
-> 
-> > > Also, if the interleave weights changed, for example, from 11:9
-> > > to 10:10, it would be preferable if only 5% of data is migrated;
-> > > however, with the round robin approach, 50% would be.
-> 
-> Elaborating more on this:
-> Imagine a process begins with a weights of 3 and 2 for node 0 and 1
-> respectively in both DAMON and the weighted interleave policy. If you
-> looked at the which node a page resides in for a group of contiguous
-> pages, it would be something like this (using letters to represent the
-> virtual addresses):
-> 
-> A -> node 0
-> B -> node 0
-> C -> node 0
-> D -> node 1
-> E -> node 1
-> F -> node 0
-> G -> node 0
-> H -> node 0
-> I -> node 1
-> J -> node 1
-> 
-> If we use a user defined quota autotuning mechanism like you described
-> in [1] to stop DAMON interleaving when we detect that the data is
-> interleaved correctly, no interleaving would happen, which is good.
-> However, let's say we change the DAMON weights to be 4:1. My
-> understanding is that DAMON applies the scheme to regions in ascending
-> order of physical address (for paddr schemes), so if using the
-> round-robin algorithm you provided in [2], the interleaving would
-> apply to the pages in node 0 first, then node 1. For the sake of
-> simplicity, let's say in this scenario the pages in the same node are
-> sorted by their virtual address,
-> so the interleaving would be applied
-> in the order ABCFGHDEIJ. This would result in the following page
-> placement
-> 
-> A -> node 0
-> B -> node 0
-> C -> node 0
-> D -> node 0
-> E -> node 0
-> F -> node 0
-> G -> node 1
-> H -> node 0
-> I -> node 0
-> J -> node 1
-> 
-> So, four pages, D, E, F, G,  and I, have been migrated. However, if
-> they were interleaved using their virtual addresses*, only pages D and
-> I would have been migrated.
 
-Thank you for this kind and detailed explanation.  Now I can understand your
-concern.  To my understanding, one of the important assumptions on the example
-is that pages of the DAMON region are sorted on both virtual address space and
-physical address space.  I'm not very sure if that is a reasonable assumption.
-
-Hence, in such virtual address-randomly mixed DAMON region cases, I think
-physical address based approach could work better than when virtual
-address-sorted case, and sometimes even make less migration than virtual
-address-based case.  For example, let's say we found a DAMON region of 6 pages
-in node 0.  And the virtual address-based interleaving targets of the 6 pages
-are all node 1, while physical address-based interleaving target nodes are 3
-pages for node 0 and other 3 pages for node 1 (weights 1:1).  Then virtual
-address-based interleaving does 6 migrations while the other one does only 3
-migrations.
-
-So both approach has worst case scenario, and my gut feeling is that this might
-not result in big difference as long as careful scheme aggressiveness control
-is made (whether using quota auto-tuning or manual online DAMON parameters
-tuning).  Of course it would be nice if we have good test results.
-
-Meanwhile, assuming the DAMON regions on the physical address space may have
-pages of random virtual addresses, I find another concern about the behavior
-from users' perspective.  In my opinion, commonly expected behaviors for the
-interface we are working together is, "DAMON will migrate pages of the regions
-of the access pattern to give NUMA nodes with given weights." If there is a
-DAMON region having random virtual addrss page, and the virtual address-based
-target node selection results in a target nodes ratio that is different from
-the user-specified weights (like above example of 6 pages), I think users could
-be confused about the results.
-
-To go in this direction, I think the interface should clearly explain the
-behavior.  I should confess I concern even in the case, if the behavior is
-unnecessarily complex for users and developers.
-
-Alternatively, if we go fully virtual address based approach (monitor on
-virtual address and operate with virtual address), I think the behavior would
-be optimum and easier to expected by users.
-
-> 
-> * Technically, the mempolicy code interleaves based on the offset from
-> the start of the VMA, but that difference doesn't change this example.
-> 
-> > > Finally, and I
-> > > forgot to mention this in my last message, the round-robin approach
-> > > does away with any notion of spatial locality, which does help the
-> > > effectiveness of interleaving [1].
-> 
-> Elaborating more on this.
-> As implied by the comment in [3], interleaving works better the finer
-> grained it is done in virtual memory. As an extreme example, if you
-> had weights of 3:2, putting the first 60% of a process's data in node
-> 0 and the remaining 40% in node 1 would satisfy the ratio globally,
-> but you would likely not see the benefits of interleaving. We can see
-> in the example above that your round-robin approach does not maintain
-> the desired interleave ratio locally, even though it does globally.
-
-I'm not very agreed if keeping the ratio process-locally is always beneficial.
-At least when people use DAMON in the physical address space, I'd assume their
-concern is global memory bandwidth control.  And hence I imagine they would
-care about the global ratio more than local ratio.
-
-I agree there could be a case users care about process local ratio, though.  In
-the case, I feel using virtual address based mode sounds more natural, unless
-there is other reason to use physical address space mode.
-
-> 
-> > We could use the probabilistic interleaving, if this is the problem?
-> 
-> I don't think so. In the above example, with probabilistic
-> interleaving, you would still migrate, on average, 20% of the pages in
-> node 0 and 80% of the pages in node 1. Similarly, the probablistic
-> interleaving also does not consider the virtual address, so it
-> wouldn't maintain the interleave ratio locally in the virtual address
-> space either.
-
-Right.  But if the DAMON region is having random virtual address pages, it
-wouldn't always result in the worst case.
-
-> 
-> > > I don't think anything done with
-> > > quotas can get around that.
-> >
-> > I think I'm not getting your points well, sorry.  More elaboration of your
-> > concern would be helpful.
-> 
-> I elaborated more above. Hopefully that clears up any confusion. If
-> you still have questions, maybe it would be easier to e-meet and have
-> a live discussion about it? I see you have a DAMON chat slot open
-> tomorrow at 9:30 PT [4]. If you have nothing else scheduled, maybe
-> that would be a good time to chat?
-
-Nice suggestion, thank you.  For readers of this mail other than I and Bijan, I
-and Bijan made an appointment for this off list.
-
-> 
-> [...]
-> 
-> > > I see where you're coming from. I think the crux of this difference is
-> > > that in my use case, the set of nodes we are monitoring is the same as
-> > > the set of nodes we are migrating to, while in the use case you
-> > > describe, the set of nodes being monitored is disjoint from the set of
-> > > migration target nodes.
-> >
-> > I understand and agree this difference.
-> >
-> > > I think this in particular makes ping ponging
-> > > more of a problem for my use case, compared to promotion/demotion
-> > > schemes.
-> >
-> > But again I'm failing at understanding this, sorry.  Could I ask more
-> > elaborations?
-> 
-> Sure, and sorry for needing to elaborate so much.
-
-No worry, thank you for walking with me.
-
-> 
-> What I was trying to say is that in the case where a scheme is
-> monitoring the same nodes it is migrating to, when it detects a hot
-> region, it will interleave the pages in the region between the nodes.
-> If there are two nodes, and assuming the access pattern was uniform
-> across the region, we have now turned one hot region into two. Using
-> the algorithms you provided earlier, the next time the scheme is
-> applied, it will interleave both of those regions again because the
-> only information it has about where to place pages is how many pages
-> it has previously interleaved.
-
-You're correct, if we don't use a nodes imbalance state based scheme tuning 
-approach.  With the approach, but, this will not happen?
-
-> Using virtual addresses to interleave
-> solves this problem by providing one and only one location a page
-> should be in given a set of interleave weights.
-
-Even in the case, DAMON will do rmap of the pages.  Even if it is entirely
-virtual address mode, rmap walking is not needed, but DAMON should still
-iterate each pages.  For large systems, that might be not negligible system
-resource.  I think even if we use virtual address based target node selection,
-or entirely virtual address mode, that kind of imbalance status based scheme
-tuning could be beneficial.
-
-> 
-> When a scheme is monitoring one set of nodes and migrating to another
-> disjoint set of nodes, you don't have this problem because once the
-> pages are migrated, they won't be considered by the scheme until some
-> other scheme moves those pages back into the monitored nodes.
-
-Not technically, in my opinion.  In the tiering scenario, we have two schemes
-migrating ho/cold pages to each other node.  Without quota or very good
-hot/coldness thresholds, unnecessary pingpoing can happen.
-
-> 
-> Does that make sense?
-> 
-> > >
-> > > > If you really need this virtual address space based
-> > > > deterministic behavior, it would make more sense to use virtual address spaces
-> > > > monitoring (damon-vaddr).
-> > >
-> > > Maybe it does make sense for me to implement vaddr versions of the
-> > > migrate actions for my use case.
-> >
-> > Yes, that could also be an option.
-> 
-> Given how much my explanations here stressed that having access to the
-> virtual addresses solves the problems I mentioned, I think the path
-> forward for the next revision should be:
-> 
-> 1) Have the paddr migration scheme use the round-robin interleaving
-> that you provided - This would be good for the use case you described
-> where you promote pages from a node into multiple nodes of the same
-> tier.
-
-If you will not use that, I don't think you need to do that.  Let's work for
-only our own selfish purposes ;)  I believe that is a better approach for long
-term maintenance, too.
-
-> 2) Implement a vaddr migration scheme that uses the virtual address
-> based interleaving - This is useful for my target use case of
-> balancing bandwidth utilization between nodes?
-> 
-> If the vaddr scheme proves insufficient down the line for my use case,
-> we can have another discussion at that time.
-> How does this sound to you?
-
-I find no concern at fully virtual address based approach off the top of my
-head.  And if you think it will work for you and you will use that, I think
-this is the right way to go.  I also think based on our previous discussion,
-this could work for your and other's multiple use cases.
-
-We still have a few conflicting opinions about physical address monitoring
-based approach.  I love having the discussions with you.  But I don't think
-those can be blockers of 2).  So to me, 2) seems the right way to go.
-
-> 
-> > > One thing that gives me pause about
-> > > this, is that, from what I understand, it would be harder to have
-> > > vaddr schemes apply to processes that start after damon begins. I
-> > > think to do that, one would have to detect when a process starts, and
-> > > then do a damon tune to upgrade the targets list? It would be nice if,
-> > > say, you could specify a cgroup as a vaddr target and track all
-> > > processes in that cgroup, but that would be a different patchset for
-> > > another day.
-> >
-> > I agree that could be a future thing to do.  Note that DAMON user-space tool
-> > implements[1] a similar feature.
-> 
-> Thanks, I'll take a look at that.
-> 
-> [...]
-> 
-> Thanks again for the time you are spending on these discussions. I do
-> appreciate it, and I hope I'm not taking up too much of your time.
-
-I also appreciate your time and patience.  I see we are near to the alignment,
-though, please bear in mind!
-
+>>
+>>>> This patch improves stability with a jiffies-based mechanism to 
+>>>> track and
+>>>> enforce the minimum transmission interval; keeping track of when 
+>>>> the next
+>>>> LACPDU should be sent.
+>>>>
+>>>> Suggested-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
+>>>> Signed-off-by: Carlos Bilbao (DigitalOcean) <carlos.bilbao@kernel.org>
+>>>> ---
+>>>> drivers/net/bonding/bond_3ad.c | 18 ++++++++----------
+>>>> include/net/bond_3ad.h         |  5 +----
+>>>> 2 files changed, 9 insertions(+), 14 deletions(-)
+>>>>
+>>>> diff --git a/drivers/net/bonding/bond_3ad.c 
+>>>> b/drivers/net/bonding/bond_3ad.c
+>>>> index c6807e473ab7..47610697e4e5 100644
+>>>> --- a/drivers/net/bonding/bond_3ad.c
+>>>> +++ b/drivers/net/bonding/bond_3ad.c
+>>>> @@ -1375,10 +1375,12 @@ static void ad_churn_machine(struct port 
+>>>> *port)
+>>>>   */
+>>>> static void ad_tx_machine(struct port *port)
+>>>> {
+>>>> - /* check if tx timer expired, to verify that we do not send more 
+>>>> than
+>>>> - * 3 packets per second
+>>>> - */
+>>>> - if (port->sm_tx_timer_counter && !(--port->sm_tx_timer_counter)) {
+>>>> + unsigned long now = jiffies;
+>>>> +
+>>>> + /* Check if enough time has passed since the last LACPDU sent */
+>>>> + if (time_after_eq(now, port->sm_tx_next_jiffies)) {
+>>>> + port->sm_tx_next_jiffies += ad_ticks_per_sec / AD_MAX_TX_IN_SECOND;
+>>>> +
+>>>> /* check if there is something to send */
+>>>> if (port->ntt && (port->sm_vars & AD_PORT_LACP_ENABLED)) {
+>>>> __update_lacpdu_from_port(port);
+>>>> @@ -1395,10 +1397,6 @@ static void ad_tx_machine(struct port *port)
+>>>> port->ntt = false;
+>>>> }
+>>>> }
+>>>> - /* restart tx timer(to verify that we will not exceed
+>>>> - * AD_MAX_TX_IN_SECOND
+>>>> - */
+>>>> - port->sm_tx_timer_counter = ad_ticks_per_sec/AD_MAX_TX_IN_SECOND;
+>>>> }
+>>>> }
+>>>>
+>>>> @@ -2199,9 +2197,9 @@ void bond_3ad_bind_slave(struct slave *slave)
+>>>> /* actor system is the bond's system */
+>>>> __ad_actor_update_port(port);
+>>>> /* tx timer(to verify that no more than MAX_TX_IN_SECOND
+>>>> - * lacpdu's are sent in one second)
+>>>> + * lacpdu's are sent in the configured interval (1 or 30 secs))
+>>>> */
+>>>> - port->sm_tx_timer_counter = ad_ticks_per_sec/AD_MAX_TX_IN_SECOND;
+>>>> + port->sm_tx_next_jiffies = jiffies + ad_ticks_per_sec / 
+>>>> AD_MAX_TX_IN_SECOND;
+>>> If CONFIG_HZ is 1000, there is 1000 tick per second, but 
+>>> "ad_ticks_per_sec / AD_MAX_TX_IN_SECOND” == 10/3 == 3, so that means 
+>>> send lacp packets every 3 ticks ?
+>>     Agreed, I think the math is off here.
+>>
+>>     ad_ticks_per_sec is 10, it's the number of times the entire LACP
+>> state machine runs per second.  It is unrelated to jiffies, and can't be
+>> used directly with jiffy units (the duration of which varies depending
+>> on what CONFIG_HZ is).  I agree that it's confusingly similar to
+>> ad_delta_in_ticks, which is measured in jiffy units.
+>>
+>>     You'll probably want to use msecs_to_jiffies() somewhere.
+>
+>
+> Thank you for taking the time to review my patch!
+>
+> I agree, the math is off here and I plan to fix that in v2. It shouldn't
+> be:
+>
+> port->sm_tx_next_jiffies = jiffies + ad_ticks_per_sec / 
+> AD_MAX_TX_IN_SECOND;
+> port->sm_tx_next_jiffies = jiffies + 3;
+>
+> ... instead, it should be:
+>
+> port->sm_tx_next_jiffies = jiffies + HZ / AD_MAX_TX_IN_SECOND;
+>
+> ... which, assuming CONFIG_HZ is 1000, it would be:
+>
+> port->sm_tx_next_jiffies = jiffies + 333;
+>
+> This math also works in terms of the units too:
+>
+> HZ = ticks / sec
+> AD_MAX_X_IN_SECOND = packets / sec
+>
+> so:
+>
+> (ticks / sec) / (packets /sec) = ticks / packet
+>
+>
+>>
+>>     How did you test this to insure the TX machine doesn't overrun
+>> (i.e., exceed AD_MAX_TX_IN_SECOND LACPDU transmissions in one second)?
+>>
+>>     -J
+>>
+>>>> __disable_port(port);
+>>>>
+>>>> diff --git a/include/net/bond_3ad.h b/include/net/bond_3ad.h
+>>>> index 2053cd8e788a..956d4cb45db1 100644
+>>>> --- a/include/net/bond_3ad.h
+>>>> +++ b/include/net/bond_3ad.h
+>>>> @@ -231,10 +231,7 @@ typedef struct port {
+>>>> mux_states_t sm_mux_state; /* state machine mux state */
+>>>> u16 sm_mux_timer_counter; /* state machine mux timer counter */
+>>>> tx_states_t sm_tx_state; /* state machine tx state */
+>>>> - u16 sm_tx_timer_counter; /* state machine tx timer counter
+>>>> - * (always on - enter to transmit
+>>>> - *  state 3 time per second)
+>>>> - */
+>>>> + unsigned long sm_tx_next_jiffies;/* expected jiffies for next 
+>>>> LACPDU sent */
+>>>> u16 sm_churn_actor_timer_counter;
+>>>> u16 sm_churn_partner_timer_counter;
+>>>> u32 churn_actor_count;
+>>>> -- 
+>>>> 2.43.0
+>>>>
+>>>>
+>>>>
+>> ---
+>>     -Jay Vosburgh, jv@jvosburgh.net
+>>
+>
+> Thanks,
+>
+> Carlos
+>
 
 Thanks,
-SJ
 
-[...]
+Carlos
+
