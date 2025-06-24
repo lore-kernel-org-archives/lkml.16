@@ -1,120 +1,117 @@
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C2A1B87D9
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 11:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC0F280CC8;
+	Tue, 24 Jun 2025 11:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750765047; cv=none; b=ejRlv1T4UA76TdwiVZSjH91dzzIZmw0CXmX+l7LLAnejDWiQWkJGXvdFQYiS3ggbfghoDER26elBh4t/Id+IhCsRctEUons7lLbBrWIevWbC2SDIW4tx14Wkxsb9l8h1GDswU54HulGuoUK2H754LdZbqPs3Gfn81d5Ehqk48nE=
+	t=1750765057; cv=none; b=V6kl55lao8zZTGtYau3yju/BWZpzy09Hhk+U0Dan11gk37IjyIPlWpZqfZsitSWXG8OxliqHP9pR4pjx1o1XyRvNLN5XLLXYF2nYpT+ZDy8K+are8oSSqqtv5Dp7Ix2j6uk/ePc4Eudk8M+ZY8zxNmgKf6td24OefEs6YVMLVrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750765047; c=relaxed/simple;
-	bh=xiCQ0j/wFlDxcAPPdnkKi8/i3QKVab07KRrRPwVR3jo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VDJHlz/i9oPB85g1syNsgvddcDbovVpf3rCrhfiecNhku4szI3F0w0ZaeIzrPpkK4BiubwxV1kN74q+bx4BQRNSc/rddx2e4wb+hjla8qzDG0qjn5mclFOhd0Shlcyz15ZOjXEbOfn1n7dS+pL80rTYNcWktiCG5OJJvwFyDHEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=suMIhtOU; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1750765057; c=relaxed/simple;
+	bh=1zp6mhXvmMH8trlbOZRktJXmdXnam+2EnOgo74XACPI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FwrW7f6gN1ohXj/bFNL9fgEoSsvepY8ntrdWlvnJH6W/jh8uWoSH7nU1kz9GrPmrCSd83S98Lyqu6ZUNSRmzz8mRwS4Ie8Gq23ic9wJPMBNI5x9jQafV8KyXpzyqe8yuXfuYB7kc/gH6rCUH80Zo/PYWLKsYaWwL6YC3WWOZo30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hpzFJi7d; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="suMIhtOU"
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-747fc77bb2aso4234799b3a.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 04:37:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1750765045; x=1751369845; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=v1BS57X/WG0jVySO8QMdoFZrcIzR1oh7Qce1t6ebg7Q=;
-        b=suMIhtOUNtcwUKFwObDJ5JE2iPQESdyDnhtvgvuRoxLEFijGxzRkRmUp7ge/4Ynw6e
-         jfHYp7/odbLxxhyqn3TJltM2Xr1fqHu6yianNBmMpVfrXg5YES1nJ5UkL1dqjccIxBbE
-         e8cS8AvhOILRWrypqDk3INsUl6sb6R0h7ORKuFdv7TfNP2A1NngVv/F0jhbi1/6js4HI
-         UJLUusKFfAqshf3Zx30w4KaAikqZHMKiLwNjUdaMc19YnbrHqmiCAtB1/9zYcXyx3nIX
-         SqYoXqPsum61OzxFz3e7x18QLaxGPt0VIfRGtgG0hTL5bxIkh1gPptkMF/yZ4nMt5arC
-         4m5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750765045; x=1751369845;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v1BS57X/WG0jVySO8QMdoFZrcIzR1oh7Qce1t6ebg7Q=;
-        b=FBCwlI613NwVRNVmORL5+pK0XUxP5R1V/IgNeL6FQ9fPkR425JFZ+ImaL1NNCmAsBc
-         BMVZaesJSk6UAous8w05D3xxG6nksPfFEbb5ZKUCNHow/d9FGy7ipR7BqtGqF/WfCz3Q
-         9Y2gZZXTwjznuiY9BtjEtnfh5Hd8XL/rarhxxZDxsFgIqHXFeq7t9YbN6bF8G3m7lcK4
-         Vh+eTrolwm5E2AgmgBcDgWo0HtARf4njEEA/3vBysFIXnm4t0iBLpECOo3FfGME34a4S
-         9WVKDb6iGMSS6eT8ymk0xRK7pEwCMRuDVnr0RqrWbYqXyTleCITinmeWScvR0wqDe4yM
-         KNeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVo+swOuwXUSUoPEqEb4g9G3H5cpKIJH+W5MfLTv/Uow8vjYcjgXluCIbgRgdUN70cSNlKkaKrYwtccQiE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztMP6onQS1h6ckK/o2MliBZKk1DG8JBa6/2HkfrgTVEnc9aMCo
-	3rR9B2xrk7y5rbh3fXtYGmU5ImpS1vA3JtvRpJ3zGZ+88loghrYvH7y5qyinwNfXM1s=
-X-Gm-Gg: ASbGncv+Pv14KnRRtivkDAmGAVPTgVGdiNS+Zp8LcuAmiD2xOUh4xOoIadFgPo1RG89
-	/QmhxSNy/X50Pco3UYK/Ir5hOICDlXF6f7IGXi/hEqKh0SsleBgSX9LhbqrAVe/hCL0+GJpu5gA
-	wAjgWU3+gajL8fL4GlL4Q0TZRcYm2/bBtcu2BZC0StIgFKRF74xBX9UH2v88kGp7x7e7MGrnAPr
-	PxXRD24QjgGT53YsbfoIWW/JBcEuYU//QHr5lJOfjo3F5yaZBjXbvVomXT5WWXGZl3qqflvwF3t
-	QVGubN45ACjCC57TSfAbJf3TWtOXMTBS9B6nc21mh8y1nwmZXnxp1655UXeRvjETp8xOz+WX7bp
-	VoUORNMpZsCS0cWsQlUcWeWWgXbv/TiI=
-X-Google-Smtp-Source: AGHT+IFNZ2hsCqwSWuixPSJ5R8AD8UK1jdLvj9vYQYk6LtP/Xb8JEeiD65LE64qqMpZvResIz21jAw==
-X-Received: by 2002:a05:6a00:140f:b0:742:a111:ee6f with SMTP id d2e1a72fcca58-7490d6dc413mr17698045b3a.10.1750765044971;
-        Tue, 24 Jun 2025 04:37:24 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c8871954sm1651063b3a.149.2025.06.24.04.37.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 04:37:24 -0700 (PDT)
-Message-ID: <19cf2371-7293-4e71-a17d-669db4c8270a@rivosinc.com>
-Date: Tue, 24 Jun 2025 13:37:13 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hpzFJi7d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750765056; x=1782301056;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1zp6mhXvmMH8trlbOZRktJXmdXnam+2EnOgo74XACPI=;
+  b=hpzFJi7dCpnBfKkbNFt0OJW/O3V81Ud/NtMbZRPqg/huS9KxDTqNYMm/
+   t8uyfMi2nhVYxi8kZtV/2nWgsI0gLxkCX6ZNTYnRgL2uFTQPTChxv3I69
+   rqn4iOWkrvOLo6BivplTEaO5C+1DvhlicXOBvhiejGcR7x2Z1GgrewcVy
+   PwbDkudyaTb2R0ePKDdgJD6vtjt8CdsfVC4neZcdTEwPhfSe5YppXlq88
+   nuVGzpEpG3zEZ5895A6wzyhG/bjWICgw1CmaZ9pLBysQYrLLItqDO/Mrc
+   b7bOR7Md/i12PlarKqTUI0yNzkBd++PTY6DvbFku4Q90iEogy1hK7WLON
+   A==;
+X-CSE-ConnectionGUID: l05Dgq+fSs+S/i68jyQTug==
+X-CSE-MsgGUID: rEKdUBuISDmAyKjGMf+Gqw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11473"; a="63693221"
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="63693221"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 04:37:34 -0700
+X-CSE-ConnectionGUID: E4+6VBWNT/KVds9ubA8IBg==
+X-CSE-MsgGUID: Xdm3O+jyTXuRhe76Z3qzAw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,261,1744095600"; 
+   d="scan'208";a="152399988"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa008.jf.intel.com with ESMTP; 24 Jun 2025 04:37:22 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 48839224; Tue, 24 Jun 2025 14:37:21 +0300 (EEST)
+Date: Tue, 24 Jun 2025 14:37:21 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Andrew Cooper <andrew.cooper3@citrix.com>, acme@redhat.com, 
+	aik@amd.com, akpm@linux-foundation.org, alexander.shishkin@linux.intel.com, 
+	ardb@kernel.org, ast@kernel.org, bp@alien8.de, brijesh.singh@amd.com, 
+	changbin.du@huawei.com, christophe.leroy@csgroup.eu, corbet@lwn.net, 
+	daniel.sneddon@linux.intel.com, dave.hansen@linux.intel.com, ebiggers@google.com, 
+	geert+renesas@glider.be, houtao1@huawei.com, hpa@zytor.com, jgg@ziepe.ca, jgross@suse.com, 
+	jpoimboe@kernel.org, kai.huang@intel.com, kees@kernel.org, leitao@debian.org, 
+	linux-doc@vger.kernel.org, linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mm@kvack.org, linux@rasmusvillemoes.dk, luto@kernel.org, mcgrof@kernel.org, 
+	mhiramat@kernel.org, michael.roth@amd.com, mingo@kernel.org, mingo@redhat.com, 
+	namhyung@kernel.org, paulmck@kernel.org, pawan.kumar.gupta@linux.intel.com, 
+	peterz@infradead.org, rick.p.edgecombe@intel.com, rppt@kernel.org, 
+	sandipan.das@amd.com, shijie@os.amperecomputing.com, sohil.mehta@intel.com, 
+	tglx@linutronix.de, tj@kernel.org, tony.luck@intel.com, vegard.nossum@oracle.com, 
+	x86@kernel.org, xin3.li@intel.com, xiongwei.song@windriver.com, 
+	ytcoode@gmail.com
+Subject: Re: [PATCHv6 07/16] x86/vsyscall: Reorganize the #PF emulation code
+Message-ID: <hhbqjpkpdi5oe77lfosjpgyvvhvxgwolb45ll5rmwbzsdt27h5@hgv57r543ryl>
+References: <9d351d80-66fe-486f-bdb3-370859dc47cc@intel.com>
+ <262c0fd2-ac66-4ce7-903f-4062f1fe1d6e@citrix.com>
+ <b6f8a90d-4309-45c5-84cd-32e281d076fb@intel.com>
+ <kthmv63jrvrr3shhzhhcib7qrjp7sjkah65kogbfphfr6wg6cb@z5zydz6ov7pv>
+ <bd81a98b-f8d4-4304-ac55-d4151a1a77ab@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] riscv: Enable interrupt during exception handling
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>,
- Palmer Dabbelt <palmer@dabbelt.com>
-Cc: namcao@linutronix.de, Paul Walmsley <paul.walmsley@sifive.com>,
- aou@eecs.berkeley.edu, Alexandre Ghiti <alex@ghiti.fr>,
- bigeasy@linutronix.de, clrkwllms@kernel.org, rostedt@goodmis.org,
- linux-rt-devel@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <mhng-60581B88-6FC7-4349-96B6-730D908ABF4A@palmerdabbelt-mac>
- <alpine.DEB.2.21.2506240303170.61655@angie.orcam.me.uk>
-Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <alpine.DEB.2.21.2506240303170.61655@angie.orcam.me.uk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bd81a98b-f8d4-4304-ac55-d4151a1a77ab@intel.com>
 
-
-
-On 24/06/2025 04:09, Maciej W. Rozycki wrote:
-> On Mon, 23 Jun 2025, Palmer Dabbelt wrote:
+On Mon, Jun 23, 2025 at 08:32:53AM -0700, Dave Hansen wrote:
+> On 6/23/25 05:41, Kirill A. Shutemov wrote:
+> > So, IIUC, that's dependency of vsyscall PF on NX. Do we want to disable
+> > vsyscall on boot if NX is not available?
 > 
->> I'm kind of split on a Fixes tag here.  One could argue it's a regression, as
->> having interrupts disabled during exceptions is going to cause all sorts of
->> performance issues for users.  Seems a bit risk to just backport, though...
->>
->> That said, if nobody noticed then it's probably a good sign nobody is really
->> paying attention and we should just backport it before anyone notices...
+> Well, vsyscall=none can break old userspace, so forcing it on old
+> hardware doesn't seem like a great idea.
 > 
->  Oh, someone did notice and it's not only performance, cf. 
-> <https://lore.kernel.org/r/alpine.DEB.2.21.2501070143250.18889@angie.orcam.me.uk/>.
-
-I also had a series which was doing so for misaligned accesses handling,
-but after discussion, it was not ok to do so.:
-
-https://lore.kernel.org/linux-riscv/20250422094419.GC14170@noisy.programming.kicks-ass.net/
-
-So this series should probably be modified to only reenable interrupts
-when explicitly needed, ie page faults and for force_sig_fault().
-
-Thanks,
-
-Clément
-
+> But, either way, this doesn't really appear to be a LASS issue. This code:
 > 
->   Maciej
+> >         if (!(error_code & X86_PF_INSTR)) {
+> >                 /* Failed vsyscall read */
+> >                 if (vsyscall_mode == EMULATE)
+> >                         return false;
 > 
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> Is really asking the question:
+> 
+> 	Is this #PF from an instruction fetch in the vsyscall page?
+> 
+> That _should_ be able to be done by comparing CR2 and regs->rip. In
+> fact, that's done just below anyway:
+> 
+> 	WARN_ON_ONCE(address != regs->ip);
+> 
+> So I think we can fix this up with something like the attached patch
+> which just drives the if() from regs->rip and make the warning NX-only.
 
+Looks good to me.
+
+Do you want me to include it into this patchset or will you apply it
+separately?
+
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
