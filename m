@@ -1,46 +1,46 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2077.outbound.protection.outlook.com [40.107.244.77])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2053.outbound.protection.outlook.com [40.107.92.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49CB9231CB0
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 05:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCBB241116
+	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 05:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.53
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750744674; cv=fail; b=kKgffPdcyx0JbnbeVtmsRxMRAAzoJAytN5KfCHoVqLpvOrkxsGKTkgSFZnIuLkG6CBwFcSvE+lOQ+U6yxRRA0qWZPaVngI5aKDG8OetsBieCHvC3xBf4wYbQLVX/jUCDsKVxrHIMvzQVqid6LeGAXbTdeEA8DObDNP5jDepaFEE=
+	t=1750744682; cv=fail; b=aMHA4wmvRh3lawfCB4RciWP3tOrF3c4Yg5ZPFZYGRzyzotcnDzNq9X9v362St00yglVZC5xMmwc17v1UF/F3A1546YT7j2z1UefRpbW31UU5hMOnjSnWZyF6rIshrepm+e1650QESAy/o39K0cIcg/koZJUT7vBMExg+ZjONvMk=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750744674; c=relaxed/simple;
-	bh=LACgJvTdaMP5BQHMQYLHzkWc+TlbTzL8BGpGZUURSFw=;
+	s=arc-20240116; t=1750744682; c=relaxed/simple;
+	bh=QMxHxEisa9gd/DwGZI+p4bpmKZdWipqdRizPxFi94Js=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KCT0O1x1qXeB0AQQlh5j1WSXRDk42RPyYAi1HJOgAl7BktX8oi0CbeoKiwdfik3pCgZMadm33X8wHJ14Zk0Ikyuom5fBLwu02u+EdV1u1WJDgT5UTdX02t1OSRcMTl8U6Iy+E5TyH2lC+HrNfIrpuhYBTPO2F+DOH7yb5+Qparo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=3Yb7fdTg; arc=fail smtp.client-ip=40.107.244.77
+	 MIME-Version:Content-Type; b=AHzJ02tUvgisnLdr1FNCA2hXwpyqoRjX3t+jWpoA2vh1CAAUsx6KtruQaXcZm+4mIqGZ5ImOWomHJ+OH3d3V13+X60qfuzdD3JN+P5vZiX9e/WIHk1iHS8FM6iHihleVncgP42LnKgbB7SH/QtVaHKWaWtY3TrGTO2JMX+vpQ1I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=VSuTX4k0; arc=fail smtp.client-ip=40.107.92.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="3Yb7fdTg"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="VSuTX4k0"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=KAW4h6O6BVAtnrRdK322YufSv4Tc1s2g+/pwdqu5sWiiZi0WaBllnIJFrI7nRMZ5Iwupb5k71Fyb2R40Fm1XBjloRG6vUym0/ABlZF+TlrLK4s6Bo+73yHCLxGkcYl+EtSaOKMlwyeklVcLmn6pRQD99WZcIZ6G4USXobx/v6A0l/H1Bo/d8XPDt0NuY+t8kx7OS7fNjMNnUSRPPBfHL4KyawK372J4x2AeAuA1lNPjgDwYRXkccLFrkud+jysMt9YxUqbz92aGQeXvXM1eV8NAT1oEnMm/qAugrZKHAevz6faaAYLegOpSLaiZWr6zS/HS/yAPctNyLE9S6Qw2YcA==
+ b=NWKiEZ2HEUHSKW3ZVtUZAgswzlboMXFosdhc8OcE7EeaOSS29PjOqayh/J697u+DeUFoz+tTRH/O3LUu2EmugU0bgUy9ujSQj0OJAXHDq3MA0cB95AxHW4wRfxy79HPacn0NwBd0v96E7GOqyXMLUNNnVaf1WwGpV55HVHZoAWS5adHGHxN8ot2EZLQvi4ynTcnjsFtjLGfd74RazYDECk3zQSq/L627tCzOQOoaGJVXuVEZU4m5jkGTpIGAiG1uWPK2LwhdoWbkGt58WrpAagbt/M5r21PQUwPyG1gWw2HyICcajel9c79Er+byKdR2xrDkDilrICuTm8cgxog6Hw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=glQsVyQHnnGhIjor8P2Px5T+5e8BzfooNwGlpwuKpOQ=;
- b=rGW1mrUjdBSUSye1FkfbRDJwjfrB8dLLB6EYxPlj+nGubOlYywas5MX12Pc4AwC5Gd/cqSdL6SIZiN3rQab0cYaYsuhIeMddFVtAM7SPa7HO3zz2AZbyQOlvb1c/Ei2EfQYljJMd20D3f7aQslYtHkWz3EEpTPGUBeNfou3uM3vs1oouEhrKz/DvnGhwnJZu+garbDSCMypKTCRKK8KOvvUayKcOA0+3oY/NQYF/lEGT1hdk0r32VzrkBMn7Kc1awRw7o5QqEmOL11bVQ9OR1eG1ot4iEgp8oE1VHQ+cmfZE15WcT02vyG2Ze+pkYrjss7yzcIoGbPv+c2CQUF4rYw==
+ bh=Dk35rIFkUSNo9wlPLmTXZUYQYCvIiEHxKbhpJSS5BDE=;
+ b=W467jeNWm0fqw97mEZvtYqW/RFhuBJCaXOzD5p7FxOEpOaiDDb1yrmJBg36Eq7q+H4uZQ4a8aMnt7Lrba0UefojKWgdEJiwbv6NCRe52SMDkccw7WP3s6F8/f2Ho8gzvihV6nH4TaVhklghPjybC/G7sv5S2OB1tjBFj7sX6HYlGdZc4WDrA4FMKS5bAHTsHE78b7d6IhpWqqIk2KeF2oVQGn0lkBk6eNZqAOk8pS9gvw7+IIgu7dlVuWggbVIYQH7dIqK4Tu267r/FuAkU6bY6HrSXbWTRf1LstTpyR7ZnEEC57faE9fGIE6Ts3tULaUrpYsVwfiIK7fG/PzbhLCA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=arm.com smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=glQsVyQHnnGhIjor8P2Px5T+5e8BzfooNwGlpwuKpOQ=;
- b=3Yb7fdTgGHTR2GoFUxt6LNCkjT8H9YXGQF26xmt/17Zv09ydWbnrqn1fDAHDZJQc2D9apPmSswUrhG+PlBJ+B17+qLm9LiqZpDAbuOg4txLyvgj6nPpxFc1NiA3dusCzQk/RauMEUb57bLA+8MuqOWhZw7KFLRrv+fV2qLcoDiI=
-Received: from MW4PR03CA0347.namprd03.prod.outlook.com (2603:10b6:303:dc::22)
- by SA3PR12MB7782.namprd12.prod.outlook.com (2603:10b6:806:31c::18) with
+ bh=Dk35rIFkUSNo9wlPLmTXZUYQYCvIiEHxKbhpJSS5BDE=;
+ b=VSuTX4k0dcS8MDaOP2xkl9vxog7XLrAG76ZMirXkPs9gESefdeVtCNi8JYMFRFSuhvwyqXrFUNeuvW48c0/3OGUG5m04d12PsbdJ2WyJN4wUnslc+KuhBXjNdjzM7qkcbzr/+y0Y95lArs4vAHgC5sDtfM8gacNYZ+tp6NErT3Q=
+Received: from SJ0PR13CA0033.namprd13.prod.outlook.com (2603:10b6:a03:2c2::8)
+ by MN2PR12MB4376.namprd12.prod.outlook.com (2603:10b6:208:26c::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Tue, 24 Jun
- 2025 05:57:46 +0000
-Received: from SJ5PEPF00000209.namprd05.prod.outlook.com
- (2603:10b6:303:dc:cafe::57) by MW4PR03CA0347.outlook.office365.com
- (2603:10b6:303:dc::22) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.30 via Frontend Transport; Tue,
- 24 Jun 2025 05:57:45 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Tue, 24 Jun
+ 2025 05:57:56 +0000
+Received: from SJ5PEPF00000206.namprd05.prod.outlook.com
+ (2603:10b6:a03:2c2:cafe::9f) by SJ0PR13CA0033.outlook.office365.com
+ (2603:10b6:a03:2c2::8) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.16 via Frontend Transport; Tue,
+ 24 Jun 2025 05:57:56 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -48,13 +48,13 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ5PEPF00000209.mail.protection.outlook.com (10.167.244.42) with Microsoft
+ SJ5PEPF00000206.mail.protection.outlook.com (10.167.244.39) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8880.14 via Frontend Transport; Tue, 24 Jun 2025 05:57:45 +0000
+ 15.20.8880.14 via Frontend Transport; Tue, 24 Jun 2025 05:57:56 +0000
 Received: from tunga.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 24 Jun
- 2025 00:57:33 -0500
+ 2025 00:57:44 -0500
 From: Raghavendra K T <raghavendra.kt@amd.com>
 To: <raghavendra.kt@amd.com>
 CC: <AneeshKumar.KizhakeVeetil@arm.com>, <Hasan.Maruf@amd.com>,
@@ -73,9 +73,9 @@ CC: <AneeshKumar.KizhakeVeetil@arm.com>, <Hasan.Maruf@amd.com>,
 	<willy@infradead.org>, <ying.huang@linux.alibaba.com>, <ziy@nvidia.com>,
 	<Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>, <yuanchu@google.com>,
 	<kinseyho@google.com>, <hdanton@sina.com>
-Subject: [RFC PATCH V2 05/13] mm/migration: Migrate accessed folios to toptier node
-Date: Tue, 24 Jun 2025 05:56:09 +0000
-Message-ID: <20250624055617.1291159-6-raghavendra.kt@amd.com>
+Subject: [RFC PATCH V2 06/13] mm: Add throttling of mm scanning using scan_period
+Date: Tue, 24 Jun 2025 05:56:10 +0000
+Message-ID: <20250624055617.1291159-7-raghavendra.kt@amd.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250624055617.1291159-1-raghavendra.kt@amd.com>
 References: <20250624055617.1291159-1-raghavendra.kt@amd.com>
@@ -91,709 +91,250 @@ X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ5PEPF00000209:EE_|SA3PR12MB7782:EE_
-X-MS-Office365-Filtering-Correlation-Id: 35bc97f3-ca80-423a-ac18-08ddb2e40aa6
+X-MS-TrafficTypeDiagnostic: SJ5PEPF00000206:EE_|MN2PR12MB4376:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6d367f3d-0163-4ec8-6b32-08ddb2e410da
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|36860700013|1800799024|376014|82310400026;
+	BCL:0;ARA:13230040|36860700013|1800799024|376014|7416014|82310400026;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?V6K/j6f+3UYG9U6SzW+Zca6P8Ca2JbvHKgbhtq9+mZbsI3To4XCmCMtiDHud?=
- =?us-ascii?Q?4S4cq3qRmtlm9YEAQjyAOZH2ZYlu9sRF2+aJLPJ1ZOxV4j9pOhV9swzxN426?=
- =?us-ascii?Q?zAhTX2h5xs6ezMAmtfaU/eJ1kTJck+S/FzciYWu9pKBIgZAeOHEb0KTAZHS9?=
- =?us-ascii?Q?sZAsdYg6uidvus5glpHuvWJsMPLGqBPIpESxxk+Tnqe/t4gWBY5EsAq2RfbF?=
- =?us-ascii?Q?wXubFQHaqb9gaxLmU985AwhijvAH+gOS2CjV4pp1oCB/7bMO2LveDrKvN81P?=
- =?us-ascii?Q?4loSOhH/+VPJrB0/Lh7YYxYo4BIpngOkI516itSIUG/enppi1iVzsITT4Laq?=
- =?us-ascii?Q?lroy5PazArCvRWMtYzz60RU3QX5FgvrtQMbvqbyd6Lip200zKFEBYF8zzqPu?=
- =?us-ascii?Q?UxwY5GPVeV28NJZjLwFZ8edfV6gOYKveuUivOQ4VZibtPBP2BF0eXuLiFCGN?=
- =?us-ascii?Q?CS3QUJCdf2hYV3oHdExaT+LuvqXKLqoMN70fUfc+bh+OtcfCcpipntQtsZqR?=
- =?us-ascii?Q?sWBe1ajKbNdRSjZzCMOuvBmcZhwiw+wqso5jAcTugsiVqzCH3N39DoCwRAyB?=
- =?us-ascii?Q?dt14rMX91s/oMajjYbCLUjdTRqfGKkNL7qrZOHDFtmj5CzfEJzrbLaKws6/Z?=
- =?us-ascii?Q?epW16V0gdLPNMwX4bk3u/WruYDDawBTv2F4QOcsStKHkPJ7EaCX7648dIN4a?=
- =?us-ascii?Q?7N9fjxwQh+1hyo6/D3nPxkXUj6RXG4RzENeuI07Q+ISM05LbGjq2x6uhLkuD?=
- =?us-ascii?Q?sKrlMklwEhi1Uets7XtL8mFaJRks0BYvXY1bEC4oAKt48UVS3v/tN5pe639I?=
- =?us-ascii?Q?hZcJVOQA6BvgMyxk8I6ktswC7s118fnJj4VycO58qVfcRLl2n/DncgQk4mHa?=
- =?us-ascii?Q?11zvobOVG3C+oJh0NIA1kmOu/OlESASKgclthyAFCz97DHUckA9Nb7vJ58A0?=
- =?us-ascii?Q?WkFyIez9ZklNPeuYA32K8yWd11eUysbDlI1bLs96LSrD6aruxJ0cb+TdGYeO?=
- =?us-ascii?Q?EvI6SZ0LsKYDGTbfU2cZZCNxeRPe0gRQlRpMcUVvi2V3NyYukCfDeVylYHE4?=
- =?us-ascii?Q?zfQW+PWRn4pg4Ja6xoOCcigiUeSrbNYn5qdBaK4z4UlV2Yh7JLWMCVpTQ4tZ?=
- =?us-ascii?Q?VkGGk0dc0p7YJm8bg5gJ4BM3/xMDlvPX3NyJr0rk7/mdFkemI4Vurc35cZVT?=
- =?us-ascii?Q?OQYqkYKbkWo2SltkAlwjiKueQdwN5NHsLSX9z+34rMseLJvKzAqr8C6Qiltx?=
- =?us-ascii?Q?dKa06el4aOaAbr+9j/Hk3aVWFVnElTwk9giTydsA/l6SEtXfM/oBgzcXv7Bg?=
- =?us-ascii?Q?GPiQ8bA0sn6LzhQc6jgzV4tH1i9cDWH+qogCXCNk4i+PAvlqq4qkb6ZjHf6Z?=
- =?us-ascii?Q?AgHV0GczKAw10wR8/IJfi7LlC1kOTb9Cuvq+KYTlCKLdcoqH46Th71dG1Z7a?=
- =?us-ascii?Q?Bv7exzVcoSSn61+Nrh2xPyG4pSwyNttMm6oeQgxWzu5tIIdDHPZW9M8oXBOR?=
- =?us-ascii?Q?2h1I950ubp8EmRzzgv/Y3E0ZGYZqiuXZwy/f?=
+	=?us-ascii?Q?2W9w5xTgJaqloHejEqnhSUwBdYalnd7Odtt0mrl+mTo5Q8OPAjDuw6HI+7/Q?=
+ =?us-ascii?Q?7JUwqTZsnBqZestbQHRm93D+pvk1kJgre2Rg/BErTNyElGuYNnD/zSLIVDBM?=
+ =?us-ascii?Q?CbanTofunY0e/XWQxluO1h7EoSRrU46yu5G/ogw8Ipqv0TXZ1/O04GyW0sjv?=
+ =?us-ascii?Q?jJYDbmwR6MROn2eMwQen9Bsd5M29qIcW3JIXu7hgYGmnY9AWq+RgEQp6SbE7?=
+ =?us-ascii?Q?yb7eEQs9W/5IMxAWiZcvrP+G0efSCwPhZa4TT4GoGI/U5goAQm4rwyHRbjs8?=
+ =?us-ascii?Q?fxbtGAbmmz9FlfBNr6htYHqTkd8Rm7GFATgys7rW3hdJ/W//28KsrzdMI/8F?=
+ =?us-ascii?Q?CFXmUGrGsbzGqFDl5nQD3uPyQLOiS8UO9a3DzcZbT7MBp/V7HvnfHC+QNkB0?=
+ =?us-ascii?Q?jnyX3WzTjXlK4ZDfLvU83hUC4F3evqcP8Chr9T+gFZpRTbIwkrm8XISt6aW0?=
+ =?us-ascii?Q?KCGYiV7k1nNq9lz/ITLp2O7ZCNP1uaNTB0CFWklaq89dHSVw7hdrfJI8ghH4?=
+ =?us-ascii?Q?5QOZEqxZirVXlirnHZu7RrxQkRJm3c7WBfo2JOsmzt1yRL24/WezmyYHNRVi?=
+ =?us-ascii?Q?a1Jw07LzFH7V8Eeb90tpuz3xqsxFX5K6FofEJBFmQ9I33pppQNs+1FVdaqBe?=
+ =?us-ascii?Q?Uxr6uWjSuNueBLnURezVKppJJ2kifnimHCGNzL3O4hHkJtpRimnfvFdRkEKr?=
+ =?us-ascii?Q?azHpdBiwRptR1XLcOg4ybapK66Wn6M2q0+bgr6wA7Hrfmj/EDTy086a/bYGX?=
+ =?us-ascii?Q?ShCLyKtG1cStk6P99K/pwAModkgZr7flO7+jhdAvMEFHML5o2MWgQUuKpTks?=
+ =?us-ascii?Q?mWTrGiPGGfRclUGbxUHU2VHtCz60jUEBNBM2v2ELIBxmHg5zIEDcxEbUDTbT?=
+ =?us-ascii?Q?iYzEKRMDtPHjpXyjS/ICqsARAJmmtS3rnkbQN89bymktQCcOUszkPrMY6JaB?=
+ =?us-ascii?Q?SbwGmIY8AU9WiwGfBdv018v8wuIJa/HZTDqDh5NE4wnGNlbeuGAXbpPX9qGs?=
+ =?us-ascii?Q?0e1drJCBF1aXO37dL9SIQf6GuCu24AO6wviDw4aYshI1nN8unzVKkle82uGh?=
+ =?us-ascii?Q?y2BYDOis6zqqoYzAG1NlwYp2ijLS1URn9i05k10uboVFhO5YTkj5EGUByzsT?=
+ =?us-ascii?Q?EdZ30TAqcE1abhGANWt4BVeBj1VYifgAgyz30TgX1KwNh3G6bY4xC5wmKTRw?=
+ =?us-ascii?Q?qoAlGJp1Dru+Tt2/mj+EpSaUH8lulav5InC/d3xyEh2bBIG8DmEj4rfwV0Tp?=
+ =?us-ascii?Q?EGR6InlMNq5PFJaluTkYYh9PailWvs9E744SSGrZuUsJqDnzDYOcBcLf336V?=
+ =?us-ascii?Q?yzALiWOQYqxSsUoA6yduEeNvNcqXpKiJrB5rvD68xVaXRhqh2j4hc2IRPnQa?=
+ =?us-ascii?Q?d4Tl+ndFGvjQbH3d64yc+u9oObEuGd85sqHvYiGOG3UUFqQKVNHEC3xwPe+S?=
+ =?us-ascii?Q?W6T1FuSe0bv0UJ551x8rFdM384xLkQOM6fAgz9GFxgu5iailvSIg1gaNpe2a?=
+ =?us-ascii?Q?xP49n/TcgJifOJM5r3EH91l+CAiDvklNzKDu?=
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(376014)(7416014)(82310400026);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 05:57:45.6247
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2025 05:57:56.0309
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 35bc97f3-ca80-423a-ac18-08ddb2e40aa6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6d367f3d-0163-4ec8-6b32-08ddb2e410da
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	SJ5PEPF00000209.namprd05.prod.outlook.com
+	SJ5PEPF00000206.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7782
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4376
 
-A per mm migration list is added and a kernel thread iterates over
-each of them.
+Before this patch, scanning of tasks' mm is done continuously and also
+at the same rate.
 
-For each recently accessed slowtier folio in the migration list:
- - Isolate LRU pages
- - Migrate to a regular node.
+Improve that by adding a throttling logic:
+1) If there were useful pages found during last scan and current scan,
+decrease the scan_period (to increase scan rate) by TUNE_PERCENT (15%).
 
-The rationale behind whole migration is to speedup the access to
-recently accessed pages.
+2) If there were no useful pages found in last scan, and there are
+candidate migration pages in the current scan decrease the scan_period
+aggressively by 2 power SCAN_CHANGE_SCALE (2^3 = 8 now).
 
-Currently, PTE A bit scanning approach lacks information about exact
-destination node to migrate to.
-
-Reason:
- PROT_NONE hint fault based scanning is done in a process context. Here
-when the fault occurs, source CPU of the fault associated task is known.
-Time of page access is also accurate.
-With the lack of above information, migration is done to node 0 by default.
+Vice versa is done for the reverse case.
+Scan period is clamped between MIN (600ms) and MAX (5sec).
 
 Signed-off-by: Raghavendra K T <raghavendra.kt@amd.com>
 ---
- include/linux/migrate.h |   2 +
- mm/kscand.c             | 452 ++++++++++++++++++++++++++++++++++++++--
- mm/migrate.c            |   2 +-
- 3 files changed, 443 insertions(+), 13 deletions(-)
+ mm/kscand.c | 110 +++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 109 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/migrate.h b/include/linux/migrate.h
-index aaa2114498d6..59547f72d150 100644
---- a/include/linux/migrate.h
-+++ b/include/linux/migrate.h
-@@ -142,6 +142,8 @@ const struct movable_operations *page_movable_ops(struct page *page)
- }
- 
- #ifdef CONFIG_NUMA_BALANCING
-+bool migrate_balanced_pgdat(struct pglist_data *pgdat,
-+				   unsigned long nr_migrate_pages);
- int migrate_misplaced_folio_prepare(struct folio *folio,
- 		struct vm_area_struct *vma, int node);
- int migrate_misplaced_folio(struct folio *folio, int node);
 diff --git a/mm/kscand.c b/mm/kscand.c
-index e4d8452b0c50..f79e05590cde 100644
+index f79e05590cde..fca4b7b4a81f 100644
 --- a/mm/kscand.c
 +++ b/mm/kscand.c
-@@ -52,9 +52,18 @@ static DEFINE_MUTEX(kmigrated_mutex);
- static DECLARE_WAIT_QUEUE_HEAD(kmigrated_wait);
- static unsigned long kmigrated_sleep_expire;
+@@ -20,6 +20,7 @@
+ #include <linux/string.h>
+ #include <linux/delay.h>
+ #include <linux/cleanup.h>
++#include <linux/minmax.h>
  
-+/* mm of the migrating folio entry */
-+static struct mm_struct *kmigrated_cur_mm;
+ #include <asm/pgalloc.h>
+ #include "internal.h"
+@@ -33,6 +34,16 @@ static DEFINE_MUTEX(kscand_mutex);
+ #define KSCAND_SCAN_SIZE	(1 * 1024 * 1024 * 1024UL)
+ static unsigned long kscand_scan_size __read_mostly = KSCAND_SCAN_SIZE;
+ 
++/*
++ * Scan period for each mm.
++ * Min: 600ms default: 2sec Max: 5sec
++ */
++#define KSCAND_SCAN_PERIOD_MAX	5000U
++#define KSCAND_SCAN_PERIOD_MIN	600U
++#define KSCAND_SCAN_PERIOD		2000U
 +
-+/* Migration list is manipulated underneath because of mm_exit */
-+static bool  kmigrated_clean_list;
++static unsigned int kscand_mm_scan_period_ms __read_mostly = KSCAND_SCAN_PERIOD;
 +
- static unsigned long kscand_sleep_expire;
-+#define KSCAND_DEFAULT_TARGET_NODE	(0)
-+static int kscand_target_node = KSCAND_DEFAULT_TARGET_NODE;
+ /* How long to pause between two scan cycles */
+ static unsigned int kscand_scan_sleep_ms __read_mostly = 20;
  
- static DEFINE_SPINLOCK(kscand_mm_lock);
-+static DEFINE_SPINLOCK(kscand_migrate_lock);
- static DECLARE_WAIT_QUEUE_HEAD(kscand_wait);
- 
- #define KSCAND_SLOT_HASH_BITS 10
-@@ -62,6 +71,10 @@ static DEFINE_READ_MOSTLY_HASHTABLE(kscand_slots_hash, KSCAND_SLOT_HASH_BITS);
- 
- static struct kmem_cache *kscand_slot_cache __read_mostly;
- 
-+#define KMIGRATED_SLOT_HASH_BITS 10
-+static DEFINE_READ_MOSTLY_HASHTABLE(kmigrated_slots_hash, KMIGRATED_SLOT_HASH_BITS);
-+static struct kmem_cache *kmigrated_slot_cache __read_mostly;
-+
+@@ -78,6 +89,11 @@ static struct kmem_cache *kmigrated_slot_cache __read_mostly;
  /* Per mm information collected to control VMA scanning */
  struct kscand_mm_slot {
  	struct mm_slot slot;
-@@ -90,6 +103,26 @@ struct kscand_scanctrl {
- 
- struct kscand_scanctrl kscand_scanctrl;
- 
-+/* Per mm migration list */
-+struct kmigrated_mm_slot {
-+	/* Tracks mm that has non empty migration list */
-+	struct mm_slot mm_slot;
-+	/* Per mm lock used to synchronize migration list */
-+	spinlock_t migrate_lock;
-+	/* Head of per mm migration list */
-+	struct list_head migrate_head;
-+};
-+
-+/* System wide list of mms that maintain migration list */
-+struct kmigrated_daemon {
-+	struct list_head mm_head;
-+	struct kmigrated_mm_slot *mm_slot;
-+};
-+
-+struct kmigrated_daemon kmigrated_daemon = {
-+	.mm_head = LIST_HEAD_INIT(kmigrated_daemon.mm_head),
-+};
-+
- /* Per folio information used for migration */
- struct kscand_migrate_info {
- 	struct list_head migrate_node;
-@@ -108,6 +141,11 @@ static inline int kscand_has_work(void)
- 	return !list_empty(&kscand_scan.mm_head);
- }
- 
-+static inline int kmigrated_has_work(void)
-+{
-+	return !list_empty(&kmigrated_daemon.mm_head);
-+}
-+
- static inline bool kscand_should_wakeup(void)
- {
- 	bool wakeup = kthread_should_stop() || need_wakeup ||
-@@ -118,6 +156,16 @@ static inline bool kscand_should_wakeup(void)
- 	return wakeup;
- }
- 
-+static inline bool kmigrated_should_wakeup(void)
-+{
-+	bool wakeup = kthread_should_stop() || migrated_need_wakeup ||
-+	       time_after_eq(jiffies, kmigrated_sleep_expire);
-+
-+	migrated_need_wakeup = false;
-+
-+	return wakeup;
-+}
-+
- static void kscand_wait_work(void)
- {
- 	const unsigned long scan_sleep_jiffies =
-@@ -133,6 +181,85 @@ static void kscand_wait_work(void)
- 			scan_sleep_jiffies);
- }
- 
-+static void kmigrated_wait_work(void)
-+{
-+	const unsigned long migrate_sleep_jiffies =
-+		msecs_to_jiffies(kmigrate_sleep_ms);
-+
-+	if (!migrate_sleep_jiffies)
-+		return;
-+
-+	kmigrated_sleep_expire = jiffies + migrate_sleep_jiffies;
-+	wait_event_timeout(kmigrated_wait, kmigrated_should_wakeup(),
-+			migrate_sleep_jiffies);
-+}
-+
-+/*
-+ * Do not know what info to pass in the future to make
-+ * decision on taget node. Keep it void * now.
-+ */
-+static int kscand_get_target_node(void *data)
-+{
-+	return kscand_target_node;
-+}
-+
-+extern bool migrate_balanced_pgdat(struct pglist_data *pgdat,
-+					unsigned long nr_migrate_pages);
-+
-+/*XXX: Taken from migrate.c to avoid NUMAB mode=2 and NULL vma checks*/
-+static int kscand_migrate_misplaced_folio_prepare(struct folio *folio,
-+		struct vm_area_struct *vma, int node)
-+{
-+	int nr_pages = folio_nr_pages(folio);
-+	pg_data_t *pgdat = NODE_DATA(node);
-+
-+	if (folio_is_file_lru(folio)) {
-+		/*
-+		 * Do not migrate file folios that are mapped in multiple
-+		 * processes with execute permissions as they are probably
-+		 * shared libraries.
-+		 *
-+		 * See folio_maybe_mapped_shared() on possible imprecision
-+		 * when we cannot easily detect if a folio is shared.
-+		 */
-+		if (vma && (vma->vm_flags & VM_EXEC) &&
-+		    folio_maybe_mapped_shared(folio))
-+			return -EACCES;
-+		/*
-+		 * Do not migrate dirty folios as not all filesystems can move
-+		 * dirty folios in MIGRATE_ASYNC mode which is a waste of
-+		 * cycles.
-+		 */
-+		if (folio_test_dirty(folio))
-+			return -EAGAIN;
-+	}
-+
-+	/* Avoid migrating to a node that is nearly full */
-+	if (!migrate_balanced_pgdat(pgdat, nr_pages)) {
-+		int z;
-+
-+		for (z = pgdat->nr_zones - 1; z >= 0; z--) {
-+			if (managed_zone(pgdat->node_zones + z))
-+				break;
-+		}
-+
-+		if (z < 0)
-+			return -EAGAIN;
-+
-+		wakeup_kswapd(pgdat->node_zones + z, 0,
-+			      folio_order(folio), ZONE_MOVABLE);
-+		return -EAGAIN;
-+	}
-+
-+	if (!folio_isolate_lru(folio))
-+		return -EAGAIN;
-+
-+	node_stat_mod_folio(folio, NR_ISOLATED_ANON + folio_is_file_lru(folio),
-+			    nr_pages);
-+
-+	return 0;
-+}
-+
- static inline bool is_valid_folio(struct folio *folio)
- {
- 	if (!folio || folio_test_unevictable(folio) || !folio_mapped(folio) ||
-@@ -142,18 +269,116 @@ static inline bool is_valid_folio(struct folio *folio)
- 	return true;
- }
- 
--static inline void kmigrated_wait_work(void)
-+enum kscand_migration_err {
-+	KSCAND_NULL_MM = 1,
-+	KSCAND_EXITING_MM,
-+	KSCAND_INVALID_FOLIO,
-+	KSCAND_NONLRU_FOLIO,
-+	KSCAND_INELIGIBLE_SRC_NODE,
-+	KSCAND_SAME_SRC_DEST_NODE,
-+	KSCAND_PTE_NOT_PRESENT,
-+	KSCAND_PMD_NOT_PRESENT,
-+	KSCAND_NO_PTE_OFFSET_MAP_LOCK,
-+	KSCAND_NOT_HOT_PAGE,
-+	KSCAND_LRU_ISOLATION_ERR,
-+};
-+
-+static bool is_hot_page(struct folio *folio)
- {
--	const unsigned long migrate_sleep_jiffies =
--		msecs_to_jiffies(kmigrate_sleep_ms);
-+#ifdef CONFIG_LRU_GEN
-+	struct lruvec *lruvec;
-+	int gen = folio_lru_gen(folio);
-+
-+	lruvec = folio_lruvec(folio);
-+	return lru_gen_is_active(lruvec, gen);
-+#else
-+	return folio_test_active(folio);
-+#endif
-+}
- 
--	if (!migrate_sleep_jiffies)
--		return;
-+static int kmigrated_promote_folio(struct kscand_migrate_info *info,
-+					struct mm_struct *mm,
-+					int destnid)
-+{
-+	unsigned long pfn;
-+	unsigned long address;
-+	struct page *page;
-+	struct folio *folio;
-+	int ret;
-+	pmd_t *pmd;
-+	pte_t *pte;
-+	spinlock_t *ptl;
-+	pmd_t pmde;
-+	int srcnid;
- 
--	kmigrated_sleep_expire = jiffies + migrate_sleep_jiffies;
--	wait_event_timeout(kmigrated_wait,
--			true,
--			migrate_sleep_jiffies);
-+	if (mm == NULL)
-+		return KSCAND_NULL_MM;
-+
-+	if (mm == READ_ONCE(kmigrated_cur_mm) &&
-+		READ_ONCE(kmigrated_clean_list)) {
-+		WARN_ON_ONCE(mm);
-+		return KSCAND_EXITING_MM;
-+	}
-+
-+	folio = info->folio;
-+
-+	/* Check again if the folio is really valid now */
-+	if (folio) {
-+		pfn = folio_pfn(folio);
-+		page = pfn_to_online_page(pfn);
-+	}
-+
-+	if (!page || PageTail(page) || !is_valid_folio(folio))
-+		return KSCAND_INVALID_FOLIO;
-+
-+	if (!folio_test_lru(folio))
-+		return KSCAND_NONLRU_FOLIO;
-+
-+	if (!is_hot_page(folio))
-+		return KSCAND_NOT_HOT_PAGE;
-+
-+	folio_get(folio);
-+
-+	srcnid = folio_nid(folio);
-+
-+	/* Do not try to promote pages from regular nodes */
-+	if (!kscand_eligible_srcnid(srcnid)) {
-+		folio_put(folio);
-+		return KSCAND_INELIGIBLE_SRC_NODE;
-+	}
-+
-+	/* Also happen when it is already migrated */
-+	if (srcnid == destnid) {
-+		folio_put(folio);
-+		return KSCAND_SAME_SRC_DEST_NODE;
-+	}
-+	address = info->address;
-+	pmd = pmd_off(mm, address);
-+	pmde = pmdp_get(pmd);
-+
-+	if (!pmd_present(pmde)) {
-+		folio_put(folio);
-+		return KSCAND_PMD_NOT_PRESENT;
-+	}
-+
-+	pte = pte_offset_map_lock(mm, pmd, address, &ptl);
-+	if (!pte) {
-+		folio_put(folio);
-+		WARN_ON_ONCE(!pte);
-+		return KSCAND_NO_PTE_OFFSET_MAP_LOCK;
-+	}
-+
-+	ret = kscand_migrate_misplaced_folio_prepare(folio, NULL, destnid);
-+	if (ret) {
-+		folio_put(folio);
-+		pte_unmap_unlock(pte, ptl);
-+		return KSCAND_LRU_ISOLATION_ERR;
-+	}
-+
-+	folio_put(folio);
-+	pte_unmap_unlock(pte, ptl);
-+
-+	return  migrate_misplaced_folio(folio, destnid);
- }
- 
- static bool folio_idle_clear_pte_refs_one(struct folio *folio,
-@@ -257,7 +482,6 @@ static int hot_vma_idle_pte_entry(pte_t *pte,
- 			folio_put(folio);
- 			return 0;
- 		}
--		/* XXX: Leaking memory. TBD: consume info */
- 
- 		info = kzalloc(sizeof(struct kscand_migrate_info), GFP_NOWAIT);
- 		if (info && scanctrl) {
-@@ -298,6 +522,115 @@ static inline int kscand_test_exit(struct mm_struct *mm)
- 	return atomic_read(&mm->mm_users) == 0;
- }
- 
-+struct destroy_list_work {
-+	struct list_head migrate_head;
-+	struct work_struct dwork;
-+};
-+
-+static void kmigrated_destroy_list_fn(struct work_struct *work)
-+{
-+	struct destroy_list_work *dlw;
-+	struct kscand_migrate_info *info, *tmp;
-+
-+	dlw = container_of(work, struct destroy_list_work, dwork);
-+
-+	if (!list_empty(&dlw->migrate_head)) {
-+		list_for_each_entry_safe(info, tmp, &dlw->migrate_head,	migrate_node) {
-+			list_del(&info->migrate_node);
-+			kfree(info);
-+		}
-+	}
-+
-+	kfree(dlw);
-+}
-+
-+static void kmigrated_destroy_list(struct list_head *list_head)
-+{
-+	struct destroy_list_work *destroy_list_work;
-+
-+
-+	destroy_list_work = kmalloc(sizeof(*destroy_list_work), GFP_KERNEL);
-+	if (!destroy_list_work)
-+		return;
-+
-+	INIT_LIST_HEAD(&destroy_list_work->migrate_head);
-+	list_splice_tail_init(list_head, &destroy_list_work->migrate_head);
-+	INIT_WORK(&destroy_list_work->dwork, kmigrated_destroy_list_fn);
-+	schedule_work(&destroy_list_work->dwork);
-+}
-+
-+static struct kmigrated_mm_slot *kmigrated_get_mm_slot(struct mm_struct *mm, bool alloc)
-+{
-+	struct kmigrated_mm_slot *mm_slot = NULL;
-+	struct mm_slot *slot;
-+
-+	guard(spinlock)(&kscand_migrate_lock);
-+
-+	slot = mm_slot_lookup(kmigrated_slots_hash, mm);
-+	mm_slot = mm_slot_entry(slot, struct kmigrated_mm_slot, mm_slot);
-+
-+	if (!mm_slot && alloc) {
-+		mm_slot = mm_slot_alloc(kmigrated_slot_cache);
-+		if (!mm_slot) {
-+			spin_unlock(&kscand_migrate_lock);
-+			return NULL;
-+		}
-+
-+		slot = &mm_slot->mm_slot;
-+		INIT_LIST_HEAD(&mm_slot->migrate_head);
-+		spin_lock_init(&mm_slot->migrate_lock);
-+		mm_slot_insert(kmigrated_slots_hash, mm, slot);
-+		list_add_tail(&slot->mm_node, &kmigrated_daemon.mm_head);
-+	}
-+
-+	return mm_slot;
-+}
-+
-+static void kscand_cleanup_migration_list(struct mm_struct *mm)
-+{
-+	struct kmigrated_mm_slot *mm_slot;
-+	struct mm_slot *slot;
-+
-+	mm_slot = kmigrated_get_mm_slot(mm, false);
-+
-+	slot = &mm_slot->mm_slot;
-+
-+	if (mm_slot && slot && slot->mm == mm) {
-+		spin_lock(&mm_slot->migrate_lock);
-+
-+		if (!list_empty(&mm_slot->migrate_head)) {
-+			if (mm == READ_ONCE(kmigrated_cur_mm)) {
-+				/* A folio in this mm is being migrated. wait */
-+				WRITE_ONCE(kmigrated_clean_list, true);
-+			}
-+
-+			kmigrated_destroy_list(&mm_slot->migrate_head);
-+			spin_unlock(&mm_slot->migrate_lock);
-+retry:
-+			if (!spin_trylock(&mm_slot->migrate_lock)) {
-+				cpu_relax();
-+				goto retry;
-+			}
-+
-+			if (mm == READ_ONCE(kmigrated_cur_mm)) {
-+				spin_unlock(&mm_slot->migrate_lock);
-+				goto retry;
-+			}
-+		}
-+		/* Reset migrated mm_slot if it was pointing to us */
-+		if (kmigrated_daemon.mm_slot == mm_slot)
-+			kmigrated_daemon.mm_slot = NULL;
-+
-+		hash_del(&slot->hash);
-+		list_del(&slot->mm_node);
-+		mm_slot_free(kmigrated_slot_cache, mm_slot);
-+
-+		WRITE_ONCE(kmigrated_clean_list, false);
-+
-+		spin_unlock(&mm_slot->migrate_lock);
-+		}
-+}
-+
- static void kscand_collect_mm_slot(struct kscand_mm_slot *mm_slot)
- {
- 	struct mm_slot *slot = &mm_slot->slot;
-@@ -309,11 +642,77 @@ static void kscand_collect_mm_slot(struct kscand_mm_slot *mm_slot)
- 		hash_del(&slot->hash);
- 		list_del(&slot->mm_node);
- 
-+		kscand_cleanup_migration_list(mm);
-+
- 		mm_slot_free(kscand_slot_cache, mm_slot);
- 		mmdrop(mm);
++	/* Unit: ms. Determines how aften mm scan should happen. */
++	unsigned int scan_period;
++	unsigned long next_scan;
++	/* Tracks how many useful pages obtained for migration in the last scan */
++	unsigned long scan_delta;
+ 	long address;
+ 	bool is_scanned;
+ };
+@@ -713,13 +729,92 @@ static void kmigrated_migrate_folio(void)
  	}
  }
  
-+static void kmigrated_migrate_mm(struct kmigrated_mm_slot *mm_slot)
++/*
++ * This is the normal change percentage when old and new delta remain same.
++ * i.e., either both positive or both zero.
++ */
++#define SCAN_PERIOD_TUNE_PERCENT	15
++
++/* This is to change the scan_period aggressively when deltas are different */
++#define SCAN_PERIOD_CHANGE_SCALE	3
++/*
++ * XXX: Hack to prevent unmigrated pages coming again and again while scanning.
++ * Actual fix needs to identify the type of unmigrated pages OR consider migration
++ * failures in next scan.
++ */
++#define KSCAND_IGNORE_SCAN_THR	256
++
++/* Maintains stability of scan_period by decaying last time accessed pages */
++#define SCAN_DECAY_SHIFT	4
++/*
++ * X : Number of useful pages in the last scan.
++ * Y : Number of useful pages found in current scan.
++ * Tuning scan_period:
++ *	Initial scan_period is 2s.
++ *	case 1: (X = 0, Y = 0)
++ *		Increase scan_period by SCAN_PERIOD_TUNE_PERCENT.
++ *	case 2: (X = 0, Y > 0)
++ *		Decrease scan_period by (2 << SCAN_PERIOD_CHANGE_SCALE).
++ *	case 3: (X > 0, Y = 0 )
++ *		Increase scan_period by (2 << SCAN_PERIOD_CHANGE_SCALE).
++ *	case 4: (X > 0, Y > 0)
++ *		Decrease scan_period by SCAN_PERIOD_TUNE_PERCENT.
++ */
++static inline void kscand_update_mmslot_info(struct kscand_mm_slot *mm_slot,
++				unsigned long total)
 +{
-+	int ret = 0, dest = -1;
-+	struct mm_slot *slot;
-+	struct mm_struct *mm;
-+	struct kscand_migrate_info *info, *tmp;
++	unsigned int scan_period;
++	unsigned long now;
++	unsigned long old_scan_delta;
 +
-+	spin_lock(&mm_slot->migrate_lock);
++	scan_period = mm_slot->scan_period;
++	old_scan_delta = mm_slot->scan_delta;
 +
-+	slot = &mm_slot->mm_slot;
-+	mm = slot->mm;
++	/* decay old value */
++	total = (old_scan_delta >> SCAN_DECAY_SHIFT) + total;
 +
-+	if (!list_empty(&mm_slot->migrate_head)) {
-+		list_for_each_entry_safe(info, tmp, &mm_slot->migrate_head,
-+				migrate_node) {
-+			if (READ_ONCE(kmigrated_clean_list))
-+				goto clean_list_handled;
++	/* XXX: Hack to get rid of continuously failing/unmigrateable pages */
++	if (total < KSCAND_IGNORE_SCAN_THR)
++		total = 0;
 +
-+			list_del(&info->migrate_node);
-+
-+			spin_unlock(&mm_slot->migrate_lock);
-+
-+			dest = kscand_get_target_node(NULL);
-+			ret = kmigrated_promote_folio(info, mm, dest);
-+
-+			kfree(info);
-+
-+			cond_resched();
-+			spin_lock(&mm_slot->migrate_lock);
-+		}
++	/*
++	 * case 1: old_scan_delta and new delta are similar, (slow) TUNE_PERCENT used.
++	 * case 2: old_scan_delta and new delta are different. (fast) CHANGE_SCALE used.
++	 * TBD:
++	 * 1. Further tune scan_period based on delta between last and current scan delta.
++	 * 2. Optimize calculation
++	 */
++	if (!old_scan_delta && !total) {
++		scan_period = (100 + SCAN_PERIOD_TUNE_PERCENT) * scan_period;
++		scan_period /= 100;
++	} else if (old_scan_delta && total) {
++		scan_period = (100 - SCAN_PERIOD_TUNE_PERCENT) * scan_period;
++		scan_period /= 100;
++	} else if (old_scan_delta && !total) {
++		scan_period = scan_period << SCAN_PERIOD_CHANGE_SCALE;
++	} else {
++		scan_period = scan_period >> SCAN_PERIOD_CHANGE_SCALE;
 +	}
-+clean_list_handled:
-+	/* Reset  mm  of folio entry we are migrating */
-+	WRITE_ONCE(kmigrated_cur_mm, NULL);
-+	spin_unlock(&mm_slot->migrate_lock);
-+}
 +
-+static void kmigrated_migrate_folio(void)
-+{
-+	/* for each mm do migrate */
-+	struct kmigrated_mm_slot *kmigrated_mm_slot = NULL;
-+	struct mm_slot *slot;
++	scan_period = clamp(scan_period, KSCAND_SCAN_PERIOD_MIN, KSCAND_SCAN_PERIOD_MAX);
 +
-+	if (!list_empty(&kmigrated_daemon.mm_head)) {
-+
-+		scoped_guard (spinlock, &kscand_migrate_lock) {
-+			if (kmigrated_daemon.mm_slot) {
-+				kmigrated_mm_slot = kmigrated_daemon.mm_slot;
-+			} else {
-+				slot = list_entry(kmigrated_daemon.mm_head.next,
-+						struct mm_slot, mm_node);
-+
-+				kmigrated_mm_slot = mm_slot_entry(slot,
-+						struct kmigrated_mm_slot, mm_slot);
-+				kmigrated_daemon.mm_slot = kmigrated_mm_slot;
-+			}
-+			WRITE_ONCE(kmigrated_cur_mm, kmigrated_mm_slot->mm_slot.mm);
-+		}
-+
-+		if (kmigrated_mm_slot)
-+			kmigrated_migrate_mm(kmigrated_mm_slot);
-+	}
++	now = jiffies;
++	mm_slot->next_scan = now + msecs_to_jiffies(scan_period);
++	mm_slot->scan_period = scan_period;
++	mm_slot->scan_delta = total;
 +}
 +
  static unsigned long kscand_scan_mm_slot(void)
  {
  	bool next_mm = false;
-@@ -327,6 +726,7 @@ static unsigned long kscand_scan_mm_slot(void)
- 	struct vm_area_struct *vma = NULL;
- 	struct kscand_mm_slot *mm_slot;
+ 	bool update_mmslot_info = false;
  
-+	struct kmigrated_mm_slot *kmigrated_mm_slot = NULL;
++	unsigned int mm_slot_scan_period;
++	unsigned long now;
++	unsigned long mm_slot_next_scan;
+ 	unsigned long vma_scanned_size = 0;
+ 	unsigned long address;
++	unsigned long total = 0;
  
- 	spin_lock(&kscand_mm_lock);
- 
-@@ -356,13 +756,23 @@ static unsigned long kscand_scan_mm_slot(void)
- 
- 	VMA_ITERATOR(vmi, mm, address);
- 
-+	kmigrated_mm_slot = kmigrated_get_mm_slot(mm, false);
-+
- 	for_each_vma(vmi, vma) {
- 		kscand_walk_page_vma(vma, &kscand_scanctrl);
- 		vma_scanned_size += vma->vm_end - vma->vm_start;
- 
- 		if (vma_scanned_size >= kscand_scan_size) {
- 			next_mm = true;
--			/* TBD: Add scanned folios to migration list */
-+
-+			if (!list_empty(&kscand_scanctrl.scan_list)) {
-+				if (!kmigrated_mm_slot)
-+					kmigrated_mm_slot = kmigrated_get_mm_slot(mm, true);
-+				spin_lock(&kmigrated_mm_slot->migrate_lock);
-+				list_splice_tail_init(&kscand_scanctrl.scan_list,
-+						&kmigrated_mm_slot->migrate_head);
-+				spin_unlock(&kmigrated_mm_slot->migrate_lock);
-+			}
- 			break;
- 		}
- 	}
-@@ -458,6 +868,8 @@ static int kscand(void *none)
- static inline void kscand_destroy(void)
- {
- 	kmem_cache_destroy(kscand_slot_cache);
-+	/* XXX: move below to kmigrated thread */
-+	kmem_cache_destroy(kmigrated_slot_cache);
- }
- 
- void __kscand_enter(struct mm_struct *mm)
-@@ -493,7 +905,7 @@ void __kscand_exit(struct mm_struct *mm)
- {
- 	struct kscand_mm_slot *mm_slot;
  	struct mm_slot *slot;
--	int free = 0;
-+	int free = 0, serialize = 1;
+ 	struct mm_struct *mm;
+@@ -744,6 +839,8 @@ static unsigned long kscand_scan_mm_slot(void)
  
- 	spin_lock(&kscand_mm_lock);
- 	slot = mm_slot_lookup(kscand_slots_hash, mm);
-@@ -508,10 +920,15 @@ void __kscand_exit(struct mm_struct *mm)
- 		free = 1;
- 		/* TBD: Set the actual next slot */
- 		kscand_scan.mm_slot = NULL;
-+	} else if (mm_slot && kscand_scan.mm_slot == mm_slot && mm_slot->is_scanned) {
-+		serialize = 0;
- 	}
- 
+ 	mm = slot->mm;
+ 	mm_slot->is_scanned = true;
++	mm_slot_next_scan = mm_slot->next_scan;
++	mm_slot_scan_period = mm_slot->scan_period;
  	spin_unlock(&kscand_mm_lock);
  
-+	if (serialize)
-+		kscand_cleanup_migration_list(mm);
-+
- 	if (free) {
- 		mm_slot_free(kscand_slot_cache, mm_slot);
- 		mmdrop(mm);
-@@ -563,6 +980,8 @@ static int kmigrated(void *arg)
- 		WRITE_ONCE(migrated_need_wakeup, false);
- 		if (unlikely(kthread_should_stop()))
- 			break;
-+		if (kmigrated_has_work())
-+			kmigrated_migrate_folio();
- 		msleep(20);
- 		kmigrated_wait_work();
- 	}
-@@ -603,7 +1022,9 @@ static int stop_kmigrated(void)
- static inline void init_list(void)
- {
- 	INIT_LIST_HEAD(&kscand_scanctrl.scan_list);
-+	spin_lock_init(&kscand_migrate_lock);
- 	init_waitqueue_head(&kscand_wait);
-+	init_waitqueue_head(&kmigrated_wait);
- }
- 
- static int __init kscand_init(void)
-@@ -617,6 +1038,13 @@ static int __init kscand_init(void)
- 		return -ENOMEM;
+ 	if (unlikely(!mmap_read_trylock(mm)))
+@@ -754,6 +851,11 @@ static unsigned long kscand_scan_mm_slot(void)
+ 		goto outerloop;
  	}
  
-+	kmigrated_slot_cache = KMEM_CACHE(kscand_mm_slot, 0);
++	now = jiffies;
 +
-+	if (!kmigrated_slot_cache) {
-+		pr_err("kmigrated: kmem_cache error");
-+		return -ENOMEM;
++	if (mm_slot_next_scan && time_before(now, mm_slot_next_scan))
++		goto outerloop;
++
+ 	VMA_ITERATOR(vmi, mm, address);
+ 
+ 	kmigrated_mm_slot = kmigrated_get_mm_slot(mm, false);
+@@ -784,8 +886,10 @@ static unsigned long kscand_scan_mm_slot(void)
+ 
+ 	update_mmslot_info = true;
+ 
+-	if (update_mmslot_info)
++	if (update_mmslot_info) {
+ 		mm_slot->address = address;
++		kscand_update_mmslot_info(mm_slot, total);
 +	}
+ 
+ outerloop:
+ 	/* exit_mmap will destroy ptes after this */
+@@ -887,6 +991,10 @@ void __kscand_enter(struct mm_struct *mm)
+ 		return;
+ 
+ 	kscand_slot->address = 0;
++	kscand_slot->scan_period = kscand_mm_scan_period_ms;
++	kscand_slot->next_scan = 0;
++	kscand_slot->scan_delta = 0;
 +
- 	init_list();
- 	err = start_kscand();
- 	if (err)
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 676d9cfc7059..94448062d009 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -2598,7 +2598,7 @@ SYSCALL_DEFINE6(move_pages, pid_t, pid, unsigned long, nr_pages,
-  * Returns true if this is a safe migration target node for misplaced NUMA
-  * pages. Currently it only checks the watermarks which is crude.
-  */
--static bool migrate_balanced_pgdat(struct pglist_data *pgdat,
-+bool migrate_balanced_pgdat(struct pglist_data *pgdat,
- 				   unsigned long nr_migrate_pages)
- {
- 	int z;
+ 	slot = &kscand_slot->slot;
+ 
+ 	spin_lock(&kscand_mm_lock);
 -- 
 2.34.1
 
