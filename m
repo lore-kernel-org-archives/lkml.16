@@ -1,75 +1,76 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349C52DA752;
-	Wed, 25 Jun 2025 19:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A942E06CD;
+	Wed, 25 Jun 2025 19:05:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750878254; cv=none; b=BIyNh4oZIMJ6gzKoZFdQrIfq5+2P1VFMMotavwgL8WW7IsolQ4mVDZkeZHIkHU7b6oSaujM8Oy5fCXdSPms0qEzJQbxciZGeIGkFoq+nFM1zjRFCyfMys7thHsmMqFjgE1OxL19T76J/tnq63WXg7l8B3Uv2M5fj/GasR9KDjHQ=
+	t=1750878323; cv=none; b=QZtpGc2496oYVUzsktziCQVSxVZYPWcZv2IOri7kadnPuf1we1xRKS8U8u3FcarlXiUwjq0zbGadVfLlkUTixVnRkYbHvICl1YGFao2x5pDvFQw1mlKk5QBeUV6QMeM6gwqkaaX0xxl3MZn9dBkoBqsZX5VB3EJX7MRmDolUVQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750878254; c=relaxed/simple;
-	bh=LUWB9Eb61V9HjLpTF0w5obOuUqX387nmjakU4den64w=;
+	s=arc-20240116; t=1750878323; c=relaxed/simple;
+	bh=F6NcfibEksUk16xLZ9aZoeLDg4FLCE0ViGkOwseLHSI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bi+R74CWArKPtCwkjDogqnmLGqHZMTXoxSHnJDAprKPMxSLIJP8MK5CRhGLyk2maYuSaTsErNlUvbHflY+sMYOFi4gwZ6yidZa9BuAkGGgOa6jMivdXf6khDmYtYTK7rL70hePhph0R+MFXHmIFJJipmvl1lC/UhY9h2h6OK+x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qjs7O3FQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=NgkkHRVwo1+/ALTD30hslde2x81YzKqo+Ylh4HwLEwZTXKtE2AdbtT2SGAYRV9ehxxbttWhb4Yt5bKgll0kSptk5Rx7tlFCTtdKDUQpVhEOt8i91wVR0zqjMYsZHCfSNjqVn7dzCi9Zc2XOChqU80BxgYgMaDkODqF0JbMTqMPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJqxeKu4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qjs7O3FQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9053BC4CEF0;
-	Wed, 25 Jun 2025 19:04:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJqxeKu4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC537C4CEEA;
+	Wed, 25 Jun 2025 19:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750878253;
-	bh=LUWB9Eb61V9HjLpTF0w5obOuUqX387nmjakU4den64w=;
+	s=k20201202; t=1750878323;
+	bh=F6NcfibEksUk16xLZ9aZoeLDg4FLCE0ViGkOwseLHSI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Qjs7O3FQiRGsi2y6To/++keHWR78/5TFsK6SYKyHHMYYxEJEeffMoT5pc4yiJU13a
-	 vKebR8SzlbO0utXZFDZOCOUf+GySf6+SD8dfYl5B+v7IWN9OpxfOTERw0cxn9u2uGf
-	 61wOjYwH11OYCjDBCn0oZYuVzSIAhD0HesvYW5aXA0n50iGpNzZyHUb/+GE9SxOtMI
-	 IT+xxR5x8hW9fRnQwp4pon/eayH+OLvliC9G58jFc/HSCUoMnmr6PMfqzrRMUnZWWA
-	 gbVPgWbfedsNIk2huEGJelVlaTl4TN49g99afx8x1UsLFenGj5SFN8Ptnk4EtKy+aT
-	 /xSa8d54PG1EQ==
-Date: Wed, 25 Jun 2025 14:04:12 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-Cc: devicetree@vger.kernel.org, Peter Griffin <peter.griffin@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, kernel-team@android.com,
-	linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-	linux-kernel@vger.kernel.org, Lee Jones <lee@kernel.org>,
-	Will McVicker <willmcvicker@google.com>,
-	linux-samsung-soc@vger.kernel.org,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 01/17] dt-bindings: firmware: google,gs101-acpm-ipc:
- convert regulators to lowercase
-Message-ID: <175087825207.2044005.6909193130559642909.robh@kernel.org>
-References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
- <20250606-s2mpg1x-regulators-v2-1-b03feffd2621@linaro.org>
+	b=jJqxeKu4wUr6cfEms7Lm7D8RCpHIsqXBw4cjPO8V4ZfBoLUH0tFner3HnTUFAseyN
+	 Wkqs3PfIRA5XWLBrSANmOLCdS1AVqqL03QAY/okgV4+Uh4TFK0oFq6yz3vLahnlYs5
+	 1bEqPC7weC0Jf+EI5NJMmlOgBR4sCpB0mFnmzQZu0iGZ/xAsxEl/mz2r06hufnd9Jg
+	 skYzu0svOuooWsCpqR1pvh8658VL0eV0n4QTGtQpzL5lJF2df5HywXt0CehD5GDeS4
+	 Wpj6UyARpKWlFnb/jx/t9Itas79HUXNNL1xp4w6IIljeEjYmUH/OjWC2zSPRSIc63h
+	 ISZgkmO2ppq8w==
+Date: Wed, 25 Jun 2025 20:05:18 +0100
+From: Simon Horman <horms@kernel.org>
+To: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+Cc: kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+	decui@microsoft.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+	linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v2] net: mana: Fix build errors when
+ CONFIG_NET_SHAPER is disabled
+Message-ID: <20250625190518.GP1562@horms.kernel.org>
+References: <1750851355-8067-1-git-send-email-ernis@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250606-s2mpg1x-regulators-v2-1-b03feffd2621@linaro.org>
+In-Reply-To: <1750851355-8067-1-git-send-email-ernis@linux.microsoft.com>
 
-
-On Fri, 06 Jun 2025 16:02:57 +0100, André Draszik wrote:
-> Using lowercase for the buck and ldo nodenames is preferred, as
-> evidenced e.g. in [1].
+On Wed, Jun 25, 2025 at 04:35:55AM -0700, Erni Sri Satya Vennela wrote:
+> Fix build errors when CONFIG_NET_SHAPER is disabled, including:
 > 
-> Convert the example here to lowercase before we add any bindings
-> describing the s2mpg1x regulators that will enforce the spelling.
+> drivers/net/ethernet/microsoft/mana/mana_en.c:804:10: error:
+> 'const struct net_device_ops' has no member named 'net_shaper_ops'
 > 
-> Link: https://lore.kernel.org/all/20250223-mysterious-infrared-civet-e5bcbf@krzk-bin/ [1]
-> Signed-off-by: André Draszik <andre.draszik@linaro.org>
+>      804 |         .net_shaper_ops         = &mana_shaper_ops,
+> 
+> drivers/net/ethernet/microsoft/mana/mana_en.c:804:35: error:
+> initialization of 'int (*)(struct net_device *, struct neigh_parms *)'
+> from incompatible pointer type 'const struct net_shaper_ops *'
+> [-Werror=incompatible-pointer-types]
+> 
+>      804 |         .net_shaper_ops         = &mana_shaper_ops,
+> 
+> Signed-off-by: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+> Fixes: 75cabb46935b ("net: mana: Add support for net_shaper_ops")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202506230625.bfUlqb8o-lkp@intel.com/
 > ---
->  Documentation/devicetree/bindings/firmware/google,gs101-acpm-ipc.yaml | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+> Changes in v2:
+> * Use "select NET_SHAPER" in Kconfig instead of adding multiple checks for
+>   CONFIG_NET_SHAPER.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+Reviewed-by: Simon Horman <horms@kernel.org>
 
