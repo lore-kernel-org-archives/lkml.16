@@ -1,118 +1,93 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726AD25BF19
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:22:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507CC3595D;
+	Wed, 25 Jun 2025 12:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750854177; cv=none; b=XpzpbHCPOGoFPAIhd5/kM2ymIgP4R7/zYq3EzlgX+JDQtvQn68yWs4Vk5iKTX73EN/Aa8gBe17ZUN9olFXd4ERiYMPRY15Db3/+z2dTVJfRH/89W/IOWB6o9P4YCNY/taqsdLdTXH1P3hYPfSML47Uet6CfqB/+Gms6OC4KUW0E=
+	t=1750854251; cv=none; b=gVL+uoR8oyodpvr99bcS4+jX48QHNvApHtVpiN+pbrInEWfXbuDCP3W6tBKs08NLPvcCbcZlpID0XXX8wVWzIri/1nQ0XNa2XiXUAUXen7lHdVu6UI8pdorEX/iR4a4WvxbRlAvadeKOExAT2+YBhBNuF401i6U6ZE8pZiFfFVo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750854177; c=relaxed/simple;
-	bh=PsQfHCEp6q5tQuX0x3zpsjWToWnh6oGziT5EQjTRAgU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h0ZRBuwl9lnRRCb3W5CptLfwzrbZn/Ymn7Uyu0ZZxFd8z5zaD9XsVIYiqODksZaLu0fOCyaAufCsUQhSe1knLm+xGR4h5LR99qOBPaGWGYuwZvlukrXf1/OPoU/oHyIyXXxmgeu+3MfxsFLdfq3xaYvffNUQnu5BpnTz3t348tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CCkUBFo0; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750854251; c=relaxed/simple;
+	bh=GnG3Fx4/tRglWsgTMCpBf55NzwKfzZTAii167KIZ4cE=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=EuGkvboOywKgcgZr10MW8+zyYgEnV93IXuAv4+LCQiWDKMlbtnErYHAC+f4Zk9nmxULeH3EaxxNyXaxeJRhw/gPTzTnyT3pPUp+y8iCQCRsCFqu89hqwy/r+D/Nziqgdyt3UeUYMj65XYlTmYYtmqregtNBuh7vZzX6anZdgV9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DVkBNJYh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CCkUBFo0"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-60c4521ae2cso1874276a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:22:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750854174; x=1751458974; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=OiG8sr1KaclHSbf6egC7naRu8LsxzyFDngHY6EqehU8=;
-        b=CCkUBFo08RV9mwv/My2zY+JomS+EdxLdXYwQt3AO5S+Mx9uf56OOgAiI3Rf6IwyQcB
-         WI5ubRZYNZ5SA0y14frj3SWRacmOfg3HGgEy+KKMn6lOjGiOdkpfICO/nDVSXR5NAiID
-         QQl860zh0dezLjQkD+yuQkQsmnY8zN8riyIqepLb8S/liGcTp5qYvcLOB8KvTFodTz0y
-         BVR1dxydusZkX8fTWF1ThqQtCt0PqD+ZliEumVkBE9N4auAvyE65wRS5Bcv8CfaaZKiL
-         LOL+NWxOl2ybxLtMFnBwbworXLYk7lHKNSrRcqcYGoH+cykazwPvfS7amKXRVcmVWcHh
-         Xr+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750854174; x=1751458974;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OiG8sr1KaclHSbf6egC7naRu8LsxzyFDngHY6EqehU8=;
-        b=qN0mCmYwMTve1LUH0gr37yXc7Y9Kj012JyFtxE93Wzznq0sk6FbjFGJrku9oN+9sxJ
-         jY2tdRK5HJDFVW1QWP4fi6sVn4PbhHKNbzz9GCUF4+ru9Ah06LNitPXR62Yoeri5rhd3
-         lFo7gQ383aXyev3WEEutsH1IMwmPJ04EXw1qHOQxpxSW7wuW/hQ/SCUBODWAY96Lt6NW
-         A2oZVbuoTdXQBtBnkhbPmw4lDpTSPBc2zkXjIccyF2QYbQV3AVPvtUnw1MVmuBopmRl9
-         Lc9rExSCXAnu6HnZcxqa8hntrgnArqtfprJi6cbup9IL78VEjUPBogUor0tIvFZo9gd3
-         TWew==
-X-Gm-Message-State: AOJu0Yx+nlw2oM09rCbozCwy5WD9qcdbI5iUMWko2m1oCNnFgASpNal5
-	fFg3qLb7JjxACcgvIjVGDCBaSkdxZUt1CPcme0grHc5LKAMgmsRJcLUDpKVGLk8+2Q==
-X-Gm-Gg: ASbGncsnNPxu2ZHiP6EfNT3tAqvu8IOLafQ62ThwwSJHO+zg9rxv+cVOj3gbU+E189l
-	mfOUkkD9qfOLuhOrvK9N2n4H0JgWmnpsTxmwk8gyYVgsSjn0tnHzsMXYU5F6UzY/IdCJjmcv7yr
-	bmWz5pqEMrN24mDMjri616FB+RvUpvG0i9hENdJaTGjIXnBMBhDfLtRwngkFIG5o+JT7+yO8Hf9
-	R+zUqKtgnW2O9LFRAKsZJ14aEGkrCvYipm6P4C30GfHDPVrkwTs/Dp8UVX7YP+1UdV7HyiLg7ik
-	QzljWDO9qHtZfGFFvMoadIUNN7YI5WXkjS1LsLKGqJbFeyYYU/9fBix7mEC/kkihl0Fmx7EpPfW
-	S1AyJR0gLdwhWTzyxFtIV
-X-Google-Smtp-Source: AGHT+IGcp1aoFc2EzYV/tl3RR8TA0Ug87fzOHVR52rNGNEdbDQoI9r/5HqWjJE0hOyK5C5jflubayA==
-X-Received: by 2002:a05:6402:27d2:b0:607:ea0c:65b2 with SMTP id 4fb4d7f45d1cf-60c4de78e8amr1953498a12.31.1750854173425;
-        Wed, 25 Jun 2025 05:22:53 -0700 (PDT)
-Received: from google.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c2f4681a8sm2391073a12.38.2025.06.25.05.22.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 05:22:51 -0700 (PDT)
-Date: Wed, 25 Jun 2025 12:22:45 +0000
-From: Quentin Perret <qperret@google.com>
-To: Mostafa Saleh <smostafa@google.com>
-Cc: linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, maz@kernel.org,
-	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org
-Subject: Re: [PATCH] KVM: arm64: Fix error path in init_hyp_mode()
-Message-ID: <aFvqFdwNYI0-3zWY@google.com>
-References: <20250625113301.580253-1-smostafa@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DVkBNJYh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C523FC4CEEE;
+	Wed, 25 Jun 2025 12:24:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750854250;
+	bh=GnG3Fx4/tRglWsgTMCpBf55NzwKfzZTAii167KIZ4cE=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=DVkBNJYhaDxHPZ2VJqYLreEXFL3IQ3f0XFP6qywuPuHcVw8RDlcY9zbt/ZjxshWtQ
+	 gIjIl1GjvlKpAMrD3z5/YvuHj2qYJZIJhhB3z6IfXlewjLzNWMt3tQQkNbLW7/Tito
+	 rsdaoyEyshVaJeYJHCK8iJA1kqnFvpaisnqJZG4iPqT/UKZ8kP8e0TJ1yzTz5x3HVy
+	 Grsp1PDrQvozx4ryOl1peEZN5kxrI0cruuxUo92qlwB7MiXeDyGDOsLYadwqJxeJ66
+	 wPagjD0YrRARPPAbqAOyAYvy7Vzt5z9038Sf6jno8ZSfVsO3MN/Cmv+5Dk+Z3kBM0X
+	 xXdOHVtRIZPUg==
+Date: Wed, 25 Jun 2025 07:24:09 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625113301.580253-1-smostafa@google.com>
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
+ ~postmarketos/upstreaming@lists.sr.ht, Georgi Djakov <djakov@kernel.org>, 
+ linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ phone-devel@vger.kernel.org, linux-pm@vger.kernel.org, 
+ devicetree@vger.kernel.org
+To: Luca Weiss <luca.weiss@fairphone.com>
+In-Reply-To: <20250625-sm7635-icc-v1-1-8b49200416b0@fairphone.com>
+References: <20250625-sm7635-icc-v1-0-8b49200416b0@fairphone.com>
+ <20250625-sm7635-icc-v1-1-8b49200416b0@fairphone.com>
+Message-Id: <175085424996.330301.5673192572760030454.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: interconnect: document the RPMh
+ Network-On-Chip Interconnect in Qualcomm SM7635 SoC
 
-On Wednesday 25 Jun 2025 at 11:33:01 (+0000), Mostafa Saleh wrote:
-> diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> index 38a91bb5d4c7..5bb36c3b06b5 100644
-> --- a/arch/arm64/kvm/arm.c
-> +++ b/arch/arm64/kvm/arm.c
-> @@ -2344,15 +2344,22 @@ static void __init teardown_hyp_mode(void)
->  	int cpu;
->  
->  	free_hyp_pgds();
-> +	/* Order matches the order of initialization init_hyp_mode() */
->  	for_each_possible_cpu(cpu) {
-> +		if (!per_cpu(kvm_arm_hyp_stack_base, cpu))
-> +			continue;
->  		free_pages(per_cpu(kvm_arm_hyp_stack_base, cpu), NVHE_STACK_SHIFT - PAGE_SHIFT);
-> +
-> +		if (!kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[cpu])
-> +			continue;
->  		free_pages(kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[cpu], nvhe_percpu_order());
->  
->  		if (free_sve) {
->  			struct cpu_sve_state *sve_state;
->  
->  			sve_state = per_cpu_ptr_nvhe_sym(kvm_host_data, cpu)->sve_state;
-> -			free_pages((unsigned long) sve_state, pkvm_host_sve_state_order());
-> +			if (sve_state)
-> +				free_pages((unsigned long) sve_state, pkvm_host_sve_state_order());
 
-I'm a bit confused by these extra checks -- free_pages() should be safe
-to call on NULL?
+On Wed, 25 Jun 2025 11:13:47 +0200, Luca Weiss wrote:
+> Document the RPMh Network-On-Chip Interconnect of the SM7635 platform.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+>  .../bindings/interconnect/qcom,sm7635-rpmh.yaml    | 136 ++++++++++++++++++++
+>  .../dt-bindings/interconnect/qcom,sm7635-rpmh.h    | 141 +++++++++++++++++++++
+>  2 files changed, 277 insertions(+)
+> 
 
-IIUC correctly, the actual issue is that per_cpu_ptr_nvhe_sym() will
-dereference the per-cpu pages to find the sve state, which is entirely
-bogus if the per-cpu pages have not been allocated. Now, looking at
-this, it looks like the bigger problem is that we literally free the
-per-cpu pages right before the sve state...
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Should we at least change the freeing order here?
+yamllint warnings/errors:
 
-Thanks,
-Quentin
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/interconnect/qcom,sm7635-rpmh.example.dts:18:18: fatal error: dt-bindings/clock/qcom,sm7635-gcc.h: No such file or directory
+   18 |         #include <dt-bindings/clock/qcom,sm7635-gcc.h>
+      |                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+make[2]: *** [scripts/Makefile.dtbs:131: Documentation/devicetree/bindings/interconnect/qcom,sm7635-rpmh.example.dtb] Error 1
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [/builds/robherring/dt-review-ci/linux/Makefile:1519: dt_binding_check] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250625-sm7635-icc-v1-1-8b49200416b0@fairphone.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
