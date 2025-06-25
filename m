@@ -1,156 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C576EBA4A;
-	Wed, 25 Jun 2025 00:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F321D1FDA
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750810091; cv=none; b=k4Igqtf9tnOFVdsLMTLA/EPetB5KT0TQc2I3TPx2J8k/gG/b4vk7IVmYmig06bgc5vy53B03N3eeE7q9COYh91eMDYBc1xpB5EsVmUOY+J0ZwZqDhJ5eWMongBrcJZWBJ3OCwDtifWDI6095i71mAo2z8bajpwPBVvrn/m7IHvs=
+	t=1750810254; cv=none; b=QDWkVXsb7ALAQ9BHWiBCPeGuTtdqF6i2YR402VGVDR7VAI2YcJ6O+NiGh+Kh2VZVVu4jyNP8Kas1L+5JJpSbwCMsS9pesGp2MGawSgVtYEsxVJdthN0EKTRCilTjV+uqNbAOEAp/DVl9PtO+BqwuMJfKurh3Wt+1kYjOV9yjmxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750810091; c=relaxed/simple;
-	bh=VB6RjF5qIFd0dFoB+XW85/SNYXcGJtaEsdKLLYK1WQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Tzv/okSWbfOIQBvL7LZXMDLAtxXeJjaluT3jrOBl7GxXrO0SnWGpKmbkvwUwYuIyzWocBMpT6qkLTeqVUAu0EH2dnovnkPPMX7Qtz2IoKEW127MTCQXoACz7QZ0wVb+8MPdWhOmEzr4RD3h+EX0/xeP0xe9BNFU6jVTeXWoOnsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I6bwZMuk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750810254; c=relaxed/simple;
+	bh=9ivD5AaMhRDnIDnklljlK+k1JVxliQvvRwvsCgoM9ck=;
+	h=Date:Message-ID:From:To:Cc:Subject; b=pu8f0M+kPhqd6mzE72lxPH186d9x/WeLpKFYJyfh31PDKQNcBFL5xZ0Ii+YtC42pvYUaKAETkuBPkF4swRhiQN4OGDYwX0IgfHM7b+pyOtn9Sav6E5C1N4/GEbgBDXpzWPnnVprDmvE2Ew5pfDw/DvH72V74mYR4QM39CZpW4Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=TqG2G9Tm; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I6bwZMuk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACFE2C4CEE3;
-	Wed, 25 Jun 2025 00:08:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750810091;
-	bh=VB6RjF5qIFd0dFoB+XW85/SNYXcGJtaEsdKLLYK1WQ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=I6bwZMukbdoONRb4Jlg6TvrF7KMpVs2OX+Gr+2XEB4kIB2ccz9xHcyWZT27elPMoO
-	 FlC7Wa7+8NIGGcqeAaOQ/Wqw00mj+EoNEySkDr9yZdhPIj3WL05GtQ8wiwrVuZnuyH
-	 06ewAsJjodRjvu440DMRFZrLJJAcexNlutxv2JWc0PW/qvDJcflXSKnHQmgmuXVOqe
-	 4O6xdiqBOfozEUTd+3IfwXLsZ1HwhgNYNSbNQyYc1pGIrFGMKkvePgq83bedJ3AWwO
-	 2HBRHYL9sHdik25lAvf6418pfzT4isaTbLhjrBvocTIpsGBiHMyhmNRWpabM3Ls7ww
-	 hN58Xk2Ue0g1Q==
-Date: Tue, 24 Jun 2025 17:08:09 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Paolo Abeni
- <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew Lunn"
- <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>,
- <saeedm@nvidia.com>, <gal@nvidia.com>, <leonro@nvidia.com>,
- <tariqt@nvidia.com>, Leon Romanovsky <leon@kernel.org>,
- <netdev@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <moshe@nvidia.com>, Yevgeny Kliteynik
- <kliteyn@nvidia.com>, Vlad Dogaru <vdogaru@nvidia.com>
-Subject: Re: [PATCH net-next v2 7/8] net/mlx5: HWS, Shrink empty matchers
-Message-ID: <20250624170809.2aac2c69@kernel.org>
-In-Reply-To: <20250622172226.4174-8-mbloch@nvidia.com>
-References: <20250622172226.4174-1-mbloch@nvidia.com>
-	<20250622172226.4174-8-mbloch@nvidia.com>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="TqG2G9Tm"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d0976776dcso690155585a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 17:10:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1750810252; x=1751415052; darn=vger.kernel.org;
+        h=subject:cc:to:from:message-id:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zL28Tc4w5+Q9+lcS6siAOTOvpsM1FGjQwIS4zdqxK/Y=;
+        b=TqG2G9TmsT9W73nwV065TYKqyDZr540bCvd78cgAbDNcyt+VkmQidpBM/aXHlkUBrw
+         BScrnBJktJj9q64n0RnxMRJkv2hSA9z3kB31gGbnB7APCpyfm9p5qf20U0rgkvhzkVqe
+         2X7fzK1fIIRhuNH70P08WDm8LLWxDlNRjVAjqVNkzlKf/4043NFgeU9djry35qQFxEta
+         QG675alk+W2bSgqK3JYCSPytVS+rfuUE6HmE7Imi6yHzRpAJcQOEKFvpnlvIGpUPdn0y
+         pcCf2WppCQRpHA7uAidxYgHSuKoUjp9Y9JBkfr+AoCi8sALC6AbOf1Usyk9+v602464T
+         3xaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750810252; x=1751415052;
+        h=subject:cc:to:from:message-id:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zL28Tc4w5+Q9+lcS6siAOTOvpsM1FGjQwIS4zdqxK/Y=;
+        b=mtQdr9Hnvc2214aiW3u4gy5s8/2tTD9k8aoPfevSBt5WH3HZJxEU57MjcyB65EJz3C
+         PARvyzCP7FbwghqnrmwUghQZegflaR6yrwIwDe5V8XCg2XVxIfLNaHuShZWrEZCd1Uc4
+         Z+0fy0M1LBkXK0GRs6a1YS8Ho13XSb95VLZrxTcBAYBd4Ypb5VZbz8zpezKw0SPyjlVk
+         gqBPMs/ni3LEEHkx+Xi5LMSkBPS+gRwBCjf/IQL+UjHz6hVN7CTktaHpxXddtgW7n3rD
+         scK8+HuIux9p8Xpvhs3rNEZTtfQexSXBH0fZFIKESutVO9f/8ujr30je0jqAo23y2vrL
+         nrIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVY/7GJbHhgCxPyfuLCeOlveBdtxPjXnGq2aM0jG8poera03y602beW7DNy91KWM3ypd9T60I/xgxulcIk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzLFHraDTQ6xQg7m8D3gt6oh8xL8oURu+kp8nlemUy40xs+hvaB
+	4E8HQYvwGf48QbzSGiA76N6t0V/vQtCzI5Bf4FsXZmIl+38piGrOyhuW8fglY8CxDw==
+X-Gm-Gg: ASbGnctaSpnkCKjHlIYIAVLx5dJ7LmfcZQc+hYMVHHkvYTT32Fzn4w3ZnqwMiFHViwn
+	Gzw8zWLJ8mBnWoiKxCYBH6ueDguRCfN+jBA9DuYydqFI5/dunaLMwiqyrxo1BHvSt/W9Ohg0RN2
+	0ts+s6d3wVlY2pqCVwzegCRkQ2K7BUfYdlQZMNA8SteTJHCkxhUw/6rX2j/RgkD7C9VgITnJYJ1
+	IQ08jRrGF3l5+JlKK1wEj6CGkoUOafUg1tBJC008+co9c6zeGZCn0JDPAar2Y4YvKXtyBEGAzql
+	Y6crfgBQeiIVEoNH9SFstm0fAU/4NOhDBCu6gLP0G6ChqbPk9Kgfo3sMdZE1KQpxfRpQa3pZ8TD
+	rH7MfCOubJj/sWzAV1bonHPG0NajISFI=
+X-Google-Smtp-Source: AGHT+IFL+HjknXTXoFRm3XUtKW87TK5WTKCaVLsRbT3brEr6WmdayurdNBDLXUWYy5PXbZrC8PQy/g==
+X-Received: by 2002:a05:620a:370c:b0:7d2:18a1:ce0 with SMTP id af79cd13be357-7d42974ba31mr151411285a.49.1750810251876;
+        Tue, 24 Jun 2025 17:10:51 -0700 (PDT)
+Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fd09442d14sm62087126d6.34.2025.06.24.17.10.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 17:10:51 -0700 (PDT)
+Date: Tue, 24 Jun 2025 20:10:50 -0400
+Message-ID: <190ee36309adb0efa27e3b39a1a93de3@paul-moore.com>
+From: Paul Moore <paul@paul-moore.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: selinux@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL] selinux/selinux-pr-20250624
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Sun, 22 Jun 2025 20:22:25 +0300 Mark Bloch wrote:
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c
-> index 0a7903cf75e8..b7098c7d2112 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c
-> @@ -3,6 +3,8 @@
->  
->  #include "internal.h"
->  
-> +static int hws_bwc_matcher_move(struct mlx5hws_bwc_matcher *bwc_matcher);
+Linus,
 
-Is there a circular dependency? Normally we recommend that people
-reorder code rather that add forward declarations.
+Another small SELinux patch to fix a problem seen by the dracut-ng folks
+during early boot when SELinux is enabled, but the policy has yet to be
+loaded.
 
->  static u16 hws_bwc_gen_queue_idx(struct mlx5hws_context *ctx)
->  {
->  	/* assign random queue */
-> @@ -409,6 +411,70 @@ static void hws_bwc_rule_cnt_dec(struct mlx5hws_bwc_rule *bwc_rule)
->  		atomic_dec(&bwc_matcher->tx_size.num_of_rules);
->  }
->  
-> +static int
-> +hws_bwc_matcher_rehash_shrink(struct mlx5hws_bwc_matcher *bwc_matcher)
-> +{
-> +	struct mlx5hws_bwc_matcher_size *rx_size = &bwc_matcher->rx_size;
-> +	struct mlx5hws_bwc_matcher_size *tx_size = &bwc_matcher->tx_size;
-> +
-> +	/* It is possible that another thread has added a rule.
-> +	 * Need to check again if we really need rehash/shrink.
-> +	 */
-> +	if (atomic_read(&rx_size->num_of_rules) ||
-> +	    atomic_read(&tx_size->num_of_rules))
-> +		return 0;
-> +
-> +	/* If the current matcher RX/TX size is already at its initial size. */
-> +	if (rx_size->size_log == MLX5HWS_BWC_MATCHER_INIT_SIZE_LOG &&
-> +	    tx_size->size_log == MLX5HWS_BWC_MATCHER_INIT_SIZE_LOG)
-> +		return 0;
-> +
-> +	/* Now we've done all the checking - do the shrinking:
-> +	 *  - reset match RTC size to the initial size
-> +	 *  - create new matcher
-> +	 *  - move the rules, which will not do anything as the matcher is empty
-> +	 *  - destroy the old matcher
-> +	 */
-> +
-> +	rx_size->size_log = MLX5HWS_BWC_MATCHER_INIT_SIZE_LOG;
-> +	tx_size->size_log = MLX5HWS_BWC_MATCHER_INIT_SIZE_LOG;
-> +
-> +	return hws_bwc_matcher_move(bwc_matcher);
-> +}
-> +
-> +static int hws_bwc_rule_cnt_dec_with_shrink(struct mlx5hws_bwc_rule *bwc_rule,
-> +					    u16 bwc_queue_idx)
-> +{
-> +	struct mlx5hws_bwc_matcher *bwc_matcher = bwc_rule->bwc_matcher;
-> +	struct mlx5hws_context *ctx = bwc_matcher->matcher->tbl->ctx;
-> +	struct mutex *queue_lock; /* Protect the queue */
-> +	int ret;
-> +
-> +	hws_bwc_rule_cnt_dec(bwc_rule);
-> +
-> +	if (atomic_read(&bwc_matcher->rx_size.num_of_rules) ||
-> +	    atomic_read(&bwc_matcher->tx_size.num_of_rules))
-> +		return 0;
-> +
-> +	/* Matcher has no more rules - shrink it to save ICM. */
-> +
-> +	queue_lock = hws_bwc_get_queue_lock(ctx, bwc_queue_idx);
-> +	mutex_unlock(queue_lock);
-> +
-> +	hws_bwc_lock_all_queues(ctx);
-> +	ret = hws_bwc_matcher_rehash_shrink(bwc_matcher);
-> +	hws_bwc_unlock_all_queues(ctx);
-> +
-> +	mutex_lock(queue_lock);
+-Paul
 
-Dropping and re-taking caller-held locks is a bad code smell.
-Please refactor - presumably you want some portion of the condition
-to be under the lock with the dec? return true / false based on that.
-let the caller drop the lock and do the shrink if true was returned
-(directly or with another helper)
+--
+The following changes since commit 86c8db86af43f52f682e53a0f2f0828683be1e52:
 
-> +	if (unlikely(ret))
-> +		mlx5hws_err(ctx,
-> +			    "BWC rule deletion: shrinking empty matcher failed (%d)\n",
-> +			    ret);
-> +
-> +	return ret;
-> +}
-> +
->  int mlx5hws_bwc_rule_destroy_simple(struct mlx5hws_bwc_rule *bwc_rule)
->  {
->  	struct mlx5hws_bwc_matcher *bwc_matcher = bwc_rule->bwc_matcher;
-> @@ -425,8 +491,8 @@ int mlx5hws_bwc_rule_destroy_simple(struct mlx5hws_bwc_rule *bwc_rule)
->  	mutex_lock(queue_lock);
->  
->  	ret = hws_bwc_rule_destroy_hws_sync(bwc_rule, &attr);
-> -	hws_bwc_rule_cnt_dec(bwc_rule);
->  	hws_bwc_rule_list_remove(bwc_rule);
-> +	hws_bwc_rule_cnt_dec_with_shrink(bwc_rule, idx);
->  
->  	mutex_unlock(queue_lock);
+  selinux: fix selinux_xfrm_alloc_user() to set correct ctx_len
+    (2025-06-16 19:02:22 -0400)
+
+are available in the Git repository at:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
+    tags/selinux-pr-20250624
+
+for you to fetch changes up to fde46f60f6c5138ee422087addbc5bf5b4968bf1:
+
+  selinux: change security_compute_sid to return the ssid or tsid on match
+    (2025-06-19 16:13:16 -0400)
+
+----------------------------------------------------------------
+selinux/stable-6.16 PR 20250624
+----------------------------------------------------------------
+
+Stephen Smalley (1):
+      selinux: change security_compute_sid to return the ssid or tsid on
+         match
+
+ security/selinux/ss/services.c |   16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+--
+paul-moore.com
