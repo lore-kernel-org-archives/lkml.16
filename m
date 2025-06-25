@@ -1,376 +1,248 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF20435280
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750890107; cv=none; b=VGvwAK4EnB0/R85Px/WbZ58EDx69cjycm7DyhsoZ0QE5T3W9gVg7rxoTrpWUAkbHQbHHuvHm4gvurAIuIicG3vXTVd/lIYWcH03c3zHPgBp4lePJ066ROUsPQNwXF2aDVOpQZT9CzMTvpMss6g3WccOiZonSHlbmMa1vhuZZsXo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750890107; c=relaxed/simple;
-	bh=fY67UzbVulfTBZct+uEcSfPtFWShD+JHkVnLxvFZ7Do=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Xu0x3AkOVMUvAHQQ56yuAGUA/4cBIs0/bdnhVvM8OMOqOsqf/e446xAHdmwv+TocHvzJyTweLcqmSdZyz131W1tdt/3AKhbWJoL6n2vFtrq2DaAs6wf7Q0Vuo29XIn52YL7BbpMK+D+caJVUw2kcmHP61p1aNGD5zLTAmjUhYi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BHcuHlKQ; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 482A035280;
+	Wed, 25 Jun 2025 22:24:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750890298; cv=fail; b=CSzUifLp+adqicT6TGaxY/Ti5Eq40IdcEKwoOiQDV3VKU58L9kcgjG9evDsCOmNV+09A56hpnFi199Xd1n5rAtBwmLaT9ZfQyXOnktlxotIh2c3PLarrWDLdX7NqVOCkGrygwn7NZbcnWJz9BC7T0UQtOCgtBsEou1VchXR5SN0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750890298; c=relaxed/simple;
+	bh=bKysMxEImWdVOj1EoOt7O9kj3vxMWcrJcniv38x4gD4=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=uE2EIDEEnAnq666CD2YPgP4ggOGPcVusYTkCcWVDp9nALZX9LgKm+ejrgOOt2wGYhGpBbSyPLI4aLOFvKTATRe6zT0dmuwVbnDTKmQ1JFzMaMSSGFGh2Z+pgQKaZcW8kqnC7jnEQDuaIoKfzdO86jaevdGP7u57SSSAiSVkSxmw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mbN0Ipbi; arc=fail smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BHcuHlKQ"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-237d849253fso781475ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:21:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750890105; x=1751494905; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=g19+8q6djvy5sxUj6fKW3hbWJ20AxD+Rc3g0stgFGGs=;
-        b=BHcuHlKQvSXQhTY3Gna04sFUp9gGS+jW2wMolg+Gk2hXuGV5G22vEklIt9G6v8Z80D
-         GOvRnB+gYAjiiAlcCc13hwV8gMINbJcnD5uxSsEx/aqz3+T+Wp7V4MJRuOdLxmTOiLDi
-         fUKneo+pc3dKlTTiT28zbDtDZcUHYl80QjHbZ2CvBB7W+X0iV0WPUQI/FR6d6upn6bmt
-         KH5yKPfQD5Lm4473J4OsSeP43LmnamUd9z0aOZa17rATrAaWtZfKJfc3Enmac3CnT7Ei
-         ReuIbgk/Ho0UTtFoQtt73ySFDPtoyp5D/j/s0n1SuTifdLdAxT2uuuWHjXtn7AxRcRXi
-         VO3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750890105; x=1751494905;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=g19+8q6djvy5sxUj6fKW3hbWJ20AxD+Rc3g0stgFGGs=;
-        b=SzktT5wKzR6dE15MS2tDIhhXEiIClJyLSFmdmUnVhzbYjgMSz4T5VJxlX2lNYf7BC2
-         m+vSGqibL05rypaFbdE+4gxtsQvMmIF0Ac5c1tPqNWJDYmL2t+/UsDXm9OwqqQnxT5FJ
-         LNfl/YORJESi9m4O7SmR3YZOgOd2md75+WeJo4qSL4lSulXp9rf6LRYc+xEkj1AJQ7zj
-         vXoNqIi8AuLfH26KYDaY1be0GK4Fcylx5PyEufLMcqB98araQQa/pyjp780xPhAWLoqC
-         9gCer0Bu+vQmF0VGVsMvKWruiKLovu2MkKFe71bTEbZ+kaOuRl2DIaiB9/7d+FEqlJvY
-         UXLA==
-X-Forwarded-Encrypted: i=1; AJvYcCVI5xl7OYkQukcCh2MSkapb43Rhx0SmWh9KlfnumlttcvPWuQE9h+DGL9m0LpZZnTaJ3yFnd1/mbvt3d6g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxTUQZHghNayJUMhJ+P2V9SXDWpx+8TGk4YNSCgCQvhi7VAcm3E
-	jwDe0+hwq3rjj4msvoTCh0idv2gvwzFIiTxtSInVlMcQoW6v2dOZWGUHT3vJAGulDMeRYcgdfAk
-	OxTWvhadOO/TFEr/EIxGTSOed4Eux8vnhSQ==
-X-Gm-Gg: ASbGncvhdlv+qZEy2rteoB0cGeKwb8M4d/5NbsRUyyAtt7fQl1YM/h/j9765BRI7LKd
-	zbIo8bX9Dp4CN9wpmIEdiMjE9cwLyG3CzVPWwcLB8uZuGw0em8xLajiWA29uYfpyLkcNN8On8a8
-	t/0HT6YdwhmNaD/HRfAHUt47ouZcsKhnH2oVlELQfI44wb
-X-Google-Smtp-Source: AGHT+IFKXARrSfKL+9xNOlbPtVYHwZM6qrpJo3T7BXj9LdX7AfoWvzwRDFFoqykiNT/0XdN8osdK+KD/NGBdKkzuT78=
-X-Received: by 2002:a17:903:1d0:b0:235:caf9:8b1d with SMTP id
- d9443c01a7336-23824386a36mr32101155ad.12.1750890105116; Wed, 25 Jun 2025
- 15:21:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mbN0Ipbi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750890297; x=1782426297;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=bKysMxEImWdVOj1EoOt7O9kj3vxMWcrJcniv38x4gD4=;
+  b=mbN0Ipbi49SjcCXmuDhdcRKv6C9/uFCxZF4Etml7Es4jpNEEANTJ5VLl
+   96eGp56rjlnO15328+vEaPWeNQocJ7wVdcTy9IOXKgjmboHeCbaIfL8pN
+   vE4WQWL5V8P7I7Koe0Gjep0mPkHARQf6kOJUMntyXmOD1IJbkVAlmv/UA
+   z+IBmQkn/+jKDadnIUAhrjQETSmPRXiheWbntUlq10eYmGCOHuMgtOk1u
+   bCfe8/lz++uU81w7TfaPjvjnrcakvcJIcu6rIlxildYEwQRc0GXsbNlWr
+   CTec6jqx9SRHl5xt4RE4lEUads4LW16NcAk+nNqIn4KjF3SXIGsySRSoV
+   A==;
+X-CSE-ConnectionGUID: oVwtHsVdQRe5NrPzDyFUYw==
+X-CSE-MsgGUID: CCzZmOJoQmCxSNeL3i0hyQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53047582"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="53047582"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 15:24:47 -0700
+X-CSE-ConnectionGUID: ijcCFimbRSCFTPkr+dFWYA==
+X-CSE-MsgGUID: hFpo0giXR0eo71RZ63/LXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="151861854"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 15:24:47 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 25 Jun 2025 15:24:46 -0700
+Received: from ORSEDG902.ED.cps.intel.com (10.7.248.12) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 25 Jun 2025 15:24:46 -0700
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.88)
+ by edgegateway.intel.com (134.134.137.112) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 25 Jun 2025 15:24:46 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=M+sjPqNb/7ZECpmFMtCV0YQCwmmFVzk0pyavKp3l6EYArC49rVyBcbIhY+o+AQzgig4OXnsf9wojmjQr6TgK2fBZNmb14VXZjyqZSvpvqk5GwZshfeMiTedsy6h6yDD0QCeBGdUagJSOdVVGs0vKPwMPaIjAaN1dAfrV4nhyfF1PQupJwM1KNTQPYrJKWbGZoST0t1tLm0IFqH+OtneGeFvv3h1FbbHoSJ5B+Mv80tQgIDjgEhw5PH0YBbexTJA/Jqwczykn9CP4Z95iakc+IAC1CxtcQRqWO5BKplD/xbNenXl86skSrCIUPrhSRdycdmPnjLzXDR0r+mO1Jhltmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=wGdHKnp68uAEePfoeCrD89Wr4BeZJrhRKwlp+yBs3pI=;
+ b=Xs6ELv8YoBVXXELqbzbupsItqFGKP6uYrRAmaN/V0QO8XB9JOB/0846YFhmFa521w/gfBGX3gPRWOiPcrxjJQVdTxAFNmMEYfbywv6dT++FpqvBRjLyp9NNKO04EG04NiyMW71G/eAFH6E/gq4S6AAcTfBKetOh5QrGFEThGNx2+PciOXHFS38wXWeil9nfq4GSYc2IdYX8ImnLpxlsC4fqY4Stcx62WlO9MFyIK3qK7p3XM/kNT3kqQ+NFRj1IhmUNF8eDB5d1EZeRU0dCKDK5gaY9wqps5NCccTJGlSPsYmNUojcuhePgxYtILw5OdU4jgbFi2NMsMvCIxZNuXsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by SN7PR11MB7418.namprd11.prod.outlook.com (2603:10b6:806:344::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Wed, 25 Jun
+ 2025 22:24:44 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.8857.025; Wed, 25 Jun 2025
+ 22:24:44 +0000
+From: <dan.j.williams@intel.com>
+Date: Wed, 25 Jun 2025 15:24:42 -0700
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+	<dan.j.williams@intel.com>, Kees Cook <kees@kernel.org>, "Gustavo A. R.
+ Silva" <gustavoars@kernel.org>
+CC: Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang
+	<dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, "Rafael J. Wysocki"
+	<rafael@kernel.org>, Len Brown <lenb@kernel.org>, <nvdimm@lists.linux.dev>,
+	<linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>
+Message-ID: <685c772aa7cc1_23a2a10080@dwillia2-mobl4.notmuch>
+In-Reply-To: <ade0c2e6-0698-4829-8c7e-cec3c486aac7@embeddedor.com>
+References: <aEneid7gdAZr1_kR@kspp>
+ <202506250950.31C8A58E@keescook>
+ <e0adad17-5d4f-4309-9975-81971597da65@embeddedor.com>
+ <685c5d0062f2b_1608bd10051@dwillia2-xfh.jf.intel.com.notmuch>
+ <685c653a6fe42_1608bd100d0@dwillia2-xfh.jf.intel.com.notmuch>
+ <ade0c2e6-0698-4829-8c7e-cec3c486aac7@embeddedor.com>
+Subject: Re: [PATCH v3][next] acpi: nfit: intel: avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BY3PR05CA0046.namprd05.prod.outlook.com
+ (2603:10b6:a03:39b::21) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAOR=gxQahs8SXmObsj-6-ux3BMpTZc=8WrSZ83hikpoBZR3OZg@mail.gmail.com>
-In-Reply-To: <CAOR=gxQahs8SXmObsj-6-ux3BMpTZc=8WrSZ83hikpoBZR3OZg@mail.gmail.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Wed, 25 Jun 2025 18:21:33 -0400
-X-Gm-Features: Ac12FXyB1lK2xXaaDmdcbOOHhW0Nsg7vExzYclAd6iHTFl-d_nupHwfvqHY-ep4
-Message-ID: <CADnq5_P-60BpvNJf5W16TPbFDXRM5wtHh10iiZm2z6DEDFqn=g@mail.gmail.com>
-Subject: =?UTF-8?B?UmU6IFtSRUdSRVNTSU9OXSBSWC01ODAgKGdmeDgwMykgR1BVIGhhbmdzIHNpbmNlIH52Ng==?=
-	=?UTF-8?B?LjE0LjEg4oCTIOKAnHNjaGVkdWxlciBjb21wXzEuMS4xIGlzIG5vdCByZWFkeeKAnSAvIFJPQ20gNS43?=
-	=?UTF-8?B?LTYuNCsgYnJva2Vu?=
-To: Johl Brown <johlbrown@gmail.com>, "Kuehling, Felix" <Felix.Kuehling@amd.com>, 
-	Harish Kasiviswanathan <Harish.Kasiviswanathan@amd.com>, "Yang, Philip" <Philip.Yang@amd.com>, 
-	"Kim, Jonathan" <Jonathan.Kim@amd.com>
-Cc: amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	amd-gfx-owner@lists.freedesktop.org
-Content-Type: multipart/mixed; boundary="000000000000c1bb9606386cde67"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|SN7PR11MB7418:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1770de04-8fbd-42dc-8bb5-08ddb43715d5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?WFFWWVNJNFNKNkFzR2Q4ZkY1TFBQTEd6V3lEUGVOM3dEMG1sWHVva21aOU44?=
+ =?utf-8?B?bHFzZU1rKzI0TC91eGdDbDBQVzBkZE5pUndKVkcxU0V2dEk3U3JoM2V2YXAz?=
+ =?utf-8?B?ZEpGdTBvWTRaQ2h4eXkreVRNclRDYURYbXdCN2VjVTlCa2NOcTNlbVc0T01o?=
+ =?utf-8?B?Z1AzM2JlNjUreG1JcFJWMzVFV243U0xpRjBxY0c5WmtLYjRJN2hQS2Fhdlcx?=
+ =?utf-8?B?MlRsODV5Qk4yTEJ6N1FCRnlJeVZCakNLbjdaUVNadFZxeVh4TXRFMmdqWTh0?=
+ =?utf-8?B?RWRHeTFZMGtOWG50V0xMek9DVWdHNHBEWGlicVJ3SnppTnFtR3JDaEI2VnNL?=
+ =?utf-8?B?M3UyaisyVExsL3U4eW10Lzc0SER5d3ArOUwxSFpEOUxaek5JckNZWFE0b1hm?=
+ =?utf-8?B?N056NzdYNUxhT0hoVE9rQUJWdWM3eldiMCt0NnpvVW9pWlZDWHdXSkVRRlVN?=
+ =?utf-8?B?cUpkdkNkUWZpaVQrTitJMzk3L1NuSUFNRHlaQkJlUDA3c1lXNVI5cEhkLzVm?=
+ =?utf-8?B?QnVpaVlleU9SODhKQjN3MzNubWdIZWhhZUd0RHpUcnpuM0lvQ3hkMUoyZ1Z1?=
+ =?utf-8?B?djg2MUNxTG1hdWJrMlcrVEd3RDJIeWxNT2xQR1R0TFpLUE9jcXR3dmRFNlJu?=
+ =?utf-8?B?REV6YXp3M0U5MHZNU0dtdkxLQXp2aEY0eGtVaUxRZm9TaWp0UUJvYnh3MG5G?=
+ =?utf-8?B?V1J0ci9Gc1hHMEFhZXhxY1h5b2hNcmFVcGtQRGxLZVFmelRBWWxkcXE2VG9U?=
+ =?utf-8?B?bEtvVVByb01YQTg1QnBGK2E2MkwrYm5DLzhVSStoUURDb3p1VVhBTm1aNEJ6?=
+ =?utf-8?B?Rk1raE5uUGpDa1RyYWFKVmRvYTJqUGxrbG90eG0zU0FaRDdCYzhVOTRySm5w?=
+ =?utf-8?B?K3lIeGVZOHRhWnJ2VG9lMnBLZmdJalJwMWdpUm5XK0Q3WUtheDh1ZjEwMDJz?=
+ =?utf-8?B?T0pFMUNldnBjUTB2N3pKd3pIVUNtQ3MzcXZsK2E5ZkdXdXRycDFETFhvZ0NN?=
+ =?utf-8?B?REVFVFNLeFhsdWNxOTFzci8rd0NKaFZvL1JnaStlcC9qWXJKTElMNTRJVTRO?=
+ =?utf-8?B?WjQ1MENDaGR3aUVsOWJZNC9nbmJpZ2MzZ1R5RFZjZUJaYlBNMUpUTXlxei9F?=
+ =?utf-8?B?L3NBaFNTMjZ0eXF0RkdQenRSQW5IMVQ1SDVaaVA1ei8zVysrRzVJYUNockNp?=
+ =?utf-8?B?dVI1VzA0eWRiODd2QjFPbGZKdmhQenU1VllScCtaWnlNVXZXNWtQV1ZxSlhM?=
+ =?utf-8?B?cGFoSC9vL3NiNEsyYTZocjdRL2Y3Z0ZGOURSa2Y5a1FTWjdJZlFwUnZ2UGZV?=
+ =?utf-8?B?Zkh3YTBMdXhIdEsxSFRTb0VnTnpIQmJ3WXVOOWlnTkpNV1M2bmd5RFFpVVYz?=
+ =?utf-8?B?a2RHRVFyc1NaNmQzRFZnbmhQRENGbTJwa0lwUjdWcFFyYVkvaG8rVEw4blRz?=
+ =?utf-8?B?ZE1SbjNHUElVMGtCUEk4QTd6cVJpWG01Z0Z5eno3Tnp5TDdTdGoySk9KK0l4?=
+ =?utf-8?B?L0wyV3FvRkluaUVFd1d0bEpkT1lrQ0p6R3g4T25aUTV2VnRSUUtKRGJCUklH?=
+ =?utf-8?B?M0o3MStEdE0yYjFNTCt1c2F6MkNEc3BSTFBOOE9Gb1d2K3EzTWRScVEyNzZw?=
+ =?utf-8?B?SFE4UGdKRnAvWXZaS1c2K3YrQ3E5d0lPdHF5NlJTMm04OEpNdUtqVVhtSEtm?=
+ =?utf-8?B?Um1ldHUwK0tVM3pNOW51ekxrV3lGdVVLTEdzeVpoZklrMllyUzVWcjFyUFU0?=
+ =?utf-8?B?SVFpWFYvS2ZZa3NFN1R0UDJ0SWZTNWEyTmEzSkoxUlo4eEtsZG1PUlkxR2d1?=
+ =?utf-8?B?NkdUbDdFNDhlWTFNdzdZUkFpNWtQR0JhekdDSlpHRHZHQUhxdjNNU2xoR1JV?=
+ =?utf-8?B?R1p2Wk9uTWd4WFp4Vk1leDVsdGtENXV3c0J3OXltUTBIY0RjVUNtOGZqT0JT?=
+ =?utf-8?Q?GotpVkBGN+s=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ajF6allNR2JZcDBkd2hyY0E2c0VWUWZMc0NaaTNtRmV2bE1pQ25icllZZWhr?=
+ =?utf-8?B?UE9OR2VDN2RvWThYSzllTVNjZk8yTjVSMXlLcEEyL0FkMFBkbEVBb2xPNmNN?=
+ =?utf-8?B?ekw1UUdNMkVpUys2TkE3WGdpTEMrazh3Z0M4Z0hJenpraFFsYlJPSldUckMv?=
+ =?utf-8?B?YnhodFBvWWRkV1VBV0M2Z2YybFhwRnBmQ3Vvb2xlMFZrZndkSlZMM1Z5ZlRx?=
+ =?utf-8?B?RTBhYzVOdHBlSlNxa0IvMGhUVEhXei8xbTYzUTlIT3N6YnQzRkU3RkZBMjlv?=
+ =?utf-8?B?VGVIS3BDcmlmTkJybFJ3VXZ1SjNrOXdSODZZNENjcVBDZE42WXlDZUFUOXVE?=
+ =?utf-8?B?T3dPbjRwVjVLRE1FOGVrd3Z3SXdveloyNWpmT1pQSXNkVDJKM1hNRUJIOVA2?=
+ =?utf-8?B?R3M4TStCU2daaWU2U3djUFV4ZkJERXVGNkNTMytsd3h0YUxnMW50Wk1KSys5?=
+ =?utf-8?B?aHFCTWtPR1dSbzJiRHAxV1VWVHNSdjR1Y0JFZGllbFNvenVSeXViTW11Mzlu?=
+ =?utf-8?B?dVMybnBJQ2VnMEsyV210WTdLNHpOYmJqekV6Sy9qc2xtSFVUZWs3QU4rZDJM?=
+ =?utf-8?B?WXRzZGlyL29yblc1Mm1rYU5ManNCYUZZY3pZYlNGK1lRMUhHd2RHN2YzSjEz?=
+ =?utf-8?B?SS9TVWZFTzdTZmMwNGRWSDZWakYzMTFySXRrcHc5cnFUcXBuVHBwM3lMcG9p?=
+ =?utf-8?B?UkxsSkRna054UFpIY3FweG5xSW5iYTFteVBkWkE5RlNPQ21nbldhSFIyNXFV?=
+ =?utf-8?B?cy8yRm9ZbGtxZ2QvN2JURUtTWCt4OEc3amphTTF1RnZUZVNrY21FSzcrdWF6?=
+ =?utf-8?B?eWpJMDA2UmxBMVlEM1ZScDYrRzBqZ08wSlJlVllDWkl0YXdBN0d3WnVSZFhC?=
+ =?utf-8?B?S204eG5lbDZEVW5yQmMxeldMc2NvR3NnYXNDZHRVdWJhUmVDT1hSa3FVZEY1?=
+ =?utf-8?B?emwrY3kzZGphUXdSa2s1Wk4yMWVwL1ZKWE1zbGlGdWdObW5BK3Z3L3YwZ1JT?=
+ =?utf-8?B?c0t5MTB2UkwyYTAxakEzTEJ5VVdsVldONlZybzQ1RHNRdmVZeDh6YkFyYlFO?=
+ =?utf-8?B?Y1czZjN5blMyNUFBMXBrVWdPSjd0ZFBleXBiaVoveUVkZzhoRHdnZkM2dDl3?=
+ =?utf-8?B?WGIrK01lcXM3MHd0N29IQUg5NGNhbmxUSFdFN0dsU3FSWUd6SnlHeUUvMC9P?=
+ =?utf-8?B?VDNjNUI1bjlycngyOGFCRU0zbGtkTnBVancvaGRudTFOZCsyclZtYmJrOVht?=
+ =?utf-8?B?SkRYS1BGcE9DUVlFL01FNllUNE1jVmdpc0F2T2NuVHZkeUQ4d1cwdW5pNllO?=
+ =?utf-8?B?Qm1Ici83UGlaSUUzc1JPcFEvWExJQThYWTVqK3pJTVBKc2R2bDl4WmhwYXVv?=
+ =?utf-8?B?blRVR0VqS3ZrdmJwSTdrWHpvajdXcC8ySWlpa01sQWFiSXRaMElJaWtVOUFn?=
+ =?utf-8?B?eUE1cmJFOVFBUkRFUmVDeWFkUGl5V010TFh4VmZEZFdNK2JoeExJd1M3Nnp3?=
+ =?utf-8?B?OEExMkQ1S0NMNFJZV210Y1FWQWdMYk5yRyt1QmxhQzNjcm04VHZNa1EwbHNv?=
+ =?utf-8?B?bGhmQytuWTF3dXRPNzVpWmpnY1BqYTE2bFRRakJCcDc3SVpoaG1sU2Y5cEVo?=
+ =?utf-8?B?ZVNVZ1lBQ2d6TTFLZ1F2TXhwZkNISksraWhicnhTSnFoZGVBWDFUckk3N2FS?=
+ =?utf-8?B?TlJjdnFTc2hiZTFJdkY1YnZxSnh5cUluTmErMmZFTzlzd2FkdDJpUGR3eDR0?=
+ =?utf-8?B?QWs4elJsdjE0YlZkYU5FZEoyTlpvbnc5TDVybHdLa0I5cStMaVVBMENEV1lm?=
+ =?utf-8?B?TXZJNFFsSmdXUWZNMmdHcllyVDdaNjhPTC83SkRTZ3RWRHpYZDBHaUVGQVA5?=
+ =?utf-8?B?RlE0eTRocG5FWGx0QzQzM1lraG1zTUtjUkx4VUJpMlN5T3lMdGZ3U3huYUt4?=
+ =?utf-8?B?RzlhZ2ZYL1BvN0hlSjMrWjJiMjBBUWFEb2ljREg0OHdJaWNVOHJGRmoxd1RU?=
+ =?utf-8?B?MDJkYVVlSEN6cS8zajRYOVZXd2VWQWNlb1VUVFlyMEgvQjE4NzBhVWR1Yzgx?=
+ =?utf-8?B?ZldhcFAwdmRKcFdLcDJWTWVZTm12UjNNMzVycWRiMUFVMHhMWGgxajhZTFVJ?=
+ =?utf-8?B?Sm5rREQzMGZtcmVqMTdVRUNJeHVucGRqbDJVVGxWNVRvZDEwdk9PQkdIZzdL?=
+ =?utf-8?B?Z3c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1770de04-8fbd-42dc-8bb5-08ddb43715d5
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 22:24:44.2087
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: elvp71mzxZP37zdMmZQFk1eMduSv7qxbcO0rZw554HymgNHrhXV5KQQuFseD707dp2Ce129vh5udjhQDZ9qN5YdoTSOqGmvhUJ5wqp5/pdg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7418
+X-OriginatorOrg: intel.com
 
---000000000000c1bb9606386cde67
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Gustavo A. R. Silva wrote:
+> 
+> 
+> On 25/06/25 15:08, dan.j.williams@intel.com wrote:
+> > dan.j.williams@ wrote:
+> >> Gustavo A. R. Silva wrote:
+> >> [..]
+> >>>> I think it would be a pretty small and direct replacement:
+> >>>>
+> >>>> 	TRAILING_OVERLAP(struct nd_cmd_pkg, pkg, nd_payload,
+> >>>> 			 struct nd_intel_get_security_state cmd;
+> >>>> 	) nd_cmd = {
+> >>>> 		...
+> >>>
+> >>> Yes, this works. Hopefully, maintainers will comment on this and let us
+> >>> know what they prefer. :)
+> >>
+> >> Hey Gustavo, apologies for the latency here. I think TRAILING_OVERLAP()
+> >> looks lovely for this if only because I can read that and have an idea
+> >> what it means vs wondering what this _offset_to_fam is about and needing
+> >> to read the comment.
+> >>
+> >> If you can get me that patch on top of the TRAILING_OVERLAP() branch I
+> >> can test it out and ack it to let it do in through the KSPP tree.
+> > 
+> > Just to move this along, I gave this conversion a try and all looks good
+> > here. So feel free to fold this in and add:
+> > 
+> > Acked-by: Dan Williams <dan.j.williams@intel.com>
+> > Tested-by: Dan Williams <dan.j.williams@intel.com>
+> > 
+> > ...and take it through the KSPP tree with the TRAILING_OVERLAP() merge.
+> 
+> Thank you, Dan! :)
 
-Adding folks from the KFD team to take a look.  Thank you for
-bisecting.  Does the attached patch fix it?
+Uh oh, I spoke too soon. I saw most of the tests pass when I sent that
+mail, but the firmware-update.sh regresses. It passes on vanilla
+v6.16-rc3 and fails with both the original open-coded _offset_to_fam[]
+approach and TRAILING_OVERLAP() conversion.
 
-Thanks,
+Let me try to get some more debug info.
 
-Alex
+The test is:
 
-On Wed, Jun 25, 2025 at 12:33=E2=80=AFAM Johl Brown <johlbrown@gmail.com> w=
-rote:
->
-> Good Afternoon and best wishes!
-> This is my first attempt at upstreaming an issue after dailying arch for =
-a full year now :)
-> Please forgive me, a lot of this is pushing my comfort zone, but preventi=
-ng needless e-waste is important to me personally :) with this in mind, I w=
-ill save your eyeballs and let you know I did use gpt to help compile the b=
-elow, but I have proofread it several times (which means you can't be mad :=
-p ).
->
->
-> https://github.com/ROCm/ROCm/issues/4965
-> https://github.com/robertrosenbusch/gfx803_rocm/issues/35#issuecomment-29=
-96884779
->
->
-> Hello Kernel, AMD GPU, & ROCm maintainers,
->
-> TL;DR: My Polaris (RX-580, gfx803) freezes under compute load on a number=
- of kernels since v6.14 and newer. This was not previously the case prior t=
-o 6.15 for ROCm 6.4.0 on gfx803 cards.
->
-> The issue has been successfully mitigated within an older version of ROC =
-under kernel 6.16rc2 by reverting two specific commits:
->
-> de84484c6f8b (=E2=80=9Cdrm/amdkfd: Improve signal event slow path=E2=80=
-=9D, 2024-12-19)
->
-> bac38ca057fe (=E2=80=9Cdrm/amdkfd: implement per queue sdma reset for gfx=
- 9.4+=E2=80=9D, 2025-03-06)
->
-> Reverting both commits on top of v6.16-rc3 restores full stability and al=
-lows ROCm 5.7 workloads (e.g., Stable-Diffusion, faster-whisper) to run. In=
-stability is usually immediately obvious via eg models failing to initialis=
-e, no errors (other than host dmesg)/segfault reported, which is the usual =
-failure method under previous kernels.
->
-> ________________________________
->
-> Problem Description
->
-> A number of users report GPU hangs when initialising compute loads, speci=
-fically with ROCm 5.7+ workloads. This issue appears to be a regression, as=
- it was not present in earlier kernel versions.
->
-> System Information:
->
-> OS: Arch Linux
->
-> CPU: Intel(R) Core(TM) i7-7700K CPU @ 4.20GHz
->
-> GPU: AMD Radeon RX 580 Series (gfx803)
->
-> ROCm Version: Runtime Version: 1.1, Runtime Ext Version: 1.7 (as per rocm=
-info --support)
->
-> ________________________________
->
-> Affected Kernels and Regression Details
->
-> The problem consistently occurs on v6.14.1-rc1 and newer kernels.
->
-> Last known good: v6.11
->
-> First known bad: v6.12
->
-> The regression has been bisected to the following two commits, as reverti=
-ng them resolves the issue:
->
-> de84484c6f8b (=E2=80=9Cdrm/amdkfd: Improve signal event slow path=E2=80=
-=9D, 2024-12-19)
->
-> bac38ca057fe (=E2=80=9Cdrm/amdkfd: implement per queue sdma reset =E2=80=
-=A6=E2=80=9D, 2025-03-06)
->
-> Both patches touch amdkfd queue reset paths and are first included in the=
- exact releases where the regression appears.
->
-> Here's a summary of kernel results:
->
-> Kernel | Result | Note
->
-> ------- | -------- | --------
->
-> 6.13.y (LTS) | OK |
->
-> 6.14.0 | OK | Baseline - my last working kernel, though I am not exactly =
-sure which subver
->
-> 6.14.1-rc1 | BAD | First hang
->
-> 6.15-rc1 | BAD | Hang
->
-> 6.15.8 | BAD | Hang
->
-> 6.16-rc3 | BAD | Hang
->
-> 6.16-rc3 =E2=80=93 revert de84484 + bac38ca | OK | Full stability restore=
-d, ROCm workloads run for hours.
->
-> ________________________________
->
-> Reproduction Steps
->
-> Boot the system with a kernel version exhibiting the issue (e.g., v6.14.1=
--rc1 or newer without the reverts).
->
-> Run a ROCm workload that creates several compute queues, for example:
->
-> python stable-diffusion.py
->
-> faster-whisper --model medium ...
->
-> Upon model initialization, an immediate driver crash occurs. This is visi=
-ble on the host machine via dmesg logs.
->
-> Observed Error Messages (dmesg):
->
-> [drm] scheduler comp_1.1.1 is not ready, skipping
-> [drm:sched_job_timedout] ERROR ring comp_1.1.1 timeout
-> [message continues ad-infinitum while system functions generally]
->
-> This is followed by a hard GPU reset (visible in logs, no visual artifact=
-s), which reliably leads to a full system lockup. Python or Docker processe=
-s become unkillable, requiring a manual reboot. Over time, the desktop slow=
-ly loses interactivity.
->
-> ________________________________
->
-> Bisect Details
->
-> I previously attempted a git bisect (limited to drivers/gpu/drm/amd) betw=
-een v6.12 and v6.15-rc1, which identified some further potentially problema=
-tic commits, however due to undersized /boot/ partition was experiencing so=
-me difficulties. In the interim, it seems a user on  the gfx803 compatibilt=
-y repo discovered the below regarding ROC 5.7:
->
-> de84484c6f8b07ad0850d6c4  bad
-> bac38ca057fef2c8c024fe9e  bad
->
-> Cherry-picking reverts of both commits on top of v6.16-rc3 restores norma=
-l behavior; leaving either patch in place reproduces the hang.
->
-> ________________________________
->
-> Relevant Log Excerpts
->
-> (Full dmesg logs can be attached separately if needed)
->
-> [drm] scheduler comp_1.1.1 is not ready, skipping
-> [ 97.602622] amdgpu 0000:08:00.0: amdgpu: ring comp_1.1.1 timeout, signal=
-ed seq=3D123456 emitted seq=3D123459
-> [ 97.602630] amdgpu 0000:08:00.0: amdgpu: GPU recover succeeded, reset do=
-main time =3D 2ms
->
-> ________________________________
-> References:
->
-> It's back: Log spam: [drm] scheduler comp_1.0.2 is not ready, skipping ..=
-. (https://bbs.archlinux.org/viewtopic.php?id=3D302729)
->
-> Observations about HSA and KFD backends in TinyGrad =C2=B7 GitHub (https:=
-//gist.github.com/fxkamd/ffd02d66a2863e444ec208ea4f3adc48)
->
-> AMD RX580 system freeze on maximum VRAM speed (https://discussion.fedorap=
-roject.org/t/amd-rx580-system-freeze-on-maximum-vram-speed/136639)
->
-> LKML: Linus Torvalds: Re: [git pull] drm fixes for 6.15-rc1 (https://lkml=
-.org/lkml/2025/4/5/394)
->
-> Commits =C2=B7 torvalds/linux - GitHub (Link for commit de84484) (https:/=
-/github.com/torvalds/linux/commits?before=3D805ba04cb7ccfc7d72e834ebd796e04=
-3142156ba+6335)
->
-> Commits =C2=B7 torvalds/linux - GitHub (Link for commit bac38ca) (https:/=
-/github.com/torvalds/linux/commits?before=3D5bc1018675ec28a8a60d83b378d8c39=
-91faa5a27+7980)
->
-> ROCm-For-RX580/README.md at main - GitHub (https://github.com/woodrex83/R=
-OCm-For-RX580/blob/main/README.md)
->
-> ROCm 4.6.0 for gfx803 - GitHub (https://github.com/robertrosenbusch/gfx80=
-3_rocm/issues/35#issuecomment-2996884779)
->
-> Compatibility matrices =E2=80=94 Use ROCm on Radeon GPUs - AMD (https://r=
-ocm.docs.amd.com/projects/radeon/en/latest/docs/compatibility.html)
->
->
-> ________________________________
->
-> Why this matters
->
-> Although gfx803 is End-of-Life (EOL) for official ROCm support, large use=
-r communities (Stable-Diffusion, Whisper, Tinygrad) still depend on it. Com=
-munity builds (e.g., github.com/robertrosenbusch/gfx803_rocm/) demonstrate =
-that ROCm 6.4+ and RX-580 are fully functional on a number of relatively re=
-cent kernels. This regression significantly impacts the usability of these =
-cards for compute workloads.
->
-> ________________________________
->
-> Proposed Next Steps
->
-> I suggest the following for further investigation:
->
-> Review the interaction between the new KFD signal-event slow-path and leg=
-acy GPUs that may lack valid event IDs.
->
-> Confirm whether hqd_sdma_get_doorbell() logic (added in bac38ca) returns =
-stale doorbells on gfx803, potentially causing false positives.
->
-> Consider back-outs for 6.15-stable / 6.16-rc while a proper fix is develo=
-ped.
->
-> Please let me know if you require any further diagnostics or testing. I c=
-an easily rebuild kernels and provide annotated traces.
->
-> Please find my working document: https://chatgpt.com/share/6854bef2-c69c-=
-8002-a243-a06c67a2c066
->
-> Thanks for your time!
->
-> Best regards, big love,
->
-> Johl Brown
->
-> johlbrown@gmail.com
+meson test -C build firmware-update.sh 
 
---000000000000c1bb9606386cde67
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-drm-amdkfd-add-hqd_sdma_get_doorbell-callbacks-for-g.patch"
-Content-Disposition: attachment; 
-	filename="0001-drm-amdkfd-add-hqd_sdma_get_doorbell-callbacks-for-g.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_mcciqhdn0>
-X-Attachment-Id: f_mcciqhdn0
+...from the ndctl project:
 
-RnJvbSAzMDEyYmJiYjM3ODA4M2MyYWYzNDMzZWVkYjljMmMyNGNiZTgzOTVhIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBBbGV4IERldWNoZXIgPGFsZXhhbmRlci5kZXVjaGVyQGFtZC5j
-b20+CkRhdGU6IFdlZCwgMjUgSnVuIDIwMjUgMTg6MTU6MzcgLTA0MDAKU3ViamVjdDogW1BBVENI
-XSBkcm0vYW1ka2ZkOiBhZGQgaHFkX3NkbWFfZ2V0X2Rvb3JiZWxsIGNhbGxiYWNrcyBmb3IgZ2Z4
-Ny84CgpUaGVzZSB3ZXJlIG1pc3NlZCB3aGVuIHN1cHBvcnQgd2FzIGFkZGVkIGZvciBvdGhlciBn
-ZW5lcmF0aW9ucy4KVGhlIGNhbGxiYWNrcyBhcmUgY2FsbGVkIHVuY29uZGl0aW9uYWxseSBzbyB3
-ZSBuZWVkIHRvIG1ha2UKc3VyZSBhbGwgZ2VuZXJhdGlvbnMgaGF2ZSB0aGVtLgoKRml4ZXM6IGJh
-YzM4Y2E4YzQ3NSAoImRybS9hbWRrZmQ6IGltcGxlbWVudCBwZXIgcXVldWUgc2RtYSByZXNldCBm
-b3IgZ2Z4IDkuNCsiKQpDYzogSm9uYXRoYW4gS2ltIDxqb25hdGhhbi5raW1AYW1kLmNvbT4KUmVw
-b3J0ZWQtYnk6IEpvaGwgQnJvd24gPGpvaGxicm93bkBnbWFpbC5jb20+ClNpZ25lZC1vZmYtYnk6
-IEFsZXggRGV1Y2hlciA8YWxleGFuZGVyLmRldWNoZXJAYW1kLmNvbT4KLS0tCiBkcml2ZXJzL2dw
-dS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfYW1ka2ZkX2dmeF92Ny5jIHwgOCArKysrKysrKwogZHJp
-dmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2FtZGtmZF9nZnhfdjguYyB8IDggKysrKysr
-KysKIDIgZmlsZXMgY2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9hbWRrZmRfZ2Z4X3Y3LmMgYi9kcml2ZXJzL2dw
-dS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfYW1ka2ZkX2dmeF92Ny5jCmluZGV4IGNhNGE2YjgyODE3
-ZjUuLmRmNzc1NThlMDNlZjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1
-L2FtZGdwdV9hbWRrZmRfZ2Z4X3Y3LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUv
-YW1kZ3B1X2FtZGtmZF9nZnhfdjcuYwpAQCAtNTYxLDYgKzU2MSwxMyBAQCBzdGF0aWMgdWludDMy
-X3QgcmVhZF92bWlkX2Zyb21fdm1mYXVsdF9yZWcoc3RydWN0IGFtZGdwdV9kZXZpY2UgKmFkZXYp
-CiAJcmV0dXJuIFJFR19HRVRfRklFTEQoc3RhdHVzLCBWTV9DT05URVhUMV9QUk9URUNUSU9OX0ZB
-VUxUX1NUQVRVUywgVk1JRCk7CiB9CiAKK3N0YXRpYyB1aW50MzJfdCBrZ2RfaHFkX3NkbWFfZ2V0
-X2Rvb3JiZWxsKHN0cnVjdCBhbWRncHVfZGV2aWNlICphZGV2LAorCQkJCQkgIGludCBlbmdpbmUs
-IGludCBxdWV1ZSkKKworeworCXJldHVybiAwOworfQorCiBjb25zdCBzdHJ1Y3Qga2ZkMmtnZF9j
-YWxscyBnZnhfdjdfa2ZkMmtnZCA9IHsKIAkucHJvZ3JhbV9zaF9tZW1fc2V0dGluZ3MgPSBrZ2Rf
-cHJvZ3JhbV9zaF9tZW1fc2V0dGluZ3MsCiAJLnNldF9wYXNpZF92bWlkX21hcHBpbmcgPSBrZ2Rf
-c2V0X3Bhc2lkX3ZtaWRfbWFwcGluZywKQEAgLTU3OCw0ICs1ODUsNSBAQCBjb25zdCBzdHJ1Y3Qg
-a2ZkMmtnZF9jYWxscyBnZnhfdjdfa2ZkMmtnZCA9IHsKIAkuc2V0X3NjcmF0Y2hfYmFja2luZ192
-YSA9IHNldF9zY3JhdGNoX2JhY2tpbmdfdmEsCiAJLnNldF92bV9jb250ZXh0X3BhZ2VfdGFibGVf
-YmFzZSA9IHNldF92bV9jb250ZXh0X3BhZ2VfdGFibGVfYmFzZSwKIAkucmVhZF92bWlkX2Zyb21f
-dm1mYXVsdF9yZWcgPSByZWFkX3ZtaWRfZnJvbV92bWZhdWx0X3JlZywKKwkuaHFkX3NkbWFfZ2V0
-X2Rvb3JiZWxsID0ga2dkX2hxZF9zZG1hX2dldF9kb29yYmVsbCwKIH07CmRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfYW1ka2ZkX2dmeF92OC5jIGIvZHJpdmVy
-cy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2FtZGtmZF9nZnhfdjguYwppbmRleCAwZjNlMjk0
-NGVkZDdlLi5lNjhjMGZhOGQ3NTEzIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2Ft
-ZGdwdS9hbWRncHVfYW1ka2ZkX2dmeF92OC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hbWQvYW1k
-Z3B1L2FtZGdwdV9hbWRrZmRfZ2Z4X3Y4LmMKQEAgLTU4Miw2ICs1ODIsMTMgQEAgc3RhdGljIHZv
-aWQgc2V0X3ZtX2NvbnRleHRfcGFnZV90YWJsZV9iYXNlKHN0cnVjdCBhbWRncHVfZGV2aWNlICph
-ZGV2LAogCQkJbG93ZXJfMzJfYml0cyhwYWdlX3RhYmxlX2Jhc2UpKTsKIH0KIAorc3RhdGljIHVp
-bnQzMl90IGtnZF9ocWRfc2RtYV9nZXRfZG9vcmJlbGwoc3RydWN0IGFtZGdwdV9kZXZpY2UgKmFk
-ZXYsCisJCQkJCSAgaW50IGVuZ2luZSwgaW50IHF1ZXVlKQorCit7CisJcmV0dXJuIDA7Cit9CisK
-IGNvbnN0IHN0cnVjdCBrZmQya2dkX2NhbGxzIGdmeF92OF9rZmQya2dkID0gewogCS5wcm9ncmFt
-X3NoX21lbV9zZXR0aW5ncyA9IGtnZF9wcm9ncmFtX3NoX21lbV9zZXR0aW5ncywKIAkuc2V0X3Bh
-c2lkX3ZtaWRfbWFwcGluZyA9IGtnZF9zZXRfcGFzaWRfdm1pZF9tYXBwaW5nLApAQCAtNTk5LDQg
-KzYwNiw1IEBAIGNvbnN0IHN0cnVjdCBrZmQya2dkX2NhbGxzIGdmeF92OF9rZmQya2dkID0gewog
-CQkJZ2V0X2F0Y192bWlkX3Bhc2lkX21hcHBpbmdfaW5mbywKIAkuc2V0X3NjcmF0Y2hfYmFja2lu
-Z192YSA9IHNldF9zY3JhdGNoX2JhY2tpbmdfdmEsCiAJLnNldF92bV9jb250ZXh0X3BhZ2VfdGFi
-bGVfYmFzZSA9IHNldF92bV9jb250ZXh0X3BhZ2VfdGFibGVfYmFzZSwKKwkuaHFkX3NkbWFfZ2V0
-X2Rvb3JiZWxsID0ga2dkX2hxZF9zZG1hX2dldF9kb29yYmVsbCwKIH07Ci0tIAoyLjUwLjAKCg==
---000000000000c1bb9606386cde67--
+https://github.com/pmem/ndctl
