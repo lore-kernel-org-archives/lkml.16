@@ -1,48 +1,51 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DACD3594E
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:19:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4C520C476;
+	Wed, 25 Jun 2025 08:20:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750839600; cv=none; b=VS9zjVHhRPpreAn4vRBn0A/O9/S2Rj4O0NOJ4klkpxUsoVQSnmn6p7SgtrWHjJ3134lrFcZuueH3xSU+vNjkO7PKncPJiS+NTjA3QQf1J0WjfgQqcCyeag8jF6kmIEAGSCTFQMXN0WzFxphI6xPYMFFiQorp/ORENx+CBHJhGFY=
+	t=1750839616; cv=none; b=AIwOY5ipbmVPILZFVpHunt1XPmrqal+/cdWnMFpb2KEgAkI746KBUeL4RgYJRBlcIt1hY6N6wGonTQsZ0SSk12Q07hQN/eOZ+3dHl5xuVDNrMGa4JUqc6czBk4X7Cj4vBLvziZbML01H/2nTgLv8HLwtbtNfhL8+qtGWNjoDkmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750839600; c=relaxed/simple;
-	bh=uByTntrZCnidudNvqPLoVgyHCXk2V+WPtHjPH6J36Uo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ibg0XTw6poThh0jfkeSAzYiX5iW8zYTfkFJLMPrlCKjOhlhclObftsvPntBBJBS8LPGsUEYaegRy+1wht8XFwSHwOlHLjozlP+Cswz3yo67NVU/beAZXY5GyGiDPpwLNvM/bpwF6PIItwJ0tih6W78qk5+3XeyUlkqLICYyiNqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=U790Jpr4; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750839616; c=relaxed/simple;
+	bh=WiO9wbmuRQglMGnSxCbiT39mRV8LV+F/4Gsxiq7r8WM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OLQUaJTylbTGpH0H8brJsnVrs8FYQujNIj2CeX0ny9pe6e68i1fQnFs9NxtQEmTKtxxEts1fuMHJYF5p/3+qkTgTpn4+kr4V3ECXRFf/yHXZJeic0t+mBvewI5f5I1UZT3YobsEeQ7yBFEByyIwHrDyBmk/UtvrZ8PgkNUmv2qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cSYTdI3V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="U790Jpr4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=3mfmKEh413JqFRThq/pWx7qpAVxemvd4cZeSRfG5+Gg=; b=U790Jpr4vo0nTEgM+I/UMIxjEj
-	SpSUQZX38mcx+YKtjsn4IIUbLNA5Eb+R2OOtchFAddmVgJOVbLugHkoYQvAcV8/lxaknx2RnvGw4V
-	KKLCsm52Kqffth5Ti2Xt0OSwzYOnPxLFqvM37yJWFAWjxgZvs2p9xY8jrg7yLjyTGrlB/R0AKxwrZ
-	c2bQoyAI3Po/el1egcbE+qJbMBo22rNaqanmYswoHOBqy7kkdBkhqe1GWV9UMD/7o46UdLKqI8B+k
-	oOJqnNdZFCMNCTMgvLI4mrUqBAQ7L1wROlKkfcq74/kkYllA5Mb/pshIZm0l8wyPUnmxaqOZikRCr
-	kdbEyZ+A==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uULMG-00000005gIm-3bnh;
-	Wed, 25 Jun 2025 08:19:53 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4D692308983; Wed, 25 Jun 2025 10:19:51 +0200 (CEST)
-Date: Wed, 25 Jun 2025 10:19:51 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-Cc: linux-kernel@vger.kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-	rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-	vschneid@redhat.com
-Subject: Re: [RFC PATCH] sched: Change nr_uninterruptible from unsigned to
- signed int
-Message-ID: <20250625081951.GY1613200@noisy.programming.kicks-ass.net>
-References: <20250625044836.3939605-1-aruna.ramakrishna@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cSYTdI3V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE1C7C4CEEA;
+	Wed, 25 Jun 2025 08:20:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750839615;
+	bh=WiO9wbmuRQglMGnSxCbiT39mRV8LV+F/4Gsxiq7r8WM=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=cSYTdI3V7H8B8kb7Z4Nc4BFyazrjKxLMBrsX760chgziT2jYW3vWvjlJMICyaJOKK
+	 RXlA7ULrcbYnBM/WglkvCU1vMU+yr/0Nz6Kn/jKHjOi3AQhhLMoUhFb2Sz8muSDl56
+	 6nJBSOgW5p5vmvJoI1BfKnn0ndWl7OS0+OfiFMfhEn2h9XLsQIaDrfozefYf6Hk+tH
+	 LElOsOEuKgHaxtQOfABqo/7/xxM6MHx75npkqwEc4XyaFLU9OiPsqrHNsJ1+ANGmrL
+	 rN8Flbt7UopDIpAOvgdRgjG5beJu27U8O6ZxvuEr8N8B+1BF2Yg3Fl353nnKEsUSfj
+	 phJNxK6Gy5XGg==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "FUJITA Tomonori" <fujita.tomonori@gmail.com>
+Cc: <miguel.ojeda.sandonis@gmail.com>,  <alex.gaynor@gmail.com>,
+  <ojeda@kernel.org>,  <aliceryhl@google.com>,  <anna-maria@linutronix.de>,
+  <bjorn3_gh@protonmail.com>,  <boqun.feng@gmail.com>,  <dakr@kernel.org>,
+  <frederic@kernel.org>,  <gary@garyguo.net>,  <jstultz@google.com>,
+  <linux-kernel@vger.kernel.org>,  <lossin@kernel.org>,
+  <lyude@redhat.com>,  <rust-for-linux@vger.kernel.org>,
+  <sboyd@kernel.org>,  <tglx@linutronix.de>,  <tmgross@umich.edu>
+Subject: Re: [PATCH v3 0/5] rust: time: Convert hrtimer to use Instant and
+ Delta
+In-Reply-To: <20250625.082020.1714542193051382332.fujita.tomonori@gmail.com>
+	(FUJITA Tomonori's message of "Wed, 25 Jun 2025 08:20:20 +0900")
+References: <20250624.224130.2089845741064711087.fujita.tomonori@gmail.com>
+	<87o6ud2fbx.fsf@kernel.org> <87cyat2c8z.fsf@kernel.org>
+	<94kOZwdYnRPRMO6SAHAvEFEygT4dU-njfBxTMC6BiPQ-u49pyL5hLgbLQBGOct1ruxVJPtYGJ0Dq0Ns2mh-sMQ==@protonmail.internalid>
+	<20250625.082020.1714542193051382332.fujita.tomonori@gmail.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Wed, 25 Jun 2025 10:19:59 +0200
+Message-ID: <877c102pxs.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,97 +53,100 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250625044836.3939605-1-aruna.ramakrishna@oracle.com>
+Content-Transfer-Encoding: quoted-printable
+
+"FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
+
+> On Tue, 24 Jun 2025 21:03:24 +0200
+> Andreas Hindborg <a.hindborg@kernel.org> wrote:
+>
+>> Andreas Hindborg <a.hindborg@kernel.org> writes:
+>>
+>>> "FUJITA Tomonori" <fujita.tomonori@gmail.com> writes:
+>>>
+>>>> On Tue, 24 Jun 2025 15:11:31 +0200
+>>>> Andreas Hindborg <a.hindborg@kernel.org> wrote:
+>>>>
+>>>>>> and already introduces pain for
+>>>>>> others (and likely even more pain when we need to rename it back next
+>>>>>> cycle), it doesn't look like a good idea to keep it.
+>>>>>
+>>>>> Ok, I'll drop it.
+>>>>
+>>>> Do you want me to send the updated hrtimer conversion patchset
+>>>> (using as_* names)?
+>>>
+>>> No, I am just about finished fixing up the rest. You can check if it is
+>>> OK when I push.
+>>
+>> I pushed it, please check.
+>
+> Thanks!
+>
+> The commit d9fc00dc7354 ("rust: time: Add HrTimerExpires trait") adds
+> to Instant structure:
+>
+> +    #[inline]
+> +    pub(crate) fn as_nanos(&self) -> i64 {
+> +        self.inner
+> +    }
+>
+> Would it be better to take self instead of &self?
+>
+> pub(crate) fn as_nanos(self) -> i64 {
+>
+> Because the as_nanos method on the Delta struct takes self, wouldn=E2=80=
+=99t it
+> be better to keep it consistent? I think that my original patch adds
+> into_nanos() that takes self.
+>
+> This commit also adds HrTimerExpire strait, which as_nanos() method
+> takes &self:
+>
+> +/// Time representations that can be used as expiration values in [`HrTi=
+mer`].
+> +pub trait HrTimerExpires {
+> +    /// Converts the expiration time into a nanosecond representation.
+> +    ///
+> +    /// This value corresponds to a raw ktime_t value, suitable for pass=
+ing to kernel
+> +    /// timer functions. The interpretation (absolute vs relative) depen=
+ds on the
+> +    /// associated [HrTimerMode] in use.
+> +    fn as_nanos(&self) -> i64;
+> +}
+>
+> That's because as I reported, Clippy warns if as_* take self.
+>
+> As Alice pointed out, Clippy doesn't warn if a type implements
+> Copy. So we can add Copy to HrTimerExpires trait, then Clippy doesn't
+> warn about as_nanos method that takes self:
+>
+> +/// Time representations that can be used as expiration values in [`HrTi=
+mer`].
+> +pub trait HrTimerExpires: Copy {
+> +    /// Converts the expiration time into a nanosecond representation.
+> +    ///
+> +    /// This value corresponds to a raw ktime_t value, suitable for pass=
+ing to kernel
+> +    /// timer functions. The interpretation (absolute vs relative) depen=
+ds on the
+> +    /// associated [HrTimerMode] in use.
+> +    fn as_nanos(self) -> i64;
+> +}
+>
+> I'm fine with either (taking &self or Adding Copy).
+
+Let's wait for the whole naming discussion to resolve before we do
+anything. I am honestly a bit confused as to what is the most idiomatic
+resolution here.
+
+I think taking `&self` vs `self` makes not difference in codegen if we
+mark the function `#[inline(always)]`.
 
 
-(Please, be careful not to wrap quoted text, unwrapped it for you)
+Best regards,
+Andreas Hindborg
 
-On Wed, Jun 25, 2025 at 04:48:36AM +0000, Aruna Ramakrishna wrote:
 
-> We have encountered a bug where the load average displayed in top is
-> abnormally high and obviously incorrect. The real values look like this
-> (this is a production env, not a simulated one):
 
-Whoopie..
-
-> The nr_uninterruptible values for each of the CPU runqueues is large,
-> and when they are summed up, the sum exceeds UINT_MAX, and the result
-> is stored in a long, which preserves this overflow.
-
-Right, that's the problem spot.
-
-> long calc_load_fold_active(struct rq *this_rq, long adjust)
-> {
->         long nr_active, delta = 0;
-> 
->         nr_active = this_rq->nr_running - adjust;
->         nr_active += (int)this_rq->nr_uninterruptible;
-> ...
-
-> From kernel/sched/loadavg.c:
-> 
->  *  - cpu_rq()->nr_uninterruptible isn't accurately tracked per-CPU because
->  *    this would add another cross-CPU cacheline miss and atomic operation
->  *    to the wakeup path. Instead we increment on whatever CPU the task ran
->  *    when it went into uninterruptible state and decrement on whatever CPU
->  *    did the wakeup. This means that only the sum of nr_uninterruptible over
->  *    all CPUs yields the correct result.
->  *
-> 
-> It seems that rq->nr_uninterruptible can go to large (positive) values
-> for one CPU if a lot of tasks were migrated off of that CPU after going
-> into an uninterruptible state. If they’re woken up on another CPU -
-> those target CPUs will have negative nr_uninterruptible values. I think
-> the casting of an unsigned int to signed int and adding to a long is
-> not preserving the sign, and results in a large positive value rather
-> than the correct sum of zero.
-
-So very close, yet so far...
-
-> I suspect the bug surfaced as a side effect of this commit:
-> 
-> commit e6fe3f422be128b7d65de607f6ae67bedc55f0ca
-> Author: Alexey Dobriyan <adobriyan@gmail.com>
-> Date:   Thu Apr 22 23:02:28 2021 +0300
-> 
->     sched: Make multiple runqueue task counters 32-bit
-> 
->     Make:
-> 
->             struct dl_rq::dl_nr_migratory
->             struct dl_rq::dl_nr_running
-> 
->             struct rt_rq::rt_nr_boosted
->             struct rt_rq::rt_nr_migratory
->             struct rt_rq::rt_nr_total
-> 
->             struct rq::nr_uninterruptible
-> 
->     32-bit.
-> 
->     If total number of tasks can't exceed 2**32 (and less due to futex pid
->     limits), then per-runqueue counters can't as well.
-> 
->     This patchset has been sponsored by REX Prefix Eradication Society.
-> ...
-> 
-> which changed the counter nr_uninterruptible from unsigned long to unsigned
-> int.
-> 
-> Since nr_uninterruptible can be a positive or negative number, change
-> the type from unsigned int to signed int.
-
-(Strictly speaking it's making things worse, since signed overflow is UB
-in regular C -- luckily we kernel folks have our own dialect and signed
-and unsigned are both expected to wrap 2s-complement).
-
-Also, we're already casting to (int) in the only place where we consume
-the value. So changing the type should make no difference what so ever,
-right?
-
-> Another possible solution would be to partially rollback e6fe3f422be1,
-> and change nr_uninterruptible back to unsigned long.
-
-I think I prefer this.
