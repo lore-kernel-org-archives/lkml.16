@@ -1,128 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-0301.mail-europe.com (mail-0301.mail-europe.com [188.165.51.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813333074BC;
-	Wed, 25 Jun 2025 19:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D758F4A
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 19:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.165.51.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750880694; cv=none; b=a/ljMjrdd6ylEZcSdqEFrY8C3IdVE+6uAcCZ3zqn4hAIcREQkJ/SwaEcYrky1bMN4pOD+jPifOlLbJwkxIFOLKhcs9LbCzBHVp0/3O7+998A+uCyTgMvuixIG6yxayimEEle8+EbWATxWFhrfABUBU2IXCzygHcDfVhP2iwKb2g=
+	t=1750880727; cv=none; b=MQbZk73qQRRQ/CqU+4TtaBMHuWJKxLCmTdSFWlKSzA6UK+RFiXs/BZtyhTng23Hd+yu/ncaeXzbOpEQXmykTokI57oIgSl+tSwi+SZI2RoelfbYx70ABYKE6zQCVrAZsZF/5i67I0Lmm9zNf6CwAxttAzBJKQYOwj+6eL4sN+uI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750880694; c=relaxed/simple;
-	bh=UaTI7XKP1pORbiVLuaFJ3J5Oj/8204WawFn35LhQVUY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XRSHXbw33Mgud6KyWBbyWezNPqT53v+4Fr47XNoRZnPAPdHb5IZ9gFX+8oBDF0RjDjSrp0G5ZsF7c+xLS20Bs/hSGM0RL6/ma0O83OEUyA8IOmVZyK9NgWjRNACM6wcveShwcu4OrSetEOyTxz5oFa4hS7eXVCc1XjNPQQJmRXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dhzsdkLc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750880727; c=relaxed/simple;
+	bh=w6SpGrYkhTVKpUDJKF5VkJGZ/CdHYl4z8SYk18rbbns=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fVnsYvUqryTDk4K1RplY0v/PExrQhTaOMCqCZdwM6Rq6QKzt3wB320VuBKEhAhk1p08XvmKLfg8+TTa5smrX0T5N1H/1Q/Ije1z2vfcdWAC9DoP+rsuboITKSg4PmNOlLHL04bx7wUGLCsFzFYwsOVRpbW55fk/4rZtmFuv64ZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca; spf=pass smtp.mailfrom=gianis.ca; dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b=fpXDx90A; arc=none smtp.client-ip=188.165.51.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gianis.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gianis.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dhzsdkLc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37F43C4CEEE;
-	Wed, 25 Jun 2025 19:44:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750880694;
-	bh=UaTI7XKP1pORbiVLuaFJ3J5Oj/8204WawFn35LhQVUY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dhzsdkLclaUjfYa0T65Fqy/kgwwK8KXUh/ZR6WFaKHRqnDji+475X+s0Sliv0VM+x
-	 preRfA/yZHFWSg2RQbJRIoA3YEV2yaaQheaR2txdVUiuQni9dWSchTL3Qfle5+EU9U
-	 EdGpUhFFOZFmhNLIYxdu4r/NXEc3gg2yOkudJtaQrBloX4t38E2v6lqk87bb9M6CBQ
-	 pmCpI+3fufALozfZBdXVcL0+Y3ms+xcp5uovXVg0i/gZ+sBd0Mnm/fyGu5N6nT89HN
-	 C1i0hQ4p+Hgd1F97qJbARCoyRamH8PQfZ5bndryLEOQIzHqEKdF2OkXitza6ZrpB0m
-	 Ah6d0jKHgCv9w==
-Date: Wed, 25 Jun 2025 14:44:53 -0500
-From: Rob Herring <robh@kernel.org>
-To: Kory Maincent <kory.maincent@bootlin.com>
-Cc: Andrew Davis <afd@ti.com>, Tony Lindgren <tony@atomide.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Andreas Kemnade <andreas@kemnade.info>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Roger Quadros <rogerq@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Bajjuri Praneeth <praneeth@ti.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 2/5] binding: omap: Add lots of missing omap AM33
- compatibles
-Message-ID: <20250625194453.GA2093083-robh@kernel.org>
-References: <20250609-bbg-v2-0-5278026b7498@bootlin.com>
- <20250609-bbg-v2-2-5278026b7498@bootlin.com>
- <53b48816-37e6-49e8-a5cf-adcca04c57a7@ti.com>
- <20250610100544.4beb07e2@kmaincent-XPS-13-7390>
+	dkim=pass (2048-bit key) header.d=gianis.ca header.i=@gianis.ca header.b="fpXDx90A"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gianis.ca;
+	s=protonmail; t=1750880711; x=1751139911;
+	bh=XYOVBScNatvLSFmdY2zfe/+Mewb8QtadPWut8agQSwk=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=fpXDx90AG+f8k7afpvIb5XjFo5l6/3yEyqmFLnBMF7XYLJ9oUtsoOf67/bIgXW9Cy
+	 7Ht07mwM3dy0lEBRCMp//3BdKNKAmLg7X1Gei1O/4OcIaiAEhHwqfQXOmpxaSVhKwW
+	 ddeIOLV2RBum2cD6bcQGRITxPwx/0b/J6Cqzyk//MGEntyKQl2hJ6cTAl8aL21If6P
+	 kPHtyQ1moPXtx9u6zh/2llLb0LvHPbtvmd38g8rBK8Wf+DPppbaFA2t/Ve1836T0Ea
+	 C16DtrWOhK/HWoqIxi7Z926XkINQoqcMBhrZ1egD85tmpudSlBSxLacyq251NLxmaF
+	 Z/DMa7D6YdKrA==
+Date: Wed, 25 Jun 2025 19:45:07 +0000
+To: Peter Zijlstra <peterz@infradead.org>
+From: Dhaval Giani <dhaval@gianis.ca>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com, juri.lelli@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/4] sched/fair: Manage lag and run to parity with different slices
+Message-ID: <aFxRupnVWaGMBHYE@172-0-28-123.lightspeed.nsvltn.sbcglobal.net>
+In-Reply-To: <20250617092208.GQ1613376@noisy.programming.kicks-ass.net>
+References: <20250613140514.2781138-1-vincent.guittot@linaro.org> <20250617092208.GQ1613376@noisy.programming.kicks-ass.net>
+Feedback-ID: 128275035:user:proton
+X-Pm-Message-ID: 61805f64f6f034ef3ad25a87cb61095af8c10c0b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250610100544.4beb07e2@kmaincent-XPS-13-7390>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 10, 2025 at 10:05:44AM +0200, Kory Maincent wrote:
-> Le Mon, 9 Jun 2025 18:34:10 -0500,
-> Andrew Davis <afd@ti.com> a écrit :
-> 
-> > On 6/9/25 10:43 AM, Kory Maincent wrote:
-> > > Add several compatible strings that were missing from the binding
-> > > documentation. Add description for Bone, BoneBlack and BoneGreen
-> > > variants.
-> > > 
-> > > Add several compatible that were missing from the binding.
-> > > 
-> > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
-> > > ---
-> > > 
-> > > Change in v2:
-> > > - New patch
-> > > ---
-> > >   Documentation/devicetree/bindings/arm/ti/omap.yaml | 38
-> > > ++++++++++++++++++++++ 1 file changed, 38 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/arm/ti/omap.yaml
-> > > b/Documentation/devicetree/bindings/arm/ti/omap.yaml index
-> > > 3603edd7361d..c43fa4f4af81 100644 ---
-> > > a/Documentation/devicetree/bindings/arm/ti/omap.yaml +++
-> > > b/Documentation/devicetree/bindings/arm/ti/omap.yaml @@ -104,12 +104,50 @@
-> > > properties:
-> > >         - description: TI AM33 based platform
-> > >           items:
-> > >             - enum:
-> > > +              - bosch,am335x-guardian
-> > >                 - compulab,cm-t335
-> > > +              - grinn,am335x-chilisom
-> > > +              - gumstix,am335x-pepper
-> > > +              - moxa,uc-2101
-> > >                 - moxa,uc-8100-me-t
-> > > +              - myir,myc-am335x
-> > > +              - myir,myd-am335x
-> > >                 - novatech,am335x-lxm
-> > > +              - oct,osd3358-sm-refdesign
-> > > +              - tcl,am335x-sl50
-> > >                 - ti,am335x-bone
-> > >                 - ti,am335x-evm
-> > > +              - ti,am335x-evmsk
-> > > +              - ti,am335x-pocketbeagle
-> > > +              - ti,am335x-shc
-> > >                 - ti,am3359-icev2
-> > > +              - vscom,onrisc
-> > > +          - const: ti,am33xx
-> > > +
-> > > +      - description: TI bone variants based on TI AM335  
-> > 
-> > Do we really need these "bone variants" split out from the above
-> > list of TI AM33 based boards? We don't do that for any of the other
-> > boards, you get a SoC and a Board compatible, every classification
-> > in-between is just unneeded.
-> 
-> As omap maintainers prefer. I did that to have the least amount of change in
-> the devicetree. We could have U-boot using these compatible but after a quick
-> check it seems not.
+On Tue, Jun 17, 2025 at 11:22:08AM +0200, Peter Zijlstra wrote:
+> On Fri, Jun 13, 2025 at 04:05:10PM +0200, Vincent Guittot wrote:
+> > Vincent Guittot (3):
+> >   sched/fair: Use protect_slice() instead of direct comparison
+> >   sched/fair: Limit run to parity to the min slice of enqueued entities
+> >   sched/fair: Improve NO_RUN_TO_PARITY
+>=20
+> Ah. I wrote these here patches and then totally forgot about them :/.
+> They take a different approach.
+>=20
 
-I agree with both. The intermediate compatibles that TI in particular 
-went crazy on have proven to be not useful. However, between having to 
-fix existing .dts files and keeping them, I would just keep them.
+Mind sticking them on a git tree somewhere please?
 
-Rob
+Dhaval
+
+
