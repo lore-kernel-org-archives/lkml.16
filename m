@@ -1,269 +1,278 @@
-Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023113.outbound.protection.outlook.com [40.107.44.113])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96B883595D;
-	Wed, 25 Jun 2025 10:46:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.113
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750848401; cv=fail; b=LFc/OjmolOJjihHYsNKkoRsEdAh9pg7Lsu6UDh322tSLsbtr3WJfUxRuwq6dTAVYa52sZ40Sw0V3QYHtyrFAN7+1DxT//nkxr+yYrmmHVhybg6/smr7dwhRiq6LLswuOfBet7enZJNo1BSNS2vINywa0LrksV1isvWbklXOlfuc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750848401; c=relaxed/simple;
-	bh=VIhFaDMEsOzG+Zzt9T6H00c8rvTUodQyBzBM87uqQsk=;
-	h=Message-ID:Date:Cc:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=BvYZj8fT6rTPm922iCFho+cT7tzGZQzd8qnbGQx/HGlnuXbNyVqHqUQ3rsZvF3aA0UK7WcmNHMqFV8SDzQaqGolRhx/ujoYHVng1CJ+iRB8qenKC4gTT9Ke+ghxU1tqNlmLtlI/0S2nh4GLU6HmTdMzVC3UC0Eu99kgC453PZHI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linumiz.com; spf=pass smtp.mailfrom=linumiz.com; arc=fail smtp.client-ip=40.107.44.113
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linumiz.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linumiz.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Z/cVZD6gzyIwtypCOXQkkw9s5n+GFOtbrS3SevyInf3XFbgGHKEKiM9HZClvWYa3O10n9D7ETXpuD9ZjdJGHWCKGiiK3PISWKJ2cLlF+BJQptNgQJ6dUBy4S/fAs8btNM8KHuwKcSC3+MoTdGGx4W61clHcBAZOTZ7NOYUi991wpsrff8iSc7QOfUM9FEKfnZwCTXkYzqES5BMM4b1Dm+8gJNbeKzEAm2GM9/pmTDzaKEEFGlUlQy7jXNsMvTWynoX1m61W/dB+w3ltXlX0NqRnHEJht2p/CXFKYKLimHIMN82aGL4XWm5J8AFHzoEh/WZOxxuUOsji19Li9OhCsIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6GPayLFeyFy8AGSQx8pyFGX30ykYr+8hUzqZ3P9JXbE=;
- b=QVNKoCq0/YvYLmuALkdEfTcSqQuTfGSPmggsfTByf+/49agovAoLMkiYJlnI+nwFuMj2NAwfZrVpxSh+9uQs6djQfUFSLpDovOC95qzPhNcO0REgiMOsm80mJeM65gqmxbPmxIeCo3FErQw3BXvudpzV7M0Csm9aVxJUcBmtBPjjUDN2drlbTdQcnKlKLEu7EgI0BnBf6rFX/nhSC8B1eF7s6LYXSdAdPo/z7UohSCxVAubpAe8kqmIZuCoRWD2Vk5Gn/VA1PQA8hZ+fc57UKBFwRQowlNSmasVlTTda61uPNqP4GDsT9Zx0p4VnmhZXMrTg8OuGHiHfs+Kj0BfBGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=linumiz.com; dmarc=pass action=none header.from=linumiz.com;
- dkim=pass header.d=linumiz.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=linumiz.com;
-Received: from TYZPR06MB6935.apcprd06.prod.outlook.com (2603:1096:405:3c::9)
- by SEYPR06MB5062.apcprd06.prod.outlook.com (2603:1096:101:53::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Wed, 25 Jun
- 2025 10:46:35 +0000
-Received: from TYZPR06MB6935.apcprd06.prod.outlook.com
- ([fe80::9e42:3253:9a2e:b565]) by TYZPR06MB6935.apcprd06.prod.outlook.com
- ([fe80::9e42:3253:9a2e:b565%7]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
- 10:46:35 +0000
-Message-ID: <802387ec-31a9-446c-8f90-c81a7345410f@linumiz.com>
-Date: Wed, 25 Jun 2025 16:16:29 +0530
-User-Agent: Mozilla Thunderbird
-Cc: parthiban@linumiz.com, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Maxime Ripard <mripard@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Michael Turquette
- <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Linus Walleij <linus.walleij@linaro.org>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, iommu@lists.linux.dev,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-phy@lists.infradead.org
-Subject: Re: [PATCH 10/22] pinctrl: sunxi: add missed lvds pins for a100/a133
-To: Paul Kocialkowski <paulk@sys-base.io>
-References: <20241227-a133-display-support-v1-0-13b52f71fb14@linumiz.com>
- <20241227-a133-display-support-v1-10-13b52f71fb14@linumiz.com>
- <aFu3fAMa8KPwjPbX@shepard> <9c3ea5fb-a045-46bd-9753-26ffa67fe1bc@linumiz.com>
- <aFvLO6GUY6NezkcF@shepard>
-Content-Language: en-US
-From: Parthiban <parthiban@linumiz.com>
-Organization: Linumiz
-In-Reply-To: <aFvLO6GUY6NezkcF@shepard>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MAXP287CA0019.INDP287.PROD.OUTLOOK.COM
- (2603:1096:a00:49::28) To TYZPR06MB6935.apcprd06.prod.outlook.com
- (2603:1096:405:3c::9)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D6BE8F5B
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750848492; cv=none; b=M9fWQ8tpzHwTKuD8OffVNmd0brfedqTVx4xbZ1KYe+ivjah5a6g+wbzGfTmRNTwNrf++D96Zwsqtp21GLTR8VWSugq/daE+qltLXXyYn5ppDG61reHzURS4DJJwe+oEkiwEjzX2C3GOUSBZRY6IxWMRwuCe+l00pKHrKCYvLXdo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750848492; c=relaxed/simple;
+	bh=ohKYVBjLzuE44bFrbh1c5o+/XEd3tbE2iUIkC1bfg90=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O2T1wHeKV9gDWVPF6pqx98IiJrtJknwU3HU5Uv4g3RZBlSfMcYY3+VuKFqlfmxdzr2QdDKD8BLBDcZO+Di02jGUCCS+QJ9Sn3KjL3Ptds9iLneJ5N0qzj2vdjpenkuoF1BGPn6zWDfc9fvNmZ4QAgf/3lXRlTxcO4woWW0hMBn0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=BWB+hSf9; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="BWB+hSf9"
+Message-ID: <938c4726-b93e-46df-bceb-65c7574714a6@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750848488;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=csN3NGyJz0Plq+DSLlEX2Pakhu0xabELB8Wjy8HXAeM=;
+	b=BWB+hSf9s40JKUag99JUhdHNhY+hi/eWwJYO4YD9eHSuRniIiKbey15lYX6sZe0B1ZFnok
+	sZPk4HhuguE7ZuMeAVTkLE7Zes+IVipMQAhigbH1G++5xpJpTMC8j8KZxnXpNdNO2AFCWs
+	FaaRff8WSDn24xARtP5xY/nLqjGRjxI=
+Date: Wed, 25 Jun 2025 18:47:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: TYZPR06MB6935:EE_|SEYPR06MB5062:EE_
-X-MS-Office365-Filtering-Correlation-Id: 087bdfa2-66d1-4c7c-9a24-08ddb3d58e21
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?STJlZXVuMFdLTURsVnpYRHhWMmNOMnMxNitLMkZZUnRONUhWYVVIWVV1elE5?=
- =?utf-8?B?eUdOMmdiZ0QzNmtjYmwwY2JjMjRlR0pRSTJGSUxUWW9jdG02bGViUHVPbVEr?=
- =?utf-8?B?d1pBeFVENGFTRWxLR1dJdVZGUjRIZ3pFWDZTelBGNHJJS1RYNkd0Mmg2Tys0?=
- =?utf-8?B?STk2SmxMWnlhSmxDenVJS2V0R2dPclZrcElnQlpFM0lBdnZuV1dXT0hKTHlM?=
- =?utf-8?B?NC9tazF1NGNsWjlvZ3RtcDRuQ0VqWGx4Z1R0Y2FRVXROMEx5Wi95dXE1L0RI?=
- =?utf-8?B?eFBDalBTWHFKWjg4ejdhaWVTNXJPQmlTWHl2NWdibktjbExEaTl1TW1KY3FP?=
- =?utf-8?B?MnBkV3cwcHRkbnJXeGx6QmRjOTZQSmJUVXMwbUhQYS9RZmppanZMVTMrSG9w?=
- =?utf-8?B?OTVtWjd4WUtsSkxTejRqSEkrL0NKWVJHQjhWVkJUUTA2TnV1ZUI2U0VCSmtt?=
- =?utf-8?B?VW95Nmg4d1B3TkgzbFdFM28xZXd4SEdtcmcvU2JralZ0UkVDNyt2czBDNWs1?=
- =?utf-8?B?NnliTmNPM3hvYTFzTmdseC9wekUya0pETnFqcnAvbkhxNWJFU3hRZTlGVC9B?=
- =?utf-8?B?cGJTaFdhaitWcVZLY3hsN2VsYkNzY013ZkY2WnUweDRibGtFODRrekpOSVlw?=
- =?utf-8?B?T0YxRTVWK3NoSTl5eGxXNGNrdjhtOHltV3pTRy9xdHdpeVlSMEVXQmpxelNu?=
- =?utf-8?B?aFk3cnhsU3FLQXRJaDNoOFdVakV0WWZERXJ0ZUYrS3JwK28wUnpHRll0aHgz?=
- =?utf-8?B?Y04wZDFaTHNlODdmQnRoZk5tSk1kbWN2Uk5hZVRzandpUnlHWVdFYWswWmVo?=
- =?utf-8?B?d25yZzNpV3JwdEdjQ1NaRDhwVzMrNTZzYys4VXdvRVdXdGZqbDVSczAzL0Va?=
- =?utf-8?B?ckIvTlF6N3hwNFBhWUZubEFDMGplaVJ3L2E5SVQzbDFiNmpvNGJya2pHcVBD?=
- =?utf-8?B?dE9CWkJGWUFpNWNyR3daZGtwWGwwOG5rUklLSU1NQ2VLejhXWERZK29Cc3RW?=
- =?utf-8?B?YmFqL0wrbHkwSytLMzhKSEVKRlVObTd5N0YvZUhOU0FDT3NPMXlwWTJlUUkr?=
- =?utf-8?B?dCtFeGwrMHZhTXlnNzJsZFVIWVM4YURvMzdUNzJXT1JYQm1wVHk5WnVROWM0?=
- =?utf-8?B?YkpFR01RQWNUbWV1Si9HelVEUDRHOW9VNXQyM2dYTVhCYzVzSWROcTRyY2o0?=
- =?utf-8?B?cGlHQ2d4WnhBODYxaFV2b3J5U1MzN3ZKbFlkdkNuRGZDdUFOVUlXWGFMNEhh?=
- =?utf-8?B?UXlWQzZKMFdCTVQvckhmeDlZaU1raHBySXh5N3NLeE9YbUFzZG1BdEQ5Ti9n?=
- =?utf-8?B?NE84YTRmUW82QmN1OStpY2wrdUlJbmpqNytiYTFyVjRNNW1pNGJyeng0WkxQ?=
- =?utf-8?B?bTcvalJwajZESDR3dWRLNkNIV1BPck8yS0E0WHVKTGxZL1NRemozb2I0Vnd6?=
- =?utf-8?B?RzJFLzRac3FjMkp2TWJvdDRiQUtUMVJvbHlyUkJtTURveXFQVkRnSGJsbnZt?=
- =?utf-8?B?YzZQYTBkSjJieHIwQXEvRERVTURFZ0RPWWxyay82MmxPNGs4MXR4eWMvbTJU?=
- =?utf-8?B?RkUwREZrbHl1SXdqVXFZUDN5bU92K0dXZEpkMWoyZHk2UTlMV3ZqVXZpTjAy?=
- =?utf-8?B?QUdFS1owQXN0ZGVsQmN5MlpZOUhuVUxraDBwWFF4RUo3eDFkaHlyeHVSbFJM?=
- =?utf-8?B?aTI3emltRmJHRFVhRzZzWUt5eDFTY2VQOE41MnpxS3hLTlFXcmU2ZzZHdzkr?=
- =?utf-8?B?R1Ixam16bXhJZFF1bXFtT2tkV29taVFvMVJDQ1d2YTlxdzl4bVpMVTQ1QUN2?=
- =?utf-8?Q?/ClRGQWA7rCvPOznI5ahRSFc8pwNI2etKYmFU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR06MB6935.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YUpNaWlYV1hIWXM4SU5jRGl6NVBsOGRWalNsTEpYTVFJaUlSMW9NWXQzcTNF?=
- =?utf-8?B?NTJRMm9FM0VNQzBsb1R5eUdhbitPMXNJdHBDNUpYM1oreEJ0bHdLU3hRZnFm?=
- =?utf-8?B?M1ZIN2lzQ3hLTnEybFlScDZuaE9HZnpiR1B2UnRJc3FZZ2g4VU9ubVlqVTRV?=
- =?utf-8?B?ZitYdHRLK01oOWY2ZGlJdjVxK1F3d3hrTjYyVldMZ2hLOUk0bkZkNzBUYjR4?=
- =?utf-8?B?WXkrTG0wSkRFSm84eFBkbFhqWXpzYnZVREhYY1dYalQrVG1sWkFCeHFvMXJI?=
- =?utf-8?B?QTFYTTlPODN6K3ZXL2FWU2k5bi96OW0xV2U0RjhQbVpjN0JiYUNHMzhHVDhs?=
- =?utf-8?B?L1U5a1JFdEd5Rk9BeURFY1g0c01SaUxRTUYyNFdoT1BER0VTcFZhT2lSeGlI?=
- =?utf-8?B?ODBnNk1jZ1UzU1lBRkpzd2lwMzB2Z0ovU1NpdGwyNUVqVUdVV1VKVldiQmdz?=
- =?utf-8?B?WXp0eHlNc3NzY002aGUrWTkxeHV1SWgyQUdaMWsvY210ZDE0cVg1V29UR1dh?=
- =?utf-8?B?MkJKd01XS2Y1SVZOdTQxYTZvZ2hDbHJoczRoSk1scThWT3lWUXVTR1d0RjRN?=
- =?utf-8?B?RFFtb09waDRBbkRPQzBtMGNJUzJJS1NJZTlSalY2M3lHUjNzb2c3TW5idnRX?=
- =?utf-8?B?SDg2M2J5bTFIRHpPYnJwdjRNS2hnVUVEYzhhbFM2Z3JEV29JUFNhNmdKOGk1?=
- =?utf-8?B?Y1lvK3VZdi9FclZYckg1dXdIQjZFbmdUTzNFSDZqT2RyT09Ycjd5ZXhsTG9u?=
- =?utf-8?B?QWpXN3orRGFGaFo5SUJrWWpaTnVuNXE5dGdNVGU2Zm5LYmdiVzh1TVh0bFkv?=
- =?utf-8?B?aTNMaTh3alJpNURuWWZoa1MxWFFmSm9qdnIyRWU0aTR3Wjc5Um9aTmRnUFZL?=
- =?utf-8?B?ZmU5a3FrU3BKUWlhNFR0aldkN1p0Vk5QTEJmK0N6YWtoa2R5VGMra1Y4Zi85?=
- =?utf-8?B?Yk1zL21BT2NDTFZBMWREcG54WkFnZm04TThZdG9RNkFuSGtHL2FWU3ExT3pE?=
- =?utf-8?B?YWI0NThYSy9Mb0hFWmlML0R1OGdnVEhkQnVTTHk4TWxQQXA5UVBSVktiOFZs?=
- =?utf-8?B?VStYNFJaWWZ5V2hLckZYMVFJbm81VEhHb2lBbCtKTlNtRVRUY24wcGMwWldI?=
- =?utf-8?B?QzhQcFBiQjNNank1SDVpZU0yeGhHZEpZZUcycHM4b2V3RS9mMHpkMEE3MWIz?=
- =?utf-8?B?aGFTVGpBUVVjU2J5ZnJreHpWSkpoMzJjdXR1ODlsTW5hRUFGdWI1N1hJYTdZ?=
- =?utf-8?B?Z25VNm53TE54VDM0Z1JGaEt5UTFsTnJIQzZZdDZxL1l4aDZtbjFVajkxZXZY?=
- =?utf-8?B?eUk3OTdWWEJOME8zWlA1eEZ4RVhaV1VLTHUwMlNrUTlCbm5ZL25ZdmJvd2Fu?=
- =?utf-8?B?NklKZEplaEJ2LzdKTmZ4TGFnbGR4ZElSOVk3TlJyelovUkk5ejFPa05VVnFv?=
- =?utf-8?B?NWUzRXFHdC92bnR0d2U0MXI2WnhDWXUwSzBYc0tHT2ovY1RXQXVwWWMvUnJt?=
- =?utf-8?B?OC9TWTZZNmhIVGlGTFB6bENyMDlxQVhsNG50VUVTallrS1VhV28wZGk0SG9E?=
- =?utf-8?B?MnZUZDNuUm1GaHo1cHAzQmlpWEVCajZ1MDF4cnhOUWpOMHJjbm1qQ0NJVnJW?=
- =?utf-8?B?RWxRd0ZlZ1NZdHNJMDFEcjRRREJGMThySkVUMHRNY1JoOVN1V3RyNVYzdXQx?=
- =?utf-8?B?bk05ZnkvV29PRWRiTXpSRE9xMEttWXNERmdSLzRTRFArUUZIKzNvdVpCNDda?=
- =?utf-8?B?clhEMSs0V0tVN1VodXFOd2pHckFVbDRBZ3NFMnZQMVgxbmVwNVdzcWdNRzNC?=
- =?utf-8?B?a2M0RkNveGdqK3JIS0NkN1NvOWp5ZTZYWXRQV2ljelhHdVN6Mko1cC9hTi9P?=
- =?utf-8?B?cmV3QXQ4TWpyNUl3VUpkWk1wUktDQjNMWk80MEpKUmg1cGtJSW12ZkJIQnBh?=
- =?utf-8?B?dFk5UmpHcmV6VnpHbVdwTHhGakZpK3pGdUxhazdHNkRPRXFacTJHcUxkVW1U?=
- =?utf-8?B?N25SSDZnNTd3RUJRZlNlQ3hteW1FTjFYV1Nva2VuVm84UUFMZFFsOEM2WU1S?=
- =?utf-8?B?c2ZrNElHVWV3c1BvdnFKU05lUUVBRXE2QURKTVBGVjNLd1RrRVNnTU5BbldK?=
- =?utf-8?B?MEZaQ2hMdDhCWE1RaGY2OEtVVWRwakUxTEVUSisrNnBhdGV1MktHNG1weS9T?=
- =?utf-8?B?QVE9PQ==?=
-X-OriginatorOrg: linumiz.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 087bdfa2-66d1-4c7c-9a24-08ddb3d58e21
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR06MB6935.apcprd06.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 10:46:35.1483
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 808466aa-232a-41f4-ac23-289e3a6840d4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EdyE+TkmcnlPXJyo7pqdIAvrDYVw+CpHAN2cbK1FkxO6rx0gb60N/wA8VCHQBWdWr3i5DusjEIjTe8Vinpkvog==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR06MB5062
+Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
+ folios during reclamation
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>
+Cc: 21cnbao@gmail.com, akpm@linux-foundation.org,
+ baolin.wang@linux.alibaba.com, chrisl@kernel.org, kasong@tencent.com,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-mm@kvack.org, linux-riscv@lists.infradead.org,
+ lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, v-songbaohua@oppo.com,
+ x86@kernel.org, ying.huang@intel.com, zhengtangquan@oppo.com,
+ Lance Yang <ioworker0@gmail.com>
+References: <2c19a6cf-0b42-477b-a672-ed8c1edd4267@redhat.com>
+ <20250624162503.78957-1-ioworker0@gmail.com>
+ <27d174e0-c209-4851-825a-0baeb56df86f@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <27d174e0-c209-4851-825a-0baeb56df86f@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
 
-On 6/25/25 3:41 PM, Paul Kocialkowski wrote:
-> On Wed 25 Jun 25, 15:06, Parthiban wrote:
->>
->> On 6/25/25 2:16 PM, Paul Kocialkowski wrote:
->>> Hi and thanks for your work!
+
+On 2025/6/25 18:00, David Hildenbrand wrote:
+> On 24.06.25 18:25, Lance Yang wrote:
+>> On 2025/6/24 23:34, David Hildenbrand wrote:
+>>> On 24.06.25 17:26, Lance Yang wrote:
+>>>> On 2025/6/24 20:55, David Hildenbrand wrote:
+>>>>> On 14.02.25 10:30, Barry Song wrote:
+>>>>>> From: Barry Song <v-songbaohua@oppo.com>
+>>>> [...]
+>>>>>> diff --git a/mm/rmap.c b/mm/rmap.c
+>>>>>> index 89e51a7a9509..8786704bd466 100644
+>>>>>> --- a/mm/rmap.c
+>>>>>> +++ b/mm/rmap.c
+>>>>>> @@ -1781,6 +1781,25 @@ void folio_remove_rmap_pud(struct folio 
+>>>>>> *folio,
+>>>>>> struct page *page,
+>>>>>>     #endif
+>>>>>>     }
+>>>>>> +/* We support batch unmapping of PTEs for lazyfree large folios */
+>>>>>> +static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
+>>>>>> +            struct folio *folio, pte_t *ptep)
+>>>>>> +{
+>>>>>> +    const fpb_t fpb_flags = FPB_IGNORE_DIRTY | 
+>>>>>> FPB_IGNORE_SOFT_DIRTY;
+>>>>>> +    int max_nr = folio_nr_pages(folio);
+>>>>>
+>>>>> Let's assume we have the first page of a folio mapped at the last page
+>>>>> table entry in our page table.
+>>>>
+>>>> Good point. I'm curious if it is something we've seen in practice ;)
 >>>
->>> On Fri 27 Dec 24, 16:37, Parthiban Nallathambi wrote:
->>>> lvds, lcd, dsi all shares the same GPIO D bank and lvds0
->>>> data 3 lines and lvds1 pins are missed, add them.
->>> Would it also make sense to submit device-tree pin definitions here?
+>>> I challenge you to write a reproducer :P I assume it might be doable
+>>> through simple mremap().
+>>>
+>>>>
+>>>>>
+>>>>> What prevents folio_pte_batch() from reading outside the page table?
+>>>>
+>>>> Assuming such a scenario is possible, to prevent any chance of an
+>>>> out-of-bounds read, how about this change:
+>>>>
+>>>> diff --git a/mm/rmap.c b/mm/rmap.c
+>>>> index fb63d9256f09..9aeae811a38b 100644
+>>>> --- a/mm/rmap.c
+>>>> +++ b/mm/rmap.c
+>>>> @@ -1852,6 +1852,25 @@ static inline bool
+>>>> can_batch_unmap_folio_ptes(unsigned long addr,
+>>>>        const fpb_t fpb_flags = FPB_IGNORE_DIRTY | 
+>>>> FPB_IGNORE_SOFT_DIRTY;
+>>>>        int max_nr = folio_nr_pages(folio);
+>>>>        pte_t pte = ptep_get(ptep);
+>>>> +    unsigned long end_addr;
+>>>> +
+>>>> +    /*
+>>>> +     * To batch unmap, the entire folio's PTEs must be contiguous
+>>>> +     * and mapped within the same PTE page table, which corresponds to
+>>>> +     * a single PMD entry. Before calling folio_pte_batch(), which 
+>>>> does
+>>>> +     * not perform boundary checks itself, we must verify that the
+>>>> +     * address range covered by the folio does not cross a PMD 
+>>>> boundary.
+>>>> +     */
+>>>> +    end_addr = addr + (max_nr * PAGE_SIZE) - 1;
+>>>> +
+>>>> +    /*
+>>>> +     * A fast way to check for a PMD boundary cross is to align both
+>>>> +     * the start and end addresses to the PMD boundary and see if they
+>>>> +     * are different. If they are, the range spans across at least two
+>>>> +     * different PMD-managed regions.
+>>>> +     */
+>>>> +    if ((addr & PMD_MASK) != (end_addr & PMD_MASK))
+>>>> +        return false;
+>>>
+>>> You should not be messing with max_nr = folio_nr_pages(folio) here at
+>>> all. folio_pte_batch() takes care of that.
+>>>
+>>> Also, way too many comments ;)
+>>>
+>>> You may only batch within a single VMA and within a single page table.
+>>>
+>>> So simply align the addr up to the next PMD, and make sure it does not
+>>> exceed the vma end.
+>>>
+>>> ALIGN and friends can help avoiding excessive comments.
 >>
->> this patch is already merged. 
->> git show --stat cef4f1b5ba99a964cd6dd248bb373520573c972f
->> commit cef4f1b5ba99a964cd6dd248bb373520573c972f
->> Author: Parthiban Nallathambi <parthiban@linumiz.com>
->> Date:   Fri Dec 27 16:37:57 2024 +0530
+>> Thanks! How about this updated version based on your suggestion:
 >>
->>     pinctrl: sunxi: add missed lvds pins for a100/a133
->>     
->>     lvds, lcd, dsi all shares the same GPIO D bank and lvds0
->>     data 3 lines and lvds1 pins are missed, add them.
->>     
->>     Signed-off-by: Parthiban Nallathambi <parthiban@linumiz.com>
->>     Link: https://lore.kernel.org/20241227-a133-display-support-v1-10-13b52f71fb14@linumiz.com
->>     Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
->>
->>  drivers/pinctrl/sunxi/pinctrl-sun50i-a100.c | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
->>
->> Do you mean the consumer/board devicetree changes?
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index fb63d9256f09..241d55a92a47 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -1847,12 +1847,25 @@ void folio_remove_rmap_pud(struct folio 
+>> *folio, struct page *page,
+>>   /* We support batch unmapping of PTEs for lazyfree large folios */
+>>   static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
+>> -            struct folio *folio, pte_t *ptep)
+>> +                          struct folio *folio, pte_t *ptep,
+>> +                          struct vm_area_struct *vma)
+>>   {
+>>       const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+>> +    unsigned long next_pmd, vma_end, end_addr;
+>>       int max_nr = folio_nr_pages(folio);
+>>       pte_t pte = ptep_get(ptep);
+>> +    /*
+>> +     * Limit the batch scan within a single VMA and within a single
+>> +     * page table.
+>> +     */
+>> +    vma_end = vma->vm_end;
+>> +    next_pmd = ALIGN(addr + 1, PMD_SIZE);
+>> +    end_addr = addr + (unsigned long)max_nr * PAGE_SIZE;
+>> +
+>> +    if (end_addr > min(next_pmd, vma_end))
+>> +        return false;
 > 
-> I mean the pin definitions for lvds in the sun50i-a100.dtsi device-tree.
+> May I suggest that we clean all that up as we fix it?
+
+Yeah, that looks much better. Thanks for the suggestion!
+
 > 
-> But maybe you wanted to submit those after the bindings/driver changes are
-> merged?
+> Maybe something like this:
+> 
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index 3b74bb19c11dd..11fbddc6ad8d6 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1845,23 +1845,38 @@ void folio_remove_rmap_pud(struct folio *folio, 
+> struct page *page,
+>   #endif
+>   }
+> 
+> -/* We support batch unmapping of PTEs for lazyfree large folios */
+> -static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
+> -                       struct folio *folio, pte_t *ptep)
+> +static inline unsigned int folio_unmap_pte_batch(struct folio *folio,
+> +               struct page_vma_mapped_walk *pvmw, enum ttu_flags flags,
+> +               pte_t pte)
+>   {
+>          const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
+> -       int max_nr = folio_nr_pages(folio);
+> -       pte_t pte = ptep_get(ptep);
+> +       struct vm_area_struct *vma = pvmw->vma;
+> +       unsigned long end_addr, addr = pvmw->address;
+> +       unsigned int max_nr;
+> +
+> +       if (flags & TTU_HWPOISON)
+> +               return 1;
+> +       if (!folio_test_large(folio))
+> +               return 1;
+> +
+> +       /* We may only batch within a single VMA and a single page 
+> table. */
+> +       end_addr = min_t(unsigned long, ALIGN(addr + 1, PMD_SIZE), vma- 
+>  >vm_end);
+> +       max_nr = (end_addr - addr) >> PAGE_SHIFT;
+> 
+> +       /* We only support lazyfree batching for now ... */
+>          if (!folio_test_anon(folio) || folio_test_swapbacked(folio))
+> -               return false;
+> +               return 1;
+>          if (pte_unused(pte))
+> -               return false;
+> -       if (pte_pfn(pte) != folio_pfn(folio))
+> -               return false;
+> +               return 1;
+> +       /* ... where we must be able to batch the whole folio. */
+> +       if (pte_pfn(pte) != folio_pfn(folio) || max_nr != 
+> folio_nr_pages(folio))
+> +               return 1;
+> +       max_nr = folio_pte_batch(folio, addr, pvmw->pte, pte, max_nr, 
+> fpb_flags,
+> +                                NULL, NULL, NULL);
+> 
+> -       return folio_pte_batch(folio, addr, ptep, pte, max_nr, 
+> fpb_flags, NULL,
+> -                              NULL, NULL) == max_nr;
+> +       if (max_nr != folio_nr_pages(folio))
+> +               return 1;
+> +       return max_nr;
+>   }
+> 
+>   /*
+> @@ -2024,9 +2039,7 @@ static bool try_to_unmap_one(struct folio *folio, 
+> struct vm_area_struct *vma,
+>                          if (pte_dirty(pteval))
+>                                  folio_mark_dirty(folio);
+>                  } else if (likely(pte_present(pteval))) {
+> -                       if (folio_test_large(folio) && !(flags & 
+> TTU_HWPOISON) &&
+> -                           can_batch_unmap_folio_ptes(address, folio, 
+> pvmw.pte))
+> -                               nr_pages = folio_nr_pages(folio);
+> +                       nr_pages = folio_unmap_pte_batch(folio, &pvmw, 
+> flags, pteval);
+>                          end_addr = address + nr_pages * PAGE_SIZE;
+>                          flush_cache_range(vma, address, end_addr);
+> 
+> 
+> Note that I don't quite understand why we have to batch the whole thing 
+> or fallback to
+> individual pages. Why can't we perform other batches that span only some 
+> PTEs? What's special
+> about 1 PTE vs. 2 PTEs vs. all PTEs?
 
-                pio: pinctrl@300b000 {
-                        compatible = "allwinner,sun50i-a100-pinctrl";
-                        reg = <0x0300b000 0x400>;
-                        interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-                                     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-                                     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-                                     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-                                     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
-                                     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-                                     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-                        clocks = <&ccu CLK_APB1>, <&dcxo24M>, <&osc32k>;
-                        clock-names = "apb", "hosc", "losc";
-                        gpio-controller;
-                        #gpio-cells = <3>;
-                        interrupt-controller;
-                        #interrupt-cells = <3>;
-                        
-                        lcd_lvds0_pins: lcd-lvds0-pins {
-                                pins = "PD0", "PD1", "PD2", "PD3", "PD4",
-                                        "PD5", "PD6", "PD7", "PD8", "PD9";
-                                function = "lvds0";
-                        };
-                        
-                        lcd_lvds1_pins: lcd-lvds1-pins {
-                                pins = "PD10", "PD11", "PD12", "PD13", "PD14",
-                                        "PD15", "PD16", "PD17", "PD18", "PD19";
-                                function = "lvds1";
-                        };
-                        
-                        dsi0_pins: dsi0-pins {
-                                pins = "PD0", "PD1", "PD2", "PD3", "PD4",
-                                        "PD5", "PD6", "PD7", "PD8", "PD9";
-                                function = "dsi0";
-                        };
+That's a good point about the "all-or-nothing" batching logic ;)
 
-                        mmc0_pins: mmc0-pins {
-                                pins = "PF0", "PF1", "PF2", "PF3",
-                                       "PF4", "PF5";
-                                function = "mmc0";
-                                drive-strength = <30>;
-                                bias-pull-up;
-                        };
+It seems the "all-or-nothing" approach is specific to the lazyfree use
+case, which needs to unmap the entire folio for reclamation. If that's
+not possible, it falls back to the single-page slow path.
 
-It got missed when my email server refused to send all the patches.
-I will send the revised full patch series after fixing the comments.
-Anyways above are the pin definitions.
+Also, supporting partial batches would be useful, but not common case
+I guess, so let's leave it as is ;p
 
 Thanks,
-Parthiban
-https://linumiz.com
-https://www.linkedin.com/company/linumiz
-
-Linumiz GmbH
-Am Hohen Rott 9, 37170, Uslar
-Registergericht: Amtsgericht Göttingen, HRB 207840
-Geschäftsführer: Madan Raj Mohanraj
+Lance
 
 > 
-> Cheers,
 > 
-> Paul
+> Can someone enlighten me why that is required?
 > 
 
