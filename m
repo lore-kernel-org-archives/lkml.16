@@ -1,90 +1,98 @@
-Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 385DB285C9F;
-	Wed, 25 Jun 2025 18:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB06E1AF0BB;
+	Wed, 25 Jun 2025 18:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750876661; cv=none; b=lf/r+dqa1w38SB9EfPKf+0swkk1ZoOl0Avw0S6mwQjpf4VnnMLrYFyVLKxLE64XvcSUMzjUiUZFW97+kmpiV+q8gzGlMLd38B9Su80Q52rc1hatdV4Uim+QE9qAVI/r6z6S5s+P9F3OoaXoqlbNTLiw3uCwD5tursVuMFXdy/Iw=
+	t=1750876713; cv=none; b=Jl2G+ZsgLXOuXUMzV3foFl9TW1n+yA5yo3c7K5j5WlwlnRUdsC4lzli+vCuiHo0Vm/K58IbCQc6ikTxM/V4ix6w5AiU9p0W3M8EC54TJ0JFWsu5JsEf4sagjoxfaJ9+7GT6j39azgPFEZmOQMHakcUEqY4uls20RdNmkeRCm9jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750876661; c=relaxed/simple;
-	bh=k2sJYG8NaOsjUJqqYSHVdnn4nS1nM6aOGXvJkILoxjw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Pp27joOPnaJJ706yqIjcVFeNyPDPHK60kLgI30cVwXmKq45IEBheiKwmIEbC9o7W9SJ6XaxUFh2Xv76yywyBCuWJq1JJ03HUbfSObQs+lCUGOZaYF75f/nyhfAtWn9oYC9sAouSM7+ICNgBvDEfzs6ze3vXKkNBMYMxxNzE0888=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=ZDETtbEy; arc=none smtp.client-ip=45.79.88.28
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
+	s=arc-20240116; t=1750876713; c=relaxed/simple;
+	bh=vhIpbL8PX1zuLkauw/1TluiZTOdJeUcJLbeWVxmstB0=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=upQijAVk3X51V0i65qnsoeWQmNb7M/WbN2g51DJAKSx838knjmqZ95BXn0oQcNi3MfgBAdNENyvA35UxqX+fPRPLH2UGIR3y9d6uo9nUL73Xt6+FBkFd+1FFBZseyktUK8M4dQPpeBpOFGmOfM5NW6dVd/U4GnnJXho6zCrywT0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vvv5A7N7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=rPbv0I9b; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="ZDETtbEy"
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 2579940AB1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-	t=1750876658; bh=+Zt8DtoRnxpBCBNrEG4Kials1Bl4NmdCHgUsjOo21Qw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=ZDETtbEyD1cMUt5m2zllYq8IkKPY/q5usVljq1la96Bz2WmA2iq5oPTRfTuh5fCa4
-	 dpcKaN9CAU6oema7742aC6DHZBJBOEjZaWrSfl7Sf3L5E4fF7TkZi0uccUV1tw2d4U
-	 uUHVJRdKvNisKi+Hm2KqsY1BBWNJrtN7xZn8ZeIDtyOQk5l/kf0B0sQ0e3Un1zm8iC
-	 zu7FE8gbxc0kIEbWD3MPEA1ncLY2qwDNfYNiqpBXABLI5g4CUtkiuiwPdFh2/crzX3
-	 PsRfhnnaRJV5RONkwHoTzh8xd4QfQ1IJgV58NbBPf5zw196Ps0RbVdB4jNN2TYqqJx
-	 CBuXWQsSi83ZQ==
-Received: from localhost (c-73-14-55-248.hsd1.co.comcast.net [73.14.55.248])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ms.lwn.net (Postfix) with ESMTPSA id 2579940AB1;
-	Wed, 25 Jun 2025 18:37:38 +0000 (UTC)
-From: Jonathan Corbet <corbet@lwn.net>
-To: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc: Akira Yokosawa <akiyks@gmail.com>, linux-kernel@vger.kernel.org, Linux
- Doc Mailing List <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v3 15/15] docs: conf.py: Check Sphinx and docutils version
-In-Reply-To: <20250622235052.05804137@foz.lan>
-References: <cover.1750571906.git.mchehab+huawei@kernel.org>
- <972673b0a5bf5537d47780d6f8e70ae45456e751.1750571906.git.mchehab+huawei@kernel.org>
- <c05dd5dc-1e30-4a2c-80dc-70e8b62cc681@gmail.com>
- <87v7ona3z7.fsf@trenco.lwn.net> <20250622235052.05804137@foz.lan>
-Date: Wed, 25 Jun 2025 12:37:37 -0600
-Message-ID: <875xgjacr2.fsf@trenco.lwn.net>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vvv5A7N7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rPbv0I9b"
+Message-ID: <20250625182951.587377878@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750876707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc; bh=vtyXAHESSpGD7UpiGsAjSdb/OwZhsKJr4dsRrO4YTfE=;
+	b=vvv5A7N7HVrhlNOuUYrNXKklHpbSiaMu/wtFA/BR7cFYx+x0ecvi8sg2o4SZ4CmbGDSo5a
+	77aitqR6B9xh2mCRkh0AzE9ZyncT2ry8lWC8ctiC5TeM8RZELPaTZGpLLvLJQX+TA7HUaB
+	PJyfpGstoAH3oTEpGCY8OmrMJHjW+V7zL/0ujlJQnP4pvHpR3oJ0BXEfxa3ndtXBaGUsZQ
+	LZThj08CvFwJ8ZaravLs0luB0ogmWjkgRpEIqoboAblOLAld2R/jB5uYKwsgdCWgpRjwQg
+	QIK9c9gfSAwgi0ixUP91TW8/BXyKw2bk5NKTY0wW8CQX2DURdqF6LhmA2ZV8ew==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750876707;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc; bh=vtyXAHESSpGD7UpiGsAjSdb/OwZhsKJr4dsRrO4YTfE=;
+	b=rPbv0I9bDXpOA5f9Qpmwsin4dawmyyCxpDccsGoBvdNmiBIGnycxeVB7YUbWJlivJCkJZs
+	yMmXgw32nGY88vAA==
+From: Thomas Gleixner <tglx@linutronix.de>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: netdev@vger.kernel.org,
+ Richard Cochran <richardcochran@gmail.com>,
+ Christopher Hall <christopher.s.hall@intel.com>,
+ John Stultz <jstultz@google.com>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Anna-Maria Behnsen <anna-maria@linutronix.de>,
+ Miroslav Lichvar <mlichvar@redhat.com>,
+ Werner Abt <werner.abt@meinberg-usa.com>,
+ David Woodhouse <dwmw2@infradead.org>,
+ Stephen Boyd <sboyd@kernel.org>,
+ =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>,
+ Kurt Kanzenbach <kurt@linutronix.de>,
+ Nam Cao <namcao@linutronix.de>,
+ Antoine Tenart <atenart@kernel.org>
+Subject: [patch V3 00/11] timekeeping: Provide support for auxiliary clocks -
+ Remaining series
+Date: Wed, 25 Jun 2025 20:38:25 +0200 (CEST)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain
 
-Mauro Carvalho Chehab <mchehab+huawei@kernel.org> writes:
+This is the remaining series of V2, which can be found here:
 
-> Em Sun, 22 Jun 2025 14:58:04 -0600
-> Jonathan Corbet <corbet@lwn.net> escreveu:
->
->> Akira Yokosawa <akiyks@gmail.com> writes:
->> 
->> > On Sun, 22 Jun 2025 08:02:44 +0200, Mauro Carvalho Chehab wrote:  
->> >> As reported by Akira, there were incompatibility issues with
->> >> Sphinx and docutils with docutils 0.19. There's already
->> >> a fix for it, but, as there are incompatibility issues with
->> >> different versions, better to add a check to verify if the
->> >> combination is supported/tested.
->> >>   
->> >
->> > I've been skeptical of adding such checks in conf.py.  
->> 
->> I have to kind of agree with this concern.  We have managed without this
->> complexity so far.  It looks like we could always be behind on
->> maintaining it going forward.  Do we *really* need this one?
->
-> IMO having a check is interesting, as the dependency between
-> Sphinx and docutils is high. Yet, with the testing script, this may
-> not be needed, provided that we run it to check if changes at Sphinx
-> extensions won't cause regressions. Still, the dependency check
-> at test_doc_build.py is not complete.
->
-> Anyway, if you prefer, don't pick this one. We can revisit it later
-> when needed.
+   https://lore.kernel.org/all/20250519082042.742926976@linutronix.de
 
-I've left it out for now, but applied the rest of the series.  Keep it
-around, we may yet decide we need it...
+The first 15 patches of V2 have been merged into the tip tree and this is
+the update of the remaining 11, which addresses the review feedback.
+
+Changes vs. V2:
+
+  - Use kobject.h, clockid_t and cleanup the sysfs init - Thomas W.
+
+  - Use aux_tkd, aux_tks instead of tkd, tks in aux clock specific
+    functions for clarity - John
+
+  - Remove misleading clock TAI comment - John
+
+The series applies on top of:
+
+    git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers/ptp
+
+and is available from git:
+
+     git://git.kernel.org/pub/scm/linux/kernel/git/tglx/devel.git timers/ptp/clocks
+
+A small update for PTP to support auxiliary clocks in
+PTP_SYS_OFFSET_EXTENDED is going to be sent seperately as it has a
+dependency on pending PTP changes.
 
 Thanks,
 
-jon
+	tglx
+---
+ Documentation/ABI/stable/sysfs-kernel-time-aux-clocks |    5 
+ include/linux/posix-timers.h                          |    5 
+ include/linux/timekeeping.h                           |   11 
+ kernel/time/posix-timers.c                            |    3 
+ kernel/time/posix-timers.h                            |    1 
+ kernel/time/timekeeping.c                             |  484 +++++++++++++++---
+ 6 files changed, 451 insertions(+), 58 deletions(-)
