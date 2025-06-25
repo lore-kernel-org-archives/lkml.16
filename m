@@ -1,148 +1,125 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69D67239E75;
-	Wed, 25 Jun 2025 10:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B25CC239E75;
+	Wed, 25 Jun 2025 10:01:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750845664; cv=none; b=u9a/t4ze3j0xZq3UCIJEXMBe0s4UHIsUkVEVTYvVCxDHtDwCwPoejnWAwIqKyptdk2haPZfbOS+ne52kcMER8sG+8woqjtMEeP7/PDThPfpmIahYkCorl4UhZdtBvXuiJlRlAsIlW+I4jwK5daHcp//0SfPi3UKk8r216SuORSo=
+	t=1750845673; cv=none; b=qRcip1a5cRV1o9n+HacNbjLZXp1ovTG5+HriFK06Exi3stVlxjczn/Q+dfSYU4ukRhZkGDkq0I8Wy6qyUH7Q+c0LD8Z7d7zQvCOAQx+QTESTYfDwyHrgNJihz6+IFXca+FtFykayBLJsVfG9k3509FgNkr3QNh5aG8SjUIbKA4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750845664; c=relaxed/simple;
-	bh=RWoz2wakwwNGLi4sl9X6dVMEZLDMU2hECt5/SC4AQ6g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uMr98V/Pde4lSsx6U2pP+IPyKcZq3OpLzRQyzuhv1jzdTe74s0l5FOrgOw9OOkuX2oEKftHhovEI/Qu9P52K6YFxiU86QXv6R8PfbBxqDgGv1i7nYU8EY3Y1CbdrlZECyUYZr6fE3wQs92OJdz7g8QRdSJ1tVfAm/91qsVAAvpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=pHrpTZFs; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750845673; c=relaxed/simple;
+	bh=okf+uhv/zJ5RP4VyNn9+JcXWCFO9Ssru835UGwlg64I=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=PT2/6OmzHaRSAhvjdJ+iDXj+eq40Lap5aR4+/kHAEXGbnI6x72jkzwyFikrGITDIDegVEAGxJEp7t0EX0Y86vWz5lzWJO9hzzsvOj2gYI0h+BVVnEWPZ7+0LABVnHcutOPo4jmiFCubk28sNS9ZoRO0WJfrtApqFafXfOLXzHFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=aSO5IlNj; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=eKaE3kNN; arc=none smtp.client-ip=202.12.124.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="pHrpTZFs"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P3VefR027585;
-	Wed, 25 Jun 2025 10:00:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vVfbmAL9nuta9hPZ9Nq1gX/UlCRXU0dU44mdWz4B17A=; b=pHrpTZFsUM+eQDdW
-	KP1bxe8k3CXM2AZk37Z0VZwe5ZDMcTjdciP4RhxH/xJw5w1Exby9cMDRcZDAR18V
-	tDoYqN61JOfgOYmZY2OSaige+Q4eE+NLonZ4XGteLhI4VeSxEdatszkqtRxp9jvg
-	9NKxlSVfinZTlXt87VOaEL/RcaYPTMOsbuY02wFnO4hP7j777OibXwqkOEpxcgMA
-	V+CK28WXdLHQtCmWQOYnJM+nT+hKf8ZFzk2ffIvjBpGh5VfVFOWzth7Ceg5V0USP
-	tfnomaFhuWfkYqeGbKd+RIC6EkTULlu15MQ09osXdQfzb2t3otBbfNN5sCrO5YtA
-	m6OqiA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbhqnxek-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 10:00:52 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55PA0pKp017026
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 10:00:51 GMT
-Received: from [10.133.33.71] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 25 Jun
- 2025 03:00:48 -0700
-Message-ID: <d163080d-61ee-4af1-a783-5a77cbc525d1@quicinc.com>
-Date: Wed, 25 Jun 2025 18:00:46 +0800
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="aSO5IlNj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eKaE3kNN"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id ABEDC7A0033;
+	Wed, 25 Jun 2025 06:01:09 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 25 Jun 2025 06:01:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1750845669;
+	 x=1750932069; bh=EfvRO+VLg3uMgXOHdRqJ5eu4+EMuM3Jf+0bB1Ld8A/4=; b=
+	aSO5IlNjFL/Xvlv9qEsBqBxGZ5d588t6Aw9UbV6KLH+3iZFUh47nom9d+qvjl1wM
+	NVCzpr/Fgz+avB975g7UEjvJbr1QAVj7yAbQtiTbr+w9fTIToUpYuilnF+9nAaBA
+	cxGfbDmeVAEymtlhcX3pA+Vp1/FqV5ac6jJNxoI3kL3F+EwhBJid25ojPbQESJbk
+	mS4BUEH+qE/1XPQ8ZFlj4BtY3R7OHMTji7B2KItH7kn2t1CKnzhrbLvreBZNQuL9
+	w1NgZQDlN1Y8L+P98WGBtOBgueCmxQpu+AFkIM/ihvzNLVWweqrps4gnCR+mnQ7M
+	tWbpuH51L+nRDfcq6+bB5g==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1750845669; x=
+	1750932069; bh=EfvRO+VLg3uMgXOHdRqJ5eu4+EMuM3Jf+0bB1Ld8A/4=; b=e
+	KaE3kNN7HJIEic2k6+1G+GF7ePJP0nA/wonf850w3ykY+yDhtpw8XzOy85ddKHGN
+	dRNBEF8LyT0T5ppzl9DnYIivWnXabW+dmG5Mo7yfFpUsDM9e7TCj3w9Bbh0yh0Ql
+	KaeU3/nM8aSw31Vvk5IDCnOviPbg+EeYu6m+S8Mz2D+g9ETAoXm2m/95JzFLlNSZ
+	+1lksCRxw8X5CckHAmtaZtdSwZ9ss6Fp0ZsWZw66v49OyR7YGkvUpp4kuTeMowDs
+	Qfnux7FQFoGH1Jh6OGwpNDEh2F8w34htIdmlTkhQq04klFvOx/eiWZc9yE/JOfdk
+	iFP0O4wap2QfVTEi3tUkA==
+X-ME-Sender: <xms:5chbaFjfUD7_TUCLeMDpbNYagpx7O4d5Eplfh9DQvs6dtn3I71GoPA>
+    <xme:5chbaKBELq7w4GfHsksQm6F2re8rNtyuZP0RoSg5U9wswKxH_CKby5Mca4AgpGMZG
+    eKnOOSVLX8najO_cgU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvvdegkecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopedutddpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepohhlthgvrghnvhesghhmrghilhdrtghomhdprhgtphhtthhopegsrh
+    hoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjrghmvghsrdgtlhgrrhhk
+    sehlihhnrghrohdrohhrghdprhgtphhtthhopehimhigsehlihhsthhsrdhlihhnuhigrd
+    guvghvpdhrtghpthhtohephhgthheslhhsthdruggvpdhrtghpthhtohepfhhrrghnkhdr
+    lhhisehngihprdgtohhmpdhrtghpthhtoheplhgrrhhishgrrdhgrhhighhorhgvsehngi
+    hprdgtohhmpdhrtghpthhtohepvhhlrgguihhmihhrrdholhhtvggrnhesnhigphdrtgho
+    mhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdroh
+    hrgh
+X-ME-Proxy: <xmx:5chbaFFQO7awfCCnnjw9iCd3Gcw0yCmXlgAjmFW579u_osew0f6aJA>
+    <xmx:5chbaKRk-W492bLzwwrvLbkWVLAvc8DXnIbHHyCnI81cNazNZuswmg>
+    <xmx:5chbaCz2Dox169bEa-9sajgmj7jwvO6gVRUi4MgobpMS8Qfrd_4ruw>
+    <xmx:5chbaA71AK2aKmG56pTEbT2dczGklsfAR4mv0duP7W7bkFJ5XvCsrQ>
+    <xmx:5chbaDt4N_OcTNTD9DXLvhC-vrZzFR55wrgZf0KKO6J6C9ZmgnT7AfZK>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 0DD83700065; Wed, 25 Jun 2025 06:01:09 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] wifi: ath11k: fix dest ring-buffer corruption when
- ring is full
-To: Johan Hovold <johan+linaro@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
-CC: Miaoqing Pan <quic_miaoqing@quicinc.com>, <linux-wireless@vger.kernel.org>,
-        <ath11k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250604143457.26032-1-johan+linaro@kernel.org>
- <20250604143457.26032-6-johan+linaro@kernel.org>
-Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <20250604143457.26032-6-johan+linaro@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-ThreadId: T588a20d0ffbb3e40
+Date: Wed, 25 Jun 2025 12:00:38 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "James Clark" <james.clark@linaro.org>, "Frank Li" <Frank.li@nxp.com>
+Cc: "Vladimir Oltean" <olteanv@gmail.com>, "Mark Brown" <broonie@kernel.org>,
+ "Vladimir Oltean" <vladimir.oltean@nxp.com>,
+ "Larisa Grigore" <larisa.grigore@nxp.com>, "Christoph Hellwig" <hch@lst.de>,
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Message-Id: <0f904f12-295c-48fe-96c7-c64c461cdbbd@app.fastmail.com>
+In-Reply-To: <0c6c78da-575a-4d29-a79a-3903aa801b42@linaro.org>
+References: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
+ <20250624-james-nxp-spi-dma-v3-3-e7d574f5f62c@linaro.org>
+ <aFrSgJ5xZfccEX9x@lizhi-Precision-Tower-5810>
+ <290fc244-e88f-47a3-8dd3-0ec27eb5c60b@app.fastmail.com>
+ <0c6c78da-575a-4d29-a79a-3903aa801b42@linaro.org>
+Subject: Re: [PATCH v3 3/6] spi: spi-fsl-dspi: Stub out DMA functions
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: vx5Yl7wNXEWKorOCHEJ7MqcFJEe5imyX
-X-Authority-Analysis: v=2.4 cv=Id+HWXqa c=1 sm=1 tr=0 ts=685bc8d4 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=3Go43yyQdFlCKqBfqAEA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: vx5Yl7wNXEWKorOCHEJ7MqcFJEe5imyX
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA3NCBTYWx0ZWRfX2c8mFj9e0oaI
- 5Xz9MCz1PRScfjD5M7sb3oG42qD3NB2w3ni/MOqbpUxJSGKaLTjyUOnTXOsfv5cLW6yAnj8iLw/
- S6qfXNtsVHyaoqcOmMQOondctl6t/ebZcsO3+VrWuIfvTjL31Bh3QwjrzphjJlOcFHDfActAeMT
- OJs28HGVCiyaJVSf68APwqmoiHBYJ3QPwwOQYcaKz91CnMXqNruRybgayPS3t1paIbMHmNmPTTF
- 7Pzcow5Ix6t6ASnUQSfrQwqNmoKcoHZUZQFrLfCZyVEBIKOIKBrD222bjp82XXblJNAJDPugneo
- SVUHl/aVYRID2c/YCPgm7T2ZEbEsWO0IPR6496hySa3zZjhUlMx3xeLdZSjWvGCMENaSQVG88iA
- 8wXxQEszSS/zMeDiJH4FWEIGgs5xWPiGVBIIvS5i3B1/ZCPHSJ6sDTkVDHiRXJixIuZz/vzy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 priorityscore=1501 mlxlogscore=632 phishscore=0 bulkscore=0
- clxscore=1015 impostorscore=0 mlxscore=0 lowpriorityscore=0 malwarescore=0
- suspectscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506250074
+
+On Wed, Jun 25, 2025, at 11:19, James Clark wrote:
+> On 24/06/2025 6:16 pm, Arnd Bergmann wrote:
+>> On Tue, Jun 24, 2025, at 18:29, Frank Li wrote:
+>
+>> It would also be simpler to enforce this in Kconfig if we only
+>> care about users that use the DMA support.
+>
+> But most of the devices supported by the driver don't do any DMA. That 
+> was the reason to stub them out rather than add the Kconfig depends.
+
+Ah right. So even when running on SoCs that have a DMA engine,
+you can end up not using it?
+
+In this case you could have an extra Kconfig symbol to configure
+DMA support for this driver and use that in the source code:
+
+config SPI_FSL_DSPI_DMA
+      bool "Use DMA engine for offloading Freescale DSPI transfers"
+      depends on SPI_FSL_DSPI && DMA_ENGINE
+      help
+         ....
 
 
-
-On 6/4/2025 10:34 PM, Johan Hovold wrote:
-> Add the missing memory barriers to make sure that destination ring
-> descriptors are read before updating the tail pointer (and passing
-> ownership to the device) to avoid memory corruption on weakly ordered
-> architectures like aarch64 when the ring is full.
-> 
-> Tested-on: WCN6855 hw2.1 WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
-> 
-> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
-> Cc: stable@vger.kernel.org      # 5.6
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  drivers/net/wireless/ath/ath11k/hal.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath11k/hal.c b/drivers/net/wireless/ath/ath11k/hal.c
-> index 927ed2bc3fbf..7eeffb36899e 100644
-> --- a/drivers/net/wireless/ath/ath11k/hal.c
-> +++ b/drivers/net/wireless/ath/ath11k/hal.c
-> @@ -854,7 +854,6 @@ void ath11k_hal_srng_access_end(struct ath11k_base *ab, struct hal_srng *srng)
->  {
->  	lockdep_assert_held(&srng->lock);
->  
-> -	/* TODO: See if we need a write memory barrier here */
->  	if (srng->flags & HAL_SRNG_FLAGS_LMAC_RING) {
->  		/* For LMAC rings, ring pointer updates are done through FW and
->  		 * hence written to a shared memory location that is read by FW
-> @@ -869,7 +868,11 @@ void ath11k_hal_srng_access_end(struct ath11k_base *ab, struct hal_srng *srng)
->  			WRITE_ONCE(*srng->u.src_ring.hp_addr, srng->u.src_ring.hp);
->  		} else {
->  			srng->u.dst_ring.last_hp = *srng->u.dst_ring.hp_addr;
-> -			*srng->u.dst_ring.tp_addr = srng->u.dst_ring.tp;
-> +			/* Make sure descriptor is read before updating the
-> +			 * tail pointer.
-> +			 */
-> +			dma_mb();
-> +			WRITE_ONCE(*srng->u.dst_ring.tp_addr, srng->u.dst_ring.tp);
->  		}
->  	} else {
->  		if (srng->ring_dir == HAL_SRNG_DIR_SRC) {
-> @@ -885,6 +888,10 @@ void ath11k_hal_srng_access_end(struct ath11k_base *ab, struct hal_srng *srng)
->  					   srng->u.src_ring.hp);
->  		} else {
->  			srng->u.dst_ring.last_hp = *srng->u.dst_ring.hp_addr;
-> +			/* Make sure descriptor is read before updating the
-> +			 * tail pointer.
-> +			 */
-> +			mb();
->  			ath11k_hif_write32(ab,
->  					   (unsigned long)srng->u.dst_ring.tp_addr -
->  					   (unsigned long)ab->mem,
-
-Reviewed-by: Baochen Qiang <quic_bqiang@quicinc.com>
+     Arnd
