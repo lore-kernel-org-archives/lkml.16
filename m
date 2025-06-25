@@ -1,88 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347A027FB28;
-	Wed, 25 Jun 2025 09:17:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C45128850D
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:18:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750843067; cv=none; b=rqHToYY2/qKbI0ZnJnQ+fNlW5M5KVUhWJrEmEmfTR4QyXc9Ptuu7mH/xk4Q26nWrzdxKcIh2A5lVeDI02oW0fly5AvWpPq75i5IAisL6WMQ+QEFDxHxwRsXPxUdRTT58crHk5QntVxQEo+edPqAfyp9mzqqJ133j+Up34Ykxacc=
+	t=1750843100; cv=none; b=uFvUxxjGphaGufgNa7IZVS/Vpq7D2DxlAYKNvh8x/iy1diV0jWKwIkOUhalH7vxDXbOzHOi232pKe+lLGtiA1GGEN8EdefQ1DRckpBL6biJ+3eeOIupXqBiIM6gWYLp9nMsrIaMZgTM5xGxbO8nNQGOQsxhD7JSx6Gj7bF0aU8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750843067; c=relaxed/simple;
-	bh=lzpnOdON6DVOT5w6AYitAh53ABW/+efYEjeRFM+K+0I=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Kxlgh2lSiaOotCO8Oq6N7ILbsX9Jof1d39D76oQwKl4WuVBZeb3ZFrKz++h4XtAwnbuzCmfgNe6JsdGLTFUS444h7YQRgLgETsR0CAlL4uX/UNr/3puwJsiCuQ84+SJf1ZP7ez0NzAcKAjwK4XKws2dOcTKCpDHTX6bQUU5IwIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIFaz6HA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750843100; c=relaxed/simple;
+	bh=FFyi2TTwWD+QPai6pEi4JyevuUJcOl9Vi7QGCJ3xztw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LPzKz0LwYLYemAEW3yv6ix0TjO37x7UGsfqtGnklP6vRi+Q+GMKtKi1L92/1r6HrIKanpNg/47jhjxemFdkQ/5HIvYHgi/5yT+6lXXwAFXGSbusKOCgH7dYImgK/n7cA75o796ve071mt2gdH9w3cHJmnzdYEfKHLZLRq2v18Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=uNaTUOOR; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIFaz6HA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E5EC4CEFC;
-	Wed, 25 Jun 2025 09:17:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750843066;
-	bh=lzpnOdON6DVOT5w6AYitAh53ABW/+efYEjeRFM+K+0I=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=XIFaz6HAp30XC5+3kqWdbXtioch/sN2GYVla67EpZbZur7OMiWAmaWk+mVMmQjq7h
-	 xWUkKD+6vJNDyOBeSsHwjpwIqsWGm/tBIvAVKheCu/e9tpTOjHd+75Jq4gmLFMw2os
-	 /sY/85yf0wnByP76jCTiSiw9WgxezQacG7tUYcIkAj9GG3REgJR8nsBem1NNxfc2/D
-	 xbD1foSYRScGYKvWqMymjo5Ff89TmWU28FLjE2oOoiOn04Y9UT23ASghVz4gPcfbYQ
-	 YkAWMyhdPj/jkyF0Bkajv9n31IeX60kr0CslyJVzFdHSp+YnTbPE0n2UuNvp4JtF7o
-	 +8G0CsvspQGMQ==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-60ef07eb7f4so3340198eaf.3;
-        Wed, 25 Jun 2025 02:17:46 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWiEhFJM8CTNvkSpjjQGcYY1FQn2yDiZBdmMpDsyo1K3CXStMcllxuiVWa4GfwYbZyT/V3drg3B9Bb1zP3V@vger.kernel.org, AJvYcCXV/xggpJvnQe2r1FNbuHYnk5C8XPqNMrUnUa8sAJeI4Vy+lzYzT2ncCKtHUTae+XnXDuPqbzqr4hzMNf82Vv8=@vger.kernel.org, AJvYcCXb/b9X5Go/HbxN9hmY12Msyy1UH8yexaimP1zv1OVt0uTjf3ihIptKWNKAEFUD8Qitfnvf6ViQ0O7K@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4P6CEtEh6BLEmFOL9EMxFZU3qiENWsFEVg6B7X72lY0VhjKZo
-	lyeqbZgjQw8rUlP4jtcXxnVbS0IPd2F7furhzgK0ko0WDdLMvc6sWZ2scZloufuDyuBtM96hNuE
-	hqEi7vOtAHLJoNGQPYpSLX8gk1cdKrMc=
-X-Google-Smtp-Source: AGHT+IGwmHiP0k0AYczEQyTJX9RAeJkddhKZ8nYsuI6oroN+azy2At44HmYTpTB4O/qsehu29og+iFkdUwWY8+oAXOs=
-X-Received: by 2002:a05:6820:4c0d:b0:611:75a8:f6ca with SMTP id
- 006d021491bc7-6119d87e6c2mr1465775eaf.6.1750843065563; Wed, 25 Jun 2025
- 02:17:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="uNaTUOOR"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ae0b6532345so136986566b.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:18:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1750843097; x=1751447897; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f2RSqLPZu23r28/yDYeK3iwSZkpIKmCaKnn2t8cvfxc=;
+        b=uNaTUOORyt699w1SXS1CH76sfqNrxw8t2G721zWMKUg64cNvebxu8wBiaK9pjYZ6CX
+         7lVBTaouM/NXE8f/sQlh5Xw85+kNIXy7GYIT9Zchphrn0nLsMCEPzXM165nAs6xQ66UF
+         r1ZNDkNksoQmdfe1osabRWzW99/lY2gMcJPHcTptlVl3GUZzuaHslSTiWLIDvYYx/fM9
+         0jeo95qSbmyKGmHY9jSCZxvPn8BAbvfMKLuW5R7cLZF8ZeNjUUhZ0g8pCNujn60xrX4r
+         YJqLKA8qJ0U9+VHa4fgyIqtb0O25gne9FKzEMg1hi/+ZhgyhfZVgxi7WObg7ojCHwb+f
+         aZ2g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750843097; x=1751447897;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f2RSqLPZu23r28/yDYeK3iwSZkpIKmCaKnn2t8cvfxc=;
+        b=s0jMaXTLsUl/WcBBuIp2awL+YtGPnJV/WRhxgjzNRNSadvd/WoGgS7sX3UdvogxG5J
+         bCkwF3L6L9FHi0XIakWbzd3nn2BHZK5iafBIi+5uIi3pkKOaQIJFkV6814VO7aM3z5WG
+         n7IXjkYemirj9aERQ+QEEWXw8zpg7yaHDi7z49XZZBDjLbx3Lx4L3PJ+ezdkinW02rgF
+         TeyhR5WewEEK5kef0GD47VnKxdvoGJ5q/Ku2a24hUxwBf3RFmIbF9neba0uNMQebt6KA
+         7q52l9/Oaf0pe1oGNCuZYd3Ul3pgcdE3q+xrIZmPjGQ5F85ihPPGVxVKn42RWYBvoiqg
+         11TQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVc/CE3iUl71SBFN2welHAXESM6m4OH18po70VQtv0FHMUHJxhUSPcD17uR0fO1Eqiavf0RNxVmdM56czg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0k/SHCOuXHhgQmJX7cxf/Q2NI5P2dTeyTnO9180SZ5BUw4038
+	vnNwPfj4QqZmqs011sZ4kyX3XmfEsIXLRbKubrmeNbWbMdtFoWU9GkIpXHHwInLtu7M=
+X-Gm-Gg: ASbGncu6XQATuFZ+oXFCq3mkDSvVBwkGkNneinV9YEgZAm8mjMujPkjUGk3zwGWEcto
+	EyUp6r+gw/G/yah2CusUjhSmLlPMHhKs9gHFHsHLdfkTZMvfNE0siXjIaJtKtIkLiAkupYliwQI
+	agkMpfkSNwCEs6q89pczeLKvIJPsFY2jInWMWb8+Nm9o3n7zuha6c47LKPVZQpDaU1z98rglHWa
+	NSg/Nq924kYPCe4vEGH4Ku2aRamBYaSWA8A296b44NrwlV1rxrLT7LmT67Ky6QVSObmKAMMGKh5
+	PzElRw4KqggNC+jJDF3pN3IiSURa1OY0Lzo0OdynI2pOqJMEVHafEzhbIJdSVBBVjmyYbeZEycb
+	3X6Fr1nPWmzfMZGhPTUt0gZSlT2jm0cRs
+X-Google-Smtp-Source: AGHT+IGYD0rC/aYIVmAXapkPflNDUng9xnrOy/PP1ovsYL3Pr4WT+utJBYAgP6x9+IrqYJvL1om8Hg==
+X-Received: by 2002:a17:907:d860:b0:ae0:c4e3:e2e8 with SMTP id a640c23a62f3a-ae0c4e3ed50mr133302166b.28.1750843096666;
+        Wed, 25 Jun 2025 02:18:16 -0700 (PDT)
+Received: from otso.local (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054209c85sm1009952366b.160.2025.06.25.02.18.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 02:18:16 -0700 (PDT)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Date: Wed, 25 Jun 2025 11:18:02 +0200
+Subject: [PATCH 1/4] dt-bindings: mfd: qcom,spmi-pmic: Document PMIV0104
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250613133517.1229722-1-igor.korotin.linux@gmail.com>
- <20250613135407.1233005-1-igor.korotin.linux@gmail.com> <aFB2FZEFcXUsW8lN@pollux>
- <f29b4eba-bd79-4f74-940c-8cff65495ae0@gmail.com> <aFGisAm-n6Mt70Hd@pollux>
-In-Reply-To: <aFGisAm-n6Mt70Hd@pollux>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Wed, 25 Jun 2025 11:17:33 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0hBG-ccWdhiKtcasAVOph+===AZoOroznf2k5OG0BOnkg@mail.gmail.com>
-X-Gm-Features: Ac12FXzgbtqeoG_UDw0GugtkAlia8IsWynCbV-x9VcnNKKiUERwayNEWl_bRE4s
-Message-ID: <CAJZ5v0hBG-ccWdhiKtcasAVOph+===AZoOroznf2k5OG0BOnkg@mail.gmail.com>
-Subject: Re: [PATCH v6 6/6] samples: rust: add ACPI match table example to
- platform driver
-To: Danilo Krummrich <dakr@kernel.org>, Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: ojeda@kernel.org, alex.gaynor@gmail.com, rafael@kernel.org, 
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	benno.lossin@proton.me, a.hindborg@kernel.org, aliceryhl@google.com, 
-	tmgross@umich.edu, lenb@kernel.org, wedsonaf@gmail.com, 
-	viresh.kumar@linaro.org, alex.hung@amd.com, dingxiangfei2009@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250625-sm7635-pmiv0104-v1-1-68d287c4b630@fairphone.com>
+References: <20250625-sm7635-pmiv0104-v1-0-68d287c4b630@fairphone.com>
+In-Reply-To: <20250625-sm7635-pmiv0104-v1-0-68d287c4b630@fairphone.com>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Luca Weiss <luca.weiss@fairphone.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750843094; l=829;
+ i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
+ bh=FFyi2TTwWD+QPai6pEi4JyevuUJcOl9Vi7QGCJ3xztw=;
+ b=cfWhIW16u8AU3opUGXPjIMEz+f97knPAZaejc4RLCxX25LbhEo2hfOqSlizWFGlJWr1mlUCuK
+ Lvms8zLfWujAlr9MWTSzk/YxpC+JHEZuQYOZF2Sbd/FZsDPal1KKBdI
+X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
+ pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
 
-On Tue, Jun 17, 2025 at 7:15=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> On Tue, Jun 17, 2025 at 05:39:07PM +0100, Igor Korotin wrote:
-> > I could suggest on of the following:
-> > DRV0001
-> > DRVR0001
-> > PDRV0001
->
-> This one looks reasonable to me.
->
-> > TEST0001
-> > TST0001
+Add the PMIV0104 PMIC which is found on e.g. boards with SM7635 SoCs.
 
-Can we please avoid using made up device IDs in the code, even if it
-is just sample code?
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+ Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-It is way better to use a real one that's been reserved already as
-"never use in real ACPI tables" for some reason.  I think I can find a
-few of these for you if need be.
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+index 078a6886f8b1e9ceb2187e988ce7c9514ff6dc2c..c416f25c90d6d9f8404947d1fadef91cf664e666 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
++++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+@@ -84,6 +84,7 @@ properties:
+           - qcom,pmi8994
+           - qcom,pmi8998
+           - qcom,pmih0108
++          - qcom,pmiv0104
+           - qcom,pmk8002
+           - qcom,pmk8350
+           - qcom,pmk8550
 
-Thanks!
+-- 
+2.50.0
+
