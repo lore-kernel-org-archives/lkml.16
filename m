@@ -1,253 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EF32263889;
-	Wed, 25 Jun 2025 13:11:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F22262FDE;
+	Wed, 25 Jun 2025 13:11:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750857075; cv=none; b=V+M5F5tXlT9nPcw0f7/LLdUk4i3RWExxhqgIpRkm5WPFTf+lExTEcTUdynw8/YPo+FjqzI2Eajbm1gLJVUGHIQe4iw6YZMoiOydWy3PlZcu0+9oTYjWLYfNLTjBkkj61xo3FyKxhnIvQ0pXoLbMya+0rDRAMzfsyFYtzb2Ym+KU=
+	t=1750857076; cv=none; b=avZUmsMSpm7WSQeYadZGToUCOsZMG9HDLpzu529NZz6C0IfiMHdaOIhmGHjT3B7uNpw17Fg7W3v2NW0LDRClmiXIZzG764TtZcyFm/yqnAN++IP/mSBqCsTBluynURX7Oyo+2fv7WB1BXWrvBDQN8mIhfSq+wPLjyyucPpoJcrA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750857075; c=relaxed/simple;
-	bh=HXejwBHjVhIVdEfA05YFBWpoT919/Xwuxzfki73h1Uc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mIpiC3jMrnnYraIwygF4pIMnbmD5U9YUPn2Fe8Gif4KRBXJqCjwXosxscelc81kezrhKTyazMXNTYNtENxx5zoMkhDPMmD/cVV8sQKyuSN/yCc4LmyPOVQ3TJ45ZKCLw6uMk6xnqbNbV/ACWw9X1Y4JmFTD3oJy/WvpB6E6Oj6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LvMJEDuH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750857076; c=relaxed/simple;
+	bh=j8C2e6tDckdTRfkOURaqEkwk7kmVI0oyt3RA3Hwp+uI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hNd8Bo1+vUojSm6iZVz1rgLa0/vQvBCv8+WQwjzF5Fgn3Uwr73lnlV0wbZF0jek9Ue8EpSPH9AhidGvy/6KeO32kleQ5cp48wWQvZLvbHLP7ntuoHkUg3IPGgrCQkj/UWVatInmh4RZl4moLtd0J1oaItrrnsvt2BeGbYX+N6pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mdrpuFgG; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LvMJEDuH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 950D6C4CEEE;
-	Wed, 25 Jun 2025 13:11:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750857075;
-	bh=HXejwBHjVhIVdEfA05YFBWpoT919/Xwuxzfki73h1Uc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=LvMJEDuHpfIast1vN40E7OCVGuwQjWUGagA77M8Y0Cb1/4sZA3Wb/8j8uTU70s7DP
-	 fOPicZgx/IfyrHwAK+mwJy7IroaMo5MD+c0FNEPekdrT6vQZoDAabF3jHqPWJQpZWX
-	 Vz8CQlI1rhIKy/ix2QlEgH0sPgGCKBdCrtSA8OjQoRKIP0tAvMNUJTZF1DAER1+sqA
-	 fr/NN30g7LGViRZHHb4hFJky6VBz0e2Zjd+wbks++jvAtXsfKvmXYRkcrOtZCU/Beh
-	 qu1qjiOTztv5DZE6Dhb6Q3SYq5Qv/VGJHiU0ojNC/nxMiLJeJ1jzEoiCY4wccFKzCX
-	 qKbTo9E9qZ9bA==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Date: Wed, 25 Jun 2025 15:10:20 +0200
-Subject: [PATCH v5 12/14] soc: qcom: ubwc: Add #defines for UBWC swizzle
- bits
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mdrpuFgG"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2363e973db1so8376855ad.0;
+        Wed, 25 Jun 2025 06:11:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750857074; x=1751461874; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pINmzrGfM7W/3B9anyGB+QhxgI2dWFZ69bm3f0khYUI=;
+        b=mdrpuFgGJJGA6TQkUtweiw5NkxOABpGpjP2rYDl0/eMNflyc8HI+uOi+CDX9RLp+P1
+         6VDxrm9UrHeuLnqbaMGoJ2TkU5Z2nj3GFXRS4+lq+4zNvHbxlwg1GORquijfNP2NvEiD
+         ltvb7kcRRkkMtc6ni0oF1w+m1LkcZlwoCkpuYyujXnAe/TmacYEt9EyYBjSeBXFuf3oA
+         QhTzq/I0FAAh2YQNOzPAVhlm65XbR8eRik1rsa6+X9/HgPbVMP+6atlssi0el9Ha1Vws
+         LuGWsEcXxtfDaQvepkrlDUQKNHoqGuqTwYFpyKt+7YP/9C/SbZH9Fq3B83nQo4XZO+Rd
+         +G9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750857074; x=1751461874;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:sender
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=pINmzrGfM7W/3B9anyGB+QhxgI2dWFZ69bm3f0khYUI=;
+        b=jyElNzbH5sYscs3qN1AwDlJkugjECQmRL8fWsgcpcYeOnUz6ljRTJkTEPi2TXdJ9of
+         jO4Ovq6fC6F1egwzo3bYc2fC/pvtTVYJCvuXSYa4Qd7d8cO6LUE/JOTNLBsc1EdKI+lI
+         WMhTyYa+1BW4dFDuTrOm7lhanRe4L93U24Kv/evuVeXkIiI+vaGzm0Q7c4el/Kdmn2fO
+         dh1i6KfsSxeQsKYcpF1FS4XUAtjHzRJX4brlE+z/VGcne2IcTYH91ykeqMDPS2BXWZiK
+         gzHrGcfWtf2YJzxpMsH1ju5aqrz8IF8zshf1vY0a2yZOFJZ/C6XqOSjCCpouqkTLcN94
+         r/Eg==
+X-Forwarded-Encrypted: i=1; AJvYcCV0khw1YQcU8Z1uT8hkfTDoBB94wRBMMHc7zhZfqum756ie0kzkuW+OANHS46DTLlDA5C9AoESQN+2/@vger.kernel.org, AJvYcCVCamQHF7x7JXcpQ2h7rtydTVypladjViJ15zvoV7Mm8QWFPQV8KuJWwU8lnowSG/GKknNrLDIB3SpWtTDk@vger.kernel.org, AJvYcCVMY1eLVWza1lABvFOH8lmIxFvcu12We3xWRcP+Px+Y/m0d3QfnDDf4H8Veuu2eGiAYFPCNbb7mDKeUzcY=@vger.kernel.org, AJvYcCXoGW8+rzcuoDEWZlpNSCaPgZAUgw66aLMNNc4TWja48zR/H5e+Tx4HZ0vVlEJ69yF42gz3bvOaq9lv@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+fUbOmah72nEQV4GnqgxPpE9klFBn0+72bMFfn3warsRkfGA0
+	kIGx0nlt49gUnn9MYJI6DpGmC0uAUQiVfhQ0jIRZyYlag5Ia+X1InWra
+X-Gm-Gg: ASbGncueERItYGfptAeNePxTZDfl+Kc5KKm3kiSYEbVzxsL71v6g9pomOqx4M7nFwOo
+	TngfqlozJZv0ow4cHsSjQoADqjwLUtlsJhr4KLzOJIybGxPkSVdXzejbKDzzuk8OJkCDDFl8zEe
+	QUBHVNmQCA8wteRDlLz7le2hNvHUkfZGQIvBP7xfyTu3tweGN0xcosN8p15N5ilVJS9xTiMDKv7
+	Ik3ad2mRi4qrRnCfQ4z5mQ/DbyDZ39Z9psk+iGLQvqIqC1kQe7gtrRPn+7I7qzHswtaMIaMU/jd
+	RbBMeJl6qBWablywo4BeB6dOPw+SoOaPmvZYo/M8YVAqknNnR2NSTAQ+dzAm2FZHGSbb94tdAxA
+	=
+X-Google-Smtp-Source: AGHT+IGFwa6G2iKD65nivo9JPbJnbMdbeBIL5HNDz82Jr9/nArUgZKtC6neqtfHGwF4oRip87mYzHQ==
+X-Received: by 2002:a17:902:fc46:b0:234:b445:3f31 with SMTP id d9443c01a7336-238024b07b2mr133494025ad.17.1750857073974;
+        Wed, 25 Jun 2025 06:11:13 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d839325fsm131346655ad.47.2025.06.25.06.11.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 06:11:13 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 25 Jun 2025 06:11:11 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: =?utf-8?B?5ZCz5qKT6LGq?= <tzuhao.wtmh@gmail.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>,
+	Michal Simek <michal.simek@amd.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Henry Wu <Henry_Wu@quantatw.com>,
+	Grant Peltier <grantpeltier93@gmail.com>,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Cedric Encarnacion <cedricjustine.encarnacion@analog.com>,
+	Kim Seer Paller <kimseer.paller@analog.com>,
+	Leo Yang <leo.yang.sy0@gmail.com>,
+	Ninad Palsule <ninad@linux.ibm.com>,
+	Alex Vdovydchenko <xzeol@yahoo.com>,
+	John Erasmus Mari Geronimo <johnerasmusmari.geronimo@analog.com>,
+	Nuno Sa <nuno.sa@analog.com>, Jerome Brunet <jbrunet@baylibre.com>,
+	Noah Wang <noahwang.wang@outlook.com>,
+	Mariel Tinaco <Mariel.Tinaco@analog.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/2] hwmon: (pmbus) Add support for MPS multi-phase
+ mp2869a/mp29612a controllers
+Message-ID: <331d77c4-fa53-4d3b-a17e-22481bf72d32@roeck-us.net>
+References: <20250624074156.291176-1-Henry_Wu@quantatw.tw>
+ <9bd05709-7702-4b74-85e1-3df25b57c535@kernel.org>
+ <CAL3H=v3s6H4ZpnS=EhPrpEiu-9N-xFCkunHuwWW0xnkXbzY9Kg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-topic-ubwc_central-v5-12-e256d18219e2@oss.qualcomm.com>
-References: <20250625-topic-ubwc_central-v5-0-e256d18219e2@oss.qualcomm.com>
-In-Reply-To: <20250625-topic-ubwc_central-v5-0-e256d18219e2@oss.qualcomm.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Abhinav Kumar <quic_abhinavk@quicinc.com>, 
- Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Rob Clark <robin.clark@oss.qualcomm.com>, 
- Abhinav Kumar <abhinav.kumar@linux.dev>, 
- Jessica Zhang <jessica.zhang@oss.qualcomm.com>, 
- Rob Clark <robin.clark@oss.qualcomm.com>, 
- Akhil P Oommen <akhilpo@oss.qualcomm.com>
-Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750857014; l=7400;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=r+76uZPGShAF8TMlEDHNZOPYCTMe3A9KqrCqkJ5zMjY=;
- b=fiA7G5Qf4HN8+WerGFgF2yBjbtlzRWScsJfGR3I1qCTyJwNPDDJP+/vsoBgAOvc3pcYLSYgGB
- 39E0xdFtqguCVHlqzpkr6JvWtmCGKILIiljjtJxE4slgEaXnB+CUff/
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL3H=v3s6H4ZpnS=EhPrpEiu-9N-xFCkunHuwWW0xnkXbzY9Kg@mail.gmail.com>
 
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+On Wed, Jun 25, 2025 at 02:31:02PM +0800, 吳梓豪 wrote:
+> Krzysztof Kozlowski <krzk@kernel.org> 於 2025年6月24日 週二 下午3:48寫道：
+> >
+> > On 24/06/2025 09:41, tzuhao.wtmh@gmail.com wrote:
+> > > +static int
+> > > +MP2869A_read_byte_data(struct i2c_client *client, int page, int reg)
+> > > +{
+> > > +     switch (reg) {
+> > > +     case PMBUS_VOUT_MODE:
+> > > +             /* Enforce VOUT direct format. */
+> > > +             return PB_VOUT_MODE_DIRECT;
+> > > +     default:
+> > > +             return -ENODATA;
+> > > +     }
+> > > +}
+> > > +
+> > > +static int
+> > > +MP2869A_identify_vout_format(struct i2c_client *client,
+> >
+> > Use Linux coding style, so lowercase for variables, types and functions.
+> > Everywhere (except when coding style tells you different, so please read
+> > it).
+> >
+> > > +                         struct MP2869A_data *data)
+> > > +{
+> > > +     int i, ret;
+> > > +
+> > > +     for (i = 0; i < data->info.pages; i++) {
+> > > +             ret = i2c_smbus_write_byte_data(client, PMBUS_PAGE, i);
+> > > +             if (ret < 0)
+> > > +                     return ret;
+> > > +
+> > > +             ret = i2c_smbus_read_word_data(client, MP2869A_VOUT_MODE);
+> > > +             if (ret < 0)
+> > > +                     return ret;
+> > > +
+> > > +             switch (ret & MP2869A_VOUT_MODE_MASK) {
+> > > +             case MP2869A_VOUT_MODE_VID:
+> > > +                     data->vout_format[i] = vid;
+> > > +                     break;
+> > > +             default:
+> > > +             return -EINVAL;
+> > > +             }
+> > > +             }
+> >
+> > Messed indentation in multiple places.
+> >
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static struct pmbus_driver_info MP2869A_info = {
+> >
+> > This is const.
+> Since info will be modified by mp2869a_read_vout at runtime, I chose
+> not to make it constant
 
-Make the values a bit more meaningful.
+That is a no-go. There can be multiple instances of the chip in a system,
+each requiring its own info data structure. If the structure is modified
+at runtime it needs to be copied first.
 
-This commit is intentionally cross-subsystem to ease review, as the
-patchset is intended to be merged together, with a maintainer
-consensus.
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c |  2 +-
- drivers/soc/qcom/ubwc_config.c        | 37 +++++++++++++++++++++++------------
- include/linux/soc/qcom/ubwc.h         |  8 ++++----
- 3 files changed, 30 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index e16ad298ba1c11ed5b4c70487bc09e23b2ed5cce..6612030621b1b16c8662d39453b609c9c9ff982f 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -679,7 +679,7 @@ static void a6xx_set_ubwc_config(struct msm_gpu *gpu)
- 	BUG_ON(adreno_gpu->ubwc_config.highest_bank_bit < 13);
- 	u32 hbb = adreno_gpu->ubwc_config.highest_bank_bit - 13;
- 	bool rgb565_predicator = cfg->ubwc_enc_version >= UBWC_4_0;
--	u32 level2_swizzling_dis = !(cfg->ubwc_swizzle & BIT(1));
-+	u32 level2_swizzling_dis = !(cfg->ubwc_swizzle & UBWC_SWIZZLE_ENABLE_LVL2);
- 	bool ubwc_mode = qcom_ubwc_get_ubwc_mode(cfg);
- 	bool amsbc = cfg->ubwc_enc_version >= UBWC_3_0;
- 	bool min_acc_len_64b = false;
-diff --git a/drivers/soc/qcom/ubwc_config.c b/drivers/soc/qcom/ubwc_config.c
-index 49ec20901f607b77fb297764b97d75c0537b1db2..7fb18ab067e60a8443d73d31886acc344c11d3b1 100644
---- a/drivers/soc/qcom/ubwc_config.c
-+++ b/drivers/soc/qcom/ubwc_config.c
-@@ -32,7 +32,7 @@ static const struct qcom_ubwc_cfg_data qcm2290_data = {
- static const struct qcom_ubwc_cfg_data sa8775p_data = {
- 	.ubwc_enc_version = UBWC_4_0,
- 	.ubwc_dec_version = UBWC_4_0,
--	.ubwc_swizzle = 4,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL3,
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 13,
- 	.macrotile_mode = true,
-@@ -41,7 +41,8 @@ static const struct qcom_ubwc_cfg_data sa8775p_data = {
- static const struct qcom_ubwc_cfg_data sar2130p_data = {
- 	.ubwc_enc_version = UBWC_3_0, /* 4.0.2 in hw */
- 	.ubwc_dec_version = UBWC_4_3,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL2 |
-+			UBWC_SWIZZLE_ENABLE_LVL3,
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 13,
- 	.macrotile_mode = true,
-@@ -50,7 +51,8 @@ static const struct qcom_ubwc_cfg_data sar2130p_data = {
- static const struct qcom_ubwc_cfg_data sc7180_data = {
- 	.ubwc_enc_version = UBWC_2_0,
- 	.ubwc_dec_version = UBWC_2_0,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL2 |
-+			UBWC_SWIZZLE_ENABLE_LVL3,
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 14,
- };
-@@ -58,7 +60,8 @@ static const struct qcom_ubwc_cfg_data sc7180_data = {
- static const struct qcom_ubwc_cfg_data sc7280_data = {
- 	.ubwc_enc_version = UBWC_3_0,
- 	.ubwc_dec_version = UBWC_4_0,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL2 |
-+			UBWC_SWIZZLE_ENABLE_LVL3,
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 14,
- 	.macrotile_mode = true,
-@@ -74,7 +77,8 @@ static const struct qcom_ubwc_cfg_data sc8180x_data = {
- static const struct qcom_ubwc_cfg_data sc8280xp_data = {
- 	.ubwc_enc_version = UBWC_4_0,
- 	.ubwc_dec_version = UBWC_4_0,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL2 |
-+			UBWC_SWIZZLE_ENABLE_LVL3,
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 16,
- 	.macrotile_mode = true,
-@@ -95,7 +99,9 @@ static const struct qcom_ubwc_cfg_data sdm845_data = {
- static const struct qcom_ubwc_cfg_data sm6115_data = {
- 	.ubwc_enc_version = UBWC_1_0,
- 	.ubwc_dec_version = UBWC_2_0,
--	.ubwc_swizzle = 7,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL1 |
-+			UBWC_SWIZZLE_ENABLE_LVL2 |
-+			UBWC_SWIZZLE_ENABLE_LVL3,
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 14,
- };
-@@ -103,7 +109,9 @@ static const struct qcom_ubwc_cfg_data sm6115_data = {
- static const struct qcom_ubwc_cfg_data sm6125_data = {
- 	.ubwc_enc_version = UBWC_1_0,
- 	.ubwc_dec_version = UBWC_3_0,
--	.ubwc_swizzle = 7,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL1 |
-+			UBWC_SWIZZLE_ENABLE_LVL2 |
-+			UBWC_SWIZZLE_ENABLE_LVL3,
- 	.highest_bank_bit = 14,
- };
- 
-@@ -116,7 +124,8 @@ static const struct qcom_ubwc_cfg_data sm6150_data = {
- static const struct qcom_ubwc_cfg_data sm6350_data = {
- 	.ubwc_enc_version = UBWC_2_0,
- 	.ubwc_dec_version = UBWC_2_0,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL2 |
-+			UBWC_SWIZZLE_ENABLE_LVL3,
- 	.ubwc_bank_spread = true,
- 	.highest_bank_bit = 14,
- };
-@@ -136,7 +145,8 @@ static const struct qcom_ubwc_cfg_data sm8150_data = {
- static const struct qcom_ubwc_cfg_data sm8250_data = {
- 	.ubwc_enc_version = UBWC_4_0,
- 	.ubwc_dec_version = UBWC_4_0,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL2 |
-+			UBWC_SWIZZLE_ENABLE_LVL3,
- 	.ubwc_bank_spread = true,
- 	/* TODO: highest_bank_bit = 15 for LP_DDR4 */
- 	.highest_bank_bit = 16,
-@@ -146,7 +156,8 @@ static const struct qcom_ubwc_cfg_data sm8250_data = {
- static const struct qcom_ubwc_cfg_data sm8350_data = {
- 	.ubwc_enc_version = UBWC_4_0,
- 	.ubwc_dec_version = UBWC_4_0,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL2 |
-+			UBWC_SWIZZLE_ENABLE_LVL3,
- 	.ubwc_bank_spread = true,
- 	/* TODO: highest_bank_bit = 15 for LP_DDR4 */
- 	.highest_bank_bit = 16,
-@@ -156,7 +167,8 @@ static const struct qcom_ubwc_cfg_data sm8350_data = {
- static const struct qcom_ubwc_cfg_data sm8550_data = {
- 	.ubwc_enc_version = UBWC_4_0,
- 	.ubwc_dec_version = UBWC_4_3,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL2 |
-+			UBWC_SWIZZLE_ENABLE_LVL3,
- 	.ubwc_bank_spread = true,
- 	/* TODO: highest_bank_bit = 15 for LP_DDR4 */
- 	.highest_bank_bit = 16,
-@@ -176,7 +188,8 @@ static const struct qcom_ubwc_cfg_data sm8750_data = {
- static const struct qcom_ubwc_cfg_data x1e80100_data = {
- 	.ubwc_enc_version = UBWC_4_0,
- 	.ubwc_dec_version = UBWC_4_3,
--	.ubwc_swizzle = 6,
-+	.ubwc_swizzle = UBWC_SWIZZLE_ENABLE_LVL2 |
-+			UBWC_SWIZZLE_ENABLE_LVL3,
- 	.ubwc_bank_spread = true,
- 	/* TODO: highest_bank_bit = 15 for LP_DDR4 */
- 	.highest_bank_bit = 16,
-diff --git a/include/linux/soc/qcom/ubwc.h b/include/linux/soc/qcom/ubwc.h
-index 5dc41aafa0afe1fe7f66ae6f8815989663ced780..e6b13980e58d1d120c84acbb90db52c007242387 100644
---- a/include/linux/soc/qcom/ubwc.h
-+++ b/include/linux/soc/qcom/ubwc.h
-@@ -21,11 +21,11 @@ struct qcom_ubwc_cfg_data {
- 	 * UBWC 1.0 always enables all three levels.
- 	 * UBWC 2.0 removes level 1 bank swizzling, leaving levels 2 & 3.
- 	 * UBWC 4.0 adds the optional ability to disable levels 2 & 3.
--	 *
--	 * This is a bitmask where BIT(0) enables level 1, BIT(1)
--	 * controls level 2, and BIT(2) enables level 3.
- 	 */
- 	u32 ubwc_swizzle;
-+#define UBWC_SWIZZLE_ENABLE_LVL1	BIT(0)
-+#define UBWC_SWIZZLE_ENABLE_LVL2	BIT(1)
-+#define UBWC_SWIZZLE_ENABLE_LVL3	BIT(2)
- 
- 	/**
- 	 * @highest_bank_bit: Highest Bank Bit
-@@ -66,7 +66,7 @@ static inline bool qcom_ubwc_get_ubwc_mode(const struct qcom_ubwc_cfg_data *cfg)
- {
- 	bool ret = cfg->ubwc_enc_version == UBWC_1_0;
- 
--	if (ret && !(cfg->ubwc_swizzle & BIT(0)))
-+	if (ret && !(cfg->ubwc_swizzle & UBWC_SWIZZLE_ENABLE_LVL1))
- 		pr_err("UBWC config discrepancy - level 1 swizzling disabled on UBWC 1.0\n");
- 
- 	return ret;
-
--- 
-2.50.0
-
+Guenter
