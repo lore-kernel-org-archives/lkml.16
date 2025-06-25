@@ -1,76 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23E8022097;
-	Wed, 25 Jun 2025 06:41:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B899130E58;
+	Wed, 25 Jun 2025 06:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750833707; cv=none; b=SSdS6itAiCA7SUqM5zdOSD/w8UcFehshoIyK4JkT/JVsMw9wjxrZJWqFafcwxMWLbtHTqgSK3vFpO+tLAJyxUJ8W3P0tuOvqGhEZGvR/6p2TZcVMqiR12Zl7bBtmUETKzNmLTWVWbLJlFqJXoj6f+conZ8jJxXtv8a6fA0QOTXU=
+	t=1750833784; cv=none; b=OhPodnwXgTBTOc6Rez2BBGrK54Od51+b5ZKdXgGaMMRmtxD005+ym+Rl+K136TMh4irdmhGihURqZn25y5vkz9bq5V1WTeT6hL8eauL/1mxnNm4fQTm8txljD98gdIvcLi2Mqe2IsQx79rdwQc3kMUTw86E7G6GsjokL66CX0+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750833707; c=relaxed/simple;
-	bh=2aNN0LNK3Qf6tRAO1HF7UcVQnZGCt20oYm9NewVYg5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=buyrUnXmUfu5vxIFYFvAJxB6c7CQIfyHu6pk6DpFoWAVOIl2mIIxalSjtrEFEjWZhmBBDdh8DPsKpzELzw+LlxzeMGrbtJvL+F0k6Qfz1o+oiG7uQK8DXksTHUmnN+PU2Mufs5OduDu7rv+d+oLrywSswgHVPwm6f/Lr3wL4rp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WVl50A4K; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750833784; c=relaxed/simple;
+	bh=PRlpk37/wc9ny9ve8FZTnggThRtsG0Xhz9V7yFY7eD0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=Uec9bh6I/xFtVFfMgGRkVQFd6pqQH3v3ArnILzQfBau26NH1F12WLX1ItarIVHaUbqy2T5yCE9NVihiHbwcQZn0wTWq2Q6Pl4aAMkziUYHx1abGH4TtFpAtjEod9cXeYmPyi1tmyeE1r0SLhghdpTb/Et7whao1zq09qYtbVVfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=md+iA8c4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WVl50A4K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750833706; x=1782369706;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2aNN0LNK3Qf6tRAO1HF7UcVQnZGCt20oYm9NewVYg5E=;
-  b=WVl50A4KxelbLyj5pZ+I9SDtXuft4AXRzBGf0TpHNTf6r2e3jIgkyjeU
-   lar5/idNsayIZcA8Hth35U/5g3rmkuJMLWDkW6r6Tbrl/8xgyBNJ/83Tw
-   o8TFl7Fm34DY2luoL+Vv4M7nlgFuwk38MAY3+eHg17mVSlVuY2WMCRjun
-   c4MCt1kOFjRakds6/YZ8MhfHVsRxbrJoW4sNhi/y/tTHf3IGRw30HVD0v
-   +YBZnsWKBs4tM95CvrXbpgf9qpQOZePwhp877a9o2ch1RcGxc7g2PXaAy
-   HwTX4SddUe4Un+84E/9nml8gqacFIp1N/ndiF2cHeSR2KVtXTmI5VivBK
-   A==;
-X-CSE-ConnectionGUID: r/T05TFlSUyJMShU9nNjkw==
-X-CSE-MsgGUID: efOu1N8CRJKlmiaJ9+0AXA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64149176"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="64149176"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 23:41:45 -0700
-X-CSE-ConnectionGUID: 04EyyZ8GQG+zDsxpDI2eYQ==
-X-CSE-MsgGUID: xksZvrIrTn+FolWKwu20mw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="175777901"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa002.fm.intel.com with ESMTP; 24 Jun 2025 23:41:42 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-	id A7934138; Wed, 25 Jun 2025 09:41:40 +0300 (EEST)
-Date: Wed, 25 Jun 2025 09:41:40 +0300
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-To: zhangjianrong <zhangjianrong5@huawei.com>
-Cc: michael.jamet@intel.com, YehezkelShB@gmail.com, andrew+netdev@lunn.ch,
-	davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-	pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, guhengsheng@hisilicon.com,
-	caiyadong@huawei.com, xuetao09@huawei.com, lixinghang1@huawei.com
-Subject: Re: [PATCH] [net] net: thunderbolt: Use correct request type in
- login/logout request packets
-Message-ID: <20250625064140.GF2824380@black.fi.intel.com>
-References: <20250625063048.1602018-1-zhangjianrong5@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="md+iA8c4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69A83C4CEEE;
+	Wed, 25 Jun 2025 06:43:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750833783;
+	bh=PRlpk37/wc9ny9ve8FZTnggThRtsG0Xhz9V7yFY7eD0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=md+iA8c4659PKGJbiD0k4w8wWR2ca+p7bpj/ygvzR6boXMUtJVqbms2nJDKFiem0S
+	 VPRoNlkOzCTmzr8zwZsG6TeeYjsJCPOA+uqKzS8Bz8G6akyA4D+HWPJ3gzoAKg5MMS
+	 CGANDupbgKgn4XS5daBIxe3EJ03rPv6Wt1jrtXud5K95RAUocRbzM8r6ywbJ8F4m6y
+	 /Bwyg5GQB2HdGyC1qkBJOY/VK5WwhDnIEQ/qYrRo1nJrGIEbZkDxdKmDe81552vIhX
+	 xsH5PweOxLSbVpmf7hgo2U0k8bzXazppTjmnBx5xSopGXtWih37cg1bEvwj1mCqaQ5
+	 PItrrWUnrIuPw==
+Date: Wed, 25 Jun 2025 15:42:59 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
+ <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, David Laight
+ <David.Laight@ACULAB.COM>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
+ <thomas@t-8ch.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv3 perf/core 07/22] uprobes: Add do_ref_ctr argument to
+ uprobe_write function
+Message-Id: <20250625154259.4a092f0213739404a0e9b210@kernel.org>
+In-Reply-To: <20250605132350.1488129-8-jolsa@kernel.org>
+References: <20250605132350.1488129-1-jolsa@kernel.org>
+	<20250605132350.1488129-8-jolsa@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250625063048.1602018-1-zhangjianrong5@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 25, 2025 at 02:30:48PM +0800, zhangjianrong wrote:
-> It doesn't make sense to use TB_CFG_PKG_XDOMAIN_RESP as the request
-> type of xdomain request packets.
+On Thu,  5 Jun 2025 15:23:34 +0200
+Jiri Olsa <jolsa@kernel.org> wrote:
 
-Same here as with previous. It is RESP on purpose.
+> Making update_ref_ctr call in uprobe_write conditional based
+> on do_ref_ctr argument. This way we can use uprobe_write for
+> instruction update without doing ref_ctr_offset update.
+> 
 
-Did you try this patch?
+Can we just decouple this update from uprobe_write()?
+If we do this exclusively, I think we can do something like;
+
+lock()
+update_ref_ctr(uprobe, mm, +1);
+...
+ret = uprobe_write();
+...
+if (ret < 0)
+  update_ref_ctr(uprobe, mm, -1);
+unlock()
+
+Thank you,
+
+
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  include/linux/uprobes.h | 2 +-
+>  kernel/events/uprobes.c | 8 ++++----
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index 518b26756469..5080619560d4 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -200,7 +200,7 @@ extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
+>  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t,
+>  			       bool is_register);
+>  extern int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma, const unsigned long opcode_vaddr,
+> -			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register);
+> +			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr);
+>  extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+>  extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
+>  extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 1e5dc3b30707..6795b8d82b9c 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -492,12 +492,12 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  		bool is_register)
+>  {
+>  	return uprobe_write(auprobe, vma, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE,
+> -			    verify_opcode, is_register);
+> +			    verify_opcode, is_register, true /* do_update_ref_ctr */);
+>  }
+>  
+>  int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  		 const unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes,
+> -		 uprobe_write_verify_t verify, bool is_register)
+> +		 uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr)
+>  {
+>  	const unsigned long vaddr = insn_vaddr & PAGE_MASK;
+>  	struct mm_struct *mm = vma->vm_mm;
+> @@ -538,7 +538,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  	}
+>  
+>  	/* We are going to replace instruction, update ref_ctr. */
+> -	if (!ref_ctr_updated && uprobe->ref_ctr_offset) {
+> +	if (do_update_ref_ctr && !ref_ctr_updated && uprobe->ref_ctr_offset) {
+>  		ret = update_ref_ctr(uprobe, mm, is_register ? 1 : -1);
+>  		if (ret) {
+>  			folio_put(folio);
+> @@ -590,7 +590,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  
+>  out:
+>  	/* Revert back reference counter if instruction update failed. */
+> -	if (ret < 0 && ref_ctr_updated)
+> +	if (do_update_ref_ctr && ret < 0 && ref_ctr_updated)
+>  		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
+>  
+>  	/* try collapse pmd for compound page */
+> -- 
+> 2.49.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
