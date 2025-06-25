@@ -1,140 +1,188 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D0125BF1F
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:08:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6842D25DAF7
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750853334; cv=none; b=R7NxzEjAxX2B6/Kibwcz8KPuA5kUEaHDtjrfVoO8N8jDagta+GJynuMpGa1vOc2IrTKeCDlfUKHi6ypvnD+tk77dOX8LDhoB/fyxAxBxTT8wz9dNlsIf3UlPIv1L5VUOiy0p7tZaOZCMFvxkFlfYm9zUxS16QtxkJ6wzxW3wO9o=
+	t=1750853337; cv=none; b=uzJMPM+iOszpZaDakiCurjxSJAINybfU23BLeugPXAJBDTZmg0jmompowc+QuCPn3Ha9FIgkOpdZl41lVy46hD4G2X/GMbYgx8r8BD5K9oGdreAfeaHGJBmhTn/Fy8KhR5efEtsEI4npRD3mjAHLvoLe7uxstK14uuX5cQLH3rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750853334; c=relaxed/simple;
-	bh=XjUv8TaY5yIBH6/CItLrdw8sZu5ezM4kHakd8j9DWGI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C4jsjKt6K98WbC59RDPwjDq1l7qfVPycwLA0hzQvP6KDHynNWcAP5ReWHP218QIivE+426WC8Ht4IrFb3OPgNoKgNiMQCn0uAHj3W1ZGCs8bOy6v5kuufTfn4kZZY7lpibMGFpANAD30W+ElFvv0iPqjE+Zb/Q55BOJmR9pdAVk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=JNBD/mXc; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750853337; c=relaxed/simple;
+	bh=X8h3MG8s3fb3StRKIu5mktDQtEpEED8w2np7qHBxHZU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sFGFOOPppJgcAzdxhdK9PGKV4fKbslL6FqOEenhNW3g7kP9cmakmdF3EqlJ7TGfLRYa91O0x+pbAMPKUsOUK+lUHuqgcnKQtKzoVY93woGCiKll4Nw5D8P0++FW4yeI/842Ia8HRrgyT9xIeOCkcbOdbfYuS8TA/fPVoSWKYtjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EEElSKjM; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="JNBD/mXc"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P4Xjia020776
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:08:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	MCaQnVyE91f9iV4YWIF0jVhUsTexB56Na6nrOBLs+DI=; b=JNBD/mXcTUez4djY
-	XllbM8spH9REuFkvl4zfaE8jU+BdZV9IO0aa8ATHclLiCyHA/E24N/3DoHNB7IgJ
-	k0UU6MBhmMHn10NsFiqUmIiKBMVXF/X9SPy26jn5n1oC7C6BmXai+E9jMTr6D2+Q
-	QeKe90bcHEtYZcWZ4ZoSwdWwCIuJP9BT+m+RD0tDRIhzedwkeVWA75WtAI8ajAGx
-	jSKKGqwuH9F75KEaL+JqI4bbmGWRPjpJH01G3f9b7j94er9uNNXJZObIi253BAGr
-	46EMIER8LVhUVSHpBfMd4us36jmSr7TZP8snOlWOtrFc04k1UMxk/F7vYt+KjLLp
-	sGEiaw==
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f4b3ymby-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:08:52 +0000 (GMT)
-Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d0a9d20c2eso153868785a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:08:51 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750853330; x=1751458130;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MCaQnVyE91f9iV4YWIF0jVhUsTexB56Na6nrOBLs+DI=;
-        b=Pg/qHt8OnZmoYU0qrGMElruFlYbfijNBnb3hL9vwEBs6/l5FFeZbmbzaqT5Uz71M4y
-         zUqLKvlPn5GKjl3/PG83NGFuD/jrolZn+99+B4h3wmz4gYu1u/B9CJEiwTq27cI/CJm7
-         lnPEPx7sohj+jpiuvbbzc7nMa89KgSwGxQ8d0aVLQ6VUp6u0voiFbR2HGZEmJytrGm4n
-         eH+pY0njMhA34NR1LRRq22TjhdmgVixmu/e/mOFWkVVO2/I8ghlIfDciqOtqG1zApc9m
-         8wzb6RQyVyXEPxX/DMkq9unYMr93uwVQcz8JEkLa8mLCCnX9w/UQUwIN/cXklvheF/xC
-         zFfg==
-X-Forwarded-Encrypted: i=1; AJvYcCX8/ay3vn0rRjkIVj9eRN1AZAH5175Sary4V1LmCigOz06mdwN9PfvgrFMEXrX3KEbtxe88P4sXE2cYWOM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyNPmHQnvuq9zBL8nbmBJgHlCMuArL1/djImtamK+uCAW1CI29C
-	OK9c6DD7ZmTEHCtrYN3ubrt0kE5S4GynQ4nOJ6xFGEFDY48WjYBE4FFLjPK1+srQUnlW9QHrcWj
-	ZahO4d6GgelB8kHUVHfXTIQ+IQ9GDrPuyqZ8QZtLa1aDamI61SYrwutsl9WycSdrHsDg=
-X-Gm-Gg: ASbGncvg1Mj+2PHqtEiKOeJ+7qT3be7875YOvPu8GwJ5I2koJRvs1gG/Z1adkrgcdoK
-	9GQLRoTbulTg2n+RbhMGZeJRa7ySpeLy99MLKZzJ0AsMGC0u+J51WNCuUWm6IyxODEVszf2/exM
-	Ut5tj2yg/3vNEjLp9mTIhUuQUdTYYj1oK/QFEorusf1i6rexm4evjf1e/q2Lzpjr68sPPE2zpVi
-	qHFzsFYltn34aToAHQCsIv6flTsEtTUwPro/4HpB2DiSx1QF5inU7zPsxSqIEavys809eZ13c4M
-	BuQMdHMrFwYOEaosmu/Hw0i96iBt6Y0gAZhJMwskHnM7Sg8GRaPEwrU3ZoySFbSt3Jr1IuJoTLG
-	BN8g=
-X-Received: by 2002:a05:620a:2982:b0:7c3:d3a0:578d with SMTP id af79cd13be357-7d42973eae3mr124361085a.14.1750853330621;
-        Wed, 25 Jun 2025 05:08:50 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE3HJQWTbVAQpycWsnZAHVSDsKtE3FEka4f1RNXtv6Ih1VXbB/6c7F/YrjduVB5TAz9qzKGHQ==
-X-Received: by 2002:a05:620a:2982:b0:7c3:d3a0:578d with SMTP id af79cd13be357-7d42973eae3mr124359685a.14.1750853330227;
-        Wed, 25 Jun 2025 05:08:50 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0b40c3950sm220037666b.141.2025.06.25.05.08.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 05:08:49 -0700 (PDT)
-Message-ID: <b1db543e-f33e-4162-8de1-257084d282de@oss.qualcomm.com>
-Date: Wed, 25 Jun 2025 14:08:48 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EEElSKjM"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750853334;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=zTVi9eLGvwvzNaP8yl+nsFwlrw1BF+IPA5X1VEV65UQ=;
+	b=EEElSKjMVPw3EAQDW9LQ7oIiukeYdAPbzqhCQdCU0gZK7ftiU8mKVZmgcowCr6HjHKymqj
+	bTpgDsvhtE7MBJIqS4LRFCZQDEkbcVKA/7uf30dn4gGFT9xpGidPvaJ4lCZYSAOKJ3S8+1
+	3pm/NtoUPhQGUI0hPAbj9cvCpLEAB7s=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-626-QJVepUZHO4aAnGEtYhWywA-1; Wed,
+ 25 Jun 2025 08:08:47 -0400
+X-MC-Unique: QJVepUZHO4aAnGEtYhWywA-1
+X-Mimecast-MFC-AGG-ID: QJVepUZHO4aAnGEtYhWywA_1750853326
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B12EA19560AF;
+	Wed, 25 Jun 2025 12:08:45 +0000 (UTC)
+Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.225.149])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B49D71956096;
+	Wed, 25 Jun 2025 12:08:39 +0000 (UTC)
+From: Gabriele Monaco <gmonaco@redhat.com>
+To: linux-kernel@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: Gabriele Monaco <gmonaco@redhat.com>
+Subject: [PATCH v2] tracing: Fix inconsistency in irq tracking on NMIs
+Date: Wed, 25 Jun 2025 14:08:22 +0200
+Message-ID: <20250625120823.60600-1-gmonaco@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/4] firmware: qcom: scm: take struct device as argument
- in SHM bridge enable
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250625-qcom-scm-race-v1-0-45601e1f248b@linaro.org>
- <20250625-qcom-scm-race-v1-2-45601e1f248b@linaro.org>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250625-qcom-scm-race-v1-2-45601e1f248b@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA4OSBTYWx0ZWRfXzX2bUAsWow6f
- vy6QJlCo6ngN9Diqm6qJJi6OoBHBFEtlAK3noIZMK5q0RJqIBc8sC6hkpMnaQjEh4IN9eDTqKMM
- OvKTC8wveqax4E8b7O/T58dnAUhZwdyHgCjfb/m+IyrqrJuCdUr0tqHEJdsDoXN5E0LVjwYI6Et
- nJCQ85WvRzZDDcQf0cqttlBsXWGs89mC5O49cBUgmUA3nqny4wLNARXdCXlt+1DyEpemY2zuDxY
- w9s8/CN8gc11RqxROTdTFB1g6c8JejXkg1FIs1t/fA1JLuYHmknE8X4JRaH5loG295uUHgyIyJ3
- W5d8z6fCPPuob1s6tL1TnI6RSxgXeuByyek6LE7VyUgiw22XRLcedd4Lh2uqptOKFTKGqtwHZxr
- g1sY90kEa1U4THP/Y/bftvVtUV9rlKGAuopIcHSCUxQ4E6w+MkwES6XqKVfyQJJnMdAEyiag
-X-Proofpoint-ORIG-GUID: h8jxqziPvF2_EnthnMF_J9Gvcx81Hkqx
-X-Proofpoint-GUID: h8jxqziPvF2_EnthnMF_J9Gvcx81Hkqx
-X-Authority-Analysis: v=2.4 cv=A8BsP7WG c=1 sm=1 tr=0 ts=685be6d4 cx=c_pps
- a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=a_hKpt2S6j2HhseFbdwA:9
- a=QEXdDO2ut3YA:10 a=PEH46H7Ffwr30OY-TuGO:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_03,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 mlxlogscore=845 malwarescore=0 spamscore=0 bulkscore=0
- phishscore=0 adultscore=0 impostorscore=0 suspectscore=0 mlxscore=0
- clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506250089
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 6/25/25 10:14 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> qcom_scm_shm_bridge_enable() is used early in the SCM initialization
-> routine. It makes an SCM call and so expects the internal __scm pointer
-> in the SCM driver to be assigned. For this reason the tzmem memory pool
-> is allocated *after* this pointer is assigned. However, this can lead to
-> a crash if another consumer of the SCM API makes a call using the memory
-> pool between the assignment of the __scm pointer and the initialization
-> of the tzmem memory pool.
-> 
-> As qcom_scm_shm_bridge_enable() is a special case, not meant to be
-> called by ordinary users, pull it into the local SCM header. Make it
-> take struct device as argument. This is the device that will be used to
-> make the SCM call as opposed to the global __scm pointer. This will
-> allow us to move the tzmem initialization *before* the __scm assignment
-> in the core SCM driver.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
+The irq_enable/irq_disable tracepoints fire only when there's an actual
+transition (enabled->disabled and vice versa), this needs special care
+in NMIs, as they can potentially start with interrupts already disabled.
+The current implementation takes care of this by tracking the lockdep
+state on nmi_entry as well as using the variable tracing_irq_cpu to
+synchronise with other calls (e.g. local_irq_disable/enable).
 
-I think you'll most definitely want to leave some comment about this
-intertwined chain, or someone is sure to break it in the future when
-doing some sort of refactoring
+This can be racy in case of NMIs when lockdep is enabled, and can lead
+to missing events when lockdep is disabled.
 
-Konrad
+Remove dependency on the lockdep status in the NMI common entry/exit
+code and adapt the tracing code to make sure that:
+
+- The first call disabling interrupts fires the tracepoint
+- The first non-NMI call enabling interrupts fires the tracepoint
+- The last NMI call enabling interrupts fires the tracepoint unless
+  interrupts were disabled before the NMI
+- All other calls don't fire
+
+Fixes: ba1f2b2eaa2a ("x86/entry: Fix NMI vs IRQ state tracking")
+Fixes: f0cd5ac1e4c5 ("arm64: entry: fix NMI {user, kernel}->kernel transitions")
+Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+---
+
+The inconsistency is visible with the sncid RV monitor and particularly
+likely on machines with the following setup:
+- x86 bare-metal with 40+ CPUs
+- tuned throughput-performance (activating regular perf NMIs)
+- workload: stress-ng --cpu-sched 21 --timer 11 --signal 11
+
+The presence of the RV monitor is useful to see the error but it is not
+necessary to trigger it.
+
+Changes since V1:
+* Reworded confusing changelog
+* Remove dependency on lockdep counters for tracepoints
+* Ensure we don't drop valid tracepoints
+* Extend change to arm64 code
+
+ arch/arm64/kernel/entry-common.c |  5 ++---
+ kernel/entry/common.c            |  5 ++---
+ kernel/trace/trace_preemptirq.c  | 12 +++++++-----
+ 3 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/arch/arm64/kernel/entry-common.c b/arch/arm64/kernel/entry-common.c
+index 7c1970b341b8c..7f1844123642e 100644
+--- a/arch/arm64/kernel/entry-common.c
++++ b/arch/arm64/kernel/entry-common.c
+@@ -213,10 +213,9 @@ static void noinstr arm64_exit_nmi(struct pt_regs *regs)
+ 	bool restore = regs->lockdep_hardirqs;
+ 
+ 	ftrace_nmi_exit();
+-	if (restore) {
+-		trace_hardirqs_on_prepare();
++	trace_hardirqs_on_prepare();
++	if (restore)
+ 		lockdep_hardirqs_on_prepare();
+-	}
+ 
+ 	ct_nmi_exit();
+ 	lockdep_hardirq_exit();
+diff --git a/kernel/entry/common.c b/kernel/entry/common.c
+index a8dd1f27417cf..e234f264fb495 100644
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -343,10 +343,9 @@ void noinstr irqentry_nmi_exit(struct pt_regs *regs, irqentry_state_t irq_state)
+ {
+ 	instrumentation_begin();
+ 	ftrace_nmi_exit();
+-	if (irq_state.lockdep) {
+-		trace_hardirqs_on_prepare();
++	trace_hardirqs_on_prepare();
++	if (irq_state.lockdep)
+ 		lockdep_hardirqs_on_prepare();
+-	}
+ 	instrumentation_end();
+ 
+ 	ct_nmi_exit();
+diff --git a/kernel/trace/trace_preemptirq.c b/kernel/trace/trace_preemptirq.c
+index 0c42b15c38004..fa45474fc54f1 100644
+--- a/kernel/trace/trace_preemptirq.c
++++ b/kernel/trace/trace_preemptirq.c
+@@ -58,7 +58,11 @@ static DEFINE_PER_CPU(int, tracing_irq_cpu);
+  */
+ void trace_hardirqs_on_prepare(void)
+ {
+-	if (this_cpu_read(tracing_irq_cpu)) {
++	int tracing_count = this_cpu_read(tracing_irq_cpu);
++
++	if (in_nmi() && tracing_count > 1)
++		this_cpu_dec(tracing_irq_cpu);
++	else if (tracing_count) {
+ 		trace(irq_enable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
+ 		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
+ 		this_cpu_write(tracing_irq_cpu, 0);
+@@ -89,8 +93,7 @@ NOKPROBE_SYMBOL(trace_hardirqs_on);
+  */
+ void trace_hardirqs_off_finish(void)
+ {
+-	if (!this_cpu_read(tracing_irq_cpu)) {
+-		this_cpu_write(tracing_irq_cpu, 1);
++	if (this_cpu_inc_return(tracing_irq_cpu) == 1) {
+ 		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
+ 		trace(irq_disable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
+ 	}
+@@ -103,8 +106,7 @@ void trace_hardirqs_off(void)
+ {
+ 	lockdep_hardirqs_off(CALLER_ADDR0);
+ 
+-	if (!this_cpu_read(tracing_irq_cpu)) {
+-		this_cpu_write(tracing_irq_cpu, 1);
++	if (this_cpu_inc_return(tracing_irq_cpu) == 1) {
+ 		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
+ 		trace(irq_disable, TP_ARGS(CALLER_ADDR0, CALLER_ADDR1));
+ 	}
+
+base-commit: 78f4e737a53e1163ded2687a922fce138aee73f5
+-- 
+2.49.0
+
