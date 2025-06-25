@@ -1,147 +1,196 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E80D829AB02;
-	Wed, 25 Jun 2025 09:01:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9A37E792;
+	Wed, 25 Jun 2025 09:01:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750842081; cv=none; b=EaYFKLt9kAb7d2CEm4wTCdcdA8o2B3HItOuIFbc37tnWDQyJWV+iSW9J51dwj8gD+DdOIXP2Y3HIZPT1sV9RSTOEVxATYgEiSP5K8S7qqJKOALzEjas8jHcthmQSFZEHs51gbah0CuzKFa9fXxSNvztrtYqupCPh7L6UcF/bprU=
+	t=1750842101; cv=none; b=ifo9NZ2Ng0YW2qk8Owyqx6J+gehrvQyVukJc3hsLXulN1vO33RoBJ9nmxIT6Q8bKGrpBjaaYIMtSkS3shjfg2mqRcrPkoJzULyfQ8DfkRS2iTRcgJrEgNisq5pJLWed9r9Ghk+lE2YruFP6vuwPOGGDKKzrRn+gxgpvV81+19dA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750842081; c=relaxed/simple;
-	bh=llIoZ65iZRbE6HKRxtDXoE+2sFnVDysUCy+rkRbLInw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nJPoF86KI1a9dZjGaF3TYQwhnSPyWkHVjVTPJpr0o9QQ5zLkNki0jv3RFDp5p/b+vdKQQzQK07OX+M3nnsLvgP1GxH5mMvzwRJns9+T6GeVou6DSDQgR0xhW1flpKWz2fruR4T3OYA+XOHUELvD1JVa9qkWcWQ7tHdzN/0BIig0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TDmYPDKA; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1750842101; c=relaxed/simple;
+	bh=OhdgF55PyBEbfC8aXgc9N1rHxO4doVes6/sM5CeG1ZU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=teMKDJDYBYBSDjpcayoA+WGPjv6AhAG0e6k1aHafTrr4D4gh5JAr953xLw6VLB0xuPVSLSovBLdYyJwf18FbI6xlKh8eS+UIr3ptSG9lX2SntSZnzk4zFEHXvkoP/u/es2kKujeL4AJUdQ4kPa8si5vG1llI7iHcXmPcI7g4Uok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kmWaOFjU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TDmYPDKA"
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P1q5KG002448;
-	Wed, 25 Jun 2025 09:01:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=EF6AjC4MUUF
-	M1cgFCRP63nmXpijP6PySoR7J70JajKg=; b=TDmYPDKAnoBX3MHJDmhRzgUN/aL
-	wjMZ2OjxuSdJYiHrMxYQr8z9ZvavzuoqnOkaJ4WwoRFnpmLgdwBe0jFIQHAkk0QC
-	ElV4ySsr62BssW9P2pf47hQG+mta+9JS3bqEL9RNyJlnavO3o4eLzDPSNF3maqw7
-	qSImKvSGcwSU+y5s1WUstSGK6Psd4gBC2xerh+Q0AS4ZM3npTr1wt+9DQl2NSGfc
-	oc7VQxOo9YDHd68l9bOSrYPH/o5oTKbbAm+b90JtWIJPvPjG2CoF6HYAE1b0NlRy
-	ke/lkOQJQRlir3YbnBuyvxTxgYN7ac72BqOo9X0aSIejPW4EnJFkhjJ08PQ==
-Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g7td921d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 09:01:02 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55P910or032353;
-	Wed, 25 Jun 2025 09:01:00 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 47dntmargj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 09:01:00 +0000
-Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55P90xxr032337;
-	Wed, 25 Jun 2025 09:00:59 GMT
-Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 55P90x6U032334
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 09:00:59 +0000
-Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
-	id 25A143864; Wed, 25 Jun 2025 17:00:58 +0800 (CST)
-From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
-        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
-        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
-        kw@linux.com
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        Ziyue Zhang <quic_ziyuzhan@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH v3 4/4] arm64: dts: qcom: sa8775p: add link_down reset for pcie
-Date: Wed, 25 Jun 2025 17:00:48 +0800
-Message-Id: <20250625090048.624399-5-quic_ziyuzhan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250625090048.624399-1-quic_ziyuzhan@quicinc.com>
-References: <20250625090048.624399-1-quic_ziyuzhan@quicinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kmWaOFjU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA9ADC4CEEA;
+	Wed, 25 Jun 2025 09:01:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750842100;
+	bh=OhdgF55PyBEbfC8aXgc9N1rHxO4doVes6/sM5CeG1ZU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kmWaOFjUT1wMib2gJdif3D7Ejx4H1upQdwnyg4IgRfaVtd5UkCyhMfOC76/FUKCgd
+	 vxAHh5XhTgPH4e9ON+kNB4QIpDFQ/8mWmCl83/GHhLyyjDp1vZvkEaecgSx8QtvX+a
+	 Sb6medYCTIPOU5fcM/Ff+yprIo/QdiK0Mjr3VOBABQvUXWYbkQksv7UAhdXb0ianvJ
+	 BRt0NEUZp8EKImSvLzdWddbpxzJqOo0edMBk+gtjyzAoRVhtTQMPeV+i6TGDdniD03
+	 uFi8a7/s5Fa5nOtywCjlBDJwWxf2Gmh8lUCG9O7yMGxOobFxqR4FXbXy6nSJAlQVcO
+	 wJyii3Wxvv+JA==
+Date: Wed, 25 Jun 2025 10:01:33 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
+	linux@roeck-us.net, jdelvare@suse.com,
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+	Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20250625090133.GP795775@google.com>
+References: <20250612140041.GF381401@google.com>
+ <CAOoeyxVvZiD18qbGd5oUnqLNETKw50fJBjJO3vR50kon_a5_kA@mail.gmail.com>
+ <20250612152313.GP381401@google.com>
+ <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
+ <20250613131133.GR381401@google.com>
+ <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
+ <20250619115345.GL587864@google.com>
+ <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
+ <20250619152814.GK795775@google.com>
+ <CAOoeyxU7eQneBuxbBqepta29q_OHPzrkN4SKmj6RX72L3Euw5A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=CPYqXQrD c=1 sm=1 tr=0 ts=685bbace cx=c_pps
- a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=UMluCPnEzjiUAf4N7sYA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA2NyBTYWx0ZWRfXxF7PsBNX5ZT0
- KfSBZ4/fb59o7KkYMBVxxLF2DtloynEMvoJ5HkzhR+uwoQ4yBPkwtPwV2R4Z6cMNANLrQVdRQ9X
- jrnipQcOM1Nnduk6h6cqmcwpMV9lXa7QlvDviiZEE0wnnDG9JHXq5PCasVkDTw6LUKknqmNjSLX
- OtiiFixV4FvbgMikyrbeFHuEV4aEFmvJ0jasr9Dr5m+4QPu9oKJBvvKi1VIY0joYSERrnxJD1ep
- CtXNKCqqPnqLyRlm4ag7FbjggrkI6Zog8UGajGkkf5ncLeWR0QVZCNpQL2NtrvveW9tmDdLqQRR
- 7kND6fnztAIq/9gchEbwo1t2D8+IS7pMj20B3hMX0LQ1Z7MRfEXo2PITcqef7wimiUj+kZ8wxPn
- McAgGu8FOiulhnWH0FsKrtOnp/0cgKi+FpI3BgPBKDkmaVsu5pwPmfKNuL4zq8b/gXMhnsJm
-X-Proofpoint-GUID: dyx6eiLlFOj_jh9uXRcZ1JWQDNoy6omj
-X-Proofpoint-ORIG-GUID: dyx6eiLlFOj_jh9uXRcZ1JWQDNoy6omj
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
- impostorscore=0 suspectscore=0 clxscore=1015 spamscore=0 priorityscore=1501
- adultscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506250067
+In-Reply-To: <CAOoeyxU7eQneBuxbBqepta29q_OHPzrkN4SKmj6RX72L3Euw5A@mail.gmail.com>
 
-SA8775p supports 'link_down' reset on hardware, so add it for both pcie0
-and pcie1, which can provide a better user experience.
+On Fri, 20 Jun 2025, Ming Yu wrote:
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
----
- arch/arm64/boot/dts/qcom/sa8775p.dtsi | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+> Lee Jones <lee@kernel.org> 於 2025年6月19日 週四 下午11:28寫道：
+> >
+> > On Thu, 19 Jun 2025, Ming Yu wrote:
+> >
+> > > Lee Jones <lee@kernel.org> 於 2025年6月19日 週四 下午7:53寫道：
+> > > >
+> > > > On Fri, 13 Jun 2025, Ming Yu wrote:
+> > > >
+> > > > > Lee Jones <lee@kernel.org> 於 2025年6月13日 週五 下午9:11寫道：
+> > > > > >
+> > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
+> > > > > >
+> > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午11:23寫道：
+> > > > > > > >
+> > > > > > > > On Thu, 12 Jun 2025, Ming Yu wrote:
+> > > > > > > >
+> > > > > > > > > Dear Lee,
+> > > > > > > > >
+> > > > > > > > > Thank you for reviewing,
+> > > > > > > > >
+> > > > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午10:00寫道：
+> > > > > > > > > >
+> > > > > > > > > ...
+> > > > > > > > > > > +static const struct mfd_cell nct6694_devs[] = {
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+> > > > > > > > > > > +
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
+> > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
+> > > > > > > > > >
+> > > > > > > > > > Why have we gone back to this silly numbering scheme?
+> > > > > > > > > >
+> > > > > > > > > > What happened to using IDA in the child driver?
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > In a previous version, I tried to maintain a static IDA in each
+> > > > > > > > > sub-driver. However, I didn’t consider the case where multiple NCT6694
+> > > > > > > > > devices are bound to the same driver — in that case, the IDs are not
+> > > > > > > > > fixed and become unusable for my purpose.
+> > > > > > > >
+> > > > > > > > Not sure I understand.
+> > > > > > > >
+> > > > > > >
+> > > > > > > As far as I know, if I maintain the IDA in the sub-drivers and use
+> > > > > > > multiple MFD_CELL_NAME("nct6694-gpio") entries in the MFD, the first
+> > > > > > > NCT6694 device bound to the GPIO driver will receive IDs 0~15.
+> > > > > > > However, when a second NCT6694 device is connected to the system, it
+> > > > > > > will receive IDs 16~31.
+> > > > > > > Because of this behavior, I switched back to using platform_device->id.
+> > > > > >
+> > > > > > Each of the devices will probe once.
+> > > > > >
+> > > > > > The first one will be given 0, the second will be given 1, etc.
+> > > > > >
+> > > > > > Why would you give multiple IDs to a single device bound to a driver?
+> > > > > >
+> > > > >
+> > > > > The device exposes multiple peripherals — 16 GPIO controllers, 6 I2C
+> > > > > adapters, 2 CAN FD controllers, and 2 watchdog timers. Each peripheral
+> > > > > is independently addressable, has its own register region, and can
+> > > > > operate in isolation. The IDs are used to distinguish between these
+> > > > > instances.
+> > > > > For example, the GPIO driver will be probed 16 times, allocating 16
+> > > > > separate gpio_chip instances to control 8 GPIO lines each.
+> > > > >
+> > > > > If another device binds to this driver, it is expected to expose
+> > > > > peripherals with the same structure and behavior.
+> > > >
+> > > > I still don't see why having a per-device IDA wouldn't render each
+> > > > probed device with its own ID.  Just as you have above.
+> > > >
+> > >
+> > > For example, when the MFD driver and the I2C sub-driver are loaded,
+> > > connecting the first NCT6694 USB device to the system results in 6
+> > > nct6694-i2c platform devices being created and bound to the
+> > > i2c-nct6694 driver. These devices receive IDs 0 through 5 via the IDA.
+> > >
+> > > However, when a second NCT6694 USB device is connected, its
+> > > corresponding nct6694-i2c platform devices receive IDs 6 through 11 —
+> > > instead of 0 through 5 as I originally expected.
+> > >
+> > > If I've misunderstood something, please feel free to correct me. Thank you!
+> >
+> > In the code above you register 6 I2C devices.  Each device will be
+> > assigned a platform ID 0 through 5. The .probe() function in the I2C
+> > driver will be executed 6 times.  In each of those calls to .probe(),
+> > instead of pre-allocating a contiguous assignment of IDs here, you
+> > should be able to use IDA in .probe() to allocate those same device IDs
+> > 0 through 5.
+> >
+> > What am I missing here?
+> >
+> 
+> You're absolutely right in the scenario where a single NCT6694 device
+> is present. However, I’m wondering how we should handle the case where
+> a second or even third NCT6694 device is bound to the same MFD driver.
+> In that situation, the sub-drivers using a static IDA will continue
+> allocating increasing IDs, rather than restarting from 0 for each
+> device. How should this be handled?
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index 731bd80fc806..d0a6303cb133 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -7635,8 +7635,11 @@ pcie0: pcie@1c00000 {
- 		iommu-map = <0x0 &pcie_smmu 0x0000 0x1>,
- 			    <0x100 &pcie_smmu 0x0001 0x1>;
- 
--		resets = <&gcc GCC_PCIE_0_BCR>;
--		reset-names = "pci";
-+		resets = <&gcc GCC_PCIE_0_BCR>,
-+			 <&gcc GCC_PCIE_0_LINK_DOWN_BCR>;
-+		reset-names = "pci",
-+			      "link_down";
-+
- 		power-domains = <&gcc PCIE_0_GDSC>;
- 
- 		phys = <&pcie0_phy>;
-@@ -7803,8 +7806,11 @@ pcie1: pcie@1c10000 {
- 		iommu-map = <0x0 &pcie_smmu 0x0080 0x1>,
- 			    <0x100 &pcie_smmu 0x0081 0x1>;
- 
--		resets = <&gcc GCC_PCIE_1_BCR>;
--		reset-names = "pci";
-+		resets = <&gcc GCC_PCIE_1_BCR>,
-+			 <&gcc GCC_PCIE_1_LINK_DOWN_BCR>;
-+		reset-names = "pci",
-+			      "link_down";
-+
- 		power-domains = <&gcc PCIE_1_GDSC>;
- 
- 		phys = <&pcie1_phy>;
+I'd like to see the implementation of this before advising.
+
+In such a case, I assume there would be a differentiating factor between
+the two (or three) devices.  You would then use that to decide which IDA
+would need to be incremented.
+
+However, Greg is correct.  Hard-coding look-ups for userspace to use
+sounds like a terrible idea.
+
 -- 
-2.34.1
-
+Lee Jones [李琼斯]
