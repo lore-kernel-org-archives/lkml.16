@@ -1,193 +1,162 @@
-Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E9C27932E;
-	Wed, 25 Jun 2025 08:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9286F1FBE9B
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:55:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841728; cv=none; b=FIDxv44Jre0vhn3PTpULjdIw8QI17V9AZrL9G3ot5PfTqW9UaYNpKX5KxEg7SXJ3nEfjFvBSB48IZo4p9/5w58wE1YzNgdTao446soRmkWx3mb12tnlI/MsR5tKJWzVUFAYfWm+xpo7NE/MQDptEdJ57Cz0A9/SkcS1Sa0NyOhQ=
+	t=1750841758; cv=none; b=gkLadIuKZfBlAud1q6Q1XxsSjXDYP9ugS49ISQSkb/+Hj9moqKhlJ9Eoypt5B6faGnYyKFgY588MJgpDAgxZBvgNw6WPXLldyz7mwG6yel9M8VNI7npRzXUOrCyTjfJo489m3STEYH9bWXIfHaxVFyFNtds5UBsWPCafuted+hw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841728; c=relaxed/simple;
-	bh=cjV9mq90c8xZ+NKkEcNZ1Gs0FultA9PRjpDMArFXJM4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kcqfxAxFaMzhqN2v/dHovdeccxyIIPPnZQHiWss11DAVW4+D3hUBCRe/c4/pLRrBkmk74fmz+nERCh1hifzaxbAFybjKH/OH+54sWwlOlqi2cvNfcKqOh1WaBy6UQqnByv2oLkMQiQ34Wjstts1RnqIthSVhs2Cn2ar1UaLotUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=UCI6yD0e; arc=none smtp.client-ip=193.68.50.107
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
+	s=arc-20240116; t=1750841758; c=relaxed/simple;
+	bh=tf35KtTzA5mss8fmiNEjVbGmUAJ95Y55dIVbi+StKhw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TPoNtwjIwxuWXhXJq4ucZed10Keb+hsVwoAJXn5FAEr6KED/wmyeVvWCVkwqRyFH22bJRcoeeGt5Z1WhHuNCyZ46xbLHe1lkiJFGRYtoD8krVq0qhO6sTwFgy/+2/cbBjktoSAY6wZNr9CNgl6RVDGiGvY2upzTUBq0544obddY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IlfpN3Te; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="UCI6yD0e"
-Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
-	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id D7A1EA06EB;
-	Wed, 25 Jun 2025 10:55:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:from:from:message-id:mime-version:reply-to:subject:subject:to
-	:to; s=mail; bh=nrf5whORkfSt+oMoV6M/vem4ZwKyQ3gZRdKv2OMWRrA=; b=
-	UCI6yD0e8NDJ52qaFvJN4jMML1kfxrIrv6EOUQuzgmUwf2G+2S4GoNagDaS9AnqZ
-	2GCPFlayL0D8KLXvQLh4C7cZY6YCo248Oo2w5l12EU4tfMCNF8JG28t6flinEwCb
-	wX6l7f1r4CO65L6Mk9jNNnYAG6K1lWol3ls2xpKuUgkA/JH/aX23coa4dLIjmSvJ
-	Dhgs6KGm8veQUWQVx9dppvh4RYzrbHTvbHDtJtUp3uyTUdpK7rItblxw+0bIreey
-	3z8jcCHqUtJ9P1+otblp+eCqBmJMSvBiZ7Xpcktqag4/IBPGAsvIMWnsqUuYyDiK
-	Od6h2rcOqMLH+AXLfQFjFmoLLHHMev5Qy96ZSV+AVErsjsDl2XX0gFD5z28MP3YJ
-	yrJ0Q6l+AeyMoUu/zTyYeYVXJK3gTA64DyrfPLWJ+7v/Cv4kdVqHi/ygBnxxRAPn
-	nqeT1diYy/Syfr0DF7epuAMQWwsJIjo/hZvUx/PTtXHUNBQr7XOFMuwNdkuAqqXY
-	aM5LyO2VItY2ZYNuFP/Oy54cKHgCogw+x6gZnn+O4c1gme+QJLPc6AYD+sFpz1w1
-	/+/ndixXvIfHDWL1qdrJiKaGDGxmQp1adgdf3EHanISzvoKRHuv0Zkb/9T9/8N7N
-	iqlV+F1kSPWqvelTAutEkzg63t8z99FqspI5XCjR3LY=
-From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
-To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>
-CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Chen-Yu
- Tsai" <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, "Chen-Yu
- Tsai" <wens@csie.org>, Julian Calaby <julian.calaby@gmail.com>, Vinod Koul
-	<vkoul@kernel.org>, Samuel Holland <samuel@sholland.org>
-Subject: [PATCH v11] dma-engine: sun4i: Simplify error handling in probe()
-Date: Wed, 25 Jun 2025 10:54:50 +0200
-Message-ID: <20250625085450.154280-2-csokas.bence@prolan.hu>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IlfpN3Te"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750841755;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=NintfTGRzXfaHVuSILiqulIMZ5CqmzdFP+2lgyyhAjk=;
+	b=IlfpN3TeZxXZdWyme0IjPLmG7MJZu4ap+tslUT52bW0tVcbe0cOzr7HEJGQOoZApGNlLZM
+	KpHh/ncfutDKPVnP5aPnREPxZimKVSo7KoZdmH5ALvy1dhE9vmVXKE6LOUZXwyIaEIqizN
+	hP4THMPBXwQRWDIqk+3/bTenDZ4Ul0w=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-325-IkZkAkHGNam7ijEaDYPvMA-1; Wed, 25 Jun 2025 04:55:53 -0400
+X-MC-Unique: IkZkAkHGNam7ijEaDYPvMA-1
+X-Mimecast-MFC-AGG-ID: IkZkAkHGNam7ijEaDYPvMA_1750841753
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4535ee06160so44345035e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:55:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750841753; x=1751446553;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NintfTGRzXfaHVuSILiqulIMZ5CqmzdFP+2lgyyhAjk=;
+        b=N8+cczfXTDH+S49PhkaKK+s0oceZHSEgHMkwcMdnIwauq5A7pm+7gBMgrnDA6bw7BG
+         Lb7ajEXeEp0Zp/X+qpgvM6PIOhpCwx0c7+j/AgtH4Cx9Wc+xGgaBG1Y49FkgZkO66Tu9
+         dbT/17Ybto8I1e+tn1w+kfJ38Z22g6rIQba7b2uBC5NCoQEmHRxmohfepwTgJ+PIuqbP
+         +IVAg06lL3q5qCfh7D7CcKvpIq5Q/RBpAkHp8EEXEbhfY/ZhUImTCfF/T0kn3GTbe92A
+         KDpPtKkZ9rXQpsp5L7lPS9vf0oTWnvIXRraa1tp4poPLzgF5PRoUkBvTjnoH7gC6zRmo
+         ju/A==
+X-Gm-Message-State: AOJu0Yyd6QpYpGJ8tNwRGZnCXDjde1u7W/O341zUVVhPwyrniDOYO0Rh
+	KIKHmi9lgPb7nTo4hw6uxUBWud3UGMBS+l9XKcXA6ISROjh45735p0h+Vhlf2H4qDHg3AePgDro
+	+TrtPeYnom8gjQjBHIm5/+hwDOKbg1Ykh7D9LkbY8MpBQp5LwNwA6E/3jIKt7GEjlow==
+X-Gm-Gg: ASbGncuaHSpgP2VaV7BqsPYiQ9oQNLxXPNL+xv1+BvN4qXYzKjkus9Y+rNmIusHI3gx
+	QskWHUbkkCCJ9g309V+cWX8MhoVM+LAawgyFUZ5Q60N5YSq2+rxlZEPy51FbyUPQydPPpLF4hrF
+	AYbbUT9ERuB9gPKeXen6d1W+itExiF+z0eX9RNdI0KqAt3Rul/+3uSzdHyy5jxl4Vu9eC+X4Urm
+	1C1CGdbrWpz4F2AnlYzzd0zWoxqkY9qQ8hknn3pHWbwWctUXCzG9/FONGn9YT17UbjogIASCwUL
+	NH2ZtQDAECWD4DEMPKEv3FNmGTMyJSgB7Yut0MMMjan7nzGVL9AsBKAp5TKS5r445fdqxLzFy5X
+	x9aggGw1M7j5+Bz1xJeMJGM6CR5dW/bXiMrHbG9mRT78d
+X-Received: by 2002:a05:600c:8283:b0:43d:3df:42d8 with SMTP id 5b1f17b1804b1-45381a9cb93mr19105675e9.6.1750841752678;
+        Wed, 25 Jun 2025 01:55:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFn9Ma24frP1Xh9SKWBbPl9V+zUB9RWKKedqyriMy2JgojdvqahW4a1Ef0ehUqtLxBkknO9Uw==
+X-Received: by 2002:a05:600c:8283:b0:43d:3df:42d8 with SMTP id 5b1f17b1804b1-45381a9cb93mr19105395e9.6.1750841752253;
+        Wed, 25 Jun 2025 01:55:52 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f12:1b00:5d6b:db26:e2b7:12? (p200300d82f121b005d6bdb26e2b70012.dip0.t-ipconnect.de. [2003:d8:2f12:1b00:5d6b:db26:e2b7:12])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8051001sm3982593f8f.1.2025.06.25.01.55.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 01:55:51 -0700 (PDT)
+Message-ID: <dc34a5ad-376f-4509-91c1-e220f88f97e8@redhat.com>
+Date: Wed, 25 Jun 2025 10:55:49 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1750841717;VERSION=7993;MC=222044062;ID=219731;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
-X-ESET-Antispam: OK
-X-EsetResult: clean, is OK
-X-EsetId: 37303A296767155D6D7C62
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 00/14] mm: vm_normal_page*() + CoW PFNMAP improvements
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ Dan Williams <dan.j.williams@intel.com>, Alistair Popple
+ <apopple@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
+ Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <06a2d665-0f1b-4e7f-9747-b4c782395dc0@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <06a2d665-0f1b-4e7f-9747-b4c782395dc0@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Clean up error handling by using devm functions and dev_err_probe(). This
-should make it easier to add new code, as we can eliminate the "goto
-ladder" in sun4i_dma_probe().
+On 25.06.25 10:49, Lorenzo Stoakes wrote:
+> David, are you planning a v2 of this soon? If so I'll hold off review until
+> then, if not I can get stuck in when I have time?
 
-Suggested-by: Chen-Yu Tsai <wens@kernel.org>
-Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
-Acked-by: Chen-Yu Tsai <wens@csie.org>
-Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
-Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
----
+There will probably be a v1 called "mm: vm_normal_page*()" where I drop 
+the problematic bit, and respin the problematic bit as a new RFC once I 
+have a better understanding.
 
-Notes:
-    Changes in v2:
-    * rebase on current next
-    Changes in v3:
-    * rebase on current next
-    * collect Jernej's tag
-    Changes in v4:
-    * rebase on current next
-    * collect Chen-Yu's tag
-    Changes in v5:
-    * reformat msg to 75 cols
-    * keep `\n`s in error messages
-    Changes in v6:
-    * remove redundant braces
-    * break lines to stay under 85 cols
-    * reword subject and message
-    Changes in v7:
-    * rebase onto current next
-    * collect Julian's tag
-    Changes in v8:
-    * rebase onto current next
-    Changes in v9:
-    * rebase onto current next
-    Changes in v10:
-    * rebase onto current next
-    Changes in v11:
-    * rebase onto current next
+So, no need to review right now.
 
- drivers/dma/sun4i-dma.c | 46 ++++++++++++-----------------------------
- 1 file changed, 13 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
-index 24796aaaddfa..00d2fd38d17f 100644
---- a/drivers/dma/sun4i-dma.c
-+++ b/drivers/dma/sun4i-dma.c
-@@ -1249,11 +1249,10 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 	if (priv->irq < 0)
- 		return priv->irq;
- 
--	priv->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(priv->clk)) {
--		dev_err(&pdev->dev, "No clock specified\n");
--		return PTR_ERR(priv->clk);
--	}
-+	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
-+				     "Couldn't start the clock\n");
- 
- 	if (priv->cfg->has_reset) {
- 		priv->rst = devm_reset_control_get_exclusive_deasserted(&pdev->dev, NULL);
-@@ -1328,12 +1327,6 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 		vchan_init(&vchan->vc, &priv->slave);
- 	}
- 
--	ret = clk_prepare_enable(priv->clk);
--	if (ret) {
--		dev_err(&pdev->dev, "Couldn't enable the clock\n");
--		return ret;
--	}
--
- 	/*
- 	 * Make sure the IRQs are all disabled and accounted for. The bootloader
- 	 * likes to leave these dirty
-@@ -1343,33 +1336,23 @@ static int sun4i_dma_probe(struct platform_device *pdev)
- 
- 	ret = devm_request_irq(&pdev->dev, priv->irq, sun4i_dma_interrupt,
- 			       0, dev_name(&pdev->dev), priv);
--	if (ret) {
--		dev_err(&pdev->dev, "Cannot request IRQ\n");
--		goto err_clk_disable;
--	}
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret, "Cannot request IRQ\n");
- 
--	ret = dma_async_device_register(&priv->slave);
--	if (ret) {
--		dev_warn(&pdev->dev, "Failed to register DMA engine device\n");
--		goto err_clk_disable;
--	}
-+	ret = dmaenginem_async_device_register(&priv->slave);
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "Failed to register DMA engine device\n");
- 
- 	ret = of_dma_controller_register(pdev->dev.of_node, sun4i_dma_of_xlate,
- 					 priv);
--	if (ret) {
--		dev_err(&pdev->dev, "of_dma_controller_register failed\n");
--		goto err_dma_unregister;
--	}
-+	if (ret)
-+		return dev_err_probe(&pdev->dev, ret,
-+				     "Failed to register translation function\n");
- 
- 	dev_dbg(&pdev->dev, "Successfully probed SUN4I_DMA\n");
- 
- 	return 0;
--
--err_dma_unregister:
--	dma_async_device_unregister(&priv->slave);
--err_clk_disable:
--	clk_disable_unprepare(priv->clk);
--	return ret;
- }
- 
- static void sun4i_dma_remove(struct platform_device *pdev)
-@@ -1380,9 +1363,6 @@ static void sun4i_dma_remove(struct platform_device *pdev)
- 	disable_irq(priv->irq);
- 
- 	of_dma_controller_free(pdev->dev.of_node);
--	dma_async_device_unregister(&priv->slave);
--
--	clk_disable_unprepare(priv->clk);
- }
- 
- static struct sun4i_dma_config sun4i_a10_dma_cfg = {
-
-base-commit: de266931dd996fc2cb8ee8b5d12e39ea463e3f36
 -- 
-2.43.0
+Cheers,
 
+David / dhildenb
 
