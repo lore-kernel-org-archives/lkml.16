@@ -1,342 +1,217 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46F8B287266
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 23:44:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 541BE2F1FC1;
+	Wed, 25 Jun 2025 23:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750895095; cv=none; b=uPjfILXSeOqiGWaWc2w5mGOOwAvVJAHHN8pWdnSxiwlOhALsE9rcYexg6dnIj5uREAbUGDbH5xFLmJ8pga8E5nH/YAMDZFsNeAtlT92ZnZuOCtLV8T69PuK7IiLC9nsYTWeqgELt8fQRW0pJObNQ/4E7AeDDYIADbx+ghinbBNk=
+	t=1750895149; cv=none; b=QFi6H0pWvmbmaD4JRkROAimMi0QUp+28aOakOZosDhI0jOR5RMhRFkWid9D2n0qiaTRTTxK9FgDvSRLY2wnhfFfPLvrnEondK2lZWOak/kWRpRizpTq8TzJ7Y8pLia7L466sz1XDWI2+943BUyA9nxuHeSw8e15dJ5j8Ka2E6dc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750895095; c=relaxed/simple;
-	bh=bg3Ch3oaeSTn0gw9pOu0G8fmMZicuhfiYO3wgc/W9g4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nSqn/tR7Ditzx0W7XgTlHRg3dh9VMkmWw3FCoYUab13qU4WZhXjHiFE7p7T7J4os0dUsU7F5micCshcXEhidzdXrIaA78Huu+4XbKfkSDxw9m7puvvSdXmg7NP5/1fRRcCiWWI8qTAkSsFhb3tZgjZ8vDn7/lGAam+tGSl1FxVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=lGaQVf+M; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1750895149; c=relaxed/simple;
+	bh=J0SwHZlrdzrvFq0FNPdyG6iwaLv8uWkmdSTYCBDuozg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=koLSU4TTf8oyq7MfJrXobpqJvZ+vAoCb1wPBJHhhwgmstkyClcTFxITnNdI+3lJkTVa7SYJRnS8mV8gRIXGbScei4y3dxEAU0o6Zt6obluGfkK6HTWpHF4EphpRFFdrhAmmrzNSg/aNpTcA7EhGVD2uMEOzau25+dYcisxlWcQ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U1/iAGMl; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="lGaQVf+M"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-4a6f3f88613so6334451cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:44:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1750895092; x=1751499892; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FK7GsFF88lqGjvQm8ZMWAKGf8qGndWj9zjttanlA1xU=;
-        b=lGaQVf+MWTUO6Prrql7qBABPKF7bQhXoUPoZMOtU40/XioQy4/hGdqA7dFgcybjzxb
-         KqqAe2RhYb/Vf2+oapsaza/a2XmXKUUHdJCnu1PSOejoKGmi7tNCi4TfhOmndap8RDSy
-         A0jWv7IdCDJvEtV+oYyLC8W/J23oSfTLCQwSZPQze2frfpzSz1i2kuFTmPRmJ4QLqwxM
-         kKPiWflEZYwCwgvQpFJGojlekwKGcZtkAT45E+lJieMJn7RXwVj3iufuBxRURwdqm2ww
-         GfDLnxv1zqG9673BfdZ1+smjU1r6P0TzSgbxbk8hViHCvuAlBPpngkbMyWT2QWTm5ekw
-         q/sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750895092; x=1751499892;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FK7GsFF88lqGjvQm8ZMWAKGf8qGndWj9zjttanlA1xU=;
-        b=s/l4agdcMfyJE7jjhfwjtIf1ZBv6SS+xtImTszOQ/5J7EYCS8k6VReZOlVMUv/w9J/
-         RlIs5PY9s+L0IrokPCujAV6UNNgQMdHIe9EGgNOnczigYXRp6Mmc2C9HpK9qleD2qQuk
-         sXRoaWDfpu9r4Wy0FkZcwUWflHUlc4M0PIX2XMZy3qrRh7HPzB/xfvtpzj06T2Un+ETA
-         i/Fq8kGK6ruPYW7q8xuPNeBl7MligWamgTNu3X1v57/Dfokc9nkKAp1U0UbQSJB7e1Tb
-         hLw0GC2Z797ZyoMtQlfkkcjCUEBElkcDRdsHPO5qduF/sT1zhVmQiYYoc5v7YygWWSAD
-         ZYRA==
-X-Forwarded-Encrypted: i=1; AJvYcCUsvJlOdA4U9jAe5GRgers/We9RThrDYC89opfAJBHaah9dhbU1UY4kC4GvP3kjCkeXHJp2dmg0FyeqwaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxeZf/nQdr/6KyOTRJLnCZFeeeDOTvUnw/poXi5qGIdpNq3gaUL
-	RjrIdWENQdLNS4HRUOApv43rKxkKbugdz/GHbnnk0PxTMX0DMOzC6Xe/kRfOLyqn2QklkoBsE2t
-	j6EXhw8C2dnwEpMacoYlAeAW71XKaybJFX+OhccX41g==
-X-Gm-Gg: ASbGncvYe1WxS9nHocyt9IEYT7QLT70Tp4CaWgK4f66+Yt7Mvj4FMm3j+Borr84fqtz
-	i/CkexhpinMoVdmJSnzvRRP5qDm4bhb3d8VcT1Vk9n8ObTEVwvC/6lujrcGqyYSp2h+v2mkozyD
-	LBIFnN1vMWQdUj150oQa74TjIQjYOFRslIlYt7PQRE9Q==
-X-Google-Smtp-Source: AGHT+IFA1dw/Tbh1ngrhBlKF8dPXkDASOz9bRitH3ybBqQXjF3c1snI3GefczU+R9hvfnnbVRHa47Akh8WxSx3KKBaU=
-X-Received: by 2002:a05:622a:1aa3:b0:4a4:3449:2b82 with SMTP id
- d75a77b69052e-4a7c0675de3mr94942221cf.13.1750895091918; Wed, 25 Jun 2025
- 16:44:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U1/iAGMl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750895148; x=1782431148;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=J0SwHZlrdzrvFq0FNPdyG6iwaLv8uWkmdSTYCBDuozg=;
+  b=U1/iAGMl3zxUxkpPLFzzVr+et3cKHSk+U/3GCkAF8cEtIjHFQvxTJGFc
+   QxzTkqvq8ismiozqA7cFS7/DcyXzDaI80LWJe/pwmAyZ/c0qxaa77pbif
+   g1v7J6CHj43iiWfh0UzQNT5T8uz45dM/4oNJqHJbxLwPHRx84g2xHwCqr
+   Z5d1fuskn3fsV7Qpj7q5GjZHM/ZNhcT4sXDgeoGjmE+13dsrRtb+RmnKU
+   SX5kIGAnA2Jn9Om5PpYCmLkLU57ck01G6Hxn78BRjGerfGnvlGUrGa+jj
+   7Qnrn4f+e9EIZs/C4wV7E1Fy2Jz9fMD9FYOJEXVh6QP9zZiZGaeH/u0D6
+   Q==;
+X-CSE-ConnectionGUID: OJqlIR33TIOTugmvwelqeg==
+X-CSE-MsgGUID: 9iXaPFh1QvaoaZZuN60aYg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53324986"
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="53324986"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 16:45:47 -0700
+X-CSE-ConnectionGUID: fxOEiMDpSraFpXm48RthWg==
+X-CSE-MsgGUID: SNN5RbQPQJmxl0RxQFTI1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="152121244"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 25 Jun 2025 16:45:44 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUZoD-000TXm-2R;
+	Wed, 25 Jun 2025 23:45:41 +0000
+Date: Thu, 26 Jun 2025 07:45:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Arun Raghavan <arun@arunraghavan.net>,
+	Shengjiu Wang <shengjiu.wang@gmail.com>,
+	Xiubo Li <Xiubo.Lee@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, Fabio Estevam <festevam@gmail.com>,
+	Nicolin Chen <nicoleotsuka@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Pieterjan Camerlynck <p.camerlynck@televic.com>,
+	linux-sound@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org, Arun Raghavan <arun@asymptotic.io>
+Subject: Re: [PATCH] ASoC: fsl_sai: Force a software reset when starting in
+ consumer mode
+Message-ID: <202506260745.Z7PLEr3i-lkp@intel.com>
+References: <20250625130648.201331-1-arun@arunraghavan.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625231838.1897085-1-pasha.tatashin@soleen.com> <20250625232653.GJ369@kvack.org>
-In-Reply-To: <20250625232653.GJ369@kvack.org>
-From: "pasha.tatashin" <pasha.tatashin@soleen.com>
-Date: Wed, 25 Jun 2025 19:44:12 -0400
-X-Gm-Features: Ac12FXw9JQy4g0DzAGeQjJ73rJNx0LH5nXFC6RmoGr5lfqNnNC58y1Z2DsYDqVc
-Message-ID: <CA+CK2bAsz4Zz2_Kp8QMKxG5taY52ykhhykROd0di85ax5eeOrw@mail.gmail.com>
-Subject: Re: [PATCH v1 00/32] Live Update Orchestrator
-To: Benjamin LaHaise <bcrl@kvack.org>
-Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com, 
-	changyuanl@google.com, rppt@kernel.org, dmatlack@google.com, 
-	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org, 
-	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org, 
-	aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org, 
-	tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com, 
-	roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk, 
-	mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org, 
-	hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com, 
-	joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com, 
-	song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org, 
-	cw00.choi@samsung.com, myungjoo.ham@samsung.com, yesanishhere@gmail.com, 
-	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com, 
-	aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de, lennart@poettering.net, 
-	brauner@kernel.org, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625130648.201331-1-arun@arunraghavan.net>
 
-On Wed, Jun 25, 2025 at 7:26=E2=80=AFPM Benjamin LaHaise <bcrl@kvack.org> w=
-rote:
->
-> FYI: Every one of your emails to the list for this series was bounced by
-> all the recipients using @gmail.com email addresses.
->
->                 -ben (owner-linux-mm)
+Hi Arun,
 
-This is extremely annoying, I will need to figure out why this is
-happening. soleen.com uses google workspace.
+kernel test robot noticed the following build warnings:
 
-Pasha
+[auto build test WARNING on broonie-sound/for-next]
+[also build test WARNING on linus/master v6.16-rc3 next-20250625]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
->
-> On Wed, Jun 25, 2025 at 11:17:47PM +0000, Pasha Tatashin wrote:
-> > This series introduces the LUO, a kernel subsystem designed to
-> > facilitate live kernel updates with minimal downtime,
-> > particularly in cloud delplyoments aiming to update without fully
-> > disrupting running virtual machines.
-> >
-> > This series builds upon KHO framework by adding programmatic
-> > control over KHO's lifecycle and leveraging KHO for persisting LUO's
-> > own metadata across the kexec boundary. The git branch for this series
-> > can be found at:
-> >
-> > https://github.com/googleprodkernel/linux-liveupdate/tree/luo/v1
-> >
-> > Changelog from rfc-v2:
-> > - Addressed review comments from Mike Rapoport, Pratyush Yadav,
-> >   David Matlack
-> > - Moved everything under kernel/liveupdate including KHO.
-> > - Added a number fixes to KHO that were discovered.
-> > - luo_files is not a registred as a subsystem.
-> > - Added sessions support to preserved files.
-> > - Added support for memfd (Pratyush Yadav)
-> > - Added libluo (proposed as RFC) (Pratyush Yadav)
-> > - Removed notifiers from KHO (Mike Rapoport)
-> >
-> > What is Live Update?
-> > Live Update is a kexec based reboot process where selected kernel
-> > resources (memory, file descriptors, and eventually devices) are kept
-> > operational or their state preserved across a kernel transition. For
-> > certain resources, DMA and interrupt activity might continue with
-> > minimal interruption during the kernel reboot.
-> >
-> > LUO provides a framework for coordinating live updates. It features:
-> > State Machine: Manages the live update process through states:
-> > NORMAL, PREPARED, FROZEN, UPDATED.
-> >
-> > KHO Integration:
-> >
-> > LUO programmatically drives KHO's finalization and abort sequences.
-> > KHO's debugfs interface is now optional configured via
-> > CONFIG_KEXEC_HANDOVER_DEBUG.
-> >
-> > LUO preserves its own metadata via KHO's kho_add_subtree and
-> > kho_preserve_phys() mechanisms.
-> >
-> > Subsystem Participation: A callback API liveupdate_register_subsystem()
-> > allows kernel subsystems (e.g., KVM, IOMMU, VFIO, PCI) to register
-> > handlers for LUO events (PREPARE, FREEZE, FINISH, CANCEL) and persist a
-> > u64 payload via the LUO FDT.
-> >
-> > File Descriptor Preservation: Infrastructure
-> > liveupdate_register_filesystem, luo_register_file, luo_retrieve_file to
-> > allow specific types of file descriptors (e.g., memfd, vfio) to be
-> > preserved and restored.
-> >
-> > Handlers for specific file types can be registered to manage their
-> > preservation and restoration, storing a u64 payload in the LUO FDT.
-> >
-> > User-space Interface:
-> >
-> > ioctl (/dev/liveupdate): The primary control interface for
-> > triggering LUO state transitions (prepare, freeze, finish, cancel)
-> > and managing the preservation/restoration of file descriptors.
-> > Access requires CAP_SYS_ADMIN.
-> >
-> > sysfs (/sys/kernel/liveupdate/state): A read-only interface for
-> > monitoring the current LUO state. This allows userspace services to
-> > track progress and coordinate actions.
-> >
-> > Selftests: Includes kernel-side hooks and userspace selftests to
-> > verify core LUO functionality, particularly subsystem registration and
-> > basic state transitions.
-> >
-> > LUO State Machine and Events:
-> >
-> > NORMAL:   Default operational state.
-> > PREPARED: Initial preparation complete after LIVEUPDATE_PREPARE
-> >           event. Subsystems have saved initial state.
-> > FROZEN:   Final "blackout window" state after LIVEUPDATE_FREEZE
-> >           event, just before kexec. Workloads must be suspended.
-> > UPDATED:  Next kernel has booted via live update. Awaiting restoration
-> >           and LIVEUPDATE_FINISH.
-> >
-> > Events:
-> > LIVEUPDATE_PREPARE: Prepare for reboot, serialize state.
-> > LIVEUPDATE_FREEZE:  Final opportunity to save state before kexec.
-> > LIVEUPDATE_FINISH:  Post-reboot cleanup in the next kernel.
-> > LIVEUPDATE_CANCEL:  Abort prepare or freeze, revert changes.
-> >
-> > RFC v1: https://lore.kernel.org/all/20250320024011.2995837-1-pasha.tata=
-shin@soleen.com
-> > RFC v2: https://lore.kernel.org/all/20250515182322.117840-1-pasha.tatas=
-hin@soleen.com/
-> >
-> > Changyuan Lyu (1):
-> >   kho: add interfaces to unpreserve folios and physical memory ranges
-> >
-> > Mike Rapoport (Microsoft) (1):
-> >   kho: drop notifiers
-> >
-> > Pasha Tatashin (22):
-> >   kho: init new_physxa->phys_bits to fix lockdep
-> >   kho: mm: Don't allow deferred struct page with KHO
-> >   kho: warn if KHO is disabled due to an error
-> >   kho: allow to drive kho from within kernel
-> >   kho: make debugfs interface optional
-> >   kho: don't unpreserve memory during abort
-> >   liveupdate: kho: move to kernel/liveupdate
-> >   liveupdate: luo_core: Live Update Orchestrator
-> >   liveupdate: luo_core: integrate with KHO
-> >   liveupdate: luo_subsystems: add subsystem registration
-> >   liveupdate: luo_subsystems: implement subsystem callbacks
-> >   liveupdate: luo_files: add infrastructure for FDs
-> >   liveupdate: luo_files: implement file systems callbacks
-> >   liveupdate: luo_ioctl: add ioctl interface
-> >   liveupdate: luo_sysfs: add sysfs state monitoring
-> >   reboot: call liveupdate_reboot() before kexec
-> >   liveupdate: luo_files: luo_ioctl: session-based file descriptor
-> >     tracking
-> >   kho: move kho debugfs directory to liveupdate
-> >   liveupdate: add selftests for subsystems un/registration
-> >   selftests/liveupdate: add subsystem/state tests
-> >   docs: add luo documentation
-> >   MAINTAINERS: add liveupdate entry
-> >
-> > Pratyush Yadav (8):
-> >   mm: shmem: use SHMEM_F_* flags instead of VM_* flags
-> >   mm: shmem: allow freezing inode mapping
-> >   mm: shmem: export some functions to internal.h
-> >   luo: allow preserving memfd
-> >   docs: add documentation for memfd preservation via LUO
-> >   tools: introduce libluo
-> >   libluo: introduce luoctl
-> >   libluo: add tests
-> >
-> >  .../ABI/testing/sysfs-kernel-liveupdate       |  51 +
-> >  Documentation/admin-guide/index.rst           |   1 +
-> >  Documentation/admin-guide/liveupdate.rst      |  16 +
-> >  Documentation/core-api/index.rst              |   1 +
-> >  Documentation/core-api/kho/concepts.rst       |   2 +-
-> >  Documentation/core-api/liveupdate.rst         |  57 ++
-> >  Documentation/mm/index.rst                    |   1 +
-> >  Documentation/mm/memfd_preservation.rst       | 138 +++
-> >  Documentation/userspace-api/index.rst         |   1 +
-> >  .../userspace-api/ioctl/ioctl-number.rst      |   2 +
-> >  Documentation/userspace-api/liveupdate.rst    |  25 +
-> >  MAINTAINERS                                   |  20 +-
-> >  include/linux/kexec_handover.h                |  53 +-
-> >  include/linux/liveupdate.h                    | 235 +++++
-> >  include/linux/shmem_fs.h                      |  23 +
-> >  include/uapi/linux/liveupdate.h               | 265 +++++
-> >  init/Kconfig                                  |   2 +
-> >  kernel/Kconfig.kexec                          |  14 -
-> >  kernel/Makefile                               |   2 +-
-> >  kernel/liveupdate/Kconfig                     |  90 ++
-> >  kernel/liveupdate/Makefile                    |  13 +
-> >  kernel/{ =3D> liveupdate}/kexec_handover.c      | 556 +++++-----
-> >  kernel/liveupdate/kexec_handover_debug.c      | 222 ++++
-> >  kernel/liveupdate/kexec_handover_internal.h   |  45 +
-> >  kernel/liveupdate/luo_core.c                  | 525 ++++++++++
-> >  kernel/liveupdate/luo_files.c                 | 946 ++++++++++++++++++
-> >  kernel/liveupdate/luo_internal.h              |  47 +
-> >  kernel/liveupdate/luo_ioctl.c                 | 192 ++++
-> >  kernel/liveupdate/luo_selftests.c             | 344 +++++++
-> >  kernel/liveupdate/luo_selftests.h             |  84 ++
-> >  kernel/liveupdate/luo_subsystems.c            | 420 ++++++++
-> >  kernel/liveupdate/luo_sysfs.c                 |  92 ++
-> >  kernel/reboot.c                               |   4 +
-> >  mm/Makefile                                   |   1 +
-> >  mm/internal.h                                 |   6 +
-> >  mm/memblock.c                                 |  56 +-
-> >  mm/memfd_luo.c                                | 501 ++++++++++
-> >  mm/shmem.c                                    |  46 +-
-> >  tools/lib/luo/LICENSE                         | 165 +++
-> >  tools/lib/luo/Makefile                        |  45 +
-> >  tools/lib/luo/README.md                       | 166 +++
-> >  tools/lib/luo/cli/.gitignore                  |   1 +
-> >  tools/lib/luo/cli/Makefile                    |  18 +
-> >  tools/lib/luo/cli/luoctl.c                    | 178 ++++
-> >  tools/lib/luo/include/libluo.h                | 128 +++
-> >  tools/lib/luo/include/liveupdate.h            | 265 +++++
-> >  tools/lib/luo/libluo.c                        | 203 ++++
-> >  tools/lib/luo/tests/.gitignore                |   1 +
-> >  tools/lib/luo/tests/Makefile                  |  18 +
-> >  tools/lib/luo/tests/test.c                    | 848 ++++++++++++++++
-> >  tools/testing/selftests/Makefile              |   1 +
-> >  tools/testing/selftests/liveupdate/.gitignore |   1 +
-> >  tools/testing/selftests/liveupdate/Makefile   |   7 +
-> >  tools/testing/selftests/liveupdate/config     |   6 +
-> >  .../testing/selftests/liveupdate/liveupdate.c | 356 +++++++
-> >  55 files changed, 7091 insertions(+), 415 deletions(-)
-> >  create mode 100644 Documentation/ABI/testing/sysfs-kernel-liveupdate
-> >  create mode 100644 Documentation/admin-guide/liveupdate.rst
-> >  create mode 100644 Documentation/core-api/liveupdate.rst
-> >  create mode 100644 Documentation/mm/memfd_preservation.rst
-> >  create mode 100644 Documentation/userspace-api/liveupdate.rst
-> >  create mode 100644 include/linux/liveupdate.h
-> >  create mode 100644 include/uapi/linux/liveupdate.h
-> >  create mode 100644 kernel/liveupdate/Kconfig
-> >  create mode 100644 kernel/liveupdate/Makefile
-> >  rename kernel/{ =3D> liveupdate}/kexec_handover.c (74%)
-> >  create mode 100644 kernel/liveupdate/kexec_handover_debug.c
-> >  create mode 100644 kernel/liveupdate/kexec_handover_internal.h
-> >  create mode 100644 kernel/liveupdate/luo_core.c
-> >  create mode 100644 kernel/liveupdate/luo_files.c
-> >  create mode 100644 kernel/liveupdate/luo_internal.h
-> >  create mode 100644 kernel/liveupdate/luo_ioctl.c
-> >  create mode 100644 kernel/liveupdate/luo_selftests.c
-> >  create mode 100644 kernel/liveupdate/luo_selftests.h
-> >  create mode 100644 kernel/liveupdate/luo_subsystems.c
-> >  create mode 100644 kernel/liveupdate/luo_sysfs.c
-> >  create mode 100644 mm/memfd_luo.c
-> >  create mode 100644 tools/lib/luo/LICENSE
-> >  create mode 100644 tools/lib/luo/Makefile
-> >  create mode 100644 tools/lib/luo/README.md
-> >  create mode 100644 tools/lib/luo/cli/.gitignore
-> >  create mode 100644 tools/lib/luo/cli/Makefile
-> >  create mode 100644 tools/lib/luo/cli/luoctl.c
-> >  create mode 100644 tools/lib/luo/include/libluo.h
-> >  create mode 100644 tools/lib/luo/include/liveupdate.h
-> >  create mode 100644 tools/lib/luo/libluo.c
-> >  create mode 100644 tools/lib/luo/tests/.gitignore
-> >  create mode 100644 tools/lib/luo/tests/Makefile
-> >  create mode 100644 tools/lib/luo/tests/test.c
-> >  create mode 100644 tools/testing/selftests/liveupdate/.gitignore
-> >  create mode 100644 tools/testing/selftests/liveupdate/Makefile
-> >  create mode 100644 tools/testing/selftests/liveupdate/config
-> >  create mode 100644 tools/testing/selftests/liveupdate/liveupdate.c
-> >
-> > --
-> > 2.50.0.727.gbf7dc18ff4-goog
-> >
->
-> --
-> "Thought is the essence of where you are now."
+url:    https://github.com/intel-lab-lkp/linux/commits/Arun-Raghavan/ASoC-fsl_sai-Force-a-software-reset-when-starting-in-consumer-mode/20250625-210824
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+patch link:    https://lore.kernel.org/r/20250625130648.201331-1-arun%40arunraghavan.net
+patch subject: [PATCH] ASoC: fsl_sai: Force a software reset when starting in consumer mode
+config: arc-randconfig-002-20250626 (https://download.01.org/0day-ci/archive/20250626/202506260745.Z7PLEr3i-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 13.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250626/202506260745.Z7PLEr3i-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506260745.Z7PLEr3i-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   sound/soc/fsl/fsl_sai.c: In function 'fsl_sai_trigger':
+>> sound/soc/fsl/fsl_sai.c:848:21: warning: the comparison will always evaluate as 'true' for the address of 'is_consumer_mode' will never be NULL [-Waddress]
+     848 |                 if (sai->is_consumer_mode) {
+         |                     ^~~
+   In file included from sound/soc/fsl/fsl_sai.c:24:
+   sound/soc/fsl/fsl_sai.h:287:14: note: 'is_consumer_mode' declared here
+     287 |         bool is_consumer_mode[2];
+         |              ^~~~~~~~~~~~~~~~
+
+
+vim +848 sound/soc/fsl/fsl_sai.c
+
+   814	
+   815	static int fsl_sai_trigger(struct snd_pcm_substream *substream, int cmd,
+   816			struct snd_soc_dai *cpu_dai)
+   817	{
+   818		struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
+   819		unsigned int ofs = sai->soc_data->reg_offset;
+   820	
+   821		bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+   822		int adir = tx ? RX : TX;
+   823		int dir = tx ? TX : RX;
+   824		u32 xcsr;
+   825	
+   826		/*
+   827		 * Asynchronous mode: Clear SYNC for both Tx and Rx.
+   828		 * Rx sync with Tx clocks: Clear SYNC for Tx, set it for Rx.
+   829		 * Tx sync with Rx clocks: Clear SYNC for Rx, set it for Tx.
+   830		 */
+   831		regmap_update_bits(sai->regmap, FSL_SAI_TCR2(ofs), FSL_SAI_CR2_SYNC,
+   832				   sai->synchronous[TX] ? FSL_SAI_CR2_SYNC : 0);
+   833		regmap_update_bits(sai->regmap, FSL_SAI_RCR2(ofs), FSL_SAI_CR2_SYNC,
+   834				   sai->synchronous[RX] ? FSL_SAI_CR2_SYNC : 0);
+   835	
+   836		/*
+   837		 * It is recommended that the transmitter is the last enabled
+   838		 * and the first disabled.
+   839		 */
+   840		switch (cmd) {
+   841		case SNDRV_PCM_TRIGGER_START:
+   842		case SNDRV_PCM_TRIGGER_RESUME:
+   843		case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
+   844			/*
+   845			 * Force a software reset if we are not the clock provider, as we
+   846			 * might have lost frame sync during xrun recovery.
+   847			 */
+ > 848			if (sai->is_consumer_mode) {
+   849				regmap_update_bits(sai->regmap,
+   850						FSL_SAI_xCSR(tx, ofs), FSL_SAI_CSR_SR,
+   851						FSL_SAI_CSR_SR);
+   852				regmap_update_bits(sai->regmap,
+   853						FSL_SAI_xCSR(tx, ofs), FSL_SAI_CSR_SR,
+   854						0);
+   855			}
+   856			regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
+   857					   FSL_SAI_CSR_FRDE, FSL_SAI_CSR_FRDE);
+   858	
+   859			regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
+   860					   FSL_SAI_CSR_TERE, FSL_SAI_CSR_TERE);
+   861			/*
+   862			 * Enable the opposite direction for synchronous mode
+   863			 * 1. Tx sync with Rx: only set RE for Rx; set TE & RE for Tx
+   864			 * 2. Rx sync with Tx: only set TE for Tx; set RE & TE for Rx
+   865			 *
+   866			 * RM recommends to enable RE after TE for case 1 and to enable
+   867			 * TE after RE for case 2, but we here may not always guarantee
+   868			 * that happens: "arecord 1.wav; aplay 2.wav" in case 1 enables
+   869			 * TE after RE, which is against what RM recommends but should
+   870			 * be safe to do, judging by years of testing results.
+   871			 */
+   872			if (fsl_sai_dir_is_synced(sai, adir))
+   873				regmap_update_bits(sai->regmap, FSL_SAI_xCSR((!tx), ofs),
+   874						   FSL_SAI_CSR_TERE, FSL_SAI_CSR_TERE);
+   875	
+   876			regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
+   877					   FSL_SAI_CSR_xIE_MASK, FSL_SAI_FLAGS);
+   878			break;
+   879		case SNDRV_PCM_TRIGGER_STOP:
+   880		case SNDRV_PCM_TRIGGER_SUSPEND:
+   881		case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+   882			regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
+   883					   FSL_SAI_CSR_FRDE, 0);
+   884			regmap_update_bits(sai->regmap, FSL_SAI_xCSR(tx, ofs),
+   885					   FSL_SAI_CSR_xIE_MASK, 0);
+   886	
+   887			/* Check if the opposite FRDE is also disabled */
+   888			regmap_read(sai->regmap, FSL_SAI_xCSR(!tx, ofs), &xcsr);
+   889	
+   890			/*
+   891			 * If opposite stream provides clocks for synchronous mode and
+   892			 * it is inactive, disable it before disabling the current one
+   893			 */
+   894			if (fsl_sai_dir_is_synced(sai, adir) && !(xcsr & FSL_SAI_CSR_FRDE))
+   895				fsl_sai_config_disable(sai, adir);
+   896	
+   897			/*
+   898			 * Disable current stream if either of:
+   899			 * 1. current stream doesn't provide clocks for synchronous mode
+   900			 * 2. current stream provides clocks for synchronous mode but no
+   901			 *    more stream is active.
+   902			 */
+   903			if (!fsl_sai_dir_is_synced(sai, dir) || !(xcsr & FSL_SAI_CSR_FRDE))
+   904				fsl_sai_config_disable(sai, dir);
+   905	
+   906			break;
+   907		default:
+   908			return -EINVAL;
+   909		}
+   910	
+   911		return 0;
+   912	}
+   913	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
