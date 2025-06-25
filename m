@@ -1,181 +1,272 @@
-Received: from mailrelay6-3.pub.mailoutpod3-cph3.one.com (mailrelay6-3.pub.mailoutpod3-cph3.one.com [46.30.212.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50D552BCF6F
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E36BE3597E
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750883368; cv=none; b=nXMAUVk2OcZClpMNHV+xxUdv6yIP7jOsHcbUVMniF+v3BDct6gyVan/fiNEs9WQ8Vpwae+WzWdZrXc02cb4SoR1mLi5B3TPqMNlc0VqdS1fgqA5DC2PPtiWLYsfF09TgjQ3xsfHEUEIj3GkcQSfYFGi84yAV8toOJB58NaR0O6E=
+	t=1750883479; cv=none; b=n/xENrtd6zwAxvPn/sQyRe72gqg8rQrCxwDLLvNj3yv34J0DL6te5bBcMe7mwEWXPKcAQ+mkQgPFkbdJFLKyaz0YcdOOfeaHC91Fu8Tk1fz0fibgoesTunNz7hcY74rnAwQfV3aE3Fubs/o0bEoFMW8m8zswwOWc7qBiBHaRO+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750883368; c=relaxed/simple;
-	bh=vuzj/xayTr95WcffBwjHoYH2sEOFOq8LE0VUip3uJHQ=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=UBjcas7QwI3p8MkzPSvuxgEi68d8T2aiHC2DF/4v8noEl+w5AFwP9MqRMBnEttgHhxfiZuwlpTnl5qK9GC7Pr05GseBJvpYlE0HWnSRVSPZJexnz0iwymsc36Q1xyYn0OK45uIqSL8CsyMiucOHWwCSTGRzXpn3dxlyDk/zGd+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=xlWYxEIt; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=e1VP2Tqq; arc=none smtp.client-ip=46.30.212.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
+	s=arc-20240116; t=1750883479; c=relaxed/simple;
+	bh=BSEuqqME9HzVFwsXQguj9Zt0wq+Ixt0XTGxAJ/tda2Q=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=co4sEOGIPqciG4evaHEA76Pxfuq9lahJYXEO0AWtihbzv6k0GPumyY0rdfN3PI/7GdpwmWNJiE7O5GApjJraMyJB20nrjtAzjCX00JsF9Dj30NdC5/RQwVSYCj5GWTCSvOgIaGLOB+ZYEgODPAjOmzraoxdxeDsioqUcz7jvUGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=W2BrLA66; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="xlWYxEIt";
-	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="e1VP2Tqq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1750883356; x=1751488156;
-	d=konsulko.se; s=rsa1;
-	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
-	 subject:mime-version:content-type:from;
-	bh=mFicMW97oCaFX3ytmFZghvLQmZgDqR8OgB6iTx+baCA=;
-	b=xlWYxEIt96EYtxtxqfAkDKuAn42RhF4BXnMhnbDT4tX9n8AZs/S7PBTGJHkJtZWCDOwujMmd8Hvpx
-	 uA+V1ub2XXvaGc68ADH67NAcIJJ8JI8+Jqq0WwwJ1b9mMR+p9g2jb7Wsc3BqFmdRtUEFVGcYSjRVKI
-	 kn3pTyP6IM96YqO9zGtHY/2Al0BBJoHSpXDlZD8nyIpP3flgxtOdLsrwRjfe+2gES0gI7faSJJ5ud0
-	 fPo6ZBy4GifEPHmRBAiyg8DicoqJW3k7ovWISrZAM0sdNUe0kp+so0+inW71+UBy3jB2dv3nbWStNw
-	 5ru0KiBrS8KyqjQc+6phNWvVRrUTHBg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1750883356; x=1751488156;
-	d=konsulko.se; s=ed1;
-	h=to:references:message-id:content-transfer-encoding:cc:date:in-reply-to:from:
-	 subject:mime-version:content-type:from;
-	bh=mFicMW97oCaFX3ytmFZghvLQmZgDqR8OgB6iTx+baCA=;
-	b=e1VP2TqqOq6P+uUeLxOSceSYWSkdKhkMQ7NYvr4vQ2yjSIBjR4EMk8hv2ppLiDME9rAD+XXA5HRFg
-	 UmXUSZqDQ==
-X-HalOne-ID: 0f22a303-5203-11f0-843b-417246ffdc90
-Received: from smtpclient.apple (c188-150-224-8.bredband.tele2.se [188.150.224.8])
-	by mailrelay6.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
-	id 0f22a303-5203-11f0-843b-417246ffdc90;
-	Wed, 25 Jun 2025 20:29:16 +0000 (UTC)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W2BrLA66"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7489ac848f3so510904b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:31:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750883477; x=1751488277; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=A+1HtdYa2qEx9xQit32U8jixwEFVgGzb4kUvF1lrUbU=;
+        b=W2BrLA66l3M+Em+EnUf4AtLi7dJwHkAOrcX0XJfGj39lDaA+eYYoWWNVmiFIKuZ67X
+         IL3hYlxK7WwuT1Ull+gZLzZXeZJNJ3OLkpV+o4TrvOG8CDTg0QYos8l7HIoKEkECeov4
+         1uESCfkyIuXJn9DexjklXqcJ/aKI62MK/fdDEay7PS1FU0m7QS2DpkmfCUtOV7WXEjCG
+         MxUNXOORRgdscSC1dXbMZd/FH1RvyAhguVLw0wIKzVGyOCti01QYQPKXEeo6ZI0WT9BE
+         Ga9pF+gPVwC9TDYGZ40xlcvD2IhmAfxJIoCiCBv0WodkeywSza3BaWMQtL9we8flTAxw
+         jb+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750883477; x=1751488277;
+        h=content-transfer-encoding:cc:to:from:subject:message-id
+         :mime-version:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=A+1HtdYa2qEx9xQit32U8jixwEFVgGzb4kUvF1lrUbU=;
+        b=a+InzfRAO5JDkdDbgkmZ2O062tg1KaTbYbojj0THaIjos6Dz2cuP4ZhzCArY8kmI7J
+         x6vKldDgFMoA3Ta90fYUeTQreusmTSPWGmNd8x2YtoLKL7OC+hCr5Tbv6o7AplQSZwdN
+         Dbj8BTwWBlbG5/L4uLxIqDjXEgXkwumIosgYghtR/IsgrwI6iesCw0i/k1LEa4RtLzcQ
+         w3ZLAVoJE6iBBEEXVBllfKnfMYsgzMNopa42pTcXcyJTqzCdbD94G3g9AVPeH0EPDFfx
+         4EEA0M+jnbeebFC5eedX+S+qnBwQwPzBR9VITjwc7h3iOhYQtuM8+Zt6COw+0a6JUPSC
+         MQZw==
+X-Gm-Message-State: AOJu0YwZtz+OkOzbe9+W+TkzGqNG8ejwJvayaI3PICa/MUMEGq5KaqKp
+	P6+rQKFxPflyPdXOLZR/d/txTG3ag/OVc1OHbPWhgKDFbpFDWjsJhQFeX/GZTs0kHNbFItPcoyu
+	lRO3LIzomyYbVMy87OUFY5rvl2G8IFeE3F8ptvlCcr9bbbZ3ILkQNrHEeKpmOaA1wbOkCVdYfiZ
+	cW0M5vhmgV2o8AgSnoZlCUmwjPzRxCMO8w8Ny4iT/wJNj5VIz3
+X-Google-Smtp-Source: AGHT+IEOgffwAz2CiOYP5e9HMXxoQfzLgTbdGT76A8EuZl5EcKZam1MWMB4qa1tzIA6/h0xPpcs3t3S2EYeK
+X-Received: from pfbbd34.prod.google.com ([2002:a05:6a00:27a2:b0:73e:665:360])
+ (user=jstultz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:1141:b0:742:b3a6:db16
+ with SMTP id d2e1a72fcca58-74ad45b0013mr7127829b3a.20.1750883477019; Wed, 25
+ Jun 2025 13:31:17 -0700 (PDT)
+Date: Wed, 25 Jun 2025 20:30:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.200.121\))
-Subject: Re: [PATCH v3 2/2] rust: support align and NUMA id in allocations
-From: Vitaly Wool <vitaly.wool@konsulko.se>
-In-Reply-To: <aFxI-rjvktSe3h8M@cassiopeiae>
-Date: Wed, 25 Jun 2025 22:22:36 +0200
-Cc: linux-mm@kvack.org,
- akpm@linux-foundation.org,
- linux-kernel@vger.kernel.org,
- Uladzislau Rezki <urezki@gmail.com>,
- Alice Ryhl <aliceryhl@google.com>,
- rust-for-linux@vger.kernel.org
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
+Message-ID: <20250625203110.2299275-1-jstultz@google.com>
+Subject: [PATCH v18 0/8] Single RunQueue Proxy Execution (v18)
+From: John Stultz <jstultz@google.com>
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: John Stultz <jstultz@google.com>, Joel Fernandes <joelagnelf@nvidia.com>, 
+	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+	Valentin Schneider <vschneid@redhat.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Zimuzo Ezeozue <zezeozue@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	"Paul E. McKenney" <paulmck@kernel.org>, Metin Kaya <Metin.Kaya@arm.com>, 
+	Xuewen Yan <xuewen.yan94@gmail.com>, K Prateek Nayak <kprateek.nayak@amd.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
+	Suleiman Souhlal <suleiman@google.com>, kuyo chang <kuyo.chang@mediatek.com>, hupu <hupu.gm@gmail.com>, 
+	kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <C349F54D-348D-44FE-A02F-E75C78608734@konsulko.se>
-References: <20250625062917.3379804-1-vitaly.wool@konsulko.se>
- <20250625063026.3379921-1-vitaly.wool@konsulko.se>
- <aFxGQWG_81Peu7mP@cassiopeiae> <aFxI-rjvktSe3h8M@cassiopeiae>
-To: Danilo Krummrich <dakr@kernel.org>
-X-Mailer: Apple Mail (2.3826.200.121)
 
+Hey All,
 
+After not getting much response from the v17 series (and
+resending it), I was going to continue to just iterate resending
+the v17 single runqueue focused series. However, Suleiman had a
+very good suggestion for improving the larger patch series and a
+few of the tweaks for those changes trickled back into the set
+I=E2=80=99m submitting here.
 
-> On Jun 25, 2025, at 9:07=E2=80=AFPM, Danilo Krummrich =
-<dakr@kernel.org> wrote:
->=20
-> On Wed, Jun 25, 2025 at 08:56:05PM +0200, Danilo Krummrich wrote:
->> On Wed, Jun 25, 2025 at 08:30:26AM +0200, Vitaly Wool wrote:
->>> Add support for large (> PAGE_SIZE) alignments in Rust allocators
->>> (Kmalloc support for large alignments is limited to the requested
->>> size, which is a reasonable limitation anyway).
->>=20
->> Please split this..
->>=20
->>> Besides, add support for NUMA id to Vmalloc.
->>=20
->> and this into separate patches.
->>=20
->> Please also add some information to the commit message what you need =
-node
->> support for. Do you also have patches to add node support to Box and =
-Vec?
+Unfortunately those later changes also uncovered some stability
+problems with the full proxy-exec patch series, which took a
+painfully long time (stress testing taking 30-60 hours to trip
+the problem) to resolve. However, after finally sorting those
+issues out it has been running well, so I can now send out the
+next revision (v18) of the set.
 
-No, but there is a zswap backend implementation written in Rust and it =
-should be  NUMA id aware.
-I=E2=80=99m planning on submitting that basically as soon as this piece =
-gets accepted.
+So here is v18 of the Proxy Execution series, a generalized form
+of priority inheritance.
 
->>=20
->>>=20
->>> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
->>> ---
->>> rust/helpers/slab.c            |  8 +++++--
->>> rust/helpers/vmalloc.c         |  4 ++--
->>> rust/kernel/alloc.rs           | 28 ++++++++++++++++++++++--
->>> rust/kernel/alloc/allocator.rs | 40 =
-+++++++++++++++++++---------------
->>> rust/kernel/alloc/kvec.rs      |  3 ++-
->>> 5 files changed, 59 insertions(+), 24 deletions(-)
->>>=20
->>> diff --git a/rust/helpers/slab.c b/rust/helpers/slab.c
->>> index a842bfbddcba..221c517f57a1 100644
->>> --- a/rust/helpers/slab.c
->>> +++ b/rust/helpers/slab.c
->>> @@ -3,13 +3,17 @@
->>> #include <linux/slab.h>
->>>=20
->>> void * __must_check __realloc_size(2)
->>> -rust_helper_krealloc(const void *objp, size_t new_size, gfp_t =
-flags)
->>> +rust_helper_krealloc(const void *objp, size_t new_size, unsigned =
-long align, gfp_t flags, int nid)
->>=20
->> This should have a comment making it obvious why the function has two =
-arguments
->> that are discarded. I think we should even separate it with an =
-additional inline
->> function.
->>=20
->> I do agree with discarding the align argument, given that it's not =
-exposed to
->> users though the Allocator API.
->=20
-> What I meant is that proper alignment is implied when krealloc() =
-succeeds.
+As I=E2=80=99m trying to submit this work in smallish digestible pieces,
+in this series, I=E2=80=99m only submitting for review the logic that
+allows us to do the proxying if the lock owner is on the same
+runqueue as the blocked waiter: Introducing the
+CONFIG_SCHED_PROXY_EXEC option and boot-argument, reworking the
+task_struct::blocked_on pointer and wrapper functions, the
+initial sketch of the find_proxy_task() logic, some fixes for
+using split contexts, and finally same-runqueue proxying.=20
 
-I agree, I need to add some comments explaining this.
+As I mentioned above, for the series I=E2=80=99m submitting here, it has
+only barely changed from v17. With the main difference being
+slightly different order of checks for cases where we don=E2=80=99t
+actually do anything yet (more on why below), and use of
+READ_ONCE for the on_rq reads to avoid the compiler fusing
+loads, which I was bitten by with the full series.
 
->=20
->> I do disagree with discarding the nid argument though, since you =
-change the
->> generic Allocator::realloc() API to take a node argument, which for =
-KREALLOC and
->> KVREALLOC is silently discarded. If we introduce it, we should do so =
-for all
->> three allocators.
->>=20
->>> {
->>> + if (WARN_ON(new_size & (align - 1)))
->>> + return NULL;
->>=20
->> I don't think we should have this WARN_ON(). If we want to warn about =
-this, we
->> should already do so on the Rust side. The helper functions in this =
-file should
->> not contain any logic.
+However for the full proxy-exec series, there are a few
+differences:
+* Suleiman Souhlal noticed an inefficiency in that we evaluate
+  if the lock owner=E2=80=99s task_cpu() is the current cpu, before we
+  look to see if the lock owner is on_rq at all. With v17 this
+  would result in us proxy-migrating a donor to a remote cpu,
+  only to then realize the task wasn=E2=80=99t even on the runqueue,
+  and doing the sleeping owner enqueuing. Suleiman suggested
+  instead that we evaluate on_rq first, so we can immediately do
+  sleeping owner enqueueing. Then only if the owner is on a
+  runqueue do we proxy-migrate the donor (which requires the
+  more costly lock juggling). While not a huge logical change,
+  it did uncover other problems, which needed to be resolved.
 
-Agreed.
+* One issue found was there was a race where if
+  do_activate_blocked_waiter() from the sleeping owner wakeup
+  was delayed and the task had already been woken up elsewhere.
+  It=E2=80=99s possible if that task was running and called into
+  schedule() to be blocked, it would be dequeued from the
+  runqueue, but before we switched to the new task,
+  do_activate_blocked_waiter() might try to activate it on a
+  different cpu. Clearly the do_activate_blocked_waiter() needed
+  to check the task on_cpu value as well.
 
->>=20
->>> return krealloc(objp, new_size, flags);
->>> }
->>>=20
->>> void * __must_check __realloc_size(2)
->>> -rust_helper_kvrealloc(const void *p, size_t size, gfp_t flags)
->>> +rust_helper_kvrealloc(const void *p, size_t size, unsigned long =
-align, gfp_t flags, int nid)
->>> {
->>> + if (WARN_ON(size & (align - 1)))
->>> + return NULL;
->>> return kvrealloc(p, size, flags);
->>> }
->>=20
->> Same as above.
->=20
-> This is actually different though, here kvrealloc() may succeed even =
-if the
-> requested alignment is not fulfilled, so this is incorrect.
+* I found that we still can hit wakeups that end up skipping the
+  BO_WAKING -> BO_RUNNALBE transition (causing find_proxy_task()
+  to end up spinning waiting for that transition), so I re-added
+  the logic to handle doing return migrations from
+  find_proxy_task() if we hit that case.
 
-I can move this logic to the Rust part, too. My point here is, for =
-Kvrealloc with a large alignment we=E2=80=99ll just make the decision to =
-use vmalloc, period. We can indeed do that on the Rust side.
+* Hupu suggested a tweak in ttwu_runnable() to evaluate
+  proxy_needs_return() slightly earlier.
 
-~Vitaly
+* Kuyo Chang reported and isolated a fix for a problem with
+  __task_is_pushable() in the !sched_proxy_exec case, which was
+  folded into the =E2=80=9Csched: Fix rt/dl load balancing via chain
+  level balance=E2=80=9D patch
+
+* Reworked some of the logic around releasing the rq->donor
+  reference on migrations, using rq->idle directly.
+
+* Sueliman also pointed out that some added task_struct elements
+  were not being initialized in the init_task code path, so that
+  was good to fix.
+
+You can find the full series here:
+  https://github.com/johnstultz-work/linux-dev/commits/proxy-exec-v18-6.16-=
+rc3/
+  https://github.com/johnstultz-work/linux-dev.git proxy-exec-v18-6.16-rc3
+
+Issues still to address with the full series (not the patches
+submitted here):
+* Peter suggested an idea that instead of when tasks become
+  unblocked, using (blocked_on_state =3D=3D BO_WAKING) to protect
+  against running proxy-migrated tasks on cpu=E2=80=99s they are not
+  affined to, we could dequeue tasks first and then wake them.
+  This does look to be cleaner in many ways, but the locking
+  rework is significant and I=E2=80=99ve not worked out all the kinks
+  with it yet. I am also a little worried that we may trip
+  other wakeup paths that might not do the dequeue first.
+  However, I have adopted this approach for the
+  find_proxy_task() forced return migration, and it=E2=80=99s working
+  well.
+
+* Need to sort out what is needed for sched_ext to be ok with
+  proxy-execution enabled.
+
+* K Prateek Nayak did some testing about a bit over a year ago
+  with an earlier version of the series and saw ~3-5%
+  regressions in some cases. Need to re-evaluate this with the
+  proxy-migration avoidance optimization Suleiman suggested now
+  implemented.
+
+* The chain migration functionality needs further iterations and
+  better validation to ensure it truly maintains the RT/DL load
+  balancing invariants (despite this being broken in vanilla
+  upstream with RT_PUSH_IPI currently)
+
+I=E2=80=99d really appreciate any feedback or review thoughts on the
+full series as well. I=E2=80=99m trying to keep the chunks small,
+reviewable and iteratively testable, but if you have any
+suggestions on how to improve the series, I=E2=80=99m all ears.
+
+Credit/Disclaimer:
+=E2=80=94--------------------
+As always, this Proxy Execution series has a long history with
+lots of developers that deserve credit:=20
+
+First described in a paper[1] by Watkins, Straub, Niehaus, then
+from patches from Peter Zijlstra, extended with lots of work by
+Juri Lelli, Valentin Schneider, and Connor O'Brien. (and thank
+you to Steven Rostedt for providing additional details here!)
+
+So again, many thanks to those above, as all the credit for this
+series really is due to them - while the mistakes are likely mine.
+
+Thanks so much!
+-john
+
+[1] https://static.lwn.net/images/conf/rtlws11/papers/proc/p38.pdf
+
+Cc: Joel Fernandes <joelagnelf@nvidia.com>
+Cc: Qais Yousef <qyousef@layalina.io> =20
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Valentin Schneider <vschneid@redhat.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Zimuzo Ezeozue <zezeozue@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Will Deacon <will@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: Metin Kaya <Metin.Kaya@arm.com>
+Cc: Xuewen Yan <xuewen.yan94@gmail.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Suleiman Souhlal <suleiman@google.com>
+Cc: kuyo chang <kuyo.chang@mediatek.com>
+Cc: hupu <hupu.gm@gmail.com>
+Cc: kernel-team@android.com
+
+John Stultz (4):
+  sched: Add CONFIG_SCHED_PROXY_EXEC & boot argument to enable/disable
+  sched: Move update_curr_task logic into update_curr_se
+  sched: Fix runtime accounting w/ split exec & sched contexts
+  sched: Add an initial sketch of the find_proxy_task() function
+
+Peter Zijlstra (2):
+  locking/mutex: Rework task_struct::blocked_on
+  sched: Start blocked_on chain processing in find_proxy_task()
+
+Valentin Schneider (2):
+  locking/mutex: Add p->blocked_on wrappers for correctness checks
+  sched: Fix proxy/current (push,pull)ability
+
+ .../admin-guide/kernel-parameters.txt         |   5 +
+ include/linux/sched.h                         |  72 ++++-
+ init/Kconfig                                  |  12 +
+ kernel/fork.c                                 |   3 +-
+ kernel/locking/mutex-debug.c                  |   9 +-
+ kernel/locking/mutex.c                        |  18 ++
+ kernel/locking/mutex.h                        |   3 +-
+ kernel/locking/ww_mutex.h                     |  16 +-
+ kernel/sched/core.c                           | 257 +++++++++++++++++-
+ kernel/sched/deadline.c                       |   7 +
+ kernel/sched/fair.c                           |  65 +++--
+ kernel/sched/rt.c                             |   5 +
+ kernel/sched/sched.h                          |  22 +-
+ 13 files changed, 448 insertions(+), 46 deletions(-)
+
+--=20
+2.50.0.727.gbf7dc18ff4-goog
 
