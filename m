@@ -1,113 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A351B26980C;
-	Wed, 25 Jun 2025 15:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCAA263F40;
+	Wed, 25 Jun 2025 15:10:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864183; cv=none; b=Zoddwvfey9W6ClXnfbVjyLPZy1nhkkt4yBdd+WQhaxIOrekVcdi/hl+dnA4631XRXoZOKtUxdBFysQDtqG2d47yK9U/HY6PcmF26FZ4lRWaMP7rsRzaiw/sXBgLpcRe2cOTbYtvNl8gA5eCZBzhueLQbHORa5tdjxT/IYZ9FD24=
+	t=1750864238; cv=none; b=m+Z+LHRCEujUvk2PCom3RKY1hXfmfsrpekxrC7poogxySgldSlhAmElFfCOTTpTn5iEirY+G11U5q3mgubrBWoBxnGQ1H6Dwx5nJL/kTi1crLzZi2/3RDMDAhWQQuO3kt8+8GZuS9AO4TGCiReK4LaU/cXLQuyXKqtxe1J0iZ84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864183; c=relaxed/simple;
-	bh=gXTrknQJEN2InCoQs4DfBMZwTkg+EzezKbyu9cjLKd0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TQ+YPpcPmPLgojQ/zYRF3DYOF2fSafD58t1WtbOgVWuMpVQrahJpCfZz1QgxzCtoIWBKSHsMKiBUv3Y968Y6YNOVELpwdA52xTw7/uY1Tr0KZyQRPBZzYGfPTTiPsoROjGK86dAymNVieDEUaaWrRTeiMAmKpo3sNJ8zTc2Bxt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0PLn9cr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750864238; c=relaxed/simple;
+	bh=2vYg8CGu9BAqmlZuYpCFtNSeJb0sljjiAyb9B6pMNPM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RlBSWxChr1SsvQgp4gGawLuL2HVhh+xnOaQvvjALBhkreCMGMHI/hadMLZlM6CPfYvXjMVSD0KLnUYc1lc/6nLruAEO8lVoxUqVYqA0K2RZjU14zzSWQr3JLHTKinnapsyzKoWRA44JFWQFKfDTU+ylKLs6aZ4uMRMgwXq/yFjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IBWyN1jp; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0PLn9cr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3131C4CEEA;
-	Wed, 25 Jun 2025 15:09:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750864182;
-	bh=gXTrknQJEN2InCoQs4DfBMZwTkg+EzezKbyu9cjLKd0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=u0PLn9crr+axy2rYzqoJGjcvfEiSGK9hhM979kA+/G695wC1d6YWe8ziw5ZSuK1Vv
-	 Bvt6fbecPTYZFWJagWccaBrKgkNeYQSCOcPZcoEy1v8R/qIR0azzTjCZaHQBQU9gTr
-	 dXg9n+caddyGG6WecQZWOnsqL2Im+/AifJaxSyFR3k3s/NVJ6zMbBUxqvDLChCkjZc
-	 Qs1kOvjrXsikBZN8kF3GYJfyTU90ALf5+Il/AcK8bN7kNwp3NBCW1MTusVza5k22Mu
-	 b7IWSsbs344BQm1JAx05KbkC61ySuBbZwok4cWMQgd81u4UOMnIl/l1FhI19mymaJL
-	 517W4942n0O8Q==
-Message-ID: <bcd9c013-4df3-4c35-82d1-e6fdde7829ea@kernel.org>
-Date: Wed, 25 Jun 2025 17:09:36 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IBWyN1jp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750864236; x=1782400236;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=2vYg8CGu9BAqmlZuYpCFtNSeJb0sljjiAyb9B6pMNPM=;
+  b=IBWyN1jpG5aGB1YxaC/45ayPe3CDHzlZTT/1KaGXisAknt+JQU0T4UZm
+   L9bdHIrNWEDjgFDOCROsDPBE1+lpKR1CYzo4mfJF8tK6808XHRQut8tUz
+   KLAOXRAkNqBmfx0KHtvTughjeZ1LAvctq6527bSSiGKaaccvPXfHVxSyb
+   doHSw6DmVMooRsCs8NM/HiEqchexlVtte9TU/RRDv9diJC8uFJ0UIuIo3
+   AafyeI5XbhgfqwQfwJXdFpzhVllNBjB9/m47BSDPeKuSpK8dLCkP/5Hbu
+   xATq+PO9nBaPHpdl3U9ZnJ/t8RirXYhhpsKqXjoIOwxcobgZr3CwLll1V
+   w==;
+X-CSE-ConnectionGUID: 8ZIgltamR1Cc/0jLIBe7CQ==
+X-CSE-MsgGUID: WDK5Z55NTLieJrA1NLn+0g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53074329"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="53074329"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 08:10:35 -0700
+X-CSE-ConnectionGUID: vz/s4aTuQoaXCf0RhIfy1Q==
+X-CSE-MsgGUID: hnpThCZdRQKZftIn4Ys6Mg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="152014619"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 08:10:32 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uURld-00000009oSY-08xw;
+	Wed, 25 Jun 2025 18:10:29 +0300
+Date: Wed, 25 Jun 2025 18:10:28 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>
+Subject: Re: [PATCH 2/2] Revert "Input: soc_button_array - debounce the
+ buttons"
+Message-ID: <aFwRZO30wf8GxQea@smile.fi.intel.com>
+References: <20250624202211.1088738-1-superm1@kernel.org>
+ <20250624202211.1088738-3-superm1@kernel.org>
+ <4a4d577b-a085-46e8-97b9-6df27461c870@kernel.org>
+ <1f8c0262-b376-43cb-b2c5-5b60e8cbf678@kernel.org>
+ <92ab85ff-6314-4db0-ae12-9803ddde5037@kernel.org>
+ <625952d3-01e9-426e-9739-86fe5cdfeb35@kernel.org>
+ <7b2f02ef-0274-480b-aecc-bc1165d15fd7@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 3/3] samples: rust: platform: Add property child and
- reference args examples
-To: Rob Herring <robh@kernel.org>
-Cc: Remo Senekowitsch <remo@buenzli.dev>,
- Saravana Kannan <saravanak@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
- <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>, Mark Brown <broonie@kernel.org>,
- Dirk Behme <dirk.behme@de.bosch.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-References: <20250616154511.1862909-1-remo@buenzli.dev>
- <20250616154511.1862909-4-remo@buenzli.dev>
- <CAL_JsqKXrsdGjTE5KDkqmVHUK5urMJnWSLWgEi8H1yM21gcOCA@mail.gmail.com>
- <aFXipz-B1vEYkww9@cassiopeiae> <20250625143930.GA1006384-robh@kernel.org>
-From: Danilo Krummrich <dakr@kernel.org>
-Content-Language: en-US
-In-Reply-To: <20250625143930.GA1006384-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <7b2f02ef-0274-480b-aecc-bc1165d15fd7@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On 6/25/25 4:39 PM, Rob Herring wrote:
-> On Sat, Jun 21, 2025 at 12:37:27AM +0200, Danilo Krummrich wrote:
->> On Tue, Jun 17, 2025 at 08:01:08AM -0500, Rob Herring wrote:
->>> On Mon, Jun 16, 2025 at 10:45â€¯AM Remo Senekowitsch <remo@buenzli.dev> wrote:
->>>>
->>>> Add some example usage of the device property methods for reading
->>>> DT/ACPI/swnode child nodes and reference args.
->>>>
->>>> Signed-off-by: Remo Senekowitsch <remo@buenzli.dev>
->>>> ---
->>>>   drivers/of/unittest-data/tests-platform.dtsi |  7 +++++++
->>>>   samples/rust/rust_driver_platform.rs         | 13 ++++++++++++-
->>>>   2 files changed, 19 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/of/unittest-data/tests-platform.dtsi b/drivers/of/unittest-data/tests-platform.dtsi
->>>> index 50a51f38afb6..509eb614ab2b 100644
->>>> --- a/drivers/of/unittest-data/tests-platform.dtsi
->>>> +++ b/drivers/of/unittest-data/tests-platform.dtsi
->>>> @@ -40,6 +40,13 @@ test-device@2 {
->>>>
->>>>                                  test,u32-prop = <0xdeadbeef>;
->>>>                                  test,i16-array = /bits/ 16 <1 2 (-3) (-4)>;
->>>> +
->>>> +                               ref_child_0: child@0 {
->>>
->>> child-0 or you need to add 'reg' property if you keep the unit-address.
->>
->> Adding child nodes here creates the following dt-test failues.
->>
->> 	[    1.031239] ### dt-test ### FAIL of_unittest_platform_populate():1862 Could not create device for node 'child'
->> 	[    1.031647] ### dt-test ### FAIL of_unittest_platform_populate():1862 Could not create device for node 'child'
->>
->> @Rob: What do you suggest?
-> 
-> This should fix it:
-> 
-> index eeb370e0f507..e3503ec20f6c 100644
-> --- a/drivers/of/unittest.c
-> +++ b/drivers/of/unittest.c
-> @@ -1856,6 +1856,8 @@ static void __init of_unittest_platform_populate(void)
->          of_platform_populate(np, match, NULL, &test_bus->dev);
->          for_each_child_of_node(np, child) {
->                  for_each_child_of_node(child, grandchild) {
-> +                       if (!of_property_present(grandchild, "compatible"))
-> +                               continue;
->                          pdev = of_find_device_by_node(grandchild);
->                          unittest(pdev,
->                                   "Could not create device for node '%pOFn'\n",
-> 
+On Wed, Jun 25, 2025 at 03:02:18PM +0000, Limonciello, Mario wrote:
+> On 6/25/25 9:41 AM, Mario Limonciello wrote:
+> > On 6/25/25 9:31 AM, Hans de Goede wrote:
+> >> On 25-Jun-25 4:09 PM, Mario Limonciello wrote:
+> >>> On 6/25/25 4:09 AM, Hans de Goede wrote:
+> >>>> On 24-Jun-25 10:22 PM, Mario Limonciello wrote:
 
-Do you want this to be a separate patch? Otherwise, I'd fine just adding it to
-this one.
+...
+
+> >> Ok, so specifically the gpiod_set_debounce() call with 50 ms
+> >> done by gpio_keys.c is the problem I guess?
+> > 
+> > Yep.
+> > 
+> >> So amd_gpio_set_debounce() does accept the 50 ms debounce
+> >> passed to it by gpio_keys.c as a valid value and then setting
+> >> that breaks the wake from suspend?
+> > 
+> > That's right.
+
+> >>> Also comparing the GPIO register in Windows (where things work) 
+> >>> Windows never programs a debounce.
+> >>
+> >> So maybe the windows ACPI0011 driver always uses a software-
+> >> debounce for the buttons? Windows not debouncing the mechanical
+> >> switches at all seems unlikely.
+> >>
+> >> I think the best way to fix this might be to add a no-hw-debounce
+> >> flag to the data passed from soc_button_array.c to gpio_keys.c
+> >> and have gpio_keys.c not call gpiod_set_debounce()  when the
+> >> no-hw-debounce flag is set.
+> >>
+> >> I've checked and both on Bay Trail and Cherry Trail devices
+> >> where soc_button_array is used a lot hw-debouncing is already
+> >> unused. pinctrl-baytrail.c does not accept 50 ms as a valid
+> >> value and pinctrl-cherryview.c does not support hw debounce
+> >> at all.
+> > 
+> > That sounds a like a generally good direction to me.
+
+Thinking a bit more of this, perhaps the HW debounce support flag should be
+per-GPIO-descriptor thingy. In such cases we don't need to distinguish the
+platforms, the GPIO ACPI lib may simply set that flag based on 0 read from
+the ACPI tables. It will also give a clue to any driver that uses GPIOs
+(not only gpio-keys).
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
