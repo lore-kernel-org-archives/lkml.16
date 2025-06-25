@@ -1,108 +1,106 @@
-Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADB4260567
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:46:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB28D1AF0BB;
+	Wed, 25 Jun 2025 12:47:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750855590; cv=none; b=h4Ydyj90fCP/LfUjPYYnnnVzzhH04EkkCmvh8VBhLdurKIQDhbCHGD2SytT2LDz6zX3vqpzcejqaW22/GTMKd80j/opKmqdlTPRkO26Ntat5HRBFXpjP/+Fz+QfzRQdCSGftjzTBousLh71qXZHzRAzD/k59JEPi8yjjMJ0zmG0=
+	t=1750855671; cv=none; b=EQJrJ0qRD0BkEMaUJA+B5ukqCz03t2deJ48f7fl/x7v9wXxDxYq4DXMG4fXLMUH89e57sX3tR88+1FZo7po0eAy5TtPyxA3rBEHUSYmHH1ekx0dy/PF/VdZGgPRwX+eNTjpeGvo7RODJL0Yes7+lAdb93LWAJba3+GhINQMoqJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750855590; c=relaxed/simple;
-	bh=uKe/lXCPQGq24nA7rp+Toa7FOiyyQGSx6ZJ25/LXCwI=;
+	s=arc-20240116; t=1750855671; c=relaxed/simple;
+	bh=BU3167g77+eBh3FQcZRn67ZUlMzren6rPxnJ6rrLr6s=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nxWurv/ktYKs3miMVgFJnx4Wc2F+bwGEKFgGRvSRVuHhOjlMFZaBJqbQAblQuRaAibUWT9J1fAwM6gAhbjmtcurKstWhlZ4L0KmB83vqNUUxO265PgQmOrqLKy0US2VYAbb4pv1t8N3lFBKa5QnlT/X4v1C0EMq+QcL7deK85Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=geo7a+Ck; arc=none smtp.client-ip=209.85.219.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=REI3Q9K8jpb9/rZruWP9caCOX8a2LFjd62y7yD4nb5Vo444IW4ZB+g5RQg71eJjxiGKx9YVzCQ2hMw0ayp8ZnbyEj/xn8IToss7kTwT3/UzJanKiAB3ui5A4qHZepbK6xiGdm6K4UBzClDIcuW8a1VkMKWiyhEt9kNBU54l0Au0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gshbbXz5; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="geo7a+Ck"
-Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-e81cf6103a6so5889360276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:46:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gshbbXz5"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-31306794b30so828382a91.2;
+        Wed, 25 Jun 2025 05:47:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750855588; x=1751460388; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=aj4jAhuCkHLc0MKXkhpZy35x/RLjZn6KIWkW8s4y+Y4=;
-        b=geo7a+CksCTvrATNZg1AGdKiEW35SDXnVT4fwqM44cWUMCepSvW3RAU6+2D0e8QpKp
-         yj7VgE+MoiLEP3evL6AWgczsHFwdGSAZHNSddn2GB2UPUg2AwFebSN7mNE+8wgWuJsrb
-         RzUPP6MfEWL1w7U+ol9D376ePUHI4Je63Re4BG5U5zNNSYf3Fg+P/ws+9yq/a9P9+UMT
-         mOhQQMnkxEf+pKDilFNtObRabkCseSdMZmFNXFyhkJWXU/hZMPPp05f3ysCb7X4j6t3h
-         C0Zr7VNwX95BmmNKnR6a7f1Zndm5XeRCN3sOnghtkh9sjZrPJ3BBu9fY16ACTq3+okMr
-         vlBQ==
+        d=gmail.com; s=20230601; t=1750855669; x=1751460469; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xRdtBmMzlAb9QIbZaGxD9UlH4C68HhmhN0SNfJyz9VA=;
+        b=gshbbXz5/SsZ7hQ26jZvnlLorw82vS9epkibt48qKQ+I3QRnqDYp4oAFU6eKP1wYG4
+         Pj9ebSQHVeCcnlQzOdTDUk/I9oCxkQzBa2LVDhbAPJ8zoDL+B0oIERtc4K5J4QSCXNSP
+         tYfeKbVWuC+iRvqCe1LhtNg0ymG0evi4Y/1ZED3iI8Tc9pul3latsoTKJD8ZDT1/1pQB
+         +teY42Upi/JSNFxbD1DZD5LMADrRhnTrIYbNYli1T5Q9Y314YQYzaSf4mJn4MOZ9FJ1o
+         NfuGJHY3etuNnivspCvUDHPL4Gl0qEiiMs7mdVpWbq5suvb3lPiuYeEqh6b7qOTtw7yQ
+         9YBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750855588; x=1751460388;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=aj4jAhuCkHLc0MKXkhpZy35x/RLjZn6KIWkW8s4y+Y4=;
-        b=HZrYHHADB3FVDmAwDFVFFTj+c1t1p3SvGYkeKWA/3kcMOYpg1/uM95EDkZVUzgcyRL
-         ig7xasV6lk5t0BeNGJlW1p71Gy7jwDn1iPu2DnkznxxbzcLthrbd0D5Q2orx+F66yfoO
-         tGykcCNxbeGydfxiBkoaXORbSZEtOrJk5IsknWtJlC+bozLpgmhln7RMzdQBHUGB+cOv
-         Y7PVYAXyJlvq+cZ71JAUFPGIHmDQTsNJTq3Th7qZWcQP8+u4FX7y8kqW0f73oYwkgPCI
-         McT7ZkDOCvGXcusgcjw1WBElcs09fRhXP28MYB1jtpsN/LHWqErWRJrBH3DjKi+l7NUe
-         hELQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxfSucHX9G6twzDyd+vKHKjbFMHISfzdW3r9lcBlUDo/oJrpzPBacBZ2+mjo7TwAxMmEJzLMLEJ3plrbo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YytJBuxaRFvw61T2Q93Q3IosT3JWy0cL7xD0F66rLI9zOh6J6YR
-	igBrPga6XghGfPupZ/Hs0AgxGXPbP0vJIDy7SSxDvBxnvNvfVRvoXKmjbnpCJjh8lJLuLHgCV8B
-	ZQDPyVLS8+jDcJJHfQxDixqaZcbJ7G+RLu0UOnrxIWA==
-X-Gm-Gg: ASbGnct9Eyv9IUmxDyKzZDCvEf6YEdkm4Glv9AzZXcS2B3fVSEdDITJDRMVDDOIEAyX
-	6dJXQtaf5TH016HjTOABtlJvuSJjMn+MBmex6ZfgxR8jqgsgJL33DPDBrNrtBisR0BUYbX4SOoi
-	dBkQzSE0VwK55Q81jj64Ob1AtZjSGbsDrFzt6b0VwbpAA=
-X-Google-Smtp-Source: AGHT+IHuqbs3+ZWuZkWAAPqD4OwhWYQ4/+DMgIxw4fLXOlRsaFo0LQlpSx2p1DV+41IMvrV599rDMZdlt1nY1Sc/mtw=
-X-Received: by 2002:a05:6902:2782:b0:e84:2cbd:3212 with SMTP id
- 3f1490d57ef6-e86018cf6afmr3027295276.20.1750855588294; Wed, 25 Jun 2025
- 05:46:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750855669; x=1751460469;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xRdtBmMzlAb9QIbZaGxD9UlH4C68HhmhN0SNfJyz9VA=;
+        b=cFp46Lb+azDWNMfMSxjoOXG/4i6RQSJAiJHBxN4XmXzDvpbQAXSl1BFOrPxdNrYge9
+         9SP9KqCbLtKNNL+vmS68n+ZPpeAuemRpJwLQc8kz1SvRjDaboprsh14nPq5PZmKW5rm0
+         vVZWHQOrH5ynqTBdrQ8SGYMvR3FjFh3qtrn9NbSLrov/ovcSJ4F1ps2xjvTMDH3eEzKT
+         yls4Iu8l95MVoeC4tFsLstEQKlacyaRGzGzH6KSm693r+myK3k23pd/kQO7L5+3/t4vM
+         85HC/TKobaCwq1ZeoOB5DfdtljLtFfUE8jYEVr/NlOcyvC9uBDXx7arJ3Ncnp+xawH5l
+         kDmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUa/bjYF/7GmUmESIwvE0J5eZCAg6SH9OSiVa6qsobUq5cHp7KWfpFmXwV/0Csq5pxtJe7BVUUHhEn2peM=@vger.kernel.org, AJvYcCVrUG1Tm24Btu71/h4AfadRnSj4TrWF1C0A/Hvcgj/QzcNyYwLkwDceKzo1G+USS7Ztkj+tjnDt46iSfn7YbQM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzJNARyqt4rSTkOLcWDvRce9XTdasy/B/QYo75VkcFrqYt40wq2
+	+0YGgvNQH+wT8793XLbPL9N3erGaF91TnwYh2JBoAC/HC6wx0C8lLytfNEN7VyI5ztgMCJCQarA
+	tewwwbGDqqN48e4SgfYeibEKHA8ClSHo=
+X-Gm-Gg: ASbGncthO7D+cDzBJx/ADsJWKqnEqXBvIaLWwijwk1V8vVCgXtBRMRxVeDINYwIGa4I
+	TXSiRguY0V1lKdR2F0+5Z1tV1N555hU92q3dsbNTL+8cmRTZs6ZLQho388d/6rMLhFe0/4joUMv
+	6IUsnO5y65Tuhan27OzZfmZjcewBOhgCIUqV6FY6glAFo=
+X-Google-Smtp-Source: AGHT+IHnvlarZCuv/RCxHiq29Qi7ylrCmEZXswOwHX+FJluU1B6A+ro+JsxQXvsVUnAYNWJueug97Vcpgz4xDNQHbpo=
+X-Received: by 2002:a17:90b:51c6:b0:30a:80bc:ad4 with SMTP id
+ 98e67ed59e1d1-315f25545b6mr1686463a91.0.1750855668951; Wed, 25 Jun 2025
+ 05:47:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <174972756982.3337526.6755001617701603082.stgit@mhiramat.tok.corp.google.com>
- <20250625052106.584905-1-senozhatsky@chromium.org>
-In-Reply-To: <20250625052106.584905-1-senozhatsky@chromium.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 25 Jun 2025 14:45:52 +0200
-X-Gm-Features: Ac12FXwFOrEcUFEsusjn1MoQ84IvAh5xPRaGYt6omrx5SZ03KEKKj6Opk4VwAGk
-Message-ID: <CAPDyKFoYgi3bauUQ8xrc+0KtwmmXi9jNNzcOt_fmyP2pFQ9Jbw@mail.gmail.com>
-Subject: Re: [PATCH] mtk-sd: reset host->mrq on prepare_data() error
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Chaotian Jing <chaotian.jing@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Tomasz Figa <tfiga@chromium.org>, linux-mmc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org
+References: <20250623-topics-tyr-drm_mm-v1-1-82fe8104a6f5@collabora.com>
+In-Reply-To: <20250623-topics-tyr-drm_mm-v1-1-82fe8104a6f5@collabora.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 25 Jun 2025 14:47:36 +0200
+X-Gm-Features: Ac12FXyWwIT-f0p09GbrWuQHLM0OEITTFnrLijUbU8qrHeVE1B6UgsCWrUJVsP0
+Message-ID: <CANiq72k07PuSodVgb+LDNw1jZVWhKt1BuYSULfBY8DBH1EJbBA@mail.gmail.com>
+Subject: Re: [PATCH] rust: drm: mm: Add DRM MM Range Allocator abstraction
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, rust-for-linux@vger.kernel.org, 
+	Asahi Lina <lina+kernel@asahilina.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 25 Jun 2025 at 07:21, Sergey Senozhatsky
-<senozhatsky@chromium.org> wrote:
+On Tue, Jun 24, 2025 at 12:13=E2=80=AFAM Daniel Almeida
+<daniel.almeida@collabora.com> wrote:
 >
-> Do not leave host with dangling ->mrq pointer if we hit
-> the msdc_prepare_data() error out path.
->
-> Signed-off-by: Sergey Senozhatsky <senozhatsky@chromium.org>
+> Signed-off-by: Asahi Lina <lina@asahilina.net>
 
-Applied for fixes, thanks!
+Patches from others also need to be signed off by you as carrier.
 
-Kind regards
-Uffe
+> Changes from v0:
 
-> ---
->  drivers/mmc/host/mtk-sd.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index b12cfb9a5e5f..d7020e06dd55 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -1492,6 +1492,7 @@ static void msdc_ops_request(struct mmc_host *mmc, struct mmc_request *mrq)
->         if (mrq->data) {
->                 msdc_prepare_data(host, mrq->data);
->                 if (!msdc_data_prepared(mrq->data)) {
-> +                       host->mrq = NULL;
->                         /*
->                          * Failed to prepare DMA area, fail fast before
->                          * starting any commands.
-> --
-> 2.50.0.714.g196bf9f422-goog
->
+I assume you mean the RFC patch from more than 2 years ago, i.e.
+
+    https://lore.kernel.org/rust-for-linux/20230307-rust-drm-v1-7-917ff5bc8=
+0a8@asahilina.net/
+
+Right?
+
+(In general, it is very useful to have a link to the previous version
+in the changelog, especially when it is a very long time ago, when
+titles change, when it is non-obvious in general, etc.).
+
+Thanks!
+
+Cheers,
+Miguel
