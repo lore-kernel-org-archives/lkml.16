@@ -1,116 +1,66 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3DAE1DE2DC;
-	Wed, 25 Jun 2025 18:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88942690F9;
+	Wed, 25 Jun 2025 18:48:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750877292; cv=none; b=naKNyLiL70SUGKeM2qkGa2ifMFIwYmBw9i7jOXGH3SWaWfe3/4ykpwMuAtPP1uKoyWGau+hnHJTpBVTgDYefE4OKx5acWKpmhcrj1TIoEDJya94IsCJ3Sl9JLDURauff2eeBY/a8dlPwSgBzjMgrSddiv+neOFrkcUcnk9Q7BJU=
+	t=1750877339; cv=none; b=ZVSF+e9xHCKrLZT5JGcVznVJYzOvwHBAgocUZH6c2jkRJcF5y/aGDBb8N/CmMqLQoCITAcMGE//1E39WkhimYL/gmL0b2zDB1ii0pWf0tLcNACMzm1Nluqe4Spparke+EFNKS+cR4rlnuMZgLTrt+2jqdTjrqouU3rrjySvK7oM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750877292; c=relaxed/simple;
-	bh=kt9De5IvAY7iLGLkFAowNEnzFuWw510oKFHcaPU1AQU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XBiBW8sMTsegMm9chksv+vUstPvcDqJ4nfgXPGg3Je0sBFuVAIOiNrANKlrrKtDL/uoLvbnYf/eUFF2Ys8uteRFsvG/eGz5K9PDUqSL7h7KgiWjXdrlTDKnqpjl9K82B9b1bnqeZa/1tQu0NlWzxbnlHMdk3i/tUKT2abyZOh1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JMIcbK43; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750877339; c=relaxed/simple;
+	bh=7ax4htsn3Fwg4rqcMH5Pa0holPGvKyZnXDOQSai1m+Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c1oSu+GWNMR01R+S3a/CJF8PnlHFugmv8TuCRmiDZodyvzeluAkw9sTV/Lhg83JlI63C+E1XrAwUF6+kVo/tGeUQgEgDnEQIMCIgqy94JrZcONiTzoC0kHoufg46pjX+nPGaJ2hMkLDHPP7j0ZxIPbMWUBUvdW+q3N+MnE/dq2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oMJBhwH4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JMIcbK43"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750877290; x=1782413290;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=kt9De5IvAY7iLGLkFAowNEnzFuWw510oKFHcaPU1AQU=;
-  b=JMIcbK43yP2ypEZpCyxlAtSH/I7FN82puSdiEAfPZnptK9o7Ggu0JqCJ
-   PbqaJw8Ez3sya8/cCgyJKR3WJH9jHTX811SAcr3i83ZQNP2GSdNS4T+kD
-   TH1uCaI6kAW7NWfFHL7XF0s1DL0fNxSnPXGBc5M0JM6I7rtHjH0HBzCgq
-   2SqnkLDvezY0iG7t0FJM6TY73V0IsY6MTRCsoVJP/luoH5U3TahcPEmXs
-   7rYSU0bFi8o/uTSmmxIC19P3avH4G3HqiR1Taourde92GYc8Z9LrRsMnN
-   pHhuRkoiTSF4MCW9lx0YFz4BnhSxEC0JE9BS/PQnEVPwPiH6nZFGtJKmF
-   Q==;
-X-CSE-ConnectionGUID: qgU8QLywSbKJ602A34Ahyg==
-X-CSE-MsgGUID: SkIle341Rx+gGfYMaWDW7g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53094741"
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="53094741"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 11:48:10 -0700
-X-CSE-ConnectionGUID: S/LoK/0sQ/SpPQVlM57hGQ==
-X-CSE-MsgGUID: nsLRR2TERduCMLjWk0+IiA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="183324227"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 11:48:06 -0700
-Received: from [10.246.136.52] (kliang2-mobl1.ccr.corp.intel.com [10.246.136.52])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 4CF0E20B5736;
-	Wed, 25 Jun 2025 11:48:05 -0700 (PDT)
-Message-ID: <9a391626-df9b-46bb-a160-2c39e3fb3c4f@linux.intel.com>
-Date: Wed, 25 Jun 2025 14:48:04 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oMJBhwH4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E275C4CEEA;
+	Wed, 25 Jun 2025 18:48:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750877339;
+	bh=7ax4htsn3Fwg4rqcMH5Pa0holPGvKyZnXDOQSai1m+Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oMJBhwH48fKOA/r9ZNid8t+OJZMQ7gZ72pT477GQ3YTF4h+oEa/k7bHp3DeM36GoC
+	 zlJLc7xnHhz4F6ZMHEeMcsTDLt7yl4uibq3g/vDB4omZVZmLRugakQNcEm8ZGN6Ys9
+	 ZmGhGC9PR5B2LRzRI/mE3HOPFoSgq3yiE2XyZCOBhg7kQhesGODPfiKqOLhm3p5FRS
+	 htVxX6Z3Rc5jsd0bWE6Li/Q/+jqy2qpWih8Q+mehYLGguD0XaogQSGRK2VanO6HgzO
+	 /0NxDP/z1XdO68VkYBOwzTwS16JD5KtVDvId5J6ySangHT2wLOCFwj4OaHWWPmxVmU
+	 I5RVN3qcEQL7Q==
+Date: Wed, 25 Jun 2025 13:48:58 -0500
+From: Rob Herring <robh@kernel.org>
+To: Chintan Vankar <c-vankar@ti.com>
+Cc: Thorsten Blum <thorsten.blum@linux.dev>, Andrew Davis <afd@ti.com>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Peter Rosin <peda@axentia.se>, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, s-vadapalli@ti.com, vigneshr@ti.com,
+	nm@ti.com, danishanwar@ti.com
+Subject: Re: [PATCH 1/2] devicetree: bindings: mux: reg-mux: Add support for
+ new property 'mux-reg-masks-state'
+Message-ID: <20250625184858.GA2004209-robh@kernel.org>
+References: <20250605063422.3813260-1-c-vankar@ti.com>
+ <20250605063422.3813260-2-c-vankar@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf/x86/intel/cstate: Remove PC3 support from
- LunarLake
-To: Zhang Rui <rui.zhang@intel.com>, peterz@infradead.org
-Cc: mingo@redhat.com, tglx@linutronix.de, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- ak@linux.intel.com
-References: <20250625010822.250826-1-rui.zhang@intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20250625010822.250826-1-rui.zhang@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250605063422.3813260-2-c-vankar@ti.com>
 
+On Thu, Jun 05, 2025 at 12:04:21PM +0530, Chintan Vankar wrote:
+> The DT binding for reg-mux currenly requires specifying register offset
+> and masks in the "mux-reg-masks" property, while corresponding register
+> values are defined in the "idle-states" property. This approach imposes a
+> constraint where "mux-reg-masks" and "idle-states" must remain
+> synchroniszed, adding complexity when configuring specific registers or a
+> set of registers with large memory spaces.
 
+Sorry, but I don't follow why there's complexity. Having to support 2 
+different ways to express the same thing adds complexity we have to 
+maintain forever. I prefer to impose the complexity on the .dts than 
+maintainers.
 
-On 2025-06-24 9:08 p.m., Zhang Rui wrote:
-> LunarLake doesn't support Package C3. Remove the PC3 residency counter
-> support from LunarLake.
-> 
-> Fixes: 26579860fbd5 ("perf/x86/intel/cstate: Add Lunarlake support")
-> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
-
-For the series,
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-
-Thanks,
-Kan
-
-> ---
->  arch/x86/events/intel/cstate.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-> index ec753e39b007..6f5286a99e0c 100644
-> --- a/arch/x86/events/intel/cstate.c
-> +++ b/arch/x86/events/intel/cstate.c
-> @@ -70,7 +70,7 @@
->   *			       perf code: 0x01
->   *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,KNL,
->   *						GLM,CNL,KBL,CML,ICL,TGL,TNT,RKL,
-> - *						ADL,RPL,MTL,ARL,LNL
-> + *						ADL,RPL,MTL,ARL
->   *			       Scope: Package (physical package)
->   *	MSR_PKG_C6_RESIDENCY:  Package C6 Residency Counter.
->   *			       perf code: 0x02
-> @@ -522,7 +522,6 @@ static const struct cstate_model lnl_cstates __initconst = {
->  				  BIT(PERF_CSTATE_CORE_C7_RES),
->  
->  	.pkg_events		= BIT(PERF_CSTATE_PKG_C2_RES) |
-> -				  BIT(PERF_CSTATE_PKG_C3_RES) |
->  				  BIT(PERF_CSTATE_PKG_C6_RES) |
->  				  BIT(PERF_CSTATE_PKG_C10_RES),
->  };
-
+Rob
