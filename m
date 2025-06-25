@@ -1,69 +1,70 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BE92E06CD
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:59:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398332F2721
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:59:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750877943; cv=none; b=K/Z623q2IrKW+4cw4JGZ/4UsT14gqd65VA7aEQUzxNQc64AtDhcKu0xQQmUtlV0hSHbmPAdBaR/eCA61+vI1xYKX4czbBczKpEpM4vP0/EduLxWnQlZb1DzqjykELLFYkJfLWAIg3IkhrVLpLVT+ePqX/4rapiYBppSkysT47n4=
+	t=1750877945; cv=none; b=DEGVRQR+ttgITlpQhqvEhrPaZrpZ221GoMMQJKtGFZMbCzHLg/+wm0+MixaxOLOISNVgZeFPmJhZ+nFjeIHIE0iof2czJSrV4B65wpIa+pheZyjzFTJhmoFviinYxM+6INBgC/FUYB4LyD9Odq7g4ZwgKMMyePY0FH2PmO9x80c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750877943; c=relaxed/simple;
-	bh=hd+SGUOq+Yjn92HqZGWhDKi1nbHdVQyx7YshAq31C8I=;
+	s=arc-20240116; t=1750877945; c=relaxed/simple;
+	bh=jAFX8qN/ZOAZrSo0QLmGzc4udiuEqBJZUE1qEmE5rxA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OYdgqAn1KHqqsRKVUpID2+zgSRrBaf9moNNXBxgyTyQ+dOjobGIcZnfaB3YAZayxbjU0GFvubGLXBB2OZwxk0D7BDocQzrikLrCJc81f7BDdpXvowkkpsp/r0VDbVZ+ge8fUXNNFX97vCzh8kkC6K5Q8ZBy+MLZWinJ8QMgh5lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eIGvpvDe; arc=none smtp.client-ip=205.220.180.131
+	 MIME-Version; b=PsFTY3Vmji9J0W+xy+a3OaHxmVsIv0JzlzWqUsoYlenbWAYNo/6R6FEw2bJG7ff6GVqEWS/SdrtdbWoipko0h1XI0dbMJ/GE+QT8JY/58dP4t2eDJqt7NiRBgh9py9+ndsJIqjfOt6fuCU/88w5Ok4RMUV7Q/M3MUAEG7kF52CY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=N1I0mv/m; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eIGvpvDe"
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="N1I0mv/m"
 Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PCbB8Z006106
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:59:00 GMT
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PDKS4T022985
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:59:03 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
 	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=nqziWkTpKn7
-	+Zo16n4ZbnSlGZfnmg6jhLx65Rn+Pn3w=; b=eIGvpvDehYgqN9sXz+0//R1otJG
-	hEi0O7yl1x1v1GTQp+D6tnG2oKP2eWY9Ue9tHjF7Z8UXtulyyxmTNu82jVWKIAO6
-	qDQgycWIW4j147uo37iaUrFzr5iUAXBfKxlPsbzsA5tsFov2NQE4ivfzPab3uPW8
-	MnJLE/JWZ7Tc0EKD5xyMXJPzWa+2PRDxgLGZmbfqeD0AXrC6RYlGmUYx5EGCcuLJ
-	jyIVG+ilm3kA6fSMEeLJm/oVoszYDqXmKyUJ4Ye7zZWeBuBQItHinXJvqB1Yr/hg
-	q/rN7s2qgVKbQan+kMEutmXFV5SGqOghmE+veOxLZIVu4vSPWb3r61YmjBQ==
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bggy1t-1
+	:mime-version:references:subject:to; s=qcppdkim1; bh=QOMNbElsFZP
+	lX1Zq+j4xLdTNJSwjVmJdOq5xQhhnr9E=; b=N1I0mv/mQZH9Ks7Xc+fzl1wwXv9
+	OSzf5PDmPgVa5lhXD1CrTcDbi1mb2IqBpsVHKeKLEPZEJW2Gp3K23zjWh9HeJD7w
+	d1hpTdKpjSssePA6CZoXIj5OK+LtD8hp1WMpQ4JNO4aWeON1D4Kf5FjBJktuZhhn
+	fJ2VVerzw+VTMZtk37xxvyKVInipKcUzw3Y2yj7/c1VQ6Kcc2GK5n2wytLTCsVb4
+	9/NX2X9br0q2+y7Wz6K6WV2/pA2GXeJoKH1Q0hF8uM5Fpja3R04Ktp2w7YdpmmoS
+	pCkd0pNsDDRd41wFJ0U5S/PRPLqGK/3GF/vdmkLqHnASPcXO7Uhe4qn1Uiw==
+Received: from mail-pf1-f198.google.com (mail-pf1-f198.google.com [209.85.210.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bggy22-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:59:00 +0000 (GMT)
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-23494a515e3so1395515ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:59:00 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:59:03 +0000 (GMT)
+Received: by mail-pf1-f198.google.com with SMTP id d2e1a72fcca58-74913a4f606so207647b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:59:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750877939; x=1751482739;
+        d=1e100.net; s=20230601; t=1750877942; x=1751482742;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nqziWkTpKn7+Zo16n4ZbnSlGZfnmg6jhLx65Rn+Pn3w=;
-        b=mYXiPTx35kXTN3JiA0jruHsDEoRAnMAvjdupxolNXI+d0XcMLO5zSxUekEGxas9dS6
-         k1bxSjPPqIOstXse8UTJBLFir81RGNQ9XIO19Gj3Neu+NLkr3/HVvuJ20iTasIEER1Zl
-         NDl4RO2Q+M+hwE0fmBEzQ5kmqVcHihPiGdC0ECYuJdqcoHAlf/cR2Hp6xAWxEEPmMjd7
-         G7o0y4HzBiVJfX34Gjha3zoZALE70+SiFQVe/Gogky8GWfU444rGzohsd9ddQ55IWSXh
-         JbXQuAPA9U2b+px8l7mUvKUrCXgNXlGoWgdP86ONkHWwbjQTYl6xnNFmeEafl/NL6Wzv
-         1n+A==
-X-Forwarded-Encrypted: i=1; AJvYcCV550FD/XSUdzjXeVtAYPa9jPTAwnWY4HAPbck8y7nEuyEGbCHPU4nPxqqmCkkI8Q8f8No0VcZl6yP8KlU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy/+okTTlBjG75WPcqBkZqfnX96d+/Xsc0gdMD++Z3X6FykSC7u
-	8N3R/qLnATqg88moys2s14IBBqcrWgYlzUUt5C/xyZGRetG5RiJLtGrdGE/IXXTv6fvP8GTPI0V
-	oUHfg3qBmGgAcSGxp/hBbcDdLdHZVdQqzmvJfzEk1kwgvrDUEVG3Nh+FipvaCYPhkNZc=
-X-Gm-Gg: ASbGncuQOQpsgIJFiC2UN9GAJz1EM8Sfo4y22Cen8C6SwvAy1mhvM8gJIEiclG4rwWa
-	VaHw0V71zGPrii+BF3vWirWcVC9H6S9ZpOra8YpsWHPfDo7Hd3VIqWqR9+NusazNw+ukdyKhKKh
-	g9ku8fqBa304CuzawEVswn9QvX6hwVou87dq4VAUEPSodQd3GVZySSClzShr9/qFE5G0vPIVW64
-	qJkwKQsej9W9oSAUGBDVElfupNyRiVjvO00c51kMLznWAQGEx6WnF/y/TWjhh9YXgKfqVNtvuM7
-	6mNKmcSsRHDbKccGfplx7ZvcnRgZkCdT
-X-Received: by 2002:a17:903:2f4c:b0:234:b41e:37a2 with SMTP id d9443c01a7336-238c86ee132mr9721375ad.11.1750877939032;
-        Wed, 25 Jun 2025 11:58:59 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHQyQ5uDlaknabIX1fOYhjGPTFIufwUdkrN+G7wbVg/TJZF7xfMrXlccspbcvQ7vz/RHivcvg==
-X-Received: by 2002:a17:903:2f4c:b0:234:b41e:37a2 with SMTP id d9443c01a7336-238c86ee132mr9721035ad.11.1750877938619;
-        Wed, 25 Jun 2025 11:58:58 -0700 (PDT)
+        bh=QOMNbElsFZPlX1Zq+j4xLdTNJSwjVmJdOq5xQhhnr9E=;
+        b=AuaaNFkvVuph/++lcuimafXjUPAufShk0sVdqy19ZR8rkyXDBJE28q4r1Xo5pbwzUw
+         J3IWyFMHOh1gmseJVCP/Vd90L1R1NBSfSRGcVvEMEaHEUjc5/TLFWm77tMaOf5Wm59gd
+         oJuYGupsI0ljQC3OFb5M4WBJNTT+1+gTjac8+QakxQqlU8TP1HYt3s6CKRKlb5f59RdF
+         Z60GBj1xCXWqHfXZg8Y7Rqfx5BJRUXhXZUR0TaQ4yleFwCf/lwQV3LVq8FtC00cwT+EY
+         hj6J+P7oP7N+2/u5p1/O6ehOHaVH4aucC8PeO3aBf+OBCvdF/l+hOXy+gshAhcb3fswj
+         ZdyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUIc9OOnWdeLBQbP2oRtnrq8wj5F6etja2EjdKRU8V3WWQ4eEqtywSjuqGahb4wPK2vTORR08NfoTJF0oM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwVEJjCRkb4UwS+6YJ+VE9UA7GcpaW6MpEI4sT3BzPCW1C8fm5/
+	Ls4mNIJ/WubiDJdlIhlvfNeaeqhFrgmz2X/64kwCY3wL5B583cAIfRfBSr1CzzCCOV+CP2AjKkw
+	x5ToJWr1BBuMVszAOBMfw6pJASQTSlEtG+hP8Bf+CPdkROPAkcp9Qevm2UMcq6xwVvJ4eAjOaLe
+	o=
+X-Gm-Gg: ASbGncsiuWRj3rAWxLIgXeocf8iwe5Yp8TsU6umAKakjByp2OEzXt8OmCRRfVn6ONdu
+	8ivzE4abf1wW2wgidPa0WHWbU1dce1Gc660HdQwL6bJXv0HG+K6bmAz00V2FRnbwooYXB6bsYNG
+	b3LrU0mm8Lke0FmDkgKIf++d8d5PPSTRg1u4QnvfVcbHHmR4K9Fr4cjpVBWbH168ZizFmLaj/kh
+	sZx0vS6Eoxyih/06UrC16BKIe4MwbKnD6UbsLLidhwjQMMoWmta/XlnRsiXEuN/S7qeoQiDveH6
+	h4jJ3lKLZdj8w9p1vU1hWXenSW0prM3Z
+X-Received: by 2002:a05:6a00:1a91:b0:749:472:d3a7 with SMTP id d2e1a72fcca58-74ad45bcfa8mr6497892b3a.18.1750877941679;
+        Wed, 25 Jun 2025 11:59:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFNIpJthfggdVhg6h4YytmxITyHayu+CLw/csQVSnZlQgLg/GHx0v96sgTadkVnx72wDQ0ltQ==
+X-Received: by 2002:a05:6a00:1a91:b0:749:472:d3a7 with SMTP id d2e1a72fcca58-74ad45bcfa8mr6497858b3a.18.1750877941248;
+        Wed, 25 Jun 2025 11:59:01 -0700 (PDT)
 Received: from localhost ([2601:1c0:5000:d5c:5b3e:de60:4fda:e7b1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83efb71sm139513385ad.75.2025.06.25.11.58.58
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c8854943sm5355763b3a.138.2025.06.25.11.59.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 11:58:58 -0700 (PDT)
+        Wed, 25 Jun 2025 11:59:00 -0700 (PDT)
 From: Rob Clark <robin.clark@oss.qualcomm.com>
 To: dri-devel@lists.freedesktop.org
 Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
@@ -76,18 +77,10 @@ Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
         Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
         Marijn Suijten <marijn.suijten@somainline.org>,
         David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-media@vger.kernel.org (open list:DMA BUFFER SHARING FRAMEWORK:Keyword:\bdma_(?:buf|fence|resv)\b),
-        linaro-mm-sig@lists.linaro.org (moderated list:DMA BUFFER SHARING FRAMEWORK:Keyword:\bdma_(?:buf|fence|resv)\b)
-Subject: [PATCH v7 24/42] drm/msm: Add _NO_SHARE flag
-Date: Wed, 25 Jun 2025 11:47:17 -0700
-Message-ID: <20250625184918.124608-25-robin.clark@oss.qualcomm.com>
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v7 26/42] drm/msm: rd dumping prep for sparse mappings
+Date: Wed, 25 Jun 2025 11:47:19 -0700
+Message-ID: <20250625184918.124608-27-robin.clark@oss.qualcomm.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250625184918.124608-1-robin.clark@oss.qualcomm.com>
 References: <20250625184918.124608-1-robin.clark@oss.qualcomm.com>
@@ -98,19 +91,19 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: eS-k4v6B18bDQfhKP8howhN4wTUuCsVk
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDE0MyBTYWx0ZWRfX3nMiwPvDhkff
- dICSKcMdDZcNNSIAi1y5SuNA3fzjLPuHbb8+Qn1STS0d6GPX1vET0aRMsyJDGT/zDQ2tdYzTyRk
- SIweZYxyGGrxXEQDOO+P+3munqEQWjelypxCO5vEMZaknFZeLqB4ongFQAUlLDf/+SyySb1NUhX
- 8h7fMHhNKE/EspsU3gM6NRfA4LCoqiNAZwv1/FSGVIo0L6P9aPWxC7T+6nBVdM3BCgRyj5fF+Lm
- JW5pvKuiveyNbEM9dESmidxbAksjOrs1m1wgtA4oZm+KeC4feTAJ9974Ih+unHZLVdVhe9/MZy1
- 2RCEjsNGo9CrrZ8Nw1X/cGyzfhPOWNu8MhkpSjSUi7yjM+1OfjOdgCUkvGWtgWD/NtmD0QXlPgU
- NejlrSTsxnrPS83ZFhceoB88wkh3NlVwyo7/MlE3PJ5MyUB1E+0ssZhOKMKIZI9w2o90DKd3
-X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=685c46f4 cx=c_pps
- a=JL+w9abYAAE89/QcEU+0QA==:117 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10
- a=cm27Pg_UAAAA:8 a=EUspDBNiAAAA:8 a=5GAAy6agFmV6x6zTEMEA:9
- a=324X-CrmTo6CU4MGRt3R:22
-X-Proofpoint-GUID: eS-k4v6B18bDQfhKP8howhN4wTUuCsVk
+X-Proofpoint-ORIG-GUID: nc2NqlQRhd_tvM69KXM3Rm6n4yjeCm2u
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDE0MyBTYWx0ZWRfXxDNBlOdOWGCf
+ i5cQps7DmKLkfJBuRAxMmiKZ9HqyVPcaz8jkB+ZW71hM5j0SbKaCZIs3haRT8vJkWS8mripjmaf
+ zI1k/FZZgVQu63qxpKY67BFP08E1UV2DkXOPJjqinS80kdXKzEmHZmKtuNr6ABh9ZEHLeMglshw
+ p6OuognQhMSBV3NBWOEzs6JizIE5ksnkVrEteZiz4lyFkRebN8NzmHbYF85OpRCsr9RD0SJi1ZB
+ OQ6qMQ6jcnAdEWcu9BDZ4zQFqjuOqc+5CwGHdLJc1iD/M9zeKWSsvkMarZZCw9NF3gvhottdQvX
+ UsJizYJ3wm2ghlhUIdF26EfAAY4GJtCKI9NT4+iIWJOSOZ6y+IVrvIwupOiUsMGh2jnll7lpWV9
+ Am/74ZBoQJw1qmYSZ3wt5YNmMx2UNgpKsw9M48cv15acjXT0FmRljFT16gIyOz6yeVRhZ71E
+X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=685c46f7 cx=c_pps
+ a=m5Vt/hrsBiPMCU0y4gIsQw==:117 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10
+ a=cm27Pg_UAAAA:8 a=EUspDBNiAAAA:8 a=uvlqqL4q8Y98p8K7alsA:9
+ a=IoOABgeZipijB_acs4fv:22
+X-Proofpoint-GUID: nc2NqlQRhd_tvM69KXM3Rm6n4yjeCm2u
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
  definitions=2025-06-25_06,2025-06-25_01,2025-03-28_01
@@ -123,157 +116,113 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
 
 From: Rob Clark <robdclark@chromium.org>
 
-Buffers that are not shared between contexts can share a single resv
-object.  This way drm_gpuvm will not track them as external objects, and
-submit-time validating overhead will be O(1) for all N non-shared BOs,
-instead of O(n).
+Similar to the previous commit, add support for dumping partial
+mappings.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
 ---
- drivers/gpu/drm/msm/msm_drv.h       |  1 +
- drivers/gpu/drm/msm/msm_gem.c       | 21 +++++++++++++++++++++
- drivers/gpu/drm/msm/msm_gem_prime.c | 15 +++++++++++++++
- include/uapi/drm/msm_drm.h          | 14 ++++++++++++++
- 4 files changed, 51 insertions(+)
+ drivers/gpu/drm/msm/msm_gem.h | 10 ---------
+ drivers/gpu/drm/msm/msm_rd.c  | 38 ++++++++++++++++-------------------
+ 2 files changed, 17 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-index 136dd928135a..2f42d075f13a 100644
---- a/drivers/gpu/drm/msm/msm_drv.h
-+++ b/drivers/gpu/drm/msm/msm_drv.h
-@@ -246,6 +246,7 @@ int msm_gem_prime_vmap(struct drm_gem_object *obj, struct iosys_map *map);
- void msm_gem_prime_vunmap(struct drm_gem_object *obj, struct iosys_map *map);
- struct drm_gem_object *msm_gem_prime_import_sg_table(struct drm_device *dev,
- 		struct dma_buf_attachment *attach, struct sg_table *sg);
-+struct dma_buf *msm_gem_prime_export(struct drm_gem_object *obj, int flags);
- int msm_gem_prime_pin(struct drm_gem_object *obj);
- void msm_gem_prime_unpin(struct drm_gem_object *obj);
+diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+index 5e8c419ed834..b44a4f7313c9 100644
+--- a/drivers/gpu/drm/msm/msm_gem.h
++++ b/drivers/gpu/drm/msm/msm_gem.h
+@@ -403,14 +403,4 @@ static inline void msm_gem_submit_put(struct msm_gem_submit *submit)
  
-diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-index 142845378deb..ec349719b49a 100644
---- a/drivers/gpu/drm/msm/msm_gem.c
-+++ b/drivers/gpu/drm/msm/msm_gem.c
-@@ -554,6 +554,9 @@ static int get_and_pin_iova_range_locked(struct drm_gem_object *obj,
+ void msm_submit_retire(struct msm_gem_submit *submit);
  
- 	msm_gem_assert_locked(obj);
- 
-+	if (to_msm_bo(obj)->flags & MSM_BO_NO_SHARE)
-+		return -EINVAL;
-+
- 	vma = get_vma_locked(obj, vm, range_start, range_end);
- 	if (IS_ERR(vma))
- 		return PTR_ERR(vma);
-@@ -1084,6 +1087,14 @@ static void msm_gem_free_object(struct drm_gem_object *obj)
- 		put_pages(obj);
- 	}
- 
-+	if (msm_obj->flags & MSM_BO_NO_SHARE) {
-+		struct drm_gem_object *r_obj =
-+			container_of(obj->resv, struct drm_gem_object, _resv);
-+
-+		/* Drop reference we hold to shared resv obj: */
-+		drm_gem_object_put(r_obj);
-+	}
-+
- 	drm_gem_object_release(obj);
- 
- 	kfree(msm_obj->metadata);
-@@ -1116,6 +1127,15 @@ int msm_gem_new_handle(struct drm_device *dev, struct drm_file *file,
- 	if (name)
- 		msm_gem_object_set_name(obj, "%s", name);
- 
-+	if (flags & MSM_BO_NO_SHARE) {
-+		struct msm_context *ctx = file->driver_priv;
-+		struct drm_gem_object *r_obj = drm_gpuvm_resv_obj(ctx->vm);
-+
-+		drm_gem_object_get(r_obj);
-+
-+		obj->resv = r_obj->resv;
-+	}
-+
- 	ret = drm_gem_handle_create(file, obj, handle);
- 
- 	/* drop reference from allocate - handle holds it now */
-@@ -1148,6 +1168,7 @@ static const struct drm_gem_object_funcs msm_gem_object_funcs = {
- 	.free = msm_gem_free_object,
- 	.open = msm_gem_open,
- 	.close = msm_gem_close,
-+	.export = msm_gem_prime_export,
- 	.pin = msm_gem_prime_pin,
- 	.unpin = msm_gem_prime_unpin,
- 	.get_sg_table = msm_gem_prime_get_sg_table,
-diff --git a/drivers/gpu/drm/msm/msm_gem_prime.c b/drivers/gpu/drm/msm/msm_gem_prime.c
-index ee267490c935..1a6d8099196a 100644
---- a/drivers/gpu/drm/msm/msm_gem_prime.c
-+++ b/drivers/gpu/drm/msm/msm_gem_prime.c
-@@ -16,6 +16,9 @@ struct sg_table *msm_gem_prime_get_sg_table(struct drm_gem_object *obj)
- 	struct msm_gem_object *msm_obj = to_msm_bo(obj);
- 	int npages = obj->size >> PAGE_SHIFT;
- 
-+	if (msm_obj->flags & MSM_BO_NO_SHARE)
-+		return ERR_PTR(-EINVAL);
-+
- 	if (WARN_ON(!msm_obj->pages))  /* should have already pinned! */
- 		return ERR_PTR(-ENOMEM);
- 
-@@ -45,6 +48,15 @@ struct drm_gem_object *msm_gem_prime_import_sg_table(struct drm_device *dev,
- 	return msm_gem_import(dev, attach->dmabuf, sg);
+-/* helper to determine of a buffer in submit should be dumped, used for both
+- * devcoredump and debugfs cmdstream dumping:
+- */
+-static inline bool
+-should_dump(struct msm_gem_submit *submit, int idx)
+-{
+-	extern bool rd_full;
+-	return rd_full || (submit->bos[idx].flags & MSM_SUBMIT_BO_DUMP);
+-}
+-
+ #endif /* __MSM_GEM_H__ */
+diff --git a/drivers/gpu/drm/msm/msm_rd.c b/drivers/gpu/drm/msm/msm_rd.c
+index 39138e190cb9..edbcb93410a9 100644
+--- a/drivers/gpu/drm/msm/msm_rd.c
++++ b/drivers/gpu/drm/msm/msm_rd.c
+@@ -308,21 +308,11 @@ void msm_rd_debugfs_cleanup(struct msm_drm_private *priv)
+ 	priv->hangrd = NULL;
  }
  
-+
-+struct dma_buf *msm_gem_prime_export(struct drm_gem_object *obj, int flags)
-+{
-+	if (to_msm_bo(obj)->flags & MSM_BO_NO_SHARE)
-+		return ERR_PTR(-EPERM);
-+
-+	return drm_gem_prime_export(obj, flags);
-+}
-+
- int msm_gem_prime_pin(struct drm_gem_object *obj)
+-static void snapshot_buf(struct msm_rd_state *rd,
+-		struct msm_gem_submit *submit, int idx,
+-		uint64_t iova, uint32_t size, bool full)
++static void snapshot_buf(struct msm_rd_state *rd, struct drm_gem_object *obj,
++			 uint64_t iova, bool full, size_t offset, size_t size)
  {
- 	struct page **pages;
-@@ -53,6 +65,9 @@ int msm_gem_prime_pin(struct drm_gem_object *obj)
- 	if (obj->import_attach)
- 		return 0;
+-	struct drm_gem_object *obj = submit->bos[idx].obj;
+-	unsigned offset = 0;
+ 	const char *buf;
  
-+	if (to_msm_bo(obj)->flags & MSM_BO_NO_SHARE)
-+		return -EINVAL;
+-	if (iova) {
+-		offset = iova - submit->bos[idx].iova;
+-	} else {
+-		iova = submit->bos[idx].iova;
+-		size = obj->size;
+-	}
+-
+ 	/*
+ 	 * Always write the GPUADDR header so can get a complete list of all the
+ 	 * buffers in the cmd
+@@ -333,10 +323,6 @@ static void snapshot_buf(struct msm_rd_state *rd,
+ 	if (!full)
+ 		return;
+ 
+-	/* But only dump the contents of buffers marked READ */
+-	if (!(submit->bos[idx].flags & MSM_SUBMIT_BO_READ))
+-		return;
+-
+ 	buf = msm_gem_get_vaddr_active(obj);
+ 	if (IS_ERR(buf))
+ 		return;
+@@ -352,6 +338,7 @@ static void snapshot_buf(struct msm_rd_state *rd,
+ void msm_rd_dump_submit(struct msm_rd_state *rd, struct msm_gem_submit *submit,
+ 		const char *fmt, ...)
+ {
++	extern bool rd_full;
+ 	struct task_struct *task;
+ 	char msg[256];
+ 	int i, n;
+@@ -385,16 +372,25 @@ void msm_rd_dump_submit(struct msm_rd_state *rd, struct msm_gem_submit *submit,
+ 
+ 	rd_write_section(rd, RD_CMD, msg, ALIGN(n, 4));
+ 
+-	for (i = 0; i < submit->nr_bos; i++)
+-		snapshot_buf(rd, submit, i, 0, 0, should_dump(submit, i));
++	for (i = 0; i < submit->nr_bos; i++) {
++		struct drm_gem_object *obj = submit->bos[i].obj;
++		bool dump = rd_full || (submit->bos[i].flags & MSM_SUBMIT_BO_DUMP);
 +
- 	pages = msm_gem_pin_pages_locked(obj);
- 	if (IS_ERR(pages))
- 		ret = PTR_ERR(pages);
-diff --git a/include/uapi/drm/msm_drm.h b/include/uapi/drm/msm_drm.h
-index b974f5a24dbc..1bccc347945c 100644
---- a/include/uapi/drm/msm_drm.h
-+++ b/include/uapi/drm/msm_drm.h
-@@ -140,6 +140,19 @@ struct drm_msm_param {
++		snapshot_buf(rd, obj, submit->bos[i].iova, dump, 0, obj->size);
++	}
  
- #define MSM_BO_SCANOUT       0x00000001     /* scanout capable */
- #define MSM_BO_GPU_READONLY  0x00000002
-+/* Private buffers do not need to be explicitly listed in the SUBMIT
-+ * ioctl, unless referenced by a drm_msm_gem_submit_cmd.  Private
-+ * buffers may NOT be imported/exported or used for scanout (or any
-+ * other situation where buffers can be indefinitely pinned, but
-+ * cases other than scanout are all kernel owned BOs which are not
-+ * visible to userspace).
-+ *
-+ * In exchange for those constraints, all private BOs associated with
-+ * a single context (drm_file) share a single dma_resv, and if there
-+ * has been no eviction since the last submit, there are no per-BO
-+ * bookeeping to do, significantly cutting the SUBMIT overhead.
-+ */
-+#define MSM_BO_NO_SHARE      0x00000004
- #define MSM_BO_CACHE_MASK    0x000f0000
- /* cache modes */
- #define MSM_BO_CACHED        0x00010000
-@@ -149,6 +162,7 @@ struct drm_msm_param {
+ 	for (i = 0; i < submit->nr_cmds; i++) {
+ 		uint32_t szd  = submit->cmd[i].size; /* in dwords */
++		int idx = submit->cmd[i].idx;
++		bool dump = rd_full || (submit->bos[idx].flags & MSM_SUBMIT_BO_DUMP);
  
- #define MSM_BO_FLAGS         (MSM_BO_SCANOUT | \
-                               MSM_BO_GPU_READONLY | \
-+                              MSM_BO_NO_SHARE | \
-                               MSM_BO_CACHE_MASK)
+ 		/* snapshot cmdstream bo's (if we haven't already): */
+-		if (!should_dump(submit, i)) {
+-			snapshot_buf(rd, submit, submit->cmd[i].idx,
+-					submit->cmd[i].iova, szd * 4, true);
++		if (!dump) {
++			struct drm_gem_object *obj = submit->bos[idx].obj;
++			size_t offset = submit->cmd[i].iova - submit->bos[idx].iova;
++
++			snapshot_buf(rd, obj, submit->cmd[i].iova, true,
++				     offset, szd * 4);
+ 		}
+ 	}
  
- struct drm_msm_gem_new {
 -- 
 2.49.0
 
