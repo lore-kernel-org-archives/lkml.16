@@ -1,261 +1,199 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C75B737160
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:36:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A8B37160
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750833421; cv=none; b=uh5hEaVKrxNQhwqmcZ7ocZTc8b7PeLncn7FmqoU5TO4LlZQyJBUWDHZBdp2l8BadvSnf1wG8YGIUw/qidD2YWuRvRJi3wUeb/HayJWNp8ulDuQgVaCmVPYPiouo+izwsa4nFDGtNu2cpfmDYifSMK6dZBF0F3qvnK93sipY5pgM=
+	t=1750833516; cv=none; b=rOW/cu5L4gNfTrt94ZWslIs9yR9ZHvD19T5eZs+2yz5Vq7KCi5hCojHkbi15ZV0m9iLjs8s3+1sSqiekgAVp9VSxXcvM6+EhkgfJB5aiCK0mtNMmmcMr/tBO5lUYOWPwl+Nddpuw6TP5zX2W589fm8pydMbNgDgfY2bZbtAi4Kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750833421; c=relaxed/simple;
-	bh=DqzJ1NDcuSae9tz4yrnm8Qx3AnfCT0VJa73AvvJKor8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JQqPfLtyQJncjvVrpaa2Wj3oxW5I5fL72ZJac5CFKFHHWJyE3K9U6tjR+bQNuv1ZEi8eEst6dqXen97lZINAblboFhTHhkJZIbHt9Wb+0Jg5v8MW6clzwk01ossj8S9V2r4PD6jz/8p9CvdujPva9YNqJ5tCnyBUzWzBWIrtrFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=huAyjIfZ; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750833516; c=relaxed/simple;
+	bh=uOKoPzus++RSFJqlEKJ9IOFeI4LJqgq56K86tgejKAA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=sxuvZ/xyr0CNBv3bApuJAIhET7jTH9sR37zknTRZMbKgO0PZRl6wbba8OvXwLxZRAVIErAyvqFx4aL42dDEiDE7l+O5fJ5RPpdhEAJ+3bD4/DiLjnvz9nlAXIO/LCfMK/FEyIeKB2JYjDz7jPIvrQxt9AAr+F+RZ35L8AQZP+PY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=L9T3olY/; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="huAyjIfZ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A1CF74435F;
-	Wed, 25 Jun 2025 06:36:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750833414;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=I+esnPC92QAULfZGIgAZ3QzOd6HXfhWYg6eoN6cTABk=;
-	b=huAyjIfZk3toBH4Nmw26kG3LYYAkJ+UiZItgRiWTzElG9qXBkNxtP9fmURR892YgK7E77t
-	c7fKObbiQ4WaK5Kiys8xpBgItEfO6pH7JDPOD5e/7JKubDOa6PlVsmpr0j/dmrxvvT5rXk
-	Qw/jpxwDdK9gidgx3WXFfnRZGPiizr97wEdG9X7XyX6alwsBROzurYvAC9+GjvrxWz5gSo
-	U8Inp9SbrPAyXTfoXJyAxqvOCPSPogk1VkVqR5viDZSV+gXsTHrLt3CTRsjRMrePhxFlN6
-	43zoUgM1eQ2ucv+Kmk3ti5EUvTiIQTujCpcav+2blo4fSaPTOdHFWeF2yWuRtQ==
-Date: Wed, 25 Jun 2025 08:36:51 +0200
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
- <quic_jesszhan@quicinc.com>, Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, Francesco Dolcini <francesco@dolcini.it>
-Subject: Re: [PATCH] panel/simple-simple: Identify simple DPI panels using
- .compatible field
-Message-ID: <20250625083651.0f545d44@booty>
-In-Reply-To: <20250624-b4-simple-panel-regression-v1-1-a5adf92a7c17@redhat.com>
-References: <20250624-b4-simple-panel-regression-v1-1-a5adf92a7c17@redhat.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="L9T3olY/"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P1lEWX029546;
+	Wed, 25 Jun 2025 06:38:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=pp1; bh=f6FKGKuzbFrJNBoDx
+	2Pvd75p3aFngtqkrbczHAyJRe4=; b=L9T3olY//mS3/5yVKpp0STizZnwC2RoFA
+	U1j34w8GQYp/sVbo27Ct2nCKeFOpWWVmO8Z+10p4JaaBizj4x34nz3Hs6SpFZF/S
+	KGfq7eDN0IeXxWsVQbah/8BUF4aWXO4/cEAx3B8gLNyCDKDt1qHd9YfB9EkjlLHu
+	YxTB6VmzKED5aO8AhqaZvbsXWQAg2/Lgt3vPygJxufldeKLznXyXxK9+LTpi+dpA
+	zfjC9WeTJopmGGYGluiHEsVUn+xtQ2aAFwHcIANzC5PiNUC5mA+jqqp84tGZOSjI
+	a5TZzcNRkDU2A8WN/OIHYdfTuO/TxgyCGRjuYO5LZZlTOV5sjE1nA==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dk63w7x1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 06:38:15 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55P58Vmn030546;
+	Wed, 25 Jun 2025 06:38:15 GMT
+Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e7f001s9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 06:38:15 +0000
+Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
+	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55P6cE4r63766856
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 25 Jun 2025 06:38:14 GMT
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4CE4258887;
+	Wed, 25 Jun 2025 06:38:14 +0000 (GMT)
+Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0CE1C5886C;
+	Wed, 25 Jun 2025 06:38:10 +0000 (GMT)
+Received: from jarvis.ozlabs.ibm.com.com (unknown [9.36.18.35])
+	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 25 Jun 2025 06:38:09 +0000 (GMT)
+From: Andrew Donnellan <ajd@linux.ibm.com>
+To: linuxppc-dev@lists.ozlabs.org, pasha.tatashin@soleen.com,
+        akpm@linux-foundation.org
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, sweettea-kernel@dorminy.me,
+        christophe.leroy@csgroup.eu, mingo@kernel.org
+Subject: [PATCH v15 01/13] arm64/mm: Add addr parameter to __set_{ptes_anysz,ptes,pmds,puds}()
+Date: Wed, 25 Jun 2025 16:37:41 +1000
+Message-ID: <20250625063753.77511-2-ajd@linux.ibm.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250625063753.77511-1-ajd@linux.ibm.com>
+References: <20250625063753.77511-1-ajd@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvvddtiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkjghfohfogggtgfesthejredtredtvdenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpedtleejjeduvddutefftdduleefudfgudeltdeuffeuudefgfdugeekgedtieehudenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdgsohhothhlihhnrdgtohhmnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddupdhrtghpthhtoheprghsrhhivhgrthhssehrvgguhhgrthdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepqhhuihgtpghjv
- ghsshiihhgrnhesqhhuihgtihhntgdrtghomhdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopegrihhrlhhivggusehgmhgrihhlrdgtohhmpdhrtghpthhtohepshhimhhonhgrsehffhiflhhlrdgthh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA0NSBTYWx0ZWRfX6kpCkDAwiIiz UcdM+FD9t/G8vRe0+qUln6egM0tQ0J8i3U9MYppN5UbiJVuI/nW9pFNVxeSZjM8sN12khSBe2eK H6LKojQzcrqCs4E6NpJmvQOh5Hk2qaC2uka7OuEmYMxuFJdow+hibBeF2aJtojgiFCq99PZ4kIZ
+ gV5zC2rvTPub6tYqs1WfeK5M991h8lNafWeEhmxUHkrd5/sGq03jTKL5QGqwjD1OShYvC0+u+nT eHAfVQz7Jkey2NhYS1geXx+WknnUmJy6nCklsavyKGrIT+mNaY9kIPpHiwzfSkJ4ivRrVzz5dKY +bawjdCGUqmO6NPmIDk3eHbpT44I0EU0VIlHM7xjLICmGYU1OMOkSjIfYkz1IXbNIQhqRvqN0DY
+ lXeJ++3PXG8vdzuFLYYPX+fJGmEgwzKlTl8p3+MZnWO3czjH/fljblh8i5Ve+gNuBOq7/FAN
+X-Proofpoint-ORIG-GUID: QX33b91KVV_jTH63ExHqyoYW22D08pZm
+X-Proofpoint-GUID: QX33b91KVV_jTH63ExHqyoYW22D08pZm
+X-Authority-Analysis: v=2.4 cv=BfvY0qt2 c=1 sm=1 tr=0 ts=685b9957 cx=c_pps a=5BHTudwdYE3Te8bg5FgnPg==:117 a=5BHTudwdYE3Te8bg5FgnPg==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=iO9NmEFvf90wNdx_zysA:9 a=0bXxn9q0MV6snEgNplNhOjQmxlI=:19
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_01,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1011 suspectscore=0 adultscore=0 spamscore=0
+ impostorscore=0 mlxlogscore=627 malwarescore=0 phishscore=0 bulkscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506250045
 
-Hello Anusha,
+To provide support for page table check on powerpc, we need to reinstate the
+address parameter in several functions, including
+page_table_check_{ptes,pmds,puds}_set().
 
-thanks for quickly addressing this issue!
+In preparation for this, add the addr parameter to arm64's __set_ptes_anysz()
+and its callers, __set_ptes(), __set_pmds() and __set_puds(). While this
+parameter won't (at present) be used on arm64, this will keep the usage of
+the page table check interfaces consistent.
 
-On Tue, 24 Jun 2025 15:13:05 -0500
-Anusha Srivatsa <asrivats@redhat.com> wrote:
+Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
+---
+v15: new patch
+---
+ arch/arm64/include/asm/pgtable.h | 19 ++++++++-----------
+ arch/arm64/mm/hugetlbpage.c      |  8 ++++----
+ 2 files changed, 12 insertions(+), 15 deletions(-)
 
-> Currently driver is checking for desc == &panel_dpi to do the DPI
-> specific panel desc allocations. This looks hacky.
-> 
-> The panel allocation in panel_simple_probe() breaks due to not having
-> the desc for DPI scenario. This patch does the following:
-> 
-> - Rename panel_dpi_probe() to panel_dpi_get_desc() and call it before
-> panel allocation. panel_dpi_get_desc() returns a panel desc unlike
-> panel_dpi_probe() which returned an int. This way driver has a known
-> connector type while allocating the panel.
-> - panel_dpi_get_desc() returns a panel desc
-> - Add a simple helper is_panel_dpi() to identify a simple DPI panel from
-> a simple panel based on .compatible field
-> 
-> Fixes: de04bb0089a9 ("drm/panel/panel-simple: Use the new allocation in place of devm_kzalloc()")
-
-Please add a mention to the discussion:
-Closes: https://lore.kernel.org/all/20250612081834.GA248237@francesco-nb/
-
-and also:
-Reported-by: Francesco Dolcini <francesco@dolcini.it>
-
-> Suggested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> Suggested-by: Maxime Ripard <mripard@kernel.org>
-> Cc: Francesco Dolcini <francesco@dolcini.it>
-> Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
-> ---
-> Seeing the below trace due to the changes introduced by:
-> Commit de04bb0089a9 ("drm/panel/panel-simple: Use the new allocation in place of devm_kzalloc()")
-> 
-> [   12.089274] ------------[ cut here ]------------
-> [   12.089303] WARNING: CPU: 0 PID: 96 at drivers/gpu/drm/bridge/panel.c:377 devm_drm_of_get_bridge+0xac/0xb8
-> [   12.130808] Modules linked in: v4l2_jpeg pwm_imx27(+) imx_vdoa gpu_sched panel_simple imx6_media(C) imx_media_common
-> (C) videobuf2_dma_contig pwm_bl gpio_keys v4l2_mem2mem fuse ipv6 autofs4
-> [   12.147774] CPU: 0 UID: 0 PID: 96 Comm: kworker/u8:3 Tainted: G         C          6.16.0-rc1+ #1 PREEMPT
-> [   12.157446] Tainted: [C]=CRAP
-> [   12.160418] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-> [   12.166953] Workqueue: events_unbound deferred_probe_work_func
-> [   12.172805] Call trace:
-> [   12.172815]  unwind_backtrace from show_stack+0x10/0x14
-> [   12.180598]  show_stack from dump_stack_lvl+0x68/0x74
-> [   12.185674]  dump_stack_lvl from __warn+0x7c/0xe0
-> [   12.190407]  __warn from warn_slowpath_fmt+0x1b8/0x1c0
-> [   12.195567]  warn_slowpath_fmt from devm_drm_of_get_bridge+0xac/0xb8
-> [   12.201949]  devm_drm_of_get_bridge from imx_pd_probe+0x58/0x164
-> [   12.207976]  imx_pd_probe from platform_probe+0x5c/0xb0
-> [   12.213220]  platform_probe from really_probe+0xd0/0x3a4
-> [   12.218551]  really_probe from __driver_probe_device+0x8c/0x1d4
-> [   12.224486]  __driver_probe_device from driver_probe_device+0x30/0xc0
-> [   12.230942]  driver_probe_device from __device_attach_driver+0x98/0x10c
-> [   12.237572]  __device_attach_driver from bus_for_each_drv+0x90/0xe4
-> [   12.243854]  bus_for_each_drv from __device_attach+0xa8/0x1c8
-> [   12.249614]  __device_attach from bus_probe_device+0x88/0x8c
-> [   12.255285]  bus_probe_device from deferred_probe_work_func+0x8c/0xcc
-> [   12.261739]  deferred_probe_work_func from process_one_work+0x154/0x2dc
-> [   12.268371]  process_one_work from worker_thread+0x250/0x3f0
-> [   12.274043]  worker_thread from kthread+0x12c/0x24c
-> [   12.278940]  kthread from ret_from_fork+0x14/0x28
-> [   12.283660] Exception stack(0xd0be9fb0 to 0xd0be9ff8)
-> [   12.288720] 9fa0:                                     00000000 00000000 00000000 00000000
-> [   12.296906] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> [   12.305089] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> [   12.312050] ---[ end trace 0000000000000000 ]---
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 38 +++++++++++++++++++++---------------
->  1 file changed, 22 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-> index 0a3b26bb4d731c54614e24e38018c308acd5367a..2e6fd545100388a9d53183a5621e7b8fdb4148ae 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -26,6 +26,7 @@
->  #include <linux/i2c.h>
->  #include <linux/media-bus-format.h>
->  #include <linux/module.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
-> @@ -432,8 +433,7 @@ static const struct drm_panel_funcs panel_simple_funcs = {
->  
->  static struct panel_desc panel_dpi;
->  
-> -static int panel_dpi_probe(struct device *dev,
-> -			   struct panel_simple *panel)
-> +static struct panel_desc *panel_dpi_get_desc(struct device *dev)
->  {
->  	struct display_timing *timing;
->  	const struct device_node *np;
-> @@ -445,17 +445,17 @@ static int panel_dpi_probe(struct device *dev,
->  	np = dev->of_node;
->  	desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
->  	if (!desc)
-> -		return -ENOMEM;
-> +		return NULL;
->  
->  	timing = devm_kzalloc(dev, sizeof(*timing), GFP_KERNEL);
->  	if (!timing)
-> -		return -ENOMEM;
-> +		return NULL;
->  
->  	ret = of_get_display_timing(np, "panel-timing", timing);
->  	if (ret < 0) {
->  		dev_err(dev, "%pOF: no panel-timing node found for \"panel-dpi\" binding\n",
->  			np);
-> -		return ret;
-> +		return NULL;
->  	}
->  
->  	desc->timings = timing;
-> @@ -473,9 +473,7 @@ static int panel_dpi_probe(struct device *dev,
->  	/* We do not know the connector for the DT node, so guess it */
->  	desc->connector_type = DRM_MODE_CONNECTOR_DPI;
->  
-> -	panel->desc = desc;
-> -
-> -	return 0;
-> +	return desc;
->  }
->  
->  #define PANEL_SIMPLE_BOUNDS_CHECK(to_check, bounds, field) \
-> @@ -570,6 +568,15 @@ static int panel_simple_override_nondefault_lvds_datamapping(struct device *dev,
->  	return 0;
->  }
->  
-> +static bool is_panel_dpi(struct device *dev)
-> +{
-> +	const struct of_device_id *match;
-> +
-> +	match = of_match_device(dev->driver->of_match_table, dev);
-> +
-> +	return strcmp(match->compatible, "panel_dpi");
-
-The compatible is panel-dpi, not panel_dpi.
-
-> +}
-> +
->  static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
->  {
->  	struct panel_simple *panel;
-> @@ -579,6 +586,10 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
->  	u32 bus_flags;
->  	int err;
->  
-> +	/* Is this simple panel a DPI panel */
-> +	if (is_panel_dpi(dev))
-> +		desc = panel_dpi_get_desc(dev);
-> +
->  	panel = devm_drm_panel_alloc(dev, struct panel_simple, base,
->  				     &panel_simple_funcs, desc->connector_type);
->  	if (IS_ERR(panel))
-> @@ -611,16 +622,11 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
->  			return -EPROBE_DEFER;
->  	}
->  
-> -	if (desc == &panel_dpi) {
-> -		/* Handle the generic panel-dpi binding */
-> -		err = panel_dpi_probe(dev, panel);
-> -		if (err)
-> -			goto free_ddc;
-> -		desc = panel->desc;
-> -	} else {
-> +	if (is_panel_dpi(dev))
-> +		goto free_ddc;
-> +	else
->  		if (!of_get_display_timing(dev->of_node, "panel-timing", &dt))
->  			panel_simple_parse_panel_timing_node(dev, panel, &dt);
-> -	}
-
-The 'else' becomes unnecessary after a 'if () goto xyz;'
-
-With your changes you should now be able to remove both this entry in
-platform_of_match:
-
-	/* Must be the last entry */
-	.compatible = "panel-dpi",
-	.data = &panel_dpi,
-
-and finally this line:
-
-	static struct panel_desc panel_dpi;
-
-Otherwise LGTM.
-
-Luca
-
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index 192d86e1cc76..acbcb5e883ce 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -712,8 +712,8 @@ static inline pgprot_t pud_pgprot(pud_t pud)
+ 	return __pgprot(pud_val(pfn_pud(pfn, __pgprot(0))) ^ pud_val(pud));
+ }
+ 
+-static inline void __set_ptes_anysz(struct mm_struct *mm, pte_t *ptep,
+-				    pte_t pte, unsigned int nr,
++static inline void __set_ptes_anysz(struct mm_struct *mm, unsigned long addr,
++				    pte_t *ptep, pte_t pte, unsigned int nr,
+ 				    unsigned long pgsize)
+ {
+ 	unsigned long stride = pgsize >> PAGE_SHIFT;
+@@ -748,26 +748,23 @@ static inline void __set_ptes_anysz(struct mm_struct *mm, pte_t *ptep,
+ 	__set_pte_complete(pte);
+ }
+ 
+-static inline void __set_ptes(struct mm_struct *mm,
+-			      unsigned long __always_unused addr,
++static inline void __set_ptes(struct mm_struct *mm, unsigned long addr,
+ 			      pte_t *ptep, pte_t pte, unsigned int nr)
+ {
+-	__set_ptes_anysz(mm, ptep, pte, nr, PAGE_SIZE);
++	__set_ptes_anysz(mm, addr, ptep, pte, nr, PAGE_SIZE);
+ }
+ 
+-static inline void __set_pmds(struct mm_struct *mm,
+-			      unsigned long __always_unused addr,
++static inline void __set_pmds(struct mm_struct *mm, unsigned long addr,
+ 			      pmd_t *pmdp, pmd_t pmd, unsigned int nr)
+ {
+-	__set_ptes_anysz(mm, (pte_t *)pmdp, pmd_pte(pmd), nr, PMD_SIZE);
++	__set_ptes_anysz(mm, addr, (pte_t *)pmdp, pmd_pte(pmd), nr, PMD_SIZE);
+ }
+ #define set_pmd_at(mm, addr, pmdp, pmd) __set_pmds(mm, addr, pmdp, pmd, 1)
+ 
+-static inline void __set_puds(struct mm_struct *mm,
+-			      unsigned long __always_unused addr,
++static inline void __set_puds(struct mm_struct *mm, unsigned long addr,
+ 			      pud_t *pudp, pud_t pud, unsigned int nr)
+ {
+-	__set_ptes_anysz(mm, (pte_t *)pudp, pud_pte(pud), nr, PUD_SIZE);
++	__set_ptes_anysz(mm, addr, (pte_t *)pudp, pud_pte(pud), nr, PUD_SIZE);
+ }
+ #define set_pud_at(mm, addr, pudp, pud) __set_puds(mm, addr, pudp, pud, 1)
+ 
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index 0c8737f4f2ce..1003b5020752 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -226,7 +226,7 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 
+ 	if (!pte_present(pte)) {
+ 		for (i = 0; i < ncontig; i++, ptep++, addr += pgsize)
+-			__set_ptes_anysz(mm, ptep, pte, 1, pgsize);
++			__set_ptes_anysz(mm, addr, ptep, pte, 1, pgsize);
+ 		return;
+ 	}
+ 
+@@ -234,7 +234,7 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 	if (pte_cont(pte) && pte_valid(__ptep_get(ptep)))
+ 		clear_flush(mm, addr, ptep, pgsize, ncontig);
+ 
+-	__set_ptes_anysz(mm, ptep, pte, ncontig, pgsize);
++	__set_ptes_anysz(mm, addr, ptep, pte, ncontig, pgsize);
+ }
+ 
+ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
+@@ -449,7 +449,7 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 	if (pte_young(orig_pte))
+ 		pte = pte_mkyoung(pte);
+ 
+-	__set_ptes_anysz(mm, ptep, pte, ncontig, pgsize);
++	__set_ptes_anysz(mm, addr, ptep, pte, ncontig, pgsize);
+ 	return 1;
+ }
+ 
+@@ -473,7 +473,7 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 	pte = get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
+ 	pte = pte_wrprotect(pte);
+ 
+-	__set_ptes_anysz(mm, ptep, pte, ncontig, pgsize);
++	__set_ptes_anysz(mm, addr, ptep, pte, ncontig, pgsize);
+ }
+ 
+ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
 -- 
-Luca Ceresoli, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.49.0
+
