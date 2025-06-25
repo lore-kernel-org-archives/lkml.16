@@ -1,83 +1,65 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C6C9275B04;
-	Wed, 25 Jun 2025 19:20:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E0442DAFD5;
+	Wed, 25 Jun 2025 19:20:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750879210; cv=none; b=Vjd7MXDfi9zSiRiz9p1QJ7Omu0jZ7mRFY7Yaw8o7L1MXbHdOiIZWOxYJceWAmNMmSr9PY5yzSy6AHGbQG8oioIN4ilcKd2lT8Kh4D+6q4k+647EOqFaj7Godi18ZgkGJVVCsCCe77vl/JVCNkOMSW3oWe+/9o0I96mnkKlsK2wM=
+	t=1750879214; cv=none; b=CvpFqMaoKvm21Vg3SdimXEyXR7tETRPHhEygqzwj/u+QxvQ6Wlo0tb0q6tszG06DiSlSOakjCaynFsCezsDOOj4e+aHwQ3vOg+WUUdrXEufGAloo8VqPapz5/DGVcO5KFooDzWima5d3k92itQlPftrP1XtVZd4DJX+j/LU6aUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750879210; c=relaxed/simple;
-	bh=SNdgHJE/X20HFoSToPtJnMgu1jFH6EnxA9NRuQ3YCog=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EvD1wHLnGseIXaEVXrums+WW5B7ZMBF7oHHqq28wVEgvpiG5LbXQBpVQ6rVD89ktx/pwTyAnzhgtfGQmX2Em5tdWgw6FL9X+XcWl7R5ix9AsBQjsp4m/j3HF9usg23l6CzccBog/a/uRwI5H9Nv1hkpvY4qtkB898j84wFF5BFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 168CF106F;
-	Wed, 25 Jun 2025 12:19:50 -0700 (PDT)
-Received: from u103485.austin.arm.com (u103485.arm.com [10.118.30.35])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03AFE3F58B;
-	Wed, 25 Jun 2025 12:20:07 -0700 (PDT)
-From: Prachotan Bathi <prachotan.bathi@arm.com>
-To: Peter Huewe <peterhuewe@gmx.de>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Stuart Yoder <stuart.yoder@arm.com>
-Cc: linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prachotan Bathi <prachotan.bathi@arm.com>
-Subject: [PATCH v7 1/2] tpm_crb_ffa: Fix typos in function name
-Date: Wed, 25 Jun 2025 14:19:42 -0500
-Message-ID: <20250625191943.1009830-2-prachotan.bathi@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250625191943.1009830-1-prachotan.bathi@arm.com>
-References: <20250625191943.1009830-1-prachotan.bathi@arm.com>
+	s=arc-20240116; t=1750879214; c=relaxed/simple;
+	bh=sca62JZH9B7G+ctNvBdw9GUebLjtvA5SkuZvnF4DILI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=czocllUJ9eNXgHsZMjN1/gWk7TU4XM6BQng6gkRPje/wQWjBlR+m9vWQll4i9qdFeKrT9beUbzc9SO81YS63/bWYZN2iM6f6NEZrlbR9CkcRl9ewm7asmcBnSz5A/gHVuBpddry072gXaOVaZqnFBDhnCo1ZNuwoxnQ/cqXNYII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PoGIOwmJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PoGIOwmJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BB60C4CEEA;
+	Wed, 25 Jun 2025 19:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750879213;
+	bh=sca62JZH9B7G+ctNvBdw9GUebLjtvA5SkuZvnF4DILI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PoGIOwmJsG0aWLCJxONJJ33xF2KR+Cq8zPFTXZ3/jcDW8a1G05z17E1otXTarIxnn
+	 Svgv00k99h6AQM9aHgvLibweNd3HPeoBeJdbhx+ChkboDTWekjolHPJX8vHBnSfcT1
+	 wzoMi+R16ZdmOumeMWBQUJbdIJIH4uGllxuLFHIuf5dlt+RBP9tS2ZGM9EiWmZHV/1
+	 0mINmFUxcAwB7ZncOfzuNT6Qw/+NYiFfmeV8//qVW7uB3fEUBmxTRnxL9TTg6aZNBl
+	 TN1KaAVYaMlKTAAdlWOneEm3RHZXM/L1IP7haxKFO/p827jzbKW1AC8BYzrlk7SutO
+	 rPypx71p5nVIw==
+Date: Wed, 25 Jun 2025 14:20:12 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Icenowy Zheng <uwu@icenowy.me>, linux-kernel@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+	linux-usb@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: usb: genesys,gl850g: add downstream
+ facing ports
+Message-ID: <175087921220.2067965.6337398694001968932.robh@kernel.org>
+References: <20250608-genesys-ports-v1-0-09ca19f6838e@oss.qualcomm.com>
+ <20250608-genesys-ports-v1-2-09ca19f6838e@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250608-genesys-ports-v1-2-09ca19f6838e@oss.qualcomm.com>
 
-s/recieve/receive in __tpm_crb_ffa_send_receive
 
-Signed-off-by: Prachotan Bathi <prachotan.bathi@arm.com>
----
- drivers/char/tpm/tpm_crb_ffa.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Sun, 08 Jun 2025 19:07:31 +0300, Dmitry Baryshkov wrote:
+> In order to describe connections between Genesys GL850G hub and
+> corresponding Type-C connectors, follow example of RTS5411 and describe
+> downstream facing ports. Unline normal case of ports being connected to
+> a USB device, hotplug ports use OF graph representation.
+> 
+> Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+> ---
+>  Documentation/devicetree/bindings/usb/genesys,gl850g.yaml | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
 
-diff --git a/drivers/char/tpm/tpm_crb_ffa.c b/drivers/char/tpm/tpm_crb_ffa.c
-index 4ead61f01299..089d1e54bb46 100644
---- a/drivers/char/tpm/tpm_crb_ffa.c
-+++ b/drivers/char/tpm/tpm_crb_ffa.c
-@@ -178,7 +178,7 @@ int tpm_crb_ffa_init(void)
- }
- EXPORT_SYMBOL_GPL(tpm_crb_ffa_init);
- 
--static int __tpm_crb_ffa_send_recieve(unsigned long func_id,
-+static int __tpm_crb_ffa_send_receive(unsigned long func_id,
- 				      unsigned long a0,
- 				      unsigned long a1,
- 				      unsigned long a2)
-@@ -251,7 +251,7 @@ int tpm_crb_ffa_get_interface_version(u16 *major, u16 *minor)
- 
- 	guard(mutex)(&tpm_crb_ffa->msg_data_lock);
- 
--	rc = __tpm_crb_ffa_send_recieve(CRB_FFA_GET_INTERFACE_VERSION, 0x00, 0x00, 0x00);
-+	rc = __tpm_crb_ffa_send_receive(CRB_FFA_GET_INTERFACE_VERSION, 0x00, 0x00, 0x00);
- 	if (!rc) {
- 		if (ffa_partition_supports_direct_req2_recv(tpm_crb_ffa->ffa_dev)) {
- 			*major = CRB_FFA_MAJOR_VERSION(tpm_crb_ffa->direct_msg_data2.data[1]);
-@@ -289,7 +289,7 @@ int tpm_crb_ffa_start(int request_type, int locality)
- 
- 	guard(mutex)(&tpm_crb_ffa->msg_data_lock);
- 
--	return __tpm_crb_ffa_send_recieve(CRB_FFA_START, request_type, locality, 0x00);
-+	return __tpm_crb_ffa_send_receive(CRB_FFA_START, request_type, locality, 0x00);
- }
- EXPORT_SYMBOL_GPL(tpm_crb_ffa_start);
- 
--- 
-2.43.0
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
