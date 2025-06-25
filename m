@@ -1,153 +1,139 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FEF3074BC;
-	Wed, 25 Jun 2025 19:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215502DAFDF;
+	Wed, 25 Jun 2025 19:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750880629; cv=none; b=RpAq3BzXH/VcUYcts0kckHSVpv59ltGwijCdBqcG/vtdRR1vCQOwz4SwR5tGVuEnoMd3oNcKJgaP/14r6w584TePRVpo+BeKXI+R8nRwx3BsxEulbGDjL+ki7+c+4PjPGA7BQahrX88AKVjAQ7YiQDQZH8ATTv/7JIV0dTnlKqE=
+	t=1750880632; cv=none; b=SneNSIC2hqtPhJ5BzWAL5yZe+SDwOEMlQIRD+f2KslOEH94LAF+CoG1ZGiLfAW/oRl6V9uQfJc/Svdo4o/prr218cEHsgNymlDBnkMOhtzLjtghgSjjCTFSUbD1YGw0Cf9atkTibTp7sKk7wWhACWO0QvgQoJj8bQyFM+f9c2jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750880629; c=relaxed/simple;
-	bh=85TBiF9vWpEzOiyWOW6FnwMDFFQ0OHyo9F1KYkZHRJw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XmTIHUCPtpH1zDx3+ue3QLzOCIhAwXtzMqt8qm+UoLm5hxqA39q42CjOnVLCTLG5dYyKqf9JNSP7hQsF7ZynclgODYwb4bR0EAtgHYEurJPAT4ojN0YM3kknd/6ZRBlu0yVcDCaTaWfwNpT1HlJ0gkrlS3xGVFZHKV8LBbTfN58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=EK2gprrP; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1750880632; c=relaxed/simple;
+	bh=FQ+2YiIDDX9scLGt0YxJPyj9uRJhs7aO0tAyrIhhXmc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=H1uZJjyHuWwZKv4hLc8TycW38Hjq5qKTfIpIV+ftRuObo1KQeICI0PcfCK9bC9W6ZDDRbzdn6KlaPSrbDI9L3Ma5rWMzpWgoaz6trGa4Anyn6kaTIQzyDQkMJl7TzMIYGpVPQuLAs12EFgnizkVYrmGPlLk4gyGFe2511xAI37I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYJF6ZrI; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="EK2gprrP"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A55C340E019C;
-	Wed, 25 Jun 2025 19:43:43 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id QCoBZ2S8itpe; Wed, 25 Jun 2025 19:43:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750880620; bh=j8KXOyVlrTz3WrmUUDKu9Dp2Ys4WOvLarIGmlHJOLtk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EK2gprrPUlw0WCgeibzeftf5aMmtKn86GN7kpnQYc1ptMpjshm+ZlDneG5x7fnSuQ
-	 BKQfs+vz48302ygD44ATw0R6lmWZgXcXeGi7ck4de76kjvMoTKz8g2YuiTX2599fIB
-	 T9DoJjcfSQ35YPX327YyrcmZqaUGYROiq8nvNgQqRuwGshfxdTpXCV1QeQhcHVwAYZ
-	 aM6xeCEMgJgqdkIaAujlmhoYJ+EP2DItCoAhZA/ORoIQbOzKZ/kEKd2qsxlT1XSaU8
-	 VYcOMrjmG173BRJlZpvtkVxAKl7+wMc1jMwy+hSnOvF3mpPyTTEJI8CH7ugaCRqWM8
-	 cW1qXHLXFPXtg19moqoF+jmtBIZdG0V8YXzN2419VXkr1VqqhB7sVake6Em9nYq/VB
-	 /TqPOKCdfDwZ9XRqG/NLTzwD/o0ITkyGFGYofSfHE770ibtvK+uNUaun9TkFxS7+7T
-	 lKmvUg3YMtwXd3w+ep5v9picR0zzkUzzgAEpzM0sPinCEmebW3gr5U83vc3/WHqmUE
-	 vzohUnybJu9ggJx5vFVwOJtPUU57rjbaUxJzjb7EKqJg7ZBfbpP6cCjk3GybclD7Bq
-	 ISs0Nm8gXv96Wj9iL1re7kyvNaiyJTxajcWHzQA9SIzRySfe4pQx1ETqlOhWCSFKcT
-	 cZjLfwYRHP5AgNfcW2oi+HY8=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D466440E00DE;
-	Wed, 25 Jun 2025 19:43:28 +0000 (UTC)
-Date: Wed, 25 Jun 2025 21:43:22 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: JP Kobryn <inwardvessel@gmail.com>
-Cc: tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
-	dave.hansen@linux.intel.com, hpa@zytor.com, aijay@meta.com,
-	x86@kernel.org, linux-edac@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-team@meta.com
-Subject: Re: [PATCH] mce: include cmci during intel feature clearing
-Message-ID: <20250625194322.GGaFxRWqx0WbE90k6N@fat_crate.local>
-References: <20250617214752.178263-1-inwardvessel@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYJF6ZrI"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-73c17c770a7so430762b3a.2;
+        Wed, 25 Jun 2025 12:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750880630; x=1751485430; darn=vger.kernel.org;
+        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cO3PBcARXLOd/sYmktk+SQ6pShkzV36dVIEfKJix4Xw=;
+        b=NYJF6ZrIQuNe8rIDScuqzragsQpbtYNfO1+xnvjdZKOIstK7kOLMF7gLEOgjLdhVHO
+         Oy+nnOkmbIQTRSXq7NTf77f4MSTBVAVwzPCnTYsn1n2dcdMjhipSlgRCCp63flvyEc7v
+         g8MUZ9Am3prJZvKlI5mBlEvR/wwlmuJymeFf0gPql0/T2PMBsIZ9VJqMed30BDC+UxyO
+         MCJT+mU9bDxTlrYZXVTuajbOVtwukta25toSUOHcDTZWURc67GowsLmHUXzAkJ/z30ZF
+         RmZhODwnVoxfmxN67V2HXDBX1r6EuI/eakk7TPOHh+lJs6XIOkhzwYsxqr+TfNVC1ofJ
+         DW5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750880630; x=1751485430;
+        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cO3PBcARXLOd/sYmktk+SQ6pShkzV36dVIEfKJix4Xw=;
+        b=QlNg2GG+pkIVfGOhEDY1WBR7rzhHSa5rmsU/BXQzjW7+JYV+pLQQKqKm7fQxiAhinN
+         dM700i8EPbKC4HeG7E2HicpS1DwXMe7/42gDA8FZmq/Y9IQKkWmo+utsB4qTjhvsCbkA
+         LNqueD8s6hOEM5nXbH2C1gl3rFW+vSS3HJ3dsQcqijkuDyA2NQsbZAZWJzFN4/mM17SD
+         1n/y7rY0Y3FLWIOcBf18OR++wSGuHtiXPnKBrRNcOENGpns5tZu1dPGt1Xo9n1EwWVv2
+         w9x8ZPLx8p13ht7MkyZ7ouPvEtF1vM57H2yq5bfaXbrt40zyTtINYJE+ilPk+AVSaMd1
+         EptA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBIXdCSpL7RywfqWqgyuGatKA/o6hIUm4p2542jmstBa1k5aLV0xoWqYQzkBHN6huu451zHdiP2BJr+nI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywtg542B95SBeevHMAdGUB9aPASY9GnfNp6Gxm4TCI0GSddJUO5
+	TnkZin8JLhXEmN6iTgiZEyUr6vKK9Tum+Yiex87vjn+Id46SR3uqxe6/Fo/YCQ==
+X-Gm-Gg: ASbGncuEfsd8+VOKMRxu85Ho+QPxhUxNGr5BJZw33NoFOow7PxbqBqVYinHmDmnYDbW
+	SyWdLHjguJ7WNlN1eOeYiynSaBzZNLcSDu3449Gs371xkrBZLy+ObXKTThYxZvzwWfUxhytDFDt
+	inmYIOAHU7G7ZLJW5Cq1l2olgBSShiUnHV42+ZM3qjLlK0Tud72F54beZZLZHOWr/Cim75uL0L8
+	uzRGMqHrumWQbklOtO98pxXE9aRv+Cr1To2x0dPHBa6JwCw4avnSdBF3+V4WnYO0eAYvNVwdXKp
+	CQH8bzn6KOeq+GfeJC1pBF5Z7qS4jZPdoIxBgZcHAEkX68Fx3hrCs2O8ny0ltP4AqhGHe2cyD9n
+	jk49WoPmDX1o=
+X-Google-Smtp-Source: AGHT+IEhUydBkMoqI3UZUfhUfnDyHW1/OUO1X1n4XWiTV71XwTKd4PIn2fvv0TFfc2VJ1kRP3Ilscw==
+X-Received: by 2002:a05:6a00:1883:b0:740:5927:bb8b with SMTP id d2e1a72fcca58-74ad42d4316mr6489404b3a.0.1750880630052;
+        Wed, 25 Jun 2025 12:43:50 -0700 (PDT)
+Received: from tx3000mach.io (static.220.227.itcsa.net. [190.15.220.227])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e08d1csm5185779b3a.13.2025.06.25.12.43.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 12:43:49 -0700 (PDT)
+From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+To: linux-wireless@vger.kernel.org, Bitterblue Smith <rtl8821cerfe2@gmail.com>
+Cc: Jes Sorensen <Jes.Sorensen@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] wifi: rtl8xxxu: toggle P2P for supported devices
+Date: Wed, 25 Jun 2025 16:43:36 -0300
+Message-ID: <13830882.uLZWGnKmhe@tx3000mach.io>
+In-Reply-To: <bde434a6-68b8-4c5f-8ec0-6c41dd1b6558@gmail.com>
+References:
+ <20250625142541.44795-1-yakoyoku@gmail.com>
+ <bde434a6-68b8-4c5f-8ec0-6c41dd1b6558@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250617214752.178263-1-inwardvessel@gmail.com>
+Content-Type: multipart/signed; boundary="nextPart3037379.e9J7NaK4W3";
+ micalg="pgp-sha512"; protocol="application/pgp-signature"
 
-On Tue, Jun 17, 2025 at 02:47:52PM -0700, JP Kobryn wrote:
-> It was found that after a kexec on an intel CPU, MCE reporting was no
-> longer active. The root cause has been found to be that ownership of CMCI
-> banks is not cleared during the shutdown phase. As a result, when CPU's
-> come back online, they are unable to rediscover these occupied banks. If we
-> clear these CPU associations before booting into the new kernel, the CMCI
-> banks can be reclaimed and MCE reporting will become functional once more.
+--nextPart3037379.e9J7NaK4W3
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+Subject: Re: [PATCH] wifi: rtl8xxxu: toggle P2P for supported devices
+Date: Wed, 25 Jun 2025 16:43:36 -0300
+Message-ID: <13830882.uLZWGnKmhe@tx3000mach.io>
+In-Reply-To: <bde434a6-68b8-4c5f-8ec0-6c41dd1b6558@gmail.com>
+MIME-Version: 1.0
+
+On Wednesday 25 June 2025 13:01:04 Argentina Standard Time Bitterblue Smith 
+wrote:
+> On 25/06/2025 17:25, Martin Rodriguez Reboredo wrote:
+> [...]
+>> As of now only rtl8192ex devices have their P2P_CLIENT and P2P_GO wiphy
+>> interface modes ensured because those are the only ones I can test on
+>> my rtl8192eu card. The rest of chips have them set from what I've seen
+>> in a cursory Internet search, they might or might not work.
+>> 
+>> Signed-off-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
 > 
-> The existing code does seem to have the intention of clearing MCE-related
-> features via mcheck_cpu_clear(). During a kexec reboot, there are two
-> sequences that reach a call to mcheck_cpu_clear(). They are:
-> 
-> 1) Stopping other (remote) CPU's via IPI:
-> native_machine_shutdown()
-> 	stop_other_cpus()
-> 		smp_ops.stop_other_cpus(1)
-> 		x86 smp: native_stop_other_cpus(1)
-> 			apic_send_IPI_allbutself(REBOOT_VECTOR)
-> 
-> ...IPI is received on remote CPU's and IDT sysvec_reboot invoked:
-> 	stop_this_cpu()
-> 		mcheck_cpu_clear(this_ptr_cpu(&cpu_info))
-> 
-> 2) Seqence of stopping the active CPU (the one performing the kexec):
-> native_machine_shutdown()
-> 	stop_other_cpus()
-> 		smp_ops.stop_other_cpus(1)
-> 		x86 smp: native_stop_other_cpus(1)
-> 			mcheck_cpu_clear(this_ptr_cpu(&cpu_info))
-> 
-> In both cases, the call to mcheck_cpu_clear() leads to the vendor specific
-> call to intel_feature_clear():
-> 
-> mcheck_cpu_clear(this_ptr_cpu(&cpu_info))
-> 	__mcheck_cpu_clear_vendor(c)
-> 		switch (c->x86_vendor)
-> 		case X86_VENDOR_INTEL:
-> 			mce_intel_feature_clear(c)
-> 
-> Now looking at the pair of functions mce_intel_feature_{init,clear}, there
-> are 3 MCE features setup on the init side:
-> 
-> mce_intel_feature_init(c)
-> 	intel_init_cmci()
-> 	intel_init_lmce()
-> 	intel_imc_init(c)
-> 
-> On the other side in the clear function, only one of these features is
-> actually cleared:
-> 
-> mce_intel_feature_clear(c)
-> 	intel_clear_lmce()
-> 
-> Just focusing on the feature pertaining to the root cause of the kexec
-> issue, there would be a benefit if we additionally cleared the CMCI feature
-> within this routine - the banks would be free for acquisition on the boot
-> up side of a kexec. This patch adds the call to clear CMCI to this intel
-> routine.
+> So... does it work with your chip? How do we test?
 
-Please:
+You can test this feature with GNOME Network Displays, that's the only 
+userspace application I can think of. KDE doesn't offer anything yet and 
+there's no other software out there that uses WiFi P2P, not even for simple 
+file transfers. Maybe utils could be written like what was done for Bluez and 
+be part of a known package like NetworkManager or a thing by themselves.
 
- - shorten this commit message - there really is no need to explain in such
-   detail that mcheck_cpu_clear() has simply forgotten to clear CMCI banks
-   too.
+With respect to my case I say it's listed by wpa_cli and it gets detected by 
+Network Displays, but I cannot do anything further than that. Because I don't 
+know how to use wpa's utility properly and while I try to share my screen or 
+see another one, I get no dice there. Maybe this is due to an incompatibility 
+with my Samsung mobile or that for proper P2P support more functionalities 
+need to be added to rtl8xxxu, I can say that as of now.
+--nextPart3037379.e9J7NaK4W3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
- - run it through a spellchecker
+-----BEGIN PGP SIGNATURE-----
 
- - drop all personal pronouns
+iQIzBAABCgAdFiEEoKWxm2R3rrCyIqCZhYg+G2pbUccFAmhcUWgACgkQhYg+G2pb
+UccwNBAAmsV9jX+ADJ2yI04UQQBoH4Zxwed3fXp2G8ZFM3wuqsGiOmjJRxEHjJWE
+nAzKLVgYCVjLJwX/uu1uOcmoV71wavSUq8T2NAskdYz3zbLTRFHT6PBgzYcBS/d7
+2P5TIlydSgbYMtxsrr6SK8pVpA4SSIU9xiHI0NAnWEE+AtPuu1zxQRSug6QUv1yz
+IDwXB4JBlgcT5TFuMAaDDZ521EGuEguh1R/P7aiUYZ8QRofFRVND3bt/1HPpQwxr
+LDLqMHx6aU1N+o+d1PMKYIDYgy9FG7HepPZSO5hAJtg82mvmy60EVbGkzBtVCBEQ
+UAVFa6G+Jy/qxaNPT8OR4fn6xFiwFQ521GoeVOFoqXFmqR3QHNFyYQpMOvB/vWcC
+2NDSa5QGfrfPS4Uwx7ePQq+T70JmIkGwfGE7Bq0hh4d70WWz64d4ZGR1kEXUL9gw
+8ACzKGKBzwSBmXyNTm9EXU15ibRzL7XgFswhXvOW35DzeGmKU+StWcZ2kwanGm28
+3iwsXDJUvGaztTiOL5BEGw+kuZ3mc4P2RgHEXUYeTVT2nQ05bGSowgJDpbOidgJI
+gPVSm2KTmZuHJvnKyx8XuNDbkyT0cYs67sN9is/BUfVkIxGe5Hk3AxnNTebeymZG
+klMyA+uKhNeVarjBf2QozZl2nNTZAXKW4wNFF0iwFNpSKx+0ZL4=
+=MBvp
+-----END PGP SIGNATURE-----
 
- - write it in imperative tone
+--nextPart3037379.e9J7NaK4W3--
 
-Some hints:
 
-Section "2) Describe your changes" in
-Documentation/process/submitting-patches.rst for more details.
 
-Also, see section "Changelog" in
-Documentation/process/maintainer-tip.rst
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
