@@ -1,114 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8108D2D9799;
-	Wed, 25 Jun 2025 23:30:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA312D3EE2;
+	Wed, 25 Jun 2025 23:35:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750894211; cv=none; b=VyvnoSTTWHfRxVq+yu/OJ5CXfl0AzSjVrb5kS2v6Vla40mAHjuJzXsybwhMDH9nRz7BjWbFYssL2euMUjYd4PcWUUvluDAYO/W6u3mPyTLn65aTNOwqpgW7ZMudRu5byNC2Fin9CJDDyseswK7sSteHJFvbXONvH4xWSmXHugwI=
+	t=1750894542; cv=none; b=m9wbE0AN3bU40AYSj1Ht9nOzSuHawEuwQK/MbXLcz6osKL0OvJDBs/9HTiKaXxyNcwa2kcyQWPuMBJYnk7+2aAFD1qDjgBI+8a+XnO2eiBzZ4yH7qB+zzhYyUS9xzMn1jFU4mm81Q2IiLPpAD9P5ApGsFsLOFcq0QeXjYx0P2Ww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750894211; c=relaxed/simple;
-	bh=Cyk1TBnxxpgcg8zPDHyXMCBT5SKpZHjDWYtGzReT2Fw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uIxPz2lb6otdVSoFI5Ye908tb0zVruTbey3a+EPcvVz3+mgXt7fzQt9LJhR314vF7RUNlDzlY4MUfLA0NbbWFBb6YHCn5QjXhzxvESm6+vSW7FlT/CdRFWRLlHLHgzZccsAP+Hz5tNZw8qBQNPfJiSG4yJOz70BtxPD5Yn9q9Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8W44OG9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750894542; c=relaxed/simple;
+	bh=3ja5VUcCu5TfcEUx7TbMSX/9RYS5fQQvz0cAl8mf0YU=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=T6ICcBR3QpV7yp9WAY+6bcwraXNjUa7VBoUYGXzR5qbwucUE2wMb5kBpp7+3rbkOAbvNwikqCRe3yG8aM9/8HnYtNAwHSvmq+6Cee/9hBi6gUkzXaPCU+gk4nY+0X7IMGFAr6rrdZatw9qJ6gIUxDO87NDLuhi95RdYbd1drXow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=K0le9pP0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6/ywN16I; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8W44OG9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 940F0C4CEEA;
-	Wed, 25 Jun 2025 23:30:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750894210;
-	bh=Cyk1TBnxxpgcg8zPDHyXMCBT5SKpZHjDWYtGzReT2Fw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=q8W44OG9Zxk+iRf2iL0uZTpQ5YU73OTrSL1Or/3pXwEda2IFgwjxJFopob6oZiI4q
-	 Y7rLX3KiryMkojo8ZKh9dPdXQEmMJe425DPAefw7BSGWShM+tN6WNj7cZVZ4Rb76iw
-	 AP85u2yIhipTJGgLOKpEei3M/1oz/O/mjKyktNy4SqUD3LoJ+8dN7TfcfRbGWj+zh4
-	 SypYRJzgwuQ701ajDicqMVThQ8T1Kq3QbIjkzodHQ4qns2U13MNhGAayusDcGe5ud1
-	 hGbqV7ZUFL95a8/hkj44A5+M1i//O7NDIPqDjxuMbwL5nXyXEV3PyNBStVg9rDJGkC
-	 nHAXDi+47rN6g==
-Date: Wed, 25 Jun 2025 16:30:09 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: allison.henderson@oracle.com, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, tj@kernel.org,
- andrew@lunn.ch, hannes@cmpxchg.org, mkoutny@suse.com,
- cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v4.1] rds: Expose feature parameters via sysfs
- (and ELF)
-Message-ID: <20250625163009.7b3a9ae1@kernel.org>
-In-Reply-To: <20250623155305.3075686-2-konrad.wilk@oracle.com>
-References: <20250623155305.3075686-1-konrad.wilk@oracle.com>
-	<20250623155305.3075686-2-konrad.wilk@oracle.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="K0le9pP0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6/ywN16I"
+Date: Wed, 25 Jun 2025 23:35:36 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750894538;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=dQpZtUpSSZaTBNjpxlHxxKngkRDVK/dGOcEWsb9wGqo=;
+	b=K0le9pP0eMCHKK7PbYW32r1sScPhxpsyd3MiF7ZD0Dkl2QGQY6mxZbgOOK6rgMj58dOUS5
+	RKPJxT+ThYOvZGFnvGZvU7xOOI+k5frlTu+31jjWGjBgOKAEoqLJpLIUjZN/aVy8M/hGYW
+	77M+96IjT/OLkjMTWXnmWishjaqbo1GqJaXlrYShIr+D/ZGNcHQel8vffLJZZPE7ny/Iaq
+	JAaXpIsUYu4OJvhZumDxaqka7c/3H1cQclGOBM/H6xgvRFp3WYr8b5pJx6tpopDq164CyU
+	ZG3iKeL0qclvcMmHhS+Yd7wq4bVJ6tXP+5YyykT1GfNm86RyztE+AeBCpVOd8A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750894538;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=dQpZtUpSSZaTBNjpxlHxxKngkRDVK/dGOcEWsb9wGqo=;
+	b=6/ywN16Ipiv6vgFLoLD0u5XqKU0l1PGf+qDoyM4RnzZW0pMZvUcHrxT7tlmQe/RwJW4KTt
+	wd9AGxGy50BmnRAw==
+From: "tip-bot2 for Dave Hansen" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject:
+ [tip: x86/fpu] x86/fpu: Delay instruction pointer fixup until after warning
+Cc: Dave Hansen <dave.hansen@linux.intel.com>, Chao Gao <chao.gao@intel.com>,
+ Alison Schofield <alison.schofield@intel.com>,
+ "Peter Zijlstra (Intel)" <peterz@infradead.org>, stable@vger.kernel.org,
+ x86@kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Message-ID: <175089453700.406.1518104364215542733.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 
-On Mon, 23 Jun 2025 11:51:36 -0400 Konrad Rzeszutek Wilk wrote:
-> With the value of 'supported' in them. In the future this value
-> could change to say 'deprecated' or have other values (for example
-> different versions) or can be runtime changed.
+The following commit has been merged into the x86/fpu branch of tip:
 
-I'm curious how this theoretical 'deprecated' value would work
-in context of uAPI which can never regress..
+Commit-ID:     1cec9ac2d071cfd2da562241aab0ef701355762a
+Gitweb:        https://git.kernel.org/tip/1cec9ac2d071cfd2da562241aab0ef701355762a
+Author:        Dave Hansen <dave.hansen@linux.intel.com>
+AuthorDate:    Tue, 24 Jun 2025 14:01:48 -07:00
+Committer:     Dave Hansen <dave.hansen@linux.intel.com>
+CommitterDate: Wed, 25 Jun 2025 16:28:06 -07:00
 
-> The choice to use sysfs and this particular way is modeled on the
-> filesystems usage exposing their features.
-> 
-> Alternative solution such as exposing one file ('features') with
-> each feature enumerated (which cgroup does) is a bit limited in
-> that it does not provide means to provide extra content in the future
-> for each feature. For example if one of the features had three
-> modes and one wanted to set a particular one at runtime - that
-> does not exist in cgroup (albeit it can be implemented but it would
-> be quite hectic to have just one single attribute).
-> 
-> Another solution of using an ioctl to expose a bitmask has the
-> disadvantage of being less flexible in the future and while it can
-> have a bit of supported/unsupported, it is not clear how one would
-> change modes or expose versions. It is most certainly feasible
-> but it can get seriously complex fast.
-> 
-> As such this mechanism offers the basic support we require
-> now and offers the flexibility for the future.
-> 
-> Lastly, we also utilize the ELF note macro to expose these via
-> so that applications that have not yet initialized RDS transport
-> can inspect the kernel module to see if they have the appropiate
-> support and choose an alternative protocol if they wish so.
+x86/fpu: Delay instruction pointer fixup until after warning
 
-Looks like this paragraph had a line starting with #, presumably
-talking about the ELF note and it got eaten by git? Please fix.
+Right now, if XRSTOR fails a console message like this is be printed:
 
+	Bad FPU state detected at restore_fpregs_from_fpstate+0x9a/0x170, reinitializing FPU registers.
 
-FWIW to me this series has a strong whiff of "we have an OOT module
-which has much more functionality and want to support a degraded /
-upstream-only mode in the user space stack". I'm probably over-
--interpreting, and you could argue this will help you make real
-use of the upstream RDS. I OTOH would argue that it's a technical
-solution to a non-technical problem of not giving upstreaming 
-sufficient priority; I'd prefer to see code flowing upstream _first_ 
-and then worry about compatibility.
+However, the text location (...+0x9a in this case) is the instruction
+*AFTER* the XRSTOR. The highlighted instruction in the "Code:" dump
+also points one instruction late.
 
-$ git log --oneline --since='6 months ago' -- net/rds/ 
-433dce0692a0 rds: Correct spelling
-6e307a873d30 rds: Correct endian annotation of port and addr assignments
-5bccdc51f90c replace strncpy with strscpy_pad
-c50d295c37f2 rds: Use nested-BH locking for rds_page_remainder
-0af5928f358c rds: Acquire per-CPU pointer within BH disabled section
-aaaaa6639cf5 rds: Disable only bottom halves in rds_page_remainder_alloc()
-357660d7596b Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-5c70eb5c593d net: better track kernel sockets lifetime
-c451715d78e3 net/rds: Replace deprecated strncpy() with strscpy_pad()
-7f5611cbc487 rds: sysctl: rds_tcp_{rcv,snd}buf: avoid using current->nsproxy
-$
+The reason is that the "fixup" moves RIP up to pass the bad XRSTOR and
+keep on running after returning from the #GP handler. But it does this
+fixup before warning.
 
-IOW applying this patch is a bit of a leap of faith that RDS
-upstreaming will restart. I don't have anything against the patch
-per se, but neither do I have much faith in this. So if v5 is taking 
-a long time to get applied it will be because its waiting for DaveM or
-Paolo to take it.
+The resulting warning output is nonsensical because it looks like the
+non-FPU-related instruction is #GP'ing.
+
+Do not fix up RIP until after printing the warning. Do this by using
+the more generic and standard ex_handler_default().
+
+Fixes: d5c8028b4788 ("x86/fpu: Reinitialize FPU registers if restoring FPU state fails")
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Chao Gao <chao.gao@intel.com>
+Acked-by: Alison Schofield <alison.schofield@intel.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc:stable@vger.kernel.org
+Link: https://lore.kernel.org/all/20250624210148.97126F9E%40davehans-spike.ostc.intel.com
+---
+ arch/x86/mm/extable.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/mm/extable.c b/arch/x86/mm/extable.c
+index bf8dab1..2fdc1f1 100644
+--- a/arch/x86/mm/extable.c
++++ b/arch/x86/mm/extable.c
+@@ -122,13 +122,12 @@ static bool ex_handler_sgx(const struct exception_table_entry *fixup,
+ static bool ex_handler_fprestore(const struct exception_table_entry *fixup,
+ 				 struct pt_regs *regs)
+ {
+-	regs->ip = ex_fixup_addr(fixup);
+-
+ 	WARN_ONCE(1, "Bad FPU state detected at %pB, reinitializing FPU registers.",
+ 		  (void *)instruction_pointer(regs));
+ 
+ 	fpu_reset_from_exception_fixup();
+-	return true;
++
++	return ex_handler_default(fixup, regs);
+ }
+ 
+ /*
