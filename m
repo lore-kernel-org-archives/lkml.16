@@ -1,352 +1,198 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809891F4199;
-	Wed, 25 Jun 2025 06:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C6818A6C4;
+	Wed, 25 Jun 2025 06:32:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750833113; cv=none; b=OgI6QvR8eK+9RdXMjPj9QljxiUvgvm97G7Zhv+J+RtXYAsXRAkXWRPSSt0/fxLBSqLIRCOS19EqHRmfSYkfH5KV2vG5EQhZY5GV9EwLsd6E+YRiKTWaLGDw7VxwiJqp9S4GJurX446Np+RQuc5PerhnqYEu1izyuqR9oBUIqS1g=
+	t=1750833153; cv=none; b=oxbkoTtY8w/557eiiAsDyoARmex4sGEhFAVPxmLo+ElfXxEVBoJLuaOQ5s43KrRhAb6/fiyxqBTOwAh8/WNwaVOvgPeEwnsZlQvM5tIvzoEztWKVh0/thD4n855hg/M7zthj85CSLSv+tlNM/md8LWjEClNjjNi919X0ZHTfMbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750833113; c=relaxed/simple;
-	bh=rLFqZHzLRZGHLvWE5iWO/CiTX4wAkGordgpDcx+vbjI=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jSBH0etM4dk6MAP5J1ayExhF5OHI4laCCTLqwZIAYeHE6WWRW6u2fO/NYboBGk7cVuynuxjsROsOjEsuLo5xWAhWRvf0+WLU0zNHH/2tmCBVc1102XqcxTz20LZL/jSPmQl9YgPb0IC9e6dCaqkX8XbsfDOUGLSs90S8GhohtI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DByNxFb9; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750833153; c=relaxed/simple;
+	bh=2fz72wdEOHN12Hrp4x5DN2tgOHb8xAEfLxxCTvKe0GI=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=UeeGEetFKpKBzUmoci5kxX1vNkM8V2hnXlYydoVxqZoI2y6LxMV9Pkulheo95tsfFANOnaTDmuTKVq9HOvXxpRJSekxWdIPh0kzjDoeARbfF65lIynMixc/73FDLgMneklxk2U4KIGmvF4r4w6FLaDb2ONsdPZaTPhwieaBmqWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BDQx1S1H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DByNxFb9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750833112; x=1782369112;
-  h=from:to:subject:date:message-id:in-reply-to:references:
-   mime-version:content-transfer-encoding;
-  bh=rLFqZHzLRZGHLvWE5iWO/CiTX4wAkGordgpDcx+vbjI=;
-  b=DByNxFb9NeCw9HrJGByd0Pp/fWrUbWo5SQBbPvQ025kbdX0n1Mvp0Q/8
-   K/JAT6Zj8LuShCIDQdNylpzcwauqgC2xRNFn6aoCfTo2bILirls7JEst0
-   eLxCUOHiLzO8Qq1344Q+rjOHc+ON0p3O7ef4VxJZcI5LvyFCnXt56S5UI
-   tXJxNX7UeTYZU+d7V+PyoQs1/+GlVidladN0SM4QS46kNMNTMpEeFlMvA
-   X9r7s07fjdSSPncePhCQEnzsh5VgZ58KUvyyM20wB9dRQLWYFAoWxmyt7
-   xfijh0gpZP4uOlXlr/trUj9RztH7CKhYU7o2XLx+D5sP2rVEJTdUT+Vzw
-   A==;
-X-CSE-ConnectionGUID: F3pj0RPRQuy1h21qaA1r4A==
-X-CSE-MsgGUID: JtL0M+ttTw2v7+UeoDQbqQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="53187469"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="53187469"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 23:31:50 -0700
-X-CSE-ConnectionGUID: VdJ5QTYkRyekoS98TsgGow==
-X-CSE-MsgGUID: MvHROPlPQ/OpgB5SBJaRlQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="152257580"
-Received: from daliomra-mobl3.amr.corp.intel.com (HELO xpardee-desk.intel.com) ([10.124.223.140])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 23:31:49 -0700
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v2 4/5] platform/x86:intel/pmc: Show substate requirement for S0ix blockers
-Date: Tue, 24 Jun 2025 23:31:41 -0700
-Message-ID: <20250625063145.624585-5-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250625063145.624585-1-xi.pardee@linux.intel.com>
-References: <20250625063145.624585-1-xi.pardee@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDQx1S1H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A03B2C4CEEA;
+	Wed, 25 Jun 2025 06:32:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750833152;
+	bh=2fz72wdEOHN12Hrp4x5DN2tgOHb8xAEfLxxCTvKe0GI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=BDQx1S1HFvbpSyi0OWj0BM2UU2EI3ELm2y4BQCLW7gQA3ZA5TFFmoCRaTsd2kTc4d
+	 EbTUTS1c9XPpIhxgG6oaJi60M3VFVBVWNe0nBcVYN8KuOk/ic9e/niIzGoFqwESOaH
+	 zFwpPTqID/wKO7RP5rJnW16KZXnKoF5vXJPnQ/6rbnW5VUmH78LRuEk0OUqBfKKssn
+	 ZE+OVSHJEk0Oc5QFITY7cGQlCUWjX2jP3hesASrMYneiRH1P+kb5lKE35vDEPrKBz2
+	 H9JdoWR0jqYBaGaAmB7o0ulCdoSv7r0ekeVWCMAFoRWiNUefJEKCn1s6/PEKD6g5rr
+	 qjAq/bQgeOHuQ==
+Date: Wed, 25 Jun 2025 15:32:29 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
+ <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, David Laight
+ <David.Laight@ACULAB.COM>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
+ <thomas@t-8ch.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv3 perf/core 06/22] uprobes: Add is_register argument to
+ uprobe_write and uprobe_write_opcode
+Message-Id: <20250625153229.f39c1a1a99ce986380769150@kernel.org>
+In-Reply-To: <20250605132350.1488129-7-jolsa@kernel.org>
+References: <20250605132350.1488129-1-jolsa@kernel.org>
+	<20250605132350.1488129-7-jolsa@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Add support to read and show S0ix blocker substate requirements.
-Starting from Panther Lake, substate requirement data is provided
-based on S0ix blockers instead of all low power mode requirements.
-For platforms that support this new feature, add support to display
-substate requirements based on S0ix blockers.
-Change the "substate_requirements" attribute of Intel PMC Core
-driver to show the substate requirements for each S0ix blocker
-and the corresponding S0ix blocker value.
+On Thu,  5 Jun 2025 15:23:33 +0200
+Jiri Olsa <jolsa@kernel.org> wrote:
 
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/arl.c  |   2 +
- drivers/platform/x86/intel/pmc/core.c | 111 ++++++++++++++++++++++++--
- drivers/platform/x86/intel/pmc/core.h |  12 +++
- drivers/platform/x86/intel/pmc/lnl.c  |   1 +
- drivers/platform/x86/intel/pmc/mtl.c  |   1 +
- 5 files changed, 121 insertions(+), 6 deletions(-)
+> The uprobe_write has special path to restore the original page when we
+> write original instruction back. This happens when uprobe_write detects
+> that we want to write anything else but breakpoint instruction.
+> 
+> Moving the detection away and passing it to uprobe_write as argument,
+> so it's possible to write different instructions (other than just
+> breakpoint and rest).
 
-diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
-index 9d66d65e75779..1852876be234f 100644
---- a/drivers/platform/x86/intel/pmc/arl.c
-+++ b/drivers/platform/x86/intel/pmc/arl.c
-@@ -722,6 +722,7 @@ static int arl_h_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_
- 
- struct pmc_dev_info arl_pmc_dev = {
- 	.pci_func = 0,
-+	.telem_info = SUB_REQ_LPM,
- 	.dmu_guid = ARL_PMT_DMU_GUID,
- 	.regmap_list = arl_pmc_info_list,
- 	.map = &arl_socs_reg_map,
-@@ -732,6 +733,7 @@ struct pmc_dev_info arl_pmc_dev = {
- 
- struct pmc_dev_info arl_h_pmc_dev = {
- 	.pci_func = 2,
-+	.telem_info = SUB_REQ_LPM,
- 	.dmu_guid = ARL_PMT_DMU_GUID,
- 	.regmap_list = arl_pmc_info_list,
- 	.map = &mtl_socm_reg_map,
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 47cc5120e7dd6..e9d281b064462 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -844,6 +844,56 @@ static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index,
- 		seq_printf(s, " %9s |\n", name);
- }
- 
-+static int pmc_core_substate_blk_req_show(struct seq_file *s, void *unused)
-+{
-+	struct pmc_dev *pmcdev = s->private;
-+	unsigned int pmc_index;
-+	u32 *blk_sub_req_regs;
-+
-+	for (pmc_index = 0; pmc_index < ARRAY_SIZE(pmcdev->pmcs); pmc_index++) {
-+		const struct pmc_bit_map **maps;
-+		unsigned int arr_size, r_idx;
-+		u32 offset, counter;
-+		struct pmc *pmc;
-+
-+		pmc = pmcdev->pmcs[pmc_index];
-+		if (!pmc || !pmc->blk_sub_req_regs)
-+			continue;
-+
-+		blk_sub_req_regs = pmc->blk_sub_req_regs;
-+		maps = pmc->map->s0ix_blocker_maps;
-+		offset = pmc->map->s0ix_blocker_offset;
-+		arr_size = pmc_core_lpm_get_arr_size(maps);
-+
-+		/* Display the header */
-+		pmc_core_substate_req_header_show(s, pmc_index, "Value");
-+
-+		for (r_idx = 0; r_idx < arr_size; r_idx++) {
-+			const struct pmc_bit_map *map;
-+
-+			for (map = maps[r_idx]; map->name; map++) {
-+				int mode;
-+
-+				if (!map->blk)
-+					continue;
-+
-+				counter = pmc_core_reg_read(pmc, offset);
-+				seq_printf(s, "pmc%d: %34s |", pmc_index, map->name);
-+				pmc_for_each_mode(mode, pmcdev) {
-+					bool required = *blk_sub_req_regs & BIT(mode);
-+
-+					seq_printf(s, " %9s |", required ? "Required" : " ");
-+				}
-+				seq_printf(s, " %9d |\n", counter);
-+				offset += map->blk * S0IX_BLK_SIZE;
-+				blk_sub_req_regs++;
-+			}
-+		}
-+	}
-+	return 0;
-+}
-+DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_blk_req);
-+
- static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
- {
- 	struct pmc_dev *pmcdev = s->private;
-@@ -1335,7 +1385,10 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
- 		debugfs_create_file("substate_requirements", 0444,
- 				    pmcdev->dbgfs_dir, pmcdev,
- 				    &pmc_core_substate_req_regs_fops);
--	}
-+	} else if (primary_pmc->blk_sub_req_regs)
-+		debugfs_create_file("substate_requirements", 0444,
-+				    pmcdev->dbgfs_dir, pmcdev,
-+				    &pmc_core_substate_blk_req_fops);
- 
- 	if (primary_pmc->map->pson_residency_offset && pmc_core_is_pson_residency_enabled(pmcdev)) {
- 		debugfs_create_file("pson_residency_usec", 0444,
-@@ -1441,7 +1494,38 @@ static int pmc_core_pmt_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc,
- 	return ret;
- }
- 
--static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func)
-+static int pmc_core_pmt_get_blk_sub_req(struct pmc_dev *pmcdev, struct pmc *pmc,
-+					struct telem_endpoint *ep)
-+{
-+	u32 num_blocker, sample_id;
-+	unsigned int index;
-+	u32 *req_offset;
-+	int ret;
-+
-+	num_blocker = pmc->map->num_s0ix_blocker;
-+	sample_id = pmc->map->blocker_req_offset;
-+
-+	pmc->blk_sub_req_regs = devm_kcalloc(&pmcdev->pdev->dev,
-+					 num_blocker, sizeof(u32),
-+					 GFP_KERNEL);
-+	if (!pmc->blk_sub_req_regs)
-+		return -ENOMEM;
-+
-+	req_offset = pmc->blk_sub_req_regs;
-+	for (index = 0; index < num_blocker; index++) {
-+		ret = pmt_telem_read32(ep, sample_id, req_offset, 1);
-+		if (ret) {
-+			dev_err(&pmcdev->pdev->dev,
-+				"couldn't read Low Power Mode requirements: %d\n", ret);
-+			return ret;
-+		}
-+		sample_id++;
-+		req_offset++;
-+	}
-+	return 0;
-+}
-+
-+static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func, unsigned int telem_info)
- {
- 	struct pci_dev *pcidev __free(pci_dev_put) = NULL;
- 	struct telem_endpoint *ep;
-@@ -1470,13 +1554,26 @@ static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func)
- 			return -EPROBE_DEFER;
- 		}
- 
--		ret = pmc_core_pmt_get_lpm_req(pmcdev, pmc, ep);
-+		if (telem_info & SUB_REQ_LPM) {
-+			ret = pmc_core_pmt_get_lpm_req(pmcdev, pmc, ep);
-+			if (ret)
-+				goto unregister_ep;
-+		}
-+
-+		if (telem_info & SUB_REQ_BLK) {
-+			ret = pmc_core_pmt_get_blk_sub_req(pmcdev, pmc, ep);
-+			if (ret)
-+				goto unregister_ep;
-+		}
-+
- 		pmt_telem_unregister_endpoint(ep);
--		if (ret)
--			return ret;
- 	}
- 
- 	return 0;
-+
-+unregister_ep:
-+	pmt_telem_unregister_endpoint(ep);
-+	return ret;
- }
- 
- static const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
-@@ -1585,7 +1682,9 @@ int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
- 		pmc_core_punit_pmt_init(pmcdev, pmc_dev_info->dmu_guid);
- 
- 	if (ssram) {
--		ret = pmc_core_get_telem_info(pmcdev, pmc_dev_info->pci_func);
-+		ret = pmc_core_get_telem_info(pmcdev,
-+					      pmc_dev_info->pci_func,
-+					      pmc_dev_info->telem_info);
- 		if (ret)
- 			goto unmap_regbase;
- 	}
-diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
-index 4a94a4ee031e6..d8c7b28493055 100644
---- a/drivers/platform/x86/intel/pmc/core.h
-+++ b/drivers/platform/x86/intel/pmc/core.h
-@@ -29,6 +29,10 @@ struct telem_endpoint;
- #define LPM_REG_COUNT		28
- #define LPM_MODE_OFFSET		1
- 
-+/* Telemetry Endpoint Info bits */
-+#define SUB_REQ_LPM		0x01	/* Substate requirement for low power mode requirements */
-+#define SUB_REQ_BLK		0x02	/* Substate requirement for S0ix blockers */
-+
- /* Sunrise Point Power Management Controller PCI Device ID */
- #define SPT_PMC_PCI_DEVICE_ID			0x9d21
- #define SPT_PMC_BASE_ADDR_OFFSET		0x48
-@@ -344,6 +348,8 @@ struct pmc_bit_map {
-  * @pm_read_disable_bit: Bit index to read PMC_READ_DISABLE
-  * @slps0_dbg_offset:	PWRMBASE offset to SLP_S0_DEBUG_REG*
-  * @s0ix_blocker_offset PWRMBASE offset to S0ix blocker counter
-+ * @num_s0ix_blocker:	Number of S0ix blockers
-+ * @blocker_req_offset:	Telemetry offset to S0ix blocker low power mode substate requirement table
-  *
-  * Each PCH has unique set of register offsets and bit indexes. This structure
-  * captures them to have a common implementation.
-@@ -369,6 +375,8 @@ struct pmc_reg_map {
- 	const u32 ltr_ignore_max;
- 	const u32 pm_vric1_offset;
- 	const u32 s0ix_blocker_offset;
-+	const u32 num_s0ix_blocker;
-+	const u32 blocker_req_offset;
- 	/* Low Power Mode registers */
- 	const int lpm_num_maps;
- 	const int lpm_num_modes;
-@@ -404,6 +412,7 @@ struct pmc_info {
-  * @map:		pointer to pmc_reg_map struct that contains platform
-  *			specific attributes
-  * @lpm_req_regs:	List of substate requirements
-+ * @blk_sub_req_reqs:	List of registers showing substate requirements for S0ix blockers
-  * @ltr_ign:		Holds LTR ignore data while suspended
-  *
-  * pmc contains info about one power management controller device.
-@@ -413,6 +422,7 @@ struct pmc {
- 	void __iomem *regbase;
- 	const struct pmc_reg_map *map;
- 	u32 *lpm_req_regs;
-+	u32 *blk_sub_req_regs;
- 	u32 ltr_ign;
- };
- 
-@@ -468,6 +478,7 @@ enum pmc_index {
- /**
-  * struct pmc_dev_info - Structure to keep PMC device info
-  * @pci_func:		Function number of the primary PMC
-+ * @telem_info:		Bitmask to indicate which telemetry info is available
-  * @dmu_guid:		Die Management Unit GUID
-  * @regmap_list:	Pointer to a list of pmc_info structure that could be
-  *			available for the platform. When set, this field implies
-@@ -480,6 +491,7 @@ enum pmc_index {
-  */
- struct pmc_dev_info {
- 	u8 pci_func;
-+	u8 telem_info;
- 	u32 dmu_guid;
- 	struct pmc_info *regmap_list;
- 	const struct pmc_reg_map *map;
-diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
-index e08a77c778c2c..ec9e79f6cd913 100644
---- a/drivers/platform/x86/intel/pmc/lnl.c
-+++ b/drivers/platform/x86/intel/pmc/lnl.c
-@@ -572,6 +572,7 @@ static int lnl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_in
- 
- struct pmc_dev_info lnl_pmc_dev = {
- 	.pci_func = 2,
-+	.telem_info = SUB_REQ_LPM,
- 	.regmap_list = lnl_pmc_info_list,
- 	.map = &lnl_socm_reg_map,
- 	.suspend = cnl_suspend,
-diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
-index faa13a7ee688f..c58a871e2e0df 100644
---- a/drivers/platform/x86/intel/pmc/mtl.c
-+++ b/drivers/platform/x86/intel/pmc/mtl.c
-@@ -994,6 +994,7 @@ static int mtl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_in
- 
- struct pmc_dev_info mtl_pmc_dev = {
- 	.pci_func = 2,
-+	.telem_info = SUB_REQ_LPM,
- 	.dmu_guid = MTL_PMT_DMU_GUID,
- 	.regmap_list = mtl_pmc_info_list,
- 	.map = &mtl_socm_reg_map,
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+
+> 
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  arch/arm/probes/uprobes/core.c |  2 +-
+>  include/linux/uprobes.h        |  5 +++--
+>  kernel/events/uprobes.c        | 21 +++++++++++----------
+>  3 files changed, 15 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/arm/probes/uprobes/core.c b/arch/arm/probes/uprobes/core.c
+> index 885e0c5e8c20..3d96fb41d624 100644
+> --- a/arch/arm/probes/uprobes/core.c
+> +++ b/arch/arm/probes/uprobes/core.c
+> @@ -30,7 +30,7 @@ int set_swbp(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  	     unsigned long vaddr)
+>  {
+>  	return uprobe_write_opcode(auprobe, vma, vaddr,
+> -		   __opcode_to_mem_arm(auprobe->bpinsn));
+> +		   __opcode_to_mem_arm(auprobe->bpinsn), true);
+>  }
+>  
+>  bool arch_uprobe_ignore(struct arch_uprobe *auprobe, struct pt_regs *regs)
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index 147c4a0a1af9..518b26756469 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -197,9 +197,10 @@ extern bool is_swbp_insn(uprobe_opcode_t *insn);
+>  extern bool is_trap_insn(uprobe_opcode_t *insn);
+>  extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
+>  extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
+> -extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t);
+> +extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t,
+> +			       bool is_register);
+>  extern int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma, const unsigned long opcode_vaddr,
+> -			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify);
+> +			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register);
+>  extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+>  extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
+>  extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index f7feb7417a2c..1e5dc3b30707 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -402,10 +402,10 @@ static bool orig_page_is_identical(struct vm_area_struct *vma,
+>  
+>  static int __uprobe_write(struct vm_area_struct *vma,
+>  		struct folio_walk *fw, struct folio *folio,
+> -		unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes)
+> +		unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes,
+> +		bool is_register)
+>  {
+>  	const unsigned long vaddr = insn_vaddr & PAGE_MASK;
+> -	const bool is_register = !!is_swbp_insn(insn);
+>  	bool pmd_mappable;
+>  
+>  	/* For now, we'll only handle PTE-mapped folios. */
+> @@ -488,26 +488,27 @@ static int __uprobe_write(struct vm_area_struct *vma,
+>   * Return 0 (success) or a negative errno.
+>   */
+>  int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> -		const unsigned long opcode_vaddr, uprobe_opcode_t opcode)
+> +		const unsigned long opcode_vaddr, uprobe_opcode_t opcode,
+> +		bool is_register)
+>  {
+> -	return uprobe_write(auprobe, vma, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE, verify_opcode);
+> +	return uprobe_write(auprobe, vma, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE,
+> +			    verify_opcode, is_register);
+>  }
+>  
+>  int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  		 const unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes,
+> -		 uprobe_write_verify_t verify)
+> +		 uprobe_write_verify_t verify, bool is_register)
+>  {
+>  	const unsigned long vaddr = insn_vaddr & PAGE_MASK;
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	struct uprobe *uprobe;
+> -	int ret, is_register, ref_ctr_updated = 0;
+> +	int ret, ref_ctr_updated = 0;
+>  	unsigned int gup_flags = FOLL_FORCE;
+>  	struct mmu_notifier_range range;
+>  	struct folio_walk fw;
+>  	struct folio *folio;
+>  	struct page *page;
+>  
+> -	is_register = is_swbp_insn(insn);
+>  	uprobe = container_of(auprobe, struct uprobe, arch);
+>  
+>  	if (WARN_ON_ONCE(!is_cow_mapping(vma->vm_flags)))
+> @@ -569,7 +570,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  	/* Walk the page tables again, to perform the actual update. */
+>  	if (folio_walk_start(&fw, vma, vaddr, 0)) {
+>  		if (fw.page == page)
+> -			ret = __uprobe_write(vma, &fw, folio, insn_vaddr, insn, nbytes);
+> +			ret = __uprobe_write(vma, &fw, folio, insn_vaddr, insn, nbytes, is_register);
+>  		folio_walk_end(&fw, vma);
+>  	}
+>  
+> @@ -611,7 +612,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  int __weak set_swbp(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  		unsigned long vaddr)
+>  {
+> -	return uprobe_write_opcode(auprobe, vma, vaddr, UPROBE_SWBP_INSN);
+> +	return uprobe_write_opcode(auprobe, vma, vaddr, UPROBE_SWBP_INSN, true);
+>  }
+>  
+>  /**
+> @@ -627,7 +628,7 @@ int __weak set_orig_insn(struct arch_uprobe *auprobe,
+>  		struct vm_area_struct *vma, unsigned long vaddr)
+>  {
+>  	return uprobe_write_opcode(auprobe, vma, vaddr,
+> -			*(uprobe_opcode_t *)&auprobe->insn);
+> +			*(uprobe_opcode_t *)&auprobe->insn, false);
+>  }
+>  
+>  /* uprobe should have guaranteed positive refcount */
+> -- 
+> 2.49.0
+> 
+
+
 -- 
-2.43.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
