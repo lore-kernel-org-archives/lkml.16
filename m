@@ -1,109 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E469F70813
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:57:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E4870813;
+	Wed, 25 Jun 2025 01:59:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750816627; cv=none; b=dlp3/Ul4B9X3+mg6I11hhvDpeXlCAdyP0EidJg1qqTXk1vgIEPWnhIyx9FnCZnxqAwnAJcl/u8I0491j/jZbPD/jqMXrNz5i+IkV5SKOzyAXrBmy/k4FUF4gYvoI6XsDPraWUyBc8LIApCOgYeCEyTBehZ0GIwKyxnRFkUzSxwA=
+	t=1750816782; cv=none; b=uJv3VQAUvXY9CHamjmIvhKDZ2PkQDmdS/QGwlKZse+G8S2Vt8PrDLGLX/rzy41QlA6Q0F30eapWqOeecUu+ccte20cHtcfce27ElCYtP3fvstmifd44AhuDOIBRrwr6BVMYTIQOtujFImfT0PA+NZrMlQ62DJBjRmClpht+o8t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750816627; c=relaxed/simple;
-	bh=32U2wOAlMtIyO75Asy250dWcqCGf5UC5QID2tausaWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O55nhPtR7MGAJIatY2ULSvV7N3Yel+cINl2ZhsbZPw3ysmyiSsde+e1cE72o5d+aizy5odHqisTFiYFVMpSIEpaX1DZufCKg6NibbgfsRG7nsPX8/KsFHh/G+/z8GIg63ugBiN+9NA90z0rd3Pmn/b5lUhyVfQEXgIEBS3BKdTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GmeD0fSK; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750816782; c=relaxed/simple;
+	bh=p321NOPiKKCXR7/+lYUBJLmzftRWSBvapwOVICGLLMQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=jXGxP515pw2T7HE/cDTzgekD1oQbANcNogTGyMzFSXVAL+xMfWFrBj8xxNP68w6FlvFJOewSLu+BSg6tI3QsJEupqVjeICgFbxbn9EMRXitsgimr7gqoaXebN12DIhrzbPWGsgqWS/B6nHCOznELEsP2YzeTZbxERww+klAl6ig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gJcqiFwC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GmeD0fSK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750816626; x=1782352626;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=32U2wOAlMtIyO75Asy250dWcqCGf5UC5QID2tausaWQ=;
-  b=GmeD0fSKGvklJBWqxXmUIGeH+EOgYEOnV7BAriYbf9+2B4h4N3FK8Ftg
-   U5SnHWb54styrusHn8WMJgfDwiF04Dk7zkIZs2uoPUbNieUMFln7Lgc3s
-   HuYSw/eABq0XN51Bm6zRnPw97eaas1L/WCU5KzApocatGz25cYuzruPA/
-   jGNF/pS7dLucTKZE85+GCcyTRaygCEr7gOR+WNrLEnicB3zyXBS685SOs
-   EJ833dczLivRCDX+BSnxe3Y7C8dTtmze4G7sq+CoR0TowNK4DRm17L8sv
-   XTaU2NBlOePcR5SeG3XXGEVAtV2yPW5nhROp7Sp8LdfzJWHOXjhlGNtPz
-   w==;
-X-CSE-ConnectionGUID: YHqFDPKDQj2sFnuFbcw4vA==
-X-CSE-MsgGUID: BF3G/nfhRF60uABuvefhpg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="56748950"
-X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="56748950"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 18:57:05 -0700
-X-CSE-ConnectionGUID: WxY9OlOoQcCBuk7WUwHnzw==
-X-CSE-MsgGUID: wSio0s/UQe2fUPImjc7KTw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="156364357"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 18:57:02 -0700
-Message-ID: <e8977169-e1f6-4ba4-931b-9bebffc1469f@linux.intel.com>
-Date: Wed, 25 Jun 2025 09:55:47 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gJcqiFwC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64528C4CEE3;
+	Wed, 25 Jun 2025 01:59:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750816781;
+	bh=p321NOPiKKCXR7/+lYUBJLmzftRWSBvapwOVICGLLMQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=gJcqiFwCeDB45p4AGW0njG79OmfMuYME76JuBvgZ3KHobg/Lr8OAiVAU10EzsWZaP
+	 nGhm6wl5qDkntDGm4bt9DQMZsAOTZME1qWb2Eu4zdDjrsjZPqWxT12jP8ZuqX7gjYD
+	 4skK8t7VsJnlZLU9iy3IdfQwK9Tr9My32maCsZ1X79f/RE49CzFF95Wv/eqNc13JPw
+	 T+eLG7F5M8eN43I/5v9A1Wkm+B29RxXJgZmOPjeXgDfxuYRke5gKHzpjJc5R8o8+Id
+	 DC16xnEpahQX5vhFRmwpqm1ACEmop4syfG0B4f+VjAQH/FhVWFj63tUY8WPpzeauW4
+	 ViATkyMD30iCQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 4A22039FEB73;
+	Wed, 25 Jun 2025 02:00:09 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] iommufd: Destroy vdevice on idevice destroy
-To: "Tian, Kevin" <kevin.tian@intel.com>, Xu Yilun
- <yilun.xu@linux.intel.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
- "jgg@ziepe.ca" <jgg@ziepe.ca>, "will@kernel.org" <will@kernel.org>,
- "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>
-Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "joro@8bytes.org" <joro@8bytes.org>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>,
- "shuah@kernel.org" <shuah@kernel.org>,
- "nicolinc@nvidia.com" <nicolinc@nvidia.com>, "aik@amd.com" <aik@amd.com>,
- "Williams, Dan J" <dan.j.williams@intel.com>, "Xu, Yilun"
- <yilun.xu@intel.com>
-References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
- <20250623094946.1714996-4-yilun.xu@linux.intel.com>
- <a2fddab4-bc85-46f6-9008-57a26e099698@linux.intel.com>
- <BN9PR11MB52763649BE32A38A60866D518C78A@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <BN9PR11MB52763649BE32A38A60866D518C78A@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 0/2] bpf,
+ verifier: Improve precision of BPF_ADD and BPF_SUB
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175081680825.4102668.16640418719234698848.git-patchwork-notify@kernel.org>
+Date: Wed, 25 Jun 2025 02:00:08 +0000
+References: <20250623040359.343235-1-harishankar.vishwanathan@gmail.com>
+In-Reply-To: <20250623040359.343235-1-harishankar.vishwanathan@gmail.com>
+To: Harishankar Vishwanathan <harishankar.vishwanathan@gmail.com>
+Cc: ast@kernel.org, m.shachnai@rutgers.edu, srinivas.narayana@rutgers.edu,
+ santosh.nagarakatte@rutgers.edu, daniel@iogearbox.net,
+ john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
+ eddyz87@gmail.com, song@kernel.org, yonghong.song@linux.dev,
+ kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On 6/24/25 16:12, Tian, Kevin wrote:
->> From: Baolu Lu <baolu.lu@linux.intel.com>
->> Sent: Tuesday, June 24, 2025 11:32 AM
->>
->> On 6/23/25 17:49, Xu Yilun wrote:
->>> Destroy iommufd_vdevice(vdev) on iommufd_idevice(idev) destroy so that
->>> vdev can't outlive idev.
->>>
->>> iommufd_device(idev) represents the physical device bound to iommufd,
->>> while the iommufd_vdevice(vdev) represents the virtual instance of the
->>> physical device in the VM. The lifecycle of the vdev should not be
->>> longer than idev. This doesn't cause real problem on existing use cases
->>> cause vdev doesn't impact the physical device, only provides
->>> virtualization information. But to extend vdev for Confidential
->>> Computing(CC), there are needs to do secure configuration for the vdev,
->>> e.g. TSM Bind/Unbind. These configurations should be rolled back on idev
->>> destroy, or the external driver(VFIO) functionality may be impact.
->>>
->>> Building the association between idev & vdev requires the two objects
->>> pointing each other, but not referencing each other.
->>
->> Does this mean each idevice can have at most a single vdevice? Is it
->> possible that different PASIDs of a physical device are assigned to
->> userspace for different purposes, such that there is a need for multiple
->> vdevices per idevice?
->>
+Hello:
+
+This series was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
+
+On Mon, 23 Jun 2025 00:03:55 -0400 you wrote:
+> This patchset improves the precision of BPF_ADD and BPF_SUB range
+> tracking. It also adds selftests that exercise the cases where precision
+> improvement occurs, and selftests for the cases where precise bounds
+> cannot be computed and the output register state values are set to
+> unbounded.
 > 
-> PASID is a resource of physical device. If it's reported to a VM then
-> it becomes the resource of virtual device. 1:1 association makes
-> sense here.
+> Changelog:
+> 
+> [...]
 
-Okay, make sense.
+Here is the summary with links:
+  - [v3,1/2] bpf, verifier: Improve precision for BPF_ADD and BPF_SUB
+    https://git.kernel.org/bpf/bpf-next/c/7a998a731627
+  - [v3,2/2] selftests/bpf: Add testcases for BPF_ADD and BPF_SUB
+    (no matching commit)
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
