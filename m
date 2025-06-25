@@ -1,84 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE6426B77F;
-	Wed, 25 Jun 2025 09:07:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FDF27CB02;
+	Wed, 25 Jun 2025 09:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750842459; cv=none; b=RtQb4hjGfl+fPviuotmPZ4PmR4jhIst/IBAZxMz1jtBW8TKRi5raR9aikxkYZssp6EDXEpUvqj8FCqNjY1wT8d+V8jfeYobhXXilNTqJCYpDSWMeBugDUrRVWw8sm93VAVN5fHR4iCFGXR+ELD8XGL3mtLHGmX452VSpeKop464=
+	t=1750842540; cv=none; b=ZDqV/cU9qy3jzfoB3/9alZ0Ikse00A6aLfiJIdh92FkeolkY0fDqUHaQTAZrNq0zi/N3HjBK+rVpJE7O9PN/YiGOsHeZM+0w6fRiIFHYHaoJwqhqq1DEF028+Gzky7srSp3Bdo/UNl8DcOWgyFGmLWUE21meI9zeTauJI+YY+Zo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750842459; c=relaxed/simple;
-	bh=Wm/Qm170JnmvLoFVbqubHllu4LDDa//IX18AMk/c+g8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IwFFForBVnhwUau6htvAD7EiCFz+ES5F3Na5zTiJegX4S09KZTjvuzzp8QgxpyMffeEJuPIodplpqbXLkATixs3EnOjjWy0Rqy6x/1m1ytSwefoaO7nevPDqUsamQWBVO+RPL2xQKCeetaxfzc/tO7c0WqLGZDaURl4b3IXomH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUztFy2h; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUztFy2h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3E4BC4CEEA;
-	Wed, 25 Jun 2025 09:07:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750842459;
-	bh=Wm/Qm170JnmvLoFVbqubHllu4LDDa//IX18AMk/c+g8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eUztFy2hS2wfsb8j77f2PVF4wB4X8iJeV6TVrk5esjbRwDb2d/nWAX7Qvgkencf+1
-	 LkOqcqQP36WgokaH0Rb4nb4VZPiyuLCttGVkE2+M9N07PTbboioekupa0qE8jXdssk
-	 ZWgLsKI4swkfWT0iGJpXtkppL87YR/otVdn740n9gKoumV1qt1v3gw5nqZqxJW5NMj
-	 oDKnzlGgCl7lJRkPWW7Cm+YretQ4cBy+ynGytnSY/GiKqs5QXvE5BthcpKF01dyyy3
-	 EJDVL6rAeK3loyeOgI500rxCGxYwH3DzNyak48FD9mGzmqPI6NqObJF/wlirXSqxCG
-	 PABnRRg0crxdQ==
-Date: Wed, 25 Jun 2025 10:07:34 +0100
-From: Simon Horman <horms@kernel.org>
-To: Jamie Bainbridge <jamie.bainbridge@gmail.com>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Michal Schmidt <mschmidt@redhat.com>,
-	Brett Creeley <brett.creeley@amd.com>,
-	Ivan Vecera <ivecera@redhat.com>, intel-wired-lan@lists.osuosl.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 net] i40e: When removing VF MAC filters, only check
- PF-set MAC
-Message-ID: <20250625090734.GJ1562@horms.kernel.org>
-References: <c856f16e6ab37286733174c0fcf12bc72b677096.1750807588.git.jamie.bainbridge@gmail.com>
+	s=arc-20240116; t=1750842540; c=relaxed/simple;
+	bh=iPSIlxbA6AL4kk1jewqtNJ7P22fvFyX5+2oLAJK7b8g=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=S2Y9p1OzUOoSTZMeOXyEzUBBDYwA8M7ShUOpJpAgqtR4VlKsPUNLxOsHO+SjnaoLabOcIsp+/ZpmlQ1hrrVWebPWw165DuNP+XfcDlWjqT52e/TfDsXBBDIk2RmnVwA8ibXPV87tJZf+kS+iZuZQVTJz5ThyGBPAHlOkK4DQbKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
+Received: from tux.applied-asynchrony.com (p5b347a18.dip0.t-ipconnect.de [91.52.122.24])
+	by mail.itouring.de (Postfix) with ESMTPSA id A2796103762;
+	Wed, 25 Jun 2025 11:08:55 +0200 (CEST)
+Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
+	by tux.applied-asynchrony.com (Postfix) with ESMTP id 584E06018BEA5;
+	Wed, 25 Jun 2025 11:08:55 +0200 (CEST)
+Subject: Re: [PATCH 6.15 000/588] 6.15.4-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+ linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+ akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+ patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+ jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+ srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+ hargar@microsoft.com, broonie@kernel.org,
+ Christian Brauner <brauner@kernel.org>
+References: <20250624121449.136416081@linuxfoundation.org>
+ <e9249afe-f039-4180-d50d-b199c26dea26@applied-asynchrony.com>
+ <2025062511-tutor-judiciary-e3f9@gregkh>
+From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <b875b110-277d-f427-412c-b2cb6512fccc@applied-asynchrony.com>
+Date: Wed, 25 Jun 2025 11:08:55 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c856f16e6ab37286733174c0fcf12bc72b677096.1750807588.git.jamie.bainbridge@gmail.com>
+In-Reply-To: <2025062511-tutor-judiciary-e3f9@gregkh>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25, 2025 at 09:29:18AM +1000, Jamie Bainbridge wrote:
-> When the PF is processing an Admin Queue message to delete a VF's MACs
-> from the MAC filter, we currently check if the PF set the MAC and if
-> the VF is trusted.
+On 2025-06-25 10:25, Greg Kroah-Hartman wrote:
+> On Wed, Jun 25, 2025 at 10:00:56AM +0200, Holger Hoffstätte wrote:
+>> (cc: Christian Brauner>
+>>
+>> Since 6.15.4-rc1 I noticed that some KDE apps (kded6, kate (the text editor))
+>> started going into a tailspin with 100% per-process CPU.
+>>
+>> The symptom is 100% reproducible: open a new file with kate, save empty file,
+>> make changes, save, watch CPU go 100%. perf top shows copy_to_user running wild.
+>>
+>> First I tried to reproduce on 6.15.3 - no problem, everything works fine.
+>>
+>> After checking the list of patches for 6.15.4 I reverted the anon_inode series
+>> (all 3 for the first attempt) and the problem is gone.
+>>
+>> Will try to reduce further & can gladly try additional fixes, but for now
+>> I'd say these patches are not yet suitable for stable.
 > 
-> This results in undesirable behaviour, where if a trusted VF with a
-> PF-set MAC sets itself down (which sends an AQ message to delete the
-> VF's MAC filters) then the VF MAC is erased from the interface.
-> 
-> This results in the VF losing its PF-set MAC which should not happen.
-> 
-> There is no need to check for trust at all, because an untrusted VF
-> cannot change its own MAC. The only check needed is whether the PF set
-> the MAC. If the PF set the MAC, then don't erase the MAC on link-down.
-> 
-> Resolve this by changing the deletion check only for PF-set MAC.
-> 
-> (the out-of-tree driver has also intentionally removed the check for VF
-> trust here with OOT driver version 2.26.8, this changes the Linux kernel
-> driver behaviour and comment to match the OOT driver behaviour)
-> 
-> Fixes: ea2a1cfc3b201 ("i40e: Fix VF MAC filter removal")
-> Signed-off-by: Jamie Bainbridge <jamie.bainbridge@gmail.com>
-> ---
-> v2: Reword commit message as suggested by Simon Horman.
+> Does this same issue also happen for you on 6.16-rc3?
 
-Thanks for the update.
+Curiously it does *not* happen on 6.16-rc3, so that's good.
+I edited/saved several files and everything works as it should.
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+In 6.15.4-rc the problem occurs (as suspected) with:
+anon_inode-use-a-proper-mode-internally.patch aka cfd86ef7e8e7 upstream.
+
+thanks
+Holger
