@@ -1,165 +1,256 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 952F31BD9C9
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:10:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D6753D76;
+	Wed, 25 Jun 2025 03:11:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750821048; cv=none; b=hsBLny4v64HOw26rg6wlEgm2MvCM/5okW7bSh7izOLFKSOnhUyRlWBDO9gYsyETJo+Jhn9txLtx/Qv3fVq1G5s2pj9Hl0FFbQVtNuC03JXUgTFhtjJTkwRkArUwsDsw0b17yMdD5c/RluN7xQ1jXtQwGYSwGlx+xOAOKMUzoEkw=
+	t=1750821087; cv=none; b=EtOb0MDSTQ4qhmBWRj6VpQ7KRk9A3bfOgIQaI3/B10r2zDiihepDx81PIyez9xfnxRT1fjIl6Uz6tBZrQWuEBXsA36nwmTEQeud4G+WjOIfvY/4ixqbl6mJp15RfVW5DTjJ0BYGBNtfeA5sd0klKl7wTY8iipL9UGzrtVWMB+q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750821048; c=relaxed/simple;
-	bh=9UOqHmzwCMjgsQn/1nIlqb7z9BtR3vgW+kgUM5V4Ml8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=r/zQwa/iPkEwWAJ6C9H5fvprAL/VwSNgZFc/4JkDgpbTG5TFCROS3l4CJkDMD7BppvE40FFUlfZGeDPGZfeB4x01Ic5xxCN8DGIypyVi/ecMkauDWA1YHi48RuqZuCdmpGRp9ii5CgjB9cBSK24xbPtKGVMuqw8qOySGUUeg/pE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bRn0S3Zv3z2QTyp;
-	Wed, 25 Jun 2025 11:11:36 +0800 (CST)
-Received: from dggemv705-chm.china.huawei.com (unknown [10.3.19.32])
-	by mail.maildlp.com (Postfix) with ESMTPS id 631A7140144;
-	Wed, 25 Jun 2025 11:10:41 +0800 (CST)
-Received: from kwepemq500002.china.huawei.com (7.202.195.240) by
- dggemv705-chm.china.huawei.com (10.3.19.32) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 25 Jun 2025 11:10:41 +0800
-Received: from kwepemq200002.china.huawei.com (7.202.195.90) by
- kwepemq500002.china.huawei.com (7.202.195.240) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 25 Jun 2025 11:10:40 +0800
-Received: from kwepemq200002.china.huawei.com ([7.202.195.90]) by
- kwepemq200002.china.huawei.com ([7.202.195.90]) with mapi id 15.02.1544.011;
- Wed, 25 Jun 2025 11:10:40 +0800
-From: duchangbin <changbin.du@huawei.com>
-To: Alexandre Ghiti <alex@ghiti.fr>
-CC: duchangbin <changbin.du@huawei.com>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] riscv: Prevent early kernel panic in instrumented
- apply_early_boot_alternatives
-Thread-Topic: [PATCH] riscv: Prevent early kernel panic in instrumented
- apply_early_boot_alternatives
-Thread-Index: AQHb5PtyjCfzcR/e2EWBZK4/MCSYmLQRvi4AgAF1PoA=
-Date: Wed, 25 Jun 2025 03:10:40 +0000
-Message-ID: <d41d9c7a103f4600a4fc5beea77e0f4e@huawei.com>
-References: <20250624113042.2123140-1-changbin.du@huawei.com>
- <a89f5970-5ea9-4d92-8952-6c26a22ac153@ghiti.fr>
-In-Reply-To: <a89f5970-5ea9-4d92-8952-6c26a22ac153@ghiti.fr>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-imapappendstamp: kwepemq200002.china.huawei.com (15.02.1544.011)
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <6B6D87550F0AC946A7F2343632909A59@huawei.com>
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1750821087; c=relaxed/simple;
+	bh=dmJlZNkGnYr4lMKNh/KeJpM+mdF8w7szhNRQjOFxOSY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pI+iF9r0iTbn++D7P73xi7cDI4j36zvWDNeuHKlLzYLj9xlQ5xBJge7nx1d7O7kmzh5CjjQsnigDDAqS7/JXXugdv1AHAoLRU4y7IVaSOUziDXPolnjoNzMglPQy/LWjJxh9j9lmtD3YdaNx1zXEuTRU9WlVmReWZAIwAGqw0SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J/2/ozm5; arc=none smtp.client-ip=209.85.219.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J/2/ozm5"
+Received: by mail-qv1-f50.google.com with SMTP id 6a1803df08f44-6fb0eb0f0fbso5338696d6.1;
+        Tue, 24 Jun 2025 20:11:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750821085; x=1751425885; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=37wLyUOFnEhvbHdZdl11U23f9N/UOWSnFyRj6lojqvw=;
+        b=J/2/ozm5KrTcAYJSKEs35JdF9evp2dk7cR5TNUppb0f0pXC3bzo4A1PTKThd9YREi5
+         kkYzKJ/r02MeRO7WuutRc+5HYnu8enhRgwfjvcWCirvj1sJqQyzTWHGkBE21kqZXnJA6
+         WuXkWXd6b4gOa05ZN8fuXDGYht4uTGqGA+hJMu1/Lo2DR9ENtH4qA5GQowLErAC8kAmr
+         NcbsPLgBMZdvUpSUHpXQG1MBX1eO6Llr3TEWw7b72ToJLCd48ycBQmRCT4SXK402bP1W
+         CgmjX5uiLJFel9qxV/6LvSkF5ZyPIoCaLafXHW/JFPqT1vyBEziHzU0b5b0vbbZc2nJm
+         jPDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750821085; x=1751425885;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=37wLyUOFnEhvbHdZdl11U23f9N/UOWSnFyRj6lojqvw=;
+        b=Hn//Zu4EtaMfcBPd0ofpCU3TjCKEcq89mx8i19stPGTAjsYTgLHR09rFd1snrgeytO
+         UQj5qanPmVOyCwxnCc7dv0jJVgDqeJ0HUUpxMBaSym8mtbf0hvJbZU++SEOPUO5poHf+
+         iy5KYqg72+qilHlvHRrYRyCrqUlqT8BQEci9hQuIjMVpOkgOxTDA+Wd8cIjaXT6q+l4L
+         tDH/r8KFDwrRDjYpMkPJrPaexUth78sOtuj7VR9kyB3mj4IYHIfGT2Uu+GogvemDz8iT
+         q/J0CSUJWJj7qEOFyxNIDpgDFVVTnw0vjt+iyVt85JKdmJa0zUzU63ZLWh57WOCTFm+X
+         bd+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWBXIrBnWZaWvVaUfz1DKl5mE7BUGeSroUzHUiMwQTj2MYXWyYtTzUjaxcU/lMYPRdD9JU1@vger.kernel.org, AJvYcCX6ZnJMJ8gm/yxcRirLtKSa023g0ZEH8O6n8oRl0YUsf0UgU4YCcVCw+tf71I+L1wbZZ9EgT9M=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyR/33UaszWA4dHrWS3DZFpETyN4SP+iGsXJ5MHnZBqRybGnnb4
+	UIapSLQ0r2VNKk6kona4I1y0fLz7xqmCgzc6B1qS/s4lgQqmnT68sQej
+X-Gm-Gg: ASbGncvB7x/QphMk2e/iOpTRQi68T9I6igVPZ0upnCxUYouSaUGEEJ0zhWfMY0zRfg/
+	xbLEPAqpi+S9wGlf9/ZNq5Wwpvj1Ug1zpU1vZ6xWeB82ALYDVEPIJTBmj2N0uGU81dLU7CVKeG6
+	XSQsdEuwmms9UQjzebzJI7084kGVBLRsi3KXWguFydiCxv48wvC6WucheHS7KGBQO+NASaak5cQ
+	emFhWqqN5sj1LyySpu69scYvtGbREK/ajmnnRpY4dRld5I4yIZt3V37E+hXEPaTRaU9tSB3Ujal
+	daAsY2aokfDZ2ApZmCMG+nl78pq2ELA8WH5pxZzUh0sinHtYQYjxr+KybXF2YwKHGY7vltArOCf
+	7YFDICOdS1T4y/lup4pEQMYCa9b2LhdLDzM4pyPutemE3VHAPkHJh
+X-Google-Smtp-Source: AGHT+IEaKhNkzW0FbV9f70GZpEk7DuWFP3tTqujTO5SU7v0JJSU26+B+8T1tUhbIvgQO9vAEkRQw4A==
+X-Received: by 2002:a05:6214:4f14:b0:6fa:edb8:b343 with SMTP id 6a1803df08f44-6fd387ec5b8mr75990336d6.2.1750821085027;
+        Tue, 24 Jun 2025 20:11:25 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f99efaa9sm567189785a.58.2025.06.24.20.11.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 20:11:24 -0700 (PDT)
+Received: from phl-compute-02.internal (phl-compute-02.phl.internal [10.202.2.42])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 9CE32F40066;
+	Tue, 24 Jun 2025 23:11:23 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-02.internal (MEProxy); Tue, 24 Jun 2025 23:11:23 -0400
+X-ME-Sender: <xms:22hbaLUxtLizeeFIafMYrMGPO6_IUUROpxUeMU-9dXMgPpLVSv5-JQ>
+    <xme:22hbaDnkM5oDjL7Fb72WmIxb1SAadqxuznNCFtw914xf2mbBqY4QqpIX-VBMDJXL5
+    RbwiyXW6PFZNs0l8Q>
+X-ME-Received: <xmr:22hbaHa6DxExEPIbPJ2_uMAz2a_Hw4xJHrsLKy0mV-dtHV6UMLmrzSfTAQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvudeihecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhnucfhvghn
+    ghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvghrnh
+    epgeegueekgefhvedukedtveejhefhkeffveeufeduiedvleetledtkeehjefgieevnecu
+    ffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpedtnecurf
+    grrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshho
+    nhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngh
+    eppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepvdei
+    pdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvh
+    hgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrtghusehvghgvrhdrkhgvrhhn
+    vghlrdhorhhgpdhrtghpthhtoheplhhkmhhmsehlihhsthhsrdhlihhnuhigrdguvghvpd
+    hrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohep
+    mhhinhhgoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfihilhhlsehkvghrnhgvlh
+    drohhrghdprhgtphhtthhopegsohhquhhnrdhfvghnghesghhmrghilhdrtghomhdprhgt
+    phhtthhopehlohhnghhmrghnsehrvgguhhgrthdrtghomhdprhgtphhtthhopegurghvvg
+    esshhtghholhgrsghsrdhnvght
+X-ME-Proxy: <xmx:22hbaGXU4-JtYzfbe7cuBsHYKmE_1xV7XkWwHwwfiJ0JVw1rA7CSlA>
+    <xmx:22hbaFnxM-vxVdj0pYO1Kgig0ovL9XbDKLHawDGt-k70AQw5LeYj1w>
+    <xmx:22hbaDdV5vwCEe1RFQ5s0JQ_isQr0qpXEQmLRbcmtb5U3JJRmKoazQ>
+    <xmx:22hbaPFD81Gef9jXtG6HTgG6fTqC8h8qsh_iZkeVYp6rvJyOD83f1Q>
+    <xmx:22hbaHlAexzm1mL7loKjEe67Ld19d_IzmXP54NmhEH7thDh5YDmL9ehm>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
+ 24 Jun 2025 23:11:23 -0400 (EDT)
+From: Boqun Feng <boqun.feng@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	rcu@vger.kernel.org,
+	lkmm@lists.linux.dev
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Waiman Long <longman@redhat.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>,
+	Breno Leitao <leitao@debian.org>,
+	aeh@meta.com,
+	netdev@vger.kernel.org,
+	edumazet@google.com,
+	jhs@mojatatu.com,
+	kernel-team@meta.com,
+	Erik Lundgren <elundgren@meta.com>
+Subject: [PATCH 0/8] Introduce simple hazard pointers for lockdep
+Date: Tue, 24 Jun 2025 20:10:53 -0700
+Message-Id: <20250625031101.12555-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 24, 2025 at 02:54:32PM +0200, Alexandre Ghiti wrote:
-> Hi Changbin,
->=20
-> On 6/24/25 13:30, Changbin Du wrote:
-> > Under FTRACE=3Dy, DYNAMIC_FTRACE=3Dn, and RISCV_ALTERNATIVE_EARLY=3Dn, =
-the kernel
->=20
->=20
-> Your above config works fine for me, I guess you meant FUNCTION_TRACER &&
-> !DYNAMIC_FTRACE (which fails).
->
-Yes, it's FUNCTION_TRACER.
+Hi,
 
-> We were just talking with Andy about this configuration (FUNCTION_TRACER =
-&&
-> !DYNAMIC_FTRACE): do we really want to support static ftrace? Andy should
-> send a patch soon to remove this possibility as IMO we don't want to supp=
-ort
-> it. Let's wait for this patch and the discussion that will follow before
-> merging your fix. I'll keep it in my list for 6.16 just in case someone
-> comes up with a good argument to keep it.
->=20
-No problem. I'm unable to enable DYNAMIC_FTRACE because GCC_SUPPORTS_DYNAMI=
-C_FTRACE=3Dn
-and CC_HAS_MIN_FUNCTION_ALIGNMENT=3Dn are set. It seems that my GCC version=
- (13.3.0)
-does not support the option -fmin-function-alignment=3D8.
+This is the official first version of simple hazard pointers following
+the RFC:
 
-By the way, this change also eliminates an empty function call.
+	https://lore.kernel.org/lkml/20250414060055.341516-1-boqun.feng@gmail.com/
 
-> Thanks,
->=20
-> Alex
->=20
->=20
-> > panics upon returning from _mcount() in the early boot path. This occur=
-s
-> > during _start_kernel() -> setup_vm() -> apply_early_boot_alternatives()=
-.
-> >=20
-> > The CC_FLAGS_FTRACE is only removed from alternative.c when
-> > CONFIG_RISCV_ALTERNATIVE_EARLY=3Dy. Therefore, no function calls should=
- be
-> > made to alternative.c during early boot in this configuration.
-> >=20
-> > Fixes: a35707c3d850 ("riscv: add memory-type errata for T-Head")
-> > Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> > ---
-> >   arch/riscv/include/asm/alternative.h | 6 ++++++
-> >   arch/riscv/kernel/alternative.c      | 4 ++--
-> >   2 files changed, 8 insertions(+), 2 deletions(-)
-> >=20
-> > diff --git a/arch/riscv/include/asm/alternative.h b/arch/riscv/include/=
-asm/alternative.h
-> > index 3c2b59b25017..c670b0cc55f4 100644
-> > --- a/arch/riscv/include/asm/alternative.h
-> > +++ b/arch/riscv/include/asm/alternative.h
-> > @@ -31,7 +31,13 @@
-> >   #define ALT_ALT_PTR(a)			__ALT_PTR(a, alt_offset)
-> >   void __init apply_boot_alternatives(void);
-> > +
-> > +# ifdef CONFIG_RISCV_ALTERNATIVE_EARLY
-> >   void __init apply_early_boot_alternatives(void);
-> > +# else
-> > +static inline void apply_early_boot_alternatives(void) { }
-> > +# endif
-> > +
-> >   void apply_module_alternatives(void *start, size_t length);
-> >   void riscv_alternative_fix_offsets(void *alt_ptr, unsigned int len,
-> > diff --git a/arch/riscv/kernel/alternative.c b/arch/riscv/kernel/altern=
-ative.c
-> > index 7eb3cb1215c6..5406c3301627 100644
-> > --- a/arch/riscv/kernel/alternative.c
-> > +++ b/arch/riscv/kernel/alternative.c
-> > @@ -205,6 +205,7 @@ void __init apply_boot_alternatives(void)
-> >   	apply_vdso_alternatives();
-> >   }
-> > +#ifdef CONFIG_RISCV_ALTERNATIVE_EARLY
-> >   /*
-> >    * apply_early_boot_alternatives() is called from setup_vm() with MMU=
--off.
-> >    *
-> > @@ -219,12 +220,11 @@ void __init apply_boot_alternatives(void)
-> >    */
-> >   void __init apply_early_boot_alternatives(void)
-> >   {
-> > -#ifdef CONFIG_RISCV_ALTERNATIVE_EARLY
-> >   	_apply_alternatives((struct alt_entry *)__alt_start,
-> >   			    (struct alt_entry *)__alt_end,
-> >   			    RISCV_ALTERNATIVES_EARLY_BOOT);
-> > -#endif
-> >   }
-> > +#endif
-> >   #ifdef CONFIG_MODULES
-> >   void apply_module_alternatives(void *start, size_t length)
+I rebase it onto v6.16-rc3 and hope to get more feedback this time.
 
---=20
-Cheers,
-Changbin Du
+Thanks a lot for Breno Leitao to try the RFC out and share the numbers.
+
+I did an extra comparison this time, between the shazptr solution and
+the synchronize_rcu_expedited() solution. In my test, during a 100 times
+"tc qdisc replace" run:
+
+* IPI rate with the shazptr solution: ~14 per second per core.
+* IPI rate with synchronize_rcu_expedited(): ~140 per second per core.
+
+(IPI results were from the 'CAL' line in /proc/interrupt)
+
+This shows that while both solutions have the similar speedup, shazptr
+solution avoids the introduce of high IPI rate compared to
+synchronize_rcu_expedited().
+
+Feedback is welcome and please let know if there is any concern or
+suggestion. Thanks!
+
+Regards,
+Boqun
+
+--------------------------------------
+Please find the old performance below:
+
+On my system (a 96-cpu VMs), the results of:
+
+	time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1: mq
+
+are (with lockdep enabled):
+
+	(without the patchset)
+	real    0m1.039s
+	user    0m0.001s
+	sys     0m0.069s
+
+	(with the patchset)
+	real    0m0.053s
+	user    0m0.000s
+	sys     0m0.051s
+
+i.e. almost 20x speed-up.
+
+Other comparisons between RCU and shazptr, the rcuscale results (using
+default configuration from
+tools/testing/selftests/rcutorture/bin/kvm.sh):
+
+RCU:
+
+	Average grace-period duration: 7470.02 microseconds
+	Minimum grace-period duration: 3981.6
+	50th percentile grace-period duration: 6002.73
+	90th percentile grace-period duration: 7008.93
+	99th percentile grace-period duration: 10015
+	Maximum grace-period duration: 142228
+
+shazptr:
+
+	Average grace-period duration: 0.845825 microseconds
+	Minimum grace-period duration: 0.199
+	50th percentile grace-period duration: 0.585
+	90th percentile grace-period duration: 1.656
+	99th percentile grace-period duration: 3.872
+	Maximum grace-period duration: 3049.05
+
+shazptr (skip_synchronize_self_scan=1, i.e. always let scan kthread to
+wakeup):
+
+	Average grace-period duration: 467.861 microseconds
+	Minimum grace-period duration: 92.913
+	50th percentile grace-period duration: 440.691
+	90th percentile grace-period duration: 460.623
+	99th percentile grace-period duration: 650.068
+	Maximum grace-period duration: 5775.46
+
+shazptr_wildcard (i.e. readers always use SHAZPTR_WILDCARD):
+
+	Average grace-period duration: 599.569 microseconds
+	Minimum grace-period duration: 1.432
+	50th percentile grace-period duration: 582.631
+	90th percentile grace-period duration: 781.704
+	99th percentile grace-period duration: 1160.26
+	Maximum grace-period duration: 6727.53
+
+shazptr_wildcard (skip_synchronize_self_scan=1):
+
+	Average grace-period duration: 460.466 microseconds
+	Minimum grace-period duration: 303.546
+	50th percentile grace-period duration: 424.334
+	90th percentile grace-period duration: 482.637
+	99th percentile grace-period duration: 600.214
+	Maximum grace-period duration: 4126.94
+
+Boqun Feng (8):
+  Introduce simple hazard pointers
+  shazptr: Add refscale test
+  shazptr: Add refscale test for wildcard
+  shazptr: Avoid synchronize_shaptr() busy waiting
+  shazptr: Allow skip self scan in synchronize_shaptr()
+  rcuscale: Allow rcu_scale_ops::get_gp_seq to be NULL
+  rcuscale: Add tests for simple hazard pointers
+  locking/lockdep: Use shazptr to protect the key hashlist
+
+ include/linux/shazptr.h  |  73 +++++++++
+ kernel/locking/Makefile  |   2 +-
+ kernel/locking/lockdep.c |  11 +-
+ kernel/locking/shazptr.c | 318 +++++++++++++++++++++++++++++++++++++++
+ kernel/rcu/rcuscale.c    |  60 +++++++-
+ kernel/rcu/refscale.c    |  77 ++++++++++
+ 6 files changed, 534 insertions(+), 7 deletions(-)
+ create mode 100644 include/linux/shazptr.h
+ create mode 100644 kernel/locking/shazptr.c
+
+-- 
+2.39.5 (Apple Git-154)
+
