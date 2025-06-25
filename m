@@ -1,77 +1,71 @@
-Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A362D5C92
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:22:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DCE288510
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:22:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864958; cv=none; b=r8w6ATXdQO3o3PiFdG1uJGNJlQqblmuQpIzhMZgWw9u8d1fRu1ex4Q9aax7Zqb9xE0hwniI0laNw+AD0VX/dPi61xt+8nh0yUlnaUXTmtTwZCm4+80glaFSuaKcqIDxK5Rott+7QwasjGSYYmeovPfnVbzB2ymNkGmoDUIDxq6k=
+	t=1750864966; cv=none; b=DatSIc3oLCdC9kfwBQZoMmdcm24UDdsTgcxyN05gYJwmdgly1mIZVnYKoPAS/Wo4tlp2Tu9DtuMc3UVZtFosFjvUjlSOlOLGVFmuyaTlnt1pWizidMFF9VKIANL017cj8O5pe9G6crGvy2LsXG10e9K5p/IbkavRTWDYtTIqBps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864958; c=relaxed/simple;
-	bh=yCYdZbO+dpu/mVZGwv9i1PkdqA5piWFDPL5hOs2zx7Q=;
+	s=arc-20240116; t=1750864966; c=relaxed/simple;
+	bh=mQ25qvLYMDyvpv7j/NtUZhUMRsahcY03k4TaRiRkM20=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=hYbLR23nyIYffBRuUmrQ1nF42/CziCvEr+LoH88pwyesV8KRK1/kazqOMCBlO4cIX3hGhWrghhYqswpu8RmfzptNke2vu4S4OqVzpJfvhuRj8C7sAzxiPnPwj41RKl1kDTZ6eco9HBdcN/Nk2jN+nXMZrIxqzH4JUfqO3lRxmf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GmLd/q/a; arc=none smtp.client-ip=209.85.161.44
+	 Content-Disposition; b=bUr9ntG89wcWweLU07webdG2hcRWO+PnmgoghdNy80oLQZkdFZXGVBa5u+UWwJHNLbhCOZznDwHmWaZGk2/3QrDQdhf4S7UI8fT6KO0Vw4kFZUk+6Tz1RfGArMmA/Zr0XUfWXSqOjt9Y3hvliN2Th0Bk63yd+yTYJMyHRlsQvv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FVEeVp8D; arc=none smtp.client-ip=209.85.160.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GmLd/q/a"
-Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-60d6303a11eso7467eaf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:22:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FVEeVp8D"
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2ef891cd058so32758fac.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:22:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750864953; x=1751469753; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750864963; x=1751469763; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=nF0VBzbDTNCK1Xw9av27PYfa00tvOG6PAv4XXmzSQFU=;
-        b=GmLd/q/akNfHtLQW8btOv1hf8CsiKeAy+BoKZO0k9DGJ/Ez1SkYSsrx/drYZDwhLTu
-         9DCxPnJ5cwOoY8Km3KWnZ+/t039ctWPTZ9ARuDZhlzTTR44YEA6+fhQkanxt2k48Q+pS
-         6kQKx6wtOV26LWlARfPU8lHKhzrmZqdIrH5JxW5Sk/Hz/cXVZzkgeirBm1dcLGjpm8xy
-         bhrfPwWgt2f2VPPoWPWcQI4LcGlOswkRiF8QM0ikbX4YoVoYAfo08Aee8Fx5R0pDacRu
-         a3gGsk+GnckLpqJZ7BcL7KxGpiJgFjs9f55jhL3Zq9aMCAzz6VdBcXnU/mf+H2orTgVI
-         zQtw==
+        bh=gV6LKTyimmW9Sx8Hibhbqk80op5pM6YCyNN7CEAKCkM=;
+        b=FVEeVp8D7I3eWP/zEEURmhwpJmvCTTmC8Pj5y+FDFPIvzj8Rtl+Zz8DJxTW67fY3Pr
+         zPu0e7KC+B7RBgGwZ+pLVa7Ia3Qe/wvNoSP6KDiJICpazSCtJPIQpg9kvV5+X9xlsjAc
+         3Zk9nocvX12gjIUO3U3j+CF9s3b/rv+VrE6yVxqQt5jDw2Yca0lLVh512fHpUbr0em+n
+         /WnQEcteaEZnKtGLlHuYEvEMb+dRr9gJ3DsT+olDUORWCigLtNCoOISSrxP6dY5P8mLL
+         oDBI3iSdisUFIFSCHliuuj+o19uNIg7qQePHcsqcmoWTKqi3q9HYB9/oIz/iGj1HZIVm
+         XogA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750864953; x=1751469753;
+        d=1e100.net; s=20230601; t=1750864963; x=1751469763;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nF0VBzbDTNCK1Xw9av27PYfa00tvOG6PAv4XXmzSQFU=;
-        b=Q2+Q9oiKJyySrmRQF7W6SYNLLMXvPLUoPmil0Ca6Z8ePk7vD2baJOhyH96q1OvQBJb
-         6zh1rihRy0lWJqqGd3m0xbxLy7xaTc+36LBkaFBRgKoZpqBXatR7v86NCLuW5wbe56dp
-         BHzMP22M1mTlPKpPQLAHUSs+UM4Vn83f1tALrH9qOZaFvmWw1XWVhZfo7mfgdqxYb+KR
-         1As2EtT8BPh+m2tCjJNrlGQS1AlEE5vbnNT17dx6M2F/Vrc/XLt4U5Jw0gZiOw4Fhx7p
-         D/TYPZiUOuZp7tPKurzd0gCEBFzKXGYr1pxi8oSfqm0qhZwNDSPcWnq3FQgjbmeCNMqO
-         mjjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVHXdrIWlY+GMyq8ov6jaKKZEm50tqe6eh/zpu/D7M1TxEpnGzoWhjQWSZnCop/El//+kp2Tt9au/BKHt4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUWJiDrBWrFTE6ThmlhHci6ehWTu1w66lUzX5ZZiE7oCIQmbZF
-	FlkyFyvWVCqNM//BpFBK+g19ksNVmw7bGsc/mbhNAgsSqB1nl4oqRk2VHSQ2MaSUkog=
-X-Gm-Gg: ASbGncuEVKMApcGgDU+fhL1VqJeYFdAfWGzp/CL8qvRDrd9EnOj2NP0ABJu1kxRKr1+
-	gpVz7DjtmPAQYwOtB4tNk611R41RSI5nfqQY03zPaDSAEkpHCeilIW1ehzZYNVNlABH/qHmOHbk
-	JRqEIvom1TA4fH8fEXEJ7eJWFEsvdJftMq+5sYQdIrYEDW0NErKKofWIE2CQoPdKOVpO4KTNHby
-	vtcaibvadDV3IhpTtyTiqD9aACGiy8fUzAb7dRRBtS9v/PqLvgQdIIY3nIYb+aF9j5AkrdQusjX
-	pXW3WnGsigGY2z8HL5b6/qS/c56DisNocLsDqzVl22+N/Rec5D8H4BI9jKmvRYduuNJBtQ==
-X-Google-Smtp-Source: AGHT+IHuQoqa1u0DUHvl6z0O9mvk8424s2tdSOokLX0655c7GkLUoXhQQnFWEefCze0j3O7DZKz2Sg==
-X-Received: by 2002:a05:6820:99a:b0:611:6fc6:e6ee with SMTP id 006d021491bc7-611aa3f4864mr221261eaf.1.1750864953563;
-        Wed, 25 Jun 2025 08:22:33 -0700 (PDT)
+        bh=gV6LKTyimmW9Sx8Hibhbqk80op5pM6YCyNN7CEAKCkM=;
+        b=qzKKQrd++HOshCazhwtwNMT3zuvUYlyr0nGSznGoRXFr9VsTz2ADDjM3bMNmV7OYpB
+         yQ1iqrvAnYJc0C3IwDaOBwR8ZBSy+sGF07JZc0Cgh1ZS0zLNtF1JsSaWWxK9XmPI74yr
+         i8XLsnMD4XucEOkTyTIf3RATTApsDLrxNIzJ/PQIgErriJ4y9x6M1uy+mkaaKkfFqBXI
+         arWN1HJUV5LJ8LejD2uR7W+CCBcAKleBgrcCCiZBG1152CwZDbT12qxKOE81X3YjwO5E
+         p933C9QNuWLPEVaQlFk/ge0jQzQSZ9E3qUJiuZrZ4nR86S8aYcKEd10CIzoO+VFApe/b
+         oRBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUNg4kxWTy9vtMjZAh3KSZOubyzCT+03P7Bv496ty3raB5R1FfZnlGlBxSoJbptP2kcM5vaEHSAFb4LqCM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+l+GyCRHv+0Navtl8lUL6wsqYmT4oczNV3niEVSudUFvizvxC
+	fCBpqshP2UenZGAiskTwz65L04aCJXEmZ7hDzVLC1RAW4GuZh4hsnjugDC4EQ+KAXWw=
+X-Gm-Gg: ASbGnct3gPBiDa7v1s6AGk0TG0zs3NX7XnWzhUVADOMR64HWi/1T7Pp56EloWQVJfVn
+	rHxDij0EnEha77TmSKrq14ndMFxSiqRNQBCLzcuMKNcbZTqgKO17uTe9SKn2R3qGdRpoXUCKNx4
+	12YXG2J0HBBQcjwrt+974ksbkuaK7274JRi+wv09Xn2uuYj40iWc6CAVuGw9hrQ7fghXd2LxUc3
+	nD1/jZ0OOX24yUY8T0avdAZfhM+LWv3TEPlmPl0mWaxm9DQI6o42sJlEfqWWXvFE2YkLKCVdzRr
+	pQwCMCemtUYf24E3fV+PYxGBwYKOah5hTPVtqRMsVtaR+ulmBZShv03yF+Ulcuk7yXKFZjtgeUS
+	8w7xe
+X-Google-Smtp-Source: AGHT+IFd6lJtom/4lncQLlKjav5G6+Wsq1AopBqbxlhEagb6rUzpAIrbOCnTOFGol9ueG4rxfQAm6w==
+X-Received: by 2002:a05:6870:af88:b0:2c2:c92a:5789 with SMTP id 586e51a60fabf-2efb21346b8mr2671351fac.5.1750864963645;
+        Wed, 25 Jun 2025 08:22:43 -0700 (PDT)
 Received: from localhost ([2603:8080:b800:f700:1fca:a60b:12ab:43a3])
-        by smtp.gmail.com with UTF8SMTPSA id 006d021491bc7-6115b7f813dsm1629279eaf.40.2025.06.25.08.22.32
+        by smtp.gmail.com with UTF8SMTPSA id 586e51a60fabf-2ee664ba910sm2562945fac.8.2025.06.25.08.22.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:22:33 -0700 (PDT)
-Date: Wed, 25 Jun 2025 10:22:32 -0500
+        Wed, 25 Jun 2025 08:22:43 -0700 (PDT)
+Date: Wed, 25 Jun 2025 10:22:41 -0500
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Frank Li <Frank.Li@nxp.com>, Rui Miguel Silva <rmfrfs@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Martin Kepplinger <martink@posteo.de>,
-	Purism Kernel Team <kernel@puri.sm>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] media: imx8mq-mipi-csi2: Fix error code in
- imx8mq_mipi_csi_parse_dt()
-Message-ID: <9b6c7925-c9c4-44bd-acd5-1ef0e698eb87@sabinyo.mountain>
+To: Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] soc: qcom: mdt_loader: Fix error return values in
+ mdt_header_valid()
+Message-ID: <db57c01c-bdcc-4a0f-95db-b0f2784ea91f@sabinyo.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,27 +76,37 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Mailer: git-send-email haha only kidding
 
-This was returning IS_ERR() where PTR_ERR() was intended.
+This function is supposed to return true for valid headers and false for
+invalid.  In a couple places it returns -EINVAL instead which means the
+invalid headers are counted as true.  Change it to return false.
 
-Fixes: 642b70d526ab ("media: imx8mq-mipi-csi2: Add support for i.MX8QXP")
+Fixes: 9f9967fed9d0 ("soc: qcom: mdt_loader: Ensure we don't read past the ELF header")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/media/platform/nxp/imx8mq-mipi-csi2.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/soc/qcom/mdt_loader.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/nxp/imx8mq-mipi-csi2.c b/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
-index 6501843ae72d..3a4645f59a44 100644
---- a/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
-+++ b/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
-@@ -966,7 +966,7 @@ static int imx8mq_mipi_csi_parse_dt(struct csi_state *state)
+diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
+index 1b4ebae458f3..0ca268bdf1f8 100644
+--- a/drivers/soc/qcom/mdt_loader.c
++++ b/drivers/soc/qcom/mdt_loader.c
+@@ -33,14 +33,14 @@ static bool mdt_header_valid(const struct firmware *fw)
+ 		return false;
  
- 		base = devm_platform_ioremap_resource(to_platform_device(dev), 1);
- 		if (IS_ERR(base))
--			return dev_err_probe(dev, IS_ERR(base), "Missing CSR register\n");
-+			return dev_err_probe(dev, PTR_ERR(base), "Missing CSR register\n");
+ 	if (ehdr->e_phentsize != sizeof(struct elf32_phdr))
+-		return -EINVAL;
++		return false;
  
- 		state->phy_gpr = devm_regmap_init_mmio(dev, base, &regmap_config);
- 		if (IS_ERR(state->phy_gpr))
+ 	phend = size_add(size_mul(sizeof(struct elf32_phdr), ehdr->e_phnum), ehdr->e_phoff);
+ 	if (phend > fw->size)
+ 		return false;
+ 
+ 	if (ehdr->e_shentsize != sizeof(struct elf32_shdr))
+-		return -EINVAL;
++		return false;
+ 
+ 	shend = size_add(size_mul(sizeof(struct elf32_shdr), ehdr->e_shnum), ehdr->e_shoff);
+ 	if (shend > fw->size)
 -- 
 2.47.2
 
