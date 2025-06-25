@@ -1,40 +1,56 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A84A15278E;
-	Wed, 25 Jun 2025 02:04:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6355A3074BD;
+	Wed, 25 Jun 2025 02:05:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750817095; cv=none; b=fUQY+c7SmjWLwz4NySetcFXR66+0jyxoDB25HwoYobhpoLbWKpLT5MwV6NLQbbB6rANaHauTzeo+kT/abqww+0XqvUdzQqtS+jUPOtXkpcnQj226U9E6zAbc3XOWFVba889KKgfvqp+GHhQRfD84vo7rA9Lt85mpemNBcpJs1i8=
+	t=1750817127; cv=none; b=KdOBG9W/SgSyVZLr2gTshHiFiJaGDxYF4vIIVruCOoz4SeDKvfIexrna5SSZ+p6bTBjWI8u3Lxp0bpWGhVE0lXiPGaTvvD13GsYDfUbpro/k+ClbfnpOHTkQBhqbsIeLdbd9iCC/AyQyoprEbSeJQ3EfyRZ1fs+JGLh85pV7438=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750817095; c=relaxed/simple;
-	bh=culdkqbFYK9shNmCfgB7f/uFr+cX5HWHD5oZkjIM+iM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ui3RPh7tpbd0HextaZucbKOIKrsZfSnPwuFG7cGNZ1hz/6MzOZIqVnNoU8knHYCfpxq7Eeccz/mKaplDf59OoSecv6C76OuiuzI8CPwajjPTzGidMkrkNJ7f9+oiG7N93Y4jhiq0XZA1EhPZuIZ2DiA4/OjWjKbN0A4ZV77ziV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4bRlSj5cBBz1d1lV;
-	Wed, 25 Jun 2025 10:02:29 +0800 (CST)
-Received: from kwepemk100010.china.huawei.com (unknown [7.202.194.58])
-	by mail.maildlp.com (Postfix) with ESMTPS id D33C51402EB;
-	Wed, 25 Jun 2025 10:04:49 +0800 (CST)
-Received: from workspace-z00536909-5022804397323726849.huawei.com
- (7.151.123.135) by kwepemk100010.china.huawei.com (7.202.194.58) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 25 Jun
- 2025 10:04:48 +0800
-From: zhangjianrong <zhangjianrong5@huawei.com>
-To: <michael.jamet@intel.com>, <mika.westerberg@linux.intel.com>,
-	<YehezkelShB@gmail.com>, <andrew+netdev@lunn.ch>, <davem@davemloft.net>,
-	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <guhengsheng@hisilicon.com>, <caiyadong@huawei.com>,
-	<xuetao09@huawei.com>, <lixinghang1@huawei.com>
-Subject: [PATCH] [net] net: thunderbolt: Fix the parameter passing of tb_xdomain_enable_paths()/tb_xdomain_disable_paths()
-Date: Wed, 25 Jun 2025 10:04:48 +0800
-Message-ID: <20250625020448.1407142-1-zhangjianrong5@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1750817127; c=relaxed/simple;
+	bh=uz398/O8MFlL6ZTxSmiwjTRrpH00nvePOXE1T6Ls/Ak=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IgKyXfHXo56C48FGq1qUaax3nhLVra/NdP/k6kKY8OSNa+0CNHNOY1JA0f3eADltAco47m3BMO5T/nevfHABZ5tKAlp+pv4iowTYZaRqwz+NMoiYU/CAwGevWCEFSo9qztqZQVQrsPHhXgUv/qvDhH4+Eb+YyK6S0BixSJITEcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mWnTgW57; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mWnTgW57"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750817126; x=1782353126;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=uz398/O8MFlL6ZTxSmiwjTRrpH00nvePOXE1T6Ls/Ak=;
+  b=mWnTgW57krk5MCirLeCl6NNr2raOdsMpUQGj4ZPBCKUBUZiJau8MHIej
+   JaRLRqQ2f3QQOuBFXxsGLm5+8xEYcADQ3IvDxNwTeW6LStvz3/QheDUei
+   4FHoejIKgX6RWLI59X//9Cq+63FwEqG8PErJSTzATMikTI72yrR522h6f
+   Jg4bUUg7ocAOYT3VvQI9zfJ7nTI9bFUw6o7Z9HkNvcVkYwqpYj0Sok0ML
+   e035YSlGp5Rcg5KrLXbPkcXWYim+IzcL71e1kAD4hCticiq1CT0kPomow
+   1QQS2QRlP5968HfKUK8hXwKc1hzZ022SbfxJWo3WtOJhmIFmghs9xYrns
+   Q==;
+X-CSE-ConnectionGUID: HbvNarfYQkm8J68rwQhW3A==
+X-CSE-MsgGUID: 5i39euBCTuW2guHjZcNY6w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64131434"
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="64131434"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 19:05:25 -0700
+X-CSE-ConnectionGUID: I8hji7zwSi2KHa3Szx8wQQ==
+X-CSE-MsgGUID: zJVSt3y8TiGCbWUq8t5SVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="151587281"
+Received: from rzhang1-mobl7.sh.intel.com ([10.238.6.124])
+  by orviesa006.jf.intel.com with ESMTP; 24 Jun 2025 19:05:24 -0700
+From: Zhang Rui <rui.zhang@intel.com>
+To: rafael.j.wysocki@intel.com
+Cc: linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org,
+	srinivas.pandruvada@linux.intel.com
+Subject: [PATCH] powercap: intel_rapl_msr: Add PL4 support for PantherLake
+Date: Wed, 25 Jun 2025 10:05:22 +0800
+Message-ID: <20250625020522.253548-1-rui.zhang@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,47 +58,30 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems500001.china.huawei.com (7.221.188.70) To
- kwepemk100010.china.huawei.com (7.202.194.58)
 
-According to the description of tb_xdomain_enable_paths(), the third
-parameter represents the transmit ring and the fifth parameter represents
-the receive ring. tb_xdomain_disable_paths() is the same case.
+Add PantherLake to the list of processors where PL4 is supported.
 
-Signed-off-by: zhangjianrong <zhangjianrong5@huawei.com>
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
 ---
- drivers/net/thunderbolt/main.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+The PL4 support for Arrowlake-S and Lunarlake are also missing for now.
+We will add them later when there is a real need. I'm also checking
+internally to see if it is required or not.
+---
+ drivers/powercap/intel_rapl_msr.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/thunderbolt/main.c b/drivers/net/thunderbolt/main.c
-index 0a53ec293d04..f4c782759566 100644
---- a/drivers/net/thunderbolt/main.c
-+++ b/drivers/net/thunderbolt/main.c
-@@ -396,9 +396,9 @@ static void tbnet_tear_down(struct tbnet *net, bool send_logout)
+diff --git a/drivers/powercap/intel_rapl_msr.c b/drivers/powercap/intel_rapl_msr.c
+index 8ad2115d65f6..4ed06c71a3ac 100644
+--- a/drivers/powercap/intel_rapl_msr.c
++++ b/drivers/powercap/intel_rapl_msr.c
+@@ -150,6 +150,7 @@ static const struct x86_cpu_id pl4_support_ids[] = {
+ 	X86_MATCH_VFM(INTEL_METEORLAKE_L, NULL),
+ 	X86_MATCH_VFM(INTEL_ARROWLAKE_U, NULL),
+ 	X86_MATCH_VFM(INTEL_ARROWLAKE_H, NULL),
++	X86_MATCH_VFM(INTEL_PANTHERLAKE_L, NULL),
+ 	{}
+ };
  
- 		ret = tb_xdomain_disable_paths(net->xd,
- 					       net->local_transmit_path,
--					       net->rx_ring.ring->hop,
-+					       net->tx_ring.ring->hop,
- 					       net->remote_transmit_path,
--					       net->tx_ring.ring->hop);
-+					       net->rx_ring.ring->hop);
- 		if (ret)
- 			netdev_warn(net->dev, "failed to disable DMA paths\n");
- 
-@@ -662,9 +662,9 @@ static void tbnet_connected_work(struct work_struct *work)
- 		goto err_free_rx_buffers;
- 
- 	ret = tb_xdomain_enable_paths(net->xd, net->local_transmit_path,
--				      net->rx_ring.ring->hop,
-+				      net->tx_ring.ring->hop,
- 				      net->remote_transmit_path,
--				      net->tx_ring.ring->hop);
-+				      net->rx_ring.ring->hop);
- 	if (ret) {
- 		netdev_err(net->dev, "failed to enable DMA paths\n");
- 		goto err_free_tx_buffers;
 -- 
-2.34.1
+2.43.0
 
