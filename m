@@ -1,77 +1,63 @@
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129E120C46D
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 21:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67E6C20E718;
+	Wed, 25 Jun 2025 21:10:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750885804; cv=none; b=qydMS0W8d5JeeHuROP/LMBYYoRK1gVXfD5Z5aijs3W/m72ZOWmuQGAbiI7xK6/9opWvShmkdbY4ZHaZwU16n4W2KeSHAZAnuuVjzGgd0rI9HROn3bZM983s0w4XFUmw9qowz5S/Xji1Nl0uWhjqsZeP4OZQx+3ZJebfsYm/snHI=
+	t=1750885823; cv=none; b=lbyFcN9zTwtB0a+22cRrib2HoWb0BEy3l+VaSDy5CdUBPNaTn/rhzWOvu0eOvTsJv312elatAimOlXn0fg8mEhiGHMrT9nfXap8QUH7Z0RKcY+31PpU9JCXZgMKaw1juH9h+a52whE5d/DcHDOGodkrq97UQWoL0dIJ2yhgpZLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750885804; c=relaxed/simple;
-	bh=CNKw6tzEja4Qt6Nh8nMdXFeEWbdQjDHV1oVsSa0p4eQ=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=GUUNQTWqr1THPGHWuHxp3+4s0qQCKra9CuuWfp5GTN2+aCZ0jwPACwoG6kyNc3/gEIScu/zl+vcUJP6t5rNzRZVj5TLnq4HU+/LH+nd6zRlLaORagPlE884g/ePyzD72uUUX4GAWahBODpNiFZxzirYVZuGbiz2QJ+aKiz+v7bI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-86f4e2434b6so37343139f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:10:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750885802; x=1751490602;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kc426aQB/Ls8eZ2ZTizs/1SQKrFEHeSjd9qsxqSJwL4=;
-        b=cixdyzG20K9e7KaJvSOBIS8GPjpnhd5m7w4v/P050CpD5QoELGAK2Vt31V0Uaxvydf
-         deo7dhSJ0PrOyVNXYQm9Ve/Y2lV4j4cVagTt9s6+u8uPjzlaOnClzC3bCElUYPy2a5GR
-         YubTo74Pw6qEuWPK4XS8Hq+YS47mZN4ZiDR/1/KbcnuwaazKhVLgJfT2RPeuyLf79dcr
-         SIZ0mMZB6PWAkqmLqdNIcYuJA43oJ3MmfvyUndwkCBZbWatAqxb3GrKDWg7kfaEZxGYD
-         9pwEtUn80afpHGXQl+bUyVxmu36HWXWSaODJFpCSCNsr7A61C8RIKhE8NrYYaRgk4Xx8
-         kVkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVSFaV8Cp/eyhh+gW1013kG4caMFq/hXJSBkvQDnjuGFrsAa59VZwcsugmiKu+JOQ7iQ4ShTXVLSfWDxaU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyVbvzYwwICcNFQgI0/Uv6dMsVtPw644Q5RJV5zYDzpBk02C2wo
-	Y1HW9PSf3O/4XGxEsci+3rO0c1F4jMZ9vNwX3xXmo/dTfBE9HvqZPx9iGTEtMWsw+K4pasu8tcE
-	XQ+n5qt2a3DZxYxjW9hx0WA9VsHPz9EEY9GZQQXZKLnER6TGmUvyOs7Oe+jg=
-X-Google-Smtp-Source: AGHT+IFsLSGcBbmWtt1GPA7otyFNGoqQ39LiKIQmsCWWO9urExGRsP2gl2q2dUeo/rc0DVTmtRh5fh/sIrBSXo3bSUXE3QaQI689
+	s=arc-20240116; t=1750885823; c=relaxed/simple;
+	bh=3FY5VhHPBZMZpbIPePeTd9+JfFK5KBxlcvCVBGzgSNo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=p7TQKiutOfOSu2qqWuCl0jju/noKmZ/UJG2UTA5XlNHnUm50qkKPRNbEb54zjkwEoxl6NHXvmrS8w3GJv6jyPXtj0RBG4gICvD3vkUfNGuhRN/4oxeGEQN+kxCfgX5MOaj2YAzYLIVjPUJn51MMOUsvmtd3ZKU8tmDZzVApFgAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=pcFFMpAb; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="pcFFMpAb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCA41C4CEEA;
+	Wed, 25 Jun 2025 21:10:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1750885823;
+	bh=3FY5VhHPBZMZpbIPePeTd9+JfFK5KBxlcvCVBGzgSNo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pcFFMpAbu8cX03ubR9iuhPVjg27xEvWqhCXWCurpilKoL1TJfhdeGgfetui7Fc2Ch
+	 pW6H4Spfd60aHvdxnKcjcKSQqR6L2/nDzb1M3PX1UCVOLw4KolhP2GvpVs+UKq9u1i
+	 aEtHd1Z5A0GCCYjtQRqqjDtZT3c/QRJ6z1wsscrM=
+Date: Wed, 25 Jun 2025 14:10:22 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, Uladzislau Rezki
+ <urezki@gmail.com>, Danilo Krummrich <dakr@kernel.org>, Alice Ryhl
+ <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 0/2] support large align and nid in Rust allocators
+Message-Id: <20250625141022.e65e4a9b8377d4879ad7065e@linux-foundation.org>
+In-Reply-To: <20250625062917.3379804-1-vitaly.wool@konsulko.se>
+References: <20250625062917.3379804-1-vitaly.wool@konsulko.se>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-Received: by 2002:a05:6602:a005:b0:86d:5b3:3b88 with SMTP id
- ca18e2360f4ac-8766b73e5f1mr592236639f.1.1750885802133; Wed, 25 Jun 2025
- 14:10:02 -0700 (PDT)
-Date: Wed, 25 Jun 2025 14:10:02 -0700
-In-Reply-To: <0000000000008905bf061fc61371@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685c65aa.050a0220.2303ee.0098.GAE@google.com>
-Subject: Re: [syzbot] [xfs?] INFO: task hung in xfs_buf_item_unpin (2)
-From: syzbot <syzbot+837bcd54843dd6262f2f@syzkaller.appspotmail.com>
-To: axboe@kernel.dk, cem@kernel.org, chandan.babu@oracle.com, 
-	david@fromorbit.com, djwong@kernel.org, hch@lst.de, john.g.garry@oracle.com, 
-	linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-syzbot suspects this issue was fixed by commit:
+On Wed, 25 Jun 2025 08:29:17 +0200 Vitaly Wool <vitaly.wool@konsulko.se> wrote:
 
-commit b1e09178b73adf10dc87fba9aee7787a7ad26874
-Author: John Garry <john.g.garry@oracle.com>
-Date:   Wed May 7 21:18:31 2025 +0000
+> The coming patches provide the ability for Rust allocators to set
+> NUMA node and large alignment.
 
-    xfs: commit CoW-based atomic writes atomically
+Including a diffstat would be nice.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1078f70c580000
-start commit:   85652baa895b Merge tag 'block-6.11-20240824' of git://git...
-git tree:       upstream
-kernel config:  https://syzkaller.appspot.com/x/.config?x=92c0312151c4e32e
-dashboard link: https://syzkaller.appspot.com/bug?extid=837bcd54843dd6262f2f
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12350ad5980000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=147927c5980000
+ include/linux/vmalloc.h        |    8 +++---
+ mm/nommu.c                     |    3 +-
+ mm/vmalloc.c                   |   16 ++++++++++--
+ rust/helpers/slab.c            |    8 ++++--
+ rust/helpers/vmalloc.c         |    4 +--
+ rust/kernel/alloc.rs           |   28 ++++++++++++++++++++-
+ rust/kernel/alloc/allocator.rs |   40 +++++++++++++++++--------------
+ rust/kernel/alloc/kvec.rs      |    3 +-
+ 8 files changed, 79 insertions(+), 31 deletions(-)
 
-If the result looks correct, please mark the issue as fixed by replying with:
-
-#syz fix: xfs: commit CoW-based atomic writes atomically
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+What is the preferred merge path for this series?
