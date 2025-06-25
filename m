@@ -1,197 +1,158 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323881F4703;
-	Wed, 25 Jun 2025 06:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA56637160;
+	Wed, 25 Jun 2025 06:35:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750833258; cv=none; b=CON4fVfha7OWgq1ZrhSSkb+p4Sedi0Lu3J+T3/1sRxK0CpcNv2lWQPVTATHgBOMQIqi+9/uHGWqPTRxJ7jOip7FEKQ4sVelb++bII9hr02Ivz9TAoNW6bT+CN14QTzY9tJF0KDG+nPt/xCVMw28YZysOR/eHJEeVyrc790/o224=
+	t=1750833313; cv=none; b=hsS6vLpOilXlQUu5muH0bWL6EAb+JlGtIvzX3YF8GKL8rPhZQTXArpYusB7D86IshPaObPqmgmDOX8lL5nugUBIYY3/2C6NwQOEhONwxPkCL2WEmHkcAvDicmBhEln+zR5vBzdiIy9/HIDGJskWkPEG2Y1+hGP82aI36VbcvkiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750833258; c=relaxed/simple;
-	bh=3WhKG1NXdKzzwq28Ut/IGW1/t/WSec7i2UkUGPPqsWM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cLg7hKkhgORpoeLZmii5AAdvxsjzPvzG9tsVt4y11knIxtLKSp5ZX0cOuZArKQCR+UA++lMgAR4UobJHvgZrZITVuZTTdPQoXuWYbc3tspzTxqO5mW3KZPQJEPrd9GZWa5EqfHDJnRKK9kkr21a2w4hGPukDfMi3x7amCOo8zro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q58/IymQ; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750833313; c=relaxed/simple;
+	bh=vwTWK+tYNZHhkq/xqWMABVn6M86lPQdnixn3JPY3DUU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bDjChaMoA6cHB6x2G9qIoTjdCvhNLYWR9O+myDPkdj6WrkqXPUjJR0zKdTGLnNsacL+oUURRquRJsqHhdg81WzlDoLZ8+elLKlP/y7etaO6GvZwLnP+XqmkZkE+g2kiMYgnylOoKdw73f958z393hhQTc66TC4HKqjsKMmIwJ5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z7iEtdGk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q58/IymQ"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-306b6ae4fb2so5018446a91.3;
-        Tue, 24 Jun 2025 23:34:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750833256; x=1751438056; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HYoTCikiF3mOWbHSKg9CxNJmBT0oqbo7zNZegpHWbfA=;
-        b=Q58/IymQGlPXLOBg93W/evqirRFHlTwDq/MN9MjIiVSPV+Qch3wZ7csMHjS6+2l5Gr
-         cZJv5KT+NR982VK20o2IQJGEOOWZBnv03y5DpxL+aVNZUQlHSr7XYjSFI/VKLCT/zFfU
-         FrAmS1GaeL2xPKZe6HXsfAjJgoyrhaxcXOVIlQTA7mMsr/1+7qHON6vh+PZltsHU0uNN
-         pyBovtAl63h0LJcelUBn+KEk32MmtkNennsyZvoh5HFBYhVPfr35Wf8VzddcqMO9oIT9
-         zZzd8m0GQKMmTbawjf3hDodseg+e9+KvpNS0zfdEkP0hiUAV69KzS+ZpRcw6YMFv/P9+
-         BK6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750833256; x=1751438056;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HYoTCikiF3mOWbHSKg9CxNJmBT0oqbo7zNZegpHWbfA=;
-        b=ai1RIOGh67Tl4NwqrVg3B9MSgFRf+M6UZltcrfbBoixXgzMa+XKoIq0ULUbNzZ/fPW
-         qZczGlZZF897qcTX2S0rpiQWpF7hVL5g3a2eGY5V7FBXhjSR21Oe3SQMPoS8OisXMpAM
-         Ki13vd8TTceFB1Cye8IoRuYgGurDaaTIq7qc0iLPYD9SAXwZuuuq6sclZ0IUvjXbirXx
-         LmL085X2ghaqYMU6OaI3H+MRXwYepqvSVdm5ctN0hbHoCXYNZFYd+rsbCFqYbfJ5NDUY
-         /W9CYTwAJgsajWjSRUj+TArWowp3nMOFwymmY3JQvGMQhWxJwrTKT2Drrc7by0izb2HT
-         HmIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXl/BG2YdNIGo0ZjPlKxKrEwQcQHBLVIjbsy+CAZbrepQ17O3dBVAFXyaMyiOB2m6cdcXkt0h/YaoSJBS0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLf7LlZjDBBqQDIWSuc4fYx/KG82/lD2krZK3DqFIJpyjqEleS
-	lWIa+QTWx13r/g22aNaVt5bKrvPEzxwFTK0QQGqks+vlCX9jRmN0BxaE
-X-Gm-Gg: ASbGncsa/ielxW+hoOiQhMBknkKC9iYUBnRcmVQZjmfB+i5WDNFX/IK81N4xEAGWR0x
-	vWkoT+Wpm6QivjJA8RgxvoUbDgveZ3l1xQXw92svWDhsl70zzlEI5DXs/D9b11SH8yPcbA1f61E
-	DNiVCDhWJeNk9fUObMGmVFjyGcFhF15tiKLmapH56GTdQEU1foE0xw+Z3eH8sbgvTxqbWuBSWD2
-	9esmWV6a09gHo9iWNnvUTBMS3lWJENoO30Tr6/9AAdhJ2OV37a6SMqgCdos1TA/PW6WNRK4iBLl
-	meoj3BvIpBQFexfc5ehDO3n9hyd+A0JD0ItCsLiLxiP1mkjOOxLwbxXOAOhhUQ==
-X-Google-Smtp-Source: AGHT+IFZKk8R5zsCq3X62KXZ4uowJyvTYfVGUn7HH/IVWXAWOCIlMIUoGwCzkX3BD8hp2z8zFAXlRA==
-X-Received: by 2002:a17:90b:2ed0:b0:312:def0:e2dc with SMTP id 98e67ed59e1d1-315f25c9b3fmr2804456a91.7.1750833256160;
-        Tue, 24 Jun 2025 23:34:16 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f53bdbf4sm967119a91.22.2025.06.24.23.34.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 23:34:15 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id E4D274207D12; Wed, 25 Jun 2025 13:34:11 +0700 (WIB)
-Date: Wed, 25 Jun 2025 13:34:11 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Alok Tiwari <alok.a.tiwari@oracle.com>, linux-nvme@lists.infradead.org,
-	rdunlap@infradead.org, kbusch@kernel.org, axboe@kernel.dk,
-	hch@lst.de, sagi@grimberg.me, kch@nvidia.com, nilay@linux.ibm.com,
-	corbet@lwn.net
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] docs: nvme: fix grammar in
- nvme-pci-endpoint-target.rst
-Message-ID: <aFuYYwceVvdc896_@archie.me>
-References: <20250625041643.174110-1-alok.a.tiwari@oracle.com>
- <20250625041643.174110-6-alok.a.tiwari@oracle.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z7iEtdGk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 995E0C4CEEA;
+	Wed, 25 Jun 2025 06:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750833313;
+	bh=vwTWK+tYNZHhkq/xqWMABVn6M86lPQdnixn3JPY3DUU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Z7iEtdGkFUpmfIgo90PZe5ORPYF+PkxouXBYkAbbKpm+ZQWRXxtG80XjdafjOE5mE
+	 T/zr6BG6oFquAkxgjG/g82i9KZmat5lBibXx2XExAahgl55aKYsaA7FTmgsozS/i3Q
+	 TJjYP4QctNSMyJeqikUXcrt6o/aJsspw1QVmqLbnK3lORVujH37OTxsC1w8NW1QSfd
+	 54O5eEqv6A9rGD4fNjqHr+l0EFR8hDGa6rTcdS7bgZMhggQ3FffGu2Lg2lHU4IB7Th
+	 DSDSrceO9+KQN5L4ekA6/hGyFaTrpcTIM86oG6JS+VUxqXK+Zh+iHG8f8nDuUgLGAT
+	 xL+QTeq7yM7cg==
+Message-ID: <49483568-b287-45ca-a66c-1e0ad0490225@kernel.org>
+Date: Wed, 25 Jun 2025 08:35:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="K9CDCDqAKhwmhjDL"
-Content-Disposition: inline
-In-Reply-To: <20250625041643.174110-6-alok.a.tiwari@oracle.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
+To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>,
+ Gatien Chevallier <gatien.chevallier@foss.st.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Gabriel Fernandez <gabriel.fernandez@foss.st.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-clk@vger.kernel.org
+References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
+ <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
+ <9cb1575e-ae27-4a78-adb7-8a9e7072375e@kernel.org>
+ <5044c733-8836-43bd-85d7-0f552b000fb1@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <5044c733-8836-43bd-85d7-0f552b000fb1@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 24/06/2025 12:43, Clement LE GOFFIC wrote:
+> On 6/23/25 11:45, Krzysztof Kozlowski wrote:
+> [...]
+> 
+> Hi Krzysztof,
+> 
+> Sorry I forgot to address comments below.
+> 
+>>> +
+>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp1 = {
+>>> +	.regs = &stm32_ddr_pmu_regspec_mp1,
+>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp1,
+>>> +	.counters_nb = MP1_CNT_NB,
+>>> +	.evt_counters_nb = MP1_CNT_NB - 1, /* Time counter is not an event counter */
+>>> +	.time_cnt_idx = MP1_TIME_CNT_IDX,
+>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp1,
+>>> +};
+>>> +
+>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp2 = {
+>>> +	.regs = &stm32_ddr_pmu_regspec_mp2,
+>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp2,
+>>> +	.counters_nb = MP2_CNT_NB,
+>>> +	.evt_counters_nb = MP2_CNT_NB - 1, /* Time counter is an event counter */
+>>> +	.time_cnt_idx = MP2_TIME_CNT_IDX,
+>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp2,
+>>> +};
+>>> +
+>>> +static const struct dev_pm_ops stm32_ddr_pmu_pm_ops = {
+>>> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, stm32_ddr_pmu_device_resume)
+>>> +};
+>>> +
+>>> +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
+>>> +	{
+>>> +		.compatible = "st,stm32mp131-ddr-pmu",
+>>> +		.data = &stm32_ddr_pmu_cfg_mp1
+>>> +	},
+>>> +	{
+>>> +		.compatible = "st,stm32mp151-ddr-pmu",
+>>> +		.data = &stm32_ddr_pmu_cfg_mp1
+>>
+>> So devices are compatible, thus express it correctly and drop this.
+> 
+> Ok so I assume this comes with your comment in the bindings and 
+> basically don't get you point here.
+> Can you please be more precise ?
 
---K9CDCDqAKhwmhjDL
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Express compatibility in the bindings, like 90% of SoCs are doing, so
+with proper fallback and drop this entry in the table. My comment was
+pretty precise, because this is completely standard pattern, also used
+already in stm32.
 
-On Tue, Jun 24, 2025 at 09:16:34PM -0700, Alok Tiwari wrote:
-> diff --git a/Documentation/nvme/nvme-pci-endpoint-target.rst b/Documentat=
-ion/nvme/nvme-pci-endpoint-target.rst
-> index b699595d1762b..2f75c8a267de5 100644
-> --- a/Documentation/nvme/nvme-pci-endpoint-target.rst
-> +++ b/Documentation/nvme/nvme-pci-endpoint-target.rst
-> @@ -6,20 +6,20 @@ NVMe PCI Endpoint Function Target
-> =20
->  :Author: Damien Le Moal <dlemoal@kernel.org>
-> =20
-> -The NVMe PCI endpoint function target driver implements a NVMe PCIe cont=
-roller
-> -using a NVMe fabrics target controller configured with the PCI transport=
- type.
-> +The NVMe PCI endpoint function target driver implements an NVMe PCIe con=
-troller
-> +using an NVMe fabrics target controller configured with the PCI transpor=
-t type.
-> =20
->  Overview
->  =3D=3D=3D=3D=3D=3D=3D=3D
-> =20
-> -The NVMe PCI endpoint function target driver allows exposing a NVMe targ=
-et
-> +The NVMe PCI endpoint function target driver allows exposing an NVMe tar=
-get
->  controller over a PCIe link, thus implementing an NVMe PCIe device simil=
-ar to a
->  regular M.2 SSD. The target controller is created in the same manner as =
-when
->  using NVMe over fabrics: the controller represents the interface to an N=
-VMe
->  subsystem using a port. The port transfer type must be configured to be
->  "pci". The subsystem can be configured to have namespaces backed by regu=
-lar
->  files or block devices, or can use NVMe passthrough to expose to the PCI=
- host an
-> -existing physical NVMe device or a NVMe fabrics host controller (e.g. a =
-NVMe TCP
-> +existing physical NVMe device or an NVMe fabrics host controller (e.g. a=
- NVMe TCP
->  host controller).
-> =20
->  The NVMe PCI endpoint function target driver relies as much as possible =
-on the
-> @@ -181,10 +181,10 @@ Creating an NVMe endpoint device is a two step proc=
-ess. First, an NVMe target
->  subsystem and port must be defined. Second, the NVMe PCI endpoint device=
- must
->  be setup and bound to the subsystem and port created.
-> =20
-> -Creating a NVMe Subsystem and Port
-> -----------------------------------
-> +Creating an NVMe Subsystem and Port
-> +-----------------------------------
-> =20
-> -Details about how to configure a NVMe target subsystem and port are outs=
-ide the
-> +Details about how to configure an NVMe target subsystem and port are out=
-side the
->  scope of this document. The following only provides a simple example of =
-a port
->  and subsystem with a single namespace backed by a null_blk device.
-> =20
-> @@ -234,8 +234,8 @@ Finally, create the target port and link it to the su=
-bsystem::
->          # ln -s /sys/kernel/config/nvmet/subsystems/nvmepf.0.nqn \
->                  /sys/kernel/config/nvmet/ports/1/subsystems/nvmepf.0.nqn
-> =20
-> -Creating a NVMe PCI Endpoint Device
-> ------------------------------------
-> +Creating an NVMe PCI Endpoint Device
-> +------------------------------------
-> =20
->  With the NVMe target subsystem and port ready for use, the NVMe PCI endp=
-oint
->  device can now be created and enabled. The NVMe PCI endpoint target driv=
-er
-> @@ -303,7 +303,7 @@ device controller::
-> =20
->          nvmet_pci_epf nvmet_pci_epf.0: Enabling controller
-> =20
-> -On the host side, the NVMe PCI endpoint function target device will is
-> +On the host side, the NVMe PCI endpoint function target device is
->  discoverable as a PCI device, with the vendor ID and device ID as config=
-ured::
-> =20
->          # lspci -n
-
-LGTM, thanks!
-
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---K9CDCDqAKhwmhjDL
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaFuYYwAKCRD2uYlJVVFO
-o+PHAQCE+vUOXn1bwzmLgPVFqN1ctK+E0hBGYsbXnSjp1YwkaQD/VheYmW0A5xSG
-N42MKwkgxkBAeH0q5RtTr7GF1IFBgw4=
-=vspR
------END PGP SIGNATURE-----
-
---K9CDCDqAKhwmhjDL--
+Best regards,
+Krzysztof
