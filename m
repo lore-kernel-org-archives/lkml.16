@@ -1,118 +1,149 @@
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from sg-3-11.ptr.tlmpb.com (sg-3-11.ptr.tlmpb.com [101.45.255.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F212721D3F5
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13B5A225419
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.45.255.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750836921; cv=none; b=O5R96XGTKqZn0TEWyGKn6m8L45rjlOEQ/dXlr/59+KxiL84ohQD4/swq097Gm6Jq9NrF1DiIVT7AEeGXwKnzRqA1ieFlLyTyJOHDkCYlABTvbzeFudWPkH3Wkjh3id+qUYD1QJ/PJX+Zl6Gcenn9TF3DBjHyDQeCieFYcTtI0oI=
+	t=1750836944; cv=none; b=SDUSxU+6ciBn7o2pRMRRWoqto/ahnScTFnNA09hdUc62VBEE9eqxfq8DLkd9n6y7eDdG5MlcWsutS8Sbxw9q8TrgF11qhYTcBQ7KM5QZmQo8RunA29N2FEvxNYToJV53EChGiPEc1yO3UyzikQNXa0Ah/40rKazKtUnwRxMBvdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750836921; c=relaxed/simple;
-	bh=2DymnnvE184jkZ20uTvSiiI7+Y+QW2i9b6WEZQ2DOJs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uTi7TxwJtrtExwGFzPVY5Uq/Y5cPlUSX+BBeCnIv8Doa2XcFDZlVsOMlhyrrRDKpG7+UfxXDAsz0TeN7VOfi1XeaFJndzajIf5PQ/4syvZRQv1PNeH/POHHZZ0cAX4p/GuzYevVmNMWXH1LouzJAW7w5++8kUdMWxD7GEBK0M9o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=srAV+ug0; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750836944; c=relaxed/simple;
+	bh=a3DMDdHA6v6pJEswAP0XuoxOFgG+epMDo8MP/gCuqCc=;
+	h=From:To:Cc:Mime-Version:Content-Type:Date:Message-Id:Subject:
+	 In-Reply-To:References; b=LBHBeU/XTR4c8AKajnYw/zRU/R3IGixfqPUJmanvYUwJbEADuSUMMQFJ5DSQlrrJm5RIzs0PtFeJyvvEwMRMkNgTLL/2+v35RFlQ9SxCIkjVrhWHGayNr7xW+1IZEZRm/3P5Nkpf/L9lNWYzmMVAHGJ8OeNtp+7uymVd8utpQhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=hz6YjGNi; arc=none smtp.client-ip=101.45.255.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="srAV+ug0"
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ade58ef47c0so129569666b.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:35:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750836918; x=1751441718; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2DymnnvE184jkZ20uTvSiiI7+Y+QW2i9b6WEZQ2DOJs=;
-        b=srAV+ug0q+0w5chyQ7ijAx/duJp13PTzdHzxqz03njor3fxDjKTSaMxdvbKRTCT5gZ
-         +Bxeh6VtfhG3bTomX+QdTe81HgGz5BzUDK4udiYfRDAk+ECP7BQim++DL+2cdKRD9aA4
-         44nlCEEYK5P0Oodemdw27yZ6OKkgUBVIwqghmLBmMVYPmyGYZ6uKcLr1Hv+6qSuhGcCg
-         nYjDl273AZtO8v+TZ1GmQwsTAVWSygvyVr6NnEbWVuhHAXFXlERpkKNdsp+kS4EX/9wS
-         it+KDG+SVQlYaintKCAyowNqLIklO3lzyEQpnX/eptd3SY5uZmMOdaj11PQScdVElkxy
-         0xQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750836918; x=1751441718;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2DymnnvE184jkZ20uTvSiiI7+Y+QW2i9b6WEZQ2DOJs=;
-        b=SR1qJZ3lUKJTxv616VW+5HAmSidDRynRKyOZGbiZ1hytV2HXe5Zf16BSzY2mQUZk41
-         pW8tese3Z70Zzzv5XW7QDuKWQXuugcibnlB1HyiEiFeXTKOeSA+cKsRTbbbTASwSjVMb
-         WZKxGUphJkC8Mv+Xk97vYBoS2RL6WE4JrU2OG1uB+9ys5ByDm991U30hyPhi5zLlNmiN
-         j337qfeWVqGbFF41sKZP8sM95WIWSW5YssqmEjzgAKTdxGD9GFpkowsMcrZ2RAJK/sLE
-         rq660SzlkqGPIVaW+TxmegxhCI6LqxNYVAKC+59fX34v91eAaMpjLFKz8cE89ubz6p+b
-         734Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUApm2Vr8/FNWf0f/NMIdFM7fKbvo78BCfDzvil8LtHeSesxWw+1wDdbIF4Ypal2mK6WWS/nGAUZn+G2WI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRpJomjbqjI7oFBzYRPsabvh6nDhcLCnOHIV9vtLq4WIFOBXAh
-	2TsSen/49E3khSadaQTYTp8+neNae/X1tPBTwknG3YOMJAtc5w3TJzmyksA/Cd4DWnGhF9TMOJg
-	8G7IK7+Pf3FMYSYxXm+lyujFsu3tMfJeQzC3+o4G48A==
-X-Gm-Gg: ASbGncs8J99Xy4chAVR5+cKpqDd6wSTFB7UnJUcLlxCD4nOR0uD7W6MgZJo79nOWNSI
-	5bQhNjTxNktdVX5t0OCuI8S/xT5yrCYT+kkUpaqvZ4L3QH0JktA2UnzHPXTkVlfqt/IH2zgkpU5
-	lQAEk6ay5P87fRvBNYAszFt/Opy7F7cW0Al+0lk1+9Jnsvz6Bnos5OzsT4CjPnmRQgDmJ/fy3AH
-	Ks=
-X-Google-Smtp-Source: AGHT+IEyXKWCmKWZPw2kgX0twR9fcnM1z7nFPYHArFddxW4orcOtG+t3XPYgPsMNGRzQt/Onxf6tBPeKruUlJC8wqdE=
-X-Received: by 2002:a17:907:7215:b0:ad8:959c:c567 with SMTP id
- a640c23a62f3a-ae0c06af8f0mr172746266b.10.1750836918190; Wed, 25 Jun 2025
- 00:35:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="hz6YjGNi"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+ s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1750836928;
+  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
+ reply-to:content-type:mime-version:in-reply-to:message-id;
+ bh=CEUqe5ahfZFpVFJnOYxZcTEDjpo1QaA063NLvGo/wqE=;
+ b=hz6YjGNig7eir5JJNBJsWhz7G9+wpKwt8UlaFU79X89L6GpOiSyzvuf32pK1V9vvwjB3Qt
+ KPKBzGpeDb+FuaXRkLsJbFzvWj1WlJF75YEPuxkc3daX7jycdOkOrLvnZ6d4qt6TFVH24l
+ 3S9PSmysMW09EnhRQRbiLBH+frZoK4jX7ycrLpeFfqnv9VYwt0b9mbehg0qfTRAWzb2Kdr
+ bADv6vpRYJC1RRR+Nt5d/pS1lGSK/sKrNYxKUX59TJpGTBM0uLRp4Z6otu/+fhfgQ9eu3Y
+ wZIbYAOcmBIG0igzKMzXAojtTnDFHUKjHACXjfV+iOYEScs8YIMRdLloKCA5mw==
+From: "Nutty Liu" <liujingqi@lanxincomputing.com>
+Content-Language: en-US
+To: "Anup Patel" <apatel@ventanamicro.com>, 
+	"Atish Patra" <atish.patra@linux.dev>
+Cc: "Palmer Dabbelt" <palmer@dabbelt.com>, 
+	"Paul Walmsley" <paul.walmsley@sifive.com>, 
+	"Alexandre Ghiti" <alex@ghiti.fr>, 
+	"Andrew Jones" <ajones@ventanamicro.com>, 
+	"Anup Patel" <anup@brainfault.org>, <kvm@vger.kernel.org>, 
+	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>, 
+	<linux-kernel@vger.kernel.org>, "Atish Patra" <atishp@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org>
- <20250624-gpio-mmio-pdata-v1-2-a58c72eb556a@linaro.org> <CACRpkdavsQJTfiwn-F+ML5MK6ADtr-31bBxLA4gV7MTAYR0YGQ@mail.gmail.com>
-In-Reply-To: <CACRpkdavsQJTfiwn-F+ML5MK6ADtr-31bBxLA4gV7MTAYR0YGQ@mail.gmail.com>
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Date: Wed, 25 Jun 2025 09:35:07 +0200
-X-Gm-Features: AX0GCFtyVKN-DtXqrWSfe49kFtB1susJDcQJSJJYWx2PpacFz_0klmfgmBsfOl0
-Message-ID: <CACMJSestPPEvsUrWaqz7yZ8OxZTMEOBY7htE7c8BV-VBumj1Lw@mail.gmail.com>
-Subject: Re: [PATCH RFT 2/6] gpio: mmio: get chip label and GPIO base from
- device properties
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Lee Jones <lee@kernel.org>, Liviu Dudau <liviu.dudau@arm.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
-	Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-omap@vger.kernel.org, patches@opensource.cirrus.com, 
-	linux-samsung-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla Thunderbird
+Content-Transfer-Encoding: 7bit
+Date: Wed, 25 Jun 2025 15:35:23 +0800
+Message-Id: <794a81fa-41d5-4b1e-816f-6d63b883f935@lanxincomputing.com>
+X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
+Subject: Re: [PATCH v3 04/12] RISC-V: KVM: Replace KVM_REQ_HFENCE_GVMA_VMID_ALL with KVM_REQ_TLB_FLUSH
+X-Lms-Return-Path: <lba+2685ba6bd+3a517f+vger.kernel.org+liujingqi@lanxincomputing.com>
+In-Reply-To: <20250618113532.471448-5-apatel@ventanamicro.com>
+Received: from [127.0.0.1] ([139.226.59.215]) by smtp.feishu.cn with ESMTPS; Wed, 25 Jun 2025 15:35:24 +0800
+References: <20250618113532.471448-1-apatel@ventanamicro.com> <20250618113532.471448-5-apatel@ventanamicro.com>
 
-On Tue, 24 Jun 2025 at 21:44, Linus Walleij <linus.walleij@linaro.org> wrot=
-e:
+On 6/18/2025 7:35 PM, Anup Patel wrote:
+> The KVM_REQ_HFENCE_GVMA_VMID_ALL is same as KVM_REQ_TLB_FLUSH so
+> to avoid confusion let's replace KVM_REQ_HFENCE_GVMA_VMID_ALL with
+> KVM_REQ_TLB_FLUSH. Also, rename kvm_riscv_hfence_gvma_vmid_all_process()
+> to kvm_riscv_tlb_flush_process().
 >
-> On Tue, Jun 24, 2025 at 3:19=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
+> Reviewed-by: Atish Patra <atishp@rivosinc.com>
+> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+> ---
+>   arch/riscv/include/asm/kvm_host.h | 4 ++--
+>   arch/riscv/kvm/tlb.c              | 8 ++++----
+>   arch/riscv/kvm/vcpu.c             | 8 ++------
+>   3 files changed, 8 insertions(+), 12 deletions(-)
 >
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Ahead of removing struct bgpio_pdata support from the gpio-mmio generic
-> > module, let's add support for getting the relevant values from generic
-> > device properties. "label" is a semi-standardized property in some GPIO
-> > drivers so let's go with it. There's no standard "base" property, so
-> > let's use the name "gpio-mmio,base" to tie it to this driver
-> > specifically. The number of GPIOs will be retrieved using
-> > gpiochip_get_ngpios() so there's no need to look it up in the software
-> > node.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> This works for me.
-> I wouldn't be stoked to see device trees abusing the "gpio-mmio,base"
-> property all of a sudden just because it now exists as a device
-> property though... I kind of wish we had a way to opt out of exposing
-> this to all the sub-property paths. But it seems tiresome, so:
->
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->
-> Yours,
-> Linus Walleij
+> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+> index 8aa705ac75a5..ff1f76d6f177 100644
+> --- a/arch/riscv/include/asm/kvm_host.h
+> +++ b/arch/riscv/include/asm/kvm_host.h
+> @@ -37,7 +37,6 @@
+>   #define KVM_REQ_UPDATE_HGATP		KVM_ARCH_REQ(2)
+>   #define KVM_REQ_FENCE_I			\
+>   	KVM_ARCH_REQ_FLAGS(3, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+> -#define KVM_REQ_HFENCE_GVMA_VMID_ALL	KVM_REQ_TLB_FLUSH
+>   #define KVM_REQ_HFENCE_VVMA_ALL		\
+>   	KVM_ARCH_REQ_FLAGS(4, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+>   #define KVM_REQ_HFENCE			\
+> @@ -331,8 +330,9 @@ void kvm_riscv_local_hfence_vvma_gva(unsigned long vmid,
+>   				     unsigned long order);
+>   void kvm_riscv_local_hfence_vvma_all(unsigned long vmid);
+>   
+> +void kvm_riscv_tlb_flush_process(struct kvm_vcpu *vcpu);
+> +
+>   void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu);
+> -void kvm_riscv_hfence_gvma_vmid_all_process(struct kvm_vcpu *vcpu);
+>   void kvm_riscv_hfence_vvma_all_process(struct kvm_vcpu *vcpu);
+>   void kvm_riscv_hfence_process(struct kvm_vcpu *vcpu);
+>   
+> diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
+> index b3461bfd9756..da98ca801d31 100644
+> --- a/arch/riscv/kvm/tlb.c
+> +++ b/arch/riscv/kvm/tlb.c
+> @@ -162,7 +162,7 @@ void kvm_riscv_fence_i_process(struct kvm_vcpu *vcpu)
+>   	local_flush_icache_all();
+>   }
+>   
+> -void kvm_riscv_hfence_gvma_vmid_all_process(struct kvm_vcpu *vcpu)
+> +void kvm_riscv_tlb_flush_process(struct kvm_vcpu *vcpu)
+>   {
+>   	struct kvm_vmid *v = &vcpu->kvm->arch.vmid;
+>   	unsigned long vmid = READ_ONCE(v->vmid);
+> @@ -342,14 +342,14 @@ void kvm_riscv_hfence_gvma_vmid_gpa(struct kvm *kvm,
+>   	data.size = gpsz;
+>   	data.order = order;
+>   	make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE,
+> -			    KVM_REQ_HFENCE_GVMA_VMID_ALL, &data);
+> +			    KVM_REQ_TLB_FLUSH, &data);
+>   }
+>   
+>   void kvm_riscv_hfence_gvma_vmid_all(struct kvm *kvm,
+>   				    unsigned long hbase, unsigned long hmask)
+>   {
+> -	make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE_GVMA_VMID_ALL,
+> -			    KVM_REQ_HFENCE_GVMA_VMID_ALL, NULL);
+> +	make_xfence_request(kvm, hbase, hmask, KVM_REQ_TLB_FLUSH,
+> +			    KVM_REQ_TLB_FLUSH, NULL);
+>   }
+>   
+>   void kvm_riscv_hfence_vvma_asid_gva(struct kvm *kvm,
+> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+> index a2dd4161e5a4..6eb11c913b13 100644
+> --- a/arch/riscv/kvm/vcpu.c
+> +++ b/arch/riscv/kvm/vcpu.c
+> @@ -721,12 +721,8 @@ static void kvm_riscv_check_vcpu_requests(struct kvm_vcpu *vcpu)
+>   		if (kvm_check_request(KVM_REQ_FENCE_I, vcpu))
+>   			kvm_riscv_fence_i_process(vcpu);
+>   
+> -		/*
+> -		 * The generic KVM_REQ_TLB_FLUSH is same as
+> -		 * KVM_REQ_HFENCE_GVMA_VMID_ALL
+> -		 */
+> -		if (kvm_check_request(KVM_REQ_HFENCE_GVMA_VMID_ALL, vcpu))
+> -			kvm_riscv_hfence_gvma_vmid_all_process(vcpu);
+> +		if (kvm_check_request(KVM_REQ_TLB_FLUSH, vcpu))
+> +			kvm_riscv_tlb_flush_process(vcpu);
+>   
+>   		if (kvm_check_request(KVM_REQ_HFENCE_VVMA_ALL, vcpu))
+>   			kvm_riscv_hfence_vvma_all_process(vcpu);
 
-That's not a problem - this property is not in any DT bindings and as
-such is not an allowed property in DT sources. For out-of-tree DTs? We
-don't care about those.
+Reviewed-by: Nutty Liu <liujingqi@lanxincomputing.com>
 
-Bartosz
+Thanks,
+Nutty
