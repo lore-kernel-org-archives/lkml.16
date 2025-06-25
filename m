@@ -1,52 +1,37 @@
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152E627F187
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:42:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5EB27F187;
+	Wed, 25 Jun 2025 08:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750840966; cv=none; b=oPsq8PNRLYUXAuQ/SOD5/MVMFHePXpH/5oKv4Em90O1BhqopurUzsgwwoXd/5MmMnfFu//O/As5+D5GsJWRiN34PKdFEC0GUPxIyzG0X9RqTJrtBHGok9MPc0pydOG0uhbJtzMChN1ag//QEHspNVNvMEx7UYL6SA46W4KEVNtQ=
+	t=1750840973; cv=none; b=jRB4mZP7yj7qbrbKTbRKPPSxlf1B5X+OjQMTD2tRkCVYxOM3SQ7EZMti7VTcelyAlTu3Miq6md/Ziq/LlzpwzITngOuUc1sIVplrF0VYxNF7W3HbL2Cb8hMLDrLY/8iPkTQKW3mSp1EcYZaWX4rD8NBTyhsVdCNkAXUeUUjBDEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750840966; c=relaxed/simple;
-	bh=jRHcWjqXkbpU4dlcT7V4DZxOI9eS/auzfoKMTr9Ocmc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=m4R4lZn6YtYS+ffO8+FrrB58ZwjFlR5+EvF7jnebJLRcOtO2e3ESEiHOpwgFBzqqbhqqis5trmBwg4Cd47cTL0LtvDjm9AkuzEIaiGpvaF9Zy3rk/Hw08BATuOoOT4oKUd1WQmEdM1RJdx4qdf/ZRwz6YNPSJbFVbVRScgWUeuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Wf3eozjJ; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+	s=arc-20240116; t=1750840973; c=relaxed/simple;
+	bh=8RyD8b+dB6zF43UCsVGSQk0jUPuIhhPSK+qvKJ7Em2A=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=J9oLRC0nxyJfbGcuzqWagmqnBq+4v7Cdu2866qylzz10kueLLt5igKjrpuq/V/0gla37/rJvWv1GM2f4rO/uzMkHomc6s4jylceD5U60XxvVE+8/iuvNxoAWqN/t3rRfIsjQeEN6LAfETzBBqqWkTAjZ652CCt9HH0ttiaI3gGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sSh0yxt3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Wf3eozjJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1750840965; x=1782376965;
-  h=from:date:subject:mime-version:content-transfer-encoding:
-   message-id:references:in-reply-to:to:cc;
-  bh=jRHcWjqXkbpU4dlcT7V4DZxOI9eS/auzfoKMTr9Ocmc=;
-  b=Wf3eozjJk2YxU8CfVvMui0/YyupmoQHo8jNtOo+XQsQ+EM+vd49xJJnL
-   IJ26QF/eZexnJmyTGNw0c34okdi1zLlNnTMOdhuibqarMBywClKWm6w7m
-   krjawNtR/CJ+dOmldSDWmUvmzHrV21PRi6NcDuU00XqwQM8FqbU4bqCLJ
-   5PbNoUzNTxjQwLhgQqbIuPxsLf9FMjrFFUL9+SD1x5OKCEbprrz32DIPY
-   HjY6MgwHoI0x5jnn7PXFSse+BzHnXwLiZsB42l1kbuMuLPoMWTZ+zALM5
-   yDiiWOzXhSh/szUmHrFoKUXMcMqvr19P+K3IWXQ0B6vbgiA/xGAMFG71w
-   w==;
-X-CSE-ConnectionGUID: cBHfqEUaQkGtLTAUKVdw1g==
-X-CSE-MsgGUID: wpML76ntTYaKlx0V78GeDw==
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="274587526"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 25 Jun 2025 01:42:43 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 25 Jun 2025 01:42:15 -0700
-Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Wed, 25 Jun 2025 01:42:10 -0700
-From: Dharma Balasubiramani <dharma.b@microchip.com>
-Date: Wed, 25 Jun 2025 14:11:54 +0530
-Subject: [PATCH v6 2/3] drm/bridge: microchip-lvds: migrate to atomic
- bridge ops
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sSh0yxt3"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C0E80C4CEEA;
+	Wed, 25 Jun 2025 08:42:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750840972;
+	bh=8RyD8b+dB6zF43UCsVGSQk0jUPuIhhPSK+qvKJ7Em2A=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=sSh0yxt3Bl4Lr9AkqrAkd34sEsrpkvyQGaD9owIXHN04JGR6xAwClsAQkoKiIxKso
+	 pRdjBbM0n+2wOb1Nj2sVPzFLOEgBCY7UCnLJss9lkw8UH5bok5usFozt6swIZNgYH7
+	 3lIWcVhD5BhvlXCw0mdLFLr3jowqboxN3Ln0WOwkdEDCLvs1YbvWX3JGcOmci/lPh7
+	 cVy+UmoAc3qrraWtuMrKamzTdGnT40/Iyq3urtMoukIPZUf+JkdZhHlKIp5y9eVvsD
+	 qDLj1tlYYkSvxVorvIg99nwCRHrF53Q2Ndc5UGv4OkhBRZ5n0/2TusyF0cmjm/Wgua
+	 q33L0WBCFCy/w==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0F9C7EE30;
+	Wed, 25 Jun 2025 08:42:52 +0000 (UTC)
+From: Yang Li via B4 Relay <devnull+yang.li.amlogic.com@kernel.org>
+Date: Wed, 25 Jun 2025 16:42:49 +0800
+Subject: [PATCH v2] Bluetooth: hci_event: Add support for handling LE BIG
+ Sync Lost event
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,72 +40,124 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250625-microchip-lvds-v6-2-7ce91f89d35a@microchip.com>
-References: <20250625-microchip-lvds-v6-0-7ce91f89d35a@microchip.com>
-In-Reply-To: <20250625-microchip-lvds-v6-0-7ce91f89d35a@microchip.com>
-To: Manikandan Muralidharan <manikandan.m@microchip.com>, Andrzej Hajda
-	<andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
-	"Robert Foss" <rfoss@kernel.org>, Laurent Pinchart
-	<Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, "Jernej
- Skrabec" <jernej.skrabec@gmail.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>, "Dharma
- Balasubiramani" <dharma.b@microchip.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750840915; l=1621;
- i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
- bh=jRHcWjqXkbpU4dlcT7V4DZxOI9eS/auzfoKMTr9Ocmc=;
- b=Vd4R0rYgDrd+nWx4fM7lsU3Mn0L/c7Vxf17UY0cGRtDiqIWprWZpbBSs2+Ti+qSNeq1cYfK4N
- T484VX0rH07D+W/H2WPsrR8sIIPqp/wpISKvufX9QtznxGByufZIj3U
-X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
- pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
+Message-Id: <20250625-handle_big_sync_lost_event-v2-1-81f163057a21@amlogic.com>
+X-B4-Tracking: v=1; b=H4sIAIi2W2gC/33NywrCMBCF4VcpWRtppjd05XtICXEytgNtIkkJl
+ tJ3NxbXLv+z+M4mIgWmKK7FJgIljuxdDjgVAkfjBpJscwsooSlbBTKPdiL94EHH1aGefFw0JXK
+ LrLGz2NbVpTQgMvAK9OT3gd/73CPHxYf1+Erqu/5YqP+xSUklsQKkqrO2Nc3NzJMfGM/oZ9Hv+
+ /4B3kTbpMYAAAA=
+To: Marcel Holtmann <marcel@holtmann.org>, 
+ Johan Hedberg <johan.hedberg@gmail.com>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>
+Cc: linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Yang Li <yang.li@amlogic.com>
+X-Mailer: b4 0.13-dev-f0463
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750840971; l=3131;
+ i=yang.li@amlogic.com; s=20240418; h=from:subject:message-id;
+ bh=+z+dUqdDyldE5nsJD9/hOCyoQSkymotIIMTtOBNS5rQ=;
+ b=adqKAGMBBzMjHlYTHEQ8EceIJGHCS/cRUiqWAz/PvVVp+OFw2uzyYJdzKA9vYV14Jf4AZLuai
+ j6eY1JBCXx5AdJKvtPM892IgAmUYV47Cw+z4SiHEKQ2th6MAvm5nKPK
+X-Developer-Key: i=yang.li@amlogic.com; a=ed25519;
+ pk=86OaNWMr3XECW9HGNhkJ4HdR2eYA5SEAegQ3td2UCCs=
+X-Endpoint-Received: by B4 Relay for yang.li@amlogic.com/20240418 with
+ auth_id=180
+X-Original-From: Yang Li <yang.li@amlogic.com>
+Reply-To: yang.li@amlogic.com
 
-Replace legacy .enable and .disable callbacks with their atomic
-counterparts .atomic_enable and .atomic_disable.
+From: Yang Li <yang.li@amlogic.com>
 
-Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
+When the BIS source stops, the controller sends an LE BIG Sync Lost
+event (subevent 0x1E). Currently, this event is not handled, causing
+the BIS stream to remain active in BlueZ and preventing recovery.
+
+Signed-off-by: Yang Li <yang.li@amlogic.com>
 ---
- drivers/gpu/drm/bridge/microchip-lvds.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Changes in v2:
+- Matching the BIG handle is required when looking up a BIG connection.
+- Use ev->reason to determine the cause of disconnection.
+- Call hci_conn_del after hci_disconnect_cfm to remove the connection entry
+- Delete the big connection
+- Link to v1: https://lore.kernel.org/r/20250624-handle_big_sync_lost_event-v1-1-c32ce37dd6a5@amlogic.com
+---
+ include/net/bluetooth/hci.h |  6 ++++++
+ net/bluetooth/hci_event.c   | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
 
-diff --git a/drivers/gpu/drm/bridge/microchip-lvds.c b/drivers/gpu/drm/bridge/microchip-lvds.c
-index 06d4169a2d8f..042e83494d8c 100644
---- a/drivers/gpu/drm/bridge/microchip-lvds.c
-+++ b/drivers/gpu/drm/bridge/microchip-lvds.c
-@@ -111,7 +111,8 @@ static int mchp_lvds_attach(struct drm_bridge *bridge,
- 				 bridge, flags);
+diff --git a/include/net/bluetooth/hci.h b/include/net/bluetooth/hci.h
+index 82cbd54443ac..48389a64accb 100644
+--- a/include/net/bluetooth/hci.h
++++ b/include/net/bluetooth/hci.h
+@@ -2849,6 +2849,12 @@ struct hci_evt_le_big_sync_estabilished {
+ 	__le16  bis[];
+ } __packed;
+ 
++#define HCI_EVT_LE_BIG_SYNC_LOST 0x1e
++struct hci_evt_le_big_sync_lost {
++	__u8    handle;
++	__u8    reason;
++} __packed;
++
+ #define HCI_EVT_LE_BIG_INFO_ADV_REPORT	0x22
+ struct hci_evt_le_big_info_adv_report {
+ 	__le16  sync_handle;
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 66052d6aaa1d..d0b9c8dca891 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -7026,6 +7026,32 @@ static void hci_le_big_sync_established_evt(struct hci_dev *hdev, void *data,
+ 	hci_dev_unlock(hdev);
  }
  
--static void mchp_lvds_enable(struct drm_bridge *bridge)
-+static void mchp_lvds_atomic_enable(struct drm_bridge *bridge,
-+				    struct drm_atomic_state *state)
++static void hci_le_big_sync_lost_evt(struct hci_dev *hdev, void *data,
++					    struct sk_buff *skb)
++{
++	struct hci_evt_le_big_sync_lost *ev = data;
++	struct hci_conn *bis, *conn;
++
++	bt_dev_dbg(hdev, "big handle 0x%2.2x", ev->handle);
++
++	hci_dev_lock(hdev);
++
++	list_for_each_entry(bis, &hdev->conn_hash.list, list) {
++		if (test_and_clear_bit(HCI_CONN_BIG_SYNC, &bis->flags) &&
++		    (bis->iso_qos.bcast.big == ev->handle)) {
++			hci_disconn_cfm(bis, ev->reason);
++			hci_conn_del(bis);
++
++			/* Delete the big connection */
++			conn = hci_conn_hash_lookup_pa_sync_handle(hdev, bis->sync_handle);
++			if (conn)
++				hci_conn_del(conn);
++		}
++	}
++
++	hci_dev_unlock(hdev);
++}
++
+ static void hci_le_big_info_adv_report_evt(struct hci_dev *hdev, void *data,
+ 					   struct sk_buff *skb)
  {
- 	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
- 	int ret;
-@@ -131,7 +132,8 @@ static void mchp_lvds_enable(struct drm_bridge *bridge)
- 	lvds_serialiser_on(lvds);
- }
- 
--static void mchp_lvds_disable(struct drm_bridge *bridge)
-+static void mchp_lvds_atomic_disable(struct drm_bridge *bridge,
-+				     struct drm_atomic_state *state)
- {
- 	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
- 
-@@ -141,8 +143,8 @@ static void mchp_lvds_disable(struct drm_bridge *bridge)
- 
- static const struct drm_bridge_funcs mchp_lvds_bridge_funcs = {
- 	.attach = mchp_lvds_attach,
--	.enable = mchp_lvds_enable,
--	.disable = mchp_lvds_disable,
-+	.atomic_enable = mchp_lvds_atomic_enable,
-+	.atomic_disable = mchp_lvds_atomic_disable,
- };
- 
- static int mchp_lvds_probe(struct platform_device *pdev)
+@@ -7149,6 +7175,11 @@ static const struct hci_le_ev {
+ 		     hci_le_big_sync_established_evt,
+ 		     sizeof(struct hci_evt_le_big_sync_estabilished),
+ 		     HCI_MAX_EVENT_SIZE),
++	/* [0x1e = HCI_EVT_LE_BIG_SYNC_LOST] */
++	HCI_LE_EV_VL(HCI_EVT_LE_BIG_SYNC_LOST,
++		     hci_le_big_sync_lost_evt,
++		     sizeof(struct hci_evt_le_big_sync_lost),
++		     HCI_MAX_EVENT_SIZE),
+ 	/* [0x22 = HCI_EVT_LE_BIG_INFO_ADV_REPORT] */
+ 	HCI_LE_EV_VL(HCI_EVT_LE_BIG_INFO_ADV_REPORT,
+ 		     hci_le_big_info_adv_report_evt,
 
+---
+base-commit: bd35cd12d915bc410c721ba28afcada16f0ebd16
+change-id: 20250612-handle_big_sync_lost_event-4c7dc64390a2
+
+Best regards,
 -- 
-2.43.0
+Yang Li <yang.li@amlogic.com>
+
 
