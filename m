@@ -1,235 +1,178 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9243C26C3BF
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196382882CA;
+	Wed, 25 Jun 2025 08:48:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841302; cv=none; b=m7ATm7DG95kGIG20k7jt43+xjBRj2Q3IDSVKAjJwyDydLzsFBk4O+CU7dm0gRl3mXaw4M2V8zZFXpzn8Gwm1ZH85TiUUobV8vFAlu7M7U7mSno2WG17PBCZJjD1MWFcRoCZs+S9v7C30eCxu1PKx9p5+mieViRD7zUKWj1Xa5EY=
+	t=1750841324; cv=none; b=OLPTvxqx34BWqTy2gZIkD31DVnhSVeqCvhD3HIb+T2wvWEWYyvomXD3zby/icqu6u4XzyT+T1dx7ILw9BkrozqAh4eg8dllzq3QJ9oDJZUasRPXJn7DsqzeXV2i2FQ8hHyv7aM3Tz5SHtYhnPh5WK3plCyRsNAlwQOlqIQABqnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841302; c=relaxed/simple;
-	bh=8CxCRl0Lj4fz10PG0ihHzNx5FOrMIdCEzi0JMM7ABYU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HY+/dZ6QC+9Fc03K3kzk+l2E8LGF7MXuYpnuQv/TFdaq3LVulb/AyE24q0mS3QF/C19uchZHhVYmWKsFmr7hAbQ15X2irn3IvTjZr+ACb1/gKtn87/kx/7/QEKIH/q04dqTEzVR3LCUu3EqByYMob+pAfDSpkF6q1qvQo+nU1uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kSpzmy7H; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750841324; c=relaxed/simple;
+	bh=MHBZGoaoMcLa2LG0Yh6EdemoDEGT5KReqDlcQpZb7Xg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ezcuW3X+PKqlmMj+ppR89j0jsNOqeN9JlP3TQrgzp3Yew28zTEszisDpZJLosEQrVOWLl/gcAKtoe6bTkecx6WBGkKSl3GK30v5HC+EX2ZvyVm7VFodZcy5c6W5WEhBySHcXoaTcHZp6BTE/D1Q2YDwxbe3ZDOVzyLdSjzQBjf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QWAAHgBT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kSpzmy7H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750841301; x=1782377301;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8CxCRl0Lj4fz10PG0ihHzNx5FOrMIdCEzi0JMM7ABYU=;
-  b=kSpzmy7HQqSGgK3cpLdBAuotHO+jwyJDWpfPL1KMM1OMpSQ9KV1T8NGq
-   +UrzUT/NC6dLqPhTlWXR2SDmu+f6iEdx8teSTVAxGyGp5EpkyvJAy4l9+
-   fnmZ6yXxhJWWbEBTD92iRLZorq3H8+kg+2a/nm+PSYjGFLsxetfKqtVoA
-   dxR0p/N0oF8XuGXmlndfkH0lTaiBLPa0CXyuO/NW32Ao8BTuoRWqloLUU
-   WAPMobFa88wvGEP5c/h4+0T+H8Khn1asPIj6EQvftreFGNgBQQtMFnQIb
-   wye+kJ17KodxppZrI9XquKjWKE6IlGBx2ns3AJEX1qwhjClcSymHGE+W7
-   w==;
-X-CSE-ConnectionGUID: nyIxYoLsTIysqjwcV2gaCg==
-X-CSE-MsgGUID: HZHKDfJsSW6OI4hnTydNKw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="70674664"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="70674664"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 01:48:20 -0700
-X-CSE-ConnectionGUID: 0liW6ewcRDywxXsmdIrHnw==
-X-CSE-MsgGUID: Qy7hfrfOSu+xQ0N04iDCgQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="156557524"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa003.jf.intel.com with ESMTP; 25 Jun 2025 01:48:17 -0700
-Date: Wed, 25 Jun 2025 16:40:40 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
-Cc: jgg@nvidia.com, jgg@ziepe.ca, kevin.tian@intel.com, will@kernel.org,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	joro@8bytes.org, robin.murphy@arm.com, shuah@kernel.org,
-	nicolinc@nvidia.com, aik@amd.com, dan.j.williams@intel.com,
-	baolu.lu@linux.intel.com, yilun.xu@intel.com
-Subject: Re: [PATCH v2 1/4] iommufd: Add iommufd_object_tombstone_user()
- helper
-Message-ID: <aFu2CKWt+IazDiiz@yilunxu-OptiPlex-7050>
-References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
- <20250623094946.1714996-2-yilun.xu@linux.intel.com>
- <yq5a4iw45pyk.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QWAAHgBT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35B63C4CEEA;
+	Wed, 25 Jun 2025 08:48:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750841323;
+	bh=MHBZGoaoMcLa2LG0Yh6EdemoDEGT5KReqDlcQpZb7Xg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QWAAHgBTocPEPd/QUDnRrg7PlySkZ+mQhXIeVrFkmWrj5XE11rF7T36Plj0XN1/id
+	 IkRmnuYv2lw9HBhciUlgXnHZRGcmHblYt2TW0epifrKqWg3Defzq1QJO+WZ1CiGUPB
+	 vguNkoOI8gIJpuJZV7ydp6QaseiOAcYE2QiKnixOUadthVBSu0WQJJdX30tNmdC6wl
+	 8/+7/F3AYHLgBdjYB5vz6dzTX5or7it4vijSy89ppsJ9O2JoOUSjbjA8HAniDHr0F2
+	 rab/uipHpePrfAjSZ31xUsLf1Xl/p/n2jjOhK7R+AybOtr4itGmQ9igOP9+l3UcK5l
+	 lh3Ix3Pj0c9vw==
+Message-ID: <a6440cbf-f7b5-4bce-8e2b-8aa3ec4d2342@kernel.org>
+Date: Wed, 25 Jun 2025 10:48:37 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq5a4iw45pyk.fsf@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
+To: Clement LE GOFFIC <clement.legoffic@foss.st.com>,
+ Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>,
+ Gatien Chevallier <gatien.chevallier@foss.st.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Gabriel Fernandez <gabriel.fernandez@foss.st.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-clk@vger.kernel.org
+References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
+ <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
+ <9cb1575e-ae27-4a78-adb7-8a9e7072375e@kernel.org>
+ <5044c733-8836-43bd-85d7-0f552b000fb1@foss.st.com>
+ <49483568-b287-45ca-a66c-1e0ad0490225@kernel.org>
+ <e2400615-f21e-40bf-84f8-384242632193@foss.st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <e2400615-f21e-40bf-84f8-384242632193@foss.st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 25, 2025 at 11:21:15AM +0530, Aneesh Kumar K.V wrote:
-> Xu Yilun <yilun.xu@linux.intel.com> writes:
+On 25/06/2025 10:33, Clement LE GOFFIC wrote:
+> On 6/25/25 08:35, Krzysztof Kozlowski wrote:
+>> On 24/06/2025 12:43, Clement LE GOFFIC wrote:
+>>> On 6/23/25 11:45, Krzysztof Kozlowski wrote:
+>>> [...]
+>>>
+>>> Hi Krzysztof,
+>>>
+>>> Sorry I forgot to address comments below.
+>>>
+>>>>> +
+>>>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp1 = {
+>>>>> +	.regs = &stm32_ddr_pmu_regspec_mp1,
+>>>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp1,
+>>>>> +	.counters_nb = MP1_CNT_NB,
+>>>>> +	.evt_counters_nb = MP1_CNT_NB - 1, /* Time counter is not an event counter */
+>>>>> +	.time_cnt_idx = MP1_TIME_CNT_IDX,
+>>>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp1,
+>>>>> +};
+>>>>> +
+>>>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp2 = {
+>>>>> +	.regs = &stm32_ddr_pmu_regspec_mp2,
+>>>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp2,
+>>>>> +	.counters_nb = MP2_CNT_NB,
+>>>>> +	.evt_counters_nb = MP2_CNT_NB - 1, /* Time counter is an event counter */
+>>>>> +	.time_cnt_idx = MP2_TIME_CNT_IDX,
+>>>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp2,
+>>>>> +};
+>>>>> +
+>>>>> +static const struct dev_pm_ops stm32_ddr_pmu_pm_ops = {
+>>>>> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, stm32_ddr_pmu_device_resume)
+>>>>> +};
+>>>>> +
+>>>>> +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
+>>>>> +	{
+>>>>> +		.compatible = "st,stm32mp131-ddr-pmu",
+>>>>> +		.data = &stm32_ddr_pmu_cfg_mp1
+>>>>> +	},
+>>>>> +	{
+>>>>> +		.compatible = "st,stm32mp151-ddr-pmu",
+>>>>> +		.data = &stm32_ddr_pmu_cfg_mp1
+>>>>
+>>>> So devices are compatible, thus express it correctly and drop this.
+>>>
+>>> Ok so I assume this comes with your comment in the bindings and
+>>> basically don't get you point here.
+>>> Can you please be more precise ?
+>>
+>> Express compatibility in the bindings, like 90% of SoCs are doing, so
+>> with proper fallback and drop this entry in the table. My comment was
+>> pretty precise, because this is completely standard pattern, also used
+>> already in stm32.
+>>
 > 
-> > Add the iommufd_object_tombstone_user() helper, which allows the caller
-> > to destroy an iommufd object created by userspace.
-> >
-> > This is useful on some destroy paths when the kernel caller finds the
-> > object should have been removed by userspace but is still alive. With
-> > this helper, the caller destroys the object but leave the object ID
-> > reserved (so called tombstone). The tombstone prevents repurposing the
-> > object ID without awareness from the original user.
-> >
-> > Since this happens for abnomal userspace behavior, for simplicity, the
-> > tombstoned object ID would be permanently leaked until
-> > iommufd_fops_release(). I.e. the original user gets an error when
-> > calling ioctl(IOMMU_DESTROY) on that ID.
-> >
-> > The first use case would be to ensure the iommufd_vdevice can't outlive
-> > the associated iommufd_device.
-> >
-> > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> > ---
-> >  drivers/iommu/iommufd/iommufd_private.h | 23 +++++++++++++++++-
-> >  drivers/iommu/iommufd/main.c            | 31 ++++++++++++++++++-------
-> >  2 files changed, 45 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
-> > index 9ccc83341f32..fbc9ef78d81f 100644
-> > --- a/drivers/iommu/iommufd/iommufd_private.h
-> > +++ b/drivers/iommu/iommufd/iommufd_private.h
-> > @@ -187,7 +187,8 @@ void iommufd_object_finalize(struct iommufd_ctx *ictx,
-> >  			     struct iommufd_object *obj);
-> >  
-> >  enum {
-> > -	REMOVE_WAIT_SHORTTERM = 1,
-> > +	REMOVE_WAIT_SHORTTERM	= BIT(0),
-> > +	REMOVE_OBJ_TOMBSTONE	= BIT(1),
-> >  };
-> >  int iommufd_object_remove(struct iommufd_ctx *ictx,
-> >  			  struct iommufd_object *to_destroy, u32 id,
-> > @@ -213,6 +214,26 @@ static inline void iommufd_object_destroy_user(struct iommufd_ctx *ictx,
-> >  	WARN_ON(ret);
-> >  }
-> >  
-> > +/*
-> > + * Similar to iommufd_object_destroy_user(), except that the object ID is left
-> > + * reserved/tombstoned.
-> > + */
-> > +static inline void iommufd_object_tombstone_user(struct iommufd_ctx *ictx,
-> > +						 struct iommufd_object *obj)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = iommufd_object_remove(ictx, obj, obj->id,
-> > +				    REMOVE_WAIT_SHORTTERM | REMOVE_OBJ_TOMBSTONE);
-> > +
-> > +	/*
-> > +	 * If there is a bug and we couldn't destroy the object then we did put
-> > +	 * back the caller's users refcount and will eventually try to free it
-> > +	 * again during close.
-> > +	 */
-> > +	WARN_ON(ret);
-> > +}
-> > +
-> >  /*
-> >   * The HWPT allocated by autodomains is used in possibly many devices and
-> >   * is automatically destroyed when its refcount reaches zero.
-> > diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
-> > index 3df468f64e7d..5fd75aba068b 100644
-> > --- a/drivers/iommu/iommufd/main.c
-> > +++ b/drivers/iommu/iommufd/main.c
-> > @@ -167,7 +167,7 @@ int iommufd_object_remove(struct iommufd_ctx *ictx,
-> >  		goto err_xa;
-> >  	}
-> >  
-> > -	xas_store(&xas, NULL);
-> > +	xas_store(&xas, (flags & REMOVE_OBJ_TOMBSTONE) ? XA_ZERO_ENTRY : NULL);
-> >  	if (ictx->vfio_ioas == container_of(obj, struct iommufd_ioas, obj))
-> >  		ictx->vfio_ioas = NULL;
-> >  	xa_unlock(&ictx->objects);
-> > @@ -238,6 +238,7 @@ static int iommufd_fops_release(struct inode *inode, struct file *filp)
-> >  	struct iommufd_ctx *ictx = filp->private_data;
-> >  	struct iommufd_sw_msi_map *next;
-> >  	struct iommufd_sw_msi_map *cur;
-> > +	XA_STATE(xas, &ictx->objects, 0);
-> >  	struct iommufd_object *obj;
-> >  
-> >  	/*
-> > @@ -251,16 +252,30 @@ static int iommufd_fops_release(struct inode *inode, struct file *filp)
-> >  	 */
-> >  	while (!xa_empty(&ictx->objects)) {
-> >  		unsigned int destroyed = 0;
-> > -		unsigned long index;
-> >  
-> > -		xa_for_each(&ictx->objects, index, obj) {
-> > -			if (!refcount_dec_if_one(&obj->users))
-> > -				continue;
-> > +		xas_set(&xas, 0);
-> > +		for (;;) {
-> > +			rcu_read_lock();
-> > +			obj = xas_find(&xas, ULONG_MAX);
-> > +			rcu_read_unlock();
-> >
+> Ok I remember your discussion with Alex in my V1 of pinctrl-hdp :
+> https://lore.kernel.org/all/1de58672-5355-4b75-99f4-c48687017d2f@kernel.org/
 > 
-> What is the need for the rcu_read_lock()? 
+> Does it suits you :
+> In the SoC DT:
+> MP13: compatible = "st,stm32mp131-ddr-pmu", "st,stm32mp1-ddr-pmu";
+> MP15: compatible = "st,stm32mp151-ddr-pmu", "st,stm32mp1-ddr-pmu";
 
-To surpress rcu warning in xas_find().
+No, because I did not say to change other entry in the table. Please
+read again what I asked: drop this. "This" means ONLY this entry. "Drop
+this" does not mean "change something else". Do not change other entries
+by introducing some generic compatible. That's not the pattern ever
+endorsed by DT maintainers. Add front compatible and you are done,
+smallest amount of changes, most obvious code.
 
-> 
-> > +
-> > +			if (!obj)
-> > +				break;
-> > +
-> > +			if (!xa_is_zero(obj)) {
-> > +				if (!refcount_dec_if_one(&obj->users))
-> > +					continue;
-> > +
-> > +				iommufd_object_ops[obj->type].destroy(obj);
-> > +				kfree(obj);
-> > +			}
-> > +
-> >  			destroyed++;
-> > -			xa_erase(&ictx->objects, index);
-> > -			iommufd_object_ops[obj->type].destroy(obj);
-> > -			kfree(obj);
-> > +			xas_lock(&xas);
-> > +			xas_store(&xas, NULL);
-> > +			xas_unlock(&xas);
-> 
-> is that xas_lock needed?. we can't run a xarray update parallel to this
-> because neither iommufd ioctl not vfio cdev unbind can happen in parallel.
-
-That's true, but also to surpress warning in xas_store().
-
-> 
-> I have this as an additonal comment added to the function in my change.
-> 
-> /*
->  * We don't need additional locks because the iommufd_fops_release() function is
->  * only triggered when the iommufd descriptor is released. At that point, no
->  * other iommufd-based ioctl operations can be running concurrently.
->  *
->  * The destruction of the vdevice via idevice unbind is also safe:
->  * iommufd_fops_release() can only be called after the idevice has been unbound.
->  * The idevice bind operation takes a reference to the iommufd descriptor,
->  * preventing early release.
->  */
-
-That's good. But Jason has another suggestion that no need to clear
-tombstones on fops_release(), so we don't need these changes at all.
-
-Thanks,
-Yilun
-
-> 
-> 
-> >  		}
-> > +
-> >  		/* Bug related to users refcount */
-> >  		if (WARN_ON(!destroyed))
-> >  			break;
-> > -- 
-> > 2.25.1
-> 
-> -aneesh
+Best regards,
+Krzysztof
