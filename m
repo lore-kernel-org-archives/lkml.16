@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78722DCC1A;
-	Wed, 25 Jun 2025 20:25:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F9C2DECDB;
+	Wed, 25 Jun 2025 20:25:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750883119; cv=none; b=khrTeJMC4TGz3FlweBBxlLTMD5gE0Xwc0Nmi4hezXAVV0eRcf4TvE3c/FnrONwfZcvr6RyG/uSwzEAm/ujUYhBV9CR+Jqo3LF+xSs+vZPO21bKIEON0E4tSroRau16KnLcZIqEAUD7d9fWyIlXdUjt133JuAfukK542izuazw3I=
+	t=1750883121; cv=none; b=pWSF0ohjMNIOHt2uI+lOsgF7mWilFnkVzZEY+d9eTIMD4+uDTwVduXtARLc1xEC71tpW1GWOkKHMWXiJ+2xMu95Kweh4jL9cyicg+2hMO8faShe+1rcSYRbbSsop+Ws6hV6syr1pa19F80ODgX2mSyIwzGXK49bO7yaGMHjszE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750883119; c=relaxed/simple;
-	bh=TziOv0cm8azgsxSTr1XbfSHXohOwDnljw555dksH0d0=;
+	s=arc-20240116; t=1750883121; c=relaxed/simple;
+	bh=6ToECW9kPBEKK7RGJMMg68/E5fqSoBAUWn6G5wMFHgA=;
 	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=kpQP5zCehxR3OAOmFt/0Z2P+mAykl/vveS69kiEfGDxgLWS4fdkjJRvO8PryZpG7DTstJbZR0l9It1y3KsJSBuTnEvKaOSHrmit1RuY1KfHq2uzvzAwSWmTO+/shDP0cewGF8goKeosFfN3kPONQIbfV6EHRTBHRoHJ6PGKDHkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BbWsS7Tv; arc=none smtp.client-ip=10.30.226.201
+	 Message-Id:Subject; b=kFso3RpwIqXcOa2rTY8R0qy9IzQBdShb8Gqh7t1VoZVarUJ86ebSdxwTZSguIwUkZ3FWGeVKX5e7b3SMbcmJD4douLB5ORkGt5iVPM19Na3EfgheD4z0yZw/QvW8d0IE/k6/ZHlnzzIITObe66HDylxw3yEVKqTvs7ea7TLvRRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdN691cv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BbWsS7Tv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E348C4CEF2;
-	Wed, 25 Jun 2025 20:25:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdN691cv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C598C4AF09;
+	Wed, 25 Jun 2025 20:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750883119;
-	bh=TziOv0cm8azgsxSTr1XbfSHXohOwDnljw555dksH0d0=;
+	s=k20201202; t=1750883120;
+	bh=6ToECW9kPBEKK7RGJMMg68/E5fqSoBAUWn6G5wMFHgA=;
 	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=BbWsS7TvvcQOXUDiR1RQKIoUGhBretA5etFDHMA/VgYxIUwUe0h5CUh71IQNJun9a
-	 kO5WbZmvPC3d43pDdg01pdyGTPNkcK27IUD4fc+Ug5I/YB27ssZfWWPtd3nbE6h39w
-	 srb6lW5QC8V6HS33obz5sKGX9uXI/xlb7EJjGnSSm1LimV5lKhaa/22zY+Ln5wH6BD
-	 GCF7fL0drw6+h1RY3tXBNkuqTIBVN/J0axjzYafv/yNXnTjvXvVlBpzWaTWmb/+3+l
-	 NNr5cTYwjLhdKGz1ceGRS099s2+U04cg3dK4PCKx+y9HxQ8+WFIpqvPih+wXk82xmi
-	 4/MX9h+cz6qRw==
-Date: Wed, 25 Jun 2025 15:25:18 -0500
+	b=jdN691cv/uE6j/6d0w1FkmmLp29wYsTLbTFpWVSnvABAptQSFUGkDLk6F2NrvqV2b
+	 drRBUdJrtJZBQ4fwKU97E3LtuGGrvuPLA5tiSzn8Ln0ldObR0Zjd3TpbclIXSJLBYY
+	 8RbEH0ZeKfM9rPnA4ckd2Ou8Usgb6KwsCDqn/DE5EjN0z9bokIWi2lIjie/CMxrtn/
+	 FfqdJcj/9uLJo1qPlMudBaNvLs9qd/qWgkdR1147SCvfCMpw8Dm77Msw5SlWou5vbB
+	 KB0sFVpKbOmidqJ6Jn8ElrOq2Kxwph0wPZDzKFEUGtdVJDwResdln5l7OmxqZPOzvL
+	 kAzglU8TaaTrw==
+Date: Wed, 25 Jun 2025 15:25:19 -0500
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,94 +36,53 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
- Peng Fan <peng.fan@nxp.com>, Bjorn Andersson <andersson@kernel.org>, 
- devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
- Frank Li <frank.li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, linux-kernel@vger.kernel.org, 
- imx@lists.linux.dev, Iuliana Prodan <iuliana.prodan@nxp.com>, 
- linux-arm-kernel@lists.infradead.org, Daniel Baluta <daniel.baluta@nxp.com>, 
- Fabio Estevam <festevam@gmail.com>, 
- Pengutronix Kernel Team <kernel@pengutronix.de>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-In-Reply-To: <20250625-imx95-rproc-1-v3-0-699031f5926d@nxp.com>
-References: <20250625-imx95-rproc-1-v3-0-699031f5926d@nxp.com>
-Message-Id: <175088289381.2146689.9089577049350520635.robh@kernel.org>
-Subject: Re: [PATCH v3 0/5] remoteproc: imx_rproc: Support i.MX95
+Cc: Konrad Dybcio <konradybcio@kernel.org>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Dmitry Baryshkov <lumag@kernel.org>, 
+ linux-arm-msm@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>
+To: "Yu Zhang(Yuriy)" <yu.zhang@oss.qualcomm.com>
+In-Reply-To: <20250625-qcs615-v2-0-0f1899647b36@oss.qualcomm.com>
+References: <20250625-qcs615-v2-0-0f1899647b36@oss.qualcomm.com>
+Message-Id: <175088289522.2146749.4187657021418891835.robh@kernel.org>
+Subject: Re: [PATCH v2 0/2] Add WiFi/BT node for qcs615 ride board.
 
 
-On Wed, 25 Jun 2025 10:23:26 +0800, Peng Fan (OSS) wrote:
-> i.MX95 features a Cortex-M33 core, six Cortex-A55 cores, and
-> one Cortex-M7 core. The System Control Management Interface(SCMI)
-> firmware runs on the M33 core. The i.MX95 SCMI firmware named System
-> Manager(SM) includes vendor extension protocols, Logical Machine
-> Management(LMM) protocol and CPU protocol and etc.
+On Wed, 25 Jun 2025 15:55:05 +0800, Yu Zhang(Yuriy) wrote:
+> This patch series depends on:
+> - PCIe
+> https://lore.kernel.org/all/20250527072036.3599076-1-quic_ziyuzhan@quicinc.com/
 > 
-> There are three cases for M7:
-> (1) M7 in a separate Logical Machine(LM) that Linux couldn't control it.
-> (2) M7 in a separate Logical Machine that Linux could control it using
->     LMM protocol
-> (3) M7 runs in same Logical Machine as A55, so Linux could control it
->     using CPU protocol
+> Changes in V2:
+> - Correct the version metadata of the previous patch.
+> - Separate the modifications to the DTS and DTSI files into different
+>   commits.
+> - Formatting: adjust layout based on reviewer feedback.
+> - Updated the email address.
+> - Link to v1:
+>   https://lore.kernel.org/all/20241203060318.1750927-1-quic_yuzha@quicinc.com/
 > 
-> In patch 2, Use LMM and CPU protocol to manage M7. More info could be
-> found in the patch commit log
-> 
-> Current setup relies on pre-Linux software(U-Boot) to do
-> M7 TCM ECC initialization. In future, we could add the support in Linux
-> to decouple U-Boot and Linux.
-> 
-> Patchset was tested with below boot images when the patchset based on next-20250526:
-> imx-boot-variant-rpmsg-imx95-19x19-lpddr5-evk-sd.bin-flash_lpboot_sm_a55 (Use LMM protocol)
-> imx-boot-variant-alt-imx95-19x19-lpddr5-evk-sd.bin-flash_alt (Use CPU protocol)
-> imx-boot-imx95-19x19-lpddr5-evk-sd.bin-flash_a55 (M7 not under A55 control)
-> imx-boot-imx95-19x19-lpddr5-evk-sd.bin-flash_all (M7 not under A55 control)
-> 
-> Patchset was tested again with rebase on next-20250623
-> 
-> Patchset is re-based on next-20250603.
-> 
-> Thanks for Daniel/Frank helping review the patchset before posting out to list.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Signed-off-by: Yu Zhang (Yuriy) <yu.zhang@oss.qualcomm.com>
 > ---
-> Changes in v3:
-> - Drop fsl,lmm-id and fsl,cpu-id for binding in patch 1
-> - Add lmid and cpuid in driver patch 2.
-> - Add i.MX95 lmid and cpuid in patch 3
-> - Rebased to linux-next-6-23 and tested with this new rebased version
-> - Add dtsi/dts patch 4,5 to give people a view on how it is used per Krzysztof
-> - Daniel's R-b are still kept after talk with Daniel
-> - Link to v2: https://lore.kernel.org/r/20250606-imx95-rproc-1-v2-0-a2bd64438be9@nxp.com
+> Yu Zhang(Yuriy) (2):
+>       arm64: dts: qcom: qcs615: add a PCIe port for WLAN
+>       arm64: dts: qcom: qcs615-ride: add WiFi/BT nodes
 > 
-> Changes in v2:
-> - Typo fix in patch 2 commit message
-> - Move the m7 address mapping array from patch 2 to patch 3
-> - Add R-b from Daniel to patch 3
-> - Link to v1: https://lore.kernel.org/r/20250604-imx95-rproc-1-v1-0-a6e5f512731c@nxp.com
-> 
+>  arch/arm64/boot/dts/qcom/qcs615-ride.dts | 131 +++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/qcs615.dtsi     |   9 +++
+>  2 files changed, 140 insertions(+)
 > ---
-> Peng Fan (5):
->       dt-bindings: remoteproc: fsl,imx-rproc: Add support for i.MX95
->       remoteproc: imx_rproc: Add support for System Manager API
->       remoteproc: imx_rproc: Add support for i.MX95
->       arm64: dts: imx95: Add SCMI LMM/CPU nodes
->       arm64: dts: imx95-19x19-evk: Add CM7 nodes and vdev related memory regions
-> 
->  .../bindings/remoteproc/fsl,imx-rproc.yaml         |   1 +
->  arch/arm64/boot/dts/freescale/imx95-19x19-evk.dts  |  45 +++++++
->  arch/arm64/boot/dts/freescale/imx95.dtsi           |   8 ++
->  drivers/remoteproc/imx_rproc.c                     | 138 ++++++++++++++++++++-
->  drivers/remoteproc/imx_rproc.h                     |   5 +
->  5 files changed, 195 insertions(+), 2 deletions(-)
-> ---
-> base-commit: fda740558acb4303fcf377e5cf9139f795b1d85b
-> change-id: 20250525-imx95-rproc-1-20bb74ddc8af
+> base-commit: 025c0cda9c75d499b71b8e02123fea56a13b324d
+> change-id: 20250625-qcs615-1ead9e48be1c
+> prerequisite-message-id: <20250527072036.3599076-1-quic_ziyuzhan@quicinc.com>
+> prerequisite-patch-id: 37d5ab98a6918dba98ef8fd7e6c91ab98aace170
+> prerequisite-patch-id: 6d12fa7481ee4900276912d2a7071a9474e62404
+> prerequisite-patch-id: 7f2e951982cabbae366b1ff516f4cfa233746427
+> prerequisite-patch-id: efa688b2ddd5744df7aef40182787ee4ceb90c98
 > 
 > Best regards,
 > --
-> Peng Fan <peng.fan@nxp.com>
+> Yu Zhang(Yuriy) <yu.zhang@oss.qualcomm.com>
 > 
 > 
 > 
@@ -144,17 +103,34 @@ make sure dt-schema is up to date:
 
 
 This patch series was applied (using b4) to base:
- Base: base-commit fda740558acb4303fcf377e5cf9139f795b1d85b not known, ignoring
+ Base: base-commit 025c0cda9c75d499b71b8e02123fea56a13b324d not known, ignoring
  Base: attempting to guess base-commit...
- Base: tags/next-20250625 (exact match)
+ Base: failed to guess base
+ Deps: looking for dependencies matching 4 patch-ids
+ Deps: Applying prerequisite patch: [PATCH v6 1/3] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings for QCS615
+ Deps: Applying prerequisite patch: [PATCH v5 2/4] dt-bindings: PCI: qcom,pcie-sm8150: document qcs615
+ Deps: Applying prerequisite patch: [PATCH v5 3/4] arm64: dts: qcom: qcs615: enable pcie
+ Deps: Applying prerequisite patch: [PATCH v6 3/3] arm64: dts: qcom: qcs615-ride: Enable PCIe interface
 
 If this is not the correct base, please add 'base-commit' tag
 (or use b4 which does this automatically)
 
-New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/freescale/' for 20250625-imx95-rproc-1-v3-0-699031f5926d@nxp.com:
+New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250625-qcs615-v2-0-0f1899647b36@oss.qualcomm.com:
 
-arch/arm64/boot/dts/freescale/imx95-tqma9596sa-mb-smarc-2.dtb: scmi (arm,scmi): Unevaluated properties are not allowed ('protocol@80', 'protocol@81', 'protocol@82', 'protocol@84' were unexpected)
-	from schema $id: http://devicetree.org/schemas/firmware/arm,scmi.yaml#
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: bluetooth (qcom,wcn6855-bt): 'vddwlcx-supply' is a required property
+	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: bluetooth (qcom,wcn6855-bt): 'vddwlmx-supply' is a required property
+	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: bluetooth (qcom,wcn6855-bt): 'vddrfa1p8-supply' is a required property
+	from schema $id: http://devicetree.org/schemas/net/bluetooth/qualcomm-bluetooth.yaml#
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: wifi@0 (pci17cb,1103): 'vddrfa1p8-supply' is a required property
+	from schema $id: http://devicetree.org/schemas/net/wireless/qcom,ath11k-pci.yaml#
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: rsc@18200000 (qcom,rpmh-rsc): 'vreg_conn_1p8', 'vreg_conn_pa', 'wcn6855-pmu' do not match any of the regexes: '^pinctrl-[0-9]+$', '^regulators(-[0-9])?$'
+	from schema $id: http://devicetree.org/schemas/soc/qcom/qcom,rpmh-rsc.yaml#
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: wcn6855-pmu (qcom,wcn6855-pmu): 'vddpmumx-supply' is a required property
+	from schema $id: http://devicetree.org/schemas/regulator/qcom,qca6390-pmu.yaml#
+arch/arm64/boot/dts/qcom/qcs615-ride.dtb: wcn6855-pmu (qcom,wcn6855-pmu): 'vddpmucx-supply' is a required property
+	from schema $id: http://devicetree.org/schemas/regulator/qcom,qca6390-pmu.yaml#
 
 
 
