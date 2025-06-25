@@ -1,38 +1,47 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87ADA1FC8;
-	Wed, 25 Jun 2025 19:35:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F230D2BF00C;
+	Wed, 25 Jun 2025 19:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750880143; cv=none; b=VZ29OX7wmoGMKxDNJI3N3NqqrmX8mjqBVKm8Fkuvu/+Do1D41rgquDcGZcpGxuPT5rSwLnMe95B3QqHEs346kYF0kRC2GxSV4FTrOV/1tOm+WASgLy7PAhc4DLgvPblWHbyHXwtxl1KIa9WGtOZrPq9bFkgeZslQLacE55IPvAw=
+	t=1750880303; cv=none; b=SjzKluEJ1Quu9l0T6kiGQ7K4g74VAis6A4Tg+pyAoRbY1br7s3gxj0i+ZbWivtVQFjyHLvssdSW+zi9/XfXV+Gj2yhkJ58XvkTejXyEtQ9BRRX3jQ8MRQkfpQV5q4lV6/1+m7q94cTzyrKiHFgiIFIHeg3n90bYhkK8FxVjsrXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750880143; c=relaxed/simple;
-	bh=NI00kXAs2Sac4BxeyxGRa5cxRTMShWKol967nsdh3lk=;
+	s=arc-20240116; t=1750880303; c=relaxed/simple;
+	bh=pwFIsXgv0jLSLDkzwQ4SNkMiI5VIG0czRQZUAQtF9nQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qgSSjrFFFRbvu6Recyv9IpOUdHPMaTjnc0trjoH+kE0FGi7MrKVAatC5b+Mbi0PxkygIy6hiqLrwBer6ZswPgnVWLF2KLkdq4WlGowfNu+I48KmFIAu8P6ADB1TfWsMGVLfNDXscPl0dx0oHti/ZzfR4rQIC7QTq37er3BWSPd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D6D9B106F;
-	Wed, 25 Jun 2025 12:35:22 -0700 (PDT)
-Received: from bogus (unknown [10.57.49.191])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0404C3F58B;
-	Wed, 25 Jun 2025 12:35:38 -0700 (PDT)
-Date: Wed, 25 Jun 2025 20:35:33 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Yeoreum Yun <yeoreum.yun@arm.com>, peterhuewe@gmx.de, jgg@ziepe.ca,
-	stuart.yoder@arm.com, linux-arm-kernel@lists.infradead.org,
-	Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] generate boot_aggregate log in IMA with TPM using
- CRB over FF-A
-Message-ID: <20250625-chital-of-infinite-proficiency-fee4dc@sudeepholla>
-References: <20250618102302.2379029-1-yeoreum.yun@arm.com>
- <aFs0of3uZdoMEJXc@kernel.org>
- <aFvRI5OwSLLKz300@e129823.arm.com>
- <aFwrBU4H0w9AXyQM@kernel.org>
- <aFwrf1HnsilrASzX@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=pCjHbqbEMrIC6B5CY0if6xTQ2f1EsiCJgk24qPpzq3IYxJYBL0/6sn8jdiJLavO5BpQqb4CA6vBhLpcVLG7RFXv0fOdFQCIkD0S3ZJaS/vk1CAQw5VetQO7x4pWBx+GXWH9HDOSb/VL/3Fy1YD2CbXHsToHxqgBEbmzblos/fT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cB634nAy; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cB634nAy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A763C4CEEA;
+	Wed, 25 Jun 2025 19:38:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750880302;
+	bh=pwFIsXgv0jLSLDkzwQ4SNkMiI5VIG0czRQZUAQtF9nQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cB634nAyoPtk4yrpYunxkzaAwXgeq6j2V72DD3axaFkRazYJOULImQfq9yfJWRLNu
+	 nX7n0CK6pkoOmqxEgUmlpanBvXFrifyFBG9FGj5wbNJy7U9Cw/vh1scCUPuuayaqD+
+	 ZRfCmay010+kNuw7D9sK1hTu2jDs8OJmB1S4keojNgO/i4JfLi3uWc9QhuqtqLClYm
+	 FXMlgcsW1M9PnG+KmXeH048HTPN7/pCtsvCbiLAlxCPZ6Qrneo14F9zv3qfedY6knT
+	 VZxJ3xNF4e3WqEJv+4f4+D4GPFxltIV1zMn6fvFbMtbqALX//JBuR6HJLGVpAK8hAG
+	 FfDk3GQAJd8iw==
+Date: Wed, 25 Jun 2025 14:38:21 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Aaron Kling <webgeek1234@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pinctrl: Document Tegra186 pin
+ controllers
+Message-ID: <175088030096.2091553.3144090820246144987.robh@kernel.org>
+References: <20250608-tegra186-pinctrl-v2-0-502d41f3eedd@gmail.com>
+ <20250608-tegra186-pinctrl-v2-1-502d41f3eedd@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,80 +50,18 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aFwrf1HnsilrASzX@kernel.org>
+In-Reply-To: <20250608-tegra186-pinctrl-v2-1-502d41f3eedd@gmail.com>
 
-On Wed, Jun 25, 2025 at 08:01:51PM +0300, Jarkko Sakkinen wrote:
-> On Wed, Jun 25, 2025 at 07:59:53PM +0300, Jarkko Sakkinen wrote:
-> > On Wed, Jun 25, 2025 at 11:36:19AM +0100, Yeoreum Yun wrote:
-> > > Hi Jarkko,
-> > > 
-> > > > On Wed, Jun 18, 2025 at 11:23:00AM +0100, Yeoreum Yun wrote:
-> > > > > To ensure the TPM device operating over the FF-A protocol with
-> > > > > the CRB interface is probed before IMA initialization,
-> > > > > the following conditions must be met:
-> > > > >
-> > > > >    1. The corresponding ffa_device must be registered,
-> > > > >       which is done via ffa_init().
-> > > > >
-> > > > >    2. The tpm_crb_driver must successfully probe this device via
-> > > > >       tpm_crb_ffa_init().
-> > > > >
-> > > > >    3. The tpm_crb driver using CRB over FF-A can then
-> > > > >       be probed successfully. (See crb_acpi_add() and
-> > > > >       tpm_crb_ffa_init() for reference.)
-> > > > >
-> > > > > Unfortunately, ffa_init(), tpm_crb_ffa_init(), and crb_acpi_driver_init() are
-> > > > > all registered with device_initcall, which means crb_acpi_driver_init() may
-> > > > > be invoked before ffa_init() and tpm_crb_ffa_init() are completed.
-> > > >
-> > > > I get the ffa_init() part i.e, moving it earlier. However for
-> > > > tpm_crb_ffa_init() and crb_acpi_driver_init(), modules.dep
-> > > > takes care that they are loaded in order.
-> > > > For IMA you will need the driver as built-in but that should
-> > > > be handled via kernel config, not via code changes.
-> > > 
-> > > In the case of "module" built, it's true.
-> > > However what I tell here is when "tpm_crb" and "tpm_crb_ffa" is built
-> > > as "built-in" in this case, it couldn't make a "dependency" between
-> > > the same initcall level: here is the case of this.
-> > > 
-> > > 0000000000000888 l       .initcall6.init>-------0000000000000000 crb_acpi_driver_init
-> > > 000000000000088c l       .initcall6.init>-------0000000000000000 tpm_crb_ffa_driver_init
-> > > 
-> > > in this case, wihtout code change, the crb_acpi_driver_init()
-> > > is failed since tpm_crb_ffa_driver_init() is called later.
-> > > 
-> > > and this couldn't be solved with kconfig --
-> > > ARM_FFA_TRANSPORT=y && CONFIG_TCG_CRB=y && CONFIG_TCG_CRB_FFA=y.
-> > > 
-> > > The Patch #2 is to proing the tpm_crb_ffa as part of
-> > > crb_acpi_driver_init() when TPM uses method ARM-FFA.
-> > > 
-> > > If there's another suggestion, let me know please.
-> > 
-> > Hmm.. I actually got what you mean now. I was looking this from
-> > wrong angle. I think we can pick these patches!
-> > 
-> > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > 
-> > > 
-> > > Thanks
-> > > 
-> > > --
-> > > Sincerely,
-> > > Yeoreum Yun
-> > 
-> > BR, Jarkko
+
+On Sun, 08 Jun 2025 21:13:13 -0500, Aaron Kling wrote:
+> Tegra186 contains two pin controllers. Document their compatible strings
+> and describe the list of pins and functions that they provide.
 > 
-> Applied.
+> Signed-off-by: Aaron Kling <webgeek1234@gmail.com>
+> ---
+>  .../bindings/pinctrl/nvidia,tegra186-pinmux.yaml   | 285 +++++++++++++++++++++
+>  1 file changed, 285 insertions(+)
+> 
 
-If you are applying 1/2 too, feel free to add
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-
-I was initially thinking of taking it separately as there is no strict
-build dependency. But I am fine if you can take them together.
-
--- 
-Regards,
-Sudeep
