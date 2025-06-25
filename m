@@ -1,240 +1,194 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013053.outbound.protection.outlook.com [40.107.162.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD702BEC2B;
-	Wed, 25 Jun 2025 16:19:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.53
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750868368; cv=fail; b=YqdqWm2VOEZVzokWq7Jp01puksinG/8dv3OuRC8ZplvTxDsqxgLP5YjZBP+7Edr3OClWICq8t/ODSCLHJHuA9UaHnR7uV8sOMGEJi5Az7/g4THWBeLe2E6Xlij+kdh0T+Cpux/704hOJ69Ex3QZGmAfmaIj9MdB6/5VMaGi5qjo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750868368; c=relaxed/simple;
-	bh=eIdkXZCp2GqF3hCBcQLGzUzVcFCHbOd8ErfGq2zta1k=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=rtSHLzg22xM/8c50IoNiSg+5PWgke8RU1SGewtj38f2/EpHy30Ozf/aO1jXxMFgqSCmyq4BPk+FKmcFyHxgvqeD8qJsicdoA6jM6uhGzYzcevjEDgHGlTAVvq9/BCs3AyWbTgRkQPzYNxoqVYwA5etLPCj/66O3P82gGIL7PXg4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=B4kEu/Hg; arc=fail smtp.client-ip=40.107.162.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 573E026C3B2;
+	Wed, 25 Jun 2025 16:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750868475; cv=none; b=u61oD7eXk+mOBnPiFr1LgN0h6/5lit3its691PMu3pYXII0up7Ea32vDElAygxVyKy7ETjm2Xrz9AShjm//0emLLKadadODd8V0SdtMHPF0ueXhEgxqLRSnMOCMhHNeieE4QFECEL6DRlPi46ivY4lM3fToMadGVeOayCTcKnAY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750868475; c=relaxed/simple;
+	bh=XMP6ERBXfxV519EBoe1Y/mZ/m+8At/oi36qL9USyJ5s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=juUUXwyK5WuJs95+f+RURZt6fgvIdnD1LbffjH0czGcTYqinNqBcKewnVIjOoNGOgkf0N97tRt+vnJqyfDFLaTyV4KV4eEXn5na/4Amxr0KULirIAOy1CvNATWgaWx49GXl6VQaRP7wXBN7se9Wtzvx9OYDOOcjY7SHhSmUhg7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KKHS7PKh; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="B4kEu/Hg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Q6eJ0ZN5f/ScnpJsGOX8OeT1czO4gpzH1aNXM9p2MVAellgks0k7yzG9gEqp/sDiTgWm4EasRvrenxJ/GPjM3dGxaDm+hDRAjgHfpPlQG8u0RppMIpwFFu+XKABohnkXoOF/LYps6tl2VCJUWF99aFQOG63gA2q+T0vDHEEC8h0dZZd+XGUCIa50rJku6K/LakHBG8uL+wK3ji3c19udr6wqaObZ01ccZL7rR0EGYeZpu3jhoMiPSj8tH0SVvTAqcKpi7D9TP9kSu/CXMAQZIGaxoc1SFIkQwKZ4uFxMEudi2cWv4Yw1DI93B2DrWtyZDVWWRXuQzc3klh/64JRObg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1b5d7p5CJABVZyYvwxIcwh6gOqXHYtgClZ331IuOAak=;
- b=VYWy8Zjuh8ctMHLT4h9KCYBvhzoZdLW81/qzim5HDnbBdK59M2lFd2o3AiHtFqHjC5qDk5CC9MNp3eWmiLp2eb6+MwCpvjLpLgS3WuEapH93+ZAOTh2lKuchCW4KJPLLdtRh04J4TeVD5++JGx6EFsOjDLykum9z0j15JXjPcn2+/7dgNLJKU/3e5NXj55V5/IPl//q/FhfFA9MbfGZO00kZzBuAz6khyFeCRPlvn2K6zoDpnL8HjE6EyGqqEg5tZ4gMW7KSQZvOXa9M/mIrGg1Kq49WN9noHcOQJeRlN1ttdvbnnuseDcJRqOe7W7blMZJbDnA68hSSSB3w9WBYIw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1b5d7p5CJABVZyYvwxIcwh6gOqXHYtgClZ331IuOAak=;
- b=B4kEu/Hg47BNxQlyYKiIB6yNTZAdPbKbLY8El1WcRETN3humIXcjX3tXS1WuBGDa++JBZN86f7EuXUBRswD8w1vJ+cHJhXCOpXfZ3eUeZRKM+haDuG2d3cY4Q6t7VpmYHexyrdsBkmS6ozvIdhCwFlJmRSEJrhxVTp9Y1a4Kt2Bbo9hmDzKGAZ4jMA0dB6mJMbHR5cc3v0aTEaYARlvYS2bxdddaT5MOfwhf9OpLHZJkJ9g6i9hd0hwaF0SvgcYS0UvzWWVl7JpknC8eAuXmzeNdV9f59f7izPSUytEmoBdNYEIYagqo+tAlxmjQuzoU581tFxjcvDU1b2MRhv8DMA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
- by DUZPR04MB10037.eurprd04.prod.outlook.com (2603:10a6:10:4d8::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Wed, 25 Jun
- 2025 16:19:22 +0000
-Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
- ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.015; Wed, 25 Jun 2025
- 16:19:22 +0000
-From: Frank Li <Frank.Li@nxp.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
-	linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
-	linux-arm-kernel@lists.infradead.org (moderated list:ARM/LPC32XX SOC SUPPORT),
-	linux-kernel@vger.kernel.org (open list)
-Cc: imx@lists.linux.dev
-Subject: [PATCH v2 1/1] dt-bindings: pwm: convert lpc32xx-pwm.txt to yaml format
-Date: Wed, 25 Jun 2025 12:19:08 -0400
-Message-Id: <20250625161909.2541315-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: AM0PR10CA0111.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:e6::28) To PAXPR04MB9642.eurprd04.prod.outlook.com
- (2603:10a6:102:240::14)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KKHS7PKh"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fb3bba0730so13928566d6.0;
+        Wed, 25 Jun 2025 09:21:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750868472; x=1751473272; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9NVslBr1xkJaej9KYSvp2pb98xkmIaEpx8AR8MBWA3Y=;
+        b=KKHS7PKh1Tzi/umPFc5fZ06crDgdRXEIWlhStq7JSGeAVz7/qrt9SLqChBWXHmZ22V
+         keGme5bnlSsc2k5nHggKOmhlEIp7hGAyPHS8U9UqPCKFo0C1ODiTngwRGd1mdTElhksy
+         P7TTHUR1OxKu2FQGjEguHiZTPBpTA0w4/8n/hyDfbUMbCqNHooZ8LoMoXaBqusoQSaMt
+         GvnoVU0W2SIHuUzuBk3MsYve3jPVgtOncq+7NkU4jfsEH/eJ+O7pvWn7+mFGZ5tfxmFA
+         bJXoi7IIpxZAL96EtHA9SFCu2pzcAx0uCEy+MHxlkvCZuAQwLCTIETOw+UlsK2rYiUMX
+         YMvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750868472; x=1751473272;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9NVslBr1xkJaej9KYSvp2pb98xkmIaEpx8AR8MBWA3Y=;
+        b=Aw6eixF4SVSE3Z2ScabJL/1fPhLCWQicIC4v2RAkO9S5HL7GDYakewRpbqSOtoDkbf
+         8+Ysn1P+1uFsGH/Fh1yzjIDDDz6Wf8JE9+uRR/acyBe95+s/wMHS66tUwqjHUTVXv4Xl
+         iUxBwSU5V2nC+Cq69kHxIxnZe+xwACin4sxnXuY0PBXSG7p9QEXzOVLaq8zypXYfObV4
+         1ghbObD+cw7w4yGKNkXSwVua9VIFhWzGADMm6PMe3qwdMr3EO+0I/4fL7dhMDUyZQ4gc
+         xP6HQHm9As0LwmQ14XS6NJdC24HyOxUP0gf5MqM6mYbwQARFbKic8Fe3cKo12T2QoIKE
+         zjDg==
+X-Forwarded-Encrypted: i=1; AJvYcCUUm27OPwp+6fijOIR1K8EHjRl0X1e1CCsbTYxw6fjYUe6jDYH+23BlzHm3yJRpw+tWSZcCpqDAa+ci@vger.kernel.org, AJvYcCVU9vV0Znvp3jzD8lHU4NDKvzGPWqRlUmZTwKi2uOiY1PDc0TbfgJnRXrtVYEg7zpxhV8YGaevSoh2MmHfxdQ==@vger.kernel.org, AJvYcCW+c9Gfhnln1GEFf0QLaqyMaHZsQoWWijer5kSJVEn3Y1whaa+TlxcySFCKtWV6s5ytIAQESL3iJuLSnC8n@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy1S9/j1HjlBrfGb8FoawmG9PfP8xarrrKi/BrJH0LSrMFHhs6V
+	x4eBRcGcPCW7EgRA4CHezGJHryOeU54XAq1poMTTO2CsXcs6mxSwReRbDsQJrIwMnQlx+xkYTFd
+	Bj0AI2r4tpe2Wb4sKxYjQBby2HRrNKPo=
+X-Gm-Gg: ASbGncv9pfIuTX0082yYkNDONwmhKky098dkZKtC2GChiHSIXEDfzXRJ/H0EaosX3eP
+	U1EnXl5TNf91P8rqe5JMyhEuTmpAmuBsGAgVtNL562jzZ7K3kYBwfTrREl9da0JlFsyYsYWR0H6
+	ky8KHPUSsJqBJcF3qnXHo6whqSJFJ2dYo5BKOF5XbWyg1TfwaajiWhfUNgdwj+HAP2NEYz50//T
+	kjQ
+X-Google-Smtp-Source: AGHT+IF0E2ADWqAWPU392h4IO+FZ/wRsjmuf7c03br6vhyt8kFz6PcUB5E7QjpVnFsCxdOzBZ17XM3vfqbwilSgcRb4=
+X-Received: by 2002:a05:6214:419e:b0:6fa:ad2a:7998 with SMTP id
+ 6a1803df08f44-6fd753a870emr3103946d6.18.1750868472164; Wed, 25 Jun 2025
+ 09:21:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DUZPR04MB10037:EE_
-X-MS-Office365-Filtering-Correlation-Id: dc282399-58bb-409f-2414-08ddb4040b7a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|52116014|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?YqyNP9KnOGAw3FSUVShRHnwzNJo1YDeS/v7jTu+9DKY5iLAuJgCCO8vhYq/J?=
- =?us-ascii?Q?SX2pRL6+CwGKETEifJcAbosMs3W0pWYTVmFkj20mQy2hkqKO+xyM6sqgNe1Q?=
- =?us-ascii?Q?/IK6D7ho/nzeZnG39xvZy7y7l6pj18UVLpdUW7Glq8iNlzgpybI54e34XKDv?=
- =?us-ascii?Q?Je5eUYzVuDhE7xKEmsYdhDhaXa2eSc6BVLHrqaILELEvA5cBjafjqoE5Ugv/?=
- =?us-ascii?Q?Xg2W3Ta4goW9vNc7binmX9jEWKEwKvlmg9SCwBlJLP8fKdxzVImU0YAlz5G7?=
- =?us-ascii?Q?o+G7wYt0SU3z5ePi+inwePgl7V1uJQYcuNa2MFTEOxxw0sCCjXQxDORuCncA?=
- =?us-ascii?Q?YB2JEFx9guckOVARjm5ywqww35xyF8h32iE6E7kOEkpq6wvYwWZEzcn8w3IZ?=
- =?us-ascii?Q?ZgHtK0PTmzngz8VE1mEtfrDr/kPE18gJZsFW/hUydVnH6cwuTm3kO3o9NYQn?=
- =?us-ascii?Q?LX23TnJb3gi2fX5Hv5zn3gjjh3BhWQRSlkI1AZUpq456b+KU0uaZm3+Is9OU?=
- =?us-ascii?Q?PFKd/EJvTsdfn3NiZ+NHnEQMP6fX7lV8yX93ftIejphPmrniMV7KMhTwtql0?=
- =?us-ascii?Q?CMYJD5zv4ActyHln2vWLtYk514EYVH4eluKK3rchncxt1iqhozgdn+8jYNIw?=
- =?us-ascii?Q?V4TvSLJNbGR7YRZfZsQV6BxOX3m3UZP4aF0ArJb1CP8eHmW0ZcOlZm3ZoeuO?=
- =?us-ascii?Q?My++hwPgHi/XXIYUS6PbDEtGJmPsYlerql/bv0Zba8d93Jz3rV9Dw0RqjlqT?=
- =?us-ascii?Q?NINxsS6AHYB0Bj8lgZJ+xhnmS4T2Rv+a+CCv/EJRMhHUSh6uDrGQRZcEeKTj?=
- =?us-ascii?Q?RGD0DzXcJIxJoFBbHdcdYfdSIHAHnFtXihtJ59s5zip4b5VswtPYk/g12S6F?=
- =?us-ascii?Q?F9zvrUE7hbWCqf1r7j6oZTKfWem/nq0Am2fzNLrLi+NDRRT9Pzpq04/D7/BG?=
- =?us-ascii?Q?TqDfwSO+Cl1BeAoy2sL2Lt5mMUECmMF88r7JLPIEb0vhM1GpNWI9YA+Fp74A?=
- =?us-ascii?Q?2ROV/um1yuc56XApiuXqJ2NIww/G0F+5aq+gww2oCnvRvGCCrLyJYYMTOJnz?=
- =?us-ascii?Q?d8CMMBFn0anxrNcV/7+UprqPJfUOVw/f5vMOxLXfbt3DC91YUM9+QI56oM4j?=
- =?us-ascii?Q?orkG/RdsaYTU029GtYmbKdmszEl9SEUKzY6uDaXTioXSKbKZaYsZfIIKPeU/?=
- =?us-ascii?Q?Jo25uJZMZiIYp5fK+I0W27kD/rf/fvGanOAMWrI4mKQxUTbMV4He0WxEREHq?=
- =?us-ascii?Q?XStyrMKIAEUViSjYKQ49iHFSQDKnhcLojWBR0eYGP1DKsCAf36YrPuolanox?=
- =?us-ascii?Q?CLe+/zg5h/GwXCE/xqHEIwPOjNi/nyun1u2YTSscIYkZa0ABHNskGkHRWZNQ?=
- =?us-ascii?Q?5zzejqs+VNhu/aDJoMBXvqoeysllLIz6OLWNEhnFAN1HBbhce/sLqFFqZ9Ry?=
- =?us-ascii?Q?bXGK6ONUk90nsWJsSBkwbo8vFfCQf/4hFcMpwPdXCJEHJnrp0RfL8Q=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(52116014)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?8Hm/nUwhtPo5E/v3EQzETGNYfyNBewtdE6xxmJ0eMb9YNu3CJ7ZWYzfMyiH5?=
- =?us-ascii?Q?7DkYTMRWPmkJxFlFFOZZ5DhKtZ+8Tnhr2XJ8SAcoKcpNHmWoor282iyqrbtv?=
- =?us-ascii?Q?HFc+uTq/S8rNlFkL0z8n5PbWzK0QPyii/ZlEuAuE4P0Xh+Lj9gntR8LW8EdB?=
- =?us-ascii?Q?5qXUuu+prhqybF7u1riFFVng3Wawd78hz7SxeMn9hWEszfQ/sUNm/iPOVPqR?=
- =?us-ascii?Q?157kRSlqGnmBlpBfiGKTAVdgr75TPDbpu36uovoXpkezaEY+ogZG55B6lOhY?=
- =?us-ascii?Q?iMOjAjvZS2QeJv/YD3UVKrYCIyk5uGLHiI2UUCs6KMmavtSzVH33AB+laJ0o?=
- =?us-ascii?Q?gBWjIlyFbKcR/UC27WouYTMiBHo73oiqwYA5hrFJ6ERLV/aVxE3qQJ5c7FL0?=
- =?us-ascii?Q?AvJRpT6hRyI/ie7/gCUrjGl7TF4iiOHzHIMH54p/BGU8CxEGR9rgZ9UwF9M8?=
- =?us-ascii?Q?snQm+YvwjCd2hrC/2HBMdZUhlaBIbNUnh5XnrA7HraYgjYWqz3tidxVah/Q8?=
- =?us-ascii?Q?ZHrR+meQEJtk5CVGdX6abwdM3NHSaIEDZucfgWsH88a9d/Z3GzALNWPB+yJ3?=
- =?us-ascii?Q?AZQccloRxb/RtrCDoRIPup3NfeHIbpDO6aMEBCJLnGMPxt13IcGvv0tZ+goS?=
- =?us-ascii?Q?r/rfnuRM+yLAcMpCBeijFHqx+YJwvTkLVyb63Y3+6Qm3j01kuGfl5xM2K+/E?=
- =?us-ascii?Q?TlZBfJLFKXUDM5ll9ar6hUKVYACyBP3NOA6RwH8od7LaKQOYnEnjSu+bt1Kv?=
- =?us-ascii?Q?bv2GclOtNgW5Je1OCbORfXmnB8viNQVLJZ/pfajG2Zx612H+Z1w+7UhWp2AH?=
- =?us-ascii?Q?1bxCA8UsQPcPvrVcCKv212VHS2g2imVSsvkjuMmYVXNpnqdSY2Snl18BQcj5?=
- =?us-ascii?Q?dzGlTzXAT0aeDM7ZkpRk64Bk2hPjZBHZc0HaJJON376/b+GvsMCGhTZEab8n?=
- =?us-ascii?Q?H2aVFxZJ3enPb8fWtTOOqolHSAaffcv0E9wkFTahLuFB9bAH0oH4rtfhBf95?=
- =?us-ascii?Q?00FXDXGTQhcDN2+5uUtK+Nf8+9Dtwwc/eT71G+Icy/Z+NXRjTOgx32r1ziB5?=
- =?us-ascii?Q?qvICt/mECACyuxq6IocmJU0GALkvIT/h4je7Oouxny6vm9gDwGjFTaZhBw/f?=
- =?us-ascii?Q?x+4jSgKEzcd2tHo56deVQQpJ/HsIv2HSUvq+QJRwxUkyvueGyYVE08PCKClK?=
- =?us-ascii?Q?iwxBAbzzLU7w/cN/1ob+ha57ULIIpogCzBT86OhsdQ0kVzv2Y8qsNgmbjY2p?=
- =?us-ascii?Q?EQLXIiYWcK7ZukFWu3Uj6jNfLdiJ7VrdQKw4nj+zh680SfgRNnQuelgIFyyY?=
- =?us-ascii?Q?vHMB5i/P+5dS3UeiMfedyzAU4UafcKVFcXUja02MiydJbSlYABNMiqykXhCt?=
- =?us-ascii?Q?A6pzXeuUysDlEdFj0LVc+YIAz8r6aJ1tAUi2g2kFtA4MaHzm2E8zJcP9pRYn?=
- =?us-ascii?Q?fLOQPPySCF2gu0RQV1pjfRAlokdf1Rwhdl8glprEO6bnCgmb4YTixqa+wvNg?=
- =?us-ascii?Q?iV7t9zgucd1KBf+BurN8hP5NYVAtTohlHY1WOJesu31FqrUefiVZz9osLNGO?=
- =?us-ascii?Q?VZxB90AkJc3JUJSMUNWmeZ+Mt1IpCTSGnJLdjVRO?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dc282399-58bb-409f-2414-08ddb4040b7a
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 16:19:22.4416
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jHzvnuw2Q3QRhzbD4Zl7sVFo45H11YMtrjQUhLaibZ9JgZEQYzDmuc6oNycg3V0lLEHzcuU8g1ztloNcCqUCyg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB10037
+References: <1372501.1750858644@warthog.procyon.org.uk> <1382992.1750862802@warthog.procyon.org.uk>
+ <011ec23b-d151-4ef8-bbe7-ba79e3678ae7@samba.org>
+In-Reply-To: <011ec23b-d151-4ef8-bbe7-ba79e3678ae7@samba.org>
+From: Steve French <smfrench@gmail.com>
+Date: Wed, 25 Jun 2025 11:21:00 -0500
+X-Gm-Features: Ac12FXwJI9fijUzybZTm6c-W7y-I5jTYEiHnpSWQL96V5yQo6-_Q8OXO622L3v8
+Message-ID: <CAH2r5mtzPKaiOmwQsaSTRWy1YdWygvVBdOPrhLLGbEfNAWXvEQ@mail.gmail.com>
+Subject: Re: [PATCH v2] cifs: Fix the smbd_request and smbd_reponse slabs to
+ allow usercopy
+To: Stefan Metzmacher <metze@samba.org>
+Cc: David Howells <dhowells@redhat.com>, Steve French <stfrench@microsoft.com>, 
+	Paulo Alcantara <pc@manguebit.com>, linux-cifs@vger.kernel.org, netfs@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Convert pc32xx-pwm.txt to yaml format.
+added to cifs-2.6.git for-next and added RB and tested-by
 
-Additional changes:
-- add ref to pwm.yaml
-- add clocks
-- restrict #pwm-cells to 3
+On Wed, Jun 25, 2025 at 10:55=E2=80=AFAM Stefan Metzmacher <metze@samba.org=
+> wrote:
+>
+> reviewed-by and tested-by: Stefan Metzmacher <metze@samba.org>
+>
+> Am 25.06.25 um 16:46 schrieb David Howells:
+> >
+> > The handling of received data in the smbdirect client code involves usi=
+ng
+> > copy_to_iter() to copy data from the smbd_reponse struct's packet trail=
+er
+> > to a folioq buffer provided by netfslib that encapsulates a chunk of
+> > pagecache.
+> >
+> > If, however, CONFIG_HARDENED_USERCOPY=3Dy, this will result in the chec=
+ks
+> > then performed in copy_to_iter() oopsing with something like the follow=
+ing:
+> >
+> >   CIFS: Attempting to mount //172.31.9.1/test
+> >   CIFS: VFS: RDMA transport established
+> >   usercopy: Kernel memory exposure attempt detected from SLUB object 's=
+mbd_response_0000000091e24ea1' (offset 81, size 63)!
+> >   ------------[ cut here ]------------
+> >   kernel BUG at mm/usercopy.c:102!
+> >   ...
+> >   RIP: 0010:usercopy_abort+0x6c/0x80
+> >   ...
+> >   Call Trace:
+> >    <TASK>
+> >    __check_heap_object+0xe3/0x120
+> >    __check_object_size+0x4dc/0x6d0
+> >    smbd_recv+0x77f/0xfe0 [cifs]
+> >    cifs_readv_from_socket+0x276/0x8f0 [cifs]
+> >    cifs_read_from_socket+0xcd/0x120 [cifs]
+> >    cifs_demultiplex_thread+0x7e9/0x2d50 [cifs]
+> >    kthread+0x396/0x830
+> >    ret_from_fork+0x2b8/0x3b0
+> >    ret_from_fork_asm+0x1a/0x30
+> >
+> > The problem is that the smbd_response slab's packet field isn't marked =
+as
+> > being permitted for usercopy.
+> >
+> > Fix this by passing parameters to kmem_slab_create() to indicate that
+> > copy_to_iter() is permitted from the packet region of the smbd_response
+> > slab objects, less the header space.
+> >
+> > Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
+> > Reported-by: Stefan Metzmacher <metze@samba.org>
+> > Link: https://lore.kernel.org/r/acb7f612-df26-4e2a-a35d-7cd040f513e1@sa=
+mba.org/
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+> > cc: Steve French <stfrench@microsoft.com>
+> > cc: Paulo Alcantara <pc@manguebit.com>
+> > cc: linux-cifs@vger.kernel.org
+> > cc: netfs@lists.linux.dev
+> > cc: linux-fsdevel@vger.kernel.org
+> > ---
+> >   fs/smb/client/smbdirect.c |   18 +++++++++++++-----
+> >   1 file changed, 13 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/fs/smb/client/smbdirect.c b/fs/smb/client/smbdirect.c
+> > index ef6bf8d6808d..f9773cc0d562 100644
+> > --- a/fs/smb/client/smbdirect.c
+> > +++ b/fs/smb/client/smbdirect.c
+> > @@ -1475,6 +1475,9 @@ static int allocate_caches_and_workqueue(struct s=
+mbd_connection *info)
+> >       char name[MAX_NAME_LEN];
+> >       int rc;
+> >
+> > +     if (WARN_ON_ONCE(sp->max_recv_size < sizeof(struct smbdirect_data=
+_transfer)))
+> > +             return -ENOMEM;
+> > +
+> >       scnprintf(name, MAX_NAME_LEN, "smbd_request_%p", info);
+> >       info->request_cache =3D
+> >               kmem_cache_create(
+> > @@ -1492,12 +1495,17 @@ static int allocate_caches_and_workqueue(struct=
+ smbd_connection *info)
+> >               goto out1;
+> >
+> >       scnprintf(name, MAX_NAME_LEN, "smbd_response_%p", info);
+> > +
+> > +     struct kmem_cache_args response_args =3D {
+> > +             .align          =3D __alignof__(struct smbd_response),
+> > +             .useroffset     =3D (offsetof(struct smbd_response, packe=
+t) +
+> > +                                sizeof(struct smbdirect_data_transfer)=
+),
+> > +             .usersize       =3D sp->max_recv_size - sizeof(struct smb=
+direct_data_transfer),
+> > +     };
+> >       info->response_cache =3D
+> > -             kmem_cache_create(
+> > -                     name,
+> > -                     sizeof(struct smbd_response) +
+> > -                             sp->max_recv_size,
+> > -                     0, SLAB_HWCACHE_ALIGN, NULL);
+> > +             kmem_cache_create(name,
+> > +                               sizeof(struct smbd_response) + sp->max_=
+recv_size,
+> > +                               &response_args, SLAB_HWCACHE_ALIGN);
+> >       if (!info->response_cache)
+> >               goto out2;
+> >
+>
+>
 
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-change in v2
-- allow clocks, there are not clocks for nxp,lpc3220-motor-pwm, so not put
-into required.
----
- .../devicetree/bindings/pwm/lpc32xx-pwm.txt   | 17 -------
- .../bindings/pwm/nxp,lpc3220-pwm.yaml         | 44 +++++++++++++++++++
- 2 files changed, 44 insertions(+), 17 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
 
-diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-deleted file mode 100644
-index 74b5bc5dd19ac..0000000000000
---- a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
-+++ /dev/null
-@@ -1,17 +0,0 @@
--LPC32XX PWM controller
--
--Required properties:
--- compatible: should be "nxp,lpc3220-pwm"
--- reg: physical base address and length of the controller's registers
--
--Examples:
--
--pwm@4005c000 {
--	compatible = "nxp,lpc3220-pwm";
--	reg = <0x4005c000 0x4>;
--};
--
--pwm@4005c004 {
--	compatible = "nxp,lpc3220-pwm";
--	reg = <0x4005c004 0x4>;
--};
-diff --git a/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
-new file mode 100644
-index 0000000000000..d8ebb0735c96e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/nxp,lpc3220-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: NXP LPC32XX PWM controller
-+
-+maintainers:
-+  - Frank Li <Frank.Li@nxp.com>
-+
-+properties:
-+  compatible:
-+    enum:
-+      - nxp,lpc3220-pwm
-+      - nxp,lpc3220-motor-pwm
-+
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+
-+  '#pwm-cells':
-+    const: 3
-+
-+required:
-+  - compatible
-+  - reg
-+  - '#pwm-cells'
-+
-+allOf:
-+  - $ref: pwm.yaml#
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    pwm@4005c000 {
-+        compatible = "nxp,lpc3220-pwm";
-+        reg = <0x4005c000 0x4>;
-+        #pwm-cells = <3>;
-+    };
-+
--- 
-2.34.1
+--=20
+Thanks,
 
+Steve
