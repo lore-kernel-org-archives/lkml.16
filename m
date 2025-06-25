@@ -1,170 +1,246 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4919545945
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C50A45945;
+	Wed, 25 Jun 2025 13:46:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750859169; cv=none; b=DFQ+E4l64Zs2N9qFbyMp99Xcgxb87RIHnrh+UNQLOe9xQM9OSLLYxCiN6/3YscH1p5prb26ZLayeR0QMdcF7m99dd/wn0VDo89dIohWpCe6m3jIUOCOcW2jq4WDQgiLO044pR8WOZZGzbmEaCJdcQlYqtiTo/WwMRsTGt1mOemM=
+	t=1750859202; cv=none; b=OVnW02cAhuwqbAGqVJGjAgmqklIfRniiRIiZmShk4fy9NMLuuA9oKrJ5Q5ypfDn/4VayswwvQTxwd04x5WyN2E0npBmlKRjfSkfSqTakwo3T3Lgx7p7ygmn8k4nZeQokFPwgM4JnY9RQCvVkPz0h0T3gp0C6BDSFJjG/84gXdJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750859169; c=relaxed/simple;
-	bh=DkhdF/kf2wSgUD1yNjOPQFXn+z2HOfvLnAWBk1XCoSM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AOM6ZM8Y1AJmtgARxHbNxRsjMP3YInq8TT4slZc4PImu/FGsN6v2v0HG0waqZJCHSMcBQXPiyhDohaG5OPwAZyVqMZoDkfQa0nDpl4bcnhrg+mxyExPvw6+VfZ+eQuZyeirRIfsoaKs02CutM48tLqeHdDozvY2OLGCcx0boeWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=D8T7lO7C; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750859202; c=relaxed/simple;
+	bh=5LIJn4O8qODMP1/vpG3/SgOca2iqWuGuWartE1ccmzU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ajd9b1UK9/MZDrbCK9Ul/ugRJ3HCoEAdUhkK5/AGTf+ZRj6UK0BiAKwSogZmcpqJVZwzISzIYMtQMwgUhv/LTdF0I/9ymigdLWO7Qj4ytNTsfi3kFqwvr5lml1ThkJyLnXlfen5M3PEXMy1540ayxBFF+Pq4rdCRijg8iiiHDaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K+3JNYzO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D8T7lO7C"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750859167;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=DkhdF/kf2wSgUD1yNjOPQFXn+z2HOfvLnAWBk1XCoSM=;
-	b=D8T7lO7CQ/jxYY+5LepYYt5ycebwnRnbQVJlwR4+anjdUzDV6ExYjB30PAvCq+YJNtDCCH
-	8Caa90RaspNuUKAru3Evnuttdvq8OW3eSxuMLCBX+1WZGfvlejP22PTXtTDOlOU9Br49Ms
-	k8oVJqKIXPvYUMqahZcR4ue32JSRjoc=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-557-lOcs2_GqMbandKPqy2slHg-1; Wed, 25 Jun 2025 09:46:05 -0400
-X-MC-Unique: lOcs2_GqMbandKPqy2slHg-1
-X-Mimecast-MFC-AGG-ID: lOcs2_GqMbandKPqy2slHg_1750859164
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4eec544c6so835264f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:46:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750859164; x=1751463964;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DkhdF/kf2wSgUD1yNjOPQFXn+z2HOfvLnAWBk1XCoSM=;
-        b=tuZ/si+gjnNIAD3pT/CJgqcI0rgxPLtYnJHHOMh2o1rz/6Q9TP520EkPjJFCRutuaB
-         i2j/bVKiw6dWslNVr992B914KA5jrfN98ABMG/TxqgNkaRZrgtuYHaKurx/PPtntLxMs
-         MHhIA/PfRadoaAhoSDjuA/yWcLxsXwEiSiGb+hG4zLDcH4T/Jym157oYM54SF1PmSr+x
-         6W3kN8C4buf9siAJzIZvxILURD6hJ5o2VGkvY4OwYkbjbYI4k3IEnPbJcNogXj2Go+3J
-         WdYxt9daoxZR/hx1r+VtVo7P7VnLpoylGHM1in8qO/duh+5BKzTYfO2ZnWI24Qt/FE4u
-         mU/Q==
-X-Gm-Message-State: AOJu0YwuTxDzCQ3vvLDOrlnM+K4ZCDooT4SjNb2ncL9s9nd+5XQzvSkE
-	FnoxytMxNepoLZHS8hoNNU3Bq6y4TyvRiq3aceIez5V9Dv5VWCNgBt0tdUvdMBdk9S4Q0XAXNt/
-	t30XxK0Kf/nuwkbHWp/RaKI+dhe9cTAO0WoA9h3/OrlmTpwWqtp9FRymheM6m120nCw==
-X-Gm-Gg: ASbGncvnQZvcDwIbHccXn/LbKK5otfyD+EQ+GYZKMt79G9Dq3SNHmhX7JnDkLy3549u
-	KgCXvc1VRMMBkLloVuvOdRZx0MuVOzeTBldLTZrnG3Z5yXFOmHSLgN89vdCqrShjACKoo2JdH21
-	wNAiIdHRHclPs6nxH9o2R5/80QTCHMqU4yaK3H4UxR/qHhKLwG95Lpt59xXsWtGHH0TYdlSAIaR
-	r2Jje3DAZYkI0Ma2IbBYQCREek4lEBzLqrO7ahwBAjyxNBYlADUfx3gUJ4/E2YtdQIOPZWzCtnp
-	QA+0UOUiSMNrdp7JQnYMQenfhIJWqKTQzGs/cVZXNSoGNNsG
-X-Received: by 2002:a5d:59c9:0:b0:3a5:5270:a52c with SMTP id ffacd0b85a97d-3a6ed5884a6mr2591902f8f.0.1750859164285;
-        Wed, 25 Jun 2025 06:46:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEBpSKcL2CNkEJu9dy31rxgn+Zouj+0ycQOZEN2aH8b7Rgllo20a5EXnfzkB7LVEskLeLnkqw==
-X-Received: by 2002:a5d:59c9:0:b0:3a5:5270:a52c with SMTP id ffacd0b85a97d-3a6ed5884a6mr2591874f8f.0.1750859163836;
-        Wed, 25 Jun 2025 06:46:03 -0700 (PDT)
-Received: from gmonaco-thinkpadt14gen3.rmtit.csb ([185.107.56.40])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538234db3bsm20580275e9.16.2025.06.25.06.46.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 06:46:03 -0700 (PDT)
-Message-ID: <7955e52177e1ad9c309df9e6f788103ae46541cf.camel@redhat.com>
-Subject: Re: [PATCH v6 6/6] timers: Exclude isolated cpus from timer migation
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: Frederic Weisbecker <frederic@kernel.org>, Thomas Gleixner
-	 <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, Anna-Maria Behnsen
- <anna-maria@linutronix.de>,  Waiman Long <longman@redhat.com>
-Date: Wed, 25 Jun 2025 15:46:02 +0200
-In-Reply-To: <aFv2mLdH3lNHdKtp@localhost.localdomain>
-References: <20250530142031.215594-1-gmonaco@redhat.com>
-	 <20250530142031.215594-7-gmonaco@redhat.com> <875xgqqrel.ffs@tglx>
-	 <b33dcafca895da1d9c64a7d6ab771952a932e579.camel@redhat.com>
-	 <878qlhnunz.ffs@tglx>
-	 <1bc41a7a5bd46860318b0417fa27121758f28448.camel@redhat.com>
-	 <aFq7rqbHugtiWF6Z@localhost.localdomain> <87a55waylv.ffs@tglx>
-	 <aFv2mLdH3lNHdKtp@localhost.localdomain>
-Autocrypt: addr=gmonaco@redhat.com; prefer-encrypt=mutual;
- keydata=mDMEZuK5YxYJKwYBBAHaRw8BAQdAmJ3dM9Sz6/Hodu33Qrf8QH2bNeNbOikqYtxWFLVm0
- 1a0JEdhYnJpZWxlIE1vbmFjbyA8Z21vbmFjb0ByZWRoYXQuY29tPoiZBBMWCgBBFiEEysoR+AuB3R
- Zwp6j270psSVh4TfIFAmbiuWMCGwMFCQWjmoAFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgk
- Q70psSVh4TfJzZgD/TXjnqCyqaZH/Y2w+YVbvm93WX2eqBqiVZ6VEjTuGNs8A/iPrKbzdWC7AicnK
- xyhmqeUWOzFx5P43S1E1dhsrLWgP
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K+3JNYzO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D485C4CEEE;
+	Wed, 25 Jun 2025 13:46:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750859201;
+	bh=5LIJn4O8qODMP1/vpG3/SgOca2iqWuGuWartE1ccmzU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K+3JNYzOjCYi1nJqRGNeJ+GYeKa+QCZj5XNdvjrSHde40k5RvXWCP9r1EamwvFAVq
+	 CagkinWZgVffasyujf9WB9B4zxNbWFWCma1qO/Ea7x5RVSOFfjgirEEWXjtRJoH5YO
+	 QyMoqO6I8Zojo6MbEI4AreXpGFQO74uuabxwaQHk+YdD/48YP7UqSLeHtowdVuK540
+	 RxL77KWUrF+BWuqS0WIXZ1psUi2Iy9r7cFOr+4EpyO/oDwsCO2p5x9tV+O5QEhjmHI
+	 ymk/1iz7E9CbukplTbdHKFj5afvGqZoRqWzQgTB6FlzcRt2Q2giStUXJuj3qvznPPT
+	 /H5LtbHZfECBQ==
+Date: Wed, 25 Jun 2025 14:46:34 +0100
+From: Lee Jones <lee@kernel.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
+	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
+	linux@roeck-us.net, jdelvare@suse.com,
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-can@vger.kernel.org, netdev@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
+	Ming Yu <tmyu0@nuvoton.com>
+Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
+Message-ID: <20250625134634.GY795775@google.com>
+References: <20250612152313.GP381401@google.com>
+ <CAOoeyxV-E_HQOBu0Pzfy0b0yJ2qbrW_C8pATCTWE4+PXqvHL6g@mail.gmail.com>
+ <20250613131133.GR381401@google.com>
+ <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
+ <20250619115345.GL587864@google.com>
+ <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
+ <20250619152814.GK795775@google.com>
+ <CAOoeyxU7eQneBuxbBqepta29q_OHPzrkN4SKmj6RX72L3Euw5A@mail.gmail.com>
+ <20250625090133.GP795775@google.com>
+ <CAOoeyxWoxC-n3JjjFe8Ruq_VydXk=jev=mopKfL5B7gsaSg=Ag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOoeyxWoxC-n3JjjFe8Ruq_VydXk=jev=mopKfL5B7gsaSg=Ag@mail.gmail.com>
 
+On Wed, 25 Jun 2025, Ming Yu wrote:
 
+> Dear Greg and Lee,
+> 
+> Thank you for your comments.
+> I've reviewed your suggestions, but would appreciate your feedback on
+> a few remaining points.
+> 
+> Lee Jones <lee@kernel.org> 於 2025年6月25日 週三 下午5:01寫道：
+> >
+> > On Fri, 20 Jun 2025, Ming Yu wrote:
+> >
+> > > Lee Jones <lee@kernel.org> 於 2025年6月19日 週四 下午11:28寫道：
+> > > >
+> > > > On Thu, 19 Jun 2025, Ming Yu wrote:
+> > > >
+> > > > > Lee Jones <lee@kernel.org> 於 2025年6月19日 週四 下午7:53寫道：
+> > > > > >
+> > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
+> > > > > >
+> > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月13日 週五 下午9:11寫道：
+> > > > > > > >
+> > > > > > > > On Fri, 13 Jun 2025, Ming Yu wrote:
+> > > > > > > >
+> > > > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午11:23寫道：
+> > > > > > > > > >
+> > > > > > > > > > On Thu, 12 Jun 2025, Ming Yu wrote:
+> > > > > > > > > >
+> > > > > > > > > > > Dear Lee,
+> > > > > > > > > > >
+> > > > > > > > > > > Thank you for reviewing,
+> > > > > > > > > > >
+> > > > > > > > > > > Lee Jones <lee@kernel.org> 於 2025年6月12日 週四 下午10:00寫道：
+> > > > > > > > > > > >
+> > > > > > > > > > > ...
+> > > > > > > > > > > > > +static const struct mfd_cell nct6694_devs[] = {
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 0),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 1),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 2),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 3),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 4),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 5),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 6),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 7),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 8),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 9),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 10),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 11),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 12),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 13),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 14),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-gpio", NULL, NULL, 0, 15),
+> > > > > > > > > > > > > +
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 0),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 1),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 2),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 3),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 4),
+> > > > > > > > > > > > > +     MFD_CELL_BASIC("nct6694-i2c", NULL, NULL, 0, 5),
+> > > > > > > > > > > >
+> > > > > > > > > > > > Why have we gone back to this silly numbering scheme?
+> > > > > > > > > > > >
+> > > > > > > > > > > > What happened to using IDA in the child driver?
+> > > > > > > > > > > >
+> > > > > > > > > > >
+> > > > > > > > > > > In a previous version, I tried to maintain a static IDA in each
+> > > > > > > > > > > sub-driver. However, I didn’t consider the case where multiple NCT6694
+> > > > > > > > > > > devices are bound to the same driver — in that case, the IDs are not
+> > > > > > > > > > > fixed and become unusable for my purpose.
+> > > > > > > > > >
+> > > > > > > > > > Not sure I understand.
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > As far as I know, if I maintain the IDA in the sub-drivers and use
+> > > > > > > > > multiple MFD_CELL_NAME("nct6694-gpio") entries in the MFD, the first
+> > > > > > > > > NCT6694 device bound to the GPIO driver will receive IDs 0~15.
+> > > > > > > > > However, when a second NCT6694 device is connected to the system, it
+> > > > > > > > > will receive IDs 16~31.
+> > > > > > > > > Because of this behavior, I switched back to using platform_device->id.
+> > > > > > > >
+> > > > > > > > Each of the devices will probe once.
+> > > > > > > >
+> > > > > > > > The first one will be given 0, the second will be given 1, etc.
+> > > > > > > >
+> > > > > > > > Why would you give multiple IDs to a single device bound to a driver?
+> > > > > > > >
+> > > > > > >
+> > > > > > > The device exposes multiple peripherals — 16 GPIO controllers, 6 I2C
+> > > > > > > adapters, 2 CAN FD controllers, and 2 watchdog timers. Each peripheral
+> > > > > > > is independently addressable, has its own register region, and can
+> > > > > > > operate in isolation. The IDs are used to distinguish between these
+> > > > > > > instances.
+> > > > > > > For example, the GPIO driver will be probed 16 times, allocating 16
+> > > > > > > separate gpio_chip instances to control 8 GPIO lines each.
+> > > > > > >
+> > > > > > > If another device binds to this driver, it is expected to expose
+> > > > > > > peripherals with the same structure and behavior.
+> > > > > >
+> > > > > > I still don't see why having a per-device IDA wouldn't render each
+> > > > > > probed device with its own ID.  Just as you have above.
+> > > > > >
+> > > > >
+> > > > > For example, when the MFD driver and the I2C sub-driver are loaded,
+> > > > > connecting the first NCT6694 USB device to the system results in 6
+> > > > > nct6694-i2c platform devices being created and bound to the
+> > > > > i2c-nct6694 driver. These devices receive IDs 0 through 5 via the IDA.
+> > > > >
+> > > > > However, when a second NCT6694 USB device is connected, its
+> > > > > corresponding nct6694-i2c platform devices receive IDs 6 through 11 —
+> > > > > instead of 0 through 5 as I originally expected.
+> > > > >
+> > > > > If I've misunderstood something, please feel free to correct me. Thank you!
+> > > >
+> > > > In the code above you register 6 I2C devices.  Each device will be
+> > > > assigned a platform ID 0 through 5. The .probe() function in the I2C
+> > > > driver will be executed 6 times.  In each of those calls to .probe(),
+> > > > instead of pre-allocating a contiguous assignment of IDs here, you
+> > > > should be able to use IDA in .probe() to allocate those same device IDs
+> > > > 0 through 5.
+> > > >
+> > > > What am I missing here?
+> > > >
+> > >
+> > > You're absolutely right in the scenario where a single NCT6694 device
+> > > is present. However, I’m wondering how we should handle the case where
+> > > a second or even third NCT6694 device is bound to the same MFD driver.
+> > > In that situation, the sub-drivers using a static IDA will continue
+> > > allocating increasing IDs, rather than restarting from 0 for each
+> > > device. How should this be handled?
+> >
+> > I'd like to see the implementation of this before advising.
+> >
+> > In such a case, I assume there would be a differentiating factor between
+> > the two (or three) devices.  You would then use that to decide which IDA
+> > would need to be incremented.
+> >
+> > However, Greg is correct.  Hard-coding look-ups for userspace to use
+> > sounds like a terrible idea.
+> >
+> 
+> I understand.
+> Do you think it would be better to pass the index via platform_data
+> and use PLATFORM_DEVID_AUTO together with mfd_add_hotplug_devices()
+> instead?
+> For example:
+> struct nct6694_platform_data {
+>     int index;
+> };
+> 
+> static struct nct6694_platform_data i2c_data[] = {
+>     { .index = 0 }, { .index = 1 }, { .index = 2 }, { .index = 3 }, {
+> .index = 4 }, { .index = 5 },
+> };
+> 
+> static const struct mfd_cell nct6694_devs[] = {
+>     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[0], sizeof(struct
+> nct6694_platform_data), 0),
+>     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[1], sizeof(struct
+> nct6694_platform_data), 0),
+>     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[2], sizeof(struct
+> nct6694_platform_data), 0),
+>     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[3], sizeof(struct
+> nct6694_platform_data), 0),
+>     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[4], sizeof(struct
+> nct6694_platform_data), 0),
+>     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[5], sizeof(struct
+> nct6694_platform_data), 0),
+> };
+> ...
+> mfd_add_hotplug_devices(dev, nct6694_devs, ARRAY_SIZE(nct6694_devs));
+> ...
 
-On Wed, 2025-06-25 at 15:16 +0200, Frederic Weisbecker wrote:
-> Le Wed, Jun 25, 2025 at 12:45:32PM +0200, Thomas Gleixner a =C3=A9crit :
-> > On Tue, Jun 24 2025 at 16:52, Frederic Weisbecker wrote:
-> > > Right I think you need to keep those checks because if CPU 0 is
-> > > isolcpus
-> > > and CPU 5 is nohz_full, CPU 0 will become later the timekeeper
-> > > and must stay
-> > > in the tmigr hierarchy.
-> > >=20
-> > > OTOH if CPU 0 is isolcpus and there is no nohz_full CPUs, then
-> > > CPU 0 doesn't
-> > > want to go to the hierarchy.
-> > >=20
-> > > cpuset isolated partitions are different because they issue SMP
-> > > calls whereas
-> > > isolcpus is defined on boot.
-> > >=20
-> > > An alternative for isolcpus could be to make a late initcall and
-> > > do the smp
-> > > calls from there just like is done for cpusets.
-> >=20
-> > There is zero reason for isolcpus and nohz full muck to be
-> > active/evaluated during early boot. That's all irrelevant and just
-> > complicates things further.
-> >=20
-> > Can we please clean this up and make it a sensible design instead
-> > of
-> > duct taping new functionality into it in completely
-> > incomprehensible
-> > ways?
-> >=20
-> > Especially under the aspect that all this should become run-time
-> > modifyable. That requires a run-time switch mechanism anyway, so
-> > the
-> > obvious design choice is to utilize that run-time switch late in
-> > the
-> > boot sequence to set this stuff up before user space starts and
-> > leave
-> > the boot process alone and simple.
-> >=20
-> > The KISS principle applies here fully.
->=20
-> Ok so the late initcall should work.
->=20
+No, that's clearly way worse.  =:-)
 
-Thanks both for the reviews.
-I'm a bit puzzled by what is expected now, though.
+The clean-up that this provides is probably not worth all of this
+discussion.  I _still_ think this enumeration should be done in the
+driver.  But if you really can't make it work, I'll accept the .id
+patch.
 
-The late initcall would work just fine to replace the call to
-tick_nohz_cpu_hotpluggable(), indeed superfluous for hotplug calls,
-however the checks for housekeeping CPUs is required to prevent
-isolated CPUs getting online from becoming available and so will run on
-early boot too (without any practical reason, only because the hotplug
-handlers run there).
-
-I might avoid it by playing with cpuhp_setup_state_nocalls perhaps, but
-that feels even more hacky.
-
-Otherwise, I can refactor the code to maintain a separate field
-(isolated), restore the 'online' field and keep the functions for
-online/offline and isolation as separate as possible, while considering
-available =3D !isolated && online
-
-This would make reading housekeeping masks superfluous on hotplug (and
-boot) code, but again, it doesn't look simpler to me.
-
-Am I missing some obviously elegant solution here?
-
-Thanks,
-Gabriele
-
+-- 
+Lee Jones [李琼斯]
