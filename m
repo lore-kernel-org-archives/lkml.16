@@ -1,120 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDEB9285CBD;
-	Wed, 25 Jun 2025 09:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AAB295DB8
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750842127; cv=none; b=gc6HAtkMzk8BE3SI5MKQ59gPYDVY6Yj4+FfD3UpysM5mkC5T+AsdJ7GteHu3wUxtSKFk4HfYk1ZGg9or/oeeg+ezphzfEZLK6pTC+bHugqQviyTXb8YWjwqCS7WthvbGqK7Y7ZBB9PA9LTBE9zPeXjcYLFg9fGwBXawCD9nCzx0=
+	t=1750842131; cv=none; b=slNifKIaC4YUaSnOHviyQLegCE1kqZnI37HeFuMs5ovZ5J34XAwQWqyEQW5oPcpP4w+DUYcM+OJi8ZTgxjJ2z5eaUPL6meXe7DA4AMeYtdujGzJuL1JVY2PHtovCFxG2SL3dca41aUIga0fRsavwGuhEw6ll/1r2o/9C8UqqkoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750842127; c=relaxed/simple;
-	bh=1W7arUVBB1d15aM5ROHQioZU9ZN5vTbbjFufqTMljjI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jgu+yErlp1k5B7chxZp+U980JXDQpgdhcYKjCTPIZRf9LPu4PNp8AMKYimIaYctFWdJe0TlWVB1ACXh6XVFjd0hMhW/Zxhjf2Rk3MDv8qAnftEo5j5pDxGMVhblCS9kkX7/dLU4hFb1FSftztZd52BYPWDzZGuiKFo8i1f7Gsr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NuZCt9yX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750842131; c=relaxed/simple;
+	bh=w69PsKV0mtJP34RG1Oy9rkIyf8HycIJ0IGuxsGrYzfY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BF8jOLhc+BquzIVhEzzLsNEJJStnR48TYpwV/PITSlmvcZ/T6NfXmpS8MQCy6OxEIXobt+LPQ+ltdZumn81wX6Twd8QQIYNHtsWzD7HEdRp3zUewXX7ROlbhRfzQHoESnLHsFAl3xKUHYVBM6x6oxkyF7SkEnCx9E0H2W8Y8cyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=K88MIKtY; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=TzFhUtlf; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=pDNU/pMD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=kjIsMO7l; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NuZCt9yX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 407C7C4CEEA;
-	Wed, 25 Jun 2025 09:02:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750842127;
-	bh=1W7arUVBB1d15aM5ROHQioZU9ZN5vTbbjFufqTMljjI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NuZCt9yXs3wPNf5vWm1VKzHQk2Xsdu2t355zrjpHl3z7VDgv/9R4whsVEFtVjGeov
-	 Ll3QlWDSXyZo6H3mZMA8+tC2bu2Xp5ytUln7P2i33ZwvYD6Z1WpCa3FwVR6fBzz4jh
-	 dUhZ1LKeBEMcp3/85ZGZP2daRCfl3w6nuTlVgqtZ+w9Wvc/9GR8OAr5brHEtIvlTaa
-	 +N6nVA2GoKuFW/YoGnvxBCgQd4vdIMf5uYC/AaHwHatYlqEQqlrgVCxUvyI4Ku2bgS
-	 dt+sqrlWl27aQeiOKU7f0FRCflB3LLNvFmkFTQLYXScpgVHhlCmxI6KyqE2TweJJ/B
-	 W3tAqYOhTz2LQ==
-Message-ID: <3f653a9f-e838-4298-9758-95e6fbec52bb@kernel.org>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="K88MIKtY";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="TzFhUtlf";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="pDNU/pMD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="kjIsMO7l"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 543581F457;
+	Wed, 25 Jun 2025 09:02:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750842127; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VQkPVKL8Rc6BcG1xlmknHJTwR6rrtSmQUG7dRS6JaQI=;
+	b=K88MIKtY82CBpDzi6rQlT8OOPkg95o/p3QDoD2WpqwtqDG9ygD7FSVfzTnMIZ7K8uQHP/1
+	a++hTBSfkSdfFK/P6HtAVN7TfcxDBmnw1rgQV/OyCk2yOckW4xtXP8KZyePm3xsYVnDJS+
+	qcseI6zWccOfZ1VVNmzQcg2F9Ma33UU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750842127;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VQkPVKL8Rc6BcG1xlmknHJTwR6rrtSmQUG7dRS6JaQI=;
+	b=TzFhUtlfsd2gpvUbQU498O7GUVWWT7ZHU7TLg3xy6oJ9oFZulfMtyjrmCdCh1Dc8Gt72rg
+	P/DStVSGf1mo1nAQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="pDNU/pMD";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=kjIsMO7l
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750842126; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VQkPVKL8Rc6BcG1xlmknHJTwR6rrtSmQUG7dRS6JaQI=;
+	b=pDNU/pMD3ceHkSNdLroWs06SZ+4g1lwFF7QW3K/tkoE2mMTb3gkLIDqm2lGc+KW1bkW2rW
+	GzjhQwoQrrEfxyO917+9puLYEuPgaGkH6x2PRDB2/zOsyZqx2AYxOkSydeSijePK6AaCdx
+	AM682U+M51EFr5F+lzgOVZumn85qvW4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750842126;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VQkPVKL8Rc6BcG1xlmknHJTwR6rrtSmQUG7dRS6JaQI=;
+	b=kjIsMO7lE8qBubsM74x4X0Wczs7UPx+ikAJR1+7ZVgZY7b4ybJzMSyJuvtoN+MTFR9L/Hv
+	s0a8I/zchHyFNcDA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D8ABF13485;
+	Wed, 25 Jun 2025 09:02:04 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id a54nMgy7W2iZKgAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 25 Jun 2025 09:02:04 +0000
 Date: Wed, 25 Jun 2025 11:02:03 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, nvdimm@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>
+Subject: Re: [PATCH RFC 11/14] mm: remove "horrible special case to handle
+ copy-on-write behaviour"
+Message-ID: <aFu7C0S_SjSOqO8G@localhost.localdomain>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-12-david@redhat.com>
+ <5f4c0a45-f219-4d95-b5d7-b4ca1bc9540b@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] gpiolib: acpi: Program debounce when finding GPIO
-To: Mario Limonciello <superm1@kernel.org>,
- Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <20250624202211.1088738-1-superm1@kernel.org>
- <20250624202211.1088738-2-superm1@kernel.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <20250624202211.1088738-2-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f4c0a45-f219-4d95-b5d7-b4ca1bc9540b@redhat.com>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 543581F457
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-6.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	DWL_DNSWL_MED(-2.00)[suse.de:dkim];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	MIME_TRACE(0.00)[0:+];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	MISSING_XM_UA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	R_RATELIMIT(0.00)[to_ip_from(RL88oxspsx4bg3gu1yybyqiqt4)];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
+X-Spam-Score: -6.51
+X-Spam-Level: 
 
-Hi Mario,
+On Wed, Jun 25, 2025 at 10:47:49AM +0200, David Hildenbrand wrote:
+> I'm still thinking about this patch here, and will likely send out the other
+> patches first as a v1, and come back to this one later.
 
-On 24-Jun-25 10:22 PM, Mario Limonciello wrote:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> When soc-button-array looks up the GPIO to use it calls acpi_find_gpio()
-> which will parse _CRS.
-> 
-> acpi_find_gpio.cold (drivers/gpio/gpiolib-acpi-core.c:953)
-> gpiod_find_and_request (drivers/gpio/gpiolib.c:4598 drivers/gpio/gpiolib.c:4625)
-> gpiod_get_index (drivers/gpio/gpiolib.c:4877)
-> 
-> The GPIO is setup basically, but the debounce information is discarded.
-> The platform will assert what debounce should be in _CRS, so program it
-> at the time it's available.
-> 
-> Cc: Hans de Goede <hansg@kernel.org>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/gpio/gpiolib-acpi-core.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/gpio/gpiolib-acpi-core.c b/drivers/gpio/gpiolib-acpi-core.c
-> index 12b24a717e43f..475cac2d95aa1 100644
-> --- a/drivers/gpio/gpiolib-acpi-core.c
-> +++ b/drivers/gpio/gpiolib-acpi-core.c
-> @@ -944,6 +944,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
->  	bool can_fallback = acpi_can_fallback_to_crs(adev, con_id);
->  	struct acpi_gpio_info info;
->  	struct gpio_desc *desc;
-> +	int ret;
->  
->  	desc = __acpi_find_gpio(fwnode, con_id, idx, can_fallback, &info);
->  	if (IS_ERR(desc))
-> @@ -957,6 +958,9 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
->  
->  	acpi_gpio_update_gpiod_flags(dflags, &info);
->  	acpi_gpio_update_gpiod_lookup_flags(lookupflags, &info);
-> +	ret = gpio_set_debounce_timeout(desc, info.debounce * 10);
-> +	if (ret)
-> +		return ERR_PTR(ret);
-
-IIRC this is going to fail sometimes, depending on which range of
-debounce values the GPIO controller support. Note that there already
-is another code-path in gpiolib-acpi-core.c which calls
-gpio_set_debounce_timeout() in acpi_request_own_gpiod() and it does:
-
-        /* ACPI uses hundredths of milliseconds units */
-        ret = gpio_set_debounce_timeout(desc, agpio->debounce_timeout * 10);
-        if (ret)
-                dev_warn(chip->parent,
-                         "Failed to set debounce-timeout for pin 0x%04X, err %d\n",
-                         pin, ret);
-
-Making this a warning was done in commit cef0d022f553 ("gpiolib: acpi: Make
-set-debounce-timeout failures non fatal").
-
-Otherwise I think this is fine.
-
-Regards,
-
-Hans
+Patch#12 depends on this one, but Patch#13 should be ok to review
+If I ignore the 'addr' parameter being dropped, right?
 
 
+-- 
+Oscar Salvador
+SUSE Labs
