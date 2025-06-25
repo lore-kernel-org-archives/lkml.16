@@ -1,260 +1,74 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66BB268688
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D282690C0;
+	Wed, 25 Jun 2025 14:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750862330; cv=none; b=m5H3az2tcXFQNugmccT27W5nT/yHm5WYqiSeqbZAWCbCqN9+Tr0KSLruYYQZxVWfgSbb9CfwjcmcofVF/MZcI3eFFimjS2TuVj30M2iWfmYQcIOWTFUASBwrTeldXur+o3lt1YXobEDo+37/a08TQ2mcVHlsyAk2qhSOTiQQCp8=
+	t=1750862340; cv=none; b=ZLVE5nSozYW55IqnVUNtItwwer2HyKycpFTA+ndHTphIUfpXEuoMP3VmkpOkp0BJFFPNzujwuVHSaof/GH5DDHxlfQnrhR+uDe1MXQ0XyE/4YxrBJKHZ3kj3o3gYhzVOfAl1YfYXWwMa8s6y86PI5cC305ow3nMMNmVH9BDyqIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750862330; c=relaxed/simple;
-	bh=gUCK5ZPtvm6MgHUIDv1wxFAc1ecbFd2rMDQC/jqlAuk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iA4UAB3clrlcJatSBWwcUkCWFN9+/88pSyJ5fd6cVwsPtSAq2kqzxLGEHHV3V3r+x2SAIhn5h8XeO3thRt8O+Ix8eEE/x0mgo/wzrQ+DGHoIOTyrlpkJw+7WCr1FHby9uJyw9sk6rWG3mwb9J8Nlv1XglZKqntu2gm/27VZQKiE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ky4Ffp+Y; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750862340; c=relaxed/simple;
+	bh=bfUVcmNNQwtwLV/135zMfp6Z0vfH5DYDCkLmywa/sdc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=F4dJWWr8r6qmBT3PoRMZ3+3Ss+k6felhFy3D9M15rDwxrjSTXoGPrvvx94uZvCG+RHkYQ/sucOtunzoXKL9p1oSRU9y0bYNspKogaiEGcFG/Y57FB0h3LdHW4oeaDRSoiyv3jr2iKMfijDb+VAhvGTDXeOYQ9akrFOV7wUpmAoo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KCxhnIJo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ky4Ffp+Y"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PBa893021236
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:38:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	vyp603+DXROKlY8+1tRFEeF1aiIPfGdpzbAJfdYnfMY=; b=ky4Ffp+Y8DWJ5sga
-	ATB71pj5U7o5cN3QB6T16JQmjj9MVT+way4qI2/Jnj/Bq/MVAyK1OeaP0n9T1lsG
-	nYFZroUkLr3jSm4w2xC4/5tpDKeth0qamfd4HVCm671aUtqZ9txeItoWat8IPjuZ
-	2zXLys17vwfBwPHHcAxyy+fdYMxni94WDpwmBRkWcFyZY/4sNf4iug5HnkGDE9io
-	G/WnjXSB8FAkJYqH7drWISk5RktaYC0S4QOykHl/T0tPfdjGsqLoKtjtAGZpCasv
-	HrhG2PqWoVhlMDa1QH2fv2l1Hn8eYWKj3OveQhgK2IDivLOiIsbTg9NNaMwKxGqJ
-	WuP4LA==
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47emcmsvaa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:38:47 +0000 (GMT)
-Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fb030f541bso14728836d6.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:38:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750862326; x=1751467126;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vyp603+DXROKlY8+1tRFEeF1aiIPfGdpzbAJfdYnfMY=;
-        b=LPuVGjV3BoBoo4JJYXgArh63vN1+xclrTorjVRK8oSuUwi4J2DTRE2QJU1J9PhBnO2
-         MdNf3rnEdcNHAhPfBRAznFlpgybzOuRnN9fhQGKrftWIXFYsz6e0fsn3CVVJlWOSLdxX
-         9vEL9nOy+Goq9rvCPsJNNxAmNL9Z6IxG5nJAP+qM506o8tH8tEBPfBMT84pWBy6VSKX9
-         A8WkV/o30wFumaf5yZ8C02C1GapQqe1T6bKQvCYx/yRvign0WCBoF4kcdwQOdXtEDPJD
-         P0vxWjazc5cnX0YqO9jymdP6j/ScOENht7LCJ2L6akX0XjrFtcxaXwe8OcMWrDCBAzBB
-         Ycqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUl0tWHrJ7wBNvxS8aciWVOlNM9un+8JEkFYmzapoO78+Bxo4NmGullrnM8D/kp/mgzGw85VgJgww2y02k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyf2g4kfRXyPo11PTFRaJl3DFQofzRY0zxI4kA7miJ+HUL7KAEP
-	WzZlbZk81x4o12Zi13UWOXZoX8DyoYSjxYJ5LpBQXuWM597Vkz+hF5wItj4hJzn3SSkWQW2RXWg
-	E0CFmg202XMRlZ2f22R9bEuw7t+PPmVXQws1kKQwTEGrekmOT6P1rtex/1GT0Wqs88ko=
-X-Gm-Gg: ASbGncvtSLTRhLvehi42Uep73pAXZ01rlMOUE1AxhkLo3zSWlLV+qKqF/q0CU2Oh9YQ
-	X259ajfdrp5AH8N73laTfZVNCLwsiM9omipiz/RaNDxQWmyncRJyanpSa4CAX4uu0PIaMEyoTMS
-	wAbnt7KjKflKIk0n/42Ws+/1XS/+Y+Me9zOikFGRqMFnUvLmTfmZSmrYdbGJiV7LmES0euEUajp
-	5qjCDIOCcN/hpwPbMEsxa78kAPNgZ08n3MCJjKj1NVLiDJzI02EQc0AlcDs7IzHgBU+pN/SHE4V
-	YbOwn2VriK9dZ0ZlPACxCLeLwjcjbGMQVr25dwQ/1vJkx0+B1yHAJG5Wnaz/aVCj9hHX0Sr5fhT
-	DyyQ=
-X-Received: by 2002:a05:620a:4713:b0:7d3:cec3:3ff with SMTP id af79cd13be357-7d4295fddb1mr179163085a.0.1750862326389;
-        Wed, 25 Jun 2025 07:38:46 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEHsbOpyUO4OQKuHvZNG56/kH2wg/UDN88jgkkkppU/y2V4JJtDrErgvtJkUii1DRKOsax2AQ==
-X-Received: by 2002:a05:620a:4713:b0:7d3:cec3:3ff with SMTP id af79cd13be357-7d4295fddb1mr179159185a.0.1750862325910;
-        Wed, 25 Jun 2025 07:38:45 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053ee4cdcsm1076068666b.56.2025.06.25.07.38.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 07:38:44 -0700 (PDT)
-Message-ID: <4200b3b8-5669-4d5a-a509-d23f921b0449@oss.qualcomm.com>
-Date: Wed, 25 Jun 2025 16:38:39 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KCxhnIJo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AA4FC4CEEA;
+	Wed, 25 Jun 2025 14:39:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750862340;
+	bh=bfUVcmNNQwtwLV/135zMfp6Z0vfH5DYDCkLmywa/sdc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KCxhnIJoxb2x05j5HO/MDrmygO3I70tOQ9dVcYudzHzpJIO2eX92qHUVgkh3ZoNs5
+	 BoNX589Dmz2/bTjmM8ujtCE6GMVtgVtBq9VlmrS+5BAxMeByZv9ngMaCXKgWW9xsdP
+	 xXH5wOIL1YT7tFGw/pmallFdcctNtfAseavp4fPktc4heD9ltM8j0IRJa9ITBk/1Ae
+	 mL4TsnQb81QawBj0M4eamv2LSWBjmwNLempUF/mgAth6ZvvH13W4YwuE4R9c3CuczC
+	 RiL5iM3Koyui2IoZuGNeGgwrd6s026o+jDPKCI17MwvbesgViwU/Ry0UoamOAQbxIW
+	 O+o6i5OsoFeVw==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uURHA-000000000be-0JKe;
+	Wed, 25 Jun 2025 16:39:00 +0200
+Date: Wed, 25 Jun 2025 16:39:00 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>,
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 3/4] firmware: qcom: scm: initialize tzmem before marking
+ SCM as available
+Message-ID: <aFwKBGuvcvUza0Xi@hovoldconsulting.com>
+References: <20250625-qcom-scm-race-v1-0-45601e1f248b@linaro.org>
+ <20250625-qcom-scm-race-v1-3-45601e1f248b@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 14/14] arm64: dts: qcom: Add The Fairphone (Gen. 6)
-To: Luca Weiss <luca.weiss@fairphone.com>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>, Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        Robert Marko <robimarko@gmail.com>,
-        Das Srinagesh <quic_gurus@quicinc.com>,
-        Thomas Gleixner
- <tglx@linutronix.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Amit Kucheria <amitk@kernel.org>,
-        Thara Gopinath <thara.gopinath@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-mmc@vger.kernel.org
-References: <20250625-sm7635-fp6-initial-v1-0-d9cd322eac1b@fairphone.com>
- <20250625-sm7635-fp6-initial-v1-14-d9cd322eac1b@fairphone.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250625-sm7635-fp6-initial-v1-14-d9cd322eac1b@fairphone.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: Ll-v5FQFt0yTHIUd4xoXbniO76j676W7
-X-Proofpoint-ORIG-GUID: Ll-v5FQFt0yTHIUd4xoXbniO76j676W7
-X-Authority-Analysis: v=2.4 cv=J+eq7BnS c=1 sm=1 tr=0 ts=685c09f7 cx=c_pps
- a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=gOtRruwUTqeMBgDD9hEA:9
- a=QEXdDO2ut3YA:10 a=5XHQ0vS7sDUA:10 a=iYH6xdkBrDN1Jqds4HTS:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDEwNiBTYWx0ZWRfX13WCGs5bXjxE
- F433HuVG6W+253d/SSnwIIsPn1X8l+Ls5OQVGGN/HY26noXnteFC0qDGAmGj7JpkD2P6UtUaYue
- Lazo3ViWgbn3rXsV0G4UZrfQjqLCWnjbr2reBecmh1EJlkwrGA+eHVgYNa0Uuf8ZdgXJoKst+pV
- CQdNIMjPimGWFEU7Jjz5RIdiwXzmXwByHXz4aSgKhfedksTW3rRQ1fdZda/xrqUoJzBxG41oTH1
- NbqgK0Y/7GdQcZIQK91XJfdAWy7VVL+j+du4mStawm/o6ChHbWsDR5UszKMQzH09pFpcIGh30IR
- 9mVUxxjL3PASrreGuSaXBhLwkGZH7C58YWXkA4AxmA97hQZGuNgl+9ynY4bH/4UBtFtZdV07Xpc
- aJRNE3ahwuVroThVtAcf4lHo4D0Kl0wn3dAM9MImQuuB2vZM1PqXn9gbIbwSSCUewPhfAXfg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_04,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 mlxlogscore=999 adultscore=0 impostorscore=0 clxscore=1015
- spamscore=0 malwarescore=0 phishscore=0 priorityscore=1501 suspectscore=0
- mlxscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506250106
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625-qcom-scm-race-v1-3-45601e1f248b@linaro.org>
 
-On 6/25/25 11:23 AM, Luca Weiss wrote:
-> Add a devicetree for The Fairphone (Gen. 6) smartphone, which is based
-> on the SM7635 SoC.
+On Wed, Jun 25, 2025 at 10:14:50AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Now that qcom_scm_shm_bridge_enable() uses the struct device passed to
+> it as argument to make the QCOM_SCM_MP_SHM_BRIDGE_ENABLE SCM call, we
+> can move the TZMem initialization before the assignment of the __scm
+> pointer in the SCM driver (which marks SCM as ready to users) thus
+> fixing the potential race between consumer calls and the memory pool
+> initialization.
+> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-[...]
+Good to see this being worked on.
 
-> +	/* Dummy panel for simple-framebuffer dimension info */
-> +	panel: panel {
-> +		compatible = "boe,bj631jhm-t71-d900";
-> +		width-mm = <65>;
-> +		height-mm = <146>;
-> +	};
+Perhaps you can add:
 
-I haven't ran through all the prerequisite-xx-id, but have
-you submitted a binding for this?
+Reported-by: Johan Hovold <johan+linaro@kernel.org>
+Link: https://lore.kernel.org/all/20250120151000.13870-1-johan+linaro@kernel.org/
 
-[...]
-
-> +	reserved-memory {
-> +		/*
-> +		 * ABL is powering down display and controller if this node is
-> +		 * not named exactly "splash_region".
-> +		 */
-> +		splash_region@e3940000 {
-> +			reg = <0x0 0xe3940000 0x0 0x2b00000>;
-> +			no-map;
-> +		};
-> +	};
-
-:/ maybe we can convince ABL not to do it..
-
-[...]
-
-> +		vreg_l12b: ldo12 {
-> +			regulator-name = "vreg_l12b";
-> +			/*
-> +			 * Skip voltage voting for UFS VCC.
-> +			 */
-
-Why so?
-
-[...]
-
-> +&gpi_dma0 {
-> +	status = "okay";
-> +};
-> +
-> +&gpi_dma1 {
-> +	status = "okay";
-> +};
-
-These can be enabled in SoC DTSI.. it's possible that the secure 
-configuration forbids access to one, but these are generally made
-per-platform
-
-[...]
-
-> +&pm8550vs_d {
-> +	status = "disabled";
-> +};
-> +
-> +&pm8550vs_e {
-> +	status = "disabled";
-> +};
-> +
-> +&pm8550vs_g {
-> +	status = "disabled";
-> +};
-
-Hm... perhaps we should disable these by deafult
-
-[...]
-
-> +&pmr735b_gpios {
-> +	pm8008_reset_n_default: pm8008-reset-n-default-state {
-> +		pins = "gpio3";
-> +		function = PMIC_GPIO_FUNC_NORMAL;
-> +		bias-pull-down;
-> +	};
-> +
-> +	s1j_enable_default: s1j-enable-default-state {
-> +		pins = "gpio1";
-> +		function = PMIC_GPIO_FUNC_NORMAL;
-> +		power-source = <0>;
-> +		bias-disable;
-> +		output-low;
-> +	};
-
-ordering by pin ID makes more sense, here and in tlmm
-
-(and is actually written down)
-https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-nodes
-
-[...]
-
-> +&pon_resin {
-> +	linux,code = <KEY_VOLUMEDOWN>;
-> +	status = "okay";
-
-\n before status consistently, please
-
-[...]
-
-> +&tlmm {
-> +	/*
-> +	 * 8-11: Fingerprint SPI
-> +	 * 13: NC
-> +	 * 63-64: WLAN UART
-> +	 */
-> +	gpio-reserved-ranges = <8 4>, <13 1>, <63 2>;
-
-Please match the style in x1-crd.dtsi
-
-[...]
-
-> +&usb_1 {
-> +	dr_mode = "otg";
-> +
-> +	/* USB 2.0 only */
-
-Because there's no usb3phy description yet, or due to hw design?
-
-Konrad
-
+Johan
