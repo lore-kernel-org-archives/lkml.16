@@ -1,518 +1,193 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5297325C802
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:55:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB47217BA5;
+	Wed, 25 Jun 2025 13:55:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750859710; cv=none; b=b2qdnGh/Glj6zrIN9XiT1iVO7J0cRpzm5x2hY2Se5ECB6vW3uUmAp1s4Px23maTl4YtXcViNuxk8WEkAc9WDkVAEXHRmmlD5lNhmgG6UZ5hhwPYNgYVxpqu27/zQINQoX6WoqL8IF+UyAl9u/Mrc+GgKSu+VcTld+WK5RD2jnu8=
+	t=1750859745; cv=none; b=BXQ60FZ+/KQzH5hwPHIoZaxgMIJnIN31NHBJ5BhBvm+EhFI1wFlkUUfgC0N3VGPDH9iVvrfcdjDKvDpL2pFrLVXN1+bseW3rwCc7x0Zi7L633+udBtbcbkN71DBQVgrNMuMDGKdSf+VwLWTC0dBDdLBIxNH0trXpgz+DJuzPKXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750859710; c=relaxed/simple;
-	bh=TRXnsRuV/h2/aY8GaEQC5h/bPIJ2GTq9bNlIUlBQpo4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:In-Reply-To:
-	 Content-Type:References; b=JTTYsFQ6LLGMOheSQR8AI/7f2CKMngHwansRGcBLqIqa1V8L7KexAIz0adJbB9egcM84Lvx5SqCjAxTHJ924Lf6MeN6nspX5+WhAd4mPPWkwfDVOFIaUAIeK5AoVK1U9s7kCP6mK10JKgMIHvtCwZlDFR2YXN+tTfI3zCZRhyWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WD5mtNXQ; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750859745; c=relaxed/simple;
+	bh=XxWOWWhxw8xigKxwJ1qU+4s3SQ5ALV8rKLToNX1dAcs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O+/uCpf1gn6PF7N1UA2UevzEUo8RAqsz5cBg3VCPjG4yg4zH8Wpl7b8my9i5JU8gD0aphS/fdiJWmCleHIBUQmIJI2htqbrY3nrDIPWeXce8uy5fTKUH/C7uDOnNzSJRm8QAM0pjAjt2xxYCl5PGyMXVtwGmOx0I7poLtsPFmPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k03tbyXm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WD5mtNXQ"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250625135503epoutp023746825b514ea9ebacf4d982749d7d0b~MTZ_pBaPN1187211872epoutp02f
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:55:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250625135503epoutp023746825b514ea9ebacf4d982749d7d0b~MTZ_pBaPN1187211872epoutp02f
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750859703;
-	bh=uwKNeej/AILqefocPj0Y2378ZX6VcMWOa4sZwvB1Af0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=WD5mtNXQcopSHR+w2iyaaTF32PibBHZ4aPnAk0RDYAgCyHcupa+7czxe/9sppnIEs
-	 5kNM7V7HruL1a52bjhOKHorfIy8Fc12h/CV1/QyMQzBuZANmTdw94upDJhHEqogj1i
-	 rm1XKOqOPJKlPFS3z5QMHwn2+maNx6EPeFSU7/Xw=
-Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPS id
-	20250625135502epcas5p270aea7390890a72d3c704df5f49486e3~MTZ988py_2038920389epcas5p2p;
-	Wed, 25 Jun 2025 13:55:02 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp01.localdomain (Postfix) with ESMTP id 4bS3Gt3WW6z6B9m4; Wed, 25 Jun
-	2025 13:55:02 +0000 (GMT)
-Received: from epsmtip1.samsung.com (unknown [182.195.34.30]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-	20250625125018epcas5p338e585db1feb40a95676fec67c21cdc7~MShctjgVW3112631126epcas5p3r;
-	Wed, 25 Jun 2025 12:50:18 +0000 (GMT)
-Received: from test-PowerEdge-R740xd (unknown [107.99.41.79]) by
-	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20250625125015epsmtip1195ea3a7fe682707e09438df50e4e3eb~MShaRvFWc2330623306epsmtip1n;
-	Wed, 25 Jun 2025 12:50:15 +0000 (GMT)
-Date: Wed, 25 Jun 2025 18:20:08 +0530
-From: Neeraj Kumar <s.neeraj@samsung.com>
-To: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: dan.j.williams@intel.com, dave@stgolabs.net, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com, ira.weiny@intel.com,
-	a.manzanares@samsung.com, nifan.cxl@gmail.com, anisa.su@samsung.com,
-	vishak.g@samsung.com, krish.reddy@samsung.com, arun.george@samsung.com,
-	alok.rathore@samsung.com, neeraj.kernel@gmail.com,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	nvdimm@lists.linux.dev, gost.dev@samsung.com, cpgs@samsung.com
-Subject: Re: [RFC PATCH 00/20] Add CXL LSA 2.1 format support in nvdimm and
- cxl pmem
-Message-ID: <1983025922.01750859702480.JavaMail.epsvc@epcpadp1new>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k03tbyXm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54526C4CEEA;
+	Wed, 25 Jun 2025 13:55:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750859744;
+	bh=XxWOWWhxw8xigKxwJ1qU+4s3SQ5ALV8rKLToNX1dAcs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=k03tbyXmTIogvpaMs361UqibAIE6LyeuX4i9GNUJxlvmYSiyPmO8XhPCSgvQdicZl
+	 Vi+cgqnqrXJk2u2vk3hlJQiGCOkNYeMSZJgEk4B31fXBcyUi+v+mReIH/g/p7YmHrw
+	 vWGl06QUqj7xV+5uCms6Rpg4S0UmAI7wa8ubR1GLq9L1ijkWof4hbflUAc0CMZoo5C
+	 lSHTtwxM9XAoSj0fRpmr2yrWGbDrTKJBVSizHwdnET0D0g7KSa1Bj6puGK784Cok0i
+	 kyg3tkq2PZrBZcOV17yCp/GEj9Ugiq7v57jSRQUu+dKOUR6UL+7eOMTQnX1PVOW9Rp
+	 RGRNPT819kauA==
+Message-ID: <e1a3d854-93bc-4771-9b8e-1639ca57b687@kernel.org>
+Date: Wed, 25 Jun 2025 15:55:36 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20250617180723.00002d13@huawei.com>
-X-CMS-MailID: 20250625125018epcas5p338e585db1feb40a95676fec67c21cdc7
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----el_smSXdYFIlAMwTB7ap0a..dltiS3v3rvvNmq_h4IEEs8u2=_c8d56_"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250617123958epcas5p3a9f00c6a63ddb140714e3d37463ff00e
-References: <CGME20250617123958epcas5p3a9f00c6a63ddb140714e3d37463ff00e@epcas5p3.samsung.com>
-	<1931444790.41750165203442.JavaMail.epsvc@epcpadp1new>
-	<20250617180723.00002d13@huawei.com>
-
-------el_smSXdYFIlAMwTB7ap0a..dltiS3v3rvvNmq_h4IEEs8u2=_c8d56_
-Content-Type: text/plain; charset="utf-8"; format="flowed"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/8] dt-bindings: gpu: img,powervr-rogue: Add TH1520
+ GPU compatible
+To: Michal Wilczynski <m.wilczynski@samsung.com>,
+ Matt Coster <Matt.Coster@imgtec.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
+ Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns
+ <Frank.Binns@imgtec.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
+ <CGME20250623114436eucas1p1ab8455b32937a472f5f656086e38f428@eucas1p1.samsung.com>
+ <20250623-apr_14_for_sending-v6-5-6583ce0f6c25@samsung.com>
+ <9c82a6bc-c6ff-4656-8f60-9d5fa499b61a@imgtec.com>
+ <d154d2d0-3d59-4176-a8fb-3cb754cf2734@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <d154d2d0-3d59-4176-a8fb-3cb754cf2734@samsung.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Disposition: inline
 
-On 17/06/25 06:07PM, Jonathan Cameron wrote:
->On Tue, 17 Jun 2025 18:09:24 +0530
->Neeraj Kumar <s.neeraj@samsung.com> wrote:
->
->Hi Neeraj,
->
->First a process thing. Looks like threading is broken in your patch set.
->https://lore.kernel.org/linux-cxl/1931444790.41750165203442.JavaMail.epsvc@epcpadp1new/T/#u
->Lore had a go and seems to have figured out there is a thread for the rest.
->If you can't fix it locally for your email, look at using the b4 gateway
->(see the docs for the b4 tool)
->
->https://git.kernel.org/pub/scm/linux/kernel/git/palmer/b4.git/
->
-
-I have used git send-email to send these patches. Will try fixing it
-locally in V1 patchset, if not will try b4 gateway
-
->Also, in an RFC the first thing I expect to see if a 'Why this is an RFC statement'
->vs ready for upstream merge.  What are the questions that need comments or
->the blockers you know need to be resolved?
->
-
-Actually this patchset supports cxl region persistency with interleave
-way == 1 and interleave way > 1 is WIP.
-
-As I am looking for feedback/suggestion regarding my approach,
-therefore I have added RFC statement.
-
->Anyhow, good to see this. Not an area I'm that familiar with but
->I'll try to take a detailed look a bit later this week.
->
->Thanks,
->
->Jonathan
->
-
-Sorry for late reply. Thanks Jonathan for your feedback.
-
-Neeraj
-
->
->> Introduction:
->> =============
->> CXL Persistent Memory (Pmem) devices region, namespace and content must be
->> persistent across system reboot. In order to achieve this persistency, it
->> uses Label Storage Area (LSA) to store respective metadata. During system
->> reboot, stored metadata in LSA is used to bring back the region, namespace
->> and content of CXL device in its previous state.
->> CXL specification provides Get_LSA (4102h) and Set_LSA (4103h) mailbox
->> commands to access the LSA area. nvdimm driver is using same commands to
->> get/set LSA data.
+On 25/06/2025 14:45, Michal Wilczynski wrote:
+> 
+> 
+> On 6/24/25 15:53, Matt Coster wrote:
+>> On 23/06/2025 12:42, Michal Wilczynski wrote:
+>>> Update the img,powervr-rogue.yaml to include the T-HEAD TH1520 SoC's
+>>> specific GPU compatible string.
+>>>
+>>> The thead,th1520-gpu compatible, along with its full chain
+>>> img,img-bxm-4-64, and img,img-rogue, is added to the
+>>> list of recognized GPU types.
+>>>
+>>> The power-domains property requirement for img,img-bxm-4-64 is also
+>>> ensured by adding it to the relevant allOf condition.
+>>>
+>>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+>>> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml | 9 ++++++++-
+>>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+>>> index 4450e2e73b3ccf74d29f0e31e2e6687d7cbe5d65..9b241a0c1f5941dc58a1e23970f6d3773d427c22 100644
+>>> --- a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+>>> +++ b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+>>> @@ -21,6 +21,11 @@ properties:
+>>>            # work with newer dts.
+>>>            - const: img,img-axe
+>>>            - const: img,img-rogue
+>>> +      - items:
+>>> +          - enum:
+>>> +              - thead,th1520-gpu
+>>> +          - const: img,img-bxm-4-64
+>>> +          - const: img,img-rogue
+>>>        - items:
+>>>            - enum:
+>>>                - ti,j721s2-gpu
+>>> @@ -93,7 +98,9 @@ allOf:
+>>>        properties:
+>>>          compatible:
+>>>            contains:
+>>> -            const: img,img-axe-1-16m
+>>> +            enum:
+>>> +              - img,img-axe-1-16m
+>>> +              - img,img-bxm-4-64
 >>
->> There are three types of LSA format and these are part of following
->> specifications:
->>  - v1.1: https://pmem.io/documents/NVDIMM_Namespace_Spec.pdf
->>  - v1.2: https://uefi.org/sites/default/files/resources/UEFI_Spec_2_7.pdf
->>  - v2.1: https://computeexpresslink.org/wp-content/uploads/2024/02/CXL-2.0-Specification.pdf
+>> This isn't right – BXM-4-64 has two power domains like BXS-4-64. I don't
+>> really know what the right way to handle that in devicetree is given the
+>> TH1520 appears to expose only a top-level domain for the entire GPU, but
+>> there are definitely two separate domains underneath that as far as the
+>> GPU is concerned (see the attached snippet from integration guide).
 >>
->> Basic differences between these LSA formats:
->>  - v1.1: Support Namespace persistency. Size of Namespace Label is 128 bytes
->>  - v1.2: Support Namespace persistency. Size of Namespace Label is 256 bytes
->>  - v2.1: Support Namespace and Region persistency. Size of Namespace and
->>    Region Label is 256 bytes.
->>
->> Linux nvdimm driver supports only v1.1 and v1.2 LSA format. CXL pmem device
->> require support of LSA v2.1 format for region and namespace persistency.
->> Initial support of LSA 2.1 was add in [1].
->>
->> This patchset adds support of LSA 2.1 in nvdimm and cxl pmem driver.
->>
->> Patch 1:     Introduce NDD_CXL_LABEL flag and Update cxl label index as per v2.1
->> Patch 2-4:   Update namespace label as per v2.1
->> Patch 5-12:  Introduce cxl region labels and modify existing change accordingly
->> Patch 13:    Refactor cxl pmem region auto assembly
->> Patch 14-18: Save cxl region info in LSA and region recreation during reboot
->> Patch 19:    Segregate out cxl pmem region code from region.c to pmem_region.c
->> Patch 20:    Introduce cxl region addition/deletion attributes
->>
->>
->> Testing:
->> ========
->> In order to test this patchset, I also added the support of LSA v2.1 format
->> in ndctl. ndctl changes are available at [2]. After review, I’ll push in
->> ndctl repo for community review.
->>
->> 1. Used Qemu using following CXL topology
->>    M2="-object memory-backend-file,id=cxl-mem1,share=on,mem-path=$TMP_DIR/cxltest.raw,size=512M \
->>        -object memory-backend-file,id=cxl-lsa1,share=on,mem-path=$TMP_DIR/lsa.raw,size=1M \
->>        -object memory-backend-file,id=cxl-mem2,share=on,mem-path=$TMP_DIR/cxltest2.raw,size=512M \
->>        -object memory-backend-file,id=cxl-lsa2,share=on,mem-path=$TMP_DIR/lsa2.raw,size=1M \
->>        -device pxb-cxl,bus_nr=10,bus=pcie.0,id=cxl.1 \
->>        -device cxl-rp,port=1,bus=cxl.1,id=root_port11,chassis=0,slot=1 \
->>        -device cxl-type3,bus=root_port11,memdev=cxl-mem1,lsa=cxl-lsa1,id=cxl-pmem1,sn=1 \
->>        -device cxl-rp,port=2,bus=cxl.1,id=root_port12,chassis=0,slot=2 \
->>        -device cxl-type3,bus=root_port12,memdev=cxl-mem2,lsa=cxl-lsa2,id=cxl-pmem2,sn=2 \
->>        -M cxl-fmw.0.targets.0=cxl.1,cxl-fmw.0.size=4G,cxl-fmw.0.interleave-granularity=8k"
->>
->> 2. Create cxl region on both devices
->> 	cxl create-region -d decoder0.0 -m mem0
->> 	cxl create-region -d decoder0.0 -m mem1
->>
->> 	root@QEMUCXL6060pmem:~# cxl list
->> 	[
->> 	  {
->> 	    "memdevs":[
->> 	      {
->> 	        "memdev":"mem0",
->> 	        "pmem_size":536870912,
->> 	        "serial":2,
->> 	        "host":"0000:0c:00.0",
->> 	        "firmware_version":"BWFW VERSION 00"
->> 	      },
->> 	      {
->> 	        "memdev":"mem1",
->> 	        "pmem_size":536870912,
->> 	        "serial":1,
->> 	        "host":"0000:0b:00.0",
->> 	        "firmware_version":"BWFW VERSION 00"
->> 	      }
->> 	    ]
->> 	  },
->> 	  {
->> 	    "regions":[
->> 	      {
->> 	        "region":"region0",
->> 	        "resource":45365592064,
->> 	        "size":536870912,
->> 	        "type":"pmem",
->> 	        "interleave_ways":1,
->> 	        "interleave_granularity":256,
->> 	        "decode_state":"commit",
->> 	        "qos_class_mismatch":true
->> 	      },
->> 	      {
->> 	        "region":"region1",
->> 	        "resource":45902462976,
->> 	        "size":536870912,
->> 	        "type":"pmem",
->> 	        "interleave_ways":1,
->> 	        "interleave_granularity":256,
->> 	        "decode_state":"commit",
->> 	        "qos_class_mismatch":true
->> 	      }
->> 	    ]
->> 	  }
->> 	]
->>
->> 3. Re-Start Qemu and we could see cxl region persistency using "cxl list"
->>
->> 4. Create namespace for both regions
->> 	root@QEMUCXL6060pmem:~# ndctl create-namespace --mode=fsdax --region=region0 --size=128M
->> 	{
->> 	  "dev":"namespace0.0",
->> 	  "mode":"fsdax",
->> 	  "map":"dev",
->> 	  "size":"124.00 MiB (130.02 MB)",
->> 	  "uuid":"3f6dcdc5-d289-4b0c-ad16-82636c82bec1",
->> 	  "sector_size":512,
->> 	  "align":2097152,
->> 	  "blockdev":"pmem0"
->> 	}
->> 	
->> 	root@QEMUCXL6060pmem:~# ndctl create-namespace --mode=fsdax --region=region1 --size=256M
->> 	{
->> 	  "dev":"namespace1.0",
->> 	  "mode":"fsdax",
->> 	  "map":"dev",
->> 	  "size":"250.00 MiB (262.14 MB)",
->> 	  "uuid":"6b9083c9-cb1a-447b-894d-fdfd2f3dbed2",
->> 	  "sector_size":512,
->> 	  "align":2097152,
->> 	  "blockdev":"pmem1"
->> 	}
->> 	
->> 	root@QEMUCXL6060pmem:~# time ndctl create-namespace --mode=fsdax --region=region0 --size=256M
->> 	{
->> 	  "dev":"namespace0.1",
->> 	  "mode":"fsdax",
->> 	  "map":"dev",
->> 	  "size":"250.00 MiB (262.14 MB)",
->> 	  "uuid":"c2071802-8c24-4f9c-a6c1-f6bb6589e561",
->> 	  "sector_size":512,
->> 	  "align":2097152,
->> 	  "blockdev":"pmem0.1"
->> 	}
->> 	
->> 	real    0m47.517s
->> 	user    0m0.209s
->> 	sys     0m26.879s
->> 	root@QEMUCXL6060pmem:~# time ndctl create-namespace --mode=fsdax --region=region1 --size=128M
->> 	{
->> 	  "dev":"namespace1.1",
->> 	  "mode":"fsdax",
->> 	  "map":"dev",
->> 	  "size":"124.00 MiB (130.02 MB)",
->> 	  "uuid":"13bc8de3-53d3-4c3d-b252-be7efefe80ee",
->> 	  "sector_size":512,
->> 	  "align":2097152,
->> 	  "blockdev":"pmem1.1"
->> 	}
->> 	
->> 	real    0m33.459s
->> 	user    0m0.243s
->> 	sys     0m13.590s
->>
->> 	root@QEMUCXL6060pmem:~# ndctl list
->> 	[
->> 	  {
->> 	    "dev":"namespace1.0",
->> 	    "mode":"fsdax",
->> 	    "map":"dev",
->> 	    "size":262144000,
->> 	    "uuid":"6b9083c9-cb1a-447b-894d-fdfd2f3dbed2",
->> 	    "sector_size":512,
->> 	    "align":2097152,
->> 	    "blockdev":"pmem1"
->> 	  },
->> 	  {
->> 	    "dev":"namespace1.1",
->> 	    "mode":"fsdax",
->> 	    "map":"dev",
->> 	    "size":130023424,
->> 	    "uuid":"13bc8de3-53d3-4c3d-b252-be7efefe80ee",
->> 	    "sector_size":512,
->> 	    "align":2097152,
->> 	    "blockdev":"pmem1.1"
->> 	  },
->> 	  {
->> 	    "dev":"namespace0.1",
->> 	    "mode":"fsdax",
->> 	    "map":"dev",
->> 	    "size":262144000,
->> 	    "uuid":"c2071802-8c24-4f9c-a6c1-f6bb6589e561",
->> 	    "sector_size":512,
->> 	    "align":2097152,
->> 	    "blockdev":"pmem0.1"
->> 	  },
->> 	  {
->> 	    "dev":"namespace0.0",
->> 	    "mode":"fsdax",
->> 	    "map":"dev",
->> 	    "size":130023424,
->> 	    "uuid":"3f6dcdc5-d289-4b0c-ad16-82636c82bec1",
->> 	    "sector_size":512,
->> 	    "align":2097152,
->> 	    "blockdev":"pmem0"
->> 	  }
->> 	]
->> 	
->> 5. Re-Start Qemu and we could see
->> 	- Region persistency using "cxl list"
->> 	- Namespace persistency using "ndctl list" and cat /proc/iomem
->>
->> 	root@QEMUCXL6060pmem:~# cat /proc/iomem
->> 	
->> 	a90000000-b8fffffff : CXL Window 0
->> 	  a90000000-aafffffff : Persistent Memory
->> 	    a90000000-aafffffff : region0
->> 	      a90000000-a97ffffff : namespace0.0
->> 	      a98000000-aa7ffffff : namespace0.1
->> 	  ab0000000-acfffffff : Persistent Memory
->> 	    ab0000000-acfffffff : region1
->> 	      ab0000000-abfffffff : namespace1.0
->> 	      ac0000000-ac7ffffff : namespace1.1
->> 	
->>
->> 	- NOTE: We can see some lag in restart, Its WIP
->>
->> 6. Also verify LSA version using "ndctl read-labels -j nmem0 -u"
->> 	root@QEMUCXL6060pmem:~# ndctl read-labels -j nmem0
->> 	{
->> 	  "dev":"nmem0",
->> 	  "index":[
->> 	    {
->> 	      "signature":"NAMESPACE_INDEX",
->> 	      "major":2,
->> 	      "minor":1,
->> 	      "labelsize":256,
->> 	      "seq":2,
->> 	      "nslot":4090
->> 	    },
->> 	    {
->> 	      "signature":"NAMESPACE_INDEX",
->> 	      "major":2,
->> 	      "minor":1,
->> 	      "labelsize":256,
->> 	      "seq":1,
->> 	      "nslot":4090
->> 	    }
->> 	  ],
->> 	  "label":[
->> 	    {
->> 	      "type":"68bb2c0a-5a77-4937-9f85-3caf41a0f93c",
->> 	      "uuid":"9a26b9ce-a859-4a63-b1b7-fd176105770d",
->> 	      "name":"",
->> 	      "flags":8,
->> 	      "nrange":1,
->> 	      "position":0,
->> 	      "dpa":134217728,
->> 	      "rawsize":268435456,
->> 	      "slot":0,
->> 	      "align":0,
->> 	      "region_uuid":"de512bdc-9731-4e5f-838c-be2e9b94ea72",
->> 	      "abstraction_uuid":"266400ba-fb9f-4677-bcb0-968f11d0d225",
->> 	      "lbasize":512
->> 	    },
->> 	    {
->> 	      "type":"529d7c61-da07-47c4-a93f-ecdf2c06f444",
->> 	      "uuid":"de512bdc-9731-4e5f-838c-be2e9b94ea72",
->> 	      "flags":0,
->> 	      "nlabel":1,
->> 	      "position":0,
->> 	      "dpa":0,
->> 	      "rawsize":536870912,
->> 	      "hpa":45365592064,
->> 	      "slot":1,
->> 	      "interleave granularity":256,
->> 	      "align":0
->> 	    },
->> 	    {
->> 	      "type":"68bb2c0a-5a77-4937-9f85-3caf41a0f93c",
->> 	      "uuid":"a90d211a-b28d-48c7-bfe7-99560d3825ef",
->> 	      "name":"",
->> 	      "flags":0,
->> 	      "nrange":1,
->> 	      "position":0,
->> 	      "dpa":0,
->> 	      "rawsize":134217728,
->> 	      "slot":2,
->> 	      "align":0,
->> 	      "region_uuid":"de512bdc-9731-4e5f-838c-be2e9b94ea72",
->> 	      "abstraction_uuid":"266400ba-fb9f-4677-bcb0-968f11d0d225",
->> 	      "lbasize":512
->> 	    },
->> 	    {
->> 	      "type":"68bb2c0a-5a77-4937-9f85-3caf41a0f93c",
->> 	      "uuid":"9a26b9ce-a859-4a63-b1b7-fd176105770d",
->> 	      "name":"",
->> 	      "flags":0,
->> 	      "nrange":1,
->> 	      "position":0,
->> 	      "dpa":134217728,
->> 	      "rawsize":268435456,
->> 	      "slot":3,
->> 	      "align":0,
->> 	      "region_uuid":"de512bdc-9731-4e5f-838c-be2e9b94ea72",
->> 	      "abstraction_uuid":"266400ba-fb9f-4677-bcb0-968f11d0d225",
->> 	      "lbasize":512
->> 	    }
->> 	  ]
->> 	}
->> 	read 1 nmem
->>
->> 	- NOTE: We have following UUID types as per CXL Spec
->> 		"type":"529d7c61-da07-47c4-a93f-ecdf2c06f444" is region label
->> 		"type":"68bb2c0a-5a77-4937-9f85-3caf41a0f93c" is namespace label
->>
->>
->> Limitation (WIP):
->> ================
->> Current changes only support interleave way == 1
->>
->> Observation:
->> ============
->> First time namespace creation using ndctl takes around 10 to 20 second time
->> while executing "devm_memremap_pages" at [3]
->>
->> As using this patchset, after auto region creation, namespace creation is
->> happening in boot sequence (if nvdimm and cxl drivers are static), It is
->> therefore boot sequence is increased by around 10 to 20 sec.
->>
->>
->> [1]: https://lore.kernel.org/all/163116432405.2460985.5547867384570123403.stgit@dwillia2-desk3.amr.corp.intel.com/
->> [2]: https://github.com/neerajoss/ndctl/tree/linux-cxl/CXL_LSA_2.1_Support
->> [3]: https://elixir.bootlin.com/linux/v6.13.7/source/drivers/nvdimm/pmem.c#L520
->>
->>
->>
->>
->> Neeraj Kumar (20):
->>   nvdimm/label: Introduce NDD_CXL_LABEL flag to set cxl label format
->>   nvdimm/label: Prep patch to accommodate cxl lsa 2.1 support
->>   nvdimm/namespace_label: Add namespace label changes as per CXL LSAv2.1
->>   nvdimm/label: CXL labels skip the need for 'interleave-set cookie'
->>   nvdimm/region_label: Add region label updation routine
->>   nvdimm/region_label: Add region label deletion routine
->>   nvdimm/namespace_label: Update namespace init_labels and its region_uuid
->>   nvdimm/label: Include region label in slot validation
->>   nvdimm/namespace_label: Skip region label during ns label DPA reservation
->>   nvdimm/region_label: Preserve cxl region information from region label
->>   nvdimm/region_label: Export routine to fetch region information
->>   nvdimm/namespace_label: Skip region label during namespace creation
->>   cxl/mem: Refactor cxl pmem region auto-assembling
->>   cxl/region: Add cxl pmem region creation routine for region persistency
->>   cxl: Add a routine to find cxl root decoder on cxl bus
->>   cxl/mem: Preserve cxl root decoder during mem probe
->>   cxl/pmem: Preserve region information into nd_set
->>   cxl/pmem: Add support of cxl lsa 2.1 support in cxl pmem
->>   cxl/pmem_region: Prep patch to accommodate pmem_region attributes
->>   cxl/pmem_region: Add cxl region label updation and deletion device attributes
->>
->>  drivers/cxl/Kconfig             |  12 +
->>  drivers/cxl/core/Makefile       |   1 +
->>  drivers/cxl/core/core.h         |   8 +-
->>  drivers/cxl/core/pmem_region.c  | 325 ++++++++++++++++++++++++++
->>  drivers/cxl/core/port.c         |  72 +++++-
->>  drivers/cxl/core/region.c       | 383 +++++++++++++++---------------
->>  drivers/cxl/cxl.h               |  46 +++-
->>  drivers/cxl/cxlmem.h            |   1 +
->>  drivers/cxl/mem.c               |  27 ++-
->>  drivers/cxl/pmem.c              |  72 +++++-
->>  drivers/cxl/port.c              |  38 ---
->>  drivers/nvdimm/dimm.c           |   5 +
->>  drivers/nvdimm/dimm_devs.c      |  28 +++
->>  drivers/nvdimm/label.c          | 403 ++++++++++++++++++++++++++++----
->>  drivers/nvdimm/label.h          |  20 +-
->>  drivers/nvdimm/namespace_devs.c | 149 ++++++++----
->>  drivers/nvdimm/nd-core.h        |   2 +
->>  drivers/nvdimm/nd.h             |  81 ++++++-
->>  drivers/nvdimm/region_devs.c    |   5 +
->>  include/linux/libnvdimm.h       |  28 +++
->>  tools/testing/cxl/Kbuild        |   1 +
->>  21 files changed, 1364 insertions(+), 343 deletions(-)
->>  create mode 100644 drivers/cxl/core/pmem_region.c
->>
->>
->> base-commit: 448a60e85ae2afe2cb760f5d2ed2c8a49d2bd1b4
->
-
-------el_smSXdYFIlAMwTB7ap0a..dltiS3v3rvvNmq_h4IEEs8u2=_c8d56_
-Content-Type: text/plain; charset="utf-8"
+>> Since power nodes are ref-counted anyway, do we just use the same node
+>> for both domains and let the driver up/down-count it twice?
+> 
+> Hi Matt,
+> 
+> Thanks for the very helpful insight. That's a great point, it seems the
+> SoC's design presents a tricky case for the bindings.
+> 
+> I see what you mean about potentially using the same power domain node
+> twice. My only hesitation is that it might be a bit unclear for someone
+> reading the devicetree later. Perhaps another option could be to relax
+> the constraint for this compatible?
+> 
+> Krzysztof, we'd be grateful for your thoughts on how to best model this
+> situation.
 
 
-------el_smSXdYFIlAMwTB7ap0a..dltiS3v3rvvNmq_h4IEEs8u2=_c8d56_--
+It's your hardware, you should tell us, not me. I don't know how many
+power domains you have there, but for sure it is not one AND two domains
+the same time. It is either one or two, because power domains are not
+the same as regulator supplies.
 
+Best regards,
+Krzysztof
