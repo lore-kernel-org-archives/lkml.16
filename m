@@ -1,200 +1,135 @@
-Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30802307498
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703E4307498;
+	Wed, 25 Jun 2025 06:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750831902; cv=none; b=FRUFjpcldfj78zpzB2QV80LQN4Ya8uKYRBix9sCIQ2TQSnA1FqXusk93YC4KGqpdJQSoLlE7NJA0YRKY8JW1o7xw1gfNFXfvmXLMgCZ8eZwSFD2EWgnm0t8QK/zw5jOX5PYfP3WUIvTd3zP7DKCC/8J9FNZINCEtyy9p+6fRvZ0=
+	t=1750831908; cv=none; b=BTmNuxeoF+Ujur5N2bWX75OyNNL+6C6fOZEHtrhSUuThAZ/UGcNif8B1Sx0Trb/xLYVAHS2/DKOjpbc0hPppT7Bo8KjIDsUaHCMK7gZ/3tWw3p7ftpcmBy3/Ewj/POvukXCX/SbPdUECvB3w3c+FeiXnYmdFsRidXl94oDl6VNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750831902; c=relaxed/simple;
-	bh=66IhicLmquIrT8WLtYhnwtaZzHKT0a9JlXmR82CzU6g=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=OkxYp6K4pLe4ZuKa5RRpkLYVCr/8rRO4r2f+jYCdBIeTCaztbg9WzL2OpIsPpLTfmmDhUYs4LC+RngcebRS4YxruRwjjo0QdRTA8W1C8G5Uqh6StO692uX2Ysfp8bzoiGfP+daO282Tkue0WEKxIcyVgDgrBicD4mOUdMwInqwA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=V0NAbayk; arc=none smtp.client-ip=115.124.30.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1750831908; c=relaxed/simple;
+	bh=BLRL/tfRl0xXr0I6Dv0V4j/7kZhCaRjPCxscsQX+91I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q875+fGSdwArwUad5T8YxHOXrCcSupBBMbJdc90Ux3fwS8hHuZwB1NRqsbc5EbnVHPEN/dUNVwhq3Fy2/B04dVyuG9lvfVzuY5zbT+mNmMAhO/1srwRuB5c3kAG37l7K9r2zd0gWp3MpqHNORJSf04tOmz0eOMAaUGVue5qT7VA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W1Eqvrpf; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="V0NAbayk"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750831895; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=76DnGSmj2vkYfuP0EwAnTPcRa1vP+wuz/cSNTM/iBy8=;
-	b=V0NAbayk2W5GH7/2EIFZf+Li+JrQnbDn2CqAiT4ymuQB6BL1dRngKWz00KgvEEsJ7/fgnYcBYqWtU2kr5Nihf5yUgufP56TD4hJdM8kKdzY5oNVVgM8zz8cvdv4RIrEyIx7M9k1IfdGJ2bu2pIob6McbdoY3C3nYM8x7QE4bJ6A=
-Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WetkeAe_1750831892 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 25 Jun 2025 14:11:33 +0800
-From: "Huang, Ying" <ying.huang@linux.alibaba.com>
-To: Li Zhijian <lizhijian@fujitsu.com>
-Cc: linux-mm@kvack.org,  akpm@linux-foundation.org,
-  linux-kernel@vger.kernel.org,  y-goto@fujitsu.com,  Ingo Molnar
- <mingo@redhat.com>,  Peter Zijlstra <peterz@infradead.org>,  Juri Lelli
- <juri.lelli@redhat.com>,  Vincent Guittot <vincent.guittot@linaro.org>,
-  Dietmar Eggemann <dietmar.eggemann@arm.com>,  Steven Rostedt
- <rostedt@goodmis.org>,  Ben Segall <bsegall@google.com>,  Mel Gorman
- <mgorman@suse.de>,  Valentin Schneider <vschneid@redhat.com>,
-  lkp@intel.com
-Subject: Re: [PATCH RFC v2] mm: memory-tiering: Fix PGPROMOTE_CANDIDATE
- accounting
-In-Reply-To: <20250625021352.2291544-1-lizhijian@fujitsu.com> (Li Zhijian's
-	message of "Wed, 25 Jun 2025 10:13:52 +0800")
-References: <20250625021352.2291544-1-lizhijian@fujitsu.com>
-Date: Wed, 25 Jun 2025 14:11:32 +0800
-Message-ID: <877c10mju3.fsf@DESKTOP-5N7EMDA>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W1Eqvrpf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750831906; x=1782367906;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=BLRL/tfRl0xXr0I6Dv0V4j/7kZhCaRjPCxscsQX+91I=;
+  b=W1EqvrpfD02qMiTw5zZBXuzrYdptBfMoV1Gff9hNiLSqr/IvV4g7Q9s2
+   rNYfJ5jhoUbNSBeYX66lGjiWp0eBoNJ+BjoG3mz4LWfvVRFOggHujJhrY
+   qRtqEkgSK0PjX9Qu+IIBmnVWEp/JuHdeEk2ZJdtM/89gIwKr3bDL94Cqy
+   aVEdGVJq2fC/nxo6onGH1nm9D1UfAIeQyZEavGjrIWhoEJrPAh9xbrtKq
+   OiFSFE8vgznDEZl2Xq7sg5aoCzAiRmEXD+U6A2XiJSf9ulGZmOaToV/L5
+   PzMDKaXeMJkTN5y+IpuXsnVwXlD/JtZB57/NIPUFW01aewmOA6qHhs1Ua
+   A==;
+X-CSE-ConnectionGUID: Y3kqi7PnSKGl7khX6OR3JQ==
+X-CSE-MsgGUID: wh30H9s4RviyPp6D9DNAXA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52203458"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="52203458"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 23:11:45 -0700
+X-CSE-ConnectionGUID: fhAeAE6jRWev4DSNMcxAng==
+X-CSE-MsgGUID: aGWvhxcmSt6GuB2BuoM4Tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="152298025"
+Received: from klitkey1-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.155])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 23:11:41 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id BA76F11FAB3;
+	Wed, 25 Jun 2025 09:11:37 +0300 (EEST)
+Date: Wed, 25 Jun 2025 06:11:37 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Mehdi Djait <mehdi.djait@linux.intel.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	"Nirujogi, Pratap" <pnirujog@amd.com>,
+	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
+	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
+	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
+	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
+	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
+	Svetoslav.Stoilov@amd.com, Yana.Zheleva@amd.com
+Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
+Message-ID: <aFuTGe1MnXNyvP3u@kekkonen.localdomain>
+References: <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
+ <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
+ <20250623220503.GA15951@pendragon.ideasonboard.com>
+ <425j7c6xvbbatdhxgjgjawzwfnjmjetg6rpnwfudbtg6qz6nay@dy5ldbuhtbvv>
+ <aFp7tuXkU1jayPum@kekkonen.localdomain>
+ <aFp78tqHhe_IhV6d@kekkonen.localdomain>
+ <20250624102745.GG15951@pendragon.ideasonboard.com>
+ <nixg4efp3zkdpd6h7kp6wkvam63batpoknov2nkgu36voks6bk@gzuackzl3l5g>
+ <aFqQEwdzSY123xps@kekkonen.localdomain>
+ <aslodzamkbjm6n6oherakch2nyltl6mnncl4mzr4o774oolr4t@hpegah7dq72g>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aslodzamkbjm6n6oherakch2nyltl6mnncl4mzr4o774oolr4t@hpegah7dq72g>
 
-Li Zhijian <lizhijian@fujitsu.com> writes:
+Hi Mehdi,
 
-> Goto-san reported confusing pgpromote statistics where
-> the pgpromote_success count significantly exceeded pgpromote_candidate.
->
-> On a system with three nodes (nodes 0-1: DRAM 4GB, node 2: NVDIMM 4GB):
->  # Enable demotion only
->  echo 1 > /sys/kernel/mm/numa/demotion_enabled
->  numactl -m 0-1 memhog -r200 3500M >/dev/null &
->  pid=$!
->  sleep 2
->  numactl memhog -r100 2500M >/dev/null &
->  sleep 10
->  kill -9 $pid # terminate the 1st memhog
->  # Enable promotion
->  echo 2 > /proc/sys/kernel/numa_balancing
->
-> After a few seconds, we observeed `pgpromote_candidate < pgpromote_success`
-> $ grep -e pgpromote /proc/vmstat
-> pgpromote_success 2579
-> pgpromote_candidate 0
->
-> In this scenario, after terminating the first memhog, the conditions for
-> pgdat_free_space_enough() are quickly met, triggering promotion.
-> However, these migrated pages are only accounted for in PGPROMOTE_SUCCESS,
-> not in PGPROMOTE_CANDIDATE.
->
-> This update increments PGPROMOTE_CANDIDATE within the free space branch
-> when a promotion decision is made, which may alter the mechanism of the
-> rate limit. Consequently, it becomes easier to reach the rate limit than
-> it was previously.
->
-> For example:
-> Rate Limit = 100 pages/sec
-> Scenario:
->   T0: 90 free-space migrations
->   T0+100ms: 20-page migration request
->
-> Before:
->   Rate limit is *not* reached: 0 + 20 = 20 < 100
->   PGPROMOTE_CANDIDATE: 20
-> After:
->   Rate limit is reached: 90 + 20 = 110 > 100
->   PGPROMOTE_CANDIDATE: 110
->
-> Due to the fact that the rate limit mechanism recalculates every second,
-> theoretically, only within that one second can the transition from
-> pgdat_free_space_enough() to !pgdat_free_space_enough() in top-tier
-> remaining memory be affected.
->
-> Moreover, previously, within this one-second span, promotions caused by
-> pgdat_free_space_enough() are not restricted by rate limits.
-> This theoretically makes it easier to cause application latency.
->
-> The current modification can better control the rate limit in cases of
-> transition from pgdat_free_space_enough() to !pgdat_free_space_enough()
-> within one second.
->
-> Cc: Huang Ying <ying.huang@linux.alibaba.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: Valentin Schneider <vschneid@redhat.com>
-> Reported-by: Yasunori Gotou (Fujitsu) <y-goto@fujitsu.com>
-> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
-> ---
-> V2:
-> Fix compiling error # Reported by LKP
->
-> As Ying suggested, we need to assess whether this change causes regression.
-> However, considering the stringent conditions this patch involves,
-> properly evaluating it may be challenging, as the outcomes depend on your
-> perspective. Much like in a zero-sum game, if someone benefits, another
-> might lose.
->
-> If there are subsequent results, I will update them here.
+On Tue, Jun 24, 2025 at 06:34:51PM +0200, Mehdi Djait wrote:
+> Hi Sakari,
+> 
+> On Tue, Jun 24, 2025 at 11:46:27AM +0000, Sakari Ailus wrote:
+> 
+> [...]
+> 
+> > 
+> > I'm in favour of the latter but both should be workable.
+> > 
+> > Speaking of return values, devm_clk_get_optional() may also return
+> > -EPROBE_DEFER. That needs to be handled.
+> > 
+> 
+> Ack.
+> 
+> > And further on -EPROBE_DEFER, I think the helper should return
+> > -EPROBE_DEFER if the "clock-frequency" property doesn't exist on non-OF
+> > nodes. That signals the required software nodes required on Intel Windows
+> > definitions/ipu-bridge or AMD systems aren't in place yet so really probing
+> > should be deferred. This would allow removing the hacks that return
+> > -EPROBE_DEFER in sensor drivers when no graph endpoint is found.
+> 
+> device_property_read_u32() returns the following:
+> 
+>  * Return: number of values if @val was %NULL,
+>  *         %0 if the property was found (success),
+>  *	   %-EINVAL if given arguments are not valid,
+>  *	   %-ENODATA if the property does not have a value,
+>  *	   %-EPROTO if the property is not an array of numbers,
+>  *	   %-EOVERFLOW if the size of the property is not as expected.
+>  *	   %-ENXIO if no suitable firmware interface is present.
+> 
+> 
+> Do you mean something like this in the helper:
+> 
+> if (ret == -ENODATA && !of_node)
+> 	return ERR_PTR(-EPROBE_DEFER);
 
-I understand that it's hard to identify all possible regressions.
-However, at least done some test to check some common use cases?
+I think -EINVAL is returned if a property doesn't exist on ACPI, same on
+software nodes. On software nodes you could also have -ENODATA if the
+property has no value. So test both of these?
 
-> Cc: lkp@intel.com
-> Here, I hope to leverage the existing LKP benchmark to evaluate the
-> potential impacts. The ideal evaluation conditions are:
-> 1. Installed with DRAM + NVDIMM (which can be simulated).
-> 2. NVDIMM is used as system RAM (configurable via daxctl).
-> 3. Promotion is enabled (`echo 2 > /proc/sys/kernel/numa_balancing`).
->
-> Alternative:
-> We can indeed eliminate the potential impact within
-> pgdat_free_space_enough(), so that the rate limit behavior remains as
-> before.
->
-> For instance, consider the following change:
->                 if (pgdat_free_space_enough(pgdat)) {
->                         /* workload changed, reset hot threshold */
->                         pgdat->nbp_threshold = 0;
-> +                        pgdat->nbp_rl_nr_cand += nr;
->                         mod_node_page_state(pgdat, PGPROMOTE_CANDIDATE, nr);
->                         return true;
->                 }
->
-> RFC:
-> I am uncertain whether we originally intended for this discrepancy or if
-> it was overlooked.
->
-> However, the current situation where pgpromote_candidate < pgpromote_success
-> is indeed confusing when interpreted literally.
-> ---
->  kernel/sched/fair.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 7a14da5396fb..505b40f8897a 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -1940,11 +1940,13 @@ bool should_numa_migrate_memory(struct task_struct *p, struct folio *folio,
->  		struct pglist_data *pgdat;
->  		unsigned long rate_limit;
->  		unsigned int latency, th, def_th;
-> +		long nr = folio_nr_pages(folio);
->  
->  		pgdat = NODE_DATA(dst_nid);
->  		if (pgdat_free_space_enough(pgdat)) {
->  			/* workload changed, reset hot threshold */
->  			pgdat->nbp_threshold = 0;
-> +			mod_node_page_state(pgdat, PGPROMOTE_CANDIDATE, nr);
->  			return true;
->  		}
->  
-> @@ -1958,8 +1960,7 @@ bool should_numa_migrate_memory(struct task_struct *p, struct folio *folio,
->  		if (latency >= th)
->  			return false;
->  
-> -		return !numa_promotion_rate_limit(pgdat, rate_limit,
-> -						  folio_nr_pages(folio));
-> +		return !numa_promotion_rate_limit(pgdat, rate_limit, nr);
->  	}
->  
->  	this_cpupid = cpu_pid_to_cpupid(dst_cpu, current->pid);
+I'd also test !of_node first.
 
----
-Best Regards,
-Huang, Ying
+-- 
+Regards,
+
+Sakari Ailus
