@@ -1,49 +1,48 @@
-Received: from out203-205-221-245.mail.qq.com (out203-205-221-245.mail.qq.com [203.205.221.245])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950FB1DB958;
-	Wed, 25 Jun 2025 10:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA5A3074A3;
+	Wed, 25 Jun 2025 10:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750848685; cv=none; b=R4Em3sLFSQ/zYSl86ScnOKhWFVEOQljP3eTHFFhS5Jr2VpSnKUSMhaiLg2TP48VYDlp1wQRPTLvZekhbozUakP8Wj8wLBNW+8IHJwqjVMKQpoGEAVvC8i1HbEQzltVApw76ae8LO0zSYaIB4K3EEkEWiCEnTIXcQa1Lua2vAuHo=
+	t=1750848727; cv=none; b=tGeXica6EGRkhn/P6m1BB8UZb1kmH6fPXTYGjDnFf3IKU0fZGOGWZuWlFC27CUL9/R0BBmVM1n443VO0Lu00is1zMKt9zp0sM/cdcDzCV+hEa7PwQWlpYLbIJsJeWHhfaeNkYbm4gKEBQ5YevA9dZaZNjWrnZiX04VHG9qaSakM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750848685; c=relaxed/simple;
-	bh=fRZQe4nl0zKEUEJnNAJ903ZecOWgKWBEK13lijK2btU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YgZII/6CPaTqEcvHoo+fkrf08wTXK7hoK8bKaIBszWfT8n0uKTYWW1g8CM3o2tjeEf8I7QGi6mtjefhqRVVcCpaNaEg/uWzpTvMugIVOfGKxVEuFiFtOLlnyAcfI1/YrIttaHx7bDta3knsv6JCicUX6mrrll/jur1bNiZZGov8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=hEJNCM6Z; arc=none smtp.client-ip=203.205.221.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1750848727; c=relaxed/simple;
+	bh=1YHsKIdOqJMrsX2Kpl5DnLJEoFjWsPIpEHyTFgeqMmM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=K1ii9iZVBmirzUm66gxuaVbbKMZEGOzcdSSDOuo5BqjtZ3IxOGHB6oT9euMZqlRh0/vVBW83cpcPXeIOsvfzoMvG3fV1l4Q63WkzMLOmIOydI2/wmjv58rkTqdp7Lz8bbQvTaT8H0Al1uni7STY3EYp8To6Sqg5/ourTrZG5JCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Ij4auXQo; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="hEJNCM6Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1750848367; bh=fRZQe4nl0zKEUEJnNAJ903ZecOWgKWBEK13lijK2btU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=hEJNCM6ZEPHh6f84t10y6/by9x0fWak3Pg9UI1wSeVixF2e96t+9lZzISUpkB7/oW
-	 ZOwPaYVVCY9jGWIszJiUsThrXfIqnwG2fLmdrEWiQFs+RlY6sH8/cL6BKv+1ob1qUm
-	 i9wjf4H+1nts5RYGFmb/NO4yI/UR56vE5e70r0EM=
-Received: from [172.25.20.158] ([111.202.154.66])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id B839CC3E; Wed, 25 Jun 2025 18:46:03 +0800
-X-QQ-mid: xmsmtpt1750848363tmxew2sy5
-Message-ID: <tencent_FB9C854A6AB8D1CF28C88A8642B297A59C07@qq.com>
-X-QQ-XMAILINFO: MT46X0n0UCeM4y5W26Ag/ADFG1DHi9F9CHyqbj6DSfeO3dtcmIBOE1oh2UcVZP
-	 ZMmQ68mcMehwhUbLUnc07Zn9RGz6F2suZwRJOeyiIzICBfgm0V2+5cregthy5C7I8MB6FhVvNcYM
-	 /VYkFzpfdEChNh1ny0qa/KKLXtV+MtsrADzq4s7xqMxPy7INKe9X7UTI8B30l2IDWVuhCLBivAB/
-	 KpDHHHEgbPHLOTlKPIWS+VeUSKe0p858cK9CT24Fk/cVWieuHQr8ktv6F80EJcbM+1S/A2ggowY6
-	 fAb4V4CaUZGL0XfnXbcLYb6LQmmw+A5CVdgTwLZAnVSKd0mwEH7Z7pmaiJiOydAd+niM/H3cdnq1
-	 rOkrq8lQR55XrWjPx6gZ/EFejSqH8DoRxc5WJMO4+TBv4qGCLjkGxCLhfzpfNWMA8RomFYbRvWrD
-	 6xwkMLEpPnGJXjxpwo0483KUAhbHlVgxJPUoWax2HkTNHkIBqD2j7ccHzxxGpye4OildalBIIxay
-	 J8znfIlVeLvpwBSMKx5L/dMMyldBbPzxX+CEr1l9/weUIrqiRVImt6MOFUDOlunpBV7QPxUklf6e
-	 CQvXxLC5C5gBdKfW7Amei+h97GCDgKpfJBIpvH0s06O9iBzMr5JOBv8vnfdC9scfGJIYymZ3iHWM
-	 8a+CKbZBw8NCA+65oAHoE15MX1UdBCdnXi39kjjEPdDJxqNl0vUWfCKAdnGACYxu7dc3IA8WzeYG
-	 t83PPzmGaZZysMJnUHhsday1qRc0X4xe1rkKegzSK3hnBQgHu9LTEGpy19ILw0Uo5i+dLyw22WC+
-	 o60brkozWdLySFo0VMzrZoSZxjebVnDOYd46LeGlXEI3ApHoWbtH5gX9qdOmXHpDuXY0YRuqAi1i
-	 YyETv+GdRIAh7F7kT9T8xtYBssGRzq52KheHTFTcSRV6Y2jZHXfqJkiLRTtyNhFI5Jhet2ohBjyw
-	 xJIvTnxoRcyK6Hsx4wo61Ymi6SJV4FfufqOKeFAABoMNiHKEgteeWdTwi/nC9lwdKRit1VdVs=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-X-OQ-MSGID: <a9c446ff-d51a-40bf-a243-350de1e6e613@qq.com>
-Date: Wed, 25 Jun 2025 18:46:03 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Ij4auXQo"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PAI6H2013820;
+	Wed, 25 Jun 2025 10:52:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	f5PY3URjo6lfFndro9HnX+YLREKT8H3OWjeSoal0FdE=; b=Ij4auXQoXpzCQt7J
+	nIgOQEXW5y1QvYNKCssm+Udjz9Qt9laPnT5wvqRWCVzZMWdY79mT5zXrF/gOszsN
+	m85jPjDFGD8ANXBH+fo3xwcpjooGxAZ8u1dikYmPeOS937YnBJoEwP43eJ2JAiM+
+	LON6Rn94tZEFxen+u70zW4QwWxAzqsa+9ekHsvcribTWgNEFV5P3dpcDO2PYpbco
+	ryMHxemvFAXFJYdXfBAzwgNsNKvjQM7/6KqmoS4boKATGxsAp46ZWdu7ubHcxs+s
+	/Wj9V1YPh4eCSjYmfWuSJOMgLDTdBO3STTEU9q/tIZ+AiCNpBhxd89TBdCrCgYCi
+	vxeZhg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbm1x5ny-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 10:52:03 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55PAq2gI025275
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 10:52:02 GMT
+Received: from [10.217.217.109] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 25 Jun
+ 2025 03:51:57 -0700
+Message-ID: <b71479b9-2f54-4d87-b384-04a948325328@quicinc.com>
+Date: Wed, 25 Jun 2025 16:21:54 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,43 +50,72 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 5/5] ext4: declare support for FOP_DONTCACHE
-To: Matthew Wilcox <willy@infradead.org>,
- =?UTF-8?B?6ZmI5rab5rabIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
-Cc: "tytso@mit.edu" <tytso@mit.edu>, "hch@infradead.org" <hch@infradead.org>,
- "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
- "brauner@kernel.org" <brauner@kernel.org>,
- "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
- "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
- "tursulin@ursulin.net" <tursulin@ursulin.net>,
- "airlied@gmail.com" <airlied@gmail.com>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
- "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "linux-mm@kvack.org" <linux-mm@kvack.org>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250624121149.2927-1-chentaotao@didiglobal.com>
- <20250624121149.2927-6-chentaotao@didiglobal.com>
- <aFqfwHofm_eXb5zw@casper.infradead.org>
-From: Chen Taotao <chentao325@qq.com>
-In-Reply-To: <aFqfwHofm_eXb5zw@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v3 0/2] Add support for clock controllers and CPU scaling
+ for QCS615
+To: Bjorn Andersson <andersson@kernel.org>
+CC: Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Ajit Pandey <quic_ajipan@quicinc.com>,
+        Imran Shaik
+	<quic_imrashai@quicinc.com>,
+        Jagadeesh Kona <quic_jkona@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Konrad Dybcio
+	<konrad.dybcio@oss.qualcomm.com>
+References: <20250612-qcs615-mm-cpu-dt-v3-v3-0-721d5db70342@quicinc.com>
+ <jtirzyxqdffbqwlhuepgspyepimn7tx3btcovutfhzveynlk33@3xnoc4awrbma>
+Content-Language: en-US
+From: Taniya Das <quic_tdas@quicinc.com>
+In-Reply-To: <jtirzyxqdffbqwlhuepgspyepimn7tx3btcovutfhzveynlk33@3xnoc4awrbma>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=YYu95xRf c=1 sm=1 tr=0 ts=685bd4d3 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=ig_1wT9v4rekqANRyDEA:9 a=QEXdDO2ut3YA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: kUIEfbVIeSNk_M-ScQQn6TY_mOloYmIX
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA4MSBTYWx0ZWRfX3SaAwO3275vV
+ UjdtBrtmN16H5PfLJCQ0KKlD8lgOZfhKFw0CvbXnWgBQGxH5ijwsAxeXmXZKwKSOxw61ajwfeJJ
+ 59Bq1NMxNPYOdQmb/FLNWfYFSRkmEpfnitf+495M+Hn7BRpGj16S1BX3QAbxH37mDDQ/Jk/LtsE
+ +Z3Sn2/ItMpT3TzIw999OmbSlBdDc94nlfd7KOBamEwDH/u0Tjwo1ya25loFkNypabxZYdLjQTx
+ 9tUQgJnN76SeduqLxA0cId6tc2x894hrzZB0crpjg31QVGZrvi5ohEI3/eqp4+mSc43OXBGnD4F
+ MdJa9/SJGsV+S5+MK3oQJG6BzMroEr3Fro3G3o/lG+n39Cu0XbstK/0IPzhhJ5toHqKJEqw2qEL
+ DaLcjH+ydwFliqARcc3/gotnSOuGatJ+qgAvOWDZZ5WCHeIieYEjkyDN6cpJM7DxtJrtf1JR
+X-Proofpoint-ORIG-GUID: kUIEfbVIeSNk_M-ScQQn6TY_mOloYmIX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_03,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
+ lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxlogscore=571
+ clxscore=1015 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506250081
 
 
-在 2025/6/24 20:53, Matthew Wilcox 写道:
-> On Tue, Jun 24, 2025 at 12:12:10PM +0000, 陈涛涛 Taotao Chen wrote:
->> From: Taotao Chen<chentaotao@didiglobal.com>
+
+On 6/19/2025 2:51 AM, Bjorn Andersson wrote:
+> On Thu, Jun 12, 2025 at 03:47:19PM +0530, Taniya Das wrote:
+>> Add the video, camera, display and gpu clock controller nodes and the
+>> cpufreq-hw node to support cpu scaling.
 >>
->> Set the FOP_DONTCACHE flag in ext4_file_operations to indicate that
->> ext4 supports IOCB_DONTCACHE handling in buffered write paths.
-> I think this patch should be combined with the previous patch so we
-> see all the change needed to support DONTCACHE in one patch.
+>> Clock Dependency:
+>> https://lore.kernel.org/all/20250119-qcs615-mm-v4-clockcontroller-v4-0-5d1bdb5a140c@quicinc.com/
+>>
+> 
+> This was rejected 6 months ago.
+> 
 
-I’ll merge the patches to keep the DONTCACHE support self-contained. Thanks!
+I will update it to the correct latest link.
 
-
+> Regards,
+> Bjorn
+> 
 
