@@ -1,152 +1,171 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC3B25DCE3;
-	Wed, 25 Jun 2025 13:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87F825BF06
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:37:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750858486; cv=none; b=NReFEy5dZKW5MAyf1mKagcod2snQy9xba6LuZDAuCf+9bjjwS16wT718cC40SY9HrYrBfSsxZnqVJ2gaf8LmQdmVDmsNMBmXcNEUh3SOp11n5wb575C71M+TqisWchf64lj7JJ/lLYE7euOSJnK9pzRmD5e0k8Bj1NpgFoXg7SU=
+	t=1750858655; cv=none; b=Q6VnP7N72nb4Ij+se4cePuqcGq0GqwodZT6dgaLV7JoVwHXtKkkDHae5tx53pH8VSqkQmg6tyDlgmR6yRkYLyHRe6HqtzUghsZGLn5DdUFIudXuAoPM1uh6KPnVRno2fv9aYeLSJ7LyU7ohE8EUMaayGHNo0X78LEsz44UxFz/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750858486; c=relaxed/simple;
-	bh=XNNKqCNks8fpJ2GsjlmUlsFeRfSZsFtwkKxp5R5Ds1I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=iqsU9BOnuszPysf+fiTH9+mVKD2dvmRWI3mywHNgif1U5mbcL2zDzw9J/4m3sMMSXzwhnLYmUwaNi2s1OpMGYv8hDRcK2AkI/7z9VkMOi8Miisj1RM8u85XIXTuMvqj7BxdpOhr+D8dAyTXGmnp760saVyvkut25Kih72GJ9s7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hDWtQE+9; arc=none smtp.client-ip=209.85.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750858655; c=relaxed/simple;
+	bh=wulRLZGJb3h5Sy6VUKgn3h/xZ4W+D9ycXw4/RiRXods=;
+	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=qo/smfGUR46q6o5omazHJWtmjD3Hkpymc+za1UZxD/1ixl7ilrPKqHqopYSKm5RgBRMpeB3DWHEJvxA5sleRQI7LRWhFH5QfAnbsXIpxEGUYvDuRE83yQ2FsXyr/+8OKolLL6W19+oeYeTQstbgZNfuYA4QIJwl3mIPyUEiFaWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XoNOusvg; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDWtQE+9"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-450cfb79177so9114435e9.0;
-        Wed, 25 Jun 2025 06:34:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750858482; x=1751463282; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sSmidhmKnlvzWCstUxmWvNTNqMZf2JeflouF2xNxjyE=;
-        b=hDWtQE+9dVcdAhHn8lewTIz+HqPuLMo2ki1e5sUkltzzzM6+ClklLFuY3+wLBQ9pFj
-         OrLADdfnKVSFdZK5jt/J2lx4n028hfWzj/mKlLskyQnyNWdS8O6otSG1Y9/tCgGa+JR3
-         EI/NtCzKlsH9V9ecm5l5ZAJcAwnAtpgWnvgoTMXOljeboCDwTeBJalppMLJ3ZAsUg2Rc
-         CxWnRD6nw70Gc+qdSQVyJLgZ2Sz5mUvT5qJirMzCJeApiY5Ak4dacfm4y+zkLW7QE3QS
-         Msn56Mhp57jcWMND406aD52cwor28uRTct6GikSegrTsinZMhzAHP6XMq98xiCxOyWam
-         uvaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750858482; x=1751463282;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sSmidhmKnlvzWCstUxmWvNTNqMZf2JeflouF2xNxjyE=;
-        b=rXPPe8Ofd2pLIJN5tJPsXRx6RZ4cNziW7IOjA0Owr1EorRZzcTt70ADt2ldU4s7KTk
-         I8hHzlFmxeeOe9U5XBF1EVLVPRBIFWF9IpYxyO1B77hovLdNJqE2v8/U+jt55s9kOGME
-         XV+pESDaagZEa9g5m0SCOi1P7QtIh2ffaTexaZmKcWfIEavjpqIAm7dIUv2zokNFAEx5
-         9OXLxBvW44w34WnZfapwYWePSjn+5lRvZWoOY2Gn93hNmG+QWDkFi/dIDiWfE8Ov3foI
-         onokb+0wHw8aVg8LgNpwRzrLiqZQ4pog0i1rdhoJestjPJ/YSHOfo8d5nxll1PCltREo
-         RKvA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjXqlaL0H0ZwmubMR8A2jc2u1fSXDz9/GX28HN+EzpjVSuDkhfV8y/mTWDNM/NM1MCP63c4bqPwg6WfdGd@vger.kernel.org, AJvYcCWnxSCjhiMNpGTSbDeqnDCWQM/E7sJncpsJ02ITyaMjJicAKZSispuLI5C8AkZqn7C3mjTc/fqHXu6VaEzL@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy8zT7dt38E2PxwfngXn93O993UZznuh59WNZ7my3EzbnkPh5sF
-	u7cGCnGUJ0KNgKI+QwpPUreSyS93G//KRYv8Y9PWlSmZskmNbLGrW05y
-X-Gm-Gg: ASbGncvjmG0QFH7+2VN3tNZSrSuqqAEA+bmZl59x0fxrdWXZAWBKhEH0HM52ezzryS+
-	j8rqX+PfFavTC5z6MFNTz1TbCJFzNhC+abxARObmetWqRaLpyx0/5pJ61V3Upw03k4VxASBKPGC
-	pA0Kpuk84pguYowkfJlPIRPAo91hRb+tkYY+cdw19XmWOOcDnuoOvhwqY6ThrbGkcx0+7bBQvpJ
-	Cqn4dwrpWruBVnq0JIQtTaLtZlaDVx+eSfoSPF+2igEPGYiiPBN6J3OMt1StpZTnTrgygcFrW/3
-	2aPX7XbpoyF50q87FrTZBO4Wm1yQiQdiZWxl1XYdQbAHU+8EsHMXpdyD3PMl80u/xjRTrTeuugA
-	/f0iZeoynUz3yXD3ygnQjHKMEiA==
-X-Google-Smtp-Source: AGHT+IFZlH16b09EMB+Pjhh0jpiWFmAOwz0K+m0zYhm8+lkZeTOoaanMtMTS1OpTavjWUdQN/5sX5A==
-X-Received: by 2002:a05:6000:1acd:b0:3a0:aed9:e34 with SMTP id ffacd0b85a97d-3a6ed66e377mr2851453f8f.48.1750858482317;
-        Wed, 25 Jun 2025 06:34:42 -0700 (PDT)
-Received: from [192.168.0.253] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-453823ad247sm21281905e9.26.2025.06.25.06.34.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 06:34:41 -0700 (PDT)
-From: Gabor Juhos <j4g8y7@gmail.com>
-Date: Wed, 25 Jun 2025 15:34:23 +0200
-Subject: [PATCH] interconnect: increase ICC_DYN_ID_START
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XoNOusvg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750858652;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DabOJJa1DrUsfTYb2fsq6yAk1bbwXjFbh/XQEYLvjZw=;
+	b=XoNOusvg2yBQtQh2BFuR3XcoTpQyU4vnOObzB6FV0HoV+mC3/GzVHDw9Lj1rJ+3yfExEAp
+	fc20nF5aq1sPm0wBU54igWERYFiNj55Y4HFaNSS7FBMMJMF6TYtu7tzT0EV2fdngFFYYw3
+	UGjZhxqX9cTczP/fsal7+swlf3MHAtE=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-FCApuVIYOliRWSVwHqg1qA-1; Wed,
+ 25 Jun 2025 09:37:29 -0400
+X-MC-Unique: FCApuVIYOliRWSVwHqg1qA-1
+X-Mimecast-MFC-AGG-ID: FCApuVIYOliRWSVwHqg1qA_1750858647
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A9E5E1809C8A;
+	Wed, 25 Jun 2025 13:37:27 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.81])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 87FDA1956096;
+	Wed, 25 Jun 2025 13:37:25 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+To: Stefan Metzmacher <metze@samba.org>,
+    Steve French <stfrench@microsoft.com>
+cc: dhowells@redhat.com, Paulo Alcantara <pc@manguebit.com>,
+    linux-cifs@vger.kernel.org, netfs@lists.linux.dev,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] cifs: Fix the smbd_request and smbd_reponse slabs to allow usercopy
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-icc-dyn-id-fix-v1-1-127cb5498449@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAN76W2gC/x2MQQqAIBAAvyJ7bkGFhO0r0SF0rb1YKEQh/b2l4
- wzMdGhchRtMpkPlS5ocRcENBuK+lo1RkjJ460cbHKHEiOkpqjHLjSllF4gyRXag0VlZ9T+cl/f
- 9ADx9OgdgAAAA
-X-Change-ID: 20250619-icc-dyn-id-fix-ddf1699f9ce1
-To: Georgi Djakov <djakov@kernel.org>, 
- Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>
-Cc: linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Gabor Juhos <j4g8y7@gmail.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1372500.1750858644.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 25 Jun 2025 14:37:24 +0100
+Message-ID: <1372501.1750858644@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Since commit d30f83d278a9 ("interconnect: core: Add dynamic id allocation
-support"), interconnect node ids greater than or equal to ICC_DYN_ID_START
-are reserved for dynamic id allocation. Yet the icc_node_create_nolock()
-function allows to directly use such ids for creating nodes. This can
-cause problems by executing dynamic id related codepaths even for nodes
-intended to use static ids.
+The handling of received data in the smbdirect client code involves using
+copy_to_iter() to copy data from the smbd_reponse struct's packet trailer
+to a folioq buffer provided by netfslib that encapsulates a chunk of
+pagecache.
 
-For example, the 'nsscc-ipq9574' driver creates interconnect nodes with
-static ids starting from 19148. Because these ids belongs to the dynamic
-id range, the icc_node_add() function replaces the node names
-unexpectedly.
+If, however, CONFIG_HARDENED_USERCOPY=3Dy, this will result in the checks
+then performed in copy_to_iter() oopsing with something like the following=
+:
 
-The node names looked like this before the change:
+ CIFS: Attempting to mount //172.31.9.1/test
+ CIFS: VFS: RDMA transport established
+ usercopy: Kernel memory exposure attempt detected from SLUB object 'smbd_=
+response_0000000091e24ea1' (offset 81, size 63)!
+ ------------[ cut here ]------------
+ kernel BUG at mm/usercopy.c:102!
+ ...
+ RIP: 0010:usercopy_abort+0x6c/0x80
+ ...
+ Call Trace:
+  <TASK>
+  __check_heap_object+0xe3/0x120
+  __check_object_size+0x4dc/0x6d0
+  smbd_recv+0x77f/0xfe0 [cifs]
+  cifs_readv_from_socket+0x276/0x8f0 [cifs]
+  cifs_read_from_socket+0xcd/0x120 [cifs]
+  cifs_demultiplex_thread+0x7e9/0x2d50 [cifs]
+  kthread+0x396/0x830
+  ret_from_fork+0x2b8/0x3b0
+  ret_from_fork_asm+0x1a/0x30
 
-  # grep nss_cc /sys/kernel/debug/interconnect/interconnect_summary
-  nss_cc_nssnoc_ppe_clk_master                          0            0
-  nss_cc_nssnoc_ppe_clk_slave                           0            0
-  nss_cc_nssnoc_ppe_cfg_clk_master                      0            0
-  ...
+The problem is that the smbd_response slab's packet field isn't marked as
+being permitted for usercopy.
 
-And those have an unexpected suffix now:
+Fix this by passing parameters to kmem_slab_create() to indicate that
+copy_to_iter() is permitted from the packet region of the smbd_response
+slab objects.
 
-  # grep nss_cc /sys/kernel/debug/interconnect/interconnect_summary
-  nss_cc_nssnoc_ppe_clk_master@39b00000.clock-controller            0            0
-  nss_cc_nssnoc_ppe_clk_slave@39b00000.clock-controller            0            0
-  nss_cc_nssnoc_ppe_cfg_clk_master@39b00000.clock-controller            0            0
-  ...
+Further, do the same thing for smbd_request slab objects and their packet
+field.
 
-Increase the value of ICC_DYN_ID_START to avoid this.
-
-Also, add sanity check to the icc_node_create_nolock() function to prevent
-directly creating nodes with ids reserved for dynamic allocation in order
-to detect these kind of problems.
-
-Fixes: d30f83d278a9 ("interconnect: core: Add dynamic id allocation support")
-Signed-off-by: Gabor Juhos <j4g8y7@gmail.com>
+Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
+Reported-by: Stefan Metzmacher <metze@samba.org>
+Link: https://lore.kernel.org/r/acb7f612-df26-4e2a-a35d-7cd040f513e1@samba=
+.org/
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Steve French <stfrench@microsoft.com>
+cc: Paulo Alcantara <pc@manguebit.com>
+cc: linux-cifs@vger.kernel.org
+cc: netfs@lists.linux.dev
+cc: linux-fsdevel@vger.kernel.org
 ---
- drivers/interconnect/core.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/smb/client/smbdirect.c |   21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 1a41e59c77f85a811f78986e98401625f4cadfa3..3a41b2717edd995d0fb864bbea005a827a33c87a 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -20,7 +20,7 @@
- 
- #include "internal.h"
- 
--#define ICC_DYN_ID_START 10000
-+#define ICC_DYN_ID_START 100000
- 
- #define CREATE_TRACE_POINTS
- #include "trace.h"
-@@ -819,6 +819,9 @@ static struct icc_node *icc_node_create_nolock(int id)
- {
- 	struct icc_node *node;
- 
-+	if (id >= ICC_DYN_ID_START)
-+		return ERR_PTR(-EINVAL);
+diff --git a/fs/smb/client/smbdirect.c b/fs/smb/client/smbdirect.c
+index ef6bf8d6808d..5915273636ad 100644
+--- a/fs/smb/client/smbdirect.c
++++ b/fs/smb/client/smbdirect.c
+@@ -1476,12 +1476,17 @@ static int allocate_caches_and_workqueue(struct sm=
+bd_connection *info)
+ 	int rc;
+ =
+
+ 	scnprintf(name, MAX_NAME_LEN, "smbd_request_%p", info);
++	struct kmem_cache_args request_args =3D {
++		.align		=3D __alignof__(struct smbd_request),
++		.useroffset	=3D offsetof(struct smbd_request, packet),
++		.usersize	=3D sizeof(struct smbdirect_data_transfer),
++	};
+ 	info->request_cache =3D
+ 		kmem_cache_create(
+ 			name,
+ 			sizeof(struct smbd_request) +
+ 				sizeof(struct smbdirect_data_transfer),
+-			0, SLAB_HWCACHE_ALIGN, NULL);
++			&request_args, SLAB_HWCACHE_ALIGN);
+ 	if (!info->request_cache)
+ 		return -ENOMEM;
+ =
+
+@@ -1492,12 +1497,16 @@ static int allocate_caches_and_workqueue(struct sm=
+bd_connection *info)
+ 		goto out1;
+ =
+
+ 	scnprintf(name, MAX_NAME_LEN, "smbd_response_%p", info);
 +
- 	/* check if node already exists */
- 	node = node_find(id);
- 	if (node)
-
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250619-icc-dyn-id-fix-ddf1699f9ce1
-
-Best regards,
--- 
-Gabor Juhos <j4g8y7@gmail.com>
++	struct kmem_cache_args response_args =3D {
++		.align		=3D __alignof__(struct smbd_response),
++		.useroffset	=3D offsetof(struct smbd_response, packet),
++		.usersize	=3D sp->max_recv_size,
++	};
+ 	info->response_cache =3D
+-		kmem_cache_create(
+-			name,
+-			sizeof(struct smbd_response) +
+-				sp->max_recv_size,
+-			0, SLAB_HWCACHE_ALIGN, NULL);
++		kmem_cache_create(name,
++				  sizeof(struct smbd_response) + sp->max_recv_size,
++				  &response_args, SLAB_HWCACHE_ALIGN);
+ 	if (!info->response_cache)
+ 		goto out2;
+ =
 
