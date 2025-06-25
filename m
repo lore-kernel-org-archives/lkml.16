@@ -1,120 +1,167 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60B1267AF2
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B3DF267721;
+	Wed, 25 Jun 2025 15:05:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750863940; cv=none; b=tlmb+NUdiR1gm3t997CQ0Oe1RiX2J36TqAAjsJ8UJEVufrz2CrHItSjlV41SgJw8oqTDECeqct6QzwIaeNfg4he+bdRK6YSEo7pJgrwBWrQckp3JIYh0C650B8PNFA0ZBFCqphTCa8N6OzdFGy5F1GPeMztjgR7J2wnvhAJjIAQ=
+	t=1750863957; cv=none; b=aXgpBApNsQmjUokJel9KOoxJnQLnbrSgTtfXJpIM0tasPQHYHDTEzZn8Xcz6KPZah9S4bPVq9xRter5cfI7YM6kMxw93oiNL09zHy9myQmAqGkMEAyF7jnYUUuZbeKlj0W9DXjnYjUGIbdgp8PTcW2CsAAYxQGFKbaT7uUeJOTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750863940; c=relaxed/simple;
-	bh=wlj7HklWXe5YtCatjQKwWuAP/xP3g/dB4xsuny3pKlk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tuBPXlZC/nHreol0FviH/s9ScmEY2EGRLqaW4TFVClMM7buML3E9AtwkU3BNrnuJmOo/T83G4mPK3j8DUsBJaa82pOKlP2yd4DTiiwh11Qhp3Oyk3pVs4kAFfPHS+qG//2AMxQqMTmqCr4CHvVFS6z4P5CAL48nmeaqtrXWR6JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kKSQ+wo9; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750863957; c=relaxed/simple;
+	bh=l5nird3PVMjr8OkJr+e7IHDK6msydbxihukDb/k8U0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UdxSdP2k6YHzEPGeiZpDtWU1RgHyVrXM1G5y165USUkicFi7/VaZKLUnMNz3tvTI74YSu1SIfUkU06OEfAETyxolHKpIZlV+k9WPemTE+zTgmDZHnYuoqzo6JKhzZMxa2jO0+yJRCR7aUULa93hS1k+eN2XpIpC1pjneHovNm6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cOgJ0x64; arc=none smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kKSQ+wo9"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so27785f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:05:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cOgJ0x64"
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-6fafdd322d3so140916d6.3;
+        Wed, 25 Jun 2025 08:05:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750863937; x=1751468737; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=wlj7HklWXe5YtCatjQKwWuAP/xP3g/dB4xsuny3pKlk=;
-        b=kKSQ+wo9oT4PkbrUUZKhpI+S+N4jOlQGfiE8lvJWDeGpX8dhARAQSHw6Zd5qkTLbm2
-         /rZ2srKSxSFCLeipJLGV85UllC0v60+4WdUdKmS3isHvluM8yN4kDtgZTXPd9vBQ+0xQ
-         b1kdAw0P5xPgiohw1eb0X5AZCd7OoRz3Zgm5GBJOw2DuqhJhGCuHLHEJ7IPxTdVPE01U
-         WOQhacOtW/oRcYO7YIoJYvu01RheQr5c0MZYn1zEBXmung0hdZ5XO53Vgl6QYTASHgm5
-         tF3a/cpD7F59refays/NJAGYlVtedrQg+YKWKVy21xnxMrgNolepnscnjbgHrZO61LDA
-         MY/Q==
+        d=gmail.com; s=20230601; t=1750863951; x=1751468751; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WLxNZ2nfHdzqYuGH8fuWWbBZX9lmP9zWUSihpsHjHn8=;
+        b=cOgJ0x640hNWts2LD06lAOgc4G070c5V3qK6Y9/S5IJpTGib5P9lvwhGle+E+94kk8
+         W/pBt7gqX9ayUloGyrp9f6UekoPIb02duf+Cxx7/wOoM6NOfuE7/hZ5GxKqHVa85XTG3
+         zj7hzzUXPMbiIfh4mCYeCK5M6Xvg3iyc0hReKH9MYsOHcp0ygHhQBZB1tAwU0eeCxjOv
+         HoBYSwTsgPMJdeMlGn3D1flY8i9fH7EUAiMwUhopPdV1pu4WDvX9LQ2gR27t69qpX6Ny
+         xOt9QGz5qo76hOU84qcftOiw0A2ArFQhrXct59nid4gaRqDqxa19bLhYRlGZV35WWW3/
+         mOSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750863937; x=1751468737;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wlj7HklWXe5YtCatjQKwWuAP/xP3g/dB4xsuny3pKlk=;
-        b=F7SSvSocqFhS3BBTd44qyWlXgNaG0nc3xsHRtxiAV1A7C0a8AUqA/Pqw0CRTe3Oo5p
-         yG3rJUGE7Gi8F+p/WKcQ01GA9HBGqBotITV4XjZ3fkOYybP7W8Gyzc/2sTYvcImuWK72
-         9B5/TlkBMRrGrULcOoOndsE/q+6ZzQhWVCX27RYYP3FG9uNMyoGOC5LTuSWc+R82Ry2M
-         KdJfpn+VSsFcarpaPNmGpeuuRbGMmjWyKKDP4YYr9VJaTScWEJxIST+NsMd3a79mH9q6
-         RZqY+Odq9G0DQYdj9aM0nEsiZP9xAbcj3Aqy4uDXj/WwbMMQMG0LvnpM+TPAfOPAqJ4M
-         f6CA==
-X-Forwarded-Encrypted: i=1; AJvYcCWIxeI7+aE9ptpJPLbNGb2fqkvjqQKSDUg/T4+KSgejZeG5+R/DR3RbRIps1Q68WerylJhHOLh2MJPITTQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJZPaLJUXII7YA65VpWkiBLLOnLBQyNZQQHwCYk7oA7/Qgf8dN
-	SizW6r5JqpJKYKj11mNtf7k9/3bren0x0p/PFZy4vBurNaRgorww3rry4dpA8Nr1pfE=
-X-Gm-Gg: ASbGncs0A0FP3TOtAZM8CUNVu9xasjEGCKfmmGoWGf1oh9ZbKhnrTPFDIRvzhDTVkVC
-	8uVaB2Jta39rkeDSnDZjyaUzbrHiqiTOMvQGq0oW/EBYeFXt5LUcodipFUN4Q33UU0B0o239T/r
-	S05TWPBF/g9rkTBCT3ROorr32En7JTcpWMLR1WJNVveCkQAb4mH5HusOxTw7Svo3HLJA1hVvUL7
-	p+Ou5xHqh9/QENVjUfpoyMHmh64TgZ+nMx7dxKBgeOMHibgAFeqaTM3vQ2MdfU6IRGEDQLuWWX+
-	QoViMyjJQfjFgc2QoBcsBV4i/ttW24wOxEoP6m93EbsgNG1rBUWtTJqW7HJXUocNkA==
-X-Google-Smtp-Source: AGHT+IEQo60y4nSkYuBCYnImSLe6MfyhEpVaq6bM9xHgfeeGrTtXV15DQSuydeKSFGHOA76Afhx/vg==
-X-Received: by 2002:a05:6000:1882:b0:3a5:5136:bd25 with SMTP id ffacd0b85a97d-3a6e71b8792mr7030428f8f.1.1750863936643;
-        Wed, 25 Jun 2025 08:05:36 -0700 (PDT)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538234957esm22170335e9.11.2025.06.25.08.05.34
+        d=1e100.net; s=20230601; t=1750863951; x=1751468751;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WLxNZ2nfHdzqYuGH8fuWWbBZX9lmP9zWUSihpsHjHn8=;
+        b=dDGAi0Ki7bzrFBumauR5NTy7+CKPdfzXLJcW+kSype+XT9FatoMaICiLMRL4koJdHt
+         Lg2+7FFGYPE0vogPqI3r5wQycZORaHqGuyggZfyl0VHjr27lXeDTAb1+bpazU+LEd43d
+         b9k3DC7FiJtMXbbQ6jL1E9YVS1+k2lSWVVOtYjTkec+fbgG/y3BLaUtnb8nqcqBuiebc
+         Zo/EEt5f9tcFm7TRDvnwxm/NXiNhILA63cXTeITIfNUKI2Fk0JB3B2Q4Dl22nzEBXpkV
+         D/2N9bw65xxCeHyLLKzVBEw18zytAESWVyakhn6W60mFYvjPuj852r3WkhH4soj/9a7Z
+         l2WA==
+X-Forwarded-Encrypted: i=1; AJvYcCUFUNuF9vCTGcz5YkED5Vm3XWBI2VC+yvpS2lJ7toLOY2FhpdDdsjHkKfeRXvM9BNgOWK97@vger.kernel.org, AJvYcCVdtEmz99GjC2bogmlobzH1+xaIaMOq3jQ6RNvY5w8oUlVBuIAzeojabek7BB+VU4Kmhtw3KZE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUwZhbgVUlO4MTSblU4pKqMKV5slipqM4bnAFQe+xtsMi+QSau
+	ACS0sAPJWd5Fbtrsu6frxqHDY5DqwT5YvYMwuu7/L90iOKA8YNfpP5v6
+X-Gm-Gg: ASbGncu43ROec5Y48lMB+LVM8BQLXnjCQ79qmdMMpsUc2h+1aspGvoZOQCiDtAC2CD0
+	px6jd3YkgXQCantTtaTAvqyiH2PB3BfAgE52c15yRRyYsLdFV96Z6o9lPI2xiqACWU3mxfP8mbB
+	7GqH+N2s4KAHQh44f2EbMLrR5sKtqQMUMyYOqjcb5n9fuFi/XIK6eS9FmfviVZ1uq1VNDOm61EF
+	cykbHXnUyOAHTmYtHm1KLN8pjRLi3LfJ/3KJaBTLUffQd8d4kdpwaxc7/lfjMk7CNbjXyq8Pjjw
+	6jTfn3RHwzoH/AH4keXdALwWIAKk20/hnE2xMbBOvVozpHDlTC4vYw0aZCAkkpfRO6APX08IaV7
+	0Mce6meSKbzDqPV6PahiEQQqEo4udEAXrzM+f4RKbHRbOiracjdR9
+X-Google-Smtp-Source: AGHT+IFdz1ZJDNBl9FpRjIaT86z6/EovaIOb64kf6xyyuNuZOIkf+JVRuQzNIU1aW33VTHbLIA6Z+A==
+X-Received: by 2002:a0c:f094:0:20b0:6fd:7297:2559 with SMTP id 6a1803df08f44-6fd72972603mr14952046d6.17.1750863950754;
+        Wed, 25 Jun 2025 08:05:50 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd74e3266bsm553516d6.53.2025.06.25.08.05.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:05:35 -0700 (PDT)
-Message-ID: <1ada43bbb20b806975d6b0503e36a3b464287612.camel@linaro.org>
-Subject: Re: [PATCH v2 01/17] dt-bindings: firmware: google,gs101-acpm-ipc:
- convert regulators to lowercase
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
-  Conor Dooley <conor+dt@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>,  Lee Jones <lee@kernel.org>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski	 <brgl@bgdev.pl>, Peter
- Griffin <peter.griffin@linaro.org>, Will McVicker	
- <willmcvicker@google.com>, kernel-team@android.com, 
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
-Date: Wed, 25 Jun 2025 16:05:34 +0100
-In-Reply-To: <013f55a0adf0b23e0836e33ee4ea0e1e7864a467.camel@linaro.org>
-References: <20250606-s2mpg1x-regulators-v2-0-b03feffd2621@linaro.org>
-		 <20250606-s2mpg1x-regulators-v2-1-b03feffd2621@linaro.org>
-		 <20250611-robust-vehement-dog-2bf6ac@kuoka>
-	 <013f55a0adf0b23e0836e33ee4ea0e1e7864a467.camel@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1-1 
+        Wed, 25 Jun 2025 08:05:50 -0700 (PDT)
+Received: from phl-compute-08.internal (phl-compute-08.phl.internal [10.202.2.48])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 76F22F40066;
+	Wed, 25 Jun 2025 11:05:49 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-08.internal (MEProxy); Wed, 25 Jun 2025 11:05:49 -0400
+X-ME-Sender: <xms:TRBcaN9ZCL7uxn4N9ZSzV4Lqwi4hxqVyUFqsxRp1MFszhNhiagY3Ig>
+    <xme:TRBcaBu61u1IQTaJg07QPnRqXGYpnD31VJzoLZIgWq1jJAjRSB_g_bVZUyPSmJ1bV
+    F7LpIbuKPLp0Uwn6Q>
+X-ME-Received: <xmr:TRBcaLDX5SEzsqsRxfnPyNcN1VQ_7640b26ou4SdFWbrWn9bjdp34i8nTw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvfedtlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnheptddtudegueevgefhgfeuffetffeuheekgedtffefhefhjeffhffgfeeggeetgefh
+    necuffhomhgrihhnpegvfhhfihgtihhoshdrtghomhenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhp
+    vghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrd
+    hfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthht
+    ohepvdeipdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehmrghthhhivghurdguvg
+    hsnhhohigvrhhssegvfhhfihgtihhoshdrtghomhdprhgtphhtthhopehlihhnuhigqdhk
+    vghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrtghusehvgh
+    gvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhkmhhmsehlihhsthhsrdhlihhn
+    uhigrdguvghvpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpd
+    hrtghpthhtohepmhhinhhgoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfihilhhl
+    sehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohhnghhmrghnsehrvgguhhgrthdrtg
+    homhdprhgtphhtthhopegurghvvgesshhtghholhgrsghsrdhnvght
+X-ME-Proxy: <xmx:TRBcaBdiyKmSKN6yAsWQbHtK7PNQ8pkLpKdcumGnpWtLqi8Q-qBSeg>
+    <xmx:TRBcaCMy6u3UWL2myLBVB-wVwUgHu_oy8pAN0Y3soombcrtAb0LfNw>
+    <xmx:TRBcaDln7cjIRHYvXtP9l6Yd38-RyNWbdOJGABi7z78r-sPHZHmNZw>
+    <xmx:TRBcaMu6--A2BLrRrytFLQZzC7h1QhMl16s2oXHkyj8QonV5HcT6xg>
+    <xmx:TRBcaEu31TpZ6gt7pf_E8pt1WBmper8QRMzjW8P7H52Jfw_C9JE7O4Tj>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 25 Jun 2025 11:05:48 -0400 (EDT)
+Date: Wed, 25 Jun 2025 08:05:48 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org, lkmm@lists.linux.dev,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>, Breno Leitao <leitao@debian.org>,
+	aeh@meta.com, netdev@vger.kernel.org, edumazet@google.com,
+	jhs@mojatatu.com, kernel-team@meta.com,
+	Erik Lundgren <elundgren@meta.com>
+Subject: Re: [PATCH 1/8] Introduce simple hazard pointers
+Message-ID: <aFwQTO-_t-P5rLUp@Mac.home>
+References: <20250625031101.12555-1-boqun.feng@gmail.com>
+ <20250625031101.12555-2-boqun.feng@gmail.com>
+ <3e2a80e6-b3c5-44dd-b290-1d140cc427ff@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3e2a80e6-b3c5-44dd-b290-1d140cc427ff@efficios.com>
 
-Hi Krzysztof,
+On Wed, Jun 25, 2025 at 10:25:23AM -0400, Mathieu Desnoyers wrote:
+> On 2025-06-24 23:10, Boqun Feng wrote:
+> [...]
+> > +
+> > +static inline void shazptr_clear(struct shazptr_guard guard)
+> > +{
+> > +	/* Only clear the slot when the outermost guard is released */
+> > +	if (likely(!guard.use_wildcard))
+> > +		smp_store_release(guard.slot, NULL); /* Pair with ACQUIRE at synchronize_shazptr() */
+> 
+> How is the wildcard ever cleared ?
+> 
 
-On Wed, 2025-06-11 at 10:08 +0100, Andr=C3=A9 Draszik wrote:
-> Hi Krzysztof,
->=20
-> On Wed, 2025-06-11 at 11:04 +0200, Krzysztof Kozlowski wrote:
-> > On Fri, Jun 06, 2025 at 04:02:57PM GMT, Andr=C3=A9 Draszik wrote:
-> > > Using lowercase for the buck and ldo nodenames is preferred, as
-> > > evidenced e.g. in [1].
-> > >=20
-> > > Convert the example here to lowercase before we add any bindings
-> > > describing the s2mpg1x regulators that will enforce the spelling.
-> > >=20
-> > > Link: https://lore.kernel.org/all/20250223-mysterious-infrared-civet-=
-e5bcbf@krzk-bin/=C2=A0[1]
-> > > Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
-> > > ---
-> > > =C2=A0Documentation/devicetree/bindings/firmware/google,gs101-acpm-ip=
-c.yaml | 4 ++--
-> > > =C2=A01 file changed, 2 insertions(+), 2 deletions(-)
-> >=20
-> > So this is also a dependency for the rest of the patches?
->=20
-> My thinking was that it makes sense to have it in context with
-> the other patches, but it indeed could go stand-alone if that's the
-> preference.
+The outermost shazptr_guard will have .use_wildcard being false, so it
+will clear the wildcard. E.g.
 
-Can you take just that patch as-is from this series (then it's at
-least out of the way :-), or should I resend it separately?
+	g1 = shazptr_acqure(a); // g1->use_wildcard is false
+				// this cpu's hazptr slot is 'a'.
+	g2 = shazptr_acqure(b); // g2->use_wildcard is true
+				// this cpu's hazptr slot becomes
+				// WILDCARD.
 
-Cheers,
-Andre'
+	shazptr_clear(g2);	// do nothing
+	shazptr_clear(g1);	// clear this cpu's hazptr slot to NULL.
+
+Regards,
+Boqun
+
+> Thanks,
+> 
+> Mathieu
+> 
+> 
+> -- 
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> https://www.efficios.com
