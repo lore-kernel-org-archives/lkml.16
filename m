@@ -1,104 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F0863074AC;
-	Wed, 25 Jun 2025 17:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8502D3074AC;
+	Wed, 25 Jun 2025 17:23:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750872100; cv=none; b=fKi1cQ2mjFB7RtF2S+jdkm74QBW5C5mldaVnRW0RTttZy7IFgQ3OGipuqSFJiu5mq1/iM6F9X+BZh577gQd68nh3DuQfOzljkNPczKccYWpOn4CZRkQaoyEgxcpWQEzLbszB6Qwy3isu5Wj/jZrYg4CywiEhq66vD8kG9PdpYwY=
+	t=1750872210; cv=none; b=vGHxIaKiaCytOP+daMzBEdT25W/HzpFC3/8b1QlnSvFeltV6RuyfEOyvMMur7qxrc+o0Bvf9zX1A78QrXmy90BMVbChf7kGojSjIlGGbOvxJOQpDTrnbIGLHjliA5zjPkxOM/1GU6q3ITORW3Ra4ykSkbhwIOGrYRt0EY+J45kE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750872100; c=relaxed/simple;
-	bh=guG45DLvKX7AACz8OfWdkmWxPqo8CO0/Q4YdI51rwwE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pYQlIdt2tl7YkVd9PedKoFmSwMS56vK7lNuCHV6TboJ5vGxHeMPT6ssCO3h5PNWxM4KuWSFDpqysY0FYWv7HxOMItsM4KB+tGKoMDSqKuDSkCyolLOsintEMgP1Jpt0tvgAVnq1JTpsr/38bprJhKGpS04hepOxFDSqBucBQ5UY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UfMpBhrU; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750872210; c=relaxed/simple;
+	bh=BEDzEKt9JSATmJp5cnYe1NQYMywsbvi4ikfwEf/X8gs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=U01+g88ava7Jw7cF4NHIMhmBQAD9sJoUk7JAayhPK7kzMhObMnXDbwt6cd0T4XShGsGg6v44ahzcMo1a/eLeUQYu5U3gIw8lw69zy9Pi/IBYbINdpYuGMfObOvJzMG5jtmmR+WJeMUPFhKPWfOEUfQkyp4o6GxTOBhrpVwm3GxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=rQXRw887; arc=none smtp.client-ip=144.76.82.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UfMpBhrU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750872099; x=1782408099;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=guG45DLvKX7AACz8OfWdkmWxPqo8CO0/Q4YdI51rwwE=;
-  b=UfMpBhrUPK957FORUY4C5y6WU6Hda8F895qBjJQ1NZAS5K6yoMYgmzmS
-   cf2A89agZvBnS9X94cfl8am+Evjf8JzDv3UpZ6yDTYWA8sXbcoePFgtak
-   E2Vcyvf24wDTAFiSXHJae2XS54ig795qCRcI69ue9fdQC4FtGO75vgPwN
-   Wi63HJqpG1goQsEk0KApiQFBOw/w5jTCXC5p3Y7k49ymFlOSCB/qJ8Fek
-   Q3fVSW4OARVNmB5DRPnRAfQy/0XJgRo8o6u1aXNGSpnwngR5ouTrbO4Is
-   QWkZ9NTqG9TEfmwcxAIt4V900zzfTRtzJd/Sh6kQcJfc1Md+m+mQsIiMi
-   g==;
-X-CSE-ConnectionGUID: 4y1nprCcRuW8ENlm9abweQ==
-X-CSE-MsgGUID: Yv1x17WNQZ+Sj31w64GiBg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="70585840"
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="70585840"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 10:21:38 -0700
-X-CSE-ConnectionGUID: BaUGF/e/QZWgm2SVsBgBkg==
-X-CSE-MsgGUID: iz7ZrVmsSwOZcWEB5acjGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="158035040"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa005.jf.intel.com with ESMTP; 25 Jun 2025 10:21:36 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 67C5027C; Wed, 25 Jun 2025 20:21:35 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>,
-	Cezary Rojewski <cezary.rojewski@intel.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] ACPI: LPSS: Remove AudioDSP related ID
-Date: Wed, 25 Jun 2025 20:21:32 +0300
-Message-ID: <20250625172133.3996325-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="rQXRw887"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+	s=42; h=From:Cc:To:Date:Message-ID;
+	bh=ZzWLo9F9RRZ6p3rOhQwF3R/YNmHPFvLGy60aTy/R4e0=; b=rQXRw887unOlqhD20dY3n74CFn
+	cPllOiKm2gLr0zvdv9nh/Ln03hde+M1gDZ7LRDhQl+k7SaHEv3dmgEHq6RJPztVtdsZ5XZaVIntMe
+	WBNa2LOeD5Mm+FI62EJ4LtcWsbQhELyGfgQ0H9xWkin1ZWicV5raotbicacJScBi43/Sw4qHtNojE
+	SpB6GXuCtPrg/2e7S87B2butjGKOtGokCSUmnUSoWAkORbXvw2tfRW2bYggNI0u65SEtNFeZIsYSf
+	sSSQWFPQdsswTfqsWCSYlP8qv2m8RA0TMfLCJVx5I6wsszGeEBuoyyqNqDGFwp2l7u25BZvj7HEGb
+	04ez/0bzmVIWvAa7zCyMthB/BSXjt9WNNYB5Pxla+ho6wID3+MU5wtHOl2TXyMGYwUV7iVLfVItJp
+	RHqrbhd4s94H52DhkHZFkXcAl3VQUxXBFhGR5oRXBsMwNyOPSjCCU5kLzWaWM7OMVJBn8KCwmKTg+
+	BpFYd9ErcxEKf/cC96aUT0Sa;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__CHACHA20_POLY1305:256)
+	(Exim)
+	id 1uUTqB-00CSQA-1x;
+	Wed, 25 Jun 2025 17:23:19 +0000
+Message-ID: <658c6f4f-468b-4233-b49a-4c39a7ab03ab@samba.org>
+Date: Wed, 25 Jun 2025 19:23:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 12/16] cifs: Fix reading into an ITER_FOLIOQ from the
+ smbdirect code
+To: David Howells <dhowells@redhat.com>,
+ Christian Brauner <christian@brauner.io>, Steve French <sfrench@samba.org>
+Cc: Paulo Alcantara <pc@manguebit.com>, netfs@lists.linux.dev,
+ linux-afs@lists.infradead.org, linux-cifs@vger.kernel.org,
+ linux-nfs@vger.kernel.org, ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Steve French <stfrench@microsoft.com>, Tom Talpey <tom@talpey.com>,
+ Matthew Wilcox <willy@infradead.org>
+References: <20250625164213.1408754-1-dhowells@redhat.com>
+ <20250625164213.1408754-13-dhowells@redhat.com>
+Content-Language: en-US
+From: Stefan Metzmacher <metze@samba.org>
+In-Reply-To: <20250625164213.1408754-13-dhowells@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The AudioDSP drivers are in control for all functions of the hardware
-they have (they are multi-functional devices). The LPSS driver prepares
-for enumeration only single devices, such as DMA, UART, SPI, I²C. Hence
-the registration of AudioDSP should not be covered. Moreover, the very
-same ACPI _HID has been added by the catpt driver a few years ago.
+Am 25.06.25 um 18:42 schrieb David Howells:
+> When performing a file read from RDMA, smbd_recv() prints an "Invalid msg
+> type 4" error and fails the I/O.  This is due to the switch-statement there
+> not handling the ITER_FOLIOQ handed down from netfslib.
+> 
+> Fix this by collapsing smbd_recv_buf() and smbd_recv_page() into
+> smbd_recv() and just using copy_to_iter() instead of memcpy().  This
+> future-proofs the function too, in case more ITER_* types are added.
+> 
+> Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
+> Reported-by: Stefan Metzmacher <metze@samba.org>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Steve French <stfrench@microsoft.com>
+> cc: Tom Talpey <tom@talpey.com>
+> cc: Paulo Alcantara (Red Hat) <pc@manguebit.com>
+> cc: Matthew Wilcox <willy@infradead.org>
+> cc: linux-cifs@vger.kernel.org
+> cc: netfs@lists.linux.dev
+> cc: linux-fsdevel@vger.kernel.org
+> ---
+>   fs/smb/client/smbdirect.c | 114 +++++++-------------------------------
+>   1 file changed, 19 insertions(+), 95 deletions(-)
+> 
+> diff --git a/fs/smb/client/smbdirect.c b/fs/smb/client/smbdirect.c
+> index a976bcf61226..5fa46b2e682c 100644
+> --- a/fs/smb/client/smbdirect.c
+> +++ b/fs/smb/client/smbdirect.c
+> @@ -1770,35 +1770,39 @@ struct smbd_connection *smbd_get_connection(
+>   }
+>   
+>   /*
+> - * Receive data from receive reassembly queue
+> + * Receive data from the transport's receive reassembly queue
+>    * All the incoming data packets are placed in reassembly queue
+> - * buf: the buffer to read data into
+> + * iter: the buffer to read data into
+>    * size: the length of data to read
+>    * return value: actual data read
+> - * Note: this implementation copies the data from reassebmly queue to receive
+> + *
+> + * Note: this implementation copies the data from reassembly queue to receive
+>    * buffers used by upper layer. This is not the optimal code path. A better way
+>    * to do it is to not have upper layer allocate its receive buffers but rather
+>    * borrow the buffer from reassembly queue, and return it after data is
+>    * consumed. But this will require more changes to upper layer code, and also
+>    * need to consider packet boundaries while they still being reassembled.
+>    */
+> -static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+> -		unsigned int size)
+> +int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
+>   {
+>   	struct smbdirect_socket *sc = &info->socket;
+>   	struct smbd_response *response;
+>   	struct smbdirect_data_transfer *data_transfer;
+> +	size_t size = iov_iter_count(&msg->msg_iter);
+>   	int to_copy, to_read, data_read, offset;
+>   	u32 data_length, remaining_data_length, data_offset;
+>   	int rc;
+>   
+> +	if (WARN_ON_ONCE(iov_iter_rw(&msg->msg_iter) == WRITE))
+> +		return -EINVAL; /* It's a bug in upper layer to get there */
+> +
+>   again:
+>   	/*
+>   	 * No need to hold the reassembly queue lock all the time as we are
+>   	 * the only one reading from the front of the queue. The transport
+>   	 * may add more entries to the back of the queue at the same time
+>   	 */
+> -	log_read(INFO, "size=%d info->reassembly_data_length=%d\n", size,
+> +	log_read(INFO, "size=%zd info->reassembly_data_length=%d\n", size,
+>   		info->reassembly_data_length);
+>   	if (info->reassembly_data_length >= size) {
+>   		int queue_length;
+> @@ -1836,7 +1840,10 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+>   			if (response->first_segment && size == 4) {
+>   				unsigned int rfc1002_len =
+>   					data_length + remaining_data_length;
+> -				*((__be32 *)buf) = cpu_to_be32(rfc1002_len);
+> +				__be32 rfc1002_hdr = cpu_to_be32(rfc1002_len);
+> +				if (copy_to_iter(&rfc1002_hdr, sizeof(rfc1002_hdr),
+> +						 &msg->msg_iter) != sizeof(rfc1002_hdr))
+> +					return -EFAULT;
+>   				data_read = 4;
+>   				response->first_segment = false;
+>   				log_read(INFO, "returning rfc1002 length %d\n",
+> @@ -1845,10 +1852,9 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+>   			}
+>   
+>   			to_copy = min_t(int, data_length - offset, to_read);
+> -			memcpy(
+> -				buf + data_read,
+> -				(char *)data_transfer + data_offset + offset,
+> -				to_copy);
+> +			if (copy_to_iter((char *)data_transfer + data_offset + offset,
+> +					 to_copy, &msg->msg_iter) != to_copy)
+> +				return -EFAULT;
+>   
+>   			/* move on to the next buffer? */
+>   			if (to_copy == data_length - offset) {
+> @@ -1893,6 +1899,8 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+>   			 data_read, info->reassembly_data_length,
+>   			 info->first_entry_offset);
+>   read_rfc1002_done:
+> +		/* SMBDirect will read it all or nothing */
+> +		msg->msg_iter.count = 0;
 
-And even more serious issue with this, is that the register window at
-offset 0x800 is actually D-SRAM0 in case of AudioDSP and writing to it
-is a data corruption.
+I think we should be remove this.
 
-That all being said, remove the AudioDSP ID from the LPSS driver,
-where it doesn't belong to.
+And I think this patch should come after the
+CONFIG_HARDENED_USERCOPY change otherwise a bisect will trigger the problem.
 
-Fixes: fb94b7b11c6a ("ASoC: Intel: Remove SST firmware components")
-Fixes: 05668be1b364 ("ASoC: Intel: Remove SST ACPI component")
-Fixes: 7a10b66a5df9 ("ASoC: Intel: catpt: Device driver lifecycle")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/acpi/x86/lpss.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/acpi/x86/lpss.c b/drivers/acpi/x86/lpss.c
-index 258440b899a9..6daa6372f980 100644
---- a/drivers/acpi/x86/lpss.c
-+++ b/drivers/acpi/x86/lpss.c
-@@ -387,9 +387,6 @@ static const struct acpi_device_id acpi_lpss_device_ids[] = {
- 	{ "INT3435", LPSS_ADDR(lpt_uart_dev_desc) },
- 	{ "INT3436", LPSS_ADDR(lpt_sdio_dev_desc) },
- 
--	/* Wildcat Point LPSS devices */
--	{ "INT3438", LPSS_ADDR(lpt_spi_dev_desc) },
--
- 	{ }
- };
- 
--- 
-2.47.2
-
+metze
