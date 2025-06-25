@@ -1,311 +1,151 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12EC1289348
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:57:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D8527991E;
+	Wed, 25 Jun 2025 08:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841873; cv=none; b=mM99PARrSr2oWRB3VZeDyRiXtZJVGWhTu9bxaZ4J0HFoSSvg+4XUcB8D3A3LuL6J+WrOmYxAc7d/NIWi4QfM4IXQc30j+oW2wSkqMeXF/GUgVtad9GwkTQ9IXpvRuuHtIE3s+BAQ/ZO240x327QaXionWla3SBvpHetKTPAFOP0=
+	t=1750841898; cv=none; b=VbaYF6nmuiCYxrZWKyarJiCktIiwGT01Wxk936E6ed2vC5C1WU2WHAL/UI0GhM4b0Nu00HyRT9P7taR/GnmUWRmuogkajy1YFi7/BSfhMfLeLUgP3rKV45wB8ueOM69beyCyPZc8aoILB0Yz2sICSjstluUo3mhsMKqinP9Z95U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841873; c=relaxed/simple;
-	bh=B8VTcpsowDz3sev4yfwaePzneci0l6MQ4WF5zwPGjZI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JGBk5KktoLjofnliIdA1BoT1eFXOWNG6Lag8Idv3PNWXqjGtD2E8b4dQYeJl5Bkc3iQqBwy+NnhjjniVsiYJNTWmBk9hcVttvohtBno1EwHlqIYht59y2gno01EedcBfiZVUK29oa6l/LKp+xuw/4d6uFJjROiYhJuMdPXlGrrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aPkRTUuU; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750841898; c=relaxed/simple;
+	bh=9E8dZ2XhVSOUnzuSWos6Vw8+2xKd23JsxUsojcAZsvM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Nkpxc6saWTzEjYZHiIDzyVzaZTztHbj2cjki+j3bDpV96mv7vYcRkbWxWl5jtwj7i/Vgn56lubL4otFrb+mQdAqoB8akSvpaqHQjGYmgdbUumjzeyn/esvG8236PHgCPNUjnkmuiHOfUsv5+TDoUwduJO+cQdP1lyf2LjI5N27Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=APlbAUrV; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aPkRTUuU"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so56921025e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:57:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750841869; x=1751446669; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=SADKG0uwMn26DRziP1/OCZLA535poEGj5OLmu5EiSm0=;
-        b=aPkRTUuUiOYRsgOtEETbIG+3uIAmckArv+gsDYQgqvflM82jAwvZFCiQNgej0AtRLD
-         QVGAC2vYkajfj221nuNUah699iR/l/8dQfiNx2yX/x7xSf5ZQy1BlZWfa2y82BwnHvEl
-         P1LkPwCtA4cX1xhepVhAIBa9EL0YG2wMqmlTAn3SbadyGaHGQn9uGO7J8E1ijkDBMPqw
-         wXkUBzneXaT9AinHQwLLdeELANn+/dCufYegD8+iq0SqyekfCtKxxdLgE3+rIsyDEP2V
-         07qEEVMqTYJ3k39UCJzhc+Jkq4rNpB8T6E3hZM3LsL4B8CA6G0Tag8R1UQ4Du9M2L6zd
-         0TPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750841869; x=1751446669;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SADKG0uwMn26DRziP1/OCZLA535poEGj5OLmu5EiSm0=;
-        b=H3YVHzzEi5zVSGzNGhyz7UysYnXV3uE+kiRFnN2memBIZmod5q0/EpaAep3Mr3wp5C
-         K6VvQEi8n/Ee98joSKWHbJQ3HRqtMqENr/Pb6aB0QRMubsdM0Y+XPt0jQJAfudn+8Er1
-         HQn4xp5m/DIN9/8bJwx/Pbwx2m0JMwAzxeig7AMRUhqaxuAkad2YKwehQsuIYRr8mXQZ
-         /DAMhA7rAoe0/gZ4CR1kg3VyeecrPhkk6/ekW5S5HhoNaO68LYgC/dvwis/2pBshSnoj
-         gYyEvmL8jTZwZ1QPJxkX1vMqpj2Th+9FZ3/j7aeNvgyxlE4/Lq1p94ClZDdpwx9AdxVA
-         kiWA==
-X-Gm-Message-State: AOJu0Yy0BfnXg5DICXxgqeJ/lEJgx6sGCN4BNOr5f3KeystsoK6v4vbh
-	6uJsMkLnPbzF4MsoyLRy0+Sp+rOW689w5YJ2HWR/D6xeZ8ylmHg0DtEJGWiCuO68HRs=
-X-Gm-Gg: ASbGncsfz7s5K591nDX1eBa8MD3URyQ0iIK88857N2bNwjcWtrJdbHezWynRB92ydsg
-	Fm+OcFkCoIZWyeEUnoRkmX+qUY4AcdbQH5y01s+ghJur75Hu8pyUbG+fP1tUW9WoC3YMhx5GYz1
-	g+cVckSYh3R1H85ZsPly4PsukDPl5X0o7p5sy4lvquW5XKB3jgmMLne7rhwMwq6pi3jV+fqbyHq
-	lC0kyw9A2Ae4FbPZu7S7AZg0EW1d8aE8OwXIN8aL9eRaOAb+2KoV3BhgYj0dmRTEzDWaLy1zqQE
-	7zUiEH1U3U1/Lp1iBwWtuT3eyQRrINuDHLSaLtX8eG+nRI+GsOLaIh48i3qGr459DJnljoIe2aS
-	iS18tafpjqM/AQ7RJDWTTvj0=
-X-Google-Smtp-Source: AGHT+IHzMVJfrHXCjXHshtclnrE/v4KUBBCxErF0KOKyfY0QaR4ysz5FmsebbjYtC5zGTYdLAylaCA==
-X-Received: by 2002:a05:600c:4594:b0:450:c20d:64c3 with SMTP id 5b1f17b1804b1-45381ae454fmr21365925e9.18.1750841869300;
-        Wed, 25 Jun 2025 01:57:49 -0700 (PDT)
-Received: from mai.. (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538234db3bsm13205945e9.16.2025.06.25.01.57.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 01:57:48 -0700 (PDT)
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-To: gregkh@linuxfoundation.org
-Cc: linux-kernel@vger.kernel.org,
-	lorenzo.pieralisi@linaro.org,
-	Hans de Goede <hansg@kernel.org>,
-	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Arnd Bergmann <arnd@arndb.de>,
-	John Stultz <jstultz@google.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	linux-arch@vger.kernel.org (open list:GENERIC INCLUDE/ASM HEADER FILES),
-	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE)
-Subject: [PATCH RFC] timer: of: Create a platform_device before the framework is initialized
-Date: Wed, 25 Jun 2025 10:57:15 +0200
-Message-ID: <20250625085715.889837-1-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="APlbAUrV"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55OMaosk001992;
+	Wed, 25 Jun 2025 08:58:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=ACLcf/y0+ET
+	DyqcTSQT5zp0eSvdxWWbD7AwNu/+16gI=; b=APlbAUrVvsczEIG2q/sv/9pjPS9
+	hrXtAIybkhYpLE9DQ1RXYVfv6dfd2QR1pIQjCywn6qPJW+Va2JiREaNIZESlqjtU
+	wA1lMkNG7eNBEgPe6f3C+0n8XLQmrHqDs3i0NNiiiDL1G48vmvRqKfl8rLDVlouF
+	p1ASX3HvbCTnF6E5IkFVSc2Oe5c/2h9DZEafc5kTA3LDbufUV44rGF0lQXJlj4Q0
+	YVxJKdNsbJ6oH3d1dQXgIL6Qz+jPGzRH1Jlzlk6wey4uF4kHb5vgUU2Zrr+Z7PV1
+	ylnY7yEqEYiMH9pNbc2Kia8W/vFoScAl9RtDCbJZfyf23OL8YUUjCFsRtnQ==
+Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47evc5r93j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 08:58:07 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55P8w5Tb016621;
+	Wed, 25 Jun 2025 08:58:05 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 47dntmarvf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 08:58:05 +0000
+Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55P8w511016610;
+	Wed, 25 Jun 2025 08:58:05 GMT
+Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 55P8w3oM016595
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 08:58:05 +0000
+Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
+	id DE6823832; Wed, 25 Jun 2025 16:58:02 +0800 (CST)
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
+        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        kw@linux.com
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Subject: [PATCH v3 2/3] PCI: qcom: fix macro typo for CURSOR
+Date: Wed, 25 Jun 2025 16:58:00 +0800
+Message-Id: <20250625085801.526669-3-quic_ziyuzhan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250625085801.526669-1-quic_ziyuzhan@quicinc.com>
+References: <20250625085801.526669-1-quic_ziyuzhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: HxYKdiPbDXQxbeAyny8s_WQWMbx61R_o
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA2NSBTYWx0ZWRfX/DgreZ0KCqjG
+ H9voMUpVoF24dxd0ZN70yPGAJ0XewqVPgIOHEkz0t604hS5Krei0KSIAa2JR/c/vA9nzOR5/T6w
+ 7aXOjpNZZRI3coOm1t5+fN+YrkLZVfgFCSoOkFObAUvx1jstS+BT27ZC+P8Q7uP2itqcWIOFbXr
+ Nb/AriuFKytawh0NhB/oo1OP6xL6yxea0Pq08HTua1fI7xkvYyekShujeapJh4HBtkCBVHjFp7I
+ ILHKbGcHtygo4GrHay3nip/j7s6phq5s4kg3zdHOgdW3O8vV+OGHbldIEbVFuNNpt0wVZgJ21zm
+ ZwfOqCoL0oaVVNFUg1YPDFXONFc+e+NX1kCHApnKwq4JystUaIgiInXgMJ+37PPQVzJ0C1Kx0XV
+ RyZtEfKiDxQ6btapmpYgPSkaAYC75ssYy+E+EjzyZqdQ9R/kpWiuNJ8v/eIIP3A5sDoNnsUs
+X-Authority-Analysis: v=2.4 cv=caHSrmDM c=1 sm=1 tr=0 ts=685bba1f cx=c_pps
+ a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=yZn9HN9ZKZZuwR4VxpAA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-ORIG-GUID: HxYKdiPbDXQxbeAyny8s_WQWMbx61R_o
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ impostorscore=0 mlxlogscore=889 suspectscore=0 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 phishscore=0 clxscore=1015 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506250065
 
-In the context of the time keeping and the timers, some platforms have
-timers which need to be initialized very early. It is the case of the
-ARM platform which do not have the architected timers.
+Corrected a typo in the macro name GEN3_EQ_FMDC_MAX_PRE_CURSOR_DELTA and
+GEN3_EQ_FMDC_MAX_POST_CURSOR_DELTA to ensure consistency and avoid
+potential issues.
 
-The macro TIMER_OF_DECLARE adds an entry in the timer init functions
-array at compile time and the function timer_probe is called from the
-timer_init() function in kernel/time.c
-
-This array contains a t-uple with the init function and the compatible
-string.
-
-The init function has a device node pointer parameter.
-
-The timer_probe() function browses the of nodes and find the ones
-matching the compatible string given when using the TIMER_OF_DECLARE
-macro. It then calls the init function with the device node as a
-pointer.
-
-But there are some platforms where there are multiple timers like the
-ARM64 with the architected timers. Those are always initialized very
-early and the other timers can be initialized later.
-
-For this reason we find timer drivers with the platform_driver
-incarnation. Consequently their init functions are different, they
-have a platform_device pointer parameter and rely on the devm_
-function for rollbacking.
-
-To summarize, we have:
- - TIMER_OF_DECLARE with init function prototype:
-   int (*init)(struct device_node *np);
-
- - module_platform_driver (and variant) with the probe function
-   prototype:
-   int (*init)(struct platform_device *pdev);
-
-The current situation with the timers is the following:
-
- - Two platforms can have the same timer hardware, hence the same
-   driver but one without alternate timers and the other with multiple
-   timers. For example, the Exynos platform has only the Exynos MCT on
-   ARM but has the architeched timers in addition on the ARM64.
-
- - The timer drivers can be modules now which was not the case until
-   recently. TIMER_OF_DECLARE do not allow the build as a module.
-
-It results in duplicate init functions (one with rollback and one with
-devm_) and different way to declare the driver (TIMER_OF_DECLARE and
-module_platform_driver).
-
-This proposed change is to unify the prototyping of the init functions
-to receive a platform_device pointer as parameter. Consequently, it
-will allow a smoother and nicer module conversion and a huge cleanup
-of the init functions by removing all the rollback code from all the
-timer drivers. It introduces a TIMER_OF_DECLARE_PDEV macro.
-
-If the macro is used a platform_device is manually allocated and
-initialized with the needed information for the probe
-function. Otherwise module_platform_driver can be use instead with the
-same probe function without the timer_probe() initialization.
-
-I don't have an expert knowledge of the platform_device internal
-subtilitie so I'm not sure if this approach is valid. However, it has
-been tested on a Rockchip board with the "rockchip,rk3288-timer" and
-verified the macro and the devm_ rollback work correctly.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Hans de Goede <hansg@kernel.org>
-Cc: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Cc: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
 ---
- drivers/clocksource/timer-probe.c | 61 ++++++++++++++++++++++++++++++-
- include/asm-generic/vmlinux.lds.h |  2 +
- include/linux/clocksource.h       |  3 ++
- include/linux/of.h                |  5 +++
- 4 files changed, 70 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-designware.h  | 4 ++--
+ drivers/pci/controller/dwc/pcie-qcom-common.c | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
-index b7860bc0db4b..6b2b341b8c95 100644
---- a/drivers/clocksource/timer-probe.c
-+++ b/drivers/clocksource/timer-probe.c
-@@ -7,13 +7,18 @@
- #include <linux/init.h>
- #include <linux/of.h>
- #include <linux/clocksource.h>
-+#include <linux/platform_device.h>
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 388306991467..80831f99d72d 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -137,8 +137,8 @@
+ #define GEN3_EQ_FB_MODE_DIR_CHANGE_OFF		0x8AC
+ #define GEN3_EQ_FMDC_T_MIN_PHASE23		GENMASK(4, 0)
+ #define GEN3_EQ_FMDC_N_EVALS			GENMASK(9, 5)
+-#define GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA	GENMASK(13, 10)
+-#define GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA	GENMASK(17, 14)
++#define GEN3_EQ_FMDC_MAX_PRE_CURSOR_DELTA	GENMASK(13, 10)
++#define GEN3_EQ_FMDC_MAX_POST_CURSOR_DELTA	GENMASK(17, 14)
  
- extern struct of_device_id __timer_of_table[];
-+extern struct of_device_id __timer_pdev_of_table[];
+ #define PCIE_PORT_MULTI_LANE_CTRL	0x8C0
+ #define PORT_MLTI_UPCFG_SUPPORT		BIT(7)
+diff --git a/drivers/pci/controller/dwc/pcie-qcom-common.c b/drivers/pci/controller/dwc/pcie-qcom-common.c
+index ed466496f077..86ed86b72d5a 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom-common.c
++++ b/drivers/pci/controller/dwc/pcie-qcom-common.c
+@@ -35,12 +35,12 @@ void qcom_pcie_common_set_equalization(struct dw_pcie *pci)
+ 		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF);
+ 		reg &= ~(GEN3_EQ_FMDC_T_MIN_PHASE23 |
+ 			GEN3_EQ_FMDC_N_EVALS |
+-			GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA |
+-			GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA);
++			GEN3_EQ_FMDC_MAX_PRE_CURSOR_DELTA |
++			GEN3_EQ_FMDC_MAX_POST_CURSOR_DELTA);
+ 		reg |= FIELD_PREP(GEN3_EQ_FMDC_T_MIN_PHASE23, 0x1) |
+ 			FIELD_PREP(GEN3_EQ_FMDC_N_EVALS, 0xd) |
+-			FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CUSROR_DELTA, 0x5) |
+-			FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CUSROR_DELTA, 0x5);
++			FIELD_PREP(GEN3_EQ_FMDC_MAX_PRE_CURSOR_DELTA, 0x5) |
++			FIELD_PREP(GEN3_EQ_FMDC_MAX_POST_CURSOR_DELTA, 0x5);
+ 		dw_pcie_writel_dbi(pci, GEN3_EQ_FB_MODE_DIR_CHANGE_OFF, reg);
  
- static const struct of_device_id __timer_of_table_sentinel
- 	__used __section("__timer_of_table_end");
- 
--void __init timer_probe(void)
-+static const struct of_device_id __timer_pdev_of_table_sentinel
-+	__used __section("__timer_pdev_of_table_end");
-+
-+static int __init timer_of_probe(void)
- {
- 	struct device_node *np;
- 	const struct of_device_id *match;
-@@ -38,6 +43,60 @@ void __init timer_probe(void)
- 		timers++;
- 	}
- 
-+	return timers;
-+}
-+
-+static int __init timer_pdev_of_probe(void)
-+{
-+	struct device_node *np;
-+	struct platform_device *pdev;
-+	const struct of_device_id *match;
-+	of_init_fn_pdev init_func;
-+	unsigned int timers = 0;
-+	int ret;
-+
-+	for_each_matching_node_and_match(np, __timer_pdev_of_table, &match) {
-+		if (!of_device_is_available(np))
-+			continue;
-+
-+		init_func = match->data;
-+
-+		pdev = platform_device_alloc(of_node_full_name(np), -1);
-+		if (!pdev)
-+			continue;
-+
-+		ret = device_add_of_node(&pdev->dev, np);
-+		if (ret) {
-+			platform_device_put(pdev);
-+			continue;
-+		}
-+
-+		dev_set_name(&pdev->dev, pdev->name);
-+
-+		ret = init_func(pdev);
-+		if (!ret) {
-+			timers++;
-+			continue;
-+		}
-+
-+		if (ret != -EPROBE_DEFER)
-+			pr_err("Failed to initialize '%pOF': %d\n", np,
-+			       ret);
-+
-+		device_remove_of_node(&pdev->dev);
-+
-+		platform_device_put(pdev);
-+	}
-+
-+	return timers;
-+}
-+
-+void __init timer_probe(void)
-+{
-+	unsigned timers = 0;
-+
-+	timers += timer_of_probe();
-+	timers += timer_pdev_of_probe();
- 	timers += acpi_probe_device_table(timer);
- 
- 	if (!timers)
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index fa5f19b8d53a..97606499c8d7 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -318,6 +318,7 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
- 	KEEP(*(__##name##_of_table_end))
- 
- #define TIMER_OF_TABLES()	OF_TABLE(CONFIG_TIMER_OF, timer)
-+#define TIMER_PDEV_OF_TABLES()	OF_TABLE(CONFIG_TIMER_OF, timer_pdev)
- #define IRQCHIP_OF_MATCH_TABLE() OF_TABLE(CONFIG_IRQCHIP, irqchip)
- #define CLK_OF_TABLES()		OF_TABLE(CONFIG_COMMON_CLK, clk)
- #define RESERVEDMEM_OF_TABLES()	OF_TABLE(CONFIG_OF_RESERVED_MEM, reservedmem)
-@@ -714,6 +715,7 @@ defined(CONFIG_AUTOFDO_CLANG) || defined(CONFIG_PROPELLER_CLANG)
- 	CLK_OF_TABLES()							\
- 	RESERVEDMEM_OF_TABLES()						\
- 	TIMER_OF_TABLES()						\
-+	TIMER_PDEV_OF_TABLES()						\
- 	CPU_METHOD_OF_TABLES()						\
- 	CPUIDLE_METHOD_OF_TABLES()					\
- 	KERNEL_DTB()							\
-diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
-index 65b7c41471c3..0eeabd207040 100644
---- a/include/linux/clocksource.h
-+++ b/include/linux/clocksource.h
-@@ -289,6 +289,9 @@ extern int clocksource_i8253_init(void);
- #define TIMER_OF_DECLARE(name, compat, fn) \
- 	OF_DECLARE_1_RET(timer, name, compat, fn)
- 
-+#define TIMER_OF_DECLARE_PDEV(name, compat, fn) \
-+	OF_DECLARE_PDEV(timer_pdev, name, compat, fn)
-+
- #ifdef CONFIG_TIMER_PROBE
- extern void timer_probe(void);
- #else
-diff --git a/include/linux/of.h b/include/linux/of.h
-index a62154aeda1b..a312a6f5ecc1 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -1540,9 +1540,12 @@ static inline int of_get_available_child_count(const struct device_node *np)
- 	_OF_DECLARE_STUB(table, name, compat, fn, fn_type)
- #endif
- 
-+struct platform_device;
-+
- typedef int (*of_init_fn_2)(struct device_node *, struct device_node *);
- typedef int (*of_init_fn_1_ret)(struct device_node *);
- typedef void (*of_init_fn_1)(struct device_node *);
-+typedef int (*of_init_fn_pdev)(struct platform_device *);
- 
- #define OF_DECLARE_1(table, name, compat, fn) \
- 		_OF_DECLARE(table, name, compat, fn, of_init_fn_1)
-@@ -1550,6 +1553,8 @@ typedef void (*of_init_fn_1)(struct device_node *);
- 		_OF_DECLARE(table, name, compat, fn, of_init_fn_1_ret)
- #define OF_DECLARE_2(table, name, compat, fn) \
- 		_OF_DECLARE(table, name, compat, fn, of_init_fn_2)
-+#define OF_DECLARE_PDEV(table, name, compat, fn) \
-+		_OF_DECLARE(table, name, compat, fn, of_init_fn_pdev)
- 
- /**
-  * struct of_changeset_entry	- Holds a changeset entry
+ 		reg = dw_pcie_readl_dbi(pci, GEN3_EQ_CONTROL_OFF);
 -- 
-2.43.0
+2.34.1
 
