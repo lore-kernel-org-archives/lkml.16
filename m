@@ -1,40 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE6E5946A;
-	Wed, 25 Jun 2025 16:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E877B2DECC9;
+	Wed, 25 Jun 2025 16:56:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750870566; cv=none; b=M3u1zCDX8kvvD5Wo6wX5pcNTYm3zJwZbyv7MHCT4SjhM7RkGhx8kGHywuy30UOZzY0/pTa/AC+m0ybZ9Qboa11jq7pVBfr4Doa2Ilckug+xkr3cJBkcD1vwS5BHEusGAsnmxBVpXtc41/rxnDpKSCTsyikZ0Umf3qmRk09zo3jw=
+	t=1750870591; cv=none; b=VzJQ8eS3E85OgrO4g1oeGussT8Equ7ONMjmtaC9UQfxWUoogX6H6bZcZwZgxhnp3iyQDSeJERNTz0V2QVIcdpvGUHr6gK+5BmSknoGEH8uNrcRJZ62pbmTclCnaOjcBriWhIuzmu9pkBSqsNB1wrcjK8dFyn2zPvbWWkLwD2J6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750870566; c=relaxed/simple;
-	bh=LRC0dit3N4Db3Q77f8HVZ5BfH7gvXp5ERShOZqe6Rpc=;
+	s=arc-20240116; t=1750870591; c=relaxed/simple;
+	bh=2EEecCr0u28ZPLu/TqGbdd1N5QSKHcQ+toYx/EPSRzw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OVVK53JenuPm8SK0AIzEw4BIDD19CvpH/LqVlMiaBrMFbYA/XoNLpPwmtM0EMYe7T0zZhcJj7Q6FulYyJ4FsDztPHX82+jOmh2NZr8VA6FqCfnXwtjZVToF5KWGQHTO2pxfiSymR7YbbhQPmZiYqyX67B64Dx1zMY67eS8QV778=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G5KggnoN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xrb3HPPvB3tqmdeQK0TnJIwbXtD+CYDFAhE3Imk8IjFM44wRwOxjxY+e8jYhi0cMNPKhJMhFpES81XuZukOplPl23dwdDAIGE/uwbJN0StNWJr+HpQWbMx5pMCDixOze0fDz0yZTAHUbDq9Itp8K9e89473sPYiepnxfA3bwh6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ls4mqaUX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G5KggnoN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F59DC4CEEA;
-	Wed, 25 Jun 2025 16:56:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ls4mqaUX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F553C4CEEA;
+	Wed, 25 Jun 2025 16:56:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750870565;
-	bh=LRC0dit3N4Db3Q77f8HVZ5BfH7gvXp5ERShOZqe6Rpc=;
+	s=k20201202; t=1750870590;
+	bh=2EEecCr0u28ZPLu/TqGbdd1N5QSKHcQ+toYx/EPSRzw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G5KggnoNj5VbDCQIlc1wP1gr3w8AebofgkhEkgQiZ/pdt/wXXUBSbYnZ0BR8TO4cD
-	 RaU8zxJmxOmkXuEPO9i0PBqnFe8PXhFs/vIguyXEBZNlN+V6+XoKpPTycdY01eMM0+
-	 Go3hVPaEcLvT1Jbm30nlXNxHXnr2oAdIMMH/uoBcBX4Xgfad/JDMKRZV2TJdaKIRxR
-	 3STnVS9WzmNWmioz/kX8XIKnZRvTGtA6jUKlC1UZnnuMhf4RZWlRGQwN2702XBTl9k
-	 4uG7somOgokIFrSROXTApjqrJc0FcLh9o1WjkdaT+/paEv2WZ8gb+vjOQgX58rjSaX
-	 K1GmkwBIiYh7A==
-Date: Wed, 25 Jun 2025 19:56:02 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-Cc: peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] tpm: Replace scnprintf() with sysfs_emit() and
- sysfs_emit_at() in sysfs show functions
-Message-ID: <aFwqIqfFFrwg1vIm@kernel.org>
-References: <20250625050346.11500-1-chelsyratnawat2001@gmail.com>
+	b=ls4mqaUXvRwwJRy7QFqoK1TdfAanCnWMF0aAy3RygIeKqXF6zHvPwx7y2uk991ZU3
+	 v6LUzmfKluAoiqCeP1OqC58wjQZaW2mEDrLxYKyKnrCxJOmIWL6mRy94I5owJOXQKU
+	 rGmszgAvxAT0hqfzjlarLSW7zjEiZozBF8rQv/nBJviAzMvj+P+MJMwOiU64ZYBzIM
+	 ng+KBeqDdykIPOgxqSW3df2Xtw3BxxMUTWsOlZjMr0ueWu73g2iit/25w0isRRT0uX
+	 XIwqDGceGeurSLd2Gymzrs/w+7G17osNDd/XCEn1ZufORFB1rbGdHoGw5pCPCydrRK
+	 YmG9IBrAasbHQ==
+Date: Wed, 25 Jun 2025 09:56:30 -0700
+From: Kees Cook <kees@kernel.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, nvdimm@lists.linux.dev,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v3][next] acpi: nfit: intel: avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Message-ID: <202506250950.31C8A58E@keescook>
+References: <aEneid7gdAZr1_kR@kspp>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,47 +48,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625050346.11500-1-chelsyratnawat2001@gmail.com>
+In-Reply-To: <aEneid7gdAZr1_kR@kspp>
 
-On Tue, Jun 24, 2025 at 10:03:46PM -0700, Chelsy Ratnawat wrote:
-> Documentation/filesystems/sysfs.rst mentions that show() should only
-> use sysfs_emit() or sysfs_emit_at() when formating the value to be
-> returned to user space. So replace scnprintf() with sysfs_emit().
+On Wed, Jun 11, 2025 at 01:52:41PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
 > 
-> Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+> Refactor multiple structs that contain flexible-array members in the
+> middle by replacing them with unions.
+> 
+> These changes preserve the memory layout while effectively adjusting
+> it so that the flexible-array member is always treated as the last
+> member.
+> 
+> With these changes, fix a dozen instances of the following type of
+> warning:
+> 
+> drivers/acpi/nfit/intel.c:692:35: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
 > ---
-> Changes in v4: 
-> - updated the commit message.
->  
->  drivers/char/tpm/tpm_ppi.c | 48 ++++++++++++++++++--------------------
->  1 file changed, 23 insertions(+), 25 deletions(-)
+> Changes in v3:
+>  - Use union instead of DEFINE_RAW_FLEX().
 
-$ scripts/checkpatch.pl --strict 0001-tpm-Replace-scnprintf-with-sysfs_emit-and-sysfs_emit.patch 
-CHECK: Alignment should match open parenthesis
-#36: FILE: drivers/char/tpm/tpm_ppi.c:91:
-+                               size = sysfs_emit(buf, "%llu %llu\n", req,
-                                    obj->package.elements[2].integer.value);
+I think your TRAILING_OVERLAP macro[1] is perfect here. I'll try to get that
+landed for the next rc. Can you double-check that this works correctly
+in these cases?
 
-CHECK: Alignment should match open parenthesis
-#50: FILE: drivers/char/tpm/tpm_ppi.c:102:
-+                       size = sysfs_emit(buf, "%llu\n",
-                                 obj->package.elements[1].integer.value);
+> @@ -55,9 +55,16 @@ static unsigned long intel_security_flags(struct nvdimm *nvdimm,
+>  {
+>  	struct nfit_mem *nfit_mem = nvdimm_provider_data(nvdimm);
+>  	unsigned long security_flags = 0;
+> -	struct {
+> +	/*
+> +	 * This effectively creates a union between the flexible-array member
+> +	 * and any members after _offset_to_fam.
+> +	 */
+> +	union {
+>  		struct nd_cmd_pkg pkg;
+> -		struct nd_intel_get_security_state cmd;
+> +		struct {
+> +			u8 _offset_to_fam[offsetof(struct nd_cmd_pkg, nd_payload)];
+> +			struct nd_intel_get_security_state cmd;
+> +		};
+>  	} nd_cmd = {
+>  		.pkg = {
+>  			.nd_command = NVDIMM_INTEL_GET_SECURITY_STATE,
 
-CHECK: spaces preferred around that '-' (ctx:VxV)
-#63: FILE: drivers/char/tpm/tpm_ppi.c:215:
-+                                   info[ARRAY_SIZE(info)-1]);
-                                                         ^
+I think it would be a pretty small and direct replacement:
 
-total: 0 errors, 0 warnings, 3 checks, 100 lines checked
+	TRAILING_OVERLAP(struct nd_cmd_pkg, pkg, nd_payload,
+			 struct nd_intel_get_security_state cmd;
+	) nd_cmd = {
+		...
 
-NOTE: For some of the reported defects, checkpatch may be able to
-      mechanically convert to the typical style using --fix or --fix-inplace.
+-Kees
 
-0001-tpm-Replace-scnprintf-with-sysfs_emit-and-sysfs_emit.patch has style problems, please review.
+[1] https://web.git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=for-next/kspp&id=29bb79e9dbf1ba100125e39deb7147acd490903f
 
-NOTE: If any of the errors are false positives, please report
-      them to the maintainer, see CHECKPATCH in MAINTAINERS.
-
-Can you fix these checkpatch errors?
-
-BR, Jarkko
+-- 
+Kees Cook
