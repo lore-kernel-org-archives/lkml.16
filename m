@@ -1,191 +1,147 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E36726A0D0;
-	Wed, 25 Jun 2025 15:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE5026A0A7
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864278; cv=none; b=oYBa35RZkxxhnNmjy6wQAOSPUIV8wxONd1/Jm6aQRUsWZHWDMw1MVBw2PaO2RahmMyFyOnI1F7k/YoCJqVWSYlgq6KyQYKADIWxEekx6Agb4mUl9Afh6lDWqYlJyd1XPqoi2OGQ3j2lCwVOA+ksn8qNCEdGXnPwtwd0qD4bMAUA=
+	t=1750864332; cv=none; b=mjg3Q1WyIC/X15p3YFNRIdq275SKByQDVGFW4/a+r/xqFN5elguhuvFc+HmDV/7be2kRMg0YbCMuJdv+bee3gfNZo4pqWGiERTCtFr1yk4ik/Z2Sh1z+hWan67JmPDB4BvHFmwkSNhwHtu2b6GAtWeLshzK70MYpj21LBdVA0PI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864278; c=relaxed/simple;
-	bh=sQWzXMpttU3Q4RdTkLeDK11omHBR555qHYPgdiuh080=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r1gNwNnWczsTdtWBjRDjo2TrX5Kf/DwzwMu4QV+IEH32hRMa1ExMOnW89lg/yFWiwdzw6vwML79xONQqEXKGghYi7stekvpN3da8/kv8p/BY+UY/hVwYCjrdGTsVjLOzFukKmO8hnIzYQzI+bkuGq4iKrT0RM3UJwE1Nv2l93dM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RMyx0lNt; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750864332; c=relaxed/simple;
+	bh=MyOeN1BOVe0tVdXuH6wdqHh3iBo9MBd6JpkNczrI04I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dd6gDFTJJSIAZWd1Q9F4WxTyyi+e17J0iuuVGvy/f9H+WGiHgfBYOCQ/SpXYSnaiqwXuAPPYrJN/KPp5vKDBbrUiwy+YBye5u2GGzxT6rhAc29R76gGM8wK+jSqn1ZrdJThVj7mC8/f1xCdM0prQqKF7OVJdczBHc5Uzw6adpXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Tzh2zbhz; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMyx0lNt"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad572ba1347so1082598566b.1;
-        Wed, 25 Jun 2025 08:11:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tzh2zbhz"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-453066fad06so12613315e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:12:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750864275; x=1751469075; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=73ypKXXgUqafYwYORXlEImzIyHG0DLPjWMG5BzkdwL0=;
-        b=RMyx0lNt7NrHiF7IsQsWJfs2RykQjbgheqF4xRQwVAwv89ZM86MNPbLpv43RrWrcw3
-         etYxHUJN9JKsX4pnhaNCovk0ZQo4tJmGOloNmWuZXqUoDyfKNpjUQFyWZf576pEly5MJ
-         fKeGNoAnKAScbXJERIMjc+wsrRn61zRJRMK/C9s1dM7pMkSbv7OFoWW8k2bX80+S3vLL
-         Gi0mCSG9A7+0XwsCGfUBy4HtsKADanImyo06LK1uoCxhrsjzqAO52Yphitof5gJdTzyG
-         FWzkI7yhPUKw29Pjk0hqVaJjSCSyQj84FO4Qb/w0trRynkyA6EgfjIYYsKRSh3LlD3Xu
-         TFfA==
+        d=linaro.org; s=google; t=1750864329; x=1751469129; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=MyOeN1BOVe0tVdXuH6wdqHh3iBo9MBd6JpkNczrI04I=;
+        b=Tzh2zbhzXRzrR/6pacGnEH3xrQU7dHwksWZE00xO4o/nTMoPVGh6FStKTEyA429DfN
+         q5wvexfNoV2d0pJaLDpznnRkSm6/4G8HYn7uV0/vXNSeP3G3OHhvxp8xnoJ0V5SceMst
+         ER17LHEVgd6PRJ0bdejwSquKkHWkHPnHRna5e75vqZ5sMvJgTMZvBXTPz2S7NpCZCzVe
+         lDCfkYoLcUTM1BfN05/hyqEoU8HBm1GNWWpKC2KwwR4ABngvOWtG3eMMBJqRv930LbpA
+         SpW9WkI/VM3+7QStrsCMjaD7vUqqOiVtBiU9BRFwRw671MLpJBBOqgSYpKi2VAFzjuIU
+         KxkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750864275; x=1751469075;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=73ypKXXgUqafYwYORXlEImzIyHG0DLPjWMG5BzkdwL0=;
-        b=mA6CPCXAgvWxBFtXAxhAb/T5CYfIE+5wy6Swi8tt7fFRjMR9PV7mlvQDUKG5jPXz66
-         iSQ1oV9idJ7S+rF6xSjg5lwXp9EpovRKHt+GxwpxgPYOTbQe5MwA9LaXXxhQBw97G44R
-         seTwPRBOo9G2Is6JxIreckBWa70qTZFh2De94wkNxblRo+BRgRJlux0UBlT14q3HSo1A
-         zKwYYVwARAl5BK2xwIxeYzmai/OJs1seIBdapGVdBFnW0eW+M9D2qjUudhCyonBJ7KV1
-         Eip7uaKPFOt/ZYe6+IpScplCR6YB8AWdCE3JhTrrlSFYDYgSO74nVRxJ4mnUyHnlwtKV
-         NFhA==
-X-Forwarded-Encrypted: i=1; AJvYcCUSrGiriUY/tM1SUm9VWfs4TTNcGl8SoSGxI18ThyvpXm1KvgDOl1Ys2FXyuUuE5YnxdBJpFbZQNCyP3iRo7Wwt2slQ@vger.kernel.org, AJvYcCW/NK8UKdBcReMvzuN2+UCbd4Tr1QMVR27zLKoW41FiCVjO8anfRp9P271b7OYhxjLS8cXpNG+L/mZAIEzc@vger.kernel.org, AJvYcCXO4pzSi5Q/IZFHOBNoOMtqAGQ/6Fw+WkRnY9ZrwqA8Aovhqp0PLpDeQbjfYVd3yE/Ro7I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzR9ylazOMMYXkOr0qK3Qns1U7c53Rda6QmAKi0vz5d2aP+l1Lk
-	ncVzU0jaQIPVhCqLYNJQQICBkBZ2Ew9CTLTjM5jpl7puuzQ8/PklInxV
-X-Gm-Gg: ASbGncsfhTzHqmZvSW/k2KjkGA6seOCp6nO3VkzvZvVwQYI+en5Lf+JIdgOEWdv51Zi
-	l6R70CtRaMjHTDDu9c+vXJSZzPfE6il/UA1su1IgkjddjW/YaFnbD87TszL5QnWvlKnnh+paxZ8
-	G7JSQRlCDNcdqE5ZguYOabOkJtP4bu7PGIrkdvDTCLIVWAZ3FfTjWq8Bq2ZP23E7BkAmTFcxzLE
-	81eSC+6+W6EK4uq/LkocHagysAPyNaw1njHpg7DeW5nb7shDRFrzoZOxg97jH3s9/ItJT/ksYPr
-	DtI69KkNKFo3s+KDZcD/oafq0jKmJJx+J3qvJ5pcA3Z8vCLJKQ==
-X-Google-Smtp-Source: AGHT+IHR73kNjkLY6I6z8/OKPl7imSBMI/aYV5GL05PY9WoiLG/9bgiLimAwHJf6yVTIF1PIfqYUzA==
-X-Received: by 2002:a17:907:26c2:b0:ae0:cca0:e6af with SMTP id a640c23a62f3a-ae0cca0ebf1mr95706966b.1.1750864272815;
-        Wed, 25 Jun 2025 08:11:12 -0700 (PDT)
-Received: from krava ([176.74.159.170])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0543421e9sm1059851066b.185.2025.06.25.08.11.10
+        d=1e100.net; s=20230601; t=1750864329; x=1751469129;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MyOeN1BOVe0tVdXuH6wdqHh3iBo9MBd6JpkNczrI04I=;
+        b=pliIRdXwnjBskbTgyKpVvMtrgd5WgA4XSHlTbXb78wHWJXjCoDL3OtUKEMO/83gqWe
+         XK6IPoPvYTcsXKRiOGYs0M0gmzCMPNc05DwJc4akIi74P6+WebqzXKT37Izx29pO303R
+         J5Oz0o0GhxGF+t93zYjOg17my5K8AxuqkyblYidUCZWW6zD9lSTdPKFQPupjbqVsrYtb
+         XxlYygi7qnGnBV83OgGxLP83NN/sqX947ay66b3UP4bNEtJEoeccl+mHJBNOjrSwdPX+
+         MQeQyf2wTWmWuPRHartfkNSqBkYs1HsvwrUtLwBfjAL/3BZC60F1X/sBChoEZl/JFZbt
+         spBg==
+X-Forwarded-Encrypted: i=1; AJvYcCXEr0zsA4RnbkvyQlcjObLvqdy8rI+ZXEcWDvAU5iEN5XcUJTDvTx1TZjSf3os93PzlO1tuN8JHoEpkjmk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoIKV2XWj4FEKA7NcQz8pSof2NoMvZQhUwea6AX2nYqOdtlUa6
+	5wpUnaGyRT/1MUd5b6qIXtHQJjoPOQrFueNdVV5oSC24RnnVtiukwRPtYNrz2bK49f0=
+X-Gm-Gg: ASbGncuCCykyE4jOHVXM+mR0hE5QoWzt4n4XTRzn5t2Gxto7UvWIG2kml73L4reVgSw
+	aJcXhDsbN9kM5DVG6mjPtMJVyUaq2VwuLWpTRCQ8PC6xxqz8lcJYRjg5jXhYPA/sj25NgZX/7l3
+	Wl2UoMxcXo7ac3ichkBHtnUM2N3pgWN1eTTfcyDgWrAQjkTlXOM1dGLbtgb7CfTpSs+Nhrs8rVg
+	HZPPfQY6NTPCI/lB5Cw5JO8n69Qid4BwNOETBN7BCaorXnHd6hknk8ubAvdFJFxqEEKAxN3OoRP
+	afrU29/3VM+scqrvTTCF3H5vkVDM8Qfw3uZZi500YHXGDdoPtQhVdyGoAHmgNdkwTw==
+X-Google-Smtp-Source: AGHT+IFSg3dibVTIEpD6FpD0UUWYk6yh5yAs3N7EJ6HO9SoNfajU5TZY11EXzo28LUVmj7JsxNhSvw==
+X-Received: by 2002:a05:600c:4f07:b0:450:cac5:45e7 with SMTP id 5b1f17b1804b1-453886d3649mr1206935e9.1.1750864328873;
+        Wed, 25 Jun 2025 08:12:08 -0700 (PDT)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8069534sm4740368f8f.44.2025.06.25.08.12.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:11:11 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 25 Jun 2025 17:11:09 +0200
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org, Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@aculab.com>,
-	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
-	Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv3 perf/core 07/22] uprobes: Add do_ref_ctr argument to
- uprobe_write function
-Message-ID: <aFwRjTkluiE-g-Ab@krava>
-References: <20250605132350.1488129-1-jolsa@kernel.org>
- <20250605132350.1488129-8-jolsa@kernel.org>
- <20250625154259.4a092f0213739404a0e9b210@kernel.org>
+        Wed, 25 Jun 2025 08:12:08 -0700 (PDT)
+Message-ID: <e29a3494986d78ca964846b54fd3e5bc78e4afd4.camel@linaro.org>
+Subject: Re: [PATCH 07/17] mfd: sec-common: Instantiate s2mpg10 bucks and
+ ldos separately
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Tudor Ambarus <tudor.ambarus@linaro.org>, Rob Herring <robh@kernel.org>,
+  Conor Dooley <conor+dt@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Liam Girdwood <lgirdwood@gmail.com>,  Mark Brown <broonie@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski	
+ <brgl@bgdev.pl>, Peter Griffin <peter.griffin@linaro.org>, Will McVicker	
+ <willmcvicker@google.com>, kernel-team@android.com, 
+	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+Date: Wed, 25 Jun 2025 16:12:07 +0100
+In-Reply-To: <05b9862c9a8f11bf7d7c8afdf60ecff30716a196.camel@linaro.org>
+References: <20250604-s2mpg1x-regulators-v1-0-6038740f49ae@linaro.org>
+		 <20250604-s2mpg1x-regulators-v1-7-6038740f49ae@linaro.org>
+		 <20250613141902.GI897353@google.com>
+	 <05b9862c9a8f11bf7d7c8afdf60ecff30716a196.camel@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.1-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625154259.4a092f0213739404a0e9b210@kernel.org>
 
-On Wed, Jun 25, 2025 at 03:42:59PM +0900, Masami Hiramatsu wrote:
-> On Thu,  5 Jun 2025 15:23:34 +0200
-> Jiri Olsa <jolsa@kernel.org> wrote:
-> 
-> > Making update_ref_ctr call in uprobe_write conditional based
-> > on do_ref_ctr argument. This way we can use uprobe_write for
-> > instruction update without doing ref_ctr_offset update.
-> > 
-> 
-> Can we just decouple this update from uprobe_write()?
-> If we do this exclusively, I think we can do something like;
-> 
-> lock()
-> update_ref_ctr(uprobe, mm, +1);
-> ...
-> ret = uprobe_write();
-> ...
-> if (ret < 0)
->   update_ref_ctr(uprobe, mm, -1);
-> unlock()
-> 
-> Thank you,
+On Fri, 2025-06-13 at 15:49 +0100, Andr=C3=A9 Draszik wrote:
+> Hi Lee,
+>=20
+> Thanks for your review!
+>=20
+> On Fri, 2025-06-13 at 15:19 +0100, Lee Jones wrote:
+> > On Wed, 04 Jun 2025, Andr=C3=A9 Draszik wrote:
+> >=20
+> > > Bucks can conceivably be used as supplies for LDOs, which means we ne=
+ed
+> > > to instantiate them separately from each other so that the supply-
+> > > consumer links can be resolved successfully at probe time.
+> > >=20
+> > > By doing so, the kernel will defer and retry instantiating the LDOs
+> > > once BUCKs have been created while without this change, it can be
+> > > impossible to mark BUCKs as LDO supplies. This becomes particularly
+> > > an issue with the upcoming support for the S2MPG11 PMIC, where
+> > > typically certain S2MP10/11 buck rails supply certain S2MP11/10 LDO
+> > > rails.
+> > >=20
+> > > The platform_device's ::id field is used to inform the regulator driv=
+er
+> > > which type of regulators (buck or ldo) to instantiate.
+> >=20
+> > I'm confused.
+> >=20
+> > There is nothing that differentiates the two, so why do you need to?
+>=20
+> On gs101, we have two PMICs, s2mpg10 and s2mpg11. Several s2mpg10 LDOs
+> are consumers of various s2mpg10 bucks & s2mpg10 bucks, and several
+> s2mpg11 LDOs are also supplied by various s2mpg10 bucks & s2mpg11 bucks.
+>=20
+> So we have a circular dependency here. LDOs of one PMIC depend on bucks
+> of the other.
+>=20
+> If all s2mpg10 rails are handled by the same instance of the s2mpg10
+> regulator driver, probe will defer (and ultimately fail), because the
+> supplies to the LDOs can not be resolved during probe.
+>=20
+> The same goes for s2mpg11.
+>=20
+> The result is that neither driver can probe successfully (unless you're
+> _extremely_ lucky due to parallel probing, but we can not rely on that,
+> of course).
+>=20
+> By splitting LDO and buck rails into separate instances, this circular
+> dependency is gone, the buck-instance of each respective driver can probe=
+,
+> which then allows the LDO instance of the other driver to probe.
 
-it was the intention in the v1 but as Oleg pointed out [1] it won't
-work, because the set_orig_refctr part of this change does not know
-if the refctr should be really updated or not
-
-while inside uprobe_write it happens right after verify callback and
-we make sure to update refctr only if the instruction was updated
-
-thanks,
-jirka
+My next version will have that changed to be fully granular (one mfd cell
+per regulator), since I've come to the conclusion that the high-level
+split is non-ideal, otherwise important supplies might be turned off during
+EPROBE_DEFER of a consumer, affecting unrelated consumers (rails) that
+haven't probed yet, since multiple consumers share the same supply.
 
 
-[1] https://lore.kernel.org/bpf/20250427141335.GA9350@redhat.com/
-
-> 
-> 
-> > Acked-by: Oleg Nesterov <oleg@redhat.com>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  include/linux/uprobes.h | 2 +-
-> >  kernel/events/uprobes.c | 8 ++++----
-> >  2 files changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> > index 518b26756469..5080619560d4 100644
-> > --- a/include/linux/uprobes.h
-> > +++ b/include/linux/uprobes.h
-> > @@ -200,7 +200,7 @@ extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
-> >  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t,
-> >  			       bool is_register);
-> >  extern int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma, const unsigned long opcode_vaddr,
-> > -			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register);
-> > +			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr);
-> >  extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
-> >  extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
-> >  extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
-> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> > index 1e5dc3b30707..6795b8d82b9c 100644
-> > --- a/kernel/events/uprobes.c
-> > +++ b/kernel/events/uprobes.c
-> > @@ -492,12 +492,12 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> >  		bool is_register)
-> >  {
-> >  	return uprobe_write(auprobe, vma, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE,
-> > -			    verify_opcode, is_register);
-> > +			    verify_opcode, is_register, true /* do_update_ref_ctr */);
-> >  }
-> >  
-> >  int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> >  		 const unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes,
-> > -		 uprobe_write_verify_t verify, bool is_register)
-> > +		 uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr)
-> >  {
-> >  	const unsigned long vaddr = insn_vaddr & PAGE_MASK;
-> >  	struct mm_struct *mm = vma->vm_mm;
-> > @@ -538,7 +538,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> >  	}
-> >  
-> >  	/* We are going to replace instruction, update ref_ctr. */
-> > -	if (!ref_ctr_updated && uprobe->ref_ctr_offset) {
-> > +	if (do_update_ref_ctr && !ref_ctr_updated && uprobe->ref_ctr_offset) {
-> >  		ret = update_ref_ctr(uprobe, mm, is_register ? 1 : -1);
-> >  		if (ret) {
-> >  			folio_put(folio);
-> > @@ -590,7 +590,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> >  
-> >  out:
-> >  	/* Revert back reference counter if instruction update failed. */
-> > -	if (ret < 0 && ref_ctr_updated)
-> > +	if (do_update_ref_ctr && ret < 0 && ref_ctr_updated)
-> >  		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
-> >  
-> >  	/* try collapse pmd for compound page */
-> > -- 
-> > 2.49.0
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cheers,
+Andre'
