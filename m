@@ -1,60 +1,62 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E805D1ADC69
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:49:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBE91ADC69
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750873773; cv=none; b=nIF1a8pfs2Al6eBcfTv1cLsV3gqwb2dO1gdvxUDrM7bnGJbqgRZpfDn8dMbLZu8Vzd/um29GJsUVk7XUWtTxw6TvbJ8NIzAb+UWbaTDqSHB5ovKb2UMPX8G9dlecPMpk3FBsgbXQuHMF7+YbkNLMH65exyfmMIqkcWAgKSEEl1M=
+	t=1750873779; cv=none; b=tBTqlPgBXI5n6dUvTHIAzoNkezg9/Vlut2qYt7zUh1zKWhRRC8VNaRz2hxf8aqYL8+vc1mhu1ynU6jsX4ghbNv+jWy229HzXl5miIT5W8a9ue3jfP0IcbPStWmxBmWCGBqfKxxBDt7hpFBOFf2wucCAKSK5XYiW9P0pZ2sDR+PE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750873773; c=relaxed/simple;
-	bh=gHURVpUT8xGnrP/mZ8Kh74Bg18Chq0fqFtTO9DFoKMc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JOYn+8LxEqwZxxUXiT7y2d/m1C6bwRKiX01J1msSEtyWSL6cAaG+sNCnnG+tlQ45bJ7WvF0VV8o6EwWr0ebZ0zH1mlaO34F7pR+vfwlzKRwhtcO4xpb/MNGvFLQUZOZb33kAQFdfSRA4F8kZczlVO+U2AdEdBW0a/uyLM+u3vws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IIVbmWSp; arc=none smtp.client-ip=209.85.215.181
+	s=arc-20240116; t=1750873779; c=relaxed/simple;
+	bh=hdaQbQzAWC7hOZjbVSYZQ6WivmG3DlnKW6X1M/R7boo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aK9+xU20LBX6pzSgLJNOgOXp8gY7TfWh8UJHKM63HsiAgHf6SfzwvMy9/KWIL1FCrQNkjVnF2p0aD7gxqX67h3JHgHdW661HHwiaxWQVTbY2Tpx3P7VJgW9sB14nVy7pYg14w+LtwNHpDiqilaOa8WqcMemujLSSxo1aKSZrCgc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ITI5eHSS; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIVbmWSp"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b34c068faf8so131108a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:49:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITI5eHSS"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-74931666cbcso250230b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750873771; x=1751478571; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wKPoygHmek9vtlAiSPTqKcPVr1OpZZ2WrDzyM0DWDbg=;
-        b=IIVbmWSpDqoK4G5jeGA5Q2vM6y3dvSu+NwiFeCpnV6LcC45OAUKqmYPzAjrO4GkvUp
-         hoScp8NXYPWn5TLn0FccRcwuKC8Tl0TK8wQtHjuHlR+bO1KqnXyUPRnpRs+FhD03hRlI
-         MhTOnJJTR4/eAzuXazLqf6ZFsgIrIDwDo531ykkB4Vez1HZpKe7/iNprFior9KsZYpkj
-         3u6+LcktG0WQ8drtrV7G/xqt5cDnkeyGzPpFYxyREAIWCLwHNTAlGQNfID8KKYMWdlyq
-         wNtEJU9ZLDB3iBJafYNVx9oF4sjMX5pZLjNm9L4u6GOrwXnKOah3hd83UMWnkv+7P8bC
-         oKIA==
+        d=gmail.com; s=20230601; t=1750873778; x=1751478578; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c1ioaSGcSzaoSqR57at2NFDMA+eF56Ru2c256CsXdIs=;
+        b=ITI5eHSS4J2li/seQOx/iaD0Kd5Rvc1VOfc1w57aDKiExbi0Q38rg1iAC2+4/0Pkht
+         JONUzSOd9sGrX6tNZGiEoZGoJe9d2KrcMKTU1buOkOcNT1W4LZAMhghnKiEOUi/E/taw
+         rzBZIBzM2wfao6Cb+C/fjxMWdUxf1yR+teDM8H0+tFGkqUhR9f89w1UX8zeRpM9eHPsW
+         rUv8gmm9679KjiJIYw8RwsPliC8MdfJeL4jtYCzteOWZOyQ5+uZ1snx4gbCMOpkIXM/b
+         wd8zwko2uehlgXNC0HE6ZPx6UsdlI+H6iFgb5hQMzzWjDqxtM4BbGqpcq8+qkDhG37Gz
+         28/Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750873771; x=1751478571;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wKPoygHmek9vtlAiSPTqKcPVr1OpZZ2WrDzyM0DWDbg=;
-        b=r8JNVqe08qFBadlDD+iCl3TegQqZA7oeagV8N+HlLSZyFb/X/3SOtTbW4iapiEaRL5
-         pD6RQsdToEu7WFprMm1MbRa6QWqnTUa7U5eK+yZllupBjH357nfcED5H1Bv2TjSBauCV
-         kRUbxerZpUTNUClRcVoUkve+JIAddncOSDH1QFmikvYo6RFijPlrYp4j0H+PDEsr6oI/
-         M1Uo6IRQHo4mkEM0AhcT7wfNPgMj6bYgaXvA35q/G2UIC59srKA/1yajfolHs+o9qUPB
-         NPWdZg60QYqPVDSEsMyhskYg5GpIgu9Y6wF1WcKFnpLYyfMxL3RQ7wY4RQ7+6dxoQOrX
-         ICtg==
-X-Gm-Message-State: AOJu0YxlaJEM7r/ibYiccsmGAlAEcBn2l3BdI8yzFaD4vQIxny3G5273
-	58brdiRYCiFMwceS1XPplUauKWjPoxrvuo0veMgn6+49EhDPGvw2Jc1sO1bfJ/3g
-X-Gm-Gg: ASbGncuDYvmj7rASq7FZAMQUdq3gXnosUQKzUJOwiOCWH3fP5vHhZaMNn+DhGC3UT84
-	Iz33gQuvc7LsAZLpgmudI48I+LdK+ecf8GZs07WbPYucmQLzKe2j1fSydF86x5Cfp5psxCLoztZ
-	9n+F65oVEr2ccJIfcMqzdLSepRlfmqH66mjF2aDhL9tC4SFzV78J5Pk9LHNxyPJ/9RIdLLxs0bA
-	06RUzIwYBLuuKDdgiVAkp5aH7H2ugLUZCQtTOsUgqAa0hRr0ghu3D+iBw+yLxoFn9DYQdDk7srx
-	dnHV5jkP5LxwoqstAHv6G0yr06vnBkMnJ1/izNm+DmLZBnQ63TUNyWQlErxKwGpcIOu8jKiE84q
-	VFhWJWtYyoLgHGnkMj5pT
-X-Google-Smtp-Source: AGHT+IEGKc4PlKwHTryODTJ8CFkDTJ/2/4oBjIzki9EynrKNZrqt3JjwxvumsRuU0cu0A6YbznIGiA==
-X-Received: by 2002:a05:6a20:748f:b0:1f5:70d8:6a98 with SMTP id adf61e73a8af0-2207efa479dmr6671547637.0.1750873771104;
-        Wed, 25 Jun 2025 10:49:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750873778; x=1751478578;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c1ioaSGcSzaoSqR57at2NFDMA+eF56Ru2c256CsXdIs=;
+        b=bAgY0kLM7PYDRmSahtGTgaIpYvIuJ/wbgLiCmwsCnbs7stQz4t9e5bqPZGc+Upqkmn
+         3tA0sY71KZYQDf7yXSu6ceGb7PBzdPwkZdM8gv+aiCmx3wrWRRS0rffnGHIpoqZMlNvX
+         lYntOQane+DcWgqCGcuMmd1EsUyCNNRXwYrNtpN5wfxFwrD0oZmg4YwMUby8LcvVOitO
+         0P5UA5amrX7dLEv2+8LoGSqUhN/n9bUNhNdWtlBGbUAOapnLlrRu5C9vOyR6kncOSBo8
+         8WKyMoHQyVtvW6sX/mPyO6ak5ls/bur5IBw+GsL5NL8bkwOyWnVSsiduky9ZraTRH+kV
+         ayfA==
+X-Gm-Message-State: AOJu0Yxn3FL74VC3+/u+wHB6ZYoJFxGvC6KSVRBylbkHDWFX7tr+v1oS
+	UHdiLXnaHt2xi/gKuK7rd2Q+JVdhhiB01EDkbO+siDKbHRSJpJj4Pix7
+X-Gm-Gg: ASbGncvoK/xv+Eya36xPw4bJjFPXh1CJsGVPlIvSXANk140PcH0hJkWdVHTw4vjtABL
+	1v5Rg3Tv5a9jRtJ96Qv5JTDT72RbWP26+kdN6EVYzcJ2WYswjC6PCF+6CmPm7yebdfMMPAYvBgD
+	5Fv4951dhyZZg0GI5joXUMg2/pPB7vmcCFokLhDVJ/xgg2/wDuhJyG5hUqU2fG6n1BROpEUM0HC
+	2mmjnh8qFI9CJVstjS3AXipYGOenidqS+8V9H6BLKIVMUf1gHPO90Sw8PFTuFCzagLULt/GU6de
+	FGrQ23N7MiG3GP1sDcF94Imyr1RilXPKtzjuA+0pPs/UoSu6vWVH6ZpE9OyYUUduOWchbq6j0rn
+	MQwlbQrSqA6zdhwUOpD0SqGGR0JJn6Hg=
+X-Google-Smtp-Source: AGHT+IFipD4D2odHuNdn/ATlCMR+IXWifKXifixJMQ7PhzMzFi6ZABQLZm7aZko8k9Nhwg8uIoSZQQ==
+X-Received: by 2002:a05:6a20:7d9a:b0:21f:5361:d7f7 with SMTP id adf61e73a8af0-2207f285b2cmr7515854637.31.1750873777676;
+        Wed, 25 Jun 2025 10:49:37 -0700 (PDT)
 Received: from fedora.. (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-749b5e23879sm4944869b3a.57.2025.06.25.10.49.29
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-749b5e23879sm4944869b3a.57.2025.06.25.10.49.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 10:49:30 -0700 (PDT)
+        Wed, 25 Jun 2025 10:49:37 -0700 (PDT)
 From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
 To: linux-mm@kvack.org
 Cc: linux-kernel@vger.kernel.org,
@@ -63,10 +65,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Jordan Rome <linux@jordanrome.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
 	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Subject: [RFC PATCH 0/3] Some remote_vm folio conversions
-Date: Wed, 25 Jun 2025 10:48:38 -0700
-Message-ID: <20250625174841.1094510-1-vishal.moola@gmail.com>
+Subject: [RFC PATCH 1/3] mm/memory.c: convert __copy_remote_vm_str() to folios
+Date: Wed, 25 Jun 2025 10:48:39 -0700
+Message-ID: <20250625174841.1094510-2-vishal.moola@gmail.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250625174841.1094510-1-vishal.moola@gmail.com>
+References: <20250625174841.1094510-1-vishal.moola@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,32 +79,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Both callers of unmap_and_put_page() are for tracing purposes and
-interact with user vmas. In a memdesc world, these should end up
-operating on folios, so convert them.
+Use kmap_local_folio() instead of kmap_local_page().
+Replaces 2 calls to compound_head() from unmap_and_put_page() with one.
 
-This patchset converts those functions so that gup - namely
-get_user_page_vma_remote() - can eventually safely pass around
-large folios.
+This prepares us for the removal of unmap_and_put_page(), and helps
+prepare for the eventual gup folio conversions since this function
+now supports individual subpages from large folios.
 
-This iteration does NOT allow support for handling a large folio all at
-once, it merely makes working on subpages of a large folio safe. Does
-anyone have any thoughts on if we might want to handle these in larger
-than PAGE_SIZE chunks? It seems like a lot of work with how kmap()
-works right now...
+Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
+---
+ mm/memory.c | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-On a similar note, might we want to convert implementations of
-copy_{to,from}_user_page() to pass around folios as well?
-
-Vishal Moola (Oracle) (3):
-  mm/memory.c: convert __copy_remote_vm_str() to folios
-  mm/memory.c: convert __access_remote_vm() to folios
-  mm: Remove unmap_and_put_page()
-
- include/linux/highmem.h |  6 -----
- mm/memory.c             | 52 +++++++++++++++++++++++++----------------
- 2 files changed, 32 insertions(+), 26 deletions(-)
-
+diff --git a/mm/memory.c b/mm/memory.c
+index 0f9b32a20e5b..747866060658 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -6820,9 +6820,10 @@ static int __copy_remote_vm_str(struct mm_struct *mm, unsigned long addr,
+ 	}
+ 
+ 	while (len) {
+-		int bytes, offset, retval;
++		int bytes, folio_offset, page_offset retval;
+ 		void *maddr;
+ 		struct page *page;
++		struct folio *folio;
+ 		struct vm_area_struct *vma = NULL;
+ 
+ 		page = get_user_page_vma_remote(mm, addr, gup_flags, &vma);
+@@ -6837,17 +6838,20 @@ static int __copy_remote_vm_str(struct mm_struct *mm, unsigned long addr,
+ 			goto out;
+ 		}
+ 
++		folio = page_folio(page);
+ 		bytes = len;
+-		offset = addr & (PAGE_SIZE - 1);
+-		if (bytes > PAGE_SIZE - offset)
+-			bytes = PAGE_SIZE - offset;
++		folio_offset = offset_in_folio(folio, addr);
++		page_offset = offset_in_page(folio_offset);
++
++		if (bytes > PAGE_SIZE - page_offset)
++			bytes = PAGE_SIZE - page_offset;
+ 
+-		maddr = kmap_local_page(page);
+-		retval = strscpy(buf, maddr + offset, bytes);
++		maddr = kmap_local_folio(folio, folio_offset);
++		retval = strscpy(buf, maddr, bytes);
+ 		if (retval >= 0) {
+ 			/* Found the end of the string */
+ 			buf += retval;
+-			unmap_and_put_page(page, maddr);
++			folio_release_kmap(folio, maddr);
+ 			break;
+ 		}
+ 
+@@ -6859,13 +6863,16 @@ static int __copy_remote_vm_str(struct mm_struct *mm, unsigned long addr,
+ 		 */
+ 		if (bytes != len) {
+ 			addr += bytes - 1;
+-			copy_from_user_page(vma, page, addr, buf, maddr + (PAGE_SIZE - 1), 1);
++			copy_from_user_page(vma,
++				folio_page(folio, folio_offset / PAGE_SIZE),
++				addr, buf,
++				maddr + (PAGE_SIZE - page_offset - 1), 1);
+ 			buf += 1;
+ 			addr += 1;
+ 		}
+ 		len -= bytes;
+ 
+-		unmap_and_put_page(page, maddr);
++		folio_release_kmap(folio, maddr);
+ 	}
+ 
+ out:
 -- 
 2.49.0
 
