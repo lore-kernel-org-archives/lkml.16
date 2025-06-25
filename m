@@ -1,102 +1,143 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63F8F1DDC04
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:50:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA5225D213
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:51:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750852256; cv=none; b=YaGcXau+nggs/Jn8u8hXs/HKNssjdXjzDd/fH9mDx1A4fuISpaacL7O3eJQ37I5MhbBYP+VNSH4vydnKA9OwOLIyKpoqpt0nsqMz9xE1Af2tiGbshphOp1vFiG9gVMmjGEtONFwG2YOUHN4xd21LgGBRZ97QywR4DDMiH7VRjgQ=
+	t=1750852282; cv=none; b=Uw6ZiFuq7yDWoDXb//EqpsP6mngkIw9aFVoQWv9wNmZdld1KQZBAcKJcni7QuQdHzLer4Drh3gM5OTGurE7WRX4JzDf4vz3bvcE+m8AkRqm+yeJkqwm6fxrOCHCKPLxUkULkfxBoDqzXGBBsYc6VDkIVT+kmc1b1TZqKCYhzepg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750852256; c=relaxed/simple;
-	bh=ccKVrwIbREFXa4j7XcS1J1dbdZcxku7g36ksBtNIWss=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WinLi3teWSN1io2pq+wHGk0u8JxD0kvIW/aNadoxRX9/EHBnRZkIkI85KnZb63LtQUxKHf18B7fEQhjBUMgo0IQrm4SzvDvlnX3QXb5GjCc/EKHAkJcJcWcMNMqD9uXKuvL544qTk8dVp3uPIiAW7mrusZm9cmuNCwm2kAIGcG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YcZ6Rw2i; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750852282; c=relaxed/simple;
+	bh=fs7c8Qyu5BrfvUyh4WP843ByKBeqVCKxGmA3+fES+jE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=j0Gte3oewKolRnnC687wp+/URJXU3SjoIRQ2sW17nTAnIwaBsxSWUXxYziM8KFmMXmnnibFEDRk/LYIAMMcsPBPz0S6QogHa6u2lhBMLNUsSncYRIVmzrHVPypyoUO/ELlRdXAVy3FcEDOlzQxTPwQB6TbZJGg5efRr6EaEu8m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=Ej0LtvTJ; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YcZ6Rw2i"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-73a5c1d9d93so5914102a34.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:50:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750852253; x=1751457053; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AoutNGAerTcoF/aenrsm72CtVJG212QTVx4YhnzRYkQ=;
-        b=YcZ6Rw2iiUo0d/sP97IM92RZq4tDAZiQyKcL8QUOQfWN7APNa5yFR6WgvYJpTcRO/k
-         S5C8mFIwpiY9hGlsnCX8IpoXA4E+hwJDQ9ZnBjQJJpbDKW8aSXY2Jr7ugztdh3/9r3U2
-         SVaMIUAhZ/js61l9kg+xl1qSUPgJM/l9oW1qnQdwNbSEPbbHsg5jlxkzO9sV1K0F9qEf
-         zj1qp97U5caV+Vuw4Gk/FJcPXggzduj/RcbBX6K5QBdKR5dIC88zCA+UPqH/QD/lsrnd
-         PQOu6DqlA7U0ws6s7gwEpzFkbvWcXRdwvgMFtNIo7qoffzeyXXyZGepLQuh/BHqFFpbr
-         s9Rw==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="Ej0LtvTJ"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P5tNKl021903
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:51:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	uRfQCMJPJ6I6xt/lsb5RiX86zBh0KuNZA9Flm5VJRyQ=; b=Ej0LtvTJLh+M6FeV
+	IpxDKqLh59EosLSa0ArOiC/IdoB5oFywQQSaMN9UOAu+528/6cOO+3HkHRWcx+eZ
+	0jT0JNFfqT3nwlmkII6vBB25GITh5GOGzuM/WCmOwHtibkfQ2fVELQC/mlsWdLN9
+	wkBi8SHN6I7tMUPFT/FScHUJp0NCJqQ7qTiekP6jqlq63IzQjIV9kP6letvWDmdR
+	03MPl4ft6GCNb+F+ofB1DWHx9fJ2fyE9zKg5OHpljk7vS5DqcgRGwaT+DEQJIW8x
+	iFwpIiDYVIlIugDWxa5VqsufcYATT7Df8Wp/sDHjUzJEk8M0JQcmvwvVk5ls0vhZ
+	qOVP4g==
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f3bgfruy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:51:20 +0000 (GMT)
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-7d0976a24ceso203646385a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:51:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750852253; x=1751457053;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AoutNGAerTcoF/aenrsm72CtVJG212QTVx4YhnzRYkQ=;
-        b=KmfD2dKTrJYnjNylOagzU2HN5QrCFLBJyGmu1I4x7Wq+l7oWJq9wD3XtP4ZykVpQt5
-         H5KgHIMf/dU+Zvg7gRIwpJ3wK7fRyimmGD2QEaegRTxQdJ+21x6DEDHWhXo93cx+sCHl
-         ozoDrkE263D8lKUNFfM8n6oRRe0AYYViL75BclpRWtUWdvhgMYRFouiPpbXQa9fGhFgo
-         D4xZkMNRnfldabX43kgGvhhx2a/MsVtOEFONnzzsajnGeiAH8zxkR0HOVmWJfRpMqJKC
-         XwJkNIV17qiyNAosS60dTx3ZnhkmbFnG+vDQZYipFil3hVUWmiNi9psK9q8dOHIrmyzT
-         uOrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEFVJZrHsb24EvsHC1ACe06Qo8bv4YMfIaB50SmbGiLAkZEuqAGEidK5E0AlbvPMlQFLlZjfux9AO0AbA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0RWUfyf7NsUcsNgElgkoZSoKsOiiavg4/zpQ3E3uaaFxorb+m
-	3xKInRui3kXu1lfiQEiX+MhpNCXfv/nQrUG5221egx1rwYQpi/NJ9CBm6vj+zIkTTiY=
-X-Gm-Gg: ASbGncvoXUC0NYNXpQ4tX9GKYGOh3qKkcdnH9L6smEhZYRY4Dp02q9a+XxTpHZkarNv
-	+Wa6FskC7dSkb2A8fEmihpjLWYc0Mb86PwoqcT4Ao5txatvlH6+kcooEY1hr6Bm70Z5C9vxUoYK
-	1J8wWyR/BBw2CTJ/tToKsxcfTd5tWXryvEjXtINs3B98FA7qXnDPl/oR6w+PGkV5FGH23egnFoB
-	O22ea99z6Wqet9aMPqylS1LYSnLvnmn5DOSzrXNSlyXCK7X2EXqOj22OfpmaJ6eRY5DryDYWly4
-	wp29MmHfp06h02+9igmt6Hs8dHDVVHjKCIi134O/PZk0iXFxG3TNFGoJit4vuE2qdmud0S4SSUI
-	v1wG8
-X-Google-Smtp-Source: AGHT+IHhifNSUvdslHEt+i0G2mhKHrYMYK7cb4RljD3ks4W3/ayaA/WwVBmac+YjncuYOBkqkdy7sg==
-X-Received: by 2002:a05:6871:2104:b0:29e:4ba5:4ddc with SMTP id 586e51a60fabf-2efb27645a8mr1809349fac.24.1750852253475;
-        Wed, 25 Jun 2025 04:50:53 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:22c9:dcd3:f442:dd1d])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efbd439555sm185735fac.25.2025.06.25.04.50.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 04:50:52 -0700 (PDT)
-Date: Wed, 25 Jun 2025 14:50:50 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Len Brown <lenb@kernel.org>,
-	James Morse <james.morse@arm.com>, Tony Luck <tony.luck@intel.com>,
-	Borislav Petkov <bp@alien8.de>, Ira Weiny <ira.weiny@intel.com>,
-	linux-acpi@vger.kernel.org, kernel-janitors@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] ACPI: APEI: EINJ: Fix check and iounmap of
- uninitialized pointer p
-Message-ID: <ba07c097-80e2-45e2-b579-fe270c04fabc@suswa.mountain>
-References: <20250624202937.523013-1-colin.i.king@gmail.com>
- <31b6548f-8ff7-4bc5-8a2c-78a5a9d5eb40@suswa.mountain>
+        d=1e100.net; s=20230601; t=1750852279; x=1751457079;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uRfQCMJPJ6I6xt/lsb5RiX86zBh0KuNZA9Flm5VJRyQ=;
+        b=MZgqr455GKz11eH8U+j7UZsfd8/uGQY5zO/JAI/cBocVGA3pzwFmaN4xsp/YjeT+1m
+         adpIH7nfPM5As9iju+USeZiwJ/ksmLIr2bcapu1DCZ9bQxTnKxTSFhPjOSNzC9ZSYW1+
+         ePvuo1g0KWwnrMJbA/ECS7foB1jQITvRZOId2HTMLqJpMB9grS6iTf6lJKefsQoWdZaF
+         Z/oCSiD2pp/aXxxhd4UJHVHf1TidxqMVUkg89ORzMnJHPStZJSS2cLTsfCvc6WqDXziQ
+         5HzmkCScgVFawxNF+3zE5rRmRgjOLaMRN0QBnDKd2bKI3sFkDMIugBqtv8ZQJ5c24V+v
+         KAxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXLkeDGf13vKxSHsmPzdPEAkmVPg9NIE6FDSAo2vPl5fa/YalPiIMRnPIEdVglV8Z6hUFE3Fm6c6/47KhE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxB2rn59dyfDyfIbwZc6htmIsTj9HM+plEiak6yaxtAaR8UpwN+
+	vKkTPddMz2lV9WUfTATkO63Kd3fA9SWTMDmRoFKu34Nrd5IDtGcnHIWNj29iz5GM6SltJLfZP1O
+	L6xQmIO4R9vCleLrDPpk7obH4+/J2yBooohKXGgXxu6IDR1V8a7Qc5lv6z796Dw6a91M=
+X-Gm-Gg: ASbGncujrmTmF5BLI1rQ7OG/KJDzh4CqgAPWKmUzTPVV9Si2bppLf4HzOg8eMtRagK4
+	btxq+QszBhdKH9g1mjXYguUzp8OTxSkMwJ65yge1ONoUXQxUE5j/xzQYkxhEiKwzIcApASF98WC
+	seEDEgEY+AXO1hXQ+KsOF096C6ytGZqp9UB6rd5iEQ5Fe7onlv9wo0oBs7APu+99bATDUrwLNr0
+	Fg38wSflIRQLMStrOXrM+cqPY8tBZMUSPUZdeTYBJqoXbh3w18No1RPuJsVjEXnI85QJxw/hwwq
+	JyCy62gQRUb1XLb9G3qrEDSaMdTKyIjYmtiuiwCQP+TzmBJhgX2YVpNG1kOc7N3f80XQork+LbB
+	XUaU=
+X-Received: by 2002:a05:620a:4802:b0:7c5:8f36:fbeb with SMTP id af79cd13be357-7d42973e679mr128604185a.12.1750852279224;
+        Wed, 25 Jun 2025 04:51:19 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHccfvELeUXoP8b1jBpiU9AZeQNg48frmRiDDZy9qYIkV5bzxU9h6vBSLu6n9Ur83kyw9tsMQ==
+X-Received: by 2002:a05:620a:4802:b0:7c5:8f36:fbeb with SMTP id af79cd13be357-7d42973e679mr128601585a.12.1750852278731;
+        Wed, 25 Jun 2025 04:51:18 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c2f485d0asm2360299a12.64.2025.06.25.04.51.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 04:51:18 -0700 (PDT)
+Message-ID: <4d215791-35da-4139-9cc8-33da5d46469e@oss.qualcomm.com>
+Date: Wed, 25 Jun 2025 13:51:15 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <31b6548f-8ff7-4bc5-8a2c-78a5a9d5eb40@suswa.mountain>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/4] phy: qcom: phy-qcom-snps-eusb2: Add missing write
+ from init sequence
+To: Luca Weiss <luca.weiss@fairphone.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Wesley Cheng <quic_wcheng@quicinc.com>, Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Abel Vesa <abel.vesa@linaro.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-phy@lists.infradead.org
+References: <20250625-sm7635-eusb-phy-v1-0-94d76e0667c1@fairphone.com>
+ <20250625-sm7635-eusb-phy-v1-3-94d76e0667c1@fairphone.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250625-sm7635-eusb-phy-v1-3-94d76e0667c1@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: jPWVF7XpSxaQDD9HzL-FzRplBEgS2lJM
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA4OCBTYWx0ZWRfX2R5lwfxDI8BY
+ REqSv4IjAbc4WBIImvICzIpEY5F/dChd+GWp1D3B/AP0viBOOOThYacBMGiUli41T0zQBvdwOJs
+ Ci71zXsTrq0xnmcQ6895XDh4If4QpKj9O/psvn75pAwYgFLPLDDr6m76+bljU9G9hOQe6JhFmoY
+ 4itquA578KlOUGNbRLikhtz1ZzKlLSFRqIYWzGrv96TL+GoWTGA6beZrqQOaDbk0tEwT2c3AwgX
+ gsA3psyj5Aw+HDJDDvjQ6kvEtrXjuMuRTJYfEe2y7wcXugkIQxmpU2po0xRsV/c/oe7g/9nI1cB
+ TqcBM1IuRMEVyLZMUU6JC1nd07tZGvQeK1+lnhqsjNRk8VOjyjmi2FqUubygN6iRsEzk6v+wQG2
+ SSYpPhZm5DDHmqFXvJHRzd7l2ml4lMtD8SwwYMSIzRHJ+wrfD2VyVA6v0WhqtlyYAy3fWirK
+X-Authority-Analysis: v=2.4 cv=L4kdQ/T8 c=1 sm=1 tr=0 ts=685be2b8 cx=c_pps
+ a=hnmNkyzTK/kJ09Xio7VxxA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=qC_FGOx9AAAA:8 a=6H0WHjuAAAAA:8
+ a=EUspDBNiAAAA:8 a=SHKt8ETI8ElOVTnc0VsA:9 a=QEXdDO2ut3YA:10
+ a=PEH46H7Ffwr30OY-TuGO:22 a=fsdK_YakeE02zTmptMdW:22 a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-GUID: jPWVF7XpSxaQDD9HzL-FzRplBEgS2lJM
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_03,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ adultscore=0 priorityscore=1501 impostorscore=0 lowpriorityscore=0
+ spamscore=0 phishscore=0 mlxlogscore=999 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506250088
 
-On Wed, Jun 25, 2025 at 12:31:10AM +0300, Dan Carpenter wrote:
-> On Tue, Jun 24, 2025 at 09:29:37PM +0100, Colin Ian King wrote:
-> > In the case where a request_mem_region call fails and pointer r is null
-> > the error exit path via label 'out' will check for a non-null pointer
-> > p and try to iounmap it. However, pointer p has not been assigned a
-> > value at this point, so it may potentially contain any garbage value.
-> > Fix this by ensuring pointer p is initialized to NULL.
-> > 
-> > Fixes: 1a35c88302a3 ("ACPI: APEI: EINJ: Fix kernel test sparse warnings")
-> > Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
-> > ---
+On 6/25/25 11:14 AM, Luca Weiss wrote:
+> As per a commit from Qualcomm's downstream 6.1 kernel[0], the init
+> sequence is missing writing 0x00 to USB_PHY_CFG0 at the end, as per the
+> 'latest' HPG revision (as of November 2023).
 > 
-> Good catch.  Apparently this isn't in my allyesconfig.  It's weird the
-> zero day bot didn't catch this either.
+> [0] https://git.codelinaro.org/clo/la/kernel/qcom/-/commit/b77774a89e3fda3246e09dd39e16e2ab43cd1329
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
 
-Never mind.  This is definitely in my allyesconfig.
+Both the original and your commit messages are slightly misleading, the
+HPG (and the code which is indeed in sync with it after the change is
+made) only sets the value of 0 to BIT(1), a.k.a. CMN_CTRL_OVERRIDE_EN.
+You most definitely don't want to set the entire register to 0.
 
-regards,
-dan carpenter
+With that fixed:
 
+Fixes: 80090810f5d3 ("phy: qcom: Add QCOM SNPS eUSB2 driver")
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+
+Konrad
