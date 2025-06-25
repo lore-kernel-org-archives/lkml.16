@@ -1,210 +1,172 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2077.outbound.protection.outlook.com [40.107.92.77])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA451B042E;
-	Wed, 25 Jun 2025 16:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750869469; cv=fail; b=RGlNlI/fBLaq9475RFzhZkIG2fYj9tyW3rqejGyReqoGwjGZ8E31RDjwxYfjYYuxX53AXkghWnC6n+CMZyEggd2s6m5gHUtn4Aha7RyCOKRaTq8pX5UlwajlOM8M5OVWuloBZ9Ji9oRG8c6E5VkO3eAD9q6SEhYsElB2FXDgl/w=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750869469; c=relaxed/simple;
-	bh=lkqIu0r73iSw3SQbTtDPSwYMeK12QzVEy+bSuOUDxOw=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tEU4U2BMQPRl6I6NDLxqRpgbWU4/AaDu9rw+I5tNtiy8qaq6BCuJc437DgxX1EvnOiSV/oD3nyA5hEorNSRbMpsvnyJmNK90h7hSMZQ3uTEXzUk9+67PB1UACM1jfhV9HjW/WuGZQ5BXnTXqj9Znyq0yX0Wy+ts8zetS3en0Ys8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=aKZhS38X; arc=fail smtp.client-ip=40.107.92.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB78E2BFC95
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750869687; cv=none; b=Ttl0H/bHaxqKQwG1f3zGTmmVuXJN6j4q0YYoaTL2/ZbS0CwSPfcmw0CRumeD8w2f1hCU4TyAFauoSRb5NzQteFtrFR6AfWSDREH3/XRBT2NcTFTU64r4NUJij7zQ43Zeyn0Nlmu+T6UPJx4Xi2XWOKOjPVvSamfPicWHWisy+WE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750869687; c=relaxed/simple;
+	bh=J1G4wA185/RC88pABxfSgtgPkiCmT4wLJ8Skkm4M8e4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OaltcVlUl7HSkiItPVaR4CnHOnIi/dVdSwY+XpQbxSURll42T/02xtVgnoKRCPyLgN5ufvEpGD7/xSKR6kGVWAhVRi6v7Aohx+fPrJ6gGEQLxumSx6qB48GLjYWHtN3qVHopjuvBJFPsrKj4IqPcKU2pk4sZF91f3n4bV25kN6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=Zrh3HOUS; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="aKZhS38X"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TKsYDRCO9bLzG2z5QeZIw3QrrDrkyWGDtYiY37bbToZP9fybdhcP3vxk/uaYXxvQl2Vv6o94j7yNBa/DfTH/GoWJQtQj67wfR9J1akulYuha91THc7SvC6hugzs80KR/uvI7urG6PXgYE23U0Lc1Z6Tye7srUUMCvm3vkEK1X1L0ARg1OJpWPVi4/LW1F9aO8/r3Qfuj1SHZN8WeCV654IquzI9Eh5HBHDk9iUIo8Jvjb+vxA7scrrqOSqQ+ognadHmpJ2Yzti9tliKdTcWfvuxsxPqT/cgKyr9nGmRtujYcZClzwMtTu4CdFN2U1anDU/NnNdtlBdes+Et8cwU1/Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2FRdDfW53Pgtbfa+hoVwW0XlohWae4tQ9e4EtEpfn1g=;
- b=QNSp4ZKuWUdOVbY3k4p6qrsNMAocewgstX6Gla2Hfna2oVrie71vuz2+32tyK3YnjijhBNFGwJZdap8YpN9dkmjsykwmb3chktYFm9KaHPksnLz+y7oPR3lciQ210tqXmtk5Jmv4zadt9ugeXQbs+wTcG+mNdM11sy71i+DVxm5jD4ERu320l1ivkOEtEapmG6pVHF+V9AtI0L1tie26yKQJjUvFhS2VK2/RkFw9ra1XV8r85iP1jmFtOtfzg1SsZVegldPdRq8VDpfZ/Xl4cQqBX+Dpys1aOivVtHdcuXPHowpR7fLUlFYXxlHE91w7HAoLGpEIHDvTqgS59zLV1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2FRdDfW53Pgtbfa+hoVwW0XlohWae4tQ9e4EtEpfn1g=;
- b=aKZhS38Xs2i7TB5xikyrmYnSJ4YK3B5/KhWLz81GQZ7gTo0j1lkH1OdI35TOHKqP1vcPpW94XRqH93N/pL8IeTrvL0ot9F1UKTTr3QnMFStiNhrg185/Vlb4eQYpd7Zjq02rmQzeWsDfaA2xknhU01sC//J7UYodJEOfHoZPOumwbyC9kmYNy7Qa1pMh2TyKubq7YTY/xz518wkvO8J4NWqi1N+1tdQYBPcqYNJMyrvZ0W2Moa+e8/zWiDxsUHnYUy48rI1+ebSHDuu3vPHqP4zmuzrBuxv9edMmDpsqjBFuBRMh832YDTbffycsVaErPfyB39rrUmdItRbcSC6E4Q==
-Received: from BN1PR14CA0020.namprd14.prod.outlook.com (2603:10b6:408:e3::25)
- by MW6PR12MB8734.namprd12.prod.outlook.com (2603:10b6:303:249::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.22; Wed, 25 Jun
- 2025 16:37:42 +0000
-Received: from BN1PEPF00006003.namprd05.prod.outlook.com
- (2603:10b6:408:e3:cafe::d) by BN1PR14CA0020.outlook.office365.com
- (2603:10b6:408:e3::25) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.29 via Frontend Transport; Wed,
- 25 Jun 2025 16:37:40 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BN1PEPF00006003.mail.protection.outlook.com (10.167.243.235) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8880.14 via Frontend Transport; Wed, 25 Jun 2025 16:37:40 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 25 Jun
- 2025 09:37:18 -0700
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 25 Jun
- 2025 09:37:18 -0700
-Received: from Asurada-Nvidia (10.127.8.13) by mail.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Wed, 25 Jun 2025 09:37:16 -0700
-Date: Wed, 25 Jun 2025 09:37:15 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-CC: "jgg@nvidia.com" <jgg@nvidia.com>, "corbet@lwn.net" <corbet@lwn.net>,
-	"will@kernel.org" <will@kernel.org>, "bagasdotme@gmail.com"
-	<bagasdotme@gmail.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"joro@8bytes.org" <joro@8bytes.org>, "thierry.reding@gmail.com"
-	<thierry.reding@gmail.com>, "vdumpa@nvidia.com" <vdumpa@nvidia.com>,
-	"jonathanh@nvidia.com" <jonathanh@nvidia.com>, "shuah@kernel.org"
-	<shuah@kernel.org>, "jsnitsel@redhat.com" <jsnitsel@redhat.com>,
-	"nathan@kernel.org" <nathan@kernel.org>, "peterz@infradead.org"
-	<peterz@infradead.org>, "Liu, Yi L" <yi.l.liu@intel.com>,
-	"mshavit@google.com" <mshavit@google.com>, "praan@google.com"
-	<praan@google.com>, "zhangzekun11@huawei.com" <zhangzekun11@huawei.com>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>, "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-tegra@vger.kernel.org"
-	<linux-tegra@vger.kernel.org>, "linux-kselftest@vger.kernel.org"
-	<linux-kselftest@vger.kernel.org>, "patches@lists.linux.dev"
-	<patches@lists.linux.dev>, "mochs@nvidia.com" <mochs@nvidia.com>,
-	"alok.a.tiwari@oracle.com" <alok.a.tiwari@oracle.com>, "vasant.hegde@amd.com"
-	<vasant.hegde@amd.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>
-Subject: Re: [PATCH v6 06/25] iommufd/access: Allow access->ops to be NULL
- for internal use
-Message-ID: <aFwlu7FlfIP85gko@Asurada-Nvidia>
-References: <cover.1749884998.git.nicolinc@nvidia.com>
- <e6a989c4dd9cb94aa4a98d46ed56a2afcb41b70d.1749884998.git.nicolinc@nvidia.com>
- <BN9PR11MB52766D0C0B12F1F10A6BE7548C7BA@BN9PR11MB5276.namprd11.prod.outlook.com>
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="Zrh3HOUS"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7d38d562a55so5083885a.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:41:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1750869683; x=1751474483; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tDCKEZvvy/u8mP8K+Ymdr+bMEt+s7GIZAgO/5a0i/oc=;
+        b=Zrh3HOUSnh9X3Mi06r+O5wAyrlxTqvX5qejNnuGMcNOFYuLVNOIOAC2v+LOATfid8F
+         P690xyYFui6ZS2y7b3qViATLMWtyxnUh/tjwOgGJjuR4kZudjTn7RZJsIv0QwULQgPt0
+         Fm4Om5hynBeBioGll3q7l9lCrLOHX6vIMs25iLAfC4rEfqsGWxaQSUabWqTqVhAFNkar
+         CBU9YImOSVPHgVHQ4KBS3WvGc+N6kK5Xj+S3I6EDUCvvxkIwnijbjaAy39Tw6DfMVOn5
+         pOF66nan/wpxv60KDDiGRvm+Ua5CvelAr3sl5CRQmKcx5nrYCSOT4iGOx6bGYbYk6c7r
+         lKUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750869683; x=1751474483;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tDCKEZvvy/u8mP8K+Ymdr+bMEt+s7GIZAgO/5a0i/oc=;
+        b=Ah/But7EFwCqtv1A1/3JRX6XgIyx+IBoO7JuqGQ2ZynHCh30Bvs0b8OC4Q/fF41j7V
+         odKSuwP6vw5rjDBBZ2+T0MARvs3u7ZVLle9ZPKdVqjMbM8rGshl/0QC3vHsH5VGLIwQ6
+         q9UAYRyST/b6FxxbOPMKRLQbJWS6GYJ2T5jfZz9o3ogGH2xG/BAn3UhrArdUrynjM47D
+         aI+kyBGDKPAuJEyv9PviP3AnfZf2oSb/ONjFthSAgl0vfQJClR9PvKN0eOdYR0BVqVAy
+         ckmiaujch1HIFND2C3Dz1E6feDLXnWDHexyND05iyDlsKTiJXEuhWHO39Fx4caENFpje
+         jxfw==
+X-Forwarded-Encrypted: i=1; AJvYcCWL4dp6EB+X+I8rp/evhV5jFK1p9xrc07DA8ycO/aED1SEL5uxu+8g10B0l2w2tbIJcljsJOwpQcKLcQ1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNEgizTlMpv+/N8gBtpRW73DjggvVu60r62lhpYEwEdO7wI2Dz
+	amWrob0QJchHCFuGiootQnGeLmv8ps/nye8jP0ppQ8mUbHSHLOLYuVHmCiZBiejxCoA=
+X-Gm-Gg: ASbGncsBjmA2uSYDURLQJTYOyR2+6k9Zj/3Ai8ksGzeH2jcvLAQox7YnjefhCdgL8Dt
+	TEVTdsYranX2QthZ6+we3hB7OblvCJN0PgW0ZttLCItzICMOaSDx3eVF5ZslPdhCYn006LKZ+jR
+	JaduWQPTJuQVTQd/7xvTXxiY9El/6IrBcmzNXLTDzIoiB6ZqgHbLgRoAxvrbv0yw65kuevJE+ei
+	5Wv7quTMRmGp5rQw44JXruoVhUqa4CtnVyviJ/Es9aNMBdIqR01IV4KctpXMG9xqLWVtrfgbcgc
+	GFuD9kt5kVWLMnQACfqip6EDqyeSJC3vz32IcHXshqzDUKpWitW3AS8PbgxrmeQ7yNOcPczvyjC
+	oYAw5s53gewyNedNOxALjySp1FJJm0lGehvlxNQPoj7unxA==
+X-Google-Smtp-Source: AGHT+IF0qAzBR+5ebXXveqzmLr/2w4QQCNXjecbTJ4SgCA/yOFBNe+rVWxWjr5FO7bLbStXLn3XERQ==
+X-Received: by 2002:a05:620a:40cb:b0:7d3:f1ff:5bac with SMTP id af79cd13be357-7d42972ce65mr495536885a.27.1750869683376;
+        Wed, 25 Jun 2025 09:41:23 -0700 (PDT)
+Received: from localhost.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3ffdb190esm576783085a.86.2025.06.25.09.41.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 09:41:23 -0700 (PDT)
+From: Alex Elder <elder@riscstar.com>
+To: lee@kernel.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	alexandre.belloni@bootlin.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: mat.jonczyk@o2.pl,
+	dlan@gentoo.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	alex@ghiti.fr,
+	troymitchell988@gmail.com,
+	linux-rtc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	spacemit@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/7] spacemit: introduce P1 PMIC support
+Date: Wed, 25 Jun 2025 11:41:11 -0500
+Message-ID: <20250625164119.1068842-1-elder@riscstar.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB52766D0C0B12F1F10A6BE7548C7BA@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00006003:EE_|MW6PR12MB8734:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4eefc242-9aff-4b28-deec-08ddb40699fa
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|36860700013|1800799024|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?zBMI1Yx5F8fjJKh8M2EynXwgt9uMyjR9J03J5MlRJX7doRRRownlvueoXFDm?=
- =?us-ascii?Q?doANt+Qn4VabCqt7kBwBjFhFtM2cJ6qZ5BjwLzYJwmoeywanXf1uNRpGWS9+?=
- =?us-ascii?Q?fjyEyTO8b3k/rPwtRqyQXG3Qrvtk0oDn/HGMSYO5kdFIIRYlH9yhwvWWHLRX?=
- =?us-ascii?Q?2MFgi+jZMovnIItx960h9cPnOm/qXyrX52A91WWtNuljUNjA7kX8uHNrHCPp?=
- =?us-ascii?Q?bmxGuqpUaCOQ80geMlHeVM7cIkD1GQkY2AT1PnsRolhFWnhPCHEjBa8fnKgx?=
- =?us-ascii?Q?zJD+HSN9idjS+MmCTAus5zy7VUVDl5x+7kHSVWQKE+wAM0At7YyhzLhYYwpG?=
- =?us-ascii?Q?Fl8LCvmwk29w/5Efe+bjuJu9g3Z6HnIoJjFquyYFZWq72PML/3NZdmybeaLh?=
- =?us-ascii?Q?pzn3gv8bSYQqnjwbilPcRO0098c9B6Z685h6go6hGSYnlisILk0lo1LQRaJ6?=
- =?us-ascii?Q?Wf7CiR9x3y8wqEpGOVpbFuAKGY2MvPuMQaC1o4pDXXQ+tHqlPGnIr8waMqpp?=
- =?us-ascii?Q?ndWwE3r4itxWVoZitWVzYS2rL/sZ6XJZ45aAp4nHm/Iqky60RdzhB6qKxul+?=
- =?us-ascii?Q?+1inMxecXRrAzDOsOf230oDsCqyIP72ViBamEBY4OGcmscLasqRVni4tMULJ?=
- =?us-ascii?Q?Hqqu+jkQDQfH5T7GjN442W/4hFVLIsDOdGlFjOw3poz/+FOq9ir+4hz/xU7n?=
- =?us-ascii?Q?yd/vcAgb/dEAuKeRiW6TXyPBNCbr155UBOL1vDf6lXGnmJ8ssML+DJt+CDiD?=
- =?us-ascii?Q?CR+wMnqtbuX1lzZyYKZGpp9w5EeLP3cz1pJBytOCoZ3wS2L3dYFeXwlS3UmY?=
- =?us-ascii?Q?NwqjZciCW0OJF4oMxvsq2AxKuiaJUkysv9hBCdeAWdD5GAtvMuJewqZ3YITJ?=
- =?us-ascii?Q?kVsPZ8OkIvq6uUA+4Kt4vbojS9ureLHmdIvTKQJ+iwZvmdbBbH9lcrmqFU88?=
- =?us-ascii?Q?nW9kwmulFn+HWFdm2ppN4NQ4X4HTeAM6pxggffOUajlGkVt7BtriKwx6ZY/B?=
- =?us-ascii?Q?+vpAV6hNeX8eeFh45K/mYF80sGkbQovWLWqQ6sJaOSW78PRsOL3n+WnzU3a5?=
- =?us-ascii?Q?I4tBFhiZ7oEhG9MxrJXJg6W+5dTVjLQ5o7jfIcEbkFZTN7z9F2DzFzU/5xlb?=
- =?us-ascii?Q?+9woYA8AORUCa+5DlwW0knBXBUsy3AbC0iArft7fJzhbLQPWVKENORhJsnXI?=
- =?us-ascii?Q?AicKerpDKMEbg4gf7sW0DQ1jWHUat5/RsoMafIAJiszPwEZq5RggxCjtPYsw?=
- =?us-ascii?Q?2MvsuNFMEbMfesqHx/SPjlhi1dlIps3QhvTfv3cHcoOfwCOYQXhe5/hcnEyz?=
- =?us-ascii?Q?U24kftwRueap/ft3HAHf47eUxfZ/XudT1wwk2/s1ZdR9djksaXJVHlMnek5r?=
- =?us-ascii?Q?AWBuS+m6EJER2zQh4+bBkVwjkf4C7HkwsRherBlKeL9K6qiPmEe/qan1r6Hi?=
- =?us-ascii?Q?5Uf/yMt147HziCdbeS56ZlU1TVBlNmPCkq/UsHM8M9I8iwKqzHOAapjEwAmN?=
- =?us-ascii?Q?3R8jWW4v0B5NHbbiSkiPN+MOA6YF2hDyWyCr?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(1800799024)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 16:37:40.0726
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4eefc242-9aff-4b28-deec-08ddb40699fa
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00006003.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR12MB8734
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25, 2025 at 03:38:19AM +0000, Tian, Kevin wrote:
-> > From: Nicolin Chen <nicolinc@nvidia.com>
-> > Sent: Saturday, June 14, 2025 3:15 PM
-> > 
-> > +int iommufd_access_notify_unmap(struct io_pagetable *iopt, unsigned long
-> > iova,
-> > +				unsigned long length)
-> >  {
-> >  	struct iommufd_ioas *ioas =
-> >  		container_of(iopt, struct iommufd_ioas, iopt);
-> >  	struct iommufd_access *access;
-> >  	unsigned long index;
-> > +	int ret = 0;
-> > 
-> >  	xa_lock(&ioas->iopt.access_list);
-> >  	xa_for_each(&ioas->iopt.access_list, index, access) {
-> > +		if (!access->ops || !access->ops->unmap) {
-> > +			ret = -EBUSY;
-> > +			goto unlock;
-> > +		}
-> 
-> then accesses before this one have been notified to unpin the area
-> while accesses afterwards are left unnotified.
-> 
-> in the end the unmap fails but with some side-effect incurred.
-> 
-> I'm not sure whether this intermediate state may lead to any undesired
-> effect later. Just raise it in case you or Jason already thought about it.
+The SpacemiT P1 is an I2C-controlled PMIC that implements 6 buck
+converters and 12 LDOs.  It contains a load switch, ADC channels,
+GPIOs, a real-time clock, and a watchdog timer.
 
-That's a good point. When an access blocks the unmap, there is no
-unmap happening so no point in notifying devices for ops->unmap.
+This series introduces a multifunction driver for the P1 PMIC as well
+as drivers for its regulators and RTC.
 
-And, when the function is re-entered, there could be a duplicated
-ops->unmap call for those devices that are already notified once?
+This version primarily updates the RTC code (in patch 4) based on
+review feedback.  It also adds adds a dependency in patch 2, to
+ensure the MFD_SIMPLE_MFD_I2C dependencies are met when selected.
 
-So, if we play safe, there can be a standalone xa_for_each to dig
-for !access->ops->unmap. And it could be a bit cleaner to add an
-iommufd_access_has_internal_use() to be called under those rwsems.
+This series is available here:
+  https://github.com/riscstar/linux/tree/outgoing/pmic-v4
 
-> >  			/* Something is not responding to unmap requests.
-> > */
-> >  			tries++;
-> > -			if (WARN_ON(tries > 100))
-> > -				return -EDEADLOCK;
-> > +			if (WARN_ON(tries > 100)) {
-> > +				rc = -EDEADLOCK;
-> > +				goto out_unmapped;
-> > +			}
-> 
-> this looks an unrelated fix?
+					-Alex
+Between version 3 and version 4:
+  - I got confirmation from SpacemiT that the RTC hardware does not
+    implement the "latch" of registers as documented, and updated the
+    RTC code accordingly (looping on read)
+  - The RTC set_time() callback now returns an error value if one is
+    reported when a regmap write re-enables the RTC
+  - Renamed the RTC Kconfig option to be RTC_DRV_SPACEMIT_P1
+  - Renamed the RTC source file be "rtc-spacemit-p1.c"
+  - Replaced an RTC enumerated type with simple numeric indices
+  - A message is no longer reported when devm_rtc_register_device()
+    returns an error in the RTC driver
+  - CONFIG_MFD_SPACEMIT_P1 now depends on I2C, to avoid a build error
+        
+Here is version 3 of this series:
+  https://lore.kernel.org/linux-rtc/20250622032941.3768912-2-elder@riscstar.com/
 
-Yea.. let me separate it out.
+Between version 2 and version 3:
+  - Removed "spacemit-pmic.c" and updated "simple-mfd-i2c.c" instead
+  - Added an RTC driver, so that the MFD has more than one sub-device
+  - Other suggestions were directed at "spacemit-pmic.c"
 
-Thanks
-Nicolin
+Here is version 2 of this series:
+  https://lore.kernel.org/lkml/20250613210150.1468845-1-elder@riscstar.com/
+
+Between version 1 and version 2:
+  - Added Reviewed-by tag from Mark Brown to patch 3
+  - Implemented suggestions from Vivian Wang:
+      - Fixed a typo in the subject line in patch 1
+      - Now use module_i2c_driver() for the PMIC driver in patch 2
+      - Added MODULE_ALIAS() for both drivers (patches 2 and 3)
+      - Defined and used DRV_NAME in both drivers
+      - Added additional Kconfig module help text for both drivers
+
+Here is version 1 of this series:
+  https://lore.kernel.org/lkml/20250613210150.1468845-1-elder@riscstar.com/
+
+Alex Elder (7):
+  dt-bindings: mfd: add support the SpacemiT P1 PMIC
+  mfd: simple-mfd-i2c: add SpacemiT P1 support
+  regulator: spacemit: support SpacemiT P1 regulators
+  rtc: spacemit: support the SpacemiT P1 RTC
+  riscv: dts: spacemit: enable the i2c8 adapter
+  riscv: dts: spacemit: define fixed regulators
+  riscv: dts: spacemit: define regulator constraints
+
+ .../devicetree/bindings/mfd/spacemit,p1.yaml  |  86 +++++++++
+ .../boot/dts/spacemit/k1-bananapi-f3.dts      | 138 ++++++++++++++
+ arch/riscv/boot/dts/spacemit/k1-pinctrl.dtsi  |   7 +
+ arch/riscv/boot/dts/spacemit/k1.dtsi          |  11 ++
+ drivers/mfd/Kconfig                           |  11 ++
+ drivers/mfd/simple-mfd-i2c.c                  |  18 ++
+ drivers/regulator/Kconfig                     |  12 ++
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/spacemit-p1.c               | 157 ++++++++++++++++
+ drivers/rtc/Kconfig                           |  10 ++
+ drivers/rtc/Makefile                          |   1 +
+ drivers/rtc/rtc-spacemit-p1.c                 | 169 ++++++++++++++++++
+ 12 files changed, 621 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/spacemit,p1.yaml
+ create mode 100644 drivers/regulator/spacemit-p1.c
+ create mode 100644 drivers/rtc/rtc-spacemit-p1.c
+
+
+base-commit: 1b152eeca84a02bdb648f16b82ef3394007a9dcf
+-- 
+2.45.2
+
