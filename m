@@ -1,131 +1,190 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D427225EF8F
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCF92620C6;
+	Wed, 25 Jun 2025 12:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750854355; cv=none; b=gNUx7Wbhsw2uxGa4p8Rnmtkt8Yi5GSzhc5V+dK2Qx6NDrZAdqGySFKOjSQvHAmgQhN3cXa6BPjKZfZBWeefjsvS79yL5fbLcLTaYSknVO2AqOH/XXYNgiYCz145s44U5BbSGgUpCa0L/ZAY1bCdqelvx+zdV0XrigWEQbOw8sA0=
+	t=1750854359; cv=none; b=sjJfe6fu563zjoaMnR56x9F8fTjJOt3znFdUkMBVdjwBqX0Toeb+wN09RBpMAjPIA9p5cnhUT+9aImMiPPQkWH/+7yq3Ua9BUIAL95dGp4wTUj6cUK4NpVWg7hbgysWnLQuae9myGludAPfYHu9X2tw32oNzIjCGLTSFasd9Dcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750854355; c=relaxed/simple;
-	bh=g7tVhWNQEWOrEFO+Wx+fLCWSoQW9KQpcO66Pz2aMF+U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k7Tk58QDkLlKAzaqUQuz/Fq3Pa42i8Q8iJ39x9xWDISbOxj5ahHGDZEy9/YFToCfe7adjOliIDTSvfjWjfYoDWQzUgwOQ0hdzWOEkYMxgM2bZCAqbMB8mNVK2a0vtlVlfbZntXIEHMP5P1EpsuNOEjfa/XWMxl1/Yu9t4IYQHjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DdF044ut; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750854359; c=relaxed/simple;
+	bh=UelFFzS6oG348I5p+iwzQ7UsbLQUt8E4BBEkP+5q0xE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=bVVglwwRCNP+bfWUUAAAURIR305HMRAKyT55Eio53pc7pFiXndwWv92Kty22ig9gT3lzThXAZtZVG/foCLQfVc6L9tgo6LIS/XCbrmdsF9uNr7sLcyujxPjWZm9b2mLe78URGapUjxDdB1nLubYrsNdQeJFmokYsnk3ko+Nhb5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UxzgGl28; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DdF044ut"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-453676c2dd3so29915e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:25:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750854351; x=1751459151; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ORz82HmG8MePjwyhjUnw+YyKg1bZgQsmMoLl2/yzhQE=;
-        b=DdF044utWLhen4IDAR3o480S+J5DSLEipmMSI/AlEffg0Nb0MpMeMgm6I0R+9u9nlI
-         uT2Y5wfZ5Q7gE6tuzZYyUGmJrceBcReTkfff9y2rt+HVuBNVBl6rX6KZpV38raoctLCJ
-         uhYEPIZMryYwJiXXsDRi5vCovWuMmYfhFbcQYkpaZxm//ty4ofbctXiku4JQXE37nIHw
-         IpDuhpZf0AvOqjD6SYNhNmZaWLdm2N2pyK0zv5i6HPIYYQDMKx6/bJii9JqsiPBeijG3
-         qu4EfmKw87xOiCsUXjfE3jthlWRcD+GGb7JnRv9gIOXiEsQIA+2cOdp2JDNnYP0QsfSK
-         ccfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750854351; x=1751459151;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ORz82HmG8MePjwyhjUnw+YyKg1bZgQsmMoLl2/yzhQE=;
-        b=fZr+DYM0oT8hlFTApEyIGpYdaew79nbxUGyA0k2Z9b8oCTC8GhfM/RopyzQupu1CBr
-         fXJ+JJ7y3XMTUjKQ8uPqeyq8UW2LCElt+dkCK8LrO9oXzzBUk5WDjoswnTmKVFMzLD/A
-         V1c4z8Fb7mGPa3dxqnWZ+VE0DYkhi4ue5AUZDPpI9wXYg0I707o5xmdnjUbeJ8J66lzW
-         uAENCmVc+kPYM/qo3YdoMYNloB2t2wn0IKGOI6jIPgUzSmg1wu+G9650lCJpBhkXKYCJ
-         OwmuOWhLHqdqNmrdPYv6SscGs6qfaRmpXTjcMbwJfpqC6rq+NU11XuJXWit0+Bv4Ez0o
-         F48A==
-X-Gm-Message-State: AOJu0YwXIGIT7Yqjz0YAwdbS2FuJxShiYjnuWCAzUoM/+amNrMir/UAy
-	ZyP8Bw1PDDp4anhiSioEgdId/etV/PnRera/j9yR0UpmOw/4boyOeLV35pvOK9KUdoBNKAy9Cej
-	52Rxitw==
-X-Gm-Gg: ASbGncvLeUmOums2LlyH59TG+Bq/jhK3tMhpxJ31fEoPCUQrQIRrX4dRrcWfALFKnIe
-	9HneSlBpL8bUm1vnE5T91mIhb7lm20Ob3sNZi9yoP2gfywHbnzRekjbMX4aEujpm1iBxtLjvH+z
-	06q64WyO8NDtZm6VUXgGavODNacLzeUnCno+DRlCnAEUFgmq7uIyeGV/Lj1jJ0fgtU0f4nT+QFB
-	HTebXoZ9Be8QB1vXfY6xtSoQFNcBNVP6x1xMTvAxquJ6mPUHjpzdaDmFef7qRwHptv5aWAl2/GY
-	yTua8EqYkL6pqzoxFDhVGklekwCALZy+UD256AXyRj0hFv9UmdKg2XBEFA5KYDZh2qLXFJwSMh8
-	TTXr36r9jHRLRPl+wIP/pxQsL4FjPXERh6c8=
-X-Google-Smtp-Source: AGHT+IHPyu4K7DFqX3gLjlWDl8SuaCVRLnWxYtuvRdiGcRhqnltdTavombWZNicSNu6nwKbmjbZ0JQ==
-X-Received: by 2002:a05:600c:c04f:b0:453:65f4:f4c8 with SMTP id 5b1f17b1804b1-45383195f5emr555595e9.3.1750854350879;
-        Wed, 25 Jun 2025 05:25:50 -0700 (PDT)
-Received: from google.com (206.39.187.35.bc.googleusercontent.com. [35.187.39.206])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8069467sm4409880f8f.42.2025.06.25.05.25.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 05:25:50 -0700 (PDT)
-Date: Wed, 25 Jun 2025 12:25:46 +0000
-From: Mostafa Saleh <smostafa@google.com>
-To: Quentin Perret <qperret@google.com>
-Cc: linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org, maz@kernel.org,
-	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
-	yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org
-Subject: Re: [PATCH] KVM: arm64: Fix error path in init_hyp_mode()
-Message-ID: <aFvqyl-Xquuoyvh1@google.com>
-References: <20250625113301.580253-1-smostafa@google.com>
- <aFvqFdwNYI0-3zWY@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UxzgGl28"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750854358; x=1782390358;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=UelFFzS6oG348I5p+iwzQ7UsbLQUt8E4BBEkP+5q0xE=;
+  b=UxzgGl289mI74ztyE2fLmrW1ZUM/6b6qqF6NmPBJN9qMUugEA+J7EhUI
+   Ue2oPIqyhQQDK0G/AhsWdhHC3IbftHSZdPEAiZaehq7gN2KzKNrNp1edf
+   N/AjTifabSvAhpkFAGNs+zXfnqmiXfBFWFMqVJeovMshzmlU5uAKIR9o5
+   a+Irjb2CJp9pUsxlFbzCdGgCD9JY5hpl1FdLP5/bJssxvDDm+rubd1d7L
+   aMcAqHfh0LYQpZBYD4B9PhI9ZGGSh6YgjGs5nPJDmUrwwUnoF5GBx3zFz
+   1lby0iRRBSVQdsVNxd2FcliHtUuBeA5cxWFFAuzMdW8FlupxOObYwMLaf
+   w==;
+X-CSE-ConnectionGUID: zL2FNZxoSq+VmBNQU/n6Ag==
+X-CSE-MsgGUID: HvNEZM/iTwG0xKgqV/l1zg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52986242"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="52986242"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:25:58 -0700
+X-CSE-ConnectionGUID: WMV3rIyxTsCWayKt9r5iZQ==
+X-CSE-MsgGUID: +5mhL3uxRK24tvclepUM3w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="156776317"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:25:56 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Wed, 25 Jun 2025 15:25:52 +0300 (EEST)
+To: Xiang Shen <turyshen@gmail.com>
+cc: Hans de Goede <hansg@kernel.org>, acelan.kao@canonical.com, 
+    platform-driver-x86@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] platform/x86: intel-vbtn: Fix code style issues
+In-Reply-To: <rzzqmdogpedswwzdjutskz2ik5duik7c2u433csogl5g4rptdr@nrzck7xdvdcg>
+Message-ID: <2f19dda5-a814-8572-2d5f-e851d6a747d4@linux.intel.com>
+References: <20250620003849.54442-1-turyshen@gmail.com> <fdb9c21f-aada-498a-92ec-bc48aceeb76e@kernel.org> <hlsev7jydwejtdlyay6e6f53yorf2aguhxykscuukqfxugg7ff@hmmpcg7s4sx6> <83b27cc9-3544-4fd5-4ece-a46f422ec6fe@linux.intel.com>
+ <rzzqmdogpedswwzdjutskz2ik5duik7c2u433csogl5g4rptdr@nrzck7xdvdcg>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFvqFdwNYI0-3zWY@google.com>
+Content-Type: multipart/mixed; boundary="8323328-1185872638-1750854352=:944"
 
-On Wed, Jun 25, 2025 at 12:22:45PM +0000, Quentin Perret wrote:
-> On Wednesday 25 Jun 2025 at 11:33:01 (+0000), Mostafa Saleh wrote:
-> > diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
-> > index 38a91bb5d4c7..5bb36c3b06b5 100644
-> > --- a/arch/arm64/kvm/arm.c
-> > +++ b/arch/arm64/kvm/arm.c
-> > @@ -2344,15 +2344,22 @@ static void __init teardown_hyp_mode(void)
-> >  	int cpu;
-> >  
-> >  	free_hyp_pgds();
-> > +	/* Order matches the order of initialization init_hyp_mode() */
-> >  	for_each_possible_cpu(cpu) {
-> > +		if (!per_cpu(kvm_arm_hyp_stack_base, cpu))
-> > +			continue;
-> >  		free_pages(per_cpu(kvm_arm_hyp_stack_base, cpu), NVHE_STACK_SHIFT - PAGE_SHIFT);
-> > +
-> > +		if (!kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[cpu])
-> > +			continue;
-> >  		free_pages(kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[cpu], nvhe_percpu_order());
-> >  
-> >  		if (free_sve) {
-> >  			struct cpu_sve_state *sve_state;
-> >  
-> >  			sve_state = per_cpu_ptr_nvhe_sym(kvm_host_data, cpu)->sve_state;
-> > -			free_pages((unsigned long) sve_state, pkvm_host_sve_state_order());
-> > +			if (sve_state)
-> > +				free_pages((unsigned long) sve_state, pkvm_host_sve_state_order());
-> 
-> I'm a bit confused by these extra checks -- free_pages() should be safe
-> to call on NULL?
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Yes, I surprised in my testing I didn't see an issue with freeing NULL, I
-though it might be config related, but I should have looked more.
+--8323328-1185872638-1750854352=:944
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 
-> 
-> IIUC correctly, the actual issue is that per_cpu_ptr_nvhe_sym() will
-> dereference the per-cpu pages to find the sve state, which is entirely
-> bogus if the per-cpu pages have not been allocated. Now, looking at
-> this, it looks like the bigger problem is that we literally free the
-> per-cpu pages right before the sve state...
-> 
-> Should we at least change the freeing order here?
+On Wed, 25 Jun 2025, Xiang Shen wrote:
 
-Make sense, I will fix that in v2.
+> On Tue, Jun 24, 2025 at 01:35:57PM +1000, Ilpo J=E4rvinen wrote:
+> > On Sun, 22 Jun 2025, Xiang Shen wrote:
+> > > On Fri, Jun 20, 2025 at 12:00:03PM +1000, Hans de Goede wrote:
+> > > > On 20-Jun-25 2:38 AM, Xiang Shen wrote:
+> > > > > Fix checkpatch code style errors:
+> > > > >
+> > > > > ERROR: do not use assignment in if condition
+> > > > > +=09if ((ke =3D sparse_keymap_entry_from_scancode(priv->buttons_d=
+ev,
+> > > event))) {
+> > > > >
+> > > > > ERROR: do not use assignment in if condition
+> > > > > +=09} else if ((ke =3D
+> > > sparse_keymap_entry_from_scancode(priv->switches_dev, event))) {
+> > > > >
+> > > > > Signed-off-by: Xiang Shen <turyshen@gmail.com>
+> > > >
+> > > > Thank you for your patch, but this change really does not make
+> > > > the code more readable.
+> > > >
+> > > > The contrary the suggested changes are making the code harder
+> > > > to read, so NACK.
+> > > >
+> > > > Note checkpatch is just a tool, sometimes there are good reasons
+> > > > to deviate from the style checks done by checkpatch.
+> > > >
+> > > > Next time when submitting a patch to fix checkpatch issues please
+> > > > take a look at the resulting code after the patch and only submit
+> > > > the patch upstream if it actually is an improvement.
+> > > >
+> > > > Regards,
+> > > >
+> > > > Hans
+> > > >
+> > > Hi Hans,
+> > >=20
+> > > Thanks for the feedback.
+> > >=20
+> > > That's fine if breaking the "rule" is the only way to keep the file
+> > > readable.
+> > >=20
+> > > However, there are only three files (x86/sony-laptop.c and
+> > > x86/dell/dell_rbu.c) out of 273 files in the whole drivers/platform
+> > > folder that have such an error.
+> >=20
+> > Hi,
+> >=20
+> > Please don't call correct code "error" even if checkpatch may label it =
+as
+> > such. The goal is NOT and will never be to have zero checkpatch warning=
+s.
+> >=20
+> > The fact that the checkpatch "rule" is broken only a few times does not
+> > mean those 3 places have a problem, it just tells it's good rule for th=
+e
+> > general case. So I won't accept using such numbers as a leverage agains=
+t
+> > the few places just for the sake of silencing checkpatch.
+> >=20
+>
+> I just thought there must be a reason that the checkpatch categories find=
+ings
+> as "ERROR", "WARNING" and "CHECK".
 
-Thanks,
-Mostafa
+The checkpatch change submitter just picked one of the levels. They're=20
+humans too. :-)
 
-> 
-> Thanks,
-> Quentin
+> Sometimes the number does make sense and means the vast majority
+> follow the widely accepted "rule".
+>
+> Curiously, isn't it the contributor's due diligence to pass checkpatch
+> in the first place before sending?
+
+Hey, that code you're changing is not being submitted. We don't want to=20
+waste our time on "fixing" checkpatch warnings on existing code when the=20
+"fix" results in worse readability that before.
+
+Also, if you would be submitting a patch and checkpatch suggest you=20
+to make the patch worse, please don't follow checkpatch's advice even in=20
+that case!
+
+Checker tools are there to help find potential issues, not rulebooks. This=
+=20
+is often overlooked by many checker tool focused developers and results in=
+=20
+low quality patches (there are exceptions too where they developer really=
+=20
+tries to understand all the related code to see if the change makes sense=
+=20
+/ improves things or not).
+
+> Should any objection, submit a patch to
+> checkpatch itself,
+> instead of sneaking into the upstream quietly for the sake of "readabilit=
+y".
+>
+> > > Perhaps there are other approaches to make them more readable without
+> > > breaking the rule.
+> >=20
+> > Perhaps, but I'm not sure the effort spent to find one is worthwhile
+> > investment.
+> >=20
+>=20
+> Indeed, that's precisely why it might be worth sacrificing a bit of
+> "readability".
+
+Please stop trying to sneak your subpar change in.
+
+NO, this a hard NO from the acting maintainer. We'll not be accepting=20
+misguided changes that are to silence ANY checker that should have know=20
+better (those checkers will never learn enough to be relied 100% so=20
+please stop spreading such illusion).
+
+
+--=20
+ i.
+
+--8323328-1185872638-1750854352=:944--
