@@ -1,108 +1,166 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mailrelay6-3.pub.mailoutpod3-cph3.one.com (mailrelay6-3.pub.mailoutpod3-cph3.one.com [46.30.212.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EBDF1EF39E;
-	Wed, 25 Jun 2025 06:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB2957F9
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.212.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750832947; cv=none; b=MjLn0hAmX7cqF9rNdZWvjv2Ypw+b+N6682jO3DMDzP2EZ+Q/AlRT4X5STHaiEVmXV/twh/71A0/ylqwVjTEpySUyoIWAQ7Xgf9pHyNKPbgNcQx03dVN/461B4kByhF0I4Eg4ifXIv+aup1BY290a0jxVptVNESuuLDOKFSj0o/4=
+	t=1750833021; cv=none; b=BnxDJ4CTBA4fWAK0ca376DILIChqHYS5RsvjzQ9gWFydOpjfqojFQFpX8hK+lAfnMd5RL9o8qivZqnfvsZFxuAUXULDeYcskE240UUXLz1iEiplvawa9ROTK/hSgCtYWwudHB67vxc1e4tUNSvAIOfUBdUPpRe5mVUJuxbyqewQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750832947; c=relaxed/simple;
-	bh=DNNM9U7fRK37I0J9YAYr9hjb20ReSmw0RtBuRXiGOG8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qEI1C01jhyqON0WFgveRdTWQphlGAcCMYDSBcxUbZZdZhrAE2jitx0MZFSLHgpSQordGi9QTkia8tUZMkOZX4/22M2f7VVqi9ajJMIhMgXbrH3tDw6jZ7SKqu69mFb3EGmzg7KPANRYPzPdeH+RpYEfOjo3W0LECKgaAtNqXqyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ro5pzVDo; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750833021; c=relaxed/simple;
+	bh=qQLmriCJNRXZyEY7sikt2q77Kex+BuQ1f8VEOCmEHNM=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=OQrrPE7C2hekr/eJeJNsUyrwdgJOqSR3KuJP9tQjo9kqsOAVo35yI3qoY1dFGnwlG+e1EjVLwKr9c4gOVxjbssOdEghegn2Cv4FXCn44cA9Dqjs02Mqcl3KUGW1WgzyRSPSrsjELj0P4V0WPMg286zf9G7xLFaT7zVfdjco936M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se; spf=none smtp.mailfrom=konsulko.se; dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=mdHOsk+K; dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b=D4JuP3p3; arc=none smtp.client-ip=46.30.212.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=konsulko.se
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=konsulko.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ro5pzVDo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750832946; x=1782368946;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=DNNM9U7fRK37I0J9YAYr9hjb20ReSmw0RtBuRXiGOG8=;
-  b=Ro5pzVDowWWihllAJuFrXmLnXo1Z/z5KbZOJtA3dHQEl3qGOapljnv9N
-   p1chBxW77NaXj6qkVvUpdBdAsDiE5QY161Di1cWa6n2AXRhNw/NyGKFrH
-   pwtd8WdpU/HyiFp0rJ3j1Chmq71b/KUjMJuskSecw6xBIOzwWCsog9F4M
-   pyN6hsMF/ampkFyDgvoDnubGy89W5cP42L7ocsa9J2YCEJh8fKmqiWFVj
-   COh16p4mBW9UDmkxTt6HcITd2Dw9ej09MSSz/Sz6HS5ixAvLamAHL9GhR
-   hHXpbDqJoEoNxEmRv1zw8H0L7Zg5mUyJb/MN+Ilftdhomnu+iwMB3WjAU
-   g==;
-X-CSE-ConnectionGUID: idLtFGRBTraUa0BC1Oc48w==
-X-CSE-MsgGUID: V3Z+As/NQhqUBjmYDwd9iA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52809064"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="52809064"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 23:29:05 -0700
-X-CSE-ConnectionGUID: PW0LCxVqRiq5tOJF/BAXzg==
-X-CSE-MsgGUID: jx8BLcRvRt659tI9CLsbWA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="151541828"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 24 Jun 2025 23:29:02 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUJcx-000SoU-2a;
-	Wed, 25 Jun 2025 06:28:59 +0000
-Date: Wed, 25 Jun 2025 14:28:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vitaly Wool <vitaly.wool@konsulko.se>, linux-mm@kvack.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="mdHOsk+K";
+	dkim=permerror (0-bit key) header.d=konsulko.se header.i=@konsulko.se header.b="D4JuP3p3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1750833016; x=1751437816;
+	d=konsulko.se; s=rsa1;
+	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
+	 subject:cc:to:from:from;
+	bh=D0x/pTDcFb9pevSx82X48KOGSgZKiyjVSzlAvoUa5m8=;
+	b=mdHOsk+K5OeP97lLxGWgnLKIr0zfdUY00pO8VkeUHl5J4yZvHK0l1WUZf7QzxbK0movr+tHiUIy4N
+	 IunkDRbwiGpDICzRVUz55cpN6T9ggAweEbnVVzMGNdUhHph3xmQeNFZMFOmgkNkSx9yYL5YUOIQ2X+
+	 tgzB2pmtBahZa8locAt037aGaAv8Xw12f5zfTCSAcmyY6LdAZ/xXycvRhs3tg0OnD2qBQ+OnxNbymy
+	 ew38oO1m5FiLbqwg1hy0llLBUXm0cFfzsVzBVJbdPMrv7NEXeNsq7K4rL0eLZAdSmon4KytHS1BWis
+	 2mSqRrya3Q6AfMB6DgO/TD1MsJjeyBA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1750833016; x=1751437816;
+	d=konsulko.se; s=ed1;
+	h=content-transfer-encoding:mime-version:references:in-reply-to:message-id:date:
+	 subject:cc:to:from:from;
+	bh=D0x/pTDcFb9pevSx82X48KOGSgZKiyjVSzlAvoUa5m8=;
+	b=D4JuP3p3A3CvYIHdITepWPPwZJJgK6lsUPXyNfCfPJbAHtG8G/S2wadzC7MZzGtHKpYLtisVT8oa1
+	 kOFQM6aCw==
+X-HalOne-ID: dabebd03-518d-11f0-bce5-417246ffdc90
+Received: from localhost.localdomain (host-90-238-19-233.mobileonline.telia.com [90.238.19.233])
+	by mailrelay6.pub.mailoutpod3-cph3.one.com (Halon) with ESMTPSA
+	id dabebd03-518d-11f0-bce5-417246ffdc90;
+	Wed, 25 Jun 2025 06:30:16 +0000 (UTC)
+From: Vitaly Wool <vitaly.wool@konsulko.se>
+To: linux-mm@kvack.org
+Cc: akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org,
 	Uladzislau Rezki <urezki@gmail.com>,
 	Danilo Krummrich <dakr@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org,
+	Alice Ryhl <aliceryhl@google.com>,
+	rust-for-linux@vger.kernel.org,
 	Vitaly Wool <vitaly.wool@konsulko.se>
-Subject: Re: [PATCH v2 2/2] rust: support large align and NUMA ids in allocs
-Message-ID: <202506251416.O5iI9bmq-lkp@intel.com>
-References: <20250624123922.3258215-1-vitaly.wool@konsulko.se>
+Subject: [PATCH v3 1/2] mm/vmalloc: allow to set node and align in vrealloc
+Date: Wed, 25 Jun 2025 08:30:13 +0200
+Message-Id: <20250625063013.3379896-1-vitaly.wool@konsulko.se>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250625062917.3379804-1-vitaly.wool@konsulko.se>
+References: <20250625062917.3379804-1-vitaly.wool@konsulko.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624123922.3258215-1-vitaly.wool@konsulko.se>
+Content-Transfer-Encoding: 8bit
 
-Hi Vitaly,
+Reimplement vrealloc() to be able to set node and alignment should
+a user need to do so. Rename the function to vrealloc_node() to
+better match what it actually does now and introduce a macro for
+vrealloc() for backward compatibility.
 
-kernel test robot noticed the following build warnings:
+With that change we also provide the ability for the Rust part of
+the kernel to set node and aligmnent in its allocations.
 
-[auto build test WARNING on akpm-mm/mm-everything]
-[also build test WARNING on rust/alloc-next rust/rust-next linus/master v6.16-rc3 next-20250624]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+---
+ include/linux/vmalloc.h |  8 +++++---
+ mm/nommu.c              |  3 ++-
+ mm/vmalloc.c            | 16 +++++++++++++---
+ 3 files changed, 20 insertions(+), 7 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Vitaly-Wool/mm-vmalloc-allow-to-set-node-and-align-in-vrealloc/20250624-204140
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20250624123922.3258215-1-vitaly.wool%40konsulko.se
-patch subject: [PATCH v2 2/2] rust: support large align and NUMA ids in allocs
-config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250625/202506251416.O5iI9bmq-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250625/202506251416.O5iI9bmq-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506251416.O5iI9bmq-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
->> warning: unused import: `crate::pr_warn`
-   --> rust/kernel/alloc/allocator.rs:18:5
-   |
-   18 | use crate::pr_warn;
-   |     ^^^^^^^^^^^^^^
-   |
-   = note: `#[warn(unused_imports)]` on by default
-
+diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
+index fdc9aeb74a44..7d5251287687 100644
+--- a/include/linux/vmalloc.h
++++ b/include/linux/vmalloc.h
+@@ -197,9 +197,11 @@ extern void *__vcalloc_noprof(size_t n, size_t size, gfp_t flags) __alloc_size(1
+ extern void *vcalloc_noprof(size_t n, size_t size) __alloc_size(1, 2);
+ #define vcalloc(...)		alloc_hooks(vcalloc_noprof(__VA_ARGS__))
+ 
+-void * __must_check vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+-		__realloc_size(2);
+-#define vrealloc(...)		alloc_hooks(vrealloc_noprof(__VA_ARGS__))
++void *__must_check vrealloc_node_noprof(const void *p, size_t size,
++		unsigned long align, gfp_t flags, int nid) __realloc_size(2);
++#define vrealloc_noprof(p, s, f)	vrealloc_node_noprof(p, s, 1, f, NUMA_NO_NODE)
++#define vrealloc_node(...)		alloc_hooks(vrealloc_node_noprof(__VA_ARGS__))
++#define vrealloc(...)			alloc_hooks(vrealloc_noprof(__VA_ARGS__))
+ 
+ extern void vfree(const void *addr);
+ extern void vfree_atomic(const void *addr);
+diff --git a/mm/nommu.c b/mm/nommu.c
+index b624acec6d2e..ae240115607f 100644
+--- a/mm/nommu.c
++++ b/mm/nommu.c
+@@ -119,7 +119,8 @@ void *__vmalloc_noprof(unsigned long size, gfp_t gfp_mask)
+ }
+ EXPORT_SYMBOL(__vmalloc_noprof);
+ 
+-void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
++void *vrealloc_node_noprof(const void *p, size_t size, unsigned long align,
++			   gfp_t flags, int nid)
+ {
+ 	return krealloc_noprof(p, size, (flags | __GFP_COMP) & ~__GFP_HIGHMEM);
+ }
+diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+index ab986dd09b6a..117894301db1 100644
+--- a/mm/vmalloc.c
++++ b/mm/vmalloc.c
+@@ -4081,10 +4081,12 @@ void *vzalloc_node_noprof(unsigned long size, int node)
+ EXPORT_SYMBOL(vzalloc_node_noprof);
+ 
+ /**
+- * vrealloc - reallocate virtually contiguous memory; contents remain unchanged
++ * vrealloc_node - reallocate virtually contiguous memory; contents remain unchanged
+  * @p: object to reallocate memory for
+  * @size: the size to reallocate
++ * @align: requested alignment
+  * @flags: the flags for the page level allocator
++ * @nid: node id
+  *
+  * If @p is %NULL, vrealloc() behaves exactly like vmalloc(). If @size is 0 and
+  * @p is not a %NULL pointer, the object pointed to is freed.
+@@ -4103,7 +4105,7 @@ EXPORT_SYMBOL(vzalloc_node_noprof);
+  * Return: pointer to the allocated memory; %NULL if @size is zero or in case of
+  *         failure
+  */
+-void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
++void *vrealloc_node_noprof(const void *p, size_t size, unsigned long align, gfp_t flags, int nid)
+ {
+ 	struct vm_struct *vm = NULL;
+ 	size_t alloced_size = 0;
+@@ -4127,6 +4129,13 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+ 		if (WARN(alloced_size < old_size,
+ 			 "vrealloc() has mismatched area vs requested sizes (%p)\n", p))
+ 			return NULL;
++		if (WARN(nid != NUMA_NO_NODE && nid != page_to_nid(vmalloc_to_page(p)),
++			 "vrealloc() has mismatched nids\n"))
++			return NULL;
++		if (WARN((uintptr_t)p & (align - 1),
++			 "will not reallocate with a bigger alignment (0x%lx)\n",
++			 align))
++			return NULL;
+ 	}
+ 
+ 	/*
+@@ -4158,7 +4167,8 @@ void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
+ 	}
+ 
+ 	/* TODO: Grow the vm_area, i.e. allocate and map additional pages. */
+-	n = __vmalloc_noprof(size, flags);
++	n = __vmalloc_node_noprof(size, align, flags, nid, __builtin_return_address(0));
++
+ 	if (!n)
+ 		return NULL;
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.2
+
