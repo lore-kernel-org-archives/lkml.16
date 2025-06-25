@@ -1,189 +1,106 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934C2225762
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:48:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E805D1ADC69
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750873687; cv=none; b=DrnJDxqG7t7oJWgcLI75mq67GMW/fjb/wrceUrBwysVGWJFJuXMFgCnjcIG31lnylbH7/TumMhrXkCHZFB74wF+Jg+BT1g6ZlEAOojYpr82bbwhIGcYSxX81rlyZN/XwoBcgKr53KZM+Oe0Gd5SJGIv3y27HuFn6W3w16Yjk8AI=
+	t=1750873773; cv=none; b=nIF1a8pfs2Al6eBcfTv1cLsV3gqwb2dO1gdvxUDrM7bnGJbqgRZpfDn8dMbLZu8Vzd/um29GJsUVk7XUWtTxw6TvbJ8NIzAb+UWbaTDqSHB5ovKb2UMPX8G9dlecPMpk3FBsgbXQuHMF7+YbkNLMH65exyfmMIqkcWAgKSEEl1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750873687; c=relaxed/simple;
-	bh=7hhr28iehbxV1W+VLs54+Oo0mG4xdVqBfI8Lz2DxStU=;
-	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=hF4ELJ6epNfhJ+piCxr5qxiEilvUNP5ho22Cx5Zj6byEe4uogMFGjVPMP1iOASyTny9jLg4JCFHNaHrjR+jT7OuRJavl34pzfVOhBfjZiqDAGhIOghpWFmOFd7LlryKSFXxGUdkmFSC6QqigvzOYYjFjXWJjZgLdkNKHTTdjtnI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I9Ij0vl4; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750873773; c=relaxed/simple;
+	bh=gHURVpUT8xGnrP/mZ8Kh74Bg18Chq0fqFtTO9DFoKMc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JOYn+8LxEqwZxxUXiT7y2d/m1C6bwRKiX01J1msSEtyWSL6cAaG+sNCnnG+tlQ45bJ7WvF0VV8o6EwWr0ebZ0zH1mlaO34F7pR+vfwlzKRwhtcO4xpb/MNGvFLQUZOZb33kAQFdfSRA4F8kZczlVO+U2AdEdBW0a/uyLM+u3vws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IIVbmWSp; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I9Ij0vl4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750873684;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UwTu+Wt/h6v7ZrbX8K8bLUbTVXbSKmPqSY5AZLWV8nk=;
-	b=I9Ij0vl4t6mLFZXq9pgBvFyGufBm7Bi66CvFjC6pCb1ZdwugnIsh1TXf+qfqjOLcpUmDHu
-	rJznN60jbpEW+od7aUYQ6CkIJRlkITlN90f+s4ARjdKmGXZHTmoXjX95f2uXvQ5w2PEhfD
-	xRN/2i3DMRFap7Q1daxcfTS0JggOh+4=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-311-NLrFdPsDOva3FMtS2LqdmQ-1; Wed, 25 Jun 2025 13:48:03 -0400
-X-MC-Unique: NLrFdPsDOva3FMtS2LqdmQ-1
-X-Mimecast-MFC-AGG-ID: NLrFdPsDOva3FMtS2LqdmQ_1750873682
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2358de17665so1235195ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:48:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IIVbmWSp"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b34c068faf8so131108a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:49:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750873771; x=1751478571; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wKPoygHmek9vtlAiSPTqKcPVr1OpZZ2WrDzyM0DWDbg=;
+        b=IIVbmWSpDqoK4G5jeGA5Q2vM6y3dvSu+NwiFeCpnV6LcC45OAUKqmYPzAjrO4GkvUp
+         hoScp8NXYPWn5TLn0FccRcwuKC8Tl0TK8wQtHjuHlR+bO1KqnXyUPRnpRs+FhD03hRlI
+         MhTOnJJTR4/eAzuXazLqf6ZFsgIrIDwDo531ykkB4Vez1HZpKe7/iNprFior9KsZYpkj
+         3u6+LcktG0WQ8drtrV7G/xqt5cDnkeyGzPpFYxyREAIWCLwHNTAlGQNfID8KKYMWdlyq
+         wNtEJU9ZLDB3iBJafYNVx9oF4sjMX5pZLjNm9L4u6GOrwXnKOah3hd83UMWnkv+7P8bC
+         oKIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750873682; x=1751478482;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UwTu+Wt/h6v7ZrbX8K8bLUbTVXbSKmPqSY5AZLWV8nk=;
-        b=E2vfEYGVPdb76VQFl304AJ/qEmvMlnnsBzHpr/AMEv4NQXQkGy8Atx9FoUCKG0+6VY
-         hqqmMEUPPRuqfy6SXYKDFep2bqZZU1BfVkQEjnzHsAW4Q4a0RSgnGqbcywmC2UFB0TFS
-         knjVvc/xsJbDCX/GOxlDO/mdmohcP3cObsMQTS/M3pIymtK1yjm+qq0E2KzbUYFlOwsk
-         GQtVP7eMSerwLl2RAUAa8opNBJce6+bR08LHRg8O8qKhs2jReSZgVl+dHPbswv7OWKkI
-         qs/doc3EcWHB2feK5GBAkmSddGzn32jcFylb5WmFeqGLKPIoT2EP9mZpnyhAQuMuzPu7
-         q3cg==
-X-Gm-Message-State: AOJu0YwwjBCyeRlXjS5hRbi9j2ASwddQ+xzM1D6C+T9QcGpCjIw1R7RC
-	EvazewGO1ptjDavdVFk3CAYDBjNGJZkukRIDK01OEuBUijDch4633JZJcbH5qY9JYfWJE29kXOr
-	+mzX+ZKBcnuUf4nho0ruB6tHFZTpE8E1+Vay4B/z8qimuGof692vBvgRhfyPdw4cX0g==
-X-Gm-Gg: ASbGncsnFLBjwMfJIh3Ea0RarqO1TvW9oDAR5H2V3DB3/ClQHTL6v6+5QeNZ74qzcyr
-	wcJA5evvdMuysAwZW0eMdtFy23CayRgDh+eoxNbWGci35Ni+LWBKpSi0etXRIJCrLFABZOWUVgw
-	uCn5LJXkibU1SECpi0/hOcY0lwC2SgwWXAi+opm+vPTSsbCYOVyQsriJ18hmmw3m8ZUNcOJs4So
-	9TlK7xEMNh9VQnVSA948bEugeLGpgkf/4oIxGjkR/JERdeVWB6DaeOnmRq5UmRN8fZC3Y7FJVo8
-	PMIi4qJBYswly2cYKUAAf1Ny9GAJolFw2hgFkUpixBv7CQaiH08m7/ZUso+6UPiBBvI9
-X-Received: by 2002:a17:902:f68f:b0:234:ed31:fc98 with SMTP id d9443c01a7336-2382406aaf8mr66947575ad.37.1750873682147;
-        Wed, 25 Jun 2025 10:48:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG3+PJS3xebQrgq54ldrQdwtd/GmCDOD/XYhhutmas5K7tDvKj2czAREFvQqDcBLOC9o54Cog==
-X-Received: by 2002:a17:902:f68f:b0:234:ed31:fc98 with SMTP id d9443c01a7336-2382406aaf8mr66947305ad.37.1750873681766;
-        Wed, 25 Jun 2025 10:48:01 -0700 (PDT)
-Received: from ?IPV6:2601:600:947f:f020:85dc:d2b2:c5ee:e3c4? ([2601:600:947f:f020:85dc:d2b2:c5ee:e3c4])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86ef84fsm135684415ad.216.2025.06.25.10.47.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 10:48:00 -0700 (PDT)
-From: Waiman Long <llong@redhat.com>
-X-Google-Original-From: Waiman Long <longman@redhat.com>
-Message-ID: <665865d7-aa34-40a1-b985-7d6229d272b0@redhat.com>
-Date: Wed, 25 Jun 2025 13:47:57 -0400
+        d=1e100.net; s=20230601; t=1750873771; x=1751478571;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wKPoygHmek9vtlAiSPTqKcPVr1OpZZ2WrDzyM0DWDbg=;
+        b=r8JNVqe08qFBadlDD+iCl3TegQqZA7oeagV8N+HlLSZyFb/X/3SOtTbW4iapiEaRL5
+         pD6RQsdToEu7WFprMm1MbRa6QWqnTUa7U5eK+yZllupBjH357nfcED5H1Bv2TjSBauCV
+         kRUbxerZpUTNUClRcVoUkve+JIAddncOSDH1QFmikvYo6RFijPlrYp4j0H+PDEsr6oI/
+         M1Uo6IRQHo4mkEM0AhcT7wfNPgMj6bYgaXvA35q/G2UIC59srKA/1yajfolHs+o9qUPB
+         NPWdZg60QYqPVDSEsMyhskYg5GpIgu9Y6wF1WcKFnpLYyfMxL3RQ7wY4RQ7+6dxoQOrX
+         ICtg==
+X-Gm-Message-State: AOJu0YxlaJEM7r/ibYiccsmGAlAEcBn2l3BdI8yzFaD4vQIxny3G5273
+	58brdiRYCiFMwceS1XPplUauKWjPoxrvuo0veMgn6+49EhDPGvw2Jc1sO1bfJ/3g
+X-Gm-Gg: ASbGncuDYvmj7rASq7FZAMQUdq3gXnosUQKzUJOwiOCWH3fP5vHhZaMNn+DhGC3UT84
+	Iz33gQuvc7LsAZLpgmudI48I+LdK+ecf8GZs07WbPYucmQLzKe2j1fSydF86x5Cfp5psxCLoztZ
+	9n+F65oVEr2ccJIfcMqzdLSepRlfmqH66mjF2aDhL9tC4SFzV78J5Pk9LHNxyPJ/9RIdLLxs0bA
+	06RUzIwYBLuuKDdgiVAkp5aH7H2ugLUZCQtTOsUgqAa0hRr0ghu3D+iBw+yLxoFn9DYQdDk7srx
+	dnHV5jkP5LxwoqstAHv6G0yr06vnBkMnJ1/izNm+DmLZBnQ63TUNyWQlErxKwGpcIOu8jKiE84q
+	VFhWJWtYyoLgHGnkMj5pT
+X-Google-Smtp-Source: AGHT+IEGKc4PlKwHTryODTJ8CFkDTJ/2/4oBjIzki9EynrKNZrqt3JjwxvumsRuU0cu0A6YbznIGiA==
+X-Received: by 2002:a05:6a20:748f:b0:1f5:70d8:6a98 with SMTP id adf61e73a8af0-2207efa479dmr6671547637.0.1750873771104;
+        Wed, 25 Jun 2025 10:49:31 -0700 (PDT)
+Received: from fedora.. (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-749b5e23879sm4944869b3a.57.2025.06.25.10.49.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 10:49:30 -0700 (PDT)
+From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	David Hildenbrand <david@redhat.com>,
+	Jordan Rome <linux@jordanrome.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
+Subject: [RFC PATCH 0/3] Some remote_vm folio conversions
+Date: Wed, 25 Jun 2025 10:48:38 -0700
+Message-ID: <20250625174841.1094510-1-vishal.moola@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] Introduce simple hazard pointers
-To: Boqun Feng <boqun.feng@gmail.com>, Waiman Long <llong@redhat.com>
-Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org, lkmm@lists.linux.dev,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- Will Deacon <will@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- Josh Triplett <josh@joshtriplett.org>,
- Frederic Weisbecker <frederic@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Joel Fernandes <joelagnelf@nvidia.com>, Uladzislau Rezki <urezki@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
- Breno Leitao <leitao@debian.org>, aeh@meta.com, netdev@vger.kernel.org,
- edumazet@google.com, jhs@mojatatu.com, kernel-team@meta.com,
- Erik Lundgren <elundgren@meta.com>
-References: <20250625031101.12555-1-boqun.feng@gmail.com>
- <20250625031101.12555-2-boqun.feng@gmail.com>
- <c649c8ec-6c1b-41a3-90c5-43c0feed7803@redhat.com> <aFwfUCw2izpjC0wr@Mac.home>
-Content-Language: en-US
-In-Reply-To: <aFwfUCw2izpjC0wr@Mac.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Both callers of unmap_and_put_page() are for tracing purposes and
+interact with user vmas. In a memdesc world, these should end up
+operating on folios, so convert them.
 
-On 6/25/25 12:09 PM, Boqun Feng wrote:
-> On Wed, Jun 25, 2025 at 11:52:04AM -0400, Waiman Long wrote:
-> [...]
->>> +/*
->>> + * Acquire a hazptr slot and begin the hazard pointer critical section.
->>> + *
->>> + * Must be called with preemption disabled, and preemption must remain disabled
->>> + * until shazptr_clear().
->>> + */
->>> +static inline struct shazptr_guard shazptr_acquire(void *ptr)
->>> +{
->>> +	struct shazptr_guard guard = {
->>> +		/* Preemption is disabled. */
->>> +		.slot = this_cpu_ptr(&shazptr_slots),
->>> +		.use_wildcard = false,
->>> +	};
->>> +
->>> +	if (likely(!READ_ONCE(*guard.slot))) {
->>> +		WRITE_ONCE(*guard.slot, ptr);
->>> +	} else {
->>> +		guard.use_wildcard = true;
->>> +		WRITE_ONCE(*guard.slot, SHAZPTR_WILDCARD);
->>> +	}
->> Is it correct to assume that shazptr cannot be used in a mixed context
->> environment on the same CPU like a task context and an interrupt context
->> trying to acquire it simultaneously because the current check isn't atomic
->> with respect to that?
-> I think the current implementation actually support mixed context usage,
-> let see (assuming we start in a task context):
->
-> 	if (likely(!READ_ONCE(*guard.slot))) {
->
-> if an interrupt happens here, it's fine because the slot is still empty,
-> as long as the interrupt will eventually clear the slot.
->
-> 		WRITE_ONCE(*guard.slot, ptr);
->
-> if an interrupt happens here, it's fine because the interrupt would
-> notice that the slot is already occupied, hence the interrupt will use a
-> wildcard, and because it uses a wild, it won't clear the slot after it
-> returns. However the task context's shazptr_clear() will eventually
-> clear the slot because its guard's .use_wildcard is false.
->
-> 	} else {
->
-> if an interrupt happens here, it's fine because of the same: interrupt
-> will use wildcard, and it will not clear the slot, and some
-> shazptr_clear() in the task context will eventually clear it.
->
-> 		guard.use_wildcard = true;
-> 		WRITE_ONCE(*guard.slot, SHAZPTR_WILDCARD);
->
-> if an interrupt happens here, it's fine because of the same.
->
-> 	}
->
->
-> It's similar to why rcu_read_lock() can be just a non-atomic inc.
-You are right.
->
->>> +
->>> +	smp_mb(); /* Synchronize with smp_mb() at synchronize_shazptr(). */
->>> +
->>> +	return guard;
->>> +}
->>> +
->>> +static inline void shazptr_clear(struct shazptr_guard guard)
->>> +{
->>> +	/* Only clear the slot when the outermost guard is released */
->>> +	if (likely(!guard.use_wildcard))
->>> +		smp_store_release(guard.slot, NULL); /* Pair with ACQUIRE at synchronize_shazptr() */
->>> +}
->> Is it better to name it shazptr_release() to be conformant with our current
->> locking convention?
->>
-> Maybe, but I will need to think about slot reusing between
-> shazptr_acquire() and shazptr_release(), in the general hazptr API,
-> you can hazptr_alloc() a slot, use it and hazptr_clear() and then
-> use it again, eventually hazptr_free(). I would like to keep both hazptr
-> APIs consistent as well. Thanks!
+This patchset converts those functions so that gup - namely
+get_user_page_vma_remote() - can eventually safely pass around
+large folios.
 
-Thanks for the explanation. Maybe we can reuse the general hazptr API 
-names (alloc/clear/free) even though shazptr_free() will be a no-op for 
-now. Just that the current acquire/clear naming looks odd to me.
+This iteration does NOT allow support for handling a large folio all at
+once, it merely makes working on subpages of a large folio safe. Does
+anyone have any thoughts on if we might want to handle these in larger
+than PAGE_SIZE chunks? It seems like a lot of work with how kmap()
+works right now...
 
-Thanks,
-Longman
+On a similar note, might we want to convert implementations of
+copy_{to,from}_user_page() to pass around folios as well?
+
+Vishal Moola (Oracle) (3):
+  mm/memory.c: convert __copy_remote_vm_str() to folios
+  mm/memory.c: convert __access_remote_vm() to folios
+  mm: Remove unmap_and_put_page()
+
+ include/linux/highmem.h |  6 -----
+ mm/memory.c             | 52 +++++++++++++++++++++++++----------------
+ 2 files changed, 32 insertions(+), 26 deletions(-)
+
+-- 
+2.49.0
 
