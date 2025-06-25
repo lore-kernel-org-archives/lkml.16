@@ -1,98 +1,271 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F61E2DCC15
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7292DBF66
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:58:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750877909; cv=none; b=hbgn9BARel08uiG+CPLiZoFlYdLA8Ifpfd7+/Pl9P8zvH1ff+Tx3MWjrAyjimAy5IoF8Z6IecFqhuEX64BZPr9Ouuip21gb/FKg2NsVTITx2NenqUc9SzTFY8+h9mWzXHe7E6nhxC0yJpWzF1Za9ICgFg+3DCs/YYnQAgtfkuxw=
+	t=1750877910; cv=none; b=KHvdQaA0c6XsPPNSoBTsFg+XlCcXJj2VR5nAjyWVSlljN0ypWY9E27u3rCAFGFgSTm7sQgkRMQml+xyUMZO4uPTJylIyxH0zK+GuRSaMbMwfJ76Re28zZiYNm9MjlSm0viLA8zoWVOxjb+t9wMERGNzjyqwSYgICpwPphANfamI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750877909; c=relaxed/simple;
-	bh=RjlGb7w/AnhlwxzMhXI+xVDeW3FXUUnZ+ueqKPPcNeQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QH6oURIKDRxxVwh31VsH8HsfL/o6RA5I3fhvrAJeOf8Rp0C9Wj3q+SahoDHBPwB/xdCTnNLXmEC1GiBCWpAL2Hg8rRBtmzyPFRZ6FdsK3zdb99OrFihH26IrmJj4E052nyiz6QQ5FzybYBrbda9gVUeKhylQKOllJp0T3mRderc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qDmKZ1SP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750877910; c=relaxed/simple;
+	bh=x6l1U8SQbNXar2T+nKC44CZbNnCrpWZd9rRpAvG91aA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=u0mkZOq395NcCEP0Ft/KjIe5bbaAtyoVdMdE2sAL+H5R38mM6p+cXVTVDZZCPyBGUd2srLrIALqV+DCr5rnA+Hi89AjCimQoCdvuq/5XYhT2Hv+4Q0U8Xxv9fth3catf86/rdqUR3HtG4Jof4uJCYDY1Qh2KRcu86KYapoWk59Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WovWfke8; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qDmKZ1SP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26621C4CEF0;
-	Wed, 25 Jun 2025 18:58:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750877909;
-	bh=RjlGb7w/AnhlwxzMhXI+xVDeW3FXUUnZ+ueqKPPcNeQ=;
-	h=From:Date:Subject:To:Cc:From;
-	b=qDmKZ1SP9+00sFr8CcP0qy9BUZzeazvNkHopWl1nYQIasIjEgqQ6kkYeNucUIP0cf
-	 BR7t5fMsCokWi/6Yv2G7djfPU0dzcihUv/dbVF1YwLpAG686S1/sDW2WW5wXhrvJej
-	 gUbdQ08O7oCZBQ4jMCUOCdRQ2/6+/UR+P1C9OBJXul2a1t7Vq1DfAIkLCa6h03fFva
-	 4uuKlMSxTvTtz4zwO2avrO1opuF8BUSTesRdfP9gss2oKRlXOEI3R30ONd9uJMyiQO
-	 5R7tVFEVIw2Qw4mDBYdx/7ybzqP9fLTLOGfIX2LItxcAozEr+A8lBHgZoBWdVgabvm
-	 3eLTz5sMFjIHA==
-From: Mark Brown <broonie@kernel.org>
-Date: Wed, 25 Jun 2025 19:56:34 +0100
-Subject: [PATCH] arm64/gcs: Don't call gcs_free() when releasing
- task_struct
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WovWfke8"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PBvDw3011924
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:58:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=BHyE+ROYmr1
+	BYZwR3C+QXhzqfJ1dS+58uUEwZ+AZnWU=; b=WovWfke8x2POZSi4XbGmSzoYY7r
+	OJuPg4AxkbaNSEDy4W9A/qIvRpSjsPBtHFLNfg2eAF7LchS0j2rSUJZNSxecTKhR
+	ZSd88/qdk1s4I+A+WGSbtG91p+FaLHyyCB7THVOZyDPRfH7EpACjmmePFE8utNH5
+	31zjC90lH2xfh/5MvanjaDhKs2YgMalBEDZZfXUtj1gAB+Za/nwOp3miOitMZUFb
+	qFjPLR3wD/j+IlOVshFrvlhITG4lP1LYb1b7L7szhnPuDzcPsTxCn0zCCRo5ANL2
+	MO91QPqTho0c7/OFx7yG4eJmt5++tQrfLcIuoHCovxInXdp2sZFW6EXzsiA==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec26b651-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:58:27 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-234fedd3e51so1839915ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:58:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750877907; x=1751482707;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BHyE+ROYmr1BYZwR3C+QXhzqfJ1dS+58uUEwZ+AZnWU=;
+        b=ANBjY7rzg3RSf9xPemSGsSEoZx0LDzSSsJOGhTY25ARtpQKhm2bI0+gTXXLeY1ZBPa
+         zi0LtUZq9LyfKmQtgpT285RdcRbvCSaYKc7wMbtJUUgb2R6VyOKpM8uF7D2RwPik5SGx
+         cn46af5AGa2Dgi6lbGNtmZ8o3FQTdtKbS64cuLRJhsO8PQM4l+yHsjd0A5Bcudgg8vdf
+         Z9Ky1OOLw3tttzVz6/aDQRA5MFa1Iso26r41ms+c2vKVU8BgeVnzBx2LegdfcO1HLRiy
+         jxoOsxB96OjhVe2bZEWzo5dUOgW7v/hl33GSyuJzrpJ4GdacLxk088gj73retl0t/9T6
+         +aYw==
+X-Forwarded-Encrypted: i=1; AJvYcCVgZXCGnnWEW0QDSqoz/fx2RXaaRF3QXmVizLChbL0xmGmjMChv9gSpXNPztZhjpqqzhkp8H8URy1dgFLE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQilpJjmbMr6cu8NHzYBaFjaNT9C2BjYs5V+TxeYqPgh0zlwG+
+	1bvw/urjDYOYPZZ1qZnVUjmkz9Cc/SAGdAQFOfst8ypmFy8vl33TP17YXm0Smg169VLRi4CXeRS
+	z6AoEQsJXQUNQb0Dhkkg66naGBUuvK5dW8tUaIpAAEzU/86yK3O6u4AVnuuXt4PvS1zk=
+X-Gm-Gg: ASbGncvdOPWs/jDIsX+3ihLh3koeNsFYxcB+Jwysd1xvQymet6d2oVfUz7BapR86Rvd
+	CBiiDEjk8HjrCOdHji0d5WxgF7ngaf1M4iZfwkO57SmsrjreQAapA9M5fQqd/IFIVPeKlFoOx/i
+	Ks45Lr/bsbHJsW5cz2Qffh7sficmQZmdyp1kzaw+seG2+iKaFHbaX2wpxliOfL7dBez9nxK5Mvl
+	3yla5oJ5fbR7Pu9I3h7fUIq78npgPcQaPGedz62PNgitYl3Uk+bh/dDg/TF0PuBSagaFtCFjpEy
+	txIFQuTe92YQjoWfgRZ1XMy6zNzOk5/l
+X-Received: by 2002:a17:902:ce06:b0:235:eca0:12d4 with SMTP id d9443c01a7336-23824095671mr80469685ad.53.1750877906901;
+        Wed, 25 Jun 2025 11:58:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEfOU8b5xN3DBcrI0SlkS8W7vOGGlK3RW15375C9lfmS207Fy10Dze1XSZd5UHnBi7y5LdHyA==
+X-Received: by 2002:a17:902:ce06:b0:235:eca0:12d4 with SMTP id d9443c01a7336-23824095671mr80469315ad.53.1750877906514;
+        Wed, 25 Jun 2025 11:58:26 -0700 (PDT)
+Received: from localhost ([2601:1c0:5000:d5c:5b3e:de60:4fda:e7b1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d868f878sm144055785ad.184.2025.06.25.11.58.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 11:58:26 -0700 (PDT)
+From: Rob Clark <robin.clark@oss.qualcomm.com>
+To: dri-devel@lists.freedesktop.org
+Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org,
+        Connor Abbott <cwabbott0@gmail.com>,
+        Antonino Maniscalco <antomani103@gmail.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robin.clark@oss.qualcomm.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Abhinav Kumar <quic_abhinavk@quicinc.com>,
+        Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v7 08/42] drm/msm: Collapse vma allocation and initialization
+Date: Wed, 25 Jun 2025 11:47:01 -0700
+Message-ID: <20250625184918.124608-9-robin.clark@oss.qualcomm.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250625184918.124608-1-robin.clark@oss.qualcomm.com>
+References: <20250625184918.124608-1-robin.clark@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-arm64-gcs-release-task-v1-1-54cbdc2db416@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAGFGXGgC/x3MTQqDQAxA4atI1gYyVqfgVcRF1Kih/pGUUhDv7
- uDyW7x3goupONTZCSY/dd23hJBn0M+8TYI6JENBRUUxELKtscSpdzRZhF3wy/7BF72HLtLIoSs
- hxYfJqP9n3LTXdQNLq9FmaAAAAA==
-X-Change-ID: 20250610-arm64-gcs-release-task-307db60fa1b4
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-08c49
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1260; i=broonie@kernel.org;
- h=from:subject:message-id; bh=RjlGb7w/AnhlwxzMhXI+xVDeW3FXUUnZ+ueqKPPcNeQ=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoXEbTeUN5t/UlNloC7DPsJVvz95VmKcMJhv+lG
- Sqh4xj8YY+JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaFxG0wAKCRAk1otyXVSH
- 0G+9B/9D8IUxvntv3DBKBNH2U8vBc2ndFy/Axie0znjeibUqabV9UqqSVUvDdfOBT2GrL2IWC6j
- m7rd08BkjcCWu5XiquQP9lR4nLE77Q0PQHOre5TEPuYpEEDZQgTw9CMRYzZl/Y1h8Jp7CzIqGnn
- kOqu0KjExJpzH1PDmJdYtQRkP4l3A2lQ40RwkwxNIgYHBiLTtP1DHfnUdk0LdJ/arTCLqkeqUC7
- dy3DzLknQw2gPL0PGEhPGJ+ZHcNJt2JXAyFDeaFhnbG5T10QuNSJgNxYGyjhWYjr0dfpg8kHf8d
- 1J8nSxrIwBHVUEimywPCeQ382SjQLGMjVurkweXkXuCCjKTE
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDE0MyBTYWx0ZWRfX8QH3VFkVb9xD
+ dBHm2IbccDsACFV+LxXx9tVvgD6NcWqUjLNoRZJnamdYnKlADyUxy59N/8lvh/uYgCzdIFAFruv
+ c8gFIZnyRdKhm92yTVP2YeOg4xgAbWnOPny/14UVCi8kOltgipPZCbUWVwQU3PVx/S+WfDMX1+Y
+ Ym5uxh3SZ1euVxVd0i2Xc+2XSGO+1v5bqdBdRgvoWYkBxWhrY6Xaqu5EtPJWhmExAsvB1NHfRm3
+ CP6pAegkg/KnkZpZ7uXdF0P9Zvfr3mTt3BOzk+J0grchzgaGJK5geX6Q1VCtXHO+Xea0FhV5wOW
+ 9nFHg0vxZzwcwy6V/SUZp5uLA5WSqLdPU9Ry0hKmcy9LX2Mnw76hZHkYnWHnGlD+j7YctK5EXCm
+ omWdyHx8TzPTJZD4lAC8eeSQsZ6Uy4ZG0omHdGheg7Ttnx9SisjCvBA8sPj982WuOcq2+zJg
+X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685c46d3 cx=c_pps
+ a=IZJwPbhc+fLeJZngyXXI0A==:117 a=xqWC_Br6kY4A:10 a=6IFa9wvqVegA:10
+ a=cm27Pg_UAAAA:8 a=EUspDBNiAAAA:8 a=Fs5xBETKxiRrdmql5B8A:9
+ a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-GUID: xNemKAqan5336AYeZkxlGXz_5HE0jAg7
+X-Proofpoint-ORIG-GUID: xNemKAqan5336AYeZkxlGXz_5HE0jAg7
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_06,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 impostorscore=0 clxscore=1015 suspectscore=0 mlxscore=0
+ spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
+ priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506250143
 
-Currently we call gcs_free() when releasing task_struct but this is
-redundant, it attempts to deallocate any kernel managed userspace GCS
-which should no longer be relevant and resets values in the struct we're
-in the process of freeing.
+From: Rob Clark <robdclark@chromium.org>
 
-By the time arch_release_task_struct() is called the mm will have been
-disassociated from the task so the check for a mm in gcs_free() will
-always be false, for threads that are exiting leaving the mm active
-deactivate_mm() will have been called previously and freed any kernel
-managed GCS.
+Now that we've dropped vram carveout support, we can collapse vma
+allocation and initialization.  This better matches how things work
+with drm_gpuvm.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Rob Clark <robin.clark@oss.qualcomm.com>
 ---
- arch/arm64/kernel/process.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/msm/msm_gem.c     | 30 +++-----------------------
+ drivers/gpu/drm/msm/msm_gem.h     |  4 ++--
+ drivers/gpu/drm/msm/msm_gem_vma.c | 36 +++++++++++++------------------
+ 3 files changed, 20 insertions(+), 50 deletions(-)
 
-diff --git a/arch/arm64/kernel/process.c b/arch/arm64/kernel/process.c
-index 5954cec19660..5dcfab9ce012 100644
---- a/arch/arm64/kernel/process.c
-+++ b/arch/arm64/kernel/process.c
-@@ -341,7 +341,6 @@ void flush_thread(void)
- void arch_release_task_struct(struct task_struct *tsk)
- {
- 	fpsimd_release_task(tsk);
--	gcs_free(tsk);
+diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+index 621fb4e17a2e..29247911f048 100644
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -337,23 +337,6 @@ uint64_t msm_gem_mmap_offset(struct drm_gem_object *obj)
+ 	return offset;
  }
  
- int arch_dup_task_struct(struct task_struct *dst, struct task_struct *src)
-
----
-base-commit: 86731a2a651e58953fc949573895f2fa6d456841
-change-id: 20250610-arm64-gcs-release-task-307db60fa1b4
-
-Best regards,
---  
-Mark Brown <broonie@kernel.org>
+-static struct msm_gem_vma *add_vma(struct drm_gem_object *obj,
+-		struct msm_gem_vm *vm)
+-{
+-	struct msm_gem_object *msm_obj = to_msm_bo(obj);
+-	struct msm_gem_vma *vma;
+-
+-	msm_gem_assert_locked(obj);
+-
+-	vma = msm_gem_vma_new(vm);
+-	if (!vma)
+-		return ERR_PTR(-ENOMEM);
+-
+-	list_add_tail(&vma->list, &msm_obj->vmas);
+-
+-	return vma;
+-}
+-
+ static struct msm_gem_vma *lookup_vma(struct drm_gem_object *obj,
+ 		struct msm_gem_vm *vm)
+ {
+@@ -420,6 +403,7 @@ static struct msm_gem_vma *get_vma_locked(struct drm_gem_object *obj,
+ 		struct msm_gem_vm *vm,
+ 		u64 range_start, u64 range_end)
+ {
++	struct msm_gem_object *msm_obj = to_msm_bo(obj);
+ 	struct msm_gem_vma *vma;
+ 
+ 	msm_gem_assert_locked(obj);
+@@ -427,18 +411,10 @@ static struct msm_gem_vma *get_vma_locked(struct drm_gem_object *obj,
+ 	vma = lookup_vma(obj, vm);
+ 
+ 	if (!vma) {
+-		int ret;
+-
+-		vma = add_vma(obj, vm);
++		vma = msm_gem_vma_new(vm, obj, range_start, range_end);
+ 		if (IS_ERR(vma))
+ 			return vma;
+-
+-		ret = msm_gem_vma_init(vma, obj->size,
+-			range_start, range_end);
+-		if (ret) {
+-			del_vma(vma);
+-			return ERR_PTR(ret);
+-		}
++		list_add_tail(&vma->list, &msm_obj->vmas);
+ 	} else {
+ 		GEM_WARN_ON(vma->iova < range_start);
+ 		GEM_WARN_ON((vma->iova + obj->size) > range_end);
+diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+index c16b11182831..9bd78642671c 100644
+--- a/drivers/gpu/drm/msm/msm_gem.h
++++ b/drivers/gpu/drm/msm/msm_gem.h
+@@ -66,8 +66,8 @@ struct msm_gem_vma {
+ 	bool mapped;
+ };
+ 
+-struct msm_gem_vma *msm_gem_vma_new(struct msm_gem_vm *vm);
+-int msm_gem_vma_init(struct msm_gem_vma *vma, int size,
++struct msm_gem_vma *
++msm_gem_vma_new(struct msm_gem_vm *vm, struct drm_gem_object *obj,
+ 		u64 range_start, u64 range_end);
+ void msm_gem_vma_purge(struct msm_gem_vma *vma);
+ int msm_gem_vma_map(struct msm_gem_vma *vma, int prot, struct sg_table *sgt, int size);
+diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+index 9419692f0cc8..6d18364f321c 100644
+--- a/drivers/gpu/drm/msm/msm_gem_vma.c
++++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+@@ -106,47 +106,41 @@ void msm_gem_vma_close(struct msm_gem_vma *vma)
+ 	msm_gem_vm_put(vm);
+ }
+ 
+-struct msm_gem_vma *msm_gem_vma_new(struct msm_gem_vm *vm)
++/* Create a new vma and allocate an iova for it */
++struct msm_gem_vma *
++msm_gem_vma_new(struct msm_gem_vm *vm, struct drm_gem_object *obj,
++		u64 range_start, u64 range_end)
+ {
+ 	struct msm_gem_vma *vma;
++	int ret;
+ 
+ 	vma = kzalloc(sizeof(*vma), GFP_KERNEL);
+ 	if (!vma)
+-		return NULL;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	vma->vm = vm;
+ 
+-	return vma;
+-}
+-
+-/* Initialize a new vma and allocate an iova for it */
+-int msm_gem_vma_init(struct msm_gem_vma *vma, int size,
+-		u64 range_start, u64 range_end)
+-{
+-	struct msm_gem_vm *vm = vma->vm;
+-	int ret;
+-
+-	if (GEM_WARN_ON(!vm))
+-		return -EINVAL;
+-
+-	if (GEM_WARN_ON(vma->iova))
+-		return -EBUSY;
+-
+ 	spin_lock(&vm->lock);
+ 	ret = drm_mm_insert_node_in_range(&vm->mm, &vma->node,
+-					  size, PAGE_SIZE, 0,
++					  obj->size, PAGE_SIZE, 0,
+ 					  range_start, range_end, 0);
+ 	spin_unlock(&vm->lock);
+ 
+ 	if (ret)
+-		return ret;
++		goto err_free_vma;
+ 
+ 	vma->iova = vma->node.start;
+ 	vma->mapped = false;
+ 
++	INIT_LIST_HEAD(&vma->list);
++
+ 	kref_get(&vm->kref);
+ 
+-	return 0;
++	return vma;
++
++err_free_vma:
++	kfree(vma);
++	return ERR_PTR(ret);
+ }
+ 
+ struct msm_gem_vm *
+-- 
+2.49.0
 
