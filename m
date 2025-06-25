@@ -1,76 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA732D29D7;
-	Wed, 25 Jun 2025 23:15:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9F126E6EB;
+	Wed, 25 Jun 2025 23:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750893307; cv=none; b=ixRzdGrvbcT1dQpceOEHczOVKLWbU+aqjbbYtHRlq71twNcbk7/2fuymgyFnuvTlzKpL0zzIP7AQdMmghC8vFUSLt6D/d0WLOtVhTxVDNEWUWU1anBUOcvGJeA1KwcEH/2fmc3CXObjTbFisLMM4zvceG9P5//zEwSA9rdOxk/c=
+	t=1750893365; cv=none; b=SCcNNpkGM3SnSuZT83555V0wq3yZhqAl1Ll58ef/ZpxwvHabOjR7cgdp+IaIxrACjTGR0vTHHjyaXikt3vq/lJnXbZI1IhsfLx+gIEPIbn3E0RjBHSBIyDJDQcWnmza+M2QIiubKa1UadgiGFVhfvAYtcETlt6IJzdkBv+xmbYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750893307; c=relaxed/simple;
-	bh=ULpLJIaM9TeysiPeOAcS+WIhV2fOnk1DrQVpGmf26r0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e6EdGOE1c+5Z0r0dUn8MEF95GudXltJ2HfCmn3k9Z1rRsFDky5KulVI+cd4exW+7V71dzNdtw+ljfMoLOR2bNXhGzLw/W/K9eB1DW6ObgaKZrycNCphh2QtPB4Ef+C5p8Muo60g/UBW9+p5cviCVCuuQDizCRWCLBTLsYNPbu5Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UodmVyY5; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UodmVyY5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDF42C4CEEA;
-	Wed, 25 Jun 2025 23:15:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750893306;
-	bh=ULpLJIaM9TeysiPeOAcS+WIhV2fOnk1DrQVpGmf26r0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UodmVyY5VH9Sz5Hxy+Qk6bEH9syQ5IfHG4YR+ADKnsVNpuXPRWAREKVZqv/EUnEfG
-	 fePlHbL/wPzx1kh8iYGi42y7ayO3QJBAX2/YW93+g+bAjmqH9KfuwN9VcPz1nRk0di
-	 2TOYb+tkYralsp4THivq58cPs2HpxPJUMrJnb9bZwkKmigR4YRt75jnAC0B8vRaagA
-	 IJLKj2iTk4rTwgj+vNkUlUpSgijzzjUFI2CRAmAQXYxjjKB4i5FObPEgnw5dURF3mb
-	 JFzfmytkWvg5nFlDQKORyFzYqc5CL6+iKMwRRencmg0heAWyEGIzTWJg7zvTf3gWhA
-	 chGebt3qJLdAg==
-Date: Wed, 25 Jun 2025 13:15:05 -1000
-From: Tejun Heo <tj@kernel.org>
-To: jake@hillion.co.uk
-Cc: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Juri Lelli <juri.lelli@redhat.com>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, sched-ext@lists.linux.dev,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] sched_ext: Drop kfuncs marked for removal in 6.15
-Message-ID: <aFyC-WVI1fkk0rPN@slm.duckdns.org>
-References: <20250625-scx-kfunc-cleanup-v1-1-d93335286fd5@hillion.co.uk>
+	s=arc-20240116; t=1750893365; c=relaxed/simple;
+	bh=INPL5mykLyHh9BAddpKD33kEw5Zh1QT3Mw8WI6pEDxg=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=qjAfdRImFNaDTAE6vn4oufQ/KcdNkE2nBuSEhc65zjgTRwsFGdjHo0H0A3uOMftp63SQrbrrTzm4Q3WBNR8Dj8bM3LBNPhni8M6TEqPd63I8jsSjr8mZ4VlQQRuH/HB8SYtmlJsmrPuxNxk/FPnj11vDPrxSDG7GKTw/HgvE6ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf10.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay04.hostedemail.com (Postfix) with ESMTP id 358E91A07B5;
+	Wed, 25 Jun 2025 23:16:00 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf10.hostedemail.com (Postfix) with ESMTPA id EF9402F;
+	Wed, 25 Jun 2025 23:15:56 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uUZLq-000000044gG-0dBi;
+	Wed, 25 Jun 2025 19:16:22 -0400
+Message-ID: <20250625231622.002316317@goodmis.org>
+User-Agent: quilt/0.68
+Date: Wed, 25 Jun 2025 19:15:43 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH v11 02/11] perf: Have get_perf_callchain() return NULL if crosstask and user are
+ set
+References: <20250625231541.584226205@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625-scx-kfunc-cleanup-v1-1-d93335286fd5@hillion.co.uk>
+Content-Type: text/plain; charset=UTF-8
+X-Stat-Signature: 1p8if5js4t5yq9bh6ff4fygzi1d9fce6
+X-Rspamd-Server: rspamout05
+X-Rspamd-Queue-Id: EF9402F
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX188kjvS+mWB42wzpmtmJv3x7MsKmJWWSlM=
+X-HE-Tag: 1750893356-313938
+X-HE-Meta: U2FsdGVkX1+XcjmPd0s26qAQpGmBVhaaTwi1VuxJiZDIA/sL7vqGO4HeuRzWIYiwKxChyEHXEtJb0RBXsL+aRbsqQmVOVfxEW55N+tyftmGu/yLgmET1TOiW6ggwQGrp2q1IrGUDKvmqAtlyHeqwskqedyo8bsk7opy/ncgWsfcqd6d1br3HPCJyhyF598UkTvZVVZMMRJIDOXDfcJkcwowBf8ggx9IToDBZYmAmzVBmYhcSkS6WlODjBiDHfrUaSvfqQVBEboP/uHN0OtjC4w5ELrqJGIP7w4iIck6S2JO6oerqFatL/fIMqy2mT+WkwIALsU20vZ6vKA1PZddDaIDZPyNen3aJkcj4K1B60knb+PXGyYTPXmwPH/CkeAZfypEwP3zDKpMOXOv2aUZuMxWXGO+jfWRPgZp8av7TlEU=
 
-On Wed, Jun 25, 2025 at 06:05:46PM +0100, Jake Hillion via B4 Relay wrote:
-> From: Jake Hillion <jake@hillion.co.uk>
-> 
-> sched_ext performed a kfunc renaming pass in 6.13 and kept the old names
-> around for compatibility with old binaries. These were scheduled for
-> cleanup in 6.15 but were missed. Submitting for cleanup in for-next.
-> 
-> Removed the kfuncs, their flags, and any references I could find to them
-> in doc comments. Left the entries in include/scx/compat.bpf.h as they're
-> still useful to make new binaries compatible with old kernels.
-> 
-> Tested by applying to my kernel. It builds and a modern version of
-> scx_lavd loads fine.
-> 
-> Signed-off-by: Jake Hillion <jake@hillion.co.uk>
+From: Josh Poimboeuf <jpoimboe@kernel.org>
 
-Applied to sched_ext/for-6.17.
+get_perf_callchain() doesn't support cross-task unwinding for user space
+stacks, have it return NULL if both the crosstask and user arguments are
+set.
 
-Thanks.
+Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/events/callchain.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index b0f5bd228cd8..cd0e3fc7ed05 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -224,6 +224,10 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 	struct perf_callchain_entry_ctx ctx;
+ 	int rctx, start_entry_idx;
+ 
++	/* crosstask is not supported for user stacks */
++	if (crosstask && user && !kernel)
++		return NULL;
++
+ 	entry = get_callchain_entry(&rctx);
+ 	if (!entry)
+ 		return NULL;
+@@ -240,7 +244,7 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 		perf_callchain_kernel(&ctx, regs);
+ 	}
+ 
+-	if (user) {
++	if (user && !crosstask) {
+ 		if (!user_mode(regs)) {
+ 			if  (current->mm)
+ 				regs = task_pt_regs(current);
+@@ -249,9 +253,6 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 		}
+ 
+ 		if (regs) {
+-			if (crosstask)
+-				goto exit_put;
+-
+ 			if (add_mark)
+ 				perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
+ 
+@@ -261,7 +262,6 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 		}
+ 	}
+ 
+-exit_put:
+ 	put_callchain_entry(rctx);
+ 
+ 	return entry;
 -- 
-tejun
+2.47.2
+
+
