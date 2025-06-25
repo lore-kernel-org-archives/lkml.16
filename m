@@ -1,192 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BD441E25ED;
-	Wed, 25 Jun 2025 08:08:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79EB3074AD;
+	Wed, 25 Jun 2025 08:09:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750838929; cv=none; b=fM3RbGsSNPvbt4ophm1e6of//RHXAO9WoKeYaOhNigv27ysunF6ivutqgPNwp/GcVxTUqeIX7SY3FsvL6DTL+OZi/1OS3vbglr/kGCtE7zA8/pikDPOKhbNNyZLtnxet5jr8wb0cv1aWVX996zMGdYXWOCb5/rCs27Ree5dmpG4=
+	t=1750838972; cv=none; b=lfHr0Zk2+kEgggob74nCnv/XYO9+vjXNFzYNhGzoE0g+X+7N2RZqF9oqev+qLcxv8FC7N33VuXPXGc18M+SYCFSOodE79kdNPz6vo9WCkSl8/cSPktKdVR8v402ZqRI+D9AZ/TPekF3TC70wFjMfPJ8vCqMs5LqInRSuPGGsTsU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750838929; c=relaxed/simple;
-	bh=HmAaA2Cbn5fJ3+qoi+KT7WNEvwt3kqHBs14BB0Pz3bc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MIXpgR4gw6N9v0HOppwCBORskF/ULEVG7Mp6vw0rZHvkreGop5Z3IenNyW1fvFaXRBRTqeYE4V4nBSFdq2xhJJkFOwJphFF4iC7Dv+GjQWJ0mKk+rfRgTjyUg8bXeI286hdxlMxKHH4LScy0HeUGy1L9Iu67wlRT1tQpiHcI1Gs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gtytpBMF; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gtytpBMF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15D42C4CEEE;
-	Wed, 25 Jun 2025 08:08:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750838929;
-	bh=HmAaA2Cbn5fJ3+qoi+KT7WNEvwt3kqHBs14BB0Pz3bc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gtytpBMFcb5Gvj9eFabwFEmqlqVOpn2W7bYKYBNKWpm2wh26UB8zlUZIFyTGtz4y5
-	 8ThgkB+NeDDfCrqgCc1Zko0++U0tEN24v8V/Oq3aK3qEAwRjWW68tnIgE5WQb/Od5i
-	 vXT2Y6+lCQBGRJQzv7D46DENCoZJ9l5hQ2PMpvufJMlCxFp59FPxfqyxG/NbkKB0ZI
-	 hKjdlTOUY75osMJ3lD8g8hngvY+t4lKg9KmtXAJTbtS62OT9zQf6nIT1rBxtOuGj2+
-	 lvvuTOcq3WkSfl0hswu/tiTs1jAlglaR9W3f/fABS/PDblqizW9yLSuXSn2BMbnjMP
-	 tgljCBtkt9ETQ==
-Message-ID: <71a6398f-1cda-4d83-992d-328d906ad8af@kernel.org>
-Date: Wed, 25 Jun 2025 10:08:41 +0200
+	s=arc-20240116; t=1750838972; c=relaxed/simple;
+	bh=ilhyZvA6BRCD5gISnlqFJ3xUsdlqaHhGlkwq3ALrQJ0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q9QRtYEyDyKrUlt/BqzfyhDZAfTj8u2J9IgCDfL6eHmdim5OYbRMEYYXmdR1j+8oOruQZHeh+HQEr4sWeOTKHR3OLs1ppP6NvSNRWkmkdyVyCzF79Y1wbp6iHVnVIYweMEFuJ2vB2wvnAihirH5Rz++Rap5MCHib2zf6dKqz9tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id C9DEA1F00055;
+	Wed, 25 Jun 2025 08:09:22 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 5B38EAC7A02; Wed, 25 Jun 2025 08:09:21 +0000 (UTC)
+X-Spam-Level: 
+Received: from shepard (unknown [192.168.1.1])
+	by laika.paulk.fr (Postfix) with ESMTPSA id 37E5AAC7A00;
+	Wed, 25 Jun 2025 08:09:19 +0000 (UTC)
+Date: Wed, 25 Jun 2025 10:09:16 +0200
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: Kuba =?utf-8?Q?Szczodrzy=C5=84ski?= <kuba@szczodrzynski.pl>
+Cc: Maxime Ripard <mripard@kernel.org>,
+	Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 4/5] riscv: dts: allwinner: d1s-t113: Add D-PHY to TCON
+ LCD0
+Message-ID: <aFuurDqkJ3yaMqRS@shepard>
+References: <20250221161751.1278049-1-kuba@szczodrzynski.pl>
+ <20250221161751.1278049-5-kuba@szczodrzynski.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] hwmon: (pmbus) Add support for MPS multi-phase
- mp2869a/mp29612a controllers
-To: =?UTF-8?B?5ZCz5qKT6LGq?= <tzuhao.wtmh@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Naresh Solanki <naresh.solanki@9elements.com>,
- Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>,
- Michal Simek <michal.simek@amd.com>, Fabio Estevam <festevam@gmail.com>,
- Henry Wu <Henry_Wu@quantatw.com>, Grant Peltier <grantpeltier93@gmail.com>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- Cedric Encarnacion <cedricjustine.encarnacion@analog.com>,
- Kim Seer Paller <kimseer.paller@analog.com>,
- Leo Yang <leo.yang.sy0@gmail.com>, Ninad Palsule <ninad@linux.ibm.com>,
- Alex Vdovydchenko <xzeol@yahoo.com>,
- John Erasmus Mari Geronimo <johnerasmusmari.geronimo@analog.com>,
- Nuno Sa <nuno.sa@analog.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Noah Wang <noahwang.wang@outlook.com>,
- Mariel Tinaco <Mariel.Tinaco@analog.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20250624074156.291176-1-Henry_Wu@quantatw.tw>
- <9bd05709-7702-4b74-85e1-3df25b57c535@kernel.org>
- <CAL3H=v3s6H4ZpnS=EhPrpEiu-9N-xFCkunHuwWW0xnkXbzY9Kg@mail.gmail.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <CAL3H=v3s6H4ZpnS=EhPrpEiu-9N-xFCkunHuwWW0xnkXbzY9Kg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-On 25/06/2025 08:31, 吳梓豪 wrote:
->>
->>> +     return 0;
->>> +}
->>> +
->>> +static struct pmbus_driver_info MP2869A_info = {
->>
->> This is const.
-> Since info will be modified by mp2869a_read_vout at runtime, I chose
-> not to make it constant
-
-No, this makes it a singleton. I don't see the code in current driver,
-so I don't get whether you meant current code or future. If current:
-where is it modified?
-
-mp2869a_read_vout() has terrible style btw, really not looking like
-Linux coding style. Be sure you carefully follow the style.
-
->>
->>> +     .pages = MP2869A_PAGE_NUM,
->>> +     .format[PSC_VOLTAGE_IN] = linear,
->>> +     .format[PSC_VOLTAGE_OUT] = direct,
->>> +     .format[PSC_TEMPERATURE] = linear,
->>> +     .format[PSC_CURRENT_IN] = linear,
->>> +     .format[PSC_CURRENT_OUT] = linear,
->>> +     .format[PSC_POWER] = linear,
->>> +     .m[PSC_VOLTAGE_OUT] = 1,
->>> +     .b[PSC_VOLTAGE_OUT] = 0,
->>> +     .R[PSC_VOLTAGE_OUT] = -3,
->>> +     .func[0] = PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT |
->>> +             PMBUS_HAVE_IIN | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT |
->>> +             PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_POUT |
->>> +             PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT,
->>> +     .func[1] = PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT | PMBUS_HAVE_IOUT |
->>> +             PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_POUT | PMBUS_HAVE_TEMP,
->>> +     .read_byte_data = MP2869A_read_byte_data,
->>> +     .read_word_data = MP2869A_read_word_data,
->>> +};
->>> +
->>> +static int mp2869a_probe(struct i2c_client *client)
->>> +{
->>> +     struct pmbus_driver_info *info;
->>> +     struct MP2869A_data *data;
->>> +     int ret;
->>> +
->>> +     data = devm_kzalloc(&client->dev, sizeof(struct MP2869A_data),
->>
->> sizeof(*)
->>
->>> +             GFP_KERNEL);
->>
->> Misaligned. Run checkpatch --srtict
->>
->>> +     if (!data)
->>> +             return -ENOMEM;
->>> +
->>> +     data->chip_id = (enum chips)(uintptr_t)i2c_get_match_data(client);
->>
->> These are just wrong or redundant casts. You need only one cast -
->> kernel_ulong_t
->>
->>> +
->>> +     memcpy(data->max_phases, mp2869a_max_phases[data->chip_id],
->>> +             sizeof(data->max_phases));
->>
->> Why you cannot just store the pointer?
-> As chip_id and max_phase will be constant, it should be acceptable to
-> handle them via pointers in this case.
->>
->>> +
->>> +     memcpy(&data->info, &MP2869A_info, sizeof(*info));
->>
->> Why you cannot just store the pointer?
-> Considering that the info can change at runtime, using memcpy is a
-> safer approach
-
-Where do you modify the contents?
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="id1qkDeCEtzLoxTA"
+Content-Disposition: inline
+In-Reply-To: <20250221161751.1278049-5-kuba@szczodrzynski.pl>
 
 
-Best regards,
-Krzysztof
+--id1qkDeCEtzLoxTA
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Fri 21 Feb 25, 17:17, Kuba Szczodrzy=C5=84ski wrote:
+> The sun4i TCON needs a reference to the D-PHY in order to support LVDS
+> on Allwinner D1s/T113.
+>=20
+> Signed-off-by: Kuba Szczodrzy=C5=84ski <kuba@szczodrzynski.pl>
+> ---
+>  arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi b/arch/ris=
+cv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
+> index e4175adb0..d241ba306 100644
+> --- a/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
+> +++ b/arch/riscv/boot/dts/allwinner/sunxi-d1s-t113.dtsi
+> @@ -828,6 +828,8 @@ tcon_lcd0: lcd-controller@5461000 {
+>  			resets =3D <&ccu RST_BUS_TCON_LCD0>,
+>  				 <&ccu RST_BUS_LVDS0>;
+>  			reset-names =3D "lcd", "lvds";
+> +			phys =3D <&dphy>;
+> +			phy-names =3D "dphy";
+
+Like I mentionned in the other patch, I don't think the name "dphy" makes s=
+ense.
+"combo-phy" probably makes a lot more sense here.
+
+Also the dt binding should be updated to reflect the introduction of the
+property.
+
+Paul
+
+>  			#clock-cells =3D <0>;
+> =20
+>  			ports {
+> --=20
+> 2.25.1
+>=20
+>=20
+
+--=20
+Paul Kocialkowski,
+
+Independent contractor - sys-base - https://www.sys-base.io/
+Free software developer - https://www.paulk.fr/
+
+Expert in multimedia, graphics and embedded hardware support with Linux.
+
+--id1qkDeCEtzLoxTA
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmhbrqwACgkQhP3B6o/u
+lQw7sg//WLoQpyAqStd6AsRVh1QrfKNATtlAD2vpTMd1iAFGZif40Xf/eIUFKSHc
+SzaFwDnYhc5d/1hJbOJ4gs866AaSGCTexQtq4wAOHuPQE+Kk3NqJ49L26Td3MtCk
+aRmQ9brdHzvAK2DyMxWxro6Xrc5D3A7wtt0FM8Jwo5CpKJgOsC3OcAgmIx/eVkYr
+pwHh3ajrnCvcPDOLvQRaALp6OOrgL1DiAs+Y61v7nDdU7U7wWNNPXd1fh4dtQbjC
+lqsM2zbhxY8+pBU6Ec6XEKPC7yvwBYxmoah6D5ophlnyQoGJbah4nzZcJwILdlJl
+6Ptb2oaRIA5D7u+2SgPKNj4ZQbhX4hdWPXn9yRMeAnf2LGziJU4BQ/AegTPWT4Zc
+N7W1TsD/4SJ9fqsZYCu8FuKUHEWUfSLl36yROAoVOWLk6hVtEfMae/f2P3gUOUle
+XXCVmn7In8LRK8THK/40O076jqSiytSnnHl2Do5wNnb95g+Rh06BVPf3OL6Z4O8i
+hJaV4vdNSSR7ta+IenShS1fZcl15dIt1vjNFGoPUflEJUY+OVfL8zTwVRgi2KGSb
+DRFue9mLKEvEtyGkGvZKscxaLVZtqfCkDg9D6w3WZG4OOigyI+N8jVTuaoVjzcWC
+ohQ6sFkD+3w4n6uDKid8NSxD1p34DxSWphNP1vsz6OftJO/xFLM=
+=LCaF
+-----END PGP SIGNATURE-----
+
+--id1qkDeCEtzLoxTA--
