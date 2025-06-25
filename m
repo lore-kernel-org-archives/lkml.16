@@ -1,673 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7F4202983;
-	Wed, 25 Jun 2025 07:12:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D653211290
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:13:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750835577; cv=none; b=O8LJ0/6z0+Z8TFDWHrpw4xOaQnuJJx6pwHEaielmvJMp3BkvP6kJ4MQqvbq0ELVPy7j/dVLzSz7sBk2Q2iW0QOkoaJkcMFYDEF20B7E7OZ89j6bfdexEXS9OxeVF6+gqHnGKIjxcZt5ZHeL2sYjyAMYnKrErP6C6OoNChMhJUHI=
+	t=1750835598; cv=none; b=uWn0fcf+4Z+Bydhq8do4WVGWv82baTGaFlODawKbtNs3OisZu8gYoFh2iJCKoApklSdBvctLaufM1V/tHbSgDhpi71/7j5Eg5uL6f9TlXjKzdHNKixZcPURovJfTKfvdZWB/2hrD0/0AzFUgu1pn+Fcy6arZVnE7pNkbyYcPhD8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750835577; c=relaxed/simple;
-	bh=ncBLyGpPk6x138mmUq9k8sHP8jWBBxbGDPaJN6Lz0QI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r1M9/jBEMBZb8Ugz20meBuNN12bqAxyN774umbMFB+ORxOSNX4rplQ4eGS/+szDulhhrNtNKGY50ZNaydEd7B5R9wL9FLHXgpAl0J6vQHgXc1kV6DwxpdYh6712iTA3o7Ga1CaKeHtA4hXD8M3Kx+qmcJtzCEleQ/X1VOYIFEVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EwWze6q/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750835598; c=relaxed/simple;
+	bh=Ds7IUTDTvw2CV2lBhtiAyxq24lOIiiA5IpHwJwPyoJ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=N3VHSVcmauUr0jsb4dzs21ReLhZ1rkANYLmJQj+sgLX+Ipk6xHIKymbCnXwbtq6gKtrBvJdXN47WPR7LRNCbjk5wU4aIapmJKqL0w/y3tzOxwKVOB2RGgRIy6j5jfueOh5dDdcsNuO9dfolhqP6X63oU7NSHngIHXTxfPzUWuek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fidglaxO; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EwWze6q/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58FD7C4CEEA;
-	Wed, 25 Jun 2025 07:12:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750835576;
-	bh=ncBLyGpPk6x138mmUq9k8sHP8jWBBxbGDPaJN6Lz0QI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EwWze6q/k5wflbJIJEM0xjJUSElsH8uJy7KY6hSF/+7FqmVt4knBtNc/uf/jEd1kW
-	 cDDZ1iN57e8OS1N69+gR087WNFB4OltUevX2jkRo+LbXXDp0/vSinoBg/I3adcW9vW
-	 wamjSPwJ2DUxaKNFDh2DpCOIszUybVdZFIPJv/b9C9DalSUVH/eEnXVve6TIlZ5sFG
-	 7AFfVm7Qr+7dLK23u3KhcCnVnQYMqdV3BdPuV0TrXSL/xCz4TggQcMPXvb+k830sjG
-	 jR5ZzDdxmdPlRDV+sHgFl1yCi0n3dpTuYfDAXq46kGUC3sYLp1dRCEpuEstamuFEOf
-	 UQvJf1EQFfGIg==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Jason A . Donenfeld" <Jason@zx2c4.com>,
-	Eric Biggers <ebiggers@kernel.org>
-Subject: [PATCH] lib/crypto: sha256: Add tests for HMAC-SHA224 and HMAC-SHA256
-Date: Wed, 25 Jun 2025 00:11:31 -0700
-Message-ID: <20250625071131.1496688-1-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fidglaxO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750835593;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UvazZI9dix5Ccz8uQdaazIH2SdfSX8TXp65gCpdhwKo=;
+	b=fidglaxO8zgwVMEne/5d6CJuRbHesSAWTc3zRbvoVhVlYLNFsgtu71eH6YQI9tFGK7ViKU
+	E6x2DP7n94ga2sjB7aqXaSBU+zZaPVg0T8825/revwhe6MPoiLN9mt37aKboCkxZ+T6DsN
+	0M2QoVl7BJ9zV3gLnxM/md90UMUsBX4=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-314-Fe5EUMpbN462kZ5hMWAkjw-1; Wed, 25 Jun 2025 03:13:08 -0400
+X-MC-Unique: Fe5EUMpbN462kZ5hMWAkjw-1
+X-Mimecast-MFC-AGG-ID: Fe5EUMpbN462kZ5hMWAkjw_1750835587
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d50eacafso8848655e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:13:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750835587; x=1751440387;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UvazZI9dix5Ccz8uQdaazIH2SdfSX8TXp65gCpdhwKo=;
+        b=cYIaf2rznvsypF6J/lSF3R92pBlDbX6SA/5kjfXickflqrChqth0jBxREYV8nr2toa
+         S8Y+s40sGKtC0rNjYkCKjcuepVgCTLNBYwl1G7tLtSZJbbyhZenfbtu1tnD86dL137nt
+         54nfTADaCdGyrIrRezUrJ7NzAZf9+jkhBKagLT5Cg7xuZa0lxEw/nADa2SA85SW+2HYa
+         AUhOfWNdbWz2YxFi9WxJd605a40zqdrELFkePB0CI53amRTy5bCXaY8vndvU6OvVN6Lc
+         8xuUqzSiz7QTxQq4xP8SuMb2trKYru8DbqJcQYo3Snw/6E/zd8XSsnWlrpGhr+lKy+hm
+         SMuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWadFIuO3c2Hu1DVIz4ZRreSULf5gAFWCYa+uLx5gzDDA7aH0MzeQvQwf3V9oXWX2NMOmCVN3XTjfXOozs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxDuRRCcjXD5XITjy4bCYUPagZEifjfKYXXV1709VRmpkhC15E
+	OrY6CMvzX3Twkev8TrV9vJ68vMINzrUDVAj+1IVx3PTv5WyABd2vtzlMQfkUQKvobfEKYJt5PbW
+	l3+c41P+1zpMlI20bmFnda5BqscL+jaIMUYpyovdTbs69IVA9EB0YUR463wLO8vxZiQ==
+X-Gm-Gg: ASbGncuXcxBuX6pt2ZKgakQNNQPjIH6/x6zb/K7VBeqUzQxJkhuv0c2I2XgUT8Caro0
+	kv4rfIw1yXyuPtfLoTuJ7COunJyvgWITQYmb1xbM6i+2ITZvZv1iIAQsjVcroJJGztfzMwAdSxf
+	zUUEZ1x9MNCpY9crH1kSu5g55T64T07YAJ2+C3KZpIMQXP5qsE61K7NOfA3WpWuL1X/J1FLtstv
+	KxRUP/LTMP3IChHNyEEQYenAnYQcwwlDH9pItxGTSf2/NbySlXga3A1y+EdoTdpbiFNISHxsGHt
+	ftG6uPUJq+KmrQJ5oKO719ivVcT1GgDtLyuNOU26eJfYeNsJLeQTjGFhOTA/RvYchsvjAA==
+X-Received: by 2002:a05:600c:c166:b0:453:2433:1c5b with SMTP id 5b1f17b1804b1-45381aeaf59mr16247375e9.5.1750835586442;
+        Wed, 25 Jun 2025 00:13:06 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF3iA3F1mdUK03DtATl2924qBuUv87aDvuUQRfj1Hbnrj8+86URjh4kC1Jl7WzPkyXWYI1Cug==
+X-Received: by 2002:a05:600c:c166:b0:453:2433:1c5b with SMTP id 5b1f17b1804b1-45381aeaf59mr16246855e9.5.1750835585911;
+        Wed, 25 Jun 2025 00:13:05 -0700 (PDT)
+Received: from ?IPV6:2a0d:3341:cc86:3510:2b4a:1654:ed63:3802? ([2a0d:3341:cc86:3510:2b4a:1654:ed63:3802])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8069534sm3692041f8f.44.2025.06.25.00.13.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 00:13:05 -0700 (PDT)
+Message-ID: <20159d14-7d6b-4c16-9f00-ae993cc16f90@redhat.com>
+Date: Wed, 25 Jun 2025 09:13:02 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [net-next v13 04/11] net: mtip: The L2 switch driver for imx287
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+ Sascha Hauer <s.hauer@pengutronix.de>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Fabio Estevam <festevam@gmail.com>,
+ Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+ Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>,
+ Andrew Lunn <andrew@lunn.ch>
+References: <20250622093756.2895000-1-lukma@denx.de>
+ <20250622093756.2895000-5-lukma@denx.de>
+ <b31793de-e34f-438c-aa37-d68f3cb42b80@redhat.com>
+ <20250624230437.1ede2bcb@wsk>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250624230437.1ede2bcb@wsk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Now that there's a library API for HMAC-SHA224 and HMAC-SHA256, update
-sha224_kunit and sha256_kunit to test it.  This mirrors the tests for
-HMAC-SHA384 and HMAC-SHA512 in sha384_kunit and sha512_kunit.  The test
-vectors were generated using scripts/crypto/gen-hash-testvecs.py.
+On 6/24/25 11:04 PM, Lukasz Majewski wrote:
+>> On 6/22/25 11:37 AM, Lukasz Majewski wrote:
+>>> +static void mtip_aging_timer(struct timer_list *t)
+>>> +{
+>>> +	struct switch_enet_private *fep = timer_container_of(fep,
+>>> t,
+>>> +
+>>> timer_aging); +
+>>> +	fep->curr_time = mtip_timeincrement(fep->curr_time);
+>>> +
+>>> +	mod_timer(&fep->timer_aging,
+>>> +		  jiffies +
+>>> msecs_to_jiffies(LEARNING_AGING_INTERVAL)); +}  
+>>
+>> It's unclear to me why you decided to maintain this function and timer
+>> while you could/should have used a macro around jiffies instead.
+> 
+> This is a bit more tricky than just getting value from jiffies.
+> 
+> The current code provides a monotonic, starting from 0 time "base" for
+> learning and managing entries in internal routing tables for MTIP.
+> 
+> To be more specific - the fep->curr_time is a value incremented after
+> each ~10ms.
+> 
+> Simple masking of jiffies would not provide such features.
 
-Signed-off-by: Eric Biggers <ebiggers@kernel.org>
----
+I guess you can get the same effect storing computing the difference
+from an initial jiffies value and using jiffies_to_msecs(<delta>)/10.
 
-This applies on top of my v1 "SHA-256 library improvements" series.
-It can also be retrieved from:
+>> [...]
+>>> +static int mtip_sw_learning(void *arg)
+>>> +{
+>>> +	struct switch_enet_private *fep = arg;
+>>> +
+>>> +	while (!kthread_should_stop()) {
+>>> +		set_current_state(TASK_INTERRUPTIBLE);
+>>> +		/* check learning record valid */
+>>> +		mtip_atable_dynamicms_learn_migration(fep,
+>>> fep->curr_time,
+>>> +						      NULL, NULL);
+>>> +		schedule_timeout(HZ / 100);
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}  
+>>
+>> Why are you using a full blown kernel thread here? 
+> 
+> The MTIP IP block requires the thread for learning. It is a HW based
+> switching accelerator, but the learning feature must be performed by
+> SW (by writing values to its registers).
+> 
+>> Here a timer could
+>> possibly make more sense.
+> 
+> Unfortunately, not - the code (in
+> mtip_atable_dynamicms_learn_migration() must be called). This function
+> has another role - it updates internal routing table with timestamps
+> (provided by timer mentioned above).
 
-    git fetch https://git.kernel.org/pub/scm/linux/kernel/git/ebiggers/linux.git sha256-lib-cleanup-v1
+Why a periodic timer can't call such function?
 
- lib/crypto/tests/sha224-testvecs.h | 247 +++++++++++++++++++++++++++++
- lib/crypto/tests/sha224_kunit.c    |  13 +-
- lib/crypto/tests/sha256-testvecs.h | 247 +++++++++++++++++++++++++++++
- lib/crypto/tests/sha256_kunit.c    |  13 +-
- 4 files changed, 516 insertions(+), 4 deletions(-)
+> 
+>> Why are checking the table every 10ms, while
+>> the learning intervall is 100ms? 
+> 
+> Yes, this is correct. In 10ms interval the internal routing table is
+> updated. 100 ms is for learning.
+> 
+>> I guess you could/should align the
+>> frequency here with such interval.
+> 
+> IMHO learning with 10ms interval would bring a lot of overhead.
+> 
+> Just to mention - the MTIP IP block can generate interrupt for
+> learning event. However, it has been advised (bu NXP support), that a
+> thread with 100ms interval shall be used to avoid too many interrupts.
 
-diff --git a/lib/crypto/tests/sha224-testvecs.h b/lib/crypto/tests/sha224-testvecs.h
-index bbab439490682..ae5334c77bb10 100644
---- a/lib/crypto/tests/sha224-testvecs.h
-+++ b/lib/crypto/tests/sha224-testvecs.h
-@@ -219,5 +219,252 @@ static const struct {
- 			0xc9, 0x89, 0xda, 0x1c, 0xf7, 0x8d, 0x00, 0xbd,
- 			0x21, 0x73, 0xb1, 0x69,
- 		},
- 	},
- };
-+
-+static const struct {
-+	size_t data_len;
-+	size_t key_len;
-+	u8 mac[SHA224_DIGEST_SIZE];
-+} hmac_sha224_testvecs[] = {
-+	{
-+		.data_len = 0,
-+		.key_len = 0,
-+		.mac = {
-+			0x5c, 0xe1, 0x4f, 0x72, 0x89, 0x46, 0x62, 0x21,
-+			0x3e, 0x27, 0x48, 0xd2, 0xa6, 0xba, 0x23, 0x4b,
-+			0x74, 0x26, 0x39, 0x10, 0xce, 0xdd, 0xe2, 0xf5,
-+			0xa9, 0x27, 0x15, 0x24,
-+		},
-+	},
-+	{
-+		.data_len = 1,
-+		.key_len = 1,
-+		.mac = {
-+			0x88, 0xa0, 0xf8, 0x4e, 0x8d, 0xdd, 0xe0, 0x30,
-+			0xb7, 0x29, 0xd6, 0x04, 0x30, 0x73, 0x5b, 0x7f,
-+			0x8c, 0x6c, 0x3a, 0x72, 0xe3, 0x4e, 0xae, 0xa3,
-+			0x91, 0x2a, 0x10, 0x4b,
-+		},
-+	},
-+	{
-+		.data_len = 2,
-+		.key_len = 31,
-+		.mac = {
-+			0xaa, 0x71, 0xab, 0x70, 0xb2, 0x69, 0xa9, 0x03,
-+			0xfd, 0xcc, 0x60, 0x08, 0x3f, 0xea, 0xeb, 0xb5,
-+			0xe9, 0xa0, 0xe9, 0xbe, 0x95, 0x30, 0xf2, 0x00,
-+			0xcd, 0x8c, 0x4e, 0xe0,
-+		},
-+	},
-+	{
-+		.data_len = 3,
-+		.key_len = 32,
-+		.mac = {
-+			0x62, 0x2e, 0x9e, 0x52, 0xfa, 0xd8, 0xc0, 0x14,
-+			0xb4, 0x29, 0xbd, 0x34, 0x58, 0xad, 0x31, 0x1f,
-+			0x04, 0x0a, 0x50, 0xdb, 0x85, 0xeb, 0x20, 0x0e,
-+			0x1b, 0x0d, 0x6d, 0x50,
-+		},
-+	},
-+	{
-+		.data_len = 16,
-+		.key_len = 33,
-+		.mac = {
-+			0x41, 0x87, 0x7c, 0x42, 0x40, 0x2f, 0x20, 0x5c,
-+			0x5a, 0x40, 0x2b, 0x17, 0x6f, 0x5a, 0x39, 0x15,
-+			0x0c, 0xcb, 0xe3, 0x90, 0x38, 0x84, 0x34, 0x35,
-+			0x2a, 0x3e, 0x1a, 0x32,
-+		},
-+	},
-+	{
-+		.data_len = 32,
-+		.key_len = 64,
-+		.mac = {
-+			0xe3, 0x5f, 0xb6, 0xb4, 0xc2, 0xe7, 0xc5, 0x4f,
-+			0xc8, 0x44, 0xc9, 0xc4, 0x2d, 0x26, 0x91, 0x1a,
-+			0x2b, 0xa7, 0xad, 0xa9, 0x1d, 0x2d, 0xe8, 0x10,
-+			0xc2, 0x8c, 0x70, 0x0f,
-+		},
-+	},
-+	{
-+		.data_len = 48,
-+		.key_len = 65,
-+		.mac = {
-+			0x9a, 0xf1, 0x06, 0xf1, 0x0e, 0xad, 0x0a, 0x67,
-+			0xe2, 0xdc, 0x40, 0xd3, 0x3d, 0xc3, 0x8a, 0xe6,
-+			0x3d, 0x5b, 0xe9, 0x4a, 0x35, 0x42, 0x0d, 0x9b,
-+			0x5f, 0x9d, 0xef, 0xd6,
-+		},
-+	},
-+	{
-+		.data_len = 49,
-+		.key_len = 66,
-+		.mac = {
-+			0xf0, 0x19, 0x80, 0xe8, 0xc3, 0xee, 0x43, 0xec,
-+			0xf8, 0x94, 0x18, 0x90, 0x0d, 0x02, 0x2d, 0x16,
-+			0x38, 0xfb, 0x2d, 0x54, 0x56, 0xf8, 0x2b, 0x4c,
-+			0x14, 0xd7, 0x88, 0x18,
-+		},
-+	},
-+	{
-+		.data_len = 63,
-+		.key_len = 127,
-+		.mac = {
-+			0x65, 0xa9, 0x59, 0xe2, 0x44, 0xf1, 0x55, 0x1a,
-+			0xff, 0x90, 0x4a, 0x64, 0xbb, 0xd4, 0x26, 0xe5,
-+			0x1f, 0x30, 0x9f, 0xd3, 0x25, 0x0d, 0x37, 0x25,
-+			0xfd, 0x0a, 0xd2, 0x40,
-+		},
-+	},
-+	{
-+		.data_len = 64,
-+		.key_len = 128,
-+		.mac = {
-+			0x92, 0x09, 0x25, 0x44, 0x11, 0x0a, 0xb8, 0x31,
-+			0x47, 0xae, 0x69, 0xda, 0xd8, 0x2a, 0xd0, 0x68,
-+			0x35, 0xfb, 0x72, 0x8b, 0x1c, 0x00, 0x68, 0x5a,
-+			0xa4, 0x3a, 0x83, 0x5f,
-+		},
-+	},
-+	{
-+		.data_len = 65,
-+		.key_len = 129,
-+		.mac = {
-+			0x4e, 0x0d, 0xbb, 0xc5, 0x50, 0x74, 0x32, 0x38,
-+			0x40, 0xf8, 0x87, 0x3d, 0xeb, 0x8b, 0x55, 0x00,
-+			0xc2, 0xf6, 0xc4, 0x27, 0x18, 0x21, 0x54, 0x4f,
-+			0x1f, 0x72, 0x5e, 0xe8,
-+		},
-+	},
-+	{
-+		.data_len = 127,
-+		.key_len = 1000,
-+		.mac = {
-+			0x12, 0x26, 0x3d, 0xbb, 0xb3, 0xcf, 0xf0, 0x8e,
-+			0x27, 0x51, 0xd5, 0x8b, 0x33, 0xb5, 0x56, 0x6b,
-+			0x00, 0x02, 0xbf, 0x07, 0xcc, 0x14, 0x4d, 0xf1,
-+			0x7d, 0x35, 0xf5, 0x06,
-+		},
-+	},
-+	{
-+		.data_len = 128,
-+		.key_len = 1024,
-+		.mac = {
-+			0x14, 0x43, 0xe7, 0x0e, 0xce, 0x3b, 0xef, 0x08,
-+			0x70, 0xb9, 0xaf, 0xfd, 0xb2, 0x13, 0xb5, 0xb6,
-+			0x64, 0x5a, 0xc4, 0x8b, 0x50, 0x55, 0xf5, 0xfe,
-+			0xd5, 0x60, 0x62, 0x4e,
-+		},
-+	},
-+	{
-+		.data_len = 129,
-+		.key_len = 0,
-+		.mac = {
-+			0xfb, 0x04, 0x66, 0x12, 0x94, 0x32, 0x37, 0xeb,
-+			0x10, 0xba, 0x7d, 0x6b, 0xfd, 0x0b, 0x8e, 0xeb,
-+			0x54, 0x45, 0x72, 0x23, 0x32, 0x50, 0x2a, 0x69,
-+			0x3c, 0x27, 0x08, 0x4a,
-+		},
-+	},
-+	{
-+		.data_len = 256,
-+		.key_len = 1,
-+		.mac = {
-+			0x15, 0xe9, 0xdb, 0x9b, 0xaf, 0x29, 0x9b, 0xf2,
-+			0xc5, 0x92, 0x26, 0xe7, 0xf6, 0x83, 0x1c, 0xab,
-+			0xf3, 0xb9, 0x80, 0x04, 0xf3, 0xb7, 0x9c, 0x20,
-+			0x5b, 0x71, 0x88, 0xb0,
-+		},
-+	},
-+	{
-+		.data_len = 511,
-+		.key_len = 31,
-+		.mac = {
-+			0x81, 0x1a, 0x0a, 0xc5, 0xbd, 0xa0, 0xb7, 0x81,
-+			0x24, 0x43, 0xd3, 0x85, 0x06, 0x42, 0x90, 0x6f,
-+			0x45, 0x6d, 0x93, 0x96, 0xfc, 0x51, 0xbe, 0xab,
-+			0xa4, 0x70, 0x40, 0x54,
-+		},
-+	},
-+	{
-+		.data_len = 513,
-+		.key_len = 32,
-+		.mac = {
-+			0x34, 0x00, 0x89, 0xb2, 0xac, 0x18, 0xc0, 0x55,
-+			0xcf, 0xc2, 0x6f, 0x49, 0xfe, 0xb2, 0x19, 0x00,
-+			0x0e, 0x49, 0xa2, 0xb6, 0x97, 0x40, 0x90, 0x94,
-+			0x30, 0x74, 0xf3, 0x8d,
-+		},
-+	},
-+	{
-+		.data_len = 1000,
-+		.key_len = 33,
-+		.mac = {
-+			0x17, 0x05, 0x9b, 0x61, 0xd0, 0xfa, 0xbc, 0xa7,
-+			0x55, 0xc7, 0x40, 0x65, 0x86, 0xb0, 0xa4, 0xb7,
-+			0x23, 0x0f, 0xc5, 0x9e, 0x61, 0x6c, 0xcc, 0x51,
-+			0x6d, 0xd3, 0x1b, 0xf8,
-+		},
-+	},
-+	{
-+		.data_len = 3333,
-+		.key_len = 64,
-+		.mac = {
-+			0xad, 0x13, 0x2b, 0xe8, 0x3d, 0x1d, 0x0e, 0x56,
-+			0x29, 0xba, 0xad, 0xc8, 0x33, 0xb3, 0xe3, 0xab,
-+			0xe7, 0x72, 0x9b, 0x14, 0x68, 0xe5, 0x32, 0xb0,
-+			0x26, 0xf6, 0xcc, 0x8d,
-+		},
-+	},
-+	{
-+		.data_len = 4096,
-+		.key_len = 65,
-+		.mac = {
-+			0xd1, 0x2d, 0x8f, 0x95, 0x67, 0x98, 0xa7, 0x40,
-+			0x85, 0x6f, 0x4e, 0x2c, 0xa2, 0xfa, 0xce, 0x7d,
-+			0x1b, 0x1f, 0xbf, 0xdd, 0xa5, 0x53, 0x3a, 0xc3,
-+			0xd1, 0x7f, 0xb6, 0x26,
-+		},
-+	},
-+	{
-+		.data_len = 4128,
-+		.key_len = 66,
-+		.mac = {
-+			0x65, 0x29, 0x5e, 0x12, 0x7e, 0xd9, 0xaa, 0x56,
-+			0x77, 0x6c, 0x59, 0x23, 0x63, 0xd7, 0x0e, 0xfa,
-+			0xca, 0x31, 0x65, 0xcf, 0x07, 0x59, 0xaf, 0x45,
-+			0xbc, 0x00, 0x3c, 0xcc,
-+		},
-+	},
-+	{
-+		.data_len = 4160,
-+		.key_len = 127,
-+		.mac = {
-+			0x08, 0x43, 0x7e, 0x3b, 0xe8, 0x3a, 0x94, 0x94,
-+			0x76, 0xfe, 0xbd, 0x02, 0xf3, 0xd3, 0x04, 0xe3,
-+			0x43, 0x33, 0x3b, 0x8d, 0x47, 0x88, 0x58, 0xde,
-+			0x29, 0x7b, 0xb0, 0xd2,
-+		},
-+	},
-+	{
-+		.data_len = 4224,
-+		.key_len = 128,
-+		.mac = {
-+			0xe3, 0xe1, 0x16, 0x26, 0xf3, 0xba, 0x87, 0x7e,
-+			0xb7, 0xa9, 0x18, 0x13, 0xf8, 0x4c, 0x76, 0xce,
-+			0x45, 0x87, 0x9b, 0xa5, 0xe1, 0xb3, 0x8a, 0xa4,
-+			0xfd, 0x37, 0xbc, 0x4b,
-+		},
-+	},
-+	{
-+		.data_len = 16384,
-+		.key_len = 129,
-+		.mac = {
-+			0x87, 0x28, 0x18, 0x95, 0x51, 0x14, 0x63, 0x80,
-+			0xd4, 0x1b, 0xf6, 0x5b, 0xe7, 0x38, 0x12, 0x8f,
-+			0x4d, 0x99, 0xfb, 0x36, 0xc8, 0xbf, 0xb0, 0xdd,
-+			0x80, 0xed, 0x01, 0x8d,
-+		},
-+	},
-+};
-diff --git a/lib/crypto/tests/sha224_kunit.c b/lib/crypto/tests/sha224_kunit.c
-index 2ae0f83b0ae72..84f55f8b9c283 100644
---- a/lib/crypto/tests/sha224_kunit.c
-+++ b/lib/crypto/tests/sha224_kunit.c
-@@ -10,21 +10,30 @@
- #define HASH_SIZE SHA224_DIGEST_SIZE
- #define HASH_INIT sha224_init
- #define HASH_UPDATE sha224_update
- #define HASH_FINAL sha224_final
- #define HASH_TESTVECS sha224_testvecs
--/* TODO: add HMAC-SHA224 support to the library, then enable the tests for it */
-+#define HMAC_KEY hmac_sha224_key
-+#define HMAC_CTX hmac_sha224_ctx
-+#define HMAC_SETKEY hmac_sha224_preparekey
-+#define HMAC_INIT hmac_sha224_init
-+#define HMAC_UPDATE hmac_sha224_update
-+#define HMAC_FINAL hmac_sha224_final
-+#define HMAC hmac_sha224
-+#define HMAC_USINGRAWKEY hmac_sha224_usingrawkey
-+#define HMAC_TESTVECS hmac_sha224_testvecs
- #include "hash-test-template.h"
- 
- static struct kunit_case hash_test_cases[] = {
- 	KUNIT_CASE(test_hash_test_vectors),
- 	KUNIT_CASE(test_hash_incremental_updates),
- 	KUNIT_CASE(test_hash_buffer_overruns),
- 	KUNIT_CASE(test_hash_overlaps),
- 	KUNIT_CASE(test_hash_alignment_consistency),
- 	KUNIT_CASE(test_hash_interrupt_context),
- 	KUNIT_CASE(test_hash_ctx_zeroization),
-+	KUNIT_CASE(test_hmac),
- 	KUNIT_CASE(benchmark_hash),
- 	{},
- };
- 
- static struct kunit_suite hash_test_suite = {
-@@ -33,7 +42,7 @@ static struct kunit_suite hash_test_suite = {
- 	.suite_init = hash_suite_init,
- 	.suite_exit = hash_suite_exit,
- };
- kunit_test_suite(hash_test_suite);
- 
--MODULE_DESCRIPTION("KUnit tests and benchmark for SHA-224");
-+MODULE_DESCRIPTION("KUnit tests and benchmark for SHA-224 and HMAC-SHA224");
- MODULE_LICENSE("GPL");
-diff --git a/lib/crypto/tests/sha256-testvecs.h b/lib/crypto/tests/sha256-testvecs.h
-index 2b0912a101833..1700c3362b251 100644
---- a/lib/crypto/tests/sha256-testvecs.h
-+++ b/lib/crypto/tests/sha256-testvecs.h
-@@ -219,5 +219,252 @@ static const struct {
- 			0x75, 0x90, 0xb8, 0x3e, 0x50, 0xcd, 0x06, 0xb7,
- 			0xb9, 0xb9, 0x2b, 0x91, 0x4f, 0xba, 0xe4, 0x4c,
- 		},
- 	},
- };
-+
-+static const struct {
-+	size_t data_len;
-+	size_t key_len;
-+	u8 mac[SHA256_DIGEST_SIZE];
-+} hmac_sha256_testvecs[] = {
-+	{
-+		.data_len = 0,
-+		.key_len = 0,
-+		.mac = {
-+			0xb6, 0x13, 0x67, 0x9a, 0x08, 0x14, 0xd9, 0xec,
-+			0x77, 0x2f, 0x95, 0xd7, 0x78, 0xc3, 0x5f, 0xc5,
-+			0xff, 0x16, 0x97, 0xc4, 0x93, 0x71, 0x56, 0x53,
-+			0xc6, 0xc7, 0x12, 0x14, 0x42, 0x92, 0xc5, 0xad,
-+		},
-+	},
-+	{
-+		.data_len = 1,
-+		.key_len = 1,
-+		.mac = {
-+			0x40, 0x52, 0x2f, 0x8b, 0xf0, 0xa0, 0xf3, 0xb6,
-+			0x4b, 0xe3, 0xc5, 0x4a, 0x46, 0x01, 0x31, 0xe4,
-+			0x5f, 0x84, 0xe2, 0x18, 0xa3, 0x33, 0x48, 0xe8,
-+			0x2b, 0x6b, 0xd4, 0xde, 0xde, 0xe1, 0xc2, 0x6d,
-+		},
-+	},
-+	{
-+		.data_len = 2,
-+		.key_len = 31,
-+		.mac = {
-+			0x79, 0x28, 0xb1, 0xee, 0x72, 0xed, 0xe3, 0xce,
-+			0xc6, 0x27, 0x98, 0x17, 0x9e, 0x91, 0xb2, 0x5d,
-+			0xd7, 0x2a, 0x72, 0x7e, 0x19, 0xea, 0xcb, 0x02,
-+			0x70, 0x38, 0x74, 0xd2, 0xd3, 0x0a, 0x90, 0x87,
-+		},
-+	},
-+	{
-+		.data_len = 3,
-+		.key_len = 32,
-+		.mac = {
-+			0x53, 0x81, 0xf3, 0xcd, 0xfa, 0x45, 0x9d, 0x69,
-+			0xf6, 0x0a, 0x92, 0x64, 0x45, 0x54, 0x59, 0xfd,
-+			0xb7, 0x8b, 0x6a, 0x1e, 0x4a, 0xb0, 0x75, 0x69,
-+			0x2a, 0x6f, 0x78, 0x3b, 0xf7, 0xfa, 0x0f, 0x4a,
-+		},
-+	},
-+	{
-+		.data_len = 16,
-+		.key_len = 33,
-+		.mac = {
-+			0x8d, 0xa7, 0x9b, 0xf6, 0xb8, 0xef, 0xa2, 0xf8,
-+			0xc9, 0x02, 0xd7, 0xa2, 0x6f, 0x98, 0x5e, 0xbc,
-+			0x1e, 0xb3, 0xb6, 0x87, 0xb2, 0x6f, 0x56, 0xb6,
-+			0xcd, 0x8d, 0x0a, 0xcd, 0x05, 0xf9, 0xd5, 0x63,
-+		},
-+	},
-+	{
-+		.data_len = 32,
-+		.key_len = 64,
-+		.mac = {
-+			0x77, 0x74, 0x7e, 0x1e, 0x2e, 0x03, 0x79, 0xb9,
-+			0xf5, 0xbe, 0x58, 0xb9, 0x61, 0x25, 0x3f, 0x19,
-+			0xe5, 0x64, 0x16, 0x19, 0x6c, 0x37, 0xcd, 0xb8,
-+			0x51, 0x20, 0xff, 0x4b, 0xa6, 0x81, 0x33, 0xa1,
-+		},
-+	},
-+	{
-+		.data_len = 48,
-+		.key_len = 65,
-+		.mac = {
-+			0xe0, 0x57, 0xef, 0xde, 0x3b, 0x69, 0x97, 0x6b,
-+			0x56, 0x9a, 0x04, 0x3e, 0x4a, 0x1f, 0xac, 0x71,
-+			0xac, 0xec, 0x0c, 0xf7, 0xd3, 0x0b, 0x4f, 0xf8,
-+			0x91, 0xd7, 0xaf, 0x9b, 0xb9, 0x34, 0x19, 0x8a,
-+		},
-+	},
-+	{
-+		.data_len = 49,
-+		.key_len = 66,
-+		.mac = {
-+			0xe1, 0x58, 0x7c, 0xa7, 0x48, 0x91, 0xb9, 0x7c,
-+			0x11, 0x30, 0x4c, 0x47, 0xc4, 0x9c, 0xb1, 0x01,
-+			0xca, 0xf7, 0x7c, 0xf8, 0xb2, 0xc5, 0xfb, 0xf0,
-+			0xe5, 0xd1, 0xb5, 0xc1, 0x2a, 0x6a, 0x19, 0x93,
-+		},
-+	},
-+	{
-+		.data_len = 63,
-+		.key_len = 127,
-+		.mac = {
-+			0x23, 0x22, 0x95, 0x4b, 0x7f, 0x2b, 0x68, 0x32,
-+			0xc8, 0x8a, 0x99, 0x51, 0xce, 0x86, 0xf9, 0x05,
-+			0xed, 0x21, 0xe4, 0x5b, 0x37, 0x4a, 0xb9, 0x35,
-+			0x98, 0x1f, 0xc0, 0x27, 0xdb, 0x4e, 0x4f, 0x03,
-+		},
-+	},
-+	{
-+		.data_len = 64,
-+		.key_len = 128,
-+		.mac = {
-+			0xa7, 0x50, 0x37, 0x33, 0x52, 0xbb, 0x47, 0x9d,
-+			0x64, 0xea, 0xac, 0x8d, 0xee, 0xa3, 0xe7, 0x0e,
-+			0x3d, 0x94, 0xa6, 0x6c, 0xf8, 0xdb, 0xee, 0x7e,
-+			0x50, 0x7e, 0xdf, 0x50, 0x5d, 0x4e, 0xe0, 0xbf,
-+		},
-+	},
-+	{
-+		.data_len = 65,
-+		.key_len = 129,
-+		.mac = {
-+			0xb4, 0x5a, 0x63, 0xeb, 0xcd, 0xd0, 0x85, 0xd0,
-+			0x94, 0xf3, 0xf9, 0xd5, 0x94, 0x4f, 0xaf, 0x19,
-+			0x32, 0x0d, 0x82, 0x8b, 0x58, 0x65, 0xf6, 0x35,
-+			0x0a, 0x91, 0x56, 0x8d, 0xbb, 0x77, 0xaf, 0x55,
-+		},
-+	},
-+	{
-+		.data_len = 127,
-+		.key_len = 1000,
-+		.mac = {
-+			0x4d, 0x27, 0x00, 0x8b, 0x14, 0xa2, 0xd9, 0x06,
-+			0x8b, 0x9c, 0x9d, 0x48, 0x4f, 0x27, 0x54, 0xf8,
-+			0x56, 0x4a, 0x24, 0xab, 0xdf, 0xcc, 0x8a, 0x6c,
-+			0x6c, 0xe8, 0x99, 0x78, 0x4b, 0xb9, 0xba, 0x1c,
-+		},
-+	},
-+	{
-+		.data_len = 128,
-+		.key_len = 1024,
-+		.mac = {
-+			0x71, 0x98, 0xa5, 0xde, 0x98, 0xa9, 0x68, 0x7f,
-+			0xe4, 0x81, 0x81, 0x84, 0x33, 0x08, 0x22, 0xed,
-+			0x86, 0x69, 0xf8, 0x88, 0x9e, 0x0d, 0x53, 0xf5,
-+			0xec, 0x4d, 0x81, 0x07, 0x2b, 0x4e, 0x85, 0xfe,
-+		},
-+	},
-+	{
-+		.data_len = 129,
-+		.key_len = 0,
-+		.mac = {
-+			0x93, 0x90, 0x59, 0x60, 0x44, 0x45, 0x0e, 0x4b,
-+			0xe4, 0x91, 0xd4, 0x4e, 0x7e, 0xb5, 0x7d, 0x28,
-+			0xec, 0xa4, 0xcb, 0x14, 0x6e, 0xd4, 0xe6, 0x38,
-+			0xf1, 0x52, 0x7d, 0x65, 0x95, 0xc3, 0xab, 0xd6,
-+		},
-+	},
-+	{
-+		.data_len = 256,
-+		.key_len = 1,
-+		.mac = {
-+			0xfe, 0xef, 0xd3, 0x6c, 0xeb, 0x8e, 0xba, 0x76,
-+			0x56, 0xb1, 0xb1, 0x10, 0x26, 0xfd, 0x3e, 0x0e,
-+			0xbb, 0xfd, 0xc2, 0x71, 0x49, 0x94, 0x2f, 0xc0,
-+			0xd7, 0xd4, 0x25, 0x39, 0x1b, 0xa8, 0xf5, 0x70,
-+		},
-+	},
-+	{
-+		.data_len = 511,
-+		.key_len = 31,
-+		.mac = {
-+			0xcd, 0x37, 0x44, 0x7c, 0xf9, 0x3d, 0xcd, 0xec,
-+			0x87, 0x7f, 0x70, 0x77, 0x81, 0x0a, 0xce, 0xb8,
-+			0xcf, 0x93, 0x45, 0x45, 0xc8, 0xd0, 0xfb, 0x2a,
-+			0x4c, 0xc6, 0xbc, 0x48, 0x28, 0x72, 0x44, 0x60,
-+		},
-+	},
-+	{
-+		.data_len = 513,
-+		.key_len = 32,
-+		.mac = {
-+			0x6c, 0x98, 0x40, 0x54, 0xc3, 0xee, 0x00, 0xb7,
-+			0x64, 0x53, 0x2c, 0x24, 0x53, 0x22, 0xfd, 0x2d,
-+			0xf4, 0x1d, 0xc5, 0xcf, 0xa0, 0x2f, 0xd6, 0x38,
-+			0x43, 0x83, 0x65, 0xa4, 0x1e, 0x44, 0x00, 0x02,
-+		},
-+	},
-+	{
-+		.data_len = 1000,
-+		.key_len = 33,
-+		.mac = {
-+			0x30, 0x8e, 0xac, 0x9e, 0x41, 0x01, 0xba, 0x4f,
-+			0x64, 0xe7, 0x8f, 0x7f, 0xbf, 0xfa, 0xd8, 0xe4,
-+			0x1e, 0x00, 0x1a, 0x64, 0xad, 0x6b, 0xde, 0xb2,
-+			0xb8, 0xd2, 0xad, 0xc1, 0x69, 0x6f, 0xc0, 0x08,
-+		},
-+	},
-+	{
-+		.data_len = 3333,
-+		.key_len = 64,
-+		.mac = {
-+			0x5c, 0xcc, 0x36, 0xab, 0x4a, 0x90, 0xf6, 0xbd,
-+			0x71, 0x6d, 0x6a, 0x7a, 0x93, 0x92, 0x6a, 0x96,
-+			0xfb, 0x21, 0x9e, 0x4a, 0x8f, 0xe8, 0x84, 0x09,
-+			0x6d, 0x94, 0x68, 0xca, 0x09, 0xb8, 0x31, 0xa0,
-+		},
-+	},
-+	{
-+		.data_len = 4096,
-+		.key_len = 65,
-+		.mac = {
-+			0x6d, 0xc9, 0x80, 0x79, 0xf5, 0x6b, 0x28, 0x9c,
-+			0xf6, 0xee, 0xcc, 0xf6, 0xc4, 0xdb, 0xe0, 0x71,
-+			0x4a, 0x4c, 0x48, 0x4b, 0x32, 0x4a, 0x8e, 0x27,
-+			0x53, 0xe0, 0x7b, 0x93, 0xa7, 0x22, 0x2d, 0xa6,
-+		},
-+	},
-+	{
-+		.data_len = 4128,
-+		.key_len = 66,
-+		.mac = {
-+			0x38, 0x73, 0x14, 0x9e, 0xbc, 0xb1, 0x26, 0x99,
-+			0x64, 0xcf, 0x9c, 0x01, 0x1d, 0xf7, 0xa8, 0xef,
-+			0xb7, 0x33, 0x06, 0x77, 0x43, 0x27, 0x73, 0xbc,
-+			0x7a, 0x11, 0x36, 0xef, 0x6f, 0xe2, 0xa8, 0xfa,
-+		},
-+	},
-+	{
-+		.data_len = 4160,
-+		.key_len = 127,
-+		.mac = {
-+			0x7f, 0xd1, 0xdb, 0xed, 0xfe, 0x81, 0xbc, 0xe1,
-+			0x5e, 0x47, 0xdb, 0x67, 0x76, 0xdb, 0xa2, 0x47,
-+			0xfe, 0x02, 0xc5, 0x12, 0xa6, 0xdd, 0xd2, 0xff,
-+			0x9c, 0x17, 0xa4, 0xc4, 0x74, 0xeb, 0xc8, 0x4b,
-+		},
-+	},
-+	{
-+		.data_len = 4224,
-+		.key_len = 128,
-+		.mac = {
-+			0xc1, 0xcb, 0xad, 0xb5, 0x9b, 0xa2, 0x46, 0x18,
-+			0x55, 0x1c, 0x52, 0xa8, 0x33, 0xb6, 0xc1, 0xc7,
-+			0x17, 0xc4, 0x3e, 0x5f, 0x97, 0xc4, 0x6b, 0x12,
-+			0xb9, 0x2f, 0x15, 0xff, 0x7c, 0x9d, 0x14, 0xa4,
-+		},
-+	},
-+	{
-+		.data_len = 16384,
-+		.key_len = 129,
-+		.mac = {
-+			0xe1, 0xc5, 0xea, 0x86, 0x87, 0x81, 0xb9, 0x1d,
-+			0x0b, 0x2e, 0x48, 0x0c, 0x16, 0x47, 0xe6, 0x54,
-+			0x51, 0x8e, 0x37, 0x80, 0xbf, 0x47, 0xf9, 0xfb,
-+			0x00, 0xa8, 0x2f, 0xd8, 0x11, 0x5a, 0xca, 0x75,
-+		},
-+	},
-+};
-diff --git a/lib/crypto/tests/sha256_kunit.c b/lib/crypto/tests/sha256_kunit.c
-index 7fe12f3c68bfd..703ed66d5ed97 100644
---- a/lib/crypto/tests/sha256_kunit.c
-+++ b/lib/crypto/tests/sha256_kunit.c
-@@ -10,21 +10,30 @@
- #define HASH_SIZE SHA256_DIGEST_SIZE
- #define HASH_INIT sha256_init
- #define HASH_UPDATE sha256_update
- #define HASH_FINAL sha256_final
- #define HASH_TESTVECS sha256_testvecs
--/* TODO: add HMAC-SHA256 support to the library, then enable the tests for it */
-+#define HMAC_KEY hmac_sha256_key
-+#define HMAC_CTX hmac_sha256_ctx
-+#define HMAC_SETKEY hmac_sha256_preparekey
-+#define HMAC_INIT hmac_sha256_init
-+#define HMAC_UPDATE hmac_sha256_update
-+#define HMAC_FINAL hmac_sha256_final
-+#define HMAC hmac_sha256
-+#define HMAC_USINGRAWKEY hmac_sha256_usingrawkey
-+#define HMAC_TESTVECS hmac_sha256_testvecs
- #include "hash-test-template.h"
- 
- static struct kunit_case hash_test_cases[] = {
- 	KUNIT_CASE(test_hash_test_vectors),
- 	KUNIT_CASE(test_hash_incremental_updates),
- 	KUNIT_CASE(test_hash_buffer_overruns),
- 	KUNIT_CASE(test_hash_overlaps),
- 	KUNIT_CASE(test_hash_alignment_consistency),
- 	KUNIT_CASE(test_hash_interrupt_context),
- 	KUNIT_CASE(test_hash_ctx_zeroization),
-+	KUNIT_CASE(test_hmac),
- 	KUNIT_CASE(benchmark_hash),
- 	{},
- };
- 
- static struct kunit_suite hash_test_suite = {
-@@ -33,7 +42,7 @@ static struct kunit_suite hash_test_suite = {
- 	.suite_init = hash_suite_init,
- 	.suite_exit = hash_suite_exit,
- };
- kunit_test_suite(hash_test_suite);
- 
--MODULE_DESCRIPTION("KUnit tests and benchmark for SHA-256");
-+MODULE_DESCRIPTION("KUnit tests and benchmark for SHA-256 and HMAC-SHA256");
- MODULE_LICENSE("GPL");
+FTR, my suggestion is to increase the
+mtip_atable_dynamicms_learn_migration's call period to 100ms
 
-base-commit: d210369868b2dbdc664b9a2e71681b25da22d292
--- 
-2.50.0
+>> Side note: I think you should move the buffer management to a later
+>> patch: this one is still IMHO too big.
+> 
+> And this is problematic - the most time I've spent for v13 to separate
+> the code - i.e. I exclude one function, then there are warnings that
+> other function is unused (and of course WARNINGS in a separate patches
+> are a legitimate reason to call for another patch set revision).
+
+A trick to break that kind of dependencies chain is to leave a function
+implementation empty.
+
+On the same topic, you could have left mtip_rx_napi() implementation
+empty up to patch 6 or you could have introduced napi initialization and
+cleanup only after such patch.
+
+In a similar way, you could introduce buffer managements in a later
+patch and add the relevant calls afterwards.
+
+/P
 
