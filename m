@@ -1,156 +1,454 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2118.outbound.protection.outlook.com [40.107.101.118])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB3220E031;
-	Wed, 25 Jun 2025 20:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750884173; cv=none; b=IhiwSgoMgx5u5K1TdTI/MTdxWEx+MkW+brrTfRRBbarwJClcEWAh7GlI6syjxuiLWeGCSDNUY0V/xNQABytgs+X3YfeIbU0MXdtUYuCpCX1vG+AVSA8MVL2C1FmQpqsYsrunZZQ8DLJ5E2InrlIL1u6HoLyQUD3ovA5X5dQWA9c=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750884173; c=relaxed/simple;
-	bh=TQ2yeYtVxpuEcSzjUBWcAiYEI/WKnqX64t4Owb5qOrA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gJicKXXIUlkCaYxPmr2wBhKK9W5369h/RHr0gCT96ERVtJKUUcZ3OQZT4vnfdoMXfgsFjOZP+po174HhWymr3Qw12oZQhGum46wZN++GrrPxSNvmGkXVYkk97pWQp96R/FADIAAEhCEOry60lX/YBByincQmXQCe+1/rZOEywwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5TLu1SR; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DC020E031;
+	Wed, 25 Jun 2025 20:43:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.118
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750884186; cv=fail; b=F7BNj0yTuZHxTpJQ9UAGHujZXItbaZkqBydVj4adSnhHDYpV61VMdXHa8I2Qeq820kepdU4EMvyLXPAWpq9ModRyDwYoyYVR8hQlmH5i8MWPRyNQy8SdaPkeIr0bpC97Z8fNsnAhzPksAwRHf4ygvp7OMRR1ShKJFwSz0dtwASY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750884186; c=relaxed/simple;
+	bh=IgGIU3rg2sYhRNu6SaB8dPR82MdNrwuRzGHKF79EWdY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=VGWkWA2011ZICVLMiSQOUAz1uqFe6T8Eq7v7jWblMy8va4YJlM09hTGONQptVjntq7FpjFj6J+bIVpLRUtJ0T3irXnIRmUrQ6RqOmFnp8YOwA7X+isOVYvRalXUM8zAEaxzXiFQGlNTcZwgcbWZsN75YlLT3DpeOln7IsPHmpFA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=FQEEonD6; arc=fail smtp.client-ip=40.107.101.118
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5TLu1SR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9EEDC4CEEA;
-	Wed, 25 Jun 2025 20:42:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750884172;
-	bh=TQ2yeYtVxpuEcSzjUBWcAiYEI/WKnqX64t4Owb5qOrA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=U5TLu1SR2eFmHmjOKeSx3aKCAWxa4XTEYdF8wwxUrjql02hOZ09fD7Ik0plJ4vBoe
-	 AS237xzFgsf5hfHMH/KUE+PxIcr73d6Ck6KTq68abVVJFDYB9fbHdhtDY2GtiEz7cA
-	 WTTKhgFQPy9PRD1aYqTPsqRAUc+/riXd10J7jTDsMCYQNLLBoxmbWajwTq4B5LIaiO
-	 VcXlESrEBruI46HNCXmJYbHDMNwwPVyfv2R7LrpEpvvSPgk+boj603uMj71yJU7nf0
-	 D4DYtZjhSYagenKy+5N3BLKiht1FthT8rNrUABrxCkP932kq32xsVcyOaIZgj2ogdq
-	 3eQ/kT5FUWLgQ==
-Date: Wed, 25 Jun 2025 15:42:52 -0500
-From: Rob Herring <robh@kernel.org>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: Ryan Chen <ryan_chen@aspeedtech.com>,
-	Catalin Marinas <catalin.marinas@arm.com>, soc@lists.linux.dev,
-	Mo Elbadry <elbadrym@google.com>, Arnd Bergmann <arnd@arndb.de>,
-	William Kennington <wak@google.com>,
-	Taniya Das <quic_tdas@quicinc.com>, linux-kernel@vger.kernel.org,
-	spuranik@nvidia.com, Eric Biggers <ebiggers@google.com>,
-	Joel Stanley <joel@jms.id.au>, linux-aspeed@lists.ozlabs.org,
-	Will Deacon <will@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Nishanth Menon <nm@ti.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	nfraprado@collabora.com, linux-arm-kernel@lists.infradead.org,
-	Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-	Rom Lemarchand <romlem@google.com>, devicetree@vger.kernel.org,
-	Geert Uytterhoeven <geert@linux-m68k.org>, leohu@nvidia.com,
-	Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-	Yuxiao Zhang <yuxiaozhang@google.com>, dkodihalli@nvidia.com,
-	wthai@nvidia.com
-Subject: Re: [PATCH v0 0/5] Add initial AST2700 SoC support
-Message-ID: <20250625204252.GA2143810-robh@kernel.org>
-References: <20250612100933.3007673-1-ryan_chen@aspeedtech.com>
- <174975871838.2916138.1953670783794758715.robh@kernel.org>
- <7b3be5c104b1fe1033570f2f3e2391991b6d9d42.camel@codeconstruct.com.au>
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="FQEEonD6"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=uFyzZL+eP/Bpgu9/6MPlLJgq+Wx3Uu6P4BKGoawaD6lC60ns40hP1L3VVAcaA3FidY9W5DjTVu568j4TOtNjoHbAY0TMOw1TfkJT5vUoVTvYnkrrjqwkzPeq6v7e4p5aV9tndqpewegoLZjNGTeQp4YhNBa4H0jk0ARn4SjsJ//+Jxw+/4DtObZx+0BjgZLVijaDtyOtYNBFxyTBQpp0YbgQmi0pXeZoW6vtOQrDqyoOIctAWQ/WBZ9FOwHdqWaVZjyPuZwIMWUjNNYr6kwpjxlD9UlHGtDH2CdhtFpezUKD9lzkYM6A5zi8nhcSel31WoLyEWSo6BwTXYnSO9UKcg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2Ji/Q+Cl2MhmQnfxQowgBH5dHffmLJ/MyVx1UdBSfW8=;
+ b=PSV1Q7TKWKhVFyKDh7uVCdptigFjvz7VtifBWOJFGG6Gnbv76Hfs+sUPgYe7EX4ZOK0nFAK29QaVJ5aTGC0A3f7ut3KTjJuB8wlS+twQNwa4x7J+mB4BACiOtqem8GaJdzBfZuVyy03lPEoQ1eihAt8tN5R8v9OttF9iftu54XNA9yu8rlmxjCdOup7zsKUS7aoNAAeN4Y1m0PPgVi2X9Uj86gFi6FTdMra1hI7DsELrjH6/M5ACXHZZPPdnH1wmtZ9eaiNe41f3Hv4Spz5hrZh4lgbL2TV8Q2uTfeqsRcI/0CMafVVp4tn95/jNm/fV/NGLZcMl/G0K0ogKpGyKAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2Ji/Q+Cl2MhmQnfxQowgBH5dHffmLJ/MyVx1UdBSfW8=;
+ b=FQEEonD6Z1T1hEO9124LpX9F3hygdChCrdUuSZpHn3gJULPFfYkC7WFJRVFJ4HeLut9zecZcP/z+zGcp1L39P76HxNUpCnHrdel4i2/5UHcrKFzu56cwU9GVEXI7Vm3FQ0nsMuH955Hz1lbAv3CjEHI2hZ+EsMbkGTliIBtfXg8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from LV2PR01MB7792.prod.exchangelabs.com (2603:10b6:408:14f::10) by
+ PH0PR01MB7927.prod.exchangelabs.com (2603:10b6:510:289::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8857.28; Wed, 25 Jun 2025 20:43:00 +0000
+Received: from LV2PR01MB7792.prod.exchangelabs.com
+ ([fe80::2349:ebe6:2948:adb9]) by LV2PR01MB7792.prod.exchangelabs.com
+ ([fe80::2349:ebe6:2948:adb9%4]) with mapi id 15.20.8880.015; Wed, 25 Jun 2025
+ 20:42:58 +0000
+From: D Scott Phillips <scott@os.amperecomputing.com>
+To: Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+ =?utf-8?Q?Micha=C5=82?=
+ Winiarski <michal.winiarski@intel.com>, Igor Mammedov
+ <imammedo@redhat.com>, LKML <linux-kernel@vger.kernel.org>, Mika
+ Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 24/25] PCI: Perform reset_resource() and build fail list
+ in sync
+In-Reply-To: <e20e3171-7aa5-0646-7934-e6b10cdefc4e@linux.intel.com>
+References: <20241216175632.4175-1-ilpo.jarvinen@linux.intel.com>
+ <20241216175632.4175-25-ilpo.jarvinen@linux.intel.com>
+ <86plf0lgit.fsf@scott-ph-mail.amperecomputing.com>
+ <e20e3171-7aa5-0646-7934-e6b10cdefc4e@linux.intel.com>
+Date: Wed, 25 Jun 2025 13:33:20 -0700
+Message-ID: <86ms9vlfxr.fsf@scott-ph-mail.amperecomputing.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-ClientProxiedBy: MW4PR02CA0001.namprd02.prod.outlook.com
+ (2603:10b6:303:16d::21) To LV2PR01MB7792.prod.exchangelabs.com
+ (2603:10b6:408:14f::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7b3be5c104b1fe1033570f2f3e2391991b6d9d42.camel@codeconstruct.com.au>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR01MB7792:EE_|PH0PR01MB7927:EE_
+X-MS-Office365-Filtering-Correlation-Id: 04191941-0e12-409c-ed50-08ddb428dec7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|38350700014|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?L0FuOElMTXJjaFQrYkcyblU3ZlFjS3JkcDlpc0M0RUduMkRtbEUwL2dBRUxY?=
+ =?utf-8?B?VGYxM0NTTERCdEdiSnJjODBIL3FiUTFVaS9OcUVhdlJYcVJVK0t3RHdJUk5S?=
+ =?utf-8?B?NUEreFB1QnhCSmxlZ2lySDZaaU9ZOHMwa0ZFeVFKQ2JkdmZzZklpZzcyd3Zt?=
+ =?utf-8?B?OWxXNkNORC9yQWZORnZmL2FLM0ZmU3MzZ0FnM3NQVjF3akkvSURoanBqSlM3?=
+ =?utf-8?B?eFRvTWhzMEhiWWgrbVlYSDN3ejAxYm1wdG5HRFdJdTVTT2Zkc1BmWVp3TWFz?=
+ =?utf-8?B?cmx3NjMxUGRZMEZrdjZic0MxK3drbU9RRlU0V3A5NW0vUWlZWmVaWGFhejE5?=
+ =?utf-8?B?TmtmTXVSbHhONW12bWhGWkRZYUtxY0tRODJGZVQxTWVsYVp3ZmszZGxKMjVQ?=
+ =?utf-8?B?YXc5ZllPZzhXcVhIek9YRk9pbThNWnIyc2Jmb2V0cG5RQS9HUDVzZTJrSVFx?=
+ =?utf-8?B?aFVrZFJmUUs3VmM4T1hsSXR4L1JBOEU5WGV2eDdMbDFSQlBEdWpzc3o1KzlJ?=
+ =?utf-8?B?ejNZNVF5dnNoU1VvU2lPY0FKU3NFOThrM0hjbE9iWk1PSzFVYnZobFNKTE1O?=
+ =?utf-8?B?N1MwV2xtZ3ZaWGxqRnJodDQxUGF4dEpkU1B4OXlRdzNkNzZDeVhMZ1JIZHpL?=
+ =?utf-8?B?UjZQeTdQZmFxSEVKZ2dQY3NFK09HbU81ZjQ4bFpTTHlxZEtncGtUUzEzUFdV?=
+ =?utf-8?B?Ymp5em1iaDh2eVBpdmxlc01WNzhZc0wxdmZ5Q1dmc2NWVytZUHZvbUJxWmhk?=
+ =?utf-8?B?M3B5d05aYm9qR1BXWHptbWNNL1liMmR4T28wTnpmcmFtamFjNVVhV2VhdUdt?=
+ =?utf-8?B?dkxvSlFzRHZMUHVlZU1aNFRocVo4L0dQbEtnT2xHMHh3Y054bWN2dG9VeWpp?=
+ =?utf-8?B?MkN5Z1pYMGRSU2FnZWF6YW9HUjdvV1dycThBdlJOalJxNmp0VDNiQzZLMFow?=
+ =?utf-8?B?WlJnS0J3MFUwRUpYZjFKUkk2TW8zUnBBWm5URlBPeGRvNHhpcUdranlOZjhv?=
+ =?utf-8?B?c0pkNEYxd1YxQi9sSXBnWEZNK0w5VVBJQ1lseHdIUTlFSHRSKzhjOS9OWmpl?=
+ =?utf-8?B?bm4wWDFZUjRVU3JvazQ4WEJ5NkJkTWJVVU1jclVRdGs4eVRRVVlaQ2g1WTli?=
+ =?utf-8?B?NTk4SXhhTmszRWdVNkVNVWlxVFZVaSttMVdLc0gxQUg4OHUxVEF2eFpUQVJU?=
+ =?utf-8?B?OGYvUDJrLzFqb0JNWTJPMStpaCtTTHI1RjVtazlXRDJXQTAzc0J0QU1xbktx?=
+ =?utf-8?B?M29rWlJyYmlYdmRiTmJFbkdNS3lreCs3T28yUnFjZEVQdXdiQ2JNczhZS3VF?=
+ =?utf-8?B?YkVuczltK2grUVhCc1Q1TWgwcXJyWGx6d2lIR3BVVmVIeXZBMHlINjZBaGtP?=
+ =?utf-8?B?eWplaUNZMk1ndzI2NFJuemlMbXFzbGlPNUFtRjN3K1JEVWI4RjZ2Um5CUytZ?=
+ =?utf-8?B?cmxyWkNDSkhqMGxWd0ErV2pYSE5mL2VjMURkbm5NOEdVd2N5YytQTHVmd1NG?=
+ =?utf-8?B?NzZUQVkyTXVTcGp3cXhjOXZPdU5Cc1dEc2t2VEhDSUwvWUdSRHBqcWFFSlMy?=
+ =?utf-8?B?YTlCMEtBbENRRkhiQmhXdVZrR2o4NU1uZlkxRW1XSytIa09sSkRERGZzbUZv?=
+ =?utf-8?B?eUlBbC8veFlycnZKck5QTnBvMWV1OWhKb3JoK2lTSWxWQWJtNTVuNVl6anRl?=
+ =?utf-8?B?WXJUWW5FcTFENHBwRExqengyRFBVRC9rZkMzcTZXcmUvUDM1cm1sUW9Nd2F2?=
+ =?utf-8?B?d3N4LzRSVWs0ZXJDVTZJTHp2SGNFUHdLS05zem1Mb250dkpWUE94cHF1RTl2?=
+ =?utf-8?B?eUNpdW14MUJIT3VaR2VUSE95SEpZYzlkYTNmbklBb2dLZkltNXpSTmY4ZzRK?=
+ =?utf-8?B?eGhWMCs0Rm5JR1hpWE03S1JaWWJuSzlVOGdjNENvN2dINm5YeUxuM0ZYbkJW?=
+ =?utf-8?B?L2R5OFRUT0pucDNaT2l1UFJBbGNQcW1pY1pLcDlXYnBYOUhPclIvbkZkMHZu?=
+ =?utf-8?Q?hXgKmCen6ccDevkSc0Wru0XqYavNKI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR01MB7792.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(38350700014)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?di8zQSt6dUFwaGFXR3J1djN2UVM3YjM5N3RoUDZsb0xwWDBPTVFhM21maWJ2?=
+ =?utf-8?B?Y3Q1aVlhV1FiK1hhSGFyRmxFZmdhOWdBeHFpcDU2QmN5L2MweDhPa1JEYi9N?=
+ =?utf-8?B?N3pwbTJaZUFwWnQ5RlRFV1YyaFR0UEV5RWtZKzQ4V21FZlhHa2hkWFlLSW9j?=
+ =?utf-8?B?bzlJMG9nVUpxVFhXN1FlS2ppbG1VR3FWQ1UyNHJFMWJyNGhXSHFsbkhSL2Nx?=
+ =?utf-8?B?ZHNmVVR1ZFRuWWdSdThyYXcyZERkL1lXWWlOU3NMRWFiNzlzTHB6dkxmSGVh?=
+ =?utf-8?B?Y3FWcnJRNkJ5SHIyWmpvcmNvL3hHTlhLN0VRVHptMjRLRkh6YzJwam41Mmhv?=
+ =?utf-8?B?VHdscHorS1BZWFhjRW1ZY21TbXBjREdkNFZBODV3WVlUbS9BVHRWaFhJT1lP?=
+ =?utf-8?B?Ly9BZUZoVE1NaytiSHY0c0dYcUtNSHFwMDh2ZmZkZmZkbDFmYWpqRE5EMGZq?=
+ =?utf-8?B?WUhYcnJuc2dDRHlVT01mL3JjVkNzdjVSTkxvWDlETFlUTnozcWFaZEpabldv?=
+ =?utf-8?B?c1g5WjFhN3NTemRCZUk0NzdLT01hdkFHd3NMcU1sRnliTlU3eWk4SDQrUzR3?=
+ =?utf-8?B?S29SWkdTc2Z2SzZTS0xyVGRkWFRyWFhWclhlRWljSzdZcGtmckNRZG5QODl3?=
+ =?utf-8?B?OXFTNFBDVi9xaGlRd2VnNmRkM2UrMTc1aXFHWkd5YTRXL2FyUDJFbm1kMmRt?=
+ =?utf-8?B?SW1XUkFaNzV2UytGbGhIckJvUEh2bkVXaUVxYmZVQy9RKzJVcEVLK2JZSHVQ?=
+ =?utf-8?B?Wk5PZCtjZ2RSNWZRKzZrUUtIODRyYllQZHhxM0o1OXp0KzRjREJpNVNEaFhQ?=
+ =?utf-8?B?UXBLK3V2NXFFNGhzS05PbVVQUXliR3NGRU5MbVVqTXYxZFBpcUVESXlQVDg1?=
+ =?utf-8?B?Vm5STytvaDB1N3ZhSWVSNjFrZCswRkVjQStpdkphZ0U3bkJ6WkVyd3NTVWhu?=
+ =?utf-8?B?bVZmV3lYRDB2QUFZeWkvTElLSjhydjd5YkI4S2lWdFRIYytuZU5SQ0wvV1RH?=
+ =?utf-8?B?MWhFRnV2eC9nL295R2JPVmpIS2ExM3d4ZWwvVFNuS1ZsN3c1NU9TR1NrU2RC?=
+ =?utf-8?B?Nktwdmk1VTlQRFpQcmZ2K2FBYUVGRm1LREZPL3ovblYzSUJDUk1wUTlIWEpa?=
+ =?utf-8?B?SkRLdHFOckNVelJJZEpKWjNLQ2tNd1d3d1NIV0FnL2Vic0FFWitJckNxckFQ?=
+ =?utf-8?B?S0J4d3dtL2J1VlFDOHlDM2V4M0Iya1p2U08vT2lDUjNRMU1jNnNkZXVXUGhG?=
+ =?utf-8?B?YlpqenN3d0h2dExoUHJrUUN6WGpyNWNiODlPVmV6Tk9MV0gzaXd5MFV6THFU?=
+ =?utf-8?B?WGNqNUpZTUVuSXNDTDc1UEluenFtN08zQ3dhYThybEsrWndwSkovdGRVcHJa?=
+ =?utf-8?B?OHVMR0VDNUcvdTk2Z1ZncUNCUjVPWXFOMTh2QXAvR3Y2VFRqRDBiMnVUUmF5?=
+ =?utf-8?B?enFUMG4zWDl6SnZxb0Z3U2ZkaG5neDRERlBqREpSUlZaaW9MQ3VWcG1Pdkd2?=
+ =?utf-8?B?RzJpWWViNWlhbldNdVg2dUVoV28yTGVYYXJ1SFp2Yk42c2R1aXZVdklRSUFK?=
+ =?utf-8?B?Rzc3QWNwWDRjejRhUFZnL0gzVWZ5dGRIYVIwWWpRTXFBbFlsNUpzQ1hKRTdK?=
+ =?utf-8?B?OTVuNHJac3htRzJ6dlN5TUZYS3p5eWdDT3ZRcStrcEhKTUladUIrQXBxYnFE?=
+ =?utf-8?B?T25EZVJScUdHZk00ZjE5NkNSbXFuQlFXM0FjSE1LV29nS1NoYTBzSXVzUWNE?=
+ =?utf-8?B?Z2dwYWsxZ2FsQ1I4UHNxT1FUaXVsZDV5aDVzd3U2VTNyYlAvbzBrQVloSTdy?=
+ =?utf-8?B?a3QzS1FQdDNvQmZzcUV1bmtoTm9EWVgxN01KVE1BWkdlcGcwQ0ZxOTNMT1dB?=
+ =?utf-8?B?UHRJc0h3ZHBPeHdiMjZSTXJRbzZJSktzUDBhQjZ1b3dyVXYvRW1RdWhwMWNK?=
+ =?utf-8?B?SHYxV2RsckRyR2NEZzFGbDVyS3RNWjNPTVhhbEFDOFY2M2IwTHNxTnRWNmpk?=
+ =?utf-8?B?bHNEeG1TNzVkaE9yWHBQMkIwd295cmt0RHpJUTFMQm9YL1hsVU1yTG9ITFhk?=
+ =?utf-8?B?TGgvNlg4YzBxaE84YkJJY2pxY1ZQN1IwUUttNExad3FSeFRmWUtJU1RiRjEv?=
+ =?utf-8?B?M2t6VjdPQzdzNUptOWZrenEvSTJFOXN5S292Y3YzL0taUFdreGUxMTNKaEZO?=
+ =?utf-8?Q?WjQWAzUMZOv5+wtEO4SJxMs=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04191941-0e12-409c-ed50-08ddb428dec7
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR01MB7792.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 20:42:58.8986
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Ewy2b75twgerYMybPVyNr3Eh/2nIH5Aw6WEQtOhECn6TKeS3FaqFvkjeT7qMhIPsfEuVTMXx/tlxngR+BPHtbq/k5oqXDm36jpCcIgBKaRcMmMruEiWmUVZK/qtq45RN
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR01MB7927
 
-On Fri, Jun 13, 2025 at 02:59:43PM +0930, Andrew Jeffery wrote:
-> On Thu, 2025-06-12 at 15:12 -0500, Rob Herring (Arm) wrote:
-> > 
-> > On Thu, 12 Jun 2025 18:09:28 +0800, Ryan Chen wrote:
-> > > This patch series introduces initial support for the Aspeed AST2700 SoC
-> > > and the AST2700 Evaluation Board (EVB) to the Linux kernel. The AST2700
-> > > is the 7th generation Baseboard Management Controller (BMC) SoC from Aspeed,
-> > > featuring improved performance, enhanced security, and expanded I/O
-> > > capabilities compared to previous generations.
-> > > 
-> > > The patchset includes the following changes:
-> > > - Device tree bindings for AST2700 boards.
-> > > - Addition of the AST2700 platform to the Kconfig menu.
-> > > - Basic device tree for the AST2700 SoC.
-> > > - Device tree for the AST2700-EVB.
-> > > - Updated defconfig to enable essential options for AST2700.
-> > > 
-> > > Ryan Chen (5):
-> > >   dt-bindings: arm: aspeed: Add AST2700 board compatible
-> > >   arm64: Kconfig: Add Aspeed SoC family (ast2700) platform option
-> > >   arm64: dts: aspeed: Add initial AST2700 SoC device tree
-> > >   arm64: dts: aspeed: Add AST2700 EVB device tree
-> > >   arm64: configs: Update defconfig for AST2700 platform support
-> > > 
-> > >  .../bindings/arm/aspeed/aspeed.yaml           |   5 +
-> > >  arch/arm64/Kconfig.platforms                  |   6 +
-> > >  arch/arm64/boot/dts/Makefile                  |   1 +
-> > >  arch/arm64/boot/dts/aspeed/Makefile           |   4 +
-> > >  arch/arm64/boot/dts/aspeed/aspeed-g7.dtsi     | 380 ++++++++++++++++++
-> > >  arch/arm64/boot/dts/aspeed/ast2700-evb.dts    |  54 +++
-> > >  arch/arm64/configs/defconfig                  |   1 +
-> > >  7 files changed, 451 insertions(+)
-> > >  create mode 100644 arch/arm64/boot/dts/aspeed/Makefile
-> > >  create mode 100644 arch/arm64/boot/dts/aspeed/aspeed-g7.dtsi
-> > >  create mode 100644 arch/arm64/boot/dts/aspeed/ast2700-evb.dts
-> > > 
-> > > --
-> > > 2.34.1
-> > > 
-> > > 
-> > > 
-> > 
-> > 
-> > My bot found new DTB warnings on the .dts files added or changed in this
-> > series.
-> > 
-> > Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> > are fixed by another series. Ultimately, it is up to the platform
-> > maintainer whether these warnings are acceptable or not. No need to reply
-> > unless the platform maintainer has comments.
-> > 
-> > If you already ran DT checks and didn't see these error(s), then
-> > make sure dt-schema is up to date:
-> > 
-> >   pip3 install dtschema --upgrade
-> > 
-> > 
-> > This patch series was applied (using b4) to base:
-> >  Base: attempting to guess base-commit...
-> >  Base: tags/v6.16-rc1 (exact match)
-> > 
-> > If this is not the correct base, please add 'base-commit' tag
-> > (or use b4 which does this automatically)
-> > 
-> > New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/aspeed/' for 20250612100933.3007673-1-ryan_chen@aspeedtech.com:
-> > 
-> > arch/arm64/boot/dts/aspeed/ast2700-evb.dtb: serial@14c33b00 (ns16550a): 'pinctrl-0' is a dependency of 'pinctrl-names'
-> >         from schema $id: http://devicetree.org/schemas/pinctrl/pinctrl-consumer.yaml#
-> > arch/arm64/boot/dts/aspeed/ast2700-evb.dtb: interrupt-controller@100 (aspeed,ast2700-intc-ic): interrupts-extended: [[6, 0, 3844]] is too short
-> >         from schema $id: http://devicetree.org/schemas/interrupt-controller/aspeed,ast2700-intc.yaml#
-> > arch/arm64/boot/dts/aspeed/ast2700-evb.dtb: interrupt-controller@110 (aspeed,ast2700-intc-ic): interrupts-extended: [[6, 1, 3844]] is too short
-> >         from schema $id: http://devicetree.org/schemas/interrupt-controller/aspeed,ast2700-intc.yaml#
-> > arch/arm64/boot/dts/aspeed/ast2700-evb.dtb: interrupt-controller@120 (aspeed,ast2700-intc-ic): interrupts-extended: [[6, 2, 3844]] is too short
-> >         from schema $id: http://devicetree.org/schemas/interrupt-controller/aspeed,ast2700-intc.yaml#
-> > arch/arm64/boot/dts/aspeed/ast2700-evb.dtb: interrupt-controller@130 (aspeed,ast2700-intc-ic): interrupts-extended: [[6, 3, 3844]] is too short
-> >         from schema $id: http://devicetree.org/schemas/interrupt-controller/aspeed,ast2700-intc.yaml#
-> > arch/arm64/boot/dts/aspeed/ast2700-evb.dtb: interrupt-controller@140 (aspeed,ast2700-intc-ic): interrupts-extended: [[6, 4, 3844]] is too short
-> >         from schema $id: http://devicetree.org/schemas/interrupt-controller/aspeed,ast2700-intc.yaml#
-> > arch/arm64/boot/dts/aspeed/ast2700-evb.dtb: interrupt-controller@150 (aspeed,ast2700-intc-ic): interrupts-extended: [[6, 5, 3844]] is too short
-> >         from schema $id: http://devicetree.org/schemas/interrupt-controller/aspeed,ast2700-intc.yaml#
-> > 
-> 
-> To draw a line in the sand here: while the existing Aspeed devicetrees
-> (AST2600 and below) produce warnings, I won't accept devicetree patches
-> for the AST2700 and related boards unless they are warning-free.
+Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> writes:
 
-Thank you. If you hadn't said it, I would have. Hopefully there's some 
-IP reuse that will get the older stuff fixed (if the fix is in the 
-schema).
+> On Wed, 18 Jun 2025, D Scott Phillips wrote:
+>
+>> Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> writes:
+>>=20
+>> > Resetting resource is problematic as it prevent attempting to allocate
+>> > the resource later, unless something in between restores the resource.
+>> > Similarly, if fail_head does not contain all resources that were reset=
+,
+>> > those resource cannot be restored later.
+>> >
+>> > The entire reset/restore cycle adds complexity and leaving resources
+>> > into reseted state causes issues to other code such as for checks done
+>> > in pci_enable_resources(). Take a small step towards not resetting
+>> > resources by delaying reset until the end of resource assignment and
+>> > build failure list (fail_head) in sync with the reset to avoid leaving
+>> > behind resources that cannot be restored (for the case where the calle=
+r
+>> > provides fail_head in the first place to allow restore somewhere in th=
+e
+>> > callchain, as is not all callers pass non-NULL fail_head).
+>> >
+>> > The Expansion ROM check is temporarily left in place while building th=
+e
+>> > failure list until the upcoming change which reworks optional resource
+>> > handling.
+>> >
+>> > Ideally, whole resource reset could be removed but doing that in a big
+>> > step would make the impact non-tractable due to complexity of all
+>> > related code.
+>> >
+>> > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+>>=20
+>> Hi Ilpo, I'm seeing a crash on arm64 at boot that I bisected to this
+>> change. I don't think it's the same as the other issues reported. I've
+>> confirmed the crash is still there after your follow up patches.  The
+>> crash itself is below[1].
+>>=20
+>> It looks like the problem begins when:
+>>=20
+>> amdgpu_device_resize_fb_bar()
+>>  pci_resize_resource()
+>>   pci_reassign_bridge_resources()
+>>    __pci_bus_size_bridges()
+>>=20
+>> adds pci_hotplug_io_size to `realloc_head`. The io resource allocation
+>> has failed earlier because the root port doesn't have an io window[2].
+>>=20
+>> Then with this patch, pci_reassign_bridge_resources()'s call to
+>> __pci_bridge_assign_resources() now returns the io added space for
+>> hotplug in the `failed` list where the old code dropped it and did not.
+>>=20
+>> That sends pci_reassign_bridge_resources() into the `cleanup:` path,
+>> where I think the cleanup code doesn't properly release the resources
+>> that were assigned by __pci_bridge_assign_resources() and there's a
+>> conflict reported in pci_claim_resource() where a restored resource is
+>> found as conflicting with itself:
+>>=20
+>> > pcieport 000d:00:01.0: bridge window [mem 0x340000000000-0x340017fffff=
+f 64bit pref]: can't claim; address conflict with PCI Bus 000d:01 [mem 0x34=
+0000000000-0x340017ffffff 64bit pref]
+>>=20
+>> Setting `pci=3Dhpiosize=3D0` avoids this crash, as does this change:
+>>=20
+>> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+>> index 16d5d390599a..59ece11702da 100644
+>> --- a/drivers/pci/setup-bus.c
+>> +++ b/drivers/pci/setup-bus.c
+>> @@ -2442,7 +2442,7 @@ int pci_reassign_bridge_resources(struct pci_dev *=
+bridge, unsigned long type)
+>>  	LIST_HEAD(saved);
+>>  	LIST_HEAD(added);
+>>  	LIST_HEAD(failed);
+>> -	unsigned int i;
+>> +	unsigned int i, relevant_fails;
+>>  	int ret;
+>> =20
+>>  	down_read(&pci_bus_sem);
+>> @@ -2490,7 +2490,16 @@ int pci_reassign_bridge_resources(struct pci_dev =
+*bridge, unsigned long type)
+>>  	__pci_bridge_assign_resources(bridge, &added, &failed);
+>>  	BUG_ON(!list_empty(&added));
+>> =20
+>> -	if (!list_empty(&failed)) {
+>> +	relevant_fails =3D 0;
+>> +	list_for_each_entry(dev_res, &failed, list) {
+>> +		restore_dev_resource(dev_res);
+>> +		if (((dev_res->res->flags ^ type) & PCI_RES_TYPE_MASK) =3D=3D 0)
+>> +			relevant_fails++;
+>> +	}
+>> +	free_list(&failed);
+>> +
+>> +	/* Cleanup if we had failures in resources of interest */
+>> +	if (relevant_fails !=3D 0) {
+>>  		ret =3D -ENOSPC;
+>>  		goto cleanup;
+>>  	}
+>> @@ -2509,11 +2518,6 @@ int pci_reassign_bridge_resources(struct pci_dev =
+*bridge, unsigned long type)
+>>  	return 0;
+>> =20
+>>  cleanup:
+>> -	/* Restore size and flags */
+>> -	list_for_each_entry(dev_res, &failed, list)
+>> -		restore_dev_resource(dev_res);
+>> -	free_list(&failed);
+>> -
+>>  	/* Revert to the old configuration */
+>>  	list_for_each_entry(dev_res, &saved, list) {
+>>  		struct resource *res =3D dev_res->res;
+>>=20
+>> I don't know this code well enough to know if that changes is completely
+>> bonkers or what.
+>
+> Hi again,
+>
+> Thanks for all the details what you think went wrong, it was really=20
+> useful. I think you have it towards the right direction but a more=20
+> targetted seems enough to address this (this needs to be confirmed, pleas=
+e
+> test the patch below).
+>
+> The most correct solution would be to make all the resource fitting code=
+=20
+> to focus on the resources that match the type filter. However, that looks=
+=20
+> way too scary change at the moment to implement, and especially, let it=20
+> end up into stable (to fix this issue). So it looks this somewhat band-ai=
+d=20
+> solution similar to your attempt might be better as a fix for now.
+>
+> In medium term, I'd want to avoid using type as a filter and base all=20
+> such decisions on matching the bridge window resource the dev resource=20
+> belongs to. I've some work towards that direction already which removes=20
+> lots of complexity in which bridge window is going to be selected as=20
+> there will be a single place to make always the same decision. That chang=
+e=20
+> is also going to simplify the internal interfaces between functions very=
+=20
+> noticably (but the change require more testing before I've enough=20
+> confidence to submit it). That work doesn't cover this resize side yet bu=
+t=20
+> it should be extended there as well.
+>
+> So please test this somewhat band-aid patch:
+>
+> From 971686ed85e341e7234f8fe8b666140187f63ad1 Mon Sep 17 00:00:00 2001
+> From: =3D?UTF-8?q?Ilpo=3D20J=3DC3=3DA4rvinen?=3D <ilpo.jarvinen@linux.int=
+el.com>
+> Date: Wed, 25 Jun 2025 20:30:43 +0300
+> Subject: [PATCH 1/1] PCI: Fix failure detectiong during resource resize
 
-Rob
+detection
+
+> MIME-Version: 1.0
+> Content-Type: text/plain; charset=3DUTF-8
+> Content-Transfer-Encoding: 8bit
+>
+> Since the commit 96336ec70264 ("PCI: Perform reset_resource() and build
+> fail list in sync") the failed list is always built and returned to let
+> the caller decide if what to do with the failures. The caller may want
+> to retry resource fitting and assignment and before that can happen,
+> the resources should be restored to their original state (a reset
+> effectively clears the struct resource), which requires returning them
+> on the failed list so that the original state remains stored in the
+> associated struct pci_dev_resource.
+>
+> Resource resizing is different from the ordinary resource fitting and
+> assignment in that it only considers part of the resources. This means
+> failures for other resource types are not relevant at all and should be
+> ignored. As resize doesn't unassign such unrelated resources, those
+> resource ending up into the failed list implies assignment of that
+> resource must have failed before resize too. The check in
+> pci_reassign_bridge_resources() to decide if the whole assignment is
+> successful, however, is based on list emptiness which may cause false
+> negatives when the failed list resources with unrelated type.
+>
+> If the failed list is not empty, call pci_required_resource_failed()
+> and extend it to be able to filter on specific resource types too (if
+> provided).
+>
+> Calling pci_required_resource_failed() at this point is slightly
+> problematic because the resource itself is reset when the failed list
+> is constructed in __assign_resources_sorted(). As a result,
+> pci_resource_is_optional() does not have access to the original
+> resource flags. This could be worked around by restoring and
+> re-reseting the resource around the call to pci_resource_is_optional(),
+> however, it shouldn't cause issue as resource resizing is meant for
+> 64-bit prefetchable resources according to Christian K=C3=B6nig (see the
+> Link which unfortunately doesn't point directly to Christian's reply
+> because lore didn't store that email at all).
+>
+> Link: https://lore.kernel.org/all/c5d1b5d8-8669-5572-75a7-0b480f581ac1@li=
+nux.intel.com/
+> Reported-by: D Scott Phillips <scott@os.amperecomputing.com>
+> Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: Christian K=C3=B6nig <christian.koenig@amd.com>
+> ---
+>  drivers/pci/setup-bus.c | 26 ++++++++++++++++++--------
+>  1 file changed, 18 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+> index 07c3d021a47e..8284bbdc44b4 100644
+> --- a/drivers/pci/setup-bus.c
+> +++ b/drivers/pci/setup-bus.c
+> @@ -28,6 +28,10 @@
+>  #include <linux/acpi.h>
+>  #include "pci.h"
+> =20
+> +#define PCI_RES_TYPE_MASK \
+> +	(IORESOURCE_IO | IORESOURCE_MEM | IORESOURCE_PREFETCH |\
+> +	 IORESOURCE_MEM_64)
+> +
+>  unsigned int pci_flags;
+>  EXPORT_SYMBOL_GPL(pci_flags);
+> =20
+> @@ -384,13 +388,19 @@ static bool pci_need_to_release(unsigned long mask,=
+ struct resource *res)
+>  }
+> =20
+>  /* Return: @true if assignment of a required resource failed. */
+> -static bool pci_required_resource_failed(struct list_head *fail_head)
+> +static bool pci_required_resource_failed(struct list_head *fail_head,
+> +					 unsigned long type)
+>  {
+>  	struct pci_dev_resource *fail_res;
+> =20
+> +	type &=3D ~PCI_RES_TYPE_MASK;
+
+Is this meant to be `type &=3D PCI_RES_TYPE_MASK`? If not, then I think
+the new `if` check below is effectively just `if (type)`.
+
+FWIW, the patch in the current state is fixing the problem that I've
+been hitting.
+
+> +
+>  	list_for_each_entry(fail_res, fail_head, list) {
+>  		int idx =3D pci_resource_num(fail_res->dev, fail_res->res);
+> =20
+> +		if (type && (fail_res->flags & PCI_RES_TYPE_MASK) !=3D type)
+> +			continue;
+> +
+>  		if (!pci_resource_is_optional(fail_res->dev, idx))
+>  			return true;
+>  	}
+> @@ -504,7 +514,7 @@ static void __assign_resources_sorted(struct list_hea=
+d *head,
+>  	}
+> =20
+>  	/* Without realloc_head and only optional fails, nothing more to do. */
+> -	if (!pci_required_resource_failed(&local_fail_head) &&
+> +	if (!pci_required_resource_failed(&local_fail_head, 0) &&
+>  	    list_empty(realloc_head)) {
+>  		list_for_each_entry(save_res, &save_head, list) {
+>  			struct resource *res =3D save_res->res;
+> @@ -1704,10 +1714,6 @@ static void __pci_bridge_assign_resources(const st=
+ruct pci_dev *bridge,
+>  	}
+>  }
+> =20
+> -#define PCI_RES_TYPE_MASK \
+> -	(IORESOURCE_IO | IORESOURCE_MEM | IORESOURCE_PREFETCH |\
+> -	 IORESOURCE_MEM_64)
+> -
+>  static void pci_bridge_release_resources(struct pci_bus *bus,
+>  					 unsigned long type)
+>  {
+> @@ -2445,8 +2451,12 @@ int pci_reassign_bridge_resources(struct pci_dev *=
+bridge, unsigned long type)
+>  		free_list(&added);
+> =20
+>  	if (!list_empty(&failed)) {
+> -		ret =3D -ENOSPC;
+> -		goto cleanup;
+> +		if (pci_required_resource_failed(&failed, type)) {
+> +			ret =3D -ENOSPC;
+> +			goto cleanup;
+> +		}
+> +		/* Only resources with unrelated types failed (again) */
+> +		free_list(&failed);
+>  	}
+> =20
+>  	list_for_each_entry(dev_res, &saved, list) {
+>
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> --=20
+> 2.39.5
