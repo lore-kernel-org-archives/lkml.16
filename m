@@ -1,134 +1,155 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E575D26B085
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A30626C39E;
+	Wed, 25 Jun 2025 08:29:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750840189; cv=none; b=rCV7ea8XguQtWEjwKMVXlIPNX+RwWP9oj4Wm6dGs+0X1EgMPAWxZrMl2zaSPcrAdS8WtO5x1hKTgULacuTZXJlS9RHW18JGiqMrNmizFF7dDI5XoTsIvyaC5oRbbqoXdb1dYSxf143hWp0SM4ObrkDhh0qylfCRDm9fJnteob6Y=
+	t=1750840192; cv=none; b=eECwxZcVNbLXm3GICCG/2ji8jBCAqStIh2ctH+rMa8Eu3FFXGHZruyUJpQ1GgBJO46gMCHy8meaE+yMHUX1MHWOZ/DXDxyVb1vLWvfvIbUPzR4QnmzJGBsMmE95KLalG9GS/MVOqRos0XmoljA3FToUkJn8sepBc0S3p2Ej63ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750840189; c=relaxed/simple;
-	bh=f+o8iEPouqOHBWyxZ8dTxNmU58i6ENQXee19SBZ0B3s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qF/2Itt5uXiB4kmorO4nlAMENbKj1xXEB65IldX+XLrJfZwuweNNbfiRcYeiw03cTfniMvBVtF88sLYywlwq9YBs6ormLyWDO5nZ5qhh1N9BR5P9uwRMfBvLFNHridOhbUpO48IHW+maOF/s674UibHyN8unl3Xm2lDbJaRJhpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bpnhslPO; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750840192; c=relaxed/simple;
+	bh=jd/ME4RBzQ++LTfqxSPqMFAzscFIcav5xgKVe9X+qN8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cEgmL6tTn3rGmGGLZgvCEEzLXJg7fTCdnuARNMM4q3Bp/MT/kFsIV2oaptDclcxB01wQx58XcQtJ56Y0PJeG2X534E4nfY0J/cv4VB2Ik5k0JY+aeIkqZwWXFvWbcFu9DSCGavUOiVcKhqrlJwpooaPsBasbe1bkML/re/MQGAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=jK3IIQpI; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bpnhslPO"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=fWPaB80+3HWu+QPjwcL43NRsxuq/i0mNSJil+VDDtCE=; b=bpnhslPOuwpAv5MIFbclSTE58N
-	VlQToVKxMVzWYNe4JgqmrVls+RsRyDCgNS/u99gI9xHeUQ2ryPxnfsNE+930VMvC0b+jSPLCANOFD
-	8NZaA/ebsYPHP3LWprw5kZNcCFeZ0Wj5bApNkD7eZOLR9r/wwWVWkN7RQQ/RRg9+U96cjeZ3vBLCf
-	i0TOGdJbRsJmTNBd3N6YyM6pxL368MBkqYkb9bAhd9ssq+z/rypi00eCiBRdFU40DT7dK/HnnJxWy
-	C0ljmhqrYcdo04xTHkbFoPPGk4iqFS1nZ0NXSIwjD0SSg08bAXmUfPofSgGSPbxby7a1cl4d1pN0h
-	MnXjq2qA==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uULVe-00000008tHl-0J2Y;
-	Wed, 25 Jun 2025 08:29:34 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id C49BF308983; Wed, 25 Jun 2025 10:29:32 +0200 (CEST)
-Date: Wed, 25 Jun 2025 10:29:32 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Li Chen <me@linux.beauty>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Li Chen <chenl311@chinatelecom.cn>
-Subject: Re: [PATCH v3 2/2] x86/smpboot: avoid SMT domain attach/destroy if
- SMT is not enabled
-Message-ID: <20250625082932.GA1613200@noisy.programming.kicks-ass.net>
-References: <20250625034552.42365-1-me@linux.beauty>
- <20250625034552.42365-3-me@linux.beauty>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="jK3IIQpI"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P5UaPW014612;
+	Wed, 25 Jun 2025 08:29:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=jiCgt6Q/FKl
+	Fl2P6MNNudSjBQgrE/yE8+G0moVmAdpA=; b=jK3IIQpIZIJEqhNI4Ld52Gy0jgM
+	vddUuc+zu/lrqmk/IKkDv6uMPlqyQEySyIlT+YkVn4fjO6/KGqkkRfv3mKst61aS
+	JHbtaXEIOv54+jXKCuPq0/hprX13caYGJwGLYyLmVNr2JhKnf9MnHsyvHGfuB9MZ
+	RgYHspuE/qFoJMvVG79N8Gym+JdlPphxQEAokWmWIbCtbkKm7RppPJcKeCmCqFsv
+	woQdmKoMJr2OjdoGlutY82+WGbNZg+rOJaF99q6EHRrUTiTiM240wYWJ5zOZqxwT
+	pJeH1NH/M1tbOKZfDJkgsogx7y9ehXGkYlvZbE4rz7pVTnxOhaJfKL0bjvQ==
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f2rpycaf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 08:29:46 +0000 (GMT)
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55P8ThfD032597;
+	Wed, 25 Jun 2025 08:29:43 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 47dntm2epk-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 08:29:43 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55P8Thdb032576;
+	Wed, 25 Jun 2025 08:29:43 GMT
+Received: from hu-devc-hyd-u22-c.qualcomm.com (hu-pkumpatl-hyd.qualcomm.com [10.147.245.204])
+	by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 55P8TgFj032569
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 08:29:43 +0000
+Received: by hu-devc-hyd-u22-c.qualcomm.com (Postfix, from userid 3914174)
+	id A72905CA; Wed, 25 Jun 2025 13:59:41 +0530 (+0530)
+From: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Srinivas Kandagatla <srini@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-sound@vger.kernel.org,
+        quic_pkumpatl@quicinc.com, kernel@oss.qualcomm.com,
+        Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Subject: [PATCH v5 3/9] ASoC: qcom: dt-bindings: qcom,lpass-va-macro: Update bindings for clocks to support ADSP
+Date: Wed, 25 Jun 2025 13:59:21 +0530
+Message-Id: <20250625082927.31038-4-quic_pkumpatl@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250625082927.31038-1-quic_pkumpatl@quicinc.com>
+References: <20250625082927.31038-1-quic_pkumpatl@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250625034552.42365-3-me@linux.beauty>
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=NdDm13D4 c=1 sm=1 tr=0 ts=685bb37a cx=c_pps
+ a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17
+ a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=GgEp1UNpQFzzL2smpCsA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA2MiBTYWx0ZWRfX4Lvt0G9LsvH4
+ a21q+QmuT1eXuCKoRt/+xbWRZJ9AUrrujoJchDBiqT+5bUHg68m8I4DPUH3lKyM90ekRXz6jiCO
+ LGqFdPIwb/4/4yCct1RgREw7GAonuXr+T8hk60sEZsP+AJ+i0GPla9TwXPCBE0xhlYNXiemjSQT
+ bpFwfZnfLeL5C7MGGTahNqzEdlWiphnmeTeAa7Q9zoOUNtDPBLd8UAVl4bkpJVFCCIxHG8nIkzN
+ R3d8X3jQXUbloMpVm+Q6mV3F+OiVx9Tbaa4jsGEvg2UiMr3q+Lih1zk74YE3BmYLyzxzSlBQO2g
+ wwBoXKrvZnm8BhW53jCqHEuTgkjUq7/BOTOAGdF/7u2yOSm90hwfGzZacyAX+OpQJFemtzHirEa
+ 3p8V5QzflI/NisbPs2NwFv2LaEd7aRdTEQ7tnkhYdaQKbax/zWCGzfa0Ajr8StJvbio5FLm/
+X-Proofpoint-ORIG-GUID: jJGRK_XO6SGGvqeGK8kt1O8kVzTd1j5q
+X-Proofpoint-GUID: jJGRK_XO6SGGvqeGK8kt1O8kVzTd1j5q
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_01,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 mlxscore=0 spamscore=0 malwarescore=0 lowpriorityscore=0
+ phishscore=0 priorityscore=1501 suspectscore=0 mlxlogscore=999 adultscore=0
+ clxscore=1015 impostorscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506250062
 
-On Wed, Jun 25, 2025 at 11:45:50AM +0800, Li Chen wrote:
-> From: Li Chen <chenl311@chinatelecom.cn>
-> 
-> Currently, the SMT domain is added into sched_domain_topology by default.
-> 
-> If cpu_attach_domain() finds that the CPU SMT domain’s cpumask_weight
-> is just 1, it will destroy it.
-> 
-> On a large machine, such as one with 512 cores, this results in
-> 512 redundant domain attach/destroy operations.
-> 
-> Avoid these unnecessary operations by simply checking
-> cpu_smt_num_threads and remove SMT domain if the SMT domain is not
-> enabled, and adjust the PKG index accordingly if NUMA-in-package
-> invalidates that level as well.
-> 
-> Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
-> ---
-> changelog:
-> v2: fix wording issue as suggested by Thomas [1]
-> v3: remove pointless memset and adjust PKG index accordingly,
->     as suggested by Thomas [2] 
-> 
-> [1]: https://lore.kernel.org/all/87msa2r018.ffs@tglx/
-> [2]: https://lore.kernel.org/all/875xglntx1.ffs@tglx/
-> 
->  arch/x86/kernel/smpboot.c | 18 +++++++++++++++++-
->  1 file changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-> index 7d202f9785362..4b6daa1545445 100644
-> --- a/arch/x86/kernel/smpboot.c
-> +++ b/arch/x86/kernel/smpboot.c
-> @@ -494,13 +494,29 @@ static struct sched_domain_topology_level x86_topology[] = {
->  
->  static void __init build_sched_topology(void)
->  {
-> +	bool smt_dropped = false;
-> +
-> +	if (cpu_smt_num_threads <= 1) {
-> +		/*
-> +		 * SMT level is x86_topology[0].  Shift the array left by one,
-> +		 */
-> +		memmove(&x86_topology[0], &x86_topology[1],
-> +			sizeof(x86_topology) - sizeof(x86_topology[0]));
-> +		smt_dropped = true;
-> +	}
-> +
->  	/*
->  	 * When there is NUMA topology inside the package invalidate the
->  	 * PKG domain since the NUMA domains will auto-magically create the
->  	 * right spanning domains based on the SLIT.
->  	 */
->  	if (x86_has_numa_in_package) {
-> -		unsigned int pkgdom = ARRAY_SIZE(x86_topology) - 2;
-> +		unsigned int pkgdom;
-> +
-> +		if (smt_dropped)
-> +			pkgdom = ARRAY_SIZE(x86_topology) - 3;
-> +		else
-> +			pkgdom = ARRAY_SIZE(x86_topology) - 2;
->  
->  		memset(&x86_topology[pkgdom], 0, sizeof(x86_topology[pkgdom]));
->  	}
+From: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
 
-Oh gawd, and you all really think this is better than dynamically
-creating that array?
+Manage clock settings for ADSP solution.
 
-This is quite terrible.
+On Existing ADSP bypass solutions, The macro and dcodec GDSCs are
+enabled using power domains in lpass-va-macro which is not applicable
+for ADSP based platform.
+
+Reference:
+ - qcom,lpass-tx-macro.yaml
+ - qcom,lpass-rx-macro.yaml
+
+Signed-off-by: Mohammad Rafi Shaik <quic_mohs@quicinc.com>
+Co-developed-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+Signed-off-by: Prasad Kumpatla <quic_pkumpatl@quicinc.com>
+---
+ .../bindings/sound/qcom,lpass-va-macro.yaml        | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
+index f41deaa6f4df..38679a4f21fa 100644
+--- a/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
++++ b/Documentation/devicetree/bindings/sound/qcom,lpass-va-macro.yaml
+@@ -75,14 +75,20 @@ allOf:
+         compatible:
+           contains:
+             const: qcom,sc7280-lpass-va-macro
++
+     then:
+       properties:
+         clocks:
+-          maxItems: 1
++          minItems: 1
++          maxItems: 3
+         clock-names:
+-          items:
+-            - const: mclk
+-
++          oneOf:
++            - items:   # for ADSP based platforms
++                - const: mclk
++                - const: macro
++                - const: dcodec
++            - items:   # for ADSP bypass based platforms
++                - const: mclk
+   - if:
+       properties:
+         compatible:
+-- 
+2.34.1
+
