@@ -1,199 +1,77 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2AD1E4AE
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5BD261593;
+	Wed, 25 Jun 2025 12:58:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750856316; cv=none; b=a2Z2GKUgf3NKZAxuPkH4qvWQ/17KYq0tNT2au71AkaXM3/vYpiTPUSAEOp2cdK+i6W7wBiVt+qCDibk5VHxUCCalRgo1U3VRVingzAW9LhsQpCPMylZHYN0snl5agwRll0SEF6S5OjFzg8eES67jnwLcOCi7PfkHARfthodL7RY=
+	t=1750856320; cv=none; b=uhBjoNFOU1o60xnzgK5j7bhZ31hV6sFac5utc9lV6YBvaL4S4R3y1R6K7syhThbNrs0NAQR2nd3gmYPrrChvJqECnM3nrkt2bZZH8WpZIR2olRBXiPPd3rol3awazSR3rU1PfQOrVKK1xT22yghOuLGZrCgB5HQg7Tjmp29LWTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750856316; c=relaxed/simple;
-	bh=2hoCCCvo0qokdy2neXBSaKGM9DPi8z7fbQliqN7ob/o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UDUsykw51nYTR8vD0Ul5C3nmt+yeK44RrjBR0fcaXvAcabvYNSPz72J4t35bcos8YNcNH79kVGeonM+N2UEo028OZClvtyF6oCwygdA62UtdtLHm4rZjsvG+wtI1okXZeIPA/NOQr4p4EG0MscKvwfTslucqxo0EnzVfXEI4LJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H0RQVztb; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750856320; c=relaxed/simple;
+	bh=/6MNs104AgtGDaHLg8LouTRM0HNdmAkvMqIT1gJdYpg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Yd+OMzo1ZNd59o1t2Isurif8YWFe6jsl8/V0EXEB2e/qpM2DqPzaowuWwGI7INzTKIah/kpTMSVDu6kU+8kzVcGifUh+30CxrFIZSzjv1OlED5xBL7zztUwT3MJtxvfpgJ59ZC3W7Zg/uIv1txEpqFfBOIBGOqlAEkDS90X8ee8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hn5MkkLQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H0RQVztb"
-Message-ID: <f1ee8679-88b4-4712-b2ed-c3eec179b430@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750856311;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lY4C+H8rjCf0tB+LlRLUjdQXLKGrHdCeK+5aYVx8K34=;
-	b=H0RQVztbREsh2CeBNzfiHRG3ArsNptNh9e4vAD7piCsogyawFZAZ0h7oX5wxSxKudfeOx8
-	zmgi8lKBBJDJyX+yA3Bd/pjb8f4zMM6qXYyQr+ccBk4iLesagodds3gfB2bKoUezfMEyH5
-	9KebcsTF3oF2ez4v96G72qSVlbShipA=
-Date: Wed, 25 Jun 2025 20:58:12 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hn5MkkLQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4B8AC4CEEE;
+	Wed, 25 Jun 2025 12:58:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750856318;
+	bh=/6MNs104AgtGDaHLg8LouTRM0HNdmAkvMqIT1gJdYpg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Hn5MkkLQ7YdwotYFW50AFPaDkbXC/h4AXX84vqEktN/Uku61SANGNFj4Wi2qF+SSV
+	 igW8Un7qsng0jWK2l/GTvATboMbUKlAMELY16vTuf87FkDgcR4KUjHup57sqwo6WjE
+	 ZjDio91HmH4pnPXXhyUiEOQ0M3QcxOiLeaOjg2mbnHXfFfXRI2CRdQGYCcBDSMMm7B
+	 GtEdWCf6veHSAygxmUzRc4bYRXP2b01+NTlfUiFCrpxdvOSJ7PelbZXV8xOGH8p6vy
+	 QVYZ6PFCrHYzeD8uxLgjBrTZoPiszB0So6zdSRpdg/lBs57ZzF2yeqRcgzMgTSRQOb
+	 iGo/RsyQS0IIA==
+From: Masahiro Yamada <masahiroy@kernel.org>
+To: linux-kbuild@vger.kernel.org
+Cc: Ard Biesheuvel <ardb@kernel.org>,
+	Ben Hutchings <ben@decadent.org.uk>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nicolas Schier <nicolas.schier@linux.dev>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation: kbuild: note CONFIG_DEBUG_EFI in reproducible builds
+Date: Wed, 25 Jun 2025 21:57:40 +0900
+Message-ID: <20250625125809.2504963-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
- folios during reclamation
-Content-Language: en-US
-To: David Hildenbrand <david@redhat.com>, Barry Song <21cnbao@gmail.com>
-Cc: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com,
- chrisl@kernel.org, kasong@tencent.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-riscv@lists.infradead.org, lorenzo.stoakes@oracle.com,
- ryan.roberts@arm.com, v-songbaohua@oppo.com, x86@kernel.org,
- ying.huang@intel.com, zhengtangquan@oppo.com,
- Lance Yang <ioworker0@gmail.com>
-References: <2c19a6cf-0b42-477b-a672-ed8c1edd4267@redhat.com>
- <20250624162503.78957-1-ioworker0@gmail.com>
- <27d174e0-c209-4851-825a-0baeb56df86f@redhat.com>
- <938c4726-b93e-46df-bceb-65c7574714a6@linux.dev>
- <CAGsJ_4y1GObH-C7R=FQL=UWe3kF6qhKoRqPxNPYx0k7uwocc+g@mail.gmail.com>
- <5ba95609-302b-456a-a863-2bd5df51baf2@redhat.com>
- <CAGsJ_4zSGT05GjxM1H6JwSa5MhgtxaiYVa1Wtvm8+SmYkm=jmQ@mail.gmail.com>
- <6179dd30-5351-4a79-b0d6-f0e85650a926@redhat.com>
- <CAGsJ_4yTH5ngM++e=c+P7g0fXs-QQsOk2oxd1RWa3Qww97Knrw@mail.gmail.com>
- <5db6fb4c-079d-4237-80b3-637565457f39@redhat.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <5db6fb4c-079d-4237-80b3-637565457f39@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
+CONFIG_EFI_DEBUG embeds absolute file paths into object files, which
+makes the resulting vmlinux specific to the build environment.
 
+Add a note about this in reproducible-builds.rst
 
-On 2025/6/25 20:09, David Hildenbrand wrote:
-> On 25.06.25 13:42, Barry Song wrote:
->> On Wed, Jun 25, 2025 at 11:27 PM David Hildenbrand <david@redhat.com> 
->> wrote:
->>>
->>> On 25.06.25 13:15, Barry Song wrote:
->>>> On Wed, Jun 25, 2025 at 11:01 PM David Hildenbrand 
->>>> <david@redhat.com> wrote:
->>>>>
->>>>> On 25.06.25 12:57, Barry Song wrote:
->>>>>>>>
->>>>>>>> Note that I don't quite understand why we have to batch the 
->>>>>>>> whole thing
->>>>>>>> or fallback to
->>>>>>>> individual pages. Why can't we perform other batches that span 
->>>>>>>> only some
->>>>>>>> PTEs? What's special
->>>>>>>> about 1 PTE vs. 2 PTEs vs. all PTEs?
->>>>>>>
->>>>>>> That's a good point about the "all-or-nothing" batching logic ;)
->>>>>>>
->>>>>>> It seems the "all-or-nothing" approach is specific to the 
->>>>>>> lazyfree use
->>>>>>> case, which needs to unmap the entire folio for reclamation. If 
->>>>>>> that's
->>>>>>> not possible, it falls back to the single-page slow path.
->>>>>>
->>>>>> Other cases advance the PTE themselves, while try_to_unmap_one() 
->>>>>> relies
->>>>>> on page_vma_mapped_walk() to advance the PTE. Unless we want to 
->>>>>> manually
->>>>>> modify pvmw.pte and pvmw.address outside of 
->>>>>> page_vma_mapped_walk(), which
->>>>>> to me seems like a violation of layers. :-)
->>>>>
->>>>> Please explain to me why the following is not clearer and better:
->>>>
->>>> This part is much clearer, but that doesn’t necessarily improve the 
->>>> overall
->>>> picture. The main challenge is how to exit the iteration of
->>>> while (page_vma_mapped_walk(&pvmw)).
->>>
->>> Okay, I get what you mean now.
->>>
->>>>
->>>> Right now, we have it laid out quite straightforwardly:
->>>>                   /* We have already batched the entire folio */
->>>>                   if (nr_pages > 1)
->>>>                           goto walk_done;
->>>
->>>
->>> Given that the comment is completely confusing whens seeing the 
->>> check ... :)
->>>
->>> /*
->>>    * If we are sure that we batched the entire folio and cleared all 
->>> PTEs,
->>>    * we can just optimize and stop right here.
->>>    */
->>> if (nr_pages == folio_nr_pages(folio))
->>>          goto walk_done;
->>>
->>> would make the comment match.
->>
->> Yes, that clarifies it.
->>
->>>
->>>>
->>>> with any nr between 1 and folio_nr_pages(), we have to consider two 
->>>> issues:
->>>> 1. How to skip PTE checks inside page_vma_mapped_walk for entries that
->>>> were already handled in the previous batch;
->>>
->>> They are cleared if we reach that point. So the pte_none() checks will
->>> simply skip them?
->>>
->>>> 2. How to break the iteration when this batch has arrived at the end.
->>>
->>> page_vma_mapped_walk() should be doing that?
->>
->> It seems you might have missed the part in my reply that says:
->> "Of course, we could avoid both, but that would mean performing 
->> unnecessary
->> checks inside page_vma_mapped_walk()."
->  > > That’s true for both. But I’m wondering why we’re still doing the 
-> check,
->> even when we’re fairly sure they’ve already been cleared or we’ve reached
->> the end :-)
-> 
-> :)
-> 
->>
->> Somehow, I feel we could combine your cleanup code—which handles a batch
->> size of "nr" between 1 and nr_pages—with the
->> "if (nr_pages == folio_nr_pages(folio)) goto walk_done" check.
-> 
-> Yeah, that's what I was suggesting. It would have to be part of the 
-> cleanup I think.
-> 
-> I'm still wondering if there is a case where
-> 
-> if (nr_pages == folio_nr_pages(folio))
->      goto walk_done;
-> 
-> would be wrong when dealing with small folios.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-We can make the check more explicit to avoid any future trouble ;)
+ Documentation/kbuild/reproducible-builds.rst | 3 +++
+ 1 file changed, 3 insertions(+)
 
-if (nr_pages > 1 && nr_pages == folio_nr_pages(folio))
-     goto walk_done;
-
-It should be safe for small folios.
-
-Thanks,
-Lance
-
-> 
->> In practice, this would let us skip almost all unnecessary checks,
->> except for a few rare corner cases.
->>
->> For those corner cases where "nr" truly falls between 1 and nr_pages,
->> we can just leave them as-is—performing the redundant check inside
->> page_vma_mapped_walk().
-> 
-> I mean, batching mapcount+refcount updates etc. is always a win. If we 
-> end up doing some unnecessary pte_none() checks, that might be 
-> suboptimal but mostly noise in contrast to the other stuff we will 
-> optimize out :)
-> 
-> Agreed that if we can easily avoid these pte_none() checks, we should do 
-> that. Optimizing that for "nr_pages == folio_nr_pages(folio)" makes sense.
-> 
+diff --git a/Documentation/kbuild/reproducible-builds.rst b/Documentation/kbuild/reproducible-builds.rst
+index f2dcc39044e6..7a16dbc275ca 100644
+--- a/Documentation/kbuild/reproducible-builds.rst
++++ b/Documentation/kbuild/reproducible-builds.rst
+@@ -61,6 +61,9 @@ supported.
+ The Reproducible Builds web site has more information about these
+ `prefix-map options`_.
+ 
++Some CONFIG options such as `CONFIG_DEBUG_EFI` embeds absolute paths in
++object files. Such options should be disabled.
++
+ Generated files in source packages
+ ----------------------------------
+ 
+-- 
+2.43.0
 
