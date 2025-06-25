@@ -1,127 +1,260 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F98267F53
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66BB268688
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750862310; cv=none; b=TWS3MiNIc7RTUYJj6fCP9I3NwInOWpQUJ3Um/hPO6DwP3X01E6++N61lw8QiivHw/3N9s1WpXRnH4lGRYdrWe49AaCE67OaAUOVtxklAnjf52EU235XfRou2RlPlJcZCIu7fh9ktIv3HSnOkRxv05Zv1FLidExbrU6jqsbXsfEs=
+	t=1750862330; cv=none; b=m5H3az2tcXFQNugmccT27W5nT/yHm5WYqiSeqbZAWCbCqN9+Tr0KSLruYYQZxVWfgSbb9CfwjcmcofVF/MZcI3eFFimjS2TuVj30M2iWfmYQcIOWTFUASBwrTeldXur+o3lt1YXobEDo+37/a08TQ2mcVHlsyAk2qhSOTiQQCp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750862310; c=relaxed/simple;
-	bh=8XoLBFN4X2J53c6WkchgBiFl2rLtXlJ2Jsji10lKYfg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:MIME-Version:
-	 Content-Type:References; b=r+tTwhFUYbpXS+0dXFjStSIBehPXF7SJosLZVic/kzfPwbWKRce17hUzzN/n7OTG3xB3IUYP5A7e8dSe1InFFURpyroRkuw0FieS83zyLv51ubHk8iZhoihNQAmCLnWYuVqz1dPo9uqdXfPk3nNVOeE2kBCPytFRXdYXX77NCWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=pFfPPfbC; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750862330; c=relaxed/simple;
+	bh=gUCK5ZPtvm6MgHUIDv1wxFAc1ecbFd2rMDQC/jqlAuk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iA4UAB3clrlcJatSBWwcUkCWFN9+/88pSyJ5fd6cVwsPtSAq2kqzxLGEHHV3V3r+x2SAIhn5h8XeO3thRt8O+Ix8eEE/x0mgo/wzrQ+DGHoIOTyrlpkJw+7WCr1FHby9uJyw9sk6rWG3mwb9J8Nlv1XglZKqntu2gm/27VZQKiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ky4Ffp+Y; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pFfPPfbC"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250625143825euoutp02bad9c106fff13684916fd381d7af86a4~MT-2ko6Gu2794127941euoutp02d
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:38:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250625143825euoutp02bad9c106fff13684916fd381d7af86a4~MT-2ko6Gu2794127941euoutp02d
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750862305;
-	bh=8dqgP4LV8c4NLpBPDYGi8Zm3iZeMy9dNLyMC8hkw3Mc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pFfPPfbCvaLUthbd5ueG3UuOnIkNWM5+nnYQbrgJy/zkV7x6wH018ApoC5WRPVXVk
-	 DNqXV4XI3CTYG+bVZ6qbnlZv6X+lp5OeMpEOXB3KglVE0okmNNYHB7rZpHqlY1ijEy
-	 yKimBKL8bgumawwX1dKSSa4STJzAtrApaZ8K0Eek=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250625143825eucas1p2e95ba80552cd289b6e05db33f32ec14a~MT-2K9-ln3066230662eucas1p23;
-	Wed, 25 Jun 2025 14:38:25 +0000 (GMT)
-Received: from AMDC4515.digital.local (unknown [106.120.51.28]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250625143824eusmtip2d3f64e540b8e66266a364f9237f7259e~MT-1hnkPv1779917799eusmtip2T;
-	Wed, 25 Jun 2025 14:38:24 +0000 (GMT)
-From: Mateusz Majewski <m.majewski2@samsung.com>
-To: linux.amoon@gmail.com
-Cc: alim.akhtar@samsung.com, bzolnier@gmail.com, daniel.lezcano@linaro.org,
-	krzk@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-samsung-soc@vger.kernel.org, lukasz.luba@arm.com,
-	m.majewski2@samsung.com, rafael@kernel.org, rui.zhang@intel.com
-Subject: Re: [RRC v1 1/3] thermal/drivers/exynos: Remove unused base_second
- mapping and references
-Date: Wed, 25 Jun 2025 16:38:16 +0200
-Message-ID: <20250625143816.1146123-1-m.majewski2@samsung.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <CANAwSgTBzpL+XMJGhG=38A7GOzeayZaG_2LTvsaE2=mF-pn5mg@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ky4Ffp+Y"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PBa893021236
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:38:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vyp603+DXROKlY8+1tRFEeF1aiIPfGdpzbAJfdYnfMY=; b=ky4Ffp+Y8DWJ5sga
+	ATB71pj5U7o5cN3QB6T16JQmjj9MVT+way4qI2/Jnj/Bq/MVAyK1OeaP0n9T1lsG
+	nYFZroUkLr3jSm4w2xC4/5tpDKeth0qamfd4HVCm671aUtqZ9txeItoWat8IPjuZ
+	2zXLys17vwfBwPHHcAxyy+fdYMxni94WDpwmBRkWcFyZY/4sNf4iug5HnkGDE9io
+	G/WnjXSB8FAkJYqH7drWISk5RktaYC0S4QOykHl/T0tPfdjGsqLoKtjtAGZpCasv
+	HrhG2PqWoVhlMDa1QH2fv2l1Hn8eYWKj3OveQhgK2IDivLOiIsbTg9NNaMwKxGqJ
+	WuP4LA==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47emcmsvaa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:38:47 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6fb030f541bso14728836d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:38:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750862326; x=1751467126;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vyp603+DXROKlY8+1tRFEeF1aiIPfGdpzbAJfdYnfMY=;
+        b=LPuVGjV3BoBoo4JJYXgArh63vN1+xclrTorjVRK8oSuUwi4J2DTRE2QJU1J9PhBnO2
+         MdNf3rnEdcNHAhPfBRAznFlpgybzOuRnN9fhQGKrftWIXFYsz6e0fsn3CVVJlWOSLdxX
+         9vEL9nOy+Goq9rvCPsJNNxAmNL9Z6IxG5nJAP+qM506o8tH8tEBPfBMT84pWBy6VSKX9
+         A8WkV/o30wFumaf5yZ8C02C1GapQqe1T6bKQvCYx/yRvign0WCBoF4kcdwQOdXtEDPJD
+         P0vxWjazc5cnX0YqO9jymdP6j/ScOENht7LCJ2L6akX0XjrFtcxaXwe8OcMWrDCBAzBB
+         Ycqw==
+X-Forwarded-Encrypted: i=1; AJvYcCUl0tWHrJ7wBNvxS8aciWVOlNM9un+8JEkFYmzapoO78+Bxo4NmGullrnM8D/kp/mgzGw85VgJgww2y02k=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyf2g4kfRXyPo11PTFRaJl3DFQofzRY0zxI4kA7miJ+HUL7KAEP
+	WzZlbZk81x4o12Zi13UWOXZoX8DyoYSjxYJ5LpBQXuWM597Vkz+hF5wItj4hJzn3SSkWQW2RXWg
+	E0CFmg202XMRlZ2f22R9bEuw7t+PPmVXQws1kKQwTEGrekmOT6P1rtex/1GT0Wqs88ko=
+X-Gm-Gg: ASbGncvtSLTRhLvehi42Uep73pAXZ01rlMOUE1AxhkLo3zSWlLV+qKqF/q0CU2Oh9YQ
+	X259ajfdrp5AH8N73laTfZVNCLwsiM9omipiz/RaNDxQWmyncRJyanpSa4CAX4uu0PIaMEyoTMS
+	wAbnt7KjKflKIk0n/42Ws+/1XS/+Y+Me9zOikFGRqMFnUvLmTfmZSmrYdbGJiV7LmES0euEUajp
+	5qjCDIOCcN/hpwPbMEsxa78kAPNgZ08n3MCJjKj1NVLiDJzI02EQc0AlcDs7IzHgBU+pN/SHE4V
+	YbOwn2VriK9dZ0ZlPACxCLeLwjcjbGMQVr25dwQ/1vJkx0+B1yHAJG5Wnaz/aVCj9hHX0Sr5fhT
+	DyyQ=
+X-Received: by 2002:a05:620a:4713:b0:7d3:cec3:3ff with SMTP id af79cd13be357-7d4295fddb1mr179163085a.0.1750862326389;
+        Wed, 25 Jun 2025 07:38:46 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEHsbOpyUO4OQKuHvZNG56/kH2wg/UDN88jgkkkppU/y2V4JJtDrErgvtJkUii1DRKOsax2AQ==
+X-Received: by 2002:a05:620a:4713:b0:7d3:cec3:3ff with SMTP id af79cd13be357-7d4295fddb1mr179159185a.0.1750862325910;
+        Wed, 25 Jun 2025 07:38:45 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae053ee4cdcsm1076068666b.56.2025.06.25.07.38.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 07:38:44 -0700 (PDT)
+Message-ID: <4200b3b8-5669-4d5a-a509-d23f921b0449@oss.qualcomm.com>
+Date: Wed, 25 Jun 2025 16:38:39 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250625143825eucas1p2e95ba80552cd289b6e05db33f32ec14a
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250625143825eucas1p2e95ba80552cd289b6e05db33f32ec14a
-X-EPHeader: CA
-X-CMS-RootMailID: 20250625143825eucas1p2e95ba80552cd289b6e05db33f32ec14a
-References: <CANAwSgTBzpL+XMJGhG=38A7GOzeayZaG_2LTvsaE2=mF-pn5mg@mail.gmail.com>
-	<CGME20250625143825eucas1p2e95ba80552cd289b6e05db33f32ec14a@eucas1p2.samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 14/14] arm64: dts: qcom: Add The Fairphone (Gen. 6)
+To: Luca Weiss <luca.weiss@fairphone.com>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>, Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>,
+        Robert Marko <robimarko@gmail.com>,
+        Das Srinagesh <quic_gurus@quicinc.com>,
+        Thomas Gleixner
+ <tglx@linutronix.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Amit Kucheria <amitk@kernel.org>,
+        Thara Gopinath <thara.gopinath@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-crypto@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+References: <20250625-sm7635-fp6-initial-v1-0-d9cd322eac1b@fairphone.com>
+ <20250625-sm7635-fp6-initial-v1-14-d9cd322eac1b@fairphone.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250625-sm7635-fp6-initial-v1-14-d9cd322eac1b@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: Ll-v5FQFt0yTHIUd4xoXbniO76j676W7
+X-Proofpoint-ORIG-GUID: Ll-v5FQFt0yTHIUd4xoXbniO76j676W7
+X-Authority-Analysis: v=2.4 cv=J+eq7BnS c=1 sm=1 tr=0 ts=685c09f7 cx=c_pps
+ a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8 a=gOtRruwUTqeMBgDD9hEA:9
+ a=QEXdDO2ut3YA:10 a=5XHQ0vS7sDUA:10 a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDEwNiBTYWx0ZWRfX13WCGs5bXjxE
+ F433HuVG6W+253d/SSnwIIsPn1X8l+Ls5OQVGGN/HY26noXnteFC0qDGAmGj7JpkD2P6UtUaYue
+ Lazo3ViWgbn3rXsV0G4UZrfQjqLCWnjbr2reBecmh1EJlkwrGA+eHVgYNa0Uuf8ZdgXJoKst+pV
+ CQdNIMjPimGWFEU7Jjz5RIdiwXzmXwByHXz4aSgKhfedksTW3rRQ1fdZda/xrqUoJzBxG41oTH1
+ NbqgK0Y/7GdQcZIQK91XJfdAWy7VVL+j+du4mStawm/o6ChHbWsDR5UszKMQzH09pFpcIGh30IR
+ 9mVUxxjL3PASrreGuSaXBhLwkGZH7C58YWXkA4AxmA97hQZGuNgl+9ynY4bH/4UBtFtZdV07Xpc
+ aJRNE3ahwuVroThVtAcf4lHo4D0Kl0wn3dAM9MImQuuB2vZM1PqXn9gbIbwSSCUewPhfAXfg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_04,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 mlxlogscore=999 adultscore=0 impostorscore=0 clxscore=1015
+ spamscore=0 malwarescore=0 phishscore=0 priorityscore=1501 suspectscore=0
+ mlxscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506250106
 
-> Can you check with with following changes
-> 
-> diff --git a/drivers/thermal/samsung/exynos_tmu.c
-> b/drivers/thermal/samsung/exynos_tmu.c
-> index 9fc085f4ea1a..0776801fafea 100644
-> --- a/drivers/thermal/samsung/exynos_tmu.c
-> +++ b/drivers/thermal/samsung/exynos_tmu.c
-> @@ -469,14 +469,11 @@ static void exynos4412_tmu_initialize(struct
-> platform_device *pdev)
->         ctrl = readl(data->base + EXYNOS_TMU_TRIMINFO_CON2);
->         ctrl = EXYNOS_TRIMINFO_RELOAD_ENABLE;
->         writel(ctrl, data->base + EXYNOS_TMU_TRIMINFO_CON2);
-> +       return;
->     }
-> 
-> -   /* On exynos5420 the triminfo register is in the shared space */
-> -   if (data->soc == SOC_ARCH_EXYNOS5420
-> -           data->soc == SOC_ARCH_EXYNOS5420_TRIMINFO) {
-> -       trim_info = readl(data->base + EXYNOS_TMU_REG_TRIMINFO);
-> -       sanitize_temp_error(data, trim_info);
-> -   }
-> +   trim_info = readl(data->base + EXYNOS_TMU_REG_TRIMINFO);
-> +   sanitize_temp_error(data, trim_info);
-> }
+On 6/25/25 11:23 AM, Luca Weiss wrote:
+> Add a devicetree for The Fairphone (Gen. 6) smartphone, which is based
+> on the SM7635 SoC.
 
-This does seem to work (tested on 3250 and on 5420) in the sense that I
-can read the temperatures, when they increase the state of the cooling
-device gets increased, and the values look reasonable and stay in a
-reasonable range. Hard to say if the trim and the temperature values are
-correct, though.
+[...]
 
-(FYI I will probably have a harder time regarding the drivers from
-GitHub you linked in 2/3, so no promises on testing them.)
+> +	/* Dummy panel for simple-framebuffer dimension info */
+> +	panel: panel {
+> +		compatible = "boe,bj631jhm-t71-d900";
+> +		width-mm = <65>;
+> +		height-mm = <146>;
+> +	};
 
-> As per my Exynos5422 user manual and DTS mapping
-> thermal-sensor tmu@10060000 is mapped to CPU0 with tmu_apbif clock
-> thermal-sensor tmu@10064000 is mapped to CPU1 with tmu_apbif clock
-> thermal-sensor tmu@10068000 is mapped to CPU2 with tmu_apbif clock
-> thermal-sensor tmu@1006c000 is mapped to CPU3 with tmu_apbif clock
-> thermal-sensor tmu@100a0000 is mapped to GPU with tmu_triminfo_apbif clock.
+I haven't ran through all the prerequisite-xx-id, but have
+you submitted a binding for this?
 
-Hmm, I might be missing something, but I think the DTS does link to two
-adresses and two clocks, for instance for GPU (in
-arch/arm/boot/dts/samsung/exynos5420.dtsi):
+[...]
 
-		tmu_gpu: tmu@100a0000 {
-			compatible = "samsung,exynos5420-tmu-ext-triminfo";
-			reg = <0x100a0000 0x100>, <0x10068000 0x4>;
-			interrupts = <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>;
-			clocks = <&clock CLK_TMU_GPU>, <&clock CLK_TMU>;
-			clock-names = "tmu_apbif", "tmu_triminfo_apbif";
-			#thermal-sensor-cells = <0>;
-		};
+> +	reserved-memory {
+> +		/*
+> +		 * ABL is powering down display and controller if this node is
+> +		 * not named exactly "splash_region".
+> +		 */
+> +		splash_region@e3940000 {
+> +			reg = <0x0 0xe3940000 0x0 0x2b00000>;
+> +			no-map;
+> +		};
+> +	};
 
-The manual does indeed not say anything about this, but I feel like the
-current code in essence states that the manual is not correct. We
-probably should have some evidence that the current code is wrong and
-the manual was correct all along?
+:/ maybe we can convince ABL not to do it..
 
-Thank you,
-Mateusz Majewski
+[...]
+
+> +		vreg_l12b: ldo12 {
+> +			regulator-name = "vreg_l12b";
+> +			/*
+> +			 * Skip voltage voting for UFS VCC.
+> +			 */
+
+Why so?
+
+[...]
+
+> +&gpi_dma0 {
+> +	status = "okay";
+> +};
+> +
+> +&gpi_dma1 {
+> +	status = "okay";
+> +};
+
+These can be enabled in SoC DTSI.. it's possible that the secure 
+configuration forbids access to one, but these are generally made
+per-platform
+
+[...]
+
+> +&pm8550vs_d {
+> +	status = "disabled";
+> +};
+> +
+> +&pm8550vs_e {
+> +	status = "disabled";
+> +};
+> +
+> +&pm8550vs_g {
+> +	status = "disabled";
+> +};
+
+Hm... perhaps we should disable these by deafult
+
+[...]
+
+> +&pmr735b_gpios {
+> +	pm8008_reset_n_default: pm8008-reset-n-default-state {
+> +		pins = "gpio3";
+> +		function = PMIC_GPIO_FUNC_NORMAL;
+> +		bias-pull-down;
+> +	};
+> +
+> +	s1j_enable_default: s1j-enable-default-state {
+> +		pins = "gpio1";
+> +		function = PMIC_GPIO_FUNC_NORMAL;
+> +		power-source = <0>;
+> +		bias-disable;
+> +		output-low;
+> +	};
+
+ordering by pin ID makes more sense, here and in tlmm
+
+(and is actually written down)
+https://docs.kernel.org/devicetree/bindings/dts-coding-style.html#order-of-nodes
+
+[...]
+
+> +&pon_resin {
+> +	linux,code = <KEY_VOLUMEDOWN>;
+> +	status = "okay";
+
+\n before status consistently, please
+
+[...]
+
+> +&tlmm {
+> +	/*
+> +	 * 8-11: Fingerprint SPI
+> +	 * 13: NC
+> +	 * 63-64: WLAN UART
+> +	 */
+> +	gpio-reserved-ranges = <8 4>, <13 1>, <63 2>;
+
+Please match the style in x1-crd.dtsi
+
+[...]
+
+> +&usb_1 {
+> +	dr_mode = "otg";
+> +
+> +	/* USB 2.0 only */
+
+Because there's no usb3phy description yet, or due to hw design?
+
+Konrad
+
