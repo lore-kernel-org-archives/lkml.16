@@ -1,231 +1,207 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C5925BF1F;
-	Wed, 25 Jun 2025 16:29:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF8782864;
+	Wed, 25 Jun 2025 16:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750868948; cv=none; b=YQHl0Zced6IwAwjhNPI8GqgBJLclu6N1/tzkHS01HLYmrxT8V+r/+kC7iSOZ0ORGid2nD8YxEBZrxyrhSjivZ3wdrVBtIo7Mi1WmIt+StuMLo1BrD2Dzlm9l2xIwq9Pk1jEuNpfnRuj6hjQsFsPN24G7rj/aALLxbFbSyHLnH4U=
+	t=1750869064; cv=none; b=QPrXrYgt4R4dMBBImWb0N/aVM0aSAfInd/W/sK/1SaNMlRtdCm/kusGMrCk2AxWnufBkqFCZnh4vVmiGGRL4Z6rsg4lhKqYOGNcs1IZv+RaxDGENh+syhD6YXjpJDSOECSivgLWZ8fwxSxcuMUqxM9GKZToRERwXF+UU7OXufPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750868948; c=relaxed/simple;
-	bh=nT5J+pfh8aqAvS4hyZdOydYj5zY9620YhqOvIOyk4oU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=b6N4frmiVdiQx70NCrwQbOKiv9Z3Pz2IP6CCq4EMmMWv4wXLSUkQNMpdnqRw4c1P57nIdADfT3l91nhTNWMFAPEjr4mwo1GLZQamKY7ulPlHHDC9BIXNboefhNpuDIzBNZUDEbi+vtC/SZ2Ok5NN5Jlf8U+ofuM5YRKGooqGOzM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LOjcBiVR; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750869064; c=relaxed/simple;
+	bh=e5rPs2f8VzLeR4ruwzzUAJHpHqv2jxxM/dhCmy/xM1c=;
+	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
+	 Content-Type:Date:Message-ID; b=SAojaPPEdJdr9saAWMCaO4vt6vGN3gwOKRDo47nQaVm2Nlq4RGHTuAAWZSQNqRVgmXmk6c8E6aclMqHTKBtY/WetfRh4dOFNJb+/nTSSNjU/J75mzQRCmxdFAyyp4xMFk3ogMqxihMjWknabn8twi5PDzAFANEjf7KzzfF2BCNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net; spf=pass smtp.mailfrom=jvosburgh.net; dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b=P7gGTM7F; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Kky8lQQB; arc=none smtp.client-ip=202.12.124.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jvosburgh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LOjcBiVR"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P8TUkb011590;
-	Wed, 25 Jun 2025 16:28:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=wKNkLw
-	5fN7SsNnaiMsGV8e5XV1H2dAFI2/X3MUrbsqE=; b=LOjcBiVRDEwaI7u6C5/s8f
-	aMQna29+6bbf7WIoU5Oq7jJcY6etOB5sgIa+yqpyBvlRAQ+m1I3MoB7Wh+WPZdQO
-	jLJQ2yj2Rsbh5nTWCCe9FdkU6Hcm/LLOU9bCaXQxd2E5IUmiAoXfh0MLVTnIt4LW
-	wru1BT9Xq6eI6SgFTi+WVSAeLZSrMoagOPm9BZi635RUAP3i4Ol2OxnM1Uj2ei3/
-	3QeN6dorOYhlw+E+P6UB3I1Uh6c47ujgb6zjKGGodL2tCFVJ6j5/Mzx+RxJJX7V3
-	iJf7eVsc9/+KR5j/CRuz8evKpL+4n91ZKqQjFA+qwkKnxGJi58pJEwtOgRVtl5cw
-	==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dm8jgr2p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 16:28:52 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55PEbuco002908;
-	Wed, 25 Jun 2025 16:28:51 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e8jma5vh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 16:28:51 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55PGSn8A45089044
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Jun 2025 16:28:49 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7CB4E20049;
-	Wed, 25 Jun 2025 16:28:49 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B3F9C20040;
-	Wed, 25 Jun 2025 16:28:48 +0000 (GMT)
-Received: from thinkpad-T15 (unknown [9.87.146.103])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with SMTP;
-	Wed, 25 Jun 2025 16:28:48 +0000 (GMT)
-Date: Wed, 25 Jun 2025 18:28:46 +0200
-From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-        Matthew Wilcox
- <willy@infradead.org>,
-        David Hildenbrand <david@redhat.com>,
-        LKML
- <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
-        linux-s390@vger.kernel.org
-Subject: Re: [RFC PATCH 1/1] mm/debug_vm_pgtable: Use a swp_entry_t input
- value for swap tests
-Message-ID: <20250625182846.5bce1aaf@thinkpad-T15>
-In-Reply-To: <9fb04185-5b71-46c0-b62c-0e0e6ee59e6e@arm.com>
-References: <20250623184321.927418-1-gerald.schaefer@linux.ibm.com>
-	<20250623184321.927418-2-gerald.schaefer@linux.ibm.com>
-	<9fb04185-5b71-46c0-b62c-0e0e6ee59e6e@arm.com>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b="P7gGTM7F";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Kky8lQQB"
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 7A05E7A021F;
+	Wed, 25 Jun 2025 12:30:59 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Wed, 25 Jun 2025 12:30:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jvosburgh.net;
+	 h=cc:cc:content-id:content-transfer-encoding:content-type
+	:content-type:date:date:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to; s=fm3; t=1750869059; x=1750955459; bh=gn5mgacS9yby6OOdchPND
+	abDPrGtXN9QDzbZk+Lowcs=; b=P7gGTM7FxZ6pHq+AO2NGcA6gbCkW/h0sxozr7
+	LOPnxuW1IuaKtYl1lrqDAmFqIYX11fsl0B0ZKsOa7qNfFWVLOFxHYypPokXzom+J
+	SgdUSRpqLxEJTrer8y7NpW+8Vlal2xUhIMiHfGYnQz26OaL4Im2tHLhjch+ZRgVC
+	SGli6wVefRWhjlTextvP3zceqPp/1ZFtpIUAFM8N1mOG63GCSpsMMo2QVLdnWwTc
+	8BsnK/nCjXCktZu2b87q25Jfwn2nrspwxb6EZ68Uod9dqWz1Xi2U5efBpE7KHhGl
+	A7deEzWlInpjnAuo/A9AnjS4BHOYHPAFeLPMF8VPBSdrOid5Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-id
+	:content-transfer-encoding:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
+	1750869059; x=1750955459; bh=gn5mgacS9yby6OOdchPNDabDPrGtXN9QDzb
+	Zk+Lowcs=; b=Kky8lQQBqRWpRpSipgmC0zErnhPv87GiRy22ShjLt158yPxp5Wx
+	T9qaufhIBrReYJzMhfOOAX4T0/hfzWRnv5pHMAsPGh3EOIp2wYyr9bB3c09dCqec
+	5ZwHUW65R9UNWJ8ihik0VChmy03ydrDQ8b+VHtMov8cqEo9Y/GonSN3chFNuqpSb
+	7PmDWHXTeRpl9IAposjTtpeZJH1At+QioE1fCz6+hEdpUWIrIA0OcIE60Zc3jzg6
+	8sMyKFxeRxZx6LGaoSSxsEEXSkydmCPqFdNO3e4xML5EbhUxLxoOVb+P5343e5av
+	YuwAciPZIrVdJXIu5VuL+gRGbxMaHpYpPUg==
+X-ME-Sender: <xms:QiRcaKfUZmG94GC1tQqIVRVA8XilqXnaMcFzU1z3OlaQW5crS-arvQ>
+    <xme:QiRcaEOxwP_rNOjWoK7pqX5b_zmK3hqpKxA4nrcQGLxA2KNc7f5SE-y3j8qLfxDNn
+    YR7gCm2VUI8DRT30eI>
+X-ME-Received: <xmr:QiRcaLgDcn9GhvsLtK_bCUN8Dab5sxQ7jKDMkKkYX_cintlh5apxjlstwbpcPtJTWnvYAQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvfedvhecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefhvfevufgjfhfogggtgfffkfesthhqredtredtvdenucfhrhhomheplfgrhicuggho
+    shgsuhhrghhhuceojhhvsehjvhhoshgsuhhrghhhrdhnvghtqeenucggtffrrghtthgvrh
+    hnpeeifedvleefleejveethfefieduueeivdefieevleffuddvveeftdehffffteefffen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjvhesjh
+    hvohhssghurhhghhdrnhgvthdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhp
+    ohhuthdprhgtphhtthhopehtohhnghhhrghosegsrghmrghitghlohhuugdrtghomhdprh
+    gtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvggu
+    uhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopegtrghrlhhoshdrsghilh
+    gsrghosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdho
+    rhhgpdhrtghpthhtohepshhfohhrshhhvggvsehkvghrnhgvlhdrohhrghdprhgtphhtth
+    hopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepphgrsggv
+    nhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvh
+    hgvghrrdhkvghrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:QiRcaH9RZvUp6ZHLpGI1yDzmmK2Axi09-wUqraoz6P_BJmaDpxLfNg>
+    <xmx:QiRcaGuRIOn29IZ4oAE7_fmuLeKDDkqK5CNImsJXn02HFyGxFOywWQ>
+    <xmx:QiRcaOGoDt-4se70SCGUgiDDNqqWULyIekECh1D3eKA1iK0wIhysFg>
+    <xmx:QiRcaFOfAWU888bY-PN2P4kTnxUAgcMWysBLvfegzvUZmXyL6q72rg>
+    <xmx:QyRcaJliR6hdj7wa3L_mpSPXGYoM690ANxBMfwLd4I2N3zfDz4vK37DA>
+Feedback-ID: i53714940:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 25 Jun 2025 12:30:58 -0400 (EDT)
+Received: by famine.localdomain (Postfix, from userid 1000)
+	id F0D159FCA2; Wed, 25 Jun 2025 09:30:56 -0700 (PDT)
+Received: from famine (localhost [127.0.0.1])
+	by famine.localdomain (Postfix) with ESMTP id ED0949FC65;
+	Wed, 25 Jun 2025 09:30:56 -0700 (PDT)
+From: Jay Vosburgh <jv@jvosburgh.net>
+To: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
+cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+    "David S. Miller" <davem@davemloft.net>,
+    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+    Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+    linux-kernel@vger.kernel.org,
+    Carlos Bilbao <carlos.bilbao@kernel.org>,
+    Tonghao Zhang <tonghao@bamaicloud.com>
+Subject: Re: [PATCH] bonding: don't force LACPDU tx to ~333 ms boundaries
+In-reply-to: <20250625-fix-lacpdu-jitter-v1-1-4d0ee627e1ba@kernel.org>
+References: <20250625-fix-lacpdu-jitter-v1-1-4d0ee627e1ba@kernel.org>
+Comments: In-reply-to "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
+   message dated "Wed, 25 Jun 2025 11:01:24 -0500."
+X-Mailer: MH-E 8.6+git; nmh 1.8+dev; Emacs 29.3
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDEyMSBTYWx0ZWRfX9ctqt0MdcuZX xOG7w60S7nhCMLPelFXSe6h7nbxB/u7WFiSc5tD8vITxE2an5eaxXBl0e0+M2B4x3/c+TKlf0on CzIT/bQUg8c4nDufjGfsjBg1YlN35pH66iqcMdRHB/+moYUghSnGcmOi07KaQayiiEqJcEJVGxW
- DJWVQLJMbD4iwkxTaFD3H0p2JGgP307KO70jlpR5gIcUZlAk4GFKf2J2IvNLjMNSn2uxmCl0wN9 8IN5bbtMosH5IhR/zeF+CB2LuqNfqI4N9+grMZRdxxuwGPdlLqqarea03h6lJmUhCyRu/a8i8kz Tf+Obvx8o9ykzS3HzZ7uJoYpFfeyx1MF2mb1bfrJPKKov5Hek7vDj0y7oBTk6jH6NlV6NUBmr/S
- NB4WP3fk3nYjIrlDnVp1EDEDVYMgojbXQutOJdU2aRzQk3FHTDAo6YB8Dm1/5Rm9q04tmjqR
-X-Proofpoint-GUID: ycLosbWzxeqeR0pwL3PG5xwCW1bFw5XS
-X-Proofpoint-ORIG-GUID: ycLosbWzxeqeR0pwL3PG5xwCW1bFw5XS
-X-Authority-Analysis: v=2.4 cv=combk04i c=1 sm=1 tr=0 ts=685c23c4 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=7CQSdrXTAAAA:8 a=0fVv-C4oS03cnMJSljAA:9 a=CjuIK1q_8ugA:10
- a=a-qgeE7W1pNrGK8U0ZQC:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_05,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 suspectscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506250121
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2545703.1750869056.1@famine>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 25 Jun 2025 09:30:56 -0700
+Message-ID: <2545704.1750869056@famine>
 
-On Wed, 25 Jun 2025 09:58:31 +0530
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+Seth Forshee (DigitalOcean) <sforshee@kernel.org> wrote:
 
-[...]
-> > diff --git a/Documentation/mm/arch_pgtable_helpers.rst b/Documentation/mm/arch_pgtable_helpers.rst
-> > index af245161d8e7..e2ac76202a85 100644
-> > --- a/Documentation/mm/arch_pgtable_helpers.rst
-> > +++ b/Documentation/mm/arch_pgtable_helpers.rst
-> > @@ -242,13 +242,13 @@ SWAP Page Table Helpers
-> >  ========================
-> >  
-> >  +---------------------------+--------------------------------------------------+
-> > -| __pte_to_swp_entry        | Creates a swapped entry (arch) from a mapped PTE |
-> > +| __pte_to_swp_entry        | Creates a swap entry (arch) from a swapped PTE   |
-> >  +---------------------------+--------------------------------------------------+
-> > -| __swp_to_pte_entry        | Creates a mapped PTE from a swapped entry (arch) |
-> > +| __swp_entry_to_pte        | Creates a swapped PTE from a swap entry (arch)   |
-> >  +---------------------------+--------------------------------------------------+
-> > -| __pmd_to_swp_entry        | Creates a swapped entry (arch) from a mapped PMD |
-> > +| __pmd_to_swp_entry        | Creates a swap entry (arch) from a swapped PMD   |
-> >  +---------------------------+--------------------------------------------------+
-> > -| __swp_to_pmd_entry        | Creates a mapped PMD from a swapped entry (arch) |
-> > +| __swp_entry_to_pmd        | Creates a swapped PMD from a swap entry (arch)   |
-> >  +---------------------------+--------------------------------------------------+
-> >  | is_migration_entry        | Tests a migration (read or write) swapped entry  |
-> >  +-------------------------------+----------------------------------------------+  
-> 
-> __pte_to_swp_entry() and __pmd_to_swp_entry() are still being used (and tested)
-> even after applying this patch. Should not their entries be preserved ?
+>The timer which ensures that no more than 3 LACPDUs are transmitted in
+>a second rearms itself every 333ms regardless of whether an LACPDU is
+>transmitted when the timer expires. This causes LACPDU tx to be delayed
+>until the next expiration of the timer, which effectively aligns LACPDUs
+>to ~333ms boundaries. This results in a variable amount of jitter in the
+>timing of periodic LACPDUs.
 
-Nothing is removed here. Only adjusted description, where David already
-posted some improvement. And renamed __swp_to_pte/pmd_entry() to the
-correct names __swp_entry_to_pte/pmd().
+	To be clear, the "3 per second" limitation that all of this
+should to conform to is from IEEE 802.1AX-2014, 6.4.16 Transmit machine:
 
-[...]
-> > @@ -804,17 +811,11 @@ static void __init pmd_swap_soft_dirty_tests(struct pgtable_debug_args *args) {
-> >  
-> >  static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
-> >  {
-> > -	unsigned long max_swap_offset;
-> >  	swp_entry_t entry, entry2;
-> >  	pte_t pte;
-> >  
-> >  	pr_debug("Validating PTE swap exclusive\n");
-> > -
-> > -	/* See generic_max_swapfile_size(): probe the maximum offset */
-> > -	max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));
-> > -
-> > -	/* Create a swp entry with all possible bits set */
-> > -	entry = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1, max_swap_offset);
-> > +	entry = args->swp_entry;  
-> args->swp_entry should be reused here as well.
+	"When the LACP_Enabled variable is TRUE and the NTT (6.4.7)
+	variable is TRUE, the Transmit machine shall ensure that a
+	properly formatted LACPDU (6.4.2) is transmitted [i.e., issue a
+	CtrlMuxN:M_UNITDATA.Request(LACPDU) service primitive], subject
+	to the restriction that no more than three LACPDUs may be
+	transmitted in any Fast_Periodic_Time interval. If NTT is set to
+	TRUE when this limit is in force, the transmission shall be
+	delayed until such a time as the restriction is no longer in
+	force. The NTT variable shall be set to FALSE when the Transmit
+	machine has transmitted a LACPDU."
 
-Yes, and it is. I just moved the swap entry creation logic from here to
-init_args(), and instead use args->swp_entry here.
+	The current implementation conforms to this as you describe: by
+aligning transmission to 1/3 second boundaries, no more than 3 can ever
+be sent in one second.
 
-> 
-> >  
-> >  	pte = swp_entry_to_pte(entry);
-> >  	WARN_ON(pte_swp_exclusive(pte));
-> > @@ -838,30 +839,36 @@ static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
-> >  
-> >  static void __init pte_swap_tests(struct pgtable_debug_args *args)
-> >  {
-> > -	swp_entry_t swp;
-> > -	pte_t pte;
-> > +	swp_entry_t entry, arch_entry;
-> > +	pte_t pte, pte2;  
-> A very small nit - s/pte2/pte as the first one is pmd not pte or
-> make it pte1, pte2 if preferred.
+	If, hypothetically, the state machine were to transition, or a
+user updates port settings (either of which would set NTT each time)
+more than 3 times in a second, would your patched code obey this
+restriction?
 
-Sure, pte1/2 looks better. Same for pmd1/2 in pmd_swap_tests().
+	For completeness, and to make this email as complicated as
+possible, I'll note that 802.1AX-2020 removes this particular
+restriction in favor of incorporating the 802.3 generic limit on
+transmission rates for Slow Protocols (of which LACP is one) to 10 per
+second (802.3-2022, 30.3.1.1.38) into the state machine (802.1AX-2020,
+6.4.7, see "txOpportunity" and 6.4.14 LACP Transmit machine).  Linux
+bonding doesn't implement the 802.1AX-2020 state machines, though, so I
+don't think we can reasonably pick and choose arbitrary pieces from two
+differing editions of a standard.
 
-> 
-> >  
-> >  	pr_debug("Validating PTE swap\n");
-> > -	pte = pfn_pte(args->fixed_pte_pfn, args->page_prot);
-> > -	swp = __pte_to_swp_entry(pte);
-> > -	pte = __swp_entry_to_pte(swp);
-> > -	WARN_ON(args->fixed_pte_pfn != pte_pfn(pte));
-> > +	entry = args->swp_entry;  
-> 
-> Should args->swp_entry be used directly here and 'entry' local variable
-> be dropped ?
+	-J
 
-Right, should be possible, also in pmd_swap_tests().
-
-[...]
-> > @@ -1166,6 +1173,7 @@ static void __init init_fixed_pfns(struct pgtable_debug_args *args)
-> >  
-> >  static int __init init_args(struct pgtable_debug_args *args)
-> >  {
-> > +	unsigned long max_swap_offset;
-> >  	struct page *page = NULL;
-> >  	int ret = 0;
-> >  
-> > @@ -1248,6 +1256,11 @@ static int __init init_args(struct pgtable_debug_args *args)
-> >  
-> >  	init_fixed_pfns(args);
-> >  
-> > +	/* See generic_max_swapfile_size(): probe the maximum offset */
-> > +	max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));  
-> Why not directly use generic_max_swapfile_size() which is doing exact same thing.
-> 
-> unsigned long generic_max_swapfile_size(void)
-> {
-> 	return swp_offset(pte_to_swp_entry(
-> 			swp_entry_to_pte(swp_entry(0, ~0UL)))) + 1;
+>Change this to only rearm the timer when an LACPDU is actually sent,
+>allowing tx at any point after the timer has expired.
+>
+>Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
+>---
+> drivers/net/bonding/bond_3ad.c | 11 ++++++-----
+> 1 file changed, 6 insertions(+), 5 deletions(-)
+>
+>diff --git a/drivers/net/bonding/bond_3ad.c b/drivers/net/bonding/bond_3a=
+d.c
+>index c6807e473ab706afed9560bcdb5e6eca1934f5b7..a8d8aaa169fc09d7d5c201ff2=
+98b37b3f11a7ded 100644
+>--- a/drivers/net/bonding/bond_3ad.c
+>+++ b/drivers/net/bonding/bond_3ad.c
+>@@ -1378,7 +1378,7 @@ static void ad_tx_machine(struct port *port)
+> 	/* check if tx timer expired, to verify that we do not send more than
+> 	 * 3 packets per second
+> 	 */
+>-	if (port->sm_tx_timer_counter && !(--port->sm_tx_timer_counter)) {
+>+	if (!port->sm_tx_timer_counter || !(--port->sm_tx_timer_counter)) {
+> 		/* check if there is something to send */
+> 		if (port->ntt && (port->sm_vars & AD_PORT_LACP_ENABLED)) {
+> 			__update_lacpdu_from_port(port);
+>@@ -1393,12 +1393,13 @@ static void ad_tx_machine(struct port *port)
+> 				 * again until demanded
+> 				 */
+> 				port->ntt =3D false;
+>+
+>+				/* restart tx timer(to verify that we will not
+>+				 * exceed AD_MAX_TX_IN_SECOND
+>+				 */
+>+				port->sm_tx_timer_counter =3D ad_ticks_per_sec / AD_MAX_TX_IN_SECOND=
+;
+> 			}
+> 		}
+>-		/* restart tx timer(to verify that we will not exceed
+>-		 * AD_MAX_TX_IN_SECOND
+>-		 */
+>-		port->sm_tx_timer_counter =3D ad_ticks_per_sec/AD_MAX_TX_IN_SECOND;
+> 	}
 > }
+> =
 
-Good question. I just moved this code here from pte_swap_exclusive_tests(),
-see above, and did not think about that. Now I also wonder why
-generic_max_swapfile_size() wasn't used before.
+>
+>---
+>base-commit: 86731a2a651e58953fc949573895f2fa6d456841
+>change-id: 20250625-fix-lacpdu-jitter-1554d9f600ab
+>
+>Best regards,
+>-- =
 
-But it is not exactly the same thing, there is an extra "+ 1" there.
-Maybe that is the reason, but I don't really understand the details /
-difference, and therefore would not want to change it.
+>Seth Forshee (DigitalOcean) <sforshee@kernel.org>
 
-David, do you remember why you didn't use generic_max_swapfile_size()
-in your pte_swap_exclusive_tests()?
-
-> 
-> > +	/* Create a swp entry with all possible bits set */
-> > +	args->swp_entry = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1, max_swap_offset);
-> > +  
-> 
-> Makes sense to use maximum possible bits while creating the swap entry for testing.
-> 
-> >  	/*
-> >  	 * Allocate (huge) pages because some of the tests need to access
-> >  	 * the data in the pages. The corresponding tests will be skipped  
-
+---
+	-Jay Vosburgh, jv@jvosburgh.net
