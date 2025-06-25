@@ -1,115 +1,219 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F79525C83F
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:36:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C05B7F50F
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:36:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750854968; cv=none; b=jmgSLkgVJhiDJzTjkuE67zzSBU0qWfD9Tui+kVAUb7oD00woYeKjFWjptJgdvbKR2u8jIrZtZRTZkBPQ+NIJz9F77a7imH1zwqVDo9+rb5K0ylcibifblJicl5Znwijpio8WGfs0vocFdBdGtpC7zYoMlCxt8JDzdN/Wsg/o6XA=
+	t=1750854980; cv=none; b=C7v9mZK25GQJFEwM/mNDLhDChA/mc0Y7rbv74UkGPZCfjk/XPGZ9cbE0LVKPplkY8tbVbLoyIVt1GBz+oYs+5qAhJDaVqrosxNFTOfCHVw65KjSeob1uauK3Dns2v8BH24EtXaA66jNculS6O2BZXnJEMT9wKh+hY+QHjbvxY0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750854968; c=relaxed/simple;
-	bh=8gvxEe87rQANHTSvFJNGL1YdvNiKYh/OurROwhKELtI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kJQlY/tSMBNuqzLxGB+vGuSJRhyxkFgM0I4CwK0q+9M4DcAJx6HY0vh5b9FlVTiuYKVbFT6ODMFaOf2SK2Btqs3hZAXzm/wKZy/HpE7lXm1KTIV2HHGp6gW81NhXWHiQMmQt5af+od6zOULHg21RCErmGgSRQXv0cSLvVA9YznA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZWAVVuUP; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750854980; c=relaxed/simple;
+	bh=1iWuKOp+rFc82fGN+3WK27u0fVFde2nYJsvLQGFjvJk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ODVlOsuraBRYMMVLjKxCAZNIcdrpaekvpfXbRDpYWVzeBefP8gyjoaMnEYzoWW2TkvwaDpmVBrl1ftYECwvnqAxrd0Bb7IOS+hd+PtDdWE18/+vE78POL7NtyTb4Z9/4v6wdMJUXiBBoSuyGgTcpHT+2NMmMXK0/X+jiwbz2ezk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=h5DayNCK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWAVVuUP"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so9105855e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:36:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750854965; x=1751459765; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=utxSfQIUzNDyFd0wpZpYOIjsXWTH5XEhERSRTus0EMQ=;
-        b=ZWAVVuUPwVwpOCis0bEEJQuI3Q1aYZsWyCe8TnI0RwknT64vAT+Mxnzsz7MbeDIl6t
-         sJbOzTcjMNZI71bTvfpGX7j/MLnxJyAeUgPQuiPUfqU1tHkenaU+k86pPUCg9pT/x16U
-         0No6CJXLfH+senNqDdp/OO+wKaQKFkYAlFArQLw9Dz9O0zGsuhnYUsPxF9Gr450Fxg8G
-         17tNTtsVmFUFM89RWrPv98EZBIdyhcxUfapch1Ymh0uYZm9ZJj0F6LcfwW/oAZKnAFql
-         veS3R7KaAyNAQ8EO5McSe+QYLHyH2ijLnTizI7uQoXR7fVkix0KBH9nUEbhOQTTHK+ui
-         ZuHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750854965; x=1751459765;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=utxSfQIUzNDyFd0wpZpYOIjsXWTH5XEhERSRTus0EMQ=;
-        b=jySqpahyDeelcbq3/sqLfByZ/5XTx8ZUIzIoUP5Cqe3SUpuhoiD6uiOUnFMRqcYU/g
-         C/HxfYi9fsK3HeUhwv/FQ34y+MuFKaZKC/8qtKYgeqK8Wj6wjm2gR84lTLpQT/LUu0lv
-         EsE9vpPK3gfR9J4WoVAZOaJQpnM8gswnhKh1qwJu5tN+HBHtixouf/kQ93EnHEKRU9cm
-         DwNI1H7qM0dwPl3YH5ehuKbziZwRA+/y2o129iKHuUNVP/2KlKb1KC7sjY6InfZEHn6Y
-         zjHNuRYBbJQup0W1NL8VeQOD1zoBCNmwHqIjXC7I1cs6V5PQfm0Ie/vdfIRg4Mk9M7PT
-         9itA==
-X-Forwarded-Encrypted: i=1; AJvYcCWmcqbg1tSrEUTPlA6cP76YtwUMuvo5RaYEyQqnUVbiq4vjhik0DHTRwTOT3t6WaqOrmOsv/DfRlQ9QjQ0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw6+2JayQe5rYXqwOG9lNwxwovg6kQyzBbz5AX2YtF/zhpAd285
-	7OLdP2IZfNNkUl25btjpa4HH1G1ygwxduA+5tDG1t9++0eCjCZ6q4KaWj18Xohu1JgE=
-X-Gm-Gg: ASbGncvT9Zfja3JSeHThh85160KD5D4BupPNKj07U7Tdrg15/b2UWB4KxjDk5Syp0M0
-	8SeMgkNXOyoSFA8b84ZxRLx/CtzP6gELgAJIwTMz8j6fCD0uRFL5TALsHh/70BvGo1fPnXHNKnw
-	HMEOt2advhJC3aAtFYshKkLv2B0WVlv3OsIe15UAnNxj5URLKLh7db+BsbNJs4ICbpEv319vJqZ
-	uKn4j58Uvq1Wdt9Yeg9Ypn8EH7ZgCUWWy13kHctytM3WJ2o3VGQ9KBZ9P0joC2g4tP4uR4XQqgJ
-	ebrWI4Qg1mZQcP+8EcVfw/jDKZujv9jWbcniugU6P2y01GM7+XgDrFnusoiBiZsqA+OosE3xM5o
-	z
-X-Google-Smtp-Source: AGHT+IHpR4lo9ocHAd6uQqZvgKCDOe86RYPFqDU+jrEBWi/cnlm4y3T0WDIq0VxBKL5+i3Qtu6Jpog==
-X-Received: by 2002:a05:600c:1c95:b0:450:d386:1afb with SMTP id 5b1f17b1804b1-45381aafecemr29587905e9.9.1750854965395;
-        Wed, 25 Jun 2025 05:36:05 -0700 (PDT)
-Received: from localhost.localdomain ([41.79.198.24])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805112asm4515756f8f.9.2025.06.25.05.36.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 05:36:05 -0700 (PDT)
-From: Khalid Ali <khaliidcaliy@gmail.com>
-X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
-To: kai.huang@intel.com,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de
-Cc: x86@kernel.org,
-	hpa@zytor.com,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h5DayNCK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750854976;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NY9vw9curyJ7/8LzORISM7uwDPvCxbSxMJ+ZZchZ3k8=;
+	b=h5DayNCK1fpG8GbdPI3JAsS3O7xnM60WfTjmaB4WIuJZ2iU2/D+zWCFBViCYC0kGssfQQo
+	p0m8VkpoU6xuW6HY85yYuT+mpG1g9Cwd5MIKGFzhEOBTroDBtFPaWAWHFjLpNagSMbJsvO
+	2TuJgLsptMgxYBPw9EYX7iKz4v9Vei0=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-606-k1aCep3vMS60dFeISDepPw-1; Wed,
+ 25 Jun 2025 08:36:13 -0400
+X-MC-Unique: k1aCep3vMS60dFeISDepPw-1
+X-Mimecast-MFC-AGG-ID: k1aCep3vMS60dFeISDepPw_1750854972
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BCE1B1809C9B;
+	Wed, 25 Jun 2025 12:36:11 +0000 (UTC)
+Received: from pauld.westford.csb (unknown [10.22.88.237])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CB2FF19560A3;
+	Wed, 25 Jun 2025 12:36:08 +0000 (UTC)
+Date: Wed, 25 Jun 2025 08:36:06 -0400
+From: Phil Auld <pauld@redhat.com>
+To: Jemmy Wong <jemmywong512@gmail.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] x86/boot: Don't return encryption mask from __startup_64()
-Date: Wed, 25 Jun 2025 12:34:21 +0000
-Message-ID: <20250625123517.4333-1-khaliidcaliy@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <487c2747bb4c02d643324292489243fdc82e1c6a.camel@intel.com>
-References: 
+Subject: Re: [PATCH v1] sched: Move curr check into __enqueue_entity and
+ __dequeue_entity
+Message-ID: <20250625123606.GB57862@pauld.westford.csb>
+References: <20250621142055.7110-1-jemmywong512@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250621142055.7110-1-jemmywong512@gmail.com>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-> Sigh... this comment is broken, since there's no '*' before the last '/'.
+Hi Jemmy,
 
->Here's how I find it:
->
->So I went to see why this patch caused early boot failure, since the code
->change doesn't seem wrong to me.
->
->After staring at the code for half hour and yet unable to see any issue, I
->went to disassemble the kernel image, then I found the above two lines of
->code wasn't there at all.
->
->Then looking at this again, it's obvious that the reason is the change to
->the comment is broken, leading the above two lines of code being commented
->out.
+On Sat, Jun 21, 2025 at 10:20:55PM +0800 Jemmy Wong wrote:
+> The check for se == cfs_rq->curr is common logic used before calling
+> __enqueue_entity and __dequeue_entity. Move this check into the respective
+> function bodies to simplify the code.
 
-So what i was wringling all along was the comment. I don't know why i couldn't spot it
-if those two lines where commented out then even boot was supposed to fail on my side too.
-I guess toolchain difference. Probably this is the reason since i compiled with gcc not clang.
 
-Thanks though. :)
+I'm not sure this simpifies the code.  The pattern is generally that
+the underscore prefixed function just does the required work and the
+non-underscore-prefixed one does the checks. That's a pattern used
+in lots of places.
 
->And this patch has other style issues too like the broken indent of function
->parameters after changing returning value from 'unsigned int' to 'void', and
-Could please clarify more as checkpatch.pl didn't notice it.
+Also, unless these end up unlined (I didn't check but they are not
+explicitly called out as such) you are adding an extra function
+call. 
 
->So, please, before posting patches, test them, and run
->./scripts/checkpatch.pl against them.
+> 
+> Signed-off-by: Jemmy Wong <jemmywong512@gmail.com>
+> 
+> ---
+>  kernel/sched/fair.c | 32 +++++++++++++++-----------------
+>  1 file changed, 15 insertions(+), 17 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 7a14da5396fb..24cbb4b6c3fb 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -849,6 +849,9 @@ RB_DECLARE_CALLBACKS(static, min_vruntime_cb, struct sched_entity,
+>   */
+>  static void __enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>  {
+> +	if (unlikely(se == cfs_rq->curr))
+> +		return;
+> +
+>  	avg_vruntime_add(cfs_rq, se);
+>  	se->min_vruntime = se->vruntime;
+>  	se->min_slice = se->slice;
+> @@ -858,6 +861,9 @@ static void __enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
+> 
+>  static void __dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>  {
+> +	if (unlikely(se == cfs_rq->curr))
+> +		return;
+> +
+>  	rb_erase_augmented_cached(&se->run_node, &cfs_rq->tasks_timeline,
+>  				  &min_vruntime_cb);
+>  	avg_vruntime_sub(cfs_rq, se);
+> @@ -3797,8 +3803,6 @@ static void place_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int fla
+>  static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+>  			    unsigned long weight)
+>  {
+> -	bool curr = cfs_rq->curr == se;
+> -
+>  	if (se->on_rq) {
+>  		/* commit outstanding execution time */
+>  		update_curr(cfs_rq);
+> @@ -3806,8 +3810,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+>  		se->deadline -= se->vruntime;
+>  		se->rel_deadline = 1;
+>  		cfs_rq->nr_queued--;
+> -		if (!curr)
+> -			__dequeue_entity(cfs_rq, se);
+> +		__dequeue_entity(cfs_rq, se);
+>  		update_load_sub(&cfs_rq->load, se->load.weight);
+>  	}
+>  	dequeue_load_avg(cfs_rq, se);
+> @@ -3834,8 +3837,7 @@ static void reweight_entity(struct cfs_rq *cfs_rq, struct sched_entity *se,
+>  	if (se->on_rq) {
+>  		place_entity(cfs_rq, se, 0);
+>  		update_load_add(&cfs_rq->load, se->load.weight);
+> -		if (!curr)
+> -			__enqueue_entity(cfs_rq, se);
+> +		__enqueue_entity(cfs_rq, se);
+>  		cfs_rq->nr_queued++;
+> 
+>  		/*
+> @@ -5363,8 +5365,7 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+> 
+>  	check_schedstat_required();
+>  	update_stats_enqueue_fair(cfs_rq, se, flags);
+> -	if (!curr)
+> -		__enqueue_entity(cfs_rq, se);
+> +	__enqueue_entity(cfs_rq, se);
+>  	se->on_rq = 1;
+> 
+>  	if (cfs_rq->nr_queued == 1) {
+> @@ -5506,8 +5507,7 @@ dequeue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+>  		se->rel_deadline = 1;
+>  	}
+> 
+> -	if (se != cfs_rq->curr)
+> -		__dequeue_entity(cfs_rq, se);
+> +	__dequeue_entity(cfs_rq, se);
+>  	se->on_rq = 0;
+>  	account_entity_dequeue(cfs_rq, se);
+> 
+> @@ -5624,14 +5624,14 @@ static void put_prev_entity(struct cfs_rq *cfs_rq, struct sched_entity *prev)
+>  	/* throttle cfs_rqs exceeding runtime */
+>  	check_cfs_rq_runtime(cfs_rq);
+> 
+> +	WARN_ON_ONCE(cfs_rq->curr != prev);
+>  	if (prev->on_rq) {
+>  		update_stats_wait_start_fair(cfs_rq, prev);
+> -		/* Put 'current' back into the tree. */
+> -		__enqueue_entity(cfs_rq, prev);
+>  		/* in !on_rq case, update occurred at dequeue */
+>  		update_load_avg(cfs_rq, prev, 0);
+> +		cfs_rq->curr = NULL;
+> +		__enqueue_entity(cfs_rq, prev);
+>  	}
+> -	WARN_ON_ONCE(cfs_rq->curr != prev);
+>  	cfs_rq->curr = NULL;
+>  }
 
-I used it, well the tool seems broken and giving me false positive. I fixed all your suggestions and sent 
-v5, as my best i could, i fixed all issues and that patch seems good. 
+And here you are changing things around a bit more. 
 
-Could you please check it?
+Plus possibly clearing curr twice. 
+
+Anyway, others may feel differently. But I don't think this patch is
+needed.
+
+
+Cheers,
+Phil
+
+
+
+> 
+> @@ -6910,12 +6910,10 @@ requeue_delayed_entity(struct sched_entity *se)
+>  		update_entity_lag(cfs_rq, se);
+>  		if (se->vlag > 0) {
+>  			cfs_rq->nr_queued--;
+> -			if (se != cfs_rq->curr)
+> -				__dequeue_entity(cfs_rq, se);
+> +			__dequeue_entity(cfs_rq, se);
+>  			se->vlag = 0;
+>  			place_entity(cfs_rq, se, 0);
+> -			if (se != cfs_rq->curr)
+> -				__enqueue_entity(cfs_rq, se);
+> +			__enqueue_entity(cfs_rq, se);
+>  			cfs_rq->nr_queued++;
+>  		}
+>  	}
+> --
+> 2.43.0
+> 
+
+-- 
+
