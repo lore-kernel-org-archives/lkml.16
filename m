@@ -1,184 +1,84 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACF8275B05;
-	Wed, 25 Jun 2025 08:36:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EB6820D4E7;
+	Wed, 25 Jun 2025 08:37:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750840608; cv=none; b=spKLMAwMQkVsyzXeVHut6OBwLIkYRoAc8kX6Gi0Wj+MPfhbPZlTkivwqJFXTzPh+LKFt3VCSHr28RomHohMsKDDbLuUyzb0hmonJVigvBMgLgG/i4G3zWtXD/kXc2YCdiWNJT1mOXlINy2Mrg9DeBce6v+bYISFnCuHFnNVzm28=
+	t=1750840639; cv=none; b=Vub0wcinjVz0oTXyassEreTLYYxmL35GsBDyWqQ9cZEkT1TRzOvQG2IfFZhSIka99aLZT6Ib65oCVrVklyIMiX8/OyUlZArhHCi7pB7b+5pSVtlcN7M4sPHvtOk9KdzS+KTnOBNlgAV35eM1AVusPDLTraDk8+yulj7qnLhnh9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750840608; c=relaxed/simple;
-	bh=EbK0U+OP5CIqfg71sOAF4oAM+5LmkeILjjLQ3geqK5s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EChmczUceWR1raU8nR5IZ0qXJdPftEdCibO9qbERnSwR6k4SC7aou3g7N0uWtN+RTuK3f3CeXIDm/0bkBFmpVrO2rVGUM6Zw6n5jSilw2jkrWVLjl9y3ZO1ILbNa41GVmRjkrLqPI2YH0moHxlRdS+kxIaVOBtumfsKFvG1y+v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=SqHnV/Gq; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="SqHnV/Gq"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P6nksJ008379;
-	Wed, 25 Jun 2025 10:36:23 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	5iWKPTMFpX+lonpPcbekR/V8/MBsHrjUivVDN79opdU=; b=SqHnV/GqxnozxlFn
-	ObEanHvfEI2F+FZtdB/7rtcovax1mQOyY1mVLlQ1BSYzN3yIdeS4b9QiEoUlf22n
-	cTk3tMwbAYEgr0NzY+C6Hu4ePlqFtc4ohf3c5cI1MVAtveM2SqSkuPOgaXVJl9t2
-	lNCnLxNPGVWfXjSSFjGP4wGMV2SqlxyIdFceC6pGRDWYwmmr/huHgqdJtS0AtyK8
-	zzxhKbVp4Gp7CwnIsip3EpIf8VWMfTaCJeNLMvIY5aPom3oUeQlg0pEMpwG3qDpL
-	WCHhLTWw5LXNeUKngpRNl/Swhe1B9upvwpikOj5INAqO+91z2RN6R3qE/iQ39qUX
-	HZIp/w==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dkmjrekf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 10:36:23 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A845540047;
-	Wed, 25 Jun 2025 10:35:03 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 36FE8B0C401;
-	Wed, 25 Jun 2025 10:33:50 +0200 (CEST)
-Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
- (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 25 Jun
- 2025 10:33:49 +0200
-Message-ID: <e2400615-f21e-40bf-84f8-384242632193@foss.st.com>
-Date: Wed, 25 Jun 2025 10:33:48 +0200
+	s=arc-20240116; t=1750840639; c=relaxed/simple;
+	bh=+ymYFCYyzrhnTDccGkxrXRgCQ9ZpY4v1A/adjJaSuu8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ww4NtSamupKUyCq+7raH2CO/pJoXn5ractWNRt6byDqDQZb4O970yhL5+niq6wcz/l57swTjNxb+nVuFF4cwKX1BHqLCtqgTy3mdqzt8BJG6J2aCgyzuqp9sQDZnzIQxNf5JcfvUtsjM6+sHONLJjHqSYhelLwnr+g7v6Voa8Ug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=pankajraghav.com; arc=none smtp.client-ip=80.241.56.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pankajraghav.com
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4bRwD84mDJz9tWd;
+	Wed, 25 Jun 2025 10:37:12 +0200 (CEST)
+From: Pankaj Raghav <p.raghav@samsung.com>
+To: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Jan Kara <jack@suse.cz>,
+	mcgrof@kernel.org,
+	Christian Brauner <brauner@kernel.org>
+Cc: kernel@pankajraghav.com,
+	linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	gost.dev@samsung.com,
+	Pankaj Raghav <p.raghav@samsung.com>,
+	Matthew Wilcox <willy@infradead.org>
+Subject: [PATCH v3] fs/buffer: remove the min and max limit checks in __getblk_slow()
+Date: Wed, 25 Jun 2025 10:37:04 +0200
+Message-ID: <20250625083704.167993-1-p.raghav@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
-To: Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will@kernel.org>,
-        Mark
- Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Gatien Chevallier
-	<gatien.chevallier@foss.st.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Gabriel Fernandez
-	<gabriel.fernandez@foss.st.com>
-CC: <linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>
-References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
- <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
- <9cb1575e-ae27-4a78-adb7-8a9e7072375e@kernel.org>
- <5044c733-8836-43bd-85d7-0f552b000fb1@foss.st.com>
- <49483568-b287-45ca-a66c-1e0ad0490225@kernel.org>
-Content-Language: en-US
-From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
-In-Reply-To: <49483568-b287-45ca-a66c-1e0ad0490225@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
- (10.75.129.70)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_01,2025-06-23_07,2025-03-28_01
+X-Rspamd-Queue-Id: 4bRwD84mDJz9tWd
 
-On 6/25/25 08:35, Krzysztof Kozlowski wrote:
-> On 24/06/2025 12:43, Clement LE GOFFIC wrote:
->> On 6/23/25 11:45, Krzysztof Kozlowski wrote:
->> [...]
->>
->> Hi Krzysztof,
->>
->> Sorry I forgot to address comments below.
->>
->>>> +
->>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp1 = {
->>>> +	.regs = &stm32_ddr_pmu_regspec_mp1,
->>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp1,
->>>> +	.counters_nb = MP1_CNT_NB,
->>>> +	.evt_counters_nb = MP1_CNT_NB - 1, /* Time counter is not an event counter */
->>>> +	.time_cnt_idx = MP1_TIME_CNT_IDX,
->>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp1,
->>>> +};
->>>> +
->>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp2 = {
->>>> +	.regs = &stm32_ddr_pmu_regspec_mp2,
->>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp2,
->>>> +	.counters_nb = MP2_CNT_NB,
->>>> +	.evt_counters_nb = MP2_CNT_NB - 1, /* Time counter is an event counter */
->>>> +	.time_cnt_idx = MP2_TIME_CNT_IDX,
->>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp2,
->>>> +};
->>>> +
->>>> +static const struct dev_pm_ops stm32_ddr_pmu_pm_ops = {
->>>> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, stm32_ddr_pmu_device_resume)
->>>> +};
->>>> +
->>>> +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
->>>> +	{
->>>> +		.compatible = "st,stm32mp131-ddr-pmu",
->>>> +		.data = &stm32_ddr_pmu_cfg_mp1
->>>> +	},
->>>> +	{
->>>> +		.compatible = "st,stm32mp151-ddr-pmu",
->>>> +		.data = &stm32_ddr_pmu_cfg_mp1
->>>
->>> So devices are compatible, thus express it correctly and drop this.
->>
->> Ok so I assume this comes with your comment in the bindings and
->> basically don't get you point here.
->> Can you please be more precise ?
-> 
-> Express compatibility in the bindings, like 90% of SoCs are doing, so
-> with proper fallback and drop this entry in the table. My comment was
-> pretty precise, because this is completely standard pattern, also used
-> already in stm32.
-> 
+All filesystems will already check the max and min value of their block
+size during their initialization. __getblk_slow() is a very low-level
+function to have these checks. Remove them and only check for logical
+block size alignment.
 
-Ok I remember your discussion with Alex in my V1 of pinctrl-hdp :
-https://lore.kernel.org/all/1de58672-5355-4b75-99f4-c48687017d2f@kernel.org/
+Suggested-by: Matthew Wilcox <willy@infradead.org>
+Signed-off-by: Pankaj Raghav <p.raghav@samsung.com>
+---
+Changes since v2:
+- Removed the max and min checks in __getblk_slow().
 
-Does it suits you :
-In the SoC DT:
-MP13: compatible = "st,stm32mp131-ddr-pmu", "st,stm32mp1-ddr-pmu";
-MP15: compatible = "st,stm32mp151-ddr-pmu", "st,stm32mp1-ddr-pmu";
-MP25: compatible = "st,stm32mp251-ddr-pmu";
+ fs/buffer.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-In the bindings:
-properties:
-   compatible:
-     enum:
-       - st,stm32mp1-ddr-pmu
-       - st,stm32mp131-ddr-pmu
-       - st,stm32mp151-ddr-pmu
-       - st,stm32mp251-ddr-pmu
+diff --git a/fs/buffer.c b/fs/buffer.c
+index a14d281c6a74..a1aa01ebc0ce 100644
+--- a/fs/buffer.c
++++ b/fs/buffer.c
+@@ -1122,13 +1122,9 @@ __getblk_slow(struct block_device *bdev, sector_t block,
+ {
+ 	bool blocking = gfpflags_allow_blocking(gfp);
+ 
+-	if (unlikely(size & (bdev_logical_block_size(bdev) - 1) ||
+-		     (size < 512 || size > PAGE_SIZE))) {
+-		printk(KERN_ERR "getblk(): invalid block size %d requested\n",
+-					size);
+-		printk(KERN_ERR "logical block size: %d\n",
+-					bdev_logical_block_size(bdev));
+-
++	if (unlikely(size & (bdev_logical_block_size(bdev) - 1))) {
++		printk(KERN_ERR "getblk(): block size %d not aligned to logical block size %d\n",
++		       size, bdev_logical_block_size(bdev));
+ 		dump_stack();
+ 		return NULL;
+ 	}
 
-In the driver:
-static const struct of_device_id stm32_ddr_pmu_of_match[] = {
-	{
-		.compatible = "st,stm32mp1-ddr-pmu",
-		.data = &stm32_ddr_pmu_cfg_mp1
-	},
-	{
-		.compatible = "st,stm32mp251-ddr-pmu",
-		.data = &stm32_ddr_pmu_cfg_mp2
-	},
-	{ },
-};
-
-Best regards,
-Clément
-
-> Best regards,
-> Krzysztof
+base-commit: 6ae58121126dcf8efcc2611f216a36a5e50b8ad9
+-- 
+2.49.0
 
