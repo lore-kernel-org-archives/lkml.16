@@ -1,161 +1,155 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A8A2EACE9
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:19:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21007285CB8
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750843152; cv=none; b=E0kHIIt3UU+ulr8mRQnCzQRbpQNRdZwu18MjupHnbuQwkFnzZQFLvrGJQjEu6f6KSNypoAkrsEB7nT6Wf8QAmRqTVrUpvBvymmzQbnLzI+5z99RVxIzoY1yB1AC70K/r8HWWXSmsCYhpAwF4kTZW/aqkkft8PBUyXe9MI5qnk4E=
+	t=1750843231; cv=none; b=DDv1nLI9SWfD7rZi++eKm+hcqznmIIa4oeQ8BbqZ2m5+bgnHgP/xv+bSkQKDj6tn8tgyB+PcEZqzX3Fxlry9mj4R7hP0et3qmLxHv/Wu6uli542DmBsfDtrG2Wpu6WG8RsMSufLYiHHzCctD5b9lxZWjw6NWJmrvSuUglKBzz+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750843152; c=relaxed/simple;
-	bh=kgpatAn3UyZhRRylnSXWUsrYKcp8B/g//yfZm7DYI1o=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=SofDezPW/1INMJ/rP2Cb7xDsXr4bE1s2hsiXBUAlZuqG6GCkFJ/6H8Zz+gOpVYwY85/CxoqqE7RzRURN4QxWdaQGOa0ECIn/MBw3utCma5AKD6/yMFqpMmhDLxjvBTCci/UR7GWRkXqrQgClVrOx6F50dSoaCUmknC6b03u4pZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=IbA3LEyA; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1750843231; c=relaxed/simple;
+	bh=uDafNFhTllkTUBhR+Oa68ZEnc3lAmutJazclJcROfpo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eoVvmO0/xMxcQw5lLC2De2vAjtOqWYC7bIDB4sSjzpXssvqxA+3Tep0PX4ZMJKyIwDMoTec2bya/X8Lq9BsZ34kLiK1BnZACXDPbFEDtJi9teL/zABSTCh81y2omjpx0FwlleDhGnhRAy1O6Q4jdzDfIO539ninYcP9ZmEVm6+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=miKXzUfe; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Pp4+T8OW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=miKXzUfe; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=Pp4+T8OW; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="IbA3LEyA"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-60780d74c85so2148863a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:19:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1750843148; x=1751447948; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wuaucapIjbc/Nvst+f4WACJyvX0IAgOq6Rw0lW1hMjM=;
-        b=IbA3LEyAEnt6r4nQOn+ZddzhADWqXUS8d6EezQSZgVkquKGZ8j0FWOOSCwJhkzqeED
-         DwxRgKWu+8IRwfKZDVXKBax4BC2TVYbRbY9cnTTEXl+RldDwQxDohxoSWjfKRW1V+JSm
-         fdm1q5/5kctSHvRgqykJdDaca1HSOVBTPL8ffxeDUyYEPTI4n0BfsjNhsw1V7P8OTbXJ
-         izj3rg8QhHHKRr47RrC8a2UQCfvv+lNJ37CTtMzTDTXEiEa3vNCO1g44F1J5W0pAmuKp
-         RaZw2WtUvURKRU8GzbDamEuXekWcQuUL4uiJNmHUkPCvRzWXx87mfldAIfE8zf2RU/0r
-         0ogg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750843148; x=1751447948;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wuaucapIjbc/Nvst+f4WACJyvX0IAgOq6Rw0lW1hMjM=;
-        b=Z0hkHXJiactjs5XuhABJ8333tLyu2XQeLWyLxQGuu99yZFoDzkGZypDgzZfywe8QRV
-         PBlg3nhTryQXGxFdSf0D9cFoaSF1XBcobQhyTdfwHO95wlPYXTHsxbNdG9ABSmoOUb7T
-         xdUTedFdAuPCnTNkD9sU3oYkxxdIQvQqTn6zMsL5EvKKXSvhkijb9KcIpePMAda1FJMp
-         sR7XUUJfF171VFtbDN/CfMK6Kp+ZpMOpBDr0BLHXWgq4xpEzk04QHQRn5Kv0/us4gGKc
-         avTjva3REXDZNW8Z71Rjlk60f3PP0VgaOWY5qKpfMalRXojyKC2XGMC42PX6HiH8uSYl
-         xW2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWdjJ2FwkvDeS6T74WXgMUGpQNlybWzm3/yX6H+Ec7t+Q/30w2CdIUD6+b83gt8JdqAtK7Jfa6un/Qoa24=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBqxK2QCDVi01rlqUkQO0dCSJYkZCXzrrW2fL6OMHhbMVjByny
-	U9SqWd2LVRmui0pQVHalPRw1cGvGlp0mxicd0iEhvWTSJDjCF0hGXdsUKq9bgiAh6KE=
-X-Gm-Gg: ASbGncu2Hv6OQcEGBdXGhV5eUWVvsq8O78yZS+1/slTgOESP92uiwHeBCNpxVJK3jl/
-	aGdoUB4tt97yNUg3sy/YTC7kqqOAyZcV09x4CZLk5hXgG/lkGmcQucmO1kYS+JGTncog9M1nMP6
-	ozYb505dVd9ZOxU/0atc4qC2Caenko44JCyiG+brgQc/KPPHe8Q/7WOAvBfqge5lC7BbRaDeOIm
-	Valb/t9mKSsUA9dR8/fXaZIpCyAALvLE/pR/6PUgu+4/xDBAebdZGFR9jRE5/k3nJdqCe8/h16w
-	qdsmBAMAeHsecmhjnw3qsMY67fdIzSgrGfugV4JS5Dhyxb/qxvyfAuynyzXthc5r+Ave+8DZ+fq
-	uz582CmlEVh4UtbUDeEsVIot0hEtGRPz7
-X-Google-Smtp-Source: AGHT+IGf29aQsvkm8Kz0oGqiHGQjafT0bQ1zdGBqpvWbJxB7FTYbZYbTebbfduxcvKuny9uTfKYpAA==
-X-Received: by 2002:a05:6402:1d55:b0:60c:44d6:2817 with SMTP id 4fb4d7f45d1cf-60c4de9bbabmr1551640a12.20.1750843148144;
-        Wed, 25 Jun 2025 02:19:08 -0700 (PDT)
-Received: from otso.local (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c2f196f84sm2194802a12.14.2025.06.25.02.19.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 02:19:07 -0700 (PDT)
-From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Wed, 25 Jun 2025 11:18:59 +0200
-Subject: [PATCH 4/4] regulator: qcom-rpmh: add support for pm7550
- regulators
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="miKXzUfe";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Pp4+T8OW";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="miKXzUfe";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="Pp4+T8OW"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 7590B21175;
+	Wed, 25 Jun 2025 09:20:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750843228; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4q3oGP7adTB8xOiBgLxnYABFNkmwV9fipjngdpsbJoI=;
+	b=miKXzUfeGl2pjydsa10CWxnBe2+CHlKnhDyCPKT646v6UehiSg9+biAVtawaFBQJo8aQin
+	cdgi38gDEtnz6+PbEP83t/UT9CgHsh9WL3l6nmLJiY4thRTvACpfvA99l3pGdRz6liynY9
+	qTjReKMPsEMjCSHjFPlG77NrYjPdvXQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750843228;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4q3oGP7adTB8xOiBgLxnYABFNkmwV9fipjngdpsbJoI=;
+	b=Pp4+T8OWBB+ZZNZMVIItKcc5NnUoHOmitTzyHMdjD/Ru3J27KyA2yro2T4sTGDoOZWuswY
+	vMG6X6WHMBNBodDg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750843228; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4q3oGP7adTB8xOiBgLxnYABFNkmwV9fipjngdpsbJoI=;
+	b=miKXzUfeGl2pjydsa10CWxnBe2+CHlKnhDyCPKT646v6UehiSg9+biAVtawaFBQJo8aQin
+	cdgi38gDEtnz6+PbEP83t/UT9CgHsh9WL3l6nmLJiY4thRTvACpfvA99l3pGdRz6liynY9
+	qTjReKMPsEMjCSHjFPlG77NrYjPdvXQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750843228;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4q3oGP7adTB8xOiBgLxnYABFNkmwV9fipjngdpsbJoI=;
+	b=Pp4+T8OWBB+ZZNZMVIItKcc5NnUoHOmitTzyHMdjD/Ru3J27KyA2yro2T4sTGDoOZWuswY
+	vMG6X6WHMBNBodDg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id E8C3213485;
+	Wed, 25 Jun 2025 09:20:26 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 9mrjNVq/W2h9MAAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 25 Jun 2025 09:20:26 +0000
+Date: Wed, 25 Jun 2025 11:20:21 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, nvdimm@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>
+Subject: Re: [PATCH RFC 10/14] mm/memory: factor out common code from
+ vm_normal_page_*()
+Message-ID: <aFu_VeTRSk4Pz-ZL@localhost.localdomain>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-11-david@redhat.com>
+ <aFu5Bn2APcr2sf7k@localhost.localdomain>
+ <1ea2de52-7684-4e27-a8e9-233390f63eeb@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-pm7550-pmr735b-rpmh-regs-v1-4-cab8ef2e5c92@fairphone.com>
-References: <20250625-pm7550-pmr735b-rpmh-regs-v1-0-cab8ef2e5c92@fairphone.com>
-In-Reply-To: <20250625-pm7550-pmr735b-rpmh-regs-v1-0-cab8ef2e5c92@fairphone.com>
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750843144; l=3664;
- i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
- bh=kgpatAn3UyZhRRylnSXWUsrYKcp8B/g//yfZm7DYI1o=;
- b=DjI1ewEOMhLXPrgnIicTOYSgqxg7FcxqxdagsIqlXVqmIr74DNe0c+qZVMPBGXDwyxSYsOq6k
- VIOE8NVnEXhDlVP0Lqu3VovgShcGjrfM2lQ+PFwD+vo3jW88HB0I4uG
-X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
- pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ea2de52-7684-4e27-a8e9-233390f63eeb@redhat.com>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLhwqoz3wsm4df3nfubx4grhps)];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,localhost.localdomain:mid]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-Add RPMH regulators exposed by Qualcomm Technologies, Inc. PM7550 PMIC.
-It has 6 FTS525 (FT-SMPS) and 23 LDOs with 3 different types.
-L1-L11 are LDO515 LV NMOS, L12-L13 are LDO515 MV PMOS, L14-L23 are
-LDO512 MV PMOS.
+On Wed, Jun 25, 2025 at 10:57:39AM +0200, David Hildenbrand wrote:
+> I don't think that comment is required anymore -- we do exactly what
+> vm_normal_page() does + documents,
+> 
+> What the current users are is not particularly important anymore.
+> 
+> Or why do you think it would still be important?
 
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
- drivers/regulator/qcom-rpmh-regulator.c | 38 +++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+Maybe the current users are not important, but at least a comment directing 
+to vm_normal_page like "See comment in vm_normal_page".
+Here, and in vm_normal_page_pud().
 
-diff --git a/drivers/regulator/qcom-rpmh-regulator.c b/drivers/regulator/qcom-rpmh-regulator.c
-index 7b1743d51fd145a44f98dd8e605b4ca410046654..ec25b324f80669a9291e41e613f09424361a28ca 100644
---- a/drivers/regulator/qcom-rpmh-regulator.c
-+++ b/drivers/regulator/qcom-rpmh-regulator.c
-@@ -1462,6 +1462,40 @@ static const struct rpmh_vreg_init_data pm7325_vreg_data[] = {
- 	{}
- };
- 
-+static const struct rpmh_vreg_init_data pm7550_vreg_data[] = {
-+	RPMH_VREG("smps1", "smp%s1",  &pmic5_ftsmps525,    "vdd-s1"),
-+	RPMH_VREG("smps2", "smp%s2",  &pmic5_ftsmps525,    "vdd-s2"),
-+	RPMH_VREG("smps3", "smp%s3",  &pmic5_ftsmps525,    "vdd-s3"),
-+	RPMH_VREG("smps4", "smp%s4",  &pmic5_ftsmps525,    "vdd-s4"),
-+	RPMH_VREG("smps5", "smp%s5",  &pmic5_ftsmps525,    "vdd-s5"),
-+	RPMH_VREG("smps6", "smp%s6",  &pmic5_ftsmps525,    "vdd-s6"),
-+	RPMH_VREG("ldo1",  "ldo%s1",  &pmic5_nldo515,      "vdd-l1"),
-+	RPMH_VREG("ldo2",  "ldo%s2",  &pmic5_nldo515,      "vdd-l2-l3"),
-+	RPMH_VREG("ldo3",  "ldo%s3",  &pmic5_nldo515,      "vdd-l2-l3"),
-+	RPMH_VREG("ldo4",  "ldo%s4",  &pmic5_nldo515,      "vdd-l4-l5"),
-+	RPMH_VREG("ldo5",  "ldo%s5",  &pmic5_nldo515,      "vdd-l4-l5"),
-+	RPMH_VREG("ldo6",  "ldo%s6",  &pmic5_nldo515,      "vdd-l6"),
-+	RPMH_VREG("ldo7",  "ldo%s7",  &pmic5_nldo515,      "vdd-l7"),
-+	RPMH_VREG("ldo8",  "ldo%s8",  &pmic5_nldo515,      "vdd-l8"),
-+	RPMH_VREG("ldo9",  "ldo%s9",  &pmic5_nldo515,      "vdd-l9-l10"),
-+	RPMH_VREG("ldo10", "ldo%s10", &pmic5_nldo515,      "vdd-l9-l10"),
-+	RPMH_VREG("ldo11", "ldo%s11", &pmic5_nldo515,      "vdd-l11"),
-+	RPMH_VREG("ldo12", "ldo%s12", &pmic5_pldo,         "vdd-l12-l14"),
-+	RPMH_VREG("ldo13", "ldo%s13", &pmic5_pldo,         "vdd-l13-l16"),
-+	RPMH_VREG("ldo14", "ldo%s14", &pmic5_pldo,         "vdd-l12-l14"),
-+	RPMH_VREG("ldo15", "ldo%s15", &pmic5_pldo,         "vdd-l15-l17-l18-l19-l20-l21-l22-l23"),
-+	RPMH_VREG("ldo16", "ldo%s16", &pmic5_pldo,         "vdd-l13-l16"),
-+	RPMH_VREG("ldo17", "ldo%s17", &pmic5_pldo,         "vdd-l15-l17-l18-l19-l20-l21-l22-l23"),
-+	RPMH_VREG("ldo18", "ldo%s18", &pmic5_pldo,         "vdd-l15-l17-l18-l19-l20-l21-l22-l23"),
-+	RPMH_VREG("ldo19", "ldo%s19", &pmic5_pldo,         "vdd-l15-l17-l18-l19-l20-l21-l22-l23"),
-+	RPMH_VREG("ldo20", "ldo%s20", &pmic5_pldo,         "vdd-l15-l17-l18-l19-l20-l21-l22-l23"),
-+	RPMH_VREG("ldo21", "ldo%s21", &pmic5_pldo,         "vdd-l15-l17-l18-l19-l20-l21-l22-l23"),
-+	RPMH_VREG("ldo22", "ldo%s22", &pmic5_pldo,         "vdd-l15-l17-l18-l19-l20-l21-l22-l23"),
-+	RPMH_VREG("ldo23", "ldo%s23", &pmic5_pldo,         "vdd-l15-l17-l18-l19-l20-l21-l22-l23"),
-+	RPMH_VREG("bob",   "bob%s1",  &pmic5_bob,          "vdd-bob"),
-+	{}
-+};
-+
- static const struct rpmh_vreg_init_data pmr735a_vreg_data[] = {
- 	RPMH_VREG("smps1",  "smp%s1",  &pmic5_ftsmps520, "vdd-s1"),
- 	RPMH_VREG("smps2",  "smp%s2",  &pmic5_ftsmps520, "vdd-s2"),
-@@ -1679,6 +1713,10 @@ static const struct of_device_id __maybe_unused rpmh_regulator_match_table[] = {
- 		.compatible = "qcom,pm7325-rpmh-regulators",
- 		.data = pm7325_vreg_data,
- 	},
-+	{
-+		.compatible = "qcom,pm7550-rpmh-regulators",
-+		.data = pm7550_vreg_data,
-+	},
- 	{
- 		.compatible = "qcom,pmr735a-rpmh-regulators",
- 		.data = pmr735a_vreg_data,
+Just someone has it clear why we're only checking for X and Y when we find a
+pte/pmd/pud special.
+
+But not really a strong opinion here, just I think that it might be helpful.
+
 
 -- 
-2.50.0
-
+Oscar Salvador
+SUSE Labs
