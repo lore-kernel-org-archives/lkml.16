@@ -1,108 +1,98 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88B4F1C8621
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:25:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6C92D6601
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750875947; cv=none; b=eiISGS/AlzxVDe2djQDsJEJfQ8KwgkeSGsJfisyuHw84grwRExLmT7POLssd+q/rgkO/9++txZXOSNDW1k3zu/30fLD5DG7tKyIKj4JWGYUUIIRUX0mqmE+4B3757WKDhomJRwd0McKTwEjKwvuC1tzVUuQuTFC/DQ3kDJ2yYpQ=
+	t=1750876167; cv=none; b=CspIIz9RxtjvJ5NT+k0z43yqb75DG+iePBsaWAh/v7+xjLgm06hYE2bD+vZQ+kQYSWpbaZpxSfJuFlFcewSU3u2DfcuBAld+OkgK9KIm8kuJzGcN4BfnkvbVFuP170wU4oRAz8pjd4do8f63hlgh0C2OGoAXHTAZaQmFUYhsvFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750875947; c=relaxed/simple;
-	bh=+ovEJMwQI9UphFTKGSGoY9aAX+2mOC85y+RlQ5VlzLQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fA9jBRPq8cWfJi4autdF13g/crrFBsOaRHp0qvTry9jCKmZpUKTfRmQp15ChKClXe6wgpaI5QVYMxr3VGvWHEs4fMng4N99ANArAPyHJ4DU+ilLQnyFAtx7JXp0CV6ZldDnXTmDbWuSaUTfrfEt/Yz+CQ38YYs9PGMP1d63cMU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=TqA+ceJf; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1750876167; c=relaxed/simple;
+	bh=TmQfvKIRFHUQRm9d3k3nPg6QQeGONuWlQrMorEs6wjw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=f/xhtFfpDUgoXJ+jK4nseH8dD/NC/OdLOBLm/rAyArB929ICPn+augikwov1vGRosc7TXCSHreu6y6v1VzKoHE0kcCg3Ig9vdph5G6e2qDqFgNoZe7UUNH9p49cAmwzG4851iDfNWFlINjjcumWpw/5PXkij1Rw4Cgq3L22kIew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SK1ZSpjl; arc=none smtp.client-ip=209.85.210.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TqA+ceJf"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-234d366e5f2so2998875ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:25:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SK1ZSpjl"
+Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7425efba1a3so200061b3a.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:29:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1750875941; x=1751480741; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HhlQKvgXhBKkjEGOu4VGBmR9okHVz/Noc/QfUL7Lp3k=;
-        b=TqA+ceJfhhJ0UJ01HPE9X7di/TnaVxiWtltpz9y8XBlznXmowJFHMilIbJ4F3lqJgj
-         Q5GvgsmS6lJdTTUA3G2MixTRkUaaoOrarQhoEW8kTcFgKNJ/z0swaE+PavuyIaUekT3X
-         rLiBCsSF9cwbRMgTrzrv6HhpVnhiApzj3AUMA=
+        d=google.com; s=20230601; t=1750876165; x=1751480965; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=RyisTqyO/JOPc+5y7ScQVEK2p20o+XhWHrp4F91o7kc=;
+        b=SK1ZSpjljhMH1mtbdDPbiymGuT787boBWTwH6/9hBEwESe9IHPx2+cm4VtCYUbFGde
+         /Ii4sF7gRpPNz7YIUYqZ106z5ZZKk7C6ubj/XjTXCaBclGkpUAo7x+tr+KGJ0JHQu2D0
+         hGhOyIzFdGYzurYPjBE1TzISZRKqI8v/XhaLYhffWFuaPXevlxtJR7vMe6iUydNbdeFh
+         /dUO/ML4c0jePwBhLJrw9kAUKWmQGOSjX0ADVLqAeLxa/+zELY4r288VKV0xIKguRB6p
+         3gZKEYHW/Hh9fmAAwY+43ss34DGHwo8BPH0B95x1Yzg8wl5mdepGJOOLkwllRFsxnKTc
+         Sbcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750875941; x=1751480741;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HhlQKvgXhBKkjEGOu4VGBmR9okHVz/Noc/QfUL7Lp3k=;
-        b=iqD2Vq5OCcEeozC2GFuvbE5aMI4VEBTwmnax4OnJ5s5swS1HZJOnrITAZb7JLFqbxy
-         KQHCcexGoyiXzFRLGSULPsvmH6ApwEDfCjm1l7hYiT8phb2+gpFQfwG1mioKiK9ChEmq
-         1oHcdS5fZz34eWLdBTVWH1WGDJnieJlGFv8PEIamiLmTnq192SH06Acd3SktKLhTeOf5
-         W3pOHVSs01JvXLnhG62YRkv6gmRPPE/93B7KvEp20WIEsRUdyvoH82H3OQdS0opLbevG
-         +t/Fd5GXE7uVhBl/BH1Gvl+aWcFIMhI16CysMoreYzHjkIMxl8LfyFTO5uHxWDseO7q9
-         VO/w==
-X-Forwarded-Encrypted: i=1; AJvYcCW2I05JFoi68sRW81FeUxqpMClIQlG5AsEqLe6RuiSJjHv0rEAywToxdM6WqvJDJV8kJPhDPu8iIAzPlCg=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy5OqdbXtoGL4ag8Y2TBKmcBEgh4DnVL86X2V76QNVNlcNtId3L
-	y1o2QZavEMnaskoE8Zy63Nnutaix/+S+y3b9zmvXDuBu4NNhTbJJjhPGuG33oyWZ77Yq3uOHTqe
-	WODQ=
-X-Gm-Gg: ASbGncv+w8UX4w11EjJHwEGWvswGtJgBln73r0ol+Yt4UO7vfznWsSUBT1hZ4O7aKyL
-	Vj9rCzI83c5mxJNIWgb+ogT8qBXGhDeXT/VYxbCvpQ5jpsgQY24aRBpmGXIix7wzbDNo9vZ2CBW
-	hmYriF6O0OycwjskWaG8orjFpr/5i4JnBCjlFBNp3vdBAgq2oc3zUfklKoQXgD4VsjgAM1x7j1X
-	CoX0C83HsiXTCZJwPysWhiQQ/SAbX8MuSM10SfnjBkEzMwWdO8cGb99g71lfFoLQrZsSRg0UJkm
-	IEZQoeYHcf60j3knrRqRlWFs1bKBvme85YL8UqMwrAOQNPCfgu6cPm1Fh2s6HOMofmpxV29HGwh
-	1n3phr8MSLtZLmKFsXnl149mgVvLU8A==
-X-Google-Smtp-Source: AGHT+IF0XeiygFdIHsNJW1ztzo8cn1yVguQcQE2GFR8WyUo3Yd/rZFjIg5KaFwwuS6AOYHyBDxXkfA==
-X-Received: by 2002:a17:902:e5c6:b0:235:ef56:7800 with SMTP id d9443c01a7336-2382404d8b0mr65491945ad.30.1750875941283;
-        Wed, 25 Jun 2025 11:25:41 -0700 (PDT)
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com. [209.85.214.173])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237f5c7f4f3sm88301795ad.198.2025.06.25.11.25.39
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 11:25:39 -0700 (PDT)
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-234d366e5f2so2997295ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:25:39 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUjBtq6hjv/OGVUcySvAoIwMaYJWfyO2bOMZw+iyRl+7NHtn6Lp372bP7DTYl/zEAeY92ChS49hDeQIZYo=@vger.kernel.org
-X-Received: by 2002:a17:903:110f:b0:235:f4f7:a633 with SMTP id
- d9443c01a7336-2382404b2f9mr69281635ad.28.1750875938884; Wed, 25 Jun 2025
- 11:25:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750876165; x=1751480965;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RyisTqyO/JOPc+5y7ScQVEK2p20o+XhWHrp4F91o7kc=;
+        b=HKIg21nl99HfMpJD24+9F+I7XPqzXzK8yBEtyCxsa/RGpowhjOXspNl7dd/VWx1vJf
+         9FHzJdqIhtTUTubIDRnb7cyB1rnVc7iVj4NX+4agLz5tyea2U9Klovb9GcM+IXm5Kz3x
+         7i6tIzSc3t2WLtlFm7VJypjbc+oSC2iE+4SW+raDuU3S4KUe9LW+plPaHB6I9J4Uw/ez
+         PwjnWRlkOEFv4RZdMA0ojQNgLujBhKbIc0l3az57IeBr5ZtkshLUiFocDpQXasLR5adT
+         uqmM7GASNWBgOiyPo5yfpbhR7wXq15RvVLGxAfQUfr5ssqe+MeOw2qyXSCV1ltK+hGxX
+         L0Sw==
+X-Forwarded-Encrypted: i=1; AJvYcCXldKeL1RtQMZBbGFoqUbx8roIHCafRLUBrkm0noHCJVs5FPm6Bb8NdwhNkYaYzk7QZ/aZlQ6YLZQ8u57I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoLzRkC48DwFEqKu5d6L5qdP4qbNogh04waGE0SECE/2K4hM5d
+	piTCh6gg/AcLoX1LAG1QoVkSvQufFLFUcnZWmGcsQ/eFP2a3MDCHZz6f9vBVQl7JuVTQEA+IB1M
+	uQdBU+g==
+X-Google-Smtp-Source: AGHT+IHO1EEsIJL+9m2YBDHY3A29o1rYIS4ZxaqkzVMPXpsMIhuoThR9fcO3LwPKLXAf4C7bLXu6Jb7838M=
+X-Received: from pfop2.prod.google.com ([2002:a05:6a00:b42:b0:749:30b5:c67e])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:9195:b0:736:4c3d:2cba
+ with SMTP id d2e1a72fcca58-74ae40c2799mr696433b3a.9.1750876165145; Wed, 25
+ Jun 2025 11:29:25 -0700 (PDT)
+Date: Wed, 25 Jun 2025 11:29:15 -0700
+In-Reply-To: <2dc165c7-e3fd-48f6-bcfb-c2119fc94a54@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250620074951.32758-1-brgl@bgdev.pl>
-In-Reply-To: <20250620074951.32758-1-brgl@bgdev.pl>
-From: Doug Anderson <dianders@chromium.org>
-Date: Wed, 25 Jun 2025 11:25:27 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XD1bfz4e=JOscqa3pGL_Z1RBRjQdDh31yfxac9ZPX6YQ@mail.gmail.com>
-X-Gm-Features: AX0GCFvGmQ04Lpb3ie1KV9hPN8Te_UvujGUQoddbWMoxDx1BT5BpEPNEUBtns9Y
-Message-ID: <CAD=FV=XD1bfz4e=JOscqa3pGL_Z1RBRjQdDh31yfxac9ZPX6YQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge: ti-sn65dsi86: remove unnecessary GPIO line
- direction check
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0
+References: <20250328171205.2029296-1-xin@zytor.com> <20250328171205.2029296-16-xin@zytor.com>
+ <aFrUg4BB-MXuYi3L@google.com> <2dc165c7-e3fd-48f6-bcfb-c2119fc94a54@zytor.com>
+Message-ID: <aFw_-8aDtO4wat8M@google.com>
+Subject: Re: [PATCH v4 15/19] KVM: x86: Allow FRED/LKGS to be advertised to guests
+From: Sean Christopherson <seanjc@google.com>
+To: Xin Li <xin@zytor.com>
+Cc: pbonzini@redhat.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, corbet@lwn.net, tglx@linutronix.de, 
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	hpa@zytor.com, andrew.cooper3@citrix.com, luto@kernel.org, 
+	peterz@infradead.org, chao.gao@intel.com, xin3.li@intel.com
+Content-Type: text/plain; charset="us-ascii"
 
-Hi,
+On Wed, Jun 25, 2025, Xin Li wrote:
+> On 6/24/2025 9:38 AM, Sean Christopherson wrote:
+> > > ---
+> > >   arch/x86/kvm/cpuid.c | 2 ++
+> > >   1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > > index 5e4d4934c0d3..8f290273aee1 100644
+> > > --- a/arch/x86/kvm/cpuid.c
+> > > +++ b/arch/x86/kvm/cpuid.c
+> > > @@ -992,6 +992,8 @@ void kvm_set_cpu_caps(void)
+> > >   		F(FZRM),
+> > >   		F(FSRS),
+> > >   		F(FSRC),
+> > > +		F(FRED),
+> > > +		F(LKGS),
+> > 
+> > These need to be X86_64_F, no?
+> 
+> Yes.  Both LKGS and FRED are 64-bit only features.
+> 
+> However I assume KVM is 64-bit only now, so X86_64_F is essentially F,
+> right?
 
-On Fri, Jun 20, 2025 at 12:50=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> As of commit 92ac7de3175e3 ("gpiolib: don't allow setting values on input
-> lines"), the GPIO core makes sure values cannot be set on input lines.
-> Remove the unnecessary check.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 5 -----
->  1 file changed, 5 deletions(-)
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Nope, KVM still supports 32-bit builds.  There are plans/efforts to kill off 32-bit
+KVM x86, but we're not quite there yet.
