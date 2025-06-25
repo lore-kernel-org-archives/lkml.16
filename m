@@ -1,77 +1,58 @@
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com [209.85.161.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailrelay-egress4.pub.mailoutpod2-cph3.one.com (mailrelay-egress4.pub.mailoutpod2-cph3.one.com [46.30.211.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96C126B2AE
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64814145355
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:21:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.30.211.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864888; cv=none; b=f498hZGHSE0imQgJexSQ0h2n6/3f1ddkhRd0sZYNtYhJZpS1nUcFkadM9eAtVf9zFIez8XGMEEtpxycaxV1IrJmNAvMQVOqDJxh21+/gtX2lCyWniAIDn+Bv6Wpt2pov6nw0RGzeTxvIZt2BV4vgq+1G2w27gkizZuNOQlT3yKQ=
+	t=1750864910; cv=none; b=MxhHLE3JZOg/Xe5lZ5F3+pv75bjt/+GIjoRyl48fcfKq4FcWtFBxArnH+ENmdvu4fkLy8hUKaHA0RT0qdeZvJdOvHpyCcl5n7/nWMmwVScWU6vkUgYxaoNcAUADhWQgIzLKvHxQX7sDd6S2ad2R1CU1NDNIK3pqrd9k0uachQ/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864888; c=relaxed/simple;
-	bh=KyGtK80to6KuEAYehb5mAJU+T+xcgGreIs/Qe+2xesE=;
+	s=arc-20240116; t=1750864910; c=relaxed/simple;
+	bh=Nv4m85cnQM5lCBdZxqzQavDUdMWkhV6xtY3hfsIHTTE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I9FqWLSHLqHzU/J5n4oMpdR2AB5+mY0H6gyTZSmKX01kHguaxrdFJDEU+FTztohOYRxlP1wR2DA3J0QGvt/OTWkInB5uNcb6CTQ3er4SSSqWaxeBvd6UI8eo66TAJ35j4zJqKH+wVNastv6S0UHDYA1FW5z4Iq8kh0apzum21NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=dpzF0HvI; arc=none smtp.client-ip=209.85.161.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=mLAJdkf4Q0OWYssu+8h4KZFe9gYqe8UIsrZQrO85UCsKY2IevPWIni/er4AqYmpsfqMxNSN5Vo6hSVgeDTiH0HP++YfKwMcUjFQzxPBA65eVrDzvsuV0a9nOB/WfN4MErhMKPz9/SaGemH8lspjgU53iY3VZAK0j96trRgbBM5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org; spf=none smtp.mailfrom=ravnborg.org; dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=a1X3H2yL; dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b=an/A7ULk; arc=none smtp.client-ip=46.30.211.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ravnborg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ravnborg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dpzF0HvI"
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-610d87553b6so741667eaf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:21:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750864886; x=1751469686; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xaOBbGszEzWNvSbaKJDe5LeOUi5TUUgxvB4nzx65NaE=;
-        b=dpzF0HvI50GVO8nmkHYCwMHqnAvt3wsTZZ02W2F2KsVWLuZ+gYHCjokYEAKqmsqNYX
-         Rf/luAyTBXTFydtGS2O08FUWHe7+dtAR9lIOi3LZNrdRuaurVRvgttmNfpLnq5G8h78f
-         ZSWPx6uKQHj8oCn2WJ6YuWMDVyCUR+l+T/2WPB9KDktcqdYtAilgsSxDxVPx93pC8HEM
-         sHOyjNfRWsknhgPxKeG44rvZFHFGbYQ2zwe1xD5HJp9QZxnN5l2hMCbtCO8HsV5Zof3Y
-         q8eNddk0Y5ymPa+rkFFsiLJb9vEhgrc9/IPUYfBZT8rqsRrTNILLnKWCpbdum8gyK3Mj
-         KdXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750864886; x=1751469686;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xaOBbGszEzWNvSbaKJDe5LeOUi5TUUgxvB4nzx65NaE=;
-        b=U4UKusL3imoaK2D+QbrzoUdQiJYzZ3w5+RSiIVG8kQsRjeMomR65kMyEkRncST5ZoP
-         3hOrYSMTB6Ssw0UCduGST0rdK36bZWgiJWXh78M8/3pGf6TIyZuD4xi0HjxdzGPfGOo+
-         wLu5bor70lDrGUaLsbXzSj+ANkU0Gcd3FZMmYqc9+uRjNUr0xFODAcX8PrZpEHS4GX61
-         YdoQz5XBaVb5TDgN5L7DmjtRgDdkl4Dz+xM+v8P/OOmsP9saRew8Fcr+zQOyId4HpxfO
-         dEVQumG93lx4yHouelzbjC0liq0BpjJTy4RJRDvmLCHToineEgwbG4k/cYRgFQAg30br
-         vFjA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrlEirsSjrTvL4fPCZ+XfRMmDw96N+RRgzTSLeBBNjqe6raps0NwvbyhbZygsPEXwJLLX1dNCo1AmV/a8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUkS6jEsDCN8LlarAcaLRwtpo2Z9uti0Ezpy/OsYm+rauqunw9
-	9avHrWHV/GTw/toqPx/JyXGIiK6wGXBxx1w5JK5oOEhAq9tlLkWfviq4hMijjfjRHXs=
-X-Gm-Gg: ASbGncuotwg6Ptf3Ui/lTGFqjdGSHLR1R3mwqaxN4+cahiWzWX1WTlzO8YrvhAtDTs9
-	/H8r/AgiN3ekj6LT9omKgpb3inoYNpPEXEPapl5vluG+idD+Ivl8o3uogsrbD4Se1z7Nbt1zn5Y
-	h4ayhf2dh6D4Z0crosM9heILk4RzrM6TwvfYExWwNzEIB8RKPwdZBCBWkLfVhelc2hiQHRj8z+x
-	TE79JFsFRcHURfiUEYa3/GL4L4ewm7yZRdv15p8cGnoWJ0NMJlH7KQ649uiGlyxpuGHAQJcKhca
-	whM+tk7Oo26RE/g2L3OotOnSFjjtMXq6xkcP0P4qLgXZBWyRIMLkmMetGf/sdy5qiEz3Xg==
-X-Google-Smtp-Source: AGHT+IGk4J0jSMpXdWyxPvRR18hOuQQOIaOFP1Wr6EYSOJlLgXKdVD4YD5Z5m09gKSGJW9gCVJhNFw==
-X-Received: by 2002:a05:6870:e96:b0:29d:c832:7ef6 with SMTP id 586e51a60fabf-2efb29472c7mr2491089fac.39.1750864885674;
-        Wed, 25 Jun 2025 08:21:25 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:1fca:a60b:12ab:43a3])
-        by smtp.gmail.com with UTF8SMTPSA id 586e51a60fabf-2ee665666d4sm2597761fac.16.2025.06.25.08.21.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:21:25 -0700 (PDT)
-Date: Wed, 25 Jun 2025 10:21:24 -0500
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: marc.herbert@linux.intel.com
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Dan Williams <dan.j.williams@intel.com>, rafael.j.wysocki@intel.com,
-	linux-cxl@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Ben Cheatham <Benjamin.Cheatham@amd.com>,
-	Danilo Krummrich <dakr@kernel.org>
-Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in
- faux_device_destroy()
-Message-ID: <4d54e4f6-0d98-4b42-9bea-169f3b8772bb@sabinyo.mountain>
-References: <20250613191556.4184103-1-marc.herbert@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="a1X3H2yL";
+	dkim=permerror (0-bit key) header.d=ravnborg.org header.i=@ravnborg.org header.b="an/A7ULk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1750864835; x=1751469635;
+	d=ravnborg.org; s=rsa1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=O4nu8mefJbyYB9Pt62QRGWGhat2XpUcP+oPL1CGj9B4=;
+	b=a1X3H2yL8v7P4SnvtjpcYSzYCDLMsRmv/8xxRbhh0VWKm1M+OM2Q2RBGLsZgXmCEzDEi7vEiLriV6
+	 sGSExYqKFH5YT+1nyGFYLTrXMVBODPYk6WBFPvjtYJ09djFErOtpncj+qw+7nEaIBeDUBmqE1jMzDd
+	 dx1v7v1JCv1MwqJibYHvCzGJyyvQkVfbgUzxwfVOa+uuuxczKKx/uuUxTr3dm1m7vjVTq9d7cCqxKm
+	 72qfB6lKxOL4vW+ChH3J4WsitteUF52qUWyMOEY0VB9m7t8xQsq6mjG6mwVDLbv+F82wBUXqnEOMS8
+	 L1GAn6TJt9eqNJoEp6Nguj0TnDPmNTQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; t=1750864835; x=1751469635;
+	d=ravnborg.org; s=ed1;
+	h=in-reply-to:content-type:mime-version:references:message-id:subject:cc:to:
+	 from:date:from;
+	bh=O4nu8mefJbyYB9Pt62QRGWGhat2XpUcP+oPL1CGj9B4=;
+	b=an/A7ULkJGe/vIKIMyryjrdRMnV19OwHwIWB1Fkwk2Rz76GeXX5uaPCxZUoLqCMtdTqgHtUnW2uIc
+	 81Zh8GgDQ==
+X-HalOne-ID: ef3a532b-51d7-11f0-8665-f78b1f841584
+Received: from ravnborg.org (2-105-16-150-cable.dk.customer.tdc.net [2.105.16.150])
+	by mailrelay1.pub.mailoutpod2-cph3.one.com (Halon) with ESMTPSA
+	id ef3a532b-51d7-11f0-8665-f78b1f841584;
+	Wed, 25 Jun 2025 15:20:34 +0000 (UTC)
+Date: Wed, 25 Jun 2025 17:20:33 +0200
+From: Sam Ravnborg <sam@ravnborg.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>,
+	Simona Vetter <simona@ffwll.ch>, Helge Deller <deller@gmx.de>,
+	Arnd Bergmann <arnd@arndb.de>, Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Javier Martinez Canillas <javierm@redhat.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 1/2] fbdev: remove fb_notify support
+Message-ID: <20250625152033.GA183878@ravnborg.org>
+References: <20250625131511.3366522-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,18 +61,213 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250613191556.4184103-1-marc.herbert@linux.intel.com>
+In-Reply-To: <20250625131511.3366522-1-arnd@kernel.org>
 
-On Fri, Jun 13, 2025 at 07:15:56PM +0000, marc.herbert@linux.intel.com wrote:
-> gcc -O0: Segmentation fault (core dumped)
-> gcc -O1: ptr is zero
-> gcc -O2: ptr is NOT zero!!!
-> gcc -O3: ptr is NOT zero!!!
-> gcc -Og: ptr is zero
+Hi Arnd.
 
-Btw, this is testing dereferences where the kernel code is doing pointer
-math.  No one disagrees about dereferences after a check.
+I remember I stared at this code before, good to see it gone.
+There is a bit more tidiying up you can do.
 
-regards,
-dan carpenter
+Also, I suggest to split it in two patches, it itches me to see the
+driver specific part mixed up with the fb_notify removal.
 
+	Sam
+
+
+On Wed, Jun 25, 2025 at 03:12:22PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> Commit dc2139c0aa32 ("leds: backlight trigger: Replace fb events with a
+> dedicated function call") removed the FB_EVENT_BLANK notifier, and now
+> the only remaining user of the FB notifier is the metronomefb driver on
+> the PXA/AM200EPD board.
+> 
+> This was introduced in commit 922613436ae5 ("[ARM] 5200/1: am200epd: use
+> fb notifiers and gpio api"), which converted it from an earlier version,
+> but as far as I can tell this can never have worked because the notifier
+> is called after the data it passes down is accessed.
+> 
+> Commit 867187821e5e ("fbdev/metronomefb: Use struct fb_info.screen_buffer")
+> broke this further, and there are likely other parts of the driver that
+> no longer work.
+> 
+> The am200epd board support itself should have also been removed long ago,
+> as there are no users and it was never converted to devicetree format.
+> 
+> Mark the board as broken to prevent build failures and remove the now
+> unused notifiers.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/arm/mach-pxa/Kconfig            |  1 +
+This is mixing things up a bit. I suggest
+splitting the "depends on BROKEN" out in a dedicated patch.
+
+>  drivers/video/fbdev/core/Makefile    |  1 -
+>  drivers/video/fbdev/core/fb_notify.c | 54 ----------------------------
+>  drivers/video/fbdev/core/fbmem.c     | 15 --------
+>  include/linux/fb.h                   | 21 -----------
+>  5 files changed, 1 insertion(+), 91 deletions(-)
+>  delete mode 100644 drivers/video/fbdev/core/fb_notify.c
+> 
+> diff --git a/arch/arm/mach-pxa/Kconfig b/arch/arm/mach-pxa/Kconfig
+> index 10e472f4fa43..edefc953e4f9 100644
+> --- a/arch/arm/mach-pxa/Kconfig
+> +++ b/arch/arm/mach-pxa/Kconfig
+> @@ -69,6 +69,7 @@ choice
+>  
+>  config GUMSTIX_AM200EPD
+>  	bool "Enable AM200EPD board support"
+> +	depends on BROKEN
+>  
+>  config GUMSTIX_AM300EPD
+>  	bool "Enable AM300EPD board support"
+> diff --git a/drivers/video/fbdev/core/Makefile b/drivers/video/fbdev/core/Makefile
+> index d15974759086..ac8036209501 100644
+> --- a/drivers/video/fbdev/core/Makefile
+> +++ b/drivers/video/fbdev/core/Makefile
+> @@ -1,5 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -obj-$(CONFIG_FB_NOTIFY)           += fb_notify.o
+>  obj-$(CONFIG_FB_CORE)             += fb.o
+>  fb-y                              := fb_info.o \
+>                                       fbmem.o fbcmap.o \
+> diff --git a/drivers/video/fbdev/core/fb_notify.c b/drivers/video/fbdev/core/fb_notify.c
+> deleted file mode 100644
+> index 10e3b9a74adc..000000000000
+> --- a/drivers/video/fbdev/core/fb_notify.c
+> +++ /dev/null
+> @@ -1,54 +0,0 @@
+> -/*
+> - *  linux/drivers/video/fb_notify.c
+> - *
+> - *  Copyright (C) 2006 Antonino Daplas <adaplas@pol.net>
+> - *
+> - *	2001 - Documented with DocBook
+> - *	- Brad Douglas <brad@neruo.com>
+> - *
+> - * This file is subject to the terms and conditions of the GNU General Public
+> - * License.  See the file COPYING in the main directory of this archive
+> - * for more details.
+> - */
+> -#include <linux/fb.h>
+> -#include <linux/notifier.h>
+> -#include <linux/export.h>
+> -
+> -static BLOCKING_NOTIFIER_HEAD(fb_notifier_list);
+> -
+> -/**
+> - *	fb_register_client - register a client notifier
+> - *	@nb: notifier block to callback on events
+> - *
+> - *	Return: 0 on success, negative error code on failure.
+> - */
+> -int fb_register_client(struct notifier_block *nb)
+> -{
+> -	return blocking_notifier_chain_register(&fb_notifier_list, nb);
+> -}
+> -EXPORT_SYMBOL(fb_register_client);
+> -
+> -/**
+> - *	fb_unregister_client - unregister a client notifier
+> - *	@nb: notifier block to callback on events
+> - *
+> - *	Return: 0 on success, negative error code on failure.
+> - */
+> -int fb_unregister_client(struct notifier_block *nb)
+> -{
+> -	return blocking_notifier_chain_unregister(&fb_notifier_list, nb);
+> -}
+> -EXPORT_SYMBOL(fb_unregister_client);
+> -
+> -/**
+> - * fb_notifier_call_chain - notify clients of fb_events
+> - * @val: value passed to callback
+> - * @v: pointer passed to callback
+> - *
+> - * Return: The return value of the last notifier function
+> - */
+> -int fb_notifier_call_chain(unsigned long val, void *v)
+> -{
+> -	return blocking_notifier_call_chain(&fb_notifier_list, val, v);
+> -}
+> -EXPORT_SYMBOL_GPL(fb_notifier_call_chain);
+> diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
+> index dfcf5e4d1d4c..82ec7351e7da 100644
+> --- a/drivers/video/fbdev/core/fbmem.c
+> +++ b/drivers/video/fbdev/core/fbmem.c
+> @@ -498,14 +498,6 @@ static int do_register_framebuffer(struct fb_info *fb_info)
+>  	num_registered_fb++;
+>  	registered_fb[i] = fb_info;
+>  
+> -#ifdef CONFIG_GUMSTIX_AM200EPD
+> -	{
+> -		struct fb_event event;
+Drop the fb_event definition, it is no longer used.
+
+> -		event.info = fb_info;
+> -		fb_notifier_call_chain(FB_EVENT_FB_REGISTERED, &event);
+Drop the define for FB_EVENT_FB_REGISTERED
+
+> -	}
+> -#endif
+> -
+>  	return fbcon_fb_registered(fb_info);
+>  }
+>  
+> @@ -544,13 +536,6 @@ static void do_unregister_framebuffer(struct fb_info *fb_info)
+>  	fb_destroy_modelist(&fb_info->modelist);
+>  	registered_fb[fb_info->node] = NULL;
+>  	num_registered_fb--;
+> -#ifdef CONFIG_GUMSTIX_AM200EPD
+> -	{
+> -		struct fb_event event;
+> -		event.info = fb_info;
+> -		fb_notifier_call_chain(FB_EVENT_FB_UNREGISTERED, &event);
+Drop the define for FB_EVENT_FB_UNREGISTERED
+
+> -	}
+> -#endif
+>  	fbcon_fb_unregistered(fb_info);
+>  
+>  	/* this may free fb info */
+> diff --git a/include/linux/fb.h b/include/linux/fb.h
+> index 05cc251035da..520ad870b8b2 100644
+> --- a/include/linux/fb.h
+> +++ b/include/linux/fb.h
+> @@ -151,27 +151,6 @@ struct fb_blit_caps {
+>  	u32 flags;
+>  };
+>  
+> -#ifdef CONFIG_FB_NOTIFY
+
+The Kconfig symbol FB_NOTIFY should be dropped as well.
+
+
+> -extern int fb_register_client(struct notifier_block *nb);
+Drop forward for notifier_block, last user in the file is gone.
+
+> -extern int fb_unregister_client(struct notifier_block *nb);
+> -extern int fb_notifier_call_chain(unsigned long val, void *v);
+> -#else
+> -static inline int fb_register_client(struct notifier_block *nb)
+> -{
+> -	return 0;
+> -};
+> -
+> -static inline int fb_unregister_client(struct notifier_block *nb)
+> -{
+> -	return 0;
+> -};
+> -
+> -static inline int fb_notifier_call_chain(unsigned long val, void *v)
+> -{
+> -	return 0;
+> -};
+> -#endif
+> -
+>  /*
+>   * Pixmap structure definition
+>   *
+> -- 
+> 2.39.5
