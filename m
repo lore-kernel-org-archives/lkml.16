@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C58B2D540B;
-	Wed, 25 Jun 2025 18:38:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B88D42D8DBD;
+	Wed, 25 Jun 2025 18:38:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750876714; cv=none; b=LaaRh7+3nyWQKI1+yyFnuZCFfuXkHRrrGr1l4uNzMX93GvJqCdUrc6tsst2tLA8PRIor3dfAnUsHlV9tDfickhAI2LdcIBRPCthR/N3+Vvhev87M+VYUx1uW763Q+PQhgrg2O+kOyzdl7cn+DlwHByoMCM6jjE5O4uVy1Loldoo=
+	t=1750876715; cv=none; b=aNBmSECL5NBMPlvZl94fjTgjmAEJOP/AtGrmmUEinGKOV3VbwftkdkwKbiHEw2QQEkqMjT9dl5ikhjgQLJi27H5ByxKOi2aj2fdMrKj7a4ID/YcxILO+E56VYxykUK/QR+AlhD0ggeEC05E0o4yVOeZ63tpaw/G/MiNpW3WpLF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750876714; c=relaxed/simple;
-	bh=96e9cJKXFPDju4/QSz3RUdC00J74o8uGRyHcUOVWnN8=;
+	s=arc-20240116; t=1750876715; c=relaxed/simple;
+	bh=D1P6//gGLnJK/BUkGyyzg8j12UrrtDCjbavWR9nLcig=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=SRDg1B7NiGkA9kKgUY5CcdcP9nuHmvc/gKOcztiUUiiFqBsChD/HzjxlwsL4gj1pnrPl6gfv4GTL9Rzh9q3uRzDAWKh5QPmXiX5jFE4QmjnXKUmXo0q3EM6HR2E1RIn22/gXd/haVwpzfZOL4zXG/A9l62EZ+1ydGMpUxRQISmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fCdPmwJR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+Cyx31IM; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=F/ccX0EHyTB+RDu0gjKYrKIEXfeGnHpFblB4UCN5GfW3S/ZgLFWmmHA64gCt9Q8xhVPM0Ks1YL8szouHGki6e1AibxECUv1dQqDNYpR4bKt2G9ec3YIWlU+zlsVToG7qhfN2UcMM/add/GlO7vdUdYtT2tcqyMVZhNi5mJYx8V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Xi6jQYE/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=e6qeYh+G; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fCdPmwJR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+Cyx31IM"
-Message-ID: <20250625183757.803890875@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xi6jQYE/";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="e6qeYh+G"
+Message-ID: <20250625183757.868342628@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750876710;
+	s=2020; t=1750876711;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=SJrzO2St6DYrac8L0oTt1CLLzIVb9v9DvCiT5mXNVHY=;
-	b=fCdPmwJRg7Ou2R4hHzMxhWnOPrZgDleYTMjSd/DcmB/d9Xu8+2O3QWSYF8QcI6OadknX3q
-	7FpyZWxmWLn5SymB+NVBqp3YQF68rUg+SATplPniamuvgNLTPrmza+9R5W/GMel0BnuVnq
-	4SVUbEJ58J/c2o9pguJCH+U7UaTnaiewkYJzW8T+1gzPdgb+77YZyRpEsp5hnipJqIuBs7
-	XtTzpDjH121XIy/w2Z0lSL1M/on2YuHeVAQfZ6eUiv+o1oXHbvs9ju81XO5AwssI18a+JE
-	uMjjRlilLp0FllCUPDUUErgZvWz7gjEx4OjO4c4NMJc7ayuNbPC5bh80N/PQrQ==
+	 references:references; bh=gYeMVqE9QiE6MqwPDRadjXqz6IU75/CthgeCFNFFOMA=;
+	b=Xi6jQYE/dZAcbkNiP5oRzWup9TqPo9WT/C488F77EnlXjQIuf1Uw9OjCJle/7TDnIQwIeA
+	02Ehzzji2TRrmqpYDE6DkjMp2Jap2rwvGevzDhkb83HpEGCJpo3Nd+wQgPAdqUSiILfFjX
+	cvYaQdCMbuhnyc0zybonb7o/ZHqgnzPWKJZ1vr1TJie5qDaL2FxEa8Mee0ITGOMsmDBRjg
+	gXYxhRf6W/SswZ0VhcNlTBK5BatXmKzt8MW7bsPeljVyxIKkD7zaf7NbVE0l19Uxcis/9f
+	2BdcwBTOdVfOmPPn7tiXz8vIIYlVktnnIxzZAK0blIexT5UJ6bowLZXCdSqsAw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750876710;
+	s=2020e; t=1750876711;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=SJrzO2St6DYrac8L0oTt1CLLzIVb9v9DvCiT5mXNVHY=;
-	b=+Cyx31IMUHC8B125ju7SNCfyAAxBtEY//FGD0F2HUgWll/CpH4QMghvxlfE0B3r5PmQ1MI
-	ktxNhZx7bo2uejDA==
+	 references:references; bh=gYeMVqE9QiE6MqwPDRadjXqz6IU75/CthgeCFNFFOMA=;
+	b=e6qeYh+GTsUclrushjwH6Kcu1pNUfzBbqY1df4VEozvyPhSfbDz35WQqz7kep6ZEPF7syp
+	v3jDw0nygG1Bm6Cw==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: netdev@vger.kernel.org,
@@ -51,8 +51,8 @@ Cc: netdev@vger.kernel.org,
  Kurt Kanzenbach <kurt@linutronix.de>,
  Nam Cao <namcao@linutronix.de>,
  Antoine Tenart <atenart@kernel.org>
-Subject: [patch V3 01/11] timekeeping: Update auxiliary timekeepers on
- clocksource change
+Subject: [patch V3 02/11] timekeeping: Provide time getters for auxiliary
+ clocks
 References: <20250625182951.587377878@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,66 +61,135 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 25 Jun 2025 20:38:29 +0200 (CEST)
+Date: Wed, 25 Jun 2025 20:38:31 +0200 (CEST)
 
-Propagate a system clocksource change to the auxiliary timekeepers so that
-they can pick up the new clocksource.
+Provide interfaces similar to the ktime_get*() family which provide access
+to the auxiliary clocks.
+
+These interfaces have a boolean return value, which indicates whether the
+accessed clock is valid or not.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/time/timekeeping.c |   28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+V3: Remove misleading TAI comment and use aux_tkd* for clarity - John
+---
+ include/linux/posix-timers.h |    5 +++
+ include/linux/timekeeping.h  |   11 +++++++
+ kernel/time/timekeeping.c    |   65 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 81 insertions(+)
 ---
 
+--- a/include/linux/posix-timers.h
++++ b/include/linux/posix-timers.h
+@@ -37,6 +37,11 @@ static inline int clockid_to_fd(const cl
+ 	return ~(clk >> 3);
+ }
+ 
++static inline bool clockid_aux_valid(clockid_t id)
++{
++	return IS_ENABLED(CONFIG_POSIX_AUX_CLOCKS) && id >= CLOCK_AUX && id <= CLOCK_AUX_LAST;
++}
++
+ #ifdef CONFIG_POSIX_TIMERS
+ 
+ #include <linux/signal_types.h>
+--- a/include/linux/timekeeping.h
++++ b/include/linux/timekeeping.h
+@@ -263,6 +263,17 @@ extern bool timekeeping_rtc_skipresume(v
+ 
+ extern void timekeeping_inject_sleeptime64(const struct timespec64 *delta);
+ 
++/*
++ * Auxiliary clock interfaces
++ */
++#ifdef CONFIG_POSIX_AUX_CLOCKS
++extern bool ktime_get_aux(clockid_t id, ktime_t *kt);
++extern bool ktime_get_aux_ts64(clockid_t id, struct timespec64 *kt);
++#else
++static inline bool ktime_get_aux(clockid_t id, ktime_t *kt) { return false; }
++static inline bool ktime_get_aux_ts64(clockid_t id, struct timespec64 *kt) { return false; }
++#endif
++
+ /**
+  * struct system_time_snapshot - simultaneous raw/real time capture with
+  *				 counter value
 --- a/kernel/time/timekeeping.c
 +++ b/kernel/time/timekeeping.c
-@@ -119,8 +119,10 @@ static struct tk_fast tk_fast_raw  ____c
+@@ -2659,6 +2659,18 @@ EXPORT_SYMBOL(hardpps);
+ /* Bitmap for the activated auxiliary timekeepers */
+ static unsigned long aux_timekeepers;
  
- #ifdef CONFIG_POSIX_AUX_CLOCKS
- static __init void tk_aux_setup(void);
-+static void tk_aux_update_clocksource(void);
- #else
- static inline void tk_aux_setup(void) { }
-+static inline void tk_aux_update_clocksource(void) { }
- #endif
- 
- unsigned long timekeeper_lock_irqsave(void)
-@@ -1548,6 +1550,8 @@ static int change_clocksource(void *data
- 		timekeeping_update_from_shadow(&tk_core, TK_UPDATE_ALL);
- 	}
- 
-+	tk_aux_update_clocksource();
-+
- 	if (old) {
- 		if (old->disable)
- 			old->disable(old);
-@@ -2651,6 +2655,30 @@ EXPORT_SYMBOL(hardpps);
- #endif /* CONFIG_NTP_PPS */
- 
- #ifdef CONFIG_POSIX_AUX_CLOCKS
-+
-+/* Bitmap for the activated auxiliary timekeepers */
-+static unsigned long aux_timekeepers;
-+
-+/* Invoked from timekeeping after a clocksource change */
-+static void tk_aux_update_clocksource(void)
++static inline unsigned int clockid_to_tkid(unsigned int id)
 +{
-+	unsigned long active = READ_ONCE(aux_timekeepers);
-+	unsigned int id;
-+
-+	for_each_set_bit(id, &active, BITS_PER_LONG) {
-+		struct tk_data *tkd = &timekeeper_data[id + TIMEKEEPER_AUX_FIRST];
-+		struct timekeeper *tks = &tkd->shadow_timekeeper;
-+
-+		guard(raw_spinlock_irqsave)(&tkd->lock);
-+		if (!tks->clock_valid)
-+			continue;
-+
-+		timekeeping_forward_now(tks);
-+		tk_setup_internals(tks, tk_core.timekeeper.tkr_mono.clock);
-+		timekeeping_update_from_shadow(tkd, TK_UPDATE_ALL);
-+	}
++	return TIMEKEEPER_AUX_FIRST + id - CLOCK_AUX;
 +}
++
++static inline struct tk_data *aux_get_tk_data(clockid_t id)
++{
++	if (!clockid_aux_valid(id))
++		return NULL;
++	return &timekeeper_data[clockid_to_tkid(id)];
++}
++
+ /* Invoked from timekeeping after a clocksource change */
+ static void tk_aux_update_clocksource(void)
+ {
+@@ -2679,6 +2691,59 @@ static void tk_aux_update_clocksource(vo
+ 	}
+ }
+ 
++/**
++ * ktime_get_aux - Get time for a AUX clock
++ * @id:	ID of the clock to read (CLOCK_AUX...)
++ * @kt:	Pointer to ktime_t to store the time stamp
++ *
++ * Returns: True if the timestamp is valid, false otherwise
++ */
++bool ktime_get_aux(clockid_t id, ktime_t *kt)
++{
++	struct tk_data *aux_tkd = aux_get_tk_data(id);
++	struct timekeeper *aux_tk;
++	unsigned int seq;
++	ktime_t base;
++	u64 nsecs;
++
++	WARN_ON(timekeeping_suspended);
++
++	if (!aux_tkd)
++		return false;
++
++	aux_tk = &aux_tkd->timekeeper;
++	do {
++		seq = read_seqcount_begin(&aux_tkd->seq);
++		if (!aux_tk->clock_valid)
++			return false;
++
++		base = ktime_add(aux_tk->tkr_mono.base, aux_tk->offs_aux);
++		nsecs = timekeeping_get_ns(&aux_tk->tkr_mono);
++	} while (read_seqcount_retry(&aux_tkd->seq, seq));
++
++	*kt = ktime_add_ns(base, nsecs);
++	return true;
++}
++EXPORT_SYMBOL_GPL(ktime_get_aux);
++
++/**
++ * ktime_get_aux_ts64 - Get time for a AUX clock
++ * @id:	ID of the clock to read (CLOCK_AUX...)
++ * @ts:	Pointer to timespec64 to store the time stamp
++ *
++ * Returns: True if the timestamp is valid, false otherwise
++ */
++bool ktime_get_aux_ts64(clockid_t id, struct timespec64 *ts)
++{
++	ktime_t now;
++
++	if (!ktime_get_aux(id, &now))
++		return false;
++	*ts = ktime_to_timespec64(now);
++	return true;
++}
++EXPORT_SYMBOL_GPL(ktime_get_aux_ts64);
 +
  static __init void tk_aux_setup(void)
  {
