@@ -1,62 +1,62 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F443074BD
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:01:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363863074BD
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750816875; cv=none; b=uQRLOZzL2PbVohGutHWAfsQydVKp4ufIom4Jw7e0t1OquK6d0kQsXx3PWjSw5jP+or3wOAycifVl2XI774MQBC7z/vET3rtnBcKEGbGxho7cEhrXAJN/dbuEC2Hqatvt7x5pVXLyfPdtHaVHGsEkkZGeUM6t/XhRTvmrMlOJoYk=
+	t=1750816906; cv=none; b=RWm29ylmmax0Os2ixL6XWdgcdAn2JXJyU62QYuJmCpUmKQHqv0weA7Uif+Fbu78p094/DKd0iXz5g64k027VmRUvZs/xrWwY0DymeONgznUMQqBxOZMCTURGoLnnVsq1JG/gRtuBOYxAE2CHPjRyFDvF6FOBY518hhcTgBCF7BA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750816875; c=relaxed/simple;
-	bh=qf5PQjERcgEHXS4PeSajQRWMCrQ3xwxRSiSR2m0s49E=;
+	s=arc-20240116; t=1750816906; c=relaxed/simple;
+	bh=0lcxKrsthp+zmul/lcrh8D9EmtsNWzHRP0j1JAVfc7A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I+199HhaGJVOOW/A7P5gkFBH0a3sRPq6re287dKH0f2FcgFyi46zlMerGN2M/I0+IC45XVuI9ww7R9HKdCee4JJlvLK6LftzZRmSMUTZIGo9BtSby7IlDYVPAB4wYRDeAnEVJRub28mkWx+QQJwu4ez+k6NMPSf62Zxj9gGem44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=YkaPBIeo; arc=none smtp.client-ip=209.85.210.178
+	 In-Reply-To:Content-Type; b=PBqaW1Fg3bue27luTa9TV+cDuAOH6K/c073EG4QYCFkC8IIy+eI4s65Jad7XC0eRDjouE0BjHrwD7L0LB9T0Y8zpUYaNV3JSlL12z5rgURHTEhV2si9k2hcE2ZmDzWrn3+lqHbNKdHY01PFmBgz/OwqSMWMILAC7Gkg+z6F0ddw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=KJ9XH040; arc=none smtp.client-ip=209.85.215.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="YkaPBIeo"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso728769b3a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:01:13 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KJ9XH040"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-af6a315b491so5320947a12.1
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:01:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1750816873; x=1751421673; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1750816904; x=1751421704; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=51MO7myB4WZMWxIAFjVF7i4OncW2e17ArzDfafsOaJs=;
-        b=YkaPBIeo1pEsrR6yLg4I5kNTSP7tloRtzEf1+2LGhbRqqN+rdurltW9IoMGmPkXQyQ
-         CpX00Qc9dKisImiGwIOmUrOQOEgYWQEMUvtOMUM5jRMvSm1Uv8Jzvo7FXz6uohi+qwt+
-         wK2WYHxlz/hGpMCV6sKnHMVxZ2leJR+F+usWo=
+        bh=yTuS9wGfxBhv+F7YWQ45ECcT+IUpvHY7G7RB7jvcKms=;
+        b=KJ9XH040gXtRLiniTSguRWK4bG3ovxXUVgwcb6Cyb/2mQfPBiUrzPdynF+WGFawFON
+         cIvUrL6Lg/mu9eU3FLDyd7SJ38pAMPgDT1dF1HAwniMREJB74ndA4c4jyrWFBxaHXzzs
+         tlLR1lMB6zB1qpJRjV7D/hU2+i9TZaodcLAqY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750816873; x=1751421673;
+        d=1e100.net; s=20230601; t=1750816904; x=1751421704;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=51MO7myB4WZMWxIAFjVF7i4OncW2e17ArzDfafsOaJs=;
-        b=aDlO83b65+DwDYvBUEVMFrGdUDbgZrYj/EDEE/Zcuu/uF69TBpLxUwvJwiSdi2KymY
-         QEbCkkZH8MY0BcSeSrzVDcXfVkApjsU0mJWOjkf4nB1/VPv6wwTg0PEwPHah0YwhaB/5
-         cc3ztiE6uV5J+j+qpu/OHdqBbk3HwIZPdZCdQIK3SDo4d4Zj0fMB6YnoeKW/NIOxMfjM
-         KF1DAmJ8lZmSsgoVcp/qIMhCEI67j50kuPOGlD3UuWkxE8zQjDKnfCkeQA4wyT7X/afM
-         cE1AKBQCNnYhlBmXJsbtmNnaHSpuXOkj66U4q6jh05/ilXvZ827KMVich4Jl9POlMiVd
-         Oz4Q==
-X-Gm-Message-State: AOJu0YzyhvNNJE6p8q3itJgV1QaA2Yo8BBRHZf/gpN+sYJLbsBaQjXxi
-	upSjbtdPHqKfNMhu+Q+zMsKPATbxapipjDCPkoyCQYm4Jt1i1JcxjLRwfJXEBze25Q==
-X-Gm-Gg: ASbGncvDNG8LmLMR6EhL2Lw5IReyO8qz1LXldJAnL3LUTXAVwq9NSJVjR+jpEaEg/hM
-	CF/zfio6AKddQib7wfXjutzHBnuMpW7gYZAas3I5K73fawknrG18FJNHuIpl+ZNEq092ES4KH21
-	H7syhTHLrkKW+eip1nWsWGANohPieLHHYiEfYqQzJeaXEn/IQ0RMecZbS4EcYeaiSqEv7aAzXkW
-	k1n5VMvB870GWvqaJc/DDFF/+XiiXVCNo2QpQnXEYCIqOWFZVsp53ObcLQXTErdGmay060yE4PW
-	dLlAJGHnLXOGQsAcazChoepyGuHRhgYyR2tgnLysjhdJYGx16Qi7ND5u6YM/KSgT5tqxarlJzwc
-	Siw1sJdabY7flvJLFGQ==
-X-Google-Smtp-Source: AGHT+IGMeVBdL+APvW2gWY1YuIwyGJt0gSjFMEw5lhQp/FbWZ/I2fpq5c5bSJ2UZ+ZtTwFhjA1JnvQ==
-X-Received: by 2002:a05:6a00:391a:b0:737:9b:582a with SMTP id d2e1a72fcca58-74ad4546a08mr2117953b3a.24.1750816871607;
-        Tue, 24 Jun 2025 19:01:11 -0700 (PDT)
+        bh=yTuS9wGfxBhv+F7YWQ45ECcT+IUpvHY7G7RB7jvcKms=;
+        b=or9MqoYU7zf3Fq9CWqe2LppzNh2pXYBNAGFHRdsZFKlVd8E0amuvRQYcrBjuNVtH4F
+         sh08z3TZS32neq9qtV8mZtovaPdKqBHdjV6euZclVb+cNU33oe2bJo9aKz99dwvVRuwj
+         8EB/UR4tiq5tY72EUcXo+w4a9E2bvQMa8TZqSZu+o078fCET2znDY5DcnFELLiBnOnem
+         rULQ+b1ra4Xi7vPz6uSh7Bj2+fVsSIiQPsmRUpLDDDLFP01NsOuW2Notgjl9mUg/kLPx
+         muOH4+aFRj5t8ju3lDQeKwEYTwkBd+OpuqI4eZ8F2FWJcwWHsC3goNeVgQs7QjBZSg2P
+         EoTA==
+X-Gm-Message-State: AOJu0YzkzkeZ8GVSEhLEYeCwY8i0Ttn19CbZ/w6HrAtwGQgHSsA7CPWr
+	pRYuUmtz6mDAOf0Nxt3bPMq9mfx8GOE8wHoxuSwovzbhDKKn0HCpTA2OXYL7hrb7Tw==
+X-Gm-Gg: ASbGncuGi/RvXzYLOFI2wwKV94wmSC/NJSPMzGltkuff1k8r6POrLuPR1EaO9WsutXv
+	MfJPDHitx3hoO1nBLjU1Nz+andq16LVeeXYB8oGAJS9J611+4B8KU1Qpyplx6FOXBAv96N6b6Rk
+	apumMqnQ9UR2fkkyJCFSbbwKX/OWlkmkkuY0ebn3YSFttqVgQq+aimz52vyxN90mmGTlsBw5Ygj
+	hSs2Dr++MqeemooAuD/gvbs7/Rgk983hsGVG7pOdCIgbmvIzIbtgJRctR/c0hAqLJwP4oyYp9et
+	F9MFMKhXBvoGDPM4DO+NP2BmqOWVnQ/N1Ftk7PsbDw9+oV2hIWWH6cPbeM0aCyWYviuE/IqbCO4
+	43azZu29V+YLQu4rgIQ==
+X-Google-Smtp-Source: AGHT+IEHYcDaY2a1+zp0ymIh+2AkxL1xSpmk0Ub08Hm9wNUWOvuECeHluh9kQgQNmwW4Bp+vF4nYnA==
+X-Received: by 2002:a17:903:4b27:b0:234:d679:72e9 with SMTP id d9443c01a7336-23823fcc7b9mr27649335ad.12.1750816904394;
+        Tue, 24 Jun 2025 19:01:44 -0700 (PDT)
 Received: from [10.230.3.249] ([192.19.161.250])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e09b1dsm2940511b3a.31.2025.06.24.19.01.09
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86f701csm118659285ad.217.2025.06.24.19.01.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 19:01:10 -0700 (PDT)
-Message-ID: <16acfac9-8686-4a77-a899-d0cfe9721ef8@broadcom.com>
-Date: Tue, 24 Jun 2025 19:01:09 -0700
+        Tue, 24 Jun 2025 19:01:43 -0700 (PDT)
+Message-ID: <b58954c7-cbc0-4971-81c8-8c40c1bb1f53@broadcom.com>
+Date: Tue, 24 Jun 2025 19:01:42 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,12 +64,16 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] scripts/gdb: De-reference per-CPU MCE interrupts
+Subject: Re: [PATCH v2] scripts/gdb: Fix interrupts.py after maple tree
+ conversion
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
- Kieran Bingham <kbingham@kernel.org>
-References: <20250624030020.882472-1-florian.fainelli@broadcom.com>
- <20250624165308.40511a280485679980147976@linux-foundation.org>
+ Kieran Bingham <kbingham@kernel.org>, Tony Ambardar
+ <tony.ambardar@gmail.com>, Stephen Brennan <stephen.s.brennan@oracle.com>,
+ Shanker Donthineni <sdonthineni@nvidia.com>,
+ Thomas Gleixner <tglx@linutronix.de>
+References: <20250624032751.1094840-1-florian.fainelli@broadcom.com>
+ <20250624165000.ecf2a00a55fd267befa6fdb4@linux-foundation.org>
 Content-Language: en-US
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
@@ -104,27 +108,30 @@ Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
  MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
  7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
  95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20250624165308.40511a280485679980147976@linux-foundation.org>
+In-Reply-To: <20250624165000.ecf2a00a55fd267befa6fdb4@linux-foundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 6/24/2025 4:53 PM, Andrew Morton wrote:
-> On Mon, 23 Jun 2025 20:00:19 -0700 Florian Fainelli <florian.fainelli@broadcom.com> wrote:
+On 6/24/2025 4:50 PM, Andrew Morton wrote:
+> On Mon, 23 Jun 2025 20:27:45 -0700 Florian Fainelli <florian.fainelli@broadcom.com> wrote:
 > 
->> The per-CPU MCE interrupts are looked up by reference and need to be
->> de-referenced before printing.
+>> In commit 721255b9826b ("genirq: Use a maple tree for interrupt
+>> descriptor management"), the irq_desc_tree was replaced with a
+>> sparse_irqs tree using a maple tree structure.
+>>
+>> A new module (mapletree.py) is added whose mtree_load() implementation
+>> is largely copied after the C version and uses the same variable and
+>> intermediate function names wherever possible to ensure that both the C
+>> and Python version be updated in the future.
 > 
-> Again, please fully describe the problem which is being addressed.
-> 
-> (OK, I can see it's "prints wrong stuff", but something like example
-> before-and-after output would be very helpful)
+> butbutbut.  What is actually being "fixed" here?  The above contains no
+> description of any problem.
 
-Sure, I thought it was clear enough we were printing the variable 
-address rather than its content, but I will make that clear in a v2.
-
-Thanks!
+OK, I also thought this was clear enough that the script stopped working 
+and printed nothing, but does not hurt to state that clearly. v3 coming 
+up shortly, thanks!
 -- 
 Florian
 
