@@ -1,316 +1,192 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C6F86338;
-	Wed, 25 Jun 2025 01:34:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750815244; cv=none; b=r+h2kwMLBlz2KhE6mbjBcogXzYDEJXbSi0tHMScjxqMyvJjFye8x9MJ9risuhZGj3orBs0JflaYMBavute46VNjDXD8oHK3RrqPEzDd5U0+EXqeNlNfweqbG8cL32qxLGncMiCKWugV5mZoyhNUHAUenKDXsGQg486gWVwS7Cck=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750815244; c=relaxed/simple;
-	bh=jCiYhVobIE8vru8xScAz++vjjNziaIN1FPr6ZOLizAo=;
-	h=Content-Type:MIME-Version:Content-Disposition:In-Reply-To:
-	 References:Subject:From:Cc:To:Date:Message-ID; b=m+x/YNq/eFZU1HgjPB/2BjDKf8maIoe72944GHzOdWxA/s3/8ZAe2kUS6pho67KEEP2G6m2xSmqwtOPcahvgqdpAs9DoKk2xgepx9KdXo2INBoncnvNk/qUjYH9t2n+Eqe0WL73y9GtP/kB8MKVHrUXBxk4OHC4EuYwLSiiC7ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JqTerPlC; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8102B9CD
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:36:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750815395; cv=fail; b=TtFi+p10+pkpBBiQs51NZkkUJw0nxRcTcVRx/Fv6P3luOi/FoqYo7zqy3TyGzih4Buo1IGXi19aoH1s8sPFoqD58d3t04qRtdecY1tu3WZy8/6TfunoUzHO+ircUCLl54IHOqLOiSHRXHv/U6QtkVIQPTlWPRCErNhTmPo6tSdU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750815395; c=relaxed/simple;
+	bh=FeBWGmpzVEiRz98yGRKeJGvIxqrikEwbsqE5Lbh+LPE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=rF9TADMBY3rxMiAj5TGgejjUtWBdXrb6S1HzQKvbP7Iop+7DO1Wd7ZcCeOCTtnkfNg9uFJpNcc8bkWWAbZhs3aRT6hb2xojizBMSVurPuBwyU2yhM9465o8jYw5QK3VIwY0JVXubUJ+LtQroeI1+ABWpAhG+2qkse1owsEkox68=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lnJTEamP; arc=fail smtp.client-ip=40.107.244.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JqTerPlC"
-Received: from mail.ideasonboard.com (unknown [IPv6:2601:602:8100:c320::cf66])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id DCD9FD77;
-	Wed, 25 Jun 2025 03:33:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750815222;
-	bh=jCiYhVobIE8vru8xScAz++vjjNziaIN1FPr6ZOLizAo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=JqTerPlCF5iHX4/tvbpy8jtA1WZpDflNn/xw4hVyNykIBUC4hDlNxbg8ETOqu3edB
-	 OSSH5WGpQO07g+JLKUpveY5ZfS2pDdsXQoLZUKdI8TaSxjkR8QGMNdTYmxOrwLLvxt
-	 +qCy6aHE2FCPIu/AHjxOHFWHDjLbs4dfMN/6EloI=
-Content-Type: multipart/signed; micalg="pgp-sha512"; protocol="application/pgp-signature"; boundary="===============5002358159074849269=="
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lnJTEamP"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Gm5slFSW16ZoOHZqridrWqgMhjkgXX8USCyGdq2qYiP5IWKZ0C9p+TFG2Qs7wIq4IUXSQKNjy1W09I83nkAPviRfEo9AeWDgIj01OgBbB9aYhDhAFacOJ4y12Fa9IPV3jW1h+RuBEbYSl+m0xE4DTUvd3EOXBe5wdwR8cfmLnHo5mZM9K0dUNRk5WCBmkY4TtJr0eX9KLvlsIDqhtEfp7cSx+Tf3YKqF3VxfK+d+RopueWLQxDjwm7wciunh3mDYSegI1SCtLsC+kQ5DQwHNDOeVkFgx64NqmfUxT1aXN0mTQrbdq+5DnNP6fQCs4r5wxdEHIXdsUtsnHd2ruSYdJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NzGmFNIF/GXqwWeWVCt0F8+q8b9otuXbOfAxbXPkCc0=;
+ b=j2tvTkSfG1Z6g7sj6boovO/HzE5JOARuGIAlDN0Hwx0vDcoqxL3iAT+Uth7gbSqjcBx8wXunDHRzZVP2zL/njmrpEFnTMVXpAdaHWeajaq17XQpm4TTfiGkpXTklVNCRAImfwz3ngzPfxnCfMrOFngozYp2Nmh+IKLI8qM6xnER7KmmxVxGpVgXexzAZuvn5SSd6UQbHJ1beA4BVLRhOzdlO9RA6sx4ygkuT3C1QAu9G5FbQQW7pxAIvafbe4MPxeeg/9FWLtbrMG6xs30+gIGWQbgK1KMT3PE7CVrhJ28qsDxcWX/zKQuva6IRLeSJiy5mVAxrsFO3GaoHEp+Cjfw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NzGmFNIF/GXqwWeWVCt0F8+q8b9otuXbOfAxbXPkCc0=;
+ b=lnJTEamPjPfefsYUzv7lDxaNRBZsOfjbNJl15u0btrkMS7UQnini6TD7o3gFjXlxHC00FWDLqVSYChXuN2WLo5V/VJk2LhKF8hUkfmz9gCcK0pTIA6T5y1FiJJqG5SNpdHKWT/OlTtgHT45Ol8rlIPim4NtxM8H/js8XKG9ner/OsUQINIFA9UbatUuDL96101VZvuW7E0uzpQaLiaM/LanaXdAyJrZ27zINgmOj9OTSmfvKCZjKs5yViROM5cFNSfuoZXb3ToSBVuJCMa2e7tKHdrv3aFKwvNIEi2zz9IToVhXAGoRlCwoDh72UbVhgGMVDJuiuSFsDrH7KOD+Ymw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
+ by SJ2PR12MB8846.namprd12.prod.outlook.com (2603:10b6:a03:549::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 25 Jun
+ 2025 01:36:31 +0000
+Received: from CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
+ ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.027; Wed, 25 Jun 2025
+ 01:36:30 +0000
+Date: Tue, 24 Jun 2025 22:36:29 -0300
+From: Jason Gunthorpe <jgg@nvidia.com>
+To: "Tian, Kevin" <kevin.tian@intel.com>
+Cc: Xu Yilun <yilun.xu@linux.intel.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
+	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"joro@8bytes.org" <joro@8bytes.org>,
+	"robin.murphy@arm.com" <robin.murphy@arm.com>,
+	"shuah@kernel.org" <shuah@kernel.org>,
+	"nicolinc@nvidia.com" <nicolinc@nvidia.com>,
+	"aik@amd.com" <aik@amd.com>,
+	"Williams, Dan J" <dan.j.williams@intel.com>,
+	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+	"Xu, Yilun" <yilun.xu@intel.com>
+Subject: Re: [PATCH v2 3/4] iommufd: Destroy vdevice on idevice destroy
+Message-ID: <20250625013629.GD167785@nvidia.com>
+References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
+ <20250623094946.1714996-4-yilun.xu@linux.intel.com>
+ <20250624145346.GC150753@nvidia.com>
+ <BN9PR11MB52762BD911A3CE2F1A062B158C78A@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BN9PR11MB52762BD911A3CE2F1A062B158C78A@BN9PR11MB5276.namprd11.prod.outlook.com>
+X-ClientProxiedBy: MN2PR22CA0030.namprd22.prod.outlook.com
+ (2603:10b6:208:238::35) To CH3PR12MB8659.namprd12.prod.outlook.com
+ (2603:10b6:610:17c::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20250514112527.1983068-13-r-donadkar@ti.com>
-References: <20250514112527.1983068-1-r-donadkar@ti.com> <20250514112527.1983068-13-r-donadkar@ti.com>
-Subject: Re: [PATCH v4 12/12] media: ti: j721e-csi2rx: Change the drain architecture for multistream
-From: Jai Luthra <jai.luthra@ideasonboard.com>
-Cc: y-abhilashchandra@ti.com, devarsht@ti.com, vaishnav.a@ti.com, s-jain1@ti.com, vigneshr@ti.com, mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, sakari.ailus@linux.intel.com, hverkuil-cisco@xs4all.nl, tomi.valkeinen@ideasonboard.com, changhuang.liang@starfivetech.com, jack.zhu@starfivetech.com, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org
-To: Rishikesh Donadkar <r-donadkar@ti.com>, jai.luthra@linux.dev, laurent.pinchart@ideasonboard.com, mripard@kernel.org
-Date: Tue, 24 Jun 2025 18:33:54 -0700
-Message-ID: <175081523471.8144.8244237988305732382@freya>
-User-Agent: alot/0.12.dev28+gd2c823fe
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SJ2PR12MB8846:EE_
+X-MS-Office365-Filtering-Correlation-Id: 3b46160c-715b-44c2-93ba-08ddb388b5ba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?hdQM5z7zqUI0PvL2CfjXNxZZYn+oHBrxGl64MFrUrGo3qxlZRh8dvJg82aSE?=
+ =?us-ascii?Q?W37IpUt4RThbD67vSaTkDVgZBJ/SBTc6JrUfAi8s7DzdIC8YF7THQf7se4f1?=
+ =?us-ascii?Q?03k11sfeCKdEySf/Xz+mg3i3S88S/z48nsfLTdqAMHG2/KjtHWo3LOOG75xR?=
+ =?us-ascii?Q?LQVl7SDfV2jf3QWoBNQ+fgyEtHiSlND2f79Mi+q+H9aM3xGW2Xg8P53HS7X7?=
+ =?us-ascii?Q?B1i861bYlL2t6jRIdEXVzggUw9WRvb8+0u20QdGiv91ItTSaUU5ZodNSmt/i?=
+ =?us-ascii?Q?cxzWTBW1Lu9KsyWK0tdHwLIwfhHkjAi3tMqJGm5J0RMHeLurDa341TQ01PQ3?=
+ =?us-ascii?Q?zbaY2qxFtopj7QyJr6IExRGpYzkJqKUdOlVBUNbhO927txkNWpBrbE02FvXf?=
+ =?us-ascii?Q?z31h5YLYMKm51kipKvOO58YZqlnrBNDIZEKI0VvFDx6JJPqiWQtTNLqhYVHV?=
+ =?us-ascii?Q?nzoLEpSiC4xFQnVApq2FiXizqPyZqJMJy3NSITCeHX51TiVg1b4A7InQwPf9?=
+ =?us-ascii?Q?YqGCoj8nlN+hqMYf9zqDmLkt1BG0LX7wLPPVXHBtIryRanWdvmkXxyOV9sfE?=
+ =?us-ascii?Q?+V+M81XcYLJP3duwZwFBmdeKKLL9Dnvhn0sQW+oyXOkfz5BnFH8SJO31Y6er?=
+ =?us-ascii?Q?GVE+CfrmRSQBoUyH8TOTOE/w92KEn6SVZyONZj+QBBCqqBqdO6ywALL2v8rI?=
+ =?us-ascii?Q?Vd1dyVVJJXa2W15PgNYId0dqe41LxmXMxK/ArSUEQFmnqLc8fBNGz7LvrHmN?=
+ =?us-ascii?Q?GzjNju86/lBdyXEw5HtlkAH/UuJdWNkyr9XRI4vTCN0lmr274gTR0vq+JAry?=
+ =?us-ascii?Q?UYxM1Zs8ARC24Y0Z4mpdUXerVm2OrjpUshiZdn0Kbjb6HjiyBzrur2qz5D9H?=
+ =?us-ascii?Q?QqrQ56VEFcfE84cay88M7HUDvgrec36iq9vm/aZdTySLD5PQCWfwjjyH1yQR?=
+ =?us-ascii?Q?cpuYy0U+RLqPO5cKAeDtviPW+1z3GgahTWeySSZLtVJAZSes2tFEKjAXsmYS?=
+ =?us-ascii?Q?CAlyJnCBsMlFeLG9Mp95WXjAjCKXgbzyPvmElf7R81kSArr5nEjsaQ/BFr9k?=
+ =?us-ascii?Q?C0IZ6O4eOCcIyv9nQ8g2RSZMrMdgPvZ/mtLvH+YI3l1mPekvIN3z8QKswGVr?=
+ =?us-ascii?Q?5w/BOkLnKOwPmbOYy/ixyGSlZ/2QXHCq8T0UVlSPfHf/Q5p36cE2KmhlBC+P?=
+ =?us-ascii?Q?yQ7UO3JVf1IMVnvvR6s47mesflz9sFGE4JcsvwKrXfNJsR8u6CD9T37UvBLH?=
+ =?us-ascii?Q?Ddbf4OvnL9vdLdCrcDJ7A2aTVcck/ER9GVKhnC+PSDFg1ipV+e8sU7prNIVm?=
+ =?us-ascii?Q?ce1EWeHBWPgKjBVFWWvxZ+FJ22LEywsYfzA5mV4WuSe0rw8cS4w2w2xfAlZJ?=
+ =?us-ascii?Q?qPZNIgC5o5EXeXFa7WgiEK1sBcGlBMO2L+fCFfbS5fTmZYqxwosyn/sqvj1i?=
+ =?us-ascii?Q?5BxcrSUvurE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?IYvY6UMSADKTzIdG0anFNbRuhFQq1tUxFCltp5ChHM0HLGJbLfRFRBcDUeNA?=
+ =?us-ascii?Q?uLOzfxXwgvgscclrx1oglGS+QLAZP3XIOKGrACn1luiRjqvB3cfTY7c0jfxP?=
+ =?us-ascii?Q?XuKVtBZy/CMKijqPQ9LV8ap5UiKFU//mdLcP8uO8atpsb3US+FLgD9/26CDs?=
+ =?us-ascii?Q?AJzJNRlQINM0u+uZFPBRa9/GxfMsg3rTaW1K8amTru3ykZI2c1oB5S/LZ37B?=
+ =?us-ascii?Q?SVgraHDg3ZiR63yIdPcqbu+oHR/HaWkESxHemfJTwf1mtH1dCanBcjfOoIqO?=
+ =?us-ascii?Q?iMMOJv03ahtBGSXQ59CljUB9Dnq04iH02bUN9sJn+QuJ3p+VmzCwETyMWCtZ?=
+ =?us-ascii?Q?ANtv6vXGarE5v5AiBBPHLDyBUul7PPtv5WUcL2BW76QoIA7CDJENzevLsRFq?=
+ =?us-ascii?Q?ky8v/gbuQihUqSuYVQAVvUhNDs4Uke0zybAVJUP1JddWkGqjQjw2NhDEtOfI?=
+ =?us-ascii?Q?nlWhv1664HCCmymjL0sxbbS6q3c6zDAPsxXLxwP1chtKMJdOdpXhkrhwZwV4?=
+ =?us-ascii?Q?w+aR1bEGF+LXgnrUtTGI0EQ4CApI5enrac7PVeay9bRMnStxVerGF18/fucw?=
+ =?us-ascii?Q?cWX/53TkCg6hphHpPRhbKThnakGf2vtfI+iaZtVhnEfu40pS10Msqx3V07XM?=
+ =?us-ascii?Q?yaYyzKD1xAMpjGHN0w25JApxS9JI5sddzUcGcn0iPo+nt85kR73+apDEl6Ys?=
+ =?us-ascii?Q?WKotd3ApvCRABRYq2N27BujerkYPN1ZcqJOfRe7OY+rta3dZrqvEE0lAHBKm?=
+ =?us-ascii?Q?ruAqAuJ8pc3dScAO6klC6hhkpSQ9IKR+QRO6g5U+0ymDiV48JRkbx/NCqoqX?=
+ =?us-ascii?Q?s4e0qYCKn3VetTK+/+0h/p6BUFsTdzUNpi+RHUnv6r8HYFaIfeokg+TalezF?=
+ =?us-ascii?Q?SzsgKeGre0fcxTI2XrsogKfpCyNyQv4poMCjD0aBL1wW67bB4/wcPge21obC?=
+ =?us-ascii?Q?jTjIGfVGKktUKFsUc8YDK4e56I0+PyXlGPOSzaEuJGQqmjp0mxWqD4LwCO+S?=
+ =?us-ascii?Q?235AYlN7JC0v00ih/33N1sTUSnWf20ZI+YCIvDuyN8lUvMPhIdX0ebIfHjkP?=
+ =?us-ascii?Q?UugsWGS9lAB6V+PyfBOgt6DM44k6z+rlGWvOAq06853UBbv7PmR307rw9Gf+?=
+ =?us-ascii?Q?UOGDNJZyI6MJNuyAseYbDlmeBJxL5cxcJDIdSlGngm+pYRw1o/xgOd3vn+AG?=
+ =?us-ascii?Q?pW7THR/r8Pd+sB/Guq+Kn2xkeLJj2lCOhfJEqIneKVy7Z3fO2Kfqe+rB2BW9?=
+ =?us-ascii?Q?f2mmsRJ06atOISS3d2tJpHNG3lTZWfNXlfeP85rVOkSuE7Hjf9iYJQ6L4ZRF?=
+ =?us-ascii?Q?2Oe4aAFkIspePzADufh4aSzQzjpqlCFDm+SYTYAUy0GdVUuTwddeEMcfvfVD?=
+ =?us-ascii?Q?ZAMewXj2qz8g4jtaabWGvUaBSlIEUrgdYeg8iQhQeJeDMmBAPG6sy+uyfKBh?=
+ =?us-ascii?Q?enqUdJggSS1yrqTrdu2HVBcth8KMNfzcAs01ig6S1nWEUjymCPyRVobxBhe6?=
+ =?us-ascii?Q?7MGMtf1ltDl/n5QbD4VTva11hiF+VwvT1oxyHgiJKEOP/VZp0faVqudo/b0S?=
+ =?us-ascii?Q?GD6o7F3gUeA6WmNnYBYD/iE6Iw2VfKYCse7EeZ67?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b46160c-715b-44c2-93ba-08ddb388b5ba
+X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 01:36:30.6749
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0ADTbt8Y+9QKVk2Z75uZlk5kUwRCdinAWoIYhuYQKnnRIXYJhQNYFVW38CyVj6LE
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8846
 
---===============5002358159074849269==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 24, 2025 at 11:57:31PM +0000, Tian, Kevin wrote:
+> > From: Jason Gunthorpe <jgg@nvidia.com>
+> > Sent: Tuesday, June 24, 2025 10:54 PM
+> > 
+> > On Mon, Jun 23, 2025 at 05:49:45PM +0800, Xu Yilun wrote:
+> > > +static void iommufd_device_remove_vdev(struct iommufd_device *idev)
+> > > +{
+> > > +	bool vdev_removing = false;
+> > > +
+> > > +	mutex_lock(&idev->igroup->lock);
+> > > +	if (idev->vdev) {
+> > > +		struct iommufd_vdevice *vdev;
+> > > +
+> > > +		vdev = iommufd_get_vdevice(idev->ictx, idev->vdev->obj.id);
+> > > +		if (IS_ERR(vdev)) {
+> > 
+> > This incrs obj.users which will cause a concurrent
+> > iommufd_object_remove() to fail with -EBUSY, which we are trying to
+> > avoid.
+> 
+> concurrent remove means a user-initiated IOMMU_DESTROY, for which 
+> failing with -EBUSY is expected as it doesn't wait for shortterm?
 
-Hi Rishikesh,
+Yes a user IOMMU_DESTROY of the vdevice should not have a transient
+EBUSY failure. Avoiding that is the purpose of the shorterm_users
+mechanism.
 
-Thanks for the patch.
+> > Also you can hit a race where the tombstone has NULL'd the entry but
+> > the racing destroy will then load the NULL with xas_load() and hit this:
+> > 
+> > 		if (WARN_ON(obj != to_destroy)) {
+> 
+> IOMMU_DESTROY doesn't provide to_destroy.
 
-Quoting Rishikesh Donadkar (2025-05-14 04:25:27)
-> On buffer starvation the DMA is marked IDLE, and the stale data in the
-> internal FIFOs gets drained only on the next VIDIOC_QBUF call from the
-> userspace. This approach works fine for a single stream case.
->=20
-> But in multistream scenarios, buffer starvation for one stream i.e. one
-> virtual channel, can block the shared HW FIFO of the CSI2RX IP. This can
-> stall the pipeline for all other virtual channels, even if buffers are
-> available for them.
->=20
-> This patch introduces a new architecture, that continuously drains data
-> from the shared HW FIFO into a small (32KiB) buffer if no buffers are made
-> available to the driver from the userspace. This ensures independence
-> between different streams, where a slower downstream element for one
-> camera does not block streaming for other cameras.
->=20
-> Signed-off-by: Rishikesh Donadkar <r-donadkar@ti.com>
-> ---
->  .../platform/ti/j721e-csi2rx/j721e-csi2rx.c   | 96 +++++++------------
->  1 file changed, 33 insertions(+), 63 deletions(-)
->=20
-> diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/driv=
-ers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> index ba2a30bfed37d..3b046d3cf7e5a 100644
-> --- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> +++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> @@ -57,7 +57,6 @@
->  #define TI_CSI2RX_MAX_SOURCE_PADS      TI_CSI2RX_MAX_CTX
->  #define TI_CSI2RX_MAX_PADS             (1 + TI_CSI2RX_MAX_SOURCE_PADS)
-> =20
-> -#define DRAIN_TIMEOUT_MS               50
->  #define DRAIN_BUFFER_SIZE              SZ_32K
-> =20
->  struct ti_csi2rx_fmt {
-> @@ -77,7 +76,6 @@ struct ti_csi2rx_buffer {
-> =20
->  enum ti_csi2rx_dma_state {
->         TI_CSI2RX_DMA_STOPPED,  /* Streaming not started yet. */
-> -       TI_CSI2RX_DMA_IDLE,     /* Streaming but no pending DMA operation=
-. */
->         TI_CSI2RX_DMA_ACTIVE,   /* Streaming and pending DMA operation. */
->  };
-> =20
-> @@ -245,6 +243,10 @@ static const struct ti_csi2rx_fmt ti_csi2rx_formats[=
-] =3D {
->  static int ti_csi2rx_start_dma(struct ti_csi2rx_ctx *ctx,
->                                struct ti_csi2rx_buffer *buf);
-> =20
-> +/* Forward declarations needed by ti_csi2rx_drain_callback. */
-> +static int ti_csi2rx_drain_dma(struct ti_csi2rx_ctx *ctx);
-> +static int ti_csi2rx_dma_submit_pending(struct ti_csi2rx_ctx *ctx);
-> +
->  static const struct ti_csi2rx_fmt *find_format_by_fourcc(u32 pixelformat)
->  {
->         unsigned int i;
-> @@ -596,9 +598,28 @@ static void ti_csi2rx_setup_shim(struct ti_csi2rx_ct=
-x *ctx)
-> =20
->  static void ti_csi2rx_drain_callback(void *param)
->  {
-> -       struct completion *drain_complete =3D param;
-> +       struct ti_csi2rx_ctx *ctx =3D param;
-> +       struct ti_csi2rx_dma *dma =3D &ctx->dma;
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&dma->lock, flags);
-> =20
-> -       complete(drain_complete);
-> +       if (dma->state =3D=3D TI_CSI2RX_DMA_STOPPED) {
-> +               spin_unlock_irqrestore(&dma->lock, flags);
-> +               return;
-> +       }
-> +
-> +       /*
-> +        * If dma->queue is empty, it signals no buffer has arrived from
-> +        * user space, so, queue more transaction to drain dma
-> +        */
-> +       if (list_empty(&dma->queue)) {
-> +               if (ti_csi2rx_drain_dma(ctx))
-> +                       dev_warn(ctx->csi->dev, "DMA drain failed\n");
-> +       } else {
-> +               ti_csi2rx_dma_submit_pending(ctx);
-> +       }
-> +       spin_unlock_irqrestore(&dma->lock, flags);
->  }
-> =20
->  /*
-> @@ -616,12 +637,9 @@ static int ti_csi2rx_drain_dma(struct ti_csi2rx_ctx =
-*ctx)
->  {
->         struct ti_csi2rx_dev *csi =3D ctx->csi;
->         struct dma_async_tx_descriptor *desc;
-> -       struct completion drain_complete;
->         dma_cookie_t cookie;
->         int ret;
-> =20
-> -       init_completion(&drain_complete);
-> -
->         desc =3D dmaengine_prep_slave_single(ctx->dma.chan, csi->drain.pa=
-ddr,
->                                            csi->drain.len, DMA_DEV_TO_MEM,
->                                            DMA_PREP_INTERRUPT | DMA_CTRL_=
-ACK);
-> @@ -631,7 +649,7 @@ static int ti_csi2rx_drain_dma(struct ti_csi2rx_ctx *=
-ctx)
->         }
-> =20
->         desc->callback =3D ti_csi2rx_drain_callback;
-> -       desc->callback_param =3D &drain_complete;
-> +       desc->callback_param =3D ctx;
-> =20
->         cookie =3D dmaengine_submit(desc);
->         ret =3D dma_submit_error(cookie);
-> @@ -640,13 +658,6 @@ static int ti_csi2rx_drain_dma(struct ti_csi2rx_ctx =
-*ctx)
-> =20
->         dma_async_issue_pending(ctx->dma.chan);
-> =20
-> -       if (!wait_for_completion_timeout(&drain_complete,
-> -                                        msecs_to_jiffies(DRAIN_TIMEOUT_M=
-S))) {
-> -               dmaengine_terminate_sync(ctx->dma.chan);
-> -               dev_dbg(csi->dev, "DMA transfer timed out for drain buffe=
-r\n");
-> -               ret =3D -ETIMEDOUT;
-> -               goto out;
-> -       }
->  out:
->         return ret;
->  }
-> @@ -694,9 +705,11 @@ static void ti_csi2rx_dma_callback(void *param)
-> =20
->         ti_csi2rx_dma_submit_pending(ctx);
-> =20
-> -       if (list_empty(&dma->submitted))
-> -               dma->state =3D TI_CSI2RX_DMA_IDLE;
-> -
-> +       if (list_empty(&dma->submitted)) {
-> +               if (ti_csi2rx_drain_dma(ctx))
-> +                       dev_warn(ctx->csi->dev,
-> +                                "DMA drain failed on one of the transact=
-ions\n");
-> +       }
->         spin_unlock_irqrestore(&dma->lock, flags);
->  }
-> =20
-> @@ -749,7 +762,7 @@ static void ti_csi2rx_stop_dma(struct ti_csi2rx_ctx *=
-ctx)
->                  * enforced before terminating DMA.
->                  */
->                 ret =3D ti_csi2rx_drain_dma(ctx);
-> -               if (ret && ret !=3D -ETIMEDOUT)
-> +               if (ret)
->                         dev_warn(ctx->csi->dev,
->                                  "Failed to drain DMA. Next frame might b=
-e bogus\n");
->         }
-> @@ -816,57 +829,14 @@ static void ti_csi2rx_buffer_queue(struct vb2_buffe=
-r *vb)
->         struct ti_csi2rx_ctx *ctx =3D vb2_get_drv_priv(vb->vb2_queue);
->         struct ti_csi2rx_buffer *buf;
->         struct ti_csi2rx_dma *dma =3D &ctx->dma;
-> -       bool restart_dma =3D false;
->         unsigned long flags =3D 0;
-> -       int ret;
-> =20
->         buf =3D container_of(vb, struct ti_csi2rx_buffer, vb.vb2_buf);
->         buf->ctx =3D ctx;
-> =20
->         spin_lock_irqsave(&dma->lock, flags);
-> -       /*
-> -        * Usually the DMA callback takes care of queueing the pending bu=
-ffers.
-> -        * But if DMA has stalled due to lack of buffers, restart it now.
-> -        */
-> -       if (dma->state =3D=3D TI_CSI2RX_DMA_IDLE) {
-> -               /*
-> -                * Do not restart DMA with the lock held because
-> -                * ti_csi2rx_drain_dma() might block for completion.
-> -                * There won't be a race on queueing DMA anyway since the
-> -                * callback is not being fired.
-> -                */
-> -               restart_dma =3D true;
-> -               dma->state =3D TI_CSI2RX_DMA_ACTIVE;
-> -       } else {
-> -               list_add_tail(&buf->list, &dma->queue);
-> -       }
-> +       list_add_tail(&buf->list, &dma->queue);
->         spin_unlock_irqrestore(&dma->lock, flags);
-> -
-> -       if (restart_dma) {
-> -               /*
-> -                * Once frames start dropping, some data gets stuck in th=
-e DMA
-> -                * pipeline somewhere. So the first DMA transfer after fr=
-ame
-> -                * drops gives a partial frame. This is obviously not use=
-ful to
+Right, but IOMMU_DESTROY thread could have already gone past the
+xa_store(NULL) and then the kernel destroy thread could reach the
+above WARN as it does use to_destroy.
 
-I think it would be good to retain a similar comment in the code, and also
-in the commit message, as there is a possibility of returning a partial fra=
-me
-to the user post drain.
-
-With that change,
-
-Reviewed-by: Jai Luthra <jai.luthra@ideasonboard.com>
-
-> -                * the application and will only confuse it. Issue a DMA
-> -                * transaction to drain that up.
-> -                */
-> -               ret =3D ti_csi2rx_drain_dma(ctx);
-> -               if (ret && ret !=3D -ETIMEDOUT)
-> -                       dev_warn(ctx->csi->dev,
-> -                                "Failed to drain DMA. Next frame might b=
-e bogus\n");
-> -
-> -               spin_lock_irqsave(&dma->lock, flags);
-> -               ret =3D ti_csi2rx_start_dma(ctx, buf);
-> -               if (ret) {
-> -                       vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_E=
-RROR);
-> -                       dma->state =3D TI_CSI2RX_DMA_IDLE;
-> -                       spin_unlock_irqrestore(&dma->lock, flags);
-> -                       dev_err(ctx->csi->dev, "Failed to start DMA: %d\n=
-", ret);
-> -               } else {
-> -                       list_add_tail(&buf->list, &dma->submitted);
-> -                       spin_unlock_irqrestore(&dma->lock, flags);
-> -               }
-> -       }
->  }
-> =20
->  static int ti_csi2rx_get_route(struct ti_csi2rx_ctx *ctx)
-> --=20
-> 2.34.1
->
---===============5002358159074849269==
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Description: signature
-Content-Type: application/pgp-signature; name="signature.asc"; charset="us-ascii"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEETeDYGOXVdejUWq/FQ96R+SSacUUFAmhbUfgACgkQQ96R+SSa
-cUUYCRAAgNZRhrRuTYsTSz7SUZoiDss//pcSSPr1PZ5Zunx2tVPE+j7Lq/79H35E
-XAb08Pmcot5vt/PKXKaR1t+8LFBxQ5fNQfF/8YNtb4vItStbQimMRZlxScSywMnI
-nxlrgiwxywaeAnLwXBj+4ql8yIlVqvzrYAdOnlq1SXNo5oyOIeR62NqTelmVh+QG
-/UsYwnkjchp9HkiThIzU+5YpZeHWjD4i/CYSEXiq8anhGC0btvUYogq9UFupZO4v
-V9utoBZymzL3EHdqlLCJGD0JcHKIM/eDfi337T+W50vytcSM8OSy6Z/4vc3Ijeyj
-1XnnRo4pCoG3E1cRyZqwJcYaCZsRTYTDHhXHWX4f5P2LOn/FpjOacmBGUE4OjgqE
-Ems0bL5+3Z57M5jt2RdoMnDwuPW0F76kguzdeBV6XBaUolgOJMLUoHsis8YkwB9h
-+tgbxaxv5owIwT3Ct7ixlnyaZmuvfZuC54dwgTjTuPBEtTGq7r6dn4UdbbOxOg6V
-GvQh6O0hajqAdxPDV1RN1Pmuglq4oLSZj0m5hJjC5z+uY8OCNrlTXGVeg+/66ncv
-etgPIka1NVMa+z8aDnBmCRTWESbXOIPOWPAkHhqd3Oq6dWIe5CAFOL6hfS/KgBTp
-X8czLyYBlm9TYi7MKb41rLkwRB8v0JGLO9HvH3XahQcQsylv464=
-=jt1I
------END PGP SIGNATURE-----
-
---===============5002358159074849269==--
+Jason
