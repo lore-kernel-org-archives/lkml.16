@@ -1,240 +1,106 @@
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DB0A19D071;
-	Wed, 25 Jun 2025 15:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73F13074B2
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:20:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864741; cv=none; b=p11Y7lYCL5w5hdgLoT43xRnCt01e1K6k+UzTeDzeLuPEDWW9hvKkbfJ+3Ccc17a3mED1gOEfos+e3bLCWIKSN7PJsDOHVlVJEafRm19l4ujj/lCxlYXbV4yZzQUvNuCUhldHjhSPA+Q4sawdTGVlg+NXgup4bbfnnrNpjYbzUGQ=
+	t=1750864840; cv=none; b=AtQvDEgcqiWb5pmKWI4TwNgF/Zyatv9KVtLW8gycSyNz4ilxEBZhKi32xnYMvA82kwiAIQFzPvhxYML5THJ9y8/7zznKL4Qq6Tg2DI78wkTZD7ZnGTJEr93ulvydIW2oYI6wK4WUUkcdY6q+nhpEZyyrWmQmSYSbEfGBFguKUVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864741; c=relaxed/simple;
-	bh=lXLEkqm1AZbw1Xkeyz5RDqidMMn5p7Yuuae2E1tcWbc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cBjkk2E9HIjq3rmSy8F1PBLw9QSROZ01eCTUEjS1JcBtaP63/VfHpJ2XMvpuh4RQRhioBjdny+GRD/pBDLQ4yaK2KqJXovKGOY+fU6a0T5Vmhjo3CdIzLbBkZ8Cwt+id2jghbvH2cT5nr5gI+WPbjGciYQ55KQ7R1cOp7ulg6fI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-6118c1775dbso2734eaf.1;
-        Wed, 25 Jun 2025 08:18:59 -0700 (PDT)
+	s=arc-20240116; t=1750864840; c=relaxed/simple;
+	bh=I3VMeM3ROOebuGmLfBamVIQdry0me/Db5bPJT6IVBiU=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hG+tOBsQ04wROcB6XWXaPze4AObVGCPWSnUx/1FMBeo1W1agKfYdFgv0fvPUcBkZKNle5XL+u6cVvrUJLCM5EYQOClsc3coAGKjO2RsB/RQ7pY95IUwetzr3hRExhj7QI6NSfYPahIY3j9kqONZA8804AatCVFfss8iF/8GjLoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Y0IWnLvX; arc=none smtp.client-ip=209.85.210.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y0IWnLvX"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-73adf1a0c48so496605a34.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:20:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750864838; x=1751469638; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=N8J0ohQkucXBpYPSUPUSvYWk0PHTE1+Gl4bdfegEge0=;
+        b=Y0IWnLvXsc3fEcGsQFavcKXEFpMdeXANtpCDE4i6UnW/kwQHGCVVi1o2YKuJF/Q8U9
+         EMo06gzMVI/LrvQpjflqBfjAHTek6qWhOmYrHrEwcFCR1j96hbbiNbxCB6hNVXx3UEZp
+         lnLXEe/BmJFvRmfqf/wf/pzYcYDCCWJXRU2Cppf7dbn1/Y/H1MQWBkeu8GzfcJuhSZ7I
+         IZ8pU+yOtFEBPmJtOUTNKw3gC54Fyf+1SrWXB4GHkPYl61RQSwSfNezKw38j+pvJxA5e
+         3Faitaxz9FYuOTRpfHg+q2AcjaCgGit/XdL9cxxNiqk7QzKGLZr/Iq/cI8vS1j8TFRKj
+         2/nA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750864738; x=1751469538;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=61X6vtBiwIDcFwxAXL+mrWigIfgOJBa9v164n3CvTMU=;
-        b=VQ+/WctZES+ws4SDn4yzckyFUTIPe+WUWTvDKED8zlt7/6L5usVRItHLeJdWIwXKZc
-         MPMxQHg/ckdLYagYMjh15YMpFQNu4C6qVc/wR65MgutZT7vKAc0fk3zfz7K1h4vloc9r
-         MgdnKRvsvfTa/jhSI1nvqZMAaUpB/KZci7+YR98NPnhLoyHRgFJjnif1wJafbSXL6TkF
-         uwPQCIBe0Cv/cekyMELKPymERH1KsfVmWyxoxRTylaVb47tH0TScx2fj9Zk2Woe/Pv2F
-         rIYSS1X2ro2/hWVZNJqHG1U1x0LnkZ64JlqxVItI9iql8KUREJ4IGXFw53wdSwmkWkh7
-         RlxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUC6HwMRbfPujTtprw4p8kahOIBH3Iny7kDeRfW/j8wjRWnFT+7yjaK95piPw2cfydY+cyKV9M4zSK/QemcU3eIPOc=@vger.kernel.org, AJvYcCV31aWyi7aEn7wsJ/S5tZInFoL+2APplER5sMdvz9/y7OGrqZ/RelW/ajjWmbrx0qlhtCVrTrte8EGN@vger.kernel.org, AJvYcCWNCuuYAPqZ44KcqXQQyoqWAvinlgJS+E21tDEGszd9cPVZKRIrcR3nIZxHNmIS4D2UqzjviCx0dncISR/V@vger.kernel.org, AJvYcCXII8iThfHOvbkmvbrpaxTDbAxBRnv4l3ducF8xN/qC6oRzEFWTgEPATgMMOc5Oe6hBQ8Z7EcJa@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxo1EtPR9Susvtsn7FK/aMCjbOMCZJCBNPm5pcp8F5DhZMqoDu0
-	mXSI0LKW1W3xJZXNQFcPG0aOrvLlGvb1JbgJTuREqzuJ1dtG8RkYEFUyEUojY5GY
-X-Gm-Gg: ASbGncv5g4oLssVcwqUairCRpUxc2ss3YT6CstIXDLvffQumwWV9Na4B1hWinn/mxYe
-	ORT6oqOCqUbywGDCO/OwsQL5ySkK8pV/FMKeBILyM+p5UM1H72NzM3iwj9BdlADYh76Mplamiya
-	IRvWqf76aZ9S11pCc+S77+v5MEG20YhSFzlQjuR55kQh5iz4t6+F/gRyhXwooeLudms0vReYNS6
-	VfwwIgE3RPDC9Ds22b6T1pENxwu40eZhMcHJJ2Ig3kbFNDjN0YhIJmveYLlzyZYYQPTLEqXZTte
-	JOqI33S6dyx0lshnhdnZHwlTiwX1LHjRXLBqNjIo3aQZokWpqX8y+e1Oup3a8vRyrEPLHoXtd00
-	6Yr5DqIbzH9Vkjq/YTLdaksoE/QiF
-X-Google-Smtp-Source: AGHT+IHhzeS9QhMVlC9Da5wv4xW71BdxK6MtLqfXrXQeP4+q51Hrr2d+t0dtfoHh8e12RX0D6LPqLw==
-X-Received: by 2002:a05:6808:210a:b0:3f9:2fdc:ee93 with SMTP id 5614622812f47-40b057f4f15mr2980265b6e.30.1750864738067;
-        Wed, 25 Jun 2025 08:18:58 -0700 (PDT)
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com. [209.85.167.175])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40ac6d3af8esm2200265b6e.44.2025.06.25.08.18.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 08:18:57 -0700 (PDT)
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-4080548891fso18744b6e.3;
-        Wed, 25 Jun 2025 08:18:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUEgOdT1UDFUJKVKepGwxgn4+4jI7sOWV3jgSHL9etfSFuh/4B0tCu9wX5/MMDPzfTLT3RUZ4a8BcRt@vger.kernel.org, AJvYcCVWVtbt4f+VLkJ2ugiyzctOy5Vq4vB/3nuZGH7Iat3nJ+CjnGRHz9v5JZtmhuFKzvR1VEjyV8IJMoY+91RHAhcCBzo=@vger.kernel.org, AJvYcCWA4ZjVA9yhflhr222BgBu3z3GsZPfF3y0uEAgPI4fu7YUzj19ejWzyRZXpK98QJf2fVZ6cDxCy@vger.kernel.org, AJvYcCXVvqU4KZ/Lbn8DGnQ96+IzLNsIvy01ypFqHhUXV1d7fXNzkEqHSEwVn5JHhywuyuvzjYISNlWpaUJHk8Y+@vger.kernel.org
-X-Received: by 2002:a05:6808:144b:b0:403:3660:4130 with SMTP id
- 5614622812f47-40b057f1341mr2798969b6e.27.1750864737453; Wed, 25 Jun 2025
- 08:18:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750864838; x=1751469638;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N8J0ohQkucXBpYPSUPUSvYWk0PHTE1+Gl4bdfegEge0=;
+        b=tHJiffs2JzbMcc4dh4TNVw2F6WKxYJIK9ZfsWvVQ5kFyg1K5ocdzRfXxJMU6D7XmDN
+         e2/O8M+kqdFPlzMdjNY3eGt3th/v8jphLdFEcofQFdD+O3bLXyNadpzMGmT8PKOBsYGs
+         gaq42IPLcdRkon4cxMMKxBzdNu7ozXAMIwdQ2Ns9EV6C3NBwkGNNLZ9vUDrUzM1+oPTF
+         LXI8+QaLYaEJb0xZduk0U07u4tV5hCSsZVtJgSQbajEoJueVYooL350TZsytjwe2iY66
+         We8rJ4LnGREu/vq8QPi/BicplSbqL81uDOiyxU+/5D36PWudpgiV2eElroiuP1jzeWhn
+         o21Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVY1N7FiGYXLoEhhwXMt+9+eoXA989WN/kIpsljSmnWL4Xfs0VsgTVemH1jYCaTEn6KexgzYzL1OGsbTGk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx8+EgrxbigXKEOSnZbsMNtYsl3V5St2Vu+ZnFL77XB9mQzMqxy
+	ikFJ7JBic9GFnbaOzcprpK/p5dSTugJE+lzwyiQVmEAtTFfMHIwzsp5ESXwDlKYi2dI=
+X-Gm-Gg: ASbGncu6dHLlV9GoXkwSEnYmGB8PjC6Dk2IHqc3zMTN78La+0LsKRhNxPNr52nLYhKQ
+	NJjxMw6DYA6EBVKVim3rTA+iG83/kS73gmGwl8OTHRfMLrJRgWSGlsWQ9U2Ri4jXr+2ZsmgHgwt
+	JTLMSTSG6op4CvRvkSxVG5YZDPgXyAls6fTwZjM2ZyKitTMcGf1v9LrHA9zDo+f38vo18IFijsk
+	orkJsVplbmMR9zQmNJRQ4acrHUKynxl0Q03ojodADYILn3gSsGti92puCmxLWD+zlGgPZZlFCku
+	P1YivWGIlsx/wEVt1hOnLb1ZGWdINRct4yFqjF3zBFQdTVk7AkgkJJVeDDnHmj1u2qt2Vw==
+X-Google-Smtp-Source: AGHT+IHN+Igzxn2usZkb70KRzmmATFBMBOaapKjVxLI0arjq0Ex2N8xDeTWjV+sIuuSwiIxu3jHu/g==
+X-Received: by 2002:a05:6830:8419:b0:72a:47ec:12c6 with SMTP id 46e09a7af769-73adc5099e7mr1611593a34.2.1750864837773;
+        Wed, 25 Jun 2025 08:20:37 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:1fca:a60b:12ab:43a3])
+        by smtp.gmail.com with UTF8SMTPSA id 46e09a7af769-73a90b337cfsm2275280a34.28.2025.06.25.08.20.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 08:20:37 -0700 (PDT)
+Message-ID: <685c13c5.050a0220.38a39d.dcf8@mx.google.com>
+X-Google-Original-Message-ID: <@sabinyo.mountain>
+Date: Wed, 25 Jun 2025 10:20:36 -0500
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Miguel Ojeda <ojeda@kernel.org>
+Cc: gregkh@linuxfoundation.org, Benjamin.Cheatham@amd.com,
+	Jonathan.Cameron@huawei.com, dakr@kernel.org,
+	dan.j.williams@intel.com, linux-acpi@vger.kernel.org,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+	marc.herbert@linux.intel.com, rafael.j.wysocki@intel.com,
+	rafael@kernel.org, sudeep.holla@arm.com,
+	Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in
+ faux_device_destroy()
+References: <2025061313-theater-surrender-944c@gregkh>
+ <20250614105037.1441029-1-ojeda@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250611061609.15527-1-john.madieu.xa@bp.renesas.com>
- <20250611061609.15527-2-john.madieu.xa@bp.renesas.com> <CAMuHMdXE-C4FAXOfzQv8xfgFytwpqkARDORGLkosZtCsjK8nmg@mail.gmail.com>
- <OSCPR01MB14647EFA0DA38119F00DF1D50FF72A@OSCPR01MB14647.jpnprd01.prod.outlook.com>
- <CAMuHMdWnz3VUeFaJBEgLc0F_gGkdm679H4YqFFuRAEVFKZd8OA@mail.gmail.com>
- <OSCPR01MB1464715327B4DDE8622B9B510FF7DA@OSCPR01MB14647.jpnprd01.prod.outlook.com>
- <CA+V-a8sF2wmLEAp7uhxhKaNx_u9xTf9SR_y8rafyvYYaUgxYDw@mail.gmail.com>
-In-Reply-To: <CA+V-a8sF2wmLEAp7uhxhKaNx_u9xTf9SR_y8rafyvYYaUgxYDw@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 25 Jun 2025 17:18:44 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXdhYJ7ZKVa_f15PMBv7t1_xsDUuwR+uv+bOaHMxtr8Lg@mail.gmail.com>
-X-Gm-Features: Ac12FXxMuB3uVsmBJbD5APZ-b0irg6FYpOQOBb_DxbMkT4pEas9BrSWPeM1lx3I
-Message-ID: <CAMuHMdXdhYJ7ZKVa_f15PMBv7t1_xsDUuwR+uv+bOaHMxtr8Lg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] clk: renesas: r9a09g047: Add clock and reset
- signals for the GBETH IPs
-To: John Madieu <john.madieu.xa@bp.renesas.com>
-Cc: "andrew+netdev@lunn.ch" <andrew+netdev@lunn.ch>, "conor+dt@kernel.org" <conor+dt@kernel.org>, 
-	"davem@davemloft.net" <davem@davemloft.net>, "edumazet@google.com" <edumazet@google.com>, 
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "kuba@kernel.org" <kuba@kernel.org>, 
-	"pabeni@redhat.com" <pabeni@redhat.com>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	"robh@kernel.org" <robh@kernel.org>, Biju Das <biju.das.jz@bp.renesas.com>, 
-	"Lad, Prabhakar" <prabhakar.csengg@gmail.com>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"john.madieu@gmail.com" <john.madieu@gmail.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"magnus.damm@gmail.com" <magnus.damm@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250614105037.1441029-1-ojeda@kernel.org>
 
-Ho John,
-
-On Thu, 19 Jun 2025 at 10:22, Lad, Prabhakar <prabhakar.csengg@gmail.com> w=
-rote:
-> On Thu, Jun 19, 2025 at 5:34=E2=80=AFAM John Madieu
-> <john.madieu.xa@bp.renesas.com> wrote:
-> > > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > On Wed, 18 Jun 2025 at 12:04, John Madieu <john.madieu.xa@bp.renesas.=
-com>
-> > > wrote:
-> > > > > From: Geert Uytterhoeven <geert@linux-m68k.org> On Wed, 11 Jun 20=
-25
-> > > > > at 11:02, John Madieu <john.madieu.xa@bp.renesas.com>
-> > > > > wrote:
-> > > > > > Add clock and reset entries for the Gigabit Ethernet Interfaces
-> > > > > > (GBETH
-> > > > > > 0-1) IPs found on the RZ/G3E SoC. This includes various PLLs,
-> > > > > > dividers, and mux clocks needed by these two GBETH IPs.
-> > > > > >
-> > > > > > Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > > > > > Tested-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > > > > > Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
-> > > > >
-> > > > > Thanks for your patch!
-> > > > >
-> > > > > > --- a/drivers/clk/renesas/r9a09g047-cpg.c
-> > > > > > +++ b/drivers/clk/renesas/r9a09g047-cpg.c
-> > >
-> > > > > > @@ -214,6 +252,30 @@ static const struct rzv2h_mod_clk
-> > > > > r9a09g047_mod_clks[] __initconst =3D {
-> > > > > >                                                 BUS_MSTOP(8,
-> > > BIT(4))),
-> > > > > >         DEF_MOD("sdhi_2_aclk",
-> > > CLK_PLLDTY_ACPU_DIV4,
-> > > > > 10, 14, 5, 14,
-> > > > > >                                                 BUS_MSTOP(8,
-> > > > > > BIT(4))),
-> > > > > > +       DEF_MOD("gbeth_0_clk_tx_i",
-> > > CLK_SMUX2_GBE0_TXCLK,
-> > > > > 11, 8, 5, 24,
-> > > > > > +                                               BUS_MSTOP(8,
-> > > BIT(5))),
-> > > > > > +       DEF_MOD("gbeth_0_clk_rx_i",
-> > > CLK_SMUX2_GBE0_RXCLK,
-> > > > > 11, 9, 5, 25,
-> > > > > > +                                               BUS_MSTOP(8,
-> > > BIT(5))),
-> > > > > > +       DEF_MOD("gbeth_0_clk_tx_180_i",
-> > > CLK_SMUX2_GBE0_TXCLK,
-> > > > > 11, 10, 5, 26,
-> > > > > > +                                               BUS_MSTOP(8,
-> > > BIT(5))),
-> > > > > > +       DEF_MOD("gbeth_0_clk_rx_180_i",
-> > > CLK_SMUX2_GBE0_RXCLK,
-> > > > > 11, 11, 5, 27,
-> > > > > > +                                               BUS_MSTOP(8,
-> > > BIT(5))),
-> > > > > > +       DEF_MOD("gbeth_0_aclk_csr_i",           CLK_PLLDTY_DIV8=
-, 11,
-> > > 12,
-> > > > > 5, 28,
-> > > > > > +                                               BUS_MSTOP(8,
-> > > BIT(5))),
-> > > > > > +       DEF_MOD("gbeth_0_aclk_i",               CLK_PLLDTY_DIV8=
-, 11,
-> > > 13,
-> > > > > 5, 29,
-> > > > > > +                                               BUS_MSTOP(8,
-> > > BIT(5))),
-> > > > > > +       DEF_MOD("gbeth_1_clk_tx_i",
-> > > CLK_SMUX2_GBE1_TXCLK,
-> > > > > 11, 14, 5, 30,
-> > > > > > +                                               BUS_MSTOP(8,
-> > > BIT(6))),
-> > > > > > +       DEF_MOD("gbeth_1_clk_rx_i",
-> > > CLK_SMUX2_GBE1_RXCLK,
-> > > > > 11, 15, 5, 31,
-> > > > > > +                                               BUS_MSTOP(8,
-> > > BIT(6))),
-> > > > > > +       DEF_MOD("gbeth_1_clk_tx_180_i",
-> > > CLK_SMUX2_GBE1_TXCLK,
-> > > > > 12, 0, 6, 0,
-> > > > >
-> > > > > scripts/checkpatch.pl says:
-> > > > >
-> > > > >     WARNING: please, no space before tabs
-> > > > >
-> > > >
-> > > > Noted.
-> > > >
-> > > > > > +                                               BUS_MSTOP(8,
-> > > BIT(6))),
-> > > > > > +       DEF_MOD("gbeth_1_clk_rx_180_i",
-> > > CLK_SMUX2_GBE1_RXCLK,
-> > > > > 12, 1, 6, 1,
-> > > > > > +                                               BUS_MSTOP(8,
-> > > BIT(6))),
-> > > > > > +       DEF_MOD("gbeth_1_aclk_csr_i",           CLK_PLLDTY_DIV8=
-, 12,
-> > > 2,
-> > > > > 6, 2,
-> > > > > > +                                               BUS_MSTOP(8,
-> > > BIT(6))),
-> > > > > > +       DEF_MOD("gbeth_1_aclk_i",               CLK_PLLDTY_DIV8=
-, 12,
-> > > 3,
-> > > > > 6, 3,
-> > > > > > +                                               BUS_MSTOP(8,
-> > > > > > + BIT(6))),
-> > > > >
-> > > > > Shouldn't all of these use DEF_MOD_MUX_EXTERNAL() instead of
-> > > > > DEF_MOD(), like on RZ/V2H and RZ/V2N?
-> > > > >
-> > > >
-> > > > Do we really need to use DEF_MOD_MUX_EXTERNAL? Unlike for the RZ/V2=
-H,
-> > > > On G3E, unbind/bind works with DEF_MOD. I can however switch to
-> > > > DEF_MOD_MUX_EXTERNAL for consistency if required.
-> > > >
-> > > > Please let me know.
-> > >
-> > > Does that mean the monitor bits on RZ/G3E do reflect the correct stat=
-e of
-> > > external clocks? If yes, then DEF_MOD() is fine.
+On Sat, Jun 14, 2025 at 12:50:37PM +0200, Miguel Ojeda wrote:
+> On Fri, 13 Jun 2025 20:33:42 -0400 Greg KH <gregkh@linuxfoundation.org> wrote:
 > >
-> > Checked DEF_MOD() and had expected result. I'll then it and send v3.
-> >
-> Can you please share the devmem logs for external clocks please. I ask
-> because the HW team mentioned the below information will be added in
-> the RZ/V2H(P) HW manual. We need to check if below is not needed on
-> RZ/G3E.
->
-> "The clock gating cells require source clocks to operate correctly. If
-> the source clocks are stopped, these registers cannot be used."
+> > Great writeup, but as Miguel says, this isn't needed at all, the kernel
+> > relies on the compiler to be sane :)
+> 
+> We may still want to clean them up, e.g. for tooling -- Kees/Dan: do we?
+> e.g. I see a similar case with discussion at:
+> 
+>     https://lore.kernel.org/lkml/3f1e7aaa-501a-44f1-8122-28e9efa0a33c@web.de/
+> 
+> Which in the end was picked up as commit 2df2c0caaecf ("fbdev: au1100fb:
+> Move a variable assignment behind a null pointer check").
 
-Has this been sorted out yet? I see no change or mention of it in v3.
+Putting the declarations at the top was always just a style preference.
+Putting declarations at the top causes issues for __cleanup magic and
+also bcachefs puts the declarations where ever it wants, but otherwise
+people generally still put the declarations at the stop.
 
-Thanks!
+regards,
+dan carpenter
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
