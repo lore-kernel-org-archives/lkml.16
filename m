@@ -1,201 +1,462 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0EF91DD877
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC663217707
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:54:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750892005; cv=none; b=eqdf8MzHUK4NImXM8fjKLv65u/Myc2Vhw+PvhH3XO4oXq1E25P1hf45kMW2xIZ+TsL7YVxK4OSThtm/hbR3PAUlzgtmJi802iOj0TW/MMfL4/ajVOZ670Cbr7SGCF40ZLvulwbdBT+V3mSedAxMvEpenr6y6DDkeZYnUUeXmZXI=
+	t=1750892088; cv=none; b=iEvhP9cyUU6JSWdr9KI3etnA7UA7SYoAByyfrajHrVHhUVMKRXsoggawc0KXokCyuI3+v8pbTpC+dLIsTN2ej5OA9VhUHEtMXu2iHHwsTkchZvWuetrWoabonIhBz5l94YdN7JZQn86z9VonIXBMtHPiLUBEEZ+iuIDW7WCSH2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750892005; c=relaxed/simple;
-	bh=1hR09h0h2EckMuSMZGYDLvVqv3cyb5erjp61cRldZRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rK1cf7CuKna7d+zx6VaNMOMTIT7ft+rUHQBccCKZ8i9TT315VFQkJut5guwIDjA2Pb7rmSaTzZYp71+P3jguKfdsS4Nm/I36ZEw1y5cr55/hUaBi9Xq2yWl6H3sE/rJAdrnRDy1Y75LuA7kDyR/1Ck/xPcREw9794cJSJhbf7OQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YX1x8z0P; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750892088; c=relaxed/simple;
+	bh=HEfJPWdCSSFS+ASivH78C0lg7gqi/7RDBA+T2IZ3uo8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ugKlPGpTuTG6jxG/P0d2VhlCpj6rSa4SusLcF8RT9Je1zgNwyxBnZp21UCA9K5z4lSoI2m3x7FhyDC2Pg5Ncg2+AXrmxsAkXQ00Yzq6h5Xf37MX4UrAWOO6QmzMqtwWx/+t/k0NGxUwmIJdi3BhbEf1fw5tYcjHotM3iqjDx+Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yy1h14tB; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YX1x8z0P"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-7490cb9a892so344140b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:53:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yy1h14tB"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2c36d3f884so217748a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:54:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750892003; x=1751496803; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yjVZNJVj1VyecmvfQv75DLyG9gWL1xdoouzFtGiwWo8=;
-        b=YX1x8z0PmNissju7HKl+QocNQKqZB/1d+stzkTEFe2QLPZVs4+vY2CTzjRt4Wt2vD5
-         GAZoSjHyFZzCbmKgCm8kEW1s9fs8w+TlER5apZEXVULWKCaL8gBFkWNGLU14PXpweNnN
-         czoM9u2N/SpCXxoEK++ZlDm6lEPQfoaTIcvCGJNBOrAynEQTvz6PUmDbgGQxDyi+WHpH
-         nh6gYAVWfdOwd/S+Ck3EPOFUK7xwBDwS5GCBhbECyA37inkrYFvWAOxlQIBvmb97chmj
-         f7FqzzfaUp/TcAo0yeTzEW0pc81Gp8xuaEyEElMPlaOpIoxMw2kAxX3lD704yW66JNdZ
-         DT5Q==
+        d=google.com; s=20230601; t=1750892086; x=1751496886; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jVxFMBb/sntNrVg4iPMTgUrHj+NwKt88HjNTcpkE/WA=;
+        b=Yy1h14tBMsi+mv0AQVkX/wIFfsNoB1xWHE6KfPqKqXVGuA8gvtfPCuQsUhnHrs/h5J
+         7RyT/VJgw5p9SSXSX7FVceKHPUpunWbcD33p7rNIdT8hi/fWCW4S/T2D0nLii7dN9gth
+         dcyX5Ly+CRAT3U2hP9uZAsqb1aihdPEPhwz4BvRr8tkqRyPH18l2750xO6gLL0nC5R4u
+         ktHjVwQBwwGA4te+QkuawJYRc9z4lZ+FDmcU6+8OHPyoYCyw5K6q6d+2iSEQtslk8wBZ
+         MUDnN02rB3zdTpEIw433U/tJy38W6bfLIxMxxXegqijzRXWwuaMN7D3/7ew9lmg6fKFE
+         VLkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750892003; x=1751496803;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yjVZNJVj1VyecmvfQv75DLyG9gWL1xdoouzFtGiwWo8=;
-        b=dDVJvCpaxaLh3Fy/N2bsIYo3nnqTeLPuVmXCtlPedYDqDpGcW1Yz7aBfGcJ9Vfp8Cn
-         CgAzw+cuIFpR5/BZJMn8rfn3lDHA7rCWgSiVdSFMXITs2eutMp/7KuBogpuUrYul57kc
-         P6PVdyWe8OTA/iTJaSmREONMVumt+WXnym700JVFV8uJSDX6Cbe4984plutlR74CqlfL
-         4mKjTP3AuT3O12e03GjCKClOeYwT5gTnUkJLKS7FBP1ye8vaY+P6AiL95X0nfI/2DNuF
-         jNaw7g/4Prtwms8pJVJ+S0v5kW5BiCOU7Ln/mYvskFqHYm0RTdHkpU2Z7mDX98yYAGYv
-         B+EQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVztfVMMBFKmVa+C9ubZjbpKxG6SXd7IrYlgpRG8cNPDpWQnv+bL9glKkThupSylhbHIRaPWq6srq5JEK4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxiwVlXu8cy6V93yCe9YfHunpnft4Ze6ZAkFp6qaP7+jeLmtduq
-	DRSlv970+8wlRM1oM+T+PPIenaWgZKZr+bOiOQ+E+XOI+Osng7Eh5yKw
-X-Gm-Gg: ASbGnctCCZOfXBU2A5DFAM9844msPetzuoMa+FkQ0PWBKZWgT/wEAQ7+8d3SJyc/E2n
-	uZGb2iURzi+78+nA8sA8qqpxQatbNVfJwkYNO+3sjQVh4CerfuRpZaevTM5iLyZwsfqZ+2nELL4
-	uf30YFWnLHcKb9Lca1tcoC4rAYtLqsfD5ReDOQJUz8V0du7WG/gr/Aqi1SIboJ4bDmJQVb1qHBd
-	7k+YwqNnwwDGM2IA/qUCSSJH5TEu8sMsX1Zs7GDjuaE99sipCSNqDZ2lkJNs7XkRJR0jGMuge9F
-	lHW5814WN+zV7Dvhbymy8GVBxioHpSuOO5ExkK1g2RI3RGibljb3CEQrrkTv2MJzzc7ulLEs
-X-Google-Smtp-Source: AGHT+IE88beKHh6OBkAbtxFt7Nvsoy5yyN1uxp5998LeU3T9z5d9GIj7QrS9GiVPtDjcAz7GT8jNfQ==
-X-Received: by 2002:a05:6a00:2185:b0:747:ab61:e4fa with SMTP id d2e1a72fcca58-74ad456a27emr6990406b3a.14.1750892003065;
-        Wed, 25 Jun 2025 15:53:23 -0700 (PDT)
-Received: from localhost ([216.228.127.131])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c8850c9fsm5735950b3a.109.2025.06.25.15.53.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 15:53:22 -0700 (PDT)
-Date: Wed, 25 Jun 2025 18:53:20 -0400
-From: Yury Norov <yury.norov@gmail.com>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-	vincent.guittot@linaro.org, tglx@linutronix.de, maddy@linux.ibm.com,
-	vschneid@redhat.com, dietmar.eggemann@arm.com, rostedt@goodmis.org,
-	kprateek.nayak@amd.com, huschle@linux.ibm.com, srikar@linux.ibm.com,
-	linux-kernel@vger.kernel.org, christophe.leroy@csgroup.eu,
-	linuxppc-dev@lists.ozlabs.org, gregkh@linuxfoundation.org
-Subject: Re: [RFC v2 9/9] [DEBUG] powerpc: add debug file for set/unset cpu
- avoid
-Message-ID: <aFx94BDKk_WJ48pK@yury>
-References: <20250625191108.1646208-1-sshegde@linux.ibm.com>
- <20250625191108.1646208-10-sshegde@linux.ibm.com>
+        d=1e100.net; s=20230601; t=1750892086; x=1751496886;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jVxFMBb/sntNrVg4iPMTgUrHj+NwKt88HjNTcpkE/WA=;
+        b=daKeyIcTGMKDinrbWyzCyO8fe3KwLoQMOhMhfjYPpX7WSLeRvRQe+i2FySuCDrltyN
+         nLM9VAjwxUT/0H1eya32qver3p8YKofUQUX9qZyRKGZYfCBKPwIJ29cD9NhFmhWIX3E4
+         +y/16nx8gejMef7jV/7AXY0xK+32ukp5Fs2ZYPqHNFzQTXqFgUQFitHA4kU2a0nt9KC5
+         TPS03qj1vEvVDIYTOigEhpDftNR7hPtx0/htOC7EQmQbrSIAOVFeiEolOK0m1/yTy38r
+         7G4yrBv5mxwelP8oD9igU8WgYSK2PXdzlADS1nCC7rGm0q7ALnLKiGe0tuzBQ/rq4c2S
+         94wg==
+X-Forwarded-Encrypted: i=1; AJvYcCVco2Il+a2tjrMA/p1POZvy8Y4oRB2/qstdSQrZ22lpJFf/C7S8IQZJMPb5L/TGM5wfvm/yK3BFDInVcU0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzFerkvHQZ9jvaVBcJbIxnKrALBuDWPH0UjFMbX9yuCqWBBGLk
+	td+W+0dYFxHyeRHg5v/TSPMLlHeRkdbltWFpIbgrA6NSn2KKDzfWcc8lzDMSgj36lQp+fXWHHHv
+	qCOz6GPTvX+C4uwoi3ziPC7f8rQ==
+X-Google-Smtp-Source: AGHT+IF0Vs1oph1wvu7WrIfD42vnAsw01GJuRYxL+r6kkTUnsEXAv69JKOmRzT9QMp88/AiomiMLd3SmuWFWtrX8PA==
+X-Received: from pfbdh9.prod.google.com ([2002:a05:6a00:4789:b0:747:abae:78e8])
+ (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a21:6b0a:b0:21f:86f1:e2dd with SMTP id adf61e73a8af0-2207f1c4c56mr6857359637.11.1750892086023;
+ Wed, 25 Jun 2025 15:54:46 -0700 (PDT)
+Date: Wed, 25 Jun 2025 15:54:44 -0700
+In-Reply-To: <aFugbDVJJDrK4n9V@yzhao56-desk.sh.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625191108.1646208-10-sshegde@linux.ibm.com>
+Mime-Version: 1.0
+References: <9169a530e769dea32164c8eee5edb12696646dfb.camel@intel.com>
+ <aFDHF51AjgtbG8Lz@yzhao56-desk.sh.intel.com> <6afbee726c4d8d95c0d093874fb37e6ce7fd752a.camel@intel.com>
+ <aFIGFesluhuh2xAS@yzhao56-desk.sh.intel.com> <0072a5c0cf289b3ba4d209c9c36f54728041e12d.camel@intel.com>
+ <aFkeBtuNBN1RrDAJ@yzhao56-desk.sh.intel.com> <draft-diqzh606mcz0.fsf@ackerleytng-ctop.c.googlers.com>
+ <diqzy0tikran.fsf@ackerleytng-ctop.c.googlers.com> <c69ed125c25cd3b7f7400ed3ef9206cd56ebe3c9.camel@intel.com>
+ <diqz34bolnta.fsf@ackerleytng-ctop.c.googlers.com> <aFugbDVJJDrK4n9V@yzhao56-desk.sh.intel.com>
+Message-ID: <diqzplerjutn.fsf@ackerleytng-ctop.c.googlers.com>
+Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
+From: Ackerley Tng <ackerleytng@google.com>
+To: Yan Zhao <yan.y.zhao@intel.com>
+Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
+	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
+	"Du, Fan" <fan.du@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
+	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
+	"tabba@google.com" <tabba@google.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
+	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, 
+	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
+	"Peng, Chao P" <chao.p.peng@intel.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
+	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Annapurve, Vishal" <vannapurve@google.com>, 
+	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
+	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "pgonda@google.com" <pgonda@google.com>, 
+	"x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 12:41:08AM +0530, Shrikanth Hegde wrote:
-> Reference patch for how an architecture can make use of this infra. 
-> 
-> This is not meant to be merged. Instead the vp_manual_hint should either
-> come from hardware or could be derived using steal time. 
+Yan Zhao <yan.y.zhao@intel.com> writes:
 
-If you don't add any code that manages the 'avoid' mask on the host
-side, all this becomes a dead code.
- 
-> When the provided hint is less than the total CPUs in the system, it
-> will enable the cpu avoid static key and set those CPUs as avoid. 
-> 
-> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
-> ---
->  arch/powerpc/include/asm/paravirt.h |  2 ++
->  arch/powerpc/kernel/smp.c           | 50 +++++++++++++++++++++++++++++
->  2 files changed, 52 insertions(+)
-> 
-> diff --git a/arch/powerpc/include/asm/paravirt.h b/arch/powerpc/include/asm/paravirt.h
-> index b78b82d66057..b6497e0b60d8 100644
-> --- a/arch/powerpc/include/asm/paravirt.h
-> +++ b/arch/powerpc/include/asm/paravirt.h
-> @@ -10,6 +10,8 @@
->  #include <asm/hvcall.h>
->  #endif
->  
-> +DECLARE_STATIC_KEY_FALSE(paravirt_cpu_avoid_enabled);
-> +
->  #ifdef CONFIG_PPC_SPLPAR
->  #include <linux/smp.h>
->  #include <asm/kvm_guest.h>
-> diff --git a/arch/powerpc/kernel/smp.c b/arch/powerpc/kernel/smp.c
-> index 5ac7084eebc0..e00cdc4de441 100644
-> --- a/arch/powerpc/kernel/smp.c
-> +++ b/arch/powerpc/kernel/smp.c
-> @@ -64,6 +64,7 @@
->  #include <asm/systemcfg.h>
->  
->  #include <trace/events/ipi.h>
-> +#include <linux/debugfs.h>
->  
->  #ifdef DEBUG
->  #include <asm/udbg.h>
-> @@ -82,6 +83,7 @@ bool has_big_cores __ro_after_init;
->  bool coregroup_enabled __ro_after_init;
->  bool thread_group_shares_l2 __ro_after_init;
->  bool thread_group_shares_l3 __ro_after_init;
-> +static int vp_manual_hint = NR_CPUS;
->  
->  DEFINE_PER_CPU(cpumask_var_t, cpu_sibling_map);
->  DEFINE_PER_CPU(cpumask_var_t, cpu_smallcore_map);
-> @@ -1727,6 +1729,7 @@ static void __init build_sched_topology(void)
->  	BUG_ON(i >= ARRAY_SIZE(powerpc_topology) - 1);
->  
->  	set_sched_topology(powerpc_topology);
-> +	vp_manual_hint = num_present_cpus();
->  }
->  
->  void __init smp_cpus_done(unsigned int max_cpus)
-> @@ -1807,4 +1810,51 @@ void __noreturn arch_cpu_idle_dead(void)
->  	start_secondary_resume();
->  }
->  
-> +/*
-> + * sysfs hint to mark CPUs as Avoid. This will help in restricting
-> + * the workload to specified number of CPUs.
-> + * For example 40 > vp_manual_hint means, workload will run on
-> + * 0-39 CPUs.
-> + */
-> +
-> +static int pv_vp_manual_hint_set(void *data, u64 val)
-> +{
-> +	int cpu;
-> +
-> +	if (val == 0 || vp_manual_hint > num_present_cpus())
-> +		vp_manual_hint = num_present_cpus();
-> +
-> +	if (val != vp_manual_hint)
-> +		vp_manual_hint = val;
+> On Tue, Jun 24, 2025 at 04:30:57PM -0700, Ackerley Tng wrote:
+>> "Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
+>>=20
+>> > On Mon, 2025-06-23 at 15:48 -0700, Ackerley Tng wrote:
+>> >> Let me try and summarize the current state of this discussion:
+>> >>=20
+>> >> Topic 1: Does TDX need to somehow indicate that it is using a page?
+>> >>=20
+>> >> This patch series uses refcounts to indicate that TDX is using a page=
+,
+>> >> but that complicates private-to-shared conversions.
+>> >>=20
+>> >> During a private-to-shared conversion, guest_memfd assumes that
+>> >> guest_memfd is trusted to manage private memory. TDX and other users
+>> >> should trust guest_memfd to keep the memory around.
+>> >>=20
+>> >> Yan's position is that holding a refcount is in line with how IOMMU
+>> >> takes a refcount when a page is mapped into the IOMMU [1].
+>> >>=20
+>> >> Yan had another suggestion, which is to indicate using a page flag [2=
+].
+>> >>=20
+>> >> I think we're in agreement that we don't want to have TDX hold a
+>> >> refcount while the page is mapped into the Secure EPTs, but taking a
+>> >> step back, do we really need to indicate (at all) that TDX is using a
+>> >> page?
+>> >>=20
+>> >> In [3] Yan said
+>> >>=20
+>> >> > If TDX does not hold any refcount, guest_memfd has to know that whi=
+ch
+>> >> > private
+>> >> > page is still mapped. Otherwise, the page may be re-assigned to oth=
+er
+>> >> > kernel
+>> >> > components while it may still be mapped in the S-EPT.
+>> >>=20
+>> >> If the private page is mapped for regular VM use as private memory,
+>> >> guest_memfd is managing that, and the same page will not be re-assign=
+ed
+>> >> to any other kernel component. guest_memfd does hold refcounts in
+>> >> guest_memfd's filemap.
+>> >>=20
+>> >> If the private page is still mapped because there was an unmapping
+>> >> failure, we can discuss that separately under error handling in Topic=
+ 2.
+>> >>=20
+>> >> With this, can I confirm that we are in agreement that TDX does not n=
+eed
+>> >> to indicate that it is using a page, and can trust guest_memfd to kee=
+p
+>> >> the page around for the VM?
+>> >
+>> > Minor correction here. Yan was concerned about *bugs* happening when f=
+reeing
+>> > pages that are accidentally still mapped in the S-EPT. My opinion is t=
+hat this
+>> > is not especially risky to happen here vs other similar places, but it=
+ could be
+>> > helpful if there was a way to catch such bugs. The page flag, or page_=
+ext
+>> > direction came out of a discussion with Dave and Kirill. If it could r=
+un all the
+>> > time that would be great, but if not a debug config could be sufficien=
+t. For
+>> > example like CONFIG_PAGE_TABLE_CHECK. It doesn't need to support vmemm=
+ap
+>> > optimizations because the debug checking doesn't need to run all the t=
+ime.
+>> > Overhead for debug settings is very normal.
+>> >
+>>=20
+>> I see, let's call debug checking Topic 3 then, to separate it from Topic
+>> 1, which is TDX indicating that it is using a page for production
+>> kernels.
+>>=20
+>> Topic 3: How should TDX indicate use of a page for debugging?
+>>=20
+>> I'm okay if for debugging, TDX uses anything other than refcounts for
+>> checking, because refcounts will interfere with conversions.
+>>=20
+>> Rick's other email is correct. The correct link should be
+>> https://lore.kernel.org/all/aFJjZFFhrMWEPjQG@yzhao56-desk.sh.intel.com/.
+>>=20
+>> [INTERFERE WITH CONVERSIONS]
+>>=20
+>> To summarize, if TDX uses refcounts to indicate that it is using a page,
+>> or to indicate anything else, then we cannot easily split a page on
+>> private to shared conversions.
+>>=20
+>> Specifically, consider the case where only the x-th subpage of a huge
+>> folio is mapped into Secure-EPTs. When the guest requests to convert
+>> some subpage to shared, the huge folio has to be split for
+>> core-mm. Core-mm, which will use the shared page, must have split folios
+>> to be able to accurately and separately track refcounts for subpages.
+>>=20
+>> During splitting, guest_memfd would see refcount of 512 (for 2M page
+>> being in the filemap) + 1 (if TDX indicates that the x-th subpage is
+>> mapped using a refcount), but would not be able to tell that the 513th
+>> refcount belongs to the x-th subpage. guest_memfd can't split the huge
+>> folio unless it knows how to distribute the 513th refcount.
+> In my POC, https://lore.kernel.org/all/aE%2Fq9VKkmaCcuwpU@yzhao56-desk.sh=
+.intel.com/
+> kvm_gmem_private_has_safe_refcount() was introduce to check the folio ref=
+ count.
+> It rejects private-to-shared conversion after splitting and unmapping KVM=
+'s
+> secondary page tables if the refcount exceeds a valid threshold.
+>
+> Though in
+> https://lore.kernel.org/all/aFJjZFFhrMWEPjQG@yzhao56-desk.sh.intel.com/, =
+we
+> agreed that "EAGAIN is not the right code in case of "extra" refcounts he=
+ld by
+> TDX", this does not imply that rejecting the conversion itself is incorre=
+ct.
+>
+> This is why we are exploring alternative solutions instead of having TDX =
+hold
+> the page refcount.
+>
+> So, either a per-page flag, per-folio flag or solutions e,f,g should be g=
+ood.
+>
+> IMO, regardless of the final choice, guest_memfd needs to identify proble=
+matic
+> folios to:
+> - reject the private-to-shared conversion
+> - prevent further recycling after kvm_gmem_free_folio()
+>
 
-This all is effectively just:
+Agreed!
 
-	vp_manual_hint = val;
+>> One might say guest_memfd could clear all the refcounts that TDX is
+>> holding on the huge folio by unmapping the entire huge folio from the
+>> Secure-EPTs, but unmapping the entire huge folio for TDX means zeroing
+>> the contents and requiring guest re-acceptance. Both of these would mess
+>> up guest operation.
+>>=20
+>> Hence, guest_memfd's solution is to require that users of guest_memfd
+>> for private memory trust guest_memfd to maintain the pages around and
+>> not take any refcounts.
+>>=20
+>> So back to Topic 1, for production kernels, is it okay that TDX does not
+>> need to indicate that it is using a page, and can trust guest_memfd to
+>> keep the page around for the VM?
+> If the "TDX does not need to indicate that it is using a page" means "do =
+not
+> take page refcount", I'm ok.
+>
 
-Isn't?
+Yes, I was trying to generalize "do not take page refcount" to "TDX does
+not need to indicate that it is using a page", but I guess TDX can
+indicate that it is using a page for debugging as long as it doesn't
+use refcounts or otherwise interfere with conversions. So I believe we
+are in agreement on Topic 1 :)
 
-> +	if (vp_manual_hint < num_present_cpus())
-> +		static_branch_enable(&paravirt_cpu_avoid_enabled);
-> +	else
-> +		static_branch_disable(&paravirt_cpu_avoid_enabled);
-> +
-> +	for_each_present_cpu(cpu) {
-> +		if (cpu >= vp_manual_hint)
-> +			set_cpu_avoid(cpu, true);
-> +		else
-> +			set_cpu_avoid(cpu, false);
-> +	}
-> +	return 0;
-> +}
-> +
-> +static int pv_vp_manual_hint_get(void *data, u64 *val)
-> +{
-> +	*val = vp_manual_hint;
-> +	return 0;
-> +}
-> +
-> +DEFINE_SIMPLE_ATTRIBUTE(fops_pv_vp_manual_hint, pv_vp_manual_hint_get, pv_vp_manual_hint_set, "%llu\n");
-> +
-> +static __init int paravirt_debugfs_init(void)
-> +{
-> +	if (is_shared_processor())
-> +		debugfs_create_file("vp_manual_hint", 0600, arch_debugfs_dir, NULL, &fops_pv_vp_manual_hint);
-> +	return 0;
-> +}
-> +
-> +device_initcall(paravirt_debugfs_init)
->  #endif
-> -- 
-> 2.43.0
+>> >>=20
+>> >> Topic 2: How to handle unmapping/splitting errors arising from TDX?
+>> >>=20
+>> >> Previously I was in favor of having unmap() return an error (Rick
+>> >> suggested doing a POC, and in a more recent email Rick asked for a
+>> >> diffstat), but Vishal and I talked about this and now I agree having
+>> >> unmapping return an error is not a good approach for these reasons.
+>> >
+>> > Ok, let's close this option then.
+>> >
+>> >>=20
+>> >> 1. Unmapping takes a range, and within the range there could be more
+>> >> =C2=A0=C2=A0 than one unmapping error. I was previously thinking that=
+ unmap()
+>> >> =C2=A0=C2=A0 could return 0 for success and the failed PFN on error. =
+Returning a
+>> >> =C2=A0=C2=A0 single PFN on error is okay-ish but if there are more er=
+rors it could
+>> >> =C2=A0=C2=A0 get complicated.
+>> >>=20
+>> >> =C2=A0=C2=A0 Another error return option could be to return the folio=
+ where the
+>> >> =C2=A0=C2=A0 unmapping/splitting issue happened, but that would not b=
+e
+>> >> =C2=A0=C2=A0 sufficiently precise, since a folio could be larger than=
+ 4K and we
+>> >> =C2=A0=C2=A0 want to track errors as precisely as we can to reduce me=
+mory loss due
+>> >> =C2=A0=C2=A0 to errors.
+>> >>=20
+>> >> 2. What I think Yan has been trying to say: unmap() returning an erro=
+r
+>> >> =C2=A0=C2=A0 is non-standard in the kernel.
+>> >>=20
+>> >> I think (1) is the dealbreaker here and there's no need to do the
+>> >> plumbing POC and diffstat.
+>> >>=20
+>> >> So I think we're all in support of indicating unmapping/splitting iss=
+ues
+>> >> without returning anything from unmap(), and the discussed options ar=
+e
+>> >>=20
+>> >> a. Refcounts: won't work - mostly discussed in this (sub-)thread
+>> >> =C2=A0=C2=A0 [3]. Using refcounts makes it impossible to distinguish =
+between
+>> >> =C2=A0=C2=A0 transient refcounts and refcounts due to errors.
+>> >>=20
+>> >> b. Page flags: won't work with/can't benefit from HVO.
+>> >
+>> > As above, this was for the purpose of catching bugs, not for guestmemf=
+d to
+>> > logically depend on it.
+>> >
+>> >>=20
+>> >> Suggestions still in the running:
+>> >>=20
+>> >> c. Folio flags are not precise enough to indicate which page actually
+>> >> =C2=A0=C2=A0 had an error, but this could be sufficient if we're will=
+ing to just
+>> >> =C2=A0=C2=A0 waste the rest of the huge page on unmapping error.
+>> >
+>> > For a scenario of TDX module bug, it seems ok to me.
+>> >
+>> >>=20
+>> >> d. Folio flags with folio splitting on error. This means that on
+>> >> =C2=A0=C2=A0 unmapping/Secure EPT PTE splitting error, we have to spl=
+it the
+>> >> =C2=A0=C2=A0 (larger than 4K) folio to 4K, and then set a flag on the=
+ split folio.
+>> >>=20
+>> >> =C2=A0=C2=A0 The issue I see with this is that splitting pages with H=
+VO applied
+>> >> =C2=A0=C2=A0 means doing allocations, and in an error scenario there =
+may not be
+>> >> =C2=A0=C2=A0 memory left to split the pages.
+>> >>=20
+>> >> e. Some other data structure in guest_memfd, say, a linked list, and =
+a
+>> >> =C2=A0=C2=A0 function like kvm_gmem_add_error_pfn(struct page *page) =
+that would
+>> >> =C2=A0=C2=A0 look up the guest_memfd inode from the page and add the =
+page's pfn to
+>> >> =C2=A0=C2=A0 the linked list.
+>> >>=20
+>> >> =C2=A0=C2=A0 Everywhere in guest_memfd that does unmapping/splitting =
+would then
+>> >> =C2=A0=C2=A0 check this linked list to see if the unmapping/splitting
+>> >> =C2=A0=C2=A0 succeeded.
+>> >>=20
+>> >> =C2=A0=C2=A0 Everywhere in guest_memfd that allocates pages will also=
+ check this
+>> >> =C2=A0=C2=A0 linked list to make sure the pages are functional.
+>> >>=20
+>> >> =C2=A0=C2=A0 When guest_memfd truncates, if the page being truncated =
+is on the
+>> >> =C2=A0=C2=A0 list, retain the refcount on the page and leak that page=
+.
+>> >
+>> > I think this is a fine option.
+>> >
+>> >>=20
+>> >> f. Combination of c and e, something similar to HugeTLB's
+>> >> =C2=A0=C2=A0 folio_set_hugetlb_hwpoison(), which sets a flag AND adds=
+ the pages in
+>> >> =C2=A0=C2=A0 trouble to a linked list on the folio.
+>> >>=20
+>> >> g. Like f, but basically treat an unmapping error as hardware poisoni=
+ng.
+>> >>=20
+>> >> I'm kind of inclined towards g, to just treat unmapping errors as
+>> >> HWPOISON and buying into all the HWPOISON handling requirements. What=
+ do
+>> >> yall think? Can a TDX unmapping error be considered as memory poisoni=
+ng?
+>> >
+>> > What does HWPOISON bring over refcounting the page/folio so that it ne=
+ver
+>> > returns to the page allocator?
+>>=20
+>> For Topic 2 (handling TDX unmapping errors), HWPOISON is better than
+>> refcounting because refcounting interferes with conversions (see
+>> [INTERFERE WITH CONVERSIONS] above).
+>>=20
+>> > We are bugging the TD in these cases.
+>>=20
+>> Bugging the TD does not help to prevent future conversions from being
+>> interfered with.
+>>=20
+>> 1. Conversions involves unmapping, so we could actually be in a
+>>    conversion, the unmapping is performed and fails, and then we try to
+>>    split and enter an infinite loop since private to shared conversions
+>>    assumes guest_memfd holds the only refcounts on guest_memfd memory.
+> We should bail out conversion even with the HWPOISON.
+> e.g.,
+> 1. user triggers private-to-shared ioctl to convert 4K page A within a 2M=
+B folio
+>    B to shared.
+> 2. kvm_gmem_convert_should_proceed() executes kvm_gmem_split_private() an=
+d
+>    kvm_gmem_zap().
+> 3. kvm_gmem_convert_should_proceed() checks kvm_gmem_has_invalid_folio()
+>    (Suppose TDX sets HWPOISON to page A or folio B after kvm_gmem_zap(), =
+then
+>      kvm_gmem_has_invalid_folio() should return true).
+> 4. Return -EFAULT.
+>
+> If we allow the actual conversion to proceed after step 3, folio B will b=
+e split
+> into 4KB folios, with page A being converted to a shared 4KB folio, which
+> becomes accessible by userspace.
+>
+> This could cause a machine check (#MC) on certain platforms. We should av=
+oid
+> this scenario when possible.
+>
+>
+
+Thanks for pointing this out. This is a good point and will definitely
+have to be handled separately under "what to do when there was some
+issue on a page (possibly caused by unmapping)", or as Yan pointed out
+above, what to do when "handling problematic folios".
+
+Regarding handling errors, or recording errors, or communicating errors
+to guest_memfd, Yan seems in favor of some kind of page flag. I know
+Rick is suggesting option e. Can we do something between f and g? I'm
+thinking that the easiest page flag to use is the HWpoison flag, because
+
+1. HWpoison checking is already part of guest_memfd, or should
+   be.
+
+   guest_memfd already checks HWpoison for kvm_gmem_get_pfn(), and
+   __do_fault() checks HWpoison for guest_memfd [5]. As Yan pointed out
+   above, it should definitely check and deal with HWpoison on
+   conversion. Perhaps on truncation it should look at HWpoison, or very
+   likely memory_failure() will need special handling for guest_memfd
+   folios. I'll look into this separately as part of HugeTLB support
+   patch series.
+
+2. HWpoison support (especially tracking of sub-folio HWpoison) in
+   folio_set_hugetlb_hwpoison() can hopefully be reused for guest_memfd.
+
+3. For now, no need to invent a new tracking mechanism or data structure
+   to support option e.
+
+4. HWpoison is kind of "part of guest_memfd" if you consider that
+   guest_memfd folios to be pretty much always owned by some guest_memfd
+   inode, and if the HWpoison flag is checked at the appropriate places.
+
+Could we (at least for the next RFC of this TDX huge page support for
+private memory series, or as a first cut), use HWpoison, and then if we
+identify that the concept of HWpoison is being overloaded/polluted, then
+try another flag/mechanism for tracking?
+
+I plan to work on HWpoison/kvm_gmem_error_folio() handling for HugeTLB
+soon and then I can keep the community updated if I find anything new or
+incompatible.
+
+>> 2. The conversion ioctl is a guest_memfd ioctl, not a VM ioctl, and so
+>>    there is no check that the VM is not dead. There shouldn't be any
+>>    check on the VM, because shareability is a property of the memory and
+>>    should be changeable independent of the associated VM.
+>>=20
+>> > Ohhh... Is
+>> > this about the code to allow gmem fds to be handed to new VMs?
+>>=20
+>> Nope, it's not related to linking. The proposed KVM_LINK_GUEST_MEMFD
+>> ioctl [4] also doesn't check if the source VM is dead. There shouldn't
+>> be any check on the source VM, since the memory is from guest_memfd and
+>> should be independently transferable to a new VM.
+>>=20
+>> [4] https://lore.kernel.org/lkml/cover.1747368092.git.afranji@google.com=
+/T/
+
+[5] https://lore.kernel.org/all/diqzv7ojjxyd.fsf@ackerleytng-ctop.c.googler=
+s.com/
