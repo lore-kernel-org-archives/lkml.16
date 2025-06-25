@@ -1,130 +1,117 @@
-Received: from mailtransmit05.runbox.com (mailtransmit05.runbox.com [185.226.149.38])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79511212B18;
-	Wed, 25 Jun 2025 21:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.38
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5681B4231
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 21:27:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750886652; cv=none; b=Ix8OCR0fk5+cTrkG9hAxQEaB38psVjuKok6uYDDGg4MKJBD/etW76gC5sap3RTFEnMrTopfGH09naFpjGpvHXuFE3bTk+gkL9NS4twx88WuaKt2ldG9Fxnf+YR5X0irN+i7aYeUdOjSFfxzfAa1Ff5V2gCeWhiXdWj1O1YDxrec=
+	t=1750886845; cv=none; b=iQQ0RUw6rdXZeY3DMkU93tWDmFUtOVDO+SwODnAKsbspOq/A0c4Mgos6NRsusJBmpVHXUZkS0/gTvmhOQw6wg8phqW/SLtguZXMytXK4KnO3OMMy3J136xLyutb9u2/oh49IiKY4xPXQjL2IjC/plnpN6e4PwnDXEDdv6Nbg/QM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750886652; c=relaxed/simple;
-	bh=KEpJcmKGcCYF2L/SDwnju58D5Yhp8c+xA0XOMtXs3d0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E4Gt9LVdFJ/G/BO2yQlgFQ9MRyICYd3bDJwd9Ztpe11uAJdPPrCqCMptb2o8iSpUGlcglr763yHQFjNz+BkZW+GmMfTO/qS+dFWR6FKZ+3K9HJYYrtQuR0yD0O2UFxbu5lVi29bYqzJZNfLiBIZnMNTFlS2EAQnd/yLigBkBUC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=uEX3HVbe; arc=none smtp.client-ip=185.226.149.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
+	s=arc-20240116; t=1750886845; c=relaxed/simple;
+	bh=5/AIDMzcp9aAn9GVVD2wKIiPIrXAOBeyMNI9k6+uBv8=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=GMWWV6LLF7/cVS2Hkt7gVwBPQShZnrUd3H0617ahH5+dnjkfrexREBBUVCTUyNuEYqxXaQotym5H3ZL+FLTkAG5iiMXFR3wXLoUUn1Ls+9frRvfARgx076lNRxqPzrfDv8kuYAepWT13yF6mKcsLOXzcHvF3Tw4CsfBu5WKO0DI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0dIQQcEk; arc=none smtp.client-ip=209.85.215.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="uEX3HVbe"
-Received: from mailtransmit02.runbox ([10.9.9.162] helo=aibo.runbox.com)
-	by mailtransmit05.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.93)
-	(envelope-from <mhal@rbox.co>)
-	id 1uUXbA-00FIuM-KF; Wed, 25 Jun 2025 23:24:04 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
-	s=selector2; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID;
-	bh=pJYr0jfRjntGUQtF5EWSLv9Zz4nbgA73uYDj8Xo5Axk=; b=uEX3HVbeUODZRh4KJFyGUQr2ee
-	NHMIG5PInSAFIXJBXfl1wk19fSjUnpGiFm9ap+QuhepbzWJpOKkI2QSpQ4Wqn5mPUc3eyX+FT3rvF
-	C8UyB9J+oJ/RUOGiO6na0eN3F/pVdG71WtWQECBoM83HYQ1KcCcDi484eNlrQ1z3hLtQ4hQMxtPht
-	qyegM8HDcNErXp011N82z49uEtjMaYbyRoZpJ6WGGN9qJWviF85ClGbnerrLYVVqqnsX18pmhAfDd
-	jPgyImoZ+wlic890jVF4bFn69ZzEt0F1K80FNnacpN+c1Jxz+e67w4Ep6X6VqxK4KUZbcvIDKeRO2
-	utTGY4vA==;
-Received: from [10.9.9.72] (helo=submission01.runbox)
-	by mailtransmit02.runbox with esmtp (Exim 4.86_2)
-	(envelope-from <mhal@rbox.co>)
-	id 1uUXbA-0002JW-9l; Wed, 25 Jun 2025 23:24:04 +0200
-Received: by submission01.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.93)
-	id 1uUXb1-004uhN-Rn; Wed, 25 Jun 2025 23:23:55 +0200
-Message-ID: <0adde2db-3a75-4ade-a1c8-8c3bc2a0b1fd@rbox.co>
-Date: Wed, 25 Jun 2025 23:23:54 +0200
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0dIQQcEk"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b31ff607527so215129a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:27:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750886843; x=1751491643; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KDkUH/8hPd96nHKcCj5ct66aFf82AL3mnAQ30uxk9O8=;
+        b=0dIQQcEkGzL0OK3+cvDkHl9CLorXFtyko7Y8nVVUS/Jt5isX5qz7F0UEHT5LWZfglY
+         Y4Ck02d4WAMJ7kYxxX22yKj+IvnUOD9JsWqrYLZPfMX3G56Agj0nmNebwWah1+ch3kmU
+         SnACsnf5VC3eaghI/9QbNGszQiyQKq/OS/8s851Ik922GUrDODtIuE+Dxbq4R7oB2VYS
+         9hvS6pRL9JnapON8va4ueR4EGQMbW/j+LrryuaYng+cQaMZFv4sD2W4euCfcbNu+PKuN
+         gU7+fyZEm8LR9tTYqJPNkUVTrO8ITh2kqj5L72JcBIW2J68bkcJnGjdVm59apz456OY8
+         jKhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750886843; x=1751491643;
+        h=content-transfer-encoding:cc:to:from:subject:message-id:references
+         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=KDkUH/8hPd96nHKcCj5ct66aFf82AL3mnAQ30uxk9O8=;
+        b=qn6MMHHS9/l9KcEvgqK5ycgwQmCG3obwwI55vThLAmtlHYc4On1Ck87bg7en7t0bdC
+         M+6OvlBWeH5J/MyHQBc4OImk6HWbU4qampgDTr6R79bzqkW45wSk39eRFyGoXBnfZf8c
+         v8D4IcI46OnApA2QkWU28e/TId7zJrRJyvOdakdzHbeZr0V3ZAxgxUrmEd4WAGLSZGcv
+         jlLi7qFKQ1OKqA1sbaDiG5jzuElBiCKW7o8XYEg1fPYvJGyK1CiQz0t0jlGCfP58iIDO
+         4kXYph694Cvm7i6dg/UzBtapAF83vxd7YkbhPhuFAzDmLft2WY2jA1l0gs3vL66LQWFp
+         jnRA==
+X-Forwarded-Encrypted: i=1; AJvYcCXMsA5pp5CRArOer9k6kqxNNNoT1OiTC/IP9oyDlktdNYVLlScdHXzEHxhMIEraIOhZxqtGowEm2//1JS4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4dkRKti81j9wJLLq39Eu4xBU8daLoeIsqKc/fkP+FlPFf3s89
+	lTakZ0Uy1BYqK0gVY0iGhUL+E8dgaQdH9Y7kBeHaC+MzgVeW+mmf/owFOooYOAnG1oZmdKQ7g5R
+	Zs1ZRkw==
+X-Google-Smtp-Source: AGHT+IHnNSiQClR98Tu2DIjJN0yUuPOY+tZ7wsPVNu+SogPTpvB/xoqOJtGyrrKUyaCs7hclUXM8so0Z7ms=
+X-Received: from pjboi14.prod.google.com ([2002:a17:90b:3a0e:b0:2ff:6132:8710])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:1aab:b0:235:eefe:68ec
+ with SMTP id d9443c01a7336-23823fe1d8dmr78782915ad.19.1750886843038; Wed, 25
+ Jun 2025 14:27:23 -0700 (PDT)
+Date: Wed, 25 Jun 2025 14:27:21 -0700
+In-Reply-To: <d897ab70d48be4508a8a9086de1ff3953041e063.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC net v2 3/3] vsock: Fix IOCTL_VM_SOCKETS_GET_LOCAL_CID
- to check also `transport_local`
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250620-vsock-transports-toctou-v2-0-02ebd20b1d03@rbox.co>
- <20250620-vsock-transports-toctou-v2-3-02ebd20b1d03@rbox.co>
- <uqap2qzmvkfqxfqssxnt5anni6jhdupnarriinblznv5lfk764@qkrjq22xeygb>
-Content-Language: pl-PL, en-GB
-From: Michal Luczaj <mhal@rbox.co>
-In-Reply-To: <uqap2qzmvkfqxfqssxnt5anni6jhdupnarriinblznv5lfk764@qkrjq22xeygb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
+ <20250609191340.2051741-2-kirill.shutemov@linux.intel.com>
+ <5cfb2e09-7ecb-4144-9122-c11152b18b5e@intel.com> <d897ab70d48be4508a8a9086de1ff3953041e063.camel@intel.com>
+Message-ID: <aFxpuRLYA2L6Qfsi@google.com>
+Subject: Re: [PATCHv2 01/12] x86/tdx: Consolidate TDX error handling
+From: Sean Christopherson <seanjc@google.com>
+To: Rick P Edgecombe <rick.p.edgecombe@intel.com>
+Cc: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, Dave Hansen <dave.hansen@intel.com>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, Chao Gao <chao.gao@intel.com>, 
+	"bp@alien8.de" <bp@alien8.de>, Kai Huang <kai.huang@intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"mingo@redhat.com" <mingo@redhat.com>, Yan Y Zhao <yan.y.zhao@intel.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, Isaku Yamahata <isaku.yamahata@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 6/25/25 10:54, Stefano Garzarella wrote:
-> On Fri, Jun 20, 2025 at 09:52:45PM +0200, Michal Luczaj wrote:
->> Support returning VMADDR_CID_LOCAL in case no other vsock transport is
->> available.
->>
->> Fixes: 0e12190578d0 ("vsock: add local transport support in the vsock core")
->> Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
->> Signed-off-by: Michal Luczaj <mhal@rbox.co>
->> ---
->> man vsock(7) mentions IOCTL_VM_SOCKETS_GET_LOCAL_CID vs. VMADDR_CID_LOCAL:
->>
->>   Ioctls
->>       ...
->>       IOCTL_VM_SOCKETS_GET_LOCAL_CID
->>              ...
->>              Consider using VMADDR_CID_ANY when binding instead of
->>              getting the local CID with IOCTL_VM_SOCKETS_GET_LOCAL_CID.
->>
->>   Local communication
->>       ....
->>       The local CID obtained with IOCTL_VM_SOCKETS_GET_LOCAL_CID can be
->>       used for the same purpose, but it is preferable to use
->>       VMADDR_CID_LOCAL.
->>
->> I was wondering it that would need some rewriting, since we're adding
->> VMADDR_CID_LOCAL as a possible ioctl's return value.
-> 
-> IIRC the reason was, that if we have for example a G2H module loaded, 
-> the ioctl returns the CID of that module (e.g. 42). So, we can use both 
-> 42 and VMADDR_CID_LOCAL to do the loopback communication, but we 
-> encourage to always use VMADDR_CID_LOCAL.  With this change we basically 
-> don't change that, but we change the fact that if there is only the 
-> loopback module loaded, before the ioctl returned VMADDR_CID_ANY, while 
-> now it returns LOCAL rightly.
-> 
-> So, IMO we are fine.
+On Wed, Jun 25, 2025, Rick P Edgecombe wrote:
+> On Wed, 2025-06-25 at 10:58 -0700, Dave Hansen wrote:
+> > > --- a/arch/x86/kvm/vmx/tdx.c
+> > > +++ b/arch/x86/kvm/vmx/tdx.c
+> > > @@ -202,12 +202,6 @@ static DEFINE_MUTEX(tdx_lock);
+> > > =C2=A0=20
+> > > =C2=A0 static atomic_t nr_configured_hkid;
+> > > =C2=A0=20
+> > > -static bool tdx_operand_busy(u64 err)
+> > > -{
+> > > -	return (err & TDX_SEAMCALL_STATUS_MASK) =3D=3D TDX_OPERAND_BUSY;
+> > > -}
+> > > -
+> > > -
+> >=20
+> > Isaku, this one was yours (along with the whitespace damage). What do
+> > you think of this patch?
+>=20
+> I think this actually got added by Paolo, suggested by Binbin. I like the=
+se
+> added helpers a lot. KVM code is often open coded for bitwise stuff, but =
+since
+> Paolo added tdx_operand_busy(), I like the idea of following the pattern =
+more
+> broadly. I'm on the fence about tdx_status() though.
 
-All right, got it.
+Can we turn them into macros that make it super obvious they are checking i=
+f the
+error code *is* xyz?  E.g.
 
->> ---
->> net/vmw_vsock/af_vsock.c | 2 ++
->> 1 file changed, 2 insertions(+)
->>
->> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->> index a1b1073a2c89f865fcdb58b38d8e7feffcf1544f..4bdb4016bd14d790f3d217d5063be64a1553b194 100644
->> --- a/net/vmw_vsock/af_vsock.c
->> +++ b/net/vmw_vsock/af_vsock.c
->> @@ -2577,6 +2577,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
->> 		cid = vsock_transport_local_cid(&transport_g2h);
->> 		if (cid == VMADDR_CID_ANY)
->> 			cid = vsock_transport_local_cid(&transport_h2g);
->> +		if (cid == VMADDR_CID_ANY && transport_local)
->> +			cid = VMADDR_CID_LOCAL;
-> 
-> why not `cid = vsock_transport_local_cid(&transport_local)` like for 
-> H2G?
+#define IS_TDX_ERR_OPERAND_BUSY
+#define IS_TDX_ERR_OPERAND_INVALID
+#define IS_TDX_ERR_NO_ENTROPY
+#define IS_TDX_ERR_SW_ERROR
 
-Sure, can do. I've assumed transport_local would always have a local CID of
-VMADDR_CID_LOCAL. So taking mutex and going through a callback function to
-get VMADDR_CID_LOCAL seemed superfluous. But I get it, if you want to have
-it symmetrical with the other vsock_transport_local_cid()s.
-
-Thanks,
-Michal
-
+As is, it's not at all clear that things like tdx_success() are simply chec=
+ks,
+as opposed to commands.
