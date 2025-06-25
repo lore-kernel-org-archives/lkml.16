@@ -1,174 +1,136 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f74.google.com (mail-ed1-f74.google.com [209.85.208.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29BA78F5B;
-	Wed, 25 Jun 2025 10:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239B22BDC38
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750848940; cv=none; b=EjymI1g9KXQZLhoHtDgEzjHVS7rLtn58hwNf61RdHh5vBsMYuIIGkoTpkMOB3ie0jjTJTaGKIvtChYv2qGtcIe8dtCqCFVVETZW/D/M3jjJdZXznxgQv1PYmVeq02i243WYP4OlTQ5YAT5qFf9it66dt0jaSDfO7aGnZvWQ2Q2A=
+	t=1750848955; cv=none; b=KE5Jbo+/IYTcpmtPKwr/1a0IOpAUlUw1OmR6tTamlA7sIx/LgBzbdHKl7bt04YSaIRMqboxlvUDH6uvUf87NnbMQcd+VwSrFZQVs5QYoIdMwcYOu8aNsnwMPV6HNRUjTrpe+IzzuTdvOj5h0XP5j9w+Aa2VW+/sBsi6X7k0oXs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750848940; c=relaxed/simple;
-	bh=Zkdx4N98+NMi7SrLDt480xNdU+Tzr4w2vmisc6vX5As=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H+UV6i4QPl35YrSgrAd0yqK61IO6fa7AbVFEDEGHn2PIYItPRsJAWmb6j0sgVgMzvi4K3RVgafm5TEPCJgGbVNHzLDFNG4BDjkykLQGmm5si/hwxD3NKx2+BU1X7h9jZ7VO9398ISAAV8jpVAgyGgi9UU/HvYBx79W7dVaV+lVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=JtmZcM8g; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750848955; c=relaxed/simple;
+	bh=Y+NflATt1BbVg4AJe27l0CDfySeQP4HOlxRLdzEDkE4=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=GdJKstpnwGOB0CSTKHsL974qsFKrbgZBffrXW5JuL31FvgNN5QqwDQFeh4zhrAylGP/UZ6MasSyE7G7fdCCSJefpk2UlCEfY5PtujxgEjoxBeOcgggkZYK3fijLbxw3iHEhdsP+7LjQvC9jA+DuO6fuT0qklIGloN5kT98jzMmk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B9QTmq+I; arc=none smtp.client-ip=209.85.208.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--qperret.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="JtmZcM8g"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P9YYEC012677;
-	Wed, 25 Jun 2025 10:55:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=5pvIga
-	Ado15YeKemezHuojdrBVvkoL3iZSzPinkaKec=; b=JtmZcM8g55nPhs59guFTQV
-	rsi4pWs4FXqTw6EVqkXfM2OAFBMmxKILKw34k20z4MZbw6mDV+pe2vme01BStHye
-	bcw33gaTqDOgAFDoRTOysXwV/lI3d1H4ZwhfCgwYEMi3gkbpNr63JuP+T+C6KAWs
-	4EQsw/eO+iR+xsZnEVxRzNK5jOVO08ZDbRnkB0kpUwz1RmYPZAlvf/i0RQCnCiCR
-	NgPhXovva6KVgrMI1yXcZ3mLX2wbR5W/r6b164nmucj1QCZfY0SaFJaq5J0ekJlM
-	y7e1wrnHflQCOpYJZ+YaY/T6chiArg8YWxlyeigB2se6N2UzDWI9ItfZfnx509ZA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dj5txt34-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 10:55:13 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55PAqHIO011226;
-	Wed, 25 Jun 2025 10:55:13 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dj5txt2y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 10:55:13 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55PArp5r002908;
-	Wed, 25 Jun 2025 10:55:12 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e8jm8st8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 10:55:12 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55PAtAg029556996
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Jun 2025 10:55:10 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6CAE12004D;
-	Wed, 25 Jun 2025 10:55:10 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id CB73E20043;
-	Wed, 25 Jun 2025 10:55:07 +0000 (GMT)
-Received: from [9.109.241.85] (unknown [9.109.241.85])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 25 Jun 2025 10:55:07 +0000 (GMT)
-Message-ID: <078c1b43-4574-4b11-b474-f37a139af62d@linux.ibm.com>
-Date: Wed, 25 Jun 2025 16:25:06 +0530
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B9QTmq+I"
+Received: by mail-ed1-f74.google.com with SMTP id 4fb4d7f45d1cf-60724177a1fso1460278a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:55:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750848951; x=1751453751; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=V1GXLq2HqBHIx1U8RtZLo2I2pqPpplv4UNHwKqoIWBU=;
+        b=B9QTmq+Iwg9J5FChLsLUtVUd6CNYlFSTIk+ySvZdCDtjNmyw+uqbhAsgakNxe3kZId
+         ncn3TbmxH6FA30bypLLuK+IuscQlxBCGZkgqcXoGfke99eL04Yev1S0EuTMBptC9P/jI
+         bpSR2oW1KW5ESxf66D5SnlogsZTlcxxPihBQ3rVgB88/c8FYMJ30KneS2eW/dGhasP+H
+         7/EGr+fgosP5tArQtsW+oUzqBBkKzUiJ/2Ah7vEorR21JPyZ+pw7lE61ELHvNzMEF1ac
+         NjzqsrnNYm61YY2qLms7QPa9wEFEStdKInAg8Z/J0BqkAaSHFv2bZAe3JzGrFdUrfnxN
+         4xLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750848951; x=1751453751;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V1GXLq2HqBHIx1U8RtZLo2I2pqPpplv4UNHwKqoIWBU=;
+        b=Kuot7M/rRZ/jJjBv2nxFgqUrG5J3sghgWLmLDPjz5YbXimGlrwmcbw2/AVWMGS8Ynb
+         D5XaMQP6vlJSA8XSjYp9rf7Sv9Ycoqq7D/LIbhFcUHT4/kdrMHISZWHsAtEq4L5p2nE0
+         X2MyTxWJVSbNxINBC2tgfEeeSGgsS946nfkSmOMd+Y/wsMnC0ue4feWkC0uEhiWgAZ9N
+         X4zYN2UnFxK1Fc8cH0lznRDfx/yt219NjVwzt87COc4hkF2zgmP920diwiOlzHeHyzUI
+         9HfEVWZRVhVukPr9hmPCHcHTq5KLyyrxwaMcXEF0gHaZbMiOQReaIr0nXkTPIbMiUTaW
+         fjtA==
+X-Forwarded-Encrypted: i=1; AJvYcCWYSgXwRg1517jvzcuUELAdLODj7psNBpdwop4julnaLf0AgBfzVMR/xtwUpktmGJQ4rs+pLcNpPHw+IjQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysXM1R8t61a5CV7gJgD54bIy5Cbns4PU0o10eAA2zcSdt4fbbz
+	AD35ieTwas5Zp/6QC9XJr07MA7Lc8+fNVQOEAMBjqKMlr5GpqX+gqEnchXqr/2M40NWceNlaMUK
+	LOXFENBNwNw==
+X-Google-Smtp-Source: AGHT+IHUR8NzJ9FFoX9Hr5oMdShDNs6NRkAE3kBsnjpl89mkWn7cGms6VUHj8zcgECBy48WdUiyOSlbMzG/D
+X-Received: from edtb19.prod.google.com ([2002:aa7:c913:0:b0:60c:5b8e:e20b])
+ (user=qperret job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6402:35d3:b0:608:8204:c600
+ with SMTP id 4fb4d7f45d1cf-60c4d31789amr2084880a12.3.1750848951221; Wed, 25
+ Jun 2025 03:55:51 -0700 (PDT)
+Date: Wed, 25 Jun 2025 10:55:48 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
- indicator
-To: Lukas Wunner <lukas@wunner.de>
-Cc: linuxppc-dev@lists.ozlabs.org,
-        Timothy Pearson <tpearson@raptorengineering.com>,
-        Shawn Anastasio <sanastasio@raptorengineering.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "\"linux-pci\"," <linux-pci@vger.kernel.org>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        christophe leroy <christophe.leroy@csgroup.eu>,
-        Naveen N Rao <naveen@kernel.org>,
-        "\"Bjorn Helgaas\"," <bhelgaas@google.com>
-References: <20250618190146.GA1213349@bhelgaas>
- <1469323476.1312174.1750293474949.JavaMail.zimbra@raptorengineeringinc.com>
- <19689b53-ac23-4b48-97c7-b26f360a7b75@linux.ibm.com>
- <aFaCfYre9N52ARWH@wunner.de>
- <f13a2d2b-af52-4934-b4fa-66bc1e5ece32@linux.ibm.com>
- <aFuuYq0m0hDAdPRF@wunner.de>
-Content-Language: en-US
-From: Krishna Kumar <krishnak@linux.ibm.com>
-In-Reply-To: <aFuuYq0m0hDAdPRF@wunner.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: UVMRLJIp6nSttSK4sEd_QX8wv_4g4aZE
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA4MSBTYWx0ZWRfX93uHIVC08qIZ zDSS78SGvIrATgrTrST909ZZiczGHqfZya585/kQLhm61ZiZsV6c9gJHmspkQjAOOZ79f2CBx6x e5tL+4QHcqFLyIMg/RXsVwXFzNjjVOpBG3y/F2Wzd2dmmmWTluDDcmRW9w12VEBHbP3EmpVNAZk
- hoZH1fknP9AhFjHTL0s1w3unJbCdxNY8G0UXLofmk6RUaRxQawd9Oz950Bepo1xxFWQR7XKmvUp pxTUozMTqwljPfSz7BCNOPANc88exVf1xFp90C4WuKqhUKfHcPkT2wh5SG8APpDARFH4/hnSowx fR45VlOavuNAc8RgukU0AIPz258JYrIwjJ46t5rtELsSEbmYY/yYgo+CCk9WtBs5yVMZ/OESGa9
- /eS/Knm2jWLWexJs5KRCMXetMwnWDj1KMu3/0Ek0RunxGz9rIrNvYA6nkHV2hCBntf0vkoYg
-X-Authority-Analysis: v=2.4 cv=MshS63ae c=1 sm=1 tr=0 ts=685bd591 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=-dPevh-D5Ufp4ETwuQAA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: WqtxR-q0R8Z9YnxnNh7wpkSOl1In-mR0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_03,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=933 impostorscore=0
- clxscore=1015 phishscore=0 malwarescore=0 suspectscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506250081
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
+Message-ID: <20250625105548.984572-1-qperret@google.com>
+Subject: [PATCH] KVM: arm64: Adjust range correctly during host stage-2 faults
+From: Quentin Perret <qperret@google.com>
+To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+	Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Zenghui Yu <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>
+Cc: Quentin Perret <qperret@google.com>, linux-arm-kernel@lists.infradead.org, 
+	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+host_stage2_adjust_range() tries to find the largest block mapping that
+fits within a memory or mmio region (represented by a kvm_mem_range in
+this function) during host stage-2 faults under pKVM. To do so, it walks
+the host stage-2 page-table, finds the faulting PTE and its level, and
+then progressively increments the level until it finds a granule of the
+appropriate size. However, the condition in the loop implementing the
+above is broken as it checks kvm_level_supports_block_mapping() for the
+next level instead of the current, so pKVM may attempt to map a region
+larger than can be covered with a single block.
 
-On 6/25/25 1:38 PM, Lukas Wunner wrote:
-> On Wed, Jun 25, 2025 at 09:38:19AM +0530, Krishna Kumar wrote:
->> On 6/21/25 3:29 PM, Lukas Wunner wrote:
->>> On Fri, Jun 20, 2025 at 02:56:51PM +0530, Krishna Kumar wrote:
->>>> 5. If point 3 and 4 does not solve the problem, then only we should
->>>> move to pciehp.c. But AFAIK, PPC/Powernv is DT based while pciehp.c
->>>> may be only supporting acpi (I have to check it on this). We need to
->>>> provide PHB related information via DTB and maintain the related
->>>> topology information via dtb and then it can be doable.
->>> pciehp is not ACPI-specific.  The PCIe port service driver in
->>> drivers/pci/pcie/portdrv.c binds to any PCIe port, examines the
->>> port's capabilities (e.g. hotplug, AER, DPC, ...) and instantiates
->>> sub-devices to which pciehp and the other drivers such as aer bind.
->> 1. If we get PHB info from mmcfg via acpi table in x86 and create a
->>    root port from there with some address/entity and if this Acpi and
->>    associated entity is not present for PPC, then it can be a problem.
->>
->> 2. PPC is normally based on DTB entity and it identifies PHB and pcie
->>    devices from there. If this all the information is correctly map
->>    via portdrv.c then there is no problem and whatever you are telling
->>    is correct and it will work.
->>
->> 3. But if point 2 is not handled correctly we need to just aligned with
->>    port related data structure to make it work.
-> PCI devices do not have to be enumerated in the devicetree (or in ACPI
-> DSDT) because PCI is an enumerable bus (like USB).  Only the host bridge
-> has to be enumerated in the devicetree or DSDT.  The kernel can find the
-> PCI devices below the host bridge itself.
-Yes in DFS manner (once it gets to know the PHB address via -acpi in X86 and via DTB in PPC)
->   Hot-plugged devices are
-> usually not described in the devicetree or DSDT because one doesn't
-> know their properties in advance.
->
-> pnv_php.c seems to search the devicetree for hotplug slots and
-> instantiates them.  My expectation would be that any hotplug-capable
-> PCIe Root Port or Downstream Port, which is *not* described in the
-> devicetree such that pnv_php.c creates a slot for it, is handled by
-> pciehp.
-Your are correct, pnv_php.c heavily depends on slot id and DTB nodes. Thats how its designed. Can we decouple it via DTB nodes, I will come back on this.
->
-> Timothy was talking about a Microsemi PCIe switch below the Root Port.
-> My understanding is that the Downstream Ports of that switch are
-> hotplug-capable. 
-I understand it.
->  So unless you've disabled CONFIG_HOTPLUG_PCI_PCIE,
-> I'd expect those ports to be handled by pciehp. 
-I need to check it and test it, but yeah- it may or maynot work and I will confirm it only after some study and testing (maybe in 1-2 week)
->  Assuming they're not
-> described as a "ibm,ioda2-phb" compatible device in the devicetree,
-> but why would they?
-HW topology and DTB is based on IODA and it will keep changing, not frequently but eventually.
->
-> Thanks,
->
-> Lukas
+This is not a security problem and is quite rare in practice (the
+kvm_mem_range check usually forces host_stage2_adjust_range() to choose a
+smaller granule), but this is clearly not the expected behaviour.
 
+Refactor the loop to fix the bug and improve readability.
 
-Best Regards,
+Fixes: c4f0935e4d95 ("KVM: arm64: Optimize host memory aborts")
+Signed-off-by: Quentin Perret <qperret@google.com>
+---
+ arch/arm64/kvm/hyp/nvhe/mem_protect.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-Krishna
+diff --git a/arch/arm64/kvm/hyp/nvhe/mem_protect.c b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+index 95d7534c9679..8957734d6183 100644
+--- a/arch/arm64/kvm/hyp/nvhe/mem_protect.c
++++ b/arch/arm64/kvm/hyp/nvhe/mem_protect.c
+@@ -479,6 +479,7 @@ static int host_stage2_adjust_range(u64 addr, struct kvm_mem_range *range)
+ {
+ 	struct kvm_mem_range cur;
+ 	kvm_pte_t pte;
++	u64 granule;
+ 	s8 level;
+ 	int ret;
+ 
+@@ -496,18 +497,21 @@ static int host_stage2_adjust_range(u64 addr, struct kvm_mem_range *range)
+ 		return -EPERM;
+ 	}
+ 
+-	do {
+-		u64 granule = kvm_granule_size(level);
++	for (; level <= KVM_PGTABLE_LAST_LEVEL; level++) {
++		if (!kvm_level_supports_block_mapping(level))
++			continue;
++		granule = kvm_granule_size(level);
+ 		cur.start = ALIGN_DOWN(addr, granule);
+ 		cur.end = cur.start + granule;
+-		level++;
+-	} while ((level <= KVM_PGTABLE_LAST_LEVEL) &&
+-			!(kvm_level_supports_block_mapping(level) &&
+-			  range_included(&cur, range)));
++		if (!range_included(&cur, range))
++			continue;
++		*range = cur;
++		return 0;
++	}
+ 
+-	*range = cur;
++	WARN_ON(1);
+ 
+-	return 0;
++	return -EINVAL;
+ }
+ 
+ int host_stage2_idmap_locked(phys_addr_t addr, u64 size,
+-- 
+2.50.0.714.g196bf9f422-goog
 
