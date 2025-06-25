@@ -1,207 +1,195 @@
-Received: from fhigh-b6-smtp.messagingengine.com (fhigh-b6-smtp.messagingengine.com [202.12.124.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF8782864;
-	Wed, 25 Jun 2025 16:31:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546632D4B67;
+	Wed, 25 Jun 2025 16:31:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750869064; cv=none; b=QPrXrYgt4R4dMBBImWb0N/aVM0aSAfInd/W/sK/1SaNMlRtdCm/kusGMrCk2AxWnufBkqFCZnh4vVmiGGRL4Z6rsg4lhKqYOGNcs1IZv+RaxDGENh+syhD6YXjpJDSOECSivgLWZ8fwxSxcuMUqxM9GKZToRERwXF+UU7OXufPI=
+	t=1750869073; cv=none; b=FdPp8pFKND0Cx7bo4kTdBBtwal+LIKe3WRHZEes/YLnb3/LfwGgADX1FKLp+vuDp2NCsq484EXiGdaIhLr3HUve6XvvIrysMTpLL9WoYUh9e/BwxUR48AO7RwvqR2G4fbJkUNWZgKzKOU3fpisg19csNLF6PzGI6oqa+uAq9Ld8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750869064; c=relaxed/simple;
-	bh=e5rPs2f8VzLeR4ruwzzUAJHpHqv2jxxM/dhCmy/xM1c=;
-	h=From:To:cc:Subject:In-reply-to:References:MIME-Version:
-	 Content-Type:Date:Message-ID; b=SAojaPPEdJdr9saAWMCaO4vt6vGN3gwOKRDo47nQaVm2Nlq4RGHTuAAWZSQNqRVgmXmk6c8E6aclMqHTKBtY/WetfRh4dOFNJb+/nTSSNjU/J75mzQRCmxdFAyyp4xMFk3ogMqxihMjWknabn8twi5PDzAFANEjf7KzzfF2BCNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net; spf=pass smtp.mailfrom=jvosburgh.net; dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b=P7gGTM7F; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Kky8lQQB; arc=none smtp.client-ip=202.12.124.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=jvosburgh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jvosburgh.net
+	s=arc-20240116; t=1750869073; c=relaxed/simple;
+	bh=9Plc2mchfJSLLakuGSpwC2tchWlUiNQeTbycwDZpd8E=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=rq0kZLHorb78KBRi2rq9GAJ4V7QbK/i+XpfwMashATbaUVDNBz42Brc4pGb8RtafPiArTmqNoCzD40ANLastDt2PyXlSMrvLqcwnF92DyaR937vuhJLOENikrRG9yyMF5fiVmVZ3w/9YY0+h6gir0JOe+iIUWlQ+Sf3pnkJlaBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=d9yfKpap; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jvosburgh.net header.i=@jvosburgh.net header.b="P7gGTM7F";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Kky8lQQB"
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfhigh.stl.internal (Postfix) with ESMTP id 7A05E7A021F;
-	Wed, 25 Jun 2025 12:30:59 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Wed, 25 Jun 2025 12:30:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jvosburgh.net;
-	 h=cc:cc:content-id:content-transfer-encoding:content-type
-	:content-type:date:date:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to; s=fm3; t=1750869059; x=1750955459; bh=gn5mgacS9yby6OOdchPND
-	abDPrGtXN9QDzbZk+Lowcs=; b=P7gGTM7FxZ6pHq+AO2NGcA6gbCkW/h0sxozr7
-	LOPnxuW1IuaKtYl1lrqDAmFqIYX11fsl0B0ZKsOa7qNfFWVLOFxHYypPokXzom+J
-	SgdUSRpqLxEJTrer8y7NpW+8Vlal2xUhIMiHfGYnQz26OaL4Im2tHLhjch+ZRgVC
-	SGli6wVefRWhjlTextvP3zceqPp/1ZFtpIUAFM8N1mOG63GCSpsMMo2QVLdnWwTc
-	8BsnK/nCjXCktZu2b87q25Jfwn2nrspwxb6EZ68Uod9dqWz1Xi2U5efBpE7KHhGl
-	A7deEzWlInpjnAuo/A9AnjS4BHOYHPAFeLPMF8VPBSdrOid5Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-id
-	:content-transfer-encoding:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:subject:subject:to
-	:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=
-	1750869059; x=1750955459; bh=gn5mgacS9yby6OOdchPNDabDPrGtXN9QDzb
-	Zk+Lowcs=; b=Kky8lQQBqRWpRpSipgmC0zErnhPv87GiRy22ShjLt158yPxp5Wx
-	T9qaufhIBrReYJzMhfOOAX4T0/hfzWRnv5pHMAsPGh3EOIp2wYyr9bB3c09dCqec
-	5ZwHUW65R9UNWJ8ihik0VChmy03ydrDQ8b+VHtMov8cqEo9Y/GonSN3chFNuqpSb
-	7PmDWHXTeRpl9IAposjTtpeZJH1At+QioE1fCz6+hEdpUWIrIA0OcIE60Zc3jzg6
-	8sMyKFxeRxZx6LGaoSSxsEEXSkydmCPqFdNO3e4xML5EbhUxLxoOVb+P5343e5av
-	YuwAciPZIrVdJXIu5VuL+gRGbxMaHpYpPUg==
-X-ME-Sender: <xms:QiRcaKfUZmG94GC1tQqIVRVA8XilqXnaMcFzU1z3OlaQW5crS-arvQ>
-    <xme:QiRcaEOxwP_rNOjWoK7pqX5b_zmK3hqpKxA4nrcQGLxA2KNc7f5SE-y3j8qLfxDNn
-    YR7gCm2VUI8DRT30eI>
-X-ME-Received: <xmr:QiRcaLgDcn9GhvsLtK_bCUN8Dab5sxQ7jKDMkKkYX_cintlh5apxjlstwbpcPtJTWnvYAQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvfedvhecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpefhvfevufgjfhfogggtgfffkfesthhqredtredtvdenucfhrhhomheplfgrhicuggho
-    shgsuhhrghhhuceojhhvsehjvhhoshgsuhhrghhhrdhnvghtqeenucggtffrrghtthgvrh
-    hnpeeifedvleefleejveethfefieduueeivdefieevleffuddvveeftdehffffteefffen
-    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehjvhesjh
-    hvohhssghurhhghhdrnhgvthdpnhgspghrtghpthhtohepuddtpdhmohguvgepshhmthhp
-    ohhuthdprhgtphhtthhopehtohhnghhhrghosegsrghmrghitghlohhuugdrtghomhdprh
-    gtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvggu
-    uhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopegtrghrlhhoshdrsghilh
-    gsrghosehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdho
-    rhhgpdhrtghpthhtohepshhfohhrshhhvggvsehkvghrnhgvlhdrohhrghdprhgtphhtth
-    hopegrnhgurhgvfidonhgvthguvghvsehluhhnnhdrtghhpdhrtghpthhtohepphgrsggv
-    nhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvh
-    hgvghrrdhkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:QiRcaH9RZvUp6ZHLpGI1yDzmmK2Axi09-wUqraoz6P_BJmaDpxLfNg>
-    <xmx:QiRcaGuRIOn29IZ4oAE7_fmuLeKDDkqK5CNImsJXn02HFyGxFOywWQ>
-    <xmx:QiRcaOGoDt-4se70SCGUgiDDNqqWULyIekECh1D3eKA1iK0wIhysFg>
-    <xmx:QiRcaFOfAWU888bY-PN2P4kTnxUAgcMWysBLvfegzvUZmXyL6q72rg>
-    <xmx:QyRcaJliR6hdj7wa3L_mpSPXGYoM690ANxBMfwLd4I2N3zfDz4vK37DA>
-Feedback-ID: i53714940:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 25 Jun 2025 12:30:58 -0400 (EDT)
-Received: by famine.localdomain (Postfix, from userid 1000)
-	id F0D159FCA2; Wed, 25 Jun 2025 09:30:56 -0700 (PDT)
-Received: from famine (localhost [127.0.0.1])
-	by famine.localdomain (Postfix) with ESMTP id ED0949FC65;
-	Wed, 25 Jun 2025 09:30:56 -0700 (PDT)
-From: Jay Vosburgh <jv@jvosburgh.net>
-To: "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
-cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-    "David S. Miller" <davem@davemloft.net>,
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-    Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-    linux-kernel@vger.kernel.org,
-    Carlos Bilbao <carlos.bilbao@kernel.org>,
-    Tonghao Zhang <tonghao@bamaicloud.com>
-Subject: Re: [PATCH] bonding: don't force LACPDU tx to ~333 ms boundaries
-In-reply-to: <20250625-fix-lacpdu-jitter-v1-1-4d0ee627e1ba@kernel.org>
-References: <20250625-fix-lacpdu-jitter-v1-1-4d0ee627e1ba@kernel.org>
-Comments: In-reply-to "Seth Forshee (DigitalOcean)" <sforshee@kernel.org>
-   message dated "Wed, 25 Jun 2025 11:01:24 -0500."
-X-Mailer: MH-E 8.6+git; nmh 1.8+dev; Emacs 29.3
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="d9yfKpap"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 59E4A25F2D;
+	Wed, 25 Jun 2025 18:31:07 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id f0ZxtAlbNKEs; Wed, 25 Jun 2025 18:31:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1750869065; bh=9Plc2mchfJSLLakuGSpwC2tchWlUiNQeTbycwDZpd8E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References;
+	b=d9yfKpapXHHKxp9kOOEdSBp99N7NOoXyzrVmdArp9eCp9tmRg/WXJtJPjxEDCae/D
+	 9X780PdaSIChVe50RXfdlyhXnMDaHb2ruJFveI11XxLUIudrW23DeGji5dNWmN9Hv4
+	 Rzvz49xwIr562B4WPHV5ZiDXNhk6tZBZiiGImpgD5NnthDqKfuFftgX44+fRs6wT/c
+	 LVtpkoKrreWEhV/MCZG7JE89DfxvQrMy8opuPhv4XtTst6vIKesHtIdlAk0pOKEMzm
+	 W08mInmZ3MCu4NhYBDgF6n25hW9+Tg9lPzEchpxaoJW6dMPTPfSq12A/kuU+U7gNYA
+	 lAkuH8pWqG58g==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2545703.1750869056.1@famine>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Jun 2025 09:30:56 -0700
-Message-ID: <2545704.1750869056@famine>
+Date: Wed, 25 Jun 2025 16:31:04 +0000
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
+ <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, Simona Vetter
+ <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+ dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: panel: document Synaptics
+ TDDI panel driver
+In-Reply-To: <20250625150804.GA1201460-robh@kernel.org>
+References: <20250625-panel-synaptics-tddi-v2-0-7a62ab1d13c7@disroot.org>
+ <20250625-panel-synaptics-tddi-v2-1-7a62ab1d13c7@disroot.org>
+ <20250625150804.GA1201460-robh@kernel.org>
+Message-ID: <3d08062eb822e2fdcc1498bc1d34075f@disroot.org>
+X-Sender: kauschluss@disroot.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-Seth Forshee (DigitalOcean) <sforshee@kernel.org> wrote:
+On 2025-06-25 15:08, Rob Herring wrote:
+> On Wed, Jun 25, 2025 at 03:38:44PM +0530, Kaustabh Chakraborty wrote:
+>> Document the driver for Synaptics TDDI (Touch/Display Integration) 
+>> panels.
+> 
+> We document the h/w, not 'the driver'.
+> 
+>> Along with the MIPI-DSI panel, these devices also have an in-built LED
+>> backlight device and a touchscreen, all packed together in a single 
+>> chip.
+>> Also, add compatibles for supported panels - TD4101 and TD4300.
+>> 
+>> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+>> ---
+>>  .../display/panel/synaptics,td4300-panel.yaml      | 89 
+>> ++++++++++++++++++++++
+>>  1 file changed, 89 insertions(+)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/display/panel/synaptics,td4300-panel.yaml 
+>> b/Documentation/devicetree/bindings/display/panel/synaptics,td4300-panel.yaml
+>> new file mode 100644
+>> index 
+>> 0000000000000000000000000000000000000000..10ac24afdfbc43ca6913bf8a343413eed81f12ff
+>> --- /dev/null
+>> +++ 
+>> b/Documentation/devicetree/bindings/display/panel/synaptics,td4300-panel.yaml
+>> @@ -0,0 +1,89 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: 
+>> http://devicetree.org/schemas/display/panel/synaptics,td4300-panel.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Synaptics TDDI Display Panel Controller
+>> +
+>> +maintainers:
+>> +  - Kaustabh Chakraborty <kauschluss@disroot.org>
+>> +
+>> +allOf:
+>> +  - $ref: panel-common.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    enum:
+>> +      - syna,td4101-panel
+>> +      - syna,td4300-panel
+> 
+> Can a TD4101 be anything other than a panel (controller)? If not, then
+> '-panel' is redundant.
+> 
 
->The timer which ensures that no more than 3 LACPDUs are transmitted in
->a second rearms itself every 333ms regardless of whether an LACPDU is
->transmitted when the timer expires. This causes LACPDU tx to be delayed
->until the next expiration of the timer, which effectively aligns LACPDUs
->to ~333ms boundaries. This results in a variable amount of jitter in the
->timing of periodic LACPDUs.
+TDDI devices are display panels and touchscreens in one chip. So I guess
+it's better to explicitly define that its a panel driver.
 
-	To be clear, the "3 per second" limitation that all of this
-should to conform to is from IEEE 802.1AX-2014, 6.4.16 Transmit machine:
+(Touchscreens are driven by RMI4)
 
-	"When the LACP_Enabled variable is TRUE and the NTT (6.4.7)
-	variable is TRUE, the Transmit machine shall ensure that a
-	properly formatted LACPDU (6.4.2) is transmitted [i.e., issue a
-	CtrlMuxN:M_UNITDATA.Request(LACPDU) service primitive], subject
-	to the restriction that no more than three LACPDUs may be
-	transmitted in any Fast_Periodic_Time interval. If NTT is set to
-	TRUE when this limit is in force, the transmission shall be
-	delayed until such a time as the restriction is no longer in
-	force. The NTT variable shall be set to FALSE when the Transmit
-	machine has transmitted a LACPDU."
-
-	The current implementation conforms to this as you describe: by
-aligning transmission to 1/3 second boundaries, no more than 3 can ever
-be sent in one second.
-
-	If, hypothetically, the state machine were to transition, or a
-user updates port settings (either of which would set NTT each time)
-more than 3 times in a second, would your patched code obey this
-restriction?
-
-	For completeness, and to make this email as complicated as
-possible, I'll note that 802.1AX-2020 removes this particular
-restriction in favor of incorporating the 802.3 generic limit on
-transmission rates for Slow Protocols (of which LACP is one) to 10 per
-second (802.3-2022, 30.3.1.1.38) into the state machine (802.1AX-2020,
-6.4.7, see "txOpportunity" and 6.4.14 LACP Transmit machine).  Linux
-bonding doesn't implement the 802.1AX-2020 state machines, though, so I
-don't think we can reasonably pick and choose arbitrary pieces from two
-differing editions of a standard.
-
-	-J
-
->Change this to only rearm the timer when an LACPDU is actually sent,
->allowing tx at any point after the timer has expired.
->
->Signed-off-by: Seth Forshee (DigitalOcean) <sforshee@kernel.org>
->---
-> drivers/net/bonding/bond_3ad.c | 11 ++++++-----
-> 1 file changed, 6 insertions(+), 5 deletions(-)
->
->diff --git a/drivers/net/bonding/bond_3ad.c b/drivers/net/bonding/bond_3a=
-d.c
->index c6807e473ab706afed9560bcdb5e6eca1934f5b7..a8d8aaa169fc09d7d5c201ff2=
-98b37b3f11a7ded 100644
->--- a/drivers/net/bonding/bond_3ad.c
->+++ b/drivers/net/bonding/bond_3ad.c
->@@ -1378,7 +1378,7 @@ static void ad_tx_machine(struct port *port)
-> 	/* check if tx timer expired, to verify that we do not send more than
-> 	 * 3 packets per second
-> 	 */
->-	if (port->sm_tx_timer_counter && !(--port->sm_tx_timer_counter)) {
->+	if (!port->sm_tx_timer_counter || !(--port->sm_tx_timer_counter)) {
-> 		/* check if there is something to send */
-> 		if (port->ntt && (port->sm_vars & AD_PORT_LACP_ENABLED)) {
-> 			__update_lacpdu_from_port(port);
->@@ -1393,12 +1393,13 @@ static void ad_tx_machine(struct port *port)
-> 				 * again until demanded
-> 				 */
-> 				port->ntt =3D false;
->+
->+				/* restart tx timer(to verify that we will not
->+				 * exceed AD_MAX_TX_IN_SECOND
->+				 */
->+				port->sm_tx_timer_counter =3D ad_ticks_per_sec / AD_MAX_TX_IN_SECOND=
-;
-> 			}
-> 		}
->-		/* restart tx timer(to verify that we will not exceed
->-		 * AD_MAX_TX_IN_SECOND
->-		 */
->-		port->sm_tx_timer_counter =3D ad_ticks_per_sec/AD_MAX_TX_IN_SECOND;
-> 	}
-> }
-> =
-
->
->---
->base-commit: 86731a2a651e58953fc949573895f2fa6d456841
->change-id: 20250625-fix-lacpdu-jitter-1554d9f600ab
->
->Best regards,
->-- =
-
->Seth Forshee (DigitalOcean) <sforshee@kernel.org>
-
----
-	-Jay Vosburgh, jv@jvosburgh.net
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +
+>> +  vio-supply:
+>> +    description: core I/O voltage supply
+>> +
+>> +  vsn-supply:
+>> +    description: negative voltage supply for analog circuits
+>> +
+>> +  vsp-supply:
+>> +    description: positive voltage supply for analog circuits
+>> +
+>> +  backlight-gpios:
+>> +    maxItems: 1
+>> +    description: backlight enable GPIO
+>> +
+>> +  reset-gpios: true
+>> +  width-mm: true
+>> +  height-mm: true
+>> +  panel-timing: true
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - width-mm
+>> +  - height-mm
+>> +  - panel-timing
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +
+>> +    dsi {
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +
+>> +        panel@0 {
+>> +            compatible = "synaptics,td4300-panel";
+>> +            reg = <0>;
+>> +
+>> +            vio-supply = <&panel_vio_reg>;
+>> +            vsn-supply = <&panel_vsn_reg>;
+>> +            vsp-supply = <&panel_vsp_reg>;
+>> +
+>> +            backlight-gpios = <&gpd3 5 GPIO_ACTIVE_LOW>;
+>> +            reset-gpios = <&gpd3 4 GPIO_ACTIVE_LOW>;
+>> +
+>> +            width-mm = <68>;
+>> +            height-mm = <121>;
+>> +
+>> +            panel-timing {
+>> +                clock-frequency = <144389520>;
+>> +
+>> +                hactive = <1080>;
+>> +                hsync-len = <4>;
+>> +                hfront-porch = <120>;
+>> +                hback-porch = <32>;
+>> +
+>> +                vactive = <1920>;
+>> +                vsync-len = <2>;
+>> +                vfront-porch = <21>;
+>> +                vback-porch = <4>;
+>> +            };
+>> +        };
+>> +    };
+>> +
+>> +...
+>> 
+>> --
+>> 2.49.0
+>> 
