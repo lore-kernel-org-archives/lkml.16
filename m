@@ -1,91 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07F5270EA9;
-	Wed, 25 Jun 2025 21:58:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB1826E6E6;
+	Wed, 25 Jun 2025 21:58:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750888706; cv=none; b=Yz5Kn+4ZWKGa0mJYto6OaDUqPifxyyEylT/KC4+yLNIYmDgkFQs8Ldau3GaSZNxLrjceiXhRZAbjynsV4f21VFXJDnKbLAx+fZPY2PFx7izQWNOmf9lopVFEer6R7v+vhNs16lpDQEymkPjXboaIYzKbUis4z/oOmWykQaLVaYM=
+	t=1750888732; cv=none; b=Y/ZSdIli46rGx9OYSpwm+cQftovUkTayJXMe7I9FKjNnwdMuArV02oPOKsYSiwzXU05Yc2o3TdFbmr6wpDGRmWGzKxVj7QUC0l/kJlPYVpuV0z8CIny3ahrMHDoN0oQyVcQOAbTKG9fqSL16wK17CI+iDoyr1kqjwE/NLD4hmWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750888706; c=relaxed/simple;
-	bh=/KGAfdZApRqdSBJiStS7lAI+cxyl0kdckHot23fdv4c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WPhPpBHaAHGZiwVoMlEXO8srCO+t6+4QrDOykH4sprbkA43a5neXxn4NAOeA3ralyOt6CBmrXYmYKeW69ld8jJBh8po323pTful1SMBJwpSf6HSvoC+N6PIN3pk1TcRM0cAvtWhMoGf+9OTyxycW6XS1C53vXM00D+BbBja/H9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHKKCO8J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750888732; c=relaxed/simple;
+	bh=oOHVi7WKulJD5Ln7DJz9kKtqOwBywgrMuliFZ1+w+HI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=NUIN10EdTda3YmNS3RoCI3/YMP1QaOl4BSvGOTqyiCHnUYZ6mj/vDxfsJdqytmOiHCoN9Sle3PpWRF+Xhps8XUMGXqiAbYG+2koZ9XFni0wttBkAIbRiY+YWUWTBNnxPMAW77ll/aWqO6F14AAgIByzEBXfXveQpE5ebaue4Ak8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gHs7BUrN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHKKCO8J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F417C4CEF0;
-	Wed, 25 Jun 2025 21:58:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gHs7BUrN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A42FEC4CEEA;
+	Wed, 25 Jun 2025 21:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750888706;
-	bh=/KGAfdZApRqdSBJiStS7lAI+cxyl0kdckHot23fdv4c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qHKKCO8J3xCyk5qZosNv/nKsmSRr/2T6uVS1g1YU229s4OndgCWhZB6kk/3euHOU6
-	 KCZlvXUPFYUldf391z7keLSUi5k05KynMqMLQVs3QK74sEk0TQKnKhIrQEFS1ba2P0
-	 36jRSqpTgYavOTXeaLvxE3tidnUggCJTfk0KmSYdAO5gMp0OQRlOt5rI0he00La14e
-	 7LX1UQdE4+wscnODknuqUO/Va/lF28toVNV7CPzGO/GkuDlS7BZbRXpkIdRiuE04aG
-	 tBI76hkmNvBlVn4KVJh+mWbZZq1acmiogagLnDCi4Mmwc8ypbO9vUKf06hUvvzdYuJ
-	 jFDhGwTYC9mow==
-From: Mario Limonciello <superm1@kernel.org>
-To: Hans de Goede <hansg@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-gpio@vger.kernel.org (open list:GPIO ACPI SUPPORT),
-	linux-acpi@vger.kernel.org (open list:GPIO ACPI SUPPORT),
-	linux-kernel@vger.kernel.org (open list),
-	linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...),
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v3 4/4] Input: Don't send fake button presses to wake system
-Date: Wed, 25 Jun 2025 16:58:13 -0500
-Message-ID: <20250625215813.3477840-5-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250625215813.3477840-1-superm1@kernel.org>
-References: <20250625215813.3477840-1-superm1@kernel.org>
+	s=k20201202; t=1750888731;
+	bh=oOHVi7WKulJD5Ln7DJz9kKtqOwBywgrMuliFZ1+w+HI=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=gHs7BUrNu9peedXSq1UccpV5094B6OcM9oumLr6Asgee1dA0TvTBQbq4auS5Ez/Qj
+	 cy6a6Ot6tZgS1guQZZGKrKPwvBtR1+Q0AApWW9l83i352c9dlAXZ7fnvN7H1guwaoM
+	 fNhtrj9zrFIep+dq8nr/GPljwfB1NRKNjfOiogGSfsyYMFrN+ArK0NS8jMXA+07ZXl
+	 bx+8pYU7A58CVDU/xzh20co/F9VEGInKVO3RMV11lo8+deg7oCtV/5RBKJI8zrisB2
+	 J2NFRIjOmlVZv9ulkCRGPktF6vufB1+zJVzes+Yvvaewl2KYsOQ+Zfb8q67QJxjAIt
+	 q48ndaErFJmaA==
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: lpieralisi@kernel.org, kwilczynski@kernel.org, bhelgaas@google.com, 
+ jingoohan1@gmail.com, Hans Zhang <18255117159@163.com>
+Cc: robh@kernel.org, linux-pci@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250612161226.950937-1-18255117159@163.com>
+References: <20250612161226.950937-1-18255117159@163.com>
+Subject: Re: [PATCH] PCI: dwc: Simplify boolean condition returns in
+ debugfs
+Message-Id: <175088873054.30154.8954618034013748758.b4-ty@kernel.org>
+Date: Wed, 25 Jun 2025 15:58:50 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.2
 
-From: Mario Limonciello <mario.limonciello@amd.com>
 
-Sending an input event to wake a system does wake it, but userspace picks
-up the keypress and processes it.  This isn't the intended behavior as it
-causes a suspended system to wake up and then potentially turn off if
-userspace is configured to turn off on power button presses.
+On Fri, 13 Jun 2025 00:12:26 +0800, Hans Zhang wrote:
+> Replace redundant ternary conditional expressions with direct boolean
+> returns in PTM visibility functions. Specifically change this pattern:
+> 
+>     return (condition) ? true : false;
+> 
+> to the simpler:
+> 
+> [...]
 
-Instead send a PM wakeup event for the PM core to handle waking the system.
+Applied, thanks!
 
-Cc: Hans de Goede <hansg@kernel.org>
-Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- drivers/input/keyboard/gpio_keys.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+[1/1] PCI: dwc: Simplify boolean condition returns in debugfs
+      commit: 032f05be51ab4a1d67d08a8083ec16dd934d255e
 
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index 773aa5294d269..4c6876b099c43 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
- 		pm_stay_awake(bdata->input->dev.parent);
- 		if (bdata->suspended  &&
- 		    (button->type == 0 || button->type == EV_KEY)) {
--			/*
--			 * Simulate wakeup key press in case the key has
--			 * already released by the time we got interrupt
--			 * handler to run.
--			 */
--			input_report_key(bdata->input, button->code, 1);
-+			pm_wakeup_event(bdata->input->dev.parent, 0);
- 		}
- 	}
- 
+Best regards,
 -- 
-2.43.0
+Manivannan Sadhasivam <mani@kernel.org>
 
