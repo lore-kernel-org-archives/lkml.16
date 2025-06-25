@@ -1,120 +1,128 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854AC219E0;
-	Wed, 25 Jun 2025 12:01:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BACA225762
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:01:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750852873; cv=none; b=gvmM0Gll3A4KKLwj1kQ5y9jovSqg1VPt4UiiiqCjg7PeV4W6H1keQWLyHf8Hgwv4HB4CamKatOvTw0GeMe4zarEs+5CGoP6z8fjXFWhDp3gSsTGgugUbH0mktOYO1hDpRdF8v/nq0/1IfxhBWc/9LlF8spWm+sazGBrYSbPUACQ=
+	t=1750852887; cv=none; b=udBVzBBbc1mLpDnhD42rcNyP9njDo1yZNNmJpU9Xsc0/ymMrZa6TBqTdkI76BopTNdPIAUD7UtTFgc3kU/W4M/o6hiSnrTWzGSiqE7qoEuuKQzPsmgYF5bG+Q7y2ZxVOLTmTFK4oesLtAxXsZXDn7nRofKwkN/58DSAYqVzsrWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750852873; c=relaxed/simple;
-	bh=CXmSqwBl+ntCnLk7LlQAQLO3lA9jG4t5fgoxlUF/UQg=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZI/zey+dfDmPSq4R5TQqzA7zgPDUmhtKeYxCYghlb2So/Z1PoHEl1wgUvWg3gSazMUQDzB0COleYsqQzfPqgkqpmpClPjiL5oeu5RKku/kja7svF4vDznXHwsADbTKL/SVq/wG6yC2QTDSNakULFB2tmBy28628Ekr5lJI2ZSCM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TvpaHKve; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750852887; c=relaxed/simple;
+	bh=4zQ0UL1wqdDM0i6fhX82EgPNJoEiVKpXy1BKVN1c4CM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ce6inTUXR87efVkikFOF/ySPVz2JbpaXCFGETAMgKUEZV0Yz0j71ms7yyZ4EdIxzmagDfeX/fblZePapT6JcKM6XpD2wD4F6fN0muu+DEitlNV8X77X0GiB9HUcwvQgKoseWygUzSTfgL9LXRe2IPgr/GY0DBgRfXNx1qARUOxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mbOfQnnA; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvpaHKve"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450ce671a08so41323375e9.3;
-        Wed, 25 Jun 2025 05:01:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750852870; x=1751457670; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yHefIg2+8X/i5cCCS+NNBXYEiweXVKRtTurM+edGkHs=;
-        b=TvpaHKvegtO7W0rHhMZtW449+K/EV1lhH91S6caoSvD3rGiIdBjNQx6PRnKxPmxACB
-         9zxWe2dzuAbjlQ2+a3GaTFEm6uZaCeiW7po0G/pXL7YTS6OMxszdcINKgqnPnuaNO4tr
-         MpT28ErcPGa2Mpw0RLAcC73fhJwO9pqEHdCM+bG2F012YqI6l7N9DUYWnEoOytmI2wTy
-         hDK9U2hlMwr36JaxgGR4WTZrVFQBLy5OsP5JOJaXN7FY4cTFgEPRNUEnN75e5nsSP0/o
-         SiyzZvUsqelbIlxs0+ozObWjZ+nat/4jDLVKMBZc0ZYASTYd+dO1zOyqTAF1vSllR/6E
-         EXpg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mbOfQnnA"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P5acOL015282
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:01:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	8OEorVaCRE0cXO8xBCXvfigA2psQBauzIpB05z6ctJc=; b=mbOfQnnAxMa07JR4
+	c60nDr78GXjJ4IxNRqr0QCKexEIojCMFnebeW4VmzD2UI0+Wmv6oL4igCUhUkcgn
+	8dQljTCC9Eb2ghucMLXkmj5cS3aZfUb8UBCYBQp42mgiC4M321VJugWaHtJyO2T6
+	9apd4bEYJQCCd9nqEcQnC/EkVpvDb3ftW0IIFu5Dy9UWSh7pbdnYNl/qkpp+bJv1
+	F8b/YWkGGIaBIctBuKi8xWZjiInn1SFdEIOfWSomYd1jQpc8DEzw+NTab3kKOo48
+	OYayc/oYeH/h88p4Q+PCvQ3oi/CgGnU2dTrmD1W0o397uhLO2JJW3hWW1qFres6y
+	qI0L1g==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47esa4ryv9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:01:25 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d094e04aa4so193227485a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:01:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750852870; x=1751457670;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id
+        d=1e100.net; s=20230601; t=1750852884; x=1751457684;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yHefIg2+8X/i5cCCS+NNBXYEiweXVKRtTurM+edGkHs=;
-        b=fmh2Hi77qcidzEaEEt4D5FYss5vHG8VzRsd8/RrS7ebz657pabhWky8aONHW+F6vMc
-         4qWKUp7APrRvsm8p+0xozYZ4G44w8UpI2cMlUMN6JerdGi3WPBxzhcEwZgSG7R9PoB1R
-         GmdvZ1/DWBH83mTAHa7bwyB3KeONKlRTWPhwujfCVwrkefXLvMlFropuZolTRw1VyNnF
-         bQImO7fgTETmEagktM33EcCeQ+wIl2r1AiZTdMItYXgSv00jZCLw8fDbPdBK0ZZ2Ud7S
-         lXyOEzCjQXcWp+9RxJx8ChgA8/v52iMnXhsSHQ5rukyvpStdUa+fc+EJrx8/fF2eEtFW
-         MWAg==
-X-Forwarded-Encrypted: i=1; AJvYcCVb7KFHlGhqJc7jBVy3386Gh3kVy5NxBi5UvGNBF4kHNQipu3saLNjQKfMxj9EI1OP2xVtdtDMMUTb6@vger.kernel.org, AJvYcCXbkZgWmOqaeGl62X6QwyqOQwXGHBZdupDXEaUhkgTn54+L3mgcsryaChI/0FjXyv1qUmmqGhLdMtctPYQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwOMQsAjMV4ySDkLtJuhgyalblDSdddzSlgNMyEk6HXD0cwtPBC
-	GHu91WrNwQ7/tVNPG9dMR+iVT4oBmPRD3le0cfNTMjc9E2+5DOViNPvZ
-X-Gm-Gg: ASbGncuk5TcubK6nPbPvm4NLf0M04EThs8AaaBFg4wdZQ4iFKYe90o1QWIEc67rEqmi
-	r4RsA3aLdLXJ1hDcZHTa/x9Q4v+EJg1p6PoOOC/JoeSqxp93zYo+KcDfTPhrwGgdO9hzRnYJWoq
-	Q9LfFlCqk62/jCWbAMQqEd5BxKI9qxRZoXP95D9xp3Mz9j5tMCTXUQqBiq9CuCrAnJp7mZ8Oir7
-	zoLM8WX7+Y9mYiHOlo31LunflqVkWEGymewBo7BWuRXC8VwAYYCxJVK3PE3eHQx3hYjpbaEdF2Z
-	vPqLJMBc4O8+lT/OHN5bDpmRWvBgUWoBaeWvYtdY1RmipdytPjxPeV1MAgn1rIkNfBrmpkgZpfT
-	AgXop6nryRP923Wc0bQ==
-X-Google-Smtp-Source: AGHT+IFTWlrNcKJ5mnN361DuQVQviW6Cwd7jiDuBvnqI/hGGoBQlP2Vju7DwNXUSJ9DFLMJsKmUovA==
-X-Received: by 2002:a05:6000:3c7:b0:3a4:e609:dc63 with SMTP id ffacd0b85a97d-3a6ed631bafmr1718435f8f.20.1750852869462;
-        Wed, 25 Jun 2025 05:01:09 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805eeffsm4437090f8f.34.2025.06.25.05.01.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 05:01:08 -0700 (PDT)
-Message-ID: <685be504.050a0220.1095cd.0c7f@mx.google.com>
-X-Google-Original-Message-ID: <aFvlAjNbUwuB7Cy8@Ansuel-XPS.>
-Date: Wed, 25 Jun 2025 14:01:06 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v16 2/2] pwm: airoha: Add support for EN7581 SoC
-References: <20250625000059.20040-1-ansuelsmth@gmail.com>
- <20250625000059.20040-2-ansuelsmth@gmail.com>
- <dehsalp2za4i6jgod6ej6gqhestljo7qost66jzmql52n2zecp@imtgipg24lv5>
- <685ba7d9.df0a0220.e1b22.e6c2@mx.google.com>
- <aFvbDdVdoroASlM6@smile.fi.intel.com>
+        bh=8OEorVaCRE0cXO8xBCXvfigA2psQBauzIpB05z6ctJc=;
+        b=poE/QHz1Rt7jkdnG3W3Qnu+KZuFfarkyg7EMyL89Uc4HxLukBXQPjTcE/s4BYyYlgp
+         JoeqEQ9ydEEp14K/q7Rca03no9q0+g/iufntWc7ps3Q+pS+LuZFjXK7KSG3TIt1FvcE2
+         m1gIi2ZvDe5PfxAOM0W38wXR+fvGqu9ZseoYz/6IA8AP44wHWUEhK6WVI4wOih9kU7pe
+         WbeDse+UICjdy7/1Zg/9UUlM/dbb9IqBn6bEI8MENycMX9rvsKaP0Wa5T33BSgnn0f1A
+         /wY9SCknqE388nuhdStrgKXd41cSreCZfsZ327qVSKz5/cX3Lswk5CuyWtBEOjxUp+fK
+         Pjfg==
+X-Forwarded-Encrypted: i=1; AJvYcCUeH5cFizNoWzxpze3O2Q4Lgfy/Fk78UcSVJ6V2RyFq9TCYcuLhId+B5+WZzZbetDFC6GcSZOpmhB7Jb6Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyaha6eYSFuO/l7N6uq46py4qdVU+mc9AQb2lvkoHeary9vP9g5
+	/u9pu5cIXEeJTlHqlRVNuAHBEzhwXcBpeo2ouAPx/dumFW1bKUPjiArrClqmkF+6jAHmNkmJwQa
+	wANN42ylEemH3F0ZWTEmLTweUrvecutGEEYb8KEhSVmCuJOkvjWavzIrmd4RICWyEKmA=
+X-Gm-Gg: ASbGncvUoMDtEYQ5k69Nk23Z+Ddc7GlbRPlfhbxx20g2HIQF9jASS2QBVZhMcfhA1JM
+	MY0PzIT85dV9eB1mE4R8n5bZg2AxxXQcpNjFsng5xBWIq3YmEW1WHZlDD0S9rhmTJeIXIByHH7F
+	eKhU1x0rnpqkacdng7SmcL/XkxIDPYHmD49lOtWfWpAjYA4zie5Xn3lXPGjfOKg5w6VEG9FghNb
+	Z9w6rFl+JF77rRrll3ouLkIXrlQw4bE8EH7ybvnDZjpqeDDlqO90y3eP3lN3iatAkgkVyvdVaA3
+	jxPROqmRKATEKsfHvMSDb2Yac46yDR7IgcuTbQVqLUhEPMwiqp9IP2QkhbO/NT1bHp+btAK5i+O
+	Tvh8=
+X-Received: by 2002:a05:620a:2b95:b0:7d0:aafd:fb7a with SMTP id af79cd13be357-7d42969a198mr110761085a.4.1750852884101;
+        Wed, 25 Jun 2025 05:01:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEGKSvGYhxFuziebMeRs8lQo0eQVL8Cuz4WpchhTnfuGoh6+aLI0eB7yKb5Db/OPDNfTIWH6A==
+X-Received: by 2002:a05:620a:2b95:b0:7d0:aafd:fb7a with SMTP id af79cd13be357-7d42969a198mr110758085a.4.1750852883399;
+        Wed, 25 Jun 2025 05:01:23 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae054209b9fsm1028312966b.161.2025.06.25.05.01.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 05:01:22 -0700 (PDT)
+Message-ID: <4e44b98e-4141-45e8-b4bc-9e9dfef4b544@oss.qualcomm.com>
+Date: Wed, 25 Jun 2025 14:01:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <aFvbDdVdoroASlM6@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] firmware: qcom: scm: remove unused arguments from SHM
+ bridge routines
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+References: <20250625-qcom-scm-race-v1-0-45601e1f248b@linaro.org>
+ <20250625-qcom-scm-race-v1-1-45601e1f248b@linaro.org>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250625-qcom-scm-race-v1-1-45601e1f248b@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=eLYTjGp1 c=1 sm=1 tr=0 ts=685be515 cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
+ a=rJ879oiodxo_ZCWU8swA:9 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-GUID: ubt8K7kEdqeS-mIXPB0Xkbty5bfsBZMN
+X-Proofpoint-ORIG-GUID: ubt8K7kEdqeS-mIXPB0Xkbty5bfsBZMN
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA4OSBTYWx0ZWRfX7xarvEJKrxO4
+ PpZ2T4u08pCKlr+XHbeUttvoNdorxd9Tqt6VD5/f/hq5SQHLAcQ3hCNYNqNDxPXAb6m54CeKoSc
+ WhVYGkNSdcSyzhpLaYsodTT2tZzVokVsa9qK0hvxzJpdJ6jKrQIXp6Imeg30DDAlJS5kwx0SxoA
+ xmRg/FCS+u99MXbsOioSvnRe4JpVFef2DSATV8jnaKIt65wSLF9Gfi4h22VMVo343Zf/EIecV+9
+ UGdzUbWIUywOqKTztMH8GU4T6UF+f8Vw5EvChKRf5gNm+mBHBbrgtzO/ZGzu5FoeVkM1FQF4wMf
+ ZYERlSFLgVUtQywfbktWJvOInTOeZh5piI7cHq1KmlVHsSbkXBBvU7PFPZymeqeu2nxcLBIdr6G
+ iJC34VZoX5GbTiUTjYQe6+d3oh4ZIVmgQ+3bw8ofD7LSFJ7EzYvQaTdvLUoTA6WAhd9Cw7n+
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_03,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=999
+ suspectscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506250089
 
-On Wed, Jun 25, 2025 at 02:18:37PM +0300, Andy Shevchenko wrote:
-> On Wed, Jun 25, 2025 at 09:40:07AM +0200, Christian Marangi wrote:
-> > On Wed, Jun 25, 2025 at 09:24:33AM +0200, Uwe Kleine-König wrote:
-> > > On Wed, Jun 25, 2025 at 02:00:39AM +0200, Christian Marangi wrote:
+On 6/25/25 10:14 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> ...
+> qcom_scm_shm_bridge_create() and qcom_scm_shm_bridge_delete() take
+> struct device as argument but don't use it. Remove it from these
+> functions' prototypes.
 > 
-> > > > +	/*
-> > > > +	 * Period goes at 4ns step, normalize it to check if we can
-> > > > +	 * share a generator.
-> > > > +	 */
-> > > > +	period_ns = rounddown_u64(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
-> > > 
-> > > I don't understand why you need that. If you clamp to
-> > > AIROHA_PWM_PERIOD_MAX_NS first, you don't need the (expensive) 64-bit
-> > > operation. If you compare using ticks instead of ns you don't even need
-> > > to round down, but just do the division that you end up doing anyhow.
-> > 
-> > Correct me if I'm wrong but 
-> > 
-> > #define NSEC_PER_SEC	1000000000L
-> > #define AIROHA_PWM_PERIOD_MAX_NS       (1 * NSEC_PER_SEC)
-> > 
-> > doesn't fit u32 so an u64 is needed.
-> 
-> I'm not sure what was the exact question, but u32 can hold up to 4*10^9,
-> this is just 1*10^9.
-> 
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-Ok feeling stupid... was treating 1000000000 as 0x1000000000 :D
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
--- 
-	Ansuel
+Konrad
