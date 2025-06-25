@@ -1,254 +1,275 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C91628C87D
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:06:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C1229CB42;
+	Wed, 25 Jun 2025 18:07:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750874809; cv=none; b=KAqKEO+JgRC8176/Pvx6CM8M6Q9e4HoaHXrk1v5zBiiYjmk0vNU3hRJ6jIAvjeUUsBor0gfS7Q50MmLOhJRCMJcEedqLvDVhW+inlo4WLvNFrMl+XFfhnkUpWZClsK1cVURkP6hkg4DO0Ay4YzmbK0nzwtaetYybCzb7N8YKMdg=
+	t=1750874848; cv=none; b=MPZJJXM3a36HKXcGicwjevlcM6djLhwgAxFngxxf1OExi2jvDS82ux2jsHORWIH20FzNsyF43zvgnk6KID25lkgQR7jvqczeOG6YLMwZjxjcWK/ml9QNXm30dftCYWBBvUwguQWVhzC6GtNNMerXdA6q6UstlHMkOMqNiZgeg2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750874809; c=relaxed/simple;
-	bh=yZ3bmJ5oFOTAfYkpkakXUT8e+YKqYTNbuX9Iu5rR8Pw=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ZrnxWXvMf7pR9uhQYHAAOYfiNBy4w3lJRLFnRx9DkTwKXS3tMvqsjNuvnE8hhATJyfRumGPLdKt3+Y2Z5RT8aQgJ3HF8fPwwwWAz9r8HcBwfr8UiZhmvS+/bJf4LYocx58bTnOOehFGEUe157BpzRQ4ZFTl+dvfIOpsyupZCRmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <l.stach@pengutronix.de>)
-	id 1uUUW2-0001i3-Nl; Wed, 25 Jun 2025 20:06:34 +0200
-Message-ID: <5a094e3b95f1219435056d87ca4f643398bcb1d3.camel@pengutronix.de>
-Subject: Re: [PATCH net-next v2 1/1] phy: micrel: add Signal Quality
- Indicator (SQI) support for KSZ9477 switch PHYs
-From: Lucas Stach <l.stach@pengutronix.de>
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>, 
- Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,  Jakub Kicinski
- <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- kernel@pengutronix.de,  Russell King <linux@armlinux.org.uk>
-Date: Wed, 25 Jun 2025 20:06:32 +0200
-In-Reply-To: <20250625124127.4176960-1-o.rempel@pengutronix.de>
-References: <20250625124127.4176960-1-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	s=arc-20240116; t=1750874848; c=relaxed/simple;
+	bh=bE/voGnQ/VKY0szR3gwEYRxnH6ixXCw4kP3jtvDKH+U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PG9qGAIEUL9Rk5wJu+GoJcEWuRRU1KJezNAx/vREjqhVqqSsSrz3R0UVn2m7RksrWbVWIIH4I491/mktNm2IigLWDanS4GRa8rNbuqFJ64kF9WAK7Ynj3uts7uByjCoPwCK9O8H6gn1cGaE/c5Tgtqx0O0UtdNefJbX5g9syH5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=OQ1+Qsaf; arc=none smtp.client-ip=144.76.82.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="OQ1+Qsaf"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+	s=42; h=From:Cc:To:Date:Message-ID;
+	bh=CNyNxcy4KrbDquitkCRDoXyOFzeMKzZ0SneX0FF2MbI=; b=OQ1+QsafI2EfAjeax0eEvZVIkt
+	4OL9orQZWVLh5NZJ5+LIOJJEAyATbcpxVL9lkqFqaZz/N63yyCON2vYxrEBWUgyyETP/31btM+2mx
+	Qp2XmqwL4Y5ZFTB/+/QMdwyqfRuj+AaPIdRWWQgjDOtVuLyDGSunVJZzlGAaOdZRtwa5cIOb9+P/v
+	thmEpSUVTaeA61+L0rpCv15iff4tvTJUwza3L39vFI7IU+WQ7Edpoa2zqD+HdXKI3nnYq6YBOB20C
+	pkZtZaANnvpTwAMeHfRFzVQuyFWIBQlsxMLH9hiAv5leJB3qDnIfBQhlcstofFxJflEtJfy8DVt+P
+	gu2GO7QEuxhsgI/Fr4kG3dbYjmDz352kizUpY7KFCgu9HRdJcHzF8RTjgLm3wDD9ENwtaSak7PLaz
+	dcJFsytALIqjBvatutj5+wZPfeYRcfo7muIhZ0Iktxai37fPQKQEECxM3g21OXESKC5yYXltmTDmV
+	0ogXySW3mm37ujJ9hpj7Qu2e;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__CHACHA20_POLY1305:256)
+	(Exim)
+	id 1uUUWp-00CSmz-0G;
+	Wed, 25 Jun 2025 18:07:23 +0000
+Message-ID: <eba15803-5afa-4805-8d6c-f0ff514d3424@samba.org>
+Date: Wed, 25 Jun 2025 20:07:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 12/16] cifs: Fix reading into an ITER_FOLIOQ from the
+ smbdirect code
+To: David Howells <dhowells@redhat.com>
+Cc: Christian Brauner <christian@brauner.io>, Steve French
+ <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
+ netfs@lists.linux.dev, linux-afs@lists.infradead.org,
+ linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Steve French <stfrench@microsoft.com>, Tom Talpey <tom@talpey.com>,
+ Matthew Wilcox <willy@infradead.org>
+References: <658c6f4f-468b-4233-b49a-4c39a7ab03ab@samba.org>
+ <20250625164213.1408754-1-dhowells@redhat.com>
+ <20250625164213.1408754-13-dhowells@redhat.com>
+ <1422741.1750874135@warthog.procyon.org.uk>
+Content-Language: en-US
+From: Stefan Metzmacher <metze@samba.org>
+In-Reply-To: <1422741.1750874135@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Oleksij,
+Am 25.06.25 um 19:55 schrieb David Howells:
+> Stefan Metzmacher <metze@samba.org> wrote:
+> 
+>>>    read_rfc1002_done:
+>>> +		/* SMBDirect will read it all or nothing */
+>>> +		msg->msg_iter.count = 0;
+>>
+>> I think we should be remove this.
+>>
+>> And I think this patch should come after the
+>> CONFIG_HARDENED_USERCOPY change otherwise a bisect will trigger the problem.
+> 
+> Okay, done.  I've attached the revised version here.  I've also pushed it to
+> my git branch and switched patches 12 & 13 there.
 
-Am Mittwoch, dem 25.06.2025 um 14:41 +0200 schrieb Oleksij Rempel:
-> Add support for the Signal Quality Index (SQI) feature on KSZ9477 family
-> switches. This feature provides a relative measure of receive signal
-> quality.
->=20
-> The KSZ9477 PHY provides four separate SQI values for a 1000BASE-T link,
-> one for each differential pair (Channel A-D). Since the current get_sqi
-> UAPI only supports returning a single value per port, this
-> implementation reads the SQI from Channel A as a representative metric.
+reviewed-by and tested-by: Stefan Metzmacher <metze@samba.org>
 
-I wonder if it wouldn't be more useful to report the worst SQI from all
-the channels instead.
-
-> This can be extended to provide per-channel readings once the UAPI is
-> enhanced for multi-channel support.
->=20
-> The hardware provides a raw 7-bit SQI value (0-127), where lower is
-> better. This raw value is converted to the standard 0-7 scale to provide
-> a usable, interoperable metric for userspace tools, abstracting away
-> hardware-specifics. The mapping to the standard 0-7 SQI scale was
-> determined empirically by injecting a 30MHz sine wave into the receive
-> pair with a signal generator. It was observed that the link becomes
-> unstable and drops when the raw SQI value reaches 8. This
-> implementation is based on these test results.
->=20
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> David
 > ---
-> changes v2:
-> - Reword commit message
-> - Fix SQI value inversion
-> - Implement an empirically-derived, non-linear mapping to the standard
->   0-7 SQI scale
+> cifs: Fix reading into an ITER_FOLIOQ from the smbdirect code
+> 
+> When performing a file read from RDMA, smbd_recv() prints an "Invalid msg
+> type 4" error and fails the I/O.  This is due to the switch-statement there
+> not handling the ITER_FOLIOQ handed down from netfslib.
+> 
+> Fix this by collapsing smbd_recv_buf() and smbd_recv_page() into
+> smbd_recv() and just using copy_to_iter() instead of memcpy().  This
+> future-proofs the function too, in case more ITER_* types are added.
+> 
+> Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
+> Reported-by: Stefan Metzmacher <metze@samba.org>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Steve French <stfrench@microsoft.com>
+> cc: Tom Talpey <tom@talpey.com>
+> cc: Paulo Alcantara (Red Hat) <pc@manguebit.com>
+> cc: Matthew Wilcox <willy@infradead.org>
+> cc: linux-cifs@vger.kernel.org
+> cc: netfs@lists.linux.dev
+> cc: linux-fsdevel@vger.kernel.org
 > ---
->  drivers/net/phy/micrel.c | 124 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 124 insertions(+)
->=20
-> diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-> index d0429dc8f561..6422d9a7c09f 100644
-> --- a/drivers/net/phy/micrel.c
-> +++ b/drivers/net/phy/micrel.c
-> @@ -2173,6 +2173,128 @@ static void kszphy_get_phy_stats(struct phy_devic=
-e *phydev,
->  	stats->rx_errors =3D priv->phy_stats.rx_err_pkt_cnt;
->  }
-> =20
-> +/* Base register for Signal Quality Indicator (SQI) - Channel A
+>   fs/smb/client/smbdirect.c |  112 ++++++----------------------------------------
+>   1 file changed, 17 insertions(+), 95 deletions(-)
+> 
+> diff --git a/fs/smb/client/smbdirect.c b/fs/smb/client/smbdirect.c
+> index 0a9fd6c399f6..754e94a0e07f 100644
+> --- a/fs/smb/client/smbdirect.c
+> +++ b/fs/smb/client/smbdirect.c
+> @@ -1778,35 +1778,39 @@ struct smbd_connection *smbd_get_connection(
+>   }
+>   
+>   /*
+> - * Receive data from receive reassembly queue
+> + * Receive data from the transport's receive reassembly queue
+>    * All the incoming data packets are placed in reassembly queue
+> - * buf: the buffer to read data into
+> + * iter: the buffer to read data into
+>    * size: the length of data to read
+>    * return value: actual data read
+> - * Note: this implementation copies the data from reassebmly queue to receive
 > + *
-> + * MMD Address: MDIO_MMD_PMAPMD (0x01)
-> + * Register:    0xAC (Channel A)
-> + * Each channel (pair) has its own register:
-> + *   Channel A: 0xAC
-> + *   Channel B: 0xAD
-> + *   Channel C: 0xAE
-> + *   Channel D: 0xAF
-> + */
-> +#define KSZ9477_MMD_SIGNAL_QUALITY_CHAN_A	0xAC
+> + * Note: this implementation copies the data from reassembly queue to receive
+>    * buffers used by upper layer. This is not the optimal code path. A better way
+>    * to do it is to not have upper layer allocate its receive buffers but rather
+>    * borrow the buffer from reassembly queue, and return it after data is
+>    * consumed. But this will require more changes to upper layer code, and also
+>    * need to consider packet boundaries while they still being reassembled.
+>    */
+> -static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+> -		unsigned int size)
+> +int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
+>   {
+>   	struct smbdirect_socket *sc = &info->socket;
+>   	struct smbd_response *response;
+>   	struct smbdirect_data_transfer *data_transfer;
+> +	size_t size = iov_iter_count(&msg->msg_iter);
+>   	int to_copy, to_read, data_read, offset;
+>   	u32 data_length, remaining_data_length, data_offset;
+>   	int rc;
+>   
+> +	if (WARN_ON_ONCE(iov_iter_rw(&msg->msg_iter) == WRITE))
+> +		return -EINVAL; /* It's a bug in upper layer to get there */
 > +
-> +/* SQI field mask for bits [14:8]
-> + *
-> + * SQI indicates relative quality of the signal.
-> + * A lower value indicates better signal quality.
-> + */
-> +#define KSZ9477_MMD_SQI_MASK			GENMASK(14, 8)
-> +
-> +#define KSZ9477_SQI_MAX				7
-> +
-> +/* Delay between consecutive SQI register reads in microseconds.
-> + *
-> + * Reference: KSZ9477S Datasheet DS00002392C, Section 4.1.11 (page 26)
-> + * The register is updated every 2 =C2=B5s. Use 3 =C2=B5s to avoid redun=
-dant reads.
-> + */
-> +#define KSZ9477_MMD_SQI_READ_DELAY_US		3
-> +
-> +/* Number of SQI samples to average for a stable result.
-> + *
-> + * Reference: KSZ9477S Datasheet DS00002392C, Section 4.1.11 (page 26)
-> + * For noisy environments, a minimum of 30=E2=80=9350 readings is recomm=
-ended.
-> + */
-> +#define KSZ9477_SQI_SAMPLE_COUNT		40
-> +
-> +/* The hardware SQI register provides a raw value from 0-127, where a lo=
-wer
-> + * value indicates better signal quality. However, empirical testing has
-> + * shown that only the 0-7 range is relevant for a functional link. A ra=
-w
-> + * value of 8 or higher was measured directly before link drop. This ali=
-gns
-> + * with the OPEN Alliance recommendation that SQI=3D0 should represent t=
-he
-> + * pre-failure state.
-> + *
-> + * This table provides a non-linear mapping from the useful raw hardware
-> + * values (0-7) to the standard 0-7 SQI scale, where higher is better.
-> + */
-> +static const u8 ksz_sqi_mapping[] =3D {
-> +	7, /* raw 0 -> SQI 7 */
-> +	7, /* raw 1 -> SQI 7 */
-> +	6, /* raw 2 -> SQI 6 */
-> +	5, /* raw 3 -> SQI 5 */
-> +	4, /* raw 4 -> SQI 4 */
-> +	3, /* raw 5 -> SQI 3 */
-> +	2, /* raw 6 -> SQI 2 */
-> +	1, /* raw 7 -> SQI 1 */
-> +};
-> +
-> +/**
-> + * kszphy_get_sqi - Read, average, and map Signal Quality Index (SQI)
-> + * @phydev: the PHY device
-> + *
-> + * This function reads and processes the raw Signal Quality Index from t=
-he
-> + * PHY. Based on empirical testing, a raw value of 8 or higher indicates=
- a
-> + * pre-failure state and is mapped to SQI 0. Raw values from 0-7 are
-> + * mapped to the standard 0-7 SQI scale via a lookup table.
-> + *
-> + * Return: SQI value (0=E2=80=937), or a negative errno on failure.
-> + */
-> +static int kszphy_get_sqi(struct phy_device *phydev)
-> +{
-> +	int sum =3D 0;
-> +	int i, val, raw_sqi, avg_raw_sqi;
-> +	u8 channels;
-> +
-> +	/* Determine applicable channels based on link speed */
-> +	if (phydev->speed =3D=3D SPEED_1000)
-> +		/* TODO: current SQI API only supports 1 channel. */
-> +		channels =3D 1;
-> +	else if (phydev->speed =3D=3D SPEED_100)
-> +		channels =3D 1;
-> +	else
-> +		return -EOPNOTSUPP;
-> +
-> +	/*
-> +	 * Sample and accumulate SQI readings for each pair (currently only one=
-).
-> +	 *
-> +	 * Reference: KSZ9477S Datasheet DS00002392C, Section 4.1.11 (page 26)
-> +	 * - The SQI register is updated every 2 =C2=B5s.
-> +	 * - Values may fluctuate significantly, even in low-noise environments=
-.
-> +	 * - For reliable estimation, average a minimum of 30=E2=80=9350 sample=
-s
-> +	 *   (recommended for noisy environments)
-> +	 * - In noisy environments, individual readings are highly unreliable.
-> +	 *
-> +	 * We use 40 samples per pair with a delay of 3 =C2=B5s between each
-> +	 * read to ensure new values are captured (2 =C2=B5s update interval).
-> +	 */
-> +	for (i =3D 0; i < KSZ9477_SQI_SAMPLE_COUNT; i++) {
-> +		val =3D phy_read_mmd(phydev, MDIO_MMD_PMAPMD,
-> +				   KSZ9477_MMD_SIGNAL_QUALITY_CHAN_A);
-> +		if (val < 0)
-> +			return val;
-> +
-> +		raw_sqi =3D FIELD_GET(KSZ9477_MMD_SQI_MASK, val);
-> +		sum +=3D raw_sqi;
-> +
-> +		udelay(KSZ9477_MMD_SQI_READ_DELAY_US);
-
-This ends up spending a sizable amount of time just spinning the CPU to
-collect the samples for the averaging. Given that only very low values
-seem to indicate a working link, I wonder how significant the
-fluctuations in reported link quality are in reality. Is it really
-worth spending 120us of CPU time to average those values?
-
-Maybe a running average updated with a new sample each time this
-function is called would be sufficient?
-
-Regards,
-Lucas
-
-> +	}
-> +
-> +	avg_raw_sqi =3D sum / KSZ9477_SQI_SAMPLE_COUNT;
-> +
-> +	/* Handle the pre-fail/failed state first. */
-> +	if (avg_raw_sqi >=3D ARRAY_SIZE(ksz_sqi_mapping))
-> +		return 0;
-> +
-> +	/* Use the lookup table for the good signal range. */
-> +	return ksz_sqi_mapping[avg_raw_sqi];
-> +}
-> +
-> +static int kszphy_get_sqi_max(struct phy_device *phydev)
-> +{
-> +	return KSZ9477_SQI_MAX;
-> +}
-> +
->  static void kszphy_enable_clk(struct phy_device *phydev)
->  {
->  	struct kszphy_priv *priv =3D phydev->priv;
-> @@ -5801,6 +5923,8 @@ static struct phy_driver ksphy_driver[] =3D {
->  	.update_stats	=3D kszphy_update_stats,
->  	.cable_test_start	=3D ksz9x31_cable_test_start,
->  	.cable_test_get_status	=3D ksz9x31_cable_test_get_status,
-> +	.get_sqi	=3D kszphy_get_sqi,
-> +	.get_sqi_max	=3D kszphy_get_sqi_max,
->  } };
-> =20
->  module_phy_driver(ksphy_driver);
+>   again:
+>   	/*
+>   	 * No need to hold the reassembly queue lock all the time as we are
+>   	 * the only one reading from the front of the queue. The transport
+>   	 * may add more entries to the back of the queue at the same time
+>   	 */
+> -	log_read(INFO, "size=%d info->reassembly_data_length=%d\n", size,
+> +	log_read(INFO, "size=%zd info->reassembly_data_length=%d\n", size,
+>   		info->reassembly_data_length);
+>   	if (info->reassembly_data_length >= size) {
+>   		int queue_length;
+> @@ -1844,7 +1848,10 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+>   			if (response->first_segment && size == 4) {
+>   				unsigned int rfc1002_len =
+>   					data_length + remaining_data_length;
+> -				*((__be32 *)buf) = cpu_to_be32(rfc1002_len);
+> +				__be32 rfc1002_hdr = cpu_to_be32(rfc1002_len);
+> +				if (copy_to_iter(&rfc1002_hdr, sizeof(rfc1002_hdr),
+> +						 &msg->msg_iter) != sizeof(rfc1002_hdr))
+> +					return -EFAULT;
+>   				data_read = 4;
+>   				response->first_segment = false;
+>   				log_read(INFO, "returning rfc1002 length %d\n",
+> @@ -1853,10 +1860,9 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+>   			}
+>   
+>   			to_copy = min_t(int, data_length - offset, to_read);
+> -			memcpy(
+> -				buf + data_read,
+> -				(char *)data_transfer + data_offset + offset,
+> -				to_copy);
+> +			if (copy_to_iter((char *)data_transfer + data_offset + offset,
+> +					 to_copy, &msg->msg_iter) != to_copy)
+> +				return -EFAULT;
+>   
+>   			/* move on to the next buffer? */
+>   			if (to_copy == data_length - offset) {
+> @@ -1921,90 +1927,6 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+>   	goto again;
+>   }
+>   
+> -/*
+> - * Receive a page from receive reassembly queue
+> - * page: the page to read data into
+> - * to_read: the length of data to read
+> - * return value: actual data read
+> - */
+> -static int smbd_recv_page(struct smbd_connection *info,
+> -		struct page *page, unsigned int page_offset,
+> -		unsigned int to_read)
+> -{
+> -	struct smbdirect_socket *sc = &info->socket;
+> -	int ret;
+> -	char *to_address;
+> -	void *page_address;
+> -
+> -	/* make sure we have the page ready for read */
+> -	ret = wait_event_interruptible(
+> -		info->wait_reassembly_queue,
+> -		info->reassembly_data_length >= to_read ||
+> -			sc->status != SMBDIRECT_SOCKET_CONNECTED);
+> -	if (ret)
+> -		return ret;
+> -
+> -	/* now we can read from reassembly queue and not sleep */
+> -	page_address = kmap_atomic(page);
+> -	to_address = (char *) page_address + page_offset;
+> -
+> -	log_read(INFO, "reading from page=%p address=%p to_read=%d\n",
+> -		page, to_address, to_read);
+> -
+> -	ret = smbd_recv_buf(info, to_address, to_read);
+> -	kunmap_atomic(page_address);
+> -
+> -	return ret;
+> -}
+> -
+> -/*
+> - * Receive data from transport
+> - * msg: a msghdr point to the buffer, can be ITER_KVEC or ITER_BVEC
+> - * return: total bytes read, or 0. SMB Direct will not do partial read.
+> - */
+> -int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
+> -{
+> -	char *buf;
+> -	struct page *page;
+> -	unsigned int to_read, page_offset;
+> -	int rc;
+> -
+> -	if (iov_iter_rw(&msg->msg_iter) == WRITE) {
+> -		/* It's a bug in upper layer to get there */
+> -		cifs_dbg(VFS, "Invalid msg iter dir %u\n",
+> -			 iov_iter_rw(&msg->msg_iter));
+> -		rc = -EINVAL;
+> -		goto out;
+> -	}
+> -
+> -	switch (iov_iter_type(&msg->msg_iter)) {
+> -	case ITER_KVEC:
+> -		buf = msg->msg_iter.kvec->iov_base;
+> -		to_read = msg->msg_iter.kvec->iov_len;
+> -		rc = smbd_recv_buf(info, buf, to_read);
+> -		break;
+> -
+> -	case ITER_BVEC:
+> -		page = msg->msg_iter.bvec->bv_page;
+> -		page_offset = msg->msg_iter.bvec->bv_offset;
+> -		to_read = msg->msg_iter.bvec->bv_len;
+> -		rc = smbd_recv_page(info, page, page_offset, to_read);
+> -		break;
+> -
+> -	default:
+> -		/* It's a bug in upper layer to get there */
+> -		cifs_dbg(VFS, "Invalid msg type %d\n",
+> -			 iov_iter_type(&msg->msg_iter));
+> -		rc = -EINVAL;
+> -	}
+> -
+> -out:
+> -	/* SMBDirect will read it all or nothing */
+> -	if (rc > 0)
+> -		msg->msg_iter.count = 0;
+> -	return rc;
+> -}
+> -
+>   /*
+>    * Send data to transport
+>    * Each rqst is transported as a SMBDirect payload
+> 
 
