@@ -1,261 +1,156 @@
-Received: from mail-il1-f177.google.com (mail-il1-f177.google.com [209.85.166.177])
+Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E321225B1C4
-	for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 23:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B8A1F3D20
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750809505; cv=none; b=YAsppqUjlckJ2L4ttmjEk1za5gyYLCjl8zxn8UPa5RrtcZK1jtaC/mCFf0osf4eabm25Hj9TFTLf+SiDGuwbA6NRgqzA0rDmNx4XNTf5HcLLPOrj8dqK9KrjSqaCDu3Up4qO0Nz0icqmqjE147DbCf4u73rn3Hj71hYk7I93f9Y=
+	t=1750809630; cv=none; b=XXUqJNScF6CSf+nC8VEjczU9JyD7D6byNdr8ZTa9EjWiW+BvmGAIN552yVSZRZpFo+oDmXMkpKieLaPT3gVArJ02QOR/c0gIQHOdh3QAhW+w8COKGlWxzT+FLG+/gUz+zFywCVagJELurDsPli+1GspMG3CTHy46DrTBU2DNO5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750809505; c=relaxed/simple;
-	bh=zONNn9pyWUemm1xt16gFXoqCjFkdMDuzLTIiiVYNUAs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Li5Qx0IX4Ih9RXpPt/dRgXNaP33utPjVYxEF/8NrXXYi7jOqjUEOY3UEBNKKbFQUiygjghflJWWLW9ZEtUllBk8Spr8zapQNklqiViaAh0mDLuVYTW0vu02fSvV+DZgusA7UMzslrvqHH8AojG7Gab7O0+Sq5IK+W9LTxFF6lwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ber2peYh; arc=none smtp.client-ip=209.85.166.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ber2peYh"
-Received: by mail-il1-f177.google.com with SMTP id e9e14a558f8ab-3de210e6076so26675ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 16:58:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750809503; x=1751414303; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iG/Zv6yLvlO+K1c2AY5mxCu5YH7CkBhhNvJhoxePL8c=;
-        b=ber2peYhDaDKfkfdD5GdYhY1EYBspzT9KlWUkkJjnkS7u/7hglsWjZ0ux3Tf+tDwqk
-         6gpyRFyZIse3nvi0A/afkE2ZJPsPQjOUsQXEXlsjivawt3HBbv3eyV0wjDlNJqllJlRv
-         2SdQTe4txWFMMSCqeIp4v6KNBLIjyh+IEbVMwKPxqvqiiIRWo6ragvm0K6JuXr1pE3NC
-         JA9sHZN3pG5ih8+IVnfyPRGVBytUBXw/jNYGVNCT6s8sOjKNDyipsYNahAEvhKGKEE5K
-         HMLewip/ESOK+Iu71SINDunW5g9TjUHV6AzHfT1mtTDeNSwqfZVCJ1zjAxjyzbE0Vwap
-         ousw==
+	s=arc-20240116; t=1750809630; c=relaxed/simple;
+	bh=8sive2Jl4qKmiMsMEqR3Gv72F8HQHweD7jjG/zBky+E=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Vfao48trjXB5bH65wo/GTurPBrUAoqoer2ggkhRgV5UGPmDcTmM/5ywysgOhtkLNyYr2mIuH8vPGQI/3RfbhKgdNhbzqT/j4ETE+wQjFTFceIDXmVg7CgCwB5OWPY+fsXgFi/79RptbBWbU0igJz+nDZ2pAHLuV9ZkcWXYTEEKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddb4a92e80so14569885ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 17:00:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750809503; x=1751414303;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iG/Zv6yLvlO+K1c2AY5mxCu5YH7CkBhhNvJhoxePL8c=;
-        b=gKnZEgAFC/jopQXZkp0fjY7y3nGb6vd7RWAoBMSxscJ+N0AQ/0xIlDCmbh/sGpfK2A
-         iPjLIctohFNZTLgCIpJMPd5+E/aNrEinojkpGoZUbSQuBDWP+fGhJyKSilyLHPGciOsK
-         pZXH04HcN238XSrM64++BlVwJgqSRna5SWDNSlMx3KdxRhrgQPDjPt+AbDeyPhsYXqUr
-         Gs8dOVfzRvOUYywOM597i83Bkwv3VXjDX+u25+voOKRfyAlKe0f6yYcR+pTmV/J6+mrG
-         VYFQ2CcelMN4V8Ud1dY5wcAECghSMUaJlqbWQhHxKFhESSFoRd9dT3utwQ3mqxeBj0H5
-         jtQw==
-X-Gm-Message-State: AOJu0YwCbC0WT7zh7V0V/zzNCN92bkaqFTffBb/bIWDJO0XDFpGyjVq1
-	ocOl/R/FUJhcaZt4edL4/qlixe79UGpjIhhqCFMJlV86uthnx7eDZ5PLOLRbEsLBE/Jzipa0LS1
-	3Kr2m6L15PBVBLUpYfAXG4XjhJTsy8fCiK0UMlVme
-X-Gm-Gg: ASbGncvTxXDugudAGNS2VN1fySRKkQa4aFwko3TVKDBz8sb68rH88GmkUpUzJvW/C/7
-	zxNTF75I4UaJDkPlI2hFZHNy2zNXJLT1EwzT2rpUlFsCV8gQKn0D1srfKuRlBVBJmSEAVf40pve
-	20klpaMsQH013+zhowr5rYY4TLDZf//tpsv+Vy8lP1gCqmdWb27ddte+xSYIDw1NWs2tt6aEzt
-X-Google-Smtp-Source: AGHT+IGBqq2uzi1iXRZYiBTgNWtXp4NXpQ5YSeoA1v+WUdjP028nu7XsYGjIbSuyWHcQ+JLQUkMm5iwUL8hxi6Ag8bY=
-X-Received: by 2002:a05:6e02:1fc1:b0:3d9:6c99:5a83 with SMTP id
- e9e14a558f8ab-3df3433f75amr570055ab.8.1750809502689; Tue, 24 Jun 2025
- 16:58:22 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750809628; x=1751414428;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sCtqvdPUTs51gqi/5wXoJUWwtYfBR5G8iVs3Go24gLI=;
+        b=DAMPInBhcI+fUpuYqwbeCFgDzonITIWSWFVH8MgEvpop5p+lM9EfbjN0mCIDN6dlo3
+         iv9FoWK2Y54aAgts7obUUlMxHPmpV9smgAD3mDnIzbcS381lvPcweIBgiQt8ef9AMxCx
+         +mQOMDWH8JTe5z0Nq7bpKvMXcXojza4cpENA+yu/Bg5bDk6jpsLLFJQey0jTRlyqqiWi
+         AxU5qb5Po/kNJGZGyMDmIcfveJ7FF8bTET7lXY2S3jGyVr0t5C3GH4JvO4Yrrk5Mq3yr
+         kL++3XHWEhC2KGZxrA7NwONNqxpeA5XCDq0BRebbpVcsYZ4oL7iOX6QihC1R2MwFbXzl
+         RQgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXfop7KzbvtAnHF5Sf/kgbdA3v6qCcDz4cKAO4gsGpd4UDnDaTyp9jdtYtnMIH2MG+U1Tslhd9VoWY8yUk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFJppl/qQKWSvlX2KTkyuXuig9Q11ONvXcXw3+4RXpuZahSJem
+	k62IOwacP1Rl+nM0JLKrypNtKu9Aavt3hDUHUSD6kH6R1MF5clrc1s7JY6mLFu+ob3XKJvVGldj
+	AEjf0OaIePfCNnWV8ISf7PQh5sSFBy0P5m4IH4M7ruVjVGWd0SZq/7g0O98s=
+X-Google-Smtp-Source: AGHT+IEFY0yuri4cuswlN4ChR08WzmEPJO9M5hmf2V7vwFtun89PVuyie76n9x0RMfoaR5x8/Gea53lQBHfNhGg1OW3fuiwuNtDq
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624221545.1711008-1-ctshao@google.com>
-In-Reply-To: <20250624221545.1711008-1-ctshao@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 24 Jun 2025 16:58:11 -0700
-X-Gm-Features: AX0GCFuoGpMpf9ipUJhqwxJVMdNdmQT_mQvyEEJ5e0_dXLJmrONU2SNlI-1Vxoc
-Message-ID: <CAP-5=fU+TN6FiRYc_g2etdBeXBujKtHA2z=NE3k3mBrz2bUS1Q@mail.gmail.com>
-Subject: Re: [PATCH v3] perf stat: Fix uncore aggregation number
-To: Chun-Tse Shao <ctshao@google.com>
-Cc: linux-kernel@vger.kernel.org, wy.shih90@gmail.com, peterz@infradead.org, 
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, james.clark@linaro.org, 
-	linux-perf-users@vger.kernel.org
+X-Received: by 2002:a05:6e02:b45:b0:3dd:b762:ed1b with SMTP id
+ e9e14a558f8ab-3df32949ecdmr14318475ab.16.1750809628001; Tue, 24 Jun 2025
+ 17:00:28 -0700 (PDT)
+Date: Tue, 24 Jun 2025 17:00:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685b3c1b.050a0220.2303ee.0010.GAE@google.com>
+Subject: [syzbot] [bpf?] WARNING: kernel/bpf/verifier.c:LINE at do_check, CPU: syz.NUM.NUM/NUM
+From: syzbot <syzbot+dc27c5fb8388e38d2d37@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, eddyz87@gmail.com, haoluo@google.com, 
+	henriette.herzog@rub.de, john.fastabend@gmail.com, jolsa@kernel.org, 
+	kpsingh@kernel.org, linux-kernel@vger.kernel.org, luis.gerhorst@fau.de, 
+	martin.lau@linux.dev, memxor@gmail.com, sdf@fomichev.me, song@kernel.org, 
+	syzkaller-bugs@googlegroups.com, yonghong.song@linux.dev
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 24, 2025 at 3:15=E2=80=AFPM Chun-Tse Shao <ctshao@google.com> w=
-rote:
->
-> Follow up:
-> lore.kernel.org/CAP-5=3DfVDF4-qYL1Lm7efgiHk7X=3D_nw_nEFMBZFMcsnOOJgX4Kg@m=
-ail.gmail.com/
->
-> The patch adds unit aggregation during evsel merge the aggregated uncore
-> counters. Change the name of the column to `ctrs` and `counters` for
-> json mode.
->
-> Tested on a 2-socket machine with SNC3, uncore_imc_[0-11] and
-> cpumask=3D"0,120"
-> Before:
->   perf stat -e clockticks -I 1000 --per-socket
->   #           time socket cpus             counts unit events
->        1.001085024 S0        1         9615386315      clockticks
->        1.001085024 S1        1         9614287448      clockticks
->   perf stat -e clockticks -I 1000 --per-node
->   #           time node   cpus             counts unit events
->        1.001029867 N0        1         3205726984      clockticks
->        1.001029867 N1        1         3205444421      clockticks
->        1.001029867 N2        1         3205234018      clockticks
->        1.001029867 N3        1         3205224660      clockticks
->        1.001029867 N4        1         3205207213      clockticks
->        1.001029867 N5        1         3205528246      clockticks
-> After:
->   perf stat -e clockticks -I 1000 --per-socket
->   #           time socket ctrs             counts unit events
->        1.001026071 S0       12         9619677996      clockticks
->        1.001026071 S1       12         9618612614      clockticks
->   perf stat -e clockticks -I 1000 --per-node
->   #           time node   ctrs             counts unit events
->        1.001027449 N0        4         3207251859      clockticks
->        1.001027449 N1        4         3207315930      clockticks
->        1.001027449 N2        4         3206981828      clockticks
->        1.001027449 N3        4         3206566126      clockticks
->        1.001027449 N4        4         3206032609      clockticks
->        1.001027449 N5        4         3205651355      clockticks
->
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Signed-off-by: Chun-Tse Shao <ctshao@google.com>
-> ---
-> v3:
->   Rename the column to `ctrs` and `counters` in json mode.
->
-> v2: https://lore.kernel.org/20250612225324.3315450-1-ctshao@google.com/
->   Rename the column to `aggr_nr`.
->   Remove unnecessary comment.
->
-> v1: https://lore.kernel.org/20250611233239.3098064-1-ctshao@google.com/
->
->  tools/perf/util/stat-display.c | 34 +++++++++++++++++-----------------
->  tools/perf/util/stat.c         |  2 +-
->  2 files changed, 18 insertions(+), 18 deletions(-)
->
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
-y.c
-> index 729ad5cd52cb..9cb5245a92aa 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -50,15 +50,15 @@ static int aggr_header_lens[] =3D {
->  };
->
->  static const char *aggr_header_csv[] =3D {
-> -       [AGGR_CORE]     =3D       "core,cpus,",
-> -       [AGGR_CACHE]    =3D       "cache,cpus,",
-> -       [AGGR_CLUSTER]  =3D       "cluster,cpus,",
-> -       [AGGR_DIE]      =3D       "die,cpus,",
-> -       [AGGR_SOCKET]   =3D       "socket,cpus,",
-> -       [AGGR_NONE]     =3D       "cpu,",
-> -       [AGGR_THREAD]   =3D       "comm-pid,",
-> -       [AGGR_NODE]     =3D       "node,",
-> -       [AGGR_GLOBAL]   =3D       ""
-> +       [AGGR_CORE]     =3D       "core,ctrs,",
-> +       [AGGR_CACHE]    =3D       "cache,ctrs,",
-> +       [AGGR_CLUSTER]  =3D       "cluster,ctrs,",
-> +       [AGGR_DIE]      =3D       "die,ctrs,",
-> +       [AGGR_SOCKET]   =3D       "socket,ctrs,",
-> +       [AGGR_NONE]     =3D       "cpu,",
-> +       [AGGR_THREAD]   =3D       "comm-pid,",
-> +       [AGGR_NODE]     =3D       "node,",
-> +       [AGGR_GLOBAL]   =3D       ""
->  };
->
->  static const char *aggr_header_std[] =3D {
-> @@ -304,7 +304,7 @@ static void print_aggr_id_std(struct perf_stat_config=
- *config,
->                 return;
->         }
->
-> -       fprintf(output, "%-*s %*d ", aggr_header_lens[idx], buf, 4, aggr_=
-nr);
-> +       fprintf(output, "%-*s %*d ", aggr_header_lens[idx], buf, /*strlen=
-("ctrs")*/ 4, aggr_nr);
->  }
->
->  static void print_aggr_id_csv(struct perf_stat_config *config,
-> @@ -366,27 +366,27 @@ static void print_aggr_id_json(struct perf_stat_con=
-fig *config, struct outstate
->  {
->         switch (config->aggr_mode) {
->         case AGGR_CORE:
-> -               json_out(os, "\"core\" : \"S%d-D%d-C%d\", \"aggregate-num=
-ber\" : %d",
-> +               json_out(os, "\"core\" : \"S%d-D%d-C%d\", \"counters\" : =
-%d",
+Hello,
 
-Do we need to change the test?
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/tests/shell/lib/perf_json_output_lint.py?h=3Dperf-tools-n=
-ext#n48
-I think we can also document the value in the man page:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.gi=
-t/tree/tools/perf/Documentation/perf-stat.txt?h=3Dperf-tools-next#n637
-I think because it was ambiguous before we hadn't done this.
+syzbot found the following issue on:
 
-Thanks,
-Ian
+HEAD commit:    050f8ad7b58d Add linux-next specific files for 20250616
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10678370580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d2efc7740224b93a
+dashboard link: https://syzkaller.appspot.com/bug?extid=dc27c5fb8388e38d2d37
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13531e82580000
 
->                         id.socket, id.die, id.core, aggr_nr);
->                 break;
->         case AGGR_CACHE:
-> -               json_out(os, "\"cache\" : \"S%d-D%d-L%d-ID%d\", \"aggrega=
-te-number\" : %d",
-> +               json_out(os, "\"cache\" : \"S%d-D%d-L%d-ID%d\", \"counter=
-s\" : %d",
->                         id.socket, id.die, id.cache_lvl, id.cache, aggr_n=
-r);
->                 break;
->         case AGGR_CLUSTER:
-> -               json_out(os, "\"cluster\" : \"S%d-D%d-CLS%d\", \"aggregat=
-e-number\" : %d",
-> +               json_out(os, "\"cluster\" : \"S%d-D%d-CLS%d\", \"counters=
-\" : %d",
->                         id.socket, id.die, id.cluster, aggr_nr);
->                 break;
->         case AGGR_DIE:
-> -               json_out(os, "\"die\" : \"S%d-D%d\", \"aggregate-number\"=
- : %d",
-> +               json_out(os, "\"die\" : \"S%d-D%d\", \"counters\" : %d",
->                         id.socket, id.die, aggr_nr);
->                 break;
->         case AGGR_SOCKET:
-> -               json_out(os, "\"socket\" : \"S%d\", \"aggregate-number\" =
-: %d",
-> +               json_out(os, "\"socket\" : \"S%d\", \"counters\" : %d",
->                         id.socket, aggr_nr);
->                 break;
->         case AGGR_NODE:
-> -               json_out(os, "\"node\" : \"N%d\", \"aggregate-number\" : =
-%d",
-> +               json_out(os, "\"node\" : \"N%d\", \"counters\" : %d",
->                         id.node, aggr_nr);
->                 break;
->         case AGGR_NONE:
-> @@ -1317,7 +1317,7 @@ static void print_header_interval_std(struct perf_s=
-tat_config *config,
->         case AGGR_CLUSTER:
->         case AGGR_CACHE:
->         case AGGR_CORE:
-> -               fprintf(output, "#%*s %-*s cpus",
-> +               fprintf(output, "#%*s %-*s ctrs",
->                         INTERVAL_LEN - 1, "time",
->                         aggr_header_lens[config->aggr_mode],
->                         aggr_header_std[config->aggr_mode]);
-> diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-> index 355a7d5c8ab8..b0205e99a4c9 100644
-> --- a/tools/perf/util/stat.c
-> +++ b/tools/perf/util/stat.c
-> @@ -526,7 +526,7 @@ static int evsel__merge_aggr_counters(struct evsel *e=
-vsel, struct evsel *alias)
->                 struct perf_counts_values *aggr_counts_a =3D &ps_a->aggr[=
-i].counts;
->                 struct perf_counts_values *aggr_counts_b =3D &ps_b->aggr[=
-i].counts;
->
-> -               /* NB: don't increase aggr.nr for aliases */
-> +               ps_a->aggr[i].nr +=3D ps_b->aggr[i].nr;
->
->                 aggr_counts_a->val +=3D aggr_counts_b->val;
->                 aggr_counts_a->ena +=3D aggr_counts_b->ena;
-> --
-> 2.50.0.714.g196bf9f422-goog
->
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/49faa18d2f53/disk-050f8ad7.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/7c6f9cd7fe5d/vmlinux-050f8ad7.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/84a08d6403ee/bzImage-050f8ad7.xz
+
+The issue was bisected to:
+
+commit d6f1c85f22534d2d9fea9b32645da19c91ebe7d2
+Author: Luis Gerhorst <luis.gerhorst@fau.de>
+Date:   Tue Jun 3 21:24:28 2025 +0000
+
+    bpf: Fall back to nospec for Spectre v1
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1346f6bc580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=10c6f6bc580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1746f6bc580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+dc27c5fb8388e38d2d37@syzkaller.appspotmail.com
+Fixes: d6f1c85f2253 ("bpf: Fall back to nospec for Spectre v1")
+
+------------[ cut here ]------------
+WARNING: kernel/bpf/verifier.c:19944 at do_check+0xa99c/0xdba0 kernel/bpf/verifier.c:19944, CPU#0: syz.0.16/6006
+Modules linked in:
+CPU: 0 UID: 0 PID: 6006 Comm: syz.0.16 Not tainted 6.16.0-rc2-next-20250616-syzkaller #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:do_check+0xa99c/0xdba0 kernel/bpf/verifier.c:19944
+Code: fc ff df 0f b6 04 08 84 c0 0f 85 91 2a 00 00 c7 03 00 00 00 00 49 bd 00 00 00 00 00 fc ff df e9 9d e9 ff ff e8 95 8a e9 ff 90 <0f> 0b 90 e9 fe cf ff ff e8 87 8a e9 ff 48 b8 00 00 00 00 00 fc ff
+RSP: 0018:ffffc90003d7eec0 EFLAGS: 00010293
+RAX: ffffffff81d6df9b RBX: 0000000000000011 RCX: ffff88807a10da00
+RDX: 0000000000000000 RSI: 0000000000000010 RDI: 0000000000000011
+RBP: ffffc90003d7f2d0 R08: 0000000000000004 R09: 0000000000000004
+R10: ffff88802fa5b07c R11: ffffed1005f4b612 R12: 0000000000000010
+R13: dffffc0000000000 R14: ffffc9000321e000 R15: ffffc9000321e611
+FS:  0000555578232500(0000) GS:ffff888125c40000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b2f25ffff CR3: 0000000076224000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ do_check_common+0x18c9/0x2400 kernel/bpf/verifier.c:23078
+ do_check_main kernel/bpf/verifier.c:23161 [inline]
+ bpf_check+0x110e2/0x1a240 kernel/bpf/verifier.c:24515
+ bpf_prog_load+0x1318/0x1930 kernel/bpf/syscall.c:2972
+ __sys_bpf+0x5f1/0x860 kernel/bpf/syscall.c:5978
+ __do_sys_bpf kernel/bpf/syscall.c:6085 [inline]
+ __se_sys_bpf kernel/bpf/syscall.c:6083 [inline]
+ __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:6083
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f9eb5d8e929
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffcbbdcac48 EFLAGS: 00000246 ORIG_RAX: 0000000000000141
+RAX: ffffffffffffffda RBX: 00007f9eb5fb5fa0 RCX: 00007f9eb5d8e929
+RDX: 0000000000000090 RSI: 00002000000004c0 RDI: 0000000000000005
+RBP: 00007f9eb5e10b39 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f9eb5fb5fa0 R14: 00007f9eb5fb5fa0 R15: 0000000000000003
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
