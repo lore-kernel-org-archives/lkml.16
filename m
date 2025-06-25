@@ -1,141 +1,168 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E98A29899A;
-	Wed, 25 Jun 2025 08:58:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7599F28469D
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841906; cv=none; b=rPSESbCCOD9hG+YlAXGdii/N9jcS4GMTWbpC+6kqjMkyo/HaGC1z8qViiVRE0f1Vmj/g3Cgbn6hEWXyKTHgVtGEZqcldH+fPenjaths+3LxziH3rAAhVpUanJ4pMMc94315M0x24+yaCdQJcfG1p2dfRwo2PAtb/L+XJB9oY4x8=
+	t=1750841970; cv=none; b=FGvuZ+htR+a+NaDaN79eoi3F6boQnufnvDZ22wIB2de5ThKKUPKoSWOQ3HJDsGI/Ba8y4F5DWqaZ1+UmzgaBhjBjJIAM5/F/bfVlKmM8Od4SbN0sHqcVsfRDvh26JUrWlBZ04SjoZMYsqb7sejb8xUo3jtEE/baFeIAk4GI4D54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841906; c=relaxed/simple;
-	bh=yhjZTBhU/CMRtbEz7y3DxrZl7CgmLF/IsLHlNdjaslA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=H+SkSevpdM/vOfrXoifeZNfeO+MFKa+jMDlPO2V2P1cEHTBLMLjR/f8gni8rzPwx1eHtLqnGkjzuDsadLVBpjm/EUy7AyYASpA1V43Dsh5ztu049qliACk8hNiV4ZZhbLqpMfAR2AS19tTclevqcuGO0O+1fTbuJNFcZ3OZlsLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Nxp25/KU; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1750841970; c=relaxed/simple;
+	bh=LsTZ1xubIK1r8E3duqAkTIbapbM06jFjZcNgwDipAM8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cNOIeCzZtJnNBX69FUKgPI8vz+AGKRThpZX3pzPLlgssYZx/7h4nde5JKutHjLvld128Yua640b1WGS4qPgaoxdqgRTj5rzDncERryG/laMtYuWlBN4jIWRWKQOgV2Rk6eLKPz/ER2CELZ0F5mYH7GHSWop8KQqYqtU0QRFKdog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iiYHjZY5; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Nxp25/KU"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P62hg2027443;
-	Wed, 25 Jun 2025 08:58:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=G1+lkP2gGBx
-	hf/sz6pg4wT4ELrreQYXqFDPuhwZPnDA=; b=Nxp25/KUWHcgA+VP4rMxCrrbxec
-	kzjSS11/jmV1EBr3rku7yufqSNxlw7u2T9Ii848+hws6XSZGaRyny3KZJ1V90Vkf
-	rsMHlCCIiOjmyEcbWBXEejPgywjF8ovuY/NA7ZikAz6OMqfGYG/97RgvoqWFz4FQ
-	z+1+H9kogOye8ETK/oeLlRn6q8CJ1rUGQEi/FurGagXAcqGV74SrpxifwxrbhIR3
-	JhbU+kOHch1xGiePqSf6Pqpw1AOnnUPYB/6JepyXjoelaixQgBju0esxtLkUfqlM
-	3Vf3dxVXaxIJL9JBRC8D89KkMX4oJA0kPIdaLcEYMRpMqAlsm7jjLBwuytQ==
-Received: from aptaippmta01.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47esa4re8w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 08:58:07 +0000 (GMT)
-Received: from pps.filterd (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55P8w4oa029382;
-	Wed, 25 Jun 2025 08:58:04 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 47dntmar3c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 08:58:04 +0000
-Received: from APTAIPPMTA01.qualcomm.com (APTAIPPMTA01.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55P8w4k8029376;
-	Wed, 25 Jun 2025 08:58:04 GMT
-Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
-	by APTAIPPMTA01.qualcomm.com (PPS) with ESMTPS id 55P8w37D029370
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 08:58:04 +0000
-Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
-	id E3BB23834; Wed, 25 Jun 2025 16:58:02 +0800 (CST)
-From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
-        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
-        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
-        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
-        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
-        kw@linux.com
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
-        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
-        Ziyue Zhang <quic_ziyuzhan@quicinc.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Subject: [PATCH v3 3/3] arm64: dts: qcom: sa8775p: Add PCIe lane equalization preset properties
-Date: Wed, 25 Jun 2025 16:58:01 +0800
-Message-Id: <20250625085801.526669-4-quic_ziyuzhan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250625085801.526669-1-quic_ziyuzhan@quicinc.com>
-References: <20250625085801.526669-1-quic_ziyuzhan@quicinc.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iiYHjZY5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750841968;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=U3Brvxz8MbiH6XgkZg4KphQbns9ecC7YJ1drbCD647Q=;
+	b=iiYHjZY5XAAA47ebkgVUKPUBHYlzslyotN/BzsUqslflctsaXptZz1YL3WvX10F4lcusEU
+	1SqSyuxBaHv5y+eT5JgeeSwQ71cBm5TuwmAgUbHX9YtIIibt6bTsXPiUsSKBDcbb4gnA6t
+	t2pb/VpCXm7hR3F+8Qj16FnsYfz4rcw=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-6-fDzf-D5ONUOcq4Je46TfIw-1; Wed, 25 Jun 2025 04:59:25 -0400
+X-MC-Unique: fDzf-D5ONUOcq4Je46TfIw-1
+X-Mimecast-MFC-AGG-ID: fDzf-D5ONUOcq4Je46TfIw_1750841965
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f6ff23ccso857115f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:59:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750841964; x=1751446764;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=U3Brvxz8MbiH6XgkZg4KphQbns9ecC7YJ1drbCD647Q=;
+        b=DHxOJn1xW2R/EjmJb0y42qHI5HBu7VoKBTtchjKVHvod/NpDI0QAXjL/Xki+k5bwgB
+         dr+s0h4VSFfts7fc0wdIkKMZDIV+4cOtShcvWutTS1JSJiEJfo9BiWkX7j2GKErFYeDP
+         IdM3yR0W5rbMo1lwAdKttkbN4sj4Z+88sHyZf5Yh6UUSu7O+cwEhd1UhELypm4dwUTwC
+         0GF7ryNI7jkIS9a3pJVsKDXgM+6FxaeGxp3S6pcgVvzmLWdR3/PYgnqgeHTP1vnKha57
+         OLJ667MvICAE6wkC7NdrQqHogzsjdaBtpTKGKPU7cGj87wbg1evC1qSq3siWzLvo0ZiF
+         Wg6w==
+X-Gm-Message-State: AOJu0Yw1u319Xx2Q/ih9z36PZDvq0d3LkplmVaiYW7l3krHD+u8QLD/+
+	SuNDE0+4L/1xKrBdohneoeq8VJLDAoFjnj0iPYihZoxMPfaqDorDGXZ8rpBDrZvpobvGhKj8VTT
+	cRcNx8HUMvF+fT0thd1EYoJfAraCoLN/8SRyWbMjt09u4aj9DhMuzs+pBQ73l8RkMBA==
+X-Gm-Gg: ASbGnctszBcXvDUHNjL4a7Zc+TPgw9HmeKc9+Ai/i6ira6sMzwI9gC809oIzWvtHLNH
+	F3aWnIQpc1BxjaTr2EIB6S9PMYGt0lHhFLRGMAlo+5cq0/MsPbkxYX/2LEcW5I7yH7n9KGO5Gi4
+	Kw5uzz4bf7+KgpDf5baJJiuJLCSKnZzvFFgh1sMIh1c+u/pMDC907IfDajbGiXFRcsUFVa/i/tI
+	+5UPJYAzvbf8VNh9c5qDFvL/OJjBQqKvJPa1e5Gitzy0xuUyDk6KiFW5Um+wDUKnUuXBKSOCrV9
+	f3tmmnHkv6HZQeSYy8kCWaBNnLphSNjZk99w1icp+9SXC9WmWxedLWzEihUXnZczd1u7U4dXpiP
+	ZxoWP8jC/vHLcU2b1/mTb3zYbD1iWmmJUjSNY1czTWqis
+X-Received: by 2002:a05:6000:2006:b0:3a5:52d4:5b39 with SMTP id ffacd0b85a97d-3a6ed5b8f3bmr1356719f8f.8.1750841964501;
+        Wed, 25 Jun 2025 01:59:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGmexdG/6iYRK1nINpdDcKN05wfIqOXNxWtd6lTUtsg3Wj5E7wNC+aoN6SEKsHkkqyrPMOE1w==
+X-Received: by 2002:a05:6000:2006:b0:3a5:52d4:5b39 with SMTP id ffacd0b85a97d-3a6ed5b8f3bmr1356681f8f.8.1750841964080;
+        Wed, 25 Jun 2025 01:59:24 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f12:1b00:5d6b:db26:e2b7:12? (p200300d82f121b005d6bdb26e2b70012.dip0.t-ipconnect.de. [2003:d8:2f12:1b00:5d6b:db26:e2b7:12])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e810010fsm4044551f8f.74.2025.06.25.01.59.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 01:59:23 -0700 (PDT)
+Message-ID: <998ab0ce-6f11-4c0b-bc32-38fe2abd74b7@redhat.com>
+Date: Wed, 25 Jun 2025 10:59:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=eLYTjGp1 c=1 sm=1 tr=0 ts=685bba1f cx=c_pps
- a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
- a=6IFa9wvqVegA:10 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=XhQEiPrLEPsAcZFVs94A:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: j-5xmPzXLYCl-Ba9u4oLdWJCOk-fQ2Vu
-X-Proofpoint-ORIG-GUID: j-5xmPzXLYCl-Ba9u4oLdWJCOk-fQ2Vu
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA2NiBTYWx0ZWRfX2RH456irvrVB
- 256toBcwNhm4bQCfsS0QwDyion+p0APjIE6E2SESQg9iiUYOEmEXaEcJgXBI8wsaDbO2Unyxasu
- 9g1aRrZiOdJljx0l5lqjJzzmxzf0+7Kb6Jf7viuIdd/t1YY2j+ydHA0kiZl3iG3H/z8snLp5AbY
- /PrsdX8xS4l93ftQGZBJtuFWeHPRnFjlrdHGbf8Jxka0E32RJ97mIZvqtVKzrlUv255+uoexQ4I
- CrkAaJ2FZuVRO3V3bDNsvs9RWdS0Pzq07ViXoCg0LG7MyEBiDOO9uWK7QtBJJKK8xzHfUnQfrE7
- DVyH9TCurbi7Fo8iFOfs4k9jXEj36chf70tuGm111gqcGnHnpnc37xfq38cuzlKnQnvpdQsCy5R
- PHcOlTWi1r4LMpnf1xaLljb628sBpVTgdi2Iv3l14kIrRKvOed6latFcDWmQwG6ofo5cUjt4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=948
- suspectscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506250066
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 06/14] mm/huge_memory: support huge zero folio in
+ vmf_insert_folio_pmd()
+To: Oscar Salvador <osalvador@suse.de>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+ linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ Andrew Morton <akpm@linux-foundation.org>, Juergen Gross <jgross@suse.com>,
+ Stefano Stabellini <sstabellini@kernel.org>,
+ Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+ Dan Williams <dan.j.williams@intel.com>, Alistair Popple
+ <apopple@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
+ Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
+ Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
+ Baolin Wang <baolin.wang@linux.alibaba.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
+ Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
+ Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
+ Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
+ Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+ Pedro Falcato <pfalcato@suse.de>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-7-david@redhat.com>
+ <aFuxRv1zYZDjJdYh@localhost.localdomain>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <aFuxRv1zYZDjJdYh@localhost.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add PCIe lane equalization preset properties with all values set to 5 for
-8.0 GT/s and 16.0 GT/s data rates to enhance link stability.
+On 25.06.25 10:20, Oscar Salvador wrote:
+> On Tue, Jun 17, 2025 at 05:43:37PM +0200, David Hildenbrand wrote:
+>> Just like we do for vmf_insert_page_mkwrite() -> ... ->
+>> insert_page_into_pte_locked(), support the huge zero folio.
+> 
+> It might just be me because I don't have the full context cached, but
+> I might have appreciated more info here :-).
 
-Co-developed-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-Signed-off-by: Qiang Yu <qiang.yu@oss.qualcomm.com>
-Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
- arch/arm64/boot/dts/qcom/sa8775p.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+I can add something similar to what we have in patch #8, stating that we 
+will change it to be special as well soon.
 
-diff --git a/arch/arm64/boot/dts/qcom/sa8775p.dtsi b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-index 45f536633f64..16caf1da0708 100644
---- a/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sa8775p.dtsi
-@@ -7159,6 +7159,9 @@ pcie0: pcie@1c00000 {
- 		phys = <&pcie0_phy>;
- 		phy-names = "pciephy";
- 
-+		eq-presets-8gts = /bits/ 16 <0x5555 0x5555>;
-+		eq-presets-16gts = /bits/ 8 <0x55 0x55>;
-+
- 		status = "disabled";
- 
- 		pcieport0: pcie@0 {
-@@ -7317,6 +7320,9 @@ pcie1: pcie@1c10000 {
- 		phys = <&pcie1_phy>;
- 		phy-names = "pciephy";
- 
-+		eq-presets-8gts = /bits/ 16 <0x5555 0x5555 0x5555 0x5555>;
-+		eq-presets-16gts = /bits/ 8 <0x55 0x55 0x55 0x55>;
-+
- 		status = "disabled";
- 
- 		pcie@0 {
+Thanks!
+
 -- 
-2.34.1
+Cheers,
+
+David / dhildenb
 
