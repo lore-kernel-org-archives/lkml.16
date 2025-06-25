@@ -1,94 +1,155 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D25F2DAFC1;
-	Wed, 25 Jun 2025 16:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1E9D2D5419;
+	Wed, 25 Jun 2025 16:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750870113; cv=none; b=SnmY/fWnjLLo+wQCmj/kwC0W7QXTKqdKhAtKCvBbl2HOUdsQWCkXj/ByFIEJM9O+nmiSVNHiTBreR2E5pJclAGt0Uy6N30Uf4DikHdASsna+Xx5Q6J30UH54tE8Bi2WIsaZQ72GOIm1SlxjtHov3ni5yD1Luj1aBDeEqSVEx7Nc=
+	t=1750870173; cv=none; b=Y3+vGL3MD/zQmrEvlutduiiNM5KvgGfugzj0HxMXDrJ2TTIIswWi9ZXfNXsKFyn9CUE5UrjYtMdgz9HBv+eaL2YYxdGfeK8LiahiyxrzBojyLNuEzSIN0XDWxVHbPvJzAGWCOyFczIhckZ6VKH790up+Pjao0j0raaE0VJKsNE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750870113; c=relaxed/simple;
-	bh=FMeTeIxkoCIe0b/zGg4ZKHQQsAok+GnOlbj4bqiJvJM=;
+	s=arc-20240116; t=1750870173; c=relaxed/simple;
+	bh=hJ9IT1sDWJS1Qd9kgWQahG6lGAg4gN1nxTf5Bx35lTY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XfzAM/wJesfe4il2oSIctqQtZxRHy1E7eWSuGufFzGQLJsi5XKTOhTkdJ8t2+yYAjFdbIDZZ9grhhmkN2fJNnWQiVLqAUvMk2nnXefcn9+JCiQr7imUwKbNC0N1P+4pY/uHQ/gC/ZNvkO2MjwRll8wFAY+phwgAQnaQsicNJLpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=peh9g5ZG; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	 Content-Type:Content-Disposition:In-Reply-To; b=biA80kzdvzAZijDtQjSThq2CnDddBCASMPsFOkGQqsgDhF/BfikJq0Q6YyOsIYhDhgIt1JplO2Cr4/gUG5HBHRJTGhEXw6TUvQkZuGaEeM4UAKv7dfzaGKsRNkwwPBmmo9PFh+cvdaHo51kkTowYGXKYSGN3ALWLjaaI/g1AthI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HSRiDNPT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="peh9g5ZG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Transfer-Encoding:Content-Disposition:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Content-Disposition:
-	In-Reply-To:References; bh=LeuVjAxzuvL1vAawfkyXmNc9BV3RB1RRKJR7uKR6uvg=; b=pe
-	h9g5ZGIAHz4Z3/8hGJCjCcGSzryCoUVJsYfa4pB920xYr5WualwA8QhQdHFdIBXBxuv5OqhHlwgtC
-	VHdGWENaFDTOC7h6PKccCZWfq4gLEWoGu8RiSv8c682Fli94OpQrwQQccJRs+zOXDTsj7Ep9jQT1X
-	bHucMQ5frd278gY=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uUTIO-00GxBa-48; Wed, 25 Jun 2025 18:48:24 +0200
-Date: Wed, 25 Jun 2025 18:48:24 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Kamil =?iso-8859-1?Q?Hor=E1k?= - 2N <kamilh@axis.com>
-Cc: florian.fainelli@broadcom.com, bcm-kernel-feedback-list@broadcom.com,
-	hkallweit1@gmail.com, linux@armlinux.org.uk, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	krzk+dt@kernel.org, conor+dt@kernel.org, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	f.fainelli@gmail.com, robh@kernel.org
-Subject: Re: [PATCH net-next v3 1/3] net: phy: MII-Lite PHY interface mode
-Message-ID: <fab0b3e5-9860-43c2-8c02-70d855b598a1@lunn.ch>
-References: <20250625163453.2567869-1-kamilh@axis.com>
- <20250625163453.2567869-2-kamilh@axis.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HSRiDNPT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3D33C4CEEA;
+	Wed, 25 Jun 2025 16:49:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750870173;
+	bh=hJ9IT1sDWJS1Qd9kgWQahG6lGAg4gN1nxTf5Bx35lTY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HSRiDNPTXbn4O9UGLpsTTb7caMI4LNipWhOJOr/wCEhL1B49Q56xuqUepdnY2Fl8X
+	 ZArJKg1tiQlyZsbQ1sK7pLiQ8B8Awj+jYa80BywD8ZIfhsd3Azh3xfKRER1a0p2w9P
+	 4vgieWP7jWg649mFW+DryVPTjbeFkIxNmELwgea65Jqm2NHk4nQokUJo95Vr5EuQc4
+	 +RuXrLBWQ880PbqdGEw9zhwPfViwRMncOPPomNxGNgeZRIrfsDRPWEZ3Ckv+p3Lvu6
+	 J5qyttSprM8mCPaTOCfdxhzEvn2uYqtaXuMvYVEI5epNyMnKLogSanIV6yTy+O7TcW
+	 NQnfDp9cpPJvQ==
+Date: Wed, 25 Jun 2025 19:49:29 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Jonathan McDowell <noodles@earth.li>
+Cc: "Orlov, Ivan" <iorlov@amazon.co.uk>,
+	"peterhuewe@gmx.de" <peterhuewe@gmx.de>,
+	"jgg@ziepe.ca" <jgg@ziepe.ca>,
+	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Woodhouse, David" <dwmw@amazon.co.uk>
+Subject: Re: [PATCH v2] tpm: Fix the timeout & use ktime
+Message-ID: <aFwomWU28ijZj3CZ@kernel.org>
+References: <20250620180828.98413-1-iorlov@amazon.com>
+ <aFhtKrWTDzZbpTSh@earth.li>
+ <aFwnG--lzZO0mQgc@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250625163453.2567869-2-kamilh@axis.com>
+In-Reply-To: <aFwnG--lzZO0mQgc@kernel.org>
 
-On Wed, Jun 25, 2025 at 06:34:51PM +0200, Kamil Horák - 2N wrote:
-> From: Kamil Horák (2N) <kamilh@axis.com>
+On Wed, Jun 25, 2025 at 07:43:11PM +0300, Jarkko Sakkinen wrote:
+> On Sun, Jun 22, 2025 at 09:52:58PM +0100, Jonathan McDowell wrote:
+> > On Fri, Jun 20, 2025 at 06:08:31PM +0000, Orlov, Ivan wrote:
+> > > The current implementation of timeout detection works in the following
+> > > way:
+> > > 
+> > > 1. Read completion status. If completed, return the data
+> > > 2. Sleep for some time (usleep_range)
+> > > 3. Check for timeout using current jiffies value. Return an error if
+> > >   timed out
+> > > 4. Goto 1
+> > > 
+> > > usleep_range doesn't guarantee it's always going to wake up strictly in
+> > > (min, max) range, so such a situation is possible:
+> > > 
+> > > 1. Driver reads completion status. No completion yet
+> > > 2. Process sleeps indefinitely. In the meantime, TPM responds
+> > > 3. We check for timeout without checking for the completion again.
+> > >   Result is lost.
+> > > 
+> > > Such a situation also happens for the guest VMs: if vCPU goes to sleep
+> > > and doesn't get scheduled for some time, the guest TPM driver will
+> > > timeout instantly after waking up without checking for the completion
+> > > (which may already be in place).
+> > > 
+> > > Perform the completion check once again after exiting the busy loop in
+> > > order to give the device the last chance to send us some data.
+> > > 
+> > > Since now we check for completion in two places, extract this check into
+> > > a separate function.
+> > > 
+> > > Signed-off-by: Ivan Orlov <iorlov@amazon.com>
+> > > ---
+> > > V1 -> V2:
+> > > - Exclude the jiffies -> ktime change from the patch
+> > > - Instead of recording the time before checking for completion, check
+> > >  for completion once again after leaving the loop
+> > > 
+> > > drivers/char/tpm/tpm-interface.c | 17 +++++++++++++++--
+> > > 1 file changed, 15 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+> > > index 8d7e4da6ed53..6960ee2798e1 100644
+> > > --- a/drivers/char/tpm/tpm-interface.c
+> > > +++ b/drivers/char/tpm/tpm-interface.c
+> > > @@ -82,6 +82,13 @@ static bool tpm_chip_req_canceled(struct tpm_chip *chip, u8 status)
+> > > 	return chip->ops->req_canceled(chip, status);
+> > > }
+> > > 
+> > > +static bool tpm_transmit_completed(struct tpm_chip *chip)
+> > > +{
+> > > +	u8 status_masked = tpm_chip_status(chip) & chip->ops->req_complete_mask;
+> > > +
+> > > +	return status_masked == chip->ops->req_complete_val;
+> > > +}
+> > > +
+> > > static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+> > > {
+> > > 	struct tpm_header *header = buf;
+> > > @@ -129,8 +136,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+> > > 	stop = jiffies + tpm_calc_ordinal_duration(chip, ordinal);
+> > > 	do {
+> > > 		u8 status = tpm_chip_status(chip);
+> > > -		if ((status & chip->ops->req_complete_mask) ==
+> > > -		    chip->ops->req_complete_val)
+> > > +		if (tpm_transmit_completed(chip))
+> > > 			goto out_recv;
+> > 
+> > The only thing I'd point out here is we end up doing a double status read
+> > one after the other (once here, once in tpm_transmit_completed), and I'm
+> > pretty sure I've seen instances where that caused a problem.
 > 
-> Some Broadcom PHYs are capable to operate in simplified MII mode,
-> without TXER, RXER, CRS and COL signals as defined for the MII.
-> The MII-Lite mode can be used on most Ethernet controllers with full
-> MII interface by just leaving the input signals (RXER, CRS, COL)
-> inactive. The absence of COL signal makes half-duplex link modes
-> impossible but does not interfere with BroadR-Reach link modes on
-> Broadcom PHYs, because they are all full-duplex only.
+> It would be easy to to prevent at least double reads after completion
+> e.g., in tpm_chip_status():
 > 
-> Add MII-Lite interface mode, especially for Broadcom two-wire PHYs.
-> Add MII-Lite activation for bcm5481x PHYs.
+> /*
+>  * Read the chip status bitmask. After completion, the returned will mask will
+>  * return value cached at the point of completion up until the next transmit.
+>  */
+> static u8 tpm_chip_status(struct tpm_chip *chip)
+> {
+> 	u8 status_masked = chip->status & chip->ops_req_complete_mask;
+> 
+> 	if (status_masked == chip->ops->req_complete_val)
+> 		return chip->status;
+> 
+> 	chip->status = tpm_chip_status(chip);
 
-Please split this patch into two. Add PHY_INTERFACE_MODE_MIILITE to
-the core first. Then add support for it to the broadcom PHY.
+OOPS:
 
-Splitting it allows you to make the commit message more detailed.
+	chip->status = chip->ops->status(chip);
 
->  
-> +	case PHY_INTERFACE_MODE_MIILITE:
-> +		link_caps |= BIT(LINK_CAPA_10FD) | BIT(LINK_CAPA_100FD);
-> +		break;
-> +
+Couple of additional constraints:
 
-You could call this out in the commit message.
+1. tpm_chip_alloc() should initialize chip->status to chip->ops->req_complete_mask.
+2. tpm_try_transmit() should reset the value to chip->ops->req_complete_mask on
+   failure paths.
 
->   * Describes the interface between the MAC and PHY.
-> @@ -150,6 +151,7 @@ typedef enum {
->  	PHY_INTERFACE_MODE_50GBASER,
->  	PHY_INTERFACE_MODE_LAUI,
->  	PHY_INTERFACE_MODE_100GBASEP,
-> +	PHY_INTERFACE_MODE_MIILITE,
->  	PHY_INTERFACE_MODE_MAX,
->  } phy_interface_t;
+With these constraints there is framework where chip->ops->status() is
+only invoked when it actually makes sense i.e., only during the course
+of tpm_try_trasmit().
 
-This enum is not part of the ABI. So you can insert MIILITE directly
-after MII.
-
-	Andrew
+BR, Jarkko
