@@ -1,375 +1,121 @@
-Received: from sg-3-15.ptr.tlmpb.com (sg-3-15.ptr.tlmpb.com [101.45.255.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DA3E1917D6
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.45.255.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C82072619
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:59:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750838321; cv=none; b=fM3AXnJe32Jyy084UOFu6H88FPDYn9YoSvq4Zirw9Oi6lTx0+COaTZXfB9GU3bYdkpmr2LEbjRZFV/NjJoBaK9PBDXcUSmGpquVvuYUTg4+lpx8gR7OeQL5H27fSyXiwyVgYEuvqsnd/WtGkp3d3NXo/IzJFJaDHK2G4LHGhAaY=
+	t=1750838370; cv=none; b=BLfZN/hkhElq8HTmOCXila0rfUNwWqbpQHWWp0NHwVsBcXc5jDGaxvun3uOOiVV0qJAqMCKFSyHpCc5cLsPgDtlF0K6BilA9U8r7dmdhys/vaIY1W5BVe88MJ0kOhorbTNfONXCmcuA2fii2kBhZyBHgv7PIHJ3zcH2lef7x6S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750838321; c=relaxed/simple;
-	bh=nPWVgEA/cM4X58e/AOxKovZwnlTAh6PtiVHZsHX1Ixg=;
-	h=In-Reply-To:Cc:Message-Id:References:Content-Type:Subject:To:From:
-	 Date:Mime-Version; b=NG7yOQwUtIVqaGZj5CSozjgfb2fe4QTN4dOjZkiNRb7mwRdn5GNCIkyAQk22dIzAbYKLXCXI/gdTA/01VdfDOeZpUvJGxWkQERF2QsL3CcNzD6K4KI/+s6jFO0/VHsDFT8EdwQpDHNZ0qbUBJ1n8QvXwqFJazuHqvkzZ+2oi75s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=CGzctu5L; arc=none smtp.client-ip=101.45.255.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
+	s=arc-20240116; t=1750838370; c=relaxed/simple;
+	bh=zUGZufnvMKaCOA4cdvldqWv45x8gEZBbT0XjJGKRVik=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Js3awx6beytBbKIWRQnz7LZ09HMH2C/guAFRxiH64WAblSIDZJcDRqotI7fXGz/f3H20aDmzJodSQOuIBgsxVEOCc7S7QjoM2y84YCqc4xh9mpoEQTMcojAmhZQU9REZFEXWDE/XvVemDCKzbsix31Syu1FM8qE6qQxy28X0I/Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=kZuJ4DhW; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="CGzctu5L"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1750838312;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=dEQ9sBnSb1IxAaBtFr6qN+iSK2n4Wh6F+hsqcQlC8zs=;
- b=CGzctu5L1cpjqnlnm20yQffQGtzcaqPrbUh1I5b/FDWtT1UeegCg1LYzkXEyphFGlvzN4b
- CWGTq47Uow/Uiu5Kjd+KpM7hmLX+EQ38W0wAjQj/AuUK/J8r0pIX4WdS0FP89/wf8h8uDe
- bAEb0pAfzB3zBvt0DdTty+FIdXWLU2NH3sluhlexWpTH2KGEwvqwpHuA/QnGq2u0xCVq2X
- bQd9Alf+5pITsnJapVNeNm3P7ZtYmLFiwtGG1Ki6gc7PH0lSaHNtJb5+zcoip5yJ6STjf4
- tIqveS31ID913YRmri7S0AUJdRLrQofPHLq/2ZGL5cFIoPKOaQE9R+VXv5qp9g==
-In-Reply-To: <20250618113532.471448-13-apatel@ventanamicro.com>
-Cc: "Palmer Dabbelt" <palmer@dabbelt.com>, 
-	"Paul Walmsley" <paul.walmsley@sifive.com>, 
-	"Alexandre Ghiti" <alex@ghiti.fr>, 
-	"Andrew Jones" <ajones@ventanamicro.com>, 
-	"Anup Patel" <anup@brainfault.org>, <kvm@vger.kernel.org>, 
-	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>, 
-	<linux-kernel@vger.kernel.org>
-Message-Id: <68964c3d-eaba-4bdd-bdeb-169d64889db5@lanxincomputing.com>
-References: <20250618113532.471448-1-apatel@ventanamicro.com> <20250618113532.471448-13-apatel@ventanamicro.com>
-X-Lms-Return-Path: <lba+2685bac26+44da01+vger.kernel.org+liujingqi@lanxincomputing.com>
-Content-Language: en-US
-Received: from [127.0.0.1] ([139.226.59.215]) by smtp.feishu.cn with ESMTPS; Wed, 25 Jun 2025 15:58:29 +0800
-Content-Type: text/plain; charset=UTF-8
-Subject: Re: [PATCH v3 12/12] RISC-V: KVM: Pass VMID as parameter to kvm_riscv_hfence_xyz() APIs
-X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
-User-Agent: Mozilla Thunderbird
-To: "Anup Patel" <apatel@ventanamicro.com>, 
-	"Atish Patra" <atish.patra@linux.dev>
-From: "Nutty Liu" <liujingqi@lanxincomputing.com>
-Date: Wed, 25 Jun 2025 15:58:27 +0800
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="kZuJ4DhW"
+Message-ID: <9d9316d7-7e00-4274-bd1c-9cb83fd82d32@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750838356;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5/oz/zGgO2lN3zqV+etyJUP5tKHg/3V30huStLqNW9k=;
+	b=kZuJ4DhW42AB1uTtKIOcJmDzEI3f1DUB1nDhB7RmZtJyIpYhTJbyYeKOS66gVENcr/UcM8
+	oNSuSRj0UCwzfK2urGWKsxJICw5xZK0LbYSMC0yFWQcuzaw4E4OtO9mbxkhVNeiwY6LWVg
+	75ADxYh8LfI1v6hi2eejSlcLC/nYAoY=
+Date: Wed, 25 Jun 2025 00:59:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Subject: Re: [PATCH v3 00/12] MMU related improvements for KVM RISC-V
+To: Anup Patel <apatel@ventanamicro.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Alexandre Ghiti <alex@ghiti.fr>,
+ Andrew Jones <ajones@ventanamicro.com>, Anup Patel <anup@brainfault.org>,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20250618113532.471448-1-apatel@ventanamicro.com>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Atish Patra <atish.patra@linux.dev>
+In-Reply-To: <20250618113532.471448-1-apatel@ventanamicro.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On 6/18/2025 7:35 PM, Anup Patel wrote:
-> Currently, all kvm_riscv_hfence_xyz() APIs assume VMID to be the
-> host VMID of the Guest/VM which resticts use of these APIs only
-> for host TLB maintenance. Let's allow passing VMID as a parameter
-> to all kvm_riscv_hfence_xyz() APIs so that they can be re-used
-> for nested virtualization related TLB maintenance.
+
+On 6/18/25 4:35 AM, Anup Patel wrote:
+> This series primarily has various MMU improvements for KVM RISC-V
+> and it also serves as a preparatory series for the upcoming nested
+> virtualization support.
 >
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->   arch/riscv/include/asm/kvm_tlb.h  | 17 ++++++---
->   arch/riscv/kvm/gstage.c           |  3 +-
->   arch/riscv/kvm/tlb.c              | 61 ++++++++++++++++++++-----------
->   arch/riscv/kvm/vcpu_sbi_replace.c | 17 +++++----
->   arch/riscv/kvm/vcpu_sbi_v01.c     | 25 ++++++-------
->   5 files changed, 73 insertions(+), 50 deletions(-)
+> PATCH1 to PATCH4: Few cosmetic improvements
+> PATCH5 to PATCH7: TLB maintenance and SBI NACL related improvements
+> PATCH8 to PATCH12: MMU related preparatory work for nested virtualization
+
+For the entire series:
+
+Tested-by: Atish Patra <atishp@rivosinc.com>
+
+> These patches can also be found in the riscv_kvm_mmu_imp_v3 branch
+> at: https://github.com/avpatel/linux.git
 >
-> diff --git a/arch/riscv/include/asm/kvm_tlb.h b/arch/riscv/include/asm/kvm_tlb.h
-> index f67e03edeaec..38a2f933ad3a 100644
-> --- a/arch/riscv/include/asm/kvm_tlb.h
-> +++ b/arch/riscv/include/asm/kvm_tlb.h
-> @@ -11,9 +11,11 @@
->   enum kvm_riscv_hfence_type {
->   	KVM_RISCV_HFENCE_UNKNOWN = 0,
->   	KVM_RISCV_HFENCE_GVMA_VMID_GPA,
-> +	KVM_RISCV_HFENCE_GVMA_VMID_ALL,
->   	KVM_RISCV_HFENCE_VVMA_ASID_GVA,
->   	KVM_RISCV_HFENCE_VVMA_ASID_ALL,
->   	KVM_RISCV_HFENCE_VVMA_GVA,
-> +	KVM_RISCV_HFENCE_VVMA_ALL
->   };
->   
->   struct kvm_riscv_hfence {
-> @@ -59,21 +61,24 @@ void kvm_riscv_fence_i(struct kvm *kvm,
->   void kvm_riscv_hfence_gvma_vmid_gpa(struct kvm *kvm,
->   				    unsigned long hbase, unsigned long hmask,
->   				    gpa_t gpa, gpa_t gpsz,
-> -				    unsigned long order);
-> +				    unsigned long order, unsigned long vmid);
->   void kvm_riscv_hfence_gvma_vmid_all(struct kvm *kvm,
-> -				    unsigned long hbase, unsigned long hmask);
-> +				    unsigned long hbase, unsigned long hmask,
-> +				    unsigned long vmid);
->   void kvm_riscv_hfence_vvma_asid_gva(struct kvm *kvm,
->   				    unsigned long hbase, unsigned long hmask,
->   				    unsigned long gva, unsigned long gvsz,
-> -				    unsigned long order, unsigned long asid);
-> +				    unsigned long order, unsigned long asid,
-> +				    unsigned long vmid);
->   void kvm_riscv_hfence_vvma_asid_all(struct kvm *kvm,
->   				    unsigned long hbase, unsigned long hmask,
-> -				    unsigned long asid);
-> +				    unsigned long asid, unsigned long vmid);
->   void kvm_riscv_hfence_vvma_gva(struct kvm *kvm,
->   			       unsigned long hbase, unsigned long hmask,
->   			       unsigned long gva, unsigned long gvsz,
-> -			       unsigned long order);
-> +			       unsigned long order, unsigned long vmid);
->   void kvm_riscv_hfence_vvma_all(struct kvm *kvm,
-> -			       unsigned long hbase, unsigned long hmask);
-> +			       unsigned long hbase, unsigned long hmask,
-> +			       unsigned long vmid);
->   
->   #endif
-> diff --git a/arch/riscv/kvm/gstage.c b/arch/riscv/kvm/gstage.c
-> index 9c7c44f09b05..24c270d6d0e2 100644
-> --- a/arch/riscv/kvm/gstage.c
-> +++ b/arch/riscv/kvm/gstage.c
-> @@ -117,7 +117,8 @@ static void gstage_tlb_flush(struct kvm_gstage *gstage, u32 level, gpa_t addr)
->   	if (gstage->flags & KVM_GSTAGE_FLAGS_LOCAL)
->   		kvm_riscv_local_hfence_gvma_vmid_gpa(gstage->vmid, addr, BIT(order), order);
->   	else
-> -		kvm_riscv_hfence_gvma_vmid_gpa(gstage->kvm, -1UL, 0, addr, BIT(order), order);
-> +		kvm_riscv_hfence_gvma_vmid_gpa(gstage->kvm, -1UL, 0, addr, BIT(order), order,
-> +					       gstage->vmid);
->   }
->   
->   int kvm_riscv_gstage_set_pte(struct kvm_gstage *gstage,
-> diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
-> index 349fcfc93f54..3c5a70a2b927 100644
-> --- a/arch/riscv/kvm/tlb.c
-> +++ b/arch/riscv/kvm/tlb.c
-> @@ -251,6 +251,12 @@ void kvm_riscv_hfence_process(struct kvm_vcpu *vcpu)
->   				kvm_riscv_local_hfence_gvma_vmid_gpa(d.vmid, d.addr,
->   								     d.size, d.order);
->   			break;
-> +		case KVM_RISCV_HFENCE_GVMA_VMID_ALL:
-> +			if (kvm_riscv_nacl_available())
-> +				nacl_hfence_gvma_vmid_all(nacl_shmem(), d.vmid);
-> +			else
-> +				kvm_riscv_local_hfence_gvma_vmid_all(d.vmid);
-> +			break;
->   		case KVM_RISCV_HFENCE_VVMA_ASID_GVA:
->   			kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_ASID_RCVD);
->   			if (kvm_riscv_nacl_available())
-> @@ -276,6 +282,13 @@ void kvm_riscv_hfence_process(struct kvm_vcpu *vcpu)
->   				kvm_riscv_local_hfence_vvma_gva(d.vmid, d.addr,
->   								d.size, d.order);
->   			break;
-> +		case KVM_RISCV_HFENCE_VVMA_ALL:
-> +			kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_RCVD);
-> +			if (kvm_riscv_nacl_available())
-> +				nacl_hfence_vvma_all(nacl_shmem(), d.vmid);
-> +			else
-> +				kvm_riscv_local_hfence_vvma_all(d.vmid);
-> +			break;
->   		default:
->   			break;
->   		}
-> @@ -328,14 +341,13 @@ void kvm_riscv_fence_i(struct kvm *kvm,
->   void kvm_riscv_hfence_gvma_vmid_gpa(struct kvm *kvm,
->   				    unsigned long hbase, unsigned long hmask,
->   				    gpa_t gpa, gpa_t gpsz,
-> -				    unsigned long order)
-> +				    unsigned long order, unsigned long vmid)
->   {
-> -	struct kvm_vmid *v = &kvm->arch.vmid;
->   	struct kvm_riscv_hfence data;
->   
->   	data.type = KVM_RISCV_HFENCE_GVMA_VMID_GPA;
->   	data.asid = 0;
-> -	data.vmid = READ_ONCE(v->vmid);
-> +	data.vmid = vmid;
->   	data.addr = gpa;
->   	data.size = gpsz;
->   	data.order = order;
-> @@ -344,23 +356,28 @@ void kvm_riscv_hfence_gvma_vmid_gpa(struct kvm *kvm,
->   }
->   
->   void kvm_riscv_hfence_gvma_vmid_all(struct kvm *kvm,
-> -				    unsigned long hbase, unsigned long hmask)
-> +				    unsigned long hbase, unsigned long hmask,
-> +				    unsigned long vmid)
->   {
-> -	make_xfence_request(kvm, hbase, hmask, KVM_REQ_TLB_FLUSH,
-> -			    KVM_REQ_TLB_FLUSH, NULL);
-> +	struct kvm_riscv_hfence data = {0};
-> +
-> +	data.type = KVM_RISCV_HFENCE_GVMA_VMID_ALL;
-> +	data.vmid = vmid;
-> +	make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE,
-> +			    KVM_REQ_TLB_FLUSH, &data);
->   }
->   
->   void kvm_riscv_hfence_vvma_asid_gva(struct kvm *kvm,
->   				    unsigned long hbase, unsigned long hmask,
->   				    unsigned long gva, unsigned long gvsz,
-> -				    unsigned long order, unsigned long asid)
-> +				    unsigned long order, unsigned long asid,
-> +				    unsigned long vmid)
->   {
-> -	struct kvm_vmid *v = &kvm->arch.vmid;
->   	struct kvm_riscv_hfence data;
->   
->   	data.type = KVM_RISCV_HFENCE_VVMA_ASID_GVA;
->   	data.asid = asid;
-> -	data.vmid = READ_ONCE(v->vmid);
-> +	data.vmid = vmid;
->   	data.addr = gva;
->   	data.size = gvsz;
->   	data.order = order;
-> @@ -370,15 +387,13 @@ void kvm_riscv_hfence_vvma_asid_gva(struct kvm *kvm,
->   
->   void kvm_riscv_hfence_vvma_asid_all(struct kvm *kvm,
->   				    unsigned long hbase, unsigned long hmask,
-> -				    unsigned long asid)
-> +				    unsigned long asid, unsigned long vmid)
->   {
-> -	struct kvm_vmid *v = &kvm->arch.vmid;
-> -	struct kvm_riscv_hfence data;
-> +	struct kvm_riscv_hfence data = {0};
->   
->   	data.type = KVM_RISCV_HFENCE_VVMA_ASID_ALL;
->   	data.asid = asid;
-> -	data.vmid = READ_ONCE(v->vmid);
-> -	data.addr = data.size = data.order = 0;
-> +	data.vmid = vmid;
->   	make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE,
->   			    KVM_REQ_HFENCE_VVMA_ALL, &data);
->   }
-> @@ -386,14 +401,13 @@ void kvm_riscv_hfence_vvma_asid_all(struct kvm *kvm,
->   void kvm_riscv_hfence_vvma_gva(struct kvm *kvm,
->   			       unsigned long hbase, unsigned long hmask,
->   			       unsigned long gva, unsigned long gvsz,
-> -			       unsigned long order)
-> +			       unsigned long order, unsigned long vmid)
->   {
-> -	struct kvm_vmid *v = &kvm->arch.vmid;
->   	struct kvm_riscv_hfence data;
->   
->   	data.type = KVM_RISCV_HFENCE_VVMA_GVA;
->   	data.asid = 0;
-> -	data.vmid = READ_ONCE(v->vmid);
-> +	data.vmid = vmid;
->   	data.addr = gva;
->   	data.size = gvsz;
->   	data.order = order;
-> @@ -402,16 +416,21 @@ void kvm_riscv_hfence_vvma_gva(struct kvm *kvm,
->   }
->   
->   void kvm_riscv_hfence_vvma_all(struct kvm *kvm,
-> -			       unsigned long hbase, unsigned long hmask)
-> +			       unsigned long hbase, unsigned long hmask,
-> +			       unsigned long vmid)
->   {
-> -	make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE_VVMA_ALL,
-> -			    KVM_REQ_HFENCE_VVMA_ALL, NULL);
-> +	struct kvm_riscv_hfence data = {0};
-> +
-> +	data.type = KVM_RISCV_HFENCE_VVMA_ALL;
-> +	data.vmid = vmid;
-> +	make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE,
-> +			    KVM_REQ_HFENCE_VVMA_ALL, &data);
->   }
->   
->   int kvm_arch_flush_remote_tlbs_range(struct kvm *kvm, gfn_t gfn, u64 nr_pages)
->   {
->   	kvm_riscv_hfence_gvma_vmid_gpa(kvm, -1UL, 0,
->   				       gfn << PAGE_SHIFT, nr_pages << PAGE_SHIFT,
-> -				       PAGE_SHIFT);
-> +				       PAGE_SHIFT, READ_ONCE(kvm->arch.vmid.vmid));
->   	return 0;
->   }
-> diff --git a/arch/riscv/kvm/vcpu_sbi_replace.c b/arch/riscv/kvm/vcpu_sbi_replace.c
-> index b17fad091bab..b490ed1428a6 100644
-> --- a/arch/riscv/kvm/vcpu_sbi_replace.c
-> +++ b/arch/riscv/kvm/vcpu_sbi_replace.c
-> @@ -96,6 +96,7 @@ static int kvm_sbi_ext_rfence_handler(struct kvm_vcpu *vcpu, struct kvm_run *run
->   	unsigned long hmask = cp->a0;
->   	unsigned long hbase = cp->a1;
->   	unsigned long funcid = cp->a6;
-> +	unsigned long vmid;
->   
->   	switch (funcid) {
->   	case SBI_EXT_RFENCE_REMOTE_FENCE_I:
-> @@ -103,22 +104,22 @@ static int kvm_sbi_ext_rfence_handler(struct kvm_vcpu *vcpu, struct kvm_run *run
->   		kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_FENCE_I_SENT);
->   		break;
->   	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA:
-> +		vmid = READ_ONCE(vcpu->kvm->arch.vmid.vmid);
->   		if ((cp->a2 == 0 && cp->a3 == 0) || cp->a3 == -1UL)
-> -			kvm_riscv_hfence_vvma_all(vcpu->kvm, hbase, hmask);
-> +			kvm_riscv_hfence_vvma_all(vcpu->kvm, hbase, hmask, vmid);
->   		else
->   			kvm_riscv_hfence_vvma_gva(vcpu->kvm, hbase, hmask,
-> -						  cp->a2, cp->a3, PAGE_SHIFT);
-> +						  cp->a2, cp->a3, PAGE_SHIFT, vmid);
->   		kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_SENT);
->   		break;
->   	case SBI_EXT_RFENCE_REMOTE_SFENCE_VMA_ASID:
-> +		vmid = READ_ONCE(vcpu->kvm->arch.vmid.vmid);
->   		if ((cp->a2 == 0 && cp->a3 == 0) || cp->a3 == -1UL)
-> -			kvm_riscv_hfence_vvma_asid_all(vcpu->kvm,
-> -						       hbase, hmask, cp->a4);
-> +			kvm_riscv_hfence_vvma_asid_all(vcpu->kvm, hbase, hmask,
-> +						       cp->a4, vmid);
->   		else
-> -			kvm_riscv_hfence_vvma_asid_gva(vcpu->kvm,
-> -						       hbase, hmask,
-> -						       cp->a2, cp->a3,
-> -						       PAGE_SHIFT, cp->a4);
-> +			kvm_riscv_hfence_vvma_asid_gva(vcpu->kvm, hbase, hmask, cp->a2,
-> +						       cp->a3, PAGE_SHIFT, cp->a4, vmid);
->   		kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_ASID_SENT);
->   		break;
->   	case SBI_EXT_RFENCE_REMOTE_HFENCE_GVMA:
-> diff --git a/arch/riscv/kvm/vcpu_sbi_v01.c b/arch/riscv/kvm/vcpu_sbi_v01.c
-> index 8f4c4fa16227..368dfddd23d9 100644
-> --- a/arch/riscv/kvm/vcpu_sbi_v01.c
-> +++ b/arch/riscv/kvm/vcpu_sbi_v01.c
-> @@ -23,6 +23,7 @@ static int kvm_sbi_ext_v01_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
->   	struct kvm *kvm = vcpu->kvm;
->   	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
->   	struct kvm_cpu_trap *utrap = retdata->utrap;
-> +	unsigned long vmid;
->   
->   	switch (cp->a7) {
->   	case SBI_EXT_0_1_CONSOLE_GETCHAR:
-> @@ -78,25 +79,21 @@ static int kvm_sbi_ext_v01_handler(struct kvm_vcpu *vcpu, struct kvm_run *run,
->   		if (cp->a7 == SBI_EXT_0_1_REMOTE_FENCE_I)
->   			kvm_riscv_fence_i(vcpu->kvm, 0, hmask);
->   		else if (cp->a7 == SBI_EXT_0_1_REMOTE_SFENCE_VMA) {
-> +			vmid = READ_ONCE(vcpu->kvm->arch.vmid.vmid);
->   			if (cp->a1 == 0 && cp->a2 == 0)
-> -				kvm_riscv_hfence_vvma_all(vcpu->kvm,
-> -							  0, hmask);
-> +				kvm_riscv_hfence_vvma_all(vcpu->kvm, 0, hmask, vmid);
->   			else
-> -				kvm_riscv_hfence_vvma_gva(vcpu->kvm,
-> -							  0, hmask,
-> -							  cp->a1, cp->a2,
-> -							  PAGE_SHIFT);
-> +				kvm_riscv_hfence_vvma_gva(vcpu->kvm, 0, hmask, cp->a1,
-> +							  cp->a2, PAGE_SHIFT, vmid);
->   		} else {
-> +			vmid = READ_ONCE(vcpu->kvm->arch.vmid.vmid);
->   			if (cp->a1 == 0 && cp->a2 == 0)
-> -				kvm_riscv_hfence_vvma_asid_all(vcpu->kvm,
-> -							       0, hmask,
-> -							       cp->a3);
-> +				kvm_riscv_hfence_vvma_asid_all(vcpu->kvm, 0, hmask,
-> +							       cp->a3, vmid);
->   			else
-> -				kvm_riscv_hfence_vvma_asid_gva(vcpu->kvm,
-> -							       0, hmask,
-> -							       cp->a1, cp->a2,
-> -							       PAGE_SHIFT,
-> -							       cp->a3);
-> +				kvm_riscv_hfence_vvma_asid_gva(vcpu->kvm, 0, hmask,
-> +							       cp->a1, cp->a2, PAGE_SHIFT,
-> +							       cp->a3, vmid);
->   		}
->   		break;
->   	default:
-
-Reviewed-by: Nutty Liu <liujingqi@lanxincomputing.com>
-
-Thanks,
-Nutty
+> Changes since v2:
+>   - Rebased upon Linux-6.16-rc2 and latest riscv_kvm_queue branch
+>   - Added Reviewed-by tags to appropriate patches
+>
+> Changes since v1:
+>   - Rebased upon Linux-6.16-rc1
+>   - Dropped PATCH1 and PATCH2 of v1 series since these are queued
+>     as fixes for Linux-6.16
+>   - Addressed Atish's comment on PATCH1 in this series
+>   - Added new PATCH7 in this series
+>
+> Anup Patel (12):
+>    RISC-V: KVM: Check kvm_riscv_vcpu_alloc_vector_context() return value
+>    RISC-V: KVM: Drop the return value of kvm_riscv_vcpu_aia_init()
+>    RISC-V: KVM: Rename and move kvm_riscv_local_tlb_sanitize()
+>    RISC-V: KVM: Replace KVM_REQ_HFENCE_GVMA_VMID_ALL with
+>      KVM_REQ_TLB_FLUSH
+>    RISC-V: KVM: Don't flush TLB when PTE is unchanged
+>    RISC-V: KVM: Implement kvm_arch_flush_remote_tlbs_range()
+>    RISC-V: KVM: Use ncsr_xyz() in kvm_riscv_vcpu_trap_redirect()
+>    RISC-V: KVM: Factor-out MMU related declarations into separate headers
+>    RISC-V: KVM: Introduce struct kvm_gstage_mapping
+>    RISC-V: KVM: Add vmid field to struct kvm_riscv_hfence
+>    RISC-V: KVM: Factor-out g-stage page table management
+>    RISC-V: KVM: Pass VMID as parameter to kvm_riscv_hfence_xyz() APIs
+>
+>   arch/riscv/include/asm/kvm_aia.h    |   2 +-
+>   arch/riscv/include/asm/kvm_gstage.h |  72 ++++
+>   arch/riscv/include/asm/kvm_host.h   | 103 +-----
+>   arch/riscv/include/asm/kvm_mmu.h    |  21 ++
+>   arch/riscv/include/asm/kvm_tlb.h    |  84 +++++
+>   arch/riscv/include/asm/kvm_vmid.h   |  27 ++
+>   arch/riscv/kvm/Makefile             |   1 +
+>   arch/riscv/kvm/aia_device.c         |   6 +-
+>   arch/riscv/kvm/aia_imsic.c          |  12 +-
+>   arch/riscv/kvm/gstage.c             | 338 +++++++++++++++++++
+>   arch/riscv/kvm/main.c               |   3 +-
+>   arch/riscv/kvm/mmu.c                | 499 ++++++----------------------
+>   arch/riscv/kvm/tlb.c                | 110 +++---
+>   arch/riscv/kvm/vcpu.c               |  26 +-
+>   arch/riscv/kvm/vcpu_exit.c          |  20 +-
+>   arch/riscv/kvm/vcpu_sbi_replace.c   |  17 +-
+>   arch/riscv/kvm/vcpu_sbi_v01.c       |  25 +-
+>   arch/riscv/kvm/vm.c                 |   7 +-
+>   arch/riscv/kvm/vmid.c               |  25 ++
+>   19 files changed, 795 insertions(+), 603 deletions(-)
+>   create mode 100644 arch/riscv/include/asm/kvm_gstage.h
+>   create mode 100644 arch/riscv/include/asm/kvm_mmu.h
+>   create mode 100644 arch/riscv/include/asm/kvm_tlb.h
+>   create mode 100644 arch/riscv/include/asm/kvm_vmid.h
+>   create mode 100644 arch/riscv/kvm/gstage.c
+>
