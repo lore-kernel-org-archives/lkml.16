@@ -1,161 +1,176 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [45.157.188.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12C52609F7;
-	Wed, 25 Jun 2025 13:14:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB9BE263889
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:14:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750857244; cv=none; b=KaxxK8qTxdWJcVBStpLix5MB3FsesnqYEGS+t2y4/2tNAYxR2nHMM2oNrossn/JorkIqAcDQ+bSH/sUHweCM3cEkefR6cdtNpgd6TLjhYVFq6r+Rhq7OsQVyPkNVYJKWQoH/xJERZ53yBoUXH8uyJO4ZuXL8qb5t0wyls8AaC/U=
+	t=1750857262; cv=none; b=SzNYylK89r7vxwHOIqDr9aCRw3ccg73BEM6fWqGNtHfTFdApp2zwG7cXwoOhQTTPu55o6adOIbqdDeUhenoy25yTDjC7Fc7vuRKofNXrP93YCBwdYYYGm+hW0c5mx0Rhdpk2Ho9z4fmXGHUAAu9rg8oVcQFWcsjtlSRisXmruX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750857244; c=relaxed/simple;
-	bh=MYabgvzLNpw0hpi+SGZrcpfwAH21zFeJ+Bbfq8cVmoc=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=XnUd6kR643J8P8FDwZcriZ+ogzTK142qdf9+DEpA/hupeD6MdzWyj52RoU4bQlavKxDaxwm7AXateJGfujQgTo18aYm12dcLj2BoqNM4MztzGglp+UbyjHxeVhve5A683N1y3+nySLEdopSH6suUwHpbRf3MC2/CiaWW02zSPvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UVf3TzAp; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750857262; c=relaxed/simple;
+	bh=VyVL4KpvH5PpIzU7d6A8maGwHpB/XkUHFTH7hoYbrgc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=afPjAz0u5FDEcJYlv2/TviwS5pFQNG1cgTvTRmnSwfUXW1UPcuXAwmGSUKfeAeVgamLOKy9wfuLl0MOZL1usEqNfhfZ6NfPBLAF3svRkn998ysIoPHx4NAaww+Xcr6WIJNNqXf0nIZ2zev/PhRznXhKjJMx59CVLkKG8u+b+bDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=NgQ4wJnQ; arc=none smtp.client-ip=45.157.188.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UVf3TzAp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750857242; x=1782393242;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=MYabgvzLNpw0hpi+SGZrcpfwAH21zFeJ+Bbfq8cVmoc=;
-  b=UVf3TzApLUKbMfcPhFri4DbvyBODH7ZnPDLWtlajUHOJTJEc9+mhPX6Q
-   c51GfxdR5pUxD1oL3a9gUv3O4t87LYlPEe5F9ISG+1tj1kXTcHqtBFug2
-   dT9sMZ7ttOUv7BcGA3f6i4HVkfP43JHehjWjUc5NfrCzQzfqeon+n+tCG
-   /yRK3nlk3oU0P2thr7nN4ejk3FN4Q2JPBQZ+wplZid3YbILczcRJ4dk4v
-   DZQsw0vq1vVCVK/kv3TCqKngpKgR7ngXNkyH9NjVl+dY9ZwtDzQfLW8O7
-   LR37gz5Zy12o4JSheoiLthaFdZq1Qg5tKXdr1KILJ+ErE8om6Ywj0XJZe
-   A==;
-X-CSE-ConnectionGUID: 3kcOVRukQm2hSIlaeCcrWg==
-X-CSE-MsgGUID: aAzx5wW6RnKdzRlZNlL1iQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="75665328"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="75665328"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:14:01 -0700
-X-CSE-ConnectionGUID: Qr3Y5JoqQracMbXzx4oBig==
-X-CSE-MsgGUID: EeF6PaKNTeqwp4BuQc7vyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="156492988"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:13:59 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 25 Jun 2025 16:13:56 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: dimich.dmb@gmail.com, Hans de Goede <hdegoede@redhat.com>, 
-    kuurtb@gmail.com, corbet@lwn.net, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] platform/x86: wmi: Fix WMI event enablement
-In-Reply-To: <b32b6f01-cac7-4cd4-b73b-eb4bbce63039@gmx.de>
-Message-ID: <bbc53a25-1b8d-ad3f-fc67-381c7d11a9b1@linux.intel.com>
-References: <20250619221440.6737-1-W_Armin@gmx.de> <e23ffd29-13db-bb11-ee06-0f1203269902@linux.intel.com> <b32b6f01-cac7-4cd4-b73b-eb4bbce63039@gmx.de>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="NgQ4wJnQ"
+Received: from smtp-4-0000.mail.infomaniak.ch (smtp-4-0000.mail.infomaniak.ch [10.7.10.107])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4bS2Mk28xSz4gR;
+	Wed, 25 Jun 2025 15:14:10 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1750857250;
+	bh=43gwrFzk4hwmv82prep9JmI9Q2MWI5mtLdOFVMSWLhk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NgQ4wJnQug59/VS2Oh7JY+Jr/FDR5DtjwhxRri1FhNkqbFQ98Q56GFLR7DHBsCkGs
+	 bvo158SXQyDMKoVRoSSsTcsyjc2FcyOfMwWoXW3XKFbYOrhVFjX0so85UBO99Rclv7
+	 jweEbF7djyq7VG+JJ+1QixEJ2MLc5oAIhHG6EUWA=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4bS2Mj0pxCzMjj;
+	Wed, 25 Jun 2025 15:14:09 +0200 (CEST)
+Date: Wed, 25 Jun 2025 15:14:08 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: NeilBrown <neil@brown.name>
+Cc: Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, brauner@kernel.org, kernel-team@meta.com, andrii@kernel.org, 
+	eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, 
+	viro@zeniv.linux.org.uk, jack@suse.cz, kpsingh@kernel.org, mattbobrowski@google.com, 
+	Tingmao Wang <m@maowtm.org>, =?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>
+Subject: Re: [PATCH v5 bpf-next 0/5] bpf path iterator
+Message-ID: <20250625.Ee2Ci6chae8h@digikod.net>
+References: <>
+ <20250624.xahShi0iCh7t@digikod.net>
+ <175080113326.2280845.18404947256630567790@noble.neil.brown.name>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-227557134-1750857236=:944"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <175080113326.2280845.18404947256630567790@noble.neil.brown.name>
+X-Infomaniak-Routing: alpha
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Wed, Jun 25, 2025 at 07:38:53AM +1000, NeilBrown wrote:
+> On Wed, 25 Jun 2025, Mickaël Salaün wrote:
+> > On Fri, Jun 20, 2025 at 02:59:17PM -0700, Song Liu wrote:
+> > > Hi Christian, Mickaël, and folks,
+> > > 
+> > > Could you please share your comments on this version? Does this
+> > > look sane?
+> > 
+> > This looks good to me but we need to know what is the acceptable next
+> > step to support RCU.  If we can go with another _rcu helper, I'm good
+> > with the current approach, otherwise we need to figure out a way to
+> > leverage the current helper to make it compatible with callers being in
+> > a RCU read-side critical section while leveraging safe path walk (i.e.
+> > several calls to path_walk_parent).
+> 
+> Can you spell out the minimum that you need?
 
---8323328-227557134-1750857236=:944
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Sure.  We'd like to call this new helper in a RCU
+read-side critical section and leverage this capability to speed up path
+walk when there is no concurrent hierarchy modification.  This use case
+is similar to handle_dots() with LOOKUP_RCU calling follow_dotdot_rcu().
 
-On Wed, 25 Jun 2025, Armin Wolf wrote:
-> Am 25.06.25 um 14:28 schrieb Ilpo J=C3=A4rvinen:
-> > On Fri, 20 Jun 2025, Armin Wolf wrote:
-> >=20
-> > > It turns out that the Windows WMI-ACPI driver always enables/disables
-> > > WMI events regardless of whether they are marked as expensive or not.
-> > > This finding is further reinforced when reading the documentation of
-> > > the WMI_FUNCTION_CONTROL_CALLBACK callback used by Windows drivers
-> > > for enabling/disabling WMI devices:
-> > >=20
-> > > =09The DpWmiFunctionControl routine enables or disables
-> > > =09notification of events, and enables or disables data
-> > > =09collection for data blocks that the driver registered
-> > > =09as expensive to collect.
-> > >=20
-> > > Follow this behavior to fix the WMI event used for reporting hotkey
-> > > events on the Dell Latitude 5400 and likely many more devices.
-> > >=20
-> > > Reported-by: Dmytro Bagrii <dimich.dmb@gmail.com>
-> > > Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D220246
-> > > Tested-by: Dmytro Bagrii <dimich.dmb@gmail.com>
-> > > Fixes: 656f0961d126 ("platform/x86: wmi: Rework WCxx/WExx ACPI method
-> > > handling")
-> > > Signed-off-by: Armin Wolf <W_Armin@gmx.de>
-> > > ---
-> > >   drivers/platform/x86/wmi.c | 16 +++++++++++-----
-> > >   1 file changed, 11 insertions(+), 5 deletions(-)
-> > >=20
-> > > diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> > > index 21b7e54bd7ab..4e86a422f05f 100644
-> > > --- a/drivers/platform/x86/wmi.c
-> > > +++ b/drivers/platform/x86/wmi.c
-> > > @@ -180,16 +180,22 @@ static int wmi_device_enable(struct wmi_device
-> > > *wdev, bool enable)
-> > >   =09acpi_handle handle;
-> > >   =09acpi_status status;
-> > >   -=09if (!(wblock->gblock.flags & ACPI_WMI_EXPENSIVE))
-> > > -=09=09return 0;
-> > > -
-> > >   =09if (wblock->dev.dev.type =3D=3D &wmi_type_method)
-> > >   =09=09return 0;
-> > >   -=09if (wblock->dev.dev.type =3D=3D &wmi_type_event)
-> > > +=09if (wblock->dev.dev.type =3D=3D &wmi_type_event) {
-> > > +=09=09/*
-> > > +=09=09 * Windows always enables/disables WMI events, even when they
-> > > are
-> > > +=09=09 * not marked as being expensive. We follow this behavior for
-> > Hi Armin,
-> >=20
-> > Is the wording in the comment reversed? (I suspect you didn't mean to
-> > include "not" into that statement?)
->=20
-> Actually i did.
->=20
-> The WMI-ACPI spec seemed to suggest that WMI events should be enabled/dis=
-abled
-> only if they are being marked as expensive, however it turned out that WM=
-I
-> events
-> should also be enabled/disabled even if _not_ marked as being expensive.
+The main issue with this approach is to keep some state of the path walk
+to know if the next call to "path_walk_parent_rcu()" would be valid
+(i.e. something like a very light version of nameidata, mainly sequence
+integers), and to get back to the non-RCU version otherwise.
 
-Okay, fine. I seemingly missed the negation in the ACPI_WMI_EXPENSIVE=20
-check.
+> 
+> My vague impression is that you want to search up from a given strut path,
+> no further then some other given path, looking for a dentry that matches
+> some rule.  Is that correct?
 
---=20
- i.
+Yes
 
-> Besides that another user tested this patch on his machine, so:
->=20
-> Tested-by: Grzegorz Suwaj <grzegorzssuwaj@gmail.com>
->=20
+> 
+> In general, the original dentry could be moved away from under the
+> dentry you find moments after the match is reported.  What mechanisms do
+> you have in place to ensure this doesn't happen, or that it doesn't
+> matter?
+
+In the case of Landlock, by default, a set of access rights are denied
+and can only be allowed by an element in the file hierarchy.  The goal
+is to only allow access to files under a specific directory (or directly
+a specific file).  That's why we only care of the file hierarchy at the
+time of access check.  It's not an issue if the file/directory was
+moved or is being moved as long as we can walk its "current" hierarchy.
+Furthermore, a sandboxed process is restricted from doing arbitrary
+mounts (and renames/links are controlled with the
+LANDLOCK_ACCESS_FS_REFER right).
+
+However, we need to get a valid "snapshot" of the set of dentries that
+(could) lead to the evaluated file/directory.
+
+> 
+> Would it be sufficient to have an iterator which reported successive
+> ancestors in turn, or reported that you need to restart because something
+> changed?  Would you need to know that a restart happened or would it be
+> acceptable to transparently start again at the parent of the starting
+> point?
+
+If the path walk is being invalidated, we need to reset the collected
+access right and start again the path walk to get all the access rights
+from a consistent/real file hierarchy.
+
+> 
+> Or do you really need a "one step at a time" interface?
+
+We need to check each component of the path walk, so either we call an
+helper to get each of them and we do our check after that (we should be
+able to do that in RCU), or we provide a callback function which is
+called by the path walk helper.
+
+> 
+> Do you need more complex movements around the tree, or is just walking
+> up sufficient?
+
+Just walking up.
+
+> 
+> If this has been discussed or documented elsewhere I'd be happy for you
+> just to provide a reference, and I can come back with follow-up
+> questions if needed.
+
+Tingmao initially described the goal here:
+https://lore.kernel.org/all/afe77383-fe56-4029-848e-1401e3297139@maowtm.org/
+
+and she sent an RFC to illustrate that:
+https://lore.kernel.org/all/cover.1748997840.git.m@maowtm.org/
+
+The discussion mainly raised two questions:
+- Should we have one or two APIs?
+- How to store the state of the walk without exposing VFS internals to
+  the rest of the kernel?
+
+Thanks
+
+> 
 > Thanks,
-> Armin Wolf
->=20
-> > > +=09=09 * compatibility reasons.
-> > > +=09=09 */
-> > >   =09=09snprintf(method, sizeof(method), "WE%02X",
-> > > wblock->gblock.notify_id);
-> > > -=09else
-> > > +=09} else {
-> > > +=09=09if (!(wblock->gblock.flags & ACPI_WMI_EXPENSIVE))
-> > > +=09=09=09return 0;
-> > > +
-> > >   =09=09get_acpi_method_name(wblock, 'C', method);
-> > > +=09}
-> > >     =09/*
-> > >   =09 * Not all WMI devices marked as expensive actually implement th=
-e
-> > >=20
->=20
---8323328-227557134-1750857236=:944--
+> NeilBrown
+> 
+> 
+> > 
+> > > 
+> > > Thanks,
+> > > Song
+> > > 
+> > > On Mon, Jun 16, 2025 at 11:11 PM Song Liu <song@kernel.org> wrote:
+> > > >
+> > > > In security use cases, it is common to apply rules to VFS subtrees.
+> > > > However, filtering files in a subtree is not straightforward [1].
+> > > >
+> > > > One solution to this problem is to start from a path and walk up the VFS
+> > > > tree (towards the root). Among in-tree LSMs, Landlock uses this solution.
+> > > >
+> > > 
+> > > [...]
+> > > 
+> > 
+> 
+> 
