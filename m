@@ -1,244 +1,279 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602C92DECAE;
-	Wed, 25 Jun 2025 17:04:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 046F8262FC2;
+	Wed, 25 Jun 2025 17:06:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750871078; cv=none; b=aX+QQZwrf/JqWt9k6Wzak70isJjPD50xOmRq9cs/M33ipoL6eP2N6CN+RMbXBPWMFUj3yNk29uiTdCw9+7CJEq/ic0oE0naOHYR/4NlV/GoNHUSFzMQqfkbcG7UUJdv+20DWZVLq1Z+ghEdQEXwFd4pyBaQCtPItUIGuZrjCw18=
+	t=1750871170; cv=none; b=hWOOcKryiKeFb5r75x1cedXta2TQRMtdtXJKbZYihNVIZbx7Y5TD9V6zhOrmTswQJUIol6prtj0+SVq7sf2nec88UPUmIs4GZbaC9UAx8N19Iz/88C6WD+/5pxQcQrLQAQH/qN6R8AQ7OIs2QGslYtBDe4bI6tBDBYoZZws6qdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750871078; c=relaxed/simple;
-	bh=8GNGCKXHwBFkYbtE7F75Rqhnbc9aosR20SluK3wK3bw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kkPrmiygM491tSw1JvKdSRPDNKhyoLictR8qQ7lX5WCDgzLyf2AwgxgjSukcd0NnGCHo891j+LvsJZVEWdr2zPIblsVxtmPCgeeKKMFfK1YsC/Yc9HltRNCVL8GvdmyiufOj/mIV+Ao0fKuo4LNB0n89BB8LlNN3QSqn9u5JcXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JiHo1C1Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750871170; c=relaxed/simple;
+	bh=50VoEmYFQSaIUCRCbBSaRek4Ygn1fa8ozNyydDU/+Lg=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PvDLX3wMcqSI9D1Z7Y5Kry/XhHPj1oAMQJGADKcQc36f8naG5qckIE2U+eU3oh3pdH36K6lzNl/4IKsDp20Q7kQqrvpRbC4QcRgGgm//5PBTrul3MRDQIWQfi+1x/alMKZHnwvwUntYMpIVJ6+klTD54up+jBmhTk/mC8cgImfg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AfwNyA86; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JiHo1C1Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92463C4CEEA;
-	Wed, 25 Jun 2025 17:04:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AfwNyA86"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 8662EC4CEEA;
+	Wed, 25 Jun 2025 17:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750871077;
-	bh=8GNGCKXHwBFkYbtE7F75Rqhnbc9aosR20SluK3wK3bw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JiHo1C1ZjXERzPbhml3ih3UMf0EvT8TTHWONfNPLsfP1x81kc/sYDom6ZK5MQQoCy
-	 iEBsEd2CNos+uo08KZixm67CLTfF9nGcvSEozOMc+pJ5o2/6438nC1H/WEJdb8LRNm
-	 BFQMIQPxQGBipk26sf4Szv8D0TS5lG2U5oB2cvHvZU8n7Goylpc/TaZJf/hof58ukE
-	 WUKttWtWt4wSWYPhzdJGPSSLifWU4VCUHHM3371b7xp74c1NaZMGlRYZDjYtoHfNrA
-	 RWlPdOZ5G0T9KgJoICUoLxHBaL6Jc6MRul3IJ1O7ia3GILjjGvJoZi8fFQSC5cVHgk
-	 bg/V7tou9oVBw==
-Date: Wed, 25 Jun 2025 20:04:34 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Lee Jones <lee@kernel.org>
-Cc: Qunqin Zhao <zhaoqunqin@loongson.cn>, herbert@gondor.apana.org.au,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	davem@davemloft.net, linux-crypto@vger.kernel.org,
-	peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
-	Yinggang Gu <guyinggang@loongson.cn>,
-	Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
-Message-ID: <aFwsIs6ri3HZictC@kernel.org>
-References: <20250619025138.2854-1-zhaoqunqin@loongson.cn>
- <20250619025138.2854-4-zhaoqunqin@loongson.cn>
- <aFs2RDOeOKvWUN2L@kernel.org>
- <20250625080527.GN795775@google.com>
- <aFvhorr3kZSuzVpv@kernel.org>
- <20250625134047.GX795775@google.com>
+	s=k20201202; t=1750871169;
+	bh=50VoEmYFQSaIUCRCbBSaRek4Ygn1fa8ozNyydDU/+Lg=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=AfwNyA861PgKcrxOGaX33RQZUrCQ2qflq+X2dV/pAj7Fe0E3T/NzS1zcpVam36wjk
+	 UDQL03tu9hbUCtZzjeoDvwVaoePmFa2TzG5zh6m+HfGwxmNCQ1mLiNc2oUOF0X4yWJ
+	 xmD7iUQ2QyuJWjbXTJT5E1XsFPZlOEa2SFkC9hmfP6AJ6KmLpZisSpEYoTeLRerGFe
+	 RK+VUK1FCt6Waa+Oqcg3EpyrWBjyRq7uA3lnIr7GZ5pP83wrQPtqdagtc8rPHsiPAB
+	 7FeOQTDgyYYU5cCeWeUtnjssUNWKqcGkdPAg5U0XBuz2nNvd9nRzE1oFYrsJ7uKzn8
+	 FbjEWBSM6Pogg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76853C77B7C;
+	Wed, 25 Jun 2025 17:06:09 +0000 (UTC)
+From: Jake Hillion via B4 Relay <devnull+jake.hillion.co.uk@kernel.org>
+Date: Wed, 25 Jun 2025 18:05:46 +0100
+Subject: [PATCH] sched_ext: Drop kfuncs marked for removal in 6.15
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250625134047.GX795775@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250625-scx-kfunc-cleanup-v1-1-d93335286fd5@hillion.co.uk>
+X-B4-Tracking: v=1; b=H4sIAGksXGgC/x3MQQqAIBBA0avErBtQSYmuEi1qGmsoTJQiiO6et
+ HyL/x/InIQzdNUDiS/JcoQCXVdA6xgWRpmLwShjlTMWM924+TMQ0s5jOCO2RpOblG0ap6F0MbG
+ X+3/2w/t+RlgswGMAAAA=
+X-Change-ID: 20250625-scx-kfunc-cleanup-821c6b054461
+To: Tejun Heo <tj@kernel.org>, David Vernet <void@manifault.com>, 
+ Andrea Righi <arighi@nvidia.com>, Changwoo Min <changwoo@igalia.com>, 
+ Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
+ Juri Lelli <juri.lelli@redhat.com>, 
+ Vincent Guittot <vincent.guittot@linaro.org>, 
+ Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+ Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+ Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>
+Cc: sched-ext@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, Jake Hillion <jake@hillion.co.uk>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750871166; l=8916;
+ i=jake@hillion.co.uk; s=20250530; h=from:subject:message-id;
+ bh=aEhsz6x954cD1n/ZnKGKsFXTVr50Ueip0D4LRoGkidQ=;
+ b=7ui4rXpCg6L0Wq2AA2bSocvv9al7b6Na2ABr4HpzvrV1ds2EUAm6eL2RVZs6HsBhdnCBC9QB7
+ qmhFX91uX9rCk6SwrL5XM8XWsCf+WcUmk+Yc6op5ltokFV+nI8rLCJi
+X-Developer-Key: i=jake@hillion.co.uk; a=ed25519;
+ pk=8cznmqtMcMEcU8QH55k8DrySboD889OBB/BEUMJh3dw=
+X-Endpoint-Received: by B4 Relay for jake@hillion.co.uk/20250530 with
+ auth_id=419
+X-Original-From: Jake Hillion <jake@hillion.co.uk>
+Reply-To: jake@hillion.co.uk
 
-On Wed, Jun 25, 2025 at 02:40:47PM +0100, Lee Jones wrote:
-> On Wed, 25 Jun 2025, Jarkko Sakkinen wrote:
-> 
-> > On Wed, Jun 25, 2025 at 09:05:27AM +0100, Lee Jones wrote:
-> > > On Wed, 25 Jun 2025, Jarkko Sakkinen wrote:
-> > > 
-> > > > On Thu, Jun 19, 2025 at 10:51:37AM +0800, Qunqin Zhao wrote:
-> > > > > Loongson Security Engine supports random number generation, hash,
-> > > > > symmetric encryption and asymmetric encryption. Based on these
-> > > > > encryption functions, TPM2 have been implemented in the Loongson
-> > > > > Security Engine firmware. This driver is responsible for copying data
-> > > > > into the memory visible to the firmware and receiving data from the
-> > > > > firmware.
-> > > > > 
-> > > > > Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
-> > > > > Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
-> > > > > Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
-> > > > > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > > ---
-> > > > >  drivers/char/tpm/Kconfig        |  9 ++++
-> > > > >  drivers/char/tpm/Makefile       |  1 +
-> > > > >  drivers/char/tpm/tpm_loongson.c | 84 +++++++++++++++++++++++++++++++++
-> > > > >  3 files changed, 94 insertions(+)
-> > > > >  create mode 100644 drivers/char/tpm/tpm_loongson.c
-> > > > > 
-> > > > > diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-> > > > > index dddd702b2..ba3924eb1 100644
-> > > > > --- a/drivers/char/tpm/Kconfig
-> > > > > +++ b/drivers/char/tpm/Kconfig
-> > > > > @@ -189,6 +189,15 @@ config TCG_IBMVTPM
-> > > > >  	  will be accessible from within Linux.  To compile this driver
-> > > > >  	  as a module, choose M here; the module will be called tpm_ibmvtpm.
-> > > > >  
-> > > > > +config TCG_LOONGSON
-> > > > > +	tristate "Loongson TPM Interface"
-> > > > > +	depends on MFD_LOONGSON_SE
-> > > > > +	help
-> > > > > +	  If you want to make Loongson TPM support available, say Yes and
-> > > > > +	  it will be accessible from within Linux. To compile this
-> > > > > +	  driver as a module, choose M here; the module will be called
-> > > > > +	  tpm_loongson.
-> > > > > +
-> > > > >  config TCG_XEN
-> > > > >  	tristate "XEN TPM Interface"
-> > > > >  	depends on TCG_TPM && XEN
-> > > > > diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
-> > > > > index 9de1b3ea3..5b5cdc0d3 100644
-> > > > > --- a/drivers/char/tpm/Makefile
-> > > > > +++ b/drivers/char/tpm/Makefile
-> > > > > @@ -46,3 +46,4 @@ obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
-> > > > >  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
-> > > > >  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
-> > > > >  obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
-> > > > > +obj-$(CONFIG_TCG_LOONGSON) += tpm_loongson.o
-> > > > > diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
-> > > > > new file mode 100644
-> > > > > index 000000000..5cbdb37f8
-> > > > > --- /dev/null
-> > > > > +++ b/drivers/char/tpm/tpm_loongson.c
-> > > > > @@ -0,0 +1,84 @@
-> > > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > > +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
-> > > > > +
-> > > > > +#include <linux/device.h>
-> > > > > +#include <linux/mfd/loongson-se.h>
-> > > > > +#include <linux/platform_device.h>
-> > > > > +#include <linux/wait.h>
-> > > > > +
-> > > > > +#include "tpm.h"
-> > > > > +
-> > > > > +struct tpm_loongson_cmd {
-> > > > > +	u32 cmd_id;
-> > > > > +	u32 data_off;
-> > > > > +	u32 data_len;
-> > > > > +	u32 pad[5];
-> > > > > +};
-> > > > > +
-> > > > > +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
-> > > > > +{
-> > > > > +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
-> > > > > +	struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
-> > > > > +
-> > > > > +	if (cmd_ret->data_len > count)
-> > > > > +		return -EIO;
-> > > > > +
-> > > > > +	memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
-> > > > > +
-> > > > > +	return cmd_ret->data_len;
-> > > > > +}
-> > > > > +
-> > > > > +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
-> > > > > +{
-> > > > > +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
-> > > > > +	struct tpm_loongson_cmd *cmd = tpm_engine->command;
-> > > > > +
-> > > > > +	if (count > tpm_engine->buffer_size)
-> > > > > +		return -E2BIG;
-> > > > > +
-> > > > > +	cmd->data_len = count;
-> > > > > +	memcpy(tpm_engine->data_buffer, buf, count);
-> > > > > +
-> > > > > +	return loongson_se_send_engine_cmd(tpm_engine);
-> > > > > +}
-> > > > > +
-> > > > > +static const struct tpm_class_ops tpm_loongson_ops = {
-> > > > > +	.flags = TPM_OPS_AUTO_STARTUP,
-> > > > > +	.recv = tpm_loongson_recv,
-> > > > > +	.send = tpm_loongson_send,
-> > > > > +};
-> > > > > +
-> > > > > +static int tpm_loongson_probe(struct platform_device *pdev)
-> > > > > +{
-> > > > > +	struct loongson_se_engine *tpm_engine;
-> > > > > +	struct device *dev = &pdev->dev;
-> > > > > +	struct tpm_loongson_cmd *cmd;
-> > > > > +	struct tpm_chip *chip;
-> > > > > +
-> > > > > +	tpm_engine = loongson_se_init_engine(dev->parent, SE_ENGINE_TPM);
-> > > > > +	if (!tpm_engine)
-> > > > > +		return -ENODEV;
-> > > > > +	cmd = tpm_engine->command;
-> > > > > +	cmd->cmd_id = SE_CMD_TPM;
-> > > > > +	cmd->data_off = tpm_engine->buffer_off;
-> > > > > +
-> > > > > +	chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
-> > > > > +	if (IS_ERR(chip))
-> > > > > +		return PTR_ERR(chip);
-> > > > > +	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
-> > > > > +	dev_set_drvdata(&chip->dev, tpm_engine);
-> > > > > +
-> > > > > +	return tpm_chip_register(chip);
-> > > > > +}
-> > > > > +
-> > > > > +static struct platform_driver tpm_loongson = {
-> > > > > +	.probe   = tpm_loongson_probe,
-> > > > > +	.driver  = {
-> > > > > +		.name  = "loongson-tpm",
-> > > > 
-> > > > This patch looks otherwise great but I'd prefer here tho use
-> > > > "tpm_loongson_probe" for the value of the name field.
-> > > 
-> > > Where does this stipulation come from?  No other driver does this [0].
-> > > driver.name should be a nicely formatted, human readable string
-> > > describing the name of the device.  Not a function name.
-> > 
-> > What defines "human-readable" here? I see both as somewhat the
-> > same level of "readability" ;-)
-> > 
-> > > 
-> > > [0] git grep -A15 "static struct platform_driver" | grep ".name = .*probe"
-> > 
-> > What I'm getting:
-> > 
-> > $ git grep -l -e platform_driver_register --or -e module_platform_driver
-> > drivers/char/tpm | xargs git grep "\.name"
-> > drivers/char/tpm/tpm_atmel.c:           .name = "tpm_atmel",
-> > drivers/char/tpm/tpm_ftpm_tee.c:                .name = "ftpm-tee",
-> > drivers/char/tpm/tpm_ftpm_tee.c:                .name           =
-> > "optee-ftpm",
-> > drivers/char/tpm/tpm_nsc.c:             .name    = "tpm_nsc",
-> > drivers/char/tpm/tpm_svsm.c:            .name = "tpm-svsm",
-> > drivers/char/tpm/tpm_tis.c:     .name = "tpm_tis",
-> > drivers/char/tpm/tpm_tis.c:             .name           = "tpm_tis",
-> > drivers/char/tpm/tpm_tis_synquacer.c:           .name           =
-> > "tpm_tis_synquacer",
-> > 
-> > Do you consider e.g, "tpm_tis" as "less human-readable".
-> > 
-> > I don't necessarily fight against the name chosen. Your arguments
-> > just plain no make sense, so I just merely want to understand this.
-> > That's all.
-> 
-> In 64% of cases '-' is preferred to '_' for device names.
-> 
-> Human readable is probably a bit of a stretch in this context, so I'll
-> retract that part of the statement.  However, we should be using device
-> names, not names of functions which remain meaningless (which is what I
-> really meant by 'readable') to the user.  Where else do you see the
-> .probe() function name being used as a device name?
+From: Jake Hillion <jake@hillion.co.uk>
 
-Oops now I see what you mean. I meant to write "tpm_loongson", i.e.
-matching tpm_tis, tpm_crb etc. Sorry my bad.
+sched_ext performed a kfunc renaming pass in 6.13 and kept the old names
+around for compatibility with old binaries. These were scheduled for
+cleanup in 6.15 but were missed. Submitting for cleanup in for-next.
 
-> 
-> -- 
-> Lee Jones [李琼斯]
+Removed the kfuncs, their flags, and any references I could find to them
+in doc comments. Left the entries in include/scx/compat.bpf.h as they're
+still useful to make new binaries compatible with old kernels.
 
-BR, Jarkko
+Tested by applying to my kernel. It builds and a modern version of
+scx_lavd loads fine.
+
+Signed-off-by: Jake Hillion <jake@hillion.co.uk>
+---
+ include/linux/sched/ext.h | 10 +++----
+ kernel/sched/ext.c        | 71 ++---------------------------------------------
+ 2 files changed, 7 insertions(+), 74 deletions(-)
+
+diff --git a/include/linux/sched/ext.h b/include/linux/sched/ext.h
+index f7545430a54821193bcfecd0a1a21c326cc438b1..f0263f2578aeda4a42035ab58c9fd3a572e36ebd 100644
+--- a/include/linux/sched/ext.h
++++ b/include/linux/sched/ext.h
+@@ -164,7 +164,7 @@ struct sched_ext_entity {
+ 
+ 	/*
+ 	 * Runtime budget in nsecs. This is usually set through
+-	 * scx_bpf_dispatch() but can also be modified directly by the BPF
++	 * scx_bpf_dsq_insert() but can also be modified directly by the BPF
+ 	 * scheduler. Automatically decreased by SCX as the task executes. On
+ 	 * depletion, a scheduling event is triggered.
+ 	 *
+@@ -176,10 +176,10 @@ struct sched_ext_entity {
+ 
+ 	/*
+ 	 * Used to order tasks when dispatching to the vtime-ordered priority
+-	 * queue of a dsq. This is usually set through scx_bpf_dispatch_vtime()
+-	 * but can also be modified directly by the BPF scheduler. Modifying it
+-	 * while a task is queued on a dsq may mangle the ordering and is not
+-	 * recommended.
++	 * queue of a dsq. This is usually set through
++	 * scx_bpf_dsq_insert_vtime() but can also be modified directly by the
++	 * BPF scheduler. Modifying it while a task is queued on a dsq may
++	 * mangle the ordering and is not recommended.
+ 	 */
+ 	u64			dsq_vtime;
+ 
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index 28bb6810e5d1804e54eda6916d3d551e17e41fa7..4d6d15c85922b42fae92eea51cbc726360612595 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -6291,7 +6291,8 @@ __bpf_kfunc_start_defs();
+  * When called from ops.dispatch(), there are no restrictions on @p or @dsq_id
+  * and this function can be called upto ops.dispatch_max_batch times to insert
+  * multiple tasks. scx_bpf_dispatch_nr_slots() returns the number of the
+- * remaining slots. scx_bpf_consume() flushes the batch and resets the counter.
++ * remaining slots. scx_bpf_dsq_move_to_local() flushes the batch and resets the
++ * counter.
+  *
+  * This function doesn't have any locking restrictions and may be called under
+  * BPF locks (in the future when BPF introduces more flexible locking).
+@@ -6315,14 +6316,6 @@ __bpf_kfunc void scx_bpf_dsq_insert(struct task_struct *p, u64 dsq_id, u64 slice
+ 	scx_dsq_insert_commit(p, dsq_id, enq_flags);
+ }
+ 
+-/* for backward compatibility, will be removed in v6.15 */
+-__bpf_kfunc void scx_bpf_dispatch(struct task_struct *p, u64 dsq_id, u64 slice,
+-				  u64 enq_flags)
+-{
+-	printk_deferred_once(KERN_WARNING "sched_ext: scx_bpf_dispatch() renamed to scx_bpf_dsq_insert()");
+-	scx_bpf_dsq_insert(p, dsq_id, slice, enq_flags);
+-}
+-
+ /**
+  * scx_bpf_dsq_insert_vtime - Insert a task into the vtime priority queue of a DSQ
+  * @p: task_struct to insert
+@@ -6360,21 +6353,11 @@ __bpf_kfunc void scx_bpf_dsq_insert_vtime(struct task_struct *p, u64 dsq_id,
+ 	scx_dsq_insert_commit(p, dsq_id, enq_flags | SCX_ENQ_DSQ_PRIQ);
+ }
+ 
+-/* for backward compatibility, will be removed in v6.15 */
+-__bpf_kfunc void scx_bpf_dispatch_vtime(struct task_struct *p, u64 dsq_id,
+-					u64 slice, u64 vtime, u64 enq_flags)
+-{
+-	printk_deferred_once(KERN_WARNING "sched_ext: scx_bpf_dispatch_vtime() renamed to scx_bpf_dsq_insert_vtime()");
+-	scx_bpf_dsq_insert_vtime(p, dsq_id, slice, vtime, enq_flags);
+-}
+-
+ __bpf_kfunc_end_defs();
+ 
+ BTF_KFUNCS_START(scx_kfunc_ids_enqueue_dispatch)
+ BTF_ID_FLAGS(func, scx_bpf_dsq_insert, KF_RCU)
+ BTF_ID_FLAGS(func, scx_bpf_dsq_insert_vtime, KF_RCU)
+-BTF_ID_FLAGS(func, scx_bpf_dispatch, KF_RCU)
+-BTF_ID_FLAGS(func, scx_bpf_dispatch_vtime, KF_RCU)
+ BTF_KFUNCS_END(scx_kfunc_ids_enqueue_dispatch)
+ 
+ static const struct btf_kfunc_id_set scx_kfunc_set_enqueue_dispatch = {
+@@ -6547,13 +6530,6 @@ __bpf_kfunc bool scx_bpf_dsq_move_to_local(u64 dsq_id)
+ 	}
+ }
+ 
+-/* for backward compatibility, will be removed in v6.15 */
+-__bpf_kfunc bool scx_bpf_consume(u64 dsq_id)
+-{
+-	printk_deferred_once(KERN_WARNING "sched_ext: scx_bpf_consume() renamed to scx_bpf_dsq_move_to_local()");
+-	return scx_bpf_dsq_move_to_local(dsq_id);
+-}
+-
+ /**
+  * scx_bpf_dsq_move_set_slice - Override slice when moving between DSQs
+  * @it__iter: DSQ iterator in progress
+@@ -6572,14 +6548,6 @@ __bpf_kfunc void scx_bpf_dsq_move_set_slice(struct bpf_iter_scx_dsq *it__iter,
+ 	kit->cursor.flags |= __SCX_DSQ_ITER_HAS_SLICE;
+ }
+ 
+-/* for backward compatibility, will be removed in v6.15 */
+-__bpf_kfunc void scx_bpf_dispatch_from_dsq_set_slice(
+-			struct bpf_iter_scx_dsq *it__iter, u64 slice)
+-{
+-	printk_deferred_once(KERN_WARNING "sched_ext: scx_bpf_dispatch_from_dsq_set_slice() renamed to scx_bpf_dsq_move_set_slice()");
+-	scx_bpf_dsq_move_set_slice(it__iter, slice);
+-}
+-
+ /**
+  * scx_bpf_dsq_move_set_vtime - Override vtime when moving between DSQs
+  * @it__iter: DSQ iterator in progress
+@@ -6599,14 +6567,6 @@ __bpf_kfunc void scx_bpf_dsq_move_set_vtime(struct bpf_iter_scx_dsq *it__iter,
+ 	kit->cursor.flags |= __SCX_DSQ_ITER_HAS_VTIME;
+ }
+ 
+-/* for backward compatibility, will be removed in v6.15 */
+-__bpf_kfunc void scx_bpf_dispatch_from_dsq_set_vtime(
+-			struct bpf_iter_scx_dsq *it__iter, u64 vtime)
+-{
+-	printk_deferred_once(KERN_WARNING "sched_ext: scx_bpf_dispatch_from_dsq_set_vtime() renamed to scx_bpf_dsq_move_set_vtime()");
+-	scx_bpf_dsq_move_set_vtime(it__iter, vtime);
+-}
+-
+ /**
+  * scx_bpf_dsq_move - Move a task from DSQ iteration to a DSQ
+  * @it__iter: DSQ iterator in progress
+@@ -6639,15 +6599,6 @@ __bpf_kfunc bool scx_bpf_dsq_move(struct bpf_iter_scx_dsq *it__iter,
+ 			    p, dsq_id, enq_flags);
+ }
+ 
+-/* for backward compatibility, will be removed in v6.15 */
+-__bpf_kfunc bool scx_bpf_dispatch_from_dsq(struct bpf_iter_scx_dsq *it__iter,
+-					   struct task_struct *p, u64 dsq_id,
+-					   u64 enq_flags)
+-{
+-	printk_deferred_once(KERN_WARNING "sched_ext: scx_bpf_dispatch_from_dsq() renamed to scx_bpf_dsq_move()");
+-	return scx_bpf_dsq_move(it__iter, p, dsq_id, enq_flags);
+-}
+-
+ /**
+  * scx_bpf_dsq_move_vtime - Move a task from DSQ iteration to a PRIQ DSQ
+  * @it__iter: DSQ iterator in progress
+@@ -6673,30 +6624,16 @@ __bpf_kfunc bool scx_bpf_dsq_move_vtime(struct bpf_iter_scx_dsq *it__iter,
+ 			    p, dsq_id, enq_flags | SCX_ENQ_DSQ_PRIQ);
+ }
+ 
+-/* for backward compatibility, will be removed in v6.15 */
+-__bpf_kfunc bool scx_bpf_dispatch_vtime_from_dsq(struct bpf_iter_scx_dsq *it__iter,
+-						 struct task_struct *p, u64 dsq_id,
+-						 u64 enq_flags)
+-{
+-	printk_deferred_once(KERN_WARNING "sched_ext: scx_bpf_dispatch_from_dsq_vtime() renamed to scx_bpf_dsq_move_vtime()");
+-	return scx_bpf_dsq_move_vtime(it__iter, p, dsq_id, enq_flags);
+-}
+-
+ __bpf_kfunc_end_defs();
+ 
+ BTF_KFUNCS_START(scx_kfunc_ids_dispatch)
+ BTF_ID_FLAGS(func, scx_bpf_dispatch_nr_slots)
+ BTF_ID_FLAGS(func, scx_bpf_dispatch_cancel)
+ BTF_ID_FLAGS(func, scx_bpf_dsq_move_to_local)
+-BTF_ID_FLAGS(func, scx_bpf_consume)
+ BTF_ID_FLAGS(func, scx_bpf_dsq_move_set_slice)
+ BTF_ID_FLAGS(func, scx_bpf_dsq_move_set_vtime)
+ BTF_ID_FLAGS(func, scx_bpf_dsq_move, KF_RCU)
+ BTF_ID_FLAGS(func, scx_bpf_dsq_move_vtime, KF_RCU)
+-BTF_ID_FLAGS(func, scx_bpf_dispatch_from_dsq_set_slice)
+-BTF_ID_FLAGS(func, scx_bpf_dispatch_from_dsq_set_vtime)
+-BTF_ID_FLAGS(func, scx_bpf_dispatch_from_dsq, KF_RCU)
+-BTF_ID_FLAGS(func, scx_bpf_dispatch_vtime_from_dsq, KF_RCU)
+ BTF_KFUNCS_END(scx_kfunc_ids_dispatch)
+ 
+ static const struct btf_kfunc_id_set scx_kfunc_set_dispatch = {
+@@ -6827,10 +6764,6 @@ BTF_ID_FLAGS(func, scx_bpf_dsq_move_set_slice)
+ BTF_ID_FLAGS(func, scx_bpf_dsq_move_set_vtime)
+ BTF_ID_FLAGS(func, scx_bpf_dsq_move, KF_RCU)
+ BTF_ID_FLAGS(func, scx_bpf_dsq_move_vtime, KF_RCU)
+-BTF_ID_FLAGS(func, scx_bpf_dispatch_from_dsq_set_slice)
+-BTF_ID_FLAGS(func, scx_bpf_dispatch_from_dsq_set_vtime)
+-BTF_ID_FLAGS(func, scx_bpf_dispatch_from_dsq, KF_RCU)
+-BTF_ID_FLAGS(func, scx_bpf_dispatch_vtime_from_dsq, KF_RCU)
+ BTF_KFUNCS_END(scx_kfunc_ids_unlocked)
+ 
+ static const struct btf_kfunc_id_set scx_kfunc_set_unlocked = {
+
+---
+base-commit: 7a972c4dc5288087cbb5a66d4cd6d5e6ced4b6c0
+change-id: 20250625-scx-kfunc-cleanup-821c6b054461
+
+Best regards,
+-- 
+Jake Hillion <jake@hillion.co.uk>
+
+
