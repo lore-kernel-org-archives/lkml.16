@@ -1,91 +1,203 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CAAB1F460B;
-	Wed, 25 Jun 2025 14:08:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6DCE264A7F;
+	Wed, 25 Jun 2025 14:09:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750860503; cv=none; b=Hq3YXDqorE0Xk8UYOWRUQxruiie68MG9dJr/wljvmxKzlB1ECvngmqU8XoJ1kgwDZ8nhjcWPXBU1I+0bS0BQSIJwROcOazbKAyNM8K0zJ+OQzULMKgA5IiHegUqGTh0+2bmdHPCVzT1GDdIDuo2jL2v4Sg/0P/60So6czwh1HrA=
+	t=1750860544; cv=none; b=CbZKMv2C8yRMXE1GynCywNvMflkkb3Rt+xctmhQNfmTfEng8i3NmSbAk75uPVVBWpgvLVPbVig8/T1q6s2OxAC97zE5zhR5MK89Pq5WN36OZmuzdfLYF5fxYxGbSMRTHI5S3/hdg8TPGCEE0anqtkuvuQGjYj5C1+bMwYZ+j1AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750860503; c=relaxed/simple;
-	bh=4vIZXsuKUOK8a+9KYnOCvceaIEpUDoSD0Xk7uwoqMOM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KMmspn8iRhgMs/D+m26rsp81f1m6HmkZ6+ZgimeWuUf2+mCyhGltFWgjdhdvuEffRk0brcK6BhiFl4EUgyuXUi4IWv7RR3b3dgfGLjdb6zKegWJEn7nB+W9bdaBfr0yDTpOaD6QI7AMB1hJkVwcMVRhoKvCriTAlxlVq6gVCh7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lngmZW6d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750860544; c=relaxed/simple;
+	bh=WpwnfGVGjxp5of/6IZTd6KwuTsBR7L32KPSN66Lelok=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UUbAdooXDDtDQQ5+o4nK77C7S+Qb6U4snCj9Dj+Atvl/uchEpBn73zikHBQZKlbPk/VzV/2cIuG8mw68308DKdPwlCIOMU8rMQcfDpDhyLiPL9DFbQEG1gVSIFyXSL5ezqJXy1kLh5vJX6EJ5icwJbCh0RJEH0PLpKFSbr/KuAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XU0kBddW; arc=none smtp.client-ip=209.85.222.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lngmZW6d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49C74C4CEEF;
-	Wed, 25 Jun 2025 14:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750860503;
-	bh=4vIZXsuKUOK8a+9KYnOCvceaIEpUDoSD0Xk7uwoqMOM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=lngmZW6d0OpP8fT7KC63MqY2H9hdncczxcomCYo6wSWtTNWpuz8+AIsrUiFz+fOPJ
-	 8fbN8gNOBbhO/8Fao/0x2HGRzaMfeTFc8hxnKzGVN5RALl9H+jaMWsBV8MiV3z7KSI
-	 CjiRa2BBx4DQ0UYeofft+dqdiCJ3tqULlAby6vr2ZVcj5EJVAkWpk7LGFzE+8H5Lie
-	 oBhWKD5bmtZ2xSrNSrdDKdQoGrH+vcfkBaZae0wG8j//aLCN4xXshLwbC2Qe9ueGzg
-	 JE5xEM/59eYm04/v5ydoUlBfZWN9oAM14Ku5vFMLNmkna22aCWJZT3+A4W0aEAxnVM
-	 TDag+MrLCvGjw==
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-60867565fb5so3004549a12.3;
-        Wed, 25 Jun 2025 07:08:23 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCU/Mvq/yV2YJyuxRCir2W7Q066nimiCuzc7Sk8+y5Xd/F1omMi0YMe+7BjkslWerO/r32z+2uMR335Sh94I@vger.kernel.org, AJvYcCUKmvz/1oM6RqXKdajwCTp3xC6aOO2H/8shdoepSohfiFocDxCNhvRrIZ/OCVRbz75Fe1zVTNVnWeer@vger.kernel.org, AJvYcCXI1vRxNC330qJuJgel7/RTx6PkLQfzPUIPo8TsPD6lQMT5irCGzpAHAC8Cb8xfEaGvodKgOdqPjNOlaVJo9Xo=@vger.kernel.org, AJvYcCXgYtaHC58mtnJMfYlSlbHh/AZTCPe6bxl6lhV4F72bhV+Xtau8PFxc0XAdL7GgNXGGl+s0//Zmv2F3Mw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyLWD6lnYsiYD8RrKXtjNDKcELGnKw3AH1iXI4bjnHpcfudbT2
-	fZJG5AXADedH2PwbYCFZwWYD4oRdWcWk7ejMnDcBROukd3rtmB4ORHjHt+8+iBM390qmpU7IkKb
-	NSOK0afLSmgVCbJgli8zdmuiNspyhsw==
-X-Google-Smtp-Source: AGHT+IGRQMMmj3unS5ciqd3uH6EUFNd8IVgWwlI/rRMie8w0Ra7lYzi6iW8icoIkLFesEo0jH7PHkSh2vWz7wpa1Ab8=
-X-Received: by 2002:a17:907:2da9:b0:add:f62e:a300 with SMTP id
- a640c23a62f3a-ae0bebe8ff6mr342351766b.2.1750860501819; Wed, 25 Jun 2025
- 07:08:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XU0kBddW"
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7d0a2220fb0so818294585a.3;
+        Wed, 25 Jun 2025 07:09:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750860541; x=1751465341; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FJCFyxNIJ7B2fFTdwEw8L9jsO7+gbSPGHGFr4LFZGcg=;
+        b=XU0kBddWkLI8Rs+F5wilCqHuckRIqbw0Wl/+v7L3udgjt/SRf0uDAiN0+3OT0pHTDJ
+         CnieZNQ/+936h66/nGU/fkIiORIJtTtjvUTW1BPR2naE7zjtbdAXZIGnv6uJ8ih6mPUN
+         8zOasVN7T5hBxZn8TqB/xTo/IVkloy164ya5jQn2WZHrAugmMIXOnF8cEGQcHCiWjwNf
+         I6c6zHKH5nt/hMolThArxBCnbtu1vQBZwz4N+0TClme+tLLRXzeczhbxCs2EOgIxcrTd
+         hP2hjTrRUjwNWHpoG6bfzyWnztPj+PiV8ENygMzwjhwyCVx0cmCA53n9MSkledgIKKJG
+         01ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750860541; x=1751465341;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FJCFyxNIJ7B2fFTdwEw8L9jsO7+gbSPGHGFr4LFZGcg=;
+        b=XAvU0mzU2MxxqkAU5hyiEm9ZKdp9AYm764fjgr16gtpUmwlkNbrQaiTzOlLitAOkX+
+         9K2SbMCwXQjB1MmceElLD0LopKMdHUcMxjZd2s61A72jz7tQQaomS5FJpydd6/UzhNdA
+         cFgWkwchcnbc1nQQgrgoYw+6ETB2EB1HBp08mcQjUy+WE+X2jICbRE8C8u2lwsb69Y8x
+         IKH9sYw5ZDRZEXXQAoiHmZhFqV2LiygtXWHiCwOTb3H8NJ6p9B5LajAgSnfV8D+Sa2aF
+         5F3OYNGGeaEReNqzciiAIRA7aKUxDVNqL6zT6rJRsN3rLa0lS8leTjGinrwXvdXToeGJ
+         1VcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVJNub4JQaacroUiDfENLCIZw4jKX5mX1MIpbhPy2t/UJwYQ4U77fnzQwqwzsOR01LTTukR1OA=@vger.kernel.org, AJvYcCVuGXWQQxY44lMCy42JXhpftrm/jTmr1UtYVrpu83IdC5MCz6cuSlm7NCjvfOUg2n2+5iEs@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnVzgzInLOIRIaDvskuLZAkW9YPzGAi2boJk06mV+jQ30ftBsz
+	amH2h1JjyuPJophrtcjOtptN61XuTI4TCgWUHWv4ULH40U36Uk9jExs9
+X-Gm-Gg: ASbGncvWppp3lpvq12rVUfIYmk3Qeu1+m/94ZHGq2D2emETvFUw8xgoHMuwYdShKwRF
+	Wgu/ftohbBhkypc7ZmtFKHzXwptKOf90wszZjghniSlMaRLXnLaag0PK9QBT9hYuGaiuknKDUQD
+	kOwGpB7Cvr4ZwjHq5h0MHj8n6mB4guUkpE8zf5XsTOMDejT2NAOiaWGbDJqsJ/6aCmWC5L4SfZx
+	wozNV86KKCTugagTKZLllsywYmJM/vIYamAXXeieZef4pumke65D27qulHZZW5GPdbx26VDAeUi
+	v9mCRDA2kkrVVaAUeqSipS/p/uWYB6w/OZ6e/ninyQOY5KheHZehsfDQFqhQhwwfMImeUH22pJk
+	MpAwDmRidW84/HzPjafEUz5urLcCu60D9yuhwcAhq5QlzhWMoxrQY
+X-Google-Smtp-Source: AGHT+IGP3xXAQS3aRTeDmPFsQlYIlwFJjsOntFEA1J01weuYZPTG6VG9nUgH89lQn3xG0BigJ5bv8w==
+X-Received: by 2002:a05:620a:2902:b0:7d4:e3e:6606 with SMTP id af79cd13be357-7d4296d49d5mr473909885a.18.1750860541118;
+        Wed, 25 Jun 2025 07:09:01 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f999bfdasm618007285a.1.2025.06.25.07.09.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 07:09:00 -0700 (PDT)
+Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
+	by mailfauth.phl.internal (Postfix) with ESMTP id C6F9FF4006B;
+	Wed, 25 Jun 2025 10:08:59 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-11.internal (MEProxy); Wed, 25 Jun 2025 10:08:59 -0400
+X-ME-Sender: <xms:-wJcaJdwbGZBmxEN9j6y_78lQL4fcdBQvDTlOCyqeew87MY_tXnEHg>
+    <xme:-wJcaHO2fQ7GEaRxo6xqYDR28zh9SO-8ANjsQIwEDCtQd40EvDSAFHyG6ll5l7hnG
+    u-Ol92oGK7gJditFA>
+X-ME-Received: <xmr:-wJcaChZ1gB2oei1fHWaEjpsWflJu3QQnVqBK3jhFv5uI2C5hjTofK4kKw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvvdeljecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedv
+    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
+    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
+    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
+    drnhgrmhgvpdhnsggprhgtphhtthhopedvjedpmhhouggvpehsmhhtphhouhhtpdhrtghp
+    thhtohephhgthhesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehlihhnuhigqd
+    hkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehrtghusehv
+    ghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhkmhhmsehlihhsthhsrdhlih
+    hnuhigrdguvghvpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhg
+    pdhrtghpthhtohepmhhinhhgoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepfihilh
+    hlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlohhnghhmrghnsehrvgguhhgrthdr
+    tghomhdprhgtphhtthhopegurghvvgesshhtghholhgrsghsrdhnvght
+X-ME-Proxy: <xmx:-wJcaC9SIRUxm3GO8s19-RXkdVH_rArIOhzfzpcmzNM-_d39bSt6Ew>
+    <xmx:-wJcaFv8nbBOJLcGByCnAxajdWVjxopT8SmEcUiCmBZZYZC3PgMoTg>
+    <xmx:-wJcaBHRyDLwhfOzIx4pKXsYEiKQJhUSMNQ4wc5h5L1PAdmOSr8nYQ>
+    <xmx:-wJcaMPbn_fTVl6EW6q6E9gbgVJTQ0WkpFPVpeq40MWWr-yF0GC_iw>
+    <xmx:-wJcaOOQ9shCLPu7c6XInbYEihY93p9riyskcRSe86qZBaWl3X3bFgqB>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 25 Jun 2025 10:08:58 -0400 (EDT)
+Date: Wed, 25 Jun 2025 07:08:57 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org, lkmm@lists.linux.dev,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>, Breno Leitao <leitao@debian.org>,
+	aeh@meta.com, netdev@vger.kernel.org, edumazet@google.com,
+	jhs@mojatatu.com, kernel-team@meta.com,
+	Erik Lundgren <elundgren@meta.com>
+Subject: Re: [PATCH 0/8] Introduce simple hazard pointers for lockdep
+Message-ID: <aFwC-dvuyYRYSWpY@Mac.home>
+References: <20250625031101.12555-1-boqun.feng@gmail.com>
+ <aFvl96hO03K1gd2m@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620150914.276272-1-igor.korotin.linux@gmail.com> <20250620151504.278766-1-igor.korotin.linux@gmail.com>
-In-Reply-To: <20250620151504.278766-1-igor.korotin.linux@gmail.com>
-From: Rob Herring <robh@kernel.org>
-Date: Wed, 25 Jun 2025 09:08:10 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqJZ2bPuBZ=gskWGuk6J-g8iEKUBSJzNPp1R_0h=-gDLjw@mail.gmail.com>
-X-Gm-Features: Ac12FXxJ0lIPGJmUoAyYij_5Tc5EGrA9gwnPxeT8GjAH4rphivqHLogw6AizxSc
-Message-ID: <CAL_JsqJZ2bPuBZ=gskWGuk6J-g8iEKUBSJzNPp1R_0h=-gDLjw@mail.gmail.com>
-Subject: Re: [PATCH v8 1/9] rust: device: implement FwNode::is_of_node()
-To: Igor Korotin <igor.korotin.linux@gmail.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Saravana Kannan <saravanak@google.com>, Alex Hung <alex.hung@amd.com>, 
-	Andrew Morton <akpm@linux-foundation.org>, Jakub Kicinski <kuba@kernel.org>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Remo Senekowitsch <remo@buenzli.dev>, 
-	Tamir Duberstein <tamird@gmail.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Xiangfei Ding <dingxiangfei2009@gmail.com>, 
-	devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Benno Lossin <lossin@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Gary Guo <gary@garyguo.net>, Len Brown <lenb@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFvl96hO03K1gd2m@infradead.org>
 
-On Fri, Jun 20, 2025 at 10:17=E2=80=AFAM Igor Korotin
-<igor.korotin.linux@gmail.com> wrote:
->
-> From: Danilo Krummrich <dakr@kernel.org>
->
-> Implement FwNode::is_of_node() in order to check whether a FwNode
-> instance is embedded in a struct device_node.
->
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
-> ---
->  MAINTAINERS                    | 1 +
->  rust/helpers/helpers.c         | 1 +
->  rust/helpers/of.c              | 8 ++++++++
->  rust/kernel/device/property.rs | 7 +++++++
->  4 files changed, 17 insertions(+)
->  create mode 100644 rust/helpers/of.c
+On Wed, Jun 25, 2025 at 05:05:11AM -0700, Christoph Hellwig wrote:
+> On Tue, Jun 24, 2025 at 08:10:53PM -0700, Boqun Feng wrote:
+> > Hi,
+> > 
+> > This is the official first version of simple hazard pointers following
+> > the RFC:
+> 
+> Can you please put an explanation of what hazard pointers are
+> prominently into this cover letter?
+> 
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Sure, I will put one for the future version, here is the gist:
+
+
+Hazard pointers provide the similar synchronzation behavior as RCU:
+readers are cheap, updaters need to wait for existing readers to go
+before they can free the objects.
+
+The difference between hazard pointers and RCU is that instead of
+waiting for a grace period, which all the readers have to exit the RCU
+read-side critical sections, the updaters of hazard pointers only need
+to wait for the readers that are accessing the objects they are about to
+free. For example, if we have 2 readers accessing different objects and
+1 updater is freeing one of them:
+
+using RCU:
+
+	Reader 1		Reader 2		Updater
+	========		========		=======
+	rcu_read_lock();
+	r = rcu_dereference(a);
+				rcu_read_lock();
+				r = rcu_dereference(b);
+							synchronize_rcu();
+	rcu_read_unlock();
+				rcu_read_unlock();
+							<synchronize_rcu() returns>
+							free(a);
+
+The updater will need to wait for reader 2 to finish before it can
+free 'a', however when using hazard pointers:
+
+	Reader 1		Reader 2		Updater
+	========		========		=======
+	g = shazptr_acquire(a);
+				g = shazptr_acqurie(b);
+							synchronize_shazptr(a);
+	shazptr_clear(g);
+							<synchronize_shazptr(a) returns>
+							free(a);
+
+				shazptr_clear(g); // <- updater doesn't
+						  //    need to wait for
+						  //    this.
+
+The updater's wait can finish immediately if no one is accessing 'a', in
+other words it doesn't need to wait for reader 2.
+
+This means for a particular workload, hazard pointers may have smaller
+memory footprint and less updater wait time compared to RCU, while still
+have the similar performance on the reader side.
+
+
+That being said, it does come with some cost, the readers would need to
+provide their own hazard pointer slots (allocating memory) in general
+cases. And in the simple hazard pointer implementation in this series,
+although readers don't need to provide their own hazard pointer slots,
+they need to disable the preemption to use the hazard pointer, and the
+performance would downgrade (to a naive SRCU implementation probably) if
+they want to protect multiple objects in one read-side critical section.
+
+
+Regards,
+Boqun
