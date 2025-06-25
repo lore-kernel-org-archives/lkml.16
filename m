@@ -1,131 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DD221FF5B
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 21:48:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2D432080C4;
+	Wed, 25 Jun 2025 21:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750888122; cv=none; b=Otg7ZdQhJ0w6XphW0bLt8UDnMrrAlQzE3EVAuhKQT8Yl/JGTgnjaiSQQIDECsk1Ev8fakFfxsbAtRCctQjjiD63hv7PjX1i2kgumCwsB0Nli7qKlhI6GaHLKJK8g/xdEc3eob9F1/qhuz3QOzy983jxUOOxNsR9fOuM1KkDhK+U=
+	t=1750888219; cv=none; b=LRQg7NDHvvQSp+jUmOK0p+DrkDpLYhPbRqBDHZzTTfEE+QmlFDg/6ZqiHi09v2UlD+twY/UbPw2UZEaZYCGu2wB/6EBB6LVpi2MitZJu2I9/dLeRPOqbCIaURCSh90UxrLGPumgWFU5zHfaGNOIErK2PODQFIWTBN+GghbuXQIM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750888122; c=relaxed/simple;
-	bh=2Al1Xo1j+YCP/7/wS0Hh4MVF7Bsv2KTjyejkLKFeTL4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AMjxPKKKFT5SQMAcdstLNxV8rQgxYKnubAfyX9bFuDKlcFgGkeDNs+0Reruk4k1ksIRc6qNyA0sR22Op/0ZaKozD5sR3DXLGKrhZGa02ApzYDHFT6tz0TmnYo8FcoGRLPCJeMxy2PBVTNWR6pk9mdJ3pTRPs62s7mpCMit+XxVA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RQL9DnYl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750888219; c=relaxed/simple;
+	bh=dmiwvHrq20K4u2vHveigUjMypKXxfJB0t/PI8qx1mlo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DnSCBSctSen4BT5kRKURP58LdcJx7HMXxgZ3zsTM3MsfeByYrMCApMuVclO+ObkMFQahfUth+lJzjT7CIRcEcrBF8LpVnnIuHBTc5nTVQOe0EIEezNxlPiRahhqS/GYSbu1SdFQlouBmww+PaQusPbc2unL22GPVbxDC3jY0nuw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oYk5T0Mh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RQL9DnYl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750888119;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yf7LN45AXmV/wr0eUVyPBaPat33AzTTVr9f1fotPlKU=;
-	b=RQL9DnYlrrtzBaMLSDDHcjRUG84cJEhH/R3Hq7pJZLQkgR7uu3v/G44T8yuTJG7BbXj/vw
-	y4Mkpj8FQuRijNzjM2UASjXSX111cYO4S6zglkfCLYiLkknpDWfTuqHVLMZ7iP2ro6fg04
-	A4QDq2AUXj/1vet07fr02/MOo+9B3a0=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-57-gIuSUAMgPYG7Rcd82GkVFQ-1; Wed, 25 Jun 2025 17:48:38 -0400
-X-MC-Unique: gIuSUAMgPYG7Rcd82GkVFQ-1
-X-Mimecast-MFC-AGG-ID: gIuSUAMgPYG7Rcd82GkVFQ_1750888118
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7d400a4d4f2so55407985a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:48:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750888118; x=1751492918;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yf7LN45AXmV/wr0eUVyPBaPat33AzTTVr9f1fotPlKU=;
-        b=FcRkzPrIZFNjTTcAwDiPGQ68/398ryMnK/Ae6O4Nm5YeKBzQYmNgOwWSoza86NTIZN
-         ICj5M2N0XCQ7Frp4lbS6y/CO+p6ZBYsEXPwUHewP12kE6Zvg9IaoXJnkZZFVc+v2P4JI
-         QU02FnXlKXkiOjDqzkX8SXflCJ93wAF16Cw86bnBfjfhPcb0Ylj6in4MXYdr0MJs8id+
-         1j/Tw2pTfgoP+zAVj0ZYibyKQf+ayWkhL8u05gpid8eNkgpWgX/4FVyeIZDbEkdmvMZi
-         L9My4W8F24sk/6VKGGWdLK7nM0IPYQzJv75GA9S6HVczXZv8lxt6v2jZNFHoqYIZdbXC
-         Zzag==
-X-Forwarded-Encrypted: i=1; AJvYcCU5SnaLa+yprM/dj9T5+UZbYTMgNMdPWqfdjPNQYv52bmXtRb9FMffd6PJWgpQZOWhgm4ls7K2fR26J118=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxK+5VLeoPAY6l8MLCzPIfw1XOaOUuHUOgV2isiZ2SNUISAvZqa
-	XfmywTYceS/nSm4W7jkQi5n066qck4YzRB+SLsXkpz6Fhr0xhJNxNV0+0UXcd/pxEs5K7UUPkGY
-	+P32HWEkUQVz+56SyiHW+RlzFh3MqWkI1FxUUqVXcLsvW7+1Z2T3QHWfrFShl8Khu+w==
-X-Gm-Gg: ASbGncuNfGFB2XrpB5NsPLzEIqGfwfjIJcR9oPRJzuiK50yWVjLB6P2X5Zd6Q8KvehW
-	PRJT5hGUGOqBtfBowIoNMq4hWJE/q4j8cyx01s3AScI7wZnysU+9Hah5K/JRI1D58qyYHPiJwDT
-	RZArp37mzUeIP5xGy0Qhex5k1OHHnh5OrN9T9AjMUY+H9voD6/qWceCLaNGoaU12FkiOnafvyb5
-	nRNjVZ66nZtjS6XaHt/m4lx4Zg1pZYDNoKri3YYDTziYJA0AACpok0aEvvajXIYd7iHTIkotJsj
-	Jgm0yisN2ELKFUZnSDQw2wWPbyKwA2zPP51IXZO1ZXxemkatr7I9Hw==
-X-Received: by 2002:a05:620a:2721:b0:7d3:abb5:b57d with SMTP id af79cd13be357-7d429738d95mr576421785a.28.1750888117616;
-        Wed, 25 Jun 2025 14:48:37 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEsLCB6jZfeylnPbGC4ONnPG6FgPUPsCN7asxvidsIyT3qk0W5gzp71Re109/DyqgsCAMiPPA==
-X-Received: by 2002:a05:620a:2721:b0:7d3:abb5:b57d with SMTP id af79cd13be357-7d429738d95mr576418985a.28.1750888117188;
-        Wed, 25 Jun 2025 14:48:37 -0700 (PDT)
-Received: from crwood-thinkpadp16vgen1.minnmso.csb ([2601:447:c680:2b50:ee6f:85c2:7e3e:ee98])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd772fcabdsm162736d6.85.2025.06.25.14.48.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 14:48:36 -0700 (PDT)
-Message-ID: <d2e98b4d7f76534c68c1a0cc30fdd61b109cbd3c.camel@redhat.com>
-Subject: Re: [PATCH v5] sched: do not call __put_task_struct() on rt if
- pi_blocked_on is set
-From: Crystal Wood <crwood@redhat.com>
-To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>, "Luis Claudio R.
- Goncalves" <lgoncalv@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Clark Williams
- <clrkwllms@kernel.org>,  Steven Rostedt <rostedt@goodmis.org>, Tejun Heo
- <tj@kernel.org>, David Vernet <dvernet@meta.com>, Barret Rhoden	
- <brho@google.com>, Josh Don <joshdon@google.com>,
- linux-kernel@vger.kernel.org, 	linux-rt-devel@lists.linux.dev, Juri Lelli
- <juri.lelli@redhat.com>, Ben Segall	 <bsegall@google.com>, Dietmar Eggemann
- <dietmar.eggemann@arm.com>, Ingo Molnar	 <mingo@redhat.com>, Mel Gorman
- <mgorman@suse.de>, Valentin Schneider	 <vschneid@redhat.com>, Vincent
- Guittot <vincent.guittot@linaro.org>, Thomas Gleixner <tglx@linutronix.de>,
- Wander Lairson Costa <wander@redhat.com>
-Date: Wed, 25 Jun 2025 16:48:35 -0500
-In-Reply-To: <20250618070350.19JbjFnG@linutronix.de>
-References: <aFF1BKtdQCnuYMaS@uudg.org>
-	 <20250618070350.19JbjFnG@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.1 (3.56.1-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oYk5T0Mh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42AD3C4CEEA;
+	Wed, 25 Jun 2025 21:50:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750888218;
+	bh=dmiwvHrq20K4u2vHveigUjMypKXxfJB0t/PI8qx1mlo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oYk5T0MhHnnsC8r5IcS9ZzR+lUEedaC7Nl19Hci1qtGjyjRwkD8VQ7fApeK8aRPxx
+	 +o65L0dBxH5la4KE7SDYnr2p+OsrOWkQeZZ4x525W2ku+lWQpN6PtiGq/Yd1wvlGjG
+	 N7xbv5Hh70vE1caNvbfthO4nY/z39U8uaCstEIorIzTBixpLI6OeQ72FewVKPP/a0Z
+	 0DeDw/drEUQtnR9huigRtrEB2Hew7rDJ53DRYa1/57mlkOCanb0hk1wU7d0JPTEzXb
+	 qQ+rbzsCNKbQ3MpW84vy9qc0PLYWkH/7WSI9VX5CxhA22LeIC9l3KpL36VjPdOkuOo
+	 2xqfAjV6Gv/6Q==
+Date: Wed, 25 Jun 2025 15:50:12 -0600
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, 
+	Bjorn Helgaas <bhelgaas@google.com>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Michal Simek <michal.simek@amd.com>, 
+	Rob Herring <robh@kernel.org>, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] PCI: xilinx: Wait for link-up status during
+ initialization
+Message-ID: <cto6st65jsa36vbyrnazwrdu6m4f7rocmtz6ez25qoija73s74@fkpw6wla5cma>
+References: <20250610185734.GA819344@bhelgaas>
+ <1b153bce-a66a-45ee-a5c6-963ea6fb1c82.949ef384-8293-46b8-903f-40a477c056ae.bd37b5e5-7e20-4db7-b2f4-b11b97bc1326@emailsignatures365.codetwo.com>
+ <9f8a7c43-4862-45aa-951c-bf3e3c1f5513@topic.nl>
+ <vwipw5opvx42e6l7ofphg47rlsoebbts7dwzq5knaf4iz4hmhw@gk6lo4b6plxh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <vwipw5opvx42e6l7ofphg47rlsoebbts7dwzq5knaf4iz4hmhw@gk6lo4b6plxh>
 
-On Wed, 2025-06-18 at 09:03 +0200, Sebastian Andrzej Siewior wrote:
-> On 2025-06-17 11:00:36 [-0300], Luis Claudio R. Goncalves wrote:
-> > With PREEMPT_RT enabled, some of the calls to put_task_struct() coming
-> > from rt_mutex_adjust_prio_chain() could happen in preemptible context a=
-nd
-> > with a mutex enqueued. That could lead to this sequence:
-> >=20
-> >         rt_mutex_adjust_prio_chain()
-> >           put_task_struct()
-> >             __put_task_struct()
-> >               sched_ext_free()
-> >                 spin_lock_irqsave()
-> >                   rtlock_lock() --->  TRIGGERS
-> >                                       lockdep_assert(!current->pi_block=
-ed_on);
->=20
-> Maybe with the addition of
->=20
-> > The first case was observed with sched_ext_free().=20
-> > Crystal Wood was able to reproduce the problem to __put_task_struct()
-> > being called during rt_mutex_adjust_prio_chain().
->=20
-> The first sentence will imply a Fixes: with the introduction of
-> sched_ext. The second implies that the original fix was not complete and
-> nobody managed to trigger it until now.
+On Wed, Jun 25, 2025 at 03:46:56PM -0600, Manivannan Sadhasivam wrote:
+> On Wed, Jun 11, 2025 at 08:48:51AM +0200, Mike Looijmans wrote:
+> > 
+> > Met vriendelijke groet / kind regards,
+> > 
+> > Mike Looijmans
+> > System Expert
+> > 
+> > 
+> > TOPIC Embedded Products B.V.
+> > Materiaalweg 4, 5681 RJ Best
+> > The Netherlands
+> > 
+> > T: +31 (0) 499 33 69 69
+> > E: mike.looijmans@topic.nl
+> > W: www.topic.nl
+> > 
+> > Please consider the environment before printing this e-mail
+> > On 10-06-2025 20:57, Bjorn Helgaas wrote:
+> > > On Tue, Jun 10, 2025 at 04:39:03PM +0200, Mike Looijmans wrote:
+> > > > When the driver loads, the transceiver and endpoint may still be setting
+> > > > up a link. Wait for that to complete before continuing. This fixes that
+> > > > the PCIe core does not work when loading the PL bitstream from
+> > > > userspace. Existing reference designs worked because the endpoint and
+> > > > PL were initialized by a bootloader. If the endpoint power and/or reset
+> > > > is supplied by the kernel, or if the PL is programmed from within the
+> > > > kernel, the link won't be up yet and the driver just has to wait for
+> > > > link training to finish.
+> > > > 
+> > > > As the PCIe spec allows up to 100 ms time to establish a link, we'll
+> > > > allow up to 200ms before giving up.
+> > > > +static int xilinx_pci_wait_link_up(struct xilinx_pcie *pcie)
+> > > > +{
+> > > > +	u32 val;
+> > > > +
+> > > > +	/*
+> > > > +	 * PCIe r6.0, sec 6.6.1 provides 100ms timeout. Since this is FPGA
+> > > > +	 * fabric, we're more lenient and allow 200 ms for link training.
+> > > > +	 */
+> > > > +	return readl_poll_timeout(pcie->reg_base + XILINX_PCIE_REG_PSCR, val,
+> > > > +			(val & XILINX_PCIE_REG_PSCR_LNKUP), 2 * USEC_PER_MSEC,
+> > > > +			2 * PCIE_T_RRS_READY_MS * USEC_PER_MSEC);
+> > > > +}
+> > > I don't think this is what PCIE_T_RRS_READY_MS is for.  Sec 6.6.1
+> > > requires 100ms *after* the link is up before sending config requests:
+> > > 
+> > >    For cases where system software cannot determine that DRS is
+> > >    supported by the attached device, or by the Downstream Port above
+> > >    the attached device:
+> > > 
+> > >      ◦ With a Downstream Port that does not support Link speeds greater
+> > >        than 5.0 GT/s, software must wait a minimum of 100 ms following
+> > >        exit from a Conventional Reset before sending a Configuration
+> > >        Request to the device immediately below that Port.
+> > > 
+> > >      ◦ With a Downstream Port that supports Link speeds greater than
+> > >        5.0 GT/s, software must wait a minimum of 100 ms after Link
+> > >        training completes before sending a Configuration Request to the
+> > >        device immediately below that Port. Software can determine when
+> > >        Link training completes by polling the Data Link Layer Link
+> > >        Active bit or by setting up an associated interrupt (see §
+> > >        Section 6.7.3.3).  It is strongly recommended for software to
+> > >        use this mechanism whenever the Downstream Port supports it.
+> > > 
+> > Yeah, true, I misread the comment in pci.h. I cannot find any #define to
+> > match the "how long to wait for link training". Each driver appears to use
+> > its own timeout. So I should just create my own?
+> > 
+> 
+> We recently merged a series that moved the timing definitions to
+> drivers/pci/pci.h:
+> https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=controller/linkup-fix&id=470f10f18b482b3d46429c9e6723ff0f7854d049
+> 
+> So if you base your series on top this branch, you could reuse the definitions.
+> 
 
-sched_ext_free() just happens to be the first cleanup function called,
-so that's where the blowup happens.  I think the "nobody managed to
-trigger it" was because we didn't have the pi_blocked_on assert until
-recently -- and my "other cases with a similar cause" was probably older
-kernels with the assert backported, but not sched_ext, so the backtrace
-was different.
+You could also introduce a new macro if all you need is 1s:
 
--Crystal
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 9d20f0222fb1..f03bb882bf2e 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -64,6 +64,7 @@ struct pcie_tlp_log;
+  */
+ #define PCIE_LINK_WAIT_MAX_RETRIES     100
+ #define PCIE_LINK_WAIT_SLEEP_MS                10
++#define PCIE_LINK_WAIT_MS              PCIE_LINK_WAIT_MAX_RETRIES * PCIE_LINK_WAIT_SLEEP_MS
+ 
+ /* Message Routing (r[2:0]); PCIe r6.0, sec 2.2.8 */
+ #define PCIE_MSG_TYPE_R_RC     0
 
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
