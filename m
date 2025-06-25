@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76072E0B4C;
-	Wed, 25 Jun 2025 18:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF4792E11D1;
+	Wed, 25 Jun 2025 18:38:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750876727; cv=none; b=AdwScsItISSHVeO3wqrHqaBWIDL3u3dJ8ny6yBkyaNPwWkKvwuFIdnVu7pcINTFUDspQa7kckGP4SdxvvEk54b2B0pHjuG8OD/iFH7pnBoLySl9xH42TYOE0euzpCIFzoQRcYfikgh5YcQgqWW3MOYEjV9Hed0ftasKoJOfvmsk=
+	t=1750876730; cv=none; b=quQwpu6yhusF9opyBR1HSEhSkzerrqlpMnrR1Y3cHKj7gJYYHGEDRbLH5Op+qMgVYwhjiucvfAALrZi+Ajh3vw4jnIdeWwjMmKvDZSsXBrqI/Q1qG5lJIPH/BifsdJuCIdOiJZvZMCSHgBIGGGiFwJeuQoH+upFeuQ7+JV7l4hs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750876727; c=relaxed/simple;
-	bh=b5T8Jbp5iX0f1kT4SzSqHy+BudfP0PzjLAc2zVZJTyg=;
+	s=arc-20240116; t=1750876730; c=relaxed/simple;
+	bh=zVJf+MmEC3btYGKcyJeAPT+oFJj0a7vjbezGTwNcPH0=;
 	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=pGxYSb25zSpVxEtMoga0c5zWOne764B6vyCBSsIYWX6C9FpfQkl89DuplQxk3uYgRfllZ5u90PVhU1i47caBAzdDGTIeAlycyTylkfENTJXBAkZfM7s293+6kCZvqfMI7+XRDcuewcJb+1S/BperTDNQ+Oln7lN6apKCMagJEI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L5RSX64P; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Tqd4mPhY; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type:Date; b=vA/Yrrxj+HQOWSHkKIrubTVdeFlwUgpd0kiG+F2+ajEXMs84Gk8YAACWJ60r3TCqinSO6KMqt89opDH01+jGOaop9Rn7t4RELZV+9fBF7rWiWyfDFdsF1UncXSeMmxBlqUNASQqERkUYDZGjb5V/T5vTks7QNajHyzV/v/eh4OM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=h+RFuY3I; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/+u3PQoh; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L5RSX64P";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Tqd4mPhY"
-Message-ID: <20250625183758.187322876@linutronix.de>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="h+RFuY3I";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/+u3PQoh"
+Message-ID: <20250625183758.317946543@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750876724;
+	s=2020; t=1750876727;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=tqZxEcAjH2Q08zl9VMf10qBSNpG/vqmret2ndMqGbDE=;
-	b=L5RSX64Prg4HapU8RlAQ2FxFmVhB65blPKS0sPBVvPuKUAo9MtXP5Jef35GMX+nNU0iwzI
-	tvo+upDXGctmyphuMIiBvAE3LMlOXT+0avV4phlNXKXO5akupmADJld579wKTsNMcs2wHB
-	UrXqJGU58ApTSjF5Z7yVD8z0GGU7qUWC418MQ02RuA03GkGrTFlHQXwfwc1A34voNrYjSf
-	A8cnIkh0ttxtybj1dahWyFGkNtC0rKbgPhfoXkh1XVPK5VCpypdB/cc3e8hJ3DMNF+Yr4a
-	tc4EErwZE6wABPwbJk71Rm0L93NIewwB4ZKe5tmBJ+utWejSuPHwhRZixdBM4A==
+	 references:references; bh=8ViF+rrLWVVG0MZcV0fafeyznX+ujEDD9BAyqdiPByg=;
+	b=h+RFuY3IPFntsBRJwpsBt3oclBiNNWduh3GRIsa3lTE3OAJUwkw/pTqA+pOtIe4jZkTNZo
+	JxwIDBKWpwbbrEJD9x6NP+gGFsBh5AwNegtJaNtqHaWbFU/+8Uync6EFNzZLnp8Uodpj5Y
+	eoBdS+L2Sn0Z3308opRcKL//94Ae4HImcD3e5yCC3bLA0P7mdtixKhhaYVj1BLjuuwS4sy
+	tKMTQ983Uq3IdJWyfI52oDkkAm4E7Etiv+yw+ULnCERe5/O1zaUNo/ICN82PXBcYZnRaR0
+	LYJh5WgCjakzmlJhmoCvvURaSn7YbDZ5hhW2J40vEFN4Zy1+6i715BLsgnmYmA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750876724;
+	s=2020e; t=1750876727;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=tqZxEcAjH2Q08zl9VMf10qBSNpG/vqmret2ndMqGbDE=;
-	b=Tqd4mPhYKI8K6QQ8jAbrjfXcJB/oTY7HQij6oM5KMRusnbeS9VX61giJ8GwxVlJY4wjM1F
-	/ggJCiY3xduuKrAA==
+	 references:references; bh=8ViF+rrLWVVG0MZcV0fafeyznX+ujEDD9BAyqdiPByg=;
+	b=/+u3PQoh5dlc7OOWzjTMReCdVQDGqzeNG7dqERO2V90MCWGtYHl0k6ZWVbm96n0wAU6pEf
+	QR1UysI9NI/vitDg==
 From: Thomas Gleixner <tglx@linutronix.de>
 To: LKML <linux-kernel@vger.kernel.org>
 Cc: netdev@vger.kernel.org,
@@ -51,7 +51,7 @@ Cc: netdev@vger.kernel.org,
  Kurt Kanzenbach <kurt@linutronix.de>,
  Nam Cao <namcao@linutronix.de>,
  Antoine Tenart <atenart@kernel.org>
-Subject: [patch V3 07/11] timekeeping: Make do_adjtimex() reusable
+Subject: [patch V3 09/11] timekeeping: Provide adjtimex() for auxiliary clocks
 References: <20250625182951.587377878@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -60,157 +60,54 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 25 Jun 2025 20:38:43 +0200 (CEST)
+Date: Wed, 25 Jun 2025 20:38:46 +0200 (CEST)
 
-Split out the actual functionality of adjtimex() and make do_adjtimex() a
-wrapper which feeds the core timekeeper into it and handles the result
-including audit at the call site.
+The behaviour is close to clock_adtime(CLOCK_REALTIME) with the
+following differences:
 
-This allows to reuse the actual functionality for auxiliary clocks.
+  1) ADJ_SETOFFSET adjusts the auxiliary clock offset
+  
+  2) ADJ_TAI is not supported
+
+  3) Leap seconds are not supported
+
+  4) PPS is not supported
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 ---
- kernel/time/timekeeping.c |  110 +++++++++++++++++++++++++---------------------
- 1 file changed, 60 insertions(+), 50 deletions(-)
+ kernel/time/timekeeping.c |   16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 ---
 
 --- a/kernel/time/timekeeping.c
 +++ b/kernel/time/timekeeping.c
-@@ -2580,17 +2580,18 @@ unsigned long random_get_entropy_fallbac
+@@ -2860,10 +2860,26 @@ static int aux_clock_set(const clockid_t
+ 	return 0;
  }
- EXPORT_SYMBOL_GPL(random_get_entropy_fallback);
  
--/**
-- * do_adjtimex() - Accessor function to NTP __do_adjtimex function
-- * @txc:	Pointer to kernel_timex structure containing NTP parameters
-- */
--int do_adjtimex(struct __kernel_timex *txc)
-+struct adjtimex_result {
-+	struct audit_ntp_data	ad;
-+	struct timespec64	delta;
-+	bool			clock_set;
-+};
++static int aux_clock_adj(const clockid_t id, struct __kernel_timex *txc)
++{
++	struct tk_data *tkd = aux_get_tk_data(id);
++	struct adjtimex_result result = { };
 +
-+static int __do_adjtimex(struct tk_data *tkd, struct __kernel_timex *txc,
-+			 struct adjtimex_result *result)
- {
--	struct tk_data *tkd = &tk_core;
--	struct timespec64 delta, ts;
--	struct audit_ntp_data ad;
--	bool offset_set = false;
--	bool clock_set = false;
-+	struct timekeeper *tks = &tkd->shadow_timekeeper;
-+	struct timespec64 ts;
-+	s32 orig_tai, tai;
- 	int ret;
- 
- 	/* Validate the data before disabling interrupts */
-@@ -2599,56 +2600,65 @@ int do_adjtimex(struct __kernel_timex *t
- 		return ret;
- 	add_device_randomness(txc, sizeof(*txc));
- 
--	audit_ntp_init(&ad);
--
- 	ktime_get_real_ts64(&ts);
- 	add_device_randomness(&ts, sizeof(ts));
- 
--	scoped_guard (raw_spinlock_irqsave, &tkd->lock) {
--		struct timekeeper *tks = &tkd->shadow_timekeeper;
--		s32 orig_tai, tai;
--
--		if (!tks->clock_valid)
--			return -ENODEV;
--
--		if (txc->modes & ADJ_SETOFFSET) {
--			delta.tv_sec  = txc->time.tv_sec;
--			delta.tv_nsec = txc->time.tv_usec;
--			if (!(txc->modes & ADJ_NANO))
--				delta.tv_nsec *= 1000;
--			ret = __timekeeping_inject_offset(tkd, &delta);
--			if (ret)
--				return ret;
--
--			offset_set = delta.tv_sec != 0;
--			clock_set = true;
--		}
--
--		orig_tai = tai = tks->tai_offset;
--		ret = ntp_adjtimex(tks->id, txc, &ts, &tai, &ad);
--
--		if (tai != orig_tai) {
--			__timekeeping_set_tai_offset(tks, tai);
--			timekeeping_update_from_shadow(tkd, TK_CLOCK_WAS_SET);
--			clock_set = true;
--		} else {
--			tk_update_leap_state_all(&tk_core);
--		}
--
--		/* Update the multiplier immediately if frequency was set directly */
--		if (txc->modes & (ADJ_FREQUENCY | ADJ_TICK))
--			clock_set |= __timekeeping_advance(tkd, TK_ADV_FREQ);
-+	guard(raw_spinlock_irqsave)(&tkd->lock);
-+
-+	if (!tks->clock_valid)
++	if (!tkd)
 +		return -ENODEV;
 +
-+	if (txc->modes & ADJ_SETOFFSET) {
-+		result->delta.tv_sec  = txc->time.tv_sec;
-+		result->delta.tv_nsec = txc->time.tv_usec;
-+		if (!(txc->modes & ADJ_NANO))
-+			result->delta.tv_nsec *= 1000;
-+		ret = __timekeeping_inject_offset(tkd, &result->delta);
-+		if (ret)
-+			return ret;
-+		result->clock_set = true;
-+	}
-+
-+	orig_tai = tai = tks->tai_offset;
-+	ret = ntp_adjtimex(tks->id, txc, &ts, &tai, &result->ad);
-+
-+	if (tai != orig_tai) {
-+		__timekeeping_set_tai_offset(tks, tai);
-+		timekeeping_update_from_shadow(tkd, TK_CLOCK_WAS_SET);
-+		result->clock_set = true;
-+	} else {
-+		tk_update_leap_state_all(&tk_core);
- 	}
- 
-+	/* Update the multiplier immediately if frequency was set directly */
-+	if (txc->modes & (ADJ_FREQUENCY | ADJ_TICK))
-+		result->clock_set |= __timekeeping_advance(tkd, TK_ADV_FREQ);
-+
-+	return ret;
++	/*
++	 * @result is ignored for now as there are neither hrtimers nor a
++	 * RTC related to auxiliary clocks for now.
++	 */
++	return __do_adjtimex(tkd, txc, &result);
 +}
 +
-+/**
-+ * do_adjtimex() - Accessor function to NTP __do_adjtimex function
-+ * @txc:	Pointer to kernel_timex structure containing NTP parameters
-+ */
-+int do_adjtimex(struct __kernel_timex *txc)
-+{
-+	struct adjtimex_result result = { };
-+	int ret;
-+
-+	ret = __do_adjtimex(&tk_core, txc, &result);
-+	if (ret < 0)
-+		return ret;
-+
- 	if (txc->modes & ADJ_SETOFFSET)
--		audit_tk_injoffset(delta);
-+		audit_tk_injoffset(result.delta);
+ const struct k_clock clock_aux = {
+ 	.clock_getres		= aux_get_res,
+ 	.clock_get_timespec	= aux_get_timespec,
+ 	.clock_set		= aux_clock_set,
++	.clock_adj		= aux_clock_adj,
+ };
  
--	audit_ntp_log(&ad);
-+	audit_ntp_log(&result.ad);
- 
--	if (clock_set)
-+	if (result.clock_set)
- 		clock_was_set(CLOCK_SET_WALL);
- 
--	ntp_notify_cmos_timer(offset_set);
-+	ntp_notify_cmos_timer(result.delta.tv_sec != 0);
- 
- 	return ret;
- }
+ static __init void tk_aux_setup(void)
 
 
 
