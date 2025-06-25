@@ -1,89 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14D619E97A;
-	Wed, 25 Jun 2025 03:33:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3D21519B9;
+	Wed, 25 Jun 2025 03:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750822394; cv=none; b=jr3UiSKp3WNwdfDfnTKKcxm9MGUVTgXiRpjFSg9p+BAU86lk6cNF5cKMTvQrdLl7IVYLkBti9k0qArjPZJ5Bi9dEDHVD3Qu233/r/6y/shlgKrKmpyvtFFwiO3yQ2CiZjeHPTdbs/ssehfzNqhH39oW5q1g3qmsxQ1KCCdyBN4I=
+	t=1750822642; cv=none; b=eQLycF4vGspDM2nzUMNZgZBn3rYSpFBkk1s137QMRk6gvb0RV8HyONRBUTodT3YWeLD7CB5M4ArdLhS47N1VbXZ8lcuOA6n88ZUQi5s0G3Ev/wqfdptW1KXuRVQOVCpVoqL8V09f7SOCpStT/2wD8eeMA0nh5v3sO1UcHgkpNjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750822394; c=relaxed/simple;
-	bh=S+zg+bDlCpe9lZBLnDQTYS3NMqzgftreSFsZWS6275U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kCjhiNdctDtiuNVFFJQlRTpCgXA2GycDvOV49Os/VBzqLzVoDcKAb9HFdKdhJaIE6PNb1SgLX3IIjuBktZO9DQmwgz1lz/ifuxFBvzP0F1GKywUAdGXQjVCM95FzobX9YusYtwb5u+NIBNzwJuwRZH8J/MQeIaJWlhid/B/cQhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rA6JgHpW; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rA6JgHpW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 367C2C4CEE3;
-	Wed, 25 Jun 2025 03:33:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750822393;
-	bh=S+zg+bDlCpe9lZBLnDQTYS3NMqzgftreSFsZWS6275U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rA6JgHpWauA80ED/D0iBM35ETh5YQCVIJAVCd4ZmH05hGpM/zJPRyn0QezCvWOkLv
-	 tGegv6/Z5RsrdrRX1xzibmSQP4sgiAuiUrxgl5eY/uyNFcvjS3QC5Kpn9hkx9ulIV3
-	 kYadut0+Nl9zkVXi9yd4vqaJdc3W7IA89t6BQZmNsZcg7jPSzeLzD+17uXp4pOAvBu
-	 MYeswK3aPHcyoC3Aey+bahq5GhzEjEVAPZnz7d6RMswdDDRgoUvbRm15SshgXCJris
-	 J/UdA9JQE3vXUU6Ua9HU0Tak4dIRIjFEhMzK+KDUeIhSxyONGYhzohzlghw2Lztcjy
-	 Oxxf2EjIixOiw==
-Date: Tue, 24 Jun 2025 20:32:38 -0700
-From: Eric Biggers <ebiggers@kernel.org>
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Crypto Mailing List <linux-crypto@vger.kernel.org>
-Subject: Re: [GIT PULL] Crypto Fixes for 6.16
-Message-ID: <20250625033238.GB8962@sol>
-References: <aFtidDP6MLX1V2A6@gondor.apana.org.au>
- <20250625030404.GA8962@sol>
- <aFtpj5y4HtzVDChg@gondor.apana.org.au>
+	s=arc-20240116; t=1750822642; c=relaxed/simple;
+	bh=rqc4hJ278qKiJIpCcI2aKMEri66YeMKurXnPgxpRwag=;
+	h=Message-ID:Date:MIME-Version:To:CC:From:Subject:Content-Type; b=T3EpYiXCjr9pyKHja66NG6Bt1oL5cee1N0oETFAimr2v6Ri69p1zdCQvJuywH9+jiP+5OlSwzCxMmp2blVWF6hWiHKkb5ddAmqgixxIhgCWv/gr+bjaO8Re/w7Dqldj/Pe5WflToXugkb7ez1po54QBo1nB7Pw+2+6SzF3yfLXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=h-partners.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=h-partners.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bRnb71qsPz2QVKJ;
+	Wed, 25 Jun 2025 11:38:11 +0800 (CST)
+Received: from kwepemk500001.china.huawei.com (unknown [7.202.194.86])
+	by mail.maildlp.com (Postfix) with ESMTPS id 244731800B2;
+	Wed, 25 Jun 2025 11:37:16 +0800 (CST)
+Received: from [10.174.185.198] (10.174.185.198) by
+ kwepemk500001.china.huawei.com (7.202.194.86) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 25 Jun 2025 11:37:15 +0800
+Message-ID: <0088ad17-37cd-4425-bfca-d03595c91cd2@huawei.com>
+Date: Wed, 25 Jun 2025 11:37:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFtpj5y4HtzVDChg@gondor.apana.org.au>
+User-Agent: Mozilla Thunderbird
+To: <lidiangang@bytedance.com>
+CC: <jejb@linux.ibm.com>, <martin.petersen@oracle.com>,
+	<linux-scsi@vger.kernel.org>, <hare@suse.de>, <linux-kernel@vger.kernel.org>,
+	<lixiaokeng@huawei.com>, <hewenliang4@huawei.com>, <yangkunlin7@huawei.com>,
+	<changfengnan@bytedance.com>
+Reply-To: <20250424092732.GA48639@bytedance.com>
+From: JiangJianJun <jiangjianjun3@huawei.com>
+Subject: Re: [RFC PATCH v3 04/19] scsi: scsi_error: Add helper
+ scsi_eh_sdev_stu to do START_UNIT
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems500002.china.huawei.com (7.221.188.17) To
+ kwepemk500001.china.huawei.com (7.202.194.86)
 
-On Wed, Jun 25, 2025 at 11:14:23AM +0800, Herbert Xu wrote:
-> On Tue, Jun 24, 2025 at 08:04:04PM -0700, Eric Biggers wrote:
-> >
-> > Wouldn't it make more sense to revert the "Crypto API partial block handling"
-> > stuff?  It's been causing a huge number of problems, and it's been getting
-> > superseded by the librarification changes anyway.
-> 
-> The partial block handling simplifies the implementation of both
-> software and hardware hash algorithms.  Just look at the diffstat.
+ > From: Wenchao Hao <haowenchao2@huawei.com>
+ >
+ > Add helper function scsi_eh_sdev_stu() to perform START_UNIT and check
+ > if to finish some error commands.
+ >
+ > > This is preparation for a genernal LUN/target based error handle
+ > > strategy and did not change original logic.
+ > >
+ > > Signed-off-by: Wenchao Hao <haowenchao2@huawei.com>
+ > > ---
+ > >  drivers/scsi/scsi_error.c | 50 +++++++++++++++++++++++----------------
+ > >  1 file changed, 29 insertions(+), 21 deletions(-)
+ > >
+ > > diff --git a/drivers/scsi/scsi_error.c b/drivers/scsi/scsi_error.c
+ > > index cc3a5adb9daa..3b55642fb585 100644
+ > > --- a/drivers/scsi/scsi_error.c
+ > > +++ b/drivers/scsi/scsi_error.c
+ > > @@ -1567,6 +1567,31 @@ static int scsi_eh_try_stu(struct scsi_cmnd 
+*scmd)
+ > >  	return 1;
+ > >  }
+ > >
+ > > +static int scsi_eh_sdev_stu(struct scsi_cmnd *scmd,
+ > > +			      struct list_head *work_q,
+ > > +			      struct list_head *done_q)
+ > > +{
+ > > +	struct scsi_device *sdev = scmd->device;
+ > > +	struct scsi_cmnd *next;
+ > > +
+ > > +	SCSI_LOG_ERROR_RECOVERY(3, sdev_printk(KERN_INFO, sdev,
+ > > +				"%s: Sending START_UNIT\n", current->comm));
+ > > +
+ >
+ > As in the scsi_eh_stu, SCSI_SENSE_VALID and scsi_check_sense is required
+ > before calling scsi_eh_try_stu.
 
-Not software, since the library functions have to handle partial blocks anyway.
-There will be a negative diffstat for algorithms that haven't been converted to
-have a library API yet, but it will go away once they are.
+But the SCSI_SENSE_VALID and scsi_check_sense has been called before 
+calling scsi_eh_try_stu, see in loop devices in scsi_eh_stu, do you 
+means re-call at here?
 
-> > Indeed, I just found that a lot of drivers in drivers/crypto/ haven't been
-> > updated to be aware of the extra byte that comes back from
-> > crypto_shash_export().  So there are a bunch of buffer overflows there too.
-> > (Not like drivers/crypto/ actually matters, but apparently your changes are for
-> > its benefit?  So it's interesting that it was actually broken by them.)
-> 
-> If anything this proves that enforcing a consistent hash format
-> is the right thing to do.  All those buggy code paths were assuming
-> that the export format is fixed which was not the case prior to the
-> partial blocks work.
-> 
-> But thanks for pointing me to these buggy drivers and I will send
-> out fixes for them.
-
-Well, they (reasonably enough) assume the format that all the CPU-based code
-previously used.  So they weren't really broken until your changes.
-
-Of course, the lack of type safety here is an artificial problem created by the
-generic crypto API which uses a 'void *' state.  The library functions simply
-use the C type system, so they just work and do not have this sort of silly
-issue where different places disagree about what struct a 'void *' points to...
-
-These legacy drivers should just use the library functions.
-
-- Eric
