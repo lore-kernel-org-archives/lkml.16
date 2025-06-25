@@ -1,151 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A06926D4C7;
-	Wed, 25 Jun 2025 22:29:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED3EF214A9B;
+	Wed, 25 Jun 2025 22:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750890580; cv=none; b=Lt6TCjDZ/fz1fIBglRkmssHxUOHZR5HhDbWD1Q/SvodSN5ycjuW85c9CosYzaG1zoMq7QF0X0EW0ucp4rLdfzTrb1TsDrBaE7pR6G8VysS6bncmeSP4YOrzDIMiSq3WiduHh90zVh6aAGQ4Km/mrjV+BCEPL7hXaaIOA7hQ3L88=
+	t=1750890658; cv=none; b=nbvBXbW/8Wl3icAXXgFI1QdltlshAolw4nGX+TYJCIfDmsnq2RD1A/KzExgwoJ4rb9duyZ6kQTt1rUuNrDNlohhDc73Dr7JJqSg5vCu+dbUaXDV8MAT/8BFQX9a5Slc8r+/vzhrWNJU40QEIQP9ZCf2DS0rB4xFodCvJMJ5iGlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750890580; c=relaxed/simple;
-	bh=65fugPI9FRJsqGGo3gHAxWmOr4BVEX8RKL5+9t0LBHk=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=UfVkfiHZCI2pLhQB1RIs+aKwqnpEHIaAOQfu8B+ia1GiPF87ukX+MTRC3WO0lnnRF7vAVRXhL7ZYe1WyjlRBhNCASo10EHxeVFtbXAFzVBHs1gNrzBdz37gctpiilKw5FiLQNQTHFY9ihkhNteDSidrY2g0tiKZOxG8Nvlc8XrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Efw8FHVe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750890658; c=relaxed/simple;
+	bh=es2pAC8UJ6aAZOOo64AymW+sUCvL5KpwNeTvHXR6GyQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=etl8jC676z/6+BYBzAYFYdez+KXZvUtK/z6bz9zgGlDAIAnsHGSLvBBgrIK93gdUVEoZRd0WTJmuNEMH2Nd2MUMDE6ORjQKoaZvaeb62iVwqTO29ZEXhTcKLWfBQVa1SdFepSDt1zjkfq4Y9jXlFEteOsmojRx6WySrAKPRvCyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dN5O3BaP; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Efw8FHVe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3D90C4CEEA;
-	Wed, 25 Jun 2025 22:29:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750890580;
-	bh=65fugPI9FRJsqGGo3gHAxWmOr4BVEX8RKL5+9t0LBHk=;
-	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
-	b=Efw8FHVeKi4IxhwYO1QOUPEuNL5FPNa0rLKLLBgiHc6QAnmK5295Vz0Aqf4bIlAAD
-	 sVVAxMyXpwoD2vO0+TCCZDATGQgh9k3bjFlqHVY2VPlppXbMPWy6dY9+PgV3p0Skzc
-	 fCLkifjGi2m9hZpZBDioTecqIA2QeuYKQJkll+mdrjZpQs9ejOMTOqgS8Smai/DdL8
-	 ozY6ye8PJiTx3QAMXR/MgZ7UsMuDmQJwXitMhULL9HVXCoMKb6JKauHpnHTDOAcGKr
-	 vTqj0eMOwREY/kINDUuxaiSejdHpvMeYF85KyoXNQOoh6bw74xtRG9lWC0Iwt1rILV
-	 RPyq71RZ0I9dA==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dN5O3BaP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750890657; x=1782426657;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=es2pAC8UJ6aAZOOo64AymW+sUCvL5KpwNeTvHXR6GyQ=;
+  b=dN5O3BaPwcolxkWW8YDYhWql6hkRrRO7aqmt3uVSUDb850GbuLOODRWY
+   NzA9FEq5T0QiZklqMqMDUhn01i8QRZAREuDqzN7UPVD7eF2kjKv09+S1Z
+   P1w/7qcLE6J/LWHmQdRVoT9ptKKAxKUWBRo78GB/jgVj1h6xMuEGhvq0G
+   rcApgyThDa6VQmxDmskRU6osdFzpXeoJqcsl/WI4ASS3pnFLv/JGN89Js
+   hE9qajLu0gNj4f9DGd3USs21PB6MISzdqQI/jHV2invC0v3lPE0VrXn20
+   5X4FF0bhzAhNkIPCD+Z4hvtN1rW0Bw/T2cPFriDvcEBu33+44zhYrQM4c
+   w==;
+X-CSE-ConnectionGUID: oXxDcL1fSza7Cj4yxjo9Jw==
+X-CSE-MsgGUID: udCOUSlRQmuR3WvkI/dICA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="63773812"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="63773812"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 15:30:56 -0700
+X-CSE-ConnectionGUID: FVV2R/ABSsWS5xlvDo6ZMw==
+X-CSE-MsgGUID: S21WJEC/SjiWb3gJmRXOQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="151955300"
+Received: from tmukhopa-mobl.amr.corp.intel.com (HELO [10.125.98.185]) ([10.125.98.185])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 15:30:56 -0700
+Message-ID: <daa7eb83-7413-4b6e-a241-84d306db0d43@linux.intel.com>
+Date: Wed, 25 Jun 2025 15:30:47 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in
+ faux_device_destroy()
+To: Dan Carpenter <dan.carpenter@linaro.org>, Miguel Ojeda <ojeda@kernel.org>
+Cc: gregkh@linuxfoundation.org, Benjamin.Cheatham@amd.com,
+ Jonathan.Cameron@huawei.com, dakr@kernel.org, dan.j.williams@intel.com,
+ linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+ linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com, rafael@kernel.org,
+ sudeep.holla@arm.com, Kees Cook <kees@kernel.org>
+References: <2025061313-theater-surrender-944c@gregkh>
+ <20250614105037.1441029-1-ojeda@kernel.org>
+ <685c13c5.050a0220.38a39d.dcf8@mx.google.com>
+Content-Language: en-GB
+From: Marc Herbert <marc.herbert@linux.intel.com>
+In-Reply-To: <685c13c5.050a0220.38a39d.dcf8@mx.google.com>
 Content-Type: text/plain; charset=UTF-8
-Date: Thu, 26 Jun 2025 00:29:35 +0200
-Message-Id: <DAVYWQE2PYZE.3TRIT906A9BJM@kernel.org>
-To: "Shankari Anand" <shankari.ak0208@gmail.com>,
- <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
- <patches@lists.linux.dev>
-Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
- <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
- <gary@garyguo.net>, "Roy Baron" <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
- "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>
-Subject: Re: [PATCH v2 1/2] rust: move ARef and AlwaysRefCounted to
- sync::aref
-From: "Benno Lossin" <lossin@kernel.org>
-X-Mailer: aerc 0.20.1
-References: <20250625111133.698481-1-shankari.ak0208@gmail.com>
-In-Reply-To: <20250625111133.698481-1-shankari.ak0208@gmail.com>
+Content-Transfer-Encoding: 7bit
 
-On Wed Jun 25, 2025 at 1:11 PM CEST, Shankari Anand wrote:
-> diff --git a/rust/kernel/sync/aref.rs b/rust/kernel/sync/aref.rs
-> new file mode 100644
-> index 000000000000..93a23b493e21
-> --- /dev/null
-> +++ b/rust/kernel/sync/aref.rs
-> @@ -0,0 +1,170 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Atomic reference-counted pointer abstraction.
 
-I'd say this module is about supporting objects with builtin reference
-counting.
 
-> +//!
-> +//! This module provides [`ARef<T>`], an owned reference to a value that=
- implements
-> +//! [`AlwaysRefCounted`] =E2=80=94 an unsafe trait for types that manage=
- their own reference count.
+On 2025-06-25 08:20, Dan Carpenter wrote:
+> On Sat, Jun 14, 2025 at 12:50:37PM +0200, Miguel Ojeda wrote:
+>> On Fri, 13 Jun 2025 20:33:42 -0400 Greg KH <gregkh@linuxfoundation.org> wrote:
+>>>
+>>> Great writeup, but as Miguel says, this isn't needed at all, the kernel
+>>> relies on the compiler to be sane :)
+>>
+>> We may still want to clean them up, e.g. for tooling -- Kees/Dan: do we?
+>> e.g. I see a similar case with discussion at:
+>>
+>>     https://lore.kernel.org/lkml/3f1e7aaa-501a-44f1-8122-28e9efa0a33c@web.de/
+>>
+>> Which in the end was picked up as commit 2df2c0caaecf ("fbdev: au1100fb:
+>> Move a variable assignment behind a null pointer check").
+> 
+> Putting the declarations at the top was always just a style preference.
 
-I would lead with comparing `ARef<T>` to `Arc<T>` and only later mention
-`AlwaysRefCounted`.
+No, "const" and variable scopes are not just "style", please do a
+bit of research. For instance...
 
-> +//!
-> +//! It is based on the Linux kernel's manual reference counting model an=
-d is typically used
-> +//! with C types that implement reference counting (e.g., via `refcount_=
-t` or `kref`).
-> +//!
-> +//! For Rust-managed objects, prefer using [`Arc`](crate::sync::Arc) ins=
-tead.
-> +
-> +use core::{
-> +    marker::PhantomData,
-> +    mem::ManuallyDrop,
-> +    ops::Deref,
-> +    ptr::NonNull,
-> +};
-> +
-> +/// Trait for types that are _always_ reference-counted.
-> +///
-> +/// This trait allows types to define custom reference increment and dec=
-rement logic.
-> +/// It enables safe conversion from a shared reference `&T` to an owned =
-[`ARef<T>`].
-> +///
-> +/// This is usually implemented by wrappers around C types with manual r=
-efcounting.
-> +///
-> +/// For purely Rust-managed memory, consider using [`Arc`](crate::sync::=
-Arc) instead.
-> +///
-> +/// # Safety
-> +///
-> +/// Implementers must ensure that:
-> +///
-> +/// - Calling [`AlwaysRefCounted::inc_ref`] keeps the object alive in me=
-mory until a matching [`AlwaysRefCounted::dec_ref`] is called.
-> +/// - The object is always managed by a reference count; it must never b=
-e stack-allocated or
-> +///   otherwise untracked.
-> +/// - When the count reaches zero in [`AlwaysRefCounted::dec_ref`], the =
-object is properly freed and no further
-> +///   access occurs.
-> +///
-> +/// Failure to follow these rules may lead to use-after-free or memory c=
-orruption.
+> Putting declarations at the top causes issues for __cleanup magic and...
 
-You also rephrased these docs, can you do that in a separate patch?
+https://stackoverflow.com/questions/368385/implementing-raii-in-pure-c
+https://en.wikipedia.org/wiki/Resource_acquisition_is_initialization#Compiler_%22cleanup%22_extensions
 
-> +
+Not just "style" either:
+- Automagically avoiding exploits like TUN https://lwn.net/Articles/342330/
+- The unusual flag -fno-delete-null-pointer-checks and incompatibility
+  with other analyzers and compilers
+- All the complex compiler discussions around those.
 
-Newline?
+Declaration-after-statement was an important (and obviously: optional)
+C99 feature that let C catch up with every other language. Forbidding it
+just for "style" would be a serious misunderstanding of that feature. I
+don't know any yet but there has to be some more important reason(s)
+than "style".
 
----
-Cheers,
-Benno
+From https://lore.kernel.org/lkml/4d54e4f6-0d98-4b42-9bea-169f3b8772bb@sabinyo.mountain/
+> Btw, this is testing dereferences where the kernel code is doing pointer math.
 
-> +pub unsafe trait AlwaysRefCounted {
-> +    /// Increments the reference count on the object.
-> +    fn inc_ref(&self);
-> +
-> +    /// Decrements the reference count on the object.
-> +    ///
-> +    /// Frees the object when the count reaches zero.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// Callers must ensure that there was a previous matching increment=
- to the reference count,
-> +    /// and that the object is no longer used after its reference count =
-is decremented (as it may
-> +    /// result in the object being freed), unless the caller owns anothe=
-r increment on the refcount
-> +    /// (e.g., it calls [`AlwaysRefCounted::inc_ref`] twice, then calls
-> +    /// [`AlwaysRefCounted::dec_ref`] once).
-> +    unsafe fn dec_ref(obj: NonNull<Self>);
-> +}
+Compiler optimizations may or may not care about that difference.  It
+seems gcc and clang both do care... for now (and even if that changes
+then I guess -fno-delete-null-pointer-checks would still be enough)
