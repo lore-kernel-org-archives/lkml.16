@@ -1,111 +1,97 @@
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 259FA260567;
-	Wed, 25 Jun 2025 12:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DD2E25C711;
+	Wed, 25 Jun 2025 12:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750855555; cv=none; b=MrsMlEuMqMhKY4xv3gZ0A7pcLP6iyP2RansTSmJZe4HGEeFHWZ1MXy6AS+hvWFMHTlsNA6qg5JPWglSz4Pz/XZNjAzrniG+01CUNTX5gLvESmII6KcWMNYtzIjsjFT9VomTIPiA+eYjMpa2I6SWF0dfWQ2BW9YCkL0OZ828hMSU=
+	t=1750855566; cv=none; b=dIc48kKNef+rZFS/RUsMH6Vd52XJ+uXAVxec31todKM7UCC0ukiqo3bsxTlb0X1ucY8CuU01ZdHcZlembQqM2Eb17aqQpS88XDES4WG3n5l/6ifiZro6/bXpzIjS/O+oekrDCbqetHTcID+x99rK2viDfGxP67p8Zu4FmC/rRbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750855555; c=relaxed/simple;
-	bh=aeUHbst5u6uAyR1ycfeU07wkwThxzbqj2XsMrc/HWnM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TGDQx2s8o9U76ExiU6VyG4ZZ/cbOsppqhBEuD7JFrq4CktUDlsK8bPIdiSIkD25KKgbQ/glJj7uzEyBFumesZ3FAvJwNDrBeVMBw+fdrbTEXf7wJ+VZC0nyW+JWXSQGN2HarWoxYjCz4ScX8LQl2STr01DU9+Ik94MlyyyGgzdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xax0JKeS; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750855566; c=relaxed/simple;
+	bh=H2Q5pv8/n1x+u1urkiz+OyiZd1H1/C8DF5+taITB/dQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EIU42x3Et68+YdVx5svdmHr8umwZ6JWnBS5xm737PsMTcIPQV3k/eMO/hfsz2kJpVun6Da/Y8vNWaVxan1k6eEVU0DU88YFvZTec4gbarWW7VMx2oCbBb0eSSnvBEh3stpdpNgVCDelLYgPPsccbfJBJ+dY2/9Hj2if89yCK4Xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SGFjyBvH; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xax0JKeS"
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-553b60de463so7105732e87.3;
-        Wed, 25 Jun 2025 05:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750855552; x=1751460352; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aeUHbst5u6uAyR1ycfeU07wkwThxzbqj2XsMrc/HWnM=;
-        b=Xax0JKeSGxE88hvWuvO4lIYb8pAGDKfLqzOC0P0PiKgL2F+Y2ki6OIrpxKIm1fgw0c
-         QfApuUagqZVw4U+Gjl8KfpFIEl1175lSXz8fzqHzdPjesJz+Si+0ukTTbM1dpoZurvyl
-         0kRdv7ewfOltY0o9ntH6xoLjLRjrd/0LoSKhK4DaEeaw1KvSB1DLiU5hp/yT7jylDxVE
-         oETJU0GbSQv2dHLrJg5AHXqDLwbQZodyk4nNGEfJh2c+rckpS2hEWfVkV9VeHzEKivKK
-         fSVK96iH0ksFSHeRwIh/dAidfmX0nE5jWvh2OtYvHLsbw6KgJ0vYtT6BrEVLenDN0mpe
-         UK2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750855552; x=1751460352;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aeUHbst5u6uAyR1ycfeU07wkwThxzbqj2XsMrc/HWnM=;
-        b=t5GV5d5C2J4YQKdwZqwqY5EDr5y2A+lhEfTShIKBwNvgbtAjx7SK8NNckLj5UsyUys
-         HrTYFCBkGQpM5RInCyEqvenboQO8RFXWcCJoVFYnkwuMciAr/YDlF4neVNnOdiWkE7oz
-         GjGkTtabxvstOZzlfaobEl8sGvUbefbAkwvuGIejzS7TnY6zfc38OVx+Qn1IPMziYIUy
-         Y3015kiLVk7u3pMANyL41TawrZ8RYydMLbi+HA/b8/qEF+OqubRDB9Ve9tZ5R0vXH7a4
-         juQPtuKUWZyRJTsmOkctYA5nJKpWYRF9vpyzbFpa86YaSe5XcTAt9ogAJp6COWUiDaFT
-         hbhA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIuuhqOrmX3o6Unw90y0knmN7gdlLwLp6uxr0P1E0IafShYWs8S9LQuBGXyg8EKupoLM5tNzW8Mn/c5A==@vger.kernel.org, AJvYcCWvQPyntQ6SZH0DHarNCMs2dTdi9Tm8rhrpKaai/+ksRPEqadPw2L6kJ6+3CEHJGiL3mfLc+TY5bm+xVls=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzc4Gc0cRezlo0DZCWppEnYkRohKIs3KyL3PjV+/rxX7aP2RyOz
-	kPjF4ufKDMAH0/3Y63ap3oif1Y99Nbx7F1/qgIOkeoGEwCYCDcTHUZgQUPj/dW00ccilShstBuE
-	LGvDxRaZa7HO7rcYLIxPCjOS1XaCNZV8=
-X-Gm-Gg: ASbGncsdyrI3LiW/kswrSBNp7zWzQAzSf2IRvc5pazhNYOAKV9Rc9FZTeuQpFKYTav/
-	qjGk27Odf80Tx+mMlFWAg+uEi5rWOfuQ+RY3xn20FsOMx6Slp8ihHlNCFrh6XwrCSQ6gbIEo0jJ
-	lEh8+9e95I4dQX9lxuarMH5ZZgr+c99ysUQT3WCj4ALA==
-X-Google-Smtp-Source: AGHT+IGd+VQCTiJwy9G1ykD/0Nzx0GAzsfPqUCVqghBLVmwOBzPwEbsyyeyH2J2LllM1nMa0CK079KR9Ekpv1ITEkm8=
-X-Received: by 2002:a05:6512:1591:b0:553:abe6:e3e7 with SMTP id
- 2adb3069b0e04-554fdf5cefbmr869898e87.47.1750855551832; Wed, 25 Jun 2025
- 05:45:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SGFjyBvH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750855565; x=1782391565;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=H2Q5pv8/n1x+u1urkiz+OyiZd1H1/C8DF5+taITB/dQ=;
+  b=SGFjyBvHYZyp1+Pj80VuazIyIe4+NXu/RHEYLH8RbCBg8g4gFVuoVl/S
+   NIJAH2OEsCPcaXBJ3LSQNdDvjfHz3/7PbEN/xOwg9WcRMaQUMg2YA1byI
+   EQrVUt/T69x+/501sXGOu2GTHrQ8znO21Nxr42HBI/DwxO1Hkt3VUqWYl
+   cJGxU9jznsFBtd3kZFrPrlnaVGEClAJB99OprKb/NWLExGwZ8cklzgOXo
+   hfDUAb29w4ZFaBRv8J4oa9VWGqqbZ/Ho8/6hWforADfuSzhpjgCMtAfyg
+   mXxzF644MLqnWKKUW5Mp9KqdC/MHLVTxaETz2epQ5COi9EuChMGIjoxid
+   Q==;
+X-CSE-ConnectionGUID: whiPltgcQeSLFtqXb5zUrg==
+X-CSE-MsgGUID: wzyvLOQ+Tfe+93x+GLPy2Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64183624"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="64183624"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:46:04 -0700
+X-CSE-ConnectionGUID: BJ7SMdQuSVmu4Q7VYDrZEw==
+X-CSE-MsgGUID: OM33N+tETeSr9vYH4S1pZg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="151629821"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:46:01 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uUPVl-00000009lm4-01Fh;
+	Wed, 25 Jun 2025 15:45:57 +0300
+Date: Wed, 25 Jun 2025 15:45:56 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Thorsten Scherer <t.scherer@eckelmann.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 11/12] gpio: tangier: use new GPIO line value setter
+ callbacks
+Message-ID: <aFvvhAo9BRFpy7Uy@smile.fi.intel.com>
+References: <20250625-gpiochip-set-rv-gpio-round2-v1-0-bc110a3b52ff@linaro.org>
+ <20250625-gpiochip-set-rv-gpio-round2-v1-11-bc110a3b52ff@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625095224.118679-1-snovitoll@gmail.com> <20250625095224.118679-10-snovitoll@gmail.com>
- <4d568111-9615-4fba-884a-f2ae629776fe@csgroup.eu>
-In-Reply-To: <4d568111-9615-4fba-884a-f2ae629776fe@csgroup.eu>
-From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
-Date: Wed, 25 Jun 2025 17:45:34 +0500
-X-Gm-Features: Ac12FXyn774raFC9M0P_m_Yp5o7tYNYYaJPlJbUzpj4u5O7z5JIOhc_ux4m2QSg
-Message-ID: <CACzwLxgVj3YD5faPj=09Z9e4WSEe-sD7Sqn4jhaT7eiePaUUMw@mail.gmail.com>
-Subject: Re: [PATCH 9/9] kasan/powerpc: call kasan_init_generic in kasan_init
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: ryabinin.a.a@gmail.com, glider@google.com, andreyknvl@gmail.com, 
-	dvyukov@google.com, vincenzo.frascino@arm.com, catalin.marinas@arm.com, 
-	will@kernel.org, chenhuacai@kernel.org, kernel@xen0n.name, 
-	maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com, hca@linux.ibm.com, 
-	gor@linux.ibm.com, agordeev@linux.ibm.com, borntraeger@linux.ibm.com, 
-	svens@linux.ibm.com, richard@nod.at, anton.ivanov@cambridgegreys.com, 
-	johannes@sipsolutions.net, dave.hansen@linux.intel.com, luto@kernel.org, 
-	peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	x86@kernel.org, hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com, 
-	akpm@linux-foundation.org, guoweikang.kernel@gmail.com, geert@linux-m68k.org, 
-	rppt@kernel.org, tiwei.btw@antgroup.com, richard.weiyang@gmail.com, 
-	benjamin.berg@intel.com, kevin.brodsky@arm.com, kasan-dev@googlegroups.com, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org, 
-	linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625-gpiochip-set-rv-gpio-round2-v1-11-bc110a3b52ff@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Jun 25, 2025 at 3:33=E2=80=AFPM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
->
->
->
-> Le 25/06/2025 =C3=A0 11:52, Sabyrzhan Tasbolatov a =C3=A9crit :
-> > Call kasan_init_generic() which enables the static flag
-> > to mark generic KASAN initialized, otherwise it's an inline stub.
-> > Also prints the banner from the single place.
->
-> What about:
->
-> arch/powerpc/mm/kasan/init_32.c:void __init kasan_init(void)
-> arch/powerpc/mm/kasan/init_book3e_64.c:void __init kasan_init(void)
+On Wed, Jun 25, 2025 at 12:33:34PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
 
-Thanks, I've missed them. Will add in v2.
-I've also found out that I've missed:
-arch/arm/mm/kasan_init.c
-arch/riscv/mm/kasan_init.c
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
->
-> Christophe
->
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
