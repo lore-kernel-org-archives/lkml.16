@@ -1,98 +1,82 @@
-Received: from mail-pf1-f201.google.com (mail-pf1-f201.google.com [209.85.210.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB6C92D6601
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:29:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6E8F3074AC;
+	Wed, 25 Jun 2025 18:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750876167; cv=none; b=CspIIz9RxtjvJ5NT+k0z43yqb75DG+iePBsaWAh/v7+xjLgm06hYE2bD+vZQ+kQYSWpbaZpxSfJuFlFcewSU3u2DfcuBAld+OkgK9KIm8kuJzGcN4BfnkvbVFuP170wU4oRAz8pjd4do8f63hlgh0C2OGoAXHTAZaQmFUYhsvFs=
+	t=1750876234; cv=none; b=BlR5PJMNaLXTgBBMXQb2CoxHxbN1Hcp6EDddGq7WL9Jw+Kqb2btaayWlQAuwCUdkHt5cVt8CLILR7t2Nc9NP7+RzTnEXAieyLWnVBgMvUHBfoB803rjq3BuZae6zRX8qUpI5VWAThkFjHq2CBBQa9IB0CV0hY4vOxCxf01qe/6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750876167; c=relaxed/simple;
-	bh=TmQfvKIRFHUQRm9d3k3nPg6QQeGONuWlQrMorEs6wjw=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=f/xhtFfpDUgoXJ+jK4nseH8dD/NC/OdLOBLm/rAyArB929ICPn+augikwov1vGRosc7TXCSHreu6y6v1VzKoHE0kcCg3Ig9vdph5G6e2qDqFgNoZe7UUNH9p49cAmwzG4851iDfNWFlINjjcumWpw/5PXkij1Rw4Cgq3L22kIew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SK1ZSpjl; arc=none smtp.client-ip=209.85.210.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750876234; c=relaxed/simple;
+	bh=Fv+V9U1t+DDhvpDRzP8mnIeCKapu4XAxhCUCYhjC7+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pbYp76CmosqV8YtXSOcjPfibj8GtAe0j/+peM/AlIvH8E7dU+R6gDOG0e9+07EWX/JJwkWq8ubRcg1kOCTS/g1bj8ho/x6g7kb3v8PIqZdr5Fd+OdGyw5HfALoQw81Q9n/CnwmCuSAZ5GEyNrgSgzbyVdfbxMpKWfazwMrD9BcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qtofrsaj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SK1ZSpjl"
-Received: by mail-pf1-f201.google.com with SMTP id d2e1a72fcca58-7425efba1a3so200061b3a.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750876165; x=1751480965; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=RyisTqyO/JOPc+5y7ScQVEK2p20o+XhWHrp4F91o7kc=;
-        b=SK1ZSpjljhMH1mtbdDPbiymGuT787boBWTwH6/9hBEwESe9IHPx2+cm4VtCYUbFGde
-         /Ii4sF7gRpPNz7YIUYqZ106z5ZZKk7C6ubj/XjTXCaBclGkpUAo7x+tr+KGJ0JHQu2D0
-         hGhOyIzFdGYzurYPjBE1TzISZRKqI8v/XhaLYhffWFuaPXevlxtJR7vMe6iUydNbdeFh
-         /dUO/ML4c0jePwBhLJrw9kAUKWmQGOSjX0ADVLqAeLxa/+zELY4r288VKV0xIKguRB6p
-         3gZKEYHW/Hh9fmAAwY+43ss34DGHwo8BPH0B95x1Yzg8wl5mdepGJOOLkwllRFsxnKTc
-         Sbcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750876165; x=1751480965;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RyisTqyO/JOPc+5y7ScQVEK2p20o+XhWHrp4F91o7kc=;
-        b=HKIg21nl99HfMpJD24+9F+I7XPqzXzK8yBEtyCxsa/RGpowhjOXspNl7dd/VWx1vJf
-         9FHzJdqIhtTUTubIDRnb7cyB1rnVc7iVj4NX+4agLz5tyea2U9Klovb9GcM+IXm5Kz3x
-         7i6tIzSc3t2WLtlFm7VJypjbc+oSC2iE+4SW+raDuU3S4KUe9LW+plPaHB6I9J4Uw/ez
-         PwjnWRlkOEFv4RZdMA0ojQNgLujBhKbIc0l3az57IeBr5ZtkshLUiFocDpQXasLR5adT
-         uqmM7GASNWBgOiyPo5yfpbhR7wXq15RvVLGxAfQUfr5ssqe+MeOw2qyXSCV1ltK+hGxX
-         L0Sw==
-X-Forwarded-Encrypted: i=1; AJvYcCXldKeL1RtQMZBbGFoqUbx8roIHCafRLUBrkm0noHCJVs5FPm6Bb8NdwhNkYaYzk7QZ/aZlQ6YLZQ8u57I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoLzRkC48DwFEqKu5d6L5qdP4qbNogh04waGE0SECE/2K4hM5d
-	piTCh6gg/AcLoX1LAG1QoVkSvQufFLFUcnZWmGcsQ/eFP2a3MDCHZz6f9vBVQl7JuVTQEA+IB1M
-	uQdBU+g==
-X-Google-Smtp-Source: AGHT+IHO1EEsIJL+9m2YBDHY3A29o1rYIS4ZxaqkzVMPXpsMIhuoThR9fcO3LwPKLXAf4C7bLXu6Jb7838M=
-X-Received: from pfop2.prod.google.com ([2002:a05:6a00:b42:b0:749:30b5:c67e])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:9195:b0:736:4c3d:2cba
- with SMTP id d2e1a72fcca58-74ae40c2799mr696433b3a.9.1750876165145; Wed, 25
- Jun 2025 11:29:25 -0700 (PDT)
-Date: Wed, 25 Jun 2025 11:29:15 -0700
-In-Reply-To: <2dc165c7-e3fd-48f6-bcfb-c2119fc94a54@zytor.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qtofrsaj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1939C4CEEA;
+	Wed, 25 Jun 2025 18:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750876233;
+	bh=Fv+V9U1t+DDhvpDRzP8mnIeCKapu4XAxhCUCYhjC7+A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QtofrsajVYLXnfEIdkZ54DPNiQH87LaQBBIEizwrIqa2ziD2F2O+pQJUpgMU3USBJ
+	 4TmAVGtAexmh7/fhH01jgjekY2jSBm0jar6QUAlaGlqHt6mjbEPa/no2o1LeSDmxuU
+	 Z1EAsI3cG43WklgBdfj15YP6qDHBZMoaZs9C9T6oE4N30bVIg9DNVpkzdaLm9rjJoY
+	 UXhcbwVIbY8dW42UQhd2q6DafbZjUvHUeHqrOcm0wqk7/mZ5NGVWVmSkI77xve8z1M
+	 pF6JUNxJO7AWLpeubMYGZFOGhSqwki4Z/tORRmWRn2zZDljxZP2He7/1FBFCmE814d
+	 YoVAulWla4GRw==
+Date: Wed, 25 Jun 2025 19:30:24 +0100
+From: Mark Brown <broonie@kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
+	jonathanh@nvidia.com, f.fainelli@gmail.com,
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
+	conor@kernel.org, hargar@microsoft.com
+Subject: Re: [PATCH 6.6 000/288] 6.6.95-rc2 review
+Message-ID: <734337bc-67c9-4a96-b071-6a459312f01a@sirena.org.uk>
+References: <20250624121409.093630364@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250328171205.2029296-1-xin@zytor.com> <20250328171205.2029296-16-xin@zytor.com>
- <aFrUg4BB-MXuYi3L@google.com> <2dc165c7-e3fd-48f6-bcfb-c2119fc94a54@zytor.com>
-Message-ID: <aFw_-8aDtO4wat8M@google.com>
-Subject: Re: [PATCH v4 15/19] KVM: x86: Allow FRED/LKGS to be advertised to guests
-From: Sean Christopherson <seanjc@google.com>
-To: Xin Li <xin@zytor.com>
-Cc: pbonzini@redhat.com, kvm@vger.kernel.org, linux-doc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, corbet@lwn.net, tglx@linutronix.de, 
-	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, andrew.cooper3@citrix.com, luto@kernel.org, 
-	peterz@infradead.org, chao.gao@intel.com, xin3.li@intel.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="eEw9C0iHB6wmF6IM"
+Content-Disposition: inline
+In-Reply-To: <20250624121409.093630364@linuxfoundation.org>
+X-Cookie: He who hates vices hates mankind.
 
-On Wed, Jun 25, 2025, Xin Li wrote:
-> On 6/24/2025 9:38 AM, Sean Christopherson wrote:
-> > > ---
-> > >   arch/x86/kvm/cpuid.c | 2 ++
-> > >   1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > > index 5e4d4934c0d3..8f290273aee1 100644
-> > > --- a/arch/x86/kvm/cpuid.c
-> > > +++ b/arch/x86/kvm/cpuid.c
-> > > @@ -992,6 +992,8 @@ void kvm_set_cpu_caps(void)
-> > >   		F(FZRM),
-> > >   		F(FSRS),
-> > >   		F(FSRC),
-> > > +		F(FRED),
-> > > +		F(LKGS),
-> > 
-> > These need to be X86_64_F, no?
-> 
-> Yes.  Both LKGS and FRED are 64-bit only features.
-> 
-> However I assume KVM is 64-bit only now, so X86_64_F is essentially F,
-> right?
 
-Nope, KVM still supports 32-bit builds.  There are plans/efforts to kill off 32-bit
-KVM x86, but we're not quite there yet.
+--eEw9C0iHB6wmF6IM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Jun 24, 2025 at 01:29:03PM +0100, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.95 release.
+> There are 288 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+
+Tested-by: Mark Brown <broonie@kernel.org>
+
+--eEw9C0iHB6wmF6IM
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhcQD8ACgkQJNaLcl1U
+h9BnJwf8DIVTUTxJONjUL0h+25lDaBsLjpqRZoaCf/xN/TAWW6JMGmPg+1yhrVer
+E3boi3MibUET5HPy0lI5xKy3irv4zs/CxKC+SBAFp8D22Au1oDu8UC1zjS6og0SB
+jr9jRqVY0QwDIbAom0QeBpxYiOkZysTBKVIytQrb/u6/KNEYP0z/DNwdCAfSNc7I
+pkJ18Q34KI2QZ7RwKCUXb0FYkx2hkLl3PY/rtT9LyRwucHstttChYdIDbvDVvEkp
+ID74jWBHVWkn9T1hhumhdS+LCqiTFOz7DeR4RveU5v7+SUNoS7JRlEqCwrDl5l1u
+lqayvibhnb9V8m2iL8ckLLLUP/uQ/g==
+=dMqp
+-----END PGP SIGNATURE-----
+
+--eEw9C0iHB6wmF6IM--
