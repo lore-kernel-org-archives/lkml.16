@@ -1,148 +1,228 @@
-Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AC4270557
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:52:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7155284686;
+	Wed, 25 Jun 2025 09:52:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750845159; cv=none; b=J2Aeh0J7VvG/CqqNcBVPw/hwj5tEt0dv5+m8kJoQbu053d8w2j4/zQUTBBj664bje8isUFV3uFN7/hcMzMs2ahSs/kYO0HKlxr/Mkcc/ytvCgPY4VbFk/5uZI0byYjWjvKa4NsHZ2EiZjYO03oh6jo73ujcNSTDzTNGm3cVAcE8=
+	t=1750845166; cv=none; b=JOI6A18xKYgvTMSHQzV8oZF9im//kZ05pt9VSVt9ImuLaFakF5BR5vXswve9NHUDFVJaOoftYYrOelwRGL2FP3Li5pRMN1TdCxWStqBWNKXFQ1CurLgNyC0akNcmc3yNECR2y8RRCb5lJBP8GQXAJzgq9mCBNfKQjPw28eRLwWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750845159; c=relaxed/simple;
-	bh=1Y8QJ+oRfOtSdRhQbvBmTw9lQq+2E+h8tGLHlYsZDv4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=KBOiuBJxed2XNXq+edDj+imDiN/rTpu9l6R25EzKJD7hFol/Fz0O/SeZ/ka5wJ2chckAduZ4QgTXygd3FA2jKSZRMRsrKmJ5uVPSF87fnJIyQlcUnnD2iitZcCCLXoXzKSLZKOUd2rfhda5Ublw4W1UcXtPwGPMpS9vRO8Tw6HI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gprocida.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WyKyMbmw; arc=none smtp.client-ip=209.85.128.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gprocida.bounces.google.com
+	s=arc-20240116; t=1750845166; c=relaxed/simple;
+	bh=ayHAWnJ4zAM8Uxay2AHX7vMtSuGiCPetlz8IAlBI+nE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gMr05xZzJ4znndR6/QbHygZj+1K4MMeAjAwAmwKuyn+H0dpE6r8QqTTjtAYnx71spijlObcGDajArdPrfZLqSM9qCTYAPnB1odLAsqDiEun4uLd0EsjyH2ZNYjkjStEuw8R1CKvjWPuSXnA7Qomf3QdiC7ZIIbrWO3Q3Q3FoKdY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QP1plxyA; arc=none smtp.client-ip=209.85.167.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WyKyMbmw"
-Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-45311704cdbso42686665e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:52:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QP1plxyA"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-553b60de463so6902476e87.3;
+        Wed, 25 Jun 2025 02:52:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750845156; x=1751449956; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FPaFg8skY6SjMOJvVYfiFB9uK0FraGFCMhdVa+qk2JA=;
-        b=WyKyMbmwIXF3ash5OeLSACPYQ/WJ89qeH0r52vZ3uL+xxHhEXTkN4y6nwa0o3EX5k+
-         G/2/bV0pUNQOxnc459Qr10gtGzFTNO8i68e3OEABtUkt3i8mcX1wEUEu6TOWrPpkXynm
-         1jBAvcuIjdvWPK2AoCEtSy9oK3FMdiVY6SnW1FtsaY9EsHidjJHhMit4qcDsGhURHLgG
-         w+myr3NeThC45QWvXJa4jX4k3NMbDezXN0a1NO/6SQPZHIRCr6wXaNKCIW61+l+FfCqc
-         QQ6fH8gIrC7TDhnuuDZeOC1DNE+5uMbKY/N21ePMnOQJ1AIN3Vya2akPm15TEKXQRn37
-         MT7w==
+        d=gmail.com; s=20230601; t=1750845162; x=1751449962; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7imy3yTxK1noZpQDmXpRegf9/Y5dUmZKs6ukLVxlc1E=;
+        b=QP1plxyAYHZ+Q77ZQgix9nsX83jnpgMNx6Ewa256QKCWbfIxaRSTkEioyMn5ai9ogd
+         mk0u8NmMnx0T81K3MpVf24esYm9v+9AQ0cajf2DT4lSX4NgX7FeB0fgvclxHpCZStBW2
+         w63/xvIqNDO4Y635V8OqCZ3+LmrNFSSwLeD/lMtsZpq+khuk3+1+xn0vNIFhEkkp9Voz
+         QDixxHSrsBRUZKodGxdUYLkATD7eGG8ddNy+4Q8fEs9Flab/jPeGAcVmsWilyW9pKH7D
+         uNUHnzkknq260K9I5l6HL0n0KnLzRfrKCeFQKhLayn2a22yyaHQFiQ0n+GRGYhq05CSK
+         RHoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750845156; x=1751449956;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=FPaFg8skY6SjMOJvVYfiFB9uK0FraGFCMhdVa+qk2JA=;
-        b=ZHY9/HbKkjaWQXU7ihbZDXkzXdSv4eVrXxuh7XWcpRMfIg+eUVLwfQt3vA+KQcpb1r
-         VWS85IYtxHqx/c4p87Hsf2cfFWIW1itGHJeyddY4ArSfjiM24r+GkudASNsSyEN0BYAW
-         Z4Uj5IW1lo9FzLl1Bz7+SaCyZNLdRwtEIM0EuRpVvmX26WnGUkIpnrdEM2M+sg91YXJX
-         fMqp8XJfTF2rC5pzlEmgo8arWvfQMiYWxgDcJ/nFpEgLbPim9RG1N68hhz/0Ynaz25tq
-         4gqkGv019jcwBzswI0v4+CiFfKa+rk1CatpxxUaNQUSv6cZmW2QDHqfvAQW3G0hBaSal
-         iIiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXEWX4BDOmnLDS8/x1Zcjzs8zksRW+qZWcwn7dtLqcsJefep6MFHtdjW1D7JMYRmTnwjOpmP1/NMrrokOk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIsmGeltw1UeoE2jKyP1pqZgiJEWhnBx9UOIES3TbQn8hlXUn3
-	mJ0Tw7oxML2T10mUf+RGSLXNHdBz1c8BrbpQU6nCtLz0fOgMD3o2c6LvHyTWjBGb1fanWEdNeHu
-	Xm7b114kd9ScVIw==
-X-Google-Smtp-Source: AGHT+IH9NSYt2O7TMUJiMIjZArM9uvyETHRaUeq8opq8u7NG97Qu9jaiO6QvaVXjIAI5VY4zW+Mj5w0AJLfVFw==
-X-Received: from wmbfa15.prod.google.com ([2002:a05:600c:518f:b0:43d:5828:13ee])
- (user=gprocida job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:3e11:b0:450:d61f:dd45 with SMTP id 5b1f17b1804b1-45381aa54ecmr21075505e9.4.1750845156283;
- Wed, 25 Jun 2025 02:52:36 -0700 (PDT)
-Date: Wed, 25 Jun 2025 10:52:08 +0100
-In-Reply-To: <20250623092350.3261118-2-gprocida@google.com>
+        d=1e100.net; s=20230601; t=1750845162; x=1751449962;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7imy3yTxK1noZpQDmXpRegf9/Y5dUmZKs6ukLVxlc1E=;
+        b=FVxatbDE33RlVbmmJzmfWV5naQXyoXlE2DPkNO589wf3sWCThuG1436YIzDOEAgjCL
+         PWdn9xEenioI9+uQxUFvTYAikm7FD2wBV3DQhViyC3Fp8qtIB2MvXcJ0JH1Lrqeio1Bi
+         mVT9Rj1W8ZJ1A+C0wZ8EbYP5cY15SRr+jQ1ZfpzBkG9jxnNGCLySK2Vcv1Ku7hsTD/WU
+         fjlpLP5BoFYITLh6lmxrT3wK0C8V6dCqa3tmA3R5Pag86K/9aFhEVCNcvzWD8bPlhnQ1
+         jje29ZkBbU4/cQouB8uEc4bxNz4jdnUHQTnbDAvu9OchBARtvqzEeI2HWUKumoj9dV/E
+         c5vw==
+X-Forwarded-Encrypted: i=1; AJvYcCWJqUzt4R1pP8HHljL8T5dDfBE9ngisDwlminHnEwWHpU2TB2HF/X7mc3WLfGiyn9P5tyiatdcDDJKKGg==@vger.kernel.org, AJvYcCXDZedeeM1Md8aarHbR6wOs/Y1m4rzoWcfyn8Ue3aqcN2egsBrB97PUgwmkJvzDMBtGRsc4Tkwl78TiJu8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx6Ue+RWAXoL16HIVweaRqxQuXs4UeEMZbKPX2PGizQpzBL+P6o
+	Tu7yscJwmJFecOrW3rFQGFHaM2bLImcy341R2fcDwC/bILALTPQi32f4
+X-Gm-Gg: ASbGncvXJHvp/cxPJVDVSBq+NCzf74vdW91gqzCD/EaiKQsNRmm9ifmSeRZseLPw9tc
+	1sjhusnH/rCEBST/NTZSRXACwewVdchebQQlMuwWhPPGqNpIHQH77PKgIGhZfNP8dOABAkZv48a
+	CN/gGJjaa82cazZ4nAVn4VwKL2YCm0X6IlKL81BGDn8Eciiu6aaJmVAd+m10+lAZMDSyTLtN1p4
+	F6/rGHbiOR/nm2c4jR/lSx6dQFlxkmq4khoPPJqWAks9QN/a6h3v0k/FmJZ/zQhA9M+AWIN2Rz7
+	KGc35DpslIk3zTqf4flD+5cfg5CdO8yPQM/kowR1+uB9/6/VQfrUMhWvIT10oyQUmKJ/2kM0HiD
+	iYqCcwv+ILQ6qhEKQ0E0tUAcNJR8qtQ==
+X-Google-Smtp-Source: AGHT+IH5ApOZ+lbBvE2ggWIBLKt7ZlvSOrm/LIiyhhxX4cx6KdoLX4TpLfXvTX3dCD4pGEuZuPz4ow==
+X-Received: by 2002:a2e:be03:0:b0:32b:3879:ce7f with SMTP id 38308e7fff4ca-32cc63451f0mr7075061fa.0.1750845161589;
+        Wed, 25 Jun 2025 02:52:41 -0700 (PDT)
+Received: from localhost.localdomain (2.135.54.165.dynamic.telecom.kz. [2.135.54.165])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-32b980a36c0sm19311851fa.62.2025.06.25.02.52.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 02:52:41 -0700 (PDT)
+From: Sabyrzhan Tasbolatov <snovitoll@gmail.com>
+To: ryabinin.a.a@gmail.com,
+	glider@google.com,
+	andreyknvl@gmail.com,
+	dvyukov@google.com,
+	vincenzo.frascino@arm.com,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	chenhuacai@kernel.org,
+	kernel@xen0n.name,
+	maddy@linux.ibm.com,
+	mpe@ellerman.id.au,
+	npiggin@gmail.com,
+	christophe.leroy@csgroup.eu,
+	hca@linux.ibm.com,
+	gor@linux.ibm.com,
+	agordeev@linux.ibm.com,
+	borntraeger@linux.ibm.com,
+	svens@linux.ibm.com,
+	richard@nod.at,
+	anton.ivanov@cambridgegreys.com,
+	johannes@sipsolutions.net,
+	dave.hansen@linux.intel.com,
+	luto@kernel.org,
+	peterz@infradead.org,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de,
+	x86@kernel.org,
+	hpa@zytor.com,
+	chris@zankel.net,
+	jcmvbkbc@gmail.com,
+	akpm@linux-foundation.org
+Cc: guoweikang.kernel@gmail.com,
+	geert@linux-m68k.org,
+	rppt@kernel.org,
+	tiwei.btw@antgroup.com,
+	richard.weiyang@gmail.com,
+	benjamin.berg@intel.com,
+	kevin.brodsky@arm.com,
+	kasan-dev@googlegroups.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	linuxppc-dev@lists.ozlabs.org,
+	linux-s390@vger.kernel.org,
+	linux-um@lists.infradead.org,
+	linux-mm@kvack.org,
+	snovitoll@gmail.com
+Subject: [PATCH 0/9] kasan: unify kasan_arch_is_ready with kasan_enabled
+Date: Wed, 25 Jun 2025 14:52:15 +0500
+Message-Id: <20250625095224.118679-1-snovitoll@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250623092350.3261118-2-gprocida@google.com>
-X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
-Message-ID: <20250625095215.4027938-1-gprocida@google.com>
-Subject: [PATCH] gendwarfksyms: order -T symtypes output by name
-From: Giuliano Procida <gprocida@google.com>
-To: Sami Tolvanen <samitolvanen@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Giuliano Procida <gprocida@google.com>, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-When writing symtypes information, we iterate through the entire hash
-table containing type expansions. The key order varies unpredictably
-as new entries are added, making it harder to compare symtypes between
-builds.
+This patch series unifies the kasan_arch_is_ready() and kasan_enabled()
+interfaces by extending the existing kasan_enabled() infrastructure to
+work consistently across all KASAN modes (Generic, SW_TAGS, HW_TAGS).
 
-Resolve this by sorting the type expansions by name before output.
+Currently, kasan_enabled() only works for HW_TAGS mode using a static key,
+while other modes either return IS_ENABLED(CONFIG_KASAN) (compile-time
+constant) or rely on architecture-specific kasan_arch_is_ready()
+implementations with custom static keys and global variables.
 
-Signed-off-by: Giuliano Procida <gprocida@google.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
----
- scripts/gendwarfksyms/types.c | 29 ++++++++++++++++++++++++++---
- 1 file changed, 26 insertions(+), 3 deletions(-)
+This leads to:
+- Code duplication across architectures  
+- Inconsistent runtime behavior between KASAN modes
+- Architecture-specific readiness tracking
 
-[Adjusted the first line of the description. Added reviewer tags.
- Added missing CC to linux-modules.]
+After this series:
+- All KASAN modes use the same kasan_flag_enabled static key
+- Consistent runtime enable/disable behavior across modes
+- Simplified architecture code with unified kasan_init_generic() calls
+- Elimination of arch specific kasan_arch_is_ready() implementations
+- Unified vmalloc integration using kasan_enabled() checks
 
-diff --git a/scripts/gendwarfksyms/types.c b/scripts/gendwarfksyms/types.c
-index 7bd459ea6c59..51c1471e8684 100644
---- a/scripts/gendwarfksyms/types.c
-+++ b/scripts/gendwarfksyms/types.c
-@@ -6,6 +6,8 @@
- #define _GNU_SOURCE
- #include <inttypes.h>
- #include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
- #include <zlib.h>
- 
- #include "gendwarfksyms.h"
-@@ -179,20 +181,41 @@ static int type_map_get(const char *name, struct type_expansion **res)
- 	return -1;
- }
- 
-+static int cmp_expansion_name(const void *p1, const void *p2)
-+{
-+	struct type_expansion *const *e1 = p1;
-+	struct type_expansion *const *e2 = p2;
-+
-+	return strcmp((*e1)->name, (*e2)->name);
-+}
-+
- static void type_map_write(FILE *file)
- {
- 	struct type_expansion *e;
- 	struct hlist_node *tmp;
-+	struct type_expansion **es;
-+	size_t count = 0;
-+	size_t i = 0;
- 
- 	if (!file)
- 		return;
- 
--	hash_for_each_safe(type_map, e, tmp, hash) {
--		checkp(fputs(e->name, file));
-+	hash_for_each_safe(type_map, e, tmp, hash)
-+		++count;
-+	es = xmalloc(count * sizeof(struct type_expansion *));
-+	hash_for_each_safe(type_map, e, tmp, hash)
-+		es[i++] = e;
-+
-+	qsort(es, count, sizeof(struct type_expansion *), cmp_expansion_name);
-+
-+	for (i = 0; i < count; ++i) {
-+		checkp(fputs(es[i]->name, file));
- 		checkp(fputs(" ", file));
--		type_list_write(&e->expanded, file);
-+		type_list_write(&es[i]->expanded, file);
- 		checkp(fputs("\n", file));
- 	}
-+
-+	free(es);
- }
- 
- static void type_map_free(void)
+This addresses the bugzilla issue [1] about making
+kasan_flag_enabled and kasan_enabled() work for Generic mode,
+and extends it to provide true unification across all modes.
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=217049
+
+=== Current mainline KUnit status
+
+To see if there is any regression, I've tested first on the following
+commit 739a6c93cc75 ("Merge tag 'nfsd-6.16-1' of
+git://git.kernel.org/pub/scm/linux/kernel/git/cel/linux").
+
+Tested via compiling a kernel with CONFIG_KASAN_KUNIT_TEST and running
+QEMU VM. There are failing tests in SW_TAGS and GENERIC modes in arm64:
+
+arm64 CONFIG_KASAN_HW_TAGS:
+	# kasan: pass:62 fail:0 skip:13 total:75
+	# Totals: pass:62 fail:0 skip:13 total:75
+	ok 1 kasan
+
+arm64 CONFIG_KASAN_SW_TAGS=y:
+	# kasan: pass:65 fail:1 skip:9 total:75
+	# Totals: pass:65 fail:1 skip:9 total:75
+	not ok 1 kasan
+	# kasan_strings: EXPECTATION FAILED at mm/kasan/kasan_test_c.c:1598
+	KASAN failure expected in "strscpy(ptr, src + KASAN_GRANULE_SIZE, KASAN_GRANULE_SIZE)", but none occurred
+
+arm64 CONFIG_KASAN_GENERIC=y, CONFIG_KASAN_OUTLINE=y:
+	# kasan: pass:61 fail:1 skip:13 total:75
+	# Totals: pass:61 fail:1 skip:13 total:75
+	not ok 1 kasan
+	# same failure as above
+
+x86_64 CONFIG_KASAN_GENERIC=y:
+	# kasan: pass:58 fail:0 skip:17 total:75
+	# Totals: pass:58 fail:0 skip:17 total:75
+	ok 1 kasan
+
+=== Testing with the patches:
+
+* arm64  (GENERIC, HW_TAGS, SW_TAGS): no regression, same above results.
+* x86_64 (GENERIC): no regression, no errors
+
+=== NB
+
+I haven't tested on the following arch. due to the absence of qemu-system-
+support on those arch on my machine. So I defer this to relevant arch
+people to test KASAN initialization:
+- loongarch
+- s390
+- um
+- xtensa
+- powerpc
+
+Sabyrzhan Tasbolatov (9):
+  kasan: unify static kasan_flag_enabled across modes
+  kasan: replace kasan_arch_is_ready with kasan_enabled
+  kasan/arm64: call kasan_init_generic in kasan_init
+  kasan/xtensa: call kasan_init_generic in kasan_init
+  kasan/loongarch: call kasan_init_generic in kasan_init
+  kasan/um: call kasan_init_generic in kasan_init
+  kasan/x86: call kasan_init_generic in kasan_init
+  kasan/s390: call kasan_init_generic in kasan_init
+  kasan/powerpc: call kasan_init_generic in kasan_init
+
+ arch/arm64/mm/kasan_init.c             |  4 +---
+ arch/loongarch/include/asm/kasan.h     |  7 -------
+ arch/loongarch/mm/kasan_init.c         |  7 ++-----
+ arch/powerpc/include/asm/kasan.h       | 14 --------------
+ arch/powerpc/mm/kasan/init_book3s_64.c |  6 +-----
+ arch/s390/kernel/early.c               |  2 +-
+ arch/um/include/asm/kasan.h            |  5 -----
+ arch/um/kernel/mem.c                   |  4 ++--
+ arch/x86/mm/kasan_init_64.c            |  2 +-
+ arch/xtensa/mm/kasan_init.c            |  2 +-
+ include/linux/kasan-enabled.h          | 22 ++++++++++++++++------
+ include/linux/kasan.h                  |  6 ++++++
+ mm/kasan/common.c                      | 15 +++++++++++----
+ mm/kasan/generic.c                     | 17 ++++++++++++++---
+ mm/kasan/hw_tags.c                     |  7 -------
+ mm/kasan/kasan.h                       |  6 ------
+ mm/kasan/shadow.c                      | 15 +++------------
+ mm/kasan/sw_tags.c                     |  2 ++
+ 18 files changed, 61 insertions(+), 82 deletions(-)
+
 -- 
-2.50.0.714.g196bf9f422-goog
+2.34.1
 
