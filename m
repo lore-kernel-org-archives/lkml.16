@@ -1,119 +1,91 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F74F2E06D1
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:56:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E0A2E11A4;
+	Wed, 25 Jun 2025 16:56:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750870605; cv=none; b=nzMHyrfPbq4ATTvV08+z3XYzjAoOMCIsIanw8D88OC12Vcyyy62aPQATlA4RqqZ2sLJ2I8hvRvZlKwnroL/KMib3r1k6nifyj4d+wtVZMg/epBRFW0nwyIpuvgTBMqg1p0JWP/F3Rjnf2u6AJjNXwVGUX2o7EYYV3UgmeuwEqNE=
+	t=1750870609; cv=none; b=STeTYtK/zaTtfc701EjE+sosMZ1KzQB7kGtXRBnOiSzxhC3tkFqPlH4/2EKc9dTNIx3i39EphCZ1Rwxarcsh4l7JuhEusarwEEaheu/dx9kYRDc41BTch70kFi8yfmd5rxj1sW3jDnu+ne3hqfeJ49rh9BVQxJzZ5xKEUCCMuRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750870605; c=relaxed/simple;
-	bh=u16CpbdUihPkyI+FiM2IX3TbeuU1zDLWDn5AwsQR/6k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=aXOrv2KB3GwRj45LiCZFUeEiqZkhHGA4+ThVpuNCdw4xfJgD/702nNie+TSuoUZ1prl2w6/LNRXl6fQF0Aalt6gHERwHpXVt+h/POSPQd3B/OgkKp6bUoE0seoHcsgU2YZZaHCfOPIwxdqvvC0d4EgR+a8c0mQj2zEzSfcRz92w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EdsUOa00; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750870609; c=relaxed/simple;
+	bh=/yJuaZm1kfnnTUIDik8a/i5phYdhtcwPtDFfSM3pngE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ic/c96oNU5rA9xa+ub53HzdBrUc4zk0+R7wQnBkVvhmkO6FwG+Ww1cfT4EoKbODI2UZjdSmxyBi0QmqVaucXGk4HsQCgs1sZpllQB3vyxZpiwcxEiFUErNK7b6ju/a6rsCaZv+Kq67kRXLl1k6wo39NUm85g1/N4KBg/7bXDfc0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=isNlvr8z; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EdsUOa00"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750870603; x=1782406603;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=u16CpbdUihPkyI+FiM2IX3TbeuU1zDLWDn5AwsQR/6k=;
-  b=EdsUOa00BCP7pH6sJfoEj8cKxFjfo7fbCO8vM3f4HSOAJyTiCKybQ8oA
-   laDwHKeRrpQQfO548BbswChV/sjHHHcS0ZfQ9un/pBcovPgzRFDxnLxmf
-   DImaIU2HEyOVc4HmCCJo8T0bswnADD8pQLdCPFPqSL2bYFrkQq/ldxroV
-   fc+OxI/jjmpic5JPpv+2YIyXx+ugLzW0XP+YjPW4+3c68gLZhtWs9d5pa
-   UiK2MAYYrSw3mF1uJupYcH3B9OySZSxNIJ/0nPiC6n/8IvKGrR9yMR9LQ
-   PPAUAwXsnfRiMsIG1dD3Z9QkFqkKNJ+vZz1zFt7noTkLESqb2r6G7z+Xi
-   Q==;
-X-CSE-ConnectionGUID: Q6eegpc3S3aw2Gdi6dlvLg==
-X-CSE-MsgGUID: +3XkmrSWRfW/WSqvhtZnmw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53214424"
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="53214424"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 09:56:43 -0700
-X-CSE-ConnectionGUID: i0R0NCMXTtqsoC6VR/6eAw==
-X-CSE-MsgGUID: aSvDYzgdT/e8bl4rXIPAfQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="151696609"
-Received: from unknown (HELO bnilawar-desk2.iind.intel.com) ([10.190.239.41])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 09:56:40 -0700
-From: Badal Nilawar <badal.nilawar@intel.com>
-To: intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: anshuman.gupta@intel.com,
-	rodrigo.vivi@intel.com,
-	alexander.usyskin@intel.com,
-	gregkh@linuxfoundation.org,
-	daniele.ceraolospurio@intel.com
-Subject: [PATCH v4 01/10] mei: bus: add mei_cldev_mtu interface
-Date: Wed, 25 Jun 2025 22:30:06 +0530
-Message-Id: <20250625170015.33912-2-badal.nilawar@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250625170015.33912-1-badal.nilawar@intel.com>
-References: <20250625170015.33912-1-badal.nilawar@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="isNlvr8z"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-312efc384fcso3838a91.3;
+        Wed, 25 Jun 2025 09:56:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750870607; x=1751475407; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W6WTH79hQK6NLtAht/80ecYDCXoA4J5POv3PkbpHQOc=;
+        b=isNlvr8z6fu/WF8SKmJxxuXv0H2QEpT0VkfDkfXxID00uhCEr4QGAquXitq0/Wa6hm
+         DZmCqa5IrVmn0KjdMsp1Zzo7VlCtXvUSBhhpqiRxzLHdS5f2FC8RbkJKfcG5uQJyiipk
+         d3RO1FWFjGY+TW6J7GbgDSa1jze5ZUbbPT0XcLdWTM+s6E+sZuhrfQ+CQkHAPYk5hJkZ
+         gplSnhyFDncZAdLYEBBosgu1x5VXUYjUz6lFj1wghhHEs/9S7hLY+nk5v+C48Xzb1Sb3
+         zHIdT+CxMGc9hhsB30vfUZIUBLFWxyaVWeziXj0a4M0SaRdSnES9oYdsXE+c6lGWvvZa
+         uzTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750870607; x=1751475407;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W6WTH79hQK6NLtAht/80ecYDCXoA4J5POv3PkbpHQOc=;
+        b=SCb71nV55PZawtnWq9HAU6WPJDWHLUQjMNsinZCq9CSO78mn80cuf41B/qmQWWLRA6
+         bRwlyGQ8NCfLMts9Z/go8KBOW0GRKa3YuoN5VXoaRtDPjsKClMvVrHlDoSVW8NcNx8us
+         LFZfTwlPEAZuQfR9ZigYlbHRfqAR9oip4SC+uVkxLB4nX7WVcghJj84nb65r9r5OF5IV
+         wD42hA2AZp5tF8M//Efnt+BetYSE0txvbnVzomLBrG9zuOjdvg5OLZiBreNukcXpr02M
+         IGf4JYSzaj7tEqKS1GDzNQS41i6Q08M63YdGEWZZQTtxAfRJNkqZxqaL/XAk/LluA6JY
+         ESjA==
+X-Forwarded-Encrypted: i=1; AJvYcCWV0nfD05JrnBn7qKza9LuJwSJNjozowmdbgdBb8sARYL81eSGPhQxAAhLakQ4xHesCFw3zDK6N4G1mFa8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxPRrBb685MA9vxllWA3A5gxHqe/hg/wTcs0rJNB404MjaAX+w4
+	a5jab0kiTP4GlSkHIxkizdk1onA7SYvv6ExIzywZCpsSHyP+LGVIKT5tYDErYnjJa1vT5Tcn/Kh
+	XVeqIOUowWrM7GPGbeXDeuDu9DMRJOXE=
+X-Gm-Gg: ASbGnctK6VylYDcv8pCY1sDbFctEluLzLIEGbIH7v6ga2Oauoe+BgM6GkXL+r4v481z
+	lTRtwPgihxcsyrp9OV6Z2L+oFwJNfLnW/xyIjsfJXHQtdhid0V/a+qBHJxoWaReOZV4KNrut/R9
+	wZKkZgrNMhduRii3nAEg7K3NhUvoc1zCLu+lkeYBKHSGE=
+X-Google-Smtp-Source: AGHT+IHgnR4DtVMaUu1NN1eLUP8fU01OtdtxkGKoYiBlYVDiZIDg6nSBdKUioPP8VzF4obtTDtEEYLx0DrhiLekpVBQ=
+X-Received: by 2002:a17:90b:35c6:b0:311:488:f506 with SMTP id
+ 98e67ed59e1d1-315f26b869fmr2043554a91.6.1750870606969; Wed, 25 Jun 2025
+ 09:56:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250625134245.14505-1-work@onurozkan.dev> <288841750859443@mail.yandex.com>
+In-Reply-To: <288841750859443@mail.yandex.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 25 Jun 2025 18:56:32 +0200
+X-Gm-Features: Ac12FXxA_3SvkBY_uiyufmsKJE9szL1QD7gdDjzY-TXLBqKQ8FB9qg3HMXrDdlI
+Message-ID: <CANiq72mTvvNA+VGOA6vC5b=QTMKGDDG4TiidsRHbK6ceU_iZJA@mail.gmail.com>
+Subject: Re: [PATCH] rust: add fast path to `RBTree::find_mut` for empty tree
+To: =?UTF-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>
+Cc: "rust-for-linux@vger.kernel.org" <rust-for-linux@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ojeda@kernel.org" <ojeda@kernel.org>, 
+	"alex.gaynor@gmail.com" <alex.gaynor@gmail.com>, "boqun.feng@gmail.com" <boqun.feng@gmail.com>, 
+	"gary@garyguo.net" <gary@garyguo.net>, "bjorn3_gh@protonmail.com" <bjorn3_gh@protonmail.com>, 
+	"lossin@kernel.org" <lossin@kernel.org>, "a.hindborg@kernel.org" <a.hindborg@kernel.org>, 
+	"aliceryhl@google.com" <aliceryhl@google.com>, "tmgross@umich.edu" <tmgross@umich.edu>, 
+	"dakr@kernel.org" <dakr@kernel.org>, "mattgilbride@google.com" <mattgilbride@google.com>, 
+	"wedsonaf@gmail.com" <wedsonaf@gmail.com>, "tamird@gmail.com" <tamird@gmail.com>, 
+	"daniel@sedlak.dev" <daniel@sedlak.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+On Wed, Jun 25, 2025 at 3:52=E2=80=AFPM Onur =C3=96zkan <work@onurozkan.dev=
+> wrote:
+>
+> Oops, I didn't realize that `rb_node` was a pointer. Please don't take th=
+e patch seriously.  :)
 
-Allow to bus client to obtain client mtu.
+I think this reply didn't reach the lists because it uses HTML.
 
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-Reviewed-by: Umesh Nerlige Ramappa <umesh.nerlige.ramappa@intel.com>
----
- drivers/misc/mei/bus.c     | 13 +++++++++++++
- include/linux/mei_cl_bus.h |  1 +
- 2 files changed, 14 insertions(+)
-
-diff --git a/drivers/misc/mei/bus.c b/drivers/misc/mei/bus.c
-index 67176caf5416..f860b1b6eda0 100644
---- a/drivers/misc/mei/bus.c
-+++ b/drivers/misc/mei/bus.c
-@@ -614,6 +614,19 @@ u8 mei_cldev_ver(const struct mei_cl_device *cldev)
- }
- EXPORT_SYMBOL_GPL(mei_cldev_ver);
- 
-+/**
-+ * mei_cldev_mtu - max message that client can send and receive
-+ *
-+ * @cldev: mei client device
-+ *
-+ * Return: mtu or 0 if client is not connected
-+ */
-+size_t mei_cldev_mtu(const struct mei_cl_device *cldev)
-+{
-+	return mei_cl_mtu(cldev->cl);
-+}
-+EXPORT_SYMBOL_GPL(mei_cldev_mtu);
-+
- /**
-  * mei_cldev_enabled - check whether the device is enabled
-  *
-diff --git a/include/linux/mei_cl_bus.h b/include/linux/mei_cl_bus.h
-index 725fd7727422..a82755e1fc40 100644
---- a/include/linux/mei_cl_bus.h
-+++ b/include/linux/mei_cl_bus.h
-@@ -113,6 +113,7 @@ int mei_cldev_register_notif_cb(struct mei_cl_device *cldev,
- 				mei_cldev_cb_t notif_cb);
- 
- u8 mei_cldev_ver(const struct mei_cl_device *cldev);
-+size_t mei_cldev_mtu(const struct mei_cl_device *cldev);
- 
- void *mei_cldev_get_drvdata(const struct mei_cl_device *cldev);
- void mei_cldev_set_drvdata(struct mei_cl_device *cldev, void *data);
--- 
-2.34.1
-
+Cheers,
+Miguel
