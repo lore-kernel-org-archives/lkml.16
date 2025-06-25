@@ -1,115 +1,144 @@
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB702BCF72
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40CC286412;
+	Wed, 25 Jun 2025 15:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864935; cv=none; b=G8RW1HwVmQZoYwJVR4JsiPCbwxa9IyNCEemRnL512hfl/KbB+9gyYtH/zvb5XN4Z4IMeogXSJaIWjFtbGqX2qTLJIblGBHtDEvDGaTs4uQemv2+s8pabvmUvmeXP01Qq81jtKMfY988xqyvPpJbr1ENpZDPIMisgKatHxM5nUrw=
+	t=1750864938; cv=none; b=PaXmC1uHoTbfe2C/MK85OQngEA1axuaxwP9dzT4fnpS6VrPZbMAUPGqB4rKJ9eEDdu8+Ma4sZW3WBb2VCniwpoO8bDzaVjiY5x9tkMq6U4jtoWnRYFa9QCv8ZWOhZMAg2lv8xNY1eA/QhP1sDDiy/6nsD62P07TYQbP/Dm4ZPR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864935; c=relaxed/simple;
-	bh=aTkJQnR/3DETZjCrMFipfbUfY5SsPpOZ1VX4D8ujLV0=;
-	h=Message-ID:Date:From:To:Cc:Subject:MIME-Version:Content-Type:
-	 Content-Disposition; b=XzDapm1f3YPnA3AQmOZg9vyW+mlVEQ28OkTsdS9iwQXmaQ0mLlzz8da3U+GLCltI8Rd0KMgk58UsGi9itLvICHh7p2pJ+kgQ7QJKN7x7e7MpuX7SxOQPOTd34cHOcJ8kAuBMwvzC7Y++BS2oYWLWeT2WbR4HDcP7yiG7z88oiPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p4zTCpIm; arc=none smtp.client-ip=209.85.210.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750864938; c=relaxed/simple;
+	bh=udi9Dj+TB3DzEDfD+VOVtv+BMkNrVkihkKNjVOl4DgA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=e/+onam0kIeoEi79Ba3HyPuTrigAuobE+4lWtUi+Ggxu1ngRtOQxKb/LG+P0uTZFWdb8tKRYfd2h98dCDS2FxySx3eM7C+a/Zy3fJrSZkmcWkUqU4UgTswygKnRxOiH4z8/Qf5bPOq9WLC8sFTbkk0GAx/mM9jhIyq1gMYx5zFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=flaElob/; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p4zTCpIm"
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-73a44512c8aso554619a34.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:22:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750864933; x=1751469733; darn=vger.kernel.org;
-        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=u98SmNY03cRBjpwBKU5+I1U9gP6hvTPRDks/D5f8cPE=;
-        b=p4zTCpImNNnbGlWsO67b4H/W/CW0sjDE6vYfK0JTfFywa0bcYYIzVSNig62b/x39R4
-         JDGiM/OHl+d8uz7zpjMy6OtMtzBDY8iG3Bbg8qBV1FEsh6ZtefUqNxxFM6lsTZyO+eKW
-         UYsD/uFynkjrMFgA/W80A+pGH853Kg2iu0zxZ07hF6K7t07q0qK8ynWNoszVl0mK+iSI
-         IflvDX4+qiZ6LrKrFNAAiSC8sCCkRULMqZ0GpGCWtsmjk5ViyhtHQGcYbvQKIM8bV7hc
-         /TCo+PocYltKNpxDCeHBCsEvTVl46HykTQsXZUt99IqDf6qKQtCzhk5+jhbNqBK/0Uhc
-         d96A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750864933; x=1751469733;
-        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=u98SmNY03cRBjpwBKU5+I1U9gP6hvTPRDks/D5f8cPE=;
-        b=cpy09smP0c14t1Z6lUbO8KL593sgw0VLuFcR+MIuoe5PtUGp8Fj9MZxe79MUhm9C8g
-         LsYENbJPcXOaq8VOP3KpdrEnzsJvFYTsxdAD2zS9QGpJqQtivTBZbk9DKAnLm3h1geeM
-         TJwZG3DGQI0g7VKS1NoGRcVT7hPV2vV3y4WvVsxDL9WYFIU2wlpRiYw4VhfBB4RnQtWw
-         aKXFFwxkUTGhYj8hTdrgBBO2UNtjwbHTEuJJeU6HxP+GB2BlA7dOl61UEqXM25lOlaV0
-         zSBuFOz9tRP2wP1PbFsTHjlUUZp/WQ4ckashh8RodVN8VLbvzZaBkC7kZFPapdbh/vsQ
-         F1pw==
-X-Forwarded-Encrypted: i=1; AJvYcCUxrI9tQr35EIka+abcgatYJCuyVSRszAnpUnkYi7ygWlNUOZfNjh285oTICcmq4bY9DRYiMk9PgyNRaWI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwxsGaN22vIQKZGCBhNnmB3Mo2XnJTGxZIABSgWgOPY9m1uNR9F
-	wePsRP0VxZI9R4resR/yp3hYK6hy9ndMKZfhb9Wreslvt6tQmbqhQzbKwmubQ1LQwWxrJ5on5h+
-	8Sh13
-X-Gm-Gg: ASbGncsIsn25/bRLytrgxD3TyiglDegqXYRL+2h04CQ2znLNdoh7+333rptAHcuZIL3
-	PVqUjh8CFqXTQjsBgLz9xqs+t6+IzFZlGovDdGnBVakNg5cWZKw+z0xy7pJsxJinLcOMrzFL2jC
-	QBiDw+9Ru1z2fdynOhzOHciFqqTWM+Wr4xOD14liP2K0G4slj7JUScnPPQbttOyyo7CZBRCftBJ
-	AozXYw4+TR4gXr7jJ4Gi/sUCiHZEpEtJUh++8sX7b4djkzdoinzkA/9A1CdbnNnvBOG7xA2Gs4l
-	VyJ8RrXaqq05XEAJCfoQ2ROIgzRtKyqO5dq50FXdriPXl4mVIPwuZ2y+vNLEW39DU2+X3Q==
-X-Google-Smtp-Source: AGHT+IHkG6dat7iqtvzwTRnE7a7/Ug1VTKQvcFownkvnX4pRkEWxDAtT4ssRBcmMzlRv3IfqQ4RMqQ==
-X-Received: by 2002:a05:6830:8088:b0:72b:7cc8:422 with SMTP id 46e09a7af769-73adc7eb8eemr1793945a34.20.1750864932939;
-        Wed, 25 Jun 2025 08:22:12 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:1fca:a60b:12ab:43a3])
-        by smtp.gmail.com with UTF8SMTPSA id 46e09a7af769-73a90ca9c12sm2236713a34.50.2025.06.25.08.22.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:22:12 -0700 (PDT)
-Message-ID: <685c1424.050a0220.baa8.d6a1@mx.google.com>
-X-Google-Original-Message-ID: <@sabinyo.mountain>
-Date: Wed, 25 Jun 2025 10:22:11 -0500
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Xiubo Li <xiubli@redhat.com>
-Cc: Ilya Dryomov <idryomov@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH] ceph: fix NULL vs IS_ERR() bug in ceph_zero_partial_page()
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="flaElob/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750864937; x=1782400937;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=udi9Dj+TB3DzEDfD+VOVtv+BMkNrVkihkKNjVOl4DgA=;
+  b=flaElob/J2R/Jgu0XLlOe7ij9fkaaXt38hWSbjZpkUBmWUWTfz9VDpZC
+   pczwJ0To2lFTxveY/kTKFlHWJBBOfm/qsQWU/LfclgAJuvXSkq/uMT2og
+   evzfAxzPS5p9c+WlVJh+BfH/WpSz4hZf7M7zy1h4vcOI/m0Uqd1LCBgZX
+   pmGlutNk5VvbJM9f34/n3X+DqLvvq5XRnwC6tA/ikgv1R5YSvRgkuhb/y
+   pSrXz5KoI1vRsG8iDHvR6DO7mqz8JVtm2BZNXlLhJJHDiFQzVJr2Yp1w/
+   o7FfdO+9+dr3VZabIZc0lXGp3ZKaRXS0oHKaUuCpD55iVusIaIIbLUP3h
+   g==;
+X-CSE-ConnectionGUID: jyJbm1bXSWWUQKd0pOdAIg==
+X-CSE-MsgGUID: ZJjdFP+nSdGfuv7UzO0i4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="70573260"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="70573260"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 08:22:16 -0700
+X-CSE-ConnectionGUID: WPMLVT8JSx+gj9sU/NfDJQ==
+X-CSE-MsgGUID: snl4U3dqQUyLma4P7zG57g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="152018305"
+Received: from linux-pnp-server-27.sh.intel.com ([10.239.147.41])
+  by orviesa009.jf.intel.com with ESMTP; 25 Jun 2025 08:22:13 -0700
+From: Tianyou Li <tianyou.li@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	tianyou.li@intel.com,
+	wangyang.guo@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH V2] tools/perf: Add --exclude-buildids option to perf archive command
+Date: Thu, 26 Jun 2025 00:14:01 +0800
+Message-ID: <20250625161509.2599646-1-tianyou.li@intel.com>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <aFrzSpvzzWeHdyJ5 () google ! com>
+References: <aFrzSpvzzWeHdyJ5 () google ! com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 8bit
 
-The filemap_lock_folio() never returns NULL.  It returns error pointers.
-Update the checking to match.
+When make a perf archive, it may contains the binaries that user did not want to ship with,
+add --exclude-buildids option to specify a file which contains the buildids need to be
+excluded. The file can be generated from command:
 
-Fixes: 483239f03149 ("ceph: convert ceph_zero_partial_page() to use a folio")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+    perf buildid-list -i perf.data --with-hits | grep -v "^ " > exclude-buildids.txt
+
+Then remove the lines from the exclude-buildids.txt for buildids should be included.
+
+Signed-off-by: Tianyou Li <tianyou.li@intel.com>
+Reviewed-by: Wangyang Guo <wangyang.guo@intel.com>
 ---
- fs/ceph/file.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ tools/perf/perf-archive.sh | 35 ++++++++++++++++++++++++++++++-----
+ 1 file changed, 30 insertions(+), 5 deletions(-)
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index d5c674d2ba8a..f6e63265c516 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -2536,12 +2536,13 @@ static inline void ceph_zero_partial_page(struct inode *inode,
- 	struct folio *folio;
+diff --git a/tools/perf/perf-archive.sh b/tools/perf/perf-archive.sh
+index 6ed7e52ab881..7977e9b0a5ea 100755
+--- a/tools/perf/perf-archive.sh
++++ b/tools/perf/perf-archive.sh
+@@ -16,6 +16,13 @@ while [ $# -gt 0 ] ; do
+ 	elif [ $1 == "--unpack" ]; then
+ 		UNPACK=1
+ 		shift
++	elif [ $1 == "--exclude-buildids" ]; then
++		EXCLUDE_BUILDIDS="$2"
++		if [ ! -e "$EXCLUDE_BUILDIDS" ]; then
++			echo "Provided exclude-buildids file $EXCLUDE_BUILDIDS does not exist"
++			exit 1
++		fi
++		shift 2
+ 	else
+ 		PERF_DATA=$1
+ 		UNPACK_TAR=$1
+@@ -86,11 +93,29 @@ fi
  
- 	folio = filemap_lock_folio(inode->i_mapping, offset >> PAGE_SHIFT);
--	if (folio) {
--		folio_wait_writeback(folio);
--		folio_zero_range(folio, offset_in_folio(folio, offset), size);
--		folio_unlock(folio);
--		folio_put(folio);
--	}
-+	if (IS_ERR(folio))
-+		return;
-+
-+	folio_wait_writeback(folio);
-+	folio_zero_range(folio, offset_in_folio(folio, offset), size);
-+	folio_unlock(folio);
-+	folio_put(folio);
- }
+ BUILDIDS=$(mktemp /tmp/perf-archive-buildids.XXXXXX)
  
- static void ceph_zero_pagecache_range(struct inode *inode, loff_t offset,
+-perf buildid-list -i $PERF_DATA --with-hits | grep -v "^ " > $BUILDIDS
+-if [ ! -s $BUILDIDS ] ; then
+-	echo "perf archive: no build-ids found"
+-	rm $BUILDIDS || true
+-	exit 1
++#
++# EXCLUDE_BUILDIDS is an optional file that contains build-ids to be excluded from the
++# archive. It is a list of build-ids, one per line, without any leading or trailing spaces.
++# If the file is empty, all build-ids will be included in the archive. To create a exclude-
++# buildids file, you can use the following command:
++# 	perf buildid-list -i perf.data --with-hits | grep -v "^ " > exclude_buildids.txt
++# You can edit the file to remove the lines that you want to keep in the archive, then:
++# 	perf archive --exclude-buildids exclude_buildids.txt
++#
++if [ -s "$EXCLUDE_BUILDIDS" ]; then
++	perf buildid-list -i $PERF_DATA --with-hits | grep -v "^ " | grep -Fv -f $EXCLUDE_BUILDIDS > $BUILDIDS
++	if [ ! -s "$BUILDIDS" ] ; then
++		echo "perf archive: no build-ids found after applying exclude-buildids file"
++		rm $BUILDIDS || true
++		exit 1
++	fi
++else
++	perf buildid-list -i $PERF_DATA --with-hits | grep -v "^ " > $BUILDIDS
++	if [ ! -s "$BUILDIDS" ] ; then
++		echo "perf archive: no build-ids found"
++		rm $BUILDIDS || true
++		exit 1
++	fi
+ fi
+ 
+ MANIFEST=$(mktemp /tmp/perf-archive-manifest.XXXXXX)
 -- 
-2.47.2
+2.47.1
 
