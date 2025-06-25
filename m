@@ -1,174 +1,336 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013002.outbound.protection.outlook.com [40.107.162.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30703074BC;
-	Wed, 25 Jun 2025 05:05:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.2
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750827945; cv=fail; b=lI7ywbOVUdat38LPc4/TRyV47YoM5IcO/VoO4ZUFMntPeyQbi3K6HTZq45NIh2jW8MeoKQAoq41yFdKa8sJiI41qBbsSfUsbuMm0w7A2LpcgWKv2YnGmlQwYIGUJuNn9x9x3KL9iUhmlgx/LwQIEHxMoDGKuUj7xRECzKrTPJTE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750827945; c=relaxed/simple;
-	bh=hTMbb6c3IygAYAlriXSpNWhd4udNMp3WYzhZFqs1U60=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=WWVqyWAXR6AgcG9FnnvP2BKrcNUV89WfYR8fPM/7ZYJcBsed5zUIAeBBPRRWYZKXMA6PhUtJf86WAAobq00jI4/hi/LYrVv97ZoO5T6z6tkDvFaYA8bnkk8N9motvBehNBCreaX6sVItdf8eYtJ6E7krI4W9ixiaLfljsJnJt80=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=juKnYdwY; arc=fail smtp.client-ip=40.107.162.2
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30BDA4A04
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:06:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750827995; cv=none; b=mx42Ntq+TMPcjLi+58DINi2ONcecfD/nwYXYhLLq+gYAm6QgsUex53zj6ShgxKActQqRFXPNEWDW4rdwmoZqxlFlSTAnz9H+Eqrvr2svkEQwPhSLmjx8whWDOVCtMYUaZvIHiAcYznGErJZvuxvc5iQmdeOGQogs/EFSRMGd5AQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750827995; c=relaxed/simple;
+	bh=czZKWkwXbXmaZpqtDefhqkPljwr9KTI2et+ef5ASvUw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cpLY/XVi67nuYz0WZ+ZC1ZrLXsTh5xfxtwYESHFl7NYM00f4SWOSnIXVcS0bjt5V9hFSs1FZn2m982cWEf9wulH68tmprdMCtxLTRT70DssjqnaDHGAhlql+YK0ie51wqD3eVUL6TVbRtlUe+XtVPe128OK4Xivi8DNk5EZwMrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=UUzYsjtJ; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="juKnYdwY"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YvdAd1lk+Sj6xiFeWWcU41HeGP5LzeGd7r+0PsFlhmmHL9uy9G31v+36RIonerViW/+yfOb35L7NgI5xdMiCJsj6kiHK1VJig8GEEJpodIE5aBdfztki0NAxoU3NJUjB96CeEc0YxIMlBNlsuaXU1HIbwdJijI/YzF3a2WxPMYh1Ndktgan5Ck8UrJGAeVgYHXZfLwKxI2WFYgikMBgOHKxKboocI2BlmhJyc7qIDS89AQ+tgjmvAHoR15U0nl95dKE/BtTR8t6kvD2XqfaUIPsirne5a6/4/lyPDWFtcVYpUVILonCsGaEfupM0B5AQHdde2/ojNM+Ix4EIfCbbrQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Rr1uDwHZ+NbCbgpH9x2DZ5Qj5ugQ6pB4gCbLqqgUp4w=;
- b=guvgV3R/7t9caIFx9SqPFXd214BzY+Gwz+M4ON6XMZjS3AMbdYSg2BP007M+tD9eHGXAleap39kKdmCvaN0qtUGk1l2almJ9/LWMzHJOE795IhfvvU9DC2yCfK1vSHScDLWgCcC8Z94xzJ2zrTP78WMdNJE0UTkj7Yh+I9rFxZPvhG3RCQ0/JBFhM4gMn4l6gy0505keV/7uefIyzniTLxNNSJiVKLc3xgUMDU0Plmg/WELiSPewLep/lPEvdJSBeH0AKqx1XVFwTbQbrep9PgsZbT7FpgSUy0YxjBRLKo7xkdl3GN7QZvTTzSZ6ysPRqgMyDTfWEOF6AnxdbMAPuw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Rr1uDwHZ+NbCbgpH9x2DZ5Qj5ugQ6pB4gCbLqqgUp4w=;
- b=juKnYdwYRN3yc0HbC0e3GHIsey6JUBFVUcZcBdgVSxH339Ih44ZF4IYFei6rVrLUE0Zq0URh916q8gATc9LoLzCo18Tx6ri377LqsgXm0PaE7Lsg26au6pmFRyghbo5uPn/xNNzzJLVuf9DAjh5Tlb4fspFuXMG0gLkDhh68pxJ1zvrhTkXhcG/4bMi9QvUSrlRRvfUey67C7ZjOOLs5yg1PVZjI0HlqppgB5NxTeqPn+6gT57VlzZ/VxX6obeuK5ginOlQLu96jUlGI5NbmxRSTeKOb39a0+qM4mBGSexOYLwyuGuWIilzgi7YKGAG2jNrkJXY2JkuLpGCKld9EwA==
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com (2603:10a6:102:211::7)
- by PAWPR04MB9911.eurprd04.prod.outlook.com (2603:10a6:102:38b::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Wed, 25 Jun
- 2025 05:05:40 +0000
-Received: from PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db]) by PAXPR04MB8510.eurprd04.prod.outlook.com
- ([fe80::a7c2:e2fa:8e04:40db%5]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
- 05:05:40 +0000
-From: Wei Fang <wei.fang@nxp.com>
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>
-CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "s.hauer@pengutronix.de"
-	<s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>, Frank Li <frank.li@nxp.com>,
-	"robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
-	<krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>
-Subject: RE: [PATCH 0/3] update NETC node of i.MX95
-Thread-Topic: [PATCH 0/3] update NETC node of i.MX95
-Thread-Index: AQHbz64iZQNI2D52QkmeWki4M3kwB7QTfcuQ
-Date: Wed, 25 Jun 2025 05:05:39 +0000
-Message-ID:
- <PAXPR04MB85100386B3BACA9724C05B7E887BA@PAXPR04MB8510.eurprd04.prod.outlook.com>
-References: <20250528083433.3861625-1-wei.fang@nxp.com>
-In-Reply-To: <20250528083433.3861625-1-wei.fang@nxp.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: PAXPR04MB8510:EE_|PAWPR04MB9911:EE_
-x-ms-office365-filtering-correlation-id: d504beb8-1d39-46da-7b79-08ddb3a5ee0a
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|7416014|1800799024|366016|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?us-ascii?Q?w7U9XzrwqOeJVIwsMSmjoeLwlmc4yZSPJUlXSu8qocJrF8Yx9zz2j4kBERqA?=
- =?us-ascii?Q?lc4p+yYMEEMOQ38c0JMEtN76hrOUHzn1Ld/H9o/DLaIguusqLhd0HuEzs+C/?=
- =?us-ascii?Q?aWLbBjAaC3QTfKVe9XFXO4BqyQ0ZGyB+JLjsghkIqfMhPdafrQSK2XNt6f+O?=
- =?us-ascii?Q?otYA3QssI/gMfP9/BT0jIAp9s2ZHNraZcrzzlZIWjxchq2YZz3da1IC+iY7Y?=
- =?us-ascii?Q?Ug0mPtO6leXhZyVM1qaitGr4dDtlSQUVkC57r7ebdtOzfKe1Gm1ytlflDovR?=
- =?us-ascii?Q?hJzYZUGg8uMkZIs7UPZzPGpVInqUjo3iKFls4j1gh12QJobHGhWmX3U4SIsJ?=
- =?us-ascii?Q?Jf9o2rtSCCnl8slq07v7tl+KC+HAiwO11QVulqUuLDBMW71C6ANbSBtt7Wn3?=
- =?us-ascii?Q?FiKM3YNzHe/iHgylpcv7Ykxb4XmIxFUQRJdKL0xo40rUMtSkJjUR6jXVuZ9y?=
- =?us-ascii?Q?lTCP7ka9X6O7JTuUOFh6eW1LnJ8sbtm9FdARg9u72yqGcHL6XCWh4PUH+YGK?=
- =?us-ascii?Q?UIlVciBYT6xLFpyuYqIho445Azy3BwZFnX6XIJ1xYr7EqASo1qfsZSCCxBi8?=
- =?us-ascii?Q?I+GJpHmOKdpYlGotNRIx/ckWQUAY8acLnh0gCvB04warPIm5MXz/GvXQrd3o?=
- =?us-ascii?Q?pTk07WOA/m6TmCsS/pt7kNuUvAueydxoqS8OgyjpZEaQHrH8sV3I84HM31tX?=
- =?us-ascii?Q?7ZlzwXV70DBGX695Db4k8K9zyvU89chsmNQo9/KhYEd/+Ickdj5nVAvhefZU?=
- =?us-ascii?Q?2TnJeSQTFpU89ZuuRlPWMO6IYJJZ2XapZjDZr0c23GDMnWi9b11bIQlyGG/1?=
- =?us-ascii?Q?S5nPXWQvOr0LPJV/IFCtZK0gNzQ7K6tXEz5VaArQpcgYsP/C+4skJpyo3Mww?=
- =?us-ascii?Q?I98C4d+QNKqHNZbjKRZaew8dJMF/SE/abWFh1kA2c+CJ5w1pgdYTYmC2X5+2?=
- =?us-ascii?Q?hh1SL/e1WbRNSCsfUP3XqXjb6qsL5pMxmIy2mUAly48qlRWycl4yCQMLH8Ja?=
- =?us-ascii?Q?Db/45l9r2x7ZT4wFbz5MopnE+10N2rrO9lVuyoGlla0mZsawEBvrqHfT+/zA?=
- =?us-ascii?Q?LaQAOduOl3+tCK1FXR2C6k+raSE3u+QgPMwTiiG+K0lo6ZGHkWhlZbb0NV6T?=
- =?us-ascii?Q?cn7xnilpaT9T03fNgoxzuk/Jbf8mlZRIX6YGpQPq/xjJVabcwvEH5EoAYSVz?=
- =?us-ascii?Q?D2/M3E1RNkqZsIuUzpJUvHSvXeaFtgbnuB8Q2mroAgk+eCcN8pcqSa/Tc5EW?=
- =?us-ascii?Q?sgij2lGTZoA1Kc09yXZnNvDF064ETDpZEMVFl5xWwfmALlb8feP64eYikivU?=
- =?us-ascii?Q?Y5e188CxFNmL9H+o2akNi3OuDJwuzRAMgfCy7JxLsJig4wgOqL918Qg5HbaH?=
- =?us-ascii?Q?Fahkrkxr+snZDgZFxSLs13hkK25wrhwYiAFLRL7T4WXZFpsLFkEfr943lspB?=
- =?us-ascii?Q?kA47bqUbrg3AXr5ykzrCAxoK9hnqk6PZ/439Po3M8aXafGp6GocdzxIE3Tvo?=
- =?us-ascii?Q?Ud06zsC0ImAfayE=3D?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8510.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?n/BdPDlA3NjpYuC+6iI+wJAkwdMjjhtvzQS7Yijo11TiOUoQ8EDAuFXGK75s?=
- =?us-ascii?Q?KOH+tJhvs63o2l/+2gePKVbRSh8g06fLxdEQjsPmi9nunFIBHwqngNmekiNW?=
- =?us-ascii?Q?HdLBH8tfXCnXM8O2fR+qKFq/HbaAi7Ze6x4m/oDp7f2nyNcrcFqOcdw+mdgz?=
- =?us-ascii?Q?nTq7mkUM0n1ngE+1DVxj75hDMyM38CZvr0J86mi/ojleSZBzAkkivEABSXAg?=
- =?us-ascii?Q?rQjlCgcEK1USjSoQK7rXyuaTC9hs/I+j21b4LG50S8QIBw9XWt2mtuC/Utqt?=
- =?us-ascii?Q?1366JZpVh6IasDEvUPNmS6cax5+nOWFfgwyakVcxlxaHYoMAcsejcZ+eDxEN?=
- =?us-ascii?Q?SrUnJpdOlUv+7ufo+29z6J99RYPe35EddAApIiQnFMqCFZrl+PIxkmfOSvBC?=
- =?us-ascii?Q?tlaaztSZN3JLe1AQkfZ7E+i5cDczJ7KozRjDLkHUuZqxVg3iR9o78nGMsoTx?=
- =?us-ascii?Q?+kPGa03SUa0DyuizDuJTbVy2ZGCnG0hkvTRcuTE4oLIboLHHX9yVMNyp4UF8?=
- =?us-ascii?Q?mIq0gePkR32PtBtjUCdQRdjVrmvcz1+sbYAjozQ2+03PiWsMY4WRiXRyaA0T?=
- =?us-ascii?Q?00BIwhYjTfNOkJ9+M6+5ZsiVwYI8T+E6HbLOrloOBop2fBXBgRw20CEDXKZ8?=
- =?us-ascii?Q?pQinEHJSkaAmZ67IfjKEoKerkWbcdwa9BQx3L1ErRIMHn2ur8YuAp8Q86gCs?=
- =?us-ascii?Q?JZHGt/xjR/E13GCAFScJcawSL4fYCkorLKncnq+xGoC3xgYIHaR0FKVGVhDP?=
- =?us-ascii?Q?odYMxfgY4lc99Gjl3iq4nEbv3sGBzPuLXV3LAmOmuniAj2ppplGPA7a8qeZj?=
- =?us-ascii?Q?27lqEcHCff1KL0fN2qbP1E/Y4WbiU3cUsZwDUsVGdrTYTIPwFbS6XjkLw4n7?=
- =?us-ascii?Q?fFCgRWW1PSjnIJgiyOuXg+e0rqDZjZ655nOl1DUGfXqZXb88icJgxw03EeVA?=
- =?us-ascii?Q?mBotuAV256e2vZ50EjYCstBL0+Xahzw1k3CG6iSkVuCb7j0P43+WOEpxkFCX?=
- =?us-ascii?Q?Uk4Usco9yb4xuG4z+zbB4KGfmDDiUzGapDtKOFLrXnSLIZfYJ4aGXtKhXOuQ?=
- =?us-ascii?Q?GlzDzGoWI1Mz4detPl8hU30AQYEJqnKT1djmY19E3YIdoOqOsolBjnFtjGTA?=
- =?us-ascii?Q?tF/jO7DvBWR30i+NZdmOlQPmFhflQrNtFOF2Tuuk1D/ij1z7qej9JwaZge0P?=
- =?us-ascii?Q?tM4x+zu7zLCNQQiAXQ+DKLlRQfhX135eG6VAkP0mFCbKnPgApIvuWBqYkS6I?=
- =?us-ascii?Q?0v6Yzgb0RWCjyhKgIn2KZpCWXxwz3ukdB+lDAIwOMj2rWsWi4zJ4kjLElMhj?=
- =?us-ascii?Q?4GxXTCVKDrKyhG19Hx6prReouruDsgdDSxzR7OuSvYCiyZKO1puF/+L53pLb?=
- =?us-ascii?Q?/AFhuDg4r1qVm8n0DiZkkNBr11EFWcmqG8ZxF4mfW0GT0B5z2Mx4PiCiUVIz?=
- =?us-ascii?Q?uJjst8T3Z7AgLUUffGcuSNiB83L2IfIOeU1+pyBqFBgtidn0o8MEKuqWbrhj?=
- =?us-ascii?Q?OqRBQPHNo/EYE7ozWwz7xcdWfrJQFLr4kLMFVAzYJRnyBOsNsi/XCGYQrGcs?=
- =?us-ascii?Q?hM24bqPseOn5dxqJYys=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UUzYsjtJ"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-553bcba4ff8so6231926e87.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:06:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1750827991; x=1751432791; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wYL0zDoEF8tBEVV2CM33ngyEh5/p8g2bCwVDJFJP1+w=;
+        b=UUzYsjtJ234w0CiI3l7SjmBOr1+orPlIwIiW7dEzO8c0rocrkRC3HUBZ16OOQ5/tVC
+         BkcIVkaFgxnl+vc5HbJ7sdWxbJ/UTM3mvXs2iGuDsj4xfE7P+JGQB+UTlXtC7t3JeN81
+         4Sfkjzvw6+EKjCgrng0sIv+S3jsBinVGyFUSc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750827991; x=1751432791;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wYL0zDoEF8tBEVV2CM33ngyEh5/p8g2bCwVDJFJP1+w=;
+        b=RrVHDYH3Vvu13Y7EOKsG0w9Vi+ZT47KVR6Uezu2OCoZT2xmii0VvATaw9+7HauY09b
+         mCuZaepq5wsUSMcMJFf6eEvra0JQkI+hwp1ooOQ9GFzCGlxReYwJecWkxWE9C1GtK9jG
+         InO9r2ouhZmcct4qSuF7WstK/jtIEzNyVEMJ6u1s8M85Cjeesq+u0Ug41wYn+oHKKmyA
+         nH5dqZ0eHeHfYWeX7paq/qbMCxO8MrfswvDdi0qFaoeK4Bf/P/ATOleQyWRKJRG/2Px+
+         Wy710JvNyXJTwcPfkgEUG8Bo5xeTRWNPEd4vWHjyCNFtCgWrN/oMIApxy53tVJY4SwFv
+         kOOA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQQu8aDXa2WEqQR9+/mXVzMH769OrJxwM/ZmmbF3KtYwKwxvIJwVuVnS4l141p0zH222wvJV+Ppj2dbWA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFeIP4NckFYHJ75lnRx0/Kwkln6wS77B2arExa/Ly4iSxM9NLi
+	jKriL0A8dTiqSq4BBmkQuOyBgt36tUPRStNLk1vM0rPDwg2LIzhwo4iZL+2mOLtmZT387jAxeCv
+	jrgCyH5yYLSiduXd+Bpwch2XCOvOGaBfaSSDmW/XC
+X-Gm-Gg: ASbGncsR6bzpE4MP40mJHlzQcv6f01C/TKkaL6sbgmahakeUEzluYhxc875t4UijyhD
+	68+REQWa8EUkhSquU9piMUM3S09jSr6m36XbgjRgYHrjUSKmf10cKzcCo2pK3RwOEJUiy+GGO70
+	lNicIniLV4Dnfrlj6YictUTe59r8/tCEj2kWDbZ5M4q5nh/5I6g1mWsAQToi+/UZsR4yrVXA==
+X-Google-Smtp-Source: AGHT+IEPnjDPdzCHrxS9FLolva0rhORMM3QulXsmJfUCrp8Q42wqK3RvPIsJ5XM2NL3tU4k3s1Ue9EkMUcYihQ9AaGg=
+X-Received: by 2002:a05:6512:b97:b0:553:2f57:f8af with SMTP id
+ 2adb3069b0e04-554fdce9e0dmr449486e87.20.1750827991225; Tue, 24 Jun 2025
+ 22:06:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8510.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d504beb8-1d39-46da-7b79-08ddb3a5ee0a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2025 05:05:40.0448
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5ZuwZxDkFO/t2snFij7ppJfPmv85RkKfyss2m8iQb4cw1xWE7T8FvD//gC6OfBeZqOcwlgRynvEh/gguxK3vDw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR04MB9911
+References: <20250624073548.29732-1-angelogioacchino.delregno@collabora.com> <20250624073548.29732-3-angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20250624073548.29732-3-angelogioacchino.delregno@collabora.com>
+From: Chen-Yu Tsai <wenst@chromium.org>
+Date: Wed, 25 Jun 2025 13:06:20 +0800
+X-Gm-Features: Ac12FXzHd-cnN4TUsA_r-2fnEM30GQ1asEGL9sR_0RQ8CDW8gNp231ivBudzbiA
+Message-ID: <CAGXv+5G-s6+sF-PS0iywC5uxMkrfH1FskWG_HcHAi_tfuHWtZA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] regulator: Add support for MediaTek MT6316 SPMI
+ PMIC Regulators
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, matthias.bgg@gmail.com, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
+	kernel@collabora.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> We found that NETC has an overshoot issue, so the drive strength of the r=
-elated
-> pins needs to be reduced. The first two patches are used to fix this issu=
-e. The
-> third patch adds SMMU support for NETC.
->=20
-> Wei Fang (3):
->   arm64: dts: imx95-19x19-evk: fix the overshoot issue of NETC
->   arm64: dts: imx95-15x15-evk: fix the overshoot issue of NETC
->   arm64: dts: imx95: add SMMU support for NETC
->=20
->  .../boot/dts/freescale/imx95-15x15-evk.dts    | 28 ++++++++++++-------
->  .../boot/dts/freescale/imx95-19x19-evk.dts    | 12 ++++----
->  arch/arm64/boot/dts/freescale/imx95.dtsi      |  8 ++++++
->  3 files changed, 32 insertions(+), 16 deletions(-)
->=20
-> --
-> 2.34.1
+Hi,
 
-Hi Shawn,
+On Tue, Jun 24, 2025 at 3:46=E2=80=AFPM AngeloGioacchino Del Regno
+<angelogioacchino.delregno@collabora.com> wrote:
+>
+> Add a driver for the regulators found on all types of the MediaTek
+> MT6316 SPMI PMIC, fully controlled by SPMI interface and featuring
+> four step down DCDC (buck) converters.
+>
+> In particular, this includes support for:
+>  - MT6316(BP/VP):    2+2 Phase (Phase 1: buck1+2, Phase 2: buck3+4)
+>  - MT6316(CP/HP/KP): 3+1 Phase (Phase 1: buck1+2+4, Phase 2: buck3)
+>  - MT6316(DP/TP):    4+0 Phase (Single phase, buck1+2+3+4)
+>
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@coll=
+abora.com>
+> ---
+>  drivers/regulator/Kconfig            |   9 +
+>  drivers/regulator/Makefile           |   1 +
+>  drivers/regulator/mt6316-regulator.c | 345 +++++++++++++++++++++++++++
+>  3 files changed, 355 insertions(+)
+>  create mode 100644 drivers/regulator/mt6316-regulator.c
+>
+> diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+> index 6d8988387da4..bca2ebbd89b7 100644
+> --- a/drivers/regulator/Kconfig
+> +++ b/drivers/regulator/Kconfig
+> @@ -864,6 +864,15 @@ config REGULATOR_MT6315
+>           This driver supports the control of different power rails of de=
+vice
+>           through regulator interface.
+>
+> +config REGULATOR_MT6316
+> +       tristate "MT6316 SPMI PMIC regulator driver"
+> +       depends on SPMI || COMPILE_TEST
+> +       help
+> +          Say Y here to enable support for 2+2, 3+1 and 4 phase regulato=
+rs
+> +          found in the MediaTek MT6316 BP, CP, DP, HP, VP and TP SPMI PM=
+ICs.
+> +         This driver supports the control of different power rails of de=
+vice
+> +         through regulator interface.
+> +
+>  config REGULATOR_MT6323
+>         tristate "MediaTek MT6323 PMIC"
+>         depends on MFD_MT6397
+> diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+> index c0bc7a0f4e67..58643e35d2cc 100644
+> --- a/drivers/regulator/Makefile
+> +++ b/drivers/regulator/Makefile
+> @@ -103,6 +103,7 @@ obj-$(CONFIG_REGULATOR_MP886X) +=3D mp886x.o
+>  obj-$(CONFIG_REGULATOR_MPQ7920) +=3D mpq7920.o
+>  obj-$(CONFIG_REGULATOR_MT6311) +=3D mt6311-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6315) +=3D mt6315-regulator.o
+> +obj-$(CONFIG_REGULATOR_MT6315)  +=3D mt6316-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6323) +=3D mt6323-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6331) +=3D mt6331-regulator.o
+>  obj-$(CONFIG_REGULATOR_MT6332) +=3D mt6332-regulator.o
+> diff --git a/drivers/regulator/mt6316-regulator.c b/drivers/regulator/mt6=
+316-regulator.c
+> new file mode 100644
+> index 000000000000..952852bbe923
+> --- /dev/null
+> +++ b/drivers/regulator/mt6316-regulator.c
+> @@ -0,0 +1,345 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (c) 2024 MediaTek Inc.
+> +// Copyright (c) 2025 Collabora Ltd
+> +//                    AngeloGioacchino Del Regno <angelogioacchino.delre=
+gno@collabora.com>
+> +
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +#include <linux/spmi.h>
+> +
+> +#include <linux/regulator/driver.h>
+> +#include <linux/regulator/machine.h>
+> +#include <linux/regulator/of_regulator.h>
+> +
+> +#define MT6316_BUCK_MODE_AUTO                  0
+> +#define MT6316_BUCK_MODE_FORCE_PWM             1
+> +#define MT6316_BUCK_MODE_LP                    2
+> +
+> +#define MT6316_CHIP_ID                         0x20b
+> +#define MT6316_BUCK_TOP_CON0                   0x1440
+> +#define EN_SET_OFFSET                          0x1
+> +#define EN_CLR_OFFSET                          0x2
+> +
+> +#define MT6316_BUCK_TOP_CON1                   0x1443
+> +
+> +#define MT6316_BUCK_TOP_ELR0                   0x1448
+> +#define MT6316_BUCK_TOP_ELR2                   0x144a
+> +#define MT6316_BUCK_TOP_ELR4                   0x144c
+> +#define MT6316_BUCK_TOP_ELR6                   0x144e
+> +#define MT6316_VSEL_MASK                       GENMASK(8, 0)
+> +
+> +#define MT6316_VBUCK1_DBG                      0x14a8
+> +#define MT6316_VBUCK2_DBG                      0x1528
+> +#define MT6316_VBUCK3_DBG                      0x15a8
+> +#define MT6316_VBUCK4_DBG                      0x1628
+> +#define MT6316_BUCK_QI                         BIT(0)
+> +
+> +#define MT6316_BUCK_TOP_4PHASE_TOP_ANA_CON0    0x1688
+> +#define MT6316_BUCK_TOP_4PHASE_TOP_ELR_0       0x1690
+> +
+> +enum mt6316_type {
+> +       MT6316_TYPE_2PHASE,
+> +       MT6316_TYPE_3PHASE,
+> +       MT6316_TYPE_4PHASE
+> +};
+> +
+> +/**
+> + * struct mt6316_regulator_info - MT6316 regulators information
+> + * @desc: Regulator description structure
+> + * @debug_reg: Debug register for regulator status
+> + * @lp_mode_reg: Low Power mode register (normal/idle)
+> + * @lp_mode_mask: Low Power mode regulator mask
+> + * @modeset_reg: AUTO/PWM mode register
+> + * @modeset_mask: AUTO/PWM regulator mask
+> + */
+> +struct mt6316_regulator_info {
+> +       struct regulator_desc desc;
+> +       u16 debug_reg;
+> +       u16 lp_mode_reg;
+> +       u16 lp_mode_mask;
+> +       u16 modeset_reg;
+> +       u16 modeset_mask;
+> +};
+> +
+> +#define MT6316_BUCK(match, vreg_id, min, max, step, vs_reg)            \
+> +{                                                                      \
+> +       .desc =3D {                                                      =
+ \
+> +               .name =3D match,                                         =
+ \
+> +               .of_match =3D of_match_ptr(match),                       =
+ \
+> +               .ops =3D &mt6316_vreg_setclr_ops,                        =
+ \
+> +               .type =3D REGULATOR_VOLTAGE,                             =
+ \
+> +               .owner =3D THIS_MODULE,                                  =
+ \
+> +               .n_voltages =3D (max - min) / step + 1,                  =
+ \
+> +               .min_uV =3D min,                                         =
+ \
+> +               .uV_step =3D step,                                       =
+ \
+> +               .enable_reg =3D MT6316_BUCK_TOP_CON0,                    =
+ \
+> +               .enable_mask =3D BIT(vreg_id - 1),                       =
+ \
+> +               .vsel_reg =3D vs_reg,                                    =
+ \
+> +               .vsel_mask =3D MT6316_VSEL_MASK,                         =
+ \
+> +               .of_map_mode =3D mt6316_map_mode,                        =
+ \
+> +       },                                                              \
+> +       .lp_mode_reg =3D MT6316_BUCK_TOP_CON1,                           =
+ \
+> +       .lp_mode_mask =3D BIT(vreg_id - 1),                              =
+ \
+> +       .modeset_reg =3D MT6316_BUCK_TOP_4PHASE_TOP_ANA_CON0,            =
+ \
+> +       .modeset_mask =3D BIT(vreg_id - 1),                              =
+ \
+> +       .debug_reg =3D MT6316_VBUCK##vreg_id##_DBG,                      =
+ \
+> +}
 
-Would you pick up this patch set?
+[...]
 
+> +
+> +/* MT6316BP/VP - 2+2 phase buck */
+> +static struct mt6316_regulator_info mt6316bv_regulators[] =3D {
+> +       MT6316_BUCK("vbuck12", 1, 0, 1277500, 2500, MT6316_BUCK_TOP_ELR0)=
+,
+> +       MT6316_BUCK("vbuck34", 3, 0, 1277500, 2500, MT6316_BUCK_TOP_ELR4)=
+,
+
+                                    ^
+While this is technically correct as the selector does start from 0,
+I don't think the regulator can actually go down to 0V. In the past
+for the MT6311 / MT6315, MediaTek always added a standard minimum
+voltage in the device tree.
+
+I believe a combination of setting .linear_min_sel and adjusting min_uV
+and n_voltages is the correct solution.
+
+> +};
+> +
+> +/* MT6316CP/HP/KP - 3+1 phase buck */
+> +static struct mt6316_regulator_info mt6316chk_regulators[] =3D {
+> +       MT6316_BUCK("vbuck124", 1, 0, 1277500, 2500, MT6316_BUCK_TOP_ELR0=
+),
+> +       MT6316_BUCK("vbuck3", 3, 0, 1277500, 2500, MT6316_BUCK_TOP_ELR4),
+> +};
+> +
+> +/* MT6316DP/TP - 4 phase buck */
+> +static struct mt6316_regulator_info mt6316dt_regulators[] =3D {
+> +       MT6316_BUCK("vbuck1234", 1, 0, 1277500, 2500, MT6316_BUCK_TOP_ELR=
+0),
+> +};
+> +
+> +static const struct regmap_config mt6316_spmi_regmap_config =3D {
+> +       .reg_bits       =3D 16,
+> +       .val_bits       =3D 8,
+> +       .max_register   =3D 0x1700,
+> +       .fast_io        =3D true,
+> +};
+> +
+> +static int mt6316_regulator_probe(struct spmi_device *sdev)
+> +{
+> +       struct regulator_config config =3D {};
+> +       struct mt6316_regulator_info *info;
+> +       struct regulator_dev *rdev;
+> +       enum mt6316_type type;
+> +       int num_vregs, ret;
+> +       unsigned int i;
+> +       u32 chip_id;
+> +
+> +       config.regmap =3D devm_regmap_init_spmi_ext(sdev, &mt6316_spmi_re=
+gmap_config);
+> +       if (IS_ERR(config.regmap))
+> +               return PTR_ERR(config.regmap);
+> +
+> +       /*
+> +        * The first read is expected to fail: this PMIC needs to be woke=
+n up
+> +        * and that can be done with any activity over the SPMI bus.
+> +        */
+> +       regmap_read(config.regmap, MT6316_CHIP_ID, &chip_id);
+> +
+> +       /* The second read, instead, shall not fail! */
+> +       ret =3D regmap_read(config.regmap, MT6316_CHIP_ID, &chip_id);
+> +       if (ret) {
+> +               dev_err(&sdev->dev, "Cannot read Chip ID!\n");
+> +               return ret;
+> +       }
+> +       dev_dbg(&sdev->dev, "Chip ID: 0x%x\n", chip_id);
+> +
+> +       config.dev =3D &sdev->dev;
+> +
+> +       type =3D (uintptr_t)device_get_match_data(&sdev->dev);
+> +       switch (type) {
+> +       case MT6316_TYPE_2PHASE:
+
+Instead of being tied to the compatible string / PMIC variant,
+I wonder if this is something that can be read back from the
+PMIC. You wouldn't need so many variant compatible strings if
+that's the case.
+
+FWIW we do that for some of the X-Powers AXP PMICs.
+
+
+ChenYu
