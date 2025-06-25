@@ -1,102 +1,157 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76C8F2D1F72;
-	Wed, 25 Jun 2025 16:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DED32BEC33
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750868173; cv=none; b=lvZkOvsaAvz3FVnRvRgEP5XTO8GuuzgOEdkLdFs6/2qyiimR0aTxJNiKO+BmcakC1rcfSzldZPbvfhyv/C/gOOgWucL+WdmONAfR1E0ad9iYHCDdITNBOwGE0MGAHxsSj3g08BFK8QgsNe876U++rFzrYo1WqEH3OqKn1Y/a/j8=
+	t=1750868251; cv=none; b=gOSAWehpGeOuoEQOufWaMXRIsodnCiYyA11PhnLSDrjRMwhoChVPYmfr2Blb2h1VSRSn75sYRK5h0xTIfeEJQA/t84pd32ah6RDRKTb5sGR7/S1bcWipnWY+K3QWJLTp4e42kkzddrr1HujtzyPZ0meZJLMcSI475d6lbodPOdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750868173; c=relaxed/simple;
-	bh=dNeHiOaL+s4WuA4ML3MliobjSxf3ZgeKH5p0jNSk090=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=TNbqnWHdpDMyKQpJBE8lC2y550hCpT4Ew1eY9McM1pLvHRbEbeU2NrWXoJOw6qmT+2410bz7nuOmds8zANUeLuYBuBmaz3NlN+1tG9KJaVzHqmvrr77Y3NQj8VAJ1yr3OkV6QzCn4AhrO3of3C0et5epDz3VifiD/uuTABtODEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HJQLiUi2; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3JBU+13H; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750868251; c=relaxed/simple;
+	bh=rWGPByoC/hnHkqwleO+GR+oyAAnuvdMd1IK36Oo/n1o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LyQH7VXHqkQcTpmN4F29g1andfXyEOUQZFuITP2IuqNWcdDd/tg3/DH9OrHuCX2loaBJcSw6lLhKP/3VxSZQQtTh3o2ft8BMuDe513TqNnRR06321G+VKwWQmXVmzEdY0Ji/svGKyT+CQ7J9MLxvKmAHQODxBiUu7CZsrbLdTqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=fUlQEqhI; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HJQLiUi2";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3JBU+13H"
-Date: Wed, 25 Jun 2025 16:16:09 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750868170;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EV5KKw4Su69oXg1YIitTcU/tbJwyi933PR7fgLZ0w0E=;
-	b=HJQLiUi2F2tZm7eVQzIJ9rHFJ42rYfO9nen68luqjc4eiVZISB97VGX0vXV9ZYeE1sSvR5
-	GJsxb+9g/1HLwExaX+Fcc2M/MEpTkDjI+LUKdrnT4VWME11nnlHDBHI77/qUdU/WH6vkAJ
-	bBeu0Dbor/lE5f3CvffOCh1fOagxLqfEuqi+uc4FbzsviNAFZoSlcs7lkMKn1cCensvqkU
-	83sNhzMDXb1MA2o4cnMNm59tQvwfqYMYl1e08djLmc9yXqArtVZmk+5PhCSksbf0HxGxdN
-	jhdRHKTjv/3w6rukAuDjJciJQx/YEnbrdKNwzoRmY3PCiw9hFB+pfDpzixCWNA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750868170;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EV5KKw4Su69oXg1YIitTcU/tbJwyi933PR7fgLZ0w0E=;
-	b=3JBU+13HOwPm9DGeI7NCudUeYRZiI6k897NPcWRZErWEaKedh7ukvJxPYgwHh5dmdn4ubL
-	fwJ4RB5mWWodeECg==
-From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/ptp] timekeeping: Remove hardcoded access to tk_core
-Cc: Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250519083025.652611452@linutronix.de>
-References: <20250519083025.652611452@linutronix.de>
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="fUlQEqhI"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7426c44e014so126302b3a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:17:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1750868249; x=1751473049; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3ucgASzDHlxpA/1R6gfwSR+grfWmp0YH8y7SE+A0JJg=;
+        b=fUlQEqhIAik8xphtfPAkV6sMQMohGGTMfRlMfGmR2STCXFq3wLCXu7CpmObbkJmqqH
+         amcrkSxbKexR3znOkf+E/ZecAN0n0rsxjvUpKwbT5m7Ye49b0IK0EIPKYleX39ZxTEcC
+         sKy/n407HJGIy1y8PSuoFCWtzvV4gLZMNpYeTPleUDNcuNDBqWgpHRiRPGumQYHMPEzQ
+         5RutZtC3nhNiLb4CxhHDtGh06mgicFFzO7AH5J5x5kLDueU6d/5+XGf24M8qNdS1cx7e
+         C618flvENfjjiEc5ac1dSsNtCr8LOfhXiDR4m6KnRxiPDeQthdY8iDbIYHMltz4L0+4R
+         d1Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750868249; x=1751473049;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3ucgASzDHlxpA/1R6gfwSR+grfWmp0YH8y7SE+A0JJg=;
+        b=OwQKjALBR9CwvE6V7gCyJGSfTrv+IFGOHZ0/g490SnGh2OFVjUPEuTulHUmvx4KTqt
+         83j//7SfiJomsd94IycLJoMi5YDmLIwGqHsEv2SrEjD9pUo1Po3m3/IOqceI8hX/4ukC
+         guRnFxqWZ8huSS4+qee1WJUD/ntGM+NzNoOr0ZxgjiUI0Vb/mkU12IDQwaZ10GZwJjUP
+         v7dXmv5lH71JHGLukIvQJLH3l5A4ff0defeS24AcF2QR/ot74sKBlRtUN4voW+L6pbJi
+         lNED+kSA8q90euAXxsgr82ubdWUM0JhCqnvv8cjzgeT85DV87EY/DMS4SsksMSPqG/sW
+         wrxw==
+X-Forwarded-Encrypted: i=1; AJvYcCV5WLcuHTs9fan869GhcPyKB7b0YxI+H8FLrbQheOdbbnvTORwtdZih2Q5IEhEUKA+OpC0tZQrzlkU+s2M=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo1W5GoTb2OccZSxNUzXYcEbyCLutF1jV0XbAVEFGltl4IlMXI
+	/X/EF1ozxHSoEM0Kd65e5wTw8Mz3d1T9asTeZrZj/4RfJACrvR2stTYr9M7WuE1cZ74=
+X-Gm-Gg: ASbGncvK4Ul4MbesAYOxE9sR/qVzw4tWe7xyM3SjXwHurY7bnUnUrmOHWb0p7Dgb1xK
+	lo3EQ9DLdWXHcvcTId6bdmxc4snpIl4GsTLsTGwbE/KVgzXwaighmNr0WybJ1U80p8ZAWB61ZgX
+	BLHbuQepZ3fQZr7tMcIJvGFeWIpuzVcUKqzMaaYs1kyYaC+Vz8g11om4LhVjPisNMlyN3VTqyR9
+	uIp0Npfm780Wi+j5fGB0RHU04Z7mLv/F8nH8NSUhq77kACSUdYafVnqUdubk8LjYVVqWg5v3ngi
+	HEWzPHIa/Ui6xHwLdeRv/5dObgN3NP2g6Ecq6FLR/kGB0Vj1lMOEIFEJGbSFcvGowLS1XNjJgUl
+	DvucrkplyprlNp40WXAePD5z2llq6sPzSyAMp
+X-Google-Smtp-Source: AGHT+IFpDcqx44HzncJdJNVAkQLG5gSRrOhDC4JGf2UMPexno4tsLpTKKz23ZIhlWN8/zRHxl5MEaw==
+X-Received: by 2002:a05:6a21:e96:b0:21f:4ecc:11ab with SMTP id adf61e73a8af0-2208c08a340mr673741637.9.1750868247253;
+        Wed, 25 Jun 2025 09:17:27 -0700 (PDT)
+Received: from anup-ubuntu-vm.localdomain ([103.97.166.196])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e217afsm5024436b3a.55.2025.06.25.09.17.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 09:17:26 -0700 (PDT)
+From: Anup Patel <apatel@ventanamicro.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: Anup Patel <anup@brainfault.org>,
+	Atish Patra <atish.patra@linux.dev>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Andrew Jones <ajones@ventanamicro.com>,
+	linux-doc@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Anup Patel <apatel@ventanamicro.com>
+Subject: [PATCH] irqchip: riscv-imsic: Add kernel parameter to disable IPIs
+Date: Wed, 25 Jun 2025 21:47:15 +0530
+Message-ID: <20250625161715.1003948-1-apatel@ventanamicro.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <175086816917.406.11370283047280648441.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the timers/ptp branch of tip:
+When injecting IPIs to a set of harts, the IMSIC IPI support will
+do a separate MMIO write to SETIPNUM_LE register of each target
+hart. This means on a platform where IMSIC is trap-n-emulated,
+there will be N MMIO traps when injecting IPI to N target harts
+hence IPIs based on IMSIC software injected MSI is slow compared
+to the SBI IPI extension.
 
-Commit-ID:     990518eb3a71c357ca4ff1ad3e747fb844d8094c
-Gitweb:        https://git.kernel.org/tip/990518eb3a71c357ca4ff1ad3e747fb844d8094c
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Mon, 19 May 2025 10:33:15 +02:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Thu, 19 Jun 2025 14:28:22 +02:00
+Add a kernel parameter to disable IPIs in IMSIC driver for platforms
+with trap-n-emulated IMSIC.
 
-timekeeping: Remove hardcoded access to tk_core
-
-This was overlooked in the initial conversion. Use the provided pointer to
-access the shadow timekeeper.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: John Stultz <jstultz@google.com>
-Link: https://lore.kernel.org/all/20250519083025.652611452@linutronix.de
-
-
+Signed-off-by: Anup Patel <apatel@ventanamicro.com>
 ---
- kernel/time/timekeeping.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/admin-guide/kernel-parameters.txt |  7 +++++++
+ drivers/irqchip/irq-riscv-imsic-early.c         | 12 ++++++++++++
+ 2 files changed, 19 insertions(+)
 
-diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-index a009c91..2ad78fb 100644
---- a/kernel/time/timekeeping.c
-+++ b/kernel/time/timekeeping.c
-@@ -663,7 +663,7 @@ static void timekeeping_restore_shadow(struct tk_data *tkd)
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index f1f2c0874da9..7f0e12d0d260 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2538,6 +2538,13 @@
+ 			requires the kernel to be built with
+ 			CONFIG_ARM64_PSEUDO_NMI.
  
- static void timekeeping_update_from_shadow(struct tk_data *tkd, unsigned int action)
++	irqchip.riscv_imsic_noipi
++			[RISC-V,EARLY]
++			Force the kernel to not use IMSIC software injected MSIs
++			as IPIs. Intended for system where IMSIC is trap-n-emulated,
++			and thus want to reduce MMIO traps when triggering IPIs
++			to multiple harts.
++
+ 	irqfixup	[HW]
+ 			When an interrupt is not handled search all handlers
+ 			for it. Intended to get systems with badly broken
+diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/irq-riscv-imsic-early.c
+index 1dbc41d7fe80..c6fba92dd5a9 100644
+--- a/drivers/irqchip/irq-riscv-imsic-early.c
++++ b/drivers/irqchip/irq-riscv-imsic-early.c
+@@ -9,6 +9,7 @@
+ #include <linux/cpu.h>
+ #include <linux/export.h>
+ #include <linux/interrupt.h>
++#include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip.h>
+@@ -22,6 +23,14 @@
+ #include "irq-riscv-imsic-state.h"
+ 
+ static int imsic_parent_irq;
++static bool imsic_noipi;
++
++static int __init imsic_noipi_cfg(char *buf)
++{
++	imsic_noipi = true;
++	return 0;
++}
++early_param("irqchip.riscv_imsic_noipi", imsic_noipi_cfg);
+ 
+ #ifdef CONFIG_SMP
+ static void imsic_ipi_send(unsigned int cpu)
+@@ -47,6 +56,9 @@ static int __init imsic_ipi_domain_init(void)
  {
--	struct timekeeper *tk = &tk_core.shadow_timekeeper;
-+	struct timekeeper *tk = &tkd->shadow_timekeeper;
+ 	int virq;
  
- 	lockdep_assert_held(&tkd->lock);
- 
++	if (imsic_noipi)
++		return 0;
++
+ 	/* Create IMSIC IPI multiplexing */
+ 	virq = ipi_mux_create(IMSIC_NR_IPI, imsic_ipi_send);
+ 	if (virq <= 0)
+-- 
+2.43.0
+
