@@ -1,176 +1,380 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2094.outbound.protection.outlook.com [40.107.236.94])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E19C417A2E3
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:24:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750875861; cv=none; b=PiaRtxWl7xZknaIzdvtXmQ+FOvY9eQBIYfwFYu/qnYs1XppMbcrEaiAv5mDk1rxBmkVYcJOVAhcf2jOlIJLrovYtljrQ7sHgIgX//l6KFJj4aCjIAH0XVvsUJ0pWRiBt7VAw9Qnf/HBbfEEEumOjo5ODuhVHHz+hxbQe5TZ4018=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750875861; c=relaxed/simple;
-	bh=ud3FvwW/I6VjeZJ0HmOW8gMowEOeWESobuFlOIBS8uA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=joymXlDGdB/j7cEDl48EroaCOg1A8YpjxIcHMXs92i80QZ18CvI5a4NQjIOpM5m8GokIWQR8Z3s3GWNdphLeOid5oj/loNj0HHlP4z1fb/DNdoDr646o/bmpci2s20oyGK3mNhcrnEL7vHDtE/dSXc8krW60Fb1UHh4WDMrMILw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aUjSO4km; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aUjSO4km"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750875858;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=pWnIWLqZUQ/JZT7dqvsQpQ8JDnL4IOC/WIuagqDhlGw=;
-	b=aUjSO4kmJMCmCyldX1fZvnMpR1soGxzs8/fp92ZMbsjIig1mx0crbGPW+sxMAkPiHXg8NL
-	BfCsRCLDayP29JqKWpMZa1iwLGGXPiTlAp3Th++xMlBnXG1evgcgn51sIzzRtRNo/vkrr4
-	Czff1+o86hmJL/xg5kgwuA0UaTFmfLM=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-367-pATSbia4NVuFOsYPs64PHQ-1; Wed, 25 Jun 2025 14:24:17 -0400
-X-MC-Unique: pATSbia4NVuFOsYPs64PHQ-1
-X-Mimecast-MFC-AGG-ID: pATSbia4NVuFOsYPs64PHQ_1750875856
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a6df0c67a6so61284f8f.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:24:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750875856; x=1751480656;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pWnIWLqZUQ/JZT7dqvsQpQ8JDnL4IOC/WIuagqDhlGw=;
-        b=Oa3jg7a+mQakAmZFz7qVeZXFkIc+oS6LoRYA2XE9DHdhonuUjf4x7niJg7W1YF3PgY
-         Oazke7GSwUb5OcIrckfspJDK+GHgI+DNpYSHUtSqE+CifHdvlr0lcyR/NHdRjtq9E/dn
-         5mtGt7G44ci/YH4wbEYfSvR/ro88s2Wm1spjbJjCrQNJsyuSsWlTslA4Uo4mb0YX0pCF
-         BVdiZfKY2wq4f7vCKytiQxMe0/wparPeeBoMg6WUdLhBnK0fuNue7KmdbDy9C3sXQpT/
-         5dh0I6HYboxnXkJlUNn6vmixdvAbXLb4K9N+Iudd1CHxkB2ZAYbP6HU9lP/o9P8wFeHF
-         OPdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWeCMQYGbFSWy2RZneHR4k47bOZyC/dOTPSTlvZpC6u+SqZlMTHuEnLbd2lJLAHGmYYJw5eElEGrZOqmtk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzALw0YwOwWH8lmNWDxOsWTBI7qNhCPJvBUXjPUmlyV6/H+Ls3f
-	3XBqt5/9zHIvnH9C4Zz/h0o2VBiZHqPUIvBnr7WickqP6EOasN9IAxnOVKkToTvfcKJNcDlFPWT
-	sj34U01ITitqcMu0y5Aqx5GgEusIbt7vT1kbXP8/6qerd7pEEGpyp21H5SzmNjCZYRw==
-X-Gm-Gg: ASbGnctcChJ/xcsMMPH8tSgX3we1sFL8nq8DkOImaKFVZQ1P0II62ao9cl+lFzr7wfd
-	0h5a9y3eFZZoJEzSn59Rh+ZgCxhlg9AcoVksgnLjBA96G0ZF/78jSiiPQDzAqKtZia/6+2T5Tc9
-	FydJwRLf9EKp74DQYi+OvBQkDJxqHfbKAUKYuPcqzTzcGFiLpZLVzo+Lgy42ZXgKnKELdXkZJmL
-	EAsRkveaFUhkV+bA+xhZSzXb6AqpL66B1cgMgFjpWYF+xoT4nlgMPRL7zZXaxmwsFstZ7UfBSOq
-	ZCUPWN8417JkjgHqiNdqhGkQ00W/nwaxd+1qkvD+kY5+GI8eawRt3tdkrPa/2jm/IJYNsMOlVoF
-	f7jPLOZWUlXAidbXNcOVYy2pnIS88feNGRcSBswUbCd1R
-X-Received: by 2002:a5d:6b81:0:b0:3a5:3517:de3e with SMTP id ffacd0b85a97d-3a6ed6420cdmr3172710f8f.35.1750875856337;
-        Wed, 25 Jun 2025 11:24:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHrWcD2BmAgCu51Qrm6UZlWp1JBNezQX6VsTDpw3DYUC3CMNPIqLe+/s/lJCX/lnLe+ooULHg==
-X-Received: by 2002:a5d:6b81:0:b0:3a5:3517:de3e with SMTP id ffacd0b85a97d-3a6ed6420cdmr3172692f8f.35.1750875855768;
-        Wed, 25 Jun 2025 11:24:15 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f12:1b00:5d6b:db26:e2b7:12? (p200300d82f121b005d6bdb26e2b70012.dip0.t-ipconnect.de. [2003:d8:2f12:1b00:5d6b:db26:e2b7:12])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80f2977sm5384651f8f.63.2025.06.25.11.24.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 11:24:15 -0700 (PDT)
-Message-ID: <cba29ce0-24ef-4cef-9e54-74418c55c217@redhat.com>
-Date: Wed, 25 Jun 2025 20:24:14 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C27D2D6633;
+	Wed, 25 Jun 2025 18:24:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.94
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750875866; cv=fail; b=nyzTzibBo/n9JriwKvImPWGS0rvRO9qyNtlxpkLSBh4Drlj93dDomyxM3JVLsu8PHb6ShwNJqZPswApY48Sqasl7P4MjI6QuX4pVMFABmt9XUjAHstggSpMkmAVlkinJHOyzXAk/Cxe6KzZqx5BYWDYuGu3bB9umS9Rc9QBRjss=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750875866; c=relaxed/simple;
+	bh=E7zjMNx/ptzWdQJoCI0CCfnmnjhyE3w/Kz0qBG8h7Ho=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=b6/0LLMGU0/OWk+5O2+INKABUaDH0BjsbT9xOVAWTabU4v/0MTv82n98MMIjW+RKp4MF3MIX068ynACfrrFzFAjHnPf0o2nSFvszVRJqISpEUz7OSpwOw2bH+F1kc1+2GlNtDy83B0Qc2QHznkryVD35hp0FCgiLhzaDj4Zudwo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com; spf=pass smtp.mailfrom=talpey.com; arc=fail smtp.client-ip=40.107.236.94
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=talpey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=talpey.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=lSmRNdTbWFcKjxNa21g0Or38fbx5B1gEfZUqMNK9Njvk4/FciuIVgjr3SGT0dkH8359YKoOQkwwi6xMDZotBPQrjCXgSeHkG2DKIeI7EUqTi/0N0FDi6IiqhZ0ISrQCnGrkaLbuuP+No9Xd4jgodjx6VU0KuISHe0j4ZY0xwtAC1UnSVDZakLw7tsyGNkFMdGl9UWIZi9zMj8XxKz6Lc1IJ8T67MnSD7rrrDmYK5Ol+YGjnLlL1MJM2aHgaQ4hXkBcJ2gWUf2x6cicgQVwDBkmYUCWxJC7EjdrylbqREQHxbARWWxYZroqAiH3LefxIGZp8jTk1HZAed961ObIa+HQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=W/hJNO4LSjDvBINtJLorvk4nElVFpDPRP9twB+J/ntg=;
+ b=Oj35carvZWnodxsBpysNS6sA7iPeqh8hXkW+qwsP/7/iUoRh4uVrr142PTnEPF1XsHc+QngumIj93/K8lA69sHxlgTfxeDeDXorSW275VflsqteylgzVv4cQBa/0WFKE7uEbbcrE+J0LmXe4MOP+wt0khRyLgPB/+R7YXLdn4JiotRVjVH6czCQCNjBf5HjCi1O9nNjR3mhta99UKOYOA7YHdwrA9YVM6iZnz8jzF3l7QYKBHZFoGNQY/vprXWQsYTFf0PS+dehhJFGA5OFGVtg0jyCYIFaSWAEWtaoX6vWSLwZRKdgXWkFVe5VZQ5ViuuFiRCyAYcBcVhL2eqdYew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=talpey.com; dmarc=pass action=none header.from=talpey.com;
+ dkim=pass header.d=talpey.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=talpey.com;
+Received: from BL3PR01MB7099.prod.exchangelabs.com (2603:10b6:208:33a::10) by
+ SA3PR01MB8014.prod.exchangelabs.com (2603:10b6:806:31c::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8857.30; Wed, 25 Jun 2025 18:24:19 +0000
+Received: from BL3PR01MB7099.prod.exchangelabs.com
+ ([fe80::e81a:4618:5784:7106]) by BL3PR01MB7099.prod.exchangelabs.com
+ ([fe80::e81a:4618:5784:7106%5]) with mapi id 15.20.8880.015; Wed, 25 Jun 2025
+ 18:24:19 +0000
+Message-ID: <9e58524a-856c-4efe-80c5-195bc7b55743@talpey.com>
+Date: Wed, 25 Jun 2025 14:24:17 -0400
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 12/16] cifs: Fix reading into an ITER_FOLIOQ from the
+ smbdirect code
+To: David Howells <dhowells@redhat.com>, Stefan Metzmacher <metze@samba.org>
+Cc: Christian Brauner <christian@brauner.io>, Steve French
+ <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
+ netfs@lists.linux.dev, linux-afs@lists.infradead.org,
+ linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+ ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Steve French <stfrench@microsoft.com>, Matthew Wilcox <willy@infradead.org>
+References: <658c6f4f-468b-4233-b49a-4c39a7ab03ab@samba.org>
+ <20250625164213.1408754-1-dhowells@redhat.com>
+ <20250625164213.1408754-13-dhowells@redhat.com>
+ <1422741.1750874135@warthog.procyon.org.uk>
+Content-Language: en-US
+From: Tom Talpey <tom@talpey.com>
+In-Reply-To: <1422741.1750874135@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MN2PR12CA0006.namprd12.prod.outlook.com
+ (2603:10b6:208:a8::19) To BL3PR01MB7099.prod.exchangelabs.com
+ (2603:10b6:208:33a::10)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/3] mm/memory.c: convert __copy_remote_vm_str() to
- folios
-To: Matthew Wilcox <willy@infradead.org>,
- "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Jordan Rome <linux@jordanrome.com>, Andrew Morton <akpm@linux-foundation.org>
-References: <20250625174841.1094510-1-vishal.moola@gmail.com>
- <20250625174841.1094510-2-vishal.moola@gmail.com>
- <aFw5NuCbgJOBmG97@casper.infradead.org>
-Content-Language: en-US
-From: David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwZgEEwEIAEICGwMGCwkIBwMCBhUIAgkKCwQW
- AgMBAh4BAheAAhkBFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl8Ox4kFCRKpKXgACgkQTd4Q
- 9wD/g1oHcA//a6Tj7SBNjFNM1iNhWUo1lxAja0lpSodSnB2g4FCZ4R61SBR4l/psBL73xktp
- rDHrx4aSpwkRP6Epu6mLvhlfjmkRG4OynJ5HG1gfv7RJJfnUdUM1z5kdS8JBrOhMJS2c/gPf
- wv1TGRq2XdMPnfY2o0CxRqpcLkx4vBODvJGl2mQyJF/gPepdDfcT8/PY9BJ7FL6Hrq1gnAo4
- 3Iv9qV0JiT2wmZciNyYQhmA1V6dyTRiQ4YAc31zOo2IM+xisPzeSHgw3ONY/XhYvfZ9r7W1l
- pNQdc2G+o4Di9NPFHQQhDw3YTRR1opJaTlRDzxYxzU6ZnUUBghxt9cwUWTpfCktkMZiPSDGd
- KgQBjnweV2jw9UOTxjb4LXqDjmSNkjDdQUOU69jGMUXgihvo4zhYcMX8F5gWdRtMR7DzW/YE
- BgVcyxNkMIXoY1aYj6npHYiNQesQlqjU6azjbH70/SXKM5tNRplgW8TNprMDuntdvV9wNkFs
- 9TyM02V5aWxFfI42+aivc4KEw69SE9KXwC7FSf5wXzuTot97N9Phj/Z3+jx443jo2NR34XgF
- 89cct7wJMjOF7bBefo0fPPZQuIma0Zym71cP61OP/i11ahNye6HGKfxGCOcs5wW9kRQEk8P9
- M/k2wt3mt/fCQnuP/mWutNPt95w9wSsUyATLmtNrwccz63XOwU0EVcufkQEQAOfX3n0g0fZz
- Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
- T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
- 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
- CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
- NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
- 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
- 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
- lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
- AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
- N7eop7uh+6bezi+rugUI+w6DABEBAAHCwXwEGAEIACYCGwwWIQQb2cqtc1xMOkYN/MpN3hD3
- AP+DWgUCXw7HsgUJEqkpoQAKCRBN3hD3AP+DWrrpD/4qS3dyVRxDcDHIlmguXjC1Q5tZTwNB
- boaBTPHSy/Nksu0eY7x6HfQJ3xajVH32Ms6t1trDQmPx2iP5+7iDsb7OKAb5eOS8h+BEBDeq
- 3ecsQDv0fFJOA9ag5O3LLNk+3x3q7e0uo06XMaY7UHS341ozXUUI7wC7iKfoUTv03iO9El5f
- XpNMx/YrIMduZ2+nd9Di7o5+KIwlb2mAB9sTNHdMrXesX8eBL6T9b+MZJk+mZuPxKNVfEQMQ
- a5SxUEADIPQTPNvBewdeI80yeOCrN+Zzwy/Mrx9EPeu59Y5vSJOx/z6OUImD/GhX7Xvkt3kq
- Er5KTrJz3++B6SH9pum9PuoE/k+nntJkNMmQpR4MCBaV/J9gIOPGodDKnjdng+mXliF3Ptu6
- 3oxc2RCyGzTlxyMwuc2U5Q7KtUNTdDe8T0uE+9b8BLMVQDDfJjqY0VVqSUwImzTDLX9S4g/8
- kC4HRcclk8hpyhY2jKGluZO0awwTIMgVEzmTyBphDg/Gx7dZU1Xf8HFuE+UZ5UDHDTnwgv7E
- th6RC9+WrhDNspZ9fJjKWRbveQgUFCpe1sa77LAw+XFrKmBHXp9ZVIe90RMe2tRL06BGiRZr
- jPrnvUsUUsjRoRNJjKKA/REq+sAnhkNPPZ/NNMjaZ5b8Tovi8C0tmxiCHaQYqj7G2rgnT0kt
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <aFw5NuCbgJOBmG97@casper.infradead.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL3PR01MB7099:EE_|SA3PR01MB8014:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7129fe3f-efa8-46a1-841d-08ddb4157fc8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WjBRMStmdGpWR0h3SXh6L1YrRVFiaVlLYm1vcU01YWd2dDVYaGR4aGpYZ0ZE?=
+ =?utf-8?B?RkNtZkxoRkl2SVFicmY0NDhxNkQ3MjE0K3ZVNjhqRzFPK1ZSd0tLYmFDRGdD?=
+ =?utf-8?B?MmVvZElndkZFbFBWelRnVkE5ZG5rQjlLcHl3NkZJSjVxYytCQmZMZDluTTNt?=
+ =?utf-8?B?NTh4T2U1eFUrNzZpa2ZGTm1UeEhKaW5FU2d0YXllTndkMkJuYS9LRy9Ua05l?=
+ =?utf-8?B?UUlWdkFWeW9ESnFLUVBTVXpJcVpRTjJzOUp4M2FYZm9wRTVYZzYzeVdvQmVN?=
+ =?utf-8?B?Zi9UNWVqWTZqT2p5eFYybzBXVjhkaTZHK1hYSVE1cGZYb3FLK2lJa0xTU3d6?=
+ =?utf-8?B?TGJieU9KVU90ZnlmYkV6TUZmQldYeHhrTmxrR2o2MlJ6RDN0L2toREhRS3RK?=
+ =?utf-8?B?OWlGZk4yU2FLc0xscTF2cWxqMkgyWUlyaHU2S0thRzhDd3piSFlZcU8vOWRx?=
+ =?utf-8?B?bVoxT2pEb001eTg5aDJqOFBZYVdrb214VjdpQkNFV2h0eStMVnphbUNhWmVy?=
+ =?utf-8?B?QlJoYWV2cWcwbCswTVNROGhBbm1yVU12S1ltbXYrVHdmRzF5MTZ1V3EyUEJI?=
+ =?utf-8?B?Y2ZDeVFidDNCN29xOVdkRnIydGJKUE9KTlJOOXlwaEtNZFVVVGJRUDNqOTNY?=
+ =?utf-8?B?c1JSbHFGOHNEY29pamt1cGxoS2VZSzhjR3NVK3pDMWQ4VUQ2UUhqNkRNbm9i?=
+ =?utf-8?B?bzFmVW5kODRXN3FHZm5KMkR0RHdYR0FBVTU3c2twYXc4S0tKVmEzWFNVSnl2?=
+ =?utf-8?B?Sld3U3pMRExPNVRqRHNhNStHeDgxY1lZM3pQejhTRTc3WGJvczg1S3c1TVNV?=
+ =?utf-8?B?V0FMalZtenk2NjczN00vY3ZoalF3R2FYVjNHWkZ5Tm9ZVitiOWRrYXNnQTEx?=
+ =?utf-8?B?OFJDVlk2NlVRS0FPaGJra0g1QWNvMGJxOTZ0NG1MSnMrdjhxelBNSWh0TkM1?=
+ =?utf-8?B?VWVPVjlqUi9hZTQvbDlyQVlzMlhFQVp0UWFDT0NwTTFXbGtiUXJKQnpnYTZu?=
+ =?utf-8?B?R28ycGd6WHFTZ3FqZzRpdXByd3ZxWFpTUUJrMDhiSk1WblNpcWhhM2hNMU1T?=
+ =?utf-8?B?U25MSjJFK3JPSzlSV2l3eDB5TnR3ejBETStDaFJxWTh4bUJOSFRNQi93RGhZ?=
+ =?utf-8?B?RmZITTRGWDk2ZkhieE5qTjRDVnUyQ1RpL2thVE85dDZWZnhOYk03WVFnaWpt?=
+ =?utf-8?B?NVRYMy9VVEJMZnRvaEQ5RDFRM0UyN3BOTlVhRWo1c2FKb3FYWDZPTlhzUFdE?=
+ =?utf-8?B?b3pTTFRnS2NaYzlRVElaQ2d4KzZQczE3NGh0U2QrQVZQNmtzOFAxczhCTlYv?=
+ =?utf-8?B?bHF0cGl0WEZFNEw2Z1VWR2VCYmFlZi9TdUVqelIzcjBxckZHMmQ0NVNGb0pu?=
+ =?utf-8?B?VFpLWWpnajRObFNzVWhJbWRjTklLZnhtaGZYTjVtSzJLQmw0bk5XMXZSalpW?=
+ =?utf-8?B?UDVMZnRucDBwZjdKT3JQNm0vYkVyZ0grT1dBRExjakVmZE9uSSszM0JBWDdt?=
+ =?utf-8?B?S2V3UzA5Y0VNbG5oQnZ3cGJlZi9BczM3UWVBeUVCTHF6NnlKSkNqY3BrQjNZ?=
+ =?utf-8?B?bkh0azdlYjRDWDRTb1F6eDRRblozUVUySzUzVUtVNjY4TU5iRFBXclFyL0g4?=
+ =?utf-8?B?ZnMzQXhxL3pkNnJSOEUvem5MWWFBb25nSkRmS3ZLcjhyc0l5bWNHZ1QzWFNW?=
+ =?utf-8?B?TjQ4NGVnaG1YNGh0QlpRWGtKeXNKTVJ5cUttNUdpaXVFRVcwQ3Z3NEM4S0Vv?=
+ =?utf-8?B?TlZ1ODN1QUgrR2dyN1dNOWgvc1dTR3g5RDYybW9NdjNYNFh0ZlVzeE1xTEov?=
+ =?utf-8?B?REZSTEJMUTF0T0dpa3V5ZFIwWjB1RzFkVVplSHkzdFhrb0hxTFAyZE1XUTFN?=
+ =?utf-8?B?LzQ1NFQ3QURkaUUzcm5Tc0p1eTd2NXBxVG5yNzN5d3E2VEE9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL3PR01MB7099.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?anRxdFR4Y1JVbnRVSTRUMXBCcCtDdVUyNC9iY3g1ZG5WdVdoVlJ3K25vdjlv?=
+ =?utf-8?B?RDZJdzJPTUpIN3o2OTBkQnhWenpNZkQxTW1KZStwand0NGFxaU4ybWthTndr?=
+ =?utf-8?B?MTEvekFvUVZXekwvU0FrY1BiN0MzYXh6K3NkdkkrVzNLSGcvd2hCdzJsTmRD?=
+ =?utf-8?B?bUhuNDhiTDJpM2FrbkFTVXFxd2ZQd0xSeTRjbTE0ZEpyRkk4anE0c1dLanNm?=
+ =?utf-8?B?eE9ZMk1PSXJkTXJMZ0xoN2lwK0Fubis4NFdGbFlmUHR5UDlRb2F4bU4xbmZQ?=
+ =?utf-8?B?TVlzaUFDdlF5am9RakwxeWMzT3JFakpQY3RBKytGdlZuKzVjMVFjTTg4MWRB?=
+ =?utf-8?B?blMrVjU2cjR2RVRSWFMzS29GT2lzdjdmMWxvMTA4N0ozVktSU09wblVBamtl?=
+ =?utf-8?B?RXRTUkhDM0RGV0lONGJXTW5mcDRHTHJpQ2h0dXBXWVNIQTRpd0N6Q25sM0d3?=
+ =?utf-8?B?N2NXMHRPQ0l1TmxRQlF3OVMvd3ovN0tXcWtHc21FVm1wNEdZQ1d6M2Uza0c4?=
+ =?utf-8?B?YTYvWlRHK1ZkaHJETlpkVkFQMXlZNnBuZExrbGQxYURPTzQ0cC8vTUoxYis2?=
+ =?utf-8?B?d09WajY2SHR0a2JYS0pMa2JlS0tnczBWQmtBMFZXU0l0d0dSclZIODJKMXpt?=
+ =?utf-8?B?UTd5MFBqWndwOFh0cnZFQmxub3crdjdXRFljQUo2RnlnT1k2bmd0RmVKU0ZK?=
+ =?utf-8?B?Rjh2dnFnM2NSUDAzM3pqTmM5VU9NaFh1bnM1VlhXc04xV0JIckZSbVd4LytE?=
+ =?utf-8?B?aVgybEk4dHdvNTFsNWlCN2NUT0VlRkJTSGRFc1M1YVFES2thZE5wbkI3b0Fv?=
+ =?utf-8?B?aHNmVGs1NnRuWjRWV0MzWlBXMGMzaXhnVkRiS21RMC83UWpQWDh6emljQmZl?=
+ =?utf-8?B?ZUxrTHd6ckJ0Z1IxckhuQ1ZaZmxGMDJHU2JDbHNtWTJkQU1DZGhIMkdpd25V?=
+ =?utf-8?B?bUlFWXMwZnRhYTI1cm1QdUc4bGxRWWtiTVZLNHR3UFE3RERrck1ERlFTUFNH?=
+ =?utf-8?B?aUJnNlM0b2M1bVBIME0rejdwWTRwaE9pTXpQTk0vMk9RVExGaFlSb2tnODJr?=
+ =?utf-8?B?bFhuY1dLNzNvVU1jN3RHbWpYVStxSi9xeGxPZlFDdzM2alppRFVPN0N1K0xP?=
+ =?utf-8?B?Wmx6MVFza0IwTFQvUHFyazFqdVNPQVJhTmJ4OENkZWFjQXJQL0s0MGttZ3Q5?=
+ =?utf-8?B?dXFmVU1RQjU4akFsL253K0JMcVZMOUlrWlJrNStCQUw0MkNVRW9IcXNtcTMz?=
+ =?utf-8?B?bUxlOWpSYzQ1a2pvY0JESWQyQ202VlROWmpkT2tOVGFwL3NmYkRCNVI0YTI3?=
+ =?utf-8?B?VER6L09vT3BBOUtURHhpdURiQTJlckxjb25vY1lJVVVNVlhUOXNJbDBzN0ts?=
+ =?utf-8?B?Z3JiMHQwQkkvaDVJQ0dUdGpvQzJVcTAzNUQvNlpZNXA0aFBpZmEyQTlueXNS?=
+ =?utf-8?B?azg2SUEwVnpjMDN0WU8zN3c2T2VHNFozaDQrYTV2UGtLcUtkS2NhNUZpYk0x?=
+ =?utf-8?B?SGY3bEVLWVpOZnEzV285WmFlVUxsaGdGNmRVR2svWnVqS2xubmxsQUd1L3RB?=
+ =?utf-8?B?WmZoZkZKRHdqcFkzN2tCdE1raTNPVmg5ZzZ3eXpZc0s0UmE5VU95NmFBbGNJ?=
+ =?utf-8?B?MG9NWUlHOWRJQzRSVnNzRmZPa05IZDErTnBSczNQZ21rcGttOGF4ck5scGhy?=
+ =?utf-8?B?ZklIRFFFWmV1MnhMZXBUdmxmTytJbm9OSlE4bko2MXVZNWFiNHdKZmlLSVlk?=
+ =?utf-8?B?Y0VZSGNGNXQ0U05KZmxUMy9jNnFsaU5rd0VNRGFvWWY0cFZTMG5wUzlJYmVQ?=
+ =?utf-8?B?cUNwM0FGbFpLMFEycDY1RGxTV2dDbDBzVlJNZW5rd0FlTmMxcGd5RlVpNDBC?=
+ =?utf-8?B?M1FFWE9nbnRKL1lsUnVOSEU2aXByYmdDb0NTcFFQUXN2Y0xiQWY0Y1ZvWHhj?=
+ =?utf-8?B?WnZqWXg1TjlkMEF3dnltelBqQnowWWtXRkdqcW9IcHU3RW5pb0crSUFlbndZ?=
+ =?utf-8?B?TXFCTTJjUFRjYmptR0FtbTRscXM5RVoyQ2tHTTVvRmFwUDNHRTlaVDJCQklr?=
+ =?utf-8?B?aUUrT3RXc0JNWC9QU0ZXTGtpWDVpbTNCa2REc1lVQUhWL2NqMnZnN0VISFo5?=
+ =?utf-8?Q?+LLU=3D?=
+X-OriginatorOrg: talpey.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7129fe3f-efa8-46a1-841d-08ddb4157fc8
+X-MS-Exchange-CrossTenant-AuthSource: BL3PR01MB7099.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 18:24:18.9800
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 2b2dcae7-2555-4add-bc80-48756da031d5
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: AR+4KbY+6KVsGoHAt7vtaxqB03Wa61EKJ5AsvQod0OriBy7hTvcozQzfJMcUhcfe
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR01MB8014
 
-On 25.06.25 20:00, Matthew Wilcox wrote:
-> On Wed, Jun 25, 2025 at 10:48:39AM -0700, Vishal Moola (Oracle) wrote:
->> +++ b/mm/memory.c
->> @@ -6820,9 +6820,10 @@ static int __copy_remote_vm_str(struct mm_struct *mm, unsigned long addr,
->>   	}
->>   
->>   	while (len) {
->> -		int bytes, offset, retval;
->> +		int bytes, folio_offset, page_offset retval;
+On 6/25/2025 1:55 PM, David Howells wrote:
+> Stefan Metzmacher <metze@samba.org> wrote:
 > 
-> offset_in_folio() returns a size_t so that we can support folios larger
-> than 2GB (which is a real possibility here; hugetlbfs might end up with
-> a 16GB folio on some architectures).
+>>>    read_rfc1002_done:
+>>> +		/* SMBDirect will read it all or nothing */
+>>> +		msg->msg_iter.count = 0;
+>>
+>> I think we should be remove this.
+>>
+>> And I think this patch should come after the
+>> CONFIG_HARDENED_USERCOPY change otherwise a bisect will trigger the problem.
 > 
->> @@ -6837,17 +6838,20 @@ static int __copy_remote_vm_str(struct mm_struct *mm, unsigned long addr,
->>   			goto out;
->>   		}
->>   
->> +		folio = page_folio(page);
->>   		bytes = len;
->> -		offset = addr & (PAGE_SIZE - 1);
->> -		if (bytes > PAGE_SIZE - offset)
->> -			bytes = PAGE_SIZE - offset;
->> +		folio_offset = offset_in_folio(folio, addr);
+> Okay, done.  I've attached the revised version here.  I've also pushed it to
+> my git branch and switched patches 12 & 13 there.
 > 
-> Umm.  Not sure this is safe.  A folio might be mapped misaligned, so
-> 'addr' might not give you the right offset within the folio.  I think
-> you might need to use addr - (vma->vm_pgoff << PAGE_SHIFT).  But I'd
-> defer to others here ... particularly when it comes to anonymous folios.
+> David
+> ---
+> cifs: Fix reading into an ITER_FOLIOQ from the smbdirect code
+> 
+> When performing a file read from RDMA, smbd_recv() prints an "Invalid msg
+> type 4" error and fails the I/O.  This is due to the switch-statement there
+> not handling the ITER_FOLIOQ handed down from netfslib.
+> 
+> Fix this by collapsing smbd_recv_buf() and smbd_recv_page() into
+> smbd_recv() and just using copy_to_iter() instead of memcpy().  This
+> future-proofs the function too, in case more ITER_* types are added.
+> 
+> Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
+> Reported-by: Stefan Metzmacher <metze@samba.org>
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Steve French <stfrench@microsoft.com>
+> cc: Tom Talpey <tom@talpey.com>
+> cc: Paulo Alcantara (Red Hat) <pc@manguebit.com>
+> cc: Matthew Wilcox <willy@infradead.org>
+> cc: linux-cifs@vger.kernel.org
+> cc: netfs@lists.linux.dev
+> cc: linux-fsdevel@vger.kernel.org
+> ---
+>   fs/smb/client/smbdirect.c |  112 ++++++----------------------------------------
+>   1 file changed, 17 insertions(+), 95 deletions(-)
+> 
+> diff --git a/fs/smb/client/smbdirect.c b/fs/smb/client/smbdirect.c
+> index 0a9fd6c399f6..754e94a0e07f 100644
+> --- a/fs/smb/client/smbdirect.c
+> +++ b/fs/smb/client/smbdirect.c
+> @@ -1778,35 +1778,39 @@ struct smbd_connection *smbd_get_connection(
+>   }
+>   
+>   /*
+> - * Receive data from receive reassembly queue
+> + * Receive data from the transport's receive reassembly queue
+>    * All the incoming data packets are placed in reassembly queue
+> - * buf: the buffer to read data into
+> + * iter: the buffer to read data into
+>    * size: the length of data to read
+>    * return value: actual data read
+> - * Note: this implementation copies the data from reassebmly queue to receive
+> + *
+> + * Note: this implementation copies the data from reassembly queue to receive
+>    * buffers used by upper layer. This is not the optimal code path. A better way
+>    * to do it is to not have upper layer allocate its receive buffers but rather
+>    * borrow the buffer from reassembly queue, and return it after data is
+>    * consumed. But this will require more changes to upper layer code, and also
+>    * need to consider packet boundaries while they still being reassembled.
+>    */
+> -static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+> -		unsigned int size)
+> +int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
+>   {
+>   	struct smbdirect_socket *sc = &info->socket;
+>   	struct smbd_response *response;
+>   	struct smbdirect_data_transfer *data_transfer;
+> +	size_t size = iov_iter_count(&msg->msg_iter);
+>   	int to_copy, to_read, data_read, offset;
+>   	u32 data_length, remaining_data_length, data_offset;
+>   	int rc;
+>   
+> +	if (WARN_ON_ONCE(iov_iter_rw(&msg->msg_iter) == WRITE))
+> +		return -EINVAL; /* It's a bug in upper layer to get there */
+> +
+>   again:
+>   	/*
+>   	 * No need to hold the reassembly queue lock all the time as we are
+>   	 * the only one reading from the front of the queue. The transport
+>   	 * may add more entries to the back of the queue at the same time
+>   	 */
+> -	log_read(INFO, "size=%d info->reassembly_data_length=%d\n", size,
+> +	log_read(INFO, "size=%zd info->reassembly_data_length=%d\n", size,
+>   		info->reassembly_data_length);
+>   	if (info->reassembly_data_length >= size) {
+>   		int queue_length;
+> @@ -1844,7 +1848,10 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+>   			if (response->first_segment && size == 4) {
+>   				unsigned int rfc1002_len =
+>   					data_length + remaining_data_length;
+> -				*((__be32 *)buf) = cpu_to_be32(rfc1002_len);
+> +				__be32 rfc1002_hdr = cpu_to_be32(rfc1002_len);
+> +				if (copy_to_iter(&rfc1002_hdr, sizeof(rfc1002_hdr),
+> +						 &msg->msg_iter) != sizeof(rfc1002_hdr))
+> +					return -EFAULT;
 
-Not special to anon memory I think ... :)
+Shouldn't there be some kind of validity check on the rfc1002 length
+field before this? For example, the high octet of that field is
+required to be zero (by SMB) and the 24-bit length is not necessarily
+checked yet. The original code just returned the decoded value but
+this sticks it in the msg_iter. If that's safe, then ok but it seems
+odd.
 
-Only the offset within a page is okay to derive (existing code).
+Tom.
 
--- 
-Cheers,
-
-David / dhildenb
+>   				data_read = 4;
+>   				response->first_segment = false;
+>   				log_read(INFO, "returning rfc1002 length %d\n",
+> @@ -1853,10 +1860,9 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+>   			}
+>   
+>   			to_copy = min_t(int, data_length - offset, to_read);
+> -			memcpy(
+> -				buf + data_read,
+> -				(char *)data_transfer + data_offset + offset,
+> -				to_copy);
+> +			if (copy_to_iter((char *)data_transfer + data_offset + offset,
+> +					 to_copy, &msg->msg_iter) != to_copy)
+> +				return -EFAULT;
+>   
+>   			/* move on to the next buffer? */
+>   			if (to_copy == data_length - offset) {
+> @@ -1921,90 +1927,6 @@ static int smbd_recv_buf(struct smbd_connection *info, char *buf,
+>   	goto again;
+>   }
+>   
+> -/*
+> - * Receive a page from receive reassembly queue
+> - * page: the page to read data into
+> - * to_read: the length of data to read
+> - * return value: actual data read
+> - */
+> -static int smbd_recv_page(struct smbd_connection *info,
+> -		struct page *page, unsigned int page_offset,
+> -		unsigned int to_read)
+> -{
+> -	struct smbdirect_socket *sc = &info->socket;
+> -	int ret;
+> -	char *to_address;
+> -	void *page_address;
+> -
+> -	/* make sure we have the page ready for read */
+> -	ret = wait_event_interruptible(
+> -		info->wait_reassembly_queue,
+> -		info->reassembly_data_length >= to_read ||
+> -			sc->status != SMBDIRECT_SOCKET_CONNECTED);
+> -	if (ret)
+> -		return ret;
+> -
+> -	/* now we can read from reassembly queue and not sleep */
+> -	page_address = kmap_atomic(page);
+> -	to_address = (char *) page_address + page_offset;
+> -
+> -	log_read(INFO, "reading from page=%p address=%p to_read=%d\n",
+> -		page, to_address, to_read);
+> -
+> -	ret = smbd_recv_buf(info, to_address, to_read);
+> -	kunmap_atomic(page_address);
+> -
+> -	return ret;
+> -}
+> -
+> -/*
+> - * Receive data from transport
+> - * msg: a msghdr point to the buffer, can be ITER_KVEC or ITER_BVEC
+> - * return: total bytes read, or 0. SMB Direct will not do partial read.
+> - */
+> -int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
+> -{
+> -	char *buf;
+> -	struct page *page;
+> -	unsigned int to_read, page_offset;
+> -	int rc;
+> -
+> -	if (iov_iter_rw(&msg->msg_iter) == WRITE) {
+> -		/* It's a bug in upper layer to get there */
+> -		cifs_dbg(VFS, "Invalid msg iter dir %u\n",
+> -			 iov_iter_rw(&msg->msg_iter));
+> -		rc = -EINVAL;
+> -		goto out;
+> -	}
+> -
+> -	switch (iov_iter_type(&msg->msg_iter)) {
+> -	case ITER_KVEC:
+> -		buf = msg->msg_iter.kvec->iov_base;
+> -		to_read = msg->msg_iter.kvec->iov_len;
+> -		rc = smbd_recv_buf(info, buf, to_read);
+> -		break;
+> -
+> -	case ITER_BVEC:
+> -		page = msg->msg_iter.bvec->bv_page;
+> -		page_offset = msg->msg_iter.bvec->bv_offset;
+> -		to_read = msg->msg_iter.bvec->bv_len;
+> -		rc = smbd_recv_page(info, page, page_offset, to_read);
+> -		break;
+> -
+> -	default:
+> -		/* It's a bug in upper layer to get there */
+> -		cifs_dbg(VFS, "Invalid msg type %d\n",
+> -			 iov_iter_type(&msg->msg_iter));
+> -		rc = -EINVAL;
+> -	}
+> -
+> -out:
+> -	/* SMBDirect will read it all or nothing */
+> -	if (rc > 0)
+> -		msg->msg_iter.count = 0;
+> -	return rc;
+> -}
+> -
+>   /*
+>    * Send data to transport
+>    * Each rqst is transported as a SMBDirect payload
+> 
+> 
 
