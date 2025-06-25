@@ -1,368 +1,225 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 207AD1F09A1
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:41:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CD2268C42;
+	Wed, 25 Jun 2025 14:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750862489; cv=none; b=sJoAktVN2JAy/81SPyCfofrwWWYdtYgZjRGL0eY8auDjyYjfQbAhggZZ741YtKw1XrbAU3MB5HmtMt6wo20UmBokfLMpXWYdx5bFU0rY4b64sEV/wmrbdI4FTm6Iw86Jl6L131OE/KJDxW/uCKf1HptSN5ECirSpgJk1kaH1R5o=
+	t=1750862497; cv=none; b=qDariLkbExGQDWg86aJ4fJod71w+idWZDw6sQUTDPJdYDrsiMYsl7H2Rh/zwm466HlBTnHnmSz4e2U+Qb/tBVXhgPyVLObnf3xh+4D3W3BAh0WuPDZCbJBva0OK5EshKDSYYp5MK8zSHEEc0Otw2iWTgEzkdRiZp5coJyK76iH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750862489; c=relaxed/simple;
-	bh=OByHNjmN/xaoYcZp3ws/ocDd7Iqgcjfde70VtKIxQEo=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ZyfG3+VkkGzaapKOyqpgxZ+CwBEU/j/eBy7N8RKXerIhxmAF8Ded0hdAnJL7t5Ob7P8Q2uLv9xIW+XeV+2i4bT7Do7ZQPr5jJhXBGTdx3r3PF1/hGs/28JjNu8Kr13zFE/sEsoCNWjg6LV0/H0gR1n1KQyj9idWl3duw0nZQRQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddba1b53e8so23524845ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:41:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750862486; x=1751467286;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XjoRFej/UKb8LuFDoRlRF1Np8CWhwwmwQcq7gCrq3vg=;
-        b=uBiju6EuXmZW4y+02RxvU0GhZYILFxdBI22X5qxx+r0BKixT+rQu5UfhVrxbi97tw7
-         APFQO7D/xYG8zgEO347U10c+dv7Jk1Z0exBko12KYDo9n3WsaM/TQeGQfE3d8xJnHBqW
-         Kurn1YIA1sSrjw3HapOVyNvnKEcnGK2OGWCt/ni92up+wj0osoGxVbFerYhSG79HcBr6
-         +eb9lhIlDspJcfYCd5jSRtSl5Hxr8qyR16JoDlYHDB/n5qPdbcXNrrpKvDv1e/LrvU0v
-         a4Pt2mCkgJoniX3t2+sONx0WiobkuKUlZ+F912iVxLlU6UYJsCUFdBlznL1E5QfOV1xj
-         NnxQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX0gogU/mfRT6hX0gRojgWROMofOq8KM+IRdbkOBIoIBU7begW3LjZiaRyotfNEhC6m02XBjPJMuRekSjY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweZL9ZeAbynUQSIZLg+49ixjImUb3dOgX832JEwiDn/XkA/Rke
-	0N5DyvI+KAAmky0FNIYIhRBeRn0dSSXMlW6Dx0r2W+pHlOtBNJCOd+E/fMyGhdCssVnaelpwtMS
-	1h3uzpSKw8aCtoNIVuNIJsQM++/FmlMHyEBMR1DzYuld0zztLNrEuyO598ks=
-X-Google-Smtp-Source: AGHT+IGUhXYBuDfGFwI0FKkrMRCOgbtkJD7xxrow/+iajmYcam1hY2is0OzHQPo/I0qDtDU3UUjpNtjL25Totmrl3lDoM1Cclo3V
+	s=arc-20240116; t=1750862497; c=relaxed/simple;
+	bh=G6puNagQFSMyUjbE+LIXearsZJYWlEPDrvFoYitM1po=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MX5Yg0MbdycTdWOavldiPfUOKDpfnzNU8ml6mzx31jaWkRH83o1FjV4zxI6WDT2bvEZIPQ83A4qEBsMXTx3egriO6Nz5MY8Nb4bEjRdT55K03TrAooqUGFQB/zdFeWyjKbPahFM+c+Oh36FTxaW2hS50AGgvtwm4E/v8WqxSTVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPTkFSpG; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPTkFSpG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C3CAC4CEEA;
+	Wed, 25 Jun 2025 14:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750862497;
+	bh=G6puNagQFSMyUjbE+LIXearsZJYWlEPDrvFoYitM1po=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RPTkFSpGXwsznlbnK1kUH0xY734FEMB9huWys+Ev9Cd+4RJT8ipohTvGXg1+rNrW2
+	 xZXfCYR8VgiqpycgDQJU81jj7xQmtcM7lUCtaXdTKEsFK07SBk0DaA58xdjAtQT/0f
+	 ErLdmRUotPrLCgcHkamQUiCRjkBx+tzhoSM6XbZ0szoBmgSrosAW8TAg6NPWKtKGyR
+	 7BtssmQmLb903HrvtT6vIoSUszrN5gfh8b46F9KOoPTmVlI1Rg8AbfNLeSEmq4iE5o
+	 wyhdS1BfCk4M1YjE+no4eesqtrBibQTlgAk4QmmTo/CGP2ZO4DNpPZontcAgGNLi4O
+	 gq/YUuVWNzbWQ==
+Message-ID: <27068fd3-92b5-402b-9f3c-fd786db56668@kernel.org>
+Date: Wed, 25 Jun 2025 16:41:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c24f:0:b0:3dc:8bb8:28a1 with SMTP id
- e9e14a558f8ab-3df3296d5ebmr39617735ab.14.1750862486178; Wed, 25 Jun 2025
- 07:41:26 -0700 (PDT)
-Date: Wed, 25 Jun 2025 07:41:26 -0700
-In-Reply-To: <67ea7949.050a0220.1547ec.0137.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685c0a96.a00a0220.2e5631.00d9.GAE@google.com>
-Subject: Re: [syzbot] [ext4?] KASAN: slab-use-after-free Read in ext4_ext_remove_space
-From: syzbot <syzbot+b73703b873a33d8eb8f6@syzkaller.appspotmail.com>
-To: adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com, tytso@mit.edu
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/8] dt-bindings: gpu: img,powervr-rogue: Add TH1520
+ GPU compatible
+To: Michal Wilczynski <m.wilczynski@samsung.com>,
+ Matt Coster <Matt.Coster@imgtec.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
+ Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns
+ <Frank.Binns@imgtec.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+References: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
+ <CGME20250623114436eucas1p1ab8455b32937a472f5f656086e38f428@eucas1p1.samsung.com>
+ <20250623-apr_14_for_sending-v6-5-6583ce0f6c25@samsung.com>
+ <9c82a6bc-c6ff-4656-8f60-9d5fa499b61a@imgtec.com>
+ <d154d2d0-3d59-4176-a8fb-3cb754cf2734@samsung.com>
+ <e1a3d854-93bc-4771-9b8e-1639ca57b687@kernel.org>
+ <d12fd4fb-0adb-40c4-8a0a-c685cd6327b3@samsung.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <d12fd4fb-0adb-40c4-8a0a-c685cd6327b3@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-syzbot has found a reproducer for the following issue on:
+On 25/06/2025 16:18, Michal Wilczynski wrote:
+> 
+> 
+> On 6/25/25 15:55, Krzysztof Kozlowski wrote:
+>> On 25/06/2025 14:45, Michal Wilczynski wrote:
+>>>
+>>>
+>>> On 6/24/25 15:53, Matt Coster wrote:
+>>>> On 23/06/2025 12:42, Michal Wilczynski wrote:
+>>>>> Update the img,powervr-rogue.yaml to include the T-HEAD TH1520 SoC's
+>>>>> specific GPU compatible string.
+>>>>>
+>>>>> The thead,th1520-gpu compatible, along with its full chain
+>>>>> img,img-bxm-4-64, and img,img-rogue, is added to the
+>>>>> list of recognized GPU types.
+>>>>>
+>>>>> The power-domains property requirement for img,img-bxm-4-64 is also
+>>>>> ensured by adding it to the relevant allOf condition.
+>>>>>
+>>>>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>>> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+>>>>> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>>>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml | 9 ++++++++-
+>>>>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+>>>>> index 4450e2e73b3ccf74d29f0e31e2e6687d7cbe5d65..9b241a0c1f5941dc58a1e23970f6d3773d427c22 100644
+>>>>> --- a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+>>>>> @@ -21,6 +21,11 @@ properties:
+>>>>>            # work with newer dts.
+>>>>>            - const: img,img-axe
+>>>>>            - const: img,img-rogue
+>>>>> +      - items:
+>>>>> +          - enum:
+>>>>> +              - thead,th1520-gpu
+>>>>> +          - const: img,img-bxm-4-64
+>>>>> +          - const: img,img-rogue
+>>>>>        - items:
+>>>>>            - enum:
+>>>>>                - ti,j721s2-gpu
+>>>>> @@ -93,7 +98,9 @@ allOf:
+>>>>>        properties:
+>>>>>          compatible:
+>>>>>            contains:
+>>>>> -            const: img,img-axe-1-16m
+>>>>> +            enum:
+>>>>> +              - img,img-axe-1-16m
+>>>>> +              - img,img-bxm-4-64
+>>>>
+>>>> This isn't right – BXM-4-64 has two power domains like BXS-4-64. I don't
+>>>> really know what the right way to handle that in devicetree is given the
+>>>> TH1520 appears to expose only a top-level domain for the entire GPU, but
+>>>> there are definitely two separate domains underneath that as far as the
+>>>> GPU is concerned (see the attached snippet from integration guide).
+>>>>
+>>>> Since power nodes are ref-counted anyway, do we just use the same node
+>>>> for both domains and let the driver up/down-count it twice?
+>>>
+>>> Hi Matt,
+>>>
+>>> Thanks for the very helpful insight. That's a great point, it seems the
+>>> SoC's design presents a tricky case for the bindings.
+>>>
+>>> I see what you mean about potentially using the same power domain node
+>>> twice. My only hesitation is that it might be a bit unclear for someone
+>>> reading the devicetree later. Perhaps another option could be to relax
+>>> the constraint for this compatible?
+>>>
+>>> Krzysztof, we'd be grateful for your thoughts on how to best model this
+>>> situation.
+>>
+>>
+>> It's your hardware, you should tell us, not me. I don't know how many
+>> power domains you have there, but for sure it is not one AND two domains
+>> the same time. It is either one or two, because power domains are not
+>> the same as regulator supplies.
+> 
+> Hi Krzysztof, Matt,
+> 
+> The img,bxm-4-64 GPU IP itself is designed with two separate power
+> domains. The TH1520 SoC, which integrates this GPU, wires both of these
+> to a single OS controllable power gate (controlled via mailbox and E902
+> co-processor).
 
-HEAD commit:    9aa9b43d689e Merge branch 'for-next/core' into for-kernelci
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=1052df0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=27f179c74d5c35cd
-dashboard link: https://syzkaller.appspot.com/bug?extid=b73703b873a33d8eb8f6
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10809b70580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=106cbdd4580000
+This helps... and also sounds a lot like regulator supplies, not power
+domains. :/
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/974f3ac1c6a5/disk-9aa9b43d.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/a5b5075d317f/vmlinux-9aa9b43d.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/2f0ba7fec19b/Image-9aa9b43d.gz.xz
-mounted in repro: https://storage.googleapis.com/syzbot-assets/e99c31ce9609/mount_0.gz
-  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=13c1d182580000)
+> 
+> This means a devicetree for the TH1520 can only ever provide one power
+> domain for the GPU. However, a generic binding for img,bxm-4-64 should
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b73703b873a33d8eb8f6@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in ext4_ext_rm_leaf fs/ext4/extents.c:2627 [inline]
-BUG: KASAN: use-after-free in ext4_ext_remove_space+0x276c/0x37c8 fs/ext4/extents.c:2965
-Read of size 4 at addr ffff0000df6bdc18 by task syz-executor309/6516
-
-CPU: 1 UID: 0 PID: 6516 Comm: syz-executor309 Not tainted 6.16.0-rc2-syzkaller-g9aa9b43d689e #0 PREEMPT 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call trace:
- show_stack+0x2c/0x3c arch/arm64/kernel/stacktrace.c:501 (C)
- __dump_stack+0x30/0x40 lib/dump_stack.c:94
- dump_stack_lvl+0xd8/0x12c lib/dump_stack.c:120
- print_address_description+0xa8/0x254 mm/kasan/report.c:408
- print_report+0x68/0x84 mm/kasan/report.c:521
- kasan_report+0xb0/0x110 mm/kasan/report.c:634
- __asan_report_load4_noabort+0x20/0x2c mm/kasan/report_generic.c:380
- ext4_ext_rm_leaf fs/ext4/extents.c:2627 [inline]
- ext4_ext_remove_space+0x276c/0x37c8 fs/ext4/extents.c:2965
- ext4_ext_truncate+0x134/0x1d0 fs/ext4/extents.c:4484
- ext4_truncate+0x9c4/0xfe0 fs/ext4/inode.c:4574
- ext4_evict_inode+0x9b4/0x104c fs/ext4/inode.c:261
- evict+0x414/0x928 fs/inode.c:810
- iput_final fs/inode.c:1898 [inline]
- iput+0x6e4/0x83c fs/inode.c:1924
- do_unlinkat+0x338/0x4dc fs/namei.c:4657
- __do_sys_unlinkat fs/namei.c:4691 [inline]
- __se_sys_unlinkat fs/namei.c:4684 [inline]
- __arm64_sys_unlinkat+0xdc/0xf8 fs/namei.c:4684
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0xea pfn:0x11f6bd
-flags: 0x5ffc00000000000(node=0|zone=2|lastcpupid=0x7ff)
-raw: 05ffc00000000000 fffffdffc37daf88 fffffdffc37daf08 0000000000000000
-raw: 00000000000000ea 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff0000df6bdb00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff0000df6bdb80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->ffff0000df6bdc00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-                            ^
- ffff0000df6bdc80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
- ffff0000df6bdd00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-==================================================================
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 2244176752, count = 0
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 147072565182463, count = 27456
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 32928, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 175, count = 32767
-EXT4-fs error (device loop0): mb_free_blocks:1948: group 0, inode 18: block 145:freeing already freed block (bit 9); block bitmap corrupt.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 174
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 2244176584, count = 0
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 4
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 3036617056, count = 0
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 4294967295, count = 0
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 4294967280, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 199007309732176, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 199007309725695, count = 6492
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 111477107367824, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 111477107342893, count = 24934
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 111477107342880, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 121450642510224, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 121450642499955, count = 10272
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 121450642499952, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 35650244284304, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 35650244255805, count = 28515
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 35528778226320, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 35528778203731, count = 22601
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 35528778203728, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 44118729738928, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 44118729709645, count = 29285
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 44118729709632, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 35654476944544, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 35654476918595, count = 25956
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 109270199922864, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 109270199919971, count = 2898
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 109270199919968, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 121380089654400, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 121380089626904, count = 27503
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 121380089626896, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 13238790227568, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 13238790218593, count = 8978
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 133540988372176, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 133540988347760, count = 24421
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 133540988347760, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 121424907179424, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 121424907149882, count = 29546
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 121424907149872, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 48814256808672, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 48814256779888, count = 28793
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 23390391899024, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 23390391898899, count = 131
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 23390391898896, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 2
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 52983525039200, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 52983525026871, count = 12332
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 52966278390864, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 52966278377520, count = 13360
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 52966278377520, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 55182548283436, count = 12336
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 52983524777056, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 52983524765744, count = 11322
-------------[ cut here ]------------
-WARNING: CPU: 1 PID: 6516 at fs/ext4/mballoc.c:1908 mb_free_blocks+0xe7c/0x1260 fs/ext4/mballoc.c:1908
-Modules linked in:
-CPU: 1 UID: 0 PID: 6516 Comm: syz-executor309 Tainted: G    B               6.16.0-rc2-syzkaller-g9aa9b43d689e #0 PREEMPT 
-Tainted: [B]=BAD_PAGE
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : mb_free_blocks+0xe7c/0x1260 fs/ext4/mballoc.c:1908
-lr : mb_free_blocks+0xe7c/0x1260 fs/ext4/mballoc.c:1908
-sp : ffff8000a40e72a0
-x29: ffff8000a40e7320 x28: 0000000000000007 x27: 0000000000000000
-x26: ffff0000e3b7b268 x25: ffff0000e3b7b268 x24: dfff800000000000
-x23: ffff8000a40e7428 x22: dfff800000000000 x21: ffff0000dcfa26a4
-x20: 0000000000000000 x19: ffff0000dcfa0000 x18: 1fffe000337e1476
-x17: ffff80008f62e000 x16: ffff80008aecb65c x15: 0000000000000001
-x14: 1fffe0001b9f44d4 x13: 0000000000000000 x12: 0000000000000000
-x11: ffff60001b9f44d5 x10: 0000000000ff0100 x9 : 0000000000000000
-x8 : ffff0000c8175b80 x7 : ffff8000a40e7424 x6 : ffff8000810f91a0
-x5 : 0000000000000000 x4 : 0000000000000001 x3 : 0000000000000000
-x2 : 0000000000000007 x1 : 0000000000000000 x0 : 0000000000000000
-Call trace:
- mb_free_blocks+0xe7c/0x1260 fs/ext4/mballoc.c:1908 (P)
- ext4_mb_clear_bb fs/ext4/mballoc.c:6519 [inline]
- ext4_free_blocks+0xf6c/0x18e4 fs/ext4/mballoc.c:6651
- ext4_remove_blocks fs/ext4/extents.c:2551 [inline]
- ext4_ext_rm_leaf fs/ext4/extents.c:2716 [inline]
- ext4_ext_remove_space+0x1610/0x37c8 fs/ext4/extents.c:2965
- ext4_ext_truncate+0x134/0x1d0 fs/ext4/extents.c:4484
- ext4_truncate+0x9c4/0xfe0 fs/ext4/inode.c:4574
- ext4_evict_inode+0x9b4/0x104c fs/ext4/inode.c:261
- evict+0x414/0x928 fs/inode.c:810
- iput_final fs/inode.c:1898 [inline]
- iput+0x6e4/0x83c fs/inode.c:1924
- do_unlinkat+0x338/0x4dc fs/namei.c:4657
- __do_sys_unlinkat fs/namei.c:4691 [inline]
- __se_sys_unlinkat fs/namei.c:4684 [inline]
- __arm64_sys_unlinkat+0xdc/0xf8 fs/namei.c:4684
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall+0x98/0x2b8 arch/arm64/kernel/syscall.c:49
- el0_svc_common+0x130/0x23c arch/arm64/kernel/syscall.c:132
- do_el0_svc+0x48/0x58 arch/arm64/kernel/syscall.c:151
- el0_svc+0x58/0x17c arch/arm64/kernel/entry-common.c:767
- el0t_64_sync_handler+0x78/0x108 arch/arm64/kernel/entry-common.c:786
- el0t_64_sync+0x198/0x19c arch/arm64/kernel/entry.S:600
-irq event stamp: 23287
-hardirqs last  enabled at (23287): [<ffff80008aec8cb0>] __exit_to_kernel_mode arch/arm64/kernel/entry-common.c:85 [inline]
-hardirqs last  enabled at (23287): [<ffff80008aec8cb0>] exit_to_kernel_mode+0xc0/0xf0 arch/arm64/kernel/entry-common.c:95
-hardirqs last disabled at (23286): [<ffff80008aec689c>] __el1_irq arch/arm64/kernel/entry-common.c:580 [inline]
-hardirqs last disabled at (23286): [<ffff80008aec689c>] el1_interrupt+0x24/0x54 arch/arm64/kernel/entry-common.c:598
-softirqs last  enabled at (21110): [<ffff8000801fcf10>] local_bh_enable+0x10/0x34 include/linux/bottom_half.h:32
-softirqs last disabled at (21108): [<ffff8000801fcedc>] local_bh_disable+0x10/0x34 include/linux/bottom_half.h:19
----[ end trace 0000000000000000 ]---
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 53955348821872, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 53955348795914, count = 25973
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 53955348795904, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 11349257057649, count = 808
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 11349257057648, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 130152096189904, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 130152096164961, count = 24948
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 130152096164960, count = 16
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 274057454951360, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 274057454948322, count = 3041
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 187048375239104, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 187048375238123, count = 995
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 187048375238112, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 273782572856256, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 273782572850149, count = 6116
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 273782572850144, count = 16
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 121399102505152, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 121399102502003, count = 3154
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 107125092697296, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 107125092672877, count = 24421
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 107125092672864, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 11147376753520, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 11147376748813, count = 4709
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 11147376748800, count = 16
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 32768, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 6, count = 32767
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 20
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 2240614592, count = 0
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 2240614592, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 146840636948479, count = 8928
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 32768, count = 16
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 162744944121408, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 162744944116483, count = 4930
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 162744944116480, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 494727485440, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 494727479552, count = 5892
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 494727479552, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 4294255808, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 4294229272, count = 26540
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 30355232, count = 0
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 139685640869072, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 139685640864015, count = 5060
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 281470681743360, count = 32768
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 281474976743408, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 281474976710655, count = 32767
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 244838905695904, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 244838905675775, count = 20141
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 305399552, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 305388640, count = 10923
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 20010252675755, count = 22496
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 10912, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 10913
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 64
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 33424, count = 16
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 30317912, count = 0
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 188910748055552, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 188910748043273, count = 12291
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 8, count = 0
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 51539611440, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 51539607551, count = 3904
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 51539607536, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 0, count = 16
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 70429001517213, count = 16640
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 17179152208, count = 23584
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 71468255809232, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 71468255805451, count = 3796
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 71468255805440, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 241750150690528, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 241750150666716, count = 23818
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 241750150666704, count = 16
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 7308266, count = 0
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 7308256, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 523986010112, count = 6112
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 281470681743360, count = 32768
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 281474976743408, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 281474976710655, count = 32767
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 244838905695904, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 244838905675775, count = 20141
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 105524727857488, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 105524727841024, count = 16475
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 105524727841024, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 217230362534192, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 217230362532889, count = 1315
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 247360067207408, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 247360067207229, count = 191
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 247360067207216, count = 16
-EXT4-fs (loop0): unmounting filesystem 00000000-0000-0000-0000-000000000000.
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 281473147498488, count = 32768
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 281474976743408, count = 16
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 281474976710655, count = 32767
-EXT4-fs error (device loop0): ext4_free_blocks:6587: comm syz-executor309: Freeing blocks not in datazone - block = 281470681743375, count = 0
+If this was a supply, you would have two supplies. Anyway internal
+wirings of GPU do not matter in such case and more important what the
+SoC has wired. And it has one power domain.
 
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+> account for a future SoC that might implement both power domains.
+> 
+> That's why I proposed to relax the constraints on the img,bmx-4-64 GPU.
+
+This should be constrained per each device, so 1 for you and 2 for
+everyone else.
+
+Best regards,
+Krzysztof
