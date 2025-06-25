@@ -1,201 +1,478 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DB4D2BDC10
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:09:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D88A29ACF9;
+	Wed, 25 Jun 2025 11:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750849779; cv=none; b=gvzOF/spgYkFFkz0ZJ9UsGVW+9mlICa81/nK11noDytdJUGxRZB31Y7xqZus8IYoDoSnBJHsBOlUOoqXy5xDAO4GxeRDhzNSByTf29DzVPwtzPCe03YkhSfWjOPK48OzFPXky8TaV0raxpl84CV+920Pd8eMEbBhlwnOwu0RxL4=
+	t=1750849920; cv=none; b=XhN214pmxJlXr1uiUQkbrCLom/69nt77uOgwS/oEOJdevR3ie928uegIxCPRU3gbrj/mFfWA729yz1Dmlm6ZxaKDkdwvoHKQmG6NfxiCzlhxbkyuKoKbkPgH7irUi9/wR1MWWsq32qSP0fQDL/UHE+17q0s3SFpO/Pglb68urkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750849779; c=relaxed/simple;
-	bh=UgtKUBNmcIe1/baVYM1JSjbXZFPfwNr0SY+tyrbOsm4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gbo0f+Bc68FTlaBUCDHdzpMafAkOz0p2V+Tc+p787dhPd8E/bXUN3Gtu45pg4clNyt3ISlhlkZxYrIPkdoQN+4NSsaPgYT5Z9eTyzenabYgKs7uWBJ8UOdZIi8BuLJIqD9D6Pz/q2Tl/G5V/Tw9uK4mQAEtkYJXtvOigVUDE0Ig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=T/EWpjqs; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750849920; c=relaxed/simple;
+	bh=jHR0bPaYIi58VgUeOdBsTdTI1oZUfYjXFb+y4BCL5Nk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Kk+eeucAUcjOvY29uxLwMuBkOEIrKbGh/k7glhW6Kwp2aUhWCqr/BER0kdMYN1DSEihGWwdxosM4Ru1Dvciii8okCbpG5BXf+pydboR2K0QvUiYlANp1u6WavgjsJi0qsQlra3VGC50Qb1XG/yfL8K2aN7yzpL8XFRITXlyUJr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kKpmi56a; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T/EWpjqs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750849774;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=qmBWPFc1Ccib0whO3GfNxLkkUEaY/v2cjHvs4XBp0gE=;
-	b=T/EWpjqslGGW7D4BjzXyw5PqbBFFNdCcZ1rbLQD9yb0kdqoXQ/DB7fXp9rDSuaPK9EK404
-	5AfvQ/W0IFi6Syu3t7Q3Cv7Ryx3shC70ibN6mOUgwrLY9up6m285bXiWXqi1sutvWkg07q
-	oiVDuniR52LEqdylKoG0aryDWyDfwNw=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-120-OjTMZUpHP0yDEbHehiWQ2Q-1; Wed, 25 Jun 2025 07:09:32 -0400
-X-MC-Unique: OjTMZUpHP0yDEbHehiWQ2Q-1
-X-Mimecast-MFC-AGG-ID: OjTMZUpHP0yDEbHehiWQ2Q_1750849772
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d244bfabso51101885e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:09:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKpmi56a"
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7490cb9a892so695525b3a.0;
+        Wed, 25 Jun 2025 04:11:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750849917; x=1751454717; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=L2SqXIiCaVImBouPqYt5Pcr5G1n4XvOv6tRKQ2x6qxk=;
+        b=kKpmi56aoxBexrWGg/ABRyIHoaN+mZWDcwibAS2sY96TVRLlNzvAlR3q4BJHj8CB8h
+         MjJ/u16yfCJ3fF7zLCBMTKkbydIaMFBiEjJ4TJATpRZoHYoflRoTMl42Y2rLsU3nbqOE
+         EJqWDHFdMJE+sdMS7NnIGGTH4qZATk8pvBeRbX4vYh3Myv23Ci/i9V6kPDn8siU7DRmy
+         vlSeSDq5nPEqdSkgzTPWKq2Ny+etHJNHp2yXJhIj8eh14i8274z7VtrMChiGhx7Mt2H0
+         kmu3mY8YNgDCxJIpfkW8acolJ1sXuABJ7RtqeBirVtvLZ1ka0NOP0Rk6TG4vaWy0xtZ8
+         0/7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750849771; x=1751454571;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=qmBWPFc1Ccib0whO3GfNxLkkUEaY/v2cjHvs4XBp0gE=;
-        b=pshgR1ziHiBYsVzVUYtM/LvFWx313EdA6B1rFbhsEaX1VSbTqXm6hmnzg++0MbrdxX
-         bm8m20XZbMghttC3XRJ/UH68C+gSEwLVzE7NVnjJHGODg02CF1zI/cO9NkEqcAOhawrL
-         JDx4Ca9xT9aPFzCEypJ2kOFwq2/FgyZT4QFQgmU/x2JCplvBbtMjl1Guq2GS5wJuQB+9
-         aQcBwKHZ7OI/0B47QTuFkl7dpbT5jrFh7OieTNmY4fqDgZ9xK/YM4EPVDVD/JNjjJYw1
-         8HqkwJb/1bl+T4m877GEEE7yJ0e6rn/hQE2HRntaDvyzaCmP20dggvrOZIo1AmSIYU55
-         yzSA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/yuQv+qnQnbAkliNO26HjYO0Xbo0mr8jAbPugzUkTwKEyAYM3xpMiDHwudTG/Zr17yGDMlJJBsg7D/P0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxNvm7XRiViafqLvyz8yxCYewWsARal3VYs59BSuk18Kk48CmiF
-	RVc2DXrQfMZ9i4WaXsl+t0t+XAl0d+kMmwSg+yXq3RFpkvUWooNneDnz5952gul1wvi9t8reSMi
-	IUH6L/0xJ64YXQdb8qkVIhZQemjOUVEjbtuYQqztaYM43umImml3vb5QZV7eQfoMKgg==
-X-Gm-Gg: ASbGncuZOrdlaIQgxdzsz5ljFrdeZsFrQ8L4Cd0s1p86k+HDeHWTm05UBd53JpC8Fmm
-	cQfpiQG6THwHKKsEcZZYdPzhJ3SgQBYgX4A9uP0HRd23saIrxZnsggXBtGiG3ieRD7JyyS5pI/Q
-	aT+JE0NeVkeNKOUk8y+l31KP6fz5CyiDz2//SxKhJ/5fE9DHu7GQLMZJKX/kQe6IZTw2PIAHoH3
-	R6dn4kmhV/F276D+pVS3+FQaLdyjqXMO4Jc4DC0Wff4owosSZ+/f5gGZqno15+ro76inYD5/+DF
-	yVQ6iav+TbcecJR+Cu4Hjx/l5AB6rWLDv8QFxFP0/3IVkOITSA4aQ5uGTbcLmKo2wx+40OEq/pP
-	hsYzllErVUlT9n4jJCryrJ+eDXO7piXeOlXuXftmd/9PL
-X-Received: by 2002:a05:6000:4913:b0:3a4:d367:c591 with SMTP id ffacd0b85a97d-3a6ed5c7b26mr2056630f8f.10.1750849771575;
-        Wed, 25 Jun 2025 04:09:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGJL+R1nMhMjUmah6WqYReIZVqz1b0hBzvgjt41pI2x/YleKqT3OVk82IqOxqbVnGBYSuxkPA==
-X-Received: by 2002:a05:6000:4913:b0:3a4:d367:c591 with SMTP id ffacd0b85a97d-3a6ed5c7b26mr2056599f8f.10.1750849771131;
-        Wed, 25 Jun 2025 04:09:31 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f12:1b00:5d6b:db26:e2b7:12? (p200300d82f121b005d6bdb26e2b70012.dip0.t-ipconnect.de. [2003:d8:2f12:1b00:5d6b:db26:e2b7:12])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80ffeb8sm4326819f8f.73.2025.06.25.04.09.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 04:09:30 -0700 (PDT)
-Message-ID: <8d019d60-80c6-4e2a-a2bd-3a2868dbaa3f@redhat.com>
-Date: Wed, 25 Jun 2025 13:09:22 +0200
+        d=1e100.net; s=20230601; t=1750849917; x=1751454717;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L2SqXIiCaVImBouPqYt5Pcr5G1n4XvOv6tRKQ2x6qxk=;
+        b=Rt2qWihrqIrNBV2rFYXpn305y4PGYnR8xZRrJMC+TFCv2n1OICQUoMjHBeqnLSp5M2
+         sAdhQNiVxshmMjC3axC166oFVsBpzsjrHvFqH/FgioG9Swkn1ghHvqR4ag4+mGci6maS
+         3mHomej3jIbhC2p1MvJgZ91jVPawQUVXJ38pLWlp90Q3nG00Fd+vQH0yknKcIo8Aa71Q
+         X4Ea7gajsGHMtBFKLS8hznHc4F0QstyXMPE886irDW/eOBCfoPinagRcKaF0WDXeT3e+
+         yeLxNNK4xAWrmF/KTKn5eP88PSAo6VgbCALkA3OcOWR/P0aJ//xFMOZ/CgiDCkXS/PBC
+         EGQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWTGGFpg85yNGz9bicwA/DRvII+Bo2ooU1MdL71ER2Yq8PhStKr9FeJhoDqac/9LDOLN0d4FAgXPINz07b2hg==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYsVEwWP9ZMzZymlGStmfkgF17mNGxZ5+c25GqfVy5nKMjc9ZI
+	xoWotFT+erdvUBZDiUW6Qkz+A/cpkxOZNXQwGBMzZA8M421coY74PqgSZYWzU0Af
+X-Gm-Gg: ASbGncvqX7lmwsxnjOZCy6dIznOnoVW/MZwliKldiwB63w0yJuipCux6r/RYpGXMIOI
+	zX6CqPoZeDZqHS0EC1wRo1EDQ5ucldt1J1LBFDRySxU7YxKPf37Dn4dKDQMRy7LOnfJnvmyO7XI
+	BxXWyHrKDdvcNtKcjdsCDxJlraqjRupQ0xZ7k1kLgnUpm/1UU1rQdgrqzEPK7OJLv3BUeyxz5oy
+	thWOWcd/o7owvE2ZmBCM75kvaXAm6Qw/f889ira0h7Sm+uU2nhH4L/WTNkOZd6mM6YlkIa/+eA3
+	uHwVmI9oyIgcSDPuNUCGRWM3oqQ3kCcLfG8I64Pw/5iP0q05LdWFQzx8UPAWROSBo0mxeJWBp85
+	QGsPZ
+X-Google-Smtp-Source: AGHT+IEt9pRkhmBu+/7O4yXM8DWTP8mMPoKirlHTiHDNGGoTSyB/gIGQ3q9P82PCR7W0FP9OSQNOQA==
+X-Received: by 2002:a05:6a20:748f:b0:220:105b:46dd with SMTP id adf61e73a8af0-2207f2fb655mr4957531637.36.1750849917189;
+        Wed, 25 Jun 2025 04:11:57 -0700 (PDT)
+Received: from shankari-IdeaPad.. ([2409:4080:10:4ef8:7bae:5763:c10a:8810])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b34aabc3842sm2561417a12.50.2025.06.25.04.11.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 04:11:56 -0700 (PDT)
+From: Shankari Anand <shankari.ak0208@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	patches@lists.linux.dev
+Cc: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Shankari Anand <shankari.ak0208@gmail.com>
+Subject: [PATCH v2 1/2] rust: move ARef and AlwaysRefCounted to sync::aref
+Date: Wed, 25 Jun 2025 16:41:32 +0530
+Message-Id: <20250625111133.698481-1-shankari.ak0208@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] fix MADV_COLLAPSE issue if THP settings are
- disabled
-To: Usama Arif <usamaarif642@gmail.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Hugh Dickins <hughd@google.com>
-Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
- ziy@nvidia.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
- zokeefe@google.com, shy828301@gmail.com, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>
-References: <cover.1750815384.git.baolin.wang@linux.alibaba.com>
- <75c02dbf-4189-958d-515e-fa80bb2187fc@google.com>
- <f1782ae5-c1d6-4f46-a676-666505990f4d@lucifer.local>
- <008ec97f-3b33-4b47-a112-9cef8c1d7f58@redhat.com>
- <f366ce31-582c-4f90-bc32-05ddf3e71fa6@gmail.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <f366ce31-582c-4f90-bc32-05ddf3e71fa6@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 25.06.25 13:03, Usama Arif wrote:
-> 
-> 
-> On 25/06/2025 08:34, David Hildenbrand wrote:
->>>>
->>>> We would all prefer a less messy world of THP tunables.  I certainly
->>>> find plenty to dislike there too; and wish that a less assertive name
->>>> than "never" had been chosen originally for the default off position.
->>>>
->>>> But please don't break the accepted and documented behaviour of
->>>> MADV_COLLAPSE now.
->>>
->>> Again see above, I absolutely disagree this is documented _clearly_. And
->>> that's the underlying issue here.
->>>> I feel like if you polled 100 system administrators (assuming they knew
->>> about THP) as to how you globally disable THP, probably all 100 would say
->>> you do it via:
->>>
->>> # echo never > /sys/kernel/mm/transparent_hugepage/enabled
->>>
->>
->> Yes. One big problem is that the documentation was not updated.
->>
->> Changing the meaning of "entirely disabled" to "entirely disabled automatically (page faults, khugepaged)"
->>
->>> So shouldn't 'never break userspace' be based on practical reality rather
->>> than a theorised interpretation of documents that sadly are not clear
->>> enough?
->>
->> I think the problem is that there might indeed be more users out there relying on "never+MADV_COLLPASE" to now place THPs than "never+MADV_COLLPASE" to no place THPs.
->>
->> What is the harm when not placing THPs? Performance degradation for some apps?
->>
-> 
-> I think a bigger issue than performance degradation is someone upgrading the kernel and not
-> seeing MADV_COLLAPSE working as it has since the beginning and not knowing that its due
-> to a kernel change.
-> 
-> I feel transparent_hugepage/enabled is too messed up, and its difficult to fix it without
-> breaking it for someone? I still find it weird that we can set transparent_hugepage/enabled
-> to never and transparent_hugepage/hugepages-2048kB/enabled to madvise and still get hugepages.
-> (And we actually use this configuration in production for our ARM servers).
-> 
-> Introducing deny for global and page size I feel will over complicate it because of the issue in
-> the previous paragraph, page size setting overrides global setting. so even if
-> transparent_hugepage/enabled is deny, we might still get a THP if the page setting is not.
-> Someone needs to file to deny, which is the same as setting every file to never.
-> 
-> So I just wanted to throw another bad idea in the mix, what if we introduce another sysfs file
-> (I hate introducing sysfs :)), something like /sys/kernel/mm/thp_allowed (or some other alternate name)
-> which is default 1.
+Move the definitions of `ARef` and `AlwaysRefCounted` from `types.rs`
+to a new file `sync/aref.rs`.
+Define the corresponding `aref` module under `rust/kernel/sync.rs`.
+These types are better grouped in `sync`.
 
-Let's rather not :)
+To avoid breaking existing imports, they are re-exported from `types.rs`.
+Drop unused imports `mem::ManuallyDrop`, `ptr::NonNull` from `types.rs`,
+they are now only used in `sync/aref.rs`, where they are already imported.
 
+Suggested-by: Benno Lossin <lossin@kernel.org>
+Link: https://github.com/Rust-for-Linux/linux/issues/1173
+Signed-off-by: Shankari Anand <shankari.ak0208@gmail.com>
+---
+v1 -> v2 : Added git base commit id
+Rebased the repository to the recent HEAD in the rust-next. Solved the conflict (a commit adding a module to sync.rs).
+Changed the in-file reference of {ARef, AlwaysRefCounted}. Rest remains unchanged.
+---
+ rust/kernel/sync.rs      |   1 +
+ rust/kernel/sync/aref.rs | 170 +++++++++++++++++++++++++++++++++++++++
+ rust/kernel/types.rs     | 154 +----------------------------------
+ 3 files changed, 174 insertions(+), 151 deletions(-)
+ create mode 100644 rust/kernel/sync/aref.rs
+
+diff --git a/rust/kernel/sync.rs b/rust/kernel/sync.rs
+index 63c99e015ad6..8fd126788e02 100644
+--- a/rust/kernel/sync.rs
++++ b/rust/kernel/sync.rs
+@@ -10,6 +10,7 @@
+ use pin_init;
+ 
+ mod arc;
++pub mod aref;
+ pub mod completion;
+ mod condvar;
+ pub mod lock;
+diff --git a/rust/kernel/sync/aref.rs b/rust/kernel/sync/aref.rs
+new file mode 100644
+index 000000000000..93a23b493e21
+--- /dev/null
++++ b/rust/kernel/sync/aref.rs
+@@ -0,0 +1,170 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Atomic reference-counted pointer abstraction.
++//!
++//! This module provides [`ARef<T>`], an owned reference to a value that implements
++//! [`AlwaysRefCounted`] — an unsafe trait for types that manage their own reference count.
++//!
++//! It is based on the Linux kernel's manual reference counting model and is typically used
++//! with C types that implement reference counting (e.g., via `refcount_t` or `kref`).
++//!
++//! For Rust-managed objects, prefer using [`Arc`](crate::sync::Arc) instead.
++
++use core::{
++    marker::PhantomData,
++    mem::ManuallyDrop,
++    ops::Deref,
++    ptr::NonNull,
++};
++
++/// Trait for types that are _always_ reference-counted.
++///
++/// This trait allows types to define custom reference increment and decrement logic.
++/// It enables safe conversion from a shared reference `&T` to an owned [`ARef<T>`].
++///
++/// This is usually implemented by wrappers around C types with manual refcounting.
++///
++/// For purely Rust-managed memory, consider using [`Arc`](crate::sync::Arc) instead.
++///
++/// # Safety
++///
++/// Implementers must ensure that:
++///
++/// - Calling [`AlwaysRefCounted::inc_ref`] keeps the object alive in memory until a matching [`AlwaysRefCounted::dec_ref`] is called.
++/// - The object is always managed by a reference count; it must never be stack-allocated or
++///   otherwise untracked.
++/// - When the count reaches zero in [`AlwaysRefCounted::dec_ref`], the object is properly freed and no further
++///   access occurs.
++///
++/// Failure to follow these rules may lead to use-after-free or memory corruption.
++
++pub unsafe trait AlwaysRefCounted {
++    /// Increments the reference count on the object.
++    fn inc_ref(&self);
++
++    /// Decrements the reference count on the object.
++    ///
++    /// Frees the object when the count reaches zero.
++    ///
++    /// # Safety
++    ///
++    /// Callers must ensure that there was a previous matching increment to the reference count,
++    /// and that the object is no longer used after its reference count is decremented (as it may
++    /// result in the object being freed), unless the caller owns another increment on the refcount
++    /// (e.g., it calls [`AlwaysRefCounted::inc_ref`] twice, then calls
++    /// [`AlwaysRefCounted::dec_ref`] once).
++    unsafe fn dec_ref(obj: NonNull<Self>);
++}
++
++/// An owned reference to an always-reference-counted object.
++///
++/// The object's reference count is automatically decremented when an instance of [`ARef`] is
++/// dropped. It is also automatically incremented when a new instance is created via
++/// [`ARef::clone`].
++///
++/// # Invariants
++///
++/// The pointer stored in `ptr` is non-null and valid for the lifetime of the [`ARef`] instance. In
++/// particular, the [`ARef`] instance owns an increment on the underlying object's reference count.
++pub struct ARef<T: AlwaysRefCounted> {
++    ptr: NonNull<T>,
++    _p: PhantomData<T>,
++}
++
++// SAFETY: It is safe to send `ARef<T>` to another thread when the underlying `T` is `Sync` because
++// it effectively means sharing `&T` (which is safe because `T` is `Sync`); additionally, it needs
++// `T` to be `Send` because any thread that has an `ARef<T>` may ultimately access `T` using a
++// mutable reference, for example, when the reference count reaches zero and `T` is dropped.
++unsafe impl<T: AlwaysRefCounted + Sync + Send> Send for ARef<T> {}
++
++// SAFETY: It is safe to send `&ARef<T>` to another thread when the underlying `T` is `Sync`
++// because it effectively means sharing `&T` (which is safe because `T` is `Sync`); additionally,
++// it needs `T` to be `Send` because any thread that has a `&ARef<T>` may clone it and get an
++// `ARef<T>` on that thread, so the thread may ultimately access `T` using a mutable reference, for
++// example, when the reference count reaches zero and `T` is dropped.
++unsafe impl<T: AlwaysRefCounted + Sync + Send> Sync for ARef<T> {}
++
++impl<T: AlwaysRefCounted> ARef<T> {
++    /// Creates a new instance of [`ARef`].
++    ///
++    /// It takes over an increment of the reference count on the underlying object.
++    ///
++    /// # Safety
++    ///
++    /// Callers must ensure that the reference count was incremented at least once, and that they
++    /// are properly relinquishing one increment. That is, if there is only one increment, callers
++    /// must not use the underlying object anymore -- it is only safe to do so via the newly
++    /// created [`ARef`].
++    pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
++        // INVARIANT: The safety requirements guarantee that the new instance now owns the
++        // increment on the refcount.
++        Self {
++            ptr,
++            _p: PhantomData,
++        }
++    }
++
++    /// Consumes the `ARef`, returning a raw pointer.
++    ///
++    /// This function does not change the refcount. After calling this function, the caller is
++    /// responsible for the refcount previously managed by the `ARef`.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// use core::ptr::NonNull;
++    /// use kernel::sync::aref::{ARef, AlwaysRefCounted};
++    ///
++    /// struct Empty {}
++    ///
++    /// # // SAFETY: TODO.
++    /// unsafe impl AlwaysRefCounted for Empty {
++    ///     fn inc_ref(&self) {}
++    ///     unsafe fn dec_ref(_obj: NonNull<Self>) {}
++    /// }
++    ///
++    /// let mut data = Empty {};
++    /// let ptr = NonNull::<Empty>::new(&mut data).unwrap();
++    /// # // SAFETY: TODO.
++    /// let data_ref: ARef<Empty> = unsafe { ARef::from_raw(ptr) };
++    /// let raw_ptr: NonNull<Empty> = ARef::into_raw(data_ref);
++    ///
++    /// assert_eq!(ptr, raw_ptr);
++    /// ```
++    pub fn into_raw(me: Self) -> NonNull<T> {
++        ManuallyDrop::new(me).ptr
++    }
++}
++
++impl<T: AlwaysRefCounted> Clone for ARef<T> {
++    fn clone(&self) -> Self {
++        self.inc_ref();
++        // SAFETY: We just incremented the refcount above.
++        unsafe { Self::from_raw(self.ptr) }
++    }
++}
++
++impl<T: AlwaysRefCounted> Deref for ARef<T> {
++    type Target = T;
++
++    fn deref(&self) -> &Self::Target {
++        // SAFETY: The type invariants guarantee that the object is valid.
++        unsafe { self.ptr.as_ref() }
++    }
++}
++
++impl<T: AlwaysRefCounted> From<&T> for ARef<T> {
++    fn from(b: &T) -> Self {
++        b.inc_ref();
++        // SAFETY: We just incremented the refcount above.
++        unsafe { Self::from_raw(NonNull::from(b)) }
++    }
++}
++
++impl<T: AlwaysRefCounted> Drop for ARef<T> {
++    fn drop(&mut self) {
++        // SAFETY: The type invariants guarantee that the `ARef` owns the reference we're about to
++        // decrement.
++        unsafe { T::dec_ref(self.ptr) };
++    }
++}
+diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+index 22985b6f6982..60cb48285630 100644
+--- a/rust/kernel/types.rs
++++ b/rust/kernel/types.rs
+@@ -5,12 +5,13 @@
+ use core::{
+     cell::UnsafeCell,
+     marker::{PhantomData, PhantomPinned},
+-    mem::{ManuallyDrop, MaybeUninit},
++    mem::MaybeUninit,
+     ops::{Deref, DerefMut},
+-    ptr::NonNull,
+ };
+ use pin_init::{PinInit, Zeroable};
+ 
++pub use crate::sync::aref::{ARef, AlwaysRefCounted};
++
+ /// Used to transfer ownership to and from foreign (non-Rust) languages.
+ ///
+ /// Ownership is transferred from Rust to a foreign language by calling [`Self::into_foreign`] and
+@@ -415,155 +416,6 @@ pub const fn raw_get(this: *const Self) -> *mut T {
+     }
+ }
+ 
+-/// Types that are _always_ reference counted.
+-///
+-/// It allows such types to define their own custom ref increment and decrement functions.
+-/// Additionally, it allows users to convert from a shared reference `&T` to an owned reference
+-/// [`ARef<T>`].
+-///
+-/// This is usually implemented by wrappers to existing structures on the C side of the code. For
+-/// Rust code, the recommendation is to use [`Arc`](crate::sync::Arc) to create reference-counted
+-/// instances of a type.
+-///
+-/// # Safety
+-///
+-/// Implementers must ensure that increments to the reference count keep the object alive in memory
+-/// at least until matching decrements are performed.
+-///
+-/// Implementers must also ensure that all instances are reference-counted. (Otherwise they
+-/// won't be able to honour the requirement that [`AlwaysRefCounted::inc_ref`] keep the object
+-/// alive.)
+-pub unsafe trait AlwaysRefCounted {
+-    /// Increments the reference count on the object.
+-    fn inc_ref(&self);
+-
+-    /// Decrements the reference count on the object.
+-    ///
+-    /// Frees the object when the count reaches zero.
+-    ///
+-    /// # Safety
+-    ///
+-    /// Callers must ensure that there was a previous matching increment to the reference count,
+-    /// and that the object is no longer used after its reference count is decremented (as it may
+-    /// result in the object being freed), unless the caller owns another increment on the refcount
+-    /// (e.g., it calls [`AlwaysRefCounted::inc_ref`] twice, then calls
+-    /// [`AlwaysRefCounted::dec_ref`] once).
+-    unsafe fn dec_ref(obj: NonNull<Self>);
+-}
+-
+-/// An owned reference to an always-reference-counted object.
+-///
+-/// The object's reference count is automatically decremented when an instance of [`ARef`] is
+-/// dropped. It is also automatically incremented when a new instance is created via
+-/// [`ARef::clone`].
+-///
+-/// # Invariants
+-///
+-/// The pointer stored in `ptr` is non-null and valid for the lifetime of the [`ARef`] instance. In
+-/// particular, the [`ARef`] instance owns an increment on the underlying object's reference count.
+-pub struct ARef<T: AlwaysRefCounted> {
+-    ptr: NonNull<T>,
+-    _p: PhantomData<T>,
+-}
+-
+-// SAFETY: It is safe to send `ARef<T>` to another thread when the underlying `T` is `Sync` because
+-// it effectively means sharing `&T` (which is safe because `T` is `Sync`); additionally, it needs
+-// `T` to be `Send` because any thread that has an `ARef<T>` may ultimately access `T` using a
+-// mutable reference, for example, when the reference count reaches zero and `T` is dropped.
+-unsafe impl<T: AlwaysRefCounted + Sync + Send> Send for ARef<T> {}
+-
+-// SAFETY: It is safe to send `&ARef<T>` to another thread when the underlying `T` is `Sync`
+-// because it effectively means sharing `&T` (which is safe because `T` is `Sync`); additionally,
+-// it needs `T` to be `Send` because any thread that has a `&ARef<T>` may clone it and get an
+-// `ARef<T>` on that thread, so the thread may ultimately access `T` using a mutable reference, for
+-// example, when the reference count reaches zero and `T` is dropped.
+-unsafe impl<T: AlwaysRefCounted + Sync + Send> Sync for ARef<T> {}
+-
+-impl<T: AlwaysRefCounted> ARef<T> {
+-    /// Creates a new instance of [`ARef`].
+-    ///
+-    /// It takes over an increment of the reference count on the underlying object.
+-    ///
+-    /// # Safety
+-    ///
+-    /// Callers must ensure that the reference count was incremented at least once, and that they
+-    /// are properly relinquishing one increment. That is, if there is only one increment, callers
+-    /// must not use the underlying object anymore -- it is only safe to do so via the newly
+-    /// created [`ARef`].
+-    pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
+-        // INVARIANT: The safety requirements guarantee that the new instance now owns the
+-        // increment on the refcount.
+-        Self {
+-            ptr,
+-            _p: PhantomData,
+-        }
+-    }
+-
+-    /// Consumes the `ARef`, returning a raw pointer.
+-    ///
+-    /// This function does not change the refcount. After calling this function, the caller is
+-    /// responsible for the refcount previously managed by the `ARef`.
+-    ///
+-    /// # Examples
+-    ///
+-    /// ```
+-    /// use core::ptr::NonNull;
+-    /// use kernel::types::{ARef, AlwaysRefCounted};
+-    ///
+-    /// struct Empty {}
+-    ///
+-    /// # // SAFETY: TODO.
+-    /// unsafe impl AlwaysRefCounted for Empty {
+-    ///     fn inc_ref(&self) {}
+-    ///     unsafe fn dec_ref(_obj: NonNull<Self>) {}
+-    /// }
+-    ///
+-    /// let mut data = Empty {};
+-    /// let ptr = NonNull::<Empty>::new(&mut data).unwrap();
+-    /// # // SAFETY: TODO.
+-    /// let data_ref: ARef<Empty> = unsafe { ARef::from_raw(ptr) };
+-    /// let raw_ptr: NonNull<Empty> = ARef::into_raw(data_ref);
+-    ///
+-    /// assert_eq!(ptr, raw_ptr);
+-    /// ```
+-    pub fn into_raw(me: Self) -> NonNull<T> {
+-        ManuallyDrop::new(me).ptr
+-    }
+-}
+-
+-impl<T: AlwaysRefCounted> Clone for ARef<T> {
+-    fn clone(&self) -> Self {
+-        self.inc_ref();
+-        // SAFETY: We just incremented the refcount above.
+-        unsafe { Self::from_raw(self.ptr) }
+-    }
+-}
+-
+-impl<T: AlwaysRefCounted> Deref for ARef<T> {
+-    type Target = T;
+-
+-    fn deref(&self) -> &Self::Target {
+-        // SAFETY: The type invariants guarantee that the object is valid.
+-        unsafe { self.ptr.as_ref() }
+-    }
+-}
+-
+-impl<T: AlwaysRefCounted> From<&T> for ARef<T> {
+-    fn from(b: &T) -> Self {
+-        b.inc_ref();
+-        // SAFETY: We just incremented the refcount above.
+-        unsafe { Self::from_raw(NonNull::from(b)) }
+-    }
+-}
+-
+-impl<T: AlwaysRefCounted> Drop for ARef<T> {
+-    fn drop(&mut self) {
+-        // SAFETY: The type invariants guarantee that the `ARef` owns the reference we're about to
+-        // decrement.
+-        unsafe { T::dec_ref(self.ptr) };
+-    }
+-}
+-
+ /// A sum type that always holds either a value of type `L` or `R`.
+ ///
+ /// # Examples
+
+base-commit: 0303584766b7bdb6564c7e8f13e0b59b6ef44984
 -- 
-Cheers,
-
-David / dhildenb
+2.34.1
 
