@@ -1,134 +1,274 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDFB7D3F4
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:14:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5EF43074AC;
+	Wed, 25 Jun 2025 17:18:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750871669; cv=none; b=rQ9QVqbdCQmyyVwoxbWQK9f+gVE6HMEIpfLK44pBIFcYnQF6VhLpSrEkM5sca3IKpgEcXgos72Z8EaLimx9XexRMSb9lTf7xg6O2ZjIZZ8rp1W6oCryiQHYl7N4Lu02qMjkZZwl9xU/pXkVnQcxya2riM79J5sVsuRZ9SqZc+Oc=
+	t=1750871899; cv=none; b=gbVgDq59h59o4ghxd3AEGyWEN5pJ9itQRAFCaDEsoEmUe8FMOoukozMD76h0/lsEyhgriO1S7WNDQI8+ADW8VBpL9atoBe6KtruGUR5t4wHdZ6Sh9UhBSLGYiAMYesiRhWFk7MUgG//n2dx9LOH4CGCjuDTz4OrJ+MfKwZ8STnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750871669; c=relaxed/simple;
-	bh=YKkvkQ+DdOVsLHQyaBRqdlrsotAQLSDlyoY+RWNqYVA=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=Cm+tYCuwU8DLAcL9TYhQfrG95FUSPiQnbt/wQaWCuA9zgNKrA3LJrtWDyUJVlvKqwQ3sj2hINZ64kVOxAFA3lJO5yGH1m3oPxCzaKzgpSfuigSWEdOAte0xqOzHsSWDCg3egeDXSWedkobcJZjGSF1xgG0sLjp3LZAcSI1FvxZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddc5137992so937505ab.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:14:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750871667; x=1751476467;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L/l8xFjBHoux/yvwL6aD3x2VUCTiy+iKK29WrV0pdFY=;
-        b=Hndga4Dk7PcLnvUbXz6qrBrn+krWEYz3d1O/mwJGValMedcRlZBpa1iTVFMzEV1Wsd
-         nZgWKBNgRyvPsXoKurx+lcvCzGpp86tWvwJNjInMwd+jJ2wtSwd1wj/mrXtgr2Fj9VDA
-         MaqmiKaHklBMrqzvAVcTuF6WEIpGdlt5Q4fm/bM5RpScg0ilAtG44n3kEjW5WupuikuV
-         nBWjRG1wbrhRDoRw685opJo+YlsupTghwz7qEMUb7y31udb3CJLjfw8hrBVlCkvVRoxr
-         DnY3BXYMgaSa3Q/XdnG3EtsjM+yAk6CLSApFjS3IwXtv+AfFaHlGPlVeR9SRR2Tjue//
-         COcg==
-X-Forwarded-Encrypted: i=1; AJvYcCUSh4W23nC0zvsWkDVm93Uw6wxD1mBgheBwM/iF0k1+XKITJo92Qmum6RW6iBhNbPiJ0aEy0+vxLN/DN1g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwdyIMZBRMTBW4UHg7QyheLWXcLitlovhbLokvRIbpu9aVlXbQk
-	7Ec3l9BhmdXJgyxBLo8c5NEfnllY5jHlttrgLesiJros3XC2kTLWiCcvcxehMA+I5vZGR+vVu6p
-	tLs273wBVFh99lPVRAmbUIYS9S9mwCwiF55hERx663eJ0a/q4VnMtKopl33s=
-X-Google-Smtp-Source: AGHT+IF4tP1NNueFUshXhU6NYNM5uEbLto+Lt8hRij3Xfkqi9ZOuPSh5aKmlJA6qZF1oxSHP+VCuV0Smkd6mHXvR22rrt5aSAQgc
+	s=arc-20240116; t=1750871899; c=relaxed/simple;
+	bh=WH+67ETG60FO49tyVub/emz9wTANfE4oZLyJ99hWlVE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=W9MM3s3BxcSKdj5D6eR7pozRq4+6B0h/uWpBGLz1J5rpR6Y1VY724K94BrcrTWD4hcce2WZhN9oGH30JVYVQe04k6RvhNwJDWiYtDhgoNcRhQWD+CV1Mefvffk7d8AsHxaZW875d1cJzAOtDqC5S77K8zBHKg0RsnW3B/VA7aZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Hu8R2TwE; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Hu8R2TwE"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PFUIrI003394;
+	Wed, 25 Jun 2025 17:18:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=hJmiqI
+	GVi9jYz2XV2RDTUFNp29tnqRL83h4+ynhToF0=; b=Hu8R2TwE+A8WyFG1N5BlSK
+	wMQo3nhEMe5EbAwT4IiewOzMG+gtt+l/D8epBEZVektbDqDWNH6N0KoZ00258HhP
+	yNiVyX7+WZkeWt6RBefwfhFibmbNG4ET6neyu6N9IdPwL8dZyIGwfUAub3gFtJa+
+	5ZTr/+T39bsaFTpWrymI2IiSk8s6CE96c3/w7m5s5lrXSSeSB8m1nybYlpme08eY
+	qNE48LFW0n4PZO+dUP+FYf3o4tG2RzOu9fz2C02aU7ks6PFQIA2mULaS3hZp+NAG
+	KFNj3KOv+TXx33hZcWbhCxjJUXeq/sMlcCLqlBgWhb0AlnDenV4zd8ypTSvnv88A
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dj5u0w7n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 17:18:01 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55PHI00j030154;
+	Wed, 25 Jun 2025 17:18:01 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dj5u0w7f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 17:18:00 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55PF1Uub004643;
+	Wed, 25 Jun 2025 17:17:59 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e99kt8nw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 17:17:59 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55PHHvkH44827114
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 25 Jun 2025 17:17:57 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9A56820043;
+	Wed, 25 Jun 2025 17:17:57 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AE6F220040;
+	Wed, 25 Jun 2025 17:17:53 +0000 (GMT)
+Received: from li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com (unknown [9.124.208.75])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 25 Jun 2025 17:17:53 +0000 (GMT)
+Date: Wed, 25 Jun 2025 22:47:50 +0530
+From: Donet Tom <donettom@linux.ibm.com>
+To: Dev Jain <dev.jain@arm.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+        Aboorva Devarajan <aboorvad@linux.ibm.com>, akpm@linux-foundation.org,
+        Liam.Howlett@oracle.com, shuah@kernel.org, pfalcato@suse.de,
+        david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
+        npache@redhat.com, ryan.roberts@arm.com, baohua@kernel.org,
+        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, ritesh.list@gmail.com
+Subject: Re: [PATCH 1/6] mm/selftests: Fix virtual_address_range test issues.
+Message-ID: <aFwvPj5AlCgTZsh2@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
+References: <79bdd993-0e9c-4d7d-b42c-4b5750eff140@lucifer.local>
+ <aaddfd0b-216e-48fe-b48f-35c78eabcf9a@arm.com>
+ <8e23c5d3-6ce3-4fe8-b6fe-69658d5d0727@lucifer.local>
+ <fc5c8193-2642-49f7-9f2a-00ad33353773@arm.com>
+ <c93110a4-19e4-4a1d-b044-6b7f521eaa0d@lucifer.local>
+ <815793f1-6800-4b9a-852e-f13d6308f50f@arm.com>
+ <2756fa2b-e8bf-4c66-bf9b-c85dc63dfc33@lucifer.local>
+ <41d9a70d-9791-4212-af23-5b13d8e4a47d@arm.com>
+ <aFPI_blZGhvKSbNJ@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
+ <16fff6e9-98f5-4004-9906-feac49f0bbb4@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:218a:b0:3dd:b808:be59 with SMTP id
- e9e14a558f8ab-3df3297dea6mr56177245ab.21.1750871667166; Wed, 25 Jun 2025
- 10:14:27 -0700 (PDT)
-Date: Wed, 25 Jun 2025 10:14:27 -0700
-In-Reply-To: <66f6c6e7.050a0220.38ace9.0024.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685c2e73.050a0220.2303ee.004c.GAE@google.com>
-Subject: Re: [syzbot] [bluetooth?] BUG: corrupted list in _hci_cmd_sync_cancel_entry
-From: syzbot <syzbot+01fdb2cc3f0b4ddcfcf1@syzkaller.appspotmail.com>
-To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <16fff6e9-98f5-4004-9906-feac49f0bbb4@arm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: GwdDxKWbBi4q9Rqmr219TkpxO9foB5-d
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDEyOCBTYWx0ZWRfX+cC+8RLbZJWH wEP3loW+cj4DbnfX/wab4EtH45pdwH1Szs+gPGN7IFRsblju3yLjvMky1sFDpzHRbD1ZvKXjChc EkGDIS4/ygaDFkPxq8yFu3X4cSWUcgs3zke4ronSLVNmR1YnD+CiDCobzAP1PNt/Sp+6wjyJ+44
+ YN2JwUE9qDkqar9MC3N3k1NQQjKqAl5oDt3GcvUARZCaz0SaOx5JYYSUN4AmrF2l8T2MqFDv46x pDwXvEjERfnGHcmvIZwx3BkU2gL0HDz8xATGsuY6C5nXZNVBHjVok71/5DqO2eifX79G5Nwkw+D c2NRN2bOQ2NytKK4jxpkN4oVGa2QIKURLzEA4iQfPWyTQm0o5Qpw5ghyVc5C2pCsk2+5k2Josqp
+ slm8qUidDYRz/clr7OHjf5pJqOTSPEnaOiGnKPJ6vgF7CTK3UkCSs1Ou9mX2tzVAPBf+0D0H
+X-Authority-Analysis: v=2.4 cv=MshS63ae c=1 sm=1 tr=0 ts=685c2f49 cx=c_pps a=AfN7/Ok6k8XGzOShvHwTGQ==:117 a=AfN7/Ok6k8XGzOShvHwTGQ==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=BaPsrneplRJP-Z4xSb0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-GUID: ai7n1ObA81d7M5cF_SeK_zdL-urTLJWf
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_05,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
+ clxscore=1015 phishscore=0 malwarescore=0 suspectscore=0 adultscore=0
+ priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506250128
 
-syzbot has found a reproducer for the following issue on:
+On Wed, Jun 25, 2025 at 06:22:53PM +0530, Dev Jain wrote:
+> 
+> On 19/06/25 1:53 pm, Donet Tom wrote:
+> > On Wed, Jun 18, 2025 at 08:13:54PM +0530, Dev Jain wrote:
+> > > On 18/06/25 8:05 pm, Lorenzo Stoakes wrote:
+> > > > On Wed, Jun 18, 2025 at 07:47:18PM +0530, Dev Jain wrote:
+> > > > > On 18/06/25 7:37 pm, Lorenzo Stoakes wrote:
+> > > > > > On Wed, Jun 18, 2025 at 07:28:16PM +0530, Dev Jain wrote:
+> > > > > > > On 18/06/25 5:27 pm, Lorenzo Stoakes wrote:
+> > > > > > > > On Wed, Jun 18, 2025 at 05:15:50PM +0530, Dev Jain wrote:
+> > > > > > > > Are you accounting for sys.max_map_count? If not, then you'll be hitting that
+> > > > > > > > first.
+> > > > > > > run_vmtests.sh will run the test in overcommit mode so that won't be an issue.
+> > > > > > Umm, what? You mean overcommit all mode, and that has no bearing on the max
+> > > > > > mapping count check.
+> > > > > > 
+> > > > > > In do_mmap():
+> > > > > > 
+> > > > > > 	/* Too many mappings? */
+> > > > > > 	if (mm->map_count > sysctl_max_map_count)
+> > > > > > 		return -ENOMEM;
+> > > > > > 
+> > > > > > 
+> > > > > > As well as numerous other checks in mm/vma.c.
+> > > > > Ah sorry, didn't look at the code properly just assumed that overcommit_always meant overriding
+> > > > > this.
+> > > > No problem! It's hard to be aware of everything in mm :)
+> > > > 
+> > > > > > I'm not sure why an overcommit toggle is even necessary when you could use
+> > > > > > MAP_NORESERVE or simply map PROT_NONE to avoid the OVERCOMMIT_GUESS limits?
+> > > > > > 
+> > > > > > I'm pretty confused as to what this test is really achieving honestly. This
+> > > > > > isn't a useful way of asserting mmap() behaviour as far as I can tell.
+> > > > > Well, seems like a useful way to me at least : ) Not sure if you are in the mood
+> > > > > to discuss that but if you'd like me to explain from start to end what the test
+> > > > > is doing, I can do that : )
+> > > > > 
+> > > > I just don't have time right now, I guess I'll have to come back to it
+> > > > later... it's not the end of the world for it to be iffy in my view as long as
+> > > > it passes, but it might just not be of great value.
+> > > > 
+> > > > Philosophically I'd rather we didn't assert internal implementation details like
+> > > > where we place mappings in userland memory. At no point do we promise to not
+> > > > leave larger gaps if we feel like it :)
+> > > You have a fair point. Anyhow a debate for another day.
+> > > 
+> > > > I'm guessing, reading more, the _real_ test here is some mathematical assertion
+> > > > about layout from HIGH_ADDR_SHIFT -> end of address space when using hints.
+> > > > 
+> > > > But again I'm not sure that achieves much and again also is asserting internal
+> > > > implementation details.
+> > > > 
+> > > > Correct behaviour of this kind of thing probably better belongs to tests in the
+> > > > userland VMA testing I'd say.
+> > > > 
+> > > > Sorry I don't mean to do down work you've done before, just giving an honest
+> > > > technical appraisal!
+> > > Nah, it will be rather hilarious to see it all go down the drain xD
+> > > 
+> > > > Anyway don't let this block work to fix the test if it's failing. We can revisit
+> > > > this later.
+> > > Sure. @Aboorva and Donet, I still believe that the correct approach is to elide
+> > > the gap check at the crossing boundary. What do you think?
+> > > 
+> > One problem I am seeing with this approach is that, since the hint address
+> > is generated randomly, the VMAs are also being created at randomly based on
+> > the hint address.So, for the VMAs created at high addresses, we cannot guarantee
+> > that the gaps between them will be aligned to MAP_CHUNK_SIZE.
+> > 
+> > High address VMAs
+> > -----------------
+> > 1000000000000-1000040000000 r--p 00000000 00:00 0
+> > 2000000000000-2000040000000 r--p 00000000 00:00 0
+> > 4000000000000-4000040000000 r--p 00000000 00:00 0
+> > 8000000000000-8000040000000 r--p 00000000 00:00 0
+> > e80009d260000-fffff9d260000 r--p 00000000 00:00 0
+> > 
+> > I have a different approach to solve this issue.
+> > 
+> >  From 0 to 128TB, we map memory directly without using any hint. For the range above
+> > 256TB up to 512TB, we perform the mapping using hint addresses. In the current test,
+> > we use random hint addresses, but I have modified it to generate hint addresses linearly
+> > starting from 128TB.
+> > 
+> > With this change:
+> > 
+> > The 0–128TB range is mapped without hints and verified accordingly.
+> > 
+> > The 128TB–512TB range is mapped using linear hint addresses and then verified.
+> > 
+> > Below are the VMAs obtained with this approach:
+> > 
+> > 10000000-10010000 r-xp 00000000 fd:05 135019531
+> > 10010000-10020000 r--p 00000000 fd:05 135019531
+> > 10020000-10030000 rw-p 00010000 fd:05 135019531
+> > 20000000-10020000000 r--p 00000000 00:00 0
+> > 10020800000-10020830000 rw-p 00000000 00:00 0
+> > 1004bcf0000-1004c000000 rw-p 00000000 00:00 0
+> > 1004c000000-7fff8c000000 r--p 00000000 00:00 0
+> > 7fff8c130000-7fff8c360000 r-xp 00000000 fd:00 792355
+> > 7fff8c360000-7fff8c370000 r--p 00230000 fd:00 792355
+> > 7fff8c370000-7fff8c380000 rw-p 00240000 fd:00 792355
+> > 7fff8c380000-7fff8c460000 r-xp 00000000 fd:00 792358
+> > 7fff8c460000-7fff8c470000 r--p 000d0000 fd:00 792358
+> > 7fff8c470000-7fff8c480000 rw-p 000e0000 fd:00 792358
+> > 7fff8c490000-7fff8c4d0000 r--p 00000000 00:00 0
+> > 7fff8c4d0000-7fff8c4e0000 r-xp 00000000 00:00 0
+> > 7fff8c4e0000-7fff8c530000 r-xp 00000000 fd:00 792351
+> > 7fff8c530000-7fff8c540000 r--p 00040000 fd:00 792351
+> > 7fff8c540000-7fff8c550000 rw-p 00050000 fd:00 792351
+> > 7fff8d000000-7fffcd000000 r--p 00000000 00:00 0
+> > 7fffe9c80000-7fffe9d90000 rw-p 00000000 00:00 0
+> > 800000000000-2000000000000 r--p 00000000 00:00 0    -> High Address (128TB to 512TB)
+> > 
+> > diff --git a/tools/testing/selftests/mm/virtual_address_range.c b/tools/testing/selftests/mm/virtual_address_range.c
+> > index 4c4c35eac15e..0be008cba4b0 100644
+> > --- a/tools/testing/selftests/mm/virtual_address_range.c
+> > +++ b/tools/testing/selftests/mm/virtual_address_range.c
+> > @@ -56,21 +56,21 @@
+> >   #ifdef __aarch64__
+> >   #define HIGH_ADDR_MARK  ADDR_MARK_256TB
+> > -#define HIGH_ADDR_SHIFT 49
+> > +#define HIGH_ADDR_SHIFT 48
+> >   #define NR_CHUNKS_LOW   NR_CHUNKS_256TB
+> >   #define NR_CHUNKS_HIGH  NR_CHUNKS_3840TB
+> >   #else
+> >   #define HIGH_ADDR_MARK  ADDR_MARK_128TB
+> > -#define HIGH_ADDR_SHIFT 48
+> > +#define HIGH_ADDR_SHIFT 47
+> >   #define NR_CHUNKS_LOW   NR_CHUNKS_128TB
+> >   #define NR_CHUNKS_HIGH  NR_CHUNKS_384TB
+> >   #endif
+> > -static char *hint_addr(void)
+> > +static char *hint_addr(int hint)
+> >   {
+> > -       int bits = HIGH_ADDR_SHIFT + rand() % (63 - HIGH_ADDR_SHIFT);
+> > +       unsigned long addr = ((1UL << HIGH_ADDR_SHIFT) + (hint * MAP_CHUNK_SIZE));
+> > -       return (char *) (1UL << bits);
+> > +       return (char *) (addr);
+> >   }
+> >   static void validate_addr(char *ptr, int high_addr)
+> > @@ -217,7 +217,7 @@ int main(int argc, char *argv[])
+> >          }
+> >          for (i = 0; i < NR_CHUNKS_HIGH; i++) {
+> > -               hint = hint_addr();
+> > +               hint = hint_addr(i);
+> >                  hptr[i] = mmap(hint, MAP_CHUNK_SIZE, PROT_READ,
+> >                                 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+> 
+> Ah you sent it here, thanks. This is fine really, but the mystery is
+> something else.
+>
 
-HEAD commit:    7595b66ae9de Merge tag 'selinux-pr-20250624' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10ed4f0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=641bc01f4fbdccd4
-dashboard link: https://syzkaller.appspot.com/bug?extid=01fdb2cc3f0b4ddcfcf1
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14bc9b70580000
+Thanks Dev
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/86576f060f6f/disk-7595b66a.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/051ad595d63b/vmlinux-7595b66a.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/e72740ea313a/bzImage-7595b66a.xz
+I can send out v2 with this patch included, right?
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+01fdb2cc3f0b4ddcfcf1@syzkaller.appspotmail.com
-
-Bluetooth: hci4: command 0x0406 tx timeout
- non-paged memory
-list_del corruption, ffff88802932b700->next is LIST_POISON1 (dead000000000100)
-------------[ cut here ]------------
-kernel BUG at lib/list_debug.c:56!
-Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
-CPU: 1 UID: 0 PID: 51 Comm: kworker/u9:0 Not tainted 6.16.0-rc3-syzkaller-00044-g7595b66ae9de #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Workqueue: hci4 hci_conn_timeout
-RIP: 0010:__list_del_entry_valid_or_report+0x121/0x200 lib/list_debug.c:56
-Code: 48 c7 c7 e0 7e 15 8c e8 1d 41 b9 fc 90 0f 0b 4c 89 e7 e8 02 f3 1d fd 4c 89 e2 48 89 de 48 c7 c7 40 7f 15 8c e8 00 41 b9 fc 90 <0f> 0b 48 89 ef e8 e5 f2 1d fd 48 89 ea 48 89 de 48 c7 c7 a0 7f 15
-RSP: 0018:ffffc90000bb7b78 EFLAGS: 00010282
-RAX: 000000000000004e RBX: ffff88802932b700 RCX: ffffffff819b00b9
-RDX: 0000000000000000 RSI: ffffffff819b7f46 RDI: 0000000000000005
-RBP: dead000000000122 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000080000000 R11: 0000000000000001 R12: dead000000000100
-R13: dffffc0000000000 R14: ffff88802f118618 R15: ffff88802932b700
-FS:  0000000000000000(0000) GS:ffff888124852000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 000000c007642020 CR3: 000000007e2b4000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __list_del_entry_valid include/linux/list.h:124 [inline]
- __list_del_entry include/linux/list.h:215 [inline]
- list_del include/linux/list.h:229 [inline]
- _hci_cmd_sync_cancel_entry.constprop.0+0x80/0x1d0 net/bluetooth/hci_sync.c:647
- hci_cmd_sync_cancel_entry net/bluetooth/hci_sync.c:851 [inline]
- hci_cmd_sync_dequeue_once net/bluetooth/hci_sync.c:870 [inline]
- hci_cancel_connect_sync+0xfa/0x2b0 net/bluetooth/hci_sync.c:6903
- hci_abort_conn+0x15a/0x340 net/bluetooth/hci_conn.c:2919
- hci_conn_timeout+0x1a2/0x210 net/bluetooth/hci_conn.c:580
- process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3321 [inline]
- worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
- kthread+0x3c2/0x780 kernel/kthread.c:464
- ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:__list_del_entry_valid_or_report+0x121/0x200 lib/list_debug.c:56
-Code: 48 c7 c7 e0 7e 15 8c e8 1d 41 b9 fc 90 0f 0b 4c 89 e7 e8 02 f3 1d fd 4c 89 e2 48 89 de 48 c7 c7 40 7f 15 8c e8 00 41 b9 fc 90 <0f> 0b 48 89 ef e8 e5 f2 1d fd 48 89 ea 48 89 de 48 c7 c7 a0 7f 15
-RSP: 0018:ffffc90000bb7b78 EFLAGS: 00010282
-RAX: 000000000000004e RBX: ffff88802932b700 RCX: ffffffff819b00b9
-RDX: 0000000000000000 RSI: ffffffff819b7f46 RDI: 0000000000000005
-RBP: dead000000000122 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000080000000 R11: 0000000000000001 R12: dead000000000100
-R13: dffffc0000000000 R14: ffff88802f118618 R15: ffff88802932b700
-FS:  0000000000000000(0000) GS:ffff888124852000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fd6f9b7e2d8 CR3: 000000007b2b4000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+ 
+> 
+> > 
+> > 
+> > Can we fix it this way?
+> 
