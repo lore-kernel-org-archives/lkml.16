@@ -1,159 +1,265 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9624018A6C4;
-	Wed, 25 Jun 2025 06:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9011F4624;
+	Wed, 25 Jun 2025 06:31:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750833072; cv=none; b=eSJ4ucWVzTxnmXCuYZR7IjTZ3suPDX2xxf7xxNITMIqtQzXhkVITHaGzIlkngrScy8hRAysxQ0KxhBYFVwQzwIQbip8QMbA+x/YDuH7u1FdpalyNpWTXPKT/RHQAqikX9c1vxq9GEL1d9Tm/7bHUt6mArAl4AFzHkHtuiAInmQo=
+	t=1750833079; cv=none; b=W6J7n0rWfnI+fqWWxzQpy62C5GJIkyRNPqQGhs00giZIihjYcar6abt0tL0z4EyiKRjxvvhlUM8SlhcAHa3sJyFhpMetXW/rARat0ziwWCO2ehMf2WpeXlnPaBvJGcXaL4hROz5iZ0aS9PLKXc2sSzm0w2b/rsI8lCyCwLlqtGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750833072; c=relaxed/simple;
-	bh=VWMmEK86o9waci3EB3HNOVJe90ev8J87isxmtuJcslU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ui6Ujfpgx9qEpNK9s3avh8lkgTreXASePLc2eShZb4RLRbUh+c13VPM5yKxDQmNyEjPKS/eCeAPoW7MdHo/nVsbHNlWnilW0YVrDFgLzxcdgJqmFdKMjlE93l9v0Je/Unqx/Vy8kl78EovrxhEsaxt41TkrDMOPBlyXgwMZ3gQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kNkVBHV7; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1750833079; c=relaxed/simple;
+	bh=0fMgE+QHYRsfF1P3dHEdwDIDYJIcDHuWpCF9nYV57fM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KRJNb8vvsRWGerMoPihSl2ABTn1nbdJppxcyIHPwZylu3OuHEvXGei19qSQ1GJvHlX8WV/iMHSmS+3zf729MI3KvlgE+tRTs5d13PK/x4355e3zuKDZxYRGTc2FeZlTb6ApvreEwGP0mWzYbdVYNz+IKw3Xh0RZs2w+QjIBfxQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aDkJWuhs; arc=none smtp.client-ip=209.85.208.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNkVBHV7"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2352400344aso16349825ad.2;
-        Tue, 24 Jun 2025 23:31:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aDkJWuhs"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-60c5b7cae8bso50193a12.1;
+        Tue, 24 Jun 2025 23:31:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750833070; x=1751437870; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L/z9ngd8zFRAIK74RWBIMljq6rrIA5Qki7ArcxDVjgg=;
-        b=kNkVBHV73Kt3/IUIgGGbo7HOexZW9d2U2hLWENFAVSUcYudsKwk8Oeb2odW0ueai3J
-         IBPHKnewwiFmEstSWLPNlY+ULF/PDFoP/qzB9FOaJEAKjWgJGG+b4hzRdEp51+E1uf30
-         cRgEt5C4S3FT+UMjy3eR4tRhcoEKEKV0LwlI4tjPB4jMIM3srgR8hw2v115D5DeyZ+5u
-         JOj3ypfKWInp2QKoJHnQiJaw9/YcrXKKMo/y6C4gPkd+tX0a7e5vu4i+auD1WkX4uis2
-         V5vhhdoKVz117edtQF7HSz+LtLwNnjm5T/xSO/OFGx2P+4LmPyiMtJqqIJrFmvwExL6I
-         4zRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750833070; x=1751437870;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1750833076; x=1751437876; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=L/z9ngd8zFRAIK74RWBIMljq6rrIA5Qki7ArcxDVjgg=;
-        b=ZovHEgsqnqzPHfKdKLjX6oUOeGV8gDS8rsz/VF2Y81Fjpax5jNyjW7LhgR31N+ntEs
-         lJpAb/sk4FKeqvQLgV5880Au7vhy/umauSglMHOigf+7tb47Vegwn60jMmTn1Q9VTb00
-         V0+21oNMJ9dHA1Nmpqjb6ackmmnSIcZVz2R72DjLw8FcofxtYDJlIX56d5rBd05s9iKL
-         4+98MEu0ytwHn8n9UUHvuiIsnEVcpIrA7PDSXQ/rtiPzWQ0E/wik26akNsFAbTLRfVEZ
-         sA9FWb/AkmoIecAaTZgJd4Cz/ufVE/mS/sWfifw4mOWNNe3Anh9maRZJNzb3Ty20D0KS
-         h48g==
-X-Forwarded-Encrypted: i=1; AJvYcCUd0KLWPvXBhszuVLDYlYdRxRGVw7zxBAcRq7DM8ZXp2UVcTZuUp45WlxpJWNkP4HYiIFI=@vger.kernel.org, AJvYcCWq5zvKqMs7eSPmOWamNLSFddN5JsBqpgr4EkoRJDiQt/1r7QdcysWJ4u4wJggtvbZh+DkN+KznvhCpNRHy@vger.kernel.org
-X-Gm-Message-State: AOJu0YwL5CzuOZH0zKzZwnNufwBLG5e2yvU4qKZlaxS172ctOhH7/ASj
-	usUImKQYN2MvV8Q1+r9hSNOKWCTvaWE1nKwEdVeGMKGeCpzHYMYnjT7II04vSQ==
-X-Gm-Gg: ASbGncuJkBgGKEC7gJib0CXr5PH2/mSTpM+IDybBuqAqahv4hicNfmDjInlwUJoqZaL
-	cmMOQnnBFFX73uTZZECUV0WUgZbOrSQ677a7aQfo9drNMhhrigFEowO/OQAknKOM2F1VzL2uhzn
-	YJoaIUTMHcf4VjaQw+YVCvBHgS1TUDSSiNjSvHgJOdK7aJ7LCvZwWv4LOLrDBsp8PSvnHBB3Ter
-	DB7LtbpBFMLrPlEsjJObKI7BKjDPxs0uJxzZBMgNCSk4lxCeHoJhHKTFtTsjhDSKj2NBOioKXvx
-	/AFaKOqmnrKMJaEOdBbWuys2BJtSgTVfSvf6H1RGFSMUvlpVenMJfNWBt4B+vg==
-X-Google-Smtp-Source: AGHT+IG244W/fN34/CD8bjiYs1J85Uc0mGYhzQ6XAiQJSMUMCZ12AC0ZO1+fbYsH+GVD3vutgE3G+w==
-X-Received: by 2002:a17:902:ec90:b0:235:e8da:8d6 with SMTP id d9443c01a7336-2382454566fmr34479815ad.2.1750833068214;
-        Tue, 24 Jun 2025 23:31:08 -0700 (PDT)
-Received: from archie.me ([103.124.138.155])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86d563fsm126520685ad.207.2025.06.24.23.31.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 23:31:07 -0700 (PDT)
-Received: by archie.me (Postfix, from userid 1000)
-	id 7C7DF4207D12; Wed, 25 Jun 2025 13:31:02 +0700 (WIB)
-Date: Wed, 25 Jun 2025 13:31:02 +0700
-From: Bagas Sanjaya <bagasdotme@gmail.com>
-To: Binbin Wu <binbin.wu@linux.intel.com>, pbonzini@redhat.com,
-	seanjc@google.com, kvm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: sfr@canb.auug.org.au, rick.p.edgecombe@intel.com, kai.huang@intel.com,
-	adrian.hunter@intel.com, reinette.chatre@intel.com,
-	xiaoyao.li@intel.com, tony.lindgren@intel.com,
-	isaku.yamahata@intel.com, yan.y.zhao@intel.com
-Subject: Re: [PATCH] Documentation: KVM: Fix unexpected unindent warnings
-Message-ID: <aFuXpoxMLa2Qj_S9@archie.me>
-References: <20250625014829.82289-1-binbin.wu@linux.intel.com>
+        bh=HomsHRhWMc91NlraWgfb8CzmapO2MWzqc8OJ53Xj91M=;
+        b=aDkJWuhsbF8PlSsoEEavQMKc+L8pX1MhOFSRTskRQ1aMNZa9xSQwGoJ6Q84RmKOYuw
+         kXjNKQeDzQgA/xg1Bb5oodMtrxcVu4ZKboWBV8i3XRGOArsfcuzETmXACbb/WXWGzl5Z
+         DBBLQyp8B8MKRhuQzRqAIUhgV9tTSjI5ZMgnR3uoAx0IelWdJmTOzg4vZAZ2KEebibKg
+         83qcTDIlQZ+PEO4q1Q+Qz4tHMS8BCPO//rNH3komiqW01tI7U2eF0fweHgcK9vfuX+XE
+         TQlvZ2TWw6EARVjsloOXQ6fSunq5HFXFJzLsMEF/wd47cv7uZgKuyTYQH54oIpwkCato
+         R3qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750833076; x=1751437876;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HomsHRhWMc91NlraWgfb8CzmapO2MWzqc8OJ53Xj91M=;
+        b=J7Acb1hmE3xbm1KyWt4ERBL0ylpT6bMUq/+HXNQa2qoDZDeK9YheoDKoNv4zeK0PrT
+         TfhpfR9Q+LqO113TF1MNQqDBbQDwW8qlb1etYqNtuay8irSzlsfkEhaxQ90nareOMZbF
+         cCDIlcvnpp4SXh2LYz/Aq4nINrLshBg1LtIERjUFbW2KA5hL8wIfHG18ZPBN2KPZ7hMd
+         ISi+sfnLOLIg0kPRatCydDTmtu28/7Sj3umc3zn0h8ohP8+l0lmdlAou6Dqn5ThCwBtr
+         fMiCoqVCiN6Tybvvbit+EEjgV/+ZXQzQ2Gk1aR9OgdiD5TDJLeUfprQZ3FiE7bMDFmDz
+         HFZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUFqh9ZO3jyOCO1B6WjsPnDCDRNXzn84vSjHomibGQdXPf4+40Ck5S2HXJopAIjkXzcUrmoNnPuh/xE@vger.kernel.org, AJvYcCUsB6mFUVPYIJ1EPmUUsKYZKBoXtjTlXHJ7Kv1tuVr1dEHb+Q52HKxVJzDoTLPqg7BgRAbGJgMsKv9Bu14=@vger.kernel.org, AJvYcCWz1LIVUS34ZVcrs3R7uChtBFQE63mUugvjxlvwZWSreq0zmGlsVMfrTx3ndFAQ8ecOiOZHzUwTAwuI@vger.kernel.org, AJvYcCX7LWT5z+LG3S+mcuFl5MSxSHhaQrarZexP3FTCummiWpaRTZysJxrW6bPg1hAAbT1u9LvjR6LV/wGBWSb1@vger.kernel.org
+X-Gm-Message-State: AOJu0Yznuem2EqDTA0xeUAU4eL3ab8KvFLqq1Z0krxESzg7IaTfH0aQb
+	sGzhYOYWzEqs7nD1Ff2HhH3BFmmqsei80NjUAlU5xtfp7bDFZweTHZl0ClF6x5l2UIEmcJvLCth
+	qwwqrlhsRwaX22402E5KpNQ0oqGWi4/g=
+X-Gm-Gg: ASbGncv5yUJJ6tESb1kttOQwUSjj/dCPTizvO2nerkgIGm66IokEa0nLA7P8gBGO77/
+	dK+gUPc3ERX+dN4L3F7fjQ9VvgodFyWhY9BN3609oyqhJJIRBC1RUnM4yLQEyPH4ow0s3yaBqQ5
+	G3jKn/Uj0y7rklsoOOYJepfiWZ0CNB909+sZWSTYLF/pJx
+X-Google-Smtp-Source: AGHT+IF7AiEa0pJbYZZoCQ1Wp9+IRvS7oTHb4LSsS4eD49aaqa7HWWLrgupXR3/9FmGLVv6KV+8mhl8dDa+aNtEF4Hw=
+X-Received: by 2002:a05:6402:84a:b0:604:e602:779a with SMTP id
+ 4fb4d7f45d1cf-60c4ddf20demr1293519a12.28.1750833075395; Tue, 24 Jun 2025
+ 23:31:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="KyriZ8LMcR1w2jqJ"
-Content-Disposition: inline
-In-Reply-To: <20250625014829.82289-1-binbin.wu@linux.intel.com>
-
-
---KyriZ8LMcR1w2jqJ
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20250624074156.291176-1-Henry_Wu@quantatw.tw> <9bd05709-7702-4b74-85e1-3df25b57c535@kernel.org>
+In-Reply-To: <9bd05709-7702-4b74-85e1-3df25b57c535@kernel.org>
+From: =?UTF-8?B?5ZCz5qKT6LGq?= <tzuhao.wtmh@gmail.com>
+Date: Wed, 25 Jun 2025 14:31:02 +0800
+X-Gm-Features: Ac12FXwVID-DBqxtNhi49QaeYZGu6tv9x2UUWeX_dFYK1J54y2MPszZ6ptrgD6c
+Message-ID: <CAL3H=v3s6H4ZpnS=EhPrpEiu-9N-xFCkunHuwWW0xnkXbzY9Kg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] hwmon: (pmbus) Add support for MPS multi-phase
+ mp2869a/mp29612a controllers
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, 
+	Guenter Roeck <linux@roeck-us.net>, Jonathan Corbet <corbet@lwn.net>, 
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, Naresh Solanki <naresh.solanki@9elements.com>, 
+	Rodrigo Gobbi <rodrigo.gobbi.7@gmail.com>, Michal Simek <michal.simek@amd.com>, 
+	Fabio Estevam <festevam@gmail.com>, Henry Wu <Henry_Wu@quantatw.com>, 
+	Grant Peltier <grantpeltier93@gmail.com>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+	Cedric Encarnacion <cedricjustine.encarnacion@analog.com>, 
+	Kim Seer Paller <kimseer.paller@analog.com>, Leo Yang <leo.yang.sy0@gmail.com>, 
+	Ninad Palsule <ninad@linux.ibm.com>, Alex Vdovydchenko <xzeol@yahoo.com>, 
+	John Erasmus Mari Geronimo <johnerasmusmari.geronimo@analog.com>, Nuno Sa <nuno.sa@analog.com>, 
+	Jerome Brunet <jbrunet@baylibre.com>, Noah Wang <noahwang.wang@outlook.com>, 
+	Mariel Tinaco <Mariel.Tinaco@analog.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 25, 2025 at 09:48:29AM +0800, Binbin Wu wrote:
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.=
-rst
-> index 9abf93ee5f65..a7dbe08dc376 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -7210,21 +7210,21 @@ number from register R11.  The remaining field of=
- the union provide the
->  inputs and outputs of the TDVMCALL.  Currently the following values of
->  ``nr`` are defined:
-> =20
-> -* ``TDVMCALL_GET_QUOTE``: the guest has requested to generate a TD-Quote
-> -signed by a service hosting TD-Quoting Enclave operating on the host.
-> -Parameters and return value are in the ``get_quote`` field of the union.
-> -The ``gpa`` field and ``size`` specify the guest physical address
-> -(without the shared bit set) and the size of a shared-memory buffer, in
-> -which the TDX guest passes a TD Report.  The ``ret`` field represents
-> -the return value of the GetQuote request.  When the request has been
-> -queued successfully, the TDX guest can poll the status field in the
-> -shared-memory area to check whether the Quote generation is completed or
-> -not. When completed, the generated Quote is returned via the same buffer.
-> -
-> -* ``TDVMCALL_GET_TD_VM_CALL_INFO``: the guest has requested the support
-> -status of TDVMCALLs.  The output values for the given leaf should be
-> -placed in fields from ``r11`` to ``r14`` of the ``get_tdvmcall_info``
-> -field of the union.
-> + * ``TDVMCALL_GET_QUOTE``: the guest has requested to generate a TD-Quote
-> +   signed by a service hosting TD-Quoting Enclave operating on the host.
-> +   Parameters and return value are in the ``get_quote`` field of the uni=
-on.
-> +   The ``gpa`` field and ``size`` specify the guest physical address
-> +   (without the shared bit set) and the size of a shared-memory buffer, =
-in
-> +   which the TDX guest passes a TD Report.  The ``ret`` field represents
-> +   the return value of the GetQuote request.  When the request has been
-> +   queued successfully, the TDX guest can poll the status field in the
-> +   shared-memory area to check whether the Quote generation is completed=
- or
-> +   not. When completed, the generated Quote is returned via the same buf=
-fer.
-> +
-> + * ``TDVMCALL_GET_TD_VM_CALL_INFO``: the guest has requested the support
-> +   status of TDVMCALLs.  The output values for the given leaf should be
-> +   placed in fields from ``r11`` to ``r14`` of the ``get_tdvmcall_info``
-> +   field of the union.
-> =20
->  KVM may add support for more values in the future that may cause a users=
-pace
->  exit, even without calls to ``KVM_ENABLE_CAP`` or similar.  In this case,
->=20
+Krzysztof Kozlowski <krzk@kernel.org> =E6=96=BC 2025=E5=B9=B46=E6=9C=8824=
+=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=883:48=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> On 24/06/2025 09:41, tzuhao.wtmh@gmail.com wrote:
+> > +static int
+> > +MP2869A_read_byte_data(struct i2c_client *client, int page, int reg)
+> > +{
+> > +     switch (reg) {
+> > +     case PMBUS_VOUT_MODE:
+> > +             /* Enforce VOUT direct format. */
+> > +             return PB_VOUT_MODE_DIRECT;
+> > +     default:
+> > +             return -ENODATA;
+> > +     }
+> > +}
+> > +
+> > +static int
+> > +MP2869A_identify_vout_format(struct i2c_client *client,
+>
+> Use Linux coding style, so lowercase for variables, types and functions.
+> Everywhere (except when coding style tells you different, so please read
+> it).
+>
+> > +                         struct MP2869A_data *data)
+> > +{
+> > +     int i, ret;
+> > +
+> > +     for (i =3D 0; i < data->info.pages; i++) {
+> > +             ret =3D i2c_smbus_write_byte_data(client, PMBUS_PAGE, i);
+> > +             if (ret < 0)
+> > +                     return ret;
+> > +
+> > +             ret =3D i2c_smbus_read_word_data(client, MP2869A_VOUT_MOD=
+E);
+> > +             if (ret < 0)
+> > +                     return ret;
+> > +
+> > +             switch (ret & MP2869A_VOUT_MODE_MASK) {
+> > +             case MP2869A_VOUT_MODE_VID:
+> > +                     data->vout_format[i] =3D vid;
+> > +                     break;
+> > +             default:
+> > +             return -EINVAL;
+> > +             }
+> > +             }
+>
+> Messed indentation in multiple places.
+>
+> > +     return 0;
+> > +}
+> > +
+> > +static struct pmbus_driver_info MP2869A_info =3D {
+>
+> This is const.
+Since info will be modified by mp2869a_read_vout at runtime, I chose
+not to make it constant
+>
+> > +     .pages =3D MP2869A_PAGE_NUM,
+> > +     .format[PSC_VOLTAGE_IN] =3D linear,
+> > +     .format[PSC_VOLTAGE_OUT] =3D direct,
+> > +     .format[PSC_TEMPERATURE] =3D linear,
+> > +     .format[PSC_CURRENT_IN] =3D linear,
+> > +     .format[PSC_CURRENT_OUT] =3D linear,
+> > +     .format[PSC_POWER] =3D linear,
+> > +     .m[PSC_VOLTAGE_OUT] =3D 1,
+> > +     .b[PSC_VOLTAGE_OUT] =3D 0,
+> > +     .R[PSC_VOLTAGE_OUT] =3D -3,
+> > +     .func[0] =3D PMBUS_HAVE_VIN | PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS=
+_VOUT |
+> > +             PMBUS_HAVE_IIN | PMBUS_HAVE_IOUT | PMBUS_HAVE_STATUS_IOUT=
+ |
+> > +             PMBUS_HAVE_TEMP | PMBUS_HAVE_STATUS_TEMP | PMBUS_HAVE_POU=
+T |
+> > +             PMBUS_HAVE_PIN | PMBUS_HAVE_STATUS_INPUT,
+> > +     .func[1] =3D PMBUS_HAVE_VOUT | PMBUS_HAVE_STATUS_VOUT | PMBUS_HAV=
+E_IOUT |
+> > +             PMBUS_HAVE_STATUS_IOUT | PMBUS_HAVE_POUT | PMBUS_HAVE_TEM=
+P,
+> > +     .read_byte_data =3D MP2869A_read_byte_data,
+> > +     .read_word_data =3D MP2869A_read_word_data,
+> > +};
+> > +
+> > +static int mp2869a_probe(struct i2c_client *client)
+> > +{
+> > +     struct pmbus_driver_info *info;
+> > +     struct MP2869A_data *data;
+> > +     int ret;
+> > +
+> > +     data =3D devm_kzalloc(&client->dev, sizeof(struct MP2869A_data),
+>
+> sizeof(*)
+>
+> > +             GFP_KERNEL);
+>
+> Misaligned. Run checkpatch --srtict
+>
+> > +     if (!data)
+> > +             return -ENOMEM;
+> > +
+> > +     data->chip_id =3D (enum chips)(uintptr_t)i2c_get_match_data(clien=
+t);
+>
+> These are just wrong or redundant casts. You need only one cast -
+> kernel_ulong_t
+>
+> > +
+> > +     memcpy(data->max_phases, mp2869a_max_phases[data->chip_id],
+> > +             sizeof(data->max_phases));
+>
+> Why you cannot just store the pointer?
+As chip_id and max_phase will be constant, it should be acceptable to
+handle them via pointers in this case.
+>
+> > +
+> > +     memcpy(&data->info, &MP2869A_info, sizeof(*info));
+>
+> Why you cannot just store the pointer?
+Considering that the info can change at runtime, using memcpy is a
+safer approach
+>
+> > +     info =3D &data->info;
+> > +
+> > +
+>
+> One blank line, not two
+>
+> > +     /* Identify vout format. */
+> > +     ret =3D MP2869A_identify_vout_format(client, data);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> > +     /* set the device to page 0 */
+> > +     i2c_smbus_write_byte_data(client, PMBUS_PAGE, 0);
+> > +
+> > +     return pmbus_do_probe(client, info);
+> > +}
+> > +
+> > +static const struct of_device_id __maybe_unused mp2869a_of_match[] =3D=
+ {
+> > +     { .compatible =3D "mps,mp2869a", .data =3D (void *)mp2869a },
+> > +     { .compatible =3D "mps,mp29612a", .data =3D (void *)mp29612a},
+> > +     {}
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(of, mp2869a_of_match);
+> > +
+> > +static struct i2c_driver mp2869a_driver =3D {
+> > +     .driver =3D {
+> > +             .name =3D "mp2869a",
+> > +             .of_match_table =3D mp2869a_of_match,
+> > +     },
+> > +     .probe =3D mp2869a_probe,
+> > +     .id_table =3D mp2869a_id,
+> > +};
+> > +
+> > +module_i2c_driver(mp2869a_driver);
+> > +
+> > +
+>
+> One blank line, not two. This applies everywhere.
+>
+> > +MODULE_AUTHOR("Henry Wu <Henry_WU@quantatw.com>");
+> > +MODULE_DESCRIPTION("PMBus driver for MPS MP2869A/MP29612A device");
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_IMPORT_NS(PMBUS);
+>
+>
+> Best regards,
+> Krzysztof
 
-LGTM, thanks!
+Thank you for your advice. I still have a few questions and would
+appreciate your help in resolving them.
 
-Reviewed-by: Bagas Sanjaya <bagasdotme@gmail.com>
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---KyriZ8LMcR1w2jqJ
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCaFuXnwAKCRD2uYlJVVFO
-o/ZcAQDEmscUf690FtG11NjUGtksSU/l4/aDjLtqVkkjrjdEIwEAtPaKvUZIB0N0
-HiF6q3sjcMH9qCYR7TsgaW2yKKT1UQ4=
-=+B1+
------END PGP SIGNATURE-----
-
---KyriZ8LMcR1w2jqJ--
+Best regards,
+Henry Wu
