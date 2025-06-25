@@ -1,223 +1,147 @@
-Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b3-smtp.messagingengine.com (fhigh-b3-smtp.messagingengine.com [202.12.124.154])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D71C2BF00A
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:54:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C9B2BEFF9;
+	Wed, 25 Jun 2025 10:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.154
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750848864; cv=none; b=A/gN+gl9qtR2JMorLt86kS+kY9/Ndn+io7c5uHWqz36vE8dKtHEprDFKlk5baPhs85gjRflus22wOuk0HHlBIyr9XBbf6hDFyZSo8aOVK9gt6TE5wqzlCzozPMKu8gJnKq9V+YmMggFs7WYQvJaojdRowYy5IzTI0HUCeLQD+uw=
+	t=1750848865; cv=none; b=hABnj6qhK1Mf77NLTDo8l0MNlkPjojHqstNvDa6I55SR6obIbyUylw3IKgVJt53R/G19zMhrES0W9PEOfhRWsQjyk2fN6DZ8xPoBjR9heOIfnIys3SJjfqBM42NW3z8nIaCjEYw4aJg+ukkfhIYZFWXyESsn+meJ426iw8+cLXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750848864; c=relaxed/simple;
-	bh=oWw3YvvIIyZMO9LMr45beiGm0PsyuB9vcsoRXkosJKM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CqaY/CdsN27LzhYjKmCvxlTcvFXuASfpDkBZpYXDLHwaISawmVnUG74Y0eUjHEtlF5/vrJ9jNtA5eBvlBJ6eIS6Ex/LqKdJvkst5PU+Gs+mycOZwYBY8x5VORX3DrYkNsx0pp12RbaJhI8h+H5Mcl0yz3C3ksSNcfb86IWLZqes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aT0USNZ9; arc=none smtp.client-ip=209.85.215.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750848865; c=relaxed/simple;
+	bh=QrX85Qk8+fEb6NVTU9wtJF8ZOywbTwF2zcUmByN2bvc=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=qw7lu2FV4ub1jINJnQ4H2aPpe3P4T2uWiO4/uCHtyXJLY5Hd4NVqj6Z6vFcxqcuW+gwISVDpHKjJ06s//DXvaWYuF2Sm5jGVvog7zuxQpmyzfc/V1+RYwy0s9WYhxA6qWh/5eUCWMttwa2OnrLpg4RQqu5BmnzhLDEkVHSFcHGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=IviJ/koI; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=hmBVKdb2; arc=none smtp.client-ip=202.12.124.154
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aT0USNZ9"
-Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b31d8dd18cbso1880133a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:54:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750848862; x=1751453662; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fMQOsT+mdqoi8lnfK5N5XyAR9UzojfvCMCTObb86FVk=;
-        b=aT0USNZ9ShDL/4pPXa6PzRTtQNlnpQmOFm/3u1w0msLeBHMotUl8fZ+okNois4hm7t
-         YidGfb0Sbf3GlLqY6bdDbZAe9+OMSwGY7XZYVxMJE+qAenBVsOPLu/cQa1V3Hpt+qRtx
-         RTeCyPHAibwQ1b5IenmXVjuhTpq41SAFnSuXUfsttAAo5tehnzD+bCLO6NT9JA5R90e4
-         9gW5hb31f4QZfoZh4hCpnlWojQNp7Jn3ao/aaQ0Oajnz9rCHMYfKpE7dUsuAswJih03Y
-         R1O0CDuQYr4aclSfVNSucr2SenWRpv1yHlNUhhFfqBUvIuSV8LvCwjQ3habQ2fyl2wCj
-         s7sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750848862; x=1751453662;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fMQOsT+mdqoi8lnfK5N5XyAR9UzojfvCMCTObb86FVk=;
-        b=Z1BaBKxYgoa6dJdTC1Q0OqZuxS35WcMacC3CbPruwNtxvBQteYSKoEDAdEm2Yhmcta
-         KBDYKJAvCAhH0+nciLCjuLALWxs+pRRw03Oofhw16iCRKeQ6BKBRzNmpqOWr1M9doK0c
-         9dI90KZPPPUdP+TiPlPzLCMb1g2v/21gDqnNbTI9cZlCEF4+A2EK2bA9GvA8uuA3HSOP
-         VcQ/8zIXOreN8jhovyBeDV+EZJAhYwC/NtmBjh7IonL3KDfNeqy2V1/JwBNNHoDW848G
-         jwF2cUD9amCTm26TAWuECDS5vczMoA8K7x0/TBPijQSe9yagUblSFnc+tzplsQByPRoP
-         GeFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXHXgcyv+MD9xoSR5fWNpM2ccoDzKiqGMynU4KSe5UvjruZ1Vp78RxDNIQgr+XzhayVBR5VuqBRBWRp1XE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywzv0hJFgrhNENPYiqbLbhXLCKXbLaDP3X3k9JKhOZZfX4UvbJ7
-	3kdPYtdv7tQ4lHJCKWc0plVhn3z5FmbMDJZj7fSxBBr1nD8c8GbaVcd3Hzjl7h0O2m+b5lZZfBg
-	1iIlpBsgz3ToHsqx+wjG+6bUoXgv5dvG84ouK/RCSvg==
-X-Gm-Gg: ASbGncsHNzJHXhXjfr5a7NWSFKcWtfMVtajU6niKGba39wNgUwn5ROSn5w2Q38IHOw3
-	bO3hjYKGXc2PKwjCEWO+ZIo9dKRHnbKgcWmrgiAsJB5+9VwQdvFHCRH7aFZNZwVQaIvAV4dLPMy
-	rQZTwmU52CIr5oFHkd/Zx2Z1aE6hVQJvC4mOynfa2czGeEPlu4yQTg906KC/6uW8o7hYoYjvzwW
-	AOC
-X-Google-Smtp-Source: AGHT+IHiEEGI2cB5HHq+2rW2I162fZGpGjKdx9vFcpygnRYRBtx9ITlyUhy0ssBTVpCEGfR518CwQjoRlvHR7iSKwUs=
-X-Received: by 2002:a17:90b:1d05:b0:311:9c1f:8516 with SMTP id
- 98e67ed59e1d1-315f26192efmr4507300a91.15.1750848861645; Wed, 25 Jun 2025
- 03:54:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="IviJ/koI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hmBVKdb2"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 182227A0178;
+	Wed, 25 Jun 2025 06:54:23 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 25 Jun 2025 06:54:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1750848862;
+	 x=1750935262; bh=Q5dyaO3jSBoJfpd1LXwtd5ZZDDPtXRhCCAifrLMtgYI=; b=
+	IviJ/koIrcB8hPHAZrglLq1oI90x4D5pgi6phAXBeDVtKK4ntPx+cM27UyZX70Jh
+	zKL+yH0ZaZHTOxkvU61I7BcvL/f70FgUlQlQjS5lXvdbzzsquI1MAsCcyDFpUptO
+	+6tbMsm3P1ePCGMTJt8TyPIJ0DvD/2hO4PSpdOxXUgDYOKLTsHAUKPAbZUbdfMfv
+	nm5nuiUHaGea76co97MAxu5l4vdztm5YiuTVEpQnTnYER0NxDIMqWwCMJg88Dkux
+	udr+KUyZJBaiRkSdB3kMz+iTSVf5KMFmi4w2p+OZ+cE6Q8e/+JHJ2MzzCI9aq2rr
+	UYBmY647rUjCctUCUnNqzQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1750848862; x=
+	1750935262; bh=Q5dyaO3jSBoJfpd1LXwtd5ZZDDPtXRhCCAifrLMtgYI=; b=h
+	mBVKdb2EGEVl9P/hu6cVlskdKonc6kBTr5iO+fl8VkDuEodtZYpy9fCVOAttkFkl
+	wf/pz1qRzXkwf+9iya+Dn8dbcKZIlR5l8jq6erDs+JUDz1eZdDECqJxwfI5QnlJf
+	Z/+GYeJHTqo0UlMMOY+5Oj9HNwyXKwzyKbKz6BLKG2Y2PdaHmSOsxPPmZyeNVeXR
+	sJiLpiWwRa1FWtaxVOQWHOy4TGsPidrL40fJXLBO38HX99q8B3xuFX04f4Y/yhhl
+	ei8296LW/2mJUgII2fH0xwnCAlqz5GfQtl7SHIY/p2y7RWCH9YnVh5Vh78ADZuV6
+	3Juz57yTaCp5AwU0nIQ2g==
+X-ME-Sender: <xms:XtVbaGsW2vsBl-CUeudkQbooqUKrAFFLaMMa0worurSJ3RALyS1DYQ>
+    <xme:XtVbaLfJmeiJG2rchMmRHWnbPCTc7RGWwZA8_rDCIgmOCDKBnM6OlkuG7b1IY13sL
+    gf6DPhuFKlefMUdUKQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvvdehlecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopedutddpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtohepohhlthgvrghnvhesghhmrghilhdrtghomhdprhgtphhtthhopegsrh
+    hoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehjrghmvghsrdgtlhgrrhhk
+    sehlihhnrghrohdrohhrghdprhgtphhtthhopehimhigsehlihhsthhsrdhlihhnuhigrd
+    guvghvpdhrtghpthhtohephhgthheslhhsthdruggvpdhrtghpthhtohepfhhrrghnkhdr
+    lhhisehngihprdgtohhmpdhrtghpthhtoheplhgrrhhishgrrdhgrhhighhorhgvsehngi
+    hprdgtohhmpdhrtghpthhtohepvhhlrgguihhmihhrrdholhhtvggrnhesnhigphdrtgho
+    mhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdroh
+    hrgh
+X-ME-Proxy: <xmx:XtVbaBylydIhWBMIDzwS7NgF-ok3CrK0h5mJKkOcCq9Oa2KV84lAyw>
+    <xmx:XtVbaBPh5ayWHdjhaHdE_Cc0X2eu7Nq7J4CoSekFy51qfAbo9k4yGg>
+    <xmx:XtVbaG-r31mxLpOHBCCFm-LasbaMmwUxqw3zZsgNXLCQLW3k8WXtgQ>
+    <xmx:XtVbaJVUfAVFcPntLalkbFh5NZLavbapYMMLOV4jGMF-1e1RjwaXHg>
+    <xmx:XtVbaBp2SfdOSv5Okgh2WLL6JrNgVhTc_-YwW38zyk9lZkV4RH4gDfo3>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id A2792700063; Wed, 25 Jun 2025 06:54:22 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624121409.093630364@linuxfoundation.org>
-In-Reply-To: <20250624121409.093630364@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 25 Jun 2025 16:24:10 +0530
-X-Gm-Features: Ac12FXz97GBM2balbdrYLnqrqpEMD_cJZ26q0A3b3jEWkftx66qzM1sifzdDU30
-Message-ID: <CA+G9fYt_Z-Vtoan2z-OEoArWuNy=A9wwAoTyRF=G8zobZBaDvA@mail.gmail.com>
-Subject: Re: [PATCH 6.6 000/288] 6.6.95-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-ThreadId: T588a20d0ffbb3e40
+Date: Wed, 25 Jun 2025 12:54:02 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "James Clark" <james.clark@linaro.org>, "Frank Li" <Frank.li@nxp.com>
+Cc: "Vladimir Oltean" <olteanv@gmail.com>, "Mark Brown" <broonie@kernel.org>,
+ "Vladimir Oltean" <vladimir.oltean@nxp.com>,
+ "Larisa Grigore" <larisa.grigore@nxp.com>, "Christoph Hellwig" <hch@lst.de>,
+ linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Message-Id: <82824032-26d4-42a6-8a92-3e4a410741c5@app.fastmail.com>
+In-Reply-To: <884e86be-112b-44dd-a827-30355a5fdba6@linaro.org>
+References: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
+ <20250624-james-nxp-spi-dma-v3-3-e7d574f5f62c@linaro.org>
+ <aFrSgJ5xZfccEX9x@lizhi-Precision-Tower-5810>
+ <290fc244-e88f-47a3-8dd3-0ec27eb5c60b@app.fastmail.com>
+ <0c6c78da-575a-4d29-a79a-3903aa801b42@linaro.org>
+ <0f904f12-295c-48fe-96c7-c64c461cdbbd@app.fastmail.com>
+ <884e86be-112b-44dd-a827-30355a5fdba6@linaro.org>
+Subject: Re: [PATCH v3 3/6] spi: spi-fsl-dspi: Stub out DMA functions
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-On Tue, 24 Jun 2025 at 17:59, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Wed, Jun 25, 2025, at 12:19, James Clark wrote:
+> On 25/06/2025 11:00 am, Arnd Bergmann wrote:
+>> On Wed, Jun 25, 2025, at 11:19, James Clark wrote:
+>>> On 24/06/2025 6:16 pm, Arnd Bergmann wrote:
 >
-> This is the start of the stable review cycle for the 6.6.95 release.
-> There are 288 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 26 Jun 2025 12:13:28 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.6.95-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+> Wouldn't that allow someone to break it by disabling (or not enabling) 
+> that option? The driver won't fall back to the other modes if DMA isn't 
+> configured, it just won't work. In this case it seems like it's better 
+> to depend directly on DMA_ENGINE because that fixes the randconfig 
+> issues, which is the whole reason for the discussion.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+It would be the same as disabling DMA_ENGINE today when running on an
+SoC that supports DMA mode in DSPI. Ideally that should fall back
+to non-accelerated mode. I see a lot of checks for
+trans_mode == DSPI_DMA_MODE, and I it's probably best to change
+them to a function call like
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
+static inline bool dsp_dma_mode(struct fsl_dspi *dspi)
+{
+     if (!IS_ENABLED(CONFIG_DMA_ENGINE)) // or CONFIG_FSL_DSPI_USE_DMA
+          return false;
 
-## Build
-* kernel: 6.6.95-rc2
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: 33e06c71265b793ab2b3f3358952f6995d09e793
-* git describe: v6.6.94-289-g33e06c71265b
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.6.9=
-4-289-g33e06c71265b
+     return dspi->devtype_data->trans_mode == DSPI_DMA_MODE;
+}
 
-## Test Regressions (compared to v6.6.93-357-g7ef12da06319)
+> Would someone really want an option to disable compilation of two 
+> functions if their DSPI device is one that doesn't use DMA? Seems like 
+> this option would always be on anyway.
 
-## Metric Regressions (compared to v6.6.93-357-g7ef12da06319)
+It's probably mainly relevant if they want to completely turn off
+CONFIG_DMA_ENGINE, which is substantially bigger. Using a check
+for that symbol in the driver is certainly simpler for the user,
+as they can't accidentally turn it off the custom symbol.
 
-## Test Fixes (compared to v6.6.93-357-g7ef12da06319)
+In theory you may also want to turn off DMA mode for testing,
+which is supported by at least the DW_DMA driver.
 
-## Metric Fixes (compared to v6.6.93-357-g7ef12da06319)
+I see that SPI_TEGRA114 has a dependency on TEGRA20_APB_DMA,
+which is yet another variation. This is clearly done for
+usability purposes since that SPI driver only ever works with
+the specific DMA driver in practice, but it seems worse
+conceptually.
 
-## Test result summary
-total: 233901, pass: 212419, fail: 5723, skip: 15315, xfail: 444
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 129 total, 128 passed, 0 failed, 1 skipped
-* arm64: 44 total, 41 passed, 0 failed, 3 skipped
-* i386: 23 total, 23 passed, 0 failed
-* mips: 26 total, 25 passed, 1 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 32 total, 30 passed, 1 failed, 1 skipped
-* riscv: 15 total, 14 passed, 0 failed, 1 skipped
-* s390: 14 total, 12 passed, 1 failed, 1 skipped
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 7 total, 7 passed, 0 failed
-* x86_64: 37 total, 37 passed, 0 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-ftrace
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* lava
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* modules
-* perf
-* rcutorture
-
---
-Linaro LKFT
-https://lkft.linaro.org
+     Arnd
