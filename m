@@ -1,128 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05086AD58;
-	Wed, 25 Jun 2025 04:00:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC16AD58;
+	Wed, 25 Jun 2025 04:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750824044; cv=none; b=VXLW2M8FpLQ3PY54PbW+wb4d+pAIv318ity6G+YRhRZePk1/dz7pk0DDBKYRMlb1vt2txaJ4KD88ldZ5vKkD6Bkudg9OzObZk8RdeYnLomtDCbRiAuSpDefItF8v+1jX4x6qawUcCKQruCwMBfmd84eBT0MNTd/2s7iK/hy5mpE=
+	t=1750824155; cv=none; b=Q6fuEK/qdPxpWkQiHcWVr6IaOx8CqCV92SGL57M9/4E85TmE+Kqu3FqM72Xxu8ZZzFIsCu7Wkh8K5NQxybXbNDCQUUC6xpo6kRr2zdFnsoLS7AqQKZkANwTkWA6/RzSk+phv95a98zne3NU4YKaMacU2I8Bauks1TkkRgzwSZhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750824044; c=relaxed/simple;
-	bh=3knVkmzjeB1aYkBJciYzDKyPEWCxuge1R6dKhWJvBcQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HeEO2G6RUdBPBsghziM1bf8E9toFK7h+yhISiLZ2+EqM2EZmXrwuR+UgpEpN+js4ARDf7gbWvG4ES8h+1qHJ5LrnwMaRYzttWFtmpS2B5kQwkOUfPwX4hLO4I5pl1OMwytjUW+sDXpM8CZ6lxQko1yLrnRH4gjKKbmsHwkG8ntQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sBr5dcep; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750824155; c=relaxed/simple;
+	bh=O21scKjBjCYqhOcRsIeQl446xModxPPXhKh/+5x9Mzk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=P8yPHQvYbkQGRF9TYn/Or7VGyAXmCpz818nGxkXOPBIS21O3auSvBDNORoKX+2ZxJJyn68HVsdxSyWH3mgNJslgW0dbd5N+ebJtTEA1EJvUL0euUBZrKmm4LHMTtMKcJA3AhRvQg4yThZatkh3D1sSwVGP3+WXwWar0GSUldUtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=mxkYqqnQ; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sBr5dcep"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C19BCC4CEEA;
-	Wed, 25 Jun 2025 04:00:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750824042;
-	bh=3knVkmzjeB1aYkBJciYzDKyPEWCxuge1R6dKhWJvBcQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sBr5dcepNEQgPiRg3aaI/tOgzPBOPr6ZvrJJamIx77DLo+9nA/3P0YctklKIDpPgk
-	 GVgjcQZPPDQo8k/1JJWkLGuYvOHk2Ec3sWXraK+bXtoLMKw/NBYJnrE5XgpNoBXNRM
-	 +SA1hpeV+Cv/l0SzOmGGHtFioAgWm9GbHdatVZtm1IYur/9FCnDMr50my/rQ8JPTzk
-	 VOXoKAkPCtBWdsfe+Yld1NzyP7dmRUN+R1+h5q6keBuzDwQUMCfnhCEkWtS2aYrRpu
-	 emtMVAvw6xPvsun4VXM0pkq19W9i4LIX8GqygUiSuq5BVoS5Vz72U9+9zVLN/DeiMH
-	 H2UjHxxWO23CQ==
-Date: Tue, 24 Jun 2025 22:00:31 -0600
-From: Manivannan Sadhasivam <mani@kernel.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: lpieralisi@kernel.org, kwilczynski@kernel.org, robh@kernel.org, 
-	bhelgaas@google.com, krzk+dt@kernel.org, conor+dt@kernel.org, 
-	mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, p.zabel@pengutronix.de, 
-	johan+linaro@kernel.org, cassel@kernel.org, shradha.t@samsung.com, 
-	thippeswamy.havalige@amd.com, quic_schintav@quicinc.com, 
-	Christian Bruel <christian.bruel@foss.st.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH v12 0/9] Add STM32MP25 PCIe drivers
-Message-ID: <3bmw76gzqjq2nmjvj7tb6gi5x233zzfrhv44uyjopl2lxyzbkh@zg5skeu62nbh>
-References: <175068078778.15794.15418191733712827693.b4-ty@kernel.org>
- <20250624222206.GA1537968@bhelgaas>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mxkYqqnQ"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=ChYOoIrjyn9EZyp3mWMJRayCKpw54Lkx/7MojD3irCA=; b=mxkYqqnQ2wYj1/rtGJOhEslqbm
+	xZMR+RE4yyR6kDjK6ujzwkSrtks//4eyBgwqltxunY5u0FI12Sf1KQzJ1v2bE2l5swl4ga/CLvJva
+	3lrNnDM+iKwApbzubLXhAhV8RVQJ0KU/Am0MLDV4tU/O9NjTepI4l3X/guHwL1l8C9ThGyW52PWuK
+	XapvtVyp4dbPR2JfxZPXsOG7CGWQfGRlbivgBbIIrnYM7ae73zfK5cD3RXAynhg7W+ANFAUDf8SLN
+	yjhrf4YBe1G5VypGlmYSE54aAKjx3DfYF0tkNrZoCHx85o3ign1H3xUbNGopiQkIICLKUsbmESXUI
+	Ns5YuY1A==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uUHLA-00000008P7Z-0eaD;
+	Wed, 25 Jun 2025 04:02:28 +0000
+Message-ID: <e99773dd-c49e-4a09-bf2c-dacadfdd1c5b@infradead.org>
+Date: Tue, 24 Jun 2025 21:02:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250624222206.GA1537968@bhelgaas>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] leds: tps6131x: add V4L2_FLASH_LED_CLASS dependency
+To: Arnd Bergmann <arnd@kernel.org>, Lee Jones <lee@kernel.org>,
+ Pavel Machek <pavel@kernel.org>, Matthias Fend <matthias.fend@emfend.at>
+Cc: Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Andr=C3=A9_Apitzsch?=
+ <git@apitzsch.eu>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250620114440.4080938-1-arnd@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250620114440.4080938-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 24, 2025 at 05:22:06PM -0500, Bjorn Helgaas wrote:
-> On Mon, Jun 23, 2025 at 06:13:07AM -0600, Manivannan Sadhasivam wrote:
-> > On Tue, 10 Jun 2025 11:07:05 +0200, Christian Bruel wrote:
-> > > Changes in v12;
-> > >    Fix warning reported by kernel test robot <lkp@intel.com>
-> > > 
-> > > Changes in v11;
-> > >    Address comments from Manivanna:
-> > >    - RC driver: Do not call pm_runtime_get_noresume in probe
-> > >                 More uses of dev_err_probe
-> > >    - EP driver: Use level triggered PERST# irq
-> > > 
-> > > [...]
-> > 
-> > Applied, thanks!
-> > 
-> > [1/9] dt-bindings: PCI: Add STM32MP25 PCIe Root Complex bindings
-> >       commit: 41d5cfbdda7a61c5d646a54035b697205cff1cf0
-> > [2/9] PCI: stm32: Add PCIe host support for STM32MP25
-> >       commit: f6111bc2d8fe6ffc741661126a2174523124dc11
-> > [3/9] dt-bindings: PCI: Add STM32MP25 PCIe Endpoint bindings
-> >       commit: 203cfc4a23506ffb9c48d1300348c290dbf9368e
-> > [4/9] PCI: stm32: Add PCIe Endpoint support for STM32MP25
-> >       commit: 8869fb36a107a9ff18dab8c224de6afff1e81dec
-> > [5/9] MAINTAINERS: add entry for ST STM32MP25 PCIe drivers
-> >       commit: 003902ed7778d62083120253cd282a9112674986
+
+
+On 6/20/25 4:43 AM, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> This doesn't build for me with the attached config:
+> This driver can optionally use the v4l2_flash infrastructure, but fails to
+> link built=in if that is in a loadable module:
 > 
->   $ make drivers/pci/controller/dwc/pcie-stm32.o
->     CALL    scripts/checksyscalls.sh
->     DESCEND objtool
->     INSTALL libsubcmd_headers
->     CC      drivers/pci/controller/dwc/pcie-stm32.o
->   drivers/pci/controller/dwc/pcie-stm32.c: In function ‘stm32_pcie_suspend_noirq’:
->   drivers/pci/controller/dwc/pcie-stm32.c:83:16: error: implicit declaration of function ‘pinctrl_pm_select_sleep_state’ [-Werror=implicit-function-declaration]
->      83 |         return pinctrl_pm_select_sleep_state(dev);
-> 	|                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   drivers/pci/controller/dwc/pcie-stm32.c: In function ‘stm32_pcie_resume_noirq’:
->   drivers/pci/controller/dwc/pcie-stm32.c:96:24: error: ‘struct device’ has no member named ‘pins’
->      96 |         if (!IS_ERR(dev->pins->init_state))
-> 	|                        ^~
->   drivers/pci/controller/dwc/pcie-stm32.c:97:23: error: implicit declaration of function ‘pinctrl_select_state’ [-Werror=implicit-function-declaration]
->      97 |                 ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
-> 	|                       ^~~~~~~~~~~~~~~~~~~~
->   drivers/pci/controller/dwc/pcie-stm32.c:97:47: error: ‘struct device’ has no member named ‘pins’
->      97 |                 ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
-> 	|                                               ^~
->   drivers/pci/controller/dwc/pcie-stm32.c:97:61: error: ‘struct device’ has no member named ‘pins’
->      97 |                 ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
-> 	|                                                             ^~
->   drivers/pci/controller/dwc/pcie-stm32.c:99:23: error: implicit declaration of function ‘pinctrl_pm_select_default_state’ [-Werror=implicit-function-declaration]
->      99 |                 ret = pinctrl_pm_select_default_state(dev);
-> 	|                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> ld.lld-21: error: undefined symbol: v4l2_flash_release
+>>>> referenced by leds-tps6131x.c:792 (drivers/leds/flash/leds-tps6131x.c:792)
 > 
+> Add the usual Kconfig dependency for it, still allowing it to be built when
+> CONFIG_V4L2_FLASH_LED_CLASS is disabled.
+> 
+> Fixes: b338a2ae9b31 ("leds: tps6131x: Add support for Texas Instruments TPS6131X flash LED driver")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Hmm... I see two issues here. First is, wrong pinctrl header used. The correct
-one is:
+I just made this same patch, so
 
-#include <linux/pinctrl/consumer.h>
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
 
-Second issue is the driver accessing "struct device::pins" directly. The "pins"
-member won't be available if CONFIG_PINCTRL is not set (which is what your
-.config has). So either the member should not be accessed directly or the
-driver has to depend on CONFIG_PINCTRL. The latter one is not acceptable. It
-also looks weird that only this driver is accessing the "pins" member directly
-apart from the pinctrl core. So I think this part needs a revisit.
+Thanks.
 
-Christian?
-
-- Mani
+> ---
+>  drivers/leds/flash/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/leds/flash/Kconfig b/drivers/leds/flash/Kconfig
+> index 55ca663ca506..5e08102a6784 100644
+> --- a/drivers/leds/flash/Kconfig
+> +++ b/drivers/leds/flash/Kconfig
+> @@ -136,6 +136,7 @@ config LEDS_TPS6131X
+>  	tristate "LED support for TI TPS6131x flash LED driver"
+>  	depends on I2C && OF
+>  	depends on GPIOLIB
+> +	depends on V4L2_FLASH_LED_CLASS || !V4L2_FLASH_LED_CLASS
+>  	select REGMAP_I2C
+>  	help
+>  	  This option enables support for Texas Instruments TPS61310/TPS61311
 
 -- 
-மணிவண்ணன் சதாசிவம்
+~Randy
