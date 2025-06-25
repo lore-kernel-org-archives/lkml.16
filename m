@@ -1,44 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A3AC8EB;
-	Wed, 25 Jun 2025 09:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44C3B1FF1A1
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750845085; cv=none; b=kOwu7O89yLRrk9CuGQzUF8PhzStRgrxF7k1FLVr1GRlbeg9E7YDKVWpcz/25DH9vdxMBgCbBTL2rgLdoEz4XGQFl15lzcFU9CfCTYmG9XjeBqi1OseyH0pZNWoELLfk5XGDX9TAlgF3H19Qi1qx+qj+wri8PYnKIlklc968Hp/w=
+	t=1750845128; cv=none; b=UnAz37RcJHMRFBtVht4dMWHLmkJ38lWrlo/1cTdXWrFcAmyKQRFwbZgJEe1sDVDuXajuY78s/TDYaGcNZ6dvhTq5OIU9PjIsGk5qce17wceFv9ftpiW3ha3NXOyY+BF4uX3EbH+AfqhCXk2T46U4SkS8SmmBjj0dZv+tv/FuGaI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750845085; c=relaxed/simple;
-	bh=nsyYLD5tEsSDiZwhTUu9p+LYrIKoWaOimwLJ+QPz3TA=;
+	s=arc-20240116; t=1750845128; c=relaxed/simple;
+	bh=gmn2IeMhW40VIwFyOegsnZI+vS3HH21BgBRu98Mv8YU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dCKGJp2ol5VuF8R3WgHaGRVF8yHMMvidIXbEVAKLJ1kOwIDgNSBU9lT9nowYrs7YlILb0xxa9o77wGuSPZ0ELUxEkLHumQUIxu6vzjNH7NI7iI+UmIgO+9WENmmCTcR2js1xZQeVt3/8308ob8T8+ZB2L78Kt6aEGD/ivgSerjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dDu98FBI; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TKciIbB7o8wRxls5JRAb7GBaaa43rdxRcc5jR0mv3naFxn4TYzWRVnizq7g+Dm0l8rmM498GYDpdWUInSUWDl62Vri30uiqWEySEA3KXVYeDW/MxDVMLG5J45FFWrukaUETsl0UrhEPhKeBJsDh3VLn5QhFcUHwX9lfHMYBvEcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TclL2auC; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dDu98FBI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E48C4CEEA;
-	Wed, 25 Jun 2025 09:51:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750845085;
-	bh=nsyYLD5tEsSDiZwhTUu9p+LYrIKoWaOimwLJ+QPz3TA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dDu98FBIEG1MEJZdAQZ8KBO68A32+ex0scuqy993yoe1dLovihqHl1p3SaK0DxNLS
-	 H14OHHGhXFYk5H6lrwkIy+OBNxaUwC5THfx7L57G9r/fpVQO7+k65EYcTfIRJyhFkl
-	 KoXA9/G4qOdnX1bDCzLYiurrdTFtCRGVe7adiP26WCIQvVUVBorfgIG9CZzTkITyX+
-	 uKFMSWsAu/7wKOu1YpxCdlJY3JMxrhZ14a40WS2F5VUHfXJ31UN68mYPz5GEp+VF83
-	 9DXFvKip96+zJIWQB6PMJOf1R2c73l7as6m3t6JYfUEnoKpWKKLlobYGItXIxnhdS3
-	 KxSXXNyAOv/Ng==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uUMmq-000000000eR-22uF;
-	Wed, 25 Jun 2025 11:51:24 +0200
-Date: Wed, 25 Jun 2025 11:51:24 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Baochen Qiang <quic_bqiang@quicinc.com>
-Cc: Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
-	ath12k@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Gregoire <gregoire.s93@live.fr>, Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH ath-next 0/2] wifi: ath12k: install pairwise key first
-Message-ID: <aFvGnJwMTqDbYsHF@hovoldconsulting.com>
-References: <20250523-ath12k-unicast-key-first-v1-0-f53c3880e6d8@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TclL2auC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750845127; x=1782381127;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gmn2IeMhW40VIwFyOegsnZI+vS3HH21BgBRu98Mv8YU=;
+  b=TclL2auCKV2nzlLIhd/gzlApOrhg/b6/eXCeEdY0rJqGl4N/UGUVWXMn
+   P02j+sbFFwpcqIPrE2LVGCaAj/BAg+E9cLH6gp/53hsmrxVnx3HXhCWG1
+   NUhT0MlfT3XM697kD0gFloWAxs0qTp8jW+TQM/mYqpivcOlkGaGX1q+gH
+   tFcpjwm92G7481Lri54NGHPudXBz71bBbGyJjVMCRzS5+aL3CHovBFNQr
+   2C3ViY601MY0wRsBGlMRp7akjYUHMAy3GI4LNXHg6P7VM2W7wXxOvp5QF
+   YI8bBiHvU0Pe4CLKI9iiFaeNxotPBhsG0SSA6VpZ6ZChAhbUqY7EjOlu+
+   w==;
+X-CSE-ConnectionGUID: J+yKAuLmQl+Ga7F71uC0tA==
+X-CSE-MsgGUID: 9c6KEd1mTzGsYQ9c6/IqMA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="56786481"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="56786481"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 02:52:07 -0700
+X-CSE-ConnectionGUID: TS7JZHS1TkuGXO5DiNVGqg==
+X-CSE-MsgGUID: S2ffql/iSUyqlPPj3wsuig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="156742942"
+Received: from klitkey1-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.155])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 02:52:06 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 5A16011F742;
+	Wed, 25 Jun 2025 12:52:02 +0300 (EEST)
+Date: Wed, 25 Jun 2025 09:52:02 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Hans de Goede <hansg@kernel.org>
+Cc: Stanislaw Gruszka <stanislaw.gruszka@linux.intel.com>,
+	Alexander Usyskin <alexander.usyskin@intel.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/10] mei: vsc: Various bug-fixes
+Message-ID: <aFvGwlin0q8YWkZO@kekkonen.localdomain>
+References: <20250623085052.12347-1-hansg@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,35 +66,35 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250523-ath12k-unicast-key-first-v1-0-f53c3880e6d8@quicinc.com>
+In-Reply-To: <20250623085052.12347-1-hansg@kernel.org>
 
-[ +CC: Gregoire ]
+Hi Hans,
 
-On Fri, May 23, 2025 at 11:49:00AM +0800, Baochen Qiang wrote:
-> We got report that WCN7850 is not working with IWD [1][2]. Debug
-> shows the reason is that IWD installs group key before pairwise
-> key, which goes against WCN7850's firmware.
+On Mon, Jun 23, 2025 at 10:50:42AM +0200, Hans de Goede wrote:
+> Hi All,
 > 
-> Reorder key install to workaround this.
+> When running a kernel with CONFIG_PROVE_RAW_LOCK_NESTING on any laptop
+> with an Intel Visual Sensing Controller chip, the vsc-tp code will
+> trigger a lockdep warning.
 > 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=218733
-> [2] https://lore.kernel.org/all/AS8P190MB12051DDBD84CD88E71C40AD7873F2@AS8P190MB1205.EURP190.PROD.OUTLOOK.COM
+> While investigating this I noticed a bunch of other issues / bugs in
+> the VSC code, resulting in the first 9 patches of this series, fixing:
 > 
-> Signed-off-by: Baochen Qiang <quic_bqiang@quicinc.com>
-> ---
-> ---
-> Baochen Qiang (2):
->       wifi: ath12k: avoid bit operation on key flags
->       wifi: ath12k: install pairwise key first
+> - An unnecessary 11 second delay on shutdown / reboot
+> - Destroying the mutex while the threaded ISR which uses it might still
+>   be running
+> - Racy use of the event_notify callback
+> - Dead event_notify callback still being registered after remove()
+> - Thread ISR waiting for hard ISR to run a second/third time
+> - The lockdep issue starting all this
+> - And some cleanups while at it...
+> 
+> Patch 10 is a generic mei debug patch to help catch similar
+> use-after-free issues as the on I fixed recently [1].
 
-Thanks for fixing this, Baochen.
+Thanks for the set.
 
-I noticed the patches weren't clearly marked as fixes. Do you think we
-should ask the stable team to backport these once they are in mainline
-(e.g. after 6.17-rc1 is out)? Or do you think they are too intrusive and
-risky to backport or similar?
+Reviewed-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
-[ Also please try to remember to CC any (public) reporters. I only found
-  out today that this had been addressed in linux-next. ]
-
-Johan
+-- 
+Sakari Ailus
