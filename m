@@ -1,123 +1,94 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89502673BD
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F98B267AF2;
+	Wed, 25 Jun 2025 14:33:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750862036; cv=none; b=Bw0m9CsZsABUGGaOSG0Mfpo0l5nNr707kaOXqhbknXSR3Io/EFRgkzdMHFXV1Aa8jH+7pd2QIgyw52yf7IEx8Gua/cK5WEN4RrPYRE96JGh7lfQmgxeZ7jqwXnRj3m2zybVNw/WSefxd7HhNjCoEEJbJO2J/CoeFDAb7K7z/VjE=
+	t=1750862037; cv=none; b=MWA+tmJMCkThgA50FjNNalaFeFczNxEvLgYTqGJxHTW/FQkg1y6gZFW8tSnPQYfLQlVpRzo7bQpN6eeVueo362s/VjaHUJWrXGJ3RkSeks6EXGjqMH6LZiRl11wNoS2QXFuT3jMC8BTsbWb1+tRdfYbzJ6t/RFBLU3cR1aKY7ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750862036; c=relaxed/simple;
-	bh=k/9Jmpcevuw9DPLUN7lxWq/HVRKdkSC2nfzszYCDb30=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nKT/hi1GcyHPqKL0V+t3KKCA7iLK0SZF9mXEcDmLGxrUCNhZScMe0csAxL1MfJyDG/Csn80FG3B9SmVYxyZ1lCkoKMKu1UCtjE8DOaRscoPx6KywB7RByYYXLGZN6wWPtw8s8Fpq8Cc/Jejc6kY8tGjUMMgyXcc+OAu6KmuTk1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FLZcWRah; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750862037; c=relaxed/simple;
+	bh=oeQkMIMFB6iyZBNWgp/vkC7G3MTX0luROzLbuvlcPVM=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=vERZjz7QfkstrtgFjccLz7SGO53VjMu5eWXZ6VkURIrVfxgjcnBNLoBIBqDN6lkAPozAQR5D6o40FspiU5gH7lmJ6cBdo4t9M9ZZkE/+SM2EXVYyLxImN9nMIweF86HR6u/a9UqxOxAaPmeN/VyEQfNERtzW6etoa0dC2ako9As=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=PSkuugfO; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FLZcWRah"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-237f270513bso147225ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:33:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750862034; x=1751466834; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BdV48kTp/uRROljNRCynqJ7h0+dKwD9pZid+7Ju9vko=;
-        b=FLZcWRahed/cn0x/habzbVuKXmZ8smUrK0DytAimjUAB29yqxoUhuNkSZSeo7lmqoO
-         P53EXbq32TNb2FE/dcII/rv8m5wlWMUqK/9UMvfB/jhN3slPF0Akw6gbHqS6li+F6bIU
-         3cwRdkH2PtAu/6OoQFOGDxODEZF/m0r/52USX1JlXUxkmyZFMusihN9lYR9d0+7O9V1i
-         3doBljxT0RCG9PjDTIppWmVZkGOkx0ute/e1XSaIj36DfYx/RsVuc7uUCAw0Y4TLhr7D
-         drAAsgAc7j3YLJEDQQmsE0w6dGyUatd16vZrjNUdbhXAw1Ph1Cgy7gGu1V49qb56hPNl
-         KlCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750862034; x=1751466834;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BdV48kTp/uRROljNRCynqJ7h0+dKwD9pZid+7Ju9vko=;
-        b=XdGJvilW6stNNfuHGxb2blBs2+BE2TBfYBB8ZwB6SC/2HaSay5apI2KjAXrJVy6WL+
-         7009luPiiE1Ejl7UarypDpxLKzqs4+oVapLEsT4NP6YTK3JL5vQ1MguXYdSM64LmAx0z
-         e89DFEElxIG98Na1OwrzPz6XZx2/B5SuK6iXzvrQOeGovfBRi824NGKtCXDl107UGNUL
-         gOpmRE3z6RIH+FDj4AinSTSHKr992gcXph2LH1h7U3/6IhGxP1ZNnL6oI1BwzPfoO50q
-         ccd9eXxqxYQzF/bkeRPNSxS/kol+ZNr3kSbKfyGOBfhUVOyzTVutSHQ4Gr6Fe962vv5/
-         cTTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXRrvEC/1R393RTSh9adf3qpKKK36UvO/kNcEZB4qkxE1eo/aycv6rUOzWQrT3vaGiVwq5h5C/+o10oki0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzFVeQgDEUZwgB/zQ/B56t/v/1kSmbcSCDzv9bbv0fKSOsRuMuY
-	R12vx4fV/9YSNlbjr+mVEJwtZNRTQGXqDEwFa7hOC29lzYaHYvDsuviVPCuW/RNi0HKvRr/2HEZ
-	W1FoZmPljB7IZiiOOKEwuVSDiVGJEQ4LXGa2JzbdX
-X-Gm-Gg: ASbGncvjBr/9mTjho/fvHtU5XOfpDIfKZAGQpMiDmymmqopSLrPh1+7XH9O9OfOzFzF
-	HX30uhYa0a7upsg38+bc5MghTrPn81qBCZyI3MB+kQPPW5kG3kCRT9mnNrbKckDHGApRNADGdD5
-	1eR9lAduS29vWmx0ZOmmBFYDADfDWqjBe8DarMMfW5QyWrgNtVIgX1MbnnYWiZMjdLSDqVsyXKb
-	TkI
-X-Google-Smtp-Source: AGHT+IHOl4ROtzPHTK+wA3RxqSQB0nXvE1X3o8JvmI/Y5HuW89eI98s0XYuUXqOg4//IZvRW47fajZljsA5Du+i3Zig=
-X-Received: by 2002:a17:903:178b:b0:235:f298:cbbb with SMTP id
- d9443c01a7336-23827442ec7mr2061555ad.26.1750862033549; Wed, 25 Jun 2025
- 07:33:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PSkuugfO"
+Received: from fllvem-sh03.itg.ti.com ([10.64.41.86])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55PEXdmh1479921;
+	Wed, 25 Jun 2025 09:33:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1750862019;
+	bh=QqPH4JN1NbqC6SS3Vqqj5iNOfWfX5mEGpHGRkw4vSh4=;
+	h=From:To:CC:Subject:Date:In-Reply-To:References;
+	b=PSkuugfOntx9eXfYydKq5SN+jUA+SHsk8BB8DZ780JEiATUHqVlRgtyX+tDc4LDI+
+	 ssZnEXXkk6uNDoNfLzam96ZmjUux/opncPQe2QtUB7t2o8knrNZGyBouMfdf3P+EpH
+	 Mt/zPqvfqTjDfq+Hi0+ZNLPJs0XFFQwj4ZqeEHLk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+	by fllvem-sh03.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55PEXdPl1077387
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
+	Wed, 25 Jun 2025 09:33:39 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 25
+ Jun 2025 09:33:39 -0500
+Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
+ Frontend Transport; Wed, 25 Jun 2025 09:33:39 -0500
+Received: from judy-hp.dhcp.ti.com (judy-hp.dhcp.ti.com [128.247.81.105])
+	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55PEXco23804070;
+	Wed, 25 Jun 2025 09:33:38 -0500
+From: Judith Mendez <jm@ti.com>
+To: Judith Mendez <jm@ti.com>, Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>,
+        <linux-watchdog@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/2] dt-bindings: watchdog: ti,rti-wdt: Add ti,am62l-rti-wdt compatible
+Date: Wed, 25 Jun 2025 09:33:37 -0500
+Message-ID: <20250625143338.2381726-2-jm@ti.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250625143338.2381726-1-jm@ti.com>
+References: <20250625143338.2381726-1-jm@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618120806.113884-1-adrian.hunter@intel.com>
- <20250618120806.113884-3-adrian.hunter@intel.com> <68938275-3f6a-46fc-9b38-2c916fdec3d6@intel.com>
-In-Reply-To: <68938275-3f6a-46fc-9b38-2c916fdec3d6@intel.com>
-From: Vishal Annapurve <vannapurve@google.com>
-Date: Wed, 25 Jun 2025 07:33:41 -0700
-X-Gm-Features: AX0GCFtcX4EHPJezVuR03z_zvYB0b1sB8iUGWdlclbBZyL1LJyYQEWzO3JG3LhQ
-Message-ID: <CAGtprH_cVwWhfXFkM-=rVzQZ0CpY_zcnkF=q5x1n_9Bzm1xKfw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] KVM: TDX: Do not clear poisoned pages
-To: Dave Hansen <dave.hansen@intel.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>, Tony Luck <tony.luck@intel.com>, pbonzini@redhat.com, 
-	seanjc@google.com, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	H Peter Anvin <hpa@zytor.com>, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, rick.p.edgecombe@intel.com, 
-	kirill.shutemov@linux.intel.com, kai.huang@intel.com, 
-	reinette.chatre@intel.com, xiaoyao.li@intel.com, 
-	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
-	isaku.yamahata@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On Wed, Jun 18, 2025 at 7:58=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
- wrote:
->
-> On 6/18/25 05:08, Adrian Hunter wrote:
-> > --- a/arch/x86/kvm/vmx/tdx.c
-> > +++ b/arch/x86/kvm/vmx/tdx.c
-> > @@ -282,10 +282,10 @@ static void tdx_clear_page(struct page *page)
-> >       void *dest =3D page_to_virt(page);
-> >       unsigned long i;
-> >
-> > -     /*
-> > -      * The page could have been poisoned.  MOVDIR64B also clears
-> > -      * the poison bit so the kernel can safely use the page again.
-> > -      */
-> > +     /* Machine check handler may have poisoned the page */
-> > +     if (PageHWPoison(page))
-> > +             return;
+Add a new compatible ti,am62l-rti-wdt for am62l SoC [0].
 
-IIUC, even if movdir64b stores contents on hwpoisoned pages, it's not
-going to cause any trouble.
+[0] https://www.ti.com/product/AM62L
+Signed-off-by: Judith Mendez <jm@ti.com>
+---
+Changes since v1-resend:
+- Binding: order compatible alphabetically
+---
+ Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-This check should be (unlikely(PageHWPoison(page)) and even better
-probably should be omitted altogether if there are no side effects of
-direct store to hwpoisoned pages.
+diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+index 62ddc284a524..2966e5bfb6c0 100644
+--- a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
++++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
+@@ -23,6 +23,7 @@ allOf:
+ properties:
+   compatible:
+     enum:
++      - ti,am62l-rti-wdt
+       - ti,j7-rti-wdt
+ 
+   reg:
+-- 
+2.49.0
 
->
-> I think the old comment needs to stay in some form.
->
-> There are two kinds of poisons here: One from an integrity mismatch and
-> the other because the hardware decided the memory is bad. MOVDIR64B
-> clears the integrity one, but not the hardware one obviously.
-
-To ensure I understand correctly, Am I correct in saying: movdir64b
-clearing the integrity poison is just hardware clearing the poison
-bit, software will still treat that page as poisoned?
-
->
-> Could we make that clear in the comment, please?
->
->
