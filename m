@@ -1,89 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10802264F9F;
-	Wed, 25 Jun 2025 13:15:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06DBD264A7C;
+	Wed, 25 Jun 2025 13:15:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750857357; cv=none; b=UwEIgOdAvfgb6a6i2zVA4hSLdbAw+QlLk1R2Mxz/8RByglfhIP0q04758GxfkKElInG4ASumd0ra3m9wyiUsEjskyRkANktADqKX4qSzXlWgsuURxtiGn5AgQjrfRIGSmIAaI8GiwYuxFG3FhkW0s+mpZZREss3jLuW61+bbR6Q=
+	t=1750857357; cv=none; b=GHB0ROSNNFKYArRq1eLqJRnYaHjkYJpQVlKeLynhU1Sxboi2M8IEz0qDZGRPaKgkFkWWTCN1RBEsh268trC9ykt0bve2VNmUMxJiQK7WPVFgdiw+O2ga8rAzLtMea4f4EuiDTvLmPb+OmO7ClTVj869s394s44lIzg8TM/WTyZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750857357; c=relaxed/simple;
-	bh=tzu8C7G0MXN2UCFhPls8DX7uDkR2X/rKpQJD5CnqN8o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AWm6IkPfu1jbLDoNQ+I0GMcJ6GW0CM+k2ZFPfXwlcwsCrXHE1jV4zy+BW76y5iI5lgciGxwoDZXGlyiRmlDn+XMzASur4O7tkedNkgowjCfpTksQ/J4/yfPLTOSEEfDwGqkCSDsO6LZ/yNpxNuk5S9eAili5Pts3C4zk6Yqkla0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gWT6vpi5; arc=none smtp.client-ip=10.30.226.201
+	bh=1Ew8prqLY6S9T/f6MB6W2DVISyi22iiN0qriMIihJcU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HIYSTpIC05huOWaZugngYgYbK5cTpShHdWQ/TCwHaAvvd0Ks4Ikb3QDQuoZiGMtG/NPADpK++1SYuGhAYLVYTL0BDVOg+OWYzN+qVIuDuUIABXcFGLOPqNYeo0FRx46MXpffeWdMBYh9jTj7gfn60hpFx+qFYlmrMMVhUErpw8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hi/sTCLH; arc=none smtp.client-ip=209.85.128.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gWT6vpi5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48213C4CEF0;
-	Wed, 25 Jun 2025 13:15:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750857356;
-	bh=tzu8C7G0MXN2UCFhPls8DX7uDkR2X/rKpQJD5CnqN8o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gWT6vpi5BODHPyeVqzNQJeFoRruUOyzf+nuN/Vbk1yO1fGiePeTUm3kaWPxO5Sncu
-	 mFvn0biHHgL/IrQI4LjX3M3Ji7qn2PorTm08rNQiigEUORqJjiTfV9/Ov6LfsrVqa7
-	 Or632OZbPTLpFo0DqhzElhPJklq+zGMaEk84XJvUNQ+qvHI+5Psc3Pof65fdnbVKGs
-	 WjBmeJM4OjItEOGxLs8PX2EdqX+u6AC3IYOPfDhU4E1bcK2shrnnRPl5h0SMnpOmPK
-	 ZZXG4KHYXsP2c9quWr2apNoJOCfS3TLkV/AAs9SsfA0Mb1XMRehXyTFzkz2y0LqMNE
-	 1NVVuBcFQQsgQ==
-From: Will Deacon <will@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Will Deacon <will@kernel.org>,
-	Keir Fraser <keirf@google.com>,
-	Steven Moreland <smoreland@google.com>,
-	Frederick Mayle <fmayle@google.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	netdev@vger.kernel.org,
-	virtualization@lists.linux.dev
-Subject: [PATCH 2/5] vsock/virtio: Resize receive buffers so that each SKB fits in a page
-Date: Wed, 25 Jun 2025 14:15:40 +0100
-Message-Id: <20250625131543.5155-3-will@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250625131543.5155-1-will@kernel.org>
-References: <20250625131543.5155-1-will@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hi/sTCLH"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-450ce671a08so41965915e9.3;
+        Wed, 25 Jun 2025 06:15:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750857354; x=1751462154; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=myFzD7QWLL6mVi6x4ybFyj0pD8esGFOCmQhIz9MBaqQ=;
+        b=Hi/sTCLHFZcUVlrTf3cCRcmg0TUEtWHHx5UkFHCgNecYD/FpeLTgUZjv9YNXGMwqBs
+         Bw2idU4IkZMMwPqkYouvsQmYTkxRJBLx/qtjh4Jaf6JF52zIiubJenjQi8nq2ntP1nGp
+         afAblklFnTjGoea9lk2RiZsaN47aR32nOYHEnfD2QUxEKtvwj790+LsXxT3qizq9nM+p
+         3/psnVWVtHXnGAESWeseHuHhcgl7mG84zEi5zsfVFvzjbqREK2VikrAk+Rwl8pOVL5yP
+         PF/duCkTJpI8obwzgkqwVnBDjXc8e4WGd0v+Mjd7RCszthMmDMsYpOsbb3V79+vi/Meg
+         ew/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750857354; x=1751462154;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=myFzD7QWLL6mVi6x4ybFyj0pD8esGFOCmQhIz9MBaqQ=;
+        b=UsiW0vgZa/5iWEh9Zm6mK+GAIdDAGqcQ9gWSaJM5xq4NN6A44T4cpu7D4qjhNs99rk
+         Y3bwaLwdsyDIjvJ+Q9lvQw3mkAhmlnlLjqFuGEV+dHqfO/bkc8DKIGrXXKKtP68VwsbZ
+         MOke0Bu/F4Szaq3Kv2e3KKAO56xG7pxUmIc/H0tILhfpQ7EJI/Uwhg9Mf9000WrZh7ge
+         OvSdP9tr//39EI+9BznwEITV4FKHkPMMtAZfkJbM4ZhAoJbzUlicayTuj1WCBHXFn7f4
+         Aw4YAzdZswrdFUDm1nCEKsHc9Vv5dnCE3+89ec4ZrkCJ6cC39AQbBNHRkCcbyMr729rR
+         RP+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCW0g30Z5ZbhoTYeNIj6oMBMx7k5CzS8bTbvT+bCmAVzccpOp2VeHQjqKgTavIzCd567tW9fbaLlO48=@vger.kernel.org, AJvYcCXdOAY80h64QwmQ+iCSeYYlbl2rZTXSSg6Hd0NWPYWfUDeijjbSJXz1akHKeltBZnlEdEehOFvLnv1I2Lk5@vger.kernel.org, AJvYcCXiJDR6gSlZeFUEeUAwza48/x2fKxAX17zKhdLm+aV6UBFpPNP1Ns79i99vEatL0LEXdVTRgaEnOl9YgL6t@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgMkRMDAP8VWdI3Zopm3EajkdRwDESg/Axv2IxbwrgnokgO5Do
+	l/8/CBnSVpJA7KxjUSswDTGWlVpa+Elxgp/JsUM4RwRpoZNcHpq3LUNN
+X-Gm-Gg: ASbGncu8wXVuWc5dvExTw4J5tcdLTUVo5N2X3LyQek09bW2JGarHGcdV/+po9fq3Yld
+	xZTtTcx9vj6Nn0z7Ps7bSC0qll4gGejsLPqhpYhlNHeXpMfkoV8ZHUlAD9L84zsiIQTAojzp0qM
+	5FZLll5obgpnl+epZfgcquPfDvjLWzG+KSRhiuv4FYrRmUkfWYLgyEWY+vY32/C/a1QeElML+7f
+	lICi3MdRKR33h+Oz4oDD2XGwXRFR83vKRQuCVU0gZXTulJ0AvJ/tMia95TWwTNHCdaY/ReFVxGM
+	Rut5EsTMjkQF3kQOUZbJ1Atd3KdSaKnF1dvjz5xa88qxNw+Q76AdBsrCD/uhduOVbp/LWGi5Ul5
+	IfLjx7CNZrVxEG+ZS7x86iVONzWk=
+X-Google-Smtp-Source: AGHT+IHqyiRVjvoB8YSLe3HZosm1kBlsHb8xxS6UoEjuMcGWiykX94tFxvLlVox0eEJcWTFkCAve6Q==
+X-Received: by 2002:a05:6000:4014:b0:3a5:8a68:b839 with SMTP id ffacd0b85a97d-3a6ed67507amr2459464f8f.45.1750857353988;
+        Wed, 25 Jun 2025 06:15:53 -0700 (PDT)
+Received: from [192.168.20.170] (5D59A51C.catv.pool.telekom.hu. [93.89.165.28])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad1adsm19989575e9.24.2025.06.25.06.15.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 06:15:53 -0700 (PDT)
+Message-ID: <84b94649-a248-46b0-a401-772aeb8777a2@gmail.com>
+Date: Wed, 25 Jun 2025 15:15:53 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3] interconnect: avoid memory allocation when
+ 'icc_bw_lock' is held
+To: Johan Hovold <johan@kernel.org>
+Cc: Georgi Djakov <djakov@kernel.org>,
+ Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
+ Johan Hovold <johan+linaro@kernel.org>,
+ Bryan O'Donoghue <bryan.odonoghue@linaro.org>, linux-pm@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250625-icc-bw-lockdep-v3-1-2b8f8b8987c4@gmail.com>
+ <aFvr1zSkf4KmIcMT@hovoldconsulting.com>
+ <aFvuiVX0kMIqXQtZ@hovoldconsulting.com>
+Content-Language: hu
+From: Gabor Juhos <j4g8y7@gmail.com>
+In-Reply-To: <aFvuiVX0kMIqXQtZ@hovoldconsulting.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When allocating receive buffers for the vsock virtio RX virtqueue, an
-SKB is allocated with a 4140 data payload (the 44-byte packet header +
-VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE). Even when factoring in the SKB
-overhead, the resulting 8KiB allocation thanks to the rounding in
-kmalloc_reserve() is wasteful (~3700 unusable bytes) and results in a
-higher-order page allocation for the sake of a few hundred bytes of
-packet data.
+2025. 06. 25. 14:41 keltezéssel, Johan Hovold írta:
+> On Wed, Jun 25, 2025 at 02:30:15PM +0200, Johan Hovold wrote:
+>> On Wed, Jun 25, 2025 at 01:25:04PM +0200, Gabor Juhos wrote:
+> 
+>>> @@ -276,13 +276,17 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
+>>>  		qcom_icc_bcm_init(qp->bcms[i], dev);
+>>>  
+>>>  	for (i = 0; i < num_nodes; i++) {
+>>> +		bool is_dyn_node = false;
+>>> +
+>>>  		qn = qnodes[i];
+>>>  		if (!qn)
+>>>  			continue;
+>>>  
+>>>  		if (desc->alloc_dyn_id) {
+>>> -			if (!qn->node)
+>>> +			if (!qn->node) {
+>>
+>> AFAICS, qn->node will currently never be set here and I'm not sure why
+>> commit 7f9560a3bebe ("interconnect: qcom: icc-rpmh: Add dynamic icc node
+>> id support") added this check, or even the node field to struct
+>> qcom_icc_desc for that matter.
+>>
+>> But if there's some future use case for this, then you may or may not
+>> need to make sure that a name is allocated also in that case.
+> 
+> Ok, I see what's going on. The qn->node may have been (pre-) allocated
+> in icc_link_nodes() dynamically, which means you need to make sure to
+> generate a name also in that case.
+> 
+>> And that could be done by simply checking if node->id >=
+>> ICC_DYN_ID_START instead of using a boolean flag below. That may be
+>> preferred either way.
+> 
+> So you should probably use node->id to determine this.
 
-Limit the vsock virtio RX buffers to a page per SKB, resulting in much
-better memory utilisation and removing the need to allocate higher-order
-pages entirely.
+You are right. The problem is that ICC_DYN_ID_START is only visible from the
+core code. Either we have to move that into the 'interconnect-provider.h' header
+or we have to add an icc_node_is_dynamic() helper or something similar.
 
-Signed-off-by: Will Deacon <will@kernel.org>
----
- include/linux/virtio_vsock.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Which is the preferred solution?
 
-diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
-index 36fb3edfa403..67ffb64325ef 100644
---- a/include/linux/virtio_vsock.h
-+++ b/include/linux/virtio_vsock.h
-@@ -111,7 +111,8 @@ static inline size_t virtio_vsock_skb_len(struct sk_buff *skb)
- 	return (size_t)(skb_end_pointer(skb) - skb->head);
- }
- 
--#define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(1024 * 4)
-+#define VIRTIO_VSOCK_DEFAULT_RX_BUF_SIZE	(SKB_WITH_OVERHEAD(PAGE_SIZE) \
-+						 - VIRTIO_VSOCK_SKB_HEADROOM)
- #define VIRTIO_VSOCK_MAX_BUF_SIZE		0xFFFFFFFFUL
- #define VIRTIO_VSOCK_MAX_PKT_BUF_SIZE		(1024 * 64)
- 
--- 
-2.50.0.714.g196bf9f422-goog
+Regards,
+Gabor
 
