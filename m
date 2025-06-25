@@ -1,112 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C59313D53B;
-	Wed, 25 Jun 2025 14:02:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F96E13D53B;
+	Wed, 25 Jun 2025 14:02:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750860131; cv=none; b=Bm0WmDF1+kQQUz+vKhKWwZNNfNpfGXeCGm+oJcFujFlPznTxXX/4fofJVEIicOgAX+mXD3nW1Or8S21/qsIpZYLFYe6zmLgwsLV8KmZWffuoa/Hcf0OIGScA/x4IFPXLp3nU9t/VcbLjLBdld/o7YSTGdincSiVz+lKZxaV094Q=
+	t=1750860161; cv=none; b=ay5Q/hnc19f15n4x432v3pFXeb5dZz0//vz4COb4Fh17zIWKXgm3tpeeUobItN3j/Wtv5ZGwFEgTrh+wk1IjMPuqiEoYelS2KukGUAM7N1ev/VMAgwC3l+BrqfApIQlnKMOycKZWgjGumN9iDxfy9W/6nnsfQj1/6kCsDPTktFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750860131; c=relaxed/simple;
-	bh=0E1iOgTDOe4/hcWEs/6My5mcmsk96XV7Vrk9N+Jysxc=;
+	s=arc-20240116; t=1750860161; c=relaxed/simple;
+	bh=DSGgVplsgDVHiHvI5ZL0W2YsegQOr8iwF9O97BbzD7w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=L0TUrYuY6etyF6iYN4mYFkX+MEPr5MH/M3XBmlFeCn3JjZRCaJTdpSl1mS/ojMWJt9MCqRag0OIOZUqUHk6dIsDqH5nZDwrLS62+TqDIrz0jh26/+63vJG8i6JCiEEISaP4JNBDw2LgbwczmZ+gdYv1V5w2CNtH0HhnOMWlvyN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsxRvAra; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsxRvAra"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1662C4CEEA;
-	Wed, 25 Jun 2025 14:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750860129;
-	bh=0E1iOgTDOe4/hcWEs/6My5mcmsk96XV7Vrk9N+Jysxc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PsxRvAra1+UYAxXNOQfwyROihYt1SLubVcs64pvGPUQv4NrfV/ZDvKniPhQp7iaMc
-	 2E8WSNQMZq4HAR/7TuU6I5/1/v4Sfw+RbxU5GBtdgyly9HNSNirynkWPV7o1UuyWzC
-	 0P7IdB0BcktrXzRN0UoRhNamc0YTldId3dqdOL1ghooDaGDuBx05voZQfUjD0Fj5lg
-	 2IV2XhdLpfxI6s5YKtUSJCiOFYdeqI2U3x8xiaAcwc4ylzGl5CyAeO3waXi/GZ9gD+
-	 d/v3F7klREapn0BL5nVQWuZgZVk+Vd2YeeT/QZTJ7h+iFJBHBAkHFDvYd+wEcLBAi8
-	 pQaYVLvnm7bvQ==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uUQhV-0000000080x-2DfT;
-	Wed, 25 Jun 2025 16:02:09 +0200
-Date: Wed, 25 Jun 2025 16:02:09 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Gabor Juhos <j4g8y7@gmail.com>
-Cc: Georgi Djakov <djakov@kernel.org>,
-	Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
-	Johan Hovold <johan+linaro@kernel.org>,
-	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] interconnect: avoid memory allocation when
- 'icc_bw_lock' is held
-Message-ID: <aFwBYRF0wJwVDdeX@hovoldconsulting.com>
-References: <20250625-icc-bw-lockdep-v3-1-2b8f8b8987c4@gmail.com>
- <aFvr1zSkf4KmIcMT@hovoldconsulting.com>
- <aFvuiVX0kMIqXQtZ@hovoldconsulting.com>
- <84b94649-a248-46b0-a401-772aeb8777a2@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=mdzA0iKRC3H1/EaJKc66MoMZBjQnIbVpj8oaWZ7FDF8n69Dudr+tikt0XpkzbSl5m1q7YQnMEWX6rmV5Z7uD15kD4EJ1exkrbArmK7Fnfflj+mvJnn9SWVq8To8ZH50gW/EIILzAPCjw5X3g4nBtFHagQwiTz7gwEc+8XVokstU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 567D8106F;
+	Wed, 25 Jun 2025 07:02:18 -0700 (PDT)
+Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BDB7D3F66E;
+	Wed, 25 Jun 2025 07:02:33 -0700 (PDT)
+Date: Wed, 25 Jun 2025 15:02:30 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
+	james.quinlan@broadcom.com, f.fainelli@gmail.com,
+	vincent.guittot@linaro.org, etienne.carriere@st.com,
+	peng.fan@oss.nxp.com, michal.simek@amd.com, quic_sibis@quicinc.com,
+	d-gole@ti.com, souvik.chakravarty@arm.com
+Subject: Re: [RFC PATCH 3/7] firmware: arm_scmi: Add Telemetry protocol
+ support
+Message-ID: <aFwBdjWQv6urIgq1@pluto>
+References: <20250620192813.2463367-1-cristian.marussi@arm.com>
+ <20250620192813.2463367-4-cristian.marussi@arm.com>
+ <0c71e182-9aac-426d-b58b-41f118b9a8f2@suswa.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <84b94649-a248-46b0-a401-772aeb8777a2@gmail.com>
+In-Reply-To: <0c71e182-9aac-426d-b58b-41f118b9a8f2@suswa.mountain>
 
-On Wed, Jun 25, 2025 at 03:15:53PM +0200, Gabor Juhos wrote:
-> 2025. 06. 25. 14:41 keltezéssel, Johan Hovold írta:
-> > On Wed, Jun 25, 2025 at 02:30:15PM +0200, Johan Hovold wrote:
-> >> On Wed, Jun 25, 2025 at 01:25:04PM +0200, Gabor Juhos wrote:
-> > 
-> >>> @@ -276,13 +276,17 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
-> >>>  		qcom_icc_bcm_init(qp->bcms[i], dev);
-> >>>  
-> >>>  	for (i = 0; i < num_nodes; i++) {
-> >>> +		bool is_dyn_node = false;
-> >>> +
-> >>>  		qn = qnodes[i];
-> >>>  		if (!qn)
-> >>>  			continue;
-> >>>  
-> >>>  		if (desc->alloc_dyn_id) {
-> >>> -			if (!qn->node)
-> >>> +			if (!qn->node) {
-> >>
-> >> AFAICS, qn->node will currently never be set here and I'm not sure why
-> >> commit 7f9560a3bebe ("interconnect: qcom: icc-rpmh: Add dynamic icc node
-> >> id support") added this check, or even the node field to struct
-> >> qcom_icc_desc for that matter.
-> >>
-> >> But if there's some future use case for this, then you may or may not
-> >> need to make sure that a name is allocated also in that case.
-> > 
-> > Ok, I see what's going on. The qn->node may have been (pre-) allocated
-> > in icc_link_nodes() dynamically, which means you need to make sure to
-> > generate a name also in that case.
-> > 
-> >> And that could be done by simply checking if node->id >=
-> >> ICC_DYN_ID_START instead of using a boolean flag below. That may be
-> >> preferred either way.
-> > 
-> > So you should probably use node->id to determine this.
+On Fri, Jun 20, 2025 at 11:46:15PM +0300, Dan Carpenter wrote:
+> On Fri, Jun 20, 2025 at 08:28:09PM +0100, Cristian Marussi wrote:
+> > +static int
+> > +scmi_telemetry_protocol_attributes_get(const struct scmi_protocol_handle *ph,
+> > +				       struct telemetry_info *ti)
+> > +{
+
+Hi Dan,
+
+thanks for having a look.
+
+> > +	int ret;
+> > +	struct scmi_xfer *t;
+> > +	struct scmi_msg_resp_telemetry_protocol_attributes *resp;
+> > +
+> > +	ret = ph->xops->xfer_get_init(ph, PROTOCOL_ATTRIBUTES,
+> > +				      0, sizeof(*resp), &t);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	resp = t->rx.buf;
+> > +	ret = ph->xops->do_xfer(ph, t);
+> > +	if (!ret) {
+> > +		__le32 attr = resp->attributes;
+> > +
+> > +		ti->info.num_de = le32_to_cpu(resp->de_num);
+> > +		ti->info.num_groups = le32_to_cpu(resp->groups_num);
+> > +		for (int i = 0; i < SCMI_TLM_MAX_DWORD; i++)
+> > +			ti->info.de_impl_version[i] =
+> > +				le32_to_cpu(resp->de_implementation_rev_dword[i]);
+> > +		ti->info.single_read_support = SUPPORTS_SINGLE_READ(attr);
+> > +		ti->info.continuos_update_support = SUPPORTS_CONTINUOS_UPDATE(attr);
+> > +		ti->info.per_group_config_support = SUPPORTS_PER_GROUP_CONFIG(attr);
+> > +		ti->info.reset_support = SUPPORTS_RESET(attr);
+> > +		ti->info.fc_support = SUPPORTS_FC(attr);
+> > +		ti->num_shmti = le32_get_bits(attr, GENMASK(15, 0));
+> > +		/* Allocate DEs descriptors */
+> > +		ti->info.des = devm_kcalloc(ph->dev, ti->info.num_de,
+> > +					    sizeof(*ti->info.des), GFP_KERNEL);
+> > +		if (!ti->info.des)
+> > +			ret = -ENOMEM;
+> > +
+> > +		/* Allocate DE GROUPS descriptors */
+> > +		ti->info.des_groups = devm_kcalloc(ph->dev, ti->info.num_groups,
+> > +						   sizeof(*ti->info.des_groups),
+> > +						   GFP_KERNEL);
+> > +		if (!ti->info.des_groups)
+> > +			ret = -ENOMEM;
 > 
-> You are right. The problem is that ICC_DYN_ID_START is only visible from the
-> core code. Either we have to move that into the 'interconnect-provider.h' header
-> or we have to add an icc_node_is_dynamic() helper or something similar.
+> It the allocation fails we need to jump to the ->xfer_put
 > 
-> Which is the preferred solution?
+> > +
+> > +		for (int i = 0; i < ti->info.num_groups; i++)
+> > +			ti->info.des_groups[i].id = i;
+> 
+> otherwise it leads to a NULL dereference.
+>
 
-I think adding a helper like icc_node_is_dynamic() in a separate
-preparatory patch is best here.
+Indeed...I will fix.
 
-If it wasn't for nodes now being created also in icc_link_nodes() we
-could otherwise perhaps just as well have moved the name generation into
-icc_node_create_dyn(). Now it seems we'd need a new helper to set the
-name (or add error handling for every icc_node_add()), but we've already
-spent way too much time trying to clean up this mess...
+There are a few more of this bugs around probably being an RFC...bots also are
+complaining a lot at this series indeed :D
 
-Johan
+Thanks,
+Cristian
+
