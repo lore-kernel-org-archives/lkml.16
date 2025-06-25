@@ -1,122 +1,234 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2116367;
-	Wed, 25 Jun 2025 06:04:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD068182BC;
+	Wed, 25 Jun 2025 06:05:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750831473; cv=none; b=m3DNptbJV7ZDSbUg4OAT/ttKC5avHU73fYjrknMBJPKtEV11b55bedpjPD1m1oGxWAb0oB72LSEUgmL57V5ZceGlPEjXK8I1YV5jknf408nDxsL4KLRNmy4WpDLkGcYKnAgnuNg5sfeW3dXFpkoNoNHsV2NE8IwPTECaycOWnEg=
+	t=1750831557; cv=none; b=OM9jOO84kuegFFWJeKVB6qY/GfCT64hoZUTF8BkN5EVHWs0dzh205r7Zy94upkoPOjxA8ags6cCvGjPwB9oLS5Zag+Ut+p1unufdA1iFkrwZSoe07EulybFywouTE0muB/NclKractnyt0hpZtnDh3jLD2C/SsGVTjFujtqMGKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750831473; c=relaxed/simple;
-	bh=76VGGKAqigMaJenupp9hk8dQHtelG15+lysezKsW0wA=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=FjgzbnrLYOMqIVL3LOqOWzQOKfib11CCqP7iWVHMWzdNp7R4NuktB2hjkeWja4k99PAdtKziHLe3/JybpShGAKHdueihEg6khxj+ho6HgL9niUlaFJnLBI5H5enCYZ+d3XQ8aWl5x2/xWGJPOGHoHtJEWsb5CRH9DduziVmSwNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CXG/9r0d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750831557; c=relaxed/simple;
+	bh=mlSg9lIHtnrO/DSwiOZdc8wwacrIJ2lGTmmKvsPErCo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I0a/wUecBXu/TqgcZpoGZDdj5zhVqF/Y3rNlDfYMeq9dsR4KeRHIYwzauoL0QzZcjLTRZ7bHMc+XYQwSve4Wy6PG9nODOCDQ0Ptqws4htT8QLuB4G7If/Mozq/yWGeUykwsAl0JFAS3u7ShJ7Zt5/4dkYhZXNZckrA5JTORpwPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxPFDjWo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CXG/9r0d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2DBBC4CEEA;
-	Wed, 25 Jun 2025 06:04:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxPFDjWo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C814BC4CEEA;
+	Wed, 25 Jun 2025 06:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750831473;
-	bh=76VGGKAqigMaJenupp9hk8dQHtelG15+lysezKsW0wA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CXG/9r0dbh4S+Nh+g6uxzVpttvRdirM4k9Z1cPoX0AM6QKVangDyE7CZffoA5TUsZ
-	 iK3eFxH/x7XidVEMeZQbMpYH51wqQldsnAr8Yp2R61j+7R5sNeo7S0e/Sch1c5+td7
-	 yuL4fBsej9MabYdKiyc1AZrJvmeJaaQrRTjqXbT7b+fvkShJX1podJ+M+tWlcAeM2b
-	 qaApWhp69xAd9n2bfOoZpAMSyQ3jzOL0w5OuYlBnc6ACGkKIp4gJcb4UwHrC37HQyJ
-	 PsHfAkzeRWnDBE1ZXrm9vAbZdGGbqeKwowQSku4Etf56GF01HeRQsHbZiwL8G2asyl
-	 Ex4RQVU5GLQzw==
-Date: Wed, 25 Jun 2025 15:04:29 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
- <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
- <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, David Laight
- <David.Laight@ACULAB.COM>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
- <thomas@t-8ch.de>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv3 perf/core 01/22] uprobes: Remove breakpoint in
- unapply_uprobe under mmap_write_lock
-Message-Id: <20250625150429.0623e05b3b1bba2d95b57dc5@kernel.org>
-In-Reply-To: <20250605132350.1488129-2-jolsa@kernel.org>
-References: <20250605132350.1488129-1-jolsa@kernel.org>
-	<20250605132350.1488129-2-jolsa@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=k20201202; t=1750831557;
+	bh=mlSg9lIHtnrO/DSwiOZdc8wwacrIJ2lGTmmKvsPErCo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=PxPFDjWocxmsoIWWpzgyx3AmmB7LtjHB8cOR3tTUYprPGkheEEY3xPbyTCvyvqlsj
+	 VXYCM6uzQ60no5DzAL/c6jKu3dW8/SsFc0lIJ+kYXfN1TIOKELqESNNsTkpHZS1hqs
+	 6UNLEXKo6EUjiAIKzAwH1HUP9eJWaIvVr/jp559ag7T3fi8LeO4p/6bur6WuVYLFOu
+	 EQ4Kt11jPO3BkO5qiKKqcmsQV3FbwgtWbGsajfMDcYOHcCaT4yhPzZTcXLIlLwSrKg
+	 XD1s9aZpEpcI1lYU7N4C+8Ynua0qB0cNRPbyn3wxtYXHLca2DXwP04/yshsRPqFTOX
+	 0EQovDgK+ovMA==
+Message-ID: <a0feb67f-3a73-4247-8383-7255616cb22b@kernel.org>
+Date: Wed, 25 Jun 2025 08:05:52 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 5/7] arm64: dts: axiado: Add initial support for AX3000
+ SoC and eval board
+To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Jan Kotas <jank@cadence.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+ "soc@lists.linux.dev" <soc@lists.linux.dev>
+References: <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-0-b3e66a7491f5@axiado.com>
+ <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-5-b3e66a7491f5@axiado.com>
+ <0709a0a6-1313-452c-85e7-2926a6a03741@kernel.org>
+ <19d78e69-4a38-420b-b9f8-d0eb90cdcaf6@axiado.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <19d78e69-4a38-420b-b9f8-d0eb90cdcaf6@axiado.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu,  5 Jun 2025 15:23:28 +0200
-Jiri Olsa <jolsa@kernel.org> wrote:
-
-> Currently unapply_uprobe takes mmap_read_lock, but it might call
-> remove_breakpoint which eventually changes user pages.
+On 25/06/2025 04:16, Harshit Shah wrote:
+> Thank you for the reviews. I have some questions/feedback to clarify 
+> before I fix some of them.
 > 
-> Current code writes either breakpoint or original instruction, so it can
-> go away with read lock as explained in here [1]. But with the upcoming
-> change that writes multiple instructions on the probed address we need
-> to ensure that any update to mm's pages is exclusive.
+> On 6/23/2025 11:45 PM, Krzysztof Kozlowski wrote:
+>>
+>> On 23/06/2025 19:28, Harshit Shah wrote:
+>>> +                     clocks = <&refclk>;
+>>> +                     interrupt-parent = <&gic500>;
+>>> +                     interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
+>>> +                     gpio-controller;
+>>> +                     #gpio-cells = <2>;
+>>> +                     interrupt-controller;
+>>> +                     #interrupt-cells = <2>;
+>>> +                     status = "disabled";
+>>> +             };
+>> Please follow DTS coding style.
 > 
-> [1] https://lore.kernel.org/all/20240710140045.GA1084@redhat.com/
+> Sorry, I didn't got this comment. Is this for the spaces between the 
+> nodes or something else?
 > 
+> The current GPIO node is as follows:
 
-Looks good to me.
+There is always, always line break between nodes.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
-
-
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  kernel/events/uprobes.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 84ee7b590861..257581432cd8 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -483,7 +483,7 @@ static int __uprobe_write_opcode(struct vm_area_struct *vma,
->   * @opcode_vaddr: the virtual address to store the opcode.
->   * @opcode: opcode to be written at @opcode_vaddr.
->   *
-> - * Called with mm->mmap_lock held for read or write.
-> + * Called with mm->mmap_lock held for write.
->   * Return 0 (success) or a negative errno.
->   */
->  int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> @@ -1464,7 +1464,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
->  	struct vm_area_struct *vma;
->  	int err = 0;
->  
-> -	mmap_read_lock(mm);
-> +	mmap_write_lock(mm);
->  	for_each_vma(vmi, vma) {
->  		unsigned long vaddr;
->  		loff_t offset;
-> @@ -1481,7 +1481,7 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
->  		vaddr = offset_to_vaddr(vma, uprobe->offset);
->  		err |= remove_breakpoint(uprobe, vma, vaddr);
->  	}
-> -	mmap_read_unlock(mm);
-> +	mmap_write_unlock(mm);
->  
->  	return err;
->  }
-> -- 
-> 2.49.0
+> gpio0: gpio-controller@80500000 {
+>                          compatible = "cdns,gpio-r1p02";
+>                          reg = <0x00 0x80500000 0x00 0x400>;
+>                          clocks = <&refclk>;
+>                          interrupt-parent = <&gic500>;
+>                          interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
+>                          gpio-controller;
+>                          #gpio-cells = <2>;
+>                          interrupt-controller;
+>                          #interrupt-cells = <2>;
+>                          status = "disabled";
+>                  };
 > 
+> I checked the document: 
+> https://elixir.bootlin.com/linux/v6.15/source/Documentation/devicetree/bindings/dts-coding-style.rst#L112.
+> 
+>>
+>>> +             gpio1: gpio-controller@80580000 {
+>>> +                     compatible = "cdns,gpio-r1p02";
+>> This should not be accepted without specific compatible, but that's some
+>> old binding so maybe matters less. Anyway, if you ever need quirk or
+>> custom properties they I will reject them based on what you claim here.
+> 
+> Yes, we are not changing anything on this driver. Is it okay?
+
+I meant for future. I would expect to follow writing bindings now, so
+have front specific compatible, but if you do not then whatever issues
+you have in the future with this driver, they should be rejected, right?
+
+> 
+> 
+>>
+>>
+>>> +             i3c16: i3c@80620400 {
+>>> +                     compatible = "cdns,i3c-master";
+>>> +                     reg = <0x00 0x80620400 0x00 0x400>;
+>>> +                     clocks = <&refclk &clk_xin>;
+>>> +                     clock-names = "pclk", "sysclk";
+>>> +                     interrupt-parent = <&gic500>;
+>>> +                     interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
+>>> +                     i2c-scl-hz = <100000>;
+>>> +                     i3c-scl-hz = <400000>;
+>>> +                     #address-cells = <3>;
+>>> +                     #size-cells = <0>;
+>>> +                     status = "disabled";
+>>> +             };
+>>> +             uart0: serial@80520000 {
+>> Looks like not ordered by unit address. What is the ordering rule you
+>> are going to adopt for entire arch?
+> 
+> Apologies for the confusion. I should have updated in last patch-set 
+> comments.
+> 
+> We are following alphabetical ordering rule. In those we are grouping 
+> some nodes together based on the numbers.
+> 
+> cpus
+> 
+> clocks
+> 
+> soc {
+> 
+>     gic500 { }
+> 
+>     gpio0-7 { }
+> 
+>     i3c0-16 { }
+> 
+>     uart0-3 { }
+> 
+> }
+> 
+> timer
+> 
+> 
+> Is this okay?
+
+alphabetical ordering is not mentioned in dts coding style. Maybe it
+should, but I think the only user of second style with grouping nodes -
+Renesas - still uses ordering by unit address in general.
+
+The trouble with your approach is that if you ever need to change the
+name, you will need to re-order and move entire node.
+
+Anyway, not a problem for me.
+
+> 
+>>
+>>> +                     compatible = "xlnx,zynqmp-uart", "cdns,uart-r1p12";
+>> NAK, you do not have xlnx here. Look at your SoC: name of vendor is
+>> axiado. Not xlnx. How is your SoC called? Also zynqmp? You cannot just
+>> randomly pick any compatibles and stuff them around.
+>>
+>> Please carefully read writing bindings from DT directory.
+> 
+> 
+> We are using the "cdns,uart-r1p12" for the UART. However, that alone 
+> can't be added alone in the compatible as per the DT bindings doc.
+
+Exactly. See writing bindings... or any guides/talks.
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Best regards,
+Krzysztof
