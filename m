@@ -1,72 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102952147FB;
-	Wed, 25 Jun 2025 21:45:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AAB5234;
+	Wed, 25 Jun 2025 21:46:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750887940; cv=none; b=ZLBunYhqb3qsm/nZk/Qdj/A7GWW4+S3Tawdk4XoZfJE7iDjPIjo883BmDHlB2F3FbPCovluQZsT6zmSH+V2J/5tPjvUgr16i3f9FeFyUOpK/EYpug6fxKd/0rgQQLcCQatRTNVFYTIzlRbv2aMh0ZOYSAQLROlw/4EvKA+c1gGg=
+	t=1750887966; cv=none; b=JUKFwtnh+475CWTwVimLhpVF+GawSr89uc32oHZ6uA/i4pBdWJ7xBaNfdw3EbF8FeKcc/8R9FHYQBX/GaS+PsASiCtUr48DxOK1+FU4JFQV/rLO9sS9PTuh0YC/IGGNfTSlk1GH3bRHpnFuWfXgccATlsBXQnnUWCrE3AKRC6Es=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750887940; c=relaxed/simple;
-	bh=EQERAeAUqfaASSXc/IWemtefhbnElFq93zKTtOoowZA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ApFDoAq9vVSl38mwHO8KhquwR/8+V+mLVyoyv4GVXI+blpU8d7tkGNkqMoIZmR0iIeARHD5VVYoYvrvrR8Gh9MR64WhB6G0xZhXa3AbANxJVprqqPlv3d4JFe4Wp7wrcQdHIuiYD87mlm96UiidYBsYo8jiJXNJsNLO/b4NggUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C/1gtSAN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750887966; c=relaxed/simple;
+	bh=wzYUEdB5fNwXy6rhECSNq0oE2cM9yjMSXFd7RBAnExY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pQigvF0PTmZzWfeForII0psplsTHlGWFhI8Nv8AAZRiURASV6tR6k24RGwpv514x1vLm2lPjv6GRPyaQP8iid3xhJ75UW4FJ9cLe/wnA7RpmRyEYHPutzvHbzbapNigjEIWU2GBfmXsrkyTrvVU14evHqvRfTewT7bDmAe6SxaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYGgbLZj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C/1gtSAN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A97AC4CEEA;
-	Wed, 25 Jun 2025 21:45:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYGgbLZj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6272C4CEEA;
+	Wed, 25 Jun 2025 21:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750887939;
-	bh=EQERAeAUqfaASSXc/IWemtefhbnElFq93zKTtOoowZA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C/1gtSANXZ6neo3lmDnHuVs+x4tdxRJKU0zUzMr2Ss03QRVjgwlBS6s2PfEU1bVI3
-	 StWalVe1jc2muhYEAbdkbsrFdqcHRALYl59yU4p0A6EIjrxwtzQzZkx15dP7T/eMGc
-	 9w/Tz9l3TTqQLtV4BWEQgX4nSuH5vrkNu4ojOo8mbBYYArGCAlY4WVNCzkxmWaDrvR
-	 teNK1dHHAQrj0VGjg77Lum/svTb2ZfH/ZyhWUlxHLOi9vcKCx/YRxeXWWGtfLH5I5M
-	 Fn/gSPUBw6HuTV/OPqar8nvqR3n1RAgMssYu5JuzlGc2ZdIAXfZG56199FFhNLHLB1
-	 /MRV2Wo5RRAKQ==
-Date: Thu, 26 Jun 2025 00:45:36 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: keyrings@vger.kernel.org, Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Mimi Zohar <zohar@linux.ibm.com>,
-	David Howells <dhowells@redhat.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	"open list:TPM DEVICE DRIVER" <linux-integrity@vger.kernel.org>,
-	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Create cleanup class for tpm_buf
-Message-ID: <aFxuADgb2C9DaFrh@kernel.org>
-References: <20250625213757.1236570-1-jarkko@kernel.org>
+	s=k20201202; t=1750887966;
+	bh=wzYUEdB5fNwXy6rhECSNq0oE2cM9yjMSXFd7RBAnExY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=RYGgbLZj8iYcNULlY8k8X3+/JZ6KlASpSFjZeUfSDIm32qAEodtGKruVfzEE9Y7r2
+	 hHdXX+oJ61vh+xWg244Htsy89Nl2xt2UntEsqTufFcEw7A2PV03Q+QcTX3r6DqnX55
+	 kJo3dDdZxC6yO04nsUnMUJ0wYP8iR3QHPFGIRPCETrrJ3yhsjneeFfO00OsZKcIupJ
+	 OoX7poUPTzfjemRhcJhc1SCoWkfxxOYTukjdMF1UJPnysmxac9+9oCmmbsEX/9V/jL
+	 XTJAeeGh/i7Mc5kwWQFDNQxo7lBbyq2nJRxEwSLANjKgjRWxkaqVsGdLlFFvTIVSmD
+	 7tibpJ91g5GWA==
+Date: Wed, 25 Jun 2025 14:46:04 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Simon Horman <horms@kernel.org>
+Cc: Breno Leitao <leitao@debian.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan
+ <shuah@kernel.org>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Willem de Bruijn
+ <willemdebruijn.kernel@gmail.com>, bpf@vger.kernel.org,
+ gustavold@gmail.com, Stanislav Fomichev <sdf@fomichev.me>
+Subject: Re: [PATCH net-next v2 0/4] selftest: net: Add selftest for netpoll
+Message-ID: <20250625144604.3f60d09d@kernel.org>
+In-Reply-To: <20250625184346.GM1562@horms.kernel.org>
+References: <20250625-netpoll_test-v2-0-47d27775222c@debian.org>
+	<20250625184346.GM1562@horms.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625213757.1236570-1-jarkko@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 26, 2025 at 12:37:56AM +0300, Jarkko Sakkinen wrote:
-> From: Jarkko Sakkinen <jarkko.sakkinen@opinsys.com>
-> 
-> Define a cleanup for tpm_buf, which will caused tpm_buf_destroy()
-> automatically called at the end of a function scope. This will
-> significantly decrease the likelihood of memory leaks.
+On Wed, 25 Jun 2025 19:43:46 +0100 Simon Horman wrote:
+> # # Exception| Traceback (most recent call last):
+> # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/net/lib/py/ksft.py", line 243, in ksft_run
+> # # Exception|     case(*args)
+> # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./netpoll_basic.py", line 308, in test_netpoll
+> # # Exception|     do_netpoll_flush_monitored(cfg, netdevnl, ifname, target_name)
+> # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./netpoll_basic.py", line 243, in do_netpoll_flush_monitored
+> # # Exception|     do_netpoll_flush(cfg, netdevnl, ifname, target_name)
+> # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./netpoll_basic.py", line 278, in do_netpoll_flush
+> # # Exception|     if bpftrace_any_hit(join=False):
+> # # Exception|   File "/home/virtme/testing-17/tools/testing/selftests/drivers/net/./netpoll_basic.py", line 230, in bpftrace_any_hit
+> # # Exception|     raise KsftFailEx(f"bpftrace failed to run!?: {MAPS}")
+> # # Exception| net.lib.py.ksft.KsftFailEx: bpftrace failed to run!?: {}
 
-Oops, this did not go well.
-
-Here's a corrected version.
-
-"Define a cleanup class for struct tpm_buf, which will take
- the responsibility of calling tpm_buf_destroy() automatically
- when tpm_buf instance is going out of scope."
-
-For the code change itself I noticed that I missed tpm-sysfs.c
-i.e., v2 coming post the feedback for this.
-
-BR, Jarkko
+Looks like I haven't added bpftrace to the image before.
+Fixed now.
