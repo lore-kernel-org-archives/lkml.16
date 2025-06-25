@@ -1,129 +1,115 @@
-Received: from out-185.mta0.migadu.com (out-185.mta0.migadu.com [91.218.175.185])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34D6E25EF82
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:35:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.185
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F79525C83F
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:36:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750854959; cv=none; b=mMHLSrrGEuymwYX/4H4f3MOcnOpB54AL0oiuvuHoW7S3rdnDN6Yvo6ISIOFj2rZ8qeqPSB4goKc7BPUyaAdy3jTJ+2uJepXj1ny7CohgIHro9Fj9XR9qamHCuOgZyCSBCFaOvdvfBGqXxLWAFiJJmZgjTRV2RFNF3pMAAtW6NPE=
+	t=1750854968; cv=none; b=jmgSLkgVJhiDJzTjkuE67zzSBU0qWfD9Tui+kVAUb7oD00woYeKjFWjptJgdvbKR2u8jIrZtZRTZkBPQ+NIJz9F77a7imH1zwqVDo9+rb5K0ylcibifblJicl5Znwijpio8WGfs0vocFdBdGtpC7zYoMlCxt8JDzdN/Wsg/o6XA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750854959; c=relaxed/simple;
-	bh=oYfb5ZG97I3Q7kngPWL4OobOrz/UDCOFDiDoI1et6wg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mpQK9WLnOEtwSP2viYFhQ0BHUb4gcTWiPu635fi2lrEcWGVQj2oTKknuRGIVFggeO/74z8RZFhVn9LGyHwyc4CgE9hjmLdpMayrfGgyXqm7WZfhvizfTM9iKXz1glzMU8/sCEDOT1e8rcwCaiR780x4p4Wul0ZUwri2RSZTMpgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wgPth1dx; arc=none smtp.client-ip=91.218.175.185
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750854968; c=relaxed/simple;
+	bh=8gvxEe87rQANHTSvFJNGL1YdvNiKYh/OurROwhKELtI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kJQlY/tSMBNuqzLxGB+vGuSJRhyxkFgM0I4CwK0q+9M4DcAJx6HY0vh5b9FlVTiuYKVbFT6ODMFaOf2SK2Btqs3hZAXzm/wKZy/HpE7lXm1KTIV2HHGp6gW81NhXWHiQMmQt5af+od6zOULHg21RCErmGgSRQXv0cSLvVA9YznA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZWAVVuUP; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wgPth1dx"
-Message-ID: <c9168877-9d66-4963-b4a7-f0095ba2760f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750854955;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=MBhxaGgNjA37rFka6DmFsDUeF2nq5c9Khk7gfBsLM70=;
-	b=wgPth1dxQCRD0V3ed0dRj9oL9K1dKtEq8pPfSmknpZbvJKt1zMt+3QNhkKNfMfZLceO8Qz
-	cPxPaRoBL8WCkPE1QYq1+gDJ6MBR7/n0ZwmoPuZBokr0YeUZSOSOzHn8u4cZN1bumaSLjB
-	Pe1sgLMQ9jKHyZ+aeQC6qLoBmCS1cY8=
-Date: Wed, 25 Jun 2025 20:35:37 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZWAVVuUP"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-450cb2ddd46so9105855e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:36:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750854965; x=1751459765; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=utxSfQIUzNDyFd0wpZpYOIjsXWTH5XEhERSRTus0EMQ=;
+        b=ZWAVVuUPwVwpOCis0bEEJQuI3Q1aYZsWyCe8TnI0RwknT64vAT+Mxnzsz7MbeDIl6t
+         sJbOzTcjMNZI71bTvfpGX7j/MLnxJyAeUgPQuiPUfqU1tHkenaU+k86pPUCg9pT/x16U
+         0No6CJXLfH+senNqDdp/OO+wKaQKFkYAlFArQLw9Dz9O0zGsuhnYUsPxF9Gr450Fxg8G
+         17tNTtsVmFUFM89RWrPv98EZBIdyhcxUfapch1Ymh0uYZm9ZJj0F6LcfwW/oAZKnAFql
+         veS3R7KaAyNAQ8EO5McSe+QYLHyH2ijLnTizI7uQoXR7fVkix0KBH9nUEbhOQTTHK+ui
+         ZuHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750854965; x=1751459765;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=utxSfQIUzNDyFd0wpZpYOIjsXWTH5XEhERSRTus0EMQ=;
+        b=jySqpahyDeelcbq3/sqLfByZ/5XTx8ZUIzIoUP5Cqe3SUpuhoiD6uiOUnFMRqcYU/g
+         C/HxfYi9fsK3HeUhwv/FQ34y+MuFKaZKC/8qtKYgeqK8Wj6wjm2gR84lTLpQT/LUu0lv
+         EsE9vpPK3gfR9J4WoVAZOaJQpnM8gswnhKh1qwJu5tN+HBHtixouf/kQ93EnHEKRU9cm
+         DwNI1H7qM0dwPl3YH5ehuKbziZwRA+/y2o129iKHuUNVP/2KlKb1KC7sjY6InfZEHn6Y
+         zjHNuRYBbJQup0W1NL8VeQOD1zoBCNmwHqIjXC7I1cs6V5PQfm0Ie/vdfIRg4Mk9M7PT
+         9itA==
+X-Forwarded-Encrypted: i=1; AJvYcCWmcqbg1tSrEUTPlA6cP76YtwUMuvo5RaYEyQqnUVbiq4vjhik0DHTRwTOT3t6WaqOrmOsv/DfRlQ9QjQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6+2JayQe5rYXqwOG9lNwxwovg6kQyzBbz5AX2YtF/zhpAd285
+	7OLdP2IZfNNkUl25btjpa4HH1G1ygwxduA+5tDG1t9++0eCjCZ6q4KaWj18Xohu1JgE=
+X-Gm-Gg: ASbGncvT9Zfja3JSeHThh85160KD5D4BupPNKj07U7Tdrg15/b2UWB4KxjDk5Syp0M0
+	8SeMgkNXOyoSFA8b84ZxRLx/CtzP6gELgAJIwTMz8j6fCD0uRFL5TALsHh/70BvGo1fPnXHNKnw
+	HMEOt2advhJC3aAtFYshKkLv2B0WVlv3OsIe15UAnNxj5URLKLh7db+BsbNJs4ICbpEv319vJqZ
+	uKn4j58Uvq1Wdt9Yeg9Ypn8EH7ZgCUWWy13kHctytM3WJ2o3VGQ9KBZ9P0joC2g4tP4uR4XQqgJ
+	ebrWI4Qg1mZQcP+8EcVfw/jDKZujv9jWbcniugU6P2y01GM7+XgDrFnusoiBiZsqA+OosE3xM5o
+	z
+X-Google-Smtp-Source: AGHT+IHpR4lo9ocHAd6uQqZvgKCDOe86RYPFqDU+jrEBWi/cnlm4y3T0WDIq0VxBKL5+i3Qtu6Jpog==
+X-Received: by 2002:a05:600c:1c95:b0:450:d386:1afb with SMTP id 5b1f17b1804b1-45381aafecemr29587905e9.9.1750854965395;
+        Wed, 25 Jun 2025 05:36:05 -0700 (PDT)
+Received: from localhost.localdomain ([41.79.198.24])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805112asm4515756f8f.9.2025.06.25.05.36.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 05:36:05 -0700 (PDT)
+From: Khalid Ali <khaliidcaliy@gmail.com>
+X-Google-Original-From: Khalid Ali <khaliidcaliy@gmail.com
+To: kai.huang@intel.com,
+	tglx@linutronix.de,
+	mingo@redhat.com,
+	bp@alien8.de
+Cc: x86@kernel.org,
+	hpa@zytor.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] x86/boot: Don't return encryption mask from __startup_64()
+Date: Wed, 25 Jun 2025 12:34:21 +0000
+Message-ID: <20250625123517.4333-1-khaliidcaliy@gmail.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <487c2747bb4c02d643324292489243fdc82e1c6a.camel@intel.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
- folios during reclamation
-Content-Language: en-US
-To: David Hildenbrand <david@redhat.com>
-Cc: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com,
- chrisl@kernel.org, kasong@tencent.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-riscv@lists.infradead.org, lorenzo.stoakes@oracle.com,
- ryan.roberts@arm.com, v-songbaohua@oppo.com, x86@kernel.org,
- ying.huang@intel.com, zhengtangquan@oppo.com,
- Lance Yang <ioworker0@gmail.com>, Barry Song <21cnbao@gmail.com>
-References: <2c19a6cf-0b42-477b-a672-ed8c1edd4267@redhat.com>
- <20250624162503.78957-1-ioworker0@gmail.com>
- <27d174e0-c209-4851-825a-0baeb56df86f@redhat.com>
- <938c4726-b93e-46df-bceb-65c7574714a6@linux.dev>
- <CAGsJ_4y1GObH-C7R=FQL=UWe3kF6qhKoRqPxNPYx0k7uwocc+g@mail.gmail.com>
- <5ba95609-302b-456a-a863-2bd5df51baf2@redhat.com>
- <CAGsJ_4zSGT05GjxM1H6JwSa5MhgtxaiYVa1Wtvm8+SmYkm=jmQ@mail.gmail.com>
- <6179dd30-5351-4a79-b0d6-f0e85650a926@redhat.com>
- <CAGsJ_4yTH5ngM++e=c+P7g0fXs-QQsOk2oxd1RWa3Qww97Knrw@mail.gmail.com>
- <5db6fb4c-079d-4237-80b3-637565457f39@redhat.com>
- <42f1d84f-2d17-43b7-8fa2-83322fcca44f@linux.dev>
- <9bb1e917-891d-4e1b-915f-98cdd5fc578b@redhat.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-In-Reply-To: <9bb1e917-891d-4e1b-915f-98cdd5fc578b@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
+> Sigh... this comment is broken, since there's no '*' before the last '/'.
 
+>Here's how I find it:
+>
+>So I went to see why this patch caused early boot failure, since the code
+>change doesn't seem wrong to me.
+>
+>After staring at the code for half hour and yet unable to see any issue, I
+>went to disassemble the kernel image, then I found the above two lines of
+>code wasn't there at all.
+>
+>Then looking at this again, it's obvious that the reason is the change to
+>the comment is broken, leading the above two lines of code being commented
+>out.
 
-On 2025/6/25 20:25, David Hildenbrand wrote:
-> On 25.06.25 14:20, Lance Yang wrote:
->>
->>
->> On 2025/6/25 20:09, David Hildenbrand wrote:
->>>>
->>>> Somehow, I feel we could combine your cleanup code—which handles a 
->>>> batch
->>>> size of "nr" between 1 and nr_pages—with the
->>>> "if (nr_pages == folio_nr_pages(folio)) goto walk_done" check.
->>>
->>> Yeah, that's what I was suggesting. It would have to be part of the
->>> cleanup I think.
->>>
->>> I'm still wondering if there is a case where
->>>
->>> if (nr_pages == folio_nr_pages(folio))
->>>       goto walk_done;
->>>
->>> would be wrong when dealing with small folios.
->>>
->>>> In practice, this would let us skip almost all unnecessary checks,
->>>> except for a few rare corner cases.
->>>>
->>>> For those corner cases where "nr" truly falls between 1 and nr_pages,
->>>> we can just leave them as-is—performing the redundant check inside
->>>> page_vma_mapped_walk().
->>>
->>> I mean, batching mapcount+refcount updates etc. is always a win. If we
->>> end up doing some unnecessary pte_none() checks, that might be
->>> suboptimal but mostly noise in contrast to the other stuff we will
->>> optimize out 🙂
->>>
->>> Agreed that if we can easily avoid these pte_none() checks, we should do
->>> that. Optimizing that for "nr_pages == folio_nr_pages(folio)" makes 
->>> sense.
->>
->> Hmm... I have a question about the reference counting here ...
->>
->>         if (vma->vm_flags & VM_LOCKED)
->>             mlock_drain_local();
->>         folio_put(folio);
->>         /* We have already batched the entire folio */
->>
->> Does anyone else still hold a reference to this folio after folio_put()?
-> 
-> The caller of the unmap operation should better hold a reference :)
+So what i was wringling all along was the comment. I don't know why i couldn't spot it
+if those two lines where commented out then even boot was supposed to fail on my side too.
+I guess toolchain difference. Probably this is the reason since i compiled with gcc not clang.
 
-Ah, you're right. I should have realized that :(
+Thanks though. :)
 
-Thanks,
-Lance
+>And this patch has other style issues too like the broken indent of function
+>parameters after changing returning value from 'unsigned int' to 'void', and
+Could please clarify more as checkpatch.pl didn't notice it.
 
-> 
-> Also, I am not sure why we don't perform a
-> 
-> folio_put_refs(folio, nr_pages);
-> 
-> ... :)
-> 
+>So, please, before posting patches, test them, and run
+>./scripts/checkpatch.pl against them.
 
+I used it, well the tool seems broken and giving me false positive. I fixed all your suggestions and sent 
+v5, as my best i could, i fixed all issues and that patch seems good. 
+
+Could you please check it?
