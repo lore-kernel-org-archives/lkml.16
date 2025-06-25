@@ -1,74 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA5827281C;
-	Wed, 25 Jun 2025 09:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE6426B77F;
+	Wed, 25 Jun 2025 09:07:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750842372; cv=none; b=RflnQBRiFhJ1Zwp9i8dLgIeb0fJ6mGhFuNMUFgPsGZzk4iYtjJx8ojjINDWY2EKW0KDcsffT/UWdTZ9D+sFMrcECBHvVEirdfNVb1Q4lpqIkZedsPdlPccmxC/7YDQgKLhw/fIz2P/FFc9mWpGvrdSrAZz9tdDZfbN6oOj4IskU=
+	t=1750842459; cv=none; b=RtQb4hjGfl+fPviuotmPZ4PmR4jhIst/IBAZxMz1jtBW8TKRi5raR9aikxkYZssp6EDXEpUvqj8FCqNjY1wT8d+V8jfeYobhXXilNTqJCYpDSWMeBugDUrRVWw8sm93VAVN5fHR4iCFGXR+ELD8XGL3mtLHGmX452VSpeKop464=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750842372; c=relaxed/simple;
-	bh=YjtRs4wsPRg2gYdjsvwLqd6q3JwrNmEOkA721Ah6kQc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=QVPPyhJoOoD+jRBYuck0jc7M1YPGBvw7yNB2LI3idwtJfwgHAFwT6JD1suydaz+lrgobub5R28wAe3ZW89ZXBknoK1PcXk2UntTeaARxBN2nDdjsoRttqbd/58fHvfvzaUjxQXW4u6D4Bpmya6vQVW1KVDBKlsF3/WAY5dFmX5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bqFhGC+y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750842459; c=relaxed/simple;
+	bh=Wm/Qm170JnmvLoFVbqubHllu4LDDa//IX18AMk/c+g8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IwFFForBVnhwUau6htvAD7EiCFz+ES5F3Na5zTiJegX4S09KZTjvuzzp8QgxpyMffeEJuPIodplpqbXLkATixs3EnOjjWy0Rqy6x/1m1ytSwefoaO7nevPDqUsamQWBVO+RPL2xQKCeetaxfzc/tO7c0WqLGZDaURl4b3IXomH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUztFy2h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bqFhGC+y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19AC3C4CEEA;
-	Wed, 25 Jun 2025 09:06:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUztFy2h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3E4BC4CEEA;
+	Wed, 25 Jun 2025 09:07:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750842372;
-	bh=YjtRs4wsPRg2gYdjsvwLqd6q3JwrNmEOkA721Ah6kQc=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=bqFhGC+yqPbKuMRvwEnTEGK3ZE21ghxWeyp4c4v6p6ynj9CJa5u7gv4vqRuL+YVsQ
-	 rNY+n8Rkyp3/q7iencBFU//C0IXA/n+JX/JHT0qIRqOaiWQjumRPvrYFXaqO25fZQG
-	 K8NL1nTWk/hbLfHUl4hsqYhncAxnSrEuMil65z4T5LfJCy+3UJ19J0baYVW8mHeood
-	 dqCWNx3qPHQVKaZTkTkCVA6wJ4N3WaOuz7BOePTV3mcLLJMvg1AVHo9Amc+/JaeJBb
-	 VK1rbReG6wejNcBtO2+FdcZD7ZoPv/SsJ+2kd268GFSoLFup+m21qywA61TqOOmT3v
-	 7Ql7EdIKQthLg==
-From: Lee Jones <lee@kernel.org>
-To: Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Andrew Davis <afd@ti.com>, 
- Jacek Anaszewski <jacek.anaszewski@gmail.com>, 
- Johan Adolfsson <johan.adolfsson@axis.com>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, kernel@axis.com
-In-Reply-To: <20250617-led-fix-v7-0-cdbe8efc88fa@axis.com>
-References: <20250617-led-fix-v7-0-cdbe8efc88fa@axis.com>
-Subject: Re: [PATCH v7 0/2] leds-lp50xx: Support reg to set multi_index.
-Message-Id: <175084236984.4074918.12825777412065581866.b4-ty@kernel.org>
-Date: Wed, 25 Jun 2025 10:06:09 +0100
+	s=k20201202; t=1750842459;
+	bh=Wm/Qm170JnmvLoFVbqubHllu4LDDa//IX18AMk/c+g8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eUztFy2hS2wfsb8j77f2PVF4wB4X8iJeV6TVrk5esjbRwDb2d/nWAX7Qvgkencf+1
+	 LkOqcqQP36WgokaH0Rb4nb4VZPiyuLCttGVkE2+M9N07PTbboioekupa0qE8jXdssk
+	 ZWgLsKI4swkfWT0iGJpXtkppL87YR/otVdn740n9gKoumV1qt1v3gw5nqZqxJW5NMj
+	 oDKnzlGgCl7lJRkPWW7Cm+YretQ4cBy+ynGytnSY/GiKqs5QXvE5BthcpKF01dyyy3
+	 EJDVL6rAeK3loyeOgI500rxCGxYwH3DzNyak48FD9mGzmqPI6NqObJF/wlirXSqxCG
+	 PABnRRg0crxdQ==
+Date: Wed, 25 Jun 2025 10:07:34 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jamie Bainbridge <jamie.bainbridge@gmail.com>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Michal Schmidt <mschmidt@redhat.com>,
+	Brett Creeley <brett.creeley@amd.com>,
+	Ivan Vecera <ivecera@redhat.com>, intel-wired-lan@lists.osuosl.org,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 net] i40e: When removing VF MAC filters, only check
+ PF-set MAC
+Message-ID: <20250625090734.GJ1562@horms.kernel.org>
+References: <c856f16e6ab37286733174c0fcf12bc72b677096.1750807588.git.jamie.bainbridge@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-c81fc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c856f16e6ab37286733174c0fcf12bc72b677096.1750807588.git.jamie.bainbridge@gmail.com>
 
-On Tue, 17 Jun 2025 12:23:53 +0200, Johan Adolfsson wrote:
-> Since devicetree nodes are (sometimes?) processed in reverse order,
-> support reg as the actual multi_index index so yo get well defined
-> color order presented in the multi_index file.
-> Not sure if reusing reg for this is the correct way or if another
-> property such as "multi_index" or similar should be used instead.
-> Looks like reg is used for similar things at least.
-> Or should the whole "reverse the devicetree" problem be fixed instead?
-> Update bindings to match implementation, and add description for the
-> reg property.
+On Wed, Jun 25, 2025 at 09:29:18AM +1000, Jamie Bainbridge wrote:
+> When the PF is processing an Admin Queue message to delete a VF's MACs
+> from the MAC filter, we currently check if the PF set the MAC and if
+> the VF is trusted.
 > 
-> [...]
+> This results in undesirable behaviour, where if a trusted VF with a
+> PF-set MAC sets itself down (which sends an AQ message to delete the
+> VF's MAC filters) then the VF MAC is erased from the interface.
+> 
+> This results in the VF losing its PF-set MAC which should not happen.
+> 
+> There is no need to check for trust at all, because an untrusted VF
+> cannot change its own MAC. The only check needed is whether the PF set
+> the MAC. If the PF set the MAC, then don't erase the MAC on link-down.
+> 
+> Resolve this by changing the deletion check only for PF-set MAC.
+> 
+> (the out-of-tree driver has also intentionally removed the check for VF
+> trust here with OOT driver version 2.26.8, this changes the Linux kernel
+> driver behaviour and comment to match the OOT driver behaviour)
+> 
+> Fixes: ea2a1cfc3b201 ("i40e: Fix VF MAC filter removal")
+> Signed-off-by: Jamie Bainbridge <jamie.bainbridge@gmail.com>
+> ---
+> v2: Reword commit message as suggested by Simon Horman.
 
-Applied, thanks!
+Thanks for the update.
 
-[1/2] leds: leds-lp50xx: Handle reg to get correct multi_index
-      commit: f0022183bfd939f7d3c669cca0bf3aade233c9a5
-[2/2] dt-bindings: leds: lp50xx: Document child reg, fix example
-      commit: d07927c0ca918a6825ef46cb7c012dbc102ac352
-
---
-Lee Jones [李琼斯]
-
+Reviewed-by: Simon Horman <horms@kernel.org>
