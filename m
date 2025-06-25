@@ -1,166 +1,156 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2051.outbound.protection.outlook.com [40.107.94.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D380800;
-	Wed, 25 Jun 2025 05:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750829456; cv=none; b=qdBK07c3rxOhmWZVK0/9CuPOTsvo0KHiKmZHmCrhONlhXK1dNKe9QF+KuYcik6YAfBm41xIKPrfokQtaNqAK9NrjJu7QSBKJdbYKCP9SC7Eb++9DTJOuPEEAGB2Tr/wegHCxb07Q3i6O9RiTX58hDyn7xdCOHh73xOUnJFBX13Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750829456; c=relaxed/simple;
-	bh=qkqTrWqvL045MNwIzcxOuCzXWF8cU9oUhMgOHUeD7+I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MAaQDSAX/JB412XcUEMMau+whKUHQdiRsLJ8v18bsoIz/vc196MO8S6h/hjiOB1reK3WlbB9P9M9gI3SRnZduY28lkHxjIHuxRtLYaKmRNUVciaRRn8sjoT/aGl5HQYyK5t+axyxxYOmC/mhwtQCqV3pELdkZYTqAWT1Pf3N9XE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ScHwaS5W; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA73182BC;
+	Wed, 25 Jun 2025 05:41:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750830085; cv=fail; b=D6fsiean7CIXV8r/IAmKcIrVJjePXZvspTezXjcWvg2M4qsou8oITvxXtOiNDsk2e8/GU6onrcm+qBYX73pFfyuhBO94JFvm5niU+MfhF92lsZWm8eNIXesAXATWXFVNaQrQUu3wvEUX28fnksSbOs8fQ/uOv8GbqEjPR/+Y8vg=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750830085; c=relaxed/simple;
+	bh=gRhXejGtgGSQZMbsKNLwRkWsvTnR+Lvg5S7Tt3c/1dw=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KnYADPcUOgMjrJrWs2OG27dVAULg+ueI79Z30RnR9zh0HVw4Ey/wy0FomrpuPnoYKPgTBWc0U82WcznTU5ZcWC08lXA4zxp4W2jrNzL0H0R7yw2iq/HHajvCZg8JYcbwOu622YUgAoNsdAGGn5Y53Tgn0+Vv3Qc5EqfQvngVD5U=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Q0f5Qrbi; arc=fail smtp.client-ip=40.107.94.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ScHwaS5W"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7490702fc7cso615379b3a.1;
-        Tue, 24 Jun 2025 22:30:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750829454; x=1751434254; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3evY/iE1wXVw/hvubL4CLnB0sjjyjXrMSBwjFohfH+0=;
-        b=ScHwaS5WDUL3b0jbCfj7OTEn0t8mq7YOMzZ5nOGjkjuSX3GVRSta7Uv9q8zdHKkCWh
-         MNmF+KdDHKpFoj2yBnPa5Eobj4gOP4qYECpIKx8/FxtTNC1aEIdMO5vurw48LdLQ8HID
-         FyZnpLHMCw4eQE3QH8QMyodP8bowhPl/+hYMyE+tLcqTGR6lRY737+cnn30E3fNsgnBe
-         AhLfyu6+kci7CHRWsULn1gFqwX/JzI6em7Ugb0SM7azvskuwYTlZ7BNwLks1bv5E/0N4
-         dknq+d+SbXfSZeDT7wD0K9IWyE2HqFRybdEB06ouRI9MSXbb13bzEtgupNvWaoENho5A
-         d9rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750829454; x=1751434254;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3evY/iE1wXVw/hvubL4CLnB0sjjyjXrMSBwjFohfH+0=;
-        b=oSRXfmFemDtRhP5+TQmBngPMWehhvbAlgMfSdC05E4eFKpAZg53zOZwfi8n/Kh0jo+
-         uQ2ahV8FbnjEoKoED13gTQ5h/wWJMqMMMeTrpIYBgz+c7XN6HgsivvWhTypV5KmnJolv
-         3MTh+yc9cBmWZ82NBWDmv4loIwT8xDxtCgIipXGTw+Pj0P1iVnalFpqsqFGeZGcYetkz
-         pm0/wybwN6WE82BeT0UrThtiHg6Tnz2yLy45n1hOpDUim7tLhMKvuiJp+PjrPcw14afv
-         b6naTKDBbGAlyE+uCbBrjKTY8ftzG1fZlMLJdOby3DkXukRj2cpFygZR7NWjb1lXkhiJ
-         iT/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVeytrn1MLiRtDx81WoLTZH4k7J5Zb2RYM+lpff8wxgZOF6LmMpnUGd6AkR6vR7h0VAZc830XT18dLiueQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+6a3esO4G0486I5cj64Q1LsFTfkic8y6WgCHqH2RTOZC1IRQh
-	HyoxwFJRNJgfYxSa+RmKpwLbkJsGC9DrCF1PJ1FWdLA5CRQDLvqzRfYd
-X-Gm-Gg: ASbGncsr//hnj3mZXZbR7dYNkZQeBpBRDymA74tgnjK996q+YuX2EXN6tKRGpThQX3S
-	euIR0qByObHKrJp22xNOdEWat/57oOspMk+0pDXNCR0nDxEyWmFtTTuLhhnpcBUYYsjuXpPiQxm
-	aVq8erv5mKq9tJRniYse84xniFiFb8fPEWzungJlpVjHGNLhKBiHItZoeSmtMfScovU2+aO2e+y
-	f3FycFp85e5T0wdt9OKI5xNXScxzVjwI3GkTiH8uYTZgRJ56DpBHHoxF8KwWfUf2YhY4nCDd6bD
-	7eX4C7+Ap/0t7uq2vKJmCorChvr4/1HDXO93x+HaztdC2H0XQiDoLQdC7swxQQ==
-X-Google-Smtp-Source: AGHT+IHBdzLEkklY0D9WmBJ64Xf7XejTse4UFiLRQR7hUrfFiqMI5K/Q7/CZsR5GOmtfYhbLVMFxmw==
-X-Received: by 2002:a05:6300:8e1b:b0:220:81e2:eae4 with SMTP id adf61e73a8af0-22081e2eaf6mr1165303637.39.1750829453617;
-        Tue, 24 Jun 2025 22:30:53 -0700 (PDT)
-Received: from deliz-1.. ([154.91.3.20])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e21466sm3297606b3a.49.2025.06.24.22.30.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 22:30:53 -0700 (PDT)
-From: Deli Zhang <deli.zhang21th@gmail.com>
-To: michael.chan@broadcom.com
-Cc: netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Deli Zhang <deli.zhang21th@gmail.com>
-Subject: [PATCH] bnxt_en: Add parameter disable_vf_bind
-Date: Wed, 25 Jun 2025 13:30:05 +0800
-Message-ID: <20250625053005.79845-1-deli.zhang21th@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Q0f5Qrbi"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=D8BcTAhH9IcpktZ7zWCL3d/x0rkh4mo+uSv+Az0st91nZWRyICJ/4kpfe5+PZ1DvPixfeXvUeQoukO/HLMqfIZkkfpoUSn6xqg90fmd7o4fBj9M2qPWL71buieRTu4DblUQ5dYKrHETsKNkIMjw9Y4+J80FNFz2I8zUdjd+VT2b36pLTtq4nmuy/+cG4u0qdbJ5ShTebC+s51S2sFl0u/Wk116UuS/m5/RUduE6g6dmEQcrZGbAXeemkiSmYkFQOnyGGgKxBggBMN8UwrF34XhPOq4uC/nTVA9Qbc5aTqFblTzkCa4Q62m+U2hhF8LMZXoZIgCNL669kJYBSlf6l0g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ovuQIaIxJyWNfQz8v1QNJVEO8IKWWgz7rW1z47T/Ems=;
+ b=Qmkc0DRcWOBS7zx+XKkxDtyMzcwl0zAQ9V8vtx8JpBp7xr5PKf2asylpDjLOF63ZEJt7LSDZ8iu3tUMrY+DQgDqc4S4nYswQKn08XobM1bTaBdWymlec7IzZSL1bKn7/reli36bNB0CvhFbf+EckAZPqJZMjov2ocMZG1Gym8yoApK+nWn7wfaS9vZx4o63ahRcYYeDJ2Og5PKDtDcL8xbj0/aCtGRqvB3WlRLrxF0YoGmvrcjBWK2LD9oyvrexnJPkQFEvVf3VpbJ+OA6ZWG3/5rLhhDGnC5YVInsJz5FYowFIHRXg+Bz91TKq+S3+/4TDqpJMbZIxo7v8wdmS4SQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ovuQIaIxJyWNfQz8v1QNJVEO8IKWWgz7rW1z47T/Ems=;
+ b=Q0f5QrbivMInZs8YS4B1lSaJuBf29bz3SgZhJlibLvjp9Zi/9rtYGbuueBhVrng1fifRxUOQuk2RZdFQqIHY8naqz4dGGxt7DnfjWg09/H06vA+szLtmVIXMRVqB6AsuBNA8ovZoj4Su9DMsWm/baAJItSy/6BBBBMu6cTqVPgA=
+Received: from BL1PR13CA0395.namprd13.prod.outlook.com (2603:10b6:208:2c2::10)
+ by DM4PR12MB6010.namprd12.prod.outlook.com (2603:10b6:8:6a::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8857.29; Wed, 25 Jun 2025 05:41:19 +0000
+Received: from BN2PEPF000044AC.namprd04.prod.outlook.com
+ (2603:10b6:208:2c2:cafe::70) by BL1PR13CA0395.outlook.office365.com
+ (2603:10b6:208:2c2::10) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.17 via Frontend Transport; Wed,
+ 25 Jun 2025 05:41:19 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN2PEPF000044AC.mail.protection.outlook.com (10.167.243.107) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8880.14 via Frontend Transport; Wed, 25 Jun 2025 05:41:18 +0000
+Received: from SATLEXMB05.amd.com (10.181.40.146) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 25 Jun
+ 2025 00:41:18 -0500
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB05.amd.com
+ (10.181.40.146) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 25 Jun
+ 2025 00:41:17 -0500
+Received: from xhdshubhraj40.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Wed, 25 Jun 2025 00:41:15 -0500
+From: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+To: <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <git@amd.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+	<sboyd@kernel.org>, Michal Simek <michal.simek@amd.com>, Shubhrajyoti Datta
+	<shubhrajyoti.datta@amd.com>
+Subject: [PATCH] clk: clocking-wizard: Fix the round rate handling for versal
+Date: Wed, 25 Jun 2025 11:11:14 +0530
+Message-ID: <20250625054114.28273-1-shubhrajyoti.datta@amd.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB05.amd.com: shubhrajyoti.datta@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN2PEPF000044AC:EE_|DM4PR12MB6010:EE_
+X-MS-Office365-Filtering-Correlation-Id: 370b1ab6-45dc-48cf-0468-08ddb3aae8c6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?ablTemGQxII1IrM4CEiZ48D2cQb1GZviUQzNUi9xGkOFYAOD33LU7rPqUM5I?=
+ =?us-ascii?Q?2TyCetZvb4AtGXPKa7cMAjB3dvRywi9Lh3j6q4onoelVn8DrzX6kc8CGsomO?=
+ =?us-ascii?Q?TR8E9Wutb/taZau+g1HJdH3oRL/dVjKs9eMzTsncr1c942GJuZj0ouVAMRSg?=
+ =?us-ascii?Q?b15bkyTJV06s88taTKHxrCVfEr+I3tQqHnOLU68STHHNmoa0p22vtORNUDsA?=
+ =?us-ascii?Q?Ppj3H/RiHoIeMNfLh3eITc6fdS0cvpj/C+iRVrgJlNze7zfGExsma9fTHZXS?=
+ =?us-ascii?Q?TSWQcmjBEl8mmUBn5FWuWUw8LEM/Hg65udtqwZpC/qAu7teOaQwmli48qtjT?=
+ =?us-ascii?Q?URP3sGnVe/vrA9sn5NiRVFBmbPassg1dMIW0ye0/gn+kuujp7LrB7QcNkE6k?=
+ =?us-ascii?Q?M/aCeaB/5ZuBW+azAQ8TmtsrSHSFH4+CQG1AJ3YlG5a8W7ZXH2vumE1VsAEM?=
+ =?us-ascii?Q?yX0wyxBsGi1krxpTai15Xd0lm2CaNBDoXXkRyIPNmntpT/47zIbhzBPBi0bT?=
+ =?us-ascii?Q?UBHAse1qlGmvOWB9ytPuZiylV3+lgyJCqRFX7XXtJQpnhl5KLtxcegFukc31?=
+ =?us-ascii?Q?gSWVmaL5LTdar6kYtWn9Ah4uvApqZYafc7UhDJZ4IAZRa2KXroZol39U3KwF?=
+ =?us-ascii?Q?e2Z/OEPf7S+1vGF8ZUA3TEld/1P2f5bNyr5rrQP6PQHEFwzOJUaPVhRvzEZd?=
+ =?us-ascii?Q?xZx/YeGyTRfTvf5RJSgZ2Gba2K1aQWttqILBjtwoPPetf/Fg/aVNtmNWyHmi?=
+ =?us-ascii?Q?RJ4ywnLUwrUC98ntrpwr0hUJ33LAC+UzRfFs5rFKmaasIyImz57ehQfaLg83?=
+ =?us-ascii?Q?y8sm1MkL/wRY2HqTUWwBkpEmBj888JetUpHHVJFFfXUrvdzOub88eYkodG2r?=
+ =?us-ascii?Q?/rx9ndfJ8J8wdbp4kKYeseZxNp4fIsmGfhufuZIxrsdnASbFLMjkqV17DT/o?=
+ =?us-ascii?Q?uESg82pLV2/8SjhL579o2e+v/x+CVw3pFYxOAiET6x2Zz4dIs7Uiz1Acghcq?=
+ =?us-ascii?Q?UGkmaO1WLYkBS95b67M7r0ipTdon2NG9liUOcmkjVpKY4vpraMbhcRBK8kf7?=
+ =?us-ascii?Q?6JqA6sE1cZGfft0hOEl7YV71jqaUVltbACPLvTK0frjSsDUPT7YbTJsgkh4M?=
+ =?us-ascii?Q?HqWaeps+KF5a7vtxcjPrg2s7SJijINoMEatKbfftxofu6LdVzfI9aQPCzIxX?=
+ =?us-ascii?Q?vtpLMGinl27bChsIb4FJ+VQlYizoV/rfav9VNtmNHzyns1m8sJklUsIZi56n?=
+ =?us-ascii?Q?dkcndkp4qBtSMLFyQS2tsHkyHGdetztrQR6epJ8l6t7/77AYTv2dHIL5z/ek?=
+ =?us-ascii?Q?7JsZmL3v4vy0ED52MaAz8XoEhiw06REuxHFZ07xOs55TNMJ8ov4tVFf6g1YM?=
+ =?us-ascii?Q?5JEvZFrzNmqP81rI9ly0wTBRfWtSAdW5o1Nu82DZildBV46cY2z05i8ayMzu?=
+ =?us-ascii?Q?mL1GEiMMmcUWvsuoAjHTUIBsIuyJfaiGwwJ87ZrJkmweyyGUmtFlR1IQgzYD?=
+ =?us-ascii?Q?WSDRevrW+E2CJlWKzNimSybNzuSWxxJTUOlq?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 05:41:18.7166
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 370b1ab6-45dc-48cf-0468-08ddb3aae8c6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN2PEPF000044AC.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6010
 
-In virtualization, VF is usually not bound by native drivers, instead
-should be passthrough to VM. Most PF and VF drivers provide separate
-names, e.g. "igb" and "igbvf", so that the hypervisor can control
-whether to use VF devices locally. The "bnxt_en" driver is a special
-case, it can drive both PF and VF devices, so here add a parameter
-"disable_vf_bind" to allow users to control.
+Fix the `clk_round_rate` implementation for Versal platforms by calling
+the Versal-specific divider calculation helper. The existing code used
+the generic divider routine, which results in incorrect round rate.
 
-Signed-off-by: Deli Zhang <deli.zhang21th@gmail.com>
+Fixes: 7681f64e6404 ("clk: clocking-wizard: calculate dividers fractional parts")
+Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 41 +++++++++++++++++++++--
- 1 file changed, 39 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 2cb3185c442c..89897182a71d 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -88,6 +88,12 @@ MODULE_DESCRIPTION("Broadcom NetXtreme network driver");
- 
- #define BNXT_TX_PUSH_THRESH 164
- 
-+#ifdef CONFIG_BNXT_SRIOV
-+static bool disable_vf_bind;
-+module_param(disable_vf_bind, bool, 0);
-+MODULE_PARM_DESC(disable_vf_bind, "Whether to disable binding to virtual functions (VFs)");
-+#endif
-+
- /* indexed by enum board_idx */
- static const struct {
- 	char *name;
-@@ -144,7 +150,12 @@ static const struct {
- 	[NETXTREME_E_P7_VF] = { "Broadcom BCM5760X Virtual Function" },
- };
- 
--static const struct pci_device_id bnxt_pci_tbl[] = {
-+/* The boundary between PF and VF devices in bnxt_pci_tbl */
-+#ifdef CONFIG_BNXT_SRIOV
-+#define FIRST_VF_DEV_ID 0x1606
-+#endif
-+
-+static struct pci_device_id bnxt_pci_tbl[] = {
- 	{ PCI_VDEVICE(BROADCOM, 0x1604), .driver_data = BCM5745x_NPAR },
- 	{ PCI_VDEVICE(BROADCOM, 0x1605), .driver_data = BCM5745x_NPAR },
- 	{ PCI_VDEVICE(BROADCOM, 0x1614), .driver_data = BCM57454 },
-@@ -196,7 +207,7 @@ static const struct pci_device_id bnxt_pci_tbl[] = {
- 	{ PCI_VDEVICE(BROADCOM, 0xd802), .driver_data = BCM58802 },
- 	{ PCI_VDEVICE(BROADCOM, 0xd804), .driver_data = BCM58804 },
- #ifdef CONFIG_BNXT_SRIOV
--	{ PCI_VDEVICE(BROADCOM, 0x1606), .driver_data = NETXTREME_E_VF },
-+	{ PCI_VDEVICE(BROADCOM, FIRST_VF_DEV_ID), .driver_data = NETXTREME_E_VF },
- 	{ PCI_VDEVICE(BROADCOM, 0x1607), .driver_data = NETXTREME_E_VF_HV },
- 	{ PCI_VDEVICE(BROADCOM, 0x1608), .driver_data = NETXTREME_E_VF_HV },
- 	{ PCI_VDEVICE(BROADCOM, 0x1609), .driver_data = NETXTREME_E_VF },
-@@ -17129,10 +17140,36 @@ static struct pci_driver bnxt_pci_driver = {
- #endif
- };
- 
-+#ifdef CONFIG_BNXT_SRIOV
-+static void bnxt_vf_bind_init(void)
-+{
-+	s32 idx;
-+
-+	if (!disable_vf_bind)
-+		return;
-+
-+	for (idx = 0; bnxt_pci_tbl[idx].device != 0; idx++) {
-+		if (bnxt_pci_tbl[idx].device == FIRST_VF_DEV_ID) {
-+			/* Truncate off VF devices */
-+			memset(&bnxt_pci_tbl[idx], 0, sizeof(struct pci_device_id));
-+			pr_info("%s: Disabled VF binding, id table offset %u",
-+				DRV_MODULE_NAME, idx);
-+			return;
-+		}
-+	}
-+
-+	/* Should not reach here! */
-+	pr_crit("%s: Unknown VF dev id %u", DRV_MODULE_NAME, FIRST_VF_DEV_ID);
-+}
-+#endif
-+
- static int __init bnxt_init(void)
- {
+ drivers/clk/xilinx/clk-xlnx-clock-wizard.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/xilinx/clk-xlnx-clock-wizard.c b/drivers/clk/xilinx/clk-xlnx-clock-wizard.c
+index 9a35031b0afd..3efce7b88906 100644
+--- a/drivers/clk/xilinx/clk-xlnx-clock-wizard.c
++++ b/drivers/clk/xilinx/clk-xlnx-clock-wizard.c
+@@ -673,7 +673,7 @@ static long clk_wzrd_ver_round_rate_all(struct clk_hw *hw, unsigned long rate,
+ 	u32 m, d, o, div, f;
  	int err;
  
-+#ifdef CONFIG_BNXT_SRIOV
-+	bnxt_vf_bind_init();
-+#endif
- 	bnxt_debug_init();
- 	err = pci_register_driver(&bnxt_pci_driver);
- 	if (err) {
+-	err = clk_wzrd_get_divisors(hw, rate, *prate);
++	err = clk_wzrd_get_divisors_ver(hw, rate, *prate);
+ 	if (err)
+ 		return err;
+ 
 -- 
-2.47.0
+2.17.1
 
