@@ -1,669 +1,224 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2052.outbound.protection.outlook.com [40.107.243.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C176A1F3B8A;
-	Wed, 25 Jun 2025 03:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750822908; cv=none; b=plLlsDkzLRA0eU5QIrsRI4nnR2f/luUXLCkZrYDeUaaxi3DzzvGcvKWpwal8zZOgw6ctEXs/0Pe3wa5oFcoxi/+QSNrdWzIaCoU4tkz6K15s3UoZZJaTuSfgLXussjyzcPxMKii4TQ449vUHihfHyYgBnJZE4qvMV5QQoazp9g0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750822908; c=relaxed/simple;
-	bh=q4ZSlxKWE885ny78Ph+FV55g1/yzZAph6yKVJWbsmcs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dKrfLFFQvtAPNp2sPu13NCt/AC9u1DaaaLpeikRPcVST9rxbPtmeG5gekByoeIqS62zGTts4vbEyH9vSJBeSW3rBYs0hsQ9ld88/aXjzN+zbKZVr9CuC1fKIEtGn4jXsDiAc5q7i8LkM9GWof25rEe314cnNGVXbvx7JbhlCcmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4bRnZ85jRvzSjSl;
-	Wed, 25 Jun 2025 11:37:20 +0800 (CST)
-Received: from kwepemf100013.china.huawei.com (unknown [7.202.181.12])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2E62D1401F1;
-	Wed, 25 Jun 2025 11:41:40 +0800 (CST)
-Received: from DESKTOP-F6Q6J7K.china.huawei.com (10.174.175.220) by
- kwepemf100013.china.huawei.com (7.202.181.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 25 Jun 2025 11:41:38 +0800
-From: Fan Gong <gongfan1@huawei.com>
-To: Fan Gong <gongfan1@huawei.com>, Zhu Yikai <zhuyikai1@h-partners.com>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
-	<horms@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	<linux-doc@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Bjorn Helgaas
-	<helgaas@kernel.org>, luosifu <luosifu@huawei.com>, Xin Guo
-	<guoxin09@huawei.com>, Shen Chenyang <shenchenyang1@hisilicon.com>, Zhou
- Shuai <zhoushuai28@huawei.com>, Wu Like <wulike1@huawei.com>, Shi Jing
-	<shijing34@huawei.com>, Meny Yossefi <meny.yossefi@huawei.com>, Gur Stavi
-	<gur.stavi@huawei.com>, Lee Trager <lee@trager.us>, Michael Ellerman
-	<mpe@ellerman.id.au>, Suman Ghosh <sumang@marvell.com>, Przemek Kitszel
-	<przemyslaw.kitszel@intel.com>, Joe Damato <jdamato@fastly.com>, Christophe
- JAILLET <christophe.jaillet@wanadoo.fr>
-Subject: [PATCH net-next v05 6/8] hinic3: Mailbox framework
-Date: Wed, 25 Jun 2025 11:41:17 +0800
-Message-ID: <a50b33bb8b121f9a40f45414187b8b7cdab87fa4.1750821322.git.zhuyikai1@h-partners.com>
-X-Mailer: git-send-email 2.21.0.windows.1
-In-Reply-To: <cover.1750821322.git.zhuyikai1@h-partners.com>
-References: <cover.1750821322.git.zhuyikai1@h-partners.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E67A1925AF
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:42:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750822961; cv=fail; b=bVvBhNnjT3vRvKdrsShLvvSDL75FA3rA11JR/b1raXFY9bpCWJM8nOqojj0AeAxVg65CnhlQIHaD6doOORzjRH/ADiqvydZEd1bJ8Ixdtqg91MRk0VSkKSSpRXDzlqOpZtPjY3yZAshlq74oLxyk3prwfi3m/sB1Eb4Vwcnn6SU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750822961; c=relaxed/simple;
+	bh=dINjA/iRuXx+shZQnVVOEWyuiJ5XcgSDlITSSvhVfEo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=foTHkWb4qC4ViWUCO4gVmQZomYC24e7tPO1D/Zh+tXXEViYnaF9EeKLCKXV/zFZYWgnFk3TzOWTdAQVrhHWJxADIvERtBtnKOOqF8beDg33XJayLCLVtgW8PWjP0FY7VE+UG4tvUh6UdClYF0Sz280tAbM9dSoPvbNJP+nCup+M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=nvkH16hW; arc=fail smtp.client-ip=40.107.243.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="nvkH16hW"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=QVPbt+EFD7j1Qh7/OuCoBlv/HzrcicUKrrdXH2F/LKmp5MhzFOz8rO+u66JIhuFDMe9L0C1STxWgFZnuVC7VnLiNwnTVdVJUb8gjbHZujSSwkArYDln+DQYW8b+9o0isDACblebeRUQT1+TSTS12D4H0DDmkf3fEkKK2meyqvXmXS9eKpwT8wwVaOAUMs4XY9rTyahDhoAB5r4GU6UErikKfKhS81UYbBGexpqaW3LAa73cdEeTn6KmSRefaNvuQJSa1LJinuOo2YBP19GCamdWWhusA+zXsy6xmKQ4iPsrcL4MGpfskxqBoCmRrCyvynsX/evq6XcBNzM7CzVlzpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dINjA/iRuXx+shZQnVVOEWyuiJ5XcgSDlITSSvhVfEo=;
+ b=FsKGdqXT+eLZQrEsJISATiLTJk2XZcPT9D0z8EHF6CVHuPxSo+Akyi/UVzBqwPKJfWB0+yEjvSKYJPsOBl/BHOXtr1C1519QF0gA5tvGjdlWBhe5JNVsfxvbuqQURhX2vxa/ZNmiMY7Y/QUYL3uzqhL0O70EDSD3dcbxkmDM2qVqZ43C52jpgVADAgwq4KyWkpBS9GR0qhBNmzxqOw2shyaOku8eH4CY3RpH3Gq8+EcS/P9auU/ReV2bm6+5lKVICbz1xw4MQ9YRQsHYfv7F4YTA+s4tjILaqoBE7tAw/ABPyJAywsfzC7G4QoyjfCx6SwnEKn/IIoYPrG3TBwJWGA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microchip.com; dmarc=pass action=none
+ header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microchip.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dINjA/iRuXx+shZQnVVOEWyuiJ5XcgSDlITSSvhVfEo=;
+ b=nvkH16hWRY5gxkeuwIRZUnN3pK2E878+uW26dFFiyTszHH10pFBdrwX2DOIBt5F2rVVGSw1VBNWmHeGCL6Sl4h+rOUZDnznqhuN+bTO6rREqEgYnDp23klJsd6Me0oReoBUy1b86M+2/BOABXFVcOvMMHITLF+KEuU2dfek/NOAWrSPl/7y8G4fNg9eX2Bdf/reR1Bz6WnEhR1Ra75p6pc7DMA+2/kqCFYEBZuIozfQX9mf8sRWYK7G5w02EZskx7da+D/T+z+TOqcbTSnreY/cH2XSY85Rf1RoXgjgX3FPVx2FVqsRKLNxWJkF+6pTLvK4soruOss9+dsAn0ajYGA==
+Received: from PH7PR11MB6451.namprd11.prod.outlook.com (2603:10b6:510:1f4::16)
+ by PH7PR11MB5958.namprd11.prod.outlook.com (2603:10b6:510:1e1::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Wed, 25 Jun
+ 2025 03:42:32 +0000
+Received: from PH7PR11MB6451.namprd11.prod.outlook.com
+ ([fe80::80a8:f388:d92e:41f8]) by PH7PR11MB6451.namprd11.prod.outlook.com
+ ([fe80::80a8:f388:d92e:41f8%5]) with mapi id 15.20.8857.022; Wed, 25 Jun 2025
+ 03:42:32 +0000
+From: <Dharma.B@microchip.com>
+To: <mripard@kernel.org>
+CC: <Manikandan.M@microchip.com>, <andrzej.hajda@intel.com>,
+	<neil.armstrong@linaro.org>, <rfoss@kernel.org>,
+	<Laurent.pinchart@ideasonboard.com>, <jonas@kwiboo.se>,
+	<jernej.skrabec@gmail.com>, <maarten.lankhorst@linux.intel.com>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <simona@ffwll.ch>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/3] drm/bridge: microchip-lvds: switch to use atomic
+ variants
+Thread-Topic: [PATCH v4 2/3] drm/bridge: microchip-lvds: switch to use atomic
+ variants
+Thread-Index: AQHb5OnRj+ugbWFlN0yfN/M1L+xAq7QSJP0AgAEXiQA=
+Date: Wed, 25 Jun 2025 03:42:32 +0000
+Message-ID: <13f93095-c339-4238-843b-1f92ea83018b@microchip.com>
+References: <20250624-microchip-lvds-v4-0-937d42a420e9@microchip.com>
+ <20250624-microchip-lvds-v4-2-937d42a420e9@microchip.com>
+ <20250624-beautiful-goose-of-penetration-c4ffde@houat>
+In-Reply-To: <20250624-beautiful-goose-of-penetration-c4ffde@houat>
+Accept-Language: en-GB, en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microchip.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH7PR11MB6451:EE_|PH7PR11MB5958:EE_
+x-ms-office365-filtering-correlation-id: bc434dd4-0249-4a1f-f570-08ddb39a50ee
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?SUVtVUFZK3ZUZktoVzE3djdIcW5IZHN6RHFUNmtkMmhvSDlicytjTkZCczlN?=
+ =?utf-8?B?VWt0bUNlQ0pLeXg0QStrKzJUOWRwRm5BL2JJWFl6ZmRNQ0p6cUFFOGVUTVA1?=
+ =?utf-8?B?cU9lKzQ0TVJ2M29UMFdGZmlVUnBHKy9XOTlkc1FiSkdyWU80N25qVlljbnlv?=
+ =?utf-8?B?ZW5LcUFUZ2g5L0V0UEc0aDRuUzl4cmFMbTA4OUpnVXZjYVprMkxzSUtjTXFS?=
+ =?utf-8?B?MitZZ3NXWmc1S0VZbEZTMUtQSzlOVC8xL2lzTGdVd3g1V043SkNTNFYzSzZx?=
+ =?utf-8?B?UzM4cThWVGJjN3dycUZDZFhldlBPR28yN0ZYMnFYR2ZWWkNDQXIwQkNUcmti?=
+ =?utf-8?B?RDAydWtoMHdQUWZ3VWV6Y0pNMms2N1ljQW1IdGlvQ216T2JUVkFPSEw5djBV?=
+ =?utf-8?B?eGc3M01KNE1uQmZhaXlqR0llNDF3a1NxOGlxOWFXUjdNR2JBTUdDUUUyeDYv?=
+ =?utf-8?B?K01SNVJ2NkZiWDlEUGpIREhjZGdaSVRYSksxSnZXZk5nWC9RSTNwQkE2K05x?=
+ =?utf-8?B?bk5CeU4vQXcwUzdOcWhMeVBPTnhZWXJDSm15RFlaTkgwYTdkbFRpb250Z3h2?=
+ =?utf-8?B?MUYrd1NqMmQzTlM3dzZ5T01MUU0wakgxNmxJWHpJV2ZVRkdlanp1bUovaHVB?=
+ =?utf-8?B?UE1EN0h3OUdCaUVMbC92R3hZKzhIdnZyazJCS1N0c2QvaThpOVQzWmJGeXE3?=
+ =?utf-8?B?ZFJ6R3RlWDBpS1FyZUpjWEt4cU1qaVJycjl5eW9aRFlHSFNOY3pJTlpNM0lE?=
+ =?utf-8?B?UDRsaUh6bWFRcW5WS05jOHQ2ank5elNiOTRGWFhaUWdhYTBQVm1HT1oxZ2l3?=
+ =?utf-8?B?bHRVemRNZzVmOVNYRkJLWTk3czd1eWUxYzQ3bHVpY2haWjVBWjFOSGFxOS8x?=
+ =?utf-8?B?N3FEVmpDNEVzb3RsdlVBaUpNNzVwYzExNGsrcGpxY213UXNvM1V4R28yemRV?=
+ =?utf-8?B?UTVkdGk3bmFRUExyR3F0VFhZeXNJWk0zUUxEbU5qdGpOeEFxMENwM3REWWZD?=
+ =?utf-8?B?UStpQ254MnNsS05KcDNmdU01Znd3Vk1DVzdVYVlFWlRvemJ5L0N6ZUIvRmw3?=
+ =?utf-8?B?c082WndEQnFMdEJMWUFScE5RbmVCdzY2NG5DMlBhZExWNmRERmVKWThmVTg3?=
+ =?utf-8?B?ckNXcjZGV3ljWkpIV0FqOU0xUTdTNlE0QUsxVWMxV01qaEZFbVVlbXY5SkpO?=
+ =?utf-8?B?OS9BNFRNdTFTK2plSnlEQk8rMUw1bEwyV0QvNCtYNUN5MGtlUVRaT2w4bHFn?=
+ =?utf-8?B?bkNBaVVBSTRXK2xoVkJyUGZoZm8zcFR6TlVpUzI2TVVyWndFclNhamNYcWhj?=
+ =?utf-8?B?QldtQlNBSkphWmVzbEZVU0NZU0hjNE55RTV1UlhlNGZwM3lMbG5sYkQ4M2U4?=
+ =?utf-8?B?aXZmSEd6TU12cE1VTUhCZlFiNDZBNmI0TjA1dkdQd3p5ZGtROVh6M1pDNEhM?=
+ =?utf-8?B?cUNzVFBCMk5lVFBaUlBNZTQyUUlvTjBVQkpJeHhrUXBGOGhDNmFUZVRCL3NZ?=
+ =?utf-8?B?cytTWXBjYXdHTlJBd1YrMXZjYkNqS2hONDYvRER5eGlueHlsK3diajNPZ3lD?=
+ =?utf-8?B?aTFCWjhwaWdUMDEwVlZ1VHVHeVQyN2xOVW1pQW9qZzRyMXNQekJjQjdGVEgx?=
+ =?utf-8?B?VWNrUGt3amlUczJMcGVudnBoZm9NTHFZU0ZXRDM2RVJ6UjNCL0lSMm0rSlph?=
+ =?utf-8?B?MzVmRW0vNDdpUWJ2ZUhPaFo5dTV3QXJNQTVWUDdaNHhReStmQUNnUENET0hY?=
+ =?utf-8?B?MjlPZ2lndDFLck5ieU5oV1Nia25GZTFsR1o1RXpKUE14aWJlOHZIVDBLNzhW?=
+ =?utf-8?B?WTZsMW9IZk5nYjdiN2hPMW85aERvMHBQUHBWSkZQOWVsWFRuTVdaeVY4QnQw?=
+ =?utf-8?B?SkR6THdCQUtEb1U0NDA5UHNBSmZOY2MraTRURTM1a0lrS2VzYVpwTVhrS1gx?=
+ =?utf-8?B?NUNVUU5QNlVtV2ZsOGlScDEyL2ljU0xyMXFHOGppZ2FhOUFlQ3dydGhYT0xW?=
+ =?utf-8?B?MHhkdWdrelJ3PT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6451.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?R3RHWlNSbndRczhZUGNvRVBDaXhsWmF5RGsyTDRwN0ZZeHFzU3gwK3FxK1d2?=
+ =?utf-8?B?MFRYdG1tNXBEYmVlemRMcE5JYkpEUmVXUllHNjB0ZFNFZGZhNUhKWGZQWHA2?=
+ =?utf-8?B?K0xub1NoeHoxRkVrdEcxUW45ZXpuZFA1NmFEY0oydURTdWgvRllzYXlyaTZ4?=
+ =?utf-8?B?TDlVVERLSEpac2tETDE4T3ZPdzVQN3hPa3ZuTnRnOHArc2RXWG9ZYkxZZzdW?=
+ =?utf-8?B?NjFxRnJKcWh4TC8vdXBjU0RKeUZqNUkrTWlJN2FpMWY0TXV4bTBmQmFWaXlu?=
+ =?utf-8?B?SG5VWHdUZ3JjZlk5Tk9rYnoybGdtaW41bk9Pa1RSQ2lLQ1RiTWJoRmVZNkNN?=
+ =?utf-8?B?WnA0M3lNZ1hxRUJZRVV0K1FZVkw4OEp2ZmVuWkFjM1B4VHN0ZU13MWg4a0xQ?=
+ =?utf-8?B?T0k4QVdBSjlLdk40cWMvaUhYb0J0T1dhMlhyZE9oU3NDb2ZHZ2FJZVVRZWZ4?=
+ =?utf-8?B?WjVxSmJFSWlON0J6OGVFcDlmamtWWVQ0ZFN2RkxjTUJqbGVTVU9EUkl0NDJa?=
+ =?utf-8?B?UW4wUGpuekkwc0V2cnhiSDJZZlU5eUhBaFNkQWdQSkNUK3B1aTBJbE9xQUZK?=
+ =?utf-8?B?aXFyak9QaVZ3UzZseWxoMjFOd0xOM0NYZnF2L1k1YklQRDNUa0lPUFNQUThi?=
+ =?utf-8?B?Qm9mOWxRRkxDY0FJUy9KYmlSOGJnOHVEMTY2SlRTMzJCMlVNZEpMRVAwSzRI?=
+ =?utf-8?B?cVRpWDUvTVpuSmtiVzlsZldoSDBFeVE4VzVMOGhIRURSa2tmc05XVk1GRXVY?=
+ =?utf-8?B?RkI1NE1kbVlUWWlhR1dHMXFJRDJEUHl3TExTTnVlQzJyWndqK2xpOFdSUzA4?=
+ =?utf-8?B?UThEdUR4NGxPZk9LUmNoNUczWXYzcS93UXpab0xpeGJyU2txWXZ2a1o5bDRk?=
+ =?utf-8?B?TEZodkx6cFF2UVplcDR6dktpcENaRlZkYlJobVFhaktsMzlnU1NjZU5WdzVI?=
+ =?utf-8?B?ZG5XV2JETWRmKzNoeSswb1BYbXFSNlI0eUNVY2ZhOUd3MElOK20xeTBQL3pB?=
+ =?utf-8?B?Qjc2c1RiVHZkUlV3SUFUeVJrYUUxd0duRUNNbTNkNk05TE5HWEx2aFJPZ24z?=
+ =?utf-8?B?THRKdkVhTXZPaTlUbi9XQi83S3NpdjVEaEFNMW9XTW5lN0MvckIyeUFVWU1l?=
+ =?utf-8?B?b1JhK0x6dWphMXpoeGM1ZklaeXJuUFEzaFdDYWF6UVRidXFLZlJZQXNFa3FG?=
+ =?utf-8?B?bVd0eFlSRWNNVmh3NzFBNEJkMG1uYzhxR2QxSEVEbzlLYUlrbHRKZ0FwYTIy?=
+ =?utf-8?B?azBVN2kxaG8yaFd1aEVCUzNrV3VISTBWMlorU2ROY2hpbE9BRWx6SFpDV3NB?=
+ =?utf-8?B?eGxyTDBJWm51MTB4dWFhNjM5dTk1b0ZXQlM0YS9aNzc4ZEZEZ0o4ZEEvTVdM?=
+ =?utf-8?B?TDEvTkRwOE9MSkpDZVRmSmJlM3Vta0dnUlhyLys1cVI4YzFKNEZkM0pocm5k?=
+ =?utf-8?B?N2YxWEVRNDVWVzR0VS8xZFFMVndJeVBwL2c3M0REN0RPVFIyTkF3ODJyUUkv?=
+ =?utf-8?B?dHR5NVBIelQ0Skd0VWlnK3gvNHYxd0t5Mm43L04xTG5IU0ZWK29IMGh6Slp4?=
+ =?utf-8?B?bHBCcUx6Nk1Ibm16MUw2YjZvcVNzNWxmRE9oQlN0a1VQajhHazdLUlFuRVB1?=
+ =?utf-8?B?NGlmaVFBcStnS1NjT3ZXU1o2RW5LdjViS1dWWjMwOTJXYkptaEJJU2ZjekhG?=
+ =?utf-8?B?MkdaT3cyY1EyTzZmR1FCVVRQSE5BekNNdUZrL2RORzZ4RG5sYXhDLzhLRkZw?=
+ =?utf-8?B?dnFIcDllTVlrb0RlZzFDVUlrUkZMT0gwSnhCL2lpTVdRUm0xVUVLWlR1WW5Z?=
+ =?utf-8?B?Q1NQSC9FaEpVY05aR01MMmFFODBMZE5obythQVpMMGo0S0hlWnp6N2JicGdh?=
+ =?utf-8?B?cmxsR21sdHdVYk9lb25ZYmlBUURkS2lNMTVvZkFWUVdxYThKUlpwSGV2ZlpU?=
+ =?utf-8?B?YUY5VWhqOVdpZzZvSTI3OHB2TXpEUFpwdGtkUnNyUFZzSFpGZEJHaFVjbGIx?=
+ =?utf-8?B?MGNzbFc4LzlBU3FDc0xWeDkrREpYcjNEdHVTNXZsc0wvK0pSKzVFdk1JbXlU?=
+ =?utf-8?B?ck00T1QrbFRxYTh5bVZXczZWcHVubkwwVlVrckxnNTM1ZGJuenBXV1BOeGRW?=
+ =?utf-8?Q?IezKBDkuY4nbtXw8C1V+nzfok?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <56BCA3547AD909488E69BF40EC4E778C@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: kwepems100001.china.huawei.com (7.221.188.238) To
- kwepemf100013.china.huawei.com (7.202.181.12)
+X-OriginatorOrg: microchip.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6451.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bc434dd4-0249-4a1f-f570-08ddb39a50ee
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2025 03:42:32.0423
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +4cHoMwHwi/6m3YfInRGWn9wlpszcuLYhh3lqDzlb0UJQHxlvoLrIFOWPFkGefRR1UbMvuV9AXCQZnw1ow6ANw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR11MB5958
 
-Add mailbox framework initialization.
-It allows driver to send commands to HW.
-
-Co-developed-by: Xin Guo <guoxin09@huawei.com>
-Signed-off-by: Xin Guo <guoxin09@huawei.com>
-Co-developed-by: Zhu Yikai <zhuyikai1@h-partners.com>
-Signed-off-by: Zhu Yikai <zhuyikai1@h-partners.com>
-Signed-off-by: Fan Gong <gongfan1@huawei.com>
----
- .../ethernet/huawei/hinic3/hinic3_common.c    |  14 +
- .../ethernet/huawei/hinic3/hinic3_common.h    |   9 +
- .../net/ethernet/huawei/hinic3/hinic3_mbox.c  | 403 ++++++++++++++++++
- .../net/ethernet/huawei/hinic3/hinic3_mbox.h  | 105 +++++
- 4 files changed, 531 insertions(+)
-
-diff --git a/drivers/net/ethernet/huawei/hinic3/hinic3_common.c b/drivers/net/ethernet/huawei/hinic3/hinic3_common.c
-index d3a69d67b4c1..016da1911072 100644
---- a/drivers/net/ethernet/huawei/hinic3/hinic3_common.c
-+++ b/drivers/net/ethernet/huawei/hinic3/hinic3_common.c
-@@ -3,6 +3,7 @@
- 
- #include <linux/delay.h>
- #include <linux/dma-mapping.h>
-+#include <linux/iopoll.h>
- 
- #include "hinic3_common.h"
- 
-@@ -52,6 +53,19 @@ void hinic3_dma_free_coherent_align(struct device *dev,
- 			  mem_align->ori_vaddr, mem_align->ori_paddr);
- }
- 
-+int hinic3_wait_for_timeout(void *priv_data, wait_cpl_handler handler,
-+			    u32 wait_total_ms, u32 wait_once_us)
-+{
-+	enum hinic3_wait_return ret;
-+	int err;
-+
-+	err = read_poll_timeout(handler, ret, ret == HINIC3_WAIT_PROCESS_CPL,
-+				wait_once_us, wait_total_ms * USEC_PER_MSEC,
-+				false, priv_data);
-+
-+	return err;
-+}
-+
- /* Data provided to/by cmdq is arranged in structs with little endian fields but
-  * every dword (32bits) should be swapped since HW swaps it again when it
-  * copies it from/to host memory. This is a mandatory swap regardless of the
-diff --git a/drivers/net/ethernet/huawei/hinic3/hinic3_common.h b/drivers/net/ethernet/huawei/hinic3/hinic3_common.h
-index 52d6cb2515c8..50d1fd038b48 100644
---- a/drivers/net/ethernet/huawei/hinic3/hinic3_common.h
-+++ b/drivers/net/ethernet/huawei/hinic3/hinic3_common.h
-@@ -18,6 +18,11 @@ struct hinic3_dma_addr_align {
- 	dma_addr_t align_paddr;
- };
- 
-+enum hinic3_wait_return {
-+	HINIC3_WAIT_PROCESS_CPL     = 0,
-+	HINIC3_WAIT_PROCESS_WAITING = 1,
-+};
-+
- struct hinic3_sge {
- 	u32 hi_addr;
- 	u32 lo_addr;
-@@ -40,6 +45,10 @@ int hinic3_dma_zalloc_coherent_align(struct device *dev, u32 size, u32 align,
- void hinic3_dma_free_coherent_align(struct device *dev,
- 				    struct hinic3_dma_addr_align *mem_align);
- 
-+typedef enum hinic3_wait_return (*wait_cpl_handler)(void *priv_data);
-+int hinic3_wait_for_timeout(void *priv_data, wait_cpl_handler handler,
-+			    u32 wait_total_ms, u32 wait_once_us);
-+
- void hinic3_cmdq_buf_swab32(void *data, int len);
- 
- #endif
-diff --git a/drivers/net/ethernet/huawei/hinic3/hinic3_mbox.c b/drivers/net/ethernet/huawei/hinic3/hinic3_mbox.c
-index e74d1eb09730..df908bfabdbd 100644
---- a/drivers/net/ethernet/huawei/hinic3/hinic3_mbox.c
-+++ b/drivers/net/ethernet/huawei/hinic3/hinic3_mbox.c
-@@ -4,10 +4,413 @@
- #include <linux/dma-mapping.h>
- 
- #include "hinic3_common.h"
-+#include "hinic3_csr.h"
- #include "hinic3_hwdev.h"
- #include "hinic3_hwif.h"
- #include "hinic3_mbox.h"
- 
-+#define MBOX_MSG_POLLING_TIMEOUT_MS  8000 // send msg seg timeout
-+#define MBOX_COMP_POLLING_TIMEOUT_MS 40000 // response
-+
-+#define MBOX_MAX_BUF_SZ           2048
-+#define MBOX_HEADER_SZ            8
-+
-+/* MBOX size is 64B, 8B for mbox_header, 8B reserved */
-+#define MBOX_SEG_LEN              48
-+#define MBOX_SEG_LEN_ALIGN        4
-+#define MBOX_WB_STATUS_LEN        16
-+
-+#define MBOX_SEQ_ID_START_VAL     0
-+#define MBOX_SEQ_ID_MAX_VAL       42
-+#define MBOX_LAST_SEG_MAX_LEN  \
-+	(MBOX_MAX_BUF_SZ - MBOX_SEQ_ID_MAX_VAL * MBOX_SEG_LEN)
-+
-+#define MBOX_DMA_MSG_QUEUE_DEPTH    32
-+#define MBOX_BODY_FROM_HDR(header)  ((u8 *)(header) + MBOX_HEADER_SZ)
-+#define MBOX_AREA(hwif)  \
-+	((hwif)->cfg_regs_base + HINIC3_FUNC_CSR_MAILBOX_DATA_OFF)
-+
-+#define MBOX_MQ_CI_OFFSET  \
-+	(HINIC3_CFG_REGS_FLAG + HINIC3_FUNC_CSR_MAILBOX_DATA_OFF + \
-+	 MBOX_HEADER_SZ + MBOX_SEG_LEN)
-+
-+#define MBOX_MQ_SYNC_CI_MASK   GENMASK(7, 0)
-+#define MBOX_MQ_ASYNC_CI_MASK  GENMASK(15, 8)
-+#define MBOX_MQ_CI_GET(val, field)  \
-+	FIELD_GET(MBOX_MQ_##field##_CI_MASK, val)
-+
-+#define MBOX_MGMT_FUNC_ID         0x1FFF
-+#define MBOX_COMM_F_MBOX_SEGMENT  BIT(3)
-+
-+static struct hinic3_msg_desc *get_mbox_msg_desc(struct hinic3_mbox *mbox,
-+						 enum mbox_msg_direction_type dir,
-+						 u16 src_func_id)
-+{
-+	struct hinic3_msg_channel *msg_ch;
-+
-+	msg_ch = (src_func_id == MBOX_MGMT_FUNC_ID) ?
-+		&mbox->mgmt_msg : mbox->func_msg;
-+
-+	return (dir == MBOX_MSG_SEND) ?
-+		&msg_ch->recv_msg : &msg_ch->resp_msg;
-+}
-+
-+static void resp_mbox_handler(struct hinic3_mbox *mbox,
-+			      const struct hinic3_msg_desc *msg_desc)
-+{
-+	spin_lock(&mbox->mbox_lock);
-+	if (msg_desc->msg_info.msg_id == mbox->send_msg_id &&
-+	    mbox->event_flag == MBOX_EVENT_START)
-+		mbox->event_flag = MBOX_EVENT_SUCCESS;
-+	spin_unlock(&mbox->mbox_lock);
-+}
-+
-+static bool mbox_segment_valid(struct hinic3_mbox *mbox,
-+			       struct hinic3_msg_desc *msg_desc,
-+			       u64 mbox_header)
-+{
-+	u8 seq_id, seg_len, msg_id, mod;
-+	u16 src_func_idx, cmd;
-+
-+	seq_id = MBOX_MSG_HEADER_GET(mbox_header, SEQID);
-+	seg_len = MBOX_MSG_HEADER_GET(mbox_header, SEG_LEN);
-+	msg_id = MBOX_MSG_HEADER_GET(mbox_header, MSG_ID);
-+	mod = MBOX_MSG_HEADER_GET(mbox_header, MODULE);
-+	cmd = MBOX_MSG_HEADER_GET(mbox_header, CMD);
-+	src_func_idx = MBOX_MSG_HEADER_GET(mbox_header, SRC_GLB_FUNC_IDX);
-+
-+	if (seq_id > MBOX_SEQ_ID_MAX_VAL || seg_len > MBOX_SEG_LEN ||
-+	    (seq_id == MBOX_SEQ_ID_MAX_VAL && seg_len > MBOX_LAST_SEG_MAX_LEN))
-+		goto err_seg;
-+
-+	if (seq_id == 0) {
-+		msg_desc->seq_id = seq_id;
-+		msg_desc->msg_info.msg_id = msg_id;
-+		msg_desc->mod = mod;
-+		msg_desc->cmd = cmd;
-+	} else {
-+		if (seq_id != msg_desc->seq_id + 1 ||
-+		    msg_id != msg_desc->msg_info.msg_id ||
-+		    mod != msg_desc->mod || cmd != msg_desc->cmd)
-+			goto err_seg;
-+
-+		msg_desc->seq_id = seq_id;
-+	}
-+
-+	return true;
-+
-+err_seg:
-+	dev_err(mbox->hwdev->dev,
-+		"Mailbox segment check failed, src func id: 0x%x, front seg info: seq id: 0x%x, msg id: 0x%x, mod: 0x%x, cmd: 0x%x\n",
-+		src_func_idx, msg_desc->seq_id, msg_desc->msg_info.msg_id,
-+		msg_desc->mod, msg_desc->cmd);
-+	dev_err(mbox->hwdev->dev,
-+		"Current seg info: seg len: 0x%x, seq id: 0x%x, msg id: 0x%x, mod: 0x%x, cmd: 0x%x\n",
-+		seg_len, seq_id, msg_id, mod, cmd);
-+
-+	return false;
-+}
-+
-+static void recv_mbox_handler(struct hinic3_mbox *mbox,
-+			      u64 *header, struct hinic3_msg_desc *msg_desc)
-+{
-+	void *mbox_body = MBOX_BODY_FROM_HDR(((void *)header));
-+	u64 mbox_header = *header;
-+	u8 seq_id, seg_len;
-+	int pos;
-+
-+	if (!mbox_segment_valid(mbox, msg_desc, mbox_header)) {
-+		msg_desc->seq_id = MBOX_SEQ_ID_MAX_VAL;
-+		return;
-+	}
-+
-+	seq_id = MBOX_MSG_HEADER_GET(mbox_header, SEQID);
-+	seg_len = MBOX_MSG_HEADER_GET(mbox_header, SEG_LEN);
-+
-+	pos = seq_id * MBOX_SEG_LEN;
-+	memcpy((u8 *)msg_desc->msg + pos, mbox_body, seg_len);
-+
-+	if (!MBOX_MSG_HEADER_GET(mbox_header, LAST))
-+		return;
-+
-+	msg_desc->msg_len = MBOX_MSG_HEADER_GET(mbox_header, MSG_LEN);
-+	msg_desc->msg_info.status = MBOX_MSG_HEADER_GET(mbox_header, STATUS);
-+
-+	if (MBOX_MSG_HEADER_GET(mbox_header, DIRECTION) == MBOX_MSG_RESP)
-+		resp_mbox_handler(mbox, msg_desc);
-+}
-+
-+void hinic3_mbox_func_aeqe_handler(struct hinic3_hwdev *hwdev, u8 *header,
-+				   u8 size)
-+{
-+	u64 mbox_header = *((u64 *)header);
-+	enum mbox_msg_direction_type dir;
-+	struct hinic3_mbox *mbox;
-+	struct hinic3_msg_desc *msg_desc;
-+	u16 src_func_id;
-+
-+	mbox = hwdev->mbox;
-+	dir = MBOX_MSG_HEADER_GET(mbox_header, DIRECTION);
-+	src_func_id = MBOX_MSG_HEADER_GET(mbox_header, SRC_GLB_FUNC_IDX);
-+	msg_desc = get_mbox_msg_desc(mbox, dir, src_func_id);
-+	recv_mbox_handler(mbox, (u64 *)header, msg_desc);
-+}
-+
-+static int init_mbox_dma_queue(struct hinic3_hwdev *hwdev,
-+			       struct mbox_dma_queue *mq)
-+{
-+	u32 size;
-+
-+	mq->depth = MBOX_DMA_MSG_QUEUE_DEPTH;
-+	mq->prod_idx = 0;
-+	mq->cons_idx = 0;
-+
-+	size = mq->depth * MBOX_MAX_BUF_SZ;
-+	mq->dma_buf_vaddr = dma_alloc_coherent(hwdev->dev, size,
-+					       &mq->dma_buf_paddr,
-+					       GFP_KERNEL);
-+	if (!mq->dma_buf_vaddr)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+static void uninit_mbox_dma_queue(struct hinic3_hwdev *hwdev,
-+				  struct mbox_dma_queue *mq)
-+{
-+	dma_free_coherent(hwdev->dev, mq->depth * MBOX_MAX_BUF_SZ,
-+			  mq->dma_buf_vaddr, mq->dma_buf_paddr);
-+}
-+
-+static int hinic3_init_mbox_dma_queue(struct hinic3_mbox *mbox)
-+{
-+	u32 val;
-+	int err;
-+
-+	err = init_mbox_dma_queue(mbox->hwdev, &mbox->sync_msg_queue);
-+	if (err)
-+		return err;
-+
-+	err = init_mbox_dma_queue(mbox->hwdev, &mbox->async_msg_queue);
-+	if (err) {
-+		uninit_mbox_dma_queue(mbox->hwdev, &mbox->sync_msg_queue);
-+		return err;
-+	}
-+
-+	val = hinic3_hwif_read_reg(mbox->hwdev->hwif, MBOX_MQ_CI_OFFSET);
-+	val &= ~MBOX_MQ_SYNC_CI_MASK;
-+	val &= ~MBOX_MQ_ASYNC_CI_MASK;
-+	hinic3_hwif_write_reg(mbox->hwdev->hwif, MBOX_MQ_CI_OFFSET, val);
-+
-+	return 0;
-+}
-+
-+static void hinic3_uninit_mbox_dma_queue(struct hinic3_mbox *mbox)
-+{
-+	uninit_mbox_dma_queue(mbox->hwdev, &mbox->sync_msg_queue);
-+	uninit_mbox_dma_queue(mbox->hwdev, &mbox->async_msg_queue);
-+}
-+
-+static int alloc_mbox_msg_channel(struct hinic3_msg_channel *msg_ch)
-+{
-+	msg_ch->resp_msg.msg = kzalloc(MBOX_MAX_BUF_SZ, GFP_KERNEL);
-+	if (!msg_ch->resp_msg.msg)
-+		return -ENOMEM;
-+
-+	msg_ch->recv_msg.msg = kzalloc(MBOX_MAX_BUF_SZ, GFP_KERNEL);
-+	if (!msg_ch->recv_msg.msg) {
-+		kfree(msg_ch->resp_msg.msg);
-+		return -ENOMEM;
-+	}
-+
-+	msg_ch->resp_msg.seq_id = MBOX_SEQ_ID_MAX_VAL;
-+	msg_ch->recv_msg.seq_id = MBOX_SEQ_ID_MAX_VAL;
-+
-+	return 0;
-+}
-+
-+static void free_mbox_msg_channel(struct hinic3_msg_channel *msg_ch)
-+{
-+	kfree(msg_ch->recv_msg.msg);
-+	kfree(msg_ch->resp_msg.msg);
-+}
-+
-+static int init_mgmt_msg_channel(struct hinic3_mbox *mbox)
-+{
-+	int err;
-+
-+	err = alloc_mbox_msg_channel(&mbox->mgmt_msg);
-+	if (err) {
-+		dev_err(mbox->hwdev->dev, "Failed to alloc mgmt message channel\n");
-+		return err;
-+	}
-+
-+	err = hinic3_init_mbox_dma_queue(mbox);
-+	if (err) {
-+		dev_err(mbox->hwdev->dev, "Failed to init mbox dma queue\n");
-+		free_mbox_msg_channel(&mbox->mgmt_msg);
-+		return err;
-+	}
-+
-+	return 0;
-+}
-+
-+static void uninit_mgmt_msg_channel(struct hinic3_mbox *mbox)
-+{
-+	hinic3_uninit_mbox_dma_queue(mbox);
-+	free_mbox_msg_channel(&mbox->mgmt_msg);
-+}
-+
-+static int hinic3_init_func_mbox_msg_channel(struct hinic3_hwdev *hwdev)
-+{
-+	struct hinic3_mbox *mbox;
-+	int err;
-+
-+	mbox = hwdev->mbox;
-+	mbox->func_msg = kzalloc(sizeof(*mbox->func_msg), GFP_KERNEL);
-+	if (!mbox->func_msg)
-+		return -ENOMEM;
-+
-+	err = alloc_mbox_msg_channel(mbox->func_msg);
-+	if (err)
-+		goto err_free_func_msg;
-+
-+	return 0;
-+
-+err_free_func_msg:
-+	kfree(mbox->func_msg);
-+	mbox->func_msg = NULL;
-+
-+	return err;
-+}
-+
-+static void hinic3_uninit_func_mbox_msg_channel(struct hinic3_hwdev *hwdev)
-+{
-+	struct hinic3_mbox *mbox = hwdev->mbox;
-+
-+	free_mbox_msg_channel(mbox->func_msg);
-+	kfree(mbox->func_msg);
-+	mbox->func_msg = NULL;
-+}
-+
-+static void prepare_send_mbox(struct hinic3_mbox *mbox)
-+{
-+	struct hinic3_send_mbox *send_mbox = &mbox->send_mbox;
-+
-+	send_mbox->data = MBOX_AREA(mbox->hwdev->hwif);
-+}
-+
-+static int alloc_mbox_wb_status(struct hinic3_mbox *mbox)
-+{
-+	struct hinic3_send_mbox *send_mbox = &mbox->send_mbox;
-+	struct hinic3_hwdev *hwdev = mbox->hwdev;
-+	u32 addr_h, addr_l;
-+
-+	send_mbox->wb_vaddr = dma_alloc_coherent(hwdev->dev,
-+						 MBOX_WB_STATUS_LEN,
-+						 &send_mbox->wb_paddr,
-+						 GFP_KERNEL);
-+	if (!send_mbox->wb_vaddr)
-+		return -ENOMEM;
-+
-+	addr_h = upper_32_bits(send_mbox->wb_paddr);
-+	addr_l = lower_32_bits(send_mbox->wb_paddr);
-+	hinic3_hwif_write_reg(hwdev->hwif, HINIC3_FUNC_CSR_MAILBOX_RESULT_H_OFF,
-+			      addr_h);
-+	hinic3_hwif_write_reg(hwdev->hwif, HINIC3_FUNC_CSR_MAILBOX_RESULT_L_OFF,
-+			      addr_l);
-+
-+	return 0;
-+}
-+
-+static void free_mbox_wb_status(struct hinic3_mbox *mbox)
-+{
-+	struct hinic3_send_mbox *send_mbox = &mbox->send_mbox;
-+	struct hinic3_hwdev *hwdev = mbox->hwdev;
-+
-+	hinic3_hwif_write_reg(hwdev->hwif, HINIC3_FUNC_CSR_MAILBOX_RESULT_H_OFF,
-+			      0);
-+	hinic3_hwif_write_reg(hwdev->hwif, HINIC3_FUNC_CSR_MAILBOX_RESULT_L_OFF,
-+			      0);
-+
-+	dma_free_coherent(hwdev->dev, MBOX_WB_STATUS_LEN,
-+			  send_mbox->wb_vaddr, send_mbox->wb_paddr);
-+}
-+
-+static int hinic3_mbox_pre_init(struct hinic3_hwdev *hwdev,
-+				struct hinic3_mbox **mbox)
-+{
-+	(*mbox) = kzalloc(sizeof(struct hinic3_mbox), GFP_KERNEL);
-+	if (!(*mbox))
-+		return -ENOMEM;
-+
-+	(*mbox)->hwdev = hwdev;
-+	mutex_init(&(*mbox)->mbox_send_lock);
-+	mutex_init(&(*mbox)->msg_send_lock);
-+	spin_lock_init(&(*mbox)->mbox_lock);
-+
-+	(*mbox)->workq = create_singlethread_workqueue(HINIC3_MBOX_WQ_NAME);
-+	if (!(*mbox)->workq) {
-+		dev_err(hwdev->dev, "Failed to initialize MBOX workqueue\n");
-+		kfree((*mbox));
-+		return -ENOMEM;
-+	}
-+	hwdev->mbox = (*mbox);
-+
-+	return 0;
-+}
-+
-+int hinic3_init_mbox(struct hinic3_hwdev *hwdev)
-+{
-+	struct hinic3_mbox *mbox;
-+	int err;
-+
-+	err = hinic3_mbox_pre_init(hwdev, &mbox);
-+	if (err)
-+		return err;
-+
-+	err = init_mgmt_msg_channel(mbox);
-+	if (err)
-+		goto err_destroy_workqueue;
-+
-+	err = hinic3_init_func_mbox_msg_channel(hwdev);
-+	if (err)
-+		goto err_uninit_mgmt_msg_ch;
-+
-+	err = alloc_mbox_wb_status(mbox);
-+	if (err) {
-+		dev_err(hwdev->dev, "Failed to alloc mbox write back status\n");
-+		goto err_uninit_func_mbox_msg_ch;
-+	}
-+
-+	prepare_send_mbox(mbox);
-+
-+	return 0;
-+
-+err_uninit_func_mbox_msg_ch:
-+	hinic3_uninit_func_mbox_msg_channel(hwdev);
-+
-+err_uninit_mgmt_msg_ch:
-+	uninit_mgmt_msg_channel(mbox);
-+
-+err_destroy_workqueue:
-+	destroy_workqueue(mbox->workq);
-+	kfree(mbox);
-+
-+	return err;
-+}
-+
-+void hinic3_free_mbox(struct hinic3_hwdev *hwdev)
-+{
-+	struct hinic3_mbox *mbox = hwdev->mbox;
-+
-+	destroy_workqueue(mbox->workq);
-+	free_mbox_wb_status(mbox);
-+	hinic3_uninit_func_mbox_msg_channel(hwdev);
-+	uninit_mgmt_msg_channel(mbox);
-+	kfree(mbox);
-+}
-+
- int hinic3_send_mbox_to_mgmt(struct hinic3_hwdev *hwdev, u8 mod, u16 cmd,
- 			     const struct mgmt_msg_params *msg_params)
- {
-diff --git a/drivers/net/ethernet/huawei/hinic3/hinic3_mbox.h b/drivers/net/ethernet/huawei/hinic3/hinic3_mbox.h
-index d7a6c37b7eff..730795b66a86 100644
---- a/drivers/net/ethernet/huawei/hinic3/hinic3_mbox.h
-+++ b/drivers/net/ethernet/huawei/hinic3/hinic3_mbox.h
-@@ -9,6 +9,111 @@
- 
- struct hinic3_hwdev;
- 
-+#define MBOX_MSG_HEADER_SRC_GLB_FUNC_IDX_MASK  GENMASK_ULL(12, 0)
-+#define MBOX_MSG_HEADER_STATUS_MASK            BIT_ULL(13)
-+#define MBOX_MSG_HEADER_SOURCE_MASK            BIT_ULL(15)
-+#define MBOX_MSG_HEADER_AEQ_ID_MASK            GENMASK_ULL(17, 16)
-+#define MBOX_MSG_HEADER_MSG_ID_MASK            GENMASK_ULL(21, 18)
-+#define MBOX_MSG_HEADER_CMD_MASK               GENMASK_ULL(31, 22)
-+#define MBOX_MSG_HEADER_MSG_LEN_MASK           GENMASK_ULL(42, 32)
-+#define MBOX_MSG_HEADER_MODULE_MASK            GENMASK_ULL(47, 43)
-+#define MBOX_MSG_HEADER_SEG_LEN_MASK           GENMASK_ULL(53, 48)
-+#define MBOX_MSG_HEADER_NO_ACK_MASK            BIT_ULL(54)
-+#define MBOX_MSG_HEADER_DATA_TYPE_MASK         BIT_ULL(55)
-+#define MBOX_MSG_HEADER_SEQID_MASK             GENMASK_ULL(61, 56)
-+#define MBOX_MSG_HEADER_LAST_MASK              BIT_ULL(62)
-+#define MBOX_MSG_HEADER_DIRECTION_MASK         BIT_ULL(63)
-+
-+#define MBOX_MSG_HEADER_SET(val, member) \
-+	FIELD_PREP(MBOX_MSG_HEADER_##member##_MASK, val)
-+#define MBOX_MSG_HEADER_GET(val, member) \
-+	FIELD_GET(MBOX_MSG_HEADER_##member##_MASK, val)
-+
-+/* identifies if a segment belongs to a message or to a response. A VF is only
-+ * expected to send messages and receive responses. PF driver could receive
-+ * messages and send responses.
-+ */
-+enum mbox_msg_direction_type {
-+	MBOX_MSG_SEND = 0,
-+	MBOX_MSG_RESP = 1,
-+};
-+
-+#define HINIC3_MBOX_WQ_NAME  "hinic3_mbox"
-+
-+struct mbox_msg_info {
-+	u8 msg_id;
-+	u8 status;
-+};
-+
-+struct hinic3_msg_desc {
-+	void                 *msg;
-+	u16                  msg_len;
-+	u8                   seq_id;
-+	u8                   mod;
-+	u16                  cmd;
-+	struct mbox_msg_info msg_info;
-+};
-+
-+struct hinic3_msg_channel {
-+	struct   hinic3_msg_desc resp_msg;
-+	struct   hinic3_msg_desc recv_msg;
-+};
-+
-+struct hinic3_send_mbox {
-+	u8 __iomem *data;
-+	void       *wb_vaddr;
-+	dma_addr_t wb_paddr;
-+};
-+
-+enum mbox_event_state {
-+	MBOX_EVENT_START   = 0,
-+	MBOX_EVENT_FAIL    = 1,
-+	MBOX_EVENT_SUCCESS = 2,
-+	MBOX_EVENT_TIMEOUT = 3,
-+	MBOX_EVENT_END     = 4,
-+};
-+
-+struct mbox_dma_msg {
-+	u32 xor;
-+	u32 dma_addr_high;
-+	u32 dma_addr_low;
-+	u32 msg_len;
-+	u64 rsvd;
-+};
-+
-+struct mbox_dma_queue {
-+	void       *dma_buf_vaddr;
-+	dma_addr_t dma_buf_paddr;
-+	u16        depth;
-+	u16        prod_idx;
-+	u16        cons_idx;
-+};
-+
-+struct hinic3_mbox {
-+	struct hinic3_hwdev       *hwdev;
-+	/* lock for send mbox message and ack message */
-+	struct mutex              mbox_send_lock;
-+	/* lock for send mbox message */
-+	struct mutex              msg_send_lock;
-+	struct hinic3_send_mbox   send_mbox;
-+	struct mbox_dma_queue     sync_msg_queue;
-+	struct mbox_dma_queue     async_msg_queue;
-+	struct workqueue_struct   *workq;
-+	/* driver and MGMT CPU */
-+	struct hinic3_msg_channel mgmt_msg;
-+	/* VF to PF */
-+	struct hinic3_msg_channel *func_msg;
-+	u8                        send_msg_id;
-+	enum mbox_event_state     event_flag;
-+	/* lock for mbox event flag */
-+	spinlock_t                mbox_lock;
-+};
-+
-+void hinic3_mbox_func_aeqe_handler(struct hinic3_hwdev *hwdev, u8 *header,
-+				   u8 size);
-+int hinic3_init_mbox(struct hinic3_hwdev *hwdev);
-+void hinic3_free_mbox(struct hinic3_hwdev *hwdev);
-+
- int hinic3_send_mbox_to_mgmt(struct hinic3_hwdev *hwdev, u8 mod, u16 cmd,
- 			     const struct mgmt_msg_params *msg_params);
- 
--- 
-2.43.0
-
+T24gMjQvMDYvMjUgNDozMiBwbSwgTWF4aW1lIFJpcGFyZCB3cm90ZToNCj4gT24gVHVlLCBKdW4g
+MjQsIDIwMjUgYXQgMDI6NTQ6MTVQTSArMDUzMCwgRGhhcm1hIEJhbGFzdWJpcmFtYW5pIHdyb3Rl
+Og0KPj4gTW9kZXJuaXplIHRoZSBicmlkZ2Ugb3BzIHRvIHVzZSBhdG9taWNfZW5hYmxlL2Rpc2Fi
+bGUuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogRGhhcm1hIEJhbGFzdWJpcmFtYW5pIDxkaGFybWEu
+YkBtaWNyb2NoaXAuY29tPg0KPj4gLS0tDQo+PiAgIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvbWlj
+cm9jaGlwLWx2ZHMuYyB8IDI2ICsrKysrKysrKysrKysrKysrKysrKystLS0tDQo+PiAgIDEgZmls
+ZSBjaGFuZ2VkLCAyMiBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQ0KPj4NCj4+IGRpZmYg
+LS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL21pY3JvY2hpcC1sdmRzLmMgYi9kcml2ZXJz
+L2dwdS9kcm0vYnJpZGdlL21pY3JvY2hpcC1sdmRzLmMNCj4+IGluZGV4IDQyNzUxMTI0Yjg2OC4u
+ZTRmZjQ2YjAzZDU0IDEwMDY0NA0KPj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9taWNy
+b2NoaXAtbHZkcy5jDQo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL21pY3JvY2hpcC1s
+dmRzLmMNCj4+IEBAIC0xMTEsNyArMTExLDggQEAgc3RhdGljIGludCBtY2hwX2x2ZHNfYXR0YWNo
+KHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsDQo+PiAgIAkJCQkgYnJpZGdlLCBmbGFncyk7DQo+
+PiAgIH0NCj4+ICAgDQo+PiAtc3RhdGljIHZvaWQgbWNocF9sdmRzX2VuYWJsZShzdHJ1Y3QgZHJt
+X2JyaWRnZSAqYnJpZGdlKQ0KPj4gK3N0YXRpYyB2b2lkIG1jaHBfbHZkc19hdG9taWNfcHJlX2Vu
+YWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlLA0KPj4gKwkJCQkJc3RydWN0IGRybV9hdG9t
+aWNfc3RhdGUgKnN0YXRlKQ0KPj4gICB7DQo+PiAgIAlzdHJ1Y3QgbWNocF9sdmRzICpsdmRzID0g
+YnJpZGdlX3RvX2x2ZHMoYnJpZGdlKTsNCj4+ICAgCWludCByZXQ7DQo+PiBAQCAtMTI3LDExICsx
+MjgsMjYgQEAgc3RhdGljIHZvaWQgbWNocF9sdmRzX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAq
+YnJpZGdlKQ0KPj4gICAJCWRldl9lcnIobHZkcy0+ZGV2LCAiZmFpbGVkIHRvIGdldCBwbSBydW50
+aW1lOiAlZFxuIiwgcmV0KTsNCj4+ICAgCQlyZXR1cm47DQo+PiAgIAl9DQo+PiArfQ0KPj4gICAN
+Cj4+ICtzdGF0aWMgdm9pZCBtY2hwX2x2ZHNfYXRvbWljX2VuYWJsZShzdHJ1Y3QgZHJtX2JyaWRn
+ZSAqYnJpZGdlLA0KPj4gKwkJCQkgICAgc3RydWN0IGRybV9hdG9taWNfc3RhdGUgKnN0YXRlKQ0K
+Pj4gK3sNCj4+ICsJc3RydWN0IG1jaHBfbHZkcyAqbHZkcyA9IGJyaWRnZV90b19sdmRzKGJyaWRn
+ZSk7DQo+PiAgIAlsdmRzX3NlcmlhbGlzZXJfb24obHZkcyk7DQo+PiAgIH0NCj4+DQo+PiAtc3Rh
+dGljIHZvaWQgbWNocF9sdmRzX2Rpc2FibGUoc3RydWN0IGRybV9icmlkZ2UgKmJyaWRnZSkNCj4+
+ICtzdGF0aWMgdm9pZCBtY2hwX2x2ZHNfYXRvbWljX2Rpc2FibGUoc3RydWN0IGRybV9icmlkZ2Ug
+KmJyaWRnZSwNCj4+ICsJCQkJICAgICBzdHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSAqc3RhdGUpDQo+
+PiArew0KPj4gKwlzdHJ1Y3QgbWNocF9sdmRzICpsdmRzID0gYnJpZGdlX3RvX2x2ZHMoYnJpZGdl
+KTsNCj4+ICsNCj4+ICsJLyogVHVybiBvZmYgdGhlIHNlcmlhbGlzZXIgKi8NCj4+ICsJbHZkc193
+cml0ZWwobHZkcywgTFZEU0NfQ1IsIDApOw0KPj4gK30NCj4+ICsNCj4+ICtzdGF0aWMgdm9pZCBt
+Y2hwX2x2ZHNfYXRvbWljX3Bvc3RfZGlzYWJsZShzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlLA0K
+Pj4gKwkJCQkJICBzdHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSAqc3RhdGUpDQo+PiAgIHsNCj4+ICAg
+CXN0cnVjdCBtY2hwX2x2ZHMgKmx2ZHMgPSBicmlkZ2VfdG9fbHZkcyhicmlkZ2UpOw0KPj4gICAN
+Cj4+IEBAIC0xNDEsOCArMTU3LDEwIEBAIHN0YXRpYyB2b2lkIG1jaHBfbHZkc19kaXNhYmxlKHN0
+cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UpDQo+PiAgIA0KPj4gICBzdGF0aWMgY29uc3Qgc3RydWN0
+IGRybV9icmlkZ2VfZnVuY3MgbWNocF9sdmRzX2JyaWRnZV9mdW5jcyA9IHsNCj4+ICAgCS5hdHRh
+Y2ggPSBtY2hwX2x2ZHNfYXR0YWNoLA0KPj4gLQkuZW5hYmxlID0gbWNocF9sdmRzX2VuYWJsZSwN
+Cj4+IC0JLmRpc2FibGUgPSBtY2hwX2x2ZHNfZGlzYWJsZSwNCj4+ICsJLmF0b21pY19wcmVfZW5h
+YmxlID0gbWNocF9sdmRzX2F0b21pY19wcmVfZW5hYmxlLA0KPj4gKwkuYXRvbWljX2VuYWJsZSA9
+IG1jaHBfbHZkc19hdG9taWNfZW5hYmxlLA0KPj4gKwkuYXRvbWljX2Rpc2FibGUgPSBtY2hwX2x2
+ZHNfYXRvbWljX2Rpc2FibGUsDQo+PiArCS5hdG9taWNfcG9zdF9kaXNhYmxlID0gbWNocF9sdmRz
+X2F0b21pY19wb3N0X2Rpc2FibGUsDQo+PiAgIH07DQo+IA0KPiBMaWtlIEkgc2FpZCB0byB5b3Ug
+ZWFybGllciB0b2RheSwgaXQncyBub3QganVzdCB3aGF0IHlvdSBjbGFpbSBpdCBpcy4NCj4gWW91
+J3JlIHNwbGl0dGluZyBlbmFibGUgaW50byBhdG9taWNfcHJlX2VuYWJsZSBhbmQgYXRvbWljX2Vu
+YWJsZSwgYW5kDQo+IGRpc2FibGUgaW50byBhdG9taWNfZGlzYWJsZSBhbmQgYXRvbWljX3Bvc3Rf
+ZGlzYWJsZS4NCj4gDQo+IEF0IHRoZSAqdmVyeSogbGVhc3QgdGhpcyBzaG91bGQgYmUgZXhwbGFp
+bmVkIGluIHlvdXIgY29tbWl0IGxvZywgYW5kIGl0DQo+IHdvdWxkIGJlIG11Y2ggYmV0dGVyIGlm
+IGl0IHdhcyBkb25lIGluIGFub3RoZXIgcGF0Y2guDQoNClN1cmUsIEnigJlsbCBzcGxpdCB0aGUg
+Y2hhbmdlcyBpbnRvIHR3byBjb21taXRzOg0KDQoxLiBDb252ZXJ0IC5lbmFibGUg4oaSIGF0b21p
+Y19lbmFibGUoKSBhbmQgLmRpc2FibGUg4oaSIGF0b21pY19kaXNhYmxlKCkNCg0KMi4gSW50cm9k
+dWNlIGF0b21pY19wcmVfZW5hYmxlKCkgYW5kIGF0b21pY19wb3N0X2Rpc2FibGUoKSwgbW92aW5n
+IHRoZSANCnNsZWVwYWJsZSBvcGVyYXRpb25zIGFjY29yZGluZ2x5Lg0KDQoNCj4gDQo+IE1heGlt
+ZQ0KDQoNCi0tIA0KV2l0aCBCZXN0IFJlZ2FyZHMsDQpEaGFybWEgQi4NCg==
