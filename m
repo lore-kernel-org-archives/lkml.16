@@ -1,160 +1,114 @@
-Received: from outbound.pv.icloud.com (p-west1-cluster4-host7-snip4-10.eps.apple.com [57.103.65.181])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 857662DD615
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 23:30:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.65.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8108D2D9799;
+	Wed, 25 Jun 2025 23:30:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750894206; cv=none; b=UCII3dT519R+KR0c+MJxe6u9vYFLBwrP/NnLSBUt90XdfBNz+OsAzUpSGv/RmSF5SReIMnH23k4hmwimq7KW9vJr3K/8h21K8SVPLeVMM9jvuYy38z+f885AlumaMSpKRRmSnW5X5P9fvEuqxcc4sHv+qDellKuyViO4yj6uPJ8=
+	t=1750894211; cv=none; b=VyvnoSTTWHfRxVq+yu/OJ5CXfl0AzSjVrb5kS2v6Vla40mAHjuJzXsybwhMDH9nRz7BjWbFYssL2euMUjYd4PcWUUvluDAYO/W6u3mPyTLn65aTNOwqpgW7ZMudRu5byNC2Fin9CJDDyseswK7sSteHJFvbXONvH4xWSmXHugwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750894206; c=relaxed/simple;
-	bh=+LOrmoIb8KK5f7WjS6l8DdCbck8dbDHebIPzu7ufsM0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UDpYLOXQRUS6mYKB4T8v/+dR9NhbRIOMqIw5euOCzj88rgfyWuLizRvm20cd/fYxQuM7U4dO9UlYepl1TEAwJtWdtO1byq7imtLIxUNmjT93+ICppL97yeXub/rCg+OPcAaBDx691JSk7gN5qMmCcxzSyodoBG+UFqGtjgyqy3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com; spf=pass smtp.mailfrom=icloud.com; dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b=f2crs/Xv; arc=none smtp.client-ip=57.103.65.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=icloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=icloud.com
+	s=arc-20240116; t=1750894211; c=relaxed/simple;
+	bh=Cyk1TBnxxpgcg8zPDHyXMCBT5SKpZHjDWYtGzReT2Fw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uIxPz2lb6otdVSoFI5Ye908tb0zVruTbey3a+EPcvVz3+mgXt7fzQt9LJhR314vF7RUNlDzlY4MUfLA0NbbWFBb6YHCn5QjXhzxvESm6+vSW7FlT/CdRFWRLlHLHgzZccsAP+Hz5tNZw8qBQNPfJiSG4yJOz70BtxPD5Yn9q9Ys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8W44OG9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=icloud.com header.i=@icloud.com header.b="f2crs/Xv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=icloud.com;
-	s=1a1hai; bh=jiFwjy9HPQt3cm9my0CNcRXj0OXu6GAMvjnck7QRBiY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=f2crs/Xv4X4TDC4RqpWxj90CbGb/mwis+QsSLEDrQRJ2L+bzaCMMsfsF7p0dQy5r2
-	 pD83yNur4OFQgdgcyQ9KvwOLoKFY7SGVFXmLi7I1RYKETpUR6ge7IXBjFVFaL3LkcA
-	 XXJfODemwrUybiXxDFNNToRFizK1qrD0aCS7ppJX8f4DcFT+nYfoI7mYrgc6+f3Wt3
-	 yJmrOs6RBT8xnozNZDewHbWUiQYSW3xLrt+zWhAJ91+lAy6iDzJkVvP6+wA87KGIvm
-	 z8sp6yDCMEjm4X9pDLL1nPqnGs7XUHgoZUF4pLrelPazLp7HNRntrnkQigi6HDQ36+
-	 Z0GGYGgIKOCFg==
-Received: from outbound.pv.icloud.com (unknown [127.0.0.2])
-	by outbound.pv.icloud.com (Postfix) with ESMTPS id D369E18001E6;
-	Wed, 25 Jun 2025 23:30:01 +0000 (UTC)
-Received: from [192.168.1.26] (pv-asmtp-me-k8s.p00.prod.me.com [17.56.9.36])
-	by outbound.pv.icloud.com (Postfix) with ESMTPSA id 5365118001E7;
-	Wed, 25 Jun 2025 23:30:00 +0000 (UTC)
-Message-ID: <ac666ce1-564d-496e-be42-8a8c1af654e7@icloud.com>
-Date: Thu, 26 Jun 2025 07:29:56 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8W44OG9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 940F0C4CEEA;
+	Wed, 25 Jun 2025 23:30:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750894210;
+	bh=Cyk1TBnxxpgcg8zPDHyXMCBT5SKpZHjDWYtGzReT2Fw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=q8W44OG9Zxk+iRf2iL0uZTpQ5YU73OTrSL1Or/3pXwEda2IFgwjxJFopob6oZiI4q
+	 Y7rLX3KiryMkojo8ZKh9dPdXQEmMJe425DPAefw7BSGWShM+tN6WNj7cZVZ4Rb76iw
+	 AP85u2yIhipTJGgLOKpEei3M/1oz/O/mjKyktNy4SqUD3LoJ+8dN7TfcfRbGWj+zh4
+	 SypYRJzgwuQ701ajDicqMVThQ8T1Kq3QbIjkzodHQ4qns2U13MNhGAayusDcGe5ud1
+	 hGbqV7ZUFL95a8/hkj44A5+M1i//O7NDIPqDjxuMbwL5nXyXEV3PyNBStVg9rDJGkC
+	 nHAXDi+47rN6g==
+Date: Wed, 25 Jun 2025 16:30:09 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: allison.henderson@oracle.com, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, tj@kernel.org,
+ andrew@lunn.ch, hannes@cmpxchg.org, mkoutny@suse.com,
+ cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v4.1] rds: Expose feature parameters via sysfs
+ (and ELF)
+Message-ID: <20250625163009.7b3a9ae1@kernel.org>
+In-Reply-To: <20250623155305.3075686-2-konrad.wilk@oracle.com>
+References: <20250623155305.3075686-1-konrad.wilk@oracle.com>
+	<20250623155305.3075686-2-konrad.wilk@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] char: misc: Enforce simple minor space division
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
- Zijun Hu <zijun.hu@oss.qualcomm.com>,
- Thadeu Lima de Souza Cascardo <cascardo@igalia.com>
-References: <20250620-rfc_miscdev-v1-1-fda25d502a37@oss.qualcomm.com>
- <2025062445-procedure-latch-9421@gregkh>
-Content-Language: en-US
-From: Zijun Hu <zijun_hu@icloud.com>
-In-Reply-To: <2025062445-procedure-latch-9421@gregkh>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: 0x8hjE11Lw2Ipc50sW9kVi7eVbsDK_pg
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDE4NCBTYWx0ZWRfX5qK/98sDJeMd
- 8lMgbGfeVsJeolJ89Z6GkFgIL111e6A/F1xDE5S++bW/65dK2IpQ4f8niinSToYONsV8vv6J1Oa
- FvwoatvjPsBaUA9Q/lg3WMNccYl6CNUaevPY2YdAUDruPvfyfbQQN6sghLJi+3VJV7WHM/ByONd
- Ba4b2mtDmBRCAjbMXd8a6l3SVpSZams2+Dac911wR+RS2KXbjJmmbsKAQAJrqDZPgg6S48n5g9k
- vamT3NQ8tNd3Zfevc5Lz/s1MWSuWdkUo1d10iNgnp2tXfSL/vgxhVBuoJBu6RoFKCEk6n11jI=
-X-Proofpoint-ORIG-GUID: 0x8hjE11Lw2Ipc50sW9kVi7eVbsDK_pg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_08,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0
- clxscore=1011 adultscore=0 phishscore=0 mlxscore=0 spamscore=0
- mlxlogscore=999 bulkscore=0 malwarescore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.22.0-2506060001 definitions=main-2506250184
 
-On 2025/6/24 23:50, Greg Kroah-Hartman wrote:
-> On Fri, Jun 20, 2025 at 10:53:32PM +0800, Zijun Hu wrote:
->> From: Zijun Hu <zijun.hu@oss.qualcomm.com>
->>
->> Enforce simple minor space division related to macro MISC_DYNAMIC_MINOR
->> defined as 255 currently:
->>
->> <  255 : Fixed minor codes
->> == 255 : Indicator to request dynamic minor code
->>>  255 : Dynamic minor codes requested
+On Mon, 23 Jun 2025 11:51:36 -0400 Konrad Rzeszutek Wilk wrote:
+> With the value of 'supported' in them. In the future this value
+> could change to say 'deprecated' or have other values (for example
+> different versions) or can be runtime changed.
+
+I'm curious how this theoretical 'deprecated' value would work
+in context of uAPI which can never regress..
+
+> The choice to use sysfs and this particular way is modeled on the
+> filesystems usage exposing their features.
 > 
-> Is this the rule today?  If so, does the now-added tests we have for
-> misc device properly test for this?
+> Alternative solution such as exposing one file ('features') with
+> each feature enumerated (which cgroup does) is a bit limited in
+> that it does not provide means to provide extra content in the future
+> for each feature. For example if one of the features had three
+> modes and one wanted to set a particular one at runtime - that
+> does not exist in cgroup (albeit it can be implemented but it would
+> be quite hectic to have just one single attribute).
 > 
-
-1) yes. this simple division becomes possible with recent commits below:
-Commit: 31b636d2c416 ("char: misc: restrict the dynamic range to exclude
-reserved minors")
-Commit: c876be906ce7 ("char: misc: register chrdev region with all
-possible minors")
-
-both available fixed and dynamic minors interleaves with narrow space
-[0, 255) before above commits.
-
-it is easy to balance minor space division by adjusting macro
-@MISC_DYNAMIC_MINOR if required in future as well.
-
-Also hope all fixed minors are registered with header linux/miscdevice.h
-
-2) no. below recent commit don't cover the simple division fully.
-Commit: 74d8361be344 ("char: misc: add test cases")
-
-drivers/misc/misc_minor_kunit.c may need to be corrected to reflecting
-division today.
-
->> This enforcing division also solves misc_register() reentry issue below:
->>
->> // Suppose both static @dev_A and @dev_B want to request dynamic minors.
->> @dev_A.minor(255) @dev_B.minor(255)
->>
->> // Register @dev_A then de-register it.
->> @dev_A.minor(255) -> registered -> @dev_A.minor(500) -> de-registered
->> -> @dev_A.minor(500)
->>
->> // Register @dev_B
->> @dev_B.minor(255) -> registered -> @dev_B.minor(500)
->>
->> // Register @dev_A again
->> @dev_A.minor(500) -> encounter -EBUSY error since @dev_B has got 500.
+> Another solution of using an ioctl to expose a bitmask has the
+> disadvantage of being less flexible in the future and while it can
+> have a bit of supported/unsupported, it is not clear how one would
+> change modes or expose versions. It is most certainly feasible
+> but it can get seriously complex fast.
 > 
-> Does this ever really happen?
+> As such this mechanism offers the basic support we require
+> now and offers the flexibility for the future.
 > 
+> Lastly, we also utilize the ELF note macro to expose these via
+> so that applications that have not yet initialized RDS transport
+> can inspect the kernel module to see if they have the appropiate
+> support and choose an alternative protocol if they wish so.
 
-i never meet this issue. but in theory, it may happen as explained below:
+Looks like this paragraph had a line starting with #, presumably
+talking about the ELF note and it got eaten by git? Please fix.
 
-misc_register()/misc_deregister() are sometimes called within driver's
-probe()/remove(), such cases have reentry requirements
 
-actually, error handling in misc_register() also reset minor code allocated:
+FWIW to me this series has a strong whiff of "we have an OOT module
+which has much more functionality and want to support a degraded /
+upstream-only mode in the user space stack". I'm probably over-
+-interpreting, and you could argue this will help you make real
+use of the upstream RDS. I OTOH would argue that it's a technical
+solution to a non-technical problem of not giving upstreaming 
+sufficient priority; I'd prefer to see code flowing upstream _first_ 
+and then worry about compatibility.
 
-	if (IS_ERR(misc->this_device)) {
-		misc_minor_free(misc->minor);
-		if (is_dynamic) {
-			misc->minor = MISC_DYNAMIC_MINOR;
-		}
-		err = PTR_ERR(misc->this_device);
-		goto out;
-	}
+$ git log --oneline --since='6 months ago' -- net/rds/ 
+433dce0692a0 rds: Correct spelling
+6e307a873d30 rds: Correct endian annotation of port and addr assignments
+5bccdc51f90c replace strncpy with strscpy_pad
+c50d295c37f2 rds: Use nested-BH locking for rds_page_remainder
+0af5928f358c rds: Acquire per-CPU pointer within BH disabled section
+aaaaa6639cf5 rds: Disable only bottom halves in rds_page_remainder_alloc()
+357660d7596b Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+5c70eb5c593d net: better track kernel sockets lifetime
+c451715d78e3 net/rds: Replace deprecated strncpy() with strscpy_pad()
+7f5611cbc487 rds: sysctl: rds_tcp_{rcv,snd}buf: avoid using current->nsproxy
+$
 
-> And with the recent changes in the last dev cycle in this code area, is
-> it still an issue?
->
-
-this is a different issue with the ones recent changes fix.
-
->> Side effects:
->> It will be refused to register device whose fixed minor > 255.
-> 
-> Do we have any in-kernel users that are > 255?
-
-NO. no kernel users have such usage.
-
-Actually, if fixed minor (>255) is used to register miscdev, it may
-encounter failure since the fixed minor (>255) may be allocated for
-other dynamic requests.
-
-> 
-> thanks,
-> 
-> greg k-h
-
+IOW applying this patch is a bit of a leap of faith that RDS
+upstreaming will restart. I don't have anything against the patch
+per se, but neither do I have much faith in this. So if v5 is taking 
+a long time to get applied it will be because its waiting for DaveM or
+Paolo to take it.
