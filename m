@@ -1,182 +1,141 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6983269B08;
-	Wed, 25 Jun 2025 13:19:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61B4426AA83
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750857582; cv=none; b=H7JZdOnstfY056d+PLnP/v0sU9vkMaWo1nnspTnqBVkpZSSB7WBzFOUX0lZQ8DNz/qRpXIsYxNQBg9qEuvjy+3xdNo2cqUHCI0ssK4Z6hW73XInQj7abpty4bEAqvofVu6YMY9T0t5T3wq7BYR695GsafDqZ3RxwGjAxZATScxY=
+	t=1750857583; cv=none; b=NM6kGCoUGglpjN5QgM7h6Qc4JBiXG5OJGLarRUp0DxfSSnuVbx5UpKuGr8cgv9Ib078ll+q0sFFDOEYwYcT9aDn393BtSz2bqAQvJBLTWWJVLxjLFR99bRROPA0zYdTBGuiOSM3YJy0d4xqOd6Fc1VPB+vVKeFwivIGNGJzYdzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750857582; c=relaxed/simple;
-	bh=U1ovqnANomb/cEXYdYYeiuP4LQydDqNW/NB4OU1aqgE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jBsC+JEQLC8yVXLULblM04w4rPVvhIaERiTjXj4UE7I0lIYrr3Jc3YkZ6SL1qY/67vypjPwA6rvV3JDaihvdHRAs6Kb33qGVPigrA6gD90Hf3x7WGMeEei7Dy8xKu/0nh7Oi4BfGre3S0Y1T11A1VQU6HI2CyUkyzDpP3Kh0CxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N0G3gV+E; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750857583; c=relaxed/simple;
+	bh=qrhKZPYkGxL/+D8ghgoJ0NSDadgal0sGTErP2Yn0lrU=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=QOFNAEoeS8fIxJUQRPszIaCNju6DR4rn9CgZMyf05XBxUwBmKZS/vmqzHMBfAyXtNukQF/RBqirZ8CzmL3/DpT5qr3ovrKfS3W5fyhNXC4tKw9EbFHkGEKEJTGf1mtU20Dg2VnTIKbtZxOYBEqqn4aOyEFMRVWtaJskuLbNnqjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C9cgz6wT; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0G3gV+E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54036C4CEEE;
-	Wed, 25 Jun 2025 13:19:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750857582;
-	bh=U1ovqnANomb/cEXYdYYeiuP4LQydDqNW/NB4OU1aqgE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=N0G3gV+E4IJhrAeOantpO1cwUDcMsTCEPcIcE6wM9Gm6ZtwQv921RF9CtRTt0u2ST
-	 6zAGA6OPg7exrFGuRKaOuTBaAc3+xMSRRas96RdgU6LBRx9z1AHyuVVAaukNs4jqny
-	 w87lOQJxPHyIi2wWXWfNDG/uhOfNvtNKL7VptMtzDVYmgSu8W5Ffhyy3cXRQ8W1qeN
-	 RO1pVbaELBUG77Cpm2gj2Kg/KSFIyv8/ESeICwpQFGTpNKAYpx78H9+/4AK7jzqdgM
-	 J/dSHbdmM6OAh3JFhCQFo+OhjxQc9meDO5S/8S+hV8AyJv+sp1BqLnSLCmXIbqc8/6
-	 ldPiGE4Zu1Z0A==
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	iommu@lists.linux.dev,
-	virtualization@lists.linux.dev,
-	kasan-dev@googlegroups.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 7/8] dma-mapping: export new dma_*map_phys() interface
-Date: Wed, 25 Jun 2025 16:19:04 +0300
-Message-ID: <7013881bb86a37e92ffaf93de6f53701943bf717.1750854543.git.leon@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750854543.git.leon@kernel.org>
-References: <cover.1750854543.git.leon@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C9cgz6wT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750857581; x=1782393581;
+  h=date:from:to:cc:subject:message-id;
+  bh=qrhKZPYkGxL/+D8ghgoJ0NSDadgal0sGTErP2Yn0lrU=;
+  b=C9cgz6wTW8DbmSC2p8zYXX/njnnTwxn2U8W/+Jt2fZ/gsu1LPgzRS11e
+   ZsCkqxTWjHD9fcCDnEUisYqiYUX2/A1tEl3YfQxfngRPw7QMqdZHDZw7C
+   q4ElpAZOs9CHSMnOJP61glr1ZaJXDcITeJjps/KFQFCzlFthstoWvUgFr
+   v45B/T+npVZXTmznv8nsbiLF+LkbGKDJ7lo8l0+XW8tYtuPFQeICFO0wH
+   Mig4nWZdCAt8gg+9OwSs7E68FN0AEHpagqOxfnOyiZzZR5RwSUAuyRn/1
+   CQzVhKigPLlk6kdxPWzTzdmTsaMBxnR76mVpE9E2+c1/VMIbxo5Hu7b4t
+   A==;
+X-CSE-ConnectionGUID: x6O/c5QXSQ6ZILOiwXmghA==
+X-CSE-MsgGUID: PJsbCONkSLG2QS4u/xAytA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="75666091"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="75666091"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:19:41 -0700
+X-CSE-ConnectionGUID: F09t3e2jTkO1itgCGsRRKw==
+X-CSE-MsgGUID: RPUc/UdqTNKNhAt/C2AHcA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="156494645"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa005.fm.intel.com with ESMTP; 25 Jun 2025 06:19:40 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUQ2L-000T8I-2K;
+	Wed, 25 Jun 2025 13:19:37 +0000
+Date: Wed, 25 Jun 2025 21:19:25 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Paul E. McKenney" <paulmck@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [paulmck-rcu:dev.2025.06.09a] BUILD SUCCESS
+ 55edf54333c0d306ea89acff59dd9209d0e42c6e
+Message-ID: <202506252115.cujce3Z7-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Leon Romanovsky <leonro@nvidia.com>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2025.06.09a
+branch HEAD: 55edf54333c0d306ea89acff59dd9209d0e42c6e  rcu: Document that rcu_barrier() hurries lazy callbacks
 
-Introduce new DMA mapping functions dma_map_phys() and dma_unmap_phys()
-that operate directly on physical addresses instead of page+offset
-parameters. This provides a more efficient interface for drivers that
-already have physical addresses available.
+elapsed time: 1453m
 
-The new functions are implemented as the primary mapping layer, with
-the existing dma_map_page_attrs() and dma_unmap_page_attrs() functions
-converted to simple wrappers around the phys-based implementations.
+configs tested: 64
+configs skipped: 1
 
-The old page-based API is preserved in mapping.c to ensure that existing
-code won't be affected by changing EXPORT_SYMBOL to EXPORT_SYMBOL_GPL
-variant for dma_*map_phys().
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- include/linux/dma-mapping.h | 13 +++++++++++++
- kernel/dma/mapping.c        | 25 ++++++++++++++++++++-----
- 2 files changed, 33 insertions(+), 5 deletions(-)
+tested configs:
+alpha                             allnoconfig    gcc-15.1.0
+alpha                            allyesconfig    gcc-15.1.0
+arc                               allnoconfig    gcc-15.1.0
+arc                   randconfig-001-20250624    gcc-12.4.0
+arc                   randconfig-002-20250624    gcc-8.5.0
+arm                               allnoconfig    clang-21
+arm                   randconfig-001-20250624    gcc-13.3.0
+arm                   randconfig-002-20250624    gcc-8.5.0
+arm                   randconfig-003-20250624    gcc-12.4.0
+arm                   randconfig-004-20250624    clang-17
+arm64                             allnoconfig    gcc-15.1.0
+arm64                 randconfig-001-20250624    clang-21
+arm64                 randconfig-002-20250624    gcc-10.5.0
+arm64                 randconfig-003-20250624    clang-21
+arm64                 randconfig-004-20250624    clang-21
+csky                              allnoconfig    gcc-15.1.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386        buildonly-randconfig-001-20250624    clang-20
+i386        buildonly-randconfig-002-20250624    gcc-12
+i386        buildonly-randconfig-003-20250624    clang-20
+i386        buildonly-randconfig-004-20250624    clang-20
+i386        buildonly-randconfig-005-20250624    clang-20
+i386        buildonly-randconfig-006-20250624    gcc-12
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-15.1.0
+loongarch                         allnoconfig    gcc-15.1.0
+m68k                             allmodconfig    gcc-15.1.0
+m68k                              allnoconfig    gcc-15.1.0
+m68k                             allyesconfig    gcc-15.1.0
+microblaze                       allmodconfig    gcc-15.1.0
+microblaze                        allnoconfig    gcc-15.1.0
+microblaze                       allyesconfig    gcc-15.1.0
+mips                              allnoconfig    gcc-15.1.0
+nios2                             allnoconfig    gcc-14.2.0
+openrisc                          allnoconfig    gcc-15.1.0
+parisc                            allnoconfig    gcc-15.1.0
+powerpc                           allnoconfig    gcc-15.1.0
+riscv                             allnoconfig    gcc-15.1.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-21
+s390                             allyesconfig    gcc-15.1.0
+sh                               allmodconfig    gcc-15.1.0
+sh                                allnoconfig    gcc-15.1.0
+sh                               allyesconfig    gcc-15.1.0
+sparc                            allmodconfig    gcc-15.1.0
+sparc                             allnoconfig    gcc-15.1.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250625    gcc-12
+x86_64      buildonly-randconfig-002-20250625    clang-20
+x86_64      buildonly-randconfig-003-20250625    clang-20
+x86_64      buildonly-randconfig-004-20250625    clang-20
+x86_64      buildonly-randconfig-005-20250625    clang-20
+x86_64      buildonly-randconfig-006-20250625    clang-20
+x86_64                              defconfig    gcc-11
+x86_64                          rhel-9.4-rust    clang-18
+xtensa                            allnoconfig    gcc-15.1.0
 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 55c03e5fe8cb..ba54bbeca861 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -118,6 +118,10 @@ dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
- 		unsigned long attrs);
- void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr, size_t size,
- 		enum dma_data_direction dir, unsigned long attrs);
-+dma_addr_t dma_map_phys(struct device *dev, phys_addr_t phys, size_t size,
-+		enum dma_data_direction dir, unsigned long attrs);
-+void dma_unmap_phys(struct device *dev, dma_addr_t addr, size_t size,
-+		enum dma_data_direction dir, unsigned long attrs);
- unsigned int dma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
- 		int nents, enum dma_data_direction dir, unsigned long attrs);
- void dma_unmap_sg_attrs(struct device *dev, struct scatterlist *sg,
-@@ -172,6 +176,15 @@ static inline void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr,
- 		size_t size, enum dma_data_direction dir, unsigned long attrs)
- {
- }
-+static inline dma_addr_t dma_map_phys(struct device *dev, phys_addr_t phys,
-+		size_t size, enum dma_data_direction dir, unsigned long attrs)
-+{
-+	return DMA_MAPPING_ERROR;
-+}
-+static inline void dma_unmap_phys(struct device *dev, dma_addr_t addr,
-+		size_t size, enum dma_data_direction dir, unsigned long attrs)
-+{
-+}
- static inline unsigned int dma_map_sg_attrs(struct device *dev,
- 		struct scatterlist *sg, int nents, enum dma_data_direction dir,
- 		unsigned long attrs)
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 74efb6909103..29e8594a725a 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -152,12 +152,12 @@ static inline bool dma_map_direct(struct device *dev,
- 	return dma_go_direct(dev, *dev->dma_mask, ops);
- }
- 
--dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
--		size_t offset, size_t size, enum dma_data_direction dir,
--		unsigned long attrs)
-+dma_addr_t dma_map_phys(struct device *dev, phys_addr_t phys, size_t size,
-+		enum dma_data_direction dir, unsigned long attrs)
- {
- 	const struct dma_map_ops *ops = get_dma_ops(dev);
--	phys_addr_t phys = page_to_phys(page) + offset;
-+	struct page *page = phys_to_page(phys);
-+	size_t offset = offset_in_page(page);
- 	bool is_pfn_valid = true;
- 	dma_addr_t addr;
- 
-@@ -191,9 +191,17 @@ dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
- 
- 	return addr;
- }
-+EXPORT_SYMBOL_GPL(dma_map_phys);
-+
-+dma_addr_t dma_map_page_attrs(struct device *dev, struct page *page,
-+		size_t offset, size_t size, enum dma_data_direction dir,
-+		unsigned long attrs)
-+{
-+	return dma_map_phys(dev, page_to_phys(page) + offset, size, dir, attrs);
-+}
- EXPORT_SYMBOL(dma_map_page_attrs);
- 
--void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr, size_t size,
-+void dma_unmap_phys(struct device *dev, dma_addr_t addr, size_t size,
- 		enum dma_data_direction dir, unsigned long attrs)
- {
- 	const struct dma_map_ops *ops = get_dma_ops(dev);
-@@ -209,6 +217,13 @@ void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr, size_t size,
- 	trace_dma_unmap_phys(dev, addr, size, dir, attrs);
- 	debug_dma_unmap_phys(dev, addr, size, dir);
- }
-+EXPORT_SYMBOL_GPL(dma_unmap_phys);
-+
-+void dma_unmap_page_attrs(struct device *dev, dma_addr_t addr, size_t size,
-+		 enum dma_data_direction dir, unsigned long attrs)
-+{
-+	dma_unmap_phys(dev, addr, size, dir, attrs);
-+}
- EXPORT_SYMBOL(dma_unmap_page_attrs);
- 
- static int __dma_map_sg_attrs(struct device *dev, struct scatterlist *sg,
--- 
-2.49.0
-
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
