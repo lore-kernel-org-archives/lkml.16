@@ -1,239 +1,210 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from DU2PR03CU002.outbound.protection.outlook.com (mail-northeuropeazon11011042.outbound.protection.outlook.com [52.101.65.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B1E262FF1;
-	Wed, 25 Jun 2025 15:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750863880; cv=none; b=XOrBmKMCqmznMtZk6tzh4ofjTSLn9XR2S2PXWLNQHu72DFuaWeg+RHQS8Q2tPFDqHhcxxl11GJxDvIcoOy2lbVJNAZtWeVOEEif4jAcFGsFnQbAnLjBtQbuho07G4ZuadUmHhm2q90W322wf7Vgqpq8ROYBgMhRLB4uOJhaEVxo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750863880; c=relaxed/simple;
-	bh=ZNB3XhrTzyPjApmhZf4sMBMt2qivNHgeklldzwm7ilE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=a8FirAR3RtkEu5ZRit/77IKwcQaUVXjDVGyJetffgUyVaLxr4kkwlodL6U+Bm2KTaWQi9gwExQ9rDHg9wJ6B7cx/wbQcCCHT4TxERWdw2N+aVVRIB889kEEo0bHYdRJUHLUoCNV+reRm2A2UmzC6qK5Vy20YK/wqvqJNBFDKEFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KVTmxMNQ; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BED80263C8E;
+	Wed, 25 Jun 2025 15:04:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.65.42
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750863890; cv=fail; b=plqnbitCp4TyGfcluseVbc1pdA50jeRs6y9JgFQk6ehvYQuUp7KxrXvKrfKN2dHuu511iTzue9F+JyAeX/T0N3aDOSIrqN/0cl4rqfZjfcDtsxMvoueq6QvVa9nB5DPdKMOPq359yO4jcf4uCxCpwXgWo1zqsaGkQueCyFZa36E=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750863890; c=relaxed/simple;
+	bh=kR2X437G5LvRdPZiKcaTcUNLedzFSxdwJB2Z7owHNXI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=HsJlvkO7rJaWl9N9uR65fqBx8l/Knwf8xdJpsFqJGiAC9JUmCIItc3aWSQAvfJBAbQu2M0BcZZcDm5VvlRUMN5G3baSzsC7jDz4VHPv95hBGetHuoHRDvVN9fyg2+Klj8p7zW2e0El7VYsj4B+JdZrl3/IiARSPfcj8BaUe9olA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=Tpc2th86; arc=fail smtp.client-ip=52.101.65.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVTmxMNQ"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23694cec0feso19516265ad.2;
-        Wed, 25 Jun 2025 08:04:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750863878; x=1751468678; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=39bZ4LirHO1x5OQItaEAejSwWpOWeNe8ZeqxJzEyH7w=;
-        b=KVTmxMNQw/az4/yyDfBa5PEIjmSsBit7LlMciCj0C75lGnsXLddtx9oU6KWs0gVQxQ
-         rb0vYW6LBs7ts7puAybUpKujav1flaql0MNzBBzY9uDzlQpGigRWhvvCklerrbPqQbhc
-         gxPR3dKDHSPC+H6Zapt0Ue6uAkspww12FlsQLjOMf8pXrNrcKmSWbPhzzZw/paL8NEX9
-         Uii59s7abpk90E/JW8O9WfubSU1wY0kauBYocC5rANCVKrKe536EBa5vlg+ZVIsQgeWg
-         x3BT+Lp2hvcS52kKt63Fttvc7MLVXeClyRC+xNRR7Fw40j5qW6y7Ce6mU3xRnhZuIuLb
-         yrEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750863878; x=1751468678;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=39bZ4LirHO1x5OQItaEAejSwWpOWeNe8ZeqxJzEyH7w=;
-        b=wVkc7wURYeSwpIcDz10IdIBRJOgRfqylEXEPhImikm0DZD/azSjvm5Ew1aM4uoaxRE
-         KxrQCybqWJ9sLcJlC9Rteh5JlsYSD3/ulI+15DDkCoVoJfjpdJiKIu2VfoDMk2baXKOB
-         KRs4K9FjdoCIvymRJY5cEuSYA0+FpB1Zkal4kwbYy9ElJN+Tn0KpVvxagGBmzd3QErac
-         fhWR2/O0Dsjqhz4JUahBdbDPL8zlvTQkuJ5Veb17Tku6QyXT03sI95Poij8MM712afmC
-         oPZt5id9URSt4WKF5v6GdAlvel14VW8NCwVxnGpWJ+AHZKa7vrvZloJo1BGcgc5hWnsY
-         PBCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXx+rcrr/MWFVm4CyFZh8HrUu1E7BDcomChEDBnFTUmu4mx6aLXLZiwpPbUcLc7GjGEfuNhoaOwLm10nH4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwTUHWYeyllnqFOBFY6M2LcdqqSKWBO77MaGE8eRQqzoxdAqZsg
-	yCal6Io8KZfhGQcbzvUAOvErQk6gl+NobzXUOUT/qoVGCHV4vK0GsBZ2iXIYoddy
-X-Gm-Gg: ASbGncuTQbC+aKudmLEc+YrDJSSUuNsOy7XlaMfibFB2OClTwq1eoycKnkvRAzpEBX2
-	e06rvjOFfZNKgFH92XolWnjNU7r3IOGUjVytBMsvplYDeP1gt/z3X84mQ1vvUxDSuXpJ6aURf6S
-	rGSYR12USFwpj21bqPeAMfg3+MTVv4K+H8G0eq3GKASH7XtY4twU8JKtYmz0uxNaGsVMamDbJX0
-	SdiiWiQdxuIRkMPqtDs9Nir6PIxhGWC/NhiSAYz/Hg5DV3EeN5LoEWITDjfWvLj3aNcdyR7jhpu
-	FCO97on7y+Js9vY5LpTkVZsI0AhR/NfxfFzsSsQX4RpywGeRE5T7hHFWIIx2DCizs19WJuC5c4k
-	k7TwKdkvRV3NfHTO2mFOXMKih1ZewvoxQAQVScA3+a+4783w7cg==
-X-Google-Smtp-Source: AGHT+IGuTWVkLVC4r4XkXeqSaabFcu6dwm5Rg7hkYvxsKcomX9Q1Wpt85Hiyg95v9nAiU4e+mVLY1g==
-X-Received: by 2002:a17:902:c946:b0:234:9066:c857 with SMTP id d9443c01a7336-23823fda014mr61874845ad.21.1750863877692;
-        Wed, 25 Jun 2025 08:04:37 -0700 (PDT)
-Received: from DESKTOP-RD0GVCL.localdomain (124-218-195-161.cm.dynamic.apol.com.tw. [124.218.195.161])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d866b000sm135082685ad.162.2025.06.25.08.04.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:04:37 -0700 (PDT)
-From: LiangCheng Wang <zaq14760@gmail.com>
-Date: Wed, 25 Jun 2025 23:04:31 +0800
-Subject: [PATCH v5] staging: media: atomisp: fix tab/space issues in
- output1.0
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="Tpc2th86"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ZgdzytVwgh1CHhV6YGsdpehPEDM0tlsj5JpXinOrI3ClI8Uu5K6C9ywgOSbtLFEqT9g8qfESHfdiqDYslF71Df1x/7wS+vf+RQ3pA7OitJgOQmNiMhB4jxWjgTDQiuRnbXmqqkrVQ1Zmg0/2MgRkFeSERIUEayMrPS3BXIOcDp/ar/lkG/UQj66UknZTbNnjAGJqPI4b58hBLor0eeIGvchaCpx1eBYW38585L+4y1T0OapBFVAVdY0pmUlp9J148w9vw/4/Re90RIZ6Q+yGTU3KwZCylHh5nUK9Rs6kzvH/5iIC0j/LcflPzbNOF7/8clRUlTzhOsuT9SpkqitHLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=kR2X437G5LvRdPZiKcaTcUNLedzFSxdwJB2Z7owHNXI=;
+ b=aBAgA3O5p4+yJGFOvqEI9i4DBojaHvmEBkc/qDN18b/scuDZ0x25uJiU4TEh1jK84Trhfa6wGDtraSS/jakBjaaQeX++aq9Euahs5BjkkZ4pC1aVo1JW3benO5XpEdiDvyBwpd7MrS12tuZ2ceuoRjLmOsxYk6cGSbZRZyJSYY0UT1CMnH8N4D368zkvzmR23CVvdq1PlxlEAozTtdw02rDTzEULH4gHjIJLFC1N2on1AKWZlA25q+8z9L1ILg9CoiUP2S70UqOY0eFOxsD/7omfyF8REio5G3fzDwmWt9Ty2Ukklpx3hYsoSH6t6est1OmRSCJSOKLy+/eFrDe+Lg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kR2X437G5LvRdPZiKcaTcUNLedzFSxdwJB2Z7owHNXI=;
+ b=Tpc2th86p5ikM++wnIUwFGUQu52Mx6K2HDqJKJMqx+86pm1gPNW5kJWjYYldpoqkWz3k+UfIPdSm7vx6qmH+MT3lnxeDN7Bc/wSwKRH92sb1cOW1iwLbd+IISKncElw89vQb+c05mrJB8B90enkkRH8OSjpCwkLVOIDjey5nttnXwaDB2uAWM7IbwSm51wfzgf+yjfJzKhfruxt/VlV7PKjlwi5OqypxV5UaxbKk4+XgFNEUHJbOR+S03Bx3VM6gH3jfljNhrDypFA3ITX5oXTmSIHuZx9Sg+bTTsEAvWNMEfFJa838vlHIkevDrCr/Xysy4q8VxVCk+UqqJ1KPa8w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by AS1PR04MB9557.eurprd04.prod.outlook.com (2603:10a6:20b:481::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Wed, 25 Jun
+ 2025 15:04:45 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.015; Wed, 25 Jun 2025
+ 15:04:45 +0000
+Date: Wed, 25 Jun 2025 11:04:40 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
+	Vladimir Oltean <vladimir.oltean@nxp.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Larisa Grigore <larisa.grigore@nxp.com>,
+	Christoph Hellwig <hch@lst.de>, linux-spi@vger.kernel.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 4/6] spi: spi-fsl-dspi: Use non-coherent memory for DMA
+Message-ID: <aFwQCL0tQh9peb7x@lizhi-Precision-Tower-5810>
+References: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
+ <20250624-james-nxp-spi-dma-v3-4-e7d574f5f62c@linaro.org>
+ <aFrUqW0ijRt7CJzw@lizhi-Precision-Tower-5810>
+ <228fc6f7-52c2-48a8-af7e-6f2cfa7b9168@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <228fc6f7-52c2-48a8-af7e-6f2cfa7b9168@linaro.org>
+X-ClientProxiedBy: AM0PR05CA0084.eurprd05.prod.outlook.com
+ (2603:10a6:208:136::24) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-bar-v5-1-db960608b607@gmail.com>
-X-B4-Tracking: v=1; b=H4sIAP4PXGgC/23MTQ6CMBAF4KuYrq3pP+DKexgXZZxCEwHTmkZDu
- LsFNkjMrN7kfW8kEYPHSM6HkQRMPvqhz0EfDwRa2zdI/T1nIpjQzAhOaxuoLmRd1oq5umQkN58
- BnX8vK9dbzq2PryF8ltHE5++vT5xyqq3EgjGljIBL01n/OMHQkdkn8ceIbBQacFAUleFqb+TWi
- NXI2QBUHB3jIO3eqK1Rq1HZVC6fxcqVptyaaZq+NmqzTTIBAAA=
-X-Change-ID: 20250621-bar-573b8b40fb80
-To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>, 
- Mauro Carvalho Chehab <mchehab@kernel.org>, 
- Sakari Ailus <sakari.ailus@linux.intel.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-staging@lists.linux.dev, LiangCheng Wang <zaq14760@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750863876; l=6031;
- i=zaq14760@gmail.com; h=from:subject:message-id;
- bh=ZNB3XhrTzyPjApmhZf4sMBMt2qivNHgeklldzwm7ilE=;
- b=V1GicTj7GDB4edMERdzb05R1lU6I1EFxJE+HTQPwGl1Mo9fJ568OmmMBOGdh2ERKKAAmA6IP2
- SD7UsDivQFuDU2ZAnnPhsGGq8feQK5c/1kkTpY05i4B8wqaDPRVRMGH
-X-Developer-Key: i=zaq14760@gmail.com; a=ed25519;
- pk=/x4391DbJ19fFQI7t33HWt3lsHfYPl2I2ax8C+Vxr+M=
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|AS1PR04MB9557:EE_
+X-MS-Office365-Filtering-Correlation-Id: aa5d92c4-3a04-415d-331d-08ddb3f99ed9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|376014|52116014|1800799024|7053199007|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?jRv+bcJwe+vzIgSZ1wNese+r/B8SCvq4U79jUNtOjVgQCXre/QZS5QAjgTbb?=
+ =?us-ascii?Q?pOexzz0epvBFT6dxRNdXKx8mjO4I8q/CpZ2brnYuQaeHuMldV8s9GHTymx/f?=
+ =?us-ascii?Q?ZmHSsmtGuq2lzT3jZZdDEoRFX3AZhQP1b2TRH+kt8IZI2eCOc0t81WLiYd6a?=
+ =?us-ascii?Q?/vWwoA2HVPKT7yHI3ZX1GPRrqnX/vyOhJPQ7962AQK50aP49/DLTCmLvKMzY?=
+ =?us-ascii?Q?PaEhnIinutU4lAlyA8MnFrQFhovyAgxIA51iSGTDHl/Vmz29l9xHODVDu2UP?=
+ =?us-ascii?Q?9BNOmqfX5uM4YYKSiBCPdALvmetpWzhp/bgDwkjWgjT4SVRH31r6njD1WwOf?=
+ =?us-ascii?Q?loKXEGkgsMkTfvmAbs1hACeWc3qk6ug3xXi/rMq/rnDcz3RxWhNs5YQ4fOO9?=
+ =?us-ascii?Q?UidhvPcGpUD5MPTxgAMwE2FYQY6jvszGmvwzJpyyrI6jFGy7539RgCl4/oxP?=
+ =?us-ascii?Q?bLZIppCMRJ1a9FwwXebq5Kw78bHsEClLwdVnMRM5h1OqF8FUuGMqwqeeGi8W?=
+ =?us-ascii?Q?hjvG2Rd1zKPzyyqkSd6UBfdAdSH9CjO7CVO4bmHMKwi4QtvMaoSBa3qF4jV1?=
+ =?us-ascii?Q?VHP1f87XoDYJfqb69GxHwtaAHm4T2ST7bPIMFgcyK/7rMI5B7gbpFB7O7gT4?=
+ =?us-ascii?Q?9BO2hlBjBEM1pdez/39sc2uUpL2eZonoC0ix6yFzReU/kSJ6hHlWQ8QbUjaT?=
+ =?us-ascii?Q?tE3Vz5MH99ynqxI64wfCZ0d0tvYOZDzR2Ds+TCWb0D5QMdhyrWmSDRE9XbRw?=
+ =?us-ascii?Q?WrIBpKo3oonvgtf+TY4lcSLFT6LfzhkyWtEmhvyynZi5zGSueUxIMS8YVtb7?=
+ =?us-ascii?Q?+emxUxGj9hu2XDG94BPUfoM1rfO7pq4XB4YFU6ZnpkzATZ5c/ReAnx8E3s3P?=
+ =?us-ascii?Q?pDuuM59WGZCTY7w/4c2oGSiaEjdXDK0yxXgefDBjG8O8YmYocLk35RcGomra?=
+ =?us-ascii?Q?7d+1mSYlYhgUmknxuuqUrl0tOxC7LqMwYgbkDgMIkst2vH83IRah7i9yffw/?=
+ =?us-ascii?Q?eVOETDqd8+2ggAng0CRvv9JseAs8+yu43UDj8PROOxkkHT/fy53It+0GJ6Aw?=
+ =?us-ascii?Q?X2DYSIP2ki405Z9tb5ro2YZ2z8ERSHFSZO9wua+7+xN14yawzu1MPie0HY/T?=
+ =?us-ascii?Q?twBgzwUdhTds3eDJ2mSrulrt2reusYGKFOCD7/+aiMOUGdW1CtADzW8iA2di?=
+ =?us-ascii?Q?Diz+SX9jWEhQ0LqAwnq0ajEjQrRpytIY/EInPygk4n5oY+1CUVvnXBImflH6?=
+ =?us-ascii?Q?u7/Vcvbs4hEalNfM0565ZwsRmZFQJu0hWDtl3rEdWtDBLQO4RG6wxmOgmRST?=
+ =?us-ascii?Q?SS9uuaUX5/nzYxmvONMcD3kZB8nEGTa4b1i0prwn92eTDTEVzxhkT8VzuL+j?=
+ =?us-ascii?Q?9pf/dxFnQaiQwb+vXJUZ0rd/DEEXjs6Qk3Z79YHVxdp9Kdr+jzVJ4/OYGn7k?=
+ =?us-ascii?Q?kfYfbknEIBxGP/+ByovWxX7xLF1qj0eDNc9ZStyfRGARQFnB60xUEeVSAyKe?=
+ =?us-ascii?Q?vO1LpqGrym8BV4s=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(52116014)(1800799024)(7053199007)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ZDbTopmReszvYqZZb8dpocFm0rzlth+0swD7RTqxJronWvc0LBu77uAwq0Bx?=
+ =?us-ascii?Q?9oxcP4bPL3VeOnFor2Cdz6j2L1cDY1VJheDGw/XcmR1EFU5rqAtAGWndNATD?=
+ =?us-ascii?Q?EG5S4DyWyA2ZI/SLnAjmYZ3ZSusDAQiAHEV/r5GnXfthRU3K6gmEED1u7kqj?=
+ =?us-ascii?Q?i/MNY7jDOb38UbOCJeWjIaoRARZ5jHMrKYlOrp/PW5/wxIHQWF8u4etNjdUZ?=
+ =?us-ascii?Q?jzZ4Q0VwGkjJy8YmHlDJkZ/J2QlqEOmhfV69REcALPavHkDuI61636FejbP1?=
+ =?us-ascii?Q?KP6KAYfYH3IRE6rNPfFwptiY4iekPTfsHsBSOgzrLt03RpSrSiRhOCGvoPhY?=
+ =?us-ascii?Q?05xTgXDxaeW7Qp2Bw5+PtIL4iaI7vOZnl+E4Z6HsoxIkIqPWF4I+UqHBeays?=
+ =?us-ascii?Q?ncYu+4vj+Y2gccJdtf6uDFC+hus2yEfNLz86R5tDECWcK0kreC25i73D6me8?=
+ =?us-ascii?Q?xj63N8v6UckIQQG5fut9IWRxphymsCvR9YoQ87g9p6K/TZ2BLqWgiiDeMc1E?=
+ =?us-ascii?Q?zsREo88ELJrFiEXS0SUAfuN0VRmMGrOpW/cxNOIt01hVZy7A/5j7v3wbgOQN?=
+ =?us-ascii?Q?SSwlzDYQ2kbEaWqP3NhcSzoim5Eg5lhu2zZZwXn6KXyEZBdPsIIkKGC0urCb?=
+ =?us-ascii?Q?7rv8I5OUwVyOK0Hw0Z2Q7CGtjN0RLQ8M9ZEQhyqjZAQ7ZYpaBaGEGkY+MPW+?=
+ =?us-ascii?Q?LNdz6T79HjZKZSOAUZX9LYo93wtY0E3Nc89cMPz0oQdVCV4qVV4Gw2b8/BE1?=
+ =?us-ascii?Q?41ea+HJ4KUNElD0mrniizgM96cNQJQPO04xEtQZRU2RuMmFgsDufdPY/M0TZ?=
+ =?us-ascii?Q?OdLQJYOQyxQKFThTh32VNwGu+U6m6YNMrYkDSeul2DGxty4jq9awCzyxZxfW?=
+ =?us-ascii?Q?Y0RPgoJYLcKh/nUJ/whUM12WQuBLeZw0V79aOYD5dgNr5RbIqAqw7evEB+hL?=
+ =?us-ascii?Q?vDHW6TteyKGpA/OLFB2cnsfNhijvsGQz2I95v3uABXaMK5bADLhVykDBZZxr?=
+ =?us-ascii?Q?Eg9n6V0X2JwIkx3BHII+9HT9flgywU2nUESTSGfE6CWq6mvsPJQoghxBALM+?=
+ =?us-ascii?Q?A1AylpLZBbvoFO4jGLDEilXsbcdQ7/+dgHHChkT236A71nIm6Y82KYv1jfd0?=
+ =?us-ascii?Q?vrqKf8ojv/f6RAKqPKUWybTVSSVk2XGEw4M4uu6Q7MTJPxaoK/IrBdcHgvZF?=
+ =?us-ascii?Q?2KoOILANy4zfN+f/7hX4DWi076KF9npBNbYr+yJIJqPfq4rDNaZVFeS4bERl?=
+ =?us-ascii?Q?r+3AFibCFEb8BZoR6k7IF2BhsY5z1EmQJIOS3cDKEpLWpiKz4pBVUrtMFGhs?=
+ =?us-ascii?Q?jSw6Yr7bT3gYFt1R2gtEV3bUjLD7NE0arfGQ0ITFZEotIuoyRZnU9xtCknuE?=
+ =?us-ascii?Q?E30RrDu9JzH1B/k78j9yiApljF2+CBrjKmGLMpmB7C2J8g/ZWeLhAbdstzrt?=
+ =?us-ascii?Q?GSotWgJNe51mhZJ9swPmEDY2i+m3X1TbHeRa/bWUQdF6eTg6QrrJlclQUg6D?=
+ =?us-ascii?Q?Bon5S69bHbZ8UKZf8s7pMt6bV//hgatRXpCOmsFd8Ktyll5CfcVXZmuy50qp?=
+ =?us-ascii?Q?iFbYvdmiYV+9pNCFtHHe9C56ccdtUWKIREv1kJkB?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa5d92c4-3a04-415d-331d-08ddb3f99ed9
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 15:04:45.2594
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6K9strQ7fjwNJg3D4EyD9npX7uH0VzBhM6UJ92qMcUNiVVCOEN56Yem0wZ1gbYILpsHA1b5IiCxYayowzXCj1g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS1PR04MB9557
 
-Fix indentation style issues by replacing spaces with tabs,
-according to Linux kernel coding style.
+On Wed, Jun 25, 2025 at 10:00:41AM +0100, James Clark wrote:
+>
+>
+> On 24/06/2025 5:39 pm, Frank Li wrote:
+> > On Tue, Jun 24, 2025 at 11:35:34AM +0100, James Clark wrote:
+> > > Using coherent memory here isn't functionally necessary. Because the
+> > > change to use non-coherent memory isn't overly complex and only a few
+> > > synchronization points are required, we might as well do it while fixing
+> > > up some other DMA issues.
+> > >
+> > > Suggested-by: Arnd Bergmann <arnd@arndb.de>
+> > > Signed-off-by: James Clark <james.clark@linaro.org>
+> >
+> > In https://lore.kernel.org/imx/c65c752a-5b60-4f30-8d51-9a903ddd55a6@linaro.org/
+> >
+> > look like less performance, why need this patch.
+> >
+> > In https://lore.kernel.org/imx/ad7e9aa7-74a3-449d-8ed9-cb270fd5c718@linaro.org/
+> > look like better.
+> >
+> > Any conclusion?
+> >
+> > Need performance gain here if it is better.
+> >
+> > Frank
+> >
+>
+> Hi Frank,
+>
+> The performance figures for this set are in the cover letter. It's either
+> the same or faster, there is no evidence of worse performance. The one you
+> linked was a bad result from not testing it in DMA mode, but it's corrected
+> later in that thread.
 
-This cleanup improves code readability and follows Linux kernel
-coding standards.
+Okay! you need mention why need this change, why non-coherent better than
+coherent at your case.
 
-Signed-off-by: LiangCheng Wang <zaq14760@gmail.com>
----
-This patch addresses tab/space indentation issues in the
-output_1.0 directory of the AtomISP driver under staging.
+You descript what you already done, but not descript why need it.
 
-This patch is part of a broader effort to clean up the AtomISP
-driver and is scoped only to tab/space fixes in one directory
-to keep review manageable.
+for example:
 
-Further style fixes for other directories and issue types will
-be submitted in subsequent patch revisions or series.
+"fixing up some other DMA issues", what issues exactly?
 
-Fixes were identified using:
+some benefit, like memcpy from/to non-coherent is faster then from/to
+coherenct memory ...
 
-./scripts/checkpatch.pl -f $(find drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ -type f \( -name "*.c" -o -name "*.h" \))
-grep -Prn '^[ ]+' drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0
+of put test data here will be appreciated.
 
-Only lines with space-based indentation (instead of tab) were changed.
+The cover letter will be lost after patch merge. When someone run git log
+after some year later, they need know why need this change , what purpose ...
 
-Suggested-by: Andy Shevchenko <andy@kernel.org>
-Link: https://lore.kernel.org/r/CAHp75VeijMvnbrCmRuqTeo_maxevCA9rB-r5URHaX+TrDNvyGA@mail.gmail.com
----
-Changes in v5:
-- Replaced space-based indentation with tabs in output_1.0 directory
-- Used checkpatch.pl and grep to identify formatting issues
-- No functional changes made
-- This patch is now focused solely on tab/space issues
-- Link to v4: https://lore.kernel.org/r/20250624-bar-v4-1-9f9f9ae9f868@gmail.com
+Frank
 
-Changes in v4:
-- Moved assignment operator '=' to the same line for static struct definitions
-- Remove unnecessary line breaks in function definitions
-- Update commit message to reflect all the coding style fixes
-- Link to v3: https://lore.kernel.org/r/20250622-bar-v3-1-4cc91ef01c3a@gmail.com
 
-Changes in v3:
-- Removed extra spaces between type and asterisk (e.g., `*to`) in function
-  declarations, as pointed out by Andy Shevchenko
-- Update commit message to reflect all the coding style fixes
-- Link to v2: https://lore.kernel.org/r/20250621-bar-v2-1-4e6cfc779614@gmail.com
+>
+> The reason the figures aren't in this commit is because it requires this
+> change and the one to increase the size of the buffer.
 
-Changes in v2:
-- Fix patch subject prefix to "staging: media: atomisp:" to comply with media CI style.
-- No other functional changes.
 
-Link to v1: https://lore.kernel.org/r/20250621-bar-v1-1-5a3e7004462c@gmail.com
----
- .../isp/kernels/output/output_1.0/ia_css_output.host.c   | 16 ++++++++--------
- .../isp/kernels/output/output_1.0/ia_css_output.host.h   | 14 +++++++-------
- 2 files changed, 15 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c
-index d09365e0c47104dbffbd455bfd649b9079f88c9c..8d440856471ca73089569be51644c7ac421607ce 100644
---- a/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c
-+++ b/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c
-@@ -34,9 +34,9 @@ static const struct ia_css_output1_configuration default_output1_configuration
- 
- void
- ia_css_output_encode(
--    struct sh_css_isp_output_params *to,
--    const struct ia_css_output_config *from,
--    unsigned int size)
-+	struct sh_css_isp_output_params *to,
-+	const struct ia_css_output_config *from,
-+	unsigned int size)
- {
- 	(void)size;
- 	to->enable_hflip = from->enable_hflip;
-@@ -74,7 +74,7 @@ int ia_css_output0_config(struct sh_css_isp_output_isp_config       *to,
- }
- 
- int ia_css_output1_config(struct sh_css_isp_output_isp_config       *to,
--		          const struct ia_css_output1_configuration *from,
-+			  const struct ia_css_output1_configuration *from,
- 			  unsigned int size)
- {
- 	return ia_css_output_config(to, (const struct ia_css_output_configuration *)from, size);
-@@ -124,8 +124,8 @@ int ia_css_output1_configure(const struct ia_css_binary     *binary,
- 
- void
- ia_css_output_dump(
--    const struct sh_css_isp_output_params *output,
--    unsigned int level)
-+	const struct sh_css_isp_output_params *output,
-+	unsigned int level)
- {
- 	if (!output) return;
- 	ia_css_debug_dtrace(level, "Horizontal Output Flip:\n");
-@@ -138,8 +138,8 @@ ia_css_output_dump(
- 
- void
- ia_css_output_debug_dtrace(
--    const struct ia_css_output_config *config,
--    unsigned int level)
-+	const struct ia_css_output_config *config,
-+	unsigned int level)
- {
- 	ia_css_debug_dtrace(level,
- 			    "config.enable_hflip=%d",
-diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.h b/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.h
-index 25408f1aede55a61a33a55ad38d5afc3a594a756..e7d44f809003d8692292e9571ac777ea3f2d87b9 100644
---- a/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.h
-+++ b/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.h
-@@ -17,9 +17,9 @@ extern const struct ia_css_output_config default_output_config;
- 
- void
- ia_css_output_encode(
--    struct sh_css_isp_output_params *to,
--    const struct ia_css_output_config *from,
--    unsigned int size);
-+	struct sh_css_isp_output_params *to,
-+	const struct ia_css_output_config *from,
-+	unsigned int size);
- 
- int ia_css_output_config(struct sh_css_isp_output_isp_config      *to,
- 			 const struct ia_css_output_configuration *from,
-@@ -44,12 +44,12 @@ int ia_css_output1_configure(const struct ia_css_binary     *binary,
- 
- void
- ia_css_output_dump(
--    const struct sh_css_isp_output_params *output,
--    unsigned int level);
-+	const struct sh_css_isp_output_params *output,
-+	unsigned int level);
- 
- void
- ia_css_output_debug_dtrace(
--    const struct ia_css_output_config *config,
--    unsigned int level);
-+	const struct ia_css_output_config *config,
-+	unsigned int level);
- 
- #endif /* __IA_CSS_OUTPUT_HOST_H */
-
----
-base-commit: 3f75bfff44be0646580fe4efda45d646f9c1693b
-change-id: 20250621-bar-573b8b40fb80
-
-Best regards,
--- 
-LiangCheng Wang <zaq14760@gmail.com>
-
+>
+> Thanks
+> James
+>
