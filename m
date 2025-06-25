@@ -1,329 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C222DF3EF;
-	Wed, 25 Jun 2025 20:24:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A73902DBF4D;
+	Wed, 25 Jun 2025 20:25:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750883082; cv=none; b=DwkTq8OzFx0dDnmc68D5M96CLMkrCGzP+56v1wcfYGj3foBYOAk2uD1SDny9R/GRmrROtgdEBLX7N3L18GJB5+S7Rjy62Te6UcoBrhvLkPcOchMKXNsdlE9vLxSui7crRxzuIVDiMWlnGclG7ZCsywlFuRt8qRFe+jC60DWNvk8=
+	t=1750883118; cv=none; b=Iyn710ZdilNVa3Ya2FF1/KRpAeivUHey15K2nPsx2Pc/jrHtBPZAGHhWiopRBWsBxE3cho9kTl0jhZMEba+8sh2uhgdaK/001WezlMMX2+o9I1Bg2Y7aWms4quq1PgxO2dWppwweX3z4nu7vHlfdGv6+L7ZcBg8OS3Q3zEm/dwM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750883082; c=relaxed/simple;
-	bh=AeGCF5QSxq0iTaxJ9oYqD/TZZRHC37rqUGBxrhBVgwM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S+FLkYAZBTI+sac25l1VbaeoCNXy331o0tfDF67OR5luvQD7Q59iQC6k6FFoJhane36emY4D2EnW6k/pM8zbJ4wYaDRtmX0MSeGywFnkUafIa3llNvR0Ymsdpo+D0me9A50e1L7kAyDaqmJJJkXc+poEXM8MLdnIXlMXkciDJIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mXbMYssn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750883118; c=relaxed/simple;
+	bh=RmMzCOmYjscoPY025HjM5woeuBP4De5S1+ANyUE8/aU=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=t/O3bE43gKDaXIB9wDmJBpNyii0Q/ihNoKkun3exkVYepkfEhiWu/uPOpHlG20VQ/XSBLVzMkdoCjQ9JdXJtiqyaq7AyqTgxm1xzYs56iVT8xZk/YbvdUifg2Q2cFiyd7nESBqkCGJWAg818amZcFpzMOO+qBMbntngIypNhaQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WvKynlmZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mXbMYssn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC3B0C4CEF5;
-	Wed, 25 Jun 2025 20:24:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WvKynlmZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 507B3C4CEEA;
+	Wed, 25 Jun 2025 20:25:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750883082;
-	bh=AeGCF5QSxq0iTaxJ9oYqD/TZZRHC37rqUGBxrhBVgwM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=mXbMYssn0/O3WnhghJ0LGpgwYPJCrMXih4v5FpyFvAUU0mvtssImITPzEdhRRzHOZ
-	 txsrdwO9IYykMu3ibh5gM+cqOiJd+EzXtHLZ+mUEmdL8oVKQoZA4dyR5mfJ8vdGfQi
-	 dmgJOdYuLIpsYpQ/kEj8DNixaI8VGDL8P2Yi4dwQL0fW6H8ii48G1O33jpwOJuH23P
-	 s63BW2zcynWRZB5i81cC33Godpd1LWeg8o+1cctdIlAexrfMibtTvo/+28Bz5AvvTG
-	 TjMAi/tLP3Aw3X4uqiZB076n0uXJ8YoMKuCL8krSnSfQoNLP4blrRDe0VAxW9eGCPg
-	 lcmmxYmo9GBAQ==
-From: Eric Biggers <ebiggers@kernel.org>
-To: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Liang Kan <kan.liang@linux.intel.com>,
-	Yuzhuo Jing <yuzhuo@google.com>,
-	Eric Biggers <ebiggers@kernel.org>
-Subject: [PATCH v3 4/4] tools: Remove libcrypto dependency
-Date: Wed, 25 Jun 2025 13:23:11 -0700
-Message-ID: <20250625202311.23244-5-ebiggers@kernel.org>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250625202311.23244-1-ebiggers@kernel.org>
-References: <20250625202311.23244-1-ebiggers@kernel.org>
+	s=k20201202; t=1750883118;
+	bh=RmMzCOmYjscoPY025HjM5woeuBP4De5S1+ANyUE8/aU=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=WvKynlmZAd0RfzqzaoQLnlwK/9452BuFvGyUPqF1wtJuDXZjjbyiPfmF67kqI6f/q
+	 L3K4wXLM1ArKaBBkOl+1Gv4HMrkgKnUL0Q+xY3TLoQTgo566gg+gJPetimkC2P6xfX
+	 +JFpoXvNLzBuGjaEgq3SaqJAkynW9heOEc/i0JDdnXUi9PLYWBRCZfA2mk3JIrYzPK
+	 oxaI/7kME5a28voih8DGbGTDIVT9Fbv+gk7WWlV8OfZEm9Zm48+y9NvnWrA5aAjoxl
+	 8Y/11CdOB1yLRDJw0QywKzNQy/Vi1/yOvwQdVWoi/2uWFOC+0PTyrpE280HjEMPQKQ
+	 j5QWx7Zx0wvng==
+Date: Wed, 25 Jun 2025 15:25:17 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+ linux-arm-kernel@lists.infradead.org, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, linux-kernel@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>
+To: Fred Chen <fredchen.openbmc@gmail.com>
+In-Reply-To: <20250625073847.4054971-1-fredchen.openbmc@gmail.com>
+References: <20250625073847.4054971-1-fredchen.openbmc@gmail.com>
+Message-Id: <175088289276.2146642.13177013272351592544.robh@kernel.org>
+Subject: Re: [PATCH v2 0/2] Add Meta (Facebook) Santabarbara BMC (AST2600)
 
-From: Yuzhuo Jing <yuzhuo@google.com>
 
-Remove all occurrence of libcrypto in the build system.
+On Wed, 25 Jun 2025 15:38:36 +0800, Fred Chen wrote:
+> Summary:
+> Add linux device tree entry related to Meta (Facebook) Santabarbara
+> specific devices connected to BMC (AST2600) SoC.
+> 
+> Change log
+> v1 -> v2:
+>   - Enable mac3 node
+>   - Add GPIO line-name FM_MUX1_SEL_R
+>   - Remove 'pinctrl-names' from gpio0 node
+>   - Reorder top-level nodes alphabetically
+>   - Reorder device node properties per style
+> v1:
+>   - Create santabarbara dts file.
+> 
+> Fred Chen (2):
+>   dt-bindings: arm: aspeed: add Meta Santabarbara board
+>   ARM: dts: aspeed: santabarbara: Add Meta Santabarbara BMC
+> 
+>  .../bindings/arm/aspeed/aspeed.yaml           |   1 +
+>  arch/arm/boot/dts/aspeed/Makefile             |   1 +
+>  .../aspeed-bmc-facebook-santabarbara.dts      | 982 ++++++++++++++++++
+>  3 files changed, 984 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dts
+> 
+> --
+> 2.49.0
+> 
+> 
+> 
 
-Signed-off-by: Yuzhuo Jing <yuzhuo@google.com>
-Signed-off-by: Eric Biggers <ebiggers@kernel.org>
----
- tools/build/Makefile.feature            |  2 --
- tools/build/feature/Makefile            |  4 ----
- tools/build/feature/test-all.c          |  5 -----
- tools/build/feature/test-libcrypto.c    | 25 -------------------------
- tools/perf/Documentation/perf-check.txt |  1 -
- tools/perf/Makefile.config              | 13 -------------
- tools/perf/Makefile.perf                |  3 ---
- tools/perf/builtin-check.c              |  1 -
- tools/perf/tests/make                   |  4 +---
- 9 files changed, 1 insertion(+), 57 deletions(-)
- delete mode 100644 tools/build/feature/test-libcrypto.c
 
-diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
-index 2e5f4c8b65476..649c5ab8e8f26 100644
---- a/tools/build/Makefile.feature
-+++ b/tools/build/Makefile.feature
-@@ -84,11 +84,10 @@ FEATURE_TESTS_BASIC :=                  \
-         libpython                       \
-         libslang                        \
-         libtraceevent                   \
-         libtracefs                      \
-         libcpupower                     \
--        libcrypto                       \
-         pthread-attr-setaffinity-np     \
-         pthread-barrier     		\
-         reallocarray                    \
-         stackprotector-all              \
-         timerfd                         \
-@@ -145,11 +144,10 @@ FEATURE_DISPLAY ?=              \
-          libelf                 \
-          libnuma                \
-          numa_num_possible_cpus \
-          libperl                \
-          libpython              \
--         libcrypto              \
-          libcapstone            \
-          llvm-perf              \
-          zlib                   \
-          lzma                   \
-          get_cpuid              \
-diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-index 0c4e541ed56e8..b41a42818d8ac 100644
---- a/tools/build/feature/Makefile
-+++ b/tools/build/feature/Makefile
-@@ -36,11 +36,10 @@ FILES=                                          \
-          test-libslang.bin                      \
-          test-libslang-include-subdir.bin       \
-          test-libtraceevent.bin                 \
-          test-libcpupower.bin                   \
-          test-libtracefs.bin                    \
--         test-libcrypto.bin                     \
-          test-libunwind.bin                     \
-          test-libunwind-debug-frame.bin         \
-          test-libunwind-x86.bin                 \
-          test-libunwind-x86_64.bin              \
-          test-libunwind-arm.bin                 \
-@@ -245,13 +244,10 @@ $(OUTPUT)test-libcpupower.bin:
- 	$(BUILD) -lcpupower
- 
- $(OUTPUT)test-libtracefs.bin:
- 	 $(BUILD) $(shell $(PKG_CONFIG) --cflags libtracefs 2>/dev/null) -ltracefs
- 
--$(OUTPUT)test-libcrypto.bin:
--	$(BUILD) -lcrypto
--
- $(OUTPUT)test-gtk2.bin:
- 	$(BUILD) $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0 2>/dev/null) -Wno-deprecated-declarations
- 
- $(OUTPUT)test-gtk2-infobar.bin:
- 	$(BUILD) $(shell $(PKG_CONFIG) --libs --cflags gtk+-2.0 2>/dev/null)
-diff --git a/tools/build/feature/test-all.c b/tools/build/feature/test-all.c
-index 1010f233d9c1a..4419fb4710bd1 100644
---- a/tools/build/feature/test-all.c
-+++ b/tools/build/feature/test-all.c
-@@ -128,14 +128,10 @@
- 
- #define main main_test_bpf
- # include "test-bpf.c"
- #undef main
- 
--#define main main_test_libcrypto
--# include "test-libcrypto.c"
--#undef main
--
- #define main main_test_sdt
- # include "test-sdt.c"
- #undef main
- 
- #define main main_test_setns
-@@ -186,11 +182,10 @@ int main(int argc, char *argv[])
- 	main_test_pthread_attr_setaffinity_np();
- 	main_test_pthread_barrier();
- 	main_test_lzma();
- 	main_test_get_cpuid();
- 	main_test_bpf();
--	main_test_libcrypto();
- 	main_test_scandirat();
- 	main_test_sched_getcpu();
- 	main_test_sdt();
- 	main_test_setns();
- 	main_test_libaio();
-diff --git a/tools/build/feature/test-libcrypto.c b/tools/build/feature/test-libcrypto.c
-deleted file mode 100644
-index bc34a5bbb5049..0000000000000
---- a/tools/build/feature/test-libcrypto.c
-+++ /dev/null
-@@ -1,25 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--#include <openssl/evp.h>
--#include <openssl/sha.h>
--#include <openssl/md5.h>
--
--int main(void)
--{
--	EVP_MD_CTX *mdctx;
--	unsigned char md[MD5_DIGEST_LENGTH + SHA_DIGEST_LENGTH];
--	unsigned char dat[] = "12345";
--	unsigned int digest_len;
--
--	mdctx = EVP_MD_CTX_new();
--	if (!mdctx)
--		return 0;
--
--	EVP_DigestInit_ex(mdctx, EVP_md5(), NULL);
--	EVP_DigestUpdate(mdctx, &dat[0], sizeof(dat));
--	EVP_DigestFinal_ex(mdctx, &md[0], &digest_len);
--	EVP_MD_CTX_free(mdctx);
--
--	SHA1(&dat[0], sizeof(dat), &md[0]);
--
--	return 0;
--}
-diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-index 799982d8d8687..ee92042082f73 100644
---- a/tools/perf/Documentation/perf-check.txt
-+++ b/tools/perf/Documentation/perf-check.txt
-@@ -52,11 +52,10 @@ feature::
-                 dwarf-unwind            /  HAVE_DWARF_UNWIND_SUPPORT
-                 auxtrace                /  HAVE_AUXTRACE_SUPPORT
-                 libbfd                  /  HAVE_LIBBFD_SUPPORT
-                 libbpf-strings          /  HAVE_LIBBPF_STRINGS_SUPPORT
-                 libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
--                libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
-                 libdw-dwarf-unwind      /  HAVE_LIBDW_SUPPORT
-                 libelf                  /  HAVE_LIBELF_SUPPORT
-                 libnuma                 /  HAVE_LIBNUMA_SUPPORT
-                 libopencsd              /  HAVE_CSTRACE_SUPPORT
-                 libperl                 /  HAVE_LIBPERL_SUPPORT
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 70a3e771c7c08..5a5832ee7b53c 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -132,12 +132,10 @@ ifndef NO_LIBUNWIND
-   FEATURE_CHECK_LDFLAGS-libunwind-aarch64 += -lunwind -lunwind-aarch64
-   FEATURE_CHECK_LDFLAGS-libunwind-x86 += -lunwind -llzma -lunwind-x86
-   FEATURE_CHECK_LDFLAGS-libunwind-x86_64 += -lunwind -llzma -lunwind-x86_64
- endif
- 
--FEATURE_CHECK_LDFLAGS-libcrypto = -lcrypto
--
- ifdef CSINCLUDES
-   LIBOPENCSD_CFLAGS := -I$(CSINCLUDES)
- endif
- OPENCSDLIBS := -lopencsd_c_api -lopencsd
- ifeq ($(findstring -static,${LDFLAGS}),-static)
-@@ -782,21 +780,10 @@ endif
- 
- ifneq ($(NO_LIBTRACEEVENT),1)
-   $(call detected,CONFIG_TRACE)
- endif
- 
--ifndef NO_LIBCRYPTO
--  ifneq ($(feature-libcrypto), 1)
--    $(warning No libcrypto.h found, disables jitted code injection, please install openssl-devel or libssl-dev)
--    NO_LIBCRYPTO := 1
--  else
--    CFLAGS += -DHAVE_LIBCRYPTO_SUPPORT
--    EXTLIBS += -lcrypto
--    $(call detected,CONFIG_CRYPTO)
--  endif
--endif
--
- ifndef NO_SLANG
-   ifneq ($(feature-libslang), 1)
-     ifneq ($(feature-libslang-include-subdir), 1)
-       $(warning slang not found, disables TUI support. Please install slang-devel, libslang-dev or libslang2-dev)
-       NO_SLANG := 1
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index 4f292edeca5a8..62697d62f7060 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -59,13 +59,10 @@ include ../scripts/utilities.mak
- #
- # Define NO_LIBNUMA if you do not want numa perf benchmark
- #
- # Define NO_LIBBIONIC if you do not want bionic support
- #
--# Define NO_LIBCRYPTO if you do not want libcrypto (openssl) support
--# used for generating build-ids for ELFs generated by jitdump.
--#
- # Define NO_LIBDW_DWARF_UNWIND if you do not want libdw support
- # for dwarf backtrace post unwind.
- #
- # Define NO_LIBTRACEEVENT=1 if you don't want libtraceevent to be linked,
- # this will remove multiple features and tools, such as 'perf trace',
-diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-index f4827f0ddb471..b1e205871ab17 100644
---- a/tools/perf/builtin-check.c
-+++ b/tools/perf/builtin-check.c
-@@ -43,11 +43,10 @@ struct feature_status supported_features[] = {
- 	FEATURE_STATUS("dwarf-unwind", HAVE_DWARF_UNWIND_SUPPORT),
- 	FEATURE_STATUS("auxtrace", HAVE_AUXTRACE_SUPPORT),
- 	FEATURE_STATUS_TIP("libbfd", HAVE_LIBBFD_SUPPORT, "Deprecated, license incompatibility, use BUILD_NONDISTRO=1 and install binutils-dev[el]"),
- 	FEATURE_STATUS("libbpf-strings", HAVE_LIBBPF_STRINGS_SUPPORT),
- 	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
--	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
- 	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_LIBDW_SUPPORT),
- 	FEATURE_STATUS("libelf", HAVE_LIBELF_SUPPORT),
- 	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
- 	FEATURE_STATUS("libopencsd", HAVE_CSTRACE_SUPPORT),
- 	FEATURE_STATUS("libperl", HAVE_LIBPERL_SUPPORT),
-diff --git a/tools/perf/tests/make b/tools/perf/tests/make
-index 0ee94caf9ec19..e3651e5b195a4 100644
---- a/tools/perf/tests/make
-+++ b/tools/perf/tests/make
-@@ -89,11 +89,10 @@ make_no_libnuma     := NO_LIBNUMA=1
- make_no_libbionic   := NO_LIBBIONIC=1
- make_no_auxtrace    := NO_AUXTRACE=1
- make_no_libbpf	    := NO_LIBBPF=1
- make_libbpf_dynamic := LIBBPF_DYNAMIC=1
- make_no_libbpf_DEBUG := NO_LIBBPF=1 DEBUG=1
--make_no_libcrypto   := NO_LIBCRYPTO=1
- make_no_libllvm     := NO_LIBLLVM=1
- make_with_babeltrace:= LIBBABELTRACE=1
- make_with_coresight := CORESIGHT=1
- make_no_sdt	    := NO_SDT=1
- make_no_libpfm4     := NO_LIBPFM4=1
-@@ -120,11 +119,11 @@ make_static         := LDFLAGS=-static NO_PERF_READ_VDSO32=1 NO_PERF_READ_VDSOX3
- # all the NO_* variable combined
- make_minimal        := NO_LIBPERL=1 NO_LIBPYTHON=1 NO_GTK2=1
- make_minimal        += NO_DEMANGLE=1 NO_LIBELF=1 NO_BACKTRACE=1
- make_minimal        += NO_LIBNUMA=1 NO_LIBBIONIC=1
- make_minimal        += NO_LIBDW_DWARF_UNWIND=1 NO_AUXTRACE=1 NO_LIBBPF=1
--make_minimal        += NO_LIBCRYPTO=1 NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
-+make_minimal        += NO_SDT=1 NO_JVMTI=1 NO_LIBZSTD=1
- make_minimal        += NO_LIBCAP=1 NO_CAPSTONE=1
- 
- # $(run) contains all available tests
- run := make_pure
- # Targets 'clean all' can be run together only through top level
-@@ -158,11 +157,10 @@ run += make_no_libcapstone
- run += make_no_libnuma
- run += make_no_libbionic
- run += make_no_auxtrace
- run += make_no_libbpf
- run += make_no_libbpf_DEBUG
--run += make_no_libcrypto
- run += make_no_libllvm
- run += make_no_sdt
- run += make_no_syscall_tbl
- run += make_with_babeltrace
- run += make_with_coresight
--- 
-2.50.0
+My bot found new DTB warnings on the .dts files added or changed in this
+series.
+
+Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
+are fixed by another series. Ultimately, it is up to the platform
+maintainer whether these warnings are acceptable or not. No need to reply
+unless the platform maintainer has comments.
+
+If you already ran DT checks and didn't see these error(s), then
+make sure dt-schema is up to date:
+
+  pip3 install dtschema --upgrade
+
+
+This patch series was applied (using b4) to base:
+ Base: attempting to guess base-commit...
+ Base: failed to guess base
+
+If this is not the correct base, please add 'base-commit' tag
+(or use b4 which does this automatically)
+
+New warnings running 'make CHECK_DTBS=y for arch/arm/boot/dts/aspeed/' for 20250625073847.4054971-1-fredchen.openbmc@gmail.com:
+
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: timer (arm,armv7-timer): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/timer/arm,arch_timer.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: /sdram@1e6e0000: failed to match any schema with compatible: ['aspeed,ast2600-sdram-edac', 'syscon']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: bus@1e600000 (aspeed,ast2600-ahbc): compatible: ['aspeed,ast2600-ahbc', 'syscon'] is too long
+	from schema $id: http://devicetree.org/schemas/bus/aspeed,ast2600-ahbc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: syscon@1e6e2000 (aspeed,ast2600-scu): 'smp-memram@180' does not match any of the regexes: '^interrupt-controller@[0-9a-f]+$', '^p2a-control@[0-9a-f]+$', '^pinctrl(@[0-9a-f]+)?$', '^pinctrl-[0-9]+$', '^silicon-id@[0-9a-f]+$'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed,ast2x00-scu.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: /ahb/apb@1e6e0000/syscon@1e6e2000/smp-memram@180: failed to match any schema with compatible: ['aspeed,ast2600-smpmem']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: /ahb/apb@1e6e0000/display@1e6e6000: failed to match any schema with compatible: ['aspeed,ast2600-gfx', 'syscon']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: adc@1e6e9000 (aspeed,ast2600-adc0): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: adc@1e6e9100 (aspeed,ast2600-adc1): 'interrupts' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/iio/adc/aspeed,ast2600-adc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: crypto@1e6fa000 (aspeed,ast2600-acry): 'aspeed,ahbc' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/crypto/aspeed,ast2600-acry.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740100:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
+	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: sdc@1e740000 (aspeed,ast2600-sd-controller): sdhci@1e740200:compatible: ['aspeed,ast2600-sdhci', 'sdhci'] is too long
+	from schema $id: http://devicetree.org/schemas/mmc/aspeed,sdhci.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: /ahb/sdc@1e740000/sdhci@1e740100: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: /ahb/sdc@1e740000/sdhci@1e740200: failed to match any schema with compatible: ['aspeed,ast2600-sdhci', 'sdhci']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: /ahb/apb@1e780000/timer@1e782000: failed to match any schema with compatible: ['aspeed,ast2600-timer']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): reg-io-width: 4 is not of type 'object'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: lpc@1e789000 (aspeed,ast2600-lpc-v2): lpc-snoop@80: 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/mfd/aspeed-lpc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: kcs@24 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: kcs@28 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: kcs@2c (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: kcs@114 (aspeed,ast2500-kcs-bmc-v2): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/ipmi/aspeed,ast2400-kcs-bmc.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: /ahb/apb@1e780000/lpc@1e789000/lhc@a0: failed to match any schema with compatible: ['aspeed,ast2600-lhc']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: /ahb/apb@1e780000/lpc@1e789000/ibt@140: failed to match any schema with compatible: ['aspeed,ast2600-ibt-bmc']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: fsi@1e79b000 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: /ahb/apb@1e790000/fsi@1e79b000: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: fsi@1e79b100 (aspeed,ast2600-fsi-master): compatible: ['aspeed,ast2600-fsi-master', 'fsi-master'] is too long
+	from schema $id: http://devicetree.org/schemas/fsi/aspeed,ast2600-fsi-master.yaml#
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: /ahb/apb@1e790000/fsi@1e79b100: failed to match any schema with compatible: ['aspeed,ast2600-fsi-master', 'fsi-master']
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dtb: /ahb/apb@1e790000/dma-controller@1e79e000: failed to match any schema with compatible: ['aspeed,ast2600-udma']
+arch/arm/boot/dts/aspeed/aspeed-bmc-ibm-system1.dtb: timer (arm,armv7-timer): 'clocks' does not match any of the regexes: '^pinctrl-[0-9]+$'
+	from schema $id: http://devicetree.org/schemas/timer/arm,arch_timer.yaml#
+
+
+
+
 
