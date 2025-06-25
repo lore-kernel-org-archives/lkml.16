@@ -1,40 +1,31 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF971F37D4;
-	Wed, 25 Jun 2025 06:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4124C1F4C8B
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:55:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750834523; cv=none; b=sAvbxYuttsU6ScmR39klzE+9vK+aZdPCjDWfjDrKAKfGViHveWlMVLUrLry1dpx0jfG1lDh2aUFKjkUV9vtQewEeeaa0PKb4oXzxnDTzMQgxjQCSCwrMKutmXyyvHg1krkmIhm08Mm+FXMQDlo4BQmIzup5xrEjRKQo+2UAROgs=
+	t=1750834527; cv=none; b=ruv2SrSV3SNpU3iWGflVTvahv6Se6nM67u3DAcRBY8HqDHhmgKSRe1In/lbrZEhxN8cCDlyReAr6lgSDladSuqzVa1+emznBj7qfwmwmL2dzmZWWdj80NqhLphNSaELs+xKKSSCKsJcfmrpDdEP/2zqHMMpbflfxcHggpWw4ejs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750834523; c=relaxed/simple;
-	bh=rrKZ1irw5yAVm4i9aB7BKAfnsmBuXw9it0NTlnvpSjQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rv/PQcpJGShvpGQ/Cl/axJP5C1T+rRte8EA3goq8hSWNzuj2d/RIrRIF+3ZWMQuXumw8giJkYFJnTDJb7/AH6u9dkwYUZiBxsPq0u2tL4P69Zd4K6y6ty2TIGRVkOc6sxD9E21hGUC68UyUJym+qD7TPFWyKIaZHchm4mRmdcAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=p4mVLhWK; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1750834527; c=relaxed/simple;
+	bh=amZf818+yoKxR3J26wICy6X6Lvj/7tZrC7kkRNAFoWs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XGEsXfFSVyrbTWlpJYEUlLpp38Bx79XCh3u4qjJBQgj6cVMNWWtltzXfga8cF+OYz2Shrj5vPl5uuz5ZY5tdT2f4ZdPaSvopaLPcaAjhRoCsl32RwtPSBN11hkz2rbsVYRGwjuH8Uut/7yMoUuSAq9g7J9DAusqifIM5qK4I9No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=yWYXYLnw; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="p4mVLhWK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1750834519; x=1751439319; i=markus.elfring@web.de;
-	bh=qIxvwagA5r9Vos0XWvHO/MalZBvADoeLlVXEg11hQjo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:From:To:
-	 Cc:References:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=p4mVLhWKaFvl2f4lSbktYxlpDcRgtEeq5Gpy49GiuM3UqQHzoJzo1FOEAgw+i6NC
-	 pknomE9oLmkKG5sGoMBY1EvLw5tpGsvxb6NxMragGqWlBsVIMQnXgDq78DCoPWoGq
-	 l7usK+oUAnZxCb8FJMoBa7zQrJOK/gOL3XSjsMzyA/zkrvXBlN37Fx1k8b3fiH1Y3
-	 ZgtNqsDbFwoThoJNTq3qbKwQxxIZYBrxYpo6fW8tcuVMN5TsmgqHyJ5l1aNygmk3L
-	 vdQbuPCixMKHxkjdUBV6qWmFBYPlm3ru7q6CqGDr9+bStxsjPV8wOBe3lSD9EYv7R
-	 FaCylo7QFZr6ahq1ZQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.69.192]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N1d3k-1usThm2ioi-00xBzK; Wed, 25
- Jun 2025 08:55:18 +0200
-Message-ID: <9de5fb9e-bbe9-4f27-9370-1fff9e3c9fe2@web.de>
-Date: Wed, 25 Jun 2025 08:55:17 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="yWYXYLnw"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750834521; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=CSs7NkcJykzWd9X/4bqzO39746qhrI0qvK17CnhNWlg=;
+	b=yWYXYLnwjlBuZj3Hq6JIP5vGA38WzAO23Dhg2ZYIH3flyNhsrdWwyU11AB8fl5dYAEq3EeUAiXyKGRExJ2WnSmCdqolrxDc8BrwsY3Ucykgz0MYreOIwXUbBXOH1COYW6wgbOU4inMLRtjVokxqc4ciIRVIxB3X4lZvvXNuGDWg=
+Received: from 30.74.144.110(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Wetv5oA_1750834519 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 25 Jun 2025 14:55:20 +0800
+Message-ID: <0f3b8f9f-a105-4cf9-a0df-bcca66f88c9b@linux.alibaba.com>
+Date: Wed, 25 Jun 2025 14:55:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,121 +33,178 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: [PATCH v2] wifi: rsi: Use usb_endpoint_xfer_bulk() rather than
- duplicating its implementation
-From: Markus Elfring <Markus.Elfring@web.de>
-To: linux-wireless@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel-janitors@vger.kernel.org,
- Chen Ni <nichen@iscas.ac.cn>, Kalle Valo <kvalo@kernel.org>
-References: <d04019cd-f782-4d81-97ce-3d70946e5c54@web.de>
-Content-Language: en-GB, de-DE
-In-Reply-To: <d04019cd-f782-4d81-97ce-3d70946e5c54@web.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4LrI0Ok8MstTdwLoStYhEWx587AL9yyOz3vn1FnCBLI2nW6/T45
- hGsIJAVY0or1AqmhSGhkIYI8ji1WuiJdKlPUbugPJ+8F5SfI6nGl5JYZQkhFyP6h43Z1gi2
- EcMQ5ENWkngdGTwsITV1SOedJls5dWJWBmUE0LGzMEEOp8mv3Jay1dj0pcSTTlhsq1C/CVm
- kBej+KS8nAIRV6T/Za54g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:JLD0F29C9i8=;+bd+Jj/F8ljuc56jPZCh3se8nlt
- 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
- k3VY0fXpKU2Wp8=
-
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Wed, 25 Jun 2025 08:46:02 +0200
-
-Reuse existing functionality from usb_endpoint_xfer_bulk() instead of
-keeping duplicate source code.
-
-The source code was transformed by using the Coccinelle software.
-
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
-
-V2:
-Another change possibility was taken better into account for the USB API.
+Subject: Re: [PATCH v4 0/2] fix MADV_COLLAPSE issue if THP settings are
+ disabled
+To: Dev Jain <dev.jain@arm.com>, Hugh Dickins <hughd@google.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, ziy@nvidia.com,
+ lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, baohua@kernel.org, zokeefe@google.com,
+ shy828301@gmail.com, usamaarif642@gmail.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <cover.1750815384.git.baolin.wang@linux.alibaba.com>
+ <75c02dbf-4189-958d-515e-fa80bb2187fc@google.com>
+ <cc4da391-7c90-435c-ae39-30de37535c05@linux.alibaba.com>
+ <88901329-08a0-49b1-b2be-c00d157cb901@arm.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <88901329-08a0-49b1-b2be-c00d157cb901@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
- drivers/net/wireless/rsi/rsi_91x_usb.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/rsi/rsi_91x_usb.c b/drivers/net/wireless=
-/rsi/rsi_91x_usb.c
-index dccc139cabb2..31707b543c19 100644
-=2D-- a/drivers/net/wireless/rsi/rsi_91x_usb.c
-+++ b/drivers/net/wireless/rsi/rsi_91x_usb.c
-@@ -122,8 +122,7 @@ static int rsi_find_bulk_in_and_out_endpoints(struct u=
-sb_interface *interface,
-=20
- 		if (!dev->bulkin_endpoint_addr[bin_found] &&
- 		    (endpoint->bEndpointAddress & USB_DIR_IN) &&
--		    ((endpoint->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) =3D=3D
--		    USB_ENDPOINT_XFER_BULK)) {
-+		    usb_endpoint_xfer_bulk(endpoint)) {
- 			buffer_size =3D endpoint->wMaxPacketSize;
- 			dev->bulkin_size[bin_found] =3D buffer_size;
- 			dev->bulkin_endpoint_addr[bin_found] =3D
-@@ -133,8 +132,7 @@ static int rsi_find_bulk_in_and_out_endpoints(struct u=
-sb_interface *interface,
-=20
- 		if (!dev->bulkout_endpoint_addr[bout_found] &&
- 		    !(endpoint->bEndpointAddress & USB_DIR_IN) &&
--		    ((endpoint->bmAttributes & USB_ENDPOINT_XFERTYPE_MASK) =3D=3D
--		    USB_ENDPOINT_XFER_BULK)) {
-+		    usb_endpoint_xfer_bulk(endpoint)) {
- 			buffer_size =3D endpoint->wMaxPacketSize;
- 			dev->bulkout_endpoint_addr[bout_found] =3D
- 				endpoint->bEndpointAddress;
-=2D-=20
-2.50.0
+On 2025/6/25 14:49, Dev Jain wrote:
+> 
+> On 25/06/25 11:56 am, Baolin Wang wrote:
+>>
+>>
+>> On 2025/6/25 13:53, Hugh Dickins wrote:
+>>> On Wed, 25 Jun 2025, Baolin Wang wrote:
+>>>
+>>>> When invoking thp_vma_allowable_orders(), if the TVA_ENFORCE_SYSFS 
+>>>> flag is not
+>>>> specified, we will ignore the THP sysfs settings. Whilst it makes 
+>>>> sense for the
+>>>> callers who do not specify this flag, it creates a odd and 
+>>>> surprising situation
+>>>> where a sysadmin specifying 'never' for all THP sizes still 
+>>>> observing THP pages
+>>>> being allocated and used on the system. And the MADV_COLLAPSE is an 
+>>>> example of
+>>>> such a case, that means it will not set TVA_ENFORCE_SYSFS when calling
+>>>> thp_vma_allowable_orders().
+>>>>
+>>>> As we discussed in the previous thread [1], the MADV_COLLAPSE will 
+>>>> ignore
+>>>> the system-wide anon/shmem THP sysfs settings, which means that even 
+>>>> though
+>>>> we have disabled the anon/shmem THP configuration, MADV_COLLAPSE 
+>>>> will still
+>>>> attempt to collapse into a anon/shmem THP. This violates the rule we 
+>>>> have
+>>>> agreed upon: never means never.
+>>>>
+>>>> For example, system administrators who disabled THP everywhere must 
+>>>> indeed very
+>>>> much not want THP to be used for whatever reason - having individual 
+>>>> programs
+>>>> being able to quietly override this is very surprising and likely to 
+>>>> cause headaches
+>>>> for those who desire this not to happen on their systems.
+>>>>
+>>>> This patch set will address the MADV_COLLAPSE issue.
+>>>>
+>>>> Test
+>>>> ====
+>>>> 1. Tested the mm selftests and found no regressions.
+>>>> 2. With toggling different Anon mTHP settings, the allocation and 
+>>>> madvise collapse for
+>>>> anonymous pages work well.
+>>>> 3. With toggling different shmem mTHP settings, the allocation and 
+>>>> madvise collapse for
+>>>> shmem work well.
+>>>> 4. Tested the large order allocation for tmpfs, and works as expected.
+>>>>
+>>>> [1] https://lore.kernel.org/all/1f00fdc3- 
+>>>> a3a3-464b-8565-4c1b23d34f8d@linux.alibaba.com/
+>>>>
+>>>> Changes from v3:
+>>>>   - Collect reviewed tags. Thanks.
+>>>>   - Update the commit message, per David.
+>>>>
+>>>> Changes from v2:
+>>>>   - Update the commit message and cover letter, per Lorenzo. Thanks.
+>>>>   - Simplify the logic in thp_vma_allowable_orders(), per Lorenzo 
+>>>> and David. Thanks.
+>>>>
+>>>> Changes from v1:
+>>>>   - Update the commit message, per Zi.
+>>>>   - Add Zi's reviewed tag. Thanks.
+>>>>   - Update the shmem logic.
+>>>>
+>>>> Baolin Wang (2):
+>>>>    mm: huge_memory: disallow hugepages if the system-wide THP sysfs
+>>>>      settings are disabled
+>>>>    mm: shmem: disallow hugepages if the system-wide shmem THP sysfs
+>>>>      settings are disabled
+>>>>
+>>>>   include/linux/huge_mm.h                 | 51 +++++++++++++++++ 
+>>>> +-------
+>>>>   mm/shmem.c                              |  6 +--
+>>>>   tools/testing/selftests/mm/khugepaged.c |  8 +---
+>>>>   3 files changed, 43 insertions(+), 22 deletions(-)
+>>>>
+>>>> -- 
+>>>> 2.43.5
+>>>
+>>> Sorry for chiming in so late, after so much effort: but I beg you,
+>>> please drop these.
+>>
+>> Thanks Hugh for your input. (yes, we put in a lot of effort on 
+>> discussion and testing:( ).
+>>
+>>> I did not want to get into a fight, and had been hoping a voice of
+>>> reason would come from others, before I got around to responding.
+>>>
+>>> And indeed Ryan understood correctly at the start; and he, Usama
+>>> and Barry, perhaps others I've missed, have raised appropriate
+>>> concerns but not prevailed.
+>>>
+>>> If we're sloganeering, I much prefer "never break userspace" to
+>>> "never means never", attractive though that over-simplification is.
+>>
+>> Yes, agree. we should not break userspace, however, I suspect whether 
+>> this can really break userspace. We can set '/sys/kernel/mm/ 
+>> transparent_hugepage/enabled' to 'madvise' to allow MADV_COLLAPSE. 
+>> Additionally, I really doubt that when the system-wide THP settings 
+>> are set to 'never', userspace would still expect to collapse into THP 
+>> using MADV_COLLAPSE.
+> 
+> After this patch, will a user still be able to use MADV_COLLAPSE and 
+> ensure no interference from khugepaged?
 
+I think so. Becuase khugepaged will still check VM_HUGEPAGE if we set 
+'/sys/kernel/mm/transparent_hugepage/enabled' to 'madvise'.
+
+>> Moreover, what makes this issue particularly frustrating is that when 
+>> we introduce mTHP collapse[1], MADV_COLLAPSE complicates matters 
+>> further. That is, when the system only enables 64K mTHP, MADV_COLLAPSE 
+>> still allows collapsing into PMD-sized THP. This really breaks the 
+>> user's settings.
+> 
+> This issue will still be there without this patch right?
+
+NO. Will fix this issue. After this patch, MADV_COLLAPSE can not 
+continue to collapse PMD-sized THP if the system only enables 64K mTHP.
+
+>> [1] https://lore.kernel.org/all/20250515032226.128900-1- 
+>> npache@redhat.com/
+>>
+>>> Seldom has a feature been so thorougly documented as MADV_COLLAPSE,
+>>> in its 6.1 commits and in the "man 2 madvise" page: which are
+>>> explicit about MADV_COLLAPSE providing a way to get THPs where the
+>>> sysfs setting governing automatic behaviour does not insert them.
+>>>
+>>> We would all prefer a less messy world of THP tunables.  I certainly
+>>> find plenty to dislike there too; and wish that a less assertive name
+>>> than "never" had been chosen originally for the default off position.
+>>>
+>>> But please don't break the accepted and documented behaviour of
+>>> MADV_COLLAPSE now.
+>>>
+>>> If you want to exclude all possibility of THPs, then please use the
+>>> prctl(PR_SET_THP_DISABLE); or shmem_enabled=deny (I think it was me
+>>> who insisted that be respected by MADV_COLLAPSE back then).
+>>
+>> Yes, that will prevent MADV_COLLAPSE.
+>>
+>>> Add a "deny" option to /sys/kernel/mm/transparent_hugepage/enabled
+>>> if you like.  (But in these days of filesystem large folios, adding
+>>> new protections against them seems a few years late.)
+>>>
+>>> If Andrew decides that these patches should go in, then I'll have to
+>>> scrutinize them more carefully than I've done so far: but currently
+>>> I'm hoping to avoid that.
+>>>
+>>> Hugh
+>>
 
