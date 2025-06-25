@@ -1,72 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62B31EEE6;
-	Wed, 25 Jun 2025 00:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9B66347B4
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:47:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750812326; cv=none; b=CMDEU75tlnPHPAN7JhIbrod1JM4OpjNSiPdKKdrTHM4sU9Q57fXfeaEUGId1T426BLvr7YXohzWvisiS6xVRNkZ9KEoqaPzFm2SKstztsiN29/ExKja+aDx9N3Dy4IxqBU88Ydsf8xELlmouyCRBqlqIirCgPCldY7nSdeiWDRQ=
+	t=1750812430; cv=none; b=MKIxCucz+Du3m8d9K8WjCZbwPvoirNiOQoj66iTngqRYnwm4LRhruMXt8HTZzN3mhtUGQwLpbIGFYu4ld3p1H8h20RD7BDKdMwpQa1QtmSeLGrvB/65Lq5SubYjSuOuaEkUZSd05MpDE3rSBDgq4xaxLV1pQe7FYAmbWt2AU3Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750812326; c=relaxed/simple;
-	bh=eRlCeZDC/evhY2Cx5J9+VqYhSZFBFgu/rZvpddXONDI=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rlZV4hO0348Dis1ojueXhCqvg2ZXTvkaHsNfPbe70FN3QFL5TF2YPp0oz3OI9WjIbt2sYF2B8WLASAAzWnVFBH4lGjxKFBLEdHFZMwB5Uvle53cS6Azlu0lLY4hrCMCQBr68ruT21h0mcznr57LoOOqkAxisQR7XykA1ab+a07k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uaZ5hUDh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750812430; c=relaxed/simple;
+	bh=A8YuiuYypENiIhwpCV2AZRqV1+TQMWXQbHQCPTi07p8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ajd/bhwdFE5UFkXYiCkBLwtVcpTocluFM1TEz1zt94TC8Z/K9uwygkAxugd9E2VrE38WAPC6Pi/VAg9VkIS1YwgFR8ncLc8+ALK/JqX5YLmTQ0EwzWipwPY+exyIjE00SN7r8ZcMe9sgAnjZJNsTiNNcnTjnf4m5QDkj/3aFkwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Oo/3XLQq; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uaZ5hUDh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A736C4CEE3;
-	Wed, 25 Jun 2025 00:45:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750812326;
-	bh=eRlCeZDC/evhY2Cx5J9+VqYhSZFBFgu/rZvpddXONDI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uaZ5hUDh9nDsLPEBof49fExd7ukHQip1e0CJ2NXNFmJub91Pz54F5jSEnfOxskRgJ
-	 cFTA7+as3bmOWQWL45D9YlQClS1wQ61w5ta67g8jlKXOgR8b76KqN9WFrJmU0Lx2XG
-	 7V1+KVRJXsE7PUTWMNn2GXl92Ln6XAVk/HebbGP2lR+XXVEz6XwosQH3hn1bIiEaO/
-	 SHtixl2/mu0gGNY8mZu4oLUFeTwbiF9ddoWnVe6FVD6nb0OFyg9Q+f6CmkIHvWBPob
-	 xP3XbsGHEKwo9GyytkzkGzmDZCC+Js9HsaA/9fxFxPCft8CRCQ7BskPFeyXK2Q0RI2
-	 Vz00B0274N6HA==
-Date: Tue, 24 Jun 2025 17:45:24 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Yevgeny Kliteynik <kliteyn@nvidia.com>
-Cc: Simon Horman <horms@kernel.org>, Mark Bloch <mbloch@nvidia.com>, "David
- S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Eric
- Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- saeedm@nvidia.com, gal@nvidia.com, leonro@nvidia.com, tariqt@nvidia.com,
- Leon Romanovsky <leon@kernel.org>, netdev@vger.kernel.org,
- linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org, moshe@nvidia.com,
- Vlad Dogaru <vdogaru@nvidia.com>
-Subject: Re: [PATCH net-next v2 3/8] net/mlx5: HWS, Refactor and export rule
- skip logic
-Message-ID: <20250624174524.62bc82e6@kernel.org>
-In-Reply-To: <dff4ea02-4adc-4044-a18a-ee884abc0053@nvidia.com>
-References: <20250622172226.4174-1-mbloch@nvidia.com>
-	<20250622172226.4174-4-mbloch@nvidia.com>
-	<20250624183832.GF1562@horms.kernel.org>
-	<dff4ea02-4adc-4044-a18a-ee884abc0053@nvidia.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Oo/3XLQq"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750812427;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=BVL90qI0uVy/+Q1mB+nKSY/ZtMcZOndhwt5gwwgQpzk=;
+	b=Oo/3XLQq5BV41Bi1Eqp86Dw540VIF/188vmj1IlaA4uhs0Zd908OEZxM1tnWxey7fgTQ03
+	KEdmxUkTWer0yQj1Jgluh2zQxhsWcDqW3CoFr9C1yeZAwlceImIQtpTh475o/v0DqyOFKg
+	09msoLGeh1Hi7A9IWv4dkSgSB2q+jY4=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-631-RtPIR-3xNLaq7N9N4sbElg-1; Tue,
+ 24 Jun 2025 20:47:02 -0400
+X-MC-Unique: RtPIR-3xNLaq7N9N4sbElg-1
+X-Mimecast-MFC-AGG-ID: RtPIR-3xNLaq7N9N4sbElg_1750812420
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 739E6180028D;
+	Wed, 25 Jun 2025 00:46:59 +0000 (UTC)
+Received: from dell-per7425-02.rhts.eng.pek2.redhat.com (dell-per7425-02.rhts.eng.pek2.redhat.com [10.73.116.18])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E8D5C19560A3;
+	Wed, 25 Jun 2025 00:46:50 +0000 (UTC)
+From: Li Wang <liwang@redhat.com>
+To: akpm@linux-foundation.org,
+	david@redhat.com,
+	peterx@redhat.com,
+	linux-kselftest@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Cc: Nadav Amit <nadav.amit@gmail.com>,
+	Aruna Ramakrishna <aruna.ramakrishna@oracle.com>,
+	Bagas Sanjaya <bagasdotme@gmail.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Keith Lucas <keith.lucas@oracle.com>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Shuah Khan <shuah@kernel.org>
+Subject: [PATCH v3] selftests/mm: Fix UFFDIO_API usage with proper two-step feature negotiation
+Date: Wed, 25 Jun 2025 08:46:45 +0800
+Message-ID: <20250625004645.400520-1-liwang@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Wed, 25 Jun 2025 03:35:52 +0300 Yevgeny Kliteynik wrote:
-> >> The bwc layer will use `mlx5hws_rule_skip` to keep track of numbers of
-> >> RX and TX rules individually, so export this function for future usage.
-> >>
-> >> While we're in there, reduce nesting by adding a couple of early return
-> >> statements.  
-> > 
-> > I'm all for reducing nesting. But this patch has two distinct changes.
-> > Please consider splitting it into two patches.  
-> 
-> Not sure I'd send the refactor thing alone - it isn't worth the effort
-> IMHO... But since I'm already in here - sure, will sent it in a separate
-> patch.
+The current implementation of test_unmerge_uffd_wp() explicitly sets
+`uffdio_api.features = UFFD_FEATURE_PAGEFAULT_FLAG_WP` before calling
+UFFDIO_API. This can cause the ioctl() call to fail with EINVAL on kernels
+that do not support UFFD-WP, leading the test to fail unnecessarily:
 
-FWIW having a function which returns void but with 2 output parameters
-is in itself a bit awkward. I'd personally return a 2 bit bitmask of
-which mode is enabled. But there's no accounting for taste.
+  # ------------------------------
+  # running ./ksm_functional_tests
+  # ------------------------------
+  # TAP version 13
+  # 1..9
+  # # [RUN] test_unmerge
+  # ok 1 Pages were unmerged
+  # # [RUN] test_unmerge_zero_pages
+  # ok 2 KSM zero pages were unmerged
+  # # [RUN] test_unmerge_discarded
+  # ok 3 Pages were unmerged
+  # # [RUN] test_unmerge_uffd_wp
+  # not ok 4 UFFDIO_API failed     <-----
+  # # [RUN] test_prot_none
+  # ok 5 Pages were unmerged
+  # # [RUN] test_prctl
+  # ok 6 Setting/clearing PR_SET_MEMORY_MERGE works
+  # # [RUN] test_prctl_fork
+  # # No pages got merged
+  # # [RUN] test_prctl_fork_exec
+  # ok 7 PR_SET_MEMORY_MERGE value is inherited
+  # # [RUN] test_prctl_unmerge
+  # ok 8 Pages were unmerged
+  # Bail out! 1 out of 8 tests failed
+  # # Planned tests != run tests (9 != 8)
+  # # Totals: pass:7 fail:1 xfail:0 xpass:0 skip:0 error:0
+  # [FAIL]
+
+This patch improves compatibility and robustness of the UFFD-WP test
+(test_unmerge_uffd_wp) by correctly implementing the UFFDIO_API
+two-step handshake as recommended by the userfaultfd(2) man page.
+
+Key changes:
+
+1. Use features=0 in the initial UFFDIO_API call to query supported
+   feature bits, rather than immediately requesting WP support.
+
+2. Skip the test gracefully if:
+   - UFFDIO_API fails with EINVAL (e.g. unsupported API version), or
+   - UFFD_FEATURE_PAGEFAULT_FLAG_WP is not advertised by the kernel.
+
+3. Close the initial userfaultfd and create a new one before enabling
+   the required feature, since UFFDIO_API can only be called once per fd.
+
+4. Improve diagnostics by distinguishing between expected and unexpected
+   failures, using strerror() to report errors.
+
+This ensures the test behaves correctly across a wider range of kernel
+versions and configurations, while preserving the intended behavior on
+kernels that support UFFD-WP.
+
+Suggestted-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Li Wang <liwang@redhat.com>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Nadav Amit <nadav.amit@gmail.com>
+Cc: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+Cc: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Joey Gouly <joey.gouly@arm.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Keith Lucas <keith.lucas@oracle.com>
+Cc: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Acked-by: David Hildenbrand <david@redhat.com>
+---
+ .../selftests/mm/ksm_functional_tests.c       | 28 +++++++++++++++++--
+ 1 file changed, 26 insertions(+), 2 deletions(-)
+
+diff --git a/tools/testing/selftests/mm/ksm_functional_tests.c b/tools/testing/selftests/mm/ksm_functional_tests.c
+index b61803e36d1c..d8bd1911dfc0 100644
+--- a/tools/testing/selftests/mm/ksm_functional_tests.c
++++ b/tools/testing/selftests/mm/ksm_functional_tests.c
+@@ -393,9 +393,13 @@ static void test_unmerge_uffd_wp(void)
+ 
+ 	/* See if UFFD-WP is around. */
+ 	uffdio_api.api = UFFD_API;
+-	uffdio_api.features = UFFD_FEATURE_PAGEFAULT_FLAG_WP;
++	uffdio_api.features = 0;
+ 	if (ioctl(uffd, UFFDIO_API, &uffdio_api) < 0) {
+-		ksft_test_result_fail("UFFDIO_API failed\n");
++		if (errno == EINVAL)
++			ksft_test_result_skip("The API version requested is not supported\n");
++		else
++			ksft_test_result_fail("UFFDIO_API failed: %s\n", strerror(errno));
++
+ 		goto close_uffd;
+ 	}
+ 	if (!(uffdio_api.features & UFFD_FEATURE_PAGEFAULT_FLAG_WP)) {
+@@ -403,6 +407,26 @@ static void test_unmerge_uffd_wp(void)
+ 		goto close_uffd;
+ 	}
+ 
++	/*
++	 * UFFDIO_API must only be called once to enable features.
++	 * So we close the old userfaultfd and create a new one to
++	 * actually enable UFFD_FEATURE_PAGEFAULT_FLAG_WP.
++	 */
++	close(uffd);
++	uffd = syscall(__NR_userfaultfd, O_CLOEXEC | O_NONBLOCK);
++	if (uffd < 0) {
++		ksft_test_result_fail("__NR_userfaultfd failed\n");
++		goto unmap;
++	}
++
++	/* Now, enable it ("two-step handshake") */
++	uffdio_api.api = UFFD_API;
++	uffdio_api.features = UFFD_FEATURE_PAGEFAULT_FLAG_WP;
++	if (ioctl(uffd, UFFDIO_API, &uffdio_api) < 0) {
++		ksft_test_result_fail("UFFDIO_API failed: %s\n", strerror(errno));
++		goto close_uffd;
++	}
++
+ 	/* Register UFFD-WP, no need for an actual handler. */
+ 	if (uffd_register(uffd, map, size, false, true, false)) {
+ 		ksft_test_result_fail("UFFDIO_REGISTER_MODE_WP failed\n");
+-- 
+2.49.0
+
