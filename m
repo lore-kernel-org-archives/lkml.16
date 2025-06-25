@@ -1,313 +1,176 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5051CAA7B;
-	Wed, 25 Jun 2025 18:53:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24841CAA7B;
+	Wed, 25 Jun 2025 18:56:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750877624; cv=none; b=KzkY2rR7MQkK6FaTzpuR0D1Sw4q5UZ30xT3TVZgkBF4Kf491C9rZuSAZlxasdYOrDsUbG3oPmt5vBikwVYaB1t79PapejtK2xSheXGrS6Ss3EDL+QnP8LjqZyNyf97q4hd5CaIlWDEv2EtIes2+22wmaX7bYjyYCdVBavrn6Oo0=
+	t=1750877766; cv=none; b=M4FBt2DGFqGmVCIz/I2VV7GDEOoXKIf/Xh0uDGVGKNpeuP6i80bdu3/A8YbcPEwOEVPbXf1Ql+MJ90Uadyxy4odKIUl53ozpDon63RiDBhJRKoATBp+LYCSrKGaQyugfsi/KhtaInYc2p0JVOuY9dkRE3kyDZJIKAEMh4wywtLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750877624; c=relaxed/simple;
-	bh=8MrvaYOz4FiqCxr7LmGqB3MEhbBqse7v9vTKMvsiFOM=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MwmWUega1XUjaFRmVOf0J3eYwBBIm1hz5aVEoaAQlCF7b5iOfiEch9Tb0ZcfMqo4/H1/AbNdMtPjgR+PdyAs5iZS1sKmswP9IxdQyCk617Ls3kTkGvohhUoXSJr1AaugTbZoQ2IJhr8O5OD2eMVNQPssvHvJQJv7W6Q/zWzpv5s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ppeUKjip; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750877766; c=relaxed/simple;
+	bh=xOFkaPALEr96n45ZXxDSSZiyNX3n+26t1/APa5EPG6w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gb7N5dSC9EW5TlHZ4Weq6lvo00mIvuFOUB7FfRdMNza1S3q1qGdcBh2yfAGrQvrMaJI1mj/Ohjls9OQ5e5/ULxce3DEgB9ITwrb7g5EuIxwbm1p7QyvXCKhdrHYVUPCI3koMdVnOKXFCfz+aAgRu1c0MxaVRejd+mMKNCgmQPE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpV8Fk4w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ppeUKjip"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB210C4CEEA;
-	Wed, 25 Jun 2025 18:53:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpV8Fk4w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 331A3C4CEEA;
+	Wed, 25 Jun 2025 18:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750877623;
-	bh=8MrvaYOz4FiqCxr7LmGqB3MEhbBqse7v9vTKMvsiFOM=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ppeUKjipB2yJbHdKKPlRyVDqbUX77oJxRhZL7ud1YUoWYEEc27uWBBlAZLBezVolW
-	 ChewIFEAAclm7IdOJPUUGDjVZ3/MC0WzysEt8xqtZhMGJw4yJc6tZeINByuTKz+boE
-	 mhJR9E962ubHGzH0zDyasotU1RFr2cXiBV6mV/yQvTWXA5gDQ2BcKdR56Y3+jPDvJq
-	 wZvA5EjnucM0MTLaIkoACEQuaQo7rhBTC4CQ+sYZkwrsTT2uurEexbd/VVyqEs9Z3h
-	 9paYrB25VlQFRZ1OhgEbXOFw+pJLk1BlNon+BKDU+oehoL3sbV4KqlXl1PUIgVhP2Y
-	 vtjkp9a0WbjMw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uUVFd-00A04o-Gz;
-	Wed, 25 Jun 2025 19:53:41 +0100
-Date: Wed, 25 Jun 2025 19:53:41 +0100
-Message-ID: <861pr7d556.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Sascha Bischoff <sascha.bischoff@arm.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Timothy Hayes <timothy.hayes@arm.com>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Peter Maydell <peter.maydell@linaro.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 18/27] arm64: smp: Support non-SGIs for IPIs
-In-Reply-To: <20250618-gicv5-host-v5-18-d9e622ac5539@kernel.org>
-References: <20250618-gicv5-host-v5-0-d9e622ac5539@kernel.org>
-	<20250618-gicv5-host-v5-18-d9e622ac5539@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=k20201202; t=1750877765;
+	bh=xOFkaPALEr96n45ZXxDSSZiyNX3n+26t1/APa5EPG6w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KpV8Fk4wsOTCJ3F3AtTznHgsqgYKNDh8sLJiuj0nYF8J3Y5RULc+AdRPI7rhxlTNg
+	 x2XAWU6ybjtHLxU8/dMJ451MxNjgBIpErQ4kFIbqc6q0Bv+P5lz1Lv4JkGIv+pGsa3
+	 i+E8oQt9XZDSAHD84wquU+7alWnYb96T4ed3DNmx8Np4g8tRBP2P+IDfZJ9fYfCyAI
+	 y50sjF/Dur0QuvfXYVVEFR1DFuSun3GJVF1xvWdBsOJMCtheNbJYrpDVhl5kEWE8S/
+	 MWWfUXbUWmETzq4yZATnGKLJRAXpmuVY9OSqgf3dv0Vm3qRicUhH/72tkSQGiw2T6q
+	 ElabgicGpHggw==
+Date: Wed, 25 Jun 2025 20:56:01 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] rust: support align and NUMA id in allocations
+Message-ID: <aFxGQWG_81Peu7mP@cassiopeiae>
+References: <20250625062917.3379804-1-vitaly.wool@konsulko.se>
+ <20250625063026.3379921-1-vitaly.wool@konsulko.se>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, tglx@linutronix.de, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, sascha.bischoff@arm.com, Jonathan.Cameron@huawei.com, timothy.hayes@arm.com, bhelgaas@google.com, Liam.Howlett@oracle.com, peter.maydell@linaro.org, mark.rutland@arm.com, jirislaby@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625063026.3379921-1-vitaly.wool@konsulko.se>
 
-On Wed, 18 Jun 2025 11:17:33 +0100,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On Wed, Jun 25, 2025 at 08:30:26AM +0200, Vitaly Wool wrote:
+> Add support for large (> PAGE_SIZE) alignments in Rust allocators
+> (Kmalloc support for large alignments is limited to the requested
+> size, which is a reasonable limitation anyway).
+
+Please split this..
+
+> Besides, add support for NUMA id to Vmalloc.
+
+and this into separate patches.
+
+Please also add some information to the commit message what you need node
+support for. Do you also have patches to add node support to Box and Vec?
+
 > 
-> From: Marc Zyngier <maz@kernel.org>
-> 
-> The arm64 arch has relied so far on GIC architectural software
-> generated interrupt (SGIs) to handle IPIs. Those are per-cpu
-> software generated interrupts.
-> 
-> arm64 architecture code that allocates the IPIs virtual IRQs and
-> IRQ descriptors was written accordingly.
-> 
-> On GICv5 systems, IPIs are implemented using LPIs that are not
-> per-cpu interrupts - they are just normal routable IRQs.
-> 
-> Add arch code to set-up IPIs on systems where they are handled
-> using normal routable IRQs.
-> 
-> For those systems, force the IRQ affinity (and make it immutable)
-> to the cpu a given IRQ was assigned to.
-> 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> [timothy.hayes@arm.com: fixed ipi/irq conversion, irq flags]
-> Signed-off-by: Timothy Hayes <timothy.hayes@arm.com>
-> [lpieralisi: changed affinity set-up, log]
-> Signed-off-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
 > ---
->  arch/arm64/include/asm/smp.h |   7 ++-
->  arch/arm64/kernel/smp.c      | 142 ++++++++++++++++++++++++++++++++-----------
->  2 files changed, 114 insertions(+), 35 deletions(-)
+>  rust/helpers/slab.c            |  8 +++++--
+>  rust/helpers/vmalloc.c         |  4 ++--
+>  rust/kernel/alloc.rs           | 28 ++++++++++++++++++++++--
+>  rust/kernel/alloc/allocator.rs | 40 +++++++++++++++++++---------------
+>  rust/kernel/alloc/kvec.rs      |  3 ++-
+>  5 files changed, 59 insertions(+), 24 deletions(-)
 > 
-> diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-> index 2510eec026f7..d6fd6efb66a6 100644
-> --- a/arch/arm64/include/asm/smp.h
-> +++ b/arch/arm64/include/asm/smp.h
-> @@ -53,7 +53,12 @@ extern void smp_init_cpus(void);
->  /*
->   * Register IPI interrupts with the arch SMP code
->   */
-> -extern void set_smp_ipi_range(int ipi_base, int nr_ipi);
-> +extern void set_smp_ipi_range_percpu(int ipi_base, int nr_ipi, int ncpus);
-> +
-> +static inline void set_smp_ipi_range(int ipi_base, int n)
-> +{
-> +	set_smp_ipi_range_percpu(ipi_base, n, 0);
-> +}
+> diff --git a/rust/helpers/slab.c b/rust/helpers/slab.c
+> index a842bfbddcba..221c517f57a1 100644
+> --- a/rust/helpers/slab.c
+> +++ b/rust/helpers/slab.c
+> @@ -3,13 +3,17 @@
+>  #include <linux/slab.h>
 >  
->  /*
->   * Called from the secondary holding pen, this is the secondary CPU entry point.
-> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-> index 3b3f6b56e733..7fd6bec80750 100644
-> --- a/arch/arm64/kernel/smp.c
-> +++ b/arch/arm64/kernel/smp.c
-> @@ -83,7 +83,31 @@ enum ipi_msg_type {
->  
->  static int ipi_irq_base __ro_after_init;
->  static int nr_ipi __ro_after_init = NR_IPI;
-> -static struct irq_desc *ipi_desc[MAX_IPI] __ro_after_init;
-> +
-> +struct ipi_descs {
-> +	struct irq_desc *descs[MAX_IPI];
-> +};
-> +
-> +static DEFINE_PER_CPU(struct ipi_descs, pcpu_ipi_desc);
+>  void * __must_check __realloc_size(2)
+> -rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
+> +rust_helper_krealloc(const void *objp, size_t new_size, unsigned long align, gfp_t flags, int nid)
 
-I wish we would make this __ro_after_init, but it doesn't see to be
-possible to do that. At least make it read_mostly, which may help a
-bit.
+This should have a comment making it obvious why the function has two arguments
+that are discarded. I think we should even separate it with an additional inline
+function.
 
-> +
-> +#define get_ipi_desc(__cpu, __ipi) (per_cpu_ptr(&pcpu_ipi_desc, __cpu)->descs[__ipi])
-> +
-> +static bool percpu_ipi_descs __ro_after_init;
-> +
-> +static int ipi_to_irq_percpu(int ipi, int cpu)
-> +{
-> +	return ipi_irq_base + (cpu * nr_ipi) + ipi;
-> +}
-> +
-> +static int ipi_to_irq(int ipi)
-> +{
-> +	return ipi_to_irq_percpu(ipi, 0);
-> +}
-> +
-> +static int irq_to_ipi(int irq)
-> +{
-> +	return (irq - ipi_irq_base) % nr_ipi;
-> +}
+I do agree with discarding the align argument, given that it's not exposed to
+users though the Allocator API.
 
-Most of these helpers are used only once, and they are so similar that
-I get cross-eyed. Consider expanding them in their calling spot.
+I do disagree with discarding the nid argument though, since you change the
+generic Allocator::realloc() API to take a node argument, which for KREALLOC and
+KVREALLOC is silently discarded. If we introduce it, we should do so for all
+three allocators.
 
->  
->  static bool crash_stop;
->  
-> @@ -844,7 +868,7 @@ int arch_show_interrupts(struct seq_file *p, int prec)
->  		seq_printf(p, "%*s%u:%s", prec - 1, "IPI", i,
->  			   prec >= 4 ? " " : "");
->  		for_each_online_cpu(cpu)
-> -			seq_printf(p, "%10u ", irq_desc_kstat_cpu(ipi_desc[i], cpu));
-> +			seq_printf(p, "%10u ", irq_desc_kstat_cpu(get_ipi_desc(cpu, i), cpu));
->  		seq_printf(p, "      %s\n", ipi_types[i]);
->  	}
->  
-> @@ -919,7 +943,13 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
->  
->  static void arm64_backtrace_ipi(cpumask_t *mask)
 >  {
-> -	__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
-> +	unsigned int cpu;
-> +
-> +	if (!percpu_ipi_descs)
-> +		__ipi_send_mask(get_ipi_desc(0, IPI_CPU_BACKTRACE), mask);
-> +	else
-> +		for_each_cpu(cpu, mask)
-> +			__ipi_send_single(get_ipi_desc(cpu, IPI_CPU_BACKTRACE), cpu);
+> +	if (WARN_ON(new_size & (align - 1)))
+> +		return NULL;
+
+I don't think we should have this WARN_ON(). If we want to warn about this, we
+should already do so on the Rust side. The helper functions in this file should
+not contain any logic.
+
+>  	return krealloc(objp, new_size, flags);
 >  }
 >  
->  void arch_trigger_cpumask_backtrace(const cpumask_t *mask, int exclude_cpu)
-> @@ -944,7 +974,7 @@ void kgdb_roundup_cpus(void)
->  		if (cpu == this_cpu)
->  			continue;
->  
-> -		__ipi_send_single(ipi_desc[IPI_KGDB_ROUNDUP], cpu);
-> +		__ipi_send_single(get_ipi_desc(cpu, IPI_KGDB_ROUNDUP), cpu);
->  	}
->  }
->  #endif
-> @@ -1013,14 +1043,21 @@ static void do_handle_IPI(int ipinr)
->  
->  static irqreturn_t ipi_handler(int irq, void *data)
+>  void * __must_check __realloc_size(2)
+> -rust_helper_kvrealloc(const void *p, size_t size, gfp_t flags)
+> +rust_helper_kvrealloc(const void *p, size_t size, unsigned long align, gfp_t flags, int nid)
 >  {
-> -	do_handle_IPI(irq - ipi_irq_base);
-> +	do_handle_IPI(irq_to_ipi(irq));
->  	return IRQ_HANDLED;
+> +	if (WARN_ON(size & (align - 1)))
+> +		return NULL;
+>  	return kvrealloc(p, size, flags);
 >  }
+
+Same as above.
+
+> diff --git a/rust/helpers/vmalloc.c b/rust/helpers/vmalloc.c
+> index 80d34501bbc0..9131279222fa 100644
+> --- a/rust/helpers/vmalloc.c
+> +++ b/rust/helpers/vmalloc.c
+> @@ -3,7 +3,7 @@
+>  #include <linux/vmalloc.h>
 >  
->  static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
+>  void * __must_check __realloc_size(2)
+> -rust_helper_vrealloc(const void *p, size_t size, gfp_t flags)
+> +rust_helper_vrealloc_node(const void *p, size_t size, unsigned long align, gfp_t flags, int node)
 >  {
-> +	unsigned int cpu;
+> -	return vrealloc(p, size, flags);
+> +	return vrealloc_node(p, size, align, flags, node);
+>  }
+> diff --git a/rust/kernel/alloc.rs b/rust/kernel/alloc.rs
+> index 2e377c52fa07..12a723bf6092 100644
+> --- a/rust/kernel/alloc.rs
+> +++ b/rust/kernel/alloc.rs
+> @@ -161,7 +161,30 @@ pub unsafe trait Allocator {
+>      fn alloc(layout: Layout, flags: Flags) -> Result<NonNull<[u8]>, AllocError> {
+>          // SAFETY: Passing `None` to `realloc` is valid by its safety requirements and asks for a
+>          // new memory allocation.
+> -        unsafe { Self::realloc(None, layout, Layout::new::<()>(), flags) }
+> +        unsafe { Self::realloc(None, layout, Layout::new::<()>(), flags, None) }
+> +    }
 > +
->  	trace_ipi_raise(target, ipi_types[ipinr]);
-> -	__ipi_send_mask(ipi_desc[ipinr], target);
-> +
-> +	if (!percpu_ipi_descs)
-> +		__ipi_send_mask(get_ipi_desc(0, ipinr), target);
-> +	else
-> +		for_each_cpu(cpu, target)
-> +			__ipi_send_single(get_ipi_desc(cpu, ipinr), cpu);
-
-Having a helper for this construct would definitely be a good thing:
-
-@@ -924,15 +919,20 @@ static void __noreturn ipi_cpu_crash_stop(unsigned int cpu, struct pt_regs *regs
- #endif
- }
- 
--static void arm64_backtrace_ipi(cpumask_t *mask)
-+static void arm64_send_ipi(const cpumask_t *mask, unsigned int nr)
- {
- 	unsigned int cpu;
- 
- 	if (!percpu_ipi_descs)
--		__ipi_send_mask(get_ipi_desc(0, IPI_CPU_BACKTRACE), mask);
-+		__ipi_send_mask(get_ipi_desc(0, nr), mask);
- 	else
- 		for_each_cpu(cpu, mask)
--			__ipi_send_single(get_ipi_desc(cpu, IPI_CPU_BACKTRACE), cpu);
-+			__ipi_send_single(get_ipi_desc(cpu, nr), cpu);
-+}
-+
-+static void arm64_backtrace_ipi(cpumask_t *mask)
-+{
-+	arm64_send_ipi(mask, IPI_CPU_BACKTRACE);
- }
- 
-and similarly for smp_cross_call().
-
->  }
+> +    /// Allocate memory based on `layout`, `flags` and `nid`.
+> +    ///
+> +    /// On success, returns a buffer represented as `NonNull<[u8]>` that satisfies the layout
+> +    /// constraints (i.e. minimum size and alignment as specified by `layout`).
+> +    ///
+> +    /// This function is equivalent to `realloc` when called with `None`.
+> +    ///
+> +    /// # Guarantees
+> +    ///
+> +    /// When the return value is `Ok(ptr)`, then `ptr` is
+> +    /// - valid for reads and writes for `layout.size()` bytes, until it is passed to
+> +    ///   [`Allocator::free`] or [`Allocator::realloc`],
+> +    /// - aligned to `layout.align()`,
+> +    ///
+> +    /// Additionally, `Flags` are honored as documented in
+> +    /// <https://docs.kernel.org/core-api/mm-api.html#mm-api-gfp-flags>.
+> +    fn alloc_node(layout: Layout, flags: Flags, nid: Option<i32>)
+> +                -> Result<NonNull<[u8]>, AllocError> {
+> +        // SAFETY: Passing `None` to `realloc` is valid by its safety requirements and asks for a
+> +        // new memory allocation.
+> +        unsafe { Self::realloc(None, layout, Layout::new::<()>(), flags, nid) }
+>      }
 >  
->  static bool ipi_should_be_nmi(enum ipi_msg_type ipi)
-> @@ -1046,11 +1083,15 @@ static void ipi_setup(int cpu)
->  		return;
->  
->  	for (i = 0; i < nr_ipi; i++) {
-> -		if (ipi_should_be_nmi(i)) {
-> -			prepare_percpu_nmi(ipi_irq_base + i);
-> -			enable_percpu_nmi(ipi_irq_base + i, 0);
-> +		if (!percpu_ipi_descs) {
-> +			if (ipi_should_be_nmi(i)) {
-> +				prepare_percpu_nmi(ipi_irq_base + i);
-> +				enable_percpu_nmi(ipi_irq_base + i, 0);
-> +			} else {
-> +				enable_percpu_irq(ipi_irq_base + i, 0);
-> +			}
->  		} else {
-> -			enable_percpu_irq(ipi_irq_base + i, 0);
-> +			enable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
->  		}
->  	}
->  }
-> @@ -1064,44 +1105,77 @@ static void ipi_teardown(int cpu)
->  		return;
->  
->  	for (i = 0; i < nr_ipi; i++) {
-> -		if (ipi_should_be_nmi(i)) {
-> -			disable_percpu_nmi(ipi_irq_base + i);
-> -			teardown_percpu_nmi(ipi_irq_base + i);
-> +		if (!percpu_ipi_descs) {
-> +			if (ipi_should_be_nmi(i)) {
-> +				disable_percpu_nmi(ipi_irq_base + i);
-> +				teardown_percpu_nmi(ipi_irq_base + i);
-> +			} else {
-> +				disable_percpu_irq(ipi_irq_base + i);
-> +			}
->  		} else {
-> -			disable_percpu_irq(ipi_irq_base + i);
-> +			disable_irq(irq_desc_get_irq(get_ipi_desc(cpu, i)));
->  		}
->  	}
->  }
->  #endif
->  
-> -void __init set_smp_ipi_range(int ipi_base, int n)
-> +static void ipi_setup_ppi(int ipi)
+>      /// Re-allocate an existing memory allocation to satisfy the requested `layout`.
+> @@ -201,6 +224,7 @@ unsafe fn realloc(
+>          layout: Layout,
+>          old_layout: Layout,
+>          flags: Flags,
+> +        nid: Option<i32>,
+>      ) -> Result<NonNull<[u8]>, AllocError>;
 
-This sets up SGIs, not PPIs. They are indeed Per Processor Interrupts,
-but given that you use "lpi" for GICv5, consider naming it
-consistently.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+I think we should rename this to realloc_node() and introduce realloc(), which
+just calls realloc_node() with None.
