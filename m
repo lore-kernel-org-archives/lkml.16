@@ -1,139 +1,128 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 215502DAFDF;
-	Wed, 25 Jun 2025 19:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 813333074BC;
+	Wed, 25 Jun 2025 19:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750880632; cv=none; b=SneNSIC2hqtPhJ5BzWAL5yZe+SDwOEMlQIRD+f2KslOEH94LAF+CoG1ZGiLfAW/oRl6V9uQfJc/Svdo4o/prr218cEHsgNymlDBnkMOhtzLjtghgSjjCTFSUbD1YGw0Cf9atkTibTp7sKk7wWhACWO0QvgQoJj8bQyFM+f9c2jI=
+	t=1750880694; cv=none; b=a/ljMjrdd6ylEZcSdqEFrY8C3IdVE+6uAcCZ3zqn4hAIcREQkJ/SwaEcYrky1bMN4pOD+jPifOlLbJwkxIFOLKhcs9LbCzBHVp0/3O7+998A+uCyTgMvuixIG6yxayimEEle8+EbWATxWFhrfABUBU2IXCzygHcDfVhP2iwKb2g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750880632; c=relaxed/simple;
-	bh=FQ+2YiIDDX9scLGt0YxJPyj9uRJhs7aO0tAyrIhhXmc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=H1uZJjyHuWwZKv4hLc8TycW38Hjq5qKTfIpIV+ftRuObo1KQeICI0PcfCK9bC9W6ZDDRbzdn6KlaPSrbDI9L3Ma5rWMzpWgoaz6trGa4Anyn6kaTIQzyDQkMJl7TzMIYGpVPQuLAs12EFgnizkVYrmGPlLk4gyGFe2511xAI37I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NYJF6ZrI; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750880694; c=relaxed/simple;
+	bh=UaTI7XKP1pORbiVLuaFJ3J5Oj/8204WawFn35LhQVUY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XRSHXbw33Mgud6KyWBbyWezNPqT53v+4Fr47XNoRZnPAPdHb5IZ9gFX+8oBDF0RjDjSrp0G5ZsF7c+xLS20Bs/hSGM0RL6/ma0O83OEUyA8IOmVZyK9NgWjRNACM6wcveShwcu4OrSetEOyTxz5oFa4hS7eXVCc1XjNPQQJmRXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dhzsdkLc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NYJF6ZrI"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-73c17c770a7so430762b3a.2;
-        Wed, 25 Jun 2025 12:43:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750880630; x=1751485430; darn=vger.kernel.org;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=cO3PBcARXLOd/sYmktk+SQ6pShkzV36dVIEfKJix4Xw=;
-        b=NYJF6ZrIQuNe8rIDScuqzragsQpbtYNfO1+xnvjdZKOIstK7kOLMF7gLEOgjLdhVHO
-         Oy+nnOkmbIQTRSXq7NTf77f4MSTBVAVwzPCnTYsn1n2dcdMjhipSlgRCCp63flvyEc7v
-         g8MUZ9Am3prJZvKlI5mBlEvR/wwlmuJymeFf0gPql0/T2PMBsIZ9VJqMed30BDC+UxyO
-         MCJT+mU9bDxTlrYZXVTuajbOVtwukta25toSUOHcDTZWURc67GowsLmHUXzAkJ/z30ZF
-         RmZhODwnVoxfmxN67V2HXDBX1r6EuI/eakk7TPOHh+lJs6XIOkhzwYsxqr+TfNVC1ofJ
-         DW5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750880630; x=1751485430;
-        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cO3PBcARXLOd/sYmktk+SQ6pShkzV36dVIEfKJix4Xw=;
-        b=QlNg2GG+pkIVfGOhEDY1WBR7rzhHSa5rmsU/BXQzjW7+JYV+pLQQKqKm7fQxiAhinN
-         dM700i8EPbKC4HeG7E2HicpS1DwXMe7/42gDA8FZmq/Y9IQKkWmo+utsB4qTjhvsCbkA
-         LNqueD8s6hOEM5nXbH2C1gl3rFW+vSS3HJ3dsQcqijkuDyA2NQsbZAZWJzFN4/mM17SD
-         1n/y7rY0Y3FLWIOcBf18OR++wSGuHtiXPnKBrRNcOENGpns5tZu1dPGt1Xo9n1EwWVv2
-         w9x8ZPLx8p13ht7MkyZ7ouPvEtF1vM57H2yq5bfaXbrt40zyTtINYJE+ilPk+AVSaMd1
-         EptA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBIXdCSpL7RywfqWqgyuGatKA/o6hIUm4p2542jmstBa1k5aLV0xoWqYQzkBHN6huu451zHdiP2BJr+nI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywtg542B95SBeevHMAdGUB9aPASY9GnfNp6Gxm4TCI0GSddJUO5
-	TnkZin8JLhXEmN6iTgiZEyUr6vKK9Tum+Yiex87vjn+Id46SR3uqxe6/Fo/YCQ==
-X-Gm-Gg: ASbGncuEfsd8+VOKMRxu85Ho+QPxhUxNGr5BJZw33NoFOow7PxbqBqVYinHmDmnYDbW
-	SyWdLHjguJ7WNlN1eOeYiynSaBzZNLcSDu3449Gs371xkrBZLy+ObXKTThYxZvzwWfUxhytDFDt
-	inmYIOAHU7G7ZLJW5Cq1l2olgBSShiUnHV42+ZM3qjLlK0Tud72F54beZZLZHOWr/Cim75uL0L8
-	uzRGMqHrumWQbklOtO98pxXE9aRv+Cr1To2x0dPHBa6JwCw4avnSdBF3+V4WnYO0eAYvNVwdXKp
-	CQH8bzn6KOeq+GfeJC1pBF5Z7qS4jZPdoIxBgZcHAEkX68Fx3hrCs2O8ny0ltP4AqhGHe2cyD9n
-	jk49WoPmDX1o=
-X-Google-Smtp-Source: AGHT+IEhUydBkMoqI3UZUfhUfnDyHW1/OUO1X1n4XWiTV71XwTKd4PIn2fvv0TFfc2VJ1kRP3Ilscw==
-X-Received: by 2002:a05:6a00:1883:b0:740:5927:bb8b with SMTP id d2e1a72fcca58-74ad42d4316mr6489404b3a.0.1750880630052;
-        Wed, 25 Jun 2025 12:43:50 -0700 (PDT)
-Received: from tx3000mach.io (static.220.227.itcsa.net. [190.15.220.227])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e08d1csm5185779b3a.13.2025.06.25.12.43.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 12:43:49 -0700 (PDT)
-From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-To: linux-wireless@vger.kernel.org, Bitterblue Smith <rtl8821cerfe2@gmail.com>
-Cc: Jes Sorensen <Jes.Sorensen@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] wifi: rtl8xxxu: toggle P2P for supported devices
-Date: Wed, 25 Jun 2025 16:43:36 -0300
-Message-ID: <13830882.uLZWGnKmhe@tx3000mach.io>
-In-Reply-To: <bde434a6-68b8-4c5f-8ec0-6c41dd1b6558@gmail.com>
-References:
- <20250625142541.44795-1-yakoyoku@gmail.com>
- <bde434a6-68b8-4c5f-8ec0-6c41dd1b6558@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dhzsdkLc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37F43C4CEEE;
+	Wed, 25 Jun 2025 19:44:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750880694;
+	bh=UaTI7XKP1pORbiVLuaFJ3J5Oj/8204WawFn35LhQVUY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dhzsdkLclaUjfYa0T65Fqy/kgwwK8KXUh/ZR6WFaKHRqnDji+475X+s0Sliv0VM+x
+	 preRfA/yZHFWSg2RQbJRIoA3YEV2yaaQheaR2txdVUiuQni9dWSchTL3Qfle5+EU9U
+	 EdGpUhFFOZFmhNLIYxdu4r/NXEc3gg2yOkudJtaQrBloX4t38E2v6lqk87bb9M6CBQ
+	 pmCpI+3fufALozfZBdXVcL0+Y3ms+xcp5uovXVg0i/gZ+sBd0Mnm/fyGu5N6nT89HN
+	 C1i0hQ4p+Hgd1F97qJbARCoyRamH8PQfZ5bndryLEOQIzHqEKdF2OkXitza6ZrpB0m
+	 Ah6d0jKHgCv9w==
+Date: Wed, 25 Jun 2025 14:44:53 -0500
+From: Rob Herring <robh@kernel.org>
+To: Kory Maincent <kory.maincent@bootlin.com>
+Cc: Andrew Davis <afd@ti.com>, Tony Lindgren <tony@atomide.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Roger Quadros <rogerq@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Bajjuri Praneeth <praneeth@ti.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 2/5] binding: omap: Add lots of missing omap AM33
+ compatibles
+Message-ID: <20250625194453.GA2093083-robh@kernel.org>
+References: <20250609-bbg-v2-0-5278026b7498@bootlin.com>
+ <20250609-bbg-v2-2-5278026b7498@bootlin.com>
+ <53b48816-37e6-49e8-a5cf-adcca04c57a7@ti.com>
+ <20250610100544.4beb07e2@kmaincent-XPS-13-7390>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3037379.e9J7NaK4W3";
- micalg="pgp-sha512"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250610100544.4beb07e2@kmaincent-XPS-13-7390>
 
---nextPart3037379.e9J7NaK4W3
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-Subject: Re: [PATCH] wifi: rtl8xxxu: toggle P2P for supported devices
-Date: Wed, 25 Jun 2025 16:43:36 -0300
-Message-ID: <13830882.uLZWGnKmhe@tx3000mach.io>
-In-Reply-To: <bde434a6-68b8-4c5f-8ec0-6c41dd1b6558@gmail.com>
-MIME-Version: 1.0
-
-On Wednesday 25 June 2025 13:01:04 Argentina Standard Time Bitterblue Smith 
-wrote:
-> On 25/06/2025 17:25, Martin Rodriguez Reboredo wrote:
-> [...]
->> As of now only rtl8192ex devices have their P2P_CLIENT and P2P_GO wiphy
->> interface modes ensured because those are the only ones I can test on
->> my rtl8192eu card. The rest of chips have them set from what I've seen
->> in a cursory Internet search, they might or might not work.
->> 
->> Signed-off-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+On Tue, Jun 10, 2025 at 10:05:44AM +0200, Kory Maincent wrote:
+> Le Mon, 9 Jun 2025 18:34:10 -0500,
+> Andrew Davis <afd@ti.com> a écrit :
 > 
-> So... does it work with your chip? How do we test?
+> > On 6/9/25 10:43 AM, Kory Maincent wrote:
+> > > Add several compatible strings that were missing from the binding
+> > > documentation. Add description for Bone, BoneBlack and BoneGreen
+> > > variants.
+> > > 
+> > > Add several compatible that were missing from the binding.
+> > > 
+> > > Signed-off-by: Kory Maincent <kory.maincent@bootlin.com>
+> > > ---
+> > > 
+> > > Change in v2:
+> > > - New patch
+> > > ---
+> > >   Documentation/devicetree/bindings/arm/ti/omap.yaml | 38
+> > > ++++++++++++++++++++++ 1 file changed, 38 insertions(+)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/arm/ti/omap.yaml
+> > > b/Documentation/devicetree/bindings/arm/ti/omap.yaml index
+> > > 3603edd7361d..c43fa4f4af81 100644 ---
+> > > a/Documentation/devicetree/bindings/arm/ti/omap.yaml +++
+> > > b/Documentation/devicetree/bindings/arm/ti/omap.yaml @@ -104,12 +104,50 @@
+> > > properties:
+> > >         - description: TI AM33 based platform
+> > >           items:
+> > >             - enum:
+> > > +              - bosch,am335x-guardian
+> > >                 - compulab,cm-t335
+> > > +              - grinn,am335x-chilisom
+> > > +              - gumstix,am335x-pepper
+> > > +              - moxa,uc-2101
+> > >                 - moxa,uc-8100-me-t
+> > > +              - myir,myc-am335x
+> > > +              - myir,myd-am335x
+> > >                 - novatech,am335x-lxm
+> > > +              - oct,osd3358-sm-refdesign
+> > > +              - tcl,am335x-sl50
+> > >                 - ti,am335x-bone
+> > >                 - ti,am335x-evm
+> > > +              - ti,am335x-evmsk
+> > > +              - ti,am335x-pocketbeagle
+> > > +              - ti,am335x-shc
+> > >                 - ti,am3359-icev2
+> > > +              - vscom,onrisc
+> > > +          - const: ti,am33xx
+> > > +
+> > > +      - description: TI bone variants based on TI AM335  
+> > 
+> > Do we really need these "bone variants" split out from the above
+> > list of TI AM33 based boards? We don't do that for any of the other
+> > boards, you get a SoC and a Board compatible, every classification
+> > in-between is just unneeded.
+> 
+> As omap maintainers prefer. I did that to have the least amount of change in
+> the devicetree. We could have U-boot using these compatible but after a quick
+> check it seems not.
 
-You can test this feature with GNOME Network Displays, that's the only 
-userspace application I can think of. KDE doesn't offer anything yet and 
-there's no other software out there that uses WiFi P2P, not even for simple 
-file transfers. Maybe utils could be written like what was done for Bluez and 
-be part of a known package like NetworkManager or a thing by themselves.
+I agree with both. The intermediate compatibles that TI in particular 
+went crazy on have proven to be not useful. However, between having to 
+fix existing .dts files and keeping them, I would just keep them.
 
-With respect to my case I say it's listed by wpa_cli and it gets detected by 
-Network Displays, but I cannot do anything further than that. Because I don't 
-know how to use wpa's utility properly and while I try to share my screen or 
-see another one, I get no dice there. Maybe this is due to an incompatibility 
-with my Samsung mobile or that for proper P2P support more functionalities 
-need to be added to rtl8xxxu, I can say that as of now.
---nextPart3037379.e9J7NaK4W3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEoKWxm2R3rrCyIqCZhYg+G2pbUccFAmhcUWgACgkQhYg+G2pb
-UccwNBAAmsV9jX+ADJ2yI04UQQBoH4Zxwed3fXp2G8ZFM3wuqsGiOmjJRxEHjJWE
-nAzKLVgYCVjLJwX/uu1uOcmoV71wavSUq8T2NAskdYz3zbLTRFHT6PBgzYcBS/d7
-2P5TIlydSgbYMtxsrr6SK8pVpA4SSIU9xiHI0NAnWEE+AtPuu1zxQRSug6QUv1yz
-IDwXB4JBlgcT5TFuMAaDDZ521EGuEguh1R/P7aiUYZ8QRofFRVND3bt/1HPpQwxr
-LDLqMHx6aU1N+o+d1PMKYIDYgy9FG7HepPZSO5hAJtg82mvmy60EVbGkzBtVCBEQ
-UAVFa6G+Jy/qxaNPT8OR4fn6xFiwFQ521GoeVOFoqXFmqR3QHNFyYQpMOvB/vWcC
-2NDSa5QGfrfPS4Uwx7ePQq+T70JmIkGwfGE7Bq0hh4d70WWz64d4ZGR1kEXUL9gw
-8ACzKGKBzwSBmXyNTm9EXU15ibRzL7XgFswhXvOW35DzeGmKU+StWcZ2kwanGm28
-3iwsXDJUvGaztTiOL5BEGw+kuZ3mc4P2RgHEXUYeTVT2nQ05bGSowgJDpbOidgJI
-gPVSm2KTmZuHJvnKyx8XuNDbkyT0cYs67sN9is/BUfVkIxGe5Hk3AxnNTebeymZG
-klMyA+uKhNeVarjBf2QozZl2nNTZAXKW4wNFF0iwFNpSKx+0ZL4=
-=MBvp
------END PGP SIGNATURE-----
-
---nextPart3037379.e9J7NaK4W3--
-
-
-
+Rob
