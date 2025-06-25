@@ -1,86 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-106103.protonmail.ch (mail-106103.protonmail.ch [79.135.106.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D9935280;
-	Wed, 25 Jun 2025 22:18:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89D522877DD;
+	Wed, 25 Jun 2025 22:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.103
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750889912; cv=none; b=stolAnz6S3upv6e0N7oqxEn/SFSolnDzHBfKYLN2G2rAhQovzz9K40S6ewln903ANf8DfxT+eMocTexb6BNcGA9k8FQwoqLWx5H+TweQWGyYQ1H6wKOXbLGtZBRfhE9dHDW/B7SAX7A3GzMvkqXoxgeTXWIorXQPuIqY4acC5w8=
+	t=1750890021; cv=none; b=VkgqDRAEPWrXl2b9LqikX9ye18ZxA3KbljKqMGyDMZBT0AVeggcdZmYdZC1HBjXz9VEAaR5OWfis/YY4sJfT1M0Ofu5jEbWxTUnr22gt0ahaijPDT94f4MzyYHZwKI72HqIOMJEzj+N/mcCjresqjoRirUkXX7+xsWNTpyRgDss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750889912; c=relaxed/simple;
-	bh=jHlQiRg4UtnzJJnBTe3Rk3Red9/nsoYqw9mrUsapWhU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:To:Cc:Subject:
-	 References:In-Reply-To; b=X7944bdLi55o1JqyIL/cQ/Tuvl55GulviLfMUJNZCls7UBATGEGcIlEWoPT9BqKVUGCrq/cznv919pwh1+DuzOx5YehiZ+NnFjPbArx45DoB4lNs0sWpeE6ZfHxCushmt9KgRg71ZWoU9uU6bW9ZyfYhJVX4fkHJkBzZOiV4vnc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HGW8CSSg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750890021; c=relaxed/simple;
+	bh=E2X8JFzbatE1FCWlY5YF6I83d2kqH95jUGI4Wns86t8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XZ2H6YvRYdwnh/8xm1U7nGmTEgGXCgqLC2iE7CXkvmZkPZdzPFGBo9O0aM/pIVueMH9t/KF1RS0vBXKG44UjEIgDgn21uFJ6Enp/6Q1wfNlOnJEQUcaM9y2HtjVrcxdipQERqLQW5+EjmLYlaTf+1PmjPlSmvwt55Tq+dG/Dz/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=oDW9APQE; arc=none smtp.client-ip=79.135.106.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGW8CSSg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54C36C4CEF1;
-	Wed, 25 Jun 2025 22:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750889911;
-	bh=jHlQiRg4UtnzJJnBTe3Rk3Red9/nsoYqw9mrUsapWhU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HGW8CSSg6Lo4OF/QY+m0VJ5Ky4qfOPysOi9MfyoUMwPBCwj3b0EbZyepJ/NRIvtOx
-	 z0TDfdCJfq2YAkm4iGGPFlXF6ZctZTUPYrPCJa00VwrsDKeyCqFYYC/4FaYYqKbiOO
-	 CTAJsDAUYoapUyEA+/tEnFejmUV5/KPyp/3VlFghG/+0lSKQa+aygDU1Y/DnPQXoyD
-	 oxcBELTlIj+2Vmjbq/1gqv2IbAEqW9PVlL7kBWK1+drYBkKAmw/zB0me5AXW9xjdsb
-	 W+CfKbqaoTIiremq+z/y8duCiuxfwmlLBHKwkOcBU8I+10BOgj9x1D6xLSK9qqZWsa
-	 WFfGhhj8/BqoQ==
+	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="oDW9APQE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+	s=protonmail3; t=1750890011; x=1751149211;
+	bh=E2X8JFzbatE1FCWlY5YF6I83d2kqH95jUGI4Wns86t8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=oDW9APQEaPN0TF9Pbt6GIgp1fNrQT6QgvtjS6i7PVCoh7VEIsUvk6Lt6iUCuh4C8I
+	 FRi4/y3YXUj+CmU4Un++R5RuYbR1eCYa0f2ToJp7S5h/Hh+cQyRmnrja1O9ti8jDQl
+	 fPkwRn6A5kJ4WJFD6fOsH0GXUgXqvRGkDfLm45m51eF0ZXp34ayUOXa3iEUhc83GVm
+	 p1heVjNaZrEHpqfITArKh+T+Rw8MhUCs0ieNTG+obos1E5hkfBc+pdoCQ99ufxRYwz
+	 THT+32eC163nLE44gpE5zzKvvwuGyX5aG4MeA0YRc0perPypZnqKqvBK+W9UhtyslT
+	 ykjNJ1SNrQEmQ==
+Date: Wed, 25 Jun 2025 22:20:01 +0000
+To: Jonathan Cameron <jic23@kernel.org>
+From: Yassine Oudjana <y.oudjana@protonmail.com>
+Cc: Lars-Peter Clausen <lars@metafoo.de>, Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nicolas Schier <nicolas.schier@linux.dev>, Alexander Sverdlin <alexander.sverdlin@gmail.com>, Sean Nyekjaer <sean@geanix.com>, Javier Carrasco <javier.carrasco.cruz@gmail.com>, Matti Vaittinen <mazziesaccount@gmail.com>, Antoniu Miclaus <antoniu.miclaus@analog.com>, Ramona Gradinariu <ramona.gradinariu@analog.com>, "Yo-Jung (Leo) Lin" <0xff07@gmail.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, =?utf-8?Q?Barnab=C3=A1s_Cz=C3=A9m=C3=A1n?= <barnabas.czeman@mainlining.org>, Danila Tikhonov
+	<danila@jiaxyga.com>, Antoni Pokusinski <apokusinski01@gmail.com>, Vasileios Amoiridis <vassilisamir@gmail.com>, Petar Stoykov <pd.pstoykov@gmail.com>, shuaijie wang <wangshuaijie@awinic.com>, Yasin Lee <yasin.lee.x@gmail.com>, "Borislav Petkov (AMD)" <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, Tony Luck <tony.luck@intel.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Ingo Molnar <mingo@kernel.org>, Yassine Oudjana <yassine.oudjana@gmail.com>, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-arm-msm@vger.kernel.org, netdev@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH 1/3] net: qrtr: Turn QRTR into a bus
+Message-ID: <ZUlOGBxe4Dky-Qo1EtYMuS0kDRjYdkqex3qgSiFBkFwIdEUpHjsD2pcl3VvMPjD-ZAeqcP5P40AsSfHtv4fJ8Z8stUu4nwYFw0qt3vtf7yc=@protonmail.com>
+In-Reply-To: <20250406170111.7a11437a@jic23-huawei>
+References: <20250406140706.812425-1-y.oudjana@protonmail.com> <20250406140706.812425-2-y.oudjana@protonmail.com> <20250406170111.7a11437a@jic23-huawei>
+Feedback-ID: 6882736:user:proton
+X-Pm-Message-ID: db9bb8d33409b840d6eaf22ce2cef2153ee0ccda
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 26 Jun 2025 00:18:26 +0200
-Message-Id: <DAVYO6S5VMDF.1615DT3F5J6H3@kernel.org>
-From: "Benno Lossin" <lossin@kernel.org>
-To: "Alice Ryhl" <aliceryhl@google.com>, "Maarten Lankhorst"
- <maarten.lankhorst@linux.intel.com>, "Maxime Ripard" <mripard@kernel.org>,
- "Thomas Zimmermann" <tzimmermann@suse.de>, "David Airlie"
- <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Miguel Ojeda"
- <ojeda@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>
-Cc: "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
- Hindborg" <a.hindborg@kernel.org>, "Trevor Gross" <tmgross@umich.edu>,
- <dri-devel@lists.freedesktop.org>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/2] rust: types: rename Opaque::raw_get to cast_into
-X-Mailer: aerc 0.20.1
-References: <20250624-opaque-from-raw-v2-0-e4da40bdc59c@google.com>
- <20250624-opaque-from-raw-v2-2-e4da40bdc59c@google.com>
-In-Reply-To: <20250624-opaque-from-raw-v2-2-e4da40bdc59c@google.com>
 
-On Tue Jun 24, 2025 at 5:27 PM CEST, Alice Ryhl wrote:
-> In the previous patch we added Opaque::cast_from() that performs the
-> opposite operation to Opaque::raw_get(). For consistency with this
-> naming, rename raw_get() to cast_from().
->
-> There are a few other options such as calling cast_from() something
-> closer to raw_get() rather than renaming this method. However, I could
-> not find a great naming scheme that works with raw_get(). The previous
-> version of this patch used from_raw(), but functions of that name
-> typically have a different signature, so that's not a great option.
->
-> Suggested-by: Danilo Krummrich <dakr@kernel.org>
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
->  rust/kernel/configfs.rs                | 2 +-
->  rust/kernel/init.rs                    | 6 +++---
->  rust/kernel/lib.rs                     | 4 ++--
->  rust/kernel/list.rs                    | 2 +-
->  rust/kernel/list/impl_list_item_mod.rs | 4 ++--
->  rust/kernel/time/hrtimer.rs            | 4 ++--
->  rust/kernel/types.rs                   | 8 ++++----
->  rust/kernel/workqueue.rs               | 2 +-
->  8 files changed, 16 insertions(+), 16 deletions(-)
 
-For init.rs:
+On Sunday, April 6th, 2025 at 5:01 PM, Jonathan Cameron <jic23@kernel.org> =
+wrote:
 
-Acked-by: Benno Lossin <lossin@kernel.org>
+> On Sun, 06 Apr 2025 14:07:43 +0000
+> Yassine Oudjana y.oudjana@protonmail.com wrote:
+>=20
+> > Implement a QRTR bus to allow for creating drivers for individual QRTR
+> > services. With this in place, devices are dynamically registered for QR=
+TR
+> > services as they become available, and drivers for these devices are
+> > matched using service and instance IDs.
+> >=20
+> > In smd.c, replace all current occurences of qdev with qsdev in order to
+> > distinguish between the newly added QRTR device which represents a QRTR
+> > service with the existing QRTR SMD device which represents the endpoint
+> > through which services are provided.
+> >=20
+> > Signed-off-by: Yassine Oudjana y.oudjana@protonmail.com
+>=20
+> Hi Yassine
+>=20
+> Just took a quick look through.
+>=20
+> It might make more sense to do this with an auxiliary_bus rather
+> than defining a new bus.
+>=20
+> I'd also split out the renames as a precursor patch.
+>=20
+> Various other comments inline.
+>=20
+> Jonathan
 
----
-Cheers,
-Benno
+<...>
+
+> > + if (!del_server)
+> > + return -ENOMEM;
+> > +
+> > + del_server->parent =3D qsdev;
+> > + del_server->port =3D port;
+> > +
+> > + INIT_WORK(&del_server->work, qcom_smd_qrtr_del_device_worker);
+> > + schedule_work(&del_server->work);
+> > +
+> > + return 0;
+> > +}
+> > +
+> > +static int qcom_smd_qrtr_device_unregister(struct device *dev, void *d=
+ata)
+> > +{
+> > + device_unregister(dev);
+>=20
+>=20
+> One option that may simplify this is to do the device_unregister() handli=
+ng
+> a devm_action_or_reset() handler that is using the parent device as it's =
+dev
+> but unregistering the children. That way the unregister is called in the
+> reverse order of setup and you only register a handler for those devices
+> registered (rather walking children). I did this in the CXL pmu driver
+> for instance.
+
+Not sure I understand this correctly. This function is called for all child=
+ren when
+the parent (the bus) is removed in order to unregister them, so its called =
+for all
+registered devices under the parent. It's just a wrapper for device_unregis=
+ter so
+that it can be used with device_for_each_child. If I register a handler wit=
+h
+devm_add_action_or_reset using the parent device then it seems to me like I=
+ will
+have to add a new function used as handler for that which in turn goes over=
+ the
+children and unregisters them (we always unregister all children since the =
+parent
+will be no more) then I will only be adding an extra layer. I checked the C=
+XL PMU
+driver but I only found devm_add_action_or_reset used for cleaning up objec=
+ts
+associated with the device, not removing child devices.
+
