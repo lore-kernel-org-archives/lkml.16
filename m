@@ -1,109 +1,112 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41C242D9EC4
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:19:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A691C2D9ED1
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:19:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750843148; cv=none; b=SdbT+FqW63BqeiXoPt8TBFP4AGxfGzlas2/8//kHeS3lIWuTwTeC6+AdLE/TJ1OQbEFeweah6VdfpL8x96M3AUU74h+cq2BdsZYxUUkKdho5GhCN3ZD4s/s5h9SBTSNXvPbh8cJIaAIJ3gXqaMAvbOLhGl3jbsdsXVVzNcoLmts=
+	t=1750843148; cv=none; b=lNG29c81SVuxWSvPBABOmTCBKZsvsJG3rEzCgZsuPkveCoGSnb7e/DhVTMv0Sc/6yhPTCO6Y8CmnUtMjo7izOnKdz9lCyEStysk2t8zgIzkICem8+TrMlUmIrbCQue+E5ZietqQ3kpZ4dfei+Hs1DG7YttNSuy/kXN3CRFN1R/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750843148; c=relaxed/simple;
-	bh=20e3PphxG30T3V+Zob/qx0IQxDG73Gud5foeaYVbVvE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b7BfgTOXYiic+g+wfM2c2gqKUxv5swpQoFu5DMfAnqQho131skGaPrZBMNmc9cKk1aEkxDoH5Amtv7eiVsnoajrmP+04FPn0oQZ+ohYBj+8IqPJm2XcRkHXKYdmk+hUjuYl9j8TRlaP8MnlqPJY0bIcvfQHh3U+BoIqGlz9GaBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yVSS5ONl; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	bh=pUbk1uqDn3rkUzvHyGVf5FiMIjDaRG8buGqEDrG6+iY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=t9iW7HktVH9gdwaIwWzXTQeAdhyMj5dVsD8RlLqCxYAoFR1UEncG4zTrOgqXjo0+DmqzCfDEuoXnYu8Y6dVRqR+7k3Au8ZuXXhE10r/pjOVkO1zqyGlhLgD5nsrLKF5edpjxCXJzMhwP4iasWkFRlvIu+ycvbu+Aj9uHsAyqnvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=IPWW2O/G; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yVSS5ONl"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4536b8c183cso4069775e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:19:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="IPWW2O/G"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-606b58241c9so10039213a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:19:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750843143; x=1751447943; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ojAQtrqRfWE5uG2/EcUt6MJrN5Ulz0bDOzZRTcZgA5A=;
-        b=yVSS5ONlgQZLL68PH2r2KmK7ETejyMcCm5wiF5j70L9Vqdb3h9BBcWEk2B9ZP7ufC0
-         V53h6hyFMq6bEmwmovlKSZqLyLSD1O+ij+0VMJk6XrmfPUVTrusL/TaZT9y3miQ8C75k
-         1n0cIRrqKg2F828yMfKfD+giWFjaQNY+5cUX36nZFNp0uklf6TyQTbYvKs5BXyOYyHvE
-         6Lfh9KF/Ue6pfb+lDm+hirDnoK+x/tbgXf/Kh0e42jYU4VmvVXiauFRSy4E/KFXTmcdj
-         7eXd4Gi6OuLPWK0zWIun3Snav05yV2b4V2nK+94bX7cg1HUUYHzlBbpMQ7/Jod6y8KO2
-         zYkA==
+        d=fairphone.com; s=fair; t=1750843145; x=1751447945; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zTFzCvwRXcKyOlaP6VWm+NwlDdnptDG85UUcTbjMo4M=;
+        b=IPWW2O/GHDydEyCavPkKeyHTHKHDEbs+3Nv05PlnBskTX4zlSVarCU2A7BO2o02WWr
+         oOZMBYwVdJDII9ZWqRzxj5+7sk2WRTPgRRlFNDMVxqIl5HrJWmpRt59exA9rmmrBFXnO
+         iXWlfBA6FMx70SAEGhK54vkT0IY/zGtI/E7iypMcJRlkULHPUAx+2i/Vn8kNgIq53QW8
+         gsxO0Efa/AYR0Y9cyf0zNDoitBTyLswZ8bgCEcjw+2t4gM2yl/GJlIj3LAfudkG5G+7F
+         lC5rdj/qypDpFGNrljitFMyyKNo84qpCEam5z4luPDdL/2lHd7i4eg2Yg+4+4VCBheo7
+         Bd7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750843143; x=1751447943;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ojAQtrqRfWE5uG2/EcUt6MJrN5Ulz0bDOzZRTcZgA5A=;
-        b=aHZ9hjPV+RcjlDTFFdyWuEVuraEaGiUVHpQB5QKNHGHudYbZU91LGwMk5Mof8Mvgsq
-         996xwyq+l0pMMxPD4tmQFUrWLlOGafQRqVVQTOIZX+DpDLdlhWtINQxmMi1hsM+jmZEG
-         1GjOKvYzRXUPlQeWEUsPT4uquQYFYDIA5BMJi2GFaY40b+bDIrGYE+mqvKM8li1fc2TV
-         kM7O88QtDLV07fAI4suh0qLVvz2HomhZFvTtva4lo2LaUW6l7Lj/cet0Mgj+v4I/0w02
-         A7fZQvJNAy9mcwC+3TihDKDSzQFYTF8RX61Z/X+BE92+voBJQ611VTpNcKeM+i/nXpp+
-         8Kdg==
-X-Forwarded-Encrypted: i=1; AJvYcCXnttiAnPafTXnKyLw9Am5X3O2anlEdg+BvEq/FgrpnyyHMXVIKGMOG4MzIIXlQwEtDHtlbNp/rdwng3Oo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbMM9wzkPZq82IQfORD/9P3HuOgx58GsnIVEBpQ1l77Gsw72AE
-	DUQTD09hBZJ62HsHovtJQMCVtxnzD/bvI9yjS1PHHRTMxgt5BDpRCt8P+/ftn5U02cI=
-X-Gm-Gg: ASbGnct/gekl7g1sw/EAnwXXTieXjwIuhWmnTeKK4CLT8L9xeItA9bMcJSPbni/CzCD
-	3qJEDsjP/RxFYtc5/CUwZwka2q9rmmlXQfvdtrUZ8rLMvPxfroJQcKQm39pv6CQMK16C6eJ31rf
-	Ha3fDeIkY0YraCybe3N1co2An7xpSQSqqypm6skMPIN7ywFSoFfFfX1ljNqfJYh4FSajvZAEV/m
-	4heTkAXIaZyqN8gO2XASFjWLZY2zRWAM96WAhFUTWzcUxaMd1o7xucsdfz0jmdgtEOO+Vs/yb99
-	du/oXaHTjqDhlDQRfDetvlp7mbtqnXEK89jE5+0fF5h/4zD+S2QtPhj8q2/KPc00QQA=
-X-Google-Smtp-Source: AGHT+IHH7ZCWqc0u7ZgOrAL3WMonYTs/JRdAzK3sDu8U1/EewCY+ihQcjBc/zfznNgiZP8hFENkJ8Q==
-X-Received: by 2002:a05:600c:450f:b0:43d:174:2668 with SMTP id 5b1f17b1804b1-4537b631db6mr57163895e9.0.1750843143517;
-        Wed, 25 Jun 2025 02:19:03 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80693c6sm3957051f8f.41.2025.06.25.02.19.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 02:19:03 -0700 (PDT)
-Message-ID: <0c6c78da-575a-4d29-a79a-3903aa801b42@linaro.org>
-Date: Wed, 25 Jun 2025 10:19:02 +0100
+        d=1e100.net; s=20230601; t=1750843145; x=1751447945;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zTFzCvwRXcKyOlaP6VWm+NwlDdnptDG85UUcTbjMo4M=;
+        b=EEpVji1cKjWcKxm0Hf34WqWyCMHR0/27zuNfUMvTzXSDRbBbXzFJ8ZBrsXB87Ir0jS
+         pLMwU+Zio3S8g5bzrObP9h+4G/NoGBRPwYhs6awc1blB531KGHUSlOUIhtxmYt3zbvKV
+         jHGu7O5PyTJBuohiLVTclAHLbvTPDQ5l8YhzkEYUzXBXDzNSzM3oAFMx4By95IU1hX7H
+         MWkhhFU5zH9Xl7ZiqoHTkwGSjrZLCvSzEZAMY4w7/ODWAQY0QaQgCkhpyySzWEcof2+e
+         P4SGcEMp/w3bTGQYSWR0E+pb/RmIlskSSk0abiBURrHB+BpzZZzcj2ePrPhUPv0l1j5B
+         bfFw==
+X-Forwarded-Encrypted: i=1; AJvYcCWdDcHFFxdI5SqkbuyLO7UaR7kOs0XjtpTlCk81LEE5/T4HnZwqGxmbUHrCof2Y72NR6F74HpOadRxZdbQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEiGyzScoGKWxknH7nvUXiuSk9m3KCcSyFNoM6UY2z6F9FRubx
+	UOmyauwy1370E/zyrU1C168/20T3CX9UTCMrCtyugQy1iFhaQ9TRjJkVrzH9EsbJ3bM=
+X-Gm-Gg: ASbGncuPvAFY4smJW+OyWFUyqP9nVOSNt6mDHRubob3giFB66vgUtG28FvawXwMIT0x
+	1Yhz10fMRwW2KOVUBv6FkQWVgoh1u3JIcNy8Oq1Fn9SShWOM0VZ2R6AtYeeUC7czNUzX8qhgBmU
+	JVwxczlk8rntOyGEcnCc2LjicFJRCFX5B54ImEJfXQOzb9ym+CkwV8g2TW+ebxEx8CPDDDpyjtn
+	6nlHkn4u+MDN5AwHUVjkaXnoNV/tl48sPtoef/h/4mb6KyOILQJUmKatk1u72XTrd5IIWLr2kbd
+	UGDI+KOsCtM1MRRvTBfhzF5Uy2jWLSh5NHCceYdDGvph7KdRbDwt4LulTCHqW64EWrlTyBCqIJx
+	8V9nBPVzjwRXniv2YopBPUh98vBts4aSa
+X-Google-Smtp-Source: AGHT+IH8149yP9D8VkRVzc5ItiuTtvTkM2SP+ZetN60G4hPLdR3fSCS4GsHThskLkKTdSjnQ5A6uxQ==
+X-Received: by 2002:a05:6402:2548:b0:604:e33f:e5c0 with SMTP id 4fb4d7f45d1cf-60c4de4fe80mr1738458a12.30.1750843144927;
+        Wed, 25 Jun 2025 02:19:04 -0700 (PDT)
+Received: from otso.local (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c2f196f84sm2194802a12.14.2025.06.25.02.19.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 02:19:04 -0700 (PDT)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Subject: [PATCH 0/4] Add RPMh regulator support for PM7550 & PMR735B
+Date: Wed, 25 Jun 2025 11:18:55 +0200
+Message-Id: <20250625-pm7550-pmr735b-rpmh-regs-v1-0-cab8ef2e5c92@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/6] spi: spi-fsl-dspi: Stub out DMA functions
-To: Arnd Bergmann <arnd@arndb.de>, Frank Li <Frank.li@nxp.com>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
- Vladimir Oltean <vladimir.oltean@nxp.com>,
- Larisa Grigore <larisa.grigore@nxp.com>, Christoph Hellwig <hch@lst.de>,
- linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
- <20250624-james-nxp-spi-dma-v3-3-e7d574f5f62c@linaro.org>
- <aFrSgJ5xZfccEX9x@lizhi-Precision-Tower-5810>
- <290fc244-e88f-47a3-8dd3-0ec27eb5c60b@app.fastmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <290fc244-e88f-47a3-8dd3-0ec27eb5c60b@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP++W2gC/x2MQQqEMAwAvyI5G4gtsepXZA/qZjUHtaQgQvHvW
+ zwNc5jJkMRUEgxVBpNLk55HkaauYNmmYxXUb3Fw5Jha5zHugZkKLHie0eK+ocmakFrqgvDsp76
+ HkkeTn97vevw8zx+M1CBJagAAAA==
+X-Change-ID: 20250623-pm7550-pmr735b-rpmh-regs-06087e5b3a99
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750843144; l=815;
+ i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
+ bh=pUbk1uqDn3rkUzvHyGVf5FiMIjDaRG8buGqEDrG6+iY=;
+ b=9SrihxBYIY5Fo98SHHtSnS8hT8vJEMRffaa99XV2DXPTTOlML224CrfPKke4PaDDTj/ageEdP
+ QhFBOtbw+BWDlxNRwakK2ZhdgZpY6D9Pk5a8taiiIRq8Nt8dXilDPmS
+X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
+ pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
 
+Document and add support for the regulators on PM7550 and PMR735B, which
+can be paired with the SM7635 SoC.
 
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+Luca Weiss (4):
+      regulator: dt-bindings: qcom,rpmh: Add PM7550 compatible
+      regulator: dt-bindings: qcom,rpmh: Add PMR735B compatible
+      regulator: qcom-rpmh: add support for pmr735b regulators
+      regulator: qcom-rpmh: add support for pm7550 regulators
 
-On 24/06/2025 6:16 pm, Arnd Bergmann wrote:
-> On Tue, Jun 24, 2025, at 18:29, Frank Li wrote:
->> On Tue, Jun 24, 2025 at 11:35:33AM +0100, James Clark wrote:
->>> This will allow the build to succeed with !CONFIG_HAS_DMA, either due to
->>> a randconfig build test or when the target only uses one of the non-DMA
->>
->> I supposed you met kbuild error. If yes, can you add kbuild build report
->> tags.
-> 
-> Actually I would suggest making it a dependency on CONFIG_DMA_ENGINE
-> instead of CONFIG_HAS_DMA, since that is the more relevant symbol.
-> 
+ .../bindings/regulator/qcom,rpmh-regulator.yaml    | 35 +++++++++++++
+ drivers/regulator/qcom-rpmh-regulator.c            | 58 ++++++++++++++++++++++
+ 2 files changed, 93 insertions(+)
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250623-pm7550-pmr735b-rpmh-regs-06087e5b3a99
 
-Makes sense.
-
-> It would also be simpler to enforce this in Kconfig if we only
-> care about users that use the DMA support.
-> 
->        Arnd
-
-But most of the devices supported by the driver don't do any DMA. That 
-was the reason to stub them out rather than add the Kconfig depends.
+Best regards,
+-- 
+Luca Weiss <luca.weiss@fairphone.com>
 
