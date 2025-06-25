@@ -1,50 +1,45 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CF917A2F8;
-	Wed, 25 Jun 2025 08:04:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9CA17A2F8;
+	Wed, 25 Jun 2025 08:05:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750838669; cv=none; b=Rj0+ia9byQxn2z5D8H3PbMEpueiECNGUrtFklZeksxGTEdW0GZkJeiGpWr+RxZ30sjMp6HPvM0lyh4IVybmbk8p4M5Agmo5bHvtChN2TA++j3uA0RnVTCvOv5FXJ9dLIC0Qw4sbZtOw7PKlE3TjGAOW/wXBaJPZvp03403ZAUWw=
+	t=1750838733; cv=none; b=PbEuX5vAGkN3BbkI17eim/Bia3iKrcnMSLR6dMwfcrt8KZpBq0BnDHzLQfwYogdQMknMYmiivmydTCVBpAjosKB9TLKYNoGIa7EfJkA+RAxiQJOrhx3CHyVtUKXDKe35xp7YUFbj18dbgFPfA6P/WJ16jSRCGEzJNbZCDall71A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750838669; c=relaxed/simple;
-	bh=33Db58Zgs1Us82FoEGQ+AOZm9l1WltZ90kNW2vjvy6c=;
+	s=arc-20240116; t=1750838733; c=relaxed/simple;
+	bh=aFMZBNy3/VRl880erNtl5opyOHksS+udQxCFuFgNaxU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jS5WfnInt9dke/uC59OgncX13QYCuAVzQ2qrLyS9c6mgrwxQ6mNZmkW9dbox6UtaJZjGObSL5lNcwYaIQn5cQAycRPsZB4gZWOo1+CWF7KQaXqc9q4trWPdOZJIFvzRtwgKx/gKlLVqkq/Bzv8dsKomT73Q6I68fSHucxFCK1j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iH1n489F; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=jeJlk7LmagRaEuJdwxS5zobnH0DIodj3USDe5fTlsJS1A8jQ1n2JN6Nc8I2vVx9/icRm2pF+EESxfuXhEEZ/3e2501IkjT3P8dXZmt4dYsK9Ci5OC7hwUvl84qDfrSAqHyvzVyi7D9ELfnkzlJFUB2r8QZMbZ3uPTdk9HJyeBSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hRKEbPeK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iH1n489F"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24A09C4CEEA;
-	Wed, 25 Jun 2025 08:04:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hRKEbPeK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48974C4CEEA;
+	Wed, 25 Jun 2025 08:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750838669;
-	bh=33Db58Zgs1Us82FoEGQ+AOZm9l1WltZ90kNW2vjvy6c=;
+	s=k20201202; t=1750838732;
+	bh=aFMZBNy3/VRl880erNtl5opyOHksS+udQxCFuFgNaxU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iH1n489FRT/VUDCzbZstkBsRFo5c8F/QxvDELXrmnB0il6WHte0vIcyu5rPE+DJtw
-	 Cxj+2D7s/QNd1hV2OSvnvUCYXs9f+HD2SqK0g+PiI1SvSgeqDm9nok2idfvm+VXf06
-	 4OdwhvFB5kpZfqgJ+GdVYC2Ml0cj3Q56rUKQw4+RYwzv1PVFnVnNCqPmZRn6zEJ4My
-	 P7N7u+Xh82fg35P2Nz7WEIWKCtFSLfnHs513dkhYS7po6+vuc+GxIDdMOYuSQg1QQL
-	 OCxmz9soe8yvYONFgmprZloT7OqCjIdaLjJriPpYTxtdDX02YuE5PBV9CLKzDU5KrF
-	 x8SDdin5EAkhg==
-Date: Wed, 25 Jun 2025 10:04:22 +0200
-From: Christian Brauner <brauner@kernel.org>
-To: Matthew Wilcox <willy@infradead.org>
-Cc: =?utf-8?B?6ZmI5rab5rab?= Taotao Chen <chentaotao@didiglobal.com>, 
-	"tytso@mit.edu" <tytso@mit.edu>, "hch@infradead.org" <hch@infradead.org>, 
-	"adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, 
-	"rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>, "tursulin@ursulin.net" <tursulin@ursulin.net>, 
-	"airlied@gmail.com" <airlied@gmail.com>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, 
-	"linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>, "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>, 
-	"intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, 
-	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"chentao325@qq.com" <chentao325@qq.com>
-Subject: Re: [PATCH v2 3/5] fs: change write_begin/write_end interface to
- take struct kiocb *
-Message-ID: <20250625-erstklassig-stilvoll-273282f0dd1b@brauner>
-References: <20250624121149.2927-1-chentaotao@didiglobal.com>
- <20250624121149.2927-4-chentaotao@didiglobal.com>
- <aFqfZ9hiiW4qnYtO@casper.infradead.org>
+	b=hRKEbPeK1kwVm+G+hspXLeZ8xLB+3tMDsuA08YEYENPK1HySl0Vhm0NYzCNBZyv9J
+	 V+6Cf6I1sxRdXMrkn6JxVaaCBh2tq/li/ti5kZrMeawfDg2SAA4mxNcPqtC4bj1c+V
+	 2O++TTxJLqXy3dGCsq5DeBWHbotd26bF9JixcD0KxlQ0Ou+0zcf5dDGIi992xbHd/6
+	 xE5W4TRJhwJt4VE+QPuNiDXgfV/UtM75t04uNiAHwxKKo/znEIuvNv8Z2zUDHccnAI
+	 sdSQuHZEeIWBw74b/2OKHNiLQzmJPYk1PT31U+3qd3cXyWkOQYkX5C0QksPghp4Wyb
+	 DSpBt1Xj8zq6w==
+Date: Wed, 25 Jun 2025 09:05:27 +0100
+From: Lee Jones <lee@kernel.org>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Qunqin Zhao <zhaoqunqin@loongson.cn>, herbert@gondor.apana.org.au,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	davem@davemloft.net, linux-crypto@vger.kernel.org,
+	peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
+Message-ID: <20250625080527.GN795775@google.com>
+References: <20250619025138.2854-1-zhaoqunqin@loongson.cn>
+ <20250619025138.2854-4-zhaoqunqin@loongson.cn>
+ <aFs2RDOeOKvWUN2L@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,42 +49,150 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aFqfZ9hiiW4qnYtO@casper.infradead.org>
+In-Reply-To: <aFs2RDOeOKvWUN2L@kernel.org>
 
-On Tue, Jun 24, 2025 at 01:51:51PM +0100, Matthew Wilcox wrote:
-> On Tue, Jun 24, 2025 at 12:12:08PM +0000, 陈涛涛 Taotao Chen wrote:
-> > -static int blkdev_write_end(struct file *file, struct address_space *mapping,
-> > +static int blkdev_write_end(struct kiocb *iocb, struct address_space *mapping,
-> >  		loff_t pos, unsigned len, unsigned copied, struct folio *folio,
-> >  		void *fsdata)
-> >  {
-> >  	int ret;
-> > -	ret = block_write_end(file, mapping, pos, len, copied, folio, fsdata);
-> > +	ret = block_write_end(iocb->ki_filp, mapping, pos, len, copied, folio, fsdata);
-> 
-> ... huh.  I thought block_write_end() had to have the same prototype as
-> ->write_end because it was used by some filesystems as the ->write_end.
-> I see that's not true (any more?).  Maybe I was confused with
-> generic_write_end().  Anyway, block_write_end() doesn't use it's file
-> argument, and never will, so we can just remove it.
-> 
-> > +++ b/include/linux/fs.h
-> > @@ -446,10 +446,10 @@ struct address_space_operations {
-> >  
-> >  	void (*readahead)(struct readahead_control *);
-> >  
-> > -	int (*write_begin)(struct file *, struct address_space *mapping,
-> > +	int (*write_begin)(struct kiocb *, struct address_space *mapping,
-> >  				loff_t pos, unsigned len,
-> >  				struct folio **foliop, void **fsdata);
-> > -	int (*write_end)(struct file *, struct address_space *mapping,
-> > +	int (*write_end)(struct kiocb *, struct address_space *mapping,
-> >  				loff_t pos, unsigned len, unsigned copied,
-> >  				struct folio *folio, void *fsdata);
-> 
-> Should we make this a 'const struct kiocb *'?  I don't see a need for
-> filesystems to be allowed to modify the kiocb in future, but perhaps
-> other people have different opinions.
+On Wed, 25 Jun 2025, Jarkko Sakkinen wrote:
 
-Given I picked up Willy's change I'll wait for a resubmit of this series
-on top of vfs-6.17.misc unless I hear otherwise?
+> On Thu, Jun 19, 2025 at 10:51:37AM +0800, Qunqin Zhao wrote:
+> > Loongson Security Engine supports random number generation, hash,
+> > symmetric encryption and asymmetric encryption. Based on these
+> > encryption functions, TPM2 have been implemented in the Loongson
+> > Security Engine firmware. This driver is responsible for copying data
+> > into the memory visible to the firmware and receiving data from the
+> > firmware.
+> > 
+> > Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> > Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> > Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> > ---
+> >  drivers/char/tpm/Kconfig        |  9 ++++
+> >  drivers/char/tpm/Makefile       |  1 +
+> >  drivers/char/tpm/tpm_loongson.c | 84 +++++++++++++++++++++++++++++++++
+> >  3 files changed, 94 insertions(+)
+> >  create mode 100644 drivers/char/tpm/tpm_loongson.c
+> > 
+> > diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> > index dddd702b2..ba3924eb1 100644
+> > --- a/drivers/char/tpm/Kconfig
+> > +++ b/drivers/char/tpm/Kconfig
+> > @@ -189,6 +189,15 @@ config TCG_IBMVTPM
+> >  	  will be accessible from within Linux.  To compile this driver
+> >  	  as a module, choose M here; the module will be called tpm_ibmvtpm.
+> >  
+> > +config TCG_LOONGSON
+> > +	tristate "Loongson TPM Interface"
+> > +	depends on MFD_LOONGSON_SE
+> > +	help
+> > +	  If you want to make Loongson TPM support available, say Yes and
+> > +	  it will be accessible from within Linux. To compile this
+> > +	  driver as a module, choose M here; the module will be called
+> > +	  tpm_loongson.
+> > +
+> >  config TCG_XEN
+> >  	tristate "XEN TPM Interface"
+> >  	depends on TCG_TPM && XEN
+> > diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> > index 9de1b3ea3..5b5cdc0d3 100644
+> > --- a/drivers/char/tpm/Makefile
+> > +++ b/drivers/char/tpm/Makefile
+> > @@ -46,3 +46,4 @@ obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
+> >  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+> >  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+> >  obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
+> > +obj-$(CONFIG_TCG_LOONGSON) += tpm_loongson.o
+> > diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
+> > new file mode 100644
+> > index 000000000..5cbdb37f8
+> > --- /dev/null
+> > +++ b/drivers/char/tpm/tpm_loongson.c
+> > @@ -0,0 +1,84 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+> > +
+> > +#include <linux/device.h>
+> > +#include <linux/mfd/loongson-se.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/wait.h>
+> > +
+> > +#include "tpm.h"
+> > +
+> > +struct tpm_loongson_cmd {
+> > +	u32 cmd_id;
+> > +	u32 data_off;
+> > +	u32 data_len;
+> > +	u32 pad[5];
+> > +};
+> > +
+> > +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> > +{
+> > +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> > +	struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
+> > +
+> > +	if (cmd_ret->data_len > count)
+> > +		return -EIO;
+> > +
+> > +	memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
+> > +
+> > +	return cmd_ret->data_len;
+> > +}
+> > +
+> > +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
+> > +{
+> > +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> > +	struct tpm_loongson_cmd *cmd = tpm_engine->command;
+> > +
+> > +	if (count > tpm_engine->buffer_size)
+> > +		return -E2BIG;
+> > +
+> > +	cmd->data_len = count;
+> > +	memcpy(tpm_engine->data_buffer, buf, count);
+> > +
+> > +	return loongson_se_send_engine_cmd(tpm_engine);
+> > +}
+> > +
+> > +static const struct tpm_class_ops tpm_loongson_ops = {
+> > +	.flags = TPM_OPS_AUTO_STARTUP,
+> > +	.recv = tpm_loongson_recv,
+> > +	.send = tpm_loongson_send,
+> > +};
+> > +
+> > +static int tpm_loongson_probe(struct platform_device *pdev)
+> > +{
+> > +	struct loongson_se_engine *tpm_engine;
+> > +	struct device *dev = &pdev->dev;
+> > +	struct tpm_loongson_cmd *cmd;
+> > +	struct tpm_chip *chip;
+> > +
+> > +	tpm_engine = loongson_se_init_engine(dev->parent, SE_ENGINE_TPM);
+> > +	if (!tpm_engine)
+> > +		return -ENODEV;
+> > +	cmd = tpm_engine->command;
+> > +	cmd->cmd_id = SE_CMD_TPM;
+> > +	cmd->data_off = tpm_engine->buffer_off;
+> > +
+> > +	chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
+> > +	if (IS_ERR(chip))
+> > +		return PTR_ERR(chip);
+> > +	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+> > +	dev_set_drvdata(&chip->dev, tpm_engine);
+> > +
+> > +	return tpm_chip_register(chip);
+> > +}
+> > +
+> > +static struct platform_driver tpm_loongson = {
+> > +	.probe   = tpm_loongson_probe,
+> > +	.driver  = {
+> > +		.name  = "loongson-tpm",
+> 
+> This patch looks otherwise great but I'd prefer here tho use
+> "tpm_loongson_probe" for the value of the name field.
+
+Where does this stipulation come from?  No other driver does this [0].
+driver.name should be a nicely formatted, human readable string
+describing the name of the device.  Not a function name.
+
+[0] git grep -A15 "static struct platform_driver" | grep ".name = .*probe"
+
+-- 
+Lee Jones [李琼斯]
