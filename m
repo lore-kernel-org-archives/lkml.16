@@ -1,202 +1,282 @@
-Received: from va-1-15.ptr.blmpb.com (va-1-15.ptr.blmpb.com [209.127.230.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B98120CCDC
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.127.230.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCA3211A3F;
+	Wed, 25 Jun 2025 07:56:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750838183; cv=none; b=r9TN3Olh3MZWh/YwC0WA3WL2MJEI2FUEGUFbKSu/mS+ZSctxOVuh4SdFeK8S4UCPrnX0S+SCeFglHMFe1Cng8A+haR42K2+tZf3kH1G36SoxzCvFBrVBVqpgQ30MRSUNNFBRaGvCj8dmxpxnGqMb+gfXyoEJ8H6oZbpOSe4bHco=
+	t=1750838193; cv=none; b=bg5GMVBuKh4156oVoKgw2Vn4Ht5HSmdpT/qqQ+RyJlDNaUjmiAHM8dzD0M5KUyCNStUTraeyUoiXQMz75oC6L6Rn3ATj0ELVkGShSpgfKT/9caP/BeLocDaiUuTqrhre7do7rXzYp2NjJ/VqIGneGjbvHmN3zjBDh2LpZdsyWlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750838183; c=relaxed/simple;
-	bh=hW3k6z49kKwNRejfAMcgIdFU5548Dv/b8lnlYkL2ZcM=;
-	h=From:Date:References:Message-Id:To:Cc:Subject:Content-Type:
-	 In-Reply-To:Mime-Version; b=O/bsMPRYVoGrRUhWIyx3jj+14Upx79TuA1B+nXevH98b7HElkneweOBxGSW7vzrxa9Viu0bvsXazSYoD97YXDzYCd+5n70m8iCXHzJSHQtvN9863xlSMjccW/tNKrk/fhZE/Pfle+fWVxusQrhKn1sOsIYy7WmX+MDzZsyFyF60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=mBTR6Pgj; arc=none smtp.client-ip=209.127.230.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="mBTR6Pgj"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1750838130;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=Uwcz+ylJEsmNE1CVgp+CscW5a5nPPX8eXKPrXaxr/uc=;
- b=mBTR6PgjmCU+frhNcEwLlXR8N78NYFR8ZiLbDiT1l99f1D6q6v6n28ASL4Jth+22MTKN5R
- od9MIDiPk92CTCB68s4YSWslGs0z5R/hFySbeZxwLvuaA3lIJDCkijGpShrs008oP1ZYLG
- Ty0N2gbiXvW57po93CoX3okpkXIZJgImBlZKD0npBeUS/nwMQgG35eHcRakGfSQ6zeabf+
- LiUXO0kpinv+JCj3aRVRGSWA3RzORVORACUy6QXDZ5+cbehoAIcoIv1wU5oFDLxZjQdyXG
- BaN2X0DNNaLwAL4HmPkzfS1Ap2yU29Wz5a+a06BUMlvWjfnIHRHQWYTrW0txfg==
-From: "Nutty Liu" <liujingqi@lanxincomputing.com>
-Date: Wed, 25 Jun 2025 15:55:25 +0800
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-References: <20250618113532.471448-1-apatel@ventanamicro.com> <20250618113532.471448-11-apatel@ventanamicro.com>
-Message-Id: <e074d79d-a8c6-42c6-bffb-543112778c1b@lanxincomputing.com>
-To: "Anup Patel" <apatel@ventanamicro.com>, 
-	"Atish Patra" <atish.patra@linux.dev>
-Cc: "Palmer Dabbelt" <palmer@dabbelt.com>, 
-	"Paul Walmsley" <paul.walmsley@sifive.com>, 
-	"Alexandre Ghiti" <alex@ghiti.fr>, 
-	"Andrew Jones" <ajones@ventanamicro.com>, 
-	"Anup Patel" <anup@brainfault.org>, <kvm@vger.kernel.org>, 
-	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>, 
-	<linux-kernel@vger.kernel.org>, "Atish Patra" <atishp@rivosinc.com>
-Subject: Re: [PATCH v3 10/12] RISC-V: KVM: Add vmid field to struct kvm_riscv_hfence
-Content-Type: text/plain; charset=UTF-8
-In-Reply-To: <20250618113532.471448-11-apatel@ventanamicro.com>
-User-Agent: Mozilla Thunderbird
+	s=arc-20240116; t=1750838193; c=relaxed/simple;
+	bh=k6iqDRq0aH+ql2T19nT4gODzNA72XKsJydflPo3BU38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c/EXXeHGKlJEWdBPK6H3QMBsk4D9q+J2WahwwsAk7IbI2iQ/Fe3wnti8koW4IyggSFNWUGI46uT+Sqq+vqAnPPJV7S7AQhpB8wOuk4aFJ6V1LiME9iFbBAjW+nJVNXwklGWdVIwxQV7KwoZH/1XMPwXnJaNh8bAYvLyL2icfSAo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id 09F6D1F00055;
+	Wed, 25 Jun 2025 07:56:10 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 0DE8AAC79ED; Wed, 25 Jun 2025 07:56:10 +0000 (UTC)
+X-Spam-Level: 
+Received: from shepard (unknown [192.168.1.1])
+	by laika.paulk.fr (Postfix) with ESMTPSA id BC2BDAC79E5;
+	Wed, 25 Jun 2025 07:56:04 +0000 (UTC)
+Date: Wed, 25 Jun 2025 09:56:02 +0200
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: Kuba =?utf-8?Q?Szczodrzy=C5=84ski?= <kuba@szczodrzynski.pl>
+Cc: Maxime Ripard <mripard@kernel.org>,
+	Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 1/5] phy: allwinner: phy-sun6i-mipi-dphy: Support LVDS in
+ combo D-PHY
+Message-ID: <aFurkudIvrbRjJ5N@shepard>
+References: <20250221161751.1278049-1-kuba@szczodrzynski.pl>
+ <20250221161751.1278049-2-kuba@szczodrzynski.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
-Received: from [127.0.0.1] ([139.226.59.215]) by smtp.feishu.cn with ESMTPS; Wed, 25 Jun 2025 15:55:27 +0800
-X-Lms-Return-Path: <lba+2685bab70+0d7a2a+vger.kernel.org+liujingqi@lanxincomputing.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="M3lDD/H+Q2OgnYvP"
+Content-Disposition: inline
+In-Reply-To: <20250221161751.1278049-2-kuba@szczodrzynski.pl>
 
-On 6/18/2025 7:35 PM, Anup Patel wrote:
-> Currently, the struct kvm_riscv_hfence does not have vmid field
-> and various hfence processing functions always pick vmid assigned
-> to the guest/VM. This prevents us from doing hfence operation on
-> arbitrary vmid hence add vmid field to struct kvm_riscv_hfence
-> and use it wherever applicable.
->
-> Reviewed-by: Atish Patra <atishp@rivosinc.com>
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+
+--M3lDD/H+Q2OgnYvP
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+Thanks for working on this! See a few comments below.
+
+On Fri 21 Feb 25, 17:17, Kuba Szczodrzy=C5=84ski wrote:
+> Some Allwinner chips (notably the D1s/T113 and the A100) have a "combo
+> MIPI DSI D-PHY" which is required when using single-link LVDS0.
+>=20
+> In this mode, the DSI peripheral is not used and the PHY is not
+> configured for DSI. Instead, the COMBO_PHY_REGx registers are set to
+> enable LVDS operation.
+>=20
+> Enable the PHY driver to work in LVDS mode on chips with a combo D-PHY.
+>=20
+> Signed-off-by: Kuba Szczodrzy=C5=84ski <kuba@szczodrzynski.pl>
 > ---
->   arch/riscv/include/asm/kvm_tlb.h |  1 +
->   arch/riscv/kvm/tlb.c             | 30 ++++++++++++++++--------------
->   2 files changed, 17 insertions(+), 14 deletions(-)
->
-> diff --git a/arch/riscv/include/asm/kvm_tlb.h b/arch/riscv/include/asm/kvm_tlb.h
-> index cd00c9a46cb1..f67e03edeaec 100644
-> --- a/arch/riscv/include/asm/kvm_tlb.h
-> +++ b/arch/riscv/include/asm/kvm_tlb.h
-> @@ -19,6 +19,7 @@ enum kvm_riscv_hfence_type {
->   struct kvm_riscv_hfence {
->   	enum kvm_riscv_hfence_type type;
->   	unsigned long asid;
-> +	unsigned long vmid;
->   	unsigned long order;
->   	gpa_t addr;
->   	gpa_t size;
-> diff --git a/arch/riscv/kvm/tlb.c b/arch/riscv/kvm/tlb.c
-> index 6fc4361c3d75..349fcfc93f54 100644
-> --- a/arch/riscv/kvm/tlb.c
-> +++ b/arch/riscv/kvm/tlb.c
-> @@ -237,49 +237,43 @@ static bool vcpu_hfence_enqueue(struct kvm_vcpu *vcpu,
->   
->   void kvm_riscv_hfence_process(struct kvm_vcpu *vcpu)
->   {
-> -	unsigned long vmid;
->   	struct kvm_riscv_hfence d = { 0 };
-> -	struct kvm_vmid *v = &vcpu->kvm->arch.vmid;
->   
->   	while (vcpu_hfence_dequeue(vcpu, &d)) {
->   		switch (d.type) {
->   		case KVM_RISCV_HFENCE_UNKNOWN:
->   			break;
->   		case KVM_RISCV_HFENCE_GVMA_VMID_GPA:
-> -			vmid = READ_ONCE(v->vmid);
->   			if (kvm_riscv_nacl_available())
-> -				nacl_hfence_gvma_vmid(nacl_shmem(), vmid,
-> +				nacl_hfence_gvma_vmid(nacl_shmem(), d.vmid,
->   						      d.addr, d.size, d.order);
->   			else
-> -				kvm_riscv_local_hfence_gvma_vmid_gpa(vmid, d.addr,
-> +				kvm_riscv_local_hfence_gvma_vmid_gpa(d.vmid, d.addr,
->   								     d.size, d.order);
->   			break;
->   		case KVM_RISCV_HFENCE_VVMA_ASID_GVA:
->   			kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_ASID_RCVD);
-> -			vmid = READ_ONCE(v->vmid);
->   			if (kvm_riscv_nacl_available())
-> -				nacl_hfence_vvma_asid(nacl_shmem(), vmid, d.asid,
-> +				nacl_hfence_vvma_asid(nacl_shmem(), d.vmid, d.asid,
->   						      d.addr, d.size, d.order);
->   			else
-> -				kvm_riscv_local_hfence_vvma_asid_gva(vmid, d.asid, d.addr,
-> +				kvm_riscv_local_hfence_vvma_asid_gva(d.vmid, d.asid, d.addr,
->   								     d.size, d.order);
->   			break;
->   		case KVM_RISCV_HFENCE_VVMA_ASID_ALL:
->   			kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_ASID_RCVD);
-> -			vmid = READ_ONCE(v->vmid);
->   			if (kvm_riscv_nacl_available())
-> -				nacl_hfence_vvma_asid_all(nacl_shmem(), vmid, d.asid);
-> +				nacl_hfence_vvma_asid_all(nacl_shmem(), d.vmid, d.asid);
->   			else
-> -				kvm_riscv_local_hfence_vvma_asid_all(vmid, d.asid);
-> +				kvm_riscv_local_hfence_vvma_asid_all(d.vmid, d.asid);
->   			break;
->   		case KVM_RISCV_HFENCE_VVMA_GVA:
->   			kvm_riscv_vcpu_pmu_incr_fw(vcpu, SBI_PMU_FW_HFENCE_VVMA_RCVD);
-> -			vmid = READ_ONCE(v->vmid);
->   			if (kvm_riscv_nacl_available())
-> -				nacl_hfence_vvma(nacl_shmem(), vmid,
-> +				nacl_hfence_vvma(nacl_shmem(), d.vmid,
->   						 d.addr, d.size, d.order);
->   			else
-> -				kvm_riscv_local_hfence_vvma_gva(vmid, d.addr,
-> +				kvm_riscv_local_hfence_vvma_gva(d.vmid, d.addr,
->   								d.size, d.order);
->   			break;
->   		default:
-> @@ -336,10 +330,12 @@ void kvm_riscv_hfence_gvma_vmid_gpa(struct kvm *kvm,
->   				    gpa_t gpa, gpa_t gpsz,
->   				    unsigned long order)
->   {
-> +	struct kvm_vmid *v = &kvm->arch.vmid;
->   	struct kvm_riscv_hfence data;
->   
->   	data.type = KVM_RISCV_HFENCE_GVMA_VMID_GPA;
->   	data.asid = 0;
-> +	data.vmid = READ_ONCE(v->vmid);
->   	data.addr = gpa;
->   	data.size = gpsz;
->   	data.order = order;
-> @@ -359,10 +355,12 @@ void kvm_riscv_hfence_vvma_asid_gva(struct kvm *kvm,
->   				    unsigned long gva, unsigned long gvsz,
->   				    unsigned long order, unsigned long asid)
->   {
-> +	struct kvm_vmid *v = &kvm->arch.vmid;
->   	struct kvm_riscv_hfence data;
->   
->   	data.type = KVM_RISCV_HFENCE_VVMA_ASID_GVA;
->   	data.asid = asid;
-> +	data.vmid = READ_ONCE(v->vmid);
->   	data.addr = gva;
->   	data.size = gvsz;
->   	data.order = order;
-> @@ -374,10 +372,12 @@ void kvm_riscv_hfence_vvma_asid_all(struct kvm *kvm,
->   				    unsigned long hbase, unsigned long hmask,
->   				    unsigned long asid)
->   {
-> +	struct kvm_vmid *v = &kvm->arch.vmid;
->   	struct kvm_riscv_hfence data;
->   
->   	data.type = KVM_RISCV_HFENCE_VVMA_ASID_ALL;
->   	data.asid = asid;
-> +	data.vmid = READ_ONCE(v->vmid);
->   	data.addr = data.size = data.order = 0;
->   	make_xfence_request(kvm, hbase, hmask, KVM_REQ_HFENCE,
->   			    KVM_REQ_HFENCE_VVMA_ALL, &data);
-> @@ -388,10 +388,12 @@ void kvm_riscv_hfence_vvma_gva(struct kvm *kvm,
->   			       unsigned long gva, unsigned long gvsz,
->   			       unsigned long order)
->   {
-> +	struct kvm_vmid *v = &kvm->arch.vmid;
->   	struct kvm_riscv_hfence data;
->   
->   	data.type = KVM_RISCV_HFENCE_VVMA_GVA;
->   	data.asid = 0;
-> +	data.vmid = READ_ONCE(v->vmid);
->   	data.addr = gva;
->   	data.size = gvsz;
->   	data.order = order;
+>  drivers/phy/allwinner/phy-sun6i-mipi-dphy.c | 65 ++++++++++++++++++++-
+>  1 file changed, 63 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c b/drivers/phy/al=
+lwinner/phy-sun6i-mipi-dphy.c
+> index 36eab9527..f958e34da 100644
+> --- a/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
+> +++ b/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
+> @@ -166,8 +166,8 @@
+>  #define SUN50I_COMBO_PHY_REG0_EN_CP		BIT(0)
+> =20
+>  #define SUN50I_COMBO_PHY_REG1		0x114
+> -#define SUN50I_COMBO_PHY_REG2_REG_VREF1P6(n)	(((n) & 0x7) << 4)
+> -#define SUN50I_COMBO_PHY_REG2_REG_VREF0P8(n)	((n) & 0x7)
+> +#define SUN50I_COMBO_PHY_REG1_REG_VREF1P6(n)	(((n) & 0x7) << 4)
+> +#define SUN50I_COMBO_PHY_REG1_REG_VREF0P8(n)	((n) & 0x7)
 
-Reviewed-by: Nutty Liu <liujingqi@lanxincomputing.com>
+Good catch! Would be good to mention in the commit log (or split in a separ=
+ate
+patch but that might be overdoing it since this register wasn't used so far=
+).
 
-Thanks,
-Nutty
+>  #define SUN50I_COMBO_PHY_REG2		0x118
+>  #define SUN50I_COMBO_PHY_REG2_HS_STOP_DLY(n)	((n) & 0xff)
+> @@ -181,7 +181,9 @@ struct sun6i_dphy;
+> =20
+>  struct sun6i_dphy_variant {
+>  	void	(*tx_power_on)(struct sun6i_dphy *dphy);
+> +	void	(*lvds_power_on)(struct sun6i_dphy *dphy);
+>  	bool	rx_supported;
+> +	bool	is_combo_dphy;
+>  };
+> =20
+>  struct sun6i_dphy {
+> @@ -222,6 +224,18 @@ static int sun6i_dphy_configure(struct phy *phy, uni=
+on phy_configure_opts *opts)
+>  	return 0;
+>  }
+> =20
+> +static int sun6i_dphy_set_mode(struct phy *phy, enum phy_mode mode, int =
+submode)
+> +{
+> +	struct sun6i_dphy *dphy =3D phy_get_drvdata(phy);
+> +
+> +	if (mode =3D=3D PHY_MODE_LVDS && !dphy->variant->is_combo_dphy) {
+> +		/* Not a combo D-PHY: LVDS is not supported */
+
+Missing a final . in the comment.
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void sun6i_a31_mipi_dphy_tx_power_on(struct sun6i_dphy *dphy)
+>  {
+>  	u8 lanes_mask =3D GENMASK(dphy->config.lanes - 1, 0);
+> @@ -329,6 +343,37 @@ static void sun50i_a100_mipi_dphy_tx_power_on(struct=
+ sun6i_dphy *dphy)
+>  	udelay(1);
+>  }
+> =20
+> +static void sun50i_a100_mipi_dphy_lvds_power_on(struct sun6i_dphy *dphy)
+> +{
+> +	regmap_write(dphy->regs, SUN50I_COMBO_PHY_REG1,
+> +		     SUN50I_COMBO_PHY_REG1_REG_VREF1P6(4) |
+> +		     SUN50I_COMBO_PHY_REG1_REG_VREF0P8(3));
+> +
+> +	regmap_write(dphy->regs, SUN50I_COMBO_PHY_REG0,
+> +		     SUN50I_COMBO_PHY_REG0_EN_CP);
+> +	udelay(5);
+
+Please add a white space here...
+
+> +	regmap_update_bits(dphy->regs, SUN50I_COMBO_PHY_REG0,
+> +			   SUN50I_COMBO_PHY_REG0_EN_LVDS,
+> +			   SUN50I_COMBO_PHY_REG0_EN_LVDS);
+> +	udelay(5);
+
+here too...
+
+> +	regmap_update_bits(dphy->regs, SUN50I_COMBO_PHY_REG0,
+> +			   SUN50I_COMBO_PHY_REG0_EN_COMBOLDO,
+> +			   SUN50I_COMBO_PHY_REG0_EN_COMBOLDO);
+> +	udelay(5);
+
+here too...
+
+> +	regmap_update_bits(dphy->regs, SUN50I_COMBO_PHY_REG0,
+> +			   SUN50I_COMBO_PHY_REG0_EN_MIPI,
+> +			   SUN50I_COMBO_PHY_REG0_EN_MIPI);
+> +
+> +	regmap_write(dphy->regs, SUN6I_DPHY_ANA4_REG,
+> +		     SUN6I_DPHY_ANA4_REG_EN_MIPI |
+> +		     SUN6I_DPHY_ANA4_REG_IB(2));
+here too...
+
+> +	regmap_write(dphy->regs, SUN6I_DPHY_ANA3_REG,
+> +		     SUN6I_DPHY_ANA3_EN_LDOR |
+> +		     SUN6I_DPHY_ANA3_EN_LDOD);
+
+here too...
+
+> +	regmap_write(dphy->regs, SUN6I_DPHY_ANA2_REG, 0);
+
+and here too in order to match the coding style.
+
+> +	regmap_write(dphy->regs, SUN6I_DPHY_ANA1_REG, 0);
+> +}
+> +
+>  static int sun6i_dphy_tx_power_on(struct sun6i_dphy *dphy)
+>  {
+>  	u8 lanes_mask =3D GENMASK(dphy->config.lanes - 1, 0);
+> @@ -492,6 +537,14 @@ static int sun6i_dphy_power_on(struct phy *phy)
+>  {
+>  	struct sun6i_dphy *dphy =3D phy_get_drvdata(phy);
+> =20
+> +	if (phy->attrs.mode =3D=3D PHY_MODE_LVDS && dphy->variant->is_combo_dph=
+y) {
+> +		if (dphy->variant->lvds_power_on) {
+> +			dphy->variant->lvds_power_on(dphy);
+> +			return 0;
+> +		}
+> +		return -EINVAL;
+
+This would look better the other way round: first check:
+	if (!dphy->variant->lvds_power_on)
+		return -EINVAL;
+
+and then call the function pointer and return 0 without extra indentation.
+
+> +	}
+> +
+>  	switch (dphy->direction) {
+>  	case SUN6I_DPHY_DIRECTION_TX:
+>  		return sun6i_dphy_tx_power_on(dphy);
+> @@ -514,6 +567,11 @@ static int sun6i_dphy_power_off(struct phy *phy)
+>  	regmap_write(dphy->regs, SUN6I_DPHY_ANA3_REG, 0);
+>  	regmap_write(dphy->regs, SUN6I_DPHY_ANA4_REG, 0);
+> =20
+> +	if (phy->attrs.mode =3D=3D PHY_MODE_LVDS && dphy->variant->is_combo_dph=
+y) {
+> +		regmap_write(dphy->regs, SUN50I_COMBO_PHY_REG1, 0);
+> +		regmap_write(dphy->regs, SUN50I_COMBO_PHY_REG0, 0);
+> +	}
+> +
+>  	return 0;
+>  }
+> =20
+> @@ -533,6 +591,7 @@ static const struct phy_ops sun6i_dphy_ops =3D {
+>  	.configure	=3D sun6i_dphy_configure,
+>  	.power_on	=3D sun6i_dphy_power_on,
+>  	.power_off	=3D sun6i_dphy_power_off,
+> +	.set_mode	=3D sun6i_dphy_set_mode,
+>  	.init		=3D sun6i_dphy_init,
+>  	.exit		=3D sun6i_dphy_exit,
+>  };
+> @@ -619,6 +678,8 @@ static const struct sun6i_dphy_variant sun6i_a31_mipi=
+_dphy_variant =3D {
+> =20
+>  static const struct sun6i_dphy_variant sun50i_a100_mipi_dphy_variant =3D=
+ {
+>  	.tx_power_on	=3D sun50i_a100_mipi_dphy_tx_power_on,
+> +	.lvds_power_on	=3D sun50i_a100_mipi_dphy_lvds_power_on,
+> +	.is_combo_dphy	=3D true,
+>  };
+> =20
+>  static const struct of_device_id sun6i_dphy_of_table[] =3D {
+> --=20
+> 2.25.1
+>=20
+>=20
+
+--=20
+Paul Kocialkowski,
+
+Independent contractor - sys-base - https://www.sys-base.io/
+Free software developer - https://www.paulk.fr/
+
+Expert in multimedia, graphics and embedded hardware support with Linux.
+
+--M3lDD/H+Q2OgnYvP
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmhbq5IACgkQhP3B6o/u
+lQytpg//bGHggO6GMgSRUWrRfU67xQXC0LWqeX5lbWuCQJk2xbXl8iQMa9wosfOG
+oGqxsObFtN+fh7G/j+I8hBtoB8V6/5PfYpYmN4YmZxwy2lur5ULXAB82DApLV2ki
++Eb5/Fox4n+t3mcfkrL9vseJHEfu1Em4CiM06U3h/GQidM6plSj+NU4J0+Rnn93G
+ayYVPuuoqcfdfnjMbGCOoGJFjlVbCAM/D71wyeBepFaEYTPgq+4LidmpPhaS7irt
+BgSH+D59cMj2ChJJQCRh3E5BkbAOWi62T7TIbzfIc/eKCaZgABN0DGFcpBoA22JG
+tuRrdpDXp5YcfPYfitvRt0idVyJsBG+zcuHY2fQlqjCrMWAVcctNZWX8jpu8LY7r
+oT727jRFb1oVVBr0FNyP1AM9PKmBhY2fj3S+vQvjSBYe1kKTjvxaMhyeT9+K7ihC
+fY3Hm7hLbDjm5TO8mSfRADkZLXZ+mvtYw7wg7apzWWfE2aCmg+EItQcw9WYAIZrH
+cCzCC2LftXzY9B24svI8K5rSE0gMGFKcs+2WWoEaLFCXosGWeJ+w2es6a0jQGvJc
+augMFPF1G1NqbN61PLXrK5JYDvzwu//BgrmNKo9fgCHUsId03crklxmU/crqj3g5
+5pkqZEm8h+ZWxCUbO6sC0qauT63pXfy5OmMSLpJeIGqW2z8B3u0=
+=LII3
+-----END PGP SIGNATURE-----
+
+--M3lDD/H+Q2OgnYvP--
