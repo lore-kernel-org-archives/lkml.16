@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CD2268C42;
-	Wed, 25 Jun 2025 14:41:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E040265CC5;
+	Wed, 25 Jun 2025 14:41:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750862497; cv=none; b=qDariLkbExGQDWg86aJ4fJod71w+idWZDw6sQUTDPJdYDrsiMYsl7H2Rh/zwm466HlBTnHnmSz4e2U+Qb/tBVXhgPyVLObnf3xh+4D3W3BAh0WuPDZCbJBva0OK5EshKDSYYp5MK8zSHEEc0Otw2iWTgEzkdRiZp5coJyK76iH8=
+	t=1750862513; cv=none; b=eLerz1bG8EWcGbxCFORLCBDYE5KCthVxaDQj+cMeHHgF0ovDEs/GCbfVkMvIgRlGiJNonpC5Fo07oNx4gAfXApUCD7n6SgmBfy09qtt/f/LrnZ8lx1beSampcH1srkUpPwW07hGekA7EFSN3cW0+CXQ4zgnk1M2w0GViLVyQPEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750862497; c=relaxed/simple;
-	bh=G6puNagQFSMyUjbE+LIXearsZJYWlEPDrvFoYitM1po=;
+	s=arc-20240116; t=1750862513; c=relaxed/simple;
+	bh=HbrmvPszGJbU3fqYSZC3uZA+lhL1yUXVrJ7I7BH6WzU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MX5Yg0MbdycTdWOavldiPfUOKDpfnzNU8ml6mzx31jaWkRH83o1FjV4zxI6WDT2bvEZIPQ83A4qEBsMXTx3egriO6Nz5MY8Nb4bEjRdT55K03TrAooqUGFQB/zdFeWyjKbPahFM+c+Oh36FTxaW2hS50AGgvtwm4E/v8WqxSTVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RPTkFSpG; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=uq46uw/zgf6U16w7W2CnL9LmWR+ow2I3h8JRosYKjZDp3KZP+x9d/hb0ImcO/gT75PdmhokKQ7j1Rk9WaBO5kOoR7uCapl5qzDEswf+ouway+7iE3hWcfvmm8s9I7tEBzvs0WhifMIzCnJr4EjYWPEDs+ScO3hstIDHLCmm6tZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U4qpNxN9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RPTkFSpG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C3CAC4CEEA;
-	Wed, 25 Jun 2025 14:41:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U4qpNxN9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C51C8C4CEEA;
+	Wed, 25 Jun 2025 14:41:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750862497;
-	bh=G6puNagQFSMyUjbE+LIXearsZJYWlEPDrvFoYitM1po=;
+	s=k20201202; t=1750862512;
+	bh=HbrmvPszGJbU3fqYSZC3uZA+lhL1yUXVrJ7I7BH6WzU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RPTkFSpGXwsznlbnK1kUH0xY734FEMB9huWys+Ev9Cd+4RJT8ipohTvGXg1+rNrW2
-	 xZXfCYR8VgiqpycgDQJU81jj7xQmtcM7lUCtaXdTKEsFK07SBk0DaA58xdjAtQT/0f
-	 ErLdmRUotPrLCgcHkamQUiCRjkBx+tzhoSM6XbZ0szoBmgSrosAW8TAg6NPWKtKGyR
-	 7BtssmQmLb903HrvtT6vIoSUszrN5gfh8b46F9KOoPTmVlI1Rg8AbfNLeSEmq4iE5o
-	 wyhdS1BfCk4M1YjE+no4eesqtrBibQTlgAk4QmmTo/CGP2ZO4DNpPZontcAgGNLi4O
-	 gq/YUuVWNzbWQ==
-Message-ID: <27068fd3-92b5-402b-9f3c-fd786db56668@kernel.org>
-Date: Wed, 25 Jun 2025 16:41:28 +0200
+	b=U4qpNxN9mwxN013tZBA8h7r1s9VJq3FJ7G2ai8w20AVX3ykxGMvtmcGxdfqoR5MUH
+	 r9s4T+apXI+sj2xJCuc/5qNCmg+yQIh/E4kip0bXpKayGRCBTjUuzHQP7MbJRnlRxm
+	 IDA4UQUMqcTbZb7yen9KpHXGj5G5Ie5/FuMu1eZUR886bef6YKlLA9XEcJ2yWfyqeT
+	 ziL2LdP2NN1fje9SfTsxdZyzoJ1QXTtzmOOZw18tW3yiEjdHIT29LdDPUNgh/ZJJ/t
+	 WC2T4ceETOPFMvpTGEIKnRTSsV1fwLFDHj39nZXB80+QLN4uVxlWVdMkDk1XMc+PWG
+	 CIJ1+4ELcv0SA==
+Message-ID: <625952d3-01e9-426e-9739-86fe5cdfeb35@kernel.org>
+Date: Wed, 25 Jun 2025 09:41:51 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,191 +35,151 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 5/8] dt-bindings: gpu: img,powervr-rogue: Add TH1520
- GPU compatible
-To: Michal Wilczynski <m.wilczynski@samsung.com>,
- Matt Coster <Matt.Coster@imgtec.com>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>,
- Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns
- <Frank.Binns@imgtec.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>,
- Marek Szyprowski <m.szyprowski@samsung.com>,
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
-References: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
- <CGME20250623114436eucas1p1ab8455b32937a472f5f656086e38f428@eucas1p1.samsung.com>
- <20250623-apr_14_for_sending-v6-5-6583ce0f6c25@samsung.com>
- <9c82a6bc-c6ff-4656-8f60-9d5fa499b61a@imgtec.com>
- <d154d2d0-3d59-4176-a8fb-3cb754cf2734@samsung.com>
- <e1a3d854-93bc-4771-9b8e-1639ca57b687@kernel.org>
- <d12fd4fb-0adb-40c4-8a0a-c685cd6327b3@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/2] Revert "Input: soc_button_array - debounce the
+ buttons"
+To: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <20250624202211.1088738-1-superm1@kernel.org>
+ <20250624202211.1088738-3-superm1@kernel.org>
+ <4a4d577b-a085-46e8-97b9-6df27461c870@kernel.org>
+ <1f8c0262-b376-43cb-b2c5-5b60e8cbf678@kernel.org>
+ <92ab85ff-6314-4db0-ae12-9803ddde5037@kernel.org>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <d12fd4fb-0adb-40c4-8a0a-c685cd6327b3@samsung.com>
-Content-Type: text/plain; charset=UTF-8
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <92ab85ff-6314-4db0-ae12-9803ddde5037@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 25/06/2025 16:18, Michal Wilczynski wrote:
+On 6/25/25 9:31 AM, Hans de Goede wrote:
+> Hi Mario,
 > 
-> 
-> On 6/25/25 15:55, Krzysztof Kozlowski wrote:
->> On 25/06/2025 14:45, Michal Wilczynski wrote:
+> On 25-Jun-25 4:09 PM, Mario Limonciello wrote:
+>> On 6/25/25 4:09 AM, Hans de Goede wrote:
+>>> Hi Mario,
 >>>
->>>
->>> On 6/24/25 15:53, Matt Coster wrote:
->>>> On 23/06/2025 12:42, Michal Wilczynski wrote:
->>>>> Update the img,powervr-rogue.yaml to include the T-HEAD TH1520 SoC's
->>>>> specific GPU compatible string.
->>>>>
->>>>> The thead,th1520-gpu compatible, along with its full chain
->>>>> img,img-bxm-4-64, and img,img-rogue, is added to the
->>>>> list of recognized GPU types.
->>>>>
->>>>> The power-domains property requirement for img,img-bxm-4-64 is also
->>>>> ensured by adding it to the relevant allOf condition.
->>>>>
->>>>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>>> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
->>>>> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml | 9 ++++++++-
->>>>>  1 file changed, 8 insertions(+), 1 deletion(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
->>>>> index 4450e2e73b3ccf74d29f0e31e2e6687d7cbe5d65..9b241a0c1f5941dc58a1e23970f6d3773d427c22 100644
->>>>> --- a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
->>>>> +++ b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
->>>>> @@ -21,6 +21,11 @@ properties:
->>>>>            # work with newer dts.
->>>>>            - const: img,img-axe
->>>>>            - const: img,img-rogue
->>>>> +      - items:
->>>>> +          - enum:
->>>>> +              - thead,th1520-gpu
->>>>> +          - const: img,img-bxm-4-64
->>>>> +          - const: img,img-rogue
->>>>>        - items:
->>>>>            - enum:
->>>>>                - ti,j721s2-gpu
->>>>> @@ -93,7 +98,9 @@ allOf:
->>>>>        properties:
->>>>>          compatible:
->>>>>            contains:
->>>>> -            const: img,img-axe-1-16m
->>>>> +            enum:
->>>>> +              - img,img-axe-1-16m
->>>>> +              - img,img-bxm-4-64
+>>> On 24-Jun-25 10:22 PM, Mario Limonciello wrote:
+>>>> From: Mario Limonciello <mario.limonciello@amd.com>
 >>>>
->>>> This isn't right – BXM-4-64 has two power domains like BXS-4-64. I don't
->>>> really know what the right way to handle that in devicetree is given the
->>>> TH1520 appears to expose only a top-level domain for the entire GPU, but
->>>> there are definitely two separate domains underneath that as far as the
->>>> GPU is concerned (see the attached snippet from integration guide).
+>>>> commit 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
+>>>> hardcoded all soc-button-array devices to use a 50ms debounce timeout
+>>>> but this doesn't work on all hardware.  The hardware I have on hand
+>>>> actually prescribes in the ASL that the timeout should be 0:
 >>>>
->>>> Since power nodes are ref-counted anyway, do we just use the same node
->>>> for both domains and let the driver up/down-count it twice?
+>>>> GpioInt (Edge, ActiveBoth, Exclusive, PullUp, 0x0000,
+>>>>            "\\_SB.GPIO", 0x00, ResourceConsumer, ,)
+>>>> {   // Pin list
+>>>>       0x0000
+>>>> }
+>>>>
+>>>> Let the GPIO core program the debounce instead of hardcoding it into a
+>>>> driver.
+>>>>
+>>>> This reverts commit 5c4fa2a6da7fbc76290d1cb54a7e35633517a522.
 >>>
->>> Hi Matt,
->>>
->>> Thanks for the very helpful insight. That's a great point, it seems the
->>> SoC's design presents a tricky case for the bindings.
->>>
->>> I see what you mean about potentially using the same power domain node
->>> twice. My only hesitation is that it might be a bit unclear for someone
->>> reading the devicetree later. Perhaps another option could be to relax
->>> the constraint for this compatible?
->>>
->>> Krzysztof, we'd be grateful for your thoughts on how to best model this
->>> situation.
+>>> This is going to cause problems I'm afraid I just checked and
+>>> based on randomly checking a few DSDTs of the tablets this driver
+>>> is used on, it seems the DSDT always specifies a debounce timeout
+>>> of 0 like your example above. And on many many devices using
+>>> the soc_button_array driver debouncing is actually necessary.
 >>
+>> That's unfortunate to hear.
 >>
->> It's your hardware, you should tell us, not me. I don't know how many
->> power domains you have there, but for sure it is not one AND two domains
->> the same time. It is either one or two, because power domains are not
->> the same as regulator supplies.
+>>>
+>>> May I ask what problem you are seeing with the 50ms debounce timeout /
+>>> what problem you are exactly trying to fix here ?
+>>
+>> The power button doesn't work to wake from suspend.  I bisected it down to your commit and then later traced that debounce from the ASL never gets set (pinctrl-amd's amd_gpio_set_debounce() is never called).
 > 
-> Hi Krzysztof, Matt,
-> 
-> The img,bxm-4-64 GPU IP itself is designed with two separate power
-> domains. The TH1520 SoC, which integrates this GPU, wires both of these
-> to a single OS controllable power gate (controlled via mailbox and E902
-> co-processor).
+> Ok, so specifically the gpiod_set_debounce() call with 50 ms
+> done by gpio_keys.c is the problem I guess?
 
-This helps... and also sounds a lot like regulator supplies, not power
-domains. :/
+Yep.
 
 > 
-> This means a devicetree for the TH1520 can only ever provide one power
-> domain for the GPU. However, a generic binding for img,bxm-4-64 should
+> So amd_gpio_set_debounce() does accept the 50 ms debounce
+> passed to it by gpio_keys.c as a valid value and then setting
+> that breaks the wake from suspend?
 
-If this was a supply, you would have two supplies. Anyway internal
-wirings of GPU do not matter in such case and more important what the
-SoC has wired. And it has one power domain.
+That's right.
+
+Here is what /sys/kernel/debug/gpio has for the bad case (no patches):
+
+  gpio     int|active|trigger|S0i3| S3|S4/S5| Z|wake|pull|  orient| 
+  debounce|reg
+#0        😛|     b|   edge|    |   |     |⏰|    |  ↑ |input  ↑|b (🕑 
+046875us)|0x8151ce3
+
+And then for the good case (these two patches):
+
+  gpio     int|active|trigger|S0i3| S3|S4/S5| Z|wake|pull|  orient| 
+  debounce|reg
+#0        😛|     b|   edge|    |   |     |⏰|    |  ↑ |input  ↑| 
+       |0x8151c00
 
 
-> account for a future SoC that might implement both power domains.
 > 
-> That's why I proposed to relax the constraints on the img,bmx-4-64 GPU.
+>> Also comparing the GPIO register in Windows (where things work) Windows never programs a debounce.
+> 
+> So maybe the windows ACPI0011 driver always uses a software-
+> debounce for the buttons? Windows not debouncing the mechanical
+> switches at all seems unlikely.
+> 
+> I think the best way to fix this might be to add a no-hw-debounce
+> flag to the data passed from soc_button_array.c to gpio_keys.c
+> and have gpio_keys.c not call gpiod_set_debounce()  when the
+> no-hw-debounce flag is set.
+> 
+> I've checked and both on Bay Trail and Cherry Trail devices
+> where soc_button_array is used a lot hw-debouncing is already
+> unused. pinctrl-baytrail.c does not accept 50 ms as a valid
+> value and pinctrl-cherryview.c does not support hw debounce
+> at all.
 
-This should be constrained per each device, so 1 for you and 2 for
-everyone else.
+That sounds a like a generally good direction to me.
 
-Best regards,
-Krzysztof
+I think I would still like to see the ASL values translated into the 
+hardware even if the ASL has a "0" value.
+So I would keep patch 1 but adjust for the warning you guys both called out.
+
+As you have this hardware would you be able to work out that quirk?
+
+Or if you want me to do it, I'll need something to go on how to how to 
+effectively detect BYT and CYT hardware.
+
+> 
+>> So that's where both patches in this series came from.
+>>
+>>>
+>>> drivers/input/keyboard/gpio_keys.c first will call gpiod_set_debounce()
+>>> it self with the 50 ms provided by soc_button_array and if that does
+>>> not work it will fall back to software debouncing. So I don't see how
+>>> the 50 ms debounce can cause problems, other then maybe making
+>>> really really (impossible?) fast double-clicks register as a single
+>>> click .
+>>>
+>>> These buttons (e.g. volume up/down) are almost always simply mechanical
+>>> switches and these definitely will need debouncing, the 0 value from
+>>> the DSDT is plainly just wrong. There is no such thing as a not bouncing
+>>> mechanical switch.
+>>
+>> On one of these tablets can you check the GPIO in Windows to see if it's using any debounce?
+> 
+> I'm afraid I don't have Windows installed on any of these.
+> 
+> But based on your testing + the DSDT specifying no debounce
+> for the GPIO I guess Windows just follows the DSDt when it
+> comes to setting up the hw debounce-settings and then uses
+> sw-debouncing on top to actually avoid very quick
+> press-release-press event cycles caused by the bouncing.
+> 
+
+Yeah that sounds like a plausible hypothesis.
+
+
