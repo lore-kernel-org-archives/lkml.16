@@ -1,66 +1,66 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9C22BCF4D
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3696729ACDA
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:12:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750842768; cv=none; b=ZCCXcVWtFFMaC3fz8Yxi2c2D1Z2uY0i7xwFE1NQjRGku8C0vxuxJQ6OFtH1RHCGDMUFcsjyqa7YvleRx+YA+IZouIxbV4Z2XqxcnfxjfJupdBaNSsABzKLe1yko9E/+MaEuCrv8ZD0v/dvdl+lKIY+97sNGLpGAtjsGVRwT0fJQ=
+	t=1750842766; cv=none; b=eDl/WodHgp5mr/r4jiDTmmv9qrYRxuV7m+hCRa8vWQmbmeLugvko+saUwh9JyJZs9Ohoo9Rjz7ItvuV3chpoeC7g48cogWHyRkus8x1Bfol+9YpGEohvL3HQugnxYL300QSyY9Ke5ArdCSJVFPROr9gdyCGnBTYDDMwY0o5tGYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750842768; c=relaxed/simple;
-	bh=vxnSaTqeUJDO9O6msCHg07IPERzZWFhTlmL7vhpi2GY=;
+	s=arc-20240116; t=1750842766; c=relaxed/simple;
+	bh=Gs4t14y/wdv/QHP56VKfWdKmL18TwrzVaj4WDjNFYsQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ncdm0hLiGllo1ArrN/zu7Dd+I1UZcQoH3iaqQzIHlghHEQa1OzlmDBx4+hk+aEFr/zCHh5cagy96ZmA5liVFbkeFmpka9upqmqtQo7fw9brLrwvp7knqwlt2QXvi8SKBJxyHT2jz96G6pMTuBOiRVkwcYVRbB5IDN8Cc5YBZ3bE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=tyOoBBKR; arc=none smtp.client-ip=209.85.218.53
+	 In-Reply-To:To:Cc; b=tVgx4vp+nJxj/PeJ3pqnJiMTtcMMEbHBI2jQ7Jggxhz8tedgg2i1Bc1nvfHfOix04SHwbpgww4BDnv2MQrk5iCCHoeG3knWnRX19CuP+yzyApcllKRAjrjLz+X72pL2+0p8DA549ofjHRD4zQ+wZhroafYqZqnd2of35LnvU730=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=tFzlfwcz; arc=none smtp.client-ip=209.85.208.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="tyOoBBKR"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-adb2bb25105so1002749366b.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:12:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="tFzlfwcz"
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-6077d0b9bbeso10675344a12.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:12:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1750842759; x=1751447559; darn=vger.kernel.org;
+        d=fairphone.com; s=fair; t=1750842757; x=1751447557; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=WM/iwMQIMQ1j4HAQ+DJc1D+yYwhc26xJOa1r6fdsCnQ=;
-        b=tyOoBBKRIxF/KUHZS9bx+bJ6Ch8FdtmTvBEaPXJWjUDBXoZ/MndnWypv9H3DgqomMl
-         J7gBGWZqIWWfIgfAGAQw/OSyqLkXt1YTAla5ECkYZZ7dMbQdzMI70bpzs0Pf2GArreIL
-         +eTZHK662Z79NjK9nc7kdbLnEb14+KY2W1CpssI2X/GbXkv8bJUJyhlJEB8AAX4JCD+k
-         Ic8TeG/jgWGpBlVvIJttXHHyaS1fZVgDfE+FE1Uh7JBxyR3JNIC4e08aZppuoFsu/BBA
-         r7ojOjPJTjy0XiHPHNGzgrxmDhjmb6CP0SjstxfPxkjIM4Z2gCx/EpcxIt5sQyfKD1Bb
-         n+9w==
+        bh=lSOCWwLV9Wjjw58Bj3vnW4Ne/5S7dwsCDIoEh8Stj+Q=;
+        b=tFzlfwcz+mD3J1lNbwN008WoE7MUiwWhWcAnOUPulS6Z79WJh5SEQqaZ4lInxMmhW9
+         TL7vX/XWcn2rpLAy/k0Mw+MCHnHOVCRSXPw6ouXKYoO6P5ezZfy8uZEIGwxoV6UBlF87
+         zM1IZ22uX95i5vmW3CImshE+ADxBLZ6NhleL+bMGVYO0/N0fVK5kL3ekmunWwL9DTIuX
+         hENgLFk8KH0usd7N+0my/gsHScr8oCC50COgXG2NkUBzRRpL28eXuawSjrD1HTWQ6map
+         M3ITP9FsO+L5Jl/FiaLX2Xbc9ZKk8J9Fe7JucF/WV8i0bp6odqca5903BZR9FCA8A4sc
+         UXtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750842759; x=1751447559;
+        d=1e100.net; s=20230601; t=1750842757; x=1751447557;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WM/iwMQIMQ1j4HAQ+DJc1D+yYwhc26xJOa1r6fdsCnQ=;
-        b=QDCH11SntBgQ5xy3vs1+7JG4nzAqFc2HzA/PdgAS8VZ8CpWkj+cImh2WUKVCfjjKK7
-         zlHx4pT5v9wNRGukwf+CTkKkjYkX0DWVzX7GAd8pexUBZeAUJ95/QrV8gGunmmQWLlp1
-         GoimsWfe8Xxm2qvG8DJeTl8s6qnnhO7PA0IfmngvGMMaMqaWDkV6f+NzRUvTvkDsmbj7
-         29meIpwfCMmUJ/t4muNYkihWU0vPxjgQNXSav1VfyZmLyu5R31tImmPJz+W8b55yIgG1
-         iO3BImzmIISqkRFqI24HPZ5hqT46fZGNjVsFWcTUTEMW3EVSC0sNh5zAkLTjhyRs+I9t
-         sinA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdBV4sRz8IV76QV68N+TrTpjapOGgn3agdS35Wrpv9l14Fl29MXvb7dNE0QoHA8vGPjv3qyFtSWxO7Wvw=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyar2Wk2L5x2Guu/ddOG+I6QkajVrNacL6zO/c46BP+tf28hRxQ
-	OvEWnmXruH51IJaO9f4jONABdtXnlUXRYsOHbTxDOODsQp1w4/DNL2A1wLphe2WOmw4=
-X-Gm-Gg: ASbGncsTE/Bzi651XQXVdCHn7oapSHSTm1xVXN4Ef7JwB9Oak0EohmxuY1C8prtMRVH
-	CYw2rHVybSOjWJq/moo4GYFumKadueQhTR1clkmbfVG+7h2J8CgYPpSCfZ8njRqpbufKqdQiYLU
-	LqsJ7xk2B1+6Ml7JQKU+/8l/DtYpIBLAvQhy4sR1JYylHU+HAF04YxVNhikRlzG7+hiBp+Pw1N+
-	yN/MgiwMqoWZawGA3yuIHRhNO/gDEBDiIA+o1zMPOSpPVxfZGMqikX9nzHLvOHNncjZShmCRxAl
-	cVEDvXA5IOaLPHyObeT7SzeUJCgXvYdmLxCgWNCyKsG6X8a8wxacn4AnzBgmIwc/2iw+NFwSSob
-	7hqOOgFH5kromUiie9OQmehTH+rImfVhJ
-X-Google-Smtp-Source: AGHT+IETMQzYRl+PjA238BQTVMp9x+7d4jtAzDbj18SUQFzauLUf7T11kootQ2WXRFpxVnw6qMKLog==
-X-Received: by 2002:a17:906:6a12:b0:ad8:8529:4f77 with SMTP id a640c23a62f3a-ae0bea790d5mr230460266b.38.1750842758823;
-        Wed, 25 Jun 2025 02:12:38 -0700 (PDT)
+        bh=lSOCWwLV9Wjjw58Bj3vnW4Ne/5S7dwsCDIoEh8Stj+Q=;
+        b=u6bOAAjhcVcoivcqFjxRFI5t6fgJthbnnai6TOoiQ8W3YYrbuvwFN16+ow5sty+L9V
+         NvYMxy08PeEncbIXlYnYJjkrETkQTMw+ohco4cu1Q6pTpOKhTbBIxq/tXASRw+BJ547I
+         FI13CIFPkvr0gBNLYjdId0TigqwFexG/GHJpr4ur0hK+6oPZjpz9hZeF2b7CsT6YSIDg
+         wq0u10V83E1OfLkRsiFh8e5JPLOTl2XJs7cshqiALBsKkwebV70ZblGTMuhNnyk5Hnz8
+         McnD7kTajoH1DAubTB+CHx4sUbtWfyuhVcOWichvVN9NG0RbK0YHdAvYQuKcGxLWv9YX
+         Sf/w==
+X-Forwarded-Encrypted: i=1; AJvYcCWGb7UaMCYsVoA82pxwsGZcaiy0nMAZ5o37yvsjvLcNWb/2kllTKFo1sXC590iiqmlOxxOuv2alw5wIXLY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzcFEehkqvNmOdk/FduGEguvoLR+h8EBqdMdJoR4f1s0JDDZrz0
+	OMUmYgikPXU7jvBKX4BytrO/+2DARq3dA87T9xDmDKF8kriCSSCUSfjcD8uessQBpoQ=
+X-Gm-Gg: ASbGncuhCqGDDEGg3V8sCvzn9hVuuRXSeYG+46rYW2NBvGv4VPVSrAsryeVlfcLFXDq
+	HFQ144kL7hsIeNFl6OQe0oXTVKPE6QCdFtJfBNvTbtpslV0Scdts050A50ny6OyqmHIiTk6bgPQ
+	TFSZ1xizzx6q6IWveJXIcAGHtHJtd4JExVRzpnNOyRPwi8jUufK3NoothH6uKguSsyDRXeQ7KkI
+	EHBo8tgz1tG57eqiaUBvMqh6it0CJMDb6HuzzJqA+/wXD1siysUrvHhkjPOvNsu3+VHpMObwJof
+	04z06GQQzn+UXJuBTi9vuYueLTAnbd9kW3gcE6ftxEl6vM3c/cXfL3/Ri+7jZrBetwdquNN05of
+	227NbIT6ihKl4Qrm6DB71e/aI740jJOb1
+X-Google-Smtp-Source: AGHT+IEyg5y9Cs6BhJw1tchzZQW4Ac0ss21gTZqlz9ydFFDmi4L1LL4f/R1KKF+SBIonMKhgEQ3u+g==
+X-Received: by 2002:a17:906:fa8b:b0:ad2:2ef3:d487 with SMTP id a640c23a62f3a-ae0beb75842mr188804966b.58.1750842756686;
+        Wed, 25 Jun 2025 02:12:36 -0700 (PDT)
 Received: from otso.local (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0b887ab4csm154937366b.129.2025.06.25.02.12.38
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0b887ab4csm154937366b.129.2025.06.25.02.12.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 02:12:38 -0700 (PDT)
+        Wed, 25 Jun 2025 02:12:36 -0700 (PDT)
 From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Wed, 25 Jun 2025 11:12:28 +0200
-Subject: [PATCH 10/10] clk: qcom: Add Video Clock controller (VIDEOCC)
+Date: Wed, 25 Jun 2025 11:12:26 +0200
+Subject: [PATCH 08/10] clk: qcom: Add Graphics Clock controller (GPUCC)
  driver for SM7635
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-sm7635-clocks-v1-10-ca3120e3a80e@fairphone.com>
+Message-Id: <20250625-sm7635-clocks-v1-8-ca3120e3a80e@fairphone.com>
 References: <20250625-sm7635-clocks-v1-0-ca3120e3a80e@fairphone.com>
 In-Reply-To: <20250625-sm7635-clocks-v1-0-ca3120e3a80e@fairphone.com>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -83,67 +83,65 @@ Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Luca Weiss <luca.weiss@fairphone.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750842748; l=13668;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750842748; l=17789;
  i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
- bh=vxnSaTqeUJDO9O6msCHg07IPERzZWFhTlmL7vhpi2GY=;
- b=bQj+SCKWekn7Zwz6eu6xQ2L8O6QYplv+Zx5a7147h20yIauUF/JomvLWOL5whTlzDHU/JvqqK
- J+tKnRjYEdrA5VgGRqIlVmp+XIp16evFIygG9nxva3qd8Oui2yQLdWq
+ bh=Gs4t14y/wdv/QHP56VKfWdKmL18TwrzVaj4WDjNFYsQ=;
+ b=4nCu1wYGqzUgG96hIEwEW+KBw4sdfDtRAO+UAbDRx72Jx8sywR1gn+OBU5kSyQjlk2MAvMomX
+ yBFWRbQ69B6C9uRJwhCdfzd7313/HA9lOb5rQEOQnslwSpfz7ACEy9A
 X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
  pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
 
-Add support for the video clock controller found on SM7635 based
+Add support for the graphics clock controller found on SM7635 based
 devices.
 
 Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 ---
- drivers/clk/qcom/Kconfig          |  11 +
- drivers/clk/qcom/Makefile         |   1 +
- drivers/clk/qcom/videocc-sm7635.c | 412 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 424 insertions(+)
+ drivers/clk/qcom/Kconfig        |   9 +
+ drivers/clk/qcom/Makefile       |   1 +
+ drivers/clk/qcom/gpucc-sm7635.c | 563 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 573 insertions(+)
 
 diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index fc8c3e488a43dc50c8a3671da9ac6d32a28a4438..b1d9e0e8be59317b1bbdbfa61c9baf1333b881aa 100644
+index 6234c9e52987be963410ec6b6be693ab18ea3514..fc8c3e488a43dc50c8a3671da9ac6d32a28a4438 100644
 --- a/drivers/clk/qcom/Kconfig
 +++ b/drivers/clk/qcom/Kconfig
-@@ -1375,6 +1375,17 @@ config SM_VIDEOCC_7150
- 	  Say Y if you want to support video devices and functionality such as
- 	  video encode and decode.
+@@ -1257,6 +1257,15 @@ config SM_GPUCC_6350
+ 	  Say Y if you want to support graphics controller devices and
+ 	  functionality such as 3D graphics.
  
-+config SM_VIDEOCC_7635
-+	tristate "SM7635 Video Clock Controller"
++config SM_GPUCC_7635
++	tristate "SM7635 Graphics Clock Controller"
 +	depends on ARM64 || COMPILE_TEST
 +	select SM_GCC_7635
-+	select QCOM_GDSC
 +	help
-+	  Support for the video clock controller on Qualcomm Technologies, Inc.
-+	  SM7635 devices.
-+	  Say Y if you want to support video devices and functionality such as
-+	  video encode/decode.
++	  Support for the graphics clock controller on SM7635 devices.
++	  Say Y if you want to support graphics controller devices and
++	  functionality such as 3D graphics.
 +
- config SM_VIDEOCC_8150
- 	tristate "SM8150 Video Clock Controller"
+ config SM_GPUCC_8150
+ 	tristate "SM8150 Graphics Clock Controller"
  	depends on ARM64 || COMPILE_TEST
 diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 59e165e8ec4436931652387cee10177336b7d8d6..7cc74d4f7af99cea1a9fed3b6523a71afcc7d40c 100644
+index 4731367a57a7624b437908ae447dcf83a8555f87..59e165e8ec4436931652387cee10177336b7d8d6 100644
 --- a/drivers/clk/qcom/Makefile
 +++ b/drivers/clk/qcom/Makefile
-@@ -169,6 +169,7 @@ obj-$(CONFIG_SM_TCSRCC_8550) += tcsrcc-sm8550.o
- obj-$(CONFIG_SM_TCSRCC_8650) += tcsrcc-sm8650.o
- obj-$(CONFIG_SM_TCSRCC_8750) += tcsrcc-sm8750.o
- obj-$(CONFIG_SM_VIDEOCC_7150) += videocc-sm7150.o
-+obj-$(CONFIG_SM_VIDEOCC_7635) += videocc-sm7635.o
- obj-$(CONFIG_SM_VIDEOCC_8150) += videocc-sm8150.o
- obj-$(CONFIG_SM_VIDEOCC_8250) += videocc-sm8250.o
- obj-$(CONFIG_SM_VIDEOCC_8350) += videocc-sm8350.o
-diff --git a/drivers/clk/qcom/videocc-sm7635.c b/drivers/clk/qcom/videocc-sm7635.c
+@@ -157,6 +157,7 @@ obj-$(CONFIG_SM_GPUCC_6115) += gpucc-sm6115.o
+ obj-$(CONFIG_SM_GPUCC_6125) += gpucc-sm6125.o
+ obj-$(CONFIG_SM_GPUCC_6350) += gpucc-sm6350.o
+ obj-$(CONFIG_SM_GPUCC_6375) += gpucc-sm6375.o
++obj-$(CONFIG_SM_GPUCC_7635) += gpucc-sm7635.o
+ obj-$(CONFIG_SM_GPUCC_8150) += gpucc-sm8150.o
+ obj-$(CONFIG_SM_GPUCC_8250) += gpucc-sm8250.o
+ obj-$(CONFIG_SM_GPUCC_8350) += gpucc-sm8350.o
+diff --git a/drivers/clk/qcom/gpucc-sm7635.c b/drivers/clk/qcom/gpucc-sm7635.c
 new file mode 100644
-index 0000000000000000000000000000000000000000..2e1a4904a5b6a8bbbd0c513def58c314695c9678
+index 0000000000000000000000000000000000000000..77ae41199613c09e8d417d8822057dfee19e822a
 --- /dev/null
-+++ b/drivers/clk/qcom/videocc-sm7635.c
-@@ -0,0 +1,412 @@
++++ b/drivers/clk/qcom/gpucc-sm7635.c
+@@ -0,0 +1,563 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Copyright (c) 2023, Qualcomm Innovation Center, Inc. All rights reserved.
++ * Copyright (c) 2023-2024, Qualcomm Innovation Center, Inc. All rights reserved.
 + * Copyright (c) 2025, Luca Weiss <luca.weiss@fairphone.com>
 + */
 +
@@ -151,16 +149,17 @@ index 0000000000000000000000000000000000000000..2e1a4904a5b6a8bbbd0c513def58c314
 +#include <linux/mod_devicetable.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
 +#include <linux/regmap.h>
 +
-+#include <dt-bindings/clock/qcom,sm7635-videocc.h>
++#include <dt-bindings/clock/qcom,sm7635-gpucc.h>
 +
 +#include "clk-alpha-pll.h"
 +#include "clk-branch.h"
++#include "clk-pll.h"
 +#include "clk-rcg.h"
 +#include "clk-regmap.h"
 +#include "clk-regmap-divider.h"
++#include "clk-regmap-mux.h"
 +#include "common.h"
 +#include "gdsc.h"
 +#include "reset.h"
@@ -168,25 +167,27 @@ index 0000000000000000000000000000000000000000..2e1a4904a5b6a8bbbd0c513def58c314
 +/* Need to match the order of clocks in DT binding */
 +enum {
 +	DT_BI_TCXO,
-+	DT_BI_TCXO_AO,
-+	DT_SLEEP_CLK,
-+	DT_IFACE,
++	DT_GPLL0_OUT_MAIN,
++	DT_GPLL0_OUT_MAIN_DIV,
 +};
 +
 +enum {
 +	P_BI_TCXO,
-+	P_SLEEP_CLK,
-+	P_VIDEO_CC_PLL0_OUT_MAIN,
++	P_GPLL0_OUT_MAIN,
++	P_GPLL0_OUT_MAIN_DIV,
++	P_GPU_CC_PLL0_OUT_EVEN,
++	P_GPU_CC_PLL0_OUT_MAIN,
++	P_GPU_CC_PLL0_OUT_ODD,
 +};
 +
 +static const struct pll_vco lucid_ole_vco[] = {
 +	{ 249600000, 2300000000, 0 },
 +};
 +
-+/* 604.8 MHz Configuration */
-+static const struct alpha_pll_config video_cc_pll0_config = {
-+	.l = 0x1f,
-+	.alpha = 0x8000,
++/* 700.0 MHz Configuration */
++static const struct alpha_pll_config gpu_cc_pll0_config = {
++	.l = 0x24,
++	.alpha = 0x7555,
 +	.config_ctl_val = 0x20485699,
 +	.config_ctl_hi_val = 0x00182261,
 +	.config_ctl_hi1_val = 0x82aa299c,
@@ -194,18 +195,18 @@ index 0000000000000000000000000000000000000000..2e1a4904a5b6a8bbbd0c513def58c314
 +	.test_ctl_hi_val = 0x00000003,
 +	.test_ctl_hi1_val = 0x00009000,
 +	.test_ctl_hi2_val = 0x00000034,
-+	.user_ctl_val = 0x00000000,
++	.user_ctl_val = 0x00000400,
 +	.user_ctl_hi_val = 0x00000005,
 +};
 +
-+static struct clk_alpha_pll video_cc_pll0 = {
++static struct clk_alpha_pll gpu_cc_pll0 = {
 +	.offset = 0x0,
 +	.vco_table = lucid_ole_vco,
 +	.num_vco = ARRAY_SIZE(lucid_ole_vco),
 +	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_OLE],
 +	.clkr = {
 +		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_pll0",
++			.name = "gpu_cc_pll0",
 +			.parent_data = &(const struct clk_parent_data) {
 +				.index = DT_BI_TCXO,
 +			},
@@ -215,124 +216,140 @@ index 0000000000000000000000000000000000000000..2e1a4904a5b6a8bbbd0c513def58c314
 +	},
 +};
 +
-+static const struct parent_map video_cc_parent_map_0[] = {
++static const struct clk_div_table post_div_table_gpu_cc_pll0_out_even[] = {
++	{ 0x1, 2 },
++	{ }
++};
++
++static struct clk_alpha_pll_postdiv gpu_cc_pll0_out_even = {
++	.offset = 0x0,
++	.post_div_shift = 10,
++	.post_div_table = post_div_table_gpu_cc_pll0_out_even,
++	.num_post_div = ARRAY_SIZE(post_div_table_gpu_cc_pll0_out_even),
++	.width = 4,
++	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_LUCID_OLE],
++	.clkr.hw.init = &(const struct clk_init_data) {
++		.name = "gpu_cc_pll0_out_even",
++		.parent_hws = (const struct clk_hw*[]) {
++			&gpu_cc_pll0.clkr.hw,
++		},
++		.num_parents = 1,
++		.flags = CLK_SET_RATE_PARENT,
++		.ops = &clk_alpha_pll_postdiv_lucid_ole_ops,
++	},
++};
++
++static const struct parent_map gpu_cc_parent_map_0[] = {
++	{ P_BI_TCXO, 0 },
++	{ P_GPLL0_OUT_MAIN, 5 },
++	{ P_GPLL0_OUT_MAIN_DIV, 6 },
++};
++
++static const struct clk_parent_data gpu_cc_parent_data_0[] = {
++	{ .index = DT_BI_TCXO },
++	{ .index = DT_GPLL0_OUT_MAIN },
++	{ .index = DT_GPLL0_OUT_MAIN_DIV },
++};
++
++static const struct parent_map gpu_cc_parent_map_1[] = {
++	{ P_BI_TCXO, 0 },
++	{ P_GPU_CC_PLL0_OUT_MAIN, 1 },
++	{ P_GPU_CC_PLL0_OUT_EVEN, 2 },
++	{ P_GPU_CC_PLL0_OUT_ODD, 3 },
++	{ P_GPLL0_OUT_MAIN, 5 },
++	{ P_GPLL0_OUT_MAIN_DIV, 6 },
++};
++
++static const struct clk_parent_data gpu_cc_parent_data_1[] = {
++	{ .index = DT_BI_TCXO },
++	{ .hw = &gpu_cc_pll0.clkr.hw },
++	{ .hw = &gpu_cc_pll0_out_even.clkr.hw },
++	{ .hw = &gpu_cc_pll0.clkr.hw },
++	{ .index = DT_GPLL0_OUT_MAIN },
++	{ .index = DT_GPLL0_OUT_MAIN_DIV },
++};
++
++static const struct parent_map gpu_cc_parent_map_2[] = {
 +	{ P_BI_TCXO, 0 },
 +};
 +
-+static const struct clk_parent_data video_cc_parent_data_0[] = {
++static const struct clk_parent_data gpu_cc_parent_data_2[] = {
 +	{ .index = DT_BI_TCXO },
 +};
 +
-+static const struct clk_parent_data video_cc_parent_data_0_ao[] = {
-+	{ .index = DT_BI_TCXO_AO },
++static const struct freq_tbl ftbl_gpu_cc_ff_clk_src[] = {
++	F(200000000, P_GPLL0_OUT_MAIN, 3, 0, 0),
++	{ }
 +};
 +
-+static const struct parent_map video_cc_parent_map_1[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_VIDEO_CC_PLL0_OUT_MAIN, 1 },
++static struct clk_rcg2 gpu_cc_ff_clk_src = {
++	.cmd_rcgr = 0x9474,
++	.mnd_width = 0,
++	.hid_width = 5,
++	.parent_map = gpu_cc_parent_map_0,
++	.freq_tbl = ftbl_gpu_cc_ff_clk_src,
++	.clkr.hw.init = &(const struct clk_init_data) {
++		.name = "gpu_cc_ff_clk_src",
++		.parent_data = gpu_cc_parent_data_0,
++		.num_parents = ARRAY_SIZE(gpu_cc_parent_data_0),
++		.flags = CLK_SET_RATE_PARENT,
++		.ops = &clk_rcg2_shared_ops,
++	},
 +};
 +
-+static const struct clk_parent_data video_cc_parent_data_1[] = {
-+	{ .index = DT_BI_TCXO },
-+	{ .hw = &video_cc_pll0.clkr.hw },
-+};
-+
-+static const struct parent_map video_cc_parent_map_2[] = {
-+	{ P_SLEEP_CLK, 0 },
-+};
-+
-+static const struct clk_parent_data video_cc_parent_data_2_ao[] = {
-+	{ .index = DT_SLEEP_CLK },
-+};
-+
-+static const struct freq_tbl ftbl_video_cc_ahb_clk_src[] = {
++static const struct freq_tbl ftbl_gpu_cc_gmu_clk_src[] = {
 +	F(19200000, P_BI_TCXO, 1, 0, 0),
++	F(350000000, P_GPU_CC_PLL0_OUT_EVEN, 1, 0, 0),
++	F(650000000, P_GPU_CC_PLL0_OUT_EVEN, 1, 0, 0),
++	F(687500000, P_GPU_CC_PLL0_OUT_EVEN, 1, 0, 0),
 +	{ }
 +};
 +
-+static struct clk_rcg2 video_cc_ahb_clk_src = {
-+	.cmd_rcgr = 0x8030,
++static struct clk_rcg2 gpu_cc_gmu_clk_src = {
++	.cmd_rcgr = 0x9318,
 +	.mnd_width = 0,
 +	.hid_width = 5,
-+	.parent_map = video_cc_parent_map_0,
-+	.freq_tbl = ftbl_video_cc_ahb_clk_src,
++	.parent_map = gpu_cc_parent_map_1,
++	.freq_tbl = ftbl_gpu_cc_gmu_clk_src,
 +	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "video_cc_ahb_clk_src",
-+		.parent_data = video_cc_parent_data_0_ao,
-+		.num_parents = ARRAY_SIZE(video_cc_parent_data_0_ao),
++		.name = "gpu_cc_gmu_clk_src",
++		.parent_data = gpu_cc_parent_data_1,
++		.num_parents = ARRAY_SIZE(gpu_cc_parent_data_1),
 +		.flags = CLK_SET_RATE_PARENT,
 +		.ops = &clk_rcg2_shared_ops,
 +	},
 +};
 +
-+static const struct freq_tbl ftbl_video_cc_mvs0_clk_src[] = {
-+	F(604800000, P_VIDEO_CC_PLL0_OUT_MAIN, 1, 0, 0),
-+	F(720000000, P_VIDEO_CC_PLL0_OUT_MAIN, 1, 0, 0),
-+	F(1014000000, P_VIDEO_CC_PLL0_OUT_MAIN, 1, 0, 0),
-+	F(1098000000, P_VIDEO_CC_PLL0_OUT_MAIN, 1, 0, 0),
-+	F(1332000000, P_VIDEO_CC_PLL0_OUT_MAIN, 1, 0, 0),
-+	F(1656000000, P_VIDEO_CC_PLL0_OUT_MAIN, 1, 0, 0),
++static const struct freq_tbl ftbl_gpu_cc_hub_clk_src[] = {
++	F(200000000, P_GPLL0_OUT_MAIN, 3, 0, 0),
++	F(300000000, P_GPLL0_OUT_MAIN, 2, 0, 0),
++	F(400000000, P_GPLL0_OUT_MAIN, 1.5, 0, 0),
 +	{ }
 +};
 +
-+static struct clk_rcg2 video_cc_mvs0_clk_src = {
-+	.cmd_rcgr = 0x8000,
++static struct clk_rcg2 gpu_cc_hub_clk_src = {
++	.cmd_rcgr = 0x93ec,
 +	.mnd_width = 0,
 +	.hid_width = 5,
-+	.parent_map = video_cc_parent_map_1,
-+	.freq_tbl = ftbl_video_cc_mvs0_clk_src,
++	.parent_map = gpu_cc_parent_map_1,
++	.freq_tbl = ftbl_gpu_cc_hub_clk_src,
 +	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "video_cc_mvs0_clk_src",
-+		.parent_data = video_cc_parent_data_1,
-+		.num_parents = ARRAY_SIZE(video_cc_parent_data_1),
++		.name = "gpu_cc_hub_clk_src",
++		.parent_data = gpu_cc_parent_data_1,
++		.num_parents = ARRAY_SIZE(gpu_cc_parent_data_1),
 +		.flags = CLK_SET_RATE_PARENT,
 +		.ops = &clk_rcg2_shared_ops,
 +	},
 +};
 +
-+static const struct freq_tbl ftbl_video_cc_sleep_clk_src[] = {
-+	F(32000, P_SLEEP_CLK, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 video_cc_sleep_clk_src = {
-+	.cmd_rcgr = 0x8128,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = video_cc_parent_map_2,
-+	.freq_tbl = ftbl_video_cc_sleep_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "video_cc_sleep_clk_src",
-+		.parent_data = video_cc_parent_data_2_ao,
-+		.num_parents = ARRAY_SIZE(video_cc_parent_data_2_ao),
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 video_cc_xo_clk_src = {
-+	.cmd_rcgr = 0x810c,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = video_cc_parent_map_0,
-+	.freq_tbl = ftbl_video_cc_ahb_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "video_cc_xo_clk_src",
-+		.parent_data = video_cc_parent_data_0,
-+		.num_parents = ARRAY_SIZE(video_cc_parent_data_0),
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_regmap_div video_cc_mvs0_div_clk_src = {
-+	.reg = 0x80c4,
++static struct clk_regmap_div gpu_cc_hub_div_clk_src = {
++	.reg = 0x942c,
 +	.shift = 0,
 +	.width = 4,
 +	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "video_cc_mvs0_div_clk_src",
++		.name = "gpu_cc_hub_div_clk_src",
 +		.parent_hws = (const struct clk_hw*[]) {
-+			&video_cc_mvs0_clk_src.clkr.hw,
++			&gpu_cc_hub_clk_src.clkr.hw,
 +		},
 +		.num_parents = 1,
 +		.flags = CLK_SET_RATE_PARENT,
@@ -340,33 +357,16 @@ index 0000000000000000000000000000000000000000..2e1a4904a5b6a8bbbd0c513def58c314
 +	},
 +};
 +
-+static struct clk_regmap_div video_cc_mvs0c_div2_div_clk_src = {
-+	.reg = 0x8070,
-+	.shift = 0,
-+	.width = 4,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "video_cc_mvs0c_div2_div_clk_src",
-+		.parent_hws = (const struct clk_hw*[]) {
-+			&video_cc_mvs0_clk_src.clkr.hw,
-+		},
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_regmap_div_ro_ops,
-+	},
-+};
-+
-+static struct clk_branch video_cc_mvs0_clk = {
-+	.halt_reg = 0x80b8,
-+	.halt_check = BRANCH_HALT_VOTED,
-+	.hwcg_reg = 0x80b8,
-+	.hwcg_bit = 1,
++static struct clk_branch gpu_cc_ahb_clk = {
++	.halt_reg = 0x90bc,
++	.halt_check = BRANCH_HALT_DELAY,
 +	.clkr = {
-+		.enable_reg = 0x80b8,
++		.enable_reg = 0x90bc,
 +		.enable_mask = BIT(0),
 +		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_mvs0_clk",
++			.name = "gpu_cc_ahb_clk",
 +			.parent_hws = (const struct clk_hw*[]) {
-+				&video_cc_mvs0_div_clk_src.clkr.hw,
++				&gpu_cc_hub_div_clk_src.clkr.hw,
 +			},
 +			.num_parents = 1,
 +			.flags = CLK_SET_RATE_PARENT,
@@ -375,36 +375,29 @@ index 0000000000000000000000000000000000000000..2e1a4904a5b6a8bbbd0c513def58c314
 +	},
 +};
 +
-+static struct clk_branch video_cc_mvs0_shift_clk = {
-+	.halt_reg = 0x8144,
++static struct clk_branch gpu_cc_cx_accu_shift_clk = {
++	.halt_reg = 0x910c,
 +	.halt_check = BRANCH_HALT_VOTED,
-+	.hwcg_reg = 0x8144,
-+	.hwcg_bit = 1,
 +	.clkr = {
-+		.enable_reg = 0x8144,
++		.enable_reg = 0x910c,
 +		.enable_mask = BIT(0),
 +		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_mvs0_shift_clk",
-+			.parent_hws = (const struct clk_hw*[]) {
-+				&video_cc_xo_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
++			.name = "gpu_cc_cx_accu_shift_clk",
 +			.ops = &clk_branch2_ops,
 +		},
 +	},
 +};
 +
-+static struct clk_branch video_cc_mvs0c_clk = {
-+	.halt_reg = 0x8064,
++static struct clk_branch gpu_cc_cx_ff_clk = {
++	.halt_reg = 0x90ec,
 +	.halt_check = BRANCH_HALT,
 +	.clkr = {
-+		.enable_reg = 0x8064,
++		.enable_reg = 0x90ec,
 +		.enable_mask = BIT(0),
 +		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_mvs0c_clk",
++			.name = "gpu_cc_cx_ff_clk",
 +			.parent_hws = (const struct clk_hw*[]) {
-+				&video_cc_mvs0c_div2_div_clk_src.clkr.hw,
++				&gpu_cc_ff_clk_src.clkr.hw,
 +			},
 +			.num_parents = 1,
 +			.flags = CLK_SET_RATE_PARENT,
@@ -413,18 +406,86 @@ index 0000000000000000000000000000000000000000..2e1a4904a5b6a8bbbd0c513def58c314
 +	},
 +};
 +
-+static struct clk_branch video_cc_mvs0c_shift_clk = {
-+	.halt_reg = 0x8148,
++static struct clk_branch gpu_cc_cx_gmu_clk = {
++	.halt_reg = 0x90d4,
 +	.halt_check = BRANCH_HALT_VOTED,
-+	.hwcg_reg = 0x8148,
-+	.hwcg_bit = 1,
 +	.clkr = {
-+		.enable_reg = 0x8148,
++		.enable_reg = 0x90d4,
 +		.enable_mask = BIT(0),
 +		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_mvs0c_shift_clk",
++			.name = "gpu_cc_cx_gmu_clk",
 +			.parent_hws = (const struct clk_hw*[]) {
-+				&video_cc_xo_clk_src.clkr.hw,
++				&gpu_cc_gmu_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_aon_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_cxo_clk = {
++	.halt_reg = 0x90e4,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x90e4,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "gpu_cc_cxo_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_dpm_clk = {
++	.halt_reg = 0x9110,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x9110,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "gpu_cc_dpm_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_freq_measure_clk = {
++	.halt_reg = 0x900c,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x900c,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "gpu_cc_freq_measure_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_gx_accu_shift_clk = {
++	.halt_reg = 0x9070,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x9070,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "gpu_cc_gx_accu_shift_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_gx_acd_ahb_ff_clk = {
++	.halt_reg = 0x9068,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x9068,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "gpu_cc_gx_acd_ahb_ff_clk",
++			.parent_hws = (const struct clk_hw*[]) {
++				&gpu_cc_ff_clk_src.clkr.hw,
 +			},
 +			.num_parents = 1,
 +			.flags = CLK_SET_RATE_PARENT,
@@ -433,125 +494,213 @@ index 0000000000000000000000000000000000000000..2e1a4904a5b6a8bbbd0c513def58c314
 +	},
 +};
 +
-+static struct gdsc video_cc_mvs0c_gdsc = {
-+	.gdscr = 0x804c,
++static struct clk_branch gpu_cc_gx_gmu_clk = {
++	.halt_reg = 0x9060,
++	.halt_check = BRANCH_HALT,
++	.clkr = {
++		.enable_reg = 0x9060,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "gpu_cc_gx_gmu_clk",
++			.parent_hws = (const struct clk_hw*[]) {
++				&gpu_cc_gmu_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_gx_rcg_ahb_ff_clk = {
++	.halt_reg = 0x906c,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x906c,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "gpu_cc_gx_rcg_ahb_ff_clk",
++			.parent_hws = (const struct clk_hw*[]) {
++				&gpu_cc_ff_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_hlos1_vote_gpu_smmu_clk = {
++	.halt_reg = 0x7000,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x7000,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "gpu_cc_hlos1_vote_gpu_smmu_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_hub_aon_clk = {
++	.halt_reg = 0x93e8,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x93e8,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "gpu_cc_hub_aon_clk",
++			.parent_hws = (const struct clk_hw*[]) {
++				&gpu_cc_hub_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_aon_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_hub_cx_int_clk = {
++	.halt_reg = 0x90e8,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x90e8,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "gpu_cc_hub_cx_int_clk",
++			.parent_hws = (const struct clk_hw*[]) {
++				&gpu_cc_hub_clk_src.clkr.hw,
++			},
++			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
++			.ops = &clk_branch2_aon_ops,
++		},
++	},
++};
++
++static struct clk_branch gpu_cc_memnoc_gfx_clk = {
++	.halt_reg = 0x90f4,
++	.halt_check = BRANCH_HALT_VOTED,
++	.clkr = {
++		.enable_reg = 0x90f4,
++		.enable_mask = BIT(0),
++		.hw.init = &(const struct clk_init_data) {
++			.name = "gpu_cc_memnoc_gfx_clk",
++			.ops = &clk_branch2_ops,
++		},
++	},
++};
++
++static struct gdsc gpu_cc_cx_gdsc = {
++	.gdscr = 0x9080,
++	.gds_hw_ctrl = 0x9094,
 +	.en_rest_wait_val = 0x2,
 +	.en_few_wait_val = 0x2,
-+	.clk_dis_wait_val = 0x6,
++	.clk_dis_wait_val = 0x8,
 +	.pd = {
-+		.name = "video_cc_mvs0c_gdsc",
++		.name = "gpu_cc_cx_gdsc",
 +	},
 +	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = POLL_CFG_GDSCR | RETAIN_FF_ENABLE,
++	.flags = RETAIN_FF_ENABLE | VOTABLE,
 +};
 +
-+static struct gdsc video_cc_mvs0_gdsc = {
-+	.gdscr = 0x80a4,
-+	.en_rest_wait_val = 0x2,
-+	.en_few_wait_val = 0x2,
-+	.clk_dis_wait_val = 0x6,
-+	.pd = {
-+		.name = "video_cc_mvs0_gdsc",
-+	},
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.parent = &video_cc_mvs0c_gdsc.pd,
-+	.flags = POLL_CFG_GDSCR | RETAIN_FF_ENABLE | HW_CTRL_TRIGGER,
++static struct clk_regmap *gpu_cc_sm7635_clocks[] = {
++	[GPU_CC_AHB_CLK] = &gpu_cc_ahb_clk.clkr,
++	[GPU_CC_CX_ACCU_SHIFT_CLK] = &gpu_cc_cx_accu_shift_clk.clkr,
++	[GPU_CC_CX_FF_CLK] = &gpu_cc_cx_ff_clk.clkr,
++	[GPU_CC_CX_GMU_CLK] = &gpu_cc_cx_gmu_clk.clkr,
++	[GPU_CC_CXO_CLK] = &gpu_cc_cxo_clk.clkr,
++	[GPU_CC_DPM_CLK] = &gpu_cc_dpm_clk.clkr,
++	[GPU_CC_FF_CLK_SRC] = &gpu_cc_ff_clk_src.clkr,
++	[GPU_CC_FREQ_MEASURE_CLK] = &gpu_cc_freq_measure_clk.clkr,
++	[GPU_CC_GMU_CLK_SRC] = &gpu_cc_gmu_clk_src.clkr,
++	[GPU_CC_GX_ACCU_SHIFT_CLK] = &gpu_cc_gx_accu_shift_clk.clkr,
++	[GPU_CC_GX_ACD_AHB_FF_CLK] = &gpu_cc_gx_acd_ahb_ff_clk.clkr,
++	[GPU_CC_GX_GMU_CLK] = &gpu_cc_gx_gmu_clk.clkr,
++	[GPU_CC_GX_RCG_AHB_FF_CLK] = &gpu_cc_gx_rcg_ahb_ff_clk.clkr,
++	[GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK] = &gpu_cc_hlos1_vote_gpu_smmu_clk.clkr,
++	[GPU_CC_HUB_AON_CLK] = &gpu_cc_hub_aon_clk.clkr,
++	[GPU_CC_HUB_CLK_SRC] = &gpu_cc_hub_clk_src.clkr,
++	[GPU_CC_HUB_CX_INT_CLK] = &gpu_cc_hub_cx_int_clk.clkr,
++	[GPU_CC_HUB_DIV_CLK_SRC] = &gpu_cc_hub_div_clk_src.clkr,
++	[GPU_CC_MEMNOC_GFX_CLK] = &gpu_cc_memnoc_gfx_clk.clkr,
++	[GPU_CC_PLL0] = &gpu_cc_pll0.clkr,
++	[GPU_CC_PLL0_OUT_EVEN] = &gpu_cc_pll0_out_even.clkr,
 +};
 +
-+static struct clk_regmap *video_cc_sm7635_clocks[] = {
-+	[VIDEO_CC_AHB_CLK_SRC] = &video_cc_ahb_clk_src.clkr,
-+	[VIDEO_CC_MVS0_CLK] = &video_cc_mvs0_clk.clkr,
-+	[VIDEO_CC_MVS0_CLK_SRC] = &video_cc_mvs0_clk_src.clkr,
-+	[VIDEO_CC_MVS0_DIV_CLK_SRC] = &video_cc_mvs0_div_clk_src.clkr,
-+	[VIDEO_CC_MVS0_SHIFT_CLK] = &video_cc_mvs0_shift_clk.clkr,
-+	[VIDEO_CC_MVS0C_CLK] = &video_cc_mvs0c_clk.clkr,
-+	[VIDEO_CC_MVS0C_DIV2_DIV_CLK_SRC] = &video_cc_mvs0c_div2_div_clk_src.clkr,
-+	[VIDEO_CC_MVS0C_SHIFT_CLK] = &video_cc_mvs0c_shift_clk.clkr,
-+	[VIDEO_CC_PLL0] = &video_cc_pll0.clkr,
-+	[VIDEO_CC_SLEEP_CLK_SRC] = &video_cc_sleep_clk_src.clkr,
-+	[VIDEO_CC_XO_CLK_SRC] = &video_cc_xo_clk_src.clkr,
++static struct gdsc *gpu_cc_sm7635_gdscs[] = {
++	[GPU_CC_CX_GDSC] = &gpu_cc_cx_gdsc,
 +};
 +
-+static struct gdsc *video_cc_sm7635_gdscs[] = {
-+	[VIDEO_CC_MVS0C_GDSC] = &video_cc_mvs0c_gdsc,
-+	[VIDEO_CC_MVS0_GDSC] = &video_cc_mvs0_gdsc,
++static const struct qcom_reset_map gpu_cc_sm7635_resets[] = {
++	[GPU_CC_CB_BCR] = { 0x93a0 },
++	[GPU_CC_CX_BCR] = { 0x907c },
++	[GPU_CC_FAST_HUB_BCR] = { 0x93e4 },
++	[GPU_CC_FF_BCR] = { 0x9470 },
++	[GPU_CC_GMU_BCR] = { 0x9314 },
++	[GPU_CC_GX_BCR] = { 0x905c },
++	[GPU_CC_RBCPR_BCR] = { 0x91e0 },
++	[GPU_CC_XO_BCR] = { 0x9000 },
 +};
 +
-+static const struct qcom_reset_map video_cc_sm7635_resets[] = {
-+	[VIDEO_CC_INTERFACE_BCR] = { 0x80f0 },
-+	[VIDEO_CC_MVS0_BCR] = { 0x80a0 },
-+	[VIDEO_CC_MVS0C_CLK_ARES] = { 0x8064, 2 },
-+	[VIDEO_CC_MVS0C_BCR] = { 0x8048 },
-+};
-+
-+static const struct regmap_config video_cc_sm7635_regmap_config = {
++static const struct regmap_config gpu_cc_sm7635_regmap_config = {
 +	.reg_bits = 32,
 +	.reg_stride = 4,
 +	.val_bits = 32,
-+	.max_register = 0x9f50,
++	.max_register = 0x95e8,
 +	.fast_io = true,
 +};
 +
-+static struct qcom_cc_desc video_cc_sm7635_desc = {
-+	.config = &video_cc_sm7635_regmap_config,
-+	.clks = video_cc_sm7635_clocks,
-+	.num_clks = ARRAY_SIZE(video_cc_sm7635_clocks),
-+	.resets = video_cc_sm7635_resets,
-+	.num_resets = ARRAY_SIZE(video_cc_sm7635_resets),
-+	.gdscs = video_cc_sm7635_gdscs,
-+	.num_gdscs = ARRAY_SIZE(video_cc_sm7635_gdscs),
++static const struct qcom_cc_desc gpu_cc_sm7635_desc = {
++	.config = &gpu_cc_sm7635_regmap_config,
++	.clks = gpu_cc_sm7635_clocks,
++	.num_clks = ARRAY_SIZE(gpu_cc_sm7635_clocks),
++	.resets = gpu_cc_sm7635_resets,
++	.num_resets = ARRAY_SIZE(gpu_cc_sm7635_resets),
++	.gdscs = gpu_cc_sm7635_gdscs,
++	.num_gdscs = ARRAY_SIZE(gpu_cc_sm7635_gdscs),
 +};
 +
-+static const struct of_device_id video_cc_sm7635_match_table[] = {
-+	{ .compatible = "qcom,sm7635-videocc" },
++static const struct of_device_id gpu_cc_sm7635_match_table[] = {
++	{ .compatible = "qcom,sm7635-gpucc" },
 +	{ }
 +};
-+MODULE_DEVICE_TABLE(of, video_cc_sm7635_match_table);
++MODULE_DEVICE_TABLE(of, gpu_cc_sm7635_match_table);
 +
-+static int video_cc_sm7635_probe(struct platform_device *pdev)
++static int gpu_cc_sm7635_probe(struct platform_device *pdev)
 +{
 +	struct regmap *regmap;
-+	int ret;
 +
-+	ret = devm_pm_runtime_enable(&pdev->dev);
-+	if (ret)
-+		return ret;
-+
-+	ret = pm_runtime_resume_and_get(&pdev->dev);
-+	if (ret)
-+		return ret;
-+
-+	regmap = qcom_cc_map(pdev, &video_cc_sm7635_desc);
-+	if (IS_ERR(regmap)) {
-+		pm_runtime_put(&pdev->dev);
++	regmap = qcom_cc_map(pdev, &gpu_cc_sm7635_desc);
++	if (IS_ERR(regmap))
 +		return PTR_ERR(regmap);
-+	}
 +
-+	clk_lucid_ole_pll_configure(&video_cc_pll0, regmap, &video_cc_pll0_config);
++	clk_lucid_ole_pll_configure(&gpu_cc_pll0, regmap, &gpu_cc_pll0_config);
 +
 +	/* Keep some clocks always-on */
-+	qcom_branch_set_clk_en(regmap, 0x80f4); /* VIDEO_CC_AHB_CLK */
-+	qcom_branch_set_clk_en(regmap, 0x8140); /* VIDEO_CC_SLEEP_CLK */
-+	qcom_branch_set_clk_en(regmap, 0x8124); /* VIDEO_CC_XO_CLK */
++	qcom_branch_set_clk_en(regmap, 0x93a4); /* GPU_CC_CB_CLK */
++	qcom_branch_set_clk_en(regmap, 0x9008); /* GPU_CC_CXO_AON_CLK */
++	qcom_branch_set_clk_en(regmap, 0x9010); /* GPU_CC_DEMET_CLK */
++	qcom_branch_set_clk_en(regmap, 0x9064); /* GPU_CC_GX_AHB_FF_CLK */
++	qcom_branch_set_clk_en(regmap, 0x93a8); /* GPU_CC_RSCC_HUB_AON_CLK */
++	qcom_branch_set_clk_en(regmap, 0x9004); /* GPU_CC_RSCC_XO_AON_CLK */
++	qcom_branch_set_clk_en(regmap, 0x90cc); /* GPU_CC_SLEEP_CLK */
 +
-+	ret = qcom_cc_really_probe(&pdev->dev, &video_cc_sm7635_desc, regmap);
-+
-+	pm_runtime_put(&pdev->dev);
-+
-+	return ret;
++	return qcom_cc_really_probe(&pdev->dev, &gpu_cc_sm7635_desc, regmap);
 +}
 +
-+static struct platform_driver video_cc_sm7635_driver = {
-+	.probe = video_cc_sm7635_probe,
++static struct platform_driver gpu_cc_sm7635_driver = {
++	.probe = gpu_cc_sm7635_probe,
 +	.driver = {
-+		.name = "video_cc-sm7635",
-+		.of_match_table = video_cc_sm7635_match_table,
++		.name = "gpu_cc-sm7635",
++		.of_match_table = gpu_cc_sm7635_match_table,
 +	},
 +};
 +
-+module_platform_driver(video_cc_sm7635_driver);
++module_platform_driver(gpu_cc_sm7635_driver);
 +
-+MODULE_DESCRIPTION("QTI VIDEO_CC SM7635 Driver");
++MODULE_DESCRIPTION("QTI GPU_CC SM7635 Driver");
 +MODULE_LICENSE("GPL");
 
 -- 
