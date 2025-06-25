@@ -1,66 +1,85 @@
-Received: from gentwo.org (gentwo.org [62.72.0.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40D9029AB02;
-	Wed, 25 Jun 2025 17:54:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.72.0.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB2F1AF0BB;
+	Wed, 25 Jun 2025 17:54:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750874065; cv=none; b=THGRYdM1zvvRcsCzLhmVzBNCYHFKppPw2sexhphqSlIOcE20cyyeLXa5lQBX4PleR/qM1pOfs9uGGdqAPiwKUDdq5Vi+yB6AfIARlMeaddh27XrDGbX06L9AIwUnC8SiYwgB1BOiPoshyaEs3jwomYh8sOv3xPe4PXbxG03WKQg=
+	t=1750874083; cv=none; b=tWIqZ7NjhUV8XclPsCW9FWoiotc4dJtobBNM7f6KJz9j56S6r6txDW0sMDMdWfcsvbnOkerAfPnr9TS3yU6XC9BG579CU1MdH+8hXvoyk0J46ostyWbjg5co6vk+vz9Nm7wrMg2g7cmPE2qC/DPRGib0ja8Vh8viqcGC+/nvywU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750874065; c=relaxed/simple;
-	bh=NGkpVoEaQdpDgPeWuBVnzV5+AxosWbl5FUgYHVP9+F4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EKRD3/0tXxV5TP8mdJSH7qNRJVvVGUSi3T+25NbxhVV3eX6v5v4v8fkZ7o/HyWB8zpDkANFG5UVWnOXXa21bfvz4yw8mv3h40Ersg6SFEt3gyR/f1QtQ3LFmURMf0G5G/y3ca/RfQgJRmczM5nFCetUuXUlFKqGwl3EnxoZNjM8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org; spf=pass smtp.mailfrom=gentwo.org; dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b=BpMO2uHz; arc=none smtp.client-ip=62.72.0.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=gentwo.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentwo.org
+	s=arc-20240116; t=1750874083; c=relaxed/simple;
+	bh=V/776moD0WP3JA8kmJKpRFhViMjXtiD1Hu+QZ1gN3ik=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=JSZhppCoVGpYxsx2g1mYhb04M6ccBVqUqDMlP8i4fSXJ2KQcOhgglgtmM8rWYR6oBmB6qGZoHLulzl5Qc84Xy9vlu2iYUpOCi4cDiSHr2znaFKy9+DIJ9wApeffQR4dKqEbG5WfRgN5wuCIHxP3f2CCgSKnHM+HsVcgZv8gsYBU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a4ZHKFfM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=gentwo.org header.i=@gentwo.org header.b="BpMO2uHz"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gentwo.org;
-	s=default; t=1750872222;
-	bh=NGkpVoEaQdpDgPeWuBVnzV5+AxosWbl5FUgYHVP9+F4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=BpMO2uHzL5lQXkm1+fD38fBuWdrwbshTzBBQX81FyKHxfvSgdGXRMQkY/WAgW8oHY
-	 Rp6K4Cch0Z0PulPhN+ed8UTdwp8c/9RaH1EZJtND6pn1PS+kCkEisyOiXtZCIieQGt
-	 FW4z6emguFAfMa48GWSBaEyt//bO84GkbteQ5+hk=
-Received: by gentwo.org (Postfix, from userid 1003)
-	id 2D91040743; Wed, 25 Jun 2025 10:23:42 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-	by gentwo.org (Postfix) with ESMTP id 2C7F940113;
-	Wed, 25 Jun 2025 10:23:42 -0700 (PDT)
-Date: Wed, 25 Jun 2025 10:23:42 -0700 (PDT)
-From: "Christoph Lameter (Ampere)" <cl@gentwo.org>
-To: Mitchell Levy <levymitchell0@gmail.com>
-cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-    Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-    =?ISO-8859-15?Q?Bj=F6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-    Andreas Hindborg <a.hindborg@kernel.org>, 
-    Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-    Andrew Morton <akpm@linux-foundation.org>, Dennis Zhou <dennis@kernel.org>, 
-    Tejun Heo <tj@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
-    Benno Lossin <lossin@kernel.org>, linux-kernel@vger.kernel.org, 
-    rust-for-linux@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 4/5] rust: percpu: Add pin-hole optimizations for
- numerics
-In-Reply-To: <20250624-rust-percpu-v1-4-9c59b07d2a9c@gmail.com>
-Message-ID: <d938ed3a-cb00-0a71-2380-dac7d1a9e039@gentwo.org>
-References: <20250624-rust-percpu-v1-0-9c59b07d2a9c@gmail.com> <20250624-rust-percpu-v1-4-9c59b07d2a9c@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a4ZHKFfM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FC41C4CEEA;
+	Wed, 25 Jun 2025 17:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750874082;
+	bh=V/776moD0WP3JA8kmJKpRFhViMjXtiD1Hu+QZ1gN3ik=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=a4ZHKFfM/MUH7wdncYY6XrWlP2fPRfVmsLpbFF+gwUxm9ucIgZFB5A819+w4EfYM+
+	 IdC82XoKAqDp92w5NLOvTPSjp6gE9SGH/sFTWE19zj/0YrsqrXGwFNq3E42xElDtgr
+	 +Vp1dOHyeR1G+XEKcajNklagWy1jzEF3m/d2xpD/qV5vAnGJu67u/CBOTARe5trz2U
+	 Y4jwsjCjh6vxmW0H39DZ3XIgA7wPcKPkqQ+UWs86uUAYiQUYHDf2wzl/Ifvq1QjIht
+	 VessRp4F48UN8weEyp0gvCFYX+TbdV7N1EP/Q8Z5efJP+q7PCS4JRYefgayvBidAIG
+	 kuBHiMzqzBMPA==
+Date: Wed, 25 Jun 2025 12:54:41 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Claudiu Beznea <claudiu.beznea@tuxon.dev>
+Cc: Manivannan Sadhasivam <mani@kernel.org>, bhelgaas@google.com,
+	lpieralisi@kernel.org, kw@linux.com,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, geert+renesas@glider.be,
+	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org,
+	p.zabel@pengutronix.de, linux-pci@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-clk@vger.kernel.org, john.madieu.xa@bp.renesas.com,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: Re: [PATCH v2 4/8] PCI: rzg3s-host: Add Initial PCIe Host Driver for
+ Renesas RZ/G3S SoC
+Message-ID: <20250625175441.GA1579685@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5ed851fd-6cdc-48f6-ae39-67c95e6ad6d0@tuxon.dev>
 
-On Tue, 24 Jun 2025, Mitchell Levy wrote:
+On Wed, Jun 25, 2025 at 04:07:58PM +0300, Claudiu Beznea wrote:
+> On 18.06.2025 20:42, Manivannan Sadhasivam wrote:
+> > On Fri, May 30, 2025 at 02:19:13PM +0300, Claudiu wrote:
+> >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >>
+> >> The Renesas RZ/G3S features a PCIe IP that complies with the PCI Express
+> >> Base Specification 4.0 and supports speeds of up to 5 GT/s. It functions
+> >> only as a root complex, with a single-lane (x1) configuration. The
+> >> controller includes Type 1 configuration registers, as well as IP
+> >> specific registers (called AXI registers) required for various adjustments.
 
-> +                        concat!("add gs:[{off}], {val:", $reg, "}"),
+> This is how HW manual suggest to do it. The manual is open, it can be
+> downloaded from [1]. Chapter that describes the steps implemented here is
+> 34.4.2.4 Issuing Special Requests.
+> 
+> Steps to reach the HW manual:
+> 1/ click "RZ/G3S Group User's Manual: Hardware" button
+> 2/ click confirm
+> 3/ open the archive
+> 4/ go to r01uh1014ej0110-rzg3s-users-manual-hardware -> Deliverables
+> 5/ open r01uh1014ej0110-rzg3s.pdf
 
-> +                        concat!("sub gs:[{off}], {val:", $reg, "}"),
+Nice that the manual is public!  URLs are a great invention; it's too
+bad when we need directions for where to click, etc, in addition to
+the URL.  Maybe one or both of these URLs could be included in the
+commit log.
 
-> +                        concat!("sub gs:[{off}], {val}"),
+> [1]
+> https://www.renesas.com/en/products/microcontrollers-microprocessors/rz-mpus/rzg3s-general-purpose-microprocessors-single-core-arm-cortex-a55-11ghz-cpu-and-dual-core-cortex-m33-250mhz?queryID=695cc067c2d89e3f271d43656ede4d12
 
-Where are the other RMV instructions like this_cpu_xchg and
-this_cpu_cmpxchg, this_cpu_cmpxchg_double etc?
-
+https://www.renesas.com/en/document/mah/rzg3s-group-users-manual-hardware?r=25458591
