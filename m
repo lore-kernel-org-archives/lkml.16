@@ -1,147 +1,78 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B0529E115
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 376B629ACFA;
+	Wed, 25 Jun 2025 10:10:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750846239; cv=none; b=sBfL6tVSCZL6i9iZi02yGRjADeGTEHnd/vF/iXSpz4fE51xXkALyYetiTZBuHz4FmNJPkqHpYwcjLYGvuVstJLkAxDWltaElRD5j+P1SHW/1kd0GxADiIbc+XlKue90Pff8VsJDZijyTfiae7Bt2v/bE9SmgNTC+m/6jtQUZFRk=
+	t=1750846258; cv=none; b=tzrDMGLHKNrsy3YRiNZl7Yb6QH7b+vo5m+erBgXztJFoMnU8KOh3qW+yHmG7b5EV0F/M6nyU4nB0dhCVSpEbmAsAlX9bAQ/gjmJpfAWBtoZMZt7Tx/iqeTDtSbioetN02Nx+wJ8mXOcU9/YZjNkqMH1vc9o7mwNZf9eBwbEDKUE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750846239; c=relaxed/simple;
-	bh=fwr13GjDwenIIn+hJVnH+OK1h41ZA7vGn8reGc5n3Cc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pEOyhHFNe/tPq9M9g4EIkib1ELyz1+J143jxOujmZONB8o1WhB26aqXFuNmCscEczPJrNPaIXMcQ8GS9KP0wDDcOGyy9VbQ5Xko2xdAvl/MlsGa3x/5kWFyMftzlB/K07pAN2f/sBUK3aiKtCrOBpwD1Pr74QHKRqM0Tr4lsx4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XIUdo6lG; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XIUdo6lG"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e731a56e111so5442495276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:10:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750846236; x=1751451036; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NyqCTrWRH38g5oBlyqrDfAPMaqAjSD4w/gNXRimf4zI=;
-        b=XIUdo6lG0rL0BOjJ/uYuQLXsp4QHvNQyKw2LFjb6yKO3t6JnPRskaByrsDc8VqUl5u
-         mgqd57GS9/KlYo+uJWyKYh7/dYVX0NsSJXUrzACozJscx1ckMLaIhHJJSGHnCFZOgglz
-         5smChTQ+eUvY9sNFvs0P+kbPFpWRF3PEAp7GpaCFVgOnbjWUXEuR/LAo4FeT1+t4Fqj8
-         rNg4o77u+xCkEDI/t+dzI7ESphrzpLfHgKdPx77n3bbmAy1UsP5zdIGBSt3fA0/TGrJs
-         nkMZNk6qSwjk3mgWhad1orrSsp4n4ToBwQ6H5pzT3LAWu4ANOG7CUmQxBLSda2JEu1bt
-         xi3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750846236; x=1751451036;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NyqCTrWRH38g5oBlyqrDfAPMaqAjSD4w/gNXRimf4zI=;
-        b=aHQTo679JgovgyMwRThybuDf88Sf/lXGlXF2J6u0qOElJUL7syaTN9SHM4pD/4VIlq
-         oWCN+FyZznQt/Yj9ihNnxCxrRKpOiydAQmqJe365D8fOdlDXF85O5xL7iGw/IBc2+AYZ
-         4xUtOtNT8WTM25MVh21PwIuNQps2c8kagDXOB/R42r9G5V6GYJhEumb8hVoUgziK86dh
-         PuUR6Zyrl00677XJF7XZuVTS62HTb0IiDQB9o96n+brN6SwWb11iIbSZPC4rhqZLqXnZ
-         xGjcxPB4jWOmnZQX6L315SGVWBi5Av+hSDWkWTZCIaihBzuNC7CO8SCVKiUEgc2tLQbQ
-         C9wA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVpZm9hoedWEfH3vltjEioxsx3EVVggDlnE1PfZaBwEBh+0QJBnstNxric+bO6RhkA7SGr7Stp5/ZXQqI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw00M6UCM0EfWym2NYKZLPKkBeajVnCrrEl6SMKiKfMFkCznUCw
-	kTVqLoHV282cuewGwgaLHExPTZHrKk9XhScGwUGoOW5n6gOCZFzQ9ULqlm7eRsOHmTysURsHRUf
-	yg6irQF26HJN2O5x9EXYsXQOjRz2JnEQPjMPOQA8NNQ==
-X-Gm-Gg: ASbGnctRGSYD7I7K6Ps1yzUd2wotaodQutL7HUMBDFCQYnzVuER3uq+2qG4i4tPuh3x
-	jGpGK5KUcSREpurGyTj3S0L9du8edp/8lulSxOnF0xOf05A3S9zGtlu/9D3MXBDlJmsWpwl+iRQ
-	XDUySN53sq4JILZFsOLOd2cnd/VBnG/yVBq+MITBnqfKQ=
-X-Google-Smtp-Source: AGHT+IGe9cdom9zPx5u2qPQ0tKYQR48QY3X3hjRnSL5OJURAbiiA4qXISjJMreIIdvqnR03DBzmyaEkxFKrpD5ccSCA=
-X-Received: by 2002:a05:6902:1703:b0:e81:9aa9:88d0 with SMTP id
- 3f1490d57ef6-e86018ef2f7mr2666888276.40.1750846235599; Wed, 25 Jun 2025
- 03:10:35 -0700 (PDT)
+	s=arc-20240116; t=1750846258; c=relaxed/simple;
+	bh=jJiZMdARSlaUy5Gkp3wE6lYkk6J5PcTRF0Hc0Gq8/VI=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=eCffA/ixdMLBiy8T+oarlRfVA5sti+RToSVlkDr/nrK3+mOkECH18cpj5oW0l+/gtjxEhuDVCEQuVenVL2vbiEwvRA1dG1+T2h4N5RW+obLyQvkiHtfwe4EvyF/lbx1LPFel47+NJFgepO6tA33B/O2KtCPUVx3nxjO527vzKXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55PAAeaM066330;
+	Wed, 25 Jun 2025 19:10:40 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55PAAdxw066301
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 25 Jun 2025 19:10:40 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <54358ab7-4525-48ba-a1e5-595f6b107cc6@I-love.SAKURA.ne.jp>
+Date: Wed, 25 Jun 2025 19:10:33 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20250623114429eucas1p1e74e09e74c5873b2f7f01228073be72a@eucas1p1.samsung.com>
- <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
-In-Reply-To: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 25 Jun 2025 12:09:59 +0200
-X-Gm-Features: AX0GCFuzRfZFQhIpkvF03Pc7_qxAuJk_yHypckCZgiSZSQVUDRcV_4FwsCAnQX0
-Message-ID: <CAPDyKFrCeYxtqscX8Vr165HMOcSof_d62PMtRwt_yDyZ4ujSDQ@mail.gmail.com>
-Subject: Re: [PATCH v6 0/8] Add TH1520 GPU support with power sequencing
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: Viacheslav Dubeyko <slava@dubeyko.com>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Yangtao Li <frank.li@vivo.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [PATCH] hfsplus: don't use BUG_ON() in
+ hfsplus_create_attributes_file()
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Virus-Status: clean
+X-Anti-Virus-Server: fsav404.rs.sakura.ne.jp
 
-On Mon, 23 Jun 2025 at 13:44, Michal Wilczynski
-<m.wilczynski@samsung.com> wrote:
->
-> This patch series introduces support for the Imagination IMG BXM-4-64
-> GPU found on the T-HEAD TH1520 SoC. A key aspect of this support is
-> managing the GPU's complex power-up and power-down sequence, which
-> involves multiple clocks and resets.
->
-> The TH1520 GPU requires a specific sequence to be followed for its
-> clocks and resets to ensure correct operation. Initial discussions and
-> an earlier version of this series explored managing this via the generic
-> power domain (genpd) framework. However, following further discussions
-> with kernel maintainers [1], the approach has been reworked to utilize
-> the dedicated power sequencing (pwrseq) framework.
->
-> This revised series now employs a new pwrseq provider driver
-> (pwrseq-thead-gpu.c) specifically for the TH1520 GPU. This driver
-> encapsulates the SoC specific power sequence details. The Imagination
-> GPU driver (pvr_device.c) is updated to act as a consumer of this power
-> sequencer, requesting the "gpu-power" target. The sequencer driver,
-> during its match phase with the GPU device, acquires the necessary clock
-> and reset handles from the GPU device node to perform the full sequence.
->
-> This approach aligns with the goal of abstracting SoC specific power
-> management details away from generic device drivers and leverages the
-> pwrseq framework as recommended.
->
-> The series is structured as follows:
->
-> Patch 1: Introduces the pwrseq-thead-gpu auxiliary driver to manage the
->          GPU's power-on/off sequence.
-> Patch 2: Adds device tree bindings for the gpu-clkgen reset to the
->          existing thead,th1520-aon binding.
-> Patch 3: Extends the pm-domains driver to detect the gpu-clkgen reset
->          and spawn the pwrseq-thead-gpu auxiliary driver.
-> Patch 4: Updates the Imagination DRM driver to utilize the pwrseq
->          framework for TH1520 GPU power management.
-> Patch 5: Adds the thead,th1520-gpu compatible string to the PowerVR GPU
->          device tree bindings.
-> Patch 6: Adds the gpu-clkgen reset property to the aon node in the
->          TH1520 device tree source.
-> Patch 7: Adds the device tree node for the IMG BXM-4-64 GPU and its
->          required fixed-clock.
-> Patch 8: Enables compilation of the Imagination PowerVR driver on the
->          RISC-V architecture.
->
-> This patchset finishes the work started in bigger series [2] by adding
-> all remaining GPU power sequencing piece. After this patchset the GPU
-> probes correctly.
->
-> This series supersedes the previous genpd based approach. Testing on
-> T-HEAD TH1520 SoC indicates the new pwrseq based solution works
-> correctly.
+syzkaller can mount crafted filesystem images.
+Don't crash the kernel when we can continue.
 
-I have applied patch2 and patch3 for next via the pmdomain tree, thanks!
+Reported-by: syzbot <syzbot+1107451c16b9eb9d29e6@syzkaller.appspotmail.com>
+Closes: https://syzkaller.appspot.com/bug?extid=1107451c16b9eb9d29e6
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+---
+ fs/hfsplus/xattr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Note that, the DT patch (patch2) is also available on the immutable dt
-branch, if it needs to be pulled into some other tree.
-
-[...]
-
-Kind regards
-Uffe
+diff --git a/fs/hfsplus/xattr.c b/fs/hfsplus/xattr.c
+index 9a1a93e3888b..191767d4cf78 100644
+--- a/fs/hfsplus/xattr.c
++++ b/fs/hfsplus/xattr.c
+@@ -172,7 +172,11 @@ static int hfsplus_create_attributes_file(struct super_block *sb)
+ 		return PTR_ERR(attr_file);
+ 	}
+ 
+-	BUG_ON(i_size_read(attr_file) != 0);
++	if (i_size_read(attr_file) != 0) {
++		err = -EIO;
++		pr_err("failed to load attributes file\n");
++		goto end_attr_file_creation;
++	}
+ 
+ 	hip = HFSPLUS_I(attr_file);
+ 
+-- 
+2.49.0
