@@ -1,31 +1,48 @@
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484FE1EF0B9
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:26:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036A53074AF
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:27:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750832794; cv=none; b=a/BCYCQc7dXRQVPxL5A0g15sbuM/H0kdtB1BOyZBpl5MdujKfTsTXMowvE5SAnY7Q8IR059JqsdxB61KNsCZwZQx8UQ9KA8/mw0Esh5cRqYvalxdpBuq6XRUnPHT41diLzwE/7hXhW1ozQM7ujmyqGosInx+7TDROiQGvCFy7Rc=
+	t=1750832856; cv=none; b=nZVMyzBlpbKqT9Qldun+Ht0eVDQXttzPmZxItFVbvEfBH68FGApenmAE88jqc1h/TARNDCA+Xhv6uSAy4SWlEVW4b4RFhMSFs4v/t8DgmVRrwROYctnmg0m+QU2qNxVsbgA6VcwXcNIcVG0NtcrlgLXKmupd4Wx/tNiXjf1JNuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750832794; c=relaxed/simple;
-	bh=BI1HaodxCq3kprUQUXR9UBMnGMac138rMkodMcp6f4o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NU9+FPG67sYvnhZUzIYd4EDA8yDgujca+bZ7xF0DtDU7+BYkdkWdX+lgK/fprAWOPQsPyZPZlH+/jIy1vf72Wij5Frn2F53OZlhSKxuMEusl3sm5SDEogA1MSQicH7yat8F5LjJHscf9IdtVPD9sdypEK1cRRiZaLGTha3QhVwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=qeSCml2t; arc=none smtp.client-ip=115.124.30.98
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1750832856; c=relaxed/simple;
+	bh=nMHX+d333D5HPC8QcZ9mPWtUcYmnNGg92MSLZoyFgLY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nQymSJKpQNDzGJfndwh4QZOCQ11+jBqQJA9rkvQHkXOCF2zPLUy9mOaxY2g1rwJ89tUOUCUl1kPwkaWwVb5d7jRcuZPWC8j0JymEVUZQVR84F9Q80Eo1tLqtJJLWIzkhRr204iy86iNhB9aUF9/v5hmMlGL9KKhCd17ThJK5YI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ewryUBMr; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="qeSCml2t"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750832788; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=/x/IypZhaD2LEMN4KW3KUfldxpdTKPN44bIQTVmKbjk=;
-	b=qeSCml2tKTaz+LyE/pWcpAId2bnkeV6brBghBfiuzpP+a9av6PFMlW7gBO45RSmtN7by+qUQMdY4e0C77V/n+FTrckBgvBhpRiuc2pCCZ90PUj1BiNwtgDp5beCPa02175G6tjaP0B0hyg2/vBgVsydjzFS+ylVaU9z6VGkpceE=
-Received: from 30.74.144.110(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WeuHXyE_1750832786 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 25 Jun 2025 14:26:27 +0800
-Message-ID: <cc4da391-7c90-435c-ae39-30de37535c05@linux.alibaba.com>
-Date: Wed, 25 Jun 2025 14:26:25 +0800
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ewryUBMr"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P54UMR022368;
+	Wed, 25 Jun 2025 06:27:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	hWkTTuqHbYqzXcJMzG5QmoHMtY37J1sZaXArJ5+zQbQ=; b=ewryUBMr41b8wis0
+	JUGp5bkxXfHVgvuNAXeG5E3tDLAjTJPPk1poloH0CtbO4Vhhw2LXAk1/8P5iLvd+
+	qiXSG4CxbZDpRqOB9aIsaa9QQScCEZldf9TmPcBhWu3e6eoHOx15dYtgIjNah41p
+	xFuPpj7oCdncksgDZ4ES1v5xEBC/q/I+KaewcdPqd0RVQOJAzpfXC83orBnXmmld
+	3cdiwaGPqcD9iS3C1c2cHHIzbPHcZJp/V8Cu6PGfZt4dBfY2qw5DjINImJH1ZSe3
+	XYW1q2bB23nQ7P6NHqtnZqGURHSVF6vC2UqXkJ8EHHAnqmqLkD3bH3WR8pJewF5O
+	RlCyew==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47f4b3xjnc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 06:27:00 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55P6Qxaj001894
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 06:26:59 GMT
+Received: from [10.253.38.60] (10.80.80.8) by nasanex01b.na.qualcomm.com
+ (10.46.141.250) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 24 Jun
+ 2025 23:26:55 -0700
+Message-ID: <1e5c1c96-b76c-4e2a-ba50-f914e94b142d@quicinc.com>
+Date: Wed, 25 Jun 2025 14:26:52 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,141 +50,82 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] fix MADV_COLLAPSE issue if THP settings are
- disabled
-To: Hugh Dickins <hughd@google.com>
-Cc: akpm@linux-foundation.org, david@redhat.com, ziy@nvidia.com,
- lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
- zokeefe@google.com, shy828301@gmail.com, usamaarif642@gmail.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1750815384.git.baolin.wang@linux.alibaba.com>
- <75c02dbf-4189-958d-515e-fa80bb2187fc@google.com>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <75c02dbf-4189-958d-515e-fa80bb2187fc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v5] coccinelle: misc: Add field_modify script
+To: Markus Elfring <Markus.Elfring@web.de>, <cocci@inria.fr>,
+        Catalin Marinas
+	<catalin.marinas@arm.com>,
+        Joey Gouly <joey.gouly@arm.com>, Julia Lawall
+	<Julia.Lawall@inria.fr>,
+        Marc Zyngier <maz@kernel.org>, Nicolas Palix
+	<nicolas.palix@imag.fr>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        "Rasmus
+ Villemoes" <linux@rasmusvillemoes.dk>,
+        Suzuki Poulose
+	<suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>, Yury Norov
+	<yury.norov@gmail.com>,
+        Zenghui Yu <yuzenghui@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <kvmarm@lists.linux.dev>, Andrew Lunn <andrew@lunn.ch>,
+        Kiran Kumar C.S.K
+	<quic_kkumarcs@quicinc.com>,
+        Lei Wei <quic_leiwei@quicinc.com>,
+        Pavithra R
+	<quic_pavir@quicinc.com>,
+        Suruchi Agarwal <quic_suruchia@quicinc.com>,
+        <quic_linchen@quicinc.com>
+References: <20250624-field_modify-v5-1-cd67127030e4@quicinc.com>
+ <e694666a-ec94-4443-bae7-54ac2f0f0e7d@web.de>
+Content-Language: en-US
+From: Luo Jie <quic_luoj@quicinc.com>
+In-Reply-To: <e694666a-ec94-4443-bae7-54ac2f0f0e7d@web.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA0NiBTYWx0ZWRfXxvGrjqZaaCR0
+ 1FQqKirKVGGm1IX0qm8OajLNKgxIEJ6URBp/iN6OGEnJjPzKB4hpBVETvsflTkU4JnqfaN2bwpf
+ QJVYLvrgWve4WgVNKFNC0yKRGaP/GbweIsQd9xIusf3EopsdyMPTQDnJxq3tKvRKRP/KQFxv1ft
+ ocds7daSscOAIPdz+mtv5Jo5BK9P3I7d0RvMzQnHYBo3oOccKXN+Q3fqddizJBICuYBcuscfcyt
+ Vf6+KTQbF9WqqFRE3W68tLPIxnvCqpjnEri0taBHbVQNMBkYygMKfmcF+Ws9CO/QVY+2/P+QT0O
+ XH3LgbWMafY0gXIZxvjuZKMBL8YqIboMo6A0+DKDo0NY+WS8m+Vb2B1hb5Rj9Pe31Ejcb/oCr08
+ S1pheYi+WyVoEK3+Ha3RTV4f0JwGp8i8Wjk8or7HTtNXAz4UGyn9MkEtWII65xl8vHqRuwuR
+X-Proofpoint-ORIG-GUID: W2qJRLW0W0B1hDpsCof4incN1KLYlAeb
+X-Proofpoint-GUID: W2qJRLW0W0B1hDpsCof4incN1KLYlAeb
+X-Authority-Analysis: v=2.4 cv=A8BsP7WG c=1 sm=1 tr=0 ts=685b96b4 cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=05oQ047nAAAA:8
+ a=kZqaHTt7WJRbN11SuRcA:9 a=QEXdDO2ut3YA:10 a=vNAg3JWiabyzeNEprMgK:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_01,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 spamscore=0 bulkscore=0
+ phishscore=0 adultscore=0 impostorscore=0 suspectscore=0 mlxscore=0
+ clxscore=1015 priorityscore=1501 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506250046
 
 
 
-On 2025/6/25 13:53, Hugh Dickins wrote:
-> On Wed, 25 Jun 2025, Baolin Wang wrote:
+On 6/24/2025 9:54 PM, Markus Elfring wrote:
+>> +msg="WARNING: Consider using FIELD_MODIFY helper on %s" % (x)
+>> +msg_safe=msg.replace("[","@(").replace("]",")")
+>> +coccilib.org.print_todo(p[0], msg_safe)
 > 
->> When invoking thp_vma_allowable_orders(), if the TVA_ENFORCE_SYSFS flag is not
->> specified, we will ignore the THP sysfs settings. Whilst it makes sense for the
->> callers who do not specify this flag, it creates a odd and surprising situation
->> where a sysadmin specifying 'never' for all THP sizes still observing THP pages
->> being allocated and used on the system. And the MADV_COLLAPSE is an example of
->> such a case, that means it will not set TVA_ENFORCE_SYSFS when calling
->> thp_vma_allowable_orders().
->>
->> As we discussed in the previous thread [1], the MADV_COLLAPSE will ignore
->> the system-wide anon/shmem THP sysfs settings, which means that even though
->> we have disabled the anon/shmem THP configuration, MADV_COLLAPSE will still
->> attempt to collapse into a anon/shmem THP. This violates the rule we have
->> agreed upon: never means never.
->>
->> For example, system administrators who disabled THP everywhere must indeed very
->> much not want THP to be used for whatever reason - having individual programs
->> being able to quietly override this is very surprising and likely to cause headaches
->> for those who desire this not to happen on their systems.
->>
->> This patch set will address the MADV_COLLAPSE issue.
->>
->> Test
->> ====
->> 1. Tested the mm selftests and found no regressions.
->> 2. With toggling different Anon mTHP settings, the allocation and madvise collapse for
->> anonymous pages work well.
->> 3. With toggling different shmem mTHP settings, the allocation and madvise collapse for
->> shmem work well.
->> 4. Tested the large order allocation for tmpfs, and works as expected.
->>
->> [1] https://lore.kernel.org/all/1f00fdc3-a3a3-464b-8565-4c1b23d34f8d@linux.alibaba.com/
->>
->> Changes from v3:
->>   - Collect reviewed tags. Thanks.
->>   - Update the commit message, per David.
->>
->> Changes from v2:
->>   - Update the commit message and cover letter, per Lorenzo. Thanks.
->>   - Simplify the logic in thp_vma_allowable_orders(), per Lorenzo and David. Thanks.
->>
->> Changes from v1:
->>   - Update the commit message, per Zi.
->>   - Add Zi's reviewed tag. Thanks.
->>   - Update the shmem logic.
->>
->> Baolin Wang (2):
->>    mm: huge_memory: disallow hugepages if the system-wide THP sysfs
->>      settings are disabled
->>    mm: shmem: disallow hugepages if the system-wide shmem THP sysfs
->>      settings are disabled
->>
->>   include/linux/huge_mm.h                 | 51 ++++++++++++++++++-------
->>   mm/shmem.c                              |  6 +--
->>   tools/testing/selftests/mm/khugepaged.c |  8 +---
->>   3 files changed, 43 insertions(+), 22 deletions(-)
->>
->> -- 
->> 2.43.5
+> How do you think about to use the following code variant instead?
 > 
-> Sorry for chiming in so late, after so much effort: but I beg you,
-> please drop these.
-
-Thanks Hugh for your input. (yes, we put in a lot of effort on 
-discussion and testing:( ).
-
-> I did not want to get into a fight, and had been hoping a voice of
-> reason would come from others, before I got around to responding.
+> msg = f"WARNING: Consider using FIELD_MODIFY helper on {x}"
+> coccilib.org.print_todo(p[0], msg.replace("[","@(").replace("]",")"))
 > 
-> And indeed Ryan understood correctly at the start; and he, Usama
-> and Barry, perhaps others I've missed, have raised appropriate
-> concerns but not prevailed.
-> 
-> If we're sloganeering, I much prefer "never break userspace" to
-> "never means never", attractive though that over-simplification is.
 
-Yes, agree. we should not break userspace, however, I suspect whether 
-this can really break userspace. We can set 
-'/sys/kernel/mm/transparent_hugepage/enabled' to 'madvise' to allow 
-MADV_COLLAPSE. Additionally, I really doubt that when the system-wide 
-THP settings are set to 'never', userspace would still expect to 
-collapse into THP using MADV_COLLAPSE.
+I think your proposed variant is a better alternative. I will adopt
+it in the next revision. Thanks.
 
-Moreover, what makes this issue particularly frustrating is that when we 
-introduce mTHP collapse[1], MADV_COLLAPSE complicates matters further. 
-That is, when the system only enables 64K mTHP, MADV_COLLAPSE still 
-allows collapsing into PMD-sized THP. This really breaks the user's 
-settings.
-
-[1] https://lore.kernel.org/all/20250515032226.128900-1-npache@redhat.com/
-
-> Seldom has a feature been so thorougly documented as MADV_COLLAPSE,
-> in its 6.1 commits and in the "man 2 madvise" page: which are
-> explicit about MADV_COLLAPSE providing a way to get THPs where the
-> sysfs setting governing automatic behaviour does not insert them.
 > 
-> We would all prefer a less messy world of THP tunables.  I certainly
-> find plenty to dislike there too; and wish that a less assertive name
-> than "never" had been chosen originally for the default off position.
-> 
-> But please don't break the accepted and documented behaviour of
-> MADV_COLLAPSE now.
-> 
-> If you want to exclude all possibility of THPs, then please use the
-> prctl(PR_SET_THP_DISABLE); or shmem_enabled=deny (I think it was me
-> who insisted that be respected by MADV_COLLAPSE back then).
-
-Yes, that will prevent MADV_COLLAPSE.
-
-> Add a "deny" option to /sys/kernel/mm/transparent_hugepage/enabled
-> if you like.  (But in these days of filesystem large folios, adding
-> new protections against them seems a few years late.)
-> 
-> If Andrew decides that these patches should go in, then I'll have to
-> scrutinize them more carefully than I've done so far: but currently
-> I'm hoping to avoid that.
-> 
-> Hugh
+> Regards,
+> Markus
 
