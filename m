@@ -1,115 +1,96 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA991C700D;
-	Wed, 25 Jun 2025 14:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C94821D5170
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750863092; cv=none; b=aKbw0wYu0uSw+p+BDk1XH09Y5XBpsiEpybE8jOXO/5kG86ubcCwaqbQn5LCe3Ngj0zxQJhNVsHKY19TSG0sa8Fk2WsdJfdpW95S3qWWIhK54Z+x7mqGXiFpWJriCb7Gx5Xjb4EGP0GrwctuyZI76bz0IiX6Qrptbu263U6vqRuM=
+	t=1750863161; cv=none; b=rWZcBDjFw94ETELxsd96pHGKvYSvr2Du1yjeGGOw473uEY2b1gMvZH7xij6CUjaP0p8kXoj8uxiznt7HLzO5bPlQvdKPVkoOeI9nm+zM6Hfie3YnaJRPQNN+16oVLilIruhVQkEGzbKB56AwLHNnpSBwSDPzRC1/3fMrkz4QcQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750863092; c=relaxed/simple;
-	bh=IDWtsE1ssLqJQnHo7vMwKeriRpXiA/AjZryWJ4ogYrY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BERbZ2yRUSzgveD6hMvD5vfNCQ0wCS5wrJh1T9S3CD3VMTwHxCnWsUsUySnjx3f1e4OEo/kDW/mppVgFaT/nUFYX+4+Eyz/22XbmcCL6jBve5jPxAToYKPUAlQJqxlduQNIZ57Gz7OHFgKn/1gYN1lSFttGPQRQ3c1MKF1fX5u0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=HTfLNVsh reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1750863161; c=relaxed/simple;
+	bh=blqNeUBeq4tjvuy/9Ly0dt0wfjN65t72jilSiX/+g7U=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=IVSJAfzZOvP2h7CshKgvr5wu1i1l8JAKDMSI5PXoFasAQ3CaUPbQ3kFJOhJfrJTmm9hRV9dKobhjzlbViCoKd535f8BTMq2bCYQE5BW5KmQsQbeq2qeuKaf2iPlt0i7JQ604sBjrxfUbtF8Pe3+Ao5z5zjTBnCqyGjxbEadTXvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=2LJqB9Az; arc=none smtp.client-ip=209.85.214.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="HTfLNVsh"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id DB65940E0198;
-	Wed, 25 Jun 2025 14:51:27 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
-	reason="fail (body has been altered)" header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id qd9_5t7BL3pK; Wed, 25 Jun 2025 14:51:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1750863081; bh=mSgBljJDSSPgybtfgKcZuc5PlEdCsjmYII4xX36X82Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HTfLNVshad0nNM1r0zJA4kAoroUiTeD7RVgpfZbBNYM0uqtc0rFst+jltnkhRgd+N
-	 7HgU0nhDkLjQWKSMH4SmvBcj01iqg9wVq0RMTs4vBpCiExzUmPN2CT2plVUw9DTThz
-	 d7j3cD5S8fQycvh7eEXIiPH9mpb19m3Z6yPL8BPHXOemYkd2rqn0DFqaTPUv4fjrQx
-	 YbjZt7A2lETbF2LeUJVwfP/qmYa7WTCt2K2ibP+KR/24yl4pZTKYbYHoekeBBt7V7a
-	 YUk+D2ABQk0mK5GwwGuEPBgpUF+o1M3OPCdKdPAwLyLddd0KwbVi1FqP7IYsXGDUdH
-	 ypWtbsfewYOdXgIS5etJBB/5F+GOXKs4yPC7/ZgS3x4pMiX/YUrVPAlbI6lbQ7risa
-	 T9+/DKBg7GrXJCt+YNOTr7j6omrUORpIJ5gNqu3JHDz012CHSSg+KY4HmrSOA+5IqD
-	 /AKHpiUx2L36crWyZ/+AD7SYvvCqTYeAHr2oz0ASCoCW7AlafZE9sljGBv87GT6PW9
-	 Hv0LVG5lB2Ctm+PAa1DVr/dN1iOujlNy88K6y0HqeeBddhKlVam7o1XxZt2aZRKuAV
-	 9k9ME8LCvL7LbKjlt3rlJqlNvUoe2cyPK3xGl4riHHei/nzTVGbyxJPnbPFOva5TAU
-	 xmXxsxzRHGy7+iQ5/wS9Xuyw=
-Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 879D540E019C;
-	Wed, 25 Jun 2025 14:51:16 +0000 (UTC)
-Date: Wed, 25 Jun 2025 16:51:10 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Avadhut Naik <avadhut.naik@amd.com>
-Cc: linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org,
-	=?utf-8?Q?=C5=BDilvinas_=C5=BDaltiena?= <zilvinas@natrix.lt>,
-	Yazen Ghannam <yazen.ghannam@amd.com>
-Subject: Re: [PATCH v5] EDAC/amd64: Fix size calculation for Non-Power-of-Two
- DIMMs
-Message-ID: <20250625145110.GAaFwM3ooyoFYsfgsf@fat_crate.local>
-References: <20250529205013.403450-1-avadhut.naik@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="2LJqB9Az"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23636167b30so66535035ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:52:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1750863157; x=1751467957; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wz1Ak0wbeYwkM41lDzZf9Pz6IYC6aH7Ol1qRTwbIEuM=;
+        b=2LJqB9AzZ/XP6a6SKHG3xY37oXE3RqXGG3LcZhJij6/Co6eFDabh/uXgLX8/9TWcC6
+         Af0N4vTCc3YK1w1bHfG3NcA6cKhJGAzSiI3upkLqc1/X4zvCkLyitbeSBTl+hRDr7ifk
+         jVtGrvO9grwELQsDwN19/LHdl70au5fcTVNwJW7TuANpqAGWi67bPoXFI1Ar1ImmxUoX
+         ZiTIAeX7xyOBnYpJ7N1ly5Vq2h6/uh/VObTdvRcYbfahpm6c3rjYYcvNKDP4G+C4Hki/
+         W9n5EgCR7ymNVFKz26fLeVR5YT340D9kW41vU+fbbhyuCL7YuydTrndVqJyR32gdhgwN
+         Trbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750863157; x=1751467957;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wz1Ak0wbeYwkM41lDzZf9Pz6IYC6aH7Ol1qRTwbIEuM=;
+        b=HN+pzJeDxIYzdk/7/6dvsBl+UMajKakEqCpGkcGDnkrnVqWeNb9oYkV8dBingzuSuv
+         1liAZQn78BVizAsezjS+WJfTXFMi/VOQAAVL+nNQ+BCWpMMRhLDb5NefrYXGdh09CW3p
+         DrRgaMMeD6Ik4XkS/YE0rARKYkuaEYNt8OojYyX5k2w6hpBAUS7nIhKqcSz2//OotSki
+         vJ5FmKlJIevLZosDbx84at+2Wo4yk8RTFYtQE03GForH/2lf26sWojDnljHjb5FHuXQ+
+         7Y+JJwmER2IqKP+Pxwwqj4l/R+LoVJldPhjxfXDiRqeOwOlau3BV4ewdZU+XkBJ8Zy7x
+         /wCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJ0RrbYKDCdtXea8BzPWO8jXGgy+pJr5KIgbnT6VFFQoo0Qu9JGmgf/WRca697l884GtsmFJqpfj6ltfU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxeVfVdeAWAfw62TN8OtUVcikcr25MFVMQ/BjPWqfARPaGElT6P
+	1N4SDdC6Kpe1uno1Y6ksXx7Zh1DZ7k6lGZRy64qtnxqaXo10/rZ47FTkZ2yeqr1umYM=
+X-Gm-Gg: ASbGncuqLVyeF/DntvnKeBpwRG4QAjwMr+X25Rtu43e882GOYmvTwjLWVq+V4hJPdc9
+	ZIGP+ox4UmFukAL7u7rR4+WUk/JNHSAT6QqJeRbApl/FtsnpFtoni+GsZkgyu57ibq/iQH2izzQ
+	xbaF1Jnm/bThCYeVia370sxpjqBSDq2MCWpct7IZw0VcUfkcL+3FTbQJF0CHE+is04aWINM2xIu
+	fVjA8Td5CwctxMwp6rKrMQ86QejMtsUHkaKb1zJqU6XQR1pJYXNVV+HTnKyeHPCUCdnqzSGCC76
+	mXKMkGJ4480e7xIpqxOeqWWJ9NaIbu3b/zBQnkyrn38Is/X/EclVrw==
+X-Google-Smtp-Source: AGHT+IH1ttY22NoB2TLT5LMAa1LZM20YfAQYpf+mdNR1+XahCsy7uPx4SRjp6id1ToSCVSVCJE/K2w==
+X-Received: by 2002:a17:902:dac4:b0:234:bfcb:5bfa with SMTP id d9443c01a7336-23823fc4f7cmr57992235ad.15.1750863156996;
+        Wed, 25 Jun 2025 07:52:36 -0700 (PDT)
+Received: from [127.0.0.1] ([12.48.65.201])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d867f5cfsm133029065ad.181.2025.06.25.07.52.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 07:52:36 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Penglei Jiang <superman.xpt@gmail.com>
+Cc: io-uring@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ asml.silence@gmail.com
+In-Reply-To: <20250625102703.68336-1-superman.xpt@gmail.com>
+References: <20250625102703.68336-1-superman.xpt@gmail.com>
+Subject: Re: [PATCH] io_uring: fix resource leak in io_import_dmabuf()
+Message-Id: <175086315592.128628.9014300764157579909.b4-ty@kernel.dk>
+Date: Wed, 25 Jun 2025 08:52:35 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250529205013.403450-1-avadhut.naik@amd.com>
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-d7477
 
-On Thu, May 29, 2025 at 08:50:04PM +0000, Avadhut Naik wrote:
-> Each Chip-Select (CS) of a Unified Memory Controller (UMC) on AMD's
-> modern Zen-based SOCs has an Address Mask and a Secondary Address Mask
-> register associated with it. The amd64_edac module logs DIMM sizes on a
-> per-UMC per-CS granularity during init using these two registers.
->=20
-> Currently, the module primarily considers only the Address Mask registe=
-r
-> for computing DIMM sizes. The Secondary Address Mask register is only
-> considered for odd CS. Additionally, if it has been considered, the
-> Address Mask register is ignored altogether for that CS. For
-> power-of-two DIMMs i.e. DIMMs whose total capacity is a power of two
-> (32GB, 64GB, etc.), this is not an issue since only the Address Mask
-> register is used.
->=20
-> For non-power-of-two DIMMs i.e, DIMMs whose total capacity is not a pow=
-er
-> of two (48GB, 96GB, etc.), however, the Secondary Address Mask register
-> is used in conjunction with the Address Mask register. However, since t=
-he
-> module only considers either of the two registers for a CS, the size
-> computed by the module is incorrect. The Secondary Address Mask registe=
-r
-> is not considered for even CS, and the Address Mask register is not
-> considered for odd CS.
->=20
-> Introduce a new helper function so that both Address Mask and Secondary
-> Address Mask registers are considered, when valid, for computing DIMM
-> sizes. Furthermore, also rename some variables for greater clarity.
->=20
-> Fixes: 81f5090db843 ("EDAC/amd64: Support asymmetric dual-rank DIMMs")
-> Reported-by: =C5=BDilvinas =C5=BDaltiena <zilvinas@natrix.lt>
-> Closes: https://lore.kernel.org/dbec22b6-00f2-498b-b70d-ab6f8a5ec87e@na=
-trix.lt
-> Signed-off-by: Avadhut Naik <avadhut.naik@amd.com>
-> Tested-by: =C5=BDilvinas =C5=BDaltiena <zilvinas@natrix.lt>
-> Reviewed-by: Yazen Ghannam <yazen.ghannam@amd.com>
-> Cc: stable@vger.kernel.org
-> ---
 
-Applied, thanks.
+On Wed, 25 Jun 2025 03:27:03 -0700, Penglei Jiang wrote:
+> Replace the return statement with setting ret = -EINVAL and jumping to
+> the err label to ensure resources are released via io_release_dmabuf.
+> 
+> 
 
---=20
-Regards/Gruss,
-    Boris.
+Applied, thanks!
 
-https://people.kernel.org/tglx/notes-about-netiquette
+[1/1] io_uring: fix resource leak in io_import_dmabuf()
+      commit: 7cac633a42a7b3c8146eb1db76fb80dc652998de
+
+Best regards,
+-- 
+Jens Axboe
+
+
+
