@@ -1,74 +1,79 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A455526A1BB
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:28:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6BC1D63C7;
+	Wed, 25 Jun 2025 15:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750865332; cv=none; b=HYH52ucLIfvBwxKWp/HPogo1nBf0P0NTcRRLIWg89QyKk6malfQG86n7esUyiWRk6b157vB19ZdxTQirj3ciGhdHVOFAlnppVcJ6WWi+jqzLRmvufJNAV/q+bwur0DAnG+uJj8kWWTfVJMY0C6Jh/ZkhavinJgRGBh9Z8cdP4YI=
+	t=1750865456; cv=none; b=Oa/YhdMkkFPEY/Zaikb7TT3HgcJMtyowdh2UyYipStLZWoHF0AcmJMLkVZwMPkGg1g7jdCxNcBt8vMOL2g0+1oEKovCpgitPETl0ksPTLeB2TIyZBpJemkuK+BZ2XkrtySbB3cFdXspPZD9wY7or4E8CIP90DA9di/kDM2olkP0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750865332; c=relaxed/simple;
-	bh=DGQGEnve4/bgkJQyVwSOGe9EimBGv4nown95OAXf1bk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BCvv08kxRWpAqGZ6eSxHHb0SPR206pRfnJic5vpn4RS/3W5N0Hyh6uYLU+8viR/83cOQwcrdULk9N8XunVrioMzu4xbnCjfqHBnEVLX7u18+RMO9PdJrWohLpu6dyrDmO3swwBfTEsA8907lTqo0NvCoh+3loWD/H1b7EWS4Ifg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GoHy6fmw; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750865456; c=relaxed/simple;
+	bh=fn76d1OT07aR5qMhS70rOda0WppW8FvGLdPQDYy2UrA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CNqy1Co3getZSLjlPByTxxt6MICrxb9eR+Xk5lGTVVgAYoFF4clPeJy0rBwj2kIc1q0juxcc1MckzuI6omW1v9xw1xIO/DFDJBrKkdPNj6BVNKyGVQkIXKooWcVzwh3S/a+/q/q/sc2JZkHAZiPQ4lUPtiydGD7n7uSiSg1Jir0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WwLBLA75; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GoHy6fmw"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-451d6ade159so50506315e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:28:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WwLBLA75"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3a4fb9c2436so1255389f8f.1;
+        Wed, 25 Jun 2025 08:30:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750865329; x=1751470129; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750865453; x=1751470253; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PI3qPrTkmKZMuiNpclcJbamBpUy45L3AQm07k2EFtpk=;
-        b=GoHy6fmwRcYFfI6v0eKyexJuCfgMF7byV7Jfu/cIlEuuj1MZgVZTHMuPgjRb3WhihF
-         KV4L3pXgY/CeSXSntjw5c9PLxz5wmstP/lryCDi/3O7yMPJd69hr1/lAiNJRjc0UtAep
-         YAx9WZvfJPXpHUUPVBHwoltOcq1hJrhpsYjVwua0d0zTLwdnVmAp+oAeJgqkbs1Xzgok
-         vdgysTMrr45SOZ+sqPOb7pJ52VD20orKNLL+dPtJMvLLLBQET8AcxegQzMIpjo7FLanA
-         RVJfR3m01YIkCnsEbMnyFXa6rWE5PCBENlFpD8BSmVZyHMSeTlsQTalKuedMa1uvgv4q
-         orXw==
+        bh=pPydrEYqCEEDJzLImKYbu5KqQM5JsZ5hylWTlIASPC4=;
+        b=WwLBLA75inmpOe5DguYNLmMwmTeyq1iHl5E6lPHtonghMevwEEd6mF7NnGrDO9wbkm
+         wIIi+RYIl1xLzaQOSbAJuD6PDefG91M4KkxzmMYMkVr8WVEsICeO/c8pHeGVLurOkYo6
+         bryMI66p2cfCsIu9tFtsh2Q/3EmlHxaclsynPOF2igNd5T73PvvJSG9diwxhaziwNDlx
+         opffTC2FvX3RznjJjnamyEhMCVkA9SqPQLzw0OP8fgPtuCNaWYwht+fSE9IlW3kLNuUn
+         q1YU3unyyywUnVYtZvw2UwE6Uq+1B2LbRGIxwCzOWWSnLJdYM4e90WwsLZkZF4LNMiFc
+         3P7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750865329; x=1751470129;
+        d=1e100.net; s=20230601; t=1750865453; x=1751470253;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=PI3qPrTkmKZMuiNpclcJbamBpUy45L3AQm07k2EFtpk=;
-        b=CqAjKDhCWX2qmjkTRnIofD4g4dlDG9OYaZjHQOYL1QGa/gck6dNmG+eChCbXzRXF78
-         7F7nMZBhwhkFiyjElyphryZYYhqtmJuYdmxYMhPkQQvk1wGGdqkS8Q1ayybzJ0c64+Nu
-         Xpa5jOrBTsIxPA9JbAn+7eujwTdxCMC4bKQDxKF6vQFPxmRikNfD3jjJ7hdCDelPWaCF
-         aTb/0M76+cXmD/Ldo9CH7pu7O8CxFi3Epz/W74y7QDNhxMz2JSMXNvQPCugC7BSLuLwF
-         F48l8siWBYZmOaQnr83TtkBU4SC1LRKjYz3wOmWQTA9QG65LHyGhisYMHTW0axnfEl9r
-         qQ5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUu6CJKOKDYoAZS0T7mo5mINIT2W/jh1FzGppMh4Y599FIgioKi9i+B1dlDsiMnM01XlUmaJRiY0vbxTwk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxJTUai9W7kPyzmLkh4+97P6K0+ZauDH696e3jwrCmRTHRmjMQe
-	2Bs0hnJ/3Vt+MZm34+Fr5G+kU6Lr4ByUPdUS6fLgsMkqvS8UA5e0Dlj5oEpimk256uY=
-X-Gm-Gg: ASbGncsAIh0dXgwhrijKyK7rwcEm2O7qvLj6o7CXM2E0hOJx/ArSPeEX0Lbe+sEse7q
-	lGrox1j1toTDFXZS98xJZXjy3Miq9pGoXr14fQKAYtrdAsxfNeNyO3McFJ+Wii8Thp8vfflfPrA
-	OQojgjJ5aGGx9K7apK/Z8H3vqhFjBAg7Wi1WczP5Ma/5XAOW1e6tfAy+A+AlC2nD3IRg1OcDKRk
-	/YYivvbcrTnnT/OVEKIXHCIkLBbxrSWKPRpp5B0+hYqjyljttM44lNyN6c/Xj1RkLExeOBdY4Sn
-	xeqWfzLFZH52OXASp93aMWN9NYf3l47qeMgRY0oXpHpG02I+5S6PtyUYYCTgHs0=
-X-Google-Smtp-Source: AGHT+IE8ILEBDNbFHwVn4CTLwkc5qRiSUjqDg5Sdx22jaPZhlrkws3KhJcV/ZrUUcqtIut17KcQNeQ==
-X-Received: by 2002:a05:600c:8217:b0:442:f482:c429 with SMTP id 5b1f17b1804b1-45381aee7e7mr31642335e9.8.1750865328896;
-        Wed, 25 Jun 2025 08:28:48 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:d216:42f3:1e7e:472e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45382366f88sm23283235e9.30.2025.06.25.08.28.48
+        bh=pPydrEYqCEEDJzLImKYbu5KqQM5JsZ5hylWTlIASPC4=;
+        b=oVJzM02/r6uHTcon5zW2TdX9e1iF1iQy6zg8yJdBRC01Uw5V6BlJNG9OMAMBtyjy/3
+         1UH0fcbXCVoZ/wajAv0Z9R97GoxW4t0JjmIVYr8MvbXQ72z5z7OvUC6tpYb62efenecK
+         yvxwxuledoX3W7xCCqFOUSzdTc3oMuA2Z0gXiYDkw96/HZXqgCAy5e9Hhc1oUMGF7bmM
+         B/lA8g5nDcF/jXcQyluluKokzaorH8FfQLs5JMbXbIYBUUz0XaWP8SkhAs/ttfCSnurx
+         6glHmVf9LC0budh+SrmBRKtJCOM2GQmguk+K+PNBwhJTZXxzDQZiHWwNJ4j4MaFz+uxw
+         zbcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUEkdeI0oIosdxBC3mQoVGtQuO9k6cjmlmhhMimicDsFqGYlKKsson8pAZZbhA05lqQv0O/Y/XLWUq0@vger.kernel.org, AJvYcCXcnreZV9/SUPVa3TQ5ZVw5Frghi86TaA3YY1UqNwr4YAPAtGDVNZvUqB4QUOTRmOBoLcY9Qw06jhVjQHoj@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzJMJn5etjDLzPlBHfbe++Guk6SgSwWP4Q2RpZNsn9zIbZh7j8
+	XKMrPpPUZPKWF7D0P+bXZmaQrUAi8MjiTFj5k80pAPLWAihja7LgurlF
+X-Gm-Gg: ASbGncu8G/L3bIuIWRvA467QcFTj4UVAS074we9z8Ws7ulPJzZHhBn0KPdvSvtx4HL6
+	Y2Baw3L7CZoN5UwzCvk4iPiux6RTMbHN/05r5Qkg0piNnyvI6x+UvbKmyO1qAs572GPAj8ssuRO
+	b01l7xgS+SB2Fb+PcDA8TrhSKuL7/nKRAIKsp7fsD+C92OtpGFvhpG1TFUeqkrkZl6eqlY7DFqO
+	h3nfoURU8dGPLNiULNedBrTOQ7cmSgpZepqtJ9QZy/Aa6cXGWXC4n6tgMqhS+myoh96z4uZICkf
+	4z55g3L1AquKZK1fgz82CYoD2NhrH2eRhEwrTJGKJtxCVN9iQYlJOalMvAanP2X5ZfUn8xIbnIt
+	SwF+1NrKCNe8wDwp3jvQ90C+K6lQX/qk=
+X-Google-Smtp-Source: AGHT+IH+WHdgTTdUhNtpMR28teFc2LxiwcjuubN83yEUP5heQPe2O9PuWCIzbWnfcXOH8Fk5gplfRg==
+X-Received: by 2002:a05:6000:2906:b0:3a5:51a3:3a2 with SMTP id ffacd0b85a97d-3a6ed66e23cmr3187422f8f.45.1750865452667;
+        Wed, 25 Jun 2025 08:30:52 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:c47e:d783:f875:2c7c])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80f296bsm4899180f8f.60.2025.06.25.08.30.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:28:48 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
+        Wed, 25 Jun 2025 08:30:50 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
 	Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org,
+Cc: linux-renesas-soc@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: sm6115: add debug UART pins
-Date: Wed, 25 Jun 2025 17:28:38 +0200
-Message-ID: <20250625152839.193672-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.48.1
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/6] arm64: dts: renesas: Add I2C and SDHI nodes for RZ/T2H and RZ/N2H SoCs
+Date: Wed, 25 Jun 2025 16:30:36 +0100
+Message-ID: <20250625153042.159690-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -77,44 +82,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-We should not rely on the bootloader to set up the pinmux of the debug
-UART port. Let's add pin definitions for uart4 to tlmm and bind them to
-the relevant device node.
+Hi All,
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- arch/arm64/boot/dts/qcom/sm6115.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+This patch series adds I2C and SDHI nodes for the Renesas RZ/T2H
+(R9A09G077) and RZ/N2H (R9A09G087) SoCs. The I2C/SDHI nodes are added
+to the respective SoC DTSI files. Additionally, user LEDs are added
+to the RZ/T2H EVK and RZ/N2H EVK boards.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm6115.dtsi b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-index c8865779173ec..91fc36b59abf9 100644
---- a/arch/arm64/boot/dts/qcom/sm6115.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm6115.dtsi
-@@ -721,6 +721,13 @@ qup_spi5_default: qup-spi5-default-state {
- 				bias-pull-up;
- 			};
- 
-+			qup_uart4_default: qup-uart4-default-state {
-+				pins = "gpio12", "gpio13";
-+				function = "qup4";
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+
- 			sdc1_state_on: sdc1-on-state {
- 				clk-pins {
- 					pins = "sdc1_clk";
-@@ -1565,6 +1572,8 @@ uart4: serial@4a90000 {
- 				reg = <0x0 0x04a90000 0x0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&qup_uart4_default>;
- 				interrupts = <GIC_SPI 331 IRQ_TYPE_LEVEL_HIGH>;
- 				interconnects = <&clk_virt MASTER_QUP_CORE_0 RPM_ALWAYS_TAG
- 						 &clk_virt SLAVE_QUP_CORE_0 RPM_ALWAYS_TAG>,
+Note, these patches apply on top of the series:
+https://lore.kernel.org/all/20250617171957.162145-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+https://lore.kernel.org/all/20250617162810.154332-1-prabhakar.mahadev-lad.rj@bp.renesas.com/
+
+Cheers,
+Prabhakar
+
+Lad Prabhakar (6):
+  arm64: dts: renesas: r9a09g077: Add I2C controller nodes
+  arm64: dts: renesas: r9a09g087: Add I2C controller nodes
+  arm64: dts: renesas: r9a09g077: Add SDHI nodes
+  arm64: dts: renesas: r9a09g087: Add SDHI nodes
+  arm64: dts: renesas: r9a09g077m44-rzt2h-evk: Add user LEDs
+  arm64: dts: renesas: r9a09g087m44-rzn2h-evk: Add user LEDs
+
+ arch/arm64/boot/dts/renesas/r9a09g077.dtsi    | 85 +++++++++++++++++++
+ .../dts/renesas/r9a09g077m44-rzt2h-evk.dts    | 50 +++++++++++
+ arch/arm64/boot/dts/renesas/r9a09g087.dtsi    | 85 +++++++++++++++++++
+ .../dts/renesas/r9a09g087m44-rzn2h-evk.dts    | 54 ++++++++++++
+ 4 files changed, 274 insertions(+)
+
 -- 
-2.48.1
+2.49.0
 
