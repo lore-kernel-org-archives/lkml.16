@@ -1,95 +1,121 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC698221DB2
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5599F1DFCB;
+	Wed, 25 Jun 2025 12:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750853740; cv=none; b=C1gOIKz2+1oHVl4IQWI7Olo1i78zhlJVjXj0fVE3WRotHXADklI34Kr1o+SE59vcygGtdVjpmUK6ukdNEW3qTp8gitlKfMNtolzgIHFr1Rs1nmE0pCTEVCQ6qjExKirDZSCrF2LWc+Rmvy4elpwEQe2EDT0iTORWaf7r6dco2S0=
+	t=1750853913; cv=none; b=nhVEa3Cl68VEY2dvxqUdJyzIvgnEXCxoFEr2dT7gNoNlrEiqcHNGn6O6xZlCqAU1+fBsFzESmLmAnCUnyVV0PIQM4hVSKEKtzzwFJ41DaGeL0Szt7EAuQisbXhaXvapze/XvplCOaY3EAiDUztXRQSW2CGNrYaijz43bNtmzAeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750853740; c=relaxed/simple;
-	bh=l65IO5kfib+wsypa1op17l/qM9MqAEQiB63dTJ1Kahg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FLWf9Ka8NKm/Z/HXZWb2WTMg8vmFb9tE4BBJghxjkDBKi9Ctq0UbwkTxTlJrvP0srzhzFY+SCCV+RgfKrTd96jwpwL0111rLPReujsu09DMuafqo2JJkVoPFB8L9QAwLMFGIxEmV+JoZEZwnVXD+ecLcEn2mAsaQo8oc440fAS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=JGZZd96m; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1750853913; c=relaxed/simple;
+	bh=YcD58soRZs6EhUzGV8q+5DJoG2q3WNRV/I6q3HlGoI0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eFOtBr6VQwxLS77lZGV7xz3qXSQ3DvyTpSQVo+AxgLgPiep/mjrQa0OuTda7YW9gTliGxtvFEYfx5JSMb101dJfL+i7N3fF5Ny9anOYoS3QU8NuCoGsrTC11k0ixYi0WCyxqx1D1qHEjpCBrZfIMk+XfCsqZPf5+pqRTzNgBnAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjI9DPZC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="JGZZd96m"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-	Message-ID:Date:Subject:Cc:To:From:Content-Type:Sender:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-To:Resent-Cc:
-	Resent-Message-ID:In-Reply-To:References;
-	bh=/vBL7C4EXHe/g4EvFuPaZIotbyPumXb6WtXEmPrqPvw=; t=1750853738; x=1752063338; 
-	b=JGZZd96mDAsPR00qmOu5zCL6wNbqP8yg1NqswvB1WXiuqS+PztWhdx6dlJUIvRXPVyC8i0qHOat
-	eRMf5vCs9galLpjzARUyRBXMxR+ohA+G7Yd4xzpBmO+WYjn356/Skl/Kf7dlGi9i49lQs74xpb5Pd
-	88xCcYrI1CYPcmr56WO5N+T2kNts4Bs8Y860v7ZA13Owyj2y3mAIbTk7oebHZVwHiWO2vQV0vl+gm
-	MlbWtmQJpTz1nsQvkMQlpUhmI5ubQ32CWvMOgDSd3ABLoRkIw0XVFvqZyt2FbkWU5RN5pjOQZNCdC
-	SoyUpdf07rXswVxbbUmvZgztE5QY6xCzdrZA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1uUP2K-00000009xSo-48of;
-	Wed, 25 Jun 2025 14:15:33 +0200
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-um@lists.infradead.org,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Subject: [GIT PULL] uml-for-6.16-rc4
-Date: Wed, 25 Jun 2025 14:14:19 +0200
-Message-ID: <20250625121529.42911-3-johannes@sipsolutions.net>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjI9DPZC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE704C4CEEE;
+	Wed, 25 Jun 2025 12:18:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750853912;
+	bh=YcD58soRZs6EhUzGV8q+5DJoG2q3WNRV/I6q3HlGoI0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SjI9DPZCwGR1deh3fSwu1ILgyrtOM8spHBVFLmLlUx+zMR6QzfUK99kYAaHP6Dsv+
+	 aTVzSgm1kNY+HTSMCetYQ4H/q5wqjyuZ/CeBSg2dXt8jMs//57nvenmXP1kqWZZJ/f
+	 zWZf3bc1X6Y3OrW7bF1QpNbabl4Sp+J+a8zopi7igGuzvWeEabiFXJn5VTVfuSkQYD
+	 G6fGtAN0dy6s3/kYxGpAkYgrruwj1vbJ8m7z3dE9BxEETF3Xe05+kaNDy+xU7KAI7D
+	 311zoO8jJmbt9vElQ7SQUNOOXpKw4GfcjNNNwWjupgdnQtDWq7Lu80ZdrgVWylMUfp
+	 nDuc7l5NK3HAg==
+Date: Wed, 25 Jun 2025 13:18:28 +0100
+From: Simon Horman <horms@kernel.org>
+To: Jacek Kowalski <jacek@jacekk.info>
+Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
+	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] e1000: drop checksum constant cast to u16 in
+ comparisons
+Message-ID: <20250625121828.GB1562@horms.kernel.org>
+References: <46b2b70d-bf53-4b0a-a9f3-dfd8493295b9@jacekk.info>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <46b2b70d-bf53-4b0a-a9f3-dfd8493295b9@jacekk.info>
 
-Hi Linus,
+On Tue, Jun 24, 2025 at 09:29:43PM +0200, Jacek Kowalski wrote:
 
-For UML we have a few fixes, all from Tiwei and mostly for
-recently added code (though one is just a compiler version
-thing.)
+Hi Jacek,
 
-Please pull and let us know if there's any problem.
+Thanks for the patchset.
 
-Thanks,
-johannes
+Some feedback at a high level:
 
+1. It's normal for patch-sets, to have a cover letter.
+   That provides a handy place for high level comments,
+   perhaps ironically, such as this one.
 
+2. Please provide some text in the patch description.
+   I know these changes are trivial. But we'd like to have something there.
+   E.g.
 
-The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
+   Remove unnecessary cast of constants to u16,
+   allowing the C type system to do it's thing.
 
-  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
+   No behavioural change intended.
+   Compile tested only.
 
-are available in the Git repository at:
+3. This patchset should probably be targeted at iwl-next, like this:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/uml/linux.git tags/uml-for-6.16-rc4
+	Subject: [PATCH iwl-next] ...
 
-for you to fetch changes up to 2d65fc13be85c336c56af7077f08ccd3a3a15a4a:
+4. Please make sure the patchset applies cleanly to it's target tree.
+   It seems that in it's current form the patchset doesn't
+   apply to iwl-next or net-next.
 
-  um: vector: Reduce stack usage in vector_eth_configure() (2025-06-25 09:28:17 +0200)
+5. It's up to you. But in general there is no need
+   to CC linux-kernel@vger.kernel.org on Networking patches
 
-----------------------------------------------------------------
-Just a few fixes:
- - fix FP registers in seccomp mode
- - prevent duplicate devices in VFIO support
- - don't ignore errors in UBD thread start
- - reduce stack use with clang 19
+> Signed-off-by: Jacek Kowalski <Jacek@jacekk.info>
+> Suggested-by: Simon Horman <horms@kernel.org>
 
-----------------------------------------------------------------
-Tiwei Bie (4):
-      um: ubd: Add missing error check in start_io_thread()
-      um: vfio: Prevent duplicate device assignments
-      um: Use correct data source in fpregs_legacy_set()
-      um: vector: Reduce stack usage in vector_eth_configure()
+As for this patch itself, it looks good to me.
+But I think you missed two.
 
- arch/um/drivers/ubd_user.c    |  2 +-
- arch/um/drivers/vector_kern.c | 42 +++++++++++++-----------------------------
- arch/um/drivers/vfio_kern.c   | 14 ++++++++++++++
- arch/x86/um/ptrace.c          |  2 +-
- 4 files changed, 29 insertions(+), 31 deletions(-)
+diff --git a/drivers/net/ethernet/intel/e1000/e1000_hw.c b/drivers/net/ethernet/intel/e1000/e1000_hw.c
+index b5a31e8d84f4..0e5de52b1067 100644
+--- a/drivers/net/ethernet/intel/e1000/e1000_hw.c
++++ b/drivers/net/ethernet/intel/e1000/e1000_hw.c
+@@ -3997,7 +3997,7 @@ s32 e1000_update_eeprom_checksum(struct e1000_hw *hw)
+ 		}
+ 		checksum += eeprom_data;
+ 	}
+-	checksum = (u16)EEPROM_SUM - checksum;
++	checksum = EEPROM_SUM - checksum;
+ 	if (e1000_write_eeprom(hw, EEPROM_CHECKSUM_REG, 1, &checksum) < 0) {
+ 		e_dbg("EEPROM Write Error\n");
+ 		return -E1000_ERR_EEPROM;
+diff --git a/drivers/net/ethernet/intel/e1000e/nvm.c b/drivers/net/ethernet/intel/e1000e/nvm.c
+index 1c9071396b3c..556dbefdcef9 100644
+--- a/drivers/net/ethernet/intel/e1000e/nvm.c
++++ b/drivers/net/ethernet/intel/e1000e/nvm.c
+@@ -588,7 +588,7 @@ s32 e1000e_update_nvm_checksum_generic(struct e1000_hw *hw)
+ 		}
+ 		checksum += nvm_data;
+ 	}
+-	checksum = (u16)NVM_SUM - checksum;
++	checksum = NVM_SUM - checksum;
+ 	ret_val = e1000_write_nvm(hw, NVM_CHECKSUM_REG, 1, &checksum);
+ 	if (ret_val)
+ 		e_dbg("NVM Write Error while updating checksum.\n");
+
+-- 
+pw-bot: changes-requested
