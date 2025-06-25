@@ -1,92 +1,59 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97089286436
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:26:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BCD425D213;
+	Wed, 25 Jun 2025 15:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750865183; cv=none; b=HXWkA3sBXTKpwnlAeH1aCySXADeu5QdLp0xDX5eb3o5WhBl+m7fCTfF4JLlwM7VSpdyJ+cNYHtBcc/0djaLP+gJIdSm+Ya/bG93cJkiCXM9IGci/IUZPtdzzAs7Tqu2dBk8H6wPMU0KjxJL5nhfBRzkFcehZyZRusskWESUcVSg=
+	t=1750865230; cv=none; b=EjnNLTusrZD4MIAVOho43lgUULfrOoOJmK6eXnPrO1n+01atNfoIRTqsi0Fc/rZbqmO7rOGj3fDeae5d7vvDW2QpP7ftDfbptv0kPQLXUuJSQKpUn/OmiTXBBPavp05+7xUC5ca1ehhidQ7IZTAV1XYGy8vKIcUMfrg9qTItsHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750865183; c=relaxed/simple;
-	bh=xce5qy/Ve8LCVnoIE2XeM4ZxdOOd3uUzCKUqXaf1QiY=;
+	s=arc-20240116; t=1750865230; c=relaxed/simple;
+	bh=9SrF5F8tK2AZ8HYnqleXgGlTslsdcdNtdJjCJkcB9zg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PN/twbluUGrD5zBVJqzlSDJr8Gcuxqz4YbKXZ1il4guafGptp7PJX4ywfGqff6vIC4oROiISj08IW1/pUhxgwZ/6EGFFfS2sYCO/bL95I6mR5CeusiufCLE6RJgNuOLizShA3WH0dOSLx8x4HhkYEtAghV79JlN9gRkSCMj4p80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com; spf=none smtp.mailfrom=pdp7.com; dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b=Nnjj5GIf; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pdp7.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=pdp7.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ktsLJlwjCFPRbT8LTwD8Dps51g0B6IbISWNsdEtuIcdb15Gl1FyufoFZtbkuyotO5oIomMC8e67Z0uUEpxSvYZhRV03pH5UHq7fcA7R1ZdrSiBv9U6/zsLpqD3pzMZzDLtQFzCEQRZG/R2+9b/4D7aQrcvKyQytjUPG6/Q9o7X0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZSbQ5RU7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uNO6L5Y2; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pdp7-com.20230601.gappssmtp.com header.i=@pdp7-com.20230601.gappssmtp.com header.b="Nnjj5GIf"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22c33677183so65315ad.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:26:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=pdp7-com.20230601.gappssmtp.com; s=20230601; t=1750865181; x=1751469981; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gE8jHxo+PQ6FPeXXY1t5SkeB5q8vcyLGyWcRWobT2vU=;
-        b=Nnjj5GIfdnTXgCXBEJYzMMDdKUvsG0YVm1doP/cb2HYdH5bzlf5CRIPqPzosv8qF7/
-         C03vCiHEwwX5MfSATrSjcKPr4kLBJCV26fbgrPNHwPq7kzjybk+MR5+Lr3hNByuiZl6r
-         Umd7WyGhPf+kzn1ZkjiKgZxxVQdIyXTWkvmVwEvKtuVPGva8guWQ4zo0+Rw0eiEQWvGk
-         tD9kDdS1mIznYbCGBBfjoqZT5Ey4FbT6zR6iaEeUtUlLpF85xGWqv5f2MBv6oqW9Cfbw
-         L41F7/h7H026U8Z6I+duoKQMnJRgsCiy+2Mfg5264HtRBq7a97vssgAGWJPw02qX8VXA
-         X4ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750865181; x=1751469981;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gE8jHxo+PQ6FPeXXY1t5SkeB5q8vcyLGyWcRWobT2vU=;
-        b=gmKZpWHsr7z1srq0es2w8SVppxeenaDZkm0TN85vygiUahjrEKerGx2bwGVzuqFbhE
-         oiJ8T3yTT9k6KJrjuFdJgzjH7qqPQZH5ZvX/Z0uxB/bIghmr0EGANAPnIOGtRCBP6akU
-         wlGP4gUKny4IviKtA4I6eIwGA15jnuwqZnYMN1+C45vHk3GPLhMICXvZ0MM4xhYRuplk
-         aeCjPmxtBBbwaSLxPMDxls6sw0lhW/J9Ka0PmYUNkbP6Azfz35EtNOZoHvJhiX7Ris/a
-         jHOvWVJm+NUbEf47j9gkxf4FguWzWH/VI2SLFaIDIzAqSnGIc2ujPxWpR/bRUtfLQpky
-         3wyw==
-X-Forwarded-Encrypted: i=1; AJvYcCVL/Y+VDfDsIO1KOMytNUIuG8bs3Yrq68X+fRYNV0VTNr0giFAPg//+tHw0B8beujP8kltlmdhhv37JTdI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4XA7sxrPyV2ipOkWqEEKdHqYypm3fSKSnn0U+tAxWBZpDoyjP
-	odlaAOddbgbAsdBwGGX3+SYp0B/uT/15WdOdDyMGx3OtCk2diXZNUertGUpIfteJ95Y=
-X-Gm-Gg: ASbGncuidjMIdFWD0OuO1Ou5SAFx7NfDy9K1EnOe8U9+aXQZvTErsA1v1MwzdkWkft0
-	fB0JHZsbL4x/5cF2+wZITswfCsmn4UmdeaunvFAFXEStSFg1N1IC/0Rg32L2gds19ebqI2/McW1
-	tL6ORZ+GlV45QXmI2bJOuKOamczHbwhkx7IILeJBT1W8Rp0xAaCluhN6Bj8ISeZXhaEaJ1GzFOL
-	lyWL+6I4Cg2BENbPtIwjCENCw8ByvSUmwCleOz7eWGdKryI+tiH9E8Y+unp0IBtdw8bQVeAmhui
-	3SLktoBHH8KaxE7c5Qq9jAzr91a7UssG3tmr/2D1B6/JiPdNzXtwnq5lmQYdNxagAbyW3xWiy9/
-	jEDdSZd8L
-X-Google-Smtp-Source: AGHT+IHrt+1gjc7s6rRerhB4Z7Hf4zvb7Zi6obxep/7tJ3hlo/78JEJ8gL2cW7XB4z6XD8DMAOJnew==
-X-Received: by 2002:a17:902:f552:b0:235:655:11aa with SMTP id d9443c01a7336-238243620b9mr62700495ad.39.1750865180734;
-        Wed, 25 Jun 2025 08:26:20 -0700 (PDT)
-Received: from x1 (97-120-252-192.ptld.qwest.net. [97.120.252.192])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d839354esm137239885ad.16.2025.06.25.08.26.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:26:20 -0700 (PDT)
-Date: Wed, 25 Jun 2025 08:26:18 -0700
-From: Drew Fustini <drew@pdp7.com>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Marek Szyprowski <m.szyprowski@samsung.com>,
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v5 0/8] Add TH1520 GPU support with power sequencing
-Message-ID: <aFwVGkAbRUm0j1hv@x1>
-References: <CGME20250618102225eucas1p129b1172bf54521c1eb0f718cb31af468@eucas1p1.samsung.com>
- <20250618-apr_14_for_sending-v5-0-27ed33ea5c6f@samsung.com>
- <aFNrRtbWzeRa7GmQ@x1>
- <12eed587-a8f3-4a67-8808-5e32617ded93@samsung.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZSbQ5RU7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uNO6L5Y2"
+Date: Wed, 25 Jun 2025 17:27:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750865227;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XIJ0rYAutoLD6SXbknpamg61E61NUlOCl4wh8dNG4w4=;
+	b=ZSbQ5RU7Y25NMsyZbOAU0RyRDC4/1PpRn3fILezvzmgAiBNsAyXhXk+6nESltLNJ39FYYU
+	WrBZB87Q0xmg4c95YT4wvu4Y9+KEXR6FwC+eOrFA7n/A4zFPXppjBWmU/cJHy9XGpvRST3
+	XgRgw4qYG93HHw52wCA9Mr5f8rM86YODlw0s9BskevjrEcERZ9kLXFQloN74/a+fM2B74X
+	LVojve0S3mPtXfSljYIGw+ZAPVWwKQvCIiLPhkjZkHhdl0/eYQqru1336fyPydSFr4zcYo
+	tb7m6sP4p9Qxyiit5OnoHB3lRFBN7SFa9xTZfD+65NBld4hjrMGgRlFTdoi8yQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750865227;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XIJ0rYAutoLD6SXbknpamg61E61NUlOCl4wh8dNG4w4=;
+	b=uNO6L5Y2EZTzN5Kkw2C1JFhZD2laJnNCAIy5RsyzCP668jqUtn0go5tONpWaSZdu5xoRoF
+	Inz8GlajmTRE35BA==
+From: Nam Cao <namcao@linutronix.de>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	John Ogness <john.ogness@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH v3] eventpoll: Fix priority inversion problem
+Message-ID: <20250625152702.JiI8qdk-@linutronix.de>
+References: <20250527090836.1290532-1-namcao@linutronix.de>
+ <20250625145031.GQ4Bnc4K@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -95,30 +62,124 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <12eed587-a8f3-4a67-8808-5e32617ded93@samsung.com>
+In-Reply-To: <20250625145031.GQ4Bnc4K@linutronix.de>
 
-On Mon, Jun 23, 2025 at 10:17:36AM +0200, Michal Wilczynski wrote:
-> Hi,
+On Wed, Jun 25, 2025 at 04:50:31PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2025-05-27 11:08:36 [+0200], Nam Cao wrote:
+> > --- a/fs/eventpoll.c
+> > +++ b/fs/eventpoll.c
+> > @@ -1867,19 +1704,18 @@ static int ep_send_events(struct eventpoll *ep,
+> >  	init_poll_funcptr(&pt, NULL);
+> >  
+> >  	mutex_lock(&ep->mtx);
+> > -	ep_start_scan(ep, &txlist);
+> >  
+> > -	/*
+> > -	 * We can loop without lock because we are passed a task private list.
+> > -	 * Items cannot vanish during the loop we are holding ep->mtx.
+> > -	 */
+> > -	list_for_each_entry_safe(epi, tmp, &txlist, rdllink) {
+> > +	while (res < maxevents) {
+> >  		struct wakeup_source *ws;
+> > +		struct llist_node *n;
+> >  		__poll_t revents;
+> >  
+> > -		if (res >= maxevents)
+> > +		n = llist_del_first(&ep->rdllist);
+> > +		if (!n)
+> >  			break;
+> >  
+> > +		epi = llist_entry(n, struct epitem, rdllink);
+> > +
+> >  		/*
+> >  		 * Activate ep->ws before deactivating epi->ws to prevent
+> >  		 * triggering auto-suspend here (in case we reactive epi->ws
+> > @@ -1896,21 +1732,30 @@ static int ep_send_events(struct eventpoll *ep,
+> >  			__pm_relax(ws);
+> >  		}
+> >  
+> > -		list_del_init(&epi->rdllink);
+> > -
+> >  		/*
+> >  		 * If the event mask intersect the caller-requested one,
+> >  		 * deliver the event to userspace. Again, we are holding ep->mtx,
+> >  		 * so no operations coming from userspace can change the item.
+> >  		 */
+> >  		revents = ep_item_poll(epi, &pt, 1);
+> > -		if (!revents)
+> > +		if (!revents) {
+> > +			init_llist_node(n);
+> > +
+> > +			/*
+> > +			 * Just in case epi becomes ready after ep_item_poll() above, but before
+> > +			 * init_llist_node(). Make sure to add it to the ready list, otherwise an
+> > +			 * event may be lost.
+> > +			 */
 > 
-> Apologies for the late reply, it was a long weekend in Poland and I was
-> away without access to e-mail.
-> 
-> This is the Imagination repository that hosts the firmware [1].
-> Admittedly I'm not using the newest firmware blobs available, as per
-> discussion here [2] I downloaded mine last year so haven't tested the
-> new ones yet.
-> 
-> For my own testing, I  embed the firmware directly into the kernel to
-> avoid issues with the initramfs. If you're compiling your own kernel,
-> you can do this with the following configuration options:
-> 
-> CONFIG_EXTRA_FIRMWARE="powervr/rogue_36.52.104.182_v1.fw"
-> CONFIG_EXTRA_FIRMWARE_DIR="/home/local_user"
+> So why not llist_del_first_init() at the top? Wouldn't this avoid the
+> add below? 
 
-Thank you, that worked.
+Look at that function:
+	static inline struct llist_node *llist_del_first_init(struct llist_head *head)
+	{
+		struct llist_node *n = llist_del_first(head);
 
-[    1.041146] powervr ffef400000.gpu: [drm] loaded firmware powervr/rogue_36.52.104.182_v1.fw
-[    1.049654] powervr ffef400000.gpu: [drm] FW version v1.0 (build 6734358 OS)
-[    1.062024] [drm] Initialized powervr 1.0.0 for ffef400000.gpu on minor 0
+		// BROKEN: another task does llist_add() here for the same node
 
--Drew
+		if (n)
+			init_llist_node(n);
+		return n;
+	}
+
+It is not atomic to another task doing llist_add() to the same node.
+init_llist_node() would then put the list in an inconsistent state.
+
+To be sure, I tried your suggestion. Systemd sometimes failed to boot, and
+my stress test crashed instantly.
+
+> 
+> > +			if (unlikely(ep_item_poll(epi, &pt, 1))) {
+> > +				ep_pm_stay_awake(epi);
+> > +				epitem_ready(epi);
+> > +			}
+> >  			continue;
+> > +		}
+> >  
+> >  		events = epoll_put_uevent(revents, epi->event.data, events);
+> >  		if (!events) {
+> > -			list_add(&epi->rdllink, &txlist);
+> > -			ep_pm_stay_awake(epi);
+> > +			llist_add(&epi->rdllink, &ep->rdllist);
+> 
+> That epitem_ready() above and this llist_add() add epi back where it was
+> retrieved from. Wouldn't it loop in this case?
+
+This is the EFAULT case, we are giving up, therefore we put the item back
+and bail out. Therefore no loop.
+
+If we have already done at least one item, then we report that to user. If
+none, then we report -EFAULT. Regardless, this current item is not
+"successfully consumed", so we put it back for the others to take it. We
+are done here.
+
+> I think you can avoid the add above and here adding it to txlist would
+> avoid the loop. (It returns NULL if the copy-to-user failed so I am not
+> sure why another retry will change something but the old code did it,
+> too so).
+> 
+> >  			if (!res)
+> >  				res = -EFAULT;
+> >  			break;
+> 
+> One note: The old code did "list_add() + ep_pm_stay_awake()". Now you do
+> "ep_pm_stay_awake() + epitem_ready()". epitem_ready() adds the item
+> conditionally to the list so you may do ep_pm_stay_awake() without
+> adding it to the list because it already is. Looking through
+> ep_pm_stay_awake() it shouldn't do any harm except incrementing a
+> counter again.
+
+Yes, it shouldn't do any harm.
+
+Thanks for reviewing, I know this lockless thing is annoying to look at.
+
+Nam
