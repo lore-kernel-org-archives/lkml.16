@@ -1,38 +1,38 @@
 Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E4E92E613C
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C4262FCE16
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:46:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750869982; cv=none; b=EGpTBrBBFWaKG83spo+EdS2IGAtPOOPEVlBTGPNbwI3YNlSmWSwz1YCaGZpv3FmT3ooO2YZ7lsBbvMIOjeg2HJCIyEEa/oCSd5e/YzXSlIjzcLGoidjYFQFZVvUKg2aWM2NzjW4NKeiOwPKGK5BEoQP8I1tnoS3mb9qOfKcnIpU=
+	t=1750869983; cv=none; b=l2TAL8srNatNsYIrjAg+F96tkypVleZRD1qviFaqnLCxFZXAeY6Ge5NKV8wW2RqGAGU2fARbFVqWEI/VTnFnRYhCCLSHD7NtgszmcHJ74y8RSaW+/QzNqxqmw1GkLTGVrIlkyjn4MoVhX3J/uvtaYuE4rwNxOHuSlDsya7WhFz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750869982; c=relaxed/simple;
-	bh=jFPjaQyDfx3K7LORcO8ofmw1d/WW3dXz7wnA0ovIXwA=;
+	s=arc-20240116; t=1750869983; c=relaxed/simple;
+	bh=7PRJH/dT13k6RVi5NSrh9Q6C4l9q9tJAoPffsopcK5c=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YKXL+MHPPXAu7VuU2LbXHOKHn23i4bOjV/AzAdWPU+ZizSLm31qjPt0ksnSkPE5viNGQRW/7sGOhmHp6Oax/AR4bwWJ/0edVxiekMm5Xei9rwVuk3WHKB/Nt9q6En32d0g3Hl6DkM1q0VlzC5wBFafT+pkMy576DrI24jpmdXiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=cCbq2e80; arc=none smtp.client-ip=217.70.183.197
+	 In-Reply-To:To:Cc; b=IdNMbLdEbPDg4IjvP7dnrr8CEoPJPq8722cvELzc1hwQ8pSBNTrTrwUNTvsOcSo8NrfFS2f0MA25FOWpS0XFHC9UVzL79Y7g0VwNAJktptCtbG6zM3FGuqZwlTZ7QlEz5QxNI7zTBSbutV2miVvlVPhscBlixFB6hH9OXPQSGQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OIP5dYf/; arc=none smtp.client-ip=217.70.183.197
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cCbq2e80"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 8578E44385;
-	Wed, 25 Jun 2025 16:46:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OIP5dYf/"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2E96644384;
+	Wed, 25 Jun 2025 16:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750869979;
+	t=1750869980;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=OMrBQHofuunDvUQikxi1pZO0MydXHJ5subj9NVDlS4c=;
-	b=cCbq2e80DMR9Z+uXH4CjM37FE/hy/mDf5oU/BbZDXYiBan2Uho5YheY844B00h2IGJL+4u
-	tDAkt9du1EaZJiUZbJMr3q30RnWkGuibNSelEboMsXClKmilZfgmRsgWroQCZcCer+cY5T
-	iT1w20j3pRReDBpbhw6wZJXrqOLbrFhnSr/jly1qaDD4OwQoPPdeEfM4izQrUSrIO/N0ch
-	ayKZm5iFx7yPTpe0Cwk2Cs3Or0cCR06DA4OKvSzm5eznhvUMZDTc/4F4YiNju5L4FjPshD
-	Tp2laWvscaRp4TUfBb/gYRmiA7Rt+dk/+erdF0YgZt2slKgme8x9UsLa3YGocA==
+	bh=mucDypvpJQb6uuO38z8Z55M0U8UDlvuva+sDU8/tA5o=;
+	b=OIP5dYf/5y3G9FULZfWtt32dq9hHIwM0W4olxVJ2JrppKfQ+rSrhZGPfQp/17MfFcL7TsG
+	HE1EVBSb54FLfh43bmMIUMDkdc+mcEZFZdYMXieg0BwlWjw9JvVCYZ7DhnmvzbF14tNEc5
+	PFRR6uQwERx2VWr7F6j8ch4JqDDUgd71ZALV6gPGAVmZHOjI7qwopFdHOuhcOKVLA2hQ04
+	IeV5mrU64s0rsZHNIgh0IVJF4i3eMx4NMp4qxHakfpq4qYQwHQ0Lwak1eurfVLeJSaVCgq
+	RGSQTXIrqkIGLk/mL1Pwztn5Ks6D+WdiQFyYOJDbG2A8xqRJa6iA3DrHb4qQUQ==
 From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Wed, 25 Jun 2025 18:45:28 +0200
-Subject: [PATCH 24/32] drm/mediatek: dsi: convert to the .attach_new op
+Date: Wed, 25 Jun 2025 18:45:29 +0200
+Subject: [PATCH 25/32] drm/bridge: nwl-dsi: convert to the .attach_new op
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-drm-dsi-host-no-device-ptr-v1-24-e36bc258a7c5@bootlin.com>
+Message-Id: <20250625-drm-dsi-host-no-device-ptr-v1-25-e36bc258a7c5@bootlin.com>
 References: <20250625-drm-dsi-host-no-device-ptr-v1-0-e36bc258a7c5@bootlin.com>
 In-Reply-To: <20250625-drm-dsi-host-no-device-ptr-v1-0-e36bc258a7c5@bootlin.com>
 To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
@@ -71,42 +71,44 @@ cannot store it.
 
 Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
 ---
- drivers/gpu/drm/mediatek/mtk_dsi.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/bridge/nwl-dsi.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index d7726091819c4762698b41060b3d4d8d27940238..33475a5c18c1146cd4ea40c3c6ccaba1271a6cd9 100644
---- a/drivers/gpu/drm/mediatek/mtk_dsi.c
-+++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -981,15 +981,15 @@ static const struct component_ops mtk_dsi_component_ops = {
- };
+diff --git a/drivers/gpu/drm/bridge/nwl-dsi.c b/drivers/gpu/drm/bridge/nwl-dsi.c
+index 94356d02a7009a4d333f2df6c628d57c4bf66fdb..76bb3828a615d75161aa7910a18ed909ee9cad2d 100644
+--- a/drivers/gpu/drm/bridge/nwl-dsi.c
++++ b/drivers/gpu/drm/bridge/nwl-dsi.c
+@@ -344,16 +344,16 @@ static int nwl_dsi_init_interrupts(struct nwl_dsi *dsi)
+ }
  
- static int mtk_dsi_host_attach(struct mipi_dsi_host *host,
+ static int nwl_dsi_host_attach(struct mipi_dsi_host *dsi_host,
 -			       struct mipi_dsi_device *device)
 +			       const struct mipi_dsi_bus_fmt *bus_fmt)
  {
- 	struct mtk_dsi *dsi = host_to_dsi(host);
- 	struct device *dev = host->dev;
- 	int ret;
+ 	struct nwl_dsi *dsi = container_of(dsi_host, struct nwl_dsi, dsi_host);
+ 
+-	if (device->lanes > 4)
++	if (bus_fmt->lanes > 4)
+ 		return -EINVAL;
  
 -	dsi->lanes = device->lanes;
 -	dsi->format = device->format;
--	dsi->mode_flags = device->mode_flags;
+-	dsi->dsi_mode_flags = device->mode_flags;
 +	dsi->lanes = bus_fmt->lanes;
 +	dsi->format = bus_fmt->format;
-+	dsi->mode_flags = bus_fmt->mode_flags;
- 	dsi->next_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
- 	if (IS_ERR(dsi->next_bridge)) {
- 		ret = PTR_ERR(dsi->next_bridge);
-@@ -1184,7 +1184,7 @@ static ssize_t mtk_dsi_host_transfer(struct mipi_dsi_host *host,
++	dsi->dsi_mode_flags = bus_fmt->mode_flags;
+ 
+ 	return 0;
+ }
+@@ -620,7 +620,7 @@ static ssize_t nwl_dsi_host_transfer(struct mipi_dsi_host *dsi_host,
  }
  
- static const struct mipi_dsi_host_ops mtk_dsi_ops = {
--	.attach = mtk_dsi_host_attach,
-+	.attach_new = mtk_dsi_host_attach,
- 	.detach = mtk_dsi_host_detach,
- 	.transfer = mtk_dsi_host_transfer,
+ static const struct mipi_dsi_host_ops nwl_dsi_host_ops = {
+-	.attach = nwl_dsi_host_attach,
++	.attach_new = nwl_dsi_host_attach,
+ 	.transfer = nwl_dsi_host_transfer,
  };
+ 
 
 -- 
 2.49.0
