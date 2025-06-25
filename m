@@ -1,159 +1,261 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BDD83074AD
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:47:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFA5B1DFD8B;
+	Wed, 25 Jun 2025 20:48:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750884474; cv=none; b=O1n5LLagPVt+z/eFv6bGJc9y/J/x/+TDmiYlhLo78xwC33Fx5GhBubKFNFE5HM4EIOJ44wmLqZarLsjTvV0VnMk5e5/PuYhw9+I4kmKi0ytEQEmg8pozdKhsO9b7HZmD8WB+oC5Q5EqIYdDJiUcoPgoN1u9x3I3NYj6fdZSjA/Q=
+	t=1750884487; cv=none; b=LL/X0BF8utYu0Kb7WYMVNPvAy43qt2i/Oefx9cg8t5otWZ/t00m1n51F53OMuGM4vC7fG+vcZfataZvKNVVHtdeSGouEkf2XQB9DJRerkEUL+7HOuZJDdovuQ0w9uRqekzes+IuNCGE8n1ppi2+P5jzHvMGtnv5DViCz3w11gCs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750884474; c=relaxed/simple;
-	bh=0olf+pHGGC2Z+86Wjw1DQMqCP3crLv7nB2XAwsL4DRs=;
+	s=arc-20240116; t=1750884487; c=relaxed/simple;
+	bh=nuEckLc/d0dmB2EIc+gySxUGvCjeFMbq6o4uimOy4oA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kvXjWTTtnAX1FKI5/d0i6nluE+0tf2pB/SpX26aKcPT6t0+OTnuBME1hn6HdtH1GE6NN37TiuVxE8MOQgPT69HkAyyuzmEqV25MvMA6skemKuJjs8X6gNyIje7vQ1mdbxIAMXgC3eADEXNnvuT4najSYlWusszgbmzHb96myrvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RHr5AWyT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nPS3ts6u; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=RHr5AWyT; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=nPS3ts6u; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=KutAg6Z2aQMJCI7o7zaVIn2VvT/JTCcmtrqBJs2sJjUAwKH1ZH23Vk0aFlk7e9D0a22LX2mH79m7CgcxZYWBbJMPyGayuDvOnKPNptZpB1POqzLlWZsnIjSB6BgtNfK8UJ8kjgx4W+DjuOUY2Mez2Wkuzma2bk1m6+OYo0PE2s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dEvpItH5; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RHr5AWyT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nPS3ts6u";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="RHr5AWyT";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="nPS3ts6u"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 477931F399;
-	Wed, 25 Jun 2025 20:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750884470; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UZuuQVBAOjxFkwRxiQlkI49ia3QjY5cZKASUPO9GhxM=;
-	b=RHr5AWyTogjk7wDUHEicPyxGiIs/pm55BRPKvkL9SDhFgebicB16M30BYwG/uRn5djaUZP
-	BmrKSYr2hSCgpXnLFVLKOwAWy7laZjQHjgBU7j38J3QwbIIoMJ2b3oUH59jvQBl/U3+fwW
-	Q1wojKxyt/6ercQ10GWe8lu6Ung+z2Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750884470;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UZuuQVBAOjxFkwRxiQlkI49ia3QjY5cZKASUPO9GhxM=;
-	b=nPS3ts6uFxPnl16PEip4jBEtKbL42bAEZKxyJJdS2mzduTsk97QrxfkBn6+47oIudy1znn
-	eFT8NPcAx5XrVOAg==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750884470; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UZuuQVBAOjxFkwRxiQlkI49ia3QjY5cZKASUPO9GhxM=;
-	b=RHr5AWyTogjk7wDUHEicPyxGiIs/pm55BRPKvkL9SDhFgebicB16M30BYwG/uRn5djaUZP
-	BmrKSYr2hSCgpXnLFVLKOwAWy7laZjQHjgBU7j38J3QwbIIoMJ2b3oUH59jvQBl/U3+fwW
-	Q1wojKxyt/6ercQ10GWe8lu6Ung+z2Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750884470;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UZuuQVBAOjxFkwRxiQlkI49ia3QjY5cZKASUPO9GhxM=;
-	b=nPS3ts6uFxPnl16PEip4jBEtKbL42bAEZKxyJJdS2mzduTsk97QrxfkBn6+47oIudy1znn
-	eFT8NPcAx5XrVOAg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CEEDF13485;
-	Wed, 25 Jun 2025 20:47:49 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AL0uL3VgXGi8fwAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 25 Jun 2025 20:47:49 +0000
-Date: Wed, 25 Jun 2025 22:47:40 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Muchun Song <muchun.song@linux.dev>, Peter Xu <peterx@redhat.com>,
-	Gavin Guo <gavinguo@igalia.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/5] mm,hugetlb: Sort out folio locking in the
- faulting path
-Message-ID: <aFxgbC-qGL8dpgGG@localhost.localdomain>
-References: <20250620123014.29748-1-osalvador@suse.de>
- <20250620123014.29748-3-osalvador@suse.de>
- <35b03911-74c3-4626-aaa8-4c331c086f8f@redhat.com>
- <aFupdJ_ky4wT6wGM@localhost.localdomain>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dEvpItH5"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-23694cec0feso4014135ad.2;
+        Wed, 25 Jun 2025 13:48:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750884485; x=1751489285; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=75jJvvv2MrkHgOrdZdE3yzodL7moqTV1X7NX8mGiTNg=;
+        b=dEvpItH5C3LvzUiwEm3RATrnDSAJwziEbtT7xQnc0rXRe/mLz/W7svQ/iMNy5AiwPf
+         1J8dLI4xtvy+j0cV1vG6pX0vjlLAhTNk9qADaFIhzSRegzkDld8N5iR/TxxjQyq0BqAf
+         W26XYlEeKepq0HEe6cDy6GrK0tBbzf1DMwtXu/1zWxL+LBz4vhIzmQHMa6dUO226HKjR
+         gnaj6TaUlt7KlvWAazWEdNpjf08wvgGUjRXxd1ABNyMFlX2dDEsh9OrcpJfohrnGvcDK
+         rLsFppBQiereUZ+vGGug+2fMfFITY1LPUz2cQSu7zEqYZvr8F6G3XQ7L7GXGxWugcSkQ
+         rK5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750884485; x=1751489285;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=75jJvvv2MrkHgOrdZdE3yzodL7moqTV1X7NX8mGiTNg=;
+        b=idxv8SlhcJG+IaRhNVK61No+LOPoOkoJLkrd/e4nKC6C/MtTFftBvtDP0qaV/blKEi
+         kYqMwpzBvX3WIjpy1H3JJ7ifm0lPqEo9ft1y2v4vcR7djBrhRiu1pZBfga6VR2zO1KKI
+         sK2tzKb+5FNdF9SdTV803NKAkHi5bnDyOGZ3MWeC4qUCjImit+vEJVxwzSF9AqxhpqEM
+         ZtbJEnEvTonfMkG/MPxUfNWF8hC1mzG2MHowLuU0ZLBZTlCrTBTrkmyuk66d4hdPcSs8
+         sbt/UbdtAVciyU5US42GYqvXihiTwlL9DpbMjMz7Xw/PxszcbW1NBFmh/WbAbXzW+4E+
+         N6Bw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjYKeaG9R9Pd1BHlGBsDLq6mULzPU93aRHs2zhNeqi4YPuIm37cySfxR5IfuMqKkB3vi0=@vger.kernel.org, AJvYcCWnzTJsPhZq0aBgWA22OUHrn/F+TLuvTRKuGfXfJLU8GpyfyhSjz88BzAn/Vc54dOSb8HbIA+R1@vger.kernel.org, AJvYcCXgs861g6QNSiFFuePyYSca/6aJbCTCNnqYHXK9INz/JfE2YM9wSGsEipJBVEVyFkhbndb3MGu1el93dDRy@vger.kernel.org
+X-Gm-Message-State: AOJu0YyYevB7hfDcru8g+6wjRqJH6nzSox506xjnOIIfshwtTpCY5vD3
+	23zKKpieV0yAkY0RHjOH849pmlXFfbukIBOYGaxQRF3F717YAKEKRec=
+X-Gm-Gg: ASbGncv5rrcKH+qCo9wsf2qsT6LadCafKm/wCWf4fk75JmwRSG1NR1kW3CeGjg0e9AZ
+	MxIwir8XHkZAVpfD5uySui34Kbxf8DGmZjGPP865S2ns1tj347i6msm+apaqGV9CPeiGSwUsX7F
+	XDO49VagFQGuCtJXAm/FowPS8ouV4FccSqrPfEgvcCjwCZSz27ZTe1T8fhZQ8j1SkragoCr4sk/
+	JKAUXSH8jTFpghGaSkv76JTB7V/pHZCrQAUuXBqiBVeeaKbty9nwsFvk6jwQf6eXmbTNJY19L1B
+	VW9rxJq956xE2rSvOeENkJJdU/3tM1022+g01AXt9UvqKK/HS7e5DJYwIMqj93BV5Aoj3tz/hUx
+	kc4B/Oi/GiJomRFqojRPRRnw=
+X-Google-Smtp-Source: AGHT+IF7fsB050mmo7FRvnrqVDKD0JxwGs2Y5b7Y7M1vFupthvCArB7beSMXuwlCz7lObtKxqifzfQ==
+X-Received: by 2002:a17:903:228b:b0:234:d7c5:a0ea with SMTP id d9443c01a7336-23824039f6fmr90196105ad.24.1750884485014;
+        Wed, 25 Jun 2025 13:48:05 -0700 (PDT)
+Received: from localhost (c-73-158-218-242.hsd1.ca.comcast.net. [73.158.218.242])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-237d86d1b74sm145500295ad.209.2025.06.25.13.48.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 13:48:04 -0700 (PDT)
+Date: Wed, 25 Jun 2025 13:48:03 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: syzbot <syzbot+e67ea9c235b13b4f0020@syzkaller.appspotmail.com>,
+	andrii@kernel.org, ast@kernel.org, bjorn@kernel.org,
+	bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+	edumazet@google.com, horms@kernel.org, jonathan.lemon@gmail.com,
+	kuba@kernel.org, linux-kernel@vger.kernel.org,
+	maciej.fijalkowski@intel.com, magnus.karlsson@intel.com,
+	netdev@vger.kernel.org, pabeni@redhat.com, sdf@fomichev.me,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [bpf?] [net?] possible deadlock in xsk_notifier (3)
+Message-ID: <aFxgg4rCQ8tfM9dw@mini-arch>
+References: <685af3b1.a00a0220.2e5631.0091.GAE@google.com>
+ <CAL+tcoB0as6+5VOk9nu0M_OH4TqT6NjDZBZmgQgdQcYx0pciCw@mail.gmail.com>
+ <aFwQZhpWIxVLJ1Ui@mini-arch>
+ <CAL+tcoCmiT9XXUVGwcT1NB6bLVK69php-oH+9UL+mH6_HYxGhA@mail.gmail.com>
+ <aFwZ5WWj835sDGpS@mini-arch>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aFupdJ_ky4wT6wGM@localhost.localdomain>
-X-Spam-Flag: NO
-X-Spam-Score: -4.30
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	ARC_NA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	URIBL_BLOCKED(0.00)[imap1.dmz-prg2.suse.org:helo,localhost.localdomain:mid];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo]
-X-Spam-Level: 
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aFwZ5WWj835sDGpS@mini-arch>
 
-On Wed, Jun 25, 2025 at 09:47:00AM +0200, Oscar Salvador wrote:
-> On Mon, Jun 23, 2025 at 04:11:38PM +0200, David Hildenbrand wrote:
-> > > @@ -6801,13 +6810,24 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
-> > >   		/* Fallthrough to CoW */
-> > >   	}
-> > > -	/* hugetlb_wp() requires page locks of pte_page(vmf.orig_pte) */
-> > > -	folio = page_folio(pte_page(vmf.orig_pte));
-> > > -	folio_lock(folio);
-> > > -	folio_get(folio);
-> > > -
-> > >   	if (flags & (FAULT_FLAG_WRITE|FAULT_FLAG_UNSHARE)) {
-> > >   		if (!huge_pte_write(vmf.orig_pte)) {
-> > > +			/*
-> > > +			 * Anonymous folios need to be lock since hugetlb_wp()
-> > > +			 * checks whether we can re-use the folio exclusively
-> > > +			 * for us in case we are the only user of it.
-> > > +			 */
+On 06/25, Stanislav Fomichev wrote:
+> On 06/25, Jason Xing wrote:
+> > On Wed, Jun 25, 2025 at 11:06 PM Stanislav Fomichev
+> > <stfomichev@gmail.com> wrote:
+> > >
+> > > On 06/25, Jason Xing wrote:
+> > > > On Wed, Jun 25, 2025 at 2:51 AM syzbot
+> > > > <syzbot+e67ea9c235b13b4f0020@syzkaller.appspotmail.com> wrote:
+> > > > >
+> > > > > Hello,
+> > > > >
+> > > > > syzbot found the following issue on:
+> > > > >
+> > > > > HEAD commit:    78f4e737a53e Merge tag 'for-6.16/dm-fixes' of git://git.ke..
+> > > > > git tree:       upstream
+> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=11b48f0c580000
+> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=12ec1a20ad573841
+> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=e67ea9c235b13b4f0020
+> > > > > compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> > > > >
+> > > > > Unfortunately, I don't have any reproducer for this issue yet.
+> > > > >
+> > > > > Downloadable assets:
+> > > > > disk image: https://storage.googleapis.com/syzbot-assets/3ff97b2d201b/disk-78f4e737.raw.xz
+> > > > > vmlinux: https://storage.googleapis.com/syzbot-assets/1968f46c8915/vmlinux-78f4e737.xz
+> > > > > kernel image: https://storage.googleapis.com/syzbot-assets/3455e371b965/bzImage-78f4e737.xz
+> > > > >
+> > > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > > > Reported-by: syzbot+e67ea9c235b13b4f0020@syzkaller.appspotmail.com
+> > > > >
+> > > > > netlink: 4 bytes leftover after parsing attributes in process `syz.1.1331'.
+> > > > > ======================================================
+> > > > > WARNING: possible circular locking dependency detected
+> > > > > 6.16.0-rc3-syzkaller-00042-g78f4e737a53e #0 Not tainted
+> > > > > ------------------------------------------------------
+> > > > > syz.1.1331/11144 is trying to acquire lock:
+> > > > > ffff888054b136b0 (&xs->mutex){+.+.}-{4:4}, at: xsk_notifier+0x101/0x280 net/xdp/xsk.c:1649
+> > > > >
+> > > > > but task is already holding lock:
+> > > > > ffff888052f43d58 (&net->xdp.lock){+.+.}-{4:4}, at: xsk_notifier+0xa4/0x280 net/xdp/xsk.c:1645
+> > > > >
+> > > > > which lock already depends on the new lock.
+> > > > >
+> > > > >
+> > > > > the existing dependency chain (in reverse order) is:
+> > > > >
+> > > > > -> #2 (&net->xdp.lock){+.+.}-{4:4}:
+> > > > >        __mutex_lock_common kernel/locking/mutex.c:602 [inline]
+> > > > >        __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:747
+> > > > >        xsk_notifier+0xa4/0x280 net/xdp/xsk.c:1645
+> > > > >        notifier_call_chain+0xbc/0x410 kernel/notifier.c:85
+> > > > >        call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2230
+> > > > >        call_netdevice_notifiers_extack net/core/dev.c:2268 [inline]
+> > > > >        call_netdevice_notifiers net/core/dev.c:2282 [inline]
+> > > > >        unregister_netdevice_many_notify+0xf9d/0x2700 net/core/dev.c:12077
+> > > > >        unregister_netdevice_many net/core/dev.c:12140 [inline]
+> > > > >        unregister_netdevice_queue+0x305/0x3f0 net/core/dev.c:11984
+> > > > >        register_netdevice+0x18f1/0x2270 net/core/dev.c:11149
+> > > > >        lapbeth_new_device drivers/net/wan/lapbether.c:420 [inline]
+> > > > >        lapbeth_device_event+0x5b1/0xbe0 drivers/net/wan/lapbether.c:462
+> > > > >        notifier_call_chain+0xbc/0x410 kernel/notifier.c:85
+> > > > >        call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2230
+> > > > >        call_netdevice_notifiers_extack net/core/dev.c:2268 [inline]
+> > > > >        call_netdevice_notifiers net/core/dev.c:2282 [inline]
+> > > > >        __dev_notify_flags+0x12c/0x2e0 net/core/dev.c:9497
+> > > > >        netif_change_flags+0x108/0x160 net/core/dev.c:9526
+> > > > >        dev_change_flags+0xba/0x250 net/core/dev_api.c:68
+> > > > >        devinet_ioctl+0x11d5/0x1f50 net/ipv4/devinet.c:1200
+> > > > >        inet_ioctl+0x3a7/0x3f0 net/ipv4/af_inet.c:1001
+> > > > >        sock_do_ioctl+0x118/0x280 net/socket.c:1190
+> > > > >        sock_ioctl+0x227/0x6b0 net/socket.c:1311
+> > > > >        vfs_ioctl fs/ioctl.c:51 [inline]
+> > > > >        __do_sys_ioctl fs/ioctl.c:907 [inline]
+> > > > >        __se_sys_ioctl fs/ioctl.c:893 [inline]
+> > > > >        __x64_sys_ioctl+0x18e/0x210 fs/ioctl.c:893
+> > > > >        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> > > > >        do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
+> > > > >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > > > >
+> > > > > -> #1 (&dev_instance_lock_key#20){+.+.}-{4:4}:
+> > > > >        __mutex_lock_common kernel/locking/mutex.c:602 [inline]
+> > > > >        __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:747
+> > > > >        netdev_lock include/linux/netdevice.h:2756 [inline]
+> > > > >        netdev_lock_ops include/net/netdev_lock.h:42 [inline]
+> > > > >        xsk_bind+0x37c/0x1570 net/xdp/xsk.c:1189
+> > > > >        __sys_bind_socket net/socket.c:1810 [inline]
+> > > > >        __sys_bind_socket net/socket.c:1802 [inline]
+> > > > >        __sys_bind+0x1a7/0x260 net/socket.c:1841
+> > > > >        __do_sys_bind net/socket.c:1846 [inline]
+> > > > >        __se_sys_bind net/socket.c:1844 [inline]
+> > > > >        __x64_sys_bind+0x72/0xb0 net/socket.c:1844
+> > > > >        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> > > > >        do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
+> > > > >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > > > >
+> > > > > -> #0 (&xs->mutex){+.+.}-{4:4}:
+> > > > >        check_prev_add kernel/locking/lockdep.c:3168 [inline]
+> > > > >        check_prevs_add kernel/locking/lockdep.c:3287 [inline]
+> > > > >        validate_chain kernel/locking/lockdep.c:3911 [inline]
+> > > > >        __lock_acquire+0x126f/0x1c90 kernel/locking/lockdep.c:5240
+> > > > >        lock_acquire kernel/locking/lockdep.c:5871 [inline]
+> > > > >        lock_acquire+0x179/0x350 kernel/locking/lockdep.c:5828
+> > > > >        __mutex_lock_common kernel/locking/mutex.c:602 [inline]
+> > > > >        __mutex_lock+0x199/0xb90 kernel/locking/mutex.c:747
+> > > > >        xsk_notifier+0x101/0x280 net/xdp/xsk.c:1649
+> > > > >        notifier_call_chain+0xbc/0x410 kernel/notifier.c:85
+> > > > >        call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:2230
+> > > > >        call_netdevice_notifiers_extack net/core/dev.c:2268 [inline]
+> > > > >        call_netdevice_notifiers net/core/dev.c:2282 [inline]
+> > > > >        unregister_netdevice_many_notify+0xf9d/0x2700 net/core/dev.c:12077
+> > > > >        rtnl_delete_link net/core/rtnetlink.c:3511 [inline]
+> > > > >        rtnl_dellink+0x3cb/0xa80 net/core/rtnetlink.c:3553
+> > > > >        rtnetlink_rcv_msg+0x95e/0xe90 net/core/rtnetlink.c:6944
+> > > > >        netlink_rcv_skb+0x158/0x420 net/netlink/af_netlink.c:2534
+> > > > >        netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+> > > > >        netlink_unicast+0x53d/0x7f0 net/netlink/af_netlink.c:1339
+> > > > >        netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
+> > > > >        sock_sendmsg_nosec net/socket.c:712 [inline]
+> > > > >        __sock_sendmsg net/socket.c:727 [inline]
+> > > > >        ____sys_sendmsg+0xa98/0xc70 net/socket.c:2566
+> > > > >        ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
+> > > > >        __sys_sendmsg+0x16d/0x220 net/socket.c:2652
+> > > > >        do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+> > > > >        do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
+> > > > >        entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > > > >
+> > > > > other info that might help us debug this:
+> > > > >
+> > > > > Chain exists of:
+> > > > >   &xs->mutex --> &dev_instance_lock_key#20 --> &net->xdp.lock
+> > > > >
+> > > > >  Possible unsafe locking scenario:
+> > > > >
+> > > > >        CPU0                    CPU1
+> > > > >        ----                    ----
+> > > > >   lock(&net->xdp.lock);
+> > > > >                                lock(&dev_instance_lock_key#20);
+> > > > >                                lock(&net->xdp.lock);
+> > > > >   lock(&xs->mutex);
+> > > >
+> > > > I feel the above race map is not that right?
+> > > >
+> > > > My understanding is as shown below.
+> > > > CPU 0                                                    CPU 1
+> > > > ---                                                           ---
+> > > > unregister_netdevice_many_notify()
+> > > >                                                           xsk_bind()
+> > > > netdev_lock_ops(dev);
+> > > >
+> > > > mutex_lock(&xs->mutex);
+> > > >                                                           netdev_lock_ops(dev);
+> > > > xsk_notifier()
+> > > > mutex_lock(&net->xdp.lock);
+> > > > mutex_lock(&xs->mutex);
+> > > >
+> > > > So ABBA lock case happens, IIUC.
+> > >
+> > > Since we can't (easily) control the ordering in notifiers, looks like
+> > > we need to align xsk_bind ordering (to be instance lock -> xs->mutex).
+> > > LMK if you want to take a stab at this; otherwise I'll try to send a
+> > > fix.
 > > 
-> > Should we move that comment to hugetlb_wp() instead? And if we are already
-> > doing this PTL unlock dance now, why not do it in hugetlb_wp() instead so we
-> > can simplify this code?
+> > I'm still learning the af_xdp. Sure, I'm interested in it, just a bit
+> > worried if I'm capable of completing it. I will try then.
 > 
-> Yes, probably we can move it further up.
-> Let me see how it would look.
+> SG, thanks! If you need more details lmk, but basically we need to reorder
+> netdev_lock_ops() and mutex_lock(lock: &xs->mutex)+XSK_READY check.
+> And similarly for cleanup (out_unlock/out_release) path.
 
-So, I've been thinking about this, and I'm not so sure.
-By default, the state of the folio in hugetlb_no_page and hugetlb_fault is
-different.
-
-hugetlb_no_page() has the folio locked already, and hugetlb_fault() hasn't, which
-means that if we want to move this further up, 1) hugetlb_no_page() would have to
-unlock the folio to then lock it in hugetlb_wp() in case it's anonymous or
-2) pass a parameter to hugetlb_wp() to let it know whether the folio is already locked.
-
-Don't really like any of them. Case 1) seems suboptimal as right now (with this patch)
-we only unlock the folio in !anon case in hugetlb_no_page(). If we want to move the 'dance'
-from hugetlb_fault() to hugetlb_wp(), we'd have to unlock and then lock it again.
-
--- 
-Oscar Salvador
-SUSE Labs
+Jakub just told me that I'm wrong and it looks similar to commit
+f0433eea4688 ("net: don't mix device locking in dev_close_many()
+calls"). So this is not as easy as flipping the lock ordering :-(
