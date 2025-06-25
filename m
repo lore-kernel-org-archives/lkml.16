@@ -1,39 +1,49 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CC112DAFAB;
-	Wed, 25 Jun 2025 10:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from out203-205-221-245.mail.qq.com (out203-205-221-245.mail.qq.com [203.205.221.245])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 950FB1DB958;
+	Wed, 25 Jun 2025 10:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750848647; cv=none; b=ddTGu6/NvOlLdr4TmPlL/OjFNFzizAvWy/hgrSYmiioCCxbkXacctUbwgJv7wefJ+sqUFDK74+RHzDv4b4svQcNeCx4by+A7yZfTf7ZTA9T9kdmAQ8ybJZjo7UErsvY5RzPBfJFi6XBJErSPJx6dfHVpUw5fNVnB4cKPpnk6dRs=
+	t=1750848685; cv=none; b=R4Em3sLFSQ/zYSl86ScnOKhWFVEOQljP3eTHFFhS5Jr2VpSnKUSMhaiLg2TP48VYDlp1wQRPTLvZekhbozUakP8Wj8wLBNW+8IHJwqjVMKQpoGEAVvC8i1HbEQzltVApw76ae8LO0zSYaIB4K3EEkEWiCEnTIXcQa1Lua2vAuHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750848647; c=relaxed/simple;
-	bh=ApxE6M1Ke6N9jdaZibKhAIInp2ndrZn6PPTj4Ntr1CE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=WpcAZOZG+HemUiZpAgaEOiGaXKPcHIUMespFFt5ecVd/QRfiS4i4+s151uqtDpFNtRwWUWbFy1K1kW6ygqwsmdqOUIffS4ZZriJMAvEJMGfiPIQi7mcRNZO2Okluww+GkHBeeYz1oaWSHCkpJnoYm3fUBoXYZYev043xyVnV4Ec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bRyfz3MTKz9vBt;
-	Wed, 25 Jun 2025 12:27:07 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id p2o-Y-FdKUAQ; Wed, 25 Jun 2025 12:27:07 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bRyfz2RdKz9vBC;
-	Wed, 25 Jun 2025 12:27:07 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 435058B7B7;
-	Wed, 25 Jun 2025 12:27:07 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id vvosXbHhLt2e; Wed, 25 Jun 2025 12:27:07 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 0BC418B7A7;
-	Wed, 25 Jun 2025 12:27:04 +0200 (CEST)
-Message-ID: <750b6617-7abf-4adc-b3e6-6194ff10c547@csgroup.eu>
-Date: Wed, 25 Jun 2025 12:27:04 +0200
+	s=arc-20240116; t=1750848685; c=relaxed/simple;
+	bh=fRZQe4nl0zKEUEJnNAJ903ZecOWgKWBEK13lijK2btU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YgZII/6CPaTqEcvHoo+fkrf08wTXK7hoK8bKaIBszWfT8n0uKTYWW1g8CM3o2tjeEf8I7QGi6mtjefhqRVVcCpaNaEg/uWzpTvMugIVOfGKxVEuFiFtOLlnyAcfI1/YrIttaHx7bDta3knsv6JCicUX6mrrll/jur1bNiZZGov8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=hEJNCM6Z; arc=none smtp.client-ip=203.205.221.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="hEJNCM6Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1750848367; bh=fRZQe4nl0zKEUEJnNAJ903ZecOWgKWBEK13lijK2btU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=hEJNCM6ZEPHh6f84t10y6/by9x0fWak3Pg9UI1wSeVixF2e96t+9lZzISUpkB7/oW
+	 ZOwPaYVVCY9jGWIszJiUsThrXfIqnwG2fLmdrEWiQFs+RlY6sH8/cL6BKv+1ob1qUm
+	 i9wjf4H+1nts5RYGFmb/NO4yI/UR56vE5e70r0EM=
+Received: from [172.25.20.158] ([111.202.154.66])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id B839CC3E; Wed, 25 Jun 2025 18:46:03 +0800
+X-QQ-mid: xmsmtpt1750848363tmxew2sy5
+Message-ID: <tencent_FB9C854A6AB8D1CF28C88A8642B297A59C07@qq.com>
+X-QQ-XMAILINFO: MT46X0n0UCeM4y5W26Ag/ADFG1DHi9F9CHyqbj6DSfeO3dtcmIBOE1oh2UcVZP
+	 ZMmQ68mcMehwhUbLUnc07Zn9RGz6F2suZwRJOeyiIzICBfgm0V2+5cregthy5C7I8MB6FhVvNcYM
+	 /VYkFzpfdEChNh1ny0qa/KKLXtV+MtsrADzq4s7xqMxPy7INKe9X7UTI8B30l2IDWVuhCLBivAB/
+	 KpDHHHEgbPHLOTlKPIWS+VeUSKe0p858cK9CT24Fk/cVWieuHQr8ktv6F80EJcbM+1S/A2ggowY6
+	 fAb4V4CaUZGL0XfnXbcLYb6LQmmw+A5CVdgTwLZAnVSKd0mwEH7Z7pmaiJiOydAd+niM/H3cdnq1
+	 rOkrq8lQR55XrWjPx6gZ/EFejSqH8DoRxc5WJMO4+TBv4qGCLjkGxCLhfzpfNWMA8RomFYbRvWrD
+	 6xwkMLEpPnGJXjxpwo0483KUAhbHlVgxJPUoWax2HkTNHkIBqD2j7ccHzxxGpye4OildalBIIxay
+	 J8znfIlVeLvpwBSMKx5L/dMMyldBbPzxX+CEr1l9/weUIrqiRVImt6MOFUDOlunpBV7QPxUklf6e
+	 CQvXxLC5C5gBdKfW7Amei+h97GCDgKpfJBIpvH0s06O9iBzMr5JOBv8vnfdC9scfGJIYymZ3iHWM
+	 8a+CKbZBw8NCA+65oAHoE15MX1UdBCdnXi39kjjEPdDJxqNl0vUWfCKAdnGACYxu7dc3IA8WzeYG
+	 t83PPzmGaZZysMJnUHhsday1qRc0X4xe1rkKegzSK3hnBQgHu9LTEGpy19ILw0Uo5i+dLyw22WC+
+	 o60brkozWdLySFo0VMzrZoSZxjebVnDOYd46LeGlXEI3ApHoWbtH5gX9qdOmXHpDuXY0YRuqAi1i
+	 YyETv+GdRIAh7F7kT9T8xtYBssGRzq52KheHTFTcSRV6Y2jZHXfqJkiLRTtyNhFI5Jhet2ohBjyw
+	 xJIvTnxoRcyK6Hsx4wo61Ymi6SJV4FfufqOKeFAABoMNiHKEgteeWdTwi/nC9lwdKRit1VdVs=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+X-OQ-MSGID: <a9c446ff-d51a-40bf-a243-350de1e6e613@qq.com>
+Date: Wed, 25 Jun 2025 18:46:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,45 +51,43 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: Re: [PATCH 2/9] kasan: replace kasan_arch_is_ready with kasan_enabled
-To: Sabyrzhan Tasbolatov <snovitoll@gmail.com>, ryabinin.a.a@gmail.com,
- glider@google.com, andreyknvl@gmail.com, dvyukov@google.com,
- vincenzo.frascino@arm.com, catalin.marinas@arm.com, will@kernel.org,
- chenhuacai@kernel.org, kernel@xen0n.name, maddy@linux.ibm.com,
- mpe@ellerman.id.au, npiggin@gmail.com, hca@linux.ibm.com, gor@linux.ibm.com,
- agordeev@linux.ibm.com, borntraeger@linux.ibm.com, svens@linux.ibm.com,
- richard@nod.at, anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
- dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
- hpa@zytor.com, chris@zankel.net, jcmvbkbc@gmail.com,
- akpm@linux-foundation.org
-Cc: guoweikang.kernel@gmail.com, geert@linux-m68k.org, rppt@kernel.org,
- tiwei.btw@antgroup.com, richard.weiyang@gmail.com, benjamin.berg@intel.com,
- kevin.brodsky@arm.com, kasan-dev@googlegroups.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- loongarch@lists.linux.dev, linuxppc-dev@lists.ozlabs.org,
- linux-s390@vger.kernel.org, linux-um@lists.infradead.org, linux-mm@kvack.org
-References: <20250625095224.118679-1-snovitoll@gmail.com>
- <20250625095224.118679-3-snovitoll@gmail.com>
-Content-Language: fr-FR
-In-Reply-To: <20250625095224.118679-3-snovitoll@gmail.com>
+Subject: Re: [PATCH v2 5/5] ext4: declare support for FOP_DONTCACHE
+To: Matthew Wilcox <willy@infradead.org>,
+ =?UTF-8?B?6ZmI5rab5rabIFRhb3RhbyBDaGVu?= <chentaotao@didiglobal.com>
+Cc: "tytso@mit.edu" <tytso@mit.edu>, "hch@infradead.org" <hch@infradead.org>,
+ "adilger.kernel@dilger.ca" <adilger.kernel@dilger.ca>,
+ "brauner@kernel.org" <brauner@kernel.org>,
+ "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+ "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+ "tursulin@ursulin.net" <tursulin@ursulin.net>,
+ "airlied@gmail.com" <airlied@gmail.com>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+ "linux-ext4@vger.kernel.org" <linux-ext4@vger.kernel.org>,
+ "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+ "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+ "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+ "linux-mm@kvack.org" <linux-mm@kvack.org>,
+ "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20250624121149.2927-1-chentaotao@didiglobal.com>
+ <20250624121149.2927-6-chentaotao@didiglobal.com>
+ <aFqfwHofm_eXb5zw@casper.infradead.org>
+From: Chen Taotao <chentao325@qq.com>
+In-Reply-To: <aFqfwHofm_eXb5zw@casper.infradead.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
+在 2025/6/24 20:53, Matthew Wilcox 写道:
+> On Tue, Jun 24, 2025 at 12:12:10PM +0000, 陈涛涛 Taotao Chen wrote:
+>> From: Taotao Chen<chentaotao@didiglobal.com>
+>>
+>> Set the FOP_DONTCACHE flag in ext4_file_operations to indicate that
+>> ext4 supports IOCB_DONTCACHE handling in buffered write paths.
+> I think this patch should be combined with the previous patch so we
+> see all the change needed to support DONTCACHE in one patch.
 
-Le 25/06/2025 à 11:52, Sabyrzhan Tasbolatov a écrit :
-> Replace the existing kasan_arch_is_ready() calls with kasan_enabled().
-> Drop checks where the caller is already under kasan_enabled() condition.
+I’ll merge the patches to keep the DONTCACHE support self-contained. Thanks!
 
-If I understand correctly, it means that KASAN won't work anymore 
-between patch 2 and 9, because until the arch calls kasan_init_generic() 
-kasan_enabled() will return false.
 
-The transition should be smooth and your series should remain bisectable.
-
-Or am I missing something ?
-
-Christophe
 
