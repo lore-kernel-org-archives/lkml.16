@@ -1,193 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D64A2D5C81;
-	Wed, 25 Jun 2025 19:42:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67FEF3074BC;
+	Wed, 25 Jun 2025 19:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750880543; cv=none; b=UMg8hbylHNTzzov/kKXW85UwPsF6Cm/7L9xuw0oKJ46kM/2v/ws/VYUKa0LFtMSgYlnqO+afOndjnoRnvcEx+1UXUXo4OqdaWebCeNd45HBXluTqazZOGVxioADwIHCPLY+FsBMSznjzUzwGYBx9zAi8tMnscqQlX6cSlI2LHNM=
+	t=1750880629; cv=none; b=RpAq3BzXH/VcUYcts0kckHSVpv59ltGwijCdBqcG/vtdRR1vCQOwz4SwR5tGVuEnoMd3oNcKJgaP/14r6w584TePRVpo+BeKXI+R8nRwx3BsxEulbGDjL+ki7+c+4PjPGA7BQahrX88AKVjAQ7YiQDQZH8ATTv/7JIV0dTnlKqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750880543; c=relaxed/simple;
-	bh=CjNKXvxO/4gk15CIk9SU0gSachKAURgD/j1MO4ru2uc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uVXjD5aNhLsZFRcnVXyHvepUpd2l7HSJy53m90hHfItQ7rmbzwMYOvVCONyp5HYhjXLWRQOxUIAdhBCaQVJWTYcW+NjY1MigoSAyrB7ylO0s2K4EtpcNioLGjdMUaNKg2dZoxppFiFD3yGUdmznWpor/fRtP1ziEptX7P9wYU8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pINkPIvI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750880629; c=relaxed/simple;
+	bh=85TBiF9vWpEzOiyWOW6FnwMDFFQ0OHyo9F1KYkZHRJw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XmTIHUCPtpH1zDx3+ue3QLzOCIhAwXtzMqt8qm+UoLm5hxqA39q42CjOnVLCTLG5dYyKqf9JNSP7hQsF7ZynclgODYwb4bR0EAtgHYEurJPAT4ojN0YM3kknd/6ZRBlu0yVcDCaTaWfwNpT1HlJ0gkrlS3xGVFZHKV8LBbTfN58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=EK2gprrP; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pINkPIvI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB967C4CEEA;
-	Wed, 25 Jun 2025 19:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750880543;
-	bh=CjNKXvxO/4gk15CIk9SU0gSachKAURgD/j1MO4ru2uc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pINkPIvIsYZFEn6g5F4lCIfTIQbnezryez2xsbQgrOAbTjFtTNuLrgf6DYBczUoWb
-	 0DLZ0I6mdKBMOTVvLilqgvgM+m5INwQzvktW1Kw1N+GRfVLSvCw10Du4xhXTGcNdng
-	 EyHzGmRHx1e4K3lCpwKJ76vccLYyiTFD0INQpF4AoY4w1megiTREicpLYDtBqVNBxg
-	 nf9GmZ9SAoMoSpmDhG9CAAJi8WHbJRBnpxeg2rPYhp8WiXIC59UGJSaXNmqF+vBOuP
-	 Vp2rLFCGhwrYLmAsOYxB2jhOgTpPiqoUYh+1tLwVozs+UD9qXBZG6LKmumwmdccHTY
-	 n3l10gmujvFlw==
-Message-ID: <a9bed0b4-b050-468b-91cb-bc4c81352046@kernel.org>
-Date: Wed, 25 Jun 2025 21:42:19 +0200
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="EK2gprrP"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A55C340E019C;
+	Wed, 25 Jun 2025 19:43:43 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id QCoBZ2S8itpe; Wed, 25 Jun 2025 19:43:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1750880620; bh=j8KXOyVlrTz3WrmUUDKu9Dp2Ys4WOvLarIGmlHJOLtk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EK2gprrPUlw0WCgeibzeftf5aMmtKn86GN7kpnQYc1ptMpjshm+ZlDneG5x7fnSuQ
+	 BKQfs+vz48302ygD44ATw0R6lmWZgXcXeGi7ck4de76kjvMoTKz8g2YuiTX2599fIB
+	 T9DoJjcfSQ35YPX327YyrcmZqaUGYROiq8nvNgQqRuwGshfxdTpXCV1QeQhcHVwAYZ
+	 aM6xeCEMgJgqdkIaAujlmhoYJ+EP2DItCoAhZA/ORoIQbOzKZ/kEKd2qsxlT1XSaU8
+	 VYcOMrjmG173BRJlZpvtkVxAKl7+wMc1jMwy+hSnOvF3mpPyTTEJI8CH7ugaCRqWM8
+	 cW1qXHLXFPXtg19moqoF+jmtBIZdG0V8YXzN2419VXkr1VqqhB7sVake6Em9nYq/VB
+	 /TqPOKCdfDwZ9XRqG/NLTzwD/o0ITkyGFGYofSfHE770ibtvK+uNUaun9TkFxS7+7T
+	 lKmvUg3YMtwXd3w+ep5v9picR0zzkUzzgAEpzM0sPinCEmebW3gr5U83vc3/WHqmUE
+	 vzohUnybJu9ggJx5vFVwOJtPUU57rjbaUxJzjb7EKqJg7ZBfbpP6cCjk3GybclD7Bq
+	 ISs0Nm8gXv96Wj9iL1re7kyvNaiyJTxajcWHzQA9SIzRySfe4pQx1ETqlOhWCSFKcT
+	 cZjLfwYRHP5AgNfcW2oi+HY8=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D466440E00DE;
+	Wed, 25 Jun 2025 19:43:28 +0000 (UTC)
+Date: Wed, 25 Jun 2025 21:43:22 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: JP Kobryn <inwardvessel@gmail.com>
+Cc: tony.luck@intel.com, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, hpa@zytor.com, aijay@meta.com,
+	x86@kernel.org, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH] mce: include cmci during intel feature clearing
+Message-ID: <20250625194322.GGaFxRWqx0WbE90k6N@fat_crate.local>
+References: <20250617214752.178263-1-inwardvessel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] Input: soc_button_array: Only debounce cherryview
- and baytrail systems
-To: Mario Limonciello <superm1@kernel.org>,
- Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <20250625181342.3175969-1-superm1@kernel.org>
- <20250625181342.3175969-4-superm1@kernel.org>
- <f5e1d50f-d85e-45a3-a131-f2da603c620c@kernel.org>
- <57e9b1d5-faf1-4c7a-87fc-047e0dc102f9@kernel.org>
-Content-Language: en-US, nl
-From: Hans de Goede <hansg@kernel.org>
-In-Reply-To: <57e9b1d5-faf1-4c7a-87fc-047e0dc102f9@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250617214752.178263-1-inwardvessel@gmail.com>
 
-Hi,
-
-On 25-Jun-25 9:23 PM, Mario Limonciello wrote:
-> On 6/25/25 2:03 PM, Hans de Goede wrote:
->> Hi,
->>
->> On 25-Jun-25 8:13 PM, Mario Limonciello wrote:
->>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>
->>> commit 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
->>> hardcoded all soc-button-array devices to use a 50ms debounce timeout
->>> but this doesn't work on all hardware.  The hardware I have on hand
->>> actually prescribes in the ASL that the timeout should be 0:
->>>
->>> GpioInt (Edge, ActiveBoth, Exclusive, PullUp, 0x0000,
->>>           "\\_SB.GPIO", 0x00, ResourceConsumer, ,)
->>> {   // Pin list
->>>      0x0000
->>> }
->>>
->>> Many cherryview and baytrail systems don't have accurate values in the
->>> ASL for debouncing and thus use software debouncing in gpio_keys. The
->>> value to use is programmed in soc_button_array.  Detect Cherry View
->>> and Baytrail using ACPI HID IDs used for those GPIO controllers and apply
->>> the 50ms only for those systems.
->>>
->>> Cc: Hans de Goede <hansg@kernel.org>
->>> Fixes: 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
->>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>
->> I'm not a fan of this approach, I believe that we need to always debounce
->> when dealing with mechanical buttons otherwise we will get unreliable /
->> spurious input events.
->>
->> My suggestion to deal with the issue where setting up debouncing at
->> the GPIO controller level is causing issues is to always use software
->> debouncing (which I suspect is what Windows does).
->>
->> Let me copy and pasting my reply from the v1 thread with
->> a bit more detail on my proposal:
->>
->> My proposal is to add a "no_hw_debounce" flag to
->> struct gpio_keys_platform_data and make the soc_button_array
->> driver set that regardless of which platform it is running on.
->>
->> And then in gpio_keys.c do something like this:
->>
->> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
->> index f9db86da0818..2788d1e5782c 100644
->> --- a/drivers/input/keyboard/gpio_keys.c
->> +++ b/drivers/input/keyboard/gpio_keys.c
->> @@ -552,8 +552,11 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
->>           bool active_low = gpiod_is_active_low(bdata->gpiod);
->>             if (button->debounce_interval) {
->> -            error = gpiod_set_debounce(bdata->gpiod,
->> -                    button->debounce_interval * 1000);
->> +            if (ddata->pdata->no_hw_debounce)
->> +                error = -EINVAL;
->> +            else
->> +                error = gpiod_set_debounce(bdata->gpiod,
->> +                        button->debounce_interval * 1000);
->>               /* use timer if gpiolib doesn't provide debounce */
->>               if (error < 0)
->>                   bdata->software_debounce =
->>
->> So keep debouncing, as that will always be necessary when dealing with
->> mechanical buttons, but always use software debouncing to avoid issues
->> like the issue you are seeing.
->>
->> My mention of the BYT/CHT behavior in my previous email was to point
->> out that those already always use software debouncing for the 50 ms
->> debounce-period. It was *not* my intention to suggest to solve this
->> with platform specific quirks/behavior.
->>
->> Regards,
->>
->> Hans
+On Tue, Jun 17, 2025 at 02:47:52PM -0700, JP Kobryn wrote:
+> It was found that after a kexec on an intel CPU, MCE reporting was no
+> longer active. The root cause has been found to be that ownership of CMCI
+> banks is not cleared during the shutdown phase. As a result, when CPU's
+> come back online, they are unable to rediscover these occupied banks. If we
+> clear these CPU associations before booting into the new kernel, the CMCI
+> banks can be reclaimed and MCE reporting will become functional once more.
 > 
-> I mentioned on the v1 too, but let's shift conversation here.
-
-Ack.
-
-> So essentially all platforms using soc_button_array would always turn on software debouncing of 50ms?
-
-Yes that is what my proposal entails.
-
-> In that case what happens if the hardware debounce was ALSO set from the ASL?  You end up with double debouncing I would expect.
-
-A hardware debounce of say 25 ms would still report the button down
-immediately, it just won't report any state changes for 25 ms
-after that, at least that is how I would expect this to work.
-
-So the 50 ms ignore-button-releases for the sw debounce will start
-at the same time as the hw ignore-button-release window and basically
-the longest window will win. So having both active should not really
-cause any problems.
-
-Still only using one or the other as you propose below would
-be better.
-
-> Shouldn't you only turn on software debouncing when it's required?
+> The existing code does seem to have the intention of clearing MCE-related
+> features via mcheck_cpu_clear(). During a kexec reboot, there are two
+> sequences that reach a call to mcheck_cpu_clear(). They are:
 > 
-> I'm wondering if considering the first two patches we should have gpio-keys look up if hardware can support debounce, and then "only if it can't" we program the value from soc button array.
+> 1) Stopping other (remote) CPU's via IPI:
+> native_machine_shutdown()
+> 	stop_other_cpus()
+> 		smp_ops.stop_other_cpus(1)
+> 		x86 smp: native_stop_other_cpus(1)
+> 			apic_send_IPI_allbutself(REBOOT_VECTOR)
 > 
-> It can be done by having gpio_keys do a "get()" on debounce.  Iff the driver returns -ENOTSUPP /then/ program the software debounce.
+> ...IPI is received on remote CPU's and IDT sysvec_reboot invoked:
+> 	stop_this_cpu()
+> 		mcheck_cpu_clear(this_ptr_cpu(&cpu_info))
+> 
+> 2) Seqence of stopping the active CPU (the one performing the kexec):
+> native_machine_shutdown()
+> 	stop_other_cpus()
+> 		smp_ops.stop_other_cpus(1)
+> 		x86 smp: native_stop_other_cpus(1)
+> 			mcheck_cpu_clear(this_ptr_cpu(&cpu_info))
+> 
+> In both cases, the call to mcheck_cpu_clear() leads to the vendor specific
+> call to intel_feature_clear():
+> 
+> mcheck_cpu_clear(this_ptr_cpu(&cpu_info))
+> 	__mcheck_cpu_clear_vendor(c)
+> 		switch (c->x86_vendor)
+> 		case X86_VENDOR_INTEL:
+> 			mce_intel_feature_clear(c)
+> 
+> Now looking at the pair of functions mce_intel_feature_{init,clear}, there
+> are 3 MCE features setup on the init side:
+> 
+> mce_intel_feature_init(c)
+> 	intel_init_cmci()
+> 	intel_init_lmce()
+> 	intel_imc_init(c)
+> 
+> On the other side in the clear function, only one of these features is
+> actually cleared:
+> 
+> mce_intel_feature_clear(c)
+> 	intel_clear_lmce()
+> 
+> Just focusing on the feature pertaining to the root cause of the kexec
+> issue, there would be a benefit if we additionally cleared the CMCI feature
+> within this routine - the banks would be free for acquisition on the boot
+> up side of a kexec. This patch adds the call to clear CMCI to this intel
+> routine.
 
-Any special handling here should be done in soc_button_array since
-this is specific to how with ACPI we have the GPIO resource
-descriptors setting up the hw-debounce and then the need to do
-software debounce when that was not setup.
+Please:
 
-As for checking for -ENOTSUPP I would make soc_button_array
-do something like this.
+ - shorten this commit message - there really is no need to explain in such
+   detail that mcheck_cpu_clear() has simply forgotten to clear CMCI banks
+   too.
 
-ret = debounce_get()
-if (ret <= 0)
-	use-sw-debounce;
+ - run it through a spellchecker
 
-If hw-debounce is supported but not setup, either because
-the exact debounce value being requested is not supported
-or because the DSDT specified 0, then sw-debouncing should
-also be used.
+ - drop all personal pronouns
 
-Note this will still require the use of a new no_hw_debounce
-flag so that we don't end up enabling hw-debounce in
-the hw-debounce is supported but not setup case.
+ - write it in imperative tone
 
-Regards,
+Some hints:
 
-Hans
+Section "2) Describe your changes" in
+Documentation/process/submitting-patches.rst for more details.
 
+Also, see section "Changelog" in
+Documentation/process/maintainer-tip.rst
 
+Thx.
 
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
