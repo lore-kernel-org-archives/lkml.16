@@ -1,72 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B204820C46D;
-	Wed, 25 Jun 2025 21:10:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2951FBCB2;
+	Wed, 25 Jun 2025 21:13:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750885849; cv=none; b=tziVBK5kD3zR2iC8KLuXo/RCM7CNSMZADpGWlaWOmpvLM1HznGt1hYQ4Ge3Yh1zyunVqQyl1Xg2Cx6rTF6mxLoA0E/lwXTlmNxd0SqCZy2qs8NqOWmEvoFy8f5hdhpl/ovWHD9gCGJJIWv4lcesGfc9q2kBJh7ba2CDv/J+cR5E=
+	t=1750886031; cv=none; b=WS/KHKxyRfP2el2KHqSK63XcoGT1BVQbt+WyXsDdREMxJayEZOyHdg/qSVXyljxU/n9d0Jq4G5Zr1d9ZEuAnHmFPUXRA+ew/uRiAhx/BFu4WngGipvmarwZpvuMbp/CfzoWBcRu7QKbBpPNSwCqV/nkbi+3FQ1rqxkA3qjRHhPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750885849; c=relaxed/simple;
-	bh=CdZaIG6cxotiCXbEsy417Cx3IBnw+TAhglshYAGkRaw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TnTt7I6+UY7ops8YuhMSvAqKSfTQEm0SKousr7A+JwuRhRfc7WDuZVPZQbTQ4IPYwvWMWUp0kjPmh42vyONjV8rvl50LOljRdp2UWttX5v3sEahK3CqvaWk6VGTpGCZOoo6CAmovjTLQS4z2PBidINAebA32lxpqJfQjnsWQUlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N9j7sG+l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750886031; c=relaxed/simple;
+	bh=2CYyWrDgfXhaIB5HAqkg5pcw/ljnzjLZcEO2sgGT5Mg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=I1/Fpu7LCSyyF1ctXj6iHTaBqIZAtbQPilzOwpBvIe6iOaen4bL8tGLa7m39hcBo5PRdPJ8PpHwNpJGap2+sT01JbwnHjnuiybVds2ID+5sWM6MArTGbLKoBI/hvaU8YKPIdJi2smuW1z47YbKEuXmJ19nowE7jwx6HsiJCKEoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=olE7ytQa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N9j7sG+l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C0CBC4CEEA;
-	Wed, 25 Jun 2025 21:10:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="olE7ytQa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50799C4CEEA;
+	Wed, 25 Jun 2025 21:13:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750885849;
-	bh=CdZaIG6cxotiCXbEsy417Cx3IBnw+TAhglshYAGkRaw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=N9j7sG+lbV/z/3Qr/ejg/YiL9FUMtkF6/V6l+/Shtq7Ls80WDr3FIqh5Oa1Gofg3r
-	 omrnsCGupI7SofgUm1tLRRcI7y/hcvS741P9rM5gR+Zmfanj7OU36hckuqK7q1Si2l
-	 9QU7qyPPqApIjB/047dP+8SI0+el38nF7pH81KWI8Irw6iRdwReV47OqptpyK7H5Y9
-	 JuMgJ6h/LMPU2FM590G8nYr7z2S8Tjyiue+tLVqD9Eeug1rYcmY0nuKVP6vkk1gmhh
-	 fECW3Fo3gOOEAn3pxjO2D3+x0ZbXyQM2A1diysl2ReT/38Qm6KjEWjted3eiml99Av
-	 GlqzrE+E5sz/g==
-Date: Wed, 25 Jun 2025 23:10:44 +0200
-From: Andi Shyti <andi.shyti@kernel.org>
-To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
-Cc: Pratap Nirujogi <pratap.nirujogi@amd.com>, rdunlap@infradead.org, 
-	Hans de Goede <hdegoede@redhat.com>, sfr@canb.auug.org.au, linux-next@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, platform-driver-x86@vger.kernel.org, 
-	LKML <linux-kernel@vger.kernel.org>, benjamin.chan@amd.com, bin.du@amd.com, 
-	gjorgji.rosikopulos@amd.com, king.li@amd.com, dantony@amd.com
-Subject: Re: [PATCH v4 3/3] platform/x86: Use i2c adapter name to fix build
- errors
-Message-ID: <4exmux33fq3nyene6qbjgtum7e7zczqvzf4aqimyszzlztsewm@hvl7umgvvlov>
-References: <20250609155601.1477055-1-pratap.nirujogi@amd.com>
- <20250609155601.1477055-4-pratap.nirujogi@amd.com>
- <570c7765-b3bc-77cd-dddb-d19e85611114@linux.intel.com>
- <2a74c711-0d9c-8013-dc92-82ffd0d7d416@linux.intel.com>
+	s=k20201202; t=1750886030;
+	bh=2CYyWrDgfXhaIB5HAqkg5pcw/ljnzjLZcEO2sgGT5Mg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=olE7ytQaRAfnd6Xerm2dTjD7So72cUL+IMTcJrzT7HaNWbjk2+6QnnrpDjzC3AhCe
+	 m/4aR7B3E08apSdIHEnYpRlosAbxXK6pG8a0JKpFzFn/NjAQw/Li4qQER8HVHNsmd6
+	 rW5P5CdnYpVl/YsC6cBzz+O0CU2pxm4YhHgAlx/n3F35nKea5llmcN8KTdrkGVfKHQ
+	 wzyT8M32iFcTo8l9awdpJcDgVb8f/v67jS/g/5BbswiQe0ssCWYdS6rfVqkF3XO0ls
+	 jcM5ZqkZUT2zGVuAIMmbb73vjwyP9PW71H0NPjjyooMAtgB2fZwLJSIiG9Ki7JdIJW
+	 /jqXKnDND/XEQ==
+Date: Wed, 25 Jun 2025 14:13:49 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Deli Zhang <deli.zhang21th@gmail.com>
+Cc: michael.chan@broadcom.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bnxt_en: Add parameter disable_vf_bind
+Message-ID: <20250625141349.5315d6cc@kernel.org>
+In-Reply-To: <20250625053005.79845-1-deli.zhang21th@gmail.com>
+References: <20250625053005.79845-1-deli.zhang21th@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2a74c711-0d9c-8013-dc92-82ffd0d7d416@linux.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Ilpo,
+On Wed, 25 Jun 2025 13:30:05 +0800 Deli Zhang wrote:
+> In virtualization, VF is usually not bound by native drivers, instead
+> should be passthrough to VM. Most PF and VF drivers provide separate
+> names, e.g. "igb" and "igbvf", so that the hypervisor can control
+> whether to use VF devices locally. The "bnxt_en" driver is a special
+> case, it can drive both PF and VF devices, so here add a parameter
+> "disable_vf_bind" to allow users to control.
 
-On Tue, Jun 24, 2025 at 03:07:16PM +0300, Ilpo Järvinen wrote:
-> Hi Andi,
-> 
-> (ping)
-> 
-> It seems by now people are starting to send workaround fixes (build only 
-> with =m) as this series is still pending and compile is breaking because 
-> of it.
-> 
-> I'm fine with you taking the entire series through i2c, or just let me 
-> know if you want me to take it through pdx86 tree instead.
-
-Sorry for the late reply, I've been off the radar for some time
-and now I'm catching up. I will take all the series, thanks.
-
-Andi
+sriov_drivers_autoprobe
