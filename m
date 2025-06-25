@@ -1,166 +1,96 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94D925BEE2
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:45:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF5825BEE2;
+	Wed, 25 Jun 2025 12:45:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750855527; cv=none; b=By+ITDLB5rwRgQsUFgbttB099zTh2StTxaSECkW76pfXVBTr/jBy4+LNozj6S1F4aMKVv+B8PFqCoqGqKTEB+rdTveQ+EAaIaSSLoJCrPyk3HmKooCuFNfOaUdlcWiZS4YEg93gXGFwOTNFcfsHJZnpsIwkhJFg8eeXV3nYW5dI=
+	t=1750855543; cv=none; b=rRMeORPWE+tpUhCwgIwCfwx18r1otVqyvuU4EwWCg5q1ow/MioI+SYjYFgfu3gS1svpj3MU3DGx+zZ8WyowLMPCiONcWOq8fPAt9Y4cwiDIsRFDNdW+plEUn8aElToUxfEIxb+r7wE7EamTljanQK38XxsgT04VIxe+KvQVes88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750855527; c=relaxed/simple;
-	bh=Zplv4nOS9R8KfxnaHMhSo9UaCkN92kVOCry+4a6NzqA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=GXEjAtZSvbXFCRyawdVBOJbAVyL9/YckQ216PgOTXq5RzJKfuFaS5gOiVZOGeyCZYHO+zUc7DiP2+f3EAggfkFaqEChLCRqou8S29DObAUa5W67dxTa0xhqQPpzZVkq7mHEUfQcjzk4DDv5hP8UGvSPctP56YzmrOQhTuCBP81I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WnPJvUam; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750855543; c=relaxed/simple;
+	bh=u7KhYtYFfF8hIrEkFmomLpCGUnnfCnEiIwSY+/XufMM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SutvdbPecCZjuzBRgLad77bvq1yquHDW3lALNR20qQ33auzmNDh0q2b1zDqr0PYCEex4+GyDBBsNVxs3mP0y+5ECI3sle9A9qeG/gvIltaHhPeiSEjvqLO3djRQ8C3OXQSKK6MLtqocYOi/n2SZAml6i5AswYvVqyOobM2zGbP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PLiJkEIR; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WnPJvUam"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250625124523euoutp01d0955268ebf51fe3335ff846ed36d6e9~MSdJpbQvT1061110611euoutp01o
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:45:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250625124523euoutp01d0955268ebf51fe3335ff846ed36d6e9~MSdJpbQvT1061110611euoutp01o
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750855523;
-	bh=li13uomVIBNy/2kXVMydN0UNjlz7j3CE3FoJs7BtxsE=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=WnPJvUamiquioaZ6cdfiTIA1RJPVBBRed/gTb61NfY9zxn5QZUq41j7BxlqjoxICP
-	 g5YLmDLenLnke7L2prZ0ylrCyngQjzdulyKDaPEIRBx6Hg+izjfspun1deuO7OjtQY
-	 SSBEqreBHxqjhIIsv2vv68gIXUwAFqZXmpQwiQ1k=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250625124522eucas1p20e5ac7f9f29dd397d16647c341b886ce~MSdIqCv4c2367423674eucas1p2m;
-	Wed, 25 Jun 2025 12:45:22 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250625124521eusmtip23e10383c21022da7c38afee3b97fd9aa~MSdHo9v8m1900619006eusmtip2m;
-	Wed, 25 Jun 2025 12:45:21 +0000 (GMT)
-Message-ID: <d154d2d0-3d59-4176-a8fb-3cb754cf2734@samsung.com>
-Date: Wed, 25 Jun 2025 14:45:20 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PLiJkEIR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750855542; x=1782391542;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=u7KhYtYFfF8hIrEkFmomLpCGUnnfCnEiIwSY+/XufMM=;
+  b=PLiJkEIR2xhh+o/Gibdv+vayqEjIe3p82q3FQtOkA6f7cUEQh7yHEs05
+   OnqefTqXBD5gZIChGkaeAMXIhifZ/FC7zIdTXzoXMZAVdICpT8y9JMHyC
+   ESjMtVIPfRGzH8GabMFi6ldg0q2I+y+o1HmWIN4X/SQB/5Tq6INACnj/Y
+   jHUhI3is0UEW6qoL0aNt8qRxBWKA+C5HP9B5RhqSgTc9pxTbClB7SGGTn
+   7SFNX+vWxUa6hbhoRnZGeibMkRXdaGwxnhlN7L6A/0KOix+mxIByAnZQz
+   B1Ao4bjgpW1cfOOhI/b3pp+/gr9CwAGFPClsLIJdr5CqpEAxFxqbf4vbS
+   w==;
+X-CSE-ConnectionGUID: q2uEl87vQoScWBj9Hiv+5g==
+X-CSE-MsgGUID: dl4AACFqSZ2KrCFcNQmXXA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="70556312"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="70556312"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:45:41 -0700
+X-CSE-ConnectionGUID: NMZhsQVgQSaZDfVpbvOZBA==
+X-CSE-MsgGUID: H2UvHpQ4SsKlNtvwARVPYw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="189380904"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:45:37 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uUPVN-00000009lll-1PDb;
+	Wed, 25 Jun 2025 15:45:33 +0300
+Date: Wed, 25 Jun 2025 15:45:32 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andy@kernel.org>,
+	Thorsten Scherer <t.scherer@eckelmann.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Orson Zhai <orsonzhai@gmail.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Chunyan Zhang <zhang.lyra@gmail.com>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH 03/12] gpio: sch: use new GPIO line value setter callbacks
+Message-ID: <aFvvbH9nJkgWqj_t@smile.fi.intel.com>
+References: <20250625-gpiochip-set-rv-gpio-round2-v1-0-bc110a3b52ff@linaro.org>
+ <20250625-gpiochip-set-rv-gpio-round2-v1-3-bc110a3b52ff@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 5/8] dt-bindings: gpu: img,powervr-rogue: Add TH1520
- GPU compatible
-To: Matt Coster <Matt.Coster@imgtec.com>, Krzysztof Kozlowski
-	<krzk@kernel.org>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bartosz
-	Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Frank
-	Binns <Frank.Binns@imgtec.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
-	Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>, Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org"
-	<linux-pm@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <9c82a6bc-c6ff-4656-8f60-9d5fa499b61a@imgtec.com>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250625124522eucas1p20e5ac7f9f29dd397d16647c341b886ce
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250623114436eucas1p1ab8455b32937a472f5f656086e38f428
-X-EPHeader: CA
-X-CMS-RootMailID: 20250623114436eucas1p1ab8455b32937a472f5f656086e38f428
-References: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
-	<CGME20250623114436eucas1p1ab8455b32937a472f5f656086e38f428@eucas1p1.samsung.com>
-	<20250623-apr_14_for_sending-v6-5-6583ce0f6c25@samsung.com>
-	<9c82a6bc-c6ff-4656-8f60-9d5fa499b61a@imgtec.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625-gpiochip-set-rv-gpio-round2-v1-3-bc110a3b52ff@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-
-
-On 6/24/25 15:53, Matt Coster wrote:
-> On 23/06/2025 12:42, Michal Wilczynski wrote:
->> Update the img,powervr-rogue.yaml to include the T-HEAD TH1520 SoC's
->> specific GPU compatible string.
->>
->> The thead,th1520-gpu compatible, along with its full chain
->> img,img-bxm-4-64, and img,img-rogue, is added to the
->> list of recognized GPU types.
->>
->> The power-domains property requirement for img,img-bxm-4-64 is also
->> ensured by adding it to the relevant allOf condition.
->>
->> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
->> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
->> ---
->>  Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml | 9 ++++++++-
->>  1 file changed, 8 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
->> index 4450e2e73b3ccf74d29f0e31e2e6687d7cbe5d65..9b241a0c1f5941dc58a1e23970f6d3773d427c22 100644
->> --- a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
->> +++ b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
->> @@ -21,6 +21,11 @@ properties:
->>            # work with newer dts.
->>            - const: img,img-axe
->>            - const: img,img-rogue
->> +      - items:
->> +          - enum:
->> +              - thead,th1520-gpu
->> +          - const: img,img-bxm-4-64
->> +          - const: img,img-rogue
->>        - items:
->>            - enum:
->>                - ti,j721s2-gpu
->> @@ -93,7 +98,9 @@ allOf:
->>        properties:
->>          compatible:
->>            contains:
->> -            const: img,img-axe-1-16m
->> +            enum:
->> +              - img,img-axe-1-16m
->> +              - img,img-bxm-4-64
+On Wed, Jun 25, 2025 at 12:33:26PM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> This isn't right – BXM-4-64 has two power domains like BXS-4-64. I don't
-> really know what the right way to handle that in devicetree is given the
-> TH1520 appears to expose only a top-level domain for the entire GPU, but
-> there are definitely two separate domains underneath that as far as the
-> GPU is concerned (see the attached snippet from integration guide).
-> 
-> Since power nodes are ref-counted anyway, do we just use the same node
-> for both domains and let the driver up/down-count it twice?
+> struct gpio_chip now has callbacks for setting line values that return
+> an integer, allowing to indicate failures. Convert the driver to using
+> them.
 
-Hi Matt,
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Thanks for the very helpful insight. That's a great point, it seems the
-SoC's design presents a tricky case for the bindings.
-
-I see what you mean about potentially using the same power domain node
-twice. My only hesitation is that it might be a bit unclear for someone
-reading the devicetree later. Perhaps another option could be to relax
-the constraint for this compatible?
-
-Krzysztof, we'd be grateful for your thoughts on how to best model this
-situation.
-
-> 
-> Cheers,
-> Matt
-> 
->>      then:
->>        properties:
->>          power-domains:
->>
-> 
-> 
-
-Best regards,
 -- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+With Best Regards,
+Andy Shevchenko
+
+
