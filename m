@@ -1,134 +1,161 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDE228C87D;
-	Wed, 25 Jun 2025 18:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E872D878A
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:06:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750874780; cv=none; b=qe9euby48mV8+Bie+vC+SiMfUsrMqQI1q23dmwSNRcieDtL4hK+J++ZNVTWN3U+NQ63d3LyUw/vKjQED/G022jjnLEnQpJz2VDdgTmoosrYo5oczwaIJumlpBLXaT1YEFq+mMgN78Nc7AOQXuOM1hcCAqcE91hwzMJ7+I7NS2Ng=
+	t=1750874783; cv=none; b=IymcIf+kN2kD+4aLnr23Rt8whw3RgoNdnQ+WDPlg2x+uoHjyTweTdaLGW/unzyt827xKbiFjr22GKd/4bt3emw+qwSTvALZGBVJ7edTztx+8sZwFBaCdllzmjKbxT+RbkYkBW3uqJRKsbMFXI3j2p+YNsdvDK+vpT8y6cv9T4eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750874780; c=relaxed/simple;
-	bh=57TV/0cm68AKOGsdQMvjSH9dG+6SjsHff+gvbD5Q3bY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AeKShd10urp7F5UVG18iPBN6k7AhZQHK5QYIEk5qhbsSzu3eCHXqa13i7UK3i7TVR0q4urRKwQ9pI/ACI7t7Dtwe1+a5jQ7K1UD5p7rdei2GtZzdFSqnPOSfIcYcX5GTXCV4WJ22yVCfOecW4XoA39GwErV2lhhTvnCZ8/3aWv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Z4cTvdXP; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750874783; c=relaxed/simple;
+	bh=LfO/WxqGhtgXAUrRxKDl23w6PUKiNJbkQGbfw22jWG0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iBSMTNOPAtj1YWyzPDVt54ieffZz00zKs3WougVlYirVOrw9iT488CK4k8BRy5TRoxLDLOQ3BK/oYcMPcyJpnlH6ez7fohWtfkM1c45AuoWrkwnaE7/tNRMVY1/bcRhLGvGIoArkTdilXaW+0LUDPD/kFR3lD8RndhZFHAxeiiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mQ240GIC; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Z4cTvdXP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750874779; x=1782410779;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=57TV/0cm68AKOGsdQMvjSH9dG+6SjsHff+gvbD5Q3bY=;
-  b=Z4cTvdXPdZB3HvH3+jrvQUVkT4Czt/7kCTXWLMcxUaas41FFb2BVTNJh
-   6cVPbGvpyNXwnRgPNe6bNcEO9IjTkT47A6FGleFu9QMMeST8peO/G4s/v
-   6A1vrDdX06HzO7pc4h9j3cY1+0VJHHOwFNbSDsoBR6rNzK+x6IjHtdx3f
-   nZnItWAzxZ911TUiVqamVzljwTkTUtzUDPeosNFwk+mRc4mSlkbZ/OQLW
-   sS07bJuVrzijTmcAMwy7RcGrPXiQrc8bapLVM359qGu+ZGisjTBxUt+aF
-   iw7ngpXkNC5bRRmD60IIBR72SX+8Eyl2TyVlMjXFRbshPfl8oa2PxUOS4
-   A==;
-X-CSE-ConnectionGUID: rTwkgATiSuy7ncGAboUHuw==
-X-CSE-MsgGUID: /eXimZDtTHOpauKekAOZKQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64215365"
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="64215365"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 11:06:18 -0700
-X-CSE-ConnectionGUID: Yy1+5wX+Q9OvjvZbAbQxlg==
-X-CSE-MsgGUID: N33EmClCTDK64va82lX10A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="151807781"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.108.244]) ([10.125.108.244])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 11:06:18 -0700
-Message-ID: <c3f77974-f1d6-4a22-bd1d-2678427a9fb1@intel.com>
-Date: Wed, 25 Jun 2025 11:06:16 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mQ240GIC"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-237f18108d2so21965ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:06:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750874781; x=1751479581; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=c3PNbssUoBeGFUceKDOa/ZUhofUS/o4RLNNr8Hnz3Kc=;
+        b=mQ240GICraOZrg5Fbs9p+m9Ku/Mz4wuxGcQs7YT8mUwPhx1/pwgiXAb4eQDEEUTmdV
+         M/qUieF4YKWv707ZORFsxPUt/RdV2gKqGrqobBjEIg7p752pOZnvlxIDR1gc52qxh+Iw
+         eSFihU2LChBnQclRaCC3mVLxzUtFW/Cu3OxboQoboLffjWq/IE+cEDVWIGPfVgtq4ei6
+         8Vnz2MMIZDbeg4aeGo8MoZcX9sCDVQAhOm7kh25ZvwpkotSlTb3ad8VQdMs3ZR0vwrcC
+         H3IIg6ljL9Vwp54vLmz1I8AC6EprAbXni3RRqbN7+ar64PJ3xJdcaXgNVBIRQjxflHgY
+         /34A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750874781; x=1751479581;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=c3PNbssUoBeGFUceKDOa/ZUhofUS/o4RLNNr8Hnz3Kc=;
+        b=Ct0JzfGuwVIlLpxWf/yNwbPs6Hk7tFEgsTpRlRsWftNzSlrwH7ZJMbYanHuOoFdNkh
+         OCb4J60/gi/6X0Fs0pjegF2/cV5HdrUgN2hmGAHGrY1R9POun5Jd/ITBKEAilMKprIs7
+         9jGTgjeqk9TFZmOknGw2YziK79z6g0Six6bd2EsS5pvjin/Op1HZnH8Rsu8PNa8L07ol
+         gNvBTICTsCDXaH73W1I+YMs3CrZ6QLrZBHTqtXjHJBR/YhKwsXDvBg89XSWdDKCLOFni
+         E5sLVxIS3XuB5ntuEo3UTyEpI6fT6DEO0B8v5OensD31kJREhHahD9OS/7YZ8HzIABAu
+         6R9A==
+X-Forwarded-Encrypted: i=1; AJvYcCXucj9f4Yvs5plafdcYhQ64aw/GzD2wc4awdLguE3KuLsujQNA6Wv1kgePxdlBNszjwyWdxYeqQQnIxiI0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6xFZo1WeCf/gG1/gEpnfe5+caSaIHfBL5BDQ83dA0Tc4d99Ts
+	na4CDgdb1hS+RQtAHOQmBdApYA9dsHFXCxhx4rnYVMS0f8eX9u3vDQZQPAObdi6XBOCSekwA/+Z
+	nSZXzSdzDL45/f6pOc0xUi8Um6dK/W/P5cazK1wzcQE1nOQcy+SL5W0h2iUc=
+X-Gm-Gg: ASbGncu87Biw2pWLZYbR9S84yRcVpt47RX7w4IBFJkA9oCl8x5dI7etuQBfgXT89lQn
+	cfgtQAd6E9YQ32vte0OmSamXGIg7H9NDaKfoXFX048MD03GDxgfjGpFQ1RWqBc0x52ekdKnnWVR
+	oztT1dcFQC52o8KwFDPx5r4k/lndXojvSq7gw7WUaCLI1ggNQIA6Llso5LWur0rm3LonUfDm1c
+X-Google-Smtp-Source: AGHT+IFghrvzPMv3+aYTxv0CDdYnxurWCNcPQl387UmznY2FxsIw81sFkdZ7P7wIweE0lrrI5CO0jXvBW9JyAAZz2ac=
+X-Received: by 2002:a17:903:1b2d:b0:22c:3cda:df11 with SMTP id
+ d9443c01a7336-239785df083mr95235ad.10.1750874780917; Wed, 25 Jun 2025
+ 11:06:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2 02/12] x86/virt/tdx: Allocate page bitmap for Dynamic
- PAMT
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- pbonzini@redhat.com, seanjc@google.com, dave.hansen@linux.intel.com
-Cc: rick.p.edgecombe@intel.com, isaku.yamahata@intel.com,
- kai.huang@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, kvm@vger.kernel.org,
- x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
- <20250609191340.2051741-3-kirill.shutemov@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250609191340.2051741-3-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250617205320.1580946-1-irogers@google.com> <51bc73ca-3b1f-4f1a-b75b-7bdeffd7a395@csgroup.eu>
+In-Reply-To: <51bc73ca-3b1f-4f1a-b75b-7bdeffd7a395@csgroup.eu>
+From: Ian Rogers <irogers@google.com>
+Date: Wed, 25 Jun 2025 11:06:08 -0700
+X-Gm-Features: AX0GCFu_4XjLCmXZDZRYMELR9OF9JFxkDcRYkMG9bF6Q2IsJKq4g0MuxY0MjGKg
+Message-ID: <CAP-5=fVoOJsk2DzG8zHLg_QxQnxsXNJ2c21T-JYOQeH5GoTMhg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Switch get/put unaligned to use memcpy
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>, 
+	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
+	Al Viro <viro@zeniv.linux.org.uk>, "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->  /*
->   * Locate a NUMA node which should hold the allocation of the @tdmr
->   * PAMT.  This node will have some memory covered by the TDMR.  The
-> @@ -522,7 +534,16 @@ static int tdmr_set_up_pamt(struct tdmr_info *tdmr,
->  	 * and the total PAMT size.
->  	 */
->  	tdmr_pamt_size = 0;
-> -	for (pgsz = TDX_PS_4K; pgsz < TDX_PS_NR; pgsz++) {
-> +	pgsz = TDX_PS_4K;
-> +
-> +	/* With Dynamic PAMT, PAMT_4K is replaced with a bitmap */
-> +	if (tdx_supports_dynamic_pamt(&tdx_sysinfo)) {
-> +		pamt_size[pgsz] = tdmr_get_pamt_bitmap_sz(tdmr);
-> +		tdmr_pamt_size += pamt_size[pgsz];
-> +		pgsz++;
-> +	}
+On Wed, Jun 18, 2025 at 4:42=E2=80=AFAM Christophe Leroy
+<christophe.leroy@csgroup.eu> wrote:
+>
+>
+>
+> Le 17/06/2025 =C3=A0 22:53, Ian Rogers a =C3=A9crit :
+> > The existing type punning approach with packed structs requires
+> >   -fno-strict-aliasing to be passed to the compiler for
+> > correctness. This is true in the kernel tree but not in the tools
+> > directory resulting in this suggested patch from Eric Biggers
+> >   <ebiggers@google.com>:
+> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flor=
+e.kernel.org%2Flkml%2F20250614044133.660848-2-ebiggers%40kernel.org%2F&data=
+=3D05%7C02%7Cchristophe.leroy%40csgroup.eu%7Cf05413010ecc40ad1bdf08ddade131=
+6a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638857904894967529%7CUnknow=
+n%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiI=
+sIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3D29QUBLnUowncZiTH4z74=
+Ec1olUlX0OTYnUNGDvWxX1o%3D&reserved=3D0
+> >
+> > Requiring -fno-strict-aliasing seems unfortunate and so this patch
+> > makes the unaligned code work via memcpy for type punning rather than
+> > the packed attribute.
+> >
+> > v2: switch memcpy to __builtin_memcpy to avoid potential/disallowed
+> >      memcpy calls in vdso caused by -fno-builtin. Reported by
+> >      Christophe Leroy <christophe.leroy@csgroup.eu>:
+> >      https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%=
+2Flore.kernel.org%2Flkml%2Fc57de5bf-d55c-48c5-9dfa-e2fb844dafe9%40csgroup.e=
+u%2F&data=3D05%7C02%7Cchristophe.leroy%40csgroup.eu%7Cf05413010ecc40ad1bdf0=
+8ddade1316a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638857904894985987=
+%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOi=
+JXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3Dl1LJP3XPKVu=
+hDpiHxxkfWBiNPMYaBT9YXGBFzs6wLpY%3D&reserved=3D0
+> >
 
-This is the wrong place to do this.
+So I think I can remove the _Generic block in unaligned.h by depending
+on the equivalent __unqual_scalar_typeof from
+include/linux/compiler_types.h. I think this is preferable and so I'll
+post a v3.
 
-Hide it in tdmr_get_pamt_sz(). Don't inject it in the main code flow
-here and complicate the for loop.
+> Does this new version also fixes the failures reported by the robots:
+> - arm64-randconfig with clang 21
+
+The issue here was:
+
+  llvm-readelf: warning: 'arch/arm64/kernel/vdso/vdso.so.dbg': invalid
+PT_DYNAMIC size (0x118)
+  llvm-readelf: warning: 'arch/arm64/kernel/vdso/vdso.so.dbg':
+PT_DYNAMIC dynamic table is invalid: SHT_DYNAMIC will be used
+
+which the switch to __builtin_memcpy should have resolved.
+
+> - i386-randconfig with gcc 12
+
+The reported error is in the unaligned code from sparse:
+
+   drivers/scsi/megaraid/megaraid_sas_base.c:8438:32: sparse: sparse:
+Using plain integer as NULL pointer
+
+I believe this is because of the _Generic block with a pointer type,
+and so the use of __unqual_scalar_typeof in the next/v3 patch set
+should hopefully resolve it - or else we'll need to special case
+pointer types to assign NULL rather than 0, but I'd prefer not to
+special case every potential pointer type.
+
+Thanks,
+Ian
+
+> Christophe
+>
+> > Ian Rogers (3):
+> >    vdso: Switch get/put unaligned from packed struct to memcpy
+> >    tools headers: Update the linux/unaligned.h copy with the kernel
+> >      sources
+> >    tools headers: Remove unneeded ignoring of warnings in unaligned.h
+> >
+> >   include/vdso/unaligned.h        | 48 ++++++++++++++++++++++++++++----=
+-
+> >   tools/include/linux/unaligned.h |  4 ---
+> >   tools/include/vdso/unaligned.h  | 48 ++++++++++++++++++++++++++++----=
+-
+> >   3 files changed, 84 insertions(+), 16 deletions(-)
+> >
+>
