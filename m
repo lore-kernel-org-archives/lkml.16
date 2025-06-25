@@ -1,105 +1,65 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC9F31E5B95;
-	Wed, 25 Jun 2025 08:08:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 278511FBE8C;
+	Wed, 25 Jun 2025 08:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750838895; cv=none; b=FLD3X6a6UCKFArcfciaI9ZTe2MUjtTuN4RRBPZKORr7uIeqeOMIe2TLibOB28rbOfLsZJYFSFYRQHcyp9xRNqAjvwC+b7HuHlCCkVRlkzBv8jo4drUuRJ6hfTCh4Qw+/ROQ9UKJF/QB0rOyP4s/OYZIVc03uxSmyobgcv3ZkjsM=
+	t=1750838905; cv=none; b=PuBFmpzyUU+PLilhhVp0K2H5SeuxQDKOp/Mi8sRUOq9gI/S/ppjQTP9OX5j24gbEt2QLqxHw58UZR/2O2KdkoeT3tXLC1vQZZ0EOt9o8xkAVfwV6ZTUIV/i518UeBK/XQCqEoyVhg6/nxVqJmnYxAVx3cKFC805mD29stBVtrAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750838895; c=relaxed/simple;
-	bh=EYBnaryO2t2j1TYPtDQ15vC+AkkaRRLZ5JYRisv3DBw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nyEbyVwky626ke6q3vBUvZAXE/RbEdOFd5xtwrjcNwnFfmtMZFkdCKU57tuV2HFZVNQH+Soy3lGKSch0jaOuWBX5j341Ow2F/wPpoW1NXgdP7nog+NvNMA4BXcxwENaefvDElDVbgH1Niclr2hjUd0+4Z+c9M006xFawgz0ZwHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id E93BD2C06E33;
-	Wed, 25 Jun 2025 10:08:02 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id E3CED3B708B; Wed, 25 Jun 2025 10:08:02 +0200 (CEST)
-Date: Wed, 25 Jun 2025 10:08:02 +0200
-From: Lukas Wunner <lukas@wunner.de>
-To: Krishna Kumar <krishnak@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org,
-	Timothy Pearson <tpearson@raptorengineering.com>,
-	Shawn Anastasio <sanastasio@raptorengineering.com>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	"\"linux-pci\"," <linux-pci@vger.kernel.org>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	christophe leroy <christophe.leroy@csgroup.eu>,
-	Naveen N Rao <naveen@kernel.org>,
-	"\"Bjorn Helgaas\"," <bhelgaas@google.com>
-Subject: Re: [PATCH v2 6/6] pci/hotplug/pnv_php: Enable third attention
- indicator
-Message-ID: <aFuuYq0m0hDAdPRF@wunner.de>
-References: <20250618190146.GA1213349@bhelgaas>
- <1469323476.1312174.1750293474949.JavaMail.zimbra@raptorengineeringinc.com>
- <19689b53-ac23-4b48-97c7-b26f360a7b75@linux.ibm.com>
- <aFaCfYre9N52ARWH@wunner.de>
- <f13a2d2b-af52-4934-b4fa-66bc1e5ece32@linux.ibm.com>
+	s=arc-20240116; t=1750838905; c=relaxed/simple;
+	bh=JAxf1CaBgAJOl5eOA6B44Q1dBB+pzL1QrV464SHm514=;
+	h=Subject:To:Cc:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=JOzuYmTjF5acamsqqZGblnI9G/yeBT/CPvUOy1SLN+tMFmRAbj7eFi4g8cy9qwNQ9x8YDb7wSCPaZ+Ve2+SAYEIaUFMusAnYyk/L7Rf64iHQb+bHRpogLR0+fHiaGCMotrvY24U2oIyNERwipT95YJwIIdSrYImo3PLneAWGuKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
+Received: from tux.applied-asynchrony.com (p5b347a18.dip0.t-ipconnect.de [91.52.122.24])
+	by mail.itouring.de (Postfix) with ESMTPSA id C0FE1C28E;
+	Wed, 25 Jun 2025 10:00:57 +0200 (CEST)
+Received: from [192.168.100.221] (hho.applied-asynchrony.com [192.168.100.221])
+	by tux.applied-asynchrony.com (Postfix) with ESMTP id 639BD6018BEA5;
+	Wed, 25 Jun 2025 10:00:56 +0200 (CEST)
+Subject: Re: [PATCH 6.15 000/588] 6.15.4-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
+ Christian Brauner <brauner@kernel.org>
+References: <20250624121449.136416081@linuxfoundation.org>
+From: =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <e9249afe-f039-4180-d50d-b199c26dea26@applied-asynchrony.com>
+Date: Wed, 25 Jun 2025 10:00:56 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f13a2d2b-af52-4934-b4fa-66bc1e5ece32@linux.ibm.com>
+In-Reply-To: <20250624121449.136416081@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 25, 2025 at 09:38:19AM +0530, Krishna Kumar wrote:
-> On 6/21/25 3:29 PM, Lukas Wunner wrote:
-> > On Fri, Jun 20, 2025 at 02:56:51PM +0530, Krishna Kumar wrote:
-> > > 5. If point 3 and 4 does not solve the problem, then only we should
-> > > move to pciehp.c. But AFAIK, PPC/Powernv is DT based while pciehp.c
-> > > may be only supporting acpi (I have to check it on this). We need to
-> > > provide PHB related information via DTB and maintain the related
-> > > topology information via dtb and then it can be doable.
-> > 
-> > pciehp is not ACPI-specific.  The PCIe port service driver in
-> > drivers/pci/pcie/portdrv.c binds to any PCIe port, examines the
-> > port's capabilities (e.g. hotplug, AER, DPC, ...) and instantiates
-> > sub-devices to which pciehp and the other drivers such as aer bind.
-> 
-> 1. If we get PHB info from mmcfg via acpi table in x86 and create a
->    root port from there with some address/entity and if this Acpi and
->    associated entity is not present for PPC, then it can be a problem.
-> 
-> 2. PPC is normally based on DTB entity and it identifies PHB and pcie
->    devices from there. If this all the information is correctly map
->    via portdrv.c then there is no problem and whatever you are telling
->    is correct and it will work.
-> 
-> 3. But if point 2 is not handled correctly we need to just aligned with
->    port related data structure to make it work.
+(cc: Christian Brauner>
 
-PCI devices do not have to be enumerated in the devicetree (or in ACPI
-DSDT) because PCI is an enumerable bus (like USB).  Only the host bridge
-has to be enumerated in the devicetree or DSDT.  The kernel can find the
-PCI devices below the host bridge itself.  Hot-plugged devices are
-usually not described in the devicetree or DSDT because one doesn't
-know their properties in advance.
+Since 6.15.4-rc1 I noticed that some KDE apps (kded6, kate (the text editor))
+started going into a tailspin with 100% per-process CPU.
 
-pnv_php.c seems to search the devicetree for hotplug slots and
-instantiates them.  My expectation would be that any hotplug-capable
-PCIe Root Port or Downstream Port, which is *not* described in the
-devicetree such that pnv_php.c creates a slot for it, is handled by
-pciehp.
+The symptom is 100% reproducible: open a new file with kate, save empty file,
+make changes, save, watch CPU go 100%. perf top shows copy_to_user running wild.
 
-Timothy was talking about a Microsemi PCIe switch below the Root Port.
-My understanding is that the Downstream Ports of that switch are
-hotplug-capable.  So unless you've disabled CONFIG_HOTPLUG_PCI_PCIE,
-I'd expect those ports to be handled by pciehp.  Assuming they're not
-described as a "ibm,ioda2-phb" compatible device in the devicetree,
-but why would they?
+First I tried to reproduce on 6.15.3 - no problem, everything works fine.
 
-Thanks,
+After checking the list of patches for 6.15.4 I reverted the anon_inode series
+(all 3 for the first attempt) and the problem is gone.
 
-Lukas
+Will try to reduce further & can gladly try additional fixes, but for now
+I'd say these patches are not yet suitable for stable.
+
+thanks
+Holger
