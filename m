@@ -1,63 +1,63 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9582828726C
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 23:19:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EEC287242
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 23:19:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750893549; cv=none; b=BO6Hsl4R6wf6vBV3ADVGsRXZpS5htzCnPXiDwxTs2hADxghL9zfNUg5WcB+gISuup0T4wZ0/B8oLwNQ1wjRwa7KX+SH451dnDxaBzy2gIhwIyQ9nfFV09BzQK2MZngahO0OhccstGXEvZClbKCnLep26dcdeJEOYLLJck7dBRss=
+	t=1750893547; cv=none; b=f2IbmTu66yoJ6zAd2O5r59BmZJYEZGtU8YaPWbuz07JQ/vfrXFCO3HEGkCZFE1SlbBsycBl+LXqhvqVc0fdWdju8ddeF2hyYaYtVAkTDrzMxWIlbXafozDSiFUKf8YDBCTj7Fq9UEfRC7KLos2paSdy5F4fVE8RSen9BCOQzO58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750893549; c=relaxed/simple;
-	bh=h1L0cbeVfJxO9kghsvJ6bWhgk+o6POMPbs4sljzTVS0=;
+	s=arc-20240116; t=1750893547; c=relaxed/simple;
+	bh=LCBnkF05BFy67Dj3X9soES2dtoYMqCQz73KyCOTgCrI=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NqtBSXf8M+WRjpF/1+7mlrpLgXvlwGHwb6cYd2mSJaZdiRTCr1YAhm2p+woVWQCG9sxp40LN51VdLu9UwdLGP7xFN7k8j1p65DgPnT7Uz32LJYzdfJawgX4WWYucDY1TUgarRbuNAY3FAYHejjqeaUSwwkcY7NAo/MRbv707brI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=dPrxG20h; arc=none smtp.client-ip=209.85.219.174
+	 MIME-Version; b=YYima5FT5E76wtbT3Aee/8bcEQWmHTZek0/QgW8ZLXurQoi+63sZM+uEMVBbXMte43cBxZkEN7j6xgVk9/zKgZmd025wA9pj87srAz6RKRnjEA8EGeaoZg+DyIMZf/jsxyM3tcfAxfm88gphd5YgiPi2x7IGhJQpUXouBiygQJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=FGgIHfX1; arc=none smtp.client-ip=209.85.219.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="dPrxG20h"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7387d4a336so312713276.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:19:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="FGgIHfX1"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e8601ce24c9so272677276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:19:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1750893545; x=1751498345; darn=vger.kernel.org;
+        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1750893544; x=1751498344; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5UX19BNUcwB6TjSqCz6om7S5yVRpVe4SwKywfTR0ocE=;
-        b=dPrxG20hSsMW/B3OVCiaYwjuLVCscBPrvr1/Z0Gpy59Qirdl7dwvNP8SRiOisXkCRB
-         wdbNM2w0Pe0/8XkVHDQXEYhz3W3JaD7vSQn0diOpRBa+Hi3nMwkgX/JSk/jjaZmqd+of
-         2fEHz0KHUs6VOyMhJZkS3Fr4em+z0fLHagpINbXLA1VXw5JgdEh+I15S2ZzGsvtea8PN
-         eQGzWjc09gvnvyOC1zrHdCo+T5o0b+JwUuojDdZVFW35Ew44YUaPjJGzCdoX28Nra9Zm
-         sm+qxQ3al2dxjjGPwVVwaanpyuwtbUDD/I3Ex1NU7w2o3r14F2fQuCxQzr7QqRkHvPip
-         +6rA==
+        bh=PZSlqdnTxC2Wjx/Crjm0HF+UsFjTh+cAEzYLoPE8XGM=;
+        b=FGgIHfX1tvADYaLlL4oQlXAWnNyVc7s3CaHLUODjsp1KllhH9piGXd79r5ZEzQPDBv
+         wwmHz5/uuI43VFDjhdjeE/edJI8KkQ619nUA328FDzA9xnY48wq1T2GXN8LtTfqueJwr
+         doPy3TMesDzsvKcPfIQxQYKpYL3Aq8qXJCrMHY48PTeStM3l8VV5FUtn6Pvgmw99L+pO
+         uGIfoFuQWW/l6ljk0d623KCbU/97udHY9sQp2YyirctaNZFNRcHUtM8kNKjGa3cJHQ9d
+         hcDbIWGvJBfwQTzhgdZC2ki94oc1Jt5NV1HNkLl9ipnrAdFOViAWB+e2XJr7d6ymTBi9
+         Z8WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750893545; x=1751498345;
+        d=1e100.net; s=20230601; t=1750893544; x=1751498344;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5UX19BNUcwB6TjSqCz6om7S5yVRpVe4SwKywfTR0ocE=;
-        b=Zg4hoMCAwHVUoRYVMdg8j1xz1uAvnFOkno2ZJomSlLDx46E9eLr5FNGfc3KOSj1LC4
-         3jfNcFMTTXs5MervLP4TeYFyXLjCyzeO1otYJHHndf3TIwgTDpYFiGv02TmK6ecRDVLp
-         2Qih9jb0N4lmsW6W4Eb14+3h8mJ97X1EvknnPW5WVVu9o5axU/5LcJbNbDySzg21619a
-         5gSfRByi1/OKQD4Xhicu6nCxQaqQPgHpqOwzbghJvBBCfMjmayDNOYPfoSmF1XV0mbrb
-         lFuFhv974U3Jad2a0xuhsASCQ9Kf35KvnfM5z0VgoAiRmQIMqRFMqmgBL+/E2PaXJdXP
-         r6Hg==
-X-Forwarded-Encrypted: i=1; AJvYcCV/mU+KNKhEpuiHDuYR2/8Dxmkdk6WrUIfNNAjr8XIkGHFYY91yB5baR9pGGaO6TzhGffa1Ow1il2ZJ44c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlE1cBHsfH5v6m0IP3/LXwVK74AdOtyT1BYXRCflqSrIyE9i5t
-	IVCryTKIqFPsfc+wSpK8K7178So6lxE9fvKfD0A/lt8ntyW85HJpuolwS5KlONyKIVg=
-X-Gm-Gg: ASbGncvXmuiF8r7HSxgpMkrWM5U3KFznfnDpkOGtqnWhSMmFpxP0/7B1zwUewxoyo1B
-	F1d4C6U+3fqWuQmnsblcXmcXNQcYgnyn/s1QeE0v//lqHV7Ea1Q1V6FuJU5cNzK8FiKQmIHsxqp
-	uyHM1Oby3vircwpIsAH8QNfhPBOWKGZ2Uqeo1tJvyr542nR9iMrCX/iE+wu0fjaPeduvUsVgnj9
-	NuIep0b7kCRn4uWFzxXtjd7n5cxvXB5VP+Ba0adVBNfOHhtVIJn42744T8xGvDXnSxc/ZioZQhF
-	pv0lKBAjlzILuqnjcfRSwCgjrTZgrPRI5VjKLg9TvwEqXdJzDlZ8bXRS8/tc3DOE7c6dxEqx0xJ
-	Fqt6PIT/rC2fQ2kM8QwVFMRa69oNkwctr0jtLXd2eVJRLx7afAGC6zZLHYWAPxZA=
-X-Google-Smtp-Source: AGHT+IEUALELAR5NZDDDyivweXKXSv+YUONyeoj1fruSJbIWZ6q9777GsWvO1Or7ZMh1+hi6yBvkfg==
-X-Received: by 2002:a05:6902:4790:b0:e81:9da8:522d with SMTP id 3f1490d57ef6-e8601765df4mr6268713276.23.1750893545592;
-        Wed, 25 Jun 2025 16:19:05 -0700 (PDT)
+        bh=PZSlqdnTxC2Wjx/Crjm0HF+UsFjTh+cAEzYLoPE8XGM=;
+        b=GF89QGMn/cpz5W4NnXy6o1KuPjhnyyYXWIuVZWM8szNsTuS+/7Ld6qLuEW4ZSkwPsP
+         IY3j//MptD2oKzgaay6UvQYGq6gNNzehx5CQY3v9PK2pUHC7wkwvkIUbb2W4hBvPaONQ
+         rENH6syXpwfAnLWgfc778xnR5AARnxHyr/MaaXxnFc98JHJsOzWp8T5m/h//4MHbQCd+
+         tDB7oSYY9OC2iychBkBUICpTBGzlf0lygcNQySADZT50G1fCS9fX279q1suqrTMeRSfB
+         9k8LLDlvMv1UKeGg2VVNEdtTSr+EBSicaFnWzbRJz9rgXnDVmp6wg5GcLhWzslAMKSmo
+         oMmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUyghMRb6od7SxfxeV8CBg/Qp3Tm7Y7cxEaoSSLvUIAAJV2MFQ6GsfMR4RyTcWFZj2xQyTutTWVLeq+t40=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzr2tT9ltVKon/1wL445zZ66ypCH8n6QayyVZubAamlFzTNIkDi
+	ktBUltu1X9R7QhV+xB95fgbmQg0XKDM39Wi4RFP7ptLi9aaTRjsLhuJBcxjHc36lurM=
+X-Gm-Gg: ASbGnctK3SQ4qch9Jc/LKdZdEW8hLz/sASRoyXy2vsOLuHSnqpTOJvqcVgY2sgIRFkM
+	xlnSButlU69ZA7itq2u6g0mGbAYGpODx9MmD0lDmHH6yEVMNqh0EVfljWNVA0RX2/41JNY3ItH0
+	dpnSiUPom/10xp/7ecj9rTWPI2ArzF7i+wfiEY4bn8ylJXb0t9fL2GW5P4l4yS2jAm5iomBSdcg
+	5J7K5Mg3NxzI2n4Sp91Sl9cZMrmYIB+/yTUiAQw+bkcm0Np6JOlEfyHe7Qem9DAxfvWTeD57tOw
+	7SyUmJQmCUBpK3uZpw/04V32mo3O27KmEHynbpKA2sDJ/aljw5Le7QFimdfhotpTJCv4wcht8YD
+	DvW+LmdXlf15F42RtZNhbvusLI9CfKK8CinkdvBx9dMMXF76coHjU
+X-Google-Smtp-Source: AGHT+IFUBGWR2vgXdeu6WMqjmysPRfKH2b0g+Y1BY72xIGjHQryfk9+9u7i490nYs2DPXKqM9VEAwA==
+X-Received: by 2002:a05:690c:6ac4:b0:70e:7663:8bb4 with SMTP id 00721157ae682-71406e064cbmr72906017b3.25.1750893543841;
+        Wed, 25 Jun 2025 16:19:03 -0700 (PDT)
 Received: from soleen.c.googlers.com.com (64.167.245.35.bc.googleusercontent.com. [35.245.167.64])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842ac5c538sm3942684276.33.2025.06.25.16.19.04
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842ac5c538sm3942684276.33.2025.06.25.16.19.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 16:19:05 -0700 (PDT)
+        Wed, 25 Jun 2025 16:19:03 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
 To: pratyush@kernel.org,
 	jasonmiu@google.com,
@@ -125,9 +125,9 @@ To: pratyush@kernel.org,
 	brauner@kernel.org,
 	linux-api@vger.kernel.org,
 	linux-fsdevel@vger.kernel.org
-Subject: [PATCH v1 13/32] liveupdate: luo_subsystems: implement subsystem callbacks
-Date: Wed, 25 Jun 2025 23:18:00 +0000
-Message-ID: <20250625231838.1897085-14-pasha.tatashin@soleen.com>
+Subject: [PATCH v1 12/32] liveupdate: luo_subsystems: add subsystem registration
+Date: Wed, 25 Jun 2025 23:17:59 +0000
+Message-ID: <20250625231838.1897085-13-pasha.tatashin@soleen.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
 In-Reply-To: <20250625231838.1897085-1-pasha.tatashin@soleen.com>
 References: <20250625231838.1897085-1-pasha.tatashin@soleen.com>
@@ -139,207 +139,511 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement the core logic within luo_subsystems.c to handle the
-invocation of registered subsystem callbacks and manage the persistence
-of their state via the LUO FDT. This replaces the stub implementations
-from the previous patch.
+Introduce the framework for kernel subsystems (e.g., KVM, IOMMU, device
+drivers) to register with LUO and participate in the live update process
+via callbacks.
 
-This completes the core mechanism enabling subsystems to actively
-participate in the LUO state machine, execute phase-specific logic, and
-persist/restore a u64 state across the live update transition
-using the FDT.
+Subsystem Registration:
+- Defines struct liveupdate_subsystem in linux/liveupdate.h,
+  which subsystems use to provide their name and optional callbacks
+  (prepare, freeze, cancel, finish). The callbacks accept
+  a u64 *data intended for passing state/handles.
+- Exports liveupdate_register_subsystem() and
+  liveupdate_unregister_subsystem() API functions.
+- Adds drivers/misc/liveupdate/luo_subsystems.c to manage a list
+  of registered subsystems.
+  Registration/unregistration is restricted to
+  specific LUO states (NORMAL/UPDATED).
+
+Callback Framework:
+- The main luo_core.c state transition functions
+  now delegate to new luo_do_subsystems_*_calls() functions
+  defined in luo_subsystems.c.
+- These new functions are intended to iterate through the registered
+  subsystems and invoke their corresponding callbacks.
+
+FDT Integration:
+- Adds a /subsystems subnode within the main LUO FDT created in
+  luo_core.c. This node has its own compatibility string
+  (subsystems-v1).
+- luo_subsystems_fdt_setup() populates this node by adding a
+  property for each registered subsystem, using the subsystem's
+  name.
+  Currently, these properties are initialized with a placeholder
+  u64 value (0).
+- luo_subsystems_startup() is called from luo_core.c on boot to
+  find and validate the /subsystems node in the FDT received via
+  KHO. It panics if the node is missing or incompatible.
+- Adds a stub API function liveupdate_get_subsystem_data() intended
+  for subsystems to retrieve their persisted u64 data from the FDT
+      in the new kernel.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- kernel/liveupdate/luo_subsystems.c | 140 ++++++++++++++++++++++++++++-
- 1 file changed, 138 insertions(+), 2 deletions(-)
+ include/linux/liveupdate.h         |  61 +++++++
+ kernel/liveupdate/Makefile         |   1 +
+ kernel/liveupdate/luo_core.c       |  19 +-
+ kernel/liveupdate/luo_internal.h   |   7 +
+ kernel/liveupdate/luo_subsystems.c | 284 +++++++++++++++++++++++++++++
+ 5 files changed, 370 insertions(+), 2 deletions(-)
+ create mode 100644 kernel/liveupdate/luo_subsystems.c
 
-diff --git a/kernel/liveupdate/luo_subsystems.c b/kernel/liveupdate/luo_subsystems.c
-index 436929a17de0..0e0070d01584 100644
---- a/kernel/liveupdate/luo_subsystems.c
-+++ b/kernel/liveupdate/luo_subsystems.c
-@@ -99,6 +99,66 @@ void __init luo_subsystems_startup(void *fdt)
- 	luo_fdt_in = fdt;
+diff --git a/include/linux/liveupdate.h b/include/linux/liveupdate.h
+index da8f05c81e51..fed68b9ab32b 100644
+--- a/include/linux/liveupdate.h
++++ b/include/linux/liveupdate.h
+@@ -88,6 +88,47 @@ enum liveupdate_state  {
+ 	LIVEUPDATE_STATE_UPDATED = 4,
+ };
+ 
++/**
++ * struct liveupdate_subsystem_ops - LUO events callback functions
++ * @prepare:      Optional. Called during LUO prepare phase. Should perform
++ *                preparatory actions and can store a u64 handle/state
++ *                via the 'data' pointer for use in later callbacks.
++ *                Return 0 on success, negative error code on failure.
++ * @freeze:       Optional. Called during LUO freeze event (before actual jump
++ *                to new kernel). Should perform final state saving actions and
++ *                can update the u64 handle/state via the 'data' pointer. Retur:
++ *                0 on success, negative error code on failure.
++ * @cancel:       Optional. Called if the live update process is canceled after
++ *                prepare (or freeze) was called. Receives the u64 data
++ *                set by prepare/freeze. Used for cleanup.
++ * @finish:       Optional. Called after the live update is finished in the new
++ *                kernel.
++ *                Receives the u64 data set by prepare/freeze. Used for cleanup.
++ */
++struct liveupdate_subsystem_ops {
++	int (*prepare)(void *arg, u64 *data);
++	int (*freeze)(void *arg, u64 *data);
++	void (*cancel)(void *arg, u64 data);
++	void (*finish)(void *arg, u64 data);
++};
++
++/**
++ * struct liveupdate_subsystem - Represents a subsystem participating in LUO
++ * @ops:          Callback functions
++ * @name:         Unique name identifying the subsystem.
++ * @arg:          Add this argument to callback functions.
++ * @list:         List head used internally by LUO. Should not be modified by
++ *                caller after registration.
++ * @private_data: For LUO internal use, cached value of data field.
++ */
++struct liveupdate_subsystem {
++	const struct liveupdate_subsystem_ops *ops;
++	const char *name;
++	void *arg;
++	struct list_head list;
++	u64 private_data;
++};
++
+ #ifdef CONFIG_LIVEUPDATE
+ 
+ /* Return true if live update orchestrator is enabled */
+@@ -109,6 +150,10 @@ bool liveupdate_state_normal(void);
+ 
+ enum liveupdate_state liveupdate_get_state(void);
+ 
++int liveupdate_register_subsystem(struct liveupdate_subsystem *h);
++int liveupdate_unregister_subsystem(struct liveupdate_subsystem *h);
++int liveupdate_get_subsystem_data(struct liveupdate_subsystem *h, u64 *data);
++
+ #else /* CONFIG_LIVEUPDATE */
+ 
+ static inline int liveupdate_reboot(void)
+@@ -136,5 +181,21 @@ static inline enum liveupdate_state liveupdate_get_state(void)
+ 	return LIVEUPDATE_STATE_NORMAL;
  }
  
-+static void __luo_do_subsystems_cancel_calls(struct liveupdate_subsystem *boundary_subsystem)
++static inline int liveupdate_register_subsystem(struct liveupdate_subsystem *h)
 +{
-+	struct liveupdate_subsystem *subsystem;
-+
-+	list_for_each_entry(subsystem, &luo_subsystems_list, list) {
-+		if (subsystem == boundary_subsystem)
-+			break;
-+
-+		if (subsystem->ops->cancel) {
-+			subsystem->ops->cancel(subsystem->arg,
-+					       subsystem->private_data);
-+		}
-+		subsystem->private_data = 0;
-+	}
-+}
-+
-+static void luo_subsystems_retrieve_data_from_fdt(void)
-+{
-+	struct liveupdate_subsystem *subsystem;
-+	int node_offset, prop_len;
-+	const void *prop;
-+
-+	if (!luo_fdt_in)
-+		return;
-+
-+	node_offset = fdt_subnode_offset(luo_fdt_in, 0,
-+					 LUO_SUBSYSTEMS_NODE_NAME);
-+	list_for_each_entry(subsystem, &luo_subsystems_list, list) {
-+		prop = fdt_getprop(luo_fdt_in, node_offset,
-+				   subsystem->name, &prop_len);
-+
-+		if (!prop || prop_len != sizeof(u64)) {
-+			panic("In FDT node '/%s' can't find property '%s': %s\n",
-+			      LUO_SUBSYSTEMS_NODE_NAME, subsystem->name,
-+			      fdt_strerror(node_offset));
-+		}
-+		memcpy(&subsystem->private_data, prop, sizeof(u64));
-+	}
-+}
-+
-+static int luo_subsystems_commit_data_to_fdt(void)
-+{
-+	struct liveupdate_subsystem *subsystem;
-+	int ret, node_offset;
-+
-+	node_offset = fdt_subnode_offset(luo_fdt_out, 0,
-+					 LUO_SUBSYSTEMS_NODE_NAME);
-+	list_for_each_entry(subsystem, &luo_subsystems_list, list) {
-+		ret = fdt_setprop(luo_fdt_out, node_offset, subsystem->name,
-+				  &subsystem->private_data, sizeof(u64));
-+		if (ret < 0) {
-+			pr_err("Failed to set FDT property for subsystem '%s' %s\n",
-+			       subsystem->name, fdt_strerror(ret));
-+			return -ENOENT;
-+		}
-+	}
-+
 +	return 0;
 +}
 +
- /**
-  * luo_do_subsystems_prepare_calls - Calls prepare callbacks and updates FDT
-  * if all prepares succeed. Handles cancellation on failure.
-@@ -114,7 +174,29 @@ void __init luo_subsystems_startup(void *fdt)
-  */
- int luo_do_subsystems_prepare_calls(void)
++static inline int liveupdate_unregister_subsystem(struct liveupdate_subsystem *h)
++{
++	return 0;
++}
++
++static inline int liveupdate_get_subsystem_data(struct liveupdate_subsystem *h,
++						u64 *data)
++{
++	return -ENODATA;
++}
++
+ #endif /* CONFIG_LIVEUPDATE */
+ #endif /* _LINUX_LIVEUPDATE_H */
+diff --git a/kernel/liveupdate/Makefile b/kernel/liveupdate/Makefile
+index b3c72c405780..999208a1fdbb 100644
+--- a/kernel/liveupdate/Makefile
++++ b/kernel/liveupdate/Makefile
+@@ -6,3 +6,4 @@
+ obj-$(CONFIG_KEXEC_HANDOVER)		+= kexec_handover.o
+ obj-$(CONFIG_KEXEC_HANDOVER_DEBUG)	+= kexec_handover_debug.o
+ obj-$(CONFIG_LIVEUPDATE)		+= luo_core.o
++obj-$(CONFIG_LIVEUPDATE)		+= luo_subsystems.o
+diff --git a/kernel/liveupdate/luo_core.c b/kernel/liveupdate/luo_core.c
+index c80a1f188359..fff84c51d986 100644
+--- a/kernel/liveupdate/luo_core.c
++++ b/kernel/liveupdate/luo_core.c
+@@ -130,6 +130,10 @@ static int luo_fdt_setup(void)
+ 	if (ret)
+ 		goto exit_free;
+ 
++	ret = luo_subsystems_fdt_setup(fdt_out);
++	if (ret)
++		goto exit_free;
++
+ 	ret = kho_preserve_phys(__pa(fdt_out), LUO_FDT_SIZE);
+ 	if (ret)
+ 		goto exit_free;
+@@ -160,20 +164,30 @@ static void luo_fdt_destroy(void)
+ 
+ static int luo_do_prepare_calls(void)
  {
 -	return 0;
-+	struct liveupdate_subsystem *subsystem;
 +	int ret;
 +
-+	list_for_each_entry(subsystem, &luo_subsystems_list, list) {
-+		if (!subsystem->ops->prepare)
-+			continue;
-+
-+		ret = subsystem->ops->prepare(subsystem->arg,
-+					      &subsystem->private_data);
-+		if (ret < 0) {
-+			pr_err("Subsystem '%s' prepare callback failed [%d]\n",
-+			       subsystem->name, ret);
-+			__luo_do_subsystems_cancel_calls(subsystem);
-+
-+			return ret;
-+		}
-+	}
-+
-+	ret = luo_subsystems_commit_data_to_fdt();
-+	if (ret)
-+		__luo_do_subsystems_cancel_calls(NULL);
++	ret = luo_do_subsystems_prepare_calls();
 +
 +	return ret;
  }
  
- /**
-@@ -132,7 +214,29 @@ int luo_do_subsystems_prepare_calls(void)
-  */
- int luo_do_subsystems_freeze_calls(void)
+ static int luo_do_freeze_calls(void)
  {
 -	return 0;
-+	struct liveupdate_subsystem *subsystem;
 +	int ret;
 +
-+	list_for_each_entry(subsystem, &luo_subsystems_list, list) {
-+		if (!subsystem->ops->freeze)
-+			continue;
-+
-+		ret = subsystem->ops->freeze(subsystem->arg,
-+					     &subsystem->private_data);
-+		if (ret < 0) {
-+			pr_err("Subsystem '%s' freeze callback failed [%d]\n",
-+			       subsystem->name, ret);
-+			__luo_do_subsystems_cancel_calls(subsystem);
-+
-+			return ret;
-+		}
-+	}
-+
-+	ret = luo_subsystems_commit_data_to_fdt();
-+	if (ret)
-+		__luo_do_subsystems_cancel_calls(NULL);
++	ret = luo_do_subsystems_freeze_calls();
 +
 +	return ret;
  }
  
- /**
-@@ -143,6 +247,17 @@ int luo_do_subsystems_freeze_calls(void)
-  */
- void luo_do_subsystems_finish_calls(void)
+ static void luo_do_finish_calls(void)
  {
-+	struct liveupdate_subsystem *subsystem;
-+
-+	luo_subsystems_retrieve_data_from_fdt();
-+
-+	list_for_each_entry(subsystem, &luo_subsystems_list, list) {
-+		if (subsystem->ops->finish) {
-+			subsystem->ops->finish(subsystem->arg,
-+					       subsystem->private_data);
-+		}
-+		subsystem->private_data = 0;
-+	}
++	luo_do_subsystems_finish_calls();
  }
  
- /**
-@@ -156,6 +271,8 @@ void luo_do_subsystems_finish_calls(void)
-  */
- void luo_do_subsystems_cancel_calls(void)
+ static void luo_do_cancel_calls(void)
  {
-+	__luo_do_subsystems_cancel_calls(NULL);
-+	luo_subsystems_commit_data_to_fdt();
++	luo_do_subsystems_cancel_calls();
  }
  
- /**
-@@ -279,6 +396,25 @@ EXPORT_SYMBOL_GPL(liveupdate_unregister_subsystem);
-  */
- int liveupdate_get_subsystem_data(struct liveupdate_subsystem *h, u64 *data)
- {
-+	int node_offset, prop_len;
-+	const void *prop;
-+
-+	luo_state_read_enter();
-+	if (WARN_ON_ONCE(!luo_fdt_in || !liveupdate_state_updated())) {
-+		luo_state_read_exit();
-+		return -ENOENT;
-+	}
-+
-+	node_offset = fdt_subnode_offset(luo_fdt_in, 0,
-+					 LUO_SUBSYSTEMS_NODE_NAME);
-+	prop = fdt_getprop(luo_fdt_in, node_offset, h->name, &prop_len);
-+	if (!prop || prop_len != sizeof(u64)) {
-+		luo_state_read_exit();
-+		return -ENOENT;
-+	}
-+	memcpy(data, prop, sizeof(u64));
-+	luo_state_read_exit();
-+
+ static int __luo_prepare(void)
+@@ -419,6 +433,7 @@ static int __init luo_startup(void)
+ 	}
+ 
+ 	__luo_set_state(LIVEUPDATE_STATE_UPDATED);
++	luo_subsystems_startup(luo_fdt_in);
+ 
  	return 0;
  }
- EXPORT_SYMBOL_GPL(liveupdate_get_subsystem_data);
+diff --git a/kernel/liveupdate/luo_internal.h b/kernel/liveupdate/luo_internal.h
+index 3d10f3eb20a7..98bf799adb61 100644
+--- a/kernel/liveupdate/luo_internal.h
++++ b/kernel/liveupdate/luo_internal.h
+@@ -18,4 +18,11 @@ void luo_state_read_exit(void);
+ 
+ const char *luo_current_state_str(void);
+ 
++void luo_subsystems_startup(void *fdt);
++int luo_subsystems_fdt_setup(void *fdt);
++int luo_do_subsystems_prepare_calls(void);
++int luo_do_subsystems_freeze_calls(void);
++void luo_do_subsystems_finish_calls(void);
++void luo_do_subsystems_cancel_calls(void);
++
+ #endif /* _LINUX_LUO_INTERNAL_H */
+diff --git a/kernel/liveupdate/luo_subsystems.c b/kernel/liveupdate/luo_subsystems.c
+new file mode 100644
+index 000000000000..436929a17de0
+--- /dev/null
++++ b/kernel/liveupdate/luo_subsystems.c
+@@ -0,0 +1,284 @@
++// SPDX-License-Identifier: GPL-2.0
++
++/*
++ * Copyright (c) 2025, Google LLC.
++ * Pasha Tatashin <pasha.tatashin@soleen.com>
++ */
++
++/**
++ * DOC: LUO Subsystems support
++ *
++ * Various kernel subsystems register with the Live Update Orchestrator to
++ * participate in the live update process. These subsystems are notified at
++ * different stages of the live update sequence, allowing them to serialize
++ * device state before the reboot and restore it afterwards. Examples include
++ * the device layer, interrupt controllers, KVM, IOMMU, and specific device
++ * drivers.
++ */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
++#include <linux/err.h>
++#include <linux/libfdt.h>
++#include <linux/liveupdate.h>
++#include <linux/mutex.h>
++#include <linux/string.h>
++#include "luo_internal.h"
++
++#define LUO_SUBSYSTEMS_NODE_NAME	"subsystems"
++#define LUO_SUBSYSTEMS_COMPATIBLE	"subsystems-v1"
++
++static DEFINE_MUTEX(luo_subsystem_list_mutex);
++static LIST_HEAD(luo_subsystems_list);
++static void *luo_fdt_out;
++static void *luo_fdt_in;
++
++/**
++ * luo_subsystems_fdt_setup - Adds and populates the 'subsystems' node in the
++ * FDT.
++ * @fdt: Pointer to the LUO FDT blob.
++ *
++ * Add subsystems node and each subsystem to the LUO FDT blob.
++ *
++ * Returns: 0 on success, negative errno on failure.
++ */
++int luo_subsystems_fdt_setup(void *fdt)
++{
++	struct liveupdate_subsystem *subsystem;
++	const u64 zero_data = 0;
++	int ret, node_offset;
++
++	ret = fdt_add_subnode(fdt, 0, LUO_SUBSYSTEMS_NODE_NAME);
++	if (ret < 0)
++		goto exit_error;
++
++	node_offset = ret;
++	ret = fdt_setprop_string(fdt, node_offset, "compatible",
++				 LUO_SUBSYSTEMS_COMPATIBLE);
++	if (ret < 0)
++		goto exit_error;
++
++	list_for_each_entry(subsystem, &luo_subsystems_list, list) {
++		ret = fdt_setprop(fdt, node_offset, subsystem->name,
++				  &zero_data, sizeof(zero_data));
++		if (ret < 0)
++			goto exit_error;
++	}
++
++	luo_fdt_out = fdt;
++	return 0;
++exit_error:
++	pr_err("Failed to setup 'subsystems' node to FDT: %s\n",
++	       fdt_strerror(ret));
++	return -ENOSPC;
++}
++
++/**
++ * luo_subsystems_startup - Validates the LUO subsystems FDT node at startup.
++ * @fdt: Pointer to the LUO FDT blob passed from the previous kernel.
++ *
++ * This __init function checks the existence and validity of the '/subsystems'
++ * node in the FDT. This node is considered mandatory. It calls panic() if
++ * the node is missing, inaccessible, or invalid (e.g., missing compatible,
++ * wrong compatible string), indicating a critical configuration error for LUO.
++ */
++void __init luo_subsystems_startup(void *fdt)
++{
++	int ret, node_offset;
++
++	node_offset = fdt_subnode_offset(fdt, 0, LUO_SUBSYSTEMS_NODE_NAME);
++	if (node_offset < 0)
++		panic("Failed to find /subsystems node\n");
++
++	ret = fdt_node_check_compatible(fdt, node_offset,
++					LUO_SUBSYSTEMS_COMPATIBLE);
++	if (ret) {
++		panic("FDT '%s' is incompatible with '%s' [%d]\n",
++		      LUO_SUBSYSTEMS_NODE_NAME, LUO_SUBSYSTEMS_COMPATIBLE, ret);
++	}
++	luo_fdt_in = fdt;
++}
++
++/**
++ * luo_do_subsystems_prepare_calls - Calls prepare callbacks and updates FDT
++ * if all prepares succeed. Handles cancellation on failure.
++ *
++ * Phase 1: Calls 'prepare' for all subsystems and stores results temporarily.
++ * If any 'prepare' fails, calls 'cancel' on previously prepared subsystems
++ * and returns the error.
++ * Phase 2: If all 'prepare' calls succeeded, writes the stored data to the FDT.
++ * If any FDT write fails, calls 'cancel' on *all* prepared subsystems and
++ * returns the FDT error.
++ *
++ * Returns: 0 on success. Negative errno on failure.
++ */
++int luo_do_subsystems_prepare_calls(void)
++{
++	return 0;
++}
++
++/**
++ * luo_do_subsystems_freeze_calls - Calls freeze callbacks and updates FDT
++ * if all freezes succeed. Handles cancellation on failure.
++ *
++ * Phase 1: Calls 'freeze' for all subsystems and stores results temporarily.
++ * If any 'freeze' fails, calls 'cancel' on previously called subsystems
++ * and returns the error.
++ * Phase 2: If all 'freeze' calls succeeded, writes the stored data to the FDT.
++ * If any FDT write fails, calls 'cancel' on *all* subsystems and
++ * returns the FDT error.
++ *
++ * Returns: 0 on success. Negative errno on failure.
++ */
++int luo_do_subsystems_freeze_calls(void)
++{
++	return 0;
++}
++
++/**
++ * luo_do_subsystems_finish_calls- Calls finish callbacks for all subsystems.
++ *
++ * This function is called at the end of live update cycle to do the final
++ * clean-up or housekeeping of the post-live update states.
++ */
++void luo_do_subsystems_finish_calls(void)
++{
++}
++
++/**
++ * luo_do_subsystems_cancel_calls - Calls cancel callbacks for all subsystems.
++ *
++ * This function is typically called when the live update process needs to be
++ * aborted externally, for example, after the prepare phase may have run but
++ * before actual reboot. It iterates through all registered subsystems and calls
++ * the 'cancel' callback for those that implement it and likely completed
++ * prepare.
++ */
++void luo_do_subsystems_cancel_calls(void)
++{
++}
++
++/**
++ * liveupdate_register_subsystem - Register a kernel subsystem handler with LUO
++ * @h: Pointer to the liveupdate_subsystem structure allocated and populated
++ * by the calling subsystem.
++ *
++ * Registers a subsystem handler that provides callbacks for different events
++ * of the live update cycle. Registration is typically done during the
++ * subsystem's module init or core initialization.
++ *
++ * Can only be called when LUO is in the NORMAL or UPDATED states.
++ * The provided name (@h->name) must be unique among registered subsystems.
++ *
++ * Return: 0 on success, negative error code otherwise.
++ */
++int liveupdate_register_subsystem(struct liveupdate_subsystem *h)
++{
++	struct liveupdate_subsystem *iter;
++	int ret = 0;
++
++	luo_state_read_enter();
++	if (!liveupdate_state_normal() && !liveupdate_state_updated()) {
++		luo_state_read_exit();
++		return -EBUSY;
++	}
++
++	mutex_lock(&luo_subsystem_list_mutex);
++	list_for_each_entry(iter, &luo_subsystems_list, list) {
++		if (iter == h) {
++			pr_warn("Subsystem '%s' (%p) already registered.\n",
++				h->name, h);
++			ret = -EEXIST;
++			goto out_unlock;
++		}
++
++		if (!strcmp(iter->name, h->name)) {
++			pr_err("Subsystem with name '%s' already registered.\n",
++			       h->name);
++			ret = -EEXIST;
++			goto out_unlock;
++		}
++	}
++
++	INIT_LIST_HEAD(&h->list);
++	list_add_tail(&h->list, &luo_subsystems_list);
++
++out_unlock:
++	mutex_unlock(&luo_subsystem_list_mutex);
++	luo_state_read_exit();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(liveupdate_register_subsystem);
++
++/**
++ * liveupdate_unregister_subsystem - Unregister a kernel subsystem handler from
++ * LUO
++ * @h: Pointer to the same liveupdate_subsystem structure that was used during
++ * registration.
++ *
++ * Unregisters a previously registered subsystem handler. Typically called
++ * during module exit or subsystem teardown. LUO removes the structure from its
++ * internal list; the caller is responsible for any necessary memory cleanup
++ * of the structure itself.
++ *
++ * Return: 0 on success, negative error code otherwise.
++ * -EINVAL if h is NULL.
++ * -ENOENT if the specified handler @h is not found in the registration list.
++ * -EBUSY if LUO is not in the NORMAL state.
++ */
++int liveupdate_unregister_subsystem(struct liveupdate_subsystem *h)
++{
++	struct liveupdate_subsystem *iter;
++	bool found = false;
++	int ret = 0;
++
++	luo_state_read_enter();
++	if (!liveupdate_state_normal() && !liveupdate_state_updated()) {
++		luo_state_read_exit();
++		return -EBUSY;
++	}
++
++	mutex_lock(&luo_subsystem_list_mutex);
++	list_for_each_entry(iter, &luo_subsystems_list, list) {
++		if (iter == h) {
++			found = true;
++			break;
++		}
++	}
++
++	if (found) {
++		list_del_init(&h->list);
++	} else {
++		pr_warn("Subsystem handler '%s' not found for unregistration.\n",
++			h->name);
++		ret = -ENOENT;
++	}
++
++	mutex_unlock(&luo_subsystem_list_mutex);
++	luo_state_read_exit();
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(liveupdate_unregister_subsystem);
++
++/**
++ * liveupdate_get_subsystem_data - Retrieve raw private data for a subsystem
++ * from FDT.
++ * @h:      Pointer to the liveupdate_subsystem structure representing the
++ * subsystem instance. The 'name' field is used to find the property.
++ * @data:   Output pointer where the subsystem's raw private u64 data will be
++ * stored via memcpy.
++ *
++ * Reads the 8-byte data property associated with the subsystem @h->name
++ * directly from the '/subsystems' node within the globally accessible
++ * 'luo_fdt_in' blob. Returns appropriate error codes if inputs are invalid, or
++ * nodes/properties are missing or invalid.
++ *
++ * Return:  0 on success. -ENOENT on error.
++ */
++int liveupdate_get_subsystem_data(struct liveupdate_subsystem *h, u64 *data)
++{
++	return 0;
++}
++EXPORT_SYMBOL_GPL(liveupdate_get_subsystem_data);
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
