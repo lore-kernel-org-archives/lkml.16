@@ -1,31 +1,31 @@
-Received: from relay.hostedemail.com (smtprelay0010.hostedemail.com [216.40.44.10])
+Received: from relay.hostedemail.com (smtprelay0011.hostedemail.com [216.40.44.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F16F12F3C06;
-	Wed, 25 Jun 2025 23:16:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9EFE2F5497;
+	Wed, 25 Jun 2025 23:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750893365; cv=none; b=rcfKoLcgrwE3wSVu4lrpM+EaG54lDBClzcTFR3r3rIH4QcKc3XdC4CFjfM1YB6dkFgssg0ArhuU95HOuWqskEwEU96Jf32NEf2amTHjtTzpgtR3NqE07XlYX8Px9ZoMtIQVeqBjjMwg8ZP7dfp5lKnjco9sazC67vnG0rWhe07k=
+	t=1750893366; cv=none; b=pigYBlXMYxvlO6b9tlVfr8VAIlFEEby4BxGxoH5eQfLxLabVSRLbB24MyCZFEQSxvODtOBrVvb8uUldwFTU8AsLCj3Cjj5XPyc4+W7LalmHdpTIJO0mWgLdKzs28h7/oGhjYpZfIYYGsrKJzJIu4h2A172LE3Vd103ED8UhgJ1w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750893365; c=relaxed/simple;
-	bh=uOx5DfUnBLxP9fI1uU9zO1GwRE8LdxHgs3BL/mHcvYk=;
+	s=arc-20240116; t=1750893366; c=relaxed/simple;
+	bh=W0V4txT2VqsqxUALEjtx7r8CsT4+EoEiM6gy9naSJcM=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=ssQ74/ouAGWmpaQxwhPqKkQpSy1h2PKWTwpqU/VPupi0eZNOIgDEXsEhXU3yU0ivUyf+GGEtGB3P939yk93biiKfwqa+l2wz58WekM/Uy4lS6l6KodPnlw/RNUyJ7/ADheMgEZbIJnegHSM3ZwNlvUKbRv9FI+ZAHYvKpKFIKb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.10
+	 Content-Type; b=AuxyCa1DPGuTFJSeduKEdpDHs8fx+AcMnEWDloc87cj6Snh7G/bm0SElgwsZSC5+mKZuSPLEkoh8BylVKggaZuANENP1C7jpHw2XJP53Tn8or/MbjwkRYv+Gea9AVImXgNY6tZII8n9eMGHPx5XLAto+XI+rg+e9+Bx6QRdaFpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf03.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id 6DE801407C1;
+Received: from omf17.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay06.hostedemail.com (Postfix) with ESMTP id 89363104867;
 	Wed, 25 Jun 2025 23:16:01 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf03.hostedemail.com (Postfix) with ESMTPA id 29DF86000F;
-	Wed, 25 Jun 2025 23:15:58 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf17.hostedemail.com (Postfix) with ESMTPA id 2D0AA17;
+	Wed, 25 Jun 2025 23:15:57 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uUZLr-000000044ji-1LZ0;
-	Wed, 25 Jun 2025 19:16:23 -0400
-Message-ID: <20250625231623.181524553@goodmis.org>
+	id 1uUZLq-000000044gm-1Lqk;
+	Wed, 25 Jun 2025 19:16:22 -0400
+Message-ID: <20250625231622.172100822@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 25 Jun 2025 19:15:50 -0400
+Date: Wed, 25 Jun 2025 19:15:44 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -47,7 +47,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v11 09/11] perf record: Enable defer_callchain for user callchains
+Subject: [PATCH v11 03/11] perf: Use current->flags & PF_KTHREAD instead of current->mm == NULL
 References: <20250625231541.584226205@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -56,123 +56,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Rspamd-Server: rspamout02
-X-Rspamd-Queue-Id: 29DF86000F
-X-Stat-Signature: 4mk4s9infhjyx3447tsg687s1cxrscxj
+X-Rspamd-Queue-Id: 2D0AA17
+X-Stat-Signature: 8awn5n4x18skqdsj7a7fb8gdf9bock5t
+X-Rspamd-Server: rspamout06
 X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX18xXZaT/jfb217i4lEktUc0qNEfZqCYGtc=
-X-HE-Tag: 1750893358-116092
-X-HE-Meta: U2FsdGVkX18eVzlLpfctSdzhsJC5l0rTb2uPMErOIBQO3q40i/YA90x/KozHdzxVdgLgdQ6wq6n4tizCQD2oOPSJajdiB2LboK2Xqa++vs8YwEWhPCUJBLgHhSPQvoYE8MLwlwCbU0AtYLg8T2b1qu4z180tTUDfjv4hAyH+godDBgKbz1LPNxkGBIrfnRbfkngpVDlU9qLO78Rkrp4OyQj8S9oyJy28fIFDj2j7Wsk5wAcaVBPpo+DNlTf54j/rR+Ck1iQpHxBq10MHxe4mwZvNR9YSp6/O7xkaVD1rY7pRO1fYThI1s4MpqAhZBN/9GnB+maNSPFE72VEHCHnRsnA6nF0iofEcoJ+8mp2LYH/iWjn5KeKdHSOwwK3EEInroXYH3ARFB7Wp5fOsFr/G7VyxLPxaihs3z+jkuxGybkY=
+X-Session-ID: U2FsdGVkX1+v3d6/TViyaAoIBSiRhmJcrZ8wW5TPm9A=
+X-HE-Tag: 1750893357-171058
+X-HE-Meta: U2FsdGVkX1+bN8xFD2uyi8X7VkIW4ToZOCWPRb9vQHFmdj7QGi/qz74rDTULSB0d9NelKCRG0HGYt5AvNRZX2ewVBuSvEY8BYJw87KRGEeLg8zyl48Kee2lq5ZAMUhT3XzsYSUxcaTWU89FVzI4A2DXveO3w0ulM7x3SdqIBmcRRGxxk6l4yWsQ9K24R7smgU6ktXQY338DwXRfwS+gzPbzdDrWtbLQ6wK94Xm5eXDSIcyjuyQRyPyKu4R20jQCkrP4ITHbPQy0hPt5Ffks2auaGi1duUjXnybmobGV8pWhJWZdWeXVPQv1i1Bu9FbV3rIhQWJ7DiH348SHEqq86BQdpABMs/tPs+wpyVm51iia/UmJq6i5fMmdpYo6fF7koY+BK9WRMk2Vp9amFH81AhqnucTxF+S9no9z0rGYV/AAxeqRdaqvBwfwnUPSH1c5fGwTNnktRgOPXLuwX2c5EUJLTziAr/W6LCWO0kz5UVEA=
 
-From: Namhyung Kim <namhyung@kernel.org>
+From: Steven Rostedt <rostedt@goodmis.org>
 
-And add the missing feature detection logic to clear the flag on old
-kernels.
+To determine if a task is a kernel thread or not, it is more reliable to
+use (current->flags & PF_KTHREAD) than to rely on current->mm being NULL.
+That is because some kernel tasks (io_uring helpers) may have a mm field.
 
-  $ perf record -g -vv true
-  ...
-  ------------------------------------------------------------
-  perf_event_attr:
-    type                             0 (PERF_TYPE_HARDWARE)
-    size                             136
-    config                           0 (PERF_COUNT_HW_CPU_CYCLES)
-    { sample_period, sample_freq }   4000
-    sample_type                      IP|TID|TIME|CALLCHAIN|PERIOD
-    read_format                      ID|LOST
-    disabled                         1
-    inherit                          1
-    mmap                             1
-    comm                             1
-    freq                             1
-    enable_on_exec                   1
-    task                             1
-    sample_id_all                    1
-    mmap2                            1
-    comm_exec                        1
-    ksymbol                          1
-    bpf_event                        1
-    defer_callchain                  1
-  ------------------------------------------------------------
-  sys_perf_event_open: pid 162755  cpu 0  group_fd -1  flags 0x8
-  sys_perf_event_open failed, error -22
-  switching off deferred callchain support
+Link: https://lore.kernel.org/linux-trace-kernel/20250424163607.GE18306@noisy.programming.kicks-ass.net/
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- tools/perf/util/evsel.c | 24 ++++++++++++++++++++++++
- tools/perf/util/evsel.h |  1 +
- 2 files changed, 25 insertions(+)
+ kernel/events/callchain.c | 6 +++---
+ kernel/events/core.c      | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 6176c31b57ea..c942983b870e 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1076,6 +1076,14 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
+index cd0e3fc7ed05..42d21761cb4d 100644
+--- a/kernel/events/callchain.c
++++ b/kernel/events/callchain.c
+@@ -246,10 +246,10 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
+ 
+ 	if (user && !crosstask) {
+ 		if (!user_mode(regs)) {
+-			if  (current->mm)
+-				regs = task_pt_regs(current);
+-			else
++			if (current->flags & PF_KTHREAD)
+ 				regs = NULL;
++			else
++				regs = task_pt_regs(current);
  		}
- 	}
  
-+	if (param->record_mode == CALLCHAIN_FP && !attr->exclude_callchain_user) {
-+		/*
-+		 * Enable deferred callchains optimistically.  It'll be switched
-+		 * off later if the kernel doesn't support it.
-+		 */
-+		attr->defer_callchain = 1;
-+	}
-+
- 	if (function) {
- 		pr_info("Disabling user space callchains for function trace event.\n");
- 		attr->exclude_callchain_user = 1;
-@@ -2124,6 +2132,8 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		if (regs) {
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index ca7e9e7d19bf..ae371007a2a6 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -8054,7 +8054,7 @@ static u64 perf_virt_to_phys(u64 virt)
+ 		 * Try IRQ-safe get_user_page_fast_only first.
+ 		 * If failed, leave phys_addr as 0.
+ 		 */
+-		if (current->mm != NULL) {
++		if (!(current->flags & PF_KTHREAD)) {
+ 			struct page *p;
  
- static void evsel__disable_missing_features(struct evsel *evsel)
- {
-+	if (perf_missing_features.defer_callchain)
-+		evsel->core.attr.defer_callchain = 0;
- 	if (perf_missing_features.inherit_sample_read && evsel->core.attr.inherit &&
- 	    (evsel->core.attr.sample_type & PERF_SAMPLE_READ))
- 		evsel->core.attr.inherit = 0;
-@@ -2398,6 +2408,15 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
- 
- 	/* Please add new feature detection here. */
- 
-+	attr.defer_callchain = true;
-+	attr.sample_type = PERF_SAMPLE_CALLCHAIN;
-+	if (has_attr_feature(&attr, /*flags=*/0))
-+		goto found;
-+	perf_missing_features.defer_callchain = true;
-+	pr_debug2("switching off deferred callchain support\n");
-+	attr.defer_callchain = false;
-+	attr.sample_type = 0;
-+
- 	attr.inherit = true;
- 	attr.sample_type = PERF_SAMPLE_READ;
- 	if (has_attr_feature(&attr, /*flags=*/0))
-@@ -2509,6 +2528,11 @@ static bool evsel__detect_missing_features(struct evsel *evsel, struct perf_cpu
- 	errno = old_errno;
- 
- check:
-+	if (evsel->core.attr.defer_callchain &&
-+	    evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN &&
-+	    perf_missing_features.defer_callchain)
-+		return true;
-+
- 	if (evsel->core.attr.inherit &&
- 	    (evsel->core.attr.sample_type & PERF_SAMPLE_READ) &&
- 	    perf_missing_features.inherit_sample_read)
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 6dbc9690e0c9..a01c1de8f95f 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -221,6 +221,7 @@ struct perf_missing_features {
- 	bool branch_counters;
- 	bool aux_action;
- 	bool inherit_sample_read;
-+	bool defer_callchain;
- };
- 
- extern struct perf_missing_features perf_missing_features;
+ 			pagefault_disable();
 -- 
 2.47.2
 
