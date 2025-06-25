@@ -1,234 +1,257 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD068182BC;
-	Wed, 25 Jun 2025 06:05:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C781EB5C2;
+	Wed, 25 Jun 2025 06:05:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750831557; cv=none; b=OM9jOO84kuegFFWJeKVB6qY/GfCT64hoZUTF8BkN5EVHWs0dzh205r7Zy94upkoPOjxA8ags6cCvGjPwB9oLS5Zag+Ut+p1unufdA1iFkrwZSoe07EulybFywouTE0muB/NclKractnyt0hpZtnDh3jLD2C/SsGVTjFujtqMGKg=
+	t=1750831559; cv=none; b=pe9D5+wP2C4nuNOJCT3GCS6X99iSS/fPlTXpJiYk4SZ09wF7g+mNQeuxSsdOXlk90uie6Maz/6mAJQfS8xWI+58ZahSpuD14UodrwZ0YT8/QtDlF++XpKbkt0BSSJtL36tT6sDVtHQ9GFsWdUlRrzhAbxaPChmd/ilEf8gsTlI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750831557; c=relaxed/simple;
-	bh=mlSg9lIHtnrO/DSwiOZdc8wwacrIJ2lGTmmKvsPErCo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I0a/wUecBXu/TqgcZpoGZDdj5zhVqF/Y3rNlDfYMeq9dsR4KeRHIYwzauoL0QzZcjLTRZ7bHMc+XYQwSve4Wy6PG9nODOCDQ0Ptqws4htT8QLuB4G7If/Mozq/yWGeUykwsAl0JFAS3u7ShJ7Zt5/4dkYhZXNZckrA5JTORpwPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxPFDjWo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750831559; c=relaxed/simple;
+	bh=Q28EoRlCHxoMaNgGOkukCqmPjyIq/8jmbDgvCGiLJew=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=FV4CVQ62lALDYATehd4J85um+2fWt4RR88oCmdExlwwvXRhGSZs4ou+OVL0DeS2tgHtvMIFogXfT/xBfYULR5RJkJy1ZNtcLLHTpCHiDvTTPQdtSeBlOfM7ETX79zPBYhuixWYhmVVZsl/zrHeon4W38YJcQgeF1+fwfbuLlDiU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DFa5ibB8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxPFDjWo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C814BC4CEEA;
-	Wed, 25 Jun 2025 06:05:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DFa5ibB8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23D90C4CEEE;
+	Wed, 25 Jun 2025 06:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750831557;
-	bh=mlSg9lIHtnrO/DSwiOZdc8wwacrIJ2lGTmmKvsPErCo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PxPFDjWocxmsoIWWpzgyx3AmmB7LtjHB8cOR3tTUYprPGkheEEY3xPbyTCvyvqlsj
-	 VXYCM6uzQ60no5DzAL/c6jKu3dW8/SsFc0lIJ+kYXfN1TIOKELqESNNsTkpHZS1hqs
-	 6UNLEXKo6EUjiAIKzAwH1HUP9eJWaIvVr/jp559ag7T3fi8LeO4p/6bur6WuVYLFOu
-	 EQ4Kt11jPO3BkO5qiKKqcmsQV3FbwgtWbGsajfMDcYOHcCaT4yhPzZTcXLIlLwSrKg
-	 XD1s9aZpEpcI1lYU7N4C+8Ynua0qB0cNRPbyn3wxtYXHLca2DXwP04/yshsRPqFTOX
-	 0EQovDgK+ovMA==
-Message-ID: <a0feb67f-3a73-4247-8383-7255616cb22b@kernel.org>
-Date: Wed, 25 Jun 2025 08:05:52 +0200
+	s=k20201202; t=1750831558;
+	bh=Q28EoRlCHxoMaNgGOkukCqmPjyIq/8jmbDgvCGiLJew=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DFa5ibB8Ln+ZaEf5b2ISYENoa//luatjioX7AXXTUyOq4JdCpf6iXP+txHPyDNSn9
+	 Vmj1Z4xrs6G7Q/SQtKCVMGo1QSAGT6m81iYdIJo/tz4evIQhLSHP3xDD6p3eON8lzQ
+	 VxBPRELlVZ0f9bk2v0/qXCIU+lsRGCkfvYCkGB45H1A8UsdueFrIOcwraDhaIZW8H1
+	 zvZsNcyWc83jGmE/OIdnKqP254cDkmgB1VRBjnYkQLVgiTRjFL3NvYpShWbsJcSsrB
+	 XkigCbNiCzUlkO8QQOgcR3OI2ynAa1/VXsfHYdqBUcbwiXOlY0Ws1H6XSE0Q0qkZQS
+	 Sb1pd7cokohBg==
+Date: Wed, 25 Jun 2025 15:05:54 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <olsajiri@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Oleg Nesterov <oleg@redhat.com>,
+ Andrii Nakryiko <andrii@kernel.org>, Alejandro Colomar <alx@kernel.org>,
+ Eyal Birger <eyal.birger@gmail.com>, kees@kernel.org, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
+ <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Alan Maguire
+ <alan.maguire@oracle.com>, David Laight <David.Laight@aculab.com>, Thomas
+ =?UTF-8?B?V2Vpw59zY2h1aA==?= <thomas@t-8ch.de>, Ingo Molnar
+ <mingo@kernel.org>
+Subject: Re: [PATCHv3 perf/core 00/22] uprobes: Add support to optimize usdt
+ probes on x86_64
+Message-Id: <20250625150554.e87f4231180082e4c0a86024@kernel.org>
+In-Reply-To: <aFpjjeYKO5uBuwcl@krava>
+References: <20250605132350.1488129-1-jolsa@kernel.org>
+	<aFFouFEKLFsYhVOe@krava>
+	<aFpjjeYKO5uBuwcl@krava>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 5/7] arm64: dts: axiado: Add initial support for AX3000
- SoC and eval board
-To: Harshit Shah <hshah@axiado.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Jan Kotas <jank@cadence.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "soc@lists.linux.dev" <soc@lists.linux.dev>
-References: <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-0-b3e66a7491f5@axiado.com>
- <20250623-axiado-ax3000-soc-and-evaluation-board-support-v3-5-b3e66a7491f5@axiado.com>
- <0709a0a6-1313-452c-85e7-2926a6a03741@kernel.org>
- <19d78e69-4a38-420b-b9f8-d0eb90cdcaf6@axiado.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <19d78e69-4a38-420b-b9f8-d0eb90cdcaf6@axiado.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 25/06/2025 04:16, Harshit Shah wrote:
-> Thank you for the reviews. I have some questions/feedback to clarify 
-> before I fix some of them.
-> 
-> On 6/23/2025 11:45 PM, Krzysztof Kozlowski wrote:
->>
->> On 23/06/2025 19:28, Harshit Shah wrote:
->>> +                     clocks = <&refclk>;
->>> +                     interrupt-parent = <&gic500>;
->>> +                     interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
->>> +                     gpio-controller;
->>> +                     #gpio-cells = <2>;
->>> +                     interrupt-controller;
->>> +                     #interrupt-cells = <2>;
->>> +                     status = "disabled";
->>> +             };
->> Please follow DTS coding style.
-> 
-> Sorry, I didn't got this comment. Is this for the spaces between the 
-> nodes or something else?
-> 
-> The current GPIO node is as follows:
+Hi Jiri,
 
-There is always, always line break between nodes.
+Sorry I missed the series. Let me review it.
+I think it should go through x86 tree because this is targetting
+x86 code.
 
-> 
-> gpio0: gpio-controller@80500000 {
->                          compatible = "cdns,gpio-r1p02";
->                          reg = <0x00 0x80500000 0x00 0x400>;
->                          clocks = <&refclk>;
->                          interrupt-parent = <&gic500>;
->                          interrupts = <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
->                          gpio-controller;
->                          #gpio-cells = <2>;
->                          interrupt-controller;
->                          #interrupt-cells = <2>;
->                          status = "disabled";
->                  };
-> 
-> I checked the document: 
-> https://elixir.bootlin.com/linux/v6.15/source/Documentation/devicetree/bindings/dts-coding-style.rst#L112.
-> 
->>
->>> +             gpio1: gpio-controller@80580000 {
->>> +                     compatible = "cdns,gpio-r1p02";
->> This should not be accepted without specific compatible, but that's some
->> old binding so maybe matters less. Anyway, if you ever need quirk or
->> custom properties they I will reject them based on what you claim here.
-> 
-> Yes, we are not changing anything on this driver. Is it okay?
-
-I meant for future. I would expect to follow writing bindings now, so
-have front specific compatible, but if you do not then whatever issues
-you have in the future with this driver, they should be rejected, right?
-
-> 
-> 
->>
->>
->>> +             i3c16: i3c@80620400 {
->>> +                     compatible = "cdns,i3c-master";
->>> +                     reg = <0x00 0x80620400 0x00 0x400>;
->>> +                     clocks = <&refclk &clk_xin>;
->>> +                     clock-names = "pclk", "sysclk";
->>> +                     interrupt-parent = <&gic500>;
->>> +                     interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_HIGH>;
->>> +                     i2c-scl-hz = <100000>;
->>> +                     i3c-scl-hz = <400000>;
->>> +                     #address-cells = <3>;
->>> +                     #size-cells = <0>;
->>> +                     status = "disabled";
->>> +             };
->>> +             uart0: serial@80520000 {
->> Looks like not ordered by unit address. What is the ordering rule you
->> are going to adopt for entire arch?
-> 
-> Apologies for the confusion. I should have updated in last patch-set 
-> comments.
-> 
-> We are following alphabetical ordering rule. In those we are grouping 
-> some nodes together based on the numbers.
-> 
-> cpus
-> 
-> clocks
-> 
-> soc {
-> 
->     gic500 { }
-> 
->     gpio0-7 { }
-> 
->     i3c0-16 { }
-> 
->     uart0-3 { }
-> 
-> }
-> 
-> timer
-> 
-> 
-> Is this okay?
-
-alphabetical ordering is not mentioned in dts coding style. Maybe it
-should, but I think the only user of second style with grouping nodes -
-Renesas - still uses ordering by unit address in general.
-
-The trouble with your approach is that if you ever need to change the
-name, you will need to re-order and move entire node.
-
-Anyway, not a problem for me.
-
-> 
->>
->>> +                     compatible = "xlnx,zynqmp-uart", "cdns,uart-r1p12";
->> NAK, you do not have xlnx here. Look at your SoC: name of vendor is
->> axiado. Not xlnx. How is your SoC called? Also zynqmp? You cannot just
->> randomly pick any compatibles and stuff them around.
->>
->> Please carefully read writing bindings from DT directory.
-> 
-> 
-> We are using the "cdns,uart-r1p12" for the UART. However, that alone 
-> can't be added alone in the compatible as per the DT bindings doc.
-
-Exactly. See writing bindings... or any guides/talks.
+Thanks,
 
 
-Best regards,
-Krzysztof
+On Tue, 24 Jun 2025 10:36:29 +0200
+Jiri Olsa <olsajiri@gmail.com> wrote:
+
+> ping
+> 
+> On Tue, Jun 17, 2025 at 03:08:08PM +0200, Jiri Olsa wrote:
+> > hi, ping
+> > 
+> > thanks,
+> > jirka
+> > 
+> > On Thu, Jun 05, 2025 at 03:23:27PM +0200, Jiri Olsa wrote:
+> > > hi,
+> > > this patchset adds support to optimize usdt probes on top of 5-byte
+> > > nop instruction.
+> > > 
+> > > The generic approach (optimize all uprobes) is hard due to emulating
+> > > possible multiple original instructions and its related issues. The
+> > > usdt case, which stores 5-byte nop seems much easier, so starting
+> > > with that.
+> > > 
+> > > The basic idea is to replace breakpoint exception with syscall which
+> > > is faster on x86_64. For more details please see changelog of patch 8.
+> > > 
+> > > The run_bench_uprobes.sh benchmark triggers uprobe (on top of different
+> > > original instructions) in a loop and counts how many of those happened
+> > > per second (the unit below is million loops).
+> > > 
+> > > There's big speed up if you consider current usdt implementation
+> > > (uprobe-nop) compared to proposed usdt (uprobe-nop5):
+> > > 
+> > > current:
+> > >         usermode-count :  152.501 ± 0.012M/s
+> > >         syscall-count  :   14.463 ± 0.062M/s
+> > > -->     uprobe-nop     :    3.160 ± 0.005M/s
+> > >         uprobe-push    :    3.003 ± 0.003M/s
+> > >         uprobe-ret     :    1.100 ± 0.003M/s
+> > >         uprobe-nop5    :    3.132 ± 0.012M/s
+> > >         uretprobe-nop  :    2.103 ± 0.002M/s
+> > >         uretprobe-push :    2.027 ± 0.004M/s
+> > >         uretprobe-ret  :    0.914 ± 0.002M/s
+> > >         uretprobe-nop5 :    2.115 ± 0.002M/s
+> > > 
+> > > after the change:
+> > >         usermode-count :  152.343 ± 0.400M/s
+> > >         syscall-count  :   14.851 ± 0.033M/s
+> > >         uprobe-nop     :    3.204 ± 0.005M/s
+> > >         uprobe-push    :    3.040 ± 0.005M/s
+> > >         uprobe-ret     :    1.098 ± 0.003M/s
+> > > -->     uprobe-nop5    :    7.286 ± 0.017M/s
+> > >         uretprobe-nop  :    2.144 ± 0.001M/s
+> > >         uretprobe-push :    2.069 ± 0.002M/s
+> > >         uretprobe-ret  :    0.922 ± 0.000M/s
+> > >         uretprobe-nop5 :    3.487 ± 0.001M/s
+> > > 
+> > > I see bit more speed up on Intel (above) compared to AMD. The big nop5
+> > > speed up is partly due to emulating nop5 and partly due to optimization.
+> > > 
+> > > The key speed up we do this for is the USDT switch from nop to nop5:
+> > > 	uprobe-nop     :    3.160 ± 0.005M/s
+> > > 	uprobe-nop5    :    7.286 ± 0.017M/s
+> > > 
+> > > 
+> > > Changes from v2:
+> > > - rebased on top of tip/master + mm/mm-stable + 1 extra change [1]
+> > > - added acks [Oleg,Andrii]
+> > > - more details changelog for patch 1 [Masami]
+> > > - several tests changes [Andrii]
+> > > - add explicit PAGE_SIZE low limit to vm_unmapped_area call [Andrii]
+> > > 
+> > > 
+> > > This patchset is adding new syscall, here are notes to check list items
+> > > in Documentation/process/adding-syscalls.rst:
+> > > 
+> > > - System Call Alternatives
+> > >   New syscall seems like the best way in here, because we need
+> > >   just to quickly enter kernel with no extra arguments processing,
+> > >   which we'd need to do if we decided to use another syscall.
+> > > 
+> > > - Designing the API: Planning for Extension
+> > >   The uprobe syscall is very specific and most likely won't be
+> > >   extended in the future.
+> > > 
+> > > - Designing the API: Other Considerations
+> > >   N/A because uprobe syscall does not return reference to kernel
+> > >   object.
+> > > 
+> > > - Proposing the API
+> > >   Wiring up of the uprobe system call is in separate change,
+> > >   selftests and man page changes are part of the patchset.
+> > > 
+> > > - Generic System Call Implementation
+> > >   There's no CONFIG option for the new functionality because it
+> > >   keeps the same behaviour from the user POV.
+> > > 
+> > > - x86 System Call Implementation
+> > >   It's 64-bit syscall only.
+> > > 
+> > > - Compatibility System Calls (Generic)
+> > >   N/A uprobe syscall has no arguments and is not supported
+> > >   for compat processes.
+> > > 
+> > > - Compatibility System Calls (x86)
+> > >   N/A uprobe syscall is not supported for compat processes.
+> > > 
+> > > - System Calls Returning Elsewhere
+> > >   N/A.
+> > > 
+> > > - Other Details
+> > >   N/A.
+> > > 
+> > > - Testing
+> > >   Adding new bpf selftests.
+> > > 
+> > > - Man Page
+> > >   Attached.
+> > > 
+> > > - Do not call System Calls in the Kernel
+> > >   N/A
+> > > 
+> > > pending todo (or follow ups):
+> > > - use PROCMAP_QUERY in tests
+> > > - alloc 'struct uprobes_state' for mm_struct only when needed [Andrii]
+> > > - use mm_cpumask(vma->vm_mm) in text_poke_sync
+> > > 
+> > > thanks,
+> > > jirka
+> > > 
+> > > 
+> > > Cc: Alejandro Colomar <alx@kernel.org>
+> > > Cc: Eyal Birger <eyal.birger@gmail.com>
+> > > Cc: kees@kernel.org
+> > > 
+> > > [1] https://lore.kernel.org/linux-trace-kernel/20250514101809.2010193-1-jolsa@kernel.org/T/#u
+> > > ---
+> > > Jiri Olsa (21):
+> > >       uprobes: Remove breakpoint in unapply_uprobe under mmap_write_lock
+> > >       uprobes: Rename arch_uretprobe_trampoline function
+> > >       uprobes: Make copy_from_page global
+> > >       uprobes: Add uprobe_write function
+> > >       uprobes: Add nbytes argument to uprobe_write
+> > >       uprobes: Add is_register argument to uprobe_write and uprobe_write_opcode
+> > >       uprobes: Add do_ref_ctr argument to uprobe_write function
+> > >       uprobes/x86: Add mapping for optimized uprobe trampolines
+> > >       uprobes/x86: Add uprobe syscall to speed up uprobe
+> > >       uprobes/x86: Add support to optimize uprobes
+> > >       selftests/bpf: Import usdt.h from libbpf/usdt project
+> > >       selftests/bpf: Reorg the uprobe_syscall test function
+> > >       selftests/bpf: Rename uprobe_syscall_executed prog to test_uretprobe_multi
+> > >       selftests/bpf: Add uprobe/usdt syscall tests
+> > >       selftests/bpf: Add hit/attach/detach race optimized uprobe test
+> > >       selftests/bpf: Add uprobe syscall sigill signal test
+> > >       selftests/bpf: Add optimized usdt variant for basic usdt test
+> > >       selftests/bpf: Add uprobe_regs_equal test
+> > >       selftests/bpf: Change test_uretprobe_regs_change for uprobe and uretprobe
+> > >       seccomp: passthrough uprobe systemcall without filtering
+> > >       selftests/seccomp: validate uprobe syscall passes through seccomp
+> > > 
+> > >  arch/arm/probes/uprobes/core.c                              |   2 +-
+> > >  arch/x86/entry/syscalls/syscall_64.tbl                      |   1 +
+> > >  arch/x86/include/asm/uprobes.h                              |   7 ++
+> > >  arch/x86/kernel/uprobes.c                                   | 525 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+> > >  include/linux/syscalls.h                                    |   2 +
+> > >  include/linux/uprobes.h                                     |  20 +++-
+> > >  kernel/events/uprobes.c                                     | 100 ++++++++++++-----
+> > >  kernel/fork.c                                               |   1 +
+> > >  kernel/seccomp.c                                            |  32 ++++--
+> > >  kernel/sys_ni.c                                             |   1 +
+> > >  tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c     | 523 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------
+> > >  tools/testing/selftests/bpf/prog_tests/usdt.c               |  38 ++++---
+> > >  tools/testing/selftests/bpf/progs/uprobe_syscall.c          |   4 +-
+> > >  tools/testing/selftests/bpf/progs/uprobe_syscall_executed.c |  60 +++++++++-
+> > >  tools/testing/selftests/bpf/test_kmods/bpf_testmod.c        |  11 +-
+> > >  tools/testing/selftests/bpf/usdt.h                          | 545 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> > >  tools/testing/selftests/seccomp/seccomp_bpf.c               | 107 ++++++++++++++----
+> > >  17 files changed, 1867 insertions(+), 112 deletions(-)
+> > >  create mode 100644 tools/testing/selftests/bpf/usdt.h
+> > > 
+> > > 
+> > > Jiri Olsa (1):
+> > >       man2: Add uprobe syscall page
+> > > 
+> > >  man/man2/uprobe.2    |  1 +
+> > >  man/man2/uretprobe.2 | 36 ++++++++++++++++++++++++------------
+> > >  2 files changed, 25 insertions(+), 12 deletions(-)
+> > >  create mode 100644 man/man2/uprobe.2
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
