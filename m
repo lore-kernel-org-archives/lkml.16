@@ -1,120 +1,199 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF25307498;
-	Wed, 25 Jun 2025 06:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359F3800;
+	Wed, 25 Jun 2025 06:13:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750831990; cv=none; b=mJKIU9QWiub5iAB+l1XQ/DZCx6FStWWzUOO8b1m9gXgTAvsRK1/wLLEy+Gz0HPTwpHmdeFsvRXcUTrY7yaEQzsyE/90Dt/MC1TQEDflsoJTRaefD9bur/cVKmJ4cpwja+kp2w+R9JVQj+87iqbSuySVb48gIaTrNXPknb6on2ng=
+	t=1750832001; cv=none; b=d4df8ou0gKM3DDvQoM8SUG6kq8DrhPRtNy291mvKP9f4F5ZcozzqfGXTpzTvbhh0sjODaVuGa1aD/xupLZsdgDmhOBkd+fYz9pRGGGVjvNTaCH9OGwve7+RAa2HiJCCSuaIgWyPtC6qhKpUCrshS3ROfedxgZmqcbewjZK0TNGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750831990; c=relaxed/simple;
-	bh=y0brSKUV4SsIuFqNMO0VsFl94vOeYflmbSbh90CxtdY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ar4ChNdCK2XpD/UCE7c3cWkS2fIDL2PwB5cTrVnTnyCN+64ocobz33dHuxGnffNQXEGxtX3h/fsUJ4fuV0MB8BsRhv5r5G8dhVsFidAjTuB8pfiWP7kvx9781IUNtqW6pwBIxYGJoFPgPJmKx3Tu3i1B04ruXGMR8ZEQV5R4S+0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=pActrePS; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1750832001; c=relaxed/simple;
+	bh=Qnpw/UpFWAxsc8LwtwAtEOU0j9IQZ58Hz71mDZMl+Sg=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=AVy0SpZq/4nTfQODvKcTQvjzfLrxV7mk5jNFBO19uXHGT6cCUalnWI8BvZu0aRB+iIKZeEEIjbXIWiMdz0PV38/u9Msq72aufjHF1L4EWVYeKgx0ojX3wSz8mL278z/XaRHwqNndq6JoqD066qy8E+QAaapRXFWq8iPB424We3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tee03rVd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pActrePS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=202503; t=1750831982;
-	bh=s+85x0ygzu3N2ASkoZVgkazaR+1uFLxlfi0sJn6YsJI=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tee03rVd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85B99C4CEEA;
+	Wed, 25 Jun 2025 06:13:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750832000;
+	bh=Qnpw/UpFWAxsc8LwtwAtEOU0j9IQZ58Hz71mDZMl+Sg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=pActrePS/Dh7MAnDkC8F0BliyOuKmPrNpMLqHsLk8R7HqdmJo2zxRovM3PasEoiUK
-	 FW6+PpV4lqJz4vr7yqsTMTqDrzPuvxg2ojrSofyBFCNql6/I5+L5c+1kGYVldv1zRL
-	 nvxxtsRIduIWpjkseowSBsuBM85k/C43GSLdFn1qslxhIcUtfJxykXHn1P9N5gAU0z
-	 OSLWkXZXt2tbXHEos1G5Whdl94PZWPSjUy+KSY8+UWoU/+lEWGJhGUnbuSeQkRBsPd
-	 Rj5Eczkf2dIZEOPq6D9GSxY/iK2rShboHnfX4mWiagLfUXlRl+KH5rJNU+Xa3yxeaI
-	 Er5bTuXqVO3/w==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4bRs1p5cqmz4wj2;
-	Wed, 25 Jun 2025 16:13:02 +1000 (AEST)
-Date: Wed, 25 Jun 2025 16:13:01 +1000
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Andreas Hindborg <a.hindborg@kernel.org>
-Cc: "Danilo Krummrich" <dakr@kernel.org>, "Alexandre Courbot"
- <acourbot@nvidia.com>, "FUJITA Tomonori" <fujita.tomonori@gmail.com>,
- "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>, "Linux Next
- Mailing List" <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the rust-timekeeping tree with the
- drm-nova tree
-Message-ID: <20250625161301.48264659@canb.auug.org.au>
-In-Reply-To: <87ikkl2ca4.fsf@kernel.org>
-References: <iuo4BpdTglZkpW9Xyy1ehjFspmj3ay0q7iejyeOShBG0HLZmIrhzIpi0eG_wBv71ZPPCgh2lcn2BOsrFHOegfg==@protonmail.internalid>
-	<20250624195142.1050e147@canb.auug.org.au>
-	<87ecv94ay9.fsf@kernel.org>
-	<DAUQZ1TY9VT3.UJEFQ96157DJ@nvidia.com>
-	<CeKXJWcbSngalEPTkHeRti8od7cPavN5gh1Opt1oNESUBUh8W4Kt7xnuHkD7l7dr1178GDTfqrabr9Pye6SWpw==@protonmail.internalid>
-	<aFqXKKAxQp0yxUvL@pollux>
-	<87ikkl2ca4.fsf@kernel.org>
+	b=Tee03rVdLVMXZKq+Z+1bHVHSurjZC4BLWV57S39Cy+0HmPHuW4yI08Q/WVl+e/bYG
+	 e0VS3GWnEoxP4xDm3kDQAsJN5kTax5gQy+5aS7JfRWtJ/f0Jn5J2g/n6NH/LFFs3Rd
+	 D/c2FDs5jlQDngFnFqzg463YnT5SIMfJMQCFIZoToLitdUbeb0EXBn5SDK6jbM465g
+	 /V+kDmtOsVAE4VR4gBxYcJc5ZI92x7VpOThXAT3PM6q3gqzAhP1XpiWHrFTcR8K6VQ
+	 3nFvVyTGAwKwIYP7et4zNuFGiOenimqR4iEEb/kxcZ2A3N4cNnqaevQ4PUcDQ9VW77
+	 WqpzKe1k4w5xg==
+Date: Wed, 25 Jun 2025 15:13:17 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
+ <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, David Laight
+ <David.Laight@ACULAB.COM>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
+ <thomas@t-8ch.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv3 perf/core 05/22] uprobes: Add nbytes argument to
+ uprobe_write
+Message-Id: <20250625151317.f90251f9f893297a3b3345c4@kernel.org>
+In-Reply-To: <20250605132350.1488129-6-jolsa@kernel.org>
+References: <20250605132350.1488129-1-jolsa@kernel.org>
+	<20250605132350.1488129-6-jolsa@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/UVAYDw9ciuOrU=ESLYfgJaS";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-
---Sig_/UVAYDw9ciuOrU=ESLYfgJaS
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-Hi Andreas,
+On Thu,  5 Jun 2025 15:23:32 +0200
+Jiri Olsa <jolsa@kernel.org> wrote:
 
-On Tue, 24 Jun 2025 21:02:43 +0200 Andreas Hindborg <a.hindborg@kernel.org>=
- wrote:
->
-> diff --git a/drivers/gpu/nova-core/util.rs b/drivers/gpu/nova-core/util.rs
-> index 5cafe0797cd6..01a920085438 100644
-> --- a/drivers/gpu/nova-core/util.rs
-> +++ b/drivers/gpu/nova-core/util.rs
-> @@ -3,7 +3,7 @@
->  use core::time::Duration;
-> =20
->  use kernel::prelude::*;
-> -use kernel::time::Instant;
-> +use kernel::time::{Instant, Monotonic};
-> =20
->  pub(crate) const fn to_lowercase_bytes<const N: usize>(s: &str) -> [u8; =
-N] {
->      let src =3D s.as_bytes();
-> @@ -35,7 +35,7 @@ pub(crate) const fn const_bytes_to_str(bytes: &[u8]) ->=
- &str {
->  /// TODO[DLAY]: replace with `read_poll_timeout` once it is available.
->  /// (https://lore.kernel.org/lkml/20250220070611.214262-8-fujita.tomonor=
-i@gmail.com/)
->  pub(crate) fn wait_on<R, F: Fn() -> Option<R>>(timeout: Duration, cond: =
-F) -> Result<R> {
-> -    let start_time =3D Instant::now();
-> +    let start_time =3D Instant::<Monotonic>::now();
-> =20
->      loop {
->          if let Some(ret) =3D cond() {
+> Adding nbytes argument to uprobe_write and related functions as
+> preparation for writing whole instructions in following changes.
+> 
+> Also renaming opcode arguments to insn, which seems to fit better.
+> 
 
-I have applied that to the merge of the rust-timekeeping tree today,
-thanks.
---=20
-Cheers,
-Stephen Rothwell
+Looks good to me.
 
---Sig_/UVAYDw9ciuOrU=ESLYfgJaS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
------BEGIN PGP SIGNATURE-----
+Thanks,
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmhbk20ACgkQAVBC80lX
-0GwiEwf+OiiBOFrlY8aOTBV0/MvwEXnWmUEOWvfCaVEaLy4g1WPiStRd5uUtxKaE
-bf0bB3JweFBE2y0jddDn7JIxCrOfsD9vsB5p2eXQbAb3TE1Wv6JN4MEsRjC52Ytg
-j7qXygrcO8JrB9ZR2PpHQM6IoXIXO+Ohjg+OKShfjjvPUPvbTKIfDzGxL4YN/k4q
-b8prfTNfhsQyn8V/3HnFzXal7yBfhOjqe+dwnQin1tvnZ99BRvaJbEpF5DKqUPHi
-MIwzsMprAswfhxzmCJ+UwIwRqPL3qbKEc5vmzacKMw4mWUJik5dyaz80JMPw19fx
-fv7ZSPJCOQqHCAmEU8yEolY/1RMtvQ==
-=CJ6E
------END PGP SIGNATURE-----
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  include/linux/uprobes.h |  4 ++--
+>  kernel/events/uprobes.c | 26 ++++++++++++++------------
+>  2 files changed, 16 insertions(+), 14 deletions(-)
+> 
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index e13382054435..147c4a0a1af9 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -188,7 +188,7 @@ struct uprobes_state {
+>  };
+>  
+>  typedef int (*uprobe_write_verify_t)(struct page *page, unsigned long vaddr,
+> -				     uprobe_opcode_t *opcode);
+> +				     uprobe_opcode_t *insn, int nbytes);
+>  
+>  extern void __init uprobes_init(void);
+>  extern int set_swbp(struct arch_uprobe *aup, struct vm_area_struct *vma, unsigned long vaddr);
+> @@ -199,7 +199,7 @@ extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
+>  extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
+>  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t);
+>  extern int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma, const unsigned long opcode_vaddr,
+> -			uprobe_opcode_t opcode, uprobe_write_verify_t verify);
+> +			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify);
+>  extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+>  extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
+>  extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 777de9b95dd7..f7feb7417a2c 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -191,7 +191,8 @@ static void copy_to_page(struct page *page, unsigned long vaddr, const void *src
+>  	kunmap_atomic(kaddr);
+>  }
+>  
+> -static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t *new_opcode)
+> +static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t *insn,
+> +			 int nbytes)
+>  {
+>  	uprobe_opcode_t old_opcode;
+>  	bool is_swbp;
+> @@ -208,7 +209,7 @@ static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t
+>  	uprobe_copy_from_page(page, vaddr, &old_opcode, UPROBE_SWBP_INSN_SIZE);
+>  	is_swbp = is_swbp_insn(&old_opcode);
+>  
+> -	if (is_swbp_insn(new_opcode)) {
+> +	if (is_swbp_insn(insn)) {
+>  		if (is_swbp)		/* register: already installed? */
+>  			return 0;
+>  	} else {
+> @@ -401,10 +402,10 @@ static bool orig_page_is_identical(struct vm_area_struct *vma,
+>  
+>  static int __uprobe_write(struct vm_area_struct *vma,
+>  		struct folio_walk *fw, struct folio *folio,
+> -		unsigned long opcode_vaddr, uprobe_opcode_t opcode)
+> +		unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes)
+>  {
+> -	const unsigned long vaddr = opcode_vaddr & PAGE_MASK;
+> -	const bool is_register = !!is_swbp_insn(&opcode);
+> +	const unsigned long vaddr = insn_vaddr & PAGE_MASK;
+> +	const bool is_register = !!is_swbp_insn(insn);
+>  	bool pmd_mappable;
+>  
+>  	/* For now, we'll only handle PTE-mapped folios. */
+> @@ -429,7 +430,7 @@ static int __uprobe_write(struct vm_area_struct *vma,
+>  	 */
+>  	flush_cache_page(vma, vaddr, pte_pfn(fw->pte));
+>  	fw->pte = ptep_clear_flush(vma, vaddr, fw->ptep);
+> -	copy_to_page(fw->page, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE);
+> +	copy_to_page(fw->page, insn_vaddr, insn, nbytes);
+>  
+>  	/*
+>  	 * When unregistering, we may only zap a PTE if uffd is disabled and
+> @@ -489,13 +490,14 @@ static int __uprobe_write(struct vm_area_struct *vma,
+>  int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  		const unsigned long opcode_vaddr, uprobe_opcode_t opcode)
+>  {
+> -	return uprobe_write(auprobe, vma, opcode_vaddr, opcode, verify_opcode);
+> +	return uprobe_write(auprobe, vma, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE, verify_opcode);
+>  }
+>  
+>  int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> -		 const unsigned long opcode_vaddr, uprobe_opcode_t opcode, uprobe_write_verify_t verify)
+> +		 const unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes,
+> +		 uprobe_write_verify_t verify)
+>  {
+> -	const unsigned long vaddr = opcode_vaddr & PAGE_MASK;
+> +	const unsigned long vaddr = insn_vaddr & PAGE_MASK;
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	struct uprobe *uprobe;
+>  	int ret, is_register, ref_ctr_updated = 0;
+> @@ -505,7 +507,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  	struct folio *folio;
+>  	struct page *page;
+>  
+> -	is_register = is_swbp_insn(&opcode);
+> +	is_register = is_swbp_insn(insn);
+>  	uprobe = container_of(auprobe, struct uprobe, arch);
+>  
+>  	if (WARN_ON_ONCE(!is_cow_mapping(vma->vm_flags)))
+> @@ -528,7 +530,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  		goto out;
+>  	folio = page_folio(page);
+>  
+> -	ret = verify(page, opcode_vaddr, &opcode);
+> +	ret = verify(page, insn_vaddr, insn, nbytes);
+>  	if (ret <= 0) {
+>  		folio_put(folio);
+>  		goto out;
+> @@ -567,7 +569,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  	/* Walk the page tables again, to perform the actual update. */
+>  	if (folio_walk_start(&fw, vma, vaddr, 0)) {
+>  		if (fw.page == page)
+> -			ret = __uprobe_write(vma, &fw, folio, opcode_vaddr, opcode);
+> +			ret = __uprobe_write(vma, &fw, folio, insn_vaddr, insn, nbytes);
+>  		folio_walk_end(&fw, vma);
+>  	}
+>  
+> -- 
+> 2.49.0
+> 
 
---Sig_/UVAYDw9ciuOrU=ESLYfgJaS--
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
