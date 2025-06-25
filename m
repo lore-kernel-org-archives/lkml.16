@@ -1,448 +1,189 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C272FD898
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:46:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D307B261399
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:47:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750869996; cv=none; b=lddB0BZh7rB1dyl5D4jjkamqs9yFAeinb04mOmkU/Zj6LbcP4W7cvIblaPQcZRYkdNiMmyIzypW8366d1LgRScNxkgEMcObD2ws1XkPK4SXk2Vl7h/bmaHeS9C9FHQ2DzB/6JhAGAxhtPWis5VdFQfdPRjAvq8LQuw5rSaFmzuc=
+	t=1750870070; cv=none; b=eg4RlBqrOoRksqXq4RyyqSZuUQQ1h8M99kiiz24ivoOg6QlPEyA/gy4krkDvuxBZWP+Vuh6qWMqhLHqLlPOGdBcqBdoomArTH9mAd3DIVttJk8noUE3+8abKhO5bqVLvfLCEO/ZtdoWTkuKcPJJxl3qYZXQcF0F6y2/X6uAq63M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750869996; c=relaxed/simple;
-	bh=DA5tJI8u7p012a2ao+miV1C4Mleqf32OubhzFQ2ViO8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CMaTwPfthslXmIhgQTszUiRDMwzXAnobPZH5BfKqbvNge2IMWjmShZZbk27bmBQ6leUYIvycQPDpWsK/JYhMOoR3Nc/rnC4TOEtT7Vhp1EHvvwVhqCMi14OnR11jd1Womhbb7Wqf1tnffreJesVp56h7VYyWKOz2W/BOqEdGFDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=i4irj6ZO; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750870070; c=relaxed/simple;
+	bh=ZIcwd55I+y4/P3j3gLsFy59kLpT72V5RSK8H+BKGMpc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kvTTqMJ8l8pM2z8tzXCmLi/JE1ikvwA1YNI7PZkMlo2BoCd8pSkqq1Km1YHFJKGXtVXj2hhuV0ZP2m8M14DTrMo368ZUpDfg52hQ9Px/+YAaObDT0J5x+JKnyA2XqVWjZKUjF8/+H1OEgj6VSTayM8nr8DQQOqdGWrtSJW+qCWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hJyxPrLj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="i4irj6ZO"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id BBA1544384;
-	Wed, 25 Jun 2025 16:46:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750869992;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hJyxPrLj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750870067;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=zbSpydz2eJQQP997xNonpSsdHolKUbUJfT+KnBTHW6I=;
-	b=i4irj6ZOqZOCZtYn7GpCYJ8Yeh21ysw9X3NjMEmJmQ+M0Q4AnnOgvo6ndo6g8/yTfXA7eK
-	BNNzwqTqdR+ECFFrTh1Tp7ZaxEGS+HrpZyrWtKb8m0dqKAukTelaiYddO4MtTVlJwi/ycu
-	1HIqJ3s/NrZRRkdPfj1Oef+OD/aXmyFaQxEJLPj+xuou5tYQKxKOqM4dJ+8ISg2Pa8GrtK
-	lmTMubR7YB9FJ5XcNtbHbHqyzF8QaZ2mKIDldJu8dAKc6usGweFWXt6oHr9V2uNHkaPcJM
-	P8UZw1arHz/NIcAN7en0b8YQhM/dfB1PBBNbpAtHmYM6Slx55ZFigY0c1jdlng==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-Date: Wed, 25 Jun 2025 18:45:36 +0200
-Subject: [PATCH 32/32] drm/mcde: convert to the .attach_new op
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=9M1vHfXIFS9l+R39Mf9youJQuWwRJBkeTDzWO25k2Ts=;
+	b=hJyxPrLj/i8+FzXB4cFp1OGXESZHLUkEj7anSWhnSN0L7IaNH4rqY/SfwnC7gNLl9c2sqf
+	tRchCNX9CrTiVFNYdFUhTUpZsAQMs99a1P5YIGmvKVt5IJbhqzGMqt7HEf4SquCG3pzW48
+	JlLeNA+s/hQSTc+Ruw8l2sEmrIidA10=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-494-bEQgapodPSqnMQ8ZxcJDlw-1; Wed, 25 Jun 2025 12:47:45 -0400
+X-MC-Unique: bEQgapodPSqnMQ8ZxcJDlw-1
+X-Mimecast-MFC-AGG-ID: bEQgapodPSqnMQ8ZxcJDlw_1750870064
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-3a4eb6fcd88so12636f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:47:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750870064; x=1751474864;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9M1vHfXIFS9l+R39Mf9youJQuWwRJBkeTDzWO25k2Ts=;
+        b=CWUqQVv/gKKJ+67wJWXuTNK/zIzgnpoyDhgpX0yOD7tn1uSjb9pToHdeMHDyLLQ79a
+         Rc+ddckxJ1Vla3MoOk1Yyt6tGMPF9zXJn9OIk0l//tiqLopC6bLIOhZtHYhjAXUgVQzG
+         Phl/jDHar92jYCQqW31bQsnrszffzQePtZ2qiGxVEvtumKEHf18NAfxqaluxNZVnOYGa
+         W+6hH+26SF1604czl60SOUmW51HmakJPPPla9pZIrnPhatwZyySO5EmRC8Ec80c0jMTN
+         4Y5rjG1yddkNhpaRBy4IzNJLJmGe69+O3inxOJoQw6wz8qHidU/cmrMBGp4qFMpYTM3g
+         y+JA==
+X-Forwarded-Encrypted: i=1; AJvYcCXDQvVytBdd+g/tBYszFxOaGw7Z37T7YDyRHOcn6s9El6FcJWZkN8ijFRDOIPvFqTpZkrmMSejeiE69hsQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yygwwes3uSZNLvlFJ2WIesD9eARNE6MgXZMdtcBHp0vCPk0VSL1
+	IsHOZYt7VyZ+ea4pmxOFUV/O+e7Udv+5ufwJlLqisvLrnH14b5sJGmgZ/j2s3HauQlPjecOF/9R
+	u8dyZDXWrnKZxtNQnY8N1JU79fJuLzBMG630mcdix94QgY7/f6tq3eOBb3EDu1Oy8dQ==
+X-Gm-Gg: ASbGnctzGn9/wIHdMYowRGgdOMhNvB0b0tm7P/A7QAYIA9q6KK48e5ajavN+FP6AC6l
+	X1t74af3Blt6IgKtM8KVrL6Jaxo44MAxLtsdeUBX4vURLzkE57W/0n18mduAQBIb3cB2T4G5i/3
+	DbOSSLnXzy/OmxcN+wg8KeR3VJX498lcG0GfjIay0vBHh5V8DuCuiYtznx5Yc57hr+DIyqhgLXW
+	ZCWiHQw7/Bkv5KadtDbliOFHQ5C1DQPBcvp5VRGXAXmOB/hJXziVfyIhyCHWf8uwDV+lpoqDNut
+	Tg8bNr1DaVqVFWFOhbUSnb9wYFhFWnmsBNdf3vl7bnE7IOpG1yZvu+lK3SDNgRg0tBzfX8DJLFr
+	VCnfbNUqokUNcwbTrhqJhq425b/EVPVoyCD5uNubn7Bix
+X-Received: by 2002:a05:6000:1888:b0:3a4:f038:af74 with SMTP id ffacd0b85a97d-3a6ed65b664mr3237862f8f.51.1750870064314;
+        Wed, 25 Jun 2025 09:47:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF9YekvGRPkYe/kZTrXaL/81esEkFz4ElnXXiExctA2VcZJSnui1u8qYRsgiNhzuyyjmJbBvg==
+X-Received: by 2002:a05:6000:1888:b0:3a4:f038:af74 with SMTP id ffacd0b85a97d-3a6ed65b664mr3237838f8f.51.1750870063878;
+        Wed, 25 Jun 2025 09:47:43 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f12:1b00:5d6b:db26:e2b7:12? (p200300d82f121b005d6bdb26e2b70012.dip0.t-ipconnect.de. [2003:d8:2f12:1b00:5d6b:db26:e2b7:12])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80f2b8fsm5089801f8f.59.2025.06.25.09.47.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 09:47:43 -0700 (PDT)
+Message-ID: <db8ab8d0-20f5-4922-a1e2-6f7409747664@redhat.com>
+Date: Wed, 25 Jun 2025 18:47:42 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/1] mm/debug_vm_pgtable: Use a swp_entry_t input
+ value for swap tests
+To: Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+ Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Matthew Wilcox <willy@infradead.org>, LKML <linux-kernel@vger.kernel.org>,
+ linux-mm <linux-mm@kvack.org>, linux-s390@vger.kernel.org
+References: <20250623184321.927418-1-gerald.schaefer@linux.ibm.com>
+ <20250623184321.927418-2-gerald.schaefer@linux.ibm.com>
+ <9fb04185-5b71-46c0-b62c-0e0e6ee59e6e@arm.com>
+ <20250625182846.5bce1aaf@thinkpad-T15>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <20250625182846.5bce1aaf@thinkpad-T15>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-drm-dsi-host-no-device-ptr-v1-32-e36bc258a7c5@bootlin.com>
-References: <20250625-drm-dsi-host-no-device-ptr-v1-0-e36bc258a7c5@bootlin.com>
-In-Reply-To: <20250625-drm-dsi-host-no-device-ptr-v1-0-e36bc258a7c5@bootlin.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Inki Dae <inki.dae@samsung.com>, Jagan Teki <jagan@amarulasolutions.com>, 
- Marek Szyprowski <m.szyprowski@samsung.com>, 
- Jani Nikula <jani.nikula@linux.intel.com>, 
- Dmitry Baryshkov <lumag@kernel.org>
-Cc: Hui Pu <Hui.Pu@gehealthcare.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- linux-sunxi@lists.linux.dev, Luca Ceresoli <luca.ceresoli@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvfedvkecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieeiuedvffetgfeuudelheeutefggfejieettdetteekueeuueeukeevvedvueevnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgepvdeknecurfgrrhgrmhepihhnvghtpedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvpdhhvghloheplgduledvrdduieekrddujeekrdejhegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddvpdhrtghpthhtohepjhhonhgrsheskhifihgsohhordhsvgdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhsuhhngihisehlihhsthhsrdhlihhnuhigrdguvghvp
- dhrtghpthhtohepmhdrshiihihprhhofihskhhisehsrghmshhunhhgrdgtohhmpdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrrghrthgvnhdrlhgrnhhkhhhorhhstheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehnvghilhdrrghrmhhsthhrohhngheslhhinhgrrhhordhorhhgpdhrtghpthhtohepjhgrnhhirdhnihhkuhhlrgeslhhinhhugidrihhnthgvlhdrtghomh
-X-GND-Sasl: luca.ceresoli@bootlin.com
 
-This op does not pass any pointer to the DSI device, so the DSI host driver
-cannot store it.
+> [...]
+>>> @@ -1166,6 +1173,7 @@ static void __init init_fixed_pfns(struct pgtable_debug_args *args)
+>>>   
+>>>   static int __init init_args(struct pgtable_debug_args *args)
+>>>   {
+>>> +	unsigned long max_swap_offset;
+>>>   	struct page *page = NULL;
+>>>   	int ret = 0;
+>>>   
+>>> @@ -1248,6 +1256,11 @@ static int __init init_args(struct pgtable_debug_args *args)
+>>>   
+>>>   	init_fixed_pfns(args);
+>>>   
+>>> +	/* See generic_max_swapfile_size(): probe the maximum offset */
+>>> +	max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));
+>> Why not directly use generic_max_swapfile_size() which is doing exact same thing.
+>>
+>> unsigned long generic_max_swapfile_size(void)
+>> {
+>> 	return swp_offset(pte_to_swp_entry(
+>> 			swp_entry_to_pte(swp_entry(0, ~0UL)))) + 1;
+>> }
+> 
+> Good question. I just moved this code here from pte_swap_exclusive_tests(),
+> see above, and did not think about that. Now I also wonder why
+> generic_max_swapfile_size() wasn't used before.
+> 
+> But it is not exactly the same thing, there is an extra "+ 1" there.
+> Maybe that is the reason, but I don't really understand the details /
+> difference, and therefore would not want to change it.
+> 
+> David, do you remember why you didn't use generic_max_swapfile_size()
+> in your pte_swap_exclusive_tests()?
 
-This driver uses the DSI device format parameters in various places outside
-the .attach op, and currently it does so by storing a pointer to the struct
-mipi_dsi_device in two places: struct mcde and struct mcde_dsi. That's
-exactly what .attach_new aims at removing.
+Excellent question. If only I would remember :)
 
-Instead of the struct mipi_dsi_device, store:
+generic_max_swapfile_size() resides in mm/swapfile.c, which is only 
+around with CONFIG_SWAP.
 
- * a copy of the format parameters in struct mcde_dsi
- * a pointer to it in struct mcde
+It makes sense to have that function only if there are ... actual swapfiles.
 
-Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
----
- drivers/gpu/drm/mcde/mcde_display.c | 14 +++----
- drivers/gpu/drm/mcde/mcde_drm.h     |  3 +-
- drivers/gpu/drm/mcde/mcde_dsi.c     | 78 ++++++++++++++++++-------------------
- 3 files changed, 48 insertions(+), 47 deletions(-)
-
-diff --git a/drivers/gpu/drm/mcde/mcde_display.c b/drivers/gpu/drm/mcde/mcde_display.c
-index 70f8d92ed23a192f4cdb51c7f68b9973147b2113..6898353e944479b4fe8cdaa632ef87e062299c57 100644
---- a/drivers/gpu/drm/mcde/mcde_display.c
-+++ b/drivers/gpu/drm/mcde/mcde_display.c
-@@ -796,9 +796,9 @@ static void mcde_configure_dsi_formatter(struct mcde *mcde,
- 	 * 8 bit commands and DCS commands (notgen = not generic)
- 	 */
- 	val = MCDE_DSICONF0_CMD8 | MCDE_DSICONF0_DCSVID_NOTGEN;
--	if (mcde->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO)
-+	if (mcde->bus_fmt->mode_flags & MIPI_DSI_MODE_VIDEO)
- 		val |= MCDE_DSICONF0_VID_MODE_VID;
--	switch (mcde->mdsi->format) {
-+	switch (mcde->bus_fmt->format) {
- 	case MIPI_DSI_FMT_RGB888:
- 		val |= MCDE_DSICONF0_PACKING_RGB888 <<
- 			MCDE_DSICONF0_PACKING_SHIFT;
-@@ -1081,11 +1081,11 @@ static void mcde_setup_dsi(struct mcde *mcde, const struct drm_display_mode *mod
- 	u32 val;
- 
- 	dev_info(mcde->dev, "output in %s mode, format %dbpp\n",
--		 (mcde->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO) ?
-+		 (mcde->bus_fmt->mode_flags & MIPI_DSI_MODE_VIDEO) ?
- 		 "VIDEO" : "CMD",
--		 mipi_dsi_pixel_format_to_bpp(mcde->mdsi->format));
-+		 mipi_dsi_pixel_format_to_bpp(mcde->bus_fmt->format));
- 	formatter_cpp =
--		mipi_dsi_pixel_format_to_bpp(mcde->mdsi->format) / 8;
-+		mipi_dsi_pixel_format_to_bpp(mcde->bus_fmt->format) / 8;
- 	dev_info(mcde->dev, "Overlay CPP: %d bytes, DSI formatter CPP %d bytes\n",
- 		 cpp, formatter_cpp);
- 
-@@ -1117,7 +1117,7 @@ static void mcde_setup_dsi(struct mcde *mcde, const struct drm_display_mode *mod
- 	 * 192 for HDMI 16bpp
- 	 */
- 	fifo_wtrmrk = mode->hdisplay;
--	if (mcde->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO) {
-+	if (mcde->bus_fmt->mode_flags & MIPI_DSI_MODE_VIDEO) {
- 		fifo_wtrmrk = min(fifo_wtrmrk, 128);
- 		pkt_div = 1;
- 	} else {
-@@ -1132,7 +1132,7 @@ static void mcde_setup_dsi(struct mcde *mcde, const struct drm_display_mode *mod
- 	/* NOTE: pkt_div is 1 for video mode */
- 	pkt_size = (formatter_ppl * formatter_cpp) / pkt_div;
- 	/* Commands CMD8 need one extra byte */
--	if (!(mcde->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO))
-+	if (!(mcde->bus_fmt->mode_flags & MIPI_DSI_MODE_VIDEO))
- 		pkt_size++;
- 
- 	dev_dbg(mcde->dev, "DSI packet size: %d * %d bytes per line\n",
-diff --git a/drivers/gpu/drm/mcde/mcde_drm.h b/drivers/gpu/drm/mcde/mcde_drm.h
-index 23f9a6473d8ac0f91b3e3665f22e52ef8e696a17..842ca58543da7a075976cc33df707d78e096e82e 100644
---- a/drivers/gpu/drm/mcde/mcde_drm.h
-+++ b/drivers/gpu/drm/mcde/mcde_drm.h
-@@ -5,6 +5,7 @@
-  * (C) ST-Ericsson SA 2013
-  */
- #include <drm/drm_simple_kms_helper.h>
-+#include <drm/drm_mipi_dsi.h>
- 
- #ifndef _MCDE_DRM_H_
- #define _MCDE_DRM_H_
-@@ -74,7 +75,7 @@ struct mcde {
- 	struct drm_connector *connector;
- 	struct drm_simple_display_pipe pipe;
- 	struct mipi_dsi_host *dsi_host;
--	struct mipi_dsi_device *mdsi;
-+	struct mipi_dsi_bus_fmt *bus_fmt;
- 	bool dpi_output;
- 	s16 stride;
- 	enum mcde_flow_mode flow_mode;
-diff --git a/drivers/gpu/drm/mcde/mcde_dsi.c b/drivers/gpu/drm/mcde/mcde_dsi.c
-index b97b9541b6277ad3e024845d3bb61c9e73d627f7..c4225875b04ab440e3e926c976dd981f46dd3461 100644
---- a/drivers/gpu/drm/mcde/mcde_dsi.c
-+++ b/drivers/gpu/drm/mcde/mcde_dsi.c
-@@ -42,7 +42,7 @@ struct mcde_dsi {
- 	struct drm_panel *panel;
- 	struct drm_bridge *bridge_out;
- 	struct mipi_dsi_host dsi_host;
--	struct mipi_dsi_device *mdsi;
-+	struct mipi_dsi_bus_fmt bus_fmt;
- 	const struct drm_display_mode *mode;
- 	struct clk *hs_clk;
- 	struct clk *lp_clk;
-@@ -147,8 +147,8 @@ bool mcde_dsi_irq(struct mipi_dsi_host *host)
- 
- static void mcde_dsi_attach_to_mcde(struct mcde_dsi *d)
- {
--	d->mcde->mdsi = d->mdsi;
- 	d->mcde->dsi_host = &d->dsi_host;
-+	d->mcde->bus_fmt = &d->bus_fmt;
- 
- 	/*
- 	 * Select the way the DSI data flow is pushing to the display:
-@@ -162,23 +162,23 @@ static void mcde_dsi_attach_to_mcde(struct mcde_dsi *d)
- 	 * single frame on-demand updates with DRM for command mode
- 	 * displays (MCDE_COMMAND_ONESHOT_FLOW).
- 	 */
--	if (d->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO)
-+	if (d->bus_fmt.mode_flags & MIPI_DSI_MODE_VIDEO)
- 		d->mcde->flow_mode = MCDE_VIDEO_FORMATTER_FLOW;
- 	else
- 		d->mcde->flow_mode = MCDE_COMMAND_TE_FLOW;
- }
- 
- static int mcde_dsi_host_attach(struct mipi_dsi_host *host,
--				struct mipi_dsi_device *mdsi)
-+				const struct mipi_dsi_bus_fmt *bus_fmt)
- {
- 	struct mcde_dsi *d = host_to_mcde_dsi(host);
- 
--	if (mdsi->lanes > 2) {
-+	if (bus_fmt->lanes > 2) {
- 		DRM_ERROR("dsi device params invalid, 1 or 2 lanes supported\n");
- 		return -EINVAL;
- 	}
- 
--	d->mdsi = mdsi;
-+	d->bus_fmt = *bus_fmt;
- 	if (d->mcde)
- 		mcde_dsi_attach_to_mcde(d);
- 
-@@ -190,10 +190,10 @@ static int mcde_dsi_host_detach(struct mipi_dsi_host *host,
- {
- 	struct mcde_dsi *d = host_to_mcde_dsi(host);
- 
--	d->mdsi = NULL;
-+	memset(&d->mcde->bus_fmt, 0, sizeof(d->mcde->bus_fmt));
- 	if (d->mcde) {
--		d->mcde->mdsi = NULL;
- 		d->mcde->dsi_host = NULL;
-+		d->mcde->bus_fmt = NULL;
- 	}
- 
- 	return 0;
-@@ -378,7 +378,7 @@ static ssize_t mcde_dsi_host_transfer(struct mipi_dsi_host *host,
- }
- 
- static const struct mipi_dsi_host_ops mcde_dsi_host_ops = {
--	.attach = mcde_dsi_host_attach,
-+	.attach_new = mcde_dsi_host_attach,
- 	.detach = mcde_dsi_host_detach,
- 	.transfer = mcde_dsi_host_transfer,
- };
-@@ -426,7 +426,7 @@ static void mcde_dsi_setup_video_mode(struct mcde_dsi *d,
- 				      const struct drm_display_mode *mode)
- {
- 	/* cpp, characters per pixel, number of bytes per pixel */
--	u8 cpp = mipi_dsi_pixel_format_to_bpp(d->mdsi->format) / 8;
-+	u8 cpp = mipi_dsi_pixel_format_to_bpp(d->bus_fmt.format) / 8;
- 	u64 pclk;
- 	u64 bpl;
- 	int hfp;
-@@ -436,14 +436,14 @@ static void mcde_dsi_setup_video_mode(struct mcde_dsi *d,
- 	u32 val;
- 
- 	val = 0;
--	if (d->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
-+	if (d->bus_fmt.mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
- 		val |= DSI_VID_MAIN_CTL_BURST_MODE;
--	if (d->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
-+	if (d->bus_fmt.mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
- 		val |= DSI_VID_MAIN_CTL_SYNC_PULSE_ACTIVE;
- 		val |= DSI_VID_MAIN_CTL_SYNC_PULSE_HORIZONTAL;
- 	}
- 	/* RGB header and pixel mode */
--	switch (d->mdsi->format) {
-+	switch (d->bus_fmt.format) {
- 	case MIPI_DSI_FMT_RGB565:
- 		val |= MIPI_DSI_PACKED_PIXEL_STREAM_16 <<
- 			DSI_VID_MAIN_CTL_HEADER_SHIFT;
-@@ -516,7 +516,7 @@ static void mcde_dsi_setup_video_mode(struct mcde_dsi *d,
- 	 * 6 + 2 is HFP header + checksum
- 	 */
- 	hfp = (mode->hsync_start - mode->hdisplay) * cpp - 6 - 2;
--	if (d->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
-+	if (d->bus_fmt.mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
- 		/*
- 		 * Use sync pulse for sync: explicit HSA time
- 		 * 6 is HBP header + checksum
-@@ -596,21 +596,21 @@ static void mcde_dsi_setup_video_mode(struct mcde_dsi *d,
- 	bpl = pclk * mode->htotal; /* (1) picoseconds per line */
- 	dev_dbg(d->dev, "picoseconds per line: %llu\n", bpl);
- 	/* Multiply with bytes per second (3) */
--	bpl *= (d->mdsi->hs_rate / 8);
-+	bpl *= (d->bus_fmt.hs_rate / 8);
- 	/* Pixels per second (2) */
- 	bpl = DIV_ROUND_DOWN_ULL(bpl, 1000000); /* microseconds */
- 	bpl = DIV_ROUND_DOWN_ULL(bpl, 1000000); /* seconds */
- 	/* parallel transactions in all lanes */
--	bpl *= d->mdsi->lanes;
-+	bpl *= d->bus_fmt.lanes;
- 	dev_dbg(d->dev,
- 		"calculated bytes per line: %llu @ %d Hz with HS %lu Hz\n",
--		bpl, drm_mode_vrefresh(mode), d->mdsi->hs_rate);
-+		bpl, drm_mode_vrefresh(mode), d->bus_fmt.hs_rate);
- 
- 	/*
- 	 * 6 is header + checksum, header = 4 bytes, checksum = 2 bytes
- 	 * 4 is short packet for vsync/hsync
- 	 */
--	if (d->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
-+	if (d->bus_fmt.mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
- 		/* Set the event packet size to 0 (not used) */
- 		writel(0, d->regs + DSI_VID_BLKSIZE1);
- 		/*
-@@ -646,10 +646,10 @@ static void mcde_dsi_setup_video_mode(struct mcde_dsi *d,
- 	 * the line duration by 1 under very specific circumstances.
- 	 * Here we also imply that LP is used during burst EOL.
- 	 */
--	if (d->mdsi->lanes == 2 && (hsa & 0x01) && (hfp & 0x01)
--	    && (d->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST))
-+	if (d->bus_fmt.lanes == 2 && (hsa & 0x01) && (hfp & 0x01)
-+	    && (d->bus_fmt.mode_flags & MIPI_DSI_MODE_VIDEO_BURST))
- 		line_duration--;
--	line_duration = DIV_ROUND_CLOSEST(line_duration, d->mdsi->lanes);
-+	line_duration = DIV_ROUND_CLOSEST(line_duration, d->bus_fmt.lanes);
- 	dev_dbg(d->dev, "line duration %u bytes\n", line_duration);
- 	val = line_duration << DSI_VID_DPHY_TIME_REG_LINE_DURATION_SHIFT;
- 	/*
-@@ -665,7 +665,7 @@ static void mcde_dsi_setup_video_mode(struct mcde_dsi *d,
- 	 * See the manual figure 657 page 2203 for understanding the impact
- 	 * of the different burst mode settings.
- 	 */
--	if (d->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
-+	if (d->bus_fmt.mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
- 		int blkeol_pck, blkeol_duration;
- 		/*
- 		 * Packet size at EOL for burst mode, this is only used
-@@ -716,7 +716,7 @@ static void mcde_dsi_setup_video_mode(struct mcde_dsi *d,
- 		 * according to figure 565 page 2202?
- 		 */
- 		blkeol_duration = DIV_ROUND_CLOSEST(blkeol_pck + 6,
--						    d->mdsi->lanes);
-+						    d->bus_fmt.lanes);
- 		dev_dbg(d->dev, "BLKEOL duration: %d clock cycles\n",
- 			blkeol_duration);
- 
-@@ -757,7 +757,7 @@ static void mcde_dsi_start(struct mcde_dsi *d)
- 		DSI_MCTL_MAIN_DATA_CTL_BTA_EN |
- 		DSI_MCTL_MAIN_DATA_CTL_READ_EN |
- 		DSI_MCTL_MAIN_DATA_CTL_REG_TE_EN;
--	if (!(d->mdsi->mode_flags & MIPI_DSI_MODE_NO_EOT_PACKET))
-+	if (!(d->bus_fmt.mode_flags & MIPI_DSI_MODE_NO_EOT_PACKET))
- 		val |= DSI_MCTL_MAIN_DATA_CTL_HOST_EOT_GEN;
- 	writel(val, d->regs + DSI_MCTL_MAIN_DATA_CTL);
- 
-@@ -785,9 +785,9 @@ static void mcde_dsi_start(struct mcde_dsi *d)
- 	 * all the lines.
- 	 */
- 	val = 0x0f << DSI_MCTL_MAIN_PHY_CTL_WAIT_BURST_TIME_SHIFT;
--	if (d->mdsi->lanes == 2)
-+	if (d->bus_fmt.lanes == 2)
- 		val |= DSI_MCTL_MAIN_PHY_CTL_LANE2_EN;
--	if (!(d->mdsi->mode_flags & MIPI_DSI_CLOCK_NON_CONTINUOUS))
-+	if (!(d->bus_fmt.mode_flags & MIPI_DSI_CLOCK_NON_CONTINUOUS))
- 		val |= DSI_MCTL_MAIN_PHY_CTL_CLK_CONTINUOUS;
- 	val |= DSI_MCTL_MAIN_PHY_CTL_CLK_ULPM_EN |
- 		DSI_MCTL_MAIN_PHY_CTL_DAT1_ULPM_EN |
-@@ -811,7 +811,7 @@ static void mcde_dsi_start(struct mcde_dsi *d)
- 		DSI_MCTL_MAIN_EN_CKLANE_EN |
- 		DSI_MCTL_MAIN_EN_DAT1_EN |
- 		DSI_MCTL_MAIN_EN_IF1_EN;
--	if (d->mdsi->lanes == 2)
-+	if (d->bus_fmt.lanes == 2)
- 		val |= DSI_MCTL_MAIN_EN_DAT2_EN;
- 	writel(val, d->regs + DSI_MCTL_MAIN_EN);
- 
-@@ -820,7 +820,7 @@ static void mcde_dsi_start(struct mcde_dsi *d)
- 	val = DSI_MCTL_MAIN_STS_PLL_LOCK |
- 		DSI_MCTL_MAIN_STS_CLKLANE_READY |
- 		DSI_MCTL_MAIN_STS_DAT1_READY;
--	if (d->mdsi->lanes == 2)
-+	if (d->bus_fmt.lanes == 2)
- 		val |= DSI_MCTL_MAIN_STS_DAT2_READY;
- 	while ((readl(d->regs + DSI_MCTL_MAIN_STS) & val) != val) {
- 		/* Sleep for a millisecond */
-@@ -839,7 +839,7 @@ static void mcde_dsi_start(struct mcde_dsi *d)
- 	 * If we enable low-power mode here,
- 	 * then display updates become really slow.
- 	 */
--	if (d->mdsi->mode_flags & MIPI_DSI_MODE_LPM)
-+	if (d->bus_fmt.mode_flags & MIPI_DSI_MODE_LPM)
- 		val |= DSI_CMD_MODE_CTL_IF1_LP_EN;
- 	val &= ~DSI_CMD_MODE_CTL_IF1_ID_MASK;
- 	writel(val, d->regs + DSI_CMD_MODE_CTL);
-@@ -861,12 +861,12 @@ void mcde_dsi_enable(struct drm_bridge *bridge)
- 	int ret;
- 
- 	/* Copy maximum clock frequencies */
--	if (d->mdsi->lp_rate)
--		lp_freq = d->mdsi->lp_rate;
-+	if (d->bus_fmt.lp_rate)
-+		lp_freq = d->bus_fmt.lp_rate;
- 	else
- 		lp_freq = DSI_DEFAULT_LP_FREQ_HZ;
--	if (d->mdsi->hs_rate)
--		hs_freq = d->mdsi->hs_rate;
-+	if (d->bus_fmt.hs_rate)
-+		hs_freq = d->bus_fmt.hs_rate;
- 	else
- 		hs_freq = DSI_DEFAULT_HS_FREQ_HZ;
- 
-@@ -912,7 +912,7 @@ void mcde_dsi_enable(struct drm_bridge *bridge)
- 	/* Start up the hardware */
- 	mcde_dsi_start(d);
- 
--	if (d->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO) {
-+	if (d->bus_fmt.mode_flags & MIPI_DSI_MODE_VIDEO) {
- 		/* Set up the video mode from the DRM mode */
- 		mcde_dsi_setup_video_mode(d, d->mode);
- 
-@@ -943,7 +943,7 @@ void mcde_dsi_enable(struct drm_bridge *bridge)
- 		 * If we enable low-power mode here
- 		 * the display updates become really slow.
- 		 */
--		if (d->mdsi->mode_flags & MIPI_DSI_MODE_LPM)
-+		if (d->bus_fmt.mode_flags & MIPI_DSI_MODE_LPM)
- 			val |= DSI_CMD_MODE_CTL_IF1_LP_EN;
- 		val &= ~DSI_CMD_MODE_CTL_IF1_ID_MASK;
- 		writel(val, d->regs + DSI_CMD_MODE_CTL);
-@@ -958,7 +958,7 @@ static void mcde_dsi_bridge_mode_set(struct drm_bridge *bridge,
- {
- 	struct mcde_dsi *d = bridge_to_mcde_dsi(bridge);
- 
--	if (!d->mdsi) {
-+	if (!d->bus_fmt.lanes) {
- 		dev_err(d->dev, "no DSI device attached to encoder!\n");
- 		return;
- 	}
-@@ -967,7 +967,7 @@ static void mcde_dsi_bridge_mode_set(struct drm_bridge *bridge,
- 
- 	dev_info(d->dev, "set DSI master to %dx%d %u Hz %s mode\n",
- 		 mode->hdisplay, mode->vdisplay, mode->clock * 1000,
--		 (d->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO) ? "VIDEO" : "CMD"
-+		 (d->bus_fmt.mode_flags & MIPI_DSI_MODE_VIDEO) ? "VIDEO" : "CMD"
- 		);
- }
- 
-@@ -1021,7 +1021,7 @@ void mcde_dsi_disable(struct drm_bridge *bridge)
- 	struct mcde_dsi *d = bridge_to_mcde_dsi(bridge);
- 	u32 val;
- 
--	if (d->mdsi->mode_flags & MIPI_DSI_MODE_VIDEO) {
-+	if (d->bus_fmt.mode_flags & MIPI_DSI_MODE_VIDEO) {
- 		/* Stop video mode */
- 		val = readl(d->regs + DSI_MCTL_MAIN_DATA_CTL);
- 		val &= ~DSI_MCTL_MAIN_DATA_CTL_VID_EN;
-@@ -1082,7 +1082,7 @@ static int mcde_dsi_bind(struct device *dev, struct device *master,
- 	}
- 	d->mcde = mcde;
- 	/* If the display attached before binding, set this up */
--	if (d->mdsi)
-+	if (d->bus_fmt.lanes)
- 		mcde_dsi_attach_to_mcde(d);
- 
- 	/* Obtain the clocks */
+These checks here are independent of CONFIG_SWAP (at least in theory -- 
+for migration entries etc we don't need CONFIG_SWAP), and we simply want 
+to construct a swap PTE with all possible bits set.
 
 -- 
-2.49.0
+Cheers,
+
+David / dhildenb
 
