@@ -1,109 +1,159 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AD825E44D
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C09225DCE3;
+	Wed, 25 Jun 2025 13:00:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750856349; cv=none; b=ubsLk0KPLF+V8aJGvpTewErYpzztwnPbjVy1m6rmFrjDOq/qW0q78kbK/kQxniQ+jNn1F7nbBJiCFXnUwTgtZs15/xsifQlucuSz+sqPI4yiSRmIqFQM5wOvBUxd2dWIAv9gvNrmvL1q9LGDJ/ymoaLUvBYKYThjVNt4Q53+Zuk=
+	t=1750856406; cv=none; b=Eb6nHZwR/HJQPb1zl3YT6+kwN3Vr4jaCE5dLEBI9UQliVlu5gPo3BX0vwiFEd5Lh1A8b1Y/cjsWNw2S+8YW+OG5xq0dBDQJERQQ5xKUbdejw0shN4vHiRDGAaKXRpdgL2lSH/5lhmx+xgYwpiRLSnmunp92gufP5QO051WG5G/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750856349; c=relaxed/simple;
-	bh=omSb4qtffp8wKfjxeF+cs4XkxHLiftOc0485WaPmKr4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=X15sU6ZZdvTZmdtCoj4eDLhZDZKUh0zZ7bl3d/W14aZ5jryaTjR38b43wLYY640jNtz9Bz4Yqn5/QtnTGZ2aWwEcr9NYcamJI4O9YTUwlMlEqgg2RNUGBDQHg3Yglr8NB+odjZqNTTCENc8ibFbvQiCc4wiihIoxJ1J12CMfo/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YgD2rISE; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750856406; c=relaxed/simple;
+	bh=vHZOLOxUOXqLChOAWe78z0H43RWaYWuJUBxuOWinPSk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YT/yXlIcqx9gkl0F0RAvO3m+dxZgIy154blL/ny+AHFJrJwwny19Imki4S7UT9XmGx6Q7BQ5MDC/8qeRUP3lWLWkyB1dBcSAk1nGEhcepWetP7oIhczeo7subOhCMUpmJZuS1nm7g8iubJqcCqPRKtwFSRHGi17uxrAOuw+LciM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B+FSU+Q1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YgD2rISE"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b3184712fd8so5148984a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:59:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750856346; x=1751461146; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qxIJ4aQC+IjPoRxmkOWSPu5mR2v1UrY8osqVxd/rWGo=;
-        b=YgD2rISEmIjCkeWL/GZXsDdayMEREwYQ72YwmK8Q7XiBgVMKgtr1mKgNy/agb5bljK
-         1bPr8VlnBGqZ3DtaHo3CB9JSTzgrfia6iZWyP0ssZ9+VFW04VKYN1z11Tu8mdnWTryZ3
-         cu7JgJX42jDoQoAGaOVcp/6Vc6/mcwh2lCNC1b+RD5ifEMeqR6+zVW5ShTCH6fzDrk9U
-         1LafOplOV0jW+STFin7QukSMGb/W9HCwRt900K+DpsAucaBDkmV77m+WegZmHvcAbMug
-         k/K1XjdTH0TI5GAh7gaZMEk0HR1eHW63xpxicPOm8aO9ot3lMI0vTOlN/7/ymsHSP9yM
-         M4VQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750856346; x=1751461146;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qxIJ4aQC+IjPoRxmkOWSPu5mR2v1UrY8osqVxd/rWGo=;
-        b=IZzojj3qxaCxo8+0hUFDveVy5r3Sg3/ue6ieQSYwbZl11v8+641kak2VazzVSfn3F/
-         Q0NyKV9dnMl3zJfaFm0iuznJ1nL2dARf08kMebumv3sgyd7bKlTLYQwv7hqTePo0eBAq
-         HAMbWxJc2HTwajRhk3J5YVCULKf65InISCQ4UCXSEGuUqZV8INbL3QFYRB2E/4aopBGl
-         cNc8Wgi9/P0MpFVyze9b+IYdQTGl1wA/4evia3onE5pVuESLC3XHHDr9F8lJELjh2SJR
-         IkolzOFEa2897nGhSTlXv/7j5kHl23ZLyUmqvPYRB1qQIX1gdPNVQKbUA69bECozXjK1
-         +yaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX2pJFDixjPHOSPh1Gq1f6Jf7BoWMwrZtPYqT6Jree5Bu+7bHoohaHB/Bbrnc9zM8u2zfOh2jtElzED6ys=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOZfnPmFybArg0TQveFa9w9NdSIgIzzUZd2tU/KfQUrJpWLjyp
-	Tk7UxvhWipVhJShtdFnnHKpNkaIqI9JiyrDOa+/op5+x8u8FHwvS6wPN3qrmtW6Ujt/0WRmWKcu
-	1Z0CP6g==
-X-Google-Smtp-Source: AGHT+IEhIwcr6ikR86NXDpgfcAQublPKVJCRuEFifK28YdTxbvKmmfgddvnr2t043GixUvzzZ12CrvVkj/A=
-X-Received: from pjj15.prod.google.com ([2002:a17:90b:554f:b0:311:eb65:e269])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2f0c:b0:315:9ac2:8700
- with SMTP id 98e67ed59e1d1-315f269caabmr4382059a91.24.1750856346092; Wed, 25
- Jun 2025 05:59:06 -0700 (PDT)
-Date: Wed, 25 Jun 2025 05:59:04 -0700
-In-Reply-To: <24675ed2-e3ae-4473-9d8e-acd378da220c@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B+FSU+Q1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 213F3C4CEEA;
+	Wed, 25 Jun 2025 13:00:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750856405;
+	bh=vHZOLOxUOXqLChOAWe78z0H43RWaYWuJUBxuOWinPSk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B+FSU+Q1GU523W8SJnwaLVuoYap1xOesCc60d/mSus1f7T2WoJ2Nxt2Yo7Vw+4Xv/
+	 /4Cjban+Zw1RtQQr7WECEv5IDDV3PYhmuxJQpdRztu0IjQNU/a3wtUvA4uRjYEvzJ3
+	 XdpQJOp2qYgRU9i2s1FWZJbWuAuz1zII7KWihOOQg0pOlQ2YbZrLI8xi5K6Sz8toi4
+	 +0ub2tsoSmoC7udguAeOgJCZiuScSxzBCmZOZ9V8QeIX8BmymloZyLIccCky1DPx35
+	 3N4bt/x9VxRkB0ksQZxqzQ4QvQsYuI5ZbxPOzidXMLXl91Wg9lFOEoMp6xmYW0l3Ia
+	 +ANCgGeuxNNvQ==
+Date: Wed, 25 Jun 2025 14:00:01 +0100
+From: Conor Dooley <conor@kernel.org>
+To: ALOK TIWARI <alok.a.tiwari@oracle.com>
+Cc: conor.dooley@microchip.com, daire.mcnamara@microchip.com,
+	mturquette@baylibre.com, sboyd@kernel.org,
+	linux-riscv@lists.infradead.org, linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [External] : Re: [PATCH] clk: microchip: mpfs: Fix incorrect
+ MSSPLL ID in error message
+Message-ID: <20250625-reconvene-lyricist-8bfbf0c6ee36@spud>
+References: <20250622180352.4151679-1-alok.a.tiwari@oracle.com>
+ <20250624-monotype-disorder-aedee5ef7cfa@spud>
+ <cf197270-bdca-4624-a2ad-9bb56429b5b7@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250610175424.209796-1-Neeraj.Upadhyay@amd.com>
- <20250610175424.209796-4-Neeraj.Upadhyay@amd.com> <20250623114910.GGaFk_NqzGmR81fG8f@fat_crate.local>
- <24675ed2-e3ae-4473-9d8e-acd378da220c@amd.com>
-Message-ID: <aFvymAS-pXMwkmjX@google.com>
-Subject: Re: [RFC PATCH v7 03/37] x86/apic: KVM: Deduplicate APIC vector =>
- register+bit math
-From: Sean Christopherson <seanjc@google.com>
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
-Cc: Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org, tglx@linutronix.de, 
-	mingo@redhat.com, dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com, 
-	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com, 
-	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org, 
-	hpa@zytor.com, peterz@infradead.org, pbonzini@redhat.com, kvm@vger.kernel.org, 
-	kirill.shutemov@linux.intel.com, huibo.wang@amd.com, naveen.rao@amd.com, 
-	francescolavra.fl@gmail.com, tiala@microsoft.com
-Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="lSQe9zTW71F2Yj1B"
+Content-Disposition: inline
+In-Reply-To: <cf197270-bdca-4624-a2ad-9bb56429b5b7@oracle.com>
 
-On Wed, Jun 25, 2025, Neeraj Upadhyay wrote:
-> 
-> 
-> On 6/23/2025 5:19 PM, Borislav Petkov wrote:
-> > On Tue, Jun 10, 2025 at 11:23:50PM +0530, Neeraj Upadhyay wrote:
-> >> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-> >> index 23d86c9750b9..c84d4e86fe4e 100644
-> >> --- a/arch/x86/include/asm/apic.h
-> >> +++ b/arch/x86/include/asm/apic.h
-> >> @@ -488,11 +488,14 @@ static inline void apic_setup_apic_calls(void) { }
-> >>  
-> >>  extern void apic_ack_irq(struct irq_data *data);
-> >>  
-> >> +#define APIC_VECTOR_TO_BIT_NUMBER(v) ((unsigned int)(v) % 32)
-> >> +#define APIC_VECTOR_TO_REG_OFFSET(v) ((unsigned int)(v) / 32 * 0x10)
-> > 
-> > Dunno - I'd probably shorten those macro names:
-> > 
-> > APIC_VEC_TO_BITNUM()
-> > APIC_VEC_TO_REGOFF()
-> > 
-> > because this way of shortening those words is very common and is still very
-> > readable, even if not fully written out...
-> > 
-> 
-> Sounds good to me. Will change this in next version (will also wait for Sean's
-> comment on this).
 
-My vote is for the long names.  I find REG_OFFSET in particular to be much more
-self-documenting.  My brain gets there eventually with REGOFF, but I just don't
-see the point in shortening the names.  The only uses where line lengths get a
-bit too long are apic_set_isr() and apic_clear_isr(), and the lines are still
-quite long with the shorter names.
+--lSQe9zTW71F2Yj1B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jun 24, 2025 at 10:39:16PM +0530, ALOK TIWARI wrote:
+>=20
+>=20
+> On 6/24/2025 9:29 PM, Conor Dooley wrote:
+> > On Sun, Jun 22, 2025 at 11:03:49AM -0700, Alok Tiwari wrote:
+> > > The error message in mpfs_clk_register_mssplls() incorrectly
+> > > printed a constant CLK_MSSPLL_INTERNAL instead of the actual
+> > > PLL ID that failed to register.
+> > Huh, that's weird. Did you actually encounter this happening, or is this
+> > some sort of patch based on the output from a tool?
+> > I ask because I don't see how this could ever actually report a
+> > constant, when the array it loops over only has a single element.
+> > Feels like we should just do something like the following (if we do
+> > anything at all)
+> >=20
+> > Cheers,
+> > Conor.
+> >=20
+> > diff --git a/drivers/clk/microchip/clk-mpfs.c b/drivers/clk/microchip/c=
+lk-mpfs.c
+> > index c22632a7439c5..ed6d5e6ff98ec 100644
+> > --- a/drivers/clk/microchip/clk-mpfs.c
+> > +++ b/drivers/clk/microchip/clk-mpfs.c
+> > @@ -148,22 +148,18 @@ static struct mpfs_msspll_hw_clock mpfs_msspll_cl=
+ks[] =3D {
+> >   };
+> >   static int mpfs_clk_register_mssplls(struct device *dev, struct mpfs_=
+msspll_hw_clock *msspll_hws,
+> > -				     unsigned int num_clks, struct mpfs_clock_data *data)
+> > +				     struct mpfs_clock_data *data)
+> >   {
+> > -	unsigned int i;
+> > +	struct mpfs_msspll_hw_clock *msspll_hw =3D &msspll_hws[0];
+> >   	int ret;
+> > -	for (i =3D 0; i < num_clks; i++) {
+> > -		struct mpfs_msspll_hw_clock *msspll_hw =3D &msspll_hws[i];
+> > +	msspll_hw->base =3D data->msspll_base;
+> > +	ret =3D devm_clk_hw_register(dev, &msspll_hw->hw);
+> > +	if (ret)
+> > +		return dev_err_probe(dev, ret, "failed to register msspll id: %d\n",
+> > +				     CLK_MSSPLL_INTERNAL);
+> > -		msspll_hw->base =3D data->msspll_base;
+> > -		ret =3D devm_clk_hw_register(dev, &msspll_hw->hw);
+> > -		if (ret)
+> > -			return dev_err_probe(dev, ret, "failed to register msspll id: %d\n",
+> > -					     CLK_MSSPLL_INTERNAL);
+> > -
+> > -		data->hw_data.hws[msspll_hw->id] =3D &msspll_hw->hw;
+> > -	}
+> > +	data->hw_data.hws[msspll_hw->id] =3D &msspll_hw->hw;
+> >   	return 0;
+> >   }
+> > @@ -386,8 +382,7 @@ static int mpfs_clk_probe(struct platform_device *p=
+dev)
+> >   	clk_data->dev =3D dev;
+> >   	dev_set_drvdata(dev, clk_data);
+> > -	ret =3D mpfs_clk_register_mssplls(dev, mpfs_msspll_clks, ARRAY_SIZE(m=
+pfs_msspll_clks),
+> > -					clk_data);
+> > +	ret =3D mpfs_clk_register_mssplls(dev, mpfs_msspll_clks, clk_data);
+> >   	if (ret)
+> >   		return ret;
+>=20
+>=20
+> Thanks Conor. This patch based on static tool.
+>=20
+> You are right, there is only a single MSSPLL internal clock, so the loop
+> isn't strictly necessary.
+> We could either remove the loop entirely (as you suggested),
+> or alternatively, just tweak the error message to something like:
+> "failed to register MSSPLL internal id: %d\n"
+
+The loop doesn't do anything, so it should probably be removed.
+
+> This would help distinguish it from the error messages used for the MSSPLL
+> output and cfg clocks.
+>=20
+> I also noticed that similar generic messages are used elsewhere, like:
+> "failed to register clock id: %d\n" in mpfs_clk_register_cfgs()
+> "failed to register clock id: %d\n" in mpfs_clk_register_periphs()
+>=20
+> Would it make sense to update those as well for clarity, or do you think
+> it's better to keep the patch minimal and leave them as is?
+
+I dunno, I don't think there's anything particularly wrong with those,
+the IDs are unique across the whole driver. You need to look up the IDs
+anyway to understand the error message, so changing those prints
+provides no extra info IMO.
+
+--lSQe9zTW71F2Yj1B
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaFvy0QAKCRB4tDGHoIJi
+0pmvAQCVowLYQ+nseeBVvAj1iEHXJVREPX47v1J5Bfg4zIr95AEA6sXHshThgwct
+aE6P6LFHjkPucomg+AlA48SgVrTcpwU=
+=nvzq
+-----END PGP SIGNATURE-----
+
+--lSQe9zTW71F2Yj1B--
