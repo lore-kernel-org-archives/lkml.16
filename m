@@ -1,198 +1,239 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6686319D07E;
-	Wed, 25 Jun 2025 15:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B1E262FF1;
+	Wed, 25 Jun 2025 15:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750863759; cv=none; b=aosMqpvhIIoiHZM3nNk4HausR+S5r63TBEu3Vnekxd0VopRw75/fuyawbz/FLZRUThpEF9nuP66XtAKtNwCVpwhyf92+8OfKqrpwlShPXoXsi1+N+S11n/jp8J8GYwe5ps23iJxBSIrvegDRUg9iHaUebiUmXIQKN2JcVTGJ2UA=
+	t=1750863880; cv=none; b=XOrBmKMCqmznMtZk6tzh4ofjTSLn9XR2S2PXWLNQHu72DFuaWeg+RHQS8Q2tPFDqHhcxxl11GJxDvIcoOy2lbVJNAZtWeVOEEif4jAcFGsFnQbAnLjBtQbuho07G4ZuadUmHhm2q90W322wf7Vgqpq8ROYBgMhRLB4uOJhaEVxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750863759; c=relaxed/simple;
-	bh=WSAs/XlrvMWOmX/zE5KdDXxcjmxX0zhDxhinjFuFuC4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O2EKisAkVaWO9J9I5oJOIAmRpY2N5lJNf5uMVL+Cl8Z4DlunGQBqR50rocH0qammSEG68qIkm7eWkQnreT3cW1F/iL6r5PGwaDYZPKEBLAyIXTCXHgsgiZ0dlUMaueoKQ0WppiKu1N/oF39ZTNuFtQtFrpHEu/7kzFVxiQNvAUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HEAheYkO; arc=none smtp.client-ip=209.85.221.47
+	s=arc-20240116; t=1750863880; c=relaxed/simple;
+	bh=ZNB3XhrTzyPjApmhZf4sMBMt2qivNHgeklldzwm7ilE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=a8FirAR3RtkEu5ZRit/77IKwcQaUVXjDVGyJetffgUyVaLxr4kkwlodL6U+Bm2KTaWQi9gwExQ9rDHg9wJ6B7cx/wbQcCCHT4TxERWdw2N+aVVRIB889kEEo0bHYdRJUHLUoCNV+reRm2A2UmzC6qK5Vy20YK/wqvqJNBFDKEFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KVTmxMNQ; arc=none smtp.client-ip=209.85.214.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HEAheYkO"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3a577ab8c34so932798f8f.3;
-        Wed, 25 Jun 2025 08:02:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KVTmxMNQ"
+Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-23694cec0feso19516265ad.2;
+        Wed, 25 Jun 2025 08:04:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750863755; x=1751468555; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QamFA6yvN7ODtshGR3J6pQWh2DuwAqjt13u4C6QWdt4=;
-        b=HEAheYkOqSbtghpew83T8rnjmZVFkK4bvNjkJHzfmUGHDfNDsuRVU/s4t14qnTEFNb
-         p5IGwBBlF8C7hyEayA73EBGjyM97sXHe9/uFlYkwqiHkFV+XHeji4BvxKaIGKUdiZZC4
-         ax/ckE4E/2zuVyOIKj7PSTjfmxt1nuAY22Z0ZvbYsNkFRnf01rgQ4Y/DpRq36hRUEl8O
-         HROBOkc0OqelMD0uTjPyl6KI5bIYz3K8tRoFQbybjfIVMr1TI7YxaDJuoYLTooJ/rfRN
-         ju7laAWARREZou/4OL0ivgNEB0HpPLymhKw8S/bf1KyjCXN3za4sCEeoUS1AQ5xbDgLq
-         AZ7A==
+        d=gmail.com; s=20230601; t=1750863878; x=1751468678; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=39bZ4LirHO1x5OQItaEAejSwWpOWeNe8ZeqxJzEyH7w=;
+        b=KVTmxMNQw/az4/yyDfBa5PEIjmSsBit7LlMciCj0C75lGnsXLddtx9oU6KWs0gVQxQ
+         rb0vYW6LBs7ts7puAybUpKujav1flaql0MNzBBzY9uDzlQpGigRWhvvCklerrbPqQbhc
+         gxPR3dKDHSPC+H6Zapt0Ue6uAkspww12FlsQLjOMf8pXrNrcKmSWbPhzzZw/paL8NEX9
+         Uii59s7abpk90E/JW8O9WfubSU1wY0kauBYocC5rANCVKrKe536EBa5vlg+ZVIsQgeWg
+         x3BT+Lp2hvcS52kKt63Fttvc7MLVXeClyRC+xNRR7Fw40j5qW6y7Ce6mU3xRnhZuIuLb
+         yrEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750863755; x=1751468555;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1750863878; x=1751468678;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QamFA6yvN7ODtshGR3J6pQWh2DuwAqjt13u4C6QWdt4=;
-        b=FhbTjbBpmzHrd1rRqCHC9wWI5R/9tiQErRk25541CAgr/UQLdzlefUW1Y0Ubum6Rmt
-         RB9SEHfD81RhLHB8wFiDULphdNEbbR0LBydLskvihjyJCS1uhL+Lvea73g7v6kvN09Dl
-         XMMyUaCYW0qGti7rpCQtg3nnBb6nkEvIJRqXBKEYnCukprzQiIma9gAdIIsRYZwK2gvq
-         7nLSzYZiskqTcuGne+MbKUYhPDArLNdXzDdN974vwHENw9N8qf7/IzRr4walj8Elz4XA
-         Gv2eVURVW/v2toui39moRrsrJsry8lfAx4HtqN+ZxDytXBmWVZsctZEZ9RlaznSR787Q
-         Rvaw==
-X-Forwarded-Encrypted: i=1; AJvYcCUII6VZC6cj8wpsd+O6wu6Fa+42C8r3FO34+R7Tayyq9fWF/UfB7abQ2hmt+HV344DhLxZNe8pnSE0=@vger.kernel.org, AJvYcCVayjjb3xwfpwzc0O+SYq2TFffo70pgVNhbWlR0uuDPe/mXYLcowtxc7tX0MMUsThJvBdbV230bc34gvJsW@vger.kernel.org
-X-Gm-Message-State: AOJu0YwXpk1AN+4VIEOLUnj61KWZkgbKmmHvodjvWbPEd9DMe3778nuN
-	uu+jcXASYLP0zEis8S3zaJxOBCDsVTat+TBxnj31vj7MPAcy37WIxsA=
-X-Gm-Gg: ASbGncvjr97ELB/c1BINSJu6iEq9xTrNwKWh4OaFf6R3Sd8PaKJ8woZMHLo1RpRWmDc
-	lZ6vFND3h+MMp57QZTWifAcCalrRscz+hhbjqRYIXrTJzN1yseZnWE/4Etyw3SwK5bQ/8QtfaVd
-	VI3H3ZhZat02CAKF7NBSmuvqj+H5DEunBrw75zkXNlCdnIzkXWnZP5GtpkNMsR22lzqJnuY/Tym
-	A4MLV9aFcgD3m+UXJuMdutsAu595UPUllKNaUb3V90c/eSdTLf6r9GMg6uLC5nsY1RvLdTfwWny
-	THvNCXV22YKSuXqlPC00vZ1MtRBMGSScI31hGGJA14o5J2oRbPwmM98XnVd7WnG/JDtKFKuvKqi
-	6+k/s2tEVnStkNEKhJFGDy1PpjFnReQ==
-X-Google-Smtp-Source: AGHT+IGEBBqo8CTkqEBEYNyvmiu/os9UVuTbwz2AcxEeNVTUJsIKircUofrp4w17i/bjIq2dnNMIQQ==
-X-Received: by 2002:a05:6000:230d:b0:3a5:324a:9bd with SMTP id ffacd0b85a97d-3a6ed608ffdmr1076168f8f.2.1750863753744;
-        Wed, 25 Jun 2025 08:02:33 -0700 (PDT)
-Received: from localhost (238.red-80-39-144.dynamicip.rima-tde.net. [80.39.144.238])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233c749sm23165795e9.4.2025.06.25.08.02.32
+        bh=39bZ4LirHO1x5OQItaEAejSwWpOWeNe8ZeqxJzEyH7w=;
+        b=wVkc7wURYeSwpIcDz10IdIBRJOgRfqylEXEPhImikm0DZD/azSjvm5Ew1aM4uoaxRE
+         KxrQCybqWJ9sLcJlC9Rteh5JlsYSD3/ulI+15DDkCoVoJfjpdJiKIu2VfoDMk2baXKOB
+         KRs4K9FjdoCIvymRJY5cEuSYA0+FpB1Zkal4kwbYy9ElJN+Tn0KpVvxagGBmzd3QErac
+         fhWR2/O0Dsjqhz4JUahBdbDPL8zlvTQkuJ5Veb17Tku6QyXT03sI95Poij8MM712afmC
+         oPZt5id9URSt4WKF5v6GdAlvel14VW8NCwVxnGpWJ+AHZKa7vrvZloJo1BGcgc5hWnsY
+         PBCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXx+rcrr/MWFVm4CyFZh8HrUu1E7BDcomChEDBnFTUmu4mx6aLXLZiwpPbUcLc7GjGEfuNhoaOwLm10nH4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwTUHWYeyllnqFOBFY6M2LcdqqSKWBO77MaGE8eRQqzoxdAqZsg
+	yCal6Io8KZfhGQcbzvUAOvErQk6gl+NobzXUOUT/qoVGCHV4vK0GsBZ2iXIYoddy
+X-Gm-Gg: ASbGncuTQbC+aKudmLEc+YrDJSSUuNsOy7XlaMfibFB2OClTwq1eoycKnkvRAzpEBX2
+	e06rvjOFfZNKgFH92XolWnjNU7r3IOGUjVytBMsvplYDeP1gt/z3X84mQ1vvUxDSuXpJ6aURf6S
+	rGSYR12USFwpj21bqPeAMfg3+MTVv4K+H8G0eq3GKASH7XtY4twU8JKtYmz0uxNaGsVMamDbJX0
+	SdiiWiQdxuIRkMPqtDs9Nir6PIxhGWC/NhiSAYz/Hg5DV3EeN5LoEWITDjfWvLj3aNcdyR7jhpu
+	FCO97on7y+Js9vY5LpTkVZsI0AhR/NfxfFzsSsQX4RpywGeRE5T7hHFWIIx2DCizs19WJuC5c4k
+	k7TwKdkvRV3NfHTO2mFOXMKih1ZewvoxQAQVScA3+a+4783w7cg==
+X-Google-Smtp-Source: AGHT+IGuTWVkLVC4r4XkXeqSaabFcu6dwm5Rg7hkYvxsKcomX9Q1Wpt85Hiyg95v9nAiU4e+mVLY1g==
+X-Received: by 2002:a17:902:c946:b0:234:9066:c857 with SMTP id d9443c01a7336-23823fda014mr61874845ad.21.1750863877692;
+        Wed, 25 Jun 2025 08:04:37 -0700 (PDT)
+Received: from DESKTOP-RD0GVCL.localdomain (124-218-195-161.cm.dynamic.apol.com.tw. [124.218.195.161])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d866b000sm135082685ad.162.2025.06.25.08.04.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:02:32 -0700 (PDT)
-From: Xose Vazquez Perez <xose.vazquez@gmail.com>
-To: 
-Cc: Xose Vazquez Perez <xose.vazquez@gmail.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	DOC ML <linux-doc@vger.kernel.org>,
-	KERNEL ML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] MAINTAINERS: replace git protocol for github
-Date: Wed, 25 Jun 2025 17:02:31 +0200
-Message-ID: <20250625150231.241687-1-xose.vazquez@gmail.com>
-X-Mailer: git-send-email 2.50.0
+        Wed, 25 Jun 2025 08:04:37 -0700 (PDT)
+From: LiangCheng Wang <zaq14760@gmail.com>
+Date: Wed, 25 Jun 2025 23:04:31 +0800
+Subject: [PATCH v5] staging: media: atomisp: fix tab/space issues in
+ output1.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250625-bar-v5-1-db960608b607@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAP4PXGgC/23MTQ6CMBAF4KuYrq3pP+DKexgXZZxCEwHTmkZDu
+ LsFNkjMrN7kfW8kEYPHSM6HkQRMPvqhz0EfDwRa2zdI/T1nIpjQzAhOaxuoLmRd1oq5umQkN58
+ BnX8vK9dbzq2PryF8ltHE5++vT5xyqq3EgjGljIBL01n/OMHQkdkn8ceIbBQacFAUleFqb+TWi
+ NXI2QBUHB3jIO3eqK1Rq1HZVC6fxcqVptyaaZq+NmqzTTIBAAA=
+X-Change-ID: 20250621-bar-573b8b40fb80
+To: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Sakari Ailus <sakari.ailus@linux.intel.com>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-staging@lists.linux.dev, LiangCheng Wang <zaq14760@gmail.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750863876; l=6031;
+ i=zaq14760@gmail.com; h=from:subject:message-id;
+ bh=ZNB3XhrTzyPjApmhZf4sMBMt2qivNHgeklldzwm7ilE=;
+ b=V1GicTj7GDB4edMERdzb05R1lU6I1EFxJE+HTQPwGl1Mo9fJ568OmmMBOGdh2ERKKAAmA6IP2
+ SD7UsDivQFuDU2ZAnnPhsGGq8feQK5c/1kkTpY05i4B8wqaDPRVRMGH
+X-Developer-Key: i=zaq14760@gmail.com; a=ed25519;
+ pk=/x4391DbJ19fFQI7t33HWt3lsHfYPl2I2ax8C+Vxr+M=
 
-It was removed time ago:
-https://github.blog/changelog/2022-03-15-removed-unencrypted-git-protocol-and-certain-ssh-keys/
+Fix indentation style issues by replacing spaces with tabs,
+according to Linux kernel coding style.
 
-Cc: Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: DOC ML <linux-doc@vger.kernel.org> (open list:DOCUMENTATION)
-Cc: KERNEL ML <linux-kernel@vger.kernel.org> (open list)
-Signed-off-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
+This cleanup improves code readability and follows Linux kernel
+coding standards.
+
+Signed-off-by: LiangCheng Wang <zaq14760@gmail.com>
 ---
- MAINTAINERS | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+This patch addresses tab/space indentation issues in the
+output_1.0 directory of the AtomISP driver under staging.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 23840fc19199..c4672371609c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -158,7 +158,7 @@ S:	Maintained
- W:	http://github.com/v9fs
- Q:	http://patchwork.kernel.org/project/v9fs-devel/list/
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/ericvh/v9fs.git
--T:	git git://github.com/martinetd/linux.git
-+T:	git https://github.com/martinetd/linux.git
- F:	Documentation/filesystems/9p.rst
- F:	fs/9p/
- F:	include/net/9p/
-@@ -2521,7 +2521,7 @@ M:	Hans Ulli Kroll <ulli.kroll@googlemail.com>
- M:	Linus Walleij <linus.walleij@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
--T:	git git://github.com/ulli-kroll/linux.git
-+T:	git https://github.com/ulli-kroll/linux.git
- F:	Documentation/devicetree/bindings/arm/gemini.yaml
- F:	Documentation/devicetree/bindings/net/cortina,gemini-ethernet.yaml
- F:	Documentation/devicetree/bindings/pinctrl/cortina,gemini-pinctrl.txt
-@@ -2727,7 +2727,7 @@ M:	Vladimir Zapolskiy <vz@mleia.com>
- M:	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
--T:	git git://github.com/vzapolskiy/linux-lpc32xx.git
-+T:	git https://github.com/vzapolskiy/linux-lpc32xx.git
- F:	Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
- F:	arch/arm/boot/dts/nxp/lpc/lpc32*
- F:	arch/arm/mach-lpc32xx/
-@@ -2893,7 +2893,7 @@ M:	Romain Perier <romain.perier@gmail.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- W:	http://linux-chenxing.org/
--T:	git git://github.com/linux-chenxing/linux.git
-+T:	git https://github.com/linux-chenxing/linux.git
- F:	Documentation/devicetree/bindings/arm/mstar/*
- F:	Documentation/devicetree/bindings/clock/mstar,msc313-mpll.yaml
- F:	Documentation/devicetree/bindings/gpio/mstar,msc313-gpio.yaml
-@@ -3813,7 +3813,7 @@ ATHEROS 71XX/9XXX GPIO DRIVER
- M:	Alban Bedel <albeu@free.fr>
- S:	Maintained
- W:	https://github.com/AlbanBedel/linux
--T:	git git://github.com/AlbanBedel/linux
-+T:	git https://github.com/AlbanBedel/linux.git
- F:	Documentation/devicetree/bindings/gpio/gpio-ath79.txt
- F:	drivers/gpio/gpio-ath79.c
+This patch is part of a broader effort to clean up the AtomISP
+driver and is scoped only to tab/space fixes in one directory
+to keep review manageable.
+
+Further style fixes for other directories and issue types will
+be submitted in subsequent patch revisions or series.
+
+Fixes were identified using:
+
+./scripts/checkpatch.pl -f $(find drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ -type f \( -name "*.c" -o -name "*.h" \))
+grep -Prn '^[ ]+' drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0
+
+Only lines with space-based indentation (instead of tab) were changed.
+
+Suggested-by: Andy Shevchenko <andy@kernel.org>
+Link: https://lore.kernel.org/r/CAHp75VeijMvnbrCmRuqTeo_maxevCA9rB-r5URHaX+TrDNvyGA@mail.gmail.com
+---
+Changes in v5:
+- Replaced space-based indentation with tabs in output_1.0 directory
+- Used checkpatch.pl and grep to identify formatting issues
+- No functional changes made
+- This patch is now focused solely on tab/space issues
+- Link to v4: https://lore.kernel.org/r/20250624-bar-v4-1-9f9f9ae9f868@gmail.com
+
+Changes in v4:
+- Moved assignment operator '=' to the same line for static struct definitions
+- Remove unnecessary line breaks in function definitions
+- Update commit message to reflect all the coding style fixes
+- Link to v3: https://lore.kernel.org/r/20250622-bar-v3-1-4cc91ef01c3a@gmail.com
+
+Changes in v3:
+- Removed extra spaces between type and asterisk (e.g., `*to`) in function
+  declarations, as pointed out by Andy Shevchenko
+- Update commit message to reflect all the coding style fixes
+- Link to v2: https://lore.kernel.org/r/20250621-bar-v2-1-4e6cfc779614@gmail.com
+
+Changes in v2:
+- Fix patch subject prefix to "staging: media: atomisp:" to comply with media CI style.
+- No other functional changes.
+
+Link to v1: https://lore.kernel.org/r/20250621-bar-v1-1-5a3e7004462c@gmail.com
+---
+ .../isp/kernels/output/output_1.0/ia_css_output.host.c   | 16 ++++++++--------
+ .../isp/kernels/output/output_1.0/ia_css_output.host.h   | 14 +++++++-------
+ 2 files changed, 15 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c b/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c
+index d09365e0c47104dbffbd455bfd649b9079f88c9c..8d440856471ca73089569be51644c7ac421607ce 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.c
+@@ -34,9 +34,9 @@ static const struct ia_css_output1_configuration default_output1_configuration
  
-@@ -3821,7 +3821,7 @@ ATHEROS 71XX/9XXX USB PHY DRIVER
- M:	Alban Bedel <albeu@free.fr>
- S:	Maintained
- W:	https://github.com/AlbanBedel/linux
--T:	git git://github.com/AlbanBedel/linux
-+T:	git https://github.com/AlbanBedel/linux.git
- F:	Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
- F:	drivers/phy/qualcomm/phy-ath79-usb.c
+ void
+ ia_css_output_encode(
+-    struct sh_css_isp_output_params *to,
+-    const struct ia_css_output_config *from,
+-    unsigned int size)
++	struct sh_css_isp_output_params *to,
++	const struct ia_css_output_config *from,
++	unsigned int size)
+ {
+ 	(void)size;
+ 	to->enable_hflip = from->enable_hflip;
+@@ -74,7 +74,7 @@ int ia_css_output0_config(struct sh_css_isp_output_isp_config       *to,
+ }
  
-@@ -3886,7 +3886,7 @@ F:	drivers/net/ethernet/cadence/
- ATMEL MAXTOUCH DRIVER
- M:	Nick Dyer <nick@shmanahar.org>
- S:	Maintained
--T:	git git://github.com/ndyer/linux.git
-+T:	git https://github.com/ndyer/linux.git
- F:	Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
- F:	drivers/input/touchscreen/atmel_mxt_ts.c
+ int ia_css_output1_config(struct sh_css_isp_output_isp_config       *to,
+-		          const struct ia_css_output1_configuration *from,
++			  const struct ia_css_output1_configuration *from,
+ 			  unsigned int size)
+ {
+ 	return ia_css_output_config(to, (const struct ia_css_output_configuration *)from, size);
+@@ -124,8 +124,8 @@ int ia_css_output1_configure(const struct ia_css_binary     *binary,
  
-@@ -19713,7 +19713,7 @@ L:	linux-pm@vger.kernel.org
- S:	Supported
- W:	https://01.org/pm-graph
- B:	https://bugzilla.kernel.org/buglist.cgi?component=pm-graph&product=Tools
--T:	git git://github.com/intel/pm-graph
-+T:	git https://github.com/intel/pm-graph.git
- F:	tools/power/pm-graph
+ void
+ ia_css_output_dump(
+-    const struct sh_css_isp_output_params *output,
+-    unsigned int level)
++	const struct sh_css_isp_output_params *output,
++	unsigned int level)
+ {
+ 	if (!output) return;
+ 	ia_css_debug_dtrace(level, "Horizontal Output Flip:\n");
+@@ -138,8 +138,8 @@ ia_css_output_dump(
  
- PM6764TR DRIVER
-@@ -20104,8 +20104,8 @@ M:	Haojian Zhuang <haojian.zhuang@gmail.com>
- M:	Robert Jarzmik <robert.jarzmik@free.fr>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
--T:	git git://github.com/hzhuang1/linux.git
--T:	git git://github.com/rjarzmik/linux.git
-+T:	git https://github.com/hzhuang1/linux.git
-+T:	git https://github.com/rjarzmik/linux.git
- F:	arch/arm/boot/dts/intel/pxa/
- F:	arch/arm/mach-pxa/
- F:	drivers/dma/pxa*
-@@ -22867,7 +22867,7 @@ M:	Casey Schaufler <casey@schaufler-ca.com>
- L:	linux-security-module@vger.kernel.org
- S:	Maintained
- W:	http://schaufler-ca.com
--T:	git git://github.com/cschaufler/smack-next
-+T:	git https://github.com/cschaufler/smack-next.git
- F:	Documentation/admin-guide/LSM/Smack.rst
- F:	security/smack/
+ void
+ ia_css_output_debug_dtrace(
+-    const struct ia_css_output_config *config,
+-    unsigned int level)
++	const struct ia_css_output_config *config,
++	unsigned int level)
+ {
+ 	ia_css_debug_dtrace(level,
+ 			    "config.enable_hflip=%d",
+diff --git a/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.h b/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.h
+index 25408f1aede55a61a33a55ad38d5afc3a594a756..e7d44f809003d8692292e9571ac777ea3f2d87b9 100644
+--- a/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.h
++++ b/drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ia_css_output.host.h
+@@ -17,9 +17,9 @@ extern const struct ia_css_output_config default_output_config;
  
-@@ -25209,7 +25209,7 @@ TRADITIONAL CHINESE DOCUMENTATION
- M:	Hu Haowen <2023002089@link.tyut.edu.cn>
- S:	Maintained
- W:	https://github.com/srcres258/linux-doc
--T:	git git://github.com/srcres258/linux-doc.git doc-zh-tw
-+T:	git https://github.com/srcres258/linux-doc.git doc-zh-tw
- F:	Documentation/translations/zh_TW/
+ void
+ ia_css_output_encode(
+-    struct sh_css_isp_output_params *to,
+-    const struct ia_css_output_config *from,
+-    unsigned int size);
++	struct sh_css_isp_output_params *to,
++	const struct ia_css_output_config *from,
++	unsigned int size);
  
- TRIGGER SOURCE - PWM
+ int ia_css_output_config(struct sh_css_isp_output_isp_config      *to,
+ 			 const struct ia_css_output_configuration *from,
+@@ -44,12 +44,12 @@ int ia_css_output1_configure(const struct ia_css_binary     *binary,
+ 
+ void
+ ia_css_output_dump(
+-    const struct sh_css_isp_output_params *output,
+-    unsigned int level);
++	const struct sh_css_isp_output_params *output,
++	unsigned int level);
+ 
+ void
+ ia_css_output_debug_dtrace(
+-    const struct ia_css_output_config *config,
+-    unsigned int level);
++	const struct ia_css_output_config *config,
++	unsigned int level);
+ 
+ #endif /* __IA_CSS_OUTPUT_HOST_H */
+
+---
+base-commit: 3f75bfff44be0646580fe4efda45d646f9c1693b
+change-id: 20250621-bar-573b8b40fb80
+
+Best regards,
 -- 
-2.50.0
+LiangCheng Wang <zaq14760@gmail.com>
 
