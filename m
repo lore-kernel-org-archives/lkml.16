@@ -1,84 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7C72641C8
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:21:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAF42641C8
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:21:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750857702; cv=none; b=KpjIgPV9Ku6Lyd48kSlzbEPsvDaLkcbzh3Oe5qOIJWOohNNzn1mUDqSAz2YGRopH5pXUT722bY2PJ+4VqKCIAbdZJ9iw7OTAaHPROdiPf4Ip9qRW7Re+Yg+Sb2r7LqZIUGrihuoRaWWAccbkOGbDjVlnWk0NXivHXk7NBS1M2K0=
+	t=1750857721; cv=none; b=Oboa3wGQFoiOc7PvV99kJn/jSeiI2DUmat50RkMcwX5JVRZbwBSQWGwhNcLQyRq//tfzbgaTJKFFul262C0Pr2C31Qa+BgmccbqKNLk6UpknhGh37H7CFMrDUq6ELMaxi7ME/I8uPDkB6pCP5NqKZ9z3JzVgqNLDNox9lqZPBSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750857702; c=relaxed/simple;
-	bh=fpJ/HYJHfp2Am8NT7HO/4wgZVfVQfcPvsMBQUn9pK1U=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=A2/WD2C6AUA9ivyVTcLFNpWsxj0Sjd0pb6AgE11KWwuKBakH5LP0j+mIHyDkbq4gh6WD7T/gRvljkow9yv0YGSo2uK7vRZkk/lorfN6+1SWffQAhk/gDIywUm0XQrFOR+oqpcR7E2lAK1xBsjWU8sL4saM/lHIZn9VoDQeBzDDA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VLoBpNo9; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750857721; c=relaxed/simple;
+	bh=1Q/pAr4sY9lLv5EGc/bvaQUMj8H/x06Su0+uEZZPQXY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I+Pio2JWkC4fgHyBXGWxcj6FtKYivwTSkmqz1I/1b/p1S8FsvyytNrump/z6He3xNRnY06omwDTdRlp4+A7Kcr0Me5NqKQpIxb3ykaXhVad60sUaltUVk/umGFvCAsScqdYNYUqUDacPyV/itRAaXaCXQdjnZlNNu7dBHG6b5Ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UuWzZJeN; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VLoBpNo9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750857702; x=1782393702;
-  h=date:from:to:cc:subject:message-id;
-  bh=fpJ/HYJHfp2Am8NT7HO/4wgZVfVQfcPvsMBQUn9pK1U=;
-  b=VLoBpNo9M9zrhvH9n3jlIdZcaMVmh2WElW3ozWEKKJC8VCEwTlJKlwX5
-   KNGwWVex7LDPfTS/e0tbJHGD05vnrWcJjWKbmodBZ0hnpp0ebP27+zmrT
-   fYSUmQDL54TCBjZLFYb/vgIcxTLsU3v+1bDLVVaH8CXILEG5PqB487DJE
-   gqMZ+sec6HRRoY4nX5GxguMgjwFER7ZF8o51rtFOA9WbjgLXZbdJj8Tbi
-   olQLO0dzhcq5t3J8ls7nr136cwL4qRS7cItZ9REMI+8F32QTIg1+TADCM
-   YaOrNuvX6S5jQPT03X+BnAtiS71k9m+q0lzDc3a2TragKcq6ct/0tXZBt
-   Q==;
-X-CSE-ConnectionGUID: 87HIUfa5RoatPcq4J0pSlA==
-X-CSE-MsgGUID: VGR2cUR3QiSs7PHJREByzA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="56807916"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="56807916"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:21:41 -0700
-X-CSE-ConnectionGUID: n66IC+s1Tqiv06VSrq2OvA==
-X-CSE-MsgGUID: xp3jMyIWTkCMhdtN6Y88yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="156788622"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 25 Jun 2025 06:21:40 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUQ4H-000T8V-31;
-	Wed, 25 Jun 2025 13:21:37 +0000
-Date: Wed, 25 Jun 2025 21:20:53 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Paul E. McKenney" <paulmck@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [paulmck-rcu:dev] BUILD SUCCESS
- 8b9967863722ae3797086e82ec7fea62ce974b95
-Message-ID: <202506252143.bkm4TCEi-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UuWzZJeN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750857718;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EMRp8rT+/1qIGfANxZLNkeUT+Jcn0lDcU42QUGT4t1Y=;
+	b=UuWzZJeNOHQ6OnX1QKYkdVaD4kCW5GqyeTr8eA99CyPnLQLh6+ixCfB/cSq9ce4yhCzyVB
+	6Wx7deoPoriT2PI8Np1fvHGfLAv3nU6xyN8wWAscxWfI/1BFsxuSiopCcnZSGzYsrCXXkB
+	h8/HIllyhb8JXiZtZDJrx43/P3Phs4M=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-516-ZgeIcD_lMIa2bepv8Yrm9w-1; Wed,
+ 25 Jun 2025 09:21:53 -0400
+X-MC-Unique: ZgeIcD_lMIa2bepv8Yrm9w-1
+X-Mimecast-MFC-AGG-ID: ZgeIcD_lMIa2bepv8Yrm9w_1750857711
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 173111956089;
+	Wed, 25 Jun 2025 13:21:51 +0000 (UTC)
+Received: from sirius.home.kraxel.org (unknown [10.44.32.244])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 677F119560A3;
+	Wed, 25 Jun 2025 13:21:49 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+	id 395C118000A3; Wed, 25 Jun 2025 15:21:47 +0200 (CEST)
+Date: Wed, 25 Jun 2025 15:21:47 +0200
+From: Gerd Hoffmann <kraxel@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-coco@lists.linux.dev, kvm@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, 
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, 
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, 
+	"open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" <linux-efi@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] x86/sev: let sev_es_efi_map_ghcbs map the caa
+ pages too
+Message-ID: <4kk67edghl7wvqzuyubgr45mhols37yqsorbxxvkypm3xwnuvc@2oek5mladprs>
+References: <20250602105050.1535272-1-kraxel@redhat.com>
+ <20250602105050.1535272-3-kraxel@redhat.com>
+ <20250624130158.GIaFqhxjE8-lQqq7mt@fat_crate.local>
+ <rite3te5udzekwbbujmga5kyyjjm5gfphhqoxlhtsncgckq6rm@7m7owl5jgubz>
+ <20250625124016.GCaFvuMA9oApInTVyI@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625124016.GCaFvuMA9oApInTVyI@fat_crate.local>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev
-branch HEAD: 8b9967863722ae3797086e82ec7fea62ce974b95  EXP arm64: enable PREEMPT_LAZY
+On Wed, Jun 25, 2025 at 02:40:16PM +0200, Borislav Petkov wrote:
+> On Wed, Jun 25, 2025 at 01:52:58PM +0200, Gerd Hoffmann wrote:
+> > The kernel allocates the caa page(s) only when running under svsm, see
+> > alloc_runtime_data(), so this is not correct.  I think we either have to
+> > return to the original behavior of only doing something in case address
+> > is not NULL
+> 
+> Yes, we're doing something only when the address is not NULL.
 
-elapsed time: 1455m
+This is inside a loop, so returning in case the caa address is NULL will
+skip ghcb setup for all but the first CPU.
 
-configs tested: 7
-configs skipped: 0
+take care,
+  Gerd
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-m68k        allnoconfig    gcc-15.1.0
-microblaze  allnoconfig    gcc-15.1.0
-mips        allnoconfig    gcc-15.1.0
-nios2       allnoconfig    gcc-14.2.0
-sh          allnoconfig    gcc-15.1.0
-sparc       allnoconfig    gcc-15.1.0
-xtensa      allnoconfig    gcc-15.1.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
