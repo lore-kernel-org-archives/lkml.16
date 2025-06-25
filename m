@@ -1,62 +1,62 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 844602D3A8C;
-	Wed, 25 Jun 2025 16:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E20D2D5417;
+	Wed, 25 Jun 2025 16:24:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750868650; cv=none; b=EEIs+9Ctkf8jNwwnr5WWDAnj/RtECge+OuptUzW3AYCOj/ZJtqpqWkFr7kCqmxvxsocHPF2kqyaf1vpM0DZH88MC+toW5w5XJ3Y+f5eg+i8rRYKeuDo+fvH7sB2IN4769OLbgKPb/rCcP860NWhneM0WN4VN4hkvDkalh4e0b04=
+	t=1750868653; cv=none; b=igdFKtgAZZAOo+nM1lk/v6H8JiHFtBHAY80LpN0/wS9gCMc8cZYc9jPDjRllkODEOpBstOJrf30cPOnEUIsh1aR4bKlk+XRMQZ21FxZTdV/YwBvne6mHYhtyIWuqybrqKxpYClNrK6Reh1tRZpitoB3nlhIBYQN0wSPMTio6+ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750868650; c=relaxed/simple;
-	bh=FX0TlUtW21rRfijrkttgymR+U8GFpunjd416I7+hI50=;
+	s=arc-20240116; t=1750868653; c=relaxed/simple;
+	bh=ywTSbJW8cYBqryUVhQgNGBIBoeuXfaX+z0POB1nDl0Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gXlszzVHVoBt0iGmOV6QL7cf+hiEHJKzRdUGYsDJvqxEXO/kM+tjkUiEyWPHPnWAed9N+njXLR/ZI9C/F3UbnAP9hhv0o6zPH0FOgcWAyBSDgynGA+Lvz7Nqw41QAnDnt9Rqkef+bqPrb4uvLnKCS4spXGxhr5V8+Q3K99f4v3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CmTJvs5X; arc=none smtp.client-ip=209.85.216.50
+	 MIME-Version; b=M3OmLkcA5NKT3KBFjVGeD0/Onmun4fDg/UBHAgOazoQHmhbx+DeiaIb01Ni2w4pbRsVJXCNAN9VyZPFcHjszLzbKMwpI4tQ2v7nQN1S7vB4gAf2KeFNZITF/lNe0U4PD3f2I789Reh2ogmJw4AHodlaGwdY7gLRXSIfZxggnARo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RkiFCC9E; arc=none smtp.client-ip=209.85.215.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CmTJvs5X"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-313a188174fso1127991a91.1;
-        Wed, 25 Jun 2025 09:24:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RkiFCC9E"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-b34a6d0c9a3so23663a12.3;
+        Wed, 25 Jun 2025 09:24:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750868648; x=1751473448; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750868651; x=1751473451; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u/SU6GEn7zDb9tgmEbrw2Ziqn0f/ZLl3SxOYdJMPvrI=;
-        b=CmTJvs5XyUn65x2izZ9FHZffixCjseRrHZ39NHUs1DIGqK8vDPCTEZ6qMPONjyapP8
-         lTMr4j0qto0covNXF2NYwQFfibc83QvbpvYiRW9tBgeh7YSgP3+36HUjZI14oC5D68U7
-         4/TOPEenXRVLLm+ITaO0rVGdtjT/PESg7MT03i3XWrnyNGU0IYzMrHdU83LAy6vLFTLw
-         zwZFo5qN3MmGna9p5+jz+tYb0gReS5td7El234GYMqAAQfm0Ql057C3Z5AcTTo0tNWOG
-         21Mr06LU4HJSlYZTCJ8SF7r/DwCaQxMipdsoVOA868Pubi46d3/9pPYxjFo/9V9OyVTA
-         udSg==
+        bh=3wMm8hdh+Q/9ZbtfahOgUMAt97QmDshyoisEFWqgnNg=;
+        b=RkiFCC9E9wgMGrd1HHAmlgz0S3P02WvIQCa7lnB3u2ErVYTuQtY0ETlttCa9gd4+Gb
+         IPAb6hIS/ZtEV7NnJeYyimSBhG9E8KdEMUAUWVzWU1LwBvUT3PbdvtYsX5zXT9lDlfeP
+         ggV64bgiGG28fFdKVOdMRC+6H1l5U1uPXgaKyxexXk6k6qM0eR8bHlOS1Vcyx3+FvviA
+         SNDVdpphz4XTOLsjCTxuy/YaC3YHuc+av30KvyEsIxXcBQQax/TL5Hq4SZ6EPaMnXZUE
+         Vqe7KJOsSEGwnJCavd0oy7xkIVgjVS9lvJXFgEgULAQAPPz18HGZSnaJfdU2yVdvKnj5
+         vKKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750868648; x=1751473448;
+        d=1e100.net; s=20230601; t=1750868651; x=1751473451;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=u/SU6GEn7zDb9tgmEbrw2Ziqn0f/ZLl3SxOYdJMPvrI=;
-        b=Q8yeare09uRU+TmkipeL0f4T0NFV9pblduhwgO1yGPyY6yyKBCExZET8+cKcQBl1aC
-         lNiOGlHy7bFC7kFFvTK6aJA/D3hPjjc/nrlDWuDtyPlBi9yQQGd17dmHxEdtLTlXFr9/
-         Wx56FurDlzOsUIVYj2mIpVOqBSzC7wKq5gdh3rZmZO021fNW4vsy3zAfXmw67B4quNHr
-         Ii7NFfNsU0iDnrHX9I1oxTm0pRGGWR1BF8B/kEadP4eltdB9SrizzziCJlcXCPF0Ni43
-         fbX7GK97jPZBSNGfs3SVyqIgWCWZ+HcdJYtkdO+V/ni4Nj7vG4dTzGmL+amBDflYY2HN
-         NH8g==
-X-Forwarded-Encrypted: i=1; AJvYcCXEjYyL2HydoDx8WVdvxPWRNYlbupaJ5afSH3hRZrX4gIa33Yv1ZWx5WwqMPY4eduzSDFl+9ddQq2JC2w8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx5YNL0l3/VqvJOMd8n8glpuuz9qv56J2w/P4V1DiAGkViSf5e
-	eaKwcQYUY2g7WOClciY2VSUlLsF/v0U3w7lRXfkc4BYyZqKNH4VY9X2t
-X-Gm-Gg: ASbGncsoUVADUSwzER43BibAXL0zfCpTap7bkbXES+qPeGG9crTRq75adk2Vcudo8vu
-	V4RwleqTdFJcHrbFQda1dW1goWZNh7jwydVtYeqoZJCfQIjBAzmp7vtI/AwJ3R6OLalyujhnpJq
-	lPSxODfne4HuBAwc/DfRnpsxEDhFvUSA4Xm+v2k090n3asqJiXWaQVCnrRbDz6q4Q0WOxQHlhP/
-	mI9HVOcX+euxPPjUJPpiFAhRLp54ryu59GlggwE+sZdIPcu9Go3LRQ8GoO1cGsA6tLN43ojHf8y
-	cuYOXQHUlIiaigGbpQ2/YfjMWZheA1ApJOmxmpm9ti5SROHK5zQ9
-X-Google-Smtp-Source: AGHT+IGH9DglrgBcKv7FgR7O69nfnelN+5Uxf3sXb/naee3g27FwO51zOKfliJWx6tPan524WVM5DA==
-X-Received: by 2002:a17:90b:558c:b0:2ff:4a8d:74f9 with SMTP id 98e67ed59e1d1-316d69f4a02mr282940a91.10.1750868647595;
-        Wed, 25 Jun 2025 09:24:07 -0700 (PDT)
+        bh=3wMm8hdh+Q/9ZbtfahOgUMAt97QmDshyoisEFWqgnNg=;
+        b=VXSx+MaKVd3uzADk7LTPxToEJDfFKlHgYTarwgKEntu9bF1/K7C01kBBIEN5rSeyhd
+         AhQ/T4/F6gKgQqnb/Gsbli0bTVdw6a7K+YQBpWSRu5TtDBYlZ3b6vxjAYI/j5ba/t+7G
+         mP5Ey/GX3R+CDWEGZTskUjKLlFtKjxEcsj/ZIXPZSulwcbO1mJlAI+neRjZtbKKoE8qJ
+         vHpSMm5AOrj+zDn7vtEJnKIHXtMJRyadb1Qg9jLlILNZDD2cFOrQrrpkWlnaAI/EEKom
+         PelMp87ckKK2rTEknlusZmPxtST6tCFvgjZefNmlCCC90it1gMh36vfrWNK1jpA2URKV
+         3WOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXnTRLSgQdDcNfrha6BWP/p+w0fj2/x+iKLBZbqb3vKqtMxF8xBjnq8/LgWK6zcCD5jiOQ39uxpamiJaGU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyaW2uoi1lVMjhmtnkDoUA/nQMAiHdkz9YJzdBFbC3m4Tatn74+
+	dRakAQaQojt2wCyj7C1nmwlrB9gNSqFhZ6edq8fwPLYaXE+RiNNIbKLZ
+X-Gm-Gg: ASbGnctGMMo6MJQyBDNPYZo7wporubJotTByI0ed9iKRB1Mdg1gk/lQXvgUEBVaYsee
+	z9P+3JO7DOwx9RHp65ENsYE+DXAkwLh34q//KBLQwBjFufNyKdvXwKbJQT0af89pAU2UB6WoeGo
+	i4da04r7CaCwtcwxDwsIzdSyF9BN0SWhK654EtCqO4PtLUmag56JnoP4ENpw5i3h+T2+vh/Z/Ng
+	+kG/yBFdiMfMFZ/M/ACyqAkL3jjJXlpca2UgwguAwLWSUivjVv+/khwCqOkQ4vX/q2u4L/oQQb/
+	kYkgY3cJyUj/frT318HROloawOk2k22oXs9K8bIv5USarpennxw5ReQTdM0YpGE=
+X-Google-Smtp-Source: AGHT+IGDwm6wCLum9Gzh8sY5xTz2sH5DgJ2zOfsWrkKOS3YApynTyHXBPuBpCQ9ukE7xH7bR9sLRcg==
+X-Received: by 2002:a17:90b:164d:b0:311:a314:c2cf with SMTP id 98e67ed59e1d1-315f26a30ddmr5193570a91.30.1750868651228;
+        Wed, 25 Jun 2025 09:24:11 -0700 (PDT)
 Received: from localhost.localdomain ([2409:40f2:116a:400:f32b:ad5e:ec3f:b2dd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5386edbsm2311631a91.6.2025.06.25.09.24.04
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f5386edbsm2311631a91.6.2025.06.25.09.24.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 09:24:07 -0700 (PDT)
+        Wed, 25 Jun 2025 09:24:10 -0700 (PDT)
 From: Sai Vishnu M <saivishnu725@gmail.com>
 X-Google-Original-From: Sai Vishnu M
 To: corbet@lwn.net,
@@ -65,9 +65,9 @@ Cc: linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	shuah@kernel.org,
 	Sai Vishnu M <saivishnu725@gmail.com>
-Subject: [PATCH 3/4] scripts: sphinx-pre-install: add fallback to distro detection
-Date: Wed, 25 Jun 2025 21:52:36 +0530
-Message-ID: <20250625162237.3996-3-saivishnu725@gmail.com>
+Subject: [PATCH 4/4] scripts: sphinx-pre-install: Integrate interactive mode
+Date: Wed, 25 Jun 2025 21:52:37 +0530
+Message-ID: <20250625162237.3996-4-saivishnu725@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250625162237.3996-1-saivishnu725@gmail.com>
 References: <20250625162237.3996-1-saivishnu725@gmail.com>
@@ -81,124 +81,142 @@ Content-Transfer-Encoding: 8bit
 
 From: Sai Vishnu M <saivishnu725@gmail.com>
 
-Implement derived_distro_detection to prompt users to select a base
-distro in interactive mode for unrecognized distributions. Move the
-fallback code for unknown distributions to fallback_unknown_distro.
-Update check_distros to use these functions.
+Replace direct printf calls with run_if_interactive for installation
+commands across all distro-specific hint subroutines, enabling user
+prompts in interactive mode.
 
 Signed-off-by: Sai Vishnu M <saivishnu725@gmail.com>
 ---
 Patch series history:
 1 -> implement the --interactive flag
 2 -> add run_if_interactive subroutine
+3 -> add fallback to unrecognized distributions
 
 Testing:
-=========
-Tested on a Debian container
+========
 
+Tested: Debian, Ubuntu, Fedora, openSUSE Tumbleweed, Mageia.
+Skipped: Gentoo (setup complexity but similarity in modification to others)
 Steps taken:
-1. Start a container with all files
-        podman pull docker.io/debian:bookworm
-        mkdir -p /tmp/sphinx-test/Documentation
-        cp ./scripts/sphinx-pre-install /tmp/sphinx-test
-        cp ./Documentation/conf.py /tmp/sphinx-test/Documentation
-        cd /tmp/sphinx-test
-        podman run -it --rm -v $(pwd):/work:z debian:bookworm bash
+1. Podman to download the containers:
+	podman pull docker.io/debian:bookworm
+	podman pull docker.io/ubuntu:24.04
+	podman pull docker.io/fedora:40
+	podman pull docker.io/opensuse/tumbleweed:latest
+	podman pull docker.io/mageia:9
+	podman pull docker.io/gentoo/stage3:latest
 
-2. Modify /etc/os-release to simulate an unknown distro:
-        echo -e 'NAME="UnknownDistro"\nID=unknowndistro' > /etc/os-release
-        rm /etc/lsb-release 2>/dev/null
+2. Copy the script and related files to a temporary folder
+	mkdir -p /tmp/sphinx-test/Documentation/
+	cp ./scripts/sphinx-pre-install /tmp/sphinx-test
+	cp ./Documentation/conf.py /tmp/sphinx-test/Documentation
+	cd /tmp/sphinx-test
 
-3. Install perl and dependencies
-        apt-get update && apt-get install -y perl sudo
+3. Connect to the containers
+	podman run -it --rm -v $(pwd):/work:z CONTAINER:VERSION bash
+	Ex: podman run -it --rm -v $(pwd):/work:z debian:bookworm bash
+	
+4. Install perl and dependencies
+	# Debian/Ubuntu
+	apt-get update && apt-get install -y perl sudo
+	# Fedora
+	dnf install -y perl sudo
+	# OpenSUSE
+	zypper install -y perl sudo
+	# Mageia
+	dnf install -y perl sudo
+	# Gentoo (requires more setup)
+	emerge-webrsync && emerge dev-lang/perl
 
-4. Run the script in interactive mode
-        cd /work; perl sphinx-pre-install --interactive
+5. Run the script
+	a. Interactive
+		cd /work; perl sphinx-pre-install --interactive
+	b. Non Interactive
+		cd /work; perl sphinx-pre-install
 
- scripts/sphinx-pre-install | 63 ++++++++++++++++++++++++++++++--------
- 1 file changed, 50 insertions(+), 13 deletions(-)
+ scripts/sphinx-pre-install | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
 diff --git a/scripts/sphinx-pre-install b/scripts/sphinx-pre-install
-index 16eb739fd633..e4f8a658857a 100755
+index 87eef15650f2..c2e10170e6c1 100755
 --- a/scripts/sphinx-pre-install
 +++ b/scripts/sphinx-pre-install
-@@ -355,6 +355,51 @@ sub run_if_interactive($)
+@@ -436,7 +436,8 @@ sub give_debian_hints()
+ 
+ 	return if (!$need && !$optional);
+ 	printf("You should run:\n") if ($verbose_warn_install);
+-	printf("\n\tsudo apt-get install $install\n");
++	my $command = "sudo apt-get install $install";
++	run_if_interactive($command);
+ }
+ 
+ sub give_redhat_hints()
+@@ -514,11 +515,13 @@ sub give_redhat_hints()
+ 	if (!$old) {
+ 		# dnf, for Fedora 18+
+ 		printf("You should run:\n") if ($verbose_warn_install);
+-		printf("\n\tsudo dnf install -y $install\n");
++		my $command = "sudo dnf install -y $install";
++		run_if_interactive($command);
+ 	} else {
+ 		# yum, for RHEL (and clones) or Fedora version < 18
+ 		printf("You should run:\n") if ($verbose_warn_install);
+-		printf("\n\tsudo yum install -y $install\n");
++		my $command = "sudo yum install -y $install";
++		run_if_interactive($command);
  	}
  }
  
-+sub fallback_unknown_distro()
-+{
-+	# Fall-back to generic hint code for other distros
-+	# That's far from ideal, especially for LaTeX dependencies.
-+	my %map = (
-+		"sphinx-build" => "sphinx"
-+	);
-+	check_missing_tex(2) if ($pdf);
-+	check_missing(\%map);
-+	print "I don't know distro $system_release.\n";
-+	print "So, I can't provide you a hint with the install procedure.\n";
-+	print "There are likely missing dependencies.\n";
-+}
-+
-+#
-+# if the distribution is not recognised
-+# but it is derived from the available options
-+#
-+sub derived_distro_detection()
-+{
-+	my @distros = (
-+		{ name => "Debian/Ubuntu", func => \&give_debian_hints },
-+		{ name => "RedHat/CentOS/Fedora", func => \&give_redhat_hints },
-+		{ name => "OpenSUSE", func => \&give_opensuse_hints },
-+		{ name => "Mageia", func => \&give_mageia_hints },
-+		{ name => "Arch Linux", func => \&give_arch_linux_hints },
-+		{ name => "Gentoo", func => \&give_gentoo_hints },
-+	);
-+	print "Which distro is your OS based on?\n";
-+	for my $i (0 .. $#distros) {
-+		printf("[%d] %s\n", $i + 1, $distros[$i]->{name});
-+	}
-+	print "[99] Others\n";
-+
-+	print "Select a number: ";
-+	my $choice = <STDIN>;
-+	chomp $choice;
-+
-+	if ($choice =~ /^\d+$/ && $choice >= 1 && $choice <= scalar(@distros)) {
-+		$distros[$choice - 1]->{func}->();
-+	} else {
-+		fallback_unknown_distro();
-+	}
-+}
-+
- #
- # Subroutines that check distro-specific hints
- #
-@@ -695,19 +740,11 @@ sub check_distros()
- 		give_gentoo_hints;
- 		return;
- 	}
--
--	#
--	# Fall-back to generic hint code for other distros
--	# That's far from ideal, specially for LaTeX dependencies.
--	#
--	my %map = (
--		"sphinx-build" => "sphinx"
--	);
--	check_missing_tex(2) if ($pdf);
--	check_missing(\%map);
--	print "I don't know distro $system_release.\n";
--	print "So, I can't provide you a hint with the install procedure.\n";
--	print "There are likely missing dependencies.\n";
-+	if ( $interactive ) {
-+		derived_distro_detection();
-+		return;
-+	}
-+	fallback_unknown_distro();
+@@ -567,7 +570,8 @@ sub give_opensuse_hints()
+ 
+ 	return if (!$need && !$optional);
+ 	printf("You should run:\n") if ($verbose_warn_install);
+-	printf("\n\tsudo zypper install --no-recommends $install\n");
++	my $command = "sudo zypper install --no-recommends $install";
++	run_if_interactive($command);
  }
  
- #
+ sub give_mageia_hints()
+@@ -612,7 +616,8 @@ sub give_mageia_hints()
+ 
+ 	return if (!$need && !$optional);
+ 	printf("You should run:\n") if ($verbose_warn_install);
+-	printf("\n\tsudo $packager_cmd $install\n");
++	my $command = "sudo $packager_cmd $install";
++	run_if_interactive($command);
+ }
+ 
+ sub give_arch_linux_hints()
+@@ -643,7 +648,8 @@ sub give_arch_linux_hints()
+ 
+ 	return if (!$need && !$optional);
+ 	printf("You should run:\n") if ($verbose_warn_install);
+-	printf("\n\tsudo pacman -S $install\n");
++	my $command = "sudo pacman -S $install";
++	run_if_interactive($command);
+ }
+ 
+ sub give_gentoo_hints()
+@@ -679,13 +685,16 @@ sub give_gentoo_hints()
+ 	my $portage_cairo = "/etc/portage/package.use/graphviz";
+ 
+ 	if (qx(grep imagemagick $portage_imagemagick 2>/dev/null) eq "") {
+-		printf("\tsudo su -c 'echo \"$imagemagick\" > $portage_imagemagick'\n")
++		my $imagemagick_command = "sudo su -c 'echo \"$imagemagick\" > $portage_imagemagick'";
++		run_if_interactive($imagemagick_command);
+ 	}
+ 	if (qx(grep graphviz $portage_cairo 2>/dev/null) eq  "") {
+-		printf("\tsudo su -c 'echo \"$cairo\" > $portage_cairo'\n");
++		my $portage_command = "sudo su -c 'echo \"$cairo\" > $portage_cairo'";
++		run_if_interactive($portage_command);
+ 	}
+ 
+-	printf("\tsudo emerge --ask $install\n");
++	my $command = "sudo emerge --ask $install";
++	run_if_interactive($command);
+ 
+ }
+ 
 -- 
 2.49.0
 
