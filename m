@@ -1,111 +1,112 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22D113D53B;
-	Wed, 25 Jun 2025 14:01:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C59313D53B;
+	Wed, 25 Jun 2025 14:02:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750860101; cv=none; b=GDEyMKBKjYYWM105qsqMSQJTVahu0dijaRjv1Y3KiPZZLLRLVaePErW9OdKS3YMzegfZLawgsoZKDOETZYTdbmScxbvpbUxX2k3BmLRBBHyLb+hx9YQqGXmP59BKKP3200lu5mRPDlO4VUlhxzJRc7QDiwaXWov2qM6C8raW5sg=
+	t=1750860131; cv=none; b=Bm0WmDF1+kQQUz+vKhKWwZNNfNpfGXeCGm+oJcFujFlPznTxXX/4fofJVEIicOgAX+mXD3nW1Or8S21/qsIpZYLFYe6zmLgwsLV8KmZWffuoa/Hcf0OIGScA/x4IFPXLp3nU9t/VcbLjLBdld/o7YSTGdincSiVz+lKZxaV094Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750860101; c=relaxed/simple;
-	bh=9F8lPK5shmD6ADdRuHTPezLJa7GOsIOjbFmUVmIzJM8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=IKrnSa7X2uu7j+WZ+tSNZkJSlCi7kYSIQuzqN5gPg0K82+mgmEoN2qZfMmZ7/auXPcFFjSWOTGb1woMLUUuWEmdVvK0lrZvjgj34dkKfVHcrpRlmKZsV4WEIpALjADx0HBdLNtu//IF2qtanhQqOULtBylTlzPnAkCwkwtRYHDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wne0F2DO; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750860131; c=relaxed/simple;
+	bh=0E1iOgTDOe4/hcWEs/6My5mcmsk96XV7Vrk9N+Jysxc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L0TUrYuY6etyF6iYN4mYFkX+MEPr5MH/M3XBmlFeCn3JjZRCaJTdpSl1mS/ojMWJt9MCqRag0OIOZUqUHk6dIsDqH5nZDwrLS62+TqDIrz0jh26/+63vJG8i6JCiEEISaP4JNBDw2LgbwczmZ+gdYv1V5w2CNtH0HhnOMWlvyN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsxRvAra; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wne0F2DO"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55PE1BPY2174964;
-	Wed, 25 Jun 2025 09:01:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750860071;
-	bh=m8aY9XaIbidLP9MStkpbdNHeE08j2OQhZ4p847qpKOs=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=wne0F2DOZZFrC3efzh+pCbzCvgAISYIHMer+mQ5ZgaK0higMDEGGhs68234wwtRtO
-	 eE9wTUgU8MWoAAELRhMMIHqCvldlk13p956i4t6lgpbke+ZoqSnzJPEpino1+hoe1Y
-	 vyoIoUwCjdZv2tahBLcAPcT4Xf9O2mFFO4Uarx1w=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55PE1BRj2629965
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 25 Jun 2025 09:01:11 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 25
- Jun 2025 09:01:11 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Wed, 25 Jun 2025 09:01:11 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55PE1Ai43495570;
-	Wed, 25 Jun 2025 09:01:10 -0500
-Message-ID: <216a0f99-9c45-480e-9b8a-1a9168b3338c@ti.com>
-Date: Wed, 25 Jun 2025 09:01:10 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsxRvAra"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1662C4CEEA;
+	Wed, 25 Jun 2025 14:02:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750860129;
+	bh=0E1iOgTDOe4/hcWEs/6My5mcmsk96XV7Vrk9N+Jysxc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PsxRvAra1+UYAxXNOQfwyROihYt1SLubVcs64pvGPUQv4NrfV/ZDvKniPhQp7iaMc
+	 2E8WSNQMZq4HAR/7TuU6I5/1/v4Sfw+RbxU5GBtdgyly9HNSNirynkWPV7o1UuyWzC
+	 0P7IdB0BcktrXzRN0UoRhNamc0YTldId3dqdOL1ghooDaGDuBx05voZQfUjD0Fj5lg
+	 2IV2XhdLpfxI6s5YKtUSJCiOFYdeqI2U3x8xiaAcwc4ylzGl5CyAeO3waXi/GZ9gD+
+	 d/v3F7klREapn0BL5nVQWuZgZVk+Vd2YeeT/QZTJ7h+iFJBHBAkHFDvYd+wEcLBAi8
+	 pQaYVLvnm7bvQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan@kernel.org>)
+	id 1uUQhV-0000000080x-2DfT;
+	Wed, 25 Jun 2025 16:02:09 +0200
+Date: Wed, 25 Jun 2025 16:02:09 +0200
+From: Johan Hovold <johan@kernel.org>
+To: Gabor Juhos <j4g8y7@gmail.com>
+Cc: Georgi Djakov <djakov@kernel.org>,
+	Raviteja Laggyshetty <quic_rlaggysh@quicinc.com>,
+	Johan Hovold <johan+linaro@kernel.org>,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+	linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] interconnect: avoid memory allocation when
+ 'icc_bw_lock' is held
+Message-ID: <aFwBYRF0wJwVDdeX@hovoldconsulting.com>
+References: <20250625-icc-bw-lockdep-v3-1-2b8f8b8987c4@gmail.com>
+ <aFvr1zSkf4KmIcMT@hovoldconsulting.com>
+ <aFvuiVX0kMIqXQtZ@hovoldconsulting.com>
+ <84b94649-a248-46b0-a401-772aeb8777a2@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RESEND 1/2] dt-bindings: watchdog: ti,rti-wdt: Add
- ti,am62l-rti-wdt compatible
-To: "Raghavendra, Vignesh" <vigneshr@ti.com>,
-        Wim Van Sebroeck
-	<wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: Tero Kristo <kristo@kernel.org>, <linux-watchdog@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250624202605.1333645-1-jm@ti.com>
- <20250624202605.1333645-2-jm@ti.com>
- <4b91a211-9e97-4431-8b42-4817fd17e1e1@ti.com>
-Content-Language: en-US
-From: Judith Mendez <jm@ti.com>
-In-Reply-To: <4b91a211-9e97-4431-8b42-4817fd17e1e1@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <84b94649-a248-46b0-a401-772aeb8777a2@gmail.com>
 
-Hi Vignesh,
-
-On 6/24/25 11:53 PM, Raghavendra, Vignesh wrote:
+On Wed, Jun 25, 2025 at 03:15:53PM +0200, Gabor Juhos wrote:
+> 2025. 06. 25. 14:41 keltezéssel, Johan Hovold írta:
+> > On Wed, Jun 25, 2025 at 02:30:15PM +0200, Johan Hovold wrote:
+> >> On Wed, Jun 25, 2025 at 01:25:04PM +0200, Gabor Juhos wrote:
+> > 
+> >>> @@ -276,13 +276,17 @@ int qcom_icc_rpmh_probe(struct platform_device *pdev)
+> >>>  		qcom_icc_bcm_init(qp->bcms[i], dev);
+> >>>  
+> >>>  	for (i = 0; i < num_nodes; i++) {
+> >>> +		bool is_dyn_node = false;
+> >>> +
+> >>>  		qn = qnodes[i];
+> >>>  		if (!qn)
+> >>>  			continue;
+> >>>  
+> >>>  		if (desc->alloc_dyn_id) {
+> >>> -			if (!qn->node)
+> >>> +			if (!qn->node) {
+> >>
+> >> AFAICS, qn->node will currently never be set here and I'm not sure why
+> >> commit 7f9560a3bebe ("interconnect: qcom: icc-rpmh: Add dynamic icc node
+> >> id support") added this check, or even the node field to struct
+> >> qcom_icc_desc for that matter.
+> >>
+> >> But if there's some future use case for this, then you may or may not
+> >> need to make sure that a name is allocated also in that case.
+> > 
+> > Ok, I see what's going on. The qn->node may have been (pre-) allocated
+> > in icc_link_nodes() dynamically, which means you need to make sure to
+> > generate a name also in that case.
+> > 
+> >> And that could be done by simply checking if node->id >=
+> >> ICC_DYN_ID_START instead of using a boolean flag below. That may be
+> >> preferred either way.
+> > 
+> > So you should probably use node->id to determine this.
 > 
+> You are right. The problem is that ICC_DYN_ID_START is only visible from the
+> core code. Either we have to move that into the 'interconnect-provider.h' header
+> or we have to add an icc_node_is_dynamic() helper or something similar.
 > 
-> On 6/25/2025 1:56 AM, Judith Mendez wrote:
->> Add a new compatible ti,am62l-rti-wdt for am62l SoC [0].
->>
->> [0] https://www.ti.com/product/AM62L
->> Signed-off-by: Judith Mendez <jm@ti.com>
->> ---
->>   Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
->> index 62ddc284a524..f57d5c2b8024 100644
->> --- a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
->> +++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
->> @@ -24,6 +24,7 @@ properties:
->>     compatible:
->>       enum:
->>         - ti,j7-rti-wdt
->> +      - ti,am62l-rti-wdt
->>   
-> 
-> Would be good to keep this sorted alphabetically.
+> Which is the preferred solution?
 
-Sure, Ill switch and respin the series, thanks for
-reviewing.
+I think adding a helper like icc_node_is_dynamic() in a separate
+preparatory patch is best here.
 
-~ Judith
+If it wasn't for nodes now being created also in icc_link_nodes() we
+could otherwise perhaps just as well have moved the name generation into
+icc_node_create_dyn(). Now it seems we'd need a new helper to set the
+name (or add error handling for every icc_node_add()), but we've already
+spent way too much time trying to clean up this mess...
 
-> 
->>     reg:
->>       maxItems: 1
-> 
-
+Johan
