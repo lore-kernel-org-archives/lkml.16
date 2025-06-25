@@ -1,189 +1,353 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3ED7D3F4;
-	Wed, 25 Jun 2025 10:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B9F29ACF3;
+	Wed, 25 Jun 2025 10:30:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750847371; cv=none; b=GhpAEREL3ssIisOb7Ec3iTSKcLM6eaNoB8taRS56GvAJR+mmmWkbaQRRVomk07hhzBrRsuNdvfzGbxpfmYqLqecFj64gg7UHQcVEiRX5nYJRlAgvkCON9SwaGGPnCqqQqnuFBi/XEoUCQ+3EmGeI2bGxBxpNRd+DInuije9NLjI=
+	t=1750847429; cv=none; b=C/t0gNa4JY2JmWKlt69qwNK/DB/MQ+4H22xqSe19nHPJXSbC4fDeortgwBT36I7zvgompZ8g2HnAEUkzNe/S3DONLEQI3UCXp7l8ezitm/RPIxD44Xl6cyzRerTkNyQWVjts2iYjnH0XgOQKP0stUFKgd/3YneR05VLnkciTiL4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750847371; c=relaxed/simple;
-	bh=+/qduDCOUlNU6dPw4M1+ZnpE3nxnSrlWF35phykoJh8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p56p/KHy0iy7k6OgcnZjO/0FnXadp6YYDWcbjMsK++Pik7OIWtevAwfAoAAqZbTO1o5EHS3nDjOlLHaFTcwiOwf/e3yUbuK6vsLxZC6DfQWkV3u/ZEwzwYkQxTvM5AwHui/3hw/44+AIYG+wVRPUO6ec+ix08WEzlRo86yGA0VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bC5+MBtM; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750847429; c=relaxed/simple;
+	bh=YBuJbRZXELECNZqD3/9cEIoljzOL95bOblwK60NxZwE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=n7l+4wHKqFJohOx7LMwyVFuhs/ydyX5ySlbCI+Mxh0btCdV0Z1s0ZO6KdqisA5J3OKvhOHK5W5bc7PQdz2U3vEJARxgT6hTdutjirREXlEHm99XyjVMSTO+Pa3VByxYkw/J6aq+rbExjRMwhlx4TMEaGtTcNn92/QvY/U8WIoVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kYXcoNQP; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bC5+MBtM"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-32b7f41d3e6so7715551fa.1;
-        Wed, 25 Jun 2025 03:29:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750847368; x=1751452168; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kM3c9e5wSrfbRp9c9ZXczT6HCLXxNZCoTjQg0rj1vTQ=;
-        b=bC5+MBtMCAN95VXjOrbOYQvPQH7UBup62DG5nzbFQB9qMpeRjEBbhS3TGFCW2pUVem
-         kX/X5TBfPoHFSnOdXLMSRFVLClbWp7rTCLJKQWv/ex/28RnFvC3ZjcCfjih9ob+GmAnK
-         8Z0Iret0j+x1mRP1qqkYQt5DpD0ZmhwddDVa8yiNh1MzQwZS1/EAOEfnooeBA3ND7O4Z
-         DURj2ZYz1kTeBC980I++xFz4TZPbheB4Xu5VLbybVcjBIPgD1p1uWv00tiVlmePRd6GJ
-         GOD9q9k3LZlBRneHQmYA2m7AD45c45EWTqpWNuuSJf7nD7+6QXgr6+Ny7BkX4RYHvY6J
-         fYlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750847368; x=1751452168;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kM3c9e5wSrfbRp9c9ZXczT6HCLXxNZCoTjQg0rj1vTQ=;
-        b=Bs8gqtG86g3l1qM8XJhp2bsPn16s5li9aTFAbDN2O/65gIXKFQx3HocGDj2OsGVmiV
-         b8PldVagQ9XZeGIwUrIQJz1p5NRUwH5Iyup6P47YaJiw1OpHPgCO44lKIW1dSfk/0Wln
-         zG89l9qKssxVwVhVnKJjFGR8XYLJF8Wv5fOt/Tnb7dc56w8T/BeblltZGl7tWMddzz5U
-         5e0+sdYa5e3UOWH2qNEuVQJz+BOPbWAkHdgcHl5KTSM1d6Ds1PGjnoQcJ9XX/F1/EILs
-         4mFDJYCtW4Izc8wieKuoyvKuYordsJfO8oBR+9JlLxyRZspaVvREZX86pdsVbs4mFkd2
-         yprQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVLRpAD7CuuSN3/WZvy5Q78VbnhG1s2Ya1Qg2ynPg2uQufPPzon6uCA8xXsxxS+Ak8Nbrs398h5NwSsoQ4=@vger.kernel.org, AJvYcCXuLPUEx1qsQN2nthWIUVYVf2wepeSB3cZI5FbxFqwRIAIzdek2umY78AaiRrI0//Nqch7c6Q7IsvuJ@vger.kernel.org
-X-Gm-Message-State: AOJu0YxqeI9sWvFtTVdqb94jiwOD9MMgccIsLZfoR0Q8+bVoaywKjMIU
-	bTap3Q4jfLnJY3x5SSYXPH+tWHLlWlcAyw1zEQ9ikHQ4xLwXJtAlOh5axCA+OPvH57f9tjUjYHB
-	p2hFARnqzltyG+UUo4CS7HbtWrq8Zr4E=
-X-Gm-Gg: ASbGnctOi/1tCsUcPSlX+VvUmXgubji4Kq3rI+BdXUuz+IIvBO/6btrPVtK++QDBNzY
-	mgXmhMv7IDSka/IrhU89PNOz3mzXlH+30ZS/44Z93ZzJj6imudEbu1BCgdQVZxn1zJZRrWRVemP
-	K0zu05RNiBi22+T4mddUn9F8xnMZVZN40jHB02tThSGPzQr4YmxQsA4p1nKlzB2eZqGMfbbXSB3
-	tEUNg==
-X-Google-Smtp-Source: AGHT+IFISN04ZOP18U0BKlCxvkOJLYyUdh/QH55alVYxrtxt/fMmb4vhG3jM4eVCBtZWmrfJCiVn1slL8U5TmhYuF/g=
-X-Received: by 2002:a2e:a604:0:b0:32a:666e:e087 with SMTP id
- 38308e7fff4ca-32cb965406cmr15521691fa.10.1750847367449; Wed, 25 Jun 2025
- 03:29:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kYXcoNQP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750847427; x=1782383427;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=YBuJbRZXELECNZqD3/9cEIoljzOL95bOblwK60NxZwE=;
+  b=kYXcoNQPeSv7mku2+C19Haqxj70QfKaX+snWIEQrv+LJ8Q2LWSGW7GJC
+   iSrz+Tj948pWAV16KCbN5lAFxA2YL/yKtbJiRHumZQ7G+dSQiA7w4ShPz
+   oJFV2dOsMlrsRrNa/KAf1LzU0ZCSfhfUSt9CdOeokisXt6+X48FV79ms/
+   YPz3PLnSPIYGTrzty6F4EbZzUa/tPH/OY2JUKb+PogBoDbAblTkrVRtq4
+   +m8ByBFuKtwjeGYwj7Eobn4IzzLm9iS80NyXWtoR4ZDEsnF6ciCtBErYy
+   +ikF2IiBjxV5rG0kgz9dlW2k6U0yIX3ra1lgUQ8u0W7WmtUOwL1yvAGka
+   w==;
+X-CSE-ConnectionGUID: V6Hrx+MMS+uEAT5o3y1JHw==
+X-CSE-MsgGUID: U3ZhtJ/ZTl2QYWWPNSOg2w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52975786"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="52975786"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 03:30:27 -0700
+X-CSE-ConnectionGUID: hBDZ77QHQ0S7tJvgRXim5A==
+X-CSE-MsgGUID: wIh4g88qTq+twcTIuj/xyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="152313416"
+Received: from chenyu-dev.sh.intel.com ([10.239.62.107])
+  by fmviesa006.fm.intel.com with ESMTP; 25 Jun 2025 03:30:17 -0700
+From: Chen Yu <yu.c.chen@intel.com>
+To: Jonathan Corbet <corbet@lwn.net>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Shakeel Butt <shakeel.butt@linux.dev>,
+	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>,
+	Ben Segall <bsegall@google.com>,
+	Libo Chen <libo.chen@oracle.com>,
+	Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Phil Auld <pauld@redhat.com>,
+	Tejun Heo <tj@kernel.org>,
+	Daniel Jordan <daniel.m.jordan@oracle.com>,
+	Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	Aubrey Li <aubrey.li@intel.com>,
+	Tim Chen <tim.c.chen@intel.com>,
+	"Huang, Ying" <ying.huang@linux.alibaba.com>,
+	linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	Chen Yu <yu.c.chen@intel.com>
+Subject: [PATCH v2] sched/numa: Introduce per cgroup numa balance control
+Date: Wed, 25 Jun 2025 18:23:37 +0800
+Message-Id: <20250625102337.3128193-1-yu.c.chen@intel.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250619185041.73240-1-akshayaj.lkd@gmail.com>
-In-Reply-To: <20250619185041.73240-1-akshayaj.lkd@gmail.com>
-From: Akshay Jindal <akshayaj.lkd@gmail.com>
-Date: Wed, 25 Jun 2025 15:59:14 +0530
-X-Gm-Features: Ac12FXzi8juwawXHmcXVfoX0UqAOsQsrMRwCnymJ4_SABUZhj6JZg91TE-X7X_8
-Message-ID: <CAE3SzaR=tXp4nKfVC7AGzh2U2fdWqVNeNeZJs-bDws+tej-f=Q@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI/AER: Add error message when AER_MAX_MULTI_ERR_DEVICES
- limit is hit during AER handling
-To: bhelgaas@google.com, helgaas@kernel.org, mani@kernel.org, 
-	manivannan.sadhasivam@linaro.org, kwilczynski@kernel.org, 
-	mahesh@linux.ibm.com, oohall@gmail.com, ilpo.jarvinen@linux.intel.com, 
-	Jonathan.Cameron@huawei.com, sathyanarayanan.kuppuswamy@linux.intel.com, 
-	lukas@wunner.de
-Cc: shuah@kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
-Is there any feedback on the patch?
+[Problem Statement]
+Currently, NUMA balancing is configured system-wide.
+However, in some production environments, different
+cgroups may have varying requirements for NUMA balancing.
+Some cgroups are CPU-intensive, while others are
+memory-intensive. Some do not benefit from NUMA balancing
+due to the overhead associated with VMA scanning, while
+others prefer NUMA balancing as it helps improve memory
+locality. In this case, system-wide NUMA balancing is
+usually disabled to avoid causing regressions.
 
-Thanks,
-Akshay
-On Fri, Jun 20, 2025 at 12:21=E2=80=AFAM Akshay Jindal <akshayaj.lkd@gmail.=
-com> wrote:
->
-> When a PCIe error is detected, the root port receives the error message
-> and the threaded IRQ handler, aer_isr, traverses the hierarchy downward
-> from the root port. It populates the e_info->dev[] array with the PCIe
-> devices that have recorded error status, so that appropriate error
-> handling and recovery can be performed.
->
-> The e_info->dev[] array is limited in size by AER_MAX_MULTI_ERR_DEVICES,
-> which is currently defined as 5. If more than five devices report errors
-> in the same event, the array silently truncates the list, and those
-> extra devices are not included in the recovery flow.
->
-> Emit an error message when this limit is reached, fulfilling a TODO
-> comment in drivers/pci/pcie/aer.c.
-> /* TODO: Should print error message here? */
->
-> Signed-off-by: Akshay Jindal <akshayaj.lkd@gmail.com>
-> ---
->
-> Changes since v1:
-> - Reworded commit message in imperative mood (per Shuah=E2=80=99s feedbac=
-k)
-> - Mentioned and quoted related TODO in the message
-> - Updated recipient list
->
-> Testing:
-> =3D=3D=3D=3D=3D=3D=3D=3D
-> Verified log in dmesg on QEMU.
->
-> 1. Following command created the required environment. As mentioned below=
- a
-> pcie-root-port and a virtio-net-pci device are used on a Q35 machine mode=
-l.
-> ./qemu-system-x86_64 \
->         -M q35,accel=3Dkvm \
->         -m 2G -cpu host -nographic \
->         -serial mon:stdio \
->         -kernel /home/akshayaj/pci/arch/x86/boot/bzImage \
->         -initrd /home/akshayaj/Embedded_System_Using_QEMU/rootfs/rootfs.c=
-pio.gz \
->         -append "console=3DttyS0 root=3D/ pci=3Dpcie_scan_all" \
->         -device pcie-root-port,id=3Drp0,chassis=3D1,slot=3D1 \
->         -device virtio-net-pci,bus=3Drp0
->
-> ~ # mylspci -t
-> -[0000:00]-+-00.0
->            +-01.0
->            +-02.0
->            +-03.0-[01]----00.0
->            +-1f.0
->            +-1f.2
->            \-1f.3
-> 00:03.0--> pcie-root-port
->
-> 2. Kernel bzImage compiled with following changes:
->         2.1 CONFIG_PCIEAER=3Dy in config
->         2.2 AER_MAX_MULTI_ERR_DEVICES set to 0
->         Since there is no pcie-testdev in QEMU, it is impossible to creat=
-e
->         a 5-level hierarchy of PCIe devices in QEMU. So we simulate the
->         error scenario by changing the limit to 0.
->         2.3 Log added at the required place in aer.c.
->
-> 3. Both correctable and uncorrectable errors were injected on
-> pcie-root-port via HMP command (pcie_aer_inject_error) in QEMU.
-> HMP Command used are as follows:
->         3.1 pcie_aer_inject_error -c rp0 0x1
->         3.2 pcie_aer_inject_error -c rp0 0x40
->         3.3 pcie_aer_inject_error rp0 0x10
->
-> Resulting dmesg:
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> [    0.380534] pcieport 0000:00:03.0: AER: enabled with IRQ 24
-> [   55.729530] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addit=
-ion of PCIe devices for AER handling
-> [  225.484456] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addit=
-ion of PCIe devices for AER handling
-> [  356.976253] pcieport 0000:00:03.0: AER: Exceeded max allowed (0) addit=
-ion of PCIe devices for AER handling
->
->  drivers/pci/pcie/aer.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 70ac66188367..3995a1db5699 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1039,7 +1039,8 @@ static int find_device_iter(struct pci_dev *dev, vo=
-id *data)
->                 /* List this device */
->                 if (add_error_device(e_info, dev)) {
->                         /* We cannot handle more... Stop iteration */
-> -                       /* TODO: Should print error message here? */
-> +                       pci_err(dev, "Exceeded max allowed (%d) addition =
-of PCIe "
-> +                               "devices for AER handling\n", AER_MAX_MUL=
-TI_ERR_DEVICES);
->                         return 1;
->                 }
->
-> --
-> 2.43.0
->
+[Proposal]
+Introduce a per-cgroup interface to enable NUMA balancing
+for specific cgroups. This interface is associated with
+the CPU subsystem, which does not support threaded subtrees,
+and close to CPU bandwidth control. The system administrator
+needs to set the NUMA balancing mode to
+NUMA_BALANCING_CGROUP=4 to enable this feature. When the
+system is in NUMA_BALANCING_CGROUP mode, NUMA balancing
+for all cgroups is disabled by default. After the
+administrator enables this feature for a specific cgroup,
+NUMA balancing for that cgroup is enabled.
+
+A simple example to show how to use per-cgroup NUMA balancing:
+
+Step1
+//switch on per cgroup Numa balancing.
+//All cgroup's NUMA balance is disabled by default.
+echo 4 > /proc/sys/kernel/numa_balancing
+
+Step2
+//created a cgroup named mytest, enable its NUMA balancing
+echo 1 > /sys/fs/cgroup/mytest/cpu.numa_load_balance
+
+[Benchmark]
+Tested on Xeon Sapphire Rapids, with 4 Numa nodes. Created
+a cgroup mytest and launched autonumabench NUMA01_THREADLOCAL.
+Each test runs 6 cycles.
+
+baseline:
+29360.56user 16280.68system 3:33.29elapsed
+29788.41user 16060.31system 3:34.38elapsed
+28307.51user 17043.45system 3:33.03elapsed
+29552.49user 16307.65system 3:34.20elapsed
+29847.41user 15966.15system 3:34.65elapsed
+29111.10user 16532.78system 3:33.19elapsed
+
+per cgroup NUMA balance:
+7589.78user 16494.90system 1:53.18elapsed
+7795.54user 16537.65system 1:54.11elapsed
+8295.66user 16391.21system 1:55.98elapsed
+7836.34user 17312.31system 1:55.71elapsed
+7773.26user 16856.19system 1:54.08elapsed
+7534.43user 17604.58system 1:55.01elapsed
+
+The user time has been reduced to 33% of the
+original, and the elapsed time has dropped to
+45% of the original (lower values are better).
+
+cat /sys/fs/cgroup/mytest/memory.stat | grep numa
+numa_pages_migrated 10238503
+numa_pte_updates 24378124
+numa_hint_faults 16921590
+numa_task_migrated 253
+numa_task_swapped 4
+
+to-do:
+Per-cgroup NUMA balancing should consider the
+hierarchy of the cgroup. Initially, NUMA balancing
+is disabled for the root cgroup. A cgroup that has
+NUMA balancing enabled should have all its parents
+enabled. For example, suppose cgroup A is the parent
+of cgroup B; if A.numa_load_balance is 0, even if
+B.numa_load_balance is 1, NUMA balancing for B is
+disabled. This idea is derived from
+commit e39925734909 ("mm/memcontrol: respect
+zswap.writeback setting from parent cgroup too").
+
+Suggested-by: Tim Chen <tim.c.chen@intel.com>
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+---
+v1->v2:
+
+Add documentation in Documentation/admin-guide/sysctl/kernel.rst.
+
+Add comments in tg_numa_balance_enabled() to explain that
+the newly introduced NUMA balancing mode is naturally
+exclusive of existing NUMA balancing modes. (Tim)
+---
+ Documentation/admin-guide/sysctl/kernel.rst |  6 ++++
+ include/linux/sched/sysctl.h                |  1 +
+ kernel/sched/core.c                         | 31 +++++++++++++++++++++
+ kernel/sched/fair.c                         | 28 +++++++++++++++++++
+ kernel/sched/sched.h                        |  3 ++
+ mm/mprotect.c                               |  5 ++--
+ 6 files changed, 72 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index dd49a89a62d3..ff88d1153c19 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -709,6 +709,7 @@ The value to set can be the result of ORing the following:
+ 0 NUMA_BALANCING_DISABLED
+ 1 NUMA_BALANCING_NORMAL
+ 2 NUMA_BALANCING_MEMORY_TIERING
++4 NUMA_BALANCING_CGROUP
+ = =================================
+ 
+ Or NUMA_BALANCING_NORMAL to optimize page placement among different
+@@ -729,6 +730,11 @@ different types of memory (represented as different NUMA nodes) to
+ place the hot pages in the fast memory.  This is implemented based on
+ unmapping and page fault too.
+ 
++Or NUMA_BALANCING_CGROUP to enable the per cgroup NUMA balancing.
++This new behavior can be opted-in/out on a per-cgroup basis via a new
++cgroup CPU subsystem file named numa_load_balance. By default, per
++cgroup NUMA balancing for each cgroup is enabled.
++
+ numa_balancing_promote_rate_limit_MBps
+ ======================================
+ 
+diff --git a/include/linux/sched/sysctl.h b/include/linux/sched/sysctl.h
+index 5a64582b086b..1e4d5a9ddb26 100644
+--- a/include/linux/sched/sysctl.h
++++ b/include/linux/sched/sysctl.h
+@@ -22,6 +22,7 @@ enum sched_tunable_scaling {
+ #define NUMA_BALANCING_DISABLED		0x0
+ #define NUMA_BALANCING_NORMAL		0x1
+ #define NUMA_BALANCING_MEMORY_TIERING	0x2
++#define NUMA_BALANCING_CGROUP		0x4
+ 
+ #ifdef CONFIG_NUMA_BALANCING
+ extern int sysctl_numa_balancing_mode;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 8988d38d46a3..8e9aa59193df 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -10078,6 +10078,30 @@ static ssize_t cpu_max_write(struct kernfs_open_file *of,
+ }
+ #endif
+ 
++#ifdef CONFIG_NUMA_BALANCING
++static int numa_balance_write_u64(struct cgroup_subsys_state *css,
++				  struct cftype *cftype, u64 enable)
++{
++	struct task_group *tg;
++	bool was_enabled;
++
++	tg = css_tg(css);
++	was_enabled = READ_ONCE(tg->nlb_enabled);
++	if (was_enabled == enable)
++		return 0;
++
++	WRITE_ONCE(tg->nlb_enabled, enable);
++
++	return 0;
++}
++
++static u64 numa_balance_read_u64(struct cgroup_subsys_state *css,
++				 struct cftype *cft)
++{
++	return READ_ONCE(css_tg(css)->nlb_enabled);
++}
++#endif /* CONFIG_NUMA_BALANCING */
++
+ static struct cftype cpu_files[] = {
+ #ifdef CONFIG_GROUP_SCHED_WEIGHT
+ 	{
+@@ -10126,6 +10150,13 @@ static struct cftype cpu_files[] = {
+ 		.seq_show = cpu_uclamp_max_show,
+ 		.write = cpu_uclamp_max_write,
+ 	},
++#endif
++#ifdef CONFIG_NUMA_BALANCING
++	{
++		.name = "numa_load_balance",
++		.read_u64 = numa_balance_read_u64,
++		.write_u64 = numa_balance_write_u64,
++	},
+ #endif
+ 	{ }	/* terminate */
+ };
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 7a14da5396fb..dcdee3bf9960 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -3161,6 +3161,29 @@ void task_numa_free(struct task_struct *p, bool final)
+ 	}
+ }
+ 
++/*
++ * Return true if the NUMA balance is allowed for
++ * the task in a task group.
++ */
++static bool tg_numa_balance_enabled(struct task_struct *p)
++{
++	/*
++	 * The min/max of sysctl_numa_balancing_mode ranges
++	 * from SYSCTL_ONE to SYSCTL_FOUR, so it is safe to
++	 * only check NUMA_BALANCING_CGROUP because it is
++	 * impossible to have both NUMA_BALANCING_CGROUP and
++	 * NUMA_BALANCING_NORMAL/NUMA_BALANCING_MEMORY_TIERING
++	 * set.
++	 */
++	struct task_group *tg = task_group(p);
++
++	if (tg && (sysctl_numa_balancing_mode & NUMA_BALANCING_CGROUP) &&
++	    !READ_ONCE(tg->nlb_enabled))
++		return false;
++
++	return true;
++}
++
+ /*
+  * Got a PROT_NONE fault for a page on @node.
+  */
+@@ -3189,6 +3212,9 @@ void task_numa_fault(int last_cpupid, int mem_node, int pages, int flags)
+ 	     !cpupid_valid(last_cpupid)))
+ 		return;
+ 
++	if (!tg_numa_balance_enabled(p))
++		return;
++
+ 	/* Allocate buffer to track faults on a per-node basis */
+ 	if (unlikely(!p->numa_faults)) {
+ 		int size = sizeof(*p->numa_faults) *
+@@ -3330,6 +3356,8 @@ static void task_numa_work(struct callback_head *work)
+ 	if (p->flags & PF_EXITING)
+ 		return;
+ 
++	if (!tg_numa_balance_enabled(p))
++		return;
+ 	/*
+ 	 * Memory is pinned to only one NUMA node via cpuset.mems, naturally
+ 	 * no page can be migrated.
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 475bb5998295..4b0dc656688e 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -485,6 +485,9 @@ struct task_group {
+ 	/* Effective clamp values used for a task group */
+ 	struct uclamp_se	uclamp[UCLAMP_CNT];
+ #endif
++#ifdef CONFIG_NUMA_BALANCING
++	u64			nlb_enabled;
++#endif
+ 
+ };
+ 
+diff --git a/mm/mprotect.c b/mm/mprotect.c
+index 88608d0dc2c2..c288ffb92bfc 100644
+--- a/mm/mprotect.c
++++ b/mm/mprotect.c
+@@ -155,10 +155,11 @@ static long change_pte_range(struct mmu_gather *tlb,
+ 				toptier = node_is_toptier(nid);
+ 
+ 				/*
+-				 * Skip scanning top tier node if normal numa
++				 * Skip scanning top tier node if normal and cgroup numa
+ 				 * balancing is disabled
+ 				 */
+-				if (!(sysctl_numa_balancing_mode & NUMA_BALANCING_NORMAL) &&
++				if (!(sysctl_numa_balancing_mode &
++				    (NUMA_BALANCING_CGROUP | NUMA_BALANCING_NORMAL)) &&
+ 				    toptier)
+ 					continue;
+ 				if (folio_use_access_time(folio))
+-- 
+2.25.1
+
