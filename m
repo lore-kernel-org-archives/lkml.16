@@ -1,163 +1,134 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from fout-a7-smtp.messagingengine.com (fout-a7-smtp.messagingengine.com [103.168.172.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B706D25D1ED;
-	Wed, 25 Jun 2025 13:29:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE78188715;
+	Wed, 25 Jun 2025 13:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750858192; cv=none; b=tJzglMGzi3gm5OzqE+MCvt4oWJMQKa6VEyd8TzPysNHA0xjfELiKLfnNGx/sju7YnqO+3DCjevEoqSI/vmQTRCiYlW0r1IHvDkJbJwy8bbAbp/l+TB3w1ElkeslMyMqjSMXUZ4+GX77mvrcX3+VV3HNe7X8u6Wk+hUjgV7nbAJ8=
+	t=1750858215; cv=none; b=ZkUAa+ar1UUz6m9kBt0AXn5IFMj3iu1nSyQHZBq3Zi1wUTWOJA850RdR2mJiQsY3Ow5VBnzU6dUzi2ENQjGF668b0vpeXgj8I1JnNcfY0qP00/jC9hvhQlNh/MbY1YZLbEpcaFYammJE8SlaZwJhpfPPvpKN5osPbkptjbGpd/0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750858192; c=relaxed/simple;
-	bh=VfXy1sSzFunuddiHtM+uLU9xQdYDLn8lHfOI5lG9CX8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QnUMfyzsl9HReKsKyQSLAPjXdnwP8fuWNClE5keMUURrx8YeYnJMvsxWAIY2GxBJSwCvENEP/8VJW04b8+0PqGWv8AODktXuTY1Uqy00Hz0jM3ZF/p0Vz3TMliziy5gkoR5k1BZtDfJH5zfe4kJ+CBPPB8P/bdD8k3vChsLGDM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ay5NlWkn; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750858215; c=relaxed/simple;
+	bh=vuHqH1PEJjDubr/N9Vp6Y8axigxhUhtGqTy2JWe5oNk=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=YrSK/P/G/2Rz63eCU8RuRnSYBi1eAzuGDohxeiHA3Hz+3q3mODG0OQWpveFcl4vE4KxZsao7qLKZvjVeOXXAFm/qOIntT9ZulF+47HQx6XgkJUchTHnOvKnXix37CYHU4obuwtVVpZDY6g/Xorpb/wzfIxF6u8LT+/u31Dq6DYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=dXGe4/nZ; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=SccpscEX; arc=none smtp.client-ip=103.168.172.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ay5NlWkn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750858188;
-	bh=VfXy1sSzFunuddiHtM+uLU9xQdYDLn8lHfOI5lG9CX8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ay5NlWknYmbxfUNMTCn2HwLL3f2bys3CsMz/fE6gTs4BL02RAjzY1dc+wa8Zlv8tN
-	 rmAn9zLzGZHzpdmK+IPMgiJAdU8IFvV1sgTtNaexjHB9VyTqjtAvJNyGw1q9L0PLhw
-	 +JI3qniO5tV6R/2VfDvXxK5rJNgbbSMqq6om7XiCXw4uogKZSrW3sHQAU9GLAYOyKd
-	 iLeQDZpXQ3zBTo5iLBCM3zgzHSmRc/WFcy8dVvXWrqSbMFaduwebS84xoMSalyfpEM
-	 aHglPIB0GyhRFbBBVly56RfEh1q3qqsUY91pA38V2/swHnoWhxf6bOj9YDdWCL7ZNv
-	 QPr36ygolnnGg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id EE09A17E1465;
-	Wed, 25 Jun 2025 15:29:47 +0200 (CEST)
-Message-ID: <1b173e16-f681-4256-8dd2-92db2e90ca73@collabora.com>
-Date: Wed, 25 Jun 2025 15:29:47 +0200
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="dXGe4/nZ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="SccpscEX"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfout.phl.internal (Postfix) with ESMTP id 71296EC0254;
+	Wed, 25 Jun 2025 09:30:12 -0400 (EDT)
+Received: from phl-imap-02 ([10.202.2.81])
+  by phl-compute-05.internal (MEProxy); Wed, 25 Jun 2025 09:30:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1750858212;
+	 x=1750944612; bh=XF9TgJ4TM+rMZuwH8jLpih446v5Y7WgDzSnif4Skai4=; b=
+	dXGe4/nZGlrqMcAkEn6WpxSoA7U0ZSTDmqEIxwgm6w/SWaAUP7J7Ki4yQaaEj2lL
+	++48R0LFGoXAj/KRtqLNmiUDmSi6pmNAkXmv8byre6Iot2oc9WoFXeOMLgXY7OG4
+	ytc78svQ0YDeMGdoHF2NBTUAaj1/y/W4fLXFWmSyhNHOZKsceCnUJgdBl22Fs5lX
+	jArCH07Mr3c/4GX4l3znLORUVh46SLfAk/bslDzWb0DQxr6nJkUJjWyMF0RMI82K
+	Brj7M+bXSG1RUqM+xIG6wQuCaZXgS5NZQwBGYWqSQxjWSWaN4uy42zaGcD0z6933
+	T9BOBcAL5g9nbDmxbVKvHA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1750858212; x=
+	1750944612; bh=XF9TgJ4TM+rMZuwH8jLpih446v5Y7WgDzSnif4Skai4=; b=S
+	ccpscEXfCYF5acR+hKZjipG83cA1rUynfX/2wf++nANktF0+1FaR2vetu9yAvMuL
+	5X+57/15mlhHW1AQAE//afhx36xGRrFmKlOWYjK9MSDjiq3DG6ENW8YZ39oiA1bc
+	Bm6Quza6lUWfkztxuXHxX+xJ4cmFx4vJDF01nnIt8D1Vd6IxtRv2p1sLktpr4NTy
+	ryUE1WNMPbuu8vfNGaMCuaSk8LsWvkKiulAoJxbzgVdx2GydszDGkPXYh9sbxxb2
+	MTImfziveXvyVOtSo976ga2D/zxekCa7Jl7FXh0im9oFbAIg0o+NOSxxTsgIlpZX
+	MgYf6pKQ9lacCWL3WoiVw==
+X-ME-Sender: <xms:4_lbaEx1jXUWSYXBR1joL8AQVSOvcZHNnwh18ovi1Rm2QcBLwMRu3g>
+    <xme:4_lbaIRVo3b76TYuCmqQRz4U5ZBKwotU7zklHi7qQgCvZZIlJMNGjEWwENex2MKJ7
+    o9wFCp19-cLgLEZD0k>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvvdeltdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpefoggffhffvvefkjghfufgtgfesthejredtredttdenucfhrhhomhepfdetrhhnugcu
+    uegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrghtthgvrh
+    hnpefhtdfhvddtfeehudekteeggffghfejgeegteefgffgvedugeduveelvdekhfdvieen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnug
+    esrghrnhgusgdruggvpdhnsggprhgtphhtthhopeduvddpmhhouggvpehsmhhtphhouhht
+    pdhrtghpthhtoheplhhutggrrdgsohgttggrshhsihesghhmrghilhdrtghomhdprhgtph
+    htthhopehjrghnnhhhsehgohhoghhlvgdrtghomhdprhgtphhtthhopegrrhhnugeskhgv
+    rhhnvghlrdhorhhgpdhrtghpthhtohepsghrrghunhgvrheskhgvrhhnvghlrdhorhhgpd
+    hrtghpthhtohepjhhlrgihthhonheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhho
+    mhgrnhhksehlihhnuhigrdhmihgtrhhoshhofhhtrdgtohhmpdhrtghpthhtoheprghlvg
+    igrghnuggvrhesmhhihhgrlhhitgihnhdrtghomhdprhgtphhtthhopehmrdhsiiihphhr
+    ohifshhkihesshgrmhhsuhhnghdrtghomhdprhgtphhtthhopehjrggtkhesshhushgvrd
+    gtii
+X-ME-Proxy: <xmx:4_lbaGVZcIeD3Bqb4N5JHA9n3DBFN_GP7M5MaQhMx2ZhJ0FC8L830A>
+    <xmx:4_lbaCg6Jt-QmmvfhUlhwfx4nbdJ7Cl_X3h_0_8QS7sZ1p8K9t-xvw>
+    <xmx:4_lbaGB3quRHyfglsSxgPk27JsxyQI-EJY448kPfLs4EN6YLHtfX2Q>
+    <xmx:4_lbaDKwO1G0rtFfE-uc1zR7IpCawWIsOF15NEL0fchIkAtNGtAJuw>
+    <xmx:5PlbaBHsDXBNJ1MIz8A4lTQHAn-P6-7ZAzOYf1M1n-dpEbDK5UWGRSaT>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 85D04700065; Wed, 25 Jun 2025 09:30:11 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/5] iio: adc: mt6359: Add support for MediaTek MT6363
- PMIC AUXADC
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
- andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- kernel@collabora.com
-References: <20250623120028.108809-1-angelogioacchino.delregno@collabora.com>
- <20250623120028.108809-5-angelogioacchino.delregno@collabora.com>
- <aFlk-l5LhgO8dnXK@smile.fi.intel.com>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <aFlk-l5LhgO8dnXK@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+X-ThreadId: T0a33ac4b6ea30a8c
+Date: Wed, 25 Jun 2025 15:29:50 +0200
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Marek Szyprowski" <m.szyprowski@samsung.com>,
+ "Arnd Bergmann" <arnd@kernel.org>,
+ "Alexander Viro" <viro@zeniv.linux.org.uk>,
+ "Christian Brauner" <brauner@kernel.org>
+Cc: "Jan Kara" <jack@suse.cz>,
+ "Alexander Mikhalitsyn" <alexander@mihalicyn.com>,
+ "Jann Horn" <jannh@google.com>, "Luca Boccassi" <luca.boccassi@gmail.com>,
+ "Jeff Layton" <jlayton@kernel.org>,
+ "Roman Kisel" <romank@linux.microsoft.com>, linux-fsdevel@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <cb0c926f-15be-4400-a9b9-0122a6238fea@app.fastmail.com>
+In-Reply-To: <8f080dc3-ef13-4d9a-8964-0c2b3395072e@samsung.com>
+References: <20250620112105.3396149-1-arnd@kernel.org>
+ <404dfe9a-1f4f-4776-863a-d8bbe08335e2@samsung.com>
+ <CGME20250625115426eucas1p17398cfcd215befcd3eafe0cac44b33a7@eucas1p1.samsung.com>
+ <8f080dc3-ef13-4d9a-8964-0c2b3395072e@samsung.com>
+Subject: Re: [PATCH] coredump: reduce stack usage in vfs_coredump()
+Content-Type: text/plain
 Content-Transfer-Encoding: 7bit
 
-Il 23/06/25 16:30, Andy Shevchenko ha scritto:
-> On Mon, Jun 23, 2025 at 02:00:27PM +0200, AngeloGioacchino Del Regno wrote:
->> MediaTek MT6363 is a PMIC found on MT8196/MT6991 board designs
->> and communicates with the SoC over SPMI.
+On Wed, Jun 25, 2025, at 13:54, Marek Szyprowski wrote:
+> On 25.06.2025 13:41, Marek Szyprowski wrote:
 >>
->> This PMIC integrates an Auxiliary ADC (AUXADC) which has a grand
->> total of 54 ADC channels: 49 PMIC-internal channels, 2 external
->> NTC thermistor channels and 2 generic ADC channels (mapped to 7
->> PMIC ADC external inputs).
->>
->> To use a generic ADC channel it is necessary to enable one of
->> the PMIC ADC inputs at a time and only then start the reading,
->> so in this case it is possible to read only one external input
->> for each generic ADC channel.
->>
->> Due to the lack of documentation, this implementation supports
->> using only one generic ADC channel, hence supports reading only
->> one external input at a time.
-> 
->> +#define MT6363_EXT_CHAN_MASK		GENMASK(2, 0)
->> +#define MT6363_EXT_PURES_MASK		GENMASK(4, 3)
->> + #define MT6363_PULLUP_RES_100K		0
->> + #define MT6363_PULLUP_RES_OPEN		3
-> 
-> I would rather expect the two spaces after #define. This most likely will break
-> syntax highlighting in (some of) the editors.
-> 
+>> This change appears in today's linux-next (next-20250625) as commit 
+>> fb82645d3f72 ("coredump: reduce stack usage in vfs_coredump()"). In my 
+>> tests I found that it causes a kernel oops on some of my ARM 32bit 
+>> Exynos based boards. This is really strange, because I don't see any 
+>> obvious problem in this patch. Reverting $subject on top of linux-next 
+>> hides/fixes the oops. I suspect some kind of use-after-free issue, but 
+>> I cannot point anything related. Here is the kernel log from one of 
+>> the affected boards (I've intentionally kept the register and stack 
+>> dumps):
+>
+> I've just checked once again and found the source of the issue. 
+> vfs_coredump() calls coredump_cleanup(), which calls coredump_finish(), 
+> which performs the following dereference:
+>
+> next = current->signal->core_state->dumper.next
+>
+> of the core_state assigned in zap_threads() called from coredump_wait(). 
+> It looks that core_state cannot be moved into coredump_wait() without 
+> refactoring/cleaning this first.
 
-I can change that no problem (or if this can be changed while applying, that'd
-buy me some time and I'd appreciate that a lot)
+Thanks for the analysis, I agree that this can't work and my patch
+just needs to be dropped. The 'noinline_for_stack' change on
+its own is probably sufficient to avoid the warning, and I can
+respin a new version after more build testing.
 
-> ...
-> 
->> +#define MTK_PMIC_ADC_EXT_CHAN(_ch_idx, _req_idx, _req_bit, _rdy_idx, _rdy_bit,	\
->> +			      _ext_sel_idx, _ext_sel_ch, _ext_sel_pu,		\
->> +			      _samples, _rnum, _rdiv)				\
-> 
-> Wondering, and it's out of scope here, if we can go to use a macro for
-> initialization of struct *_fract.
-> 
->>   	[PMIC_AUXADC_CHAN_##_ch_idx] = {					\
->>   		.req_idx = _req_idx,						\
->>   		.req_mask = BIT(_req_bit),					\
->>   		.rdy_idx = _rdy_idx,						\
->>   		.rdy_mask = BIT(_rdy_bit),					\
->> +		.ext_sel_idx = _ext_sel_idx,					\
->> +		.ext_sel_ch = _ext_sel_ch,					\
->> +		.ext_sel_pu = _ext_sel_pu,					\
->>   		.num_samples = _samples,					\
->>   		.r_ratio = { _rnum, _rdiv }					\
->>   	}
-> 
-> Perhaps something in math.h as
-> 
-> #define INIT_STRUCT_FRACT_UXX(n, d) ...
-
-Not sure... honestly, at a first glance it looks like a macro would only make
-a longer line and nothing else...
-
-...but - effectively - I can see a benefit for a INIT_CONST_STRUCT_FRACT_Uxx(n, d)
-where we could perform a build-time check for division by zero.
-
-I'm not sure how many users would there be of such a macro, ideas?
-
-> 
-> ...
-> 
->> +	if (MTK_AUXADC_HAS_FLAG(cinfo, IS_SPMI)) {
->> +		/* If the previous read succeeded, this can't fail */
->> +		regmap_read(regmap, reg - 1, &lval);
-> 
-> No error check? lval may contain garbage here, right?
-> 
-
-No, because if the previous read succeeded, this can't fail, and also cannot ever
-possibly contain garbage (and if it does, - but again, that can't happen - there is
-no way to validate that because valid values are [0x00..0xff] anyway).
-
->> +		val = (val << 8) | lval;
-> 
-> Is it guaranteed that lval is always less than 256 (if unsigned)?
-> 
-
-Yes, with SPMI that is guaranteed.
-
->> +	}
-> 
-> ...
-> 
->> +		regmap_update_bits(regmap, cinfo->regs[desc->ext_sel_idx],
->> +				   MT6363_EXT_PURES_MASK, ext_sel);
-> 
-> No  error check?
-> 
-
-No, because if the previous reads and/or writes succeeded, it is impossible for
-this to fail :-)
-
-Cheers,
-Angelo
-
+     Arnd
