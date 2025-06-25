@@ -1,208 +1,106 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390EC1F417B
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:40:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33E61DE4D2;
+	Wed, 25 Jun 2025 06:40:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750833604; cv=none; b=BCYvcCe2d2QXXitkJOsuSoqaHbcmiIHFaur6/qYz6ZtdB5a2xaHA2jJaopUMa9IFIBaRNU3xVcjc+NkXV7c5AMlyvC32vbbMTOEHV7DhqHF/K29aS0//jCjCC1PuznSByT91Bs8m6NEE/Q/0RT/kxY87moOI/OFtUJT1ON+2MrQ=
+	t=1750833612; cv=none; b=Viz2MguYP9eebbCLOZDuy5laI7UXDPgVXjNwEvoTG4aBaptBwH3sTtLhC4tcZs4kcZuPNmfm0SrhHtezMK+L9umoz+OF7JQmHVS++WsmPWMTJMgT7dNIIgbd7YKO1rAj7hg6cx9qJGEGEUSwd8oqnrnZZ7ha0PLDfY7p9ndpiZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750833604; c=relaxed/simple;
-	bh=AlFRqGPfVPlsS/JrN+TTx7xmwCM5gQLROXynUoae7+Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RjdTyIk+RsjNuKwCIo+EoZrXM3F/u0j1m8xspkAXrd0glnX8Glx1bP4lQ0pRF+MA2n58iLQWxMXeZLG6Dk9NOnqu+YGnU8y+MmaiHo3pBWd9pEULyqq3nB8yDVS8p4t5Hc43dwL8m07vF6PvE0OhOt5CRqgSDuxbH3kp6whX8lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZVTsY4iu; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750833612; c=relaxed/simple;
+	bh=WvclcHiT+DnHLH2WR+iDlvHyg2rAKG6EvtwH8ed+/00=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h3G8nRh+JTDlLlJxyNHJ6vL7W/iiFCb0m2dPCcp5EATda7va73MmP0g2SXU7Uwy65i6dCYtjsChc3TODBhtKuWYLtv3P5YO6aEGqPGM9YQ6/Sqdsiwu2zU8w38LVuLTOQBL23M96VHtSMMlO+GyVbOHnMByT6BCG5xjSuhVlEew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VoO4Xi3t; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZVTsY4iu"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P6KIFC027197;
-	Wed, 25 Jun 2025 06:39:49 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=pp1; bh=y0uGGjTwvQMXqwA8b
-	HmeHWGWvFDAhSVWPCqT+UWRp/M=; b=ZVTsY4iuseNAEkMz5aUAtf20YjK87OvHJ
-	pgiY16o8tHB6B3VQm34YNet81excWdAZN0ARDY9xDvouCYKksesrqL995PempcPG
-	vMZCS2AFNTNt26GaHOxjsWsd4Jfu0bsZftDu5NR4FsuDeTareXKit3lSU7Hl9QsL
-	eiRZEjHwBn8IvJXAPOxGiUYg6DYAPeW3YMnpwTJLx0213bzh44e53EpHrdLz0X5J
-	zZq5oGQQ3nr4VO6znGbhwWYqOWM9dPaB62lEsSGkKH/M6hfJ+f9mhunL3YTDD0aB
-	L7xO0S71Cq91L++yG2hhM2Ko7Z2Pp2ZMtwBD7B0qSoZPZID7d5VWw==
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dj5twg89-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 06:39:49 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55P65rBf006329;
-	Wed, 25 Jun 2025 06:39:48 GMT
-Received: from smtprelay02.wdc07v.mail.ibm.com ([172.16.1.69])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e82p8012-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 06:39:48 +0000
-Received: from smtpav02.dal12v.mail.ibm.com (smtpav02.dal12v.mail.ibm.com [10.241.53.101])
-	by smtprelay02.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55P6dlxV47251908
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Jun 2025 06:39:47 GMT
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6A9A058932;
-	Wed, 25 Jun 2025 06:39:40 +0000 (GMT)
-Received: from smtpav02.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F152558913;
-	Wed, 25 Jun 2025 06:39:24 +0000 (GMT)
-Received: from jarvis.ozlabs.ibm.com.com (unknown [9.36.18.35])
-	by smtpav02.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 25 Jun 2025 06:39:24 +0000 (GMT)
-From: Andrew Donnellan <ajd@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org, pasha.tatashin@soleen.com,
-        akpm@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-riscv@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-        linux-mm@kvack.org, sweettea-kernel@dorminy.me,
-        christophe.leroy@csgroup.eu, mingo@kernel.org
-Subject: [PATCH v15 11/13] powerpc: mm: Implement *_user_accessible_page() for ptes
-Date: Wed, 25 Jun 2025 16:37:51 +1000
-Message-ID: <20250625063753.77511-12-ajd@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250625063753.77511-1-ajd@linux.ibm.com>
-References: <20250625063753.77511-1-ajd@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VoO4Xi3t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750833611; x=1782369611;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WvclcHiT+DnHLH2WR+iDlvHyg2rAKG6EvtwH8ed+/00=;
+  b=VoO4Xi3tQCmCZ8R3DD4xa97nKCjrVXIkyowFNtXwk/nT7DwC+qzhqijm
+   V3uyHH8RNiN3mvcqhmpv4m8o4OVSdAwHpOMxGESaTUF4zRn/492WxWRIR
+   bLptvB1Z0iPp+KFrUj10nSa1rIU3hpZXMp32uFQz8wkn76tXKGB5CYsB6
+   lAjlwjS+95k+cQRDUoIH3EK6x4j4Nv9H0bWV4NST1GCwTcVRDC8Fe48Nf
+   iP5rP5pVq/7FhWJTqjcw6+gQ9PYquAtmNd6HzGj+5Wybz+AJgLWmfBoWY
+   c8JtvAs1wyA5Galug9MP6oMYbHjBBDlU6/Bla7ZIFWzh7EyrKpVIGVOp8
+   g==;
+X-CSE-ConnectionGUID: iUgQOOT7S5SR5SybiLkYEg==
+X-CSE-MsgGUID: M2DGR9YTQpufHIOOn1vgAQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64527454"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="64527454"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 23:40:10 -0700
+X-CSE-ConnectionGUID: ZIF/0KJFQFW+uymoaBwZcQ==
+X-CSE-MsgGUID: Y85IJJu9T068YmCA47aOxQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="152259090"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa006.fm.intel.com with ESMTP; 24 Jun 2025 23:40:07 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id 1E648138; Wed, 25 Jun 2025 09:40:06 +0300 (EEST)
+Date: Wed, 25 Jun 2025 09:40:06 +0300
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: zhangjianrong <zhangjianrong5@huawei.com>
+Cc: andreas.noever@gmail.com, michael.jamet@intel.com,
+	YehezkelShB@gmail.com, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, guhengsheng@hisilicon.com,
+	caiyadong@huawei.com, xuetao09@huawei.com, lixinghang1@huawei.com
+Subject: Re: [PATCH] thunderbolt: Process xdomain response packets
+ synchronously
+Message-ID: <20250625064006.GE2824380@black.fi.intel.com>
+References: <20250625062505.1596787-1-zhangjianrong5@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: o8pwN8EwYal227quZlaJ3Sf4w3pndpWK
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA0NSBTYWx0ZWRfX/r2U2Vc/ajCp bxsk6+xpiyEKaboTL+EmY/t/cFJaZuaZichgUtjlkdAvasA29qP2hCPbFcI1lbO577y3aQem6KE 71z4G3FuhONrOr5KROK5VkunB2NBAYb5WBzFTfnTbJ2uUcwNpgAsFWz++yrgbPc4eSfantOty6e
- hTXJcsG2W4MBNRzZuGXgYWgiLit9rIPiuPccmbSQ/7Ppwb/7bPqvj9gXNyit86BC7NZLK/39yGW y1YO2Hky4EwTzlhpnMeMj6eISDXZdZZu1z+l3jKiMbu/cr0m8UrOQ2vQ8+I/+C2bev6ppY6EILf HlJ8LYFyUh0nkS3mXBAecPKECm3FPacnmng+Q/j52GBoYS3AK8DdkMMevf/0TKjw1D0TLNf0WA3
- JFp/KHCimzIj1NX/oSzyY9gfxMfUUJAU5wbgcEBFp84EeJbtrhGdEaC25cegM3OTd5Mutnpl
-X-Authority-Analysis: v=2.4 cv=MshS63ae c=1 sm=1 tr=0 ts=685b99b5 cx=c_pps a=GFwsV6G8L6GxiO2Y/PsHdQ==:117 a=GFwsV6G8L6GxiO2Y/PsHdQ==:17 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=7ipKWUHlAAAA:8 a=a65a1E2n8xkc5m_RgcEA:9 a=gpc5p9EgBqZVLdJeV_V1:22
-X-Proofpoint-GUID: o8pwN8EwYal227quZlaJ3Sf4w3pndpWK
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_01,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=673 impostorscore=0
- clxscore=1011 phishscore=0 malwarescore=0 suspectscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506250045
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250625062505.1596787-1-zhangjianrong5@huawei.com>
 
-From: Rohan McLure <rmclure@linux.ibm.com>
+On Wed, Jun 25, 2025 at 02:25:05PM +0800, zhangjianrong wrote:
+> Xdomain response packets don't belong to async event. It seems
+> no harm now but better to be fixed.
 
-Page table checking depends on architectures providing an
-implementation of p{te,md,ud}_user_accessible_page. With
-refactorisations made on powerpc/mm, the pte_access_permitted() and
-similar methods verify whether a userland page is accessible with the
-required permissions.
+It seems odd but the protocol actually uses RESP packets also with requests
+(probably a typo in the original specs but this is what Apple also
+implemented so we need to support it). So we need to deal with them.
 
-Since page table checking is the only user of
-p{te,md,ud}_user_accessible_page(), implement these for all platforms,
-using some of the same preliminary checks taken by pte_access_permitted()
-on that platform.
+Did you try if this patch works against macOS for example?
 
-Since commit 8e9bd41e4ce1 ("powerpc/nohash: Replace pte_user() by pte_read()")
-pte_user() is no longer required to be present on all platforms as it
-may be equivalent to or implied by pte_read(). Hence implementations of
-pte_user_accessible_page() are specialised.
-
-[ajd@linux.ibm.com: rebase and fix commit message]
-Signed-off-by: Rohan McLure <rmclure@linux.ibm.com>
-Reviewed-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Signed-off-by: Andrew Donnellan <ajd@linux.ibm.com>
----
- arch/powerpc/include/asm/book3s/32/pgtable.h |  5 +++++
- arch/powerpc/include/asm/book3s/64/pgtable.h | 17 +++++++++++++++++
- arch/powerpc/include/asm/nohash/pgtable.h    |  5 +++++
- arch/powerpc/include/asm/pgtable.h           |  8 ++++++++
- 4 files changed, 35 insertions(+)
-
-diff --git a/arch/powerpc/include/asm/book3s/32/pgtable.h b/arch/powerpc/include/asm/book3s/32/pgtable.h
-index 92d21c6faf1e..b225967f85ea 100644
---- a/arch/powerpc/include/asm/book3s/32/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/32/pgtable.h
-@@ -437,6 +437,11 @@ static inline bool pte_access_permitted(pte_t pte, bool write)
- 	return true;
- }
- 
-+static inline bool pte_user_accessible_page(pte_t pte, unsigned long addr)
-+{
-+	return pte_present(pte) && !is_kernel_addr(addr);
-+}
-+
- /* Conversion functions: convert a page and protection to a page entry,
-  * and a page entry and page directory to the page they refer to.
-  *
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
-index a2ddcbb3fcb9..5de04302c6f4 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
-@@ -540,6 +540,11 @@ static inline bool pte_access_permitted(pte_t pte, bool write)
- 	return arch_pte_access_permitted(pte_val(pte), write, 0);
- }
- 
-+static inline bool pte_user_accessible_page(pte_t pte, unsigned long addr)
-+{
-+	return pte_present(pte) && pte_user(pte);
-+}
-+
- /*
-  * Conversion functions: convert a page and protection to a page entry,
-  * and a page entry and page directory to the page they refer to.
-@@ -1430,5 +1435,17 @@ static inline bool is_pte_rw_upgrade(unsigned long old_val, unsigned long new_va
- 	return false;
- }
- 
-+#define pmd_user_accessible_page pmd_user_accessible_page
-+static inline bool pmd_user_accessible_page(pmd_t pmd, unsigned long addr)
-+{
-+	return pmd_leaf(pmd) && pte_user_accessible_page(pmd_pte(pmd), addr);
-+}
-+
-+#define pud_user_accessible_page pud_user_accessible_page
-+static inline bool pud_user_accessible_page(pud_t pud, unsigned long addr)
-+{
-+	return pud_leaf(pud) && pte_user_accessible_page(pud_pte(pud), addr);
-+}
-+
- #endif /* __ASSEMBLY__ */
- #endif /* _ASM_POWERPC_BOOK3S_64_PGTABLE_H_ */
-diff --git a/arch/powerpc/include/asm/nohash/pgtable.h b/arch/powerpc/include/asm/nohash/pgtable.h
-index 7d6b9e5b286e..a8bc4f24beb1 100644
---- a/arch/powerpc/include/asm/nohash/pgtable.h
-+++ b/arch/powerpc/include/asm/nohash/pgtable.h
-@@ -243,6 +243,11 @@ static inline bool pte_access_permitted(pte_t pte, bool write)
- 	return true;
- }
- 
-+static inline bool pte_user_accessible_page(pte_t pte, unsigned long addr)
-+{
-+	return pte_present(pte) && !is_kernel_addr(addr);
-+}
-+
- /* Conversion functions: convert a page and protection to a page entry,
-  * and a page entry and page directory to the page they refer to.
-  *
-diff --git a/arch/powerpc/include/asm/pgtable.h b/arch/powerpc/include/asm/pgtable.h
-index 0f73a9ade0ed..d0938e9c33fb 100644
---- a/arch/powerpc/include/asm/pgtable.h
-+++ b/arch/powerpc/include/asm/pgtable.h
-@@ -223,6 +223,14 @@ static inline int pud_pfn(pud_t pud)
- }
- #endif
- 
-+#ifndef pmd_user_accessible_page
-+#define pmd_user_accessible_page(pmd, addr)	false
-+#endif
-+
-+#ifndef pud_user_accessible_page
-+#define pud_user_accessible_page(pud, addr)	false
-+#endif
-+
- #endif /* __ASSEMBLY__ */
- 
- #endif /* _ASM_POWERPC_PGTABLE_H */
--- 
-2.49.0
-
+> 
+> Signed-off-by: zhangjianrong <zhangjianrong5@huawei.com>
+> ---
+>  drivers/thunderbolt/ctl.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thunderbolt/ctl.c b/drivers/thunderbolt/ctl.c
+> index 4bdb2d45e0bf..1873b64caf7c 100644
+> --- a/drivers/thunderbolt/ctl.c
+> +++ b/drivers/thunderbolt/ctl.c
+> @@ -461,6 +461,7 @@ static void tb_ctl_rx_callback(struct tb_ring *ring, struct ring_frame *frame,
+>  	case TB_CFG_PKG_ERROR:
+>  	case TB_CFG_PKG_OVERRIDE:
+>  	case TB_CFG_PKG_RESET:
+> +	case TB_CFG_PKG_XDOMAIN_RESP:
+>  		if (*(__be32 *)(pkg->buffer + frame->size) != crc32) {
+>  			tb_ctl_err(pkg->ctl,
+>  				   "RX: checksum mismatch, dropping packet\n");
+> @@ -474,7 +475,6 @@ static void tb_ctl_rx_callback(struct tb_ring *ring, struct ring_frame *frame,
+>  		break;
+>  
+>  	case TB_CFG_PKG_EVENT:
+> -	case TB_CFG_PKG_XDOMAIN_RESP:
+>  	case TB_CFG_PKG_XDOMAIN_REQ:
+>  		if (*(__be32 *)(pkg->buffer + frame->size) != crc32) {
+>  			tb_ctl_err(pkg->ctl,
+> -- 
+> 2.34.1
