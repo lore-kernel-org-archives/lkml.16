@@ -1,107 +1,113 @@
-Received: from relay.hostedemail.com (smtprelay0015.hostedemail.com [216.40.44.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADBE3074AD;
-	Wed, 25 Jun 2025 20:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69E561E9B35;
+	Wed, 25 Jun 2025 20:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750884678; cv=none; b=CWClPTXgvhr7FM4dQsrF4Yn9TTYp6u8m0xRGkFgwbrkwmEkLdXqyeOP4lio5rBplz25rIA5itw67IQXiD9iUdnvW4omYQ30YMlDq3yGFa4zmDlWrru6MG6NuqICDNC0Atvep8zBJAWeJC/12ezUgGRrwMoiKTnSsHz3igOaMmfM=
+	t=1750885057; cv=none; b=PwewBL8oKpbJZwjyGjLczTWPkwo9QifE1K40t4GJSav2lgX/RMPNXsggBpDvr/AUOpNykLw0JYJP1X8ULJ+zZC1mpLu1Ve6g355yo4hmbv0paKAz6YwyvbNWneO4AkiAAqzle2RDA9yzd1pHq5VmsUQ8IpwvQZSOGdsZwGB1Ccc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750884678; c=relaxed/simple;
-	bh=6KkgogaZ8zdurDpNx/9i2VO5L1eeG4hr6lZaiwa4V6I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GMAM0WKzYW+1jtf5Q0HLpb0/p61zYRv9WWp7Epgp7AVpy0WGg23BdfR8oR+mZWS4/FREYvFwW19oZuv+OVl666GUYrF3SM3ty/DHN99hj4mfKelRBrGv07q/IlRjudrvxb9UsiKnfCIyz8OzWyFLcYDrCoRUZv4c1Xiq3qR/t4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
-Received: from omf18.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id ED0C810468F;
-	Wed, 25 Jun 2025 20:51:06 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: rostedt@goodmis.org) by omf18.hostedemail.com (Postfix) with ESMTPA id 3336330;
-	Wed, 25 Jun 2025 20:51:05 +0000 (UTC)
-Date: Wed, 25 Jun 2025 16:50:54 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Jiazi Li <jqqlijiazi@gmail.com>, linux-kernel@vger.kernel.org,
- "peixuan.qiu" <peixuan.qiu@transsion.com>, io-uring@vger.kernel.org, Peter
- Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] stacktrace: do not trace user stack for user_worker
- tasks
-Message-ID: <20250625165054.199093f1@batman.local.home>
-In-Reply-To: <80e637d3-482d-4f3a-9a86-948d3837b24d@kernel.dk>
-References: <20250623115914.12076-1-jqqlijiazi@gmail.com>
-	<20250624130744.602c5b5f@batman.local.home>
-	<80e637d3-482d-4f3a-9a86-948d3837b24d@kernel.dk>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1750885057; c=relaxed/simple;
+	bh=CONJvh9GTvQNHiz6RDThEGWt/rqqD1237zzZv4uI+TU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KTa2MCsFkWwkirHVfiwIqonNk2eknU9zHa7jA5fnUAOx1vz1J7a5ELFoiwpPSOcs1OkdfklnldOZS6rZx6IYv90U4Cra/GxcE2pJk8mbEI7+ztBo3Pu39ckFW+39QBblSInqm8PcY8IDqn4d/WwqoKCzAUmjsSgXHg1LXyBwtJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NsY8MbQS; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NsY8MbQS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16B48C4CEEA;
+	Wed, 25 Jun 2025 20:57:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750885057;
+	bh=CONJvh9GTvQNHiz6RDThEGWt/rqqD1237zzZv4uI+TU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NsY8MbQSr/FWAyLyQKy0V1OdBJdQrvtOmCxXJwTBm0iysH//ZgI+k942HearjhGNO
+	 LTsLetKBXJYXNnbkcMR41zlIIPp0e+mcvgkZag0BtB12Zct8wzj1/OPfNf0xFtj79f
+	 9O+fQ54QDjcH2512vrHV7bM0yaH6qKER2jFLLqo/KdFxQxJxeoqune5/Fwg0f7muvc
+	 mf9xHXG+VowHFfo0lOuwJjc+9zqkb1UcK3d4ZriC/U5cAASjG8j1jmOj1G+wMDhPhI
+	 56/8eBOfHJOgAs5lJmNpBwsAFsgDwcT0bWuwdfPlYQ587vzCy+rgVr5WW1cU6ea2TN
+	 yW1an6uVBZpqw==
+Date: Wed, 25 Jun 2025 14:57:34 -0600
+From: Manivannan Sadhasivam <mani@kernel.org>
+To: Hans Zhang <18255117159@163.com>
+Cc: lpieralisi@kernel.org, bhelgaas@google.com, kwilczynski@kernel.org, 
+	robh@kernel.org, jingoohan1@gmail.com, linux-pci@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 13/13] PCI: tegra194: Refactor code by using
+ dw_pcie_clear_and_set_dword()
+Message-ID: <ci3ojmiiuajwedx3desa7vf5lkk35meaj4kdqnunf3f66knvm5@gtgxoagzl7ek>
+References: <20250618152112.1010147-1-18255117159@163.com>
+ <20250618152112.1010147-14-18255117159@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Stat-Signature: xafjfh53pddn6wo38thmi4gzzca9ar6z
-X-Rspamd-Server: rspamout07
-X-Rspamd-Queue-Id: 3336330
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX19g5aGSHAsoIS2cMM7hYXD74NMSHkUDja0=
-X-HE-Tag: 1750884665-748652
-X-HE-Meta: U2FsdGVkX1+p6Z0Hf1vmldNDykjSGqq1TUpuT+GHffjCeaqkm+Z1cXBA1mJi+7f0ug/eEAi5nD0Cw/W7UOJIbT/ImATJTQyr2+Wj8SobUljq79GHHPZoncZb0yggqmfa5B8nhEuqWz/8r+ld/dxZ5llBhp1JLnPzvTschpYAa5ajPHnsaarixYNaFRBUUQ+IpMT5p2wT8FZWT7ezHFDkzFPi8ycsjznCZs2NX8RyMqt5d5H5wGeyh33P3AAq5XL1uwauTaJjhvTUwT/r+t833TYUVj/QwLBxMesgJWdnSO7t1mJHJv2F776WZPgCovnMTUiNg+3aDnxWCzm++Q+TXr3wABA8r25b5KslGOypoUkLzzZTZNOZ7e48arvS4peXxmwV/xLl/d9hdVQ1ErOnMJ9AbaipoJ3HfbMXlgEwOoU=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250618152112.1010147-14-18255117159@163.com>
 
-[
-  Adding Peter Zijlstra as he has been telling me to test against
-  PF_KTHREAD instead of current->mm to tell if it is a kernel thread.
-  But that seems to not be enough!
-]
-
-On Wed, 25 Jun 2025 10:23:28 -0600
-Jens Axboe <axboe@kernel.dk> wrote:
-
-> On 6/24/25 11:07 AM, Steven Rostedt wrote:
-> > On Mon, 23 Jun 2025 19:59:11 +0800
-> > Jiazi Li <jqqlijiazi@gmail.com> wrote:
-> >   
-> >> Tasks with PF_USER_WORKER flag also only run in kernel space,
-> >> so do not trace user stack for these tasks.  
-> > 
-> > What exactly is the difference between PF_KTHREAD and PF_USER_WORKER?  
+On Wed, Jun 18, 2025 at 11:21:12PM +0800, Hans Zhang wrote:
+> Tegra194 PCIe driver contains extensive manual bit manipulation across
+> interrupt handling, ASPM configuration, and controller initialization.
+> The driver implements complex read-modify-write sequences with explicit
+> bit masking, leading to verbose and hard-to-maintain code.
 > 
-> One is a kernel thread (eg no mm, etc), the other is basically a user
-> thread. None of them exit to userspace, that's basically the only
-> thing they have in common.
-
-Was it ever in user space? Because exiting isn't the issue for getting
-a user space stack. If it never was in user space than sure, there's no
-reason to look at the user space stack.
-
+> Refactor interrupt handling, ASPM setup, capability configuration, and
+> controller initialization using dw_pcie_clear_and_set_dword(). Replace
+> multi-step register modifications with single helper calls, eliminating
+> intermediate variables and reducing code size by ~100 lines. For CDMA
+> error handling, initialize the value variable to zero before setting
+> status bits.
 > 
-> > Has all the locations that test for PF_KTHREAD been audited to make
-> > sure that PF_USER_WORKER isn't also needed?  
+> This comprehensive refactoring significantly improves code readability
+> and maintainability. Standardizing on the helper ensures consistent
+> register access patterns across all driver components and reduces the
+> risk of bit manipulation errors in this complex controller driver.
 > 
-> I did when adding it, to the best of my knowledge. But there certainly
-> could still be gaps. Sometimes not easy to see why code checks for
-> PF_KTHREAD in the first place.
+> Signed-off-by: Hans Zhang <18255117159@163.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 155 +++++++++------------
+>  1 file changed, 64 insertions(+), 91 deletions(-)
 > 
-> > I'm working on other code that needs to differentiate between user
-> > tasks and kernel tasks, and having to have multiple flags to test is
-> > becoming quite a burden.  
-> 
-> None of them are user tasks, but PF_USER_WORKER does look like a
-> user thread and acts like one, except it wasn't created by eg
-> pthread_create() and it never returns to userspace. When it's done,
-> it's simply reaped.
-> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 4f26086f25da..c6f5c35a4be4 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -378,9 +378,8 @@ static irqreturn_t tegra_pcie_rp_irq_handler(int irq, void *arg)
+>  			val |= APPL_CAR_RESET_OVRD_CYA_OVERRIDE_CORE_RST_N;
+>  			appl_writel(pcie, val, APPL_CAR_RESET_OVRD);
+>  
+> -			val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+> -			val |= PORT_LOGIC_SPEED_CHANGE;
+> -			dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> +			dw_pcie_clear_and_set_dword(pci, PCIE_LINK_WIDTH_SPEED_CONTROL,
+> +						    0, PORT_LOGIC_SPEED_CHANGE);
+>  		}
+>  	}
+>  
+> @@ -412,7 +411,7 @@ static irqreturn_t tegra_pcie_rp_irq_handler(int irq, void *arg)
+>  
+>  	if (status_l0 & APPL_INTR_STATUS_L0_CDM_REG_CHK_INT) {
+>  		status_l1 = appl_readl(pcie, APPL_INTR_STATUS_L1_18);
+> -		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
+> +		val = 0;
+>  		if (status_l1 & APPL_INTR_STATUS_L1_18_CDM_REG_CHK_CMPLT) {
+>  			dev_info(pci->dev, "CDM check complete\n");
+>  			val |= PCIE_PL_CHK_REG_CHK_REG_COMPLETE;
+> @@ -425,7 +424,8 @@ static irqreturn_t tegra_pcie_rp_irq_handler(int irq, void *arg)
+>  			dev_err(pci->dev, "CDM Logic error\n");
+>  			val |= PCIE_PL_CHK_REG_CHK_REG_LOGIC_ERROR;
+>  		}
+> -		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
+> +		dw_pcie_clear_and_set_dword(pci, PCIE_PL_CHK_REG_CONTROL_STATUS,
+> +					    PORT_LOGIC_SPEED_CHANGE, val);
 
-I'm assuming that it also never was in user space, which is where we
-don't want to do any user space stack trace.
+I don't know why you are clearing PORT_LOGIC_SPEED_CHANGE here which is not part
+of PCIE_PL_CHK_REG_CONTROL_STATUS. Typo?
 
-This looks like more rationale for having a kernel_task() user_task()
-helper functions:
+- Mani
 
-  https://lore.kernel.org/linux-trace-kernel/20250425204120.639530125@goodmis.org/
-
-Where one returns true for both PF_KERNEL and PF_USER_WORKER and the
-other returns false.
-
--- Steve
+-- 
+மணிவண்ணன் சதாசிவம்
