@@ -1,63 +1,87 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55FDF2D8DBB;
-	Wed, 25 Jun 2025 18:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16142DAFA9
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750877598; cv=none; b=Fl1QGF70aC7gv3FwRGGhBckb7Ve4uoSDzJThso1lynBciZ21srkCz0aCfzcWCsgfSBP6xNJkKP8da8wtBpLSmCsGg6Rl9oRXL6UyFPrdfbRL4Kczr6vXOYNw4hpTfX5XD5bI+De614FHXAhSaCNjv2yqVcjAkALQ6ylM2z9SnFQ=
+	t=1750877600; cv=none; b=UXhUrIIh4IqeRgbRYGTT6ip/oaDFT/TDUn7XfvBJp+ZRe0OVZ4IwBjxRMqPjCmITnxuKPZDPjsS6hsfo+ec9OdPlLpQurhguEbqQP6t09XlYw+EGWAVG6f8ZAdvyDhijAciarRVaF09ap1AT9K/S6R3qAKXMx5GCzT95YvPX1kU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750877598; c=relaxed/simple;
-	bh=3wYCOYlwhfdQnUe00+EDf/165r80azUtSL9YyHaV/T0=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=DFpaF5boqtn0LhxDmaQFHugIxFgvRLpqYk9TPms3yTgQWGU45k2yKuQrR76+1ZNW2krEoXl+GFlp0DgutW/OtBlS2xeNS2T+/vBM1xE6ikSPde8rJzUhheOAqwfvGArCaOa9uO32TVPDg5syzUi7oUhy9xI3mF5K4Iply6w1+yo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CVSRtwV/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750877600; c=relaxed/simple;
+	bh=bS8vPhhMVwxzJT6/BNkoc7Er8p13AErTd9yG5dAIq5s=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=aBkb+RFHfNHAluCNnt9IweJeBOcIcQpGMe36pv2ZZiGvwWn1mzdjsBUFueDGZf0quZP+PgUrvJ2qfqZXi8cM/OTCGeCfd73SXLOLWNnPNeYH8iV9HxjXbHh74JoClJea6spUZhTF06Esrdd8zw8wPyUNmd9OfQTSo8PrllyyQWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HtyjgVUh; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CVSRtwV/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F0F3C4CEEA;
-	Wed, 25 Jun 2025 18:53:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750877597;
-	bh=3wYCOYlwhfdQnUe00+EDf/165r80azUtSL9YyHaV/T0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CVSRtwV/MrKypcajCBrXjcZg/nC7B12T8B7lLJmQ3bq2arDvmqttE1eMHSDJGNYx9
-	 xH8ztUrrVWBA8NlFi0/yZgNlBM0U3PvKxjKS7gP3XCpnXo1FVuVmaCcEwpb5hD3ViS
-	 2aNzHdRipdYEqAmJMieDaWwvL4QALPmAOukPWaQObQAGAa6HTsVXSrszUAnFLB9C/J
-	 jAX9ybDzi5Svs70w61RUJY16aU6IOmaA6gb7czs9i8BrmnuDvWLv3decbx2A+jVuOv
-	 Py7uRfRgzX3yFd9g91ex/a5r9eSkIM++9WWyLm5VVuTZ3EnHe/7SvTBbwUftbSYkYd
-	 A7XumvavhwRsQ==
-Message-ID: <95ca93d21c843dd7a6ae15410596d123.broonie@kernel.org>
-From: Mark Brown <broonie@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] SPI fixes for v6.16-rc3
-Date: Wed, 25 Jun 2025 19:53:07 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HtyjgVUh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750877598;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h6E8oLR88JXaGJ+0hThZ0Yw7Sb6AqN89mXhCvOuzvaE=;
+	b=HtyjgVUhXI20VOSaiyxiEn+ICa8K9pSLIf0GwlnyI4vEc64AAdCV/2UTy8nl/OjhieP+Sa
+	FxjkCowE1YqlLyC15yjdJXwpYgeLCigqdEA2VmaifzyQAaNLpQYIR1XAoIPSOReXvDuHMl
+	iY+RJUi8WhcHgadg0t0+mj8hqUoAVz0=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-180-ZroNxM6hP7Kh0pBASYoOhA-1; Wed,
+ 25 Jun 2025 14:53:13 -0400
+X-MC-Unique: ZroNxM6hP7Kh0pBASYoOhA-1
+X-Mimecast-MFC-AGG-ID: ZroNxM6hP7Kh0pBASYoOhA_1750877591
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6664219560AA;
+	Wed, 25 Jun 2025 18:53:11 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.81])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8738C180045B;
+	Wed, 25 Jun 2025 18:53:07 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <9e58524a-856c-4efe-80c5-195bc7b55743@talpey.com>
+References: <9e58524a-856c-4efe-80c5-195bc7b55743@talpey.com> <658c6f4f-468b-4233-b49a-4c39a7ab03ab@samba.org> <20250625164213.1408754-1-dhowells@redhat.com> <20250625164213.1408754-13-dhowells@redhat.com> <1422741.1750874135@warthog.procyon.org.uk>
+To: Tom Talpey <tom@talpey.com>
+Cc: dhowells@redhat.com, Stefan Metzmacher <metze@samba.org>,
+    Christian Brauner <christian@brauner.io>,
+    Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
+    netfs@lists.linux.dev, linux-afs@lists.infradead.org,
+    linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+    ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
+    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+    Steve French <stfrench@microsoft.com>,
+    Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v3 12/16] cifs: Fix reading into an ITER_FOLIOQ from the smbdirect code
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1425469.1750877586.1@warthog.procyon.org.uk>
+Date: Wed, 25 Jun 2025 19:53:06 +0100
+Message-ID: <1425470.1750877586@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-The following changes since commit 86731a2a651e58953fc949573895f2fa6d456841:
+Tom Talpey <tom@talpey.com> wrote:
 
-  Linux 6.16-rc3 (2025-06-22 13:30:08 -0700)
+> 
+> Shouldn't there be some kind of validity check on the rfc1002 length
+> field before this? For example, the high octet of that field is
+> required to be zero (by SMB) and the 24-bit length is not necessarily
+> checked yet. The original code just returned the decoded value but
+> this sticks it in the msg_iter. If that's safe, then ok but it seems
+> odd.
 
-are available in the Git repository at:
+That should be a separate bugfix, I think.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git tags/spi-fix-v6.16-rc3
+David
 
-for you to fetch changes up to b07f349d1864abe29436f45e3047da2bdd476462:
-
-  spi: spi-cadence-quadspi: Fix pm runtime unbalance (2025-06-24 16:40:31 +0100)
-
-----------------------------------------------------------------
-spi: Fix for v6.16
-
-One fix here, for a runtime PM underflow when removing the Cadence
-QuadSPI driver.
-
-----------------------------------------------------------------
-Khairul Anuar Romli (1):
-      spi: spi-cadence-quadspi: Fix pm runtime unbalance
-
- drivers/spi/spi-cadence-quadspi.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
