@@ -1,120 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD0C2F2C74;
-	Wed, 25 Jun 2025 22:16:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B22D35280;
+	Wed, 25 Jun 2025 22:17:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750889815; cv=none; b=eaD2qdEDzZ1k3edNa0VTwWik+OXDT0Sd/H4N57rSZHwoseRMgu2MiUrcIWJgeemVFcz28rCxrkzEgJ6yd9/YSorSIuV5FXMe7X4rldlpLczRjV4fjL4gCdGCzyQKwTkFpOCuT13SBMFGYyvoKBvZx4QuxuCgCKFp1bHcV3eWnSs=
+	t=1750889871; cv=none; b=HzEbZ5DAjSdL+w31rcvgl/pDydf+FmpCfBfiNv4hUhd41x2N9SDp8QGcG7X+Qlfrrn+IsJsrIZHW8xO8NvEMJZAez1VHKq/X30JfgiMI3pJnVllJ6NWNEJr0UOmVfrnWgkHgz7EHW1IGcfJyqCNNNYTO6fhbNc+md3+P1uBpGj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750889815; c=relaxed/simple;
-	bh=JPCUTE7k+d+bV0g/ym3IuJKj3lnwuQfByYVszEgGuWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=NeSVpqgzIkqaIPZGvhJHmt8y55GBejV7wyBDj9AOb+PPTDNx//Fv0bEUvQL5DLXFdGUGQEOLkKJ0ddRmRsfJ9q+mN3xU4eWs1PWZeICvxPk72HncwguGd8Ppaa+lnnj+B1wy/iYITgsNW652YvnwLVPH5UWnlWfwJbTRffwJIS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FRgvI8Ki; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750889871; c=relaxed/simple;
+	bh=SOlW945FsEuU+z2VqRVH+3m+gzeJachd1rv/kOLBoD8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I+bdxne/zO31mn/K9RdFooqARswpns41bvcm/RTxBNrkb+6EDuFsc7rS8WmBgVfhArB5WqAA8oJqnO6WOXdn1X6l5yXF8ntJY/1Mjv9N9CWzxfyyJvfzxHihkuKom6FMv1xWAFgX0EBapIZbqbul0TdAauQlBiccnJiqWuR03pI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TOuy1yeF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FRgvI8Ki"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2720CC4CEEA;
-	Wed, 25 Jun 2025 22:16:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TOuy1yeF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1C12C4CEEA;
+	Wed, 25 Jun 2025 22:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750889815;
-	bh=JPCUTE7k+d+bV0g/ym3IuJKj3lnwuQfByYVszEgGuWY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=FRgvI8Ki3o+8iAvZxOIOLv4YJj2pE/da5dKHPk4INdG0jov6rqfxyEemaXfjw7Gch
-	 7/EpZGNRiorCi7p4OgarRC8qCQ/dx0UQ9I2J3SoVMztSbhHzrqfQSuT5BuAZWrnCwa
-	 0Gf4FPtA2UdyAGdoY7lWk0pnZG+LvElbmEFkd4erB8Ioo259Q2nrKXZ55Hh9EC0oXK
-	 /Q4N+vlPGYoJ5/LWKa3MzpD9yjxG6/yfB+QoaWFgwrx9j4i7mUTYPOOdtxwcB+6NlK
-	 o14doDX3YsC5c5DLWuPCeGWr/HKA5g9BOUlP184kbOtrpIE2lKxBg1GnhPxjAbEP3Y
-	 Vwjm1PXyLnUZg==
-Date: Wed, 25 Jun 2025 17:16:53 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Jacky Chou <jacky_chou@aspeedtech.com>
-Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
-	"mani@kernel.org" <mani@kernel.org>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"joel@jms.id.au" <joel@jms.id.au>,
-	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
-	"vkoul@kernel.org" <vkoul@kernel.org>,
-	"kishon@kernel.org" <kishon@kernel.org>,
-	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
-	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
-	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
-	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"elbadrym@google.com" <elbadrym@google.com>,
-	"romlem@google.com" <romlem@google.com>,
-	"anhphan@google.com" <anhphan@google.com>,
-	"wak@google.com" <wak@google.com>,
-	"yuxiaozhang@google.com" <yuxiaozhang@google.com>,
-	BMC-SW <BMC-SW@aspeedtech.com>
-Subject: Re: =?utf-8?B?5Zue6KaGOiDlm57opoY=?= =?utf-8?Q?=3A?= [PATCH 5/7]
- ARM: dts: aspeed-g6: Add PCIe RC node
-Message-ID: <20250625221653.GA1590146@bhelgaas>
+	s=k20201202; t=1750889870;
+	bh=SOlW945FsEuU+z2VqRVH+3m+gzeJachd1rv/kOLBoD8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=TOuy1yeF9Ackritm8p/aX1omm/wZpCvVFwrZ3wESNTTLB9VHdquUbC99Mdt2qBsdZ
+	 N8/t9i6dnBeOa+dPtJFo6OOH31RuyxUJBKxpWR+xPF9hZnykWDiO+nUWow2SRBa5RN
+	 E7ctyqtCrksbpBdo3tCyfbMmLP12EdJY/OHMXSzpQghhpUQpIOlD5SXN5PQd2kh8OS
+	 bszr0EgASrf3/dqjEk4MSjbEjcvE/YRh9IIcB5J7N8QrejF5uIVXurarv63NJA3+/R
+	 gt3UcLcTEferpmtCxfAu7CjHV4xgXoZCoIn55s0VOhfb9RpXfwsykwUjC/NpK1XCYW
+	 MkLbLM82qkpiw==
+Date: Thu, 26 Jun 2025 00:17:46 +0200
+From: Andi Shyti <andi.shyti@kernel.org>
+To: =?utf-8?Q?Cl=C3=A9ment?= Le Goffic <clement.legoffic@foss.st.com>
+Cc: Pierre-Yves MORDRET <pierre-yves.mordret@foss.st.com>, 
+	Alain Volmat <alain.volmat@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+	Alexandre Torgue <alexandre.torgue@foss.st.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
+	Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>, M'boumba Cedric Madianga <cedric.madianga@gmail.com>, 
+	Wolfram Sang <wsa@kernel.org>, Pierre-Yves MORDRET <pierre-yves.mordret@st.com>, 
+	linux-i2c@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org
+Subject: Re: [PATCH 0/3] Fix STM32 I2C dma operations
+Message-ID: <cmxzc2slync7toacgqpng6u5nbxhp73foaacwqdkm3z7k7hesu@zc3mpbdrpiaz>
+References: <20250616-i2c-upstream-v1-0-42d3d5374e65@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-15
 Content-Disposition: inline
-In-Reply-To: <SEYPR06MB51346BC9292066243CB845699D7BA@SEYPR06MB5134.apcprd06.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250616-i2c-upstream-v1-0-42d3d5374e65@foss.st.com>
 
-On Wed, Jun 25, 2025 at 08:27:26AM +0000, Jacky Chou wrote:
-> > > > > +				resets = <&syscon ASPEED_RESET_H2X>,
-> > > > > +					 <&syscon ASPEED_RESET_PCIE_RC_O>;
-> > > > > +				reset-names = "h2x", "perst";
-> > > >
-> > > > PERST# is clearly a per-Root Port item since it's a signal on the
-> > > > PCIe connector.  Can you separate this and any other per-Root Port
-> > > > things into a Root Port stanza to leave open the possibility of
-> > > > future hardware that supports multiple Root Ports in the RC?
-> > >
-> > > The PCIe RC that designed by us is only one root port.
-> > 
-> > Yes.  But this driver may be used in the future for other RCs that include more
-> > than one Root Port, and it would be good if that didn't require structural
-> > changes to the DT.  Also, there are RCs from other vendors that include more
-> > than one Root Port, and I'd like all the DTs and drivers to have similar
-> > structure.
+Pierre-Yves, Alain,
+
+On Mon, Jun 16, 2025 at 10:53:53AM +0200, Clément Le Goffic wrote:
+> This patch series aims to fix some issues inside the driver's DMA
+> handling.
+> It also uses newer I2C DMA API.
 > 
-> Thanks.
-> Is the "pciec" node in arch/arm/boot/dts/marvell/armada-385.dtsi
-> what you said?  Or could you provide some examples for us to modify
-> our pcie rc node?
+> Signed-off-by: Clément Le Goffic <clement.legoffic@foss.st.com>
+> ---
+> Clément Le Goffic (3):
+>       i2c: stm32: fix the device used for the DMA map
+>       i2c: stm32f7: unmap DMA mapped buffer
+>       i2c: stm32f7: support i2c_*_dma_safe_msg_buf APIs
 
-Here are some examples of DT bindings and corresponding driver code:
+any chance you can take a look at this series?
 
-* drivers/pci/controller/dwc/pcie-kirin.c
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml?id=v6.16-rc1#n108
+Thanks,
+Andi
 
-    kirin_pcie_parse_port():
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-kirin.c?id=v6.16-rc1#n399
-
-* drivers/pci/controller/pci-mvebu.c
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/marvell,kirkwood-pcie.yaml?id=v6.16-rc1#n125
-
-    mvebu_pcie_parse_port():
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pci-mvebu.c?id=v6.16-rc1#n1252
-
-* drivers/pci/controller/pcie-mt7621.c
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml?id=v6.16-rc1#n111
-
-    mt7621_pcie_parse_port():
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-mt7621.c.c?id=v6.16-rc1#n198
-
-* drivers/pci/controller/pcie-mediatek.c
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/mediatek-pcie.txt?id=v6.16-rc1#n85
-
-    mtk_pcie_parse_port():
-    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-mediatek.c.c?id=v6.16-rc1#n909
-
+> 
+>  drivers/i2c/busses/i2c-stm32.c   |  2 +-
+>  drivers/i2c/busses/i2c-stm32f7.c | 40 +++++++++++++++++++++++++++++-----------
+>  2 files changed, 30 insertions(+), 12 deletions(-)
+> ---
+> base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+> change-id: 20250527-i2c-upstream-e5b69501359a
+> 
+> Best regards,
+> -- 
+> Clément Le Goffic <clement.legoffic@foss.st.com>
+> 
