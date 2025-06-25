@@ -1,41 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24841CAA7B;
-	Wed, 25 Jun 2025 18:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FBC1CAA7B;
+	Wed, 25 Jun 2025 18:56:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750877766; cv=none; b=M4FBt2DGFqGmVCIz/I2VV7GDEOoXKIf/Xh0uDGVGKNpeuP6i80bdu3/A8YbcPEwOEVPbXf1Ql+MJ90Uadyxy4odKIUl53ozpDon63RiDBhJRKoATBp+LYCSrKGaQyugfsi/KhtaInYc2p0JVOuY9dkRE3kyDZJIKAEMh4wywtLE=
+	t=1750877769; cv=none; b=A8qBfwJ9GH0yFSBIf0ykcRfC1ft9hlHylkehLbvqA5ijbPVvUh92rvjtiFfzjtT60lvBYoO84HNrZ4MP5M4v/BWcrOJ3TbZURw4I/l9vzMJH+Zzk4EU+X8wbpmVyfyBSRmRpH6AW0Ky62OmeikrQ3BUF2oOhevPXhTq3zpadl9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750877766; c=relaxed/simple;
-	bh=xOFkaPALEr96n45ZXxDSSZiyNX3n+26t1/APa5EPG6w=;
+	s=arc-20240116; t=1750877769; c=relaxed/simple;
+	bh=6xdnTIn9JsUPsSYNpRZM+JxKZeDZmlbySNAsX2t+WTI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Gb7N5dSC9EW5TlHZ4Weq6lvo00mIvuFOUB7FfRdMNza1S3q1qGdcBh2yfAGrQvrMaJI1mj/Ohjls9OQ5e5/ULxce3DEgB9ITwrb7g5EuIxwbm1p7QyvXCKhdrHYVUPCI3koMdVnOKXFCfz+aAgRu1c0MxaVRejd+mMKNCgmQPE4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpV8Fk4w; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ou7V+M4w+0VrpHIjlkb4ssZCRyusQ0qGztpBoSwhDiwKmDZ89aiXYbhEeUtXay1u1KSk4Qxbfrj71kJcvoXNHqquhzMWR8w1xfbd+61fVN/se8PULGkw36yMcvICNzvE5scT+GbjzX7SqXvZCeMKmNSw6M/4RaKNlUQo2T05lh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gff5cji2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpV8Fk4w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 331A3C4CEEA;
-	Wed, 25 Jun 2025 18:56:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gff5cji2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 338B7C4CEEA;
+	Wed, 25 Jun 2025 18:56:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750877765;
-	bh=xOFkaPALEr96n45ZXxDSSZiyNX3n+26t1/APa5EPG6w=;
+	s=k20201202; t=1750877769;
+	bh=6xdnTIn9JsUPsSYNpRZM+JxKZeDZmlbySNAsX2t+WTI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KpV8Fk4wsOTCJ3F3AtTznHgsqgYKNDh8sLJiuj0nYF8J3Y5RULc+AdRPI7rhxlTNg
-	 x2XAWU6ybjtHLxU8/dMJ451MxNjgBIpErQ4kFIbqc6q0Bv+P5lz1Lv4JkGIv+pGsa3
-	 i+E8oQt9XZDSAHD84wquU+7alWnYb96T4ed3DNmx8Np4g8tRBP2P+IDfZJ9fYfCyAI
-	 y50sjF/Dur0QuvfXYVVEFR1DFuSun3GJVF1xvWdBsOJMCtheNbJYrpDVhl5kEWE8S/
-	 MWWfUXbUWmETzq4yZATnGKLJRAXpmuVY9OSqgf3dv0Vm3qRicUhH/72tkSQGiw2T6q
-	 ElabgicGpHggw==
-Date: Wed, 25 Jun 2025 20:56:01 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Vitaly Wool <vitaly.wool@konsulko.se>
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] rust: support align and NUMA id in allocations
-Message-ID: <aFxGQWG_81Peu7mP@cassiopeiae>
-References: <20250625062917.3379804-1-vitaly.wool@konsulko.se>
- <20250625063026.3379921-1-vitaly.wool@konsulko.se>
+	b=Gff5cji2w4rVgfmpej2qu34cYAMMr+BzZ4UHZaIH5XAbQTuM9i+g7mUq2U5j40fHZ
+	 Z1q5bI29k3jsZWhuNj5yhDbG1Cf2CK2Ja0Ff7LDDsR3OOFfZ9Vzt2j15k/nXxeuZkT
+	 9YjFuV7bOl1cksFgU80Bm0WScsAeKZPxiJYfl/Gw6Nw4fguHRhvgpQzb9a5DuxXi9k
+	 r0a99nd/yLYW3OjYml4ONi/ceLO8lUzrdNYHwjtC2OmZGRegktJ+ySI9PYIagF4iS1
+	 BZaw35eG2KRHrrYA05zBh06BuCSR5KKlQpVgpHHc3LUu/B0aN9NxM4wAvkXLn1IoOB
+	 S80u/83hMdyFA==
+Date: Wed, 25 Jun 2025 13:56:08 -0500
+From: Rob Herring <robh@kernel.org>
+To: Ricardo Ribalda <ribalda@chromium.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2 06/12] dt-bindings: usb: usb-device: Add orientation
+ and rotation
+Message-ID: <20250625185608.GA2010256-robh@kernel.org>
+References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
+ <20250605-uvc-orientation-v2-6-5710f9d030aa@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,133 +57,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625063026.3379921-1-vitaly.wool@konsulko.se>
+In-Reply-To: <20250605-uvc-orientation-v2-6-5710f9d030aa@chromium.org>
 
-On Wed, Jun 25, 2025 at 08:30:26AM +0200, Vitaly Wool wrote:
-> Add support for large (> PAGE_SIZE) alignments in Rust allocators
-> (Kmalloc support for large alignments is limited to the requested
-> size, which is a reasonable limitation anyway).
-
-Please split this..
-
-> Besides, add support for NUMA id to Vmalloc.
-
-and this into separate patches.
-
-Please also add some information to the commit message what you need node
-support for. Do you also have patches to add node support to Box and Vec?
-
+On Thu, Jun 05, 2025 at 05:52:59PM +0000, Ricardo Ribalda wrote:
+> For some devices, such as cameras, the OS needs to know where they are
+> mounted.
 > 
-> Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+> ACPI has a property for this purpose, which is parsed by
+> acpi_get_physical_device_location():
+> https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html#pld-physical-location-of-device
+> 
+> In DT we have similar properties for video-interface-devices called
+> orientation and rotation:
+> Documentation/devicetree/bindings/media/video-interface-devices.yaml
+> 
+> Add rotation and orientation for usb-devices that matches the already
+> existing properties of video-interface-devices.
+> 
+> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
 > ---
->  rust/helpers/slab.c            |  8 +++++--
->  rust/helpers/vmalloc.c         |  4 ++--
->  rust/kernel/alloc.rs           | 28 ++++++++++++++++++++++--
->  rust/kernel/alloc/allocator.rs | 40 +++++++++++++++++++---------------
->  rust/kernel/alloc/kvec.rs      |  3 ++-
->  5 files changed, 59 insertions(+), 24 deletions(-)
+>  Documentation/devicetree/bindings/usb/usb-device.yaml | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+
+Comments from v1 still apply. Add a schema for *your* device (i.e. one 
+that only matches the compatible string of your device). Look for 
+anything that includes usb-device.yaml for an example. Your schema 
+should have something like this if you want to use 
+video-interface-devices.yaml properties:
+
+allOf:
+  - $ref: /schemas/usb/usb-device.yaml#
+  - $ref: /schemas/media/video-interface-devices.yaml#
+
 > 
-> diff --git a/rust/helpers/slab.c b/rust/helpers/slab.c
-> index a842bfbddcba..221c517f57a1 100644
-> --- a/rust/helpers/slab.c
-> +++ b/rust/helpers/slab.c
-> @@ -3,13 +3,17 @@
->  #include <linux/slab.h>
+> diff --git a/Documentation/devicetree/bindings/usb/usb-device.yaml b/Documentation/devicetree/bindings/usb/usb-device.yaml
+> index c676956810331b81f11f3624340fc3e612c98315..a44eb24c657993f88145377a4706ec419b6cd998 100644
+> --- a/Documentation/devicetree/bindings/usb/usb-device.yaml
+> +++ b/Documentation/devicetree/bindings/usb/usb-device.yaml
+> @@ -44,6 +44,14 @@ properties:
+>        - minimum: 1
+>          maximum: 255
 >  
->  void * __must_check __realloc_size(2)
-> -rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
-> +rust_helper_krealloc(const void *objp, size_t new_size, unsigned long align, gfp_t flags, int nid)
+> +  orientation:
+> +    description: If present, specifies the orientation of the usb device.
+> +    $ref: /schemas/media/video-interface-devices.yaml#/properties/orientation
 
-This should have a comment making it obvious why the function has two arguments
-that are discarded. I think we should even separate it with an additional inline
-function.
+Again, this is generally the wrong way to add properties from another 
+schema for your device. Above is the right way.
 
-I do agree with discarding the align argument, given that it's not exposed to
-users though the Allocator API.
-
-I do disagree with discarding the nid argument though, since you change the
-generic Allocator::realloc() API to take a node argument, which for KREALLOC and
-KVREALLOC is silently discarded. If we introduce it, we should do so for all
-three allocators.
-
->  {
-> +	if (WARN_ON(new_size & (align - 1)))
-> +		return NULL;
-
-I don't think we should have this WARN_ON(). If we want to warn about this, we
-should already do so on the Rust side. The helper functions in this file should
-not contain any logic.
-
->  	return krealloc(objp, new_size, flags);
->  }
->  
->  void * __must_check __realloc_size(2)
-> -rust_helper_kvrealloc(const void *p, size_t size, gfp_t flags)
-> +rust_helper_kvrealloc(const void *p, size_t size, unsigned long align, gfp_t flags, int nid)
->  {
-> +	if (WARN_ON(size & (align - 1)))
-> +		return NULL;
->  	return kvrealloc(p, size, flags);
->  }
-
-Same as above.
-
-> diff --git a/rust/helpers/vmalloc.c b/rust/helpers/vmalloc.c
-> index 80d34501bbc0..9131279222fa 100644
-> --- a/rust/helpers/vmalloc.c
-> +++ b/rust/helpers/vmalloc.c
-> @@ -3,7 +3,7 @@
->  #include <linux/vmalloc.h>
->  
->  void * __must_check __realloc_size(2)
-> -rust_helper_vrealloc(const void *p, size_t size, gfp_t flags)
-> +rust_helper_vrealloc_node(const void *p, size_t size, unsigned long align, gfp_t flags, int node)
->  {
-> -	return vrealloc(p, size, flags);
-> +	return vrealloc_node(p, size, align, flags, node);
->  }
-> diff --git a/rust/kernel/alloc.rs b/rust/kernel/alloc.rs
-> index 2e377c52fa07..12a723bf6092 100644
-> --- a/rust/kernel/alloc.rs
-> +++ b/rust/kernel/alloc.rs
-> @@ -161,7 +161,30 @@ pub unsafe trait Allocator {
->      fn alloc(layout: Layout, flags: Flags) -> Result<NonNull<[u8]>, AllocError> {
->          // SAFETY: Passing `None` to `realloc` is valid by its safety requirements and asks for a
->          // new memory allocation.
-> -        unsafe { Self::realloc(None, layout, Layout::new::<()>(), flags) }
-> +        unsafe { Self::realloc(None, layout, Layout::new::<()>(), flags, None) }
-> +    }
-> +
-> +    /// Allocate memory based on `layout`, `flags` and `nid`.
-> +    ///
-> +    /// On success, returns a buffer represented as `NonNull<[u8]>` that satisfies the layout
-> +    /// constraints (i.e. minimum size and alignment as specified by `layout`).
-> +    ///
-> +    /// This function is equivalent to `realloc` when called with `None`.
-> +    ///
-> +    /// # Guarantees
-> +    ///
-> +    /// When the return value is `Ok(ptr)`, then `ptr` is
-> +    /// - valid for reads and writes for `layout.size()` bytes, until it is passed to
-> +    ///   [`Allocator::free`] or [`Allocator::realloc`],
-> +    /// - aligned to `layout.align()`,
-> +    ///
-> +    /// Additionally, `Flags` are honored as documented in
-> +    /// <https://docs.kernel.org/core-api/mm-api.html#mm-api-gfp-flags>.
-> +    fn alloc_node(layout: Layout, flags: Flags, nid: Option<i32>)
-> +                -> Result<NonNull<[u8]>, AllocError> {
-> +        // SAFETY: Passing `None` to `realloc` is valid by its safety requirements and asks for a
-> +        // new memory allocation.
-> +        unsafe { Self::realloc(None, layout, Layout::new::<()>(), flags, nid) }
->      }
->  
->      /// Re-allocate an existing memory allocation to satisfy the requested `layout`.
-> @@ -201,6 +224,7 @@ unsafe fn realloc(
->          layout: Layout,
->          old_layout: Layout,
->          flags: Flags,
-> +        nid: Option<i32>,
->      ) -> Result<NonNull<[u8]>, AllocError>;
-
-I think we should rename this to realloc_node() and introduce realloc(), which
-just calls realloc_node() with None.
+Rob
