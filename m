@@ -1,497 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDCF26B745;
-	Wed, 25 Jun 2025 13:17:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B66F925E44D
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:19:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750857427; cv=none; b=a3wZqj63H8MdXKSz8yabEd8qwctdnShJhIyIbX14pNSdAyQUyVjaoM264wZgm8UXGIv0bVfMcq1HfCDhTuxKpMgf3YtkHYc9rL4Ygpf//UmilAA5o8cqtPbZ3MvLAfrGJoja32GHBtzP18SZc3XvMNeFathrBQ27R6qUwh2hGLQ=
+	t=1750857554; cv=none; b=azHuiSVnzoVpPeINwHX73Fwps0maTszJ2teEdMm3lqgyBWNSHtm3UjIyt76BXKfovFuA4tH66gXXMpnGbjA8ZMaQHB6SOf0U2xmSmLHQUbVll83twJ/speyHNEwhLLn6Z7N1HAP1A+A4OcEQnWr8cDa/wWo7vq/ZXgH70UAyO+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750857427; c=relaxed/simple;
-	bh=GQCtV65tnQSYaczAMpaz5abbjbW1c9WMqIxzwn0KYr4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=GXuvr9mXk+HEGjRI3v0z27qyD0doh5GGD1qT1C0lcVHebtn8fQsVa7jaRMotvLipMNAP8pjM3jpHZ+6LkPnfJppToGfmDT4uQInGTIvlQHdcZiPynm+HvTlX4hYt8mp6qjwgvDCljex93z6VIbmrGcuY8ZH3hNdsCL5kj6tV7uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pBJwVyJ5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750857554; c=relaxed/simple;
+	bh=OLbZLCeEIh/QhsKvBR05z93Lz887to7p39N5x/NgpCM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HK8jOqpw1S/I5ulYBjPHSh4tVFNbP0iEFClw0YKMLrxhH3ljIJm/cVCaNKWwNmr/mbZH36LiVpCEULTwshewAkVO0c4RCh1SlYHDfbJ3sJJSzKxczCMLtNhikdNRLXGdb3je2SKkfmlL9FI0pUD81m5Sn7KGFve+STiBJYOUBwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=leSlgYCU; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pBJwVyJ5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F877C4CEEA;
-	Wed, 25 Jun 2025 13:17:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750857427;
-	bh=GQCtV65tnQSYaczAMpaz5abbjbW1c9WMqIxzwn0KYr4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pBJwVyJ5ILFW2wIUW1Ms5dl8Af3Ir1xWOfDgTS97UtVEZT3uC6vo4AAOEnXpBwruQ
-	 EujFxoRE3LsYWvuK0DlP48m/pPWi4aiK6dgydPzfKPejs59D1L83a17xWV3LK19a/P
-	 cNVyAtD6qB82QYig3G5MDo6w7YAiTO2CWJ9f93czKZT13rnJRvxiQnvWxmYioMJNRT
-	 ueO2fP6aE1PsMqssJUNf6j3H7si+yFx21J0jCxBrp4hoIuBc0yjbTrLMNy/MPtBnVW
-	 Y8/WauWdiA3USwBRp/NqX2fGAymGfEmIG6RWL9EpM+Iqn6bK25Uv4s6hOo3gZPhtbc
-	 0CUqYN7zfSEcg==
-Received: by wens.tw (Postfix, from userid 1000)
-	id 7F9B85FFBC; Wed, 25 Jun 2025 21:17:02 +0800 (CST)
-From: Chen-Yu Tsai <wens@kernel.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej@kernel.org>,
-	Samuel Holland <samuel@sholland.org>
-Cc: devicetree@vger.kernel.org,
-	linux-sunxi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH v2 5/5] arm64: dts: allwinner: t527: Add OrangePi 4A board
-Date: Wed, 25 Jun 2025 21:16:52 +0800
-Message-Id: <20250625131652.1667345-6-wens@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250625131652.1667345-1-wens@kernel.org>
-References: <20250625131652.1667345-1-wens@kernel.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="leSlgYCU"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PAL9lN001286
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:19:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	6eQaxjKeabn3poKnIk9ut7d7cX6un1MCActTxh/vj5s=; b=leSlgYCU4S2q3GBB
+	1lbhTVp292Jsbnzfu0mSgY8HM9o8ujQDXR2hA0Lr4FXdf1xNMALD5mzetNA+vDkc
+	ymcLd2JH60xEunoIq19CPr02YjJgwkxcCdMy6HUtmBXUv2GEr5JFDwR8XG0iaiiB
+	XWrw2I0lN3ZJHcg8MLfqhdk+QpWN3gk/vxZhYvrfv+7u+0HCK2NOZPNx0RS9vt8T
+	5o7CFjYS4psQ1pzk01QmWvB38mo8lNG651C612lyekzXDTNq8wD3d+OLQEKcXObU
+	FB5qcVE3hteNuy6OfEL3hG2RgLEpZP3/sVjJ3bk58UwNwvqKL4LdBEqEddJntp7k
+	pl3bKw==
+Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g7td9uny-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:19:11 +0000 (GMT)
+Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4a6f59d5ac6so15031481cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:19:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750857550; x=1751462350;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6eQaxjKeabn3poKnIk9ut7d7cX6un1MCActTxh/vj5s=;
+        b=h1dwteXh1HwPj9SsUwbfeIWHIRHsijV7XOGbWbO7zA8XJGRZ98Vc3nCVT9ubNoURl2
+         7oh4cj4z4Y/IFw68bSl2tWHjd+HZC2TzJ+1TDcydCQg1zRSmxxbhYzUJTc2f08r7Jj9/
+         QihZ9S2loRnsz1CgYBsD8UMxLUv6HzNKhXU4sz+9ih7YND04fr5T3b6hytwzcldm/UVH
+         RCrxfudhBITyI3xzMkiZX9GrqN8/sUDC0uh8QGJmVNnbn3ScPp9qinLiZW7v/t/O6QtC
+         XQ1/MJSWguEQBPUbTCL9t2C0ZtgBt+yOZIYKLiJ4SWf9FMV1f4qlassGkVQxQg97GQHa
+         r4AQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVT3AKnfuJUjtxGA0ZURAYMoVY/Lc4VETVnFDIfpxjB7XI2y+3t6/VMkXAnyamg6ZPmryZmW6YYxDFOy7g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4438WXr8oHzPO5uvDaAk11Ci163e2I9ICpL4P9amXsAErupI4
+	8aGXmv94WwxZUJerrMEf6rqDeGCEeG3vmBJW+APl54hCL3HvB88txPfGBIAdbG/T0bYsqQrJ5Ht
+	N9JPrx1u0OdWG/AuzmDZMbPb1n5bLMZzmot9xInlXDEvyZvr67aHjMCZ33sHsrck30g8=
+X-Gm-Gg: ASbGnctRGrsUL/OBurrzQAJRpyKftPDPCuUeEIhA8JZsdnxwiB+0ORdMLnZjUEWERcz
+	lKprdkiXNgqmxomGa5jyfw//KFedTRzAPFajoddfQPiAgxat5XiHBWEIDnMS7wCop5hmGBIhAw5
+	u0OCSHLBtnZYn4KR9sT9C947jOdbAS3kw0uU1TUG94cFhGCyoK3kIXa9nawSq3zZMNSCihdq0DS
+	Dlf90pKK3Dy4VPDdeBavZyhS6OfdZmdHvcj569AtPdYjpDyuRhp1IyOQh36EjfoM/ItfPdVdtQA
+	/mkdjrKJCmxunBUnDhhUch91z9ELVtNRBRY39mq1us4IfRgGMHP+Bb8rjy/f7nk+5o5RTZ2ecbh
+	Nx4U=
+X-Received: by 2002:a05:620a:8801:b0:7d3:cf9b:511f with SMTP id af79cd13be357-7d4296eabdemr154347485a.5.1750857550484;
+        Wed, 25 Jun 2025 06:19:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGqGtKUmkLUVvMQx5KRJ0CRLAplizpPsb2y5iNrRAnX06UrCQE5yCFeuIbo7mZ8pru90VrR1g==
+X-Received: by 2002:a05:620a:8801:b0:7d3:cf9b:511f with SMTP id af79cd13be357-7d4296eabdemr154344985a.5.1750857550072;
+        Wed, 25 Jun 2025 06:19:10 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c3ca7b8cbsm1919553a12.5.2025.06.25.06.19.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 06:19:09 -0700 (PDT)
+Message-ID: <50fd7271-5311-475d-91ff-03c3c593866f@oss.qualcomm.com>
+Date: Wed, 25 Jun 2025 15:19:06 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] arm64: dts: qcom: Add PMIV0104 PMIC
+To: Luca Weiss <luca.weiss@fairphone.com>, Lee Jones <lee@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20250625-sm7635-pmiv0104-v1-0-68d287c4b630@fairphone.com>
+ <20250625-sm7635-pmiv0104-v1-4-68d287c4b630@fairphone.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250625-sm7635-pmiv0104-v1-4-68d287c4b630@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=CPYqXQrD c=1 sm=1 tr=0 ts=685bf74f cx=c_pps
+ a=WeENfcodrlLV9YRTxbY/uA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=6H0WHjuAAAAA:8 a=EUspDBNiAAAA:8
+ a=gG0EGFSrpznu9jIhvzsA:9 a=QEXdDO2ut3YA:10 a=kacYvNCVWA4VmyqE58fU:22
+ a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA5NyBTYWx0ZWRfX662tuPWgRRpe
+ hc/oR3FpcSz90oSnL7o0euXV07ZB/y7CgTmXSAiHczkCmNVXzNqdnbSAUvBAUbaIaKyKA25zFO9
+ qklfuoUK2PTN66gZnF01B8WkP3cbqvDJAQBTDp5UuRYqeBdUCsQ5QC3WKfG8Y4HHeFHULIY+Kvi
+ V+00a0tOy73q6ixNmpTRjBp/9GYAlJIPCKhEnisx8uj7PO0VRLkwKgaAnx7vh6GbQ2uMeSjktBp
+ XZS6nA1J0OdbYgv+dHIhyisMexyiZKCN+8XkBki6UCOVmQWfKQpFDyfuRHanWlObsF3phO8ZBGG
+ CLBhAyDLqW5XJpdaSYdbaJmJUy7JP1y/GBhuEpym5PJhJDt0lXFzgP2VbsiU3/ZGzoYwBTgiQp5
+ YjhqNTE6E/stGN8yHwTt78AFUqU203GF7yEjSSTw5+UpZC0zMOJqfIc+2FQhK5wKiT8nZwj9
+X-Proofpoint-GUID: ootEA46B2e5C04YyBGEShpQCy_EuFd3R
+X-Proofpoint-ORIG-GUID: ootEA46B2e5C04YyBGEShpQCy_EuFd3R
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_03,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 suspectscore=0 clxscore=1015 spamscore=0 priorityscore=1501
+ adultscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506250097
 
-From: Chen-Yu Tsai <wens@csie.org>
+On 6/25/25 11:18 AM, Luca Weiss wrote:
+> Add a dts for the PMIC used e.g. with SM7635 devices.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+>  arch/arm64/boot/dts/qcom/pmiv0104.dtsi | 63 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pmiv0104.dtsi b/arch/arm64/boot/dts/qcom/pmiv0104.dtsi
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..04d929db76f409c49c47ef0147a3de568006973a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/pmiv0104.dtsi
+> @@ -0,0 +1,63 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2025, Luca Weiss <luca.weiss@fairphone.com>
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/spmi/spmi.h>
+> +
+> +/ {
+> +	thermal-zones {
+> +		pmiv0104-thermal {
+> +			polling-delay-passive = <100>;
+> +
+> +			thermal-sensors = <&pmiv0104_temp_alarm>;
+> +
+> +			trips {
+> +				trip0 {
+> +					temperature = <95000>;
+> +					hysteresis = <0>;
+> +					type = "passive";
+> +				};
+> +
+> +				trip1 {
+> +					temperature = <115000>;
+> +					hysteresis = <0>;
+> +					type = "hot";
+> +				};
 
-The OrangePi 4A is a typical Raspberry Pi model B sized development
-board from Xunlong designed around an Allwinner T527 SoC.
+Please also include a 145C critical trip, which is probably the
+most important one
 
-The board has the following features:
-- Allwinner T527 SoC
-- AXP717B + AXP323 PMICs
-- Up to 4GB LPDDR4 DRAM
-- micro SD slot
-- optional eMMC module
-- M.2 slot for PCIe 2.0 x1
-- 16 MB SPI-NOR flash
-- 4x USB 2.0 type-A ports (one can be used in gadget mode)
-- 1x Gigabit ethernet w/ Motorcomm PHY (through yet to be supported GMAC200)
-- 3.5mm audio jack via internal audio codec
-- HDMI 2.0 output
-- eDP, MIPI CSI (2-lane and 4-lane) and MIPI DSI (4-lane) connectors
-- USB type-C port purely for power
-- AP6256 (Broadcom BCM4345) WiFi 5.0 + BT 5.0
-- unsoldered headers for ADC and an additional USB 2.0 host port
-- 40-pin GPIO header
+otherwise:
 
-Add a device tree for it, enabling all peripherals currently supported.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
-Changes since v1:
-- Fixed regulator names for bldo3 and bldo4
-- Dropped labels for aldo1, bldo3, and bldo4, which are not really used
-- Added voltage constraints to aldo2, based on specifications from
-  schematic
-- Appended "-usb-0v9" to cpusldo's regulator name
-- Added comments to explain how axp323 aldo1 and dldo1 are tied together
-
- arch/arm64/boot/dts/allwinner/Makefile        |   1 +
- .../dts/allwinner/sun55i-t527-orangepi-4a.dts | 383 ++++++++++++++++++
- 2 files changed, 384 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts
-
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index 773cc02a13d0..780aeba0f3a4 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -57,3 +57,4 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h700-anbernic-rg35xx-sp.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun55i-a527-cubie-a5e.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun55i-h728-x96qpro+.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun55i-t527-avaota-a1.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun55i-t527-orangepi-4a.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts b/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts
-new file mode 100644
-index 000000000000..ff2fd8e71e03
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun55i-t527-orangepi-4a.dts
-@@ -0,0 +1,383 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR MIT)
-+/*
-+ * Copyright (C) 2025 Chen-Yu Tsai <wens@csie.org>
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun55i-a523.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/leds/common.h>
-+
-+/ {
-+	model = "OrangePi 4A";
-+	compatible = "xunlong,orangepi-4a", "allwinner,sun55i-t527";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	ext_osc32k: ext-osc32k-clk {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		clock-frequency = <32768>;
-+		clock-output-names = "ext_osc32k";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		/* PWM capable pin, but PWM isn't supported yet. */
-+		led {
-+			function = LED_FUNCTION_STATUS;
-+			color = <LED_COLOR_ID_GREEN>;
-+			gpios = <&pio 3 20 GPIO_ACTIVE_HIGH>; /* PD20 */
-+		};
-+	};
-+
-+	wifi_pwrseq: pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		reset-gpios = <&r_pio 1 1 GPIO_ACTIVE_LOW>; /* PM1 */
-+		clocks = <&rtc CLK_OSC32K_FANOUT>;
-+		clock-names = "ext_clock";
-+	};
-+
-+	reg_otg_vbus: regulator-otg-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "otg-vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&reg_vcc5v>;
-+		gpio = <&r_pio 0 4 GPIO_ACTIVE_HIGH>;	/* PL4 */
-+		enable-active-high;
-+	};
-+
-+	reg_pcie_vcc3v3: regulator-pcie-vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc-pcie-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&reg_vcc5v>;
-+		gpio = <&r_pio 0 8 GPIO_ACTIVE_HIGH>;	/* PL8 */
-+		enable-active-high;
-+	};
-+
-+	reg_usb_vbus: regulator-usb-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb-vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&reg_vcc5v>;
-+		gpio = <&r_pio 0 12 GPIO_ACTIVE_HIGH>;	/* PL12 */
-+		enable-active-high;
-+	};
-+
-+	reg_vcc5v: regulator-vcc5v {
-+		/* board wide 5V supply from USB type-C port */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc-5v";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&mmc0 {
-+	vmmc-supply = <&reg_cldo3>;
-+	cd-gpios = <&pio 5 6 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>; /* PF6 */
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	bus-width = <4>;
-+	mmc-pwrseq = <&wifi_pwrseq>;
-+	non-removable;
-+	vmmc-supply = <&reg_dldo1_323>;
-+	vqmmc-supply = <&reg_bldo1>;
-+	status = "okay";
-+
-+	brcmf: wifi@1 {
-+		compatible = "brcm,bcm4329-fmac";
-+		reg = <1>;
-+		interrupt-parent = <&r_pio>;
-+		interrupts = <1 0 IRQ_TYPE_LEVEL_LOW>; /* PM0 */
-+		interrupt-names = "host-wake";
-+	};
-+};
-+
-+&mmc2 {
-+	bus-width = <8>;
-+	cap-mmc-hw-reset;
-+	mmc-ddr-1_8v;
-+	mmc-hs200-1_8v;
-+	non-removable;
-+	vmmc-supply = <&reg_cldo3>;
-+	vqmmc-supply = <&reg_cldo1>;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&pio {
-+	vcc-pb-supply = <&reg_cldo3>;	/* via VCC-IO */
-+	vcc-pc-supply = <&reg_cldo1>;
-+	vcc-pd-supply = <&reg_cldo3>;
-+	vcc-pe-supply = <&reg_aldo2>;
-+	vcc-pf-supply = <&reg_cldo3>;	/* VCC-IO for 3.3v; VCC-MCSI for 1.8v */
-+	vcc-pg-supply = <&reg_bldo1>;
-+	vcc-ph-supply = <&reg_cldo3>;	/* via VCC-IO */
-+	vcc-pi-supply = <&reg_cldo3>;
-+	vcc-pj-supply = <&reg_cldo1>;
-+	vcc-pk-supply = <&reg_cldo1>;
-+};
-+
-+&r_i2c0 {
-+	status = "okay";
-+
-+	axp717: pmic@35 {
-+		compatible = "x-powers,axp717";
-+		reg = <0x35>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		interrupts-extended = <&nmi_intc 0 IRQ_TYPE_LEVEL_LOW>;
-+
-+		vin1-supply = <&reg_vcc5v>;
-+		vin2-supply = <&reg_vcc5v>;
-+		vin3-supply = <&reg_vcc5v>;
-+		vin4-supply = <&reg_vcc5v>;
-+		aldoin-supply = <&reg_vcc5v>;
-+		bldoin-supply = <&reg_vcc5v>;
-+		cldoin-supply = <&reg_vcc5v>;
-+
-+		regulators {
-+			/* Supplies the "little" cluster (1.4 GHz cores) */
-+			reg_dcdc1: dcdc1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1160000>;
-+				regulator-name = "vdd-cpul";
-+			};
-+
-+			reg_dcdc2: dcdc2 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <920000>;
-+				regulator-max-microvolt = <920000>;
-+				regulator-name = "vdd-gpu-sys";
-+			};
-+
-+			reg_dcdc3: dcdc3 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1160000>;
-+				regulator-max-microvolt = <1160000>;
-+				regulator-name = "vcc-dram";
-+			};
-+
-+			reg_dcdc4: dcdc4 {
-+				/* feeds 3.3V pin on GPIO header */
-+				regulator-always-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vdd-io";
-+			};
-+
-+			aldo1 {
-+				/* not actually connected */
-+				regulator-name = "avdd-csi";
-+			};
-+
-+			reg_aldo2: aldo2 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc-pe";
-+			};
-+
-+			reg_aldo3: aldo3 {
-+				/* supplies the I2C pins for this PMIC */
-+				regulator-always-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-pl-usb";
-+			};
-+
-+			reg_aldo4: aldo4 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc-pll-dxco-avcc";
-+			};
-+
-+			reg_bldo1: bldo1 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc-pg-wifi";
-+			};
-+
-+			reg_bldo2: bldo2 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc-pm-lpddr";
-+			};
-+
-+			bldo3 {
-+				/* not actually connected */
-+				regulator-name = "afvcc-csi";
-+			};
-+
-+			bldo4 {
-+				/* not actually connected */
-+				regulator-name = "dvdd-csi";
-+			};
-+
-+			reg_cldo1: cldo1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-name = "vcc-cvp-pc-lvds-mcsi-pk-efuse-pcie-edp-1v8";
-+			};
-+
-+			reg_cldo2: cldo2 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc3v3-csi";
-+			};
-+
-+			reg_cldo3: cldo3 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-io-mmc-nand-pd-pi-usb";
-+			};
-+
-+			reg_cldo4: cldo4 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-3v3-phy1-lcd";
-+			};
-+
-+			reg_cpusldo: cpusldo {
-+				/* supplies the management core */
-+				regulator-always-on;
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-name = "vdd-cpus";
-+			};
-+		};
-+	};
-+
-+	axp323: pmic@36 {
-+		compatible = "x-powers,axp323";
-+		reg = <0x36>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		status = "okay";
-+
-+		vin1-supply = <&reg_vcc5v>;
-+		vin2-supply = <&reg_vcc5v>;
-+		vin3-supply = <&reg_vcc5v>;
-+
-+		regulators {
-+			reg_aldo1_323: aldo1 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-wifi";
-+			};
-+
-+			reg_dldo1_323: dldo1 {
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-name = "vcc-wifi2";
-+			};
-+
-+			/* Supplies the "big" cluster (1.8 GHz cores) */
-+			reg_dcdc1_323: dcdc1 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1150000>;
-+				regulator-name = "vdd-cpub";
-+			};
-+
-+			/* DCDC2 is polyphased with DCDC1 */
-+
-+			/* Some RISC-V management core related voltage */
-+			reg_dcdc3_323: dcdc3 {
-+				regulator-always-on;
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-name = "vdd-dnr";
-+			};
-+		};
-+	};
-+};
-+
-+&r_pio {
-+/*
-+ * Specifying the supply would create a circular dependency.
-+ *
-+ *	vcc-pl-supply = <&reg_aldo3>;
-+ */
-+	vcc-pm-supply = <&reg_bldo2>;
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	uart-has-rtscts;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "brcm,bcm4345c5";
-+		clocks = <&rtc CLK_OSC32K_FANOUT>;
-+		clock-names = "lpo";
-+		vbat-supply = <&reg_aldo1_323>;
-+		vddio-supply = <&reg_bldo1>;
-+		device-wakeup-gpios = <&r_pio 1 3 GPIO_ACTIVE_HIGH>; /* PM3 */
-+		host-wakeup-gpios = <&r_pio 1 4 GPIO_ACTIVE_HIGH>; /* PM4 */
-+		shutdown-gpios = <&r_pio 1 2 GPIO_ACTIVE_HIGH>; /* PM2 */
-+	};
-+};
-+
-+&usb_otg {
-+	 /*
-+	  * The OTG controller is connected to one of the type-A ports.
-+	  * There is a regulator, controlled by a GPIO, to provide VBUS power
-+	  * to the port, and a VBUSDET GPIO, to detect externally provided
-+	  * power. But without ID or CC pins there is no real way to do a
-+	  * runtime role detection.
-+	  */
-+	dr_mode = "host";
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	usb0_vbus-supply = <&reg_otg_vbus>;
-+	usb0_vbus_det-gpios = <&r_pio 0 7 GPIO_ACTIVE_HIGH>; /* PL7 */
-+	usb1_vbus-supply = <&reg_usb_vbus>;
-+	status = "okay";
-+};
--- 
-2.39.5
-
+Konrad
