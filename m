@@ -1,254 +1,83 @@
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2F726E6F1
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:11:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC9127B4E4;
+	Wed, 25 Jun 2025 22:12:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750889466; cv=none; b=gnhxaOkw1L4Qp2qrT5Ot3ILRBiq+Fjaa+p7Y/uywTfSwyQmGdwez9w5+aVNaiEeyxtdZ/9WkEWXY/WCmGL/0ZPoe2n9HRkCBRSJV4iC/T7ZIh6Q551qR66FsaKnzNUxgLiNlcxBU6uhB4LlKGmxyWC1/j1FUC3QNr5Oe4eI8ddk=
+	t=1750889571; cv=none; b=jtdDv6/WlOTS/84YaYA+BNQ4kK3zhf6MyfYcFvkuBw5tIfRnQCfEEM0WA3wxwn6LOF18Tq080ooWA4FoItW6DO+HntHeA2PGsTkkZn048g+EjWce0nGLB/2vUftYtk9/HV+vMaXlrDcjP+QZSgniRY/rMG7E7WG7jDYH8YXaINY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750889466; c=relaxed/simple;
-	bh=fMV7Fv3bE5reYHrMs+H+GDgGCXhMWYwP1GPWJORDReU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pnCnWx+yCjxO6vncjiw5uigjy86o5mNK8n+7q+qH/zZD/3yGA2B5zcYE1PwyKDiZOAKFrj99s5cO8xUwFZgjeo1aErUCTxBL6F3N7tyY3MEniGXS4k6Dg3kUxR63y31nH9VaRWis1DOxA/TV3R2cQGynZ8yzb2gBw5M6qrREPZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=fN7HkrO0; arc=none smtp.client-ip=209.85.166.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riscstar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
+	s=arc-20240116; t=1750889571; c=relaxed/simple;
+	bh=QmYH8iz7I+hLnHHXLpT4R2xRHfQmPJ3xgDQkAv1dxvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=P0j6y3Mnof8/+DjERQRxa/MFggNKV6Ic0f3xWyxLcUaQ2amZMQOR5oYUxSYUOLqBFOZwp9CBbJ29QZnw9XeNx8/3YnPhUMeKw/JPgnmp1a0LKWB98L4cIdBi8KOqOfUvw6Z1WMpqaBZ/Pe1yxb0o59Bdm6IVFVK7ppJAruYFc5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhhVQukH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="fN7HkrO0"
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-86d01686196so12649439f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1750889462; x=1751494262; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XPg8khamQ0n3Un0f5D3NLY/jQXcOqvv2U1B/Sm+t1ps=;
-        b=fN7HkrO02IDzpsA/JrKw6Ou5K6HVqo+G9yiSXZhtGnkHjC6QbuuoOEjvEHwbZMktb+
-         Zrbw+WDOpY0gVpriquDlRew3A458HcSfWoYKgEjliWmjSJC9nHnQFwuNRj6PWQnBSp1v
-         YBdF+Inz0qY8/DkiKlqg53AUglnIoCWTTSBXXwTZlf3mtrE6tYExZOCLeQ1chckMHH3n
-         gGeLPPOwBABqTgM1XWzgjculDRp+ypX7iUCO1vj1SFxxvXNp2H6j5nW0zfYk9ZAmz4uJ
-         CY7WDLufqHcd1UOctlqerVtiF/dWNBo28wGWg8NFHHUJR6XWJ7R+kkq//kVfy0fMyTIo
-         5Dag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750889462; x=1751494262;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XPg8khamQ0n3Un0f5D3NLY/jQXcOqvv2U1B/Sm+t1ps=;
-        b=XLfsviVo8CbctwAQzGeNJpEp1Y6OP2B16cwDPB04dY1zHixiJ9Db4JbYOgtakMTzMn
-         iVfKwkBsG4OCwREUSBld4uXIiYrEx5pBIl7dZHExTS4LMXBFuGGax8kjnipARDC4s9+q
-         8zUpvxoNuW19YgA3xtn2ibRC3BLm4Y7LiVRTrX81vn/A4Er1pwhHtiHykwdrfTMs+T6X
-         qoG3MYPdATJlNGUlHKLA4GetEydZkPew9YWWVA1wH93cPGeCwXgGmeIGx5zMpKEVhwsZ
-         T0sLqCMnz46AvFuzWY5NVPdJ+eFhBhFyrQf1lLTejUQvkc5JKvZAf4g4Xw8eceC+fGIg
-         cDCg==
-X-Forwarded-Encrypted: i=1; AJvYcCXluWn1lDApJdGr/xsrViQ1jewh6PWtIWaxbAJDtFsDL+tNdnF5/2WpMwq4Wpdw4/fQB5/xfqfgUztxiRk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzCXR2F4dUcTkRjrVIBHqknaaDvntXPPqIgQNrPHdHrYMjb9qwL
-	A5QhBn7wfOOuBp7oGPpky1Jr61Ej5x4BbUqKOMGYrKnsF0lWSGtBkQtrLptTH9fKS+I=
-X-Gm-Gg: ASbGncs5ZKzvzQwtCl+xkJQ6mUqb1bcpGIWBedChPkuQrFtTcnwU4gAgccD++279mWG
-	HTeY1BKiIGDISspQ1QjGMcYtoE08hbUcSRiSePQyclQ3I+Cz6hfmZgpE4RoNV3NhRdM7nurnAnt
-	DlrMuEHR3UPh/3pRcnEsYdQAiMFGnCJXT+QLndUpqZ143nOWl7ySZzkl42dCvUxQ6p2I5hGk2SL
-	Jdb9gNnowhxMwjlE1mQL5BtQcNjxOobQXixktipFe/ANtSsPQ4Hgq3c2VNQbH85Mc/6zLJmY27N
-	FDIhUbQPMMeKgeeBNtosY5/PsgZvVe7+QEOznG2YAyCqUoC1zC64rgVgjIBy9pZ1zNZ5ytrChlz
-	oQ/y5julrTtZ70fiY+TQLs7StFw==
-X-Google-Smtp-Source: AGHT+IE+u9IjJy5DnG3IQAouxiGs+RqUt0Ha90G1K5TW/7uCSs9nbBzWj+oWsSVfWQZ0oTWVcwd35w==
-X-Received: by 2002:a05:6e02:16cb:b0:3df:3be7:59d1 with SMTP id e9e14a558f8ab-3df3be7658cmr35101075ab.11.1750889461833;
-        Wed, 25 Jun 2025 15:11:01 -0700 (PDT)
-Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3df2d32d228sm13202125ab.41.2025.06.25.15.10.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 15:10:56 -0700 (PDT)
-Message-ID: <a99ad08a-99b2-4e39-a2d1-28302d312735@riscstar.com>
-Date: Wed, 25 Jun 2025 17:10:54 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhhVQukH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B0B0C4CEEA;
+	Wed, 25 Jun 2025 22:12:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750889571;
+	bh=QmYH8iz7I+hLnHHXLpT4R2xRHfQmPJ3xgDQkAv1dxvA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ZhhVQukHhyp2I54I7VvZp1jd++sQGhmz8Be2pEFbQLlKF+/sp4JBVT5rSuj5+O2VV
+	 PxQ67Rtl3Xm2ZgWqqGl4qBZReImW0Sw2RsjX/z3vgdvk7NMp8t6Pa5k4sGv2HVxok5
+	 x4TqZJPdT5Kpw5IhDkMetGmjsxP5jUjIiR6SqBbSiuTWu+oQG7A3f/aEwXc+G8YobP
+	 GVKSs/ZWKr5IIsq/rWWgODE4m4KCQVBgTMO6+KLpEYcOUIFXNTdeopo9uTAjpSSO2h
+	 A/cuwuz3dU58gvu23Hagf2H5RTF6zc6RcFZ6JvAJ/GSvFORMO6QaXX6xBcw0NAPJ5J
+	 eyjb/JrANp26g==
+Date: Wed, 25 Jun 2025 15:12:49 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, Simon Horman
+ <horms@kernel.org>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Willem de Bruijn
+ <willemdebruijn.kernel@gmail.com>, bpf@vger.kernel.org, gustavold@gmail.com
+Subject: Re: [PATCH net-next v2 1/4] selftests: drv-net: add helper/wrapper
+ for bpftrace
+Message-ID: <20250625151249.14e5cd79@kernel.org>
+In-Reply-To: <20250625-netpoll_test-v2-1-47d27775222c@debian.org>
+References: <20250625-netpoll_test-v2-0-47d27775222c@debian.org>
+	<20250625-netpoll_test-v2-1-47d27775222c@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/7] rtc: spacemit: support the SpacemiT P1 RTC
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: lee@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, robh@kernel.org,
- krzk+dt@kernel.org, conor+dt@kernel.org, mat.jonczyk@o2.pl, dlan@gentoo.org,
- paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
- alex@ghiti.fr, troymitchell988@gmail.com, linux-rtc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
- spacemit@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250625164119.1068842-1-elder@riscstar.com>
- <20250625164119.1068842-5-elder@riscstar.com>
- <202506252201262779aa6c@mail.local>
-Content-Language: en-US
-From: Alex Elder <elder@riscstar.com>
-In-Reply-To: <202506252201262779aa6c@mail.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On 6/25/25 5:01 PM, Alexandre Belloni wrote:
-> On 25/06/2025 11:41:15-0500, Alex Elder wrote:
->> +/*
->> + * The P1 hardware documentation states that the register values are
->> + * latched to ensure a consistent time snapshot within the registers,
->> + * but these are in fact unstable due to a bug in the hardware design.
->> + * So we loop until we get two identical readings.
->> + */
->> +static int p1_rtc_read_time(struct device *dev, struct rtc_time *t)
->> +{
->> +	struct p1_rtc *p1 = dev_get_drvdata(dev);
->> +	struct regmap *regmap = p1->regmap;
->> +	u32 count = RTC_READ_TRIES;
->> +	u8 times[2][6];
->> +	size_t size;
->> +	u32 i = 0;
->> +	u8 *time;
->> +	int ret;
->> +
->> +	size = sizeof(times[0]);
->> +	ret = regmap_bulk_read(regmap, RTC_TIME, times[i], size);
->> +	if (ret)
->> +		return ret;
->> +
->> +	do {
->> +		i = 1 - i;
->> +		ret = regmap_bulk_read(regmap, RTC_TIME, times[i], size);
->> +		if (ret)
->> +			return ret;
->> +	} while (memcmp(times[i], times[1 - i], size) && --count);
+On Wed, 25 Jun 2025 04:39:46 -0700 Breno Leitao wrote:
+> From: Jakub Kicinski <kuba@kernel.org>
 > 
-> Simply checking the seconds is enough, unless you expect regmap_bulk_read to ake
-> more than a minute so you don't need a two dimension array.
-
-I hadn't thought it through, but you're right.  I'll still
-do bulk reads but will save only the seconds register and
-compare it to the previous.
-
+> bpftrace is very useful for low level driver testing. perf or trace-cmd
+> would also do for collecting data from tracepoints, but they require
+> much more post-processing.
 > 
->> +
->> +	if (!count)
->> +		return -EIO;
->> +
->> +	time = &times[0][0];
->> +
->> +	t->tm_sec = time[0] & GENMASK(5, 0);
->> +	t->tm_min = time[1] & GENMASK(5, 0);
->> +	t->tm_hour = time[2] & GENMASK(4, 0);
->> +	t->tm_mday = (time[3] & GENMASK(4, 0)) + 1;
->> +	t->tm_mon = time[4] & GENMASK(3, 0);
->> +	t->tm_year = (time[5] & GENMASK(5, 0)) + 100;
->> +
->> +	return 0;
->> +}
->> +
->> +/*
->> + * The P1 hardware documentation states that values in the registers are
->> + * latched so when written they represent a consistent time snapshot.
->> + * Nevertheless, this is not guaranteed by the implementation, so we must
->> + * disable the RTC while updating it.
->> + */
->> +static int p1_rtc_set_time(struct device *dev, struct rtc_time *t)
->> +{
->> +	struct p1_rtc *p1 = dev_get_drvdata(dev);
->> +	struct regmap *regmap = p1->regmap;
->> +	u8 time[6];
->> +	int ret2;
->> +	int ret;
->> +
->> +	time[0] = t->tm_sec;
->> +	time[1] = t->tm_min;
->> +	time[2] = t->tm_hour;
->> +	time[3] = t->tm_mday - 1;
->> +	time[4] = t->tm_mon;
->> +	time[5] = t->tm_year - 100;
->> +
->> +	/* Disable the RTC to update; re-enable again when done */
->> +	ret = regmap_update_bits(regmap, RTC_CTRL, RTC_EN, 0);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = regmap_bulk_write(regmap, RTC_TIME, time, sizeof(time));
->> +
-> Honnestly, I'd simply go for
-> 
-> 	if (ret)
-> 		return ret;
-> 
-> Here, you are trying to set the time, I'm not sure it is worth trying to
-> reenable the rtc while hoping the previous time has been kept.
+> Add a wrapper for running bpftrace and sanitizing its output.
+> bpftrace has JSON output, which is great, but it prints loose objects
+> and in a slightly inconvenient format. We have to read the objects
+> line by line, and while at it return them indexed by the map name.
 
-OK.  I normally at least try to return to the original state
-even when errors occur.
+Could you squash this in? Otherwise pylint can't find it
 
-I don't know who updates the RTC, but I suppose if any error
-occurs writing a value they should assume it's "not working".
+diff --git a/tools/testing/selftests/drivers/net/lib/py/__init__.py b/tools/testing/selftests/drivers/net/lib/py/__init__.py
+index 9ed1d8f70524..98829a0f7a02 100644
+--- a/tools/testing/selftests/drivers/net/lib/py/__init__.py
++++ b/tools/testing/selftests/drivers/net/lib/py/__init__.py
+@@ -14,7 +14,8 @@ KSFT_DIR = (Path(__file__).parent / "../../../..").resolve()
+     from net.lib.py import EthtoolFamily, NetdevFamily, NetshaperFamily, \
+         NlError, RtnlFamily
+     from net.lib.py import CmdExitFailure
+-    from net.lib.py import bkg, cmd, defer, ethtool, fd_read_timeout, ip, \
++    from net.lib.py import bkg, cmd, bpftrace, defer, ethtool, \
++        fd_read_timeout, ip, \
+         rand_port, tool, wait_port_listen
+     from net.lib.py import fd_read_timeout
+     from net.lib.py import KsftSkipEx, KsftFailEx, KsftXfailEx
 
-> This also shows that p1_rtc_read_time should check that RTC_EN is set, else it
-> knows the time has never been set and is invalid.
-
-That's a good point.  I'll add a check.  And with that it should
-be fine to return without re-enabling.
-
-Thanks for your review.  I'll wait until tomorrow to send the
-next version.
-
-					-Alex
-
->> +	ret2 = regmap_update_bits(regmap, RTC_CTRL, RTC_EN, RTC_EN);
->> +
->> +	return ret ? : ret2;		/* Return the first error */
-> 
-> 
->> +}
->> +
->> +static const struct rtc_class_ops p1_rtc_class_ops = {
->> +	.read_time = p1_rtc_read_time,
->> +	.set_time = p1_rtc_set_time,
->> +};
->> +
->> +static int p1_rtc_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct rtc_device *rtc;
->> +	struct p1_rtc *p1;
->> +
->> +	p1 = devm_kzalloc(dev, sizeof(*p1), GFP_KERNEL);
->> +	if (!p1)
->> +		return -ENOMEM;
->> +	dev_set_drvdata(dev, p1);
->> +
->> +	p1->regmap = dev_get_regmap(dev->parent, NULL);
->> +	if (!p1->regmap)
->> +		return dev_err_probe(dev, -ENODEV, "failed to get regmap\n");
->> +
->> +	rtc = devm_rtc_allocate_device(dev);
->> +	if (IS_ERR(rtc))
->> +		return dev_err_probe(dev, PTR_ERR(rtc),
->> +				     "error allocating device\n");
->> +	p1->rtc = rtc;
->> +
->> +	rtc->ops = &p1_rtc_class_ops;
->> +	rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
->> +	rtc->range_max = RTC_TIMESTAMP_END_2063;
->> +
->> +	clear_bit(RTC_FEATURE_ALARM, rtc->features);
->> +	clear_bit(RTC_FEATURE_UPDATE_INTERRUPT, rtc->features);
->> +
->> +	return devm_rtc_register_device(rtc);
->> +}
->> +
->> +static struct platform_driver p1_rtc_driver = {
->> +	.probe = p1_rtc_probe,
->> +	.driver = {
->> +		.name = MOD_NAME,
->> +	},
->> +};
->> +
->> +module_platform_driver(p1_rtc_driver);
->> +
->> +MODULE_DESCRIPTION("SpacemiT P1 RTC driver");
->> +MODULE_LICENSE("GPL");
->> +MODULE_ALIAS("platform:" MOD_NAME);
->> -- 
->> 2.45.2
->>
-> 
-
+and with that I think it should be possible to make pylint clean on the
+past patch?
