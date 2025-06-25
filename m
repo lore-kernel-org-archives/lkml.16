@@ -1,83 +1,37 @@
-Received: from siberian.tulip.relay.mailchannels.net (siberian.tulip.relay.mailchannels.net [23.83.218.246])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11EB1A23A4;
-	Wed, 25 Jun 2025 02:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.246
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750819286; cv=pass; b=AGQ6mlNFm/Z4lOVDZekf+JOjNfCpk8quGrVa3cudiYleFAfCm9fBy9aQv1Pb2Fp+tWts6R97x6FhZHmG804g5l/yYOeEV+bdL3jTrF5olCV1qQPI8qieJwapOhO8EU66V4iwmmmfQs2LDMvsKLWyNpi4EFY5nJm17/OruWdLEDA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750819286; c=relaxed/simple;
-	bh=g05fp5tznJTq2ihZAsz/TZXx28vocabXtBccaPhv0L4=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2149B1A4E9E;
+	Wed, 25 Jun 2025 02:41:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750819302; cv=none; b=PlM3CjBsGXiR9mJ2ATJpuILv4tpsWDW5roVyg7KXscf2+yKahj1ACJ81BCaDan+TGsw6O6Y46IGbMSnVHQ1glSsjAgsFWKAz7dDel15Tuut6em5NYS7iteCYMAwyw+4kSN+9zkBVkMOw+fCOHYLWOcSRBz8kX5Vy9PqsOayb0yI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750819302; c=relaxed/simple;
+	bh=BM18j/jSKaNiUI9qg/26vUGPAgDnxE7Wu64OlBKchy0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PzP8HmEhHYwU+olugnAboU1gjUupNSxds84AiAv/3sQgNITgi0k0E3Qwn71nJKJmCtbt7Jb+zggT70vPRYZ+zwhKP/sTPBOWuAxXbvATWB/hbBE7DzVNG81xeeL4g7esnPrUINf3mY9d1ZgB8jYu0mgckZ8+leAKCzA4fLO087E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net; spf=pass smtp.mailfrom=landley.net; dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b=bWFSp2Y8; arc=pass smtp.client-ip=23.83.218.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=landley.net
+	 In-Reply-To:Content-Type; b=Kl18m0HkN8BYlxQPm0vuCa+u9ky0GwMzs5GGhrnAe85oTbvDYJY8Rw6QyP7mcsk254Vze9T6oveSRDGg/2cdNTUTm6qJIgki1ls1x/PWIY/fQ18Xry5w0sP4SGxvvd1bs6kPLxKwzrAn3QXuvcSFsObly7wz6LtuYCWvtm+Kgyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=uJM6BLB6; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b="bWFSp2Y8"
-X-Sender-Id: dreamhost|x-authsender|rob@landley.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 296441A4D84;
-	Wed, 25 Jun 2025 02:41:17 +0000 (UTC)
-Received: from pdx1-sub0-mail-a314.dreamhost.com (100-108-113-168.trex-nlb.outbound.svc.cluster.local [100.108.113.168])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id B633C1A3F0F;
-	Wed, 25 Jun 2025 02:41:16 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1750819276; a=rsa-sha256;
-	cv=none;
-	b=ltFt7IzZNxrJGxiYV+k1oGZWgrwHuGih4VwkNcqlliN6gShnrrTxBblpqnQivlZpp18Pkd
-	vccqqA0wpyetNsTgh1o3WGGe0U4jhsXn31J83pb3Ie8yg8+YDNggCMRXa0XVi55GkmeZnV
-	vh8245EacFFZprcViyTZhfXQsjtc2qwvJnNRNX5xpfbJUS6RmPj6yvxOxc8H0k5ar/qh1Z
-	iCo02sqgxqJqwfGnWvIPAdwTF539ZuIsif4+bO1Q37nHA0SSggrXMcQbA7Uki0y11yS0gj
-	7gKk+8LyWaPnZu2gkjR3GbTgju5u0YqrIBIbIorzaCLYLxfQ459sxg0YNsvexA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1750819276;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=LgABf1mB39qVwXO9ATW+JWNCBe+eqNN387tXL3KETMg=;
-	b=WQBczNvNGfB4w8FJqs+9GW6tc1lORYHGd9yxPwBTt1VEe+HP9zI0IgPRVe6oUy3Z6HFj4N
-	neda4JnEocB/nwR/wVVnFZG3pvvn6YxB8XtKL81qOY1vl/PB+bEGHYR4OtkHQ2kjkaxOvC
-	f5HmplyNEUKTKaGcvABy0h+duXIyxoUOYBPP/4O23Mh8U8e6oTVGUfhoXJQcCX5bPHzEOh
-	TGMIJZgxYKsl50Q1UR2mLGZEmuqvPOI0T7ctogwqXYG2SwNwKGX7NuIpJ9JwtuE/NDAvAf
-	EXhWhNQ+Yy0zQkGFIhg4g6l3yVcb3NPJ6osGUOcsDSxijPgOIBHWWWEWVL9wVw==
-ARC-Authentication-Results: i=1;
-	rspamd-6597f9cdc7-8mcrn;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=rob@landley.net
-X-Sender-Id: dreamhost|x-authsender|rob@landley.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|rob@landley.net
-X-MailChannels-Auth-Id: dreamhost
-X-Tangy-Name: 101dd87568f9001e_1750819277034_1257048522
-X-MC-Loop-Signature: 1750819277034:1050076598
-X-MC-Ingress-Time: 1750819277033
-Received: from pdx1-sub0-mail-a314.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.108.113.168 (trex/7.1.3);
-	Wed, 25 Jun 2025 02:41:17 +0000
-Received: from [172.22.7.54] (unknown [198.232.126.195])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: rob@landley.net)
-	by pdx1-sub0-mail-a314.dreamhost.com (Postfix) with ESMTPSA id 4bRmKR5XZ9zC4;
-	Tue, 24 Jun 2025 19:41:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=landley.net;
-	s=dreamhost; t=1750819276;
-	bh=LgABf1mB39qVwXO9ATW+JWNCBe+eqNN387tXL3KETMg=;
-	h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
-	b=bWFSp2Y8DtFviBNOxweyNaW8TuWC7PDhtig+Xm+aD/JvpQccqIwt0ekglzI/JDWz7
-	 IKGNqf6WPpINfkah5mAf/MGcezl990xL3cb68XhUfp6twDSSDKTUc2M2qms+Eu6Yxf
-	 qm5z2MEOEswM2Q6y5oN43UMqSrIEZ810GxVfmzqr4QfwGQd9N8xEbna4gaDQNcMaBT
-	 OAE8VZp2pN6m4bDh/zgYNl/ExBhFEq1ncwbLRW6oMWvDTDskLBdtxGWFDWyl3c+k/R
-	 dOzsF/XR22mzJ6v4P4juS0TuCtwOKqYOBqfnBnJ6CwWPTzkrBDEA5Ymfzx0aA1iqnB
-	 o1YSEOH9HwR3w==
-Message-ID: <16f63653-c5c9-4b32-8e0c-0a4910a9fdb9@landley.net>
-Date: Tue, 24 Jun 2025 21:41:14 -0500
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uJM6BLB6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description;
+	bh=bqS8VBg7H0zTWw6zFLBSfLSl1NjJXNGmF0tzhS3Kfso=; b=uJM6BLB6B2t3Hd1d3c/bLLVmUJ
+	WsX1a480WFy1MFsocTmD3mRD4/ClPRzuXYr8zdrxd9FaNSZLNS1AwU+fNGZ3o5Ao/RmNmsKBqGshd
+	KVJ48+c6bEoIm1danbGhcUZ+UOFmNbC/BB3ZRiVq1v45VjL/pqrdxGEeAvPPtAOvK0Ae/pV1PWPoF
+	7I+aGCrfnzrW20oA5LMe7a+PKmT9BayPtr8ml0/TggFcPVA/bM5tN1mV3K1VcWzFG92Z4qGPn3n7U
+	2q8E4xUHfXSjA4C3vK7bFhg1J4XiL7TDrgxcj3zRsUCtN6R/jL+mQQcdhZBu9bewvdlPa7XKfYGRo
+	PzRUad4g==;
+Received: from [50.53.25.54] (helo=[192.168.254.17])
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uUG4r-00000008GIU-2xCp;
+	Wed, 25 Jun 2025 02:41:33 +0000
+Message-ID: <ff155de3-7e7e-47ea-92ff-c14cc0a2dc1f@infradead.org>
+Date: Tue, 24 Jun 2025 19:41:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,37 +39,128 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/3] tools/nolibc: add support for SuperH
-To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
- Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
- John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
- Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
-Cc: linux-sh@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250609-nolibc-sh-v1-0-9dcdb1b66bb5@weissschuh.net>
+Subject: Re: [PATCH 1/8] docs: dma-api: use "DMA API" consistently throughout
+ the document
+To: Petr Tesarik <ptesarik@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ Morton <akpm@linux-foundation.org>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
+ Leon Romanovsky <leon@kernel.org>, Keith Busch <kbusch@kernel.org>,
+ Caleb Sander Mateos <csander@purestorage.com>,
+ Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+ John Garry <john.g.garry@oracle.com>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>
+References: <20250624133923.1140421-1-ptesarik@suse.com>
+ <20250624133923.1140421-2-ptesarik@suse.com>
 Content-Language: en-US
-From: Rob Landley <rob@landley.net>
-In-Reply-To: <20250609-nolibc-sh-v1-0-9dcdb1b66bb5@weissschuh.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20250624133923.1140421-2-ptesarik@suse.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 6/9/25 04:28, Thomas Weißschuh wrote:
-> Add support for SuperH/"sh" to nolibc.
-> Only sh4 is tested for now.
+Hi Petr,
+
+On 6/24/25 6:39 AM, Petr Tesarik wrote:
+> Make sure that all occurrences are spelled "DMA API" (all uppercase, no
+> hyphen, no underscore).
 > 
-> This is only tested on QEMU so far.
-> Additional testing would be very welcome.
+> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
 
-I ran this by Jeff Dionne (the j-core architect) who said:
+LGTM. Thanks.
 
- > Looks correct to me.  There are no endian assumptions that I can see.
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
 
-So you can put
+> ---
+>  Documentation/core-api/dma-api.rst | 22 +++++++++++-----------
+>  1 file changed, 11 insertions(+), 11 deletions(-)
+> 
+> diff --git a/Documentation/core-api/dma-api.rst b/Documentation/core-api/dma-api.rst
+> index 2ad08517e626..97f42c15f5e4 100644
+> --- a/Documentation/core-api/dma-api.rst
+> +++ b/Documentation/core-api/dma-api.rst
+> @@ -13,10 +13,10 @@ machines.  Unless you know that your driver absolutely has to support
+>  non-consistent platforms (this is usually only legacy platforms) you
+>  should only use the API described in part I.
+>  
+> -Part I - dma_API
+> +Part I - DMA API
+>  ----------------
+>  
+> -To get the dma_API, you must #include <linux/dma-mapping.h>.  This
+> +To get the DMA API, you must #include <linux/dma-mapping.h>.  This
+>  provides dma_addr_t and the interfaces described below.
+>  
+>  A dma_addr_t can hold any valid DMA address for the platform.  It can be
+> @@ -76,7 +76,7 @@ may only be called with IRQs enabled.
+>  Part Ib - Using small DMA-coherent buffers
+>  ------------------------------------------
+>  
+> -To get this part of the dma_API, you must #include <linux/dmapool.h>
+> +To get this part of the DMA API, you must #include <linux/dmapool.h>
+>  
+>  Many drivers need lots of small DMA-coherent memory regions for DMA
+>  descriptors or I/O buffers.  Rather than allocating in units of a page
+> @@ -247,7 +247,7 @@ Maps a piece of processor virtual memory so it can be accessed by the
+>  device and returns the DMA address of the memory.
+>  
+>  The direction for both APIs may be converted freely by casting.
+> -However the dma_API uses a strongly typed enumerator for its
+> +However the DMA API uses a strongly typed enumerator for its
+>  direction:
+>  
+>  ======================= =============================================
+> @@ -775,19 +775,19 @@ memory or doing partial flushes.
+>  	of two for easy alignment.
+>  
+>  
+> -Part III - Debug drivers use of the DMA-API
+> +Part III - Debug drivers use of the DMA API
+>  -------------------------------------------
+>  
+> -The DMA-API as described above has some constraints. DMA addresses must be
+> +The DMA API as described above has some constraints. DMA addresses must be
+>  released with the corresponding function with the same size for example. With
+>  the advent of hardware IOMMUs it becomes more and more important that drivers
+>  do not violate those constraints. In the worst case such a violation can
+>  result in data corruption up to destroyed filesystems.
+>  
+> -To debug drivers and find bugs in the usage of the DMA-API checking code can
+> +To debug drivers and find bugs in the usage of the DMA API checking code can
+>  be compiled into the kernel which will tell the developer about those
+>  violations. If your architecture supports it you can select the "Enable
+> -debugging of DMA-API usage" option in your kernel configuration. Enabling this
+> +debugging of DMA API usage" option in your kernel configuration. Enabling this
+>  option has a performance impact. Do not enable it in production kernels.
+>  
+>  If you boot the resulting kernel will contain code which does some bookkeeping
+> @@ -826,7 +826,7 @@ example warning message may look like this::
+>  	<EOI> <4>---[ end trace f6435a98e2a38c0e ]---
+>  
+>  The driver developer can find the driver and the device including a stacktrace
+> -of the DMA-API call which caused this warning.
+> +of the DMA API call which caused this warning.
+>  
+>  Per default only the first error will result in a warning message. All other
+>  errors will only silently counted. This limitation exist to prevent the code
+> @@ -834,7 +834,7 @@ from flooding your kernel log. To support debugging a device driver this can
+>  be disabled via debugfs. See the debugfs interface documentation below for
+>  details.
+>  
+> -The debugfs directory for the DMA-API debugging code is called dma-api/. In
+> +The debugfs directory for the DMA API debugging code is called dma-api/. In
+>  this directory the following files can currently be found:
+>  
+>  =============================== ===============================================
+> @@ -882,7 +882,7 @@ dma-api/driver_filter		You can write a name of a driver into this file
+>  
+>  If you have this code compiled into your kernel it will be enabled by default.
+>  If you want to boot without the bookkeeping anyway you can provide
+> -'dma_debug=off' as a boot parameter. This will disable DMA-API debugging.
+> +'dma_debug=off' as a boot parameter. This will disable DMA API debugging.
+>  Notice that you can not enable it again at runtime. You have to reboot to do
+>  so.
+>  
 
-Acked-by: Rob Landley <rob@landley.net>
-Acked-by: D. Jeff Dionne <jeff@coresemi.io>
-
-But neither of us really have a build environment set up to do much with 
-it. Is there a howto for this, or is just to run the kernel tests?
-
-Rob
+-- 
+~Randy
