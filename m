@@ -1,90 +1,288 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF3C4C83;
-	Wed, 25 Jun 2025 22:43:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B9F30749E
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750891409; cv=none; b=h1aQw1yAqx7iGEjfbkTKKVr5nnRSYVb5WYqMCrdTZcSISmx4xhgp9A92LE6j+srZ7MDp4o3qykj2gBFpPdbGvg3fqH2a0W4RvR5AQmwjd5VsIU3RIVO+26gsSR5WlIMDqK+CG6IGBP8eI1n88pcUWDpoAsaq0lf4fxH2hBP+ps4=
+	t=1750891569; cv=none; b=s6s2hpbfmgrXh+xuujVZzFFdkIJh4BlZmo++W31rJOoBrsikMYAjtFT71AiGCPbYKTVfnCxGsbMj20uHZHAdBXT5yxGLhPnij5Xw+fHaEGdKmctlHZTlPkJ3rIOOmljPLo9xjWfL7TWuFx7XLxPhXEeYJfTI8n7ExlxPl3pCWEg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750891409; c=relaxed/simple;
-	bh=xZtSzPqdbJ8208R4RJdG5ryYeh1/4FRyOAC1mvLBQrQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=POr3dysMLqATQjGuCpPU8V1Y+DztNFb2UZ5WykRrvERZN74Jl0mlIYIFny3VJfZunKIjO2fQdnf5dvmE1Tzd5Ud4vo9mQef5yPd/iCT1Al5wgiRHFsT1fhhJI054el5sqei29d2BwMG55H8ip+PYBoe5EfWeoOEO71wwplIHNwg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M9lM+5Gc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750891569; c=relaxed/simple;
+	bh=KpQBq8cTWgHBNZDDJpzS8CHdL8OOqHXQA7o9ZDYM6RI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ofnZv25AgArCtZuyI7AzhGMc9GJJXUayc0TPnxOd8xbSiy+xaqVJH4SVcIQ3vkQAQILU0tTmlduoi/55dkPrHVGLa4MFIGMV/+1QmMglmY/w1KAux4g92M3lbWJh28vRLrEF6aAQOCMDIS2ACEf/zRRYMi0kD0iA7woZZV3tQWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CIUALG0h; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M9lM+5Gc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1586C4CEEA;
-	Wed, 25 Jun 2025 22:43:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750891408;
-	bh=xZtSzPqdbJ8208R4RJdG5ryYeh1/4FRyOAC1mvLBQrQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M9lM+5Gc+L7q2ca8HZzWtCcZHjuqT+xnq1wlbdQIhJl6GxXCYLWDUcazMsQC5MTo4
-	 PWlHHO2snzOKBmHolt4bLf062MLyx5QG6GE2bhJ9ZbK9EmvPasMFPL9zEeyuvo0qNw
-	 fBJ3p3ZiEeXAE6UEAwEj10f19WjdQI2lI9up/mosp5lmH/F5EJe1XMkZsEp2Vkn7JL
-	 E9H7kNoTVa3jHkzwArtNGJvJlyFMPmCIM4ahC0ZNwPAGu3wh7NxLYzlxlsl6aA4K3D
-	 X1Lw6y4+4UA2spjku2uyUuXl5D0ZYtt0Enns+LYhuqghGJN90o4xxLnXBoqBOW9ikj
-	 +/tRezTKybA0g==
-Date: Wed, 25 Jun 2025 23:43:23 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Gabor Juhos <j4g8y7@gmail.com>
-Cc: Md Sadre Alam <quic_mdalam@quicinc.com>,
-	Varadarajan Narayanan <quic_varada@quicinc.com>,
-	Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-spi@vger.kernel.org,
-	linux-mtd@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Lakshmi Sowjanya D <quic_laksd@quicinc.com>
-Subject: Re: [PATCH v3 0/2] spi: spi-qpic-snand: avoid memory corruption
-Message-ID: <aFx7ix0uikB8dkm4@finisterre.sirena.org.uk>
-References: <20250618-qpic-snand-avoid-mem-corruption-v3-0-319c71296cda@gmail.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CIUALG0h"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750891564;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=cOrJ0BWmzHP1S8qZkg+9YGmlzCtKwaBoQZ0rsm3ib5U=;
+	b=CIUALG0hAl9bERDSEq0ozcYyVoRmAoCrVHF6/GRlwKkSqGXRGcga+SqzQFOmjet8k5v29n
+	6BUb4hwJYTQ3kc0d6y+VhEMe4+qQUjJ7pJWe8iX0taWG+tBr2e1Y0JlXv4BWH7NFlRWKcm
+	Jk2CWxxd1vHYeRHbZU+LXsJN+3Suqn8=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-308-_XCgAn6hO-qAjMP2R-ffBA-1; Wed,
+ 25 Jun 2025 18:46:02 -0400
+X-MC-Unique: _XCgAn6hO-qAjMP2R-ffBA-1
+X-Mimecast-MFC-AGG-ID: _XCgAn6hO-qAjMP2R-ffBA_1750891560
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D0D641800268;
+	Wed, 25 Jun 2025 22:45:59 +0000 (UTC)
+Received: from asrivats-na.rmtustx.csb (unknown [10.2.16.179])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 678C819560A3;
+	Wed, 25 Jun 2025 22:45:56 +0000 (UTC)
+From: Anusha Srivatsa <asrivats@redhat.com>
+Date: Wed, 25 Jun 2025 17:44:44 -0500
+Subject: [PATCH v2] panel/simple-simple: Identify simple DPI panels using
+ .compatible field
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6lvN9Ro0oZtMf/Z5"
-Content-Disposition: inline
-In-Reply-To: <20250618-qpic-snand-avoid-mem-corruption-v3-0-319c71296cda@gmail.com>
-X-Cookie: Do not cut switchbacks.
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250625-b4-simple-panel-regression-v2-1-9422d46917ac@redhat.com>
+X-B4-Tracking: v=1; b=H4sIANt7XGgC/42NSw6CUAxFt0I6toZXQdCR+zAMChRowi99hGgIe
+ /fBChyek9xzN/BiKh6e0QYmq3qdxgB0iaDqeGwFtQ4MFFMa3ynBMkGvw9wLzjxKjyatiT9mmLP
+ cSqacGiEIgdmk0c8ZfxeBO/XLZN/za3WH/Su7OnTIKdfNgzirXPYyqTtertU0QLHv+w+DY4nrx
+ QAAAA==
+X-Change-ID: 20250624-b4-simple-panel-regression-8ae3ba282fe2
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Francesco Dolcini <francesco@dolcini.it>, 
+ Anusha Srivatsa <asrivats@redhat.com>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750891486; l=8509;
+ i=asrivats@redhat.com; s=20250122; h=from:subject:message-id;
+ bh=KpQBq8cTWgHBNZDDJpzS8CHdL8OOqHXQA7o9ZDYM6RI=;
+ b=Sb9YHTyGFNODaxRqP+TJOHaOR6GP9g6wYOLczCx6IdQblOZgshlmv7RxFrrPsCaLkNa2hu5jJ
+ Ej11NK7/wPwDpH86OsX/KG8pDTE0WdYm/NXh/ow7Dt4DaujUDScVYVE
+X-Developer-Key: i=asrivats@redhat.com; a=ed25519;
+ pk=brnIHkBsUZEhyW6Zyn0U92AeIZ1psws/q8VFbIkf1AU=
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+The panel allocation in panel_simple_probe() breaks due to not having
+the panel desc for DPI panels. DPI panels gets probed much later.
 
---6lvN9Ro0oZtMf/Z5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Currently driver is checking for desc == &panel_dpi to do the DPI
+specific panel desc allocations. This looks hacky.
 
-On Wed, Jun 18, 2025 at 10:22:48PM +0200, Gabor Juhos wrote:
-> The 'spi-qpic-nand' driver may cause memory corruption under some
-> circumstances. The first patch in the series changes the driver to
-> avoid that, whereas the second adds some sanity checks to the common
-> QPIC code in order to make detecting such errors easier in the future.
->=20
-> Preferably, the two patches should go along in via the SPI tree.
-> It is not a strict requirement though, in the case the second patch
-> gets included separately through the MTD tree it reveals the bug
-> which is fixed in the first patch.
+This patch does the following:
 
-Miquel, are you OK with this plan for merging via the SPI tree?
+- Rename panel_dpi_probe() to panel_dpi_get_desc() and call it before
+panel allocation. panel_dpi_get_desc() returns a panel desc unlike
+panel_dpi_probe() which returned an int. This way driver has a known
+connector type while allocating the panel.
+- panel_dpi_get_desc() returns a panel desc
+- Add a simple helper is_panel_dpi() to identify a simple DPI panel from
+a simple panel based on .compatible field
 
---6lvN9Ro0oZtMf/Z5
-Content-Type: application/pgp-signature; name="signature.asc"
+Fixes: de04bb0089a9 ("drm/panel/panel-simple: Use the new allocation in place of devm_kzalloc()")
+Suggested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Suggested-by: Maxime Ripard <mripard@kernel.org>
+Cc: Francesco Dolcini <francesco@dolcini.it>
+Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Reported-by: Francesco Dolcini <francesco@dolcini.it>
+Closes: https://lore.kernel.org/all/20250612081834.GA248237@francesco-nb/
+Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
+---
+Seeing the below trace due to the changes introduced by:
+Commit de04bb0089a9 ("drm/panel/panel-simple: Use the new allocation in place of devm_kzalloc()")
 
------BEGIN PGP SIGNATURE-----
+[   12.089274] ------------[ cut here ]------------
+[   12.089303] WARNING: CPU: 0 PID: 96 at drivers/gpu/drm/bridge/panel.c:377 devm_drm_of_get_bridge+0xac/0xb8
+[   12.130808] Modules linked in: v4l2_jpeg pwm_imx27(+) imx_vdoa gpu_sched panel_simple imx6_media(C) imx_media_common
+(C) videobuf2_dma_contig pwm_bl gpio_keys v4l2_mem2mem fuse ipv6 autofs4
+[   12.147774] CPU: 0 UID: 0 PID: 96 Comm: kworker/u8:3 Tainted: G         C          6.16.0-rc1+ #1 PREEMPT
+[   12.157446] Tainted: [C]=CRAP
+[   12.160418] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+[   12.166953] Workqueue: events_unbound deferred_probe_work_func
+[   12.172805] Call trace:
+[   12.172815]  unwind_backtrace from show_stack+0x10/0x14
+[   12.180598]  show_stack from dump_stack_lvl+0x68/0x74
+[   12.185674]  dump_stack_lvl from __warn+0x7c/0xe0
+[   12.190407]  __warn from warn_slowpath_fmt+0x1b8/0x1c0
+[   12.195567]  warn_slowpath_fmt from devm_drm_of_get_bridge+0xac/0xb8
+[   12.201949]  devm_drm_of_get_bridge from imx_pd_probe+0x58/0x164
+[   12.207976]  imx_pd_probe from platform_probe+0x5c/0xb0
+[   12.213220]  platform_probe from really_probe+0xd0/0x3a4
+[   12.218551]  really_probe from __driver_probe_device+0x8c/0x1d4
+[   12.224486]  __driver_probe_device from driver_probe_device+0x30/0xc0
+[   12.230942]  driver_probe_device from __device_attach_driver+0x98/0x10c
+[   12.237572]  __device_attach_driver from bus_for_each_drv+0x90/0xe4
+[   12.243854]  bus_for_each_drv from __device_attach+0xa8/0x1c8
+[   12.249614]  __device_attach from bus_probe_device+0x88/0x8c
+[   12.255285]  bus_probe_device from deferred_probe_work_func+0x8c/0xcc
+[   12.261739]  deferred_probe_work_func from process_one_work+0x154/0x2dc
+[   12.268371]  process_one_work from worker_thread+0x250/0x3f0
+[   12.274043]  worker_thread from kthread+0x12c/0x24c
+[   12.278940]  kthread from ret_from_fork+0x14/0x28
+[   12.283660] Exception stack(0xd0be9fb0 to 0xd0be9ff8)
+[   12.288720] 9fa0:                                     00000000 00000000 00000000 00000000
+[   12.296906] 9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[   12.305089] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+[   12.312050] ---[ end trace 0000000000000000 ]---
+---
+Changes in v2:
+- Add the "Reported-by" and "Closes" tags.
+- change the compatible with panel-dpi instead of previously used
+panel_dpi (Luca).
+- remove DPI entry in platform_of_match() the global panel_desc panel_dpi
+declaration (Luca).
+- Edit commit message (Maxime)
+- Avoid returning NULL, instead return ERR_PTR in panel_dpi_get_desc()
+- Link to v1: https://lore.kernel.org/r/20250624-b4-simple-panel-regression-v1-1-a5adf92a7c17@redhat.com
+---
+v2:
+- Add the "Reported-by" and "Closes" tags.
+- change the compatible with panel-dpi instead of previously used
+panel_dpi (Luca).
+- remove DPI entry in platform_of_match() the global panel_desc panel_dpi
+declaration (Luca).
+- Edit commit message (Maxime)
+- Avoid returning NULL, instead return ERR_PTR in panel_dpi_get_desc()
+---
+ drivers/gpu/drm/panel/panel-simple.c | 48 ++++++++++++++++++------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhce4oACgkQJNaLcl1U
-h9B+2wf/eAiUMzOvjQ9ulZwzoVeTR/QxB3I0UmI2oTP88zeNfeOivQc5l31yTtca
-U5r6vueSYI4LvMYCwSgpG+4ye/1ZvpBMbpRXuNYCV/xC+jwtWwGerxk7MIlp3vLC
-yLkvKnpYCwljsjZUx2KgkKmrrA+zttfJWWQwhRbYif+Q3mo+p2Y0kqBF01V7GYDu
-CKOQP+xrQnTLzgmr38Rnw+YH3/x/gZBxWLrwIqagVaFfY6iMDWZrgw/Q9fzOFX0V
-uqKFR36pBXSue/r5MXTFY1mLwc4IVKqz8jq+wLZuo72ZBxvcboZk7I4sgSkrivkF
-kxPnKDJjk9t+6mW0SWfYBAHS1+qZcw==
-=3z7M
------END PGP SIGNATURE-----
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 0a3b26bb4d731c54614e24e38018c308acd5367a..aace1c7d17bdb3c2a0ebd36d164a858877c2c4c2 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -26,6 +26,7 @@
+ #include <linux/i2c.h>
+ #include <linux/media-bus-format.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+@@ -430,10 +431,7 @@ static const struct drm_panel_funcs panel_simple_funcs = {
+ 	.get_timings = panel_simple_get_timings,
+ };
+ 
+-static struct panel_desc panel_dpi;
+-
+-static int panel_dpi_probe(struct device *dev,
+-			   struct panel_simple *panel)
++static struct panel_desc *panel_dpi_get_desc(struct device *dev)
+ {
+ 	struct display_timing *timing;
+ 	const struct device_node *np;
+@@ -445,17 +443,17 @@ static int panel_dpi_probe(struct device *dev,
+ 	np = dev->of_node;
+ 	desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
+ 	if (!desc)
+-		return -ENOMEM;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	timing = devm_kzalloc(dev, sizeof(*timing), GFP_KERNEL);
+ 	if (!timing)
+-		return -ENOMEM;
++		return ERR_PTR(-ENOMEM);
+ 
+ 	ret = of_get_display_timing(np, "panel-timing", timing);
+ 	if (ret < 0) {
+ 		dev_err(dev, "%pOF: no panel-timing node found for \"panel-dpi\" binding\n",
+ 			np);
+-		return ret;
++		return ERR_PTR(ret);
+ 	}
+ 
+ 	desc->timings = timing;
+@@ -473,9 +471,7 @@ static int panel_dpi_probe(struct device *dev,
+ 	/* We do not know the connector for the DT node, so guess it */
+ 	desc->connector_type = DRM_MODE_CONNECTOR_DPI;
+ 
+-	panel->desc = desc;
+-
+-	return 0;
++	return desc;
+ }
+ 
+ #define PANEL_SIMPLE_BOUNDS_CHECK(to_check, bounds, field) \
+@@ -570,6 +566,15 @@ static int panel_simple_override_nondefault_lvds_datamapping(struct device *dev,
+ 	return 0;
+ }
+ 
++static bool is_panel_dpi(struct device *dev)
++{
++	const struct of_device_id *match;
++
++	match = of_match_device(dev->driver->of_match_table, dev);
++
++	return strcmp(match->compatible, "panel-dpi");
++}
++
+ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
+ {
+ 	struct panel_simple *panel;
+@@ -579,6 +584,13 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
+ 	u32 bus_flags;
+ 	int err;
+ 
++	/* Is this simple panel a DPI panel */
++	if (is_panel_dpi(dev)) {
++		desc = panel_dpi_get_desc(dev);
++		if (IS_ERR(desc))
++			return PTR_ERR(desc);
++	}
++
+ 	panel = devm_drm_panel_alloc(dev, struct panel_simple, base,
+ 				     &panel_simple_funcs, desc->connector_type);
+ 	if (IS_ERR(panel))
+@@ -611,16 +623,8 @@ static int panel_simple_probe(struct device *dev, const struct panel_desc *desc)
+ 			return -EPROBE_DEFER;
+ 	}
+ 
+-	if (desc == &panel_dpi) {
+-		/* Handle the generic panel-dpi binding */
+-		err = panel_dpi_probe(dev, panel);
+-		if (err)
+-			goto free_ddc;
+-		desc = panel->desc;
+-	} else {
+-		if (!of_get_display_timing(dev->of_node, "panel-timing", &dt))
+-			panel_simple_parse_panel_timing_node(dev, panel, &dt);
+-	}
++	if (!of_get_display_timing(dev->of_node, "panel-timing", &dt))
++		panel_simple_parse_panel_timing_node(dev, panel, &dt);
+ 
+ 	if (desc->connector_type == DRM_MODE_CONNECTOR_LVDS) {
+ 		/* Optional data-mapping property for overriding bus format */
+@@ -5364,10 +5368,6 @@ static const struct of_device_id platform_of_match[] = {
+ 	}, {
+ 		.compatible = "microchip,ac69t88a",
+ 		.data = &mchp_ac69t88a,
+-	}, {
+-		/* Must be the last entry */
+-		.compatible = "panel-dpi",
+-		.data = &panel_dpi,
+ 	}, {
+ 		/* sentinel */
+ 	}
 
---6lvN9Ro0oZtMf/Z5--
+---
+base-commit: 10357824151262636fda879845f8b64553541106
+change-id: 20250624-b4-simple-panel-regression-8ae3ba282fe2
+
+Best regards,
+-- 
+Anusha Srivatsa <asrivats@redhat.com>
+
