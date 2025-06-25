@@ -1,69 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A36129827B;
-	Wed, 25 Jun 2025 09:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D203281357
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:11:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750842624; cv=none; b=bUmhoSceIOpFT7oHT2sZ8+L0xunRYEwAzUliv9vyLJfmjb7R1JwpJQ9WkkpmfrvRhEiRH7+Yez5GgbFe+WLpUe64Kppml4iU7qQ4xnGvCkGK7EG/B/IYub4VN0WOyiHVo0g/mQAesjJvDIgVozMuU6TJA1D2Zr20P5g2gUhp0uQ=
+	t=1750842702; cv=none; b=Ek6Ot+aYAa1qRfH18nJBCCtlxdCvLTAP5i6d+zUMiDm9OPtQtIJR6e1QYet/BVN19DlpckK9HSUFQqAclkKSDlc57KVkfnxfPOZV2ld36IBMbVEOL2Y1pogXHLF9WSOuf5X7azkVbP68CBNJ/esg+io5ULlSg0s359OR19c7Ge0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750842624; c=relaxed/simple;
-	bh=TwT/5Vz8Ma7wzxLrrCHG2vsifHompVEwcDYXvMtMbqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kClSYxb9P6AeNvRfzBTRYvyCRNlir6bVz/ZKEkfcI6c3nYt8FTZE4sEJZzmpATRijDWENjhxFHy7BW8sEEikiLB564tgB5j4wa1AKs/uHWnYpJYaTBTSLczRcsytN1EGdLM3dYavkEU6GvtSZL4WgQsNvNYgGzw66yPyAgJrz7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DVHE+tab; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750842702; c=relaxed/simple;
+	bh=20OgU07hYw0BKvki0Oaix0JpyTN3z8RUI0obpczt4ZI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=aQ12Z2FaiewCMkDMp+bpY0Y5fZVnu/7bg2Wr5/RYlVPFj0lmUc2TH4WmcSz9C6GqnL7ND7IoJeiBXwmxalFV+CACFo0Wa0oDNQbf8PNNAEbb1SMy8w1Ulo979voZzuQxPtnXWdZhnyKR9LdIsBypoALOR77ntQhIJmsAhPmSOdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=LA8l7xCC; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DVHE+tab"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAFA3C4CEEA;
-	Wed, 25 Jun 2025 09:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750842624;
-	bh=TwT/5Vz8Ma7wzxLrrCHG2vsifHompVEwcDYXvMtMbqQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DVHE+tabPYjCqC9CRXPdH59I/hn7aoJ965K6683K1f8OVMEIzCkyUf/ReIBMKb/08
-	 +1vhb9G0uUwR1zNnPUW+/RX+w4odXjrA6Gnil38rKsk5/2YVs7Te1aiVt0AJw+djzl
-	 2QZ3Z8hVJ1eFpEEcfZDef8TOgLy2LsHNcpGnrEFkdOOo3Vc2iNZhDCxhPUJCAZyA+9
-	 aBMV0Tvu7yTt584Bh9Kutq69mStSppWCW6zLVeHEFYUn/qno2T0aYoATsnuWdzhPE1
-	 dUPM06KPdTK0sdNMVe2lSEBsi2QF+VSWnWuFdLwTK2Cj9ZmHkDQMUtxA3tN+yn1sPY
-	 yjZNZM3S3wa/w==
-Date: Wed, 25 Jun 2025 10:10:20 +0100
-From: Lee Jones <lee@kernel.org>
-To: Abinash <abinashlalotra@gmail.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	Abinash Singh <abinashsinghlalotra@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the mfd tree with the mfd-fixes tree
-Message-ID: <20250625091020.GR795775@google.com>
-References: <20250620160345.48fd2d50@canb.auug.org.au>
- <CAJZ91LDiQM2kSpmDM6TvnY5m8MEqK03fXJBWa=itxx5mdX1ifw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="LA8l7xCC"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-6088d856c6eso2608026a12.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:11:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1750842699; x=1751447499; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uMKYOxxD7UdxTP/ee1363S4GDcIjdo0gX+UMgMSM07M=;
+        b=LA8l7xCCcO9COtBMNSD+0HzPlMsC9vYezNo01bYnblQcNA/yCbIrI434lsJidHFI8Y
+         Y7OhoTnd4TNZBOL4BO5UFhv/foxW/3kSTV2J2UjQqpyg7jdCtsPKf45y1uOj7aaIvkbw
+         ezs9VH6Lp2woTb3+/h0F7EB+aENYptXVroPkLD9v9jVQl3+V+9rJYE+tcpxYI0xvUNil
+         AwpWximdECgYzl5yFGKngL6/tGQSx303sBbgOUUP2iWV8zv0OL2HjKTK2MgxcnWBYqFl
+         B9Dm7SqufpC2sva7t7vHQmxQcARIQLwNZC0oMM3wQ4o01bEMcuF6Bijljmcfg36CNRTo
+         tIEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750842699; x=1751447499;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uMKYOxxD7UdxTP/ee1363S4GDcIjdo0gX+UMgMSM07M=;
+        b=WHlIbtHTYJNydkuRgxqkW9mnQyrmcd4Vc4jgpao9XknIPLAb9H5HxNO3fxhiYQ90KZ
+         YR07EpwD0IqXaRsjG7cQ/IjV8rNKF3WBSbtiWOlrDRsvMIQMoTgRFNl5cfyIWBPsOyIq
+         FSdquOzULc3/X0w1wZEcPF+P1L55HnXG74S7LVv5hND4SUeKrDXfiaT5sSwAdP/aOw9L
+         WVgPdrXjsUogvRYjWObH9PjbuJv3aHTODBxFlYcFzUYEcLo/E1FaqFtmW86nH3kUXtn9
+         uOLRdVLGNTB/JdGCs/7LHzW61J/ooUq93adFOi3gx+YI3RmKV9DQIkYtxRBOxVgrmGrG
+         LgBg==
+X-Forwarded-Encrypted: i=1; AJvYcCV09QDWiM/QdEcs9qQYji1GwuCGJSrOe0SXCb3jg9JR9bDQB9cypsk2eSMYwZBst9gAePDafj9EtoBapcI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxxW7UJGjWte928gfCrofOyWNkKgFy+WDws7J0PsfO+huiNYGdF
+	oYmOsHENc8rE/5wgdy3gHji7TH4zwCfwMiBqJEG9RvThj/TQfz4WI5TegVyzTYozI64=
+X-Gm-Gg: ASbGncuz7g55FNo2rmsPnx6K94adPwanMIxk4h6D78+5oeN0wGtNIwEDKmRHwtZGCyL
+	1LnKLTPmvATxjHItzISZ86fP/3sid+wVOQBlRPXbcEuBkaREEAydpe0OvngtL6nLli1286DR7k+
+	yqWUkJh9ET8+sagRPQVAlQ12XA2fzH5Xw41/iqwmjvHjd2SMdgvTQxoSxZAycXFLhZvLTKLDWVf
+	BJn4iHANhzCgM9Bq3Aq+JuOmmTOSh/c1hoivGP9uW2ToheZrc4KqF8TTm7Y92WWb6JOchgNK5po
+	h4oaILZvgI+uok5/tz5MEqVEOR1fR9q5D/vpZX/8FlEXjgfSbAXT+T8dTub7Ncec3qEtznDjbsk
+	4JTHkcsulheXEQU/zVv5VFeN2uauMGhSW
+X-Google-Smtp-Source: AGHT+IEc7/hN2f9cmghjg+sMULShIBvhh5KvCrY+8l12A4p/2NB5EXrD1TehNzU0qc52lkbGcpeGcA==
+X-Received: by 2002:a05:6402:2b95:b0:601:89d4:968e with SMTP id 4fb4d7f45d1cf-60c4ddc2ec6mr1441560a12.27.1750842698815;
+        Wed, 25 Jun 2025 02:11:38 -0700 (PDT)
+Received: from otso.local (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c2f485d0asm2167101a12.64.2025.06.25.02.11.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 02:11:38 -0700 (PDT)
+From: Luca Weiss <luca.weiss@fairphone.com>
+Date: Wed, 25 Jun 2025 11:11:25 +0200
+Subject: [PATCH] arm64: dts: qcom: pmk8550: Correct gpio node name
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ91LDiQM2kSpmDM6TvnY5m8MEqK03fXJBWa=itxx5mdX1ifw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250625-pmk8550-gpio-name-v1-1-58402849f365@fairphone.com>
+X-B4-Tracking: v=1; b=H4sIADy9W2gC/x3MTQqAIBBA4avErBswzf6uEi0kxxoiE4UIpLsnL
+ b/FexkSRaYEU5Uh0s2JL1/Q1BWsu/EbIdtikEJq0UmF4TwGrQVugS/05iRUzkhS7Wh110PpQiT
+ Hz/+cl/f9AJE4wKNjAAAA
+X-Change-ID: 20250623-pmk8550-gpio-name-3fa2e349d567
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Luca Weiss <luca.weiss@fairphone.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750842697; l=992;
+ i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
+ bh=20OgU07hYw0BKvki0Oaix0JpyTN3z8RUI0obpczt4ZI=;
+ b=wdifaQe+6/HlEDQF8LAH/wkqmOA1J/D1j9RVM28OKGvP2EQPBSEIw3ic+R9Uf3/dOocYrdNGd
+ OSrCrGT94wkBZ+fFM6Wdza3osAI0Fsm92N1CGDGA6RUbsmWs90PSKxp
+X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
+ pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
 
-On Fri, 20 Jun 2025, Abinash wrote:
+The reg for the GPIOs is 0xb800 and not 0x8800, so fix this copy-paste
+mistake.
 
-> Hi Stephen, Lee,
-> 
-> Thanks for the heads-up. I'm the author of the patch:
-> 
->   "mfd: twl4030-irq: Remove redundant 'node' variable"
-> 
-> It looks like Arnd’s patch in `for-mfd-fixes` already removes the same
-> variable and improves compatibility by switching to `dev_fwnode()`.
-> 
-> Given the overlap, my patch can be safely dropped from `for-mfd-next`
-> during rebase if it's now redundant.
+Fixes: e9c0a4e48489 ("arm64: dts: qcom: Add PMK8550 pmic dtsi")
+Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+---
+ arch/arm64/boot/dts/qcom/pmk8550.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Done.
+diff --git a/arch/arm64/boot/dts/qcom/pmk8550.dtsi b/arch/arm64/boot/dts/qcom/pmk8550.dtsi
+index c7ac9b2eaacfe6e8363448d9d2ffb4ac8f5f4dd2..583f61fc16ad570972ac166aef12183382ebb4c5 100644
+--- a/arch/arm64/boot/dts/qcom/pmk8550.dtsi
++++ b/arch/arm64/boot/dts/qcom/pmk8550.dtsi
+@@ -64,7 +64,7 @@ reboot_reason: reboot-reason@48 {
+ 			};
+ 		};
+ 
+-		pmk8550_gpios: gpio@8800 {
++		pmk8550_gpios: gpio@b800 {
+ 			compatible = "qcom,pmk8550-gpio", "qcom,spmi-gpio";
+ 			reg = <0xb800>;
+ 			gpio-controller;
 
+---
+base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+change-id: 20250623-pmk8550-gpio-name-3fa2e349d567
+
+Best regards,
 -- 
-Lee Jones [李琼斯]
+Luca Weiss <luca.weiss@fairphone.com>
+
