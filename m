@@ -1,110 +1,123 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CA719066B
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:32:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B89502673BD
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:33:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750861933; cv=none; b=nP1jaeIp6uHE36KMtppcnsFNAOMxExJu2clfp6jMhkn5GKSpJJ+IBce5NFKx0PsNUZzotN+YhS7UwsITWyPCgexZVUubBs4GBBq/mk/cb8FUU+WkCSYlXPn+qCHcSAJL30kYvwhxEa5nSGFG+oa1bsPT/GUtqon1bocLCOLbWIY=
+	t=1750862036; cv=none; b=Bw0m9CsZsABUGGaOSG0Mfpo0l5nNr707kaOXqhbknXSR3Io/EFRgkzdMHFXV1Aa8jH+7pd2QIgyw52yf7IEx8Gua/cK5WEN4RrPYRE96JGh7lfQmgxeZ7jqwXnRj3m2zybVNw/WSefxd7HhNjCoEEJbJO2J/CoeFDAb7K7z/VjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750861933; c=relaxed/simple;
-	bh=36jFcNi5AMtDfDUxJWLv7FOPyUhXdgiBwK1gip+Y68Q=;
+	s=arc-20240116; t=1750862036; c=relaxed/simple;
+	bh=k/9Jmpcevuw9DPLUN7lxWq/HVRKdkSC2nfzszYCDb30=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bUbCSnshKUuVuoqOBzXH3V8r3l9yEahrFAlZtp4RhtqdW434buk18zZGVGBh+Yun9L1WiWPDh0NmCY24c1+HQvRghWOoI6adE2e+o0EwirasGRuaAITmqMpqmVpaMuYXv7v7LUfdFZvVR9sP6AUjus2yvbtAOjhX2g69eFqOjCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com; spf=pass smtp.mailfrom=ciq.com; dkim=temperror (0-bit key) header.d=ciq.com header.i=@ciq.com header.b=cEnMhSXm; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=ciq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ciq.com
+	 To:Cc:Content-Type; b=nKT/hi1GcyHPqKL0V+t3KKCA7iLK0SZF9mXEcDmLGxrUCNhZScMe0csAxL1MfJyDG/Csn80FG3B9SmVYxyZ1lCkoKMKu1UCtjE8DOaRscoPx6KywB7RByYYXLGZN6wWPtw8s8Fpq8Cc/Jejc6kY8tGjUMMgyXcc+OAu6KmuTk1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FLZcWRah; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=temperror (0-bit key) header.d=ciq.com header.i=@ciq.com header.b="cEnMhSXm"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-4a44b3526e6so20826071cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:32:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FLZcWRah"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-237f270513bso147225ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:33:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ciq.com; s=s1; t=1750861930; x=1751466730; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750862034; x=1751466834; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1Vaw6UAlGLmX5XnFTSQ9UINLTAG+KGTITiCt0APsbtY=;
-        b=cEnMhSXm4Qrow3qjuFrrGoU9hl8V+b1Nh408VG+rRctAkJyPwriYwVRujj2S5ZyUFh
-         CemZvHJH/9HzqQ/yStLSOJgXQNCUkDN10Qyerl6v3VaA93Z0/ohrhE8wyvCqC8wTS2VU
-         OxMlaRj2FGAXzoAZzG9PDHRfCplvomcBpt60toBkKkzN/celChdoLikWX5cjusxcrJgt
-         wVNEkx4r2I6mCy0xi+5NIQeae0IRbYJ4zYuLdlb/mIaxusI9QTnKs0DuAtqD86LyRpHK
-         rBCZjzjenLrM5yVhONG1r8XOZmR1qENCYrr8NgGuvE7NQHoBAOwIKMr90rSEE4qFCJsg
-         lpdQ==
+        bh=BdV48kTp/uRROljNRCynqJ7h0+dKwD9pZid+7Ju9vko=;
+        b=FLZcWRahed/cn0x/habzbVuKXmZ8smUrK0DytAimjUAB29yqxoUhuNkSZSeo7lmqoO
+         P53EXbq32TNb2FE/dcII/rv8m5wlWMUqK/9UMvfB/jhN3slPF0Akw6gbHqS6li+F6bIU
+         3cwRdkH2PtAu/6OoQFOGDxODEZF/m0r/52USX1JlXUxkmyZFMusihN9lYR9d0+7O9V1i
+         3doBljxT0RCG9PjDTIppWmVZkGOkx0ute/e1XSaIj36DfYx/RsVuc7uUCAw0Y4TLhr7D
+         drAAsgAc7j3YLJEDQQmsE0w6dGyUatd16vZrjNUdbhXAw1Ph1Cgy7gGu1V49qb56hPNl
+         KlCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750861930; x=1751466730;
+        d=1e100.net; s=20230601; t=1750862034; x=1751466834;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1Vaw6UAlGLmX5XnFTSQ9UINLTAG+KGTITiCt0APsbtY=;
-        b=BqDKc0PYPid9JQM5oB4iS2NFwJ3D4+jpFJ+fy5Wj2kzX2gNMncwuZA3u1+5eyP70mF
-         mawXi7MQfGUjJ50FTBl/UR0ubWbo3TwtaQJHTQKPO5kWwcAfXZ4rFF5zzPqcOo2SG/UR
-         SeM9cGLxKzpZgvALncTWyBjaEpLtQ2h5eiJClEu61CQnXlh7zweMBRwi4iDzM426XS2k
-         60Umg/wxpR27jQiY1XwrO2OcxB65r433Nizxd2ptVhR6QIccrASnHBeNjwCPsTqfyOPX
-         OKW6saCEy/m+AdZcn+l+Eb68FmVCrgG4En4RINfWebGWZL7QXFejaWH7BgqzxfbhAoye
-         w0Ew==
-X-Forwarded-Encrypted: i=1; AJvYcCVUUXnjpPwpdAeo0HeBcBjx+pEVCpvzCg3JipPyHcRyaobjeX3OVBvMxKhqY1AZDqvVw3d0k6AUZU99Bjk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxe7wvlVP/7EmkHe3W7UPGAE71pDvAWw6D0TzEC47Me1LJnzbUY
-	8xCzuv/BYywaO+H86s9+etSuokzi9A+CByLLbohyKUr/WKRAcKpLxBaQ4ZH3GaJ0zrcl5/nJ21y
-	BOU2Rg4pA5DluCfreyK0KNsdNzIu1hzzemgcNkn/7LQ==
-X-Gm-Gg: ASbGnctsqqFCTsbMrido4LFKvYImz0yRERySBghwP6DmjQkJOy71R2PvsO4dZkCWzR6
-	EleAdME1N75BfJdkwGfgXZAxcc65je0avqEnwUzPZhgPi0XZUzoHg/9R3/VvF2GyaV0BunjsI99
-	vOuLWkRHnDcqW4Nv2Su1eYCTJJ8TvRfJC4PuiMDADl9Bs=
-X-Google-Smtp-Source: AGHT+IF2FmBWl6hqQSw2dIMa/iN1L0L/HGqhMRXMl7b4jLmd44qi6m3OJaL1JIBpTME2CDDJL00MZsFOUSwKBfmsMZw=
-X-Received: by 2002:a05:622a:1105:b0:4a6:bd99:5b30 with SMTP id
- d75a77b69052e-4a7c05f9cbdmr46296431cf.1.1750861929919; Wed, 25 Jun 2025
- 07:32:09 -0700 (PDT)
+        bh=BdV48kTp/uRROljNRCynqJ7h0+dKwD9pZid+7Ju9vko=;
+        b=XdGJvilW6stNNfuHGxb2blBs2+BE2TBfYBB8ZwB6SC/2HaSay5apI2KjAXrJVy6WL+
+         7009luPiiE1Ejl7UarypDpxLKzqs4+oVapLEsT4NP6YTK3JL5vQ1MguXYdSM64LmAx0z
+         e89DFEElxIG98Na1OwrzPz6XZx2/B5SuK6iXzvrQOeGovfBRi824NGKtCXDl107UGNUL
+         gOpmRE3z6RIH+FDj4AinSTSHKr992gcXph2LH1h7U3/6IhGxP1ZNnL6oI1BwzPfoO50q
+         ccd9eXxqxYQzF/bkeRPNSxS/kol+ZNr3kSbKfyGOBfhUVOyzTVutSHQ4Gr6Fe962vv5/
+         cTTA==
+X-Forwarded-Encrypted: i=1; AJvYcCXRrvEC/1R393RTSh9adf3qpKKK36UvO/kNcEZB4qkxE1eo/aycv6rUOzWQrT3vaGiVwq5h5C/+o10oki0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzFVeQgDEUZwgB/zQ/B56t/v/1kSmbcSCDzv9bbv0fKSOsRuMuY
+	R12vx4fV/9YSNlbjr+mVEJwtZNRTQGXqDEwFa7hOC29lzYaHYvDsuviVPCuW/RNi0HKvRr/2HEZ
+	W1FoZmPljB7IZiiOOKEwuVSDiVGJEQ4LXGa2JzbdX
+X-Gm-Gg: ASbGncvjBr/9mTjho/fvHtU5XOfpDIfKZAGQpMiDmymmqopSLrPh1+7XH9O9OfOzFzF
+	HX30uhYa0a7upsg38+bc5MghTrPn81qBCZyI3MB+kQPPW5kG3kCRT9mnNrbKckDHGApRNADGdD5
+	1eR9lAduS29vWmx0ZOmmBFYDADfDWqjBe8DarMMfW5QyWrgNtVIgX1MbnnYWiZMjdLSDqVsyXKb
+	TkI
+X-Google-Smtp-Source: AGHT+IHOl4ROtzPHTK+wA3RxqSQB0nXvE1X3o8JvmI/Y5HuW89eI98s0XYuUXqOg4//IZvRW47fajZljsA5Du+i3Zig=
+X-Received: by 2002:a17:903:178b:b0:235:f298:cbbb with SMTP id
+ d9443c01a7336-23827442ec7mr2061555ad.26.1750862033549; Wed, 25 Jun 2025
+ 07:33:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624121426.466976226@linuxfoundation.org>
-In-Reply-To: <20250624121426.466976226@linuxfoundation.org>
-From: Brett Mastbergen <bmastbergen@ciq.com>
-Date: Wed, 25 Jun 2025 10:31:58 -0400
-X-Gm-Features: Ac12FXwA-ei6dK0JEz1zZ0PaTcCEPi5wGhoiU2mqpDM_OzesGNEGCpdmM0EPskk
-Message-ID: <CAOBMUvhnQ+ijRh839SUT4g0-y0zy0E_Nx65xpqOx1=2fF14nRg@mail.gmail.com>
-Subject: Re: [PATCH 6.12 000/413] 6.12.35-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
+References: <20250618120806.113884-1-adrian.hunter@intel.com>
+ <20250618120806.113884-3-adrian.hunter@intel.com> <68938275-3f6a-46fc-9b38-2c916fdec3d6@intel.com>
+In-Reply-To: <68938275-3f6a-46fc-9b38-2c916fdec3d6@intel.com>
+From: Vishal Annapurve <vannapurve@google.com>
+Date: Wed, 25 Jun 2025 07:33:41 -0700
+X-Gm-Features: AX0GCFtcX4EHPJezVuR03z_zvYB0b1sB8iUGWdlclbBZyL1LJyYQEWzO3JG3LhQ
+Message-ID: <CAGtprH_cVwWhfXFkM-=rVzQZ0CpY_zcnkF=q5x1n_9Bzm1xKfw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] KVM: TDX: Do not clear poisoned pages
+To: Dave Hansen <dave.hansen@intel.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Tony Luck <tony.luck@intel.com>, pbonzini@redhat.com, 
+	seanjc@google.com, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, 
+	Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	H Peter Anvin <hpa@zytor.com>, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, rick.p.edgecombe@intel.com, 
+	kirill.shutemov@linux.intel.com, kai.huang@intel.com, 
+	reinette.chatre@intel.com, xiaoyao.li@intel.com, 
+	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
+	isaku.yamahata@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 24, 2025 at 8:31=E2=80=AFAM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Wed, Jun 18, 2025 at 7:58=E2=80=AFAM Dave Hansen <dave.hansen@intel.com>=
+ wrote:
 >
-> This is the start of the stable review cycle for the 6.12.35 release.
-> There are 413 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 26 Jun 2025 12:13:28 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.12.35-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+> On 6/18/25 05:08, Adrian Hunter wrote:
+> > --- a/arch/x86/kvm/vmx/tdx.c
+> > +++ b/arch/x86/kvm/vmx/tdx.c
+> > @@ -282,10 +282,10 @@ static void tdx_clear_page(struct page *page)
+> >       void *dest =3D page_to_virt(page);
+> >       unsigned long i;
+> >
+> > -     /*
+> > -      * The page could have been poisoned.  MOVDIR64B also clears
+> > -      * the poison bit so the kernel can safely use the page again.
+> > -      */
+> > +     /* Machine check handler may have poisoned the page */
+> > +     if (PageHWPoison(page))
+> > +             return;
 
-Builds successfully.  Boots and works on qemu and Dell XPS 15 9520 w/
-Intel Core i7-12600H
+IIUC, even if movdir64b stores contents on hwpoisoned pages, it's not
+going to cause any trouble.
 
-Tested-by: Brett Mastbergen <bmastbergen@ciq.com>
+This check should be (unlikely(PageHWPoison(page)) and even better
+probably should be omitted altogether if there are no side effects of
+direct store to hwpoisoned pages.
 
-Thanks,
-Brett
+>
+> I think the old comment needs to stay in some form.
+>
+> There are two kinds of poisons here: One from an integrity mismatch and
+> the other because the hardware decided the memory is bad. MOVDIR64B
+> clears the integrity one, but not the hardware one obviously.
+
+To ensure I understand correctly, Am I correct in saying: movdir64b
+clearing the integrity poison is just hardware clearing the poison
+bit, software will still treat that page as poisoned?
+
+>
+> Could we make that clear in the comment, please?
+>
+>
