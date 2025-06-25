@@ -1,145 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from siberian.tulip.relay.mailchannels.net (siberian.tulip.relay.mailchannels.net [23.83.218.246])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDCE1B4F0A;
-	Wed, 25 Jun 2025 02:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750819182; cv=none; b=K9TsR3L6TYdl/2e9zvQ1kcDnncE/AvBs+vXpixekpRE7k3GOjEEWFsTrNH/EU/eiNkUpMamDS0Ql576fGGVZAcqGgYG69d9t3UFrI6jFN/RykbspnFHNBYaYIwlJylRmVioZpiweg1MXRRQ2Qpy5/87quum6SWSzuE9V+tsSt9k=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750819182; c=relaxed/simple;
-	bh=WAerYuAXgqsAgcla018iotDoPRumUCAOOHyW2IVFyXk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kopL4lXWGR8gOWDY/ONaQpTl0HTffFuAnVNg/8n80gLKerrMvHPAvcEvT4Kh5jJ19OIo3ZmD/eqjR9qdBnfwN28s47CpGAN7ycC8HKbUmdmYlPzjTSGiu0lxeAkAV+461lSgUqQpiZwB65Hh0+jdvM0vXAUTlNlSwFASD+3AWQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IW5Z1A32; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11EB1A23A4;
+	Wed, 25 Jun 2025 02:41:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.246
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750819286; cv=pass; b=AGQ6mlNFm/Z4lOVDZekf+JOjNfCpk8quGrVa3cudiYleFAfCm9fBy9aQv1Pb2Fp+tWts6R97x6FhZHmG804g5l/yYOeEV+bdL3jTrF5olCV1qQPI8qieJwapOhO8EU66V4iwmmmfQs2LDMvsKLWyNpi4EFY5nJm17/OruWdLEDA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750819286; c=relaxed/simple;
+	bh=g05fp5tznJTq2ihZAsz/TZXx28vocabXtBccaPhv0L4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PzP8HmEhHYwU+olugnAboU1gjUupNSxds84AiAv/3sQgNITgi0k0E3Qwn71nJKJmCtbt7Jb+zggT70vPRYZ+zwhKP/sTPBOWuAxXbvATWB/hbBE7DzVNG81xeeL4g7esnPrUINf3mY9d1ZgB8jYu0mgckZ8+leAKCzA4fLO087E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net; spf=pass smtp.mailfrom=landley.net; dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b=bWFSp2Y8; arc=pass smtp.client-ip=23.83.218.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=landley.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=landley.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IW5Z1A32"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750819180; x=1782355180;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=WAerYuAXgqsAgcla018iotDoPRumUCAOOHyW2IVFyXk=;
-  b=IW5Z1A322VM+NyF7LmrxhMrpGwr20V5eG2J8VfD/dDJGuIVMVns/9Ah3
-   QXjVf0CqWOEf5sFVjePcXMun0rwHlT//w9WitYU3W9ujE767UPx0q1L3y
-   9WNS+VNKMZSkxKujdinQ+EUJJzNW2UD3Nipmj3/jX3hS8lOz7MHGUfiyI
-   SeRTfiPnORDwdkiuLJLZpS9MhM91zvYq2Lz11oJuKkVcUPjo3smHg5Lxl
-   jE7whNCLdOVhiGGo3GDzvPayUDt7jIWLRFTkniZ5VnYTd0ugrnMc56noA
-   VOBMCaicvaO4/mLTRKxpTJnsvVATOUlsPKBjUDXvUPd10ig0em0rJdVOR
-   w==;
-X-CSE-ConnectionGUID: r6/sbV+HSfW1IIJq0ySZLw==
-X-CSE-MsgGUID: ng7y4UbYTbiAONABew7nfQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="53143018"
-X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="53143018"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 19:39:39 -0700
-X-CSE-ConnectionGUID: A5XXVkmVQDKrUq5PVqT0tQ==
-X-CSE-MsgGUID: mI7++jFoSCSUNFPwrZwNVQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="183124331"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 24 Jun 2025 19:39:35 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUG2v-000ShS-1A;
-	Wed, 25 Jun 2025 02:39:33 +0000
-Date: Wed, 25 Jun 2025 10:39:29 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Christian S. Lima" <christiansantoslima21@gmail.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, ~lkcamp/patches@lists.sr.ht,
-	richard120310@gmail.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v8] rust: transmute: Add methods for FromBytes trait
-Message-ID: <202506251052.onsnGcvR-lkp@intel.com>
-References: <20250624042802.105623-1-christiansantoslima21@gmail.com>
+	dkim=pass (2048-bit key) header.d=landley.net header.i=@landley.net header.b="bWFSp2Y8"
+X-Sender-Id: dreamhost|x-authsender|rob@landley.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 296441A4D84;
+	Wed, 25 Jun 2025 02:41:17 +0000 (UTC)
+Received: from pdx1-sub0-mail-a314.dreamhost.com (100-108-113-168.trex-nlb.outbound.svc.cluster.local [100.108.113.168])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id B633C1A3F0F;
+	Wed, 25 Jun 2025 02:41:16 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1750819276; a=rsa-sha256;
+	cv=none;
+	b=ltFt7IzZNxrJGxiYV+k1oGZWgrwHuGih4VwkNcqlliN6gShnrrTxBblpqnQivlZpp18Pkd
+	vccqqA0wpyetNsTgh1o3WGGe0U4jhsXn31J83pb3Ie8yg8+YDNggCMRXa0XVi55GkmeZnV
+	vh8245EacFFZprcViyTZhfXQsjtc2qwvJnNRNX5xpfbJUS6RmPj6yvxOxc8H0k5ar/qh1Z
+	iCo02sqgxqJqwfGnWvIPAdwTF539ZuIsif4+bO1Q37nHA0SSggrXMcQbA7Uki0y11yS0gj
+	7gKk+8LyWaPnZu2gkjR3GbTgju5u0YqrIBIbIorzaCLYLxfQ459sxg0YNsvexA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1750819276;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=LgABf1mB39qVwXO9ATW+JWNCBe+eqNN387tXL3KETMg=;
+	b=WQBczNvNGfB4w8FJqs+9GW6tc1lORYHGd9yxPwBTt1VEe+HP9zI0IgPRVe6oUy3Z6HFj4N
+	neda4JnEocB/nwR/wVVnFZG3pvvn6YxB8XtKL81qOY1vl/PB+bEGHYR4OtkHQ2kjkaxOvC
+	f5HmplyNEUKTKaGcvABy0h+duXIyxoUOYBPP/4O23Mh8U8e6oTVGUfhoXJQcCX5bPHzEOh
+	TGMIJZgxYKsl50Q1UR2mLGZEmuqvPOI0T7ctogwqXYG2SwNwKGX7NuIpJ9JwtuE/NDAvAf
+	EXhWhNQ+Yy0zQkGFIhg4g6l3yVcb3NPJ6osGUOcsDSxijPgOIBHWWWEWVL9wVw==
+ARC-Authentication-Results: i=1;
+	rspamd-6597f9cdc7-8mcrn;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=rob@landley.net
+X-Sender-Id: dreamhost|x-authsender|rob@landley.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|rob@landley.net
+X-MailChannels-Auth-Id: dreamhost
+X-Tangy-Name: 101dd87568f9001e_1750819277034_1257048522
+X-MC-Loop-Signature: 1750819277034:1050076598
+X-MC-Ingress-Time: 1750819277033
+Received: from pdx1-sub0-mail-a314.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.108.113.168 (trex/7.1.3);
+	Wed, 25 Jun 2025 02:41:17 +0000
+Received: from [172.22.7.54] (unknown [198.232.126.195])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: rob@landley.net)
+	by pdx1-sub0-mail-a314.dreamhost.com (Postfix) with ESMTPSA id 4bRmKR5XZ9zC4;
+	Tue, 24 Jun 2025 19:41:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=landley.net;
+	s=dreamhost; t=1750819276;
+	bh=LgABf1mB39qVwXO9ATW+JWNCBe+eqNN387tXL3KETMg=;
+	h=Date:Subject:To:Cc:From:Content-Type:Content-Transfer-Encoding;
+	b=bWFSp2Y8DtFviBNOxweyNaW8TuWC7PDhtig+Xm+aD/JvpQccqIwt0ekglzI/JDWz7
+	 IKGNqf6WPpINfkah5mAf/MGcezl990xL3cb68XhUfp6twDSSDKTUc2M2qms+Eu6Yxf
+	 qm5z2MEOEswM2Q6y5oN43UMqSrIEZ810GxVfmzqr4QfwGQd9N8xEbna4gaDQNcMaBT
+	 OAE8VZp2pN6m4bDh/zgYNl/ExBhFEq1ncwbLRW6oMWvDTDskLBdtxGWFDWyl3c+k/R
+	 dOzsF/XR22mzJ6v4P4juS0TuCtwOKqYOBqfnBnJ6CwWPTzkrBDEA5Ymfzx0aA1iqnB
+	 o1YSEOH9HwR3w==
+Message-ID: <16f63653-c5c9-4b32-8e0c-0a4910a9fdb9@landley.net>
+Date: Tue, 24 Jun 2025 21:41:14 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624042802.105623-1-christiansantoslima21@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/3] tools/nolibc: add support for SuperH
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>,
+ John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+ Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>
+Cc: linux-sh@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250609-nolibc-sh-v1-0-9dcdb1b66bb5@weissschuh.net>
+Content-Language: en-US
+From: Rob Landley <rob@landley.net>
+In-Reply-To: <20250609-nolibc-sh-v1-0-9dcdb1b66bb5@weissschuh.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Christian,
+On 6/9/25 04:28, Thomas Weißschuh wrote:
+> Add support for SuperH/"sh" to nolibc.
+> Only sh4 is tested for now.
+> 
+> This is only tested on QEMU so far.
+> Additional testing would be very welcome.
 
-kernel test robot noticed the following build errors:
+I ran this by Jeff Dionne (the j-core architect) who said:
 
-[auto build test ERROR on rust/rust-next]
-[also build test ERROR on linus/master v6.16-rc3 next-20250624]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+ > Looks correct to me.  There are no endian assumptions that I can see.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christian-S-Lima/rust-transmute-Add-methods-for-FromBytes-trait/20250624-123012
-base:   https://github.com/Rust-for-Linux/linux rust-next
-patch link:    https://lore.kernel.org/r/20250624042802.105623-1-christiansantoslima21%40gmail.com
-patch subject: [PATCH v8] rust: transmute: Add methods for FromBytes trait
-config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250625/202506251052.onsnGcvR-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250625/202506251052.onsnGcvR-lkp@intel.com/reproduce)
+So you can put
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506251052.onsnGcvR-lkp@intel.com/
+Acked-by: Rob Landley <rob@landley.net>
+Acked-by: D. Jeff Dionne <jeff@coresemi.io>
 
-All errors (new ones prefixed by >>):
+But neither of us really have a build environment set up to do much with 
+it. Is there a howto for this, or is just to run the kernel tests?
 
->> error[E0658]: use of unstable library feature 'pointer_is_aligned'
-   --> rust/kernel/transmute.rs:74:68
-   |
-   74 |         if bytes.len() == ::core::mem::size_of::<T>() && slice_ptr.is_aligned() {
-   |                                                                    ^^^^^^^^^^
-   |
-   = note: see issue #96284 <https://github.com/rust-lang/rust/issues/96284> for more information
-   = help: add `#![feature(pointer_is_aligned)]` to the crate attributes to enable
-   = note: this compiler was built on 2024-04-29; consider upgrading it if it is out of date
---
->> error[E0658]: use of unstable library feature 'pointer_is_aligned'
-   --> rust/kernel/transmute.rs:87:68
-   |
-   87 |         if bytes.len() == ::core::mem::size_of::<T>() && slice_ptr.is_aligned() {
-   |                                                                    ^^^^^^^^^^
-   |
-   = note: see issue #96284 <https://github.com/rust-lang/rust/issues/96284> for more information
-   = help: add `#![feature(pointer_is_aligned)]` to the crate attributes to enable
-   = note: this compiler was built on 2024-04-29; consider upgrading it if it is out of date
---
->> error[E0658]: use of unstable library feature 'pointer_is_aligned'
-   --> rust/kernel/transmute.rs:101:72
-   |
-   101 |         if bytes.len() % ::core::mem::size_of::<T>() == 0 && slice_ptr.is_aligned() {
-   |                                                                        ^^^^^^^^^^
-   |
-   = note: see issue #96284 <https://github.com/rust-lang/rust/issues/96284> for more information
-   = help: add `#![feature(pointer_is_aligned)]` to the crate attributes to enable
-   = note: this compiler was built on 2024-04-29; consider upgrading it if it is out of date
---
->> error[E0658]: use of unstable library feature 'pointer_is_aligned'
-   --> rust/kernel/transmute.rs:114:72
-   |
-   114 |         if bytes.len() % ::core::mem::size_of::<T>() == 0 && slice_ptr.is_aligned() {
-   |                                                                        ^^^^^^^^^^
-   |
-   = note: see issue #96284 <https://github.com/rust-lang/rust/issues/96284> for more information
-   = help: add `#![feature(pointer_is_aligned)]` to the crate attributes to enable
-   = note: this compiler was built on 2024-04-29; consider upgrading it if it is out of date
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Rob
