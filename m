@@ -1,100 +1,98 @@
-Received: from mail.mleia.com (mleia.com [178.79.152.223])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D15988F58;
-	Wed, 25 Jun 2025 00:18:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D0F29408;
+	Wed, 25 Jun 2025 00:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750810707; cv=none; b=DwamSkvbtQXRMXqAupjYHmflfCQyFJz3p3Uqe7527aJGsVreY6YgZ0N/Up18bfVGi9wo7JOavcOlHsuSnd7qoJY9MuXwRD2m9b+QudBsoGQIHsZHoZlmCNzIo+Xvm/1QQllHqRBJt6NHr23PDZMnascOhdTZ4oqFVp2V2vx5sBI=
+	t=1750810788; cv=none; b=LTRCvm0ZhbmBqGy5oAFOT/RwA4cDE7Da2Ebtewuv/1eJL7gUATZpJXDkSCa++ibkCyu6UwZe74OU9GGd1BBLDPsSRFBKf6XVs9KcAXP9rQDkXE1Gu9hkO0ZqjuJLZPNDcBYpQ8ZDpQNcc/Xz1D0LjT7Spy4TSHhmokgdZtdiZq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750810707; c=relaxed/simple;
-	bh=LAjJwA9Sc1kFGB8BpiYKf53CHRgKJ/pQhv7ov4Y98uo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o2iu/RqS0NeMQTGfSdJFiLN2r0k5SoEqfCK9bLpL8ER2UrRLjVadCNr2SWHv4hb2MsEcLbYH+9xnjxzttdDHn8TTFNxrOQLstKoc+uZEcB5IJ//O5oyJ8AafhTPMckYoeBFZfBIGKsF8aLxGo6DVfqgzClPK9D5Y7al6T1CIyIM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=rn4DCnj1; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=rn4DCnj1; arc=none smtp.client-ip=178.79.152.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
+	s=arc-20240116; t=1750810788; c=relaxed/simple;
+	bh=AEysO/7hrlR6JL0IE++5oBEgqmDvVKEURUzZQDzyRTM=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=SFlFaeP/SZFXs4/7AwYWXkbYgn0i/b4P3M3LCgtIv2k1ZVq5y2cs8Ofw4+hep5BDurPNu6FVpMq4zOr5Mfo97tC6JTegkICA9uN1tqZTYUa1ILysFRAMdumbjmsQRtMtHPYfOkPMOS1AOYzNLSVIuEj8hD8CM+WbbKJUzjnw1dA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RJTfz/Y1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="rn4DCnj1";
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="rn4DCnj1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1750810703; bh=LAjJwA9Sc1kFGB8BpiYKf53CHRgKJ/pQhv7ov4Y98uo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rn4DCnj1JS3KfjuUeuC2Drz6AAfK7CF6rVdhKIad2hJaQ6DYS+MLkuk5pxWMVbmMI
-	 JrH71jDuVJNoAx3+/CmrEc0BNa5255sx4AqMmfw8tCvq3fyojF21f8OPLdAl7Xq4BN
-	 nURJFd/VUps4V13pHWmVeSNXT5e731PfvygDhfhyTRdT5obLUyYgkDxkIri2WFEqlt
-	 eUYAZMHl8w1sb5XKuVlm7ia4QdinwKYRGE5NpZTKLmk8jp8L458erFFJHK36S7K/HP
-	 D8ZLBItZYaNaoFdIGEBnL/8E6wRA4Eu+N5yf4LszAKduhycIYIjfe4S8W1a6fJ4VQY
-	 mZYG+sSKx0v5A==
-Received: from mail.mleia.com (localhost [127.0.0.1])
-	by mail.mleia.com (Postfix) with ESMTP id 3C6253C43A8;
-	Wed, 25 Jun 2025 00:18:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1750810703; bh=LAjJwA9Sc1kFGB8BpiYKf53CHRgKJ/pQhv7ov4Y98uo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rn4DCnj1JS3KfjuUeuC2Drz6AAfK7CF6rVdhKIad2hJaQ6DYS+MLkuk5pxWMVbmMI
-	 JrH71jDuVJNoAx3+/CmrEc0BNa5255sx4AqMmfw8tCvq3fyojF21f8OPLdAl7Xq4BN
-	 nURJFd/VUps4V13pHWmVeSNXT5e731PfvygDhfhyTRdT5obLUyYgkDxkIri2WFEqlt
-	 eUYAZMHl8w1sb5XKuVlm7ia4QdinwKYRGE5NpZTKLmk8jp8L458erFFJHK36S7K/HP
-	 D8ZLBItZYaNaoFdIGEBnL/8E6wRA4Eu+N5yf4LszAKduhycIYIjfe4S8W1a6fJ4VQY
-	 mZYG+sSKx0v5A==
-Message-ID: <6c5ae787-edbf-43fa-8c9d-542ff2c411fe@mleia.com>
-Date: Wed, 25 Jun 2025 03:18:19 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RJTfz/Y1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F705C4CEF0;
+	Wed, 25 Jun 2025 00:19:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750810788;
+	bh=AEysO/7hrlR6JL0IE++5oBEgqmDvVKEURUzZQDzyRTM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=RJTfz/Y1tA+lvrjhi7eMKJHnLa0CJAg0kDCxdzdV7dtTDx7vI//2F0CoEOSoC+fzY
+	 cgrTZTaUkk8W8Y+JazGyyIIWc6NVsGmhmHrej1BX7clj0B85vwa0bmVz0WDvpR67/p
+	 kJTxUytWMdqbj6hrf7KKmxzipKWwRkH4OBdUks1EFx35Ds+7FU5aQtAhOjApU38iBP
+	 oQmV8qJBwZt1K5TN95kq8FckyLnDlitUcy8XgsvND2w37c/uKzrugt+eQYVZpP+MMB
+	 aWSfExxnKzAAjeeCM29RyhRHlr1MDWuYS0oFIZUxHneRf68oTPb+xSY3YExNMDBrhm
+	 H1qABnK5IQj3w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE3D39FEB7C;
+	Wed, 25 Jun 2025 00:20:15 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/1] dt-bindings: i2c: nxp,pnx-i2c: allow clocks property
-To: Frank Li <Frank.Li@nxp.com>,
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
- Andi Shyti <andi.shyti@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Animesh Agarwal <animeshagarwal28@gmail.com>,
- "moderated list:ARM/LPC32XX SOC SUPPORT"
- <linux-arm-kernel@lists.infradead.org>,
- "open list:I2C SUBSYSTEM HOST DRIVERS" <linux-i2c@vger.kernel.org>,
- "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
- <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: imx@lists.linux.dev
-References: <20250624200444.2514331-1-Frank.Li@nxp.com>
-From: Vladimir Zapolskiy <vz@mleia.com>
-In-Reply-To: <20250624200444.2514331-1-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20250625_001823_274741_4A78B44C 
-X-CRM114-Status: UNSURE (   8.71  )
-X-CRM114-Notice: Please train this message. 
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v4 net-next 0/7]There are some cleanup for hns3 driver
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175081081475.4081312.3746271660520654145.git-patchwork-notify@kernel.org>
+Date: Wed, 25 Jun 2025 00:20:14 +0000
+References: <20250623040043.857782-1-shaojijie@huawei.com>
+In-Reply-To: <20250623040043.857782-1-shaojijie@huawei.com>
+To: Jijie Shao <shaojijie@huawei.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
+ shenjian15@huawei.com, wangpeiyang1@huawei.com, liuyonglong@huawei.com,
+ chenhao418@huawei.com, jonathan.cameron@huawei.com,
+ shameerali.kolothum.thodi@huawei.com, salil.mehta@huawei.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On 6/24/25 23:04, Frank Li wrote:
-> Allow clocks property to fix below CHECK_DTB warnings:
->    arch/arm/boot/dts/nxp/lpc/lpc3250-ea3250.dtb: i2c@300 (nxp,pnx-i2c): Unevaluated properties are not allowed ('clocks' was unexpected)
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 23 Jun 2025 12:00:36 +0800 you wrote:
+> There are some cleanup for hns3 driver
 > 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
 > ---
->   Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml | 3 +++
->   1 file changed, 3 insertions(+)
+> ChangeLog:
+> v3 -> v4:
+>   - Drop the patch about pointer set to NULL operation, suggested by Jakub Kicinski
+>   v3: https://lore.kernel.org/all/20250621083310.52c8e7ae@kernel.org/
+> v2 -> v3:
+>   - Remove unnecessary pointer set to NULL operation, suggested by Simon Horman.
+>   v2: https://lore.kernel.org/all/20250617010255.1183069-1-shaojijie@huawei.com/
+> v1 -> v2:
+>   - Change commit message and title, suggested by Michal Swiatkowski.
+>   v1: https://lore.kernel.org/all/20250612021317.1487943-1-shaojijie@huawei.com/
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml b/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
-> index 798a6939b8948..e645784b77d3a 100644
-> --- a/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
-> +++ b/Documentation/devicetree/bindings/i2c/nxp,pnx-i2c.yaml
-> @@ -22,6 +22,9 @@ properties:
->     interrupts:
->       maxItems: 1
->   
-> +  clocks:
-> +    maxItems: 1
-> +
->     clock-frequency:
->       default: 100000
->   
+> [...]
 
-Reviewed-by: Vladimir Zapolskiy <vz@mleia.com>
+Here is the summary with links:
+  - [v4,net-next,1/7] net: hns3: fix spelling mistake "reg_um" -> "reg_num"
+    https://git.kernel.org/netdev/net-next/c/befd4e971a78
+  - [v4,net-next,2/7] net: hns3: use hns3_get_ae_dev() helper to reduce the unnecessary middle layer conversion
+    https://git.kernel.org/netdev/net-next/c/2031f01394b2
+  - [v4,net-next,3/7] net: hns3: use hns3_get_ops() helper to reduce the unnecessary middle layer conversion
+    https://git.kernel.org/netdev/net-next/c/5306c1039686
+  - [v4,net-next,4/7] net: hns3: add \n at the end when print msg
+    https://git.kernel.org/netdev/net-next/c/dd9480f6ed28
+  - [v4,net-next,5/7] net: hns3: delete redundant address before the array
+    https://git.kernel.org/netdev/net-next/c/ad0cf0729f53
+  - [v4,net-next,6/7] net: hns3: add complete parentheses for some macros
+    https://git.kernel.org/netdev/net-next/c/84c0564b1c51
+  - [v4,net-next,7/7] net: hns3: clear hns alarm: comparison of integer expressions of different signedness
+    https://git.kernel.org/netdev/net-next/c/169d07e7e41c
 
+You are awesome, thank you!
 -- 
-Best wishes,
-Vladimir
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
