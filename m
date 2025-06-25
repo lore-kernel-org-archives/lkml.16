@@ -1,120 +1,168 @@
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F031D25F99A
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:33:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 771072877DC;
+	Wed, 25 Jun 2025 15:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750865637; cv=none; b=etjKZ1jUJAXkrKp2YZNGNh6oXmbmUzJZG9RmurAxzGuer7YhNgsQbTL9tR2pqoyQel0jRhfOtFv3uSit0E/cCYCv+rGwkd7vFCaP7LteicF78aMNc5ujM8jqPCLHQVx8wL5WlByNKf9UoXcwTkYzKx0DrMnxy5lpqLha8uD3cX8=
+	t=1750865640; cv=none; b=nILNB7RkWDCaE9yDWScrI8LslQl70s3EmegSCnhUFgpBLnqhk05KMzBBXSuq6LsawbJvN4T/5y6kA8uLtQu9/FotWScSUPXpOlnY1MoTvsxAbusAo6YnjCWx9MBS3mn3toBsmHCCfPl6dwl/B5d9OIJdAoOMLcosje6wAWGlTWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750865637; c=relaxed/simple;
-	bh=oeDVbXzYCMu1RsPKrLrCYA5wW/CpYO+WF4MAGS9OyyQ=;
+	s=arc-20240116; t=1750865640; c=relaxed/simple;
+	bh=6RjDvqxMF4UNHL2ffnUoiaYP0QyOxEoOLDFwtWWOF4c=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Cv7p/OZtOzbdpXiGW8HPaF+zJqSELXAW/cT6lt6ACBW8OaE2WId8aTi4mdL7co8asRcEMJ1XVGcjtH9Vbnyuf3TGtSBAOEVMcFnr3OmnA+ShpY+IazoCW0q/jE32iQGvf6ExFKnbCFVvQrRn3tCZsGx11E5uxwxZziOxMhvTg8E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LyFfbnK0; arc=none smtp.client-ip=209.85.210.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=ghIqdiT0/v7+vIH3938bfcZOy3gfyG2g1kL/a71Y+xP7XHtQsWbaYdjjVMXEpXHH0C/UkuV0Yr4kD6zgHZLhAJ1mb40G6xCteOPD8B2Ec0cGnHivDd/llkdbyUjTbcwfImnqUSrU5DX+N454mzEqICiQUI2XvHFTWqWSI0DO5r8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uwttktU3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=V69TqSXF; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LyFfbnK0"
-Received: by mail-ot1-f41.google.com with SMTP id 46e09a7af769-72c172f1de1so4250031a34.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:33:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750865634; x=1751470434; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VZqhEcxBQhbzOh6JVaGxQL694yeYlxvz6oZqmaMRq08=;
-        b=LyFfbnK0RWpT7DhguTiH2xr4csnVfiCzm+elCqg805kgp4iOo9WvBXkmgL6erYf5z9
-         I/vK6S4/7UsWRbcgEhI0EXtlP1am8vYVUgZs/sIOoYraurQN6ugZnz9tJiSVQRYHKz3a
-         LuZT5nwgVSMAdrNBI+GMinrxv9Czwb2qb3sVf1lw14nrr5iDmqHPrldJcm0I/2oFZ6A/
-         1BSc4WApbaRSoqIsYgyJ49kzjQt29XSDNMxuuQexO1y03fhqGhDzmW5/fJ2rgRmveceh
-         dYRPqaYYcxIeIRQyG7w8RKuXiNnOWaqgw7r8fdpSqQNAzWbZYGYaQ4/GxZ/zKJDsW7ss
-         zeOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750865634; x=1751470434;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VZqhEcxBQhbzOh6JVaGxQL694yeYlxvz6oZqmaMRq08=;
-        b=v3irTTWMA/mLl2w4ZzYJ6h9QeHWqPLE4ofiGkET7dwIzqR4QVGwffLWtu84dc7Or1i
-         nIdd7W2oPNT3RP0RPv+TidzNPRsMbfJGtBv1I2famimdYBrKousT+EgusRwIaHt+HeoH
-         IwzXz/g3C9GH9foR8tp3puVsugz9pbxghh6xoRjnXkrn4Ok0mQd3NKIb7BozDuw4OMqe
-         uT8qf68abbsSBCiphl5j4nt9X+GyFE4EV5CDlLpMF/98B8Gb8zJTfghUPN+rX7l3fqKt
-         thg5XymWRmrbxUCNMShS6O8FekLFQARflknfrbD8VDDZ7GQRaLB9hPUPqrfw7jLE2yY5
-         0tEA==
-X-Forwarded-Encrypted: i=1; AJvYcCX4R3ogoPpt8jrNlOIMH30yuANL75Rsi/UcsQr+Tyo+4swYBXwXbxXkEfbwmG9ws97LxC2qA9N6ztryJ80=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwPhJYJxSNtzWTaxFE8tTn6orFDSxbJLLX3wsROv31jh+1at02c
-	JwgvZeh6vxx9Kt4psqA21QsAVfKGDWfW4J/0q+Gtnyc1G9kgQg0GstBNuTNiHUpeNQY=
-X-Gm-Gg: ASbGncuKL4HmvI9Gd64jP/vVVgHp7zAOvH0fKPSCCQuGukblnrXT3S9SoMXtExYKCuj
-	JzLryfngMUe+ZmPz5EJQu/jIMrGLM+zabDplxpSssnoV6bfIaBw4SILRwUvjQsNHdXxSEuPgyi1
-	hLXQbPRXm7NXfTXqKiClVV7YagF6RZ0mkJX1Ck2+wzxd7T5wGYDEuX+HQB7WL7KGTPuk4Df+1pO
-	KoDgFBpXWs4IgaHSRD8cs4e1GujRslYJaDkU5wOtp8UL2ZQaO2DI9teBcHMgwPUP2Wlz3X+zXVh
-	LUEPJy05QXQoaZ5Bx6u/vTtnp4PHpUeSvFdljoTnSUwvqEyRwuIq3gcC/RSkwOYkUps=
-X-Google-Smtp-Source: AGHT+IHocp2lWjY0ub02K97anAYnYNyxecSqopXbTvdpz/db5rpNAumtukQSZFEpei331ZTaZVEUDg==
-X-Received: by 2002:a05:6830:2112:b0:72c:3235:557d with SMTP id 46e09a7af769-73adc7b4318mr2366572a34.13.1750865634096;
-        Wed, 25 Jun 2025 08:33:54 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:3ee4:904:206f:ad8])
-        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a90aee8ecsm2293133a34.10.2025.06.25.08.33.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:33:53 -0700 (PDT)
-Date: Wed, 25 Jun 2025 18:33:52 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: David Hildenbrand <david@redhat.com>
-Cc: Oscar Salvador <osalvador@suse.de>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Harry Yoo <harry.yoo@oracle.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] mm,memory_hotplug: set failure reason in offline_pages()
-Message-ID: <c20a5cde-671c-4f71-995e-779fb6778273@suswa.mountain>
-References: <685c1428.050a0220.346d5e.eafa@mx.google.com>
- <2db18566-f864-44f4-bd0b-baa7cc4bebea@redhat.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uwttktU3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="V69TqSXF"
+Date: Wed, 25 Jun 2025 17:33:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750865636;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Yc4y94UlE/VFlG8nYY1S5q5zlkhHTNo8sayND4Be7QQ=;
+	b=uwttktU3aAKdTHXQWCtIKF3v5Ar5unQ4u3+4SXrV/qww7ACldqp+X+UR9TT4IMXEB/0sM7
+	XyY+8YsP5Nrf4BQGtGuRBTtXm9pDtvHqyOpKiQ/qdnlx4Nw5BHaVK2Ez2+zGUJVisboIgn
+	K5RClptQLUbOZrG/maDpMAw50tGlih46+H034JQ6n1dxfr8/x6cYOQwcPMcJul6nrG2at9
+	xTXPav42Y+F1gcu90TTPdEuZVYqlir7uwyuUsh74d40/KDxBcCVr/zBIlFAbUGUEdsIXcZ
+	zg2S3Sc5ZjGnSuOMDKbKAdW5BNxmSIEcegJeBIfgsjbG5VOpKkWm4KYkgeVa4g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750865636;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Yc4y94UlE/VFlG8nYY1S5q5zlkhHTNo8sayND4Be7QQ=;
+	b=V69TqSXFfwgCkx+m2VTPolpJ/8qMEVOcBR3NJRUz59cRIa7Qm9WyCgDUibBvY7P2vnZItX
+	MtbhB5W5LmLXK2BQ==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: Nam Cao <namcao@linutronix.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	John Ogness <john.ogness@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH v3] eventpoll: Fix priority inversion problem
+Message-ID: <20250625153354.0cgh85EQ@linutronix.de>
+References: <20250527090836.1290532-1-namcao@linutronix.de>
+ <20250625145031.GQ4Bnc4K@linutronix.de>
+ <20250625152702.JiI8qdk-@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <2db18566-f864-44f4-bd0b-baa7cc4bebea@redhat.com>
+In-Reply-To: <20250625152702.JiI8qdk-@linutronix.de>
 
-On Wed, Jun 25, 2025 at 05:24:01PM +0200, David Hildenbrand wrote:
-> On 25.06.25 17:22, Dan Carpenter wrote:
-> > The "reason" variable is uninitialized on this error path.  It's supposed
-> > to explain why the function failed.
+On 2025-06-25 17:27:02 [+0200], Nam Cao wrote:
+> > > @@ -1896,21 +1732,30 @@ static int ep_send_events(struct eventpoll *ep,
+> > >  			__pm_relax(ws);
+> > >  		}
+> > >  
+> > > -		list_del_init(&epi->rdllink);
+> > > -
+> > >  		/*
+> > >  		 * If the event mask intersect the caller-requested one,
+> > >  		 * deliver the event to userspace. Again, we are holding ep->mtx,
+> > >  		 * so no operations coming from userspace can change the item.
+> > >  		 */
+> > >  		revents = ep_item_poll(epi, &pt, 1);
+> > > -		if (!revents)
+> > > +		if (!revents) {
+> > > +			init_llist_node(n);
+> > > +
+> > > +			/*
+> > > +			 * Just in case epi becomes ready after ep_item_poll() above, but before
+> > > +			 * init_llist_node(). Make sure to add it to the ready list, otherwise an
+> > > +			 * event may be lost.
+> > > +			 */
 > > 
-> > Fixes: e4e2806b639c ("mm,memory_hotplug: implement numa node notifier")
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > ---
-> >   mm/memory_hotplug.c | 4 +++-
-> >   1 file changed, 3 insertions(+), 1 deletion(-)
+> > So why not llist_del_first_init() at the top? Wouldn't this avoid the
+> > add below? 
+> 
+> Look at that function:
+> 	static inline struct llist_node *llist_del_first_init(struct llist_head *head)
+> 	{
+> 		struct llist_node *n = llist_del_first(head);
+> 
+> 		// BROKEN: another task does llist_add() here for the same node
+> 
+> 		if (n)
+> 			init_llist_node(n);
+> 		return n;
+> 	}
+> 
+> It is not atomic to another task doing llist_add() to the same node.
+> init_llist_node() would then put the list in an inconsistent state.
+
+Okay, I wasn't expecting another llist_add() from somewhere else. Makes
+sense.
+
+> To be sure, I tried your suggestion. Systemd sometimes failed to boot, and
+> my stress test crashed instantly.
+
+I had a trace_printk() there while testing and it never triggered.
+
 > > 
-> > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> > index 4d864b4fb891..e954f81b55a0 100644
-> > --- a/mm/memory_hotplug.c
-> > +++ b/mm/memory_hotplug.c
-> > @@ -1977,8 +1977,10 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
-> >   		node_arg.nid = node;
-> >   		ret = node_notify(NODE_REMOVING_LAST_MEMORY, &node_arg);
-> >   		ret = notifier_to_errno(ret);
-> > -		if (ret)
-> > +		if (ret) {
-> > +			reason = "nr_pages more than present_pages";
+> > > +			if (unlikely(ep_item_poll(epi, &pt, 1))) {
+> > > +				ep_pm_stay_awake(epi);
+> > > +				epitem_ready(epi);
+> > > +			}
+> > >  			continue;
+> > > +		}
+> > >  
+> > >  		events = epoll_put_uevent(revents, epi->event.data, events);
+> > >  		if (!events) {
+> > > -			list_add(&epi->rdllink, &txlist);
+> > > -			ep_pm_stay_awake(epi);
+> > > +			llist_add(&epi->rdllink, &ep->rdllist);
+> > 
+> > That epitem_ready() above and this llist_add() add epi back where it was
+> > retrieved from. Wouldn't it loop in this case?
 > 
-> "node notifier failure"
+> This is the EFAULT case, we are giving up, therefore we put the item back
+> and bail out. Therefore no loop.
+
+Right.
+
+> If we have already done at least one item, then we report that to user. If
+> none, then we report -EFAULT. Regardless, this current item is not
+> "successfully consumed", so we put it back for the others to take it. We
+> are done here.
 > 
-> With that
+> > I think you can avoid the add above and here adding it to txlist would
+> > avoid the loop. (It returns NULL if the copy-to-user failed so I am not
+> > sure why another retry will change something but the old code did it,
+> > too so).
+> > 
+> > >  			if (!res)
+> > >  				res = -EFAULT;
+> > >  			break;
+> > 
+> > One note: The old code did "list_add() + ep_pm_stay_awake()". Now you do
+> > "ep_pm_stay_awake() + epitem_ready()". epitem_ready() adds the item
+> > conditionally to the list so you may do ep_pm_stay_awake() without
+> > adding it to the list because it already is. Looking through
+> > ep_pm_stay_awake() it shouldn't do any harm except incrementing a
+> > counter again.
 > 
-> Acked-by: David Hildenbrand <david@redhat.com>
+> Yes, it shouldn't do any harm.
 > 
-> (likely should be squashed because the commit it might not be stable yet)
+> Thanks for reviewing, I know this lockless thing is annoying to look at.
 
-Oh, yeah.  I misread the code.  Thanks.  I resent now.
+but it looks now a bit smaller :)
 
-But, ugh, I forgot to add your Acked-by...  But this is likely going
-to be squashed as you say so hopefully that's fine.
+> Nam
 
-regards,
-dan carpenter
-
+Sebastian
