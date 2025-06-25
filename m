@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F23199E89;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04F8925F784;
 	Wed, 25 Jun 2025 13:17:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750857425; cv=none; b=AjkBgf+OijimIab84X586Tkm981Hhin4ygOsNslpyU/pXhX/J3DneXnQUVqoYigJUi/vD2gtYFVvX7e76voEI5/I6OfrLaAwkAGsKUmQUoWtZy4TvnqHb42SbdiTeVaxZV8XWnb8Q/CbapsD4Fqb94Bgw0lcRBAyG9FULCs4N0E=
+	t=1750857425; cv=none; b=JLoqY8emzParYivl8nyf3LuLIdxl5IGI56ck6i1gKhB160pDE66tTQRMOSIk5zpbagy5P09mKwDRH45mGkwaqGJIbizHEqxuwGQpaZcZJnm9j200T1qhN/HIn43yeaDH2/BMnn43KZXAcvJRTjqzVsRGweZizyk3nFfnhvRuud0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750857425; c=relaxed/simple;
-	bh=2K6FEdZJxw9ltrH83HiFUwdVQ5PYFVVIBpHrVuk6Ijw=;
+	bh=2wjz3+JKr8b/GuKvZURR2QiYdmWce02dMigkYvBt0Gk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HQfuaGFdWqNkYsSly+P4JIrxOJm7SieoxgWMWVCX3ERMTw5joUmOYz8AuUrUWx4EDWSbJtGv55S8v9lOW1TJPR7KujPljdxXowzniA+P5k8xr7H45hiKgO+8yWy1/EaEcE9vmOLIoUwDobcnDJyM5vlO4TIFonZl62m1E1IfIHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f6QDsgUO; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AQL0MoZNDaKPRQvjIb6JJemGmqA6ZZVLTzYahmhHdwVrmJtrGQ0T7G42/BotF/m3J0f1SdifHEgHDMgSA8KbKGk90/DcqJ1lzso6GOOlxLefxiDLm9kiBuzCn5rwywpnIkgYtKzbjOCaRLFdQWcqijdhYY4Sl1W90/EG+Tvo8MI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F3AopbvJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f6QDsgUO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2E51C4CEEA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F3AopbvJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4105C4CEEE;
 	Wed, 25 Jun 2025 13:17:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1750857424;
-	bh=2K6FEdZJxw9ltrH83HiFUwdVQ5PYFVVIBpHrVuk6Ijw=;
+	bh=2wjz3+JKr8b/GuKvZURR2QiYdmWce02dMigkYvBt0Gk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=f6QDsgUOFY5Lh8fajygvvy0FpyEXt/rCNSAkPDbaNN2OL27rcGdP5KiwuTy++1hse
-	 U0Avlnmnro61MJlx3ENbtsF3LJFmwEtl1gZR8SL5whhzQnH0+D02BMfaUYeVItPN14
-	 dK6KxGyX3Q83M/b0Y4J5g5atQ9IXUeu1OcUXTvyhbH8xvCxLAyv29wxf9eJvej3UJ2
-	 HSsmkMErVkM3X7zKUGW4Qdoo7X0cz2ehR85cCt+lf9wGkJ0llyEanZRjKJpGHCwCWn
-	 hM26z/L2Sws/PqmpcuMtSHeAMpGDPAm0UvtFbyJU1ufuB9CO6tLCRpcF3X/SnffkpV
-	 +DBFWLKUe2Vrw==
+	b=F3AopbvJ164+Etui5cLAx3/wbfJEr+coRlX2u6OyEm1akxuq0i/AL7fUXVMBTjiLv
+	 LLjT9xl8src5NZV1o1yIMp4eh/9b3evLl2JUGSyNIWStmk/jPDDgT3Dz9XQTQJJgPt
+	 zN0zX6f4dp+DGSrZ6Dun2F8eNQAiu0fkFrAN4H0HR0BhP4BjUACuf3pgjS1fzcvORZ
+	 eM/2PRlGQaASki9zmJmbSRbsO4qU8zRsyX38v9xy7KruT8eZtgAdiMnkbTdZQTtHba
+	 ZvCo1AFMvM3IoKuTr1AdyHdp2Mpw0cF9hym7nj2PrZZZOmsP7J0hhvgTijm9Cy2OIe
+	 hm1ciZ94ZlrVQ==
 Received: by wens.tw (Postfix, from userid 1000)
-	id 6BEDF5FF51; Wed, 25 Jun 2025 21:17:02 +0800 (CST)
+	id 794825FF4F; Wed, 25 Jun 2025 21:17:02 +0800 (CST)
 From: Chen-Yu Tsai <wens@kernel.org>
 To: Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -40,9 +40,9 @@ Cc: devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Andre Przywara <andre.przywara@arm.com>
-Subject: [PATCH v2 3/5] arm64: dts: allwinner: a523: Move rgmii0 pins to correct location
-Date: Wed, 25 Jun 2025 21:16:50 +0800
-Message-Id: <20250625131652.1667345-4-wens@kernel.org>
+Subject: [PATCH v2 4/5] arm64: dts: allwinner: a523: Add UART1 pins
+Date: Wed, 25 Jun 2025 21:16:51 +0800
+Message-Id: <20250625131652.1667345-5-wens@kernel.org>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250625131652.1667345-1-wens@kernel.org>
 References: <20250625131652.1667345-1-wens@kernel.org>
@@ -56,56 +56,43 @@ Content-Transfer-Encoding: 8bit
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-Nodes are supposed to be sorted by address, or if no addresses
-apply, by node name. The rgmii0 pins are out of order, possibly
-due to multiple patches adding pin mux settings conflicting.
+UART1 is normally used to connect to the Bluetooth side of a Broadcom
+WiFi+BT combo chip. The connection uses 4 pins.
 
-Move the rgmii0 pins to the correct location.
+Add pinmux nodes for UART1, one for the RX/TX pins, and one for the
+RTS/CTS pins.
 
 Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- .../arm64/boot/dts/allwinner/sun55i-a523.dtsi | 20 +++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-index 458d7ecedacd..30613a0b1124 100644
+index 30613a0b1124..6f62201fd739 100644
 --- a/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun55i-a523.dtsi
-@@ -126,16 +126,6 @@ pio: pinctrl@2000000 {
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
- 
--			rgmii0_pins: rgmii0-pins {
--				pins = "PH0", "PH1", "PH2", "PH3", "PH4",
--				       "PH5", "PH6", "PH7", "PH9", "PH10",
--				       "PH14", "PH15", "PH16", "PH17", "PH18";
--				allwinner,pinmux = <5>;
--				function = "emac0";
--				drive-strength = <40>;
--				bias-disable;
--			};
--
- 			mmc0_pins: mmc0-pins {
- 				pins = "PF0" ,"PF1", "PF2", "PF3", "PF4", "PF5";
+@@ -168,6 +168,20 @@ uart0_pb_pins: uart0-pb-pins {
  				allwinner,pinmux = <2>;
-@@ -163,6 +153,16 @@ mmc2_pins: mmc2-pins {
- 				bias-pull-up;
+ 				function = "uart0";
  			};
- 
-+			rgmii0_pins: rgmii0-pins {
-+				pins = "PH0", "PH1", "PH2", "PH3", "PH4",
-+				       "PH5", "PH6", "PH7", "PH9", "PH10",
-+				       "PH14", "PH15", "PH16", "PH17", "PH18";
-+				allwinner,pinmux = <5>;
-+				function = "emac0";
-+				drive-strength = <40>;
-+				bias-disable;
++
++			/omit-if-no-ref/
++			uart1_pins: uart1-pins {
++				pins = "PG6", "PG7";
++				function = "uart1";
++				allwinner,pinmux = <2>;
 +			};
 +
- 			uart0_pb_pins: uart0-pb-pins {
- 				pins = "PB9", "PB10";
- 				allwinner,pinmux = <2>;
++			/omit-if-no-ref/
++			uart1_rts_cts_pins: uart1-rts-cts-pins {
++				pins = "PG8", "PG9";
++				function = "uart1";
++				allwinner,pinmux = <2>;
++			};
+ 		};
+ 
+ 		ccu: clock-controller@2001000 {
 -- 
 2.39.5
 
