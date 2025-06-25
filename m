@@ -1,125 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FF120C00B;
-	Wed, 25 Jun 2025 14:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 931DD20C00B
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750861646; cv=none; b=KnAHctbdQfbhhpcFXVLcVEkO8dE83wAkLBiO/pRH3TUox8ynXsJSiHuUaeoDRhJOheAVgL+nh9SFqN7Kk+GzPTZqlRsYsAo6qEs7oSApjcapIGhbRECTZhTMJqqC8tSt1dIshCX4HUUKrivwXlF6XfuakZg0K/oEHxwI3+qX/h8=
+	t=1750861653; cv=none; b=sbwhLhxzuunhZpRJ6dgNvHsx7U56lY8/SxkELP4QsM8DbmspyLxpt24v+1BdfhT/R6lLqMdAjwrar+GnrvhD+uNGaThPK7rt+um2FHbuGKeINtTA9MVWbHpmKS1fOF4GmjIVdz4HhVpo5RB6JwO5ZeIoF4OVDE4mHTf4TifDQ7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750861646; c=relaxed/simple;
-	bh=aiCBfShnv6jIIgQ4bpuIfMp5r40wbfensHpHCEm3pBM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tH+XbgzH4Xd4WC8txwHpcxlRtJ6iRfhXEwKRdEAdiORO7jebIr4ddHigFYA3Ei2fN+iv0MC/mVCJedk3awUdzKrF2VQrtqmhfHHx78e2vCYHoATTC1RVXY31kpbKaJfcB0l83/wD8N+8UjQFYAL74hZ1yxYXxmuCXR7/JUaIu80=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mU+nKfkS; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mU+nKfkS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750861646; x=1782397646;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aiCBfShnv6jIIgQ4bpuIfMp5r40wbfensHpHCEm3pBM=;
-  b=mU+nKfkS2z3z9O0xwUk5kQ0cuEPjqmKzxvvq/Z6FYVrq5C0CRu0lhWOO
-   cCK6bv2XpjmAqbQNMzHYaVwZdSBZvv+zLtbAInNunTJubqF/ggWsjhap6
-   fLM6KbYWKdVlq7NWUEy/1wUCigXjUpaZKk8Hc40U46XCAKaivobECZK0j
-   ZGo/oyMsoLasZt4fv+Xoi728oJcA01PN2b6hJlKCwy+2JI3WzHKzfrQmM
-   zhfTQf0+pnFQCgdYMxcCKTk53Df/IMWMDtV8MjTFsd1ShedmPA6ko3cdF
-   uo3T97eUKQnoXdbJ+4+6KAPKE0IwQKscvTu8zqIvJWBVq68F1Ze9URKaS
-   A==;
-X-CSE-ConnectionGUID: dkxlRjhbQqC2rBspwRddlA==
-X-CSE-MsgGUID: XVwLUXiITWqaTCLDJbXwwg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="56920079"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="56920079"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 07:27:25 -0700
-X-CSE-ConnectionGUID: NYVNjaqgRd2C28PhusN2oA==
-X-CSE-MsgGUID: Vm3m4nwNToS9MwdDCSPhkw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="175877583"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 07:27:21 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uUR5q-00000009nnt-1JQk;
-	Wed, 25 Jun 2025 17:27:18 +0300
-Date: Wed, 25 Jun 2025 17:27:18 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
-	andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, matthias.bgg@gmail.com,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v1 4/5] iio: adc: mt6359: Add support for MediaTek MT6363
- PMIC AUXADC
-Message-ID: <aFwHRigf95hPKTE7@smile.fi.intel.com>
-References: <20250623120028.108809-1-angelogioacchino.delregno@collabora.com>
- <20250623120028.108809-5-angelogioacchino.delregno@collabora.com>
- <aFlk-l5LhgO8dnXK@smile.fi.intel.com>
- <1b173e16-f681-4256-8dd2-92db2e90ca73@collabora.com>
+	s=arc-20240116; t=1750861653; c=relaxed/simple;
+	bh=1aQdPCSK/iMrYq3lMACmqItfXwpA0hwA0F4iHTJ2uyE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LwK5B8mVP9S7PCPUu+rMsAGvG6N/eIBxsdg8itj68SkvmbeMeYOg2xYxuAFVM6ALh9NZi1cVGe7idEVEvVg9NB7eftksXSf3eipEODdOcxMUTc7NhozSZ4VZ3pqqCqCnD2OPhNHmwpDiEYyUR41wfO11kLIaDiQM4zZPwot/IC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C2C18106F;
+	Wed, 25 Jun 2025 07:27:13 -0700 (PDT)
+Received: from donnerap.arm.com (donnerap.manchester.arm.com [10.32.101.27])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E8823F66E;
+	Wed, 25 Jun 2025 07:27:30 -0700 (PDT)
+From: Andre Przywara <andre.przywara@arm.com>
+To: Mark Rutland <mark.rutland@arm.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-coco@lists.linux.dev,
+	Chao Gao <chao.gao@intel.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Salman Nabi <salman.nabi@arm.com>
+Subject: [RFC PATCH 0/1] Arm Live Firmware activation support
+Date: Wed, 25 Jun 2025 15:27:21 +0100
+Message-Id: <20250625142722.1911172-1-andre.przywara@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1b173e16-f681-4256-8dd2-92db2e90ca73@collabora.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25, 2025 at 03:29:47PM +0200, AngeloGioacchino Del Regno wrote:
-> Il 23/06/25 16:30, Andy Shevchenko ha scritto:
-> > On Mon, Jun 23, 2025 at 02:00:27PM +0200, AngeloGioacchino Del Regno wrote:
+Hi,
 
-...
+(please feel free to add people interested on this from the x86 side
+as you see fit)
 
-> > > +	if (MTK_AUXADC_HAS_FLAG(cinfo, IS_SPMI)) {
-> > > +		/* If the previous read succeeded, this can't fail */
-> > > +		regmap_read(regmap, reg - 1, &lval);
-> > 
-> > No error check? lval may contain garbage here, right?
-> 
-> No, because if the previous read succeeded, this can't fail, and also cannot ever
-> possibly contain garbage (and if it does, - but again, that can't happen - there is
-> no way to validate that because valid values are [0x00..0xff] anyway).
+this is a proposal for a driver for the Arm Live Firmware Activation (LFA)
+specification[1]. LFA provides an interface to allow "activating" firmware
+updates without a reboot.
+In contrast to Intel's TDX [2] approach (which seems only concerned about
+some confidential computing related firmware blob), and even OCP's
+"impactless" updates[3], the Arm approach just lists a number of
+"activatable" firmware images, and does not limit their scope. In
+particular those updates can (and will) be for firmware bits used by the
+application processors (which OCP seems to rule out), including runtime
+secure firmware (TF-A/BL31), confidential compute firmware, and
+potentially even UEFI runtime firmware.
+Initially we have the whole chain demoing the Arm Confidential Computing
+firmware (RMM) update, which is conceptually the same as Intel's TDX
+proposal.
 
-Never say never. Any regmap_*() call that performs I/O might fail. You can't
-predict with 100% guarantee the HW behaviour in all possible scenarios.
+So our design approach is to create a directory under /sys/firmware, and
+just list all images there, as directories named by their GUID.
+Then the properties of each image can be queried and the activation
+triggered by the sysfs files inside each directory. For details see the
+commit message of the patch.
+This is admittedly a somewhat raw interface, though even in that form
+it's good enough for testing. Eventually I would expect some fwupd
+plugin to wrap this nicely for any admins or end users.
 
-> > > +		val = (val << 8) | lval;
-> > 
-> > Is it guaranteed that lval is always less than 256 (if unsigned)?
-> 
-> Yes, with SPMI that is guaranteed.
-> 
-> > > +	}
+The purpose of this RFC is to get some feedback on the feasibility of
+this interface, and to understand how this would relate to the other two
+approaches (TDX + OCP "impactless" updates).
 
-...
+- Are GUID named directories under /sys/firmware/lfa a good idea?
+- Shall all three approaches be unified under a common kernel/userland
+  sysfs interface? Or can we live with separate interfaces, given the
+  different scopes, and unify this in userland, for instance via fwupd
+  plugins?
 
-> > > +		regmap_update_bits(regmap, cinfo->regs[desc->ext_sel_idx],
-> > > +				   MT6363_EXT_PURES_MASK, ext_sel);
-> > 
-> > No  error check?
-> 
-> No, because if the previous reads and/or writes succeeded, it is impossible for
-> this to fail :-)
+Thanks,
+Andre
 
-Ditto.
+[1] https://developer.arm.com/documentation/den0147/latest/
+[2] https://lore.kernel.org/all/20250523095322.88774-1-chao.gao@intel.com/
+[3] https://www.opencompute.org/documents/hyperscale-cpu-impactless-firmware-updates-requirements-specification-v0-5-2025-05-22-pdf
 
-I.o.w. the failed regmap_*() call can be a signal that something on the
-communication channel with the HW went wrong, Depending on the severity of this
-call the device driver may decide what to do next.
+Salman Nabi (1):
+  firmware: smccc: Add support for Live Firmware Activation (LFA)
+
+ drivers/firmware/smccc/Kconfig  |   7 +
+ drivers/firmware/smccc/Makefile |   1 +
+ drivers/firmware/smccc/lfa_fw.c | 411 ++++++++++++++++++++++++++++++++
+ 3 files changed, 419 insertions(+)
+ create mode 100644 drivers/firmware/smccc/lfa_fw.c
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
