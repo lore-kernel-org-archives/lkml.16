@@ -1,233 +1,211 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C2572626;
-	Wed, 25 Jun 2025 07:34:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750836899; cv=fail; b=fS3M8qH/4GKM7QIFWGCNJJ4QUwhMlCG4vDy0HZuqKfT8dVbfNWd/I9yaKT6Lm2jNMfVPbDU58xj9Qk73IAFOoiT1nqX+G0xyG+Q8VOSjHquYRWK5uFmttWt9KFESIhdA8YV9CrB2o4ndRAD6aZfJ00Hvox0Lz0uJlOFgY/Ao+HM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750836899; c=relaxed/simple;
-	bh=6tJOP6PS3yTWyL/hY8958d+lRu8QwgBjsX8bEbMZWSg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=sNGMHkzYLx9CqASDy2JY7O39MwokrlRGVFFfkbqMYdLKdtQ/aouMoGI+9Y+QoV1uptuGAK6GR9Insq12uO1yvAVvm5cMAwxOGNn+dJL/c+Z2jqfkYqx11c5fTRRt5frtOrHH5v8AzVxMyeZRp/hQK2I3RQgKTQ35bQtTuU14T34=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=THKQfL/a; arc=fail smtp.client-ip=40.107.244.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B99202987
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750836902; cv=none; b=XMrhXCzYF3sedqZQiGUA9p5Pg0+SGBqHuRFhc0URF5PR7UIv4ecDJgUcBdGmfpaamnOXB9NXyRRLmBV4Rq8tJKWqPmjr69mMkbaXiUVtvFMjBq4dxW/6ZzI49Hqx/zFRxtoCSCS3rtZE8OMOSDuiLhM2lZXQzkS8fNz1PzB2kTo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750836902; c=relaxed/simple;
+	bh=yaCMwg1iL7Eggle9ZPBsnpKe6GZKe276eIApPvgv2BA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oK762RNPP9+0MZ2o7+qcpwqQjJUnkSgbUM6vq6B5sr/P5kgI2QhfAS0Nhq3E0dRya74+FUup59JuhqfpePnYo61JPb9sfXOwF2DXo5xlhot7NEvE7Ek23ogC4eHzYLupQDeWKeuYNYE2D0Khw8IVh357R7zkrWlsFRo01nDJeZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Zgj7AGZV; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="THKQfL/a"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=eNGInZ50HRwxgc6HS0K4m50auL8jrLC7NM8vsdVyWasJeWQaGQN4Fz1oyyw7U7V0nXMJzDCD6k+JRHE0UsJGI33rSqwa4yFcb2ypns0x/8HEUSvP5PKhO42nSlFw27stlX/pwVfsrq5zT2DnAPXgaPOIWrq/+9wMTOKi/+xDnFGH4F9+a2i4U/vb42g1W+RtNTIPuzvolJmJyUXI0B2z6Gw6syB9uMuEQEYnDnxTAyXtRybv2fBA5rPZEl673U9iNvmN+Fg+UFdYW+ZrVi/tKwh04TZU6mIdOkOeSKdujEZ4axKYlEiFCj+FxZLbXr8WyNiAVKyGgQBaHs2D92uyPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=emUjFpNwWdXSav4Lu1dvsXAdmd6DUTGrWyfyjbbvGvs=;
- b=Rv/iR0f/82oFT93Gq6nRCKm2eXnHz1WZFAhXvSlHckwDpspBZovJiO+TqPhyBAbcqs8c6Y9HMW7ZEAyROiYywPAPjBGXdswSnL5nVroXQSv/zm6plbj8wRKhuasd8sw8wKF7xSHsMHc7PcGLsFXJwPPddl1w6uidOlb47HEr80XEoWowmKYcjnxURcq3+qeq2km5M5nBqcF+ttdRYlrq8ozqgTbnSUwgAYRGLeoIZP3gggEV++TfnPBayfOikNlJOJ+DKyz85LIVZpxiRV/SpK3dpMF0iVvliQqyABRoUcJtBQCEWEbqZqIB3hkF4x/Bt5CkQkx0RSiVsj/CdIcyXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=emUjFpNwWdXSav4Lu1dvsXAdmd6DUTGrWyfyjbbvGvs=;
- b=THKQfL/a+WSlOO9xsghMmlF67ow7Mp8ePGEdsTIPaZt0PFyScxCj7PPoXtns0V8n2Dwlx+Krp/tuJeDm6MHwj0OHZqOnDeLdsdZgKVsDv9MHM6n8omgoMr/PIrrrYeVFZ7/i1T6KErj0dGyQ/t0m+KR5O17+eEriBB8Q331Jd01T8yFtJuDBym/dZLBkuXs+3++cGwgiUwHbvFpcIl2ccJon32iVJ/rDEp1LlGhw0ZOyzUOkNkf5Tm06JZegR7a4XmY0yMj/bdJIFFFYZ2lZDGMD9epmM/MPHdlHKllUoIUIs+xK+JuNMuoHzPg/RCoXwZHiImdzPZJHrTGh6ubLoQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from SJ2PR12MB8784.namprd12.prod.outlook.com (2603:10b6:a03:4d0::11)
- by DM4PR12MB8449.namprd12.prod.outlook.com (2603:10b6:8:17f::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 25 Jun
- 2025 07:34:55 +0000
-Received: from SJ2PR12MB8784.namprd12.prod.outlook.com
- ([fe80::1660:3173:eef6:6cd9]) by SJ2PR12MB8784.namprd12.prod.outlook.com
- ([fe80::1660:3173:eef6:6cd9%5]) with mapi id 15.20.8835.027; Wed, 25 Jun 2025
- 07:34:55 +0000
-Message-ID: <c84768f2-17d7-4edd-8f6e-d0f2a74ef559@nvidia.com>
-Date: Wed, 25 Jun 2025 08:34:47 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5.4 000/222] 5.4.295-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, f.fainelli@gmail.com,
- sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
- linux-tegra@vger.kernel.org, stable@vger.kernel.org
-References: <20250623130611.896514667@linuxfoundation.org>
- <cf271495-270e-4a0a-a93e-fe8c44e4eabd@rnnvmail204.nvidia.com>
-From: Jon Hunter <jonathanh@nvidia.com>
-Content-Language: en-US
-In-Reply-To: <cf271495-270e-4a0a-a93e-fe8c44e4eabd@rnnvmail204.nvidia.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P265CA0168.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:312::11) To SJ2PR12MB8784.namprd12.prod.outlook.com
- (2603:10b6:a03:4d0::11)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Zgj7AGZV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750836897;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=f9JWJaXqe/mzvWtWTkmax9Q+vie4v0vnBThpwbTMo7w=;
+	b=Zgj7AGZVJ7Zxerli7i/833bMcujYFw91vYMa8VBFw+nD7M7/loZSJJECnNda9QlOHiLfh8
+	hRgkVeu9/OM+MAKFGzcpIwJcmTXA8znFly+jVoqPWOrSc3pVVNzZQ+ndnC9bAUh618m3Qh
+	iLd1npFDfhMYDtFZKIBc7LvTvm0L0wY=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-304-EJguKSL5MnyKxvcP_LQE8w-1; Wed, 25 Jun 2025 03:34:54 -0400
+X-MC-Unique: EJguKSL5MnyKxvcP_LQE8w-1
+X-Mimecast-MFC-AGG-ID: EJguKSL5MnyKxvcP_LQE8w_1750836893
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3a4f8fd1847so487436f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:34:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750836893; x=1751441693;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=f9JWJaXqe/mzvWtWTkmax9Q+vie4v0vnBThpwbTMo7w=;
+        b=NBr4gdeCgZ8d2WIFMo+f6Px5tHMKZnJFaCyW4OfW6zrz/tldH2zykhbq2gUkazIRd/
+         r/DSlCEaeYjrns86WLILVczFphszfqs0k8USthVAtOU/wb6EZ7eOOW7huHmvQEL+OWW3
+         w2lQHYVyOO6rrJ/mrkpka2rBtxWESbV03/s8al2SjE097wCpoS49sW8bWVqF8OfyuOh2
+         ImGANmwUDao8kTMyZf8p56JKx5roRaHJN48dhO3IcZDwOtyyQSFOnKo7Vuca6Db6bITx
+         mIIMbENYz6eJrObrj5YOHRZPJ7M5vngMXq4HiRx6GEr/27aJh+azQACs97Wxe+bmhb4U
+         CDPA==
+X-Forwarded-Encrypted: i=1; AJvYcCW62+d9PLAKobRSqlRS/CTLrV9PnRTqHTJAm9r61L8NXSkV1XuQRq8VeOplNDjF/ddlujXAokE2Yk1rK9I=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy72QKfEH2RDegveN2w9V36ev6iP57HTFKzWoXg0J9Z9bAmTDYG
+	NSSQ6pZ03uIPXdJtRlufgX7KrN89AW0bBGIRYLO5xDix10uapRDvMbceXveIOAUFcGuAMvl4Yki
+	zD9jtQTIQIHUuU410LtjVB5QDdJ9MFZQBXf5LoijYjA7gZYNkM4Vda1JZdWIQGsemOA==
+X-Gm-Gg: ASbGnct/ZbTe0Z0mb0aOha7IGgvU+lrWZau6RYQXb0iOtGcO5Gw+WZUW21TOhXJ22xZ
+	UiIm0i8H66inIwoQM2dypMqkEFUC0H+Olyh1wv0R2nABsPRcfVcawpIuNivVRZncrwvMpiyoh+m
+	MLCInljobc+HhA0SD16Z5NQovxVIkRBCrPV3DZCVjwmgh+J+n3CtzPgUtvCbjUoPEWF8D2biuZ8
+	vp3e0wV0PCtS174HFFIzPpcZg/zZQocG6B5eiV4CKv7ULA70bclTjlOfdPH5V+PSG1VsfrRMrbF
+	1ret3U+v1uPM8WeiQ/SvL2fYdItT5aZtgmzN3xb1jA0GMKWpDoIFwHgKgSHg5Ccv0Xqh77pNe/p
+	AFm57VQnA92g3s81nRchqiQeAM2od3kWloo2d1HLTwcc5
+X-Received: by 2002:a5d:6f04:0:b0:3a5:52b2:fa65 with SMTP id ffacd0b85a97d-3a6ed618eeemr1368000f8f.5.1750836893026;
+        Wed, 25 Jun 2025 00:34:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFWq9GTffc3FP0XcHKicmiSih8rODvVlPPlK3Pn7m6ROmtE6VqVdBM2z1yvr5bS5ZvH8JCsuw==
+X-Received: by 2002:a5d:6f04:0:b0:3a5:52b2:fa65 with SMTP id ffacd0b85a97d-3a6ed618eeemr1367974f8f.5.1750836892652;
+        Wed, 25 Jun 2025 00:34:52 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f12:1b00:5d6b:db26:e2b7:12? (p200300d82f121b005d6bdb26e2b70012.dip0.t-ipconnect.de. [2003:d8:2f12:1b00:5d6b:db26:e2b7:12])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823551dbsm11138045e9.17.2025.06.25.00.34.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 00:34:52 -0700 (PDT)
+Message-ID: <008ec97f-3b33-4b47-a112-9cef8c1d7f58@redhat.com>
+Date: Wed, 25 Jun 2025 09:34:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR12MB8784:EE_|DM4PR12MB8449:EE_
-X-MS-Office365-Filtering-Correlation-Id: b286eb6f-18b2-4713-2d8c-08ddb3bac773
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|10070799003|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?QWRKL1lFNVVsY1NYYi9zNVNJbUVMWkt4VWVTS0NhbDZEL3BqSUQwVFlIZDZD?=
- =?utf-8?B?dE83d012NjV3SXB3VEJwSFY5YzBBZFQwVnorcEsveEJBTlpmRjhwMVZwQlJs?=
- =?utf-8?B?MXlVT2lFZXd5MVlKOFhmT3pPdU1pUGgxSjk5QTVyeWY2ZngvVDJyeksyZkt6?=
- =?utf-8?B?UFhrZ1BmKzlvbzhsNDd3TGx1bTllRUp2bk1GdFQ1NTlTYURoczJqbGpScGRD?=
- =?utf-8?B?MDJBR3YwNjkvbFBBQ0VkYkFWdVJZL2hYdWo4VVMvYzU5MWluYlFjdnlVNE1j?=
- =?utf-8?B?RmRzRFcvb3p6QkI4UHdEMXpsU1E3cE9ITFVZa3h2aVowVHJFU3Y3UXFzMzZa?=
- =?utf-8?B?Y0s3YjZFcUxzM1M5UHdQNnBWNXBsbGc5Z2d6ZUpxT0g3RDRsQytTcWJVc0k0?=
- =?utf-8?B?RmtENENZRlliN3E1SGtqUzJGcTJhMnlsNHhkaVRBUlh1aGpkSlhvaitMSXlo?=
- =?utf-8?B?MUw2RzJyNmdPUFpHd3A1VHFUZmZkNE1aTnYyUUx0WWtCZS9BYnkzSUR6ZjRP?=
- =?utf-8?B?TGFhYWdTZ202bXJ2Mk5XWm9GcnZBS21FQjhqcCtGNlE0dmYyY0tRV3VCNjIx?=
- =?utf-8?B?VTJPQ0o5VWVSSjNuUTNiZUVaYTdpa1FRTUVHbDE3MTlRNGx0NEV2bFNhd3FP?=
- =?utf-8?B?Z3NMaElicVRmYlBsbm5qNWJkOWNLZWRQUG9BL1NMOVN2RlBCRDkwTTBieGZQ?=
- =?utf-8?B?TXdJM0hWSm1USFBZNFJIZXJ2VG5Cb1k0L0p4TmdPMHpveHVHRnhHRVZscys4?=
- =?utf-8?B?dVpESW1yd1RFVmh2Q0xmNXQ3ZitXZGhOcXFRQ3ErajNzOE80UEVRZnpNKzNB?=
- =?utf-8?B?L01IOU1uRmhKYkpsN0dhQjNLT01KWGQwZ2hUZTQ3eTM0VHcyYml3blRiN2JL?=
- =?utf-8?B?Y25jR2ptRlB2WEJZSnpHcVJ0R3QrT3dRWmsvWE1TMTRBRFdQOXNKK2RnaXBk?=
- =?utf-8?B?blNTelhuL3A5Q3F5TEVXWmpuWG9ydURGRW9QQnpROXJlZWQyTW9iYTN3ZURo?=
- =?utf-8?B?OGZvK0JBWkVXeUFYRTVuRk9MVy8yaU1IN3RveFRDM2FjRHhrMjY4ekhEZEJ3?=
- =?utf-8?B?R0JJRzZHSUxtVDB6WTljWEtXVVNkMG5QUXBSVnNVbDJnNHFIbmxjQVpSRHdr?=
- =?utf-8?B?eU0rMGdEUXd1L3Z4UUZsNkQ2TndENUdVYWFYQ3hvOW9JMVo3NVhTd0NPT2VN?=
- =?utf-8?B?ZXdzQWFmSTE0U0hPQmw1UEt6dlpjd2xKSTdaU3NHeE93NitiRnZ1dnY1Z04z?=
- =?utf-8?B?YnpxaFp1RC9KbVRTOU9EY3lFeGwxOU13Um9BZk4vMEhyd3VSWDA3U2ZqczR0?=
- =?utf-8?B?S3dDSkUwM2dZamJhZmduNitWamc3M2RUdGpuWUgvOC9GNGxNUXRLL0hDdzhm?=
- =?utf-8?B?cGxOcHYycVdRQXFBZEIweVNCSStzVjVRMDRKcFNmYTlhVjVDWmJTR2dSeDdt?=
- =?utf-8?B?TkVBZkp3NnlGRnlpUmZsYks2MENhaWcyeWR4dHBJWWJ5V3d1Rkg0QnY0eE1T?=
- =?utf-8?B?aVFwK2tqZFZxZ1R4RktoSjlGaW5JT1FQS2ZGZDBWZ0dGL0dKSWFWc0NiTkJ3?=
- =?utf-8?B?MmE4R1RTMTBWV1IxaFlocjFucFVVc1h3THp1N2o2QmRUY2kvRUd4a1RCTUhJ?=
- =?utf-8?B?d2hUbWEyS1BKYmh1VWREMU1TQ2xOZDdSaFBPNG1MdS8zc3dONk95Y3F0UzYr?=
- =?utf-8?B?RVVsOUFwUENFeUoyalArRk03VlV3SCtRVjcvOEFiekdvaEcwS0VkTzVCVDJZ?=
- =?utf-8?B?S3VuZ3dLb3l3WTFlM1JOWG1GVzgySExrdWpyM281WkFtcGQxVmFkWHhMc3Vh?=
- =?utf-8?B?UGRvWEdYblVVUTZxWldUQXpOUytXMU5HMFdjVWt5WmRhN1A4QUY5RGt6VEVB?=
- =?utf-8?B?YzNMRjk4bDBnaHd6VHp5ZW5ERjErQ2RtVy9rWXA3eHBCbmZ2QmZQVkRqZldq?=
- =?utf-8?Q?2hgyZn0Ygjs=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB8784.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?N2xsNCtLeVlDRTB3cmRGQlV4TFZJL1hkZG5yN0ZVaHQ3TmQxMWovZWx4c3Ez?=
- =?utf-8?B?Ri9iakNIT1ZQVXdSVnQ1YUxSR1FZY25BUEZBc0MySTkxWFVGcHR3ZmhES21Y?=
- =?utf-8?B?eVJwdlBsWm5zQmlhR2tIY3QxSjRuMkF5dG5EM0hyakVGaXhaamMybmlUaktK?=
- =?utf-8?B?OW1TTUNHSVUvMkc0eHRQMThWTlRUWXZ2SjFCWU5SbG1PVklEL0NpenJtaTBq?=
- =?utf-8?B?SWFvVUc1MGJlRDRENW80Mjlxai9qcllpVUtNNnpBd2RXRXV4RFdRMERDd1B3?=
- =?utf-8?B?REJvQTdGUlhBN1hjaTVDazY3a1BWQTdrYmsxbE5pVHNHZm9ibC9xSlQvSFI3?=
- =?utf-8?B?bm1CZGl0UUI0T3VWalN5aTRhT1Q0TDJBcWlqUUlmU0hzNHpFSkhheGw3R1ps?=
- =?utf-8?B?US9naHdWL2lDWU9HQlBBdTd0NlJ3V2Y5YkI1S0pxejN1cXBYdFVkWndENzRX?=
- =?utf-8?B?K1JvM1pFeUEwL2ZDZjJFQXRBekJlcVJvS09aV2o3MzVhQm94bzVYU012eVVN?=
- =?utf-8?B?Wkpkcm9YQUoyR2pXYU1yKzUzTGIrOHQvRDc5MlRsK0ZDTlhvVFB0cFVqdWxx?=
- =?utf-8?B?NjZwaEJIR1hpNXJ6NzF4MFIxMS9BSlhSOW5COWJOS1hIOWdxTm9GZWxDMTVC?=
- =?utf-8?B?Y1FCSTNQckVWVm1mbGhqY3Q0K1FmWWtKRzNFbDNRM0JRZmFaZDVuYnNhbVBW?=
- =?utf-8?B?dklHdFFQdDlCRWxBQkNVOU9JaWlFdVpwNFJSMDFjQ0o4QzdjTW5kS213ZGVl?=
- =?utf-8?B?OHAwN3c1TDN0UXBZU3BtbVFKT3V2ZWFUK2lQSGQ4elozTDQwL2YxY0JpMUJY?=
- =?utf-8?B?Y2Y1R2dwRFR2QzBZK2hERmRNNlE4alJYWTVPaVVmK1RtdUlTZGZCelFGa0l5?=
- =?utf-8?B?di8rV2tRbkdLejJkZFI0OElBeDJyS2tzR1M5MEltN0pyc2tBUVdLMEJUM0lx?=
- =?utf-8?B?Q1dibWh3R3F4MmpkcFRxc1FJZHlpaFRNNHN5M09RSGR0SGVBdEltY2ZKL1M0?=
- =?utf-8?B?M1dTanBLVitQSVRXaURaOEUza25mK3kwVmtKV2dCWjVIVnV0a0t4N0ViVWNp?=
- =?utf-8?B?d2ZoTEZ0WXJsTzRGR2VIeVR3eU9xVnNIR0I5K2w0OERjY1JtWGlwZS9WTmpp?=
- =?utf-8?B?SnR0eE5PVndCekEzQU1DYnFxdXlZeUpTc3ZWU1dzNTJXWG9PeWU2ODhZYjdQ?=
- =?utf-8?B?WG5nN0ZPK3YvbFlkUlJlS3E4bDE1VkFxNVJwTTg0RFRSQTFlcCtKQ0Vob2Ra?=
- =?utf-8?B?UWVnb3A2NHlVbG9UV09kSmN4VlN5ZUZBOGwwSHhXUG1zVmNzMHNEN2dndTVa?=
- =?utf-8?B?OE5XODdBM1d1Y2s4Y1F4ejlsVjI5WWVTTzhHMFAvcnFYTWQ2clY2RDlvWlY2?=
- =?utf-8?B?WXZrWEg2NElmOU1LZG9xOW1Xbk80M21ic2ZWSXNOM2lyNFVGdlJYWE5ISmt6?=
- =?utf-8?B?cTBxZTFnRlA2MWdjU3pjcjlIZzE3bkszeWc4anU4TThjTmE4bnk5THBtd2Vv?=
- =?utf-8?B?eWdoQXc4WFg1ZW53Vll6dFhqczdKZUpnNkRya0pxcnliZHBoRUs2aExMOUh4?=
- =?utf-8?B?UlBuSE9hQ25Wc1R1OUxUZTlIVGJwMXJ5TWhNVitlK3k0UUp4RUVvSldvZmJi?=
- =?utf-8?B?UW5FaG0zeXFpaDlFdmxFYnJETWVQOTRMNGx4a040NXFYTDNoRXdJUkJNSTM3?=
- =?utf-8?B?TGZBdFZZd1VycVVUUHVCVDJ6b3pBREFTQlcwL3lzazJPQUY3NlJVSForMlVp?=
- =?utf-8?B?OTdnN01JY3BuZUNXanN1TmlwWHBkQTFsT0FJVnE4M2RrNUF0ZUt6TlRLREpl?=
- =?utf-8?B?M1BmNGgwNkhkZ0JDZHE1bnFIUzQvL2FZc01wd2paNTM3TmViS3lOWVY1WHZl?=
- =?utf-8?B?QStoVE9IcFBQcmhLNUdURUZ4MmhyWFRrakV2WDRvSmFtWk0xWmQzcWpBaWd2?=
- =?utf-8?B?RzFITmFNaG9lWU9hQ1JtSWRPTGdWdHJhajROV2JvaVZlUmE4cC9hM1dXdExZ?=
- =?utf-8?B?NE5XYWF6MVc2NEtuRzMrRFlBY2pmTHEwSXBPOXZ0VEdFTy9pSDRvZEpLL2Fr?=
- =?utf-8?B?REE0YnRuUjRHWEdraDVWNWRucXRlcjM0R0ZIc2lqN0hIOG9vYml2aHQvN0ZF?=
- =?utf-8?B?bXlnS3ZVdC81NjNNZXdGb3J3bHdPWVBCNGpMYUpWMnB1WDlFRkVBckdVblYr?=
- =?utf-8?Q?K3a7i8KrQqND3uTkMmUIv9nthuGkVZGramYgszzfEx2Q?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b286eb6f-18b2-4713-2d8c-08ddb3bac773
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB8784.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 07:34:55.0363
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: n9Q2+7G3zoGW02joApIfcekmNoILgFx+Vzrr00aElALYwrk840hFRc8bnX3oQid/MJ27i3UpA6GngAxisX+jiQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB8449
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/2] fix MADV_COLLAPSE issue if THP settings are
+ disabled
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Hugh Dickins <hughd@google.com>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ ziy@nvidia.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+ zokeefe@google.com, shy828301@gmail.com, usamaarif642@gmail.com,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <cover.1750815384.git.baolin.wang@linux.alibaba.com>
+ <75c02dbf-4189-958d-515e-fa80bb2187fc@google.com>
+ <f1782ae5-c1d6-4f46-a676-666505990f4d@lucifer.local>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <f1782ae5-c1d6-4f46-a676-666505990f4d@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Greg,
-
-On 25/06/2025 08:16, Jon Hunter wrote:
-> On Mon, 23 Jun 2025 15:05:35 +0200, Greg Kroah-Hartman wrote:
->> This is the start of the stable review cycle for the 5.4.295 release.
->> There are 222 patches in this series, all will be posted as a response
->> to this one.  If anyone has any issues with these being applied, please
->> let me know.
 >>
->> Responses should be made by Wed, 25 Jun 2025 13:05:50 +0000.
->> Anything received after that time might be too late.
+>> We would all prefer a less messy world of THP tunables.  I certainly
+>> find plenty to dislike there too; and wish that a less assertive name
+>> than "never" had been chosen originally for the default off position.
 >>
->> The whole patch series can be found in one patch at:
->> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.295-rc1.gz
->> or in the git tree and branch at:
->> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
->> and the diffstat can be found below.
+>> But please don't break the accepted and documented behaviour of
+>> MADV_COLLAPSE now.
+> 
+> Again see above, I absolutely disagree this is documented _clearly_. And
+> that's the underlying issue here.
+ > > I feel like if you polled 100 system administrators (assuming they knew
+> about THP) as to how you globally disable THP, probably all 100 would say
+> you do it via:
+> 
+> # echo never > /sys/kernel/mm/transparent_hugepage/enabled
+> 
+
+Yes. One big problem is that the documentation was not updated.
+
+Changing the meaning of "entirely disabled" to "entirely disabled 
+automatically (page faults, khugepaged)"
+
+> So shouldn't 'never break userspace' be based on practical reality rather
+> than a theorised interpretation of documents that sadly are not clear
+> enough?
+
+I think the problem is that there might indeed be more users out there 
+relying on "never+MADV_COLLPASE" to now place THPs than 
+"never+MADV_COLLPASE" to no place THPs.
+
+What is the harm when not placing THPs? Performance degradation for some 
+apps?
+
+What is the harm when placing THPs although disabled? Making the life 
+for David for debugging customer issues harder :P
+
+> 
 >>
->> thanks,
+>> If you want to exclude all possibility of THPs, then please use the
+>> prctl(PR_SET_THP_DISABLE); or shmem_enabled=deny (I think it was me
+>> who insisted that be respected by MADV_COLLAPSE back then).
+> 
+> While it's useful to have this, prctl() is where APIs go to die. It's a
+> hidden wasteland that nobody knows about, it may as well not exist.
+> 
+> We have a whole sysctl directory for configuring this stuff. It's sort of
+> crazy to have that then to have a special prctl() hidden away also...
+
+prctl(PR_SET_THP_DISABLE) is today not really a reasonable way for an 
+admin to disable THPs system wide I'm afraid.
+
+> 
 >>
->> greg k-h
+>> Add a "deny" option to /sys/kernel/mm/transparent_hugepage/enabled
+>> if you like.  (But in these days of filesystem large folios, adding
+>> new protections against them seems a few years late.)
 > 
-> Failures detected for Tegra ...
-> 
-> Test results for stable-v5.4:
->      10 builds:	7 pass, 3 fail
->      18 boots:	18 pass, 0 fail
->      39 tests:	39 pass, 0 fail
-> 
-> Linux version:	5.4.295-rc1-gca8c5417d1e6
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                  tegra194-p2972-0000, tegra20-ventana,
->                  tegra210-p2371-2180, tegra210-p3450-0000,
->                  tegra30-cardhu-a04
-> 
-> Builds failed:	arm+multi_v7
+> Based on a reasonable interpretation of 'never' I would say we retain this
+> series as-is, and 'deny' could be what 'never' was intended to be before.
 
+At least for shmem_enabled never means "unless overwritten per mount 
+through huge=" and "deny" means "force off for all mounts". So "deny" is 
+"harder"
 
-I am seeing the following build error for ARM with the
-multi_v7_defconfig on our builders ...
-
-   CC      drivers/firmware/qcom_scm-32.o
-/tmp/cc9gP1cd.s: Assembler messages:
-/tmp/cc9gP1cd.s:45: Error: selected processor does not support `smc #0' in ARM mode
-/tmp/cc9gP1cd.s:94: Error: selected processor does not support `smc #0' in ARM mode
-/tmp/cc9gP1cd.s:160: Error: selected processor does not support `smc #0' in ARM mode
-/tmp/cc9gP1cd.s:295: Error: selected processor does not support `smc #0' in ARM mode
-make[3]: *** [/home/jonathanh/nvidia/mlt-linux_next/kernel/scripts/Makefile.build:262: drivers/firmware/qcom_scm-32.o] Error 1
-
-
-Bisect is pointing to ...
-
-# first bad commit: [0c23125c509b41be51f0d5acb843b079a098a40c] kbuild: Update assembler calls to use proper flags and language target
-
-Reverting this fixes it but I also needed to revert the following due to dependencies ...
-
-Nathan Chancellor <nathan@kernel.org>
-     kbuild: Add KBUILD_CPPFLAGS to as-option invocation
-
-Nathan Chancellor <nathan@kernel.org>
-     kbuild: Add CLANG_FLAGS to as-instr
-
-Jon
+Inverting the semantics here might be causing even more problems.
 
 -- 
-nvpublic
+Cheers,
+
+David / dhildenb
 
