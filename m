@@ -1,184 +1,574 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9719C26B748
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 19:26:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A27A12DCBEE;
+	Wed, 25 Jun 2025 19:28:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750879614; cv=none; b=mqSsneWDKYri988GaLCs0z3KytctzbebbALR+OAXamFx7D2lsh+Ij0X4VcM2VjvxffjtwFreGBg3HC2zNN/abrjZBhx17DkXuVUqPwsTMf9RXY+f6AZaN3wPjTLcF/7uHLc/askfaKtUofzoC6CIdeWdAgd8NBegEL620PvwY3M=
+	t=1750879692; cv=none; b=X5a5y2HEKvxeVtAO5v1FhaY9yHzLlwvlMgurUw+P5M+RlBT6YwLBsiw1Df0SxzRqDwpfVxGatibP19MEm5+vm20wxmS3KIwh2xcPQaqp3QuwBRSoQPrNn+WUVJLvLo7FMC0M/rswEOUlXZQuVVdT5czc9LfAjlposokp3RVEbDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750879614; c=relaxed/simple;
-	bh=lzwFHTmArGTFfMnHS2pC4PiDBDDb1yR51vxeS8GWDfg=;
+	s=arc-20240116; t=1750879692; c=relaxed/simple;
+	bh=wRuV8u4487v8pd6cIb11D4QOkkKgieStdC4qajmZOwA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G6F2bNUBdn11nAdCMV0SJj1OwIj5gL4XmZ4FcTaRqdB0NeoQSpVWYD2dmgNuGTG5/+QDE2iizuepugTdHZWfUORsu2pDRpq7gNe0LUCcPaxz+IZ7EPCJAg+HKI0KKHIL+XU9ebgzM9kVJJ3IP34iRjEsnPCJ/v41bk9wHgDMMLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZiV/+trD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=QwuwHVviYrRpPjuovuSOA07si/SIAdlu2DjR1PTZ5UUkesRmATF3LTIeqkKi5YaTDVbovWQrn+O6AV6uNRkm2+C7UAY5CQ3y012e1CfL/+cpoIyZGQDPr2pg6PHX0hpz3PNLK1ofnd8sJWSEP0qB72pzlBWlOQpOGSUZsj3U07Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F65Rg3/3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZiV/+trD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750879610;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TGfYjsrv3CHWJsl4ZYRpnVjuHZ4AXKNVmUWtYP9RsHQ=;
-	b=ZiV/+trD/3ECqPDhy97fwfR43M0SlLcgQq9HFPGdc3EVC/sv5ydXps2qYsaFlD1QJuOGpH
-	K+Dep6OFamql2i4bPivqTyYgvawSy9wSshQihN4pQYHuq4eqc/vlwIT0hBGNo1u7673tz8
-	9rRPJ0wZnb/JXE87qnRKCV4MFn6pd+4=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-632-IWAvKl2WNw6JjNeWtc4IYQ-1; Wed, 25 Jun 2025 15:26:49 -0400
-X-MC-Unique: IWAvKl2WNw6JjNeWtc4IYQ-1
-X-Mimecast-MFC-AGG-ID: IWAvKl2WNw6JjNeWtc4IYQ_1750879609
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-4a585ad6726so7224251cf.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:26:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750879608; x=1751484408;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TGfYjsrv3CHWJsl4ZYRpnVjuHZ4AXKNVmUWtYP9RsHQ=;
-        b=JHKRE4926YIJiRE5KQ+bbQKjV6s1DOVwI76EuCUjOrwgq/IJEn5L6dh2oTF35b3AxZ
-         0Us0zolLVgdYDIh6wmc49akibTtWmiL+4pH0kSpVIKuHV7/cX2b/IJQeAs+fmlf7mKGI
-         Qxf+8DGPqz/clGeTQH6gE6GtC9zzFAwy7AIbjp22/pM+/EmSAj/s2yBs3oyL1/uYYR43
-         8z9IZCczIrUrKbzOVCqE8rBDw4NdQY5u71JdE3O+GDTu2oo7ZTKqJJ7mEwTeN3AQZ2vW
-         ZKWs0n06wVpOmXUXqDpiiB0PyJZ2vzSgm+tcg4QedrJY1sQh1VxQ97fWEQGoo3TonuVV
-         7r3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCX+a5M8kLxJTDjp8mJ2ItSe+FrqPhd/nOGWF7htyJL2Re0oqiFcQOIynx1aj2GWEtwGXO36wQtO44tGT0I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyhH6tfMo73HZ96yZW4cLB10Mtano7HImlDQ9mgOs1/G8nB/aTJ
-	6ja8PQLqrNsX3BidujCw1p0JG8zUgET8/ujnnzN5u5a9cD1daoyi9P6QQWuZwEaZo04e+rwbOup
-	uraq2PJRVPpfyVvoWgNbh8ZWQYG2SXw+Yz6xmrtJaoIZIoSXvZHWPEZWqCKymO6OUfA==
-X-Gm-Gg: ASbGncuN8YUVXgRk4ILoJDlPFIZyWig/MjJPojSET+O2QIs9efHhwXu9OSy6hDfU2Q5
-	QjnvsQSAM+4onDzOeRsUj6YtcLk8cA85yvPxO0CEakzx11n3TEyOHeRkLu9rWv49ejGgftYa3BU
-	G1HCLXcQUtYjO1oPXPosrMsjSioQv1AgtfNi86Jyry2E+tdEXW0vRPZvO26OI4/5kqnFJqXccGf
-	FbdWFqFGok1bNTOnoO5bcUm1tZfLRm+HhDOOiwwKIWsiwEP/8avSc42K6Gi/VvSWmdazRFCgnGA
-	eFaEeFUvb+Ejow==
-X-Received: by 2002:a05:622a:d0c:b0:4a7:693a:6ae8 with SMTP id d75a77b69052e-4a7c0987d78mr76648611cf.52.1750879608525;
-        Wed, 25 Jun 2025 12:26:48 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE2/4t5r9VjiW5td+72Yce2Xj+4z6Ttju+rlhn9lvRECNav3t/dX5xvs86OsGTFFXZgQqVrUA==
-X-Received: by 2002:a05:622a:d0c:b0:4a7:693a:6ae8 with SMTP id d75a77b69052e-4a7c0987d78mr76648091cf.52.1750879608097;
-        Wed, 25 Jun 2025 12:26:48 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779d4f7d9sm62877581cf.6.2025.06.25.12.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 12:26:47 -0700 (PDT)
-Date: Wed, 25 Jun 2025 15:26:44 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
- mappings
-Message-ID: <aFxNdDpIlx0fZoIN@x1.local>
-References: <aFMQZru7l2aKVsZm@x1.local>
- <20250619135852.GC1643312@nvidia.com>
- <aFQkxg08fs7jwXnJ@x1.local>
- <20250619184041.GA10191@nvidia.com>
- <aFsMhnejq4fq6L8N@x1.local>
- <20250624234032.GC167785@nvidia.com>
- <aFtHbXFO1ZpAsnV8@x1.local>
- <20250625130711.GH167785@nvidia.com>
- <aFwt6wjuDzbWM4_C@x1.local>
- <20250625184154.GI167785@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F65Rg3/3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A7EAC4CEEA;
+	Wed, 25 Jun 2025 19:28:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750879691;
+	bh=wRuV8u4487v8pd6cIb11D4QOkkKgieStdC4qajmZOwA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F65Rg3/3Kmack2u+Vxnr7TZpy8d+uuu7JIPCphjO4srYS7ct4zwBMxLAPXthT20sw
+	 XcaKIzqBgJnTdEq1Bx2v7b/vS6gdoVKyhykjGk/iiOKIKcl4JpkizRLSyxdCkoEOSa
+	 grepEB3j+PWraoJncOKnFh3ogIEVslq9kXsrxh5r2kdhBUKBHHzf5yOkg/zHpgFbzF
+	 /tPJVPAoVDTeQpr64hjz67gu/Qtes93sDdubn39CHBbUdN7eD617VjmUQB9+zIA7d0
+	 ZbovYpRuHCc+zCao8dMSN5RQSIFE8vRyVCeRDt0uBLBDE7RQetKXkJmOTGx0jAWlFb
+	 mjKuS677iz7Sg==
+Date: Wed, 25 Jun 2025 16:28:07 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: James Clark <james.clark@linaro.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>, Nick Terrell <terrelln@fb.com>,
+	David Sterba <dsterba@suse.com>,
+	Collin Funk <collin.funk1@gmail.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH] perf test: Change all remaining #!/bin/sh to #!/bin/bash
+Message-ID: <aFxNx8250L1bBaC9@x1>
+References: <20250623-james-perf-bash-tests-v1-1-f572f54d4559@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625184154.GI167785@nvidia.com>
+In-Reply-To: <20250623-james-perf-bash-tests-v1-1-f572f54d4559@linaro.org>
 
-On Wed, Jun 25, 2025 at 03:41:54PM -0300, Jason Gunthorpe wrote:
-> On Wed, Jun 25, 2025 at 01:12:11PM -0400, Peter Xu wrote:
+On Mon, Jun 23, 2025 at 10:00:12AM +0100, James Clark wrote:
+> There are 43 instances of posix shell tests and 35 instances of bash. To
+> give us a single consistent language for testing in, replace
+> all #!/bin/sh to #!/bin/bash. Common sources that are included in both
+> different shells will now work as expected. And we no longer have to fix
+> up bashisms that appear to work when someone's system has sh symlinked
+> to bash, but don't work on other systems that have both shells
+> installed.
 > 
-> > After I read the two use cases, I mostly agree.  Just one trivial thing to
-> > mention, it may not be direct map but vmap() (see io_region_init_ptr()).
+> Although we could have chosen sh, it's not backwards compatible so it
+> wouldn't be possible to bulk convert without re-writing the existing
+> bash tests.
 > 
-> If it is vmapped then this is all silly, you should vmap and mmmap
-> using the same cache colouring and, AFAIK, pgoff is how this works for
-> purely userspace.
+> Choosing bash also gives us some nicer features including 'local'
+> variable definitions and regexes in if statements that are already
+> widely used in the tests.
 > 
-> Once vmap'd it should determine the cache colour and set the pgoff
-> properly, then everything should already work no?
-
-I don't yet see how to set the pgoff.  Here pgoff is passed from the
-userspace, which follows io_uring's definition (per io_uring_mmap).
-
-For example, in parisc one could map the complete queue with
-pgoff=IORING_OFF_CQ_RING (0x8000000), but then the VA alignment needs to be
-adjusted to the vmap() returned for complete queue's io_mapped_region.ptr.
-
+> It's not expected that there are any users with only sh available due to
+> the large number of bash tests that exist.
 > 
-> > It already does, see (io_uring_get_unmapped_area(), of parisc):
-> > 
-> > 	/*
-> > 	 * Do not allow to map to user-provided address to avoid breaking the
-> > 	 * aliasing rules. Userspace is not able to guess the offset address of
-> > 	 * kernel kmalloc()ed memory area.
-> > 	 */
-> > 	if (addr)
-> > 		return -EINVAL;
-> > 
-> > I do not know whoever would use MAP_FIXED but with addr=0.  So failing
-> > addr!=0 should literally stop almost all MAP_FIXED already.
+> Discussed in relation to running shellcheck here:
+> https://lore.kernel.org/linux-perf-users/e3751a74be34bbf3781c4644f518702a7270220b.1749785642.git.collin.funk1@gmail.com/
+
+The reasoning is sound, agreed:
+
+Acked-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+
+- Arnaldo
+ 
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+>  tools/perf/tests/perf-targz-src-pkg                          | 2 +-
+>  tools/perf/tests/shell/amd-ibs-swfilt.sh                     | 2 +-
+>  tools/perf/tests/shell/buildid.sh                            | 2 +-
+>  tools/perf/tests/shell/coresight/asm_pure_loop.sh            | 2 +-
+>  tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh     | 2 +-
+>  tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh | 2 +-
+>  tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh  | 2 +-
+>  tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh    | 2 +-
+>  tools/perf/tests/shell/diff.sh                               | 2 +-
+>  tools/perf/tests/shell/ftrace.sh                             | 2 +-
+>  tools/perf/tests/shell/lib/perf_has_symbol.sh                | 2 +-
+>  tools/perf/tests/shell/lib/probe_vfs_getname.sh              | 2 +-
+>  tools/perf/tests/shell/lib/setup_python.sh                   | 2 +-
+>  tools/perf/tests/shell/lib/waiting.sh                        | 2 +-
+>  tools/perf/tests/shell/list.sh                               | 2 +-
+>  tools/perf/tests/shell/lock_contention.sh                    | 2 +-
+>  tools/perf/tests/shell/perf-report-hierarchy.sh              | 2 +-
+>  tools/perf/tests/shell/probe_vfs_getname.sh                  | 2 +-
+>  tools/perf/tests/shell/record+probe_libc_inet_pton.sh        | 2 +-
+>  tools/perf/tests/shell/record+script_probe_vfs_getname.sh    | 2 +-
+>  tools/perf/tests/shell/record+zstd_comp_decomp.sh            | 2 +-
+>  tools/perf/tests/shell/record_bpf_filter.sh                  | 2 +-
+>  tools/perf/tests/shell/record_offcpu.sh                      | 2 +-
+>  tools/perf/tests/shell/record_sideband.sh                    | 2 +-
+>  tools/perf/tests/shell/script.sh                             | 2 +-
+>  tools/perf/tests/shell/stat+csv_summary.sh                   | 2 +-
+>  tools/perf/tests/shell/stat+shadow_stat.sh                   | 2 +-
+>  tools/perf/tests/shell/stat_all_pfm.sh                       | 2 +-
+>  tools/perf/tests/shell/stat_bpf_counters.sh                  | 2 +-
+>  tools/perf/tests/shell/stat_bpf_counters_cgrp.sh             | 2 +-
+>  tools/perf/tests/shell/test_arm_callgraph_fp.sh              | 2 +-
+>  tools/perf/tests/shell/test_arm_coresight.sh                 | 2 +-
+>  tools/perf/tests/shell/test_arm_coresight_disasm.sh          | 2 +-
+>  tools/perf/tests/shell/test_arm_spe.sh                       | 2 +-
+>  tools/perf/tests/shell/test_arm_spe_fork.sh                  | 2 +-
+>  tools/perf/tests/shell/test_bpf_metadata.sh                  | 2 +-
+>  tools/perf/tests/shell/test_intel_pt.sh                      | 2 +-
+>  tools/perf/tests/shell/trace+probe_vfs_getname.sh            | 2 +-
+>  tools/perf/tests/shell/trace_btf_enum.sh                     | 2 +-
+>  tools/perf/tests/shell/trace_exit_race.sh                    | 2 +-
+>  tools/perf/tests/shell/trace_record_replay.sh                | 2 +-
+>  tools/perf/tests/shell/trace_summary.sh                      | 2 +-
+>  tools/perf/tests/tests-scripts.c                             | 2 +-
+>  43 files changed, 43 insertions(+), 43 deletions(-)
 > 
-> Maybe but also it is not right to not check MAP_FIXED directly.. And
-> addr is supposed to be a hint for non-fixed mode so it is weird to
-> -EINVAL when you can ignore the hint??
-
-I agree on both points here.
-
+> diff --git a/tools/perf/tests/perf-targz-src-pkg b/tools/perf/tests/perf-targz-src-pkg
+> index b3075c168cb2..52a90e6bd8af 100755
+> --- a/tools/perf/tests/perf-targz-src-pkg
+> +++ b/tools/perf/tests/perf-targz-src-pkg
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Test one of the main kernel Makefile targets to generate a perf sources tarball
+>  # suitable for build outside the full kernel sources.
+> diff --git a/tools/perf/tests/shell/amd-ibs-swfilt.sh b/tools/perf/tests/shell/amd-ibs-swfilt.sh
+> index 83937aa687cc..7045ec72ba4c 100755
+> --- a/tools/perf/tests/shell/amd-ibs-swfilt.sh
+> +++ b/tools/perf/tests/shell/amd-ibs-swfilt.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # AMD IBS software filtering
+>  
+>  echo "check availability of IBS swfilt"
+> diff --git a/tools/perf/tests/shell/buildid.sh b/tools/perf/tests/shell/buildid.sh
+> index 3383ca3399d4..d2eb213da01d 100755
+> --- a/tools/perf/tests/shell/buildid.sh
+> +++ b/tools/perf/tests/shell/buildid.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # build id cache operations
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/coresight/asm_pure_loop.sh b/tools/perf/tests/shell/coresight/asm_pure_loop.sh
+> index c63bc8c73e26..0301904b9637 100755
+> --- a/tools/perf/tests/shell/coresight/asm_pure_loop.sh
+> +++ b/tools/perf/tests/shell/coresight/asm_pure_loop.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh -e
+> +#!/bin/bash -e
+>  # CoreSight / ASM Pure Loop (exclusive)
+>  
+>  # SPDX-License-Identifier: GPL-2.0
+> diff --git a/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh b/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
+> index 8e29630957c8..1f765d69acc3 100755
+> --- a/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
+> +++ b/tools/perf/tests/shell/coresight/memcpy_thread_16k_10.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh -e
+> +#!/bin/bash -e
+>  # CoreSight / Memcpy 16k 10 Threads (exclusive)
+>  
+>  # SPDX-License-Identifier: GPL-2.0
+> diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
+> index 0c4c82a1c8e1..7f43a93a2ac2 100755
+> --- a/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
+> +++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_10.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh -e
+> +#!/bin/bash -e
+>  # CoreSight / Thread Loop 10 Threads - Check TID (exclusive)
+>  
+>  # SPDX-License-Identifier: GPL-2.0
+> diff --git a/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
+> index d3aea9fc6ced..a94d2079ed06 100755
+> --- a/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
+> +++ b/tools/perf/tests/shell/coresight/thread_loop_check_tid_2.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh -e
+> +#!/bin/bash -e
+>  # CoreSight / Thread Loop 2 Threads - Check TID (exclusive)
+>  
+>  # SPDX-License-Identifier: GPL-2.0
+> diff --git a/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh b/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
+> index 7429d3a2ae43..cb3e97a0a89f 100755
+> --- a/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
+> +++ b/tools/perf/tests/shell/coresight/unroll_loop_thread_10.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh -e
+> +#!/bin/bash -e
+>  # CoreSight / Unroll Loop Thread 10 (exclusive)
+>  
+>  # SPDX-License-Identifier: GPL-2.0
+> diff --git a/tools/perf/tests/shell/diff.sh b/tools/perf/tests/shell/diff.sh
+> index e05a5dc49479..fe05fdebcab5 100755
+> --- a/tools/perf/tests/shell/diff.sh
+> +++ b/tools/perf/tests/shell/diff.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf diff tests
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
+> index c243731d2fbf..7f8aafcbb761 100755
+> --- a/tools/perf/tests/shell/ftrace.sh
+> +++ b/tools/perf/tests/shell/ftrace.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf ftrace tests
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/lib/perf_has_symbol.sh b/tools/perf/tests/shell/lib/perf_has_symbol.sh
+> index 561c93b75d77..0b35cce0b13d 100644
+> --- a/tools/perf/tests/shell/lib/perf_has_symbol.sh
+> +++ b/tools/perf/tests/shell/lib/perf_has_symbol.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+>  perf_has_symbol()
+> diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> index 58debce9ab42..88cd0e26d5f6 100644
+> --- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # Arnaldo Carvalho de Melo <acme@kernel.org>, 2017
+>  
+>  perf probe -l 2>&1 | grep -q probe:vfs_getname
+> diff --git a/tools/perf/tests/shell/lib/setup_python.sh b/tools/perf/tests/shell/lib/setup_python.sh
+> index c2fce1793538..a58e5536f2ed 100644
+> --- a/tools/perf/tests/shell/lib/setup_python.sh
+> +++ b/tools/perf/tests/shell/lib/setup_python.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+>  if [ "x$PYTHON" = "x" ]
+> diff --git a/tools/perf/tests/shell/lib/waiting.sh b/tools/perf/tests/shell/lib/waiting.sh
+> index bdd5a7c71591..3a152892e077 100644
+> --- a/tools/perf/tests/shell/lib/waiting.sh
+> +++ b/tools/perf/tests/shell/lib/waiting.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+>  tenths=date\ +%s%1N
+> diff --git a/tools/perf/tests/shell/list.sh b/tools/perf/tests/shell/list.sh
+> index 76a9846cff22..0c04b3159cef 100755
+> --- a/tools/perf/tests/shell/list.sh
+> +++ b/tools/perf/tests/shell/list.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf list tests
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/lock_contention.sh b/tools/perf/tests/shell/lock_contention.sh
+> index 30d195d4c62f..dde5bc737eb2 100755
+> --- a/tools/perf/tests/shell/lock_contention.sh
+> +++ b/tools/perf/tests/shell/lock_contention.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # kernel lock contention analysis test
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/perf-report-hierarchy.sh b/tools/perf/tests/shell/perf-report-hierarchy.sh
+> index 02e3b6aee4ed..e3c6f9a24f33 100755
+> --- a/tools/perf/tests/shell/perf-report-hierarchy.sh
+> +++ b/tools/perf/tests/shell/perf-report-hierarchy.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf report --hierarchy
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Arnaldo Carvalho de Melo <acme@redhat.com> 
+> diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
+> index 0f52654c914a..5fe5682c28ce 100755
+> --- a/tools/perf/tests/shell/probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/probe_vfs_getname.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # Add vfs_getname probe to get syscall args filenames (exclusive)
+>  
+>  # SPDX-License-Identifier: GPL-2.0
+> diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> index c4bab5b5cc59..cfad1bd7b780 100755
+> --- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> +++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # probe libc's inet_pton & backtrace it with ping (exclusive)
+>  
+>  # Installs a probe on libc's inet_pton function, that will use uprobes,
+> diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+> index 1ad252f0d36e..002f7037f182 100755
+> --- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # Use vfs_getname probe to get syscall args filenames (exclusive)
+>  
+>  # Uses the 'perf test shell' library to add probe:vfs_getname to the system
+> diff --git a/tools/perf/tests/shell/record+zstd_comp_decomp.sh b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
+> index 8929046e9057..f6b82223834e 100755
+> --- a/tools/perf/tests/shell/record+zstd_comp_decomp.sh
+> +++ b/tools/perf/tests/shell/record+zstd_comp_decomp.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # Zstd perf.data compression/decompression
+>  
+>  # SPDX-License-Identifier: GPL-2.0
+> diff --git a/tools/perf/tests/shell/record_bpf_filter.sh b/tools/perf/tests/shell/record_bpf_filter.sh
+> index 4d6c3c1b7fb9..383574cb3bd3 100755
+> --- a/tools/perf/tests/shell/record_bpf_filter.sh
+> +++ b/tools/perf/tests/shell/record_bpf_filter.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf record sample filtering (by BPF) tests
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/shell/record_offcpu.sh
+> index 21a22efe08f5..860a2d6f4b75 100755
+> --- a/tools/perf/tests/shell/record_offcpu.sh
+> +++ b/tools/perf/tests/shell/record_offcpu.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf record offcpu profiling tests (exclusive)
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/record_sideband.sh b/tools/perf/tests/shell/record_sideband.sh
+> index ac70ac27d590..2182551873be 100755
+> --- a/tools/perf/tests/shell/record_sideband.sh
+> +++ b/tools/perf/tests/shell/record_sideband.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf record sideband tests
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
+> index d3e2958d2242..7007f1cdf761 100755
+> --- a/tools/perf/tests/shell/script.sh
+> +++ b/tools/perf/tests/shell/script.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf script tests
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/stat+csv_summary.sh b/tools/perf/tests/shell/stat+csv_summary.sh
+> index 323123ff4d19..9a4353db3825 100755
+> --- a/tools/perf/tests/shell/stat+csv_summary.sh
+> +++ b/tools/perf/tests/shell/stat+csv_summary.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf stat csv summary test
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/stat+shadow_stat.sh b/tools/perf/tests/shell/stat+shadow_stat.sh
+> index 0c7d79a230ea..8824f445d343 100755
+> --- a/tools/perf/tests/shell/stat+shadow_stat.sh
+> +++ b/tools/perf/tests/shell/stat+shadow_stat.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf stat metrics (shadow stat) test
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/stat_all_pfm.sh b/tools/perf/tests/shell/stat_all_pfm.sh
+> index 4d004f777a6e..c08c186af2c4 100755
+> --- a/tools/perf/tests/shell/stat_all_pfm.sh
+> +++ b/tools/perf/tests/shell/stat_all_pfm.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf all libpfm4 events test
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/stat_bpf_counters.sh b/tools/perf/tests/shell/stat_bpf_counters.sh
+> index 95d2ad5d17c6..f43e28a136d3 100755
+> --- a/tools/perf/tests/shell/stat_bpf_counters.sh
+> +++ b/tools/perf/tests/shell/stat_bpf_counters.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf stat --bpf-counters test (exclusive)
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
+> index 2ec69060c42f..ff2e06c408bc 100755
+> --- a/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
+> +++ b/tools/perf/tests/shell/stat_bpf_counters_cgrp.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf stat --bpf-counters --for-each-cgroup test
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/test_arm_callgraph_fp.sh b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
+> index 9caa36130175..9172dd68a81d 100755
+> --- a/tools/perf/tests/shell/test_arm_callgraph_fp.sh
+> +++ b/tools/perf/tests/shell/test_arm_callgraph_fp.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # Check Arm64 callgraphs are complete in fp mode
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/test_arm_coresight.sh b/tools/perf/tests/shell/test_arm_coresight.sh
+> index 573af9235b72..1c750b67d141 100755
+> --- a/tools/perf/tests/shell/test_arm_coresight.sh
+> +++ b/tools/perf/tests/shell/test_arm_coresight.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # Check Arm CoreSight trace data recording and synthesized samples (exclusive)
+>  
+>  # Uses the 'perf record' to record trace data with Arm CoreSight sinks;
+> diff --git a/tools/perf/tests/shell/test_arm_coresight_disasm.sh b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+> index be2d26303f94..0dfb4fadf531 100755
+> --- a/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+> +++ b/tools/perf/tests/shell/test_arm_coresight_disasm.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # Check Arm CoreSight disassembly script completes without errors (exclusive)
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/test_arm_spe.sh b/tools/perf/tests/shell/test_arm_spe.sh
+> index a69aab70dd8a..bb76ea88aa14 100755
+> --- a/tools/perf/tests/shell/test_arm_spe.sh
+> +++ b/tools/perf/tests/shell/test_arm_spe.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # Check Arm SPE trace data recording and synthesized samples (exclusive)
+>  
+>  # Uses the 'perf record' to record trace data of Arm SPE events;
+> diff --git a/tools/perf/tests/shell/test_arm_spe_fork.sh b/tools/perf/tests/shell/test_arm_spe_fork.sh
+> index 8efeef9fb956..5bcca51c03ac 100755
+> --- a/tools/perf/tests/shell/test_arm_spe_fork.sh
+> +++ b/tools/perf/tests/shell/test_arm_spe_fork.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # Check Arm SPE doesn't hang when there are forks
+>  
+>  # SPDX-License-Identifier: GPL-2.0
+> diff --git a/tools/perf/tests/shell/test_bpf_metadata.sh b/tools/perf/tests/shell/test_bpf_metadata.sh
+> index 11df592fb661..bc9aef161664 100755
+> --- a/tools/perf/tests/shell/test_bpf_metadata.sh
+> +++ b/tools/perf/tests/shell/test_bpf_metadata.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # SPDX-License-Identifier: GPL-2.0
+>  #
+>  # BPF metadata collection test.
+> diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
+> index 32a9b8dcb200..8ee761f03c38 100755
+> --- a/tools/perf/tests/shell/test_intel_pt.sh
+> +++ b/tools/perf/tests/shell/test_intel_pt.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # Miscellaneous Intel PT testing (exclusive)
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> index 5d5019988d61..7a0b1145d0cd 100755
+> --- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> +++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # Check open filename arg using perf trace + vfs_getname (exclusive)
+>  
+>  # Uses the 'perf test shell' library to add probe:vfs_getname to the system
+> diff --git a/tools/perf/tests/shell/trace_btf_enum.sh b/tools/perf/tests/shell/trace_btf_enum.sh
+> index c37017bfeb5e..572001d75d78 100755
+> --- a/tools/perf/tests/shell/trace_btf_enum.sh
+> +++ b/tools/perf/tests/shell/trace_btf_enum.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf trace enum augmentation tests
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/trace_exit_race.sh b/tools/perf/tests/shell/trace_exit_race.sh
+> index 1e247693e756..db300cde94fb 100755
+> --- a/tools/perf/tests/shell/trace_exit_race.sh
+> +++ b/tools/perf/tests/shell/trace_exit_race.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf trace exit race
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/trace_record_replay.sh b/tools/perf/tests/shell/trace_record_replay.sh
+> index 6b4ed863c1ef..88d30a03dcec 100755
+> --- a/tools/perf/tests/shell/trace_record_replay.sh
+> +++ b/tools/perf/tests/shell/trace_record_replay.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf trace record and replay
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/shell/trace_summary.sh b/tools/perf/tests/shell/trace_summary.sh
+> index f9bb7f9388be..22e2651d5919 100755
+> --- a/tools/perf/tests/shell/trace_summary.sh
+> +++ b/tools/perf/tests/shell/trace_summary.sh
+> @@ -1,4 +1,4 @@
+> -#!/bin/sh
+> +#!/bin/bash
+>  # perf trace summary (exclusive)
+>  # SPDX-License-Identifier: GPL-2.0
+>  
+> diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
+> index 1d5759d08141..684feed58254 100644
+> --- a/tools/perf/tests/tests-scripts.c
+> +++ b/tools/perf/tests/tests-scripts.c
+> @@ -85,7 +85,7 @@ static char *shell_test__description(int dir_fd, const char *name)
+>  	if (io.fd < 0)
+>  		return NULL;
+>  
+> -	/* Skip first line - should be #!/bin/sh Shebang */
+> +	/* Skip first line - should be #!/bin/bash Shebang */
+>  	if (io__get_char(&io) != '#')
+>  		goto err_out;
+>  	if (io__get_char(&io) != '!')
 > 
-> > Going back to the topic of this series - I think the new API would work for
-> > io_uring and parisc too if I can return phys_pgoff, here what parisc would
-> > need is:
+> ---
+> base-commit: edf2cadf01e8f2620af25b337d15ebc584911b46
+> change-id: 20250623-james-perf-bash-tests-88261a847552
 > 
-> The best solution is to fix the selection of normal pgoff so it has
-> consistent colouring of user VMAs and kernel vmaps. Either compute a
-> pgoff that matches the vmap (hopefully easy if it is not uABI) or
-> teach the kernel vmap how to respect a "pgoff" to set the cache
-> colouring just like the user VMA's do (AFIACR).
-> 
-> But I think this is getting maybe too big and I'd just introduce the
-> new API and not try to convert this hard stuff. The above explanation
-> how it could be fixed should be enough??
-
-I never planned to do it myself.  However if I'm going to sign-off and
-propose an API, I want to be crystal clear of the goal of the API, and
-feasibility of the goal even if I'm not going to work on it..
-
-We don't want to introduce something then found it won't work even for some
-MMU use cases, and start maintaining both, or revert back. I wished we
-could have sticked with the get_unmapped_area() as of now and leave the API
-for later.
-
-So if we want the new API to be proposed here, and make VFIO use it first
-(while consider it to be applicable to all existing MMU users at least,
-which I checked all of them so far now), I'd think this proper:
-
-    int (*mmap_va_hint)(struct file *file, unsigned long *pgoff, size_t len);
-
-The changes comparing to previous:
-
-    (1) merged pgoff and *phys_pgoff parameters into one unsigned long, so
-    the hook can adjust the pgoff for the va allocator to be used.  The
-    adjustment will not be visible to future mmap() when VMA is created.
-
-    (2) I renamed it to mmap_va_hint(), because *pgoff will be able to be
-    updated, so it's not only about ordering, but "order" and "pgoff
-    adjustment" hints that the core mm will use when calculating the VA.
-
-Does it look ok to you?
-
--- 
-Peter Xu
-
+> Best regards,
+> -- 
+> James Clark <james.clark@linaro.org>
