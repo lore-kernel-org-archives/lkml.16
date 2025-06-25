@@ -1,99 +1,98 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DB21E2834;
-	Wed, 25 Jun 2025 05:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33F71EF0A6;
+	Wed, 25 Jun 2025 05:15:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750828530; cv=none; b=l5YJ40aZfOxOhUAYZ5V8GC5LUaFw6f3OUsVqsSwTyyJ+2vW3JtKorSIubWhngyjjH9lhjgNArwHHrwaf5jn7fnUE4GaVxYaw9MRCG+2/TLYsDtKHGYq3B3b7a8YeMm1r1N/Ud6dd+9lYChPtH9WHZDiPbSsDu1Q3mX8CMfYRVg0=
+	t=1750828532; cv=none; b=Y9redG6vhuWNgRNBv1QznQ89z7pi4ZAXxAGMzNIx5ZaEylxCYoIkRqIeoxnlcnSovvopZloQITkR03A1/6IsyOvj6B48bWFgU7Dnz8PoNlU50UFL3ROM//xZ0tiGAPmPgQW/0J0KpeZLe9BnhwYD3aquODEwt4ruHVpHtcYINFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750828530; c=relaxed/simple;
-	bh=smxDLvsJze7SanW5jkLByGCvEyisY67nQWf9OhoWJVg=;
+	s=arc-20240116; t=1750828532; c=relaxed/simple;
+	bh=7P9OHFktnHehT6/0WfESnN3+d/wQTpA8ehdmH59U66Q=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dXswy7t/ahZaK9Hsy09oiG54m9n9PFYXhMLwdy0cnXAl5NZVwGTRInuhDp+wWcRhRXx5lpDLT8XqsyysR5as94Bt9X/KEtdsLyO/mMmloR0g4XWmrwgYHbCCT8C0bqz9kzd4VK1WDjTrdB9rOG00YFFxOZTXbMzaBqz1s2lceoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IHe9YEGj; arc=none smtp.client-ip=209.85.222.171
+	 MIME-Version; b=kckly70Rpy9tSx2qyzqxLvgsjcVkEcQP6pfWaeyazdHSVoZ/QdN2lxC/tdCrK2GfgHx47CujLX76k+qukWKA0h3ZZFYJgpA6nHtsGgf9MGopxiQUjHXSOZKYID1eSxZZd+wza2zML7OC+f/Y0cTf9GKzePan4UXTO3ql4gCwDqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HayMAqCH; arc=none smtp.client-ip=209.85.222.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IHe9YEGj"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7cadd46ea9aso946663385a.1;
-        Tue, 24 Jun 2025 22:15:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HayMAqCH"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7d38ddc198eso674873285a.1;
+        Tue, 24 Jun 2025 22:15:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750828527; x=1751433327; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750828529; x=1751433329; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=+kICsOE0yg2BTiSdXOCgN6mz13mvo6la/kJ0XkefREQ=;
-        b=IHe9YEGjGdVKtlBoGNV2rO6f1THz3g8uAkeKB1IRrDhtzhjhTA+nGHm0KJatWVYri2
-         jOSlD7ICMrm3ofGWZ9AKhSHm6E4AIUNN4cIl2NilBE+I2M2gX7rQs5DmcoWxg7Oayvcv
-         8g22OfAe7QgIZ82TE71YIhnFNPdyac4kOLBnAVJR4EV47a/U8d42HiOyTekXvIgj/sJH
-         uEyz64im6TVPpa1KQpqD9CLyQNcM6XygQN41nPzOkQBP+N8JwT+arBWtYueOjuuNKQCj
-         w/ItYZwd3/+G0dp2MVD/eH2mdBwW7ZqBQXkHHPX7yBesaRB36fsJ0jwikZE/PsTYbVby
-         opwg==
+        bh=a7iMVxay3WmzLuCq2ZJestj5SyAiKNQShqHsp8//u9g=;
+        b=HayMAqCHpOYz4Osvqeg9UsHSUMIj8wWexMJbNqZaAjucw2tGecmzlFh+r47oA3gRyQ
+         Kj77alAZSBQuv9/LBY3C91zBfR7lLCJ7TzDf4aOUKdhPuzcrqGSj3PBv+yi9dNZSNXoN
+         flgWntgQ0Ten11sO0xmykcSgG2wcEoc7F+yHRN3SNpYcCJPfqiVZR8nXXYbJMOTt5YNZ
+         xdqErPqWYMz0EaS6VXIdca9HQvx11jRCE/EXYW3RkJuN0EITUvdh/K0B6K6t3bpTh7O+
+         DnNjQMkmA+ScFeD8pXER8Mz+Aar+/3uyghbtwH6fWyxa3LOOvvOugSN4P/tWFYw9jTQE
+         D57A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750828527; x=1751433327;
+        d=1e100.net; s=20230601; t=1750828529; x=1751433329;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=+kICsOE0yg2BTiSdXOCgN6mz13mvo6la/kJ0XkefREQ=;
-        b=mL7vfB4uZe5P+YbzcZHafq+PcWAn1tK+QGA5ewGE/IKRcE2MRRalLM/yvUkpGrQPLK
-         hggUNswPfLH7QI/KBtvbuIcv8fIoyzDhb2Z2Xi01qf6lKYwQ5inoDdMn1blFGTS+3M4L
-         7HMqKbYw7Ho3wflWQu3f7jLQrONA1bKRXKbmCgx438k2d+a0NcxfNApCOdu5PpTtIrLA
-         MVB4UjkINdT/CGGfWx2Nd9r6BiopFltALcFydDdAQ9D9N0bTyj90SLcKYOZDQsacGUxo
-         yWOOqXlJQ99/PEyuKbCKcEcXYqLgqcK36a3Bcgy+4zSCQbkSO55y8dp7uhATjzJllF1a
-         9rPA==
-X-Forwarded-Encrypted: i=1; AJvYcCUEIx2lITIseYZqPx7Q1oefFO308w84cDGuR0gQa+LBS6O2/0vSb7jaXIReJAQECcLPNq9DVTWQ2UJ+GJxI69g=@vger.kernel.org, AJvYcCXQAw4ymsVG1k8ooI4kkPo6dPcrEbswDgn6kbJfvSjytQOACLVPnD+ZZthkButqtkQ7rSN5gnVuS02F64o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyKyE8e/2NNdGfwda1mmEyVvPR494Gz1D2BZh6MJ3qP6KreBqcS
-	btqpD2HAzOtRByGLsVpd6slAhm0LdveHwFxVF/06HQSYMmKs/GA5zD3Y
-X-Gm-Gg: ASbGncvv4VHfAzaimEDeIOl5gf5OUF4oURinDQfcf7pD2ImLCKCgvYQFW6fVdt3BH59
-	XZJsUJSbDSd5sBHtDhwSfa36crjxZR639bUizZMd93y/SbrEHMDsSNJ3KXc8aKekdjDQ1tfUXH3
-	4ya1Z7N66t8tj0X3mAzwt6LgQnhJEkAbRPimhz46lJvT4fCNULOj3T6JtDAj0WyRfsUykHi+c28
-	AmxlW7s4q1EqrhMOHIklEpscIe7xGPVLd0DROLo+oun1SVUHgYQrzrtwViHW1wQ6Vh6gcZH55gg
-	DLYWwghYTVB2AQ2199AS0DNWuPMKMRadWGBnGP1qXAnIXiosBJ3L2XNgIdV4mvAahqbXlXgpQtD
-	dBTuW0xugmwmYFIYwNKd2q2ESPMcRYDIlNLfIwy1B23kAFaPD9/hJ
-X-Google-Smtp-Source: AGHT+IF/eyqrfKOfuzaqpV3gyLsb6OnjZf7waUNYedNniJyI+yfxubomdyfc4MxIxfE5P6r1MYBDwA==
-X-Received: by 2002:a05:620a:40c2:b0:7d3:f193:6328 with SMTP id af79cd13be357-7d429797054mr285299885a.54.1750828527153;
-        Tue, 24 Jun 2025 22:15:27 -0700 (PDT)
+        bh=a7iMVxay3WmzLuCq2ZJestj5SyAiKNQShqHsp8//u9g=;
+        b=WP9r3ezmkYxdGK/2bAicq64UBYsuLlp1YZ2/w7MUN4oGTGQyykr7K5R3E+dsT/TsAK
+         Hh1ULO6QahEOWc++UlQbPOuObdA7+jTCAIh/P5pMiuKnSOaQ7Y2s/vvBHpWNHs7itNef
+         ecfXMGfnKUeUgW6VKexA7aFdJHG0S9LxHKe4INzPwsJIhPWG9TqzY5WqF/jS3D38bHP7
+         RR5mJks/5C2a6yadCzCXQDQ1JQ0Sh+6g0TzsO6WB6aAO7eQTB7VPNArbakCCBzJtjgST
+         w9ewtmWZNybsq36TMe6YFcYa52SLLNLQef3w6nHCxzIb644DQKRpl9BN67Azuz5iOQy0
+         t88A==
+X-Forwarded-Encrypted: i=1; AJvYcCX0A8dvDTYl0AzqCiPyaaEL8v4k+OkpEA2Kvz38K5WCTTwTYkjATkN8mF6iKCWi+ftRR6iHHrlpnrZxlQp2HCw=@vger.kernel.org, AJvYcCXKFncpx4hyUyeg6pwlHB53h4Xh//dl6p7ufZPo5Rhrd3NLXmY1lOqoQrrlvKvM1KPv114gQXLv2BR7lVQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzCIpHwnbe0qLEhEUyYb/OnJ+Qn9WHo7XrnSqyQStDNIzKgOwE7
+	zTP7xWZuUFCVYYpAN8Z6nu4dEtTf3ptOmevWyUg7BoTgq8Pvsx6z0RFB
+X-Gm-Gg: ASbGncsjYiQpjfP1BxkOp12Tq/+PNBXjzIuNJ5GTV68493XvxfZw7C5XEgN8sxiz8i2
+	hfBFSXGwRzt4Mj1YJPM+Zlm1DPVaLHdesG7UG20h0ITkGOuiDToC/PoZi4VoR6qiGBxIke2NzAU
+	ic0Bpxq6BnMSVjkGUmKvoTmfreEy8Jc9f1hgs9bLWsU1vgCgYmBxFq5jiEK+mjKntwSaKeyMK3b
+	EbFtf1Go8rBMeQ6F4nQaOhgrnW22dX+GxnBLcYySv9aFS/F0C13445SoHth30snYmhtBi9I/aBU
+	DJ9KEFIdxwfcx2QrQPwreNVJvERKqOCIpHNNgNa7QcR+5D1jgCv2ROJLFmHuV9Ox375+O6zPJtO
+	6gCOsnEot2ZbU/lDtecWa9dhQ143OtUG4CgTHzo4uGUjbCgkQONks
+X-Google-Smtp-Source: AGHT+IH5eh5NyDryLi2CVj0oAVK7jawM/QHsz+yh19M5+tyWzNSi5g3PazROuvwLLJau2orQReIvNg==
+X-Received: by 2002:a05:620a:801b:b0:7d3:f0a3:d8cc with SMTP id af79cd13be357-7d4297487dbmr254922785a.45.1750828529411;
+        Tue, 24 Jun 2025 22:15:29 -0700 (PDT)
 Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f999c07bsm581667885a.4.2025.06.24.22.15.25
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd095bc554sm64286026d6.117.2025.06.24.22.15.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 22:15:26 -0700 (PDT)
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id A3EC1F40066;
-	Wed, 25 Jun 2025 01:15:25 -0400 (EDT)
+        Tue, 24 Jun 2025 22:15:29 -0700 (PDT)
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 40EBEF40066;
+	Wed, 25 Jun 2025 01:15:28 -0400 (EDT)
 Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Wed, 25 Jun 2025 01:15:25 -0400
-X-ME-Sender: <xms:7YVbaPbztAQS3G6CcHXLQPlUFNDIrUaMUpr3ZWaa5vQvOWlJPHqFTA>
-    <xme:7YVbaOb_-Baqkav_Z06dDU1X4mIKWHXXiTLnKfdVqr3sqMnTcXMKEDAazRutRBSED
-    4e-RSwusSk0fDXYcg>
-X-ME-Received: <xmr:7YVbaB_xVdGWDFUXHv5RaywSnue0fdaluUPL1i2E3tkUy31D-Yaf4Xf0_g>
+  by phl-compute-07.internal (MEProxy); Wed, 25 Jun 2025 01:15:28 -0400
+X-ME-Sender: <xms:8IVbaGB1pF7JAZg3-ts1rcOmEZdpchFO6_JoKyOnxkUoXKvNSbSv0A>
+    <xme:8IVbaAhW8Mk4rcxqWbDe8GgVbd-4AVBFk42cMe7XxKqh1-poOGALHdUVHAYBV74rt
+    0f9PdWxMhveiplKwA>
+X-ME-Received: <xmr:8IVbaJkpYB_kSSwNmJfXLGYrr7T3-U7UiXHnPoJkEc_QSjDMeWh8_xJSLg>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvudeltdcutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
     hrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeeuohhquhhnucfh
     vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
-    hrnhepteejueeugeefiefhiefhtdeukeegvdekvdeufedvudehueegheelhfdvudeugeff
-    necuffhomhgrihhnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgpdgtrghsth
-    drrghsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhep
-    sghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtie
-    egqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhi
-    gihmvgdrnhgrmhgvpdhnsggprhgtphhtthhopeefjedpmhhouggvpehsmhhtphhouhhtpd
-    hrtghpthhtohepmhhinhhgoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgvthgv
-    rhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepmhhinhhgohesrhgvughhrg
-    htrdgtohhmpdhrtghpthhtohepjhhurhhirdhlvghllhhisehrvgguhhgrthdrtghomhdp
-    rhgtphhtthhopehvihhntggvnhhtrdhguhhithhtohhtsehlihhnrghrohdrohhrghdprh
-    gtphhtthhopeguihgvthhmrghrrdgvghhgvghmrghnnhesrghrmhdrtghomhdprhgtphht
-    thhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtohepsghsvghgrg
-    hllhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepmhhgohhrmhgrnhesshhushgvrdgu
-    vg
-X-ME-Proxy: <xmx:7YVbaFrwsMfvJuo08KFgwcz8RnsfBYYwIx2SaMvI9-3W_GimA_ABGQ>
-    <xmx:7YVbaKr2gtme0UjoqZFNtrRVsdut9srBn2KvSeP63IJQuxD_8_zxxg>
-    <xmx:7YVbaLRe_pfboeAIpdQHNs4roJ9NfP7JvWD9zG7crYSyNC-V8w0giw>
-    <xmx:7YVbaCqc8RgWXyAACAL4S9Rz9CUCTZ044aWbr3hl8-Vvpo2zGfXgMw>
-    <xmx:7YVbaL4Glhw4crWCS0Sl9biVVqaqtWIe8Kj7sgx9tDmMAjCjv1hTlFP8>
+    hrnhepkeetteejgeduieekudejfedvvddtiefgieffffeljeefieehiefffedvfeffgfet
+    necuffhomhgrihhnpehgihhthhhusgdrtghomhdpkhgvrhhnvghlrdhorhhgnecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdomhgv
+    shhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejkeehhe
+    ehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgrmhgv
+    pdhnsggprhgtphhtthhopeefhedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepmh
+    hinhhgoheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgvthgvrhiisehinhhfrhgr
+    uggvrggurdhorhhgpdhrtghpthhtohepmhhinhhgohesrhgvughhrghtrdgtohhmpdhrtg
+    hpthhtohepjhhurhhirdhlvghllhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopehv
+    ihhntggvnhhtrdhguhhithhtohhtsehlihhnrghrohdrohhrghdprhgtphhtthhopeguih
+    gvthhmrghrrdgvghhgvghmrghnnhesrghrmhdrtghomhdprhgtphhtthhopehrohhsthgv
+    ughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtohepsghsvghgrghllhesghhoohhglh
+    gvrdgtohhmpdhrtghpthhtohepmhhgohhrmhgrnhesshhushgvrdguvg
+X-ME-Proxy: <xmx:8IVbaEyYQA3gAY5F_geMShHAKvEXim9580O9fxeJCEfRJsx5IFmflw>
+    <xmx:8IVbaLTkqDe1pvL3FjiSsra7VKuTCvOmzIzbCnS5oP3rOsdlvk5_Mg>
+    <xmx:8IVbaPa0Od98KrdsCoDCcP2U-okoZvGWiETE_6YOTH2DZTA5RG5Erg>
+    <xmx:8IVbaESijH0ygGbtCtxsD6MxoLdwuje5gL0oZ0OaA2zajn7KXk2Fnw>
+    <xmx:8IVbaND7CmZxEij-rm0bgChx_52qmkpKQlZzw_XzcWZdAfod0mAj-e9k>
 Feedback-ID: iad51458e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 25 Jun 2025 01:15:25 -0400 (EDT)
+ 25 Jun 2025 01:15:26 -0400 (EDT)
 From: Boqun Feng <boqun.feng@gmail.com>
 To: Ingo Molnar <mingo@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>
@@ -119,12 +118,10 @@ Cc: Ingo Molnar <mingo@redhat.com>,	Juri Lelli <juri.lelli@redhat.com>,
 	Borys Tyran <borys.tyran@protonmail.com>,
 	Christian Brauner <brauner@kernel.org>,
 	Panagiotis Foliadis <pfoliadis@posteo.net>,	linux-kernel@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,	llvm@lists.linux.dev,
-	Christian Schrefl <chrisi.schrefl@gmail.com>,
-	Charalampos Mitrodimas <charmitro@posteo.net>
-Subject: [PATCH v2 3/5] rust: task: Mark Task methods inline
-Date: Tue, 24 Jun 2025 22:15:16 -0700
-Message-Id: <20250625051518.15255-4-boqun.feng@gmail.com>
+	rust-for-linux@vger.kernel.org,	llvm@lists.linux.dev
+Subject: [PATCH v2 4/5] rust: Introduce file_from_location()
+Date: Tue, 24 Jun 2025 22:15:17 -0700
+Message-Id: <20250625051518.15255-5-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250625051518.15255-1-boqun.feng@gmail.com>
 References: <20250625051518.15255-1-boqun.feng@gmail.com>
@@ -136,114 +133,111 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Panagiotis Foliadis <pfoliadis@posteo.net>
+Most of kernel debugging facilities take a nul-terminated string for
+file names for a callsite (generated from __FILE__), however the Rust
+courterpart, Location, would return a Rust string (not nul-terminated)
+from method .file(). And such a string cannot be passed to C debugging
+function directly.
 
-When building the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
-toolchain provided by kernel.org, the following symbols are generated:
+There is ongoing work to support a Location::file_with_nul() [1], which
+returns a nul-terminated string from a Location. Since it's still
+working in progress, and it will take some time before the feature
+finally gets stabilized and the kernel's minimal rustc version might
+also take a while to bump to a version that at least has that feature,
+introduce a file_from_location() function, which returns a warning
+string if Location::file_with_nul() is not available.
 
-$ nm vmlinux | grep ' _R'.*Task | rustfilt
-... T <kernel::task::Task>::get_pid_ns
-... T <kernel::task::Task>::tgid_nr_ns
-... T <kernel::task::Task>::current_pid_ns
-... T <kernel::task::Task>::signal_pending
-... T <kernel::task::Task>::uid
-... T <kernel::task::Task>::euid
-... T <kernel::task::Task>::current
-... T <kernel::task::Task>::wake_up
-... T <kernel::task::Task as kernel::types::AlwaysRefCounted>::dec_ref
-... T <kernel::task::Task as kernel::types::AlwaysRefCounted>::inc_ref
+This should work in most cases because as for now the known usage of
+Location::file_with_nul() is only in debugging code (e.g. might_sleep())
+and there might be other information reported by the debugging code that
+could help locate the problematic function, so missing the file name is
+fine at the moment.
 
-These Rust symbols are trivial wrappers around the C functions. It
-doesn't make sense to go through a trivial wrapper for these functions,
-so mark them inline.
-
-[boqun: Capitalize the title, reword a bit to avoid listing all the C
-functions as the code already shows them and remove the addresses of the
-symbols in the commit log as they are different from build to build.]
-
-Link: https://github.com/Rust-for-Linux/linux/issues/1145
-Reviewed-by: Benno Lossin <benno.lossin@proton.me>
-Reviewed-by: Christian Schrefl <chrisi.schrefl@gmail.com>
-Reviewed-by: Charalampos Mitrodimas <charmitro@posteo.net>
-Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Panagiotis Foliadis <pfoliadis@posteo.net>
+Link: https://github.com/rust-lang/rust/issues/141727 [1]
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
-Link: https://lore.kernel.org/r/20250315-inline-c-wrappers-v3-1-048e43fcef7d@posteo.net
+Link: https://lore.kernel.org/r/20250619151007.61767-2-boqun.feng@gmail.com
 ---
- rust/kernel/task.rs | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ init/Kconfig       |  3 +++
+ rust/kernel/lib.rs | 48 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
 
-diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
-index 927413d85484..834368313088 100644
---- a/rust/kernel/task.rs
-+++ b/rust/kernel/task.rs
-@@ -173,6 +173,7 @@ pub fn current_raw() -> *mut bindings::task_struct {
-     /// Callers must ensure that the returned object is only used to access a [`CurrentTask`]
-     /// within the task context that was active when this function was called. For more details,
-     /// see the invariants section for [`CurrentTask`].
-+    #[inline]
-     pub unsafe fn current() -> impl Deref<Target = CurrentTask> {
-         struct TaskRef {
-             task: *const CurrentTask,
-@@ -222,24 +223,28 @@ pub fn pid(&self) -> Pid {
-     }
+diff --git a/init/Kconfig b/init/Kconfig
+index af4c2f085455..6f4ec5633ffa 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -142,6 +142,9 @@ config RUSTC_HAS_SPAN_FILE
+ config RUSTC_HAS_UNNECESSARY_TRANSMUTES
+ 	def_bool RUSTC_VERSION >= 108800
  
-     /// Returns the UID of the given task.
-+    #[inline]
-     pub fn uid(&self) -> Kuid {
-         // SAFETY: It's always safe to call `task_uid` on a valid task.
-         Kuid::from_raw(unsafe { bindings::task_uid(self.as_ptr()) })
-     }
++config RUSTC_HAS_FILE_WITH_NUL
++	def_bool RUSTC_VERSION >= 108900
++
+ config PAHOLE_VERSION
+ 	int
+ 	default $(shell,$(srctree)/scripts/pahole-version.sh $(PAHOLE))
+diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+index 6b4774b2b1c3..717a5b6160ca 100644
+--- a/rust/kernel/lib.rs
++++ b/rust/kernel/lib.rs
+@@ -40,6 +40,10 @@
+ #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(coerce_unsized))]
+ #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(dispatch_from_dyn))]
+ #![cfg_attr(not(CONFIG_RUSTC_HAS_COERCE_POINTEE), feature(unsize))]
++//
++// `feature(file_with_nul)` is expected to become stable. Before Rust 1.89.0, it did not exist, so
++// enable it conditionally.
++#![cfg_attr(CONFIG_RUSTC_HAS_FILE_WITH_NUL, feature(file_with_nul))]
  
-     /// Returns the effective UID of the given task.
-+    #[inline]
-     pub fn euid(&self) -> Kuid {
-         // SAFETY: It's always safe to call `task_euid` on a valid task.
-         Kuid::from_raw(unsafe { bindings::task_euid(self.as_ptr()) })
-     }
- 
-     /// Determines whether the given task has pending signals.
-+    #[inline]
-     pub fn signal_pending(&self) -> bool {
-         // SAFETY: It's always safe to call `signal_pending` on a valid task.
-         unsafe { bindings::signal_pending(self.as_ptr()) != 0 }
-     }
- 
-     /// Returns task's pid namespace with elevated reference count
-+    #[inline]
-     pub fn get_pid_ns(&self) -> Option<ARef<PidNamespace>> {
-         // SAFETY: By the type invariant, we know that `self.0` is valid.
-         let ptr = unsafe { bindings::task_get_pid_ns(self.as_ptr()) };
-@@ -255,6 +260,7 @@ pub fn get_pid_ns(&self) -> Option<ARef<PidNamespace>> {
- 
-     /// Returns the given task's pid in the provided pid namespace.
-     #[doc(alias = "task_tgid_nr_ns")]
-+    #[inline]
-     pub fn tgid_nr_ns(&self, pidns: Option<&PidNamespace>) -> Pid {
-         let pidns = match pidns {
-             Some(pidns) => pidns.as_ptr(),
-@@ -268,6 +274,7 @@ pub fn tgid_nr_ns(&self, pidns: Option<&PidNamespace>) -> Pid {
-     }
- 
-     /// Wakes up the task.
-+    #[inline]
-     pub fn wake_up(&self) {
-         // SAFETY: It's always safe to call `wake_up_process` on a valid task, even if the task
-         // running.
-@@ -341,11 +348,13 @@ pub fn active_pid_ns(&self) -> Option<&PidNamespace> {
- 
- // SAFETY: The type invariants guarantee that `Task` is always refcounted.
- unsafe impl crate::types::AlwaysRefCounted for Task {
-+    #[inline]
-     fn inc_ref(&self) {
-         // SAFETY: The existence of a shared reference means that the refcount is nonzero.
-         unsafe { bindings::get_task_struct(self.as_ptr()) };
-     }
- 
-+    #[inline]
-     unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
-         // SAFETY: The safety requirements guarantee that the refcount is nonzero.
-         unsafe { bindings::put_task_struct(obj.cast().as_ptr()) }
+ // Ensure conditional compilation based on the kernel configuration works;
+ // otherwise we may silently break things like initcall handling.
+@@ -274,3 +278,47 @@ macro_rules! asm {
+         ::core::arch::asm!( $($asm)*, $($rest)* )
+     };
+ }
++
++/// Gets the C string file name of a [`Location`].
++///
++/// If `file_with_nul()` is not available, returns a string that warns about it.
++///
++/// [`Location`]: core::panic::Location
++///
++/// # Examples
++///
++/// ```
++/// # use kernel::file_from_location;
++///
++/// #[track_caller]
++/// fn foo() {
++///     let caller = core::panic::Location::caller();
++///
++///     // Output:
++///     // - A path like "rust/kernel/example.rs" if file_with_nul() is available.
++///     // - "<Location::file_with_nul() not supported>" otherwise.
++///     let caller_file = file_from_location(caller);
++///
++///     // Prints out the message with caller's file name.
++///     pr_info!("foo() called in file {caller_file:?}\n");
++///
++///     # if cfg!(CONFIG_RUSTC_HAS_FILE_WITH_NUL) {
++///     #     assert_eq!(Ok(caller.file()), caller_file.to_str());
++///     # }
++/// }
++///
++/// # foo();
++/// ```
++#[inline]
++pub fn file_from_location<'a>(loc: &'a core::panic::Location<'a>) -> &'a core::ffi::CStr {
++    #[cfg(CONFIG_RUSTC_HAS_FILE_WITH_NUL)]
++    {
++        loc.file_with_nul()
++    }
++
++    #[cfg(not(CONFIG_RUSTC_HAS_FILE_WITH_NUL))]
++    {
++        let _ = loc;
++        c"<Location::file_with_nul() not supported>"
++    }
++}
 -- 
 2.39.5 (Apple Git-154)
 
