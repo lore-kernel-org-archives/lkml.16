@@ -1,171 +1,149 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87F825BF06
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:37:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01ED25BF06
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750858655; cv=none; b=Q6VnP7N72nb4Ij+se4cePuqcGq0GqwodZT6dgaLV7JoVwHXtKkkDHae5tx53pH8VSqkQmg6tyDlgmR6yRkYLyHRe6HqtzUghsZGLn5DdUFIudXuAoPM1uh6KPnVRno2fv9aYeLSJ7LyU7ohE8EUMaayGHNo0X78LEsz44UxFz/4=
+	t=1750858660; cv=none; b=Es+t67sdTvfRj7PEQkOGLFz8o+e4c0f7il9bGt14hpqCb0YbzPPdQhvLjQZBOeDly8ixfOMGNgIFujPcEVGhZ55uE2w2ubt0fENDtMktRiYudKilvePKgmFfTRQGXcoi4h0/ucNJTbn7vc8FKUTmqy4lvOSJV9dwAAoAEa5iI5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750858655; c=relaxed/simple;
-	bh=wulRLZGJb3h5Sy6VUKgn3h/xZ4W+D9ycXw4/RiRXods=;
-	h=From:To:cc:Subject:MIME-Version:Content-Type:Date:Message-ID; b=qo/smfGUR46q6o5omazHJWtmjD3Hkpymc+za1UZxD/1ixl7ilrPKqHqopYSKm5RgBRMpeB3DWHEJvxA5sleRQI7LRWhFH5QfAnbsXIpxEGUYvDuRE83yQ2FsXyr/+8OKolLL6W19+oeYeTQstbgZNfuYA4QIJwl3mIPyUEiFaWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XoNOusvg; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750858660; c=relaxed/simple;
+	bh=UdYQ1Nu+L55yueU5BMkbqZe3IiP3IgOF4R8o04XgR7c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dpWdFwJbCorqzRT4v3sYrRjk4g5MzTf2fb+oxI0wpKro1QU5rLDi5Qcvwj9VI6ZDjpsMZ1oYqAWl3dDxUILAnKWH6WKpKIInKjVA0Gw0OhFUUPHqI6YGEMJvruMNjzvcvYAW4U52l5ycgxfaeXmFeMz+0g/DfzFag5dNmzzFMm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca; spf=pass smtp.mailfrom=ziepe.ca; dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b=cXdMmmSk; arc=none smtp.client-ip=209.85.219.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ziepe.ca
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ziepe.ca
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XoNOusvg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750858652;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=DabOJJa1DrUsfTYb2fsq6yAk1bbwXjFbh/XQEYLvjZw=;
-	b=XoNOusvg2yBQtQh2BFuR3XcoTpQyU4vnOObzB6FV0HoV+mC3/GzVHDw9Lj1rJ+3yfExEAp
-	fc20nF5aq1sPm0wBU54igWERYFiNj55Y4HFaNSS7FBMMJMF6TYtu7tzT0EV2fdngFFYYw3
-	UGjZhxqX9cTczP/fsal7+swlf3MHAtE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-FCApuVIYOliRWSVwHqg1qA-1; Wed,
- 25 Jun 2025 09:37:29 -0400
-X-MC-Unique: FCApuVIYOliRWSVwHqg1qA-1
-X-Mimecast-MFC-AGG-ID: FCApuVIYOliRWSVwHqg1qA_1750858647
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A9E5E1809C8A;
-	Wed, 25 Jun 2025 13:37:27 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.81])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 87FDA1956096;
-	Wed, 25 Jun 2025 13:37:25 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-To: Stefan Metzmacher <metze@samba.org>,
-    Steve French <stfrench@microsoft.com>
-cc: dhowells@redhat.com, Paulo Alcantara <pc@manguebit.com>,
-    linux-cifs@vger.kernel.org, netfs@lists.linux.dev,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] cifs: Fix the smbd_request and smbd_reponse slabs to allow usercopy
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cXdMmmSk"
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6fd1b2a57a0so13336996d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:37:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google; t=1750858656; x=1751463456; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NglHKItE2MnRf7kVBkJpZrmGam+ZtM8lvAR6jGRQjyo=;
+        b=cXdMmmSkAlersHuk/9zZ11+H0UbZsmv+DkMv0M33cF3FFrg9hpe/HNE6Z/G8DwPYlt
+         7KVWLKup92g4GCd1VQ7amzL5CfUxPpGbni3Fb0FfxfNqjvpaIxpzlIr9jGIHk0Y7rFO0
+         DmGJe4ugZ0u9kNpRdhmlxkhctY0pqiJFTuIGQLGlOV/32tN3mnEW8t4H6uWy5hv3uNpL
+         5yxD9dYLeGV8mbIfwkJImgghxEGcVZTRVrTvfdsX9MUUVeAjzNdv9DV0mY8gh2fpt1SU
+         ZsaN3J24gb7qapGMeUxgJJEvQ1tA32ByqUpkaS7NJQk4tXKX9FpbQ4EHtB/Wt+PoGmKQ
+         FDkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750858656; x=1751463456;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NglHKItE2MnRf7kVBkJpZrmGam+ZtM8lvAR6jGRQjyo=;
+        b=RLT6s+3+0S5smUHAIz+PmkN/5emO89RXeDG5KilU2j4Y/8DDYSGcFAyQALhcyso1Qv
+         tMpAfUEqEAgUp2IMcTi2QOcMDGS6tqXgsKrAAITuFF3IC+60fRfcJlU0fAood5n9aXyX
+         TvcSVI0naTgfycaG8I8qfVMFXKnA7o7aA9P/JwtZS7dlLCLhx6YT+wotuKdnq9avo7eH
+         le4GPhU2J5l+DGQFX7evDpicqEcvL48rQhBExV/v3J3+N8A94cdk7zk37VY4eToz8x4x
+         jljkt2Vwi6DFhrqA+3KQwCzxk9I6/st0XHXPrGwWjIJhFnQf3ObSc8X0iVdv/N28gTEE
+         feSg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwueZH/ZASqhXQuPn+fGkDFkihsdGeO0qFkysiB7JIX+KEiZrgsXiJY2nfSYYv9ztB1JjEBCYrVtkrjzc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+w3OxqFtB4nB/quCvsEKY4zfP2PJfrnjPO5POjPzptPV1t3IR
+	iK/LRo3kvYyN/MP9XZL7EYLjloOq/LMefhQF4kME0mFoy7/ZO8GZ7GitPKpticHNoss=
+X-Gm-Gg: ASbGncss0YkCyTx3FegokezBcxZ2Zuv1/VAwZ6CUDb56iQ8/TwDqt1r6UR9oKqZwzkh
+	vg+Me5mcX8PY1LjM0UI2d++Dr/xuw+rRQQPuVQQpgAqzxbHYso3Uu2gFOXC2m7ltS0AUGnTDTJz
+	f8jEEYRpE99xwKFlnFvr1Auf49H5O+N8LMHYrIUc0hzsuCrSHZZnD9muvCz0gQcBRvQY6iHWEi/
+	UutjssXab+C6t9yoT3A0aPmKOu1pYSG3zmyJfiVLD5z9VvVX/Fst+/mbmjswZ/npvZ+Tb1+Wn3P
+	0q8dZHDmM3wvV4Gke3cTOasZT5eRhvPD1mhLBaR73LAAv9bQUfctJFyrt02fkomfXKcSm6l6huZ
+	k901jnM0m1YQ2BUsZjnDMFHFLH+Btq1IfOiSGQA==
+X-Google-Smtp-Source: AGHT+IHNWTn84Obl4sCOYge34wUPUvuPQlJlnAKQv8tTsnsg8qT0v7mGMowd+Em7yTBlsKIc3f9P2A==
+X-Received: by 2002:a05:6214:cc1:b0:6fa:b9e9:e799 with SMTP id 6a1803df08f44-6fd5ef802afmr35290316d6.24.1750858656416;
+        Wed, 25 Jun 2025 06:37:36 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-142-167-56-70.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.167.56.70])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd093e167esm68119946d6.18.2025.06.25.06.37.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 06:37:35 -0700 (PDT)
+Received: from jgg by wakko with local (Exim 4.97)
+	(envelope-from <jgg@ziepe.ca>)
+	id 1uUQJj-000000014g9-0Uom;
+	Wed, 25 Jun 2025 10:37:35 -0300
+Date: Wed, 25 Jun 2025 10:37:35 -0300
+From: Jason Gunthorpe <jgg@ziepe.ca>
+To: Ryan Roberts <ryan.roberts@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	=?utf-8?Q?Miko=C5=82aj?= Lenczewski <miko.lenczewski@arm.com>,
+	yang@os.amperecomputing.com, will@kernel.org,
+	jean-philippe@linaro.org, robin.murphy@arm.com, joro@8bytes.org,
+	maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com,
+	james.morse@arm.com, broonie@kernel.org, ardb@kernel.org,
+	baohua@kernel.org, suzuki.poulose@arm.com, david@redhat.com,
+	nicolinc@nvidia.com, jsnitsel@redhat.com, mshavit@google.com,
+	kevin.tian@intel.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+Subject: Re: [PATCH v7 4/4] arm64/mm: Elide tlbi in contpte_convert() under
+ BBML2
+Message-ID: <20250625133735.GB213144@ziepe.ca>
+References: <20250617095104.6772-1-miko.lenczewski@arm.com>
+ <20250617095104.6772-5-miko.lenczewski@arm.com>
+ <aFRlDSZ2PPnHixjc@arm.com>
+ <7105112f-b0bb-4191-b3c9-93522162319c@arm.com>
+ <636c8901-6e05-479f-ae06-ee391d4d36e8@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1372500.1750858644.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Jun 2025 14:37:24 +0100
-Message-ID: <1372501.1750858644@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <636c8901-6e05-479f-ae06-ee391d4d36e8@arm.com>
 
-The handling of received data in the smbdirect client code involves using
-copy_to_iter() to copy data from the smbd_reponse struct's packet trailer
-to a folioq buffer provided by netfslib that encapsulates a chunk of
-pagecache.
+On Wed, Jun 25, 2025 at 02:07:23PM +0100, Ryan Roberts wrote:
+> I think what you are saying is that despite going via invalid, the HW may see
+> this direct transition:
+> 
+> +----+----+----+----+
+> |RO,n|RO,n|RO,n|RW,n|
+> +----+----+----+----+
+> to:
+> +----+----+----+----+
+> |RO,c|RO,c|RO,c|RO,c|
+> +----+----+----+----+
+> 
+> There are 2 logical operations here. The first is changing the permissions of
+> the last entry. The second is changing the size of the entry.
+> 
+> As I understand it, it's permissible in the architecture to update the
+> permissions of the a PTE without break-before-make and without issuing a tlbi
+> afterwards; in that case the HW may apply either the old permissions or the new
+> permissions up until a future tlbi (after which the new permissions are
+> guarranteed). That's the first logical operation.
+> 
+> The second logical operation is permitted by FEAT_BBM level 2.
+> 
+> So both logical operations are permitted and the Arm ARM doesn't mention any
+> requirement to "separate" these operations with a tlbi or anything else, as far
+> as I can see.
+> 
+> So I would interpret that combining these 2 in the way we have should be safe.
+> RNGLXZ and RJQQTC give further insight into the spirit of the spec. But I agree
+> this isn't spelled out super clearly.
+> 
+> Perhaps we can move forwards based on this understanding, and I will seek some
+> clarifying words to be added to the Arm ARM?
 
-If, however, CONFIG_HARDENED_USERCOPY=3Dy, this will result in the checks
-then performed in copy_to_iter() oopsing with something like the following=
-:
+FWIW this matches my understanding as well.
 
- CIFS: Attempting to mount //172.31.9.1/test
- CIFS: VFS: RDMA transport established
- usercopy: Kernel memory exposure attempt detected from SLUB object 'smbd_=
-response_0000000091e24ea1' (offset 81, size 63)!
- ------------[ cut here ]------------
- kernel BUG at mm/usercopy.c:102!
- ...
- RIP: 0010:usercopy_abort+0x6c/0x80
- ...
- Call Trace:
-  <TASK>
-  __check_heap_object+0xe3/0x120
-  __check_object_size+0x4dc/0x6d0
-  smbd_recv+0x77f/0xfe0 [cifs]
-  cifs_readv_from_socket+0x276/0x8f0 [cifs]
-  cifs_read_from_socket+0xcd/0x120 [cifs]
-  cifs_demultiplex_thread+0x7e9/0x2d50 [cifs]
-  kthread+0x396/0x830
-  ret_from_fork+0x2b8/0x3b0
-  ret_from_fork_asm+0x1a/0x30
+AFAIK the actual physical issue for BBM < 2 is the TLB lookup HW
+cannot tolerate having two entries that overlap in address because of
+different sizes. Every lookup must return exactly one result. If more
+results are returned the HW fails in some way.
 
-The problem is that the smbd_response slab's packet field isn't marked as
-being permitted for usercopy.
+For BBM 2 if the HW lookup gets more than one result the HW selects
+one unpredictably and uses that.
 
-Fix this by passing parameters to kmem_slab_create() to indicate that
-copy_to_iter() is permitted from the packet region of the smbd_response
-slab objects.
+Permissions shouldn't have any impact because they do not effect how
+the lookup is performed, they are the result of the lookup.
 
-Further, do the same thing for smbd_request slab objects and their packet
-field.
+I've been looking at implementing BBM 2 support on the iommu side and
+I didn't see anything that said we cannot do arbitary transformations
+under BBM 2? For instance when degrading from a contiguous range of
+block descriptors down to single page descriptors I'm expecting to go
+like:
+    16x2M -> 2M -> 4k -> FLUSH
 
-Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
-Reported-by: Stefan Metzmacher <metze@samba.org>
-Link: https://lore.kernel.org/r/acb7f612-df26-4e2a-a35d-7cd040f513e1@samba=
-.org/
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <stfrench@microsoft.com>
-cc: Paulo Alcantara <pc@manguebit.com>
-cc: linux-cifs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/smb/client/smbdirect.c |   21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
-
-diff --git a/fs/smb/client/smbdirect.c b/fs/smb/client/smbdirect.c
-index ef6bf8d6808d..5915273636ad 100644
---- a/fs/smb/client/smbdirect.c
-+++ b/fs/smb/client/smbdirect.c
-@@ -1476,12 +1476,17 @@ static int allocate_caches_and_workqueue(struct sm=
-bd_connection *info)
- 	int rc;
- =
-
- 	scnprintf(name, MAX_NAME_LEN, "smbd_request_%p", info);
-+	struct kmem_cache_args request_args =3D {
-+		.align		=3D __alignof__(struct smbd_request),
-+		.useroffset	=3D offsetof(struct smbd_request, packet),
-+		.usersize	=3D sizeof(struct smbdirect_data_transfer),
-+	};
- 	info->request_cache =3D
- 		kmem_cache_create(
- 			name,
- 			sizeof(struct smbd_request) +
- 				sizeof(struct smbdirect_data_transfer),
--			0, SLAB_HWCACHE_ALIGN, NULL);
-+			&request_args, SLAB_HWCACHE_ALIGN);
- 	if (!info->request_cache)
- 		return -ENOMEM;
- =
-
-@@ -1492,12 +1497,16 @@ static int allocate_caches_and_workqueue(struct sm=
-bd_connection *info)
- 		goto out1;
- =
-
- 	scnprintf(name, MAX_NAME_LEN, "smbd_response_%p", info);
-+
-+	struct kmem_cache_args response_args =3D {
-+		.align		=3D __alignof__(struct smbd_response),
-+		.useroffset	=3D offsetof(struct smbd_response, packet),
-+		.usersize	=3D sp->max_recv_size,
-+	};
- 	info->response_cache =3D
--		kmem_cache_create(
--			name,
--			sizeof(struct smbd_response) +
--				sp->max_recv_size,
--			0, SLAB_HWCACHE_ALIGN, NULL);
-+		kmem_cache_create(name,
-+				  sizeof(struct smbd_response) + sp->max_recv_size,
-+				  &response_args, SLAB_HWCACHE_ALIGN);
- 	if (!info->response_cache)
- 		goto out2;
- =
-
+Jason
