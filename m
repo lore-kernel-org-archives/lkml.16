@@ -1,192 +1,110 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2071.outbound.protection.outlook.com [40.107.244.71])
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8102B9CD
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:36:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750815395; cv=fail; b=TtFi+p10+pkpBBiQs51NZkkUJw0nxRcTcVRx/Fv6P3luOi/FoqYo7zqy3TyGzih4Buo1IGXi19aoH1s8sPFoqD58d3t04qRtdecY1tu3WZy8/6TfunoUzHO+ircUCLl54IHOqLOiSHRXHv/U6QtkVIQPTlWPRCErNhTmPo6tSdU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750815395; c=relaxed/simple;
-	bh=FeBWGmpzVEiRz98yGRKeJGvIxqrikEwbsqE5Lbh+LPE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=rF9TADMBY3rxMiAj5TGgejjUtWBdXrb6S1HzQKvbP7Iop+7DO1Wd7ZcCeOCTtnkfNg9uFJpNcc8bkWWAbZhs3aRT6hb2xojizBMSVurPuBwyU2yhM9465o8jYw5QK3VIwY0JVXubUJ+LtQroeI1+ABWpAhG+2qkse1owsEkox68=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=lnJTEamP; arc=fail smtp.client-ip=40.107.244.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 567F022083
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:40:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750815623; cv=none; b=DfuS9jdM4s9XFfmRroXvUVDYMy21cAveMSrLVuLev9UMa/q/dVnbiZTUJpNkYCgH3YNl14hPL41jvg2u2BHH+9IbffEdbFuZsu7gQ0JuSJlHiW3/XYzr0Wfc4gp4WuvNcH+xFBLB8AA3U7RJBBDAje2CpIcYbsmE0yfkra3C4YU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750815623; c=relaxed/simple;
+	bh=Rp0v8eEoECEueax+THVVGvuQ0+kS7Ek7zNa5/4hNDTE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TDK8j8mLOMAPT9wRy6DJQRvQb147DLfrzay1HaMXwBkJwis2XF4b/CmchDeyhk0Gjr56xrjCKQYG+n/Af4Bti9K/UzX2EiIWBulIDvlMxph7v5eTqR/EGau+MCf5Xy6mllRkZyOTk3y7hDxZ+JwzrYdVtZm9lKk9SOSoKHM/W6Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=CBULkXrc; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="lnJTEamP"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Gm5slFSW16ZoOHZqridrWqgMhjkgXX8USCyGdq2qYiP5IWKZ0C9p+TFG2Qs7wIq4IUXSQKNjy1W09I83nkAPviRfEo9AeWDgIj01OgBbB9aYhDhAFacOJ4y12Fa9IPV3jW1h+RuBEbYSl+m0xE4DTUvd3EOXBe5wdwR8cfmLnHo5mZM9K0dUNRk5WCBmkY4TtJr0eX9KLvlsIDqhtEfp7cSx+Tf3YKqF3VxfK+d+RopueWLQxDjwm7wciunh3mDYSegI1SCtLsC+kQ5DQwHNDOeVkFgx64NqmfUxT1aXN0mTQrbdq+5DnNP6fQCs4r5wxdEHIXdsUtsnHd2ruSYdJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NzGmFNIF/GXqwWeWVCt0F8+q8b9otuXbOfAxbXPkCc0=;
- b=j2tvTkSfG1Z6g7sj6boovO/HzE5JOARuGIAlDN0Hwx0vDcoqxL3iAT+Uth7gbSqjcBx8wXunDHRzZVP2zL/njmrpEFnTMVXpAdaHWeajaq17XQpm4TTfiGkpXTklVNCRAImfwz3ngzPfxnCfMrOFngozYp2Nmh+IKLI8qM6xnER7KmmxVxGpVgXexzAZuvn5SSd6UQbHJ1beA4BVLRhOzdlO9RA6sx4ygkuT3C1QAu9G5FbQQW7pxAIvafbe4MPxeeg/9FWLtbrMG6xs30+gIGWQbgK1KMT3PE7CVrhJ28qsDxcWX/zKQuva6IRLeSJiy5mVAxrsFO3GaoHEp+Cjfw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NzGmFNIF/GXqwWeWVCt0F8+q8b9otuXbOfAxbXPkCc0=;
- b=lnJTEamPjPfefsYUzv7lDxaNRBZsOfjbNJl15u0btrkMS7UQnini6TD7o3gFjXlxHC00FWDLqVSYChXuN2WLo5V/VJk2LhKF8hUkfmz9gCcK0pTIA6T5y1FiJJqG5SNpdHKWT/OlTtgHT45Ol8rlIPim4NtxM8H/js8XKG9ner/OsUQINIFA9UbatUuDL96101VZvuW7E0uzpQaLiaM/LanaXdAyJrZ27zINgmOj9OTSmfvKCZjKs5yViROM5cFNSfuoZXb3ToSBVuJCMa2e7tKHdrv3aFKwvNIEi2zz9IToVhXAGoRlCwoDh72UbVhgGMVDJuiuSFsDrH7KOD+Ymw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com (2603:10b6:610:17c::13)
- by SJ2PR12MB8846.namprd12.prod.outlook.com (2603:10b6:a03:549::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 25 Jun
- 2025 01:36:31 +0000
-Received: from CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732]) by CH3PR12MB8659.namprd12.prod.outlook.com
- ([fe80::6eb6:7d37:7b4b:1732%7]) with mapi id 15.20.8835.027; Wed, 25 Jun 2025
- 01:36:30 +0000
-Date: Tue, 24 Jun 2025 22:36:29 -0300
-From: Jason Gunthorpe <jgg@nvidia.com>
-To: "Tian, Kevin" <kevin.tian@intel.com>
-Cc: Xu Yilun <yilun.xu@linux.intel.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>,
-	"iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"joro@8bytes.org" <joro@8bytes.org>,
-	"robin.murphy@arm.com" <robin.murphy@arm.com>,
-	"shuah@kernel.org" <shuah@kernel.org>,
-	"nicolinc@nvidia.com" <nicolinc@nvidia.com>,
-	"aik@amd.com" <aik@amd.com>,
-	"Williams, Dan J" <dan.j.williams@intel.com>,
-	"baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-	"Xu, Yilun" <yilun.xu@intel.com>
-Subject: Re: [PATCH v2 3/4] iommufd: Destroy vdevice on idevice destroy
-Message-ID: <20250625013629.GD167785@nvidia.com>
-References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
- <20250623094946.1714996-4-yilun.xu@linux.intel.com>
- <20250624145346.GC150753@nvidia.com>
- <BN9PR11MB52762BD911A3CE2F1A062B158C78A@BN9PR11MB5276.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BN9PR11MB52762BD911A3CE2F1A062B158C78A@BN9PR11MB5276.namprd11.prod.outlook.com>
-X-ClientProxiedBy: MN2PR22CA0030.namprd22.prod.outlook.com
- (2603:10b6:208:238::35) To CH3PR12MB8659.namprd12.prod.outlook.com
- (2603:10b6:610:17c::13)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="CBULkXrc"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750815616; h=From:To:Subject:Date:Message-ID:MIME-Version;
+	bh=s3gRp0xJxwb0f1sG+vjcL17ce4cZOv0ZWJkdD4FJg/M=;
+	b=CBULkXrcb+xYZBtcoiUc6oSiAWEsEL8h03+Ka2m08bwid9b1D7DmVR3+5z9xCQpOGFnR5IZUDPNPxfvLOdN1lBRfik5EVkhtv9OoQ5l4QSzGr9mrJhug3zml/qS0xT9JEefnLtBcbouGmVL4u8cR69D+ru2C4+fL0c7+OnN6Mzc=
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WeqBlig_1750815615 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 25 Jun 2025 09:40:16 +0800
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+To: akpm@linux-foundation.org,
+	hughd@google.com,
+	david@redhat.com
+Cc: ziy@nvidia.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	npache@redhat.com,
+	ryan.roberts@arm.com,
+	dev.jain@arm.com,
+	baohua@kernel.org,
+	baolin.wang@linux.alibaba.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/2] fix MADV_COLLAPSE issue if THP settings are disabled
+Date: Wed, 25 Jun 2025 09:40:08 +0800
+Message-ID: <cover.1750815384.git.baolin.wang@linux.alibaba.com>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH3PR12MB8659:EE_|SJ2PR12MB8846:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3b46160c-715b-44c2-93ba-08ddb388b5ba
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?hdQM5z7zqUI0PvL2CfjXNxZZYn+oHBrxGl64MFrUrGo3qxlZRh8dvJg82aSE?=
- =?us-ascii?Q?W37IpUt4RThbD67vSaTkDVgZBJ/SBTc6JrUfAi8s7DzdIC8YF7THQf7se4f1?=
- =?us-ascii?Q?03k11sfeCKdEySf/Xz+mg3i3S88S/z48nsfLTdqAMHG2/KjtHWo3LOOG75xR?=
- =?us-ascii?Q?LQVl7SDfV2jf3QWoBNQ+fgyEtHiSlND2f79Mi+q+H9aM3xGW2Xg8P53HS7X7?=
- =?us-ascii?Q?B1i861bYlL2t6jRIdEXVzggUw9WRvb8+0u20QdGiv91ItTSaUU5ZodNSmt/i?=
- =?us-ascii?Q?cxzWTBW1Lu9KsyWK0tdHwLIwfhHkjAi3tMqJGm5J0RMHeLurDa341TQ01PQ3?=
- =?us-ascii?Q?zbaY2qxFtopj7QyJr6IExRGpYzkJqKUdOlVBUNbhO927txkNWpBrbE02FvXf?=
- =?us-ascii?Q?z31h5YLYMKm51kipKvOO58YZqlnrBNDIZEKI0VvFDx6JJPqiWQtTNLqhYVHV?=
- =?us-ascii?Q?nzoLEpSiC4xFQnVApq2FiXizqPyZqJMJy3NSITCeHX51TiVg1b4A7InQwPf9?=
- =?us-ascii?Q?YqGCoj8nlN+hqMYf9zqDmLkt1BG0LX7wLPPVXHBtIryRanWdvmkXxyOV9sfE?=
- =?us-ascii?Q?+V+M81XcYLJP3duwZwFBmdeKKLL9Dnvhn0sQW+oyXOkfz5BnFH8SJO31Y6er?=
- =?us-ascii?Q?GVE+CfrmRSQBoUyH8TOTOE/w92KEn6SVZyONZj+QBBCqqBqdO6ywALL2v8rI?=
- =?us-ascii?Q?Vd1dyVVJJXa2W15PgNYId0dqe41LxmXMxK/ArSUEQFmnqLc8fBNGz7LvrHmN?=
- =?us-ascii?Q?GzjNju86/lBdyXEw5HtlkAH/UuJdWNkyr9XRI4vTCN0lmr274gTR0vq+JAry?=
- =?us-ascii?Q?UYxM1Zs8ARC24Y0Z4mpdUXerVm2OrjpUshiZdn0Kbjb6HjiyBzrur2qz5D9H?=
- =?us-ascii?Q?QqrQ56VEFcfE84cay88M7HUDvgrec36iq9vm/aZdTySLD5PQCWfwjjyH1yQR?=
- =?us-ascii?Q?cpuYy0U+RLqPO5cKAeDtviPW+1z3GgahTWeySSZLtVJAZSes2tFEKjAXsmYS?=
- =?us-ascii?Q?CAlyJnCBsMlFeLG9Mp95WXjAjCKXgbzyPvmElf7R81kSArr5nEjsaQ/BFr9k?=
- =?us-ascii?Q?C0IZ6O4eOCcIyv9nQ8g2RSZMrMdgPvZ/mtLvH+YI3l1mPekvIN3z8QKswGVr?=
- =?us-ascii?Q?5w/BOkLnKOwPmbOYy/ixyGSlZ/2QXHCq8T0UVlSPfHf/Q5p36cE2KmhlBC+P?=
- =?us-ascii?Q?yQ7UO3JVf1IMVnvvR6s47mesflz9sFGE4JcsvwKrXfNJsR8u6CD9T37UvBLH?=
- =?us-ascii?Q?Ddbf4OvnL9vdLdCrcDJ7A2aTVcck/ER9GVKhnC+PSDFg1ipV+e8sU7prNIVm?=
- =?us-ascii?Q?ce1EWeHBWPgKjBVFWWvxZ+FJ22LEywsYfzA5mV4WuSe0rw8cS4w2w2xfAlZJ?=
- =?us-ascii?Q?qPZNIgC5o5EXeXFa7WgiEK1sBcGlBMO2L+fCFfbS5fTmZYqxwosyn/sqvj1i?=
- =?us-ascii?Q?5BxcrSUvurE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH3PR12MB8659.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?IYvY6UMSADKTzIdG0anFNbRuhFQq1tUxFCltp5ChHM0HLGJbLfRFRBcDUeNA?=
- =?us-ascii?Q?uLOzfxXwgvgscclrx1oglGS+QLAZP3XIOKGrACn1luiRjqvB3cfTY7c0jfxP?=
- =?us-ascii?Q?XuKVtBZy/CMKijqPQ9LV8ap5UiKFU//mdLcP8uO8atpsb3US+FLgD9/26CDs?=
- =?us-ascii?Q?AJzJNRlQINM0u+uZFPBRa9/GxfMsg3rTaW1K8amTru3ykZI2c1oB5S/LZ37B?=
- =?us-ascii?Q?SVgraHDg3ZiR63yIdPcqbu+oHR/HaWkESxHemfJTwf1mtH1dCanBcjfOoIqO?=
- =?us-ascii?Q?iMMOJv03ahtBGSXQ59CljUB9Dnq04iH02bUN9sJn+QuJ3p+VmzCwETyMWCtZ?=
- =?us-ascii?Q?ANtv6vXGarE5v5AiBBPHLDyBUul7PPtv5WUcL2BW76QoIA7CDJENzevLsRFq?=
- =?us-ascii?Q?ky8v/gbuQihUqSuYVQAVvUhNDs4Uke0zybAVJUP1JddWkGqjQjw2NhDEtOfI?=
- =?us-ascii?Q?nlWhv1664HCCmymjL0sxbbS6q3c6zDAPsxXLxwP1chtKMJdOdpXhkrhwZwV4?=
- =?us-ascii?Q?w+aR1bEGF+LXgnrUtTGI0EQ4CApI5enrac7PVeay9bRMnStxVerGF18/fucw?=
- =?us-ascii?Q?cWX/53TkCg6hphHpPRhbKThnakGf2vtfI+iaZtVhnEfu40pS10Msqx3V07XM?=
- =?us-ascii?Q?yaYyzKD1xAMpjGHN0w25JApxS9JI5sddzUcGcn0iPo+nt85kR73+apDEl6Ys?=
- =?us-ascii?Q?WKotd3ApvCRABRYq2N27BujerkYPN1ZcqJOfRe7OY+rta3dZrqvEE0lAHBKm?=
- =?us-ascii?Q?ruAqAuJ8pc3dScAO6klC6hhkpSQ9IKR+QRO6g5U+0ymDiV48JRkbx/NCqoqX?=
- =?us-ascii?Q?s4e0qYCKn3VetTK+/+0h/p6BUFsTdzUNpi+RHUnv6r8HYFaIfeokg+TalezF?=
- =?us-ascii?Q?SzsgKeGre0fcxTI2XrsogKfpCyNyQv4poMCjD0aBL1wW67bB4/wcPge21obC?=
- =?us-ascii?Q?jTjIGfVGKktUKFsUc8YDK4e56I0+PyXlGPOSzaEuJGQqmjp0mxWqD4LwCO+S?=
- =?us-ascii?Q?235AYlN7JC0v00ih/33N1sTUSnWf20ZI+YCIvDuyN8lUvMPhIdX0ebIfHjkP?=
- =?us-ascii?Q?UugsWGS9lAB6V+PyfBOgt6DM44k6z+rlGWvOAq06853UBbv7PmR307rw9Gf+?=
- =?us-ascii?Q?UOGDNJZyI6MJNuyAseYbDlmeBJxL5cxcJDIdSlGngm+pYRw1o/xgOd3vn+AG?=
- =?us-ascii?Q?pW7THR/r8Pd+sB/Guq+Kn2xkeLJj2lCOhfJEqIneKVy7Z3fO2Kfqe+rB2BW9?=
- =?us-ascii?Q?f2mmsRJ06atOISS3d2tJpHNG3lTZWfNXlfeP85rVOkSuE7Hjf9iYJQ6L4ZRF?=
- =?us-ascii?Q?2Oe4aAFkIspePzADufh4aSzQzjpqlCFDm+SYTYAUy0GdVUuTwddeEMcfvfVD?=
- =?us-ascii?Q?ZAMewXj2qz8g4jtaabWGvUaBSlIEUrgdYeg8iQhQeJeDMmBAPG6sy+uyfKBh?=
- =?us-ascii?Q?enqUdJggSS1yrqTrdu2HVBcth8KMNfzcAs01ig6S1nWEUjymCPyRVobxBhe6?=
- =?us-ascii?Q?7MGMtf1ltDl/n5QbD4VTva11hiF+VwvT1oxyHgiJKEOP/VZp0faVqudo/b0S?=
- =?us-ascii?Q?GD6o7F3gUeA6WmNnYBYD/iE6Iw2VfKYCse7EeZ67?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3b46160c-715b-44c2-93ba-08ddb388b5ba
-X-MS-Exchange-CrossTenant-AuthSource: CH3PR12MB8659.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 01:36:30.6749
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0ADTbt8Y+9QKVk2Z75uZlk5kUwRCdinAWoIYhuYQKnnRIXYJhQNYFVW38CyVj6LE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8846
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 24, 2025 at 11:57:31PM +0000, Tian, Kevin wrote:
-> > From: Jason Gunthorpe <jgg@nvidia.com>
-> > Sent: Tuesday, June 24, 2025 10:54 PM
-> > 
-> > On Mon, Jun 23, 2025 at 05:49:45PM +0800, Xu Yilun wrote:
-> > > +static void iommufd_device_remove_vdev(struct iommufd_device *idev)
-> > > +{
-> > > +	bool vdev_removing = false;
-> > > +
-> > > +	mutex_lock(&idev->igroup->lock);
-> > > +	if (idev->vdev) {
-> > > +		struct iommufd_vdevice *vdev;
-> > > +
-> > > +		vdev = iommufd_get_vdevice(idev->ictx, idev->vdev->obj.id);
-> > > +		if (IS_ERR(vdev)) {
-> > 
-> > This incrs obj.users which will cause a concurrent
-> > iommufd_object_remove() to fail with -EBUSY, which we are trying to
-> > avoid.
-> 
-> concurrent remove means a user-initiated IOMMU_DESTROY, for which 
-> failing with -EBUSY is expected as it doesn't wait for shortterm?
+When invoking thp_vma_allowable_orders(), if the TVA_ENFORCE_SYSFS flag is not
+specified, we will ignore the THP sysfs settings. Whilst it makes sense for the
+callers who do not specify this flag, it creates a odd and surprising situation
+where a sysadmin specifying 'never' for all THP sizes still observing THP pages
+being allocated and used on the system. And the MADV_COLLAPSE is an example of
+such a case, that means it will not set TVA_ENFORCE_SYSFS when calling
+thp_vma_allowable_orders().
 
-Yes a user IOMMU_DESTROY of the vdevice should not have a transient
-EBUSY failure. Avoiding that is the purpose of the shorterm_users
-mechanism.
+As we discussed in the previous thread [1], the MADV_COLLAPSE will ignore
+the system-wide anon/shmem THP sysfs settings, which means that even though
+we have disabled the anon/shmem THP configuration, MADV_COLLAPSE will still
+attempt to collapse into a anon/shmem THP. This violates the rule we have
+agreed upon: never means never.
 
-> > Also you can hit a race where the tombstone has NULL'd the entry but
-> > the racing destroy will then load the NULL with xas_load() and hit this:
-> > 
-> > 		if (WARN_ON(obj != to_destroy)) {
-> 
-> IOMMU_DESTROY doesn't provide to_destroy.
+For example, system administrators who disabled THP everywhere must indeed very
+much not want THP to be used for whatever reason - having individual programs
+being able to quietly override this is very surprising and likely to cause headaches
+for those who desire this not to happen on their systems.
 
-Right, but IOMMU_DESTROY thread could have already gone past the
-xa_store(NULL) and then the kernel destroy thread could reach the
-above WARN as it does use to_destroy.
+This patch set will address the MADV_COLLAPSE issue.
 
-Jason
+Test
+====
+1. Tested the mm selftests and found no regressions.
+2. With toggling different Anon mTHP settings, the allocation and madvise collapse for
+anonymous pages work well.
+3. With toggling different shmem mTHP settings, the allocation and madvise collapse for
+shmem work well.
+4. Tested the large order allocation for tmpfs, and works as expected.
+
+[1] https://lore.kernel.org/all/1f00fdc3-a3a3-464b-8565-4c1b23d34f8d@linux.alibaba.com/
+
+Changes from v3:
+ - Collect reviewed tags. Thanks.
+ - Update the commit message, per David.
+
+Changes from v2:
+ - Update the commit message and cover letter, per Lorenzo. Thanks.
+ - Simplify the logic in thp_vma_allowable_orders(), per Lorenzo and David. Thanks.
+
+Changes from v1:
+ - Update the commit message, per Zi.
+ - Add Zi's reviewed tag. Thanks.
+ - Update the shmem logic.
+
+Baolin Wang (2):
+  mm: huge_memory: disallow hugepages if the system-wide THP sysfs
+    settings are disabled
+  mm: shmem: disallow hugepages if the system-wide shmem THP sysfs
+    settings are disabled
+
+ include/linux/huge_mm.h                 | 51 ++++++++++++++++++-------
+ mm/shmem.c                              |  6 +--
+ tools/testing/selftests/mm/khugepaged.c |  8 +---
+ 3 files changed, 43 insertions(+), 22 deletions(-)
+
+-- 
+2.43.5
+
