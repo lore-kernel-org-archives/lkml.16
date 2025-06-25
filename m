@@ -1,262 +1,118 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41FC219E96A;
-	Wed, 25 Jun 2025 03:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C8819E96A
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750821943; cv=none; b=tHAk9bsAoEQOLi280QWQUxGbgK9JPZzdhV22r78CBfQXoncUPQCjCfyg6Zt/2HkpwF16pGb8I3hgyE7gLPlnrl9JrzCyjFMMcBNMX9z9aaqtkpNXHq1Xkeh4SQrK4Ida0xREVp7FkmXmFI9bzwv+1ITz4/wf3FHoAHyuepMdaiQ=
+	t=1750822005; cv=none; b=ZM/CkGzoUKw21PbDC8HQkB07pmglTKHN7OvIXAn4yv1i6n5Yeh6FXWXpz+kUQY3YUPw0ozUjUUTgyrqlUaaUupcMIkC23QiRmJOMKkPWs9ayxQrcIiA9ZzkLJUVJRBgtuWwmyrkWWCxaQNjKtV4u03SUWmrzTk8Eo7gS3i/yy1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750821943; c=relaxed/simple;
-	bh=4NMFst5bZwlMKW8tHUP/911zQnFY6nUDVvYvEJtmNmE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UoystGgPIAnpguSFS6IUzg7vdkGCN7PVBEg3/vClcySSlnQTSOjTZVeFx+mf/b17SM47147b3YFWI/gTr1T8/9dOtLZ/xUsclZFzBJa3k/uwLrTenpafhU8vdlv6gIVdBzq/0mpTOFzOKU74hL6MLo8D+p+XC5FnuUimo7KNR0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ALLiYJNR; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750822005; c=relaxed/simple;
+	bh=mU1F3RUhNdk4UiLc1UjPfNsL6ir3JdMqJQbzgDnm9HI=;
+	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=gzQHRFeBYdlJcL5GlqjYYKvzcBn94XtnLkbjODKCQoUJ0I1hZt1WedPkVnJb261oA02wKxYvDk/t/MRaeTI7rWmnqP9mVrGxi/u/F16KX9vIow6qwK6XULMeVqsCYi3IHVl4nDkw+X0tvyuHeuwv+5Pcf+q1X/k2WEHBZRgRfeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gvmc2jOT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ALLiYJNR"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3df2ccbb895so9553715ab.3;
-        Tue, 24 Jun 2025 20:25:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750821941; x=1751426741; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P5Idd7bAuzOnb9JUX43u5xXxkP4Sj/WJFUVcPFMjRpA=;
-        b=ALLiYJNRTj9ix71ma9TNnzxfyPLdRXjggRpbQ2aBwhlyJIbjYtJnsF+Mk96NIIKMKV
-         jnoovPInGrf8kKXeymu8co5/BBftaU2xzjw+nkBhs7sLmiXV76VL3QYIubLd9PDPgQzo
-         XZFkl05Ng/ImwVzT5RLxGG2ZlFB0EoyIJHqW0FNOd5XXeo7A+7b7y7X0QAMLCGBz8b07
-         pO1PLwraR69E/t6p3ZXTnoBE2aDxulp44l+LLmdFUuOqe3GKy5jxj5nLpQlsUFiY+lwC
-         P2lUDPpIYoBHVVHJ/Kmka63B21EFay6QCEudHHqk2+CoDdwPCOE78LtBf/i8JSmtHwvn
-         Mzug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750821941; x=1751426741;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P5Idd7bAuzOnb9JUX43u5xXxkP4Sj/WJFUVcPFMjRpA=;
-        b=tKhdOnl2UJqFm0RU/HnZGzzXGH2OItD8hxgib9OGu9nK9EEqBWsDumLQTdiBgoK8sj
-         pWh+cI5CCDedrvbXbStrDFPlpvtZl7zCS2kE3YgwVWpAXHlq53NkItdK0CRm04MwZ1Nh
-         ocEYZeNKY+J9NrzMWpHlmTogpcu1wobVsAff3kcEYB4rYltaNAIVKFGJGdjKb7hz/Gw1
-         sweZqEoJ6cwD+ep87STes7LvEF5Ilao5Gvyas3RbvQxrAf1Vgd5TKlFOf426at/Qx3vq
-         ecLOe5+oU0nFfzuKgCn+I3iKU5qj/Tdur3cER4weqo4kYr5zAQB7dNQUI+6K891s56Xf
-         VB8A==
-X-Forwarded-Encrypted: i=1; AJvYcCVrLtJMaNQVLY0uArGbLS3+rn3mEVcQTGHFMYLK8lHlnxS+vvvQroPke+xoDUSr43aqdYXolTASmxmyIcc=@vger.kernel.org, AJvYcCWF4pw7MFTeqL3pe3kKKOedaNZdKfCte2lIv91vU9BvdnnS6NOZr8DfOOyEzFZGfKtd8sTGTIjIAugNzjHZ+sMDDA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwqIeo+PWF7LSmvjE94aCIbFbwW0mjUYJMifDuOyRRmoeZXXTD8
-	aja1pEcJl1wnZPDGW/SaX/oGAfn+smOo2+lNBo05FlvwNac0a7Bf9Dr4xec/4T+JhNEc4BQ8Z43
-	z+8tKBeluAkWQZ8cKtMlxGRswfhsjhiQ=
-X-Gm-Gg: ASbGnctltp38+kx1AVW2lIj0OC2s5U1jTBnQfHkOjzcqiA57faSJtgkCkf8sXCVbXy7
-	7QPCwUDfhBzPUCd5A6XdnlrcpE5x5re/0P5h5qupQzmQATXSduOuJa1W8WUm6NZw4qmNvw41ANs
-	z+Y2snVxY2vx3Tt90uuZ8hNhvogIn92N//IYOr89fIDNNpXWAm8V0N1g==
-X-Google-Smtp-Source: AGHT+IGTb/5LGPPf3L0DL//MOyob2CFyZfg/IHtK/wNWTQnMHIKm1ENWEeAPJPDEIqD049xw5eck28OJqJkG6TTW8sI=
-X-Received: by 2002:a05:6e02:1c09:b0:3dc:8075:ccd3 with SMTP id
- e9e14a558f8ab-3df3294954dmr17771145ab.9.1750821941152; Tue, 24 Jun 2025
- 20:25:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gvmc2jOT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F914C4CEE3;
+	Wed, 25 Jun 2025 03:26:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750822004;
+	bh=mU1F3RUhNdk4UiLc1UjPfNsL6ir3JdMqJQbzgDnm9HI=;
+	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
+	b=gvmc2jOTNq5BnKN4qV3mGOUAFbAbd7ROpWJ9PK5ReuXKS0tUxcVnZVPrw061GP1vq
+	 zYy/XnoAApKMZD2D2DwbD5a3nwL9SD/qgMyypwLd5zzk/pRsK6JN17thu2a1y02Aq2
+	 g8DlxS+Xwn60hqjTPV/t1qdzCRwNJRx9J6Qae9o+yN4DTNrOlcMUapkPqoqT7nSnZd
+	 ye68G98qEUsNPL+FY1BUp+ZQQ6HTjY3AVZGU0mIjDYw9nxGd58+h8taGALsxin5dTh
+	 LK6ZHAwHy+2Ioz6osrTR36fLs3quHMbRY4hYHeoo8K92fx/6kNgmCMYxWz/w58QyKs
+	 o3Pc89hCfA25w==
+Message-ID: <c91bcaf4-083d-4d5c-96a7-de7d2171f576@kernel.org>
+Date: Wed, 25 Jun 2025 11:26:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250618062644.3895785-1-shengjiu.wang@nxp.com>
- <20250618062644.3895785-2-shengjiu.wang@nxp.com> <aFltBpXuEXVZ5gKn@p14s>
-In-Reply-To: <aFltBpXuEXVZ5gKn@p14s>
-From: Shengjiu Wang <shengjiu.wang@gmail.com>
-Date: Wed, 25 Jun 2025 11:25:29 +0800
-X-Gm-Features: Ac12FXzRQJouDdZDx5KrobO9xlf8zpg91IyZbOOnLAWOvOD5rocTnkVsx4AQ2xM
-Message-ID: <CAA+D8AP47xyftzPZki8MXEeWEfbocug6e134uaJgFH+tx7mH2Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] remoteproc: imx_dsp_rproc: Add support of recovery process
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Shengjiu Wang <shengjiu.wang@nxp.com>, andersson@kernel.org, shawnguo@kernel.org, 
-	s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com, 
-	linux-remoteproc@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Cc: chao@kernel.org, wanghui33@xiaomi.com, linux-kernel@vger.kernel.org,
+ Sheng Yong <shengyong1@xiaomi.com>
+Subject: Re: [PATCH v2] f2fs: avoid splitting bio when reading multiple pages
+To: Jianan Huang <huangjianan@xiaomi.com>,
+ linux-f2fs-devel@lists.sourceforge.net, jaegeuk@kernel.org
+References: <20250617055542.218681-1-huangjianan@xiaomi.com>
+ <20250618081705.260239-1-huangjianan@xiaomi.com>
+Content-Language: en-US
+From: Chao Yu <chao@kernel.org>
+In-Reply-To: <20250618081705.260239-1-huangjianan@xiaomi.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 23, 2025 at 11:11=E2=80=AFPM Mathieu Poirier
-<mathieu.poirier@linaro.org> wrote:
->
-> Good day,
->
-> On Wed, Jun 18, 2025 at 02:26:43PM +0800, Shengjiu Wang wrote:
-> > when recovery is triggered, rproc_stop() is called first then
-> > rproc_start(), but there is no rproc_unprepare_device() and
-> > rproc_prepare_device() in the flow.
-> >
-> > So power enablement needs to be moved from prepare callback to start
-> > callback, power disablement needs to be moved from unprepare callback
-> > to stop callback, loading elf function also needs to be moved to start
-> > callback, the load callback only store the firmware handler.
-> >
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > ---
-> >  drivers/remoteproc/imx_dsp_rproc.c | 58 ++++++++++++++++++------------
-> >  1 file changed, 36 insertions(+), 22 deletions(-)
-> >
-> > diff --git a/drivers/remoteproc/imx_dsp_rproc.c b/drivers/remoteproc/im=
-x_dsp_rproc.c
-> > index 5ee622bf5352..9b9cddb224b0 100644
-> > --- a/drivers/remoteproc/imx_dsp_rproc.c
-> > +++ b/drivers/remoteproc/imx_dsp_rproc.c
-> > @@ -122,6 +122,7 @@ enum imx_dsp_rp_mbox_messages {
-> >   * @ipc_handle: System Control Unit ipc handle
-> >   * @rproc_work: work for processing virtio interrupts
-> >   * @pm_comp: completion primitive to sync for suspend response
-> > + * @firmware: firmware handler
-> >   * @flags: control flags
-> >   */
-> >  struct imx_dsp_rproc {
-> > @@ -139,6 +140,7 @@ struct imx_dsp_rproc {
-> >       struct imx_sc_ipc                       *ipc_handle;
-> >       struct work_struct                      rproc_work;
-> >       struct completion                       pm_comp;
-> > +     const struct firmware                   *firmware;
-> >       u32                                     flags;
-> >  };
-> >
-> > @@ -211,6 +213,7 @@ static const struct imx_rproc_att imx_dsp_rproc_att=
-_imx8ulp[] =3D {
-> >
-> >  /* Initialize the mailboxes between cores, if exists */
-> >  static int (*imx_dsp_rproc_mbox_init)(struct imx_dsp_rproc *priv);
-> > +static int imx_dsp_rproc_elf_load_segments(struct rproc *rproc, const =
-struct firmware *fw);
-> >
-> >  /* Reset function for DSP on i.MX8MP */
-> >  static int imx8mp_dsp_reset(struct imx_dsp_rproc *priv)
-> > @@ -402,8 +405,24 @@ static int imx_dsp_rproc_start(struct rproc *rproc=
-)
-> >       const struct imx_dsp_rproc_dcfg *dsp_dcfg =3D priv->dsp_dcfg;
-> >       const struct imx_rproc_dcfg *dcfg =3D dsp_dcfg->dcfg;
-> >       struct device *dev =3D rproc->dev.parent;
-> > +     struct rproc_mem_entry *carveout;
-> >       int ret;
-> >
-> > +     pm_runtime_get_sync(dev);
-> > +
-> > +     /*
-> > +      * Clear buffers after pm rumtime for internal ocram is not
-> > +      * accessible if power and clock are not enabled.
-> > +      */
-> > +     list_for_each_entry(carveout, &rproc->carveouts, node) {
-> > +             if (carveout->va)
-> > +                     memset(carveout->va, 0, carveout->len);
-> > +     }
-> > +
-> > +     ret =3D imx_dsp_rproc_elf_load_segments(rproc, priv->firmware);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> >       switch (dcfg->method) {
-> >       case IMX_RPROC_MMIO:
-> >               ret =3D regmap_update_bits(priv->regmap,
-> > @@ -446,6 +465,7 @@ static int imx_dsp_rproc_stop(struct rproc *rproc)
-> >
-> >       if (rproc->state =3D=3D RPROC_CRASHED) {
-> >               priv->flags &=3D ~REMOTE_IS_READY;
-> > +             pm_runtime_put_sync(dev);
->
-> From this patch I understand that for a recovery to be successful, the
-> remote processor _has_ to go through a hard reset.  But here the PM runti=
-me API
-> is used, meaning the remote processor won't be switched off if another de=
-vice in
-> the same power domain still neeeds power.  If that is the case, the solut=
-ion in
-> tihs patch won't work.
+On 6/18/25 16:17, Jianan Huang wrote:
+> When fewer pages are read, nr_pages may be smaller than nr_cpages. Due
+> to the nr_vecs limit, the compressed pages will be split into multiple
+> bios and then merged at the block level. In this case, nr_cpages should
+> be used to pre-allocate bvecs.
+> To handle this case, align max_nr_pages to cluster_size, which should be
+> enough for all compressed pages.
+> 
+> Signed-off-by: Jianan Huang <huangjianan@xiaomi.com>
+> Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
+> ---
+> Changes since v1:
+> - Use aligned nr_pages instead of nr_cpages to pre-allocate bvecs.
+> 
+>  fs/f2fs/data.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 31e892842625..2d948586fea0 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -2303,7 +2303,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+>  		}
+>  
+>  		if (!bio) {
+> -			bio = f2fs_grab_read_bio(inode, blkaddr, nr_pages,
+> +			bio = f2fs_grab_read_bio(inode, blkaddr, nr_pages - i,
+>  					f2fs_ra_op_flags(rac),
+>  					folio->index, for_write);
+>  			if (IS_ERR(bio)) {
+> @@ -2370,12 +2370,18 @@ static int f2fs_mpage_readpages(struct inode *inode,
+>  		.nr_cpages = 0,
+>  	};
+>  	pgoff_t nc_cluster_idx = NULL_CLUSTER;
+> -	pgoff_t index;
+> +	pgoff_t index = rac ? readahead_index(rac) : folio->index;
 
-Thanks for reviewing.
-With the case you mentioned, there is software reset to make the
-recovery process work.
+For non-compressed file, it's redundant.
 
-best regards
-Shengjiu Wang
+>  #endif
+>  	unsigned nr_pages = rac ? readahead_count(rac) : 1;
+>  	unsigned max_nr_pages = nr_pages;
+>  	int ret = 0;
+>  
+> +#ifdef CONFIG_F2FS_FS_COMPRESSION
+> +	if (f2fs_compressed_file(inode))
 
->
-> Thanks,
-> Mathieu
->
-> >               return 0;
-> >       }
-> >
-> > @@ -472,6 +492,8 @@ static int imx_dsp_rproc_stop(struct rproc *rproc)
-> >       else
-> >               priv->flags &=3D ~REMOTE_IS_READY;
-> >
-> > +     pm_runtime_put_sync(dev);
-> > +
-> >       return ret;
-> >  }
-> >
-> > @@ -774,7 +796,6 @@ static int imx_dsp_rproc_prepare(struct rproc *rpro=
-c)
-> >  {
-> >       struct imx_dsp_rproc *priv =3D rproc->priv;
-> >       struct device *dev =3D rproc->dev.parent;
-> > -     struct rproc_mem_entry *carveout;
-> >       int ret;
-> >
-> >       ret =3D imx_dsp_rproc_add_carveout(priv);
-> > @@ -783,25 +804,6 @@ static int imx_dsp_rproc_prepare(struct rproc *rpr=
-oc)
-> >               return ret;
-> >       }
-> >
-> > -     pm_runtime_get_sync(dev);
-> > -
-> > -     /*
-> > -      * Clear buffers after pm rumtime for internal ocram is not
-> > -      * accessible if power and clock are not enabled.
-> > -      */
-> > -     list_for_each_entry(carveout, &rproc->carveouts, node) {
-> > -             if (carveout->va)
-> > -                     memset(carveout->va, 0, carveout->len);
-> > -     }
-> > -
-> > -     return  0;
-> > -}
-> > -
-> > -/* Unprepare function for rproc_ops */
-> > -static int imx_dsp_rproc_unprepare(struct rproc *rproc)
-> > -{
-> > -     pm_runtime_put_sync(rproc->dev.parent);
-> > -
-> >       return  0;
-> >  }
-> >
-> > @@ -1022,13 +1024,25 @@ static int imx_dsp_rproc_parse_fw(struct rproc =
-*rproc, const struct firmware *fw
-> >       return 0;
-> >  }
-> >
-> > +static int imx_dsp_rproc_load(struct rproc *rproc, const struct firmwa=
-re *fw)
-> > +{
-> > +     struct imx_dsp_rproc *priv =3D rproc->priv;
-> > +
-> > +     /*
-> > +      * Just save the fw handler, the firmware loading will be after
-> > +      * power enabled
-> > +      */
-> > +     priv->firmware =3D fw;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  static const struct rproc_ops imx_dsp_rproc_ops =3D {
-> >       .prepare        =3D imx_dsp_rproc_prepare,
-> > -     .unprepare      =3D imx_dsp_rproc_unprepare,
-> >       .start          =3D imx_dsp_rproc_start,
-> >       .stop           =3D imx_dsp_rproc_stop,
-> >       .kick           =3D imx_dsp_rproc_kick,
-> > -     .load           =3D imx_dsp_rproc_elf_load_segments,
-> > +     .load           =3D imx_dsp_rproc_load,
-> >       .parse_fw       =3D imx_dsp_rproc_parse_fw,
-> >       .handle_rsc     =3D imx_dsp_rproc_handle_rsc,
-> >       .find_loaded_rsc_table =3D rproc_elf_find_loaded_rsc_table,
-> > --
-> > 2.34.1
-> >
->
+index = rac ? readahead_index(rac) : folio->index;
+
+Thanks,
+
+> +		max_nr_pages = round_up(index + nr_pages, cc.cluster_size) -
+> +				round_down(index, cc.cluster_size);
+> +#endif
+> +
+>  	map.m_pblk = 0;
+>  	map.m_lblk = 0;
+>  	map.m_len = 0;
+> @@ -2385,7 +2391,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
+>  	map.m_seg_type = NO_CHECK_TYPE;
+>  	map.m_may_create = false;
+>  
+> -	for (; nr_pages; nr_pages--) {
+> +	for (; nr_pages; nr_pages--, max_nr_pages--) {
+>  		if (rac) {
+>  			folio = readahead_folio(rac);
+>  			prefetchw(&folio->flags);
+
