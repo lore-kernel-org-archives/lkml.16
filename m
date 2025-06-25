@@ -1,108 +1,97 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2C12820D5;
-	Wed, 25 Jun 2025 11:18:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22D4225BF02
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750850325; cv=none; b=GEAWKy4If6zwSiQBPO5dtkbcZXefk5HndFFsLGRPBgZI204QIlRcJP7bWHYouO7H7ye7MT8J5WqUX4vjbM8ub/UyPRZtqRNkP4FFlHTU5KZXrIe0Ydt8ijU0S7CFLtmPCJqAVY87ZIi27JUBcAge+mxr/LXq4j2YQ9tfLRALHwY=
+	t=1750850388; cv=none; b=Hf3gCtg4RSr9w6jN3DQSlkEG+Ut5JGlTZbkMx/V7NCIpUYxIHNlcWUvvg1rCfFEYG/Xf+cGU95PAbEck8fkBO8EHskllw4K4k0lVm7sqmQscBTI1LjHeHCH+HIxL78iANnu6GXHDEvYsB8zL2d7qOmNSWEIDfMSdY/x2nCgUeNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750850325; c=relaxed/simple;
-	bh=2cn7y+Ptn7dugIKl4xG4EpXViME5U8PgqEVu9KF4wXc=;
+	s=arc-20240116; t=1750850388; c=relaxed/simple;
+	bh=VNz+lSy568xXrNEW/LdsAyCYu0exIyy51MijlASqERI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=buC2S0dQx+KCIECSPdS9tX8tJcGuYTYzra3g7VZz9RkTVeWUa3idWwSVveZ182F7H6sDoqJ4T3gHWeVPlNpQfWKquEgcctiIu5G7JTKaumeJPV/1bRBjUX4xfu4F6pIbZ0flqEF4Eq3qmPNUBDekGiolbk6G8Po8hrZGjBdPvmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CTKHHN38; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gC4Yz0g8qhe4r8J7aagSC5D9yPqpOfbeN+pecwm85Zu9EhV5vhgi0vOxXXi/oOxMFELDlAoPX2aSJKby6Q/XJWWIYVbjN4Wn2vSmq913jTMv6tbhz1zL+Y9b5+n/usJVZtUOWyzJsLPRFO6NHaExoG8QBDLrQAnjH2wuwEaFA7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RC0Go2XJ; arc=none smtp.client-ip=209.85.210.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CTKHHN38"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750850324; x=1782386324;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=2cn7y+Ptn7dugIKl4xG4EpXViME5U8PgqEVu9KF4wXc=;
-  b=CTKHHN38/EcPDEC8w8miE2J+JNC6TuJq20m73V100Mh5TH7S/u2o20sC
-   shcC1brHbP10wjLtyU8NCGcH4NA+HnbAptwXGEZH0FxCCs6tgi9c4xATk
-   34+8XxMxr1uIGzc9owhUYL7MdssN5DfPIe4scQdVYl4geUpEE3S9dZzr1
-   lbyIz7CXq9k8/KiX/xJCxOweQ0yz5Hc2UksgMJxjbplBhON5+FjQp4n3t
-   IY8UwPrOXTHKCGyXphfi3Q6zD4UyVMYifi8ev50A+T9oSGOkOwGwVR/YP
-   Li8fBqRIm+QaMUwmxPe3DelkjXjMa+JmpRjqOat4v1deNe1cMKrxp+nCF
-   g==;
-X-CSE-ConnectionGUID: O77rTMtCSz+BoGJNwiOExg==
-X-CSE-MsgGUID: 9yRZ2otxSHmDmHLKZP0ExQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="78541952"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="78541952"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 04:18:43 -0700
-X-CSE-ConnectionGUID: yGMeqNnjSqihUerMqeyvrA==
-X-CSE-MsgGUID: XY4GYARRTOWK1VunocbUDQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="156221613"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 04:18:41 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uUO9G-00000009kfx-1Hy9;
-	Wed, 25 Jun 2025 14:18:38 +0300
-Date: Wed, 25 Jun 2025 14:18:37 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v16 2/2] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <aFvbDdVdoroASlM6@smile.fi.intel.com>
-References: <20250625000059.20040-1-ansuelsmth@gmail.com>
- <20250625000059.20040-2-ansuelsmth@gmail.com>
- <dehsalp2za4i6jgod6ej6gqhestljo7qost66jzmql52n2zecp@imtgipg24lv5>
- <685ba7d9.df0a0220.e1b22.e6c2@mx.google.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RC0Go2XJ"
+Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-73ac5680bb0so407053a34.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:19:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750850386; x=1751455186; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iq4wYZ8O8v8iGoHVKCZbSBs74G20nkHHqtB4OQv75Kk=;
+        b=RC0Go2XJZoD2w9YPxoKoro2XpHEqF+1b5xeqdcMsIfB8KxSTHPl+yEaXv/ndqkxdgb
+         rPvi2fJgcJBLEdmQNmmuKmecCLxUqbbf6LwF5SQNrXGvTi6oAWGs501Nl7/gwek40IVv
+         weMj8/cEyefme9fnHqbq28HMMakgbdO6R5IOqyeN5fdOVSHwvIa3sBA26HCgDaQ5YpgR
+         Qn+gzry9zdkSwFnji72w/GPvCtk5PNUbSU7+QH/T+1PwjeVo7u7Nb0PcL9GqhAtQnvUq
+         hECmvSlDAMWPAb7HJtn2hT1lGBRfJKhfbRA6+bXMs0+dFMZp1upB72NTXpxwenO6yibh
+         V1HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750850386; x=1751455186;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iq4wYZ8O8v8iGoHVKCZbSBs74G20nkHHqtB4OQv75Kk=;
+        b=wjLhP8dn1L7bM/A0kmDc7uM4hQXMbQWviqBQzxOzpLl3aTQZ3JLvclb1CVRsL5gTrw
+         82Y+w6WbyPRTCMSp0PpBU/N61KfSOMBAdOQ09nrl1HkmKvd48cbcEvLf/njfogijSiVz
+         WrUpkQH5RVm/HtcCNZkOR6zfnE9DoMZm5GL1f1xfOQCVGAqqbm7OCzgbLwB2N0d+wIfr
+         JZaXdLHQLBTARBCWkNYG86W/3bSIH+AEN5LV/Tr8AUzS/Ch11eCawbw/Arg+kgL+hz+D
+         Acdcyq6GWHWB+flvz9vNIA9WbbMAWs/DB8kKtM0+dU7x7N93A3rty8zX8OI8l02NO3bp
+         fuFw==
+X-Forwarded-Encrypted: i=1; AJvYcCWQNH5axSIYi5uKxHVaXnEISKswJI9EWUwbU0LWExrh1X4IEGgsMsPq8Sa27O79Tj7pmtsoo9TpcMT48v0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxNlz+8SG9eD5/xJ+I1sIABobhOGIsPP5egQTi+cWJdl4+/FVw1
+	l0SbQxcHvXrsn2ljWsNdsk0MtodGtXCjdgM08eSsMcCTLviqyLaBNOSR1gGma7cbxgc=
+X-Gm-Gg: ASbGncsEMBvqslzH1050oNDw3a4Nhi4/YXzbA9fuAEV/Xxybu2wXLTT6taDzFl3mOnz
+	Fm/EGFPEwW27VqdSMqYOdVm4s5bHeSGr3fHsu+L0ba5ozXU/tVkP8yW+H+3Tu3BHSi0OU1DHTK9
+	+KqqquvXa/yqsY49kczcHrn746t89rysnKGFOvcdH6kO558vvUWk1r/lqN2V/F0zqSxOgDt0E4Q
+	iQwoDZwkNcj/0BwiQ0HOXV77DIJqcMD1aFzIUFBhdB66y10woTq7XO112zTTVaeIW0STcj5A+6z
+	xrHfWPqIRS54KK3UfBIf7QOngQp90GICsyMUxTiWo7oWCeNvg7q2MPhD7DG04ycGN0RiQlPILeO
+	HzcFW
+X-Google-Smtp-Source: AGHT+IHUPmQyLG5EAp7kEhFfGkI4eD9tbFqoGyW5KZup0EXS2PDOGnB5h/POMmLnHUjyUistd5gdNg==
+X-Received: by 2002:a05:6830:4429:b0:72c:3235:3b97 with SMTP id 46e09a7af769-73adc8984e6mr1795836a34.22.1750850386145;
+        Wed, 25 Jun 2025 04:19:46 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:22c9:dcd3:f442:dd1d])
+        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6117598cc6bsm989956eaf.32.2025.06.25.04.19.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 04:19:44 -0700 (PDT)
+Date: Wed, 25 Jun 2025 14:19:42 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Pratibimba Khadka <pratibimbakhadka@gmail.com>
+Cc: sudipm.mukherjee@gmail.com, Teddy Wang <teddy.wang@siliconmotion.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"open list:STAGING - SILICON MOTION SM750 FRAME BUFFER DRIVER" <linux-fbdev@vger.kernel.org>,
+	"open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] staging: sm750fb: Mark g_fbmode as a pointer to const
+ pointer
+Message-ID: <e477d4a1-a941-4301-b295-c245f9023cd3@suswa.mountain>
+References: <20250625045526.82758-1-pratibimbakhadka@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <685ba7d9.df0a0220.e1b22.e6c2@mx.google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250625045526.82758-1-pratibimbakhadka@gmail.com>
 
-On Wed, Jun 25, 2025 at 09:40:07AM +0200, Christian Marangi wrote:
-> On Wed, Jun 25, 2025 at 09:24:33AM +0200, Uwe Kleine-König wrote:
-> > On Wed, Jun 25, 2025 at 02:00:39AM +0200, Christian Marangi wrote:
-
-...
-
-> > > +	/*
-> > > +	 * Period goes at 4ns step, normalize it to check if we can
-> > > +	 * share a generator.
-> > > +	 */
-> > > +	period_ns = rounddown_u64(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
-> > 
-> > I don't understand why you need that. If you clamp to
-> > AIROHA_PWM_PERIOD_MAX_NS first, you don't need the (expensive) 64-bit
-> > operation. If you compare using ticks instead of ns you don't even need
-> > to round down, but just do the division that you end up doing anyhow.
+On Wed, Jun 25, 2025 at 10:40:26AM +0545, Pratibimba Khadka wrote:
+> Fixes a checkpatch warning:
+> WARNING: static const char * array should probably be static const char * const
 > 
-> Correct me if I'm wrong but 
+> The array `g_fbmode` contains constant string pointers that are not
+> supposed to be modified. By declaring it as `const char * const`,
+> both the string literals and the pointers themselves are protected
+> from accidental modification, which improves code safety and clarity.
 > 
-> #define NSEC_PER_SEC	1000000000L
-> #define AIROHA_PWM_PERIOD_MAX_NS       (1 * NSEC_PER_SEC)
-> 
-> doesn't fit u32 so an u64 is needed.
 
-I'm not sure what was the exact question, but u32 can hold up to 4*10^9,
-this is just 1*10^9.
+You need to compile test code before sending it.  It can't be changed
+from being a NULL pointer now so it breaks.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
+regards,
+dan carpenter
 
