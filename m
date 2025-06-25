@@ -1,97 +1,97 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8F035280;
-	Wed, 25 Jun 2025 04:54:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016A235280;
+	Wed, 25 Jun 2025 04:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750827253; cv=none; b=rk65lLH37A9DodROpjiZ4yfd4HFNlRsc9Wt90MpJ6uzrxCKMBRIiz6ijt0A4Is5zS9xI+dq0mAE1TX9rfvRwAgRdq9woeT/yuvFp8ZgjhngGuhkzymtGMM2r5VgR/0vmhrxA5S3wOgS4X+b8dRj0/GOovzcMqw+CjEyPJFBOa0s=
+	t=1750827288; cv=none; b=eOOqkugakhDstxGtkCeAPK3JeUrnOWSB9mC+UBAWwzu5EP8T0BFgARR9GTo/RsQn+rO4aqT3ubIIfSSew7f/8Ldv5P+bgPLPqv+gEyl3lX31qHF7KnvEdh88TnxKFuvZSLtedzVIXCdA9bBT8EGVuqzAE701aMx2FG7BcaimmrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750827253; c=relaxed/simple;
-	bh=T4oMS/UYHhH2kSrrHCVM15xoOnQaU/C+jWcr+Vc0gwE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Jd3vReB0y7T+F5SLLja2c6UJBdkQE0vhqfLr5+JgUdHFJ+3RUXq4dCj2NAz5fK/aBCTP0w8W2wK6FpPZVVAB+FdwI/tz+5wXWeWRJ7VTOBKnrJx79Yn8Kb+Ty/nydSGakmTgdaUbDwYV0sCYgrPAptWKcQn9W/bCQmzTbO/Ux20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=aVnTZh+G; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750827288; c=relaxed/simple;
+	bh=dd9Qun5alIb832kjxzLiwo2DDL06Ewvd0ileT0Lq4iI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fzwcAQNRjIF2MZNz3TPKXr7E+C2F1ntUPKsAfnLY6CjjrEpMUZ8fJ1PTGDoxFJnKBDn4hPrKNdDblSA4w65qdIyasX0j95sYE42yg/yJJeYB7r0z8iFI92igZw9IvTu1VEY//Exv3gIpChGkfa74H2znwHBXKBu3vDkdRgG7uzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ej2Zs27E; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aVnTZh+G"
-Received: from fllvem-sh04.itg.ti.com ([10.64.41.54])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55P4rstu2040833;
-	Tue, 24 Jun 2025 23:53:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750827234;
-	bh=b3no2NG3xR2a4DyD5qkF1Cq3m2ljBEdtB02js9lWzpw=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=aVnTZh+Ga6t6mDrInar6pb/lpqQtkW2FDxI30dmIQgzq0CMel0xhRgpvcEeXRseEc
-	 V9g8H0Se/hBSGVOUagSf9EsS7D9iQd9jNeh6dMyJOw75Qflko2vGBxF5VTDOIMsNvW
-	 vfAVYyoI8cyFvH+PiKR5vWpt/4iuoSxEq56bIZoA=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-	by fllvem-sh04.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55P4rsk9928730
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Tue, 24 Jun 2025 23:53:54 -0500
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Tue, 24
- Jun 2025 23:53:53 -0500
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Tue, 24 Jun 2025 23:53:53 -0500
-Received: from [10.249.142.58] ([10.249.142.58])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55P4rn5G2993802;
-	Tue, 24 Jun 2025 23:53:50 -0500
-Message-ID: <4b91a211-9e97-4431-8b42-4817fd17e1e1@ti.com>
-Date: Wed, 25 Jun 2025 10:23:49 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ej2Zs27E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750827287; x=1782363287;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dd9Qun5alIb832kjxzLiwo2DDL06Ewvd0ileT0Lq4iI=;
+  b=ej2Zs27EcZ70ss42YWC9i8d67xQnbKHYZasgOaovb8Ka6/dzIbTtAI4N
+   cD8fJTr9GHkNhU3y6/bQyGtsw+QNDJFFNfJFRsD52AsRiDH/KgyL5yXLJ
+   rR2728M0aQECXM64zV78jMaJy8BXX341R9fcSo/0WWe6Hy5CymVP//txX
+   4mHahTF+usXiJk2/wAYg0T+bBC+rqc02082rF4VhTfKVtOCKoPOP8pfU6
+   Y77MVFyC7h9ttp0p+atIDOpDLXqZp3wF5TcvVXgoQxUb7V0En4/MTb2ox
+   UZG4galYEIBb9MRPpr0t3RXG/a1v1duZY16qhlJ6ux5BW3eKeQ8t//7x3
+   g==;
+X-CSE-ConnectionGUID: 1ApRzU4dRte27iOLR01s4Q==
+X-CSE-MsgGUID: X0ZuPMRCQn2sjG0RJ36jAQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64142051"
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="64142051"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 21:54:45 -0700
+X-CSE-ConnectionGUID: c+mawL3RRL+swpu2DZhapQ==
+X-CSE-MsgGUID: kPfirjqcSd2q+AfUierqVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="175750369"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 21:54:43 -0700
+Message-ID: <c2191a58-5330-406c-b6b0-951a9d370bed@linux.intel.com>
+Date: Wed, 25 Jun 2025 12:53:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Betterbird (Windows)
-Subject: Re: [PATCH RESEND 1/2] dt-bindings: watchdog: ti,rti-wdt: Add
- ti,am62l-rti-wdt compatible
-To: Judith Mendez <jm@ti.com>, Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-CC: Tero Kristo <kristo@kernel.org>, <linux-watchdog@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20250624202605.1333645-1-jm@ti.com>
- <20250624202605.1333645-2-jm@ti.com>
-From: "Raghavendra, Vignesh" <vigneshr@ti.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/1] iommu/vt-d: Enable ATS before cache tag assignment
+To: "Tian, Kevin" <kevin.tian@intel.com>, Joerg Roedel <joro@8bytes.org>,
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>
+Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <20250620060802.3036137-1-baolu.lu@linux.intel.com>
+ <BN9PR11MB5276371ACFE0B5CEAAA021C88C78A@BN9PR11MB5276.namprd11.prod.outlook.com>
 Content-Language: en-US
-In-Reply-To: <20250624202605.1333645-2-jm@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <BN9PR11MB5276371ACFE0B5CEAAA021C88C78A@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-
-
-On 6/25/2025 1:56 AM, Judith Mendez wrote:
-> Add a new compatible ti,am62l-rti-wdt for am62l SoC [0].
+On 6/24/25 16:33, Tian, Kevin wrote:
+>> From: Lu Baolu <baolu.lu@linux.intel.com>
+>> Sent: Friday, June 20, 2025 2:08 PM
+>>
+>> Commit <4f1492efb495> ("iommu/vt-d: Revert ATS timing change to fix boot
+>> failure") placed the enabling of ATS in the probe_finalize callback. This
+>> occurs after the default domain attachment, which is when the ATS cache
+>> tag is assigned. Consequently, the device TLB cache tag is missed when the
+>> domain is attached, leading to the device TLB not being invalidated in the
+>> iommu_unmap paths.
+>>
+>> Fix it by moving the ATS enabling to the default domain attachment path,
+>> ensuring ATS is enabled before the cache tag assignment.
 > 
-> [0] https://www.ti.com/product/AM62L
-> Signed-off-by: Judith Mendez <jm@ti.com>
-> ---
->  Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml | 1 +
->  1 file changed, 1 insertion(+)
+> this means ATS will never be enabled for drivers with driver_managed_dma
+> set to '1', as they don't expect their devices attached to the default domain
+> automatically.
+
+You are right.
+
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
-> index 62ddc284a524..f57d5c2b8024 100644
-> --- a/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
-> +++ b/Documentation/devicetree/bindings/watchdog/ti,rti-wdt.yaml
-> @@ -24,6 +24,7 @@ properties:
->    compatible:
->      enum:
->        - ti,j7-rti-wdt
-> +      - ti,am62l-rti-wdt
->  
+> does it make more sense sticking to current way (enabling ATS in
+> probe_finalize) and assigning cache tag for device tlb at that point?
+> 
 
-Would be good to keep this sorted alphabetically.
+Yes. I will post v2 with this approach.
 
->    reg:
->      maxItems: 1
-
+Thanks,
+baolu
