@@ -1,165 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B17E25E44B;
-	Wed, 25 Jun 2025 11:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9D325E44B
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:53:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750852364; cv=none; b=hUCjLWTAvfVi+gB8BFFXJwN4ZobUeXfdtNwyneNy3bUd8MHyKORyQGXBMSa46CxZEpXh46NaGzSqER4uFgTY5tKmks9oziBsXlGnPDm7vMdrIVXnnc9Z3j5zzOKKWwDCGtr2XVA7yIXBBJH0WFp0/g3b/8VIi7hpa/8YvAzFmso=
+	t=1750852390; cv=none; b=GqV/nmFZxkkMkZHOV3IeJ98DRoFY83d0UlAZDp6kge0VKnxDuD9smDaw9hG43PNA65XhJ0TM8Ql0HSOVuXGzenLrWvpisbDlsD0U4Rz+sw/U3UAlxHJjgBivEncBNS9U3T5H9BiLCb++jkrponKd0ws81baA+QbkZF/WYZIgVyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750852364; c=relaxed/simple;
-	bh=TWIqKKbfG6uuI5HtJ3eC8YlrZRXG3e3FNtS1Y27gBWY=;
-	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=G8cem57f2PKYvdARL9aNc/1Y5yTt9oeT1l9MRQaNWaQYzJx9uBSvzk7jKwe4zDdZm+Jwh7bOf1+HlS04VWV0bus8u5wQ9Ok2YHY/UvDNEkNEcO0z9OQNntxH8OuCStw459iW8UDanP+Vs9acKXdUk8QD9mHYTWz5tS/sMWlFrPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ij1geo9+; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yI77TiUa; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750852390; c=relaxed/simple;
+	bh=wHC06+XDQXM2g63t+meeqhE3uQJP0n7nF2pLYZwxmUA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jk2TPNptegypDRU+0dLcckgwJzgGkr9iJoMP0BWVObQPX5QoqU0ct7Ips9rAtKJAzc8hsNA3+fGDC5emwNR8RiFkbdFNl7A3Rwz26t8uIfqp19BuRVdAv0Q5agC/IGBxlaj7XX0fuWxFYSciYHnKd+SvidARMfIzHUWT7VdZzAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=MBZy8yaj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ij1geo9+";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yI77TiUa"
-Message-ID: <20250625115133.486953538@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750852359;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MBZy8yaj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750852387;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=GCssfyGvJulb+kWMiAtrGha00DmPusbjNgsxf3WrhOI=;
-	b=ij1geo9+GrIYRBF5s3mgwgO/FAfNNTqkmPB8Xy5nTJi1av60V6YnQdQ6PoSpdiVKpX0cQN
-	UFE4AYhgYiPogILMxtFY2aWsEYwB70GsbFeyro8Yxx04hLV5yb5IwKErr7lInhabF5YyEr
-	zryubZbPNYe1nROE2hXmeenMBmS7VcZrNnLg3PI2HjydFj5UAlfj28qCgKb31fMK01QX+I
-	TIjlom64jjT3Wt5I4aJPsq50gfyUYNo4SqzxMiScG0Y1c15uG3u/szXD3l6P6A+0X7DGy2
-	uYN5tJJ6dSJvDOKShekQCbt4dLMoTx8+VHCJHnpzVqTpoVLMuD1DdWOa2qRnSw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750852359;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=GCssfyGvJulb+kWMiAtrGha00DmPusbjNgsxf3WrhOI=;
-	b=yI77TiUaBFd0b2giLZAR3Rs2r4RQHtySXnAtTI/QfaEbAzV+CzTK+nPIsGtM/eejba2I45
-	v6UtiPDj/3WmR2AQ==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Richard Cochran <richardcochran@gmail.com>,
- netdev@vger.kernel.org,
- Vadim Fedorenko <vadim.fedorenko@linux.dev>,
- Paolo Abeni <pabeni@redhat.com>,
- Jakub Kicinski <kuba@kernel.org>
-Subject: [patch V2 13/13] ptp: Simplify ptp_read()
-References: <20250625114404.102196103@linutronix.de>
+	 in-reply-to:in-reply-to:references:references;
+	bh=t4Xv+4iFOSQyhQxAlU+cPqAXaAkqD/p8+Wz48p9hJkc=;
+	b=MBZy8yaj6XYsJwotG0qJF7CbAPd/e1XLSmQf0oMy5upRSCxx5CXSYeT6+fcR+KYRULaz1s
+	eEyHNrfqYATVlhD1mI5Zgmpz7fevaSi52OBOImvcB0acWFms/ijpCMZJCVRXTp9UbwhGQT
+	oHyRK5XeROlzsuH6vnGogxSaPwTLluw=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-638-LiX6dINzM5GzkvZKRixnUg-1; Wed,
+ 25 Jun 2025 07:53:04 -0400
+X-MC-Unique: LiX6dINzM5GzkvZKRixnUg-1
+X-Mimecast-MFC-AGG-ID: LiX6dINzM5GzkvZKRixnUg_1750852382
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 610CC195608C;
+	Wed, 25 Jun 2025 11:53:02 +0000 (UTC)
+Received: from sirius.home.kraxel.org (unknown [10.44.32.244])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 47272180035C;
+	Wed, 25 Jun 2025 11:53:01 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+	id AF16D18000A3; Wed, 25 Jun 2025 13:52:58 +0200 (CEST)
+Date: Wed, 25 Jun 2025 13:52:58 +0200
+From: Gerd Hoffmann <kraxel@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: linux-coco@lists.linux.dev, kvm@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, 
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Ard Biesheuvel <ardb@kernel.org>, 
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>, 
+	"open list:EXTENSIBLE FIRMWARE INTERFACE (EFI)" <linux-efi@vger.kernel.org>
+Subject: Re: [PATCH v2 2/2] x86/sev: let sev_es_efi_map_ghcbs map the caa
+ pages too
+Message-ID: <rite3te5udzekwbbujmga5kyyjjm5gfphhqoxlhtsncgckq6rm@7m7owl5jgubz>
+References: <20250602105050.1535272-1-kraxel@redhat.com>
+ <20250602105050.1535272-3-kraxel@redhat.com>
+ <20250624130158.GIaFqhxjE8-lQqq7mt@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 25 Jun 2025 13:52:39 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250624130158.GIaFqhxjE8-lQqq7mt@fat_crate.local>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-The mixture of gotos and direct return codes is inconsistent and just makes
-the code harder to read. Let it consistently return error codes directly and
-tidy the code flow up accordingly.
+>  	for_each_possible_cpu(cpu) {
+>  		data = per_cpu(runtime_data, cpu);
+> @@ -1066,6 +1069,14 @@ int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
+>  
+>  		if (kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags))
+>  			return 1;
+> +
+> +		address = per_cpu(svsm_caa_pa, cpu);
+> +		if (!address)
+> +			return 1;
+> +
+> +		pfn = address >> PAGE_SHIFT;
+> +		if (kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags_enc))
+> +			return 1;
+>  	}
 
-No functional change intended.
+The kernel allocates the caa page(s) only when running under svsm, see
+alloc_runtime_data(), so this is not correct.  I think we either have to
+return to the original behavior of only doing something in case address
+is not NULL, or wrap the caa code block into a 'if (snp_vmpl) { ... }',
+following what alloc_runtime_data() is doing.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
-V2: Fix the return value - Paolo
-    Drop the __free() part - Jakub
----
- drivers/ptp/ptp_chardev.c |   54 +++++++++++++---------------------------------
- 1 file changed, 16 insertions(+), 38 deletions(-)
-
---- a/drivers/ptp/ptp_chardev.c
-+++ b/drivers/ptp/ptp_chardev.c
-@@ -106,8 +106,7 @@ int ptp_set_pinfunc(struct ptp_clock *pt
- 
- int ptp_open(struct posix_clock_context *pccontext, fmode_t fmode)
- {
--	struct ptp_clock *ptp =
--		container_of(pccontext->clk, struct ptp_clock, clock);
-+	struct ptp_clock *ptp = container_of(pccontext->clk, struct ptp_clock, clock);
- 	struct timestamp_event_queue *queue;
- 	char debugfsname[32];
- 
-@@ -536,67 +535,46 @@ long ptp_ioctl(struct posix_clock_contex
- ssize_t ptp_read(struct posix_clock_context *pccontext, uint rdflags,
- 		 char __user *buf, size_t cnt)
- {
--	struct ptp_clock *ptp =
--		container_of(pccontext->clk, struct ptp_clock, clock);
-+	struct ptp_clock *ptp =	container_of(pccontext->clk, struct ptp_clock, clock);
- 	struct timestamp_event_queue *queue;
- 	struct ptp_extts_event *event;
--	int result;
-+	ssize_t result;
- 
- 	queue = pccontext->private_clkdata;
--	if (!queue) {
--		result = -EINVAL;
--		goto exit;
--	}
-+	if (!queue)
-+		return -EINVAL;
- 
--	if (cnt % sizeof(struct ptp_extts_event) != 0) {
--		result = -EINVAL;
--		goto exit;
--	}
-+	if (cnt % sizeof(*event) != 0)
-+		return -EINVAL;
- 
- 	if (cnt > EXTTS_BUFSIZE)
- 		cnt = EXTTS_BUFSIZE;
- 
--	cnt = cnt / sizeof(struct ptp_extts_event);
--
--	if (wait_event_interruptible(ptp->tsev_wq,
--				     ptp->defunct || queue_cnt(queue))) {
-+	if (wait_event_interruptible(ptp->tsev_wq, ptp->defunct || queue_cnt(queue)))
- 		return -ERESTARTSYS;
--	}
- 
--	if (ptp->defunct) {
--		result = -ENODEV;
--		goto exit;
--	}
-+	if (ptp->defunct)
-+		return -ENODEV;
- 
- 	event = kmalloc(EXTTS_BUFSIZE, GFP_KERNEL);
--	if (!event) {
--		result = -ENOMEM;
--		goto exit;
--	}
-+	if (!event)
-+		return -ENOMEM;
- 
- 	scoped_guard(spinlock_irq, &queue->lock) {
--		size_t qcnt = queue_cnt(queue);
--
--		if (cnt > qcnt)
--			cnt = qcnt;
-+		size_t qcnt = min((size_t)queue_cnt(queue), cnt / sizeof(*event));
- 
--		for (size_t i = 0; i < cnt; i++) {
-+		for (size_t i = 0; i < qcnt; i++) {
- 			event[i] = queue->buf[queue->head];
- 			/* Paired with READ_ONCE() in queue_cnt() */
- 			WRITE_ONCE(queue->head, (queue->head + 1) % PTP_MAX_TIMESTAMPS);
- 		}
-+		cnt = qcnt * sizeof(*event);
- 	}
- 
--	cnt = cnt * sizeof(struct ptp_extts_event);
--
- 	result = cnt;
--	if (copy_to_user(buf, event, cnt)) {
-+	if (copy_to_user(buf, event, cnt))
- 		result = -EFAULT;
--		goto free_event;
--	}
- 
--free_event:
- 	kfree(event);
--exit:
- 	return result;
- }
+take care,
+  Gerd
 
