@@ -1,87 +1,84 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F8E265629;
-	Wed, 25 Jun 2025 14:13:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C817E25FA31
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:14:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750860819; cv=none; b=klpjdCeMf8cpRV9ohUo/GEdbmtnmhJ1SU4m7QAFXoFjVshRW2l4YREFumkqDLpu6OR19Q77VwRanTdEtBGv6C19ysgJ74HVdvqpCjpKwhTnr3wOFKz7P3m61DfF5dU9t0p2B4JeqCIJ864w79TWNi26xXcXkcbAZziwS4of+f60=
+	t=1750860874; cv=none; b=mF36GELJ6lKVyC9NdOQ0vP4vNcFbYHwlsput5dPyWFHA8VbQ07XQc2lJ0kpvC2ssAcw/UZQ70ykaePa9cOBGNt9CFHlT0cyv2bIKz6Njqe1zFCgdiJ882cEen8TxYSGWy+ovLb5wh0vmEzb152L5+q8DLRSqe2u0XSPJQpQwnl4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750860819; c=relaxed/simple;
-	bh=Xu+3guvzOiENbP4PGwXaQ6Dx/qzMgz+1EW/rhP7FAc8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t73pB72sxtuppZON2jS1fIe41drxCDB6LFrkH1POHLXipRB/uQd8B+kcoKyNSCwUM0HTZyZLtB5OJSivI8Ii1R94iBaqfGp26sXSPw6u+voUzx3i+eX2QwPunriIk1MEnTq7ukbd6aZfc/WZtrJbz/nT8oegfML/9B/m/lG2GYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=NhKuR0EE; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="NhKuR0EE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1750860807;
-	bh=Xu+3guvzOiENbP4PGwXaQ6Dx/qzMgz+1EW/rhP7FAc8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NhKuR0EEiMHXSjz5JQyzoq4n7Itq6ws4JFS371iOgmwAxwHlweqitPurrklqdy1pK
-	 ugfqG9VVwZom2u4vJtyA9ACjhYhHy3tWuavX/l9vRO0l7/x1KYjTFUQ3VoN+a6NMYb
-	 PeCNP9M5APn/w9i9vNSDGGW6xu2Xp97PplrbhTyw=
-Date: Wed, 25 Jun 2025 16:13:26 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Rob Landley <rob@landley.net>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>, 
-	Rich Felker <dalias@libc.org>, John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, 
-	Willy Tarreau <w@1wt.eu>, Shuah Khan <shuah@kernel.org>, linux-sh@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] tools/nolibc: add support for SuperH
-Message-ID: <ffeea73d-35e1-44b7-b90d-c1b45f85376b@t-8ch.de>
-References: <20250609-nolibc-sh-v1-0-9dcdb1b66bb5@weissschuh.net>
- <16f63653-c5c9-4b32-8e0c-0a4910a9fdb9@landley.net>
+	s=arc-20240116; t=1750860874; c=relaxed/simple;
+	bh=TwJhoQVTKewqAiecfG3kRNUnDXWKo7e5dMkPkOD0uPc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=IiMPM6U1vKk7p4hXoL1Too/vvcamiDHVXwO+ZEjHdktZbHCQULtaJh+8Tj+cgLqiTTWXw7+rfWPrwUODmPPiqZo3xwVgoCHBhZk0u8qCpWW9ubNuYl82u32WUGrBAuDKnx2R1nvKGCEZgKKcTgkq7xwAaYYOBUx3pagUc/cZLEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-86cfe68a8bbso161143439f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:14:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750860872; x=1751465672;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HVAdq5Xq3i/M/33mG03JeSbgLnvbME+n59OXXHf2FJI=;
+        b=b1EwJ4kDrl7P5CJdS5V17B0aktf8L2lnMIpKocS0+S9+sk1uFwouIld4vKzMzH9e25
+         SmQfFfZgYYaX9us0UJph6R+uxZRmZxHvCXSuneBqIQQ3AONHonv2Enu+xLzl384lbcGH
+         ikzJLeJlvq9kd3xDIKzPxyMW3A1coN6HndSdl0sFxX2naEbWt+E4U4/p4w8TC0g8fJEQ
+         s8yZ42yaj0bvapcLkICCyUigbf6+U8Y7H8b702kbWF2avy23SUnLGnfwQmZbh8OrrSwF
+         FMXTssSRaHHgPIX9F7wm/7WzPJ/Hqx0yaCMCnI6J/yRu3lCKK1Hf9u01ITjScp9HvPPQ
+         PBxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUXC+UAbgz6h2g4aHqI1VbYnkXAoF/RF0WkRGkHgM0aaFjfda40TphK7wvN9lMBrkuS0pwzaVquAefi/bk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxrXPM3lRPautZGligwkgjpeLpm9ZQB5IQce1jfocAZvusfDhZF
+	75Ys77RfkWfp6CwNjEPyk2IWkzORUcNW05V4G6tnenCi/VAeAZ3HtzkvaBqhOX5WL0sQfNYbYEZ
+	yeqdRyieK0ryNiTPUCzD7ed1mFptjhGbntk7ZxMi9juw7Q9jvvI7bdwIQqPY=
+X-Google-Smtp-Source: AGHT+IFAY8cbF/hrLSvfXwLM3Q/WedY9hHd354EOrKS1CI3bA11yz9a/SmJikGlDR2rNWrnyoxqwq6e2gjjWCu9ETmLS9cysCgaJ
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <16f63653-c5c9-4b32-8e0c-0a4910a9fdb9@landley.net>
+X-Received: by 2002:a05:6e02:19cc:b0:3dd:ebb4:bcd8 with SMTP id
+ e9e14a558f8ab-3df32920042mr36725445ab.9.1750860872003; Wed, 25 Jun 2025
+ 07:14:32 -0700 (PDT)
+Date: Wed, 25 Jun 2025 07:14:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685c0447.a00a0220.34b642.00c3.GAE@google.com>
+Subject: [syzbot] Monthly bpf report (Jun 2025)
+From: syzbot <syzbot+listb92358b4c1405dc20706@syzkaller.appspotmail.com>
+To: andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org, 
+	daniel@iogearbox.net, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Rob,
+Hello bpf maintainers/developers,
 
-On 2025-06-24 21:41:14-0500, Rob Landley wrote:
-> On 6/9/25 04:28, Thomas Weißschuh wrote:
-> > Add support for SuperH/"sh" to nolibc.
-> > Only sh4 is tested for now.
-> > 
-> > This is only tested on QEMU so far.
-> > Additional testing would be very welcome.
-> 
-> I ran this by Jeff Dionne (the j-core architect) who said:
-> 
-> > Looks correct to me.  There are no endian assumptions that I can see.
-> 
-> So you can put
-> 
-> Acked-by: Rob Landley <rob@landley.net>
-> Acked-by: D. Jeff Dionne <jeff@coresemi.io>
+This is a 31-day syzbot report for the bpf subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/bpf
 
-Thanks!
+During the period, 3 new issues were detected and 2 were fixed.
+In total, 25 issues are still open and 294 have already been fixed.
 
-> But neither of us really have a build environment set up to do much with it.
-> Is there a howto for this, or is just to run the kernel tests?
+Some of the still happening issues:
 
-v2 of the series [0] has some test instructions.
-These should also work with v1, except that "-f Makefile.nolibc" needs
-to be removed.
+Ref Crashes Repro Title
+<1> 269     Yes   INFO: rcu detected stall in sys_clone (8)
+                  https://syzkaller.appspot.com/bug?extid=c4c6c3dc10cc96bcf723
+<2> 13      Yes   general protection fault in bpf_get_local_storage
+                  https://syzkaller.appspot.com/bug?extid=e6e8f6618a2d4b35e4e0
+<3> 5       Yes   WARNING: kernel/bpf/verifier.c:LINE at do_check, CPU: syz.NUM.NUM/NUM
+                  https://syzkaller.appspot.com/bug?extid=dc27c5fb8388e38d2d37
 
-$ cd tools/testings/selftests/nolibc/
-$ make -f Makefile.nolibc ARCH=sh CROSS_COMPILE=sh4-linux- nolibc-test
-$ file nolibc-test
-nolibc-test: ELF 32-bit LSB executable, Renesas SH, version 1 (SYSV), statically linked, not stripped
-$ ./nolibc-test
-Running test 'startup'
-0 argc = 1                                                        [OK]
-...
-Total number of errors: 0
-Exiting with status 0
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-[0] https://lore.kernel.org/lkml/20250623-nolibc-sh-v2-0-0f5b4b303025@weissschuh.net/
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
