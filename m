@@ -1,198 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50C6818A6C4;
-	Wed, 25 Jun 2025 06:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD2BA1F866B;
+	Wed, 25 Jun 2025 06:32:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750833153; cv=none; b=oxbkoTtY8w/557eiiAsDyoARmex4sGEhFAVPxmLo+ElfXxEVBoJLuaOQ5s43KrRhAb6/fiyxqBTOwAh8/WNwaVOvgPeEwnsZlQvM5tIvzoEztWKVh0/thD4n855hg/M7zthj85CSLSv+tlNM/md8LWjEClNjjNi919X0ZHTfMbI=
+	t=1750833163; cv=none; b=ZkxnO0V5F8Isn3XmWY6d8GwknDLkAPKFlnYrgHc/cA96Er6Htz/9Vv70siBCe1QR8mNPtMRrpXtEHp6jEmcpggQ2NwlqzKmB8UefxVS2FBAajx6faYAwf5Ob16o4Rtd2Fx6SWFwcJU7H8EZpxia+XU1McAE71CZkoFpRXOFdWkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750833153; c=relaxed/simple;
-	bh=2fz72wdEOHN12Hrp4x5DN2tgOHb8xAEfLxxCTvKe0GI=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=UeeGEetFKpKBzUmoci5kxX1vNkM8V2hnXlYydoVxqZoI2y6LxMV9Pkulheo95tsfFANOnaTDmuTKVq9HOvXxpRJSekxWdIPh0kzjDoeARbfF65lIynMixc/73FDLgMneklxk2U4KIGmvF4r4w6FLaDb2ONsdPZaTPhwieaBmqWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BDQx1S1H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750833163; c=relaxed/simple;
+	bh=fRKEajYsrjEETd0CV9CF87Nd+bCIvmN7rl+y4Q2rXBw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=kPGcZmlZoFb0i53MeaZMZoNMH/5hVqIZKjzLXKHRQIwkl0TRQzEMQ/KS3ckZNzDUHHK1CuMkFTQavrlHtO+tidhuyqmlXPOqzUw9+pxMpiwm+q/4JAGh0kYlmIPjZgdYqHLT9AQ1WV6lzyNX0dU9nJtGGUhIMXS3745GaevkK5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=WtYfPiiK; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDQx1S1H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A03B2C4CEEA;
-	Wed, 25 Jun 2025 06:32:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750833152;
-	bh=2fz72wdEOHN12Hrp4x5DN2tgOHb8xAEfLxxCTvKe0GI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BDQx1S1HFvbpSyi0OWj0BM2UU2EI3ELm2y4BQCLW7gQA3ZA5TFFmoCRaTsd2kTc4d
-	 EbTUTS1c9XPpIhxgG6oaJi60M3VFVBVWNe0nBcVYN8KuOk/ic9e/niIzGoFqwESOaH
-	 zFwpPTqID/wKO7RP5rJnW16KZXnKoF5vXJPnQ/6rbnW5VUmH78LRuEk0OUqBfKKssn
-	 ZE+OVSHJEk0Oc5QFITY7cGQlCUWjX2jP3hesASrMYneiRH1P+kb5lKE35vDEPrKBz2
-	 H9JdoWR0jqYBaGaAmB7o0ulCdoSv7r0ekeVWCMAFoRWiNUefJEKCn1s6/PEKD6g5rr
-	 qjAq/bQgeOHuQ==
-Date: Wed, 25 Jun 2025 15:32:29 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Jiri Olsa <jolsa@kernel.org>
-Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
- x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
- <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
- <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
- <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, David Laight
- <David.Laight@ACULAB.COM>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
- <thomas@t-8ch.de>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCHv3 perf/core 06/22] uprobes: Add is_register argument to
- uprobe_write and uprobe_write_opcode
-Message-Id: <20250625153229.f39c1a1a99ce986380769150@kernel.org>
-In-Reply-To: <20250605132350.1488129-7-jolsa@kernel.org>
-References: <20250605132350.1488129-1-jolsa@kernel.org>
-	<20250605132350.1488129-7-jolsa@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="WtYfPiiK"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P1pHBU001125;
+	Wed, 25 Jun 2025 06:32:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:date:from:in-reply-to:message-id
+	:mime-version:references:subject:to; s=qcppdkim1; bh=Ko96WMYCjhf
+	nkHlSLv3qudWFvcVqQt11yvW1BUhMEyg=; b=WtYfPiiKKZFqiQOcLYOY839edLm
+	DDs3hGYp7wPrpFJ2WG8l/dknJzwYoqtyC9LS2uHvSqt9Y3DwTXonVXwkjtFilehy
+	QN416a6ZSKp8INmn8m4qFYOFXX5+/MQVMfWBY6fh+UQ/u3zGiRbtKmzLOBZrI0WA
+	/xPydMP7VHIolhmknJ9jKo8sknxuwkNAjv6cfj6nFWoBQ07ut/ST4Q0LJUuG1nQN
+	B+3Ur5gtKGxJRv150TIUXazd04ewroDPKH2aBnIYwwU8aSa9yD7ICwqVH2EBQ2z0
+	cVQuvdr8cpY1FihWHCeGtQB5cuPNfOSWx53gFisCg4QPAQ++1XgiuZB7kRA==
+Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g7td8k67-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 06:32:30 +0000 (GMT)
+Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 55P6WSUK029375;
+	Wed, 25 Jun 2025 06:32:28 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 47dntma48b-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 06:32:28 +0000
+Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 55P6WRK1029360;
+	Wed, 25 Jun 2025 06:32:28 GMT
+Received: from cse-cd02-lnx.ap.qualcomm.com (cse-cd02-lnx.qualcomm.com [10.64.75.246])
+	by APTAIPPMTA02.qualcomm.com (PPS) with ESMTPS id 55P6WR8o029350
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 06:32:27 +0000
+Received: by cse-cd02-lnx.ap.qualcomm.com (Postfix, from userid 4438065)
+	id 04B263835; Wed, 25 Jun 2025 14:32:26 +0800 (CST)
+From: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+To: andersson@kernel.org, konradybcio@kernel.org, robh@kernel.org,
+        krzk+dt@kernel.org, conor+dt@kernel.org, jingoohan1@gmail.com,
+        mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org,
+        bhelgaas@google.com, johan+linaro@kernel.org, vkoul@kernel.org,
+        kishon@kernel.org, neil.armstrong@linaro.org, abel.vesa@linaro.org,
+        kw@linux.com
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, qiang.yu@oss.qualcomm.com,
+        quic_krichai@quicinc.com, quic_vbadigan@quicinc.com,
+        Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+Subject: [PATCH v6 1/3] dt-bindings: phy: qcom,sc8280xp-qmp-pcie-phy: Update pcie phy bindings for QCS615
+Date: Wed, 25 Jun 2025 14:32:11 +0800
+Message-Id: <20250625063213.1416442-2-quic_ziyuzhan@quicinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250625063213.1416442-1-quic_ziyuzhan@quicinc.com>
+References: <20250625063213.1416442-1-quic_ziyuzhan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=CPYqXQrD c=1 sm=1 tr=0 ts=685b97fe cx=c_pps
+ a=nuhDOHQX5FNHPW3J6Bj6AA==:117 a=nuhDOHQX5FNHPW3J6Bj6AA==:17
+ a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=oxzBFytuHnZbSq-PjLoA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA0NyBTYWx0ZWRfX1iQtwp72NeyK
+ q83f0VKpUBQGpnmybEonumJe4YRQ1awPDldHspZyg4MHARr51CiX1Fh2VeWxZNqioBHd5ggjfIK
+ ZvfCu8sRakSFZDJ4kCwrjHnVO3drJqOLjeKRK+hPNkBL1BXAGasNIxiv70Ljv7x1xOZQ5BOLiGQ
+ uZgxwMnI8loSnPr+yEBaPle9hz778RJBAIm5klW+7b2IvLnUvLByEluM1ZukorU64CpfRy1DYYJ
+ pbxLEmumCI+P0xUhisGVofMNr3ZGx0YHi9xZ7zWCGiaB46WFcNJTsFjXZFkgVzm/LDyka/xijfZ
+ HuGI0uj6VjcyUJqZCl5TyXbMAe8f8xl0sUf8WM/1YMWqZBSl/6uf2a1azRiNAK1rcgoCjHnkRAo
+ Ra4l3HnoVa3Mb/TktHN5SQBqJ8N5962yziQvK4pPoqXWhgXd6j+jqCDTM+asZKOD1Vbfdk/d
+X-Proofpoint-GUID: cCDw8hKUtLMS-FKduVj31CqRnEB0WNMC
+X-Proofpoint-ORIG-GUID: cCDw8hKUtLMS-FKduVj31CqRnEB0WNMC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_01,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 phishscore=0 mlxlogscore=999 lowpriorityscore=0 malwarescore=0
+ impostorscore=0 suspectscore=0 clxscore=1015 spamscore=0 priorityscore=1501
+ adultscore=0 mlxscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506250047
 
-On Thu,  5 Jun 2025 15:23:33 +0200
-Jiri Olsa <jolsa@kernel.org> wrote:
+QCS615 pcie phy only use 5 clocks, which are aux, cfg_ahb, ref,
+ref_gen, pipe. So move "qcom,qcs615-qmp-gen3x1-pcie-phy" compatible
+from 6 clocks' list to 5 clocks' list.
 
-> The uprobe_write has special path to restore the original page when we
-> write original instruction back. This happens when uprobe_write detects
-> that we want to write anything else but breakpoint instruction.
-> 
-> Moving the detection away and passing it to uprobe_write as argument,
-> so it's possible to write different instructions (other than just
-> breakpoint and rest).
+Signed-off-by: Ziyue Zhang <quic_ziyuzhan@quicinc.com>
+---
+ .../devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml     | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
-
-> 
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
-> Acked-by: Oleg Nesterov <oleg@redhat.com>
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  arch/arm/probes/uprobes/core.c |  2 +-
->  include/linux/uprobes.h        |  5 +++--
->  kernel/events/uprobes.c        | 21 +++++++++++----------
->  3 files changed, 15 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/arm/probes/uprobes/core.c b/arch/arm/probes/uprobes/core.c
-> index 885e0c5e8c20..3d96fb41d624 100644
-> --- a/arch/arm/probes/uprobes/core.c
-> +++ b/arch/arm/probes/uprobes/core.c
-> @@ -30,7 +30,7 @@ int set_swbp(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
->  	     unsigned long vaddr)
->  {
->  	return uprobe_write_opcode(auprobe, vma, vaddr,
-> -		   __opcode_to_mem_arm(auprobe->bpinsn));
-> +		   __opcode_to_mem_arm(auprobe->bpinsn), true);
->  }
->  
->  bool arch_uprobe_ignore(struct arch_uprobe *auprobe, struct pt_regs *regs)
-> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-> index 147c4a0a1af9..518b26756469 100644
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -197,9 +197,10 @@ extern bool is_swbp_insn(uprobe_opcode_t *insn);
->  extern bool is_trap_insn(uprobe_opcode_t *insn);
->  extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
->  extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
-> -extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t);
-> +extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t,
-> +			       bool is_register);
->  extern int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma, const unsigned long opcode_vaddr,
-> -			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify);
-> +			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register);
->  extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
->  extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
->  extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index f7feb7417a2c..1e5dc3b30707 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -402,10 +402,10 @@ static bool orig_page_is_identical(struct vm_area_struct *vma,
->  
->  static int __uprobe_write(struct vm_area_struct *vma,
->  		struct folio_walk *fw, struct folio *folio,
-> -		unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes)
-> +		unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes,
-> +		bool is_register)
->  {
->  	const unsigned long vaddr = insn_vaddr & PAGE_MASK;
-> -	const bool is_register = !!is_swbp_insn(insn);
->  	bool pmd_mappable;
->  
->  	/* For now, we'll only handle PTE-mapped folios. */
-> @@ -488,26 +488,27 @@ static int __uprobe_write(struct vm_area_struct *vma,
->   * Return 0 (success) or a negative errno.
->   */
->  int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
-> -		const unsigned long opcode_vaddr, uprobe_opcode_t opcode)
-> +		const unsigned long opcode_vaddr, uprobe_opcode_t opcode,
-> +		bool is_register)
->  {
-> -	return uprobe_write(auprobe, vma, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE, verify_opcode);
-> +	return uprobe_write(auprobe, vma, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE,
-> +			    verify_opcode, is_register);
->  }
->  
->  int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
->  		 const unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes,
-> -		 uprobe_write_verify_t verify)
-> +		 uprobe_write_verify_t verify, bool is_register)
->  {
->  	const unsigned long vaddr = insn_vaddr & PAGE_MASK;
->  	struct mm_struct *mm = vma->vm_mm;
->  	struct uprobe *uprobe;
-> -	int ret, is_register, ref_ctr_updated = 0;
-> +	int ret, ref_ctr_updated = 0;
->  	unsigned int gup_flags = FOLL_FORCE;
->  	struct mmu_notifier_range range;
->  	struct folio_walk fw;
->  	struct folio *folio;
->  	struct page *page;
->  
-> -	is_register = is_swbp_insn(insn);
->  	uprobe = container_of(auprobe, struct uprobe, arch);
->  
->  	if (WARN_ON_ONCE(!is_cow_mapping(vma->vm_flags)))
-> @@ -569,7 +570,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
->  	/* Walk the page tables again, to perform the actual update. */
->  	if (folio_walk_start(&fw, vma, vaddr, 0)) {
->  		if (fw.page == page)
-> -			ret = __uprobe_write(vma, &fw, folio, insn_vaddr, insn, nbytes);
-> +			ret = __uprobe_write(vma, &fw, folio, insn_vaddr, insn, nbytes, is_register);
->  		folio_walk_end(&fw, vma);
->  	}
->  
-> @@ -611,7 +612,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
->  int __weak set_swbp(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
->  		unsigned long vaddr)
->  {
-> -	return uprobe_write_opcode(auprobe, vma, vaddr, UPROBE_SWBP_INSN);
-> +	return uprobe_write_opcode(auprobe, vma, vaddr, UPROBE_SWBP_INSN, true);
->  }
->  
->  /**
-> @@ -627,7 +628,7 @@ int __weak set_orig_insn(struct arch_uprobe *auprobe,
->  		struct vm_area_struct *vma, unsigned long vaddr)
->  {
->  	return uprobe_write_opcode(auprobe, vma, vaddr,
-> -			*(uprobe_opcode_t *)&auprobe->insn);
-> +			*(uprobe_opcode_t *)&auprobe->insn, false);
->  }
->  
->  /* uprobe should have guaranteed positive refcount */
-> -- 
-> 2.49.0
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+index 2c6c9296e4c0..a1ae8c7988c8 100644
+--- a/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
++++ b/Documentation/devicetree/bindings/phy/qcom,sc8280xp-qmp-pcie-phy.yaml
+@@ -145,6 +145,7 @@ allOf:
+         compatible:
+           contains:
+             enum:
++              - qcom,qcs615-qmp-gen3x1-pcie-phy
+               - qcom,sar2130p-qmp-gen3x2-pcie-phy
+               - qcom,sc8180x-qmp-pcie-phy
+               - qcom,sdm845-qhp-pcie-phy
+@@ -175,7 +176,6 @@ allOf:
+         compatible:
+           contains:
+             enum:
+-              - qcom,qcs615-qmp-gen3x1-pcie-phy
+               - qcom,sc8280xp-qmp-gen3x1-pcie-phy
+               - qcom,sc8280xp-qmp-gen3x2-pcie-phy
+               - qcom,sc8280xp-qmp-gen3x4-pcie-phy
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.34.1
+
