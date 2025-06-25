@@ -1,236 +1,120 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7509229C323
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFD0C2F2C74;
+	Wed, 25 Jun 2025 22:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750889754; cv=none; b=nHRR2s1cej86aVgmnfe16O26mcy7HpViEzMqbvRuBRaeNxqwOXcIjXA0ofc+J1aBXGYl9H/f0fDEVWuBtoaV9udbz1Yi540au2LN9b4ZibV+W2a80CPF3uuTOj8XObRFf80z1RRgarudX51DJNWSdWnM4HkZYsqhIqUlcDmFozg=
+	t=1750889815; cv=none; b=eaD2qdEDzZ1k3edNa0VTwWik+OXDT0Sd/H4N57rSZHwoseRMgu2MiUrcIWJgeemVFcz28rCxrkzEgJ6yd9/YSorSIuV5FXMe7X4rldlpLczRjV4fjL4gCdGCzyQKwTkFpOCuT13SBMFGYyvoKBvZx4QuxuCgCKFp1bHcV3eWnSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750889754; c=relaxed/simple;
-	bh=ylUWsqBdv7tvsvdpMfdW9ujSAH2BGmfxAz/cPhecY5Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Wxo9OXlurWxE6nJGJCAPBe5x0CI7gMrXiYjidMJz4R3C+dBK1oHlSIxMjpo4f08ZrPP4S9zj7ZY7/RnLJyk11nd+1Jb9QEg8SomnOjwx9AG74TVLX8wGb6D1s4kCbxfdal898BhYg1XZ2iMKVvl+2ZZ2+qu6532N47VUvzEDm+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RoJD50ed; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750889815; c=relaxed/simple;
+	bh=JPCUTE7k+d+bV0g/ym3IuJKj3lnwuQfByYVszEgGuWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=NeSVpqgzIkqaIPZGvhJHmt8y55GBejV7wyBDj9AOb+PPTDNx//Fv0bEUvQL5DLXFdGUGQEOLkKJ0ddRmRsfJ9q+mN3xU4eWs1PWZeICvxPk72HncwguGd8Ppaa+lnnj+B1wy/iYITgsNW652YvnwLVPH5UWnlWfwJbTRffwJIS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FRgvI8Ki; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoJD50ed"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-236470b2dceso5083005ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:15:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750889751; x=1751494551; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=i1/PgKpNQEL4CZ/x5npolCmb2YPYwo+H2VVcT6JHico=;
-        b=RoJD50edfT3eMAQwSA7TcU64911r/AUAquVs8QzEuwJOFuZi1CizQ5PkzabplJcZwT
-         xd+KIRPU/2SsSQ9mhm9vu209hbayh4Ew0NIR72f3aOibBgT4/IkjQTKULIiWAJ7y8LPD
-         qj9HC16qxuyjZpAr+cZJjzIjErYzCZ9jiV9cF08dqNyZ9LwZI2Ca0OlYv7rG/WjrH4Eh
-         P3WIfOzsq72xIsU4CVfAXz96OYLf40w73untwPcITwBqUpPApHuKpzKtz9r98AF/l2Mf
-         gbb3MxM7WcMMP6pUzv7uqazAilHSfKnhsJzXmN1UuAQ/8dHmkPaVjp03L1OIZfudzdWH
-         jmkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750889751; x=1751494551;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=i1/PgKpNQEL4CZ/x5npolCmb2YPYwo+H2VVcT6JHico=;
-        b=aMzjLQcEkj+uPTmXytAtEDuTvDSj617bXFdX3LWbClOh4LGDEfIWzNnfLb7dJs07BF
-         ffdACnrzH7mv2vM18GJzF96u+Q+/Evr9wuTVpL1n0jz9PlWf1ygE8djS2a8t+6phY+mz
-         MLYHps2hr4XLibxnQ8mx313knsXFsyrW9k3yvIg/f6i5oNTrEPkM9nHVm8RWHWnOCrMk
-         HtTNDGbrxvJnXbltCwTmMZKfanduDgR52oJgUs8Z1S+LMv6o8PqHJWf908y0ITS1sil+
-         XpYd+M1RQ+miOSOEDZs/j2nKzjU1BYiY/R/tliK2oQG30BA6Q1he/xwREHYHWZSE23rU
-         uXig==
-X-Forwarded-Encrypted: i=1; AJvYcCUvio2FFwq5vqpigosRhQn2brscaoN0Mr/1XL/1ZjhWFhToCoeS5MSo3WCON2l8p822oorxRAZX6dYVREQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJD9BwL5wwEYkA4hY6PAWBz5gLUwNHUmX6QNIYQbkLJBcfPPiZ
-	SSVh7DxRH7KJrvUifTyxTh2eAa4AbQZ7LeKbVSAX7A1o5N/6FmMuGIB0
-X-Gm-Gg: ASbGnctdkMSIZr56WCmV2+qWSTSHpWnrUkBfiVIP6IX0Sb1BcSJjnUaIFnFtvMk1AyT
-	PNEnedDav9d156+4AvVPKFNnWD1QFCVaDvevxU1S4Y8od7jHfFgsPGcqO2UZME0zuQNgDb7z8Ew
-	QN4cfGtNlIcnWW9xc44R707pN94PS0oGB41PIxAfD6PVxqwDBs+fG6ONZT4ANGhLFN5e5ygvVyl
-	n9q79jTdzeN4rNCAwOL/Z1AsymVWnKbj88BvMjQ0lFCdbLBa/OtnKYLAcnT7FL+oumOV3Cnboof
-	cwx3KSTEkX3JaGHzVGaQEMqcwI3gksq2EHSek1qYW2g2roqptuTvqOqX7HDJ1i/40+OjbD8YjtS
-	Fgow=
-X-Google-Smtp-Source: AGHT+IF447eXoeCPMZ9fSborn0oc0o77ApQohY3vn62RRe/f5MId9QjXnzTMTAtUShcwzCs4rGS+mw==
-X-Received: by 2002:a17:902:f684:b0:235:60e:3704 with SMTP id d9443c01a7336-23823fc3f99mr87140675ad.12.1750889751418;
-        Wed, 25 Jun 2025 15:15:51 -0700 (PDT)
-Received: from itsmeut.. ([103.215.237.70])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237f7579cddsm84397535ad.202.2025.06.25.15.15.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 15:15:50 -0700 (PDT)
-From: Utkarsh Singh <utkarsh.singh.em@gmail.com>
-To: agruenba@redhat.com
-Cc: gfs2@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	skhan@linuxfoundation.org,
-	Utkarsh Singh <utkarsh.singh.em@gmail.com>
-Subject: [PATCH] gfs2/sysfs: Replace sprintf/snprintf with sysfs_emit()
-Date: Thu, 26 Jun 2025 03:41:38 +0530
-Message-Id: <20250625221137.108313-1-utkarsh.singh.em@gmail.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FRgvI8Ki"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2720CC4CEEA;
+	Wed, 25 Jun 2025 22:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750889815;
+	bh=JPCUTE7k+d+bV0g/ym3IuJKj3lnwuQfByYVszEgGuWY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=FRgvI8Ki3o+8iAvZxOIOLv4YJj2pE/da5dKHPk4INdG0jov6rqfxyEemaXfjw7Gch
+	 7/EpZGNRiorCi7p4OgarRC8qCQ/dx0UQ9I2J3SoVMztSbhHzrqfQSuT5BuAZWrnCwa
+	 0Gf4FPtA2UdyAGdoY7lWk0pnZG+LvElbmEFkd4erB8Ioo259Q2nrKXZ55Hh9EC0oXK
+	 /Q4N+vlPGYoJ5/LWKa3MzpD9yjxG6/yfB+QoaWFgwrx9j4i7mUTYPOOdtxwcB+6NlK
+	 o14doDX3YsC5c5DLWuPCeGWr/HKA5g9BOUlP184kbOtrpIE2lKxBg1GnhPxjAbEP3Y
+	 Vwjm1PXyLnUZg==
+Date: Wed, 25 Jun 2025 17:16:53 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Jacky Chou <jacky_chou@aspeedtech.com>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>,
+	"robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
+	"conor+dt@kernel.org" <conor+dt@kernel.org>,
+	"joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"vkoul@kernel.org" <vkoul@kernel.org>,
+	"kishon@kernel.org" <kishon@kernel.org>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-phy@lists.infradead.org" <linux-phy@lists.infradead.org>,
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"elbadrym@google.com" <elbadrym@google.com>,
+	"romlem@google.com" <romlem@google.com>,
+	"anhphan@google.com" <anhphan@google.com>,
+	"wak@google.com" <wak@google.com>,
+	"yuxiaozhang@google.com" <yuxiaozhang@google.com>,
+	BMC-SW <BMC-SW@aspeedtech.com>
+Subject: Re: =?utf-8?B?5Zue6KaGOiDlm57opoY=?= =?utf-8?Q?=3A?= [PATCH 5/7]
+ ARM: dts: aspeed-g6: Add PCIe RC node
+Message-ID: <20250625221653.GA1590146@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SEYPR06MB51346BC9292066243CB845699D7BA@SEYPR06MB5134.apcprd06.prod.outlook.com>
 
-Documentation/filesystems/sysfs.rst mentions that show() should only
-use sysfs_emit() or sysfs_emit_at() when formatting values returned
-to user space. This patch updates the GFS2 sysfs interface accordingly.
+On Wed, Jun 25, 2025 at 08:27:26AM +0000, Jacky Chou wrote:
+> > > > > +				resets = <&syscon ASPEED_RESET_H2X>,
+> > > > > +					 <&syscon ASPEED_RESET_PCIE_RC_O>;
+> > > > > +				reset-names = "h2x", "perst";
+> > > >
+> > > > PERST# is clearly a per-Root Port item since it's a signal on the
+> > > > PCIe connector.  Can you separate this and any other per-Root Port
+> > > > things into a Root Port stanza to leave open the possibility of
+> > > > future hardware that supports multiple Root Ports in the RC?
+> > >
+> > > The PCIe RC that designed by us is only one root port.
+> > 
+> > Yes.  But this driver may be used in the future for other RCs that include more
+> > than one Root Port, and it would be good if that didn't require structural
+> > changes to the DT.  Also, there are RCs from other vendors that include more
+> > than one Root Port, and I'd like all the DTs and drivers to have similar
+> > structure.
+> 
+> Thanks.
+> Is the "pciec" node in arch/arm/boot/dts/marvell/armada-385.dtsi
+> what you said?  Or could you provide some examples for us to modify
+> our pcie rc node?
 
-It replaces uses of sprintf() and snprintf() in all *_show() functions
-with sysfs_emit() to align with current kernel sysfs API best practices.
-It also updates the GFS2_SHOW_UINT macro to use sysfs_emit() instead
-of snprintf().
+Here are some examples of DT bindings and corresponding driver code:
 
-Signed-off-by: Utkarsh Singh <utkarsh.singh.em@gmail.com>
----
- fs/gfs2/sys.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+* drivers/pci/controller/dwc/pcie-kirin.c
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/hisilicon,kirin-pcie.yaml?id=v6.16-rc1#n108
 
-diff --git a/fs/gfs2/sys.c b/fs/gfs2/sys.c
-index c3c8842920d2..77bd35b2f594 100644
---- a/fs/gfs2/sys.c
-+++ b/fs/gfs2/sys.c
-@@ -59,7 +59,7 @@ static struct kset *gfs2_kset;
- 
- static ssize_t id_show(struct gfs2_sbd *sdp, char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%u:%u\n",
-+	return sysfs_emit(buf, "%u:%u\n",
- 			MAJOR(sdp->sd_vfs->s_dev), MINOR(sdp->sd_vfs->s_dev));
- }
- 
-@@ -68,7 +68,7 @@ static ssize_t status_show(struct gfs2_sbd *sdp, char *buf)
- 	unsigned long f = sdp->sd_flags;
- 	ssize_t s;
- 
--	s = snprintf(buf, PAGE_SIZE,
-+	s = sysfs_emit(buf,
- 		     "Journal Checked:          %d\n"
- 		     "Journal Live:             %d\n"
- 		     "Journal ID:               %d\n"
-@@ -140,7 +140,7 @@ static ssize_t status_show(struct gfs2_sbd *sdp, char *buf)
- 
- static ssize_t fsname_show(struct gfs2_sbd *sdp, char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%s\n", sdp->sd_fsname);
-+	return sysfs_emit(buf, "%s\n", sdp->sd_fsname);
- }
- 
- static ssize_t uuid_show(struct gfs2_sbd *sdp, char *buf)
-@@ -150,7 +150,7 @@ static ssize_t uuid_show(struct gfs2_sbd *sdp, char *buf)
- 	buf[0] = '\0';
- 	if (uuid_is_null(&s->s_uuid))
- 		return 0;
--	return snprintf(buf, PAGE_SIZE, "%pUB\n", &s->s_uuid);
-+	return sysfs_emit(buf, "%pUB\n", &s->s_uuid);
- }
- 
- static ssize_t freeze_show(struct gfs2_sbd *sdp, char *buf)
-@@ -158,7 +158,7 @@ static ssize_t freeze_show(struct gfs2_sbd *sdp, char *buf)
- 	struct super_block *sb = sdp->sd_vfs;
- 	int frozen = (sb->s_writers.frozen == SB_UNFROZEN) ? 0 : 1;
- 
--	return snprintf(buf, PAGE_SIZE, "%d\n", frozen);
-+	return sysfs_emit(buf, "%d\n", frozen);
- }
- 
- static ssize_t freeze_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
-@@ -194,7 +194,7 @@ static ssize_t freeze_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
- static ssize_t withdraw_show(struct gfs2_sbd *sdp, char *buf)
- {
- 	unsigned int b = gfs2_withdrawing_or_withdrawn(sdp);
--	return snprintf(buf, PAGE_SIZE, "%u\n", b);
-+	return sysfs_emit(buf, "%u\n", b);
- }
- 
- static ssize_t withdraw_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
-@@ -397,7 +397,7 @@ static struct kobj_type gfs2_ktype = {
- static ssize_t proto_name_show(struct gfs2_sbd *sdp, char *buf)
- {
- 	const struct lm_lockops *ops = sdp->sd_lockstruct.ls_ops;
--	return sprintf(buf, "%s\n", ops->lm_proto_name);
-+	return sysfs_emit(buf, "%s\n", ops->lm_proto_name);
- }
- 
- static ssize_t block_show(struct gfs2_sbd *sdp, char *buf)
-@@ -408,7 +408,7 @@ static ssize_t block_show(struct gfs2_sbd *sdp, char *buf)
- 
- 	if (test_bit(DFL_BLOCK_LOCKS, &ls->ls_recover_flags))
- 		val = 1;
--	ret = sprintf(buf, "%d\n", val);
-+	ret = sysfs_emit(buf, "%d\n", val);
- 	return ret;
- }
- 
-@@ -437,7 +437,7 @@ static ssize_t wdack_show(struct gfs2_sbd *sdp, char *buf)
- {
- 	int val = completion_done(&sdp->sd_wdack) ? 1 : 0;
- 
--	return sprintf(buf, "%d\n", val);
-+	return sysfs_emit(buf, "%d\n", val);
- }
- 
- static ssize_t wdack_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
-@@ -459,7 +459,7 @@ static ssize_t wdack_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
- static ssize_t lkfirst_show(struct gfs2_sbd *sdp, char *buf)
- {
- 	struct lm_lockstruct *ls = &sdp->sd_lockstruct;
--	return sprintf(buf, "%d\n", ls->ls_first);
-+	return sysfs_emit(buf, "%d\n", ls->ls_first);
- }
- 
- static ssize_t lkfirst_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
-@@ -492,7 +492,7 @@ static ssize_t lkfirst_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
- static ssize_t first_done_show(struct gfs2_sbd *sdp, char *buf)
- {
- 	struct lm_lockstruct *ls = &sdp->sd_lockstruct;
--	return sprintf(buf, "%d\n", !!test_bit(DFL_FIRST_MOUNT_DONE, &ls->ls_recover_flags));
-+	return sysfs_emit(buf, "%d\n", !!test_bit(DFL_FIRST_MOUNT_DONE, &ls->ls_recover_flags));
- }
- 
- int gfs2_recover_set(struct gfs2_sbd *sdp, unsigned jid)
-@@ -550,18 +550,18 @@ static ssize_t recover_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
- static ssize_t recover_done_show(struct gfs2_sbd *sdp, char *buf)
- {
- 	struct lm_lockstruct *ls = &sdp->sd_lockstruct;
--	return sprintf(buf, "%d\n", ls->ls_recover_jid_done);
-+	return sysfs_emit(buf, "%d\n", ls->ls_recover_jid_done);
- }
- 
- static ssize_t recover_status_show(struct gfs2_sbd *sdp, char *buf)
- {
- 	struct lm_lockstruct *ls = &sdp->sd_lockstruct;
--	return sprintf(buf, "%d\n", ls->ls_recover_jid_status);
-+	return sysfs_emit(buf, "%d\n", ls->ls_recover_jid_status);
- }
- 
- static ssize_t jid_show(struct gfs2_sbd *sdp, char *buf)
- {
--	return sprintf(buf, "%d\n", sdp->sd_lockstruct.ls_jid);
-+	return sysfs_emit(buf, "%d\n", sdp->sd_lockstruct.ls_jid);
- }
- 
- static ssize_t jid_store(struct gfs2_sbd *sdp, const char *buf, size_t len)
-@@ -626,7 +626,7 @@ static struct attribute *lock_module_attrs[] = {
- 
- static ssize_t quota_scale_show(struct gfs2_sbd *sdp, char *buf)
- {
--	return snprintf(buf, PAGE_SIZE, "%u %u\n",
-+	return sysfs_emit(buf, "%u %u\n",
- 			sdp->sd_tune.gt_quota_scale_num,
- 			sdp->sd_tune.gt_quota_scale_den);
- }
-@@ -679,7 +679,7 @@ static struct gfs2_attr tune_attr_##name = __ATTR(name, 0644, show, store)
- #define TUNE_ATTR_2(name, store)                                              \
- static ssize_t name##_show(struct gfs2_sbd *sdp, char *buf)                   \
- {                                                                             \
--	return snprintf(buf, PAGE_SIZE, "%u\n", sdp->sd_tune.gt_##name);      \
-+	return sysfs_emit(buf, "%u\n", sdp->sd_tune.gt_##name);      \
- }                                                                             \
- TUNE_ATTR_3(name, name##_show, store)
- 
--- 
-2.34.1
+    kirin_pcie_parse_port():
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-kirin.c?id=v6.16-rc1#n399
+
+* drivers/pci/controller/pci-mvebu.c
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/marvell,kirkwood-pcie.yaml?id=v6.16-rc1#n125
+
+    mvebu_pcie_parse_port():
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pci-mvebu.c?id=v6.16-rc1#n1252
+
+* drivers/pci/controller/pcie-mt7621.c
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/mediatek,mt7621-pcie.yaml?id=v6.16-rc1#n111
+
+    mt7621_pcie_parse_port():
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-mt7621.c.c?id=v6.16-rc1#n198
+
+* drivers/pci/controller/pcie-mediatek.c
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/pci/mediatek-pcie.txt?id=v6.16-rc1#n85
+
+    mtk_pcie_parse_port():
+    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/pcie-mediatek.c.c?id=v6.16-rc1#n909
 
