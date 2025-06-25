@@ -1,33 +1,42 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CF7525EFBF
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:41:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF1D21EF39E
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750851670; cv=none; b=nMSFl+QN9123O/9xNlpT2kMd2QFFWgdPE8wMjfPmicxoTGLMJsrOGSC3TDKw+ZZ3mzT8LnWfc2UkY0gp2weSjg02toECP378pawR26euBoc514+osZZ7MKMr2LelMN3ViAupd9rLZkG+XaGZMPTakjdSupjJRzTftBQF8mHqvX0=
+	t=1750851717; cv=none; b=AGzkeD/lVit1ckrYCZg/XbB6X2tgOG0icyDqc7SpRKkoxpfPSZ7UhpEJ50clY0hdsmoa/0odAuav8PhM+ixuNIFTV8HOYyW3e2CiuO3alfez/+hDah0jPt7gnxjWU5Z+28zBMD55b0uwRH9ua8oNKmZSHkNd95QlnnGLJeZyAjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750851670; c=relaxed/simple;
-	bh=d070qAEZgxidwjedTmRNJ8GWUf+wa/RxGhJfYnWxxb4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rGIjVY8yAWDhW9g0CbFoox8cSvy0GQJ5+/RTXnZaTP0759atPjgIt3n6Z84QsUkbVsKJAjFcjJ0g3j8e2YCF5LaGFGCHQ54m/o7RYZfjm54ONLbzIE376JxK5szelvFM+/JwbACK9/81LCnIyFMMw9oBLUhcL5v3fZC7JBJT0qQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Xq9nlzeS; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1750851717; c=relaxed/simple;
+	bh=AiZ+4BJeQwwgeYzerv9oMdkL4douk5VFTfA7c2gLQc4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=PlE/bVv8T80vYdZ7XFWvJUC9vmJaLnriC3yzdjI3Dgb7W9T+HRgk2/Q5UQJ/WoNXmWOAcDeeO1bv5zzwo+NKQc5Os7Eecr5SN9LoKO1ykOJaFyU4wJgfDImwHEu+hMa7b+0McqF8l4g+P6ks5E2XmqtjtUdWehXcFz0LWLwGabg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=WH7akxYQ; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Xq9nlzeS"
-Received: from [192.168.88.20] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 576CF6F3;
-	Wed, 25 Jun 2025 13:40:45 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1750851645;
-	bh=d070qAEZgxidwjedTmRNJ8GWUf+wa/RxGhJfYnWxxb4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Xq9nlzeS7ucVFlbYAnNuo7hsLhte9e4I0SAoOn+pG2UkaxnQUl3oB4QQTYSS4TyCn
-	 naAkLIGYfA0+yswT2KKXDwD2TcO4aGnB8iFnHDUns7eCoQwWWUSH+8y87CDjq3i8jg
-	 JO046JREbDyXj60F6hBYdbMpXfbnFHBOqLc35jUE=
-Message-ID: <d0baec54-26cd-45bf-b4dc-fbd4131e0462@ideasonboard.com>
-Date: Wed, 25 Jun 2025 14:41:00 +0300
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WH7akxYQ"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250625114153euoutp02e6099a6767c0fcf05d04ad5a7c395e6e~MRltXC9Cr1724617246euoutp02t
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:41:53 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250625114153euoutp02e6099a6767c0fcf05d04ad5a7c395e6e~MRltXC9Cr1724617246euoutp02t
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750851713;
+	bh=iOWMgX0Z9ViulP6ngLZfwJEBoO6kYOpEBwMizntxyEw=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=WH7akxYQZjP6zMg8ZQk02YcXdJU3b2j+0hWYDhE57FMvQ7JYK+kuWN+qpv5fCTDrE
+	 szo8Q6x4MnWd14zIyr+xBjKCJlofeplBFnMHn69YmqakSezaDSbrayelbP9IwIHMD2
+	 StYyAu598zM11pEhF25btt4GboLPgPlP55A89ma8=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250625114152eucas1p250b0d9a60a030e0eca6adf4d50794ebd~MRls7i1Te2073720737eucas1p2q;
+	Wed, 25 Jun 2025 11:41:52 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250625114151eusmtip1ad5d6bda7cf749a2e77ad330f8396be4~MRlrtK14k3239232392eusmtip1C;
+	Wed, 25 Jun 2025 11:41:51 +0000 (GMT)
+Message-ID: <404dfe9a-1f4f-4776-863a-d8bbe08335e2@samsung.com>
+Date: Wed, 25 Jun 2025 13:41:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,368 +44,223 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] drm/tidss: Decouple max_pclk from tidss feats to
- remove clock dependency
-To: Jayesh Choudhary <j-choudhary@ti.com>, jyri.sarha@iki.fi,
- dri-devel@lists.freedesktop.org, devarsht@ti.com, mripard@kernel.org
-Cc: maarten.lankhorst@linux.intel.com, tzimmermann@suse.de,
- airlied@gmail.com, simona@ffwll.ch, linux-kernel@vger.kernel.org
-References: <20250618100509.20386-1-j-choudhary@ti.com>
- <5337fc13-f7e3-4252-84db-e1129cc31e32@ideasonboard.com>
- <a6c0b929-383f-4541-b4f1-c2e54f547de4@ti.com>
+Subject: Re: [PATCH] coredump: reduce stack usage in vfs_coredump()
+To: Arnd Bergmann <arnd@kernel.org>, Alexander Viro
+	<viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Jan Kara <jack@suse.cz>, Alexander
+	Mikhalitsyn <alexander@mihalicyn.com>, Jann Horn <jannh@google.com>, Luca
+	Boccassi <luca.boccassi@gmail.com>, Jeff Layton <jlayton@kernel.org>, Roman
+	Kisel <romank@linux.microsoft.com>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org
 Content-Language: en-US
-From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Autocrypt: addr=tomi.valkeinen@ideasonboard.com; keydata=
- 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
-In-Reply-To: <a6c0b929-383f-4541-b4f1-c2e54f547de4@ti.com>
-Content-Type: text/plain; charset=UTF-8
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <20250620112105.3396149-1-arnd@kernel.org>
 Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250625114152eucas1p250b0d9a60a030e0eca6adf4d50794ebd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250625114152eucas1p250b0d9a60a030e0eca6adf4d50794ebd
+X-EPHeader: CA
+X-CMS-RootMailID: 20250625114152eucas1p250b0d9a60a030e0eca6adf4d50794ebd
+References: <20250620112105.3396149-1-arnd@kernel.org>
+	<CGME20250625114152eucas1p250b0d9a60a030e0eca6adf4d50794ebd@eucas1p2.samsung.com>
 
 Hi,
 
-On 25/06/2025 14:15, Jayesh Choudhary wrote:
-> Hello Tomi,
-> 
-> On 24/06/25 17:29, Tomi Valkeinen wrote:
->> Hi,
->>
->> On 18/06/2025 13:05, Jayesh Choudhary wrote:
->>> TIDSS hardware by itself does not have variable max_pclk for each VP.
->>> Each VP supports a fixed maximum pixel clock. K2 devices and AM62*
->>> devices uses "ultra-light" version where each VP supports a max of
->>> 300MHz whereas J7* devices uses TIDSS where all VP can support a
->>> max pclk of 600MHz.
->>> The limitation that has been modeled till now comes from the clock
->>> (PLL can only be programmed to a particular max value). Due to this
->>> we end up using different compatible for each SoC when the clocking
->>> architecture changes for VPs, even when the hardware is essentially
->>> the same.
->>> max_pclk cannot be entirely removed since the display controller
->>> should tell if a particular mode clock can be supported or not in crtc's
->>> "mode_valid()" call. So remove "max_pclk_khz" from the static display
->>> feat and add it to "tidss_device" structure which would be modified in
->>> runtime. In mode_valid() call, check if a best frequency match for mode
->>> clock can be found or not using "clk_round_rate()". Based on that,
->>> propagate "max_pclk" and check max_clk again only if the requested mode
->>> clock is greater than saved value. (As the preferred display mode is
->>> usually the max resolution, driver ends up checking the maximum clock
->>> the first time itself which is used in subsequent checks)
->>> Since TIDSS display controller provides clock tolerance of 5%, we use
->>> this while checking the max_pclk. Also, move up "dispc_pclk_diff()"
->>> before it is called.
->>
->> An empty line between paragraphs makes the desc easier to read.
-> 
-> Okay. Will add empty lines here.
-> 
->>
->>> This will make the existing compatibles reusable.
->>>
->>> Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
->>> ---
->>>
->>> Changelog v1->v2:
->>> - Rebase it on linux-next after OLDI support series[0] as all of its
->>>    patches are reviewed and tested and it touches one of the functions
->>>    used.
->>>    v1 patch link:
->>> <https://lore.kernel.org/all/20250618075804.139844-1-j-
->>> choudhary@ti.com/>
->>>
->>> Test log on TI's J784S4 SoC with a couple of downstream patches
->>> to integrate DSI support on one of the video ports:
->>> <https://gist.github.com/Jayesh2000/ad4ab87028740efa60e5eb83fb892097>
->>>
->>>  From the logs, we can see that for CLK ID 218 (DSS), we do not have to
->>> call sci_clk_determine_rate() multiple times. So there is very little
->>> overhead of this call even with multiple mode_valid() called during
->>> display run.
->>>  From weston-simple-egl application, I have seen that there is no frame
->>> drop or performance impact.
->>>
->>> Once this patch gets in, I will send patches for AM62P and J722S DSS
->>> support.
->>>
->>> [0]: https://lore.kernel.org/all/20250528122544.817829-1-
->>> aradhya.bhatia@linux.dev/
-> 
-> One more observation here. This patch works absolutely fine in the
-> current tree (all SOCs that have TIDSS in upstream tree)
-> ***This change is fully backward compatible.***
-> 
-> But after applying some downstream patches for OLDI support on
-> J722S/AM62P, I saw that clk_round_rate() causes issue in display
-> as the VP clock is not actually being handled by TIDSS, but actually it
-> is owned by OLDI and the clock request is for (7 * VP) value to
-> accound for the fixed clock divider present in case of OLDI panel.
-> 
-> In the OLDI support[0], I see that the serial clock is handled properly
-> and we also check the value after setting it in the driver. So we should
-> avoid performing clock operations for OLDI in TIDSS driver.
-> 
-> OLDI driver during tidss_oldi_init() stores the parent VP in oldi-
->>parent_vp which can be used to avoid performing clk_round_rate()
-> in tidss driver, and in oldi, we can add atomic_check hook to propagate
-> max_pclk[] value for OLDI VP.
-> 
-> I will post next revision on top of [0] soon accounting this as well.
-> (Some oldi driver changes)
-> 
-> [0]: https://lore.kernel.org/all/20250528122544.817829-1-
-> aradhya.bhatia@linux.dev/
-> 
-> 
->>>
->>>   drivers/gpu/drm/tidss/tidss_dispc.c | 74 ++++++++++++-----------------
->>>   drivers/gpu/drm/tidss/tidss_dispc.h |  1 -
->>>   drivers/gpu/drm/tidss/tidss_drv.h   |  2 +
->>>   3 files changed, 33 insertions(+), 44 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/
->>> tidss/tidss_dispc.c
->>> index c0277fa36425..ad9ffc3685b4 100644
->>> --- a/drivers/gpu/drm/tidss/tidss_dispc.c
->>> +++ b/drivers/gpu/drm/tidss/tidss_dispc.c
->>> @@ -58,10 +58,6 @@ static const u16
->>> tidss_k2g_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
->>>   const struct dispc_features dispc_k2g_feats = {
->>>       .min_pclk_khz = 4375,
->>>   -    .max_pclk_khz = {
->>> -        [DISPC_VP_DPI] = 150000,
->>> -    },
->>> -
->>>       /*
->>>        * XXX According TRM the RGB input buffer width up to 2560 should
->>>        *     work on 3 taps, but in practice it only works up to 1280.
->>> @@ -144,11 +140,6 @@ static const u16
->>> tidss_am65x_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
->>>   };
->>>     const struct dispc_features dispc_am65x_feats = {
->>> -    .max_pclk_khz = {
->>> -        [DISPC_VP_DPI] = 165000,
->>> -        [DISPC_VP_OLDI_AM65X] = 165000,
->>> -    },
->>> -
->>>       .scaling = {
->>>           .in_width_max_5tap_rgb = 1280,
->>>           .in_width_max_3tap_rgb = 2560,
->>> @@ -244,11 +235,6 @@ static const u16
->>> tidss_j721e_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
->>>   };
->>>     const struct dispc_features dispc_j721e_feats = {
->>> -    .max_pclk_khz = {
->>> -        [DISPC_VP_DPI] = 170000,
->>> -        [DISPC_VP_INTERNAL] = 600000,
->>> -    },
->>> -
->>>       .scaling = {
->>>           .in_width_max_5tap_rgb = 2048,
->>>           .in_width_max_3tap_rgb = 4096,
->>> @@ -315,11 +301,6 @@ const struct dispc_features dispc_j721e_feats = {
->>>   };
->>>     const struct dispc_features dispc_am625_feats = {
->>> -    .max_pclk_khz = {
->>> -        [DISPC_VP_DPI] = 165000,
->>> -        [DISPC_VP_INTERNAL] = 170000,
->>> -    },
->>> -
->>>       .scaling = {
->>>           .in_width_max_5tap_rgb = 1280,
->>>           .in_width_max_3tap_rgb = 2560,
->>> @@ -380,10 +361,6 @@ const struct dispc_features dispc_am62a7_feats = {
->>>        * if the code reaches dispc_mode_valid with VP1,
->>>        * it should return MODE_BAD.
->>>        */
->>> -    .max_pclk_khz = {
->>> -        [DISPC_VP_TIED_OFF] = 0,
->>> -        [DISPC_VP_DPI] = 165000,
->>> -    },
->>>         .scaling = {
->>>           .in_width_max_5tap_rgb = 1280,
->>> @@ -441,10 +418,6 @@ const struct dispc_features dispc_am62a7_feats = {
->>>   };
->>>     const struct dispc_features dispc_am62l_feats = {
->>> -    .max_pclk_khz = {
->>> -        [DISPC_VP_DPI] = 165000,
->>> -    },
->>> -
->>>       .subrev = DISPC_AM62L,
->>>         .common = "common",
->>> @@ -1347,25 +1320,48 @@ static void dispc_vp_set_default_color(struct
->>> dispc_device *dispc,
->>>               DISPC_OVR_DEFAULT_COLOR2, (v >> 32) & 0xffff);
->>>   }
->>>   +/*
->>> + * Calculate the percentage difference between the requested pixel
->>> clock rate
->>> + * and the effective rate resulting from calculating the clock
->>> divider value.
->>> + */
->>> +unsigned int dispc_pclk_diff(unsigned long rate, unsigned long
->>> real_rate)
->>> +{
->>> +    int r = rate / 100, rr = real_rate / 100;
->>> +
->>> +    return (unsigned int)(abs(((rr - r) * 100) / r));
->>> +}
->>> +
->>> +static int check_max_pixel_clock(struct dispc_device *dispc,
->>> +                 u32 hw_videoport, unsigned long clock)
->>> +{
->>> +    if (clock > dispc->tidss->max_pclk[hw_videoport]) {
->>> +        unsigned long round_clock = clk_round_rate(dispc-
->>> >vp_clk[hw_videoport], clock);
->>> +
->>> +        if (dispc_pclk_diff(clock, round_clock) > 5)
->>> +            return -EINVAL;
->>> +
->>> +        dispc->tidss->max_pclk[hw_videoport] = round_clock;
->>> +    }
->>> +
->>> +    return 0;
->>> +}
->>> +
->>>   enum drm_mode_status dispc_vp_mode_valid(struct dispc_device *dispc,
->>>                        u32 hw_videoport,
->>>                        const struct drm_display_mode *mode)
->>>   {
->>>       u32 hsw, hfp, hbp, vsw, vfp, vbp;
->>>       enum dispc_vp_bus_type bus_type;
->>> -    int max_pclk;
->>>         bus_type = dispc->feat->vp_bus_type[hw_videoport];
->>>   -    max_pclk = dispc->feat->max_pclk_khz[bus_type];
->>> -
->>> -    if (WARN_ON(max_pclk == 0))
->>> +    if (bus_type == DISPC_VP_TIED_OFF)
->>>           return MODE_BAD;
->>>         if (mode->clock < dispc->feat->min_pclk_khz)
->>>           return MODE_CLOCK_LOW;
->>>   -    if (mode->clock > max_pclk)
->>> +    if (check_max_pixel_clock(dispc, hw_videoport, mode->clock * 1000))
->>>           return MODE_CLOCK_HIGH;
->>>         if (mode->hdisplay > 4096)
->>> @@ -1437,17 +1433,6 @@ void dispc_vp_disable_clk(struct dispc_device
->>> *dispc, u32 hw_videoport)
->>>       clk_disable_unprepare(dispc->vp_clk[hw_videoport]);
->>>   }
->>>   -/*
->>> - * Calculate the percentage difference between the requested pixel
->>> clock rate
->>> - * and the effective rate resulting from calculating the clock
->>> divider value.
->>> - */
->>> -unsigned int dispc_pclk_diff(unsigned long rate, unsigned long
->>> real_rate)
->>> -{
->>> -    int r = rate / 100, rr = real_rate / 100;
->>> -
->>> -    return (unsigned int)(abs(((rr - r) * 100) / r));
->>> -}
->>> -
->>>   int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32
->>> hw_videoport,
->>>                 unsigned long rate)
->>>   {
->>> @@ -3087,6 +3072,9 @@ int dispc_init(struct tidss_device *tidss)
->>>       }
->>>       dev_dbg(dev, "DSS fclk %lu Hz\n", clk_get_rate(dispc->fclk));
->>>   +    for (i = 0; i < dispc->feat->num_vps; i++)
->>> +        dispc->tidss->max_pclk[i] = 0;
->>
->> I think this is not needed, the struct should be zero initialized at
->> alloc.
-> 
-> Okay will remove this.
-> 
->>
->>>       of_property_read_u32(dispc->dev->of_node, "max-memory-bandwidth",
->>>                    &dispc->memory_bandwidth_limit);
->>>   diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/
->>> tidss/tidss_dispc.h
->>> index b8614f62186c..45b1a8aa9089 100644
->>> --- a/drivers/gpu/drm/tidss/tidss_dispc.h
->>> +++ b/drivers/gpu/drm/tidss/tidss_dispc.h
->>> @@ -75,7 +75,6 @@ enum dispc_dss_subrevision {
->>>     struct dispc_features {
->>>       int min_pclk_khz;
->>> -    int max_pclk_khz[DISPC_VP_MAX_BUS_TYPE];
->>>         struct dispc_features_scaling scaling;
->>>   diff --git a/drivers/gpu/drm/tidss/tidss_drv.h b/drivers/gpu/drm/
->>> tidss/tidss_drv.h
->>> index d14d5d28f0a3..59c67ae8e721 100644
->>> --- a/drivers/gpu/drm/tidss/tidss_drv.h
->>> +++ b/drivers/gpu/drm/tidss/tidss_drv.h
->>> @@ -22,6 +22,8 @@ struct tidss_device {
->>>         const struct dispc_features *feat;
->>>       struct dispc_device *dispc;
->>> +    long max_pclk[TIDSS_MAX_PORTS];
->>> +
->>>         unsigned int num_crtcs;
->>>       struct drm_crtc *crtcs[TIDSS_MAX_PORTS];
->>
->> One thing to keep in mind is that if we ever change the source clk, we
->> need to also clear the max_pclk for that VP.
-> 
-> So I will clear them (mark as 0) in tidss_remove?
+On 20.06.2025 13:21, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> The newly added socket coredump code runs into some corner cases
+> with KASAN that end up needing a lot of stack space:
+>
+> fs/coredump.c:1206:1: error: the frame size of 1680 bytes is larger than 1280 bytes [-Werror=frame-larger-than=]
+>
+> Mark the socket helper function as noinline_for_stack so its stack
+> usage does not leak out to the other code paths. This also seems to
+> help with register pressure, and the resulting combined stack usage of
+> vfs_coredump() and coredump_socket() is actually lower than the inlined
+> version.
+>
+> Moving the core_state variable into coredump_wait() helps reduce the
+> stack usage further and simplifies the code, though it is not sufficient
+> to avoid the warning by itself.
+>
+> Fixes: 6a7a50e5f1ac ("coredump: use a single helper for the socket")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-No need. I meant that if we ever change the source clock at runtime
-(say, if we have multiple displays and need to switch the clocking based
-on which display gets enabled), we also need to clear the max_pclk, so
-that the new max gets calculated. So nothing to do in this patch.
+This change appears in today's linux-next (next-20250625) as commit 
+fb82645d3f72 ("coredump: reduce stack usage in vfs_coredump()"). In my 
+tests I found that it causes a kernel oops on some of my ARM 32bit 
+Exynos based boards. This is really strange, because I don't see any 
+obvious problem in this patch. Reverting $subject on top of linux-next 
+hides/fixes the oops. I suspect some kind of use-after-free issue, but I 
+cannot point anything related. Here is the kernel log from one of the 
+affected boards (I've intentionally kept the register and stack dumps):
+
+8<--- cut here ---
+Unable to handle kernel paging request at virtual address c10ba370 when 
+write
+[c10ba370] *pgd=4101941e(bad)
+Internal error: Oops: 80d [#1] SMP ARM
+Modules linked in: cmac bnep mwifiex_sdio mwifiex btmrvl_sdio btmrvl 
+sha256 libsha256_generic bluetooth cfg80211 exynos_gsc v4l2_mem2mem 
+s5p_mfc videobuf2_dma_contig videobuf2_memops videobuf2_v4l2 
+videobuf2_common ecdh_generic ecc videodev mc s5p_cec
+CPU: 1 UID: 0 PID: 1367 Comm: cgm-release-age Not tainted 
+6.16.0-rc3-next-20250625 #10627 PREEMPT
+Hardware name: Samsung Exynos (Flattened Device Tree)
+PC is at vfs_coredump+0x294/0x17bc
+LR is at _raw_spin_unlock_irq+0x20/0x50
+pc : [<c03c4534>]    lr : [<c0cf096c>]    psr: a0000013
+sp : f1249dd0  ip : 00000000  fp : f1249e68
+r10: c1ae41e4  r9 : 00000000  r8 : c13aaa74
+r7 : 00000000  r6 : 63726f46  r5 : c2a3c000  r4 : c3852080
+r3 : c10ba370  r2 : c3852080  r1 : ffffffff  r0 : 00006325
+Flags: NzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+Control: 10c5387d  Table: 4324c06a  DAC: 00000051
+Register r0 information: non-paged memory
+Register r1 information: non-paged memory
+Register r2 information: slab task_struct start c3852080 pointer offset 
+0 size 4160
+Register r3 information: non-slab/vmalloc memory
+Register r4 information: slab task_struct start c3852080 pointer offset 
+0 size 4160
+Register r5 information: slab kmalloc-128 start c2a3c000 pointer offset 
+0 size 128
+Register r6 information: non-paged memory
+Register r7 information: NULL pointer
+Register r8 information: non-slab/vmalloc memory
+Register r9 information: NULL pointer
+Register r10 information: non-slab/vmalloc memory
+Register r11 information: 2-page vmalloc region starting at 0xf1248000 
+allocated at kernel_clone+0x58/0x3f4
+Register r12 information: NULL pointer
+Process cgm-release-age (pid: 1367, stack limit = 0x4909c75e)
+Stack: (0xf1249dd0 to 0xf124a000)
+9dc0:                                     c3852830 00000000 c3852080 
+c01ae7fc
+9de0: c13095a8 c45c8600 c2a3c000 00000000 00000000 c014ab28 c102c84c 
+c104be90
+9e00: c13095a8 c1496b58 ffffffff 00000081 00000000 6fda5e52 c127e2ec 
+00000000
+9e20: c2a3c280 00000004 00000080 00000000 c3852800 00000001 00000001 
+00000000
+9e40: c2855d90 00000000 c3852830 c0ce2874 c13133c8 c3852080 c13133e0 
+c1472911
+9e60: c1cc6480 ef0484e0 f1249f60 00000000 00000000 800000cd 00000001 
+00000000
+9e80: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 
+00000000
+9ea0: 00000000 00000000 00000006 c01450a8 f1249f4c 00000001 c12849dc 
+6fda5e52
+9ec0: c0cf096c c3852080 00000005 00000006 400004d8 0001e000 c1309154 
+c2855d80
+9ee0: f1249f60 c014ab28 00000000 c02eeb48 00000000 c3852830 00000000 
+ce4d1c00
+9f00: f1249f4c c13095a8 c127e2ec c2855d90 00000000 6fda5e52 c12849dc 
+c3852080
+9f20: f1249fb0 00000000 f1249f4c 5ac3c35a b6d21668 c3852730 b6d2166c 
+c011a430
+9f40: 00000000 00000002 f1249f74 c0cf096c bee9b9d4 c0148328 f1249f7c 
+00000000
+9f60: 00000006 00000000 fffffffa 00000557 00000000 00000000 00000000 
+00000000
+9f80: 00000000 6fda5e52 00000000 00000000 b6f43968 bee9b9d4 000000af 
+c0100290
+9fa0: c3852080 000000af 00000000 c0100088 00000000 bee9b9d4 00000000 
+00000008
+9fc0: 00000000 b6f43968 bee9b9d4 000000af bee9bf70 b6ebdc94 00440f90 
+00000000
+9fe0: 00000020 bee9b9d0 ffffffff b6d2166c 00000010 00000002 00000000 
+00000000
+Call trace:
+  vfs_coredump from get_signal+0x990/0xd9c
+  get_signal from do_work_pending+0x118/0x588
+  do_work_pending from slow_work_pending+0xc/0x24
+Exception stack(0xf1249fb0 to 0xf1249ff8)
+9fa0:                                     00000000 bee9b9d4 00000000 
+00000008
+9fc0: 00000000 b6f43968 bee9b9d4 000000af bee9bf70 b6ebdc94 00440f90 
+00000000
+9fe0: 00000020 bee9b9d0 ffffffff b6d2166c 00000010 00000002
+Code: e1a03006 e5966004 e5930000 f57ff05b (e5837000)
+---[ end trace 0000000000000000 ]---
+note: cgm-release-age[1367] exited with irqs disabled
 
 
->>
->> Shouldn't we still have a check for the DSS internal max pclk somewhere?
-> 
-> Makes sense. So instead of moving max_pclk_khz from dispc_features to
-> tidss_device, I will have it in both. We can have int max_pclk_khz
-> similar to min_pclk_khz which would be static for a tidss device.
-> 
-> And then I will rename max_pclk[] in tidss_device structure to
-> max_pclk_vp[].
+> ---
+>   fs/coredump.c | 20 ++++++++++----------
+>   1 file changed, 10 insertions(+), 10 deletions(-)
+>
+> diff --git a/fs/coredump.c b/fs/coredump.c
+> index e2611fb1f254..c46e3996ff91 100644
+> --- a/fs/coredump.c
+> +++ b/fs/coredump.c
+> @@ -518,27 +518,28 @@ static int zap_threads(struct task_struct *tsk,
+>   	return nr;
+>   }
+>   
+> -static int coredump_wait(int exit_code, struct core_state *core_state)
+> +static int coredump_wait(int exit_code)
+>   {
+>   	struct task_struct *tsk = current;
+> +	struct core_state core_state;
+>   	int core_waiters = -EBUSY;
+>   
+> -	init_completion(&core_state->startup);
+> -	core_state->dumper.task = tsk;
+> -	core_state->dumper.next = NULL;
+> +	init_completion(&core_state.startup);
+> +	core_state.dumper.task = tsk;
+> +	core_state.dumper.next = NULL;
+>   
+> -	core_waiters = zap_threads(tsk, core_state, exit_code);
+> +	core_waiters = zap_threads(tsk, &core_state, exit_code);
+>   	if (core_waiters > 0) {
+>   		struct core_thread *ptr;
+>   
+> -		wait_for_completion_state(&core_state->startup,
+> +		wait_for_completion_state(&core_state.startup,
+>   					  TASK_UNINTERRUPTIBLE|TASK_FREEZABLE);
+>   		/*
+>   		 * Wait for all the threads to become inactive, so that
+>   		 * all the thread context (extended register state, like
+>   		 * fpu etc) gets copied to the memory.
+>   		 */
+> -		ptr = core_state->dumper.next;
+> +		ptr = core_state.dumper.next;
+>   		while (ptr != NULL) {
+>   			wait_task_inactive(ptr->task, TASK_ANY);
+>   			ptr = ptr->next;
+> @@ -858,7 +859,7 @@ static bool coredump_sock_request(struct core_name *cn, struct coredump_params *
+>   	return coredump_sock_mark(cprm->file, COREDUMP_MARK_REQACK);
+>   }
+>   
+> -static bool coredump_socket(struct core_name *cn, struct coredump_params *cprm)
+> +static noinline_for_stack bool coredump_socket(struct core_name *cn, struct coredump_params *cprm)
+>   {
+>   	if (!coredump_sock_connect(cn, cprm))
+>   		return false;
+> @@ -1095,7 +1096,6 @@ void vfs_coredump(const kernel_siginfo_t *siginfo)
+>   {
+>   	struct cred *cred __free(put_cred) = NULL;
+>   	size_t *argv __free(kfree) = NULL;
+> -	struct core_state core_state;
+>   	struct core_name cn;
+>   	struct mm_struct *mm = current->mm;
+>   	struct linux_binfmt *binfmt = mm->binfmt;
+> @@ -1131,7 +1131,7 @@ void vfs_coredump(const kernel_siginfo_t *siginfo)
+>   	if (coredump_force_suid_safe(&cprm))
+>   		cred->fsuid = GLOBAL_ROOT_UID;
+>   
+> -	if (coredump_wait(siginfo->si_signo, &core_state) < 0)
+> +	if (coredump_wait(siginfo->si_signo) < 0)
+>   		return;
+>   
+>   	old_cred = override_creds(cred);
 
-Right.
-
- Tomi
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
