@@ -1,53 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 767AD1D63F8;
-	Wed, 25 Jun 2025 17:00:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F5915ADB4;
+	Wed, 25 Jun 2025 17:01:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750870854; cv=none; b=R/ItAU5fikrRuvbpup5EAIH6cQBdqTuczMb+TvgAAnoig9ugxd8hadD3wQa53SRKa0r6DUpif9feA1ZSNYUirYaexTd/WHr5tEkBHwfzPyBTtgKk56XW9L0pujo6yV/K+zn0ZwS+9lg//Ss8OcQ3ENaWMPNwXeTOoNi6F4QGTFI=
+	t=1750870915; cv=none; b=iYqNDf4HcrgT0U9b4FrVLNJ3X2TZEXUMUhhxP1F9nI9U5UcxOI17JdIC1Gzh/QB1yq4HhZnSPRCM4EGu/CTHuIa6UcWNIaH1fcOB+IMyUFGoDmp+g8YBzvoszIa+aqxmBHbfb8J2BnZ9YwXBcvvAaoP9DBkz+8jTKdHHoZWOx80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750870854; c=relaxed/simple;
-	bh=sV4Z0ubPWbCvivHS7xiJTDANUW3GSypskarbYGUfU5Y=;
+	s=arc-20240116; t=1750870915; c=relaxed/simple;
+	bh=eALn9anayFEUy5QoMrVPaobWyJA2W/W/5mmJqhg2eeY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GV1NqQhavFqvliM2GUpcxe0CofJgMllDdUpuHyxiV5in4YVOZE2PBtThx10QZW6lHRTtsYWCgOsnLGYjvII10bh1hHYZsknrNS8VoAMLZYQsmgft7Y7CZQI8rg2dfCfA9RPsAMjuSc6RKoQsvvXOVq4OJXiwKJX2f7J4q3x0Sjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vLSr3Sod; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RArOVNVs1RWrk9h1ca5Lhh4oHvXsDRh9zciOHSkCKILU5RkPpXvGuwMbE4P2OcwRXGgrcBZFl8+g5ufVRTcaxNnaf1ahzdkxRQFsC6NXYpAfof5QXKlgE6hKtT8U/YpUAXmAab4u7ie94D4QPR7zueEQ6g3wTtl+e9caFo9BS1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YHYkKZdj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vLSr3Sod"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 180A5C4CEEA;
-	Wed, 25 Jun 2025 17:00:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YHYkKZdj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE9E0C4CEEA;
+	Wed, 25 Jun 2025 17:01:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750870854;
-	bh=sV4Z0ubPWbCvivHS7xiJTDANUW3GSypskarbYGUfU5Y=;
+	s=k20201202; t=1750870915;
+	bh=eALn9anayFEUy5QoMrVPaobWyJA2W/W/5mmJqhg2eeY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vLSr3SodfBFHXLPE0oP7krUvDl54AWbcRgXX6JAoA8kqCZNlpjFmyq5slqvGogvfy
-	 6S3GpHspF9Tle2Pl4EQ0/kYQU6SPHqFf07MBSceXAaVY8S01D3oPN7bh2+SzAAmcVh
-	 6FNlgYjd8PEKfMNKDPQh8NC171TYeHKCY7Tt2jsmDwKGDXnNzIJtTvdnn7uCnjEN6X
-	 O9iXYLTfDisifWP4bXP3adwuirJL8JFu0XTtSTVEan9y484fQ1ieK63UZoscAUubd4
-	 IRBkDfajXOuoKfkCdIyb6WCtw25Hdp3dWbU3pIJVzsX3U0q/QapjrU/fGC20xliwHm
-	 VwAC7VPUPlpyQ==
-Date: Wed, 25 Jun 2025 18:00:50 +0100
-From: Simon Horman <horms@kernel.org>
-To: Vlad URSU <vlad@ursu.me>
-Cc: Jacek Kowalski <jacek@jacekk.info>,
-	Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] e1000e: ignore factory-default checksum value on
- TGP platform
-Message-ID: <20250625170050.GJ1562@horms.kernel.org>
-References: <91030e0c-f55b-4b50-8265-2341dd515198@jacekk.info>
- <5c75ef9b-12f5-4923-aef8-01d6c998f0af@jacekk.info>
- <20250624194237.GI1562@horms.kernel.org>
- <0407b67d-e63f-4a85-b3b4-1563335607dc@jacekk.info>
- <20250625094411.GM1562@horms.kernel.org>
- <613026c7-319c-480f-83da-ffc85faaf42b@jacekk.info>
- <eb418aae-c0d4-438f-9b3b-fcb870387b1a@ursu.me>
+	b=YHYkKZdjYC4HV3b95BXhVaBQ9s+cmAywC5izCrtUMIZf1ZosFbgoewL5l91JXINjg
+	 kcTtTEengp7ZpcB2mvHxoxfnoFydbYlTyyqTZLw/5s6S4ubK6LzxE3iYXMO+NTHNG+
+	 /YGOlzi/g08ShWET1btNYKDuYi9ebTXY6JK/xv50U1gniwk8CJyf1oygZqsZT16Wzn
+	 IaIiT0lbJ3N++5bn1j0w2X0tm/jD1/ot8BF7sfzvKrxbXyQJYjI4S9IO+cj1AXB8Qm
+	 gA44VwxNEKcUDsnRheIO9FL06KloUdflmdcIo7SI+VVvg5M97UcycFzKKmjNqAr4aK
+	 BRu3t/NkbfREg==
+Date: Wed, 25 Jun 2025 20:01:51 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: sudeep.holla@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
+	stuart.yoder@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] generate boot_aggregate log in IMA with TPM using
+ CRB over FF-A
+Message-ID: <aFwrf1HnsilrASzX@kernel.org>
+References: <20250618102302.2379029-1-yeoreum.yun@arm.com>
+ <aFs0of3uZdoMEJXc@kernel.org>
+ <aFvRI5OwSLLKz300@e129823.arm.com>
+ <aFwrBU4H0w9AXyQM@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -56,29 +47,70 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <eb418aae-c0d4-438f-9b3b-fcb870387b1a@ursu.me>
+In-Reply-To: <aFwrBU4H0w9AXyQM@kernel.org>
 
-On Wed, Jun 25, 2025 at 05:06:44PM +0300, Vlad URSU wrote:
-> On 25.06.2025 16:05, Jacek Kowalski wrote:
-> > > > > > +#define NVM_CHECKSUM_FACTORY_DEFAULT 0xFFFF
-> > > > > 
-> > > > > Perhaps it is too long, but I liked Vlad's suggestion of naming this
-> > > > > NVM_CHECKSUM_WORD_FACTORY_DEFAULT.
+On Wed, Jun 25, 2025 at 07:59:53PM +0300, Jarkko Sakkinen wrote:
+> On Wed, Jun 25, 2025 at 11:36:19AM +0100, Yeoreum Yun wrote:
+> > Hi Jarkko,
 > > 
-> > So the proposals are:
+> > > On Wed, Jun 18, 2025 at 11:23:00AM +0100, Yeoreum Yun wrote:
+> > > > To ensure the TPM device operating over the FF-A protocol with
+> > > > the CRB interface is probed before IMA initialization,
+> > > > the following conditions must be met:
+> > > >
+> > > >    1. The corresponding ffa_device must be registered,
+> > > >       which is done via ffa_init().
+> > > >
+> > > >    2. The tpm_crb_driver must successfully probe this device via
+> > > >       tpm_crb_ffa_init().
+> > > >
+> > > >    3. The tpm_crb driver using CRB over FF-A can then
+> > > >       be probed successfully. (See crb_acpi_add() and
+> > > >       tpm_crb_ffa_init() for reference.)
+> > > >
+> > > > Unfortunately, ffa_init(), tpm_crb_ffa_init(), and crb_acpi_driver_init() are
+> > > > all registered with device_initcall, which means crb_acpi_driver_init() may
+> > > > be invoked before ffa_init() and tpm_crb_ffa_init() are completed.
+> > >
+> > > I get the ffa_init() part i.e, moving it earlier. However for
+> > > tpm_crb_ffa_init() and crb_acpi_driver_init(), modules.dep
+> > > takes care that they are loaded in order.
+> > > For IMA you will need the driver as built-in but that should
+> > > be handled via kernel config, not via code changes.
 > > 
-> > 1. NVM_CHECKSUM_WORD_FACTORY_DEFAULT
-> > 2. NVM_CHECKSUM_FACTORY_DEFAULT
-> > 3. NVM_CHECKSUM_INVALID
-> > 4. NVM_CHECKSUM_MISSING
-> > 5. NVM_CHECKSUM_EMPTY
-> > 6. NVM_NO_CHECKSUM
+> > In the case of "module" built, it's true.
+> > However what I tell here is when "tpm_crb" and "tpm_crb_ffa" is built
+> > as "built-in" in this case, it couldn't make a "dependency" between
+> > the same initcall level: here is the case of this.
 > > 
-> > Any other contenders?
+> > 0000000000000888 l       .initcall6.init>-------0000000000000000 crb_acpi_driver_init
+> > 000000000000088c l       .initcall6.init>-------0000000000000000 tpm_crb_ffa_driver_init
 > > 
+> > in this case, wihtout code change, the crb_acpi_driver_init()
+> > is failed since tpm_crb_ffa_driver_init() is called later.
+> > 
+> > and this couldn't be solved with kconfig --
+> > ARM_FFA_TRANSPORT=y && CONFIG_TCG_CRB=y && CONFIG_TCG_CRB_FFA=y.
+> > 
+> > The Patch #2 is to proing the tpm_crb_ffa as part of
+> > crb_acpi_driver_init() when TPM uses method ARM-FFA.
+> > 
+> > If there's another suggestion, let me know please.
 > 
-> For reference, I called it "CHECKSUM_WORD" in my proposal because that's
-> what it's refered to as in the intel documentation (section 10.3.2.2 - http://www.intel.com/content/dam/www/public/us/en/documents/datasheets/ethernet-connection-i219-datasheet.pdf)
+> Hmm.. I actually got what you mean now. I was looking this from
+> wrong angle. I think we can pick these patches!
 > 
+> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+> 
+> > 
+> > Thanks
+> > 
+> > --
+> > Sincerely,
+> > Yeoreum Yun
+> 
+> BR, Jarkko
 
-FWIIW, I'd vote for 1.
+Applied.
+
+BR, Jarkko
