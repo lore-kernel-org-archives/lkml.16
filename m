@@ -1,93 +1,86 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E116D2F362B
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC42226E6E1
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:26:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750890378; cv=none; b=OYPh1sSt92DWjgUBAceU2hOF6+BN9FHRuGH7xZHmB6t2jm8hiNvH3OnjIfarvMYmnWpt2kOXnGfHK7CzlAu77izVyG2stXHnwaJ4YwR9ICNSy9skyG1ajhwKdzOQyl2R5tdiariFC+O4FoqAlnVCOxhRsZqqOJMEQ2Q7Lb0+UsQ=
+	t=1750890394; cv=none; b=fr+UgtlpXHKe+g1iCQQ5gktv+OiA7DRJWLxI8daCqPDtcCztKmfwP9Qx47FmoO4fofUdhYIm91iK/bEqDvoB155+rDgX869dZ7Ap8i0FbxxCsrrHs75i+GtvQzTwvr8FNh7wXlMHDdIWu7FNnLBt9XVO16OQh90kMWvk1UBH8m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750890378; c=relaxed/simple;
-	bh=+E8EpWppY5+z5Zzf48g8XA+vg9TjHKzBWwqNlo6Zjq0=;
+	s=arc-20240116; t=1750890394; c=relaxed/simple;
+	bh=yyzQXPsLkcBr0oSLAqWgPrP77tRf2tbQ5z6fMMbApCA=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JXivTSFHJqCRD9lfJkdVx86SO6DpoCmPAAuokKDWIeqP9C2SYIj9SbXuc0VYvhh4Y7M7r+khAL16l3EvPdY+FfRNShq0r92F4XIEdVNUSxO3Uk8R5tWIXXfu0JztmZvUgTFXu7mHA77N3EfNwg1MFHsSiGdzecK/59MPsjTP7pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zcL/OVtw; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=YTGmZISHbgyFCCgoYIiuN+or5ktzNFbQX0mVwRnN+op5/aHMG8GOu0PF3wUToHvUD2XWmBFDGkYpFcbQ/APWbyZqzutgZ6PGp4sdUHtTsvvnpEE3d2Oys9WIdlK9bEBaSqjcF2hRLN76yr3bPjXikuxD9k1e7ibTXLcNTAJVf5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ABYjDTl2; arc=none smtp.client-ip=209.85.216.73
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zcL/OVtw"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-313c3915345so393452a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:26:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ABYjDTl2"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3132c1942a1so423925a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:26:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750890375; x=1751495175; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750890392; x=1751495192; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5P0C0ay1sg6VzBmBVHnNwzZiHo9BP6seWcPK5go4PNI=;
-        b=zcL/OVtw27M3cM+KpQ9SDGGPI1shnJz8YMXM9D4vdcKSjFyiJhdqR+bkg42y3g1uPa
-         7oq8VBnXyrBR+3hjdeS0U+YfG+KCvoZJiNnmLwAvG97jfaYw44jpQOf+gE9PDZDsFDnD
-         AbHkRNn/Zip+5KZhhkupaTdT9YDMVxMe9ghWNyfTsy+ED9f9ttEqV/iQ0Hba90d4JNt3
-         j3UBYwjCUg6wczoaHmKwJLmpIwie5P5mT3Z6EZhzBz7bR+dRxtOsuALXZibVs2MWTt82
-         59Ss2jwt1RS+bGG8w67QQCwQjyqj1RtBmIpFTfqsBX4it+hWo2zZEA9jXLCHkf8oEdYZ
-         zKVw==
+        bh=P6WauUfkkK2gO5jt3CCxoOdLFQCfPyXmm+Bs1EqbQ8Q=;
+        b=ABYjDTl249M8tZGSpTMa7f/f3VujH070MZiy95PhgWNjrZGMoEUPpF+5tP47Yfw/x8
+         +QoULexv4OngwRAMgKnwgTP2UD/QRcdrF98nVLvK0zfxV7drUQCvkbqX0c1TSUIZ9rYU
+         HLktP5DaKRDTSR5azszy1ec+CpA4YkL5la7t+dVbJ3KWSUJCI+P6vMPE+gBS0QpZDPJJ
+         e3bur91ur1uAqrQOZUzXc4YhVWRi9kecPITA5VhVGkgbVmBqephJZQkekRvihWvpvqzj
+         3rsh1Z4oNsKxS9ZvsaOCxOVBRF688fAgTFog8LC/r7jvlGguPPlMmSadF+T0O7S1XJkB
+         sIUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750890375; x=1751495175;
+        d=1e100.net; s=20230601; t=1750890392; x=1751495192;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5P0C0ay1sg6VzBmBVHnNwzZiHo9BP6seWcPK5go4PNI=;
-        b=PSEFsswfrXDLfPMOkHeEdAYdqV+MDa93o2Xcxbwo3N7XVNyBEenBc2+PRJjXeOWBlK
-         8R7YxpErUB1X10djfpDd4PKLAucI8r4lRtxibdMU3+oel7p5qdCx9wccixzGXIXqdrkT
-         JzUksTGx7pxmQrOY3SPjYCupw6zw28a/815vL3P1Hbaz7gmJdJwfGJAHY6235YB+bAJq
-         zj62TeZwh39T3+oaCUXuPYL7OOvtoOE/Pn+ACHL3TALg6NWWOSA0Xw/rDIkuFH6k+HH6
-         Rj4cmHMnWDMmZ3OrQ6apV3iiDOyIQGclAa7hwVRTzC5TvIK17RrRhuHvhJwY1/Np2x1E
-         LTTw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFKU20HYRbePf0yosJQCWzVyxLSOYVtTrAgUjoMkvKb8UGoB+sUa45nw75+AjttWpeukOs/kkfIRXA0+Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy0oeiKNwVmHpqhDWPeuqw97YLUbwHjCm9tBA93UDgme2nJULMV
-	7Wh3N14WyR/krN2YS6sr1T6iXuhe7iqj7DzMrVVSjFUeqSpqOS47C4GcUZ8myqXFhwRqA3Kc6rN
-	d1NJ88w==
-X-Google-Smtp-Source: AGHT+IH1teFPxnZYyI+Zl9dnd3n0vbjMm6JT635LpkcUQ5aBNQq4BJwtfTJcGPRDPWWcdL2cdyw4AEW8xkI=
-X-Received: from pjbta14.prod.google.com ([2002:a17:90b:4ece:b0:311:ea2a:3919])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:574e:b0:311:e8cc:4253
- with SMTP id 98e67ed59e1d1-315f25ce932mr6982074a91.2.1750890375324; Wed, 25
- Jun 2025 15:26:15 -0700 (PDT)
-Date: Wed, 25 Jun 2025 15:25:29 -0700
-In-Reply-To: <c090efb3-ef82-499f-a5e0-360fc8420fb7@tum.de>
+        bh=P6WauUfkkK2gO5jt3CCxoOdLFQCfPyXmm+Bs1EqbQ8Q=;
+        b=QB8IaOC+VorxVU93nUHbsVtXlzcF4w5wmazCDI/KgHdhbieSTlhQLVaE2dzVZnqbhb
+         19lKJLClIFSXnJXbD0ALTy8HoCffXEUefCnqn5lVU38iUoNQS0SEUnyXuk4YjjZiXvzq
+         xU5ealkVhY6nTOjdNKWFe9LvBRW0B1VM37tCVaUa9p9TAZ6CPqW/m8Q+0/jHJ3dk3u2W
+         Dfwm1Gq1Q0+5I23UL24cbjvyXNliXP5aViJp+h29VOhR57NnlQ3Uik9kx9QxRJj2Rlk1
+         XbocKPdiW74sWtX+GuRTEHFvPyOgtuxwEWwt0wrLEk61klpIooSZmCSAVGeTJ+qZ4ADN
+         SEgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUC62b5RsfntNmQlYusR4+rNBNmSxEjkjqBvS4EJxL8srbx8ayE1Uzd5onqu0tr7pcikGrqt1WTpHdg60I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSyUlWrXa7qnmhNINYLcbKQqxirDPjeMboNBEjgQa/u7sYBHyu
+	zEPDOj7F/o4vLofYD+TTHx7WEFHn+dMqM14ZYcadOJDmiT2sfgTITwIf8J5w2AWyZrtkKvk0exd
+	D4+yAFg==
+X-Google-Smtp-Source: AGHT+IH8WNh75hYFjly4SyW+lveTdUM4hXthSziwr0cb2a0IZY9ZfUCJrswlHz/oV1Y45+ll7+bwKdTMwNc=
+X-Received: from pjee7.prod.google.com ([2002:a17:90b:5787:b0:311:b3fb:9f74])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:3a91:b0:311:a314:c2ca
+ with SMTP id 98e67ed59e1d1-315f25ed82amr6242747a91.6.1750890392115; Wed, 25
+ Jun 2025 15:26:32 -0700 (PDT)
+Date: Wed, 25 Jun 2025 15:25:33 -0700
+In-Reply-To: <20250602172317.10601-1-shivankg@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <c090efb3-ef82-499f-a5e0-360fc8420fb7@tum.de>
+References: <20250602172317.10601-1-shivankg@amd.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <175088956523.720749.10160134537876951534.b4-ty@google.com>
-Subject: Re: [PATCH] x86/hyper-v: Filter non-canonical addresses passed via HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST(_EX)
+Message-ID: <175089020166.723091.4300884010519691582.b4-ty@google.com>
+Subject: Re: [PATCH] KVM: guest_memfd: Remove redundant kvm_gmem_getattr implementation
 From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Manuel Andreas <manuel.andreas@tum.de>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>, pbonzini@redhat.com
+To: Sean Christopherson <seanjc@google.com>, pbonzini@redhat.com, kvm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Shivank Garg <shivankg@amd.com>
+Cc: bharata@amd.com, tabba@google.com, ackerleytng@google.com
 Content-Type: text/plain; charset="utf-8"
 
-On Wed, 25 Jun 2025 15:53:19 +0200, Manuel Andreas wrote:
-> In KVM guests with Hyper-V hypercalls enabled, the hypercalls
-> HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST and HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX
-> allow a guest to request invalidation of portions of a virtual TLB.
-> For this, the hypercall parameter includes a list of GVAs that are supposed
-> to be invalidated.
+On Mon, 02 Jun 2025 17:23:18 +0000, Shivank Garg wrote:
+> Remove the redundant kvm_gmem_getattr() implementation that simply calls
+> generic_fillattr() without any special handling. The VFS layer
+> (vfs_getattr_nosec()) will call generic_fillattr() by default when no
+> custom getattr operation is provided in the inode_operations structure.
 > 
-> However, when non-canonical GVAs are passed, there is currently no
-> filtering in place and they are eventually passed to checked invocations of
-> INVVPID on Intel / INVLPGA on AMD.
-> While the AMD variant (INVLPGA) will silently ignore the non-canonical
-> address and perform a no-op, the Intel variant (INVVPID) will fail and end
-> up in invvpid_error, where a WARN_ONCE is triggered:
+> This is a cleanup with no functional change.
 > 
 > [...]
 
-Applied to kvm-x86 fixes, with a massaged changelog, e.g. to call out that
-"real" Hyper-V behaves this way.  Thanks!
+Applied to kvm-x86 generic, thanks!
 
-[1/1] x86/hyper-v: Filter non-canonical addresses passed via HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST(_EX)
-      https://github.com/kvm-x86/linux/commit/fa787ac07b3c
+[1/1] KVM: guest_memfd: Remove redundant kvm_gmem_getattr implementation
+      https://github.com/kvm-x86/linux/commit/87d4fbf4a387
 
 --
 https://github.com/kvm-x86/kvm-unit-tests/tree/next
