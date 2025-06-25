@@ -1,142 +1,78 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E868634A;
-	Wed, 25 Jun 2025 01:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F48D3B19A
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:09:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750813711; cv=none; b=RF5sym25yPQQ1MZO6UqnGwxfxPk6EtctBTPSB+ft+SuK6iwTFFFqTM68GavuYJ9+v6muhdGWUQ4EDmtoRAnPsur0YU4fysqqMRwWbY/HYxC040ZIOux4OfhpBsmZSe4wHPYX5OWk+iZwNgC6Moy5EliFeNOkvsA1DlPjsiRRDpk=
+	t=1750813748; cv=none; b=ikvtuA/CodrJuKXRLZX8B/HbLwawwec9YLkomRJYkAdbDv59gDj8RiKk4JCtWtZZfIYxIvsp+AGzrJp6lU2bo6GSOmrbcDWi8sbAzn4wFCShplFU9gt05KnEzcQfrprEyIWoPEoFFS6f6OOwHwM16aJH8v+JU1tgM58zPQoiwDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750813711; c=relaxed/simple;
-	bh=TOF0C3SFCw/3wf+4fGiczSw4KaPn8gRnHe/zXv3hBqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qY3uwyyuYe3n1rJMqGKS7IldqZpCUBF0VQ8ctgHCUs31Mz+8XDN0DpC3BsJk08brhEiRF5Tj7HtSwWtVR5gpMQMzmDiH1ZoYA0zjp7g1Hx9lYpGo3FUZsq8XIzRdCj7kaGUELEYIk5Husr4kJYWVsvvCB3hnBuhtBCfFLu3tibk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YEIwnQ1D; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YEIwnQ1D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750813710; x=1782349710;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TOF0C3SFCw/3wf+4fGiczSw4KaPn8gRnHe/zXv3hBqM=;
-  b=YEIwnQ1DPiw6ftfK//e6y+pNcpk0h9Cs9rg4XG9ho7ftnL0Lpt7J/ADm
-   4NHuYeyRVtKm3BcyVAgbg9KnwCUAQbGkh8FpNwHqaizJW8wlPlGVHpAA1
-   VlQADPrl0KE47zxIwsIRNFgxSRJEbh/AOMTas9wqpZCKAgzOA9G2EXf+T
-   VmbgELIQXIi8aL7L4kHOkELk+/IsjdGDix4NpXA+lk/kt0rpgt4I0jB+B
-   Qozf9U2gyLofBOxe6kKpw7S/PMn9kFI15QDsvrwSISoS4dv6HdWIVzDJW
-   XqxIkMqF73zsMS8wbQTUEr+mShlAfYxpMGJ0xFHQCmfAAK9ZLee0A+Iss
-   g==;
-X-CSE-ConnectionGUID: xHcmzCzqQkmUGyGyQ11vEw==
-X-CSE-MsgGUID: 06kpQPQBSrmPt9Uuq558ig==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="53003641"
-X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="53003641"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 18:08:30 -0700
-X-CSE-ConnectionGUID: xO2Sq9mWRp+JcSgzKF56Og==
-X-CSE-MsgGUID: pLVpZm2VQk+Vz8A5adQ1gg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="156470228"
-Received: from rzhang1-mobl7.sh.intel.com ([10.238.6.124])
-  by orviesa003.jf.intel.com with ESMTP; 24 Jun 2025 18:08:27 -0700
-From: Zhang Rui <rui.zhang@intel.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	tglx@linutronix.de,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	x86@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ak@linux.intel.com,
-	kan.liang@linux.intel.com
-Subject: [PATCH 2/2] perf/x86/intel/cstate: Add Pantherlake support
-Date: Wed, 25 Jun 2025 09:08:22 +0800
-Message-ID: <20250625010822.250826-2-rui.zhang@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250625010822.250826-1-rui.zhang@intel.com>
-References: <20250625010822.250826-1-rui.zhang@intel.com>
+	s=arc-20240116; t=1750813748; c=relaxed/simple;
+	bh=jY+C/TpjBj7NczdPxP5qJzNzfhMM6ZTS+CIqe8D+ro4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=T7RwdLlCCbndLpVgAAclgwFtu1Ck7WdMuPxtsV5Epi7YbSoxW5rFUOvyMQu4oGeNa7tbGvC6XdsHIXrz+EDsLMwh0ItBQT2W5zkY0dTJvXLto59VPbUktAos0izsHwAnqMyqk4iGIAwXDkCuTfYE1UnqFQrSXGYNAafHn8eR1fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55P18vOg012417;
+	Wed, 25 Jun 2025 10:08:57 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55P18uSx012413
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 25 Jun 2025 10:08:56 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <945bf443-32b4-4432-8702-41ff7b15e420@I-love.SAKURA.ne.jp>
+Date: Wed, 25 Jun 2025 10:08:55 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] lsm: introduce security_lsm_config_*_policy hooks
+To: =?UTF-8?Q?Maxime_B=C3=A9lair?= <maxime.belair@canonical.com>,
+        linux-security-module@vger.kernel.org
+Cc: john.johansen@canonical.com, paul@paul-moore.com, jmorris@namei.org,
+        serge@hallyn.com, mic@digikod.net, kees@kernel.org,
+        stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
+        takedakn@nttdata.co.jp, song@kernel.org, rdunlap@infraread.org,
+        linux-api@vger.kernel.org, apparmor@lists.ubuntu.com,
+        linux-kernel@vger.kernel.org
+References: <20250624143211.436045-1-maxime.belair@canonical.com>
+ <20250624143211.436045-3-maxime.belair@canonical.com>
+Content-Language: en-US
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <20250624143211.436045-3-maxime.belair@canonical.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-Virus-Status: clean
+X-Anti-Virus-Server: fsav304.rs.sakura.ne.jp
 
-Like Lunarlake, Pantherlake supports CC1/CC6/CC7 and PC2/PC6/PC10.
+On 2025/06/24 23:30, Maxime Bélair wrote:
+> +config LSM_CONFIG_SELF_POLICY_MAX_BUFFER_SIZE
+> +	int "Maximum buffer size for lsm_config_self_policy"
+> +	range 16384 1073741824
+> +	depends on SECURITY
+> +	default 4194304
+> +	help
+> +	  The maximum size of the buffer argument of lsm_config_self_policy.
+> +
+> +	  The default value of 4194304 (4MiB) is reasonable and should be large
+> +	  enough to fit policies in for most cases.
+> +
 
-Signed-off-by: Zhang Rui <rui.zhang@intel.com>
----
- arch/x86/events/intel/cstate.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+Do we want to define LSM_CONFIG_{SELF,SYSTEM}_POLICY_MAX_BUFFER_SIZE as Kconfig?
 
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index 6f5286a99e0c..369b0d204ff0 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -41,7 +41,7 @@
-  *	MSR_CORE_C1_RES: CORE C1 Residency Counter
-  *			 perf code: 0x00
-  *			 Available model: SLM,AMT,GLM,CNL,ICX,TNT,ADL,RPL
-- *					  MTL,SRF,GRR,ARL,LNL
-+ *					  MTL,SRF,GRR,ARL,LNL,PTL
-  *			 Scope: Core (each processor core has a MSR)
-  *	MSR_CORE_C3_RESIDENCY: CORE C3 Residency Counter
-  *			       perf code: 0x01
-@@ -53,18 +53,19 @@
-  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
-  *						SKL,KNL,GLM,CNL,KBL,CML,ICL,ICX,
-  *						TGL,TNT,RKL,ADL,RPL,SPR,MTL,SRF,
-- *						GRR,ARL,LNL
-+ *						GRR,ARL,LNL,PTL
-  *			       Scope: Core
-  *	MSR_CORE_C7_RESIDENCY: CORE C7 Residency Counter
-  *			       perf code: 0x03
-  *			       Available model: SNB,IVB,HSW,BDW,SKL,CNL,KBL,CML,
-- *						ICL,TGL,RKL,ADL,RPL,MTL,ARL,LNL
-+ *						ICL,TGL,RKL,ADL,RPL,MTL,ARL,LNL,
-+ *						PTL
-  *			       Scope: Core
-  *	MSR_PKG_C2_RESIDENCY:  Package C2 Residency Counter.
-  *			       perf code: 0x00
-  *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
-  *						KBL,CML,ICL,ICX,TGL,TNT,RKL,ADL,
-- *						RPL,SPR,MTL,ARL,LNL,SRF
-+ *						RPL,SPR,MTL,ARL,LNL,SRF,PTL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
-  *			       perf code: 0x01
-@@ -77,7 +78,7 @@
-  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
-  *						SKL,KNL,GLM,CNL,KBL,CML,ICL,ICX,
-  *						TGL,TNT,RKL,ADL,RPL,SPR,MTL,SRF,
-- *						ARL,LNL
-+ *						ARL,LNL,PTL
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C7_RESIDENCY:  Package C7 Residency Counter.
-  *			       perf code: 0x03
-@@ -96,7 +97,7 @@
-  *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
-  *			       perf code: 0x06
-  *			       Available model: HSW ULT,KBL,GLM,CNL,CML,ICL,TGL,
-- *						TNT,RKL,ADL,RPL,MTL,ARL,LNL
-+ *						TNT,RKL,ADL,RPL,MTL,ARL,LNL,PTL
-  *			       Scope: Package (physical package)
-  *	MSR_MODULE_C6_RES_MS:  Module C6 Residency Counter.
-  *			       perf code: 0x00
-@@ -651,6 +652,7 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
- 	X86_MATCH_VFM(INTEL_ARROWLAKE_H,	&adl_cstates),
- 	X86_MATCH_VFM(INTEL_ARROWLAKE_U,	&adl_cstates),
- 	X86_MATCH_VFM(INTEL_LUNARLAKE_M,	&lnl_cstates),
-+	X86_MATCH_VFM(INTEL_PANTHERLAKE_L,	&lnl_cstates),
- 	{ },
- };
- MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
--- 
-2.43.0
+If security_lsm_config_{self,system}_policy() are meant to be used by multiple
+LSM modules, the upper limit each LSM module wants to impose would vary. Also,
+1073741824 is larger than KMALLOC_MAX_SIZE; kmalloc()-based memory copying
+functions will hit WARN_ON_ONCE_GFP() at __alloc_frozen_pages_noprof().
+
+Since some of LSM modules might use vmalloc()-based memory copying functions from
+security_lsm_config_{self,system}_policy(), the upper limit should be imposed by
+individual LSM module which provides security_lsm_config_{self,system}_policy().
 
