@@ -1,77 +1,77 @@
-Received: from mail-oa1-f54.google.com (mail-oa1-f54.google.com [209.85.160.54])
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43D782D5409
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:22:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A362D5C92
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:22:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864952; cv=none; b=r5cLhxPH9r1xt/Ahp4IHT6ApPzvk3NyEpsFzqxAmHHQkd34WFts1qeK9YHqIZmTT7suwk/cquma6Ely8YdqrQmZ4KNNyArYFf68ei//3V3nbm1F7Y+5Gvb4Jex8tdmFzfIiUe2uUzEcElTdO2VK+TjX2/Sile3qobTD7jALh15k=
+	t=1750864958; cv=none; b=r8w6ATXdQO3o3PiFdG1uJGNJlQqblmuQpIzhMZgWw9u8d1fRu1ex4Q9aax7Zqb9xE0hwniI0laNw+AD0VX/dPi61xt+8nh0yUlnaUXTmtTwZCm4+80glaFSuaKcqIDxK5Rott+7QwasjGSYYmeovPfnVbzB2ymNkGmoDUIDxq6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864952; c=relaxed/simple;
-	bh=h750Dg9nVgGpkoaJBvLMDscZZNL/lSyHB9wANtywhQM=;
+	s=arc-20240116; t=1750864958; c=relaxed/simple;
+	bh=yCYdZbO+dpu/mVZGwv9i1PkdqA5piWFDPL5hOs2zx7Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=cFpvHyrXLjWb/XIIfCeUxJnnaxgsXLopo2FuHup9RF6NuWoNBjHUm+6bcdGuidk/KYrouGK4D8mnUPyJaTY3VqVR9ugXNbdecRZIhqhGqpv6Y33V5a6aAMYozWoxxKi5jx5/uLd46nZGRNI/gqwa0jWxyQvCTRmwqQkbwK+zniE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ge96jNp4; arc=none smtp.client-ip=209.85.160.54
+	 Content-Disposition; b=hYbLR23nyIYffBRuUmrQ1nF42/CziCvEr+LoH88pwyesV8KRK1/kazqOMCBlO4cIX3hGhWrghhYqswpu8RmfzptNke2vu4S4OqVzpJfvhuRj8C7sAzxiPnPwj41RKl1kDTZ6eco9HBdcN/Nk2jN+nXMZrIxqzH4JUfqO3lRxmf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GmLd/q/a; arc=none smtp.client-ip=209.85.161.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ge96jNp4"
-Received: by mail-oa1-f54.google.com with SMTP id 586e51a60fabf-2ea6dd628a7so18165fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:22:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GmLd/q/a"
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-60d6303a11eso7467eaf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:22:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750864949; x=1751469749; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750864953; x=1751469753; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7AotgDT5LaYynHW/ZEfD1/SGeGKITLpNV/LQfaww2/4=;
-        b=ge96jNp4OUGktaTmUKyIgT9WB/PInF/BjND0ftsxv+qeAWAmHGxO5qI0NpCbyncJWN
-         m+eQlaYHbJ/6mOGvT4W4A/eJGWRvVXIU/Lc60Jf1lI3Zu2VsUR4SalQUIayjkSMvvbx4
-         fsJ7ZYfrjXHYjZODXRjeisMOk/nHDEfGF0B76IPBHQ5umyOs11sk/arv2gJcnsf/atm2
-         gfCmZ8IBzPH7VxuqBC4+JaE4yDFJhfj4QcI37iCEx+ee7rC/Y85T/WPK1mLDQwXhIsMv
-         d7gPOw3rLU0eddqLvwmkhSQBe9HSf+AL9zoLuJkpb4y6ec9KkGkQplqgVAw1eFnx75/f
-         OY+g==
+        bh=nF0VBzbDTNCK1Xw9av27PYfa00tvOG6PAv4XXmzSQFU=;
+        b=GmLd/q/akNfHtLQW8btOv1hf8CsiKeAy+BoKZO0k9DGJ/Ez1SkYSsrx/drYZDwhLTu
+         9DCxPnJ5cwOoY8Km3KWnZ+/t039ctWPTZ9ARuDZhlzTTR44YEA6+fhQkanxt2k48Q+pS
+         6kQKx6wtOV26LWlARfPU8lHKhzrmZqdIrH5JxW5Sk/Hz/cXVZzkgeirBm1dcLGjpm8xy
+         bhrfPwWgt2f2VPPoWPWcQI4LcGlOswkRiF8QM0ikbX4YoVoYAfo08Aee8Fx5R0pDacRu
+         a3gGsk+GnckLpqJZ7BcL7KxGpiJgFjs9f55jhL3Zq9aMCAzz6VdBcXnU/mf+H2orTgVI
+         zQtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750864949; x=1751469749;
+        d=1e100.net; s=20230601; t=1750864953; x=1751469753;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7AotgDT5LaYynHW/ZEfD1/SGeGKITLpNV/LQfaww2/4=;
-        b=bKy45oyMQT+YacI9IqcDYBe6ncyVEioHF8BUIAYQydcPN7xl1BQalhGmPriahM+vMB
-         e7WjwYspBN0gWDA0/mp+y0Lwzh6a5Ygx8f9Vz6tNhVRkkF6kzUCsM0Yvz4LWJGVLmRXU
-         H8/oD+sjq1A3mOE2npWNZ7EV+Hs/aSRMIxalhQNKqfpoXtSj7cIid3tiYS8J1FKr9Zia
-         Vlid9m3giPOH7pafv/7Lr/Vv63MilQjsM4UmERyTzr2Yk6FG6acO6CukQ21XiW4LDY6Y
-         GenqMrWxeQasUp19fFnjQ63rAdHN26SuEnm6wDGxWZM4qCOsGKhym4subCRXOyoJI10o
-         /1Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJRJQtmZtdV5D0IgFfmXTZ7LPPxPMN8MRPnuBmqwHnlzivH30xsia/6nWscQF5BUYYcxM8h8TvLy1BB/Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyDZ3Gu5COKdJr3iX5aoJLLyOPpr9P+zVMmezr67FAJrRzsV2Dx
-	QnGLF1qpUVI6zV0JX40iL9ZOvEKK4zMsNu21XW+ZnYN7M3ejcpYNRcp5xHuTPlxYGgM=
-X-Gm-Gg: ASbGnctUGt6mN47XbhF7qDpYGzVGw/t983V0FuewsBo9Er/4P8KaYnjkwkmcATjfpt1
-	QSf40YXBcNQ+x4ESS2K787Dx9CHKQnOAT7GB2bMGqknGUuHOEG7ZWy11zw5dodZcLxDo17F0O2L
-	Z14A0PjFapHYbhXVKfxG3xdkSJsQ1hoHxTX2tCvMimfQXvnJkP2AnzQhOFfy6Ni4DgVmtd184MH
-	PUJyu+gnKD9bhNzreot+/DivooIAprOMQY6rjNuIr7XArq3/VvQBkCtj7tjHBhYEMx4B94V3kV3
-	rx/F4OXntQy4P+eAAGfdVlkDGRcNYqtvM+tAIWiJMv+XHdIqzM87G8Gu2L9rpp2c382caw==
-X-Google-Smtp-Source: AGHT+IGsr3ucc8CyFqc6Gm9yOw1rdKd2Ohl95Xek/6xI6751ZImxrSCLvS3rUdnLDFx5jkH5lTS+2Q==
-X-Received: by 2002:a05:6808:1817:b0:406:1e0c:3196 with SMTP id 5614622812f47-40b057f075amr3033719b6e.28.1750864949418;
-        Wed, 25 Jun 2025 08:22:29 -0700 (PDT)
+        bh=nF0VBzbDTNCK1Xw9av27PYfa00tvOG6PAv4XXmzSQFU=;
+        b=Q2+Q9oiKJyySrmRQF7W6SYNLLMXvPLUoPmil0Ca6Z8ePk7vD2baJOhyH96q1OvQBJb
+         6zh1rihRy0lWJqqGd3m0xbxLy7xaTc+36LBkaFBRgKoZpqBXatR7v86NCLuW5wbe56dp
+         BHzMP22M1mTlPKpPQLAHUSs+UM4Vn83f1tALrH9qOZaFvmWw1XWVhZfo7mfgdqxYb+KR
+         1As2EtT8BPh+m2tCjJNrlGQS1AlEE5vbnNT17dx6M2F/Vrc/XLt4U5Jw0gZiOw4Fhx7p
+         D/TYPZiUOuZp7tPKurzd0gCEBFzKXGYr1pxi8oSfqm0qhZwNDSPcWnq3FQgjbmeCNMqO
+         mjjg==
+X-Forwarded-Encrypted: i=1; AJvYcCVHXdrIWlY+GMyq8ov6jaKKZEm50tqe6eh/zpu/D7M1TxEpnGzoWhjQWSZnCop/El//+kp2Tt9au/BKHt4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUWJiDrBWrFTE6ThmlhHci6ehWTu1w66lUzX5ZZiE7oCIQmbZF
+	FlkyFyvWVCqNM//BpFBK+g19ksNVmw7bGsc/mbhNAgsSqB1nl4oqRk2VHSQ2MaSUkog=
+X-Gm-Gg: ASbGncuEVKMApcGgDU+fhL1VqJeYFdAfWGzp/CL8qvRDrd9EnOj2NP0ABJu1kxRKr1+
+	gpVz7DjtmPAQYwOtB4tNk611R41RSI5nfqQY03zPaDSAEkpHCeilIW1ehzZYNVNlABH/qHmOHbk
+	JRqEIvom1TA4fH8fEXEJ7eJWFEsvdJftMq+5sYQdIrYEDW0NErKKofWIE2CQoPdKOVpO4KTNHby
+	vtcaibvadDV3IhpTtyTiqD9aACGiy8fUzAb7dRRBtS9v/PqLvgQdIIY3nIYb+aF9j5AkrdQusjX
+	pXW3WnGsigGY2z8HL5b6/qS/c56DisNocLsDqzVl22+N/Rec5D8H4BI9jKmvRYduuNJBtQ==
+X-Google-Smtp-Source: AGHT+IHuQoqa1u0DUHvl6z0O9mvk8424s2tdSOokLX0655c7GkLUoXhQQnFWEefCze0j3O7DZKz2Sg==
+X-Received: by 2002:a05:6820:99a:b0:611:6fc6:e6ee with SMTP id 006d021491bc7-611aa3f4864mr221261eaf.1.1750864953563;
+        Wed, 25 Jun 2025 08:22:33 -0700 (PDT)
 Received: from localhost ([2603:8080:b800:f700:1fca:a60b:12ab:43a3])
-        by smtp.gmail.com with UTF8SMTPSA id 5614622812f47-40ac6d3f540sm2202840b6e.50.2025.06.25.08.22.28
+        by smtp.gmail.com with UTF8SMTPSA id 006d021491bc7-6115b7f813dsm1629279eaf.40.2025.06.25.08.22.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:22:29 -0700 (PDT)
-Date: Wed, 25 Jun 2025 10:22:27 -0500
+        Wed, 25 Jun 2025 08:22:33 -0700 (PDT)
+Date: Wed, 25 Jun 2025 10:22:32 -0500
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Frank Min <Frank.Min@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>,
-	Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Lijo Lazar <lijo.lazar@amd.com>,
-	Hawking Zhang <Hawking.Zhang@amd.com>,
-	Samuel Zhang <guoqing.zhang@amd.com>,
-	Asad Kamal <asad.kamal@amd.com>, Ying Li <yingli12@amd.com>,
-	Prike Liang <Prike.Liang@amd.com>,
-	Pratap Nirujogi <pratap.nirujogi@amd.com>,
-	amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+To: Frank Li <Frank.Li@nxp.com>, Rui Miguel Silva <rmfrfs@gmail.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+	Martin Kepplinger <martink@posteo.de>,
+	Purism Kernel Team <kernel@puri.sm>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] drm/amdgpu: indent an if statement
-Message-ID: <5827884c-f269-4e38-8202-2a3fce280ae3@sabinyo.mountain>
+Subject: [PATCH] media: imx8mq-mipi-csi2: Fix error code in
+ imx8mq_mipi_csi_parse_dt()
+Message-ID: <9b6c7925-c9c4-44bd-acd5-1ef0e698eb87@sabinyo.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,29 +82,27 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Mailer: git-send-email haha only kidding
 
-The "return true;" line wasn't indented.  Also checkpatch likes when
-we align the && conditions.
+This was returning IS_ERR() where PTR_ERR() was intended.
 
+Fixes: 642b70d526ab ("media: imx8mq-mipi-csi2: Add support for i.MX8QXP")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_ucode.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/platform/nxp/imx8mq-mipi-csi2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ucode.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ucode.c
-index d777c049747e..a0b50a8ac9c4 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ucode.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ucode.c
-@@ -1400,8 +1400,8 @@ bool amdgpu_is_kicker_fw(struct amdgpu_device *adev)
+diff --git a/drivers/media/platform/nxp/imx8mq-mipi-csi2.c b/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
+index 6501843ae72d..3a4645f59a44 100644
+--- a/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
++++ b/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
+@@ -966,7 +966,7 @@ static int imx8mq_mipi_csi_parse_dt(struct csi_state *state)
  
- 	for (i = 0; i < ARRAY_SIZE(kicker_device_list); i++) {
- 		if (adev->pdev->device == kicker_device_list[i].device &&
--			adev->pdev->revision == kicker_device_list[i].revision)
--		return true;
-+		    adev->pdev->revision == kicker_device_list[i].revision)
-+			return true;
- 	}
+ 		base = devm_platform_ioremap_resource(to_platform_device(dev), 1);
+ 		if (IS_ERR(base))
+-			return dev_err_probe(dev, IS_ERR(base), "Missing CSR register\n");
++			return dev_err_probe(dev, PTR_ERR(base), "Missing CSR register\n");
  
- 	return false;
+ 		state->phy_gpr = devm_regmap_init_mmio(dev, base, &regmap_config);
+ 		if (IS_ERR(state->phy_gpr))
 -- 
 2.47.2
 
