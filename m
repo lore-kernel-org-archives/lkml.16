@@ -1,136 +1,95 @@
-Received: from sender4-op-o15.zoho.com (sender4-op-o15.zoho.com [136.143.188.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1D733E4
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750823262; cv=pass; b=U280hu1NByX/qkVFh4Sxm2Dy71Tm0a9ZMSM1qB+Hfw8xBP6LQbYn4pZrisFSVPLuWzReX9YHxAD+Ip5V5bEEP9JpphUN5/SZGlzp9qqrQ08UjBlblbyYyP71oEkOO+1tsynUVVK1vjdOSTWsfzR/6PAWL9pRq7sRyv3gj7je1v0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750823262; c=relaxed/simple;
-	bh=JP26mKnlstWQd02lHyws56EmzQCjDY8MetuTGwA3c/M=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MvhsB8Jtu4Hq4X3XKX0cT5MnsLAW9W9dkgr0fT5KPrcYnYkefabmLUI6t1lCA2GtojHRxawrM4AzH9hMZRfAD9CmiYbhwB8wVoWbTsTeHiP7FnQ+/XvKcy6dQ/PPNEfmHWGRgugN7fNlFOtnDzBzwEMOIxOBHD/fTu2C/fjhw5o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty; spf=pass smtp.mailfrom=linux.beauty; dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b=asvfwpn8; arc=pass smtp.client-ip=136.143.188.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux.beauty
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.beauty
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B7271917F4;
+	Wed, 25 Jun 2025 03:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750823296; cv=none; b=jlT4Ov/fcOv7fB2FnYUs6/2zFaOUurJN6Gpn/H606jYu7hd6lP2V6DMv9xDd138Hubc85YXtJoiJhn9R5Ib+w2xRPpOYsVN6MLL9Mhm751KURLOICYHprGC74z7unGr997A5CjGjEDbaXucRVFy0ZnPfkB3MSjcVZO947xkZeR4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750823296; c=relaxed/simple;
+	bh=Otk52K2UkGgNNbsfo3Tw+wT8D1C0VqHYBREnFKHZXdY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=X2jjZQgQ9qV+Rgu75d38VUc6DHfy6ZyW3mxV988wxrGFeEGCRr8kfHtR+rnHZhQGvTs6wdpFQAqF384o3nrMle4vYGNnrkjQEL/o1SsjyNujExHxXTJtxMXW6Bd9fCq2WiPjqT78RSMLUHVyImCEl+oSrC4pUqrK1/gK9t9xWeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=Vu66G7A1; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.beauty header.i=me@linux.beauty header.b="asvfwpn8"
-ARC-Seal: i=1; a=rsa-sha256; t=1750823170; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=H6wU9jp5UENsHWc5Zw+/FuQQker8QugDtICeQqdw/2FiPOGcG9p61gGah4q4704C62wmcsOjId5kIJLS6vuB6gP6P+7tKtbbp9CJIMQW1YbiR75BTtfDkqezBtWf3QEs5od79uBgJ8ezu2wlYEiojEZ9b89s3KRPa6aS8KrW03Q=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1750823170; h=Content-Type:Content-Transfer-Encoding:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To:Cc; 
-	bh=RdGgv5ETNd0Zsp1nHqiyPSrLOVxivkC0P66w4cAdGsU=; 
-	b=OkCElp4h0yM6T4Hzw0rE0df6JX5z/Rxsf4pnKGNfcYK0XU33wuR1K3yZ9XWtpr7fJgR2Htajv7yE8j7SjX0sZG3rdqD6w+qHifsoGRuuBPHkaOvLnsa0qo74cauO7SM6A2zR4277gE/dghTNE5n6AQXnYMfpAgS1fqgdWpxj9CY=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=linux.beauty;
-	spf=pass  smtp.mailfrom=me@linux.beauty;
-	dmarc=pass header.from=<me@linux.beauty>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1750823170;
-	s=zmail; d=linux.beauty; i=me@linux.beauty;
-	h=From:From:To:To:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
-	bh=RdGgv5ETNd0Zsp1nHqiyPSrLOVxivkC0P66w4cAdGsU=;
-	b=asvfwpn8pbFkG2lF6J5zRtDPlVQNn+8B5WOM/67WgCQnPdVrXUvTTp2RVzEYva4E
-	RYDQx4grcyu/s2wf/Na1xWSfVKsnxJorG9NOjA8VNCZss/eSiSWh+8XQyUnNejuUcjZ
-	OYCVw0T5ssoKEen/dO7f9j0vbdX+bVkquhy0yTyE=
-Received: by mx.zohomail.com with SMTPS id 175082316749596.95391557947278;
-	Tue, 24 Jun 2025 20:46:07 -0700 (PDT)
-From: Li Chen <me@linux.beauty>
-To: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	K Prateek Nayak <kprateek.nayak@amd.com>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Brian Gerst <brgerst@gmail.com>,
-	Patryk Wlazlyn <patryk.wlazlyn@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	"Gautham R. Shenoy" <gautham.shenoy@amd.com>,
-	Li Chen <chenl311@chinatelecom.cn>
-Subject: [PATCH v3 2/2] x86/smpboot: avoid SMT domain attach/destroy if SMT is not enabled
-Date: Wed, 25 Jun 2025 11:45:50 +0800
-Message-ID: <20250625034552.42365-3-me@linux.beauty>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250625034552.42365-1-me@linux.beauty>
-References: <20250625034552.42365-1-me@linux.beauty>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="Vu66G7A1"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id 48398206BD;
+	Wed, 25 Jun 2025 05:48:05 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id b7gxHv5344jB; Wed, 25 Jun 2025 05:48:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1750823283; bh=Otk52K2UkGgNNbsfo3Tw+wT8D1C0VqHYBREnFKHZXdY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=Vu66G7A1MauCIThE3FLEUGylkmIO/BxPgVEv36LVLfofHUhmW7DKcv9OMGJvYf3kA
+	 90phhj8O7Y/sMbINhNjl2LkRVK8EOmAgdoDzvh2OwuwVDwVqOe9LHnw4y25j4tJFX9
+	 Se1YQiArrVaJBtqQbIz/9IWoLJ22ODbFvmqRlfCLv/lVee6g+1xHsnU3IfbHEYTGfo
+	 iapSQyYzCAOamera+WXhhwZX2I16jUHMTA5hS/TJZWReOO5q1wLLJ5ErEbMr5xgsVs
+	 HEG9BCoUPLqcQQNH9K8KuWtC3Fl1et/V3GMe1hsI9GHliYTJBVP8jLnzhBHN3k5yX7
+	 uDrxzZp91z5xA==
+Date: Wed, 25 Jun 2025 03:47:47 +0000
+From: Yao Zi <ziyao@disroot.org>
+To: Huacai Chen <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Mingcong Bai <jeffbai@aosc.io>,
+	Kexy Biscuit <kexybiscuit@aosc.io>, loongarch@lists.linux.dev,
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: loongson3: Support older SMC firmware
+Message-ID: <aFtxYwgZDbYy_EMb@pie>
+References: <20250623123321.5622-1-ziyao@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250623123321.5622-1-ziyao@disroot.org>
 
-From: Li Chen <chenl311@chinatelecom.cn>
+On Mon, Jun 23, 2025 at 12:33:21PM +0000, Yao Zi wrote:
+> SMC firmware found on many on-market LoongArch devices implement a
+> different ABI than what has been implemented in the current upstream
+> driver. They significantly differ in the following ways:
+> 
+> - CMD_GET_VERSION returns 0.
+> - There is no known SMC call to obtain corresponding frequencies for
+>   each frequency level. The frequency table must therefore be calculated
+>   with CPU clock frequency from scratch.
+> - There is no known SMC call to obtain the current frequency level.
+> - The main processor must determine the set of cores able to run at
+>   boost frequency and enable boosting manually.
+> - SMC call response format may vary between commands.
+> 
+> This patch adds support for the SMC firmware found on these devices,
+> which I denoted as "SMC-0" in the driver. Boost support is omitted,
+> since determination of cores able to boost requires the driver to couple
+> tightly with micro-architecture details.
+> 
+> For coexistence, I prefixed all SMC-call constants with their SMC
+> versions, and introduced "SMC-0"-specific initialization and
+> frequency-level-setup rountines.
+> 
+> Signed-off-by: Yao Zi <ziyao@disroot.org>
 
-Currently, the SMT domain is added into sched_domain_topology by default.
+While self-testing the patch on a 3A5000 workstation, I observed the
+processor cannot run stably at the low frequency levels, it's required
+to keep it above half of the maximum frequency for stability.
 
-If cpu_attach_domain() finds that the CPU SMT domain’s cpumask_weight
-is just 1, it will destroy it.
+This type of instability seems to depend on the silicon or firmware
+revision, my 3A5000 laptop, Tongfang L860-T2, could run stably at any
+frequency level allowed by the SMC firmware. And with the driver it
+gains extra 30 minutes of battery life when idle, which looks valuable
+to me.
 
-On a large machine, such as one with 512 cores, this results in
-512 redundant domain attach/destroy operations.
+To avoid breaking existing users, I'll disable SMCv0 frequency scaling
+by default and add a module parameter to enable it in v2.
 
-Avoid these unnecessary operations by simply checking
-cpu_smt_num_threads and remove SMT domain if the SMT domain is not
-enabled, and adjust the PKG index accordingly if NUMA-in-package
-invalidates that level as well.
-
-Signed-off-by: Li Chen <chenl311@chinatelecom.cn>
----
-changelog:
-v2: fix wording issue as suggested by Thomas [1]
-v3: remove pointless memset and adjust PKG index accordingly,
-    as suggested by Thomas [2] 
-
-[1]: https://lore.kernel.org/all/87msa2r018.ffs@tglx/
-[2]: https://lore.kernel.org/all/875xglntx1.ffs@tglx/
-
- arch/x86/kernel/smpboot.c | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 7d202f9785362..4b6daa1545445 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -494,13 +494,29 @@ static struct sched_domain_topology_level x86_topology[] = {
- 
- static void __init build_sched_topology(void)
- {
-+	bool smt_dropped = false;
-+
-+	if (cpu_smt_num_threads <= 1) {
-+		/*
-+		 * SMT level is x86_topology[0].  Shift the array left by one,
-+		 */
-+		memmove(&x86_topology[0], &x86_topology[1],
-+			sizeof(x86_topology) - sizeof(x86_topology[0]));
-+		smt_dropped = true;
-+	}
-+
- 	/*
- 	 * When there is NUMA topology inside the package invalidate the
- 	 * PKG domain since the NUMA domains will auto-magically create the
- 	 * right spanning domains based on the SLIT.
- 	 */
- 	if (x86_has_numa_in_package) {
--		unsigned int pkgdom = ARRAY_SIZE(x86_topology) - 2;
-+		unsigned int pkgdom;
-+
-+		if (smt_dropped)
-+			pkgdom = ARRAY_SIZE(x86_topology) - 3;
-+		else
-+			pkgdom = ARRAY_SIZE(x86_topology) - 2;
- 
- 		memset(&x86_topology[pkgdom], 0, sizeof(x86_topology[pkgdom]));
- 	}
--- 
-2.49.0
-
+Regards,
+Yao Zi
