@@ -1,64 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A8152F4326;
-	Wed, 25 Jun 2025 23:14:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA732D29D7;
+	Wed, 25 Jun 2025 23:15:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750893286; cv=none; b=NVGC+T6Bugw5Bzay/md20v/2wRukEkj4QR1eEVMHy91rPOnXQU8WM9vvqkQ+Vd9jebMOwNZuSkuNZZeLrrLQYwysFnH8ETM8Ck2nIndf5g5oGVIwe9B3zrtSZzx8xeSmWHpMRUKvAFYcS4gtQnAXRp9oXBL3Hwpu7riFoAvnlvU=
+	t=1750893307; cv=none; b=ixRzdGrvbcT1dQpceOEHczOVKLWbU+aqjbbYtHRlq71twNcbk7/2fuymgyFnuvTlzKpL0zzIP7AQdMmghC8vFUSLt6D/d0WLOtVhTxVDNEWUWU1anBUOcvGJeA1KwcEH/2fmc3CXObjTbFisLMM4zvceG9P5//zEwSA9rdOxk/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750893286; c=relaxed/simple;
-	bh=q+Xgk6gY7XYxDUH0slZtZV1r6bW0xVVA1X7mSXJHpKA=;
+	s=arc-20240116; t=1750893307; c=relaxed/simple;
+	bh=ULpLJIaM9TeysiPeOAcS+WIhV2fOnk1DrQVpGmf26r0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lr3kUniIxdSTbgLbQJW0P4CSf86/u+QCF860xKsX3hkw89sKfsnVj6PC/0ho/Zhibnt9PT4Ids4iTPiVCNPcSSag90MGdsNzcx4yu4TKWPgPUcC7TuSwsRG5NdBtYTIiUUNGiB+6keIBq6IHlNk8hAU/yKgnG2FKwhI+DfWIZfU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jRLpBRrp; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=e6EdGOE1c+5Z0r0dUn8MEF95GudXltJ2HfCmn3k9Z1rRsFDky5KulVI+cd4exW+7V71dzNdtw+ljfMoLOR2bNXhGzLw/W/K9eB1DW6ObgaKZrycNCphh2QtPB4Ef+C5p8Muo60g/UBW9+p5cviCVCuuQDizCRWCLBTLsYNPbu5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UodmVyY5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jRLpBRrp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750893284; x=1782429284;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=q+Xgk6gY7XYxDUH0slZtZV1r6bW0xVVA1X7mSXJHpKA=;
-  b=jRLpBRrpOFLwacBmxvo8gnb9n+sva/YNn6hHhoBamIAOHVrrZ5IW2zhs
-   62EtMI3g6kDuDPg5bioH2qRJ8cuhw/RDDA01QBOimGmh0lVTydPgG64EZ
-   nWmUDlptGjqYChLqfWzPiOvcAjPXjNag0G+GJiZ+vuGwSXJZLuJeq5oDt
-   57kYmLzjF1c9sL72kO5KAZJYRJAJ6iDhOTBQWuIvYNpne6sYi1dDlvinw
-   Mh/6mTOqkH8wo9itzdiJgLp0s3cD2Xnnwv5h8d6FhIP0Paj4S/N6HYjmA
-   3er50gSu4B6x7MO1AiUSNV4k0FnKOtY6yqYlF3/vUULOeri0ENkRGMgJ8
-   g==;
-X-CSE-ConnectionGUID: gS8cdfx3SLq2S9BlQTolug==
-X-CSE-MsgGUID: y79klQh9T7+g9wKIXsHIjg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64534621"
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="64534621"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 16:14:43 -0700
-X-CSE-ConnectionGUID: wzR4hzHxQJWM2Z80q5tYIw==
-X-CSE-MsgGUID: nGIuA4g5T4+jfVIKBXXyCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="158107202"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 25 Jun 2025 16:14:40 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUZKA-000TW6-05;
-	Wed, 25 Jun 2025 23:14:38 +0000
-Date: Thu, 26 Jun 2025 07:14:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: Wen Gu <guwen@linux.alibaba.com>, richardcochran@gmail.com,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	xuanzhuo@linux.alibaba.com, dust.li@linux.alibaba.com,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	guwen@linux.alibaba.com
-Subject: Re: [PATCH net-next] ptp: add Alibaba CIPU PTP clock driver
-Message-ID: <202506260725.kFmPHRIJ-lkp@intel.com>
-References: <20250625132549.93614-1-guwen@linux.alibaba.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UodmVyY5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDF42C4CEEA;
+	Wed, 25 Jun 2025 23:15:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750893306;
+	bh=ULpLJIaM9TeysiPeOAcS+WIhV2fOnk1DrQVpGmf26r0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UodmVyY5VH9Sz5Hxy+Qk6bEH9syQ5IfHG4YR+ADKnsVNpuXPRWAREKVZqv/EUnEfG
+	 fePlHbL/wPzx1kh8iYGi42y7ayO3QJBAX2/YW93+g+bAjmqH9KfuwN9VcPz1nRk0di
+	 2TOYb+tkYralsp4THivq58cPs2HpxPJUMrJnb9bZwkKmigR4YRt75jnAC0B8vRaagA
+	 IJLKj2iTk4rTwgj+vNkUlUpSgijzzjUFI2CRAmAQXYxjjKB4i5FObPEgnw5dURF3mb
+	 JFzfmytkWvg5nFlDQKORyFzYqc5CL6+iKMwRRencmg0heAWyEGIzTWJg7zvTf3gWhA
+	 chGebt3qJLdAg==
+Date: Wed, 25 Jun 2025 13:15:05 -1000
+From: Tejun Heo <tj@kernel.org>
+To: jake@hillion.co.uk
+Cc: David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
+	Changwoo Min <changwoo@igalia.com>, Ingo Molnar <mingo@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Juri Lelli <juri.lelli@redhat.com>,
+	Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+	Valentin Schneider <vschneid@redhat.com>, sched-ext@lists.linux.dev,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] sched_ext: Drop kfuncs marked for removal in 6.15
+Message-ID: <aFyC-WVI1fkk0rPN@slm.duckdns.org>
+References: <20250625-scx-kfunc-cleanup-v1-1-d93335286fd5@hillion.co.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,85 +50,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625132549.93614-1-guwen@linux.alibaba.com>
+In-Reply-To: <20250625-scx-kfunc-cleanup-v1-1-d93335286fd5@hillion.co.uk>
 
-Hi Wen,
+On Wed, Jun 25, 2025 at 06:05:46PM +0100, Jake Hillion via B4 Relay wrote:
+> From: Jake Hillion <jake@hillion.co.uk>
+> 
+> sched_ext performed a kfunc renaming pass in 6.13 and kept the old names
+> around for compatibility with old binaries. These were scheduled for
+> cleanup in 6.15 but were missed. Submitting for cleanup in for-next.
+> 
+> Removed the kfuncs, their flags, and any references I could find to them
+> in doc comments. Left the entries in include/scx/compat.bpf.h as they're
+> still useful to make new binaries compatible with old kernels.
+> 
+> Tested by applying to my kernel. It builds and a modern version of
+> scx_lavd loads fine.
+> 
+> Signed-off-by: Jake Hillion <jake@hillion.co.uk>
 
-kernel test robot noticed the following build errors:
+Applied to sched_ext/for-6.17.
 
-[auto build test ERROR on net-next/main]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Wen-Gu/ptp-add-Alibaba-CIPU-PTP-clock-driver/20250625-212835
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250625132549.93614-1-guwen%40linux.alibaba.com
-patch subject: [PATCH net-next] ptp: add Alibaba CIPU PTP clock driver
-config: x86_64-buildonly-randconfig-002-20250626 (https://download.01.org/0day-ci/archive/20250626/202506260725.kFmPHRIJ-lkp@intel.com/config)
-compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250626/202506260725.kFmPHRIJ-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506260725.kFmPHRIJ-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/ptp/ptp_cipu.c:775:8: error: call to undeclared function 'pci_request_irq'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     775 |                 rc = pci_request_irq(pdev, i, irq_ctx[i].irq_func, NULL,
-         |                      ^
-   drivers/ptp/ptp_cipu.c:775:8: note: did you mean 'pci_request_acs'?
-   include/linux/pci.h:2570:6: note: 'pci_request_acs' declared here
-    2570 | void pci_request_acs(void);
-         |      ^
->> drivers/ptp/ptp_cipu.c:784:3: error: call to undeclared function 'pci_free_irq'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     784 |                 pci_free_irq(pdev, i, ptp_ctx);
-         |                 ^
->> drivers/ptp/ptp_cipu.c:785:2: error: call to undeclared function 'pci_free_irq_vectors'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     785 |         pci_free_irq_vectors(pdev);
-         |         ^
-   drivers/ptp/ptp_cipu.c:785:2: note: did you mean 'pci_alloc_irq_vectors'?
-   include/linux/pci.h:2139:1: note: 'pci_alloc_irq_vectors' declared here
-    2139 | pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
-         | ^
-   drivers/ptp/ptp_cipu.c:796:3: error: call to undeclared function 'pci_free_irq'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     796 |                 pci_free_irq(pdev, i, ptp_ctx);
-         |                 ^
-   drivers/ptp/ptp_cipu.c:797:2: error: call to undeclared function 'pci_free_irq_vectors'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     797 |         pci_free_irq_vectors(pdev);
-         |         ^
-   5 errors generated.
-
-
-vim +/pci_request_irq +775 drivers/ptp/ptp_cipu.c
-
-   763	
-   764	static int ptp_cipu_init_irq(struct ptp_cipu_ctx *ptp_ctx)
-   765	{
-   766		struct pci_dev *pdev = ptp_ctx->pdev;
-   767		int i, rc;
-   768	
-   769		rc = pci_alloc_irq_vectors(pdev, PTP_CIPU_IRQ_NUM,
-   770					   PTP_CIPU_IRQ_NUM, PCI_IRQ_MSIX);
-   771		if (rc < 0)
-   772			goto out;
-   773	
-   774		for (i = 0; i < PTP_CIPU_IRQ_NUM; i++) {
- > 775			rc = pci_request_irq(pdev, i, irq_ctx[i].irq_func, NULL,
-   776					     ptp_ctx, "ptp-cipu");
-   777			if (rc)
-   778				goto out_vec;
-   779		}
-   780		return 0;
-   781	
-   782	out_vec:
-   783		for (i = i - 1; i >= 0; i--)
- > 784			pci_free_irq(pdev, i, ptp_ctx);
- > 785		pci_free_irq_vectors(pdev);
-   786	out:
-   787		return rc;
-   788	}
-   789	
+Thanks.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+tejun
