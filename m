@@ -1,98 +1,78 @@
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88933BA4A
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:12:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C127C7F9
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:13:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750810329; cv=none; b=XFcM4K83T9kBeuyYb3ig65TUhPoot8nSwS2Yo7k86x8JdG6WvlPMzdw7rC3iyQ/J5eVwYGYWhWwRH3zIWty1RuQkgR2ZR/bEHMfjYW1+7n2p6sBVNuhuUJGF3IVwY5A6wTC5b+sibHhdcgjjJYJxFa5sxy9eSMvzvkSUrQWcApE=
+	t=1750810433; cv=none; b=NDYRJcYLVUBvQYUOl2klYdN2lUxSmRqQ+/F3rQNqkDgoePZ5Z7tg8vHAQfDrUnFzGSSfPtskQZnz76bTLntGe4o44ccpLvKleFUM/xb0CpG7BMkT5dbK9MCI3MDKQGfDt9dqoRhHSG+aZ0Da7K6MDBRTWUsM+0PXfQrl2AKCVok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750810329; c=relaxed/simple;
-	bh=4eoSUaocYmaWsmbo5jnksZ2C3rx/pVjA9dIc1SBhIag=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a4bvDzAC0FHdhbJgFKixB5wp8YUayoRlR5j5lAf2jMilZyvlni1Hm/s3k7tkreXAmvdOvEvg9Hbko1ETYfCEfrqCHejMcIKSZofo1ohaC9MqvHXD0jy5IfUr4s6qSwVPu0ggc6mRArQBkvswfIerSoSo1tuk9bnZWHq0JPhEHeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=us+62I+r; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="us+62I+r"
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-609b169834cso5332a12.0
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 17:12:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750810326; x=1751415126; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xhThPHLsvNen0jbqs0BDq7omrwoGam4W7cLnmLsm00Q=;
-        b=us+62I+r8r9eueggNzLoXt9ykNlfbtLFELP6jjljSUz/GkWLOswVq+AX7b4szSztip
-         bBi8QzapgzEBjdSKDB8ivtX+LhDoTi1+n7eckpr/b+PLZFDUS7mU6E0lTy0a4Hl/Dl5h
-         cMQ+blbv1q5gWI/Rsq7I+j2lvdPDTdiO2Wj9ZQ9cfJnwCDjhAytIaiC5Xy7/BEY6yWNF
-         mQQPguZsqN+1+fxCuGWc3FU1iBqkaXl+8DWR8wk9AFec0wfzlf52mbKL7kTTQp/KjTuz
-         oZWiPm5kPrHKd8SjnLtLIQGVDYQpxVCab7HJRggCiiJ/oQVQ3R8w44+8pO52AAC1+0PV
-         l9RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750810326; x=1751415126;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xhThPHLsvNen0jbqs0BDq7omrwoGam4W7cLnmLsm00Q=;
-        b=hJxbAeD53KdET05jvvxn3Q7eh6fs4C/ldVQxYP/wsDngAtm1XGaBC8QgoeAtIjIeqj
-         yOwO8rn/ekq60vCeiHG8E2l+TZPkrUCrzHiT1y6ybmFMyN8zT7mZvCe4dgsoxar6yB7P
-         IA/RL7Fex8Fn/u2JFfULx71+PsUFs4nZJUJXRRfOIN1m1CGGcp3NBWq/ptc0PGaK185B
-         LNStRETm1RidCEE5FRCgSoFbw5BZ53NeWLFlk3hBZGQ0eJLaqMQnKw6vzzOQmiN+/Nhd
-         ycRrMVTvrmXqbJnWmCyf4xxtW5cVU7+qyGj/WnkEbQNPrRQ4beuvI6U2xqCGQ14KKEG7
-         uvNQ==
-X-Gm-Message-State: AOJu0YzQEIo06ZmCZcOwVgNuQR6i4EH+YYwPbR+F8qR2Ao5toEXTxnXA
-	cXrEnfe5G1wwGeMvToAPe/LpDiHwm6ykdEuwf3k8PKPoPLXYmvzoTQ5dS9K8PoZCldme4Wz25Se
-	Jul7x8QNQsaS0w64xpgWxaP2NCD3Y9YZlN1b+R/9bs5QVIQ5fjIesGcSo
-X-Gm-Gg: ASbGncs3YGEAkx7tUTJM0jlADDuS+9J4YLl2EUMmCM2ANfvK5AyhqEg0soQ3LFwNgpy
-	sFUuYahPpg2pyVHBYjjejgtEJ6gSDFboGXAM7/HqMFOmRSCA7pkcEq/ZUUB/HP6+2+WlNyF8sYK
-	I8MR0FmZllTCNrY1inCXUYXx9QyrF9kkjm7+uctZHbZP3loSxVJj+vbg==
-X-Google-Smtp-Source: AGHT+IFSOFiLAN3ICey2GAdu0RNYWTKLxB7jGvanJwTfeh4aRq0sUq04sobGMGS0G2nqBQj2terPEeZjtQHCwiw0uro=
-X-Received: by 2002:a05:6402:4408:b0:601:f23b:a377 with SMTP id
- 4fb4d7f45d1cf-60c4fba5fe9mr11095a12.6.1750810325709; Tue, 24 Jun 2025
- 17:12:05 -0700 (PDT)
+	s=arc-20240116; t=1750810433; c=relaxed/simple;
+	bh=NEQM9xuqMINt671Yit5PJJpVCuKBuDsqTDV8sdTXOuw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l6ZeZ7Axmx2/cisaSNfqJ5ejFAgo6Z1QlKcpXhGag0NVg1AqXgnCsSXmbcAQIUbM6V2CVlvTAvzChNqDd5geyca1rcI/c8ayTMQlpIJcuvyw3tVUyRo2kOLenR/pME0xt5B+Tb5pgr2eN0ehrB6VAbtfXuxOIiZQIJ+/9Ptjj2o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc59-057ff7000000aab6-03-685b3f33380d
+From: "yohan.joung" <yohan.joung@sk.com>
+To: jaegeuk@kernel.org,
+	chao@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-f2fs-devel@lists.sourceforge.net,
+	pilhyun.kim@sk.com,
+	"yohan.joung" <yohan.joung@sk.com>
+Subject: [PATCH v4] f2fs: enable tuning of boost_zoned_gc_percent via sysfs
+Date: Wed, 25 Jun 2025 09:13:35 +0900
+Message-ID: <20250625001336.1937-1-yohan.joung@sk.com>
+X-Mailer: git-send-email 2.49.0.windows.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250530185239.2335185-1-jmattson@google.com> <20250530185239.2335185-3-jmattson@google.com>
- <aFs1OL8QybDRUQkF@google.com>
-In-Reply-To: <aFs1OL8QybDRUQkF@google.com>
-From: Jim Mattson <jmattson@google.com>
-Date: Tue, 24 Jun 2025 17:11:53 -0700
-X-Gm-Features: Ac12FXyF4HyLSGZZxKYDwfWReaDHVxBdd4mVp7eJRLyg4tWKSRBXXXXKbx-1nzI
-Message-ID: <CALMp9eTi_8T3Yyz6NYqqmKsgTLYKVz++9qt=2gdoxty40Od5Lw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] KVM: x86: Provide a capability to disable
- APERF/MPERF read intercepts
-To: Sean Christopherson <seanjc@google.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
-	Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprILMWRmVeSWpSXmKPExsXC9ZZnka6xfXSGQe9EDovTU88yWTxZP4vZ
+	4tIid4vLu+awObB4bFrVyeaxe8FnJo/Pm+QCmKO4bFJSczLLUov07RK4MlpOXWUvuMNacfvm
+	R8YGxncsXYycHBICJhI/Fm1lgrEbr31nBbHZBDQk/vT2MoPYIgKaEkc6Z7J3MXJxMAu0MUq0
+	H20CKxIW8JZ4f+0rI4jNIqAqMXnlcTYQm1fATOJJ012oBZoSO76cZ4KIC0qcnPkELM4sIC/R
+	vHU2M8hQCYG7rBK/D61hhmiQlDi44gbLBEbeWUh6ZiHpWcDItIpRJDOvLDcxM8dYrzg7ozIv
+	s0IvOT93EyMwoJbV/oncwfjtQvAhRgEORiUeXoPWqAwh1sSy4srcQ4wSHMxKIrzTzIFCvCmJ
+	lVWpRfnxRaU5qcWHGKU5WJTEeY2+lacICaQnlqRmp6YWpBbBZJk4OKUaGC2aMn9NmFRczbtA
+	ca5ZtUJL+bndjYz77HZOcT7zv6n+5NUZVdf5t+1b3sDnfTrYn6uxN7b6TdfEhuaVH3TcQvJK
+	6j3CnziruPps7jrnO+nmgkUmZ9PLxTZnWzx0O1ipaOLi433+uJf1/jYt71aNz3xv49pnTP1Y
+	UFLHnRx+/uaiEuPJB1dEKLEUZyQaajEXFScCAIhC9pMkAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrFJMWRmVeSWpSXmKPExsXCNUNljq6RfXSGwY7P1hanp55lsniyfhaz
+	xaVF7haXd81hs5gw9yqTxfut9xgd2Dw2repk89i94DOTx7fbHh6fN8kFsERx2aSk5mSWpRbp
+	2yVwZbScuspecIe14vbNj4wNjO9Yuhg5OSQETCQar31nBbHZBDQk/vT2MoPYIgKaEkc6Z7J3
+	MXJxMAu0MUq0H20CKxIW8JZ4f+0rI4jNIqAqMXnlcTYQm1fATOJJ012ooZoSO76cZ4KIC0qc
+	nPkELM4sIC/RvHU28wRGrllIUrOQpBYwMq1iFMnMK8tNzMwx0yvOzqjMy6zQS87P3cQIDJFl
+	tX8m7WD8dtn9EKMAB6MSD2/EiqgMIdbEsuLK3EOMEhzMSiK808yBQrwpiZVVqUX58UWlOanF
+	hxilOViUxHm9wlMThATSE0tSs1NTC1KLYLJMHJxSDYyTbsUXem5c8KPV6xPbr56I+4tSr6UV
+	mkrNXLtJLejJpUZ1P7u2aZP7Zkey3DjKMsPgeotRUff+IO5y9/43hy8d1VLnPdV322r7sVdp
+	jSvK3ELqhM7MK3CW/1e14Z0Xy9lVCunvrW13Cf5ILtyQFBe8LUnPeYqK+CFfK8v3XT+fJjzZ
+	udjiMrsSS3FGoqEWc1FxIgDXfW8GDQIAAA==
+X-CFilter-Loop: Reflected
 
-On Tue, Jun 24, 2025 at 4:31=E2=80=AFPM Sean Christopherson <seanjc@google.=
-com> wrote:
->
-> Question: what do we want to do about nested?  Due to differences between=
- SVM
-> and VMX at the time you posted your patches, this series _as posted_ will=
- do
-> nested passthrough for SVM, but not VMX (before the MSR rework, SVM auto-=
-merged
-> bitmaps for all MSRs in svm_direct_access_msrs).
->
-> As I've got it locally applied, neither SVM nor VMX will do passthrough t=
-o L2.
-> I'm leaning toward allowing full passthrough, because (a) it's easy, (b) =
-I can't
-> think of any reason not to, and (c) SVM's semi-auto-merging logic means w=
-e could
-> *unintentinally* do full passthrough in the future, in the unlikely event=
- that
-> KVM added passthrough support for an MSR in the same chunk as APERF and M=
-PERF.
+to allow users to dynamically tune
+the boost_zoned_gc_percent parameter
 
-I think full passthrough makes sense.
+Signed-off-by: yohan.joung <yohan.joung@sk.com>
+---
+ fs/f2fs/gc.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/f2fs/gc.h b/fs/f2fs/gc.h
+index 5c1eaf55e127..11fba7636af7 100644
+--- a/fs/f2fs/gc.h
++++ b/fs/f2fs/gc.h
+@@ -194,6 +194,7 @@ static inline bool has_enough_invalid_blocks(struct f2fs_sb_info *sbi)
+ static inline bool need_to_boost_gc(struct f2fs_sb_info *sbi)
+ {
+ 	if (f2fs_sb_has_blkzoned(sbi))
+-		return !has_enough_free_blocks(sbi, LIMIT_BOOST_ZONED_GC);
++		return !has_enough_free_blocks(sbi,
++				sbi->gc_thread->boost_zoned_gc_percent);
+ 	return has_enough_invalid_blocks(sbi);
+ }
+-- 
+2.33.0
+
