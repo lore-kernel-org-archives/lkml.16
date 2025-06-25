@@ -1,223 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from nbd.name (nbd.name [46.4.11.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDF729E0F9;
-	Wed, 25 Jun 2025 10:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.21
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750847121; cv=fail; b=MqzGnMatduIoHeyPy0h7Pw47qDRePpFoAfWiWoPvOx+BGQF+DPjj0rDMtP8donbqlMc3VPquNM3LqxRWli7ETKNFGBwn7cnu/6kM+vJT8iha4iq8pNnAO88sEl1N9yiMIDZvVQM77ilu9L6VFdHplFQRquHb1Uif0Edv4J66TZM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750847121; c=relaxed/simple;
-	bh=2PKBqo8bwIQ1urn7sB3qNZwALymM/pBNp9pNlB75lvw=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=IuGFnSUpzPfcpEnFRa3WtZLOqjam2OhIyJw5DHXS7suwoyQBAOkqVBM6lXYLy+JZa/Iw31RViDWoD2VshgBBZCuvqgvuFzeFYspwgWQz8QW72FWlcwtO74xrHw7oTEdI63bXgrNpK2J1VLjK63DVhU/iKY5MfazMJGoPoIi8AAE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bpCgU4N5; arc=fail smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E5A52857F1;
+	Wed, 25 Jun 2025 10:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.4.11.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750847140; cv=none; b=a58qvlBoKJPh2TlQB7/7G0hIk/UUwTQH5AS7qIYkHtNjMp8XHfxzMOhLQ0xgP2QJjBUXrvLB9W8BGRipVAgd2MhB6a/gdy/ePwoR+7BbVEROhDCV5uTGmxWcXUbKVCpI2KUW6EKrLwxa4/ka2t8AgTSqSGf0cIVPqQh+4VWdCOQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750847140; c=relaxed/simple;
+	bh=OT05aiHEgxlpJtauo1lOQHDjKjcVf+YutBo6Aak4sUY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sRNoTH60xk8kO3UpDjtLya/X2hz0M9S+ebm3cpJqv9JF2lLO5JPaNSB99+BbsEMn52FRdNuarQ2qBjyP3tlFnafxJoaVWI8iH1GHRAF2fmtrtTOzHK7NxHCdBEvpqTmli51sh3IRz2TcuawN8E/pFr9HPaO2uXne8Xr6Nv1yPd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name; spf=none smtp.mailfrom=nbd.name; dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b=uoFUjwJ8; arc=none smtp.client-ip=46.4.11.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nbd.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=nbd.name
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bpCgU4N5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750847120; x=1782383120;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=2PKBqo8bwIQ1urn7sB3qNZwALymM/pBNp9pNlB75lvw=;
-  b=bpCgU4N5m/n6HqZmXYO6Cn3939BL1Zjqut0DvYZCGSrZhZv/ySMVHgvE
-   qWFDsorNa5rKX5gqvp41Mb7RIOp4be1P0X2ThQLmCzGwTtu608OnT5xNC
-   Dt6sx4RpXD0pCfNhygKw/y/5lRG3Yo9I7I/I7mTbsX/oD5sIlZqLITnqg
-   58rtXjmZpmHekkMagc1zXqqPx+dICEDqYcUMuNckMLfuWGDhuuqCVBZ0x
-   MOY/Vb+Dl7+rfM8BWXKJxgCNlurTIMZOQKh0CA+SsEV38QzaaifVx4SrU
-   Ei8XnQFGYWQB3z0NV4YtT58XKZY8XngpzmAPDeOq072Dky4+QtijDLcJO
-   Q==;
-X-CSE-ConnectionGUID: 26oNOSt1SZ6aIkWZEoDRsA==
-X-CSE-MsgGUID: qXCVKG1lRAmFzYn6/Wop8A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52975073"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="52975073"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 03:25:18 -0700
-X-CSE-ConnectionGUID: bcSlctutSUyRTZ8jVneAlA==
-X-CSE-MsgGUID: vEW7sdydT1KZ2rpLz2xnSg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="152312724"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 03:25:17 -0700
-Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 25 Jun 2025 03:25:17 -0700
-Received: from ORSEDG903.ED.cps.intel.com (10.7.248.13) by
- ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 25 Jun 2025 03:25:17 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.83)
- by edgegateway.intel.com (134.134.137.113) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 25 Jun 2025 03:25:16 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=UD+J1zEs7BG/32f1lAFscxR482zVdLRj7D5hU+GbOM4IkZhAMxsBPmz/FxQ/zBhMlC/r99P31bPIMj+VflHYtzmGYX+btO5e12RmefQErAZYS4mHcw1Vtb2wZmoKLkqVfu3e4fK7nBmGQrWv2PO5pr2ZzfM7VE1b7whAQWo6M28Gvt8HJF+zLSZ02QQ7TPzqxKwM3iVc1tNXpSC8eoTgmYdt5aHcEnhkmHvEI8012ZE8GNjnyD7A5wWbsy0/85h2tbSOQU9e2AE2SdnSjIkoI2+aj/ovbvybaqHAtl6S/m0mdMUDde0cNJn8xO+7F14vC/QKK1USooisYJLsGNWjww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kHzBCneMm6aF5Cmxg+9+X7KIaObyE7mVYNUPQbeBBDk=;
- b=MHcjLfmVyC0odHigheGwvSfanuOi5+Z79W66+nMxvSo0WH9UEy2s0QRBvQEXuOVrbCG1JGyb0O4/Hj+Zv9yn8bLJIN41r74pwiupbtJznzb87syQAoj8ee2hU/AaTG+FNDURynPI1vWt2klIeSu4hO2D2euZSTTmVZNnPcOMEOBiHK6J5JEno+B8gEEVCVsYdL02WSS4RtntGpyZ6AohoCmgpXFTIkCKQeyVkVSruW24TTCI72s6rzhwwqCgU+/L4/Nib56bNko7kI1grkm3B3MXXEEjZVMHD2UXuucuNKY9isya0BcWoZ097nNNspPgYXN7171fRg2WNuh/0eG+3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BN7PR11MB2708.namprd11.prod.outlook.com (2603:10b6:406:a9::11)
- by DM4PR11MB6310.namprd11.prod.outlook.com (2603:10b6:8:a7::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Wed, 25 Jun
- 2025 10:25:15 +0000
-Received: from BN7PR11MB2708.namprd11.prod.outlook.com
- ([fe80::6790:e12f:b391:837d]) by BN7PR11MB2708.namprd11.prod.outlook.com
- ([fe80::6790:e12f:b391:837d%5]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
- 10:25:14 +0000
-Message-ID: <a142960d-d30f-4845-86d3-a2b2888f1907@intel.com>
-Date: Wed, 25 Jun 2025 13:25:09 +0300
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2] mmc: sdhci-msm: Ensure SD card power isn't ON when
- card removed
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, Sarthak Garg
-	<quic_sartgarg@quicinc.com>, Ulf Hansson <ulf.hansson@linaro.org>
-CC: <linux-mmc@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <quic_cang@quicinc.com>,
-	<quic_nguyenb@quicinc.com>, <quic_rampraka@quicinc.com>,
-	<quic_pragalla@quicinc.com>, <quic_sayalil@quicinc.com>,
-	<quic_nitirawa@quicinc.com>, <quic_bhaskarv@quicinc.com>,
-	<kernel@oss.qualcomm.com>
-References: <20250620090333.3068568-1-quic_sartgarg@quicinc.com>
- <61cffc10-3e05-4331-b967-6c01cc03d072@oss.qualcomm.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: c/o Alberga Business Park,
- 6 krs, Bertel Jungin Aukio 5, 02600 Espoo, Business Identity Code: 0357606 -
- 4, Domiciled in Helsinki
-In-Reply-To: <61cffc10-3e05-4331-b967-6c01cc03d072@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DB8PR06CA0010.eurprd06.prod.outlook.com
- (2603:10a6:10:100::23) To BN7PR11MB2708.namprd11.prod.outlook.com
- (2603:10b6:406:a9::11)
+	dkim=pass (1024-bit key) header.d=nbd.name header.i=@nbd.name header.b="uoFUjwJ8"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nbd.name;
+	s=20160729; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=vJ3mwn0o0bNWIsKKV9EgOQNug5ExZy+GsquJ5hq125c=; b=uoFUjwJ8Jh3yc0ecE27bc1VUee
+	1EonnoamVyY+y7eJXmxmzochQ/PjP8cTbux05fhoXcdUGc3FgWxQTynwWLJTMVZR4ZbilwvmXcwrS
+	N/tibEuTq4/LbUL9TYdQ01QGR1IHfEPmi2wKF6sSsnUuHP8GX3Zmf1CVOI4eEtdYP8UI=;
+Received: from p54ae9243.dip0.t-ipconnect.de ([84.174.146.67] helo=nf.local)
+	by ds12 with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.96)
+	(envelope-from <nbd@nbd.name>)
+	id 1uUNCi-003Twy-0A;
+	Wed, 25 Jun 2025 12:18:08 +0200
+Message-ID: <26e6c7f7-a35f-4ebb-a55b-ade2ac7c20bb@nbd.name>
+Date: Wed, 25 Jun 2025 12:18:07 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN7PR11MB2708:EE_|DM4PR11MB6310:EE_
-X-MS-Office365-Filtering-Correlation-Id: 284bc549-4ef7-46f6-0d61-08ddb3d292f3
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?NnNRREZodGQ0M1FTWWp2dWp4R0N5UVEzRGI0WHI5T29XTlhnS1cwR2UwZnB6?=
- =?utf-8?B?d3VIcXpYYWNmK0lKdFhiYmhhODMvTzYyY1lBMFlYS3lyNW84eDA3WnpYZDNt?=
- =?utf-8?B?eXRxUHFzSy85ZU0xaHY4aTRDTHBWYkVxQzRHNjgrVzRuQU5tcnBDWGpXL0Z2?=
- =?utf-8?B?UkZSWjhxbXhGYkYycm1TVnpXS3AreitkL0hBWUdGOUNFdHI5djJRWGM0Mk51?=
- =?utf-8?B?cFNSNUZacGlGckJsRnE3bU5RZmRNYndVZHJLMVRKVUgzc25sbFljVXhpVys4?=
- =?utf-8?B?amUvcFdUVmNSVkQvSC9FRzJWVEY3WmdLU1pESFd3WDdXejdOUW4xb2ZFSFNa?=
- =?utf-8?B?TXNFVVM2bXloS3MyR1BUS29uS1N1ZFZZQXhFSC81NGhSc3BQeHBHSXR6bS85?=
- =?utf-8?B?aWlQTTRiVTMwU2I0ZmZVRjVWcFJQWFV1ZGFXMzNKY0FNeUdVWWtJeU43bXdD?=
- =?utf-8?B?RndCTzRnUFovV0tHV2xGOUFlWmVwRTlYMStITWpIVS9HSEZ5VzBLdXJ2ZFZo?=
- =?utf-8?B?TVB6VEY1aGNYRHBBbm1DRVNSaVlXU3JJeEZoSVl3UlFSV20zZk5YNFh2TGtF?=
- =?utf-8?B?bzRadkw2Q3ZWYnhlcmR1R05GRlhSQ1REZ01qUEFjQ2l2dEpmc25pSlFJZTlL?=
- =?utf-8?B?MHc4NXBIajkyWFo1WHJtSHFVb25yNXJMc21Jc1ZySkg3K1lsKzNlNWorbVly?=
- =?utf-8?B?akhoME9iYkJjQnpGQ1NxcC9KQ3lhMEs0MythZWg5N2VWWGdPZnJkSFJvQXFT?=
- =?utf-8?B?L3p0SjVxRkRyL3NqNWxLMHF1OEVEUUdpR3hEcC9GV0I2VFYrOFoxUTNlQjNj?=
- =?utf-8?B?dVk5V1lnOVFodGY4cktYdnR2Y1FQUlpKa3RqNGpIcE5vVTNMUWhMaERKd3Js?=
- =?utf-8?B?aDdPK0xVUDNZUkhRS0t0WFFXeUJxWU5QKzVzOGxjOGxLMnBCNHd6NzdjbVd4?=
- =?utf-8?B?K3JpeWZmci90OVZHeFJ6TlhMc2JFR3N1YUM0WjQvUldqMlJoTHg5cWs5VWRj?=
- =?utf-8?B?YjdZSGZRNjBMSWpBQmNoK2F2SXhxVWhESFhxQkMwVmovTEZKcjZZbkhzRjBs?=
- =?utf-8?B?eVVzWEsrMEdZS3ZNZmkrbnhnRHg5OFpUQ2VsSXFqa3pOczNTRCs0azJsZW01?=
- =?utf-8?B?MjJKaTN4eWFWMzhFR0duU2puc3N0UStTNC8yVGk3VDNxNEJTVVJxbldwZ0Zo?=
- =?utf-8?B?K3dYV1B4WUF0N0VLQTRndXkwZEdaWjRvRkNLdGJtTHhQVXVJYUhOZzhyMEht?=
- =?utf-8?B?bndNRitLQ0dxKzBPd3V5Z0dUMlMxTGVXQjh3dit4Mzh2MkRRaW9lL0haNFF6?=
- =?utf-8?B?MUhyNVRteVE1TEFab0pOYjlkSGFsdHh4UkM3WUI2dVJsRnplZVZEc3poZXZ4?=
- =?utf-8?B?Vld5R3RTMzZpb3E0b1RzelMvVDFNUTVYU1RJQ1ljcnhhK3RUVHdaRU44RUxN?=
- =?utf-8?B?U3BqOEZ4RWJ3VmxEOWdrblhxUERSK3R4OHpRQ0NGRkxoQ0w1KzZIMlVqQjhX?=
- =?utf-8?B?d1BHV08zZXY2U1o5T3d3bXViK20yNnpHUkFHRlEvRjNqZklqL0JQeEtsaG43?=
- =?utf-8?B?c1g3a3paajFQT0pOeEVhNVdMTzhKQnlhWGJZUGI3MXVSTnU3dFQ1Z3p3UTZt?=
- =?utf-8?B?US9FdjZkczVEMnBQNXhvZ2FvMmlTcTNvSmo3b1FBUTJaQVlpSUtjQW01QlIw?=
- =?utf-8?B?K2p0RGx5WW1NZkp4TGpsbTg5ekZvek9KL2FBZElYVHdFcWt4MGxjVnZiZ2w3?=
- =?utf-8?B?Vi81MVcrOGtWNFdLaTdyTUN4S3IxK0pJK2tUVUtLbkdlSytCY2pZZ3YvWlJn?=
- =?utf-8?B?c1R2V2ZqVWcxVTdOK0E4T2NOc2kxQ0crRGRRUWYyaWdHb1VaY0V5SnNoeFBl?=
- =?utf-8?B?ZXBvc3dyR2pnU0NxL0dDZ0RCTkszVXhYM0RjSm5CRlBLaDhxR1pRemE1TjNu?=
- =?utf-8?Q?H69aWx4AS7k=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN7PR11MB2708.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Z0NUemc0MHc3a2hGbTBGSG5uMjgvcHRMdU5OTkFCdDdXcGk4ci9pbDhEMDM4?=
- =?utf-8?B?aktCaldta3QvSjdHOS9ZQTdOTlVWVG03SUJOeWZqV0hrVDJ0dGEzMkI4YVVR?=
- =?utf-8?B?YUhaR2lNVlhGUU90T0Z3WmwwV2lvSEkrekRmdStLdjR1TTd5di9acUdZVEpV?=
- =?utf-8?B?NzI5ZS9uSi9RNGg4V3NWUWtSS2J2TG1RQlhlZUpLWHg4NnZheG1PQXA3Q2JO?=
- =?utf-8?B?SWtXMXRnMnM0RDhKQk5XTGw2Yzl4ZU9SVUhFcEF4SlV3YmdQRDkvQTNTdTdX?=
- =?utf-8?B?T08zSkRzWmNmZ0xjSWE2Y1FqU3R2UVhUVVRjQ1JJZVhxb09yZlczK2hwc0xI?=
- =?utf-8?B?V3g1dXd5dU5zVzh0RTVZVkV2MTRabXAvL1dMbXVpUDZ2OG1KQWI5Uy9BS0xM?=
- =?utf-8?B?RG92WXREaTN5elFFZlkvSmVvS2hzZ0NtTjJqNnpLVUErdFdSVmYrZUlyTmty?=
- =?utf-8?B?Z1F0YURvOHlKeS96cS9ZZUlNZ1FrcGxGNEpZY0N6MjJybUJ2ZXIvR1lzWElo?=
- =?utf-8?B?TUUzMmtmbFcyRjViWklJUzRtUUUyMVllek9kZDJQY3FidXZlcnIzTDMybWtX?=
- =?utf-8?B?TlR3TGswdmZxdTRQUXVjcDB0SisySmNlRjR5VkdjV21BdGRaT002ZWJyQ3Zx?=
- =?utf-8?B?ak1nQXdReWZ4Q1VjT1Rmb1NjWWFQQXNidVdxOVJIM1g4c2h5M3ZWK3ozc0pt?=
- =?utf-8?B?cmFOTWNtYXNiNVFXeGN0a2FVMWpRcFowWmpmSUkrUDQraTJicWhCTnBmRTBX?=
- =?utf-8?B?MFhwTUJXZUhhOERRa25obDY1L3FEYnpOSVV4K3VndXVnbTVQVWZpQTI4bmx2?=
- =?utf-8?B?VVcyVGhpc0QrUWsvS2VITTNnOXpveTJtOHpNaklKR1ZWWGRlUVFWSlByVXpJ?=
- =?utf-8?B?K0dScW1HSTJNaHQwVmNWMi94U1FKN2QwTE1yc2lSMXBqek9aU3gwdHlUVE1z?=
- =?utf-8?B?N0VIY256OXFnTndVZisyRXh3SFNvUjNlcElOeG1lSllnZW5BTlZoUUlxL3JT?=
- =?utf-8?B?WDFyV05MZUhjYVJDZDFYdnlLQ0J1RWE2WlZJZ0JYdHQ1UWxWb05PeTNCVWJW?=
- =?utf-8?B?Vzlaa1NYRkhpMDhrNzYxWklLQlRUYUloZHJXYmwwL3NJb1M5dnlxYlRkN1ZU?=
- =?utf-8?B?c1pxSnpMRFNoaURIbzc5a25ZQ2R1MzhSazVLNTM5WkFPYktrVnphMXh4dmd0?=
- =?utf-8?B?K1NVT3ViQjdOV3pKMUI0cXY2YWtHeEFaVWZyV1I4WVV2Q0oyM0tNbTZnM2x6?=
- =?utf-8?B?S3pmcGVuRENZTWExQmltNXRiRGc4dXUrNkRTcUExSlB5NHdxUmIxTEtYWmNq?=
- =?utf-8?B?SHh6b05jdmN1U0RUVU5CRloxaktHc3dSU09ydjZ2OS9DNG8wcmwwOW1rd2Fj?=
- =?utf-8?B?Nk45bGdrOEZJSFY2ZTNXeU55TXpyckpuZlY4bE1zNTB6MVdkc2M4RVVXWCtP?=
- =?utf-8?B?K01KRjZzczJ2akhwN3loa0h6R3hEKzlnSy9DTkp1ZjlndXFBTGlPRUR3ckZZ?=
- =?utf-8?B?YVRaZit4cXUzVDMwdVVhTWdiOTJFeDJXZVVNQUlYR05ibUd1dnJ1K3BrL2lV?=
- =?utf-8?B?S3lKVDZEUjRhVWlZNHg5MFp1VjZyU1kwWWNsckVpMk5lSUtMbzdZWVNjZDZI?=
- =?utf-8?B?dE0xeGp0ampuSTgyWXJzQ0kxN1FPR3hLR2RBN1hKbENxWWNBSXY5dkJSUUpU?=
- =?utf-8?B?bFhZSjBVSUN5ZjhibTFybUVIK2F3dGxha2tUeGtPR1dLZzNHZHAzUzZBQ0l2?=
- =?utf-8?B?NmRNb2M2ZEI3WC80azYwMnR0SG4zNWxlVWY3OVVIOWFJaWFCNE54U2kwUDdw?=
- =?utf-8?B?NEJMOE5JeHNlQnFYakZEcXJWMEdhMDVJYWxWUlA4WmZtdEIwZnVxV2NwM3BM?=
- =?utf-8?B?S1pJQWYwWDZ6R1RCVFJEb05QaGViakEzdTVhTFkyUlVrNEtuZXRXUk96SU9q?=
- =?utf-8?B?eHRIV051clpmMWc1TEZHSHM4Q1EzWHpPU25zOFliWDBRVE01QnB2VUFvanpn?=
- =?utf-8?B?bGIzSDZiN1l6d2xaZC9nWE8xWlJRVmEySlZnVVAxRE1zdHlLRTJtUHJYNEdp?=
- =?utf-8?B?YWlReDJyQ04veUpYQ3BDVFo2ZXkxRUZFbHZ0bFVCb1AxWWRCUjFSS0NwbURz?=
- =?utf-8?B?R09ITERpRFl3R3NKb0dxMjF0RmpST1BPUTFZNnRIT0tVSzVyblg3Y2lsNmcv?=
- =?utf-8?B?VkE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 284bc549-4ef7-46f6-0d61-08ddb3d292f3
-X-MS-Exchange-CrossTenant-AuthSource: BN7PR11MB2708.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 10:25:14.8675
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: EsnsbJuDeIhQQ5GAw3Nx72GFssDYapY9iVpOkNkanNbJDydSbeZ81nFbPdxvageD989sILYknl+Z4Ygcw4jKGg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB6310
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 RESEND] wifi: mt76: mt7915: add wds support when wed
+ is enabled
+To: Shengyu Qu <wiagn233@outlook.com>, pkshih@realtek.com,
+ lorenzo@kernel.org, ryder.lee@mediatek.com, shayne.chen@mediatek.com,
+ sean.wang@mediatek.com, matthias.bgg@gmail.com,
+ angelogioacchino.delregno@collabora.com, johannes.berg@intel.com,
+ miriam.rachel.korenblit@intel.com, christophe.jaillet@wanadoo.fr,
+ greearb@candelatech.com, howard-yh.hsu@mediatek.com,
+ StanleyYP.Wang@mediatek.com, deren.wu@mediatek.com,
+ chui-hao.chiu@mediatek.com, quic_adisi@quicinc.com, gustavoars@kernel.org,
+ razvan.grigore@vampirebyte.ro, linux-wireless@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Cc: Sujuan Chen <sujuan.chen@mediatek.com>, Bo Jiao <bo.jiao@mediatek.com>
+References: <OSZPR01MB84342A0E21AAD111ED7AF6B198B82@OSZPR01MB8434.jpnprd01.prod.outlook.com>
+ <TY4PR01MB1443294C4D36DF73852B4E79B9878A@TY4PR01MB14432.jpnprd01.prod.outlook.com>
+From: Felix Fietkau <nbd@nbd.name>
+Content-Language: en-US
+Autocrypt: addr=nbd@nbd.name; keydata=
+ xsDiBEah5CcRBADIY7pu4LIv3jBlyQ/2u87iIZGe6f0f8pyB4UjzfJNXhJb8JylYYRzIOSxh
+ ExKsdLCnJqsG1PY1mqTtoG8sONpwsHr2oJ4itjcGHfn5NJSUGTbtbbxLro13tHkGFCoCr4Z5
+ Pv+XRgiANSpYlIigiMbOkide6wbggQK32tC20QxUIwCg4k6dtV/4kwEeiOUfErq00TVqIiEE
+ AKcUi4taOuh/PQWx/Ujjl/P1LfJXqLKRPa8PwD4j2yjoc9l+7LptSxJThL9KSu6gtXQjcoR2
+ vCK0OeYJhgO4kYMI78h1TSaxmtImEAnjFPYJYVsxrhay92jisYc7z5R/76AaELfF6RCjjGeP
+ wdalulG+erWju710Bif7E1yjYVWeA/9Wd1lsOmx6uwwYgNqoFtcAunDaMKi9xVQW18FsUusM
+ TdRvTZLBpoUAy+MajAL+R73TwLq3LnKpIcCwftyQXK5pEDKq57OhxJVv1Q8XkA9Dn1SBOjNB
+ l25vJDFAT9ntp9THeDD2fv15yk4EKpWhu4H00/YX8KkhFsrtUs69+vZQwc0cRmVsaXggRmll
+ dGthdSA8bmJkQG5iZC5uYW1lPsJgBBMRAgAgBQJGoeQnAhsjBgsJCAcDAgQVAggDBBYCAwEC
+ HgECF4AACgkQ130UHQKnbvXsvgCgjsAIIOsY7xZ8VcSm7NABpi91yTMAniMMmH7FRenEAYMa
+ VrwYTIThkTlQzsFNBEah5FQQCACMIep/hTzgPZ9HbCTKm9xN4bZX0JjrqjFem1Nxf3MBM5vN
+ CYGBn8F4sGIzPmLhl4xFeq3k5irVg/YvxSDbQN6NJv8o+tP6zsMeWX2JjtV0P4aDIN1pK2/w
+ VxcicArw0VYdv2ZCarccFBgH2a6GjswqlCqVM3gNIMI8ikzenKcso8YErGGiKYeMEZLwHaxE
+ Y7mTPuOTrWL8uWWRL5mVjhZEVvDez6em/OYvzBwbkhImrryF29e3Po2cfY2n7EKjjr3/141K
+ DHBBdgXlPNfDwROnA5ugjjEBjwkwBQqPpDA7AYPvpHh5vLbZnVGu5CwG7NAsrb2isRmjYoqk
+ wu++3117AAMFB/9S0Sj7qFFQcD4laADVsabTpNNpaV4wAgVTRHKV/kC9luItzwDnUcsZUPdQ
+ f3MueRJ3jIHU0UmRBG3uQftqbZJj3ikhnfvyLmkCNe+/hXhPu9sGvXyi2D4vszICvc1KL4RD
+ aLSrOsROx22eZ26KqcW4ny7+va2FnvjsZgI8h4sDmaLzKczVRIiLITiMpLFEU/VoSv0m1F4B
+ FtRgoiyjFzigWG0MsTdAN6FJzGh4mWWGIlE7o5JraNhnTd+yTUIPtw3ym6l8P+gbvfoZida0
+ TspgwBWLnXQvP5EDvlZnNaKa/3oBes6z0QdaSOwZCRA3QSLHBwtgUsrT6RxRSweLrcabwkkE
+ GBECAAkFAkah5FQCGwwACgkQ130UHQKnbvW2GgCeMncXpbbWNT2AtoAYICrKyX5R3iMAoMhw
+ cL98efvrjdstUfTCP2pfetyN
+In-Reply-To: <TY4PR01MB1443294C4D36DF73852B4E79B9878A@TY4PR01MB14432.jpnprd01.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 21/06/2025 13:59, Konrad Dybcio wrote:
->> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->> index bf91cb96a0ea..97a895d839c9 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -1566,6 +1566,14 @@ static inline void sdhci_msm_complete_pwr_irq_wait(
->>  	wake_up(&msm_host->pwr_irq_wait);
->>  }
->>  
->> +static int get_cd(struct sdhci_host *host)
->> +{
->> +	struct mmc_host *mmc = host->mmc;
->> +	const struct mmc_host_ops *mmc_ops = READ_ONCE(mmc->ops);
-> What do you need the READ_ONCE for?> +
+On 24.06.25 16:11, Shengyu Qu wrote:
+> Hi Felix,
+> 
+> Please, tell me if this patch needs any polishing. I really don't know
+> why this patch still not get merged after such a long time(and 2x
+> resend), especially it already got a Reviewed-by and is a bugfix.
 
-Yeah I was confusing it with bus_ops.  READ_ONCE() is not needed.
-sdhci already assumes mmc->ops->get_cd always exists, so
-separate get_cd() is not much use.
+Hi Shengyu,
 
-With that and cosmetic changes, you can add:
+sorry it took such a long time for me to take a look at this patch.
+I don't see how it can even work properly in its current form, because 
+of at least one bug:
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+When switching from non-wds to wds mode, the code calls 
+mt7915_mac_sta_add in order to create the new sta. However, after 
+changes that I made a while back, this function does not actually upload 
+the station to the MCU anymore, since it is called on the NOTEXIST->NONE 
+transition before assoc. Without corresponding ASSOC/AUTHORIZE events 
+(handled by mt7915_mac_sta_event), the firmware doesn't get any data for 
+the new wcid.
 
+That said, I finally got around to starting to rework your patch myself. 
+I will let you know when I have something ready for testing, hopefully 
+later today.
+
+- Felix
