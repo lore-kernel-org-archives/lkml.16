@@ -1,55 +1,55 @@
 Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAF92DECC1
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:31:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36B3F2DFF25
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:31:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750883485; cv=none; b=rQ7P/0SJyt6dpPl22aTX6IDJElyT8s4IMIi0NwbwjC5p4MhkkL67L2x8ZbpxagKLBYIMVZg4DVnIjQrnwOU/lFdhLm4Fnr6hfZKUwQwtmOCIxIOSAvVdYkm6bawtK+d1HAxlcujWIp8duDh+JYk2Kjg6VU0ZVfskTKTEoIRkcr8=
+	t=1750883487; cv=none; b=JSkswwHnihwAqNFXFlvtRLCG++vaQ6MXxyPtaAPLAhXNa0zlkd0xqXwRQxxpacANQe9cE1K0LhFelYRzszHPKvMWS9EVJWH6gfeW81h5x9AQH62wtH1rR8q+ORYyO32BN+gK9YzuYDDhYlaUdJH1zzGNVOCpKuytQwVq5KRQ9Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750883485; c=relaxed/simple;
-	bh=W+qmZSIaHerBC6mMLl7PYab0nmLTysV/UsZpoTQGwms=;
+	s=arc-20240116; t=1750883487; c=relaxed/simple;
+	bh=sOZ4t17AJ5iVPp4wVyz1H8xJqd/fbypdGdkeH5mDiiI=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=qM7Ol8wEinIIem+n/OxTCiiabppVTk6DzSDz8RolEp0TcqLLPwleMMZnSrio6DbjFgKNzRfbdwvl/2AoM3O4/YClNnTG87br//a8pt1uHD0vlsL+bLuaohg6Uy61WFSLn4owfIWpWYyH1hA0iiCsu/ar5R7aEfJSAEzx2vz0eu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZLzz8OK4; arc=none smtp.client-ip=209.85.215.201
+	 To:Cc:Content-Type; b=uwIZACTJFGtA2G3ToU4jsRM3PmzXgcxnBVxxO6cS/nur/mRllzKyryQyZWAeicylKtrS5TCYmAG4RQwW+Clt9TZXSpfPZiFKyZ2DcYOxbmHbwdVYg/5DkEsSJd07fXyiwZ/jvPsADzTuxvR/rFaU0kR3U39iTdQd2Y6N1wgPz3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K42HQz2o; arc=none smtp.client-ip=209.85.215.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--jstultz.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZLzz8OK4"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b31f112c90aso191708a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:31:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K42HQz2o"
+Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2c36951518so240107a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:31:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750883482; x=1751488282; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750883485; x=1751488285; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8i/fLaJcfoOBu+GE99WreXdg0Kg5hxNU37Cftd/kbl0=;
-        b=ZLzz8OK4/1PhZ+qla4amjqZuAmySP1yG4lR7edGW6W00WCgOzum13LRmeRWQhYDDIE
-         zSpr4C8v8SAmt86Mt7pqTcyQQnO4qWK/6xOBtUdJ3Xpy66wK/Mu3q/IAKUKgCVJOQfDT
-         RqFP6tDHsnXZv8AsHXtvTtnirIxFqd2024d/+axXPhKkT9nidzvL3q6MEpgWz9E//6pH
-         in6N60CE05QtCuMShhGwU4fIXF9+uVcIRc2QtB63JeJgsr3koPd3GZpMCzZC/zUVEJVV
-         0KlqEogTea6sTpgDgBq6xdMuNAvR5Vm6CI42hQ8JChd1QQENeQ0PrCw1Y25P/AGITuI0
-         Sv0g==
+        bh=fPeymT7NIAooWQEri2B3P7iuuC6t76eak7WRt7BTTBs=;
+        b=K42HQz2oqDl0fWq/vbA4gozzTJUdR74ThuC3FOFmmP2qwqPzqEkmEroShUaFhudJnF
+         7M6HlYe6vo10FPOfREe4oxbahmNtbKX81ZGHrpqNqXsC7S1wSwOgGH0PF1FdM+f1phId
+         gR8+XPPGSNzJcwTmzONqdvWbMxdaFf5iG83gYY0DmjeS2SJSBaWrUlnIxxb5rtPJE4aT
+         lHK0EFVO/cxR/+gs9FRyo6dibTM7eo/gh/DdD3ux6qapXWcphfhviJXaUlC3p+jFQ/9E
+         49q0Y+77Z7nNxL7XIvKC1jAs6X/p91NOzwlFJieopTi0P2jm8O9WwOl2LvSO6OoVMLcH
+         0Qzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750883482; x=1751488282;
+        d=1e100.net; s=20230601; t=1750883485; x=1751488285;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8i/fLaJcfoOBu+GE99WreXdg0Kg5hxNU37Cftd/kbl0=;
-        b=u5cawpWQkKQ9LFRLYQMzAUSF29Xl1PaT2ryGCSsp+xGAv8qMf/u6TU893EdKNev/JO
-         tXVf6+3z9nvHhWPlXOpjNXJnxr9b4nwYeIGaD79cQg5UD3Y638QTZFNJklQXj/AC/VOm
-         oGXRLSNqjU1vu/xE8EWQFgCYs2snvTnB8jGo/yNFd6oY8buv/OJUPT8cNZ5ZDRcleH1u
-         QRDxWrOaVgriH7c+uhRxgB6hnMV9eV+OsSrh9oyZS5q83om4W7ABr486GMdMfc3UH2ZQ
-         DEzqj6UoS5McAdE+8MZgatn7R/ckNfoleZS9qlVn0XDY+X7ln52VAtybI9tiIMuT4zoW
-         UsyQ==
-X-Gm-Message-State: AOJu0YwVeIeZ/ImK+jvuIRRSnlZsPkCjGoBPv13jpM5J/pAuj7JAz2Ai
-	6IYjx8btDaAKbioWJJzUSuDFgPRDvpxtaf4kBTFc1hjE6mdhsRuxQNUyCHsH0YnXNNb/eSzI/Pj
-	1DVW5UmX0INhIkFH5D8yL8cAJE2VTsPRZCluEZIgUNN90Dz0shytaHU8T9TyNJjlEmIEAzJnk3r
-	NRpwvcr2C7C0rhs7O/IL+XsNM/B1YsFs1VDZc2XEf1AJf4toe0
-X-Google-Smtp-Source: AGHT+IHWEW7MnrGP8BNZ0jkqVpfSLJoF00onsFnffYMQy+IlxrmpUPVdQV7hWQVFIu03Lgnxan9LyfUj7FRQ
-X-Received: from pfqf28.prod.google.com ([2002:aa7:9d9c:0:b0:73c:29d8:b795])
- (user=jstultz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a11a:b0:1f3:20be:c18a
- with SMTP id adf61e73a8af0-2208d0ec8d6mr1160715637.10.1750883482137; Wed, 25
- Jun 2025 13:31:22 -0700 (PDT)
-Date: Wed, 25 Jun 2025 20:30:56 +0000
+        bh=fPeymT7NIAooWQEri2B3P7iuuC6t76eak7WRt7BTTBs=;
+        b=QQZt5Zo280cqu2hsl7sxyPt2HhLXWW9N7VtgGPCWsOrICytRfJJW3jR1hAHEllTGgv
+         5IHEzGTt/aylKKtv1C15hWvcelHUAKkaP/KYVS0t/uBwYnU0yWALaCPayaBVMiDPpDb9
+         NNcAYh3CVE+4cXbcx3V1U/QXXtxMEa3qBwBxJD748P+pg8d4LWPgPb5rM/3i6+yMs6MY
+         HzifPJy7MmvXqS9M6l/6tx60vp1d+smfgHmgs3ZvtnX9mIzcNMpAF3hGDcdt1DVOelWG
+         wqrxaD2K+9s0Iw/+njcIvA4TaQRc0M/jWRYg+WDXSfybZcBnOXFnOGrrPDfplYOrQO3u
+         tmjQ==
+X-Gm-Message-State: AOJu0YwlDx37/orOZX6OW41bqQerkXSZHlmwNOqPJQlE5cIdLUD8Syzx
+	zW0OJsIk1ggeFMeZuzrk3AAfD/4dq60fkgaqEb/dQQt5P53PUa/wOVMv4klNR5aIEaoHJmkJQWw
+	xnvib3nOngIMv4MkVjvQPqaJm2zaU7NANxHVNFN2Nal3qxeWU1aqYVzZ8Z6B53z2ZwcRTR1Fx8r
+	WyMkpW0ccPAJ9t6Zx7ZVjz5gStnDSq651FEVPOuwzPUnmWkW2f
+X-Google-Smtp-Source: AGHT+IHWv7rw9xYClYLSpjznGzC3DSbsn/7oFCuojbsln+hYJ4FF6RN2RlQz5mNTrLiP9vNO64bcvauzZAdH
+X-Received: from pgar3.prod.google.com ([2002:a05:6a02:2e83:b0:b31:d4af:e567])
+ (user=jstultz job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:2444:b0:1ee:e33d:f477
+ with SMTP id adf61e73a8af0-2207f19c2d0mr8118560637.15.1750883485284; Wed, 25
+ Jun 2025 13:31:25 -0700 (PDT)
+Date: Wed, 25 Jun 2025 20:30:58 +0000
 In-Reply-To: <20250625203110.2299275-1-jstultz@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,13 +59,11 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250625203110.2299275-1-jstultz@google.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <20250625203110.2299275-4-jstultz@google.com>
-Subject: [PATCH v18 3/8] locking/mutex: Add p->blocked_on wrappers for
- correctness checks
+Message-ID: <20250625203110.2299275-6-jstultz@google.com>
+Subject: [PATCH v18 5/8] sched: Fix runtime accounting w/ split exec & sched contexts
 From: John Stultz <jstultz@google.com>
 To: LKML <linux-kernel@vger.kernel.org>
-Cc: Valentin Schneider <valentin.schneider@arm.com>, "Connor O'Brien" <connoro@google.com>, 
-	John Stultz <jstultz@google.com>, Joel Fernandes <joelagnelf@nvidia.com>, 
+Cc: John Stultz <jstultz@google.com>, Joel Fernandes <joelagnelf@nvidia.com>, 
 	Qais Yousef <qyousef@layalina.io>, Ingo Molnar <mingo@redhat.com>, 
 	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
 	Vincent Guittot <vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>, 
@@ -79,37 +77,38 @@ Cc: Valentin Schneider <valentin.schneider@arm.com>, "Connor O'Brien" <connoro@g
 	kernel-team@android.com
 Content-Type: text/plain; charset="UTF-8"
 
-From: Valentin Schneider <valentin.schneider@arm.com>
+Without proxy-exec, we normally charge the "current" task for
+both its vruntime as well as its sum_exec_runtime.
 
-This lets us assert mutex::wait_lock is held whenever we access
-p->blocked_on, as well as warn us for unexpected state changes.
+With proxy, however, we have two "current" contexts: the
+scheduler context and the execution context. We want to charge
+the execution context rq->curr (ie: proxy/lock holder) execution
+time to its sum_exec_runtime (so it's clear to userland the
+rq->curr task *is* running), as well as its thread group.
 
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
-[fix conflicts, call in more places]
-Signed-off-by: Connor O'Brien <connoro@google.com>
-[jstultz: tweaked commit subject, reworked a good bit]
+However the rest of the time accounting (such a vruntime and
+cgroup accounting), we charge against the scheduler context
+(rq->donor) task, because it is from that task that the time
+is being "donated".
+
+If the donor and curr tasks are the same, then it's the same as
+without proxy.
+
 Signed-off-by: John Stultz <jstultz@google.com>
 ---
-v2:
-* Added get_task_blocked_on() accessor
-v4:
-* Address READ_ONCE usage that was dropped in v2
-* Reordered to be a later add on to the main patch series as
-  Peter was unhappy with similar wrappers in other patches.
-v5:
-* Added some extra correctness checking in wrappers
-v7:
-* Tweaks to reorder this change in the patch series
-* Minor cleanup to set_task_blocked_on() suggested by Metin Kaya
-v15:
-* Split out into its own patch again.
-* Further improve assumption checks in helpers.
 v16:
-* Fix optimistic spin case that can call schedule()
+* Renamed update_curr_se to update_se_times, as suggested by
+  Steven Rostedt.
+* Reworded the commit message as suggested by Steven Rostedt
 v17:
-* Fix typos caught by Metin Kaya
-* Add lockdep_assert_held_once and drop the READ_ONCE in
-  __get_task_blocked_on(), as suggested by Juri Lelli
+* Renamed update_se_times to update_se, as suggested by Peter
+* Added comment calrifying cfs_rq->curr being rq->donor.se as
+  suggested by Peter
+* Reworked to fix issue Peter pointed out with thread group
+  accounting being done on the donor, rather then the running
+  execution context.
+* Slight rewording of the commit message to further clairifiy
+  things.
 
 Cc: Joel Fernandes <joelagnelf@nvidia.com>
 Cc: Qais Yousef <qyousef@layalina.io>
@@ -137,219 +136,95 @@ Cc: kuyo chang <kuyo.chang@mediatek.com>
 Cc: hupu <hupu.gm@gmail.com>
 Cc: kernel-team@android.com
 ---
- include/linux/sched.h        | 54 ++++++++++++++++++++++++++++++++++--
- kernel/locking/mutex-debug.c |  4 +--
- kernel/locking/mutex.c       | 32 ++++++++++-----------
- kernel/locking/ww_mutex.h    |  6 ++--
- 4 files changed, 70 insertions(+), 26 deletions(-)
+ kernel/sched/fair.c | 40 ++++++++++++++++++++++++++++------------
+ 1 file changed, 28 insertions(+), 12 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index aa7966141a090..1d7f625adbb5e 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -34,6 +34,7 @@
- #include <linux/sched/prio.h>
- #include <linux/sched/types.h>
- #include <linux/signal_types.h>
-+#include <linux/spinlock.h>
- #include <linux/syscall_user_dispatch_types.h>
- #include <linux/mm_types_task.h>
- #include <linux/netdevice_xmit.h>
-@@ -2177,6 +2178,57 @@ extern int __cond_resched_rwlock_write(rwlock_t *lock);
- 	__cond_resched_rwlock_write(lock);					\
- })
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index edcc7d59ecc3b..c34e0891193a7 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -1143,30 +1143,40 @@ static void update_tg_load_avg(struct cfs_rq *cfs_rq)
+ }
+ #endif /* CONFIG_SMP */
  
-+static inline void __set_task_blocked_on(struct task_struct *p, struct mutex *m)
-+{
-+	WARN_ON_ONCE(!m);
-+	/* The task should only be setting itself as blocked */
-+	WARN_ON_ONCE(p != current);
-+	/* Currently we serialize blocked_on under the mutex::wait_lock */
-+	lockdep_assert_held_once(&m->wait_lock);
-+	/*
-+	 * Check ensure we don't overwrite existing mutex value
-+	 * with a different mutex. Note, setting it to the same
-+	 * lock repeatedly is ok.
-+	 */
-+	WARN_ON_ONCE(p->blocked_on && p->blocked_on != m);
-+	p->blocked_on = m;
-+}
-+
-+static inline void set_task_blocked_on(struct task_struct *p, struct mutex *m)
-+{
-+	guard(raw_spinlock_irqsave)(&m->wait_lock);
-+	__set_task_blocked_on(p, m);
-+}
-+
-+static inline void __clear_task_blocked_on(struct task_struct *p, struct mutex *m)
-+{
-+	WARN_ON_ONCE(!m);
-+	/* Currently we serialize blocked_on under the mutex::wait_lock */
-+	lockdep_assert_held_once(&m->wait_lock);
-+	/*
-+	 * There may be cases where we re-clear already cleared
-+	 * blocked_on relationships, but make sure we are not
-+	 * clearing the relationship with a different lock.
-+	 */
-+	WARN_ON_ONCE(m && p->blocked_on && p->blocked_on != m);
-+	p->blocked_on = NULL;
-+}
-+
-+static inline void clear_task_blocked_on(struct task_struct *p, struct mutex *m)
-+{
-+	guard(raw_spinlock_irqsave)(&m->wait_lock);
-+	__clear_task_blocked_on(p, m);
-+}
-+
-+static inline struct mutex *__get_task_blocked_on(struct task_struct *p)
-+{
-+	struct mutex *m = p->blocked_on;
-+
-+	if (m)
-+		lockdep_assert_held_once(&m->wait_lock);
-+	return m;
-+}
-+
- static __always_inline bool need_resched(void)
+-static s64 update_curr_se(struct rq *rq, struct sched_entity *curr)
++static s64 update_se(struct rq *rq, struct sched_entity *se)
  {
- 	return unlikely(tif_need_resched());
-@@ -2216,8 +2268,6 @@ extern bool sched_task_on_rq(struct task_struct *p);
- extern unsigned long get_wchan(struct task_struct *p);
- extern struct task_struct *cpu_curr_snapshot(int cpu);
+ 	u64 now = rq_clock_task(rq);
+ 	s64 delta_exec;
  
--#include <linux/spinlock.h>
--
- /*
-  * In order to reduce various lock holder preemption latencies provide an
-  * interface to see if a vCPU is currently running or not.
-diff --git a/kernel/locking/mutex-debug.c b/kernel/locking/mutex-debug.c
-index 758b7a6792b0c..949103fd8e9b5 100644
---- a/kernel/locking/mutex-debug.c
-+++ b/kernel/locking/mutex-debug.c
-@@ -54,13 +54,13 @@ void debug_mutex_add_waiter(struct mutex *lock, struct mutex_waiter *waiter,
- 	lockdep_assert_held(&lock->wait_lock);
+-	delta_exec = now - curr->exec_start;
++	delta_exec = now - se->exec_start;
+ 	if (unlikely(delta_exec <= 0))
+ 		return delta_exec;
  
- 	/* Current thread can't be already blocked (since it's executing!) */
--	DEBUG_LOCKS_WARN_ON(task->blocked_on);
-+	DEBUG_LOCKS_WARN_ON(__get_task_blocked_on(task));
+-	curr->exec_start = now;
+-	curr->sum_exec_runtime += delta_exec;
++	se->exec_start = now;
++	if (entity_is_task(se)) {
++		struct task_struct *donor = task_of(se);
++		struct task_struct *running = rq->curr;
++		/*
++		 * If se is a task, we account the time against the running
++		 * task, as w/ proxy-exec they may not be the same.
++		 */
++		running->se.exec_start = now;
++		running->se.sum_exec_runtime += delta_exec;
+ 
+-	if (entity_is_task(curr)) {
+-		struct task_struct *p = task_of(curr);
++		trace_sched_stat_runtime(running, delta_exec);
++		account_group_exec_runtime(running, delta_exec);
+ 
+-		trace_sched_stat_runtime(p, delta_exec);
+-		account_group_exec_runtime(p, delta_exec);
+-		cgroup_account_cputime(p, delta_exec);
++		/* cgroup time is always accounted against the donor */
++		cgroup_account_cputime(donor, delta_exec);
++	} else {
++		/* If not task, account the time against donor se  */
++		se->sum_exec_runtime += delta_exec;
+ 	}
+ 
+ 	if (schedstat_enabled()) {
+ 		struct sched_statistics *stats;
+ 
+-		stats = __schedstats_from_se(curr);
++		stats = __schedstats_from_se(se);
+ 		__schedstat_set(stats->exec_max,
+ 				max(delta_exec, stats->exec_max));
+ 	}
+@@ -1213,7 +1223,7 @@ s64 update_curr_common(struct rq *rq)
+ {
+ 	struct task_struct *donor = rq->donor;
+ 
+-	return update_curr_se(rq, &donor->se);
++	return update_se(rq, &donor->se);
  }
  
- void debug_mutex_remove_waiter(struct mutex *lock, struct mutex_waiter *waiter,
- 			 struct task_struct *task)
+ /*
+@@ -1221,6 +1231,12 @@ s64 update_curr_common(struct rq *rq)
+  */
+ static void update_curr(struct cfs_rq *cfs_rq)
  {
--	struct mutex *blocked_on = READ_ONCE(task->blocked_on);
-+	struct mutex *blocked_on = __get_task_blocked_on(task);
++	/*
++	 * Note: cfs_rq->curr corresponds to the task picked to
++	 * run (ie: rq->donor.se) which due to proxy-exec may
++	 * not necessarily be the actual task running
++	 * (rq->curr.se). This is easy to confuse!
++	 */
+ 	struct sched_entity *curr = cfs_rq->curr;
+ 	struct rq *rq = rq_of(cfs_rq);
+ 	s64 delta_exec;
+@@ -1229,7 +1245,7 @@ static void update_curr(struct cfs_rq *cfs_rq)
+ 	if (unlikely(!curr))
+ 		return;
  
- 	DEBUG_LOCKS_WARN_ON(list_empty(&waiter->list));
- 	DEBUG_LOCKS_WARN_ON(waiter->task != task);
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index e2f59863a866e..80d778fedd605 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -644,8 +644,7 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 			goto err_early_kill;
- 	}
+-	delta_exec = update_curr_se(rq, curr);
++	delta_exec = update_se(rq, curr);
+ 	if (unlikely(delta_exec <= 0))
+ 		return;
  
--	WARN_ON(current->blocked_on);
--	current->blocked_on = lock;
-+	__set_task_blocked_on(current, lock);
- 	set_current_state(state);
- 	trace_contention_begin(lock, LCB_F_MUTEX);
- 	for (;;) {
-@@ -685,9 +684,9 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 		/*
- 		 * As we likely have been woken up by task
- 		 * that has cleared our blocked_on state, re-set
--		 * it to the lock we are trying to aquire.
-+		 * it to the lock we are trying to acquire.
- 		 */
--		current->blocked_on = lock;
-+		set_task_blocked_on(current, lock);
- 		set_current_state(state);
- 		/*
- 		 * Here we order against unlock; we must either see it change
-@@ -699,11 +698,15 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 
- 		if (first) {
- 			trace_contention_begin(lock, LCB_F_MUTEX | LCB_F_SPIN);
--			/* clear blocked_on as mutex_optimistic_spin may schedule() */
--			current->blocked_on = NULL;
-+			/*
-+			 * mutex_optimistic_spin() can call schedule(), so
-+			 * clear blocked on so we don't become unselectable
-+			 * to run.
-+			 */
-+			clear_task_blocked_on(current, lock);
- 			if (mutex_optimistic_spin(lock, ww_ctx, &waiter))
- 				break;
--			current->blocked_on = lock;
-+			set_task_blocked_on(current, lock);
- 			trace_contention_begin(lock, LCB_F_MUTEX);
- 		}
- 
-@@ -711,7 +714,7 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 	}
- 	raw_spin_lock_irqsave(&lock->wait_lock, flags);
- acquired:
--	current->blocked_on = NULL;
-+	__clear_task_blocked_on(current, lock);
- 	__set_current_state(TASK_RUNNING);
- 
- 	if (ww_ctx) {
-@@ -741,11 +744,11 @@ __mutex_lock_common(struct mutex *lock, unsigned int state, unsigned int subclas
- 	return 0;
- 
- err:
--	current->blocked_on = NULL;
-+	__clear_task_blocked_on(current, lock);
- 	__set_current_state(TASK_RUNNING);
- 	__mutex_remove_waiter(lock, &waiter);
- err_early_kill:
--	WARN_ON(current->blocked_on);
-+	WARN_ON(__get_task_blocked_on(current));
- 	trace_contention_end(lock, ret);
- 	raw_spin_unlock_irqrestore_wake(&lock->wait_lock, flags, &wake_q);
- 	debug_mutex_free_waiter(&waiter);
-@@ -956,14 +959,7 @@ static noinline void __sched __mutex_unlock_slowpath(struct mutex *lock, unsigne
- 		next = waiter->task;
- 
- 		debug_mutex_wake_waiter(lock, waiter);
--		/*
--		 * Unlock wakeups can be happening in parallel
--		 * (when optimistic spinners steal and release
--		 * the lock), so blocked_on may already be
--		 * cleared here.
--		 */
--		WARN_ON(next->blocked_on && next->blocked_on != lock);
--		next->blocked_on = NULL;
-+		__clear_task_blocked_on(next, lock);
- 		wake_q_add(&wake_q, next);
- 	}
- 
-diff --git a/kernel/locking/ww_mutex.h b/kernel/locking/ww_mutex.h
-index 00db40946328e..086fd5487ca77 100644
---- a/kernel/locking/ww_mutex.h
-+++ b/kernel/locking/ww_mutex.h
-@@ -289,9 +289,7 @@ __ww_mutex_die(struct MUTEX *lock, struct MUTEX_WAITER *waiter,
- 		 * blocked_on pointer. Otherwise we can see circular
- 		 * blocked_on relationships that can't resolve.
- 		 */
--		WARN_ON(waiter->task->blocked_on &&
--			waiter->task->blocked_on != lock);
--		waiter->task->blocked_on = NULL;
-+		__clear_task_blocked_on(waiter->task, lock);
- 		wake_q_add(wake_q, waiter->task);
- 	}
- 
-@@ -345,7 +343,7 @@ static bool __ww_mutex_wound(struct MUTEX *lock,
- 			 * blocked_on pointer. Otherwise we can see circular
- 			 * blocked_on relationships that can't resolve.
- 			 */
--			owner->blocked_on = NULL;
-+			__clear_task_blocked_on(owner, lock);
- 			wake_q_add(wake_q, owner);
- 		}
- 		return true;
 -- 
 2.50.0.727.gbf7dc18ff4-goog
 
