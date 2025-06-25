@@ -1,111 +1,83 @@
-Received: from mail-m16.yeah.net (mail-m16.yeah.net [1.95.21.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB2671FF1C8;
-	Wed, 25 Jun 2025 07:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.95.21.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99CBD8F4A;
+	Wed, 25 Jun 2025 07:08:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750835150; cv=none; b=qvTT/lTeuLg1qi81vN16Fh0vQkkkyWM4ETOK442uDS2VFY8n6w6zE+lEcVILuN7D8YSPAwx9Zf16TQqNhFCzSJADpS/yCA+emN224TN1r+x9hBv9RjrT/F/Rg6Xe87Jdlb6ft4FzvNjNNTlRGMOWuBvJlEOuIXjsij8w5MuuQrs=
+	t=1750835302; cv=none; b=DA1xc05p8UUTgBLT0cnkPHxEfKIbaYwHJlIaF0dRSBVCLL9MoB+94yHUhe248lbTDxHF6eko4Hlnn6BqB8Cf+cR4TstH3UCWlT3Jsu5+NPtUb9uDOUNr41RTospOx+MZx+w9AaRpXyFVfCTg8M6zyKZPuxefX1gPONkwfGpf+B0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750835150; c=relaxed/simple;
-	bh=AIx9KgGY4+P85oNCOJVwREtiXdk9pNQmRPz0GTokeXA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Ep7kW7qYpVngX8LHv6KzOgUYBrT8SzxJnlwoVTkT9ciriXcxgbvjPTAa7UwOjOjdxh+esi5sntGl4L/ytg6dHNUEqFGbOPSgsWP4sSroX9P4CuBGe0UCokXUR9jEbgYzL7jQCjE2kz14AK7leo87gb7YjNvNDdGJIIBwJLgU2pI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=G4tgqzcO; arc=none smtp.client-ip=1.95.21.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+	s=arc-20240116; t=1750835302; c=relaxed/simple;
+	bh=CHm5OV3W0KUMqplu/gRPB+lt1EfnCyIHCgP7omgKaPQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nyxjUdZM0/jq4V0F7Hc8kJYNBVc7nLXixCiyB2rfApWZ9IdyQS3T86QZRFB0GrzI3No0dr4PoQBitkD11Esrrn1PATy/JCFTEBOHa2IaDOhPJGqBlSaK9UpdvpsOQaWT8kCcAf/5C/Km51v2kO/gn0rn5UQEG7awsJ708aHryww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=0rNqbEsp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="G4tgqzcO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=VP
-	ZrqWa7/07CY5diTNNl5DfBiV7kIBBHm24n3oMQpiI=; b=G4tgqzcO6EI46wfhcK
-	X0so4VJH4E7Vll1OEXZwlQzW/PMtukVfkDH14jGEwCg8UCSYm//I8SzxZWg/1q1i
-	cq1Z49sXLg0I8/cMGTYuDLeTfb7bRQ5rt1tE/51xOuLtejTARWtK2L9RM+JjYhDF
-	cspdCZjI/rrNdcX7uap2l6QoM=
-Received: from mps-HP-EliteBook-840-G3.monolithicpower.com (unknown [])
-	by gzsmtp1 (Coremail) with SMTP id Mc8vCgDXbU9Un1toEmaCAQ--.23207S2;
-	Wed, 25 Jun 2025 15:03:51 +0800 (CST)
-From: wenswang@yeah.net
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	jdelvare@suse.com,
-	linux@roeck-us.net,
-	corbet@lwn.net
-Cc: Jonathan.Cameron@huawei.com,
-	michal.simek@amd.com,
-	naresh.solanki@9elements.com,
-	festevam@gmail.com,
-	rodrigo.gobbi.7@gmail.com,
-	grantpeltier93@gmail.com,
-	laurent.pinchart@ideasonboard.com,
-	cedricjustine.encarnacion@analog.com,
-	nuno.sa@analog.com,
-	ninad@linux.ibm.com,
-	jbrunet@baylibre.com,
-	kimseer.paller@analog.com,
-	xzeol@yahoo.com,
-	leo.yang.sy0@gmail.com,
-	Mariel.Tinaco@analog.com,
-	johnerasmusmari.geronimo@analog.com,
-	linux@weissschuh.net,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Wensheng Wang <wenswang@yeah.net>
-Subject: [PATCH 1/4] dt-bindings: hwmon: Add MPS mp2869 series
-Date: Wed, 25 Jun 2025 15:03:35 +0800
-Message-Id: <20250625070338.965168-1-wenswang@yeah.net>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20250625065956.964759-1-wenswang@yeah.net>
-References: <20250625065956.964759-1-wenswang@yeah.net>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="0rNqbEsp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1329C4CEEA;
+	Wed, 25 Jun 2025 07:08:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750835301;
+	bh=CHm5OV3W0KUMqplu/gRPB+lt1EfnCyIHCgP7omgKaPQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0rNqbEspWPFPt/zAKVCr0S0wNlKMXQ03YJDeHpgpLS1QjLsYqT1I8eKQu3G6XnWkB
+	 lYVZdt3fTaZyweqQkIcaWe9okp7JOTXWBQciP8FZuc9i6AnquSGdELM3bDRlvZmFgU
+	 2NZkuzIlvxPSxNOpgmbAujiS+JFumt9p7wZhEP0E=
+Date: Wed, 25 Jun 2025 08:08:18 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+Cc: heikki.krogerus@linux.intel.com, lumag@kernel.org,
+	neil.armstrong@linaro.org, johan+linaro@kernel.org,
+	quic_bjorande@quicinc.com, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] usb: typec: ucsi: ucsi_glink: Increase buffer size to
+ support UCSI v2
+Message-ID: <2025062528-grip-maverick-7a19@gregkh>
+References: <20250624222922.2010820-1-anjelique.melendez@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:Mc8vCgDXbU9Un1toEmaCAQ--.23207S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Kr48Aw47AryDZw13WF4kJFb_yoW8GrWrpF
-	WkCF4xtF4FgF17Ca12gF1kGF45WrZrAw4kJayqyr17Krya9rZ7Ww4a93s5Xan8Crs3ZFWU
-	JrnFy34F9Fyjv3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07j2pBhUUUUU=
-X-CM-SenderInfo: 5zhq24xdqjq5hhdkh0dhw/1tbiBAZ3pGhbdveNoQAAsP
+In-Reply-To: <20250624222922.2010820-1-anjelique.melendez@oss.qualcomm.com>
 
-From: Wensheng Wang <wenswang@yeah.net>
+On Tue, Jun 24, 2025 at 03:29:22PM -0700, Anjelique Melendez wrote:
+> UCSI v2 specification has increased the MSG_IN and MSG_OUT size from
+> 16 bytes to 256 bytes each for the message exchange between OPM and PPM
+> This makes the total buffer size increase from 48 bytes to 528 bytes.
+> Update the buffer size to support this increase.
+> 
+> Signed-off-by: Anjelique Melendez <anjelique.melendez@oss.qualcomm.com>
+> ---
+>  drivers/usb/typec/ucsi/ucsi_glink.c | 50 ++++++++++++++++++++++++++---
+>  1 file changed, 45 insertions(+), 5 deletions(-)
 
-Add support for MPS mp2869 series controller
+40 lines added new, but:
 
-Signed-off-by: Wensheng Wang <wenswang@yeah.net>
----
- Documentation/devicetree/bindings/trivial-devices.yaml | 8 ++++++++
- 1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/usb/typec/ucsi/ucsi_glink.c b/drivers/usb/typec/ucsi/ucsi_glink.c
+> index 8af79101a2fc..d20f01a0cd5c 100644
+> --- a/drivers/usb/typec/ucsi/ucsi_glink.c
+> +++ b/drivers/usb/typec/ucsi/ucsi_glink.c
+> @@ -2,6 +2,7 @@
+>  /*
+>   * Copyright (c) 2019-2020, The Linux Foundation. All rights reserved.
+>   * Copyright (c) 2023, Linaro Ltd
+> + * ​Copyright (c) Qualcomm Technologies, Inc. and/or its subsidiaries.
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index 27930708ccd5..493e7232f09f 100644
---- a/Documentation/devicetree/bindings/trivial-devices.yaml
-+++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -285,10 +285,18 @@ properties:
-           - mps,mp2856
-             # Monolithic Power Systems Inc. multi-phase controller mp2857
-           - mps,mp2857
-+            # Monolithic Power Systems Inc. multi-phase controller mp2869
-+          - mps,mp2869
-             # Monolithic Power Systems Inc. multi-phase controller mp2888
-           - mps,mp2888
-             # Monolithic Power Systems Inc. multi-phase controller mp2891
-           - mps,mp2891
-+            # Monolithic Power Systems Inc. multi-phase controller mp29608
-+          - mps,mp29608
-+            # Monolithic Power Systems Inc. multi-phase controller mp29612
-+          - mps,mp29612
-+            # Monolithic Power Systems Inc. multi-phase controller mp29816
-+          - mps,mp29816
-             # Monolithic Power Systems Inc. multi-phase controller mp2993
-           - mps,mp2993
-             # Monolithic Power Systems Inc. multi-phase hot-swap controller mp5920
--- 
-2.25.1
+Please don't add odd characters, AND work with your corporate lawyers to
+go over the rules for when you should, and should not, add your
+copyright line to a file that you did not author from the beginning.
 
+Hint, 40 lines added to a file that is 426 lines long does not trigger
+this type of response based on the legal advice I was told to follow
+many years ago, if yours differ, I would love to talk to your lawyers
+about this please.
+
+thanks,
+
+greg k-h
