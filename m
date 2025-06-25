@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 353612F49E6;
-	Wed, 25 Jun 2025 22:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5E52F531C;
+	Wed, 25 Jun 2025 22:50:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750891828; cv=none; b=h7vKjlnPgdtrVsJ9BwIVNf71abAgU8TY8b4Il561KQwYoNvqWOhBfIuVj6IL30MLY+BkedfQnygxWbstt+UigekAjMnEebFmcvwHMXgjxpWt4JRiZpGua5MV04ww/GybrjXpsxlDTTV70LTgoIUEe3deNWxhGHVey3P1N14WX5o=
+	t=1750891829; cv=none; b=rHqGQvT58y19+nH89zeBq2ENimQJQsZ73ZOQnc8bgVTl95QW3mFrupEyJMMcehzMFjbhXMRJOGo+kvMETM5PL+Eu5UCtE+MO6X257u41A0Rt6Qiplpna57scGtGcKh8Yuc6wUKvQVbZDR7yK+KNu/L+BP5vpEe7D1/gE9xvuPEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750891828; c=relaxed/simple;
-	bh=EeIIx88KxbIwDqyUp9KTPG/NWGit+rGuf50o9X8FrSk=;
+	s=arc-20240116; t=1750891829; c=relaxed/simple;
+	bh=FT21782BgGq6b28t9oTv5V3syYC1vBZKY4HikPiL8MQ=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=lvhxxnVoZ0ZtoDGLz88Qzufp3feJYEB83p6aP05O6nf8NU2aBScLOARSnwUEJcLbQDc6UIZVTSnFHRvP9ksOD96mqid7BXM/+A07mx4PEun8X/Yi/5KLPYROlJ4oSmSlDCPosvOSCzepzwpLaj31UYrUrgXSUQu9a8xc8vBLqiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pSWHzHbh; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=BqkUtB3tawMRlv+Xu+v+kOd092jWCDGNl/1zy49xh772QJRCjfvYNOwNfbidIUvzetc3CnTNoq5Giktlg81n0LFFoNBmD5AkmgThJqPVBazhM+dGT7z06ZvGqr81amjs3NOiHAxaRC2DwCkjLE4534Ct4ioE2l7xu36NQFJpjFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GvRNwwXw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pSWHzHbh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B82FAC4CEEA;
-	Wed, 25 Jun 2025 22:50:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GvRNwwXw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A448C4CEF1;
+	Wed, 25 Jun 2025 22:50:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750891827;
-	bh=EeIIx88KxbIwDqyUp9KTPG/NWGit+rGuf50o9X8FrSk=;
+	s=k20201202; t=1750891829;
+	bh=FT21782BgGq6b28t9oTv5V3syYC1vBZKY4HikPiL8MQ=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=pSWHzHbheDb1NQgBEOLbEnEnzA/6TPzCkzE3RptobQ3P3FPMUKbncbbxut8cdAKwS
-	 8YxM10Xi13ZLwyjDS97VvP989oEGbC0eWoBvsMefns5/wgte1VNXcMjxUAes4OJ8gR
-	 JezrdqJeTpyCpI9gqw6AIRwNtjKcAJa0UkWLU8AZU4r/BTsKZi5vDEI/B6US6zd9z1
-	 P/5IIBZkPScVnbPytFxhXgTX/dn3YFwcxu76H6iSJY7P20N5Sge5mPMED/1VraQ65i
-	 LmflcqV6aoXPSziGzpwQdwYyAyY/ugpBjbPD8ZZjvPufbk7DS1vnzR8s0PjCl6buSh
-	 XvOawIiOmBS/A==
+	b=GvRNwwXwqyw7tg6uw+JODa+GadjYIlrGYXWpiTuUEz35qTZ+7fCoZVTPseir6Sple
+	 E4PreJtc6cH5hCGw8sSKfXC7YD0mSmmJnS7cDtdU8826iVO83DwvHfNX4AiVjj8soE
+	 HO00UeMYlbOO1ThDzghiMWwOZhZhgy3yGr2PfSTEUu00HBHxRZXa1bEmC9pcT+vDb0
+	 k1YGLfiKLAyQzJPro+KNoxKZJ87fG1cUfI3zm8zRVv4wHrkcB/vjttQ57vV1CWUpI7
+	 rnnlW+wRvzBxSc1KINerBWeSCmmJUyaDPe4Xl7euyqE3nQwGQL65BTD8fNwrXtGIB8
+	 EuYb6EqMXWxrQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D983A40FCB;
-	Wed, 25 Jun 2025 22:50:55 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EADAA3A40FCB;
+	Wed, 25 Jun 2025 22:50:56 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -37,45 +37,39 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] team: replace team lock with rtnl lock
+Subject: Re: [PATCH] uapi: net_dropmon: drop unused is_drop_point_hw macro
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <175089185399.646343.13396735096193328085.git-patchwork-notify@kernel.org>
-Date: Wed, 25 Jun 2025 22:50:53 +0000
-References: <20250623153147.3413631-1-sdf@fomichev.me>
-In-Reply-To: <20250623153147.3413631-1-sdf@fomichev.me>
-To: Stanislav Fomichev <sdf@fomichev.me>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, jiri@resnulli.us, andrew+netdev@lunn.ch,
- linux-kernel@vger.kernel.org, penguin-kernel@I-love.SAKURA.ne.jp,
- syzbot+705c61d60b091ef42c04@syzkaller.appspotmail.com,
- syzbot+71fd22ae4b81631e22fd@syzkaller.appspotmail.com
+ <175089185549.646343.1625769414535488237.git-patchwork-notify@kernel.org>
+Date: Wed, 25 Jun 2025 22:50:55 +0000
+References: <20250624165711.1188691-1-rubenkelevra@gmail.com>
+In-Reply-To: <20250624165711.1188691-1-rubenkelevra@gmail.com>
+To: RubenKelevra <rubenkelevra@gmail.com>
+Cc: nhorman@tuxdriver.com, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
 Hello:
 
 This patch was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Mon, 23 Jun 2025 08:31:47 -0700 you wrote:
-> syszbot reports various ordering issues for lower instance locks and
-> team lock. Switch to using rtnl lock for protecting team device,
-> similar to bonding. Based on the patch by Tetsuo Handa.
+On Tue, 24 Jun 2025 18:57:11 +0200 you wrote:
+> Commit 4ea7e38696c7 ("dropmon: add ability to detect when hardware
+> drops rx packets") introduced is_drop_point_hw, but the symbol was
+> never referenced anywhere in the kernel tree and is currently not used
+> by dropwatch. I could not find, to the best of my abilities, a current
+> out-of-tree user of this macro.
 > 
-> Cc: Jiri Pirko <jiri@resnulli.us>
-> Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Reported-by: syzbot+705c61d60b091ef42c04@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=705c61d60b091ef42c04
-> Reported-by: syzbot+71fd22ae4b81631e22fd@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=71fd22ae4b81631e22fd
-> Fixes: 6b1d3c5f675c ("team: grab team lock during team_change_rx_flags")
-> Link: https://lkml.kernel.org/r/ZoZ2RH9BcahEB9Sb@nanopsycho.orion
-> Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+> The definition also contains a syntax error in its for-loop, so any
+> project that tried to compile against it would fail. Removing the
+> macro therefore eliminates dead code without breaking existing
+> users.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net] team: replace team lock with rtnl lock
-    https://git.kernel.org/netdev/net-next/c/bfb4fb77f9a8
+  - uapi: net_dropmon: drop unused is_drop_point_hw macro
+    https://git.kernel.org/netdev/net-next/c/2855e43c6bb1
 
 You are awesome, thank you!
 -- 
