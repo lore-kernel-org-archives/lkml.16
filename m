@@ -1,131 +1,102 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0130A800;
-	Wed, 25 Jun 2025 12:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93B37800
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:29:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750854532; cv=none; b=tIFPOkbxCh7g2/5iGoia16Q1A6zB1NwA77xrF2OOIBJFUHByVxK5pQcZbL0aiFsORAz04jyZzTRPGJtD41pI1CvCHUL2FQujwEIFYMEpuTNK5YcyEMCA9W6QIZ4MvVzdNnyYq/e42b2EKBuan8Lg+a+dPmMBH4MjM/kHB5nQQTM=
+	t=1750854562; cv=none; b=lmZ+938PejBr92H87/ejM9DcBgpUDxMD8lw65eNLrPT2GJNPYmDA5wU3jTnoFJiqz1Dwwg8ohP7qs+rIwGgt61L5wC53vjEgRv6e6e5vWUIRhQc/ztVnOCZGpd4y2M+F/3zfhNUWAXFs4FG68a1qmB4PndM6Kg5Sq8/NR0dXPPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750854532; c=relaxed/simple;
-	bh=x+77b4i0Z6wKis3aStFQZ7veNrPOT+2KFQd69RsxdjI=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=EGToClWHKq4qDRmJ3Ibc95V6oZrpMS5VPtFYbhbLsp4K2mf7klqlKyUgRobgrexF+KmYX+uwDFi7aGb+5OQWMnWVo6lRtqAztCGA3LczD87yyT3Y46tX/wJNe7YBScuew+Bh9vzMeyoitI+mxCNN0y3n6bukdOm1+x1VvZQHyVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W37ODDGs; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W37ODDGs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750854530; x=1782390530;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=x+77b4i0Z6wKis3aStFQZ7veNrPOT+2KFQd69RsxdjI=;
-  b=W37ODDGsXjcudJGDkl4cz2OzR3o3bVvonAhkzNkYW/SVUL3iah11/P+Z
-   I1JWopHr+iExqxgYcojRO6kqRNd+9jSskoWnpuVLQ8BoB12Rk+41GWsei
-   c0CGLdpcYWiKa4fkQeaJa1uT70xnejB/1m5jUviXYJNFR8t1BqhSTsTHe
-   5HEhgvoH0wkBpBWY1/ER28csBUg92GKms74FTlbb7l+GdfxbEfZXFNURQ
-   /3l1/jGPCe4OjUeK7WSGExpy1rdfvE6QVWFiRY8HkXEj6uKygyJgz/F5R
-   cdqMlVMBbqfwwIrjpvttrvlAmzhoLd23OeAt+ipOdMKh9XuEanSzwl56K
-   w==;
-X-CSE-ConnectionGUID: fwvn+bumTIOGz7MtQDn4qw==
-X-CSE-MsgGUID: mC0XEDCoQRS4yxZsEOKYSQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52986391"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="52986391"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:28:50 -0700
-X-CSE-ConnectionGUID: 9xNSDUdMS+q77U3s5X5XnQ==
-X-CSE-MsgGUID: sTrhSogiRLmBSxcVtSP++w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="152502198"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:28:46 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Wed, 25 Jun 2025 15:28:43 +0300 (EEST)
-To: Armin Wolf <W_Armin@gmx.de>
-cc: dimich.dmb@gmail.com, Hans de Goede <hdegoede@redhat.com>, 
-    kuurtb@gmail.com, corbet@lwn.net, platform-driver-x86@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] platform/x86: wmi: Fix WMI event enablement
-In-Reply-To: <20250619221440.6737-1-W_Armin@gmx.de>
-Message-ID: <e23ffd29-13db-bb11-ee06-0f1203269902@linux.intel.com>
-References: <20250619221440.6737-1-W_Armin@gmx.de>
+	s=arc-20240116; t=1750854562; c=relaxed/simple;
+	bh=CguZlLibNJQ8+DvWfFIbiKXn0D5O7pmOOPle6BkZZxI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E2iNlBFo571ynf+fKlOUinjXqzNmeCdt9bsgT/FUyLMNWDVmmSDI55qj7ST+fJpYxfzJZmHbSnSIgdGubz3gmfdWqtt45OPOpt+F7u0+aJ/q5cNGtKCctWQ2VjGAkjGl/4H3Jmi0hNXdumNd6E1nJb1PfdQ8vyi70INtIzvL6+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91136106F;
+	Wed, 25 Jun 2025 05:28:59 -0700 (PDT)
+Received: from [10.57.31.57] (unknown [10.57.31.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5ED43F66E;
+	Wed, 25 Jun 2025 05:29:16 -0700 (PDT)
+Message-ID: <e01be912-fe6b-420b-a911-700b338c9bd0@arm.com>
+Date: Wed, 25 Jun 2025 13:29:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iommu/amd: clear SME flag for mmio pages
+To: YangWencheng <east.moutain.yang@gmail.com>
+Cc: joro@8bytes.org, suravee.suthikulpanit@amd.com, will@kernel.org,
+ iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250625064802.3640589-1-east.moutain.yang@gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Content-Language: en-GB
+In-Reply-To: <20250625064802.3640589-1-east.moutain.yang@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, 20 Jun 2025, Armin Wolf wrote:
+On 2025-06-25 7:48 am, YangWencheng wrote:
+> If paddr is a mmio address, clear the SME flag. It makes no sense to
+> set SME bit on MMIO address.
 
-> It turns out that the Windows WMI-ACPI driver always enables/disables
-> WMI events regardless of whether they are marked as expensive or not.
-> This finding is further reinforced when reading the documentation of
-> the WMI_FUNCTION_CONTROL_CALLBACK callback used by Windows drivers
-> for enabling/disabling WMI devices:
-> 
-> 	The DpWmiFunctionControl routine enables or disables
-> 	notification of events, and enables or disables data
-> 	collection for data blocks that the driver registered
-> 	as expensive to collect.
-> 
-> Follow this behavior to fix the WMI event used for reporting hotkey
-> events on the Dell Latitude 5400 and likely many more devices.
-> 
-> Reported-by: Dmytro Bagrii <dimich.dmb@gmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=220246
-> Tested-by: Dmytro Bagrii <dimich.dmb@gmail.com>
-> Fixes: 656f0961d126 ("platform/x86: wmi: Rework WCxx/WExx ACPI method handling")
-> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
+Arguably it also doesn't make sense for callers to be mapping MMIO 
+addresses without IOMMU_MMIO...
+
 > ---
->  drivers/platform/x86/wmi.c | 16 +++++++++++-----
->  1 file changed, 11 insertions(+), 5 deletions(-)
+>   drivers/iommu/amd/io_pgtable.c    | 6 ++++--
+>   drivers/iommu/amd/io_pgtable_v2.c | 6 +++++-
+>   2 files changed, 9 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/platform/x86/wmi.c b/drivers/platform/x86/wmi.c
-> index 21b7e54bd7ab..4e86a422f05f 100644
-> --- a/drivers/platform/x86/wmi.c
-> +++ b/drivers/platform/x86/wmi.c
-> @@ -180,16 +180,22 @@ static int wmi_device_enable(struct wmi_device *wdev, bool enable)
->  	acpi_handle handle;
->  	acpi_status status;
->  
-> -	if (!(wblock->gblock.flags & ACPI_WMI_EXPENSIVE))
-> -		return 0;
-> -
->  	if (wblock->dev.dev.type == &wmi_type_method)
->  		return 0;
->  
-> -	if (wblock->dev.dev.type == &wmi_type_event)
-> +	if (wblock->dev.dev.type == &wmi_type_event) {
-> +		/*
-> +		 * Windows always enables/disables WMI events, even when they are
-> +		 * not marked as being expensive. We follow this behavior for
+> diff --git a/drivers/iommu/amd/io_pgtable.c b/drivers/iommu/amd/io_pgtable.c
+> index 4d308c071134..88b204449c2c 100644
+> --- a/drivers/iommu/amd/io_pgtable.c
+> +++ b/drivers/iommu/amd/io_pgtable.c
+> @@ -352,15 +352,17 @@ static int iommu_v1_map_pages(struct io_pgtable_ops *ops, unsigned long iova,
+>   			updated = true;
+>   
+>   		if (count > 1) {
+> -			__pte = PAGE_SIZE_PTE(__sme_set(paddr), pgsize);
+> +			__pte = PAGE_SIZE_PTE(paddr, pgsize);
+>   			__pte |= PM_LEVEL_ENC(7) | IOMMU_PTE_PR | IOMMU_PTE_FC;
+>   		} else
+> -			__pte = __sme_set(paddr) | IOMMU_PTE_PR | IOMMU_PTE_FC;
+> +			__pte = paddr | IOMMU_PTE_PR | IOMMU_PTE_FC;
+>   
+>   		if (prot & IOMMU_PROT_IR)
+>   			__pte |= IOMMU_PTE_IR;
+>   		if (prot & IOMMU_PROT_IW)
+>   			__pte |= IOMMU_PTE_IW;
+> +		if (pfn_valid(__phys_to_pfn(paddr)))
 
-Hi Armin,
+As usual, pfn_valid() isn't really appropriate for this anyway, since 
+all it means is "does a struct page exist?", and in general it is 
+entirely possible for (reserved) pages to exist for non-RAM addresses.
 
-Is the wording in the comment reversed? (I suspect you didn't mean to 
-include "not" into that statement?)
+Thanks,
+Robin.
 
-> +		 * compatibility reasons.
-> +		 */
->  		snprintf(method, sizeof(method), "WE%02X", wblock->gblock.notify_id);
-> -	else
-> +	} else {
-> +		if (!(wblock->gblock.flags & ACPI_WMI_EXPENSIVE))
-> +			return 0;
+> +			__pte = __sme_set(__pte);
+>   
+>   		for (i = 0; i < count; ++i)
+>   			pte[i] = __pte;
+> diff --git a/drivers/iommu/amd/io_pgtable_v2.c b/drivers/iommu/amd/io_pgtable_v2.c
+> index b47941353ccb..b301fb8e58fa 100644
+> --- a/drivers/iommu/amd/io_pgtable_v2.c
+> +++ b/drivers/iommu/amd/io_pgtable_v2.c
+> @@ -65,7 +65,11 @@ static u64 set_pte_attr(u64 paddr, u64 pg_size, int prot)
+>   {
+>   	u64 pte;
+>   
+> -	pte = __sme_set(paddr & PM_ADDR_MASK);
+> +	if (pfn_valid(__phys_to_pfn(paddr)))
+> +		pte = __sme_set(paddr & PM_ADDR_MASK);
+> +	else
+> +		pte = paddr & PM_ADDR_MASK;
 > +
->  		get_acpi_method_name(wblock, 'C', method);
-> +	}
->  
->  	/*
->  	 * Not all WMI devices marked as expensive actually implement the
-> 
-
--- 
- i.
+>   	pte |= IOMMU_PAGE_PRESENT | IOMMU_PAGE_USER;
+>   	pte |= IOMMU_PAGE_ACCESS | IOMMU_PAGE_DIRTY;
+>   
 
