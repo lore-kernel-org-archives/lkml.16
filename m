@@ -1,40 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 941781DE8A3;
-	Wed, 25 Jun 2025 10:12:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E905329C33C;
+	Wed, 25 Jun 2025 10:12:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750846374; cv=none; b=YfgX96AsDD6QdBKx/BCFYOKWAw4SNhjWE1Nj6WPLIBF3iyEPo26GGz8dFp30lOvgTFoZF9zKXUc8al9ocbzr6glfJylXwOyiWQfEdwWZW1fAn/8TwI8Y9W3hG4vw1zPSCy58nW2kGGzblDsvNw0BJyycEdPY6mCztCjvGPH1ijE=
+	t=1750846376; cv=none; b=vDSZIt5mIs6EaNJiPZW4TM0z2ejwixMtq7BFeCGW8HAm3tp7LdcH4NQgLyO01ecDCqFSsX1DnTP1J8TekUJP/y5mEz+jLvP8RGuPBKFsVfVDiAhMchEBh1l4HwdnPPhfpaKDsd3pJeRGODdEYJX/3QFRKk4K14pvQ0GyOhQmJa8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750846374; c=relaxed/simple;
-	bh=eR0q+RNjFITK9YCpEg9fBMwnAYg3EaVMIJOV9Zmw3uA=;
+	s=arc-20240116; t=1750846376; c=relaxed/simple;
+	bh=rv4hE/m/Wwv9+Rsy/pnGUhoU5nmf/1y40+chIyXMyv0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=eFZbTFZf6onfvpTXA2K4Q1tH5WUUDQu57sPLuk0NMKBba2HLV0e+eoEjteG108ThIQRx8Hu4cZ+Gj9deFfDaUCybhk0tHmNLoTcPqeXUdfoyawz0OqBj/UATYQZpyP6h9Y8OrEup+LHyDq76BCWlHOBjrVgMyz6FqqPq6C12kx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wt6bqGxg; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=gcNJ/z291kze2kOOCyilzo6OIbK0dixoobuCt7pmEz/lIEkTKBmhE31MNmH8sRfBkReUYe4ws8+bk8bVb2AHMQ2yeuF1xGB+AWqQDUKaGBR5e91LPSPNEYCKGWZJpu1hIdEi+rOLVq3qyP0C+wXYR/4vIcu2wFuey3gwuqNhc4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/mW6RBZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wt6bqGxg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 395E1C4CEEA;
-	Wed, 25 Jun 2025 10:12:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/mW6RBZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FE1BC4CEEE;
+	Wed, 25 Jun 2025 10:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750846374;
-	bh=eR0q+RNjFITK9YCpEg9fBMwnAYg3EaVMIJOV9Zmw3uA=;
+	s=k20201202; t=1750846375;
+	bh=rv4hE/m/Wwv9+Rsy/pnGUhoU5nmf/1y40+chIyXMyv0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=Wt6bqGxgEM9AK914Ib+/cqaATn6qRbr0DhFZlohg/V6DezycPprn/XFVR3daLJ1fS
-	 FXO9owsM6qALErI+XjdfoKxANx6RHiEUGyJ894Jd2Z4XOM9uVwuEtw9Glx1V2A7Pm+
-	 AT7pwa0oCGpjTC9Fs4nD/XhK+jiclQYgr0IiYGr4tI+ikukrWVyUOcNNbxWFd2Y5iO
-	 FTI4CgaNISLjyqFS6MmxNESvAcFUdaw1+1hV6F9kXscFIezbpAjfjr6uXzB/keoh/j
-	 haxOl5q6vwnHTHw/jxnMuVT/kemtSBhEyWGzQGWeEmfRCUYRUureaOB9Ir/OiA9/E3
-	 DEeyZ5dDJ2a/w==
+	b=T/mW6RBZt5ciP7aI9XEA9N05GdIoAnIB5BaU3KQv7LWKru3JxxaIy5Sazp0K7y/WW
+	 0vQ0jp9XirLit8S8ccnIue5DyOQ38Oh5r4Q8W2HdsEtQMTkMUU1YE9Xew/Vvg3lfGd
+	 3iAKCNUVLIq/MQ2EzsGoi7EnaFsE3v+Wftekn2MDjfxKcUa9i7xKBXKmyZFv6pKntr
+	 ghEVjery7pBTwdF6mtdUIy/xe+ixT0etgccDqSZUzk+YbdHNKlIEzzBJaUSnZo6RN6
+	 dPAIUgTSyPzrE4D2o+rJNlT/BLB9xLYKsOjGfVSrwoRFYC9blu395uu365mmDozAlK
+	 oq7f84UN0ciEw==
 From: Lee Jones <lee@kernel.org>
 To: Matti Vaittinen <mazziesaccount@gmail.com>, Lee Jones <lee@kernel.org>, 
  Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-In-Reply-To: <d56bac346e94ac91df16a775c59092d1b60efabd.1750005148.git.christophe.jaillet@wanadoo.fr>
-References: <d56bac346e94ac91df16a775c59092d1b60efabd.1750005148.git.christophe.jaillet@wanadoo.fr>
-Subject: Re: (subset) [PATCH] mfd: rohm-bd71828: Constify some structures
-Message-Id: <175084637296.4142064.14602531767494530713.b4-ty@kernel.org>
-Date: Wed, 25 Jun 2025 11:12:52 +0100
+In-Reply-To: <037e28e587ae899da9acdb45c606d75ec61f858b.1750501700.git.christophe.jaillet@wanadoo.fr>
+References: <037e28e587ae899da9acdb45c606d75ec61f858b.1750501700.git.christophe.jaillet@wanadoo.fr>
+Subject: Re: (subset) [PATCH v2] mfd: rohm-bd71828: Constify some
+ structures
+Message-Id: <175084637440.4142064.15452160092046627411.b4-ty@kernel.org>
+Date: Wed, 25 Jun 2025 11:12:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,7 +46,7 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 X-Mailer: b4 0.15-dev-c81fc
 
-On Sun, 15 Jun 2025 18:32:48 +0200, Christophe JAILLET wrote:
+On Sat, 21 Jun 2025 12:28:38 +0200, Christophe JAILLET wrote:
 > Several structures are not modified in this driver. Constifying them moves
 > some data to a read-only section, so increases overall security, especially
 > when the structure holds some function pointers. This is the case for
@@ -55,7 +56,7 @@ On Sun, 15 Jun 2025 18:32:48 +0200, Christophe JAILLET wrote:
 > Before:
 > ======
 >    text	   data	    bss	    dec	    hex	filename
->   18161	  14112	    192	  32465	   7ed1	drivers/mfd/rohm-bd71828.o
+>   18321	  13952	    192	  32465	   7ed1	drivers/mfd/rohm-bd71828.o
 > 
 > [...]
 
