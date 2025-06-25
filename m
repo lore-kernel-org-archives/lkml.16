@@ -1,112 +1,74 @@
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FEE1F460B
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:04:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9F81F460B;
+	Wed, 25 Jun 2025 10:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750845872; cv=none; b=kgoaT1cFCVlRkHjHQB6E+iosmH9psuoXrysHvuyzjQiZUB2N/5pPZX2WYje46I45wA1RVOU1yQXe6YqsZtDKMmhEiTrEJHarDcPFK0ls6z/Qgs3EhlybZsKmaoFpE9+zKPvkYinDM42Vm6LPB/pp1hxv3KuGRII3liKMJ5gJL5Q=
+	t=1750845881; cv=none; b=sjhBT6nW4s16Vbs+RA/Fy6K8lJxm/6hSR3LmeJRj9kiVxXxjZG1jgbWlWHd0Ww+7hgMQssKkIYX3g3VPgmbZKSW4g/aQTrgf2SXR/dZ5iu3Tx2Dk5VGkepEN4XL+HP2DiZP8yJS/LdcZetoKTVgR9/sUPafM7zV9GC6VYa60/sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750845872; c=relaxed/simple;
-	bh=EQuPWVkGF1nshAKLaU4W+d2hSy30i6DDLNsWfTtXoGk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k60UQm+SBzVgFURxZvBxHGQj3l9KOaTyr6jWXCpsVAqrJk1/OtmMpzYukTouetq7muWpjyK5vExj3e2slVxn9ttqi+hvJy8lOHsUCjQ9IIke2LTmLUmNADme96OTgIU4t17pXPSV0RQapXNax/kSfTi1BaynztyI6MkFU0hoqRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xyV7PgI/; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xyV7PgI/"
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-e8273504c67so5663564276.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:04:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750845870; x=1751450670; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=2FoYZ4Nr01R53huec/tf1xznQvupBhVO4tbylq2xKes=;
-        b=xyV7PgI/+uKLHWg1XqvU//E0ZL9rWBVCCQl+WJuiImbX24rOSLJu8dVZBQumszGCtJ
-         cJJ22cAoXQqVAL1rpiIxh6Wm80cRyjDuIGzAJeQP1RBsf0Qw/R2QW3b49EB5+NQpqAij
-         0HwqPqEf6J/gtUWJGmR6xD3KWDa7SJDqmA8JcRX6BYTTXiyOODiuR8QK+31P+doEaKPD
-         qmARKXfqeoL6Rwvh+WsOlQoh6VIgceSsBjmoYnJm/fu8XMKGuumwvwHCdKVrkb9Nb56I
-         IFV3RmsTBDvCOVe349vj05fQ7Du8QRTvQcs8GbXNUavwoqtdN8M6ZgvTFyE+3LhhIAmH
-         w5kA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750845870; x=1751450670;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2FoYZ4Nr01R53huec/tf1xznQvupBhVO4tbylq2xKes=;
-        b=wT8rbjrbs31pytPfZDbtvUQUxukykKsTNX+7VPdadcFF1g68LgUPIBSYA1FgmS3hd3
-         78VL/EptvI13ivO8rKibT/7RuoyBtTmpFBxIjZmFrVThgTFjNyR3IHsdCWs7DJVu8CXg
-         Vm5ig6ZdaYDGfia6d1IM3IqF6gkKJdReVW3s9JJXchTBKya6VHRKiSlla5ugwlD6rccH
-         MzLnZ/hqVN0VhZfG8Mua75HitlyifyGXXt/7vhlYfMDVNslRkKZNtgVp/DicJyDIP8oU
-         iAOY3M866SMJjjWbgZ39q7cx+7fhIT09ZFOg8KwZCkAvN9XeiKaVHvQ9lkpWqWL8Owij
-         9vkw==
-X-Forwarded-Encrypted: i=1; AJvYcCUtKdVqNVWDQGoO1TNcbN9nGbVrgKG2JXaq8ak6qqnZtJIus2bR1jJYzOCnL7N8BS/wgF6FMAASc7mQE5s=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOZ6BLXuT3BUu3dRTqHIvo2fXtPFVXXM+Wwi40Gx5UTz13uytj
-	VFSCkn6My9WVf0+pgHuf6hnduA8d3ez48mhaLcKNOM1tuGjeuKNukeRO9OCXbGyXSSKoLWEL4V9
-	UuyYcR8l+6hroUBxWyemOrSATcpCwsal8pkIYQNlSoQ==
-X-Gm-Gg: ASbGncv4fe1vRLlRep2qRv7YdEtCz76K+o5HEyhkskFOX9+5553vxhz09YO+W3uI7UJ
-	+R4GP70LedpY+NDDBJVqivywFxp+LNz8Gub5hExQi5Yu5ph2D6h3G6JOIkAxZG2BpKSgsexP/h1
-	fmCrs7tMzxJpv5box6cTU1t9Bwo1PzcXSLvPWbIVAvD4c=
-X-Google-Smtp-Source: AGHT+IGEwF//unOd8KqnIb3kUSk3TkEl6eAh1VfDQazORQUWho3pyKqqzApD4UjhgThjUzADzPYQsRLphHC9Om0O8cU=
-X-Received: by 2002:a05:6902:100e:b0:e81:4a97:b8dc with SMTP id
- 3f1490d57ef6-e86019b93abmr2658200276.48.1750845870308; Wed, 25 Jun 2025
- 03:04:30 -0700 (PDT)
+	s=arc-20240116; t=1750845881; c=relaxed/simple;
+	bh=GvIaJF5+J/InRTOZVzTLzmt/zTQ4aOIgzf23NRiEfPM=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y8ZhxOybLJzK7432FILUhhehTeRYBfrtvbD+4kYnsTUm14TYQZrf82kYxApxoXpjrkF1Fqd6DCDrtjn3JYqHwgCF6WPp1ySNbFiglL7G8VP6bpADJP9NtrLsriVbgK0lIPu5Q1iONQmP06VGqy7y+rosLk7VHqOqJ3rAWQOhoH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4bRyB25xydz2QTxx;
+	Wed, 25 Jun 2025 18:05:30 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id A9B4E1A016C;
+	Wed, 25 Jun 2025 18:04:35 +0800 (CST)
+Received: from huawei.com (10.175.124.27) by dggpemf500002.china.huawei.com
+ (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 25 Jun
+ 2025 18:04:34 +0800
+From: Yue Haibing <yuehaibing@huawei.com>
+To: <andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
+	<kuba@kernel.org>, <pabeni@redhat.com>, <horms@kernel.org>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yuehaibing@huawei.com>
+Subject: [PATCH net-next] net: Remove unused function first_net_device_rcu()
+Date: Wed, 25 Jun 2025 18:21:55 +0800
+Message-ID: <20250625102155.483570-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624-pwrseq-match-defines-v1-0-a59d90a951f1@linaro.org>
-In-Reply-To: <20250624-pwrseq-match-defines-v1-0-a59d90a951f1@linaro.org>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 25 Jun 2025 12:03:54 +0200
-X-Gm-Features: Ac12FXxb7NJQLDFAGAZjqxBIaCwRE2IAI0_rkmMKymSaefvVyWHj4pimfXs-K_g
-Message-ID: <CAPDyKFqUZ4pVPgrWfCjH2dDBPRs37L9nc_tAqOtUR=0hzweKVA@mail.gmail.com>
-Subject: Re: [PATCH 0/5] pwrseq: replace magic numbers with defines for
- match() return values
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Michal Wilczynski <m.wilczynski@samsung.com>, linux-riscv@lists.infradead.org, 
-	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: kwepems200001.china.huawei.com (7.221.188.67) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
-On Tue, 24 Jun 2025 at 16:32, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> We currently use 0 or 1 as magic numbers returned from the match()
-> callback. It's more readable to replace them with proper defines whose
-> names indicate the meaning. While at it: fix a build issue with the
-> thead-gpu driver I noticed and extend build coverage for the drivers.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
-> Bartosz Golaszewski (5):
->       pwrseq: thead-gpu: add missing header
->       pwrseq: extend build coverage for pwrseq drivers with COMPILE_TEST=y
->       pwrseq: add defines for return values of the match() callback
->       pwrseq: qcom-wcn: use new defines for match() return values
->       pwrseq: thead-gpu: use new defines for match() return values
->
->  drivers/power/sequencing/Kconfig            |  4 ++--
->  drivers/power/sequencing/core.c             |  6 +++---
->  drivers/power/sequencing/pwrseq-qcom-wcn.c  |  8 ++++----
->  drivers/power/sequencing/pwrseq-thead-gpu.c | 12 +++++++-----
->  include/linux/pwrseq/provider.h             |  3 +++
->  5 files changed, 19 insertions(+), 14 deletions(-)
-> ---
-> base-commit: d4c2d9b5b7ceed14a3a835fd969bb0699b9608d3
-> change-id: 20250624-pwrseq-match-defines-aec46817e69e
->
-> Best regards,
-> --
-> Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
+This is unused since commit f04565ddf52e ("dev: use name hash for
+dev_seq_ops")
 
-For the series, feel free to add:
+Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+---
+ include/linux/netdevice.h | 7 -------
+ 1 file changed, 7 deletions(-)
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 03c26bb0fbbe..431d5ca10905 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -3316,13 +3316,6 @@ static inline struct net_device *first_net_device(struct net *net)
+ 		net_device_entry(net->dev_base_head.next);
+ }
+ 
+-static inline struct net_device *first_net_device_rcu(struct net *net)
+-{
+-	struct list_head *lh = rcu_dereference(list_next_rcu(&net->dev_base_head));
+-
+-	return lh == &net->dev_base_head ? NULL : net_device_entry(lh);
+-}
+-
+ int netdev_boot_setup_check(struct net_device *dev);
+ struct net_device *dev_getbyhwaddr(struct net *net, unsigned short type,
+ 				   const char *hwaddr);
+-- 
+2.34.1
 
-Kind regards
-Uffe
