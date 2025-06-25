@@ -1,138 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f182.google.com (mail-oi1-f182.google.com [209.85.167.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 692FF2F3C0E;
-	Wed, 25 Jun 2025 23:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30D3211A28
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 23:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750893453; cv=none; b=InKhuXCWWQULK0qdC14rpby9iDjMbmdg+DGLvTVonQ0P7KRTN5leL1Z1SSs+IMGMLGJyEa7XSMYu7d3jbGFf9Gs4VYwmP9GeryiqF2s7cHJqaUU+j9/rYqqW0VOEU1ioLOrkLDU7HnRdL7jPbEeAXUbhyVH55uBzA+N1IBkZKKw=
+	t=1750893518; cv=none; b=DxVKrwhYlo7zxgkZAGe0GN+RvcbADRYIr7s//AiSwJm5jSuChu/qEiwDoZ/U56Z2MtxoEIk+7OrMRfuYaQwICfwCRP+X1xb8acXRCPElC5mnq09zyP2Dp2HmfSGjXsiZZWEoMqSEPp481cNuGf6GNEjmXbSWV8Hjj1ZBHuHACGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750893453; c=relaxed/simple;
-	bh=d93OHtZpHqLPoIbKn84sAiKUZpSfPfqxrY/UyMGc52Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WbKo52p6YqpCP65YmqpPEIEG9KoPO+LPdODqlyNuvYQKJMBpQxqgw24H54LGqr6LX2oNt52arfDKbXYT7/WV5nDmvFZLoQGkLmddXqKHkIDz5ciohyxkQowVk+eL/0CMqh9TlDtYK8YiN7pGlM2Jd5P7p4awO2i3tWXOn4v2Gvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gMHywAqH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750893518; c=relaxed/simple;
+	bh=o7nWOpB8g4zXrKnObOSxdMpT/uFNKTEpAMgxA33hsCU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=svyrS4mWr1dbcK4KI0Hyt3aEk+lceNQkP9M4sTRE/IoaHdJdHa6u6Xd6xq8N6lx8pd3DLDk9cIoXnP3Sx5lm1qg6DtN4T7prQXuCZ4IztRGz8anlJiL/SDapr+eHca00ff511RTXaRf/4n2sQXlEsuT7iCJXhOrhGVI6KHtC8aU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B9da6tqT; arc=none smtp.client-ip=209.85.167.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gMHywAqH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 022FAC4CEF1;
-	Wed, 25 Jun 2025 23:17:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750893453;
-	bh=d93OHtZpHqLPoIbKn84sAiKUZpSfPfqxrY/UyMGc52Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=gMHywAqH8meta8A/WSGEK51VZYqQ8kjn7QsJ6qVHot3M3+OWo6U3SC2EFZyYznee4
-	 pggYPNhlxhBO0cdFOu4FYzKhdHX5beyO4FwbP3utEpQOBUIXFr3LHpy6rHSc7eq496
-	 Hd6+RpQnI6ucEx+8JTggHdP4Vzmlnyorrc2jVesD9C6uaiRgHVNm0+ExvVnsmvIQnx
-	 HPsBUX2qXP3yjfZl/ryligK+Fa2A07VEpjRieDzwtyMM/yMFi9ESwadN7VL3ZM6odh
-	 KNaMZJ8qrRaLn1WmAQtEgatdWrOPkttH9Lr5uy3x5h80oZj594emMO1+RS5+JDLX75
-	 MmpxiMp8sifnQ==
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a585dc5f4aso5652301cf.2;
-        Wed, 25 Jun 2025 16:17:32 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUAL5OFZdtA/JnUqgcGCHNPYR+JS83Zooxp+HxfP8q0kDQY96fGkeuwzboCyrtch0KhI//y3MpLr+ZvRIcy@vger.kernel.org, AJvYcCUdDjCTZnvqeiUoClI3hAvkV5olLu/FlerNgVDhLOcD8SwExruDHRXSdhRAQfmQyRds5yZnd51tthGYD937bQ==@vger.kernel.org, AJvYcCWGd4rE9JYPsl9YA3uVVFBVVlUYGdTGMKr3avbXayJEoB1uv4LGi4clGSuH5m3KTSdIBGvqqnUTCRjoLoq20u7lmpSmnmkT@vger.kernel.org, AJvYcCWOY+5hs4XjxW+tXxYSNM0TgNIudpdH0DagScFjkyzUtciU8F1vicihCRqAKY1nBBJlF68=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzubCcr4i3nJYU6t7Uklhj4k2tjoVPz2dQXtPdMeJzN8v+UxAdL
-	j2H3OKED7WBAccUkNeQp9pYB8q+jRaHk/c1lZSrPrZrLB+1TU8sxigA2yHw9/JU+ocGd384g5dC
-	Q+6tXK4ueq5aDWn6TzDznhI9+5N8otzE=
-X-Google-Smtp-Source: AGHT+IGoh6S2nBdD+7L5IEbXsOa4fFgsvTiWA2MUQtgk66QvUy2ctdvR0Io57I8XDB1k/+xhQ0KaTf20soOaK2X8wDI=
-X-Received: by 2002:a05:622a:2293:b0:4a6:f434:8cd with SMTP id
- d75a77b69052e-4a7c06ef9a4mr80144551cf.23.1750893452178; Wed, 25 Jun 2025
- 16:17:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B9da6tqT"
+Received: by mail-oi1-f182.google.com with SMTP id 5614622812f47-401c43671ecso274589b6e.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:18:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750893515; x=1751498315; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L3sVHvu6rqtfwSzthUoBWhxdxzvIuGv3z4vvAxvJak0=;
+        b=B9da6tqTxZKgCi76jYrsE3NbCHbppkVYsBHEgRgO6HZB1G2Aw1jwIHjNv61b8VdOpx
+         35fwFuwr3OdY1rwKlZj9uAhBYM3OltPHVGSnLGdqxeiHevkqH+liVoTg36RnEIfgaGGk
+         MDE4sGotloFu8XLGpb+YGu2xCzsVMsskCSOgLcG3uAIttsWk6DHavIbBgPM07X7who7A
+         5Z19xQ4lNhxdkhM7GHDqjlPE3fdjhMU+ZCPaJsl20RXcYj8Ptx8rWwxsWLmN6mwCnHS5
+         6qjUpZb/X7gj4qpRdN+9wmsTc9ouT3t+JcEl+OssCGeTu74oEVnVw6x1RsZu3dJR1MeP
+         CjxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750893515; x=1751498315;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L3sVHvu6rqtfwSzthUoBWhxdxzvIuGv3z4vvAxvJak0=;
+        b=jnDo44+fNhUojBedWIuBIkMoNuN5N2kC82A/y9ZlekXLf0Hxt4fl3oTX4tTFhiIK8w
+         kaBM3rqkCo+N92pimAHXusjpoIPp6KXeokqm3HSfF2+kOhew90Qgv9H2Hp8Fuwp/RtSY
+         qGWpf5ZrfHfFgBPFIhKMm55XNQIig9cMP+gw6XvNnoVEWpfUOR69Mmd2kNWRneSoD888
+         uCFM44g0IcJY4QqyQ07236RvRoS/b/9GZvYilq9dN8xWnWX6+1Y/eFVKhOr7fiWE4ECf
+         bkR9hakBYVUaG98W1//wC/muaV/4AfG32CPTrhscTrC4sRUR34+v4SkhUluWO2AILWSZ
+         6Y6A==
+X-Forwarded-Encrypted: i=1; AJvYcCXmCewOmo/2LXo57hDzbvoTol7uxhNB/hP+4SAG+tvg8Ed1tYYICidVb2W5kQGLN9nhwH63oBNdrWhkpRI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRTkt3/02wqT8MqyybR2UtC8vw+qqLaAnp9J88DWeX2xzC6avG
+	zDx+ZuuUIB7Q3V58cjB85uUfuIl4fW70+SgXyJTViLU3hNI4Il/zjLi38ug5WGW0VNc=
+X-Gm-Gg: ASbGncvsoDtdqiHt1Hf9eRifhPZLK16ewrFTjYKI97eHCN/n582psVfI/O5V8Ggz+Qs
+	ZuQbhiVzH9KEq4IDh7U2qHmFxkvYXijMHnKNzfkslAqEzI46iRtmk5pdMnbuL2QMf9heUopOGvu
+	wOagsoweibqWfz60DrdkT8Gs8IhuqZ2ghSg4SHFFJkbiecTQApeXhDc8///h2ehpvEc4PkBOZEG
+	fD0cFwAnx08ITikHb4rWt9cv8GL0wUGKaOyLwpFr7hk1oCwp555/86m4cTJMaD4JLh5FUAboEcW
+	Oqr1zkhR7APgmClTfJWsnTVvdCEkUlGXkas3V/djjBXpXBXlonk8c8uSWrZraLCgwN4=
+X-Google-Smtp-Source: AGHT+IGUSOTDcMhyXVdEI7yCPybwKm55wAWpHQBu02wApjRIvEjewZ0uBQq+qXkoDQPhGY+OUVDZ7w==
+X-Received: by 2002:a05:6808:178c:b0:406:8a86:6475 with SMTP id 5614622812f47-40b1c98ee06mr1362483b6e.19.1750893514886;
+        Wed, 25 Jun 2025 16:18:34 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:3ee4:904:206f:ad8])
+        by smtp.gmail.com with ESMTPSA id 46e09a7af769-73a90cc3dc8sm2386202a34.67.2025.06.25.16.18.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 16:18:34 -0700 (PDT)
+Date: Thu, 26 Jun 2025 02:18:31 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Marc Herbert <marc.herbert@linux.intel.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, gregkh@linuxfoundation.org,
+	Benjamin.Cheatham@amd.com, Jonathan.Cameron@huawei.com,
+	dakr@kernel.org, dan.j.williams@intel.com,
+	linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org, rafael.j.wysocki@intel.com,
+	rafael@kernel.org, sudeep.holla@arm.com,
+	Kees Cook <kees@kernel.org>
+Subject: Re: [PATCH] driver core: faux: fix Undefined Behavior in
+ faux_device_destroy()
+Message-ID: <fee97bfc-aebf-47e2-8764-e998cf9a9eb3@suswa.mountain>
+References: <2025061313-theater-surrender-944c@gregkh>
+ <20250614105037.1441029-1-ojeda@kernel.org>
+ <685c13c5.050a0220.38a39d.dcf8@mx.google.com>
+ <daa7eb83-7413-4b6e-a241-84d306db0d43@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625.Ee2Ci6chae8h@digikod.net> <175089269668.2280845.5681675711269608822@noble.neil.brown.name>
-In-Reply-To: <175089269668.2280845.5681675711269608822@noble.neil.brown.name>
-From: Song Liu <song@kernel.org>
-Date: Wed, 25 Jun 2025 16:17:20 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW53QiS8Aa5c4VLFjojShmgibftVe=py-RuL+ZyHBY5Pbg@mail.gmail.com>
-X-Gm-Features: Ac12FXziaRaFqMxVW6VcmQD_8qDZwMUUshKYzHkXEjuqAFIdtIHjuJL3ctPGHIo
-Message-ID: <CAPhsuW53QiS8Aa5c4VLFjojShmgibftVe=py-RuL+ZyHBY5Pbg@mail.gmail.com>
-Subject: Re: [PATCH v5 bpf-next 0/5] bpf path iterator
-To: NeilBrown <neil@brown.name>
-Cc: =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	bpf@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	brauner@kernel.org, kernel-team@meta.com, andrii@kernel.org, 
-	eddyz87@gmail.com, ast@kernel.org, daniel@iogearbox.net, martin.lau@linux.dev, 
-	viro@zeniv.linux.org.uk, jack@suse.cz, kpsingh@kernel.org, 
-	mattbobrowski@google.com, Tingmao Wang <m@maowtm.org>, 
-	=?UTF-8?Q?G=C3=BCnther_Noack?= <gnoack@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <daa7eb83-7413-4b6e-a241-84d306db0d43@linux.intel.com>
 
-On Wed, Jun 25, 2025 at 4:05=E2=80=AFPM NeilBrown <neil@brown.name> wrote:
->
-> On Wed, 25 Jun 2025, Micka=C3=ABl Sala=C3=BCn wrote:
-> > On Wed, Jun 25, 2025 at 07:38:53AM +1000, NeilBrown wrote:
-> > >
-> > > Can you spell out the minimum that you need?
-> >
-> > Sure.  We'd like to call this new helper in a RCU
-> > read-side critical section and leverage this capability to speed up pat=
-h
-> > walk when there is no concurrent hierarchy modification.  This use case
-> > is similar to handle_dots() with LOOKUP_RCU calling follow_dotdot_rcu()=
-.
-> >
-> > The main issue with this approach is to keep some state of the path wal=
-k
-> > to know if the next call to "path_walk_parent_rcu()" would be valid
-> > (i.e. something like a very light version of nameidata, mainly sequence
-> > integers), and to get back to the non-RCU version otherwise.
-> >
-> > >
-> > > My vague impression is that you want to search up from a given strut =
-path,
-> > > no further then some other given path, looking for a dentry that matc=
-hes
-> > > some rule.  Is that correct?
-> >
-> > Yes
-> >
-> > >
-> > > In general, the original dentry could be moved away from under the
-> > > dentry you find moments after the match is reported.  What mechanisms=
- do
-> > > you have in place to ensure this doesn't happen, or that it doesn't
-> > > matter?
-> >
-> > In the case of Landlock, by default, a set of access rights are denied
-> > and can only be allowed by an element in the file hierarchy.  The goal
-> > is to only allow access to files under a specific directory (or directl=
-y
-> > a specific file).  That's why we only care of the file hierarchy at the
-> > time of access check.  It's not an issue if the file/directory was
-> > moved or is being moved as long as we can walk its "current" hierarchy.
-> > Furthermore, a sandboxed process is restricted from doing arbitrary
-> > mounts (and renames/links are controlled with the
-> > LANDLOCK_ACCESS_FS_REFER right).
-> >
-> > However, we need to get a valid "snapshot" of the set of dentries that
-> > (could) lead to the evaluated file/directory.
->
-> A "snapshot" is an interesting idea - though looking at the landlock
-> code you one need inodes, not dentries.
-> I imagine an interface where you give it a starting path, a root, and
-> and array of inode pointers, and it fills in the pointers with the path
-> - all under rcu so no references are needed.
-> But you would need some fallback if the array isn't big enough, so maybe
-> that isn't a good idea.
->
-> Based on the comments by Al and Christian, I think the only viable
-> approach is to pass a callback to some vfs function that does the
-> walking.
->
->    vfs_walk_ancestors(struct path *path, struct path *root,
->                       int (*walk_cb)(struct path *ancestor, void *data),
->                       void *data)
+On Wed, Jun 25, 2025 at 03:30:47PM -0700, Marc Herbert wrote:
+> 
+> 
+> On 2025-06-25 08:20, Dan Carpenter wrote:
+> > On Sat, Jun 14, 2025 at 12:50:37PM +0200, Miguel Ojeda wrote:
+> >> On Fri, 13 Jun 2025 20:33:42 -0400 Greg KH <gregkh@linuxfoundation.org> wrote:
+> >>>
+> >>> Great writeup, but as Miguel says, this isn't needed at all, the kernel
+> >>> relies on the compiler to be sane :)
+> >>
+> >> We may still want to clean them up, e.g. for tooling -- Kees/Dan: do we?
+> >> e.g. I see a similar case with discussion at:
+> >>
+> >>     https://lore.kernel.org/lkml/3f1e7aaa-501a-44f1-8122-28e9efa0a33c@web.de/
+> >>
+> >> Which in the end was picked up as commit 2df2c0caaecf ("fbdev: au1100fb:
+> >> Move a variable assignment behind a null pointer check").
+> > 
+> > Putting the declarations at the top was always just a style preference.
+> 
+> No, "const" and variable scopes are not just "style", please do a
+> bit of research. For instance...
+> 
 
-I like this idea.
+No, I meant it was a style issue for *us* as kernel developers.  It
+wasn't like kernel developers had not heard that c99 let you put
+variable declarations randomly all over the place.  We knew about it
+and hated it.  We only changed the rules because of __cleanup magic.
 
-Maybe we want "struct path *ancestor" of walk_cb to be const.
-walk_cb should only change "data", so that we can undo all the
-changes when the rcu walk fails.
+regards,
+dan carpenter
 
-Thanks,
-Song
