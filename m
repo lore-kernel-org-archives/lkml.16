@@ -1,71 +1,76 @@
-Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78DCE288510
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EA2126B09A
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:23:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864966; cv=none; b=DatSIc3oLCdC9kfwBQZoMmdcm24UDdsTgcxyN05gYJwmdgly1mIZVnYKoPAS/Wo4tlp2Tu9DtuMc3UVZtFosFjvUjlSOlOLGVFmuyaTlnt1pWizidMFF9VKIANL017cj8O5pe9G6crGvy2LsXG10e9K5p/IbkavRTWDYtTIqBps=
+	t=1750864990; cv=none; b=gPrK0wdnS/NmlxtoYNtaZXnaqMUpOKoxcPLpxEVBPGI/V3lEqrOGY+q0sU/Tw7Tvm+l3hSuwNfvNz8ZWt4WUCI7EM2Xmcd+YjdbYRXUew61q03UAiPEDv2ZClOruRd83KljbvVV8BD43w9Ykra7mn5OcEIy6IhOawE/hvQnBDp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864966; c=relaxed/simple;
-	bh=mQ25qvLYMDyvpv7j/NtUZhUMRsahcY03k4TaRiRkM20=;
+	s=arc-20240116; t=1750864990; c=relaxed/simple;
+	bh=a47eZHNrHhm8bIT1UsXDpMZVMqM2M/J1nRMDkPp4vj8=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=bUr9ntG89wcWweLU07webdG2hcRWO+PnmgoghdNy80oLQZkdFZXGVBa5u+UWwJHNLbhCOZznDwHmWaZGk2/3QrDQdhf4S7UI8fT6KO0Vw4kFZUk+6Tz1RfGArMmA/Zr0XUfWXSqOjt9Y3hvliN2Th0Bk63yd+yTYJMyHRlsQvv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=FVEeVp8D; arc=none smtp.client-ip=209.85.160.53
+	 Content-Disposition; b=lrK9s8hb0L9QaVnK1fbz1hmWlHXaaLeeX4ik/6yLQSjkAliqI+mO1MWaJdBlERZ2weuDh0b+f/Kmj7NwqBMqAokRDGUU5pJ5m2qkMKwDQ1lFX4dnTfNVxhn8BnRqphO9LS8Omt2dZAH8Ghc450YPxoa3R6XZyCrX85CS94cJplU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=z8QL6c5y; arc=none smtp.client-ip=209.85.210.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FVEeVp8D"
-Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-2ef891cd058so32758fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:22:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z8QL6c5y"
+Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-735a6faec9eso4525880a34.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:23:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750864963; x=1751469763; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1750864987; x=1751469787; darn=vger.kernel.org;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=gV6LKTyimmW9Sx8Hibhbqk80op5pM6YCyNN7CEAKCkM=;
-        b=FVEeVp8D7I3eWP/zEEURmhwpJmvCTTmC8Pj5y+FDFPIvzj8Rtl+Zz8DJxTW67fY3Pr
-         zPu0e7KC+B7RBgGwZ+pLVa7Ia3Qe/wvNoSP6KDiJICpazSCtJPIQpg9kvV5+X9xlsjAc
-         3Zk9nocvX12gjIUO3U3j+CF9s3b/rv+VrE6yVxqQt5jDw2Yca0lLVh512fHpUbr0em+n
-         /WnQEcteaEZnKtGLlHuYEvEMb+dRr9gJ3DsT+olDUORWCigLtNCoOISSrxP6dY5P8mLL
-         oDBI3iSdisUFIFSCHliuuj+o19uNIg7qQePHcsqcmoWTKqi3q9HYB9/oIz/iGj1HZIVm
-         XogA==
+        bh=/gzYs3m3F/c7eB4Inj/8U0D6uQl5hfC5e5tB1ISacj4=;
+        b=z8QL6c5ymUm2QCKobA5U/ljErhFTSOq2eZzBh7i+MQiI35m4HkFZxK4AWQucZjO9xd
+         kR4L+X7pK/99kttJZmvX5z+TMjdrmjgW+N+IpmvCMoB0RwoThpNXlSy3qgZofflkFU5T
+         Md7rud0cTXfyuwJ4DHL7mQoja27T2ZiNnwK17MmjWZhUZw7cQIEBOKIqDv2MQsxexsDt
+         IsOwNXA2BQps4aJZ59nMUueEieg8aX6vHdlkHTmTt7hWsseze19FEj5IDIfSQ3A85NO7
+         klPVKO5+26wo1Tp0WmlUDFtg6kQN8F8icZFn72slk1V0+MsoCj3Ana6IQJwibcNSijVW
+         i6qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750864963; x=1751469763;
+        d=1e100.net; s=20230601; t=1750864987; x=1751469787;
         h=content-disposition:mime-version:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gV6LKTyimmW9Sx8Hibhbqk80op5pM6YCyNN7CEAKCkM=;
-        b=qzKKQrd++HOshCazhwtwNMT3zuvUYlyr0nGSznGoRXFr9VsTz2ADDjM3bMNmV7OYpB
-         yQ1iqrvAnYJc0C3IwDaOBwR8ZBSy+sGF07JZc0Cgh1ZS0zLNtF1JsSaWWxK9XmPI74yr
-         i8XLsnMD4XucEOkTyTIf3RATTApsDLrxNIzJ/PQIgErriJ4y9x6M1uy+mkaaKkfFqBXI
-         arWN1HJUV5LJ8LejD2uR7W+CCBcAKleBgrcCCiZBG1152CwZDbT12qxKOE81X3YjwO5E
-         p933C9QNuWLPEVaQlFk/ge0jQzQSZ9E3qUJiuZrZ4nR86S8aYcKEd10CIzoO+VFApe/b
-         oRBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUNg4kxWTy9vtMjZAh3KSZOubyzCT+03P7Bv496ty3raB5R1FfZnlGlBxSoJbptP2kcM5vaEHSAFb4LqCM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+l+GyCRHv+0Navtl8lUL6wsqYmT4oczNV3niEVSudUFvizvxC
-	fCBpqshP2UenZGAiskTwz65L04aCJXEmZ7hDzVLC1RAW4GuZh4hsnjugDC4EQ+KAXWw=
-X-Gm-Gg: ASbGnct3gPBiDa7v1s6AGk0TG0zs3NX7XnWzhUVADOMR64HWi/1T7Pp56EloWQVJfVn
-	rHxDij0EnEha77TmSKrq14ndMFxSiqRNQBCLzcuMKNcbZTqgKO17uTe9SKn2R3qGdRpoXUCKNx4
-	12YXG2J0HBBQcjwrt+974ksbkuaK7274JRi+wv09Xn2uuYj40iWc6CAVuGw9hrQ7fghXd2LxUc3
-	nD1/jZ0OOX24yUY8T0avdAZfhM+LWv3TEPlmPl0mWaxm9DQI6o42sJlEfqWWXvFE2YkLKCVdzRr
-	pQwCMCemtUYf24E3fV+PYxGBwYKOah5hTPVtqRMsVtaR+ulmBZShv03yF+Ulcuk7yXKFZjtgeUS
-	8w7xe
-X-Google-Smtp-Source: AGHT+IFd6lJtom/4lncQLlKjav5G6+Wsq1AopBqbxlhEagb6rUzpAIrbOCnTOFGol9ueG4rxfQAm6w==
-X-Received: by 2002:a05:6870:af88:b0:2c2:c92a:5789 with SMTP id 586e51a60fabf-2efb21346b8mr2671351fac.5.1750864963645;
-        Wed, 25 Jun 2025 08:22:43 -0700 (PDT)
+        bh=/gzYs3m3F/c7eB4Inj/8U0D6uQl5hfC5e5tB1ISacj4=;
+        b=Z9NMCN7+L0GsO48issBxmWbpqRccWkjKdvgzJxHwhlULWvDNIs39UED0e7MsabDsPj
+         XKj/8u3Swunt8DNnLEqUoulHTFGcPnIp1byMgl5FH1SBn7/kujVv0FYZY9df6XathgKo
+         h2Nscpj9ymRQUH0BYsfrgiBIKtewEkjczMNJR/cA8nI8n11WTVP+gTelDvMN+LjbdbkT
+         028EmYKMN+W8D1Xhl02npJ48DcS/GMABTvY3CR4/JQ31++YNtSeHiXgJDj5Q84+oP5eC
+         d1ROzhf7huF7OJyTHcTqTnxmOFsPayz8YkUxCBGfp0PPEYnmUr/ErcCf+knYrnNHSP6N
+         KWOw==
+X-Forwarded-Encrypted: i=1; AJvYcCV0q9hhmKjFEsqVvCMETraxsTiE+NtuMOV6ZYB02O2IebxEFK0Ykqid5SWkduOprms5ojR6bNbHyr6ShSg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5rQjA4nP6bv0Iwg/klDoNNSk8AlcfRIyd1ztQmT24MsFKX+m9
+	ud9xc5sIix3nJXwrbXMp04etWKt9FZ3vNTYDSY2ypwu+PaQuaZqSzMQr8frB/RLBsVc=
+X-Gm-Gg: ASbGncsjAwnra3ejnQVYo8sagPsFrHqPdOzlAw/uiir36XR+P/UozqUqGWmgZqVmrEa
+	uXrcQiKnRLyAsEXTzU69d7yatrGc+kQVEjCRSfuo8eTsWUxsjL8XrpoHBv9md0FmtXztKuW6wD1
+	b1/leTQnyw3msf8P2flXBVfQLQ8Ntj1yDpLWS4pndAY7mi2B90CTo95nyh+598iTuSkNvbgypz1
+	HEprOyu92ET12HnrAPgkof/14wC1BzSS3XIQvpUi7mU4z7ogQ1qbGmLbHexVFkavNtDmvi0dbvm
+	c8GJkhczKtDorYhgTM9YJdEXZ3bXJSkyZZWw2Ihy65NtPcQrGqI1UhYoW0p8AOdtu/ICMg==
+X-Google-Smtp-Source: AGHT+IEd8+YjM8LYQGmqEAU6rFmznZBC4Qrv0XQ+XpbkPlvJZEhO0r+n9pOweQCLkeKUxTgosdHpgA==
+X-Received: by 2002:a05:6830:3e8d:b0:734:faee:58a2 with SMTP id 46e09a7af769-73adc5e9b79mr1827733a34.12.1750864987275;
+        Wed, 25 Jun 2025 08:23:07 -0700 (PDT)
 Received: from localhost ([2603:8080:b800:f700:1fca:a60b:12ab:43a3])
-        by smtp.gmail.com with UTF8SMTPSA id 586e51a60fabf-2ee664ba910sm2562945fac.8.2025.06.25.08.22.42
+        by smtp.gmail.com with UTF8SMTPSA id 46e09a7af769-73a90c92335sm2258295a34.36.2025.06.25.08.23.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:22:43 -0700 (PDT)
-Date: Wed, 25 Jun 2025 10:22:41 -0500
+        Wed, 25 Jun 2025 08:23:06 -0700 (PDT)
+Date: Wed, 25 Jun 2025 10:23:05 -0500
 From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Bjorn Andersson <andersson@kernel.org>
-Cc: Konrad Dybcio <konradybcio@kernel.org>,
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+To: Sai Krishna <saikrishnag@marvell.com>
+Cc: Sunil Goutham <sgoutham@marvell.com>,
+	Linu Cherian <lcherian@marvell.com>,
+	Geetha sowjanya <gakula@marvell.com>,
+	Jerin Jacob <jerinj@marvell.com>, hariprasad <hkelam@marvell.com>,
+	Subbaraya Sundeep <sbhatta@marvell.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org
-Subject: [PATCH] soc: qcom: mdt_loader: Fix error return values in
- mdt_header_valid()
-Message-ID: <db57c01c-bdcc-4a0f-95db-b0f2784ea91f@sabinyo.mountain>
+Subject: [PATCH net-next] octeontx2-af: Fix error code in rvu_mbox_init()
+Message-ID: <ee7944ae-7d7d-480d-af33-b77f2aa15500@sabinyo.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,37 +81,38 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 X-Mailer: git-send-email haha only kidding
 
-This function is supposed to return true for valid headers and false for
-invalid.  In a couple places it returns -EINVAL instead which means the
-invalid headers are counted as true.  Change it to return false.
+The error code was intended to be -EINVAL here, but it was accidentally
+changed to returning success.  Set the error code.
 
-Fixes: 9f9967fed9d0 ("soc: qcom: mdt_loader: Ensure we don't read past the ELF header")
+Fixes: e53ee4acb220 ("octeontx2-af: CN20k basic mbox operations and structures")
 Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 ---
- drivers/soc/qcom/mdt_loader.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/marvell/octeontx2/af/rvu.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/qcom/mdt_loader.c b/drivers/soc/qcom/mdt_loader.c
-index 1b4ebae458f3..0ca268bdf1f8 100644
---- a/drivers/soc/qcom/mdt_loader.c
-+++ b/drivers/soc/qcom/mdt_loader.c
-@@ -33,14 +33,14 @@ static bool mdt_header_valid(const struct firmware *fw)
- 		return false;
+diff --git a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+index 7e538ee8a59f..c6bb3aaa8e0d 100644
+--- a/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
++++ b/drivers/net/ethernet/marvell/octeontx2/af/rvu.c
+@@ -2458,9 +2458,9 @@ static int rvu_mbox_init(struct rvu *rvu, struct mbox_wq_info *mw,
+ 			 void (mbox_handler)(struct work_struct *),
+ 			 void (mbox_up_handler)(struct work_struct *))
+ {
+-	int err = -EINVAL, i, dir, dir_up;
+ 	void __iomem **mbox_regions;
+ 	struct ng_rvu *ng_rvu_mbox;
++	int err, i, dir, dir_up;
+ 	void __iomem *reg_base;
+ 	struct rvu_work *mwork;
+ 	unsigned long *pf_bmap;
+@@ -2526,6 +2526,7 @@ static int rvu_mbox_init(struct rvu *rvu, struct mbox_wq_info *mw,
+ 			goto free_regions;
+ 		break;
+ 	default:
++		err = -EINVAL;
+ 		goto free_regions;
+ 	}
  
- 	if (ehdr->e_phentsize != sizeof(struct elf32_phdr))
--		return -EINVAL;
-+		return false;
- 
- 	phend = size_add(size_mul(sizeof(struct elf32_phdr), ehdr->e_phnum), ehdr->e_phoff);
- 	if (phend > fw->size)
- 		return false;
- 
- 	if (ehdr->e_shentsize != sizeof(struct elf32_shdr))
--		return -EINVAL;
-+		return false;
- 
- 	shend = size_add(size_mul(sizeof(struct elf32_shdr), ehdr->e_shnum), ehdr->e_shoff);
- 	if (shend > fw->size)
 -- 
 2.47.2
 
