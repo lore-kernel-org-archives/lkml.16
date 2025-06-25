@@ -1,38 +1,38 @@
 Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8B12FA646;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991742FA622;
 	Wed, 25 Jun 2025 23:13:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750893199; cv=none; b=qaTHNta4PIqwHcU72mUIKkOtdgy7xuo2A73a1j7uaBYjLnXME5Vd7dIp6K6jDTbT+XFxsEA2P9PjrYNw0t50M1L4zo9SFFnS2KTAuIGB9qIV/uyGnsFVg2sZSCM2PraH9YZRcfA0K7ZAQZaMYK0ljSMBDNPZdORAIry7IeB7ub8=
+	t=1750893200; cv=none; b=m53hebLhVJRJ/bWaipav31BviBrG/FDH4kF+sMBihJ776b1kRjfYl4Zhg7dQwwZKPjOHrActsvjy3heAwXgkvnlJrkmibCDICLcdPKya8Va51/8O/gzRjXwwzkrgjPcz3ZgXLqYxk2qkBCpvv4S5fbMHlN8dbCI+dzYr3K6jPeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750893199; c=relaxed/simple;
-	bh=vJKxu81Bu7+XfGaA30puQn2EqmTYh9aEWm5+YU8RJd4=;
+	s=arc-20240116; t=1750893200; c=relaxed/simple;
+	bh=qh6e2Biw2maAV/F+E7c145v0o7b/d5cfpu9qQV/HZTs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=romC88PKcNHmdCpgQA4sb5G20IVMG1wm/ATOoB226q+E7wAnNkS8f3z5J50u/7Fm3H5K5KUseDww1z85bQxB8gFw3LwpD2Ro08+77fgzwkUODurzKGWoyr3j4DgXpxJ/8UUaDw9Q/ULLjHoxi5g91IvZSoViPeWMyzRiV1HkfgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=cS/h4p5V; arc=none smtp.client-ip=192.19.144.207
+	 MIME-Version; b=PsCK/08ivwDMC3XIuciqmR0FCF+FtUuTbDnIMc6jif6fM133QHYWgoBDsuejtuogUKAhh2v1nh8wHLe2rwPUpYa9ys8/ggIksccubIKpx0CjRnpy06fIcHfnEK01cO+mQhndQ2uQ573uDOZ3d05gkhtGf5/2wZkhx2p5sVJC4gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=vDS0zxQ3; arc=none smtp.client-ip=192.19.144.207
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="cS/h4p5V"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="vDS0zxQ3"
 Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id B9D87C002831;
-	Wed, 25 Jun 2025 16:13:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com B9D87C002831
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 50141C003AD4;
+	Wed, 25 Jun 2025 16:13:14 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 50141C003AD4
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1750893192;
-	bh=vJKxu81Bu7+XfGaA30puQn2EqmTYh9aEWm5+YU8RJd4=;
+	s=dkimrelay; t=1750893194;
+	bh=qh6e2Biw2maAV/F+E7c145v0o7b/d5cfpu9qQV/HZTs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cS/h4p5VjNW+qE6Z8BUlElgikJNuDLV3On0zzioZ4+b6/2USGo4/U3r3Elno1+dyv
-	 GLM9lt9f0met0IggAz3wZqWzmPHHTWX7uDzEhisQxQSr92NgatA9nrWaG0h6LPq7A1
-	 kCrgAAbQym5kKW0G27pINITa5jvr4WlBr5Oi6o4s=
+	b=vDS0zxQ3vRlPv9pB+nKxiJ30rqUxh4hltdcXpbKIuo5r5CnI4NtrDe/EbKkhRlItw
+	 p+Gq2rufI+6i3pGprnVeU4OY2DHtHmEPk42prRO/rL+MpDQBCPoqtOWBoQLCz4rp9U
+	 QRFWUFInjmoj4fx7fQp7+ISW8J5j4EIWBwIGyyU0=
 Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 2C99718000853;
-	Wed, 25 Jun 2025 16:13:12 -0700 (PDT)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id B8AF118000530;
+	Wed, 25 Jun 2025 16:13:13 -0700 (PDT)
 From: Florian Fainelli <florian.fainelli@broadcom.com>
 To: linux-kernel@vger.kernel.org
 Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
@@ -83,9 +83,9 @@ Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
 	maple-tree@lists.infradead.org (open list:MAPLE TREE),
 	linux-modules@vger.kernel.org (open list:MODULE SUPPORT),
 	linux-fsdevel@vger.kernel.org (open list:PROC FILESYSTEM)
-Subject: [PATCH 13/16] MAINTAINERS: Include proc.py under PROC FILESYSTEM entry
-Date: Wed, 25 Jun 2025 16:10:50 -0700
-Message-ID: <20250625231053.1134589-14-florian.fainelli@broadcom.com>
+Subject: [PATCH 16/16] MAINTAINERS: Include vfs.py under FILESYSTEMS entry
+Date: Wed, 25 Jun 2025 16:10:53 -0700
+Message-ID: <20250625231053.1134589-17-florian.fainelli@broadcom.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250625231053.1134589-1-florian.fainelli@broadcom.com>
 References: <20250625231053.1134589-1-florian.fainelli@broadcom.com>
@@ -97,9 +97,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Include the GDB scripts file under scripts/gdb/linux/proc.py under the
-PROC FILESYSTEM subsystem since it parses internal data structures that
-depend upon that subsystem.
+Include the GDB scripts file under scripts/gdb/linux/vfs.py under the
+FILESYSTEMS (VFS and infrastructure) subsystem since it parses internal
+data structures that depend upon that subsystem.
 
 Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
@@ -107,17 +107,17 @@ Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 0931440c890b..610828010cca 100644
+index a90d926c90a0..a292012a3ff1 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -19998,6 +19998,7 @@ S:	Maintained
- F:	Documentation/filesystems/proc.rst
- F:	fs/proc/
- F:	include/linux/proc_fs.h
-+F:	scripts/gdb/linux/proc.py
- F:	tools/testing/selftests/proc/
+@@ -9290,6 +9290,7 @@ F:	include/uapi/linux/openat2.h
+ F:	Documentation/driver-api/early-userspace/buffer-format.rst
+ F:	init/do_mounts*
+ F:	init/*initramfs*
++F:	scripts/gdb/linux/vfs.py
  
- PROC SYSCTL
+ FILESYSTEMS [EXPORTFS]
+ M:	Chuck Lever <chuck.lever@oracle.com>
 -- 
 2.43.0
 
