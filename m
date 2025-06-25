@@ -1,245 +1,224 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B02823C4FD;
-	Wed, 25 Jun 2025 21:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750887495; cv=none; b=TWalOkdhhYCIUc3jtSVkQv+wJL6FWlXDgEN4//I2WS/wbXkXCG8F7g7+lqtysTQkwnpq3bZOZWXdNIMyPRmcVtRFP2/RCx64eNgOzpNueB0mo+iUK0h0Wo4jQB8vFAGvOp6JOX/EPCxodi4sUo/sdPCXb51QZaHqU5Ba0UAWIR8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750887495; c=relaxed/simple;
-	bh=HH+L8pR8TiXPWL+ZCRhZNIHlxtNoS2CZmDiF2mrWlv8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ic4cLNhtw66dKNmxKcIM3dcJg//9OvcAI+2mPa4SnhIhPm+58yN/sIk5emYv44q+ZKbOPLB0WLGznP+8NxkJBGiFGo/BZgC/7YAYLQmkvn04+TGdxVZyG+Lcg6cIVc1z/hMvE6Ft5zyWSMGlykoDXQ1KX8Cjd7uc/0wQdtQx9TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HnvyYqnF; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E67A1F4CAF;
+	Wed, 25 Jun 2025 21:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750887561; cv=fail; b=jVV+HRCxElziMEQE9QvZx9MdJmxf/H118ij7m0yba8+xi71boz0LaPOFL7JGvlbFG9Z0Z7PXnacefeV15TGDej+2iA4AbzVMMxwHmWNjVGLOBSyMOnFAix6OOQSaHYUkDiRHxN3zvBOJho4Y3RO4XwMZTHn6ma2r2u3UjXnk4p0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750887561; c=relaxed/simple;
+	bh=3CsIqei4MF19WAUCLz4OSdqBCuv02EcwsU+P1IPZxqA=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=LiayxIlXjyI3e8T4TJ8Q9iGNegPIaKbmHn6dc59ak2ztBlrvBJe0kcM13tbPKC/RzfsTXgnG2zGY9sH0TcCMaWZCtW/RLNNmeG+cNIPgLhT+Yxycv+m13QEhNGNUb4e6UPeB7shUNOv7cHDNSbb46OROOHbSRIBVdyUSPJAdhmM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KPInCKol; arc=fail smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HnvyYqnF"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4a6f3f88613so5327191cf.1;
-        Wed, 25 Jun 2025 14:38:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750887492; x=1751492292; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=icS2AouUM5ZODolYe6PBP3Lq/4sYyjlXkKI8jGjPk7c=;
-        b=HnvyYqnF5lKymfCUBkhk9/u6v/yGp8q6plOv2x7+p8IMBTPZ9p3qtuG534VqKBOPah
-         CLfaDlyqEAUDKK81VFOpi8GthPofzYodwZYTeKPbNbU/VUQ5/AKVtoRtEJjBruch0lsX
-         yoOe+PeKJ4INgBJoTvoVyMrHLPkBn0ZJs0HDSn2Kou5obQUpgWo+klL94akoHTjjIRmh
-         FVBo8I9+3LTnNpaVdO1ZtqLqZSV4UWQwGe1kku0drSE/jXG3f0SAIFBKwFcaZnEhzBFS
-         UVjn3BiySjEhxgCxAVdi81gQN4CtPRrJ7YM0m496C9UECVeKWT41oMO7gg34/HfD3YPr
-         IQOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750887492; x=1751492292;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=icS2AouUM5ZODolYe6PBP3Lq/4sYyjlXkKI8jGjPk7c=;
-        b=cFJof8SrCcTUrex1J7Ow2w45Tj3fAJpthYn7qPFC9xbyIob7EB+lnzXff/hgLE8YPR
-         3EFzRwOwrkqKd7pZGQaCDLKi/Ln49kgcQ56v9eNFmp+g7AZo9OK41JnwMgHpmdAA2Q73
-         UxV6Q6K4BiFOuaaRwApeBsBq+tf+myzwhaIHj6gjgHtUCbxcZGZWo/dcVtXwfGgO5RLX
-         B4SbQBksVVXLms0pNYwrGKvXlON3eGlVxcVPyPlGCK3GaLsIbZ4NtC0ydXX2RigmSQwY
-         LIsRcTiP4RZXDr8LN8kVy5DYSv9nklprye5stC8v0mpOQlcVjorEflkDBAVF91d0Mour
-         WaNA==
-X-Forwarded-Encrypted: i=1; AJvYcCUaw7H/kJbgar1SOxzLS209u/Y+9/JwnYyLtjo/X4y/hYnOsY68HHhFxz1azl9esorjLsTrDhiKqsV5ft/I3w==@vger.kernel.org, AJvYcCVFYmmHSy2fMbfVj5Pb+qjvYCRq1rx72dHNs78kgCzFy7t/uYHXmuo2SnQpHBqWCyUoJxbdjwLpV168bhQm@vger.kernel.org, AJvYcCWc2uqKt7LkvyJympELfNBNK2n5gO21d80jUUqhkEzvp7bzp1g0Cqv3BDTQmiqWtnENwouvnzeeOz0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzkkrX458savcmujNOmnN06yQYbDMFgCT5YR7Sg1mWJV+5tbVg0
-	2CtIu1oLrqsSS8ddkfFx6wf0YGVAUWaARn9iVBhUxmpFcGQQm4M69fPUpGr6wle1yzXaJoZAdZI
-	yKobRG71hc/xQXD3+roqTBRkeeAbu8Sg=
-X-Gm-Gg: ASbGncssRTfplS++PZ4o+SJw0HU8mwtkDYGvzQROVbTsbf+/A086y89YZOdVqitx+z+
-	UQ/izyqLLKxaamHJo7juVxIzHEWXuXFO0QSX0jAodffE3xHzH8Cpn8T1xbsClJPdwLlkX9oF1Mx
-	sgUlXCTgEt+y43hr/XiMgDSyMI5wSBAXLUC9l67r4NEHbNMa98Sv+04Rgi3F0=
-X-Google-Smtp-Source: AGHT+IFZIWsQIXMMcF1W41F7hsUCeEsozAHsACSm5zeGcSmEWqHzYmyUffMSAGUNEkq5Ztg6G/bA9j5d7XROB0GK+2g=
-X-Received: by 2002:a05:622a:1915:b0:4a5:a447:679f with SMTP id
- d75a77b69052e-4a7c06d9718mr82122501cf.22.1750887492397; Wed, 25 Jun 2025
- 14:38:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KPInCKol"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750887560; x=1782423560;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=3CsIqei4MF19WAUCLz4OSdqBCuv02EcwsU+P1IPZxqA=;
+  b=KPInCKolPKOdqTX4F/rONjCZNmywH1ufKXP5WCiqkmucybtfUPWZF76L
+   f9QbI6tGJJjTcUIQ8VH3N3PxAVinQSgze1ahVe1PQmyW3DeSlwm2R6JaZ
+   oDXZtbV+A+0/ZGoHV/ZzVO6qSyd67DQgsyyd9WEJwAKzJzr2ZkyLgL3e0
+   NZluf/vFZ7WDJuA5Hp1yRqSKZnQFmX5SMdiKJWwFZVPpTYvVtIBMzDC/a
+   6Vu3fgKYpUZNNoe8U1Iyqd2Su2sLr9+ToyvlkZGRuSH+XDYW9/iop4VX1
+   0MxdM5FDK4b3yWyHsUSVyZeYvWXK/JCJJFVGAE8l0cVmtf2n4uHAmWXBG
+   w==;
+X-CSE-ConnectionGUID: JVHEZo/eTUezKB9f+fh7Tg==
+X-CSE-MsgGUID: qv0D1trnTb6h7/nL7vvTyg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64527528"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="64527528"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 14:39:19 -0700
+X-CSE-ConnectionGUID: p/RL8ZetTpqEYU1EostniQ==
+X-CSE-MsgGUID: 9sgtxoUyRjuogr+F4fDEUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="156593195"
+Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 14:39:18 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 25 Jun 2025 14:39:18 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 25 Jun 2025 14:39:18 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (40.107.236.81)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 25 Jun 2025 14:39:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=oJPWsu84b9i1KpvifUUxSQBajrOuODuU4OLzuqh5/RoImNTvNKl6oGnK+MGpG0UdoLI6aV9IxPk7sMYr7KQKnff8wycClF73i5qUlEWmGhlQ2MSmqx5K4gK9LqzqfKvbnqb/zKRn8F7QwiVf6IlCCtGXiD7JyWuBqcwNxnFHLQXpFnw+A/2lEub5p0pPFo7OLO0MWIplJ8WYpXeSJaLYvqaT6crbFGpmIZyyfN50x1I35Rm6PqzYztbdkmjVuXoWn3nk2gKI/jLmCXer8nuVx4ZuJQw0DJmRNpym29XsK9YfdQ8ScXKnBeBvqPd6h9+fgDv9fHQbBOORBM/I+n6iMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aKe0ZKAf5Gbslbxud/EouPA494s8WatlvpqeSwv1hqc=;
+ b=lBIxV8NBssPOZB84iB9j0j80U5+P5ACBE8aYMLJdEQoUHwgYUwhzqQyqui/ccENqaF6bxMYHs6XbSgEIfBdX+I+/wGfNw5lz5QrfGBMWCt/l0kNb5dDVSPd34MgTFKHAXbdhJE15ZgrJpzy2TyfkDJvH3GQmt8VFns1OsQ2fNyfNzGlZUigJgbtO6HhqahVHtUnnjYoAPmSmE4jTgH//C96OqeoA1N86jScUa0Q+IdwkKWAexQKmP8Zam+K/FeDeumM4qGY8x2KBzSqO1eN6pOKMz+OG2BpUFVRFkD8wEK/Q9BY9vDTYsHUA+ZyH3tc0mGvs3ea+xLhyYZcXnRL6mw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c) by DS0PR11MB7506.namprd11.prod.outlook.com
+ (2603:10b6:8:151::8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.16; Wed, 25 Jun
+ 2025 21:39:15 +0000
+Received: from PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::19ef:ed1c:d30:468f]) by PH3PPF9E162731D.namprd11.prod.outlook.com
+ ([fe80::19ef:ed1c:d30:468f%4]) with mapi id 15.20.8835.018; Wed, 25 Jun 2025
+ 21:39:15 +0000
+Date: Wed, 25 Jun 2025 16:40:35 -0500
+From: Ira Weiny <ira.weiny@intel.com>
+To: Colin Ian King <colin.i.king@gmail.com>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Len Brown <lenb@kernel.org>, James Morse
+	<james.morse@arm.com>, Tony Luck <tony.luck@intel.com>, Borislav Petkov
+	<bp@alien8.de>, Ira Weiny <ira.weiny@intel.com>, <linux-acpi@vger.kernel.org>
+CC: <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] ACPI: APEI: EINJ: Fix check and iounmap of
+ uninitialized pointer p
+Message-ID: <685c6cd3bf88b_2c35442946c@iweiny-mobl.notmuch>
+References: <20250624202937.523013-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250624202937.523013-1-colin.i.king@gmail.com>
+X-ClientProxiedBy: MW4PR03CA0347.namprd03.prod.outlook.com
+ (2603:10b6:303:dc::22) To PH3PPF9E162731D.namprd11.prod.outlook.com
+ (2603:10b6:518:1::d3c)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250625-nr_writeback_removal-v1-1-7f2a0df70faa@suse.cz>
-In-Reply-To: <20250625-nr_writeback_removal-v1-1-7f2a0df70faa@suse.cz>
-From: Joanne Koong <joannelkoong@gmail.com>
-Date: Wed, 25 Jun 2025 14:38:01 -0700
-X-Gm-Features: Ac12FXwlVDGHlUh4l_DXXilyT7E1Aq8TPPOR9-Jjm7VABkUY-VOx1-0jVSkO8zs
-Message-ID: <CAJnrk1YcA9MBC+KQdLE7B-CspoO5=xjkAf78swP6Q6UPijJaug@mail.gmail.com>
-Subject: Re: [PATCH] mm, vmstat: remove the NR_WRITEBACK_TEMP node_stat_item counter
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>, Tejun Heo <tj@kernel.org>, 
-	Maxim Patlasov <mpatlasov@parallels.com>, Jan Kara <jack@suse.cz>, 
-	"Zach O'Keefe" <zokeefe@google.com>, Jonathan Corbet <corbet@lwn.net>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, Brendan Jackman <jackmanb@google.com>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Zi Yan <ziy@nvidia.com>, 
-	Jingbo Xu <jefflexu@linux.alibaba.com>, Jeff Layton <jlayton@kernel.org>, 
-	Miklos Szeredi <mszeredi@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	Jens Axboe <axboe@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH3PPF9E162731D:EE_|DS0PR11MB7506:EE_
+X-MS-Office365-Filtering-Correlation-Id: 55766add-0e3e-4001-b36c-08ddb430bb2d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?IzkNLL+KmnuLNPz//QJ8lt8NuUqzDoKtzvs4MAlgdgiXXpA8+POfDcsNHOR+?=
+ =?us-ascii?Q?YrgPrWFIjWxT6utmnJgX51b8RkpIcm/LhFDQjdMEVqAiBGPz79pErjDCXXJa?=
+ =?us-ascii?Q?5u1KKPfFbYK1JH5RFb4pgHil2s0zcTs4XU8JCXjOnSd1HSDK/jozMHyoRM6k?=
+ =?us-ascii?Q?Qs6yELlJjTqpo+LnebB3UV4jCywtUcje86tndg7m16mkgU/CdELLd7YTqu7o?=
+ =?us-ascii?Q?cMLEFNAcGEW8vgZCDxQbkd5Dwu5mSyR4xCyV6Zwcn+g2kuKMYuI5xc4Sh0jx?=
+ =?us-ascii?Q?Lvj0L1l37z12QXNlZyCJgjSgB/uiUSE5PpowRL7rBOvCT8xncBV61TffwrA/?=
+ =?us-ascii?Q?tBAcFKodWr/tKitOoGKOVVFGoGSurtF1s+5JxpyRjDh6J4JOo2/JAJdDuS+T?=
+ =?us-ascii?Q?8huz0MWBnO9m9o+T9K+rkt+Ro8QJsHv0UPEuaYZ99T+Q5ISSS6I8oAqi9Q7r?=
+ =?us-ascii?Q?ct6g5ased1ggkiozmduN7UqICnbdZCvab5fMZ3ociQrC4otiKeYYsDOYge7I?=
+ =?us-ascii?Q?tiq/5iiQexdWPUmPBtdDNj4a22th2oBTs/UvzN8zMqwnpprk9p1Ek2+jj22e?=
+ =?us-ascii?Q?eQttXX/Ww8wqHL3MI1/xHM/RF1abnYnqaNf320rRYudlD0S8X+Y43oecPtIx?=
+ =?us-ascii?Q?dvKHAfe7k3L9ALdEDeZD5wpgUqXRY6pBN3ayb6XXmlyIxQVecY5HVAyg0MgK?=
+ =?us-ascii?Q?IyQLWmjhq0ee1yCxpevPT/P3/2LHCbbgWxEA7UOofIOJUDqCFxD9DdIs6sdP?=
+ =?us-ascii?Q?V+iJZ0iawSTBibe395zUAtaotEUxGli/W56iyJUK06IDz/cwXAdoWRjLv+mt?=
+ =?us-ascii?Q?eNtyM4VhPTFTZUmbjySmfGIWb5/zh9YAZaPhb5wkm+LPFbQSNyI359N1xhII?=
+ =?us-ascii?Q?V0ceIWRdm6saATB1gFY9GE+oN2N0LHME860b4CenBi4VlSN78/Ml6Au2VhDf?=
+ =?us-ascii?Q?KL1Z5iwByPHhYPnFrxzQqeLZkEU7DyZ4/BesTZphD++F+7HWRDtCoXPGMwsH?=
+ =?us-ascii?Q?icoAFCWYAJwmJTC5sKO1r1MftG+s0sY4KqOXVrefprHT9f2N2/g0G5KNtIy2?=
+ =?us-ascii?Q?ZiMKG+7XvZol7X5/J061ZbzuQLUy2Amh8zGKQluxvENY8P90+Wf4aNK9e+A4?=
+ =?us-ascii?Q?A8UT1v6plkb5lY3ms/EaLstSWkN0zPBp+VDM2olal20LvDqzOu4/34ygs2P0?=
+ =?us-ascii?Q?wIIY2dZD+iepp8XaGLiW8ju5i8EUCDKwhGn2WS5QiuoKoNrQyWpYzqv6vC8l?=
+ =?us-ascii?Q?lNhXlT426F1SteQ42YX5Mw5kB6VMVhZi07nlkRkMUrIMNdaQaN8Dp7bqgk6U?=
+ =?us-ascii?Q?PjbZUv82YUr/+JmchQFUiP7ishyaVn8+ttXHXS+fAOUevV3Z946cMFbwIFfD?=
+ =?us-ascii?Q?2+i2pV1bgD9pS9YMGAo0KtDp35KzLpSnYBmS76xCR2o3xRvCz5+4ffQJWMj2?=
+ =?us-ascii?Q?a5eMHGidG5M=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH3PPF9E162731D.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?TsreYeHfgXtQaEx7jHU005gUsAnFAlecxs0xSHuaXEj6zMXIUQFhUUXXg7Xp?=
+ =?us-ascii?Q?4le0tsx/K9MjCUpkuyxyn9OSIqQt07Vb8Itv1rmhm5dJ7EQcql+4xkwjVpOS?=
+ =?us-ascii?Q?zQRN4CJ3AqsVkJseDsisXsPO0dGrLN/otKjxWqLqpt2yzTkRTUSKgHz5qQcv?=
+ =?us-ascii?Q?r2P7Typ1q9YAXf9KRYTH9yLQXKryBo/VJ29T2I3FlsuztUudqoio6OUaQgSQ?=
+ =?us-ascii?Q?mt8bxoMUxWNjkmClAcELObhMDHqOFE3DFOgmwWd9YrcO55DMptD8+kWWAGSj?=
+ =?us-ascii?Q?wfwk2/PAFFLP7KWrUmtErtMB8zcN9BEBY8PWKEn17qj/vWCIsqX4Ck1ER2f/?=
+ =?us-ascii?Q?mIAkC3yd4nGyj26z2y5JP5H/aRU+PnvjxdgSCgALqNBxzHN/UCgPZsETagqK?=
+ =?us-ascii?Q?yUZDew230oAQqKOb2Pi0Y+TQJHTCq8x7eaIphf3OT9y0P35oxe5vKCuZdw29?=
+ =?us-ascii?Q?2xMhA1qXsVY8Bdei3gkapytqbw2/uXkMTAMeBYafKs/V+xIitfQTCIJPRzcf?=
+ =?us-ascii?Q?HH7Wfxm1cpWqRXZRbDvO1P9Eqxv1d7/nffjqN/tnjnQXLr4gywEWBLzxFizL?=
+ =?us-ascii?Q?q+UJnTQWCk1Gwnj+nWVWlqZzzvw6qinuhnNn+Wz3MhTXJNsGBqzl/6r4rfzj?=
+ =?us-ascii?Q?Vih2pZyVQlIuqytZux1VIYLtwV/pmGbRaW6eIPJNOY/6TYNRlE0qsmqNjS0e?=
+ =?us-ascii?Q?NNkfNCKKiFcwSXgsIdqQ6QZwPrqo13mDKvONkcaQ5ZV0Bo+48OticrYoDfCZ?=
+ =?us-ascii?Q?7TlOIU07RVc/9fiCKUpgaTQDl5tNO5k20z7vrHqIedWP0jhDakUlGmnSoSnN?=
+ =?us-ascii?Q?wKnlI1RH7yVxxpaDM3w4yqvtkS7mLbCTRfhAeEcYKySYw9Gq5sbvDtrevjWd?=
+ =?us-ascii?Q?0N5AScdUIV0FEB1QisIvi0m5jh6/5oc7D6hosEOWFGcKGyT39KeFKk9BWhW6?=
+ =?us-ascii?Q?ANdWJAiBLYhwXQPtsoJ8vwZL0iyDTJoU39KzLzUfaK/V2ouA6hWhUJrvPEav?=
+ =?us-ascii?Q?LrK4C9J5liIDr8Q2Sc4/FTcwv7yzQqJhrWgwDB0p19YdZLmB8R3BbWR7qeRz?=
+ =?us-ascii?Q?lcFRkt7Fp09dMDv2vmvWguPPkpMKWf0sXz2m/3cobhz1RV5cMqy1C2ZUNSu+?=
+ =?us-ascii?Q?P7Ib5gtgUi+bOHjZzmzic+SiE8pnB6QqXVXFzAMMtrDsNrE9wztxRsAx8OPL?=
+ =?us-ascii?Q?3UXsHePTjy+OStecgZPvchtJ0erDvGWLyGj7mb7Qd1gUiOtT4KB+Kn2TOk79?=
+ =?us-ascii?Q?z23Ie4zOzMt8WWoYEcBML6lHiMUBwI8ZYhwA0Dd1e0+hMzDLkqkw7kFI3yFn?=
+ =?us-ascii?Q?NFRVlXfMgsd3fjNYqZFxsdZRy4kTXN9WGp//eYaZZPNictsKF7JcEx6fYzEw?=
+ =?us-ascii?Q?vjORgGIlFzdDSUhNlp+aw1kzbFL7LWySaSHEEL+aqb3hXrDsEtIcIkVyyKCp?=
+ =?us-ascii?Q?v1XqYJV+pMBsTKKCq6c2O+AiS5B5bhVtGIFkuvqROUIw1ejILgQmz5MqzRz4?=
+ =?us-ascii?Q?kgaoVTBRzE8zg0UWAJTNEzBmo3HFwBvwk2Ivdmt1Q/1XilEBZkZtu/T9vWBt?=
+ =?us-ascii?Q?eG3qp9AWu2zTI8qCOAubwA+st4+4GCohMjBu9YRz?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55766add-0e3e-4001-b36c-08ddb430bb2d
+X-MS-Exchange-CrossTenant-AuthSource: PH3PPF9E162731D.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 21:39:14.9989
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oUQfPP4Sr4akjn15kamdpAhcb1py66dZuI1wa6R/VmrEIgVeaN/HjDsVzmAkawKa5K5i1s6OgtwiSDZ0mvhuIQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7506
+X-OriginatorOrg: intel.com
 
-On Wed, Jun 25, 2025 at 8:51=E2=80=AFAM Vlastimil Babka <vbabka@suse.cz> wr=
-ote:
->
-> The only user of the counter (FUSE) was removed in commit 0c58a97f919c
-> ("fuse: remove tmp folio for writebacks and internal rb tree") so follow
-> the established pattern of removing the counter and hardcoding 0 in
-> meminfo output, as done recently with NR_BOUNCE. Update documentation
-> for procfs, including for the value for Bounce that was missed when
-> removing its counter.
->
-> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Colin Ian King wrote:
+> In the case where a request_mem_region call fails and pointer r is null
+> the error exit path via label 'out' will check for a non-null pointer
+> p and try to iounmap it. However, pointer p has not been assigned a
+> value at this point, so it may potentially contain any garbage value.
+> Fix this by ensuring pointer p is initialized to NULL.
+> 
+> Fixes: 1a35c88302a3 ("ACPI: APEI: EINJ: Fix kernel test sparse warnings")
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 > ---
-> The removal of the counter is straightforward. The reason for the large
-> Cc list is that there is a comment in mm/page-writeback.c function
-> wb_position_ratio() that mentions NR_WRITEBACK_TEMP, and just deleting
-> the sentence feels to me it could be the wrong thing to do - maybe the
-> strictlimit feature itself is now obsolete? It sure does mention FUSE
-> as the main reason to exist, but commit 5a53748568f79 that introduced it
-> also mentions slow USB sticks as a possibile scenario. Has that
-> happened? I'm not familiar enough with this so I'd rather highlight this
-> and ask for input here than make "git grep NR_WRITEBACK_TEMP" return
-> nothing.
+>  drivers/acpi/apei/einj-core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
+> index 7930acd1d3f3..fc801587df8e 100644
+> --- a/drivers/acpi/apei/einj-core.c
+> +++ b/drivers/acpi/apei/einj-core.c
+> @@ -401,7 +401,7 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
+>  	u32 table_size;
+>  	int rc = -EIO;
+>  	struct acpi_generic_address *trigger_param_region = NULL;
+> -	struct acpi_einj_trigger __iomem *p;
+> +	struct acpi_einj_trigger __iomem *p = NULL;
 
-My understanding is that even without the fuse use case, strictlimit
-is still used for other devices via the /sys/class/bdi interface (eg
-/sys/class/bdi/<bdi>/strict_limit) so I don't think the feature itself
-is obsolete.
+Apparently my review of these was pretty weak...  :-/
 
-It's not clear to me whether fuse still needs strictlimit now that it
-doesn't have tmp writeback pages, but it'd be great to get an answer
-to this, as strictlimit currently leads to too much dirty throttling
-when large folios are enabled in fuse.
+That said; Why not skip a goto as well?
 
-> ---
->  Documentation/filesystems/proc.rst | 8 +++++---
->  drivers/base/node.c                | 2 +-
->  fs/proc/meminfo.c                  | 3 +--
->  include/linux/mmzone.h             | 1 -
->  mm/show_mem.c                      | 2 --
->  mm/vmstat.c                        | 1 -
->  6 files changed, 7 insertions(+), 10 deletions(-)
->
-> diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesyste=
-ms/proc.rst
-> index 5236cb52e357dcd00496b26be8578e1dec0a345e..2971551b7235345c9a7ec3c84=
-a87a16adcda5901 100644
-> --- a/Documentation/filesystems/proc.rst
-> +++ b/Documentation/filesystems/proc.rst
-> @@ -1196,12 +1196,14 @@ SecPageTables
->                Memory consumed by secondary page tables, this currently i=
-ncludes
->                KVM mmu and IOMMU allocations on x86 and arm64.
->  NFS_Unstable
-> -              Always zero. Previous counted pages which had been written=
- to
-> +              Always zero. Previously counted pages which had been writt=
-en to
->                the server, but has not been committed to stable storage.
->  Bounce
-> -              Memory used for block device "bounce buffers"
-> +              Always zero. Previously memory used for block device
-> +              "bounce buffers".
->  WritebackTmp
-> -              Memory used by FUSE for temporary writeback buffers
-> +              Always zero. Previously memory used by FUSE for temporary
-> +              writeback buffers.
->  CommitLimit
->                Based on the overcommit ratio ('vm.overcommit_ratio'),
->                this is the total amount of  memory currently available to
-> diff --git a/drivers/base/node.c b/drivers/base/node.c
-> index 6d66382dae6533a0c8481f72ad67c35021e331d3..e434cb260e6182468e0d617b5=
-59134c6fbe128f4 100644
-> --- a/drivers/base/node.c
-> +++ b/drivers/base/node.c
-> @@ -500,7 +500,7 @@ static ssize_t node_read_meminfo(struct device *dev,
->                              nid, K(node_page_state(pgdat, NR_SECONDARY_P=
-AGETABLE)),
->                              nid, 0UL,
->                              nid, 0UL,
-> -                            nid, K(node_page_state(pgdat, NR_WRITEBACK_T=
-EMP)),
-> +                            nid, 0UL,
->                              nid, K(sreclaimable +
->                                     node_page_state(pgdat, NR_KERNEL_MISC=
-_RECLAIMABLE)),
->                              nid, K(sreclaimable + sunreclaimable),
-> diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
-> index bc2bc60c36ccc1dab8913913056f5ff20b448490..a458f1e112fdbc63019239a79=
-ce39c5576b5f963 100644
-> --- a/fs/proc/meminfo.c
-> +++ b/fs/proc/meminfo.c
-> @@ -121,8 +121,7 @@ static int meminfo_proc_show(struct seq_file *m, void=
- *v)
->
->         show_val_kb(m, "NFS_Unstable:   ", 0);
->         show_val_kb(m, "Bounce:         ", 0);
-> -       show_val_kb(m, "WritebackTmp:   ",
-> -                   global_node_page_state(NR_WRITEBACK_TEMP));
-> +       show_val_kb(m, "WritebackTmp:   ", 0);
->         show_val_kb(m, "CommitLimit:    ", vm_commit_limit());
->         show_val_kb(m, "Committed_AS:   ", committed);
->         seq_printf(m, "VmallocTotal:   %8lu kB\n",
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 1d1bb2b7f40d25b430932c9ef9096d97bf1c29de..0c5da9141983b795018c0aa24=
-57b065507416564 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -206,7 +206,6 @@ enum node_stat_item {
->         NR_FILE_PAGES,
->         NR_FILE_DIRTY,
->         NR_WRITEBACK,
-> -       NR_WRITEBACK_TEMP,      /* Writeback using temporary buffers */
->         NR_SHMEM,               /* shmem pages (included tmpfs/GEM pages)=
- */
->         NR_SHMEM_THPS,
->         NR_SHMEM_PMDMAPPED,
-> diff --git a/mm/show_mem.c b/mm/show_mem.c
-> index 0cf8bf5d832d6b339b4c9a6c7b8b3ab41683bcfe..41999e94a56d623726ea92f3f=
-38785e8b218afe5 100644
-> --- a/mm/show_mem.c
-> +++ b/mm/show_mem.c
-> @@ -246,7 +246,6 @@ static void show_free_areas(unsigned int filter, node=
-mask_t *nodemask, int max_z
->                         " shmem_pmdmapped:%lukB"
->                         " anon_thp:%lukB"
->  #endif
-> -                       " writeback_tmp:%lukB"
->                         " kernel_stack:%lukB"
->  #ifdef CONFIG_SHADOW_CALL_STACK
->                         " shadow_call_stack:%lukB"
-> @@ -273,7 +272,6 @@ static void show_free_areas(unsigned int filter, node=
-mask_t *nodemask, int max_z
->                         K(node_page_state(pgdat, NR_SHMEM_PMDMAPPED)),
->                         K(node_page_state(pgdat, NR_ANON_THPS)),
->  #endif
-> -                       K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
->                         node_page_state(pgdat, NR_KERNEL_STACK_KB),
->  #ifdef CONFIG_SHADOW_CALL_STACK
->                         node_page_state(pgdat, NR_KERNEL_SCS_KB),
-> diff --git a/mm/vmstat.c b/mm/vmstat.c
-> index c3114b8826e4c3b6969fd4af4b0cd32173c42d7b..e0fcd9057f344170b2dc5c82b=
-eafea4ec18359bb 100644
-> --- a/mm/vmstat.c
-> +++ b/mm/vmstat.c
-> @@ -1251,7 +1251,6 @@ const char * const vmstat_text[] =3D {
->         [I(NR_FILE_PAGES)]                      =3D "nr_file_pages",
->         [I(NR_FILE_DIRTY)]                      =3D "nr_dirty",
->         [I(NR_WRITEBACK)]                       =3D "nr_writeback",
-> -       [I(NR_WRITEBACK_TEMP)]                  =3D "nr_writeback_temp",
->         [I(NR_SHMEM)]                           =3D "nr_shmem",
->         [I(NR_SHMEM_THPS)]                      =3D "nr_shmem_hugepages",
->         [I(NR_SHMEM_PMDMAPPED)]                 =3D "nr_shmem_pmdmapped",
->
-> ---
-> base-commit: 4216fd45fc9156da0ee33fcb25cc0a5265049e32
-> change-id: 20250625-nr_writeback_removal-4eca139cf09a
->
-> Best regards,
-> --
-> Vlastimil Babka <vbabka@suse.cz>
->
+Ira
+
+diff --git a/drivers/acpi/apei/einj-core.c b/drivers/acpi/apei/einj-core.c
+index d6d7e36e3647..fae01795e7f6 100644
+--- a/drivers/acpi/apei/einj-core.c
++++ b/drivers/acpi/apei/einj-core.c
+@@ -410,7 +410,7 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
+                       (unsigned long long)trigger_paddr,
+                       (unsigned long long)trigger_paddr +
+                            sizeof(trigger_tab) - 1);
+-               goto out;
++               return -EIO;
+        }
+        p = ioremap_cache(trigger_paddr, sizeof(*p));
+        if (!p) {
+@@ -502,7 +502,6 @@ static int __einj_error_trigger(u64 trigger_paddr, u32 type,
+                           table_size - sizeof(trigger_tab));
+ out_rel_header:
+        release_mem_region(trigger_paddr, sizeof(trigger_tab));
+-out:
+        if (p)
+                iounmap(p);
+ 
