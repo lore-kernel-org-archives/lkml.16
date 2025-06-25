@@ -1,202 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D135422097;
-	Wed, 25 Jun 2025 05:51:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37DA815A86B
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:53:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750830685; cv=none; b=AP7uH+W2oJBDScZok5EptnFd+wS1WhOYceLizcosIrOta53IEOM5feTmH7u8ZuyfSa2LgBPPWiJxCdmIyoYCnCMGw8NxwWr/GIl2ih4tHJaeuXQhI5mdj0RISzfqXsdxHTsTd+CIT4F0lO3gGQRo0rxHv+TyU9xf/f2czlr0SIU=
+	t=1750830827; cv=none; b=ntCyHSXn0aTBstbxR6kVuyxWZB9GaZPIEf5o39zJVoCP6icKNIqsb3mREtA/vq065u17IA3zjQz6EVeKahqUjPreoVgUkjddjW/OQFBUQi/zSzFavR9CzuWtpAjJHaAafICcw1XInay44mh27mbptIVxPyPk0MgM7joL/0hPiqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750830685; c=relaxed/simple;
-	bh=v2jxSDzl+HanYql75B5ABYiNWBnLJ3SnpH0ZofYRNeE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=mnpiVUHOtYh6HzwXl3SC7tKczhcXq57VmcFSZZtS4XXIXt7g5Szw5G/gWMiwKHe0KdXhgGfgzqAA6oVaeu91lI8/BVNM9FpMy13IyYYMafW6rmYCC6itOX8LpLYfiqpOxgiGG0iESTmWHbu/iBg4cIgfveC/sQuPu7Cs4ilP4sc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUfDiNVG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750830827; c=relaxed/simple;
+	bh=F9dfqYIEkMxVE81sTGPMWMZSfm0J+FXwzVe4sWTDWK8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=BFfNQw/ExMb9eJ4JRo8nF2dgui6DGtNYRWL3S44+HrrdGerVhNWJ75S6X8OVbolzmkmBjpYArksUsyb0BOcimPxBRbuHLeUhU6ci9EbzwxSBNDafCKkz/V01OCpQ4VzxTgDq92cIvu1TfUx6PgMCr0o5HPYjS8c5vdEHyiB0NFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ah9mZJIw; arc=none smtp.client-ip=209.85.219.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUfDiNVG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DDABC4CEEA;
-	Wed, 25 Jun 2025 05:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750830685;
-	bh=v2jxSDzl+HanYql75B5ABYiNWBnLJ3SnpH0ZofYRNeE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=JUfDiNVGCOFOnD7O/08AlkobkiN9AejCTLC/rREbvxkF7qGDWgRJtQ/DjzmpZlizR
-	 /ht+QoskG02ZSg+zAuAwJJ3rKLEtnego0bC3cZXGmKJHsuiTiiMBvPie5t82IxnCdd
-	 UI57CIUjjbin1G9Vfltc5sOd6prnZoTKvNtDDpjPxnRjqyBrW20Bi+GO6gX/d4ZPAr
-	 gcigXlaf+JOOkFa1/iNy/1n9+Do+pRrCKKwVgZmOmqZqvBBqTZXjlvFkoKDZn+Y86G
-	 MoRaOg7bS+Am90PoiAXz0qC5NnISXdCn5SHN3uDIPqW4lxdZBBQYv2HZZxsNbxfkQ9
-	 XavGWg9cJMopg==
-X-Mailer: emacs 30.1 (via feedmail 11-beta-1 I)
-From: Aneesh Kumar K.V <aneesh.kumar@kernel.org>
-To: Xu Yilun <yilun.xu@linux.intel.com>, jgg@nvidia.com, jgg@ziepe.ca,
-	kevin.tian@intel.com, will@kernel.org
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org, joro@8bytes.org,
-	robin.murphy@arm.com, shuah@kernel.org, nicolinc@nvidia.com,
-	aik@amd.com, dan.j.williams@intel.com, baolu.lu@linux.intel.com,
-	yilun.xu@linux.intel.com, yilun.xu@intel.com
-Subject: Re: [PATCH v2 1/4] iommufd: Add iommufd_object_tombstone_user() helper
-In-Reply-To: <20250623094946.1714996-2-yilun.xu@linux.intel.com>
-References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
- <20250623094946.1714996-2-yilun.xu@linux.intel.com>
-Date: Wed, 25 Jun 2025 11:21:15 +0530
-Message-ID: <yq5a4iw45pyk.fsf@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ah9mZJIw"
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-e8600a33792so380055276.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 22:53:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750830825; x=1751435625; darn=vger.kernel.org;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zx4z3mvYvRG/tfV4gSv1U16fSrx8Gj6X51fryVagCtc=;
+        b=ah9mZJIw3IdbxCP+DYTuZqF8pmS8X4xaRMQkLlDATE+6iqFLzd/tckRtuBXyIRBCwe
+         0oAKwItyJBZqVDVzqV9s2Iw2st5Z1sU2mJaFltzHE3fLIUiuTGDo1sq/uY0t+33QhsJZ
+         Uzv5jDBQxBqloT3GYvVOTse2t+hZAGGxpGNUhl6vW50IcDRIgBovO/dK4aUuEMGqiSN7
+         EkOEi+rYePQev2JV2EFk94G6feKxrgUbzs8ZCkl9tfUQ7OgzoQS2UbLsBKw/ABgm+Kcl
+         s73+l4Rrin/IPs/V+5mtS/MBSCHwlaH/MZ/JIZPaiG4/uT1od9+lwikhDiEPugEWPU2g
+         VsbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750830825; x=1751435625;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zx4z3mvYvRG/tfV4gSv1U16fSrx8Gj6X51fryVagCtc=;
+        b=eZQ6pf0Q3j+cISym3BmnIvFdZyMg3CpWchqk1RV7NzjhXE5Sl9gS/jSYOokR+Hh41K
+         VBhBxErWef427VCIH3ZztyAQHm0yzzfr5YtGnGWqBOmVEO+DDI5pghG4CAWJyKXj9acS
+         umCWtUhOfMyNzprqR2KNyU7eeFqSmoZ48J0/iT4cJkIXGvYkCB+LEItgBgShcT1tkPvR
+         isefmN1gxNYUCKZEbK6vXxsmR5Kwvt1usDJRvd9p02u/qqCjw2y6SEsbLiOqiGxaF3fD
+         A5PRTLWOwtbzpggH58zBZjGbcwnETS7tAa7vFxnvE+PA/tsUp5mclFNz7g13sEgX3Vh5
+         xZjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWLGCwzMgcKlEm3FNzlM5Wd3GFTCaLQKt11yG/naD6KZ8FkdmzAFTafst+7oVf6zn+WtdK5o0GsRucy6VE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGsBLkgFGa7OqRfOuqBHwQWNI9M1HyDsSXhBZR0xbDZl1OLIvE
+	/cWuJpKxrfiEu9ArjvDDf4+F4/CndGuZDwC1PRff+nq9Q5CJBLYT8yu1Tmzdn34nnw==
+X-Gm-Gg: ASbGncsQzqQrw9LAaoUmUW9iJlF6bjXToIMwdxLS452fcHjE/AQHXXBoc9eGOQgXIjT
+	UVN84+fXzF9db7Za3LKK1bwgU1DLwIVc9b0D5C4637HcJhjY5ycWOfy/D7LdUjc4OB+VoQRZubU
+	Qre+ctjA86qpW32vneOc53Oc2bUwaBVfEgmECC2L/iqFPW2IwP4LBhg9deRazTVoHOOZlEOaJZC
+	tgWqdaAXuqAhq8D9d54bALfp4JrDklL3fKo02g8dUJeihwSatO1t4X+DszHcsFDzkKaQJcWsWI6
+	zH0PBIY2ZTRSFBcRFogq2bkxcx9ORtJH13RKF6g8y6qXnXUKP8RDUPS+8HiKUxtP0te+fjOsoXj
+	/BUtykAcy58BF0sNUUsIEpAPUNcf7Xdvi/rhORXAXT0oE3Rw=
+X-Google-Smtp-Source: AGHT+IEQN2zXhNVyExsWalzpya1s0GNQyAha8OZtfjqzvRU+p7vLrRDF/OejiPJM7ycEFxSrqgRmqA==
+X-Received: by 2002:a05:6902:1891:b0:e84:4af8:c6c1 with SMTP id 3f1490d57ef6-e8601776ab9mr2194708276.25.1750830824676;
+        Tue, 24 Jun 2025 22:53:44 -0700 (PDT)
+Received: from darker.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-e842ac8ef24sm3464821276.46.2025.06.24.22.53.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 22:53:43 -0700 (PDT)
+Date: Tue, 24 Jun 2025 22:53:28 -0700 (PDT)
+From: Hugh Dickins <hughd@google.com>
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+cc: akpm@linux-foundation.org, hughd@google.com, david@redhat.com, 
+    ziy@nvidia.com, lorenzo.stoakes@oracle.com, Liam.Howlett@oracle.com, 
+    npache@redhat.com, ryan.roberts@arm.com, dev.jain@arm.com, 
+    baohua@kernel.org, zokeefe@google.com, shy828301@gmail.com, 
+    usamaarif642@gmail.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 0/2] fix MADV_COLLAPSE issue if THP settings are
+ disabled
+In-Reply-To: <cover.1750815384.git.baolin.wang@linux.alibaba.com>
+Message-ID: <75c02dbf-4189-958d-515e-fa80bb2187fc@google.com>
+References: <cover.1750815384.git.baolin.wang@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 
-Xu Yilun <yilun.xu@linux.intel.com> writes:
+On Wed, 25 Jun 2025, Baolin Wang wrote:
 
-> Add the iommufd_object_tombstone_user() helper, which allows the caller
-> to destroy an iommufd object created by userspace.
->
-> This is useful on some destroy paths when the kernel caller finds the
-> object should have been removed by userspace but is still alive. With
-> this helper, the caller destroys the object but leave the object ID
-> reserved (so called tombstone). The tombstone prevents repurposing the
-> object ID without awareness from the original user.
->
-> Since this happens for abnomal userspace behavior, for simplicity, the
-> tombstoned object ID would be permanently leaked until
-> iommufd_fops_release(). I.e. the original user gets an error when
-> calling ioctl(IOMMU_DESTROY) on that ID.
->
-> The first use case would be to ensure the iommufd_vdevice can't outlive
-> the associated iommufd_device.
->
-> Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
-> Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
-> ---
->  drivers/iommu/iommufd/iommufd_private.h | 23 +++++++++++++++++-
->  drivers/iommu/iommufd/main.c            | 31 ++++++++++++++++++-------
->  2 files changed, 45 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
-> index 9ccc83341f32..fbc9ef78d81f 100644
-> --- a/drivers/iommu/iommufd/iommufd_private.h
-> +++ b/drivers/iommu/iommufd/iommufd_private.h
-> @@ -187,7 +187,8 @@ void iommufd_object_finalize(struct iommufd_ctx *ictx,
->  			     struct iommufd_object *obj);
->  
->  enum {
-> -	REMOVE_WAIT_SHORTTERM = 1,
-> +	REMOVE_WAIT_SHORTTERM	= BIT(0),
-> +	REMOVE_OBJ_TOMBSTONE	= BIT(1),
->  };
->  int iommufd_object_remove(struct iommufd_ctx *ictx,
->  			  struct iommufd_object *to_destroy, u32 id,
-> @@ -213,6 +214,26 @@ static inline void iommufd_object_destroy_user(struct iommufd_ctx *ictx,
->  	WARN_ON(ret);
->  }
->  
-> +/*
-> + * Similar to iommufd_object_destroy_user(), except that the object ID is left
-> + * reserved/tombstoned.
-> + */
-> +static inline void iommufd_object_tombstone_user(struct iommufd_ctx *ictx,
-> +						 struct iommufd_object *obj)
-> +{
-> +	int ret;
-> +
-> +	ret = iommufd_object_remove(ictx, obj, obj->id,
-> +				    REMOVE_WAIT_SHORTTERM | REMOVE_OBJ_TOMBSTONE);
-> +
-> +	/*
-> +	 * If there is a bug and we couldn't destroy the object then we did put
-> +	 * back the caller's users refcount and will eventually try to free it
-> +	 * again during close.
-> +	 */
-> +	WARN_ON(ret);
-> +}
-> +
->  /*
->   * The HWPT allocated by autodomains is used in possibly many devices and
->   * is automatically destroyed when its refcount reaches zero.
-> diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
-> index 3df468f64e7d..5fd75aba068b 100644
-> --- a/drivers/iommu/iommufd/main.c
-> +++ b/drivers/iommu/iommufd/main.c
-> @@ -167,7 +167,7 @@ int iommufd_object_remove(struct iommufd_ctx *ictx,
->  		goto err_xa;
->  	}
->  
-> -	xas_store(&xas, NULL);
-> +	xas_store(&xas, (flags & REMOVE_OBJ_TOMBSTONE) ? XA_ZERO_ENTRY : NULL);
->  	if (ictx->vfio_ioas == container_of(obj, struct iommufd_ioas, obj))
->  		ictx->vfio_ioas = NULL;
->  	xa_unlock(&ictx->objects);
-> @@ -238,6 +238,7 @@ static int iommufd_fops_release(struct inode *inode, struct file *filp)
->  	struct iommufd_ctx *ictx = filp->private_data;
->  	struct iommufd_sw_msi_map *next;
->  	struct iommufd_sw_msi_map *cur;
-> +	XA_STATE(xas, &ictx->objects, 0);
->  	struct iommufd_object *obj;
->  
->  	/*
-> @@ -251,16 +252,30 @@ static int iommufd_fops_release(struct inode *inode, struct file *filp)
->  	 */
->  	while (!xa_empty(&ictx->objects)) {
->  		unsigned int destroyed = 0;
-> -		unsigned long index;
->  
-> -		xa_for_each(&ictx->objects, index, obj) {
-> -			if (!refcount_dec_if_one(&obj->users))
-> -				continue;
-> +		xas_set(&xas, 0);
-> +		for (;;) {
-> +			rcu_read_lock();
-> +			obj = xas_find(&xas, ULONG_MAX);
-> +			rcu_read_unlock();
->
-
-What is the need for the rcu_read_lock()? 
-
-> +
-> +			if (!obj)
-> +				break;
-> +
-> +			if (!xa_is_zero(obj)) {
-> +				if (!refcount_dec_if_one(&obj->users))
-> +					continue;
-> +
-> +				iommufd_object_ops[obj->type].destroy(obj);
-> +				kfree(obj);
-> +			}
-> +
->  			destroyed++;
-> -			xa_erase(&ictx->objects, index);
-> -			iommufd_object_ops[obj->type].destroy(obj);
-> -			kfree(obj);
-> +			xas_lock(&xas);
-> +			xas_store(&xas, NULL);
-> +			xas_unlock(&xas);
-
-is that xas_lock needed?. we can't run a xarray update parallel to this
-because neither iommufd ioctl not vfio cdev unbind can happen in parallel.
-
-I have this as an additonal comment added to the function in my change.
-
-/*
- * We don't need additional locks because the iommufd_fops_release() function is
- * only triggered when the iommufd descriptor is released. At that point, no
- * other iommufd-based ioctl operations can be running concurrently.
- *
- * The destruction of the vdevice via idevice unbind is also safe:
- * iommufd_fops_release() can only be called after the idevice has been unbound.
- * The idevice bind operation takes a reference to the iommufd descriptor,
- * preventing early release.
- */
-
-
->  		}
-> +
->  		/* Bug related to users refcount */
->  		if (WARN_ON(!destroyed))
->  			break;
+> When invoking thp_vma_allowable_orders(), if the TVA_ENFORCE_SYSFS flag is not
+> specified, we will ignore the THP sysfs settings. Whilst it makes sense for the
+> callers who do not specify this flag, it creates a odd and surprising situation
+> where a sysadmin specifying 'never' for all THP sizes still observing THP pages
+> being allocated and used on the system. And the MADV_COLLAPSE is an example of
+> such a case, that means it will not set TVA_ENFORCE_SYSFS when calling
+> thp_vma_allowable_orders().
+> 
+> As we discussed in the previous thread [1], the MADV_COLLAPSE will ignore
+> the system-wide anon/shmem THP sysfs settings, which means that even though
+> we have disabled the anon/shmem THP configuration, MADV_COLLAPSE will still
+> attempt to collapse into a anon/shmem THP. This violates the rule we have
+> agreed upon: never means never.
+> 
+> For example, system administrators who disabled THP everywhere must indeed very
+> much not want THP to be used for whatever reason - having individual programs
+> being able to quietly override this is very surprising and likely to cause headaches
+> for those who desire this not to happen on their systems.
+> 
+> This patch set will address the MADV_COLLAPSE issue.
+> 
+> Test
+> ====
+> 1. Tested the mm selftests and found no regressions.
+> 2. With toggling different Anon mTHP settings, the allocation and madvise collapse for
+> anonymous pages work well.
+> 3. With toggling different shmem mTHP settings, the allocation and madvise collapse for
+> shmem work well.
+> 4. Tested the large order allocation for tmpfs, and works as expected.
+> 
+> [1] https://lore.kernel.org/all/1f00fdc3-a3a3-464b-8565-4c1b23d34f8d@linux.alibaba.com/
+> 
+> Changes from v3:
+>  - Collect reviewed tags. Thanks.
+>  - Update the commit message, per David.
+> 
+> Changes from v2:
+>  - Update the commit message and cover letter, per Lorenzo. Thanks.
+>  - Simplify the logic in thp_vma_allowable_orders(), per Lorenzo and David. Thanks.
+> 
+> Changes from v1:
+>  - Update the commit message, per Zi.
+>  - Add Zi's reviewed tag. Thanks.
+>  - Update the shmem logic.
+> 
+> Baolin Wang (2):
+>   mm: huge_memory: disallow hugepages if the system-wide THP sysfs
+>     settings are disabled
+>   mm: shmem: disallow hugepages if the system-wide shmem THP sysfs
+>     settings are disabled
+> 
+>  include/linux/huge_mm.h                 | 51 ++++++++++++++++++-------
+>  mm/shmem.c                              |  6 +--
+>  tools/testing/selftests/mm/khugepaged.c |  8 +---
+>  3 files changed, 43 insertions(+), 22 deletions(-)
+> 
 > -- 
-> 2.25.1
+> 2.43.5
 
--aneesh
+Sorry for chiming in so late, after so much effort: but I beg you,
+please drop these.
+
+I did not want to get into a fight, and had been hoping a voice of
+reason would come from others, before I got around to responding.
+
+And indeed Ryan understood correctly at the start; and he, Usama
+and Barry, perhaps others I've missed, have raised appropriate
+concerns but not prevailed.
+
+If we're sloganeering, I much prefer "never break userspace" to
+"never means never", attractive though that over-simplification is.
+
+Seldom has a feature been so thorougly documented as MADV_COLLAPSE,
+in its 6.1 commits and in the "man 2 madvise" page: which are
+explicit about MADV_COLLAPSE providing a way to get THPs where the
+sysfs setting governing automatic behaviour does not insert them.
+
+We would all prefer a less messy world of THP tunables.  I certainly
+find plenty to dislike there too; and wish that a less assertive name
+than "never" had been chosen originally for the default off position.
+
+But please don't break the accepted and documented behaviour of
+MADV_COLLAPSE now.
+
+If you want to exclude all possibility of THPs, then please use the
+prctl(PR_SET_THP_DISABLE); or shmem_enabled=deny (I think it was me
+who insisted that be respected by MADV_COLLAPSE back then).
+
+Add a "deny" option to /sys/kernel/mm/transparent_hugepage/enabled
+if you like.  (But in these days of filesystem large folios, adding
+new protections against them seems a few years late.)
+
+If Andrew decides that these patches should go in, then I'll have to
+scrutinize them more carefully than I've done so far: but currently
+I'm hoping to avoid that.
+
+Hugh
