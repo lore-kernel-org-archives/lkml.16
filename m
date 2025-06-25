@@ -1,275 +1,146 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3B0129B23C
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:35:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5186529E0F4;
+	Wed, 25 Jun 2025 10:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750847723; cv=none; b=XLlOGnFYzu4YJGXg07H1vCbNhTzjlHG2amU2XT/RzHHmG/kUedzjL+b27wSasiWxZXUXzJ3w1ZkqluyRndmbwKvaEX6RHPcTsSwzI+D7JWV4QC6PWVAidgyBFpIJwMOqPqKJV1m9egx0u92wte/kinLJEfgCrDqrVIT+TuQVXNk=
+	t=1750847746; cv=none; b=Ne4gZU41UHZ2z+Vof714UfIWdz0KwwQpMfHuoA45jbuPyG+haHCSPPkR5yiLf4SjDWljBQ15f87fDEuurgP/zkEhQy5ZzWbk6Tti5CB7S73LS8RTtvuwgEJ6DhcuHVMnT5xWB77qjIabtmqWBl8DwTnmZ5eE+YnaL/IqCJaXS08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750847723; c=relaxed/simple;
-	bh=kcAcK5jd09oWV4gJibbPb6KcqEYlBE9/nXmilJck/7w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rk8o/wpoLuzmQvvNhWvfv0LIhaZ/rUWQuPDFgPXQe47bHoTq3GPjSGCgOjLftW1GyiymWZYQ6wSbl57Ts2AO2tLCus9cm0Mbh/6Y0b3of8xGWiDgInl9rgx4MGLdPGndRSdJ1NkxliJXaO7WbDgO2x9URQw6q9qZ37Q/kG8LS78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3E1C106F;
-	Wed, 25 Jun 2025 03:34:54 -0700 (PDT)
-Received: from [10.57.84.221] (unknown [10.57.84.221])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34EFA3F63F;
-	Wed, 25 Jun 2025 03:35:11 -0700 (PDT)
-Message-ID: <01b48f6c-81cf-499c-97f7-0b537364c5e7@arm.com>
-Date: Wed, 25 Jun 2025 11:35:09 +0100
+	s=arc-20240116; t=1750847746; c=relaxed/simple;
+	bh=QF2/nTzgTNewJqtTDSDCBUv+MKs2/0U6B8wr3E4jhpQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d5Vmca7my0JBsw/XfexJN6e+f6lDZ4KDIMZBNR3dQnzkvntPyxKR4fK//OqphgSGEt0mE5h3+2YsDODwbL3nHrX6iySQ9GTt649nB38jLdiQTofY6cPjXaThxu/WmuofyYGkpPYf6kAOI6Kf9ZheALST9oZecmOc6UnZagW/Q5o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gEKgZYyL; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gEKgZYyL"
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P5Ntnj032017;
+	Wed, 25 Jun 2025 10:35:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=uiZBvkEuqcSuz312Gn4jCPAi
+	lFFf4Ltnui1EyIcPcTU=; b=gEKgZYyLYERXnWLUlW3qSXlViRGVq7jUfgjfZjDX
+	jQdnQUo0bjhLiUs6ShJLBJTVHFjGul8oI+VNMRv/YrlqRd5HmVB22P5Pjo0s0tda
+	d8sJIxpnJRcswlWAdEvdVinOTl3a4lM4YX387P0ze95IjioZSxLiAksP0b0q9ymc
+	sRY+n5oaJfbTD/GTt9DqgcFQNmVLeu5aXhmR0upmTMKbj2qlhEndH7qZ8cGgnl0J
+	10yYqp2qQxdk1a2ohw9PyMKgZB77M0HL+vyc3gkd8sWWZxWGaOiXm6X0540cj0FE
+	xlu5yw9jPs+/QYRmK9QtgWun9H3VsHrZbLYy8lUUxIHp0g==
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47esa4rrcs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 10:35:42 +0000 (GMT)
+Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
+	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55PAZgZ8011283
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 10:35:42 GMT
+Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
+ nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Wed, 25 Jun 2025 03:35:38 -0700
+Date: Wed, 25 Jun 2025 16:05:35 +0530
+From: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <andersson@kernel.org>,
+        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+        <conor+dt@kernel.org>, <lumag@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] arm64: dts: qcom: ipq9574: Fix 'l2' regulator min/max
+ voltages
+Message-ID: <aFvQ96h+BdRf5ma3@hu-varada-blr.qualcomm.com>
+References: <20250623113227.1754156-1-quic_varada@quicinc.com>
+ <465751c4-a45a-41ce-ab65-ebddb71dd916@oss.qualcomm.com>
+ <aFpA4mk2L/sxlpO1@hu-varada-blr.qualcomm.com>
+ <qbet26mwfas4ymyy3ozl6f3a5yhgcd2e3euvrn6m3gdvnyvugh@c6yl2u2pcshz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] arm64: Enable vmalloc-huge with ptdump
-Content-Language: en-GB
-To: Dev Jain <dev.jain@arm.com>, catalin.marinas@arm.com, will@kernel.org
-Cc: anshuman.khandual@arm.com, quic_zhenhuah@quicinc.com,
- kevin.brodsky@arm.com, yangyicong@hisilicon.com, joey.gouly@arm.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- david@redhat.com
-References: <20250616103310.17625-1-dev.jain@arm.com>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250616103310.17625-1-dev.jain@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <qbet26mwfas4ymyy3ozl6f3a5yhgcd2e3euvrn6m3gdvnyvugh@c6yl2u2pcshz>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01b.na.qualcomm.com (10.46.141.250)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=eLYTjGp1 c=1 sm=1 tr=0 ts=685bd0fe cx=c_pps
+ a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
+ a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
+ a=COk6AnOGAAAA:8 a=YFLLylPM97RZD3lBE-IA:9 a=CjuIK1q_8ugA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: PQgyuCRGNZuIwCzVm-4yHqaNJrD3yAXj
+X-Proofpoint-ORIG-GUID: PQgyuCRGNZuIwCzVm-4yHqaNJrD3yAXj
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA3OSBTYWx0ZWRfX1czRz9YB9xQC
+ zNXN5b1B8MDXBtKencCxbnws5+aLs4fJ1LgLnyX4EyZ4g6VsHewqWJDO9vL6IevcVaLzGbbq+li
+ KcYgzSRdG1TN3dU+YZMUWF1hkv6BWmrJMBfxq//hpdcstqWWGK8+itydynwezXBi5kDRnKJ8pDX
+ GRMwV+v/lFArSz9dEcs/1UKx499zHkIAYbbBw6sM2Ajut1JeyGae7it77fYpAR6BJtM31HEBhYa
+ 7CSVFHTf3aHowu5BNr7vd05xe7ZLbe5iljxLwRrZD3ej44yPnqfOyy4oIqZutYa8eRKcsABo3iC
+ YyBJp+fPsAkPNpju0DoGRBWzfuerT7DK5lfw0XS4HClId3GAwrrUfiVnp7NWA8HG1lAS3K8Rx69
+ 2ajCTGxKdBu6RNQpbln/A6VlKSZBFtsx00z+4TSJVqXvyST0Wb3VgcetDkV/292lRgvPeZQu
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=364
+ suspectscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506250079
 
-On 16/06/2025 11:33, Dev Jain wrote:
-> arm64 disables vmalloc-huge when kernel page table dumping is enabled,
-> because an intermediate table may be removed, potentially causing the
-> ptdump code to dereference an invalid address. We want to be able to
-> analyze block vs page mappings for kernel mappings with ptdump, so to
-> enable vmalloc-huge with ptdump, synchronize between page table removal in
-> pmd_free_pte_page()/pud_free_pmd_page() and ptdump pagetable walking. We
-> use mmap_read_lock and not write lock because we don't need to synchronize
-> between two different vm_structs; two vmalloc objects running this same
-> code path will point to different page tables, hence there is no race.
-> 
-> For pud_free_pmd_page(), we isolate the PMD table to avoid taking the lock
-> 512 times again via pmd_free_pte_page().
-> 
-> We implement the locking mechanism using static keys, since the chance
-> of a race is very small. Observe that the synchronization is needed
-> to avoid the following race:
-> 
-> CPU1							CPU2
-> 						take reference of PMD table
-> pud_clear()
-> pte_free_kernel()
-> 						walk freed PMD table
-> 
-> and similar race between pmd_free_pte_page and ptdump_walk_pgd.
-> 
-> Therefore, there are two cases: if ptdump sees the cleared PUD, then
-> we are safe. If not, then the patched-in read and write locks help us
-> avoid the race.
-> 
-> To implement the mechanism, we need the static key access from mmu.c and
-> ptdump.c. Note that in case !CONFIG_PTDUMP_DEBUGFS, ptdump.o won't be a
-> target in the Makefile, therefore we cannot initialize the key there, as
-> is being done, for example, in the static key implementation of
-> hugetlb-vmemmap. Therefore, include asm/cpufeature.h, which includes
-> the jump_label mechanism. Declare the key there and define the key to false
-> in mmu.c.
-> 
-> No issues were observed with mm-selftests. No issues were observed while
-> parallelly running test_vmalloc.sh and dumping the kernel pagetable through
-> sysfs in a loop.
-> 
-> v2->v3:
->  - Use static key mechanism
-> 
-> v1->v2:
->  - Take lock only when CONFIG_PTDUMP_DEBUGFS is on
->  - In case of pud_free_pmd_page(), isolate the PMD table to avoid taking
->    the lock 512 times again via pmd_free_pte_page()
-> 
-> Signed-off-by: Dev Jain <dev.jain@arm.com>
-> ---
->  arch/arm64/include/asm/cpufeature.h |  1 +
->  arch/arm64/mm/mmu.c                 | 51 ++++++++++++++++++++++++++---
->  arch/arm64/mm/ptdump.c              |  5 +++
->  3 files changed, 53 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
-> index c4326f1cb917..3e386563b587 100644
-> --- a/arch/arm64/include/asm/cpufeature.h
-> +++ b/arch/arm64/include/asm/cpufeature.h
-> @@ -26,6 +26,7 @@
->  #include <linux/kernel.h>
->  #include <linux/cpumask.h>
->  
-> +DECLARE_STATIC_KEY_FALSE(ptdump_lock_key);
+On Wed, Jun 25, 2025 at 04:26:29AM +0300, Dmitry Baryshkov wrote:
+> On Tue, Jun 24, 2025 at 11:38:34AM +0530, Varadarajan Narayanan wrote:
+> > On Mon, Jun 23, 2025 at 01:34:22PM +0200, Konrad Dybcio wrote:
+> > > On 6/23/25 1:32 PM, Varadarajan Narayanan wrote:
+> > > > The min and max voltages on l2 regulator is 850000uV. This was
+> > > > incorrectly set at 1800000uV earlier and that affected the
+> > > > stability of the networking subsystem.
+> > > >
+> > > > Fixes: d5506524d9d9 ("arm64: dts: qcom: ipq9574: Add LDO regulator node")
+> > > > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
+> > > > ---
+> > >
+> > > Shouldn't there be a consumer for it, instead of it being always-on?
+> >
+> > The uniphy block is the consumer of this voltage. The PMIC configures it
+> > to 850000uV based on OTP settings and s/w doesn't change it as uniphy
+> > doesn't do scaling.
+>
+> Please express this in DT terms, specifying the regulator as a supplier
+> to the uniphy and then making the uniphy driver use that supply.
 
-Is this really the correct header file for this declaration? Perhaps it would be
-better in arch/arm64/include/asm/ptdump.h ?
+Sure, we will update UNIPHY patch series [1] to enable this voltage supplier.
 
->  /*
->   * CPU feature register tracking
->   *
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 8fcf59ba39db..e242ba428820 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -41,11 +41,14 @@
->  #include <asm/tlbflush.h>
->  #include <asm/pgalloc.h>
->  #include <asm/kfence.h>
-> +#include <asm/cpufeature.h>
->  
->  #define NO_BLOCK_MAPPINGS	BIT(0)
->  #define NO_CONT_MAPPINGS	BIT(1)
->  #define NO_EXEC_MAPPINGS	BIT(2)	/* assumes FEAT_HPDS is not used */
->  
-> +DEFINE_STATIC_KEY_FALSE(ptdump_lock_key);
-> +
->  enum pgtable_type {
->  	TABLE_PTE,
->  	TABLE_PMD,
-> @@ -1267,8 +1270,9 @@ int pmd_clear_huge(pmd_t *pmdp)
->  	return 1;
->  }
->  
-> -int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
-> +static int __pmd_free_pte_page(pmd_t *pmdp, unsigned long addr, bool lock)
->  {
-> +	bool lock_taken = false;
+Thanks
+Varada
 
-As David commented, no need for this.
+1 - https://lore.kernel.org/linux-arm-msm/20250207-ipq_pcs_6-14_rc1-v5-0-be2ebec32921@quicinc.com/
 
->  	pte_t *table;
->  	pmd_t pmd;
->  
-> @@ -1279,15 +1283,29 @@ int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
->  		return 1;
->  	}
->  
-> +	/* See comment in pud_free_pmd_page for static key logic */
->  	table = pte_offset_kernel(pmdp, addr);
->  	pmd_clear(pmdp);
->  	__flush_tlb_kernel_pgtable(addr);
-> +	if (static_branch_unlikely(&ptdump_lock_key) && lock) {
-> +		mmap_read_lock(&init_mm);
-> +		lock_taken = true;
-> +	}
-> +	if (unlikely(lock_taken))
-> +		mmap_read_unlock(&init_mm);
-> +
-
-As per David's comment this can just be:
-
-if (static_branch_unlikely(&ptdump_lock_key) && lock) {
-	mmap_read_lock(&init_mm);
-	mmap_read_unlock(&init_mm);
-}
-
->  	pte_free_kernel(NULL, table);
->  	return 1;
->  }
->  
-> +int pmd_free_pte_page(pmd_t *pmdp, unsigned long addr)
-> +{
-> +	return __pmd_free_pte_page(pmdp, addr, true);
-> +}
-> +
->  int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
->  {
-> +	bool lock_taken = false;
-
-Same comment.
-
->  	pmd_t *table;
->  	pmd_t *pmdp;
->  	pud_t pud;
-> @@ -1301,15 +1319,40 @@ int pud_free_pmd_page(pud_t *pudp, unsigned long addr)
->  	}
->  
->  	table = pmd_offset(pudp, addr);
-> +	/*
-> +	 * Isolate the PMD table; in case of race with ptdump, this helps
-> +	 * us to avoid taking the lock in __pmd_free_pte_page().
-> +	 *
-> +	 * Static key logic:
-> +	 *
-> +	 * Case 1: If ptdump does static_branch_enable(), and after that we
-> +	 * execute the if block, then this patches in the read lock, ptdump has
-> +	 * the write lock patched in, therefore ptdump will never read from
-> +	 * a potentially freed PMD table.
-> +	 *
-> +	 * Case 2: If the if block starts executing before ptdump's
-> +	 * static_branch_enable(), then no locking synchronization
-> +	 * will be done. However, pud_clear() + the dsb() in
-> +	 * __flush_tlb_kernel_pgtable will ensure that ptdump observes an
-> +	 * empty PUD. Thus, it will never walk over a potentially freed
-> +	 * PMD table.
-> +	 */
-> +	pud_clear(pudp);
-> +	__flush_tlb_kernel_pgtable(addr);
-> +	if (static_branch_unlikely(&ptdump_lock_key)) {
-> +		mmap_read_lock(&init_mm);
-> +		lock_taken = true;
-> +	}
-> +	if (unlikely(lock_taken))
-> +		mmap_read_unlock(&init_mm);
-
-Same comment.
-
-> +
->  	pmdp = table;
->  	next = addr;
->  	end = addr + PUD_SIZE;
->  	do {
-> -		pmd_free_pte_page(pmdp, next);
-> +		__pmd_free_pte_page(pmdp, next, false);
->  	} while (pmdp++, next += PMD_SIZE, next != end);
->  
-> -	pud_clear(pudp);
-> -	__flush_tlb_kernel_pgtable(addr);
->  	pmd_free(NULL, table);
->  	return 1;
->  }
-> diff --git a/arch/arm64/mm/ptdump.c b/arch/arm64/mm/ptdump.c
-> index 421a5de806c6..f75e12a1d068 100644
-> --- a/arch/arm64/mm/ptdump.c
-> +++ b/arch/arm64/mm/ptdump.c
-> @@ -25,6 +25,7 @@
->  #include <asm/pgtable-hwdef.h>
->  #include <asm/ptdump.h>
->  
-> +#include <asm/cpufeature.h>
->  
->  #define pt_dump_seq_printf(m, fmt, args...)	\
->  ({						\
-> @@ -311,7 +312,9 @@ void ptdump_walk(struct seq_file *s, struct ptdump_info *info)
->  		}
->  	};
->  
-> +	static_branch_enable(&ptdump_lock_key);
->  	ptdump_walk_pgd(&st.ptdump, info->mm, NULL);
-> +	static_branch_disable(&ptdump_lock_key);
->  }
->  
->  static void __init ptdump_initialize(void)
-> @@ -353,7 +356,9 @@ bool ptdump_check_wx(void)
->  		}
->  	};
->  
-> +	static_branch_enable(&ptdump_lock_key);
->  	ptdump_walk_pgd(&st.ptdump, &init_mm, NULL);
-> +	static_branch_disable(&ptdump_lock_key);
->  
->  	if (st.wx_pages || st.uxn_pages) {
->  		pr_warn("Checked W+X mappings: FAILED, %lu W+X pages found, %lu non-UXN pages found\n",
-
-
-With the improvements as suggested, LGTM:
-
-Reviewed-by: Ryan Roberts <ryan.roberts@arm.com>
-
-
+> > > >  arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi | 4 ++--
+> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi b/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
+> > > > index bdb396afb992..21b04a2c629d 100644
+> > > > --- a/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
+> > > > +++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
+> > > > @@ -106,8 +106,8 @@ ipq9574_s1: s1 {
+> > > >  		};
+> > > >
+> > > >  		mp5496_l2: l2 {
+> > > > -			regulator-min-microvolt = <1800000>;
+> > > > -			regulator-max-microvolt = <1800000>;
+> > > > +			regulator-min-microvolt = <850000>;
+> > > > +			regulator-max-microvolt = <850000>;
+> > > >  			regulator-always-on;
+> > > >  			regulator-boot-on;
+> > > >  		};
+> > > >
+> > > > base-commit: 5d4809e25903ab8e74034c1f23c787fd26d52934
+>
+> --
+> With best wishes
+> Dmitry
