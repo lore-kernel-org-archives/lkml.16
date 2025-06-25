@@ -1,127 +1,68 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6B51CEAD6;
-	Wed, 25 Jun 2025 16:04:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 412621DF256;
+	Wed, 25 Jun 2025 16:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750867484; cv=none; b=In92Kp7249E7LST1lHoiVLIQ2Bda820yqDz97LQVYJ6OSO2xxbUKs0oZ95NF6Xx6upmjDT5dC5wEZ5AiI0HvcrjGXok5yQdg7uOJrxpLoSfLymfNWwKz9wgTtJpYkmvC/j53Jh4/A76vxkfw1Hy5gI92WIwnVVS8Uv3YTwgyAGY=
+	t=1750867548; cv=none; b=gT1awBd1F/LesZ/mwaQ1zOU3YaL/22tl0W5F2zys0O4q5EUf2gtnlCx9M2B6xvlF7CMBvWaeV0cos+F7/DBQbH9tBM0KnitZiTD8Hzu8+FMi6L9gybWk0S4bfOIOR5RLhHQvjpR1Vn+j1zNBYkkKxaKMCJReLVbCbdfFnCEZ2/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750867484; c=relaxed/simple;
-	bh=otHmhz9qKbneCAY/qZt+a5oqKkpxMdFANunIpnL3QQM=;
-	h=From:Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:To:
-	 References:In-Reply-To; b=tjbgi5NmjVGcFfST61KTiMXECSzrgTBNS94s0FA3Y1IZaugv3JMqvTa+MW0TcuxokMNiBbZcKGukKh/sJO6ha7ab694QEQjC7LA8tdermtjSdjc6Y37o+eAIrPdm6bTaMxKCBoeWY3Xa49z75/4y5giIEI1qw/D+UMSS+TgMUYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EsR3DsiW; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750867548; c=relaxed/simple;
+	bh=JombFk2+EPbmO/DxMPhdDw0gjCly3lhSkJ2aGwGulYg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=EknCNiEHT3W9gWUqGtM+iOSdj9eLckA5vEdRql2JOLSNFtqxfbdGjHXrhIGrn8S6npKU0p2yBktnOHO7NWyDjKmxvfGZoYNd2SwKlcgcmEE+VjoGjQnFkqzTSB7gz0fULAuHhtO1uGVnUGMT+KIqwTd6RQTL4/THooZj09GwhoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qNc+rp0a; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Son8ZXXJ; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EsR3DsiW"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3a6d1369d4eso1257493f8f.2;
-        Wed, 25 Jun 2025 09:04:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750867480; x=1751472280; darn=vger.kernel.org;
-        h=in-reply-to:references:to:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uWKkFAFg9O1FS34EdKG7yTUZEGesEzF1QQfwKchWpik=;
-        b=EsR3DsiW9naBMEhfFJFIRcbn65r7nmtu2c3WXhVzW70Ro6sfrrZEwze+IrTgmRTISc
-         goXigzea1Xnm8lfHhEgxnrEJGUd+7YA2reRBV9bysHmFbVQPRSiZsoU9a2PfOP3nF8J8
-         te3KAlxd2Omnz7fg1a0TES2BPv25M1QNknnoCukhHjzbRP4JhANY/pRGuCSIMCWombSu
-         mA5pJ4ZjxXiIBRwEk+AU7TikGqmAwPHxkCHycF7gWMjMfheCsywcho3NTdYpWm4pxHuN
-         JGvQ9L5ASlzMiWlxwblC+3bLsdGPpN5N09Kc/KpS/+/pVzgnew78oB6uaD1cOBkyyuw6
-         CBlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750867480; x=1751472280;
-        h=in-reply-to:references:to:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=uWKkFAFg9O1FS34EdKG7yTUZEGesEzF1QQfwKchWpik=;
-        b=CJB2n9qcz6KCg3yNUGOeY0M1sREOfo47Y4P+GX2eobSqaYz/WG7Bl6+82udIAJopxf
-         lU3Dawl9929xueVtyhx3XpUDliRum3QLp6HkifhdamqllxRqeuDif6n1m7Ycn0dysb0e
-         6oJlz1mQltlIt2qTSm3eSX7fWMeC18V6DcGJwEsO7x4uZ0dqmuk3kNBEgy4q/iEU9oMT
-         4OGfR/5syslh7U5dB6K8ZEBTwRqM6B75pOXjNJ1KEzr93zt2H8RVi3Gw6rBHpyiTddK7
-         da1gR4pkCf4GeCUQ6MjRUHTjhg7JMSaw0rxyRdCEEhUg7AFZpachjBLDSos9X8Wf1LAm
-         pOoA==
-X-Forwarded-Encrypted: i=1; AJvYcCUni5mJwYcRxS29anFPWr+jhwnwqDV9Dvkj9umQGXhCGou12Dmpkwfwa08wIaC4sVsS4tTw3jsP9mrEq/U=@vger.kernel.org, AJvYcCW18uxb84uDUyecFAny8rQjkraKcDzh9J7ryHRGwKyTUnP4YHl+OPJ2cusYgp6i3PJtMNlMwIFMPJ1WF0oc@vger.kernel.org, AJvYcCWcZ8T0SZK1RChyBCOmtEsXHr/bJOPDTAfalN2QV2hrvsE3NhdJy/p6pyy1OKTgf9KM0WREwBXVURugbtxpbgc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/lTKr13iQfr1VJyGyeh1Z2giZ+oz5K0k0br+E2jSsjMiZFjjJ
-	rrC8R2wX2iqYLwixWs4gDQzI5Ut/Uvqft4PhqbPRrmZ6Cet6WRPiLgvHQ7UT/OS0
-X-Gm-Gg: ASbGncvmLV4UsVdX1VH9Nje8a2AgTg+X3CYOOkoUeQM36yVfJdLkn3yKbOlZJWDawjX
-	O1MXCiM32x7+r2UCY/GhR9y8mbuIIi0l/SK0OobSdJrY//ldK/0MQ2Z+ChCRPOZcSywN7YWZ2NK
-	dUxBmOaq13mqQfLf3DxnAaVBhPw2x9CL2l6gij3J4kgR/g4f2nZtNYfnuwmT31kE3i/5aCLMFBx
-	qaxyoyKGKQIfNWfM1MUKDetyULqA41WHbqrXAz1nM5coXCo17ROij+a/GpsPJWVvacLz3XekMXk
-	o2UR5gijOYf4e29/Vo1pXXy5PmcwxysriBgORPuHS7N/B2+ZC2/GrPnJ1NtBvr2iaFMLk33V+ND
-	dSg8Sa2LfiPxp3S5NQu6r0Ip/
-X-Google-Smtp-Source: AGHT+IGwdBKEOpjpvucseGnRqSYsFTVnLPoA4uCi0Dyrn7S/hacATqeX4eEhHO0U4z09yQRUY40vHQ==
-X-Received: by 2002:a05:6000:230d:b0:3a4:dcb0:a5f with SMTP id ffacd0b85a97d-3a6f2e8e330mr249814f8f.16.1750867479407;
-        Wed, 25 Jun 2025 09:04:39 -0700 (PDT)
-Received: from localhost (a95-94-245-170.cpe.netcabo.pt. [95.94.245.170])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3a6e8109e1asm4934842f8f.84.2025.06.25.09.04.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 09:04:38 -0700 (PDT)
-From: Rui Miguel Silva <rmfrfs@gmail.com>
-X-Google-Original-From: "Rui Miguel Silva" <rui.silva@linaro.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qNc+rp0a";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Son8ZXXJ"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750867545;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JombFk2+EPbmO/DxMPhdDw0gjCly3lhSkJ2aGwGulYg=;
+	b=qNc+rp0a8wDFUH9zgs3JCWy11IeHBAZvfDNmWFNLZdK+mrt0pI3Mtsfa2N7TVUjzCh14Ay
+	izTHkVnuRGRk3phMH4vsg4rvSOJqIlKrSwEXLj0oDxEbxyuEmziQUvsukOSfzatJBON8wt
+	vj/xHubBHV8p3n2pZaFTOe2pykmih4u6Xtc08N4I81nBYH8TDGStu718ta60tsm0aUbOn4
+	qhFfkVkSiGiyIDDVEI758gvZzbLOeTQXgEWMqdjLnX1QNHGPdDXe2CKM4E0nUVS5HBRh7J
+	il3SEft6ntKyVVK4O/dKLuRyjvIZPjr7fQUk7gEm3MVttHqZ5e7beNvsk5/fYw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750867545;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JombFk2+EPbmO/DxMPhdDw0gjCly3lhSkJ2aGwGulYg=;
+	b=Son8ZXXJlXXG5NfdHf2AdIhwMBFMZDuGJjYd6sqEfOHlDyB1q/XrgPNX2h011yMWF9qXPW
+	wO/I4usJvsBzxJBg==
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, netdev@vger.kernel.org, Vadim
+ Fedorenko <vadim.fedorenko@linux.dev>, Paolo Abeni <pabeni@redhat.com>,
+ Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [patch V2 00/13] ptp: Belated spring cleaning of the chardev
+ driver
+In-Reply-To: <aFwKc5R3uZVc_aoH@hoboy.vegasvil.org>
+References: <20250625114404.102196103@linutronix.de>
+ <aFwKc5R3uZVc_aoH@hoboy.vegasvil.org>
+Date: Wed, 25 Jun 2025 18:05:44 +0200
+Message-ID: <87a55vrelj.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 25 Jun 2025 17:04:37 +0100
-Message-Id: <DAVQPZC0K30N.308T7KKXHN7N1@linaro.com>
-Cc: "Laurent Pinchart" <laurent.pinchart@ideasonboard.com>, "Martin
- Kepplinger" <martink@posteo.de>, "Purism Kernel Team" <kernel@puri.sm>,
- "Mauro Carvalho Chehab" <mchehab@kernel.org>, "Shawn Guo"
- <shawnguo@kernel.org>, "Sascha Hauer" <s.hauer@pengutronix.de>,
- "Pengutronix Kernel Team" <kernel@pengutronix.de>, "Fabio Estevam"
- <festevam@gmail.com>, "Hans Verkuil" <hverkuil@xs4all.nl>,
- <linux-media@vger.kernel.org>, <imx@lists.linux.dev>,
- <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
- <kernel-janitors@vger.kernel.org>
-Subject: Re: [PATCH] media: imx8mq-mipi-csi2: Fix error code in
- imx8mq_mipi_csi_parse_dt()
-To: "Dan Carpenter" <dan.carpenter@linaro.org>, "Frank Li"
- <Frank.Li@nxp.com>, "Rui Miguel Silva" <rmfrfs@gmail.com>
-References: <9b6c7925-c9c4-44bd-acd5-1ef0e698eb87@sabinyo.mountain>
-In-Reply-To: <9b6c7925-c9c4-44bd-acd5-1ef0e698eb87@sabinyo.mountain>
+MIME-Version: 1.0
+Content-Type: text/plain
 
-Hey Dan,
-Thanks for the patch.
+On Wed, Jun 25 2025 at 07:40, Richard Cochran wrote:
 
-On Wed Jun 25, 2025 at 4:22 PM WEST, Dan Carpenter wrote:
-
-> This was returning IS_ERR() where PTR_ERR() was intended.
+> On Wed, Jun 25, 2025 at 01:52:23PM +0200, Thomas Gleixner wrote:
+>> The code (~400 lines!) is really hard to follow due to a gazillion of
+>> local variables, which are only used in certain case scopes, and a
+>> mixture of gotos, breaks and direct error return paths.
 >
-> Fixes: 642b70d526ab ("media: imx8mq-mipi-csi2: Add support for i.MX8QXP")
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> But it is 100% organically grown and therefore healthy for you!
 
-Reviewed-by: Rui Miguel Silva <rui.silva@linaro.org>
-
-Cheers,
-    Rui
-
-> ---
->  drivers/media/platform/nxp/imx8mq-mipi-csi2.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/media/platform/nxp/imx8mq-mipi-csi2.c b/drivers/medi=
-a/platform/nxp/imx8mq-mipi-csi2.c
-> index 6501843ae72d..3a4645f59a44 100644
-> --- a/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
-> +++ b/drivers/media/platform/nxp/imx8mq-mipi-csi2.c
-> @@ -966,7 +966,7 @@ static int imx8mq_mipi_csi_parse_dt(struct csi_state =
-*state)
-> =20
->  		base =3D devm_platform_ioremap_resource(to_platform_device(dev), 1);
->  		if (IS_ERR(base))
-> -			return dev_err_probe(dev, IS_ERR(base), "Missing CSR register\n");
-> +			return dev_err_probe(dev, PTR_ERR(base), "Missing CSR register\n");
-> =20
->  		state->phy_gpr =3D devm_regmap_init_mmio(dev, base, &regmap_config);
->  		if (IS_ERR(state->phy_gpr))
-> --=20
-> 2.47.2
-
-
-
+You sure there were no forbidden plants involved?
