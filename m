@@ -1,195 +1,130 @@
-Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 546632D4B67;
-	Wed, 25 Jun 2025 16:31:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F112D320B;
+	Wed, 25 Jun 2025 16:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750869073; cv=none; b=FdPp8pFKND0Cx7bo4kTdBBtwal+LIKe3WRHZEes/YLnb3/LfwGgADX1FKLp+vuDp2NCsq484EXiGdaIhLr3HUve6XvvIrysMTpLL9WoYUh9e/BwxUR48AO7RwvqR2G4fbJkUNWZgKzKOU3fpisg19csNLF6PzGI6oqa+uAq9Ld8=
+	t=1750869083; cv=none; b=i9J27iDxUHXUO+cSD1bUNOxB/GeG2WPp/fiektO9TIrhdbXS+rhO8oFfp193zWi0oGGMEC6EOQyAug1LGT7nUbjc+iAarLFBLHUMMOG+3kru2KkW3135oBr0baSHhf9I3Ak1ZpHfJEpejCyvzmnAQpy7E0WpTnqEup2UZoNAV9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750869073; c=relaxed/simple;
-	bh=9Plc2mchfJSLLakuGSpwC2tchWlUiNQeTbycwDZpd8E=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=rq0kZLHorb78KBRi2rq9GAJ4V7QbK/i+XpfwMashATbaUVDNBz42Brc4pGb8RtafPiArTmqNoCzD40ANLastDt2PyXlSMrvLqcwnF92DyaR937vuhJLOENikrRG9yyMF5fiVmVZ3w/9YY0+h6gir0JOe+iIUWlQ+Sf3pnkJlaBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=d9yfKpap; arc=none smtp.client-ip=178.21.23.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
+	s=arc-20240116; t=1750869083; c=relaxed/simple;
+	bh=cfvm2yMxR62gBPP9HqBHZX62gz5cZmnXqherGhd85YA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gX6/povck7e1SGMdJtG4kauqRQobMOyC2rgGqd687H0PWG8Y63pmEIor2hpyvbItogxWWpcfOceAJX9aVpxtLSjgpTyNUAbqQMKKS/XfMtRU62hAKL4IcW5gtvEMypGYTcxwaiEUsV3EM/PAEAe4b/MPan+k982Z4G4SLEaox94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iMFv0L0I; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="d9yfKpap"
-Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 59E4A25F2D;
-	Wed, 25 Jun 2025 18:31:07 +0200 (CEST)
-X-Virus-Scanned: SPAM Filter at disroot.org
-Received: from layka.disroot.org ([127.0.0.1])
- by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id f0ZxtAlbNKEs; Wed, 25 Jun 2025 18:31:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750869065; bh=9Plc2mchfJSLLakuGSpwC2tchWlUiNQeTbycwDZpd8E=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=d9yfKpapXHHKxp9kOOEdSBp99N7NOoXyzrVmdArp9eCp9tmRg/WXJtJPjxEDCae/D
-	 9X780PdaSIChVe50RXfdlyhXnMDaHb2ruJFveI11XxLUIudrW23DeGji5dNWmN9Hv4
-	 Rzvz49xwIr562B4WPHV5ZiDXNhk6tZBZiiGImpgD5NnthDqKfuFftgX44+fRs6wT/c
-	 LVtpkoKrreWEhV/MCZG7JE89DfxvQrMy8opuPhv4XtTst6vIKesHtIdlAk0pOKEMzm
-	 W08mInmZ3MCu4NhYBDgF6n25hW9+Tg9lPzEchpxaoJW6dMPTPfSq12A/kuU+U7gNYA
-	 lAkuH8pWqG58g==
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iMFv0L0I"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750869082; x=1782405082;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=cfvm2yMxR62gBPP9HqBHZX62gz5cZmnXqherGhd85YA=;
+  b=iMFv0L0IFTn+YcM7ND1wcji+FBwEeRmTR7Nw8GLhx6H+QJRG5UHk8NAi
+   ShPeSMpM0Nday/PlM3nceyrlrmtzSXTVgS1ENr9MD52tx6hF9GW42rtLF
+   m14oUHZy2pPb3x6hnkxK1vga/LSbQVVj0qeGTsINTJdDHUlG4kJOCRN2n
+   q/z+bkWHSaNOsjul/+uKmgkOZ9R3UgqGQFGAg8PU7/zmYPenRkymKybit
+   3gP8/l/cJk5WVqeseqOZUptC3In3n7sXQZTOXepAd6JzLeBbzPdLDI1xR
+   nZ8YpcIQLC4ZmYyECgmvxjXx2LV1LUxDmnX7HO9Dbm0M4b3JrTxlOVRaC
+   g==;
+X-CSE-ConnectionGUID: JjPJ1tubRFSmWObcH5Zohw==
+X-CSE-MsgGUID: QEuF2nK0RJaoC6wmaiQwdw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="70580805"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="70580805"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 09:31:20 -0700
+X-CSE-ConnectionGUID: o0pkp8ApTlC+GM81HtbAKA==
+X-CSE-MsgGUID: yP6spNRbSGa8nOaHtHdVYg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="156659456"
+Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.108.244]) ([10.125.108.244])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 09:31:19 -0700
+Message-ID: <8f05cd1c-74cf-4370-a39c-8e06cdf2c921@intel.com>
+Date: Wed, 25 Jun 2025 09:31:18 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Wed, 25 Jun 2025 16:31:04 +0000
-From: Kaustabh Chakraborty <kauschluss@disroot.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jessica Zhang
- <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, Simona Vetter
- <simona@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
- dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: panel: document Synaptics
- TDDI panel driver
-In-Reply-To: <20250625150804.GA1201460-robh@kernel.org>
-References: <20250625-panel-synaptics-tddi-v2-0-7a62ab1d13c7@disroot.org>
- <20250625-panel-synaptics-tddi-v2-1-7a62ab1d13c7@disroot.org>
- <20250625150804.GA1201460-robh@kernel.org>
-Message-ID: <3d08062eb822e2fdcc1498bc1d34075f@disroot.org>
-X-Sender: kauschluss@disroot.org
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] KVM: TDX: Do not clear poisoned pages
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Vishal Annapurve <vannapurve@google.com>
+Cc: Tony Luck <tony.luck@intel.com>, pbonzini@redhat.com, seanjc@google.com,
+ Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, H Peter Anvin <hpa@zytor.com>, linux-edac@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+ rick.p.edgecombe@intel.com, kirill.shutemov@linux.intel.com,
+ kai.huang@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com,
+ tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com,
+ isaku.yamahata@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com
+References: <20250618120806.113884-1-adrian.hunter@intel.com>
+ <20250618120806.113884-3-adrian.hunter@intel.com>
+ <68938275-3f6a-46fc-9b38-2c916fdec3d6@intel.com>
+ <CAGtprH_cVwWhfXFkM-=rVzQZ0CpY_zcnkF=q5x1n_9Bzm1xKfw@mail.gmail.com>
+ <bc492cb2-1d30-4a30-9eb9-d48b09cd29a9@intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <bc492cb2-1d30-4a30-9eb9-d48b09cd29a9@intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 2025-06-25 15:08, Rob Herring wrote:
-> On Wed, Jun 25, 2025 at 03:38:44PM +0530, Kaustabh Chakraborty wrote:
->> Document the driver for Synaptics TDDI (Touch/Display Integration) 
->> panels.
-> 
-> We document the h/w, not 'the driver'.
-> 
->> Along with the MIPI-DSI panel, these devices also have an in-built LED
->> backlight device and a touchscreen, all packed together in a single 
->> chip.
->> Also, add compatibles for supported panels - TD4101 and TD4300.
->> 
->> Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
->> ---
->>  .../display/panel/synaptics,td4300-panel.yaml      | 89 
->> ++++++++++++++++++++++
->>  1 file changed, 89 insertions(+)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/display/panel/synaptics,td4300-panel.yaml 
->> b/Documentation/devicetree/bindings/display/panel/synaptics,td4300-panel.yaml
->> new file mode 100644
->> index 
->> 0000000000000000000000000000000000000000..10ac24afdfbc43ca6913bf8a343413eed81f12ff
->> --- /dev/null
->> +++ 
->> b/Documentation/devicetree/bindings/display/panel/synaptics,td4300-panel.yaml
->> @@ -0,0 +1,89 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: 
->> http://devicetree.org/schemas/display/panel/synaptics,td4300-panel.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Synaptics TDDI Display Panel Controller
->> +
->> +maintainers:
->> +  - Kaustabh Chakraborty <kauschluss@disroot.org>
->> +
->> +allOf:
->> +  - $ref: panel-common.yaml#
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +      - syna,td4101-panel
->> +      - syna,td4300-panel
-> 
-> Can a TD4101 be anything other than a panel (controller)? If not, then
-> '-panel' is redundant.
-> 
+On 6/25/25 09:25, Adrian Hunter wrote:
+>> IIUC, even if movdir64b stores contents on hwpoisoned pages, it's not
+>> going to cause any trouble.
+> No.  PageHWPoison(page) means the page should not be touched.  It must
+> be freed back to the allocator where it will never be allocated again.
 
-TDDI devices are display panels and touchscreens in one chip. So I guess
-it's better to explicitly define that its a panel driver.
+What's the end-user-visible effect if the page is touched in this
+specific function in this specific way (with movdir64b)?
 
-(Touchscreens are driven by RMI4)
-
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +  vio-supply:
->> +    description: core I/O voltage supply
->> +
->> +  vsn-supply:
->> +    description: negative voltage supply for analog circuits
->> +
->> +  vsp-supply:
->> +    description: positive voltage supply for analog circuits
->> +
->> +  backlight-gpios:
->> +    maxItems: 1
->> +    description: backlight enable GPIO
->> +
->> +  reset-gpios: true
->> +  width-mm: true
->> +  height-mm: true
->> +  panel-timing: true
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - width-mm
->> +  - height-mm
->> +  - panel-timing
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/gpio/gpio.h>
->> +
->> +    dsi {
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +
->> +        panel@0 {
->> +            compatible = "synaptics,td4300-panel";
->> +            reg = <0>;
->> +
->> +            vio-supply = <&panel_vio_reg>;
->> +            vsn-supply = <&panel_vsn_reg>;
->> +            vsp-supply = <&panel_vsp_reg>;
->> +
->> +            backlight-gpios = <&gpd3 5 GPIO_ACTIVE_LOW>;
->> +            reset-gpios = <&gpd3 4 GPIO_ACTIVE_LOW>;
->> +
->> +            width-mm = <68>;
->> +            height-mm = <121>;
->> +
->> +            panel-timing {
->> +                clock-frequency = <144389520>;
->> +
->> +                hactive = <1080>;
->> +                hsync-len = <4>;
->> +                hfront-porch = <120>;
->> +                hback-porch = <32>;
->> +
->> +                vactive = <1920>;
->> +                vsync-len = <2>;
->> +                vfront-porch = <21>;
->> +                vback-porch = <4>;
->> +            };
->> +        };
->> +    };
->> +
->> +...
->> 
->> --
->> 2.49.0
->> 
+In other words, what does this patch do for end users?
