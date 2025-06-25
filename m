@@ -1,249 +1,203 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2058.outbound.protection.outlook.com [40.107.236.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD30425EF82
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:26:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750854378; cv=none; b=u9qReu9581oFy9naBrMkJF5K5f18YCwRnk1atzmw7/4UOnramO6QSsGi+4gY/OHhY3gushyCOY/pahrtWB0x12SkHp9KKlzAXYdo6lwTfa4fn/2bTq+JyfvH7MW11blq+48Q2c6srdo78esvX9wMqKz1tlw9GT0ycXPczEkjjrc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750854378; c=relaxed/simple;
-	bh=RJylVnltnYi62l6fnhJri2c9ENd6bS6fxc04Feonn0c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AO3Nmjj4uo+RDoTg4KE5vY7WOE3xX2+qq3pcEnZOpvLjpZip9vn5uheG2XX3FyT+8Rl+GlH8IoPI0pr2nQLgmOtldgT7KCEzNoHtadn1nYCHFqnCT7YbWRb/K54o4Liho1u1UN5YGbA07w/HXkuWHfX1y0o64xbXJ2UbbhpaMlE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=LKGkajmC; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 713F325DAFF;
+	Wed, 25 Jun 2025 12:26:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.58
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750854408; cv=fail; b=J2ppH5LATit39l/mj/i+wjACm7u0N1Tu4dkxDjy0Joj5Y//9wqGtBHycrvtkPAi1kaO/XkJukjdrZcgEIKgyvpxEkRM+c4DQDEEVy1BGdUxQ/Z8GnucCNSNs99/XJDUIit6YlcFfe5pbRCPIjZg+ZgWsfcoVteqtW+UvWo+s9Ms=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750854408; c=relaxed/simple;
+	bh=I9vbeENbKdaMHoAL8VR5mGGQ/ULKC+fulnJ+wwDsykI=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=tdHPyVbqdB7V8YZYPfrP0kGHUgUGtGsTM+cW2L/Jb0KogdlMswMeOYdOci7bel1mUEpmtODGaovUyOCp032C6LDEGfJ3nab64MkEjyQ1fqg/UTGBjJ5v34Ica4TlRtAkjCoMBDF7DRt/yFNx7YCzFdYFVTttO+WqNZ0d/4mRPq8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=2/kpZiMs; arc=fail smtp.client-ip=40.107.236.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="LKGkajmC"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a54700a46eso999447f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:26:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1750854374; x=1751459174; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MK0Hj58r5vfZoNmYyXjSjcoja0uU5HmHWhKlrdtiqP4=;
-        b=LKGkajmCW/fwULw1ZQDjhfECiNC0U5PjRcuaMYSeSnD8jf+2cpo0m2AlJ1EwwNna+k
-         z9yBswGEZrUIi1EyM6gFzDl0P3TNg5qEuiso1tnveHzm5Hx4E0paIuyE9oWXfaVtcXAx
-         D/zrA4FGW/N3vuhUerU3vzzEJdFjlAaR9ORf9grj5+X5mx7msX7qgrHxc0/OjEwc4aDt
-         sVfGIzzUEmgX5ELs1sy8OOKVUw0lDHOhAZIWJ72R8XyX5bVr2WxSxauE95eT51dEfC7Y
-         OvTRf3dkd/6Ar78PFWjsP3/ozJJPP3rfPAmX3oBRJWAdsUOY34Csw7DJT2VT2d4hLfar
-         xGQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750854374; x=1751459174;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MK0Hj58r5vfZoNmYyXjSjcoja0uU5HmHWhKlrdtiqP4=;
-        b=ZDFOkWg3x8kUwa0765PSGia35/LgbVW+wGYIOx0k4fHmSqPdVnrAHIfVRq28P+RUlf
-         /In9h7RYBvCDphtG/i0564ALe0vMEgFpZRvYJyvPuafeq0LeTz0zPWWJk+HGP+7eAVgj
-         cnDfbRA5GzYmMrHuj8lLkQ2iLVOszW+neTrKry1Jccmzq5pxxZq2eAD73jsnx0pBxjJK
-         61d7n0mFSot65LKyAfk3VZf+dvs/280gTjx7b1+fAYTaF2kGjEt9+C188BwN5NR2f86e
-         WjLlxPjTMvrWw3rnbqCLVpMBp5oP1t5VVL+u409zQ7zLmhf3SeVR1FzFksyYRSyl+SG9
-         KAqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUB4kRJrW5eTY80rmk++kW93BZDU+ai5XL0xTo1qqiQi0V8aRfIMIdMcGirYhrXhGjwxVuFNtneyNAXtt8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyiASrg4aOO86+rram65xgIieUNJvFp+TNmWeWuLsq1uc+t7Kju
-	T6+lu7/rKk9irwesJ9azhN9doxA8rvHl4yPmtW8uEhdfWWYzw8l9SrIDFuhlBdQbunJH96Kt4Gd
-	8xWw=
-X-Gm-Gg: ASbGncujfipeeo4tY56yRHipsS5qcnn8h4HMh8KORV+ny/csMWDaaFBHGfsjwBOXPiO
-	R8VrlXf8vvBrrfNZsamXYYNdYUjSJouZDdRkUQTtCnacYVj/MWBPC34grlw89t6TYWAvyMfwR1V
-	CTMDH4pH8Lu38iqFI/778KgP64586TFUCvr8CEWTaC24aec33uxf5aD+GGI6IJ4okCUlFtjp3rD
-	Ug0jHmq7GEJjW1+e2mwRSuMf1RUzL4T0esDeL1dvGponfYG1fB2nWLMcyNY2XEhDIJxPHBJsHNJ
-	Mwi6aLQ+iqOTr9ZNZBZG/AUWafgMRZDSXBRGCE7cdLm26OU4+ki0N30topYdUeFupGPqrOjcv59
-	rYkxBzsxm+gsH2dD2ChiOgkylP8yCR6Sj/J2Nebmzsg==
-X-Google-Smtp-Source: AGHT+IE0ZRp8hz87yz6pSXLfSGUZeMtxz5hwGB1i4LKMJooPymaYKx+TBLnM1kArAooUHdH2EKfAnw==
-X-Received: by 2002:a05:6000:4b1a:b0:3a3:621a:d3c5 with SMTP id ffacd0b85a97d-3a6ed62eb07mr2151898f8f.19.1750854373878;
-        Wed, 25 Jun 2025 05:26:13 -0700 (PDT)
-Received: from cyber-t14sg4 (ip-078-094-000-050.um19.pools.vodafone-ip.de. [78.94.0.50])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4537c3bf576sm24715685e9.0.2025.06.25.05.26.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 05:26:13 -0700 (PDT)
-Date: Wed, 25 Jun 2025 14:26:11 +0200
-From: Michal Gorlas <michal.gorlas@9elements.com>
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: Brian Norris <briannorris@chromium.org>,
-	Julius Werner <jwerner@chromium.org>, linux-kernel@vger.kernel.org,
-	chrome-platform@lists.linux.dev,
-	Marcello Sylvester Bauer <marcello.bauer@9elements.com>
-Subject: Re: [PATCH v2 2/3] firmware: coreboot: loader for Linux-owned SMI
- handler
-Message-ID: <aFvq49ODR3XfcwZJ@cyber-t14sg4>
-References: <20250616-coreboot-payload-mm-v2-0-5d679b682e13@9elements.com>
- <20250616-coreboot-payload-mm-v2-2-5d679b682e13@9elements.com>
- <aFuQHqSd9kT87tsF@google.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="2/kpZiMs"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aE7hHdzbLS+GxBYEA5mKnOhqiFjfJmkFIEdBR2iCXkM6QNrknQl2+0hgwHRTkkojAh0tMrwOgG8Kp2GUhBeQFy1TaW4AnKjscXlUhMIs33n34rWFQdY1Ztum+j1gWJMOgF7eTpI9j3cFxg+RQLfM/vcEqUS8twGEwuO6RwvWtwTEMGZom5qTGuwNtJgt77V7DUWVwxr8ro7WAvwgNGWPC1asHW+3R3pcOMFZm7u58RrIP5f3KxtSngohq1JzFcxFwMh/EMdVdwsUXlcdDh6NirsCqeSZcA3bifu8aIWsHbsTisL8jJlBOVAvmp5cALF6IV6aT6O3H4LryxqAhcjSwg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1kEAar1AcZfmQmZBi8p0dGcnCkpwdouqtSwCjOIdKik=;
+ b=yVyPvp2yBOD6I+OyoXcp+e+k4XUw+ro8Fj9ZHRsUQAQ6+0fpnRxhpR7ZQhcbD1Q+7fOMaqArN96OEolyw7ej8B36CpybUmQg/q3EaQyUDwgy983+Qeyl9U/It8oc2CuD5w2ReW/4pBibCvjP64FWpMnpNtn310BRxKW2sA1OJE/ou/ZZXWzlgZyx8mnMUF8zGhd8S9mZQsb0SxPHhOQt9x7QbNNAp75KcVvK5go9p3CUW0xLx/6ProNKC8B8M/qBHtMTr1X/swtvzGvUzvem7/ISn8+DNgdYmv9n0EoIfW+Cm+gDgAgMm31t0b+S6Owy/HMSN86QDBiHBgqDaohxiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1kEAar1AcZfmQmZBi8p0dGcnCkpwdouqtSwCjOIdKik=;
+ b=2/kpZiMs1JXToD+70UO6/IXTpQCVl/SJ5cFOYU3TJEPytgjiOUA/EURoNLf22YZ2b4D29O/AG3G6fw11ZpbfFm0riKHLUnEIPfwKO/7oF8ov8Kwy7SMrmfCFksaJvfByMRthcgTeZ69KbhWeA2yL8M2N6n9BZXbpVlmYrNHOfA0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from IA1PR12MB8189.namprd12.prod.outlook.com (2603:10b6:208:3f0::13)
+ by SA0PR12MB4480.namprd12.prod.outlook.com (2603:10b6:806:99::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Wed, 25 Jun
+ 2025 12:26:44 +0000
+Received: from IA1PR12MB8189.namprd12.prod.outlook.com
+ ([fe80::193b:bbfd:9894:dc48]) by IA1PR12MB8189.namprd12.prod.outlook.com
+ ([fe80::193b:bbfd:9894:dc48%4]) with mapi id 15.20.8835.027; Wed, 25 Jun 2025
+ 12:26:42 +0000
+Message-ID: <cbae3475-0c4c-4a71-af8d-67cc8bb7de21@amd.com>
+Date: Wed, 25 Jun 2025 14:26:39 +0200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] KVM: guest_memfd: Remove redundant kvm_gmem_getattr
+ implementation
+To: Shivank Garg <shivankg@amd.com>, pbonzini@redhat.com,
+ kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: bharata@amd.com, tabba@google.com, ackerleytng@google.com
+References: <20250602172317.10601-1-shivankg@amd.com>
+Content-Language: en-US
+From: "Gupta, Pankaj" <pankaj.gupta@amd.com>
+In-Reply-To: <20250602172317.10601-1-shivankg@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR4P281CA0127.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:b9::11) To IA1PR12MB8189.namprd12.prod.outlook.com
+ (2603:10b6:208:3f0::13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFuQHqSd9kT87tsF@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA1PR12MB8189:EE_|SA0PR12MB4480:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5a71a29a-9d5a-46ee-f0f1-08ddb3e38ab3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?SzVqVVJ2dWFLTzdyN0FjTWdOYXFKV3Z3eEI5Rnh3aXEwQVdtR2dqVlVFQmZm?=
+ =?utf-8?B?U3lhc2lHQ1ZTc21MSk9HTU5ud05FRk83QlRkYmdZeUJ2RUlDTkl1NVFhakxR?=
+ =?utf-8?B?Nkx0VXNjd2RtblNGaDM5RFQ5V0g1eEtudkVTeElYWkhaMCtsV0YwK21jMUdD?=
+ =?utf-8?B?aC9RZUE5QzF3VkFOSFN3NCtIL1VET3NFbFE3cmc3UXh0eHRQNFova05vdXlS?=
+ =?utf-8?B?aDd4cEtuZmMvTnZsWWczcWljZDc2aW91ZVJLbVFCT0dXYmZxWERXOEtSSWo1?=
+ =?utf-8?B?T0g4SVFQYlF0c3R5clpLdnN2KzB4N2MzeEZGMEtGdGFpSUUwbUp4c2tjak1K?=
+ =?utf-8?B?ZkRJd2RWeU5GcDVMSTRqVjlMS0dQckJnakVmUmhLTTIrd00zMnhoNE1JQmRr?=
+ =?utf-8?B?YXhZS2dRRHp5ZXlCbVZWWlU3VzJqR2VscmozZVRQSWFaQTl5Q2xmeE1rTTRk?=
+ =?utf-8?B?OTdMaEx4RlNvNm5rOWZIQ2tHa1EwZ3l6WVlkNjQwcDZpOE14YXViVWpUclN0?=
+ =?utf-8?B?VkIvcTl4ME54eHMraWlNODkxWmFRM0o3S3JYSGwyZWJnYXRDcTVhYU9mdkhx?=
+ =?utf-8?B?NDljdW9GOGRqbU1hVXRWUHlRSWQ1eVhyMFlqN0pWeVNKMzlZZE9Vc2FDLzBq?=
+ =?utf-8?B?VFgwWGl4L09CSHMrR3VybElIQmFMb1VzVkV1VDZjSXlRaXViUTdrODJiQ0Nn?=
+ =?utf-8?B?c1dyMWM3MDFiL3paelkyVXltYmVXWkRsSnRLeVNOUEhlN3VybHNwN1M1VWZW?=
+ =?utf-8?B?Y3FjdTQxdFAwK2U3ckpZZnhyMzQ3QzROYXpQWU9VbHM0Rlk4ZW9rNUpzdzdY?=
+ =?utf-8?B?ZEQzeGVEalMxNWNUZDJKVlZnR2RHRzg3c0FVRnhXSFVnZk5Wa2dHdkNrdlZG?=
+ =?utf-8?B?TTcyVnFMS2dKenhvWTUwbGtzSGJvNmNlaDRUVHk0aTVPU084MFdPbFBORWgx?=
+ =?utf-8?B?dkV3Q09PSG9RVmVHZzFMWlJrOUY5UjRZUVdWYkVKRW9tRWpWRDFqbDN0NGkx?=
+ =?utf-8?B?M01tVTcwTlFXUlRwZVMxT2JweXpFa1lub2xiWldOaloxRk5aaS9xQnpXdC96?=
+ =?utf-8?B?SVpTekc0VVZOcnlid21DbWQ4RmN2bkFoQUZqdkY1Mk1sdTZWY0RycytPRHo4?=
+ =?utf-8?B?Tmt4djB3Njc3d0Rpa2xVV0RzTjZ3dUJkWXBhRE1zcHUrMDJRQ0pTSDYyMHhi?=
+ =?utf-8?B?UzdVNGI1bkJxTGE1bEx5cVlwaWJyanFldktxOUlMME4xSHNMZW1hWHdSNTc1?=
+ =?utf-8?B?cVhVeHVSMCtpekZxMW5zZm1FTVBCSHZlMzhMclBCQ2NaMkZ2clpHcFBQZVFG?=
+ =?utf-8?B?SGcyZmRNVDZ3MEdGa3dPakpZOEJNNStBNDYyeGZ1L1drcjFFNlp0Slp3MHRv?=
+ =?utf-8?B?YlRBNDRaSnlxVUdkeFBNb25mVDdjcFZteVlkMy9HOWZtYVlTUVZxT2UxZTFK?=
+ =?utf-8?B?SmZhK3JjQ0lWMmF0Mlh4N3lzb2x3dVArZjJudzRLL0ladW1kcmlmSlIxdTYz?=
+ =?utf-8?B?WFpRWG5VYmxpOXU3TXpodmtWLzNvTzd2RjhlS3k0VzhvYjNQenJBczFoYmNu?=
+ =?utf-8?B?VnVPZXlDbzc0dTBodTE1MStIS005cWNJVEpUWFg0bjJaWG5rOWl3WFFPY3ZH?=
+ =?utf-8?B?V0VsamZxY0RQVHYwT3NrQ29mUHFQYUhoOWhUUVhkOExxQnRTOWlheDdmQU9K?=
+ =?utf-8?B?bDVyTStoK0JLVTZ3c3RGcG5mMVZaZ0FIREp3am03ZHlrbDhLZEdmb1FFSURK?=
+ =?utf-8?B?amtOczAyUTVUeHJDdHNFWEZ2a0RuS05Rc3VETTAwc2EvM3ZTeDk2MUR1b1d2?=
+ =?utf-8?B?b3RDczZZclBPVmc2TGZmT3NWd0dFNGlCN0prTWFCeUlKTjh6WnNWYVhtZ096?=
+ =?utf-8?B?MTVqOXp6RmRFWjFNS1NJWjlGNHdSSmJTNy8vY2VMUDl3WHFuM3BMWUNDU1J3?=
+ =?utf-8?Q?KlEGwEdTELE=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA1PR12MB8189.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eVdDakdVM0x4ZzZHVWNkbENzSEdnYnNCYmpsRkw5SCtJN1JSSzVnRXE0ejhL?=
+ =?utf-8?B?N3BXSWtuL2NBaTVCciszQWtBbGZaUUJEd3hqRGU3bHk4ZWNTbFdqMU4waW5h?=
+ =?utf-8?B?OVJ2VkU1dkk2VGhubWdKNW83RXhscUJlVE5BQmpwU1BwME4yUXRzU2lVaXZa?=
+ =?utf-8?B?NkwwamcvZ2U0NlhDTG5aZ2RLdDR4a0hCK1I0ckhYS1JyUGlsU1F4T3prWnll?=
+ =?utf-8?B?Qk9oTG56dzlTbHlxZVZHeHhPNFk5Mi9vcUR1RTVkL0VlZ0J6ZlByeDJHNitt?=
+ =?utf-8?B?RWc5bWpwS3dzbnJ1dkFhZGc4b2RWdEF6Z0FBK09INnNMMWtoOEh6U0wzZlAr?=
+ =?utf-8?B?MUt2b0VDWWdnQ1I5NThORnFkaTR2Q2JIeFFUZk8zdU15YlpWSnJuNUVvTEVm?=
+ =?utf-8?B?ell3QjRaV1Y2QUV3STJYc056WlA5eS90Qzc0dmVibWtIS2ZKRmdBRmJFSlRn?=
+ =?utf-8?B?YzVpb3dtUlBMa2NISG1ldkRPcXdCY1JsV05yaXhnRjJrR2lFc2lHMkcwMkVW?=
+ =?utf-8?B?dHVjY2ZLbGZLTHdkNDlxV0RpOWdWbmRkUGVkSVJldTB2VXVwWThNWWNlaXNP?=
+ =?utf-8?B?cmZrUEM1V2UxdWpqdjRlVENla29JN3dhaEFEMVdCMnkyLzlWREV6QnAzMTd5?=
+ =?utf-8?B?aDQ3ZExsai9Xc0grc0piT1Q3THptNVh2bWR0WmE0MFVxcEpZRDEvV1pTNEFT?=
+ =?utf-8?B?K1lHejFYNHlWWG8yUHNtcy9VazNGT2laY3luWFNMVGJ5aW1vUXRhSjVyaTFt?=
+ =?utf-8?B?MUJENDIvOGlxd2sxS1YzelRHdmtuWHMvZU52ZG55WUljbndSajJ6YW5ya2xy?=
+ =?utf-8?B?anUvQTc3Sy84VnVuTW1WZHJSS2pxVjM2VHl6MkhUbG1mNnMwZlpzRCt3S1FC?=
+ =?utf-8?B?TFBidEhjS0N4WlA0UVlMUC81eVp3WEpnWlIyd3JOYjFRSndtQVFNbVF0akJn?=
+ =?utf-8?B?MTJvaUJVbEFWc2pybmNrc2Y3N3Ava2ZkeUIvakxENFJzSlhtdjRqK2hoSU1Q?=
+ =?utf-8?B?OWcvMHUwUmdEdm9oN2Mrb01lVkhpN3dod2tiVEZkWHpuWXFaWWJMZWpNbkFY?=
+ =?utf-8?B?dDYvbzRCcUJpd2NNQS82TStpUzBqcG5yM2NTT2R6Z1BsMTlEOGF2WlFmbDZM?=
+ =?utf-8?B?cjZxY1Y0bkV1ZkE4cjJxRHdLWEduN3ZDTEFUSWdCc2p1TUhwS3VMRkNLakR2?=
+ =?utf-8?B?WmtycDVyM2c4Uk9vWU1TQm16anVkbCtDNFZnQUkwc0hqYkhYOUtLSEJ5aW1Z?=
+ =?utf-8?B?SmVvTzFHMGNGdTdFdTZvMk1hV21uOE4xdm5aMGRxTXYvVm9PLzcvM2lGeDlN?=
+ =?utf-8?B?ejcwZnFDeVFaZnJFUHVBcWk5K3pGdnNNQlNPbFo1MzJJbmd3emgzeHVvTkdH?=
+ =?utf-8?B?bzZuYWQvWGZvbEJJN1JLODBnRnkvVFVWNHk3T0RycDN4bHJjUGRWek13RXpN?=
+ =?utf-8?B?bnZQbHc5QUdOclZyZkpsUkt3ZjdwN0dyaEhxYURLUjJFa2FQK0VtMHZGWVor?=
+ =?utf-8?B?Mm1teTgxWFMxQWswR01vMGNMR1NJSFlzRlNZMkZROHFNUU80SkxTVFZSRUlo?=
+ =?utf-8?B?NU54Zk9Ud2RKeHJHaTAzUWoxMzBRWGl0LzIrN2VBQlZmcmMrMzB2ejF4Vm0z?=
+ =?utf-8?B?T3BsVzZSc3MvYWpUcWtmV2JMWWMwSkxZZzlwUldwMkZVUGYrSVZCb2VVSFNY?=
+ =?utf-8?B?Snpmbk8yMEJiR0pESktqMHIxUTZEQ2FIOTlWZkxGN082MFNPUWwyYklhNkNW?=
+ =?utf-8?B?bDRIanVFNUZrYU1GRGVlTCtPYjFRYVovcS83RXloaFdsSXBDc0lDRSs5elNp?=
+ =?utf-8?B?NXBRdE1qNUNUTnVHR05obW4vMXpqVnNLU3hWeVJDK0ordy8vc202U24rS0Rn?=
+ =?utf-8?B?Y0VwV0YxaEJ3dHZDMnpSN0wwS0tVN1l2NnRGOUhGTGdYRGp6K3JPRVlzcWtY?=
+ =?utf-8?B?aUhUR0VZRXpDb0FIendZSy9reW9YV2dQOHF5SXY1WnBXRFVOODNRbWFUMkt3?=
+ =?utf-8?B?SXBzeXQzb0d4KzUyTlFoenZWcFRndTdWMnltNmJON3R6K2ZEbzdiS01oSkFk?=
+ =?utf-8?B?bjdtOGxINDQrM1VhTWtsWE9ENHhWTVBXNkdpblJWQUZXZy9TU1FJKzBsQ3ZU?=
+ =?utf-8?Q?r8CGoG+6OsgL2bqFzqzKQpdj6?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a71a29a-9d5a-46ee-f0f1-08ddb3e38ab3
+X-MS-Exchange-CrossTenant-AuthSource: IA1PR12MB8189.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 12:26:42.5170
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ov+iJ+kM9NhAJW7MsjfOtBU5i5Gff1EDSUBF1SnHARJ4uLVVpoWnCjN7pSwyXQ09Rcq1gW1mcjhKru603Gj6IA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4480
 
-On Wed, Jun 25, 2025 at 05:58:54AM +0000, Tzung-Bi Shih wrote:
-> How about repharse the message to something like:
+On 6/2/2025 7:23 PM, Shivank Garg wrote:
+> Remove the redundant kvm_gmem_getattr() implementation that simply calls
+> generic_fillattr() without any special handling. The VFS layer
+> (vfs_getattr_nosec()) will call generic_fillattr() by default when no
+> custom getattr operation is provided in the inode_operations structure.
 > 
->     Load Linux-owned SMI handler:
->     - Place Linux-owned SMI handler in ...
->     - Inform coreboot the location of Linux-owned SMI handler via SMI ...
+> This is a cleanup with no functional change.
 > 
->     On success, the Linux-owned SMI handler takes over all upcoming SMIs.
-> 
+> Signed-off-by: Shivank Garg <shivankg@amd.com>
 
-Yep, will do.
+Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
 
-> > diff --git a/drivers/firmware/google/Makefile b/drivers/firmware/google/Makefile
-> > [...]
-> > +
-> > +# LinuxBootSMM related.
-> > +payload-mm-$(CONFIG_COREBOOT_PAYLOAD_MM)	:= mm_loader.o mm_blob.o
-> > +
-> > +subdir-						:= mm_handler
+> ---
+>   virt/kvm/guest_memfd.c | 11 -----------
+>   1 file changed, 11 deletions(-)
 > 
-> subdir-$(CONFIG_COREBOOT_PAYLOAD_MM)?
-> 
-Right.
+> diff --git a/virt/kvm/guest_memfd.c b/virt/kvm/guest_memfd.c
+> index b2aa6bf24d3a..7d85cc33c0bb 100644
+> --- a/virt/kvm/guest_memfd.c
+> +++ b/virt/kvm/guest_memfd.c
+> @@ -382,23 +382,12 @@ static const struct address_space_operations kvm_gmem_aops = {
+>   #endif
+>   };
+>   
+> -static int kvm_gmem_getattr(struct mnt_idmap *idmap, const struct path *path,
+> -			    struct kstat *stat, u32 request_mask,
+> -			    unsigned int query_flags)
+> -{
+> -	struct inode *inode = path->dentry->d_inode;
+> -
+> -	generic_fillattr(idmap, request_mask, inode, stat);
+> -	return 0;
+> -}
+> -
+>   static int kvm_gmem_setattr(struct mnt_idmap *idmap, struct dentry *dentry,
+>   			    struct iattr *attr)
+>   {
+>   	return -EINVAL;
+>   }
+>   static const struct inode_operations kvm_gmem_iops = {
+> -	.getattr	= kvm_gmem_getattr,
+>   	.setattr	= kvm_gmem_setattr,
+>   };
+>   
 
-> > +obj-$(CONFIG_COREBOOT_PAYLOAD_MM)		+= payload-mm.o
-> > +
-> > +$(obj)/mm_blob.o: $(obj)/mm_handler/handler.bin
-> > +
-> > +$(obj)/mm_handler/handler.bin: FORCE
-> > +	$(Q)$(MAKE) $(build)=$(obj)/mm_handler $@
-> 
-> mm_handler/ isn't visible to this patch. Separate them into the following
-> patch of series?
-> 
-> > diff --git a/drivers/firmware/google/mm_blob.S b/drivers/firmware/google/mm_blob.S
-> > [...]
-> > +SYM_DATA_START(mm_blob)
-> > +	.incbin	"drivers/firmware/google/mm_handler/handler.bin"
-> > +SYM_DATA_END_LABEL(mm_blob, SYM_L_GLOBAL, mm_blob_end)
-> > +
-> > +SYM_DATA_START(mm_relocs)
-> > +	.incbin	"drivers/firmware/google/mm_handler/handler.relocs"
-> > +SYM_DATA_END(mm_relocs)
-> 
-> mm_handler/ isn't visible to this patch. Separate them into the following
-> patch of series?
-> 
-
-Would it make sense then to merge patch 2/3 and 3/3 into one? mm_loader
-depends on mm_blob, and mm_blob depends on mm_handler/ being visible.
-I wanted to split these initially as the 3rd patch is already terrible
-to read because of all the assembly code in mm_handler/. But if it makes
-sense to have them as one patch, I'll do that.
-
-> > diff --git a/drivers/firmware/google/mm_loader.c b/drivers/firmware/google/mm_loader.c
-> > [...]
-> > +#include <linux/module.h>
-> > +#include <linux/init.h>
-> > +#include <linux/cpu.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/gfp.h>
-> > +#include <linux/mm.h>
-> > +#include <linux/slab.h>
-> > +#include <linux/device.h>
-> 
-> Please review again if it really needs to include the headers. Does it need
-> to include cpu.h, mm.h, and slab.h?
-> 
-> Also sort them alphabetically.
-> 
-
-Right, I forgot to clean these up, my bad.
-
-> > +struct mm_header *mm_header;
-> > +static void *shared_buffer;
-> > +static size_t blob_size;
-> > +static struct lb_pld_mm_interface_info *mm_cbtable_info;
-> > +struct mm_info *mm_info;
-> 
-> No. Please allocate a driver specific struct and access it via
-> dev_set_drvdata() and dev_get_drvdata() if the context needs to be kept.
-> 
-
-Yep will do.
-
-> > +static int trigger_smi(u64 cmd, u64 arg, u64 retry)
-> > +{
-> > +	u64 status;
-> > [...]
-> > +
-> > +	if (status == cmd || status == PAYLOAD_MM_RET_FAILURE)
-> > +		status = PAYLOAD_MM_RET_FAILURE;
-> > +	else
-> > +		status = PAYLOAD_MM_RET_SUCCESS;
-> 
-> No. Please use -errno in the kernel.
-> 
-
-In which line here exactly? In the conditional statement I explicitly
-check for RAX (and hence status) being 1. Not sure if status == EPERM
-would make any sense here. I guess you meant specifically 
-status = PAYLOAD_MM_RET_FAILURE? Then what would be appropriate -errno?
-I think it could be -EREMOTEIO or -EIO, since the APMC SMI which
-trigger_smi does is an I/O write. But I am not sure if that's the
-appropriate errno.
-
-> > +static int get_mm_info(struct coreboot_device *dev)
-> > +{
-> > +	mm_cbtable_info = &dev->mm_info;
-> > +	if (mm_cbtable_info->tag != LB_TAG_PLD_MM_INTERFACE_INFO)
-> > +		return -ENXIO;
-> > +
-> > +	mm_info = devm_kzalloc(&dev->dev, sizeof(*mm_info), GFP_KERNEL);
-> > +	if (!mm_info)
-> > +		return -ENOMEM;
-> > +
-> > +	mm_info->revision = mm_cbtable_info->revision;
-> > +	mm_info->requires_long_mode_call =
-> > +		mm_cbtable_info->requires_long_mode_call;
-> > +	mm_info->register_mm_entry_command =
-> > +		mm_cbtable_info->register_mm_entry_command;
-> 
-> Does it really need to copy the data from `&dev->mm_info`?
-> 
-
-Not necessarily, the concept of copying the data made sense with v1
-patches where the "parser" was in separate module, and was exporting
-mm_info to mm_loader. I think it would be sufficient here to get rid of
-get_mm_info and just let mm_loader_probe check for the tag:
-
-	mm_cbtable_info = &dev->mm_info;
-	if (mm_cbtable_info->tag != LB_TAG_PLD_MM_INTERFACE_INFO)
-		return -ENXIO;	
-
-> > +
-> > +	u32 entry_point;
-> > +
-> > +	entry_point = place_handler(&dev->dev);
-> > +
-> > +	if (register_entry_point(&dev->dev, mm_info, entry_point)) {
-> > +		dev_warn(&dev->dev, ": registering entry point for MM payload failed.\n");
-> > +		return -1;
-> 
-> Please use -errno in the kernel. -ENOENT or -ENOTSUPP?
-> 
-
-Yep. -ENOTSUPP fits here.
-
-> > +	}
-> > +
-> > +	/*
-> > +	 * Gives SMI some time in case it takes longer than expected.
-> > +	 * Only useful on real hardware (tested on RaptorLake), not needed on emulation.
-> > +	 */
-> > +	mdelay(100);
-> 
-> This looks weird. Are there some ways for Linux to be aware of the SMI has
-> completed?
-
-Not in a straight forward fashion. On Intel SoCs we could read MSR_SMI_COUNT
-[1] before and after sending an SMI, and wait till it increments. I am
-not aware about any unified way that works for AMD SoCs. However, so far
-none of the AMD boards supported by coreboot was tested with MM payload,
-so to make it Intel-only in v3 is not a bad idea.
-
-[1]: https://elixir.bootlin.com/linux/v6.16-rc3/source/arch/x86/include/asm/msr-index.h#L880
