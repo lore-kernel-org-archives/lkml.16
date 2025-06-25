@@ -1,83 +1,177 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F55A175A5
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:30:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C37175A5;
+	Wed, 25 Jun 2025 14:31:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750861857; cv=none; b=kI5cKdFkNHcjLdw5DqedQ/eIUqwRfTyf0xR38yeRePvMuv/VEFKcadd4xbppw7Y6wff5XdyeTY9Pa/H6BENNMdjX0NCLhHBq7QOFi/UPsMjexRRspG8jaxOd9L4LHNKSxWofPwPaJmBX3MWxu9dZmWid2BRPAJx09k9mpohxynw=
+	t=1750861886; cv=none; b=VsDSNXGzgBrGgAEMguXTpMwwFh3iFKjiXlL45W2b5ZQ30NQOrS1jLJfSARP3hpwBD8ryUh4koumahhdXnUfemxkWN4d26Me4RngaEdjcitf5qeP/TvfPEzHqTpOyHsDCdplhyBjT9j5DpgbjkY1JZK+wjI/I7XoUn9n8xaDk1sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750861857; c=relaxed/simple;
-	bh=dAJQaczav+5mwL1Y2Kgggjtw996gUr7V6zTfYs3ao5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ikyHvKgx2E7Hvvw8AaCTpC8nX6MHvM5/b3l5PD0edOVLTw24k2Qsj+MFFTPk0tKYOvleVwo2C8raFGqHTvZGF05KAWDwgIQBufW1wRcrJ+Mjw2+cmPTVvlP65FfCs3mVKcMBXgc6XoUNUq+pCyls0Dg/4YNj3tzK/9YTiOSMP8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nOMukM+I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750861886; c=relaxed/simple;
+	bh=Jcjv+dddV2ui/w203eJdS8SKE0fSdMAbf6Th4P6s6sw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dUg6g5h50brRH+wnzoY2C+BlqUsqMidzNkiuJM4aNbuxu2Yut+DJfPoRCT2RiT/87RKbmfUDN9P6utrJF6A2YNgxI6zg48OQ/t5bCIx3M2aEf7VSxdbNi/Fp0vC1TmDR53DCDhqziwicIHi9WNN3JoWWdGJdomQvbAi0SJ/rsAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhvUBeDz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nOMukM+I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A064EC4CEEA;
-	Wed, 25 Jun 2025 14:30:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhvUBeDz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2C91C4CEEA;
+	Wed, 25 Jun 2025 14:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750861856;
-	bh=dAJQaczav+5mwL1Y2Kgggjtw996gUr7V6zTfYs3ao5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nOMukM+IFsxNZ1Y6E2SgIwH8CcINZcQibc1atrgcSDmznieEdaV+KmirgvmNjQj//
-	 s6MquvtuzmO5/Ei3GjpG1MReJtpKkiiZqjtoO0Oynau+8owWGyWe4N1AEFpfpZdfKY
-	 D/IvUDMsf4sIXbFzQ1gUbZesK76I/buHdYZiKRs7vVdKKnCWP+yAvgTqEoULapG7CW
-	 K46YyjJwgktj+nVZPC6ZgoBf+FrhiLLt8kV+NbuH3oTLa3iP+lro6YZ2XOX/7gt7xY
-	 +owbLxSeYpgelL/X/P9RWQ6HPMKg04v+N1s1B3VLAQ/DwM+SHXxOGWIOpoyp9R1eYI
-	 WeU0/0CH1FKwQ==
-Date: Wed, 25 Jun 2025 16:30:54 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Tejun Heo <tj@kernel.org>
-Cc: Waiman Long <llong@redhat.com>, LKML <linux-kernel@vger.kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Marco Crivellari <marco.crivellari@suse.com>,
-	Michal Hocko <mhocko@suse.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH 02/27] sched/isolation: Introduce housekeeping per-cpu
- rwsem
-Message-ID: <aFwIHnSr8lok7Gks@localhost.localdomain>
-References: <20250620152308.27492-1-frederic@kernel.org>
- <20250620152308.27492-3-frederic@kernel.org>
- <3bf95ee2-1340-41b1-9f5c-1563f953c6eb@redhat.com>
- <aFmRQLv2RWbqX01b@slm.duckdns.org>
- <509c307c-c72f-423c-b5c4-a1c5fdcac7a1@redhat.com>
- <aFmXAjmtasot2rp6@slm.duckdns.org>
+	s=k20201202; t=1750861885;
+	bh=Jcjv+dddV2ui/w203eJdS8SKE0fSdMAbf6Th4P6s6sw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JhvUBeDzL7M6b/VIQTjsjQox29Ft5/n+QtfpwL/mRmVUAtjEvCwvnSygjEKmqRMml
+	 r9rWrz286dnobMM1Au/LMyDS6a3aMVFFBsd/yLaKsWT5pHgmbXNnKfvy6rCPlcqxd1
+	 wowLCk+7H2RnhWeItQJF55C3XNfywypAqCcY8Z7wjb7MqqMcFqFSAZ9lzTvHrfir3I
+	 4KrgIAt9fH+kpSOKpUkSo+LBXFrOTinKmkKSK7Ny3dW0x3mgfPAxi+7ditCy+iBvdN
+	 cA93qAud4RhLKaiBRXTmTpqJwbmVeP+cYVvFUoCmD938ig+P1YiwrHHXf5N6Ma6F1w
+	 DE+TNcjCCFSeg==
+Message-ID: <92ab85ff-6314-4db0-ae12-9803ddde5037@kernel.org>
+Date: Wed, 25 Jun 2025 16:31:22 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] Revert "Input: soc_button_array - debounce the
+ buttons"
+To: Mario Limonciello <superm1@kernel.org>,
+ Mika Westerberg <westeri@kernel.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <20250624202211.1088738-1-superm1@kernel.org>
+ <20250624202211.1088738-3-superm1@kernel.org>
+ <4a4d577b-a085-46e8-97b9-6df27461c870@kernel.org>
+ <1f8c0262-b376-43cb-b2c5-5b60e8cbf678@kernel.org>
+Content-Language: en-US, nl
+From: Hans de Goede <hansg@kernel.org>
+In-Reply-To: <1f8c0262-b376-43cb-b2c5-5b60e8cbf678@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aFmXAjmtasot2rp6@slm.duckdns.org>
 
-Le Mon, Jun 23, 2025 at 08:03:46AM -1000, Tejun Heo a �crit :
-> Hello,
+Hi Mario,
+
+On 25-Jun-25 4:09 PM, Mario Limonciello wrote:
+> On 6/25/25 4:09 AM, Hans de Goede wrote:
+>> Hi Mario,
+>>
+>> On 24-Jun-25 10:22 PM, Mario Limonciello wrote:
+>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>
+>>> commit 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
+>>> hardcoded all soc-button-array devices to use a 50ms debounce timeout
+>>> but this doesn't work on all hardware.  The hardware I have on hand
+>>> actually prescribes in the ASL that the timeout should be 0:
+>>>
+>>> GpioInt (Edge, ActiveBoth, Exclusive, PullUp, 0x0000,
+>>>           "\\_SB.GPIO", 0x00, ResourceConsumer, ,)
+>>> {   // Pin list
+>>>      0x0000
+>>> }
+>>>
+>>> Let the GPIO core program the debounce instead of hardcoding it into a
+>>> driver.
+>>>
+>>> This reverts commit 5c4fa2a6da7fbc76290d1cb54a7e35633517a522.
+>>
+>> This is going to cause problems I'm afraid I just checked and
+>> based on randomly checking a few DSDTs of the tablets this driver
+>> is used on, it seems the DSDT always specifies a debounce timeout
+>> of 0 like your example above. And on many many devices using
+>> the soc_button_array driver debouncing is actually necessary.
 > 
-> On Mon, Jun 23, 2025 at 01:57:17PM -0400, Waiman Long wrote:
-> > The percpu-rwsem does have a cheaper read side compared with rwsem for
-> > typical use case where writer update happens sparingly. However, when the
-> > writer has successful acquired the write lock, the readers do have to wait
-> > until the writer issues a percpu_up_write() call before they can proceed. It
-> > is the delay introduced by this wait that I am worry about. Isolated
-> > partitions are typically set up to run RT applications that have a strict
-> > latency requirement. So any possible latency spike should be avoided.
+> That's unfortunate to hear.
 > 
-> I see. Hmm... this being the mechanism that establishes the isolation, it
-> doesn't seem too broken if things stutter a bit when isolation is being
-> updated. Let's see what Frederic says why the strong interlocking is needed.
+>>
+>> May I ask what problem you are seeing with the 50ms debounce timeout /
+>> what problem you are exactly trying to fix here ?
+> 
+> The power button doesn't work to wake from suspend.  I bisected it down to your commit and then later traced that debounce from the ASL never gets set (pinctrl-amd's amd_gpio_set_debounce() is never called).
 
-I should be able to work around that.
-I think only PCI requires that rwsem because it relies on work_on_cpu().
+Ok, so specifically the gpiod_set_debounce() call with 50 ms
+done by gpio_keys.c is the problem I guess?
 
-I can create a dedicated workqueue for it that housekeeping can flush after
-the cpumask update.
+So amd_gpio_set_debounce() does accept the 50 ms debounce
+passed to it by gpio_keys.c as a valid value and then setting
+that breaks the wake from suspend?
 
--- 
-Frederic Weisbecker
-SUSE Labs
+> Also comparing the GPIO register in Windows (where things work) Windows never programs a debounce.
+
+So maybe the windows ACPI0011 driver always uses a software-
+debounce for the buttons? Windows not debouncing the mechanical
+switches at all seems unlikely.
+
+I think the best way to fix this might be to add a no-hw-debounce
+flag to the data passed from soc_button_array.c to gpio_keys.c
+and have gpio_keys.c not call gpiod_set_debounce()  when the
+no-hw-debounce flag is set.
+
+I've checked and both on Bay Trail and Cherry Trail devices
+where soc_button_array is used a lot hw-debouncing is already
+unused. pinctrl-baytrail.c does not accept 50 ms as a valid
+value and pinctrl-cherryview.c does not support hw debounce
+at all.
+
+> So that's where both patches in this series came from.
+> 
+>>
+>> drivers/input/keyboard/gpio_keys.c first will call gpiod_set_debounce()
+>> it self with the 50 ms provided by soc_button_array and if that does
+>> not work it will fall back to software debouncing. So I don't see how
+>> the 50 ms debounce can cause problems, other then maybe making
+>> really really (impossible?) fast double-clicks register as a single
+>> click .
+>>
+>> These buttons (e.g. volume up/down) are almost always simply mechanical
+>> switches and these definitely will need debouncing, the 0 value from
+>> the DSDT is plainly just wrong. There is no such thing as a not bouncing
+>> mechanical switch.
+> 
+> On one of these tablets can you check the GPIO in Windows to see if it's using any debounce?
+
+I'm afraid I don't have Windows installed on any of these.
+
+But based on your testing + the DSDT specifying no debounce
+for the GPIO I guess Windows just follows the DSDt when it
+comes to setting up the hw debounce-settings and then uses
+sw-debouncing on top to actually avoid very quick
+press-release-press event cycles caused by the bouncing.
+
+Regards,
+
+Hans
+
+
+
+
+
+>>> Cc: Hans de Goede <hansg@kernel.org>
+>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>> ---
+>>>   drivers/input/misc/soc_button_array.c | 2 --
+>>>   1 file changed, 2 deletions(-)
+>>>
+>>> diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
+>>> index b8cad415c62ca..99490df42b6f2 100644
+>>> --- a/drivers/input/misc/soc_button_array.c
+>>> +++ b/drivers/input/misc/soc_button_array.c
+>>> @@ -219,8 +219,6 @@ soc_button_device_create(struct platform_device *pdev,
+>>>           gpio_keys[n_buttons].active_low = info->active_low;
+>>>           gpio_keys[n_buttons].desc = info->name;
+>>>           gpio_keys[n_buttons].wakeup = info->wakeup;
+>>> -        /* These devices often use cheap buttons, use 50 ms debounce */
+>>> -        gpio_keys[n_buttons].debounce_interval = 50;
+>>>           n_buttons++;
+>>>       }
+>>>   
+>>
+> 
+
