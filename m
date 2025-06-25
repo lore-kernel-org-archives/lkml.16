@@ -1,135 +1,134 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C0A16A395;
-	Wed, 25 Jun 2025 15:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB83E263C8E
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:16:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864520; cv=none; b=LRJsIrwL71HE6kgNwDq4sHFrLn/B4BiVgvEvmzlxeBrQf7AzTYVwsYvKapjV9PC2KmGBBnQ4FQHasKPbMdow/42huKFu7QEZHleIkZl+VIn8StmI7KAEVN2pzenKxwkyUZ6rJoaGYsegou6Olb5GAmXbnkBpmWUAgwLSEzIpqeA=
+	t=1750864569; cv=none; b=FIIhf0f8MIrLpbkTD0V1wP5V4Jsg+O6PP1Hf1fgsrSxV/Q1h5J1uSTJNxtn2BwpwnCet1DqmRoUoTjYhxrObXjcennkdgARoAvj/Airmp/PaMN67S1cucwjB3JtAOcmXkf+EGSMgy7GG7zyOyXs2MQK0m6WjArayKHBbCvIK1Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864520; c=relaxed/simple;
-	bh=X+geANwj+e06vg9CyGf+Mrs07Xd21aM6EWzSmqpFrec=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I4PjFcz9PO7A6Xkrq54XSL8n+meAeHrMn0+YJ9Qo8463Q37KL3WG4Yo3nIFgX6UtxWZVZj4IgH4bTjJf5NMDIJ90fGp3x50vXGI9wWKtk1sxYZ49O6BdHuNRPukRsoEuPiDYLvwVsn82Slj4QQ/VOA3BkueVoP82uvscHabmKJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BVwg/mlq; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750864569; c=relaxed/simple;
+	bh=9uiCx//aBaD0yGFQdVerDfD2PgBCP5+9oifVTXlFXYI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r+2Xi5baCFOIEibUM/7JLa9BS9mhATjTpwL4x0YQTrJ8gMe3WaiywfjlfbWhY66DHHCiSbWw74KYf6OZYQ0++9lFC9kWsXeiF8/fdWzuk8VQYhpVTF1cIa+tMch39BGbaVWHtvltvRC9FBUJm5hi3YXq5rodUOjWN97kHWFQ7Vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TkY2tMZ3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BVwg/mlq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750864519; x=1782400519;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=X+geANwj+e06vg9CyGf+Mrs07Xd21aM6EWzSmqpFrec=;
-  b=BVwg/mlqFIIQDcFI/laz/FDzZGUheABJwo2lXfxqiEpEO+f3yZy0Y1cl
-   9jomIMZTd2vvje0L8dSD3yb2ahrB/VJWYFIIMIMqcd64Cra8cro+ZQ0mF
-   M5gYJn0A4iz+CxiXDGBYxq1vgYGdG3zTOCV88BRAdmyokZLdr6/kzCjvT
-   z5yMIJWdXonvQhKDNyVS27DfNsH8vgtAV/F6Tflnqtlz23+ZB2mec9a4f
-   7ac0jYaiQfBZWEzuiaRpZ2tYRhtWMALMM1LDBbSxjWqDGC9sx15SH1/su
-   M/z2+39rxwaafKCyeTCeMA+F/5awDz1kmy+ouAj7JBoF0wO5jdWu+vRcC
-   g==;
-X-CSE-ConnectionGUID: AxH8bmpSQY6cFigpry/R2A==
-X-CSE-MsgGUID: fY+FM2zPS1S+igXfoommjw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="56925145"
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="56925145"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 08:15:18 -0700
-X-CSE-ConnectionGUID: Rw/epIH/SBarFV+yHcYMhA==
-X-CSE-MsgGUID: lqDVQTLsT5apT5AeknqQrQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="152735245"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 08:15:16 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1uURqC-00000009oWM-1sWm;
-	Wed, 25 Jun 2025 18:15:12 +0300
-Date: Wed, 25 Jun 2025 18:15:12 +0300
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: LiangCheng Wang <zaq14760@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Hans de Goede <hansg@kernel.org>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-staging@lists.linux.dev
-Subject: Re: [PATCH v5] staging: media: atomisp: fix tab/space issues in
- output1.0
-Message-ID: <aFwSgCtrK7DH3pIw@smile.fi.intel.com>
-References: <20250625-bar-v5-1-db960608b607@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TkY2tMZ3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8384DC4CEF4
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:16:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750864568;
+	bh=9uiCx//aBaD0yGFQdVerDfD2PgBCP5+9oifVTXlFXYI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=TkY2tMZ3PpuUyBYnhjn4aUhRen6PKOzLvqdf9sEQ2MwIeSuY+OeWjpUz2PKtzLDcz
+	 B84x5fB6r7hubY0bv9YGtCoqxtdkIEWLmfxvtkr4mJFWPNCgpBEawz4PePI9B2rsew
+	 Y/TVEsbzNYX88CF76bS+1UQtqUL7rhtZ95IrAMBDlOamfYc1LxzY1/K46E3gkcDhTM
+	 agcKiFkTGBV/YYJVbNCFH9UiYh0Mem0GuCe0I+QL/I7wp0sPdyM7B1gT1p9MMKQu+h
+	 5ct8o2FcCLTqx3nT4+VhEK6gcP/VA1NuCOu3nzYDSEc5w2pAi6w4YnSsaTBqcj3b3H
+	 LGmbVz2tI4yIQ==
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-313154270bbso7617669a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:16:08 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXMmG1SzaMfeY+vk9qH1IsfblAWH0JYELIcNCxBrfOad5lICILJDoUjxvBsxbw8pjQJUQnuHvpf/nIiYP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzt0tTgRLEq7DmCqqvtJUDEw7npYNhLOuN4g6BiWk6mDRJcTWFE
+	28hCT5W0AC2nsWgvyoAaHcREkXF9iYweo5edDdbVDTWrXZip0Wg4VVuDc8gW5OM3NOyu0a4hJlP
+	FbrP4QsLb35HOJ+DtM0XuFhjsO1W3eQ==
+X-Google-Smtp-Source: AGHT+IHtRKCKayH+Lzht6QxsgoVvjQ6oWe0lLgYe2Cl+JRUJ/z1lS3uwRu/T5Q4f9oAnyB42TUycr2B2CpGFTJDpP5w=
+X-Received: by 2002:a17:90b:2b47:b0:313:f83a:e473 with SMTP id
+ 98e67ed59e1d1-315f25ed7e8mr5611684a91.15.1750864568023; Wed, 25 Jun 2025
+ 08:16:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625-bar-v5-1-db960608b607@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+References: <20250606-mtk_dpi-mt8195-fix-wrong-color-v1-1-47988101b798@collabora.com>
+In-Reply-To: <20250606-mtk_dpi-mt8195-fix-wrong-color-v1-1-47988101b798@collabora.com>
+From: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date: Wed, 25 Jun 2025 23:17:13 +0800
+X-Gmail-Original-Message-ID: <CAAOTY__=3Pb2Tsr87b5FWG_DrQNdfeDC5yAE2XFo+TiP7hO6BA@mail.gmail.com>
+X-Gm-Features: AX0GCFsC1n-RCC-W67WMTwPw4kHzfcK5gDHEnXA5e3PZAISJh-AfZvkzSrkcFBc
+Message-ID: <CAAOTY__=3Pb2Tsr87b5FWG_DrQNdfeDC5yAE2XFo+TiP7hO6BA@mail.gmail.com>
+Subject: Re: [PATCH] drm/mediatek: mtk_dpi: Reorder output formats on MT8195/88
+To: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+Cc: Chun-Kuang Hu <chunkuang.hu@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Matthias Brugger <matthias.bgg@gmail.com>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, kernel@collabora.com, 
+	dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 25, 2025 at 11:04:31PM +0800, LiangCheng Wang wrote:
-> Fix indentation style issues by replacing spaces with tabs,
-> according to Linux kernel coding style.
-> 
-> This cleanup improves code readability and follows Linux kernel
-> coding standards.
-> 
-> Signed-off-by: LiangCheng Wang <zaq14760@gmail.com>
+Hi, Louis:
+
+Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com> =E6=96=BC 2025=E5=B9=
+=B46=E6=9C=886=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=888:52=E5=AF=AB=
+=E9=81=93=EF=BC=9A
+>
+> Reorder output format arrays in both MT8195 DPI and DP_INTF block
+> configuration by decreasing preference order instead of alphanumeric
+> one, as expected by the atomic_get_output_bus_fmts callback function
+> of drm_bridge controls, so the RGB ones are used first during the
+> bus format negotiation process.
+
+Applied to mediatek-drm-fixes [1], thanks.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/chunkuang.hu/linux.git/=
+log/?h=3Dmediatek-drm-fixes
+
+Regards,
+Chun-Kuang.
+
+>
+> Fixes: 20fa6a8fc588 ("drm/mediatek: mtk_dpi: Allow additional output form=
+ats on MT8195/88")
+> Signed-off-by: Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
 > ---
-> This patch addresses tab/space indentation issues in the
-> output_1.0 directory of the AtomISP driver under staging.
-> 
-> This patch is part of a broader effort to clean up the AtomISP
-> driver and is scoped only to tab/space fixes in one directory
-> to keep review manageable.
-> 
-> Further style fixes for other directories and issue types will
-> be submitted in subsequent patch revisions or series.
-> 
-> Fixes were identified using:
-> 
-> ./scripts/checkpatch.pl -f $(find drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0/ -type f \( -name "*.c" -o -name "*.h" \))
-> grep -Prn '^[ ]+' drivers/staging/media/atomisp/pci/isp/kernels/output/output_1.0
-> 
-> Only lines with space-based indentation (instead of tab) were changed.
-
-> Suggested-by: Andy Shevchenko <andy@kernel.org>
-> Link: https://lore.kernel.org/r/CAHp75VeijMvnbrCmRuqTeo_maxevCA9rB-r5URHaX+TrDNvyGA@mail.gmail.com
-
-These two lines should be just above your SoB in the commit message. Currently
-they will most likely be ignored (at least by `git am ...`.
-
-...
-
->  void
->  ia_css_output_encode(
-> -    struct sh_css_isp_output_params *to,
-> -    const struct ia_css_output_config *from,
-> -    unsigned int size)
-> +	struct sh_css_isp_output_params *to,
-> +	const struct ia_css_output_config *from,
-> +	unsigned int size)
-
-In cases like this you might want to also reshuffle the lines:
-
-void ia_css_output_encode(struct sh_css_isp_output_params *to,
-			  const struct ia_css_output_config *from,
-			  unsigned int size)
-
-...
-
-Have you tried simply to run slang-format against the whole driver using the
-clang-format configuration from the kernel source tree?
-
-With it done, you may just make it as a single patch.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>  drivers/gpu/drm/mediatek/mtk_dpi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediate=
+k/mtk_dpi.c
+> index 6fb85bc6487a019cdcdb3770dc06a1deab8d5bda..a2fdceadf209f6d2166e7523b=
+82ca18c82c7d435 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+> @@ -1095,7 +1095,6 @@ static const u32 mt8183_output_fmts[] =3D {
+>  };
+>
+>  static const u32 mt8195_dpi_output_fmts[] =3D {
+> -       MEDIA_BUS_FMT_BGR888_1X24,
+>         MEDIA_BUS_FMT_RGB888_1X24,
+>         MEDIA_BUS_FMT_RGB888_2X12_LE,
+>         MEDIA_BUS_FMT_RGB888_2X12_BE,
+> @@ -1103,18 +1102,19 @@ static const u32 mt8195_dpi_output_fmts[] =3D {
+>         MEDIA_BUS_FMT_YUYV8_1X16,
+>         MEDIA_BUS_FMT_YUYV10_1X20,
+>         MEDIA_BUS_FMT_YUYV12_1X24,
+> +       MEDIA_BUS_FMT_BGR888_1X24,
+>         MEDIA_BUS_FMT_YUV8_1X24,
+>         MEDIA_BUS_FMT_YUV10_1X30,
+>  };
+>
+>  static const u32 mt8195_dp_intf_output_fmts[] =3D {
+> -       MEDIA_BUS_FMT_BGR888_1X24,
+>         MEDIA_BUS_FMT_RGB888_1X24,
+>         MEDIA_BUS_FMT_RGB888_2X12_LE,
+>         MEDIA_BUS_FMT_RGB888_2X12_BE,
+>         MEDIA_BUS_FMT_RGB101010_1X30,
+>         MEDIA_BUS_FMT_YUYV8_1X16,
+>         MEDIA_BUS_FMT_YUYV10_1X20,
+> +       MEDIA_BUS_FMT_BGR888_1X24,
+>         MEDIA_BUS_FMT_YUV8_1X24,
+>         MEDIA_BUS_FMT_YUV10_1X30,
+>  };
+>
+> ---
+> base-commit: b3bded85d838336326ce78e394e7818445e11f20
+> change-id: 20250606-mtk_dpi-mt8195-fix-wrong-color-5aab0f6d2d27
+>
+> Best regards,
+> --
+> Louis-Alexis Eyraud <louisalexis.eyraud@collabora.com>
+>
