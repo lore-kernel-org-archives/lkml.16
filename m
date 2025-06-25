@@ -1,132 +1,152 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802CA1F461D
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:34:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0D19271A9A;
+	Wed, 25 Jun 2025 08:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750840460; cv=none; b=IQq7fJMg9N7DT8LmtaudstidvCP+giBEdJw5vhJGYeh9U/S9hClJrWvyvQug2V2+lJqTeIKDF73ognsELoPeMzwQyKHiuSHzl54TczU7+CwZBCUvtZsdGCNBZtamQB7IOQqL0uLNlqqu0KIyxuGonMHyq+XMK3tDa/pFhLd6p4A=
+	t=1750840533; cv=none; b=OzjV9nGheicNOtnQmAGCQpLVI1HTnfI8hxseI1A5fDy6hUnEdumhetPqAwXB/4/NAX2YONkRYLCDagtl+k4XZkTCgZc6QRg+KeJNsLVYfaMDAwDWoVywtsX06XdiNx0ZDLSnVP/8dfjWn4XY825GhWTJ1SNL9eLqtwaRFXn2Mm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750840460; c=relaxed/simple;
-	bh=+QtwyR1NK6SfC2uELTLQv9t/n+xX9pp+Bk+GvUshkug=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lT8DTQm8CqD7PXyo7ex2r9zysmQxtvZ/4BONpoxU+S2RgZ/U0fxWAj2r6bd6ABqpCFXs2EGgU6SENfnJt6U8uIeqFGLMCqSAbhs1g5Hlt2U7fR2QeMFu44GUWXwk2yVS9j6+BQnq6KK2ftAEisE/TLTkbz+ifdhg1OxYgz8JIko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DRyZ5gYW; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DRyZ5gYW"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a50fc819f2so1181823f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:34:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750840457; x=1751445257; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RzsHE0Dm+vaKIDZxCmSo57hINCBe8Wa9oOmgUaoD+0o=;
-        b=DRyZ5gYWo9v0nmeBMeAyqVJmcRt+Tkq0lo93uJShkqzc2w0L7qyMGnRsmcjizEZ6kb
-         664X/U4Cr5D1D/dm60GnanY55dS/TT1drT09WgQBbmA5CPqH3X0XppwFCrxXKzsReEBc
-         uhHHOyVF9VTE1bRbQvYg7EOvp5Y+eXqH38dT2HCweZ38iaZOBARkBY1BsvB69rLOLtxG
-         S0YPTmI6G01aGXK7hlUb567yRqtSsdF5dDDP5XoVjZ1WEWSzP6KvOJ5nqcJm8fmN9KgS
-         etAEE6ZbKFG7iqqe7Wadbg0m1t3KGLH0l75aoAr4K6qZZwMHSV75a/fMqpFW2xVmyfTy
-         3N5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750840457; x=1751445257;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RzsHE0Dm+vaKIDZxCmSo57hINCBe8Wa9oOmgUaoD+0o=;
-        b=uIhFWrtqwGQenRscEkEtTjseccCQcPeb9Cc7CdN5owWdWaTU7Njfx4IW2CMrNi3Pr7
-         4/EPzVPxW5yOAHRtHdOU6DJuh/gJBoUg8f7D3fb5Uenzk62oaBR7tsUEjaV977LUXzkD
-         rYCieuqdFTsgRQACk6tLUBSlEw+eXh4dHNmCEkBBPl2xKUhr4H32j8DGHATwn1XR2zLK
-         5q0b9Yj/7W+FKELfy3A5hvuFrLqc0QEGjLzbG9273iiKCRUxKlQ4lVC3wGBKTs636KO8
-         GC3dM30e5yyOza4OrOHiEs4MukYcPp6xs7NAfr6UDVBhib2j6if4G/8QH/LI+zs6TIzs
-         KPjA==
-X-Forwarded-Encrypted: i=1; AJvYcCU0+5sQrFpHYq5UKzoQ+si0NVDWGIX7ADkvqDejaL6LovPQEpFbrU2gAsIZVWDwKN4Oc7o/Dq4ZSEsmIj8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx5TRTQRI9VkGW6H4BJlQKanxLj5Ysh4ByFuePm4CqhuwTdXAnu
-	yilogcAiadwIMRRgnVB6+eOZ6Ef+JUpm2+H16Lw1afxts9ncw2MOJfhS
-X-Gm-Gg: ASbGnctBXb4c2FFj/lEYg677mM7h+PgfFvl7rku649WpBXzbYYEHeA+hpc6jvRvGI/Z
-	MpQKg+OCzcjJSLysxri09bki5fSF1Q+gNEI+h4ZAfqq7KtJIbSRrwTCPmxk0OwS6l99BcRlXMJY
-	Bozh8UopkeFq6DBax4aPlLN3rS97HMWv77Qf4A5hzJXsIh5yA0+tNCtrcclvH81LHUb2sIag6wV
-	6RrJwZ7Ll6c9WNlTmRQhjcJFdQ62uOZPtCmKvp1eFT4o/MojdjMJbE9s51sKUdYjEwOy3yRjWTK
-	45QXyWHyoXn1c0W3zUu+oOrygAykSV7U2onTuBx5T+NpGg/DvIqdZUSF3CVMHKUSbMMgzY7G1oS
-	HJN2DL0Wa8kGfIHskpQN2LGTW
-X-Google-Smtp-Source: AGHT+IG4iG1MpnnxD3c0z3g1108nyY/UfjDrLLLTyFBsEARnqSoXsXoPNJxtt7ch3KoKN+2Mq6N5Pw==
-X-Received: by 2002:a05:6000:1449:b0:3a4:dbac:2dc1 with SMTP id ffacd0b85a97d-3a6ed6506a3mr1622991f8f.54.1750840456547;
-        Wed, 25 Jun 2025 01:34:16 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538238198asm12803765e9.39.2025.06.25.01.34.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 01:34:16 -0700 (PDT)
-Date: Wed, 25 Jun 2025 09:34:15 +0100
-From: David Laight <david.laight.linux@gmail.com>
-To: Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@ventanamicro.com>
-Cc: "Palmer Dabbelt" <palmer@dabbelt.com>,
- <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>, "Paul
- Walmsley" <paul.walmsley@sifive.com>, <aou@eecs.berkeley.edu>, "Alexandre
- Ghiti" <alex@ghiti.fr>, "Atish Patra" <atishp@rivosinc.com>,
- <ajones@ventanamicro.com>, <cleger@rivosinc.com>,
- <apatel@ventanamicro.com>, <thomas.weissschuh@linutronix.de>, "Jeff Law"
- <jlaw@ventanamicro.com>
-Subject: Re: [PATCH v2 3/2] RISC-V: sbi: remove sbi_ecall tracepoints
-Message-ID: <20250625093415.53fd21cf@pumpkin>
-In-Reply-To: <DAVG8M70SJ4Q.ZSTC5VSJWGSK@ventanamicro.com>
-References: <20250619190315.2603194-4-rkrcmar@ventanamicro.com>
-	<mhng-516082EA-5A9A-4A76-9448-70828749F95F@palmerdabbelt-mac>
-	<DAUSD38QIV6D.1YO5ASNI3EUGV@ventanamicro.com>
-	<DAVG8M70SJ4Q.ZSTC5VSJWGSK@ventanamicro.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	s=arc-20240116; t=1750840533; c=relaxed/simple;
+	bh=ASrITMP/6f0gfIsNfvcsAiCPafZTrPR6wOt9JZi1Ia0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s0R4lFOgaazEK38NNlZdRg6PXj3aNggHMwpdK6osj6TbMI1OliibaVe6z/rYfB1lzeUaPHRvRXdWAMgjNdyg+fMbvaoJTlgO57FDERyAyVkHMpnDfArqGW9/phKDwEHj9FuuHT9FGwOunphWZnZJ4heQQzGjCG1slLmk24Mc3To=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
+Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
+	by leonov.paulk.fr (Postfix) with ESMTPS id 981A31F00036;
+	Wed, 25 Jun 2025 08:35:22 +0000 (UTC)
+Received: by laika.paulk.fr (Postfix, from userid 65534)
+	id 857E4AC7A3B; Wed, 25 Jun 2025 08:35:20 +0000 (UTC)
+X-Spam-Level: 
+Received: from shepard (unknown [192.168.1.1])
+	by laika.paulk.fr (Postfix) with ESMTPSA id 4EC5EAC7A2F;
+	Wed, 25 Jun 2025 08:35:18 +0000 (UTC)
+Date: Wed, 25 Jun 2025 10:35:16 +0200
+From: Paul Kocialkowski <paulk@sys-base.io>
+To: Kuba =?utf-8?Q?Szczodrzy=C5=84ski?= <kuba@szczodrzynski.pl>
+Cc: Maxime Ripard <mripard@kernel.org>,
+	Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+	dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH 0/5] drm/sun4i: Support LVDS on D1s/T113 combo D-PHY
+Message-ID: <aFu0xIHURuDttwJn@shepard>
+References: <20250221161751.1278049-1-kuba@szczodrzynski.pl>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="lE79oaprNLAlqRlL"
+Content-Disposition: inline
+In-Reply-To: <20250221161751.1278049-1-kuba@szczodrzynski.pl>
+
+
+--lE79oaprNLAlqRlL
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 25 Jun 2025 09:51:45 +0200
-Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanamicro.com> wrote:
+Hi,
 
-> 2025-06-24T15:09:09+02:00, Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@ventanami=
-cro.com>:
-> > For another example, let's have the following function:
-> >
-> >   struct sbiret some_sbi_ecall(uintptr_t a0, uintptr_t a1)
-> >   {
-> >     return sbi_ecall(123, 456, a0, a1);
-> >   }
-> >
-...
+Thanks for your work!
+
+On Fri 21 Feb 25, 17:17, Kuba Szczodrzy=C5=84ski wrote:
+> Some Allwinner chips (notably the D1s/T113 and the A100) have a "combo
+> MIPI DSI D-PHY" which is required when using single-link LVDS0. The same
+> PD0..PD9 pins are used for either DSI or LVDS.
 >=20
-> GCC 15.1 still leaves "mv" outside the branch, but at least seems to be
-> on the right track (undesired overhead is marked with leading stars):
+> Other than having to use the combo D-PHY, LVDS output is configured in
+> the same way as on older chips.
+
+=46rom what I understand of section 5.1.4.2 LVDS Mode Configuration Process
+there's two LVDS outputs:
+- LVDS0, driven by the combo-phy
+- LVDS1, driven by the usual TCON0 LVDS PHY
+
+As far as I understand the LVDS_IF register still has to be configured for
+LVDS0. The D1 manual mentions a LVDS1_IF register at offset 0x244 (which I =
+don't
+see in the T113-S3 manual, but is probably also there), which is liekely us=
+ed to
+configure LVDS1. Then we find our LVDS_ANA0/ANA1 registers that are likely =
+just
+used for LVDS1.
+
+While this series adds support for LVDS0 only, it would be good to also be =
+able
+to support LVDS1, including dual-link modes. So eventually we'd need a way =
+to
+actually support both cases.
+
+It would be great if you could include these details somewhere so they don'=
+t get
+lost. And this seems to be the exact same situation as the A133 by the way.
+
+All the best,
+
+Paul
+
+> This series enables the sun6i MIPI D-PHY to also work in LVDS mode. It
+> is then configured by the LCD TCON, which allows connecting a
+> single-link LVDS display panel.
 >=20
->    0xffffffff800236e8 <+0>:	addi	sp,sp,-48
->    0xffffffff800236ea <+2>:	sd	s0,32(sp)
->    0xffffffff800236ec <+4>:	sd	ra,40(sp)
->    0xffffffff800236ee <+6>:	addi	s0,sp,48
-> *  0xffffffff800236f0 <+8>:	mv	a4,a0
-> *  0xffffffff800236f2 <+10>:	mv	a5,a1
->    0xffffffff800236f4 <+12>:	nop
-> *  0xffffffff800236f8 <+16>:	mv	a0,a4
-> *  0xffffffff800236fa <+18>:	mv	a1,a5
->    0xffffffff800236fc <+20>:	li	a7,123
->    0xffffffff80023700 <+24>:	li	a6,456
->    0xffffffff80023704 <+28>:	ecall
-> *  0xffffffff80023708 <+32>:	mv	a5,a0
-> *  0xffffffff8002370a <+34>:	mv	a2,a1
->    0xffffffff8002370c <+36>:	nop
->    0xffffffff80023710 <+40>:	ld	ra,40(sp)
->    0xffffffff80023712 <+42>:	ld	s0,32(sp)
-> *  0xffffffff80023714 <+44>:	mv	a0,a5
-> *  0xffffffff80023716 <+46>:	mv	a1,a2
->    0xffffffff80023718 <+48>:	addi	sp,sp,48
->    0xffffffff8002371a <+50>:	ret
->    [Tracing goes to +126]
+> Kuba Szczodrzy=C5=84ski (5):
+>   phy: allwinner: phy-sun6i-mipi-dphy: Support LVDS in combo D-PHY
+>   drm/sun4i: Support LVDS using MIPI DSI combo D-PHY
+>   drm/sun4i: Enable LVDS output on sun20i D1s/T113
+>   riscv: dts: allwinner: d1s-t113: Add D-PHY to TCON LCD0
+>   riscv: dts: allwinner: d1s-t113: Add LVDS0 pins
+>=20
+>  .../boot/dts/allwinner/sunxi-d1s-t113.dtsi    | 10 +++
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c            | 40 ++++++++++++
+>  drivers/gpu/drm/sun4i/sun4i_tcon.h            |  6 ++
+>  drivers/phy/allwinner/phy-sun6i-mipi-dphy.c   | 65 ++++++++++++++++++-
+>  4 files changed, 119 insertions(+), 2 deletions(-)
+>=20
+> --=20
+> 2.25.1
+>=20
+>=20
 
-How much do a few register moves/spills matter compared to the
-cost of the called code?
-There will but much worse things out there if you look.
+--=20
+Paul Kocialkowski,
 
-	David
+Independent contractor - sys-base - https://www.sys-base.io/
+Free software developer - https://www.paulk.fr/
+
+Expert in multimedia, graphics and embedded hardware support with Linux.
+
+--lE79oaprNLAlqRlL
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmhbtMQACgkQhP3B6o/u
+lQy1gA/+Iu8VPy90JA8o66lrxeIiIPWu6Xc+0rbfnad0J7/iNziGmCOxQ3XaZbd7
+W5L9p+yX9ByxxHM5Ijwujnq47fMWfOSXRCtwxN7BR2rlpp9F6RmnI7qxRnv14n74
+ygKt4UEbPCsvtLj6X7w76NQK1qotvnQYwwdkoRKM0zKKvah2N49FFgSmue/AI3QZ
+rDbK/WWXOdxuEIv8kp6L3zlWLsm9Rdc9NprRjlXzTESyHfFlE7be8hiKs1OLwoh2
+jy9PFCzCSSbWx6ePb6pjPq07gVmjQxr4IQys0EHgxWvNeq4d/AdLzzijuiWR9sbM
+FfzTvWtV/eSrg1cedRGejZqY9K+rHC1naCmaJaxXppqBcTveO/coAb3Gt3HJh6PL
+NU+LWe1mFgKS1iU+PZX8Kz2eRmeqYBxPHNIpgLsqGlnqeHG1yNODCgj84PJF5nN6
+1vnELm6+dBfMhg7LYv/N0Z1kaYHAyFPU7F0Cq3L+NHRiqBCZK2nSRnb7DhqNt4Nn
+jcQbee+prBnM+tMoH5qtJLQ8vZ37XNZwbmHKOP/f5mzS04YUsWI2cvdSvXReMgLZ
+TfJjvNYmIZdarxMFsA6+E0TeZp7l7zLuxMFAO/v83VpxtmRnx5w+kYc4VJG7vAe3
+cMlHuxed0U8beaagiB+SYqTPx4VFjBLAw2SY8RYS4HuovYh4v5o=
+=RNKR
+-----END PGP SIGNATURE-----
+
+--lE79oaprNLAlqRlL--
