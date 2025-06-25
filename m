@@ -1,73 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419A41B4F0A
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:01:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F57A23ABAD
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750849298; cv=none; b=TbIervUK3F1sEfzPMs9gu4+ACpwxpEe8V1rxSXf3iqckXSetfML/+grCHPCbyE/YXRzpZFaLdDG2ewb2BJVx00aG+y68LN1B0c1BtqIMph+PRPigfOq3cEALHM2k/dplwh8q0eOXwuIvor4GmdBWrQLQ8t+BpDR7UeYwRiXQMpQ=
+	t=1750849403; cv=none; b=cJVveuOaRZbaFXxGsukILK9deB4X0h40uBOfLOskryXz/wr8eQ8OjFQU5YS1hcHLuvz3jg/1iQxsU8MWKP9WBTSsbmFyXrAErLU6HjTP8nK9mIaDuSap8r608VzbQDVlvLowtf4XxPeNyeMmLCztyN4+zoTJ+o8W42YjHA1Q0js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750849298; c=relaxed/simple;
-	bh=0pR9xiLr3TNGa3IpLyBgqw9P5mr1T0CNAsj1vkj871M=;
+	s=arc-20240116; t=1750849403; c=relaxed/simple;
+	bh=4g+L4G0tMIc145fGYqMbFN7XcyM9UxxEQBV+jLHsLmY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O303z6yTBZoW/uVUQkm8wcPPgpTigmgFPd8CK/tCjZaBlbgIFKFc/vL7QVQSgyd8o9QNLBnCKdiB+kvRwYk8Vf4mG0tom0RjnJxHdI9xqyySM0yKRmYMiVidQKhO0GFNB4YCY3RIrUUs3ZjYHmbRaPwhhf8kwF0p5Sxk6ANbaSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iJYOe+gV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=lJT5JBahtNL/F3WUBEao8BF1wGq5HxESkyJ5jnEDhUT0wbxcInKNu//EinR29Gsm/RRU8wz/LNa9Ik8rTS09a3sZPcUeiVU/NNNdlp9KF2oOCn4meIcQbAm6NThggGzIcGZDqD372ceU+D1TM0iHqKGnO0YkxgMz3/BsMzIuAHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cYc5x0QS; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iJYOe+gV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750849296;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=Kz6APK9dsF4j4P9pg66c0MDK7d+JPOfYEid0r31fCbs=;
-	b=iJYOe+gVvbSGesFZaibzmWcC+rIod7S1PmXbBlZhi6k0mXISNrA7ZBVdRdw0e6iSmYtU4g
-	93AG9nZsgMHRrJNciF0olOnLTtw+Wq1vg8o6cYKkJniyYvuEeOS+JOfH2Zi1t3h9tuE49Z
-	t9TZJxD22SRkvVihL6VMTTeVOv3GdaQ=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-651-t5o6XBdROVWyGzqta0PjIg-1; Wed, 25 Jun 2025 07:01:33 -0400
-X-MC-Unique: t5o6XBdROVWyGzqta0PjIg-1
-X-Mimecast-MFC-AGG-ID: t5o6XBdROVWyGzqta0PjIg_1750849292
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-450de98b28eso3908765e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:01:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cYc5x0QS"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-607cc1a2bd8so9687766a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:03:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750849399; x=1751454199; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FG1P8CHryUaXZf8mi+4YebSBxRIf/UHd7sOEoQ7RTdM=;
+        b=cYc5x0QS2k1b0zNm8S7rw67rA07WFFgoqT+YhhcTp6kWP/dJ4XP2jbSQauG1lxP0vN
+         fnCJc/BPvgEofDdNpx73pyn5JcahbtS3QN6z7YjtVL3ZbZzNYFbOU+0Pohtfern2o1gN
+         i8G2JNdUr0HQMjI+NYU1gVxKu6bgD+F9aDknQRyhWlJ18MdualyrZWYjJdBZSG4IIFUg
+         p4kp9YuDtetuoBm/BSQOQUo67R39ApQWAki/g+oUkQ8aqiB/RItk3/xUOCw1hlArJvgS
+         DO+8WdIK1WDtJEJy0iVncTA6csCO1HP9RRKQQ8S6bi5bNA66h6G9249n71Q/Dfxju/S/
+         uEQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750849292; x=1751454092;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Kz6APK9dsF4j4P9pg66c0MDK7d+JPOfYEid0r31fCbs=;
-        b=R31YXGgFYgbm0NWeRzcXXndDAyz4mLjgBeZCd2/gPXwDM7Hj+uvem0DKunCO34JtNR
-         phtMoNekEBEddVGuD7FjsBs0wFuR82ctMsFwR0PH2q0QfDKWGDK+aZMBMm3OpFE2qF61
-         d09LKhtX4gUVQ5TVeg9AFa+MfG3Z0F4CuGNDFb8LtWuiMxEAMnjo4aTpaFj6xaYZNzca
-         ngZm8b2LlhXHpwZVAAhvnTxwILqLfpQ36Wzc22VQ0WqSh5ogHePRpa2PBElCbpifmMtZ
-         VndHRMGge0CKwL5weOWlZpw39+YM5dzEIFpkqn69/hMX3Kz3jxOw9+V0wrrJphbyWUV/
-         ZzSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWwYJf9MZMoIXqy6Wu4IcwYHNRjIOwmZil0DwI7cOMp8po613B+xAueWjp7W7iYacE467DVMy5SX5ISVY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj/zw6fUTFOtZj8YKA6mvuHgZf8Fp1uw//JsOHBzDNh3kME/6P
-	lb+gb736aKcTMdXGkfYvFsb5YBEaLuPtNGlxVdfZ9XIR2wbPJ6qJhnL7C6Gx5MFyANXqBi3mQUK
-	RdOKp+qg6mJhYWXvKjPH0oKQ/rKyrLgdO1ErQVtj390KTR9HUwrh/YfwCxoT4lE7paQ==
-X-Gm-Gg: ASbGnctv5z94VAH3dLzDSx0qZ2XDG+dsn7+dLkOgqpx6Ace6UcA+aR3g0KnXlpjsOfG
-	3EI82Rr1Pd8oIRfLUYiU5BYyI+AQiNfc9wEaNi6w0UxOuuR5ZaljT93IUeyFECBq4Om7a9uxneY
-	J/kfdDfBpApY5/LpOhvSYaDsiTWlonYlzLBww6l7RR/G4aTSc8JAN0Wt+vaWrXmSXtR+ZIEX7l5
-	FX48ZMNXsxvl8mhbmMotQYB34OzHoSBfGMWsn7O1mI4Sbrp1IVC37lW1NdAcXWhgNPjLKRGzzsB
-	+nC+dcpdPSQmXDTocbwuQ2MWgHdYeU19riUTRg+p/ZVJMbz+Fp8BkQMw6gnEPz3bqbOrSMUHkjw
-	Q+F7IQNXv4Nk2YjrFpeXGjq/GPlHsrvq83HYrjrIjMMEZ
-X-Received: by 2002:a5d:64e6:0:b0:3a4:f722:a46b with SMTP id ffacd0b85a97d-3a6e71ff6aamr6361375f8f.15.1750849291847;
-        Wed, 25 Jun 2025 04:01:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGPZFLBLmsDHtXRB4H5l5o76XKJEC5l5yx1gYpH977UiB1XroTTTWDmy2sKvb5kr0xD7UuyEA==
-X-Received: by 2002:a5d:64e6:0:b0:3a4:f722:a46b with SMTP id ffacd0b85a97d-3a6e71ff6aamr6361311f8f.15.1750849291308;
-        Wed, 25 Jun 2025 04:01:31 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f12:1b00:5d6b:db26:e2b7:12? (p200300d82f121b005d6bdb26e2b70012.dip0.t-ipconnect.de. [2003:d8:2f12:1b00:5d6b:db26:e2b7:12])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538235600csm16446145e9.20.2025.06.25.04.01.29
+        d=1e100.net; s=20230601; t=1750849399; x=1751454199;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FG1P8CHryUaXZf8mi+4YebSBxRIf/UHd7sOEoQ7RTdM=;
+        b=kY01n99aOv3iUl21dDyzvE5mp4Vp0YClfmusKlZg3+fJzj6RV43b6yAh8/fmLkytFF
+         Ez4r222XfVMKLm0G31hpXeqoalO1CHG4k3tqgAtZJXH1+qHeId+AwKKOaW12p+JlJJA+
+         +Pe1AE6fX7Acmfubud9CVCBq/+jTYTtkewH/zEtstJbl2suEzfW1zn+8Xi3S6xA4J0iO
+         3t9DKJ7BYnlEE21qVF3chivV0dWZ3UlH0EtvlSwi6kknuCl/KuM33UvpNpVf0zR0fLmm
+         SG39pL03o8mXgkf+CEDyo0GykpF6Va7qKtDbtmjkHX+iXmeeaFwdfzK1B0/083ZK22ql
+         i/BQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAfbe35tBs+AMD0Vi/nRuxftohBbD6sd/FC7Kx6u5UM2wJz4pn82W7Cr8n+vwMQM4kpb+g+NJY/TkxiDw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMTZS3lYmU4ophgPA3wL+ysZDwG/yTwoGqRbspMH6cJJeRN4U4
+	YBew03GS3pkqFVtn4dpgy99nZA06bJLrXc6FcVes0Ht+eyMads5bMHu6
+X-Gm-Gg: ASbGnctE/Har+XmE5/dIQ21PrV0q+PxC6R6WkUdzXQ+Svm+Po66ldbJhj4GRhCayI8v
+	cEcsyiPnaGRy5C3iDmEUeqaI/kK8na646d8SIoqN43ys1zDRNbAj/bP1RGKqKkU0IZpGuEWWNj7
+	mKYOHDGIGIGMgEKjMSrz8RJpukk98lJUn1JDzGNgpwrjYzfE5y3A0GOtqkb3E0d+aKEPCkoZmCh
+	UBsq1ZDV9q460jS+9k5F5DFXpQV8E2nyVuz5xY+z57caiywXZQ6WDaI17TpuWC1QSUDU0qYo/8B
+	xxLaRVqBSU2DElCncHRfFyRds9fyg517MWVtiHGmUswoPwtfX+vnQdZSsWUbu5q+pezchorxttk
+	iUr940XK0qzvrhG29N/gB0Tt77T7ZePNh
+X-Google-Smtp-Source: AGHT+IGOtBi23jTRNgwJ5c1WUUVFrnDLfhHWfhKcHoNgqL6ZwQGOLzxtvPJyEH5F05dtdHi7LaEwcQ==
+X-Received: by 2002:a05:6402:3514:b0:5fb:e868:8730 with SMTP id 4fb4d7f45d1cf-60c4dbb9d5bmr1849558a12.10.1750849398870;
+        Wed, 25 Jun 2025 04:03:18 -0700 (PDT)
+Received: from ?IPV6:2a03:83e0:1126:4:7e:645c:aa81:5180? ([2620:10d:c092:500::5:db74])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-60c2f196c6esm2320666a12.16.2025.06.25.04.03.18
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 04:01:30 -0700 (PDT)
-Message-ID: <5ba95609-302b-456a-a863-2bd5df51baf2@redhat.com>
-Date: Wed, 25 Jun 2025 13:01:28 +0200
+        Wed, 25 Jun 2025 04:03:18 -0700 (PDT)
+Message-ID: <f366ce31-582c-4f90-bc32-05ddf3e71fa6@gmail.com>
+Date: Wed, 25 Jun 2025 12:03:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,155 +67,84 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
- folios during reclamation
-To: Barry Song <21cnbao@gmail.com>, Lance Yang <lance.yang@linux.dev>
-Cc: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com,
- chrisl@kernel.org, kasong@tencent.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-riscv@lists.infradead.org, lorenzo.stoakes@oracle.com,
- ryan.roberts@arm.com, v-songbaohua@oppo.com, x86@kernel.org,
- ying.huang@intel.com, zhengtangquan@oppo.com,
- Lance Yang <ioworker0@gmail.com>
-References: <2c19a6cf-0b42-477b-a672-ed8c1edd4267@redhat.com>
- <20250624162503.78957-1-ioworker0@gmail.com>
- <27d174e0-c209-4851-825a-0baeb56df86f@redhat.com>
- <938c4726-b93e-46df-bceb-65c7574714a6@linux.dev>
- <CAGsJ_4y1GObH-C7R=FQL=UWe3kF6qhKoRqPxNPYx0k7uwocc+g@mail.gmail.com>
-From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v4 0/2] fix MADV_COLLAPSE issue if THP settings are
+ disabled
+To: David Hildenbrand <david@redhat.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Hugh Dickins <hughd@google.com>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>, akpm@linux-foundation.org,
+ ziy@nvidia.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
+ zokeefe@google.com, shy828301@gmail.com, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>
+References: <cover.1750815384.git.baolin.wang@linux.alibaba.com>
+ <75c02dbf-4189-958d-515e-fa80bb2187fc@google.com>
+ <f1782ae5-c1d6-4f46-a676-666505990f4d@lucifer.local>
+ <008ec97f-3b33-4b47-a112-9cef8c1d7f58@redhat.com>
 Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <CAGsJ_4y1GObH-C7R=FQL=UWe3kF6qhKoRqPxNPYx0k7uwocc+g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Usama Arif <usamaarif642@gmail.com>
+In-Reply-To: <008ec97f-3b33-4b47-a112-9cef8c1d7f58@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 25.06.25 12:57, Barry Song wrote:
+
+
+On 25/06/2025 08:34, David Hildenbrand wrote:
 >>>
->>> Note that I don't quite understand why we have to batch the whole thing
->>> or fallback to
->>> individual pages. Why can't we perform other batches that span only some
->>> PTEs? What's special
->>> about 1 PTE vs. 2 PTEs vs. all PTEs?
+>>> We would all prefer a less messy world of THP tunables.  I certainly
+>>> find plenty to dislike there too; and wish that a less assertive name
+>>> than "never" had been chosen originally for the default off position.
+>>>
+>>> But please don't break the accepted and documented behaviour of
+>>> MADV_COLLAPSE now.
 >>
->> That's a good point about the "all-or-nothing" batching logic ;)
+>> Again see above, I absolutely disagree this is documented _clearly_. And
+>> that's the underlying issue here.
+>> > I feel like if you polled 100 system administrators (assuming they knew
+>> about THP) as to how you globally disable THP, probably all 100 would say
+>> you do it via:
 >>
->> It seems the "all-or-nothing" approach is specific to the lazyfree use
->> case, which needs to unmap the entire folio for reclamation. If that's
->> not possible, it falls back to the single-page slow path.
+>> # echo never > /sys/kernel/mm/transparent_hugepage/enabled
+>>
 > 
-> Other cases advance the PTE themselves, while try_to_unmap_one() relies
-> on page_vma_mapped_walk() to advance the PTE. Unless we want to manually
-> modify pvmw.pte and pvmw.address outside of page_vma_mapped_walk(), which
-> to me seems like a violation of layers. :-)
+> Yes. One big problem is that the documentation was not updated.
+> 
+> Changing the meaning of "entirely disabled" to "entirely disabled automatically (page faults, khugepaged)"
+> 
+>> So shouldn't 'never break userspace' be based on practical reality rather
+>> than a theorised interpretation of documents that sadly are not clear
+>> enough?
+> 
+> I think the problem is that there might indeed be more users out there relying on "never+MADV_COLLPASE" to now place THPs than "never+MADV_COLLPASE" to no place THPs.
+> 
+> What is the harm when not placing THPs? Performance degradation for some apps?
+> 
 
-Please explain to me why the following is not clearer and better:
+I think a bigger issue than performance degradation is someone upgrading the kernel and not
+seeing MADV_COLLAPSE working as it has since the beginning and not knowing that its due
+to a kernel change.
 
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 8200d705fe4ac..09e2c2f28aa58 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1845,23 +1845,31 @@ void folio_remove_rmap_pud(struct folio *folio, struct page *page,
-  #endif
-  }
-  
--/* We support batch unmapping of PTEs for lazyfree large folios */
--static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
--                       struct folio *folio, pte_t *ptep)
-+static inline unsigned int folio_unmap_pte_batch(struct folio *folio,
-+               struct page_vma_mapped_walk *pvmw, enum ttu_flags flags,
-+               pte_t pte)
-  {
-         const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
--       int max_nr = folio_nr_pages(folio);
--       pte_t pte = ptep_get(ptep);
-+       struct vm_area_struct *vma = pvmw->vma;
-+       unsigned long end_addr, addr = pvmw->address;
-+       unsigned int max_nr;
-+
-+       if (flags & TTU_HWPOISON)
-+               return 1;
-+       if (!folio_test_large(folio))
-+               return 1;
-+
-+       /* We may only batch within a single VMA and a single page table. */
-+       end_addr = min_t(unsigned long, ALIGN(addr + 1, PMD_SIZE), vma->vm_end);
-+       max_nr = (end_addr - addr) >> PAGE_SHIFT;
-  
-+       /* We only support lazyfree batching for now ... */
-         if (!folio_test_anon(folio) || folio_test_swapbacked(folio))
--               return false;
-+               return 1;
-         if (pte_unused(pte))
--               return false;
--       if (pte_pfn(pte) != folio_pfn(folio))
--               return false;
--
--       return folio_pte_batch(folio, addr, ptep, pte, max_nr, fpb_flags, NULL,
--                              NULL, NULL) == max_nr;
-+               return 1;
-+       return folio_pte_batch(folio, addr, pvmw->pte, pte, max_nr, fpb_flags,
-+                              NULL, NULL, NULL);
-  }
-  
-  /*
-@@ -2024,9 +2032,7 @@ static bool try_to_unmap_one(struct folio *folio, struct vm_area_struct *vma,
-                         if (pte_dirty(pteval))
-                                 folio_mark_dirty(folio);
-                 } else if (likely(pte_present(pteval))) {
--                       if (folio_test_large(folio) && !(flags & TTU_HWPOISON) &&
--                           can_batch_unmap_folio_ptes(address, folio, pvmw.pte))
--                               nr_pages = folio_nr_pages(folio);
-+                       nr_pages = folio_unmap_pte_batch(folio, &pvmw, flags, pteval);
-                         end_addr = address + nr_pages * PAGE_SIZE;
-                         flush_cache_range(vma, address, end_addr);
+I feel transparent_hugepage/enabled is too messed up, and its difficult to fix it without
+breaking it for someone? I still find it weird that we can set transparent_hugepage/enabled
+to never and transparent_hugepage/hugepages-2048kB/enabled to madvise and still get hugepages.
+(And we actually use this configuration in production for our ARM servers).
 
+Introducing deny for global and page size I feel will over complicate it because of the issue in
+the previous paragraph, page size setting overrides global setting. so even if
+transparent_hugepage/enabled is deny, we might still get a THP if the page setting is not.
+Someone needs to file to deny, which is the same as setting every file to never.
 
--- 
-Cheers,
+So I just wanted to throw another bad idea in the mix, what if we introduce another sysfs file
+(I hate introducing sysfs :)), something like /sys/kernel/mm/thp_allowed (or some other alternate name)
+which is default 1.
+Once someone sets it to 0, no one can ever get a THP, no matter what future changes we make. Whether its
+madv_collapse, bpf THPs, cgroup THPs, prctls, syscalls.. never will mean never.
+Notice that its /sys/kernel/mm/thp_allowed and not /sys/kernel/mm/transparent_hugepage/thp_allowed.
+Having it one directory above will make it look uglier, but it highlights that whatever you
+set in /sys/kernel/mm/transparent_hugepage/ wont matter if /sys/kernel/mm/thp_allowed is set to 0.
+Ideally this would be /sys/kernel/mm/transparent_hugepage/enabled=never if we were developing this
+from scratch..
+Not pushing for this idea, just throwing it out there.
 
-David / dhildenb
-
+Thanks,
+Usama
+ 
