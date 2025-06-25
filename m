@@ -1,87 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4EE28689C;
-	Wed, 25 Jun 2025 09:04:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC86286422;
+	Wed, 25 Jun 2025 09:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750842286; cv=none; b=aoo1VQTo0DLey/Z8Q9msuQrvx7aKgWOKAhn8YLizAew4FlNoxo+FzjuIET72yNCcP2CFm9wlXrvcV3fzcC/I4T53SgdzgxefAH8FbeUmxcKveLc+Vf15zx4Wanwegg+kdE6rDjnGz3CVS/APXbPebdJd6V9wvXgBEyYMHw6Bj0I=
+	t=1750842316; cv=none; b=rNml1ngkDfOQsXDhCEqsubY0Ks7XAOeA6GT+EO4ScMUdmxUf9UQp9Rk2xLvICwxmY5lFmMd6Izh4vk9XwTC6mV7/LbRVculkd/Xcgw8OKBDJ+17DO8C3UamRS1Xy+4HG8sSml/f6fApifGXd+enlA4q7vxwGO7+zgy4Ld9J5xOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750842286; c=relaxed/simple;
-	bh=VE6S4IdljfLojze0jkDz8OAExWzhUG5J1Makz+kHkU0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rbFuT+qm6Ea/cRHmsQTU9UfLsjynaefbSsUIPYz/Zvgr6Eb8P46gUdq14JkoCprAKd17GRNC7sIDnzt35O6fgqtYSzugHqRDz2mahm7xjM4GUpYV/Qk0A4SKg8qQx3kFtNGQcyu2qkNNOmTXHrd3vDU/cQKfjCPtkfwTKlxKyjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rqte5sv6; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rqte5sv6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18646C4CEEA;
-	Wed, 25 Jun 2025 09:04:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750842285;
-	bh=VE6S4IdljfLojze0jkDz8OAExWzhUG5J1Makz+kHkU0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rqte5sv6J+gkHvmA7D3NKdMprt8FzCyTpRTZf8mcie7sPp78rbteCQ+1eJbjwgdGn
-	 UJw+wyyD5nKM+mEFYlmfmj+hJiHBGtbllto4diPX78bfNRziCDixfukr3AlViQ1bMi
-	 qF/XuEamC3u/u9Puwl2Z1FYAOz5OMUR11pHZmbfUDS1PbmcH6v+ojFNIkkDZltWRn9
-	 zFLTgaAhiACdCBRcmOj9Zn+cZ0h+vR5ZXzttCggbx6vCWhe2k73fnTwLuBD9wiu9dc
-	 51lCZrgY60/eY7q1UELawOu0JtmdzbSa+/tA6s+gmDQLPcqaEiJOVSVKG3DHqG4Lhj
-	 oLa/cIEnEeRuA==
-Date: Wed, 25 Jun 2025 10:04:39 +0100
-From: Lee Jones <lee@kernel.org>
-To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>,
-	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>,
-	Will Deacon <will@kernel.org>, Han Xu <han.xu@nxp.com>,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Yogesh Gaur <yogeshgaur.83@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@kernel.org>,
-	Andrew Davis <afd@ti.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-spi@vger.kernel.org, imx@lists.linux.dev,
-	linux-leds@vger.kernel.org
-Subject: Re: (subset) [PATCH v7 2/3] leds: lp8860: Check return value of
- devm_mutex_init()
-Message-ID: <20250625090439.GQ795775@google.com>
-References: <20250617-must_check-devm_mutex_init-v7-2-d9e449f4d224@weissschuh.net>
- <175033649656.801367.11888454651585197053.b4-ty@kernel.org>
- <f1cc8959-d420-4ba3-922f-ed7c6f054f22@t-8ch.de>
+	s=arc-20240116; t=1750842316; c=relaxed/simple;
+	bh=ENbIt35blLVVdonVJShKKuqn0xG/16BBjS5D+QLQFOw=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oMo7SfArmpNgvrfovamLMAt12LgdU4m6xhhZ7S5Wic0ZhiOxirLlK9R1svze+oM7O+r5LYV+AHNSYL73JqP+SkeengNnNxfIVYgzPekxdXZiAuXIBtc/4aZ/75Zgfq+tixMM8VDmJT+Oi9axGTZbKZB8HBcYGxLHSSyH/m/5BA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4bRwnX4gr3z6GDDB;
+	Wed, 25 Jun 2025 17:02:40 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id E8A6914027A;
+	Wed, 25 Jun 2025 17:05:12 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Wed, 25 Jun
+ 2025 11:05:12 +0200
+Date: Wed, 25 Jun 2025 10:05:10 +0100
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Alok Tiwari <alok.a.tiwari@oracle.com>
+CC: <will@kernel.org>, <mark.rutland@arm.com>, <linux-cxl@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] perf/cxlpmu: Fix typos in cxl_pmu.c comments and
+ documentation
+Message-ID: <20250625100510.00005f0b@huawei.com>
+In-Reply-To: <20250624194350.109790-4-alok.a.tiwari@oracle.com>
+References: <20250624194350.109790-1-alok.a.tiwari@oracle.com>
+	<20250624194350.109790-4-alok.a.tiwari@oracle.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f1cc8959-d420-4ba3-922f-ed7c6f054f22@t-8ch.de>
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Thu, 19 Jun 2025, Thomas Weißschuh wrote:
+On Tue, 24 Jun 2025 12:43:40 -0700
+Alok Tiwari <alok.a.tiwari@oracle.com> wrote:
 
-> Hi Lee,
+> Fix several minor typo errors in comments:
+> - Remove duplicated word "a" in "a a VID / GroupID".
+> - Correct "Opcopdes" to "Opcodes" in CXL spec reference.
+> - Fix spelling of "implemnted" to "implemented".
 > 
-> On 2025-06-19 13:34:56+0100, Lee Jones wrote:
-> > On Tue, 17 Jun 2025 19:08:13 +0200, Thomas Weißschuh wrote:
-> > > devm_mutex_init() can fail. With CONFIG_DEBUG_MUTEXES=y the mutex will be
-> > > marked as unusable and trigger errors on usage.
-> > > 
-> > > Add the missed check.
-> > 
-> > Applied, thanks!
-> > 
-> > [2/3] leds: lp8860: Check return value of devm_mutex_init()
-> >       commit: 426e0c8e8eed26b67bbbd138483bb5973724adae
+> Improves code readability and documentation consistency.
 > 
-> Thanks, but (as mentioned in the cover letter) these patches should go
-> together through the mutex/locking tree.
-> Could you drop it on your side and give an Ack instead?
+> Signed-off-by: Alok Tiwari <alok.a.tiwari@oracle.com>
+One day I'll remember to run a spell checker :(
 
-There has to be good reasons to do this.
+Reviewed-by: Jonathan Cameron <jonathan.cameron@huawei.com>
 
-I didn't see any dependents or dependencies in this patch.
+> ---
+>  drivers/perf/cxl_pmu.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/perf/cxl_pmu.c b/drivers/perf/cxl_pmu.c
+> index 5a475a5a1f095..d094030220bf2 100644
+> --- a/drivers/perf/cxl_pmu.c
+> +++ b/drivers/perf/cxl_pmu.c
+> @@ -113,7 +113,7 @@ struct cxl_pmu_info {
+>  
+>  /*
+>   * All CPMU counters are discoverable via the Event Capabilities Registers.
+> - * Each Event Capability register contains a a VID / GroupID.
+> + * Each Event Capability register contains a VID / GroupID.
+>   * A counter may then count any combination (by summing) of events in
+>   * that group which are in the Supported Events Bitmask.
+>   * However, there are some complexities to the scheme.
+> @@ -406,7 +406,7 @@ static struct attribute *cxl_pmu_event_attrs[] = {
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_curblk,		CXL_PMU_GID_S2M_BISNP, BIT(4)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_datblk,		CXL_PMU_GID_S2M_BISNP, BIT(5)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_bisnp_invblk,		CXL_PMU_GID_S2M_BISNP, BIT(6)),
+> -	/* CXL rev 3.1 Table 3-50 S2M NDR Opcopdes */
+> +	/* CXL rev 3.1 Table 3-50 S2M NDR Opcodes */
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmp,			CXL_PMU_GID_S2M_NDR, BIT(0)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmps,			CXL_PMU_GID_S2M_NDR, BIT(1)),
+>  	CXL_PMU_EVENT_CXL_ATTR(s2m_ndr_cmpe,			CXL_PMU_GID_S2M_NDR, BIT(2)),
+> @@ -627,7 +627,7 @@ static void cxl_pmu_event_start(struct perf_event *event, int flags)
+>  	hwc->state = 0;
+>  
+>  	/*
+> -	 * Currently only hdm filter control is implemnted, this code will
+> +	 * Currently only hdm filter control is implemented, this code will
+>  	 * want generalizing when more filters are added.
+>  	 */
+>  	if (info->filter_hdm) {
 
--- 
-Lee Jones [李琼斯]
