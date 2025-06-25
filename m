@@ -1,152 +1,176 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7A411A5B8C;
-	Wed, 25 Jun 2025 15:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A534823AD
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750865649; cv=none; b=WyNUTHNs1WmMviXVaf5ZVDOuozDnnjtm5zqi5oJ7bHnQaeT6T5NdHOZyHFVQnkiq/Lu3wbEKlJvFcAaKY/VsHWWQfbl7UuTNsjVdUfokFpOMSVtCe3DrV1xPOYehtsx9NUVE5b2IPn5fPQoX6HyaIPCJdo2EdXyZGO/TuteCqxM=
+	t=1750865694; cv=none; b=ggTAVS5tNuSgvAM4jDKVD2P7iBGNBflcazGZi7z/bueEEdUja7Ol4rksb5M0XVOXPV31FIVzKctesK4X9yuquQ8yiXYWVfqncHfP4jM2DsShl3zcAfoXGK1VnmyWFAmszGXKx+Ru4OdIY02sOMzNw8sKTQcwmK/ZXmyGZwUCOb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750865649; c=relaxed/simple;
-	bh=GO8/l9hZdF/FDZm2vS40Wtzn+Q/5nvto7+1zvwL9SiY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=acqSnD1iy3ld24SWq2CgcQhvDxK4OxxTrnB1BkxG7JkHf12RhNAfm2azmh9jVp/m3RqGGExJDzTxpAQTyb4OimznrddUTLlWlfcuiBXIvKA7Q+fd0NYMY1tHi0hbTr85ye1GVdSPHKqNETqwvYMbGSyN5RtXz2SHBv/0csYWS5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EPceV2E+; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750865694; c=relaxed/simple;
+	bh=XoabQxPR4e1tSSRhYqRd4kOH9Gzv5ulUOhd93CzsBu8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fptS3s3CBEM4CoUb9kKhtBOEFAoe2xr2tQKdMB5w2oRDHxXS4DefbIpIty6sFwBD27qPTo3D5IdfcmPno6p2zkmuwAvmFX5kqi8OvQekN0STUbVT+J8D/Y4oXGBhv636j7hBDFMikiB/9OZ/xhs/CpVcfd/5TmzIR+HGw0Tm5xM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QplYnOpz; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EPceV2E+"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-74264d1832eso139959b3a.0;
-        Wed, 25 Jun 2025 08:34:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750865647; x=1751470447; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/XVVjse7SLe3BXVW5yyOf89DyqZxU9QrMZCJroaokII=;
-        b=EPceV2E+qgp3zudMaH2HwtBhmy2B4Nw7EFCSmeO7JjdevPzlYLszyznOCpEzEyCkE5
-         DbXUlT7JDpTlIy8S+RVBL0dFmqEx6JTegaYzU9xoL6DVGdLQfGerjq0MPt+sUyeg31qi
-         NoOLLMAmI+MUueSFvvFdEfE5b5z9eO+7jOUQyEdNKE935XBjvbsqYuG5eTtcr+UfemWe
-         KYAwfwE8iXmWtnuLOhJmK9Z6pVcZQ0ef6NOnlJKroA0Lrq4fgQBrtJhN708RLZwnHASA
-         1Ggcbm+Gl+IVbFwyife9b1IVRspbM12gq59HWxkVKnqUNsAr5F8ozj/JBugRznlu/yLQ
-         DDxw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QplYnOpz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750865691;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=L6U7uSZ3zn6lSctvvHLf/6IoHum5TuGxKVo47SoLtfs=;
+	b=QplYnOpzrTFuqZ73W2YbiADvbKPw+7Cf0AwQ/bOgBafR8dhFKQ+YinquVwh339bq/pOd2h
+	4gdfknzRr4Mjp6ULfpDw9Kjwt3i2xn1SspawJzMg3Tkkn8ATDV7DfXGXR1fbPMrdbJM55e
+	XXiX2PH3DYSd2hVENlqU+dlkjc5VY08=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-602-henEyCr2OaGuLePcoh1t9A-1; Wed, 25 Jun 2025 11:34:49 -0400
+X-MC-Unique: henEyCr2OaGuLePcoh1t9A-1
+X-Mimecast-MFC-AGG-ID: henEyCr2OaGuLePcoh1t9A_1750865688
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4535ad64d30so53313375e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:34:48 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750865647; x=1751470447;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/XVVjse7SLe3BXVW5yyOf89DyqZxU9QrMZCJroaokII=;
-        b=fmyFsbK50n7gRLzLdh+tgFyu79LvzBxH8UXpntq04w1zcsLLemRufojW90sPIaQJ9D
-         soodrxYHb21OvO9eYQCmDNYSKCswqedS3sTaIKMgi6YDYItKJHgFspx9MxjdUldDRLxM
-         vdlKgHBCZhS6O5JDuxcmSiuDGFTw+9BA1RXvA4D9KZrDnMm4iMfU7nY9apMmHp+US7fP
-         9AlcymbNsbTAVp3P2NIxXglf9IXxfoelJKRjF21OG9+1pOKjkFcnIu1PTJcR4Ifz7v6d
-         9Hl9gUZl19CQ6waBm4A3eyNbDlzadG7H951jdg3RC6FQ9bdogiEBqfUFz93BbG/k878M
-         iafQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUerbwfTykDAsXeOUOYoegTkl0cp4AV1+2LW0oTFn+0GCR/j8+Id9t3mjlW36EksKETb4Z7P17s4El5X1A=@vger.kernel.org, AJvYcCVCsJVs5dATw65kQIv5r2/Dtmnd5x2fGf3KJdMQQ4V8oS/xVphcDImWf7/p9597gVdFUbIFe+GXoUMaCcEQvdo4@vger.kernel.org, AJvYcCVI6EBaJTwCdpHS5DUHGHpvsshg0murH0/FlTSPpp32BlYOkE1h/we9YRUsXQWCi7TU2a1uPwnB@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXezlqRCYf7GtNrEhOxDSGxtAHDFh3NidV/1BOo5aqITILTJfP
-	O04BOVjr91ln4miF7qYQvOs6CVW1DPGOHt7tQSXn77gOpanGQz1Y0s6N
-X-Gm-Gg: ASbGnctYsJtEf9NbZ8wGI4fCaFN0h7bxQqpOxQQUWVSpS8w84k23NAfNywhL4J46+td
-	aAQq2NQ0xmElQeCaqMsgHHwCoKT/Anf2TRi8EhnJAyCZEz7IV/viWU76zhg4XNlTcWa1jbVc2uQ
-	utiLe72gG+8Y4A4MDMNGFZ6CjreuMf9CG9xxlIjdkmq6npAAU/Gvi71aC0SubDMllr+QHAUOYjx
-	MKBGPBiM0/b8sYpIozb8Vz2gm7tgh7z7x++hSTBzvGYZTuf8H23nMpxNK2uWLoMuF+mh1KkkejO
-	q516ej/FPwAXDHp+y2BfwntRZF08tHAC6+ImsIOwZECs4Mohm6arnR7USd1OMYgEjeKrgeJnE/V
-	oG3E8rZOIT+WWV3aevRf44/drN7a9vlwcSQ==
-X-Google-Smtp-Source: AGHT+IGEsigkbjsnTclJYWdU60y2qHEdvcVG9LRVDW0dYPsNGLYx5hAXrCi7negqVdxFafDSDMwEyQ==
-X-Received: by 2002:a05:6a20:1581:b0:215:fac3:2ce2 with SMTP id adf61e73a8af0-2207f28f8bfmr5849761637.23.1750865646715;
-        Wed, 25 Jun 2025 08:34:06 -0700 (PDT)
-Received: from malayaVM.mrout-thinkpadp16vgen1.punetw6.csb ([103.133.229.223])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f1241f07sm13043969a12.37.2025.06.25.08.34.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:34:06 -0700 (PDT)
-From: Malaya Kumar Rout <malayarout91@gmail.com>
-To: malayarout91@gmail.com
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>,
-	netdev@vger.kernel.org,
-	linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] selftests: net: fix resource leak  in napi_id_helper.c
-Date: Wed, 25 Jun 2025 21:03:07 +0530
-Message-ID: <20250625153334.434747-1-malayarout91@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1750865688; x=1751470488;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=L6U7uSZ3zn6lSctvvHLf/6IoHum5TuGxKVo47SoLtfs=;
+        b=PjsBJujFGFv3DBv8+a60S0cvJaAomfImRByU1H9IwlRG0nTc22RIDCOODv1xXjJZET
+         CE6hcoBZBxsk3FNNMKsKccYdKhiW9nYEH87oasmTxAejlx25HQwTAleFvdSh1SG30Dvl
+         NUUJg27i94D4bCxA9tiT/eo0PiLiP6yUIhkVn0icLASCysKvEwHhzkVLyy9u8YDvcsQK
+         q391AOvO3ONtzQbqFScbfP1NuQHoI+3vU4MHvUYARQsrygJ9Z8N2LPgiu/Fvzmdd3Uyq
+         PO9Wc6rz0QiX/pXztaskepXljx1Ura/EvNvCafrTsxzYUkkP2H1SnOI4FsfAGvTv0joO
+         01PA==
+X-Forwarded-Encrypted: i=1; AJvYcCXYf+R+sqhScM1oPczEANm5Cn/5jymmVCOvDN/MTNZSlMYknox+IbnAH9A+wN5FVxDahUxEAH/nI8khwbE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy0lSEASMHiqWvV84vn8MN8Bbu04hwfgTctEiho3wiIjc40EuVv
+	yCIIb5x0tppomO/lU8hZ5/im3uSFDwGvVYrY1NLPLj5cE6mtCmad9QqICZKaRZmD5Gghqn3QX6M
+	C3TVB/8o4Ke6wnvHMrRzBLVbELC0ACatA0YspWA1tYpKC5ecyGqh4C2Sq/ih4KPLlrw==
+X-Gm-Gg: ASbGncvAueBxpTHWkvOMP1N0p1PofVyan8dwC9/2/OiDAwz3xhUGxDiRBVLwZanT1zO
+	f1Sw4thBwK9zDQttzI++sATl9AFe2EISAup3A6/2XxT5W2PeQAVtdxVcjJjefc3nbvZwnuj/Y3+
+	CFVuAxXLZYxw1lE9jgt8RJTIB/IYoQnfd68BHNVEvOE8Yse9iWCv67xmbl5apVqmPLT4+A82bEf
+	6BjPyxgWGqwA5daWBBSEvRpFwnbOh6vXfswB/5T0f5Dhse6pmTQkoSpTAlgDTGnWKWkGIwJo4W4
+	3jq+HL7qXcOJ0qbonqnYrpNJBvCxhL3uQk842ASchq4AVhIgPAfWwHpkgctRP/Myc5KPmX/y7x2
+	DXtMepDxeQwsBEuMeZn0pi1Vq4DDUSWrQAsqJAyC0VvXb
+X-Received: by 2002:a05:600c:a302:b0:43c:fda5:41e9 with SMTP id 5b1f17b1804b1-453821b0a2amr28702215e9.31.1750865687752;
+        Wed, 25 Jun 2025 08:34:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE3G62Xle62kvZpcNmhC/QVpFryCSUhbFB9UamD6FGT8RaMoB3EMzXfizx4te1AkopeO5/XYQ==
+X-Received: by 2002:a05:600c:a302:b0:43c:fda5:41e9 with SMTP id 5b1f17b1804b1-453821b0a2amr28701915e9.31.1750865687375;
+        Wed, 25 Jun 2025 08:34:47 -0700 (PDT)
+Received: from ?IPV6:2003:d8:2f12:1b00:5d6b:db26:e2b7:12? (p200300d82f121b005d6bdb26e2b70012.dip0.t-ipconnect.de. [2003:d8:2f12:1b00:5d6b:db26:e2b7:12])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823c3a96sm23252415e9.35.2025.06.25.08.34.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 08:34:46 -0700 (PDT)
+Message-ID: <477c1b34-6acb-4e49-b9d4-f52d93597c90@redhat.com>
+Date: Wed, 25 Jun 2025 17:34:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 next] mm,memory_hotplug: set failure reason in
+ offline_pages()
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Oscar Salvador <osalvador@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Harry Yoo <harry.yoo@oracle.com>, Vlastimil Babka <vbabka@suse.cz>,
+ Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <be4fd31b-7d09-46b0-8329-6d0464ffa7a5@sabinyo.mountain>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <be4fd31b-7d09-46b0-8329-6d0464ffa7a5@sabinyo.mountain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Resolve minor resource leaks reported by cppcheck in napi_id_helper.c
+On 25.06.25 17:32, Dan Carpenter wrote:
+> The "reason" variable is uninitialized on this error path.  It's supposed
+> to explain why the function failed.
+> 
+> Fixes: e4e2806b639c ("mm,memory_hotplug: implement numa node notifier")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+> v2: I misunderstood the reason why the function was failing.  Use the
+>      correct reason.
+> 
+>   mm/memory_hotplug.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 4d864b4fb891..e4009a44f883 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1977,8 +1977,10 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
+>   		node_arg.nid = node;
+>   		ret = node_notify(NODE_REMOVING_LAST_MEMORY, &node_arg);
+>   		ret = notifier_to_errno(ret);
+> -		if (ret)
+> +		if (ret) {
+> +			reason = "node notifier failure";
+>   			goto failed_removal_isolated;
+> +		}
+>   	}
+>   
+>   	ret = memory_notify(MEM_GOING_OFFLINE, &mem_arg);
 
-cppcheck output before this patch:
-tools/testing/selftests/drivers/net/napi_id_helper.c:37:3: error: Resource leak: server [resourceLeak]
-tools/testing/selftests/drivers/net/napi_id_helper.c:46:3: error: Resource leak: server [resourceLeak]
-tools/testing/selftests/drivers/net/napi_id_helper.c:51:3: error: Resource leak: server [resourceLeak]
-tools/testing/selftests/drivers/net/napi_id_helper.c:59:3: error: Resource leak: server [resourceLeak]
-tools/testing/selftests/drivers/net/napi_id_helper.c:67:3: error: Resource leak: server [resourceLeak]
-tools/testing/selftests/drivers/net/napi_id_helper.c:76:3: error: Resource leak: server [resourceLeak]
+Again, likely to be squashed :)
 
-cppcheck output after this patch:
-No resource leaks found
+Acked-by: David Hildenbrand <david@redhat.com>
 
-Signed-off-by: Malaya Kumar Rout <malayarout91@gmail.com>
----
- tools/testing/selftests/drivers/net/napi_id_helper.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/tools/testing/selftests/drivers/net/napi_id_helper.c b/tools/testing/selftests/drivers/net/napi_id_helper.c
-index eecd610c2109..1441b8d49b91 100644
---- a/tools/testing/selftests/drivers/net/napi_id_helper.c
-+++ b/tools/testing/selftests/drivers/net/napi_id_helper.c
-@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
- 
- 	if (setsockopt(server, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt))) {
- 		perror("setsockopt");
-+		close(server);
- 		return 1;
- 	}
- 
-@@ -43,11 +44,13 @@ int main(int argc, char *argv[])
- 
- 	if (bind(server, (struct sockaddr *)&address, sizeof(address)) < 0) {
- 		perror("bind failed");
-+		close(server);
- 		return 1;
- 	}
- 
- 	if (listen(server, 1) < 0) {
- 		perror("listen");
-+		close(server);
- 		return 1;
- 	}
- 
-@@ -56,6 +59,7 @@ int main(int argc, char *argv[])
- 	client = accept(server, NULL, 0);
- 	if (client < 0) {
- 		perror("accept");
-+		close(server);
- 		return 1;
- 	}
- 
-@@ -64,6 +68,7 @@ int main(int argc, char *argv[])
- 			 &optlen);
- 	if (ret != 0) {
- 		perror("getsockopt");
-+		close(server);
- 		return 1;
- 	}
- 
-@@ -73,6 +78,7 @@ int main(int argc, char *argv[])
- 
- 	if (napi_id == 0) {
- 		fprintf(stderr, "napi ID is 0\n");
-+		close(server);
- 		return 1;
- 	}
- 
 -- 
-2.43.0
+Cheers,
+
+David / dhildenb
 
