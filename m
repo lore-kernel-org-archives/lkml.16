@@ -1,115 +1,77 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA99520E023;
-	Wed, 25 Jun 2025 08:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6414D211290;
+	Wed, 25 Jun 2025 08:16:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750839360; cv=none; b=Z5CjNxzXaSuNlrH/AzjA5WToAEDlHxNNTx6EztdF1POTL3JnSk+jw324/wag4Ws0Huzh7uzR58midDcLAQeS3D51XEtrUqa+Jo8CyK4QuwtIO1Wqltd/OeoAWz5oCqZbE6mOx6VoQtnkwT2XV4mjYb9Lr2Po8c73CjPrX0BjRDU=
+	t=1750839389; cv=none; b=BVQ7q+ZKvg2QZZHQiHaSVUJ3c2ruHvkPjaYnK9CAs1FB8qtZMtfkCYb2pAlsVLU+qJGvJDnKh97dTbz50LPbf0N/qCFxdLNUmBqAavpPUSaqGjKYPAkk7SrokVJvwAwv7YIdgaHUGVNwbvA2Y37Ujp9M05X5NYCScStG4Hak0/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750839360; c=relaxed/simple;
-	bh=B9FQ/xDTdaPFjALjUp4dGIQ/na1i4R5MHemjyoJtJVw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=taXzEPL5XcnhlY2U059LjRQACH0k66byaOP6r29AnDRfJy9dCgeaPVRW0qdcmBXV2LxqWiChMCBILxtIV/tnfrnSo5sxsRTKA9Ws3TRtuLNCAvk7nVmArZaVLWKUByiq9tVvBFsswiwc5paRc+LEDopPTLbJVr77GS78a5ocZ1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OjAjNowm; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750839389; c=relaxed/simple;
+	bh=Tq7JiNhUc/TmZgnGqkVm2S6PN6rdSjbPFvW/AHOLB8E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QIppNeWXzNxeV5KsL8wuufaAnJJSxq/bw4KUyoSas+5gXfpdxraaHe0H6vlei0Nun2tQvB57hUjlC2wCxhyv5qNYE5BKNXQUEKWfBkkgx8j0dSRvWgTZVzUWGxSLQWS/nMHYq0xUKeLRZQkJ25ABaPd0eGdv8TU0WY/r4Uik1Os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=BnFbIaq6; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OjAjNowm"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-70834f92aaeso4462537b3.3;
-        Wed, 25 Jun 2025 01:15:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750839358; x=1751444158; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B9FQ/xDTdaPFjALjUp4dGIQ/na1i4R5MHemjyoJtJVw=;
-        b=OjAjNowm7EI8tLuGe/AvOhuTVpO4QPXaz/Xat3mG7KIEF7MCyhRnfEyJhuHC58O1ih
-         PzkuaVTu2SsMMZRcIQwHdRL+wFrAsS4kZ7g+J9UZl+xmc25cbuqzr0Uw3/hh2JFurxyY
-         wgTa2zj9x33OJaAoBVrDGiiqzZRCwbWDfBblVDA+e6FjS6H360IvY6EV+/Nj5pyTxucZ
-         afuwiaowF+9+CdmEiWiAAL4s30vQ8oE912rRb1zlo9PcDAqwUr/63fF1iddidnJPbOP1
-         RIbWxPdyMaD985+KQOtoBxj58XUKk9uO275utoehg9IvkofABtPxuUtDHXgxlDHjbuHU
-         w8/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750839358; x=1751444158;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B9FQ/xDTdaPFjALjUp4dGIQ/na1i4R5MHemjyoJtJVw=;
-        b=ccaPnN3sFCpOoqPJ5QXQPiZARzwJCYUUcpBb8dtNoZ7mi5i16iLUNtbb9zhF4DldWc
-         k3m0x8YlkxQyXiypA1ZYO8cLeE1ZbQvvLzB76z5W4P20L1+ffA+b+rvP8RPGyPIpGHdh
-         4jjj0vZuBkFJmHfK4G1GOTjrfbtrFGj3UtA0ugHybmeJa/OWxbk5wshTIE/Nd5lnodMp
-         kKzRkRdA+1EPlt47Nmu7JfOPGdkowwe51SP40Pqfv6zCZIytGFu6JVcXbTcSmMTu57td
-         ULBrsWyM4OkcnC5v6GzfttqhkutCAKi7LFU7MgGy79QDVtAo54nEoszop5BdovN8celm
-         PCug==
-X-Forwarded-Encrypted: i=1; AJvYcCUrohKJl3Hod0lTojJkuovjSxoAGZIp0gydAx+TM0f6teFTx8kST1VXbd7QAxsvLe0MhHeSOoIjuMEg@vger.kernel.org, AJvYcCXWLnrgCdw40h9HiWwJaviVPi5oZBTOTKoooi/fxV0lDjev0ytqHhRSSIPPQmcvMZnXjmheQR7A9wo=@vger.kernel.org, AJvYcCXZZ2H5gjgy0egYi2cDF7XWf9KIwC1SOOTmuJx/4N/Ds3jcGn10iq4BVjpb28IdWiyPWJ+XXp34YKDCrxdC@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgTy1xMkSBMc/jjgbEAi0fxFDiJ27uft9N9IF1SZt9B6TxeGsq
-	dSA9/uLi260xXRJUWsQOBQ+M6gkAmS/S5TX8MODEbz5Ffvaos0H3Wj81jsgwziWIjyHxPYvXkPt
-	RUL2qYyiloeBGGIJgQ24JXcT30vFdBqM=
-X-Gm-Gg: ASbGncuuDWqSqq4jTxn5NuGW7pkoVsaEFV5qGC0BQr7KFSsNlU3DZgjrTGh5ril9LDD
-	xo75jEe2iwOHF0RnlmC2u6E814k8wcpC28LznviYjMbRYg5T3HPgp8xHCN0bAOQRA3SSFDvCuDa
-	vIXARxFGBnu/xLK+xSE5J+Z8qLEH+zrvk4SoY2uI/XpyE=
-X-Google-Smtp-Source: AGHT+IErRBRd4ZEkZGGTpdiXkJHmurXTIOpZXK+xDiiziUhNlaNMwGpOR9VoKLkPFm/JlC7M4GtcD6m2pcR3WADrueM=
-X-Received: by 2002:a05:690c:7483:b0:712:c5f7:1f02 with SMTP id
- 00721157ae682-71406c84c64mr12648157b3.1.1750839357660; Wed, 25 Jun 2025
- 01:15:57 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="BnFbIaq6"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=Kmzfb1nkzdrlqwAWTt9ms5w6okRVCGLkfGIvWoO8lgk=; b=BnFbIaq61VP2otrUASU7ANP7VN
+	8pPOx63R9LzJZ3WSQHnuS7afqC47qBYFhRwU4N59Ih0Hi2pzn+Z4h51OXEZS62lRZkkP3as6oxssY
+	T8Wo2vKbk2mlfxKNoZMnVdsdcFQIZw6wVP+VXmNZz3qxunn/iPQ9SBSQyFmJKdMPrdPs=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uULIu-00Gt4U-7j; Wed, 25 Jun 2025 10:16:24 +0200
+Date: Wed, 25 Jun 2025 10:16:24 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Qingfang Deng <dqfext@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Guillaume Nault <gnault@redhat.com>
+Subject: Re: [PATCH net-next 3/3] ppp: synchronize netstats updates
+Message-ID: <e6110e8c-34cb-4152-8fce-4de7675b639d@lunn.ch>
+References: <20250625034021.3650359-1-dqfext@gmail.com>
+ <20250625034021.3650359-4-dqfext@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250615222258.117771-1-l.rubusch@gmail.com> <aFDBWztZT67hUF6I@archie.me>
-In-Reply-To: <aFDBWztZT67hUF6I@archie.me>
-From: Lothar Rubusch <l.rubusch@gmail.com>
-Date: Wed, 25 Jun 2025 10:15:21 +0200
-X-Gm-Features: AX0GCFsCKhxXsO9vDHgBQ6201WxKb_UPKCWTu4wT49puBY3PnYFj9m7uKV-mBTY
-Message-ID: <CAFXKEHaZ8aGw=WZiSDZhsrviATTNK5omRBOhNLd1xAsjxDAPmQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/8] iio: accel: adxl313: add power-save on activity/inactivity
-To: Bagas Sanjaya <bagasdotme@gmail.com>
-Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
-	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
-	Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625034021.3650359-4-dqfext@gmail.com>
 
-Hi Bagas Sanjaya
+On Wed, Jun 25, 2025 at 11:40:20AM +0800, Qingfang Deng wrote:
+> The PPP receive path can now run concurrently across CPUs (after converting
+> rlock to rwlock in an earlier patch). This may lead to data races on
+> net_device->stats.
+> 
+> Convert all stats updates in both transmit and receive paths to use the
+> DEV_STATS_INC() macro, which updates stats atomically.
 
-Sry, for the late reply.
+Do you have benchmark numbers for these changes? How big an
+improvement does it makes?
 
-On Tue, Jun 17, 2025 at 3:14=E2=80=AFAM Bagas Sanjaya <bagasdotme@gmail.com=
-> wrote:
->
-> On Sun, Jun 15, 2025 at 10:22:50PM +0000, Lothar Rubusch wrote:
-> > base-commit: 7461179e080df770240850a126cc7dbffad195c8
-> > prerequisite-patch-id: 263cdbf28524f1edc96717db1461d7a4be2319c2
->
-> What prerequisite patch?
->
-> Confused...
->
+https://elixir.bootlin.com/linux/v6.15.3/source/include/linux/netdevice.h#L5549
 
-Interesting, tbh I'm not sure about the "prerequisite-patch-id",
-either. AFAIK there is some git command to verify and use it as rather
-an ID of the patch (series), as far as I can see in the documentation
-for format-patch:
-https://git-scm.com/docs/git-format-patch#_base_tree_information
+/* Note: Avoid these macros in fast path, prefer per-cpu or per-queue counters. */
+#define DEV_STATS_INC(DEV, FIELD) atomic_long_inc(&(DEV)->stats.__##FIELD)
 
-As mentioned the series is based on this fork and branch:
-https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/log/?h=3Dtest=
-ing
+As far as i can see, you only use DEV_STATS_INC() in error paths. It
+might be worth mentioning this. As the comment says, you don't want to
+use it on the hot path.
 
-Actually, the base commit should be possible to identify (at least I
-could identify it in tig). AFAIK - or, as I needed to learn myself in
-the past - usually they check the series automatically first to rule
-out such things. E.g. they execute checkpatch, smatch, in case DT
-check,... on it. If anything fails here, I guess I would have received
-feedback within about 24h. Since there was no feedback, I assume there
-should not be an issue.
 
-Best regards,
-Lothar
+    Andrew
 
-> --
-> An old man doll... just what I always wanted! - Clara
+---
+pw-bot: cr
