@@ -1,121 +1,198 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97DA02868AD
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F6D22BE7D2;
+	Wed, 25 Jun 2025 11:05:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750849549; cv=none; b=qJSG4F1dHjxtKTGsSzA+nZy7Pf40Kx+GLGpQnxmbFF4RHajMmBA127Znpyro7pXbZju7F6w+EIYsH2XZttY3B2jiJ2w/4yqLtWNPU54qWwM0HGYv/cuX/r4oUUCnuKxM2k1/Wmivx0AeFZk62ERXpkhpM2unAtT12rR8zcwSBis=
+	t=1750849552; cv=none; b=kGjeOW6qLOtmxUKlyknOjb3BZJPwr8VYzhUR+Qml/DmZOXMf9XdIr0ZaGsRJhxuatadmq6QzaJbqCWtWgdoDFfez2QLxZb/7ZmWPi70QqXiSqusZ1mQMbqi/c2wFjO7Ub9fyw+ddbUI0H8xwtD+r0/HupVN1WdtVcx5weVvucCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750849549; c=relaxed/simple;
-	bh=vyRKtZy/2kPcnMWv/9m64yZU2aTVrPZeufxUwnEHYT4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LhmNNZu9DN+tHbRzzFx0e9njwgCxZS/2Ml91aSe5EKl2T2HQqIbALW0ylSsMNZI03L28C9FpAh6hFTVjKTXM/BQAoeFRem5nzo1AG7lE2BbSx+I3HI0duYwFRnhUHcLdsSEBIKpZ2XR2NPms3U5xiyl/i6ABhi0ahRbgseHL1tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fnb94Nxu; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750849552; c=relaxed/simple;
+	bh=4lPd6KAvzXLpR40aJR9oTpfeEv7nnPZ/tTvk3e0XF4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BLWzvQ2aqiEzsgUgjkg2vNVQEIQ83iD32XmoiU4P/Ru880N3Fh+8v9NJJ8jWJWx1Hk3os+9WqbKwfgRB6zBtwus7Ipkk4/coUUmt67yfphlzlOLP+4X8AZYVrF2bfTY2p9VfZwvmij68PvK0ynWC+j+vY7MOEkCG+4qtJh98EPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tulmo0CJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fnb94Nxu"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-747e41d5469so6605030b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:05:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750849547; x=1751454347; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CNMyLG0/0oSyVY4Kn9SLnpAitEEY4h0zMz72v9Ot1R8=;
-        b=Fnb94NxuVaO00DRa2hzgfPvDxmj20hbR21LjrjFRwgl74L4pAFHJj3lWARe8R+G5bf
-         J78hfrstq76j5uz25bzZaWh1Y6oqGvHHR7luGqbrP6bXcan8IBBkDAnoKGEMJGHz1awR
-         8t2lVkkfBkN0N/hLktBEvqlSJ57hHBAMdIgtfLiYRZ09uq/JMLI1AMaus86y1Wjay679
-         sTm5ZMz5mdwl0tiHbHLrULh4C4irl6VrbtfHM9pDeBIYgI/WBmCE6B0nzjgNqs1L72vY
-         UQ7GD6OAxIPDPMvDttEJ5o3OAuIgvi8OBW37wvjY8WnYlr3U7b5ZhmFCsCyENoT9kX6C
-         qcZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750849547; x=1751454347;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CNMyLG0/0oSyVY4Kn9SLnpAitEEY4h0zMz72v9Ot1R8=;
-        b=O/0toLCGWDa2pJ5w0UNodkdtLfOblUCYIWQp9Lw+CHXZqEj4U6KlIb4AxC34Dz7a83
-         jYOwJaTBxcB2B5u1R2yT0+/KbGNsg811ddr8YMAlM1J17+wTlbu0yx4qg/E4Zgup0fTQ
-         r/FnqMeoqM/Dz3UmoqCAnRpBCNw65p1IAj2AWQIgHZgo0SsVRR8a2+zvYRk4nyprxvOC
-         wkf/2fvTKycEyNsIX5QRrp3x1lt0B8TpJrSAtt0zgj5V8etwd0HnPoY6QzuxavXvTyjn
-         XV39ohGV+nWXJqOjAJL2t3cEkjhXeIE9Y3O3V1HUXi0t2OFry67YYPrcVa987feOoKNF
-         5YPA==
-X-Forwarded-Encrypted: i=1; AJvYcCVvGD3mHcJhCe5OhIlTr4HmKVdMuG0K23J7oojkQPF7wq/ATILnTU1n3RHe/P4IL5N4DM7upChzfK0PVaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwaahGboU5xdJWDfBOEVLpSBpzA9t1dmNNkKIDhVsCtiV6izvkm
-	IJb48f6LF9fNrwTlOmHuBxhWDTbUVhwklrCG2/pLiklvYXEOZEPmOLeF
-X-Gm-Gg: ASbGnctKaNKStQUliEd9hZ43SWBgI7MjsI6BYZiIIFxHLm7A+xlS+SXSkKCe+e1puvM
-	cmKu3WjQfhDRD50Fjl+WxRsLwirc3DaCGw5jC9FNEo/qAACcYVqD8O2Mgtzx1tog0DcdX9rDams
-	3vLBkFWmDcnOkoTAoqoHIBhmG9AvPbaMW/q8VVm/APFbVzX2kR/buL6Q6zoDd40VTOJVaT/+H30
-	wqicrxo5luP/iFZSf5cJAPLCkQt9JmWqYjuDj5l1JLk0AbaoHvDJbQO5CaoHYZmfI0V/lwQUFf8
-	Oii1q2Tg5krD1V7Ofgfy6eoXcYTRYmJ1Yh7qZ1gyNxjXFlmRJa3OIqmbInIbP00R7t31z7xE1VB
-	q4+DuXG18LGGeQEc3NzA=
-X-Google-Smtp-Source: AGHT+IEysA6hmEMCHBftoGPxxrMX8x7rQIN8t6NhhCljZQ1qJAhej2tYzOSCXdyZVbFj0sKLouB8Nw==
-X-Received: by 2002:a05:6a21:ad1b:b0:217:ff4b:cc57 with SMTP id adf61e73a8af0-2207f31cca4mr3128157637.39.1750849546835;
-        Wed, 25 Jun 2025 04:05:46 -0700 (PDT)
-Received: from avinash-INBOOK-Y2-PLUS.. ([2401:4900:88f7:9fa5:cd1:28e1:73f6:ea42])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b31f12423d8sm10710622a12.41.2025.06.25.04.05.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 04:05:46 -0700 (PDT)
-From: Abinash Singh <abinashlalotra@gmail.com>
-X-Google-Original-From: Abinash Singh <abinashsinghlalotra@gmail.com>
-To: chao@kernel.org
-Cc: abinashlalotra@gmail.com,
-	abinashsinghlalotra@gmail.com,
-	jaegeuk@kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	syzbot+b8c1d60e95df65e827d4@syzkaller.appspotmail.com
-Subject: [PATCH v4] f2fs: fix KMSAN uninit-value in extent_info usage
-Date: Wed, 25 Jun 2025 16:35:37 +0530
-Message-ID: <20250625110537.22806-1-abinashsinghlalotra@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <29dac4f4-3f46-49b6-8a9f-c26ffcde11d0@kernel.org>
-References: <29dac4f4-3f46-49b6-8a9f-c26ffcde11d0@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tulmo0CJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8E92C4CEEA;
+	Wed, 25 Jun 2025 11:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750849551;
+	bh=4lPd6KAvzXLpR40aJR9oTpfeEv7nnPZ/tTvk3e0XF4M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=tulmo0CJdcLK2dbqrKEF7umDt2un0BQ5K2ElGgLeR6Hc7GH9nI2x5boFteE3GRRb7
+	 rDUBDDQnyglthoIHmG3QAESsvF9sROfEAA5ssM4NRAKUQtfJIDJ/XahkqkNu0dmuMR
+	 WLcffsAoUvm7a+floCkuu2aDhxSHhLIvL9w8Ng7yeZvsFKlT8sKHI7Kcqs65qbHIQJ
+	 +1ZYLSc676lj+IqY7w0OeNG7paY4Pa7GBQjwJqrIhMBCTbdmVlH0Sn0uJgVYh5HMAi
+	 Sf63AA98YQcmTPw5Snf/6SrQ/3w434pcaaVKsTOubklkd5o/53lpUaAVDHDIQzwSTD
+	 7ruDKt5dHClrg==
+Message-ID: <29eeae4f-59ed-4781-88b1-4fd76714ecb6@kernel.org>
+Date: Wed, 25 Jun 2025 13:05:45 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 09/29] dt-bindings: clock: mediatek: Describe MT8196
+ peripheral clock controllers
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ Laura Nao <laura.nao@collabora.com>, mturquette@baylibre.com,
+ sboyd@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, p.zabel@pengutronix.de, richardcochran@gmail.com
+Cc: guangjie.song@mediatek.com, wenst@chromium.org,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
+ kernel@collabora.com
+References: <20250624143220.244549-1-laura.nao@collabora.com>
+ <20250624143220.244549-10-laura.nao@collabora.com>
+ <7dfba01a-6ede-44c2-87e3-3ecb439b48e3@kernel.org>
+ <284a4ee5-806b-45f9-8d57-d02ec291e389@collabora.com>
+ <0870a2ba-936b-4eb2-a570-f2c9dea471b8@kernel.org>
+ <9fc32523-5009-4f48-8d82-6c3fd285801d@collabora.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <9fc32523-5009-4f48-8d82-6c3fd285801d@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-KMSAN reported a use of uninitialized value in `__is_extent_mergeable()`
- and `__is_back_mergeable()` via the read extent tree path.
+On 25/06/2025 11:45, AngeloGioacchino Del Regno wrote:
+> Il 25/06/25 10:57, Krzysztof Kozlowski ha scritto:
+>> On 25/06/2025 10:20, AngeloGioacchino Del Regno wrote:
+>>> Il 24/06/25 18:02, Krzysztof Kozlowski ha scritto:
+>>>> On 24/06/2025 16:32, Laura Nao wrote:
+>>>>> +  '#reset-cells':
+>>>>> +    const: 1
+>>>>> +    description:
+>>>>> +      Reset lines for PEXTP0/1 and UFS blocks.
+>>>>> +
+>>>>> +  mediatek,hardware-voter:
+>>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>>>> +    description:
+>>>>> +      On the MT8196 SoC, a Hardware Voter (HWV) backed by a fixed-function
+>>>>> +      MCU manages clock and power domain control across the AP and other
+>>>>> +      remote processors. By aggregating their votes, it ensures clocks are
+>>>>> +      safely enabled/disabled and power domains are active before register
+>>>>> +      access.
+>>>>
+>>>> Resource voting is not via any phandle, but either interconnects or
+>>>> required opps for power domain.
+>>>
+>>> Sorry, I'm not sure who is actually misunderstanding what, here... let me try to
+>>> explain the situation:
+>>>
+>>> This is effectively used as a syscon - as in, the clock controllers need to perform
+>>> MMIO R/W on both the clock controller itself *and* has to place a vote to the clock
+>>> controller specific HWV register.
+>>
+>> syscon is not the interface to place a vote for clocks. "clocks"
+>> property is.
+>>
+>>>
+>>> This is done for MUX-GATE and GATE clocks, other than for power domains.
+>>>
+>>> Note that the HWV system is inside of the power domains controller, and it's split
+>>> on a per hardware macro-block basis (as per usual MediaTek hardware layout...).
+>>>
+>>> The HWV, therefore, does *not* vote for clock *rates* (so, modeling OPPs would be
+>>> a software quirk, I think?), does *not* manage bandwidth (and interconnect is for
+>>> voting BW only?), and is just a "switch to flip".
+>>
+>> That's still clocks. Gate is a clock.
+>>
+>>>
+>>> Is this happening because the description has to be improved and creating some
+>>> misunderstanding, or is it because we are underestimating and/or ignoring something
+>>> here?
+>>>
+>>
+>> Other vendors, at least qcom, represent it properly - clocks. Sometimes
+>> they mix up and represent it as power domains, but that's because
+>> downstream is a mess and because we actually (at upstream) don't really
+>> know what is inside there - is it a clock or power domain.
+>>
+> 
+> ....but the hardware voter cannot be represented as a clock, because you use it
+> for clocks *or* power domains (but at the same time, and of course in different
+> drivers, and in different *intertwined* registers).
+> 
+> So the hardware voter itself (and/or bits inside of its registers) cannot be
+> represented as a clock :\
+> 
+> In the context of clocks, it's used for clocks, (and not touching power domains at
+> all), but in the context of power domains it's used for power domains (and not
+> touching clocks at all).
 
-The root cause is that `get_read_extent_info()` only initializes three
-fields (`fofs`, `blk`, `len`) of `struct extent_info`, leaving the
-remaining fields uninitialized. This leads to undefined behavior
-when those fields are accessed later, especially during
-extent merging.
+I don't understand this. Earlier you mentioned "MUX-GATE and GATE
+clocks", so these are clocks, right? How these clocks are used in other
+places as power domains? If they are, this either has to be fixed or
+apparently this is a power domain and use it as power domain also here.
 
-Fix it by zero-initializing the `extent_info` struct before population.
+Really, something called as hardware voter is not that uncommon and it
+does fit existing bindings.
 
-Reported-by: syzbot+b8c1d60e95df65e827d4@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=b8c1d60e95df65e827d4
-Fixes: 94afd6d6e525 ("f2fs: extent cache: support unaligned extent")
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Abinash Singh <abinashsinghlalotra@gmail.com>
----
-v4 : Added Reviewed-by and Corrected Fixes
----
- fs/f2fs/extent_cache.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> I'm not sure what qcom does - your reply makes me think that they did it such that
+> the clocks part is in a MMIO and the power domains part is in a different MMIO,
+> without having clock/pd intertwined voting registers...
 
-diff --git a/fs/f2fs/extent_cache.c b/fs/f2fs/extent_cache.c
-index cfe925a3d555..4ce19a310f38 100644
---- a/fs/f2fs/extent_cache.c
-+++ b/fs/f2fs/extent_cache.c
-@@ -414,7 +414,7 @@ void f2fs_init_read_extent_tree(struct inode *inode, struct folio *ifolio)
- 	struct f2fs_extent *i_ext = &F2FS_INODE(&ifolio->page)->i_ext;
- 	struct extent_tree *et;
- 	struct extent_node *en;
--	struct extent_info ei;
-+	struct extent_info ei = {0};
- 
- 	if (!__may_extent_tree(inode, EX_READ)) {
- 		/* drop largest read extent */
--- 
-2.43.0
+No, you just never have direct access to hardware. You place votes and
+votes go to the firmware. Now depending on person submitting it or
+writing internal docs, they call it differently, but eventually it is
+the same. You want to vote for some specific signal to be active or
+running at some performance level.
 
+> 
+> Still not sure what to do here, then...
+> 
+> Cheers,
+> Angelo
+
+
+Best regards,
+Krzysztof
