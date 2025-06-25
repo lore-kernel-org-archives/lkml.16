@@ -1,62 +1,62 @@
-Received: from mail-oi1-f172.google.com (mail-oi1-f172.google.com [209.85.167.172])
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB24D2D8794
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017AA2D9ED7
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:19:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750882752; cv=none; b=o+jp2w38Jv3sOCyCsa2taLbTcdNK8mxwZEzSlWCsxEAWrKHJ5rMP3NsBsZnPkgmBjDeF2Xhbc30lv5h1zzOaQDXz7rUw18zlbQaGufV3dNA4xS9N0ANIr/F5xq2WJ+GGz/mSLhSq3/qXq1g8YrGaN9h3jj+ZTATXJtLv+vg7Djg=
+	t=1750882753; cv=none; b=iIvh7/L3nm2FjyBjcTGEjXfHmFyJXZWavZkrnf2Y0vb4XGEefMuO5HRvBg/AyBkZYMK1Obwk5p50a373lE/ta/0h9ZIHa4F/pg2FdFpvtA2QWxjCVDlV4Aof4j8wXBSqAI6YL+viThyAd22UZrFmjFFCEgcdFYphpf+WnaLj0d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750882752; c=relaxed/simple;
-	bh=zCwnFT6YvpOnBXES6Ar8fdc609/zgYWwY3IzSAw9dtM=;
+	s=arc-20240116; t=1750882753; c=relaxed/simple;
+	bh=h7rNjT3qiAFAf02O0q1TiHR0k+rR9JvQ409LLZcGSDw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MS2Ug+c/hf6fssoGv6E9WcuUFt76Cm5POleOlLe+AGN6OClb4w12bUrAC+YiLqkLEm40AAD+M5GHxZh5mi+2wwSmCopiKnNOkA6BjUnXrtrW/3ehbAcyXkU6Gm6BiiJYyIBSNJK6b8eUDX8M5t9nCWn2Wl0/kQwLtm2JBQ5O+yE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jsTJBsug; arc=none smtp.client-ip=209.85.167.172
+	 MIME-Version; b=RE02NLZs3nwsXfl+h8DxhedSrUwtTqItqZcawpYco9UfoMrZenVDXLNVeRPprRzS2P9ZmaC15OMRbySfs6haa5vbvNV5DkKKhJI1fQp6buMzG8xGk/pZLngGxTJGb3Xr9bRnCYZZpSRXXmgSFsEjlzPL4V4QJPe2NsWOGAhSvwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DtH+WcwU; arc=none smtp.client-ip=209.85.167.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jsTJBsug"
-Received: by mail-oi1-f172.google.com with SMTP id 5614622812f47-4080548891fso144777b6e.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:19:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtH+WcwU"
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-4079f80ff0fso884907b6e.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:19:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750882750; x=1751487550; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750882751; x=1751487551; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Ii7F3KTd50OP4ELYVVkfKIFESVbr68GqYZUwUTPpVR4=;
-        b=jsTJBsugYFdJ17Aawxfq727ghHg0g6TcjXxAeugya96z1hV84YogPa2UsrJz1c93DY
-         dWXkvjSfNqB1iexv5dbRfQpRlZw7abc8t+QRMtfyNvV6dS3dzQt7dimKM/yNdF5ucUnu
-         ZesP8RHNoCmF9PRQ+OUTRuVy+1R0wT8oq1N4LFWAeEDwtgVyExNMFtvknR5Nd6liv0Xv
-         gLnIBNUBDqEfOylCSmNrIx1yqRYt8aZYOnzeiEQa+0jdZrpXS9vywYCW/z806H40aqFD
-         72C5YqJrBkV2YBZX3ITqHIq4wxXxSs/7tjjOBzeg1bz1ZZ3iKoShGt+VuAq59nVuucga
-         DLsA==
+        bh=I+3SW8vJVKoCSfPWTHdZMGnwJ8NA6WVZ3bsZQcUT5XA=;
+        b=DtH+WcwUWlIkTOdYgvCFwoHxa+nNZu0v1r6qe7xGhs+UgYiHI7Mhph4M4LoZJXMWty
+         jMA1dx7KF9KIpJ2lcbUb6VYphRcRANVpM7kv5+B2WdZq7wZyDNbKfIU4BDy1sZ/E/Ld7
+         PEwejlONHo431dtYkLnkhnCzdNPxt4+cZhCY4qCcxZbPmuNNFldWTUco6wXvBHhVVesT
+         jXRVNQJNQZSKR43GNTLbwusOqT8S95j6EFriHcRLet/e99saUi4shkIfq9Mm/D0I6cK1
+         3ck8VyW3jsEJrw8yp23ptpKIlzZUukI8QW6M6ZipyKqKi5ozHMr1bfZFoAil/1w50I6r
+         dweA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750882750; x=1751487550;
+        d=1e100.net; s=20230601; t=1750882751; x=1751487551;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Ii7F3KTd50OP4ELYVVkfKIFESVbr68GqYZUwUTPpVR4=;
-        b=fhnm1Wh95ej5uctsvXIlQcDPwfcboOu7/N2Ps2xa4qtywzAiXiAC3YsjgPqFyaiSG5
-         BeFzuXzCTkXc+8/V2a7FM6Ty+duB4gpDUhuynCA6/wFJWaxHZrZNzaRVZF3G3KBabGNu
-         pjeB9JX8/9nVXgZYRKzY5Q/lJTGSkzSYD0c+fhDXFdhDAXal8NBnGk4To+1c5VuwrlHn
-         h4Dq7ioAxthpSAdn0eWo5h6oB+y3KXxr6IG/QfW2sv1jj78DSEkIdjBvIpnbIqfT4xrS
-         Tx2hTNhZPQtGk/ZIY66P9FTedWBHxoL//JVatY9dH5BjOe+hkynQ7NedtwqfwVz4d1OG
-         lM+g==
-X-Gm-Message-State: AOJu0Yy76JtOJyRsBFBzIXRjagKGLJWBc0RZXSYCp7IDuE1Z/Z1eLafB
-	a4lR8rIPY31xUoeZLOkj8/7aUwkL+r+zKilXawyLc3MCEZiMQ5soasTCBmj7s/7W
-X-Gm-Gg: ASbGncs8UO37NIDmnRFxYmrFY2YNANtF7kIqdxPaUrJe9Zj+pqoEAgHDwDxPiCdiPb0
-	4qL7FKQ6XGHCOM+oHNZS37Oau1YYPIDOT7OTkLVJBfEshq8wwQe0IhVKwMtNn59eAFZGBVKmRMD
-	EFhmmDWG4js+78FsVTRKeM9EPln+T7H3EV/IkJAocdWygqENjH04ypCPita+EcDqKeynRdWzM/+
-	Tvjo2bgqYQhodTIF3pVYIii9ll/TBqBD2bNx/wWyzcATAxHJ452CrWCIJ0fYc54u05tbZLTNJNi
-	EZ5zCEgT4jptRzZgijpOh0DtWS+Vpv/3t2/qLm6KY3EP2XiDEnrE2/5a3ye1sBwl1kg6SCNHF22
-	KrS66dm8=
-X-Google-Smtp-Source: AGHT+IGEZJwCIISdIXRvS1gnBkGMKpKYrYU/Oz1NxYRz4ecK56zRfo/tvDDixdQKK2GCSXYcSwb2ng==
-X-Received: by 2002:a05:6808:2001:b0:408:e68d:975a with SMTP id 5614622812f47-40b05a11227mr3693289b6e.39.1750882749745;
-        Wed, 25 Jun 2025 13:19:09 -0700 (PDT)
+        bh=I+3SW8vJVKoCSfPWTHdZMGnwJ8NA6WVZ3bsZQcUT5XA=;
+        b=EmTKGhtElw3qosiCsoo56b08YgGwQo9VDhLdYJS6mY/raGR/8Lh5VBPyCyPp5C/m4x
+         Tkrg/DQZpgoDjDkhGVfHP3r/1yN9vi5g4aEjzh2uboh+X60Vs86HaMyzaXs1jHY7el3L
+         8mPOEEqH2PvNZqQtRGpSMpU5QzGrklTy+AnPE3z49TIqvZqz5809bQ19PF/9DKOR8djN
+         x7ErgWk+fUXMR8MDIs9krd+ZvIz7zp36S8A0PPiXWVeVAa7zjywLgcF6QLNtpad1Eme5
+         moKoY4VpOFDstcR9pDC6QKNgaz3ExyKj+FeAqJMDJ6ZGqTv6lJ8a+xgMfapXbvIMQrOt
+         BGDA==
+X-Gm-Message-State: AOJu0Yyh6aaviNMpZngibSAKmw8B+sdW3N0bO5FqrtTy//ahP5/Id7aO
+	j+blubUebFbBrKP6wR8RMGmDoR2Be2VRri2ul/klZMIsHJ4OWHuTfs5Iel60dVq7
+X-Gm-Gg: ASbGnct4HfmX7dz19nnp/znFa5ntcE8sZLjPiQ/WFaeQ9YjmXIGv2ZHuvVgJSpbm4X6
+	87oaLzqA+o7Xte/vjp7VVwR/u72Zmh2fLlcDT+UZW127RG/tfQgtMx5rrZHwcrVfTpz9Huh1hNw
+	HoYznt8YE8A/erSBg6xiv3D56AlkLedf2gMBKP/H0QOz90lSy6NfXOADmpBhVfub4b9lYzwT4N7
+	jZxlCYXhx/ki7c/WXvLqJEvDubQzeB5s+WQxqnRitngqckTaqvhmw+ZOFla4zecSX3Z0EHlVhaG
+	M7EfDyoguPUyyFpufUM3rvYdjrvGsSjRmQCAOonk59A6JrqqGVjy8CPa/Ho68003ksdu1H6Je+t
+	hahU5YnU=
+X-Google-Smtp-Source: AGHT+IH3tdJswFN36V2uHSc+zADQ3AIuPT/3nG6JE2jqxtQe0s1SSwBgNwMBzhMPrf7gPrzC+jyOYQ==
+X-Received: by 2002:a05:6808:3021:b0:3f3:d6f9:69a5 with SMTP id 5614622812f47-40b1c8ca908mr942017b6e.8.1750882750920;
+        Wed, 25 Jun 2025 13:19:10 -0700 (PDT)
 Received: from localhost.localdomain ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40ac6d22c23sm2319188b6e.42.2025.06.25.13.19.08
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40ac6d22c23sm2319188b6e.42.2025.06.25.13.19.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 13:19:09 -0700 (PDT)
+        Wed, 25 Jun 2025 13:19:10 -0700 (PDT)
 From: Stuart Hayes <stuart.w.hayes@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -76,9 +76,9 @@ To: linux-kernel@vger.kernel.org,
 	Jan Kiszka <jan.kiszka@seimens.com>,
 	Bert Karwatzki <spasswolf@web.de>
 Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v10 1/5] kernel/async: streamline cookie synchronization
-Date: Wed, 25 Jun 2025 15:18:49 -0500
-Message-Id: <20250625201853.84062-2-stuart.w.hayes@gmail.com>
+Subject: [PATCH v10 2/5] driver core: don't always lock parent in shutdown
+Date: Wed, 25 Jun 2025 15:18:50 -0500
+Message-Id: <20250625201853.84062-3-stuart.w.hayes@gmail.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20250625201853.84062-1-stuart.w.hayes@gmail.com>
 References: <20250625201853.84062-1-stuart.w.hayes@gmail.com>
@@ -90,95 +90,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: David Jeffery <djeffery@redhat.com>
+Don't lock a parent device unless it is needed in device_shutdown. This
+is in preparation for making device shutdown asynchronous, when it will
+be needed to allow children of a common parent to shut down
+simultaneously.
 
-To prevent a thundering herd effect, implement a custom wake function for
-the async shubsystem which will only wake waiters which have all their
-dependencies completed.
-
-The async subsystem currently wakes all waiters on async_done when an async
-task completes. When there are many tasks trying to synchronize on differnt
-async values, this can create a thundering herd problem when an async task
-wakes up all waiters, most of whom go back to waiting after causing
-lock contention and wasting CPU.
-
-Signed-off-by: David Jeffery <djeffery@redhat.com>
 Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
+Signed-off-by: David Jeffery <djeffery@redhat.com>
 ---
- kernel/async.c | 42 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 41 insertions(+), 1 deletion(-)
+ drivers/base/core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/async.c b/kernel/async.c
-index 4c3e6a44595f..ae327f29bac9 100644
---- a/kernel/async.c
-+++ b/kernel/async.c
-@@ -76,6 +76,12 @@ struct async_entry {
- 	struct async_domain	*domain;
- };
+diff --git a/drivers/base/core.c b/drivers/base/core.c
+index cbc0099d8ef2..58c772785606 100644
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -4823,7 +4823,7 @@ void device_shutdown(void)
+ 		spin_unlock(&devices_kset->list_lock);
  
-+struct async_wait_entry {
-+	wait_queue_entry_t wait;
-+	async_cookie_t cookie;
-+	struct async_domain *domain;
-+};
-+
- static DECLARE_WAIT_QUEUE_HEAD(async_done);
+ 		/* hold lock to avoid race with probe/release */
+-		if (parent)
++		if (parent && dev->bus && dev->bus->need_parent_lock)
+ 			device_lock(parent);
+ 		device_lock(dev);
  
- static atomic_t entry_count;
-@@ -298,6 +304,24 @@ void async_synchronize_full_domain(struct async_domain *domain)
- }
- EXPORT_SYMBOL_GPL(async_synchronize_full_domain);
+@@ -4847,7 +4847,7 @@ void device_shutdown(void)
+ 		}
  
-+/**
-+ * async_domain_wake_function - wait function for cooking synchronization
-+ *
-+ * Custom wait function for async_synchronize_cookie_domain to check cookie
-+ * value.  This prevents waking up waiting threads unnecessarily.
-+ */
-+static int async_domain_wake_function(struct wait_queue_entry *wait,
-+				      unsigned int mode, int sync, void *key)
-+{
-+	struct async_wait_entry *await =
-+		container_of(wait, struct async_wait_entry, wait);
-+
-+	if (lowest_in_progress(await->domain) < await->cookie)
-+		return 0;
-+
-+	return autoremove_wake_function(wait, mode, sync, key);
-+}
-+
- /**
-  * async_synchronize_cookie_domain - synchronize asynchronous function calls within a certain domain with cookie checkpointing
-  * @cookie: async_cookie_t to use as checkpoint
-@@ -310,11 +334,27 @@ EXPORT_SYMBOL_GPL(async_synchronize_full_domain);
- void async_synchronize_cookie_domain(async_cookie_t cookie, struct async_domain *domain)
- {
- 	ktime_t starttime;
-+	struct async_wait_entry await = {
-+		.cookie = cookie,
-+		.domain = domain,
-+		.wait = {
-+			.func = async_domain_wake_function,
-+			.private = current,
-+			.flags = 0,
-+			.entry = LIST_HEAD_INIT(await.wait.entry),
-+		}};
+ 		device_unlock(dev);
+-		if (parent)
++		if (parent && dev->bus && dev->bus->need_parent_lock)
+ 			device_unlock(parent);
  
- 	pr_debug("async_waiting @ %i\n", task_pid_nr(current));
- 	starttime = ktime_get();
- 
--	wait_event(async_done, lowest_in_progress(domain) >= cookie);
-+	for (;;) {
-+		prepare_to_wait(&async_done, &await.wait, TASK_UNINTERRUPTIBLE);
-+
-+		if (lowest_in_progress(domain) >= cookie)
-+			break;
-+		schedule();
-+	}
-+	finish_wait(&async_done, &await.wait);
- 
- 	pr_debug("async_continuing @ %i after %lli usec\n", task_pid_nr(current),
- 		 microseconds_since(starttime));
+ 		put_device(dev);
 -- 
 2.39.3
 
