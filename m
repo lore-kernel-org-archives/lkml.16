@@ -1,129 +1,143 @@
-Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37682BE7D6
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:13:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E4E2BDC10;
+	Wed, 25 Jun 2025 16:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750868009; cv=none; b=i5XOCYhylmwUzo7b0yQ7/G8F7ZMvHdFx7PyW48ej56Waxj5jsOkVTdN160aJ3x0piq412G+oTuVfKVNiVBKUyNQcSfi7odmn5BwJZ/Kz+JSiGxihhE8f8E7AUnywCTsNiGor3odQ8t8n4UCGlGUpIFywD69IgtuxhKBeCbNF9fQ=
+	t=1750868009; cv=none; b=rObygPMJCJ11LJGm5Q9JxSxoSTYxIjTXGpgT5R6hTVWRf/aTsaHxV6B6U08q6iRRBj/cyOMcaPNZXYXiAOfpGa9KiJMHNBkRA2an/8x2JVis7ZuWZScdnT4Iwl1J96d87KOa9JGz3ZzRfPVr1pxs2dEE+wDUkjW5XYKP3V7T/iQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750868009; c=relaxed/simple;
-	bh=WT7ivMV9qqeQwMyuD6mdADCPzfCCXz2Dy8zS7veJoMs=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=rmESF45Ghl6EIr/JpB6XdT8QNGWHgxn1XE1oCtHO7/CpJiX/TZ2homFoGhcEf91wXx2PGo4OGp0JSmDVg4aFjsJn7hbU3I3b94U9JfbGODP6PVZky9P3kKshMNwPwNf/VhbjKEqfE+BKmTMvmUpe0wXt723WBwX1BMrIXZ2dzLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3df33d97436so8744035ab.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:13:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750868007; x=1751472807;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=skryBwueoVvpqeh7d4a3noBeWswe7fbsQ/e6Mb6+Dhg=;
-        b=Smn/O6ZM9WQEZ9dkeq6KQVNtZuR1J8Ddc66dBHqMyvs/IqWYgZhxNKyoMhLQ1gU3hW
-         91t4YLz9g1inXHkYjQoFqnUWfRnjZQL06dhPWleo1TZQSo7Jh2AUkDHIlswrkJlXaoqh
-         YJXGhKHRjpjsN4eOjc4Dccwkm72XKrlaLVUhavneby2tXQydljcc2Txkews6YgydBdKd
-         Vor5gInCTBWweVy6pAXZbQucWj7ciL5EmYMokezUdCfFmlM4IMzYRaBVjpgGS2hGn2O9
-         swlGi+C5jAzmpGl8dJX3nF2jGg9gJhK0oyoOVYFUDU9UFsa3KcVdSgTsjbvMkVcCsG3p
-         VjjQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUAbvdlvroW+SdM30TrENAVsBCYI5gPZiQlvywiaflPuT1DFPsU+Y+l0dNDrcdMuE1UoeW0KBjSCsIdoso=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMD8yFqvQOPsHDlUTGtiFCmDftHCK8sqfh53lZl1knAunVnyoN
-	6v5xlQ85EtU0mNRmnyae0zfrmL+7+T1+7Nfpie7st6qzpwoi4EYmKWfvRCu9APfpxVR6SPTi45/
-	8rS3pFF4MNhqEm0sWOTnSEs72jO8mxWPbsykxOHnF9kmOoPXcO7024wFrMIk=
-X-Google-Smtp-Source: AGHT+IHEz0cNg0RdHPrZ5I5pzxpMHNh8tbp3gQEx4kycm9WGHRLb0EAHML2SkO+hC86Kl93MyXmubTW2rKIIYeVrG3p/J+gYps7h
+	bh=IIQljKBsNRMZzyX/Rtn6xxA6HrVZM41HmNzZGjrS+bc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=opnDqhT1A6ZXMIih7ZjIOanMrecagirnSRu4tEkppNs7yggkfF6Y/1OqopCQp7JyzCKVNeHCRPCTnRw9A7RCbXT3WnUlRp8A63sKvQIRggH3iMSZ9w4Rmf4vQ8frecGqd5giIKRptw8cfSLqm6XvCtfpyo+E8fmGNeipcMEMceE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=afqgb50X; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="afqgb50X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750868004;
+	bh=IIQljKBsNRMZzyX/Rtn6xxA6HrVZM41HmNzZGjrS+bc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=afqgb50Xmd4fpACfmLcinWsRLQN09kVBJtwqMJ2v7rl+t/yH8DTDpSLQISRJz70zA
+	 eSZiVO3RJlgLJP6qPscVt912gxR7zny4IGv0kkqowCLJ7eiMHL5tyYYFVzFY2D24WL
+	 GgeY64UmAlz8Njb1MRa70lKlVBeGIs4yCy/u0Jw+o/tda3C4+zBzo0vJkU227jwyXR
+	 XrgpbpbUhc9BTRgcWUDADkFDDsq49zTA9J33rfwqvancfDIIYMcFbwzFJg9xzE6CaM
+	 NLgiwAdPO172FCMjCL3DXA25DQKYhqTJ2y/3W4el37bIqkKpWolv3i6aQdWmEn3Zp6
+	 G63fs6uKBWK1w==
+Received: from [IPv6:2606:6d00:17:b699::bad] (unknown [IPv6:2606:6d00:17:b699::bad])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: nicolas)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1286C17E0202;
+	Wed, 25 Jun 2025 18:13:22 +0200 (CEST)
+Message-ID: <6ac8b8db02190da7d2edc9ce4abe5e7a7cab70d6.camel@collabora.com>
+Subject: Re: [PATCH] media: rkvdec: Fix a NULL vs IS_ERR() bug in probe()
+From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>, Ezequiel Garcia
+	 <ezequiel@vanguardiasur.com.ar>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman
+	 <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil@xs4all.nl>, Detlev
+ Casanova <detlev.casanova@collabora.com>, linux-media@vger.kernel.org, 
+	linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Date: Wed, 25 Jun 2025 12:13:20 -0400
+In-Reply-To: <696219e9-a1c7-4c87-b15c-1ffd42c95d58@sabinyo.mountain>
+References: <696219e9-a1c7-4c87-b15c-1ffd42c95d58@sabinyo.mountain>
+Autocrypt: addr=nicolas.dufresne@collabora.com; prefer-encrypt=mutual;
+ keydata=mQGiBEUQN0MRBACQYceNSezSdMjx7sx6gwKkMghrrODgl3B0eXBTgNp6c431IfOOEsdvk
+ oOh1kwoYcQgbg4MXw6beOltysX4e8fFWsiRkc2nvvRW9ir9kHDm49MkBLqaDjTqOkYKNMiurFW+go
+ zpr/lUW15QqT6v68RYe0zRdtwGZqeLzX2LVuukGwCg4AISzswrrYHNV7vQLcbaUhPgIl0D+gILYT9
+ TJgAEK4YHW+bFRcY+cgUFoLQqQayECMlctKoLOE69nIYOc/hDr9uih1wxrQ/yL0NJvQCohSPyoyLF
+ 9b2EuIGhQVp05XP7FzlTxhYvGO/DtO08ec85+bTfVBMV6eeY4MS3ZU+1z7ObD7Pf29YjyTehN2Dan
+ 6w1g2rBk5MoA/9nDocSlk4pbFpsYSFmVHsDiAOFje3+iY4ftVDKunKYWMhwRVBjAREOByBagmRau0
+ cLEcElpf4hX5f978GoxSGIsiKoDAlXX+ICDOWC1/EXhEEmBR1gL0QJgiVviNyLfGJlZWnPjw6xhhm
+ tHYWTDxBOP5peztyc2PqeKsLsLWzAr7QnTmljb2xhcyBEdWZyZXNuZSA8bmljb2xhc0BuZHVmcmVz
+ bmUuY2E+iGIEExECACIFAlXA3CACGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFTAi2sB
+ qgcJngAnRDBTr8bhzuH0KQwFP1nEYtfgpKdAKCrQ/sJfuG/8zsd7J8wVl7y3e8ARbRDTmljb2xhcy
+ BEdWZyZXNuZSAoQi4gU2MuIEluZm9ybWF0aXF1ZSkgPG5pY29sYXMuZHVmcmVzbmVAZ21haWwuY29
+ tPohgBBMRAgAgBQJFlCyOAhsDBgsJCAcDAgQVAggDBBYCAwECHgECF4AACgkQcVMCLawGqBwhLQCg
+ zYlrLBj6KIAZ4gmsfjXD6ZtddT8AoIeGDicVq5WvMHNWign6ApQcZUihtElOaWNvbGFzIER1ZnJlc
+ 25lIChCLiBTYy4gSW5mb3JtYXRpcXVlKSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY28udW
+ s+iGIEExECACIFAkuzca8CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFTAi2sBqgcQX8
+ An2By6LDEeMxi4B9hUbpvRnzaaeNqAJ9Rox8rfqHZnSErw9bCHiBwvwJZ77QxTmljb2xhcyBEdWZy
+ ZXNuZSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY29tPohiBBMRAgAiBQJNzZzPAhsDBgsJC
+ AcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBxUwItrAaoHLlxAKCYAGf4JL7DYDLs/188CPMGuwLypw
+ CfWKc9DorA9f5pyYlD5pQo6SgSoiC0R05pY29sYXMgRHVmcmVzbmUgKEIgU2MuIEluZm9ybWF0aXF
+ 1ZSkgPG5pY29sYXMuZHVmcmVzbmVAdXNoZXJicm9va2UuY2E+iGAEExECACAFAkUQN0MCGwMGCwkI
+ BwMCBBUCCAMEFgIDAQIeAQIXgAAKCRBxUwItrAaoHPTnAJ0WGgJJVspoctAvEcI00mtp5WAFGgCgr
+ +E7ItOqZEHAs+xabBgknYZIFPU=
+Organization: Collabora Canada
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-Yg+9RAryTT3i1Yp4yaC4"
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1889:b0:3dc:7b3d:6a45 with SMTP id
- e9e14a558f8ab-3df3e0b23dbmr3533975ab.0.1750868006912; Wed, 25 Jun 2025
- 09:13:26 -0700 (PDT)
-Date: Wed, 25 Jun 2025 09:13:26 -0700
-In-Reply-To: <683265d3.a70a0220.253bc2.0079.GAE@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685c2026.a00a0220.34b642.00c6.GAE@google.com>
-Subject: Re: [syzbot] [net?] WARNING in ah6_output
-From: syzbot <syzbot+01b0667934cdceb4451c@syzkaller.appspotmail.com>
-To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	herbert@gondor.apana.org.au, horms@kernel.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
-	steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
+
+
+--=-Yg+9RAryTT3i1Yp4yaC4
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-syzbot has found a reproducer for the following issue on:
+Hi,
 
-HEAD commit:    9caca6ac0e26 bnxt: properly flush XDP redirect lists
-git tree:       net
-console+strace: https://syzkaller.appspot.com/x/log.txt?x=16254f0c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d11f52d3049c3790
-dashboard link: https://syzkaller.appspot.com/bug?extid=01b0667934cdceb4451c
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1252bdd4580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1715d182580000
+Le mercredi 25 juin 2025 =C3=A0 10:23 -0500, Dan Carpenter a =C3=A9crit=C2=
+=A0:
+> The iommu_paging_domain_alloc() function doesn't return NULL on error it
+> returns error pointers.=C2=A0 Update the check and then set ->empty_domai=
+n to
+> NULL because the rest of the driver assumes it can be NULL.
+>
+> Fixes: ff8c5622f9f7 ("media: rkvdec: Restore iommu addresses on errors")
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/b5b575608bd0/disk-9caca6ac.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/5c5f5f06115c/vmlinux-9caca6ac.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/d833e4fd921e/bzImage-9caca6ac.xz
+Oh, sorry about that, I'll will test your patch this week, but otherwise
+looks good to me, fixing yet one more error path. I'll take the time
+to test dropping the iommu node from the DT while at it, as I simply
+don't remember if that was re-tested after that change.
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+01b0667934cdceb4451c@syzkaller.appspotmail.com
+regards,
+Nicolas
 
-------------[ cut here ]------------
-memcpy: detected field-spanning write (size 40) of single field "&top_iph->saddr" at net/ipv6/ah6.c:439 (size 16)
-WARNING: CPU: 0 PID: 5841 at net/ipv6/ah6.c:439 ah6_output+0xece/0x1510 net/ipv6/ah6.c:439
-Modules linked in:
-CPU: 0 UID: 0 PID: 5841 Comm: syz-executor125 Not tainted 6.16.0-rc2-syzkaller-00179-g9caca6ac0e26 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:ah6_output+0xece/0x1510 net/ipv6/ah6.c:439
-Code: ff e8 e6 09 91 f7 c6 05 d6 c0 5b 05 01 90 b9 10 00 00 00 48 c7 c7 60 64 a0 8c 4c 89 f6 48 c7 c2 c0 66 a0 8c e8 73 b4 54 f7 90 <0f> 0b 90 90 e9 ab fe ff ff e8 c4 14 37 01 48 8b 4c 24 28 80 e1 07
-RSP: 0018:ffffc900041a70a0 EFLAGS: 00010246
-RAX: 6316bcc3c9618000 RBX: ffff888030ed5808 RCX: ffff888079c1da00
-RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000002
-RBP: ffffc900041a7230 R08: 0000000000000003 R09: 0000000000000004
-R10: dffffc0000000000 R11: fffffbfff1bfa9ec R12: dffffc0000000000
-R13: 1ffff92000834e34 R14: 0000000000000028 R15: 0000000000000030
-FS:  000055556d6c9380(0000) GS:ffff888125c51000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fe027d09e9c CR3: 0000000074d90000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- xfrm_output_one net/xfrm/xfrm_output.c:555 [inline]
- xfrm_output_resume+0x2c55/0x6170 net/xfrm/xfrm_output.c:590
- __xfrm6_output+0x2eb/0x1070 net/ipv6/xfrm6_output.c:103
- NF_HOOK_COND include/linux/netfilter.h:306 [inline]
- xfrm6_output+0x1c6/0x4f0 net/ipv6/xfrm6_output.c:108
- ip6_send_skb+0x1d5/0x390 net/ipv6/ip6_output.c:1982
- l2tp_ip6_sendmsg+0x12ee/0x17c0 net/l2tp/l2tp_ip6.c:661
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg+0x19c/0x270 net/socket.c:727
- ____sys_sendmsg+0x505/0x830 net/socket.c:2566
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
- __sys_sendmsg net/socket.c:2652 [inline]
- __do_sys_sendmsg net/socket.c:2657 [inline]
- __se_sys_sendmsg net/socket.c:2655 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f1b7b30bc79
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffdde4e6fd8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f1b7b30bc79
-RDX: 0000000000000800 RSI: 0000200000000540 RDI: 0000000000000005
-RBP: 0000000000000000 R08: 0000000000000006 R09: 0000000000000006
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000001
- </TASK>
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+> =C2=A0drivers/staging/media/rkvdec/rkvdec.c | 4 +++-
+> =C2=A01 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/medi=
+a/rkvdec/rkvdec.c
+> index d707088ec0dc..1b7f27e4d961 100644
+> --- a/drivers/staging/media/rkvdec/rkvdec.c
+> +++ b/drivers/staging/media/rkvdec/rkvdec.c
+> @@ -1162,8 +1162,10 @@ static int rkvdec_probe(struct platform_device *pd=
+ev)
+> =C2=A0	if (iommu_get_domain_for_dev(&pdev->dev)) {
+> =C2=A0		rkvdec->empty_domain =3D iommu_paging_domain_alloc(rkvdec->dev);
+> =C2=A0
+> -		if (!rkvdec->empty_domain)
+> +		if (IS_ERR(rkvdec->empty_domain)) {
+> +			rkvdec->empty_domain =3D NULL;
+> =C2=A0			dev_warn(rkvdec->dev, "cannot alloc new empty domain\n");
+> +		}
+> =C2=A0	}
+> =C2=A0
+> =C2=A0	vb2_dma_contig_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
 
+--=-Yg+9RAryTT3i1Yp4yaC4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
----
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCaFwgIAAKCRBxUwItrAao
+HJNoAKCHiY+S3IyVE4XjQknVwTjwtJf1vACgqDbhVHBrZ4XhiuSSP0h7rE8sanI=
+=F7Kw
+-----END PGP SIGNATURE-----
+
+--=-Yg+9RAryTT3i1Yp4yaC4--
