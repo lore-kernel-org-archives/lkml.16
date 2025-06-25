@@ -1,105 +1,116 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2BED2BD011;
-	Wed, 25 Jun 2025 09:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92B42BCF72
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750843922; cv=none; b=Fyh6J+PwYKPH4w37DwHQkycGMfWyD3ig1VFMUga5quLPscbdf/4sQt03qK0d9DHy7b34Q/96eOiumNPjlwUYGn/rYQBNgR460Rb+JiQIJpSD71jXfldNr9JccivV5zCZFw8gd1lpK+hV2MM+UlKtlm77rvnOZV0krsBu86puw1g=
+	t=1750844048; cv=none; b=t1q/mhskPI4/oc2dmh8N4IkZkHdvDewnelELdJ7Luq4BmSz/oHCiRWALllAsIFVievu5u7C39eXmiV1ixydpCMuTfiMahSp4MOSFHnbWZyZEcd45Rwfcb09zQg8XwxMAqCMAv1nq4JjAcVzEJEE7xjzzXJ86NXSkwL3wA/WCUKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750843922; c=relaxed/simple;
-	bh=8WdkpHh9ihGxDLz1l3NF+mD7rcsSpB/4RzlTSLNQQgg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WZTt6EMRuKnMEomNtaIdE4pxvHpyrOmHoA9wxjvMaseXL7ht0zNPT26iuX1u9br+eLNSVVPa5MuXXg9NzzBoRgDCQOBLmO4pqTE4QERcRs5gOgd7cdExQsEmZvCdcsRhN5ykUu7fH0L9bvfVt5EN/QtNLJcXK1Eiv0VPoZt+MIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=oYb6ahlJ; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750844048; c=relaxed/simple;
+	bh=khNkfOsR7Llox6I112lqSvaS2QdOn2MM5KZ08Ea+Wgk=;
+	h=From:Date:Subject:MIME-Version:Message-Id:To:Cc:Content-Type:
+	 References; b=TfAHV0d/b7FDl85JMb0d6wpnDOh7NEJgbP9u8MjENiq40Cf8/p0D3bnvvWZCsNu8kJyvb/7XUURV8bv/b6fT41pMAHdy5/tFoyYdSnJ0YC1AlBkxqASjC1EHJOq/FaPv5QQWOoFCG2fNYntrNdv73k0vBVqg7HHw41u6mGjxdmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=X24D4Uid; arc=none smtp.client-ip=203.254.224.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="oYb6ahlJ"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P2h1iK029075;
-	Wed, 25 Jun 2025 09:31:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=pp1; bh=pW+mWi87HkS2sbIpDcichjdcRzMO14
-	+ztmmlTG3x5nU=; b=oYb6ahlJunQv6zxmgWbY0FacUt6QNm9xJoL8Wff0jdv9ef
-	C7F6Q942tzbIJhPHZFQnRfPxF7Bww9YHOIZ5BxYAfyijc5T0+k40laQ6EjY71MLv
-	qWpBngUIytL0VFpNM7YXQ9sIWAriaBMWLmoQ7JUjVYxoHmqVqpVyptLGxm7TDXnX
-	xL/2b6dvJVQ8RpYP98TTfjWn6H29i5OlHhfyiTyenhIW6QmHghKCn6D1fgku5rII
-	zDVOLMFYS99VCWurP3Gu1zCZkojXFNrXClvQys7jQ1VMBcSHOww/0WMwYj97nWRR
-	zifStx9mNpHjc7W4YiCZ65yFue59rVIZexUrwslg==
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dme1eb6a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 09:31:57 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55P7YWkP014723;
-	Wed, 25 Jun 2025 09:31:56 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e9s2ga3h-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 09:31:56 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55P9VqCH44499408
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Jun 2025 09:31:52 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6C18E20049;
-	Wed, 25 Jun 2025 09:31:52 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 4423220040;
-	Wed, 25 Jun 2025 09:31:52 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.133])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 25 Jun 2025 09:31:52 +0000 (GMT)
-Date: Wed, 25 Jun 2025 11:31:50 +0200
-From: Heiko Carstens <hca@linux.ibm.com>
-To: Ingo Molnar <mingo@redhat.com>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 0/2] bugs/s390: Fix compile error with old gcc versions
-Message-ID: <20250625093150.7485A0e-hca@linux.ibm.com>
-References: <20250617135042.1878068-1-hca@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="X24D4Uid"
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20250625093356epoutp04e179742061d7062fd5fe7e2223f503d2~MP1--upar1333413334epoutp042
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:33:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20250625093356epoutp04e179742061d7062fd5fe7e2223f503d2~MP1--upar1333413334epoutp042
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750844036;
+	bh=CBC9RrUsb8ZR2LuYyo/8tdiochVtCnPVT6I0z3/0w9w=;
+	h=From:Date:Subject:To:Cc:References:From;
+	b=X24D4UidyqsXvF5h62ivkZwJ1g/Pcuce28g+FFNq4XFP464SWDlVKn86pMoPbP0SC
+	 aqEAXabVO2WLzxhK7nIUffPC0nkxv3GR4f4CWGpbzKn3Dl0NnbAGwJluUDsqwhlkX7
+	 53Aor0q6uCclT+GZtwplfbm6aY+cBIlTow1pAsOc=
+Received: from epsnrtp01.localdomain (unknown [182.195.42.153]) by
+	epcas1p2.samsung.com (KnoxPortal) with ESMTPS id
+	20250625093355epcas1p2faae8a26c68cb02ea04d4c88e02b1581~MP1_vdX511190011900epcas1p2r;
+	Wed, 25 Jun 2025 09:33:55 +0000 (GMT)
+Received: from epcas1p3.samsung.com (unknown [182.195.36.223]) by
+	epsnrtp01.localdomain (Postfix) with ESMTP id 4bRxTZ72sVz6B9m5; Wed, 25 Jun
+	2025 09:33:54 +0000 (GMT)
+Received: from epsmtip2.samsung.com (unknown [182.195.34.31]) by
+	epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250625093354epcas1p1c9817df6e1d1599e8b4eb16c5715a6fd~MP19wiIYq0667706677epcas1p1z;
+	Wed, 25 Jun 2025 09:33:54 +0000 (GMT)
+Received: from U20PB1-1082.tn.corp.samsungelectronics.net (unknown
+	[10.91.135.33]) by epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250625093354epsmtip292d16f2bc0d2b23d1119c49d914b7fca~MP19s5avp0986709867epsmtip2P;
+	Wed, 25 Jun 2025 09:33:54 +0000 (GMT)
+From: "Peter GJ. Park" <gyujoon.park@samsung.com>
+Date: Wed, 25 Jun 2025 18:33:48 +0900
+Subject: [PATCH] net: usb: usbnet: fix use-after-free in race on workqueue
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617135042.1878068-1-hca@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Authority-Analysis: v=2.4 cv=Tc6WtQQh c=1 sm=1 tr=0 ts=685bc20d cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=gleN7Cury3K8distblQA:9 a=CjuIK1q_8ugA:10
-X-Proofpoint-GUID: P-VPh-kXSaVvALZUE4udkEr2-dv12pnm
-X-Proofpoint-ORIG-GUID: P-VPh-kXSaVvALZUE4udkEr2-dv12pnm
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA2OSBTYWx0ZWRfX0rHDKHvjFhKI CrsMHIaO2gRYSntwOKapPQ7wrhS/oYODvyKE/H6gAIpIKzL7B9ySEkabw0SfyDK9vEz+Jfcnuic VLyYcpZgReEj0r7N+R7Syl0twyuu+9UmUrjxjv009zAvu/ngRbtZH83JCoLehtsNc4SoxK9O8U8
- n3AUuvvUrBxtZA1kgwvVdAyD/golXpGtjpHAhbaBTEMtad0FOzmO4o01G86onK+y+DVMUQgZgu8 WN6f1CQurMoe646wV5ieSA7p4rOv1KRE5qC88mUZay6Q9yHlw/NaIM6B6aWjY1NJAgJkeBttd4G 6KZRGPumQpNhMyiGXWatR6a9+hnwmt7xtEsh/bQE8EoxghhxvJZvGFxbuWtAyOR//IEx7DNyuEs
- XzvuYgukG9WkXEhflbcGSR8VR3RwWpLc0PT36u9IOYMCY6Q7uOX0wZypa/on2OR9io0OXJHC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=694 phishscore=0 spamscore=0
- malwarescore=0 suspectscore=0 impostorscore=0 clxscore=1015 adultscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506250069
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250625-usbnet-uaf-fix-v1-1-421eb05ae6ea@samsung.com>
+X-B4-Tracking: v=1; b=H4sIAHvCW2gC/x2MQQqAIBAAvyJ7bsEEw/pKdNBaay8WmhFEf2/pO
+	AMzDxTKTAUG9UCmiwvvSaBtFMybTyshL8JgtLG6MxZrCYlOrD5i5Bt7H5xdqA1ujiDRkUn0Pxy
+	n9/0AVpR/pGAAAAA=
+X-Change-ID: 20250625-usbnet-uaf-fix-9ab85de1b8cf
+To: Oliver Neukum <oneukum@suse.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org, "Peter GJ. Park" <gyujoon.park@samsung.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750844034; l=1198;
+	i=gyujoon.park@samsung.com; s=20250625; h=from:subject:message-id;
+	bh=khNkfOsR7Llox6I112lqSvaS2QdOn2MM5KZ08Ea+Wgk=;
+	b=22L8HpUpqznMwZsnG30qdugykmy8QNtjp4q/oY1GDx+mA56yNFHaSpYKNkVvWLtg0rBLHTvaO
+	oWVD9VL9XGaBs2WVE1Qhy78AL7auR/61t/1pqZuFb2dBU4WhFNyRCgy
+X-Developer-Key: i=gyujoon.park@samsung.com; a=ed25519;
+	pk=EdSwPjEiPaVzw7VRIRalIsT9igO06CZZXNJzE0/whs0=
+X-CMS-MailID: 20250625093354epcas1p1c9817df6e1d1599e8b4eb16c5715a6fd
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+cpgsPolicy: CPGSC10-711,Y
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250625093354epcas1p1c9817df6e1d1599e8b4eb16c5715a6fd
+References: <CGME20250625093354epcas1p1c9817df6e1d1599e8b4eb16c5715a6fd@epcas1p1.samsung.com>
 
-Hi Ingo,
+When usbnet_disconnect() queued while usbnet_probe() processing,
+it results to free_netdev before kevent gets to run on workqueue,
+thus workqueue does assign_work() with referencing freeed memory address.
 
-> As reported by Naresh and Anders old gcc variants cannot handle
-> strings as input operands for inline assemblies. Rewrite the s390
-> generic bug support very similar to arm64 and loongarch to fix this.
-> 
-> Also use the opportunity to drop the rather pointless s390 specific
-> WARN_ON() implementation.
-> 
-> Ingo, I think the two patches should also go via the core/bugs branch
-> of the tip repository.
+For graceful disconnect and to prevent use-after-free of netdev pointer,
+the fix adds canceling work and timer those are placed by usbnet_probe()
 
-You might have missed this, but this was directed to you :)
+Signed-off-by: Peter GJ. Park <gyujoon.park@samsung.com>
+---
+ drivers/net/usb/usbnet.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
+index c04e715a4c2ade3bc5587b0df71643a25cf88c55..3c5d9ba7fa6660273137c80106746103f84f5a37 100644
+--- a/drivers/net/usb/usbnet.c
++++ b/drivers/net/usb/usbnet.c
+@@ -1660,6 +1660,9 @@ void usbnet_disconnect (struct usb_interface *intf)
+ 	usb_free_urb(dev->interrupt);
+ 	kfree(dev->padding_pkt);
+ 
++	timer_delete_sync(&dev->delay);
++	tasklet_kill(&dev->bh);
++	cancel_work_sync(&dev->kevent);
+ 	free_netdev(net);
+ }
+ EXPORT_SYMBOL_GPL(usbnet_disconnect);
+
+---
+base-commit: 86731a2a651e58953fc949573895f2fa6d456841
+change-id: 20250625-usbnet-uaf-fix-9ab85de1b8cf
+
+Best regards,
+-- 
+Peter GJ. Park <gyujoon.park@samsung.com>
+
