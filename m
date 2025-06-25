@@ -1,64 +1,67 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC31C28726C
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 23:50:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDC45287264
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 23:50:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750895442; cv=none; b=od67rfOxylzbZutDtN7PKxxYNVXcdSChC8yy/tQcbcnu24cZXIwQZN7X0hI2GX6wDq2BnwyOKjEuMAtNm26G76S1GZcm1BpK0tnWbiIGemputgmmG/a9k7GnrhuhohD0R3iiWNPaMG2pTsDY6cmA6AU5n61KiL9XP4wRCBgFeOw=
+	t=1750895444; cv=none; b=Exnrhr7OCOSntzdMmnE7owdqghTFJVT6hcEyPlz5ZzxZCQHh4RNM2kuLjxZebPc2Cg8l9zBnwFd+a+dJslOB5OFSDbumaTasxjMz5W8qZUFct1+yE0cyxaks9MhgaE28Q4afip6JGVoYfGGjR4YMXrTv/9abhRBHz25YaGwrPcU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750895442; c=relaxed/simple;
-	bh=yys+Y7kH+kxLmahkOFj8+wmPki8hhBTm+J6+LUsRF8U=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=W7B9EfvgzcISUUmUsVAyY5Og/8GHdgG/XESY4Xq2r8vvn4O7nYcPCRYg7AxgRPFrDlpkQsKvbAXats+WIJYj/6r/JcUDyFY9+M2/VUQ6Kb3OBwDAirF/27TQEhfgd8mHHzuzUGD9H4DUqkByf0f3Lqen3dnAyZCGYzW5y6nxsqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yhv7BtNq; arc=none smtp.client-ip=209.85.221.46
+	s=arc-20240116; t=1750895444; c=relaxed/simple;
+	bh=ubcyYSt1tGOBrsYT11xCoGtfsmnsJRE0OnGIA+lpDno=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=V4JjxY8i0f4++rCouaymzmkNTz6G+TELuDYifx+a7GaAdsM+R+xaQEY6HZgZ+OUS72vm9s5fNrK4h9SjOZj17+Yd8Au782lk0uzqiLm6WB0agjp1rYmUlisHKIL3XgozjRJl3mI6YH3zYCtEOEU2EqdTdBqnbqdT/qDJmaEwNHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VMzuWt/p; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yhv7BtNq"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3a4fd1ba177so300636f8f.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:50:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VMzuWt/p"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3a6cdc27438so312550f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:50:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750895439; x=1751500239; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sVbzmXkQ+ioipLbjuwvN0ILc+ibg7MYD7cUDUXAebNM=;
-        b=yhv7BtNqbpyavOIBpqsRlzQa6f64l3Dn1m6lbrAycpE3Ub1fbUExC5KnmvzjENAR70
-         uoiyE5F9fBmFkzJkUfN3t+SRpsJ9PDU/1JM3wdTjtcVLLyhp2/Hu/10JxN6iM5kF370m
-         lMf44EkTewORRBo9eUF+4iJQfWD1Z8CDfLAjDqRT8/BxvoBR4L4+NuhSQLg0bkgECck4
-         Hb0B/wjqGqdImfIJJk+qZ1ayLKuojIGWcjYYVtk9IxKV3RndExzAVsuoBepvQGafQGvT
-         N8oGWV84BMxO5ZFrlYmyRECJEHbtO5mJ83ksJT8oWpomHqBbR0ipWLBnpEJ1OJaiUHCe
-         xOfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750895439; x=1751500239;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1750895441; x=1751500241; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=sVbzmXkQ+ioipLbjuwvN0ILc+ibg7MYD7cUDUXAebNM=;
-        b=p809JUEfLe6AejgYJNCnLFov90swRKsWaCZlgiM5IHOeHkA+SFZDEZcc9OLutDodCd
-         WflndJW6Rnaxq2CdBnd39Xzy2PQ8ucdSI9Q8DvfIaUktlA6lKKmT3OuYI4Iwd8ImAfhU
-         i9qj92XYEi+wLZwV81JbllYo9EhWcHA4WqwdCEpVzIq/Rqgt7Rq3nVL2b/O+UXuxaQ04
-         OevgKr/N9cG9chdTmqXjFPWCuwfBxLkEtuH5bEOh0GzUMVpOaET0I5DccMSLo3FdjEI4
-         hP2GWu3Av81vdBN93QVE4myDsDXPg/aqyZ6LqdGkYMTsHeTRIQ0A8ZEQSe2qHabTuE1R
-         Gp/A==
-X-Forwarded-Encrypted: i=1; AJvYcCUAgYn/GGjCrwejHQxnFz0+zVwvyDvsvR4FviXJejVP7kAYe4vTpgVvUtRyAeZHr64fzk89DDCHlqwUxX0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwJJu76ORbb7ILbRwc3A2qdWav152xruz1uAHhULRYLDGEqiQGE
-	GUSkXh7874hi2kpVM2YThx1wTB5MhEwtl0RqrOkihV1rwE2VgfoXsL3BcPGeBApI0W0=
-X-Gm-Gg: ASbGncvR0L1Cdr5DgynHBJTt7IKLbal+UaLmevwG4kBGALCqldxDDb2Me3kCGRTgery
-	KgLzs8Uu/hlEWwIzd4xWT4eJo22Uam8yqz+Ly0tZ/iz9p1RMYU9aeK0amsOUDC6iY6Hp3JmElUI
-	MwjTjQ/vzyqS7lzYKvtdJv2kFLBKaj7IJqmHSG2/I8+L+Wi/m+1TV1gRngosBq4oYgrn7Zuq6Ac
-	X8TlVnziSy/zJHE5Gwc3U/4reNYm6Lff5T/rxDRiyhMdRKK7Iv8fv9XZ4IHhtGp7JwcOym91qYI
-	AbaReUo5Ggf2dDlAYK+juJRRIPDxvfRexDRixJAJn7KFac800/2ctNy7BckUNEwDrlqJ5Q==
-X-Google-Smtp-Source: AGHT+IHiNkMf63E27GyHyQ9CDnHOV87nvjoonLrt5SqyVkwL3YcXeaYC1SQaCHL9+wqWnnxtVniKgg==
-X-Received: by 2002:a05:6000:400d:b0:3a4:dfbe:2b14 with SMTP id ffacd0b85a97d-3a6f311aab6mr1095295f8f.16.1750895439285;
-        Wed, 25 Jun 2025 16:50:39 -0700 (PDT)
+        bh=2dzqcetow2B51APDrHAsItbs32I0mVc5EzPsX40H1m0=;
+        b=VMzuWt/phLbi1Jl7YV1/tF53EnMnr3Y5sKQn+G4pS3PUpMLflNrIDp6+xRMiZd0bQx
+         Zc3UVF64twGTzOQ7hvYGwbPNVUHnzTjmKQrsbLg9bPPVzkpjLdjOhyZ/EvCUK3uj1bS4
+         4eVJJfZz+T+kMx0bxgIubN1V3IfVacJhmGL45GlW2wylCv0CUkTQh5+mWHwl82oO3Z33
+         ahpFuCs0JMhMkWz5ws46x5c0K1JJACmim9VFBtLOslFG63DWnD4LBa8H0kIr4Dy614oI
+         sGdtOu90a97B9qAtxdOZ/z7WJ9aWefy9LyP0YtNsVrsokgxm1xr0+NPB8fpuJVxupU8K
+         tguQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750895441; x=1751500241;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2dzqcetow2B51APDrHAsItbs32I0mVc5EzPsX40H1m0=;
+        b=spobKDG6HeSTSbqqIz1/XKtgVJeGJusL3CIjxTBNhVAlP1P7JiPAoq7uFCiuhZN191
+         pREG43HRjJbZjVKq3SHfnCvMX8DHcNHaAIByconQWuFcrISBgnQCOix2CJeYuzmdOMc0
+         D9tJqdA4lmwDRryj2MmW4n+G4GihrKFLAnL72JgQxGYpQUymn1i6ePu9KtuRRl0CsoyJ
+         fnKxj80E4ME6XuDTH4LtXfexq/ZwiGpOLE5DSCYlFfqKE1USsS3JicdYDUfI0GzPBsyh
+         dxITLDPlzpOsRR/ugd5PY8HZLzlF++tAB6bsTlS48u2LQXXhTX6wEUBATtEPTw46qLY7
+         WaJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXMjZoxVaIfcttF6qN0hSbpZbgtCr2i2gdir5lbKlKMxn0w/TyPgyqDPJdQBMCzKLEwcXUOdnEmChP3ySo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk/PIhZjJ63mk9Wf6UAWY16bvEgZxA28+n3Mw7Tc4XfDK3Didt
+	o5pyRlf17ZTfcCA7sE5+4u2ToSTV7qyrvplLA0XXeKusTh3RwKymqgZ6T4k4Y/Jnit8=
+X-Gm-Gg: ASbGncvgu5upqFacIdrBmew/VOrTTMpfESDW3hA7lSnbtZlx2W+5EjNAlHzwgYwJnAc
+	WPsMe6Syt9dsaBx/5/3DICdRcpl9ukvDXBrcayxlfnOw/rfHOcVNmzm3JG1NaOZN31cnDk7jr4T
+	9kg1PbOqMHUZlF3HchD8F50vH3N9W+yI329o/ZoY4T786pacLx0WpHdtgwxNnNvDq0fPO46C2Yx
+	RsU3onJKeHzTbQVthjbaV5LjYrFhRn93wJNyhnX5RdLdRXaJSj7/dI6DKaYwNjpYN6b0lxZoYUu
+	RdzdYRY+HHx3FjrLM/ii/sAK+mux2UilLhKlGRmFHvq+VrRsrLI0VQ1PLW5qBcErho+EjRhDObb
+	dx4th
+X-Google-Smtp-Source: AGHT+IGmAy9KxHvtShO+4udgRgvhXO8cmz7qTC2X55qjEkrvqF77KTVDg46g3zJQDvJYoEntF9fcXQ==
+X-Received: by 2002:a5d:4b10:0:b0:3a4:d6ed:8e00 with SMTP id ffacd0b85a97d-3a6ed64251fmr3626972f8f.33.1750895441200;
+        Wed, 25 Jun 2025 16:50:41 -0700 (PDT)
 Received: from orion.home ([2a02:c7c:7213:c700:1417:1313:3884:915e])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805dc32sm5636300f8f.29.2025.06.25.16.50.37
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805dc32sm5636300f8f.29.2025.06.25.16.50.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 16:50:37 -0700 (PDT)
+        Wed, 25 Jun 2025 16:50:40 -0700 (PDT)
 From: Alexey Klimov <alexey.klimov@linaro.org>
-Subject: [PATCH 0/3] Add PM4125 audio codec driver
-Date: Thu, 26 Jun 2025 00:50:28 +0100
-Message-Id: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
+Date: Thu, 26 Jun 2025 00:50:30 +0100
+Subject: [PATCH 2/3] dt-bindings: mfd: qcom,spmi-pmic: add pm4125 audio
+ codec
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,10 +70,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAESLXGgC/x3MQQqEMAxA0atI1lNI46jgVWQoJcmMWWilRRHEu
- 1tm+Rb/X1A0mxYYmwuyHlYsrRX+1QDPcf2pM6kGQuqwp95ty9tTF+IulgInUQ6Hd0gch9giijD
- Udsv6tfP/nT73/QBuaNTdZwAAAA==
-X-Change-ID: 20250626-pm4125_audio_codec_v1-02ca7a300ddc
+Message-Id: <20250626-pm4125_audio_codec_v1-v1-2-e52933c429a0@linaro.org>
+References: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
+In-Reply-To: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
 To: Srinivas Kandagatla <srini@kernel.org>, 
  Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -84,45 +86,30 @@ Cc: Lee Jones <lee@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
  Alexey Klimov <alexey.klimov@linaro.org>
 X-Mailer: b4 0.14.2
 
-PMICs like PM4125 have in-built audio codec IC. The series here
-adds support for this codec driver: DT bindings and codec driver
-itself that consists mainly of two parts: soundwire devices and
-codec part itself.
-
-This audio codec can be found on platforms like QCM2290 and
-on Qualcomm QRB2210 RB1 board.
-
-We are working on this together with Srini
-(srinivas.kandagatla@oss.qualcomm.com or srini@kernel.org)
-so this is shared here as minimal working driver and more commits on
-top of this are expected that will add and extend functionality.
-
-Currently with this set the playback via line out or headset work.
-
-This driver also has a bit limited support for concurrent playback,
-since line out path is connected to left input channel.
+PM4125 has audio codec hardware block. Add pattern for respecive node
+so the devicetree for those blocks can be validated properly.
 
 Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
 ---
-Alexey Klimov (3):
-      dt-bindings: sound: add bindings for pm4125 audio codec
-      dt-bindings: mfd: qcom,spmi-pmic: add pm4125 audio codec
-      ASoC: codecs: add new pm4125 audio codec driver
+ Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- .../devicetree/bindings/mfd/qcom,spmi-pmic.yaml    |    4 +-
- .../bindings/sound/qcom,pm4125-codec.yaml          |  147 ++
- .../devicetree/bindings/sound/qcom,pm4125-sdw.yaml |   86 +
- sound/soc/codecs/Kconfig                           |   19 +
- sound/soc/codecs/Makefile                          |    8 +
- sound/soc/codecs/pm4125-sdw.c                      |  485 +++++
- sound/soc/codecs/pm4125.c                          | 1848 ++++++++++++++++++++
- sound/soc/codecs/pm4125.h                          |  375 ++++
- 8 files changed, 2971 insertions(+), 1 deletion(-)
----
-base-commit: 2ae2aaafb21454f4781c30734959cf223ab486ef
-change-id: 20250626-pm4125_audio_codec_v1-02ca7a300ddc
+diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+index 078a6886f8b1e9ceb2187e988ce7c9514ff6dc2c..5718cfe7f4c2b696ee2700fafe8dc071c70a6476 100644
+--- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
++++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.yaml
+@@ -137,7 +137,9 @@ patternProperties:
+ 
+   "^audio-codec@[0-9a-f]+$":
+     type: object
+-    $ref: /schemas/sound/qcom,pm8916-wcd-analog-codec.yaml#
++    oneOf:
++      - $ref: /schemas/sound/qcom,pm8916-wcd-analog-codec.yaml#
++      - $ref: /schemas/sound/qcom,pm4125-codec.yaml#
+ 
+   "^battery@[0-9a-f]+$":
+     type: object
 
-Best regards,
 -- 
-Alexey Klimov <alexey.klimov@linaro.org>
+2.47.2
 
