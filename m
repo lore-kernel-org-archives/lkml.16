@@ -1,216 +1,88 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8089C33E1
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD5C91A83F9;
+	Wed, 25 Jun 2025 04:50:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750826967; cv=none; b=EHfRPg2Q1/V/O0uMxUoRb4eMJenNbG7HAV3BB20IJjRrIr/6aGx0miMKZB5ag/oDbmB/u7aKhTx38dhFwnEwtTRg/FRceplYoUHaNCyHTKZ7MF4vnkAr8u8viXpa+IemxAVEbjfAr/H3RubShWD5XbMIMy+qGlyBKNbmm4rPad4=
+	t=1750827054; cv=none; b=XP6jUITnBCTFPBSQZWeDcep11OAAPdFd2co7vFtPx60Zo2ndGkPyjEvDTgEeAMjYORDXEnNfxkVuqNMA3TJZISSVBASuTKirC3anJdH0bnPSF+HMid5pVb4L01srE+YVnOi+qyM3AfqitLZN3lzQK3dQeDZRFi7KBqkbg5ZAo9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750826967; c=relaxed/simple;
-	bh=h3vKZKMJLz6K9ecOFVhipEDXb3xrenVE3PPIaN08ogQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=D64OoTSee1Wr9Qqsgl9YUJacxyC8IDW8SAM/GMKlhuWYkw02yYTAXxSPfcwsOh60k63IuE7FUHFZIXg9mAOYSut5JxP/xt/af7Nf3aMziD80vrHR1fmFEH7XZLw3Il8iThxFfY9FyhHMRPsNRHomGoTFq0IbshEiz5U0hCq5R64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=q9qYmjC0; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	s=arc-20240116; t=1750827054; c=relaxed/simple;
+	bh=R3JC+OY5M+o//Yl1v0b97s5nFwwOQDq4EZehW1mQ9d0=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=uZgmiEXRqm0A6sBxsRqF3l/c5GiKfFfACcqvwLSZmO2DtJbsq7uS1YfU1W3Y8abxqH+CRnPfRN2iOe083nY3gMigNJhjo2BmzuevtnWGr+VmqInjrq+YGO+yDU6hIT7N4FcvxRYS1lS4Kbt5QzGUjfrS/ZzwuGtznYvKRJjQHRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=gdUJ68Xs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="q9qYmjC0"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55OMif2q019163;
-	Wed, 25 Jun 2025 04:48:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=corp-2025-04-25; bh=VmFPYnubK/xFPXJJ
-	L2xpmltWzNgNE57L7HX+rHvMBoY=; b=q9qYmjC0NCgtx+NQBwunU+LsRhibY7WT
-	EBZ2oiIKT2HmObQ/5HUsDz+gSxoXFbsZIi9kpx4cWHE1qUi173jgVipE9Wy/pgVf
-	/xGo9g3lgNuT81lP/CVPwivzJn34rBz90EM8JMyLBwGY5646goKudvBrjC3QPyi5
-	x7DvTP5+OC5lVK4aJQhBpXq7KKYyANQpyYUPFjg42IXm1/tsnz/+of/8hucEhe+Y
-	e1xTm0u0aIwMmQuw5vEqmFVZypIl9kvAfJP26eRXtzL+P9OE0R6zrTbPnrG3yvFY
-	D2RwtO8qwUV9ymIeMkgZW1Kr81r9uvUrhkDKEJDra/CLH+6LsWLghA==
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 47ds7uxk9d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Jun 2025 04:48:39 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 55P2RaJC002351;
-	Wed, 25 Jun 2025 04:48:38 GMT
-Received: from aruramak-dev.osdevelopmeniad.oraclevcn.com (aruramak-dev.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.253.155])
-	by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 47ehpe1p5t-1;
-	Wed, 25 Jun 2025 04:48:38 +0000
-From: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-To: linux-kernel@vger.kernel.org
-Cc: mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        vschneid@redhat.com
-Subject: [RFC PATCH] sched: Change nr_uninterruptible from unsigned to signed int
-Date: Wed, 25 Jun 2025 04:48:36 +0000
-Message-ID: <20250625044836.3939605-1-aruna.ramakrishna@oracle.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="gdUJ68Xs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41D38C4CEEA;
+	Wed, 25 Jun 2025 04:50:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
+	s=korg; t=1750827053;
+	bh=R3JC+OY5M+o//Yl1v0b97s5nFwwOQDq4EZehW1mQ9d0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=gdUJ68XsmACxGdWI0eeeUoyOpEd28QFbC5WF3ix1zVAhBU7SFhiYWzSzFKt2ZrlWj
+	 7iLbdug9pCu0GEEFGqG+eqSMBxxL3g3OVdWo8LF89sjc+P7CwNFlRebQlMJYAazuip
+	 /uC9+0HyTEjBaK8UN8Dl5XE5P6m7252PiMnt5lv8=
+Date: Tue, 24 Jun 2025 21:50:50 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Christophe Leroy <christophe.leroy@csgroup.eu>, "David S . Miller"
+ <davem@davemloft.net>, Andreas Larsson <andreas@gaisler.com>, Jarkko
+ Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, "H . Peter Anvin" <hpa@zytor.com>, Andy
+ Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner
+ <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Kees Cook <kees@kernel.org>,
+ Peter Xu <peterx@redhat.com>, David Hildenbrand <david@redhat.com>, Zi Yan
+ <ziy@nvidia.com>, Baolin Wang <baolin.wang@linux.alibaba.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>, Dev Jain
+ <dev.jain@arm.com>, Barry Song <baohua@kernel.org>, Xu Xin
+ <xu.xin16@zte.com.cn>, Chengming Zhou <chengming.zhou@linux.dev>, Hugh
+ Dickins <hughd@google.com>, Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport
+ <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>, Michal Hocko
+ <mhocko@suse.com>, Rik van Riel <riel@surriel.com>, Harry Yoo
+ <harry.yoo@oracle.com>, Dan Williams <dan.j.williams@intel.com>, Matthew
+ Wilcox <willy@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, Masami
+ Hiramatsu <mhiramat@kernel.org>, Mathieu Desnoyers
+ <mathieu.desnoyers@efficios.com>, Jason Gunthorpe <jgg@ziepe.ca>, John
+ Hubbard <jhubbard@nvidia.com>, Muchun Song <muchun.song@linux.dev>, Oscar
+ Salvador <osalvador@suse.de>, Jann Horn <jannh@google.com>, Pedro Falcato
+ <pfalcato@suse.de>, Johannes Weiner <hannes@cmpxchg.org>, Qi Zheng
+ <zhengqi.arch@bytedance.com>, Shakeel Butt <shakeel.butt@linux.dev>,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, kvm@vger.kernel.org,
+ sparclinux@vger.kernel.org, linux-sgx@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, nvdimm@lists.linux.dev,
+ linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] use vm_flags_t consistently
+Message-Id: <20250624215050.83229f93cee5994f580720e6@linux-foundation.org>
+In-Reply-To: <46432a2e-1a9d-44f7-aa09-689d6e2a022a@arm.com>
+References: <cover.1750274467.git.lorenzo.stoakes@oracle.com>
+	<46432a2e-1a9d-44f7-aa09-689d6e2a022a@arm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_01,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- suspectscore=0 spamscore=0 mlxlogscore=999 mlxscore=0 malwarescore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2505160000 definitions=main-2506250034
-X-Proofpoint-GUID: cUOi7gHiT3tLZfx-LsVJf-VqMJQMAfUY
-X-Authority-Analysis: v=2.4 cv=CeII5Krl c=1 sm=1 tr=0 ts=685b7fa7 b=1 cx=c_pps a=WeWmnZmh0fydH62SvGsd2A==:117 a=WeWmnZmh0fydH62SvGsd2A==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=pGLkceISAAAA:8 a=yPCof4ZbAAAA:8 a=HWCl2iI5DVSZb1gQ_N8A:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: cUOi7gHiT3tLZfx-LsVJf-VqMJQMAfUY
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDAzNCBTYWx0ZWRfX9e7BpL4KA/G2 Vb8p0DD+03sshGndE6BCTccNHRG+74swKImBanbWfUNC5rrMCuF07WOGAiBr+A+0YTVyEXteZg8 icRFxL3yk0+Kb5DcD1TOUl4yMbt9h4CJbS7YFXlhIGoopPqf6cJxYQc6XSM1z69kbFeHoi7UKx1
- R3Y/K/3rLZfmj4V11dIdZ5s4rrCpqCzGqjZu6/n35TH20aq2OWmrTushs7mRpbKBxNlul3MLt3u cFCmfJINBRvtpgzlRFt1GPC4Z4C1wBzSUdhXNqc2AMJE2O40lHjk9LuB5Q65jPmDW3j65LKUMYA m6EohjZcAoeJqvQg+Aw9GxH0UmLzv2xuNVtjeGMcg2j7pnu1Mmb2vuy2Qu25c1IYKWGfHjRqWAD
- L35BkoDWuaVIbGllb9plQvAVQe0ZpHb2Un2xAb8NUDdhV/slg/uDOn2ltDIkWZcNhTcFuSfa
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-We have encountered a bug where the load average displayed in top is
-abnormally high and obviously incorrect. The real values look like this
-(this is a production env, not a simulated one):
+On Wed, 25 Jun 2025 08:25:35 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 
-top - 13:54:24 up 68 days, 14:33,  7 users,  load average:
-4294967298.80, 4294967298.55, 4294967298.58
-Threads: 5764 total,   5 running, 5759 sleeping,   0 stopped,   0 zombie
+> ust wondering which tree-branch this series applies ? Tried all the usual
+> ones but could not apply the series cleanly.
+> 
+> v6.16-rc3
+> next-20250624
+> mm-stable
+> mm-unstable
 
-From digging a bit into the vmcore:
-
-crash> p calc_load_tasks
-calc_load_tasks = $1 = {
-  counter = 4294967297
-}
-
-which is:
-
-crash> eval 4294967297
-hexadecimal: 100000001
-
-It seems like an overflow, since the value exceeds UINT_MAX.
-
-Checking further:
-
-The nr_uninterruptible values for each of the CPU runqueues is large,
-and when they are summed up, the sum exceeds UINT_MAX, and the result
-is stored in a long, which preserves this overflow.
-
-long calc_load_fold_active(struct rq *this_rq, long adjust)
-{
-        long nr_active, delta = 0;
-
-        nr_active = this_rq->nr_running - adjust;
-        nr_active += (int)this_rq->nr_uninterruptible;
-...
-
-From the vmcore:
-
->>> sum=0
->>> for cpu in for_each_online_cpu(prog):
-...     rq = per_cpu(prog["runqueues"], cpu)
-...     nr_unint = rq.nr_uninterruptible.value_()
-...     sum += nr_unint
-...     print(f"CPU {cpu}: nr_uninterruptible = {hex(nr_unint)}")
-...     print(f"sum {hex(sum)}")
-...
-CPU 0: nr_uninterruptible = 0x638dd3
-sum 0x638dd3
-CPU 1: nr_uninterruptible = 0x129fb26
-sum 0x18d88f9
-CPU 2: nr_uninterruptible = 0xd8281f
-sum 0x265b118
-...
-CPU 94: nr_uninterruptible = 0xe0a86
-sum 0xfff1e855
-CPU 95: nr_uninterruptible = 0xe17ab
-sum 0x100000000
-
-This is what we see, stored in calc_load_tasks. The correct sum here would be 0.
-
-From kernel/sched/loadavg.c:
-
- *  - cpu_rq()->nr_uninterruptible isn't accurately tracked per-CPU
-because
- *    this would add another cross-CPU cacheline miss and atomic
-operation
- *    to the wakeup path. Instead we increment on whatever CPU the task
-ran
- *    when it went into uninterruptible state and decrement on whatever
-CPU
- *    did the wakeup. This means that only the sum of nr_uninterruptible
-over
- *    all CPUs yields the correct result.
- *
-
-It seems that rq->nr_uninterruptible can go to large (positive) values
-for one CPU if a lot of tasks were migrated off of that CPU after going
-into an uninterruptible state. If they’re woken up on another CPU -
-those target CPUs will have negative nr_uninterruptible values. I think
-the casting of an unsigned int to signed int and adding to a long is
-not preserving the sign, and results in a large positive value rather
-than the correct sum of zero.
-
-I suspect the bug surfaced as a side effect of this commit:
-
-commit e6fe3f422be128b7d65de607f6ae67bedc55f0ca
-Author: Alexey Dobriyan <adobriyan@gmail.com>
-Date:   Thu Apr 22 23:02:28 2021 +0300
-
-    sched: Make multiple runqueue task counters 32-bit
-
-    Make:
-
-            struct dl_rq::dl_nr_migratory
-            struct dl_rq::dl_nr_running
-
-            struct rt_rq::rt_nr_boosted
-            struct rt_rq::rt_nr_migratory
-            struct rt_rq::rt_nr_total
-
-            struct rq::nr_uninterruptible
-
-    32-bit.
-
-    If total number of tasks can't exceed 2**32 (and less due to futex
-pid
-    limits), then per-runqueue counters can't as well.
-
-    This patchset has been sponsored by REX Prefix Eradication Society.
-...
-
-which changed the counter nr_uninterruptible from unsigned long to unsigned
-int.
-
-Since nr_uninterruptible can be a positive or negative number, change
-the type from unsigned int to signed int.
-
-Another possible solution would be to partially rollback e6fe3f422be1,
-and change nr_uninterruptible back to unsigned long.
-
-Signed-off-by: Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
----
- kernel/sched/sched.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 475bb5998295..f6d21278e64e 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -1149,7 +1149,7 @@ struct rq {
- 	 * one CPU and if it got migrated afterwards it may decrease
- 	 * it on another CPU. Always updated under the runqueue lock:
- 	 */
--	unsigned int		nr_uninterruptible;
-+	int 			nr_uninterruptible;
- 
- 	union {
- 		struct task_struct __rcu *donor; /* Scheduler context */
-
-base-commit: 86731a2a651e58953fc949573895f2fa6d456841
-prerequisite-patch-id: dd6db7012c5094dec89e689ba56fd3551d2b4a40
--- 
-2.43.5
-
+It's now in mm-unstable if that helps.
