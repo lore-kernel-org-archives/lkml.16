@@ -1,111 +1,84 @@
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C795D1DF749
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1441F4612
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:05:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750845922; cv=none; b=lbr2v+ot90+QICmKEBljNEto2ILKExe+/dkBHhRvjsSntl3HtJsWnzs9R97zg+AJXm/eDItACGf46irnYhEXahMZn34Mmnc0JAgT6hKExO9jb7sT9lQMt5E4SIFcUJDNi15jok/4JtJJ0Ur4OIhpmznWc4QVzlqRYcwpSwOS/U8=
+	t=1750845942; cv=none; b=coWukQLyygtpqMHBHOUb3PtermgCSO4HQshlHKK1xSAxpVrUlbB3sJiQxVXF8MpYcJjy8T3XpCF7etCbJq2VrxaKTQiLKIUsKjhDEvNksBPLVqtKCeZ06UjQpNjhyr9bWaM2Ah5rfC6zX1sgivkXTehwp85bXZfN3lB1XngR8fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750845922; c=relaxed/simple;
-	bh=6xKfQLYxQrQT0vEeA6XiT41ZdovNWLUZMpAYKaRFfyA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vuc96cqFQHQP34zh0baKuQ91evW0zbNDfsgO4V5mAY4uZ9nhSLPIB3rBgUj28Cq55gref298UlxpijFKhWbKHgNTaN1rP4yW1btrgtNuBPF6jEK+z+bPFBRvQR2MwtKEdOFfuI893ghu8zVNsdEk1lMtE1FyUXwHbXqMH3qGF/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bCPsYZkz; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750845942; c=relaxed/simple;
+	bh=rHcXDMORzi9ySLjCAFmcCgO62FhtY0Y4qCEwxCwVjZA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mvXeJt1jjBq2MmlAH+UG7h9QOMErcAJmh67Try3urkwDJ9xxAYR3ZAf/jUazLi5ujGLqfVcmheRIoLd6QT8JJb4EYx+FhD57Rbvy95Uj62yrAjlRrsf/ICnG8afqRt//e8Sza/X7GVjRlIixT80OWJKoj7q2kS0We4mxoDT5npc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Eu8k0aZN; arc=none smtp.client-ip=115.124.30.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bCPsYZkz"
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e84207a8aa3so3994208276.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:05:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750845920; x=1751450720; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6xKfQLYxQrQT0vEeA6XiT41ZdovNWLUZMpAYKaRFfyA=;
-        b=bCPsYZkzDxKCP0SSRmbgL5TySayRYaZ0pIkGeg0Tw7azGM/gcF8xhqoyQvZqpfqzCw
-         YkSiBdU5LkMVU2vnvz1EhTWNP4XI0f9XtohuwlX7Dmaa5bListw1nrfFjPwn//SnPnUd
-         Cx3jZ+5aWPRWsod4iWsiwXSBh9tRsWmNPufWWeQYS5mdh/wiZHPs7YLYWqZgQBIGAkjb
-         GoKKlmrKGg6JTK9zJIz4uGrzP2dUZKEqKRk1qa7taimmDDz1ibKbM+iR9RHYyxC/jCKq
-         1XqZNElkCUib93l2JmEnC5heQFF8ahvrxl4hJZCyho/+saNpIhzKliWEi57MRR6Pp7on
-         IlOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750845920; x=1751450720;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6xKfQLYxQrQT0vEeA6XiT41ZdovNWLUZMpAYKaRFfyA=;
-        b=IEz0YbJeszkxNWLW3p6V31RMYcjKKr2QtXiiFuPyIKUk6ASJhkCk7+iscXuJI5hKbE
-         ts0v2eILBObN1nSrXM23+P/cJEyx4MiNfltgydwSYsMdK1gP2utBRBdqhwmQRZRepF4Q
-         cd3AUvDb9cB1fJYrFo/VcYNo6HmOp1ABr4K5PpIGJZ50Uy1Qu6RiAooHCyO2oLR5qQoG
-         b/dTwVcvVCilqqn64zbv9miYyU5OnoirA5FxE/V7YCOq2ujjBF87mzZ9O9yhanqfbMk0
-         nqm5CX9plZyptqKFWcrcxyElK0HB0ey57I6FW1TrTA0oMRtvNUtqlpPzWWQbj0txrqOb
-         UsYg==
-X-Forwarded-Encrypted: i=1; AJvYcCV7Yd/VhagL9gwOf2cxFXepreo/TlRHqoKHCX59h9SzDuLH/yMqVwZKOQQbl7iez8ghJ8D22qr1TARONFw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YykmNsvFSz6c79EPBpDPJGj76vDc7U3jdYgw/C84r+0h3cePyvh
-	HkBe6cLepN08YcWu9wUtLb0t3sfy3CVrqKk0bRhJX794MSrdHBfGlpoTyW8erOwiK/9yeHc9RfW
-	q4z20w9tjS8hi1Q2lEA4wxENmLhmHJy7fcpT67//GGQ==
-X-Gm-Gg: ASbGncuilBRVYXJIdB149ZJSjietNp563y6XJx7k/oUqjj/6ZVH6nYC7ln1DwiBzfDk
-	230uTyQAz9euCIKglX5UF6gl+mnis1qgKtbSyEBKlx7C3d9kQ3lFPpIg8fw4PajWuYODvSJjLQX
-	uVb32d//okj0ycd2WTewYnl57upFTwsbrUwM+T53+JH4w=
-X-Google-Smtp-Source: AGHT+IEJrS2tphZ7UMREypIClsxlSmABIBla9pP6cK7b0bEY7VGBFV8Zh4V9DmKzTV5zBXNgMqCqlhwI6mHWvsv490U=
-X-Received: by 2002:a05:6902:1703:b0:e81:9aa9:88d0 with SMTP id
- 3f1490d57ef6-e86018ef2f7mr2643332276.40.1750845919338; Wed, 25 Jun 2025
- 03:05:19 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Eu8k0aZN"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750845934; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=H0JonyXpzOqWlle3ErNWkPnEUQnUnfWFaYTN0l2CrLg=;
+	b=Eu8k0aZNKXYkB9TEZSyJEE9/9HUkPRxy5/zZrM7fd97QndqihB2LgY4h5iP742DxVc7w8al0634wu1rhw4/xtmHljU539u6q1xamlbQBkL6VCiGh6ZNVqUogRxhfmM742zZwWCBPSCnO600Le1NGvWbJi3rJR2LBVnDe2V/n7d8=
+Received: from 30.74.144.110(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WewhP5l_1750845932 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 25 Jun 2025 18:05:34 +0800
+Message-ID: <dba5a7c2-1a7a-4b40-8a05-1dbba467065e@linux.alibaba.com>
+Date: Wed, 25 Jun 2025 18:05:32 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624141013.81358-1-brgl@bgdev.pl> <CAMRc=MeKfWsf8T1tJLdj=+7aq0zGpQ07pHd2Mz-Y=Bwae0sAbw@mail.gmail.com>
-In-Reply-To: <CAMRc=MeKfWsf8T1tJLdj=+7aq0zGpQ07pHd2Mz-Y=Bwae0sAbw@mail.gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 25 Jun 2025 12:04:42 +0200
-X-Gm-Features: AX0GCFtiYC7fRWb7mfaCIbLmQje2hb4McQcP0uGJDzj7bHa1BymRJdIDLbPQ_rE
-Message-ID: <CAPDyKFq5G1CDL+VJxuzWZahZwUM0mVQJwU_WYYqNuDMDE3H5TA@mail.gmail.com>
-Subject: Re: [GIT PULL] Immutable tag between the pwrseq, drm and pmdomain
- trees for v6.17-rc1
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Michal Wilczynski <m.wilczynski@samsung.com>, Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, 
-	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Frank Binns <frank.binns@imgtec.com>, 
-	Matt Coster <matt.coster@imgtec.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] MAINTAINERS: add myself as THP co-maintainer
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+ Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+ "Liam R . Howlett" <Liam.Howlett@oracle.com>, Nico Pache
+ <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+ Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <20250625095231.42874-1-lorenzo.stoakes@oracle.com>
+From: Baolin Wang <baolin.wang@linux.alibaba.com>
+In-Reply-To: <20250625095231.42874-1-lorenzo.stoakes@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, 24 Jun 2025 at 16:40, Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> On Tue, Jun 24, 2025 at 4:10=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
-> >
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Here's an immutable tag containing the thead 1520 power sequencing driv=
-er
-> > for the drm and pmdomain trees to pull from.
-> >
-> > Best Regards,
-> > Bartosz Golaszewski
->
-> Just an FYI - there don't seem to be any actual build-time
-> dependencies between this driver and the rest of the code that uses it
-> (thanks to the aux bus usage etc.) so Michal, Ulf et al: you can
-> probably skip the pull if you can rely on this being available in
-> linux-next for run-time testing.
+Hi Lorenzo,
 
-Good point, I am not pulling the tag then!
+On 2025/6/25 17:52, Lorenzo Stoakes wrote:
+> I am doing a great deal of review and getting ever more involved in THP
+> with intent to do more so in future also, so add myself as co-maintainer to
+> help David with workload.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Kind regards
-Uffe
+I appreciate your help and great work.
+
+Acked-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+
+> ---
+>   MAINTAINERS | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4b9a4fa905e1..a8a963e530a4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15945,9 +15945,9 @@ F:	mm/swapfile.c
+>   MEMORY MANAGEMENT - THP (TRANSPARENT HUGE PAGE)
+>   M:	Andrew Morton <akpm@linux-foundation.org>
+>   M:	David Hildenbrand <david@redhat.com>
+> +M:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>   R:	Zi Yan <ziy@nvidia.com>
+>   R:	Baolin Wang <baolin.wang@linux.alibaba.com>
+> -R:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>   R:	Liam R. Howlett <Liam.Howlett@oracle.com>
+>   R:	Nico Pache <npache@redhat.com>
+>   R:	Ryan Roberts <ryan.roberts@arm.com>
+> --
+> 2.50.0
+
