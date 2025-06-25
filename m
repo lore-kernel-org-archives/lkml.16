@@ -1,191 +1,113 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5623E17333F
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:18:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA5514A639
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750861140; cv=none; b=U+blrT3XxTr9FXcqc7c6rC8VoN0pkcnH0pf0o/JdrH8Hv1wkAoEknpSUZl+fCiSCE/HhKB8VCJHXBd5BmzT9tjqIz5abum0NPQPD4rrl9C3/azEsby10DNODoJ9OjoK+dqIT7Fbz0ModLE0OnOJ9xzmZT3Lb3wWsy9YbFTQOYuk=
+	t=1750861141; cv=none; b=U8YeeOxqFK0S46L0Pq/dj5tcSuG2KAcjBT/7QmDTdBWjRIqZYTqoD9KjlGLfrgq2U37IbG6Vm91bLhJGkwJfVt6SwhibhMnFY+yrmqB4NfZQ16OIlv12jbRZlHAGYh6lvxGSKrnuA8CPrSup2kBGKmH56twmOjHZm00SLRojO0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750861140; c=relaxed/simple;
-	bh=qFJmevTRkhOJj67gAfw4bXMqkBpsxt7ZANAMwvYuQ/8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=OmhGHT0tmxRRnY7zywY1UoURSo8jOF90WB40uapWNsb9/S9VgE0mIQ9G8/jZpZBxCe4HX1MlQgm9qlKEs39GVhDdAWTCl8Lhx9Fz+nOOu1spL2kolOn3Zk7RQmg+60YA2uZnLhjZjE7LwdBJw8a1CK0PmpB+CEFyYIcmrop9wQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=XcHRTdLb; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1750861141; c=relaxed/simple;
+	bh=YP0CEUGFXhpsc2Fz0e2EjDTwhTxWlO1jlfpXpSbPNS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qc+MJ2GORz3p2FIpuWfL9kwV+ClHwrXogT6c2sEhqjoNpknmT0D2UTm7f7ZX8x6rafUbliv9BjGMPt+8+zrpv0cps2deOCMSXqXl2P9u3xqZyZFitkd9zD1He1SMeu65lhIaixtmN7EdzGXaXVZssirbeoFHNVG63ny+gRQrsUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GsRY3fpw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XcHRTdLb"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250625141856euoutp01e70e9fa0141b6d9739a17c36d77408f8~MTu1edOCT2451624516euoutp01D
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:18:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250625141856euoutp01e70e9fa0141b6d9739a17c36d77408f8~MTu1edOCT2451624516euoutp01D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1750861136;
-	bh=wR56TfR1MrnOoOQITo0mciNv5ZtTtuKRzNtl8gwqSX0=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=XcHRTdLbKaso4zpzre+8DiVdHGUTcpphgnhci53QhO8NFzmo6rnu3exvXs4th0k3A
-	 hG4UDIWlxuHq7ZNMwBUBQYgQtby9/ZitRt1E+J1/OSBVfiEXv7uHS6r2dg7IwcL7xv
-	 xydJN8aAc97HLGY2fRlTUjg0fmvScczh2GOoleQE=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250625141855eucas1p2d817ba3aa087d78130ac2fa293d18ba0~MTu0wMw5m0434904349eucas1p2z;
-	Wed, 25 Jun 2025 14:18:55 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250625141854eusmtip271ddb5cec99f21f63cc1bf8c27cf6418~MTuzjrIvR0996109961eusmtip2H;
-	Wed, 25 Jun 2025 14:18:54 +0000 (GMT)
-Message-ID: <d12fd4fb-0adb-40c4-8a0a-c685cd6327b3@samsung.com>
-Date: Wed, 25 Jun 2025 16:18:54 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GsRY3fpw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD8AAC4CEF6;
+	Wed, 25 Jun 2025 14:19:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750861141;
+	bh=YP0CEUGFXhpsc2Fz0e2EjDTwhTxWlO1jlfpXpSbPNS4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GsRY3fpwoesq6fR78RG03SkV0sHyiQhi6tlwlmLnxRdFc1mQm91AM5Zeb7Ad0XuJJ
+	 HN6HyVmEGu5b6Pq/T4i6D/sYhhisAHl2RSi/MHSNOLQrcnpXWoomtjjUyg6xW8o7bn
+	 qqL7KVFpAAF40W8cQ+2S+jPK4ae4cEmV+gdzWPIaCZzL4LawnjH7flFShLd1WgYQRs
+	 uT1HYGzzMJ6iKaAGlTYae2MdW/1/I9kLBxUMf3aj+ypn9tugnK5YdJnASr5l7iPbzD
+	 +j2oa/hcitbNwFzJUJP4xYZoABFZhEX1BXMlVPEtj6i5uAQDL++jdX8JIXFe54o4j8
+	 yFomn8xO8B2Gw==
+Date: Wed, 25 Jun 2025 16:18:58 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Waiman Long <llong@redhat.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>,
+	Marco Crivellari <marco.crivellari@suse.com>,
+	Michal Hocko <mhocko@suse.com>,
+	Peter Zijlstra <peterz@infradead.org>, Tejun Heo <tj@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Vlastimil Babka <vbabka@suse.cz>
+Subject: Re: [PATCH 02/27] sched/isolation: Introduce housekeeping per-cpu
+ rwsem
+Message-ID: <aFwFUk2rWrikLbyA@localhost.localdomain>
+References: <20250620152308.27492-1-frederic@kernel.org>
+ <20250620152308.27492-3-frederic@kernel.org>
+ <3bf95ee2-1340-41b1-9f5c-1563f953c6eb@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 5/8] dt-bindings: gpu: img,powervr-rogue: Add TH1520
- GPU compatible
-To: Krzysztof Kozlowski <krzk@kernel.org>, Matt Coster
-	<Matt.Coster@imgtec.com>
-Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bartosz
-	Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Frank
-	Binns <Frank.Binns@imgtec.com>, Maarten Lankhorst
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
-	Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>, Bartosz Golaszewski
-	<bartosz.golaszewski@linaro.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org"
-	<linux-pm@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
-	<dri-devel@lists.freedesktop.org>
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <e1a3d854-93bc-4771-9b8e-1639ca57b687@kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250625141855eucas1p2d817ba3aa087d78130ac2fa293d18ba0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250623114436eucas1p1ab8455b32937a472f5f656086e38f428
-X-EPHeader: CA
-X-CMS-RootMailID: 20250623114436eucas1p1ab8455b32937a472f5f656086e38f428
-References: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
-	<CGME20250623114436eucas1p1ab8455b32937a472f5f656086e38f428@eucas1p1.samsung.com>
-	<20250623-apr_14_for_sending-v6-5-6583ce0f6c25@samsung.com>
-	<9c82a6bc-c6ff-4656-8f60-9d5fa499b61a@imgtec.com>
-	<d154d2d0-3d59-4176-a8fb-3cb754cf2734@samsung.com>
-	<e1a3d854-93bc-4771-9b8e-1639ca57b687@kernel.org>
+In-Reply-To: <3bf95ee2-1340-41b1-9f5c-1563f953c6eb@redhat.com>
 
-
-
-On 6/25/25 15:55, Krzysztof Kozlowski wrote:
-> On 25/06/2025 14:45, Michal Wilczynski wrote:
->>
->>
->> On 6/24/25 15:53, Matt Coster wrote:
->>> On 23/06/2025 12:42, Michal Wilczynski wrote:
->>>> Update the img,powervr-rogue.yaml to include the T-HEAD TH1520 SoC's
->>>> specific GPU compatible string.
->>>>
->>>> The thead,th1520-gpu compatible, along with its full chain
->>>> img,img-bxm-4-64, and img,img-rogue, is added to the
->>>> list of recognized GPU types.
->>>>
->>>> The power-domains property requirement for img,img-bxm-4-64 is also
->>>> ensured by adding it to the relevant allOf condition.
->>>>
->>>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
->>>> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->>>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
->>>> ---
->>>>  Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml | 9 ++++++++-
->>>>  1 file changed, 8 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
->>>> index 4450e2e73b3ccf74d29f0e31e2e6687d7cbe5d65..9b241a0c1f5941dc58a1e23970f6d3773d427c22 100644
->>>> --- a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
->>>> +++ b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
->>>> @@ -21,6 +21,11 @@ properties:
->>>>            # work with newer dts.
->>>>            - const: img,img-axe
->>>>            - const: img,img-rogue
->>>> +      - items:
->>>> +          - enum:
->>>> +              - thead,th1520-gpu
->>>> +          - const: img,img-bxm-4-64
->>>> +          - const: img,img-rogue
->>>>        - items:
->>>>            - enum:
->>>>                - ti,j721s2-gpu
->>>> @@ -93,7 +98,9 @@ allOf:
->>>>        properties:
->>>>          compatible:
->>>>            contains:
->>>> -            const: img,img-axe-1-16m
->>>> +            enum:
->>>> +              - img,img-axe-1-16m
->>>> +              - img,img-bxm-4-64
->>>
->>> This isn't right â€“ BXM-4-64 has two power domains like BXS-4-64. I don't
->>> really know what the right way to handle that in devicetree is given the
->>> TH1520 appears to expose only a top-level domain for the entire GPU, but
->>> there are definitely two separate domains underneath that as far as the
->>> GPU is concerned (see the attached snippet from integration guide).
->>>
->>> Since power nodes are ref-counted anyway, do we just use the same node
->>> for both domains and let the driver up/down-count it twice?
->>
->> Hi Matt,
->>
->> Thanks for the very helpful insight. That's a great point, it seems the
->> SoC's design presents a tricky case for the bindings.
->>
->> I see what you mean about potentially using the same power domain node
->> twice. My only hesitation is that it might be a bit unclear for someone
->> reading the devicetree later. Perhaps another option could be to relax
->> the constraint for this compatible?
->>
->> Krzysztof, we'd be grateful for your thoughts on how to best model this
->> situation.
+Le Mon, Jun 23, 2025 at 01:34:58PM -0400, Waiman Long a écrit :
+> On 6/20/25 11:22 AM, Frederic Weisbecker wrote:
+> > The HK_TYPE_DOMAIN isolation cpumask, and further the
+> > HK_TYPE_KERNEL_NOISE cpumask will be made modifiable at runtime in the
+> > future.
+> > 
+> > The affected subsystems will need to synchronize against those cpumask
+> > changes so that:
+> > 
+> > * The reader get a coherent snapshot
+> > * The housekeeping subsystem can safely propagate a cpumask update to
+> >    the susbsytems after it has been published.
+> > 
+> > Protect against readsides that can sleep with per-cpu rwsem. Updates are
+> > expected to be very rare given that CPU isolation is a niche usecase and
+> > related cpuset setup happen only in preparation work. On the other hand
+> > read sides can occur in more frequent paths.
+> > 
+> > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 > 
-> 
-> It's your hardware, you should tell us, not me. I don't know how many
-> power domains you have there, but for sure it is not one AND two domains
-> the same time. It is either one or two, because power domains are not
-> the same as regulator supplies.
+> Thanks for the patch series and it certainly has some good ideas. However I
+> am a bit concern about the overhead of using percpu-rwsem for
+> synchronization especially when the readers have to wait for the completion
+> on the writer side. From my point of view, during the transition period when
+> new isolated CPUs are being added or old ones being removed, the reader will
+> either get the old CPU data or the new one depending on the exact timing.
+> The effect the CPU selection may persist for a while after the end of the
+> critical section.
 
-Hi Krzysztof, Matt,
+It depends.
 
-The img,bxm-4-64 GPU IP itself is designed with two separate power
-domains. The TH1520 SoC, which integrates this GPU, wires both of these
-to a single OS controllable power gate (controlled via mailbox and E902
-co-processor).
+1) If the read side queues a work and wait for it
+  (case of work_on_cpu()), we can protect the whole under the same
+  sleeping lock and there is no persistance beyond.
 
-This means a devicetree for the TH1520 can only ever provide one power
-domain for the GPU. However, a generic binding for img,bxm-4-64 should
-account for a future SoC that might implement both power domains.
+2) But if the read side just queues some work or defines some cpumask
+   for future queue then there is persistance and some action must be
+   taken by housekeeping after the update to propagare the new cpumask
+   (flush pending works, etc...)
 
-That's why I proposed to relax the constraints on the img,bmx-4-64 GPU.
+> Can we just rely on RCU to make sure that it either get the new one or the
+> old one but nothing in between without the additional overhead?
 
-This makes the binding accurately represent the GPU's full capabilities
-while remaining compatible with SoCs like the TH1520 that have a limited
-implementation.
+This is the case as well and it is covered by 2) above.
+The sleeping parts handled in 1) would require more thoughts.
 
-Does this seem like the correct and robust approach to you?
+> My current thinking is to make use CPU hotplug to enable better CPU
+> isolation. IOW, I would shut down the affected CPUs, change the housekeeping
+> masks and then bring them back online again. That means the writer side will
+> take a while to complete.
 
-> 
-> Best regards,
-> Krzysztof
-> 
+You mean that an isolated partition should only be set on offline CPUs ? That's
+the plan for nohz_full but it may be too late for domain isolation.
 
-Best regards,
+Thanks.
+
 -- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+Frederic Weisbecker
+SUSE Labs
