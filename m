@@ -1,52 +1,52 @@
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91D5B1DDC1E
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9301DEFE7
 	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:56:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750827407; cv=none; b=AfxiuG2TSs+cL5s/bazKzS7e+jdhkJ46WuFs2IT3gWjKexy12oSMRFOAvDuj0SaP+dB0brfRi8or05lnswwCaf+dN5Lyq9my7RzYPqrcMItjjb4HfqgDOv09o6JnZ7AiR7WyCWZJl+MVdpj6W897InFWHKsfepDpnzW/O93ZrBs=
+	t=1750827407; cv=none; b=LAdIzV27eL16mdW734FKnFDXLRtsC0/U+TXY3rdOy3uJDTzP4WnHg1Jn2/E5P9jkuYlQhLnqjnUJgKGmJ3ZhiDdSIM88EzoBX9IHbfra37mhyGKLwBRg/5mlOt8cjOpixg5+sFDwb5rOhTBzpley2kIRjUjV2ReeHRKyLRq8Spw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750827407; c=relaxed/simple;
-	bh=e/mJTOaSWA2P1JapKy8sNOWJL14LCqY1jBMNxyjcl4o=;
+	bh=3nqEZxV/Y5uq+XwWCf1wbzoSm47wfpCQv/tVq85eryQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=R1RCfNAwTOwluEo1/cekpx5LmblSvQqtc9lZbkfNtPoM5+fcMMMaNekRWeqXYw1hmTNgQgjJJ+oVJ/RfDx28dlAchIjpmhDdS6BQHg4iJuVf3uVqaBy44CCI1+CUGG/djGzJnHwgD9oWVHhKfaT+yumCDYGf5dqe6Q/5y7Cso7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=lcKluhHs; arc=none smtp.client-ip=68.232.154.123
+	 In-Reply-To:To:CC; b=HnvUUwdN4vm10oIP2MZgQz4k2d508Mo4FAcg5Wbnrc6O7fO+JjLTsGPEzhKgwSGZ9AnBT4NEp6PS2ADa9KrXGZAzuWNdWwArjLQbO49yNbJ49uvzlrNXjwUKXrcgFHvB3BzREr5OiOaYbRCOE9mO1C/QFKal0VPVW3G+v/Ve8PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=1q6BGWl3; arc=none smtp.client-ip=68.232.154.123
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="lcKluhHs"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="1q6BGWl3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
   t=1750827405; x=1782363405;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=e/mJTOaSWA2P1JapKy8sNOWJL14LCqY1jBMNxyjcl4o=;
-  b=lcKluhHsxBhXnZ8ae9c0XAHGpORG9qxm2nGh54Sb063GGA7vSm8NsPI/
-   NenwnY1MWkLQz4rBlHvE1qJUbXvDkLmk/3uMKR/eqHkpCXKybTLVj5ULL
-   CZxfz/d673omS3MN3dzK9p6V7lUHT2WsldEmUy850DIP/FzfjlcfKNDiX
-   buir083JJjMrE1K5D4QcCyfC+pKvTeDVOhUHJevwuch7VIfX2tCXOVJXk
-   RrcsZfrwwqa/hrf5Aj/O2bAv3LIMpQ0fqSuf5bCWg2dC+AUgnb5RrAR30
-   umd3lnCIUQs8mJ5D6gVsQhTR+jCLNTApo5rXzZn9BXArODzWXrOulWJOF
-   w==;
+  bh=3nqEZxV/Y5uq+XwWCf1wbzoSm47wfpCQv/tVq85eryQ=;
+  b=1q6BGWl3gWg9BHZPTOLv8OCa4wvwco3OL32tgj4Hh458ydCPpvoHgv9z
+   twTp3+TpUvW6IJnp3+dEr9SqWaWbBoio7F2lPv0Dpw6Ped6BZYGZUwwbH
+   JrhLMyr4ZlpQa0c8RnEBwFGxyTVWyf7oHxXlPnF5JGaSN7Ks6lNyItXXF
+   kUf/8M+7C7VkAmopeUfVEiiDjgfFX/gsIEcmk2WdybWDJdAsHMJYEkU04
+   XGbAD/IpP8IwJGh1Xm5zRrGA6NAj0NA/NZgGQl+arcG0WWnB118FCfPME
+   ARAI6r6ERC6xzwSHilCYW4PQP3CXVUIb/Zfv9i9erT5/49vTP4TJIG9LF
+   g==;
 X-CSE-ConnectionGUID: AhZgIOJERfil50n8LIfntw==
-X-CSE-MsgGUID: Ottw10F8RHGo9SV422wKFg==
+X-CSE-MsgGUID: tiE5eSZaTme32b23sLO4TQ==
 X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="42713913"
+   d="scan'208";a="42713914"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
   by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2025 21:56:37 -0700
 Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 24 Jun 2025 21:56:25 -0700
+ 15.1.2507.44; Tue, 24 Jun 2025 21:56:31 -0700
 Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex01.mchp-main.com
  (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
- Transport; Tue, 24 Jun 2025 21:56:19 -0700
+ Transport; Tue, 24 Jun 2025 21:56:26 -0700
 From: Dharma Balasubiramani <dharma.b@microchip.com>
-Date: Wed, 25 Jun 2025 10:26:09 +0530
-Subject: [PATCH v5 1/4] drm/bridge: microchip-lvds: Remove unused drm_panel
- and redundant port node lookup
+Date: Wed, 25 Jun 2025 10:26:10 +0530
+Subject: [PATCH v5 2/4] drm/bridge: microchip-lvds: migrate to atomic
+ bridge ops
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -55,7 +55,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250625-microchip-lvds-v5-1-624cf72b2651@microchip.com>
+Message-ID: <20250625-microchip-lvds-v5-2-624cf72b2651@microchip.com>
 References: <20250625-microchip-lvds-v5-0-624cf72b2651@microchip.com>
 In-Reply-To: <20250625-microchip-lvds-v5-0-624cf72b2651@microchip.com>
 To: Manikandan Muralidharan <manikandan.m@microchip.com>, Andrzej Hajda
@@ -69,71 +69,64 @@ To: Manikandan Muralidharan <manikandan.m@microchip.com>, Andrzej Hajda
 CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>, "Dharma
  Balasubiramani" <dharma.b@microchip.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750827371; l=1861;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750827371; l=1753;
  i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
- bh=e/mJTOaSWA2P1JapKy8sNOWJL14LCqY1jBMNxyjcl4o=;
- b=t1+npYydtMChl3XcRSzWZulvNLHRGo1f5cRnLqjyWS/apXPU1mSdxu508JLvCOp8TEYIak2TA
- IaaxLS0qeGBAoz+yR9lz9vIk94RFDhek0g3J+Sy/hVRu5+KBvT7ktbQ
+ bh=3nqEZxV/Y5uq+XwWCf1wbzoSm47wfpCQv/tVq85eryQ=;
+ b=4sdzPsgpBa4OlnMTfa/2tULoTtkrEe19367c/589Yny1LsbWdncOmxsb744sWmSNmJtkcdHMs
+ Kz2M9gtS92sA3b/dmDiT0U19OeSBoOxF4/AQHGY5kC632yNsUV1DnXY
 X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
  pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
 
-Drop the unused drm_panel field from the mchp_lvds structure, and remove
-the unnecessary port device node lookup, as devm_drm_of_get_bridge()
-already performs the required checks internally.
+Replace legacy .enable and .disable callbacks with their atomic
+counterparts .atomic_enable and .atomic_disable.
+
+Also, add turn off the serialiser inside atomic_disable().
 
 Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
 ---
- drivers/gpu/drm/bridge/microchip-lvds.c | 16 ----------------
- 1 file changed, 16 deletions(-)
+ drivers/gpu/drm/bridge/microchip-lvds.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/microchip-lvds.c b/drivers/gpu/drm/bridge/microchip-lvds.c
-index 9f4ff82bc6b4..06d4169a2d8f 100644
+index 06d4169a2d8f..c40c8717f026 100644
 --- a/drivers/gpu/drm/bridge/microchip-lvds.c
 +++ b/drivers/gpu/drm/bridge/microchip-lvds.c
-@@ -23,7 +23,6 @@
- #include <drm/drm_atomic_helper.h>
- #include <drm/drm_bridge.h>
- #include <drm/drm_of.h>
--#include <drm/drm_panel.h>
- #include <drm/drm_print.h>
- #include <drm/drm_probe_helper.h>
- #include <drm/drm_simple_kms_helper.h>
-@@ -56,7 +55,6 @@ struct mchp_lvds {
- 	struct device *dev;
- 	void __iomem *regs;
- 	struct clk *pclk;
--	struct drm_panel *panel;
- 	struct drm_bridge bridge;
- 	struct drm_bridge *panel_bridge;
- };
-@@ -151,7 +149,6 @@ static int mchp_lvds_probe(struct platform_device *pdev)
+@@ -111,7 +111,8 @@ static int mchp_lvds_attach(struct drm_bridge *bridge,
+ 				 bridge, flags);
+ }
+ 
+-static void mchp_lvds_enable(struct drm_bridge *bridge)
++static void mchp_lvds_atomic_enable(struct drm_bridge *bridge,
++				    struct drm_atomic_state *state)
  {
- 	struct device *dev = &pdev->dev;
- 	struct mchp_lvds *lvds;
--	struct device_node *port;
+ 	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
  	int ret;
+@@ -131,18 +132,22 @@ static void mchp_lvds_enable(struct drm_bridge *bridge)
+ 	lvds_serialiser_on(lvds);
+ }
  
- 	if (!dev->of_node)
-@@ -173,19 +170,6 @@ static int mchp_lvds_probe(struct platform_device *pdev)
- 		return dev_err_probe(lvds->dev, PTR_ERR(lvds->pclk),
- 				"could not get pclk_lvds\n");
+-static void mchp_lvds_disable(struct drm_bridge *bridge)
++static void mchp_lvds_atomic_disable(struct drm_bridge *bridge,
++				     struct drm_atomic_state *state)
+ {
+ 	struct mchp_lvds *lvds = bridge_to_lvds(bridge);
  
--	port = of_graph_get_remote_node(dev->of_node, 1, 0);
--	if (!port) {
--		dev_err(dev,
--			"can't find port point, please init lvds panel port!\n");
--		return -ENODEV;
--	}
--
--	lvds->panel = of_drm_find_panel(port);
--	of_node_put(port);
--
--	if (IS_ERR(lvds->panel))
--		return -EPROBE_DEFER;
--
- 	lvds->panel_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
++	/* Turn off the serialiser */
++	lvds_writel(lvds, LVDSC_CR, 0);
++
+ 	pm_runtime_put(lvds->dev);
+ 	clk_disable_unprepare(lvds->pclk);
+ }
  
- 	if (IS_ERR(lvds->panel_bridge))
+ static const struct drm_bridge_funcs mchp_lvds_bridge_funcs = {
+ 	.attach = mchp_lvds_attach,
+-	.enable = mchp_lvds_enable,
+-	.disable = mchp_lvds_disable,
++	.atomic_enable = mchp_lvds_atomic_enable,
++	.atomic_disable = mchp_lvds_atomic_disable,
+ };
+ 
+ static int mchp_lvds_probe(struct platform_device *pdev)
 
 -- 
 2.43.0
