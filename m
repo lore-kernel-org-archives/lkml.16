@@ -1,173 +1,452 @@
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011038.outbound.protection.outlook.com [40.107.130.38])
+Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.166.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 410B43074BD;
-	Wed, 25 Jun 2025 02:07:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.38
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750817244; cv=fail; b=jQq1soOGVbWZlnoZy0xjsJDGe5taFP2izyfP7d5gWAlIMJI4li0V6Rf+6Iqen3OV3Y4g1K5UER6cbXewb5xSmnyc6sxsDMJN4y4vy8X+rHDJwxseXlp2rYJKQHPDfvR6MakZZnSVEBHPrUzjfvibKRb02sB81XiLoxJJyCf3dmI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750817244; c=relaxed/simple;
-	bh=1pMl135sNHxBgSK53OJSTy1L/8bebVgoRsuH64iuKPI=;
-	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=J5dP2d4E5qGZmefNkPSE26B+ESGiot0N9FtUnr6eTsgqZkeuVSEp5NEnzXSVTQ808eyJQP7QgXI6zkBCpJYKuAXaXx1WJpOZ+RhB24msgdZCYA0nvuD/K4F2WDPXwRJmssQHzi0/3xkjLBn0lW6sSd7/0F/ho8FiW0Lu/hLwOw8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=NMDum3z5; arc=fail smtp.client-ip=40.107.130.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B2E611713
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:10:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.166.231
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750817425; cv=none; b=sy6Ju8E96WHsprERB0nSq33IRBe1cBIDrkPJjYN/UhEb9rVyOuK7NU7f8zwtU66jOdNKFRrylY/h9pabE1DOkt79wuc5i66yh4wrO5uZItDc9Z2DWKcyj7dbN4OAYdQtoUmHPSDeEGs9wjj6/mdh3T9f9hNa/SlsJOkii6l5HXk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750817425; c=relaxed/simple;
+	bh=OVrtyg81aFeAXV9xOvMMM3yjsFRLqonDHma0iIjbo6o=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=m5NP/JNGDucWPpeAK9oCPD7bt4uomarjTM4aOEZYCBbjAQ15mfJsEGkp9X15GoA63WZP50VMZHJTI9wC4COBOgNIUtBwrKhk9oXRGAA0sLHpzNGYWo+aUiyecURj61GBop4zuwC8hvNE2qQFXGIv9+fr1EWmoznTSq2U8jMdzfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=hj4MVV0s; arc=none smtp.client-ip=192.19.166.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="NMDum3z5"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qtj1H4eCgzIbv6teRH9WMNJ4ncPCUECuGhs0ek9iqTYKJsgfd/LglAp/GBfvmgxNxBZ7HvrifatBUxAqgd5kJuF3bDr4Rq+bPBOr5yBHS57kxexHWdMUJqEltJLiy4MOwqnP2B75v3RrwHWE5r81F2mmxKbCiA+nNE6sgYdOsVN9hb20ScwWb/x/xuOB7e8fZvnLGGfjQTBxcsrG0HQAykKlNj+m41YOr1OIigsiMGDVhqtbyR0kZdvZuxiGh3qMcXKIh/MgZ2O98SKfCsqcQSzCc5amn9Nf/VybJFoeJq1030hsCgopFK6aHkVYYAluz3YQ1zwHyKadIj/G6UAeUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dp3sh28CaxeSzlF0eAGsqDF6PEpno+gQxpxNKcMWYWU=;
- b=euLBFZ+Dy0V5OFRJuBqDGFoXK0yDMJ9sKw0CFYlss7N7zxxcvuEeEFz5yNxMdwOE9YFXZYd9B8Ticts51JyEfOocw/+EqlCzuIxYFErRQzJJNXz6IQT/oTFqBBDgRcVYiyTQX0bWAdJCt/VbiGC0dL7TNogu2jJUztHFekBP+V/pkN/wmLVY+LX3H/5rp8cjk+sj02AsoDviRTXQiafIRqlLj6fJQPM4aSKRkqesReBud2s/mLz4iUYJ8xVuHxeBE4VKzIMUO9CPx/2T4etXar+cqcRgME0vzhOm5nHj6DN254X25kswSZyVV2jsNOMIluIrvgmXzZZws17P4F5NLA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dp3sh28CaxeSzlF0eAGsqDF6PEpno+gQxpxNKcMWYWU=;
- b=NMDum3z5z1q3pJ2uMSql0QJtjbOZp65dpZaAl9u3eaQVVmtwA1Lgy65m5nXUvjZkE8n5+Rs0TYrObZkt4muNO+NJdYIjUh9kJnrbSoPGOn6K19rBTYN2xJvYdWw4Sk5RarMVEiTM5EqFj29x04lboxeGpI8RnCUqaq2H0rnMoORZcrLgKCwohWfCXV4fxtyNG9Ou/2N0dHAewvHZ1vu5iNEkYeLd60VWaVmGINqS+4IL9Gy2fyohqYPZWPZsS33bfFYEJCuTLwxJPkjWwvWUNiP/Or8ob8l7TPduhrWtqStb9JwrXZi/XFVp/lG4LcBO3AUDL31/VTvQeonPXUKtAw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM0PR04MB7044.eurprd04.prod.outlook.com (2603:10a6:208:191::20)
- by DBBPR04MB7850.eurprd04.prod.outlook.com (2603:10a6:10:1e8::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Wed, 25 Jun
- 2025 02:07:18 +0000
-Received: from AM0PR04MB7044.eurprd04.prod.outlook.com
- ([fe80::7be0:296:768c:e891]) by AM0PR04MB7044.eurprd04.prod.outlook.com
- ([fe80::7be0:296:768c:e891%4]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
- 02:07:17 +0000
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
-To: shengjiu.wang@gmail.com,
-	Xiubo.Lee@gmail.com,
-	festevam@gmail.com,
-	nicoleotsuka@gmail.com,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	linux-sound@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: fsl_asrc: use internal measured ratio for non-ideal ratio mode
-Date: Wed, 25 Jun 2025 10:05:04 +0800
-Message-Id: <20250625020504.2728161-1-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MA1PR01CA0173.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:d::14) To AM0PR04MB7044.eurprd04.prod.outlook.com
- (2603:10a6:208:191::20)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="hj4MVV0s"
+Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
+	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id 6B7C3C0004E1;
+	Tue, 24 Jun 2025 19:10:22 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com 6B7C3C0004E1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
+	s=dkimrelay; t=1750817422;
+	bh=OVrtyg81aFeAXV9xOvMMM3yjsFRLqonDHma0iIjbo6o=;
+	h=From:To:Cc:Subject:Date:From;
+	b=hj4MVV0sUd7tNa8vXbKNPqSlJiqsVRurE2XOOs36h+ahuj4zb2j0M8mEdJ1E6qQNr
+	 pTTaDZCXxEzpJZg2pH3XhWvMlM710BllfWtx7YkktQ9kLfbleRwwxeXDqcqU3xpyMh
+	 NM+GXKKht3zIQmpg8Wbiy37L0ZGrlDVSmk/ELV7o=
+Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 36AC318000530;
+	Tue, 24 Jun 2025 19:10:22 -0700 (PDT)
+From: Florian Fainelli <florian.fainelli@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: akpm@linux-foundation.org,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Jan Kiszka <jan.kiszka@siemens.com>,
+	Kieran Bingham <kbingham@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Shanker Donthineni <sdonthineni@nvidia.com>
+Subject: [PATCH v3] scripts/gdb: Fix interrupts.py after maple tree conversion
+Date: Tue, 24 Jun 2025 19:10:20 -0700
+Message-ID: <20250625021020.1056930-1-florian.fainelli@broadcom.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR04MB7044:EE_|DBBPR04MB7850:EE_
-X-MS-Office365-Filtering-Correlation-Id: f258da91-c798-4a01-083d-08ddb38d0284
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|1800799024|52116014|366016|376014|38350700014|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?D6le8EwF6MR7CNiOiCk27vRa+bgjE2RdEr4PSdxu7iXYqqRcP+xevpr7CCPX?=
- =?us-ascii?Q?Z8uQiqsYLBg9Ru7NKiI3t9KHayzzACXTFGYMLOTiKucNOybopKqoz6zApJAI?=
- =?us-ascii?Q?UJ+tESqOBDfzJ976GB9Rw4kcdgmjsZuPMNA4XkNRUjQfxk691v3JJ10sf/b3?=
- =?us-ascii?Q?VbFBsBa83MWcW5Y47hK0Y5u3Uy/Fg5z5SzZBsEOjlM49QVvOBeSLTPhd0kdH?=
- =?us-ascii?Q?DD58UrFZbZSg//WEmB1K9GHsrLxpCy9tMwsxp3gTOT4bTpluUAINU/XuZsR6?=
- =?us-ascii?Q?/lFaDr2pMJdbQHkJPKPYzJkHQWG56tD9BR0/OIHmBIzz4l68niZ6y6uM7sE6?=
- =?us-ascii?Q?86z0w113GdGBuSoX4W+i2/wOmhmS8ZF2RUPSJ/dlf3i61YV14lS0C1CQUDMw?=
- =?us-ascii?Q?I9mxFxTQREtNQNfr5HSxjJ6K3DRnNMbEDXXS24WdHQz9w0QxGAQEZe/91k1a?=
- =?us-ascii?Q?MGI58pV9m5kRiipSPgheq9nlTHWQXIeclAPxQndc+iQcek24Sf1k+IX7L5ez?=
- =?us-ascii?Q?Xu70mCPPngiWMuObSSTn5RqPqmTmYJ3FxCsigx1AqYF25NjB9u0VY+v9aTYF?=
- =?us-ascii?Q?oYgvXB1Gpe754Iz3hjSs9RgrY3NddhNKa0Q2ULqOcfK516OAbzWBeEUNLHDx?=
- =?us-ascii?Q?SvwonHb8huujWZlafm5ePzOmtibCRm59rgGN33A/Xs2JfHV3hUZmrdaFLpLw?=
- =?us-ascii?Q?fcxE8meqrAa4Iza6bZlGkqqulK7q5PlP9UNbJiy6MHZIlk7vhr2bp6ZAdWu5?=
- =?us-ascii?Q?16AkFkyctx2QVwjtk9GuYT/UcaaIvIL+lPY6Ya0j93lqkj4Ell7rcmcgaEIw?=
- =?us-ascii?Q?a5EtvqhVfy93zG3ZNHztwncjwRU4Zc37nTLs68csJrA4njIXg20yjj/TB32s?=
- =?us-ascii?Q?QLeAj2XsaOD0RH9oMgdeXph+6aLC5/pRtVTw18mjgkozLjGMmQ4kThvH6jHl?=
- =?us-ascii?Q?+iWGPxNSH2il/IlctoSEjNdTIK2C0WjhZBrQ3hnNoQGFlWJPkvSskJH4pn8p?=
- =?us-ascii?Q?pCMK7Uo+G7RaW8a5jddGMK1+BqBDNinc4+l8zekt/wN0k/DkW9i+dOHWwjpO?=
- =?us-ascii?Q?CU4cPOv0FiI3kjci81AssMWw1mFBjS+/YYxPb6rQcj0GKCCOxEUlcJgOvwRr?=
- =?us-ascii?Q?IoakOeeJuB/KSoCPmIqBZPKSoKJdQYOrWKWWiGVxLak6/DoLG8gwlmsZguqM?=
- =?us-ascii?Q?wMslOWzFhntngzVV7btNyrRQwQST+1o15L2Q5qeJD36EDFtGhRh1lPGGOlqW?=
- =?us-ascii?Q?/UwAhzfYjjg1PynVmuigQeLcBphd3tAyflVWRA9tPtr2n4gDVGfjNbXTqjPF?=
- =?us-ascii?Q?FVPQ1zlKsfiBqDgKd2Fkuldp8t2+bwIConZC0/frgCcEaDWGN5LetLWgAE6D?=
- =?us-ascii?Q?5jmOaj4XaVel5x4sTFkmqe+9gvrnnygM6HsbQfD7EyWwZK6CNbB4bVw8SCR9?=
- =?us-ascii?Q?RqlARuNQ4b4YtdTdGWd8FQBV4lwmR2o71L/HtuJxlqMpzVWAF9+HgIMvUPpb?=
- =?us-ascii?Q?ohWHCxdOvTsXS+A=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB7044.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(1800799024)(52116014)(366016)(376014)(38350700014)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?g+xaN6bI1xIQjkgLGHQAKJ51gKaWLP2mZ0f46xvNLFZn73h+WPNoj8k0v+ZK?=
- =?us-ascii?Q?YUvu427rzEISr9ZV7a59cVjVv2fwkwx3wTE1D73s/PrFM+K9XwN39McA2z0Q?=
- =?us-ascii?Q?H5OSNpJstxQKWgKlTH3vVeS8mZ6keWYk1KSZXyAY59SpDFUusCR/PQRyVGwb?=
- =?us-ascii?Q?bVnfYN1n4N4TRr81t5dUU6qrJawDyOcxL+jFzhzg6wKlECt5GUXet4n0s4UU?=
- =?us-ascii?Q?HzykMKxBhhyukeG01uOEoB85k/qlEjA+IccNUtgrs01tzTPdDVLN/s//riFv?=
- =?us-ascii?Q?GxA4HI52LMSBeWgyaDDNP4b/OTQIS8LRe6zf1NaIY4qOHA+BlaWN1GbdbqMk?=
- =?us-ascii?Q?OOYl4Ta/ahCFSrbP18ni1ifJcQtuyrMVwPAyDRNJPZp7v3S5+JIWU8yrKwH9?=
- =?us-ascii?Q?cJDsJB+eHdKda7hEdYMFVp4t7qCyDNL9m5PLVSfm781fxmxPWPGIYzjBgJup?=
- =?us-ascii?Q?lq5/8DtgcZqXxLC4ATnX/Y2CPL2zeR7hFqw3JUSbw+1vUevmyj3xsYf11QuD?=
- =?us-ascii?Q?Z2aJ+L4opKiQsdMPGsXabwuVo9PeAxdreIzWyXqUSQf0L4THd19dOt2i5jWS?=
- =?us-ascii?Q?7sml0cQRQ9i4jncI3FG0QKt/SeDEmKoiEHRtjBWbs+D7VGWhZdDl4dYu1hws?=
- =?us-ascii?Q?pqshjElvuKGrL2ir4F0aBDzm/ALQ7smTBWHa+iL/wteQDFhEmkOKTCocnP19?=
- =?us-ascii?Q?F9ShQBzbKOmbfEKSiR+SfGKQ804Pikdb6pehaB3O9J/+jo2i749SOTHlCQNv?=
- =?us-ascii?Q?DKcKo6SD/w+Bu+7hkvyIAUkFrmFWFbwtv3kxs+gT9A0tbDm3RYBhN2w/NKoy?=
- =?us-ascii?Q?kMPkmeS0gDvvtJR5tbqf1LCGJYQ6cdwg/erswlqVrJeoThFtZAG1+Fl4g2jI?=
- =?us-ascii?Q?RMxrbgNSPW7LFfQv1wNsnFCxDu5IkxOmgu7yx0S3o7zxkSt+dThS75TAwpGh?=
- =?us-ascii?Q?lhbNRBN4wd7QpNPrf+GGFnlo49lQmm3LAejJxw4lsmcqULHui5SQs0GxvC23?=
- =?us-ascii?Q?mr9X1X1FH/Khz5jgW03Gu1JlV5jXkyKD89U5JE95hpCQy0ugKaLY0T6Sm4A3?=
- =?us-ascii?Q?DWoMwFZCBHSYy6p1AO+lCY9kbBWgsK4H3WoR6ygs06dcTkTb+Dj1OOtBwAk1?=
- =?us-ascii?Q?lxiXDIRito0KkRbt0/tLZN5/hq+fAFJaCNpdJ+siloZOuMrkKyqdjrbxdl3m?=
- =?us-ascii?Q?6zb5UUbEpJQSZLA9sqEEPhfOaWxvHyNOigdQI4yfrPSb5Pvgd1h2QqAqXCJE?=
- =?us-ascii?Q?2B6qAl/7WIxwQbDoYhn6xa/gUPxM+3rndm9Y0Q4l5ZfI5U8tbPgriBmJMSVw?=
- =?us-ascii?Q?rzyLl/LOfKNCgaXcr2HLs7DbVrozOowNgiDxcWOkvWvZBoCkfcg0ObDBG2eK?=
- =?us-ascii?Q?nDgyjsHx/RBNtxrMVDxtuVLsEXSlu2XWPK2CCf7EpbvBVVDIWUfx8IzHKOHM?=
- =?us-ascii?Q?Q1BKNUo3lTe2JSRbKYUB+TjjRzrDz1Yl7TCJd2NKLrBfHck3e+VhspgsFiV8?=
- =?us-ascii?Q?jR7MNWyA2LPaL3UCNP6BiEF+oU6s5RKcgVNE/6uwbkbIsXJn5JrfA6lP8+cs?=
- =?us-ascii?Q?FsLUweQi5kMIkNJtdnd5P7WJhwIthnO+Pc2xj1ls?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f258da91-c798-4a01-083d-08ddb38d0284
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB7044.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 02:07:17.7439
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6emaybj5zut26ex5lNwGFV1Df23x2XogP6y8X1qPUalh5L+AXgMfc+lT/ZadvC3ABBdyBoAAweLxkJo7G+g8lw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7850
+Content-Transfer-Encoding: 8bit
 
-When USRC=0, there is underrun issue for the non-ideal ratio mode;
-according to the reference mannual, the internal measured ratio can be
-used with USRC=1 and IDRC=0.
+In commit 721255b9826b ("genirq: Use a maple tree for interrupt
+descriptor management"), the irq_desc_tree was replaced with a
+sparse_irqs tree using a maple tree structure. Since the script looked
+for the irq_desc_tree symbol which is no longer available, no interrupts
+would be printed and the script output would not be useful anymore.
 
-Fixes: d0250cf4f2ab ("ASoC: fsl_asrc: Add an option to select internal ratio mode")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+In addition to looking up the correct symbol (sparse_irqs), a new module
+(mapletree.py) is added whose mtree_load() implementation is largely
+copied after the C version and uses the same variable and intermediate
+function names wherever possible to ensure that both the C and Python
+version be updated in the future.
+
+This restores the scripts' output to match that of /proc/interrupts.
+
+Fixes: 721255b9826b ("genirq: Use a maple tree for interrupt descriptor management")
+Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
 ---
- sound/soc/fsl/fsl_asrc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Changes in v3:
 
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index 677529916dc0..745532ccbdba 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -517,7 +517,8 @@ static int fsl_asrc_config_pair(struct fsl_asrc_pair *pair, bool use_ideal_rate)
- 	regmap_update_bits(asrc->regmap, REG_ASRCTR,
- 			   ASRCTR_ATSi_MASK(index), ASRCTR_ATS(index));
- 	regmap_update_bits(asrc->regmap, REG_ASRCTR,
--			   ASRCTR_USRi_MASK(index), 0);
-+			   ASRCTR_IDRi_MASK(index) | ASRCTR_USRi_MASK(index),
-+			   ASRCTR_USR(index));
+- explain in more details what is being fixed and how
+- stop looking for the irq_desc_tree symbol which is no longer relevant
+- raise an exception if sparse_irqs cannot be found which is likely due
+  to CONFIG_SPARSE_IRQ being disabled
+
+Changes in v2:
+
+- do a proper Python implementation of mtree_load() since we cannot
+  assume that context in which we will be interfacing with the target
+  permits making direct function calls from the kernel.
+
+ scripts/gdb/linux/constants.py.in |   7 +
+ scripts/gdb/linux/interrupts.py   |  12 +-
+ scripts/gdb/linux/mapletree.py    | 252 ++++++++++++++++++++++++++++++
+ scripts/gdb/linux/xarray.py       |  28 ++++
+ 4 files changed, 293 insertions(+), 6 deletions(-)
+ create mode 100644 scripts/gdb/linux/mapletree.py
+ create mode 100644 scripts/gdb/linux/xarray.py
+
+diff --git a/scripts/gdb/linux/constants.py.in b/scripts/gdb/linux/constants.py.in
+index d5e3069f42a7..c3886739a028 100644
+--- a/scripts/gdb/linux/constants.py.in
++++ b/scripts/gdb/linux/constants.py.in
+@@ -20,6 +20,7 @@
+ #include <linux/of_fdt.h>
+ #include <linux/page_ext.h>
+ #include <linux/radix-tree.h>
++#include <linux/maple_tree.h>
+ #include <linux/slab.h>
+ #include <linux/threads.h>
+ #include <linux/vmalloc.h>
+@@ -93,6 +94,12 @@ LX_GDBPARSED(RADIX_TREE_MAP_SIZE)
+ LX_GDBPARSED(RADIX_TREE_MAP_SHIFT)
+ LX_GDBPARSED(RADIX_TREE_MAP_MASK)
  
- 	/* Set the input and output clock sources */
- 	regmap_update_bits(asrc->regmap, REG_ASRCSR,
++/* linux/maple_tree.h */
++LX_VALUE(MAPLE_NODE_SLOTS)
++LX_VALUE(MAPLE_RANGE64_SLOTS)
++LX_VALUE(MAPLE_ARANGE64_SLOTS)
++LX_GDBPARSED(MAPLE_NODE_MASK)
++
+ /* linux/vmalloc.h */
+ LX_VALUE(VM_IOREMAP)
+ LX_VALUE(VM_ALLOC)
+diff --git a/scripts/gdb/linux/interrupts.py b/scripts/gdb/linux/interrupts.py
+index 199d9e8193f4..492d1f1e9529 100644
+--- a/scripts/gdb/linux/interrupts.py
++++ b/scripts/gdb/linux/interrupts.py
+@@ -7,7 +7,7 @@ import gdb
+ from linux import constants
+ from linux import cpus
+ from linux import utils
+-from linux import radixtree
++from linux import mapletree
+ 
+ irq_desc_type = utils.CachedType("struct irq_desc")
+ 
+@@ -23,12 +23,12 @@ def irqd_is_level(desc):
+ def show_irq_desc(prec, irq):
+     text = ""
+ 
+-    desc = radixtree.lookup(gdb.parse_and_eval("&irq_desc_tree"), irq)
++    desc = mapletree.mtree_load(gdb.parse_and_eval("&sparse_irqs"), irq)
+     if desc is None:
+         return text
+ 
+-    desc = desc.cast(irq_desc_type.get_type())
+-    if desc is None:
++    desc = desc.cast(irq_desc_type.get_type().pointer())
++    if desc == 0:
+         return text
+ 
+     if irq_settings_is_hidden(desc):
+@@ -221,8 +221,8 @@ class LxInterruptList(gdb.Command):
+             gdb.write("CPU%-8d" % cpu)
+         gdb.write("\n")
+ 
+-        if utils.gdb_eval_or_none("&irq_desc_tree") is None:
+-            return
++        if utils.gdb_eval_or_none("&sparse_irqs") is None:
++            raise gdb.GdbError("Unable to find the sparse IRQ tree, is CONFIG_SPARSE_IRQ enabled?")
+ 
+         for irq in range(nr_irqs):
+             gdb.write(show_irq_desc(prec, irq))
+diff --git a/scripts/gdb/linux/mapletree.py b/scripts/gdb/linux/mapletree.py
+new file mode 100644
+index 000000000000..d52d51c0a03f
+--- /dev/null
++++ b/scripts/gdb/linux/mapletree.py
+@@ -0,0 +1,252 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++#  Maple tree helpers
++#
++# Copyright (c) 2025 Broadcom
++#
++# Authors:
++#  Florian Fainelli <florian.fainelli@broadcom.com>
++
++import gdb
++
++from linux import utils
++from linux import constants
++from linux import xarray
++
++maple_tree_root_type = utils.CachedType("struct maple_tree")
++maple_node_type = utils.CachedType("struct maple_node")
++maple_enode_type = utils.CachedType("void")
++
++maple_dense = 0
++maple_leaf_64 = 1
++maple_range_64 = 2
++maple_arange_64 = 3
++
++class Mas(object):
++    ma_active = 0
++    ma_start = 1
++    ma_root = 2
++    ma_none = 3
++    ma_pause = 4
++    ma_overflow = 5
++    ma_underflow = 6
++    ma_error = 7
++
++    def __init__(self, mt, first, end):
++        if mt.type == maple_tree_root_type.get_type().pointer():
++            self.tree = mt.dereference()
++        elif mt.type != maple_tree_root_type.get_type():
++            raise gdb.GdbError("must be {} not {}"
++                               .format(maple_tree_root_type.get_type().pointer(), mt.type))
++        self.tree = mt
++        self.index = first
++        self.last = end
++        self.node = None
++        self.status = self.ma_start
++        self.min = 0
++        self.max = -1
++
++    def is_start(self):
++        # mas_is_start()
++        return self.status == self.ma_start
++
++    def is_ptr(self):
++        # mas_is_ptr()
++        return self.status == self.ma_root
++
++    def is_none(self):
++        # mas_is_none()
++        return self.status == self.ma_none
++
++    def root(self):
++        # mas_root()
++        return self.tree['ma_root'].cast(maple_enode_type.get_type().pointer())
++
++    def start(self):
++        # mas_start()
++        if self.is_start() is False:
++            return None
++
++        self.min = 0
++        self.max = ~0
++
++        while True:
++            self.depth = 0
++            root = self.root()
++            if xarray.xa_is_node(root):
++                self.depth = 0
++                self.status = self.ma_active
++                self.node = mte_safe_root(root)
++                self.offset = 0
++                if mte_dead_node(self.node) is True:
++                    continue
++
++                return None
++
++            self.node = None
++            # Empty tree
++            if root is None:
++                self.status = self.ma_none
++                self.offset = constants.LX_MAPLE_NODE_SLOTS
++                return None
++
++            # Single entry tree
++            self.status = self.ma_root
++            self.offset = constants.LX_MAPLE_NODE_SLOTS
++
++            if self.index != 0:
++                return None
++
++            return root
++
++        return None
++
++    def reset(self):
++        # mas_reset()
++        self.status = self.ma_start
++        self.node = None
++
++def mte_safe_root(node):
++    if node.type != maple_enode_type.get_type().pointer():
++        raise gdb.GdbError("{} must be {} not {}"
++                           .format(mte_safe_root.__name__, maple_enode_type.get_type().pointer(), node.type))
++    ulong_type = utils.get_ulong_type()
++    indirect_ptr = node.cast(ulong_type) & ~0x2
++    val = indirect_ptr.cast(maple_enode_type.get_type().pointer())
++    return val
++
++def mte_node_type(entry):
++    ulong_type = utils.get_ulong_type()
++    val = None
++    if entry.type == maple_enode_type.get_type().pointer():
++        val = entry.cast(ulong_type)
++    elif entry.type == ulong_type:
++        val = entry
++    else:
++        raise gdb.GdbError("{} must be {} not {}"
++                           .format(mte_node_type.__name__, maple_enode_type.get_type().pointer(), entry.type))
++    return (val >> 0x3) & 0xf
++
++def ma_dead_node(node):
++    if node.type != maple_node_type.get_type().pointer():
++        raise gdb.GdbError("{} must be {} not {}"
++                           .format(ma_dead_node.__name__, maple_node_type.get_type().pointer(), node.type))
++    ulong_type = utils.get_ulong_type()
++    parent = node['parent']
++    indirect_ptr = node['parent'].cast(ulong_type) & ~constants.LX_MAPLE_NODE_MASK
++    return indirect_ptr == node
++
++def mte_to_node(enode):
++    ulong_type = utils.get_ulong_type()
++    if enode.type == maple_enode_type.get_type().pointer():
++        indirect_ptr = enode.cast(ulong_type)
++    elif enode.type == ulong_type:
++        indirect_ptr = enode
++    else:
++        raise gdb.GdbError("{} must be {} not {}"
++                           .format(mte_to_node.__name__, maple_enode_type.get_type().pointer(), enode.type))
++    indirect_ptr = indirect_ptr & ~constants.LX_MAPLE_NODE_MASK
++    return indirect_ptr.cast(maple_node_type.get_type().pointer())
++
++def mte_dead_node(enode):
++    if enode.type != maple_enode_type.get_type().pointer():
++        raise gdb.GdbError("{} must be {} not {}"
++                           .format(mte_dead_node.__name__, maple_enode_type.get_type().pointer(), enode.type))
++    node = mte_to_node(enode)
++    return ma_dead_node(node)
++
++def ma_is_leaf(tp):
++    result = tp < maple_range_64
++    return tp < maple_range_64
++
++def mt_pivots(t):
++    if t == maple_dense:
++        return 0
++    elif t == maple_leaf_64 or t == maple_range_64:
++        return constants.LX_MAPLE_RANGE64_SLOTS - 1
++    elif t == maple_arange_64:
++        return constants.LX_MAPLE_ARANGE64_SLOTS - 1
++
++def ma_pivots(node, t):
++    if node.type != maple_node_type.get_type().pointer():
++        raise gdb.GdbError("{}: must be {} not {}"
++                           .format(ma_pivots.__name__, maple_node_type.get_type().pointer(), node.type))
++    if t == maple_arange_64:
++        return node['ma64']['pivot']
++    elif t == maple_leaf_64 or t == maple_range_64:
++        return node['mr64']['pivot']
++    else:
++        return None
++
++def ma_slots(node, tp):
++    if node.type != maple_node_type.get_type().pointer():
++        raise gdb.GdbError("{}: must be {} not {}"
++                           .format(ma_slots.__name__, maple_node_type.get_type().pointer(), node.type))
++    if tp == maple_arange_64:
++        return node['ma64']['slot']
++    elif tp == maple_range_64 or tp == maple_leaf_64:
++        return node['mr64']['slot']
++    elif tp == maple_dense:
++        return node['slot']
++    else:
++        return None
++
++def mt_slot(mt, slots, offset):
++    ulong_type = utils.get_ulong_type()
++    return slots[offset].cast(ulong_type)
++
++def mtree_lookup_walk(mas):
++    ulong_type = utils.get_ulong_type()
++    n = mas.node
++
++    while True:
++        node = mte_to_node(n)
++        tp = mte_node_type(n)
++        pivots = ma_pivots(node, tp)
++        end = mt_pivots(tp)
++        offset = 0
++        while True:
++            if pivots[offset] >= mas.index:
++                break
++            if offset >= end:
++                break
++            offset += 1
++
++        slots = ma_slots(node, tp)
++        n = mt_slot(mas.tree, slots, offset)
++        if ma_dead_node(node) is True:
++            mas.reset()
++            return None
++            break
++
++        if ma_is_leaf(tp) is True:
++            break
++
++    return n
++
++def mtree_load(mt, index):
++    ulong_type = utils.get_ulong_type()
++    # MT_STATE(...)
++    mas = Mas(mt, index, index)
++    entry = None
++
++    while True:
++        entry = mas.start()
++        if mas.is_none():
++            return None
++
++        if mas.is_ptr():
++            if index != 0:
++                entry = None
++            return entry
++
++        entry = mtree_lookup_walk(mas)
++        if entry is None and mas.is_start():
++            continue
++        else:
++            break
++
++    if xarray.xa_is_zero(entry):
++        return None
++
++    return entry
+diff --git a/scripts/gdb/linux/xarray.py b/scripts/gdb/linux/xarray.py
+new file mode 100644
+index 000000000000..f4477b5def75
+--- /dev/null
++++ b/scripts/gdb/linux/xarray.py
+@@ -0,0 +1,28 @@
++# SPDX-License-Identifier: GPL-2.0
++#
++#  Xarray helpers
++#
++# Copyright (c) 2025 Broadcom
++#
++# Authors:
++#  Florian Fainelli <florian.fainelli@broadcom.com>
++
++import gdb
++
++from linux import utils
++from linux import constants
++
++def xa_is_internal(entry):
++    ulong_type = utils.get_ulong_type()
++    return ((entry.cast(ulong_type) & 3) == 2)
++
++def xa_mk_internal(v):
++    return ((v << 2) | 2)
++
++def xa_is_zero(entry):
++    ulong_type = utils.get_ulong_type()
++    return entry.cast(ulong_type) == xa_mk_internal(257)
++
++def xa_is_node(entry):
++    ulong_type = utils.get_ulong_type()
++    return xa_is_internal(entry) and (entry.cast(ulong_type) > 4096)
 -- 
-2.34.1
+2.43.0
 
