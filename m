@@ -1,49 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC5D32E0B6C;
-	Wed, 25 Jun 2025 19:06:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77DAE2E11AE;
+	Wed, 25 Jun 2025 19:07:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750878396; cv=none; b=KN28uGRkk5zcseMr3hl1nc4OREw8aTxPlYDlBZz2pfh6EvWmQmiDVZJnRToHlsuauFNvfbSNR2brUDOEOPMMsAfXZKJMpwqHmLC8fsMN+cycwJhFM/H8n2panykWk4AgZJrP5ER1bMGMO3DjBraASw+Wbbi6e8jH7LzL8yRhuc8=
+	t=1750878463; cv=none; b=TjeOIMeqXlOut/C80B0Dn2mAj0c7Ry0gp3vIfsh68qmw7dluPn2HTRp27gWIZsvAt7WUnxuG1jmmLcAL60LEmtdfqJEaJcakDJolanlcbkU+SzZt+kFOqi29w2XaNl6CQbvw0iKWNN2gyZTcz5kCEXlYhLLiB+zyRTdJBc6vmTM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750878396; c=relaxed/simple;
-	bh=mt41Fb0q1YhHKfjDtHyYRotEsd67rfLrbLZk+qxV9gA=;
+	s=arc-20240116; t=1750878463; c=relaxed/simple;
+	bh=NTjjLVl+LeSllJP6R1f53QYe43vLG0TwGoSH4vgeBpU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qiQYNa3IGMe3HJijgbaYS9Ycp7VsM7Jc7DlCYn3VNyOt/oVyyNEAIddXsGxaDpIIE7QyuvGwPhe7xQ+JTXYrTduwberrUyk0bultiiBzBYXYu9jYeWtejLE0l2A9e3P18v9RZrrzzNMHSDqXtHEDP5koOXG5mrkXMwtL0stkzMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cBIWj6da; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=C31JmDJgg6s0HsEe5mt2SflWDQajMuBRiiNta3ep+THFux0TNbBUYF9tSsLPM62hdFbQUzrjEE85cpWipgmIS+tzkB2Gy91ipfNWDErEInkBNtmvyzWL1huNT9eNMpV3WFb9jik9n4chUjy9DtF+65xlPuuG39q3OKZadAbcWBE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tnLTQT9X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cBIWj6da"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF815C4CEEA;
-	Wed, 25 Jun 2025 19:06:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tnLTQT9X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7745CC4CEEA;
+	Wed, 25 Jun 2025 19:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750878395;
-	bh=mt41Fb0q1YhHKfjDtHyYRotEsd67rfLrbLZk+qxV9gA=;
+	s=k20201202; t=1750878463;
+	bh=NTjjLVl+LeSllJP6R1f53QYe43vLG0TwGoSH4vgeBpU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cBIWj6daJ2/j7eMRSz1WZoK1fQzvuFIbKA3ujFVOwzwFQgQUFqRzb4VcI/0TzmRi1
-	 MQbK8UqQ6+wrYd03mjrTGw5QunO6u3fJv7XIqGo4REHjwJVmoC4FsonsRF+f49FB1o
-	 Qcc9662DGCUZjVJc+4CmJZ+ZvmbuAgOidrrSsdfAoNBaMcfXgEgtngQKc+DbgoO4f4
-	 HDGvy/v3iBv6jZH8P0oU4gs5s5LZe+3SJ2X0lgDObx2FLzYmT3dHpaQE5LqDWvwkKy
-	 iMrGDmDFZyR9l7ask/n02TT40PPBSKyfUaJx6tbPFoFg13B7F0d0r+7RXB+Ubv0BJP
-	 lNCjQgJv5rH1A==
-Date: Wed, 25 Jun 2025 14:06:34 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Frank Li <Frank.Li@nxp.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	devicetree@vger.kernel.org, imx@lists.linux.dev,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Conor Dooley <conor+dt@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH v3 1/1] dt-bindings: ieee802154: Convert at86rf230.txt
- yaml format
-Message-ID: <175087839356.2050766.5864325742697685736.robh@kernel.org>
-References: <20250606155638.1355908-1-Frank.Li@nxp.com>
+	b=tnLTQT9XyDCKDpGmH6TieOM5dQPInWDIgXpXHByydzTLNwqm1C3EX9AMWa5DjAuxW
+	 y/wnjIYacb/tCgGLuXP/8cwQYpCkW1eN4uPsIxUAJLUh8Frp60b+ZzSVnmh6BVnLZS
+	 u9RCORJJV7fWpihkmRjzUEa3m+bARSmow8P6HwObyFyxowoGiWRxwoBBl0MKQ+a0xG
+	 N5KMjkKPzYLRHNrXP4w3Q4KmRVbW7wBbHj6CUWyn89aJjWgyT6eGRyCTque+ahhzYC
+	 SYmg1BoTFRvaKDjhkfZGrQ4Z+rDprpAKqho3egcQ4jMBiDdTfMCiInFNKy01MAjoQi
+	 HxLxJb0Ewj8NQ==
+Date: Wed, 25 Jun 2025 21:07:38 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Vitaly Wool <vitaly.wool@konsulko.se>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org,
+	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>,
+	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] rust: support align and NUMA id in allocations
+Message-ID: <aFxI-rjvktSe3h8M@cassiopeiae>
+References: <20250625062917.3379804-1-vitaly.wool@konsulko.se>
+ <20250625063026.3379921-1-vitaly.wool@konsulko.se>
+ <aFxGQWG_81Peu7mP@cassiopeiae>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,31 +45,79 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250606155638.1355908-1-Frank.Li@nxp.com>
+In-Reply-To: <aFxGQWG_81Peu7mP@cassiopeiae>
 
+On Wed, Jun 25, 2025 at 08:56:05PM +0200, Danilo Krummrich wrote:
+> On Wed, Jun 25, 2025 at 08:30:26AM +0200, Vitaly Wool wrote:
+> > Add support for large (> PAGE_SIZE) alignments in Rust allocators
+> > (Kmalloc support for large alignments is limited to the requested
+> > size, which is a reasonable limitation anyway).
+> 
+> Please split this..
+> 
+> > Besides, add support for NUMA id to Vmalloc.
+> 
+> and this into separate patches.
+> 
+> Please also add some information to the commit message what you need node
+> support for. Do you also have patches to add node support to Box and Vec?
+> 
+> > 
+> > Signed-off-by: Vitaly Wool <vitaly.wool@konsulko.se>
+> > ---
+> >  rust/helpers/slab.c            |  8 +++++--
+> >  rust/helpers/vmalloc.c         |  4 ++--
+> >  rust/kernel/alloc.rs           | 28 ++++++++++++++++++++++--
+> >  rust/kernel/alloc/allocator.rs | 40 +++++++++++++++++++---------------
+> >  rust/kernel/alloc/kvec.rs      |  3 ++-
+> >  5 files changed, 59 insertions(+), 24 deletions(-)
+> > 
+> > diff --git a/rust/helpers/slab.c b/rust/helpers/slab.c
+> > index a842bfbddcba..221c517f57a1 100644
+> > --- a/rust/helpers/slab.c
+> > +++ b/rust/helpers/slab.c
+> > @@ -3,13 +3,17 @@
+> >  #include <linux/slab.h>
+> >  
+> >  void * __must_check __realloc_size(2)
+> > -rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
+> > +rust_helper_krealloc(const void *objp, size_t new_size, unsigned long align, gfp_t flags, int nid)
+> 
+> This should have a comment making it obvious why the function has two arguments
+> that are discarded. I think we should even separate it with an additional inline
+> function.
+> 
+> I do agree with discarding the align argument, given that it's not exposed to
+> users though the Allocator API.
 
-On Fri, 06 Jun 2025 11:56:33 -0400, Frank Li wrote:
-> Convert at86rf230.txt yaml format.
-> 
-> Additional changes:
-> - Add ref to spi-peripheral-props.yaml.
-> - Add parent spi node in examples.
-> 
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
-> change in v3
-> - add maximum: 0xf for xtal-trim
-> - drop 'u8 value ...' for xtal-trim's description
-> 
-> change in v2
-> - xtal-trim to uint8
-> ---
->  .../bindings/net/ieee802154/at86rf230.txt     | 27 --------
->  .../net/ieee802154/atmel,at86rf233.yaml       | 66 +++++++++++++++++++
->  2 files changed, 66 insertions(+), 27 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/net/ieee802154/at86rf230.txt
->  create mode 100644 Documentation/devicetree/bindings/net/ieee802154/atmel,at86rf233.yaml
-> 
+What I meant is that proper alignment is implied when krealloc() succeeds.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+> I do disagree with discarding the nid argument though, since you change the
+> generic Allocator::realloc() API to take a node argument, which for KREALLOC and
+> KVREALLOC is silently discarded. If we introduce it, we should do so for all
+> three allocators.
+> 
+> >  {
+> > +	if (WARN_ON(new_size & (align - 1)))
+> > +		return NULL;
+> 
+> I don't think we should have this WARN_ON(). If we want to warn about this, we
+> should already do so on the Rust side. The helper functions in this file should
+> not contain any logic.
+> 
+> >  	return krealloc(objp, new_size, flags);
+> >  }
+> >  
+> >  void * __must_check __realloc_size(2)
+> > -rust_helper_kvrealloc(const void *p, size_t size, gfp_t flags)
+> > +rust_helper_kvrealloc(const void *p, size_t size, unsigned long align, gfp_t flags, int nid)
+> >  {
+> > +	if (WARN_ON(size & (align - 1)))
+> > +		return NULL;
+> >  	return kvrealloc(p, size, flags);
+> >  }
+> 
+> Same as above.
 
+This is actually different though, here kvrealloc() may succeed even if the
+requested alignment is not fulfilled, so this is incorrect.
