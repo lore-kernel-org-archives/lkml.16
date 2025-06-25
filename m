@@ -1,95 +1,123 @@
-Received: from forward205a.mail.yandex.net (forward205a.mail.yandex.net [178.154.239.88])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E92C92609FE;
-	Wed, 25 Jun 2025 13:48:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.88
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F831F9F51
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750859323; cv=none; b=OMKMbf+glk0SPVqM0QuNLuz27/kv0uzQtlf9ntU/+rSk+febBrTAUjnIjrWBH3ZwGwKVZLrBkAZvmA1FjP+p2O6wIPTQE4gzwk/Du3RE3Cn5xUe6+TSKKqsLMifq3B/spL//kIe2YrD22X20oTOqf1PBmCxitwI0zqczu/es2rQ=
+	t=1750859373; cv=none; b=oETGK+Ku6AThK62w3XXbqeKBMLZZMift+cEnD9tqQzNw1vWPi2hVcOgAnXq5rw2YHXhBW/qIgp7bAR+0TgA7Qigs1lbg0F0mNmbjys/2NzTTU7dPk1baNN4mtXHz70Eg/lE+udAUOOaBbt+SVhIJXh/zadRwHYBE4j4pOnRZx3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750859323; c=relaxed/simple;
-	bh=DyWGO5uV4iCKw39gngTGRWlylzt8jhIu7LFkwE5ZtTQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Sny2igRCiqh5lQkqDfN+3N/a30nwtKvEsROSaDE1a+8oFpskLwyrQWesdJVD7gZG0PPESM+wAs2JeUSAh6KyCyCUjjzrFmT6WJ0pO5YdiZ9/2LCcA08hHV1jnthyqsVm6+EcoLH5GbpMBQHDBHHVS8n/5CfbWwdTkpVKOvifRTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=R0mqvmH1; arc=none smtp.client-ip=178.154.239.88
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
+	s=arc-20240116; t=1750859373; c=relaxed/simple;
+	bh=Ez3h2hcedkCPo5tU5X3TK6D6K7FlG6mpkgJxcG02l30=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=WNzq6pXyskugkueKfScPmC5P9IGnk8yGjewGgvT179h90/65z70kleM2r8B5Nb3DxoHQIemXTBPyiMYhfVRzBIkSB3pa93VH6/ZOfjkMWyGgpIBH96fMUQMiemWYmxtZa+8bxUlJ1vSC+me3OSbI/eptPDUFuQfGYsJVSXJ/VRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=HQu6sHKv; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="R0mqvmH1"
-Received: from forward100a.mail.yandex.net (forward100a.mail.yandex.net [IPv6:2a02:6b8:c0e:500:1:45:d181:d100])
-	by forward205a.mail.yandex.net (Yandex) with ESMTPS id 8BBC865E23;
-	Wed, 25 Jun 2025 16:43:08 +0300 (MSK)
-Received: from mail-nwsmtp-smtp-production-main-59.iva.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-59.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:90a4:0:640:a790:0])
-	by forward100a.mail.yandex.net (Yandex) with ESMTPS id E3F8C46DAE;
-	Wed, 25 Jun 2025 16:42:59 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-59.iva.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id lgUwmHwLk8c0-3DNayexY;
-	Wed, 25 Jun 2025 16:42:59 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1750858979;
-	bh=/JZa2/ArvXobd5bldiwnQiPtvCokwDkARdf/6PiesIk=;
-	h=Message-ID:Date:Cc:Subject:To:From;
-	b=R0mqvmH1n4uADigUZOnT/dFs7fn8NVPXt7ofLV6oZBzNzljMwVcvs2XLUrXdZINMp
-	 AbHXsh2nvezqLdGLT/v3V4YWv/zeaAJhbWnwddsma3w2JBFyPqPLvR4oG2XJ7W0RSL
-	 8pzZYGGGI6x1mM0ky01m55j0a4pG2rgjs7dHCU1E=
-Authentication-Results: mail-nwsmtp-smtp-production-main-59.iva.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-From: =?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
-To: rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ojeda@kernel.org,
-	alex.gaynor@gmail.com,
-	boqun.feng@gmail.com,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	aliceryhl@google.com,
-	tmgross@umich.edu,
-	dakr@kernel.org,
-	mattgilbride@google.com,
-	wedsonaf@gmail.com,
-	tamird@gmail.com,
-	daniel@sedlak.dev,
-	=?UTF-8?q?Onur=20=C3=96zkan?= <work@onurozkan.dev>
-Subject: [PATCH] rust: add fast path to `RBTree::find_mut` for empty tree
-Date: Wed, 25 Jun 2025 16:42:45 +0300
-Message-ID: <20250625134245.14505-1-work@onurozkan.dev>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HQu6sHKv"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250625134929euoutp01b341705f638a60b72163cc822bdc9e56~MTVHyeEBI2044120441euoutp01c
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:49:29 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250625134929euoutp01b341705f638a60b72163cc822bdc9e56~MTVHyeEBI2044120441euoutp01c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750859369;
+	bh=jet5Z3oHYs+Jf13HfgUgZVZFfowNJyNZZd5QLwXLsCI=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=HQu6sHKvhjbMr5lVaeA2ReHrbImqud2jLsnzmbuml9ACbzaa475kFfb4bRZhxtkjP
+	 wfTM9ksJ1g/EW7ECpOw0oD8J4CkvTPk35uwYRm2pD5qresCgjM2Ah9dhritgHugYhV
+	 7hcnLuPtoyD8WqwSCzTGcorGSLk89uvlduamNDPk=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250625134928eucas1p20116c6f28849c9efd79be3d1c9f83e6d~MTVG8cjqV2648326483eucas1p2s;
+	Wed, 25 Jun 2025 13:49:28 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250625134927eusmtip15bc8d3e11211e663cc281314615c3b89~MTVF7n4xZ1371313713eusmtip1E;
+	Wed, 25 Jun 2025 13:49:27 +0000 (GMT)
+Message-ID: <4e2e770a-0b94-4c73-a98d-ce14c3e3c364@samsung.com>
+Date: Wed, 25 Jun 2025 15:49:27 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 4/8] drm/imagination: Use pwrseq for TH1520 GPU power
+ management
+To: Matt Coster <Matt.Coster@imgtec.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bartosz
+	Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Frank
+	Binns <Frank.Binns@imgtec.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
+	Szyprowski <m.szyprowski@samsung.com>, Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <a265a20e-8908-40d8-b4e0-2c8b8f773742@imgtec.com>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250625134928eucas1p20116c6f28849c9efd79be3d1c9f83e6d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250623114433eucas1p1659c22d6696f3eb51d4169eee80b7cb2
+X-EPHeader: CA
+X-CMS-RootMailID: 20250623114433eucas1p1659c22d6696f3eb51d4169eee80b7cb2
+References: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
+	<CGME20250623114433eucas1p1659c22d6696f3eb51d4169eee80b7cb2@eucas1p1.samsung.com>
+	<20250623-apr_14_for_sending-v6-4-6583ce0f6c25@samsung.com>
+	<a265a20e-8908-40d8-b4e0-2c8b8f773742@imgtec.com>
 
-Adds a fast path to `RBTree::find_mut` that immediately returns `None`
-when the tree is empty.
 
-This should also benefit `RBTree::get_mut`, `RBTree::remove_node` and
-`RBTree::remove` functions as they rely on `find_mut` internally.
 
-Signed-off-by: Onur Özkan <work@onurozkan.dev>
----
- rust/kernel/rbtree.rs | 5 +++++
- 1 file changed, 5 insertions(+)
+On 6/24/25 15:53, Matt Coster wrote:
+> On 23/06/2025 12:42, Michal Wilczynski wrote:
+>> Update the Imagination PVR DRM driver to leverage the pwrseq framework
+>> for managing the power sequence of the GPU on the T-HEAD TH1520 SoC.
+>>
+>> To cleanly handle the TH1520's specific power requirements in the
+>> generic driver, this patch implements the "driver match data" pattern.
+>> The pvr_soc_data struct, associated with a compatible string in the
+>> of_device_id table, now holds pointers to platform-specific power_on and
+>> power_off functions.
+>>
+>> At probe time, the driver inspects the assigned power_on function
+>> pointer. If it points to the pwrseq variant, the driver calls
+>> devm_pwrseq_get("gpu-power"), requiring a valid sequencer and deferring
+>> probe on failure. Otherwise, it falls back to its standard manual reset
+>> initialization.
+>>
+>> The runtime PM callbacks, pvr_power_device_resume() and
+>> pvr_power_device_suspend(), call the power_on and power_off function
+>> pointers. Helper functions for both manual and pwrseq-based sequences
+>> are introduced to support this.
+> 
+> Hi Michal,
+> 
+> My apologies for not responding to previous revisions of this series. In
+> general, my main earlier complaints were already addressed by others and
+> the series generally looks good to me.
+> 
+> Just a few notes from me in this and subsequent patches.
+> 
+>>
 
-diff --git a/rust/kernel/rbtree.rs b/rust/kernel/rbtree.rs
-index 8d978c896747..a9b79b22ea32 100644
---- a/rust/kernel/rbtree.rs
-+++ b/rust/kernel/rbtree.rs
-@@ -365,6 +365,11 @@ pub fn entry(&mut self, key: K) -> Entry<'_, K, V> {
+Thanks for the feedback.
 
-     /// Used for accessing the given node, if it exists.
-     pub fn find_mut(&mut self, key: &K) -> Option<OccupiedEntry<'_, K, V>> {
-+        // Fast path: return `None` when tree is empty.
-+        if self.root.rb_node.is_null() {
-+            return None;
-+        }
-+
-         match self.raw_entry(key) {
-             RawEntry::Occupied(entry) => Some(entry),
-             RawEntry::Vacant(_entry) => None,
---
-2.50.0
+I will send an updated revision based on the linux-next and skip patches
+that have already been applied to Ulf's and Bartosz's trees.
 
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
