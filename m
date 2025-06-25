@@ -1,103 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15CB2690D9;
-	Wed, 25 Jun 2025 13:16:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A7C262FF5
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:16:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750857365; cv=none; b=iFokQ1YvSMl6V9gttmuJZeDl83Cx63hNH3o8gMouTdY+Bu8SfBWQ15kuZ7UaB5BLl9X4Zpb7jWLB75yEdmL75tcbOBXohhXYuK/Buzal+ZxWbe3Y7AQlQgGTshxouN+Bjn0oOWrWbymR400Nh6jWEuludWvBGckyo8h3BQaKzl0=
+	t=1750857372; cv=none; b=JGC+Gz70QhRoVnKWnLTB7MU5cJjK9W/nuMjPs6i8b+DfKcsSvNjUyg7csoyAnd8yR7hZVN5aaid8iN4bu608MRUePtjSfPMbT7e53R9bFHHPkw2sA67ITUZb3PAnzhs+ECiAJSFAHmQ3795+hagjlXaxkrcn4PeTUZxOq364mW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750857365; c=relaxed/simple;
-	bh=47+rWBkW5T9ldh2nVz1QhH5OlPRIa49bdi0RnHpxrJg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NO8nAOGEKQDu0bceynWwdwBPIu8fe06CGZJ6ZKUC9soAbvVaA+KTa/2Kp08oS9Kgo9Y9BbFaReD8cbJOrpeI17RralN/AYVlGgYnuITXcyNKsbndJIDOzwT3Gbo1ilnlXqihNj3+rktSGtR+UjDLkAHx16KNb0xzJs8HygONMYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G6clDI6u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750857372; c=relaxed/simple;
+	bh=QHCB4urdBJBIlkKBAKRhwgC29BeTmZl9cL0tpXDUwa8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=p/0Ge30WleipMUfvdVHMZvMJt6//QLfKQApQr3K0wxA5u4wvCNSp+gJRQvpZNGkhoQEeqDevI/AChZaOzwHHciti51lF5ilX4y/C066e+YoKcZYvZvrnfDaa/Q9X8poikTUwBQnpSeeaKqGk2Q9fWDqHT7OV8x9oPwfYWJ/6B2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/VBU0pG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G6clDI6u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56660C4CEEA;
-	Wed, 25 Jun 2025 13:16:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/VBU0pG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5159AC4CEEA;
+	Wed, 25 Jun 2025 13:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750857364;
-	bh=47+rWBkW5T9ldh2nVz1QhH5OlPRIa49bdi0RnHpxrJg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=G6clDI6uglgTscVNsSEyVq1VgDkkZSq6qTwx3X58T2ENqGSO780wRagTtNexP10OT
-	 Bq9EjQt8y64thrAPRiVzE9sfYWDRn/oM0ad4UXLvHT/D3c8k1wXgKIuLQ6pf8f35ss
-	 iZTEs8Dn6hHacrecfqwn6vy5Qnlg10cZUiKoyAKrj4M0tU/f+GNJxds6VHaZc6odvS
-	 Xvh+vNqsZs2OInTtrsMSu47g+AZiWGA0O+dk9baAdPKDpmfpPcXh9ScHTXKt6tSmc2
-	 Cst3A920d4vuz3GMA973XkbaKzTPmqCqWPqKjBsu0fvOp29pA6MvSiMLJSgJek6u0j
-	 FdBxwEpDWQnPg==
-From: Will Deacon <will@kernel.org>
-To: linux-kernel@vger.kernel.org
-Cc: Will Deacon <will@kernel.org>,
-	Keir Fraser <keirf@google.com>,
-	Steven Moreland <smoreland@google.com>,
-	Frederick Mayle <fmayle@google.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	netdev@vger.kernel.org,
-	virtualization@lists.linux.dev
-Subject: [PATCH 5/5] vhost/vsock: Allocate nonlinear SKBs for handling large transmit buffers
-Date: Wed, 25 Jun 2025 14:15:43 +0100
-Message-Id: <20250625131543.5155-6-will@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250625131543.5155-1-will@kernel.org>
-References: <20250625131543.5155-1-will@kernel.org>
+	s=k20201202; t=1750857371;
+	bh=QHCB4urdBJBIlkKBAKRhwgC29BeTmZl9cL0tpXDUwa8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A/VBU0pGHjMKELm3AvbBCE/4TmjsNJhGDH/8fkYu08vkCdNYlEyY5S5q+e+qu1Smd
+	 W/P5zKhihcUlB13sB+VvLTNWUv+jR4MN9eBhfSDfHqIbPAoq8rqEPsXENA6F6DV2vK
+	 KhyKl3eeEi4XCfDt3+NwKm9f5rJnUihDj8kHMjd1csOjadQNMcG1P98St2x6uRlDK+
+	 pVSnkLL1CigJOEKcIbgxqyjw991d49tyq4Cu8Af605hZy+YvBfjDkXFCyvJSj2GkfV
+	 5OP59OjahJPMX25j/EiLUERqFjVRigUuI01v66nNEIBJ6YZuo6gqQGrLr0XyyN7BJl
+	 l3gvX/Ce46a9Q==
+Date: Wed, 25 Jun 2025 15:16:08 +0200
+From: Frederic Weisbecker <frederic@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
+	Anna-Maria Behnsen <anna-maria@linutronix.de>,
+	Waiman Long <longman@redhat.com>
+Subject: Re: [PATCH v6 6/6] timers: Exclude isolated cpus from timer migation
+Message-ID: <aFv2mLdH3lNHdKtp@localhost.localdomain>
+References: <20250530142031.215594-1-gmonaco@redhat.com>
+ <20250530142031.215594-7-gmonaco@redhat.com>
+ <875xgqqrel.ffs@tglx>
+ <b33dcafca895da1d9c64a7d6ab771952a932e579.camel@redhat.com>
+ <878qlhnunz.ffs@tglx>
+ <1bc41a7a5bd46860318b0417fa27121758f28448.camel@redhat.com>
+ <aFq7rqbHugtiWF6Z@localhost.localdomain>
+ <87a55waylv.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <87a55waylv.ffs@tglx>
 
-When transmitting a vsock packet, virtio_transport_send_pkt_info() calls
-virtio_transport_alloc_skb() to allocate and fill SKBs with the transmit
-data. Unfortunately, these are always linear allocations and can
-therefore result in significant pressure on kmalloc() considering that
-the maximum packet size (VIRTIO_VSOCK_MAX_PKT_BUF_SIZE +
-VIRTIO_VSOCK_SKB_HEADROOM) is a little over 64KiB, resulting in a 128KiB
-allocation for each packet.
+Le Wed, Jun 25, 2025 at 12:45:32PM +0200, Thomas Gleixner a écrit :
+> On Tue, Jun 24 2025 at 16:52, Frederic Weisbecker wrote:
+> > Le Tue, Jun 24, 2025 at 04:06:41PM +0200, Gabriele Monaco a écrit :
+> >> Right, but as far as I understood, the first call to 
+> >> tmigr_set_cpu_available() happens after the isolcpus parameter has been
+> >> parsed so we know at least cpu0 is going to be isolated.
+> >> 
+> >> On my machine it works reliably this way. I'm a bit lost in the init
+> >> code but seeing housekeeping_init() before rcu_init(), which in turn
+> >> should be required for some RCU-related early_initcalls, makes me
+> >> believe this order is guaranteed to be respected.
+> >> Or am I missing something?
+> >
+> > Right I think you need to keep those checks because if CPU 0 is isolcpus
+> > and CPU 5 is nohz_full, CPU 0 will become later the timekeeper and must stay
+> > in the tmigr hierarchy.
+> >
+> > OTOH if CPU 0 is isolcpus and there is no nohz_full CPUs, then CPU 0 doesn't
+> > want to go to the hierarchy.
+> >
+> > cpuset isolated partitions are different because they issue SMP calls whereas
+> > isolcpus is defined on boot.
+> >
+> > An alternative for isolcpus could be to make a late initcall and do the smp
+> > calls from there just like is done for cpusets.
+> 
+> There is zero reason for isolcpus and nohz full muck to be
+> active/evaluated during early boot. That's all irrelevant and just
+> complicates things further.
+> 
+> Can we please clean this up and make it a sensible design instead of
+> duct taping new functionality into it in completely incomprehensible
+> ways?
+> 
+> Especially under the aspect that all this should become run-time
+> modifyable. That requires a run-time switch mechanism anyway, so the
+> obvious design choice is to utilize that run-time switch late in the
+> boot sequence to set this stuff up before user space starts and leave
+> the boot process alone and simple.
+> 
+> The KISS principle applies here fully.
 
-Rework the vsock SKB allocation so that, for sizes with page order
-greater than PAGE_ALLOC_COSTLY_ORDER, a nonlinear SKB is allocated
-instead with the packet header in the SKB and the transmit data in the
-fragments.
+Ok so the late initcall should work.
 
-Signed-off-by: Will Deacon <will@kernel.org>
----
- net/vmw_vsock/virtio_transport_common.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Thanks.
 
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-index 1b5d9896edae..424eb69e84f9 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -109,7 +109,8 @@ static int virtio_transport_fill_skb(struct sk_buff *skb,
- 		return __zerocopy_sg_from_iter(info->msg, NULL, skb,
- 					       &info->msg->msg_iter, len, NULL);
- 
--	return memcpy_from_msg(skb_put(skb, len), info->msg, len);
-+	virtio_vsock_skb_put(skb);
-+	return skb_copy_datagram_from_iter(skb, 0, &info->msg->msg_iter, len);
- }
- 
- static void virtio_transport_init_hdr(struct sk_buff *skb,
-@@ -261,7 +262,11 @@ static struct sk_buff *virtio_transport_alloc_skb(struct virtio_vsock_pkt_info *
- 	if (!zcopy)
- 		skb_len += payload_len;
- 
--	skb = virtio_vsock_alloc_skb(skb_len, GFP_KERNEL);
-+	if (skb_len > SKB_WITH_OVERHEAD(PAGE_SIZE << PAGE_ALLOC_COSTLY_ORDER))
-+		skb = virtio_vsock_alloc_skb_with_frags(skb_len, GFP_KERNEL);
-+	else
-+		skb = virtio_vsock_alloc_skb(skb_len, GFP_KERNEL);
-+
- 	if (!skb)
- 		return NULL;
- 
 -- 
-2.50.0.714.g196bf9f422-goog
-
+Frederic Weisbecker
+SUSE Labs
