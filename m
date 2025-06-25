@@ -1,169 +1,264 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2987D3F4;
-	Wed, 25 Jun 2025 17:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53352284670
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750871534; cv=none; b=niVKv/HMvnrTpwWML0qakSxU/uCef93xw6mfK0YF5B6oD90OmWHkpr2ezfPZUBe6NWhvcw6xu5bgx3IIO0/BwLHAwOlCNUUaz8tlOpwwz4HrHk8tyhVT7/gdeJ3/zvRgC8Nx5UZfxBasTghNvGnRuKY30MiaA4xsLIwph1K+X/s=
+	t=1750871542; cv=none; b=oCS1vbAMgYKqhkQfdOhQiGT488yBTrj+XY8JHEHnrM8z2/r+cA5hk6VAcwONRfJSXySefPVluXzK6ZNYBGI1cNDqwOgceI6EeFxvIIkFnhkhmn3A2iWgLS+X+i3Av+WjnV4mBGNHWPo28D0cCAd1KdBN/aVCyU/+JZhHOdJKzYc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750871534; c=relaxed/simple;
-	bh=YaeCqA31K3Ilmu3te7dK2oKu8g5ZeoTHNuNZ16Qh2Zs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=OU4wSK1OpRLdICenvWsCfhJui6dibXh7DaoXZLsRWUyMGm6GB4X+gbpKu9H0yj6tOPniaAaT06i/ePKU6+y06gxd4oefwJDnOBkfptPzUUIhNJjy/1/hZfH+JMyJL6EdXmYvUVDzg5n+/CMILg5lwUFMwWDAxg5lWwLohSaGqxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=P+4L+PEG; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1750871542; c=relaxed/simple;
+	bh=pqkIDhr4yYMMYnY/+fSGhDZ1uE7lj3oqlLUoR8xcxtw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B1Iv3N9WuE6gVJBM+/nHnXZYp2Jivp1sPqd46GZTS+ivihp4JZSBMh4Go2jDUj5cVaO98DflU1lPUgQQaE4h2PRsQGyhezjdaE8FbmmIiPnAcRmVpAuzHsm3MThw74Cn/zWpR+bGgEsgy3mmD9NOLEha3mtSpdSW2jZ2/NEUN0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bYQKCNnc; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="P+4L+PEG"
-Received: from lelvem-sh01.itg.ti.com ([10.180.77.71])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTP id 55PHC5752238235;
-	Wed, 25 Jun 2025 12:12:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1750871525;
-	bh=k3+4eTElymS85z7iOFtGbKaOKqZschF1hFgFwnsrxMo=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=P+4L+PEGKGmlph+Qb6zeL9hfzVBCyrQIaMPEmM/oN7vtgXBkOo94d98lM0kjGfiDj
-	 7ouAOnjCI7lx3qpRQKCxh4VFnA0TckKBbdQ8oIdIj5lvL/7Swze1OBtZToXl9hOCYJ
-	 SzMhvs22IPXSqYUTP2eJT5qRqYcVjsYVd/82kz5Y=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-	by lelvem-sh01.itg.ti.com (8.18.1/8.18.1) with ESMTPS id 55PHC4K72770384
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-SHA256 bits=128 verify=FAIL);
-	Wed, 25 Jun 2025 12:12:05 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55; Wed, 25
- Jun 2025 12:12:04 -0500
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.55 via
- Frontend Transport; Wed, 25 Jun 2025 12:12:04 -0500
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 55PHC3tD3742857;
-	Wed, 25 Jun 2025 12:12:03 -0500
-Message-ID: <a6d77856-cf9a-48f4-a66c-d124752b5f64@ti.com>
-Date: Wed, 25 Jun 2025 12:12:03 -0500
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bYQKCNnc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750871539;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SpMWnzwEQrz5g7Z8QpxeuZOo0PQWHqBUbD3/9JCskzM=;
+	b=bYQKCNncpPqWJdHWTmSIeYuZ4PUqkTB24W4xXs8rwQoINWHr0p+K2pi0wmnWH85Wg9ed8J
+	93HljySfV/ATKlZJnWCzotcZJDFchoWVtU8XCV5/5Eo0ZqOPF92F2O0f+p2/INcLu5ccjA
+	r1h0dwHPVlhm482Zo6rv6jcL8aXoSCM=
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
+ [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-214-MgZJjIanMYCgjdmif61L6g-1; Wed, 25 Jun 2025 13:12:17 -0400
+X-MC-Unique: MgZJjIanMYCgjdmif61L6g-1
+X-Mimecast-MFC-AGG-ID: MgZJjIanMYCgjdmif61L6g_1750871537
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d09bc05b77so10869985a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:12:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750871537; x=1751476337;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SpMWnzwEQrz5g7Z8QpxeuZOo0PQWHqBUbD3/9JCskzM=;
+        b=Bai6uxdyIWkuUbvhtV2MIUbHpxqUN4OMv2hKtnK+BwWpORpDjNe9K4Lhoy/Bs1yhPY
+         XMkbIaS0Tn0h1BfgGQ5ahSrKiRbi51O+HPKXOBj1QSUzKoFz9RSGIv5eW04jjYGK/CCV
+         5bIu9VwFC6HflhrLCrYiIZO05HjMElfXXWbURosLe5k//ORzAi8gOY+ilWsEoFR4TQpm
+         zI06m+LaApE6Z+BcTxGyNbGXe4CuPn21AkhtbWpbR1epj+bwTv7eryRJdztOWYGyjfvn
+         UjlmnzFt/RzTss3ZQTEZB5oKjpjJmxH1TiCx/8u5T52Xb15lJjXi0t/JP1AalFngCiby
+         jVeg==
+X-Forwarded-Encrypted: i=1; AJvYcCU9TTZWgU4E6gZceSU7S3+jskGoOh01bRepaUMb7/3iAcW//pBNZogs+SDCN1lBArVx7hna7ckd46L5V8o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxuRDD5pMQbzwGhm1+UldBsCs32huPAG/k5ZUxalwnhOevtrp9m
+	cpep9ggC5E7s/9dg+ryKPv9yJrFtm6iRRJa7Lxk5WCTSRFP/Z0+2T5xpcSVXDc7sIyLJz7v5xGM
+	XQahF8A61lMQhzY/u2Dd1Ciio7WWjuUFG6/Yk4zB1RbuVqQE3f9CIpbUJ0AREEKrjZA==
+X-Gm-Gg: ASbGncuEw0XrSj7Y7lU06ywCGimMO1Psl2+7sxzZIcaEOEt7OZO9TtDmEJfcKS9X66P
+	dJ6VVDzF/VoRph+wV4ONJ8k2tEH9DTS/httzuWhsOGiPh3LzEE3koDb0eWvDE9pbZ7l1BD6m0Vp
+	xQ/V9makFH2PRpJecmRu09riXQHjUkANq33yk7RyUckYgWOIgnFam0ySiUPtiVfYPjJdCREXZia
+	lf9fLE32hW/NH1Fcrfs0MqOPe6rdx8jQ1PLUUKublDT+oe6aYuQnfJ1X8LQLcFTID2gc+fSfRWF
+	OzeCf7zGtAgC4g==
+X-Received: by 2002:a05:620a:4893:b0:7cc:aedc:d0c1 with SMTP id af79cd13be357-7d429679b10mr490569585a.5.1750871536981;
+        Wed, 25 Jun 2025 10:12:16 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHyrt+UA8j4eJN5Kl/iuZzYbNEyvfMEcAUbDYG7hfuDyGNjFN3bqqLY7ZZU1ZAyKHWHlsX1Fg==
+X-Received: by 2002:a05:620a:4893:b0:7cc:aedc:d0c1 with SMTP id af79cd13be357-7d429679b10mr490563685a.5.1750871536438;
+        Wed, 25 Jun 2025 10:12:16 -0700 (PDT)
+Received: from x1.local ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d41d5ffcfcsm259507785a.68.2025.06.25.10.12.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 10:12:15 -0700 (PDT)
+Date: Wed, 25 Jun 2025 13:12:11 -0400
+From: Peter Xu <peterx@redhat.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+	Alex Williamson <alex.williamson@redhat.com>,
+	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
+	David Hildenbrand <david@redhat.com>,
+	Nico Pache <npache@redhat.com>
+Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
+ mappings
+Message-ID: <aFwt6wjuDzbWM4_C@x1.local>
+References: <aFLvodROFN9QwvPp@x1.local>
+ <20250618174641.GB1629589@nvidia.com>
+ <aFMQZru7l2aKVsZm@x1.local>
+ <20250619135852.GC1643312@nvidia.com>
+ <aFQkxg08fs7jwXnJ@x1.local>
+ <20250619184041.GA10191@nvidia.com>
+ <aFsMhnejq4fq6L8N@x1.local>
+ <20250624234032.GC167785@nvidia.com>
+ <aFtHbXFO1ZpAsnV8@x1.local>
+ <20250625130711.GH167785@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] rpmsg: char: Export alias for RPMSG ID rpmsg-raw from
- table
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-CC: Bjorn Andersson <andersson@kernel.org>, Hari Nagalla <hnagalla@ti.com>,
-        Beleswar Padhi <b-padhi@ti.com>, <linux-remoteproc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250619205722.133827-1-afd@ti.com> <aFwgQJ8B7EcjM1q7@p14s>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <aFwgQJ8B7EcjM1q7@p14s>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250625130711.GH167785@nvidia.com>
 
-On 6/25/25 11:13 AM, Mathieu Poirier wrote:
-> Good day,
+On Wed, Jun 25, 2025 at 10:07:11AM -0300, Jason Gunthorpe wrote:
+> On Tue, Jun 24, 2025 at 08:48:45PM -0400, Peter Xu wrote:
+> > > My feeling, and the reason I used the phrase "pgoff aligned address",
+> > > is that the owner of the file should already ensure that for the large
+> > > PTEs/folios:
+> > >  pgoff % 2**order == 0
+> > >  physical % 2**order == 0
+> > 
+> > IMHO there shouldn't really be any hard requirement in mm that pgoff and
+> > physical address space need to be aligned.. but I confess I don't have an
+> > example driver that didn't do that in the linux tree.
 > 
-> On Thu, Jun 19, 2025 at 03:57:22PM -0500, Andrew Davis wrote:
->> Module aliases are used by userspace to identify the correct module to
->> load for a detected hardware. The currently supported RPMSG device IDs for
->> this module include "rpmsg-raw", but the module alias is "rpmsg_chrdev".
->>
->> Use the helper macro MODULE_DEVICE_TABLE(rpmsg) to export the correct
->> supported IDs. And while here, to keep backwards compatibility we also add
->> the other ID "rpmsg_chrdev" so that it is also still exported as an alias.
->>
->> This has the side benefit of adding support for some legacy firmware
->> which still uses the original "rpmsg_chrdev" ID. This was the ID used for
->> this driver before it was upstreamed (as reflected by the module alias).
+> Well, maybe, but right now there does seem to be for
+> THP/hugetlbfs/etc. It is a nice simple solution that exposes the
+> alignment requirements to userspace if it wants to use MAP_FIXED.
 > 
-> I was surprised to receive this patch - my question from almost a year back is
-> still pending.
+> > > To me this just keeps thing simpler. I guess if someone comes up with
+> > > a case where they really can't get a pgoff alignment and really need a
+> > > high order mapping then maybe we can add a new return field of some
+> > > kind (pgoff adjustment?) but that is so weird I'd leave it to the
+> > > future person to come and justfiy it.
+> > 
+> > When looking more, I also found some special cased get_unmapped_area() that
+> > may not be trivially converted into the new API even for CONFIG_MMU, namely:
+> > 
+> > - io_uring_get_unmapped_area
+> > - arena_get_unmapped_area (from bpf_map->ops->map_get_unmapped_area)
+> > 
+> > I'll need to have some closer look tomorrow.  If any of them cannot be 100%
+> > safely converted to the new API, I'd also think we should not introduce the
+> > new API, but reuse get_unmapped_area() until we know a way out.
 > 
-
-I answered[0] your question and never received any follow up questions so I had
-assumed the answer was satisfactory.
-
->>
->> Signed-off-by: Andrew Davis <afd@ti.com>
->> Acked-by: Hari Nagalla <hnagalla@ti.com>
->> Tested-by: Hari Nagalla <hnagalla@ti.com>
->> ---
->>
->> Changes for v2:
->>   - Rebased on v6.16-rc1
->>   - Added Acked/Tested-by
->>
->> [v1] https://www.spinics.net/lists/linux-remoteproc/msg18959.html
->>
->>   drivers/rpmsg/rpmsg_char.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
->> index eec7642d26863..96fcdd2d7093c 100644
->> --- a/drivers/rpmsg/rpmsg_char.c
->> +++ b/drivers/rpmsg/rpmsg_char.c
->> @@ -522,8 +522,10 @@ static void rpmsg_chrdev_remove(struct rpmsg_device *rpdev)
->>   
->>   static struct rpmsg_device_id rpmsg_chrdev_id_table[] = {
->>   	{ .name	= "rpmsg-raw" },
->> +	{ .name	= "rpmsg_chrdev" },
->>   	{ },
->>   };
->> +MODULE_DEVICE_TABLE(rpmsg, rpmsg_chrdev_id_table);
+> Oh yuk. It is trying to avoid the dcache flush on some kernel paths
+> for virtually tagged cache systems.
 > 
-> ... and I still don't understand why this patch is needed.  What is broken that
-> this patch fixes?
+> Arguably this fixup should not be in io_uring, but conveying the right
+> information to the core code, and requesting a special flush
+> avoidance mapping is not so easy.
+
+IIUC it still makes sense to be with io_uring, because only io_uring
+subsystem knows what to align against.  I don't yet understand how generic
+mm can do this, after all generic mm doesn't know the address that io_uring
+is using (from io_region_get_ptr()).
+
 > 
-
-Today when this driver is built as a module it does not automatically load
-when a matching firmware is started. You can see examples of documentation
-working around this by manually loading it[1] and even applications
-attempting the same in code[2]. This should not be needed. Here is why
-this happens and how this patch fixes it:
-
-A given firmware that makes use of this driver will have one of two
-RPMSG device IDs: "rpmsg-raw" or "rpmsg_chrdev". Let's look at each in
-turn:
-
-If the ID is "rpmsg_chrdev" then this driver module will be loaded into
-the kernel (that is what the MODULE_ALIAS line below did). But it will
-not cause the driver module to probe, as probe is triggered by a match
-in the above rpmsg_device_id table.
-
-If the ID is "rpmsg-raw" then this driver module will probe with the
-firmware, but only if this driver module was already loaded into the
-kernel, or was built-in to the kernel.
-
-By adding "rpmsg_chrdev" to the table we make this driver probe for
-firmware with that ID. And by adding MODULE_DEVICE_TABLE we make both
-IDs trigger the module to be loaded if it has not been already.
-
-This patch makes it so both IDs do both needed actions. Where before
-each ID would only do one action, but not the other.
-
-Andrew
-
-[0] https://www.spinics.net/lists/linux-remoteproc/msg19814.html
-[1] https://github.com/OpenAMP/openamp-system-reference/blob/main/examples/linux/rpmsg-mat-mul/README.md?plain=1#L42
-[2] https://github.com/Xilinx/meta-openamp/blob/master/recipes-openamp/rpmsg-examples/rpmsg-mat-mul/mat_mul_demo.c#L306
-
-> Thanks,
-> Mathieu
+> But again I suspect the pgoff is the right solution.
 > 
->>   
->>   static struct rpmsg_driver rpmsg_chrdev_driver = {
->>   	.probe = rpmsg_chrdev_probe,
->> @@ -565,6 +567,5 @@ static void rpmsg_chrdev_exit(void)
->>   }
->>   module_exit(rpmsg_chrdev_exit);
->>   
->> -MODULE_ALIAS("rpmsg:rpmsg_chrdev");
->>   MODULE_DESCRIPTION("RPMSG device interface");
->>   MODULE_LICENSE("GPL v2");
->> -- 
->> 2.39.2
->>
+> IIRC this is handled by forcing a few low virtual address bits to
+> always match across all user mappings (the colour) via the pgoff. This
+> way the userspace always uses the same cache tag and doesn't become
+> cache incoherent. ie:
+> 
+>    user_addr % PAGE_SIZE*N == pgoff % PAGE_SIZE*N
+> 
+> The issue is now the kernel is using the direct map and we can't force
+
+After I read the two use cases, I mostly agree.  Just one trivial thing to
+mention, it may not be direct map but vmap() (see io_region_init_ptr()).
+
+> a random jumble of pages to have the right colours to match
+> userspace. So the kernel has all those dcache flushes sprinkled about
+> before it touches user mapped memory through the direct map as the
+> kernel will use a different colour and cache tag.
+> 
+> So.. if iouring selects a pgoff that automatically gives the right
+> colour for the userspace mapping to also match the kernel mapping's
+> colour then things should just work.
+> 
+> Frankly I'm shocked that someone invested time in trying to make this
+> work - the commit log says it was for parisc and only 2 years ago :(
+> 
+> d808459b2e31 ("io_uring: Adjust mapping wrt architecture aliasing requirements")
+> 
+> I thought such physically tagged cache systems were long ago dead and
+> buried..
+
+Yeah.. internet says parisc stopped shipping since 2005.  Obviously
+there're still people running io_uring on parisc systems, more or less.
+This change seems to be required to make io_uring work on parisc or any
+vipt.
+
+> 
+> Shouldn't this entirely reject MAP_FIXED too?
+
+It already does, see (io_uring_get_unmapped_area(), of parisc):
+
+	/*
+	 * Do not allow to map to user-provided address to avoid breaking the
+	 * aliasing rules. Userspace is not able to guess the offset address of
+	 * kernel kmalloc()ed memory area.
+	 */
+	if (addr)
+		return -EINVAL;
+
+I do not know whoever would use MAP_FIXED but with addr=0.  So failing
+addr!=0 should literally stop almost all MAP_FIXED already.
+
+Side topic, but... logically speaking this should really be fine when
+!SHM_COLOUR.  This commit should break MAP_FIXED for everyone on io_uring,
+but I guess nobody really use MAP_FIXED for io_uring fds..
+
+It's also utterly confusing to set addr=ptr for parisc, fundamentally addr
+here must be a kernel va not user va, so it'll (AFAIU) 100% fail later with
+STACK_SIZE checks..  IMHO we should really change this to:
+
+diff --git a/io_uring/memmap.c b/io_uring/memmap.c
+index 725dc0bec24c..1225a9393dc5 100644
+--- a/io_uring/memmap.c
++++ b/io_uring/memmap.c
+@@ -380,12 +380,10 @@ unsigned long io_uring_get_unmapped_area(struct file *filp, unsigned long addr,
+         */
+        filp = NULL;
+        flags |= MAP_SHARED;
+-       pgoff = 0;      /* has been translated to ptr above */
+ #ifdef SHM_COLOUR
+-       addr = (uintptr_t) ptr;
+-       pgoff = addr >> PAGE_SHIFT;
++       pgoff = (uintptr_t)ptr >> PAGE_SHIFT;
+ #else
+-       addr = 0UL;
++       pgoff = 0;      /* has been translated to ptr above */
+ #endif
+        return mm_get_unmapped_area(current->mm, filp, addr, len, pgoff, flags);
+ }
+
+And avoid the confusing "addr=ptr" setup.  This might be too off-topic,
+though.
+
+Then I also looked at the other bpf arena use case, which doubled the len
+when requesting VA and does proper round ups for 4G:
+
+arena_get_unmapped_area():
+	ret = mm_get_unmapped_area(current->mm, filp, addr, len * 2, 0, flags);
+        ...
+	return round_up(ret, SZ_4G);
+
+AFAIU, this is buggy.. at least we should check "round_up(ret, SZ_4G)"
+still falls into the (ret, ret+2*len) region... or AFAIU we can return some
+address that might be used by other VMAs already..
+
+But in general that smells like a similar alignment issue, IIUC.  So might
+be applicable for the new API.
+
+Going back to the topic of this series - I think the new API would work for
+io_uring and parisc too if I can return phys_pgoff, here what parisc would
+need is:
+
+#ifdef SHM_COLOUR
+        *phys_pgoff = io_region_get_ptr(..) >> PAGE_SHIFT;
+#else
+        *phys_pgoff = pgoff;
+#endif
+
+Here *phys_pgoff (or a rename) would be required to fetch the kernel VA (no
+matter direct mapping or vmap()) offset, to avoid aliasing issue.
+
+Should I go and introduce the API with *phys_pgoff returned together, then?
+I'll still need to scratch my head on how to properly define it, but it at
+least will also get vfio use case decouple with spec dependency.
+
+Thanks,
+
+-- 
+Peter Xu
+
