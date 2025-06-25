@@ -1,54 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1FBC1CAA7B;
-	Wed, 25 Jun 2025 18:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9E91CAA7B;
+	Wed, 25 Jun 2025 18:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750877769; cv=none; b=A8qBfwJ9GH0yFSBIf0ykcRfC1ft9hlHylkehLbvqA5ijbPVvUh92rvjtiFfzjtT60lvBYoO84HNrZ4MP5M4v/BWcrOJ3TbZURw4I/l9vzMJH+Zzk4EU+X8wbpmVyfyBSRmRpH6AW0Ky62OmeikrQ3BUF2oOhevPXhTq3zpadl9k=
+	t=1750877818; cv=none; b=rIjsS3gYSrs8fQbizw3SphVp+gUg6p8vc6k8Kdnj5LCifq5iVxeQ247nsAQGkobe3TGTSm/7ghhfkXV9hPJDqCVihkZ79ArfrfZVqcVFtyeCrLZSTVEsU7XK7XMzE4H1rsRnnYpwjnyhjPC2Ds+QKfVFXPchF89rBZQyZn9jzF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750877769; c=relaxed/simple;
-	bh=6xdnTIn9JsUPsSYNpRZM+JxKZeDZmlbySNAsX2t+WTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ou7V+M4w+0VrpHIjlkb4ssZCRyusQ0qGztpBoSwhDiwKmDZ89aiXYbhEeUtXay1u1KSk4Qxbfrj71kJcvoXNHqquhzMWR8w1xfbd+61fVN/se8PULGkw36yMcvICNzvE5scT+GbjzX7SqXvZCeMKmNSw6M/4RaKNlUQo2T05lh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gff5cji2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750877818; c=relaxed/simple;
+	bh=pAJn+E8Fw6rpPtJHLwOdSAsmjfHdVW9rBS7PDzny0P0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ai3/mJ1esK01B//KBhYl1YUjOUT1cSVS46qXn7V4UNyLBLET3YtTDBlEduwOXCzLIddC3Sbu+XN8/pAFwFpytG2+C3to3CD7CxEv5uCkL7e9AcSqrWqFRNNgzEq50Gxjng0BIOnmK/YqxJyreCclGm89tKebHlSfMh/da1coIog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L2upaEwt; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gff5cji2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 338B7C4CEEA;
-	Wed, 25 Jun 2025 18:56:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750877769;
-	bh=6xdnTIn9JsUPsSYNpRZM+JxKZeDZmlbySNAsX2t+WTI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gff5cji2w4rVgfmpej2qu34cYAMMr+BzZ4UHZaIH5XAbQTuM9i+g7mUq2U5j40fHZ
-	 Z1q5bI29k3jsZWhuNj5yhDbG1Cf2CK2Ja0Ff7LDDsR3OOFfZ9Vzt2j15k/nXxeuZkT
-	 9YjFuV7bOl1cksFgU80Bm0WScsAeKZPxiJYfl/Gw6Nw4fguHRhvgpQzb9a5DuxXi9k
-	 r0a99nd/yLYW3OjYml4ONi/ceLO8lUzrdNYHwjtC2OmZGRegktJ+ySI9PYIagF4iS1
-	 BZaw35eG2KRHrrYA05zBh06BuCSR5KKlQpVgpHHc3LUu/B0aN9NxM4wAvkXLn1IoOB
-	 S80u/83hMdyFA==
-Date: Wed, 25 Jun 2025 13:56:08 -0500
-From: Rob Herring <robh@kernel.org>
-To: Ricardo Ribalda <ribalda@chromium.org>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v2 06/12] dt-bindings: usb: usb-device: Add orientation
- and rotation
-Message-ID: <20250625185608.GA2010256-robh@kernel.org>
-References: <20250605-uvc-orientation-v2-0-5710f9d030aa@chromium.org>
- <20250605-uvc-orientation-v2-6-5710f9d030aa@chromium.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2upaEwt"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7494999de5cso216655b3a.3;
+        Wed, 25 Jun 2025 11:56:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750877817; x=1751482617; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=EDnCmso9gBvKQ5z3Nhbls9AMHlpp/w95LXYj9Nsfg4A=;
+        b=L2upaEwtYSEYpyp5mTarR1lqxBMJg31McQst14LZtZB90R8fHrvTpQ0fuFefB0ZFIZ
+         Iy/nGZTShKgJApMB+dhAaZU89XUqn9T2kX6e300K7MTIZq8tZBQ6b2KGIKElst7vniiI
+         BGmLh55aONnIhBK/U982O0rjtvuOzapXOTS0x/PerqdY5IJIMEo4wQGXee+SQiofichi
+         /e3gWmfwmuY/XIiPx/1HfzZP4be8dmcDDmkOq+rWJcfBaVU1tJhGIBC+UrfjN1DlGuYk
+         KEtA2idP1tq76IUKegWAQphA0UnSYEgUYNtR13uqidBNUOHL3jF3GHaoQoh3ePdQ8DEO
+         ElUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750877817; x=1751482617;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EDnCmso9gBvKQ5z3Nhbls9AMHlpp/w95LXYj9Nsfg4A=;
+        b=rplJWXNDqTLOEaKybtM6ZxL75ci6IP3OdVqctQuaZDYNc1+yFKoiCQS3bvqA2QDtKU
+         kTaFEFwa7BEFTcXG1Zpq9FIkzt4fxv8WL0W7jNXRpuKQrxG2NOsuGFbMyp+s5PUl7QcV
+         oOG+TZVMRWoN+WrztG3KtO+Qot5oeHk/LBVR0VZJu3pkUZXuqOawzzguAFUACM6vEE0S
+         4G8pNGVd9scqe9qXO3WlKHolgYksgbjJFHe/fvoeyd7M2CUEcNT0BaxE89BBXxbks2zS
+         a80xG6crIvc9BJzH1ro0yWx6OuZb5h7NlqaJ2hYL48/1cwT+p7Fd5IWtYV5+FHtaf2+N
+         Qegw==
+X-Forwarded-Encrypted: i=1; AJvYcCUyIeTwjFj7yixjbH/luwC6WhdbL0dNpOL3CsUwWmEGnLpTs1xWYW4cbp6zXuW7G6v2f8zPBGWxPFdfOjKK@vger.kernel.org, AJvYcCXIgruuDf5VnpOKrGsdG3xPbOL27aExW0ZW1+1hfM3K55NeAMjK1KaK6H/LaGRGEGNFe5/2mwp21Mw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNxvi7CjFnL0itqHDoqEKom37t26m+uPmkmNI/b1+g38ut5AQH
+	C8bUpXoy31FcLaTTbh4w1qLFusFIrGJ4W6t4CivH8PJck7kY9x9TY3Mi
+X-Gm-Gg: ASbGncuhWT1KY6WgEIGUD3sYoP87wvAs13hlHFLkf+KPK5JppCEpyDPf73axbFaIwti
+	bJ3fMs3aoRr8KKcfhJOMSVOln+5604IPOu6S7BJMFQarvlALUzbfRLtTbpJ6xG2Y5+8NUGBKnGY
+	9DibY/QZ9+KLKdqzeDVJGLDcmP35ME2ba11y8c9oNRPsAvQfto90N0BeBrcNtUvci7uze+I1Aid
+	UPKH1fqBCWYIAI+ZjwqJhFbuzMRHZ7uXJwCOUenwT7sqoNLq9cXaxjtfQYlsRjf3AwwK/AWTMGO
+	b9yhDDmJM75UTap8krl20qJq5jvHrjtmUlND1GRCClOe8Sh0N5tt
+X-Google-Smtp-Source: AGHT+IHAmiu6mVphq9BC1ZY3m5KyI9JcC0kxXAC4zKALvQ9VxCyB18aOPPH+wNJPHim21oO/qofqNA==
+X-Received: by 2002:a05:6a20:2449:b0:21f:ef96:49ab with SMTP id adf61e73a8af0-2207f26a286mr6640946637.27.1750877816565;
+        Wed, 25 Jun 2025 11:56:56 -0700 (PDT)
+Received: from lg ([2601:646:8f03:9fee:4510:8d70:ea8c:c110])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c88714a3sm5108046b3a.146.2025.06.25.11.56.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 11:56:56 -0700 (PDT)
+From: Fan Ni <nifan.cxl@gmail.com>
+X-Google-Original-From: Fan Ni <fan.ni@samsung.com>
+Date: Wed, 25 Jun 2025 11:56:52 -0700
+To: Li Ming <ming.li@zohomail.com>
+Cc: dave@stgolabs.net, jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	shiju.jose@huawei.com, linux-cxl@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/1] cxl/edac: Fix using wrong repair type to check dram
+ event record
+Message-ID: <aFxGdIceR2DeG07K@lg>
+References: <20250620052924.138892-1-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,52 +77,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250605-uvc-orientation-v2-6-5710f9d030aa@chromium.org>
+In-Reply-To: <20250620052924.138892-1-ming.li@zohomail.com>
 
-On Thu, Jun 05, 2025 at 05:52:59PM +0000, Ricardo Ribalda wrote:
-> For some devices, such as cameras, the OS needs to know where they are
-> mounted.
+On Fri, Jun 20, 2025 at 01:29:24PM +0800, Li Ming wrote:
+> cxl_find_rec_dram() is used to find a DRAM event record based on the
+> inputted attributes. Different repair_type of the inputted attributes
+> will check the DRAM event record in different ways.
+> When EDAC driver is performing a memory rank sparing, it should use
+> CXL_RANK_SPARING rather than CXL_BANK_SPARING as repair_type for DRAM
+> event record checking.
 > 
-> ACPI has a property for this purpose, which is parsed by
-> acpi_get_physical_device_location():
-> https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html#pld-physical-location-of-device
-> 
-> In DT we have similar properties for video-interface-devices called
-> orientation and rotation:
-> Documentation/devicetree/bindings/media/video-interface-devices.yaml
-> 
-> Add rotation and orientation for usb-devices that matches the already
-> existing properties of video-interface-devices.
-> 
-> Signed-off-by: Ricardo Ribalda <ribalda@chromium.org>
+> Fixes: 588ca944c277 ("cxl/edac: Add CXL memory device memory sparing control feature")
+> Signed-off-by: Li Ming <ming.li@zohomail.com>
 > ---
->  Documentation/devicetree/bindings/usb/usb-device.yaml | 10 ++++++++++
->  1 file changed, 10 insertions(+)
 
-Comments from v1 still apply. Add a schema for *your* device (i.e. one 
-that only matches the compatible string of your device). Look for 
-anything that includes usb-device.yaml for an example. Your schema 
-should have something like this if you want to use 
-video-interface-devices.yaml properties:
+Reviewed-by: Fan Ni <fan.ni@samsung.com>
 
-allOf:
-  - $ref: /schemas/usb/usb-device.yaml#
-  - $ref: /schemas/media/video-interface-devices.yaml#
-
+> base-commit: 3c70ec71abdaf4e4fa48cd8fdfbbd864d78235a8 cxl/fixes
+> ---
+>  drivers/cxl/core/edac.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-device.yaml b/Documentation/devicetree/bindings/usb/usb-device.yaml
-> index c676956810331b81f11f3624340fc3e612c98315..a44eb24c657993f88145377a4706ec419b6cd998 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-device.yaml
-> +++ b/Documentation/devicetree/bindings/usb/usb-device.yaml
-> @@ -44,6 +44,14 @@ properties:
->        - minimum: 1
->          maximum: 255
->  
-> +  orientation:
-> +    description: If present, specifies the orientation of the usb device.
-> +    $ref: /schemas/media/video-interface-devices.yaml#/properties/orientation
+> diff --git a/drivers/cxl/core/edac.c b/drivers/cxl/core/edac.c
+> index d725ee954199..623aaa4439c4 100644
+> --- a/drivers/cxl/core/edac.c
+> +++ b/drivers/cxl/core/edac.c
+> @@ -1323,7 +1323,7 @@ cxl_mem_get_rec_dram(struct cxl_memdev *cxlmd,
+>  		attrbs.bank = ctx->bank;
+>  	break;
+>  	case EDAC_REPAIR_RANK_SPARING:
+> -		attrbs.repair_type = CXL_BANK_SPARING;
+> +		attrbs.repair_type = CXL_RANK_SPARING;
+>  		break;
+>  	default:
+>  		return NULL;
+> -- 
+> 2.34.1
+> 
 
-Again, this is generally the wrong way to add properties from another 
-schema for your device. Above is the right way.
-
-Rob
+-- 
+Fan Ni
