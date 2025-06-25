@@ -1,208 +1,231 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2081.outbound.protection.outlook.com [40.107.243.81])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADDFB2797B1;
-	Wed, 25 Jun 2025 16:28:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750868927; cv=fail; b=U3foHlG27amntEjWiHs26XtB0u0zvvtmGG2ZOXufiSjbtR0N/ju32RUYbwRfxbNKVZW/q43NPd2cD5LIiraZSQshwGCPaO7REiVHoRUEEcF2bYVpAWCtjafadSdeUnBJ1+tLOh7/dl5f5pihO6eejfPJilDz3DbbkuadgBUxe5I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750868927; c=relaxed/simple;
-	bh=pKNt6qSkXc1dDoBtImbNFOecp5bnSJQxrOWP147nzIc=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Pzm6hzwaKIfVPWcvdTA8ti8CqkzlR/ct25govg6BDC5QO46bdfr0McPPFZdOMy3c8tpOOHHS1ZRvM6E/0iAOsSNpHShoa95iFGyUkEqW+gsc16Gfu451cnxqRa+SGb6mAhDcB9cQgEAVoYbt5tskcjC9H3q1+kMpSulBl2PkVMw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=5mdh1Obs; arc=fail smtp.client-ip=40.107.243.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C5925BF1F;
+	Wed, 25 Jun 2025 16:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750868948; cv=none; b=YQHl0Zced6IwAwjhNPI8GqgBJLclu6N1/tzkHS01HLYmrxT8V+r/+kC7iSOZ0ORGid2nD8YxEBZrxyrhSjivZ3wdrVBtIo7Mi1WmIt+StuMLo1BrD2Dzlm9l2xIwq9Pk1jEuNpfnRuj6hjQsFsPN24G7rj/aALLxbFbSyHLnH4U=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750868948; c=relaxed/simple;
+	bh=nT5J+pfh8aqAvS4hyZdOydYj5zY9620YhqOvIOyk4oU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=b6N4frmiVdiQx70NCrwQbOKiv9Z3Pz2IP6CCq4EMmMWv4wXLSUkQNMpdnqRw4c1P57nIdADfT3l91nhTNWMFAPEjr4mwo1GLZQamKY7ulPlHHDC9BIXNboefhNpuDIzBNZUDEbi+vtC/SZ2Ok5NN5Jlf8U+ofuM5YRKGooqGOzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LOjcBiVR; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5mdh1Obs"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uyC/mkQcKXZXvmOfoY0x6NQcJ1RCaefPVFbFsDvMCC7dceKQMNd5YF+E2DZXnUmMcfajlxxIopGIcmy8LsLj8lbaSIWfu7DPmzGoc9jDR2jx2cTaNZxzgC0fyIcZ2KC04G40uj6TfXvYH7kZxTX84UMB6GMvFm/YuwepOihJAu3uHI98bDwIBJPPjZhj482JJHlwMVhREJ2dVEuu1zSR70dhA9aPhINxLVTv2P2/uupMriUWXISSMFuNs47FECp5hlJIq3Al2JP8HzrMUxEKJG331vwzqdK8yvIzly2DH6i+fmnWLRRIB9KCl0+M5kmy2+PyyuK1Hqx02ocQ1jnIwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BPlMVbcVzCTqYZPCSA1XVT56R9abLlmUooJd22Ae+Xs=;
- b=EW1Zta9FBiLb3f184OVK/uilQSVnuPO6FU21caXftgfjcWSEs9qln3XZwFI5y2LIuhGsDGDefNgUTdKFoDLcU3kDTAlShACHFlgsIUUerbbdnPRnt72iZB/sv2uuef/T/dA370isFMjrOGySRnzsHoSc3rJWXJK3KVgRRQPUG9ayJAosT9vRlMimuVAFqTSvm/hV6vhcUVRqXb/k5Rqyic0zKHom7ebMn34nsFtGuRhIzXKXVGJZpAF7q1IHRbPXUGwzJ3rKTjfNDQ4ZVtduXi67oJphfZH63f/mBVhM7GIgMnDZHPKPuvSordKHY2BREYGqsWkJaHVl7lku4RE3lg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BPlMVbcVzCTqYZPCSA1XVT56R9abLlmUooJd22Ae+Xs=;
- b=5mdh1ObsuKhr+qhd+t7Ce9YTpipq4HYqmRrR9wVyp+KGAFWPQ2uW8qkcLHzJTEJb/sZgMo5BQwiYqWAw4VssMpnd//m3372roRl0424NOQ90fzMt1cOjVu+4cOtU4KyvAHuIFCG+3ms1lHagOkKMCEIcx6GLMyhCEsJg57713M0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by CY3PR12MB9679.namprd12.prod.outlook.com (2603:10b6:930:100::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Wed, 25 Jun
- 2025 16:28:43 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%7]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
- 16:28:43 +0000
-Message-ID: <df5f6ece-0fca-4e4c-a6e8-df48da276353@amd.com>
-Date: Wed, 25 Jun 2025 11:28:38 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH v14 06/32] x86/cpufeatures: Add support for Assignable
- Bandwidth Monitoring Counters (ABMC)
-To: Reinette Chatre <reinette.chatre@intel.com>, corbet@lwn.net,
- tony.luck@intel.com, Dave.Martin@arm.com, james.morse@arm.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com
-Cc: x86@kernel.org, hpa@zytor.com, akpm@linux-foundation.org,
- rostedt@goodmis.org, paulmck@kernel.org, thuth@redhat.com, ardb@kernel.org,
- gregkh@linuxfoundation.org, seanjc@google.com, thomas.lendacky@amd.com,
- pawan.kumar.gupta@linux.intel.com, manali.shukla@amd.com,
- perry.yuan@amd.com, kai.huang@intel.com, peterz@infradead.org,
- xiaoyao.li@intel.com, kan.liang@linux.intel.com, mario.limonciello@amd.com,
- xin3.li@intel.com, gautham.shenoy@amd.com, xin@zytor.com,
- chang.seok.bae@intel.com, fenghuay@nvidia.com, peternewman@google.com,
- maciej.wieczor-retman@intel.com, eranian@google.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1749848714.git.babu.moger@amd.com>
- <c3a7f07ae0e8d1495b778013afb09d078ee4618d.1749848715.git.babu.moger@amd.com>
- <ff41df42-6267-4684-a2e5-ab8b90ce5bb0@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <ff41df42-6267-4684-a2e5-ab8b90ce5bb0@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA1P222CA0163.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:806:3c3::22) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LOjcBiVR"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P8TUkb011590;
+	Wed, 25 Jun 2025 16:28:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=wKNkLw
+	5fN7SsNnaiMsGV8e5XV1H2dAFI2/X3MUrbsqE=; b=LOjcBiVRDEwaI7u6C5/s8f
+	aMQna29+6bbf7WIoU5Oq7jJcY6etOB5sgIa+yqpyBvlRAQ+m1I3MoB7Wh+WPZdQO
+	jLJQ2yj2Rsbh5nTWCCe9FdkU6Hcm/LLOU9bCaXQxd2E5IUmiAoXfh0MLVTnIt4LW
+	wru1BT9Xq6eI6SgFTi+WVSAeLZSrMoagOPm9BZi635RUAP3i4Ol2OxnM1Uj2ei3/
+	3QeN6dorOYhlw+E+P6UB3I1Uh6c47ujgb6zjKGGodL2tCFVJ6j5/Mzx+RxJJX7V3
+	iJf7eVsc9/+KR5j/CRuz8evKpL+4n91ZKqQjFA+qwkKnxGJi58pJEwtOgRVtl5cw
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dm8jgr2p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 16:28:52 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55PEbuco002908;
+	Wed, 25 Jun 2025 16:28:51 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 47e8jma5vh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 16:28:51 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55PGSn8A45089044
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 25 Jun 2025 16:28:49 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7CB4E20049;
+	Wed, 25 Jun 2025 16:28:49 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B3F9C20040;
+	Wed, 25 Jun 2025 16:28:48 +0000 (GMT)
+Received: from thinkpad-T15 (unknown [9.87.146.103])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with SMTP;
+	Wed, 25 Jun 2025 16:28:48 +0000 (GMT)
+Date: Wed, 25 Jun 2025 18:28:46 +0200
+From: Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+        Matthew Wilcox
+ <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>,
+        LKML
+ <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-s390@vger.kernel.org
+Subject: Re: [RFC PATCH 1/1] mm/debug_vm_pgtable: Use a swp_entry_t input
+ value for swap tests
+Message-ID: <20250625182846.5bce1aaf@thinkpad-T15>
+In-Reply-To: <9fb04185-5b71-46c0-b62c-0e0e6ee59e6e@arm.com>
+References: <20250623184321.927418-1-gerald.schaefer@linux.ibm.com>
+	<20250623184321.927418-2-gerald.schaefer@linux.ibm.com>
+	<9fb04185-5b71-46c0-b62c-0e0e6ee59e6e@arm.com>
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|CY3PR12MB9679:EE_
-X-MS-Office365-Filtering-Correlation-Id: 18d96da6-70c1-4928-1ef8-08ddb40559b9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZWk1OU44Y3BBd2VUN2c1bWpBVllGMnMxVXVpeWlvOWtpc3NVdVg4NDAyLzJ5?=
- =?utf-8?B?YnVVZXkxOVRPSmNJa1d3aUtQSm1kc0VkU0MzRStUR0ZPb3h0VXNySkJsSE05?=
- =?utf-8?B?U0xCdnpBZUh6bHd3T1hiVjN5UmRaaHBxRzVnT3VhN290U1AveXlxc1o3djMr?=
- =?utf-8?B?N2xjU2wxUzJjSXBua25PbzlVUy9najN6MFFqdG40RDU1UHMwNmpOUkZLUGxo?=
- =?utf-8?B?Yjgrai9mM3JESnVaTkJmcVlWU3RZeUp6MlBmVytseWxPR3dlR2h3MmdvZi9N?=
- =?utf-8?B?enA5Zzd4QXY2dTNuaFZkT3RpYkQxcUo2a0g1Z1M2NGFlKzI3Yno0aGdiOFdQ?=
- =?utf-8?B?RlNNU09qOW9Zd2R2Z2Z6K3E0RHFZTXM0dDQ4aWdaV2dUZnE1Q2NxY3VTZXRU?=
- =?utf-8?B?SXNER3NXU0ZoVkNnWFZTM0xaQnpKRkp5THk2Y1VaUEJzRG9saDdLTWk3NVlw?=
- =?utf-8?B?clppOVFPL0FIZ1diUkVDT2JWM1NJdEdqVTRnWVc2bTlQcFVxZ2NpMXJvQjZh?=
- =?utf-8?B?aDZFM3RpNmZxL2YvZXBKZ0JIZGVoN29DMERXMHVVbURCK3VxY0x4MU9RbDNy?=
- =?utf-8?B?VVY0L1lDaUJ0Z0RoZTVwUitIY0VhQ2o5RkdkWDNsQVpzSXljVWl5T2QwVXV5?=
- =?utf-8?B?SGRhdCtxS1N0NWVCVDRjckl3STY4OGV4alg1VVdYbVN6VTFHNzI4SUlNQ0Na?=
- =?utf-8?B?OUg5VUhSRzJGclhVbloxTUFhM3JJZ3M1Nkc3dUtEK3hjcG9OaTloUUJJaHBn?=
- =?utf-8?B?eUE1UzRpVHNMMWdFY21tSkZmTlZ5bnhRK044eXJrNk5HREFKZ0JqVDFrVmFM?=
- =?utf-8?B?OXRHRldvYkIxUUNWckhpTXBxYlg2RUd2T0NBbDBLelUxSTYxYUdxSWRMV1VH?=
- =?utf-8?B?RERLSHdIQ3FaZDJWREVERkIxY2l0Zm1zTDk5SUVSSnlSRVRMcWg1OHAyOW1j?=
- =?utf-8?B?eE5tSEdQV1NCSHppb2JTYU5NalkrQW5kNkN5dnRybzVxcXJxNVFmOFpkelMy?=
- =?utf-8?B?VlBSVTdiN0xLbE1EdG9WU003Q0dyL2Qyb3RtQ2xqeTZIaWZXMTJFM2JKNTNW?=
- =?utf-8?B?cnJlMjdVOUxFSHRhRW1KbHlCWmJWajZvMUVwQ0xubUIwNThSbFlSNGM2a3cy?=
- =?utf-8?B?czNoVU0xSzFnZU9adEd2VmZQR2Jma3VqMVA5ckFUdkZhSkpMK2xBMHBIbUJw?=
- =?utf-8?B?LzJwVUJXejlsaktBdkF3c3ZnWWNWRGxta21tWHpMdlZ0QmZVdGNQNHpDZGgz?=
- =?utf-8?B?RFowSnBVbFh6ODJRcldiVkx6UUk1Um9DWmZWV2hkQ3MxemRLbmhBYjBsUis4?=
- =?utf-8?B?ODE3UVNQWDdDVFcwcmNVc21yeUwyalEvVm5PREpnZkFYY0hyNjdEYkZuMHZM?=
- =?utf-8?B?VnlScEFTRCtoSjA1Y2JwbEEwRUlDbFFxejQ1Y0R0WWxveWQvUVM2c1hxYXJO?=
- =?utf-8?B?bUg3V0hJMUVETU5CRDdwWklMN010VEY5NDA4YWtTaFN1OU1XZ0hXZUJtWm41?=
- =?utf-8?B?aEI2bGNwY2ZSaVBDTkpnTEJBVGxkNC82Wnd5RHJFWC9EZ0pqZjlvcE53eGF4?=
- =?utf-8?B?b3NKM29TQ2dPbGdNcEkrUzJzRFJROW5IZTdOMWJBSk5JSUhzWWVDM3B5clBa?=
- =?utf-8?B?dDhpbXM4d0F5azN4OHZXZTBnRTJoNWVIUXk3eVp6SnpJSFBEaXJLa1RFcHVn?=
- =?utf-8?B?TmF0dWQxOHMwL2NFbHlKTUZUV0x6TXdVSElDUXpHTnZrSUVLaDdRaXRtV0FR?=
- =?utf-8?B?RWdRdmtqaXhhQkZWdG1HZUQwS1NZY3hwOEkrMTN5Q1hrZ3Rob1Y2NGdnM2pR?=
- =?utf-8?B?ZnByL0tUODl6SUhDQS9QNGRzNUxOOVA5ZjFZdSs5V05DTjBBSDV1dDF0L3FL?=
- =?utf-8?B?RVM0MmZGUDJ2c0JCM2FlWEpuelZOZ1F4NnVqMnhmUzlxTG9vUno1TDhJR2hy?=
- =?utf-8?Q?L91dIkXhcL0=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?S29qcUwxV0tQVVM5eEV1RmVvTmFodTJ0aFVNYTZYQkdlckRpZVBCSmJFdXNk?=
- =?utf-8?B?TFdJS3ZjbUk5SExvc3g4c2txcHF3elZ4UCt3NHdxTi9tUGYrZXJPOUZKTWJ5?=
- =?utf-8?B?QXpCU3M5bElKbFVWYzNZZUVudTBLWEYyc05Ed3NLekFuU2lGUDBBeGJNMUdE?=
- =?utf-8?B?a2NVQnphZnFGOWJoVGlpZUR3UGFCUXhhcENmUWZFL0pRT0twZG1Xa3B0YWp3?=
- =?utf-8?B?RDlkTWUxL1d6UHBaL0lUb2lZZ2Z2eTBVMm5UOGkrRjR3V3RMc2V3Y1lMVWQz?=
- =?utf-8?B?MGhZamJKYnBqM01oVkg3NFBwamhBZVJzck9zVndzbGVPdGxDampKdGhpSDNl?=
- =?utf-8?B?ODhoUmVwckhVZzVoanlNcTIvL3prVEtqWWlSYWxWRFQ0dzFNVEIrNHdaS0Rk?=
- =?utf-8?B?K0NJMHYxUEFWMDEwU0txV1FnNTZacXlodFVydnFSOTNaL09paFFUbnFsajEx?=
- =?utf-8?B?ZWQ0by83SFVWTHR5VmNWU1pBK21xWE9TRzVCeGZQbWE5Z2VrMllIMHJsNHFP?=
- =?utf-8?B?NkpZR0piRlFTR005WElRSG1OZ1JkSG11a3VQR1dOem01Y1ZjSHVRbmlrYVhp?=
- =?utf-8?B?Zk4yNkE4WWtjdlhEYUNxaGpaOHMzbTJ5MDkwdmVtdnNhcWh3anlKTmJQUXBD?=
- =?utf-8?B?S0dVV21OS1ozWXBMUlRCSElwcHdSWnJZZEZWeUlJL2VsWDY1WDlCMkVqYmc0?=
- =?utf-8?B?T1hpc2pTbTJSbithbUlOVFpHckJkVnczREdTeVNHSVI0VGZRLzhVRFRBcngz?=
- =?utf-8?B?dlBBWVlPK2o1bGF4L0Z0YytFQmNYMHB3ZXYyNkcyRGJ5S2RhbmR1UEdzN05y?=
- =?utf-8?B?NWl6eGlsbllHZjcxdFl5aXpyQW8ydXU3WFR5WDlZT2UrUHBQNEdDM1ZqNkNO?=
- =?utf-8?B?VzNqcVN0ekhwMnRxN1YvekJQTFhTOXYrNC9Wb1FCdW1OTWIvSitsd282dUU5?=
- =?utf-8?B?clRUMmFueDMySVRXaTgxL0UzM0pBS1c1ZHNYbW44SkkxbjJaSmZRTkRDcDZM?=
- =?utf-8?B?OG4xNkdqcEhhbmdvaUFPYTVKOGVqQllNazhmdmFERy93Y3RMT2dLUXZmMEIv?=
- =?utf-8?B?cm5uaHNKRzNOV2FPaUFSSTFXUjZJZjAxT1ZuUTJRY3FLUUhBSk5uTGY2dVQ1?=
- =?utf-8?B?RkFiZDFadDdJTkttVnd5eEJlVmhFWDRwcXlrZVgyU0JKTjJYUkNsOTN3bHhD?=
- =?utf-8?B?b1JTbThnYWFLdnVienhxK1RBYTFvYWgxUHZvUTU0alArS08vN0FPOUI5cGo1?=
- =?utf-8?B?b2N1cW9wVXlQZFZTekdWc0NrZnNHb2JDMWZCMWdHNHd5S3pHT0pOOG5XQUhv?=
- =?utf-8?B?SE9CaXpNZUJHTlhwdEpmR1Z2QXQ4cktVaTVhSzhoMzFDRllTamZDZnlmWmNM?=
- =?utf-8?B?SzZkbll1QWIyWXRqSW1ycmJ0MStOMEpoVU1Ka0dhcXllRmRMcWw2RDNnZnNj?=
- =?utf-8?B?cnl5b29iS2dxR3FSUmF2N2E3aVRmRmtVa3N5Kzh6WE5ibk1QMWxVS29PSzJ4?=
- =?utf-8?B?dkJnQVZTa24wVnNidklIVFEreTRtaHdOV3RSNWI2ejJRc1d1RHlNcWpZNktB?=
- =?utf-8?B?UThkNHlMcWoxWjM5Uk5JWTJkQkNjZlhZU01iYzdDWlRhSUhZemYrVlVTZGRq?=
- =?utf-8?B?NURZVStjZFppN0szUHF1dWdicVB0OUxCb1Q1STBSVzVja0Z5bnJIQ2NqREI3?=
- =?utf-8?B?SlduYWlVa09ENHpWWG8zRTh4N3RZNGlWWVdGRks1d08wNHhDakpweEpqdkQw?=
- =?utf-8?B?alVXM1U3b2ZrbW0yMlVVUHRqdkVOOFluOE1vZzRER2RKWU1udkJ2R2dlNVk1?=
- =?utf-8?B?YjZ4aUl0cGlzSEZJdDVZVHNVSCtEVUpxUTd3MW10dEQrUTFUTGZWTVFEQkI5?=
- =?utf-8?B?cHM4cmdSeXlwNGhqbHRKZDN5OEFwRTd5Q3U4eVJWMGhObDRHYVloTFk1R3BD?=
- =?utf-8?B?NnA1V2J1SklJcmhMNWNQN3Uvbm1IdUUvMk9jdWt1RUJKSXhOT01BaWhhWHYz?=
- =?utf-8?B?aTNjQXZQdWZLbW5QVG15NGt5UXp5VHF6dE9YN0VXdGE2NjNyblcrUkJjMTJR?=
- =?utf-8?B?bEZPczBCVk9KNnMzRmtxck9NN3ppci96UWF3ckhQdy91VGk5M2FYWVMrTFlP?=
- =?utf-8?Q?PooE=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18d96da6-70c1-4928-1ef8-08ddb40559b9
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 16:28:43.2459
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: f074WZCWw1V6uQsDohg5Qa6aTiLFVQhzI5m+L1dj/GNA+uT2h2lcwb9KDFcPTJQJ
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY3PR12MB9679
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDEyMSBTYWx0ZWRfX9ctqt0MdcuZX xOG7w60S7nhCMLPelFXSe6h7nbxB/u7WFiSc5tD8vITxE2an5eaxXBl0e0+M2B4x3/c+TKlf0on CzIT/bQUg8c4nDufjGfsjBg1YlN35pH66iqcMdRHB/+moYUghSnGcmOi07KaQayiiEqJcEJVGxW
+ DJWVQLJMbD4iwkxTaFD3H0p2JGgP307KO70jlpR5gIcUZlAk4GFKf2J2IvNLjMNSn2uxmCl0wN9 8IN5bbtMosH5IhR/zeF+CB2LuqNfqI4N9+grMZRdxxuwGPdlLqqarea03h6lJmUhCyRu/a8i8kz Tf+Obvx8o9ykzS3HzZ7uJoYpFfeyx1MF2mb1bfrJPKKov5Hek7vDj0y7oBTk6jH6NlV6NUBmr/S
+ NB4WP3fk3nYjIrlDnVp1EDEDVYMgojbXQutOJdU2aRzQk3FHTDAo6YB8Dm1/5Rm9q04tmjqR
+X-Proofpoint-GUID: ycLosbWzxeqeR0pwL3PG5xwCW1bFw5XS
+X-Proofpoint-ORIG-GUID: ycLosbWzxeqeR0pwL3PG5xwCW1bFw5XS
+X-Authority-Analysis: v=2.4 cv=combk04i c=1 sm=1 tr=0 ts=685c23c4 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=7CQSdrXTAAAA:8 a=0fVv-C4oS03cnMJSljAA:9 a=CjuIK1q_8ugA:10
+ a=a-qgeE7W1pNrGK8U0ZQC:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_05,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=999 clxscore=1015
+ impostorscore=0 suspectscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506250121
 
-Hi Reinette,
+On Wed, 25 Jun 2025 09:58:31 +0530
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 
-On 6/24/25 16:31, Reinette Chatre wrote:
-> Hi Babu,
+[...]
+> > diff --git a/Documentation/mm/arch_pgtable_helpers.rst b/Documentation/mm/arch_pgtable_helpers.rst
+> > index af245161d8e7..e2ac76202a85 100644
+> > --- a/Documentation/mm/arch_pgtable_helpers.rst
+> > +++ b/Documentation/mm/arch_pgtable_helpers.rst
+> > @@ -242,13 +242,13 @@ SWAP Page Table Helpers
+> >  ========================
+> >  
+> >  +---------------------------+--------------------------------------------------+
+> > -| __pte_to_swp_entry        | Creates a swapped entry (arch) from a mapped PTE |
+> > +| __pte_to_swp_entry        | Creates a swap entry (arch) from a swapped PTE   |
+> >  +---------------------------+--------------------------------------------------+
+> > -| __swp_to_pte_entry        | Creates a mapped PTE from a swapped entry (arch) |
+> > +| __swp_entry_to_pte        | Creates a swapped PTE from a swap entry (arch)   |
+> >  +---------------------------+--------------------------------------------------+
+> > -| __pmd_to_swp_entry        | Creates a swapped entry (arch) from a mapped PMD |
+> > +| __pmd_to_swp_entry        | Creates a swap entry (arch) from a swapped PMD   |
+> >  +---------------------------+--------------------------------------------------+
+> > -| __swp_to_pmd_entry        | Creates a mapped PMD from a swapped entry (arch) |
+> > +| __swp_entry_to_pmd        | Creates a swapped PMD from a swap entry (arch)   |
+> >  +---------------------------+--------------------------------------------------+
+> >  | is_migration_entry        | Tests a migration (read or write) swapped entry  |
+> >  +-------------------------------+----------------------------------------------+  
 > 
-> On 6/13/25 2:04 PM, Babu Moger wrote:
->> Users can create as many monitor groups as RMIDs supported by the hardware.
->> However, bandwidth monitoring feature on AMD system only guarantees that
->> RMIDs currently assigned to a processor will be tracked by hardware. The
->> counters of any other RMIDs which are no longer being tracked will be reset
->> to zero. The MBM event counters return "Unavailable" for the RMIDs that are
->> not tracked by hardware. So, there can be only limited number of groups
->> that can give guaranteed monitoring numbers. With ever changing
->> configurations there is no way to definitely know which of these groups are
->> being tracked for certain point of time. Users do not have the option to
->> monitor a group or set of groups for certain period of time without
->> worrying about RMID being reset in between.
->>
->> The ABMC feature allows users to assign a hardware counter ID to an RMID,
->> event pair and monitor bandwidth usage as long as it is assigned. The
->> hardware continues to track the assigned counter until it is explicitly
->> unassigned by the user. There is no need to worry about counters being
->> reset during this period. Additionally, the user can specify a particular
->> type of memory transactions for the counter to track.
-> 
-> Looks like grammar updates from cover letter did not make it into this
-> copied text. For example,
-> "being tracked for certain point of time" -> "being tracked during a particular time"
-> "for certain period of time" -> "for a certain period of time"
-> "specify a particular type of memory transactions" -> "specify the type of
-> memory transactions (e.g., reads, writes)"
+> __pte_to_swp_entry() and __pmd_to_swp_entry() are still being used (and tested)
+> even after applying this patch. Should not their entries be preserved ?
 
-Yes. Missed it. Will take of it now.
--- 
-Thanks
-Babu Moger
+Nothing is removed here. Only adjusted description, where David already
+posted some improvement. And renamed __swp_to_pte/pmd_entry() to the
+correct names __swp_entry_to_pte/pmd().
+
+[...]
+> > @@ -804,17 +811,11 @@ static void __init pmd_swap_soft_dirty_tests(struct pgtable_debug_args *args) {
+> >  
+> >  static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
+> >  {
+> > -	unsigned long max_swap_offset;
+> >  	swp_entry_t entry, entry2;
+> >  	pte_t pte;
+> >  
+> >  	pr_debug("Validating PTE swap exclusive\n");
+> > -
+> > -	/* See generic_max_swapfile_size(): probe the maximum offset */
+> > -	max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));
+> > -
+> > -	/* Create a swp entry with all possible bits set */
+> > -	entry = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1, max_swap_offset);
+> > +	entry = args->swp_entry;  
+> args->swp_entry should be reused here as well.
+
+Yes, and it is. I just moved the swap entry creation logic from here to
+init_args(), and instead use args->swp_entry here.
+
+> 
+> >  
+> >  	pte = swp_entry_to_pte(entry);
+> >  	WARN_ON(pte_swp_exclusive(pte));
+> > @@ -838,30 +839,36 @@ static void __init pte_swap_exclusive_tests(struct pgtable_debug_args *args)
+> >  
+> >  static void __init pte_swap_tests(struct pgtable_debug_args *args)
+> >  {
+> > -	swp_entry_t swp;
+> > -	pte_t pte;
+> > +	swp_entry_t entry, arch_entry;
+> > +	pte_t pte, pte2;  
+> A very small nit - s/pte2/pte as the first one is pmd not pte or
+> make it pte1, pte2 if preferred.
+
+Sure, pte1/2 looks better. Same for pmd1/2 in pmd_swap_tests().
+
+> 
+> >  
+> >  	pr_debug("Validating PTE swap\n");
+> > -	pte = pfn_pte(args->fixed_pte_pfn, args->page_prot);
+> > -	swp = __pte_to_swp_entry(pte);
+> > -	pte = __swp_entry_to_pte(swp);
+> > -	WARN_ON(args->fixed_pte_pfn != pte_pfn(pte));
+> > +	entry = args->swp_entry;  
+> 
+> Should args->swp_entry be used directly here and 'entry' local variable
+> be dropped ?
+
+Right, should be possible, also in pmd_swap_tests().
+
+[...]
+> > @@ -1166,6 +1173,7 @@ static void __init init_fixed_pfns(struct pgtable_debug_args *args)
+> >  
+> >  static int __init init_args(struct pgtable_debug_args *args)
+> >  {
+> > +	unsigned long max_swap_offset;
+> >  	struct page *page = NULL;
+> >  	int ret = 0;
+> >  
+> > @@ -1248,6 +1256,11 @@ static int __init init_args(struct pgtable_debug_args *args)
+> >  
+> >  	init_fixed_pfns(args);
+> >  
+> > +	/* See generic_max_swapfile_size(): probe the maximum offset */
+> > +	max_swap_offset = swp_offset(pte_to_swp_entry(swp_entry_to_pte(swp_entry(0, ~0UL))));  
+> Why not directly use generic_max_swapfile_size() which is doing exact same thing.
+> 
+> unsigned long generic_max_swapfile_size(void)
+> {
+> 	return swp_offset(pte_to_swp_entry(
+> 			swp_entry_to_pte(swp_entry(0, ~0UL)))) + 1;
+> }
+
+Good question. I just moved this code here from pte_swap_exclusive_tests(),
+see above, and did not think about that. Now I also wonder why
+generic_max_swapfile_size() wasn't used before.
+
+But it is not exactly the same thing, there is an extra "+ 1" there.
+Maybe that is the reason, but I don't really understand the details /
+difference, and therefore would not want to change it.
+
+David, do you remember why you didn't use generic_max_swapfile_size()
+in your pte_swap_exclusive_tests()?
+
+> 
+> > +	/* Create a swp entry with all possible bits set */
+> > +	args->swp_entry = swp_entry((1 << MAX_SWAPFILES_SHIFT) - 1, max_swap_offset);
+> > +  
+> 
+> Makes sense to use maximum possible bits while creating the swap entry for testing.
+> 
+> >  	/*
+> >  	 * Allocate (huge) pages because some of the tests need to access
+> >  	 * the data in the pages. The corresponding tests will be skipped  
+
