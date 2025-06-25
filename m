@@ -1,153 +1,193 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fw2.prolan.hu (fw2.prolan.hu [193.68.50.107])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E1220DD40
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E9C27932E;
+	Wed, 25 Jun 2025 08:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.68.50.107
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841693; cv=none; b=k8crYazh1bcK047jcC576KyVVnIrIGlMWJDiS76msBsADszfGGs2qeJbJCGx7Ve+QNJg0WJrQf4EzHLQV9CM9ZE5prbrPsvuI4MCc0IrkgtdDJYequLicAFmxo9e7d4vzFDiHRIL/pbdY3+dPBJum7+OG6WxpMW6Dmh5+wV1RfI=
+	t=1750841728; cv=none; b=FIDxv44Jre0vhn3PTpULjdIw8QI17V9AZrL9G3ot5PfTqW9UaYNpKX5KxEg7SXJ3nEfjFvBSB48IZo4p9/5w58wE1YzNgdTao446soRmkWx3mb12tnlI/MsR5tKJWzVUFAYfWm+xpo7NE/MQDptEdJ57Cz0A9/SkcS1Sa0NyOhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841693; c=relaxed/simple;
-	bh=IMHNO1bT1El4HG2JXEHyLJZxCIu/EzODJnWdqZWBHw8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e9XQDliAc3RFSsiF/DPCow2Jo8HqeZp7Cmm0gF4GTjMDsP5zFXvhWH+yJW7tzN8nsoWwynd6F87llsXo571ew3Ym8As65cXwZWcD1U4YlpAe50FU1Um8aF76/2y87gIOW4DLWI6tHcCZ9AowCmt3yU5h9dbUESX4y62d324+wak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NoPCt0Lg; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750841728; c=relaxed/simple;
+	bh=cjV9mq90c8xZ+NKkEcNZ1Gs0FultA9PRjpDMArFXJM4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kcqfxAxFaMzhqN2v/dHovdeccxyIIPPnZQHiWss11DAVW4+D3hUBCRe/c4/pLRrBkmk74fmz+nERCh1hifzaxbAFybjKH/OH+54sWwlOlqi2cvNfcKqOh1WaBy6UQqnByv2oLkMQiQ34Wjstts1RnqIthSVhs2Cn2ar1UaLotUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu; spf=pass smtp.mailfrom=prolan.hu; dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b=UCI6yD0e; arc=none smtp.client-ip=193.68.50.107
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=prolan.hu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prolan.hu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NoPCt0Lg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750841690;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=H7SojeMD2gps8cZo3IPHcE59cXnndpk0obLuxFCFG5c=;
-	b=NoPCt0Lga0/6jdflq+J4E/ccK04N95tVlCIgg2Wunq/V+T0wNAnqfCmFsVPT0TWc8iwhaz
-	EV5D8rHlenTxGe1IaSt4OEIN6I9Diwq+iOfqFVeSgOFY0GflqYgzUQcpMhySs/mTFQIHaD
-	fxMtiHxqaF0oJbsw4ScOPC44YxYHGoI=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-437-p576XWvENf2U_chhXudFfg-1; Wed, 25 Jun 2025 04:54:48 -0400
-X-MC-Unique: p576XWvENf2U_chhXudFfg-1
-X-Mimecast-MFC-AGG-ID: p576XWvENf2U_chhXudFfg_1750841688
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-45334219311so6737785e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:54:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750841688; x=1751446488;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H7SojeMD2gps8cZo3IPHcE59cXnndpk0obLuxFCFG5c=;
-        b=VLVA2JFFSIxYbH6kUPkIyWvTKXVKYyE+ATkgW0/uHMIqw/Sf49SHcGviGeGW3V+zf+
-         rJ0mlo6GyWM08h7bsQwucAKOGmgV8ygngonBd+FECbIeCrI6OrPBnXGZBX/Wnz5bKGHD
-         cjiV/PE9tpZmehkotsvz+yTScLd8Nnf3yzSyHlmCwBYj5QmOpdjQmsQkCGaIHS4jTrBq
-         /ByHsHW9HuOhI+xjbCmhaTqsIagdqHJw0wUlFZUYXSLiU7Au+agNXWPPGyw9u//4l/My
-         GnqhfOavcCo/CUMl0sebWyAEixEeRbzyL/WVIBLlgb81P6l8OmFj2vfi0AyCe3i2nkTz
-         svyg==
-X-Forwarded-Encrypted: i=1; AJvYcCX09MyGJDwP3rc470p4l33BK9cjwnoVG15GYkjs2qBcvNgu7SAaF53tKPgR4V9e9ATXYOn1RR2J0K4DiP0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxr6trSDDJEBNju8CGaO+s4PFYLE1p59wfH8pptqCt52egdOty6
-	BL39KeaNRKh+XR96ZF8ha2wWaZqUv0lrNOxuj44NezS2b1iPsuB+6Qkj0kDKgROByJE8a6wHPnt
-	uksDVRLRwEZhXeGfTXZJGXhDrYL6qjztxPJf5SGaXviWseg/30rAm13EwXHzG8uVB/Q==
-X-Gm-Gg: ASbGncufUAz+0aHL7y5uOMzdqEFsahK5o2fVlxom9hxGM7jBYvpGnRJiXypoMSnIcGi
-	M7eVNfJJvbqWyqdBweT7VP4iYW+Peukh4v6xl6DrzLxTuPEkpG1G3u8BhtbuLn+rOPOWvftrxEz
-	kcK8nVJGxovDfjOLSP4I1hUmgymOiPzFAmWQ36435WsidCZtyl1zpEnHYmxJ2Gu7omQ6190vU6C
-	JqBVakyq5Z95G8MXGn/39+xrAlJ3WWDxL3vaciYnqd/vym5dnrgIaM1xG5ucSIlYWD5SWrwTUfA
-	wb6x4FO2uTPFeXpHy5q1r//nUCuO
-X-Received: by 2002:a05:600c:35d2:b0:450:d00d:d0 with SMTP id 5b1f17b1804b1-45381ae467cmr18288025e9.19.1750841687666;
-        Wed, 25 Jun 2025 01:54:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGYLN8WpVcipmrn+PxxvTbwwdYiFGmiYVj3yUsHDD0K7ZUDXBWM8hLnXLAMurjH8x8NH2rxcA==
-X-Received: by 2002:a05:600c:35d2:b0:450:d00d:d0 with SMTP id 5b1f17b1804b1-45381ae467cmr18287785e9.19.1750841687044;
-        Wed, 25 Jun 2025 01:54:47 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.151.122])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad247sm13350055e9.26.2025.06.25.01.54.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 01:54:46 -0700 (PDT)
-Date: Wed, 25 Jun 2025 10:54:40 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, virtualization@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC net v2 3/3] vsock: Fix IOCTL_VM_SOCKETS_GET_LOCAL_CID
- to check also `transport_local`
-Message-ID: <uqap2qzmvkfqxfqssxnt5anni6jhdupnarriinblznv5lfk764@qkrjq22xeygb>
-References: <20250620-vsock-transports-toctou-v2-0-02ebd20b1d03@rbox.co>
- <20250620-vsock-transports-toctou-v2-3-02ebd20b1d03@rbox.co>
+	dkim=pass (4096-bit key) header.d=prolan.hu header.i=@prolan.hu header.b="UCI6yD0e"
+Received: from proxmox-mailgw.intranet.prolan.hu (localhost.localdomain [127.0.0.1])
+	by proxmox-mailgw.intranet.prolan.hu (Proxmox) with ESMTP id D7A1EA06EB;
+	Wed, 25 Jun 2025 10:55:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prolan.hu; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:from:from:message-id:mime-version:reply-to:subject:subject:to
+	:to; s=mail; bh=nrf5whORkfSt+oMoV6M/vem4ZwKyQ3gZRdKv2OMWRrA=; b=
+	UCI6yD0e8NDJ52qaFvJN4jMML1kfxrIrv6EOUQuzgmUwf2G+2S4GoNagDaS9AnqZ
+	2GCPFlayL0D8KLXvQLh4C7cZY6YCo248Oo2w5l12EU4tfMCNF8JG28t6flinEwCb
+	wX6l7f1r4CO65L6Mk9jNNnYAG6K1lWol3ls2xpKuUgkA/JH/aX23coa4dLIjmSvJ
+	Dhgs6KGm8veQUWQVx9dppvh4RYzrbHTvbHDtJtUp3uyTUdpK7rItblxw+0bIreey
+	3z8jcCHqUtJ9P1+otblp+eCqBmJMSvBiZ7Xpcktqag4/IBPGAsvIMWnsqUuYyDiK
+	Od6h2rcOqMLH+AXLfQFjFmoLLHHMev5Qy96ZSV+AVErsjsDl2XX0gFD5z28MP3YJ
+	yrJ0Q6l+AeyMoUu/zTyYeYVXJK3gTA64DyrfPLWJ+7v/Cv4kdVqHi/ygBnxxRAPn
+	nqeT1diYy/Syfr0DF7epuAMQWwsJIjo/hZvUx/PTtXHUNBQr7XOFMuwNdkuAqqXY
+	aM5LyO2VItY2ZYNuFP/Oy54cKHgCogw+x6gZnn+O4c1gme+QJLPc6AYD+sFpz1w1
+	/+/ndixXvIfHDWL1qdrJiKaGDGxmQp1adgdf3EHanISzvoKRHuv0Zkb/9T9/8N7N
+	iqlV+F1kSPWqvelTAutEkzg63t8z99FqspI5XCjR3LY=
+From: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>
+To: <dmaengine@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-sunxi@lists.linux.dev>, <linux-kernel@vger.kernel.org>
+CC: =?UTF-8?q?Bence=20Cs=C3=B3k=C3=A1s?= <csokas.bence@prolan.hu>, "Chen-Yu
+ Tsai" <wens@kernel.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, "Chen-Yu
+ Tsai" <wens@csie.org>, Julian Calaby <julian.calaby@gmail.com>, Vinod Koul
+	<vkoul@kernel.org>, Samuel Holland <samuel@sholland.org>
+Subject: [PATCH v11] dma-engine: sun4i: Simplify error handling in probe()
+Date: Wed, 25 Jun 2025 10:54:50 +0200
+Message-ID: <20250625085450.154280-2-csokas.bence@prolan.hu>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250620-vsock-transports-toctou-v2-3-02ebd20b1d03@rbox.co>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1750841717;VERSION=7993;MC=222044062;ID=219731;TRN=0;CRV=0;IPC=;SP=0;SIPS=0;PI=3;F=0
+X-ESET-Antispam: OK
+X-EsetResult: clean, is OK
+X-EsetId: 37303A296767155D6D7C62
 
-On Fri, Jun 20, 2025 at 09:52:45PM +0200, Michal Luczaj wrote:
->Support returning VMADDR_CID_LOCAL in case no other vsock transport is
->available.
->
->Fixes: 0e12190578d0 ("vsock: add local transport support in the vsock core")
->Suggested-by: Stefano Garzarella <sgarzare@redhat.com>
->Signed-off-by: Michal Luczaj <mhal@rbox.co>
->---
->man vsock(7) mentions IOCTL_VM_SOCKETS_GET_LOCAL_CID vs. VMADDR_CID_LOCAL:
->
->   Ioctls
->       ...
->       IOCTL_VM_SOCKETS_GET_LOCAL_CID
->              ...
->              Consider using VMADDR_CID_ANY when binding instead of
->              getting the local CID with IOCTL_VM_SOCKETS_GET_LOCAL_CID.
->
->   Local communication
->       ....
->       The local CID obtained with IOCTL_VM_SOCKETS_GET_LOCAL_CID can be
->       used for the same purpose, but it is preferable to use
->       VMADDR_CID_LOCAL.
->
->I was wondering it that would need some rewriting, since we're adding
->VMADDR_CID_LOCAL as a possible ioctl's return value.
+Clean up error handling by using devm functions and dev_err_probe(). This
+should make it easier to add new code, as we can eliminate the "goto
+ladder" in sun4i_dma_probe().
 
-IIRC the reason was, that if we have for example a G2H module loaded, 
-the ioctl returns the CID of that module (e.g. 42). So, we can use both 
-42 and VMADDR_CID_LOCAL to do the loopback communication, but we 
-encourage to always use VMADDR_CID_LOCAL.  With this change we basically 
-don't change that, but we change the fact that if there is only the 
-loopback module loaded, before the ioctl returned VMADDR_CID_ANY, while 
-now it returns LOCAL rightly.
+Suggested-by: Chen-Yu Tsai <wens@kernel.org>
+Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
+Reviewed-by: Julian Calaby <julian.calaby@gmail.com>
+Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+---
 
-So, IMO we are fine.
+Notes:
+    Changes in v2:
+    * rebase on current next
+    Changes in v3:
+    * rebase on current next
+    * collect Jernej's tag
+    Changes in v4:
+    * rebase on current next
+    * collect Chen-Yu's tag
+    Changes in v5:
+    * reformat msg to 75 cols
+    * keep `\n`s in error messages
+    Changes in v6:
+    * remove redundant braces
+    * break lines to stay under 85 cols
+    * reword subject and message
+    Changes in v7:
+    * rebase onto current next
+    * collect Julian's tag
+    Changes in v8:
+    * rebase onto current next
+    Changes in v9:
+    * rebase onto current next
+    Changes in v10:
+    * rebase onto current next
+    Changes in v11:
+    * rebase onto current next
 
->---
-> net/vmw_vsock/af_vsock.c | 2 ++
-> 1 file changed, 2 insertions(+)
->
->diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->index a1b1073a2c89f865fcdb58b38d8e7feffcf1544f..4bdb4016bd14d790f3d217d5063be64a1553b194 100644
->--- a/net/vmw_vsock/af_vsock.c
->+++ b/net/vmw_vsock/af_vsock.c
->@@ -2577,6 +2577,8 @@ static long vsock_dev_do_ioctl(struct file *filp,
-> 		cid = vsock_transport_local_cid(&transport_g2h);
-> 		if (cid == VMADDR_CID_ANY)
-> 			cid = vsock_transport_local_cid(&transport_h2g);
->+		if (cid == VMADDR_CID_ANY && transport_local)
->+			cid = VMADDR_CID_LOCAL;
+ drivers/dma/sun4i-dma.c | 46 ++++++++++++-----------------------------
+ 1 file changed, 13 insertions(+), 33 deletions(-)
 
-why not `cid = vsock_transport_local_cid(&transport_local)` like for 
-H2G?
+diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
+index 24796aaaddfa..00d2fd38d17f 100644
+--- a/drivers/dma/sun4i-dma.c
++++ b/drivers/dma/sun4i-dma.c
+@@ -1249,11 +1249,10 @@ static int sun4i_dma_probe(struct platform_device *pdev)
+ 	if (priv->irq < 0)
+ 		return priv->irq;
+ 
+-	priv->clk = devm_clk_get(&pdev->dev, NULL);
+-	if (IS_ERR(priv->clk)) {
+-		dev_err(&pdev->dev, "No clock specified\n");
+-		return PTR_ERR(priv->clk);
+-	}
++	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
++	if (IS_ERR(priv->clk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk),
++				     "Couldn't start the clock\n");
+ 
+ 	if (priv->cfg->has_reset) {
+ 		priv->rst = devm_reset_control_get_exclusive_deasserted(&pdev->dev, NULL);
+@@ -1328,12 +1327,6 @@ static int sun4i_dma_probe(struct platform_device *pdev)
+ 		vchan_init(&vchan->vc, &priv->slave);
+ 	}
+ 
+-	ret = clk_prepare_enable(priv->clk);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Couldn't enable the clock\n");
+-		return ret;
+-	}
+-
+ 	/*
+ 	 * Make sure the IRQs are all disabled and accounted for. The bootloader
+ 	 * likes to leave these dirty
+@@ -1343,33 +1336,23 @@ static int sun4i_dma_probe(struct platform_device *pdev)
+ 
+ 	ret = devm_request_irq(&pdev->dev, priv->irq, sun4i_dma_interrupt,
+ 			       0, dev_name(&pdev->dev), priv);
+-	if (ret) {
+-		dev_err(&pdev->dev, "Cannot request IRQ\n");
+-		goto err_clk_disable;
+-	}
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret, "Cannot request IRQ\n");
+ 
+-	ret = dma_async_device_register(&priv->slave);
+-	if (ret) {
+-		dev_warn(&pdev->dev, "Failed to register DMA engine device\n");
+-		goto err_clk_disable;
+-	}
++	ret = dmaenginem_async_device_register(&priv->slave);
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++				     "Failed to register DMA engine device\n");
+ 
+ 	ret = of_dma_controller_register(pdev->dev.of_node, sun4i_dma_of_xlate,
+ 					 priv);
+-	if (ret) {
+-		dev_err(&pdev->dev, "of_dma_controller_register failed\n");
+-		goto err_dma_unregister;
+-	}
++	if (ret)
++		return dev_err_probe(&pdev->dev, ret,
++				     "Failed to register translation function\n");
+ 
+ 	dev_dbg(&pdev->dev, "Successfully probed SUN4I_DMA\n");
+ 
+ 	return 0;
+-
+-err_dma_unregister:
+-	dma_async_device_unregister(&priv->slave);
+-err_clk_disable:
+-	clk_disable_unprepare(priv->clk);
+-	return ret;
+ }
+ 
+ static void sun4i_dma_remove(struct platform_device *pdev)
+@@ -1380,9 +1363,6 @@ static void sun4i_dma_remove(struct platform_device *pdev)
+ 	disable_irq(priv->irq);
+ 
+ 	of_dma_controller_free(pdev->dev.of_node);
+-	dma_async_device_unregister(&priv->slave);
+-
+-	clk_disable_unprepare(priv->clk);
+ }
+ 
+ static struct sun4i_dma_config sun4i_a10_dma_cfg = {
 
-Thanks,
-Stefano
+base-commit: de266931dd996fc2cb8ee8b5d12e39ea463e3f36
+-- 
+2.43.0
 
->
-> 		if (put_user(cid, p) != 0)
-> 			retval = -EFAULT;
->
->-- 
->2.49.0
->
 
