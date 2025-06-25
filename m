@@ -1,109 +1,127 @@
-Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com [209.85.210.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424201D5AD4
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B073329B8E0
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:32:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750865530; cv=none; b=i7V3V2wh468T3EsPQ2ZrdYZdcqRrKknH1YfyDIS0zgAP3A5xdIb/a475rFlZnE1CZaaSmr50HPAQyFPGQdzwhFoBWboXe8S7w0OnscTLIhOB0cAeF3da/jX87Y6MlKiBY53sn/njJb9R395qQrBI1rTfK+DeXhGV5kT17FKIZaI=
+	t=1750865538; cv=none; b=CPo0z3c21FHUpgZtw+Q33avhAh/tYGi9S9LK9Kcs//dvxoeqL4NxkoyUyGVpZWxqvllVmjhRmEyG+Zk8YqfMZhviGSakUegp6GjAJYisH8iIaw/K/RuUrnDQ+wL1c1MR/ePpVKVtvdyd/G9MdmEYzaullKbLPqySApRSdmNXMfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750865530; c=relaxed/simple;
-	bh=x6feCITrFhPaGclC8zFQ2HR1RuZnWD4n2DVDo7w5SLg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=RB+AhjtbEb3tcb7udhKKpATiXoO/FhMsGPb2zObWksS3pqYH3+YG94rJ7zLYfECqt1dJIRehU42Pv4LW9CGDs41bpNoVQnRwPt3WbZbuyhhOVEfMPYbsroQloJ6iPkvTmRrySnWywRbnoehSe415lEdd/LjVdQdEoGVuCupoTQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PkINNl6M; arc=none smtp.client-ip=209.85.210.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750865538; c=relaxed/simple;
+	bh=I813X3EiTRqpw6wo324kYvor4rpxKNGrNGbvqJoqGYk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KgvkcW2gORMibPDQUFRjZZu37gmqqkrI1cAOQ/O/Nc09NOvch8EAdWYUBtFergMebKSdodjm+1Vs9pkXtpy7ZHUWmyLcBl3Aqy+ym9Mw6z93TL56suuDWGdRD1xMWcE26D1LXAxe6cDN6z19Q8aw0zJH2OUoH++O/ZtJS9/xVV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=bw2ttHAH; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PkINNl6M"
-Received: by mail-ot1-f49.google.com with SMTP id 46e09a7af769-72c173211feso1886119a34.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:32:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750865528; x=1751470328; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QSbIY9Yl8vGdIuAQaYjHaIKe7rsAqaxI1VrCaxGNZw0=;
-        b=PkINNl6MOv/ae6cm9mouEGJSDtwAfzwyVphShMnC7nlIVU4MGOzLM1F7WhSu/DKUJb
-         vrzT0dHTK9IEg81Sh/sycODTBjzNDfuoOtc4P4z4/1KCwLU1Q7BOZfWxXIjVo4nM1MaE
-         SU44gQyOizJ4qkq/Dgke/WqTpeQicmGXhwKoGZPXx568wp2EhZVISxLQ3/LYlCCNve04
-         uWxMHnC0lWt8BklKCov0zxaQ9PlMYv7cDwJgV/xckoxO7LHSsQf3GQQUsJUj8R1ggXY/
-         nrtHJjKksOo+NnX6lU5PIamRUw20gjZNe9wSBJJzIgrMZeqCFN2zy5+qX/ekU8XD0qa/
-         i9NQ==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="bw2ttHAH"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PBa8Fu021236
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:32:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	2bRqJKwszvjn9ZfGyF+gPi3zgUpm+iifoMBtv8JYdic=; b=bw2ttHAHNYzMxnOn
+	hOLUp5wwm0y0ZTcVIAimXepUCyF0A2YfkqHE8xOau7c2c6X1jCrrr5VZJuCgZ6tF
+	OzJoJDrzDD5XMfPCdDzUlS0wHv3/DmHOcgQ+buld14vkQkj6TykjMsgwbcM11Tnn
+	cAOyzJeY9xnRVI1FWb0OutxSmrvzg35lUey4edVCal3cmDzIcFGvbB44y+uFVEBy
+	y3r9eX9IxaGN8ZF5HidYKkzeKIg2gAM3cW7L/BHAGn8nLxTu7UK/8XdWb/OTn82F
+	xbYiyFW/uxk/B/JBWUzju8gyos6uzEMfUpmwuaSpbGesasw8dNpL6ckADKsTW3io
+	HaTgoQ==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47emcmt1jn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:32:15 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d3ba561898so117238285a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:32:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750865528; x=1751470328;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1750865533; x=1751470333;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QSbIY9Yl8vGdIuAQaYjHaIKe7rsAqaxI1VrCaxGNZw0=;
-        b=Pk3ZVmR1cNXAaaxP2vIIlvf/DFBe/hfi57aIJaPaLDLlPzCJ6e7vZ3nDtgjNZ/W4hh
-         9uJ01liws2aVOsxbwLrLd6Q9WCh+eQkVeVyQwNug1Opbi1VBS69TDq5FOVk3q4EJ71LS
-         YHb9OhSYe6ikOlY7NwZtq4hsSwxYFVUK54u/MZk51jhoel3GzLlGKaSpqxoPeHje5xI8
-         /TvrnLYfZuvkwweReoxy2YLB6lTRmCgtfNAYPmEd3cFGvSAmTeQNOsEqGslL9sZaQwZo
-         Z7LigCGYJxGkQ4GrxFCG1i/k26T6e/UOyNuDAS19Z5K4JlTEC8e1x3o0eK5rx8tIh3XD
-         wAUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWkYVbuVowY0OItwwd0RVUvfz/4gi90HQlcD76DhTt/VOCbC4VdRDZ6I8S76RWDLI00StzOHTNnyhqBC/I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxmn0TE/eZTzgb2yOWufORHNQtPdB/Zx/NZBK4oiezhNjIiiQFx
-	HIaZkkO16urwOKok7SYx7AV+8ZgvB4bBS3GKp140IOWmS88XOc/FZYkmJlM0+g/ijyQ=
-X-Gm-Gg: ASbGncuuTsfwBd+/54axvPoYGg3F8hccU7uMJLbQ9Ij5FbEXm6rVMTL9MGSgIZSFzlC
-	8n/IKbi2ne02KyO1IUlJgn8mIk342R7DRmKMXWfVgQ4TSMBfrah6DHFowabG8wMPFL/Jgg3CKK/
-	W6zCWbwewUUU5yLE0nC8AY9iwh1VJhDEeBOpogKF8gsMnAXm3zDkCDBlTcrOh6wTOebNCpwSXGV
-	2ZrOdomctOSMAKYS8gCaoVVuH4y2OUTSWLBTKLZzTiTrtCPFBYA6zn11pbdE6x0KrjCj4WX2N0j
-	A5WORXBMFju9jmr0UUutsOD7BJr+3Jqw5Dk+0Lh/SRIhfQGDgNw0suzCBlB/UXKNsJc3jA==
-X-Google-Smtp-Source: AGHT+IHnooEMEz17n4Y/kHC8fTdwEsKQiWCHXSACT92x6wJgEO1U5hoZYWd06+PlWgby4tspZtHXSA==
-X-Received: by 2002:a05:6808:81d5:b0:406:6fd3:ff18 with SMTP id 5614622812f47-40b05c740b8mr2902678b6e.34.1750865528333;
-        Wed, 25 Jun 2025 08:32:08 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:1fca:a60b:12ab:43a3])
-        by smtp.gmail.com with UTF8SMTPSA id 5614622812f47-40ac6d11bd8sm2252633b6e.39.2025.06.25.08.32.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:32:07 -0700 (PDT)
-Date: Wed, 25 Jun 2025 10:32:04 -0500
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Oscar Salvador <osalvador@suse.de>,
-	David Hildenbrand <david@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Harry Yoo <harry.yoo@oracle.com>, Vlastimil Babka <vbabka@suse.cz>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH v2 next] mm,memory_hotplug: set failure reason in
- offline_pages()
-Message-ID: <be4fd31b-7d09-46b0-8329-6d0464ffa7a5@sabinyo.mountain>
+        bh=2bRqJKwszvjn9ZfGyF+gPi3zgUpm+iifoMBtv8JYdic=;
+        b=KcNwbObfzwh0WZyP7vJBbeFYzsY/oBiwonVXlPUQIVMO5WYSfY5Ajl4+JGsSuTfH3D
+         uZi37RnctI68NyDv56feBeZ+LCuYZDHV6RNSyt2su1K8npx7WNrvWl0EocrWGe3kWuBI
+         10K5U41+/3US+QmezQOWyAnLPDdaxkjNwoxqvsgyOf0AwDUAmJxbH4d9zYlxrCsIkDTY
+         lFGhcPk7fFs1TYtPNjuv7YW+im5i9cDZih+Nj0EYIFpNhbliWfbXJXx3VN9zf57XoIrl
+         O1soG++t4tV95W2lAc8zw7bJt7VQzYbrwajDDT+emtrEjHxW+AUkrODvtdvZA/382QTR
+         AjDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXlW/Yupq7sj0pCCEgAmRJQwgH6NpMSwxABe9nezWIUI4OCGW0FlDzR3ZAZrTuiE7u0ps+D4X63hmd2JTM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZJoXBKR1k6M+J/JzsBQrjuMHcMEUuMmALT72HaTqWK9aWoqe7
+	iyHgsb0PWikWAPXIXUirMqv96uFWdlRlt6VnG+5BsMsj1+dSfcgPfqbLmj+jxeCAfl+TI1H1322
+	q5m2yppwgO8NJ2mYmdh68AXs0AvjLPBmJHxAtNfciADoev7C04BNdhqIQX99bd45Ey2U=
+X-Gm-Gg: ASbGncsobGpxQ9cWXdrTNj8KHJ0BiKasO8YbIQsBrYwiDRyerLqMXrySCxt1yezwMgW
+	wRVKCdX9rim/zQywyuIWrDVbJgxScwK6PylJm6yGhZaPAROtySsSTswz9pN7XeHBj8qfix0Ct8S
+	pwilHLUPXaflCWSQy9dA7LHN8Cd4i7MLFYxFPtMkRpdm/WmRfYp8pngJMmyNcokPZWHF7yvONZT
+	RziNKubyjVg2nMumx17+XCeDYumY98jJloQdoeYvH1mkPUdM6eiHXYtWJo7l608OsAQe4L28+PS
+	XzzQaIimoPo8x2yuoI6C+ZD5IpibXBPCgGqdgb2A/UH/4DPPuebKI+jlmWip1S6fIq7uus/1f/E
+	Usfc=
+X-Received: by 2002:a05:620a:1a22:b0:7d4:1e05:ecae with SMTP id af79cd13be357-7d4296da9c2mr193092785a.3.1750865533422;
+        Wed, 25 Jun 2025 08:32:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEuBJ83h9G+qwXCNBTSoc+BDxPk02mWPCES2uC4O7zyFAuSLARJnDW3VJXs7MFVpfgTejIuwQ==
+X-Received: by 2002:a05:620a:1a22:b0:7d4:1e05:ecae with SMTP id af79cd13be357-7d4296da9c2mr193089185a.3.1750865532427;
+        Wed, 25 Jun 2025 08:32:12 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0cab0ed04sm63243066b.135.2025.06.25.08.32.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 08:32:11 -0700 (PDT)
+Message-ID: <e24c7bef-e94d-4deb-9ee5-a8e91373716c@oss.qualcomm.com>
+Date: Wed, 25 Jun 2025 17:32:10 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] soc: qcom: mdt_loader: Fix error return values in
+ mdt_header_valid()
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+        Bjorn Andersson <andersson@kernel.org>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <db57c01c-bdcc-4a0f-95db-b0f2784ea91f@sabinyo.mountain>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <db57c01c-bdcc-4a0f-95db-b0f2784ea91f@sabinyo.mountain>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: oCCqnQ3t1TqlamWfQ51E_GA4yF5jU80W
+X-Proofpoint-ORIG-GUID: oCCqnQ3t1TqlamWfQ51E_GA4yF5jU80W
+X-Authority-Analysis: v=2.4 cv=J+eq7BnS c=1 sm=1 tr=0 ts=685c167f cx=c_pps
+ a=50t2pK5VMbmlHzFWWp8p/g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8
+ a=W7YHIwnd5pbqMA7mjMgA:9 a=QEXdDO2ut3YA:10 a=IoWCM6iH3mJn3m4BftBB:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDExNCBTYWx0ZWRfX1P3lDMspkZz3
+ VnxI5WIDS2PmwZudlrsgrPSU7pUa8zsLt8oOz/nybYM1Mjw+2bAbXcLP6NRtsoNI21+BqM3iZJz
+ 30wefmdlBfZBtAaAREHM+VOBK4EFO3q/5Yb6j/nReXIqXRztIytF1Y+g55anFogzGP/h0+B3t+F
+ q0jdFwzPoDXUbh8cwNnnkem9OfxY28tidnmkwwRpR8eDRZmcwOc060nUPrcCLmIyrqGaMVVdaf+
+ AxI9ndDokUklzkkw1WWSVjg8SesSzN2WIrXJyxbjHZKG44Hsf2drXk66MH5334/C7LIEtfLsJ9W
+ hUA/Xu/99b+S1ayg/fJlTPMfvztbc+woRbJPio7arnyZIJ9TFG1/oIHv8h/FcWokvVKSidOI+tf
+ xJqj5fMC2vmBxLQMr+7yGw596Z9Z+iycWLu7mJDZBNVWg0YlSL47zNamNAXQ+xxm/2ItCo9C
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_05,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 mlxlogscore=999 adultscore=0 impostorscore=0 clxscore=1015
+ spamscore=0 malwarescore=0 phishscore=0 priorityscore=1501 suspectscore=0
+ mlxscore=0 lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506250114
 
-The "reason" variable is uninitialized on this error path.  It's supposed
-to explain why the function failed.
+On 6/25/25 5:22 PM, Dan Carpenter wrote:
+> This function is supposed to return true for valid headers and false for
+> invalid.  In a couple places it returns -EINVAL instead which means the
+> invalid headers are counted as true.  Change it to return false.
+> 
+> Fixes: 9f9967fed9d0 ("soc: qcom: mdt_loader: Ensure we don't read past the ELF header")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
 
-Fixes: e4e2806b639c ("mm,memory_hotplug: implement numa node notifier")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
----
-v2: I misunderstood the reason why the function was failing.  Use the
-    correct reason.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
- mm/memory_hotplug.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 4d864b4fb891..e4009a44f883 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1977,8 +1977,10 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages,
- 		node_arg.nid = node;
- 		ret = node_notify(NODE_REMOVING_LAST_MEMORY, &node_arg);
- 		ret = notifier_to_errno(ret);
--		if (ret)
-+		if (ret) {
-+			reason = "node notifier failure";
- 			goto failed_removal_isolated;
-+		}
- 	}
- 
- 	ret = memory_notify(MEM_GOING_OFFLINE, &mem_arg);
--- 
-2.47.2
-
+Konrad
