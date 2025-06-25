@@ -1,196 +1,153 @@
-Received: from relay.smtp-ext.broadcom.com (relay.smtp-ext.broadcom.com [192.19.144.205])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531E91D7984
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.19.144.205
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C3C71AF0BB
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:53:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750873972; cv=none; b=SD+DL717Fu+57VuYlPAosvwWL8tc1wsYzjzjk2HHNqPq325xkkXprRh77jPMK0DvIPH86ERjPuN8ygmfuUWear6rwx5nmAyJI/YtjM6OIzfqXVubIjLUJbMbHk/IBDanMWKljFeAMhvPhEbpXdFlv0UO1ecLzSApBMrDCg/cN9I=
+	t=1750874040; cv=none; b=a/jfhbZzFBoSH4T9/iEgplYmxaM9lFLCdq7Oep+Q3xyRhY1XWUa5SNxvR9PclZXyfCjc0rWLWw7RvpG0nrcpxELFHflNGMcsRE4VVyA/8qLrDz6ym6umfEeBPaYpUkOM+BlkReOEXEal9UqbL4VJgfPpdmbS6ybtxreWR4GpxIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750873972; c=relaxed/simple;
-	bh=diUs+emJ1PgouBHKc8p0tTDSS6ZydLFUrIltWRKGTSM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fCaQgIkgL88W3GsvDX0+5ms472aiCCOVvLRTjU7RD8C52vbiPzUr+0nbzQKJuy1JD3EflKAlC+tr37fMK2s1JJZk3kOHHdYujrjsGdwP6Cs+t+TEeV7U7H4KGehp6Pgpl7J2Pd9Cnd8FVGxYII7pgtmLGMNIPyDnDx0HUymVPDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Y+gCQtRU; arc=none smtp.client-ip=192.19.144.205
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1750874040; c=relaxed/simple;
+	bh=CFUEUk5xUpc9zLE1MwObmu07Edbhws/ym50msGMLvF4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DbdoUFjlexJFNdCMoXWUYc5XjCnCLoBqie702O0l1308Zipv30TdoO87mtxf1Gle/MS/NcNNAbmDnkNgnFnKfS2d3rOJcvHusy2ErNgVYLJ3uML5Md4uoKYzUj81uNV5O1dfVywlOKFP6Co+nfWeX68NZSLALqLmLwsFvGxAMeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yTB784w3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OkH7btFD; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yTB784w3; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OkH7btFD; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Y+gCQtRU"
-Received: from mail-lvn-it-01.broadcom.com (mail-lvn-it-01.lvn.broadcom.net [10.36.132.253])
-	by relay.smtp-ext.broadcom.com (Postfix) with ESMTP id DF31DC002827;
-	Wed, 25 Jun 2025 10:52:42 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 relay.smtp-ext.broadcom.com DF31DC002827
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=broadcom.com;
-	s=dkimrelay; t=1750873962;
-	bh=diUs+emJ1PgouBHKc8p0tTDSS6ZydLFUrIltWRKGTSM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Y+gCQtRUvMs4FWolx1t2qnTYkLBjTIqwFBRJuaHPdB2PShGBgMe3CPnPwekcUHPB7
-	 Bb31zWcpKKe4UJp8OCUCVnBtWNrIW+0jM+cdj8omRcHqTzCVgt9pEqbRn7uE4yxoOq
-	 e1h3mlbiT68Pw91x0Ec5aHoteuo0BhV1FuYFHXmc=
-Received: from fainelli-desktop.igp.broadcom.net (fainelli-desktop.dhcp.broadcom.net [10.67.48.245])
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yTB784w3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OkH7btFD";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yTB784w3";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OkH7btFD"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mail-lvn-it-01.broadcom.com (Postfix) with ESMTPSA id 8FBCD18000530;
-	Wed, 25 Jun 2025 10:52:42 -0700 (PDT)
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-To: linux-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org,
-	jan.kiszka@siemens.com,
-	kbingham@kernel.org,
-	Florian Fainelli <florian.fainelli@broadcom.com>
-Subject: [PATCH] MAINTAINERS: Associate GDB scripts with their subsystems
-Date: Wed, 25 Jun 2025 10:52:38 -0700
-Message-ID: <20250625175239.1099848-1-florian.fainelli@broadcom.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp-out1.suse.de (Postfix) with ESMTPS id AF0B32118D;
+	Wed, 25 Jun 2025 17:53:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750874036; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xpFHd114ytKEjWw2eJqvNKzl0S1pv8LJlzpfoSAjlsA=;
+	b=yTB784w3XxqRr7tcxhkaBvuZzXqXY+0sCrUczooEDmVbsqzulbzwOI6mI495Sty0Opqg2y
+	ufD/nc6rQ2JNqJ2fR/mXyPRPtlEOXPO03e+lDE1rYUR0q7fonet7DKQL7gOmJIU97Kf1Q+
+	ISPYybpHgiF8jNdTZL/RR+RQEcVtdtw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750874036;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xpFHd114ytKEjWw2eJqvNKzl0S1pv8LJlzpfoSAjlsA=;
+	b=OkH7btFDSFFBOL+YISuxJ5+1t1zbEDjBDQpIE7fHlzo6onuifQeRoqOgkqChwc852Vjdky
+	kSufkadGnUtlX3Cg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750874036; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xpFHd114ytKEjWw2eJqvNKzl0S1pv8LJlzpfoSAjlsA=;
+	b=yTB784w3XxqRr7tcxhkaBvuZzXqXY+0sCrUczooEDmVbsqzulbzwOI6mI495Sty0Opqg2y
+	ufD/nc6rQ2JNqJ2fR/mXyPRPtlEOXPO03e+lDE1rYUR0q7fonet7DKQL7gOmJIU97Kf1Q+
+	ISPYybpHgiF8jNdTZL/RR+RQEcVtdtw=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750874036;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=xpFHd114ytKEjWw2eJqvNKzl0S1pv8LJlzpfoSAjlsA=;
+	b=OkH7btFDSFFBOL+YISuxJ5+1t1zbEDjBDQpIE7fHlzo6onuifQeRoqOgkqChwc852Vjdky
+	kSufkadGnUtlX3Cg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0A53B13301;
+	Wed, 25 Jun 2025 17:53:55 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 0VuQO7M3XGjIUQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 25 Jun 2025 17:53:55 +0000
+Date: Wed, 25 Jun 2025 19:53:54 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	David Hildenbrand <david@redhat.com>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	"Liam R . Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: add myself as THP co-maintainer
+Message-ID: <aFw3sljxMuas-y64@localhost.localdomain>
+References: <20250625095231.42874-1-lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625095231.42874-1-lorenzo.stoakes@oracle.com>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email]
+X-Spam-Level: 
 
-The GDB scripts under scripts/gdb/linux are very useful for inspecting
-kernel data structures however they depend upon the internal APIs and
-data structures which are updated without much consideration for those
-scripts. This results in a near constant catching up with fixing the
-scripts so they continue to work.
+On Wed, Jun 25, 2025 at 10:52:31AM +0100, Lorenzo Stoakes wrote:
+> I am doing a great deal of review and getting ever more involved in THP
+> with intent to do more so in future also, so add myself as co-maintainer to
+> help David with workload.
+> 
+> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 
-Associate the GDB scripts with their subsystems in the hope that they
-get more love and attention.
+Great Lorenzo :-D
 
-Signed-off-by: Florian Fainelli <florian.fainelli@broadcom.com>
----
- MAINTAINERS | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Acked-by: Oscar Salvador <osalvador@suse.de>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index efb51ee92683..ffd08e63cd20 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5979,6 +5979,7 @@ F:	include/dt-bindings/clock/
- F:	include/linux/clk-pr*
- F:	include/linux/clk/
- F:	include/linux/of_clk.h
-+F:	scripts/gdb/linux/clk.py
- F:	rust/helpers/clk.c
- F:	rust/kernel/clk.rs
- X:	drivers/clk/clkdev.c
-@@ -7374,6 +7375,7 @@ F:	rust/kernel/faux.rs
- F:	rust/kernel/platform.rs
- F:	samples/rust/rust_driver_platform.rs
- F:	samples/rust/rust_driver_faux.rs
-+F:	scripts/gdb/linux/device.py
- 
- DRIVERS FOR OMAP ADAPTIVE VOLTAGE SCALING (AVS)
- M:	Nishanth Menon <nm@ti.com>
-@@ -10119,6 +10121,7 @@ F:	Documentation/devicetree/bindings/power/power?domain*
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/linux-pm.git
- F:	drivers/pmdomain/
- F:	include/linux/pm_domain.h
-+F:	scripts/gdb/linux/genpd.py
- 
- GENERIC RADIX TREE
- M:	Kent Overstreet <kent.overstreet@linux.dev>
-@@ -10126,6 +10129,7 @@ S:	Supported
- C:	irc://irc.oftc.net/bcache
- F:	include/linux/generic-radix-tree.h
- F:	lib/generic-radix-tree.c
-+F:	scripts/gdb/linux/radixtree.py
- 
- GENERIC RESISTIVE TOUCHSCREEN ADC DRIVER
- M:	Eugen Hristev <eugen.hristev@microchip.com>
-@@ -12750,6 +12754,7 @@ F:	include/linux/irqnr.h
- F:	include/linux/irqreturn.h
- F:	kernel/irq/
- F:	lib/group_cpus.c
-+F:	scripts/gdb/linux/interrupts.py
- 
- IRQCHIP DRIVERS
- M:	Thomas Gleixner <tglx@linutronix.de>
-@@ -12985,6 +12990,7 @@ F:	include/linux/kasan*.h
- F:	lib/Kconfig.kasan
- F:	mm/kasan/
- F:	scripts/Makefile.kasan
-+F:	scripts/gdb/linux/kasan.py
- 
- KCONFIG
- M:	Masahiro Yamada <masahiroy@kernel.org>
-@@ -14464,6 +14470,7 @@ F:	include/linux/maple_tree.h
- F:	include/trace/events/maple_tree.h
- F:	lib/maple_tree.c
- F:	lib/test_maple_tree.c
-+F:	scripts/gdb/linux/mapletree.py
- F:	tools/testing/radix-tree/maple.c
- F:	tools/testing/shared/linux/maple_tree.h
- 
-@@ -15748,6 +15755,10 @@ F:	include/linux/mmu_notifier.h
- F:	include/linux/pagewalk.h
- F:	include/trace/events/ksm.h
- F:	mm/
-+F:	scripts/gdb/linux/mm.py
-+F:	scripts/gdb/linux/page_owner.py
-+F:	scripts/gdb/linux/pgtable.py
-+F:	scripts/gdb/linux/slab.py
- F:	tools/mm/
- F:	tools/testing/selftests/mm/
- N:	include/linux/page[-_]*
-@@ -16809,6 +16820,7 @@ F:	include/linux/module*.h
- F:	kernel/module/
- F:	lib/test_kmod.c
- F:	lib/tests/module/
-+F:	scripts/gdb/linux/modules.py
- F:	scripts/module*
- F:	tools/testing/selftests/kmod/
- F:	tools/testing/selftests/module/
-@@ -19430,6 +19442,7 @@ F:	arch/*/include/asm/percpu.h
- F:	include/linux/percpu*.h
- F:	lib/percpu*.c
- F:	mm/percpu*.c
-+F:	scripts/gdb/linux/cpus.py
- 
- PER-TASK DELAY ACCOUNTING
- M:	Balbir Singh <bsingharora@gmail.com>
-@@ -19771,6 +19784,7 @@ F:	include/trace/events/timer*
- F:	kernel/time/itimer.c
- F:	kernel/time/posix-*
- F:	kernel/time/namespace.c
-+F:	scripts/gdb/linux/timerlist.py
- 
- POWER MANAGEMENT CORE
- M:	"Rafael J. Wysocki" <rafael@kernel.org>
-@@ -19886,6 +19900,7 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git
- F:	include/linux/printk.h
- F:	kernel/printk/
-+F:	scripts/gdb/linux/dmesg.py
- 
- PRINTK INDEXING
- R:	Chris Down <chris@chrisdown.name>
-@@ -19901,6 +19916,7 @@ S:	Maintained
- F:	Documentation/filesystems/proc.rst
- F:	fs/proc/
- F:	include/linux/proc_fs.h
-+F:	scripts/gdb/linux/proc.py
- F:	tools/testing/selftests/proc/
- 
- PROC SYSCTL
-@@ -26440,6 +26456,7 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm
- F:	include/linux/vmalloc.h
- F:	mm/vmalloc.c
- F:	lib/test_vmalloc.c
-+F:	scripts/gdb/linux/vmalloc.py
- 
- VME SUBSYSTEM
- L:	linux-kernel@vger.kernel.org
-@@ -26949,6 +26966,7 @@ F:	include/linux/xarray.h
- F:	lib/idr.c
- F:	lib/test_xarray.c
- F:	lib/xarray.c
-+F:	scripts/gdb/linux/xarray.py
- F:	tools/testing/radix-tree
- 
- XARRAY API [RUST]
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4b9a4fa905e1..a8a963e530a4 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -15945,9 +15945,9 @@ F:	mm/swapfile.c
+>  MEMORY MANAGEMENT - THP (TRANSPARENT HUGE PAGE)
+>  M:	Andrew Morton <akpm@linux-foundation.org>
+>  M:	David Hildenbrand <david@redhat.com>
+> +M:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>  R:	Zi Yan <ziy@nvidia.com>
+>  R:	Baolin Wang <baolin.wang@linux.alibaba.com>
+> -R:	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+>  R:	Liam R. Howlett <Liam.Howlett@oracle.com>
+>  R:	Nico Pache <npache@redhat.com>
+>  R:	Ryan Roberts <ryan.roberts@arm.com>
+> --
+> 2.50.0
+> 
+
 -- 
-2.43.0
-
+Oscar Salvador
+SUSE Labs
