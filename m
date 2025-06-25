@@ -1,191 +1,299 @@
-Received: from CAN01-YQB-obe.outbound.protection.outlook.com (mail-yqbcan01on2128.outbound.protection.outlook.com [40.107.116.128])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BBE266573;
-	Wed, 25 Jun 2025 14:25:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.116.128
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750861534; cv=fail; b=XG5JuB7bpY/UVQVGRsk6Zgg8Narr785oLgwRkaAuDVUTdL7Ual+zWxmG8q4R4wZmep2OU6Z0YvludybIypyLvsfNPcmx0NbTUYiN4Mu2uySRbUNlAoXg+Yp16YEUJcruxNn8XAsCZB42BcNFUXZYnFt90hV2P231X5J/0qtQuEQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750861534; c=relaxed/simple;
-	bh=UVJeHEANmJhiShEEcRqcHg9V54kkTkXTBvHbv6pY/kI=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=HWmTXpqPVQ20ov+1EdKyzVpTqGa1+h/2CCzl3LfY3il76Y9TN4mcy7aC+JkWr8bc/H+tI6YEgzEBciJLwgZv1ITqsPJbtMBXEukHO2LeSBypTUZJoCKEieqUuTdR83K7iyypkaN9UI5AG5olduQgAZT2OVlHH+x4SjOyjysBCFA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=cTHBNInf; arc=fail smtp.client-ip=40.107.116.128
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2FE266573;
+	Wed, 25 Jun 2025 14:25:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750861549; cv=none; b=YAhqb/3idlCktNgPWq4V1ZKGKzjPuA7dk0ruC2GbaY0AtVwLMgbo5tvoxtEBuI084yykxhLpuWtcvHdnfDqtXL8WCfmh6lYkLgJ9Mi2meINLJHX3w8ASblUJfwhmd3xbdO4WsWnMaInSd8R/MjAfRup2LXkpjYWkGrto0pNG9po=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750861549; c=relaxed/simple;
+	bh=ooti5aRiP+r/vzUl75DAjcq1JqYhjChiHekLoh9kh1k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EQPkS+ygog9GItwi8wIo5EQNAFMq+eQ6YpmVPrLiEgbXVKvFSGQEKVJYqbDOJQcRG4PG2PGk//ByypsfRRYLtzfCar8dtDuJhGlH0/hlownfhGfDtj3NXpzlXO/3ZrQYJd2LqBEH0L8W5RznJusO4aAXiHIbjDJdq4AdkBJ9nuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQbaOju/; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="cTHBNInf"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=cgtwgxHkS74BpOM8TG62YzKJdgFteo1WnHLwhpKXqWw9s58HZTIBA148fAxoI2yAqcHXMFk9XoN2qmkMSYSL8cLSaqxVYBNxWM7hMqCB8cPn1dEQsiCMmCGCjdIcyR8q6LDQNCjJHbpRXAdCYWc65dZesMPbm4BZtmbyqEiAmUH7VsfYVHIC2+S5/D6dQvacCWMtpdNxToKzh6PqQuX08JkedSXR3D1JnELBrvQyEsHHSWqr4t/xXMgO9E+3ZvKzUSmYBPFMQVJXf3wmhFsJvQ32sMCLYBOzsydhj9iZVY/7An4hmmDdr8Rwz1TWUxpmkjAeKsk3kjfC/XJjUG47zw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QKVQlz4+BfabLbnRmgR69K+4N5v3Di5dQLnwTvKv9Ns=;
- b=RQtFxXxxV9i2ixiOu1Axc+MMxJ4yjZz5CuFJORY+g+dSs/ZoN50bQ+KqL+lDQc/ykLqkNQI7zRkiClz7+RnZZBPs8p1tqnSGHrphKIO1NGX7RRKpjlA0QIjSqP+WaHBr8X/EGAF2IH6Okq7z1wHb+OJuIWnwp0uDP8w76O2tFax/k8wSZvo1AVdwhI02ObzWm0l12mSId6E0mjuC+aqUm3EpuRH14aKnDwP6siuXG056vxIXspV1bMpArY8V8mFTnr3iXJ6yPQURZZ6PoFjtXRuzHiR9BCQeb1qB6V++osQ34CJY8tysmvrwcYek7bclbAOnbfsqs0wLDImncAznNw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QKVQlz4+BfabLbnRmgR69K+4N5v3Di5dQLnwTvKv9Ns=;
- b=cTHBNInfQCEs8dnXQUWHFaOfi8XUFU9BxGlBHEIrHWL9lqktrUktB9I62LjY4DA6lSZQIJkKafPI9CR00gJeEPeOoe+mF37wOQzCFur3QmGS8P924TZtLsFfpjUh4YwvjH3rWh4ulcV/xWbuMosmPXbZg84AD9NrtoLAR/qRof4V9p4IxfKMCr4lO8xdNQA+JVKAZ7VFEr5f5r7qjix/gG64KbKPymJsHu8e3qV+HnCBnA+sLllaLrwIrCp1bJp25IvDHsMya7DwTVF76raZAwvJmlGNFvK/pTHNgcPpO4sNwxs9hRgrBN7GQQAGCHQgoZvdEz7nKC89ag9KIw3apA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:be::5)
- by YQBPR0101MB8208.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:53::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.19; Wed, 25 Jun
- 2025 14:25:26 +0000
-Received: from YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4]) by YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::50f1:2e3f:a5dd:5b4%3]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
- 14:25:26 +0000
-Message-ID: <3e2a80e6-b3c5-44dd-b290-1d140cc427ff@efficios.com>
-Date: Wed, 25 Jun 2025 10:25:23 -0400
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/8] Introduce simple hazard pointers
-To: Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
- rcu@vger.kernel.org, lkmm@lists.linux.dev
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
- Will Deacon <will@kernel.org>, Waiman Long <longman@redhat.com>,
- Davidlohr Bueso <dave@stgolabs.net>, "Paul E. McKenney"
- <paulmck@kernel.org>, Josh Triplett <josh@joshtriplett.org>,
- Frederic Weisbecker <frederic@kernel.org>,
- Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
- Joel Fernandes <joelagnelf@nvidia.com>, Uladzislau Rezki <urezki@gmail.com>,
- Steven Rostedt <rostedt@goodmis.org>, Lai Jiangshan
- <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
- Breno Leitao <leitao@debian.org>, aeh@meta.com, netdev@vger.kernel.org,
- edumazet@google.com, jhs@mojatatu.com, kernel-team@meta.com,
- Erik Lundgren <elundgren@meta.com>
-References: <20250625031101.12555-1-boqun.feng@gmail.com>
- <20250625031101.12555-2-boqun.feng@gmail.com>
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Language: en-US
-In-Reply-To: <20250625031101.12555-2-boqun.feng@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: YQZPR01CA0017.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:85::13) To YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:be::5)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQbaOju/"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-748d982e92cso1018675b3a.1;
+        Wed, 25 Jun 2025 07:25:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750861546; x=1751466346; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7gaf+j9calOvQuq5f2KKkjhmZldOW4cezU0qA9IROgM=;
+        b=OQbaOju/KCyWVSkvdg06XPtWcsBLnAXFme+L1l5/pNAJMGYNlF07D0hFmYT9C66mVp
+         Yq0pTfWdvYya7A8b1UpAS3AUdjz0p+7ixVtJ+OdZF2gxwIBCgMQF2idFobKapBrWRaN3
+         86e8e8QBwzEqszwgzLC2bXf5q7BbRed2795rgq5uQusOS4EO1P+wO47Yv8vPn7gujTHt
+         dF4+G/au6YFnXiXBZJSVYlN11Pj96x1pqV9oyv7PcamiG432itzIfz+4v/K6ty6zQcYa
+         1gcNcHab70v0I1iwm3qeqDKxPJCTKYVugp9FyskTwMsPtIM5AtwssU088W7lMd4g4+7G
+         hZzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750861546; x=1751466346;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7gaf+j9calOvQuq5f2KKkjhmZldOW4cezU0qA9IROgM=;
+        b=EpSPpNY3J47ILZtXsN6YTlP5fYoplyklTBmYCQ3917TUz3eFkc/vUDUG8teI35Vo96
+         z2/XN81ZJAlmnhiQYqcrY7TcDO/HpmpGkJHtdlFP02wKeifbSgzv6cTfrdOvjrf4RkbU
+         vuxVmpS2nv1+a/r0ZlOMUPp72sbfCcYUtM8PLgczbdsyqQZDmJBF1VcDtyofKBhdMThA
+         1K+bbpNQY0hlpMkN09CbA2OxoiY8Q62x0wcVORnwDiewOzlCbbl/lA5Ym4Ki2BC4IEBL
+         rNRsWNytosXftgcVwxTFzeQD878UGQV3w3fDtG2SJaOZ5YzL7IMFi64hFxIm3WzMA313
+         PLaA==
+X-Forwarded-Encrypted: i=1; AJvYcCWQD1sCxGJfxpjGPF3g56WCTk06kSs07FPnaQW9SbZNWgJavRsXw7BiyTNy8VqRg/D+mxaidVNvgbExtc4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyritTVNWuJ+JmBPh0OQYdLpiX+Gy/ibqRIPknZWXkvCY8ys5IL
+	3hhqJL2blmCqJ6KaTk4TA5EWKmLUHptKUI7+Whv3xI6XMt+kp6/UbsQxBt8Gyg==
+X-Gm-Gg: ASbGnctJ4z1FxGkWmQuCXScEZaVKbGMoRZKW+c4zrABGrmDeVlwjimkyxtBg1n6Ofpc
+	U54FnrmRfrA6emluejj5Owa0q/WBavFhJ9mqB/ejiJkj+AIAF5spC29U11aKmYPv2iXE/1wNmDG
+	cJOvSQ9H087nuj5QOIV7Mev5QiOCH+iAXyh19RUXREHtxq5sd1/4M7uUXsRv92AmgbI2N0Gv0oL
+	Rxg9MKhq1cxRyto5CRn98KH7Jq9j0pdPFrF6DRYG67y2BV0hPdw42g0sysR8zsH9mk7tffQQUMj
+	E7HoGeEcQFiSteU21deWWbqxHmtLgXyVSw7it2BHYkzm2Q3WU3n8DlmNAfiZoFhHfGAFxdmAjXo
+	n0M3QRHuKv/A=
+X-Google-Smtp-Source: AGHT+IHWZsVJs3bjakpXmS/j9tChOa1kgGP9vCPU8F4xi0Cy6u3OFesatG0pGJChVzETz0Ab6p6g/w==
+X-Received: by 2002:a05:6a00:1146:b0:748:3964:6177 with SMTP id d2e1a72fcca58-74ad44f267dmr5223809b3a.19.1750861546212;
+        Wed, 25 Jun 2025 07:25:46 -0700 (PDT)
+Received: from tx3000mach.io (static.220.227.itcsa.net. [190.15.220.227])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e08cfbsm4764799b3a.18.2025.06.25.07.25.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 07:25:45 -0700 (PDT)
+From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+To: linux-wireless@vger.kernel.org
+Cc: Jes Sorensen <Jes.Sorensen@gmail.com>,
+	Ping-Ke Shih <pkshih@realtek.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] wifi: rtl8xxxu: toggle P2P for supported devices
+Date: Wed, 25 Jun 2025 11:25:39 -0300
+Message-ID: <20250625142541.44795-1-yakoyoku@gmail.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YT2PR01MB9175:EE_|YQBPR0101MB8208:EE_
-X-MS-Office365-Filtering-Correlation-Id: d5694c70-1091-4045-bf51-08ddb3f420ad
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|10070799003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SkFLSXJuZGZsbjBsQkRJZ20veDY3OWQ1L1hjV3BSWHhEMUY5UHJ4R2JoRlRM?=
- =?utf-8?B?QnpEYXZvQTFJbHVmdzRqQ0Jpb0pseXkya1M5SFZsY3NZaUpBcmpBUGQxVUNS?=
- =?utf-8?B?VHZ4S1FmNlI2TCtBNkxIeXV0R2QwU1ZDSHp4TVZyTDc2dGtyRVlMbzRRYWFR?=
- =?utf-8?B?WEZKNlN4TVBIZFVrMmJFMHBkc0hPYjBJM3BoMFRKcWxRakw3eGxtREFBY3dL?=
- =?utf-8?B?S3RhWXFlMUtQQzlFOE1iT0NKUDVtYXJCeEtLdVJBUzFpMmxFZGhEREV3bW81?=
- =?utf-8?B?Z2NwZVFHNTQ1ODl1U3JSQWVSLzFybDFDYUFMeVM4TDhsYnhlVXhkb3dxQ3ZH?=
- =?utf-8?B?VHlud08wM1RYMk41TGh3bzZ3WWZxeWg2ajYzaDlPL1RCV0p2RjRYZm5BMDhr?=
- =?utf-8?B?c0JSeGRGejdGc0Y3UThidzB2QmZYblVjU3JBSDRLcXdZMWFzQk12elVjWHQr?=
- =?utf-8?B?MEZhTUVnUGpIWDMzT0dnVjIrTk5PbTNwY21YandQcjRrRTNWVjBJNUg4OExF?=
- =?utf-8?B?WHQ0RUFrbkdGNXpvY0xCcWJYZFp1eS9yK2QxY0tienI3VTVPNHhYZ2dvOTMw?=
- =?utf-8?B?YWxuK3ByVTYxYVJQMDk3Z1AvL3poWG1yS01CTUJackhjSisrcW9zdTRTWnU4?=
- =?utf-8?B?bFBGOThGMnVESmNUc1dJTUNhS1FLQi9zL2g5dWE0Znc0ZE1PZGRtN0JxS1c5?=
- =?utf-8?B?bVIxNEkyR3BpYXcxMFNqSFB6VnZqN2ZDUStnczU3UHIySzV1MnVWS1NOUThI?=
- =?utf-8?B?cVhEZ2hrSjY3Y084THFLaG1zeGZGZC9OU2RqbWFJQ1JvNGhmanZhbVVxdlhk?=
- =?utf-8?B?a1AzNzhqZnZQSStDbERjMVRobFpNMmpFTS9WZC9XUVNJUzJ1WkVqZ21YYWF6?=
- =?utf-8?B?VkJhRzZuWno5ZVlBMW5ndTRMR0E5VEovRVBRQjNvcCtlbUU1WDVwMjJHSlBB?=
- =?utf-8?B?NmVMOUFXR0J0QUhNY0VZU3AyRWZaczBxNFlmRmlXRThKZEhpSytIRkVGTGRV?=
- =?utf-8?B?aXIyMmNSNmRYSXVMOW94QWhCbloxNldQMTNnMjUwMmJQZHVxOFNManZFRGN6?=
- =?utf-8?B?VEoxV3hkajF5OWJBN3B2VGNhM3ZGeXA5enFMNUg4ZTRLUnF3d0kzOHJ1NndU?=
- =?utf-8?B?ZlcyZVFIejlWd2ZKeXpxWVErK1ZxVEdxb3RlUnBnOHFzWmNGOWNmeTlkbk1Q?=
- =?utf-8?B?MWxJRXU0TjNRb1NDZjUzSVY0L2xYOHQvVTNtQmwvNFplblNwRGxVNnBLd25t?=
- =?utf-8?B?MWdlTGEwaEJDS0VtOCsyVHNmSlF6cUhaZHAycTlNd0lISlo5eGU4MU90UGh3?=
- =?utf-8?B?cy9YK25uL3NqdkwvZXgzZ1JLdTVvNUJJVklFZFM5TGxtbnZGcWhqblBONFVN?=
- =?utf-8?B?QnRoUW0zemFPS3ZiL25zYWVJTFdsUCtLcVAwUHBCaEdHb3FER3pBTXcvNGtz?=
- =?utf-8?B?ZG9JRUdBWk5pSFBHNjRwTGQ5ZUh3eDBaOE9JT0UxNGJUTVFxZ3BDOUNzejdw?=
- =?utf-8?B?QWRrSVZoQ1RWWVcvS2tDaXFNbk1NWkpTbkRiUDBOdWFQUFozTWF6RUljOU1q?=
- =?utf-8?B?Y1hrRGRONVB1ODBVM29YUjF6MlRUVThkdnJyZGJIdUdoNmdjalAySHFYSWxE?=
- =?utf-8?B?ZnNJSkR6WHlVNXppbTQwdzE0dGlRS2xDRHB0L04wZE93M3ZiQTUveXhpNktK?=
- =?utf-8?B?TWduc0J6UUdZMGVydnNXL095WU0wMWVycmJKUUZ4SnEwTC9tSjlGWWFFaFh6?=
- =?utf-8?B?WHY5OHlablJrRkJwSEFGeHBuc2llcGdMOEtwUTlVdEhZU2RhTzNIODROaER6?=
- =?utf-8?Q?pOnFfzgXSlMNWA2FNlAeuTXCHqsREzWHePmJQ=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(10070799003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bkRVY0laTWdzWk1MUFlIcXd3VzBqVW1qTzA2UnBVOHpxOVllQXZoMGdBUjNO?=
- =?utf-8?B?UUhtWkdWMDQ2Qmg5eU44Z2hCVFZIMS92dFQyQ25WaGJJeENPSzJ2Z2pTSG80?=
- =?utf-8?B?K2x3cDM1QktkRkRld0x6YWthakZCOGVuWDZ3Si8zalJtR1I5NXoxUlVwR1Jl?=
- =?utf-8?B?ZFV2VjR2VlJNL1VXdk81cHdVa0FNNlVkaTJlWGliRnJtWW5jVW52bHBBOWZD?=
- =?utf-8?B?L0J2em02VXJpNTRrWkJ2YnlJanF0K0NCQ2psR2lZOWFsL3oveUk3L3NxNndh?=
- =?utf-8?B?QUhaek5JWUtiaHN2cE93MjVETUFVTzhrYlEwRG4waTJmbjNMWGJoUERYUkdC?=
- =?utf-8?B?Ulc5ZnR1c0RMWnJ5T1lWei9UWEkycnRQSWJxU2VzRWVvUjlUZ1picDdROG1F?=
- =?utf-8?B?L2dvS01aME1Uem1vWnZjQVBIMytWeWNQUWRteTE5cDRaaklTM2hJcUF3b1Ro?=
- =?utf-8?B?QTBSN3NJTHJ4K0xta3VubzBWb1I5dUV1YkRwV20xQUNWVjhhMUFlVDBaaCt2?=
- =?utf-8?B?MXppSllPTC9OaXlHZ0JkV1lydE5UZCtmU3hnbUpzZDIzR1VjeUlEN0REMGU0?=
- =?utf-8?B?TUNOUWJjY3hIKzVBWUd3cngvSE9nYjNDa0VQSU9OVVFKRUgyVk5odkdoZFph?=
- =?utf-8?B?VnZzTitYK0tYQjQvWkZzTHlra3IzekhtRVdFbS9MSDN0c2tGWnZmQWRyRklN?=
- =?utf-8?B?MU1BQ0EvcHhoMFJNejRHeThDc25IdWxhTC9VTVF4dnNsYlJkQVlZc1VBSVNV?=
- =?utf-8?B?YnBNbFZuVHBpbWNEd1VRbmRqb29yNWczaGZMdXpPM0RrTW4zWlRBSHIxeEJO?=
- =?utf-8?B?TkE1ZXMwQWloWmZpOTladkVKWlF3THBhaHpDc2tNNDRQUHVKRXhuRFlkQVZZ?=
- =?utf-8?B?RGlpelBKdE00S0R2bml6bjlrckV6WFU1VGZZVVF0S3E1ZzZuS1p6MW9naktp?=
- =?utf-8?B?ZTAvcXI0S2FCVGc2blkybzRwSVhJMDFtVFdxVk5na2RsSFhkSHdZYnJmeTE0?=
- =?utf-8?B?MVBTdHEwNHcwbUcybW1zc2VJcDBQTy94MkZxb3UxTDJmdWx6UHIrQnV1aWIy?=
- =?utf-8?B?SmhqakNmS0hYRTBRbHB5TWRDT1NpR2tUVkdUcXplT0J3Vi8xeE1PUVlTUDR4?=
- =?utf-8?B?TzJpckI2STQ0ZnJFeXlmVDBEYzgxMlNibmlOMjJYWHZqM1BIM0hLcjlyTGdU?=
- =?utf-8?B?dTczQzl4QTBOWUp6RDZSN3JGVkJ2TFhGMHBoMTVWbjc2SEhRUE9oOUFLVXND?=
- =?utf-8?B?V2hQMlBRWCtqZ1F1Z3JOTERReFZ6OHREYzA3RC95aWZTNHJHbHNKTE9SRWxw?=
- =?utf-8?B?Z29JYUxQby8yTWpTdmtVMUVkOFNqWmVKME1heWxTeUt6MG8rcFRXeTdTb1RF?=
- =?utf-8?B?K2pxenU5RHlVMGRKNWlGbWdsSVFDMDRvdEZRSzZ1V1F3UkRiblU0RnZJbk95?=
- =?utf-8?B?T0xIYll2WSttZEl2VGptd2I4Q2xGc2JtVHRmMFdsRFVjVUFreWUyeDhTUTlD?=
- =?utf-8?B?WnhtNERMaGZLR3RHMTI1SnVtRElibXBUUWU4N1h4Q3pmK2pTKzRvUWQ2TWdJ?=
- =?utf-8?B?dDlSNzM2QzhDN1BPYjhMakxvVUJ3NVpKb2xOMHlsMlVtd2xMSXIrL09qaVpa?=
- =?utf-8?B?ZTMwMm5KdVpoWFlHdmN1a1FOaTJRUDR2R1N4Y3JmWnVHbU5GMWx6OXhHU2Yx?=
- =?utf-8?B?blR4TWV6N1huRkNaTTIxRFozaXZxM3NIaXJXN1EwekloVk10UFRoSy9xY0c0?=
- =?utf-8?B?Z016azF3ZkQxamFlNlVVSE41U0taSTUxbEhsK3ZzQ2VsbzlJbUoyNW1iTnQ3?=
- =?utf-8?B?Q0lTa1lzTk1zZktYcjc0S2laZjZlQ1FQNVNHeXFwWlprM0lrRk1FbFFHdldt?=
- =?utf-8?B?ZEdUSEd1SXNlTXJiR3JWOExPT1dlakNmWFVwN1NHUTBPL21ZZGtqeFdaK0Ny?=
- =?utf-8?B?Zk04OWVSd01jRjJsU3lGMk5QRlloMnRaMUNjS0dOUDUvRFF1V1RFZHhGWTIv?=
- =?utf-8?B?aUJodmJoUlpXNFAwUmNpSjhINEhpQ0hQS2tXaW9BWTJ4aDNJUEZKUXltdVhz?=
- =?utf-8?B?SGY5a1lMazJ1VDNPM3Bra0kxdVYzTzJyYm44U2R2czNLc0FRcXVyMVk0NHZ6?=
- =?utf-8?B?dHhTWlNNMVNJZlR1aGZ3MmptY25PWXNzSjgrSklsSG9pTUl3czN3WlE0aWM2?=
- =?utf-8?B?YkxVeVBWZGdzNHdnV2dDOUNsQkoyajVUU0NNVTVDWXJpdld0MWViSzBpai9s?=
- =?utf-8?Q?vOHHbiqNkDrcvFWIzQo9D+JQThpxXjx1JMdQRsQ2Go=3D?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5694c70-1091-4045-bf51-08ddb3f420ad
-X-MS-Exchange-CrossTenant-AuthSource: YT2PR01MB9175.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 14:25:26.0527
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1UgCeYVFu+5MZfImnr0WNJF39lzXxjKvcrW8nlrHMyjOxxPv0FsXLlJk41rJLnDXTzneL1fkbnF9KfoMcjPbgGUHXxu0KYbri8iSIlB8StY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YQBPR0101MB8208
+Content-Transfer-Encoding: 8bit
 
-On 2025-06-24 23:10, Boqun Feng wrote:
-[...]
-> +
-> +static inline void shazptr_clear(struct shazptr_guard guard)
-> +{
-> +	/* Only clear the slot when the outermost guard is released */
-> +	if (likely(!guard.use_wildcard))
-> +		smp_store_release(guard.slot, NULL); /* Pair with ACQUIRE at synchronize_shazptr() */
+This is a MR to see if rtl8xxxu can be made to support P2P.
 
-How is the wildcard ever cleared ?
+Theoretically this should be handled by mac80211 but it seems that
+drivers may have to take some extra steps depending on which device we
+are talking about. I know that this patch is so basic that it might be
+missing some H2C commands or similar for this to work on Realtek chips
+but I don't have the required knowledge for me to implement it, so if
+you know a place to read about I'll be glad to hear.
 
-Thanks,
+As of now only rtl8192ex devices have their P2P_CLIENT and P2P_GO wiphy
+interface modes ensured because those are the only ones I can test on
+my rtl8192eu card. The rest of chips have them set from what I've seen
+in a cursory Internet search, they might or might not work.
 
-Mathieu
+Signed-off-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+---
+ drivers/net/wireless/realtek/rtl8xxxu/8188e.c |  1 +
+ drivers/net/wireless/realtek/rtl8xxxu/8188f.c |  1 +
+ drivers/net/wireless/realtek/rtl8xxxu/8192c.c |  1 +
+ drivers/net/wireless/realtek/rtl8xxxu/8192e.c |  1 +
+ drivers/net/wireless/realtek/rtl8xxxu/8192f.c |  1 +
+ drivers/net/wireless/realtek/rtl8xxxu/8710b.c |  1 +
+ drivers/net/wireless/realtek/rtl8xxxu/8723a.c |  1 +
+ drivers/net/wireless/realtek/rtl8xxxu/8723b.c |  1 +
+ drivers/net/wireless/realtek/rtl8xxxu/core.c  | 29 ++++++++++++++++++-
+ .../net/wireless/realtek/rtl8xxxu/rtl8xxxu.h  |  1 +
+ 10 files changed, 37 insertions(+), 1 deletion(-)
 
-
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8188e.c b/drivers/net/wireless/realtek/rtl8xxxu/8188e.c
+index 766a7a7c7d28..f4f5ad7d88e5 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/8188e.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/8188e.c
+@@ -1866,6 +1866,7 @@ struct rtl8xxxu_fileops rtl8188eu_fops = {
+ 	.has_tx_report = 1,
+ 	.init_reg_pkt_life_time = 1,
+ 	.gen2_thermal_meter = 1,
++	.supports_p2p = 0,
+ 	.max_sec_cam_num = 32,
+ 	.adda_1t_init = 0x0b1b25a0,
+ 	.adda_1t_path_on = 0x0bdb25a0,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8188f.c b/drivers/net/wireless/realtek/rtl8xxxu/8188f.c
+index 3abf14d7044f..3102384b35eb 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/8188f.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/8188f.c
+@@ -1749,6 +1749,7 @@ struct rtl8xxxu_fileops rtl8188fu_fops = {
+ 	.ustime_tsf_edca = 0x28,
+ 	.max_aggr_num = 0x0c14,
+ 	.supports_ap = 1,
++	.supports_p2p = 1,
+ 	.max_macid_num = 16,
+ 	.max_sec_cam_num = 16,
+ 	.supports_concurrent = 1,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8192c.c b/drivers/net/wireless/realtek/rtl8xxxu/8192c.c
+index 73034e7e41d1..df9cb7e0e331 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/8192c.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/8192c.c
+@@ -645,6 +645,7 @@ struct rtl8xxxu_fileops rtl8192cu_fops = {
+ 	.tx_desc_size = sizeof(struct rtl8xxxu_txdesc32),
+ 	.rx_desc_size = sizeof(struct rtl8xxxu_rxdesc16),
+ 	.supports_ap = 1,
++	.supports_p2p = 1,
+ 	.max_macid_num = 32,
+ 	.max_sec_cam_num = 32,
+ 	.adda_1t_init = 0x0b1b25a0,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8192e.c b/drivers/net/wireless/realtek/rtl8xxxu/8192e.c
+index 8e123bbfc665..f6cdd0eb5b44 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/8192e.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/8192e.c
+@@ -1752,6 +1752,7 @@ struct rtl8xxxu_fileops rtl8192eu_fops = {
+ 	.gen2_thermal_meter = 1,
+ 	.needs_full_init = 1,
+ 	.supports_ap = 1,
++	.supports_p2p = 1,
+ 	.max_macid_num = 128,
+ 	.max_sec_cam_num = 64,
+ 	.adda_1t_init = 0x0fc01616,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8192f.c b/drivers/net/wireless/realtek/rtl8xxxu/8192f.c
+index cd2156b7a57a..2a505350e6e8 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/8192f.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/8192f.c
+@@ -2078,6 +2078,7 @@ struct rtl8xxxu_fileops rtl8192fu_fops = {
+ 	.ustime_tsf_edca = 0x50,
+ 	.max_aggr_num = 0x1f1f,
+ 	.supports_ap = 1,
++	.supports_p2p = 1,
+ 	.max_macid_num = 128,
+ 	.max_sec_cam_num = 64,
+ 	.trxff_boundary = 0x3f3f,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8710b.c b/drivers/net/wireless/realtek/rtl8xxxu/8710b.c
+index 11c63c320eae..242296a57c92 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/8710b.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/8710b.c
+@@ -1860,6 +1860,7 @@ struct rtl8xxxu_fileops rtl8710bu_fops = {
+ 	.ustime_tsf_edca = 0x28,
+ 	.max_aggr_num = 0x0c14,
+ 	.supports_ap = 1,
++	.supports_p2p = 0,
+ 	.max_macid_num = 16,
+ 	.max_sec_cam_num = 32,
+ 	.adda_1t_init = 0x03c00016,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8723a.c b/drivers/net/wireless/realtek/rtl8xxxu/8723a.c
+index ecbc324e4609..381fde571858 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/8723a.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/8723a.c
+@@ -519,6 +519,7 @@ struct rtl8xxxu_fileops rtl8723au_fops = {
+ 	.rx_agg_buf_size = 16000,
+ 	.tx_desc_size = sizeof(struct rtl8xxxu_txdesc32),
+ 	.rx_desc_size = sizeof(struct rtl8xxxu_rxdesc16),
++	.supports_p2p = 0,
+ 	.max_sec_cam_num = 32,
+ 	.adda_1t_init = 0x0b1b25a0,
+ 	.adda_1t_path_on = 0x0bdb25a0,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/8723b.c
+index cc2e60b06f64..9837580e316e 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/8723b.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/8723b.c
+@@ -1750,6 +1750,7 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
+ 	.ustime_tsf_edca = 0x50,
+ 	.max_aggr_num = 0x0c14,
+ 	.supports_ap = 1,
++	.supports_p2p = 1,
+ 	.max_macid_num = 128,
+ 	.max_sec_cam_num = 64,
+ 	.adda_1t_init = 0x01c00014,
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/core.c b/drivers/net/wireless/realtek/rtl8xxxu/core.c
+index 569856ca677f..ac2691d6f991 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/core.c
++++ b/drivers/net/wireless/realtek/rtl8xxxu/core.c
+@@ -1600,9 +1600,11 @@ static void rtl8xxxu_set_linktype(struct rtl8xxxu_priv *priv,
+ 	case NL80211_IFTYPE_ADHOC:
+ 		type = MSR_LINKTYPE_ADHOC;
+ 		break;
++	case NL80211_IFTYPE_P2P_CLIENT:
+ 	case NL80211_IFTYPE_STATION:
+ 		type = MSR_LINKTYPE_STATION;
+ 		break;
++	case NL80211_IFTYPE_P2P_GO:
+ 	case NL80211_IFTYPE_AP:
+ 		type = MSR_LINKTYPE_AP;
+ 		break;
+@@ -6780,6 +6782,7 @@ static int rtl8xxxu_add_interface(struct ieee80211_hw *hw,
+ 		return -EOPNOTSUPP;
+ 
+ 	switch (vif->type) {
++	case NL80211_IFTYPE_P2P_CLIENT:
+ 	case NL80211_IFTYPE_STATION:
+ 		if (port_num == 0) {
+ 			rtl8xxxu_stop_tx_beacon(priv);
+@@ -6790,6 +6793,7 @@ static int rtl8xxxu_add_interface(struct ieee80211_hw *hw,
+ 			rtl8xxxu_write8(priv, REG_BEACON_CTRL, val8);
+ 		}
+ 		break;
++	case NL80211_IFTYPE_P2P_GO:
+ 	case NL80211_IFTYPE_AP:
+ 		if (port_num == 1) {
+ 			rtl8xxxu_switch_ports(priv);
+@@ -6839,6 +6843,23 @@ static void rtl8xxxu_remove_interface(struct ieee80211_hw *hw,
+ 	priv->vifs[rtlvif->port_num] = NULL;
+ }
+ 
++static int rtl8xxxu_change_interface(struct ieee80211_hw *hw,
++				     struct ieee80211_vif *vif,
++				     enum nl80211_iftype new_type, bool p2p)
++{
++	struct rtl8xxxu_priv *priv = hw->priv;
++	int ret;
++
++	dev_dbg(&priv->udev->dev, "%s: p2p %x\n", __func__, p2p);
++
++	rtl8xxxu_remove_interface(hw, vif);
++	vif->type = new_type;
++	vif->p2p = p2p;
++	ret = rtl8xxxu_add_interface(hw, vif);
++
++	return ret;
++}
++
+ static int rtl8xxxu_config(struct ieee80211_hw *hw, u32 changed)
+ {
+ 	struct rtl8xxxu_priv *priv = hw->priv;
+@@ -7623,6 +7644,7 @@ static const struct ieee80211_ops rtl8xxxu_ops = {
+ 	.tx = rtl8xxxu_tx,
+ 	.wake_tx_queue = ieee80211_handle_wake_tx_queue,
+ 	.add_interface = rtl8xxxu_add_interface,
++	.change_interface = rtl8xxxu_change_interface,
+ 	.remove_interface = rtl8xxxu_remove_interface,
+ 	.config = rtl8xxxu_config,
+ 	.conf_tx = rtl8xxxu_conf_tx,
+@@ -7755,7 +7777,9 @@ static void rtl8xxxu_deinit_led(struct rtl8xxxu_priv *priv)
+ 
+ static const struct ieee80211_iface_limit rtl8xxxu_limits[] = {
+ 	{ .max = 2, .types = BIT(NL80211_IFTYPE_STATION), },
+-	{ .max = 1, .types = BIT(NL80211_IFTYPE_AP), },
++	{ .max = 1, .types = BIT(NL80211_IFTYPE_AP) |
++			     BIT(NL80211_IFTYPE_P2P_CLIENT) |
++			     BIT(NL80211_IFTYPE_P2P_GO), },
+ };
+ 
+ static const struct ieee80211_iface_combination rtl8xxxu_combinations[] = {
+@@ -7912,6 +7936,9 @@ static int rtl8xxxu_probe(struct usb_interface *interface,
+ 	hw->wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION);
+ 	if (priv->fops->supports_ap)
+ 		hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_AP);
++	if (priv->fops->supports_p2p)
++		hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_P2P_CLIENT) |
++					      BIT(NL80211_IFTYPE_P2P_GO);
+ 	hw->queues = 4;
+ 
+ 	hw->wiphy->flags |= WIPHY_FLAG_HAS_CHANNEL_SWITCH;
+diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+index f42463e595cc..7a0a9fd20cdf 100644
+--- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
++++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
+@@ -2013,6 +2013,7 @@ struct rtl8xxxu_fileops {
+ 	u8 ustime_tsf_edca;
+ 	u16 max_aggr_num;
+ 	u8 supports_ap:1;
++	u8 supports_p2p:1;
+ 	u16 max_macid_num;
+ 	u16 max_sec_cam_num;
+ 	u32 adda_1t_init;
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-https://www.efficios.com
+2.50.0
+
