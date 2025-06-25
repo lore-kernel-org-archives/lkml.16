@@ -1,91 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECF062BE7B1;
-	Wed, 25 Jun 2025 11:18:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2C12820D5;
+	Wed, 25 Jun 2025 11:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750850294; cv=none; b=m/+nwjhAamb9OhQi76MgfisUOwNrDslwYh/ot5tAJRNuE1TUHkxco6tdvgq2l4qU5SSzR6Hl9KTUaw2WXO20e9VPbqWbtlR7ImXffckRpyRLSH56pIqXJAGBpmSVQc4dK5TM+9xnFRTC6+9Qmy/5s1c+d3djg/kFsQfIqQzMuyY=
+	t=1750850325; cv=none; b=GEAWKy4If6zwSiQBPO5dtkbcZXefk5HndFFsLGRPBgZI204QIlRcJP7bWHYouO7H7ye7MT8J5WqUX4vjbM8ub/UyPRZtqRNkP4FFlHTU5KZXrIe0Ydt8ijU0S7CFLtmPCJqAVY87ZIi27JUBcAge+mxr/LXq4j2YQ9tfLRALHwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750850294; c=relaxed/simple;
-	bh=ynGFjdcNjSc6sRsTsuXQoAEgvgF/ccNZ82PF3o/rowk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=WDZiQwQh7uq28L0I3++srWw6WZR+//JAjgtEMkKFSwyEpVQyymbDU1aRT2fVBNnPVmWLt4M3MwYftfLSE8Ye+4tSfoI+iWeh0sy2c4qIgAeFlBWxS5cMr7C2VkuN1YKubrjz28n2lc55LKhCRtbbhGkLeo6MJtVXmady14QIeyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MKHGkbpN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750850325; c=relaxed/simple;
+	bh=2cn7y+Ptn7dugIKl4xG4EpXViME5U8PgqEVu9KF4wXc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=buC2S0dQx+KCIECSPdS9tX8tJcGuYTYzra3g7VZz9RkTVeWUa3idWwSVveZ182F7H6sDoqJ4T3gHWeVPlNpQfWKquEgcctiIu5G7JTKaumeJPV/1bRBjUX4xfu4F6pIbZ0flqEF4Eq3qmPNUBDekGiolbk6G8Po8hrZGjBdPvmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CTKHHN38; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MKHGkbpN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FFEFC4CEEA;
-	Wed, 25 Jun 2025 11:18:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750850293;
-	bh=ynGFjdcNjSc6sRsTsuXQoAEgvgF/ccNZ82PF3o/rowk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MKHGkbpNcCQqSAO3nLNRYXJFMSVUynxv+ueAOjnW3dDZbAHJp4nn+7mG0km6oXAHl
-	 ebvnd0Zr+u723V4d07pXU48zI+1lecFSJq8Tbj+43p+/ZPDY4Ol7QZKOSimJ9XKLT7
-	 LQYz9ckXor4Fv0G5H4FV+r01aG9RaRCuAnQdF9a3hu61O9R6xkY5N6670aQAhZQfY8
-	 f35i6KA0VaNsLhTOeGZpdghIDd1K5Hvdicr3RowGWjhJTwC6KBBrqv9owum63q7Q7N
-	 pVWatgm+Alx909RPYmtNaFZkQBwNvt0LyMNelPJAK3MpSeq1P/tvr3QA+W9QkXO4kr
-	 fF+cq86F73dLg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=valley-girl.lan)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1uUO8p-009qM2-D6;
-	Wed, 25 Jun 2025 12:18:11 +0100
-From: Marc Zyngier <maz@kernel.org>
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Rob Herring <robh@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Janne Grunau <j@jannau.net>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	linux-pci@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] Revert "PCI: ecam: Allow cfg->priv to be pre-populated from the root port device"
-Date: Wed, 25 Jun 2025 12:18:06 +0100
-Message-Id: <20250625111806.4153773-4-maz@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20250625111806.4153773-1-maz@kernel.org>
-References: <20250625111806.4153773-1-maz@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CTKHHN38"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750850324; x=1782386324;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=2cn7y+Ptn7dugIKl4xG4EpXViME5U8PgqEVu9KF4wXc=;
+  b=CTKHHN38/EcPDEC8w8miE2J+JNC6TuJq20m73V100Mh5TH7S/u2o20sC
+   shcC1brHbP10wjLtyU8NCGcH4NA+HnbAptwXGEZH0FxCCs6tgi9c4xATk
+   34+8XxMxr1uIGzc9owhUYL7MdssN5DfPIe4scQdVYl4geUpEE3S9dZzr1
+   lbyIz7CXq9k8/KiX/xJCxOweQ0yz5Hc2UksgMJxjbplBhON5+FjQp4n3t
+   IY8UwPrOXTHKCGyXphfi3Q6zD4UyVMYifi8ev50A+T9oSGOkOwGwVR/YP
+   Li8fBqRIm+QaMUwmxPe3DelkjXjMa+JmpRjqOat4v1deNe1cMKrxp+nCF
+   g==;
+X-CSE-ConnectionGUID: O77rTMtCSz+BoGJNwiOExg==
+X-CSE-MsgGUID: 9yRZ2otxSHmDmHLKZP0ExQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="78541952"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="78541952"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 04:18:43 -0700
+X-CSE-ConnectionGUID: yGMeqNnjSqihUerMqeyvrA==
+X-CSE-MsgGUID: XY4GYARRTOWK1VunocbUDQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="156221613"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 04:18:41 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uUO9G-00000009kfx-1Hy9;
+	Wed, 25 Jun 2025 14:18:38 +0300
+Date: Wed, 25 Jun 2025 14:18:37 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v16 2/2] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <aFvbDdVdoroASlM6@smile.fi.intel.com>
+References: <20250625000059.20040-1-ansuelsmth@gmail.com>
+ <20250625000059.20040-2-ansuelsmth@gmail.com>
+ <dehsalp2za4i6jgod6ej6gqhestljo7qost66jzmql52n2zecp@imtgipg24lv5>
+ <685ba7d9.df0a0220.e1b22.e6c2@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: bhelgaas@google.com, alyssa@rosenzweig.io, robh@kernel.org, mani@kernel.org, lpieralisi@kernel.org, kwilczynski@kernel.org, j@jannau.net, geert+renesas@glider.be, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <685ba7d9.df0a0220.e1b22.e6c2@mx.google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-This reverts commit 4900454b4f819e88e9c57ed93542bf9325d7e161.
+On Wed, Jun 25, 2025 at 09:40:07AM +0200, Christian Marangi wrote:
+> On Wed, Jun 25, 2025 at 09:24:33AM +0200, Uwe Kleine-König wrote:
+> > On Wed, Jun 25, 2025 at 02:00:39AM +0200, Christian Marangi wrote:
 
-Now that nobody relies of cfg->priv containing anything useful before
-the .init() callback is used, restore the previous behaviour.
+...
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/pci/ecam.c | 2 --
- 1 file changed, 2 deletions(-)
+> > > +	/*
+> > > +	 * Period goes at 4ns step, normalize it to check if we can
+> > > +	 * share a generator.
+> > > +	 */
+> > > +	period_ns = rounddown_u64(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
+> > 
+> > I don't understand why you need that. If you clamp to
+> > AIROHA_PWM_PERIOD_MAX_NS first, you don't need the (expensive) 64-bit
+> > operation. If you compare using ticks instead of ns you don't even need
+> > to round down, but just do the division that you end up doing anyhow.
+> 
+> Correct me if I'm wrong but 
+> 
+> #define NSEC_PER_SEC	1000000000L
+> #define AIROHA_PWM_PERIOD_MAX_NS       (1 * NSEC_PER_SEC)
+> 
+> doesn't fit u32 so an u64 is needed.
 
-diff --git a/drivers/pci/ecam.c b/drivers/pci/ecam.c
-index 2c5e6446e00ee..260b7de2dbd57 100644
---- a/drivers/pci/ecam.c
-+++ b/drivers/pci/ecam.c
-@@ -84,8 +84,6 @@ struct pci_config_window *pci_ecam_create(struct device *dev,
- 			goto err_exit_iomap;
- 	}
- 
--	cfg->priv = dev_get_drvdata(dev);
--
- 	if (ops->init) {
- 		err = ops->init(cfg);
- 		if (err)
+I'm not sure what was the exact question, but u32 can hold up to 4*10^9,
+this is just 1*10^9.
+
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
