@@ -1,214 +1,147 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DABEE1F4615
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:10:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B0529E115
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:10:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750846202; cv=none; b=NMwH7IQb3rTWENkr1iH+HgQ2Yn/Wpqt5WdHAqj2fHTTNMZmQyA/ljh5zoNUDn604PPDWcOlS2nfjIwiTWWTubE2PC2NWv3XR+eeXpvSjcxzeknuqwFVBHXnHvxq96u10o7HRoYiOOoQxwTLvoyKIJbKvE+8r4xVaVg3wvFe4Z48=
+	t=1750846239; cv=none; b=sBfL6tVSCZL6i9iZi02yGRjADeGTEHnd/vF/iXSpz4fE51xXkALyYetiTZBuHz4FmNJPkqHpYwcjLYGvuVstJLkAxDWltaElRD5j+P1SHW/1kd0GxADiIbc+XlKue90Pff8VsJDZijyTfiae7Bt2v/bE9SmgNTC+m/6jtQUZFRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750846202; c=relaxed/simple;
-	bh=OylUmlOteTQZOUB8k3gp2U6i5Fi2b03eFfECFDhsR6A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ANosPYEu4a8m2wFdEntthpa1zBKOTDp4iC++zAS4t+cR6OpbUNsnHOMRFyFR+hbvchopanv+kxJlQlvasvF+3butayuRTLpPHee/nWbbMLOdN36F2+IJL/r8YSYwPRnCHSgOrlecGVsbDgafjVtOZqgQrxSCb0KJZKgaRMb0mog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gse//QQH; arc=none smtp.client-ip=209.85.128.49
+	s=arc-20240116; t=1750846239; c=relaxed/simple;
+	bh=fwr13GjDwenIIn+hJVnH+OK1h41ZA7vGn8reGc5n3Cc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pEOyhHFNe/tPq9M9g4EIkib1ELyz1+J143jxOujmZONB8o1WhB26aqXFuNmCscEczPJrNPaIXMcQ8GS9KP0wDDcOGyy9VbQ5Xko2xdAvl/MlsGa3x/5kWFyMftzlB/K07pAN2f/sBUK3aiKtCrOBpwD1Pr74QHKRqM0Tr4lsx4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XIUdo6lG; arc=none smtp.client-ip=209.85.219.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gse//QQH"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-453608ed113so56119975e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:10:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XIUdo6lG"
+Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-e731a56e111so5442495276.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:10:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750846199; x=1751450999; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=y4I1PJPpHezpA836vKI44sV4N989fSWCkW53dGjnJDg=;
-        b=gse//QQHqbzpDXiZ1MDZ70rHRU1GYKRGnMsHCV4iUlZ6lLmIjfoQqXGixWt2i5HhjB
-         ka6+S3fwAzatSM6GkRh3Wf5HVXEo5TyMfiYGXwOvayjD6IW0F2mxOycCT8oRMujxhilK
-         FCH1krRbZ70bnQFTs0Ok6duecKFQwUMTcESzhc6fak+dAJvPC1IkHRRHfdn3CvYGkYeb
-         dCCwLhM6vhXGIv552XlqdTRE1tAvznFxGMR3mRmxYHur0R4U5mqAC0MDELoWXUpx+cki
-         btkOzFrKrDtXGJwLfXhoihxC9ueBLtqg6NrREz4ajP7gFJHrArTpSbi4u330yAZlqSoo
-         jERw==
+        d=linaro.org; s=google; t=1750846236; x=1751451036; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=NyqCTrWRH38g5oBlyqrDfAPMaqAjSD4w/gNXRimf4zI=;
+        b=XIUdo6lG0rL0BOjJ/uYuQLXsp4QHvNQyKw2LFjb6yKO3t6JnPRskaByrsDc8VqUl5u
+         mgqd57GS9/KlYo+uJWyKYh7/dYVX0NsSJXUrzACozJscx1ckMLaIhHJJSGHnCFZOgglz
+         5smChTQ+eUvY9sNFvs0P+kbPFpWRF3PEAp7GpaCFVgOnbjWUXEuR/LAo4FeT1+t4Fqj8
+         rNg4o77u+xCkEDI/t+dzI7ESphrzpLfHgKdPx77n3bbmAy1UsP5zdIGBSt3fA0/TGrJs
+         nkMZNk6qSwjk3mgWhad1orrSsp4n4ToBwQ6H5pzT3LAWu4ANOG7CUmQxBLSda2JEu1bt
+         xi3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750846199; x=1751450999;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=y4I1PJPpHezpA836vKI44sV4N989fSWCkW53dGjnJDg=;
-        b=gtoDBPbUaoakdPC5DvZfIpNN3mlF20sHrC44gpodWvP+UgXlvF+fqqBI2OKNQSty88
-         7GncYMJLv3KNptoPawunJsLg2/8m9oRRO63cl7EqcZS0u9gupcgFsa6iJsiANCKeLSLj
-         /5F4F9jxAPs/GmYhG34LBhosKROZ3J0CoIX7T16STkwD7RoVqU81G2KVzwW27hHcilAu
-         i2teBVH6tWIlWS3q0GLbTJR97ZwHDhF6iuX1lacrAjLBVSGB8tHy+i2QOjAYVN6bXIYP
-         Ho+4/iImsL4yWaszsCSppUtkB0gc2ztAQX0UPpFmhtzJ9vq8Gj2BH/bYVkFVik3hNski
-         04xg==
-X-Forwarded-Encrypted: i=1; AJvYcCWsDBWnlfp4Em1htkoVHbQ3HhBAEMjaVLvxqYq46uCdOHrv/ficTbM+6DU7YweqMDmu4eqzvBKQr91jP0Y=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrY1eU/kuAJc4mr+jmxY9lIhZV8e5uDrGXQgNN8/vL2mYcGkxw
-	Iy8AKPZJzHEP25YRpBvkAIBIORI6DGYBpj4zBnrGl5k78vuPHwj784VOXT0GGS+Fads=
-X-Gm-Gg: ASbGnctIW9BDJF093RdM9Q6GEam0Wco/yR0r1CGplf2QW+DSGbLR3hxKidCCPT/fSo+
-	QW7bwOh1RoygsoWSmKHBIAnPyTk1h/6v2yfEgXQcEDZEw8xmqm4+YMikw6AhEo2HaELN0a4Eyye
-	xqCow9SDAoN72TcTd5aUfVgRRCWXN6OHomlMik6CA2IyfJxSrWyYCrUUx6mhXOMuiI9Nhm7OvHW
-	tguq0tR1KSBMbP25Td6JNxuYE+zQ6768WF5Njpbwo6MewV8yt3WQHAG7lqzf3Bx2vdJCliiB2II
-	pUQNKOuptGc4nN15Df9/oX15xq7g8kP85SuvEGJBMt6O16Tz7n5x3t3lMGL1X6N3hoZq3xY2+fk
-	g3w==
-X-Google-Smtp-Source: AGHT+IEUMHqgZbLFHpHfwdSLV9qr4L6CCkcPkB2BptUFawy9i4DhryIcnKtQz1y2O+KERfW+BoO8YQ==
-X-Received: by 2002:a05:6000:2207:b0:3a4:dfa9:ce28 with SMTP id ffacd0b85a97d-3a6ed5b880amr1909565f8f.5.1750846199010;
-        Wed, 25 Jun 2025 03:09:59 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233a895sm15457165e9.3.2025.06.25.03.09.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 03:09:58 -0700 (PDT)
-Message-ID: <0e26494d-7b85-4874-a2e4-a498ce1864c8@linaro.org>
-Date: Wed, 25 Jun 2025 11:09:57 +0100
+        d=1e100.net; s=20230601; t=1750846236; x=1751451036;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NyqCTrWRH38g5oBlyqrDfAPMaqAjSD4w/gNXRimf4zI=;
+        b=aHQTo679JgovgyMwRThybuDf88Sf/lXGlXF2J6u0qOElJUL7syaTN9SHM4pD/4VIlq
+         oWCN+FyZznQt/Yj9ihNnxCxrRKpOiydAQmqJe365D8fOdlDXF85O5xL7iGw/IBc2+AYZ
+         4xUtOtNT8WTM25MVh21PwIuNQps2c8kagDXOB/R42r9G5V6GYJhEumb8hVoUgziK86dh
+         PuUR6Zyrl00677XJF7XZuVTS62HTb0IiDQB9o96n+brN6SwWb11iIbSZPC4rhqZLqXnZ
+         xGjcxPB4jWOmnZQX6L315SGVWBi5Av+hSDWkWTZCIaihBzuNC7CO8SCVKiUEgc2tLQbQ
+         C9wA==
+X-Forwarded-Encrypted: i=1; AJvYcCXVpZm9hoedWEfH3vltjEioxsx3EVVggDlnE1PfZaBwEBh+0QJBnstNxric+bO6RhkA7SGr7Stp5/ZXQqI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw00M6UCM0EfWym2NYKZLPKkBeajVnCrrEl6SMKiKfMFkCznUCw
+	kTVqLoHV282cuewGwgaLHExPTZHrKk9XhScGwUGoOW5n6gOCZFzQ9ULqlm7eRsOHmTysURsHRUf
+	yg6irQF26HJN2O5x9EXYsXQOjRz2JnEQPjMPOQA8NNQ==
+X-Gm-Gg: ASbGnctRGSYD7I7K6Ps1yzUd2wotaodQutL7HUMBDFCQYnzVuER3uq+2qG4i4tPuh3x
+	jGpGK5KUcSREpurGyTj3S0L9du8edp/8lulSxOnF0xOf05A3S9zGtlu/9D3MXBDlJmsWpwl+iRQ
+	XDUySN53sq4JILZFsOLOd2cnd/VBnG/yVBq+MITBnqfKQ=
+X-Google-Smtp-Source: AGHT+IGe9cdom9zPx5u2qPQ0tKYQR48QY3X3hjRnSL5OJURAbiiA4qXISjJMreIIdvqnR03DBzmyaEkxFKrpD5ccSCA=
+X-Received: by 2002:a05:6902:1703:b0:e81:9aa9:88d0 with SMTP id
+ 3f1490d57ef6-e86018ef2f7mr2666888276.40.1750846235599; Wed, 25 Jun 2025
+ 03:10:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 6/6] spi: spi-fsl-dspi: Report FIFO overflows as errors
-To: Frank Li <Frank.li@nxp.com>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
- Vladimir Oltean <vladimir.oltean@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
- Larisa Grigore <larisa.grigore@nxp.com>, Christoph Hellwig <hch@lst.de>,
- linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
- <20250624-james-nxp-spi-dma-v3-6-e7d574f5f62c@linaro.org>
- <aFrXRDJmMgt0qTlL@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <aFrXRDJmMgt0qTlL@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <CGME20250623114429eucas1p1e74e09e74c5873b2f7f01228073be72a@eucas1p1.samsung.com>
+ <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
+In-Reply-To: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 25 Jun 2025 12:09:59 +0200
+X-Gm-Features: AX0GCFuzRfZFQhIpkvF03Pc7_qxAuJk_yHypckCZgiSZSQVUDRcV_4FwsCAnQX0
+Message-ID: <CAPDyKFrCeYxtqscX8Vr165HMOcSof_d62PMtRwt_yDyZ4ujSDQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/8] Add TH1520 GPU support with power sequencing
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Frank Binns <frank.binns@imgtec.com>, Matt Coster <matt.coster@imgtec.com>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, linux-riscv@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Mon, 23 Jun 2025 at 13:44, Michal Wilczynski
+<m.wilczynski@samsung.com> wrote:
+>
+> This patch series introduces support for the Imagination IMG BXM-4-64
+> GPU found on the T-HEAD TH1520 SoC. A key aspect of this support is
+> managing the GPU's complex power-up and power-down sequence, which
+> involves multiple clocks and resets.
+>
+> The TH1520 GPU requires a specific sequence to be followed for its
+> clocks and resets to ensure correct operation. Initial discussions and
+> an earlier version of this series explored managing this via the generic
+> power domain (genpd) framework. However, following further discussions
+> with kernel maintainers [1], the approach has been reworked to utilize
+> the dedicated power sequencing (pwrseq) framework.
+>
+> This revised series now employs a new pwrseq provider driver
+> (pwrseq-thead-gpu.c) specifically for the TH1520 GPU. This driver
+> encapsulates the SoC specific power sequence details. The Imagination
+> GPU driver (pvr_device.c) is updated to act as a consumer of this power
+> sequencer, requesting the "gpu-power" target. The sequencer driver,
+> during its match phase with the GPU device, acquires the necessary clock
+> and reset handles from the GPU device node to perform the full sequence.
+>
+> This approach aligns with the goal of abstracting SoC specific power
+> management details away from generic device drivers and leverages the
+> pwrseq framework as recommended.
+>
+> The series is structured as follows:
+>
+> Patch 1: Introduces the pwrseq-thead-gpu auxiliary driver to manage the
+>          GPU's power-on/off sequence.
+> Patch 2: Adds device tree bindings for the gpu-clkgen reset to the
+>          existing thead,th1520-aon binding.
+> Patch 3: Extends the pm-domains driver to detect the gpu-clkgen reset
+>          and spawn the pwrseq-thead-gpu auxiliary driver.
+> Patch 4: Updates the Imagination DRM driver to utilize the pwrseq
+>          framework for TH1520 GPU power management.
+> Patch 5: Adds the thead,th1520-gpu compatible string to the PowerVR GPU
+>          device tree bindings.
+> Patch 6: Adds the gpu-clkgen reset property to the aon node in the
+>          TH1520 device tree source.
+> Patch 7: Adds the device tree node for the IMG BXM-4-64 GPU and its
+>          required fixed-clock.
+> Patch 8: Enables compilation of the Imagination PowerVR driver on the
+>          RISC-V architecture.
+>
+> This patchset finishes the work started in bigger series [2] by adding
+> all remaining GPU power sequencing piece. After this patchset the GPU
+> probes correctly.
+>
+> This series supersedes the previous genpd based approach. Testing on
+> T-HEAD TH1520 SoC indicates the new pwrseq based solution works
+> correctly.
 
+I have applied patch2 and patch3 for next via the pmdomain tree, thanks!
 
-On 24/06/2025 5:50 pm, Frank Li wrote:
-> On Tue, Jun 24, 2025 at 11:35:36AM +0100, James Clark wrote:
->> In target mode, the host sending more data than can be consumed would be
->> a common problem for any message exceeding the FIFO or DMA buffer size.
->> Cancel the whole message as soon as this condition is hit as the message
->> will be corrupted.
->>
->> Only do this for target mode in a DMA transfer because we need to add a
->> register read.
-> 
-> "We need to add a register read" is not reason.
-> 
+Note that, the DT patch (patch2) is also available on the immutable dt
+branch, if it needs to be pulled into some other tree.
 
-Maybe: "It's not likely to catch any errors in host mode so optimize by 
-avoiding an extra register read"?
+[...]
 
-> Add checking FIFO error status at target mode in a DMA transfer since PIO
-> mode already do it. It help catch some host mode ...
-> 
-
-Are you suggesting that we check for FIFO errors in host mode too? It 
-requires an extra read and check in dspi_tx_dma_callback(), but I'm not 
-sure what it could catch. Realistically as long as everything is setup 
-correctly then neither of those flags will be set. It will either always 
-work or never work.
-
-It might be better to add it later if a use becomes apparent otherwise 
-it's extra noise in the code.
-
->> In IRQ and polling modes always do it because SPI_SR was
->> already read and it might catch some host mode programming/buffer
->> management errors too.
->>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->>   drivers/spi/spi-fsl-dspi.c | 28 +++++++++++++++++++++++++++-
->>   1 file changed, 27 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
->> index 58881911e74a..16a9769f518d 100644
->> --- a/drivers/spi/spi-fsl-dspi.c
->> +++ b/drivers/spi/spi-fsl-dspi.c
->> @@ -560,12 +560,24 @@ static void dspi_rx_dma_callback(void *arg)
->>   	complete(&dma->cmd_rx_complete);
->>   }
->>
->> +static int dspi_fifo_error(struct fsl_dspi *dspi, u32 spi_sr)
->> +{
->> +	if (spi_sr & (SPI_SR_TFUF | SPI_SR_RFOF)) {
->> +		dev_err_ratelimited(&dspi->pdev->dev, "FIFO errors:%s%s\n",
->> +				    spi_sr & SPI_SR_TFUF ? " TX underflow," : "",
->> +				    spi_sr & SPI_SR_RFOF ? " RX overflow," : "");
->> +		return -EIO;
->> +	}
->> +	return 0;
->> +}
->> +
->>   static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
->>   {
->>   	size_t size = dspi_dma_transfer_size(dspi);
->>   	struct device *dev = &dspi->pdev->dev;
->>   	struct fsl_dspi_dma *dma = dspi->dma;
->>   	int time_left;
->> +	u32 spi_sr;
->>   	int i;
->>
->>   	for (i = 0; i < dspi->words_in_flight; i++)
->> @@ -614,7 +626,8 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
->>
->>   	if (spi_controller_is_target(dspi->ctlr)) {
->>   		wait_for_completion_interruptible(&dspi->dma->cmd_rx_complete);
->> -		return 0;
->> +		regmap_read(dspi->regmap, SPI_SR, &spi_sr);
->> +		return dspi_fifo_error(dspi, spi_sr);
->>   	}
->>
->>   	time_left = wait_for_completion_timeout(&dspi->dma->cmd_tx_complete,
->> @@ -1069,6 +1082,10 @@ static void dspi_poll(struct fsl_dspi *dspi)
->>
->>   			if (spi_sr & SPI_SR_CMDTCF)
->>   				break;
->> +
->> +			dspi->cur_msg->status = dspi_fifo_error(dspi, spi_sr);
->> +			if (dspi->cur_msg->status)
->> +				return;
-> 
-> 
-> Although fifo error may happen after you check, it may reduce some possilbity
-> and catch some problems.
-> 
-> Frak
-> 
-
-Not sure what you mean by this one. But I've seen a few small errors now 
-that I look again. The error check should be before the transfer 
-complete break. And tries should be reset for each part of the message.
-
->>   		} while (--tries);
->>
->>   		if (!tries) {
->> @@ -1085,6 +1102,7 @@ static void dspi_poll(struct fsl_dspi *dspi)
->>   static irqreturn_t dspi_interrupt(int irq, void *dev_id)
->>   {
->>   	struct fsl_dspi *dspi = (struct fsl_dspi *)dev_id;
->> +	int status;
->>   	u32 spi_sr;
->>
->>   	regmap_read(dspi->regmap, SPI_SR, &spi_sr);
->> @@ -1093,6 +1111,14 @@ static irqreturn_t dspi_interrupt(int irq, void *dev_id)
->>   	if (!(spi_sr & SPI_SR_CMDTCF))
->>   		return IRQ_NONE;
->>
->> +	status = dspi_fifo_error(dspi, spi_sr);
->> +	if (status) {
->> +		if (dspi->cur_msg)
->> +			WRITE_ONCE(dspi->cur_msg->status, status);
->> +		complete(&dspi->xfer_done);
->> +		return IRQ_HANDLED;
->> +	}
->> +
->>   	dspi_rxtx(dspi);
->>
->>   	if (!dspi->len) {
->>
->> --
->> 2.34.1
->>
-
+Kind regards
+Uffe
