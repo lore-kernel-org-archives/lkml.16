@@ -1,115 +1,107 @@
-Received: from sg-3-17.ptr.tlmpb.com (sg-3-17.ptr.tlmpb.com [101.45.255.17])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB271E5B6F
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.45.255.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82C981E5B6F;
+	Wed, 25 Jun 2025 07:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750837113; cv=none; b=FZM+qjRs4TAnN1zzvqfEDboHFvoE9RNxyNO/h+wp/yz+q5ieXc6H9dudOXmOewrSPs0KuZSZdCzF5+qVaw6dsJ1R5CKY+hxTAdp2MLPwFLHAjVUkVNaC2a8vAb0GORd51qeMSEwItAnPC/P6q9N8bceTQn/aq6Vxzz4SbGBiiBY=
+	t=1750837133; cv=none; b=M7icv9S1ZULAI17SpMmLiiXLmM4I2ec5uLKXfnEA1qF3P7xG6yZpW/+ml0UavQjmvh4K82AQuDp1eERqWeEfPC90HtFbABs2/iSsu5K0oq0Wr9ABJakh14q21n8JWQHF/8fYXKcGhFdBe2I1myp7RjXKfn9vFAocYN4J6+KLAlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750837113; c=relaxed/simple;
-	bh=SnMkTEfPjKinQQUJ9SjEb/GZPamQROt4gk0GU0pFhvY=;
-	h=Cc:In-Reply-To:References:Content-Type:To:Subject:Date:Message-Id:
-	 From:Mime-Version; b=kxhYYRtxpLZ713SpEJWWvXgFBGBI+ioI3RWTpMdLmeCjFzkWnu7F6HCc7/w9q1Eshe9KCLO155zspkA3WkmxrbDXjvPVhV39Cgq/r9ZWpkFtlrGCSBLK3QbsNOp1sWljTOauOpGNFFLZjGcTk8KV4qiFPAkjpq6RozUuF/wN2WU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=USqBzc7s; arc=none smtp.client-ip=101.45.255.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
+	s=arc-20240116; t=1750837133; c=relaxed/simple;
+	bh=G4UH1AtsdvMQkmaLooTD4c20idV/ZS4iK22NQyGiJpM=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=U1BHOm8nBa/Hw1il46NWK+3JTsBD9nPKJUJSwjoMBUJe9Fxj8VHbcxuUyNTDz1c93rStHZlh0I1z+rI4mSu8hQeyJMJ+gGlUOF+A8hSfdOKYsOvykHJl47km5DLxe0ugru9+pyRSzeBZQ/a8Gbkcs9hhx5QHlPU65K/Z7tzAWsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XsDInOoK; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="USqBzc7s"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1750837105;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=23blSFdrb8/fbPehCaYr2JhyqpZwpwwsJFLPuTL/tn4=;
- b=USqBzc7sxYVUbueSjJ/yzfbbkLm/Z/zcL6hJVpmKZ1qWYj2gzVJiLmmAL5Y0kJ3PLDTfgy
- 6c4hvJQs5X2UMuAC54IeoJii2QDymw04t0g0rrHlup/f+lw80S5z1kCW8ZbR7ovHy1O/j1
- 8iE9liV1XQcqSs/rU3/kp+gUB1FiWgjr1DSX0+4mrHaOKB1uZIMTEt4vVRgL54icSELKX4
- yBquXc3a3uevZc7x4u0uTsc3CltsYSaRHBSGEeSWlOD2i5m0yoJTsXBvUPm+vQeZqYPsCT
- wOhGIKsm3iFa8mRjI0NuXAuf/uN/w2UGZaOj5Fyl6BdEYlAfAG7BuUSGkeBXKg==
-Cc: "Palmer Dabbelt" <palmer@dabbelt.com>, 
-	"Paul Walmsley" <paul.walmsley@sifive.com>, 
-	"Alexandre Ghiti" <alex@ghiti.fr>, 
-	"Andrew Jones" <ajones@ventanamicro.com>, 
-	"Anup Patel" <anup@brainfault.org>, <kvm@vger.kernel.org>, 
-	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>, 
-	<linux-kernel@vger.kernel.org>, "Atish Patra" <atishp@rivosinc.com>
-In-Reply-To: <20250618113532.471448-6-apatel@ventanamicro.com>
-References: <20250618113532.471448-1-apatel@ventanamicro.com> <20250618113532.471448-6-apatel@ventanamicro.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-To: "Anup Patel" <apatel@ventanamicro.com>, 
-	"Atish Patra" <atish.patra@linux.dev>
-Subject: Re: [PATCH v3 05/12] RISC-V: KVM: Don't flush TLB when PTE is unchanged
-Date: Wed, 25 Jun 2025 15:38:20 +0800
-Message-Id: <adb4afad-19a1-404d-bec0-d0dc535d98c4@lanxincomputing.com>
-User-Agent: Mozilla Thunderbird
-X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
-X-Lms-Return-Path: <lba+2685ba76e+9d6ce5+vger.kernel.org+liujingqi@lanxincomputing.com>
-From: "Nutty Liu" <liujingqi@lanxincomputing.com>
-Content-Language: en-US
-Received: from [127.0.0.1] ([139.226.59.215]) by smtp.feishu.cn with ESMTPS; Wed, 25 Jun 2025 15:38:21 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XsDInOoK"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2363616a1a6so53902155ad.3;
+        Wed, 25 Jun 2025 00:38:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750837132; x=1751441932; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=kG1olUInn/LVZERQ5W1mrbwIx3yXWmY5X23lP+cvHI0=;
+        b=XsDInOoKld4oG5fd7u/QesmWxfv0Z4jPp1zXytDvxpFfLdQUfEkl4FPz+2Qu652L+H
+         WjOrwvQsSVSaVnUZfgdUUNmxWXGz0E5FaA1HFL84YITu46PYV4msQPBUKFz1jw1QfGci
+         POrxzk+ojMy1qorkZRUgL4Ol+FJGmMKtP0pRiqBFDac/KzqqtzTbSh/UUMqVQxsduuYw
+         e0qGlMR+vDD4tv6RcQ8Y16IgBDRJYnGPRoJNkNWe3hF+kGOWTUXWIdwPIP2XUN+pm3ye
+         6ZsIf03Sp9W+u79ipIk4zvJwECZDL446QXlDl51S6DRcLsvZmS63XrZgJzvXXcTewv6v
+         sj3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750837132; x=1751441932;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kG1olUInn/LVZERQ5W1mrbwIx3yXWmY5X23lP+cvHI0=;
+        b=NeCz2u6yF1b1+ei+WS7saXVtOzl6y562eBsTONRDjzTRChs5+L2clqSEIgorFOTF5x
+         omYI97qtrGKjRjdb66ieHWhkYrn1Le6acO4vHi9YWrgoPXtRr0iVN0fh1KU6dLTAO9BO
+         RyCGHZ6g8L4pduqFBylvEOp0YpTuahYvCBor71sXUOhTHJXj49OfUHNw8bfvRPo3xrVv
+         ExH8RXlC4EDCH0XElXczYw+gdv2hkiuBzPh6DAF3ROLMIPLrTYBrb0DWkp/wK2MqZLjw
+         dkfzwhgoY9MwOlEV94YdXAtXNDkuEQim+YSUfJO8aKNkTZHLg6z9fPJyRVBtIGmFH3WH
+         3QxA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6sd/0ffINxhM3jBXCrlD5tLFujJ1GdPIkDcPCbhG7W+4DaYsnn7eunfzb9BSZj6KvCt+6CC1P2Mpt@vger.kernel.org, AJvYcCWG4WnxIdWwWfYp12LThlCX3VTllR4c5KyNQXNgxHgCks46ALp0XP+TPvfO/54/0Fsz/1raJZMihA7ouDFx@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw+LXHjYzKjGwHQ3XPNv34+36P+Jl6+oeu7I+P7Ia9ZcS28RYWk
+	V1pzXzBDnDRh619O8Ak1l8ZpaoGk2oXpxVQ+KbeJ0AD2Tc+qe48eB7KAuW3rgq9IJVw=
+X-Gm-Gg: ASbGnctyLYiRZ96jzIyMrT+QVUGQ3nF1bKLrmiccui7D4VaVjKjBJuuahJzOq5V7E5p
+	KBgWNGueEYplB24TckQE8RXeQrfOvZlXZa3vL7Misx5/45Ydj8nOC4ZCkYcYjqzrvXzH11hybcS
+	JPgzAVz+UWaGEHuMowkS0OuiErhkZ65bCX/rc5CDIXWk0LXPmHWhriC9IjtPf0Im+QphRCytoTD
+	rEXYXbvUokc0TF7y0cigpLUBIgRmC2D5KgN1z7OUWqtJ03ofLaVmaay8LT2wgUK+FW+75ji4MaX
+	RSd+bFNj+lZUBY8Gf7LwKUjQTbyHV4Rf2HnlFGP71WXe55rXkDueAhwQttidE38WB6WUNgGnsEQ
+	vi555Rv1NfJvzoRGryMAVQgSxZRozraDBhkCr4OYRif3p9kdPUH6697YL9DmWPVDRO1vwIOViet
+	gE9kkkmbFWOdcTng==
+X-Google-Smtp-Source: AGHT+IEAYJ2SDUHupwKAlisVD3ai/2xripja2VDUoY9Ul4K/z1BlfG/iLbXNiETNKFpAqA+j53TumQ==
+X-Received: by 2002:a17:902:dace:b0:234:eadc:c0b4 with SMTP id d9443c01a7336-23824079303mr47397585ad.44.1750837131671;
+        Wed, 25 Jun 2025 00:38:51 -0700 (PDT)
+Received: from fred-System-Product-Name.. (2001-b400-e389-b6b2-29b2-bfd3-aa15-d345.emome-ip6.hinet.net. [2001:b400:e389:b6b2:29b2:bfd3:aa15:d345])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86a3083sm125374285ad.195.2025.06.25.00.38.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 00:38:51 -0700 (PDT)
+From: Fred Chen <fredchen.openbmc@gmail.com>
+To: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Joel Stanley <joel@jms.id.au>,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/2] Add Meta (Facebook) Santabarbara BMC (AST2600)
+Date: Wed, 25 Jun 2025 15:38:36 +0800
+Message-ID: <20250625073847.4054971-1-fredchen.openbmc@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On 6/18/2025 7:35 PM, Anup Patel wrote:
-> The gstage_set_pte() and gstage_op_pte() should flush TLB only when
-> a leaf PTE changes so that unnecessary TLB flushes can be avoided.
->
-> Reviewed-by: Atish Patra <atishp@rivosinc.com>
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->   arch/riscv/kvm/mmu.c | 14 +++++++++-----
->   1 file changed, 9 insertions(+), 5 deletions(-)
->
-> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-> index 1087ea74567b..29f1bd853a66 100644
-> --- a/arch/riscv/kvm/mmu.c
-> +++ b/arch/riscv/kvm/mmu.c
-> @@ -167,9 +167,11 @@ static int gstage_set_pte(struct kvm *kvm, u32 level,
->   		ptep = &next_ptep[gstage_pte_index(addr, current_level)];
->   	}
->   
-> -	set_pte(ptep, *new_pte);
-> -	if (gstage_pte_leaf(ptep))
-> -		gstage_remote_tlb_flush(kvm, current_level, addr);
-> +	if (pte_val(*ptep) != pte_val(*new_pte)) {
-> +		set_pte(ptep, *new_pte);
-> +		if (gstage_pte_leaf(ptep))
-> +			gstage_remote_tlb_flush(kvm, current_level, addr);
-> +	}
->   
->   	return 0;
->   }
-> @@ -229,7 +231,7 @@ static void gstage_op_pte(struct kvm *kvm, gpa_t addr,
->   			  pte_t *ptep, u32 ptep_level, enum gstage_op op)
->   {
->   	int i, ret;
-> -	pte_t *next_ptep;
-> +	pte_t old_pte, *next_ptep;
->   	u32 next_ptep_level;
->   	unsigned long next_page_size, page_size;
->   
-> @@ -258,11 +260,13 @@ static void gstage_op_pte(struct kvm *kvm, gpa_t addr,
->   		if (op == GSTAGE_OP_CLEAR)
->   			put_page(virt_to_page(next_ptep));
->   	} else {
-> +		old_pte = *ptep;
->   		if (op == GSTAGE_OP_CLEAR)
->   			set_pte(ptep, __pte(0));
->   		else if (op == GSTAGE_OP_WP)
->   			set_pte(ptep, __pte(pte_val(ptep_get(ptep)) & ~_PAGE_WRITE));
-> -		gstage_remote_tlb_flush(kvm, ptep_level, addr);
-> +		if (pte_val(*ptep) != pte_val(old_pte))
-> +			gstage_remote_tlb_flush(kvm, ptep_level, addr);
->   	}
->   }
->   
+Summary:
+Add linux device tree entry related to Meta (Facebook) Santabarbara
+specific devices connected to BMC (AST2600) SoC.
 
-Reviewed-by: Nutty Liu <liujingqi@lanxincomputing.com>
+Change log
+v1 -> v2:
+  - Enable mac3 node
+  - Add GPIO line-name FM_MUX1_SEL_R
+  - Remove 'pinctrl-names' from gpio0 node
+  - Reorder top-level nodes alphabetically
+  - Reorder device node properties per style
+v1:
+  - Create santabarbara dts file.
 
-Thanks,
-Nutty
+Fred Chen (2):
+  dt-bindings: arm: aspeed: add Meta Santabarbara board
+  ARM: dts: aspeed: santabarbara: Add Meta Santabarbara BMC
+
+ .../bindings/arm/aspeed/aspeed.yaml           |   1 +
+ arch/arm/boot/dts/aspeed/Makefile             |   1 +
+ .../aspeed-bmc-facebook-santabarbara.dts      | 982 ++++++++++++++++++
+ 3 files changed, 984 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-santabarbara.dts
+
+-- 
+2.49.0
+
