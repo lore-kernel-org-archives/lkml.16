@@ -1,63 +1,78 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 795431E9B04
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A2D1DB958;
+	Wed, 25 Jun 2025 07:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750836458; cv=none; b=evWMLCtKG4LngJFXWxOSUGldmll/evsw4Y7OWMpGcrQC/ffWF4lMx8/W1RvSa1daMrPuB8OqikTqFaQmwrK7SHZWS0a2kAEK28mlwCouqLvRCTTqdVC3GQgxDg7lCTWnVXXoqDXTOUl/y8gyuNFfPZFNbG58IjFHXv0Sop96z2M=
+	t=1750836659; cv=none; b=kvmg5m7EC1LicGpK96AuKw1MbOoiQhqWZ6C15E0+QPYlMHIt1Cdeiz9VOncn0es6OEEHj9kWQcdaRVI+M24FdxX6n103opDS4mnqTnphf7p7GkdILVnFgoKpw5UP1ywOZY2an/QqhnUFxoOQdvLCnotPNf4mbW8UDvQvCIdoQSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750836458; c=relaxed/simple;
-	bh=gb2wGiZu74RqqJqhX1esbflHF0cg3aU9V15dfrHTPuA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AZbWQJYSymNdGJc8IgUCE8w57R9dXylUDdyBIMT8QoKNd/owzZxdjpCop8FBxIezW4RxztyWPgXX0kG72JKVz3UC5NgbbgI//SFcmmw9BQ548jfD1nxY3ffijWBcNdBWwjG6UPoK0Uy+2KNdgOPFwm/I+h2kWzV9nKC2piK1EEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=bRAqsqkb; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1750836659; c=relaxed/simple;
+	bh=hFIPoFQTI28beysZgW+h6si22+17Zi0rpBS3e/XJg9A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PIFBIw/6axNwRwWgzI7LEsZ+WAeI2SONwwt8UZBq0L6UMYk9ep5vvRKSDPPR1YFyS8dEE3pDMM7vI4GZZFdCrb9Hggj2nIwYoRtwHQ8BZ+MyDJBd3VEfAZwo01HN0V/EFcWShj7X7XJivxT5V/UsmeZT2yTzCGfN2KMX7beKjmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=delWNXz9; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="bRAqsqkb"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=CTJ7
-	m01QlF0COGdgm0pbIkw/ui2APLrwIzfMjYyoeZU=; b=bRAqsqkb/n1EJw8V39JM
-	y4BM8n/PZ/CWzXVJ0sLa6VM1mOco8HInKGbvm3OnWBLiYJ2yuE06xCpAsOVMVc0P
-	vEBzs4VNzxojXLO3kwAGymyKXFUl6Fn8LKVfQ76+aaYignnBCIOJVkeB+QYJGLSk
-	dCvlXMzhG8vQaouw7XAtmFaMd9CSQU/n3/GjoKVvBYCKhr6yDbQkunas/ImB/Bk9
-	oALJBllPC4MXuUdFov7N1p3G4VyFH0SB1FblGTC/jdIlpeh9yVOMz6f7+eAQrTJ7
-	gT1yv8anJmuNWzUK6Y0IuiBpBZKs5kfFdxghzYe7myGnTm2vafcl+6nQA6u9JJPd
-	8A==
-Received: (qmail 548001 invoked from network); 25 Jun 2025 09:27:33 +0200
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 25 Jun 2025 09:27:33 +0200
-X-UD-Smtp-Session: l3s3148p1@2abSYGA4UL1tKLNf
-Date: Wed, 25 Jun 2025 09:27:32 +0200
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Jorge Marques <jorge.marques@analog.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Frank Li <Frank.Li@nxp.com>,
-	=?utf-8?Q?Przemys=C5=82aw?= Gaj <pgaj@cadence.com>,
-	linux-i3c@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] i3c: master: dw: Use i3c_writel_fifo() and
- i3c_readl_fifo()
-Message-ID: <aFuk5IBH9N0ljNIK@shikoro>
-References: <20250624-i3c-writesl-readsl-v3-0-63ccf0870f01@analog.com>
- <20250624-i3c-writesl-readsl-v3-3-63ccf0870f01@analog.com>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="delWNXz9"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=ZMtcUGoXxkzCJ2uEnnxxlBvqXNs4t6MJkz6Ioc+X3X0=; b=delWNXz9Eefk3jAK0iWcv0p3fW
+	8b1NjHcTj3S9uL91ksYIioUj0Bre38IchSX+ECiyFdVSVcgJ1r7u3Jrv0hPWFZEjiP3SzGSXvDMCH
+	PpyZ7OrTQpZ0+NrARYBrGACILq7ah6ztB3ce6xllIPiSXhPrP7Hmywg3TalXGH8TVEUMUfvXYg5jP
+	Y1/Z9otKQroKVemBYerWwqX4Xji5z9ZNVBdzY2J6WbngOdrNHUPDLKgtI8F0TR9Lq4ZKLHoAOW1Qw
+	eoRtKBZou9Z+BnHNtGyYkGyXvjrlIwasewRfFlhgWfNVHsVrnBiLwtpRHOp9IFlagcg5Z696/za1t
+	JeEM19Ag==;
+Received: from [50.53.25.54] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uUKau-00000007omW-0QtG;
+	Wed, 25 Jun 2025 07:30:56 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	Helge Deller <deller@gmx.de>,
+	linux-parisc@vger.kernel.org
+Subject: [PATCH] parisc: Makefile: explain that 64BIT requires both 32-bit and 64-bit compilers
+Date: Wed, 25 Jun 2025 00:30:54 -0700
+Message-ID: <20250625073054.802365-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624-i3c-writesl-readsl-v3-3-63ccf0870f01@analog.com>
+Content-Transfer-Encoding: 8bit
 
+For building a 64-bit kernel, both 32-bit and 64-bit VDSO binaries
+are built, so both 32-bit and 64-bit compilers (and tools) should be
+in the PATH environment variable.
 
->  static void dw_i3c_master_read_rx_fifo(struct dw_i3c_master *master,
->  				       u8 *bytes, int nbytes)
->  {
-> -	return dw_i3c_master_read_fifo(master, RX_TX_DATA_PORT, bytes, nbytes);
-> +	i3c_readl_fifo(master->regs + RX_TX_DATA_PORT, bytes, nbytes);
->  }
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: linux-parisc@vger.kernel.org
+---
+This wasn't obvious to me; I was seeing lots of Assembler errors
+when only the 64-bit tools were in $PATH.
+I didn't find a better place to document this.
 
-Same question as patch 2, why not remove the surrounding functions?
+ arch/parisc/Makefile |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
+--- lnx-616-rc3.orig/arch/parisc/Makefile
++++ lnx-616-rc3/arch/parisc/Makefile
+@@ -39,7 +39,9 @@ endif
+ 
+ export LD_BFD
+ 
+-# Set default 32 bits cross compilers for vdso
++# Set default 32 bits cross compilers for vdso.
++# This means that for 64BIT, both the 64-bit tools and the 32-bit tools
++# need to be in the path.
+ CC_ARCHES_32 = hppa hppa2.0 hppa1.1
+ CC_SUFFIXES  = linux linux-gnu unknown-linux-gnu suse-linux
+ CROSS32_COMPILE := $(call cc-cross-prefix, \
