@@ -1,144 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF0472DA760;
-	Wed, 25 Jun 2025 18:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE6931DDC1E;
+	Wed, 25 Jun 2025 18:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750875233; cv=none; b=PsALwW/waKWYe6Yg9EWFErkXeNvif08UkZliozQeRbbQ5TEtf7xpdqNXUmt4m51M9NgFYOXc2Z3MLbxfs+VFyGiA3fXoEwlPsZSi4nelhBrOYKDB0qG2g7Uu+xSmxuR8zolsFiG99EaFGSieqoUcYPuyn5EjZziAl4NfFIcRiww=
+	t=1750875314; cv=none; b=ky3YndlOAAJ22MSEXBpk5BO+ET79GelCRAQ0NHBXoDosPW6to57ExKt+U2fy0td0AZT3JLK51SPWDA9xncVCje0CLBs2B2Zu/m5jLcfU3CVY4qLvsWsVbbFu5NerA2/wy6WZraTDjxjW2vbjnGT0J19gzRmPYWPEsFmMePG18fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750875233; c=relaxed/simple;
-	bh=G1QCpjfavpigKy+ema2A3AXCLD86KSvFQwQbDAd0FQE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pVQPSHZx17BtsSyMQG8aXZ0Z5vaKPSlb52gcb/kv52/7LCYY9iO2IFPF1MfKtu4+9n7tYrmzPOS5+yEjeL7mzeZl3pux6Q4QeXIIwJczuH3seYG34CMBydqCKsU3SKPqfh6BgnnDhs5gn/NxcNjoqBN9hr5+QX4vmIsGjLVIwGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pW0BvXZi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750875314; c=relaxed/simple;
+	bh=CxtBoFDG1a0gobPdzSr/uuDoJXqLk9bYZjbFWAhbBBg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mn6BGRO6HYQNHffPoTlpwSDf1Ysd6tVZOBvpNjP2P/a6rYnFmNLXpQhz4aGNMHkVEf13Qh7dz+K3XZe/21+dDTOmH1+bTDRPxBKYA6lCXbvjSaicdSWzH3/zHCfcCXeYM5DzPjVRDcQPLgM1Tx6H/R3he8M2+muZk14bMndBnVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GjWucunt; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pW0BvXZi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C69D1C4CEF1;
-	Wed, 25 Jun 2025 18:13:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750875232;
-	bh=G1QCpjfavpigKy+ema2A3AXCLD86KSvFQwQbDAd0FQE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pW0BvXZiDoFTLUm0j/12DOdmLhl3f11YBe3wVzjVP3/yWprEgLU+rTyrZ6ZybQyY+
-	 z+7VKJTEl0FL504v2CDIMpR05YFHxE/3ee2WzSiY7jJE0vDC1dpQhm9g2HwSQuaVAg
-	 y4JToDY+vSUl0Nj34PsqkvwDoWqwbepxGjgNvg3Z4lNEnuDr7vCM4idN+lAc6WltAQ
-	 SygA2RH46bZkLaa/GSp5Cj5VfWlpNJf3kOqm7j7zkTAyiN5DMsVqq7KLmIY1+eQpN5
-	 3JFQUhS6yXJXpBefePLzhbF1RLwl3bkS4LNDLA3WYr+KOQJsFXkfhMO0IJqtkBzOaF
-	 MSl2HucufuCjg==
-From: Mario Limonciello <superm1@kernel.org>
-To: Hans de Goede <hansg@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-gpio@vger.kernel.org (open list:GPIO ACPI SUPPORT),
-	linux-acpi@vger.kernel.org (open list:GPIO ACPI SUPPORT),
-	linux-kernel@vger.kernel.org (open list),
-	linux-input@vger.kernel.org (open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)...),
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v2 3/3] Input: soc_button_array: Only debounce cherryview and baytrail systems
-Date: Wed, 25 Jun 2025 13:13:42 -0500
-Message-ID: <20250625181342.3175969-4-superm1@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250625181342.3175969-1-superm1@kernel.org>
-References: <20250625181342.3175969-1-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GjWucunt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750875313; x=1782411313;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CxtBoFDG1a0gobPdzSr/uuDoJXqLk9bYZjbFWAhbBBg=;
+  b=GjWucuntzDlCAsjVTOqCtn3XSaPD34QitzeFGh9ZRfrynr9bj66Gfx9z
+   AEomu79lVc00ivkeAxa9J0cjUdUggp95AvSVqU4Jv+qE55rkjwvCDiptZ
+   cUnunSiUv6FTUJ+5RLVsg0gKepoTOX/tMNQTPLw+qJvHLIBG4PdjTtlbg
+   DzTjYxovG3YjFzgqnNr4ecB9c2oCyYM1iQ/BJ0XLAgC5k6TqnhZ4Opv1o
+   hnWMFOepU24cnxF9blxZdPdEmXgsjV+B3k8PYGuN1DRqCoFX2aot+c62x
+   m+gjdYbQga6Iz3MD2OjkjiW8Mv7lLUdyh0138ULpgiOSUrXhjaYsslTzo
+   w==;
+X-CSE-ConnectionGUID: NsGMuXHcT9So33Yjuvalsg==
+X-CSE-MsgGUID: rNdYn1T9RY6D7QztHv+VIg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="75695502"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="75695502"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 11:15:12 -0700
+X-CSE-ConnectionGUID: SxgJoMYURoeM4rO5GTa72A==
+X-CSE-MsgGUID: a9b+IyaeR3GAlzq0ei13Yw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="158050180"
+Received: from agluck-desk3.sc.intel.com (HELO agluck-desk3) ([172.25.103.51])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 11:15:11 -0700
+Date: Wed, 25 Jun 2025 11:15:09 -0700
+From: "Luck, Tony" <tony.luck@intel.com>
+To: JP Kobryn <inwardvessel@gmail.com>
+Cc: bp@alien8.de, tglx@linutronix.de, mingo@redhat.com,
+	dave.hansen@linux.intel.com, hpa@zytor.com, aijay@meta.com,
+	x86@kernel.org, linux-edac@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kernel-team@meta.com
+Subject: Re: [PATCH] mce: include cmci during intel feature clearing
+Message-ID: <aFw8rWwTVw85cavh@agluck-desk3>
+References: <20250617214752.178263-1-inwardvessel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617214752.178263-1-inwardvessel@gmail.com>
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+On Tue, Jun 17, 2025 at 02:47:52PM -0700, JP Kobryn wrote:
+> It was found that after a kexec on an intel CPU, MCE reporting was no
+> longer active. The root cause has been found to be that ownership of CMCI
+> banks is not cleared during the shutdown phase. As a result, when CPU's
+> come back online, they are unable to rediscover these occupied banks. If we
+> clear these CPU associations before booting into the new kernel, the CMCI
+> banks can be reclaimed and MCE reporting will become functional once more.
+> 
+> The existing code does seem to have the intention of clearing MCE-related
+> features via mcheck_cpu_clear(). During a kexec reboot, there are two
+> sequences that reach a call to mcheck_cpu_clear(). They are:
+> 
+> 1) Stopping other (remote) CPU's via IPI:
+> native_machine_shutdown()
+> 	stop_other_cpus()
+> 		smp_ops.stop_other_cpus(1)
+> 		x86 smp: native_stop_other_cpus(1)
+> 			apic_send_IPI_allbutself(REBOOT_VECTOR)
+> 
+> ...IPI is received on remote CPU's and IDT sysvec_reboot invoked:
+> 	stop_this_cpu()
+> 		mcheck_cpu_clear(this_ptr_cpu(&cpu_info))
+> 
+> 2) Seqence of stopping the active CPU (the one performing the kexec):
+> native_machine_shutdown()
+> 	stop_other_cpus()
+> 		smp_ops.stop_other_cpus(1)
+> 		x86 smp: native_stop_other_cpus(1)
+> 			mcheck_cpu_clear(this_ptr_cpu(&cpu_info))
+> 
+> In both cases, the call to mcheck_cpu_clear() leads to the vendor specific
+> call to intel_feature_clear():
+> 
+> mcheck_cpu_clear(this_ptr_cpu(&cpu_info))
+> 	__mcheck_cpu_clear_vendor(c)
+> 		switch (c->x86_vendor)
+> 		case X86_VENDOR_INTEL:
+> 			mce_intel_feature_clear(c)
+> 
+> Now looking at the pair of functions mce_intel_feature_{init,clear}, there
+> are 3 MCE features setup on the init side:
+> 
+> mce_intel_feature_init(c)
+> 	intel_init_cmci()
+> 	intel_init_lmce()
+> 	intel_imc_init(c)
+> 
+> On the other side in the clear function, only one of these features is
+> actually cleared:
+> 
+> mce_intel_feature_clear(c)
+> 	intel_clear_lmce()
+> 
+> Just focusing on the feature pertaining to the root cause of the kexec
+> issue, there would be a benefit if we additionally cleared the CMCI feature
+> within this routine - the banks would be free for acquisition on the boot
+> up side of a kexec. This patch adds the call to clear CMCI to this intel
+> routine.
+> 
+> Reported-by: Aijay Adams <aijay@meta.com>
+> Signed-off-by: JP Kobryn <inwardvessel@gmail.com>
 
-commit 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
-hardcoded all soc-button-array devices to use a 50ms debounce timeout
-but this doesn't work on all hardware.  The hardware I have on hand
-actually prescribes in the ASL that the timeout should be 0:
+LGTM
 
-GpioInt (Edge, ActiveBoth, Exclusive, PullUp, 0x0000,
-         "\\_SB.GPIO", 0x00, ResourceConsumer, ,)
-{   // Pin list
-    0x0000
-}
+Reviewed-by: Tony Luck <tony.luck@intel.com>
 
-Many cherryview and baytrail systems don't have accurate values in the
-ASL for debouncing and thus use software debouncing in gpio_keys. The
-value to use is programmed in soc_button_array.  Detect Cherry View
-and Baytrail using ACPI HID IDs used for those GPIO controllers and apply
-the 50ms only for those systems.
+> ---
+>  arch/x86/kernel/cpu/mce/intel.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/mce/intel.c b/arch/x86/kernel/cpu/mce/intel.c
+> index efcf21e9552e..9b149b9c4109 100644
+> --- a/arch/x86/kernel/cpu/mce/intel.c
+> +++ b/arch/x86/kernel/cpu/mce/intel.c
+> @@ -478,6 +478,7 @@ void mce_intel_feature_init(struct cpuinfo_x86 *c)
+>  void mce_intel_feature_clear(struct cpuinfo_x86 *c)
+>  {
+>  	intel_clear_lmce();
+> +	cmci_clear();
 
-Cc: Hans de Goede <hansg@kernel.org>
-Fixes: 5c4fa2a6da7fb ("Input: soc_button_array - debounce the buttons")
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v2:
- * commit message
- * quirk systems instead of revert
----
- drivers/input/misc/soc_button_array.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+I particularly like that you found a one-line fix!
 
-diff --git a/drivers/input/misc/soc_button_array.c b/drivers/input/misc/soc_button_array.c
-index b8cad415c62ca..56abc93f23e0c 100644
---- a/drivers/input/misc/soc_button_array.c
-+++ b/drivers/input/misc/soc_button_array.c
-@@ -129,6 +129,13 @@ static const struct dmi_system_id dmi_invalid_acpi_index[] = {
- 	{} /* Terminating entry */
- };
- 
-+static const struct acpi_device_id force_software_debounce_ids[] = {
-+	{ "INT33FF" },
-+	{ "INT33B2" },
-+	{ "INT33FC" },
-+	{ }
-+};
-+
- /*
-  * Get the Nth GPIO number from the ACPI object.
-  */
-@@ -149,11 +156,17 @@ static int soc_button_lookup_gpio(struct device *dev, int acpi_index,
- 	return 0;
- }
- 
-+static int soc_button_match_acpi_device_ids(struct device *dev, const void *data)
-+{
-+	return acpi_match_device(data, dev) ? 1 : 0;
-+}
-+
- static struct platform_device *
- soc_button_device_create(struct platform_device *pdev,
- 			 const struct soc_button_info *button_info,
- 			 bool autorepeat)
- {
-+	struct device *quirkdev __free(put_device) = NULL;
- 	const struct soc_button_info *info;
- 	struct platform_device *pd;
- 	struct gpio_keys_button *gpio_keys;
-@@ -181,6 +194,10 @@ soc_button_device_create(struct platform_device *pdev,
- 	if (dmi_id)
- 		invalid_acpi_index = (long)dmi_id->driver_data;
- 
-+	quirkdev = bus_find_device(&platform_bus_type, NULL,
-+				   force_software_debounce_ids,
-+				   soc_button_match_acpi_device_ids);
-+
- 	for (info = button_info; info->name; info++) {
- 		if (info->autorepeat != autorepeat)
- 			continue;
-@@ -220,7 +237,8 @@ soc_button_device_create(struct platform_device *pdev,
- 		gpio_keys[n_buttons].desc = info->name;
- 		gpio_keys[n_buttons].wakeup = info->wakeup;
- 		/* These devices often use cheap buttons, use 50 ms debounce */
--		gpio_keys[n_buttons].debounce_interval = 50;
-+		if (quirkdev)
-+			gpio_keys[n_buttons].debounce_interval = 50;
- 		n_buttons++;
- 	}
- 
--- 
-2.43.0
-
+>  }
+>  
+>  bool intel_filter_mce(struct mce *m)
+> -- 
+> 2.47.1
+> 
