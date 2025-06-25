@@ -1,234 +1,202 @@
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C34CE1F3B8A
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:02:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4D42066DE;
+	Wed, 25 Jun 2025 20:02:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750881761; cv=none; b=XylXI8pQh4/Orluo9LxBBPBMlKKLMN9++2xaZ/K5YCzTt286OBLZSZ0Cc8eu1DqwwBrmf/yKHOkoPxPV37Ealg4CJDJimcCpiVKnrYl4AUgdyZmjZT/Ch2SPS1Y5iND+8fMvFFYu27sP+g2ghCANuJ4dbIIFSM+MSTzpXdOW+bc=
+	t=1750881762; cv=none; b=cenGYl3pnUqkUnEHuRlDxk98Mu2+iUC9C1p5USXlZuQ7+ypJj9ia++51CWhQdsdPj663ivE56iIEYjB2A4Kgu52s3j1OFnb7z5MHhEvmYNsSY2/YLGyvXxFMbdIEsgHEhiwt6CDRTStlG0hu9jL1pKc188eQM2pqOOX/QVmnWvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750881761; c=relaxed/simple;
-	bh=GWxvHFwPBV5gIX5Qwmy+RsHiRnqW9YVgenIq5FFMcBU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a21K5q3yYTToWC4rtYulnI3bfmqU4VrxgrfwWjK5lgK/oJljwsQB4KaSt2HjMEsmrlUVqmueDrHTKp3gmzRSDOF/a458MLoEGn4hlN+4U3fNHtqkPbw3ppf4vE19lz/RRltBwF4DBh/QFyM89qLPk7owFBmm5gjU421uBWxbrhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xXQOfujg; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750881762; c=relaxed/simple;
+	bh=43wNCcyAb8e54VAM2GwpB9zj2+lN8oliu10hUpHh+JU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=a+lhtBbSyK+SxTxfzGqNnXN5cBdKRx7L5kvSnkg2NVXfqaYQjKeqjYje5wmN5edj4lV9SbgiIfY/4SBYRcbhtP0k3AH0aG9EeLR4v88I5FamkIT7bFofPks+HuvLXs45XGWI29tXRd/T9unSAOD2rI4yuxqr9US40BM3tbQcNNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gLrpY2m8; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xXQOfujg"
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-7494999de5cso263219b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:02:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750881759; x=1751486559; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=5UB338dJyB9x4dGE/uaHtvPfiiZjGfFWO/fBs+2Cp2E=;
-        b=xXQOfujgGwlFD8JWf/32NnrnQpxrqhWnIPx6A0VzGM+Z5j4mBHBbosPcqCyzKQXVsI
-         /EsKBZDB7/b4U59FfCa7a4hgVeDtJOHX/DEMFZuJ+B09Aazd/LP4dpMd/mNXA2ZOFXss
-         gKOjdQvmtczjFSmekdBdXktfk6jdYhfPXCfjPgOGQ2bnXq4NQll4q/Rebq43zy3TF/5e
-         6F1PWgdtvv0hCLx37h1IDyP3I629TZWuRgysoWYixNVrVgId3NoU2WvGRwAWRw95PO2d
-         J56MlbEKk8vgmlmfAZd4MLe1OK0EMhOwQxISMWTxtKKOh7BJW1p0IMlpYqlOWbM+2dg2
-         +kUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750881759; x=1751486559;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5UB338dJyB9x4dGE/uaHtvPfiiZjGfFWO/fBs+2Cp2E=;
-        b=L2NXyPEo00OjdvyhhdczbZRfXzr+u2Q2ZlMtSV1GO6R4L/pZyUKETd2n4NiD1tOjfS
-         ZAjWiWhCCrRQDipqeb916wbkSqXu1LqJmg5xsJ6YUpSiQUqcyQaK6ozRrgz1NW0/nKc3
-         6lSzGUsx1NQbW74yUCAG12WzL3nPC6zUeyQ6H0l2Z7nb5TczxetbcpJ7BGWn1U9diwoc
-         MW38M7WFW56zCoqhvjiHMSeDw4Z6V5RI+K4nORRtOP4T6vkb63RDVNU+E/GL6pQMzKkH
-         Sty7o+YxAyD5f84djSwdjh+cBw72/vRp8JcYRdwE6ITHy6FdcM1hgv38xSdvIkTXmulF
-         NfhA==
-X-Forwarded-Encrypted: i=1; AJvYcCXaf9I4XV2UB/T6eyqGjnqyfypLlOdDqVd3878UCku6WPZuQ7AWjE7U01+reXrk9P7zCbR+iqb8xrTOxxw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxpB5HpMkqtw66jHnnMLi9jsttX/2q7VibWjdd013XMs+fjmCDD
-	rhhiG2BeMm19cKK0QAjolRK6hlQnRvPjuooTqwK6G4aYcCZyRzlpnCbzADua3Fg8KD5HBJ8ANaj
-	Vuq/gYafwYeO12Vzyx6dAhDRmq2C2Ncu5nTMw2Bj/Uw==
-X-Gm-Gg: ASbGncsiI57aIt2L+NU2tIulLUk4hoydZUjy3AxOH2rYmDb3q+k+EP1/QyVejxYrpm/
-	lO9Nj3ta2ZUCdl4RnoDNOYQRNBQ42vzefhELYT14uPxcLX4nSQPSQhp/yWcOMPvTMVPT7/0hUoT
-	E0HamgqzaempG/weiC9GrDu93k2IRTY4Uo/4b9jI+DhBMRlXY130W8frvLHRA6rtdrU/kMTZkHN
-	Wfc67RqVylhHWw=
-X-Google-Smtp-Source: AGHT+IGp24/z92mP7JfdtfQI7sA5sbT6HecvDxjyl6G3uib8/3VToor/29Vj/jdDEhMiO8w/jgWZY09yEuJRJcmOpZk=
-X-Received: by 2002:a17:90b:2b4b:b0:311:ffe8:20ee with SMTP id
- 98e67ed59e1d1-315f25e9832mr6879387a91.11.1750881758779; Wed, 25 Jun 2025
- 13:02:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gLrpY2m8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750881761; x=1782417761;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=43wNCcyAb8e54VAM2GwpB9zj2+lN8oliu10hUpHh+JU=;
+  b=gLrpY2m8YSYhuFf3PwM78v9fNVdRyKae67qKm6M2VBJW6WiTdqX5yUue
+   Wn0yyYZycaIMgS8AxVo2urtLgUTZfF7Inc5oYYBQwve1mMTFu/G1Bjjio
+   EqOB+Rupewps6Hqdbke3L7hTVVEXDNoqHeM02/RUvEZ1hPudp608FEwOP
+   V1KfHNRaN003fwbt8B6JOwRreyn9QTT9jVwRmrx1JUUN0vOm6VNFtlWnA
+   0IYDzp2ckZoPWkx7yIn/V/hXw94k0Vcr4/VyOLJGwu+heCNHD46tTIl+S
+   AZKL2Xl9j6F4GPvLB5XDo8fL2rqJEFjX5r5eZFddAjIXAgQ4hFXaB9Ql/
+   Q==;
+X-CSE-ConnectionGUID: S2Urh4ipT+ygz6o0CZpFFw==
+X-CSE-MsgGUID: D4ddN9p3QbK8z0nnX2+X/Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64520423"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="64520423"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 13:02:40 -0700
+X-CSE-ConnectionGUID: +bPP6+oXToWrLF/e5liXMA==
+X-CSE-MsgGUID: Gve64YEVQ1mAoZ9IjDbYiQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="183340922"
+Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.108.244]) ([10.125.108.244])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 13:02:39 -0700
+Message-ID: <fd9ebb1c-8a5a-44c5-869b-810bb5e7436c@intel.com>
+Date: Wed, 25 Jun 2025 13:02:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624121412.352317604@linuxfoundation.org>
-In-Reply-To: <20250624121412.352317604@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Thu, 26 Jun 2025 01:32:27 +0530
-X-Gm-Features: Ac12FXzEp4L8RYJhUT_Lg9wiamdSRFMkF8CBHtdeGPvPWKEwJR4j0UjhcHdLfRw
-Message-ID: <CA+G9fYse3W=-C0JbR6fhw=PLPy4aWUFqPwPTD0eK+x0sLidxYw@mail.gmail.com>
-Subject: Re: [PATCH 5.10 000/352] 5.10.239-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCHv2 04/12] x86/virt/tdx: Add tdx_alloc/free_page() helpers
+To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ pbonzini@redhat.com, seanjc@google.com, dave.hansen@linux.intel.com
+Cc: rick.p.edgecombe@intel.com, isaku.yamahata@intel.com,
+ kai.huang@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com,
+ tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, kvm@vger.kernel.org,
+ x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
+ <20250609191340.2051741-5-kirill.shutemov@linux.intel.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20250609191340.2051741-5-kirill.shutemov@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, 24 Jun 2025 at 17:59, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.10.239 release.
-> There are 352 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 26 Jun 2025 12:13:28 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.239-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On 6/9/25 12:13, Kirill A. Shutemov wrote:
+>  arch/x86/include/asm/tdx.h       |   3 +
+>  arch/x86/include/asm/tdx_errno.h |   6 +
+>  arch/x86/virt/vmx/tdx/tdx.c      | 205 +++++++++++++++++++++++++++++++
+>  arch/x86/virt/vmx/tdx/tdx.h      |   2 +
+>  4 files changed, 216 insertions(+)
 
-Regressions noticed on arm64 allyesconfig build with gcc-12 on the
-stable-rc 5.10.239-rc2.
-(this allyesconfig build was skipped on rc1 due to other build regressions)
+Please go through this whole series and add appropriate comments and
+explanations.
 
-This was reported on stable-rc 5.15.186-rc1 with bisection results.
-  randstruct: gcc-plugin: Remove bogus void member
-  [ Upstream commit e136a4062174a9a8d1c1447ca040ea81accfa6a8 ]
+There are 4 lines of comments in the 216 lines of new code.
 
-Test environments:
- - arm64
+I'll give some examples:
 
-Regression Analysis:
- - New regression? Yes
- - Reproducibility? Yes
+> +static int tdx_nr_pamt_pages(void)
 
-Build regression: stable-rc 5.10.239-rc2 qedf_main.c field name not in
-record or union initializer
+Despite the naming this function does not return the number of TDX
+PAMT pages. It returns the number of pages needed for each *dynamic*
+PAMT granule.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+The naming is not consistent with something used only for dynamic PAMT
+support. This kind of comment would help, but is not a replacement for
+good naming:
 
-## Build log
-drivers/scsi/qedf/qedf_main.c:695:9: note: (near initialization for
-'qedf_cb_ops.get_login_failures')
-drivers/scsi/qedf/qedf_main.c:696:17: error: field name not in record
-or union initializer
-  696 |                 .link_update = qedf_link_update,
-      |                 ^
+/*
+ * How many pages are needed for the TDX
+ * dynamic page metadata for a 2M region?
+ */
 
-## Build log
- * Build logs: https://qa-reports.linaro.org/api/testruns/28858666/log_file/
- * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2yxHG0IfVj37DNnB0QgFB8uKDn2/
- * Build config:
-https://storage.tuxsuite.com/public/linaro/lkft/builds/2yxHG0IfVj37DNnB0QgFB8uKDn2/config
- * Build details:
-https://regressions.linaro.org/lkft/linux-stable-rc-linux-5.10.y/v5.10.238-353-g9dc843c66f6f/build/gcc-12-allyesconfig/
+Oh, and what the heck is with the tdx_supports_dynamic_pamt() check?
+Isn't it illegal to call these functions without dynamic PAMT in
+place? Wouldn't the TDH_PHYMEM_PAMT_ADD blow up if you hand it 0's
+in args.rdx?
 
-## Build
-* kernel: 5.10.239-rc2
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-* git commit: 9dc843c66f6f9281a760618b9967c74c86438b6a
-* git describe: v5.10.238-353-g9dc843c66f6f
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10.238-353-g9dc843c66f6f
+> +static int tdx_nr_pamt_pages(void)
+> +{
+> +	if (!tdx_supports_dynamic_pamt(&tdx_sysinfo))
+> +		return 0;
+> +
+> +	return tdx_sysinfo.tdmr.pamt_4k_entry_size * PTRS_PER_PTE / PAGE_SIZE;
+> +}
+> +
+> +static u64 tdh_phymem_pamt_add(unsigned long hpa,
+> +			       struct list_head *pamt_pages)
+> +{
+> +	struct tdx_module_args args = {
+> +		.rcx = hpa,
+> +	};
+> +	struct page *page;
+> +	u64 *p;
+> +
+> +	WARN_ON_ONCE(!IS_ALIGNED(hpa & PAGE_MASK, PMD_SIZE));
+> +
+> +	p = &args.rdx;
+> +	list_for_each_entry(page, pamt_pages, lru) {
+> +		*p = page_to_phys(page);
+> +		p++;
+> +	}
 
-## Test Regressions (compared to v5.10.237-271-g8bfb88108193)
-* arm64, build
-  - gcc-12-allyesconfig
+This is sheer voodoo. Voodoo on its own is OK. But uncommented voodoo
+is not.
 
-## Metric Regressions (compared to v5.10.237-271-g8bfb88108193)
+Imagine what would happen if, for instance, someone got confused and did:
 
-## Test Fixes (compared to v5.10.237-271-g8bfb88108193)
+	tdx_alloc_pamt_pages(&pamd_pages);
+	tdx_alloc_pamt_pages(&pamd_pages);
+	tdx_alloc_pamt_pages(&pamd_pages);
 
-## Metric Fixes (compared to v5.10.237-271-g8bfb88108193)
+It would *work* because the allocation function would just merrily
+shove lots of pages on the list. But when it's consumed you'd run off
+the end of the data structure in this function far, far away from the
+bug site.
 
-## Test result summary
-total: 37161, pass: 28448, fail: 1823, skip: 6742, xfail: 148
+The least you can do here is comment what's going on. Because treating
+a structure like an array is obtuse at best.
 
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 100 total, 100 passed, 0 failed
-* arm64: 28 total, 27 passed, 1 failed
-* i386: 20 total, 20 passed, 0 failed
-* mips: 22 total, 22 passed, 0 failed
-* parisc: 3 total, 0 passed, 3 failed
-* powerpc: 21 total, 21 passed, 0 failed
-* riscv: 9 total, 9 passed, 0 failed
-* s390: 9 total, 9 passed, 0 failed
-* sh: 10 total, 10 passed, 0 failed
-* sparc: 6 total, 6 passed, 0 failed
-* x86_64: 24 total, 24 passed, 0 failed
+Even better would be to have a check to ensure that the pointer magic
+doesn't run off the end of the struct:
 
-## Test suites summary
-* boot
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-exec
-* kselftest-fpu
-* kselftest-futex
-* kselftest-intel_pstate
-* kselftest-kcmp
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-mincore
-* kselftest-mqueue
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* lava
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* perf
-* rcutorture
+	if (p - &args.rcx >= sizeof(args)/sizeof(u64)) {
+		WARN_ON_ONCE(1);
+		break;
+	}
 
---
-Linaro LKFT
-https://lkft.linaro.org
+or some other pointer voodoo.
+
+> +
+> +	return seamcall(TDH_PHYMEM_PAMT_ADD, &args);
+> +}
+
