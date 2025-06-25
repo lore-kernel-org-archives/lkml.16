@@ -1,106 +1,114 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4BE287252;
-	Wed, 25 Jun 2025 23:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 271C7287274;
+	Wed, 25 Jun 2025 23:57:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750895861; cv=none; b=tuv+2crAXWFJm9KklxSH9yjnIfPcjF5tY0wnNHalA4WQsKIwv3lW6Qs26cktgCKz53bvNerSnm7pLYpjwanlAH6SDQ+4EJYKc5QabIBrhmHtqP82M/Y8Xz1z8jQY5PpweHAHEhOVwwPeT/xXkdcl3XAuoPLhFMiWOAGBbLyqTOo=
+	t=1750895870; cv=none; b=AiwfGyWYegYq0UqvcCbtBzi65Bz0/ptVV3uE7CZoirVhyCjaQPSb6unx0cHMW3uFgt00UFLKVArRzTgKv9y4/YcXmNxl19SfZVKitgh4fRU3QDCpwwN1vb3lODQtakDqbms+KrgR3ZPDzh39nqMdwn+Ye0ZracnCop+vu5tssG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750895861; c=relaxed/simple;
-	bh=b2p2wLab3AkXhvQjT2HVq8Bz24cBRw35pUZ7w5ivhU8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Z3Mja29H3gWux5/grDExxGaeaKiFysVfPYZN33vve046I+n3+2kzNtoNfqvfNlOkaSDdk9MH5ZBMo+Nn1qfo3P53EU7O16PHXgaPLGldNjXgzSE0DWYLzuOsuDN7KqQeGechCvpWHunxKRbxncjFaaC3D1oWSBd+Nx1QuwVKMRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=k/KCcCyG; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1750895870; c=relaxed/simple;
+	bh=CkcCjk8IzsSvEHOxb9mbqVNqkfQ5haY3GvAwzUt4bxI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JpixEna3vtHzcuaUggocV1uz+a1z93DoOBcrrk6j93fYDC7fdMnaS+0ipI5zzZbs+5wX6ES1mg5ecMcWmZwkIs+WCugGq2aY6Q5VkTgtGgKzLQ+P0y0bUCJWnIIhKuPflJvx4pqzBPdU9UeO70iKB1tEzcFakFhCQtAXtIZDvQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gHQL0dV9; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="k/KCcCyG"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=Content-Transfer-Encoding:Content-Type
-	:In-Reply-To:From:References:To:Subject:MIME-Version:Date:Message-ID:Sender:
-	Reply-To:Cc:Content-ID:Content-Description;
-	bh=c+rrrcFg6u66Hnzut5Z/WroFwVDDLyZyn8hntHme06U=; b=k/KCcCyGyqyAaxFb2ZKA9rh+VF
-	Tw6VTBokl/pf0DZqNobcHM6gtVorsZFwjF1thuG8hsHpYkkudmmJQG7E68zAW5xoaM4FTkmbKJE2x
-	O9iRP4tpW1WALUETZlhq3OfEb/qnSTosMFfwVxhZmeTX6c+Z7aA1j+BjwzIegrJUroKPvl+XDbjec
-	7uAUmnu7eIXy0AOot45E+8K+/ItaML7t/oFzCCNLc5L2DH6fSZw2wwRtScDNRq2Vdxs3Yw5RQiyBf
-	XBS/At592eesDjQ0OjCaWqPi4H4KI6ntoWqNb46K4fPxwU/iHzZ5XEqTDG6ZtNeDN3uHJPjmae4n+
-	RjiP4REg==;
-Received: from [50.53.25.54] (helo=[192.168.254.17])
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUZzD-000000060Zf-0xuo;
-	Wed, 25 Jun 2025 23:57:03 +0000
-Message-ID: <ac8efa08-3f85-4532-8762-573ebd258ca7@infradead.org>
-Date: Wed, 25 Jun 2025 16:56:48 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gHQL0dV9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750895869; x=1782431869;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CkcCjk8IzsSvEHOxb9mbqVNqkfQ5haY3GvAwzUt4bxI=;
+  b=gHQL0dV9sCc3ZnlXDFAA0WPKIzbFig+vwBWtXA0wdzBVI8iBeXTkdbow
+   I1CIDkKSzrqSoUL8pJKVouuPSoMMj6CCtFKrUw3rgOGl3LtggjorH7hZB
+   dIVzzLE2EZPvxhABHrgTbskCwvjUMMim8AtuxedN7xF0MXujp/UE7WBJ3
+   mKDp6ilvXgP0xuXJJ/lHE+1gp8thbV1tbcjiY/FJgl2nw9+GO9seZEDh/
+   lSl/+ctsYhLi9nsNKVvdlUNach7WwWmvDLdh8xqeODt/2PxlRuBFcClmO
+   2BovSB7lSRnHCkCOZ9Z+A6MluUgj/qzcufRjfM5OqwxJzdo/pmPyRtRJC
+   A==;
+X-CSE-ConnectionGUID: agVg71CHRZSu1uujeRj99w==
+X-CSE-MsgGUID: pnVuJbe5SXGTQnsz3A4Ltw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64616235"
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="64616235"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 16:57:49 -0700
+X-CSE-ConnectionGUID: Gy7XcTc0Sc2uOSE6wWY0hg==
+X-CSE-MsgGUID: RulosnoFTIGOmowOtTQoQg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="152884623"
+Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 25 Jun 2025 16:57:45 -0700
+Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uUZzr-000TYQ-0F;
+	Wed, 25 Jun 2025 23:57:43 +0000
+Date: Thu, 26 Jun 2025 07:56:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: Konrad Dybcio <konradybcio@kernel.org>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Rob Clark <robin.clark@oss.qualcomm.com>,
+	Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+	Akhil P Oommen <akhilpo@oss.qualcomm.com>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: Re: [PATCH v5 03/14] drm/msm: Use the central UBWC config database
+Message-ID: <202506260718.HOiyc0Mm-lkp@intel.com>
+References: <20250625-topic-ubwc_central-v5-3-e256d18219e2@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 03/32] kho: warn if KHO is disabled due to an error
-To: Pasha Tatashin <pasha.tatashin@soleen.com>, pratyush@kernel.org,
- jasonmiu@google.com, graf@amazon.com, changyuanl@google.com,
- rppt@kernel.org, dmatlack@google.com, rientjes@google.com, corbet@lwn.net,
- ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org,
- aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org,
- tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com,
- roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk,
- mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org,
- hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com,
- joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com,
- song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org,
- gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org,
- cw00.choi@samsung.com, myungjoo.ham@samsung.com, yesanishhere@gmail.com,
- Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com,
- aleksander.lobakin@intel.com, ira.weiny@intel.com,
- andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de,
- bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com,
- stuart.w.hayes@gmail.com, ptyadav@amazon.de, lennart@poettering.net,
- brauner@kernel.org, linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org
-References: <20250625231838.1897085-1-pasha.tatashin@soleen.com>
- <20250625231838.1897085-4-pasha.tatashin@soleen.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20250625231838.1897085-4-pasha.tatashin@soleen.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625-topic-ubwc_central-v5-3-e256d18219e2@oss.qualcomm.com>
+
+Hi Konrad,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 2ae2aaafb21454f4781c30734959cf223ab486ef]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Konrad-Dybcio/soc-qcom-Add-UBWC-config-provider/20250625-211253
+base:   2ae2aaafb21454f4781c30734959cf223ab486ef
+patch link:    https://lore.kernel.org/r/20250625-topic-ubwc_central-v5-3-e256d18219e2%40oss.qualcomm.com
+patch subject: [PATCH v5 03/14] drm/msm: Use the central UBWC config database
+config: arm-randconfig-002-20250626 (https://download.01.org/0day-ci/archive/20250626/202506260718.HOiyc0Mm-lkp@intel.com/config)
+compiler: clang version 20.1.7 (https://github.com/llvm/llvm-project 6146a88f60492b520a36f8f8f3231e15f3cc6082)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250626/202506260718.HOiyc0Mm-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506260718.HOiyc0Mm-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/soc/qcom/ubwc_config.c:230:34: error: redefinition of 'qcom_ubwc_config_get_data'
+     230 | const struct qcom_ubwc_cfg_data *qcom_ubwc_config_get_data(void)
+         |                                  ^
+   include/linux/soc/qcom/ubwc.h:59:48: note: previous definition is here
+      59 | static inline const struct qcom_ubwc_cfg_data *qcom_ubwc_config_get_data(void)
+         |                                                ^
+   1 error generated.
 
 
+vim +/qcom_ubwc_config_get_data +230 drivers/soc/qcom/ubwc_config.c
 
-On 6/25/25 4:17 PM, Pasha Tatashin wrote:
-> During boot scratch area is allocated based on command line
-> parameters or auto calculated. However, scratch area may fail
-> to allocate, and in that case KHO is disabled. Currently,
-> no warning is printed that KHO is disabled, which makes it
-> confusing for the end user to figure out why KHO is not
-> available. Add the missing warning message.
-
-Are users even going to know what "KHO" means in the warning message?
-
-> 
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> ---
->  kernel/kexec_handover.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-> index 1ff6b242f98c..069d5890841c 100644
-> --- a/kernel/kexec_handover.c
-> +++ b/kernel/kexec_handover.c
-> @@ -565,6 +565,7 @@ static void __init kho_reserve_scratch(void)
->  err_free_scratch_desc:
->  	memblock_free(kho_scratch, kho_scratch_cnt * sizeof(*kho_scratch));
->  err_disable_kho:
-> +	pr_warn("Failed to reserve scratch area, disabling KHO\n");
->  	kho_enable = false;
->  }
->  
+892fee0dfae7022 Konrad Dybcio 2025-06-25  229  
+892fee0dfae7022 Konrad Dybcio 2025-06-25 @230  const struct qcom_ubwc_cfg_data *qcom_ubwc_config_get_data(void)
 
 -- 
-~Randy
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
