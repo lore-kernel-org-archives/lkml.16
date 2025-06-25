@@ -1,149 +1,113 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8EC28F4
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:03:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A96B1FE47B;
+	Wed, 25 Jun 2025 20:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750881801; cv=none; b=sANTZpmE3mSyCJ6szi17/tO0jRbnGVtNaSbXQPwfyhZilyjgUJqahchkZjMDPic9Sn/5rOG4yRb87MOR3ZUHyKIhzARiPVEKHFFqqdivbQIJcBLW7J3EMeFqjWLQLo2ktobdc7Ujuu0HaXjGLIV1M63CFZOB72ZAf9VxrpLNJKo=
+	t=1750881878; cv=none; b=cERq0ZBv2zY2MyxUp5yWam7gAXTk2+N727O8awHh4XututqbMMrq/XwV09jqM1tQO0YHahD4S8BV/XTfawRWaT5Tvgf01wdAuPQAsLg1jVuwMI9DQ8BfIX3Im7UgtXsUG3nI0X0RrK1uywOuxslDas+t7h1sCE3dmOZ9HogZYFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750881801; c=relaxed/simple;
-	bh=diZUvsuygdgUuJpbdkBRN2X7Ia6hWcWPIGA1aInMWZE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aBWOqAJLZnTvJekur8htnN0+5hGDrUNED6lHVUPWov/3TJbSCO6c0eUGyg/BHcbqkkGxX5yWM0lh9CQjsTPFahFze14q9OQubN5rGWGHi44o29GK/39WmfeOIjy763sP14c2erMomEXmdcBOCxmKSSnJEYHFny/jfEnPqVUQFB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BCaXJ2Qx; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750881878; c=relaxed/simple;
+	bh=oi4nmOkgUH8qBiEH7+3hBQBtcU6SViOVAb/7d5YTPNc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=H92K1aSBeaEE1kP94BaC1RHGSJyZKG8dD+vY9aoIdVUUHvlyLTZCStC0EijpWBimHxJa51C8Aw6JsrxuUNOX34ztNCJgmPdoGrLg7zgYA2WY1qh2qNKDX/WVUyRR5G3NjMCD67FgEIskEPdyw9DRIMM8lU1EUZfDTyHxV0LknSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ujmi3TUW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BCaXJ2Qx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750881798;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=JSs8so6zmO6ZUprflkSDZAkkmaHGPnqT6njVMAY4rO0=;
-	b=BCaXJ2Qx4h0ThIOBqxJP52bqHfc0Ou+6JNIZgKp2TFngxgD77GXpcldO8wTzLuUkydr5Fc
-	yHk7ecWrYQmjOkvfroMUb+98zNwWtAQqlI4QIZXMV0+W8/dYYFfXmxX37gS5TjA57eA4Ml
-	qIO7ethErLB7W8noM/KXwF5j+tyR0mU=
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
- [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-301-HaOEDXcCOreXJ5Rit-Udmg-1; Wed, 25 Jun 2025 16:03:17 -0400
-X-MC-Unique: HaOEDXcCOreXJ5Rit-Udmg-1
-X-Mimecast-MFC-AGG-ID: HaOEDXcCOreXJ5Rit-Udmg_1750881796
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3138e65efe2so142237a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:03:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750881796; x=1751486596;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JSs8so6zmO6ZUprflkSDZAkkmaHGPnqT6njVMAY4rO0=;
-        b=FWEmnIbmBnWo+TFdqc8fbwAPjfaWL7P9p9out42RZwKnaCVelIwTbjT1hXYYWYd8dS
-         hnA2mp3DnElhR8FUCkLxHy4z1xOShmahuJuOrIZInfkNVxS6wkNvG99zGbUg+5pGRpyI
-         jNzkuXR6jVWlwx3Jy4O9MeQlPC9INIIXPWZVJd3kAWV3ihJ84a/eOJ9lthzzA02Ay4yh
-         lExFutuCbli/flr4dpyhwLLDMHn1Z14FT5C0KMuWvw+F7C/IgPwVCZRMprT9yiWv4KEp
-         z2Ip7dH7cKNvao9SNBZG5eVvN9s2UnRC5mCzqULfXeZaB+HRtaOUqIarAY6apsb95S4z
-         cEiw==
-X-Gm-Message-State: AOJu0YySWO8WBbBXdTqY45q5Dzk4U64VNhco22Ha1CQ1fB0Oa2CmegWh
-	M+Qwb8JYn+mZgJtu5h+fRn6OTjXrO8dPQXdwHcbxWObAaxj6l9MfGz58K1LmG6Z4IpPzqHsRG1z
-	4/BbbhTsmIObRG6a0KrinuZGExK7QY6uAH5u3vAt7DMcUsLMtX47TbSHvJNyyF9ZSOA6zVzD57b
-	AB83xvdKmsyGyeptKK8cRuY+IcbRrp47kpqdcMk5Qb6u+SbvU=
-X-Gm-Gg: ASbGnct/la9tPYryprWJVlz444WRytgwASni5syDuf9gqnZ5fp8s6iVLiQaGPV1Txts
-	Z4xMqMr3IwyMzEVuUYWlsL4EQQogVuJxsZoA7gEe9zUlCAjFCrlnXaEIklTOC6S1JECe9JqAs6g
-	r3kJ2PgjDP98QbN5yG+ul+/UnFodMtoYsCKZFDQ3hMfOuTbkQEd0+fuhJ4In2tgv9VYTLBaibkX
-	O2olZ1mIdA9ArFK0lHoOp+dvqSR4x82SlCMgvwm9ALtflXlCopDh59V7ZeBfkholnqfmngNyv+g
-	rNPp9sH8VWU=
-X-Received: by 2002:a17:90b:2c84:b0:312:26d9:d5a7 with SMTP id 98e67ed59e1d1-315f269a810mr6390301a91.20.1750881795693;
-        Wed, 25 Jun 2025 13:03:15 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEWluOphzoBkdIqDO9x/Cn/KdojkpjiUCw5fsKUu7aYBwan55TLSI3+J3vCjY7+OxhBm/MMMQ==
-X-Received: by 2002:a17:90b:2c84:b0:312:26d9:d5a7 with SMTP id 98e67ed59e1d1-315f269a810mr6390240a91.20.1750881794982;
-        Wed, 25 Jun 2025 13:03:14 -0700 (PDT)
-Received: from x1.com ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f53a1bcbsm2509238a91.19.2025.06.25.13.03.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 13:03:14 -0700 (PDT)
-From: Peter Xu <peterx@redhat.com>
-To: linux-kernel@vger.kernel.org
-Cc: peterx@redhat.com,
-	Helge Deller <deller@gmx.de>,
-	Jens Axboe <axboe@kernel.dk>,
-	Jason Gunthorpe <jgg@nvidia.com>,
-	io-uring@vger.kernel.org
-Subject: [PATCH RFC] io_uring: Fix addr usage on get_unmapped_area()
-Date: Wed, 25 Jun 2025 16:03:10 -0400
-Message-ID: <20250625200310.1968696-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ujmi3TUW"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DDF37C4CEEA;
+	Wed, 25 Jun 2025 20:04:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750881877;
+	bh=oi4nmOkgUH8qBiEH7+3hBQBtcU6SViOVAb/7d5YTPNc=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=ujmi3TUW3CY6sYw5UsebZIzckZEIxFBhkWPq0/gim7X5uE26yp0tMMpE7XHNCFTWB
+	 XkNh2H+x1NdmAqp/g0QcMQOfglEjNdP6C96vt7rSeS3VNYEIn9NduBYPqWyP0DHH5p
+	 oFHCRQlV0w2WZircn0YuJIaCaaETFkrnaIgfatq1GqD53meweEZT+r9CWdbhJF6JLn
+	 9bkJK7GeN1qhK9yoGqPP8JgfsQ1M38gCTuz0sVhJ3+ESJt94HXsHBVmWMfBPpatOAo
+	 3byB21rIktU+nB8t45mpMrpLZ5Olcd/rJATzGzJAiY4vuCrH1w5rWCfexgdpOxGM4r
+	 6UvJHtux4jIqQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A29C7EE31;
+	Wed, 25 Jun 2025 20:04:37 +0000 (UTC)
+From: Cristian Cozzolino via B4 Relay <devnull+cristian_ci.protonmail.com@kernel.org>
+Subject: [PATCH v3 0/3] Add initial device tree for Billion Capture+
+Date: Thu, 26 Jun 2025 00:04:25 +0200
+Message-Id: <20250626-rimob-initial-devicetree-v3-0-4017ac9fd93d@protonmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGlyXGgC/43NQQrDIBCF4asE17UYk1jpKvcoXagZm4FEg4q0h
+ Ny9JqtCoXT5D7xvVhIhIERyrVYSIGNE70o0p4qYUbkHUBxKE854xwRnNODsNUWHCdVEhzIxkAI
+ AHZQUqtPWGqlJmS8BLD4P+nYvPWJMPryOT7ner3+guaaMShDiAorXVvJ+CT55NyuczsbPZJcz/
+ 9TaHxovWtNawdoOtGnYl7Zt2xuj9rHGEwEAAA==
+X-Change-ID: 20250620-rimob-initial-devicetree-da86a5bffc8b
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht, 
+ phone-devel@vger.kernel.org, 
+ Cristian Cozzolino <cristian_ci@protonmail.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750889075; l=1601;
+ i=cristian_ci@protonmail.com; s=20250620; h=from:subject:message-id;
+ bh=oi4nmOkgUH8qBiEH7+3hBQBtcU6SViOVAb/7d5YTPNc=;
+ b=8qVk1VlGFAm2TG8RjhqDQ8JZmR+hhMIJO6jSPxyyaszT7QFUf5vuGRrv1N4GRlaVQRc/Jx5lF
+ CjI1UgPQEwvCALijkhMquddBF6QaJovxsIPVWIcgk07LIbxMuwjIWkb
+X-Developer-Key: i=cristian_ci@protonmail.com; a=ed25519;
+ pk=xH5IvIPUNHV1Q8R0/pq2CfuVFR/wTiAyuyi6IwedjZY=
+X-Endpoint-Received: by B4 Relay for cristian_ci@protonmail.com/20250620
+ with auth_id=438
+X-Original-From: Cristian Cozzolino <cristian_ci@protonmail.com>
+Reply-To: cristian_ci@protonmail.com
 
-mm_get_unmapped_area() is an internal mm API to calculate virtual addresses
-for mmap().  Here, addr parameter should normally be passed over from an
-userspace as hint address.  When with MAP_FIXED, it's required to use the
-address or fail the mmap().
+Billion Capture+ is a handset using the MSM8953 SoC released in 2017
+and sold by Flipkart.
 
-When reviewing existing mm_get_unmapped_area() users, I stumbled upon this
-use case, where addr will be adjusted to io_uring_validate_mmap_request().
-That internally uses io_region_get_ptr() to fetch the kernel address that
-io_uring used, by either page_address() or vmap() from io_region_init_ptr()
-calls.
+Add a device tree with initial support for:
 
-Here, the io_mapped_region.ptr isn't a valid user address, hence passing it
-over to mm_get_unmapped_area() is misleading if not wrong.
+- GPIO keys
+- SDHCI (internal and external storage)
+- USB Device Mode
+- Regulators
+- Simple framebuffer
 
-The problem should be about parisc having issues with cache aliasing when
-both io_uring kernel and the userspace may map the same pages.  Here what
-matters should be pgoff rather than the address hint.  Simplify the code to
-keep addr=0, while setup pgoff only to make sure the VA to be calculated
-will satisfy VIPT's cache aliasing demand.
-
-Cc: Helge Deller <deller@gmx.de>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Jason Gunthorpe <jgg@nvidia.com>
-Cc: io-uring@vger.kernel.org
-Signed-off-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Cristian Cozzolino <cristian_ci@protonmail.com>
 ---
-Marking this as RFC because I don't have parisc hence no test done, but
-raise this issue.
----
- io_uring/memmap.c | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+Changes in v3:
+- (patch 3/3): pick up tag (Konrad);
+- Link to v2: https://lore.kernel.org/r/20250624-rimob-initial-devicetree-v2-0-34f6045ebc30@protonmail.com
 
-diff --git a/io_uring/memmap.c b/io_uring/memmap.c
-index 725dc0bec24c..8b74894489bc 100644
---- a/io_uring/memmap.c
-+++ b/io_uring/memmap.c
-@@ -371,21 +371,17 @@ unsigned long io_uring_get_unmapped_area(struct file *filp, unsigned long addr,
- 	 * kernel memory *and* userspace memory. To achieve that:
- 	 * - use a NULL file pointer to reference physical memory, and
- 	 * - use the kernel virtual address of the shared io_uring context
--	 *   (instead of the userspace-provided address, which has to be 0UL
--	 *   anyway).
--	 * - use the same pgoff which the get_unmapped_area() uses to
--	 *   calculate the page colouring.
-+	 *   to calculate pgoff, which will be used later in parisc va
-+	 *   allocator to calculate VIPT-safe aliasing va.
- 	 * For architectures without such aliasing requirements, the
--	 * architecture will return any suitable mapping because addr is 0.
-+	 * architecture will return any suitable mapping because pgoff is 0.
- 	 */
- 	filp = NULL;
- 	flags |= MAP_SHARED;
--	pgoff = 0;	/* has been translated to ptr above */
- #ifdef SHM_COLOUR
--	addr = (uintptr_t) ptr;
--	pgoff = addr >> PAGE_SHIFT;
-+	pgoff = (uintptr_t)ptr >> PAGE_SHIFT;
- #else
--	addr = 0UL;
-+	pgoff = 0;
- #endif
- 	return mm_get_unmapped_area(current->mm, filp, addr, len, pgoff, flags);
- }
+Changes in v2:
+- (patch 3/3):
+  - add unit address and label to qseecom (Luca);
+  - reorder properties alphabetically in gpio-keys node (Konrad);
+  - fix hex values in reg address and size cells: from 0x00 to 0x0 (Konrad);
+  - add regulator-allow-set-load property to regulators supplying sdhc1/sdhc2. 
+- Link to v1: https://lore.kernel.org/r/20250620-rimob-initial-devicetree-v1-0-8e667ea21f82@protonmail.com
+
+---
+Cristian Cozzolino (3):
+      dt-bindings: vendor-prefixes: Add Flipkart
+      dt-bindings: arm: qcom: Add Billion Capture+
+      arm64: dts: qcom: msm8953: Add device tree for Billion Capture+
+
+ Documentation/devicetree/bindings/arm/qcom.yaml    |   1 +
+ .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
+ arch/arm64/boot/dts/qcom/Makefile                  |   1 +
+ .../arm64/boot/dts/qcom/msm8953-flipkart-rimob.dts | 255 +++++++++++++++++++++
+ 4 files changed, 259 insertions(+)
+---
+base-commit: 0ff41df1cb268fc69e703a08a57ee14ae967d0ca
+change-id: 20250620-rimob-initial-devicetree-da86a5bffc8b
+
+Best regards,
 -- 
-2.49.0
+Cristian Cozzolino <cristian_ci@protonmail.com>
+
 
