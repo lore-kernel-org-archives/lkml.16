@@ -1,112 +1,133 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23C372D6631
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:45:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEE22D8762;
+	Wed, 25 Jun 2025 10:45:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750848335; cv=none; b=Q/uRuGd/pLQqIp9hsFUJ5eyIloiP0B1Fsn2VrbI6kOAFYoX4GDjov4Fn42BEtM9Wq4/fwxLuWrkCF63iej1X3WPuNBCst7yPGnUAoBDadcukqNTjMwXOkgRcyPCDqGrZxo9DQ5/KbGUAOMhd+okAKKcGNNZ1oPE04h+a5+sQNEA=
+	t=1750848339; cv=none; b=SOxJymVuzxwXavql1U00gVvAKq/CUOnjncuiU0Bc8oBjp31TcxZXmCWsiIj0Gh54LSgCjUb1amn5ubqzJVnRnRfLrCSL9JUvUX3r/ITFSVOl6WabhKWZJhMV4R6xmiJ42Iw0llEewxN+KZekIIKlia4u5ozbHEETvkHmVr+TfsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750848335; c=relaxed/simple;
-	bh=NXguTMKTYKcS9+04TH+RE4WvIQZsBUqDVg7o4aWiryo=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pUv+fsJwjeWlTChEpmRiZDU9s5rSmUI5QfJf/Rd0BS6HHxH08mU07EwoxVDICw071rokC24nYRob9gE9aKFUuwXGsitzbwJ/5O6kmUa7erY1xCXTXyIBCPQpxQjnYetTuxxPEJH/Rl/xxnLv3N4wW6PMcxPWBQQwwntNuCNbGEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bNaR+Bgx; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=k47FKYd6; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750848339; c=relaxed/simple;
+	bh=3CxHp1TGay9ZGXz33grGZBOt3lLRZaab+Cmaf5i7/0U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YyovE4El3hWCOW1NPW+etnXpnzNpg5g9D3aCmJz9DoVFVx9Z2XEmhNdPNRCSdJu3Lbbm96ECjuJcfFkk+OvzpHSql6TA+8nJ7kA2+LgFjSabydzQ0XQpw8b8juHF6A0b+E3Y9lGt4HdW/ZahS5272FyK0zWb9vRCyKjm9WrgMDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fETzP+Wx; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bNaR+Bgx";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k47FKYd6"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750848332;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bSQHwp5JO1fSK3Q8TWqnvRLBHvmX8AI0vZCMeI3GeWw=;
-	b=bNaR+BgxSjqDs5ZQM8/mzRAS037UNP8GkxJGgny1bgLa63MZC2QdFJvRDnuM3NIAcucd/7
-	IyhLH8MGFitupMLjrcvNnRGs889l6PTrsthvBuNtzyOj+/APA+ks3svX3BryVxBPTHo944
-	Nf+qZ0elLXdw6+xcsjxTBdncoYx8mNt+VTyy0Y5gwmVVqq4Qy5qupd10gIHQnoCVGZLwI8
-	6A54YwXzT6qykyfK6/Ut9osRZJFFsPMUF3VzI+XPvarB/ZfcybF5ut/RWYxXM+qnFWdaNO
-	WYQgp2fVVo4YSwzK5v9z8U6AsxB7d5yonCunMpMoD81rs38yBQ8ZuRuqVpqDOA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750848332;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bSQHwp5JO1fSK3Q8TWqnvRLBHvmX8AI0vZCMeI3GeWw=;
-	b=k47FKYd6aiPk0L186WFLhizslUUE8thBTTKW/eljrHgSHP3xPkc7pOv7RtLQN+Q8YOxKAf
-	wlAMgkHd2MIyKkCA==
-To: Frederic Weisbecker <frederic@kernel.org>, Gabriele Monaco
- <gmonaco@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Anna-Maria Behnsen
- <anna-maria@linutronix.de>, Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v6 6/6] timers: Exclude isolated cpus from timer migation
-In-Reply-To: <aFq7rqbHugtiWF6Z@localhost.localdomain>
-References: <20250530142031.215594-1-gmonaco@redhat.com>
- <20250530142031.215594-7-gmonaco@redhat.com> <875xgqqrel.ffs@tglx>
- <b33dcafca895da1d9c64a7d6ab771952a932e579.camel@redhat.com>
- <878qlhnunz.ffs@tglx>
- <1bc41a7a5bd46860318b0417fa27121758f28448.camel@redhat.com>
- <aFq7rqbHugtiWF6Z@localhost.localdomain>
-Date: Wed, 25 Jun 2025 12:45:32 +0200
-Message-ID: <87a55waylv.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fETzP+Wx"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-450ccda1a6eso53709565e9.2;
+        Wed, 25 Jun 2025 03:45:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750848334; x=1751453134; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BTT8M9lvOnuNo47cLpUQJQekotV2eBvCU0pRSn/QWrY=;
+        b=fETzP+Wxg6whK3zik2T0AHimZBdJ2LOpNm+hBRe397QVFoHpcJyt8qbZ4pfic7F2Vn
+         Z3hA5mEkCJ4nPVks3xXmO2mXSMGA5DVx+2zU0bmFI0J9d1gwE/lf5jSDKkMH72275Mjs
+         LL0FvSiLstUOnYS1h2h+gvBikIzxg3cviJtiWEHGpyR2RkDnxr5YSHWWdWMoOd5KXUeW
+         J/zKMbFCc333IdMhaBW+nheuyIoG5Nmv+ojAbBlw65REN0BNrNHE2+X/owuNs0yctQY0
+         f1YN8C21/wth7pRRaDla9n0Aeuk1jLn/IDmwShdunLz34MX/zsqrHwjkfDkBtDDPlI9L
+         ZICg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750848334; x=1751453134;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BTT8M9lvOnuNo47cLpUQJQekotV2eBvCU0pRSn/QWrY=;
+        b=f+0YJY2o5qiRN6HhkwXxlrIgiqa83AiuUniVGZ1ESGmQ3yTgiklNnQ4PzMwQFg8ZMs
+         M0Iw68ddnaOtbC/k8KkhvcIKuGKc9OSbyx8c9biTGGEosXTmqMn739dyS8KbsIEVJwxq
+         vA1QF+NH5GoD5T53bXC0Qr7BM+BOFygZoQo16o7AswKEsqpSz29SaCtHJpdTHIY0iytY
+         bokUnMntvd/AKyGf7KpFVW6a9vNtVEX5MwiPuwDh5ucYotiQaUVkHW3hA3joVTuCwrHT
+         17E/EBksNsCWDNAg/yY9Qm+8I335sZ6nBsXx1idelffdWOGWLxXAMURftfwVCRj1MNfq
+         a/Iw==
+X-Forwarded-Encrypted: i=1; AJvYcCVFIcfSWBDnNgbGVxLCilLxTe5hR4IFCkARy/8IoMpURJ4EsQAXUxAgutXhgYj8/YO3XeL0xenicrYhhk5L@vger.kernel.org, AJvYcCW0Sbxh+F8WskZlnLA+WzZe4QPjlApxpQsDP1L21i3Qwd+O4dzLRnenq+e+R85iZJ71bXtzprG53OUM@vger.kernel.org, AJvYcCWYwZQFHnKmCr206c+NYL5+qbRaLHK0eYfTuJ+l2Koq4YZ6RHjRimxGguuOij8r6Z01W6Pr5EutfPJo@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqgQkjQ+8RWoXFn3hPUwjmtLM6a3lxeuSs9a842fEQ4sLfgxil
+	sZdt+aAvWL/LGpFY2/aPQMRwRJq7T9IhD8J1LhtQJGyD1n3es3YEMLCb
+X-Gm-Gg: ASbGncsJAr/Bx1tAKN23OjhD4FFzsU5F31ry4eZErpkp3qKF0KFi7NkMPoBCXomiyGE
+	n2mNyoGct6/DkOzPktXDkS+FDm9LVaIPpfs1EAJg9TPbrZkpeKJQms1yUZgyOp4zkuDe6rGwm8s
+	SMYCamBS509L3LjVe4F3iukEA9hX3i+QwuY1n0EqOX7ldZgNzReqlmaOWhGT14hAaChLvx0fPi4
+	Miz7WU8cgy0vEh7gYt9XlGy4V7vVfgbP7NaWCgFmgOzbK/whvDgQC5A8Qp4mCNEu73zvvyQxSw2
+	EMrtdiwADdNMx0DY59YjjEyHtLm6kzCqOaJ9FNhX+OtA9Ew/fsojvEXKqSn1fD0nFi+43DcC7IV
+	7n4WG9Wpbk+CFqrwTpwnO
+X-Google-Smtp-Source: AGHT+IGKPYsJWUF5K8s7+an7VhPz/9OGomk5Q2CRXWrqQKmk402hv6nhjeXiw6R5slm5rTdfE9EjuA==
+X-Received: by 2002:a05:600c:5490:b0:444:34c7:3ed9 with SMTP id 5b1f17b1804b1-45381ae9142mr21753105e9.26.1750848333570;
+        Wed, 25 Jun 2025 03:45:33 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:c47e:d783:f875:2c7c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538233c1easm16036175e9.3.2025.06.25.03.45.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 03:45:33 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Chris Brandt <chris.brandt@renesas.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Magnus Damm <magnus.damm@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andy Shevchenko <andy@kernel.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH v4 0/5] Add RIIC support for RZ/T2H and RZ/N2H SoCs
+Date: Wed, 25 Jun 2025 11:45:21 +0100
+Message-ID: <20250625104526.101004-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jun 24 2025 at 16:52, Frederic Weisbecker wrote:
-> Le Tue, Jun 24, 2025 at 04:06:41PM +0200, Gabriele Monaco a =C3=A9crit :
->> Right, but as far as I understood, the first call to=20
->> tmigr_set_cpu_available() happens after the isolcpus parameter has been
->> parsed so we know at least cpu0 is going to be isolated.
->>=20
->> On my machine it works reliably this way. I'm a bit lost in the init
->> code but seeing housekeeping_init() before rcu_init(), which in turn
->> should be required for some RCU-related early_initcalls, makes me
->> believe this order is guaranteed to be respected.
->> Or am I missing something?
->
-> Right I think you need to keep those checks because if CPU 0 is isolcpus
-> and CPU 5 is nohz_full, CPU 0 will become later the timekeeper and must s=
-tay
-> in the tmigr hierarchy.
->
-> OTOH if CPU 0 is isolcpus and there is no nohz_full CPUs, then CPU 0 does=
-n't
-> want to go to the hierarchy.
->
-> cpuset isolated partitions are different because they issue SMP calls whe=
-reas
-> isolcpus is defined on boot.
->
-> An alternative for isolcpus could be to make a late initcall and do the s=
-mp
-> calls from there just like is done for cpusets.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-There is zero reason for isolcpus and nohz full muck to be
-active/evaluated during early boot. That's all irrelevant and just
-complicates things further.
+Hi All,
 
-Can we please clean this up and make it a sensible design instead of
-duct taping new functionality into it in completely incomprehensible
-ways?
+This patch series adds support for I2C Bus Interface (RIIC) found on
+the Renesas RZ/T2H (R9A09G077) and RZ/N2H (R9A09G087) SoCs. The RIIC
+IP on these SoCs is similar to that on the RZ/V2H(P) SoC but has some
+differences in interrupt handling and does not require resets.
 
-Especially under the aspect that all this should become run-time
-modifyable. That requires a run-time switch mechanism anyway, so the
-obvious design choice is to utilize that run-time switch late in the
-boot sequence to set this stuff up before user space starts and leave
-the boot process alone and simple.
+v3->v4:
+- Collected RB tag from Geert
+- Squshed patch 2/6 and 3/6 into single patch
 
-The KISS principle applies here fully.
+v2->v3:
+- Replaced `Transmit Error` -> `Transfer Error`
+- Fixed the order of interrupts in the DT binding
+  documentation to match the HW manual.
 
-Thanks,
+v1-> v2:
+- Added Acked-by, Reviewed-by and Tested-by tags.
+- Listed the interrupts in the order as mentioned in the
+  HW manual.
+- Renamed the interrupt names to match the HW manual.
+- Initialized the members of `riic_of_data` in the order they are
+  declared in the struct.
 
-        tglx
+Cheers,
+Prabhakar
+
+Lad Prabhakar (5):
+  dt-bindings: i2c: renesas,riic: Move ref for i2c-controller.yaml to
+    the end
+  dt-bindings: i2c: renesas,riic: Document RZ/T2H and RZ/N2H support
+  i2c: riic: Pass IRQ desc array as part of OF data
+  i2c: riic: Move generic compatible string to end of array
+  i2c: riic: Add support for RZ/T2H SoC
+
+ .../devicetree/bindings/i2c/renesas,riic.yaml | 105 ++++++++++++------
+ drivers/i2c/busses/i2c-riic.c                 |  54 +++++++--
+ 2 files changed, 117 insertions(+), 42 deletions(-)
+
+-- 
+2.49.0
+
