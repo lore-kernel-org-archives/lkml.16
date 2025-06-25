@@ -1,323 +1,195 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2065.outbound.protection.outlook.com [40.107.94.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B661F8F04;
-	Wed, 25 Jun 2025 04:37:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750826227; cv=none; b=R+a+rFSnitRI4EMOIWiRDlXmdUmGgj9n88uycERQccF4ijzgqGYl+S7IXj9qrKaYm7rk3WFHGjWQciebKCgRA76HJcOS9FIKa0v7421PA3aR+uIkQ/Qr5J7nh3GL4utwCBwWBCStWA+Ibd+MufzTJf8bIK5egVeQePrKMc2z4H4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750826227; c=relaxed/simple;
-	bh=pWn49LNA4I1yycTiwukHdmKBrPI5OFgqhgwsK4Mf4LE=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IN9vpHtK/jwhqdaDf3yUjhcB/6YqCguv1i95hWEZAbhOF9p0hVyQBQtI1CfexcYDj8PAXCdUc8RZROV/4ngv4YZtORIofcQP6z3QkVmMU325X2IwjbbxOCXonzK1aFAHRWbYNPALprrjYph2GiYscP1zgrRALMFHC9fJ97QsfVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aBJLjz96; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A881946DF;
+	Wed, 25 Jun 2025 04:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.65
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750826256; cv=fail; b=mjyJvCUchElDq8WhqHYqBgdKo8N53+sh3y/3b25Ju3QXVT/vwuq2r8/LZIrcjpkvnvfCggjk8WdzXPbpDKYRnPmShAYoopKLhBk/n45oGAOuz5AP1txXQcEo7Yr6B/uPzsxx++cD/ci014alncUkVMJhTLUGmtJ5KnF0jtKs5xk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750826256; c=relaxed/simple;
+	bh=aEkqF2MMDMiEdFCVZvv9cNsFTUl6tSlOAJcepmaGo4M=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=hUmuC18aXvf6q4UcWIJpKRXRHW0Xi9+PEfEy4d+3LvupSoGn0jjrGKsseVRlSc/bGLjNJsRkI1Nxt5L0rHPSNQhIOlLZJBsq6jaeB9MDgiweOx8F0NRSJd/AuYH6XKWMbGZFd1IDBa39zn3PHwBszlDv4xoDVajh7aHykrbbJKc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=uB0mSmje; arc=fail smtp.client-ip=40.107.94.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aBJLjz96"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P4Cllq012117;
-	Wed, 25 Jun 2025 04:36:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	GoM+/GB7+CXx13oQ0cP6U3HrmC9OcVEyI/bcNQ4231s=; b=aBJLjz96YPShbWOK
-	V+xDsVJ18iBpogq5j9NSl5/MhFU/DvMsZZvhHdcysLzF9obu5mccvKbHM8xrFKfc
-	wJNkp4FaA4cWtAiqPHcIQnYFfvqZS1RM0vPrHNe67NDKGotRmnc3D0+iLr1E0wl/
-	o/iq/uXn50JAgeXfoT17r9dFOU806i8Mx4K9o73Uk6E1Ie+vzQjs0OcwUA0I0mbP
-	GxIC20m/AADJcnUsNP/hMqdHz9bUdLuYfH8/wJANQVjHyyhn2/LiZV1zRN2uRazp
-	t34ostVzlF1ND3kNnF406t0YwOdmxnsqzqHa/Q9EeDeIdnG/a50PBT7HRsD5Guds
-	dKb1UA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fbm1w1hk-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 04:36:56 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55P4atDl020263
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 04:36:55 GMT
-Received: from hu-gkohli-hyd.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 24 Jun 2025 21:36:51 -0700
-From: Gaurav Kohli <quic_gkohli@quicinc.com>
-To: <amitk@kernel.org>, <daniel.lezcano@linaro.org>, <rui.zhang@intel.com>,
-        <lukasz.luba@arm.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <andersson@kernel.org>, <konradybcio@kernel.org>
-CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <quic_manafm@quicinc.com>,
-        Gaurav Kohli
-	<quic_gkohli@quicinc.com>
-Subject: [PATCH v5 2/2] arm64: dts: qcom: qcs615: Enable TSENS support for QCS615 SoC
-Date: Wed, 25 Jun 2025 10:06:26 +0530
-Message-ID: <20250625043626.2743155-3-quic_gkohli@quicinc.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250625043626.2743155-1-quic_gkohli@quicinc.com>
-References: <20250625043626.2743155-1-quic_gkohli@quicinc.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="uB0mSmje"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=sJeJlJxrTN/Wq07T4tjMFQXMlMe37fvVZ4bz5ewKYr4UZF62zCeBilCakAiUKF4PifC8a4YkyiBqvdx2kLRtdSYELSVx3p9erOftu70MXgbFW+1Z3Spc7mDDQlAUEUkEkcOywLuU4EBaPPAU2a0WpTH3+ELMzVvEnP5YRONf47GGoAdf5+HMpy8S55PPslfmI86phNZgIppKtto6XaunadvZoRIGtB9lAjpEkwM9GUgjr0y5eSyqTVkPPDk9mE1UsiDEYqPvjLvkq+BNfDKfJjcw1fTv6DOWb2xC7PAxWebLW1xaApBxWbZKVYVRBPqWTPbXiDcrOPQTv8qig28Exg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=aEkqF2MMDMiEdFCVZvv9cNsFTUl6tSlOAJcepmaGo4M=;
+ b=EwALTN1dRBNjDP9aNaytj8dkbJTSs6S68eb+Uj76m4mNoG3f9J/HyUpZeoOTzvmby7Sg+L9hl122iyud3C4bwVbqK134m+lK4bv2eQ0a2nv+kiDJTGdBwkpkP4NvEet8+2LF2JbzcfHZOl4Duw3uCLTNudy3qgC9aBVcentvhRrDqP4j6sAMKao57wzbvBAwo5Qc44vPDO9JwV4N3hg2wEDwHnDRZWVoRfZwetBKJs/m1jbR8u0/EcUxlDAcFmDjJZ26YvlE5qp/QL6LyGQPdKBPDHQXd5HO/iTYXv8iI5uVKRlqNBtQvzpnhvXgrUQirjU9BK5B+9tEsq77sQ3JBw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aEkqF2MMDMiEdFCVZvv9cNsFTUl6tSlOAJcepmaGo4M=;
+ b=uB0mSmjeioHkAnneDnBjXfAdVxU+/9LHWJpqFFzszjbRu2Ty1TFU1UWbuLUYAeXfHndQVKoBBNSelxU34WdLCpKlW6CvhZ9ighUjs4n4wmw8UYVbDETa9sJluEpEKDLFyHtDTaZIWij4tHoJhc7AZEJWc+NiE5l89XNS54jxRd8v1NMnCkkc4VX5Hsu/1R+Jbeb140K5fld2h2eMNim+X/0N4LIAbXtzU6H4yJOulHjEalr5SPnMV8DO8JHfqYLDSuZ5YKCa1f+gLt8CoYz986yEwv7qFIivuNHc0CDe/APePUMod0xDgi6GRYaWCvOHlikCnsZ019xkY7ODU9erAw==
+Received: from LV3PR12MB9404.namprd12.prod.outlook.com (2603:10b6:408:219::9)
+ by DM4PR12MB7743.namprd12.prod.outlook.com (2603:10b6:8:101::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Wed, 25 Jun
+ 2025 04:37:33 +0000
+Received: from LV3PR12MB9404.namprd12.prod.outlook.com
+ ([fe80::57ac:82e6:1ec5:f40b]) by LV3PR12MB9404.namprd12.prod.outlook.com
+ ([fe80::57ac:82e6:1ec5:f40b%3]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
+ 04:37:33 +0000
+From: Chaitanya Kulkarni <chaitanyak@nvidia.com>
+To: Daniel Wagner <wagi@kernel.org>, Jens Axboe <axboe@kernel.dk>, Christoph
+ Hellwig <hch@lst.de>
+CC: Keith Busch <kbusch@kernel.org>, Sagi Grimberg <sagi@grimberg.me>,
+	"Michael S. Tsirkin" <mst@redhat.com>, "Martin K. Petersen"
+	<martin.petersen@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, Costa
+ Shulyupin <costa.shul@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+	Valentin Schneider <vschneid@redhat.com>, Waiman Long <llong@redhat.com>,
+	Ming Lei <ming.lei@redhat.com>, Frederic Weisbecker <frederic@kernel.org>,
+	Hannes Reinecke <hare@suse.de>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-block@vger.kernel.org"
+	<linux-block@vger.kernel.org>, "linux-nvme@lists.infradead.org"
+	<linux-nvme@lists.infradead.org>, "megaraidlinux.pdl@broadcom.com"
+	<megaraidlinux.pdl@broadcom.com>, "linux-scsi@vger.kernel.org"
+	<linux-scsi@vger.kernel.org>, "storagedev@microchip.com"
+	<storagedev@microchip.com>, "virtualization@lists.linux.dev"
+	<virtualization@lists.linux.dev>, "GR-QLogic-Storage-Upstream@marvell.com"
+	<GR-QLogic-Storage-Upstream@marvell.com>
+Subject: Re: [PATCH 3/5] nvme-pci: use block layer helpers to calculate num of
+ queues
+Thread-Topic: [PATCH 3/5] nvme-pci: use block layer helpers to calculate num
+ of queues
+Thread-Index: AQHb3430P+CX9DOYZUaCqKA3FejphLQTVp4A
+Date: Wed, 25 Jun 2025 04:37:33 +0000
+Message-ID: <ceb8e40d-04a3-42ae-bdc1-1033cf239073@nvidia.com>
+References: <20250617-isolcpus-queue-counters-v1-0-13923686b54b@kernel.org>
+ <20250617-isolcpus-queue-counters-v1-3-13923686b54b@kernel.org>
+In-Reply-To: <20250617-isolcpus-queue-counters-v1-3-13923686b54b@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+user-agent: Mozilla Thunderbird
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV3PR12MB9404:EE_|DM4PR12MB7743:EE_
+x-ms-office365-filtering-correlation-id: 72001f18-c06e-48d1-a461-08ddb3a2008b
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|366016|10070799003|7416014|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?b3VnYjc0enZ0dTU5OTBlQTNLamcrSTJlZk4yd1lCT2ZsWnFPaUV4UHRjenZm?=
+ =?utf-8?B?SlFpU3ZwUXdLQkJlOGpDNFEySEFsZGpSWFhKTURGWnRLd09NL0ZLb0lMSFZI?=
+ =?utf-8?B?LzBpMEZmWkJpQUFPTlZpV1p5aTV1TTZmWnA3enZzL0Q0VVNOMkhCTGdlN1dM?=
+ =?utf-8?B?OUJVSlRaQlh5c29kd014eUdBMkZKYUlBQTFJaUdzcStDcjVOS0g5V2FXS295?=
+ =?utf-8?B?ZEZreE5zWjNQNUxsdllzNTRyL3I3cnVQc2RaOTd1R3ViT2U4dWRURW51enpu?=
+ =?utf-8?B?VEdNTFVzYm5KdGZSbnBERUZzU20yaUlYcVhQOUlEellPQmpOQVlrQzNyM2tG?=
+ =?utf-8?B?Q1pUVjV2WXFpV1J1UFNlQlRZY1lpZ0F3VCtqa0hieUpaRzIxWmw5RlNVdFFS?=
+ =?utf-8?B?S2VESWlTTnA2OXVGNzNTa3M0RGNXSkkzL3RBcDlEcGNUMFZteUx1NmVhZlpK?=
+ =?utf-8?B?TitQRkNxbGRXVjJtRHlmZkZLNWY2KzM4aHVyT1JtMXJXK0hXV092Y0J4cytD?=
+ =?utf-8?B?L0FNOUhJQW5mZ3g0bHRWeHpwdWc1eXNMNE5BLy81WWxhcTV6NzJnU2ZRV0Jx?=
+ =?utf-8?B?cGFmY255MEkzbHl2RWN0ckxTaDVxSWVsMkNEMmM3S3VjL0VuL0ZaMEduRklp?=
+ =?utf-8?B?bjNaOFV4YjlQekFxc2NHbmEya1c1aVFFRW5iTkNkUWdtTWZQUkZkd1d5cmtO?=
+ =?utf-8?B?ZlRHdnhBTUt1MGtVKzduTGYrVEQ5ZEIrcExsYUlESHdoRlo4MXFiYjVEbnpy?=
+ =?utf-8?B?TlZCSFI0ajlCQnZyaVBjYlJTUjRjTHp4ZzVESnA3bjFPa1lHTXJwM2swN28y?=
+ =?utf-8?B?eTF3SjVPQ002K2hZdE1xQmNwaTk1VUhxUWJycEVCVGc1TVRoMTVCRloxcHNL?=
+ =?utf-8?B?WEZ0OFdOeC9FRkpXZERrd0UrbXJhU1lmeXlYZEFzWmZITk9QbzRzRC9qWk93?=
+ =?utf-8?B?UmdUeEpQelhkVDhBbHFoWEc3cEg0WFJIR0pMYXc2aWx1VkpubUhLTFBUSG5I?=
+ =?utf-8?B?ZUg4cjlkbDl4UkVJb29wMHQ5TVZieUpTV2FXRjhRcHBKOXQ0K2pMNHR2NVpL?=
+ =?utf-8?B?RFpjNElRT1JuREVJd2wyYmdydjA0N0kvVGhseWFRQ1lIQmdPV0t0OVROaFNm?=
+ =?utf-8?B?NEd3b2RZS0VCdVdNU1dDZkxhWlN3bk8rdVJocUZJbUd1aGkxWFovdk9MdTNp?=
+ =?utf-8?B?Z1BrLzVCMy9HTysrSUxoaDcxMldtMVdlSWZWOE9PSFdkMzRIQmR2RVlyZXhR?=
+ =?utf-8?B?Q0dhOTNmTUpHb1EwR1g3MFpkaUlqREVCc1ZYeWZZbW9BL1BVWjhudkpCTjZR?=
+ =?utf-8?B?bU5yVjFwT3kveWVkYWhsMzlxd0dvQk9KQTMzaFE2Z1JwcitFZDhiemtmNTlS?=
+ =?utf-8?B?YUxQWG1NWHBZZnNldGFaeStMYVM2T1BiSzI1RkN1cWpuMm4rQlZYWkZUNy9S?=
+ =?utf-8?B?NmVRVGJ2RzYzSElzQ0lqenRacWlJdnByS1pDdzAreGpMK09TTWh3dDFiNzV4?=
+ =?utf-8?B?QUJKK1Y1RkNUYWRRTEc1bE9XNUFuTFoyVXN1UkN0SWF1NUU3djBzSDQySnBT?=
+ =?utf-8?B?UXFvdDkwaWdUQkRRTHR2NkdHcHNFcVpQbTFWVVFYL3g4ZnpXNnpnK1Nxc2Jq?=
+ =?utf-8?B?bkIxSW5TYzdtS2FjZFlhM3RvenZhdjhLODh0TjI4eVhiNDRWWUFNYmZackVZ?=
+ =?utf-8?B?ZUJmTm5PYVVaR25NdEtHd2J5OGZ5a1ViMlVma0k5b0kzaDBLZ1RjdUN3cVdz?=
+ =?utf-8?B?S1FtMWFUOCtNMzVLWXdaejhScUoyVWZ0aDQyT2txTnN3OWF4bVQ4RTJtdFd0?=
+ =?utf-8?B?WHg0dnQzNjBWV1lNNUVIcUpyekFWSDBuWmM3aXh0RS9WTzFYYUpyTTJ6VzRW?=
+ =?utf-8?B?WlZhaDArODFTQ3hjU3N4bWJyK3lXMFlOWm40TDQxRnBKS3hENzZtdGdCZndL?=
+ =?utf-8?B?Smg5NmZIelVrR0ZXY052UFdGYTMza2hUR3A2SmR6V2orbStkOHMzVmJPVW1r?=
+ =?utf-8?B?OGFWcFp4SjBnPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:ja;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR12MB9404.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?T293WnJRZFhLcC82YS9GMXAwQkFzbWtMY0t6TVAyT3FtWU5ZNjVXU0J1dmQ2?=
+ =?utf-8?B?RVVwMXN5QWRDUldGZzgwbkpib0k2UERlOUkrSWtTckJTVFZtb1hoMm9HaEpK?=
+ =?utf-8?B?em1mRVVObHh1V3BBOG50VEY2ME0yMjE0YnlldE04cXlVZFI3TG00aW5mUkV1?=
+ =?utf-8?B?bWRkSHAxK05MbzZIbDh3MTlyRUp2ZzZoUit3cXdrc3lVRHNiK3V5eC9EblQ3?=
+ =?utf-8?B?ZEVCZDk1dDB3TERKRGVtTStUZ2lZMjBuaDRJVHQ2QzYrQmxEUEJRdUIzUlZF?=
+ =?utf-8?B?NDhvZVFjQlY3NWFqNUU1cVE1QmRLWnh2UWtoTVRteUx1Qy90STE1aTJ1Wm9x?=
+ =?utf-8?B?ZGJ6bDh4WHN0U0pscitwSUV3VFptVnFQbGp0aG9TWVFiTzVXRnZDZWlFTzRE?=
+ =?utf-8?B?ZWxaVkZsZHZ2M3o5K2sxUlJibndGRXR1OGhVcDlIOWh6TXR0K1FKaVdadkov?=
+ =?utf-8?B?djlWSFgzT0Y4bFgzMFdkQTljK0QxMW1jeGtBNTJncEpUeTIxTHFIOUNwY3JT?=
+ =?utf-8?B?OWxEYVp5bnlDL1k4dGVlOVRtU0VYdUNEQjlEYlBEazlTZnRueVdlK01DMjAw?=
+ =?utf-8?B?TnRLS3F5L2VtWHAzOW1sNWF1cTFzbWxnWkhGSytlTnRJdFV3Zzl0SE9MWm5q?=
+ =?utf-8?B?czhzK0c3bzAxTkFYZWwvQjlvODdtODVxcnRYQTNlRGdMZHc0dDd2Mi9nQzFq?=
+ =?utf-8?B?bHczeHlTcGdLdkk5bGpqb25LMzFGWjIwelI0RWFxSC81Wk0zckVCMkdWWXg5?=
+ =?utf-8?B?TEl0QnF2ZWNRZU1XVUJFdHRvUkxZRitzaUUrOUZreWJPcHhtalZhd2JZWlBG?=
+ =?utf-8?B?VEdnS0pQMDlaT1VsRSttOEFHSThlRWdUOVRRQ29XdEhDS3hSZkVUckN2eWV6?=
+ =?utf-8?B?ZGJwVXV3YUV3ZHBieEh2S3ZQRFFYclJTcnduYzdlaVg3WXNTbUoxeXZZWTQw?=
+ =?utf-8?B?VHgwTGo0Y0hyYUY5am45TUpyMElneWdBTFJmODZXbHN4Zk4xZkJYWnJ2djJJ?=
+ =?utf-8?B?byt2VFJaNGtkWjZjdmdWSVAvcnpvaW9TSXV6NjdQRm1aKzVsRUQwM1padk5v?=
+ =?utf-8?B?NUl6NFcvUHVGaG1aWFQ5Rm5xdlJCeTV4UTB4ZjRSVzdKMGw1UWM5Mlo3c2cz?=
+ =?utf-8?B?R2VORVo1RG5UQkpRd1lXYmFDSnNnclM4cEgrQXhSeDZIVGVGNEI3QzVaYi9I?=
+ =?utf-8?B?Y2xhSkRVSHNpcmZCYWQ0elJWNEFuT0lPRWpzSjVFTFY4UUFSU3JFMTU2Tm8x?=
+ =?utf-8?B?ajc3SUlzQklPc0hldTNVeGd6MU5RSnRXNGNiYmF4YTd6UVZnL25Mb2FTdXBK?=
+ =?utf-8?B?Mml1NmNqSFp5YllqdnRUc1NGNWVyT28rbnZaQ0dXZGU2Zy9LOE9JOWc2R0Jy?=
+ =?utf-8?B?QkVGODM5eXBxMlBFbU0wSXQ1N1l4eiszQTR3MWU3aFgvZ29ZcGRBZkNRTnpZ?=
+ =?utf-8?B?cUhoMlh5Q1lKRlFjWEZFTlRqUTdFWGpnQSszenhBT3VKMDhCMFIySUsybU11?=
+ =?utf-8?B?cDNSaXJwOEJZUjVlWU5QY3F4RkNobnpOM3JqcjRIOU9NcUNqL0k5QjRxcm1B?=
+ =?utf-8?B?NGdTazJzRVozdVFJNVU3MjFwamJESTA1a2FzUHdaSTFacFVIbGhhZTdOTG1K?=
+ =?utf-8?B?V0VmQ0hvWk9zTmtBMkN4U2ExOHJFOXNXS3JzV0hNT1kzTi92S1dFS2x2V1ll?=
+ =?utf-8?B?cVJUU1JsQ0Q5aUMyU3hOb3JBalpydTVTd1RIYUNZcDR1RGRtVVY4aVdIOEkx?=
+ =?utf-8?B?dnF1djhjNXlaZjhqRUVEaXZVL3N4VlIrMVpJNGFzdElrdG5KWW81eGZkNUdI?=
+ =?utf-8?B?OXRaRFo4NldEWDdNQXpGRTFtUWZ5ZlN6TXBDWDllWFpFTlBiZitEZVJucGF3?=
+ =?utf-8?B?Sit4Q2xMRWcvblRZL2xjSVZUdGpWa2FwTHVtU01BWm9Fa2ZoK2VaOFZjNFBt?=
+ =?utf-8?B?OXlva3p2ZG5wam5WVDcyOSthSVdZcFM5ZldlY0s0OExnckdrV3Q4UkVsSUtG?=
+ =?utf-8?B?L0VaWWVLaHcwYnkyN3ZsNVBnOGdNUXN0TEdiMWk0Rzl2V0FjZW41SDFiVzcx?=
+ =?utf-8?B?RHNtblNJZWNlV3lSa2o5dW1kZStYZmNKTkJKMXQ0NmkrZWhiOG5QanZqMXdN?=
+ =?utf-8?B?Z3I0RWtaTWR6c3J3TEhmMlhKekZMUFlSMXFKL1d5emFvVFNyNjhNVWdqNG94?=
+ =?utf-8?Q?qDT3oXwjIDjYUej5++JY0upO4NOCyolCht+IOEWoTeDL?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C227EA10EAA173419D61D66485C988C6@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=YYu95xRf c=1 sm=1 tr=0 ts=685b7ce8 cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8 a=3mcCAZ4DCuo2i6UhkvcA:9
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: 8bzI6lswgQ9f81e4x5IumXPDbEJ7DXRP
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDAzMyBTYWx0ZWRfXynE8DiqijWDt
- A5YwCMW5AJYx9Iw977XuVA2nnhRc6ovA2YJYD3KsYftGbJaajpApvAOh6bW550C539gMjagGYRS
- Uh1M7r9BqnOcA+d0dBKFa8Q+7XKor9CvnJBSQWPeVAfCORBXGGEt0tZUtXr1L2pgnMhmjq4Yb6U
- ZJGawllD6Hun/mNsqXWtim6REneQA4buQbLrZXKFVRGLxaedP27DCmz4jG5CRKIEURtwrEDM2g5
- chWg8rweyhPTUMGw/Ytbzm2kIikWCak568b9jtmyCEv3S0HKmdL3s+a2Ke4iB+OnEwRgDKrW/fA
- t6f4XwxF76xomhilh5qmjXaAJjvxQYgD2VjWi2+71wDJY1mxzRNUHwiVhu3QIOyckNa7py52Kd6
- 9EvbDsW945rdYqtB4dtI6yxShU43uMhHC4Pa49Qb+BHFZz73SFGXXxdzqazFgugvvTg6koUn
-X-Proofpoint-ORIG-GUID: 8bzI6lswgQ9f81e4x5IumXPDbEJ7DXRP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_01,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 adultscore=0 spamscore=0 impostorscore=0 suspectscore=0
- lowpriorityscore=0 priorityscore=1501 phishscore=0 mlxlogscore=755
- clxscore=1015 mlxscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506250033
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV3PR12MB9404.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 72001f18-c06e-48d1-a461-08ddb3a2008b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2025 04:37:33.1225
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JQobUOHOOa0TWWZw0AdDgUGusrsAYaM4djIKiOlYSiL/ksTiL+wy2Q7nHToaYRTt9ygLdGOWYAQU89WdMDwcPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7743
 
-Add TSENS and thermal devicetree node for QCS615 SoC.
-
-Signed-off-by: Gaurav Kohli <quic_gkohli@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcs615.dtsi | 205 +++++++++++++++++++++++++++
- 1 file changed, 205 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-index bb8b6c3ebd03..c20e98f8399f 100644
---- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-@@ -3692,6 +3692,17 @@ usb_2_dwc3: usb@a800000 {
- 				maximum-speed = "high-speed";
- 			};
- 		};
-+
-+		tsens0: thermal-sensor@c222000 {
-+			compatible = "qcom,qcs615-tsens", "qcom,tsens-v2";
-+			reg = <0x0 0x0c263000 0x0 0x1ff>,
-+				<0x0 0x0c222000 0x0 0x8>;
-+			interrupts = <GIC_SPI 506 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 508 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "uplow", "critical";
-+			#qcom,sensors = <16>;
-+			#thermal-sensor-cells = <1>;
-+		};
- 	};
- 
- 	arch_timer: timer {
-@@ -3701,4 +3712,198 @@ arch_timer: timer {
- 			     <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
- 			     <GIC_PPI 0 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
-+
-+	thermal-zones {
-+		aoss-thermal {
-+			thermal-sensors = <&tsens0 0>;
-+
-+			trips {
-+				aoss-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss-0-thermal {
-+			thermal-sensors = <&tsens0 1>;
-+
-+			trips {
-+				cpuss0-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss-1-thermal {
-+			thermal-sensors = <&tsens0 2>;
-+
-+			trips {
-+				cpuss1-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss-2-thermal {
-+			thermal-sensors = <&tsens0 3>;
-+
-+			trips {
-+				cpuss2-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpuss-3-thermal {
-+			thermal-sensors = <&tsens0 4>;
-+
-+			trips {
-+				cpuss3-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu-1-0-thermal {
-+			thermal-sensors = <&tsens0 5>;
-+
-+			trips {
-+				cpu-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu-1-1-thermal {
-+			thermal-sensors = <&tsens0 6>;
-+
-+			trips {
-+				cpu-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu-1-2-thermal {
-+			thermal-sensors = <&tsens0 7>;
-+
-+			trips {
-+				cpu-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		cpu-1-3-thermal {
-+			thermal-sensors = <&tsens0 8>;
-+
-+			trips {
-+				cpu-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		gpu-thermal {
-+			thermal-sensors = <&tsens0 9>;
-+
-+			trips {
-+				gpu-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		q6-hvx-thermal {
-+			thermal-sensors = <&tsens0 10>;
-+
-+			trips {
-+				q6-hvx-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		mdm-core-thermal {
-+			thermal-sensors = <&tsens0 11>;
-+
-+			trips {
-+				mdm-core-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		camera-thermal {
-+			thermal-sensors = <&tsens0 12>;
-+
-+			trips {
-+				camera-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		wlan-thermal {
-+			thermal-sensors = <&tsens0 13>;
-+
-+			trips {
-+				wlan-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		display-thermal {
-+			thermal-sensors = <&tsens0 14>;
-+
-+			trips {
-+				display-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		video-thermal {
-+			thermal-sensors = <&tsens0 15>;
-+
-+			trips {
-+				video-critical {
-+					temperature = <115000>;
-+					hysteresis = <1000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
- };
--- 
-2.34.1
-
+T24gNi8xNy8yNSAwNjo0MywgRGFuaWVsIFdhZ25lciB3cm90ZToNCj4gVGhlIGNhbGN1bGF0aW9u
+IG9mIHRoZSB1cHBlciBsaW1pdCBmb3IgcXVldWVzIGRvZXMgbm90IGRlcGVuZCBzb2xlbHkgb24N
+Cj4gdGhlIG51bWJlciBvZiBwb3NzaWJsZSBDUFVzOyBmb3IgZXhhbXBsZSwgdGhlIGlzb2xjcHVz
+IGtlcm5lbA0KPiBjb21tYW5kLWxpbmUgb3B0aW9uIG11c3QgYWxzbyBiZSBjb25zaWRlcmVkLg0K
+Pg0KPiBUbyBhY2NvdW50IGZvciB0aGlzLCB0aGUgYmxvY2sgbGF5ZXIgcHJvdmlkZXMgYSBoZWxw
+ZXIgZnVuY3Rpb24gdG8NCj4gcmV0cmlldmUgdGhlIG1heGltdW0gbnVtYmVyIG9mIHF1ZXVlcy4g
+VXNlIGl0IHRvIHNldCBhbiBhcHByb3ByaWF0ZQ0KPiB1cHBlciBxdWV1ZSBudW1iZXIgbGltaXQu
+DQo+DQo+IFJldmlld2VkLWJ5OiBDaHJpc3RvcGggSGVsbHdpZzxoY2hAbHN0LmRlPg0KPiBSZXZp
+ZXdlZC1ieTogSGFubmVzIFJlaW5lY2tlPGhhcmVAc3VzZS5kZT4NCj4gU2lnbmVkLW9mZi1ieTog
+RGFuaWVsIFdhZ25lcjx3YWdpQGtlcm5lbC5vDQoNClRoYW5rcyBhIGxvdCBmb3IgdGhpcyBpdCBy
+ZWFsbHkgbWFrZXMgY29kZSBjbGVhbiB3aXRoIGEgbmV3IGhlbHBlcg0Kd2hpY2ggc2hvd3MgYXNz
+b2NpYXRpb24gd2l0aCBxdWV1ZSB0aGFuIG9wZW4gY29kZWQgY3B1IGhlbHBlci4NCg0KTG9va3Mg
+Z29vZC4NCg0KUmV2aWV3ZWQtYnk6IENoYWl0YW55YSBLdWxrYXJuaSA8a2NoQG52aWRpYS5jb20+
+DQoNCi1jaw0KDQoNCg==
