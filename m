@@ -1,202 +1,149 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA4D42066DE;
-	Wed, 25 Jun 2025 20:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8EC28F4
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750881762; cv=none; b=cenGYl3pnUqkUnEHuRlDxk98Mu2+iUC9C1p5USXlZuQ7+ypJj9ia++51CWhQdsdPj663ivE56iIEYjB2A4Kgu52s3j1OFnb7z5MHhEvmYNsSY2/YLGyvXxFMbdIEsgHEhiwt6CDRTStlG0hu9jL1pKc188eQM2pqOOX/QVmnWvA=
+	t=1750881801; cv=none; b=sANTZpmE3mSyCJ6szi17/tO0jRbnGVtNaSbXQPwfyhZilyjgUJqahchkZjMDPic9Sn/5rOG4yRb87MOR3ZUHyKIhzARiPVEKHFFqqdivbQIJcBLW7J3EMeFqjWLQLo2ktobdc7Ujuu0HaXjGLIV1M63CFZOB72ZAf9VxrpLNJKo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750881762; c=relaxed/simple;
-	bh=43wNCcyAb8e54VAM2GwpB9zj2+lN8oliu10hUpHh+JU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=a+lhtBbSyK+SxTxfzGqNnXN5cBdKRx7L5kvSnkg2NVXfqaYQjKeqjYje5wmN5edj4lV9SbgiIfY/4SBYRcbhtP0k3AH0aG9EeLR4v88I5FamkIT7bFofPks+HuvLXs45XGWI29tXRd/T9unSAOD2rI4yuxqr9US40BM3tbQcNNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gLrpY2m8; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750881801; c=relaxed/simple;
+	bh=diZUvsuygdgUuJpbdkBRN2X7Ia6hWcWPIGA1aInMWZE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aBWOqAJLZnTvJekur8htnN0+5hGDrUNED6lHVUPWov/3TJbSCO6c0eUGyg/BHcbqkkGxX5yWM0lh9CQjsTPFahFze14q9OQubN5rGWGHi44o29GK/39WmfeOIjy763sP14c2erMomEXmdcBOCxmKSSnJEYHFny/jfEnPqVUQFB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BCaXJ2Qx; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gLrpY2m8"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750881761; x=1782417761;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=43wNCcyAb8e54VAM2GwpB9zj2+lN8oliu10hUpHh+JU=;
-  b=gLrpY2m8YSYhuFf3PwM78v9fNVdRyKae67qKm6M2VBJW6WiTdqX5yUue
-   Wn0yyYZycaIMgS8AxVo2urtLgUTZfF7Inc5oYYBQwve1mMTFu/G1Bjjio
-   EqOB+Rupewps6Hqdbke3L7hTVVEXDNoqHeM02/RUvEZ1hPudp608FEwOP
-   V1KfHNRaN003fwbt8B6JOwRreyn9QTT9jVwRmrx1JUUN0vOm6VNFtlWnA
-   0IYDzp2ckZoPWkx7yIn/V/hXw94k0Vcr4/VyOLJGwu+heCNHD46tTIl+S
-   AZKL2Xl9j6F4GPvLB5XDo8fL2rqJEFjX5r5eZFddAjIXAgQ4hFXaB9Ql/
-   Q==;
-X-CSE-ConnectionGUID: S2Urh4ipT+ygz6o0CZpFFw==
-X-CSE-MsgGUID: D4ddN9p3QbK8z0nnX2+X/Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64520423"
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="64520423"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 13:02:40 -0700
-X-CSE-ConnectionGUID: +bPP6+oXToWrLF/e5liXMA==
-X-CSE-MsgGUID: Gve64YEVQ1mAoZ9IjDbYiQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="183340922"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.108.244]) ([10.125.108.244])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 13:02:39 -0700
-Message-ID: <fd9ebb1c-8a5a-44c5-869b-810bb5e7436c@intel.com>
-Date: Wed, 25 Jun 2025 13:02:38 -0700
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BCaXJ2Qx"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750881798;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JSs8so6zmO6ZUprflkSDZAkkmaHGPnqT6njVMAY4rO0=;
+	b=BCaXJ2Qx4h0ThIOBqxJP52bqHfc0Ou+6JNIZgKp2TFngxgD77GXpcldO8wTzLuUkydr5Fc
+	yHk7ecWrYQmjOkvfroMUb+98zNwWtAQqlI4QIZXMV0+W8/dYYFfXmxX37gS5TjA57eA4Ml
+	qIO7ethErLB7W8noM/KXwF5j+tyR0mU=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-301-HaOEDXcCOreXJ5Rit-Udmg-1; Wed, 25 Jun 2025 16:03:17 -0400
+X-MC-Unique: HaOEDXcCOreXJ5Rit-Udmg-1
+X-Mimecast-MFC-AGG-ID: HaOEDXcCOreXJ5Rit-Udmg_1750881796
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-3138e65efe2so142237a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:03:17 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750881796; x=1751486596;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JSs8so6zmO6ZUprflkSDZAkkmaHGPnqT6njVMAY4rO0=;
+        b=FWEmnIbmBnWo+TFdqc8fbwAPjfaWL7P9p9out42RZwKnaCVelIwTbjT1hXYYWYd8dS
+         hnA2mp3DnElhR8FUCkLxHy4z1xOShmahuJuOrIZInfkNVxS6wkNvG99zGbUg+5pGRpyI
+         jNzkuXR6jVWlwx3Jy4O9MeQlPC9INIIXPWZVJd3kAWV3ihJ84a/eOJ9lthzzA02Ay4yh
+         lExFutuCbli/flr4dpyhwLLDMHn1Z14FT5C0KMuWvw+F7C/IgPwVCZRMprT9yiWv4KEp
+         z2Ip7dH7cKNvao9SNBZG5eVvN9s2UnRC5mCzqULfXeZaB+HRtaOUqIarAY6apsb95S4z
+         cEiw==
+X-Gm-Message-State: AOJu0YySWO8WBbBXdTqY45q5Dzk4U64VNhco22Ha1CQ1fB0Oa2CmegWh
+	M+Qwb8JYn+mZgJtu5h+fRn6OTjXrO8dPQXdwHcbxWObAaxj6l9MfGz58K1LmG6Z4IpPzqHsRG1z
+	4/BbbhTsmIObRG6a0KrinuZGExK7QY6uAH5u3vAt7DMcUsLMtX47TbSHvJNyyF9ZSOA6zVzD57b
+	AB83xvdKmsyGyeptKK8cRuY+IcbRrp47kpqdcMk5Qb6u+SbvU=
+X-Gm-Gg: ASbGnct/la9tPYryprWJVlz444WRytgwASni5syDuf9gqnZ5fp8s6iVLiQaGPV1Txts
+	Z4xMqMr3IwyMzEVuUYWlsL4EQQogVuJxsZoA7gEe9zUlCAjFCrlnXaEIklTOC6S1JECe9JqAs6g
+	r3kJ2PgjDP98QbN5yG+ul+/UnFodMtoYsCKZFDQ3hMfOuTbkQEd0+fuhJ4In2tgv9VYTLBaibkX
+	O2olZ1mIdA9ArFK0lHoOp+dvqSR4x82SlCMgvwm9ALtflXlCopDh59V7ZeBfkholnqfmngNyv+g
+	rNPp9sH8VWU=
+X-Received: by 2002:a17:90b:2c84:b0:312:26d9:d5a7 with SMTP id 98e67ed59e1d1-315f269a810mr6390301a91.20.1750881795693;
+        Wed, 25 Jun 2025 13:03:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEWluOphzoBkdIqDO9x/Cn/KdojkpjiUCw5fsKUu7aYBwan55TLSI3+J3vCjY7+OxhBm/MMMQ==
+X-Received: by 2002:a17:90b:2c84:b0:312:26d9:d5a7 with SMTP id 98e67ed59e1d1-315f269a810mr6390240a91.20.1750881794982;
+        Wed, 25 Jun 2025 13:03:14 -0700 (PDT)
+Received: from x1.com ([85.131.185.92])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f53a1bcbsm2509238a91.19.2025.06.25.13.03.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 13:03:14 -0700 (PDT)
+From: Peter Xu <peterx@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: peterx@redhat.com,
+	Helge Deller <deller@gmx.de>,
+	Jens Axboe <axboe@kernel.dk>,
+	Jason Gunthorpe <jgg@nvidia.com>,
+	io-uring@vger.kernel.org
+Subject: [PATCH RFC] io_uring: Fix addr usage on get_unmapped_area()
+Date: Wed, 25 Jun 2025 16:03:10 -0400
+Message-ID: <20250625200310.1968696-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2 04/12] x86/virt/tdx: Add tdx_alloc/free_page() helpers
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
- pbonzini@redhat.com, seanjc@google.com, dave.hansen@linux.intel.com
-Cc: rick.p.edgecombe@intel.com, isaku.yamahata@intel.com,
- kai.huang@intel.com, yan.y.zhao@intel.com, chao.gao@intel.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, kvm@vger.kernel.org,
- x86@kernel.org, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
- <20250609191340.2051741-5-kirill.shutemov@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
-Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250609191340.2051741-5-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 6/9/25 12:13, Kirill A. Shutemov wrote:
->  arch/x86/include/asm/tdx.h       |   3 +
->  arch/x86/include/asm/tdx_errno.h |   6 +
->  arch/x86/virt/vmx/tdx/tdx.c      | 205 +++++++++++++++++++++++++++++++
->  arch/x86/virt/vmx/tdx/tdx.h      |   2 +
->  4 files changed, 216 insertions(+)
+mm_get_unmapped_area() is an internal mm API to calculate virtual addresses
+for mmap().  Here, addr parameter should normally be passed over from an
+userspace as hint address.  When with MAP_FIXED, it's required to use the
+address or fail the mmap().
 
-Please go through this whole series and add appropriate comments and
-explanations.
+When reviewing existing mm_get_unmapped_area() users, I stumbled upon this
+use case, where addr will be adjusted to io_uring_validate_mmap_request().
+That internally uses io_region_get_ptr() to fetch the kernel address that
+io_uring used, by either page_address() or vmap() from io_region_init_ptr()
+calls.
 
-There are 4 lines of comments in the 216 lines of new code.
+Here, the io_mapped_region.ptr isn't a valid user address, hence passing it
+over to mm_get_unmapped_area() is misleading if not wrong.
 
-I'll give some examples:
+The problem should be about parisc having issues with cache aliasing when
+both io_uring kernel and the userspace may map the same pages.  Here what
+matters should be pgoff rather than the address hint.  Simplify the code to
+keep addr=0, while setup pgoff only to make sure the VA to be calculated
+will satisfy VIPT's cache aliasing demand.
 
-> +static int tdx_nr_pamt_pages(void)
+Cc: Helge Deller <deller@gmx.de>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Jason Gunthorpe <jgg@nvidia.com>
+Cc: io-uring@vger.kernel.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+Marking this as RFC because I don't have parisc hence no test done, but
+raise this issue.
+---
+ io_uring/memmap.c | 14 +++++---------
+ 1 file changed, 5 insertions(+), 9 deletions(-)
 
-Despite the naming this function does not return the number of TDX
-PAMT pages. It returns the number of pages needed for each *dynamic*
-PAMT granule.
-
-The naming is not consistent with something used only for dynamic PAMT
-support. This kind of comment would help, but is not a replacement for
-good naming:
-
-/*
- * How many pages are needed for the TDX
- * dynamic page metadata for a 2M region?
- */
-
-Oh, and what the heck is with the tdx_supports_dynamic_pamt() check?
-Isn't it illegal to call these functions without dynamic PAMT in
-place? Wouldn't the TDH_PHYMEM_PAMT_ADD blow up if you hand it 0's
-in args.rdx?
-
-> +static int tdx_nr_pamt_pages(void)
-> +{
-> +	if (!tdx_supports_dynamic_pamt(&tdx_sysinfo))
-> +		return 0;
-> +
-> +	return tdx_sysinfo.tdmr.pamt_4k_entry_size * PTRS_PER_PTE / PAGE_SIZE;
-> +}
-> +
-> +static u64 tdh_phymem_pamt_add(unsigned long hpa,
-> +			       struct list_head *pamt_pages)
-> +{
-> +	struct tdx_module_args args = {
-> +		.rcx = hpa,
-> +	};
-> +	struct page *page;
-> +	u64 *p;
-> +
-> +	WARN_ON_ONCE(!IS_ALIGNED(hpa & PAGE_MASK, PMD_SIZE));
-> +
-> +	p = &args.rdx;
-> +	list_for_each_entry(page, pamt_pages, lru) {
-> +		*p = page_to_phys(page);
-> +		p++;
-> +	}
-
-This is sheer voodoo. Voodoo on its own is OK. But uncommented voodoo
-is not.
-
-Imagine what would happen if, for instance, someone got confused and did:
-
-	tdx_alloc_pamt_pages(&pamd_pages);
-	tdx_alloc_pamt_pages(&pamd_pages);
-	tdx_alloc_pamt_pages(&pamd_pages);
-
-It would *work* because the allocation function would just merrily
-shove lots of pages on the list. But when it's consumed you'd run off
-the end of the data structure in this function far, far away from the
-bug site.
-
-The least you can do here is comment what's going on. Because treating
-a structure like an array is obtuse at best.
-
-Even better would be to have a check to ensure that the pointer magic
-doesn't run off the end of the struct:
-
-	if (p - &args.rcx >= sizeof(args)/sizeof(u64)) {
-		WARN_ON_ONCE(1);
-		break;
-	}
-
-or some other pointer voodoo.
-
-> +
-> +	return seamcall(TDH_PHYMEM_PAMT_ADD, &args);
-> +}
+diff --git a/io_uring/memmap.c b/io_uring/memmap.c
+index 725dc0bec24c..8b74894489bc 100644
+--- a/io_uring/memmap.c
++++ b/io_uring/memmap.c
+@@ -371,21 +371,17 @@ unsigned long io_uring_get_unmapped_area(struct file *filp, unsigned long addr,
+ 	 * kernel memory *and* userspace memory. To achieve that:
+ 	 * - use a NULL file pointer to reference physical memory, and
+ 	 * - use the kernel virtual address of the shared io_uring context
+-	 *   (instead of the userspace-provided address, which has to be 0UL
+-	 *   anyway).
+-	 * - use the same pgoff which the get_unmapped_area() uses to
+-	 *   calculate the page colouring.
++	 *   to calculate pgoff, which will be used later in parisc va
++	 *   allocator to calculate VIPT-safe aliasing va.
+ 	 * For architectures without such aliasing requirements, the
+-	 * architecture will return any suitable mapping because addr is 0.
++	 * architecture will return any suitable mapping because pgoff is 0.
+ 	 */
+ 	filp = NULL;
+ 	flags |= MAP_SHARED;
+-	pgoff = 0;	/* has been translated to ptr above */
+ #ifdef SHM_COLOUR
+-	addr = (uintptr_t) ptr;
+-	pgoff = addr >> PAGE_SHIFT;
++	pgoff = (uintptr_t)ptr >> PAGE_SHIFT;
+ #else
+-	addr = 0UL;
++	pgoff = 0;
+ #endif
+ 	return mm_get_unmapped_area(current->mm, filp, addr, len, pgoff, flags);
+ }
+-- 
+2.49.0
 
