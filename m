@@ -1,184 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2472AD58;
-	Wed, 25 Jun 2025 01:09:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3245B347B4;
+	Wed, 25 Jun 2025 01:09:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750813757; cv=none; b=YfbjfnCbhUHL5kQrj8xgS5x0DIyWhhVbGI2r48aDF1QWXvRfaBJLE0qhdJIHzpY1Ica2isWjyiCNOUxbTdtAAdFoXfyg8LqaCiQdSc/pwwiJQ2W/L19BiKYTUQYfqH3hOo0TL2nci6Wwv+KMH2xdNSelMezmrMaAo7jMYJNd1Gc=
+	t=1750813779; cv=none; b=j+29xUKZGvQ4Tn7WKLO9Lhw3V5HdG53eQzXzvBpBWuJ2TYpLyVMQS82khaX3whBTQonvDyIOWplSORaZPCTub8P5MpUwiVXESv9otC0Wo6dbjARyd12r703ExFfwnliBFX7ji3Rp5da9q78VQEqCRG1ckANyqjBbG3AXdKS8jD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750813757; c=relaxed/simple;
-	bh=ar+M7uOS6NGMBXnGsSfhmdY2/NIrFzzFwB2vQ2UdzzU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=Lqkw544z7nEnHYzbIOoMDtLajewAAV6RVrA7tDGQIOxWtcHK+kuLIn2j5w49sDUwlY2fCCaAkXRrufDWM5+1fUlgrmkCoJAkav6C/qgM142QAEVwLSQ9P9He8RAMJBXXqkUtLot5U/m+ZfFjCq/TFqEb325RvAZrTecsNXhdw7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=si3Mv9bY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750813779; c=relaxed/simple;
+	bh=ZsvfSJ6ncx3+0Tez5j+qCZFZeyhCDFZJrU4gsWWe9U0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=RNOQfcFHqc05euXlbW+0aLkucURfgL3kD/kECK3JPnG7eM29IRkrunWxYB/z9uMkBK6m1SIPqQi5UvEVaNwbiJ8rxSeE/1JRyIW4cJErIHqxXkhWDhZQ/Y86TnfuHAbFTpL0N49DrWz40Anai8UzgrVSlwhe9uUfD/VlH/NwDmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AGNrJh1z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="si3Mv9bY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F5E3C4CEE3;
-	Wed, 25 Jun 2025 01:09:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AGNrJh1z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B66C4C4CEE3;
+	Wed, 25 Jun 2025 01:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750813756;
-	bh=ar+M7uOS6NGMBXnGsSfhmdY2/NIrFzzFwB2vQ2UdzzU=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=si3Mv9bYY/8kBwTkVAcQqZoJK6oPCfQbERzoeHQNnnjouaaju9cDPj5M/XH+LGCGf
-	 sutZ2TLPTDRMtEiUcTLAfcucjlB1tBOK027s1ZYe+qpQm8YtBXVVCggwf2H8yIixe+
-	 IDVtaRLnE7OYk8omFmO1wVvMArdpG+qU6ghcCXqwDH3eSeR/zt8PJr47crwpodU4K/
-	 +SdYth5GpIqN7Rkz05vHh/vtCMrcnD2wmTD+63kR8qXgeUEYggdfeNmyLdKPgxxZY0
-	 Z7hF7LuReE6Xw0PlrdhJ4M022p1QhH6fci9WuRh8Uql2D6xK1hPUmyC7uoJ+Q8UvXd
-	 gbu4rtou3gcJw==
-Date: Tue, 24 Jun 2025 18:09:18 -0700
-From: Kees Cook <kees@kernel.org>
-To: Huacai Chen <chenhuacai@kernel.org>
-CC: Arnd Bergmann <arnd@arndb.de>, WANG Xuerui <kernel@xen0n.name>,
- Thomas Gleixner <tglx@linutronix.de>,
- Tianyang Zhang <zhangtianyang@loongson.cn>, Bibo Mao <maobibo@loongson.cn>,
- Jiaxun Yang <jiaxun.yang@flygoat.com>, loongarch@lists.linux.dev,
- "Gustavo A. R. Silva" <gustavoars@kernel.org>,
- Christoph Hellwig <hch@lst.de>, Marco Elver <elver@google.com>,
- Andrey Konovalov <andreyknvl@gmail.com>,
- Andrey Ryabinin <ryabinin.a.a@gmail.com>, Ard Biesheuvel <ardb@kernel.org>,
- Masahiro Yamada <masahiroy@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>,
- Nicolas Schier <nicolas.schier@linux.dev>,
- Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
- Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-kernel@vger.kernel.org, x86@kernel.org, kasan-dev@googlegroups.com,
- linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-efi@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
- linux-security-module@vger.kernel.org, linux-kselftest@vger.kernel.org,
- sparclinux@vger.kernel.org, llvm@lists.linux.dev
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_10/14=5D_loongarch=3A_Han?=
- =?US-ASCII?Q?dle_KCOV_=5F=5Finit_vs_inline_mismatches?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAAhV-H5oHPG+etNawAmVwyDtg80iKUrAM_m3Vj57bBO0scHqvQ@mail.gmail.com>
-References: <20250523043251.it.550-kees@kernel.org> <20250523043935.2009972-10-kees@kernel.org> <CAAhV-H4WxAwXTYVFOnphgHN80-_6jt77YZ_rw-sOBoBjjiN-yQ@mail.gmail.com> <CAAhV-H5oHPG+etNawAmVwyDtg80iKUrAM_m3Vj57bBO0scHqvQ@mail.gmail.com>
-Message-ID: <B5A11282-CB0E-46E0-A5D7-EF4D8BFC23B4@kernel.org>
+	s=k20201202; t=1750813778;
+	bh=ZsvfSJ6ncx3+0Tez5j+qCZFZeyhCDFZJrU4gsWWe9U0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=AGNrJh1zVV/tMvhTqI17QotPLLiL+X0AktHnvCfoxCFNRgKQTxORSrZGRCzYmMvNI
+	 AeJ2gUL0rb1Iq9f2Gsitdo1yqT7RLmIvPoUuYM9MlHLAqo0OI34G0AoB7D0/5Xp3hi
+	 BKuSYox5a/qoVNV9Xjou4uCYJus5eyfu38bFxfySun2Ls1RkzX7ZVs4swkeAPVFEO9
+	 eGjms126m7Ga9mVmEnmpSdvf0WDrdwn+9oiAG2bWNbThVpnXNYPESdnh3myIU6hnE+
+	 P318oBPPMmU+tAuRGjzEpbOZTrLNlsnPotE6GuCxP9TuiXwoBbfnSJt1v33YZm2iow
+	 AbcHTpKYN0sbA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD2739FEB73;
+	Wed, 25 Jun 2025 01:10:06 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] bnxt: properly flush XDP redirect lists
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175081380550.4090877.5607568768954736372.git-patchwork-notify@kernel.org>
+Date: Wed, 25 Jun 2025 01:10:05 +0000
+References: <aFl7jpCNzscumuN2@debian.debian>
+In-Reply-To: <aFl7jpCNzscumuN2@debian.debian>
+To: Yan Zhai <yan@cloudflare.com>
+Cc: netdev@vger.kernel.org, michael.chan@broadcom.com,
+ pavan.chebbi@broadcom.com, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, ast@kernel.org,
+ daniel@iogearbox.net, hawk@kernel.org, john.fastabend@gmail.com,
+ sdf@fomichev.me, andrew.gospodarek@broadcom.com,
+ linux-kernel@vger.kernel.org, bpf@vger.kernel.org, kernel-team@cloudflare.com
+
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 23 Jun 2025 09:06:38 -0700 you wrote:
+> We encountered following crash when testing a XDP_REDIRECT feature
+> in production:
+> 
+> [56251.579676] list_add corruption. next->prev should be prev (ffff93120dd40f30), but was ffffb301ef3a6740. (next=ffff93120dd
+> 40f30).
+> [56251.601413] ------------[ cut here ]------------
+> [56251.611357] kernel BUG at lib/list_debug.c:29!
+> [56251.621082] Oops: invalid opcode: 0000 [#1] PREEMPT SMP NOPTI
+> [56251.632073] CPU: 111 UID: 0 PID: 0 Comm: swapper/111 Kdump: loaded Tainted: P           O       6.12.33-cloudflare-2025.6.
+> 3 #1
+> [56251.653155] Tainted: [P]=PROPRIETARY_MODULE, [O]=OOT_MODULE
+> [56251.663877] Hardware name: MiTAC GC68B-B8032-G11P6-GPU/S8032GM-HE-CFR, BIOS V7.020.B10-sig 01/22/2025
+> [56251.682626] RIP: 0010:__list_add_valid_or_report+0x4b/0xa0
+> [56251.693203] Code: 0e 48 c7 c7 68 e7 d9 97 e8 42 16 fe ff 0f 0b 48 8b 52 08 48 39 c2 74 14 48 89 f1 48 c7 c7 90 e7 d9 97 48
+>  89 c6 e8 25 16 fe ff <0f> 0b 4c 8b 02 49 39 f0 74 14 48 89 d1 48 c7 c7 e8 e7 d9 97 4c 89
+> [56251.725811] RSP: 0018:ffff93120dd40b80 EFLAGS: 00010246
+> [56251.736094] RAX: 0000000000000075 RBX: ffffb301e6bba9d8 RCX: 0000000000000000
+> [56251.748260] RDX: 0000000000000000 RSI: ffff9149afda0b80 RDI: ffff9149afda0b80
+> [56251.760349] RBP: ffff9131e49c8000 R08: 0000000000000000 R09: ffff93120dd40a18
+> [56251.772382] R10: ffff9159cf2ce1a8 R11: 0000000000000003 R12: ffff911a80850000
+> [56251.784364] R13: ffff93120fbc7000 R14: 0000000000000010 R15: ffff9139e7510e40
+> [56251.796278] FS:  0000000000000000(0000) GS:ffff9149afd80000(0000) knlGS:0000000000000000
+> [56251.809133] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [56251.819561] CR2: 00007f5e85e6f300 CR3: 00000038b85e2006 CR4: 0000000000770ef0
+> [56251.831365] PKRU: 55555554
+> [56251.838653] Call Trace:
+> [56251.845560]  <IRQ>
+> [56251.851943]  cpu_map_enqueue.cold+0x5/0xa
+> [56251.860243]  xdp_do_redirect+0x2d9/0x480
+> [56251.868388]  bnxt_rx_xdp+0x1d8/0x4c0 [bnxt_en]
+> [56251.877028]  bnxt_rx_pkt+0x5f7/0x19b0 [bnxt_en]
+> [56251.885665]  ? cpu_max_write+0x1e/0x100
+> [56251.893510]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [56251.902276]  __bnxt_poll_work+0x190/0x340 [bnxt_en]
+> [56251.911058]  bnxt_poll+0xab/0x1b0 [bnxt_en]
+> [56251.919041]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [56251.927568]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [56251.935958]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [56251.944250]  __napi_poll+0x2b/0x160
+> [56251.951155]  bpf_trampoline_6442548651+0x79/0x123
+> [56251.959262]  __napi_poll+0x5/0x160
+> [56251.966037]  net_rx_action+0x3d2/0x880
+> [56251.973133]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [56251.981265]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [56251.989262]  ? __hrtimer_run_queues+0x162/0x2a0
+> [56251.996967]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [56252.004875]  ? srso_alias_return_thunk+0x5/0xfbef5
+> [56252.012673]  ? bnxt_msix+0x62/0x70 [bnxt_en]
+> [56252.019903]  handle_softirqs+0xcf/0x270
+> [56252.026650]  irq_exit_rcu+0x67/0x90
+> [56252.032933]  common_interrupt+0x85/0xa0
+> [56252.039498]  </IRQ>
+> [56252.044246]  <TASK>
+> [56252.048935]  asm_common_interrupt+0x26/0x40
+> [56252.055727] RIP: 0010:cpuidle_enter_state+0xb8/0x420
+> [56252.063305] Code: dc 01 00 00 e8 f9 79 3b ff e8 64 f7 ff ff 49 89 c5 0f 1f 44 00 00 31 ff e8 a5 32 3a ff 45 84 ff 0f 85 ae
+>  01 00 00 fb 45 85 f6 <0f> 88 88 01 00 00 48 8b 04 24 49 63 ce 4c 89 ea 48 6b f1 68 48 29
+> [56252.088911] RSP: 0018:ffff93120c97fe98 EFLAGS: 00000202
+> [56252.096912] RAX: ffff9149afd80000 RBX: ffff9141d3a72800 RCX: 0000000000000000
+> [56252.106844] RDX: 00003329176c6b98 RSI: ffffffe36db3fdc7 RDI: 0000000000000000
+> [56252.116733] RBP: 0000000000000002 R08: 0000000000000002 R09: 000000000000004e
+> [56252.126652] R10: ffff9149afdb30c4 R11: 071c71c71c71c71c R12: ffffffff985ff860
+> [56252.136637] R13: 00003329176c6b98 R14: 0000000000000002 R15: 0000000000000000
+> [56252.146667]  ? cpuidle_enter_state+0xab/0x420
+> [56252.153909]  cpuidle_enter+0x2d/0x40
+> [56252.160360]  do_idle+0x176/0x1c0
+> [56252.166456]  cpu_startup_entry+0x29/0x30
+> [56252.173248]  start_secondary+0xf7/0x100
+> [56252.179941]  common_startup_64+0x13e/0x141
+> [56252.186886]  </TASK>
+> 
+> [...]
+
+Here is the summary with links:
+  - [net] bnxt: properly flush XDP redirect lists
+    https://git.kernel.org/netdev/net/c/9caca6ac0e26
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-
-On June 24, 2025 5:31:12 AM PDT, Huacai Chen <chenhuacai@kernel=2Eorg> wro=
-te:
->Hi, Kees,
->
->On Thu, Jun 19, 2025 at 4:55=E2=80=AFPM Huacai Chen <chenhuacai@kernel=2E=
-org> wrote:
->>
->> Hi, Kees,
->>
->> On Fri, May 23, 2025 at 12:39=E2=80=AFPM Kees Cook <kees@kernel=2Eorg> =
-wrote:
->> >
->> > When KCOV is enabled all functions get instrumented, unless
->> > the __no_sanitize_coverage attribute is used=2E To prepare for
->> > __no_sanitize_coverage being applied to __init functions, we have to
->> > handle differences in how GCC's inline optimizations get resolved=2E =
-For
->> > loongarch this exposed several places where __init annotations were
->> > missing but ended up being "accidentally correct"=2E Fix these cases =
-and
->> > force one function to be inline with __always_inline=2E
->> >
->> > Signed-off-by: Kees Cook <kees@kernel=2Eorg>
->> > ---
->> > Cc: Huacai Chen <chenhuacai@kernel=2Eorg>
->> > Cc: WANG Xuerui <kernel@xen0n=2Ename>
->> > Cc: Thomas Gleixner <tglx@linutronix=2Ede>
->> > Cc: Tianyang Zhang <zhangtianyang@loongson=2Ecn>
->> > Cc: Bibo Mao <maobibo@loongson=2Ecn>
->> > Cc: Jiaxun Yang <jiaxun=2Eyang@flygoat=2Ecom>
->> > Cc: <loongarch@lists=2Elinux=2Edev>
->> > ---
->> >  arch/loongarch/include/asm/smp=2Eh | 2 +-
->> >  arch/loongarch/kernel/time=2Ec     | 2 +-
->> >  arch/loongarch/mm/ioremap=2Ec      | 4 ++--
->> >  3 files changed, 4 insertions(+), 4 deletions(-)
->> >
->> > diff --git a/arch/loongarch/include/asm/smp=2Eh b/arch/loongarch/incl=
-ude/asm/smp=2Eh
->> > index ad0bd234a0f1=2E=2E88e19d8a11f4 100644
->> > --- a/arch/loongarch/include/asm/smp=2Eh
->> > +++ b/arch/loongarch/include/asm/smp=2Eh
->> > @@ -39,7 +39,7 @@ int loongson_cpu_disable(void);
->> >  void loongson_cpu_die(unsigned int cpu);
->> >  #endif
->> >
->> > -static inline void plat_smp_setup(void)
->> > +static __always_inline void plat_smp_setup(void)
->> Similar to x86 and arm, I prefer to mark it as __init rather than
->> __always_inline=2E
->If you have no objections, I will apply this patch with the above modific=
-ation=2E
-
-That's fine by me; thank you! I didn't have a chance yet to verify that it=
- actually fixes the mismatches I saw, but if it looks good to you, yes plea=
-se=2E :)
-
--Kees
-
->
->
->Huacai
->
->>
->> Huacai
->>
->> >  {
->> >         loongson_smp_setup();
->> >  }
->> > diff --git a/arch/loongarch/kernel/time=2Ec b/arch/loongarch/kernel/t=
-ime=2Ec
->> > index bc75a3a69fc8=2E=2E367906b10f81 100644
->> > --- a/arch/loongarch/kernel/time=2Ec
->> > +++ b/arch/loongarch/kernel/time=2Ec
->> > @@ -102,7 +102,7 @@ static int constant_timer_next_event(unsigned lon=
-g delta, struct clock_event_dev
->> >         return 0;
->> >  }
->> >
->> > -static unsigned long __init get_loops_per_jiffy(void)
->> > +static unsigned long get_loops_per_jiffy(void)
->> >  {
->> >         unsigned long lpj =3D (unsigned long)const_clock_freq;
->> >
->> > diff --git a/arch/loongarch/mm/ioremap=2Ec b/arch/loongarch/mm/iorema=
-p=2Ec
->> > index 70ca73019811=2E=2Edf949a3d0f34 100644
->> > --- a/arch/loongarch/mm/ioremap=2Ec
->> > +++ b/arch/loongarch/mm/ioremap=2Ec
->> > @@ -16,12 +16,12 @@ void __init early_iounmap(void __iomem *addr, uns=
-igned long size)
->> >
->> >  }
->> >
->> > -void *early_memremap_ro(resource_size_t phys_addr, unsigned long siz=
-e)
->> > +void * __init early_memremap_ro(resource_size_t phys_addr, unsigned =
-long size)
->> >  {
->> >         return early_memremap(phys_addr, size);
->> >  }
->> >
->> > -void *early_memremap_prot(resource_size_t phys_addr, unsigned long s=
-ize,
->> > +void * __init early_memremap_prot(resource_size_t phys_addr, unsigne=
-d long size,
->> >                     unsigned long prot_val)
->> >  {
->> >         return early_memremap(phys_addr, size);
->> > --
->> > 2=2E34=2E1
->> >
-
---=20
-Kees Cook
