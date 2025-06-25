@@ -1,181 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C801214209;
-	Wed, 25 Jun 2025 11:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9998725C834
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:33:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750851155; cv=none; b=D4J4ZbvPg248Ov9gVzJmbg5nVABWrchyykVWTn8HvPRptwzxeNu/XjLB1C1SHQd2i8Qi14tX++MVPeQgkOPyRiHcN1yKcupLb8pnlYyzGcwa3lOBRH8HBdyOMcLzGVOqgXmuzzOic8IHvyL+W1mVxRkg7H0aJSpiFSGzcopUcRw=
+	t=1750851205; cv=none; b=ub2mRdZiZufVPw955YQxDGLKFsMUSMYBEOMxdScGd+q2a2lgHchPL5T5HtWo/xWxW+rwWkQYM62+KABktHtFujPv6+QzdHpE+HhFqfAUiAfI1PatBaToN6uU9L5eGRjyfLa4JjP0mjCCzcAVuyo3F/XMSrEF/8dySntKFZVMzLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750851155; c=relaxed/simple;
-	bh=b8HExZsm4GZZYkcq+Be3f1cAN7tYaXlR5706Bb4d3ZE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=unBVaSSz92eegRPdkBOgg+DU2GzrWe8HvV/KW6ixj88lGN6moxkpJ0yYNVSLl3oVtuf0hfNvsO6whw4nF5AVWKcbSal342slma+3MnWf0zHr+bl3ZeEbxCSbUcHUN3LTDX1ANtMk1cmYMSBOhy5qOvrh63jv0F6ayRDVyguTBdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aKcoe7zn; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750851205; c=relaxed/simple;
+	bh=/cwfe7cQie7eRGu4mTNSb1C1PMIa0UZgfLu+KikXDvc=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=oSP3NbCB8wn47d7Z3kn8InPNRHg5Qxk51DNC6lvUv24ZHcTceDO1+1diUDJ6BvG8nnSG8HUqzUB0KMq8854STOhtrg+Qu6UduC+Zlhdnp3EN7RTM7o3RNjG3dsKphqkwiev8IiTp3w7bBDI+4rnPY7y5RNPhC+AC9QCRJM3LP2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hovrZTvJ; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--smostafa.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aKcoe7zn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750851154; x=1782387154;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=b8HExZsm4GZZYkcq+Be3f1cAN7tYaXlR5706Bb4d3ZE=;
-  b=aKcoe7zn2lgBZlyrxIjzb/6RI0aS6zQf0onLWPfW++uKtb5F4fdQfbeZ
-   TPQde0CzVd/O/+JRd81VFB4r6syhfYFLF9VRglOaKyLpyMDJrigvarA1B
-   ZX/nZccfG+jVz0PFC1VAOnGP08jALJld86zXrcEFxHAWvVj1VdP2N8aP3
-   ZXQ9MZ6Wp+K0U4F/8uZ3EaPU2GrH9Dk9Qmstrys6OJVfigycGpTXsta+v
-   3ApiHhz1RSmA443bDlsHzMm2/yy4HF3VFy/+eT2HdThIC/elSPUDS0/OH
-   7MqCrDP0x8ABoiKUPzmdttqXkAvdFtRuQWk2opN6wOjF5fW7C5gObFjim
-   w==;
-X-CSE-ConnectionGUID: jon4LHGCTEWpuxEKPLKnwA==
-X-CSE-MsgGUID: YRX4vHH9TCiORdLU8H2flg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52232756"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="52232756"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 04:32:33 -0700
-X-CSE-ConnectionGUID: Pe3OIX3TS0GODZpYIBAnfg==
-X-CSE-MsgGUID: +AIkFjC4RvKbHxfHQa8CQg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="157964784"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa005.jf.intel.com with ESMTP; 25 Jun 2025 04:32:30 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUOMd-000T3u-2f;
-	Wed, 25 Jun 2025 11:32:27 +0000
-Date: Wed, 25 Jun 2025 19:32:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
-	Mark Brown <broonie@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 3/6] spi: Add driver for the RZ/V2H(P) RSPI IP
-Message-ID: <202506251915.mDWx8v2S-lkp@intel.com>
-References: <20250624192304.338979-4-fabrizio.castro.jz@renesas.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hovrZTvJ"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-4532ff43376so52013875e9.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:33:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750851202; x=1751456002; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=2NIlOMIrjnVsdM2AHEMlWacU0EQa3pY5nigk/W+dUCk=;
+        b=hovrZTvJa8dK6e1NnyAukpuSGDzRxhBeuADMPg3CA3OT56m7t11Oitb/lM/UUSZFAQ
+         I15LVZzb2ahCXdOQ9mUKetQ9GmllC4T87zJrgMzYaxKX9AVYHCH+GtPbHr5GpeKhQ+Yc
+         L+H8QCXj+PgVzBiHhZQeg+thT9hesqADqv4/r4F8EEcTD0t9r9RTnUm4fGHSCAswDjnV
+         D7KXGOHocLABNyHZCj1G+fDxQUh0YonSQoidt8ixFjXsjGmv/YkrP+i+QWctssyyGiIW
+         q3fmZAFTpf+wv2rXfjWFHLVkePdN4mV175zy8UXyit1P8Jfw0RTGFfi1hAcQVuteyZ2j
+         +vsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750851202; x=1751456002;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2NIlOMIrjnVsdM2AHEMlWacU0EQa3pY5nigk/W+dUCk=;
+        b=e5XKWjO+GVwHEiiL0LCOyrjySBe0KD8KJ6V72iSDJaxEPSkbCUEidMtaQOieK7Ig0G
+         Voi83HR71He+y71GIRPsQnKKoagzq5ZKg4+fWUYv3fshuTL1oeTwztTC6YxK/lbRY9Gm
+         mSTLjSDdSEA0P3utSaUP9bnGBmpI2wnY+lHmFh2WhgZdTC6r8nG6l17azm/v77nGGiIm
+         PIAiX9Kwb/D4KNC3W8Jo7cVaNLmixbkrdudqnLlbOOG8MbfrE52A5wnd64SSlSigQdZi
+         6Zy+xcKBSXygcvGVP6esKWva6Ro/z6DugZGqrO5wquxJWpVZoR4Z3YRnssbO7lA/G6hl
+         5q5Q==
+X-Gm-Message-State: AOJu0Yxd3jKctCanY2AW+Dqi2O5RxzoTC0cUH7yjS5wqDBCaGXaQu0FP
+	ErXq2EkjE3IFz5vkZeCOLSnrhKYCLGI0zC7QFkrAdj6+MR+bU3xFqmBf/vMuuxYxeOsqdxz5EHN
+	9pkhE0ctBb9QEiySiFTWhIDwSdiTQb98TiIKTADUe+boWhz5sPacUuuu9H8zQ9XZqLs/OIV432Z
+	upVcZKyp1EzB08o+B9aBzNKUnMlCqm1VQae2wavH1Mx0GLf/YAJ0Y8ArY=
+X-Google-Smtp-Source: AGHT+IFOs0Gi4knoSxkuw3WEzWTeg5pmNz2XOZ2P1IvG2UaOypTfCATZEtKucsPAekJhdqLV//IPLmdoJn1rpQ==
+X-Received: from wmbfs5.prod.google.com ([2002:a05:600c:3f85:b0:450:cfda:ece7])
+ (user=smostafa job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:674a:b0:441:b076:fce8 with SMTP id 5b1f17b1804b1-45381ab25e9mr28886085e9.14.1750851201981;
+ Wed, 25 Jun 2025 04:33:21 -0700 (PDT)
+Date: Wed, 25 Jun 2025 11:33:01 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624192304.338979-4-fabrizio.castro.jz@renesas.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
+Message-ID: <20250625113301.580253-1-smostafa@google.com>
+Subject: [PATCH] KVM: arm64: Fix error path in init_hyp_mode()
+From: Mostafa Saleh <smostafa@google.com>
+To: linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org
+Cc: maz@kernel.org, oliver.upton@linux.dev, joey.gouly@arm.com, 
+	suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, 
+	will@kernel.org, qperret@google.com, Mostafa Saleh <smostafa@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Fabrizio,
+In the unlikely case pKVM failed to allocate carveout, the error path
+tries to access NULL ptr when it de-reference the SVE state from the
+uninitialized nVHE per-cpu base.
 
-kernel test robot noticed the following build errors:
+[    1.575420] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
+[    1.576010] pc : teardown_hyp_mode+0xe4/0x180
+[    1.576920] lr : teardown_hyp_mode+0xd0/0x180
+[    1.577308] sp : ffff8000826fb9d0
+[    1.577600] x29: ffff8000826fb9d0 x28: 0000000000000000 x27: ffff80008209b000
+[    1.578383] x26: ffff800081dde000 x25: ffff8000820493c0 x24: ffff80008209eb00
+[    1.579180] x23: 0000000000000040 x22: 0000000000000001 x21: 0000000000000000
+[    1.579881] x20: 0000000000000002 x19: ffff800081d540b8 x18: 0000000000000000
+[    1.580544] x17: ffff800081205230 x16: 0000000000000152 x15: 00000000fffffff8
+[    1.581183] x14: 0000000000000008 x13: fff00000ff7f6880 x12: 000000000000003e
+[    1.581813] x11: 0000000000000002 x10: 00000000000000ff x9 : 0000000000000000
+[    1.582503] x8 : 0000000000000000 x7 : 7f7f7f7f7f7f7f7f x6 : 43485e525851ff30
+[    1.583140] x5 : fff00000ff6e9030 x4 : fff00000ff6e8f80 x3 : 0000000000000000
+[    1.583780] x2 : 0000000000000000 x1 : 0000000000000002 x0 : 0000000000000000
+[    1.584526] Call trace:
+[    1.584945]  teardown_hyp_mode+0xe4/0x180 (P)
+[    1.585578]  init_hyp_mode+0x920/0x994
+[    1.586005]  kvm_arm_init+0xb4/0x25c
+[    1.586387]  do_one_initcall+0xe0/0x258
+[    1.586819]  do_initcall_level+0xa0/0xd4
+[    1.587224]  do_initcalls+0x54/0x94
+[    1.587606]  do_basic_setup+0x1c/0x28
+[    1.587998]  kernel_init_freeable+0xc8/0x130
+[    1.588409]  kernel_init+0x20/0x1a4
+[    1.588768]  ret_from_fork+0x10/0x20
+[    1.589568] Code: f875db48 8b1c0109 f100011f 9a8903e8 (f9463100)
+[    1.590332] ---[ end trace 0000000000000000 ]---
 
-[auto build test ERROR on broonie-spi/for-next]
-[also build test ERROR on geert-renesas-drivers/renesas-clk arm64/for-next/core geert-renesas-devel/next robh/for-next linus/master v6.16-rc3 next-20250625]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+It seems also in other cases, it can try to free NULL ptrs, so add the
+proper NULL checks in teardown_hyp_mode(), we can skip the loop early
+if any of the ptrs is NULL as the order of free matches the order of
+initialization.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Fabrizio-Castro/clk-renesas-r9a09g057-Add-entries-for-the-RSPIs/20250625-032714
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
-patch link:    https://lore.kernel.org/r/20250624192304.338979-4-fabrizio.castro.jz%40renesas.com
-patch subject: [PATCH 3/6] spi: Add driver for the RZ/V2H(P) RSPI IP
-config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20250625/202506251915.mDWx8v2S-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250625/202506251915.mDWx8v2S-lkp@intel.com/reproduce)
+I initially observed this on 6.12, but I could also repro in master.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506251915.mDWx8v2S-lkp@intel.com/
+Signed-off-by: Mostafa Saleh <smostafa@google.com>
+---
+ arch/arm64/kvm/arm.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-All errors (new ones prefixed by >>):
-
-   drivers/spi/spi-rzv2h-rspi.c: In function 'rzv2h_rspi_prepare_message':
->> drivers/spi/spi-rzv2h-rspi.c:298:18: error: implicit declaration of function 'FIELD_PREP' [-Wimplicit-function-declaration]
-     298 |         conf32 = FIELD_PREP(RSPI_SPCMD_CPOL, !!(spi->mode & SPI_CPOL));
-         |                  ^~~~~~~~~~
-
-
-vim +/FIELD_PREP +298 drivers/spi/spi-rzv2h-rspi.c
-
-   268	
-   269	static int rzv2h_rspi_prepare_message(struct spi_controller *ctlr,
-   270					      struct spi_message *message)
-   271	{
-   272		struct rzv2h_rspi_priv *rspi = spi_controller_get_devdata(ctlr);
-   273		const struct spi_device *spi = message->spi;
-   274		struct spi_transfer *xfer;
-   275		u32 speed_hz = U32_MAX;
-   276		u8 bits_per_word;
-   277		u32 conf32;
-   278		u16 conf16;
-   279	
-   280		/* Make sure SPCR.SPE is 0 before amending the configuration */
-   281		rzv2h_rspi_spe_disable(rspi);
-   282	
-   283		/* Configure the device to work in "host" mode */
-   284		conf32 = RSPI_SPCR_MSTR;
-   285	
-   286		/* Auto-stop function */
-   287		conf32 |= RSPI_SPCR_SCKASE;
-   288	
-   289		/* SPI receive buffer full interrupt enable */
-   290		conf32 |= RSPI_SPCR_SPRIE;
-   291	
-   292		writel(conf32, rspi->base + RSPI_SPCR);
-   293	
-   294		/* Use SPCMD0 only */
-   295		writeb(0x0, rspi->base + RSPI_SPSCR);
-   296	
-   297		/* Setup mode */
- > 298		conf32 = FIELD_PREP(RSPI_SPCMD_CPOL, !!(spi->mode & SPI_CPOL));
-   299		conf32 |= FIELD_PREP(RSPI_SPCMD_CPHA, !!(spi->mode & SPI_CPHA));
-   300		conf32 |= FIELD_PREP(RSPI_SPCMD_LSBF, !!(spi->mode & SPI_LSB_FIRST));
-   301		conf32 |= FIELD_PREP(RSPI_SPCMD_SSLKP, 1);
-   302		conf32 |= FIELD_PREP(RSPI_SPCMD_SSLA, spi_get_chipselect(spi, 0));
-   303		writel(conf32, rspi->base + RSPI_SPCMD);
-   304		if (spi->mode & SPI_CS_HIGH)
-   305			writeb(BIT(spi_get_chipselect(spi, 0)), rspi->base + RSPI_SSLP);
-   306		else
-   307			writeb(0, rspi->base + RSPI_SSLP);
-   308	
-   309		/* Setup FIFO thresholds */
-   310		conf16 = FIELD_PREP(RSPI_SPDCR2_TTRG, RSPI_FIFO_SIZE - 1);
-   311		conf16 |= FIELD_PREP(RSPI_SPDCR2_RTRG, 0);
-   312		writew(conf16, rspi->base + RSPI_SPDCR2);
-   313	
-   314		rzv2h_rspi_clear_fifos(rspi);
-   315	
-   316		list_for_each_entry(xfer, &message->transfers, transfer_list) {
-   317			if (!xfer->speed_hz)
-   318				continue;
-   319	
-   320			speed_hz = min(xfer->speed_hz, speed_hz);
-   321			bits_per_word = xfer->bits_per_word;
-   322		}
-   323	
-   324		if (speed_hz == U32_MAX)
-   325			return -EINVAL;
-   326	
-   327		rspi->bytes_per_word = roundup_pow_of_two(BITS_TO_BYTES(bits_per_word));
-   328		rzv2h_rspi_reg_rmw(rspi, RSPI_SPCMD, RSPI_SPCMD_SPB, bits_per_word - 1);
-   329	
-   330		rspi->freq = rzv2h_rspi_setup_clock(rspi, speed_hz);
-   331		if (!rspi->freq)
-   332			return -EINVAL;
-   333	
-   334		rzv2h_rspi_spe_enable(rspi);
-   335	
-   336		return 0;
-   337	}
-   338	
-
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 38a91bb5d4c7..5bb36c3b06b5 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -2344,15 +2344,22 @@ static void __init teardown_hyp_mode(void)
+ 	int cpu;
+ 
+ 	free_hyp_pgds();
++	/* Order matches the order of initialization init_hyp_mode() */
+ 	for_each_possible_cpu(cpu) {
++		if (!per_cpu(kvm_arm_hyp_stack_base, cpu))
++			continue;
+ 		free_pages(per_cpu(kvm_arm_hyp_stack_base, cpu), NVHE_STACK_SHIFT - PAGE_SHIFT);
++
++		if (!kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[cpu])
++			continue;
+ 		free_pages(kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[cpu], nvhe_percpu_order());
+ 
+ 		if (free_sve) {
+ 			struct cpu_sve_state *sve_state;
+ 
+ 			sve_state = per_cpu_ptr_nvhe_sym(kvm_host_data, cpu)->sve_state;
+-			free_pages((unsigned long) sve_state, pkvm_host_sve_state_order());
++			if (sve_state)
++				free_pages((unsigned long) sve_state, pkvm_host_sve_state_order());
+ 		}
+ 	}
+ }
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.50.0.714.g196bf9f422-goog
+
