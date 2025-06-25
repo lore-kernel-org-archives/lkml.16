@@ -1,267 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9B38130E58
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D5993074A9;
+	Wed, 25 Jun 2025 06:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750833788; cv=none; b=F12d2SWOk6hS5L5S5K7tKprUH5cdZqu5E1QhptXHTqmBYCnGAk/N9t0fqhqGSD9wuoHsY0XDswvE44WXZ9OOpMOktHDMOwMkGK3pwOFD8MCA3fQ42NmEvExi4AeLnA1vcLRwwcVbQM2XVcyPrV4wk/w1aoA2pPEpJapvrBtugrI=
+	t=1750833942; cv=none; b=CFg16p4Iv7xPpR1KHZPzgJXb9qNQXUaMlAadeG+Cl7ua1xtybYUj65KfLkGCV/p7txO2wjFaacxahra1FPLCGOWyvFkdxV+BXXj/YgjjVgclf7k++fjuTXW9J7pQ8pbYGS+ZNaS9o+H6ef9RMCvC/DggCVpft5qdwDojZHdPKIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750833788; c=relaxed/simple;
-	bh=stFldKNT49IrqhQYk2uT3dBVK5zbe0fYsGPIzjf0Ux4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r3ODmVa+8i/x1EdNROD5Yv9yBSrtcQhFOCnLkRvtVN6DNQd6j70rO9mCX8ORVOwdPtkqO7H8VtHpPSaFXSo3w+CcMBaxq/JP81U+t3IF606teaee4Y4CDzcIgxsmlpOxD6W20gG6GV/vWE2fYIW2w/ls9r8RGw2lv5+sJqY17mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5N87GGS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750833942; c=relaxed/simple;
+	bh=HT93cWViqpWS2aTEIOaemqPNEO6x5Lz/c8DBkSJlNvc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gG1AMEbgfuxeLWf43tQGmEai4lThU8/2XbiotBXmYf3hiRqUYLcMVE3pu+wHFVJlwwNbBu3brKjGEXMfPoUE4bGRuhbN2xeUTpUHG5aHUzt0OdHFATn2KV1ofvIjjvYcr/7bKypHafwhCPJA2x1oVsLtusqmiz/sG3XCTrO6Uk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=e358nW9t; arc=none smtp.client-ip=168.119.38.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5N87GGS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A6B0C4CEEA;
-	Wed, 25 Jun 2025 06:43:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750833788;
-	bh=stFldKNT49IrqhQYk2uT3dBVK5zbe0fYsGPIzjf0Ux4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=l5N87GGSBQiWORqxUyf57rO5Gt4hwsNQg5fwzmAECl8sWm+leZX+GY7gqB9JW4lw8
-	 1qQxQf2vXLOH1jLo5eEjyuA1B3nhBdFvbcWaWfD7EwnREvV6QnC/+XQunPzbf+I7mX
-	 3DBaQ2A5VSAAlP/8vY6pmDg8uUVaHdTeCIozpGtU53YhuUTdQKMjm7lBxnnENLNCUn
-	 qaO5UmW/9YAl7tkTI8l9jOdr492j3lNOokEWPijGsKYKJYz707qa92mCa4o3u0Bs7y
-	 DasfrHtOHQDQbZVjsYM5w1gOBuPXICKO/2vSybo0r6VYfAKQRhKqCiPeQdKjgH+myy
-	 /NAOnZQpyElnQ==
-Date: Wed, 25 Jun 2025 08:43:05 +0200
-From: Maxime Ripard <mripard@kernel.org>
-To: Anusha Srivatsa <asrivats@redhat.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Jessica Zhang <quic_jesszhan@quicinc.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Francesco Dolcini <francesco@dolcini.it>
-Subject: Re: [PATCH] panel/simple-simple: Identify simple DPI panels using
- .compatible field
-Message-ID: <20250625-meaty-bouncy-mastodon-c66bde@houat>
-References: <20250624-b4-simple-panel-regression-v1-1-a5adf92a7c17@redhat.com>
+	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="e358nW9t"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
+	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
+	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
+	Resent-Cc:Resent-Message-ID; bh=Hb6/3DRM/RbA1HkQbys/qwqnckKcr0/Zq2L66H0aGQc=;
+	t=1750833940; x=1752043540; b=e358nW9tFIllPYE4DtIDMP8qZ+4CTZzubZaeKOwJ6IVTQFm
+	WlavCfjjgrJbBATTWk5AsDCxVYXQE7ihQy7+DoF0whh7+Ty+4TDCdz4OegbzbS326RJJ2HaGS+7Cu
+	nbDQ/O+qJ7N3stbgZNIdwkzOR6vsJupxMonAiTWRZV6QubloMrqP/8A4TjDxR4B7Zas4byqOp+f1j
+	Halq7vPyzEg1NtG9qofpiK67Q3UBPFaiJAjo3u/oiGxLFoaD8eMETQVsYymRPJuTAjWAJ3jiaI/wG
+	DluX9dCdAVrJ1j7U15a+1UPw+Yz3sueg5VSHHEqousPWT7ARjnB1mOXHbphNmU2g==;
+Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.98.2)
+	(envelope-from <johannes@sipsolutions.net>)
+	id 1uUJsy-00000009lI7-2aWT;
+	Wed, 25 Jun 2025 08:45:32 +0200
+Message-ID: <4d62cb5cd352ffc7c23be18b208865798137b966.camel@sipsolutions.net>
+Subject: Re: [PATCH v3] wifi: mac80211: Prevent disconnect reports when no
+ AP is associated
+From: Johannes Berg <johannes@sipsolutions.net>
+To: Zhongqiu Han <quic_zhonhan@quicinc.com>, 
+	miriam.rachel.korenblit@intel.com
+Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzbot+5a7b40bcb34dea5ca959@syzkaller.appspotmail.com
+Date: Wed, 25 Jun 2025 08:45:31 +0200
+In-Reply-To: <d63e5f8a-8e0a-4619-98a8-e73c80e307cd@quicinc.com>
+References: <20250620032011.1102373-1-quic_zhonhan@quicinc.com>
+	 <a5078d3c7f3d1c2281a3f5a50386fdb7072935bb.camel@sipsolutions.net>
+	 <5e378fe7-90ec-4453-b549-1106f9d0cfef@quicinc.com>
+	 <89dd111db62029f1575f7a7113e2a0cb5a1a8d5f.camel@sipsolutions.net>
+	 <d63e5f8a-8e0a-4619-98a8-e73c80e307cd@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="a5dtqbbm3hgyj6vt"
-Content-Disposition: inline
-In-Reply-To: <20250624-b4-simple-panel-regression-v1-1-a5adf92a7c17@redhat.com>
+X-malware-bazaar: not-scanned
 
-
---a5dtqbbm3hgyj6vt
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] panel/simple-simple: Identify simple DPI panels using
- .compatible field
-MIME-Version: 1.0
-
-On Tue, Jun 24, 2025 at 03:13:05PM -0500, Anusha Srivatsa wrote:
-> Currently driver is checking for desc =3D=3D &panel_dpi to do the DPI
-> specific panel desc allocations. This looks hacky.
-
-I guess, but it's also the least of our concerns for Francesco regression.
-
-> The panel allocation in panel_simple_probe() breaks due to not having
-> the desc for DPI scenario.
-
-*Which* scenario? All of these panels are DPI panels.
-
-> This patch does the following:
+On Wed, 2025-06-25 at 11:58 +0800, Zhongqiu Han wrote:
 >=20
-> - Rename panel_dpi_probe() to panel_dpi_get_desc() and call it before
-> panel allocation. panel_dpi_get_desc() returns a panel desc unlike
-> panel_dpi_probe() which returned an int. This way driver has a known
-> connector type while allocating the panel.
-> - panel_dpi_get_desc() returns a panel desc
-> - Add a simple helper is_panel_dpi() to identify a simple DPI panel from
-> a simple panel based on .compatible field
+>  >>>
+> We have this WARN_ON since 687a7c8a7227
+> ("wifi: mac80211: change disassoc sequence a bit")
+>  >>>
 >=20
-> Fixes: de04bb0089a9 ("drm/panel/panel-simple: Use the new allocation in p=
-lace of devm_kzalloc()")
-> Suggested-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> Suggested-by: Maxime Ripard <mripard@kernel.org>
-> Cc: Francesco Dolcini <francesco@dolcini.it>
-> Cc: Luca Ceresoli <luca.ceresoli@bootlin.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Signed-off-by: Anusha Srivatsa <asrivats@redhat.com>
-> ---
-> Seeing the below trace due to the changes introduced by:
-> Commit de04bb0089a9 ("drm/panel/panel-simple: Use the new allocation in p=
-lace of devm_kzalloc()")
+> this WARN_ON was added in func ieee80211_set_disassoc() but not=20
+> ieee80211_report_disconnect()
+> I add WARN_ON on ieee80211_report_disconnect() on my patch v2,
 >=20
-> [   12.089274] ------------[ cut here ]------------
-> [   12.089303] WARNING: CPU: 0 PID: 96 at drivers/gpu/drm/bridge/panel.c:=
-377 devm_drm_of_get_bridge+0xac/0xb8
-> [   12.130808] Modules linked in: v4l2_jpeg pwm_imx27(+) imx_vdoa gpu_sch=
-ed panel_simple imx6_media(C) imx_media_common
-> (C) videobuf2_dma_contig pwm_bl gpio_keys v4l2_mem2mem fuse ipv6 autofs4
-> [   12.147774] CPU: 0 UID: 0 PID: 96 Comm: kworker/u8:3 Tainted: G       =
-  C          6.16.0-rc1+ #1 PREEMPT
-> [   12.157446] Tainted: [C]=3DCRAP
-> [   12.160418] Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-> [   12.166953] Workqueue: events_unbound deferred_probe_work_func
-> [   12.172805] Call trace:
-> [   12.172815]  unwind_backtrace from show_stack+0x10/0x14
-> [   12.180598]  show_stack from dump_stack_lvl+0x68/0x74
-> [   12.185674]  dump_stack_lvl from __warn+0x7c/0xe0
-> [   12.190407]  __warn from warn_slowpath_fmt+0x1b8/0x1c0
-> [   12.195567]  warn_slowpath_fmt from devm_drm_of_get_bridge+0xac/0xb8
-> [   12.201949]  devm_drm_of_get_bridge from imx_pd_probe+0x58/0x164
-> [   12.207976]  imx_pd_probe from platform_probe+0x5c/0xb0
-> [   12.213220]  platform_probe from really_probe+0xd0/0x3a4
-> [   12.218551]  really_probe from __driver_probe_device+0x8c/0x1d4
-> [   12.224486]  __driver_probe_device from driver_probe_device+0x30/0xc0
-> [   12.230942]  driver_probe_device from __device_attach_driver+0x98/0x10c
-> [   12.237572]  __device_attach_driver from bus_for_each_drv+0x90/0xe4
-> [   12.243854]  bus_for_each_drv from __device_attach+0xa8/0x1c8
-> [   12.249614]  __device_attach from bus_probe_device+0x88/0x8c
-> [   12.255285]  bus_probe_device from deferred_probe_work_func+0x8c/0xcc
-> [   12.261739]  deferred_probe_work_func from process_one_work+0x154/0x2dc
-> [   12.268371]  process_one_work from worker_thread+0x250/0x3f0
-> [   12.274043]  worker_thread from kthread+0x12c/0x24c
-> [   12.278940]  kthread from ret_from_fork+0x14/0x28
-> [   12.283660] Exception stack(0xd0be9fb0 to 0xd0be9ff8)
-> [   12.288720] 9fa0:                                     00000000 0000000=
-0 00000000 00000000
-> [   12.296906] 9fc0: 00000000 00000000 00000000 00000000 00000000 0000000=
-0 00000000 00000000
-> [   12.305089] 9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> [   12.312050] ---[ end trace 0000000000000000 ]---
-> ---
->  drivers/gpu/drm/panel/panel-simple.c | 38 +++++++++++++++++++++---------=
-------
->  1 file changed, 22 insertions(+), 16 deletions(-)
+> It was precisely because of the WARN_ON at 687a7c8a7227 that caused
+> ieee80211_set_disassoc to return early(when panic_on_warn is not
+> enabled). As a result, ieee80211_set_disassoc failed to properly
+> initialize frame_buf. Then, when ieee80211_report_disconnect was called,
+> it ended up using an uninitialized value.
+
+Sure, but now you're talking about something that's not supposed to
+happen. The WARN there means "someone made a mistake in this code". I'm
+not even super concerned about using uninitialised memory in that case
+although I agree we should avoid it, so the trivial fix for the data
+leak, without making the logic more complex, would be to just initialise
+the data to zero. Not to fix the syzbot issue (which btw is already no
+longer happening according to the dashboard), but to fix the potential
+data leak.
+
+Since ieee80211_set_disassoc() returns early only with a WARN, with
+syzbot you won't ever get to the uninitialized memory use though, which
+is what I was asking.
+
+> The bug was triggered as follow:
 >=20
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel=
-/panel-simple.c
-> index 0a3b26bb4d731c54614e24e38018c308acd5367a..2e6fd545100388a9d53183a56=
-21e7b8fdb4148ae 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -26,6 +26,7 @@
->  #include <linux/i2c.h>
->  #include <linux/media-bus-format.h>
->  #include <linux/module.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
-> @@ -432,8 +433,7 @@ static const struct drm_panel_funcs panel_simple_func=
-s =3D {
-> =20
->  static struct panel_desc panel_dpi;
-> =20
-> -static int panel_dpi_probe(struct device *dev,
-> -			   struct panel_simple *panel)
-> +static struct panel_desc *panel_dpi_get_desc(struct device *dev)
->  {
->  	struct display_timing *timing;
->  	const struct device_node *np;
-> @@ -445,17 +445,17 @@ static int panel_dpi_probe(struct device *dev,
->  	np =3D dev->of_node;
->  	desc =3D devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
->  	if (!desc)
-> -		return -ENOMEM;
-> +		return NULL;
-> =20
->  	timing =3D devm_kzalloc(dev, sizeof(*timing), GFP_KERNEL);
->  	if (!timing)
-> -		return -ENOMEM;
-> +		return NULL;
-> =20
->  	ret =3D of_get_display_timing(np, "panel-timing", timing);
->  	if (ret < 0) {
->  		dev_err(dev, "%pOF: no panel-timing node found for \"panel-dpi\" bindi=
-ng\n",
->  			np);
-> -		return ret;
-> +		return NULL;
->  	}
-> =20
->  	desc->timings =3D timing;
-> @@ -473,9 +473,7 @@ static int panel_dpi_probe(struct device *dev,
->  	/* We do not know the connector for the DT node, so guess it */
->  	desc->connector_type =3D DRM_MODE_CONNECTOR_DPI;
-> =20
-> -	panel->desc =3D desc;
-> -
-> -	return 0;
-> +	return desc;
->  }
-> =20
->  #define PANEL_SIMPLE_BOUNDS_CHECK(to_check, bounds, field) \
-> @@ -570,6 +568,15 @@ static int panel_simple_override_nondefault_lvds_dat=
-amapping(struct device *dev,
->  	return 0;
->  }
-> =20
-> +static bool is_panel_dpi(struct device *dev)
-> +{
-> +	const struct of_device_id *match;
-> +
-> +	match =3D of_match_device(dev->driver->of_match_table, dev);
-> +
-> +	return strcmp(match->compatible, "panel_dpi");
+> Commit 687a7c8a7227 ("wifi: mac80211: change disassoc sequence a bit")=
+=20
+> introduced a code path where ieee80211_set_disassoc may return early if=
+=20
+> WARN_ON(!ap_sta) is triggered(panic_on_warn is not enabled). In this=20
+> case, frame_buf is not initialized.
 
-That's not the right compatible...
+No ... that can't be right, we _know_ that syzbot enables panic_on_warn.
+So this particular bug report from syzbot is definitely _not_ triggered
+this way.
 
-> +}
-> +
->  static int panel_simple_probe(struct device *dev, const struct panel_des=
-c *desc)
->  {
->  	struct panel_simple *panel;
-> @@ -579,6 +586,10 @@ static int panel_simple_probe(struct device *dev, co=
-nst struct panel_desc *desc)
->  	u32 bus_flags;
->  	int err;
-> =20
-> +	/* Is this simple panel a DPI panel */
-> +	if (is_panel_dpi(dev))
-> +		desc =3D panel_dpi_get_desc(dev);
-> +
+> Later, when ieee80211_report_disconnect is called, it attempts to use=20
+> the uninitialized frame_buf, resulting in a bug.
 
-What happens if panel_dpi_get_desc fails?
+I agree this is a bug but it's not one that requires major surgery to
+fix - the only bug here is that if we already have another bug that
+leads to the WARN, we can leak stack data to userspace. We can simply
+initialise the data to avoid that. I'm not worried about reporting a bad
+thing to userspace if we already had a WARN indicating some _other_ bug
+that we should fix.
 
->  	panel =3D devm_drm_panel_alloc(dev, struct panel_simple, base,
->  				     &panel_simple_funcs, desc->connector_type);
->  	if (IS_ERR(panel))
-> @@ -611,16 +622,11 @@ static int panel_simple_probe(struct device *dev, c=
-onst struct panel_desc *desc)
->  			return -EPROBE_DEFER;
->  	}
-> =20
-> -	if (desc =3D=3D &panel_dpi) {
-> -		/* Handle the generic panel-dpi binding */
-> -		err =3D panel_dpi_probe(dev, panel);
-> -		if (err)
-> -			goto free_ddc;
-> -		desc =3D panel->desc;
-> -	} else {
-> +	if (is_panel_dpi(dev))
-> +		goto free_ddc;
-> +	else
 
-So, if the panel is a panel-dpi driver, you *always* return an error
-now? How can that possibly work?
+I'll happily take a patch that says "initialise the frame buffer so that
+on the off chance of other bugs, we don't leak stack data to userspace",
+but I do think that's about all we need at this point. The syzbot report
+is already stale and no longer happening anyway. If there is another
+report about the WARN_ON after commit ccbaf782390d ("wifi: mac80211:
+rework the Tx of the deauth in ieee80211_set_disassoc()"), we need to
+see how it's possible that we get into the WARN case, but I haven't seen
+such a report.
 
-I'll send some fixes.
-Maxime
-
---a5dtqbbm3hgyj6vt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaFuadQAKCRAnX84Zoj2+
-dl84AYCqJei6atsyjmw79uhkqMbVAyWzfNg2iEUdmJc49g3Frd7nhG4ktwv3Dqqe
-dEyso/MBegLmESDZ/CNvk/FWZqnUDvsq2yhcuTKNSE/OT4piIsXabEj804QQWrKa
-lGquCJzjbA==
-=jCUg
------END PGP SIGNATURE-----
-
---a5dtqbbm3hgyj6vt--
+johannes
