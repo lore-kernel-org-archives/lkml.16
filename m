@@ -1,402 +1,296 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CAC82DD61D;
-	Wed, 25 Jun 2025 23:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750894053; cv=fail; b=ejA//Kxo6eciy9TXHuyr8XAj+hzwJC+K2Ldm+U8BMHg25/v8rz4da/WBD4BfiB/AptJDi5xc4xKK9vc3/mZKJ8wtSW2BsXz1o2w9fXibZcMjdTK+S9KLIuIYmw3kYBowTbd31mqaLh8T65i9NGi+1BZxbGviuooybqVGgn/JUFo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750894053; c=relaxed/simple;
-	bh=P6x1fqACzvHtXoTz/PAu0k1MzhsFM7A8Vv2mCfdAf5w=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=lT725ya/1eWG+ODjg9CeukuDdN6Y7rU0QUQXFz/jBn2uE7rjJX3o7IyaZ8ysVKpuxhJG2uD6zR1hShdCk3DTamtKjFVJZK5zxk8pfrn92hgkm4SunEcdwzn9Tm6ymNFmyMQ3e1IRlscCk0qqQW6+t3zcdmlc077lB7b5c7mKEAg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lsJDVd6A; arc=fail smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lsJDVd6A"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750894050; x=1782430050;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=P6x1fqACzvHtXoTz/PAu0k1MzhsFM7A8Vv2mCfdAf5w=;
-  b=lsJDVd6ABrqloKNHth62HhRbqNl+sidJ7WEOe3ZrUHTTpHLaVVNixV2j
-   VoZIfoRF7v48GlxJEOcxcwQu80qYekSk03dmpi0rWFZ5DEBDMvRjAbgGx
-   PUfjINXvqRQTsbtLL6nzcqVI+h7KAf5mBWrCl0F3MZkiPKjM25gIpNC6U
-   mIpvqk23UGNLYAH37dHvVInC2mo7AcKPQL4caSwbWfCi3yh27ALzcX3rc
-   qA12bua2syfNUSS9ck2FzrE+6jJ4r6+rwzBuztB/I2YXBfpak0vMzNQKX
-   ewa7a2hZ2cZX3buDLl1sjgJWcos9AjE4Q8zdfNCISyR6a5Fy0iuuxJBzu
-   g==;
-X-CSE-ConnectionGUID: JvSN/DM+TSmTjA5hB9vGiA==
-X-CSE-MsgGUID: gF+3kmKYTFeh1inUpcR0dA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53249137"
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="53249137"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 16:27:28 -0700
-X-CSE-ConnectionGUID: D1sz8hz2R3+1FR4Gv1Vhqg==
-X-CSE-MsgGUID: S0kaQlHaTpuMtU4gq/k1Tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="151875275"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa006.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 16:27:28 -0700
-Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 25 Jun 2025 16:27:27 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 25 Jun 2025 16:27:27 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (40.107.223.71)
- by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 25 Jun 2025 16:27:27 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tewyKbwUEDj5Hx+1bvCwOECGtEme4JDuTles63kFF+rfWZJdglCIo8cAZjB9sJrziGLVoQx0U4eUOK0fUODFol/aQyegrYkyrdIeJ45OCNU42ohSFe85Kj3KDrRU/Ok5V+7HDtR6EKRG0oy272MaUxOWhwQOErEUk/8faYovvcIjINLTk/Erytwleo9JmP6fHqVFjDD4Mya2jztaf3L8/kc2BS6BOsHTCkEbF2MFSlxNaC6c/cuvVXXpu6LIktHiT37RTujPQEuq0WBozaUQmWITUuN1EOZ4bv6WbgXFnlrpK+lRTzuHuWzz6wEyrECJEmYG9D6leStjP4qnZWRtfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=S994FPaWfwp6o7ITujvfgBpPOru6v3Viq0Q/yYXMOew=;
- b=WjwCkgcH3XzYhwJ3LOcW4iZE3TIcQqNgUkw6YCwklkWXiexrfzv3FfVd6RxZ+mNlYdjuoYlzoeK6wLTy05fVnKjpHuRjTbn+UA273dlDARXJ/OqPgJCggeK6TPAqpMBZp49CAklxWTRMqf2UAt5eahmL72cVn7aBpJXVvXamty1ovme7x2gKCxMkvB8QM61d3lzgC4z+8yKBeYseuN51Ql5UUGzLUVOtQHYLAptx0D8oG+WlBvyzPMCBhMPv4tid2g8YByyVegcqXdOsXCBgmqdKuCYlfiPt3sFumnX1oBxn+ndR3YOaeu39e1U2aeXy1+DrgSOdr/iH+MZwjvrLtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com (2603:10b6:a03:4d2::10)
- by DM6PR11MB4529.namprd11.prod.outlook.com (2603:10b6:5:2ae::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.17; Wed, 25 Jun
- 2025 23:27:11 +0000
-Received: from SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf]) by SJ2PR11MB7573.namprd11.prod.outlook.com
- ([fe80::61a:aa57:1d81:a9cf%6]) with mapi id 15.20.8792.034; Wed, 25 Jun 2025
- 23:27:11 +0000
-Message-ID: <2313a148-2946-4d33-9062-852dc56e16dc@intel.com>
-Date: Wed, 25 Jun 2025 16:27:08 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 28/32] fs/resctrl: Introduce mbm_L3_assignments to
- list assignments in a group
-To: Babu Moger <babu.moger@amd.com>, <corbet@lwn.net>, <tony.luck@intel.com>,
-	<Dave.Martin@arm.com>, <james.morse@arm.com>, <tglx@linutronix.de>,
-	<mingo@redhat.com>, <bp@alien8.de>, <dave.hansen@linux.intel.com>
-CC: <x86@kernel.org>, <hpa@zytor.com>, <akpm@linux-foundation.org>,
-	<rostedt@goodmis.org>, <paulmck@kernel.org>, <thuth@redhat.com>,
-	<ardb@kernel.org>, <gregkh@linuxfoundation.org>, <seanjc@google.com>,
-	<thomas.lendacky@amd.com>, <pawan.kumar.gupta@linux.intel.com>,
-	<manali.shukla@amd.com>, <perry.yuan@amd.com>, <kai.huang@intel.com>,
-	<peterz@infradead.org>, <xiaoyao.li@intel.com>, <kan.liang@linux.intel.com>,
-	<mario.limonciello@amd.com>, <xin3.li@intel.com>, <gautham.shenoy@amd.com>,
-	<xin@zytor.com>, <chang.seok.bae@intel.com>, <fenghuay@nvidia.com>,
-	<peternewman@google.com>, <maciej.wieczor-retman@intel.com>,
-	<eranian@google.com>, <linux-doc@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <cover.1749848714.git.babu.moger@amd.com>
- <ee123e224ae4b7869378316df0da4ff00a19d093.1749848715.git.babu.moger@amd.com>
-From: Reinette Chatre <reinette.chatre@intel.com>
-Content-Language: en-US
-In-Reply-To: <ee123e224ae4b7869378316df0da4ff00a19d093.1749848715.git.babu.moger@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4PR03CA0356.namprd03.prod.outlook.com
- (2603:10b6:303:dc::31) To SJ2PR11MB7573.namprd11.prod.outlook.com
- (2603:10b6:a03:4d2::10)
+Received: from kanga.kvack.org (kanga.kvack.org [205.233.56.17])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91B952DD5FE;
+	Wed, 25 Jun 2025 23:28:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.233.56.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750894113; cv=none; b=tJHpoS0wg0shGbWFrKaDYC1ahp2IK/fbj3PVTJUsFvA/cr4j8LxE6haUdlYj2qa5PSKRHpGfqqMnqAgGhpL3fDBjdUnM3F2p3VAf019NYaOA8cLRKOG070eeUlKGkhdDMT4eZ8ZLsXahcctMFVwu+pR4dw2S09kHBn2t2IpDqcQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750894113; c=relaxed/simple;
+	bh=VACyL9SVZH+oXMgnnFUVknN0C0rVL/YKqH0xVwx4xpI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GLgBs4jbUS5Pw6NmekQKx2+3E4jIt/NIuw3DbHFoIOefRjW5+jek+TkK9VZSnxWQh+aa0GfXw0XMB9eozsvrYw+hELZHYUEeoRz0fFOcNrVT9lKxnAHzPDTlpMQgLnMXhcGYQYA7R+AfC192mBSg6V44aHJLsaU9HWRli0W+UGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kvack.org; spf=pass smtp.mailfrom=kvack.org; arc=none smtp.client-ip=205.233.56.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kvack.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kvack.org
+Received: by kanga.kvack.org (Postfix, from userid 63042)
+	id 0A1446B00F8; Wed, 25 Jun 2025 19:26:53 -0400 (EDT)
+Date: Wed, 25 Jun 2025 19:26:53 -0400
+From: Benjamin LaHaise <bcrl@kvack.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: pratyush@kernel.org, jasonmiu@google.com, graf@amazon.com,
+	changyuanl@google.com, rppt@kernel.org, dmatlack@google.com,
+	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org,
+	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com,
+	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org,
+	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr,
+	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com,
+	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com,
+	vincent.guittot@linaro.org, hannes@cmpxchg.org,
+	dan.j.williams@intel.com, david@redhat.com,
+	joel.granados@kernel.org, rostedt@goodmis.org,
+	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn,
+	linux@weissschuh.net, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org,
+	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com,
+	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+	hpa@zytor.com, rafael@kernel.org, dakr@kernel.org,
+	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com,
+	myungjoo.ham@samsung.com, yesanishhere@gmail.com,
+	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com,
+	aleksander.lobakin@intel.com, ira.weiny@intel.com,
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de,
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com,
+	stuart.w.hayes@gmail.com, ptyadav@amazon.de, lennart@poettering.net,
+	brauner@kernel.org, linux-api@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v1 00/32] Live Update Orchestrator
+Message-ID: <20250625232653.GJ369@kvack.org>
+References: <20250625231838.1897085-1-pasha.tatashin@soleen.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR11MB7573:EE_|DM6PR11MB4529:EE_
-X-MS-Office365-Filtering-Correlation-Id: 85133f13-940a-451f-00c1-08ddb43fcf5d
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?dHljbkJWSU4xc0laRU54aDY2dVpaWjR3Y0k0M0trUDB3VUdEUERMTFNsOG9p?=
- =?utf-8?B?TnpGdW9pbWdCbzlpa0RDZWdvTEFuamhadWgzN0hFbW1QL0lxNm10U0xXdTdt?=
- =?utf-8?B?T2pPNXpxVVhYcXB6YjlQYzJQN3pna1ViUTJ0MmFiOG5DaXNZYTl2a3IrdnlU?=
- =?utf-8?B?YmxzNFpHWXp1dUlFN3NaczBudUJQTzJBYUcxb2RKN3oxdXJaWXRteXkva1R2?=
- =?utf-8?B?YVVQcmRTVXlKU20zNTErdWxwbDF5RWJOVTIyNGFqN0FMUmtzOUp4N0hYRnQ2?=
- =?utf-8?B?QTFmVCs4aURndjFMOThNclhvUC9MTEQ4d2l6VHV6c01ic3Rub3N1UUNVRmQ3?=
- =?utf-8?B?L2U5Mnlpdk5sM0xxVmlwWWZZckZ3ZjFGY2dqN2hudnJDeVNQeHJRT244RGFm?=
- =?utf-8?B?UTZyby9wc1R4cEJTYjVHZjdyVmpVWUJDMVJDeWVwcXpiRXVPZDZKUXh4cVV6?=
- =?utf-8?B?YnpvZEdhc053L29VT3NzZk1QV2o1RWxET0kvTVlNTE5LMklQWUs1YldiYkV1?=
- =?utf-8?B?aDlTdGtUeVNSaEZPQmhNYWZDUkNBSk5Xd2lCWVhNZmRRcW5WZVFQNGowMkxM?=
- =?utf-8?B?QVRaaFJ5bEs5YXhBWmVLVTdJQjR0KzBYakY4bUhCeGlmYkt2TGk3Rk5zRklM?=
- =?utf-8?B?bnVrVDZTcFAvb2U2WDBiUUtIWG9kSHJPZEtMclBsaWgxRjR1RXNJVE1McVAw?=
- =?utf-8?B?c1ZGbjVweGRGTmtjTTFTa3ZIYWFyK2xIbG9oZXZacFFleGFBTzRKTllEUm1H?=
- =?utf-8?B?c1RYSnZ4aS92ZTBKZ2FsMFU1eXcyNEpRQkt0M2xjVjJ3c2ZkVUlRVlJsRXRn?=
- =?utf-8?B?SG5rN08ySHdTRElhT1NtN3AzU3RLR3hYdytFc0xrMWhZKzJMNVJrSEpROGJW?=
- =?utf-8?B?YVhpNGl5MmpiWGdkUU5xSGFDTVdzb045MDB2OURrV3BXSXpIQ2RPVTZ2WW5U?=
- =?utf-8?B?eWJUek1KR2dDeHM0K21DOWsyMWpHUG14VXVCUzRlQ1VHbDM2ZUtqeDgxc0RC?=
- =?utf-8?B?MWNqZVNoTlYyVmQzWStac1RYZ3c3QWhtdVliM2lHQWNSOWpNL2FlVTRra3pn?=
- =?utf-8?B?V09qcDZIYXIvbjNpVHhvYkN1Zlo4akhJdUIwZHk3T2ZXbGJDZEpkSFk4dlNJ?=
- =?utf-8?B?eC9pNUt2Y0x0WEVSKzlnbitMQXR6bk1ueTl1SFBjSG5rb091ai9CSEtvVDVt?=
- =?utf-8?B?a0g1d21neUc4ZWg1TW56SEw3WFlpZzVzajdJalNNQ1ZGek1iekxsSjdIWkc1?=
- =?utf-8?B?ZVVXZkRISzNKUnB2TzM1YmwyWXAvZnp2c05KcjFVaGQrNVVnaDdXR2MvczRE?=
- =?utf-8?B?Nnh5TTR6M2hKZGE1a2hwOWdIYUVNSTNVcW9JWFdJZjNac09HWnFsMUZoRVhm?=
- =?utf-8?B?Q0hQQklCdE12eG4wWEdoZ1JBczV4RXA4QTRycjR5ODdnMVdLbHBCcVRoajd2?=
- =?utf-8?B?dkx2RnlKQlRyMHRmOFF4NmpMQU1sN1dDVWpnejBQZnlGbWVkb0IveVpidjRI?=
- =?utf-8?B?TjJMc2psbktVNFZuWU5rU0NwV1NhSXkxcVJDMmNiKzMwZ0tTVlFxTjhGcUJi?=
- =?utf-8?B?TkE0b01IWVoyUnh6cVNGdGVIZDFUVkF3Q3ZVSEl6dXZlWmNpMU1jbXBVeEF5?=
- =?utf-8?B?WW9BSytlNUxmYjBRMnRPRS9GVVlmNXJjbGxhbitFUnpvTkJ6WGd2VmtkVGFs?=
- =?utf-8?B?NU1tQlZXWFJLcFIzaytiWGRxN0xSOXluWnZIRG02TlFQVURkOUdWV3JIMk0v?=
- =?utf-8?B?c281WTVRQ3dWYXVDZ003cHoraDg3UmpzTTdOU0MrWTdDNGNUdDJMMVZNMGRl?=
- =?utf-8?Q?MNJJKFUNQUCiJgCmMnOHJtBQL1BqgU4tyZyH4=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB7573.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SXBpaElDb2M1YjZ0YVZXd0h2WnpQZ245dEo2ZTZtck1BZU1vTm10KzV2QzMw?=
- =?utf-8?B?Q1JrWGNwQjRSSFd0THpsMUdVbGYzWUNOTyt2OTRRWVJSZDZ3QzZOOGVKZmRN?=
- =?utf-8?B?Y0FIeWhYNkhYYVRDVjVYU3BvZ3FhaU5TUW5lam9PaEh5RGtZczFQZTJFYkF6?=
- =?utf-8?B?ais5ZXQvOWFUUXdRWTJ4aEhIVWVaeEJreDBTckkrMjVBdElzaGV6K256TlRJ?=
- =?utf-8?B?UUYxWTU2SmowRjNmTkU0eTZycVk5MFRTOEtTM2R5RHFZM2d2Vk53TEpJVElP?=
- =?utf-8?B?QUVqUDNmRFhuU1oramNNVVlLcUUvMG81Z1RGODdERUpaSTRJcmN5OVRhU1BU?=
- =?utf-8?B?QWJONkJIZm9WdEtBRi9FL2htTHNkQUIrZ3I3eTJsMzNQZzB3SHdpbXk0dmdy?=
- =?utf-8?B?Vk9USWZrTmNETGFRMHpLZGlMd2lKRDJ3RUxuRkhCMjlremVsUnNCSk9HMmFG?=
- =?utf-8?B?UGZ5RUdoOFNzVXJoeXIrWmh3MG9MUDZva1p6SGQvNFpuQVFVUExLdGR2ajFZ?=
- =?utf-8?B?UDBJOGozMDFyTS9IYjdtczB2NWxpWEI3b295SWttOXQ5RFdNaENCRVVWc3lC?=
- =?utf-8?B?dTZzWDhrZjhTYm1MOGpBZGNGZlRJM0ZNQ0RTN2VwcCtBOGVOcFRyTVFoMk5W?=
- =?utf-8?B?dkhLbnZESDB4TWR5ODZOaW9OZkNJZ3ZjN2szR1NjV3Vxdkdnd2tZRGNnOTZh?=
- =?utf-8?B?YzJRQzk3a2VpQ2NJRHcxZDJPcDNHczhYb0tISUtZWm9RaVk4M3NxbUx4V3dO?=
- =?utf-8?B?V2pvV2E1eHRGcWdPR2FJanRmaDYzUElINFN5SVFoUGFlRHg0dGREY1NkRkh0?=
- =?utf-8?B?MUxPLzFqRGZNZjRDMi9MdVJGWjlGZit0ZHZZRkljYWFaZElYeUxpU2NoSk1o?=
- =?utf-8?B?MkdrQlp1TzJ0MkJUNjBLR2k0TFMvM3grSkZKcDFZazFFK0pGbjIwZFJDY1B3?=
- =?utf-8?B?UXBVWVVCMkZ2dlpjdExHTC8rSk9yRmhaTFVsQXpLQ3pMTkp6R2ZBbmhWako3?=
- =?utf-8?B?aVpKK0MrQWxtcllHbGhxYXBIUzdlY0pTdHBpa1k5Z3hURHFKaitrQVlkN1Vs?=
- =?utf-8?B?cHJKcUVsRWxTZHRUV2F1bDlleHlJQmlyenVCckNVdU5QN0xWMFZZbTJmQWtD?=
- =?utf-8?B?VndKazVEdnRwVEJJaXdINlU4Wm9xTGJOd2dKZ3NDOVVBY3VCVXFRY0hXTDlr?=
- =?utf-8?B?ZW1ESVVnK1IxT0U4azl1dE56VG9nRXF0TkJIeG9KNmVWN0JibWJVeW9jN25k?=
- =?utf-8?B?WnV3OTk3cjNGUjE0cE5DOUhsQjFIRWE4Q2p6K2NvazR0azhGZFhIejgvVEVQ?=
- =?utf-8?B?cHNrNHFWc2xnWXhZRTh1RzZycHhLakhYYStXSmZWS1E1YmprbG0xc3I5NEZk?=
- =?utf-8?B?Y2VVREQrSUhuOHdFSjZ4K09ZMm1aU0t1VTRTVjltajg4OVZ6eGZOMGtyZStB?=
- =?utf-8?B?d3BlTTkxdERXQXVMV3BhL2d6Y1JwcFZUbUR0d2cwYzlLY0VuRHpiMkk2enpF?=
- =?utf-8?B?VkZ6Y1pWdEdGeEthaENsM1dpVENiNGY5MVJZYTlkdGxLKzNJRG5ab3VLQjFj?=
- =?utf-8?B?amN6TnhxelI1Q3daSzhvbTZVYXZBR3pHbDBCa3B3NmhoRVpTZW1ZS3RUR210?=
- =?utf-8?B?QXV5WG1NcWYvVWR1Ui9YVmtqQ2RDZkVLQVhUYXR3TzQxamp1REltZXNSQkFi?=
- =?utf-8?B?ZUw1TEZUc1UxeHpibWJ6Z0pGWHVlT0VsMjNzOEhTejJJTE5Zb3RzeXB1UEdR?=
- =?utf-8?B?RzEyOFFZNU5aQ2N1S3Q1Y05BRk43Q2QxK3JIQUhKS29YS0RWbi9BOHZ4NE16?=
- =?utf-8?B?Z0FYN0RZSXk3YVJ3Ym15N3k5dTJXUDdHSXBRSk8yV213NDdhUTM3MFdHMTNx?=
- =?utf-8?B?U1BPTjlmU0grdjIxQkFZbzZUTEVSWDhGUEVDTVM5ZnhLRE5jeU5wYUdUZmtj?=
- =?utf-8?B?Yko4TDRRRWpUWmhIREQ5cVJ1YlAzd0VmN0w4YVc3Nkk0VCs4aVgzclJsbWIy?=
- =?utf-8?B?RVpWUGw2Zk9SbGErVnk3dy9iMHZXVzhKQnZJUi84UjYzc3o1L050alBaYk9r?=
- =?utf-8?B?VkM4QWFZaFhZZzZqTmxXeFNuSnZmanc5eSttckNWWWtjdnFPeHExQnB3TWtV?=
- =?utf-8?B?TVpaZ2JZMU1LcXIrbmc0QzArQkdicjFqTmhBM1lyM1RmVlhvbEJwU285NFdE?=
- =?utf-8?B?amc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85133f13-940a-451f-00c1-08ddb43fcf5d
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB7573.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 23:27:11.2366
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 09gaX1RSckO1k31e7NJl5EaqUqK9GtopYS5kfr9VVujoUfu1q4+XWrr5jxF9AZouZqFVFmVs/Js478EZOJrntAfvAm9rnFZFd2t/9vRxCF8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4529
-X-OriginatorOrg: intel.com
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625231838.1897085-1-pasha.tatashin@soleen.com>
+User-Agent: Mutt/1.4.2.2i
 
-Hi Babu,
+FYI: Every one of your emails to the list for this series was bounced by
+all the recipients using @gmail.com email addresses.
 
-On 6/13/25 2:05 PM, Babu Moger wrote:
-> Introduce the interface to display the assignment states for resctrl group
+		-ben (owner-linux-mm)
 
-"Introduce the mbm_L3_assignments resctrl file associated with
-CTRL_MON an MON resource groups to display the counter assignment
-states of the resource group when "mbm_event" counter assignment
-mode is enabled."
-
-> when "mbm_event" mdoe is enabled.
-
-"mdoe" -> "counter assignment mode"
-
+On Wed, Jun 25, 2025 at 11:17:47PM +0000, Pasha Tatashin wrote:
+> This series introduces the LUO, a kernel subsystem designed to
+> facilitate live kernel updates with minimal downtime,
+> particularly in cloud delplyoments aiming to update without fully
+> disrupting running virtual machines.
 > 
-> The list is displayed in the following format:
-> <Event>:<Domain id>=<Assignment state>
-
-Similar to previous note, please add syntax for multiple domains to avoid
-it appearing that each domain is on one line.
-
+> This series builds upon KHO framework by adding programmatic
+> control over KHO's lifecycle and leveraging KHO for persisting LUO's
+> own metadata across the kexec boundary. The git branch for this series
+> can be found at:
 > 
-> Event: A valid MBM event listed in
->        /sys/fs/resctrl/info/L3_MON/event_configs directory.
+> https://github.com/googleprodkernel/linux-liveupdate/tree/luo/v1
 > 
-> Domain ID: A valid domain ID.
+> Changelog from rfc-v2:
+> - Addressed review comments from Mike Rapoport, Pratyush Yadav,
+>   David Matlack
+> - Moved everything under kernel/liveupdate including KHO.
+> - Added a number fixes to KHO that were discovered.
+> - luo_files is not a registred as a subsystem.
+> - Added sessions support to preserved files.
+> - Added support for memfd (Pratyush Yadav)
+> - Added libluo (proposed as RFC) (Pratyush Yadav)
+> - Removed notifiers from KHO (Mike Rapoport)
 > 
-> The assignment state can be one of the following:
+> What is Live Update?
+> Live Update is a kexec based reboot process where selected kernel
+> resources (memory, file descriptors, and eventually devices) are kept
+> operational or their state preserved across a kernel transition. For
+> certain resources, DMA and interrupt activity might continue with
+> minimal interruption during the kernel reboot.
 > 
-> _ : No counter assigned.
+> LUO provides a framework for coordinating live updates. It features:
+> State Machine: Manages the live update process through states:
+> NORMAL, PREPARED, FROZEN, UPDATED.
 > 
-> e : Counter assigned exclusively.
+> KHO Integration:
 > 
-> Example:
-> To list the assignment states for the default group
-> $ cd /sys/fs/resctrl
-> $ cat /sys/fs/resctrl/mbm_L3_assignments
-> mbm_total_bytes:0=e;1=e
-> mbm_local_bytes:0=e;1=e
+> LUO programmatically drives KHO's finalization and abort sequences.
+> KHO's debugfs interface is now optional configured via
+> CONFIG_KEXEC_HANDOVER_DEBUG.
 > 
-> Signed-off-by: Babu Moger <babu.moger@amd.com>
-> ---
-> v14: Added missed rdtgroup_kn_lock_live on failure case.
->      Updated the user doc resctrl.rst to clarify counter assignments.
->      Updated the changelog.
+> LUO preserves its own metadata via KHO's kho_add_subtree and
+> kho_preserve_phys() mechanisms.
 > 
-> v13: Changelog update.
->      Few changes in mbm_L3_assignments_show() after moving the event config to evt_list.
->      Resolved conflicts caused by the recent FS/ARCH code restructure.
->      The rdtgroup.c/monitor.c files have been split between the FS and ARCH directories.
+> Subsystem Participation: A callback API liveupdate_register_subsystem()
+> allows kernel subsystems (e.g., KVM, IOMMU, VFIO, PCI) to register
+> handlers for LUO events (PREPARE, FREEZE, FINISH, CANCEL) and persist a
+> u64 payload via the LUO FDT.
 > 
-> v12: New patch:
->      Assignment interface moved inside the group based the discussion
->      https://lore.kernel.org/lkml/CALPaoCiii0vXOF06mfV=kVLBzhfNo0SFqt4kQGwGSGVUqvr2Dg@mail.gmail.com/#t
-> ---
->  Documentation/filesystems/resctrl.rst | 28 ++++++++++++++
->  fs/resctrl/monitor.c                  |  1 +
->  fs/resctrl/rdtgroup.c                 | 54 +++++++++++++++++++++++++++
->  3 files changed, 83 insertions(+)
+> File Descriptor Preservation: Infrastructure
+> liveupdate_register_filesystem, luo_register_file, luo_retrieve_file to
+> allow specific types of file descriptors (e.g., memfd, vfio) to be
+> preserved and restored.
 > 
-> diff --git a/Documentation/filesystems/resctrl.rst b/Documentation/filesystems/resctrl.rst
-> index f94c7c387416..a232a0b1356c 100644
-> --- a/Documentation/filesystems/resctrl.rst
-> +++ b/Documentation/filesystems/resctrl.rst
-> @@ -516,6 +516,34 @@ When the "mba_MBps" mount option is used all CTRL_MON groups will also contain:
->  	/sys/fs/resctrl/info/L3_MON/mon_features changes the input
->  	event.
->  
-> +"mbm_L3_assignments":
-> +	Exists when "mbm_event" mode is supported and lists the counter
+> Handlers for specific file types can be registered to manage their
+> preservation and restoration, storing a u64 payload in the LUO FDT.
+> 
+> User-space Interface:
+> 
+> ioctl (/dev/liveupdate): The primary control interface for
+> triggering LUO state transitions (prepare, freeze, finish, cancel)
+> and managing the preservation/restoration of file descriptors.
+> Access requires CAP_SYS_ADMIN.
+> 
+> sysfs (/sys/kernel/liveupdate/state): A read-only interface for
+> monitoring the current LUO state. This allows userspace services to
+> track progress and coordinate actions.
+> 
+> Selftests: Includes kernel-side hooks and userspace selftests to
+> verify core LUO functionality, particularly subsystem registration and
+> basic state transitions.
+> 
+> LUO State Machine and Events:
+> 
+> NORMAL:   Default operational state.
+> PREPARED: Initial preparation complete after LIVEUPDATE_PREPARE
+>           event. Subsystems have saved initial state.
+> FROZEN:   Final "blackout window" state after LIVEUPDATE_FREEZE
+>           event, just before kexec. Workloads must be suspended.
+> UPDATED:  Next kernel has booted via live update. Awaiting restoration
+>           and LIVEUPDATE_FINISH.
+> 
+> Events:
+> LIVEUPDATE_PREPARE: Prepare for reboot, serialize state.
+> LIVEUPDATE_FREEZE:  Final opportunity to save state before kexec.
+> LIVEUPDATE_FINISH:  Post-reboot cleanup in the next kernel.
+> LIVEUPDATE_CANCEL:  Abort prepare or freeze, revert changes.
+> 
+> RFC v1: https://lore.kernel.org/all/20250320024011.2995837-1-pasha.tatashin@soleen.com
+> RFC v2: https://lore.kernel.org/all/20250515182322.117840-1-pasha.tatashin@soleen.com/
+> 
+> Changyuan Lyu (1):
+>   kho: add interfaces to unpreserve folios and physical memory ranges
+> 
+> Mike Rapoport (Microsoft) (1):
+>   kho: drop notifiers
+> 
+> Pasha Tatashin (22):
+>   kho: init new_physxa->phys_bits to fix lockdep
+>   kho: mm: Don't allow deferred struct page with KHO
+>   kho: warn if KHO is disabled due to an error
+>   kho: allow to drive kho from within kernel
+>   kho: make debugfs interface optional
+>   kho: don't unpreserve memory during abort
+>   liveupdate: kho: move to kernel/liveupdate
+>   liveupdate: luo_core: Live Update Orchestrator
+>   liveupdate: luo_core: integrate with KHO
+>   liveupdate: luo_subsystems: add subsystem registration
+>   liveupdate: luo_subsystems: implement subsystem callbacks
+>   liveupdate: luo_files: add infrastructure for FDs
+>   liveupdate: luo_files: implement file systems callbacks
+>   liveupdate: luo_ioctl: add ioctl interface
+>   liveupdate: luo_sysfs: add sysfs state monitoring
+>   reboot: call liveupdate_reboot() before kexec
+>   liveupdate: luo_files: luo_ioctl: session-based file descriptor
+>     tracking
+>   kho: move kho debugfs directory to liveupdate
+>   liveupdate: add selftests for subsystems un/registration
+>   selftests/liveupdate: add subsystem/state tests
+>   docs: add luo documentation
+>   MAINTAINERS: add liveupdate entry
+> 
+> Pratyush Yadav (8):
+>   mm: shmem: use SHMEM_F_* flags instead of VM_* flags
+>   mm: shmem: allow freezing inode mapping
+>   mm: shmem: export some functions to internal.h
+>   luo: allow preserving memfd
+>   docs: add documentation for memfd preservation via LUO
+>   tools: introduce libluo
+>   libluo: introduce luoctl
+>   libluo: add tests
+> 
+>  .../ABI/testing/sysfs-kernel-liveupdate       |  51 +
+>  Documentation/admin-guide/index.rst           |   1 +
+>  Documentation/admin-guide/liveupdate.rst      |  16 +
+>  Documentation/core-api/index.rst              |   1 +
+>  Documentation/core-api/kho/concepts.rst       |   2 +-
+>  Documentation/core-api/liveupdate.rst         |  57 ++
+>  Documentation/mm/index.rst                    |   1 +
+>  Documentation/mm/memfd_preservation.rst       | 138 +++
+>  Documentation/userspace-api/index.rst         |   1 +
+>  .../userspace-api/ioctl/ioctl-number.rst      |   2 +
+>  Documentation/userspace-api/liveupdate.rst    |  25 +
+>  MAINTAINERS                                   |  20 +-
+>  include/linux/kexec_handover.h                |  53 +-
+>  include/linux/liveupdate.h                    | 235 +++++
+>  include/linux/shmem_fs.h                      |  23 +
+>  include/uapi/linux/liveupdate.h               | 265 +++++
+>  init/Kconfig                                  |   2 +
+>  kernel/Kconfig.kexec                          |  14 -
+>  kernel/Makefile                               |   2 +-
+>  kernel/liveupdate/Kconfig                     |  90 ++
+>  kernel/liveupdate/Makefile                    |  13 +
+>  kernel/{ => liveupdate}/kexec_handover.c      | 556 +++++-----
+>  kernel/liveupdate/kexec_handover_debug.c      | 222 ++++
+>  kernel/liveupdate/kexec_handover_internal.h   |  45 +
+>  kernel/liveupdate/luo_core.c                  | 525 ++++++++++
+>  kernel/liveupdate/luo_files.c                 | 946 ++++++++++++++++++
+>  kernel/liveupdate/luo_internal.h              |  47 +
+>  kernel/liveupdate/luo_ioctl.c                 | 192 ++++
+>  kernel/liveupdate/luo_selftests.c             | 344 +++++++
+>  kernel/liveupdate/luo_selftests.h             |  84 ++
+>  kernel/liveupdate/luo_subsystems.c            | 420 ++++++++
+>  kernel/liveupdate/luo_sysfs.c                 |  92 ++
+>  kernel/reboot.c                               |   4 +
+>  mm/Makefile                                   |   1 +
+>  mm/internal.h                                 |   6 +
+>  mm/memblock.c                                 |  56 +-
+>  mm/memfd_luo.c                                | 501 ++++++++++
+>  mm/shmem.c                                    |  46 +-
+>  tools/lib/luo/LICENSE                         | 165 +++
+>  tools/lib/luo/Makefile                        |  45 +
+>  tools/lib/luo/README.md                       | 166 +++
+>  tools/lib/luo/cli/.gitignore                  |   1 +
+>  tools/lib/luo/cli/Makefile                    |  18 +
+>  tools/lib/luo/cli/luoctl.c                    | 178 ++++
+>  tools/lib/luo/include/libluo.h                | 128 +++
+>  tools/lib/luo/include/liveupdate.h            | 265 +++++
+>  tools/lib/luo/libluo.c                        | 203 ++++
+>  tools/lib/luo/tests/.gitignore                |   1 +
+>  tools/lib/luo/tests/Makefile                  |  18 +
+>  tools/lib/luo/tests/test.c                    | 848 ++++++++++++++++
+>  tools/testing/selftests/Makefile              |   1 +
+>  tools/testing/selftests/liveupdate/.gitignore |   1 +
+>  tools/testing/selftests/liveupdate/Makefile   |   7 +
+>  tools/testing/selftests/liveupdate/config     |   6 +
+>  .../testing/selftests/liveupdate/liveupdate.c | 356 +++++++
+>  55 files changed, 7091 insertions(+), 415 deletions(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-kernel-liveupdate
+>  create mode 100644 Documentation/admin-guide/liveupdate.rst
+>  create mode 100644 Documentation/core-api/liveupdate.rst
+>  create mode 100644 Documentation/mm/memfd_preservation.rst
+>  create mode 100644 Documentation/userspace-api/liveupdate.rst
+>  create mode 100644 include/linux/liveupdate.h
+>  create mode 100644 include/uapi/linux/liveupdate.h
+>  create mode 100644 kernel/liveupdate/Kconfig
+>  create mode 100644 kernel/liveupdate/Makefile
+>  rename kernel/{ => liveupdate}/kexec_handover.c (74%)
+>  create mode 100644 kernel/liveupdate/kexec_handover_debug.c
+>  create mode 100644 kernel/liveupdate/kexec_handover_internal.h
+>  create mode 100644 kernel/liveupdate/luo_core.c
+>  create mode 100644 kernel/liveupdate/luo_files.c
+>  create mode 100644 kernel/liveupdate/luo_internal.h
+>  create mode 100644 kernel/liveupdate/luo_ioctl.c
+>  create mode 100644 kernel/liveupdate/luo_selftests.c
+>  create mode 100644 kernel/liveupdate/luo_selftests.h
+>  create mode 100644 kernel/liveupdate/luo_subsystems.c
+>  create mode 100644 kernel/liveupdate/luo_sysfs.c
+>  create mode 100644 mm/memfd_luo.c
+>  create mode 100644 tools/lib/luo/LICENSE
+>  create mode 100644 tools/lib/luo/Makefile
+>  create mode 100644 tools/lib/luo/README.md
+>  create mode 100644 tools/lib/luo/cli/.gitignore
+>  create mode 100644 tools/lib/luo/cli/Makefile
+>  create mode 100644 tools/lib/luo/cli/luoctl.c
+>  create mode 100644 tools/lib/luo/include/libluo.h
+>  create mode 100644 tools/lib/luo/include/liveupdate.h
+>  create mode 100644 tools/lib/luo/libluo.c
+>  create mode 100644 tools/lib/luo/tests/.gitignore
+>  create mode 100644 tools/lib/luo/tests/Makefile
+>  create mode 100644 tools/lib/luo/tests/test.c
+>  create mode 100644 tools/testing/selftests/liveupdate/.gitignore
+>  create mode 100644 tools/testing/selftests/liveupdate/Makefile
+>  create mode 100644 tools/testing/selftests/liveupdate/config
+>  create mode 100644 tools/testing/selftests/liveupdate/liveupdate.c
+> 
+> -- 
+> 2.50.0.727.gbf7dc18ff4-goog
+> 
 
-""mbm_event" mode" -> "mbm_event" counter assignment mode"
-
-> +	assignment states for the group.
-
-"for the group" -> "of the group"?
-
-> +
-> +	The assignment list is displayed in the following format:
-> +
-> +	<Event>:<Domain ID>=<Assignment state>
-
-Same comment about syntax example.
-
-> +
-> +	Event: A valid MBM event in the
-> +	       /sys/fs/resctrl/info/L3_MON/event_configs directory.
-> +
-> +	Domain ID: A valid domain ID.
-> +
-> +	Assignment states:
-> +
-> +	_ : No counter assigned.
-> +
-> +	e : Counter assigned exclusively.
-> +
-> +	Example:
-> +	To display the counter assignment states for the default group.
-> +	::
-> +
-> +	 # cd /sys/fs/resctrl
-> +	 # cat /sys/fs/resctrl/mbm_L3_assignments
-> +	   mbm_total_bytes:0=e;1=e
-> +	   mbm_local_bytes:0=e;1=e
-> +
->  Resource allocation rules
->  -------------------------
->  
-> diff --git a/fs/resctrl/monitor.c b/fs/resctrl/monitor.c
-> index 1ec2efd50273..618c94cd1ad8 100644
-> --- a/fs/resctrl/monitor.c
-> +++ b/fs/resctrl/monitor.c
-> @@ -959,6 +959,7 @@ int resctrl_mon_resource_init(void)
->  		resctrl_file_fflags_init("event_filter", RFTYPE_ASSIGN_CONFIG);
->  		resctrl_file_fflags_init("mbm_assign_on_mkdir", RFTYPE_MON_INFO |
->  					 RFTYPE_RES_CACHE);
-> +		resctrl_file_fflags_init("mbm_L3_assignments", RFTYPE_MON_BASE);
->  	}
->  
->  	return 0;
-> diff --git a/fs/resctrl/rdtgroup.c b/fs/resctrl/rdtgroup.c
-> index 128a9db339f3..18ec65801dbb 100644
-> --- a/fs/resctrl/rdtgroup.c
-> +++ b/fs/resctrl/rdtgroup.c
-> @@ -2081,6 +2081,54 @@ static ssize_t resctrl_mbm_assign_on_mkdir_write(struct kernfs_open_file *of,
->  	return ret ?: nbytes;
->  }
->  
-> +static int mbm_L3_assignments_show(struct kernfs_open_file *of, struct seq_file *s, void *v)
-> +{
-> +	struct rdt_resource *r = resctrl_arch_get_resource(RDT_RESOURCE_L3);
-> +	struct rdt_mon_domain *d;
-> +	struct rdtgroup *rdtgrp;
-> +	struct mon_evt *mevt;
-> +	int ret = 0;
-> +	bool sep;
-> +
-> +	rdtgrp = rdtgroup_kn_lock_live(of->kn);
-> +	if (!rdtgrp) {
-> +		ret = -ENOENT;
-> +		goto out_assign;
-
-out_assign -> out_unlock
-
-> +	}
-> +
-> +	rdt_last_cmd_clear();
-> +	if (!resctrl_arch_mbm_cntr_assign_enabled(r)) {
-> +		rdt_last_cmd_puts("mbm_event mode is not enabled\n");
-> +		ret = -ENOENT;
-> +		goto out_assign;
-> +	}
-> +
-> +	for (mevt = &mon_event_all[0]; mevt < &mon_event_all[QOS_NUM_EVENTS]; mevt++) {
-> +		if (!mevt->enabled || !resctrl_is_mbm_event(mevt->evtid))
-> +			continue;
-
-(use macro and mon_evt::rid)
-
-> +
-> +		sep = false;
-> +		seq_printf(s, "%s:", mevt->name);
-> +		list_for_each_entry(d, &r->mon_domains, hdr.list) {
-> +			if (sep)
-> +				seq_putc(s, ';');
-> +
-> +			if (mbm_cntr_get(r, d, rdtgrp, mevt->evtid) >= 0)
-> +				seq_printf(s, "%d=e", d->hdr.id);
-> +			else
-> +				seq_printf(s, "%d=_", d->hdr.id);
-> +
-> +			sep = true;
-> +		}
-> +		seq_putc(s, '\n');
-> +	}
-> +
-> +out_assign:
-> +	rdtgroup_kn_unlock(of->kn);
-> +
-> +	return ret;
-> +}
-> +
->  /* rdtgroup information files for one cache resource. */
->  static struct rftype res_common_files[] = {
->  	{
-> @@ -2219,6 +2267,12 @@ static struct rftype res_common_files[] = {
->  		.seq_show	= event_filter_show,
->  		.write		= event_filter_write,
->  	},
-> +	{
-> +		.name		= "mbm_L3_assignments",
-> +		.mode		= 0444,
-> +		.kf_ops		= &rdtgroup_kf_single_ops,
-> +		.seq_show	= mbm_L3_assignments_show,
-> +	},
->  	{
->  		.name		= "mbm_assign_mode",
->  		.mode		= 0444,
-
-Reinette
+-- 
+"Thought is the essence of where you are now."
