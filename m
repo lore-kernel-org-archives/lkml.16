@@ -1,167 +1,115 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB3A829C33A
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCB702BCF72
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864934; cv=none; b=D11/Cu4Xsh8cvSy58IQxGwLGsLUA/he+RZmLBBSFM4j+NVSv5VE21iN5YM2T0Czv+KeRcldl/e1udhBrN+Gb56M7H8L7ntVs/DWtXRkGYmRHhhhzZiY9tmGSv56mwOFm/8Mcmz9bhr12ugb5ilWBoUApqMIFYFwcmcWuoWNTGw0=
+	t=1750864935; cv=none; b=G8RW1HwVmQZoYwJVR4JsiPCbwxa9IyNCEemRnL512hfl/KbB+9gyYtH/zvb5XN4Z4IMeogXSJaIWjFtbGqX2qTLJIblGBHtDEvDGaTs4uQemv2+s8pabvmUvmeXP01Qq81jtKMfY988xqyvPpJbr1ENpZDPIMisgKatHxM5nUrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864934; c=relaxed/simple;
-	bh=CkP4Zii5yEFnjEpnjpmU8yomUCDwhFbpaCZV6rMyG4o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=I8uhGVyoxN57jgkdk0hHgsa+cLixbCmwfgHM0/jnNKbOjlMuMeZ/WzjwxuAzwd8KpkeGkI9E36sZGer0JGZScLnsh30uO6JaYuLOGChT01HAYkNP+zLsZ7131BsIWe9a6Ph5H6/EBfgnaOLPmxhnJDRDpvaEa2qIl/Etw0d8Oug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ac74SO+b; arc=none smtp.client-ip=209.85.160.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1750864935; c=relaxed/simple;
+	bh=aTkJQnR/3DETZjCrMFipfbUfY5SsPpOZ1VX4D8ujLV0=;
+	h=Message-ID:Date:From:To:Cc:Subject:MIME-Version:Content-Type:
+	 Content-Disposition; b=XzDapm1f3YPnA3AQmOZg9vyW+mlVEQ28OkTsdS9iwQXmaQ0mLlzz8da3U+GLCltI8Rd0KMgk58UsGi9itLvICHh7p2pJ+kgQ7QJKN7x7e7MpuX7SxOQPOTd34cHOcJ8kAuBMwvzC7Y++BS2oYWLWeT2WbR4HDcP7yiG7z88oiPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p4zTCpIm; arc=none smtp.client-ip=209.85.210.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ac74SO+b"
-Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-4a58ef58a38so175001cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:22:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p4zTCpIm"
+Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-73a44512c8aso554619a34.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:22:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750864932; x=1751469732; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nJ5P0u/6xcg1NtaqnGcLvqTOCLTnaVcDdgVW1OPXhxk=;
-        b=ac74SO+bXQSpktt/NQgPXOw8n0qyYQEtL9Qu8SaqtLijnACeUk3QX0c4Gq3LLWwHvm
-         873xAuPBg563ut2+95zgEXaL3KKzEkSyHZ5lTaCVLbjjRKfxjR3tmUe0Irm4cOV2cCDd
-         YgRE/5pptYf23aV/5nHnJcvPg7LewX7ze+bYkygHMU0Wk+RqWB7KmJ6HPnURTXGxnLdw
-         8Un0uUZ9cgAPOaRAhRkiVUpWiJc7VHhYwH5UT+qnmGBMGKAKsPIeMIYUP1vSzNTPpEu8
-         ZKFrvfSTpFDTX0y2Bpn0Pc8jef0pWHerHaCbEsQS2Obg20aby8mMIWg/Jj/R5OAqpLpq
-         zPrA==
+        d=linaro.org; s=google; t=1750864933; x=1751469733; darn=vger.kernel.org;
+        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u98SmNY03cRBjpwBKU5+I1U9gP6hvTPRDks/D5f8cPE=;
+        b=p4zTCpImNNnbGlWsO67b4H/W/CW0sjDE6vYfK0JTfFywa0bcYYIzVSNig62b/x39R4
+         JDGiM/OHl+d8uz7zpjMy6OtMtzBDY8iG3Bbg8qBV1FEsh6ZtefUqNxxFM6lsTZyO+eKW
+         UYsD/uFynkjrMFgA/W80A+pGH853Kg2iu0zxZ07hF6K7t07q0qK8ynWNoszVl0mK+iSI
+         IflvDX4+qiZ6LrKrFNAAiSC8sCCkRULMqZ0GpGCWtsmjk5ViyhtHQGcYbvQKIM8bV7hc
+         /TCo+PocYltKNpxDCeHBCsEvTVl46HykTQsXZUt99IqDf6qKQtCzhk5+jhbNqBK/0Uhc
+         d96A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750864932; x=1751469732;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nJ5P0u/6xcg1NtaqnGcLvqTOCLTnaVcDdgVW1OPXhxk=;
-        b=UvbmOrfLGkqTkkPUEjlFEGDTa+WxYfcvyxqcqtJ22hd6AqDZP6KRKeQLM60fO4KU8h
-         cuks4W7/umBdKuT+gv2NGDmZk9XCUY2Wo9NjAQ8hR3JfB1x1zGJtrqt4W2e+ofbumhR6
-         sUQqUJuZkequonF0hQpwV/mN+buzrnj0T/nQJjj3R7toFNZidE4xRSgtuKmt7cdAmLQY
-         p6ZzNJ2ZjnKmlxZCOydxF4R+qx+PjuT+vfA/VGCINQBs2mdwwaiJjP1wijhOIVq7QXgS
-         R0K0RSjlAfcpppUNZPnEd4eBolK2D1hPBhQJdx9DO1rMBjTLovoFmc0XBXC6UnOCTKCU
-         rVlw==
-X-Forwarded-Encrypted: i=1; AJvYcCUCx5h2GSJNlXYLgjriupDf0oTiqJH5H3+Rd4YGiVbmdxybsqNKPpRH/lpZXV74tqpk7DfBKRgSOAJ2s8Q=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznEb2xaDRhGVP8IphhLeh9X142S45lZlHIRpqFMBbJjiHijt02
-	DvaipDypd3BwFIKkTHR+vPTngkflOimqahXgaKMLft8+/h0qJPeiYgv2gacpSu1oxhMNrhChMzc
-	mA3z+v8YuXqIvl4GQVgy/Vs4Zp9gEeShF3bMRpHjf
-X-Gm-Gg: ASbGncuWndF4P3A8+jEUls03WpV9IvNwZ8vt9NGNkKSqxj7KtL8iC72XTqNh3xkW/TP
-	UH9B8lgkhMhnSuPlhjBoaI0ZYyIyk62ncFQAKFPCPZTMatYF2C0JWzOjdlE9u3v++ydgCS55va4
-	f5NrmMVCitDiwpenjCGyw7XDYXo54eFOIBVg9F/RHBCg==
-X-Google-Smtp-Source: AGHT+IG8U6qG5KYMo+nkavpDTx/PPdha23r+RnimIC8ktx5xvsAvgguafO1U53hsdch5/27popiTWWkJKAGkT/NKfVc=
-X-Received: by 2002:a05:622a:85:b0:4a6:f9d2:b547 with SMTP id
- d75a77b69052e-4a7c236b037mr3595081cf.20.1750864931337; Wed, 25 Jun 2025
- 08:22:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750864933; x=1751469733;
+        h=content-disposition:mime-version:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u98SmNY03cRBjpwBKU5+I1U9gP6hvTPRDks/D5f8cPE=;
+        b=cpy09smP0c14t1Z6lUbO8KL593sgw0VLuFcR+MIuoe5PtUGp8Fj9MZxe79MUhm9C8g
+         LsYENbJPcXOaq8VOP3KpdrEnzsJvFYTsxdAD2zS9QGpJqQtivTBZbk9DKAnLm3h1geeM
+         TJwZG3DGQI0g7VKS1NoGRcVT7hPV2vV3y4WvVsxDL9WYFIU2wlpRiYw4VhfBB4RnQtWw
+         aKXFFwxkUTGhYj8hTdrgBBO2UNtjwbHTEuJJeU6HxP+GB2BlA7dOl61UEqXM25lOlaV0
+         zSBuFOz9tRP2wP1PbFsTHjlUUZp/WQ4ckashh8RodVN8VLbvzZaBkC7kZFPapdbh/vsQ
+         F1pw==
+X-Forwarded-Encrypted: i=1; AJvYcCUxrI9tQr35EIka+abcgatYJCuyVSRszAnpUnkYi7ygWlNUOZfNjh285oTICcmq4bY9DRYiMk9PgyNRaWI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwxsGaN22vIQKZGCBhNnmB3Mo2XnJTGxZIABSgWgOPY9m1uNR9F
+	wePsRP0VxZI9R4resR/yp3hYK6hy9ndMKZfhb9Wreslvt6tQmbqhQzbKwmubQ1LQwWxrJ5on5h+
+	8Sh13
+X-Gm-Gg: ASbGncsIsn25/bRLytrgxD3TyiglDegqXYRL+2h04CQ2znLNdoh7+333rptAHcuZIL3
+	PVqUjh8CFqXTQjsBgLz9xqs+t6+IzFZlGovDdGnBVakNg5cWZKw+z0xy7pJsxJinLcOMrzFL2jC
+	QBiDw+9Ru1z2fdynOhzOHciFqqTWM+Wr4xOD14liP2K0G4slj7JUScnPPQbttOyyo7CZBRCftBJ
+	AozXYw4+TR4gXr7jJ4Gi/sUCiHZEpEtJUh++8sX7b4djkzdoinzkA/9A1CdbnNnvBOG7xA2Gs4l
+	VyJ8RrXaqq05XEAJCfoQ2ROIgzRtKyqO5dq50FXdriPXl4mVIPwuZ2y+vNLEW39DU2+X3Q==
+X-Google-Smtp-Source: AGHT+IHkG6dat7iqtvzwTRnE7a7/Ug1VTKQvcFownkvnX4pRkEWxDAtT4ssRBcmMzlRv3IfqQ4RMqQ==
+X-Received: by 2002:a05:6830:8088:b0:72b:7cc8:422 with SMTP id 46e09a7af769-73adc7eb8eemr1793945a34.20.1750864932939;
+        Wed, 25 Jun 2025 08:22:12 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:1fca:a60b:12ab:43a3])
+        by smtp.gmail.com with UTF8SMTPSA id 46e09a7af769-73a90ca9c12sm2236713a34.50.2025.06.25.08.22.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 08:22:12 -0700 (PDT)
+Message-ID: <685c1424.050a0220.baa8.d6a1@mx.google.com>
+X-Google-Original-Message-ID: <@sabinyo.mountain>
+Date: Wed, 25 Jun 2025 10:22:11 -0500
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Xiubo Li <xiubli@redhat.com>
+Cc: Ilya Dryomov <idryomov@gmail.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
+	ceph-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: [PATCH] ceph: fix NULL vs IS_ERR() bug in ceph_zero_partial_page()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624193359.3865351-1-surenb@google.com> <20250624193359.3865351-7-surenb@google.com>
- <fd305c41-b2a3-4f0c-a64d-6e2358859529@lucifer.local>
-In-Reply-To: <fd305c41-b2a3-4f0c-a64d-6e2358859529@lucifer.local>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Wed, 25 Jun 2025 08:22:00 -0700
-X-Gm-Features: Ac12FXxttU6uD8NTsD-TnCGNT9pqqB3547DZqQ19Bc1hh7qCrrhXbmy4EDhP4xU
-Message-ID: <CAJuCfpEpshf7L-Axt4MJf=onoz4F=Sw4nk5Z1yVwvwkzSYx9qA@mail.gmail.com>
-Subject: Re: [PATCH v5 6/7] mm/maps: read proc/pid/maps under per-vma lock
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: akpm@linux-foundation.org, Liam.Howlett@oracle.com, david@redhat.com, 
-	vbabka@suse.cz, peterx@redhat.com, jannh@google.com, hannes@cmpxchg.org, 
-	mhocko@kernel.org, paulmck@kernel.org, shuah@kernel.org, adobriyan@gmail.com, 
-	brauner@kernel.org, josef@toxicpanda.com, yebin10@huawei.com, 
-	linux@weissschuh.net, willy@infradead.org, osalvador@suse.de, 
-	andrii@kernel.org, ryan.roberts@arm.com, christophe.leroy@csgroup.eu, 
-	tjmercier@google.com, kaleshsingh@google.com, linux-kernel@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, 
-	linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email haha only kidding
 
-On Wed, Jun 25, 2025 at 5:30=E2=80=AFAM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> This patch results in some spam :) there's a stray mmap_assert_locked() i=
-n
-> anon_vma_name() that triggers constantly.
+The filemap_lock_folio() never returns NULL.  It returns error pointers.
+Update the checking to match.
 
-Ah, damn! This was triggered before and I completely forgot to fix it.
-Thanks for reporting it!
+Fixes: 483239f03149 ("ceph: convert ceph_zero_partial_page() to use a folio")
+Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+---
+ fs/ceph/file.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
->
-> Andrew - I attach a fix-patch for this, could you apply as at least a tem=
-porary
-> fix? As mm-new is broken at the moment with this patch.
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index d5c674d2ba8a..f6e63265c516 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -2536,12 +2536,13 @@ static inline void ceph_zero_partial_page(struct inode *inode,
+ 	struct folio *folio;
+ 
+ 	folio = filemap_lock_folio(inode->i_mapping, offset >> PAGE_SHIFT);
+-	if (folio) {
+-		folio_wait_writeback(folio);
+-		folio_zero_range(folio, offset_in_folio(folio, offset), size);
+-		folio_unlock(folio);
+-		folio_put(folio);
+-	}
++	if (IS_ERR(folio))
++		return;
++
++	folio_wait_writeback(folio);
++	folio_zero_range(folio, offset_in_folio(folio, offset), size);
++	folio_unlock(folio);
++	folio_put(folio);
+ }
+ 
+ static void ceph_zero_pagecache_range(struct inode *inode, loff_t offset,
+-- 
+2.47.2
 
-Yes please.Andrew, if you would prefer me to respin the series please
-let me know.
-
->
-> Suren - could you check and obviously suggest something more sensible if =
-you
-> feel this isn't right.
-
-This is exactly what I was planning to do but it slipped from my mind.
-
->
-> I'm not actually sure if we'd always have the VMA read lock here, maybe w=
-e need
-> an 'assert mmap lock or vma lock' predicate?
-
-For now this is the only place that needs it. Maybe we can wait until
-there is more demand for it?
-
->
-> Worth auditing other mmap lock asserts that might have been missed with t=
-his
-> change also.
-
-I'll go over it once more but this was the only reported issue with
-the previous version.
-Thanks,
-Suren.
-
->
-> Cheers, Lorenzo
->
-> ----8<----
-> From 1ed3bd12d43be1f8303fd6b7b714f5ef7e60728a Mon Sep 17 00:00:00 2001
-> From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-> Date: Wed, 25 Jun 2025 13:28:36 +0100
-> Subject: [PATCH] mm/madvise: fixup stray mmap lock assert in anon_vma_nam=
-e()
->
-> anon_vma_name() is being called under VMA lock, but is assert mmap lock w=
-hich
-> won't necessarily be held.
->
-> This results in the kernel spamming warnings about this on startup.
->
-> Replace this with an open-coded 'mmap or VMA lock' assert to resolve.
->
-> Signed-off-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-
-Acked-by: Suren Baghdasaryan <surenb@google.com>
-
-> ---
->  mm/madvise.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index c467ee42596f..0530d033b3dd 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -108,7 +108,8 @@ void anon_vma_name_free(struct kref *kref)
->
->  struct anon_vma_name *anon_vma_name(struct vm_area_struct *vma)
->  {
-> -       mmap_assert_locked(vma->vm_mm);
-> +       if (!rwsem_is_locked(&vma->vm_mm->mmap_lock))
-> +               vma_assert_locked(vma);
->
->         return vma->anon_name;
->  }
-> --
-> 2.50.0
