@@ -1,40 +1,41 @@
 Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3729D26C3A2;
-	Wed, 25 Jun 2025 08:31:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D214426C3A2;
+	Wed, 25 Jun 2025 08:31:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750840303; cv=none; b=pRalwE/Hzv4Ef+/ytshFFTj5sUzSC262vzufYo3EkKdTCrpBD2VKQ+gHUaZROB9I/v0cejIzbunquZYz1CK/Js7b1q9t93q5msrszkAdl65dxD5EUH2gE5AE+9jG1deb8JBo4YrDVs/uXZS9R/R43nyti23uMywGe4pDZvP15uk=
+	t=1750840310; cv=none; b=sgoGLlRYgdZ+R1bxuD3Ou0bbpVA9XCT5I4jb0Im/F0mjF+9NxevPvxkg46oZWFyNFxk1sAllNp/qFoZdwoAguyh05MsSe/InsYaeKoyGi3FNUkyd9S58l4x7OMzM6mKFTyL5uHQzbIdrJ82VMtC47m5KUKcr6RxA8lD4lTA9Qko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750840303; c=relaxed/simple;
-	bh=kRAmnZqcu3w7ZeUPYcI9fMpa3pvDcJC7k8rDwHpG8+0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=KyX2eFWCyDGyZliqNNA8MbCLywdk8rYcxt7qOfFV8BEzbgcwON1UrdCz+Him5FQixFEz/7XX0TEmjPAoHtdudVYlVDdKjrG6XiVP9Gp/LyUDjnXhDbwUOfxWjp3gBxtpG/tRG/5fYLSdDcPhnvWSipWwzjwwQls+XRlcxrpWOV0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=WdXHe27v; arc=none smtp.client-ip=178.21.23.139
+	s=arc-20240116; t=1750840310; c=relaxed/simple;
+	bh=f0JRQMEsVKlGa0ZIRNYll0HpfPGIEpcJG3yvaDfP6WI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=p711FKCH9hwtaOB/iWQwMlAAjdyscSWoZSimIdiOPnvDnC+2WaEMNxi7za0zN9uKD3XSl/2AxmzVtffJomhnkwkiUsVBkYuQqdYmga1oLUCf9iw0YyHVanS8dxftqr9vl7aGauGqww51vu9WizIzdgaITeyG2McOn7Dh1Hl5yCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=BE5wn33H; arc=none smtp.client-ip=178.21.23.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="WdXHe27v"
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="BE5wn33H"
 Received: from mail01.disroot.lan (localhost [127.0.0.1])
-	by disroot.org (Postfix) with ESMTP id 8E9E622D94;
-	Wed, 25 Jun 2025 10:31:37 +0200 (CEST)
+	by disroot.org (Postfix) with ESMTP id 3D8AB2600D;
+	Wed, 25 Jun 2025 10:31:47 +0200 (CEST)
 X-Virus-Scanned: SPAM Filter at disroot.org
 Received: from layka.disroot.org ([127.0.0.1])
  by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
- id FcRS75g62sSj; Wed, 25 Jun 2025 10:31:36 +0200 (CEST)
+ id l9zCeHefamUn; Wed, 25 Jun 2025 10:31:46 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
-	t=1750840296; bh=kRAmnZqcu3w7ZeUPYcI9fMpa3pvDcJC7k8rDwHpG8+0=;
-	h=From:Subject:Date:To:Cc;
-	b=WdXHe27va2n8z1H5c68ilfgj3ICetKkCTC6CWGovHFWr1du1ifvF/RdHKIdZrBJPH
-	 UB32y1dIyDuyez3N2OuqOHBr8HyZ2meCiOjg3esOwnMWo3HQJsjm8fkvVy4Cy7wOcy
-	 7h3tBl/DawLjx6jyrGgyEFZaPV36Me8d6ZrHxTpj1I/vfkR+HI6smWkii2TDQwdExL
-	 kajCIdwyC8YzLUVKkvc/cv5wkkhpIYFxYL3Y1dPqtZhSwO4fjWUk095qVaLOBMO4OK
-	 1cELy8qqRkPDGVjDUE5r1fmDm4h1zTQicff/nOguXS75U66xm+9OK52775s/dEfTLe
-	 BVQfWGTx9+VJw==
+	t=1750840306; bh=f0JRQMEsVKlGa0ZIRNYll0HpfPGIEpcJG3yvaDfP6WI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc;
+	b=BE5wn33HJSU6KttaeNozm5/WqxD2yuBTrPBbhnqgFZoHueYT0gJhMbAkmkBVkk4az
+	 f14KxCn4F4VihwDZ1fesH04XdQRIiBrswsJ/aa0PTqWwZh+LZCgn1HaE+0TPCEYtyT
+	 gfozvHeBLhvqlTQr8cdXYEFAC03/MGLmC1zS48xLuR2N2/J8mtcev14L9eEWp52QqN
+	 hfhovDEoLAj4aYqhgAoL1LGfqSHZhadvcyS/rvp0+7GLE47vhMiUMiPdC//Khg7Nhy
+	 s5e/B6/LIDH7MUhXxWZFx7OBzz/64IWHKfsnVuyFq+nSLZf60XT/mwaTbHwY7VI9do
+	 hFRHhjZyrFAag==
 From: Kaustabh Chakraborty <kauschluss@disroot.org>
-Subject: [PATCH v2 0/2] Add driver for Samsung S6E8AA5X01 panel controller
-Date: Wed, 25 Jun 2025 14:01:14 +0530
-Message-Id: <20250625-panel-samsung-s6e8aa5x01-v2-0-4db72b87a5a4@disroot.org>
+Date: Wed, 25 Jun 2025 14:01:15 +0530
+Subject: [PATCH v2 1/2] dt-bindings: display: panel: document Samsung
+ S6E8AA5X01 panel driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,11 +44,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANKzW2gC/3WNQQ6CMBBFr0K6dkxbpSor72FYjHSASbQlHSQYw
- t2tuHb5XvLfX5RQYhJVFYtKNLFwDBnsrlBNj6EjYJ9ZWW1LXdoDDBjoAYJPeYUOxNEZsZy1AUJ
- 7vDjCljyqPB8StTxv6VuduWcZY3pvT5P52l/UGfs/OhnQoJ1v7qhPhtBdPUuKcdzH1Kl6XdcP2
- cPkO8IAAAA=
-X-Change-ID: 20250523-panel-samsung-s6e8aa5x01-ea2496eafeda
+Message-Id: <20250625-panel-samsung-s6e8aa5x01-v2-1-4db72b87a5a4@disroot.org>
+References: <20250625-panel-samsung-s6e8aa5x01-v2-0-4db72b87a5a4@disroot.org>
+In-Reply-To: <20250625-panel-samsung-s6e8aa5x01-v2-0-4db72b87a5a4@disroot.org>
 To: Neil Armstrong <neil.armstrong@linaro.org>, 
  Jessica Zhang <quic_jesszhan@quicinc.com>, David Airlie <airlied@gmail.com>, 
  Simona Vetter <simona@ffwll.ch>, 
@@ -59,44 +58,110 @@ To: Neil Armstrong <neil.armstrong@linaro.org>,
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Kaustabh Chakraborty <kauschluss@disroot.org>, 
  Conor Dooley <conor.dooley@microchip.com>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750840288; l=1414;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750840288; l=2570;
  i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
- bh=kRAmnZqcu3w7ZeUPYcI9fMpa3pvDcJC7k8rDwHpG8+0=;
- b=3BsNs2IW9OGhEJ5YRMj8U4hg9xhReajV3FtYk5Xa7VVPzEkAL59nEbYF3iACDJXKQbBO7URwm
- P70uB4DuI79BTB0rDrScfCFJ+9c/Z4mfbd+itRyhU8Kjytp1wbRjdmB
+ bh=f0JRQMEsVKlGa0ZIRNYll0HpfPGIEpcJG3yvaDfP6WI=;
+ b=0ba8V32EHTcgRN38+l4ZPrfTjF3jDlzW8X/nOPaPj5Ea7hEwMrHLq+4K8Ns7PoUyq0x/sdnRP
+ Th9gqxPdafsCZRtjPAUvX+gYPijx4+WtZc+gP6dNogmOiipw/TRenMT
 X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
  pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-This patch series introduces a driver for Samsung S6E8AA5X01, which is
-an AMOLED MIPI DSI panel controller. This panel is found in several
-(mostly Samsung) phones, in at least two different sizes - 720x1280 and
-720x1480.
+Samsung S6E8AA5X01 is an AMOLED MIPI DSI panel controller. Document the
+compatible and devicetree properties of this panel driver. Timings are
+provided through the devicetree node as panels are available in
+different sizes.
 
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
 ---
-Changes in v2:
-- fixed various dt_binding_check errors (conor)
-- simplified panel enable sequencing (tzimmermann)
-- did s/s6e8aa5x01_update_brightness/s6e8aa5x01_update_status (tzimmermann)
-- added check for panel enable in s6e8aa5x01_update_status() (tzimmermann)
-- used backlight_get_brightness() in appropriate places (tzimmermann)
-- Link to v1: https://lore.kernel.org/r/20250612-panel-samsung-s6e8aa5x01-v1-0-06dcba071ea6@disroot.org
+ .../bindings/display/panel/samsung,s6e8aa5x01.yaml | 78 ++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
 
----
-Kaustabh Chakraborty (2):
-      dt-bindings: display: panel: document Samsung S6E8AA5X01 panel driver
-      drm: panel: add support for Samsung S6E8AA5X01 panel controller
+diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa5x01.yaml b/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa5x01.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..23dae6e961ae01c99de93bf4b4a067f2953f8edf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e8aa5x01.yaml
+@@ -0,0 +1,78 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/samsung,s6e8aa5x01.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Samsung S6E8AA5X01 display panel controller
++
++maintainers:
++  - Kaustabh Chakraborty <kauschluss@disroot.org>
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    const: samsung,s6e8aa5x01
++
++  reg:
++    maxItems: 1
++
++  vdd-supply:
++    description: core voltage supply
++
++  vci-supply:
++    description: voltage supply for analog circuits
++
++  reset-gpios: true
++  width-mm: true
++  height-mm: true
++  panel-timing: true
++
++required:
++  - compatible
++  - reg
++  - width-mm
++  - height-mm
++  - panel-timing
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    dsi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        panel@0 {
++            compatible = "samsung,s6e8aa5x01";
++            reg = <0>;
++
++            vdd-supply = <&panel_vdd_reg>;
++            vci-supply = <&panel_vci_reg>;
++
++            reset-gpios = <&gpd3 4 GPIO_ACTIVE_HIGH>;
++
++            width-mm = <62>;
++            height-mm = <128>;
++
++            panel-timing {
++                clock-frequency = <73094400>;
++
++                hactive = <720>;
++                hsync-len = <2>;
++                hfront-porch = <62>;
++                hback-porch = <26>;
++
++                vactive = <1480>;
++                vsync-len = <2>;
++                vfront-porch = <12>;
++                vback-porch = <10>;
++            };
++        };
++    };
++
++...
 
- .../bindings/display/panel/samsung,s6e8aa5x01.yaml |  78 ++
- drivers/gpu/drm/panel/Kconfig                      |  11 +
- drivers/gpu/drm/panel/Makefile                     |   1 +
- drivers/gpu/drm/panel/panel-samsung-s6e8aa5x01.c   | 906 +++++++++++++++++++++
- 4 files changed, 996 insertions(+)
----
-base-commit: 0bb71d301869446810a0b13d3da290bd455d7c78
-change-id: 20250523-panel-samsung-s6e8aa5x01-ea2496eafeda
-
-Best regards,
 -- 
-Kaustabh Chakraborty <kauschluss@disroot.org>
+2.49.0
 
