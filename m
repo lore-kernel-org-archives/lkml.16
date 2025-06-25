@@ -1,433 +1,228 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB40C273D67;
-	Wed, 25 Jun 2025 09:37:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D196B27FB07
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750844244; cv=none; b=sz2IBMG9siloMEj9ykGkpkDm3svMndVtkUoQwqP86W2nVrf5Cgxf/GfWHg/Hfse4sUfMwRH37X7vcR6S2t0PbejPoL4K+FJpN4gTfDBGpFy7p7sI29rVjSh/5SeD0SB/qDBYJRSNNJ1gtH8TuAQCvEXeA+CJdHi2E0DSGeS5nMA=
+	t=1750844317; cv=none; b=NpLDSF0+ubDztR3ySjbiixxfqw0VZ+kxIMBMJMGUmF3x5N86tX8bhCqKH67Ctz7J7uwjs+BmoEG5vfSNbWZtfOvvxY3kHcSpyf4/sTJYObqQxrFD+ZpzcMuy737Q8XSyDzAEJuMNQbl7qkR/OC3DWlo75P6RpD/CE6u52EvT5/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750844244; c=relaxed/simple;
-	bh=QAAw8lHoQe88LywfWFJxKDuVBFv6U47HaKF8hR18sao=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qfcqAQ9DdM76BqGwrE+lODPgUxyJuwm7mK/W+vtddikcnz5y4yp+Qi6Mh8xuuv56IBFq6RI98kVgTqclwT7Iqf5TqAMIfta7HUPvhubw3HfcBczHq4ZU98IgdviAW6ne0CUuRPm6yI/okAeRLCGCzwVwsRyAXZW39Pg6xNnWyNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ol/Y0rap; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1750844317; c=relaxed/simple;
+	bh=jk4Hhh427Dopn8B/4mWSQYIGFRTAUvXboyajkL1+37o=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=apnk0fgMga+RsFJe1A2bI8SJKupek+SY1eGqbezHnZDrSvn+BARIHHlS9uprdhJOQhHpPXHE+52XpBIwsy7oLNbic7lkKQSM3IFdF1OstQV9T/rfx7ey/5GdR59H81BSXKWiagygsGTuEtKPSAXDGnSP7Sk9AyGl4xlM7ch3Hwo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b1hc0nf5; arc=none smtp.client-ip=209.85.221.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ol/Y0rap"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P7VHJ3016009;
-	Wed, 25 Jun 2025 09:37:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=duIT7v
-	YThX9XWpWOLWRNfP/IrShB8W5j2qBMdKOPyRA=; b=ol/Y0rapTnRtY/ETlbu7JY
-	Ww6HEywCSzIYs2R5GVbPdm/Dd39AJJp3zB3TvzfTsQrIn1xmSziC2Uk5QQFaa9yh
-	QYBZeeR+X/DboLaAN2VqWJbgnYRtL78GDfcw0GAgO8G/75pcmS9TLQfrKqjJitwL
-	r8PHtrbXYkXHALSVHJmrjOTp5ztHSEPRSknu1SkPXvKQ4FnlqwsECvk835DtX7g+
-	AKNK38HwkSRC6kuIx0tTGVUt6gkbD0iPoJ/O4wlRZVFeKeU1L8gMNGuFuG0s9v2z
-	TraKml9ZmjY0wBBJataik3Rjlwxu1guzqqzN7ed+4ypL98wOTn5zbezKqdmFCcEg
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dm8jefss-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 09:37:05 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55P9UZG1027503;
-	Wed, 25 Jun 2025 09:37:04 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dm8jefsd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 09:37:04 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55P7SM4h014710;
-	Wed, 25 Jun 2025 09:37:01 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e9s2gb4q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 09:37:01 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55P9b0CG53084626
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 25 Jun 2025 09:37:00 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0E4B020043;
-	Wed, 25 Jun 2025 09:37:00 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C66F420040;
-	Wed, 25 Jun 2025 09:36:55 +0000 (GMT)
-Received: from li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com (unknown [9.124.208.75])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 25 Jun 2025 09:36:55 +0000 (GMT)
-Date: Wed, 25 Jun 2025 15:06:52 +0530
-From: Donet Tom <donettom@linux.ibm.com>
-To: Dev Jain <dev.jain@arm.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-        Aboorva Devarajan <aboorvad@linux.ibm.com>, akpm@linux-foundation.org,
-        Liam.Howlett@oracle.com, shuah@kernel.org, pfalcato@suse.de,
-        david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
-        npache@redhat.com, ryan.roberts@arm.com, baohua@kernel.org,
-        linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ritesh.list@gmail.com
-Subject: Re: [PATCH 1/6] mm/selftests: Fix virtual_address_range test issues.
-Message-ID: <aFvDNPZWs2CA_MoU@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
-References: <c93110a4-19e4-4a1d-b044-6b7f521eaa0d@lucifer.local>
- <815793f1-6800-4b9a-852e-f13d6308f50f@arm.com>
- <2756fa2b-e8bf-4c66-bf9b-c85dc63dfc33@lucifer.local>
- <41d9a70d-9791-4212-af23-5b13d8e4a47d@arm.com>
- <aFPI_blZGhvKSbNJ@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
- <546d7aa5-9ea3-4fce-a604-b1676a61d6cd@arm.com>
- <aFbyFMjVs9F3KMex@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
- <2fc32719-1e38-4bf0-8ec5-5bcb452d939f@arm.com>
- <aFmPliw773p1VvAY@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
- <673c9442-7d69-408b-a2c4-2baa696a7e86@arm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b1hc0nf5"
+Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-531b4da8189so1484151e0c.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:38:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750844313; x=1751449113; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ik/O3lKW8D4PX3b9RKMi5Pl8dRCbo+JtmwcqMh8DqL4=;
+        b=b1hc0nf53oD80hoYVnnpcZEp2egs/u2pkricymLmDGYC4SWI6kI/hK5mX0kqbUmZye
+         rjOBm43PPJi/u459coiZY2+7dqHTWgS37+u/lTHelKRyeVKMNjQJc/tJYLi/6nD6RjXX
+         J6E37QzFd+GwqHz7zI5qHiYSEF9zHRKgI17DhDm0XNv/dbMQsJqI2XdM8ORJepw9KPUT
+         OGwZSoCxjhioUm2Z4geyaHqa56xdm7El5X2f+W37k0rFHX73tMaVJEGF/gWfW6WxbsOm
+         6yxENUBzAdsn+4mnQh1GKzRiVyt6dG2S7T0blGUccAH3Re5UbejN7sk9VfE29c34HpLT
+         zmgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750844313; x=1751449113;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ik/O3lKW8D4PX3b9RKMi5Pl8dRCbo+JtmwcqMh8DqL4=;
+        b=B+Htk1eMDmdyJj23a3lqTCTYcfKJuhV6v/rKnPZwNxpQF8WS8ekveUbRfk2PkVLNu2
+         iFffW4Xv9g4OamJ7Hakjd1J6M3LbBmbqQD+0hEC51U0NMj9ChRDNBcvurxqxQGHBs/M+
+         CCxqo2iC3rmxSpV/zwmHva/1A5M7Nn5RURZBBTT36zohlW155r5uryknNtc6R6sQYjep
+         seAD6MZmcnmy7OgMf1rkRPKgU/BAUaRFq+txOYldMb0WxAy8YZ0d2chUFERHrxVN0gWb
+         Rz7JIE7koKJ0heELlzjoUUEW7usNvxu3hE96aGd2J5iqwyM/uAznHdNzVAECMCHT5O7C
+         VAWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWhFcNhBzrbGBw0oNxj8bhYwvgITUQX5uxB4KwCb1KSG9mFa2xTOqj5XcS0fITmBrFQLuue6p8N76qFSCg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTWQTBlh+oc2uWEnrdppSofSg6rNsz2qnx0DCy2QMkEwMO4uGv
+	Wu/AhcBS+8sRjr9z/bjPv9d953QNF4bGntL4LdNfCdyfdUJ50zP4rO1tCMVzO34BJXhWNXWmt+j
+	Gt6+5/Qn/FlFIkFjhwKQPxjxNnEU+wm4=
+X-Gm-Gg: ASbGncv3CxWbeUIuMtYQzquIh1k/gP9rQYPK4ujol414qJh3W8C9u3q49fOe0oOV1Ju
+	dqkhmrxCFITmszjmZk7vr58EStpypJskMSqZJT718wQDHTcxXBfuszNLGF61FXTvEydpmRmrZk4
+	A/iBA5VWVamgynyxdHCpJjH/Q1K9doBEVxdSxgW+cRnXg=
+X-Google-Smtp-Source: AGHT+IHFsEjf8mVqrGJlOglZXBqK+LXUAHLKDnHRegX9xwHltPGn1BuflQtnpCujXSYlVduWzyct2ogezPY53n9zi2Q=
+X-Received: by 2002:a05:6122:2516:b0:530:81ac:51be with SMTP id
+ 71dfb90a1353d-532ef6cc1e4mr985532e0c.8.1750844313457; Wed, 25 Jun 2025
+ 02:38:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <673c9442-7d69-408b-a2c4-2baa696a7e86@arm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA2OSBTYWx0ZWRfX0iJZbH4RZkZK u0t2Zi/7WypS2huIG4OwOXtScs4HMFEvh2ZN5BOVuZKALBJBROM1uecgePSLKgn+uVDVWJAX20L ok4yRD+KKfuN5Rhg2bo3SnxOPykto1ALr64JeraenWVmqk6su3AMhOCNZejPcp3nylQuPkiUYiA
- SWpoNLRskT3W1YJH1qt0yik5z1CDl3LDguqS5hb5CM+rPNJW3pgVMJUb73CqOJW32aLw9Pre75C TunpOwtkSfjgM0d8SvzfaRFpKaTHOiddcKFwfHg+ucZmuxzuA3xJCqRuUD96Bw3XcXgjIGtA/72 F4mdHfhACEYN/oH1etHgrTsf6VjqCjxg6jKGuHVNfOSVk5lyLlVuBAGhPQDLQJEhaL4SqZ6RgEw
- XDRY8JNpOn4idAmfmay4z/otASuq6XzfSZg2QUHRns9a4jOr8kDEW1OQsk9cZ0DBFnJ38KsY
-X-Proofpoint-GUID: Z5r55ByDizHJ-aXph3TfBfNKCoelqRP3
-X-Proofpoint-ORIG-GUID: GITBJs78SYYz-Zab8GAvxJcLabiTrtcu
-X-Authority-Analysis: v=2.4 cv=combk04i c=1 sm=1 tr=0 ts=685bc341 cx=c_pps a=aDMHemPKRhS1OARIsFnwRA==:117 a=aDMHemPKRhS1OARIsFnwRA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=CpnFgls9S9_tUT08MQ0A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 spamscore=0 adultscore=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 suspectscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506250069
+References: <2c19a6cf-0b42-477b-a672-ed8c1edd4267@redhat.com> <20250624162503.78957-1-ioworker0@gmail.com>
+In-Reply-To: <20250624162503.78957-1-ioworker0@gmail.com>
+From: Barry Song <21cnbao@gmail.com>
+Date: Wed, 25 Jun 2025 21:38:21 +1200
+X-Gm-Features: Ac12FXwzgBA5qA6Bu1rSIUYx-JEmY2u59OAGcqCQlCXMv4jDK2aouZ9-YNF9zfQ
+Message-ID: <CAGsJ_4x+YaF3bVjMuNv2iJtdoD2-GgGsbJA__cpxb7U5YtK9ig@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
+ folios during reclamation
+To: Lance Yang <ioworker0@gmail.com>
+Cc: david@redhat.com, akpm@linux-foundation.org, baolin.wang@linux.alibaba.com, 
+	chrisl@kernel.org, kasong@tencent.com, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	linux-riscv@lists.infradead.org, lorenzo.stoakes@oracle.com, 
+	ryan.roberts@arm.com, v-songbaohua@oppo.com, x86@kernel.org, 
+	ying.huang@intel.com, zhengtangquan@oppo.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-eOn Tue, Jun 24, 2025 at 11:45:09AM +0530, Dev Jain wrote:
-> 
-> On 23/06/25 11:02 pm, Donet Tom wrote:
-> > On Mon, Jun 23, 2025 at 10:23:02AM +0530, Dev Jain wrote:
-> > > On 21/06/25 11:25 pm, Donet Tom wrote:
-> > > > On Fri, Jun 20, 2025 at 08:15:25PM +0530, Dev Jain wrote:
-> > > > > On 19/06/25 1:53 pm, Donet Tom wrote:
-> > > > > > On Wed, Jun 18, 2025 at 08:13:54PM +0530, Dev Jain wrote:
-> > > > > > > On 18/06/25 8:05 pm, Lorenzo Stoakes wrote:
-> > > > > > > > On Wed, Jun 18, 2025 at 07:47:18PM +0530, Dev Jain wrote:
-> > > > > > > > > On 18/06/25 7:37 pm, Lorenzo Stoakes wrote:
-> > > > > > > > > > On Wed, Jun 18, 2025 at 07:28:16PM +0530, Dev Jain wrote:
-> > > > > > > > > > > On 18/06/25 5:27 pm, Lorenzo Stoakes wrote:
-> > > > > > > > > > > > On Wed, Jun 18, 2025 at 05:15:50PM +0530, Dev Jain wrote:
-> > > > > > > > > > > > Are you accounting for sys.max_map_count? If not, then you'll be hitting that
-> > > > > > > > > > > > first.
-> > > > > > > > > > > run_vmtests.sh will run the test in overcommit mode so that won't be an issue.
-> > > > > > > > > > Umm, what? You mean overcommit all mode, and that has no bearing on the max
-> > > > > > > > > > mapping count check.
-> > > > > > > > > > 
-> > > > > > > > > > In do_mmap():
-> > > > > > > > > > 
-> > > > > > > > > > 	/* Too many mappings? */
-> > > > > > > > > > 	if (mm->map_count > sysctl_max_map_count)
-> > > > > > > > > > 		return -ENOMEM;
-> > > > > > > > > > 
-> > > > > > > > > > 
-> > > > > > > > > > As well as numerous other checks in mm/vma.c.
-> > > > > > > > > Ah sorry, didn't look at the code properly just assumed that overcommit_always meant overriding
-> > > > > > > > > this.
-> > > > > > > > No problem! It's hard to be aware of everything in mm :)
-> > > > > > > > 
-> > > > > > > > > > I'm not sure why an overcommit toggle is even necessary when you could use
-> > > > > > > > > > MAP_NORESERVE or simply map PROT_NONE to avoid the OVERCOMMIT_GUESS limits?
-> > > > > > > > > > 
-> > > > > > > > > > I'm pretty confused as to what this test is really achieving honestly. This
-> > > > > > > > > > isn't a useful way of asserting mmap() behaviour as far as I can tell.
-> > > > > > > > > Well, seems like a useful way to me at least : ) Not sure if you are in the mood
-> > > > > > > > > to discuss that but if you'd like me to explain from start to end what the test
-> > > > > > > > > is doing, I can do that : )
-> > > > > > > > > 
-> > > > > > > > I just don't have time right now, I guess I'll have to come back to it
-> > > > > > > > later... it's not the end of the world for it to be iffy in my view as long as
-> > > > > > > > it passes, but it might just not be of great value.
-> > > > > > > > 
-> > > > > > > > Philosophically I'd rather we didn't assert internal implementation details like
-> > > > > > > > where we place mappings in userland memory. At no point do we promise to not
-> > > > > > > > leave larger gaps if we feel like it :)
-> > > > > > > You have a fair point. Anyhow a debate for another day.
-> > > > > > > 
-> > > > > > > > I'm guessing, reading more, the _real_ test here is some mathematical assertion
-> > > > > > > > about layout from HIGH_ADDR_SHIFT -> end of address space when using hints.
-> > > > > > > > 
-> > > > > > > > But again I'm not sure that achieves much and again also is asserting internal
-> > > > > > > > implementation details.
-> > > > > > > > 
-> > > > > > > > Correct behaviour of this kind of thing probably better belongs to tests in the
-> > > > > > > > userland VMA testing I'd say.
-> > > > > > > > 
-> > > > > > > > Sorry I don't mean to do down work you've done before, just giving an honest
-> > > > > > > > technical appraisal!
-> > > > > > > Nah, it will be rather hilarious to see it all go down the drain xD
-> > > > > > > 
-> > > > > > > > Anyway don't let this block work to fix the test if it's failing. We can revisit
-> > > > > > > > this later.
-> > > > > > > Sure. @Aboorva and Donet, I still believe that the correct approach is to elide
-> > > > > > > the gap check at the crossing boundary. What do you think?
-> > > > > > > 
-> > > > > > One problem I am seeing with this approach is that, since the hint address
-> > > > > > is generated randomly, the VMAs are also being created at randomly based on
-> > > > > > the hint address.So, for the VMAs created at high addresses, we cannot guarantee
-> > > > > > that the gaps between them will be aligned to MAP_CHUNK_SIZE.
-> > > > > > 
-> > > > > > High address VMAs
-> > > > > > -----------------
-> > > > > > 1000000000000-1000040000000 r--p 00000000 00:00 0
-> > > > > > 2000000000000-2000040000000 r--p 00000000 00:00 0
-> > > > > > 4000000000000-4000040000000 r--p 00000000 00:00 0
-> > > > > > 8000000000000-8000040000000 r--p 00000000 00:00 0
-> > > > > > e80009d260000-fffff9d260000 r--p 00000000 00:00 0
-> > > > > > 
-> > > > > > I have a different approach to solve this issue.
-> > > > > It is really weird that such a large amount of VA space
-> > > > > is left between the two VMAs yet mmap is failing.
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > Can you please do the following:
-> > > > > set /proc/sys/vm/max_map_count to the highest value possible.
-> > > > > If running without run_vmtests.sh, set /proc/sys/vm/overcommit_memory to 1.
-> > > > > In validate_complete_va_space:
-> > > > > 
-> > > > > if (start_addr >= HIGH_ADDR_MARK && found == false) {
-> > > > > 	found = true;
-> > > > > 	continue;
-> > > > > }
-> > > > Thanks Dev for the suggestion. I set max_map_count and set overcommit
-> > > > memory to 1, added this code change as well, and then tried. Still, the
-> > > > test is failing
-> > > > 
-> > > > > where found is initialized to false. This will skip the check
-> > > > > for the boundary.
-> > > > > 
-> > > > > After this can you tell whether the test is still failing.
-> > > > > 
-> > > > > Also can you give me the complete output of proc/pid/maps
-> > > > > after putting a sleep at the end of the test.
-> > > > > 
-> > > > on powerpc support DEFAULT_MAP_WINDOW is 128TB and with
-> > > > total address space size is 4PB With hint it can map upto
-> > > > 4PB. Since the hint addres is random in this test random hing VMAs
-> > > > are getting created. IIUC this is expected only.
-> > > > 
-> > > > 
-> > > > 10000000-10010000 r-xp 00000000 fd:05 134226638                          /home/donet/linux/tools/testing/selftests/mm/virtual_address_range
-> > > > 10010000-10020000 r--p 00000000 fd:05 134226638                          /home/donet/linux/tools/testing/selftests/mm/virtual_address_range
-> > > > 10020000-10030000 rw-p 00010000 fd:05 134226638                          /home/donet/linux/tools/testing/selftests/mm/virtual_address_range
-> > > > 30000000-10030000000 r--p 00000000 00:00 0                               [anon:virtual_address_range]
-> > > > 10030770000-100307a0000 rw-p 00000000 00:00 0                            [heap]
-> > > > 1004f000000-7fff8f000000 r--p 00000000 00:00 0                           [anon:virtual_address_range]
-> > > > 7fff8faf0000-7fff8fe00000 rw-p 00000000 00:00 0
-> > > > 7fff8fe00000-7fff90030000 r-xp 00000000 fd:00 792355                     /usr/lib64/libc.so.6
-> > > > 7fff90030000-7fff90040000 r--p 00230000 fd:00 792355                     /usr/lib64/libc.so.6
-> > > > 7fff90040000-7fff90050000 rw-p 00240000 fd:00 792355                     /usr/lib64/libc.so.6
-> > > > 7fff90050000-7fff90130000 r-xp 00000000 fd:00 792358                     /usr/lib64/libm.so.6
-> > > > 7fff90130000-7fff90140000 r--p 000d0000 fd:00 792358                     /usr/lib64/libm.so.6
-> > > > 7fff90140000-7fff90150000 rw-p 000e0000 fd:00 792358                     /usr/lib64/libm.so.6
-> > > > 7fff90160000-7fff901a0000 r--p 00000000 00:00 0                          [vvar]
-> > > > 7fff901a0000-7fff901b0000 r-xp 00000000 00:00 0                          [vdso]
-> > > > 7fff901b0000-7fff90200000 r-xp 00000000 fd:00 792351                     /usr/lib64/ld64.so.2
-> > > > 7fff90200000-7fff90210000 r--p 00040000 fd:00 792351                     /usr/lib64/ld64.so.2
-> > > > 7fff90210000-7fff90220000 rw-p 00050000 fd:00 792351                     /usr/lib64/ld64.so.2
-> > > > 7fffc9770000-7fffc9880000 rw-p 00000000 00:00 0                          [stack]
-> > > > 1000000000000-1000040000000 r--p 00000000 00:00 0                        [anon:virtual_address_range]
-> > > > 2000000000000-2000040000000 r--p 00000000 00:00 0                        [anon:virtual_address_range]
-> > > > 4000000000000-4000040000000 r--p 00000000 00:00 0                        [anon:virtual_address_range]
-> > > > 8000000000000-8000040000000 r--p 00000000 00:00 0                        [anon:virtual_address_range]
-> > > > eb95410220000-fffff90220000 r--p 00000000 00:00 0                        [anon:virtual_address_range]
-> > > > 
-> > > > 
-> > > > 
-> > > > 
-> > > > If I give the hint address serially from 128TB then the address
-> > > > space is contigous and gap is also MAP_SIZE, the test is passing.
-> > > > 
-> > > > 10000000-10010000 r-xp 00000000 fd:05 134226638                          /home/donet/linux/tools/testing/selftests/mm/virtual_address_range
-> > > > 10010000-10020000 r--p 00000000 fd:05 134226638                          /home/donet/linux/tools/testing/selftests/mm/virtual_address_range
-> > > > 10020000-10030000 rw-p 00010000 fd:05 134226638                          /home/donet/linux/tools/testing/selftests/mm/virtual_address_range
-> > > > 33000000-10033000000 r--p 00000000 00:00 0                               [anon:virtual_address_range]
-> > > > 10033380000-100333b0000 rw-p 00000000 00:00 0                            [heap]
-> > > > 1006f0f0000-10071000000 rw-p 00000000 00:00 0
-> > > > 10071000000-7fffb1000000 r--p 00000000 00:00 0                           [anon:virtual_address_range]
-> > > > 7fffb15d0000-7fffb1800000 r-xp 00000000 fd:00 792355                     /usr/lib64/libc.so.6
-> > > > 7fffb1800000-7fffb1810000 r--p 00230000 fd:00 792355                     /usr/lib64/libc.so.6
-> > > > 7fffb1810000-7fffb1820000 rw-p 00240000 fd:00 792355                     /usr/lib64/libc.so.6
-> > > > 7fffb1820000-7fffb1900000 r-xp 00000000 fd:00 792358                     /usr/lib64/libm.so.6
-> > > > 7fffb1900000-7fffb1910000 r--p 000d0000 fd:00 792358                     /usr/lib64/libm.so.6
-> > > > 7fffb1910000-7fffb1920000 rw-p 000e0000 fd:00 792358                     /usr/lib64/libm.so.6
-> > > > 7fffb1930000-7fffb1970000 r--p 00000000 00:00 0                          [vvar]
-> > > > 7fffb1970000-7fffb1980000 r-xp 00000000 00:00 0                          [vdso]
-> > > > 7fffb1980000-7fffb19d0000 r-xp 00000000 fd:00 792351                     /usr/lib64/ld64.so.2
-> > > > 7fffb19d0000-7fffb19e0000 r--p 00040000 fd:00 792351                     /usr/lib64/ld64.so.2
-> > > > 7fffb19e0000-7fffb19f0000 rw-p 00050000 fd:00 792351                     /usr/lib64/ld64.so.2
-> > > > 7fffc5470000-7fffc5580000 rw-p 00000000 00:00 0                          [stack]
-> > > > 800000000000-2aab000000000 r--p 00000000 00:00 0                         [anon:virtual_address_range]
-> > > > 
-> > > > 
-> > > Thank you for this output. I can't wrap my head around why this behaviour changes
-> > > when you generate the hint sequentially. The mmap() syscall is supposed to do the
-> > > following (irrespective of high VA space or not) - if the allocation at the hint
-> > Yes, it is working as expected. On PowerPC, the DEFAULT_MAP_WINDOW is
-> > 128TB, and the system can map up to 4PB.
-> > 
-> > In the test, the first mmap call maps memory up to 128TB without any
-> > hint, so the VMAs are created below the 128TB boundary.
-> > 
-> > In the second mmap call, we provide a hint starting from 256TB, and
-> > the hint address is generated randomly above 256TB. The mappings are
-> > correctly created at these hint addresses. Since the hint addresses
-> > are random, the resulting VMAs are also created at random locations.
-> > 
-> > So, what I tried is: mapping from 0 to 128TB without any hint, and
-> > then for the second mmap, instead of starting the hint from 256TB, I
-> > started from 128TB. Instead of using random hint addresses, I used
-> > sequential hint addresses from 128TB up to 512TB. With this change,
-> > the VMAs are created in order, and the test passes.
-> > 
-> > 800000000000-2aab000000000 r--p 00000000 00:00 0    128TB to 512TB VMA
-> > 
-> > I think we will see same behaviour on x86 with X86_FEATURE_LA57.
-> > 
-> > I will send the updated patch in V2.
-> 
-> Since you say it fails on both radix and hash, it means that the generic
-> code path is failing. I see that on my system, when I run the test with
-> LPA2 config, write() fails with errno set to -ENOMEM. Can you apply
-> the following diff and check whether the test fails still. Doing this
-> fixed it for arm64.
-> 
-> diff --git a/tools/testing/selftests/mm/virtual_address_range.c b/tools/testing/selftests/mm/virtual_address_range.c
-> 
-> index b380e102b22f..3032902d01f2 100644
-> 
-> --- a/tools/testing/selftests/mm/virtual_address_range.c
-> 
-> +++ b/tools/testing/selftests/mm/virtual_address_range.c
-> 
-> @@ -173,10 +173,6 @@ static int validate_complete_va_space(void)
-> 
->                  */
-> 
->                 hop = 0;
-> 
->                 while (start_addr + hop < end_addr) {
-> 
-> -                       if (write(fd, (void *)(start_addr + hop), 1) != 1)
-> 
-> -                               return 1;
-> 
-> -                       lseek(fd, 0, SEEK_SET);
-> 
-> -
-> 
->                         if (is_marked_vma(vma_name))
-> 
->                                 munmap((char *)(start_addr + hop), MAP_CHUNK_SIZE);
+On Wed, Jun 25, 2025 at 4:27=E2=80=AFAM Lance Yang <ioworker0@gmail.com> wr=
+ote:
 >
+> On 2025/6/24 23:34, David Hildenbrand wrote:
+> > On 24.06.25 17:26, Lance Yang wrote:
+> >> On 2025/6/24 20:55, David Hildenbrand wrote:
+> >>> On 14.02.25 10:30, Barry Song wrote:
+> >>>> From: Barry Song <v-songbaohua@oppo.com>
+> >> [...]
+> >>>> diff --git a/mm/rmap.c b/mm/rmap.c
+> >>>> index 89e51a7a9509..8786704bd466 100644
+> >>>> --- a/mm/rmap.c
+> >>>> +++ b/mm/rmap.c
+> >>>> @@ -1781,6 +1781,25 @@ void folio_remove_rmap_pud(struct folio *foli=
+o,
+> >>>> struct page *page,
+> >>>>    #endif
+> >>>>    }
+> >>>> +/* We support batch unmapping of PTEs for lazyfree large folios */
+> >>>> +static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
+> >>>> +            struct folio *folio, pte_t *ptep)
+> >>>> +{
+> >>>> +    const fpb_t fpb_flags =3D FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DI=
+RTY;
+> >>>> +    int max_nr =3D folio_nr_pages(folio);
+> >>>
+> >>> Let's assume we have the first page of a folio mapped at the last pag=
+e
+> >>> table entry in our page table.
+> >>
+> >> Good point. I'm curious if it is something we've seen in practice ;)
+> >
+> > I challenge you to write a reproducer :P I assume it might be doable
+> > through simple mremap().
+> >
+> >>
+> >>>
+> >>> What prevents folio_pte_batch() from reading outside the page table?
+> >>
+> >> Assuming such a scenario is possible, to prevent any chance of an
+> >> out-of-bounds read, how about this change:
+> >>
+> >> diff --git a/mm/rmap.c b/mm/rmap.c
+> >> index fb63d9256f09..9aeae811a38b 100644
+> >> --- a/mm/rmap.c
+> >> +++ b/mm/rmap.c
+> >> @@ -1852,6 +1852,25 @@ static inline bool
+> >> can_batch_unmap_folio_ptes(unsigned long addr,
+> >>       const fpb_t fpb_flags =3D FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIR=
+TY;
+> >>       int max_nr =3D folio_nr_pages(folio);
+> >>       pte_t pte =3D ptep_get(ptep);
+> >> +    unsigned long end_addr;
+> >> +
+> >> +    /*
+> >> +     * To batch unmap, the entire folio's PTEs must be contiguous
+> >> +     * and mapped within the same PTE page table, which corresponds t=
+o
+> >> +     * a single PMD entry. Before calling folio_pte_batch(), which do=
+es
+> >> +     * not perform boundary checks itself, we must verify that the
+> >> +     * address range covered by the folio does not cross a PMD bounda=
+ry.
+> >> +     */
+> >> +    end_addr =3D addr + (max_nr * PAGE_SIZE) - 1;
+> >> +
+> >> +    /*
+> >> +     * A fast way to check for a PMD boundary cross is to align both
+> >> +     * the start and end addresses to the PMD boundary and see if the=
+y
+> >> +     * are different. If they are, the range spans across at least tw=
+o
+> >> +     * different PMD-managed regions.
+> >> +     */
+> >> +    if ((addr & PMD_MASK) !=3D (end_addr & PMD_MASK))
+> >> +        return false;
+> >
+> > You should not be messing with max_nr =3D folio_nr_pages(folio) here at
+> > all. folio_pte_batch() takes care of that.
+> >
+> > Also, way too many comments ;)
+> >
+> > You may only batch within a single VMA and within a single page table.
+> >
+> > So simply align the addr up to the next PMD, and make sure it does not
+> > exceed the vma end.
+> >
+> > ALIGN and friends can help avoiding excessive comments.
+>
+> Thanks! How about this updated version based on your suggestion:
+>
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index fb63d9256f09..241d55a92a47 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1847,12 +1847,25 @@ void folio_remove_rmap_pud(struct folio *folio, s=
+truct page *page,
+>
+>  /* We support batch unmapping of PTEs for lazyfree large folios */
+>  static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
+> -                       struct folio *folio, pte_t *ptep)
+> +                                             struct folio *folio, pte_t =
+*ptep,
+> +                                             struct vm_area_struct *vma)
+>  {
+>         const fpb_t fpb_flags =3D FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRT=
+Y;
+> +       unsigned long next_pmd, vma_end, end_addr;
+>         int max_nr =3D folio_nr_pages(folio);
+>         pte_t pte =3D ptep_get(ptep);
+>
+> +       /*
+> +        * Limit the batch scan within a single VMA and within a single
+> +        * page table.
+> +        */
+> +       vma_end =3D vma->vm_end;
+> +       next_pmd =3D ALIGN(addr + 1, PMD_SIZE);
+> +       end_addr =3D addr + (unsigned long)max_nr * PAGE_SIZE;
+> +
+> +       if (end_addr > min(next_pmd, vma_end))
+> +               return false;
+> +
 
-Even with this change, the test is still failing. In this case,
-we are allocating physical memory and writing into it, but our
-issue seems to be with the gap between VMAs, so I believe this
-might not be directly related.
+I had a similar check in do_swap_page() for both forward and backward
+out-of-bounds page tables, but I forgot to add it for this unmap path.
 
-I will send the next revision where the test passes and no
-issues are observed
+this is do_swap_page():
 
-Just curious — with LPA2, is the second mmap() call successful?
-And are the VMAs being created at the hint address as expected?
- 
-> > 
-> > > addr succeeds, then all is well, otherwise, do a top-down search for a large
-> > > enough gap. I am not aware of the nuances in powerpc but I really am suspecting
-> > > a bug in powerpc mmap code. Can you try to do some tracing - which function
-> > > eventually fails to find the empty gap?
-> > > 
-> > > Through my limited code tracing - we should end up in slice_find_area_topdown,
-> > > then we ask the generic code to find the gap using vm_unmapped_area. So I
-> > > suspect something is happening between this, probably slice_scan_available().
-> > > 
-> > > > > >    From 0 to 128TB, we map memory directly without using any hint. For the range above
-> > > > > > 256TB up to 512TB, we perform the mapping using hint addresses. In the current test,
-> > > > > > we use random hint addresses, but I have modified it to generate hint addresses linearly
-> > > > > > starting from 128TB.
-> > > > > > 
-> > > > > > With this change:
-> > > > > > 
-> > > > > > The 0–128TB range is mapped without hints and verified accordingly.
-> > > > > > 
-> > > > > > The 128TB–512TB range is mapped using linear hint addresses and then verified.
-> > > > > > 
-> > > > > > Below are the VMAs obtained with this approach:
-> > > > > > 
-> > > > > > 10000000-10010000 r-xp 00000000 fd:05 135019531
-> > > > > > 10010000-10020000 r--p 00000000 fd:05 135019531
-> > > > > > 10020000-10030000 rw-p 00010000 fd:05 135019531
-> > > > > > 20000000-10020000000 r--p 00000000 00:00 0
-> > > > > > 10020800000-10020830000 rw-p 00000000 00:00 0
-> > > > > > 1004bcf0000-1004c000000 rw-p 00000000 00:00 0
-> > > > > > 1004c000000-7fff8c000000 r--p 00000000 00:00 0
-> > > > > > 7fff8c130000-7fff8c360000 r-xp 00000000 fd:00 792355
-> > > > > > 7fff8c360000-7fff8c370000 r--p 00230000 fd:00 792355
-> > > > > > 7fff8c370000-7fff8c380000 rw-p 00240000 fd:00 792355
-> > > > > > 7fff8c380000-7fff8c460000 r-xp 00000000 fd:00 792358
-> > > > > > 7fff8c460000-7fff8c470000 r--p 000d0000 fd:00 792358
-> > > > > > 7fff8c470000-7fff8c480000 rw-p 000e0000 fd:00 792358
-> > > > > > 7fff8c490000-7fff8c4d0000 r--p 00000000 00:00 0
-> > > > > > 7fff8c4d0000-7fff8c4e0000 r-xp 00000000 00:00 0
-> > > > > > 7fff8c4e0000-7fff8c530000 r-xp 00000000 fd:00 792351
-> > > > > > 7fff8c530000-7fff8c540000 r--p 00040000 fd:00 792351
-> > > > > > 7fff8c540000-7fff8c550000 rw-p 00050000 fd:00 792351
-> > > > > > 7fff8d000000-7fffcd000000 r--p 00000000 00:00 0
-> > > > > > 7fffe9c80000-7fffe9d90000 rw-p 00000000 00:00 0
-> > > > > > 800000000000-2000000000000 r--p 00000000 00:00 0    -> High Address (128TB to 512TB)
-> > > > > > 
-> > > > > > diff --git a/tools/testing/selftests/mm/virtual_address_range.c b/tools/testing/selftests/mm/virtual_address_range.c
-> > > > > > index 4c4c35eac15e..0be008cba4b0 100644
-> > > > > > --- a/tools/testing/selftests/mm/virtual_address_range.c
-> > > > > > +++ b/tools/testing/selftests/mm/virtual_address_range.c
-> > > > > > @@ -56,21 +56,21 @@
-> > > > > >     #ifdef __aarch64__
-> > > > > >     #define HIGH_ADDR_MARK  ADDR_MARK_256TB
-> > > > > > -#define HIGH_ADDR_SHIFT 49
-> > > > > > +#define HIGH_ADDR_SHIFT 48
-> > > > > >     #define NR_CHUNKS_LOW   NR_CHUNKS_256TB
-> > > > > >     #define NR_CHUNKS_HIGH  NR_CHUNKS_3840TB
-> > > > > >     #else
-> > > > > >     #define HIGH_ADDR_MARK  ADDR_MARK_128TB
-> > > > > > -#define HIGH_ADDR_SHIFT 48
-> > > > > > +#define HIGH_ADDR_SHIFT 47
-> > > > > >     #define NR_CHUNKS_LOW   NR_CHUNKS_128TB
-> > > > > >     #define NR_CHUNKS_HIGH  NR_CHUNKS_384TB
-> > > > > >     #endif
-> > > > > > -static char *hint_addr(void)
-> > > > > > +static char *hint_addr(int hint)
-> > > > > >     {
-> > > > > > -       int bits = HIGH_ADDR_SHIFT + rand() % (63 - HIGH_ADDR_SHIFT);
-> > > > > > +       unsigned long addr = ((1UL << HIGH_ADDR_SHIFT) + (hint * MAP_CHUNK_SIZE));
-> > > > > > -       return (char *) (1UL << bits);
-> > > > > > +       return (char *) (addr);
-> > > > > >     }
-> > > > > >     static void validate_addr(char *ptr, int high_addr)
-> > > > > > @@ -217,7 +217,7 @@ int main(int argc, char *argv[])
-> > > > > >            }
-> > > > > >            for (i = 0; i < NR_CHUNKS_HIGH; i++) {
-> > > > > > -               hint = hint_addr();
-> > > > > > +               hint = hint_addr(i);
-> > > > > >                    hptr[i] = mmap(hint, MAP_CHUNK_SIZE, PROT_READ,
-> > > > > >                                   MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
-> > > > > > 
-> > > > > > 
-> > > > > > 
-> > > > > > Can we fix it this way?
+        if (folio_test_large(folio) && folio_test_swapcache(folio)) {
+                int nr =3D folio_nr_pages(folio);
+                unsigned long idx =3D folio_page_idx(folio, page);
+                unsigned long folio_start =3D address - idx * PAGE_SIZE;
+                unsigned long folio_end =3D folio_start + nr * PAGE_SIZE;
+
+                pte_t *folio_ptep;
+                pte_t folio_pte;
+
+                if (unlikely(folio_start < max(address & PMD_MASK,
+vma->vm_start)))
+                        goto check_folio;
+                if (unlikely(folio_end > pmd_addr_end(address, vma->vm_end)=
+))
+                        goto check_folio;
+       }
+
+So maybe something like folio_end > pmd_addr_end(address, vma->vm_end)?
+
+Thanks
+Barry
