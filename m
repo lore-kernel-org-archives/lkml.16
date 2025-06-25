@@ -1,164 +1,113 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3F329A9FA;
-	Wed, 25 Jun 2025 10:34:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7337E2BDC11
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:34:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750847682; cv=none; b=EQCdR21fpIZ1EYsUYptTxn/m+g5eYDpPYO6S2M/0c85CxXyQsvbZeknqfsZocCufR4+SE/okisqqHExKGHBBzkQemo6DpVhvND1Csf5zqPMS7cStNyZYgVcMIeaX5kp+0JVyzerpqQlrdCBiHd+GP7yTy6QusdyUOW/wsotiq88=
+	t=1750847689; cv=none; b=Q4pnGsQjD3inLpNiBjX+CqgFe7wi17tR1eI4heM6VfTrrcBEdgDDp7ZXocNWXkQcNnmkOnGnmGUtgt6vqvkJXI0IUJflCCT7F221n165FeXO/UOfDr5sQJQGh4hZWWEf38bJzeKPOCigUdoK/73T2Au0afUO6/DN+lGjpNLi/KY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750847682; c=relaxed/simple;
-	bh=dA5ZCy6HQqEkPHgSujZ/C9IiG2ZeoOXHBOqgYKQ8Ow8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=SzmB76weEdHYkwPy4hEmpA85Ag7WQNMm+F3wyr1/xMepcygXQZsHihrwh8+Gc6NIZ5E2w0E2+UnU+RTjoerNNaUEO14q4urOeHI9uMzyChoeZYmKYZo5f8pgOqOwNZt7UPBrqYHs9awjOusj72CbC3+vEgasXaXfmQXbP17ByQo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=fIzbdzCx; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="fIzbdzCx"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PAV0V5022703;
-	Wed, 25 Jun 2025 10:34:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	BfrFEUPqOh3EWJBb82sN4PO9NfKDcWv3vyibL0dYnyw=; b=fIzbdzCxHeX9X74j
-	AKWgSm+XHP1W+eu+VFo0lwceC0uMZBMfQnflXB/Hse7vB9sxnUF1hOHhcifPZy7u
-	iOpY907t0DA/qQrjnMlG4brkOG01VDt7wFYGGtF1js6rcu8/4C1t2Ic6T6Oy8hvf
-	YpbcpnACo3j3PcjtOt+7aWw3ItHqZFlM4ZD+sRGDZgZK3QjKQycIdYmpeNh9fC/G
-	o0TCrMFQeRsswjpLXK1edwNkv/rMbPxwLmy2DBh3mOybfPhIhqmyWoEOAHwH6pjj
-	yTKtSjVPQYMteZuMWjfjuFLXcyX/oKqvc64e+XLyWdqIPMi4Q5K5hdoBmNA4Z9+n
-	ocKPMw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g88f9aar-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 10:34:37 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55PAYalI014555
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 10:34:36 GMT
-Received: from [10.218.23.250] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 25 Jun
- 2025 03:34:32 -0700
-Message-ID: <2e892bda-c9a4-46b3-9331-0978d4dabab4@quicinc.com>
-Date: Wed, 25 Jun 2025 16:04:28 +0530
+	s=arc-20240116; t=1750847689; c=relaxed/simple;
+	bh=MN0a0M5SY8qVye0UR6x7OgeBX33RCLWkHTWSqb1SIG0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OSxWzF5VTj4QWQMj2FEZIaqxVQUEo+QBrtOzyukXwzQnQu+qIaVvmqK3lCkaUIRpMVu4OS8oDXnO7NJwTsTMuC6aTUe9z9t7p3bLr6NuRgKd6L6kCy+Wf8GfLr7lCxS7or+jhcGSBJnZZ5udjaO2HeQAEFwtyIeM+ko2CsfSJMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uUNSO-0007Kd-Gq; Wed, 25 Jun 2025 12:34:20 +0200
+Received: from pty.whiteo.stw.pengutronix.de ([2a0a:edc0:2:b01:1d::c5])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uUNSO-005GSi-08;
+	Wed, 25 Jun 2025 12:34:20 +0200
+Received: from mfe by pty.whiteo.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1uUNSN-00H7jR-2z;
+	Wed, 25 Jun 2025 12:34:19 +0200
+Date: Wed, 25 Jun 2025 12:34:19 +0200
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Pankaj Gupta <pankaj.gupta@nxp.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+	imx@lists.linux.dev, linux-doc@vger.kernel.org,
+	Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v18 0/7] firmware: imx: driver for NXP secure-enclave
+Message-ID: <20250625103419.h32apyxfjztpoi7k@pengutronix.de>
+References: <20250619-imx-se-if-v18-0-c98391ba446d@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] arm64: dts: qcom: sc8180x: Add video clock controller
- node
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: Ajit Pandey <quic_ajipan@quicinc.com>,
-        Imran Shaik
-	<quic_imrashai@quicinc.com>,
-        Taniya Das <quic_tdas@quicinc.com>,
-        "Jagadeesh
- Kona" <quic_jkona@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20250623-sc8180x-videocc-dt-v1-1-9d210c140600@quicinc.com>
- <b5d181d8-26bc-4855-a8df-ab352837e800@oss.qualcomm.com>
-Content-Language: en-US
-From: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
-In-Reply-To: <b5d181d8-26bc-4855-a8df-ab352837e800@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA3OCBTYWx0ZWRfX3eRva1y0KiPo
- R5V2ew7ghdddghyYp4yuRTlny/W/I8dD10F3p0p5PeZQwuADCr0kbgUL/6UbySGGTum1DBaqVur
- RSPnNt9mIQu2S1sQLbgf8AHydMUEXGkXL1otpmWWulnHZ2nkKht4Oq7gonj/NjrcfSXc7nE7h/P
- Mqp9uS/IlLjC1C6LMN9/jsPseWyHQNbLvOltCBuvZgMgEj8lha2P1R/E8aMqz0HvLZp+F1HjFCp
- zy8wb32008yQrN7wUuj1XBTAhzMe3OrUiT3tdH9+TJPpwX2SwzRuDmtHM/R12f0sXuruaON6BxD
- +9UKcG0kxi+9HoPLHnIPmD7S2VJDbNWjuvnGeDv77o/iPxhZ5kxC/EmPPVA//8ATHoWBv1YVB7S
- yR8F6KDmdswZDrPzApXSWLxuO7GEg3G9PihbK7iWwfx/r8IKqp8N2ZT39X0hOsOWlopRHZRv
-X-Proofpoint-ORIG-GUID: gyb5z3Cud4ZfJN-AuZSHAEpS2rSfrrDl
-X-Proofpoint-GUID: gyb5z3Cud4ZfJN-AuZSHAEpS2rSfrrDl
-X-Authority-Analysis: v=2.4 cv=LNNmQIW9 c=1 sm=1 tr=0 ts=685bd0bd cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=Ud0PsPdOlkabNkr14dYA:9 a=QEXdDO2ut3YA:10 a=aWhxIMAnu1oA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
- impostorscore=0 mlxscore=0 clxscore=1015 adultscore=0 priorityscore=1501
- lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506250078
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619-imx-se-if-v18-0-c98391ba446d@nxp.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
+Hi Pankaj,
 
-On 6/23/2025 3:38 PM, Konrad Dybcio wrote:
-> On 6/23/25 10:14 AM, Satya Priya Kakitapalli wrote:
->> Add device node for video clock controller on Qualcomm
->> SC8180X platform.
->>
->> Signed-off-by: Satya Priya Kakitapalli <quic_skakitap@quicinc.com>
->> ---
->> Add device node for video clock controller on Qualcomm
->> SC8180X platform.
-> Because you added this text under '---', it will not be included in
-> the commit log (and we want it to be there), please put the message
-> above your sign-off
+thank you for the patchset and sorry for jumping late.
 
+On 25-06-19, Pankaj Gupta wrote:
 
-I did not add this manually, seems it was appended by b4
+...
+> ---
+> Pankaj Gupta (7):
+>       Documentation/firmware: add imx/se to other_interfaces
+>       dt-bindings: arm: fsl: add imx-se-fw binding doc
+>       firmware: imx: add driver for NXP EdgeLock Enclave
+>       firmware: imx: device context dedicated to priv
+>       firmware: drivers: imx: adds miscdev
 
-https://b4.docs.kernel.org/en/latest/contributor/prep.html#what-if-the-series-only-has-a-single-patch
+I didn't had the time for a detailed review but the patches3-5 (e.g. all
+firmware: *) can be squashed. In patch3 you add a set of files which
+you're going to patch in patch4 and patch5.
 
+Please have a look at my comment on patch3.
 
-I have already mentioned the same message in the commit text above my 
-sign-off.
+Regards,
+  Marco
 
-
->
->> ---
->>   arch/arm64/boot/dts/qcom/sc8180x.dtsi | 14 ++++++++++++++
->>   1 file changed, 14 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sc8180x.dtsi b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
->> index b74ce3175d209b569e634073662307964158b340..4590c2ff68a9885d8047d728bbf2dea0236d5b8f 100644
->> --- a/arch/arm64/boot/dts/qcom/sc8180x.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc8180x.dtsi
->> @@ -10,6 +10,7 @@
->>   #include <dt-bindings/clock/qcom,gpucc-sm8150.h>
->>   #include <dt-bindings/clock/qcom,rpmh.h>
->>   #include <dt-bindings/clock/qcom,sc8180x-camcc.h>
->> +#include <dt-bindings/clock/qcom,videocc-sm8150.h>
->>   #include <dt-bindings/interconnect/qcom,icc.h>
->>   #include <dt-bindings/interconnect/qcom,osm-l3.h>
->>   #include <dt-bindings/interconnect/qcom,sc8180x.h>
->> @@ -2943,6 +2944,19 @@ usb_sec_dwc3_ss: endpoint {
->>   			};
->>   		};
->>   
->> +		videocc: clock-controller@ab00000 {
->> +			compatible = "qcom,sm8150-videocc";
-> If the blocks are truly 1:1 shared, with no additional software changes
-> required, please still include a 8180-specific compatible in the front,
-> with a 8150 fallback:
->
-> "qcom,sc8180x-videocc", "qcom,sm8150-videocc"
->
-> which will require a dt-bindings update
-
-
-Sure, I will add the new compatible for sc8180x and update the bindings.
-
-
+>       arm64: dts: imx8ulp: add secure enclave node
+>       arm64: dts: imx8ulp-evk: add reserved memory property
+> 
+>  Documentation/ABI/testing/se-cdev                  |   43 +
+>  .../devicetree/bindings/firmware/fsl,imx-se.yaml   |   91 ++
+>  .../driver-api/firmware/other_interfaces.rst       |  123 +++
+>  arch/arm64/boot/dts/freescale/imx8ulp-evk.dts      |   12 +-
+>  arch/arm64/boot/dts/freescale/imx8ulp.dtsi         |   11 +-
+>  drivers/firmware/imx/Kconfig                       |   13 +
+>  drivers/firmware/imx/Makefile                      |    2 +
+>  drivers/firmware/imx/ele_base_msg.c                |  269 +++++
+>  drivers/firmware/imx/ele_base_msg.h                |   95 ++
+>  drivers/firmware/imx/ele_common.c                  |  354 ++++++
+>  drivers/firmware/imx/ele_common.h                  |   49 +
+>  drivers/firmware/imx/se_ctrl.c                     | 1145 ++++++++++++++++++++
+>  drivers/firmware/imx/se_ctrl.h                     |  128 +++
+>  include/linux/firmware/imx/se_api.h                |   14 +
+>  include/uapi/linux/se_ioctl.h                      |   97 ++
+>  15 files changed, 2443 insertions(+), 3 deletions(-)
+> ---
+> base-commit: 9e9eef5925a5d2b1938484c4edc906e384145959
+> change-id: 20240507-imx-se-if-a40055093dc6
+> 
+> Best regards,
+> -- 
+> Pankaj Gupta <pankaj.gupta@nxp.com>
+> 
+> 
+> 
