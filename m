@@ -1,99 +1,168 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F303272619
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:54:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2103022083
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:55:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750838061; cv=none; b=ryKknslIiBe7SkkPbDcP8ebS8AHqduOZNhPxPVVj0u1m7AO2aHUuHj4n1J+N6pmOPAgM7CGUEBQ8GBNbK2p7fN1jyvTSJkl38rNOPbmDQ+VKZrdxP/Hnhp7R5WrHXmKDMDVTYsxSKnAxOaTp+oYS0sbeYfIY5+AM9NvRDJMBQPk=
+	t=1750838103; cv=none; b=DTJRXRqWAe207CzIvbv1YXMXgx7CQmG5/Wm5eIcakcalGyEHQ35z2r5P1w+xJ7xdQPKQeCafbWi8/9GiKUJrSWy972g6CwlwyLgaLt1aeqpT3Xrx50PWOhb+H/Amo3TdSerQ9to0gFs46b95oGOHG8hbOnhglUX8pskPwKiJujQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750838061; c=relaxed/simple;
-	bh=V/cKTqS5I6N6Gw4GRuMyE6GPe7ohHi82BZbeNsiAXtM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pLK8wU+s7Xu32L6kq0j498Yc2jtEER7ni1EQRdzUomFiOU+B4rBQj4rBbXMtCQpHaULKa5a1yZLkkQCc+l7Ik65gVS6CcdfebxrqhnKxNb0PoxceM4HSnMm1AFwuNJdGqXxVMJZYzNi5c22KddIkR4e8T1rwLrhDopq4ps74N0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DINnN/Dk; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1750838103; c=relaxed/simple;
+	bh=GGSR1sAePJsPOnz++Aerqtc9xPzkK5LJcZnkjQa1RKQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UeykuQVRY/N1oD4pPGRmv8a7TvU04l89Fojq3N9GxoF25WAgCjtFOgPDWk2N2zG8ncKwbfuKBTxI5h1kZWPBoCSEovC5NO6reh+0Q9oHBfKSBF7HSv1/W/fW4glMHvplq3nbejHBRmiUyXU5GxcxqYCn8vAE2ffAFiOS5hA1WYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SjrdOX2s; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bUX5vEHY; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=SjrdOX2s; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=bUX5vEHY; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DINnN/Dk"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4535fbe0299so35031305e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:54:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750838056; x=1751442856; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DGIylCtWYzvUCW3Ait7fyeB6e45G1L47puxB8d2HHKs=;
-        b=DINnN/DkAF6lDww1d7U5/+kXW5yzaaiXGjzEYzG1IpOTwbuPxNKoFLXx8MuaL421Q2
-         tY4O7D9ycZZord6PnLh+bli2hPuqFmC9EPrGEJyofIrhqNmPDRIhtcrVmlx+tBYlnV7H
-         aUfFomtBfPljJY7xuxRY4bJZnkrnJvEyeTSaiY3gb6/vhr+3a0Q4XtpUh2UHCW5M0wCn
-         MNnjBCX7oyUQorfvFIIwQQ1vLHk5/Q/rbC2HJ5qSYJKLvPpDUicF0qgkdd5cTLin6JkM
-         rH83/NGI6lZHU9KFApJVyc6+uRndWiG7tQ+IoiS1bWE6scOy8gkhrxnOdH1ss102JZeE
-         uMHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750838056; x=1751442856;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DGIylCtWYzvUCW3Ait7fyeB6e45G1L47puxB8d2HHKs=;
-        b=m1LBDLC3M+dqq2cZY0jSZqWI+9l9O36XRG+2Cf7uG7WtTptQtKnwzJ4vs1hHCRIgra
-         cCpNRcMuRRKm0s0lhhtAMK5k7DsS120Wmfh6rm0B7tOX/sEjXGBhR+9aza28mPI6ar3U
-         RRIMYUTQBlcxYrRnK8us9DT1jzWO91AyalvBDyhNMI9A0h9RpOH6O3hIyE6SnWwxTjEm
-         hF2Pl534+L9BN0S7FD3ThhBWnBGjtuLLZD06Ueu+9PJSpdX+qTiipUjFx6yBCkmcLgx0
-         92yKl1B2/0OgNTI3/5f8kBBeaw9IHm+tQb8R8EgoBsKEo3XkT+6xBl6p/UaeOxIoscTw
-         nKsA==
-X-Forwarded-Encrypted: i=1; AJvYcCXJhHflETHVM7wkPGOl9UMU+5ZVgb8XawXxQa17WOMHQDgUV5PlPenYFP2Bb9C+0PT95ws6N9NSh3yIv+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy2ywd4i9qeg9UjCgzN4pKpW/brBiQp4x8kpWWEyPjFfBjc4WiR
-	awPiwAA2pJKE/gM6m+F+6TKePfLqs0viOR0I8MYnhTBDK/HKYj05qbcKxWdLcYBa1Z4=
-X-Gm-Gg: ASbGncsb4JLl6uZz1yqOgL//a+UJOCE/1h+UMlfI9F0Osc9xYWBdLUFYII28y0MF2AS
-	Anfsr5o/ijhCXjYpTu2DDy1jOYE7f+39gWVlbURwd3B3d6pv+sAXDpETn9SZCPoDleRNh6/Twu3
-	kfgk5DkelAfj80tgdxvHjQg1HMYJI0NWVMjGZ6k9NTZj7f0JCUgVmZXMoyOEGtWNP+q5vG4APOb
-	9X7ruXW7JC8dwkZJW2mKuBXQ40Rip/VcAu+GNNr7oqztNytUSeMu4Bh6M4xRO0I/uko/VU2bNu4
-	F3NfpeBFrkCQbs8MGMN4Sq8XeNc4cQTDTH06/AulzGepZdWsbYkwhst1Fxt9smn3dfNy9DOSFA=
-	=
-X-Google-Smtp-Source: AGHT+IFTN+pUF7ig2e5+eSgpV49BEm9FJsw7Px+Alu7qgTSm71Hqmqt+nSXb/t7u0Vhkr0V9xsRnTg==
-X-Received: by 2002:a05:600c:a48:b0:450:d01e:78ee with SMTP id 5b1f17b1804b1-45381aeff7cmr14873805e9.24.1750838056039;
-        Wed, 25 Jun 2025 00:54:16 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:d216:42f3:1e7e:472e])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823ad03asm11650295e9.23.2025.06.25.00.54.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 00:54:15 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: clps711x: drop unneeded platform_set_drvdata()
-Date: Wed, 25 Jun 2025 09:54:14 +0200
-Message-ID: <175083805259.9312.14360612986153360461.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250618074653.25555-1-brgl@bgdev.pl>
-References: <20250618074653.25555-1-brgl@bgdev.pl>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SjrdOX2s";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bUX5vEHY";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="SjrdOX2s";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="bUX5vEHY"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 49BF42116F;
+	Wed, 25 Jun 2025 07:55:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750838100; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jr2DJml86CkvLgTSl6zdjggn2/vW3DsZt/BTczAFHQo=;
+	b=SjrdOX2sDdKgblCBMUVnqceNrMIMGh7OJX/oXKNA/dYbvqUlTFLFP+jpNUZipabqT6lRUs
+	NEn6D98AlAdhUOLJQJuROjeIfyitgRIrk2YpCJYVqqWiL5h9xC9uiOOT3WX7JiFJrAtEhY
+	IzZ4nYNYrfDGb7c1Ur8Soy88nOFnBE0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750838100;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jr2DJml86CkvLgTSl6zdjggn2/vW3DsZt/BTczAFHQo=;
+	b=bUX5vEHYowEIL50emhbwwFb2Vo3qPhtmEGVKJWUo61ycvBCV2bTYEWcMcHt/VS2qmRMSLI
+	alj/+MB1POrNwdAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750838100; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jr2DJml86CkvLgTSl6zdjggn2/vW3DsZt/BTczAFHQo=;
+	b=SjrdOX2sDdKgblCBMUVnqceNrMIMGh7OJX/oXKNA/dYbvqUlTFLFP+jpNUZipabqT6lRUs
+	NEn6D98AlAdhUOLJQJuROjeIfyitgRIrk2YpCJYVqqWiL5h9xC9uiOOT3WX7JiFJrAtEhY
+	IzZ4nYNYrfDGb7c1Ur8Soy88nOFnBE0=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750838100;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jr2DJml86CkvLgTSl6zdjggn2/vW3DsZt/BTczAFHQo=;
+	b=bUX5vEHYowEIL50emhbwwFb2Vo3qPhtmEGVKJWUo61ycvBCV2bTYEWcMcHt/VS2qmRMSLI
+	alj/+MB1POrNwdAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id CDAA013301;
+	Wed, 25 Jun 2025 07:54:58 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id 5MYqL1KrW2gjEwAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 25 Jun 2025 07:54:58 +0000
+Date: Wed, 25 Jun 2025 09:54:57 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, nvdimm@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>
+Subject: Re: [PATCH RFC 01/14] mm/memory: drop highest_memmap_pfn sanity
+ check in vm_normal_page()
+Message-ID: <aFurUeuxhasLdCTT@localhost.localdomain>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-2-david@redhat.com>
+ <aFVZCvOpIpBGAf9w@localhost.localdomain>
+ <c88c29d2-d887-4c5a-8b4e-0cf30e71d596@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c88c29d2-d887-4c5a-8b4e-0cf30e71d596@redhat.com>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLhwqoz3wsm4df3nfubx4grhps)];
+	RCVD_COUNT_TWO(0.00)[2];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Jun 23, 2025 at 04:04:01PM +0200, David Hildenbrand wrote:
+> Hi Oscar,
 
+Hi David,
 
-On Wed, 18 Jun 2025 09:46:53 +0200, Bartosz Golaszewski wrote:
-> There's no corresponding platform_get_drvdata() used in this module or
-> the higher-level gpio-mmio. Let's remove the unneeded call to
-> platform_set_drvdata().
 > 
+> > I'm confused, I'm missing something here.
+> > Before this change we would return NULL if e.g: pfn > highest_memmap_pfn, but
+> > now we just print the warning and call pfn_to_page() anyway.
+> > AFAIK, pfn_to_page() doesn't return NULL?
 > 
+> You're missing that vm_normal_page_pmd() was created as a copy from
+> vm_normal_page() [history of the sanity check above], but as we don't have
+> (and shouldn't have ...) print_bad_pmd(), we made the code look like this
+> would be something that can just happen.
 
-Applied, thanks!
+Ok I see.
 
-[1/1] gpio: clps711x: drop unneeded platform_set_drvdata()
-      https://git.kernel.org/brgl/linux/c/23b33cf1244185d0432b25afdc04f2fe47a1cc2e
+> 
+> "
+> Do the same in vm_normal_page_pmd(), where we don't even report a
+> problem at all ...
+> "
+> 
+> So we made something that should never happen a runtime sanity check without
+> ever reporting a problem ...
 
-Best regards,
+all clear now, thanks :-)
+
+
+
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Oscar Salvador
+SUSE Labs
