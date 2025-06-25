@@ -1,112 +1,136 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49C4225FA07;
-	Wed, 25 Jun 2025 14:00:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from postout2.mail.lrz.de (postout2.mail.lrz.de [129.187.255.138])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7CD25C81F;
+	Wed, 25 Jun 2025 14:00:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.187.255.138
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750860002; cv=none; b=t5jSmQCGr9hk7Wma5wdNiteuUes7ccv29gAdeSuAl3tuRDXavKsIn92mMEUWji9kezVfkFib0OTf9654QN2L0kkQOnve+94qt4g3d/J65UH1NL/Re3HMSwV75ppQ80PT3+IrMBfkXW2YYEDkkL8EBQZJQYVOor98KaD4fq4lBRE=
+	t=1750860027; cv=none; b=jHHpwou7XP5exHxVvFrm+vZcDRL5H79qwMWzFzBfV2qyQxpfrcykcXJW02QdozM3Nyl+XTOBR3VXZoBKUIjBkppAERLKm9TwZdr6QsX8xtXy1auZi9S4YU+/HMOEKmOo1WZQiHj8X8ry8LVZKvViagszUN+ntDUFIundjd0wQbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750860002; c=relaxed/simple;
-	bh=z9Mh5NxDhxrXtxph/P2pAXti2Wjh3Kg66nbWIs2/0J0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nC4F0n67FtIBWfQaVsJGsChjN4KzZg8TLcvuPHjKwSF6ytOaxHegocU5psba60tepjHS4kQbk4kR6pZSF2Lm4srczzowUZgZ+ZgEBI9Rtz8Yakv0BYaIAx0eYE5STqLcSoLBk2TPkc+/9lNju7dkkSDu/kvreYaX5udGkjKCujU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3238D106F;
-	Wed, 25 Jun 2025 06:59:41 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A59E3F66E;
-	Wed, 25 Jun 2025 06:59:56 -0700 (PDT)
-Date: Wed, 25 Jun 2025 14:59:46 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Peng Fan <peng.fan@oss.nxp.com>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
-	james.quinlan@broadcom.com, f.fainelli@gmail.com,
-	vincent.guittot@linaro.org, etienne.carriere@st.com,
-	michal.simek@amd.com, quic_sibis@quicinc.com,
-	dan.carpenter@linaro.org, d-gole@ti.com, souvik.chakravarty@arm.com
-Subject: Re: [RFC PATCH 1/7] firmware: arm_scmi: Define a common
- SCMI_MAX_PROTOCOLS value
-Message-ID: <aFwA0n2krgW0_cNr@pluto>
-References: <20250620192813.2463367-1-cristian.marussi@arm.com>
- <20250620192813.2463367-2-cristian.marussi@arm.com>
- <20250624031351.GC10415@nxa18884-linux>
+	s=arc-20240116; t=1750860027; c=relaxed/simple;
+	bh=PbYvShW9eZXDl9zcQylaxIY7W2/bTDgB+NiFXYT8H9Q=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Cc:Content-Type; b=uS0vLwiJeHSgbiIxb/EOTG1CVVqrrH3qk9FoWC6Ezudj+dhFDEL1A4iMbmXYBI0D9yktgqm8iOdX+EaSKMP+o4R1ysq/2wgBuVx3TNbHq8c09J0iHR1p6MiF1/FQSbfXppcjtC8kw+1syXu15y4OJnpBUGQfBqbP6ftnAC0IIHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tum.de; spf=pass smtp.mailfrom=tum.de; dkim=pass (2048-bit key) header.d=tum.de header.i=@tum.de header.b=PrMP3WDv; arc=none smtp.client-ip=129.187.255.138
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=tum.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tum.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tum.de header.i=@tum.de header.b="PrMP3WDv"
+Received: from lxmhs52.srv.lrz.de (localhost [127.0.0.1])
+	by postout2.mail.lrz.de (Postfix) with ESMTP id 4bS3F04cZlzySN;
+	Wed, 25 Jun 2025 15:53:24 +0200 (CEST)
+Authentication-Results: postout.lrz.de (amavis); dkim=pass (2048-bit key)
+ reason="pass (just generated, assumed good)" header.d=tum.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tum.de; h=
+	content-transfer-encoding:content-type:content-type:subject
+	:subject:from:from:content-language:user-agent:mime-version:date
+	:date:message-id:received:received; s=tu-postout21; t=
+	1750859604; bh=rHOUNQI/LUioMhdXul5khE5zg/7fobUm4oyuXtkvfFY=; b=P
+	rMP3WDvOz2bs/NhDHERQrdbx8jkAi+shyvqENWwuEUgeD6HcG0RRzN9UPe4Eyb21
+	qp7+QZEDvkyayR0dga3iMmVEjYK6gqafT4uOc9husp76RHdy63zC4ihiYXexLbJf
+	DzRG1toRdO5PEva79PoFT3fa2fpQ7oN92G4Ly3szq4RZZbrZ+fYJ/Vwf+vo0Qh8i
+	8bFgBCmHE29PffajGBO+fsH8gHeIcYeauafQ1uz39rz06R/dFK4+WzInJ+Jc7euu
+	uQzCETp0jeri+dtJe1oQDIdmU/8VIY68MTRPrXVEOQcymIPR/4mdBjQhRMd80c/9
+	MLhW4/HMurMLOxMQxnVHA==
+X-Virus-Scanned: by amavisd-new at lrz.de in lxmhs52.srv.lrz.de
+X-Spam-Flag: NO
+X-Spam-Score: -2.873
+X-Spam-Level:
+Received: from postout2.mail.lrz.de ([127.0.0.1])
+ by lxmhs52.srv.lrz.de (lxmhs52.srv.lrz.de [127.0.0.1]) (amavis, port 20024)
+ with LMTP id hxZpH3LrEP1h; Wed, 25 Jun 2025 15:53:24 +0200 (CEST)
+Received: from [IPV6:2a09:80c0:192:0:1a32:faf8:4a92:5176] (unknown [IPv6:2a09:80c0:192:0:1a32:faf8:4a92:5176])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by postout2.mail.lrz.de (Postfix) with ESMTPSA id 4bS3Dz67mZzyRN;
+	Wed, 25 Jun 2025 15:53:23 +0200 (CEST)
+Message-ID: <c090efb3-ef82-499f-a5e0-360fc8420fb7@tum.de>
+Date: Wed, 25 Jun 2025 15:53:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624031351.GC10415@nxa18884-linux>
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Manuel Andreas <manuel.andreas@tum.de>
+Subject: [PATCH] x86/hyper-v: Filter non-canonical addresses passed via
+ HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST(_EX)
+Autocrypt: addr=manuel.andreas@tum.de; keydata=
+ xjMEY9Zx/RYJKwYBBAHaRw8BAQdALWzRzW9a74DX4l6i8VzXGvv72Vz0qfvj9s7bjBD905nN
+ Jk1hbnVlbCBBbmRyZWFzIDxtYW51ZWwuYW5kcmVhc0B0dW0uZGU+wokEExYIADEWIQQuSfNX
+ 11QV6exAUmOqZGwY4LuingUCY9Zx/QIbAwQLCQgHBRUICQoLBRYCAwEAAAoJEKpkbBjgu6Ke
+ McQBAPyP530S365I50I5rM2XjH5Hr9YcUQATD5dusZJMDgejAP9T/wUurwQSuRfm1rK8cNcf
+ w4wP3+PLvL+J+kuVku93CM44BGPWcf0SCisGAQQBl1UBBQEBB0AmCAf31tLBD5tvtdZ0XX1B
+ yGLUAxhgmFskGyPhY8wOKQMBCAfCeAQYFggAIBYhBC5J81fXVBXp7EBSY6pkbBjgu6KeBQJj
+ 1nH9AhsMAAoJEKpkbBjgu6Kej6YA/RvJdXMjsD5csifolLw53KX0/ElM22SvaGym1+KiiVND
+ AQDy+y+bCXI+J713/AwLBsDxTEXmP7Cp49ZqbAu83NnpBQ==
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, pbonzini@redhat.com
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 24, 2025 at 11:13:51AM +0800, Peng Fan wrote:
-> On Fri, Jun 20, 2025 at 08:28:07PM +0100, Cristian Marussi wrote:
-> >Add a common definition of SCMI_MAX_PROTOCOLS and use it all over the
-> >SCMI stack.
-> >
+In KVM guests with Hyper-V hypercalls enabled, the hypercalls 
+HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST and HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX 
+allow a guest to request invalidation of portions of a virtual TLB.
+For this, the hypercall parameter includes a list of GVAs that are supposed 
+to be invalidated.
 
-Hi Peng,
+However, when non-canonical GVAs are passed, there is currently no 
+filtering in place and they are eventually passed to checked invocations of 
+INVVPID on Intel / INVLPGA on AMD.
+While the AMD variant (INVLPGA) will silently ignore the non-canonical 
+address and perform a no-op, the Intel variant (INVVPID) will fail and end 
+up in invvpid_error, where a WARN_ONCE is triggered:
 
-thanks for having a look.
+invvpid failed: ext=0x0 vpid=1 gva=0xaaaaaaaaaaaaa000
+WARNING: CPU: 6 PID: 326 at arch/x86/kvm/vmx/vmx.c:482 
+invvpid_error+0x91/0xa0 [kvm_intel]
+Modules linked in: kvm_intel kvm 9pnet_virtio irqbypass fuse
+CPU: 6 UID: 0 PID: 326 Comm: kvm-vm Not tainted 6.15.0 #14 PREEMPT(voluntary)
+RIP: 0010:invvpid_error+0x91/0xa0 [kvm_intel]
+Call Trace:
+  <TASK>
+  vmx_flush_tlb_gva+0x320/0x490 [kvm_intel]
+  ? __pfx_vmx_flush_tlb_gva+0x10/0x10 [kvm_intel]
+  ? kfifo_copy_out+0xcf/0x120
+  kvm_hv_vcpu_flush_tlb+0x24f/0x4f0 [kvm]
+  ? __pfx_kvm_hv_vcpu_flush_tlb+0x10/0x10 [kvm]
+  ? kvm_pmu_is_valid_msr+0x6e/0x80 [kvm]
+  ? kvm_get_msr_common+0x219/0x20f0 [kvm]
+  kvm_arch_vcpu_ioctl_run+0x3013/0x5810 [kvm]
+  /* ... */
 
-> >Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
-> >---
-> > drivers/firmware/arm_scmi/notify.c | 4 +---
-> > include/linux/scmi_protocol.h      | 3 +++
-> > 2 files changed, 4 insertions(+), 3 deletions(-)
-> >
-> >diff --git a/drivers/firmware/arm_scmi/notify.c b/drivers/firmware/arm_scmi/notify.c
-> >index e160ecb22948..27a53a6729dd 100644
-> >--- a/drivers/firmware/arm_scmi/notify.c
-> >+++ b/drivers/firmware/arm_scmi/notify.c
-> >@@ -94,8 +94,6 @@
-> > #include "common.h"
-> > #include "notify.h"
-> > 
-> >-#define SCMI_MAX_PROTO		256
-> >-
-> > #define PROTO_ID_MASK		GENMASK(31, 24)
-> > #define EVT_ID_MASK		GENMASK(23, 16)
-> > #define SRC_ID_MASK		GENMASK(15, 0)
-> >@@ -1652,7 +1650,7 @@ int scmi_notification_init(struct scmi_handle *handle)
-> > 	ni->gid = gid;
-> > 	ni->handle = handle;
-> > 
-> >-	ni->registered_protocols = devm_kcalloc(handle->dev, SCMI_MAX_PROTO,
-> >+	ni->registered_protocols = devm_kcalloc(handle->dev, SCMI_MAX_PROTOCOLS,
-> > 						sizeof(char *), GFP_KERNEL);
-> > 	if (!ni->registered_protocols)
-> > 		goto err;
-> >diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-> >index 688466a0e816..6f8d36e1f8fc 100644
-> >--- a/include/linux/scmi_protocol.h
-> >+++ b/include/linux/scmi_protocol.h
-> >@@ -926,8 +926,11 @@ enum scmi_std_protocol {
-> > 	SCMI_PROTOCOL_VOLTAGE = 0x17,
-> > 	SCMI_PROTOCOL_POWERCAP = 0x18,
-> > 	SCMI_PROTOCOL_PINCTRL = 0x19,
-> >+	SCMI_PROTOCOL_LAST = 0xff,
-> 
-> The enum says this is std protocol, but 0x80~0xff is for vendor extension.
-> It might confuse others to keep "SCMI_PROTOCOL_LAST" here.
-> 
+Hyper-V documents that invalid GVAs (those that are beyond a partition's 
+GVA space) are to be ignored. While not completely clear whether this 
+ruling also applies to non-canonical GVAs, it is likely fine to make that 
+assumption.
 
-Yes indeed. This patch was lingering around since ages in my trees and
-it is probably to review in itself.
+The following patch addresses the issue by skipping non-canonical GVAs 
+before calling the architecture-specific invalidation primitive.
+I've validated it against a PoC and the issue seems to be fixed.
 
-> > };
-> > 
-> >+#define SCMI_MAX_PROTOCOLS	(SCMI_PROTOCOL_LAST + 1)
-> 
-> How about "#define SCMI_MAX_PROTOCOLS 256" as the line you removed in notify.c.
-> 
+Signed-off-by: Manuel Andreas <manuel.andreas@tum.de>
+Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+  arch/x86/kvm/hyperv.c | 3 +++
+  1 file changed, 3 insertions(+)
 
-Yes, probably the easiest thing to do.
+diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+index 24f0318c50d7..644a7aae6dab 100644
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -1979,6 +1979,9 @@ int kvm_hv_vcpu_flush_tlb(struct kvm_vcpu *vcpu)
+  		if (entries[i] == KVM_HV_TLB_FLUSHALL_ENTRY)
+  			goto out_flush_all;
 
-Thanks,
-Cristian
++                if (is_noncanonical_invlpg_address(entries[i], vcpu))
++                        continue;
++
+  		/*
+  		 * Lower 12 bits of 'address' encode the number of additional
+  		 * pages to flush.
+-- 
+2.50.0
