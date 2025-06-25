@@ -1,117 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F07E42750F8;
-	Wed, 25 Jun 2025 08:52:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5907B27F73D
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841572; cv=none; b=ZEgyFaqWlEs7dbssdoQ0IsZwdxlD2qEW2bkb8GNv0ntFkU0xwxwr/sjlgTN50q31WEW5wCYzUuH0VTbhj3oV0bxhRsK5+MsX6yK6DmV7IexaSPuWmX/PI8ChrNvs+XVMVq96wCM36ruPbmDt7/01nBHhBsgNsgrZRqAQiuADf6k=
+	t=1750841582; cv=none; b=TAXWF8rzsPTewcAhzZzubzk7GCHiS6FTwyH9qVQYbOiHOwOktOnAzX5xrB0lCT4RC9IioYCOLbGAl67hQ54X+ZDs3Cpb759pi7IYM5xtPuBw52KgP9JPpX33OQ1i2pLW+26Z5KXCNn6Q9m/VSbM+9QgZsP/5SWHAei3di2WQAJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841572; c=relaxed/simple;
-	bh=SF3bLEabkpsMFTOBi7CdbNK4kPMG1GvDh9vgEQ/j9xM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZGGKCqiuzaWasCXNVIyV3aY6vd/yTWnYXNe6NP0H/RHHOG43AinIqlvz4F2Hk+vviOw8OYE05bhfY8H975tdRHHp+MSzdasoeTkNA49ZykewizTbDzYQgokjOvGD2kVlG7bRqjBfVoY/l5Lm6miC+NYehT3xvMN9QPilPdtrw64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ilQxjYbW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750841582; c=relaxed/simple;
+	bh=/aGMiSWgswdb3PxpszlBovn3np9bIPgjxtNCoeUpgjw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JGxHkDjP7C/58Iveyqfl0rpIf2YLj+2gmCvGIflJd5C3yqQvGGzFNpwMbVjloilDNRn7J0I42Z1q3VJDP6yEqzwT19uTxtrj+wcmTssVx42uiB16Wv5JWqdg2rAmqkTdRivjsmi+K+WW2fzSfgf3l7K8K4pO7JKL4YheBt1kGLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yNvBUzm7; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ilQxjYbW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF550C4CEEA;
-	Wed, 25 Jun 2025 08:52:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1750841571;
-	bh=SF3bLEabkpsMFTOBi7CdbNK4kPMG1GvDh9vgEQ/j9xM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ilQxjYbWiAqEXKQVEksDS67eR3x2Rz+JpKAEMXa3PUr4dzW3lHpUKjqwVJkVpaWqT
-	 TJtEkP3k49gedFELsxQnqiB7KWfiO/jtgBekLKy1MbXdi2a6qRwn0h0UE1UCxS/1jo
-	 k2yH6HZhXfVebcZy7KWxZrEUrwa0ZqnBOnAQR9dY=
-Date: Wed, 25 Jun 2025 09:52:49 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org,
-	linux-tegra@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.4 000/222] 5.4.295-rc1 review
-Message-ID: <2025062530-friend-certainly-f8e4@gregkh>
-References: <20250623130611.896514667@linuxfoundation.org>
- <cf271495-270e-4a0a-a93e-fe8c44e4eabd@rnnvmail204.nvidia.com>
- <c84768f2-17d7-4edd-8f6e-d0f2a74ef559@nvidia.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yNvBUzm7"
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-32b561a861fso11163311fa.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:52:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750841578; x=1751446378; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/aGMiSWgswdb3PxpszlBovn3np9bIPgjxtNCoeUpgjw=;
+        b=yNvBUzm7HQioAxHvUAItpxKH1RAv/arKTA+stNrfkSkTJkbZIuAk095lskBmUla+B6
+         2UQUpfSej9VRX9QLEeFidWzhkHGIRzcrcVff2ri79PHCtz2r3Mmm4Zo1pOfXvsX4PwAY
+         4dKY8mqX8SF5/sTlmrkb2EuCbJPvTJmGijpOLmsMg3SZv/5xJ+8g7wsoRAzqOZsF+Qnk
+         GZJQa2wVPm5gwARjgYIuBPNLGCtywSxkAIS2DX2HD0YIuiGtm3bRx62ER1oz8J4vMZbh
+         o4CJM0I4O6kPtYTE0XjJ81ut61unA/Cu9KDEGE5MKZBOlDYa8Tr9EUk9nCu8iHOa42QZ
+         Hepg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750841578; x=1751446378;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/aGMiSWgswdb3PxpszlBovn3np9bIPgjxtNCoeUpgjw=;
+        b=uXcawljfZuVra2x6gM4A+E+RA4Dnsu4N+kpkrLmh0FIalvK2Mcr0I6ApwPHsoynNB2
+         TXpy3AUIdy8By0YJUctj8SrvgM3zRErjNfkm+/4z2LyazzGCdhUutWTg5SLk7JVPNmnt
+         w6Dngo5nvD+ML2tEAl8R6cATJVONPnmufQ4VmG4loJVZC2S6Rk/OyJQtJrHFbwqZZVmR
+         OdfOaWdMRssGmuIDFl0I2SHtIrjvtGk6Fkc+p0KPMcBKMt4XkyF7OJcNhuXv+EEjOdqX
+         ueHBtT/yhf3BlU2cqQhJk0kdDNCYG/9YZaV8I0mlYe+1zWxS4Mm4kyk3RyWvWUZBlMMm
+         bcew==
+X-Forwarded-Encrypted: i=1; AJvYcCWZ2vyzq0DbL+1Mk/5VfEc2oFe4rEbmnYIKxHlQ7NIqzY+SwW2rgJp8mbodj9iYCuIk7DgP80UTkBmO7R0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBU9CIv+pfb3/NjVNPUqgfy/Y6uqdDYC+NZ7vffG46xHkSFDiC
+	6daqrKQ9kP6FvQGvEYRuebdtUVHKaW1N/l92FPi8O6WSC44e9l3bjkqbp+oZqtm4vFA4aJJhOR2
+	H5yEBNSAjVEwvwOdO9AgwADByUbpqVdv0adnu8R5D
+X-Gm-Gg: ASbGncs1EW+C86SL+iS83KVRvEuppt9eWGiXVu+kdPviEsKMZnfy+xrJucEfZD/V+3O
+	K+vviz/c/JXOoZxeQbnTC2gkEBfXOQM07U/82VOIUccHjXcSMWMSvNWEZ9Q0ECJWcoSltVdS/TA
+	xwdwEA4tLJF2A6YPa8KaEOorZfAcTYUinGi5mgpCpkX9l0uPAQMtfwEYkjsgeDtGppW7WmrEAv0
+	tuv
+X-Google-Smtp-Source: AGHT+IHn5jN08ujo8GoOIZXJyGKEDPnWbpxEqhAfrT8jEIaoiQ0R+LhHX8niQOlMCvkzPsyqSYJbSovaD/ar3ODPJFY=
+X-Received: by 2002:a2e:bb98:0:b0:32c:bc69:e918 with SMTP id
+ 38308e7fff4ca-32cc641db52mr4677001fa.1.1750841578106; Wed, 25 Jun 2025
+ 01:52:58 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c84768f2-17d7-4edd-8f6e-d0f2a74ef559@nvidia.com>
+References: <aFNYQkbEctT6N0Hb@lappy> <20250623132803.26760-1-dvyukov@google.com>
+ <aFsE0ogdbKupvt7o@lappy>
+In-Reply-To: <aFsE0ogdbKupvt7o@lappy>
+From: Dmitry Vyukov <dvyukov@google.com>
+Date: Wed, 25 Jun 2025 10:52:46 +0200
+X-Gm-Features: Ac12FXzXBIFSLBsUnXVDMCaUxIQVjV8jup_taqhSUWe1Psb2MF0u58GMi7noczg
+Message-ID: <CACT4Y+Y04JC359J3DnLzLzhMRPNLem11oj+u04GoEazhpmzWTw@mail.gmail.com>
+Subject: Re: [RFC 00/19] Kernel API Specification Framework
+To: Sasha Levin <sashal@kernel.org>
+Cc: kees@kernel.org, elver@google.com, linux-api@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, tools@kernel.org, workflows@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 25, 2025 at 08:34:47AM +0100, Jon Hunter wrote:
-> Hi Greg,
-> 
-> On 25/06/2025 08:16, Jon Hunter wrote:
-> > On Mon, 23 Jun 2025 15:05:35 +0200, Greg Kroah-Hartman wrote:
-> > > This is the start of the stable review cycle for the 5.4.295 release.
-> > > There are 222 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Wed, 25 Jun 2025 13:05:50 +0000.
-> > > Anything received after that time might be too late.
-> > > 
-> > > The whole patch series can be found in one patch at:
-> > > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.295-rc1.gz
-> > > or in the git tree and branch at:
-> > > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > > and the diffstat can be found below.
-> > > 
-> > > thanks,
-> > > 
-> > > greg k-h
-> > 
-> > Failures detected for Tegra ...
-> > 
-> > Test results for stable-v5.4:
-> >      10 builds:	7 pass, 3 fail
-> >      18 boots:	18 pass, 0 fail
-> >      39 tests:	39 pass, 0 fail
-> > 
-> > Linux version:	5.4.295-rc1-gca8c5417d1e6
-> > Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-> >                  tegra194-p2972-0000, tegra20-ventana,
-> >                  tegra210-p2371-2180, tegra210-p3450-0000,
-> >                  tegra30-cardhu-a04
-> > 
-> > Builds failed:	arm+multi_v7
-> 
-> 
-> I am seeing the following build error for ARM with the
-> multi_v7_defconfig on our builders ...
-> 
->   CC      drivers/firmware/qcom_scm-32.o
-> /tmp/cc9gP1cd.s: Assembler messages:
-> /tmp/cc9gP1cd.s:45: Error: selected processor does not support `smc #0' in ARM mode
-> /tmp/cc9gP1cd.s:94: Error: selected processor does not support `smc #0' in ARM mode
-> /tmp/cc9gP1cd.s:160: Error: selected processor does not support `smc #0' in ARM mode
-> /tmp/cc9gP1cd.s:295: Error: selected processor does not support `smc #0' in ARM mode
-> make[3]: *** [/home/jonathanh/nvidia/mlt-linux_next/kernel/scripts/Makefile.build:262: drivers/firmware/qcom_scm-32.o] Error 1
-> 
-> 
-> Bisect is pointing to ...
-> 
-> # first bad commit: [0c23125c509b41be51f0d5acb843b079a098a40c] kbuild: Update assembler calls to use proper flags and language target
-> 
-> Reverting this fixes it but I also needed to revert the following due to dependencies ...
-> 
-> Nathan Chancellor <nathan@kernel.org>
->     kbuild: Add KBUILD_CPPFLAGS to as-option invocation
-> 
-> Nathan Chancellor <nathan@kernel.org>
->     kbuild: Add CLANG_FLAGS to as-instr
+On Tue, 24 Jun 2025 at 22:04, Sasha Levin <sashal@kernel.org> wrote:
 
-I've also dropped the others in this series and will push out a -rc2
-soon, thanks for testing and letting me know.
+> >6. What's the goal of validation of the input arguments?
+> >Kernel code must do this validation anyway, right.
+> >Any non-trivial validation is hard, e.g. even for open the validation function
+> >for file name would need to have access to flags and check file precense for
+> >some flags combinations. That may add significant amount of non-trivial code
+> >that duplicates main syscall logic, and that logic may also have bugs and
+> >memory leaks.
+>
+> Mostly to catch divergence from the spec: think of a scenario where
+> someone added a new param/flag/etc but forgot to update the spec - this
+> will help catch it.
 
-greg k-h
+How exactly is this supposed to work?
+Even if we run with a unit test suite, a test suite may include some
+incorrect inputs to check for error conditions. The framework will
+report violations on these incorrect inputs. These are not bugs in the
+API specifications, nor in the test suite (read false positives).
