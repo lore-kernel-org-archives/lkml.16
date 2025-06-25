@@ -1,70 +1,37 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from proxmox-new.maurer-it.com (proxmox-new.maurer-it.com [94.136.29.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2FE266573;
-	Wed, 25 Jun 2025 14:25:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E603D266562;
+	Wed, 25 Jun 2025 14:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.136.29.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750861549; cv=none; b=YAhqb/3idlCktNgPWq4V1ZKGKzjPuA7dk0ruC2GbaY0AtVwLMgbo5tvoxtEBuI084yykxhLpuWtcvHdnfDqtXL8WCfmh6lYkLgJ9Mi2meINLJHX3w8ASblUJfwhmd3xbdO4WsWnMaInSd8R/MjAfRup2LXkpjYWkGrto0pNG9po=
+	t=1750861587; cv=none; b=CcTudH51m9v575RaZ96YUCSJg9LEV9MMdCZMwHjKnZqz5pGsJayogAA3xr2PECSVry+MldgKmUtANEqqt9fAusetysfKAPD0B6gziTddSC85E4E3VF36l+fDSNRy7pqt2/nr0xvOnBIolZMRQEw2zFOjarO+xtm341wfX5K8dfY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750861549; c=relaxed/simple;
-	bh=ooti5aRiP+r/vzUl75DAjcq1JqYhjChiHekLoh9kh1k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EQPkS+ygog9GItwi8wIo5EQNAFMq+eQ6YpmVPrLiEgbXVKvFSGQEKVJYqbDOJQcRG4PG2PGk//ByypsfRRYLtzfCar8dtDuJhGlH0/hlownfhGfDtj3NXpzlXO/3ZrQYJd2LqBEH0L8W5RznJusO4aAXiHIbjDJdq4AdkBJ9nuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQbaOju/; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQbaOju/"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-748d982e92cso1018675b3a.1;
-        Wed, 25 Jun 2025 07:25:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750861546; x=1751466346; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7gaf+j9calOvQuq5f2KKkjhmZldOW4cezU0qA9IROgM=;
-        b=OQbaOju/KCyWVSkvdg06XPtWcsBLnAXFme+L1l5/pNAJMGYNlF07D0hFmYT9C66mVp
-         Yq0pTfWdvYya7A8b1UpAS3AUdjz0p+7ixVtJ+OdZF2gxwIBCgMQF2idFobKapBrWRaN3
-         86e8e8QBwzEqszwgzLC2bXf5q7BbRed2795rgq5uQusOS4EO1P+wO47Yv8vPn7gujTHt
-         dF4+G/au6YFnXiXBZJSVYlN11Pj96x1pqV9oyv7PcamiG432itzIfz+4v/K6ty6zQcYa
-         1gcNcHab70v0I1iwm3qeqDKxPJCTKYVugp9FyskTwMsPtIM5AtwssU088W7lMd4g4+7G
-         hZzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750861546; x=1751466346;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7gaf+j9calOvQuq5f2KKkjhmZldOW4cezU0qA9IROgM=;
-        b=EpSPpNY3J47ILZtXsN6YTlP5fYoplyklTBmYCQ3917TUz3eFkc/vUDUG8teI35Vo96
-         z2/XN81ZJAlmnhiQYqcrY7TcDO/HpmpGkJHtdlFP02wKeifbSgzv6cTfrdOvjrf4RkbU
-         vuxVmpS2nv1+a/r0ZlOMUPp72sbfCcYUtM8PLgczbdsyqQZDmJBF1VcDtyofKBhdMThA
-         1K+bbpNQY0hlpMkN09CbA2OxoiY8Q62x0wcVORnwDiewOzlCbbl/lA5Ym4Ki2BC4IEBL
-         rNRsWNytosXftgcVwxTFzeQD878UGQV3w3fDtG2SJaOZ5YzL7IMFi64hFxIm3WzMA313
-         PLaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWQD1sCxGJfxpjGPF3g56WCTk06kSs07FPnaQW9SbZNWgJavRsXw7BiyTNy8VqRg/D+mxaidVNvgbExtc4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyritTVNWuJ+JmBPh0OQYdLpiX+Gy/ibqRIPknZWXkvCY8ys5IL
-	3hhqJL2blmCqJ6KaTk4TA5EWKmLUHptKUI7+Whv3xI6XMt+kp6/UbsQxBt8Gyg==
-X-Gm-Gg: ASbGnctJ4z1FxGkWmQuCXScEZaVKbGMoRZKW+c4zrABGrmDeVlwjimkyxtBg1n6Ofpc
-	U54FnrmRfrA6emluejj5Owa0q/WBavFhJ9mqB/ejiJkj+AIAF5spC29U11aKmYPv2iXE/1wNmDG
-	cJOvSQ9H087nuj5QOIV7Mev5QiOCH+iAXyh19RUXREHtxq5sd1/4M7uUXsRv92AmgbI2N0Gv0oL
-	Rxg9MKhq1cxRyto5CRn98KH7Jq9j0pdPFrF6DRYG67y2BV0hPdw42g0sysR8zsH9mk7tffQQUMj
-	E7HoGeEcQFiSteU21deWWbqxHmtLgXyVSw7it2BHYkzm2Q3WU3n8DlmNAfiZoFhHfGAFxdmAjXo
-	n0M3QRHuKv/A=
-X-Google-Smtp-Source: AGHT+IHWZsVJs3bjakpXmS/j9tChOa1kgGP9vCPU8F4xi0Cy6u3OFesatG0pGJChVzETz0Ab6p6g/w==
-X-Received: by 2002:a05:6a00:1146:b0:748:3964:6177 with SMTP id d2e1a72fcca58-74ad44f267dmr5223809b3a.19.1750861546212;
-        Wed, 25 Jun 2025 07:25:46 -0700 (PDT)
-Received: from tx3000mach.io (static.220.227.itcsa.net. [190.15.220.227])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e08cfbsm4764799b3a.18.2025.06.25.07.25.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 07:25:45 -0700 (PDT)
-From: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
-To: linux-wireless@vger.kernel.org
-Cc: Jes Sorensen <Jes.Sorensen@gmail.com>,
-	Ping-Ke Shih <pkshih@realtek.com>,
+	s=arc-20240116; t=1750861587; c=relaxed/simple;
+	bh=/9VFx4V/R12ObC+QTUIcUs4r3Yji2iXrxnaQH+uihB0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ePMwJ0m/MuyvrYatfeHUtMwYIlQiIzuMcDgEA0BDqPZA3eGcsL1cZtCh4sqH0v7WT2CGIGfS8cvRkEf7Th5croliUGVjruG2oQ+OnukXSliaG5+V5CbtnbnoiOE4rL+QdFc3ynyP/sFbycdMd0vbhcIiWoLiOVQvTB12RYNroxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com; spf=pass smtp.mailfrom=proxmox.com; arc=none smtp.client-ip=94.136.29.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=proxmox.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proxmox.com
+Received: from proxmox-new.maurer-it.com (localhost.localdomain [127.0.0.1])
+	by proxmox-new.maurer-it.com (Proxmox) with ESMTP id 8B9074685B;
+	Wed, 25 Jun 2025 16:26:15 +0200 (CEST)
+From: Gabriel Goller <g.goller@proxmox.com>
+To: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Jonathan Corbet <corbet@lwn.net>,
+	David Ahern <dsahern@kernel.org>
+Cc: Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+	netdev@vger.kernel.org,
+	linux-doc@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] wifi: rtl8xxxu: toggle P2P for supported devices
-Date: Wed, 25 Jun 2025 11:25:39 -0300
-Message-ID: <20250625142541.44795-1-yakoyoku@gmail.com>
-X-Mailer: git-send-email 2.50.0
+Subject: [PATCH] ipv6: add `do_forwarding` sysctl to enable per-interface forwarding
+Date: Wed, 25 Jun 2025 16:26:06 +0200
+Message-Id: <20250625142607.828873-1-g.goller@proxmox.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,227 +40,168 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is a MR to see if rtl8xxxu can be made to support P2P.
+It is currently impossible to enable ipv6 forwarding on a per-interface
+basis like in ipv4. To enable forwarding on an ipv6 interface we need to
+enable it on all interfaces and disable it on the other interfaces using
+a netfilter rule. This is especially cumbersome if you have lots of
+interface and only want to enable forwarding on a few. According to the
+sysctl docs [0] the `net.ipv6.conf.all.forwarding` enables forwarding
+for all interfaces, while the interface-specific
+`net.ipv6.conf.<interface>.forwarding` configures the interface
+Host/Router configuration.
 
-Theoretically this should be handled by mac80211 but it seems that
-drivers may have to take some extra steps depending on which device we
-are talking about. I know that this patch is so basic that it might be
-missing some H2C commands or similar for this to work on Realtek chips
-but I don't have the required knowledge for me to implement it, so if
-you know a place to read about I'll be glad to hear.
+Introduce a new sysctl flag `do_forwarding`, which can be set on every
+interface. The ip6_forwarding function will then check if the global
+forwarding flag OR the do_forwarding flag is active and forward the
+packet. To preserver backwards-compatibility also reset the flag on all
+interfaces when setting the global forwarding flag to 0.
 
-As of now only rtl8192ex devices have their P2P_CLIENT and P2P_GO wiphy
-interface modes ensured because those are the only ones I can test on
-my rtl8192eu card. The rest of chips have them set from what I've seen
-in a cursory Internet search, they might or might not work.
+[0]: https://www.kernel.org/doc/Documentation/networking/ip-sysctl.txt
 
-Signed-off-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
+Signed-off-by: Gabriel Goller <g.goller@proxmox.com>
 ---
- drivers/net/wireless/realtek/rtl8xxxu/8188e.c |  1 +
- drivers/net/wireless/realtek/rtl8xxxu/8188f.c |  1 +
- drivers/net/wireless/realtek/rtl8xxxu/8192c.c |  1 +
- drivers/net/wireless/realtek/rtl8xxxu/8192e.c |  1 +
- drivers/net/wireless/realtek/rtl8xxxu/8192f.c |  1 +
- drivers/net/wireless/realtek/rtl8xxxu/8710b.c |  1 +
- drivers/net/wireless/realtek/rtl8xxxu/8723a.c |  1 +
- drivers/net/wireless/realtek/rtl8xxxu/8723b.c |  1 +
- drivers/net/wireless/realtek/rtl8xxxu/core.c  | 29 ++++++++++++++++++-
- .../net/wireless/realtek/rtl8xxxu/rtl8xxxu.h  |  1 +
- 10 files changed, 37 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8188e.c b/drivers/net/wireless/realtek/rtl8xxxu/8188e.c
-index 766a7a7c7d28..f4f5ad7d88e5 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/8188e.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/8188e.c
-@@ -1866,6 +1866,7 @@ struct rtl8xxxu_fileops rtl8188eu_fops = {
- 	.has_tx_report = 1,
- 	.init_reg_pkt_life_time = 1,
- 	.gen2_thermal_meter = 1,
-+	.supports_p2p = 0,
- 	.max_sec_cam_num = 32,
- 	.adda_1t_init = 0x0b1b25a0,
- 	.adda_1t_path_on = 0x0bdb25a0,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8188f.c b/drivers/net/wireless/realtek/rtl8xxxu/8188f.c
-index 3abf14d7044f..3102384b35eb 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/8188f.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/8188f.c
-@@ -1749,6 +1749,7 @@ struct rtl8xxxu_fileops rtl8188fu_fops = {
- 	.ustime_tsf_edca = 0x28,
- 	.max_aggr_num = 0x0c14,
- 	.supports_ap = 1,
-+	.supports_p2p = 1,
- 	.max_macid_num = 16,
- 	.max_sec_cam_num = 16,
- 	.supports_concurrent = 1,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8192c.c b/drivers/net/wireless/realtek/rtl8xxxu/8192c.c
-index 73034e7e41d1..df9cb7e0e331 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/8192c.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/8192c.c
-@@ -645,6 +645,7 @@ struct rtl8xxxu_fileops rtl8192cu_fops = {
- 	.tx_desc_size = sizeof(struct rtl8xxxu_txdesc32),
- 	.rx_desc_size = sizeof(struct rtl8xxxu_rxdesc16),
- 	.supports_ap = 1,
-+	.supports_p2p = 1,
- 	.max_macid_num = 32,
- 	.max_sec_cam_num = 32,
- 	.adda_1t_init = 0x0b1b25a0,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8192e.c b/drivers/net/wireless/realtek/rtl8xxxu/8192e.c
-index 8e123bbfc665..f6cdd0eb5b44 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/8192e.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/8192e.c
-@@ -1752,6 +1752,7 @@ struct rtl8xxxu_fileops rtl8192eu_fops = {
- 	.gen2_thermal_meter = 1,
- 	.needs_full_init = 1,
- 	.supports_ap = 1,
-+	.supports_p2p = 1,
- 	.max_macid_num = 128,
- 	.max_sec_cam_num = 64,
- 	.adda_1t_init = 0x0fc01616,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8192f.c b/drivers/net/wireless/realtek/rtl8xxxu/8192f.c
-index cd2156b7a57a..2a505350e6e8 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/8192f.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/8192f.c
-@@ -2078,6 +2078,7 @@ struct rtl8xxxu_fileops rtl8192fu_fops = {
- 	.ustime_tsf_edca = 0x50,
- 	.max_aggr_num = 0x1f1f,
- 	.supports_ap = 1,
-+	.supports_p2p = 1,
- 	.max_macid_num = 128,
- 	.max_sec_cam_num = 64,
- 	.trxff_boundary = 0x3f3f,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8710b.c b/drivers/net/wireless/realtek/rtl8xxxu/8710b.c
-index 11c63c320eae..242296a57c92 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/8710b.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/8710b.c
-@@ -1860,6 +1860,7 @@ struct rtl8xxxu_fileops rtl8710bu_fops = {
- 	.ustime_tsf_edca = 0x28,
- 	.max_aggr_num = 0x0c14,
- 	.supports_ap = 1,
-+	.supports_p2p = 0,
- 	.max_macid_num = 16,
- 	.max_sec_cam_num = 32,
- 	.adda_1t_init = 0x03c00016,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8723a.c b/drivers/net/wireless/realtek/rtl8xxxu/8723a.c
-index ecbc324e4609..381fde571858 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/8723a.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/8723a.c
-@@ -519,6 +519,7 @@ struct rtl8xxxu_fileops rtl8723au_fops = {
- 	.rx_agg_buf_size = 16000,
- 	.tx_desc_size = sizeof(struct rtl8xxxu_txdesc32),
- 	.rx_desc_size = sizeof(struct rtl8xxxu_rxdesc16),
-+	.supports_p2p = 0,
- 	.max_sec_cam_num = 32,
- 	.adda_1t_init = 0x0b1b25a0,
- 	.adda_1t_path_on = 0x0bdb25a0,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/8723b.c b/drivers/net/wireless/realtek/rtl8xxxu/8723b.c
-index cc2e60b06f64..9837580e316e 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/8723b.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/8723b.c
-@@ -1750,6 +1750,7 @@ struct rtl8xxxu_fileops rtl8723bu_fops = {
- 	.ustime_tsf_edca = 0x50,
- 	.max_aggr_num = 0x0c14,
- 	.supports_ap = 1,
-+	.supports_p2p = 1,
- 	.max_macid_num = 128,
- 	.max_sec_cam_num = 64,
- 	.adda_1t_init = 0x01c00014,
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/core.c b/drivers/net/wireless/realtek/rtl8xxxu/core.c
-index 569856ca677f..ac2691d6f991 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/core.c
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/core.c
-@@ -1600,9 +1600,11 @@ static void rtl8xxxu_set_linktype(struct rtl8xxxu_priv *priv,
- 	case NL80211_IFTYPE_ADHOC:
- 		type = MSR_LINKTYPE_ADHOC;
- 		break;
-+	case NL80211_IFTYPE_P2P_CLIENT:
- 	case NL80211_IFTYPE_STATION:
- 		type = MSR_LINKTYPE_STATION;
- 		break;
-+	case NL80211_IFTYPE_P2P_GO:
- 	case NL80211_IFTYPE_AP:
- 		type = MSR_LINKTYPE_AP;
- 		break;
-@@ -6780,6 +6782,7 @@ static int rtl8xxxu_add_interface(struct ieee80211_hw *hw,
- 		return -EOPNOTSUPP;
+* I don't have any hard feelings about the naming, Nicolas Dichtel
+  proposed `fwd_per_iface` but I think `do_forwarding` is a better fit.
+* I'm also not sure about the reset when setting the global forwarding
+  flag; don't know if I did that right. Feedback is welcome!
+* Thanks for the help!
+
+ Documentation/networking/ip-sysctl.rst |  5 +++++
+ include/linux/ipv6.h                   |  1 +
+ include/uapi/linux/ipv6.h              |  1 +
+ include/uapi/linux/sysctl.h            |  1 +
+ net/ipv6/addrconf.c                    | 21 +++++++++++++++++++++
+ net/ipv6/ip6_output.c                  |  3 ++-
+ 6 files changed, 31 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/networking/ip-sysctl.rst b/Documentation/networking/ip-sysctl.rst
+index 0f1251cce314..fa966a710e21 100644
+--- a/Documentation/networking/ip-sysctl.rst
++++ b/Documentation/networking/ip-sysctl.rst
+@@ -2292,6 +2292,11 @@ conf/all/forwarding - BOOLEAN
+ proxy_ndp - BOOLEAN
+ 	Do proxy ndp.
  
- 	switch (vif->type) {
-+	case NL80211_IFTYPE_P2P_CLIENT:
- 	case NL80211_IFTYPE_STATION:
- 		if (port_num == 0) {
- 			rtl8xxxu_stop_tx_beacon(priv);
-@@ -6790,6 +6793,7 @@ static int rtl8xxxu_add_interface(struct ieee80211_hw *hw,
- 			rtl8xxxu_write8(priv, REG_BEACON_CTRL, val8);
- 		}
- 		break;
-+	case NL80211_IFTYPE_P2P_GO:
- 	case NL80211_IFTYPE_AP:
- 		if (port_num == 1) {
- 			rtl8xxxu_switch_ports(priv);
-@@ -6839,6 +6843,23 @@ static void rtl8xxxu_remove_interface(struct ieee80211_hw *hw,
- 	priv->vifs[rtlvif->port_num] = NULL;
- }
++do_forwarding - BOOLEAN
++	Enable forwarding on this interface only -- regardless of the setting on
++	``conf/all/forwarding``. When setting ``conf.all.forwarding`` to 0,
++	the `do_forwarding` flag will be reset on all interfaces.
++
+ fwmark_reflect - BOOLEAN
+ 	Controls the fwmark of kernel-generated IPv6 reply packets that are not
+ 	associated with a socket for example, TCP RSTs or ICMPv6 echo replies).
+diff --git a/include/linux/ipv6.h b/include/linux/ipv6.h
+index 5aeeed22f35b..74d7cfbb8f83 100644
+--- a/include/linux/ipv6.h
++++ b/include/linux/ipv6.h
+@@ -19,6 +19,7 @@ struct ipv6_devconf {
+ 	__s32		forwarding;
+ 	__s32		disable_policy;
+ 	__s32		proxy_ndp;
++	__u8		do_forwarding;
+ 	__cacheline_group_end(ipv6_devconf_read_txrx);
  
-+static int rtl8xxxu_change_interface(struct ieee80211_hw *hw,
-+				     struct ieee80211_vif *vif,
-+				     enum nl80211_iftype new_type, bool p2p)
-+{
-+	struct rtl8xxxu_priv *priv = hw->priv;
-+	int ret;
-+
-+	dev_dbg(&priv->udev->dev, "%s: p2p %x\n", __func__, p2p);
-+
-+	rtl8xxxu_remove_interface(hw, vif);
-+	vif->type = new_type;
-+	vif->p2p = p2p;
-+	ret = rtl8xxxu_add_interface(hw, vif);
-+
-+	return ret;
-+}
-+
- static int rtl8xxxu_config(struct ieee80211_hw *hw, u32 changed)
- {
- 	struct rtl8xxxu_priv *priv = hw->priv;
-@@ -7623,6 +7644,7 @@ static const struct ieee80211_ops rtl8xxxu_ops = {
- 	.tx = rtl8xxxu_tx,
- 	.wake_tx_queue = ieee80211_handle_wake_tx_queue,
- 	.add_interface = rtl8xxxu_add_interface,
-+	.change_interface = rtl8xxxu_change_interface,
- 	.remove_interface = rtl8xxxu_remove_interface,
- 	.config = rtl8xxxu_config,
- 	.conf_tx = rtl8xxxu_conf_tx,
-@@ -7755,7 +7777,9 @@ static void rtl8xxxu_deinit_led(struct rtl8xxxu_priv *priv)
- 
- static const struct ieee80211_iface_limit rtl8xxxu_limits[] = {
- 	{ .max = 2, .types = BIT(NL80211_IFTYPE_STATION), },
--	{ .max = 1, .types = BIT(NL80211_IFTYPE_AP), },
-+	{ .max = 1, .types = BIT(NL80211_IFTYPE_AP) |
-+			     BIT(NL80211_IFTYPE_P2P_CLIENT) |
-+			     BIT(NL80211_IFTYPE_P2P_GO), },
+ 	__s32		accept_ra;
+diff --git a/include/uapi/linux/ipv6.h b/include/uapi/linux/ipv6.h
+index cf592d7b630f..66147838bb83 100644
+--- a/include/uapi/linux/ipv6.h
++++ b/include/uapi/linux/ipv6.h
+@@ -199,6 +199,7 @@ enum {
+ 	DEVCONF_NDISC_EVICT_NOCARRIER,
+ 	DEVCONF_ACCEPT_UNTRACKED_NA,
+ 	DEVCONF_ACCEPT_RA_MIN_LFT,
++	DEVCONF_DO_FORWARDING,
+ 	DEVCONF_MAX
  };
  
- static const struct ieee80211_iface_combination rtl8xxxu_combinations[] = {
-@@ -7912,6 +7936,9 @@ static int rtl8xxxu_probe(struct usb_interface *interface,
- 	hw->wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION);
- 	if (priv->fops->supports_ap)
- 		hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_AP);
-+	if (priv->fops->supports_p2p)
-+		hw->wiphy->interface_modes |= BIT(NL80211_IFTYPE_P2P_CLIENT) |
-+					      BIT(NL80211_IFTYPE_P2P_GO);
- 	hw->queues = 4;
+diff --git a/include/uapi/linux/sysctl.h b/include/uapi/linux/sysctl.h
+index 8981f00204db..d540689910ec 100644
+--- a/include/uapi/linux/sysctl.h
++++ b/include/uapi/linux/sysctl.h
+@@ -573,6 +573,7 @@ enum {
+ 	NET_IPV6_ACCEPT_RA_FROM_LOCAL=26,
+ 	NET_IPV6_ACCEPT_RA_RT_INFO_MIN_PLEN=27,
+ 	NET_IPV6_RA_DEFRTR_METRIC=28,
++	NET_IPV6_DO_FORWARDING=29,
+ 	__NET_IPV6_MAX
+ };
  
- 	hw->wiphy->flags |= WIPHY_FLAG_HAS_CHANNEL_SWITCH;
-diff --git a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-index f42463e595cc..7a0a9fd20cdf 100644
---- a/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-+++ b/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.h
-@@ -2013,6 +2013,7 @@ struct rtl8xxxu_fileops {
- 	u8 ustime_tsf_edca;
- 	u16 max_aggr_num;
- 	u8 supports_ap:1;
-+	u8 supports_p2p:1;
- 	u16 max_macid_num;
- 	u16 max_sec_cam_num;
- 	u32 adda_1t_init;
+diff --git a/net/ipv6/addrconf.c b/net/ipv6/addrconf.c
+index ba2ec7c870cc..2f0c68428f63 100644
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -239,6 +239,7 @@ static struct ipv6_devconf ipv6_devconf __read_mostly = {
+ 	.ndisc_evict_nocarrier	= 1,
+ 	.ra_honor_pio_life	= 0,
+ 	.ra_honor_pio_pflag	= 0,
++	.do_forwarding		= 0,
+ };
+ 
+ static struct ipv6_devconf ipv6_devconf_dflt __read_mostly = {
+@@ -303,6 +304,7 @@ static struct ipv6_devconf ipv6_devconf_dflt __read_mostly = {
+ 	.ndisc_evict_nocarrier	= 1,
+ 	.ra_honor_pio_life	= 0,
+ 	.ra_honor_pio_pflag	= 0,
++	.do_forwarding		= 0,
+ };
+ 
+ /* Check if link is ready: is it up and is a valid qdisc available */
+@@ -857,6 +859,15 @@ static void addrconf_forward_change(struct net *net, __s32 newf)
+ 		idev = __in6_dev_get_rtnl_net(dev);
+ 		if (idev) {
+ 			int changed = (!idev->cnf.forwarding) ^ (!newf);
++			/*
++			 * With the introduction of do_forwarding, we need to be backwards
++			 * compatible, so that means we need to set the do_forwarding flag
++			 * on every interface to 0 if net.ipv6.conf.all.forwarding is set to 0.
++			 * This allows the global forwarding flag to disable forwarding for
++			 * all interfaces.
++			 */
++			if (newf == 0)
++				WRITE_ONCE(idev->cnf.do_forwarding, newf);
+ 
+ 			WRITE_ONCE(idev->cnf.forwarding, newf);
+ 			if (changed)
+@@ -5719,6 +5730,7 @@ static void ipv6_store_devconf(const struct ipv6_devconf *cnf,
+ 	array[DEVCONF_ACCEPT_UNTRACKED_NA] =
+ 		READ_ONCE(cnf->accept_untracked_na);
+ 	array[DEVCONF_ACCEPT_RA_MIN_LFT] = READ_ONCE(cnf->accept_ra_min_lft);
++	array[DEVCONF_DO_FORWARDING] = READ_ONCE(cnf->do_forwarding);
+ }
+ 
+ static inline size_t inet6_ifla6_size(void)
+@@ -7217,6 +7229,15 @@ static const struct ctl_table addrconf_sysctl[] = {
+ 		.extra1		= SYSCTL_ZERO,
+ 		.extra2		= SYSCTL_TWO,
+ 	},
++	{
++		.procname	= "do_forwarding",
++		.data		= &ipv6_devconf.do_forwarding,
++		.maxlen		= sizeof(u8),
++		.mode		= 0644,
++		.proc_handler	= proc_dou8vec_minmax,
++		.extra1		= SYSCTL_ZERO,
++		.extra2		= SYSCTL_ONE,
++	},
+ };
+ 
+ static int __addrconf_sysctl_register(struct net *net, char *dev_name,
+diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+index 7bd29a9ff0db..a75bbf54157e 100644
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -509,7 +509,8 @@ int ip6_forward(struct sk_buff *skb)
+ 	u32 mtu;
+ 
+ 	idev = __in6_dev_get_safely(dev_get_by_index_rcu(net, IP6CB(skb)->iif));
+-	if (READ_ONCE(net->ipv6.devconf_all->forwarding) == 0)
++	if ((idev && READ_ONCE(idev->cnf.do_forwarding) == 0) &&
++	    READ_ONCE(net->ipv6.devconf_all->forwarding) == 0)
+ 		goto error;
+ 
+ 	if (skb->pkt_type != PACKET_HOST)
 -- 
-2.50.0
+2.39.5
+
 
