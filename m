@@ -1,87 +1,121 @@
-Received: from mail-yb1-f193.google.com (mail-yb1-f193.google.com [209.85.219.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TWMBX01.aspeed.com (mail.aspeedtech.com [211.20.114.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AADB61E5B6F
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:34:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B4732040B6;
+	Wed, 25 Jun 2025 07:34:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=211.20.114.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750836869; cv=none; b=uKmWtA9TnLuZfasf+6WJYB0TY+BExr023gBTYh/dGYRIRrncryiQD67eFTEzBC1vs3Cu9+eE4jkFsXeQVUiJcNlOPk5lDD6K4KJPyQqtqDJtwe2ydIaRQSC0xzip+k/i2zRLstU9LSWG9halaaQ+kx54LkL6DxstQpvtb+2Pe4k=
+	t=1750836871; cv=none; b=bxr/6PI6LZUrY3Y/Wqy3+HEan4wVFc+OZojBnlx+tG/POPY1gSIGd7/B1hK60SCCLUn4d0qmXDMw11dWvuyEZtVSowTOpJ5Wm7tJ1sQK+jYrNk76LP8hK9wWPVeVR0gpiFsBh1GbK8Ahl2sSFiW/Dt01+z+WzmaTrqnxEKGy5ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750836869; c=relaxed/simple;
-	bh=RkRgQ/E3teXtjmLDQu0zs02cJ5CyGTii9nfI7+52fL0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=GF23/yZy6hVGLPY0yKszsRUXVae7v7mwroLtTQitQQ3UVapqmQZOvR3UGiBin74hkG5ykdvSSkF6vd1BveUHKOV9uevItKlCCen6TWz2zBA5BB0Hir7/qS0MyfVragrN7L9cPD7tmCSR2WCsApIyuGi1i2sGUDzD9Rnu76YmrXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F+P1O2oq; arc=none smtp.client-ip=209.85.219.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F+P1O2oq"
-Received: by mail-yb1-f193.google.com with SMTP id 3f1490d57ef6-e8600c87293so465426276.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750836866; x=1751441666; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RkRgQ/E3teXtjmLDQu0zs02cJ5CyGTii9nfI7+52fL0=;
-        b=F+P1O2oq/senMAKohFKRAqzBsPRYN0Gv5hAqnVNUi5pp/kBp3cb4zo0LchoY9eFXZq
-         dPT4gwCrMF+xdeu6PdcyLTbiSlNf6OPDpos//MgUZlo31TZ4We0oaHX1wOqvVT2+70th
-         pICZUZ3T6czF1CDxQC6NPPpRfHeAi4dhzHdUkVWqzRv0w5CkVE+xWFDHhz3vH+tweUNR
-         4OWSufv0+SfJ3kDbvujvwE26GCOJHyuVPV5PVh93AvRhOrGBFj50eL2lGAlowWNAsTot
-         GzzTrk3+aB8NGr9FNYCtt/59uYGk2lTFG+KhsbdboMLBtTymNUtkaTsEVezhkTzBVIAM
-         PoWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750836866; x=1751441666;
-        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RkRgQ/E3teXtjmLDQu0zs02cJ5CyGTii9nfI7+52fL0=;
-        b=elb6R6HgSqgTax6cnS1cmxae8zGBUgPj2RU9beDOramdWUFR9tzBFxZXs1svuNJ0Sb
-         x0lWI6bM2939GnP/kGVvRn9n/kORcHhP8m46zKQLTLdygDsNyPZ2SepPAaE8vbV7KBUX
-         QNO+EXZT51QPgrO9XptKbg7QcmJ/PtiQiKPiXHDR8MmxsZX5QgyYeEukcyYew1ukETsS
-         g50U0woOP8kNgvjBTA9uXRi305fRpi/iroiPAUs0z4tqiHiU+0C3xj0j+vGaZDCiIChR
-         ueQyqPij2uFbgToPtZjn3BrKQrUwokTMewoMrUQJoyHllcHYRwZnSBtvPEIyawDUNom/
-         vJIg==
-X-Gm-Message-State: AOJu0YwHncU8zNO0j5yGHeI4QKPR7EwwzVmQB7Q8XqKJyL6ghfpAazOH
-	6glmPjJ3/rBn3zZoudIOYgEZg/yndv9DnOUL/ZHYkhwVC8RRoY1dspAEixNPWCoxnOMtb/cF9qI
-	Bqqm4SzX+QRSG488CGMnNBWVpuw5fB11ZI8Vlokn/PA==
-X-Gm-Gg: ASbGncttHgiPQgUEIcsOOQz6btcpbG7B8sG8oNbI4+NZqLaP3a97vuAlLyetOH0A/Xm
-	i6++fajZRTohJs+2PbNgPAFUXx8M+JzTZJJ6mg8uVqGZ9y68xzcFVSuQGvz9WaT5mwn4fKuV/my
-	91HhyA74/ryoOxRe8tTcQ1YTEyPtxHhHyRpV72CZvlopgtYKCwvTWzfwj2sP2xx0DrSoadwacjD
-	D0jyhVore/e5b9d
-X-Google-Smtp-Source: AGHT+IFAqtr+8OgfdCZusf1wXl6gxEKA/2wTwpel93CXDCMseqJXPbx4t91/POE0FE/gPG/y+ooIy8i1+AGoxcAE990=
-X-Received: by 2002:a05:6902:2e85:b0:e84:20f5:a6ed with SMTP id
- 3f1490d57ef6-e8601726faemr2197605276.2.1750836866127; Wed, 25 Jun 2025
- 00:34:26 -0700 (PDT)
+	s=arc-20240116; t=1750836871; c=relaxed/simple;
+	bh=MFUynQYKC8TeFM9g8g4aaiAVStZlY2yKQEpZEWi1ma4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=InmOhrQDieWy1cbL12H7wOko1AMXuW4N84Nbi6wGGLk6FGSkLJjypDyB0o+/oGfLLMm3rTawNB3FCPHkGL02doZLKWallDkiNycAl7B4Z2FRlByysyx/wfwi/wLgKJK4HDviEXxJvcsBjAxdHYyk1BJc1NVhAe8LrywQ6JfBpSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; arc=none smtp.client-ip=211.20.114.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
+Received: from TWMBX01.aspeed.com (192.168.0.62) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 25 Jun
+ 2025 15:34:18 +0800
+Received: from mail.aspeedtech.com (192.168.10.13) by TWMBX01.aspeed.com
+ (192.168.0.62) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Wed, 25 Jun 2025 15:34:18 +0800
+From: Jammy Huang <jammy_huang@aspeedtech.com>
+To: <jassisinghbrar@gmail.com>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <joel@jms.id.au>, <andrew@codeconstruct.com.au>,
+	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>
+Subject: [PATCH v5 1/2] dt-bindings: mailbox: Add ASPEED AST2700 series SoC
+Date: Wed, 25 Jun 2025 15:34:16 +0800
+Message-ID: <20250625073417.2395037-2-jammy_huang@aspeedtech.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250625073417.2395037-1-jammy_huang@aspeedtech.com>
+References: <20250625073417.2395037-1-jammy_huang@aspeedtech.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAFf+5zhvusE2bPiTA40wJ39UZHCaW+TyiE7E1ZEERQJS9sLcdA@mail.gmail.com>
-In-Reply-To: <CAFf+5zhvusE2bPiTA40wJ39UZHCaW+TyiE7E1ZEERQJS9sLcdA@mail.gmail.com>
-From: Amit <amitchoudhary0523@gmail.com>
-Date: Wed, 25 Jun 2025 13:04:15 +0530
-X-Gm-Features: Ac12FXyLIclP9JJomuv-hQ9rk49mqEP34so7Y9oXWIIlBldIrDMd4r5zcHcZ7zY
-Message-ID: <CAFf+5zgBTkW3W46xFYgbBzyP72e08gFQd+NRssCnZRm8UYhzdw@mail.gmail.com>
-Subject: Bash script to generate random ascii string lines (printable
- characters only, including space) with lengths within a min-max range.
-To: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
-Bash script to generate random ascii string lines (printable
-characters only, including space) with lengths within a min-max range.
+Introduce the mailbox module for AST27XX series SoC, which is responsible
+for interchanging messages between asymmetric processors.
 
---------------------------------------------------
-#!/bin/bash
+Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+---
+ .../mailbox/aspeed,ast2700-mailbox.yaml       | 60 +++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
 
-min=50
-max=110
+diff --git a/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
+new file mode 100644
+index 000000000000..0a5f43de5f28
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
+@@ -0,0 +1,60 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mailbox/aspeed,ast2700-mailbox.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ASPEED AST2700 mailbox controller
++
++maintainers:
++  - Jammy Huang <jammy_huang@aspeedtech.com>
++
++description:
++  ASPEED AST2700 has multiple processors that need to communicate with each
++  other. The mailbox controller provides a way for these processors to send
++  messages to each other. It is a hardware-based inter-processor communication
++  mechanism that allows processors to send and receive messages through
++  dedicated channels.
++  The mailbox's tx/rx are independent, meaning that one processor can send a
++  message while another processor is receiving a message simultaneously.
++  There are 4 channels available for both tx and rx operations. Each channel
++  has a FIFO buffer that can hold messages of a fixed size (32 bytes in this
++  case).
++  The mailbox controller also supports interrupt generation, allowing
++  processors to notify each other when a message is available or when an event
++  occurs.
++
++properties:
++  compatible:
++    const: aspeed,ast2700-mailbox
++
++  reg:
++    maxItems: 2
++    description:
++      Contains the base addresses and sizes of the mailbox controller. 1st one
++      is for TX control register; 2nd one is for RX control register.
++
++  interrupts:
++    maxItems: 1
++
++  "#mbox-cells":
++    const: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#mbox-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++
++    mailbox@12c1c200 {
++        compatible = "aspeed,ast2700-mailbox";
++        reg = <0x12c1c200 0x100>, <0x12c1c300 0x100>;
++        interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++        #mbox-cells = <1>;
++    };
+-- 
+2.25.1
 
-while true; do
-
-len=`shuf -i $min-$max -n 1`
-
-tr -dc '[:print:]' < /dev/urandom | dd ibs=$len count=1 status=none; echo
-
-done
---------------------------------------------------
