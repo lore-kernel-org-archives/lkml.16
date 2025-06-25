@@ -1,210 +1,156 @@
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96E73F50F
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:52:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.118
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21E8AF50F;
+	Wed, 25 Jun 2025 08:52:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841540; cv=none; b=XB4TEb/hLo5kmj7NjVV98AhazDpYRPWvb1befR8twd5mtIUl/wSSMh9pyr2Fhl5Rl4bd6ct1KRZiIOpO2/+zLuWUEGI+CyOZlamC/Q9TlgRYgChaVYfj26DE9c0QCPJB6/fjBkw9dSrLtzdQEh2mHZXDrmYRbImQ+jnQ21Z4WIM=
+	t=1750841550; cv=none; b=corsEPEgeLnnhmYBRqRkT9w9EBytJKaLCN3IlZDyVZwStC6BoF6Kou5+YmB95/FktmHBDDSL8sndP4QlE1xpf0+nmLKXnH1cHAWunJ14XrG3/mp1Xe2yrxff4c4BpecIDesCCEaTqs+kR2jIpk0/1b8+5NAa/mBDwE1mA+axMx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841540; c=relaxed/simple;
-	bh=4C89RP3ZG0A4Ej7e2QGiktJ4IBTDZuAQFp3Zc6bH9a8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tMLRImlUIKNMsbywWd+F0g0z1+wIqfUDPISWyUFUQZ53JNjQCF6AOw6ayQbGrWN1o1aIPN9sObspzzkG0bLB3Kdub8Po/WUTam8fRp9Nm2DMiy1XnsZ/jITFkkFJxAnlJxFuj910RpBo5gBCcKjcPk4O4NLiZiW25UZZYDUR7NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=sR2rWfdF; arc=none smtp.client-ip=115.124.30.118
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1750841550; c=relaxed/simple;
+	bh=NEjOO6MyFXxkn7NerpncmY9/qLiFsH/Y4Jb/xiTGkOQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DYX6pCxbZ6tQ1Xoc5Azlo6QUeCeosdmWqE+ZV5WSl3qglZUBZloBk241s5xntsW/54OXQ7Th1quQgNe9q50U1JIHU/x8iANJWVz7H1WHuNUC+EO/IUuDv8/xYJIJieV2lcdEQCJRtVqTrnLs7y3lnn9bWdLXkwQxV/yt0Tc7DrU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Q+ZBmcW7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="sR2rWfdF"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1750841527; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
-	bh=Jdk7MOIYN3yseBOY4jjLY6dw7calfP5EQ2cuWW/TLEA=;
-	b=sR2rWfdFIiYHRrL8m0y6fsB61pkT5sxPwBvddNjje21ykfhQLxTIt8Lv3Wv/iIC6hDYd18D1XLHlCNHh6f2rZu3xPK7WmKZwoafL7YXTERvOtua5oHzLKGDsk/X9YPVCwgUiaapRUl1uBXg+lmseFWoMVYFy730GwmoLLYwSrq8=
-Received: from 30.74.144.110(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WevRTcD_1750841524 cluster:ay36)
-          by smtp.aliyun-inc.com;
-          Wed, 25 Jun 2025 16:52:06 +0800
-Message-ID: <a877b2b7-382b-498b-9b4a-188a0845d630@linux.alibaba.com>
-Date: Wed, 25 Jun 2025 16:52:03 +0800
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Q+ZBmcW7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F853C4CEF1;
+	Wed, 25 Jun 2025 08:52:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1750841549;
+	bh=NEjOO6MyFXxkn7NerpncmY9/qLiFsH/Y4Jb/xiTGkOQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q+ZBmcW72ckUTCHtrRqXpKmpnjw7iEoZCAZOrCPKTA2vJ7UfB69HatqPmcGy+u9ip
+	 On1xNK9o/S8Yd29DDbgfG6XHgHxaonAzEqr5rEMfusAl4OoQY6IGSJ+4QX7OyZfct2
+	 ZUSnPvbl2T2EphXFKuij6jOVnIkCdxLX3ih/tSAI=
+Date: Wed, 25 Jun 2025 09:52:27 +0100
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev,
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+	kvmarm@lists.cs.columbia.edu, akpm@linux-foundation.org,
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
+	hargar@microsoft.com, broonie@kernel.org,
+	Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+	Julien Thierry <julien.thierry.kdev@gmail.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Linux ARM <linux-arm-kernel@lists.infradead.org>,
+	Andy Gross <agross@kernel.org>
+Subject: Re: [PATCH 5.4 000/222] 5.4.295-rc1 review
+Message-ID: <2025062508-vertical-rewrite-4bce@gregkh>
+References: <20250623130611.896514667@linuxfoundation.org>
+ <CA+G9fYvpJjhNDS1Knh0YLeZSXawx-F4LPM-0fMrPiVkyE=yjFw@mail.gmail.com>
+ <2025062425-waggle-jaybird-ef83@gregkh>
+ <CA+G9fYvNTO2kObFG9RcOOAkGrRa7rgTw+5P3gmbfzuodVj6owQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/2] fix MADV_COLLAPSE issue if THP settings are
- disabled
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- David Hildenbrand <david@redhat.com>
-Cc: Hugh Dickins <hughd@google.com>, akpm@linux-foundation.org,
- ziy@nvidia.com, Liam.Howlett@oracle.com, npache@redhat.com,
- ryan.roberts@arm.com, dev.jain@arm.com, baohua@kernel.org,
- zokeefe@google.com, shy828301@gmail.com, usamaarif642@gmail.com,
- linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <cover.1750815384.git.baolin.wang@linux.alibaba.com>
- <75c02dbf-4189-958d-515e-fa80bb2187fc@google.com>
- <f1782ae5-c1d6-4f46-a676-666505990f4d@lucifer.local>
- <008ec97f-3b33-4b47-a112-9cef8c1d7f58@redhat.com>
- <01d679f2-fd64-472c-b9dc-ebe87268ce82@lucifer.local>
- <a16071e5-ae97-4e1a-9df8-f353f6b319c7@lucifer.local>
- <23b8ad10-cd1f-45df-a25c-78d01c8af44f@redhat.com>
- <decbae07-0c84-4379-9f9d-6e2bd6dbad6e@lucifer.local>
-From: Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <decbae07-0c84-4379-9f9d-6e2bd6dbad6e@lucifer.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvNTO2kObFG9RcOOAkGrRa7rgTw+5P3gmbfzuodVj6owQ@mail.gmail.com>
 
+On Wed, Jun 25, 2025 at 10:03:22AM +0530, Naresh Kamboju wrote:
+> On Tue, 24 Jun 2025 at 15:55, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Jun 24, 2025 at 12:46:15AM +0530, Naresh Kamboju wrote:
+> > > On Mon, 23 Jun 2025 at 18:40, Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > This is the start of the stable review cycle for the 5.4.295 release.
+> > > > There are 222 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > >
+> > > > Responses should be made by Wed, 25 Jun 2025 13:05:50 +0000.
+> > > > Anything received after that time might be too late.
+> > > >
+> > > > The whole patch series can be found in one patch at:
+> > > >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.295-rc1.gz
+> > > > or in the git tree and branch at:
+> > > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> > > > and the diffstat can be found below.
+> > > >
+> > > > thanks,
+> > > >
+> > > > greg k-h
+> > >
+> > > Regressions on arm defconfig builds with gcc-12 and clang failed on
+> > > the Linux stable-rc 5.4.295-rc1.
+> > >
+> > > Regressions found on arm
+> > > * arm, build
+> > >   - clang-20-axm55xx_defconfig
+> > >   - clang-20-defconfig
+> > >   - clang-20-lkftconfig
+> > >   - clang-20-lkftconfig-no-kselftest-frag
+> > >   - clang-nightly-axm55xx_defconfig
+> > >   - clang-nightly-defconfig
+> > >   - clang-nightly-lkftconfig
+> > >   - gcc-12-axm55xx_defconfig
+> > >   - gcc-12-defconfig
+> > >   - gcc-12-lkftconfig
+> > >   - gcc-12-lkftconfig-debug
+> > >   - gcc-12-lkftconfig-kasan
+> > >   - gcc-12-lkftconfig-kunit
+> > >   - gcc-12-lkftconfig-libgpiod
+> > >   - gcc-12-lkftconfig-no-kselftest-frag
+> > >   - gcc-12-lkftconfig-perf
+> > >   - gcc-12-lkftconfig-rcutorture
+> > >   - gcc-8-axm55xx_defconfig
+> > >   - gcc-8-defconfig
+> > >
+> > > Regression Analysis:
+> > >  - New regression? Yes
+> > >  - Reproducibility? Yes
+> > >
+> > > Build regression: stable-rc 5.4.295-rc1 arm kvm init.S Error selected
+> > > processor does not support `eret' in ARM mode
+> > >
+> > > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> > >
+> > >
+> > > ## Build errors
+> > > arch/arm/kvm/init.S: Assembler messages:
+> > > arch/arm/kvm/init.S:109: Error: selected processor does not support
+> > > `eret' in ARM mode
+> > > arch/arm/kvm/init.S:116: Error: Banked registers are not available
+> > > with this architecture. -- `msr ELR_hyp,r1'
+> > > arch/arm/kvm/init.S:145: Error: selected processor does not support
+> > > `eret' in ARM mode
+> > > arch/arm/kvm/init.S:149: Error: selected processor does not support
+> > > `eret' in ARM mode
+> > > make[2]: *** [scripts/Makefile.build:345: arch/arm/kvm/init.o] Error 1
+> > >
+> > > and
+> > > /tmp/cc0RDxs9.s: Assembler messages:
+> > > /tmp/cc0RDxs9.s:45: Error: selected processor does not support `smc
+> > > #0' in ARM mode
+> > > /tmp/cc0RDxs9.s:94: Error: selected processor does not support `smc
+> > > #0' in ARM mode
+> > > /tmp/cc0RDxs9.s:160: Error: selected processor does not support `smc
+> > > #0' in ARM mode
+> > > /tmp/cc0RDxs9.s:296: Error: selected processor does not support `smc
+> > > #0' in ARM mode
+> > > make[3]: *** [/builds/linux/scripts/Makefile.build:262:
+> > > drivers/firmware/qcom_scm-32.o] Error 1
+> >
+> > That's odd, both clang and gcc don't like this?  Any chance you can do
+> > 'git bisect' to track down the offending commit?
+> 
+> The git bisection pointing to,
+> 
+>   kbuild: Update assembler calls to use proper flags and language target
+>   commit d5c8d6e0fa61401a729e9eb6a9c7077b2d3aebb0 upstream.
 
+Thanks for that,  I'll go drop all of the kbuild patches that Nathan
+submitted here and push out a -rc2
 
-On 2025/6/25 16:37, Lorenzo Stoakes wrote:
-> On Wed, Jun 25, 2025 at 10:24:53AM +0200, David Hildenbrand wrote:
->> On 25.06.25 10:12, Lorenzo Stoakes wrote:
->>> On Wed, Jun 25, 2025 at 08:55:28AM +0100, Lorenzo Stoakes wrote:
->>>> I suppose the least awful way of addressing Baolin's concerns re: mTHP
->>>> while simultaneosly keeping existing semantics is:
->>>>
->>>> 1. Introduce deny to mean what never should have meant.
->>>
->>> To fix Baolin's issue btw we'd have to add 'deny' to both 'global' settings
->>> _and_ each page size setting.
->>>
->>> Because otherwise we'd end up in a weird case where say:
->>>
->>> global 'deny'
->>>
->>>    2 MiB 'never'
->>> 64 KiB 'inherit'
->>>
->>> And err... get 2 MiB THP pages from MADV_COLLAPSE :)
->>>
->>> Or:
->>>
->>> global 'deny'
->>>
->>>    2 MiB 'never'
->>> 64 KiB 'always'
->>>
->>> Or:
->>>
->>> global 'never'
->>>
->>>    2 MiB 'never'
->>> 64 KiB 'always'
->>>
->>> Or:
->>>
->>> global 'never'
->>>
->>>    2 MiB 'madvise'
->>> 64 KiB 'always'
->>>
->>> All doing the same. Not very clear is it?
->>>
->>> We have sowed the seeds of something terrible here, truly.
->>
->> Fully agreed. "Deny" is nasty. Maybe if we really need a way to disable
->> "madv_collapse", it should be done differently, not using this toggle here.
-> 
-> Yeah maybe the best way is to just have another tunable for this?
-> 
-> /sys/kernel/mm/transparent_hugepage/disable_collapse perhaps?
-> 
-> What do you think Hugh, Baolin?
-
-I think it's not necessary to find a way to disable madvise_collapse. 
-Essentially, it's a conflict between the semantics of madvise_collapse 
-and the '/sys/kernel/mm/transparent_hugepage/enabled' interface. We 
-should reach a consensus on the semantics first:
-
-Semantic 1: madv_collapse() should ignore any THP system settings, 
-meaning we need to update the 'never' semantics in 
-'/sys/kernel/mm/transparent_hugepage/enabled', which would only disable 
-page fault and khugepaged, not including madvise_collapse. If we agree 
-on this, then the 'never' for per-sized mTHP would have the same 
-semantics, i.e., when I set 64K mTHP to 'always' and 2M mTHP to 'never', 
-madvise_collapse would still allow the collapse of 2M THP. We should 
-document this clearly in case users still want 64K mTHP from 
-madvise_collapse.
-
-
-Semantic 2: madv_collapse() needs to respect THP system settings, which 
-is what my patch does. Never means never, and we would need to update 
-the documentation of madv_collapse() to make it clearer.
-
->> Regarding MADV_COLLAPSE, I strongly assume that we should not change it to
->> collapse smaller mTHPs as part of the khugepaged mTHP work. For now, it will
->> simply always collapse to PMD THPs.
-> 
-> Yeah thinking about it maybe this is the best way. And we can then update
-> the man page to make this ABUNDANTLY clear (am happy to do this).
-> 
-> This keeps things simple.
-
-Yes, agree.
-
-> (One side note on PMD-sized MADV_COLLAPSE - this is basically completely
-> useless for 64 KB page size arm64 systems where PMD's are 512 MB :)
-> 
-> Thoughts Baolin?
-
-We should not collapse 512MB THP on 64K pagesize kernel. So seems 
-madv_collapse() can not work on 64K pagesize kernel.
-
->> Once we want to support other sizes, likely MADV_COLLAPSE users want to have
->> better control over which size to use, at which point it all gets nasty.
-> 
-> madvise2() this time with extra parameters? ;)
-> 
-> I sort of wish we had added a flags parameter there.
-> 
-> But lacking a time machine... :)
-> 
->>
->> --
->> Cheers,
->>
->> David / dhildenb
->>
-> 
-> To summarise:
-> 
-> Drop series:
-> 
-> * Might degrade performance for very specific users using
->    never/MADV_COLLAPSE (quite possibly via process_madvise() + a remote
->    process).
-> 
-> * Matches 'de jure' interpretation of documentation.
-> 
-> Keep series:
-> 
-> * Provides no means whatsoever to have a 'manual only' collapse mode,
->    though does provide for manual khugepaged THP.
-> 
-> * MADV_COLLAPSE automatically gets mTHP support based on obeying 'never'.
-> 
-> * Matches likely 'de facto' understanding system admins have about THP
->    usage.
-> 
-> Action items:
-> 
-> * Either way, I (Lorenzo) will improve documentation.
-
-Great. Thanks.
-
-> * If we drop the series, provide another means to disable
->    MADV_COLLAPSE. But not using existing sysfs toggles, something new. We
->    will document MADV_COLLAPSE as PMD only.
-> 
-> * If we drop the series, also consider how we might provide mTHP-compatible
->    MADV_COLLAPSE.
-
-Yes. Agree. Will be another mess I guess :)
-
-> 
-> * Totally and completely refactor the hell out of the THP implementation
->    from top-to-bottom (over time this is becoming more and more of a me
->    thing... as I'm getting ever more frustrated with the implementation ;)
-
-Yes.
+greg k-h
