@@ -1,137 +1,131 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 921E425EF8F;
-	Wed, 25 Jun 2025 12:25:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D427225EF8F
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:25:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750854349; cv=none; b=uOvrnnIgFORGpD+ITMCp5M8nZSfD+EPjR5dv/ru2QQDuPgLYK8nLWu7nZu33su0uwq3BXihYplQvYT5PIxxHqw03O8ORofgMryC+XbOhV3JvA6QqeC9N7jfCqhbh+6+y7ZXW0P8Eq/shDpzNgF0h0Gw9kJpPy95Ue6LSfIyisX4=
+	t=1750854355; cv=none; b=gNUx7Wbhsw2uxGa4p8Rnmtkt8Yi5GSzhc5V+dK2Qx6NDrZAdqGySFKOjSQvHAmgQhN3cXa6BPjKZfZBWeefjsvS79yL5fbLcLTaYSknVO2AqOH/XXYNgiYCz145s44U5BbSGgUpCa0L/ZAY1bCdqelvx+zdV0XrigWEQbOw8sA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750854349; c=relaxed/simple;
-	bh=GWlhp73LNm/7EbO3DbUYo/TyoyteULAA+bKvzRvitdU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FLI9CuM4w1WZush1+cHt/P1G5A4jhOhMo3NsvJGnjVh1p1ul82tcyIj6r3CMLGN2V+Lo7MJ+XRk7IPfkkt1JH0g1M8rrheSDs5/bUOSYbj8+/FGVc42ZLdMsLuaF/0Mgh0I4Gs8NB9fvl0NE6DuHLKckVuIP8N763XAim4gOJPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AI/e6nso; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750854355; c=relaxed/simple;
+	bh=g7tVhWNQEWOrEFO+Wx+fLCWSoQW9KQpcO66Pz2aMF+U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k7Tk58QDkLlKAzaqUQuz/Fq3Pa42i8Q8iJ39x9xWDISbOxj5ahHGDZEy9/YFToCfe7adjOliIDTSvfjWjfYoDWQzUgwOQ0hdzWOEkYMxgM2bZCAqbMB8mNVK2a0vtlVlfbZntXIEHMP5P1EpsuNOEjfa/XWMxl1/Yu9t4IYQHjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DdF044ut; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AI/e6nso"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-237e6963f63so27646925ad.2;
-        Wed, 25 Jun 2025 05:25:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DdF044ut"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-453676c2dd3so29915e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:25:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750854346; x=1751459146; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gK8Hp/mA0/WB+LCIYX3QIzvfFd0YpHU2lftvUglJLEk=;
-        b=AI/e6nsoLKUx+iWuYt2f/94E9X5rQPiqg9t+uIjN3jD0U8Gk5tdz8/H12ENO2VaNtD
-         aMRst/y384qHnr9w7+PKVyike9C8kHj/5aWqq4LH0uWYj54Lqfl8adVqfA7qKKajFtUY
-         gHeR7IeXz+yy8OsjZrM6V9TTqzIM4j8zdJ9uNfkqcFuqpq/M/rSU6orgCviMaNOca2hA
-         kJFmvQqRHGwWmPXQh1yHECuz6yDvINxXsmiPeUOkwB0S8fkwF+JK/SYSZSBk9UsqENoa
-         id6+BjrlpkxZFNlWu280qZw+MvVrq74wovackoPy50bSWbXO/33VHqoTONPnWERocmKD
-         SQxg==
+        d=google.com; s=20230601; t=1750854351; x=1751459151; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ORz82HmG8MePjwyhjUnw+YyKg1bZgQsmMoLl2/yzhQE=;
+        b=DdF044utWLhen4IDAR3o480S+J5DSLEipmMSI/AlEffg0Nb0MpMeMgm6I0R+9u9nlI
+         uT2Y5wfZ5Q7gE6tuzZYyUGmJrceBcReTkfff9y2rt+HVuBNVBl6rX6KZpV38raoctLCJ
+         uhYEPIZMryYwJiXXsDRi5vCovWuMmYfhFbcQYkpaZxm//ty4ofbctXiku4JQXE37nIHw
+         IpDuhpZf0AvOqjD6SYNhNmZaWLdm2N2pyK0zv5i6HPIYYQDMKx6/bJii9JqsiPBeijG3
+         qu4EfmKw87xOiCsUXjfE3jthlWRcD+GGb7JnRv9gIOXiEsQIA+2cOdp2JDNnYP0QsfSK
+         ccfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750854346; x=1751459146;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gK8Hp/mA0/WB+LCIYX3QIzvfFd0YpHU2lftvUglJLEk=;
-        b=UB732ojk3QsPiDp+Lb5rpHvJVFz6OO/ERUm7XcpeU076aVkmzaMTDLq7l2+eVqD+/J
-         wcvRQ/6QAJLCSXh0Ui9ZUzDGynL3a1VhrxChtnH3365i5X2oobQGP8BJ1hQMAH6VrlY0
-         rnEQAGNj/yhqj07oEUfamLXg9Zpnq0oNKi5Cr+e4+nTk5yO0YJOf8xM6HqRCZcDJo08g
-         NfPmitthd0/MQBG7Lp5zJH2TBh1UBEVYdMNLs1MQhXrDTE3tWoVgRgTCshoQdL0fJcRT
-         h/Zc+sVzOU6F6cVngbHLmeSDi1lZBeb1r6u11XygatxNc6ImB3iE9rFKBbfxnUnY3ACi
-         R5MA==
-X-Forwarded-Encrypted: i=1; AJvYcCV0/LskhkyJHYVtgtp8QKz+7LAXJMtL4Z7QSWGK5UH1Of0oud7Cdyx7Uu1giM65ym/geveBQQv0C4ZOlxq26Lw=@vger.kernel.org, AJvYcCXH+Dokr9M2ytngjMThbna7XbpKWo4BYZizzqZD3qYcvAbQwv8ma3vpagsASQ4citf3SO8WcGYcFQtfrG8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq4hL/0HQtQPEUHPlsQT1zHPzMZFuqOjDlKu22dMbYE5fDNpaw
-	j6OdTcZXvrWT+BtsZc0amaFvsrN+VhgEQXwgHqtgYFMTKXgGyXowB0JY
-X-Gm-Gg: ASbGncvGXUTsAoTRXNJZtDX7GYx6BUwrkfhPaeePpA1J0mJNP+27+dml6NE7K+CBDzo
-	SLNY+qxPw63KJlct4dGT29tCEE1nQaRooS2/fQUm016HY4LwHZ5DftiDqVtMlSa/mVEsdoSpkNe
-	s25kHJRcJir/brs/l4DOckWKrgHvlNG6yMOqAzLGzv76OEEoAl6uZZIG9rrZqO5n4rsm/0fqso2
-	V2gBVVnXPJKIgdrf3gvte4k9M10Wz6/2Hg9V68MqFV5CPmeTopqD6hftm/e3rYD1/77+EmiyboV
-	tvNIWEPRfmAQvdNJU8zAFnkY8BQXF+CefNNzzp1uItlv7UdrWF2b8LP4BD49QTlrh5n7mFlFaU+
-	ClUKfpxebj1djc935sTJ4MtiAs7l7lDgSALuQJfZHprSBggIQzNfXJ0Jk
-X-Google-Smtp-Source: AGHT+IHtv4E8mTXtJhjRtDr/sOzVXJ8chAiqbXjdQq30k70nkAEaKLwRixvhgJfDtHBn2buXrkIWeA==
-X-Received: by 2002:a17:903:2f10:b0:223:f9a4:3f99 with SMTP id d9443c01a7336-23824044733mr56789135ad.29.1750854345794;
-        Wed, 25 Jun 2025 05:25:45 -0700 (PDT)
-Received: from 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa ([50.233.106.34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d83ea243sm137551405ad.72.2025.06.25.05.25.44
+        d=1e100.net; s=20230601; t=1750854351; x=1751459151;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ORz82HmG8MePjwyhjUnw+YyKg1bZgQsmMoLl2/yzhQE=;
+        b=fZr+DYM0oT8hlFTApEyIGpYdaew79nbxUGyA0k2Z9b8oCTC8GhfM/RopyzQupu1CBr
+         fXJ+JJ7y3XMTUjKQ8uPqeyq8UW2LCElt+dkCK8LrO9oXzzBUk5WDjoswnTmKVFMzLD/A
+         V1c4z8Fb7mGPa3dxqnWZ+VE0DYkhi4ue5AUZDPpI9wXYg0I707o5xmdnjUbeJ8J66lzW
+         uAENCmVc+kPYM/qo3YdoMYNloB2t2wn0IKGOI6jIPgUzSmg1wu+G9650lCJpBhkXKYCJ
+         OwmuOWhLHqdqNmrdPYv6SscGs6qfaRmpXTjcMbwJfpqC6rq+NU11XuJXWit0+Bv4Ez0o
+         F48A==
+X-Gm-Message-State: AOJu0YwXIGIT7Yqjz0YAwdbS2FuJxShiYjnuWCAzUoM/+amNrMir/UAy
+	ZyP8Bw1PDDp4anhiSioEgdId/etV/PnRera/j9yR0UpmOw/4boyOeLV35pvOK9KUdoBNKAy9Cej
+	52Rxitw==
+X-Gm-Gg: ASbGncvLeUmOums2LlyH59TG+Bq/jhK3tMhpxJ31fEoPCUQrQIRrX4dRrcWfALFKnIe
+	9HneSlBpL8bUm1vnE5T91mIhb7lm20Ob3sNZi9yoP2gfywHbnzRekjbMX4aEujpm1iBxtLjvH+z
+	06q64WyO8NDtZm6VUXgGavODNacLzeUnCno+DRlCnAEUFgmq7uIyeGV/Lj1jJ0fgtU0f4nT+QFB
+	HTebXoZ9Be8QB1vXfY6xtSoQFNcBNVP6x1xMTvAxquJ6mPUHjpzdaDmFef7qRwHptv5aWAl2/GY
+	yTua8EqYkL6pqzoxFDhVGklekwCALZy+UD256AXyRj0hFv9UmdKg2XBEFA5KYDZh2qLXFJwSMh8
+	TTXr36r9jHRLRPl+wIP/pxQsL4FjPXERh6c8=
+X-Google-Smtp-Source: AGHT+IHPyu4K7DFqX3gLjlWDl8SuaCVRLnWxYtuvRdiGcRhqnltdTavombWZNicSNu6nwKbmjbZ0JQ==
+X-Received: by 2002:a05:600c:c04f:b0:453:65f4:f4c8 with SMTP id 5b1f17b1804b1-45383195f5emr555595e9.3.1750854350879;
+        Wed, 25 Jun 2025 05:25:50 -0700 (PDT)
+Received: from google.com (206.39.187.35.bc.googleusercontent.com. [35.187.39.206])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8069467sm4409880f8f.42.2025.06.25.05.25.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 05:25:45 -0700 (PDT)
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 25 Jun 2025 05:25:39 -0700
-Subject: [PATCH net-next v2 2/2] Cast to the proper type
+        Wed, 25 Jun 2025 05:25:50 -0700 (PDT)
+Date: Wed, 25 Jun 2025 12:25:46 +0000
+From: Mostafa Saleh <smostafa@google.com>
+To: Quentin Perret <qperret@google.com>
+Cc: linux-kernel@vger.kernel.org, kvmarm@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, maz@kernel.org,
+	oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com,
+	yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org
+Subject: Re: [PATCH] KVM: arm64: Fix error path in init_hyp_mode()
+Message-ID: <aFvqyl-Xquuoyvh1@google.com>
+References: <20250625113301.580253-1-smostafa@google.com>
+ <aFvqFdwNYI0-3zWY@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-correct-type-cast-v2-2-6f2c29729e69@gmail.com>
-References: <20250625-correct-type-cast-v2-0-6f2c29729e69@gmail.com>
-In-Reply-To: <20250625-correct-type-cast-v2-0-6f2c29729e69@gmail.com>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>, 
- Trevor Gross <tmgross@umich.edu>, Miguel Ojeda <ojeda@kernel.org>, 
- Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Danilo Krummrich <dakr@kernel.org>, 
- "David S. Miller" <davem@davemloft.net>, Andrew Lunn <andrew@lunn.ch>
-Cc: netdev@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
-X-Mailer: b4 0.15-dev
-X-Developer-Signature: v=1; a=openssh-sha256; t=1750854341; l=1601;
- i=tamird@gmail.com; h=from:subject:message-id;
- bh=GWlhp73LNm/7EbO3DbUYo/TyoyteULAA+bKvzRvitdU=;
- b=U1NIU0lHAAAAAQAAADMAAAALc3NoLWVkMjU1MTkAAAAgtYz36g7iDMSkY5K7Ab51ksGX7hJgs
- MRt+XVZTrIzMVIAAAAGcGF0YXR0AAAAAAAAAAZzaGE1MTIAAABTAAAAC3NzaC1lZDI1NTE5AAAA
- QLiFIDwSMOyJlQHnf/QjQNXkpiIIChkOhXZtBSbgofNDN9br92N6eAa+Mq90ITZAPwF3itPMtkc
- 2hu6u7BX0eQI=
-X-Developer-Key: i=tamird@gmail.com; a=openssh;
- fpr=SHA256:264rPmnnrb+ERkS7DDS3tuwqcJss/zevJRzoylqMsbc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aFvqFdwNYI0-3zWY@google.com>
 
-Use the ffi type rather than the resolved underlying type.
+On Wed, Jun 25, 2025 at 12:22:45PM +0000, Quentin Perret wrote:
+> On Wednesday 25 Jun 2025 at 11:33:01 (+0000), Mostafa Saleh wrote:
+> > diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+> > index 38a91bb5d4c7..5bb36c3b06b5 100644
+> > --- a/arch/arm64/kvm/arm.c
+> > +++ b/arch/arm64/kvm/arm.c
+> > @@ -2344,15 +2344,22 @@ static void __init teardown_hyp_mode(void)
+> >  	int cpu;
+> >  
+> >  	free_hyp_pgds();
+> > +	/* Order matches the order of initialization init_hyp_mode() */
+> >  	for_each_possible_cpu(cpu) {
+> > +		if (!per_cpu(kvm_arm_hyp_stack_base, cpu))
+> > +			continue;
+> >  		free_pages(per_cpu(kvm_arm_hyp_stack_base, cpu), NVHE_STACK_SHIFT - PAGE_SHIFT);
+> > +
+> > +		if (!kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[cpu])
+> > +			continue;
+> >  		free_pages(kvm_nvhe_sym(kvm_arm_hyp_percpu_base)[cpu], nvhe_percpu_order());
+> >  
+> >  		if (free_sve) {
+> >  			struct cpu_sve_state *sve_state;
+> >  
+> >  			sve_state = per_cpu_ptr_nvhe_sym(kvm_host_data, cpu)->sve_state;
+> > -			free_pages((unsigned long) sve_state, pkvm_host_sve_state_order());
+> > +			if (sve_state)
+> > +				free_pages((unsigned long) sve_state, pkvm_host_sve_state_order());
+> 
+> I'm a bit confused by these extra checks -- free_pages() should be safe
+> to call on NULL?
 
-Acked-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Signed-off-by: Tamir Duberstein <tamird@gmail.com>
----
- rust/kernel/net/phy.rs | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Yes, I surprised in my testing I didn't see an issue with freeing NULL, I
+though it might be config related, but I should have looked more.
 
-diff --git a/rust/kernel/net/phy.rs b/rust/kernel/net/phy.rs
-index 9b4dc09403e4..5fa6b7e97887 100644
---- a/rust/kernel/net/phy.rs
-+++ b/rust/kernel/net/phy.rs
-@@ -163,20 +163,20 @@ pub fn set_speed(&mut self, speed: u32) {
-         let phydev = self.0.get();
-         // SAFETY: The struct invariant ensures that we may access
-         // this field without additional synchronization.
--        unsafe { (*phydev).speed = speed as i32 };
-+        unsafe { (*phydev).speed = speed as c_int };
-     }
- 
-     /// Sets duplex mode.
-     pub fn set_duplex(&mut self, mode: DuplexMode) {
-         let phydev = self.0.get();
-         let v = match mode {
--            DuplexMode::Full => bindings::DUPLEX_FULL as i32,
--            DuplexMode::Half => bindings::DUPLEX_HALF as i32,
--            DuplexMode::Unknown => bindings::DUPLEX_UNKNOWN as i32,
-+            DuplexMode::Full => bindings::DUPLEX_FULL,
-+            DuplexMode::Half => bindings::DUPLEX_HALF,
-+            DuplexMode::Unknown => bindings::DUPLEX_UNKNOWN,
-         };
-         // SAFETY: The struct invariant ensures that we may access
-         // this field without additional synchronization.
--        unsafe { (*phydev).duplex = v };
-+        unsafe { (*phydev).duplex = v as c_int };
-     }
- 
-     /// Reads a PHY register.
+> 
+> IIUC correctly, the actual issue is that per_cpu_ptr_nvhe_sym() will
+> dereference the per-cpu pages to find the sve state, which is entirely
+> bogus if the per-cpu pages have not been allocated. Now, looking at
+> this, it looks like the bigger problem is that we literally free the
+> per-cpu pages right before the sve state...
+> 
+> Should we at least change the freeing order here?
 
--- 
-2.50.0
+Make sense, I will fix that in v2.
 
+Thanks,
+Mostafa
+
+> 
+> Thanks,
+> Quentin
