@@ -1,277 +1,169 @@
-Received: from lf-1-19.ptr.blmpb.com (lf-1-19.ptr.blmpb.com [103.149.242.19])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE101DB958
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.149.242.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26E61E2853
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:46:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750837476; cv=none; b=UqsxreS7Sjl3ZnlFs0uJ4RgQdislS21YKHZl2UxwGTjnLghoxi4Bm/PA2TlDrEn8xWrTz6Vo3J5HjvtL87zKjl5MTHuiQKYSieoXxGJMEpkEhJhj8+3JgKE7xkGrHhmN9Myr2zqydf6W4ZOgxFXu+HXN/MoGL3c3y2zjStx8+So=
+	t=1750837568; cv=none; b=Bsohm4jMa2HbF1CE5l960d6tcxT013btR1fF+3rmB3owCqcNSJy8gKCC3zPCe5llQkIoJyyhucp9x9sNCSoBzGfXdrSIZ9P9GdfTQ/0jYVpJJxoY7eT0jpc6GWG+Kecj+HPay9MNYol2RHgdUHyQXnwGjQt7f1MD1k0fLrAOw/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750837476; c=relaxed/simple;
-	bh=HGNOaFVshgBbanyfIn25e/OXjX3qvHdI1YJjgtD645s=;
-	h=Cc:From:Date:Content-Type:Mime-Version:Subject:To:Message-Id:
-	 In-Reply-To:References; b=PqKWnxl+n1QuwN/pmjw5WK5diKt65Ewihut7uaDdxmY+/O2By7kN2EIpQAtxXz9AyyNcKHPjfzVYY5frJzdGdkng3h2tw9fh4cLEhaHIBQw+3OlucPyx43lxi58u+neu7zv+Sadpxv9BxQhBubSL4rmnOZ0alxo72DkmR3G75TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=AL55rIKM; arc=none smtp.client-ip=103.149.242.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
+	s=arc-20240116; t=1750837568; c=relaxed/simple;
+	bh=KCEB9aoNc4NVNtxLTRhRV9jIf4HuQLN9q+IMpZJJFis=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=YAUaBXjnT7BJiGOB9m1nII4Nw63HpEQY0iUIgIl6SUSnbalvSJov1utEV9mfTRICEP+UKBGLk7CYx5fdJhcNCFOj5LO5U4Vda7zLfmnV9TZjgQlkt8IEhnKUZSZSXXVe48+nWV5E9L0Hj4lqqJTaUK+8dBW2XKuYzP+kFtoXukk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ogRVPUdJ; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="AL55rIKM"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1750837409;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=oGnmteCS7Y1cGbRip4TRzIH/m6fa6vD0sYRYRmitVFM=;
- b=AL55rIKM7mvoV3OqGg0WItMPupsay1lsa/aY7NjNvEp7qKQMC72K5CkStaERm0JhpkVFmx
- kQuc85PVKGPja7UMzosma1NFFEdING69ixdAtE36iKJZilzj+2Z7RsCsX4rpXuHOK7FlNT
- RaOHwPSo27Z+5AI10vEK66yFY+rn8IC9sEFUkU5yl9GzOapK94NV6HBNcP42i0ew3NaGJ0
- IQYY6qjzlEdPEDyFLUp7CUOQNpm6C6D4SJcU8fOTsSPqt5+mtLbrUZ4//QSFzavEBoVFuG
- uhoxFzJ7L3NkL9+2NNN8M9dBsJ4OTNF8Gc4j4G7XBDKfWdIgRuD265qg0cWoqA==
-Cc: "Palmer Dabbelt" <palmer@dabbelt.com>, 
-	"Paul Walmsley" <paul.walmsley@sifive.com>, 
-	"Alexandre Ghiti" <alex@ghiti.fr>, 
-	"Andrew Jones" <ajones@ventanamicro.com>, 
-	"Anup Patel" <anup@brainfault.org>, <kvm@vger.kernel.org>, 
-	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>, 
-	<linux-kernel@vger.kernel.org>, "Atish Patra" <atishp@rivosinc.com>
-From: "Nutty Liu" <liujingqi@lanxincomputing.com>
-Date: Wed, 25 Jun 2025 15:43:25 +0800
-X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
-Received: from [127.0.0.1] ([139.226.59.215]) by smtp.feishu.cn with ESMTPS; Wed, 25 Jun 2025 15:43:26 +0800
-Content-Type: text/plain; charset=UTF-8
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ogRVPUdJ"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4537fdec33bso8154225e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:46:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1750837564; x=1751442364; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:user-agent
+         :references:in-reply-to:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G38oZPD0ZUO+4eufUOOmiC+1nFVfHKSYBYFSxQkb+SY=;
+        b=ogRVPUdJvksivFv80WOZE4LxAOxFTtGFo+iPWTNFvGqlDztvSZO6+dhmTeGRSH2BZu
+         HcHjtvQKGR857r7hy9qklUjVjRR4F8GGNpUCQiGPRnDO6d7cKpGH/IZflH2dtLx/Kcmf
+         0HjCdGpimKjumHDmDyLuQOHpGegjPIaDjkVuJz5in4u4PI0BYnxbN0tU6UTACbE6v8L9
+         LRFEo9HnUlJueY4Yt1NuXM4T1f+IXut8nUXOpi34+XkcZObNFkscT/Jwn3Hrz2bNNtxf
+         vbnAUNHT5LxhpO8fioEnz82iznxUFzV3OQfGp2H0O5KjdAP61MlUawTN33nfQHiTtUra
+         Hkbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750837564; x=1751442364;
+        h=content-transfer-encoding:mime-version:message-id:date:user-agent
+         :references:in-reply-to:subject:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=G38oZPD0ZUO+4eufUOOmiC+1nFVfHKSYBYFSxQkb+SY=;
+        b=xGidjlUDVba3LnTXYnhhYiFi/Sk6u7KKfUJE7d13EtoXiZicYZhQbi0H6DHbIX5WfE
+         8dM0jo3HOPJEGdDycb1XQhWomQW6JhsRRQznCyAebjf+oEYBlThyt8WBgsosizafD9FK
+         BgXVnkFsZLDTNkMzgVfxTHnO/morsH/KBbc7uZTkUFBwANptVRljW+nmIsGZ9Hd7BMXk
+         ZM6ZEDTz2uXo/sozsm3gIST+oEoTcdQM4QOGckGkQ41+fT8IDn6SovTS/QsBs/55tq2M
+         VxLfZGtpX/AlQYg40JAYhaMe7C+4pGS8cLzLvQTkJt5uVvTPm/B7RWTG01aggOaOM6Zy
+         TrrA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7j+yCIMoJCvofs3EgeQehHy5bY/fhLOP7HK9Td1lijcIe6N2t+kZGnH5oP23i0q9LPTqVrXP7CsB6p3k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwCgrX39+VQmetH/Zd5l4+4E/+8pcXw+03+5I6yvA9jdaHFTeWO
+	sekinoTPJwWJj6NKk+hzsO6bVTz8lGB6rxcUzhYKLs8SVbMT/bKLOMm3b/4wozhx6Ss=
+X-Gm-Gg: ASbGnct/07MO9v4JCCoLjNEwLbo6RkewywmFdLx8rGvHHkjWQIUKBQDuLth8tQQCAc1
+	Q5blmWzFIb0JbF53LNpxZDnC6FdbWdNY09/QLbCMkQYkz7baYe/jqqh9Dm9Qdk1jJ0swE/bdo1I
+	ihd1mupJKwvzPLkl9kI251J9sZm5aRd6C/QIYP03S9Znsxr/lW54TjXFLzbia0rmd+G2LgVouch
+	9Z8fADrIbwfPhvaIDa/FKWYjUbf7uP8tTQ1f9uJaatOA0aHXE/84b1tr0jKMTmkz/QEQuu9vu88
+	W0zElsdLnXhpUHUZpDBNWO+vHbIJO+6Kv6ZYIjOr3Lrnbae2+y9KMMxe+1vfR5GxfvKs3ptX
+X-Google-Smtp-Source: AGHT+IEFcmap2xUg1PMroE0rTK44KQv6jBprJalyHbE1zkENpItZBZ87xVowh0/gWqyHbHbnprwUrg==
+X-Received: by 2002:a05:600c:4684:b0:450:cea0:1781 with SMTP id 5b1f17b1804b1-45381ae456bmr17467905e9.16.1750837563946;
+        Wed, 25 Jun 2025 00:46:03 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:87a0:eae0:c854:b578])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-45380fd167bsm14015175e9.0.2025.06.25.00.46.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 00:46:03 -0700 (PDT)
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Jian Hu <jian.hu@amlogic.com>
+Cc: Xianwei Zhao <xianwei.zhao@amlogic.com>,  Chuan Liu
+ <chuan.liu@amlogic.com>,  Neil Armstrong <neil.armstrong@linaro.org>,
+  Kevin Hilman <khilman@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>,
+  Michael Turquette <mturquette@baylibre.com>,  Dmitry Rokosov
+ <ddrokosov@sberdevices.ru>,  robh+dt <robh+dt@kernel.org>,  Rob Herring
+ <robh@kernel.org>,  devicetree <devicetree@vger.kernel.org>,  linux-clk
+ <linux-clk@vger.kernel.org>,  linux-amlogic
+ <linux-amlogic@lists.infradead.org>,  linux-kernel
+ <linux-kernel@vger.kernel.org>,  linux-arm-kernel
+ <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 4/6] clk: meson: t7: add support for the T7 SoC PLL
+ clock
+In-Reply-To: <22a24fe6-9e62-4aba-825e-aee214f683ee@amlogic.com> (Jian Hu's
+	message of "Wed, 25 Jun 2025 10:52:28 +0800")
+References: <20250509074825.1933254-1-jian.hu@amlogic.com>
+	<20250509074825.1933254-5-jian.hu@amlogic.com>
+	<1jtt5ny6gq.fsf@starbuckisacylon.baylibre.com>
+	<4dd25114-212d-44d6-938a-63871750c292@amlogic.com>
+	<1jh60fd52u.fsf@starbuckisacylon.baylibre.com>
+	<22a24fe6-9e62-4aba-825e-aee214f683ee@amlogic.com>
+User-Agent: mu4e 1.12.9; emacs 30.1
+Date: Wed, 25 Jun 2025 09:46:02 +0200
+Message-ID: <1j7c10jmbp.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-Subject: Re: [PATCH v3 09/12] RISC-V: KVM: Introduce struct kvm_gstage_mapping
-Content-Transfer-Encoding: 7bit
-To: "Anup Patel" <apatel@ventanamicro.com>, 
-	"Atish Patra" <atish.patra@linux.dev>
-Message-Id: <8e8b241b-ef9d-4559-a451-e4cc1067c7fa@lanxincomputing.com>
-In-Reply-To: <20250618113532.471448-10-apatel@ventanamicro.com>
-X-Lms-Return-Path: <lba+2685ba89f+cb8104+vger.kernel.org+liujingqi@lanxincomputing.com>
-References: <20250618113532.471448-1-apatel@ventanamicro.com> <20250618113532.471448-10-apatel@ventanamicro.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 6/18/2025 7:35 PM, Anup Patel wrote:
-> Introduce struct kvm_gstage_mapping which represents a g-stage
-> mapping at a particular g-stage page table level. Also, update
-> the kvm_riscv_gstage_map() to return the g-stage mapping upon
-> success.
+On Wed 25 Jun 2025 at 10:52, Jian Hu <jian.hu@amlogic.com> wrote:
+
+> On 2025/6/17 0:27, Jerome Brunet wrote:
+>> [ EXTERNAL EMAIL ]
+>>
+>> On Thu 12 Jun 2025 at 21:02, Jian Hu <jian.hu@amlogic.com> wrote:
+>>
+>>>>> +
+>>>>> +static struct clk_regmap t7_pcie_pll_od =3D {
+>>>>> +     .data =3D &(struct clk_regmap_div_data){
+>>>>> +             .offset =3D ANACTRL_PCIEPLL_CTRL0,
+>>>>> +             .shift =3D 16,
+>>>>> +             .width =3D 5,
+>>>>> +             .flags =3D CLK_DIVIDER_ONE_BASED |
+>>>>> +                      CLK_DIVIDER_ALLOW_ZERO,
+>>>> What's the behaviour of the divider on zero then ?
+>>>
+>>> If there is no CLK_DIVDER_ALLOW_ZERO, there is a warning when registeri=
+ng
+>>> t7_pcie_pll_od.
+>>>
+>>> like this:
+>>>
+>>>    ------------[ cut here ]------------
+>>>    WARNING: CPU: 1 PID: 1 at drivers/clk/clk-divider.c:140
+>>> divider_recalc_rate+0xfc/0x100
+>>>    pcie_pll_od: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set
+>>>    Modules linked in:
+>>>   CPU: 1 PID: 1 Comm: swapper/0 Not tainted
+>>> 5.4.283-09976-ga803e94eed88-dirty #91
+>>>    Hardware name: tm2_t962e2_ab311 (DT)
+>>>   Call trace:
+>>>    [ffffffc020003750+  64][<ffffffc0100e3e3c>] dump_backtrace+0x0/0x1e4
+>>>    [ffffffc020003790+  32][<ffffffc0100e4044>] show_stack+0x24/0x34
+>>>    [ffffffc0200037b0+  96][<ffffffc01130a2e8>] dump_stack+0xbc/0x108
+>>>   [ffffffc020003810+ 144][<ffffffc01010c484>] __warn+0xf4/0x1b8
+>>>    [ffffffc0200038a0+  64][<ffffffc01010c5f4>] warn_slowpath_fmt+0xac/0=
+xc8
+>>>   [ffffffc0200038e0+  64][<ffffffc01061d364>] divider_recalc_rate+0xfc/=
+0x100
+>>>   [ffffffc020003920+  80][<ffffffc010624e84>]
+>>> clk_regmap_div_recalc_rate+0x74/0x88
+>>>    [ffffffc020003970+  96][<ffffffc010616a54>] __clk_register+0x62c/0xb=
+78
+>>>
+>>> so add it to avoid the warning.
+>> That does not really answer my question
 >
-> Reviewed-by: Atish Patra <atishp@rivosinc.com>
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->   arch/riscv/include/asm/kvm_mmu.h |  9 ++++-
->   arch/riscv/kvm/mmu.c             | 58 ++++++++++++++++++--------------
->   arch/riscv/kvm/vcpu_exit.c       |  3 +-
->   3 files changed, 43 insertions(+), 27 deletions(-)
 >
-> diff --git a/arch/riscv/include/asm/kvm_mmu.h b/arch/riscv/include/asm/kvm_mmu.h
-> index 4e1654282ee4..91c11e692dc7 100644
-> --- a/arch/riscv/include/asm/kvm_mmu.h
-> +++ b/arch/riscv/include/asm/kvm_mmu.h
-> @@ -8,6 +8,12 @@
->   
->   #include <linux/kvm_types.h>
->   
-> +struct kvm_gstage_mapping {
-> +	gpa_t addr;
-> +	pte_t pte;
-> +	u32 level;
-> +};
-> +
->   int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
->   			     phys_addr_t hpa, unsigned long size,
->   			     bool writable, bool in_atomic);
-> @@ -15,7 +21,8 @@ void kvm_riscv_gstage_iounmap(struct kvm *kvm, gpa_t gpa,
->   			      unsigned long size);
->   int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
->   			 struct kvm_memory_slot *memslot,
-> -			 gpa_t gpa, unsigned long hva, bool is_write);
-> +			 gpa_t gpa, unsigned long hva, bool is_write,
-> +			 struct kvm_gstage_mapping *out_map);
->   int kvm_riscv_gstage_alloc_pgd(struct kvm *kvm);
->   void kvm_riscv_gstage_free_pgd(struct kvm *kvm);
->   void kvm_riscv_gstage_update_hgatp(struct kvm_vcpu *vcpu);
-> diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
-> index c1a3eb076df3..806614b3e46d 100644
-> --- a/arch/riscv/kvm/mmu.c
-> +++ b/arch/riscv/kvm/mmu.c
-> @@ -135,18 +135,18 @@ static void gstage_remote_tlb_flush(struct kvm *kvm, u32 level, gpa_t addr)
->   	kvm_riscv_hfence_gvma_vmid_gpa(kvm, -1UL, 0, addr, BIT(order), order);
->   }
->   
-> -static int gstage_set_pte(struct kvm *kvm, u32 level,
-> -			   struct kvm_mmu_memory_cache *pcache,
-> -			   gpa_t addr, const pte_t *new_pte)
-> +static int gstage_set_pte(struct kvm *kvm,
-> +			  struct kvm_mmu_memory_cache *pcache,
-> +			  const struct kvm_gstage_mapping *map)
->   {
->   	u32 current_level = gstage_pgd_levels - 1;
->   	pte_t *next_ptep = (pte_t *)kvm->arch.pgd;
-> -	pte_t *ptep = &next_ptep[gstage_pte_index(addr, current_level)];
-> +	pte_t *ptep = &next_ptep[gstage_pte_index(map->addr, current_level)];
->   
-> -	if (current_level < level)
-> +	if (current_level < map->level)
->   		return -EINVAL;
->   
-> -	while (current_level != level) {
-> +	while (current_level != map->level) {
->   		if (gstage_pte_leaf(ptep))
->   			return -EEXIST;
->   
-> @@ -165,13 +165,13 @@ static int gstage_set_pte(struct kvm *kvm, u32 level,
->   		}
->   
->   		current_level--;
-> -		ptep = &next_ptep[gstage_pte_index(addr, current_level)];
-> +		ptep = &next_ptep[gstage_pte_index(map->addr, current_level)];
->   	}
->   
-> -	if (pte_val(*ptep) != pte_val(*new_pte)) {
-> -		set_pte(ptep, *new_pte);
-> +	if (pte_val(*ptep) != pte_val(map->pte)) {
-> +		set_pte(ptep, map->pte);
->   		if (gstage_pte_leaf(ptep))
-> -			gstage_remote_tlb_flush(kvm, current_level, addr);
-> +			gstage_remote_tlb_flush(kvm, current_level, map->addr);
->   	}
->   
->   	return 0;
-> @@ -181,14 +181,16 @@ static int gstage_map_page(struct kvm *kvm,
->   			   struct kvm_mmu_memory_cache *pcache,
->   			   gpa_t gpa, phys_addr_t hpa,
->   			   unsigned long page_size,
-> -			   bool page_rdonly, bool page_exec)
-> +			   bool page_rdonly, bool page_exec,
-> +			   struct kvm_gstage_mapping *out_map)
->   {
-> -	int ret;
-> -	u32 level = 0;
-> -	pte_t new_pte;
->   	pgprot_t prot;
-> +	int ret;
->   
-> -	ret = gstage_page_size_to_level(page_size, &level);
-> +	out_map->addr = gpa;
-> +	out_map->level = 0;
-> +
-> +	ret = gstage_page_size_to_level(page_size, &out_map->level);
->   	if (ret)
->   		return ret;
->   
-> @@ -216,10 +218,10 @@ static int gstage_map_page(struct kvm *kvm,
->   		else
->   			prot = PAGE_WRITE;
->   	}
-> -	new_pte = pfn_pte(PFN_DOWN(hpa), prot);
-> -	new_pte = pte_mkdirty(new_pte);
-> +	out_map->pte = pfn_pte(PFN_DOWN(hpa), prot);
-> +	out_map->pte = pte_mkdirty(out_map->pte);
->   
-> -	return gstage_set_pte(kvm, level, pcache, gpa, &new_pte);
-> +	return gstage_set_pte(kvm, pcache, out_map);
->   }
->   
->   enum gstage_op {
-> @@ -352,7 +354,6 @@ int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
->   			     phys_addr_t hpa, unsigned long size,
->   			     bool writable, bool in_atomic)
->   {
-> -	pte_t pte;
->   	int ret = 0;
->   	unsigned long pfn;
->   	phys_addr_t addr, end;
-> @@ -360,22 +361,25 @@ int kvm_riscv_gstage_ioremap(struct kvm *kvm, gpa_t gpa,
->   		.gfp_custom = (in_atomic) ? GFP_ATOMIC | __GFP_ACCOUNT : 0,
->   		.gfp_zero = __GFP_ZERO,
->   	};
-> +	struct kvm_gstage_mapping map;
->   
->   	end = (gpa + size + PAGE_SIZE - 1) & PAGE_MASK;
->   	pfn = __phys_to_pfn(hpa);
->   
->   	for (addr = gpa; addr < end; addr += PAGE_SIZE) {
-> -		pte = pfn_pte(pfn, PAGE_KERNEL_IO);
-> +		map.addr = addr;
-> +		map.pte = pfn_pte(pfn, PAGE_KERNEL_IO);
-> +		map.level = 0;
->   
->   		if (!writable)
-> -			pte = pte_wrprotect(pte);
-> +			map.pte = pte_wrprotect(map.pte);
->   
->   		ret = kvm_mmu_topup_memory_cache(&pcache, gstage_pgd_levels);
->   		if (ret)
->   			goto out;
->   
->   		spin_lock(&kvm->mmu_lock);
-> -		ret = gstage_set_pte(kvm, 0, &pcache, addr, &pte);
-> +		ret = gstage_set_pte(kvm, &pcache, &map);
->   		spin_unlock(&kvm->mmu_lock);
->   		if (ret)
->   			goto out;
-> @@ -593,7 +597,8 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
->   
->   int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
->   			 struct kvm_memory_slot *memslot,
-> -			 gpa_t gpa, unsigned long hva, bool is_write)
-> +			 gpa_t gpa, unsigned long hva, bool is_write,
-> +			 struct kvm_gstage_mapping *out_map)
->   {
->   	int ret;
->   	kvm_pfn_t hfn;
-> @@ -608,6 +613,9 @@ int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
->   	unsigned long vma_pagesize, mmu_seq;
->   	struct page *page;
->   
-> +	/* Setup initial state of output mapping */
-> +	memset(out_map, 0, sizeof(*out_map));
-> +
->   	/* We need minimum second+third level pages */
->   	ret = kvm_mmu_topup_memory_cache(pcache, gstage_pgd_levels);
->   	if (ret) {
-> @@ -677,10 +685,10 @@ int kvm_riscv_gstage_map(struct kvm_vcpu *vcpu,
->   	if (writable) {
->   		mark_page_dirty(kvm, gfn);
->   		ret = gstage_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
-> -				      vma_pagesize, false, true);
-> +				      vma_pagesize, false, true, out_map);
->   	} else {
->   		ret = gstage_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
-> -				      vma_pagesize, true, true);
-> +				      vma_pagesize, true, true, out_map);
->   	}
->   
->   	if (ret)
-> diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-> index 965df528de90..6b4694bc07ea 100644
-> --- a/arch/riscv/kvm/vcpu_exit.c
-> +++ b/arch/riscv/kvm/vcpu_exit.c
-> @@ -15,6 +15,7 @@
->   static int gstage_page_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
->   			     struct kvm_cpu_trap *trap)
->   {
-> +	struct kvm_gstage_mapping host_map;
->   	struct kvm_memory_slot *memslot;
->   	unsigned long hva, fault_addr;
->   	bool writable;
-> @@ -43,7 +44,7 @@ static int gstage_page_fault(struct kvm_vcpu *vcpu, struct kvm_run *run,
->   	}
->   
->   	ret = kvm_riscv_gstage_map(vcpu, memslot, fault_addr, hva,
-> -		(trap->scause == EXC_STORE_GUEST_PAGE_FAULT) ? true : false);
-> +		(trap->scause == EXC_STORE_GUEST_PAGE_FAULT) ? true : false, &host_map);
->   	if (ret < 0)
->   		return ret;
->   
+> Sorry, I did not get you before.
+>
+> I have set OD to 0.=C2=A0 And measure pcie frequency,=C2=A0 It is 37.5Mhz.
+>
+> 4800Mhz/2/32/2=3D37.5Mhz, and the OD equal zero means divided by 32 in fa=
+ct.
+>
 
-Reviewed-by: Nutty Liu <liujingqi@lanxincomputing.com>
+CLK_DIVIDER_MAX_AT_ZERO maybe ?
 
-Thanks,
-Nutty
+> Here is the test result:
+>
+> devm 0xfe008140 32
+>
+> 0xD40C04C8
+>
+> cat /sys/kernel/debug/meson-clk-msr/measure_summary | grep pcie
+>
+> [16] pcie_clk_inp =C2=A0=C2=A0=C2=A0=C2=A0 37500000=C2=A0 +/1 3125HZ
+>
+>
+> the OD divider is N crossover. it is one based.
+>
+> and It's possible to go from 1 to 31 crossovers.
+
+--=20
+Jerome
