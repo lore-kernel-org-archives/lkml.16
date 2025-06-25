@@ -1,139 +1,228 @@
-Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8BCB1917D6
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:43:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7A3B205E02;
+	Wed, 25 Jun 2025 11:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750851823; cv=none; b=IGZH3oV6texurWASgtE67KyYUGqCp15sIEBMMvbjq6loJGw2RFgV5myowxWqOsvn/Wz5zX524mxWXh4T9LOBclkZHE9dSV/8zydX7objolKqie6VkmolPFIlBhxuBmUTbx0WNb1FUl1MAgrGcMKl9RUC8LATC/4ik4EF9aFEkYk=
+	t=1750852006; cv=none; b=A8UbSrZ7Pwcoed1sX2EFWRA/F0b97nN5udp1XW1SkYso1+b3wlm9nzX0NjoOHYJ5F0x4uUVQSjwasX1qyx6xvMD3/yarWQC6qnA8PimeqM2qRRfTnld2vNlMUzbmINJxfHkYIhA/jCkFiaWkFpbk/B40GXrjbnkY6KUPcQjR8i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750851823; c=relaxed/simple;
-	bh=cEDi9ZKMQju5O/ESIIPxFOhF8RL9fAcN9hpv1FMsk10=;
+	s=arc-20240116; t=1750852006; c=relaxed/simple;
+	bh=z0XG3Bw6TLmnXq/PjkcVsBymSm1jVI29doeIVoNJiSw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EOzvSjR0oPmkhX0yIougYHCsQtbsfplhHqNJnfB8Nl3JUG+7h9nc6dUZ7PqFvicatxraP7I5FnsOG1vsm/3Yk7RUnBis2WKODFcCYnmWmcPF1TMTsP5gp0TCDTE+hAe3MRMHvWhrt3dQasqVTDw7lBMPp73lya41p8Jc/+fybG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UvOROsfN; arc=none smtp.client-ip=209.85.167.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=U5AwNPt9d/RftjMoFNXtaW84K8IlkD5Ro7/6BJMoIVSEFlwCIp/28guCp4Dl8SDIZ4luyUJZaFcZcq9W6lpcmc13bEhSbjiTnjgI/1q9Wmwkfx64sStaul6gh0yG8s5dM0YXll1WiJbv8W3UxGyIsd4M6HO8sJRl5qPkV7F94aI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8vED+Ix; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UvOROsfN"
-Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-40a4de175a3so4388500b6e.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:43:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750851820; x=1751456620; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=XR0h6nvp/9pR9PG0WAomd1E7a7QNXrG2eff2Y2JJpOo=;
-        b=UvOROsfNS0XCVqB+C1kcFiBIj6X7jF/2vt2WJzGjDj2D7bbb6CMWCD0dAr1gU8IWwq
-         IDnKoDUJBvKUdDZ48pfRhsYx0x4Cutmn8owqBzAqgj2XwLmYp7x6ptvDMfcyf05Miw7m
-         ykQMoN8hvsj2RA13igKti4BfwyGLpMRan7pFWtr7kLHfdN1K1tO7VhP8knz2Pe4oLVya
-         ZgKUfF5NihPUgrMckMf6YlUAaD8yXzANGRKEeHP47qC2pfDiUSU0ov5/3+0TZX3kSS6o
-         Tv+4zOjadDPgxgkB8OnyLEWrnHfHiB9vaNHjaftbqliBsEG4SlnaBOaMdxZZ7t+RWNBC
-         a1Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750851820; x=1751456620;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XR0h6nvp/9pR9PG0WAomd1E7a7QNXrG2eff2Y2JJpOo=;
-        b=c8TvejrVd95wKqUyA7ZQNUfhzR1QzQfsLlrMNqI6avXEOxJVxRMaNq0aYrWq3/yFTB
-         +teY+ny++4wWrQecbi/pe4/if/lB2282U1CrH8BAmUhuVXGipAHHHeOtNPSRlRummkgl
-         LKOel0IOcrul/rqBpmea4umhaI3us+At94NS1asjG0Qt2AwBzbAVyxkIhB6cC86ob0yy
-         cldmbiLUTEBMbhSva4pjI56iRuoktEg0MuzZnhXQuNaxUkvUzUt2P0XydVkNaEUB42y/
-         dnKLP6B5XAIuaUmyLMgD3M9eNSLzqCSbRVQWN9EDtPqhlnP5uqtODlaxmCWgj2A2hnZq
-         riRQ==
-X-Gm-Message-State: AOJu0YwNu09pGjeyTI5LlCMxtrNvohBhq04MzkuLR0332zHRm56RF3QQ
-	zetmwVmIkcPw+eMBtWnuQJAWCgIqkSN5EzFDt2TTE9MMcPYqa643QTMWU6xxPqvaCYA=
-X-Gm-Gg: ASbGncsAOK9ubG0QgMZt5CsiATaJmFwEOyJh3uAiEgd7d8m1hsN0Oy4saPzSRB9xVBg
-	/B1pQ3a0N5djdDC9SCHt7NJvf88YWnd4RyFyIFsi1F8nTIlLgjOlFEIOCLk1kqfB7JFmEISoQCU
-	/IDu++KNiLrVqh9s09PJir7fBVUaeu9zaErAkBoFGg7xxkapcsB/uk55Bv6XsG/UNFvfiq9+D4C
-	/f5YQWjmhJORJ98qgBQmX5m5Xua6JnCj0/JU1M8DQ6OzXhDFZM7rLDYkHtmd58YzHm2ndTmhkDH
-	5pqne5zpi4weiF2XVuPHJn0oMiW0JNo8gFGmxc/JjIoPo0MhZKSeUNFec/iupuK7+Ouvlw==
-X-Google-Smtp-Source: AGHT+IGHbPCyH1l2CklT51825R4v7DezvBt+8FBSn2k+YzHNVnUrJ0xW7pjHWydN10rMm8JVVrtnNw==
-X-Received: by 2002:a05:6808:30a7:b0:3fa:7909:2716 with SMTP id 5614622812f47-40b058246b3mr2209518b6e.39.1750851819874;
-        Wed, 25 Jun 2025 04:43:39 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:22c9:dcd3:f442:dd1d])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-6115b7a1cf9sm1601911eaf.24.2025.06.25.04.43.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 04:43:38 -0700 (PDT)
-Date: Wed, 25 Jun 2025 14:43:35 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Akshay Gupta <akshay.gupta@amd.com>
-Cc: linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de,
-	shyam-sundar.s-k@amd.com, gautham.shenoy@amd.com,
-	mario.limonciello@amd.com, naveenkrishna.chatradhi@amd.com,
-	anand.umarji@amd.com
-Subject: Re: [PATCH v2 2/2] misc: amd-sbi: Address copy_to/from_user()
- warning reported in smatch
-Message-ID: <0d18ed52-86cf-44a3-913a-d514f7b8d4a7@suswa.mountain>
-References: <20250625110707.315489-1-akshay.gupta@amd.com>
- <20250625110707.315489-2-akshay.gupta@amd.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8vED+Ix"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B55EFC4CEEA;
+	Wed, 25 Jun 2025 11:46:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750852006;
+	bh=z0XG3Bw6TLmnXq/PjkcVsBymSm1jVI29doeIVoNJiSw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n8vED+Ixnm6GXHKMbmqqW2ZMWMwnjPrlReJbEoNfv9Y0gj9ADIZmCPB2vvWThRjnD
+	 1M/7AeX/HMARmgPGjA35x7qD8peBoF6O+l9fXQjuocKR2Y2/FmQcSfrPbXUI/R19oX
+	 oNKWYHe98z7krpsHN/u/liBM2RzLYDPIK+SGppc2mYx8LFBpCX/TJ2bz2CwsHexGkg
+	 LS5Q2N9cCTLYdL3UyXdpdMl/LGDzdG7HW4FHMQmDyMGr3nJ4mKcKYLDf2oKia3VNFa
+	 FWvqX3mqqAcNt93zYaj/f3mLrE6/t5iMLmKq2ZUFE66+Ol8EQQA7QoEUSuc5MWsEcq
+	 YMXdnWJ/+1d7g==
+Date: Wed, 25 Jun 2025 14:46:42 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Lee Jones <lee@kernel.org>
+Cc: Qunqin Zhao <zhaoqunqin@loongson.cn>, herbert@gondor.apana.org.au,
+	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+	davem@davemloft.net, linux-crypto@vger.kernel.org,
+	peterhuewe@gmx.de, jgg@ziepe.ca, linux-integrity@vger.kernel.org,
+	Yinggang Gu <guyinggang@loongson.cn>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH v11 3/4] tpm: Add a driver for Loongson TPM device
+Message-ID: <aFvhorr3kZSuzVpv@kernel.org>
+References: <20250619025138.2854-1-zhaoqunqin@loongson.cn>
+ <20250619025138.2854-4-zhaoqunqin@loongson.cn>
+ <aFs2RDOeOKvWUN2L@kernel.org>
+ <20250625080527.GN795775@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250625110707.315489-2-akshay.gupta@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250625080527.GN795775@google.com>
 
-On Wed, Jun 25, 2025 at 11:07:07AM +0000, Akshay Gupta wrote:
-> Smatch warnings are reported for below commit,
+On Wed, Jun 25, 2025 at 09:05:27AM +0100, Lee Jones wrote:
+> On Wed, 25 Jun 2025, Jarkko Sakkinen wrote:
 > 
-> Commit bb13a84ed6b7 ("misc: amd-sbi: Add support for CPUID protocol")
-> from Apr 28, 2025 (linux-next), leads to the following Smatch static
-> checker warning:
+> > On Thu, Jun 19, 2025 at 10:51:37AM +0800, Qunqin Zhao wrote:
+> > > Loongson Security Engine supports random number generation, hash,
+> > > symmetric encryption and asymmetric encryption. Based on these
+> > > encryption functions, TPM2 have been implemented in the Loongson
+> > > Security Engine firmware. This driver is responsible for copying data
+> > > into the memory visible to the firmware and receiving data from the
+> > > firmware.
+> > > 
+> > > Co-developed-by: Yinggang Gu <guyinggang@loongson.cn>
+> > > Signed-off-by: Yinggang Gu <guyinggang@loongson.cn>
+> > > Signed-off-by: Qunqin Zhao <zhaoqunqin@loongson.cn>
+> > > Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > ---
+> > >  drivers/char/tpm/Kconfig        |  9 ++++
+> > >  drivers/char/tpm/Makefile       |  1 +
+> > >  drivers/char/tpm/tpm_loongson.c | 84 +++++++++++++++++++++++++++++++++
+> > >  3 files changed, 94 insertions(+)
+> > >  create mode 100644 drivers/char/tpm/tpm_loongson.c
+> > > 
+> > > diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
+> > > index dddd702b2..ba3924eb1 100644
+> > > --- a/drivers/char/tpm/Kconfig
+> > > +++ b/drivers/char/tpm/Kconfig
+> > > @@ -189,6 +189,15 @@ config TCG_IBMVTPM
+> > >  	  will be accessible from within Linux.  To compile this driver
+> > >  	  as a module, choose M here; the module will be called tpm_ibmvtpm.
+> > >  
+> > > +config TCG_LOONGSON
+> > > +	tristate "Loongson TPM Interface"
+> > > +	depends on MFD_LOONGSON_SE
+> > > +	help
+> > > +	  If you want to make Loongson TPM support available, say Yes and
+> > > +	  it will be accessible from within Linux. To compile this
+> > > +	  driver as a module, choose M here; the module will be called
+> > > +	  tpm_loongson.
+> > > +
+> > >  config TCG_XEN
+> > >  	tristate "XEN TPM Interface"
+> > >  	depends on TCG_TPM && XEN
+> > > diff --git a/drivers/char/tpm/Makefile b/drivers/char/tpm/Makefile
+> > > index 9de1b3ea3..5b5cdc0d3 100644
+> > > --- a/drivers/char/tpm/Makefile
+> > > +++ b/drivers/char/tpm/Makefile
+> > > @@ -46,3 +46,4 @@ obj-$(CONFIG_TCG_ARM_CRB_FFA) += tpm_crb_ffa.o
+> > >  obj-$(CONFIG_TCG_VTPM_PROXY) += tpm_vtpm_proxy.o
+> > >  obj-$(CONFIG_TCG_FTPM_TEE) += tpm_ftpm_tee.o
+> > >  obj-$(CONFIG_TCG_SVSM) += tpm_svsm.o
+> > > +obj-$(CONFIG_TCG_LOONGSON) += tpm_loongson.o
+> > > diff --git a/drivers/char/tpm/tpm_loongson.c b/drivers/char/tpm/tpm_loongson.c
+> > > new file mode 100644
+> > > index 000000000..5cbdb37f8
+> > > --- /dev/null
+> > > +++ b/drivers/char/tpm/tpm_loongson.c
+> > > @@ -0,0 +1,84 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/* Copyright (c) 2025 Loongson Technology Corporation Limited. */
+> > > +
+> > > +#include <linux/device.h>
+> > > +#include <linux/mfd/loongson-se.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/wait.h>
+> > > +
+> > > +#include "tpm.h"
+> > > +
+> > > +struct tpm_loongson_cmd {
+> > > +	u32 cmd_id;
+> > > +	u32 data_off;
+> > > +	u32 data_len;
+> > > +	u32 pad[5];
+> > > +};
+> > > +
+> > > +static int tpm_loongson_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+> > > +{
+> > > +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> > > +	struct tpm_loongson_cmd *cmd_ret = tpm_engine->command_ret;
+> > > +
+> > > +	if (cmd_ret->data_len > count)
+> > > +		return -EIO;
+> > > +
+> > > +	memcpy(buf, tpm_engine->data_buffer, cmd_ret->data_len);
+> > > +
+> > > +	return cmd_ret->data_len;
+> > > +}
+> > > +
+> > > +static int tpm_loongson_send(struct tpm_chip *chip, u8 *buf, size_t count)
+> > > +{
+> > > +	struct loongson_se_engine *tpm_engine = dev_get_drvdata(&chip->dev);
+> > > +	struct tpm_loongson_cmd *cmd = tpm_engine->command;
+> > > +
+> > > +	if (count > tpm_engine->buffer_size)
+> > > +		return -E2BIG;
+> > > +
+> > > +	cmd->data_len = count;
+> > > +	memcpy(tpm_engine->data_buffer, buf, count);
+> > > +
+> > > +	return loongson_se_send_engine_cmd(tpm_engine);
+> > > +}
+> > > +
+> > > +static const struct tpm_class_ops tpm_loongson_ops = {
+> > > +	.flags = TPM_OPS_AUTO_STARTUP,
+> > > +	.recv = tpm_loongson_recv,
+> > > +	.send = tpm_loongson_send,
+> > > +};
+> > > +
+> > > +static int tpm_loongson_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct loongson_se_engine *tpm_engine;
+> > > +	struct device *dev = &pdev->dev;
+> > > +	struct tpm_loongson_cmd *cmd;
+> > > +	struct tpm_chip *chip;
+> > > +
+> > > +	tpm_engine = loongson_se_init_engine(dev->parent, SE_ENGINE_TPM);
+> > > +	if (!tpm_engine)
+> > > +		return -ENODEV;
+> > > +	cmd = tpm_engine->command;
+> > > +	cmd->cmd_id = SE_CMD_TPM;
+> > > +	cmd->data_off = tpm_engine->buffer_off;
+> > > +
+> > > +	chip = tpmm_chip_alloc(dev, &tpm_loongson_ops);
+> > > +	if (IS_ERR(chip))
+> > > +		return PTR_ERR(chip);
+> > > +	chip->flags = TPM_CHIP_FLAG_TPM2 | TPM_CHIP_FLAG_IRQ;
+> > > +	dev_set_drvdata(&chip->dev, tpm_engine);
+> > > +
+> > > +	return tpm_chip_register(chip);
+> > > +}
+> > > +
+> > > +static struct platform_driver tpm_loongson = {
+> > > +	.probe   = tpm_loongson_probe,
+> > > +	.driver  = {
+> > > +		.name  = "loongson-tpm",
+> > 
+> > This patch looks otherwise great but I'd prefer here tho use
+> > "tpm_loongson_probe" for the value of the name field.
 > 
-> drivers/misc/amd-sbi/rmi-core.c:376 apml_rmi_reg_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
-> drivers/misc/amd-sbi/rmi-core.c:394 apml_mailbox_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
-> drivers/misc/amd-sbi/rmi-core.c:411 apml_cpuid_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
-> drivers/misc/amd-sbi/rmi-core.c:428 apml_mcamsr_xfer() warn: maybe return -EFAULT instead of the bytes remaining?
+> Where does this stipulation come from?  No other driver does this [0].
+> driver.name should be a nicely formatted, human readable string
+> describing the name of the device.  Not a function name.
+
+What defines "human-readable" here? I see both as somewhat the
+same level of "readability" ;-)
+
 > 
-> copy_to/from_user() returns number of bytes, not copied.
-> In case data not copied, return "-EFAULT".
+> [0] git grep -A15 "static struct platform_driver" | grep ".name = .*probe"
+
+What I'm getting:
+
+$ git grep -l -e platform_driver_register --or -e module_platform_driver
+drivers/char/tpm | xargs git grep "\.name"
+drivers/char/tpm/tpm_atmel.c:           .name = "tpm_atmel",
+drivers/char/tpm/tpm_ftpm_tee.c:                .name = "ftpm-tee",
+drivers/char/tpm/tpm_ftpm_tee.c:                .name           =
+"optee-ftpm",
+drivers/char/tpm/tpm_nsc.c:             .name    = "tpm_nsc",
+drivers/char/tpm/tpm_svsm.c:            .name = "tpm-svsm",
+drivers/char/tpm/tpm_tis.c:     .name = "tpm_tis",
+drivers/char/tpm/tpm_tis.c:             .name           = "tpm_tis",
+drivers/char/tpm/tpm_tis_synquacer.c:           .name           =
+"tpm_tis_synquacer",
+
+Do you consider e.g, "tpm_tis" as "less human-readable".
+
+I don't necessarily fight against the name chosen. Your arguments
+just plain no make sense, so I just merely want to understand this.
+That's all.
+
 > 
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/all/aDVyO8ByVsceybk9@stanley.mountain/
-> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-> Signed-off-by: Akshay Gupta <akshay.gupta@amd.com>
-> ---
-> Changes from v1:
->  - Split patch as per Greg's suggestion
->  drivers/misc/amd-sbi/rmi-core.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/misc/amd-sbi/rmi-core.c b/drivers/misc/amd-sbi/rmi-core.c
-> index 3570f3b269a9..9048517c088c 100644
-> --- a/drivers/misc/amd-sbi/rmi-core.c
-> +++ b/drivers/misc/amd-sbi/rmi-core.c
-> @@ -372,7 +372,8 @@ static int apml_rmi_reg_xfer(struct sbrmi_data *data,
->  	mutex_unlock(&data->lock);
->  
->  	if (msg.rflag && !ret)
+> -- 
+> Lee Jones [李琼斯]
 
-Unrelated to this patch, but it's always better to do if (ret) {.
-Do error handling not success handling etc.
-
-> -		return copy_to_user(arg, &msg, sizeof(struct apml_reg_xfer_msg));
-> +		if (copy_to_user(arg, &msg, sizeof(struct apml_reg_xfer_msg)))
-> +			return -EFAULT;
->  	return ret;
->  }
->  
-> @@ -390,7 +391,9 @@ static int apml_mailbox_xfer(struct sbrmi_data *data, struct apml_mbox_msg __use
->  	if (ret && ret != -EPROTOTYPE)
->  		return ret;
->  
-> -	return copy_to_user(arg, &msg, sizeof(struct apml_mbox_msg));
-> +	if (copy_to_user(arg, &msg, sizeof(struct apml_mbox_msg)))
-> +		return -EFAULT;
-> +	return ret;
-
-This fixes the -EPROTOTYPE as well.  In the original code, it would
-return success where -EPROTOTYPE was intended.  It's probably worth
-mentioning that in the commit message and maybe adding a test cases to
-your test platform.
-
-regards,
-dan carpenter
-
+BR, Jarkko
