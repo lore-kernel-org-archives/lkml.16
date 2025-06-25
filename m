@@ -1,104 +1,146 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A7C262FF5
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:16:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF18625FA0F;
+	Wed, 25 Jun 2025 13:16:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750857372; cv=none; b=JGC+Gz70QhRoVnKWnLTB7MU5cJjK9W/nuMjPs6i8b+DfKcsSvNjUyg7csoyAnd8yR7hZVN5aaid8iN4bu608MRUePtjSfPMbT7e53R9bFHHPkw2sA67ITUZb3PAnzhs+ECiAJSFAHmQ3795+hagjlXaxkrcn4PeTUZxOq364mW8=
+	t=1750857392; cv=none; b=ax7C7pgMh3aCFhXJ/Cp8oxshniRa8SJwCpItu5BuDiEbqdfRdUV3ViFOtP0cAFzd/ZjSJG8qO1lhc3TkdaW7AbL1Dz48M3kxr3X4pV9mCBw0tVMQ4HTvglTwfHGagtFVK5EfG5mUHO57tY1apJJzg32F590LFmkNGNpHQkuM/kI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750857372; c=relaxed/simple;
-	bh=QHCB4urdBJBIlkKBAKRhwgC29BeTmZl9cL0tpXDUwa8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p/0Ge30WleipMUfvdVHMZvMJt6//QLfKQApQr3K0wxA5u4wvCNSp+gJRQvpZNGkhoQEeqDevI/AChZaOzwHHciti51lF5ilX4y/C066e+YoKcZYvZvrnfDaa/Q9X8poikTUwBQnpSeeaKqGk2Q9fWDqHT7OV8x9oPwfYWJ/6B2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/VBU0pG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750857392; c=relaxed/simple;
+	bh=17ImiBrvIC1hj8JzSb1O1aUHchtP9UQvsq/M13ZSMhI=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ds7u8AEVtInbR/T74fYBy6ErVE/g3rZANcY5NPLwA6MJAvSKnRKFQpkKrh95YEEFkRH4Yq1a2zOzq1lTZZdwazTGV59fW3STDiSls+MKzFk4AhVV72UnPNrzUEzdou6AmpOwxWMttOLqIKC3bKsT1Grnex9xngcDDfecbUa6Yvg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AWbrss6L; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/VBU0pG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5159AC4CEEA;
-	Wed, 25 Jun 2025 13:16:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750857371;
-	bh=QHCB4urdBJBIlkKBAKRhwgC29BeTmZl9cL0tpXDUwa8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A/VBU0pGHjMKELm3AvbBCE/4TmjsNJhGDH/8fkYu08vkCdNYlEyY5S5q+e+qu1Smd
-	 W/P5zKhihcUlB13sB+VvLTNWUv+jR4MN9eBhfSDfHqIbPAoq8rqEPsXENA6F6DV2vK
-	 KhyKl3eeEi4XCfDt3+NwKm9f5rJnUihDj8kHMjd1csOjadQNMcG1P98St2x6uRlDK+
-	 pVSnkLL1CigJOEKcIbgxqyjw991d49tyq4Cu8Af605hZy+YvBfjDkXFCyvJSj2GkfV
-	 5OP59OjahJPMX25j/EiLUERqFjVRigUuI01v66nNEIBJ6YZuo6gqQGrLr0XyyN7BJl
-	 l3gvX/Ce46a9Q==
-Date: Wed, 25 Jun 2025 15:16:08 +0200
-From: Frederic Weisbecker <frederic@kernel.org>
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Gabriele Monaco <gmonaco@redhat.com>, linux-kernel@vger.kernel.org,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v6 6/6] timers: Exclude isolated cpus from timer migation
-Message-ID: <aFv2mLdH3lNHdKtp@localhost.localdomain>
-References: <20250530142031.215594-1-gmonaco@redhat.com>
- <20250530142031.215594-7-gmonaco@redhat.com>
- <875xgqqrel.ffs@tglx>
- <b33dcafca895da1d9c64a7d6ab771952a932e579.camel@redhat.com>
- <878qlhnunz.ffs@tglx>
- <1bc41a7a5bd46860318b0417fa27121758f28448.camel@redhat.com>
- <aFq7rqbHugtiWF6Z@localhost.localdomain>
- <87a55waylv.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AWbrss6L"
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3a522224582so838048f8f.3;
+        Wed, 25 Jun 2025 06:16:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750857389; x=1751462189; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=kNNms1cqXOggVNTVVI9ToDIchXGpgIDdlrqJ7bT7Z3I=;
+        b=AWbrss6LETXrQnLnzWjkb1JQJHUSMV/3xK/ms9eWf65Fs5w8EYBSfnyTnHeYQCNKtx
+         TOGR2ZLul2ReI14A8oUp41d9EB2iouwuMJsOuWyP+JUza48dGbtgDYcJdl2THZGDd17w
+         zvCu2Faxj4BArBqRpb/1UN+gBqM1Abu5DOc8dlamw9DGqzgzPWb+P+jAfQwPTptbY3tO
+         1B04zlyNxdRprZh7Y2Gg8uajR/881IC0EnXg4fVHmlVNgrc1XBYbwPcqDqtLvowuzHDZ
+         g6LOyrwaVrgiuVHxfDW7/sfvTGe4Jqq3js1HghuOhPMHdSSaXCjs2Y0xL2KDfQRzVLy6
+         XtmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750857389; x=1751462189;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kNNms1cqXOggVNTVVI9ToDIchXGpgIDdlrqJ7bT7Z3I=;
+        b=LnrVKD4T4lerjEUGh9xpvkJckC0q6KK+t6kPp/Z5xOd+KwZUhI5LViORDpqEKjLs3j
+         HqwhDOdaaqaJkaJmGIdeHXZ077jQf4kvUVyJDqfyazShDB9m/FsHGUZ3/tGK59MBRxRO
+         21EhVeMlVFJuk51aj+am8AMkzJijWcwPmgNMGjQkezFkqNN6fi5LsBxwIA+NBfLOhM6K
+         JQkcRxtBobcAVcMcjug+8sP7iFvNhQBJ3J10UVPLzrzewkRflsq+S+Z3WkM8cBMj5e7B
+         7IDofIEHKEU+Oo5EeYiVpipPVtuTSBpWtm1XUQSehgntKfPiB9/OLdyoLXPSYTSppgWi
+         kqZQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxbNegHE1oYcBh8QbbVNTweOcNXVF9g9rV1Mvudw2Qg+jijhdolJTWbil1gFFcTUg3gFTKqR4jZLbF@vger.kernel.org, AJvYcCW7y5exFeC2YSB+gczW6e6dPaNIiaqoSOCOslJ4G4AplVLK7hHcwRUbEOCn/howcIXAVhaFG8XCECxUEQE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5gp6VQwRdIAWMvZwMpT58GJrNlA4FGv6b3mS3Br//lAa7k07i
+	BSVX0nFSU5YZ5Fy5KiFhHDuC6Iyiz/6Yp/mrs6TDRrbFOYfTz+zY7vvn
+X-Gm-Gg: ASbGncs5P4JJ9AiewVf7HkqghLtB4fPDrsf2Z3878ExlV0QY5XJjzrudX/sfYdTOSTp
+	Jthbo0pLpjkxrZSTeXAh5cRPwXLZLphCNgGdwuu3UIY/KaqUN0eGijDwSoxr6ZbaRsIVgme7y2x
+	9SvRe26D9fRYJf++aSzqstkQsRK0wAf9uTjRFsaZlS4BGBhTiwvSD7WJWaNNWYcs1DaYQ19PA1v
+	mDz1ZBVWvqtuCvlQw4rHq6Lbn5xZJlap6+zwloYXdAexoZl58QVZNTVCDDKYn5C6l/P+Z0Lxhy/
+	YqRQBW5oIXFNmHnAMvn1bnHiEsyF6eD4VsZdNuvy//ZvFr9hCsqUQZj2pj5eiX9HCXPtgcHjulp
+	ecM7D3G2G89jghGEZJQ==
+X-Google-Smtp-Source: AGHT+IHb3Q0fgemYtR23g+jZRPWflFpdrZhbF17TvO7pkjsqXfR8YQ4Ku28UgCKOYBTi2n6UQD4jJQ==
+X-Received: by 2002:a5d:5f4d:0:b0:3a4:f7ae:77e8 with SMTP id ffacd0b85a97d-3a6ed620053mr2616782f8f.15.1750857388773;
+        Wed, 25 Jun 2025 06:16:28 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45382376ff7sm20503605e9.35.2025.06.25.06.16.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 06:16:28 -0700 (PDT)
+Message-ID: <685bf6ac.050a0220.357231.66b2@mx.google.com>
+X-Google-Original-Message-ID: <aFv2qTBCCSwmj1y3@Ansuel-XPS.>
+Date: Wed, 25 Jun 2025 15:16:25 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v16 1/2] math64.h: provide rounddown_u64 variant for
+ rounddown macro
+References: <20250625000059.20040-1-ansuelsmth@gmail.com>
+ <aFvf4c6Jp-cgBssA@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <87a55waylv.ffs@tglx>
+In-Reply-To: <aFvf4c6Jp-cgBssA@smile.fi.intel.com>
 
-Le Wed, Jun 25, 2025 at 12:45:32PM +0200, Thomas Gleixner a écrit :
-> On Tue, Jun 24 2025 at 16:52, Frederic Weisbecker wrote:
-> > Le Tue, Jun 24, 2025 at 04:06:41PM +0200, Gabriele Monaco a écrit :
-> >> Right, but as far as I understood, the first call to 
-> >> tmigr_set_cpu_available() happens after the isolcpus parameter has been
-> >> parsed so we know at least cpu0 is going to be isolated.
-> >> 
-> >> On my machine it works reliably this way. I'm a bit lost in the init
-> >> code but seeing housekeeping_init() before rcu_init(), which in turn
-> >> should be required for some RCU-related early_initcalls, makes me
-> >> believe this order is guaranteed to be respected.
-> >> Or am I missing something?
-> >
-> > Right I think you need to keep those checks because if CPU 0 is isolcpus
-> > and CPU 5 is nohz_full, CPU 0 will become later the timekeeper and must stay
-> > in the tmigr hierarchy.
-> >
-> > OTOH if CPU 0 is isolcpus and there is no nohz_full CPUs, then CPU 0 doesn't
-> > want to go to the hierarchy.
-> >
-> > cpuset isolated partitions are different because they issue SMP calls whereas
-> > isolcpus is defined on boot.
-> >
-> > An alternative for isolcpus could be to make a late initcall and do the smp
-> > calls from there just like is done for cpusets.
+On Wed, Jun 25, 2025 at 02:39:13PM +0300, Andy Shevchenko wrote:
+> On Wed, Jun 25, 2025 at 02:00:38AM +0200, Christian Marangi wrote:
+> > There is currently a problem with the usage of rounddown() macro with
+> > u64 dividends. This causes compilation error on specific arch where
+> > 64-bit division is done on 32-bit system.
+> > 
+> > To be more specific GCC try to optimize the function and replace it
+> > with __umoddi3() but this is actually not compiled in the kernel.
+> > 
+> > Example:
+> > pwm-airoha.c:(.text+0x8f8): undefined reference to `__umoddi3'
+> > 
+> > To better handle this, introduce a variant of rounddown() macro,
+> > rounddown_u64() that can be used exactly for this scenario.
+> > 
+> > The new rounddown_u64() in math64.h uses do_div() to do the heavy work
+> > of handling internally all the magic for the 64-bit division on 32-bit
+> > (and indirectly fix the compilation error).
 > 
-> There is zero reason for isolcpus and nohz full muck to be
-> active/evaluated during early boot. That's all irrelevant and just
-> complicates things further.
+> ...
 > 
-> Can we please clean this up and make it a sensible design instead of
-> duct taping new functionality into it in completely incomprehensible
-> ways?
+> > static inline u64 roundup_u64(u64 x, u32 y)
+> >  {
+> >  	return DIV_U64_ROUND_UP(x, y) * y;
+> >  }
 > 
-> Especially under the aspect that all this should become run-time
-> modifyable. That requires a run-time switch mechanism anyway, so the
-> obvious design choice is to utilize that run-time switch late in the
-> boot sequence to set this stuff up before user space starts and leave
-> the boot process alone and simple.
+> ...
 > 
-> The KISS principle applies here fully.
+> > +static inline u64 rounddown_u64(u64 x, u32 y)
+> > +{
+> > +	u64 tmp = x;
+> > +	return x - do_div(tmp, y);
+> > +}
+> 
+> Can it be implemented as above?
+> 
+> 	return DIV_U64_ROUND_DOWN(x, y) * y;
+> 
+> (yes, it seems we are missing the DIV_U64_ROUND_DOWN() implementation).
+> 
 
-Ok so the late initcall should work.
+Guess it would be
 
-Thanks.
+#define DIV_U64_ROUND_DOWN(ll, d)		\
+	({ u32 _tmp = (d); div_u64((ll), _tmp); })
+
+
+But isn't that just directly div_u64?? (maybe the dividend is enforced
+u32 with the cast)
+
+and in math.h I can also notice
+
+#define DIV_ROUND_DOWN_ULL(ll, d) \
+	({ unsigned long long _tmp = (ll); do_div(_tmp, d); _tmp; })
+
+tons of macro that do the same thing ahhahah
+
+Really seems I'm opening a can of worm.
+
+Also also division + subtraction isn't less CPU intensive than division
++ multiplication?
+
+I know the compiler does magic on these internally but still...
 
 -- 
-Frederic Weisbecker
-SUSE Labs
+	Ansuel
