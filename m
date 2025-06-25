@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B4FE221F39;
-	Wed, 25 Jun 2025 07:10:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90D0421858A;
+	Wed, 25 Jun 2025 07:10:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750835434; cv=none; b=rnG3qZ+L5+ecjXLXsl/AR8V2tGx/qc7IAIVl1bJ/V/UCEa3WojSoaB3eRuuEfAh3mPa11/k9fJJ6LMnXvGBgy2cuED4JnVFpLfte1OXaHhXIi0a47urqH//ilus2vraHgUG9zbAIt06qmv4l+a05KwAXatcb/rjGcmPbWuZb9f4=
+	t=1750835432; cv=none; b=Bdujq3uvms5QF8d32zomBj34wyLhrHKLKj0/GAUxMtgRnEI+hvQdpXEaQ6B54LmcKGT8EDD7Dg+IDSfLxh0k6CKWgMPxY3QWl7vVeUmgpf4d7Vh9l/J9muqmvcfCaTMJ5RzKMOMplSrfmPKMQkPe43BJ7ws7QH2HjfQZalBRNZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750835434; c=relaxed/simple;
-	bh=S+CsVx9dQpCGjijF7e+ZbdDM5QBgscfKC4GdP91vltQ=;
+	s=arc-20240116; t=1750835432; c=relaxed/simple;
+	bh=GMam131N1o/5e3I3F+I9ymjxueGAN0OrCeWnHp1EQDA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uBA/vJuXoRky5QhjuRMqErvxA6cER9U1TBuJSpDHvusXF5cOBiA6bnfqAs1f5AlwRNBl6Q6B4GmtKbGM+Jv80y2+pNVYbIpfcpfxFITYySwXSPK3J5ptOWDNikgJRkpDfyhvrb5JJ3lFFyadudocLd5Hr4JrV8MBDHNLRZuYKJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kyYjW82E; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Qla+mMThYrIlTP5XKNsByj3/vUNOIsLaCNI5x+UYWUjPhv+qq4iv1bly8PeJkNsy8plm6R7fPmEqV6fdb/As4L3QDWnuOH0Uq15n4V68YTKRu7fYBTRGSwyUA2fglGU1JrhRylZlbMF9AL8rMbD+FwgIvjSUuWWScNfvW7gGDao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UZg5CVnO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kyYjW82E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1651AC4CEEE;
-	Wed, 25 Jun 2025 07:10:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UZg5CVnO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A8FC4CEEE;
+	Wed, 25 Jun 2025 07:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750835434;
-	bh=S+CsVx9dQpCGjijF7e+ZbdDM5QBgscfKC4GdP91vltQ=;
+	s=k20201202; t=1750835432;
+	bh=GMam131N1o/5e3I3F+I9ymjxueGAN0OrCeWnHp1EQDA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kyYjW82EC/38db+3veMXnZFHE54YSYV+kKjN6MFru4nkzIGgs46VmKUI0bATwPXY4
-	 gOrldjdHacg1a2nKYAdSM9e5WzJKF99M+vkA0mtbd+MFOKqNwPSU3aC4UYtBfPgMfB
-	 ialFlK523z2IO+ksv6EWAQLoB8sI/sb9SU3yH1kmSvVxjGY1NEerbkRO4S715T8EJR
-	 zC2tV9CDuqId2iSscOziziqU7Gve96UZNpI2G3CrpUMmrKS9N8BLz0fTu2HNx+E9tz
-	 Nd4Jx1zyC0AtoiXb8STQlrXgmZFEx+ZTv9FZoarslRIPkYei/QBp+yslpmjgACXVM4
-	 LOWPa81y+8YLg==
+	b=UZg5CVnOW+bpgYExd5yE3LBDQF4l8SyP1jY0An82o+CEsahhSP60qCkUDAEeDZ9Qi
+	 wcM/LqGssYMo0UDtpeqKxTL15GlL6pdrfjimwOODY4lS8HABWXmlvnCZDJE0XK/7xO
+	 1BGNtUoczmt7Q53+QLkX7mMxsapsC5XMd96eShPkVIiRxLVxVXXlpjMg19ExJ+CPgr
+	 dtGg7jUUv4zGum2btrBJTFSLWNSrDK51HD6P/eJKdK8xdIZz+FAU+S7PeN9OuV+r86
+	 UvM8ut3Pzrcsfdotx6biYw6wt9ZiUoBGE/KsnwSNbeT72e/Bb2Y5N8JElE3zv1Cg4U
+	 X9kgYBl8dyFiA==
 From: Eric Biggers <ebiggers@kernel.org>
 To: linux-crypto@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -39,9 +39,9 @@ Cc: linux-kernel@vger.kernel.org,
 	sparclinux@vger.kernel.org,
 	x86@kernel.org,
 	Eric Biggers <ebiggers@kernel.org>
-Subject: [PATCH 15/18] lib/crypto: sha512: Remove sha256_is_arch_optimized()
-Date: Wed, 25 Jun 2025 00:08:16 -0700
-Message-ID: <20250625070819.1496119-16-ebiggers@kernel.org>
+Subject: [PATCH 11/18] lib/crypto: sha256: Propagate sha256_block_state type to implementations
+Date: Wed, 25 Jun 2025 00:08:12 -0700
+Message-ID: <20250625070819.1496119-12-ebiggers@kernel.org>
 X-Mailer: git-send-email 2.50.0
 In-Reply-To: <20250625070819.1496119-1-ebiggers@kernel.org>
 References: <20250625070819.1496119-1-ebiggers@kernel.org>
@@ -53,209 +53,436 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove sha256_is_arch_optimized(), since it is no longer used.
+The previous commit made the SHA-256 compression function state be
+strongly typed, but it wasn't propagated all the way down to the
+implementations of it.  Do that now.
 
 Signed-off-by: Eric Biggers <ebiggers@kernel.org>
 ---
- arch/mips/cavium-octeon/crypto/octeon-sha256.c | 6 ------
- include/crypto/internal/sha2.h                 | 8 --------
- lib/crypto/arm/sha256.c                        | 7 -------
- lib/crypto/arm64/sha256.c                      | 7 -------
- lib/crypto/powerpc/sha256.c                    | 6 ------
- lib/crypto/riscv/sha256.c                      | 6 ------
- lib/crypto/s390/sha256.c                       | 6 ------
- lib/crypto/sparc/sha256.c                      | 6 ------
- lib/crypto/x86/sha256.c                        | 6 ------
- 9 files changed, 58 deletions(-)
+ .../mips/cavium-octeon/crypto/octeon-sha256.c |  2 +-
+ include/crypto/internal/sha2.h                |  8 +++----
+ lib/crypto/arm/sha256-ce.S                    |  2 +-
+ lib/crypto/arm/sha256.c                       |  8 +++----
+ lib/crypto/arm64/sha256-ce.S                  |  2 +-
+ lib/crypto/arm64/sha256.c                     |  8 +++----
+ lib/crypto/powerpc/sha256.c                   |  2 +-
+ .../sha256-riscv64-zvknha_or_zvknhb-zvkb.S    |  2 +-
+ lib/crypto/riscv/sha256.c                     |  7 +++---
+ lib/crypto/s390/sha256.c                      |  2 +-
+ lib/crypto/sha256-generic.c                   | 24 ++++++++++++++-----
+ lib/crypto/sparc/sha256.c                     |  4 ++--
+ lib/crypto/x86/sha256-avx-asm.S               |  2 +-
+ lib/crypto/x86/sha256-avx2-asm.S              |  2 +-
+ lib/crypto/x86/sha256-ni-asm.S                |  2 +-
+ lib/crypto/x86/sha256-ssse3-asm.S             |  2 +-
+ lib/crypto/x86/sha256.c                       | 10 ++++----
+ 17 files changed, 51 insertions(+), 38 deletions(-)
 
 diff --git a/arch/mips/cavium-octeon/crypto/octeon-sha256.c b/arch/mips/cavium-octeon/crypto/octeon-sha256.c
-index f8664818d04ec..c7c67bdc2bd06 100644
+index c20038239cb6b..f8664818d04ec 100644
 --- a/arch/mips/cavium-octeon/crypto/octeon-sha256.c
 +++ b/arch/mips/cavium-octeon/crypto/octeon-sha256.c
-@@ -59,14 +59,8 @@ void sha256_blocks_arch(struct sha256_block_state *state,
- 	state64[3] = read_octeon_64bit_hash_dword(3);
- 	octeon_crypto_disable(&cop2_state, flags);
- }
- EXPORT_SYMBOL_GPL(sha256_blocks_arch);
+@@ -20,11 +20,11 @@
  
--bool sha256_is_arch_optimized(void)
--{
--	return octeon_has_crypto();
--}
--EXPORT_SYMBOL_GPL(sha256_is_arch_optimized);
--
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("SHA-256 Secure Hash Algorithm (OCTEON)");
- MODULE_AUTHOR("Aaro Koskinen <aaro.koskinen@iki.fi>");
+ /*
+  * We pass everything as 64-bit. OCTEON can handle misaligned data.
+  */
+ 
+-void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
++void sha256_blocks_arch(struct sha256_block_state *state,
+ 			const u8 *data, size_t nblocks)
+ {
+ 	struct octeon_cop2_state cop2_state;
+ 	u64 *state64 = (u64 *)state;
+ 	unsigned long flags;
 diff --git a/include/crypto/internal/sha2.h b/include/crypto/internal/sha2.h
-index 51028484ccdc7..f724e6ad03a9f 100644
+index 79be22381ef86..51028484ccdc7 100644
 --- a/include/crypto/internal/sha2.h
 +++ b/include/crypto/internal/sha2.h
-@@ -7,18 +7,10 @@
- #include <linux/compiler_attributes.h>
- #include <linux/string.h>
- #include <linux/types.h>
- #include <linux/unaligned.h>
- 
--#if IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_SHA256)
--bool sha256_is_arch_optimized(void);
--#else
--static inline bool sha256_is_arch_optimized(void)
--{
--	return false;
--}
--#endif
- void sha256_blocks_generic(struct sha256_block_state *state,
+@@ -15,23 +15,23 @@ bool sha256_is_arch_optimized(void);
+ static inline bool sha256_is_arch_optimized(void)
+ {
+ 	return false;
+ }
+ #endif
+-void sha256_blocks_generic(u32 state[SHA256_STATE_WORDS],
++void sha256_blocks_generic(struct sha256_block_state *state,
  			   const u8 *data, size_t nblocks);
- void sha256_blocks_arch(struct sha256_block_state *state,
+-void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
++void sha256_blocks_arch(struct sha256_block_state *state,
  			const u8 *data, size_t nblocks);
  
+ static inline void sha256_choose_blocks(
+ 	u32 state[SHA256_STATE_WORDS], const u8 *data, size_t nblocks,
+ 	bool force_generic, bool force_simd)
+ {
+ 	if (!IS_ENABLED(CONFIG_CRYPTO_ARCH_HAVE_LIB_SHA256) || force_generic)
+-		sha256_blocks_generic(state, data, nblocks);
++		sha256_blocks_generic((struct sha256_block_state *)state, data, nblocks);
+ 	else
+-		sha256_blocks_arch(state, data, nblocks);
++		sha256_blocks_arch((struct sha256_block_state *)state, data, nblocks);
+ }
+ 
+ static __always_inline void sha256_finup(
+ 	struct crypto_sha256_state *sctx, u8 buf[SHA256_BLOCK_SIZE],
+ 	size_t len, u8 out[SHA256_DIGEST_SIZE], size_t digest_size,
+diff --git a/lib/crypto/arm/sha256-ce.S b/lib/crypto/arm/sha256-ce.S
+index ac2c9b01b22d2..7481ac8e6c0d9 100644
+--- a/lib/crypto/arm/sha256-ce.S
++++ b/lib/crypto/arm/sha256-ce.S
+@@ -65,11 +65,11 @@
+ 	.word		0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3
+ 	.word		0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208
+ 	.word		0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+ 
+ 	/*
+-	 * void sha256_ce_transform(u32 state[SHA256_STATE_WORDS],
++	 * void sha256_ce_transform(struct sha256_block_state *state,
+ 	 *			    const u8 *data, size_t nblocks);
+ 	 */
+ ENTRY(sha256_ce_transform)
+ 	/* load state */
+ 	vld1.32		{dga-dgb}, [r0]
 diff --git a/lib/crypto/arm/sha256.c b/lib/crypto/arm/sha256.c
-index 7d90823586952..27181be0aa92e 100644
+index 2c9cfdaaa0691..7d90823586952 100644
 --- a/lib/crypto/arm/sha256.c
 +++ b/lib/crypto/arm/sha256.c
-@@ -35,17 +35,10 @@ void sha256_blocks_arch(struct sha256_block_state *state,
- 		sha256_block_data_order(state, data, nblocks);
- 	}
- }
- EXPORT_SYMBOL_GPL(sha256_blocks_arch);
+@@ -8,21 +8,21 @@
+ #include <crypto/internal/sha2.h>
+ #include <crypto/internal/simd.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
  
--bool sha256_is_arch_optimized(void)
--{
--	/* We always can use at least the ARM scalar implementation. */
--	return true;
--}
--EXPORT_SYMBOL_GPL(sha256_is_arch_optimized);
--
- static int __init sha256_arm_mod_init(void)
- {
- 	if (IS_ENABLED(CONFIG_KERNEL_MODE_NEON) && (elf_hwcap & HWCAP_NEON)) {
- 		static_branch_enable(&have_neon);
- 		if (elf_hwcap2 & HWCAP2_SHA2)
-diff --git a/lib/crypto/arm64/sha256.c b/lib/crypto/arm64/sha256.c
-index 609ffb8151987..a5a4982767089 100644
---- a/lib/crypto/arm64/sha256.c
-+++ b/lib/crypto/arm64/sha256.c
-@@ -45,17 +45,10 @@ void sha256_blocks_arch(struct sha256_block_state *state,
- 		sha256_block_data_order(state, data, nblocks);
- 	}
- }
- EXPORT_SYMBOL_GPL(sha256_blocks_arch);
+-asmlinkage void sha256_block_data_order(u32 state[SHA256_STATE_WORDS],
++asmlinkage void sha256_block_data_order(struct sha256_block_state *state,
+ 					const u8 *data, size_t nblocks);
+-asmlinkage void sha256_block_data_order_neon(u32 state[SHA256_STATE_WORDS],
++asmlinkage void sha256_block_data_order_neon(struct sha256_block_state *state,
+ 					     const u8 *data, size_t nblocks);
+-asmlinkage void sha256_ce_transform(u32 state[SHA256_STATE_WORDS],
++asmlinkage void sha256_ce_transform(struct sha256_block_state *state,
+ 				    const u8 *data, size_t nblocks);
  
--bool sha256_is_arch_optimized(void)
--{
--	/* We always can use at least the ARM64 scalar implementation. */
--	return true;
--}
--EXPORT_SYMBOL_GPL(sha256_is_arch_optimized);
--
- static int __init sha256_arm64_mod_init(void)
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_neon);
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_ce);
+ 
+-void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
++void sha256_blocks_arch(struct sha256_block_state *state,
+ 			const u8 *data, size_t nblocks)
  {
  	if (IS_ENABLED(CONFIG_KERNEL_MODE_NEON) &&
- 	    cpu_have_named_feature(ASIMD)) {
- 		static_branch_enable(&have_neon);
+ 	    static_branch_likely(&have_neon) && crypto_simd_usable()) {
+ 		kernel_neon_begin();
+diff --git a/lib/crypto/arm64/sha256-ce.S b/lib/crypto/arm64/sha256-ce.S
+index f3e21c6d87d2e..b99d9589c4217 100644
+--- a/lib/crypto/arm64/sha256-ce.S
++++ b/lib/crypto/arm64/sha256-ce.S
+@@ -69,11 +69,11 @@
+ 	.word		0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3
+ 	.word		0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208
+ 	.word		0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+ 
+ 	/*
+-	 * size_t __sha256_ce_transform(u32 state[SHA256_STATE_WORDS],
++	 * size_t __sha256_ce_transform(struct sha256_block_state *state,
+ 	 *				const u8 *data, size_t nblocks);
+ 	 */
+ 	.text
+ SYM_FUNC_START(__sha256_ce_transform)
+ 	/* load round constants */
+diff --git a/lib/crypto/arm64/sha256.c b/lib/crypto/arm64/sha256.c
+index fb9bff40357be..609ffb8151987 100644
+--- a/lib/crypto/arm64/sha256.c
++++ b/lib/crypto/arm64/sha256.c
+@@ -8,21 +8,21 @@
+ #include <crypto/internal/sha2.h>
+ #include <crypto/internal/simd.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ 
+-asmlinkage void sha256_block_data_order(u32 state[SHA256_STATE_WORDS],
++asmlinkage void sha256_block_data_order(struct sha256_block_state *state,
+ 					const u8 *data, size_t nblocks);
+-asmlinkage void sha256_block_neon(u32 state[SHA256_STATE_WORDS],
++asmlinkage void sha256_block_neon(struct sha256_block_state *state,
+ 				  const u8 *data, size_t nblocks);
+-asmlinkage size_t __sha256_ce_transform(u32 state[SHA256_STATE_WORDS],
++asmlinkage size_t __sha256_ce_transform(struct sha256_block_state *state,
+ 					const u8 *data, size_t nblocks);
+ 
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_neon);
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_ce);
+ 
+-void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
++void sha256_blocks_arch(struct sha256_block_state *state,
+ 			const u8 *data, size_t nblocks)
+ {
+ 	if (IS_ENABLED(CONFIG_KERNEL_MODE_NEON) &&
+ 	    static_branch_likely(&have_neon) && crypto_simd_usable()) {
+ 		if (static_branch_likely(&have_ce)) {
 diff --git a/lib/crypto/powerpc/sha256.c b/lib/crypto/powerpc/sha256.c
-index c3f844ae0aceb..437e587b05754 100644
+index 6b0f079587eb6..c3f844ae0aceb 100644
 --- a/lib/crypto/powerpc/sha256.c
 +++ b/lib/crypto/powerpc/sha256.c
-@@ -58,13 +58,7 @@ void sha256_blocks_arch(struct sha256_block_state *state,
- 		nblocks -= unit;
- 	} while (nblocks);
+@@ -40,11 +40,11 @@ static void spe_end(void)
+ 	disable_kernel_spe();
+ 	/* reenable preemption */
+ 	preempt_enable();
  }
- EXPORT_SYMBOL_GPL(sha256_blocks_arch);
  
--bool sha256_is_arch_optimized(void)
--{
--	return true;
--}
--EXPORT_SYMBOL_GPL(sha256_is_arch_optimized);
--
- MODULE_LICENSE("GPL");
- MODULE_DESCRIPTION("SHA-256 Secure Hash Algorithm, SPE optimized");
+-void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
++void sha256_blocks_arch(struct sha256_block_state *state,
+ 			const u8 *data, size_t nblocks)
+ {
+ 	do {
+ 		/* cut input data into smaller blocks */
+ 		u32 unit = min_t(size_t, nblocks,
+diff --git a/lib/crypto/riscv/sha256-riscv64-zvknha_or_zvknhb-zvkb.S b/lib/crypto/riscv/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
+index fad501ad06171..1618d1220a6e7 100644
+--- a/lib/crypto/riscv/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
++++ b/lib/crypto/riscv/sha256-riscv64-zvknha_or_zvknhb-zvkb.S
+@@ -104,11 +104,11 @@
+ 	sha256_4rounds	\last, \k1, W1, W2, W3, W0
+ 	sha256_4rounds	\last, \k2, W2, W3, W0, W1
+ 	sha256_4rounds	\last, \k3, W3, W0, W1, W2
+ .endm
+ 
+-// void sha256_transform_zvknha_or_zvknhb_zvkb(u32 state[SHA256_STATE_WORDS],
++// void sha256_transform_zvknha_or_zvknhb_zvkb(struct sha256_block_state *state,
+ //					       const u8 *data, size_t nblocks);
+ SYM_FUNC_START(sha256_transform_zvknha_or_zvknhb_zvkb)
+ 
+ 	// Load the round constants into K0-K15.
+ 	vsetivli	zero, 4, e32, m1, ta, ma
 diff --git a/lib/crypto/riscv/sha256.c b/lib/crypto/riscv/sha256.c
-index a2079aa3ae925..01004cb9c6e9e 100644
+index aa77349d08f30..a2079aa3ae925 100644
 --- a/lib/crypto/riscv/sha256.c
 +++ b/lib/crypto/riscv/sha256.c
-@@ -32,16 +32,10 @@ void sha256_blocks_arch(struct sha256_block_state *state,
- 		sha256_blocks_generic(state, data, nblocks);
- 	}
- }
- EXPORT_SYMBOL_GPL(sha256_blocks_arch);
+@@ -13,16 +13,17 @@
+ #include <crypto/internal/sha2.h>
+ #include <crypto/internal/simd.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
  
--bool sha256_is_arch_optimized(void)
--{
--	return static_key_enabled(&have_extensions);
--}
--EXPORT_SYMBOL_GPL(sha256_is_arch_optimized);
--
- static int __init riscv64_sha256_mod_init(void)
+-asmlinkage void sha256_transform_zvknha_or_zvknhb_zvkb(
+-	u32 state[SHA256_STATE_WORDS], const u8 *data, size_t nblocks);
++asmlinkage void
++sha256_transform_zvknha_or_zvknhb_zvkb(struct sha256_block_state *state,
++				       const u8 *data, size_t nblocks);
+ 
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_extensions);
+ 
+-void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
++void sha256_blocks_arch(struct sha256_block_state *state,
+ 			const u8 *data, size_t nblocks)
  {
- 	/* Both zvknha and zvknhb provide the SHA-256 instructions. */
- 	if ((riscv_isa_extension_available(NULL, ZVKNHA) ||
- 	     riscv_isa_extension_available(NULL, ZVKNHB)) &&
+ 	if (static_branch_likely(&have_extensions) && crypto_simd_usable()) {
+ 		kernel_vector_begin();
+ 		sha256_transform_zvknha_or_zvknhb_zvkb(state, data, nblocks);
 diff --git a/lib/crypto/s390/sha256.c b/lib/crypto/s390/sha256.c
-index fb565718f7539..6ebfd35a5d44c 100644
+index 7dfe120fafaba..fb565718f7539 100644
 --- a/lib/crypto/s390/sha256.c
 +++ b/lib/crypto/s390/sha256.c
-@@ -21,16 +21,10 @@ void sha256_blocks_arch(struct sha256_block_state *state,
- 	else
- 		sha256_blocks_generic(state, data, nblocks);
- }
- EXPORT_SYMBOL_GPL(sha256_blocks_arch);
+@@ -10,11 +10,11 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
  
--bool sha256_is_arch_optimized(void)
--{
--	return static_key_enabled(&have_cpacf_sha256);
--}
--EXPORT_SYMBOL_GPL(sha256_is_arch_optimized);
--
- static int __init sha256_s390_mod_init(void)
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_cpacf_sha256);
+ 
+-void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
++void sha256_blocks_arch(struct sha256_block_state *state,
+ 			const u8 *data, size_t nblocks)
  {
- 	if (cpu_have_feature(S390_CPU_FEATURE_MSA) &&
- 	    cpacf_query_func(CPACF_KIMD, CPACF_KIMD_SHA_256))
- 		static_branch_enable(&have_cpacf_sha256);
+ 	if (static_branch_likely(&have_cpacf_sha256))
+ 		cpacf_kimd(CPACF_KIMD_SHA_256, state, data,
+ 			   nblocks * SHA256_BLOCK_SIZE);
+diff --git a/lib/crypto/sha256-generic.c b/lib/crypto/sha256-generic.c
+index 2968d95d04038..99f904033c261 100644
+--- a/lib/crypto/sha256-generic.c
++++ b/lib/crypto/sha256-generic.c
+@@ -68,11 +68,11 @@ static inline void BLEND_OP(int I, u32 *W)
+ 	t2 = e0(a) + Maj(a, b, c);				\
+ 	d += t1;						\
+ 	h = t1 + t2;						\
+ } while (0)
+ 
+-static void sha256_block_generic(u32 state[SHA256_STATE_WORDS],
++static void sha256_block_generic(struct sha256_block_state *state,
+ 				 const u8 *input, u32 W[64])
+ {
+ 	u32 a, b, c, d, e, f, g, h;
+ 	int i;
+ 
+@@ -99,12 +99,18 @@ static void sha256_block_generic(u32 state[SHA256_STATE_WORDS],
+ 		BLEND_OP(i + 6, W);
+ 		BLEND_OP(i + 7, W);
+ 	}
+ 
+ 	/* load the state into our registers */
+-	a = state[0];  b = state[1];  c = state[2];  d = state[3];
+-	e = state[4];  f = state[5];  g = state[6];  h = state[7];
++	a = state->h[0];
++	b = state->h[1];
++	c = state->h[2];
++	d = state->h[3];
++	e = state->h[4];
++	f = state->h[5];
++	g = state->h[6];
++	h = state->h[7];
+ 
+ 	/* now iterate */
+ 	for (i = 0; i < 64; i += 8) {
+ 		SHA256_ROUND(i + 0, a, b, c, d, e, f, g, h);
+ 		SHA256_ROUND(i + 1, h, a, b, c, d, e, f, g);
+@@ -114,15 +120,21 @@ static void sha256_block_generic(u32 state[SHA256_STATE_WORDS],
+ 		SHA256_ROUND(i + 5, d, e, f, g, h, a, b, c);
+ 		SHA256_ROUND(i + 6, c, d, e, f, g, h, a, b);
+ 		SHA256_ROUND(i + 7, b, c, d, e, f, g, h, a);
+ 	}
+ 
+-	state[0] += a; state[1] += b; state[2] += c; state[3] += d;
+-	state[4] += e; state[5] += f; state[6] += g; state[7] += h;
++	state->h[0] += a;
++	state->h[1] += b;
++	state->h[2] += c;
++	state->h[3] += d;
++	state->h[4] += e;
++	state->h[5] += f;
++	state->h[6] += g;
++	state->h[7] += h;
+ }
+ 
+-void sha256_blocks_generic(u32 state[SHA256_STATE_WORDS],
++void sha256_blocks_generic(struct sha256_block_state *state,
+ 			   const u8 *data, size_t nblocks)
+ {
+ 	u32 W[64];
+ 
+ 	do {
 diff --git a/lib/crypto/sparc/sha256.c b/lib/crypto/sparc/sha256.c
-index 060664b88a6d3..f41c109c1c18d 100644
+index 8bdec2db08b30..060664b88a6d3 100644
 --- a/lib/crypto/sparc/sha256.c
 +++ b/lib/crypto/sparc/sha256.c
-@@ -30,16 +30,10 @@ void sha256_blocks_arch(struct sha256_block_state *state,
- 	else
- 		sha256_blocks_generic(state, data, nblocks);
- }
- EXPORT_SYMBOL_GPL(sha256_blocks_arch);
+@@ -17,14 +17,14 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
  
--bool sha256_is_arch_optimized(void)
--{
--	return static_key_enabled(&have_sha256_opcodes);
--}
--EXPORT_SYMBOL_GPL(sha256_is_arch_optimized);
--
- static int __init sha256_sparc64_mod_init(void)
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_sha256_opcodes);
+ 
+-asmlinkage void sha256_sparc64_transform(u32 state[SHA256_STATE_WORDS],
++asmlinkage void sha256_sparc64_transform(struct sha256_block_state *state,
+ 					 const u8 *data, size_t nblocks);
+ 
+-void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
++void sha256_blocks_arch(struct sha256_block_state *state,
+ 			const u8 *data, size_t nblocks)
  {
- 	unsigned long cfr;
+ 	if (static_branch_likely(&have_sha256_opcodes))
+ 		sha256_sparc64_transform(state, data, nblocks);
+ 	else
+diff --git a/lib/crypto/x86/sha256-avx-asm.S b/lib/crypto/x86/sha256-avx-asm.S
+index 0d7b2c3e45d9a..73bcff2b548f4 100644
+--- a/lib/crypto/x86/sha256-avx-asm.S
++++ b/lib/crypto/x86/sha256-avx-asm.S
+@@ -339,11 +339,11 @@ a = TMP_
+         add     y0, h                   # h = h + S1 + CH + k + w + S0 + MAJ
+         ROTATE_ARGS
+ .endm
  
- 	if (!(sparc64_elf_hwcap & HWCAP_SPARC_CRYPTO))
+ ########################################################################
+-## void sha256_transform_avx(u32 state[SHA256_STATE_WORDS],
++## void sha256_transform_avx(struct sha256_block_state *state,
+ ##			     const u8 *data, size_t nblocks);
+ ########################################################################
+ .text
+ SYM_FUNC_START(sha256_transform_avx)
+ 	ANNOTATE_NOENDBR	# since this is called only via static_call
+diff --git a/lib/crypto/x86/sha256-avx2-asm.S b/lib/crypto/x86/sha256-avx2-asm.S
+index 25d3380321ec3..45787570387f2 100644
+--- a/lib/crypto/x86/sha256-avx2-asm.S
++++ b/lib/crypto/x86/sha256-avx2-asm.S
+@@ -516,11 +516,11 @@ STACK_SIZE	= _CTX      + _CTX_SIZE
+ 	ROTATE_ARGS
+ 
+ .endm
+ 
+ ########################################################################
+-## void sha256_transform_rorx(u32 state[SHA256_STATE_WORDS],
++## void sha256_transform_rorx(struct sha256_block_state *state,
+ ##			      const u8 *data, size_t nblocks);
+ ########################################################################
+ .text
+ SYM_FUNC_START(sha256_transform_rorx)
+ 	ANNOTATE_NOENDBR	# since this is called only via static_call
+diff --git a/lib/crypto/x86/sha256-ni-asm.S b/lib/crypto/x86/sha256-ni-asm.S
+index d3548206cf3d4..4af7d22e29e47 100644
+--- a/lib/crypto/x86/sha256-ni-asm.S
++++ b/lib/crypto/x86/sha256-ni-asm.S
+@@ -104,11 +104,11 @@
+  * input data, and the number of 64-byte blocks to process.  Once all blocks
+  * have been processed, the state is updated with the new state.  This function
+  * only processes complete blocks.  State initialization, buffering of partial
+  * blocks, and digest finalization is expected to be handled elsewhere.
+  *
+- * void sha256_ni_transform(u32 state[SHA256_STATE_WORDS],
++ * void sha256_ni_transform(struct sha256_block_state *state,
+  *			    const u8 *data, size_t nblocks);
+  */
+ .text
+ SYM_FUNC_START(sha256_ni_transform)
+ 	ANNOTATE_NOENDBR	# since this is called only via static_call
+diff --git a/lib/crypto/x86/sha256-ssse3-asm.S b/lib/crypto/x86/sha256-ssse3-asm.S
+index 7f24a4cdcb257..407b30adcd37f 100644
+--- a/lib/crypto/x86/sha256-ssse3-asm.S
++++ b/lib/crypto/x86/sha256-ssse3-asm.S
+@@ -346,11 +346,11 @@ a = TMP_
+ 	add     y0, h		      # h = h + S1 + CH + k + w + S0 + MAJ
+ 	ROTATE_ARGS
+ .endm
+ 
+ ########################################################################
+-## void sha256_transform_ssse3(u32 state[SHA256_STATE_WORDS],
++## void sha256_transform_ssse3(struct sha256_block_state *state,
+ ##			       const u8 *data, size_t nblocks);
+ ########################################################################
+ .text
+ SYM_FUNC_START(sha256_transform_ssse3)
+ 	ANNOTATE_NOENDBR	# since this is called only via static_call
 diff --git a/lib/crypto/x86/sha256.c b/lib/crypto/x86/sha256.c
-index cbb45defbefab..9ee38d2b3d572 100644
+index baba74d7d26f2..cbb45defbefab 100644
 --- a/lib/crypto/x86/sha256.c
 +++ b/lib/crypto/x86/sha256.c
-@@ -35,16 +35,10 @@ void sha256_blocks_arch(struct sha256_block_state *state,
- 		sha256_blocks_generic(state, data, nblocks);
- 	}
- }
- EXPORT_SYMBOL_GPL(sha256_blocks_arch);
+@@ -9,24 +9,24 @@
+ #include <crypto/internal/simd.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/static_call.h>
  
--bool sha256_is_arch_optimized(void)
--{
--	return static_key_enabled(&have_sha256_x86);
--}
--EXPORT_SYMBOL_GPL(sha256_is_arch_optimized);
--
- static int __init sha256_x86_mod_init(void)
+-asmlinkage void sha256_transform_ssse3(u32 state[SHA256_STATE_WORDS],
++asmlinkage void sha256_transform_ssse3(struct sha256_block_state *state,
+ 				       const u8 *data, size_t nblocks);
+-asmlinkage void sha256_transform_avx(u32 state[SHA256_STATE_WORDS],
++asmlinkage void sha256_transform_avx(struct sha256_block_state *state,
+ 				     const u8 *data, size_t nblocks);
+-asmlinkage void sha256_transform_rorx(u32 state[SHA256_STATE_WORDS],
++asmlinkage void sha256_transform_rorx(struct sha256_block_state *state,
+ 				      const u8 *data, size_t nblocks);
+-asmlinkage void sha256_ni_transform(u32 state[SHA256_STATE_WORDS],
++asmlinkage void sha256_ni_transform(struct sha256_block_state *state,
+ 				    const u8 *data, size_t nblocks);
+ 
+ static __ro_after_init DEFINE_STATIC_KEY_FALSE(have_sha256_x86);
+ 
+ DEFINE_STATIC_CALL(sha256_blocks_x86, sha256_transform_ssse3);
+ 
+-void sha256_blocks_arch(u32 state[SHA256_STATE_WORDS],
++void sha256_blocks_arch(struct sha256_block_state *state,
+ 			const u8 *data, size_t nblocks)
  {
- 	if (boot_cpu_has(X86_FEATURE_SHA_NI)) {
- 		static_call_update(sha256_blocks_x86, sha256_ni_transform);
- 	} else if (cpu_has_xfeatures(XFEATURE_MASK_SSE |
+ 	if (static_branch_likely(&have_sha256_x86) && crypto_simd_usable()) {
+ 		kernel_fpu_begin();
+ 		static_call(sha256_blocks_x86)(state, data, nblocks);
 -- 
 2.50.0
 
