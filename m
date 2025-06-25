@@ -1,125 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1BA01DDA3E;
-	Wed, 25 Jun 2025 18:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58C925C6EF
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750874515; cv=none; b=POj7T3RF0L4VuTrJ8ObwnzflTMJtM7ga3xlW6WTg/dax0A248TjWqyQ0LG+EVJ/vE86OOI72I86EijohDoCV9asTvm+Dj71h8N1REjXCg4mshnhsh1F4N6H1kTIQB3EudH6/OFH+dCXky+Hi/p7aNzVU4HYG4UokkGM5WP7FJRI=
+	t=1750874649; cv=none; b=Kf8JFKSA2zudA8ogrqrzShsEPnQVbgowr+l+ED+TbiBrSlWYOm6TDIXqSbzdVzkMmqCz/XV4hnAEXr7rPXIU6W/0JixFeBvuRrr2/80FwKEVzcr0SmkaeEdUDFmF5us/nN3ecbHa9RK1Kn03RN9qrT1RlykfHa69jR93gI+50MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750874515; c=relaxed/simple;
-	bh=9zt9kSH4ydaeYpW47pmNj8ouiqsks2pwtnnh3nCsl3Q=;
+	s=arc-20240116; t=1750874649; c=relaxed/simple;
+	bh=kTOVzbJXVGmBvAGjVwIPoNLXCVX7LhoBr+zKdn7qsAg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bv/00Q5IS+9vNWUG22fh6Kl9lthBEi7DTIvu7fgsub4eukDKUBQbp5Se+04SRcQDyvME3P7PutWY1mbYUGw8oXAEbfZvgfLJ+v2hh/eQqeoXW6Q7tn/p/GddewQ9pZ734O8YFnvIhlNXtRIpv2OpJld2vvj7T5lGHbZZsGkklmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kzpRA+T5; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=ckm5BWpinIc8lgpcmXnZXA/XSe1SU32Rf7pVjcTUqyQa0Ah3zfVZs5Ka2uhhWOYOKFSCe1JEm/OC37r5tZsEagHb1flShML/zT851yLrPrvFRS8Zr+zpnWCZzW7r3vdD0iE0sj88P3e8KFlYzCJKjHR1TIbgfxZuGviIKCkbijk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ZRLHZ2Yz; arc=none smtp.client-ip=95.215.58.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kzpRA+T5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750874514; x=1782410514;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=9zt9kSH4ydaeYpW47pmNj8ouiqsks2pwtnnh3nCsl3Q=;
-  b=kzpRA+T5lz37LJgVu7WxLAGU02sMllm9VxzgkmZkZO4JShHKHTb1Buig
-   o6vXG0zcK5L1b/PE6OZeVmBPOq0l6GetwmIM05hL7Sno99rpiB6f8Vdlg
-   sroc6PZJ6JIQmPnyjz1QmReVtGSmJvYgI5ats/enXfX9iFPnukuA4oeQH
-   iNS90xKDyq8S9UTkX4oNy77jums+COQ9t+K2Cm54e7qOrDmWEm2xBqrCA
-   L0ja7U5KyJN6+IfZnl0U98XrL6rsg5+QTE7TT5m1QGo96ASxoqSRP3vZA
-   6c/90wOQtyFBGI+fN+2Li1Nn8W2AIg4iDNexXSqY6lRz5R0hVGdcW+kXm
-   Q==;
-X-CSE-ConnectionGUID: HHB05st/RumNzyE4c9Mltg==
-X-CSE-MsgGUID: 6f8pSK76Ttev8ey0WvPJKg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53296393"
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="53296393"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 11:01:53 -0700
-X-CSE-ConnectionGUID: CHMemTsbRn67OS14w2k8PQ==
-X-CSE-MsgGUID: GEVg6mkGQyKBBOnAMhZIqw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="189472348"
-Received: from dwoodwor-mobl2.amr.corp.intel.com (HELO [10.125.108.244]) ([10.125.108.244])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 11:01:53 -0700
-Message-ID: <a1c95555-aa68-4c54-b411-7ae259636921@intel.com>
-Date: Wed, 25 Jun 2025 11:01:52 -0700
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ZRLHZ2Yz"
+Message-ID: <d72af2c1-2faf-46db-b212-0b800040c311@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750874633;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bmEOTc35qmXDcWHfJYLwaXjxVpRNejQ+x5gurD+FuPA=;
+	b=ZRLHZ2Yzhr9hA/kJDhbYSZquvZRJAZyVm37HS11+SLXa/PXi+soMKoTIObWca4ex53ha/7
+	i3I6NdYxXVlWLPhKwTHo8YPiNHg+4rXeiPmUEcGkjBYgvNq+wGQI9YkDc5svIXg+6AbdmC
+	zE5s3tODqmPisZegwo1fW3dLo8E0W1s=
+Date: Wed, 25 Jun 2025 11:03:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCHv2.1 04/12] x86/virt/tdx: Add tdx_alloc/free_page() helpers
-To: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, chao.gao@intel.com
-Cc: bp@alien8.de, dave.hansen@linux.intel.com, isaku.yamahata@intel.com,
- kai.huang@intel.com, kvm@vger.kernel.org, linux-coco@lists.linux.dev,
- linux-kernel@vger.kernel.org, mingo@redhat.com, pbonzini@redhat.com,
- rick.p.edgecombe@intel.com, seanjc@google.com, tglx@linutronix.de,
- x86@kernel.org, yan.y.zhao@intel.com
-References: <aEeaJH1KqZ38tgKi@intel.com>
- <20250610145116.2502206-1-kirill.shutemov@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH] RDMA/rxe: Fix a couple IS_ERR() vs NULL bugs
+To: Dan Carpenter <dan.carpenter@linaro.org>,
+ Zhu Yanjun <zyjzyj2000@gmail.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+ Daisuke Matsuda <dskmtsd@gmail.com>, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <685c1430.050a0220.18b0ef.da83@mx.google.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20250610145116.2502206-1-kirill.shutemov@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "yanjun.zhu" <yanjun.zhu@linux.dev>
+In-Reply-To: <685c1430.050a0220.18b0ef.da83@mx.google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Kirill (and anybody else reading this),
+On 6/25/25 8:22 AM, Dan Carpenter wrote:
+> The lookup_mr() function returns NULL on error.  It never returns error
+> pointers.
 
-Please stop doing these vXXX.1 patches. b4 can't deal with them. I don't
-know if it's _supposed_ to be able to, but I'm not sure I even want
-Konstantin spending time on making b4 handle this kind of thing. I
-honestly don't want to make my scripts deal with them either.
+Yes, I agree with you. However, this commit is intended to fix an issue 
+in the rdma-next tree. The corresponding repository is: 
+https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git.
 
-It's one thing to post a whole new series 2 hours after the old one.
-It's a very different thing to resend a series in the 2 *weeks* since
-you updated it.
+Therefore, the subject should be: [PATCH rdma-next]
 
-I'd much rather you resend the series than just leave these tangles for
-the maintainers to unwind.
+This problem does not exist in the upstream Linux kernel.
+
+Other than that, I have no issues with the commit.
+
+Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
+
+Zhu Yanjun
+
+> 
+> Fixes: 9284bc34c773 ("RDMA/rxe: Enable asynchronous prefetch for ODP MRs")
+> Fixes: 3576b0df1588 ("RDMA/rxe: Implement synchronous prefetch for ODP MRs")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>   drivers/infiniband/sw/rxe/rxe_odp.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/infiniband/sw/rxe/rxe_odp.c b/drivers/infiniband/sw/rxe/rxe_odp.c
+> index 01a59d3f8ed4..f58e3ec6252f 100644
+> --- a/drivers/infiniband/sw/rxe/rxe_odp.c
+> +++ b/drivers/infiniband/sw/rxe/rxe_odp.c
+> @@ -470,10 +470,10 @@ static int rxe_ib_prefetch_sg_list(struct ib_pd *ibpd,
+>   		mr = lookup_mr(pd, IB_ACCESS_LOCAL_WRITE,
+>   			       sg_list[i].lkey, RXE_LOOKUP_LOCAL);
+>   
+> -		if (IS_ERR(mr)) {
+> +		if (!mr) {
+>   			rxe_dbg_pd(pd, "mr with lkey %x not found\n",
+>   				   sg_list[i].lkey);
+> -			return PTR_ERR(mr);
+> +			return -EINVAL;
+>   		}
+>   
+>   		if (advice == IB_UVERBS_ADVISE_MR_ADVICE_PREFETCH_WRITE &&
+> @@ -535,8 +535,10 @@ static int rxe_ib_advise_mr_prefetch(struct ib_pd *ibpd,
+>   		/* Takes a reference, which will be released in the queued work */
+>   		mr = lookup_mr(pd, IB_ACCESS_LOCAL_WRITE,
+>   			       sg_list[i].lkey, RXE_LOOKUP_LOCAL);
+> -		if (IS_ERR(mr))
+> +		if (!mr) {
+> +			mr = ERR_PTR(-EINVAL);
+>   			goto err;
+> +		}
+>   
+>   		work->frags[i].io_virt = sg_list[i].addr;
+>   		work->frags[i].length = sg_list[i].length;
+
