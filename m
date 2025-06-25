@@ -1,116 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61ADE23AD;
-	Wed, 25 Jun 2025 06:18:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7567307498
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:21:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750832310; cv=none; b=Pw9448DADMhADGZGJv+eFerQcylpF/SHqnqnPvdWlG4qwHwves2we5mDQDfPiW6N5LIFerfqS3ktEOgOQDooPAswigg48mGSUbOfj+T0/2ajzw4SsDhpcGpwjOG0y6ggJIlZ7EGOKEs9o0MTvbLoU90EzSGWTQUgLSWsFxqsUJ0=
+	t=1750832465; cv=none; b=JtUS3Ye7d38z96t00N8u3hF4n+jk+SJeNeAf8Oj9zWaNT3rrOACr5JDU13PydQuGuxZU4sCpCBzg1hwYinGJKC6r7Rp1hC8+e+n1oGr5JOD6DZcCjfiC5srsBDrtF7GE4GVBjj2WrETS+UYAVfegoVQpYXi2LUAYIF5MnqSXUZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750832310; c=relaxed/simple;
-	bh=v8dGxdpXvhwjMLSxtF/xObVxeM0eFoe68UmmiFX3esY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SIo0YI3myhP0Jf3/jJmbDi8vT6a1S7PsX5qOYpKJw6xtN3qd6KoTAL7PKKEYC0ooeU8WZ27HjClP/9OyXYMbpsB7riJQxFyz0/ty/0qz3mRVg9+A11DKzaxn7e79C6CK5r5cOE2NBhwTIW9Qr9B6hU6pmq2735hZ8PnfcXssGTY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LDn6Q2vH; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LDn6Q2vH"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750832308; x=1782368308;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=v8dGxdpXvhwjMLSxtF/xObVxeM0eFoe68UmmiFX3esY=;
-  b=LDn6Q2vHZG0rMXB0T95iwUg1HA07fH1Pyej/kB7dIqAM8yOjXiNCL0lP
-   7BigNKszp1hTV4AhMZna5W4KULzFUZjUOrw8Iq8hf7jtnHhE3sA0kiR09
-   iRebdbJopnrhSLAJ4lolwyW5U5lq5BbkTUco7v6LdcLwYZvPTE/4s97d0
-   ewuHMTpvXbinxNGPByYsN+c9/GSWJlNDF/rzx1x1ruSnvayJ/XeIYF/p7
-   it3X941eU7ash1y9draCTfJ+RUREiv6L5KrszVovzXzemUK4HYEglgMFh
-   cb1rbILwW2qsvkBFFdUj0pBsj56vLGJkvoCyL9ss8lLfYgtV+hCK5aXmu
-   Q==;
-X-CSE-ConnectionGUID: ZUP59z1eTI2YEcS9BTlLZA==
-X-CSE-MsgGUID: Het6v8EkR5KuveHWIg8EqQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="63351727"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="63351727"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 23:18:06 -0700
-X-CSE-ConnectionGUID: 61QiRcVBRhaW/fx0UykyOw==
-X-CSE-MsgGUID: SyFgvC+DRVaCzbOgdTJ5wg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="157624492"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa004.fm.intel.com with ESMTP; 24 Jun 2025 23:18:00 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUJSI-000So2-0t;
-	Wed, 25 Jun 2025 06:17:58 +0000
-Date: Wed, 25 Jun 2025 14:17:41 +0800
-From: kernel test robot <lkp@intel.com>
-To: Pengyu Luo <mitltlatltl@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Eric Biggers <ebiggers@google.com>, Len Brown <len.brown@intel.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Ingo Molnar <mingo@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
-	Joel Granados <joel.granados@kernel.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Pengyu Luo <mitltlatltl@gmail.com>,
-	Hong Zhu <vanyang@smail.nju.edu.cn>
-Subject: Re: [PATCH 3/4] arm64: dts: qcom: sc8280xp: Add initial support for
- Ntmer TW220
-Message-ID: <202506251320.oOPGzTPQ-lkp@intel.com>
-References: <20250617092929.1492750-4-mitltlatltl@gmail.com>
+	s=arc-20240116; t=1750832465; c=relaxed/simple;
+	bh=1lTz6DqeOe8NPoTeAl41EHOZtPKHD6BUVZH0lZxc7yU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=mkBWYZeQxtcDdTNyPb/L+su0T/NQ7u75XD1z1IHKxn+cARHsdMGzAAG/l8GbQ1d42aDU2feML0hn6iYpCbAprNjTcFdlJUuW565N1JczIoTyKcaNjFcB5XEBpwqF+WCmcySwUnjz5od5vKlCy52YbZoPa/kdy+QKUu/rQw2R5k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3df309d9842so21636365ab.3
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 23:21:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750832463; x=1751437263;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HqyM0hNOcM/LlydT1TMBUQpwK8UMds3nkjKr8/fsXP0=;
+        b=P9kwjb8mVIZe+azPbYoBVV60JRV9j5rqGJXVGRovkJ7G8hyWlTpijflI/z83M46OzX
+         OIVHNiSlrxZyZp4LJhGWSVZJrTfV6zykw9F81Yc3QePC/ChaG36CXRkPlozuUt5Sh0rS
+         1AJ/gHYuVaXSDS4RO+IxY3NexTBpg2X1wOWRWQKxRnf0/gwaoKOkEhsAlp0PurV2W8o/
+         +b5BTWlw83mWknSq6jsb4HO7s5Ns/or1bNH0B9fJN3tGlqVY45AbsJP+Dk0AFOGQsWSm
+         K+tVY25PEc72WwTdxrtpNs5n8/V0qKX8ZJ9haXEVLEd0KXD6cbaN2scu1AXKHYzL1YuR
+         Hc/w==
+X-Forwarded-Encrypted: i=1; AJvYcCWfsq++HiajdqLSKkhzYME+OLemYjzYwly406LZkveiZTrkf8YrprYCc00NYzi7G4R2nyo2GchXtr3P7l4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyK8mu+q3pe7xGc/dRhIO3uSEqTQOewBLHhQKRpTkEhB1oLBv3
+	+2oRyaYTYIyvwgHGv/KUQSrMadE3UNF+xCAYfN9d1eYj612UFaHHOZYxwsFBcUmRTNIPWu+uPL5
+	kZei8bb9JhKfThIv1Kc2t/k9C3ZkkIFQWONhw3/T7+DMUGpnjXGHRcwErsH0=
+X-Google-Smtp-Source: AGHT+IHc8iivZd6hcCj7E9rk0RuOzYsvdSvd9Jrs0YqDjRK9dLnfn2BWapixUX0XZE4Xr8vwR2bPQ25Ia/InkJDJAVGMt6lGeReh
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617092929.1492750-4-mitltlatltl@gmail.com>
+X-Received: by 2002:a05:6e02:2181:b0:3dd:d6c2:51fb with SMTP id
+ e9e14a558f8ab-3df329224b9mr21658345ab.10.1750832462766; Tue, 24 Jun 2025
+ 23:21:02 -0700 (PDT)
+Date: Tue, 24 Jun 2025 23:21:02 -0700
+In-Reply-To: <20250625054430.67623-1-enjuk@amazon.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685b954e.050a0220.2303ee.0015.GAE@google.com>
+Subject: Re: [syzbot] [hams?] KASAN: slab-use-after-free Read in rose_get_neigh
+From: syzbot <syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com>
+To: enjuk@amazon.com, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Pengyu,
+Hello,
 
-kernel test robot noticed the following build errors:
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.16-rc3 next-20250624]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Reported-by: syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com
+Tested-by: syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Pengyu-Luo/dt-bindings-vendor-prefixes-Add-Ntmer/20250617-173338
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20250617092929.1492750-4-mitltlatltl%40gmail.com
-patch subject: [PATCH 3/4] arm64: dts: qcom: sc8280xp: Add initial support for Ntmer TW220
-config: arm64-randconfig-001-20250624 (https://download.01.org/0day-ci/archive/20250625/202506251320.oOPGzTPQ-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project e04c938cc08a90ae60440ce22d072ebc69d67ee8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250625/202506251320.oOPGzTPQ-lkp@intel.com/reproduce)
+Tested on:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506251320.oOPGzTPQ-lkp@intel.com/
+commit:         7595b66a Merge tag 'selinux-pr-20250624' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14204f0c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4ec8b4e4d31ae914
+dashboard link: https://syzkaller.appspot.com/bug?extid=e04e2c007ba2c80476cb
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1469b70c580000
 
-All errors (new ones prefixed by >>):
-
->> Error: arch/arm64/boot/dts/qcom/sc8280xp-ntmer-tw220.dts:751.1-10 Label or path gpi_dma0 not found
->> Error: arch/arm64/boot/dts/qcom/sc8280xp-ntmer-tw220.dts:755.1-10 Label or path gpi_dma1 not found
->> Error: arch/arm64/boot/dts/qcom/sc8280xp-ntmer-tw220.dts:759.1-10 Label or path gpi_dma2 not found
->> FATAL ERROR: Syntax error parsing input tree
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Note: testing is done by a robot and is best-effort only.
