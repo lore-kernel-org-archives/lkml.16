@@ -1,140 +1,260 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D36F29A303;
-	Wed, 25 Jun 2025 09:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A007E2066CE
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:46:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750844744; cv=none; b=tO02ZQPHU+cK5fC6Mh1/ChdAsKTNjYL2TkYgR/kYEqt5gTo5o5Bv84addc+MBodO6Klz9nUDufRU1EQGYbnRWuWoKO9eFCJW5lAnli0hP+45qJ+RqML8isi9vMvFdYnHIOmAL9q+gh81l+71Zzo+nEO4521iQXqKaI+QJpZ3zIU=
+	t=1750844790; cv=none; b=o7vlzyfpRUYlpK1MrLZkpdJ2OIHPgXGKS93YgzFRspEHkgw6ZNJTyDWxkr4QBdXFtDtDAXra7TEhHIVWD4rRZ6W1ZBA6RAsxVLJBXA6D6yBG6PbFvr/U1KvbhB6kr3lLPDrvEVoncEziImlOU8Q3ewBe+G+/I7wZAQbD3+9/dlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750844744; c=relaxed/simple;
-	bh=WGq9BnLFRlvgaj6JRyQGZWMVZ81/AYyKEllbs2pFfUQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p5dYSXqItUODp679RtJR7X9+KO826PbgxDzbgp54STqNt7l0tYZeQgGaFrzL3VBW4RTsWSkq8VZ+GJzsHe/2otby6S1xgHro6WhgnApRimZwh+CiZqws1BKnR3aHRsGneFNMzDYOlhEc2zJ0sIWfuInJ1ksAAHEUeAqZxEE68KQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=GBU4AKGc; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750844790; c=relaxed/simple;
+	bh=VahF800RD6awzaPHIvyJkfnSmFed4yTzKvqtc6h4VSY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=L3voto5Lqd/9JGmWnNJIlxmlL9tGx5UEB6VLhWJQ0xzb4YaTWhzzrPcv/jCl4r1oqSUu5qkTD+aLr9K+8vM4xo20ytyiyUcaVKODQ4HbsFZagRaXtlQg62I3nhyMX9l7akNh8XHwMIoYOCFTQn5tpdaX0+qPs/L/7bwb5e50/xI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dq9LtvWA; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="GBU4AKGc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750844739;
-	bh=WGq9BnLFRlvgaj6JRyQGZWMVZ81/AYyKEllbs2pFfUQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GBU4AKGca8KnCekeyVnEecyJmPoVJ7wlpqhQnR8iWTyHHoOmXtft89FJs/f+zClQV
-	 hbB+VfZY7un9VwtAeD07AeKh1UjGVKVG0FXBySpj02ixuj48s0NNREvPRmj0d9EPD7
-	 hSIJOAuxT7B8J5+oGL74kB+VAGj6Ot/Aizw8daZNKJV66x8egWZH/vgxHYgxIcSZaa
-	 WmI79YohY/fz4whCsSj0MdwFqEGHo978IvhMhR13I0Nov+bqXurBJuTpdWIgcPj42X
-	 3v82NQL/5x4kqHRLDpAuyf0qYvJ43Ib9grHcg+NmAWGMum2+fmyXCcLkwX19utj+VX
-	 As/O7jLCKPSbg==
-Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id B9EBB17E0CE3;
-	Wed, 25 Jun 2025 11:45:38 +0200 (CEST)
-Message-ID: <9fc32523-5009-4f48-8d82-6c3fd285801d@collabora.com>
-Date: Wed, 25 Jun 2025 11:45:38 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dq9LtvWA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750844789; x=1782380789;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=VahF800RD6awzaPHIvyJkfnSmFed4yTzKvqtc6h4VSY=;
+  b=Dq9LtvWAJyv8Do22ksoIMS8pFKJgBPNfFVrCk+SAfVdaSaGdWbWOL7L5
+   JPphI7ENi0Z/dRGhxeKv1v7N3s/T7IA9r80pZGWz0WYY40ot91xzfJcKe
+   Y9cFF+pCjhBaeEQGre2Yq0ZRF1I2AZJU8e8u7ZVE4n80w90fap+HcFTQj
+   dR2M8S87P9kQk8C8WPjo9VUPazs1CjkHEcurqZBCb57AB5cbETI1CLByr
+   CWv3Br8/NW4gUH9QSvOdtYTx/9Dr4s7R7sWl9EZRYARNKAxfbMV42sxAk
+   TSGD59Nd9Zcw1GVFmBDRSTEPZ16L66HP3ICzNC9C8M5KSfEuVHlDP7LMH
+   Q==;
+X-CSE-ConnectionGUID: YUTWFZ93SmyeksnmRojK3Q==
+X-CSE-MsgGUID: QGmmclJrSqOxzlZ8fA94RA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52337923"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="52337923"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 02:46:28 -0700
+X-CSE-ConnectionGUID: UA3V2zXlRkS4ZS9/NnWkrQ==
+X-CSE-MsgGUID: /m4EyaggQxm2KjJxNyFJVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="151681300"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa006.jf.intel.com with ESMTP; 25 Jun 2025 02:46:25 -0700
+Date: Wed, 25 Jun 2025 17:38:48 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: jgg@nvidia.com, jgg@ziepe.ca, kevin.tian@intel.com, will@kernel.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	joro@8bytes.org, robin.murphy@arm.com, shuah@kernel.org,
+	nicolinc@nvidia.com, aik@amd.com, dan.j.williams@intel.com,
+	baolu.lu@linux.intel.com, yilun.xu@intel.com
+Subject: Re: [PATCH v2 3/4] iommufd: Destroy vdevice on idevice destroy
+Message-ID: <aFvDqAGAM3RbPh8G@yilunxu-OptiPlex-7050>
+References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
+ <20250623094946.1714996-4-yilun.xu@linux.intel.com>
+ <yq5a1pr85noj.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/29] dt-bindings: clock: mediatek: Describe MT8196
- peripheral clock controllers
-To: Krzysztof Kozlowski <krzk@kernel.org>, Laura Nao
- <laura.nao@collabora.com>, mturquette@baylibre.com, sboyd@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- matthias.bgg@gmail.com, p.zabel@pengutronix.de, richardcochran@gmail.com
-Cc: guangjie.song@mediatek.com, wenst@chromium.org,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-mediatek@lists.infradead.org, netdev@vger.kernel.org,
- kernel@collabora.com
-References: <20250624143220.244549-1-laura.nao@collabora.com>
- <20250624143220.244549-10-laura.nao@collabora.com>
- <7dfba01a-6ede-44c2-87e3-3ecb439b48e3@kernel.org>
- <284a4ee5-806b-45f9-8d57-d02ec291e389@collabora.com>
- <0870a2ba-936b-4eb2-a570-f2c9dea471b8@kernel.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Content-Language: en-US
-In-Reply-To: <0870a2ba-936b-4eb2-a570-f2c9dea471b8@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq5a1pr85noj.fsf@kernel.org>
 
-Il 25/06/25 10:57, Krzysztof Kozlowski ha scritto:
-> On 25/06/2025 10:20, AngeloGioacchino Del Regno wrote:
->> Il 24/06/25 18:02, Krzysztof Kozlowski ha scritto:
->>> On 24/06/2025 16:32, Laura Nao wrote:
->>>> +  '#reset-cells':
->>>> +    const: 1
->>>> +    description:
->>>> +      Reset lines for PEXTP0/1 and UFS blocks.
->>>> +
->>>> +  mediatek,hardware-voter:
->>>> +    $ref: /schemas/types.yaml#/definitions/phandle
->>>> +    description:
->>>> +      On the MT8196 SoC, a Hardware Voter (HWV) backed by a fixed-function
->>>> +      MCU manages clock and power domain control across the AP and other
->>>> +      remote processors. By aggregating their votes, it ensures clocks are
->>>> +      safely enabled/disabled and power domains are active before register
->>>> +      access.
->>>
->>> Resource voting is not via any phandle, but either interconnects or
->>> required opps for power domain.
->>
->> Sorry, I'm not sure who is actually misunderstanding what, here... let me try to
->> explain the situation:
->>
->> This is effectively used as a syscon - as in, the clock controllers need to perform
->> MMIO R/W on both the clock controller itself *and* has to place a vote to the clock
->> controller specific HWV register.
+On Wed, Jun 25, 2025 at 12:10:28PM +0530, Aneesh Kumar K.V wrote:
+> Xu Yilun <yilun.xu@linux.intel.com> writes:
 > 
-> syscon is not the interface to place a vote for clocks. "clocks"
-> property is.
+> > Destroy iommufd_vdevice(vdev) on iommufd_idevice(idev) destroy so that
+> > vdev can't outlive idev.
+> >
+> > iommufd_device(idev) represents the physical device bound to iommufd,
+> > while the iommufd_vdevice(vdev) represents the virtual instance of the
+> > physical device in the VM. The lifecycle of the vdev should not be
+> > longer than idev. This doesn't cause real problem on existing use cases
+> > cause vdev doesn't impact the physical device, only provides
+> > virtualization information. But to extend vdev for Confidential
+> > Computing(CC), there are needs to do secure configuration for the vdev,
+> > e.g. TSM Bind/Unbind. These configurations should be rolled back on idev
+> > destroy, or the external driver(VFIO) functionality may be impact.
+> >
+> > Building the association between idev & vdev requires the two objects
+> > pointing each other, but not referencing each other. This requires
+> > proper locking. This is done by reviving some of Nicolin's patch [1].
+> >
+> > There are 3 cases on idev destroy:
+> >
+> >   1. vdev is already destroyed by userspace. No extra handling needed.
+> >   2. vdev is still alive. Use iommufd_object_tombstone_user() to
+> >      destroy vdev and tombstone the vdev ID.
+> >   3. vdev is being destroyed by userspace. The vdev ID is already freed,
+> >      but vdev destroy handler is not complete. The idev destroy handler
+> >      should wait for vdev destroy completion.
+> >
+> > [1]: https://lore.kernel.org/all/53025c827c44d68edb6469bfd940a8e8bc6147a5.1729897278.git.nicolinc@nvidia.com/
+> >
+> > Original-by: Nicolin Chen <nicolinc@nvidia.com>
+> > Original-by: Aneesh Kumar K.V (Arm) <aneesh.kumar@kernel.org>
+> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
 > 
->>
->> This is done for MUX-GATE and GATE clocks, other than for power domains.
->>
->> Note that the HWV system is inside of the power domains controller, and it's split
->> on a per hardware macro-block basis (as per usual MediaTek hardware layout...).
->>
->> The HWV, therefore, does *not* vote for clock *rates* (so, modeling OPPs would be
->> a software quirk, I think?), does *not* manage bandwidth (and interconnect is for
->> voting BW only?), and is just a "switch to flip".
-> 
-> That's still clocks. Gate is a clock.
-> 
->>
->> Is this happening because the description has to be improved and creating some
->> misunderstanding, or is it because we are underestimating and/or ignoring something
->> here?
->>
-> 
-> Other vendors, at least qcom, represent it properly - clocks. Sometimes
-> they mix up and represent it as power domains, but that's because
-> downstream is a mess and because we actually (at upstream) don't really
-> know what is inside there - is it a clock or power domain.
-> 
+> This is the latest version I have. But as Jason suggested we can
+> possibly switch to short term users to avoid parallel destroy returning
+> EBUSY.
 
-....but the hardware voter cannot be represented as a clock, because you use it
-for clocks *or* power domains (but at the same time, and of course in different
-drivers, and in different *intertwined* registers).
+We can discuss in that thread, I have the same question as Kevin.
 
-So the hardware voter itself (and/or bits inside of its registers) cannot be
-represented as a clock :\
+> I am using a mutex lock to block parallel vdevice destroy.
 
-In the context of clocks, it's used for clocks, (and not touching power domains at
-all), but in the context of power domains it's used for power domains (and not
-touching clocks at all).
+I don't find reason to add a new lock rather than reuse the
+idev->igroup->lock, which is already reviewed in Nicolin's series.
 
-I'm not sure what qcom does - your reply makes me think that they did it such that
-the clocks part is in a MMIO and the power domains part is in a different MMIO,
-without having clock/pd intertwined voting registers...
+[...]
 
-Still not sure what to do here, then...
+> diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
+> index 3df468f64e7d..fd82140e6320 100644
+> --- a/drivers/iommu/iommufd/main.c
+> +++ b/drivers/iommu/iommufd/main.c
+> @@ -81,14 +81,16 @@ void iommufd_object_abort_and_destroy(struct iommufd_ctx *ictx,
+>  struct iommufd_object *iommufd_get_object(struct iommufd_ctx *ictx, u32 id,
+>  					  enum iommufd_object_type type)
+>  {
+> +	XA_STATE(xas, &ictx->objects, id);
+>  	struct iommufd_object *obj;
+>  
+>  	if (iommufd_should_fail())
+>  		return ERR_PTR(-ENOENT);
+>  
+>  	xa_lock(&ictx->objects);
+> -	obj = xa_load(&ictx->objects, id);
+> -	if (!obj || (type != IOMMUFD_OBJ_ANY && obj->type != type) ||
+> +	obj = xas_load(&xas);
+> +	if (!obj || xa_is_zero(obj) ||
 
-Cheers,
-Angelo
+xas_load() & filter out zero entries, then what's the difference from
+xa_load()?
+
+> +	    (type != IOMMUFD_OBJ_ANY && obj->type != type) ||
+>  	    !iommufd_lock_obj(obj))
+>  		obj = ERR_PTR(-ENOENT);
+>  	xa_unlock(&ictx->objects);
+
+[...]
+
+>  static int iommufd_destroy(struct iommufd_ucmd *ucmd)
+>  {
+> +	int ret;
+>  	struct iommu_destroy *cmd = ucmd->cmd;
+> +	struct iommufd_object *obj;
+> +	struct iommufd_device *idev = NULL;
+> +
+> +	obj = iommufd_get_object(ucmd->ictx, cmd->id, IOMMUFD_OBJ_ANY);
+> +	/* Destroying vdevice requires an idevice lock */
+> +	if (!IS_ERR(obj) && obj->type == IOMMUFD_OBJ_VDEVICE) {
+> +		struct iommufd_vdevice *vdev =
+> +			container_of(obj, struct iommufd_vdevice, obj);
+> +		/*
+> +		 * since vdev have an refcount on idev, this is safe.
+> +		 */
+> +		idev = vdev->idev;
+> +		mutex_lock(&idev->lock);
+> +		/* drop the additonal reference taken above */
+> +		iommufd_put_object(ucmd->ictx, obj);
+> +	}
+> +
+> +	ret = iommufd_object_remove(ucmd->ictx, NULL, cmd->id, 0);
+> +	if (idev)
+> +		mutex_unlock(&idev->lock);
+
+I'm trying best not to add vdev/idev specific things to generic
+code. I also don't prefer adding a idev specific lock around generic
+object remove flow. That makes idev/vdev way to special. So for these
+locking things, I prefer more to Nicolin's v5 and revives them.
+
+>  
+> -	return iommufd_object_remove(ucmd->ictx, NULL, cmd->id, 0);
+> +	return ret;
+>  }
+>  
+
+[...]
+
+> @@ -147,10 +160,17 @@ int iommufd_vdevice_alloc_ioctl(struct iommufd_ucmd *ucmd)
+>  	if (rc)
+>  		goto out_abort;
+>  	iommufd_object_finalize(ucmd->ictx, &vdev->obj);
+> -	goto out_put_idev;
+> +	/* don't allow idev free without vdev free */
+> +	refcount_inc(&idev->obj.users);
+
+IIRC, it has been suggested no long term refcount to kernel created
+object. Besides, you actually disallow nothing.
+
+> +	vdev->idev = idev;
+> +	/* vdev lifecycle now managed by idev */
+> +	idev->vdev = vdev;
+> +	goto out_put_idev_unlock;
+>  
+>  out_abort:
+>  	iommufd_object_abort_and_destroy(ucmd->ictx, &vdev->obj);
+> +out_put_idev_unlock:
+> +	mutex_unlock(&idev->lock);
+>  out_put_idev:
+>  	iommufd_put_object(ucmd->ictx, &idev->obj);
+>  out_put_viommu:
+> diff --git a/drivers/vfio/pci/vfio_pci_core.c b/drivers/vfio/pci/vfio_pci_core.c
+> index 6328c3a05bcd..0bf4f8b7f8d2 100644
+> --- a/drivers/vfio/pci/vfio_pci_core.c
+> +++ b/drivers/vfio/pci/vfio_pci_core.c
+> @@ -694,6 +694,12 @@ void vfio_pci_core_close_device(struct vfio_device *core_vdev)
+>  #if IS_ENABLED(CONFIG_EEH)
+>  	eeh_dev_release(vdev->pdev);
+>  #endif
+> +
+> +	/* destroy vdevice which involves tsm unbind before we disable pci disable */
+> +	if (core_vdev->iommufd_device)
+> +		iommufd_device_tombstone_vdevice(core_vdev->iommufd_device);
+
+Ah.. I think all our effort to destroy vdevice on idevice destruction
+is to hide the sequence details from VFIO.
+
+> +
+> +	/* tsm unbind should happen before this */
+>  	vfio_pci_core_disable(vdev);
+
+I did mention there is still issue when vdevice lifecycle problem is
+solved. That VFIO for now do device disable configurations before
+iommufd_device_unbind() and cause problem. But my quick idea would
+be (not tested):
+
+@@ -544,12 +544,14 @@ static void vfio_df_device_last_close(struct vfio_device_file *df)
+
+        lockdep_assert_held(&device->dev_set->lock);
+
+-       if (device->ops->close_device)
+-               device->ops->close_device(device);
+        if (iommufd)
+                vfio_df_iommufd_unbind(df);
+        else
+                vfio_device_group_unuse_iommu(device);
++
++       if (device->ops->close_device)
++               device->ops->close_device(device);
+
+>  
+>  	mutex_lock(&vdev->igate);
+> diff --git a/include/linux/iommufd.h b/include/linux/iommufd.h
+> index 34b6e6ca4bfa..8de3d903bfc0 100644
+> --- a/include/linux/iommufd.h
+> +++ b/include/linux/iommufd.h
+> @@ -63,6 +63,7 @@ void iommufd_device_detach(struct iommufd_device *idev, ioasid_t pasid);
+>  
+>  struct iommufd_ctx *iommufd_device_to_ictx(struct iommufd_device *idev);
+>  u32 iommufd_device_to_id(struct iommufd_device *idev);
+> +void iommufd_device_tombstone_vdevice(struct iommufd_device *idev);
+>  
+>  struct iommufd_access_ops {
+>  	u8 needs_pin_pages : 1;
