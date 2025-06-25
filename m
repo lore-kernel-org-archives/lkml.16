@@ -1,115 +1,184 @@
-Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 511D927C15C;
-	Wed, 25 Jun 2025 08:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACF8275B05;
+	Wed, 25 Jun 2025 08:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750840600; cv=none; b=mHxujKopVyWREexParCcqYy9xAHfT3yZe94yzFVrWvUjHWUCwt2Aear04h7W06YOXRBqREjsqOzFKqUVWDJcY7HCcvnFYbzXOaQb5unuWixsOBaOc5HCKpZ9Xgqwo3A4rI7aX6kaDzBzyXwxaqtwlBALnWTFzeRVduRi5tXD2zY=
+	t=1750840608; cv=none; b=spKLMAwMQkVsyzXeVHut6OBwLIkYRoAc8kX6Gi0Wj+MPfhbPZlTkivwqJFXTzPh+LKFt3VCSHr28RomHohMsKDDbLuUyzb0hmonJVigvBMgLgG/i4G3zWtXD/kXc2YCdiWNJT1mOXlINy2Mrg9DeBce6v+bYISFnCuHFnNVzm28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750840600; c=relaxed/simple;
-	bh=qCNgTNRRzKT+qYd/55FmcZR0Rrpdw8ahO3hzjmRU+/k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mTkIwDpQnoAtPgIE1Lt8nNyVFjenPHRDejPASCKA0LYSnDsq3j6G5AKq/0CotGKR8FHUgkggHeaddOEZV5DAZ5mTFXVfhBi5s8Lw300Sf2Jtdiu9Z9z6Nxd24R1hqt5MbELB6gwo7xoYY0+Rlwa8PVLMPrqp18y8Ou+Dk+D/6r4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
-Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
-	by leonov.paulk.fr (Postfix) with ESMTPS id 5BAF81F00055;
-	Wed, 25 Jun 2025 08:36:33 +0000 (UTC)
-Received: by laika.paulk.fr (Postfix, from userid 65534)
-	id D4FEAAC7A37; Wed, 25 Jun 2025 08:36:31 +0000 (UTC)
-X-Spam-Level: 
-Received: from shepard (unknown [192.168.1.1])
-	by laika.paulk.fr (Postfix) with ESMTPSA id 0CA55AC7A32;
-	Wed, 25 Jun 2025 08:36:30 +0000 (UTC)
-Date: Wed, 25 Jun 2025 10:36:28 +0200
-From: Paul Kocialkowski <paulk@sys-base.io>
-To: Kuba =?utf-8?Q?Szczodrzy=C5=84ski?= <kuba@szczodrzynski.pl>
-Cc: Maxime Ripard <mripard@kernel.org>,
-	Samuel Holland <samuel@sholland.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 2/5] drm/sun4i: Support LVDS using MIPI DSI combo D-PHY
-Message-ID: <aFu1DC4eGtYmAuSf@shepard>
-References: <20250221161751.1278049-1-kuba@szczodrzynski.pl>
- <20250221161751.1278049-3-kuba@szczodrzynski.pl>
- <aFutWCScsMNgXUAu@shepard>
+	s=arc-20240116; t=1750840608; c=relaxed/simple;
+	bh=EbK0U+OP5CIqfg71sOAF4oAM+5LmkeILjjLQ3geqK5s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EChmczUceWR1raU8nR5IZ0qXJdPftEdCibO9qbERnSwR6k4SC7aou3g7N0uWtN+RTuK3f3CeXIDm/0bkBFmpVrO2rVGUM6Zw6n5jSilw2jkrWVLjl9y3ZO1ILbNa41GVmRjkrLqPI2YH0moHxlRdS+kxIaVOBtumfsKFvG1y+v0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=SqHnV/Gq; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="SqHnV/Gq"
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P6nksJ008379;
+	Wed, 25 Jun 2025 10:36:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	5iWKPTMFpX+lonpPcbekR/V8/MBsHrjUivVDN79opdU=; b=SqHnV/GqxnozxlFn
+	ObEanHvfEI2F+FZtdB/7rtcovax1mQOyY1mVLlQ1BSYzN3yIdeS4b9QiEoUlf22n
+	cTk3tMwbAYEgr0NzY+C6Hu4ePlqFtc4ohf3c5cI1MVAtveM2SqSkuPOgaXVJl9t2
+	lNCnLxNPGVWfXjSSFjGP4wGMV2SqlxyIdFceC6pGRDWYwmmr/huHgqdJtS0AtyK8
+	zzxhKbVp4Gp7CwnIsip3EpIf8VWMfTaCJeNLMvIY5aPom3oUeQlg0pEMpwG3qDpL
+	WCHhLTWw5LXNeUKngpRNl/Swhe1B9upvwpikOj5INAqO+91z2RN6R3qE/iQ39qUX
+	HZIp/w==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dkmjrekf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 10:36:23 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id A845540047;
+	Wed, 25 Jun 2025 10:35:03 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 36FE8B0C401;
+	Wed, 25 Jun 2025 10:33:50 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 25 Jun
+ 2025 10:33:49 +0200
+Message-ID: <e2400615-f21e-40bf-84f8-384242632193@foss.st.com>
+Date: Wed, 25 Jun 2025 10:33:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="mMddwFhTjlnTEsAi"
-Content-Disposition: inline
-In-Reply-To: <aFutWCScsMNgXUAu@shepard>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
+To: Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will@kernel.org>,
+        Mark
+ Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Gabriel Fernandez
+	<gabriel.fernandez@foss.st.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>
+References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
+ <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
+ <9cb1575e-ae27-4a78-adb7-8a9e7072375e@kernel.org>
+ <5044c733-8836-43bd-85d7-0f552b000fb1@foss.st.com>
+ <49483568-b287-45ca-a66c-1e0ad0490225@kernel.org>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <49483568-b287-45ca-a66c-1e0ad0490225@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_01,2025-06-23_07,2025-03-28_01
 
+On 6/25/25 08:35, Krzysztof Kozlowski wrote:
+> On 24/06/2025 12:43, Clement LE GOFFIC wrote:
+>> On 6/23/25 11:45, Krzysztof Kozlowski wrote:
+>> [...]
+>>
+>> Hi Krzysztof,
+>>
+>> Sorry I forgot to address comments below.
+>>
+>>>> +
+>>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp1 = {
+>>>> +	.regs = &stm32_ddr_pmu_regspec_mp1,
+>>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp1,
+>>>> +	.counters_nb = MP1_CNT_NB,
+>>>> +	.evt_counters_nb = MP1_CNT_NB - 1, /* Time counter is not an event counter */
+>>>> +	.time_cnt_idx = MP1_TIME_CNT_IDX,
+>>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp1,
+>>>> +};
+>>>> +
+>>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp2 = {
+>>>> +	.regs = &stm32_ddr_pmu_regspec_mp2,
+>>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp2,
+>>>> +	.counters_nb = MP2_CNT_NB,
+>>>> +	.evt_counters_nb = MP2_CNT_NB - 1, /* Time counter is an event counter */
+>>>> +	.time_cnt_idx = MP2_TIME_CNT_IDX,
+>>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp2,
+>>>> +};
+>>>> +
+>>>> +static const struct dev_pm_ops stm32_ddr_pmu_pm_ops = {
+>>>> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, stm32_ddr_pmu_device_resume)
+>>>> +};
+>>>> +
+>>>> +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
+>>>> +	{
+>>>> +		.compatible = "st,stm32mp131-ddr-pmu",
+>>>> +		.data = &stm32_ddr_pmu_cfg_mp1
+>>>> +	},
+>>>> +	{
+>>>> +		.compatible = "st,stm32mp151-ddr-pmu",
+>>>> +		.data = &stm32_ddr_pmu_cfg_mp1
+>>>
+>>> So devices are compatible, thus express it correctly and drop this.
+>>
+>> Ok so I assume this comes with your comment in the bindings and
+>> basically don't get you point here.
+>> Can you please be more precise ?
+> 
+> Express compatibility in the bindings, like 90% of SoCs are doing, so
+> with proper fallback and drop this entry in the table. My comment was
+> pretty precise, because this is completely standard pattern, also used
+> already in stm32.
+> 
 
---mMddwFhTjlnTEsAi
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok I remember your discussion with Alex in my V1 of pinctrl-hdp :
+https://lore.kernel.org/all/1de58672-5355-4b75-99f4-c48687017d2f@kernel.org/
 
-On Wed 25 Jun 25, 10:03, Paul Kocialkowski wrote:
-> On Fri 21 Feb 25, 17:17, Kuba Szczodrzy=C5=84ski wrote:
-> > @@ -183,6 +184,8 @@ static void sun4i_tcon_lvds_set_status(struct sun4i=
-_tcon *tcon,
-> >  	} else {
-> >  		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
-> >  				   SUN4I_TCON0_LVDS_IF_EN, 0);
->=20
-> Does the T113-S3/D1 also have LVDS support in TCON regsiters?
-> My understanding is that it only has the combo-phy, so this register write
-> should not take place.
->=20
-> I think it would be easier to just move this to a common callback for use=
-rs of
-> the tcon0 lvds phy and always call=20
+Does it suits you :
+In the SoC DT:
+MP13: compatible = "st,stm32mp131-ddr-pmu", "st,stm32mp1-ddr-pmu";
+MP15: compatible = "st,stm32mp151-ddr-pmu", "st,stm32mp1-ddr-pmu";
+MP25: compatible = "st,stm32mp251-ddr-pmu";
 
-Nevermind this comment, the LVDS_IF writes are actually necessary and
-independent from the LVDS PHY configuration.
+In the bindings:
+properties:
+   compatible:
+     enum:
+       - st,stm32mp1-ddr-pmu
+       - st,stm32mp131-ddr-pmu
+       - st,stm32mp151-ddr-pmu
+       - st,stm32mp251-ddr-pmu
 
-All the best,
+In the driver:
+static const struct of_device_id stm32_ddr_pmu_of_match[] = {
+	{
+		.compatible = "st,stm32mp1-ddr-pmu",
+		.data = &stm32_ddr_pmu_cfg_mp1
+	},
+	{
+		.compatible = "st,stm32mp251-ddr-pmu",
+		.data = &stm32_ddr_pmu_cfg_mp2
+	},
+	{ },
+};
 
-Paul
+Best regards,
+Clément
 
---=20
-Paul Kocialkowski,
+> Best regards,
+> Krzysztof
 
-Independent contractor - sys-base - https://www.sys-base.io/
-Free software developer - https://www.paulk.fr/
-
-Expert in multimedia, graphics and embedded hardware support with Linux.
-
---mMddwFhTjlnTEsAi
-Content-Type: application/pgp-signature; name=signature.asc
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmhbtQwACgkQhP3B6o/u
-lQxNJQ/+NRLOuDtviPYOloG5xp+nX3B4qO2FXp19IWGBOrz/SEL34AfiP1Bb30fu
-7uwvYvURCKtY9J68zna5ovG4mex4pLo5sA81xZVc/1Cs5+7pMV2F2ixnPkAWHP6i
-um3pIEKP5amDFP9DCAVAchAAQdZHD5D4+FZlu9Mw5CCWt0XToXkUpmfcExA07kzD
-KnlpKPJhc1DPgXku5izWrAkrgAC0k8uMlENVclI0djMw67aO7vOyqIJpABp5ZOe4
-oHIsanTWy3/2PWx2RyrXdvrXwUaZRcJUmbezq+VOxyqtVY+IytVWHj13l2CzL+eu
-dyKm538s55HpwBvEbo9vYiFvLMRaMct637GGK9Z3TG2khO6LJHtBZ8nvfEHCBVmu
-vUxTCl6/Mm7HEm6Wkg2wOzeBc94OsYYib2WDnPJ2TnmB2vWua9Nk96t5TQ48qOQT
-J/N1sRyvy3iBX2U+gYCS9bb2SmQ+yVDSoIulX25hTqypn5peaJgQh9miq4UtC21M
-4F73RP0zjS6Dn/1Hw7lE3l/M7Pd169b5ymguuxorKg+rGDpz62TMsClNQr/tPg9M
-NPUZK7YW4s+O3VOXjkAy/aj+iQ8gTVvifRn14lB+lYQFPcnb82l2Ra+x6YnRTo//
-6VzXsjUgV9sGRYKxcau8DQPfRDfKrZNpruYazhAOToyO96tvKiY=
-=o01Z
------END PGP SIGNATURE-----
-
---mMddwFhTjlnTEsAi--
