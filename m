@@ -1,146 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF1C2D6626;
-	Wed, 25 Jun 2025 11:26:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 348192BF018;
+	Wed, 25 Jun 2025 11:26:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750850790; cv=none; b=rLYdPqpk8aO3QBiO/Ok5r8IYB+sCH9OBKwnq0easTxMigtgvrR1U1X9m1o6ojEXnOSyAGUTyuPociOHKJFEjT1NDTq66SBXUITo1Z0cneD2dQ1FvDyCkpizUXIpIMlzq3fQ780t9QvSwpdizcLKMOSLbfHHBAB8teJBWyZM3nLw=
+	t=1750850808; cv=none; b=Gq6xN2Vyyye5b886WRcLR38vdDFf+Cs1EGYZcOBGBzPyZLukdZnJi64ersEfrTUXeEHTXx/0zYRI5mr0an8mYWOJp7/lKKZ2ARyW+iNm62FtidV4oRaWEBVnWVypeBtNHQQjqvwvVEV4e7MRwQUAZm7xduRFR0yIptJ2yZBkja4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750850790; c=relaxed/simple;
-	bh=/AEnPXo1dA8qwf5CIu0xk7I0CHglYXCtZ9CYRjry6l8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=bM71cLpXArBVW0iou1IM8hJjKAhnddu9gHaqaiBvLG4/64H8S10Y2hblgpErE5wwtQ1IiJfzhYMPpfxJOAp7i0RvyNjLDArZ3A3Qj2WPQTp600U7UNjODRN04Crh9n/bKESmX0Miri8rJdcm1M6qq07aiqm7VWudQGB174tDbNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1VhB4oC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750850808; c=relaxed/simple;
+	bh=fwe9BBLMlu4VzpIL1O4aUOFuc3nVdJxZWfgog8pSUwI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=A4ua72O/3bVtBDKuFa6Mlnd4rvTaPnEyWj0cN04Mmwq/j4INPLpfLq7pIgiQFzEL3iqdjU1Q6W0c0DG1QplHW6/4kXDX7D8Cuw/uxbgsAktu894UJNQ91YIAWQS6JEUn0vcFtiE6dfK5NjNbNgMWupsJzTEJT5HOdQi+evYyrzw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=KusbOReh; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1VhB4oC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87511C4CEEA;
-	Wed, 25 Jun 2025 11:26:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750850789;
-	bh=/AEnPXo1dA8qwf5CIu0xk7I0CHglYXCtZ9CYRjry6l8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=S1VhB4oCwFp56rekUgYKd6f+8Wpmbr1vhPQmFkmjzZWBo9cfOlamDTba3WcN1HzF8
-	 KyIrkF3AdsMCAFP0CeMnAAeR4YtgqgAS8be615FtRpYgL4if3hzsfIySkCvAi6jQDB
-	 p5JhLn9bMlCuAz1kbk+DrJSgfvlaZrY3QMlmFFI/81Go2iJ5/O+VRES/Zo85m54t5a
-	 exDhD/l/CHYWuofJTk20OFqeRyuqrOF2nQzhFCsIlOye0erW6/vLyHrWjB2NCIWrwW
-	 oODvwyoRBIG818bZKoFEeet6vU25aCj7Nw0GFaw0H+IRy3jYxh0WLbqqFbJSwW+CBS
-	 Rfh3xkZuV2VNA==
-From: Mark Brown <broonie@kernel.org>
-Date: Wed, 25 Jun 2025 11:48:19 +0100
-Subject: [PATCH v6 28/28] KVM: arm64: selftests: Add SME to set_id_regs
- test
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="KusbOReh"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9379240E00CE;
+	Wed, 25 Jun 2025 11:26:42 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id QOZ3dyJqhmiV; Wed, 25 Jun 2025 11:26:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1750850799; bh=N4krg2nW69F/Z/Y1vJhF5JHhSPZNqedsWzEdZoS9FB4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=KusbORehXEpmuMQDnw08R59uZzhK5efmE6CsY5dC9f+4PUG7vh5I7jle+7rIQ8iU7
+	 vjs3zp0mUG+ArPkBIYRrYCa/F6ZXyg8UkGZ+tZ1TBv9ojtGjBoJ9jLu8mMrvrvIU1x
+	 5FbvS4/3JqUsrFSEjvRy95y5pQEbSTJsEFHlIZ1BgXVKbDlVCSBWBGLPy6qMB/6j+x
+	 36VCM8DdU5WI1KYJU+aFqFio6FO1CTt3858FCwb+WM2ZF9WaXs2oFiNqB9F0AUZNiZ
+	 yZesJbQiCqZ2VVNt+G+hGBiL/QkBXSTy2CAp7cV9pyiPiZgyocSeP3AAmMJ91cbveG
+	 W0aiTla/yei2M5k9jyksKVDwK6ZjBcgdRMk2DOZyHnsl5kSOwS7JeNKanHc+pNeS4j
+	 T+BDzFQ2INzZG1D2SayaSlBKXLsvwrdwkmQpPa1Wi3XI8ruRdaUF8TGEfRJGfXlcz0
+	 hkqO74aE3JfwH1u40p9DypdqONGQTHnuHzXYmwSyzaldRHaIHPWJn522+wkGNUeVPX
+	 0e4dUNul77GiJq/z6iOolS8+iCRj60wU4IMpTR6qFs3GHmQ1kE9U6l80IZAnvBATFv
+	 n5JqKuV4T2NLBzkNSNFA+dEtIEF3UCbfJkHcD1UYnKLkw7CNtElhW+sviyEBukwNix
+	 pxC2h/aOaH17XmPwCjbkI87w=
+Received: from zn.tnic (p57969c58.dip0.t-ipconnect.de [87.150.156.88])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1701A40E0169;
+	Wed, 25 Jun 2025 11:26:28 +0000 (UTC)
+Date: Wed, 25 Jun 2025 13:26:17 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Nikolay Borisov <nik.borisov@suse.com>
+Cc: Yazen Ghannam <yazen.ghannam@amd.com>, x86@kernel.org,
+	Tony Luck <tony.luck@intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Len Brown <lenb@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-edac@vger.kernel.org, Smita.KoralahalliChannabasappa@amd.com,
+	Qiuxu Zhuo <qiuxu.zhuo@intel.com>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v4 11/22] x86/mce: Define BSP-only init
+Message-ID: <20250625112617.GBaFvc2SdsGhEFPiYR@fat_crate.local>
+References: <20250624-wip-mca-updates-v4-0-236dd74f645f@amd.com>
+ <20250624-wip-mca-updates-v4-11-236dd74f645f@amd.com>
+ <fa56c7d9-cd93-47a5-bc48-0962b364d8be@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-kvm-arm64-sme-v6-28-114cff4ffe04@kernel.org>
-References: <20250625-kvm-arm64-sme-v6-0-114cff4ffe04@kernel.org>
-In-Reply-To: <20250625-kvm-arm64-sme-v6-0-114cff4ffe04@kernel.org>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
- Joey Gouly <joey.gouly@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, Will Deacon <will@kernel.org>, 
- Paolo Bonzini <pbonzini@redhat.com>, Jonathan Corbet <corbet@lwn.net>, 
- Shuah Khan <shuah@kernel.org>
-Cc: Dave Martin <Dave.Martin@arm.com>, Fuad Tabba <tabba@google.com>, 
- Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, 
- kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.15-dev-08c49
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3742; i=broonie@kernel.org;
- h=from:subject:message-id; bh=/AEnPXo1dA8qwf5CIu0xk7I0CHglYXCtZ9CYRjry6l8=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBoW9x6rNqzz5sGrNiRrIXrOWy+bwyOVKM58C21N
- 8UQF1abh0qJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCaFvcegAKCRAk1otyXVSH
- 0N0DB/9C9EuLoP1QX+nQpinl3+RPQkVA/LC6ibKQ/ADrljxkUPGGGzPd1i6TvLlJknrU6Vc4Nax
- WDtdGQKNgnTPy3sCEyI4C3+FgSGlHdBbbkgADugt9SKjXOL10CHbhQf+JMHP21/CLhiM70rXc1k
- zcC+isN7mi3oeWRgEXnU3koSXtr0NEPvmPdvraSFOd0YEvH9BdMPw5ucfSK+PBIXLcIGPng/i4A
- 5eWSFYfsbv8Dgk61y2B/4VJqJPcuIvTihfFprFmrQovxnackxM2n4xpiD64Ufm59EZEYbJBIzuO
- jVunrH2tpAizaubCJdtSHop4CQE7fKYbG96ae0Xij6ouEAoH
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <fa56c7d9-cd93-47a5-bc48-0962b364d8be@suse.com>
 
-Add coverage of the SME ID registers to set_id_regs, ID_AA64PFR1_EL1.SME
-becomes writable and we add ID_AA64SMFR_EL1 and it's subfields.
+On Wed, Jun 25, 2025 at 02:04:24PM +0300, Nikolay Borisov wrote:
+> nit: Why use cpu_feature_enabled VS say boot_cpu_has since none of the 3
+> features are defined in cpufeaturemasks.h, meaning that cpu_feature_enabled
+> is essentially static_cpu_has, given that this is not a fast path?
+> 
+> It's not wrong per-se but I think the cpu_feature_enabled api is somewhat of
+> a trainwreck i.e we ought to have a version that uses boot_cpu_has for
+> "ordinary uses" and probably cpu_feature_enabled_fast for fastpaths.
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/kvm/arm64/set_id_regs.c | 29 +++++++++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+Look at the resulting asm of *cpu_has().
 
-diff --git a/tools/testing/selftests/kvm/arm64/set_id_regs.c b/tools/testing/selftests/kvm/arm64/set_id_regs.c
-index 8f422bfdfcb9..f41c4e7da3e8 100644
---- a/tools/testing/selftests/kvm/arm64/set_id_regs.c
-+++ b/tools/testing/selftests/kvm/arm64/set_id_regs.c
-@@ -140,6 +140,7 @@ static const struct reg_ftr_bits ftr_id_aa64pfr0_el1[] = {
- 
- static const struct reg_ftr_bits ftr_id_aa64pfr1_el1[] = {
- 	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64PFR1_EL1, CSV2_frac, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64PFR1_EL1, SME, 0),
- 	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64PFR1_EL1, SSBS, ID_AA64PFR1_EL1_SSBS_NI),
- 	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64PFR1_EL1, BT, 0),
- 	REG_FTR_END,
-@@ -187,6 +188,28 @@ static const struct reg_ftr_bits ftr_id_aa64mmfr2_el1[] = {
- 	REG_FTR_END,
- };
- 
-+static const struct reg_ftr_bits ftr_id_aa64smfr0_el1[] = {
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, FA64, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, LUTv2, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, SMEver, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, I16I64, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, F64F64, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, I16I32, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, B16B16, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, F16F16, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, F8F16, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, F8F32, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, I8I32, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, F16F32, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, B16F32, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, BI32I32, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, F32F32, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, SF8FMA, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, SF8DP4, 0),
-+	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64SMFR0_EL1, SF8DP2, 0),
-+	REG_FTR_END,
-+};
-+
- static const struct reg_ftr_bits ftr_id_aa64zfr0_el1[] = {
- 	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64ZFR0_EL1, F64MM, 0),
- 	REG_FTR_BITS(FTR_LOWER_SAFE, ID_AA64ZFR0_EL1, F32MM, 0),
-@@ -217,6 +240,7 @@ static struct test_feature_reg test_regs[] = {
- 	TEST_REG(SYS_ID_AA64MMFR0_EL1, ftr_id_aa64mmfr0_el1),
- 	TEST_REG(SYS_ID_AA64MMFR1_EL1, ftr_id_aa64mmfr1_el1),
- 	TEST_REG(SYS_ID_AA64MMFR2_EL1, ftr_id_aa64mmfr2_el1),
-+	TEST_REG(SYS_ID_AA64SMFR0_EL1, ftr_id_aa64smfr0_el1),
- 	TEST_REG(SYS_ID_AA64ZFR0_EL1, ftr_id_aa64zfr0_el1),
- };
- 
-@@ -233,6 +257,7 @@ static void guest_code(void)
- 	GUEST_REG_SYNC(SYS_ID_AA64MMFR0_EL1);
- 	GUEST_REG_SYNC(SYS_ID_AA64MMFR1_EL1);
- 	GUEST_REG_SYNC(SYS_ID_AA64MMFR2_EL1);
-+	GUEST_REG_SYNC(SYS_ID_AA64SMFR0_EL1);
- 	GUEST_REG_SYNC(SYS_ID_AA64ZFR0_EL1);
- 	GUEST_REG_SYNC(SYS_CTR_EL0);
- 	GUEST_REG_SYNC(SYS_MIDR_EL1);
-@@ -774,8 +799,8 @@ int main(void)
- 		   ARRAY_SIZE(ftr_id_aa64isar2_el1) + ARRAY_SIZE(ftr_id_aa64pfr0_el1) +
- 		   ARRAY_SIZE(ftr_id_aa64pfr1_el1) + ARRAY_SIZE(ftr_id_aa64mmfr0_el1) +
- 		   ARRAY_SIZE(ftr_id_aa64mmfr1_el1) + ARRAY_SIZE(ftr_id_aa64mmfr2_el1) +
--		   ARRAY_SIZE(ftr_id_aa64zfr0_el1) - ARRAY_SIZE(test_regs) + 3 +
--		   MPAM_IDREG_TEST + MTE_IDREG_TEST;
-+		   ARRAY_SIZE(ftr_id_aa64zfr0_el1) + ARRAY_SIZE(ftr_id_aa64smfr0_el1) -
-+		   ARRAY_SIZE(test_regs) + 3 + MPAM_IDREG_TEST + MTE_IDREG_TEST;
- 
- 	ksft_set_plan(test_cnt);
- 
+And, we need exactly one interface that everyone should use and everyone
+should not care about what it does underneath. Not 10 interfaces as it is now.
 
 -- 
-2.39.5
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
