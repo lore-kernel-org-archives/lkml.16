@@ -1,126 +1,185 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF431FCFFB
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 803771F9F51;
+	Wed, 25 Jun 2025 07:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750836300; cv=none; b=iNDcpDOUryvLUN6rHRi5Ww7HTxdEyOg/6AB3d+12jgib257Md9dGt+OtdHhroJyb/0w8GMVQAqA9IVuPRVt4AVTLsYjFxvay7E2QK+qQGHLVo43sSs7XD39wMAfFb8ffWnI+4UGMn9g5LVmTssvfTlZhRhLdflmg5orMbNoRdP0=
+	t=1750836373; cv=none; b=T8XMbBW+e4U1dU6UNewbGtOgiIZpL3k5G8/pk2rZqu31ozvK1Wbzqc97gPWFwn28ug/VoaG35r5zSeOFpSnbYVB5pIGuG2HZUJil5c5qae5wC7HdDuxgMijl0ET3kCgCUvYzdghQcuEdqR4uryvOpgPUaw+LL8Of9GvOL8pXYBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750836300; c=relaxed/simple;
-	bh=ce1UdDUU7h2aNFOM8myKE4XHFYi78SBsoNdAnOZm/JA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uXj2Llj+TdAkcVEpGlOMRyWRXC1nUM4WBbG6eRKNYusHEpANBizyBak07xs2bhhgtGCSrtxorOna8Q+op4t9KUkk2tPP61KOGpids0khW0UVkRkzzFZrk0b/T6zRYwM2bytufVNf4o/2IZQ1S+O4q5wprHBLqpPLpx3A1A/moBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Lw9QD5As; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lw9QD5As"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750836298;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=gb1EG5rVAzkyLlYvRtxAnYGAwdctzybaq8suJ9itpCc=;
-	b=Lw9QD5AsyfH2/ENQfEAPeAYYjhVrwYy8cfW+t311nef0k0OJ7gxDc+a7jEzGUY4wVvBmho
-	9oTcEtKLrZEip5uIGz0fc9DKYVcHKCoDUbEdA9pUIqeSOjC+dCtc7KMb8kJXtv3nm+KNWs
-	YLk8fW7sxmAk9gu1a7cBtUJbyYZCSV8=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-491-J8VKH_MkMo--uiebmQ1OJg-1; Wed, 25 Jun 2025 03:24:55 -0400
-X-MC-Unique: J8VKH_MkMo--uiebmQ1OJg-1
-X-Mimecast-MFC-AGG-ID: J8VKH_MkMo--uiebmQ1OJg_1750836294
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4530ec2c87cso32851235e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:24:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750836294; x=1751441094;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gb1EG5rVAzkyLlYvRtxAnYGAwdctzybaq8suJ9itpCc=;
-        b=RluL+xCrnggTZvLEDEQ7e19jtHKmn7RjozchIBSbRJ7NZfzSCRfdC/CI7mtsMRabmt
-         uTtAgaXzquHmz1g9qhqapdq+0UwrS5CozM6stUwmDMzSyxCiZa3rISAmXutfQm79oNBR
-         je5wIQiZ5vQaXXPMkZ2J4evIsQ8DHTZ0uY46kwCp35irykNLJDycXQg92J72SjGhP1zv
-         QljeOWkPp4RJQPpWjVX6fpibBDSOjRL1W07MeJd7ZlRVGkrjlcjbMEnVraFLLkpC8tVH
-         b0MP1+JhpUvFnva+lqeieC7ltwY2/Y+NXqsQ12Y0bCgd6BRXt9daE3Ea/teZA9CtPdp+
-         y1gQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXx+eqwlMZaFX7jWot5h3mlHHtDr3KMvbVTX8HxfRV8bBiVCxjNYohraWQm+6kRCftSWNFDvgSQzLaYY6w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjdNFJpAxUNKI1NNfwc8C3W1e4A8ZKJbTtnjpN8q8AGt37FUBN
-	cAyp+Xvw5t5enmvEC299+qHOjqBsemMI5FKLMy0iDQ8KyVdGCrYxJyhUW3DdzZWZiqqWN+W3S1M
-	ARMpBN3DBriUakXSqgXwPRF1a6dBlN38t+ziq4H37dGXMfw7G/DNi3SQ0BXKVSqbi9B+HjFAQxR
-	lY
-X-Gm-Gg: ASbGncvEMA4lRuuCekyT2rJSGyU2hAyWbey9BuLSkWl2YEuOgvI3s9MwG8MepmmJvIE
-	nLZp6FN/m2SL+m89dgv8cJB5myzx8ODeIdkCU4ZH194OdrfdyBkGY6jZvlUK4JDoKbeb/qT6bgw
-	XKPZYb0SJxECf2EvoXIwPk5RwItGaJFp/qQEFcgMG+DdmTKzuRiyivKEhGC6wqxs8Gp2V3Idvfk
-	aEUPaf9bq6DEHevryBkLFPmLiwcYCi8H+ey2SxUSmOM7qW1/8kT8pAER32Sg+zQXHvAyN5sW6AZ
-	C6YMqCl9P9DY59P1/cYm/i2MGD1BGGlPi8JKQCGatlzcymv8Ss5EZ2dttHfqv8/oRXVy2A==
-X-Received: by 2002:a05:6000:4815:b0:3a4:dc42:a0ac with SMTP id ffacd0b85a97d-3a6ed64e5ddmr1223622f8f.49.1750836294081;
-        Wed, 25 Jun 2025 00:24:54 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFA5cKazsGi7+isNP4cFmVJmrA4j/6038eVM8NMzh2KqkWk8sKK482rCdusN3KvxTYpOH6e0g==
-X-Received: by 2002:a05:6000:4815:b0:3a4:dc42:a0ac with SMTP id ffacd0b85a97d-3a6ed64e5ddmr1223598f8f.49.1750836293687;
-        Wed, 25 Jun 2025 00:24:53 -0700 (PDT)
-Received: from ?IPV6:2a0d:3341:cc86:3510:2b4a:1654:ed63:3802? ([2a0d:3341:cc86:3510:2b4a:1654:ed63:3802])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805e828sm3894469f8f.32.2025.06.25.00.24.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 00:24:53 -0700 (PDT)
-Message-ID: <81a216e8-e675-4564-84bb-039e0851a8ec@redhat.com>
-Date: Wed, 25 Jun 2025 09:24:52 +0200
+	s=arc-20240116; t=1750836373; c=relaxed/simple;
+	bh=v5qrOwQLCu8zoibqZN3Xk22dHEesaX60PG3K++b3fYw=;
+	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=JGGjqeVTG3eRw3WUqKwkFBOEEiBIS+Bzfhh8P08Gh2DxDQ/cRyXMNyxOzk5ceqRLoliZUB4w6ZOhxeQptwg9B+4y09bBHIzURbjW/fZBgTAPfxx2VDlDmaM8NfQJAYOBysZ6XNr1xLveYij1PiTRNBG4zmsdZeGwuHBIJATJ2CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.105])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4bRtbQ245dz1d1q0;
+	Wed, 25 Jun 2025 15:23:46 +0800 (CST)
+Received: from dggpemf500015.china.huawei.com (unknown [7.185.36.143])
+	by mail.maildlp.com (Postfix) with ESMTPS id A95E1140258;
+	Wed, 25 Jun 2025 15:26:06 +0800 (CST)
+Received: from [10.67.121.110] (10.67.121.110) by
+ dggpemf500015.china.huawei.com (7.185.36.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Wed, 25 Jun 2025 15:26:06 +0800
+Subject: Re: [PATCH v4 1/3] migration: update BAR space size
+To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>, "jgg@nvidia.com"
+	<jgg@nvidia.com>, Jonathan Cameron <jonathan.cameron@huawei.com>
+CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linuxarm@openeuler.org" <linuxarm@openeuler.org>
+References: <20250610063251.27526-1-liulongfang@huawei.com>
+ <20250610063251.27526-2-liulongfang@huawei.com>
+ <3ec5ffdee2f64c74a82093c06612f59b@huawei.com>
+From: liulongfang <liulongfang@huawei.com>
+Message-ID: <e8ec5644-fe10-5a03-5386-fbec6d35ed61@huawei.com>
+Date: Wed, 25 Jun 2025 15:26:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: linux-next: duplicate patches in the bluetooth tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>, David Miller <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>
-Cc: Networking <netdev@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250625111648.54026af1@canb.auug.org.au>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250625111648.54026af1@canb.auug.org.au>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <3ec5ffdee2f64c74a82093c06612f59b@huawei.com>
+Content-Type: text/plain; charset="gbk"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: kwepems200002.china.huawei.com (7.221.188.68) To
+ dggpemf500015.china.huawei.com (7.185.36.143)
 
-Hi,
-
-On 6/25/25 3:16 AM, Stephen Rothwell wrote:
-> The following commits are also in the net tree as different commits
-> (but the same patches):
+On 2025/6/24 15:03, Shameerali Kolothum Thodi wrote:
 > 
->   4500d2e8da07 ("Bluetooth: hci_core: Fix use-after-free in vhci_flush()")
->   6c31dab4ff1e ("driver: bluetooth: hci_qca:fix unable to load the BT driver")
->   d5c2d5e0f1d3 ("Bluetooth: L2CAP: Fix L2CAP MTU negotiation")
->   866fd57640ce ("Bluetooth: btintel_pcie: Fix potential race condition in firmware download")
 > 
-> These are commits
+>> -----Original Message-----
+>> From: liulongfang <liulongfang@huawei.com>
+>> Sent: Tuesday, June 10, 2025 7:33 AM
+>> To: alex.williamson@redhat.com; jgg@nvidia.com; Shameerali Kolothum
+>> Thodi <shameerali.kolothum.thodi@huawei.com>; Jonathan Cameron
+>> <jonathan.cameron@huawei.com>
+>> Cc: kvm@vger.kernel.org; linux-kernel@vger.kernel.org;
+>> linuxarm@openeuler.org; liulongfang <liulongfang@huawei.com>
+>> Subject: [PATCH v4 1/3] migration: update BAR space size
+>>
+>> On the new hardware platform, the live migration configuration region
+>> is moved from VF to PF. The VF's own configuration space is
+>> restored to the complete 64KB, and there is no need to divide the
+>> size of the BAR configuration space equally.
+>>
+>> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+>> ---
+>>  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 36 ++++++++++++++-----
+>>  1 file changed, 27 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> index 2149f49aeec7..b16115f590fd 100644
+>> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
+>> @@ -1250,6 +1250,28 @@ static struct hisi_qm *hisi_acc_get_pf_qm(struct
+>> pci_dev *pdev)
+>>  	return !IS_ERR(pf_qm) ? pf_qm : NULL;
+>>  }
+>>
+>> +static size_t hisi_acc_get_resource_len(struct vfio_pci_core_device *vdev,
+>> +					unsigned int index)
+>> +{
+>> +	struct hisi_acc_vf_core_device *hisi_acc_vdev =
+>> +			hisi_acc_drvdata(vdev->pdev);
+>> +
+>> +	/*
+>> +	 * On the old HW_V3 device, the ACC VF device BAR2
+>> +	 * region encompasses both functional register space
+>> +	 * and migration control register space.
+>> +	 * only the functional region should be report to Guest.
+>> +	 *
+>> +	 * On the new HW device, the migration control register
+>> +	 * has been moved to the PF device BAR2 region.
+>> +	 * The VF device BAR2 is entirely functional register space.
+>> +	 */
+>> +	if (hisi_acc_vdev->pf_qm->ver == QM_HW_V3)
+>> +		return (pci_resource_len(vdev->pdev, index) >> 1);
+>> +
+>> +	return pci_resource_len(vdev->pdev, index);
+>> +}
+>> +
+>>  static int hisi_acc_pci_rw_access_check(struct vfio_device *core_vdev,
+>>  					size_t count, loff_t *ppos,
+>>  					size_t *new_count)
+>> @@ -1260,8 +1282,9 @@ static int hisi_acc_pci_rw_access_check(struct
+>> vfio_device *core_vdev,
+>>
+>>  	if (index == VFIO_PCI_BAR2_REGION_INDEX) {
+>>  		loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
+>> -		resource_size_t end = pci_resource_len(vdev->pdev, index) /
+>> 2;
+>> +		resource_size_t end;
+>>
+>> +		end = hisi_acc_get_resource_len(vdev, index);
+>>  		/* Check if access is for migration control region */
+>>  		if (pos >= end)
+>>  			return -EINVAL;
+>> @@ -1282,8 +1305,9 @@ static int hisi_acc_vfio_pci_mmap(struct
+>> vfio_device *core_vdev,
+>>  	index = vma->vm_pgoff >> (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT);
+>>  	if (index == VFIO_PCI_BAR2_REGION_INDEX) {
+>>  		u64 req_len, pgoff, req_start;
+>> -		resource_size_t end = pci_resource_len(vdev->pdev, index) /
+>> 2;
+>> +		resource_size_t end;
+>>
+>> +		end = PAGE_ALIGN(hisi_acc_get_resource_len(vdev, index));
 > 
->   1d6123102e9f ("Bluetooth: hci_core: Fix use-after-free in vhci_flush()")
->   db0ff7e15923 ("driver: bluetooth: hci_qca:fix unable to load the BT driver")
->   042bb9603c44 ("Bluetooth: L2CAP: Fix L2CAP MTU negotiation")
->   89a33de31494 ("Bluetooth: btintel_pcie: Fix potential race condition in firmware download")
-> 
-> in the net tree.
+> I think I have commented on this before. The above PAGE_ALIGN will change the 
+> behavior on HW_V3 with 64K PAGE_SIZE kernel. The end will become 64K which
+> is not what we want on HW_V3. Could you please check that again.
+>
 
-I think it's an artifact of the BT tree being rebased. I pulled from:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth.git
-tags/for-net-2025-06-23
-
-It looks like the first set of commits is no more reachable in the bt
-tree, so the 'net' ones should be the "correct" commits set. @Luiz:
-could you please confirm?
+OK, Continue to pass the actual length to the Guest.
 
 Thanks,
+Longfang.
 
-Paolo
-
-
+> Thanks,
+> Shameer
+> 
+>>  		req_len = vma->vm_end - vma->vm_start;
+>>  		pgoff = vma->vm_pgoff &
+>>  			((1U << (VFIO_PCI_OFFSET_SHIFT - PAGE_SHIFT)) - 1);
+>> @@ -1330,7 +1354,6 @@ static long hisi_acc_vfio_pci_ioctl(struct
+>> vfio_device *core_vdev, unsigned int
+>>  	if (cmd == VFIO_DEVICE_GET_REGION_INFO) {
+>>  		struct vfio_pci_core_device *vdev =
+>>  			container_of(core_vdev, struct vfio_pci_core_device,
+>> vdev);
+>> -		struct pci_dev *pdev = vdev->pdev;
+>>  		struct vfio_region_info info;
+>>  		unsigned long minsz;
+>>
+>> @@ -1345,12 +1368,7 @@ static long hisi_acc_vfio_pci_ioctl(struct
+>> vfio_device *core_vdev, unsigned int
+>>  		if (info.index == VFIO_PCI_BAR2_REGION_INDEX) {
+>>  			info.offset =
+>> VFIO_PCI_INDEX_TO_OFFSET(info.index);
+>>
+>> -			/*
+>> -			 * ACC VF dev BAR2 region consists of both
+>> functional
+>> -			 * register space and migration control register
+>> space.
+>> -			 * Report only the functional region to Guest.
+>> -			 */
+>> -			info.size = pci_resource_len(pdev, info.index) / 2;
+>> +			info.size = hisi_acc_get_resource_len(vdev,
+>> info.index);
+>>
+>>  			info.flags = VFIO_REGION_INFO_FLAG_READ |
+>>  					VFIO_REGION_INFO_FLAG_WRITE |
+>> --
+>> 2.24.0
+> 
+> .
+> 
