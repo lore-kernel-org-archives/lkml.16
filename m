@@ -1,123 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DEA72634;
-	Wed, 25 Jun 2025 00:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF72978F32;
+	Wed, 25 Jun 2025 00:42:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750812150; cv=none; b=Jnqgsls5U7zQpYZI5IGOIkEyglTSKAjjZ2U54mstcinoqdXJRWi4jlyRRUzE+k9rORCw91rhzIH3GvuvQr7w3NQU5cJFc/BCT6lrf1KLXE5xAR8BHd838lIk+kr93+eY0KPKU+N2kL0pCfhxGKmuiuuMtfJgnmMKvf0KSuC9tGQ=
+	t=1750812174; cv=none; b=iYzZBV4AoBp4qsn0w64NfnLeOowZ9tKlgcN/3FKxgldxpMz9SnKc05H4c8Ko6icd7maiOzQic1YXyxOuBoLsYlQ/MsBSP9J4/upz6Y6eBd9xk8lOiLEC2VL+HL8+51KfbKZYHNWdX953Bk4Ah6kMWPrgWb8Aufz7ubIIly+kBjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750812150; c=relaxed/simple;
-	bh=sU2bp2FhksrcqHMdvPNPlXXnoiA4d9/n8fR2mCs2TO0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M6OMCwb6e+oyT/TZqkAiK9Z0zmeYFCrWYzvrMbUrlBHJENnd8xYqqGu4Ao1+JeoD7ArLKVcJDvrpRoeDvYndfCbbUc5KzBlO1WZxiVteDIAOLcF35n6OaRJjlWIRWGnqWPFcGquGmUano3AvgZqkiXdAJVWMVkcdUDZ3sInWLqA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qolb9x/4; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750812174; c=relaxed/simple;
+	bh=sQkxeHTipZS4vmVmOQzJQQdgbKms1hiJGF6GNURpkKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N470v/0uO49yPTEnCt8jp9wDeIxwXh0CHjMxbjmit6yBqs2eSigdszwE/1GLWrJnb8qszI3+gDXWMPcTC3AWFoDD2VgJDOMvOq+FpheR8Yrfp5nITqAPz+d8lWxZcIe/hnUpilre3kBVeHHwM6yCYAFs5f84SF0y+bwNvf8Ma3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sl8Vksed; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qolb9x/4"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750812149; x=1782348149;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=sU2bp2FhksrcqHMdvPNPlXXnoiA4d9/n8fR2mCs2TO0=;
-  b=Qolb9x/441o6FMdjxErw6gweCdzLguhyzm/RVJirj3UMThlWGe8LmqGP
-   EEx/uQrwchqfj2WAYegMT/+v7wtglSeGgIui8MoQuLrCJ/T4qKIesQQeL
-   JUxUK0cBcYVlLuSKs9Io+BcwYEebFe2SjzpK59mj/+I+jOa2oEga+UHxT
-   HfEeNcOIsQY8+sWibEtb9vGdOzLWPYc2CKiVt8V8WuJlarPIlUjN9022o
-   pxNGpMGUBQVYbJMQl8TzWfh/sBdN4CU6dUxvB3K63dod5otec7VWobaLW
-   RoWFarwE23fj8PHbpFUA5BoKD9qabL/YrJPvTdCOToslJACJ1XfXAeCXr
-   Q==;
-X-CSE-ConnectionGUID: 0EJvShpNSeGq+X1pjXN1VQ==
-X-CSE-MsgGUID: 0pNFTTd8RJyHtgAxyQtrZg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="70497671"
-X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="70497671"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 17:42:28 -0700
-X-CSE-ConnectionGUID: D6eAnGzDS2CVyTA3FvngIg==
-X-CSE-MsgGUID: b/dXdKFATX2y6HDy5S3wfA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="183103928"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 24 Jun 2025 17:42:23 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUEDV-000Sd4-1v;
-	Wed, 25 Jun 2025 00:42:21 +0000
-Date: Wed, 25 Jun 2025 08:42:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Maxime =?iso-8859-1?Q?B=E9lair?= <maxime.belair@canonical.com>,
-	linux-security-module@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, john.johansen@canonical.com,
-	paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-	mic@digikod.net, kees@kernel.org, stephen.smalley.work@gmail.com,
-	casey@schaufler-ca.com, takedakn@nttdata.co.jp,
-	penguin-kernel@i-love.sakura.ne.jp, song@kernel.org,
-	rdunlap@infraread.org, linux-api@vger.kernel.org,
-	apparmor@lists.ubuntu.com, linux-kernel@vger.kernel.org,
-	Maxime =?iso-8859-1?Q?B=E9lair?= <maxime.belair@canonical.com>
-Subject: Re: [PATCH v3 2/3] lsm: introduce security_lsm_config_*_policy hooks
-Message-ID: <202506250843.UnXrlnza-lkp@intel.com>
-References: <20250624143211.436045-3-maxime.belair@canonical.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sl8Vksed"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6FE3C4CEE3;
+	Wed, 25 Jun 2025 00:42:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750812174;
+	bh=sQkxeHTipZS4vmVmOQzJQQdgbKms1hiJGF6GNURpkKA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Sl8Vksed3lrAB6mMEzjEIQJDhjqf+SnWdQZdno7Tj+Df7vIqvfBxlN6bBaq3kt30r
+	 ViBko3rtYeQb53LCf9HdaDXmuacVMITb8YBfGwpiX91A6XswgXxEO1IepjxZUdkUxG
+	 XMUvNWbedHsLLugAOARQQv4OrDfjMO5SscyYYwdzTXnS50fMKAqwWEzoFahDiccugi
+	 myqVYon+SfxAzdzA+kBXbdt03znMeewPw//7SDAZ2tQiWSFULByf504rIXvlmX72Z0
+	 ricK7FMzbcrooF+Ph3TKVAcRKzneck5+ueNC36kPvxiwGeDXZGXh0F4j+4cTaBojRA
+	 Hd2d4JePlpRhA==
+Date: Tue, 24 Jun 2025 17:42:52 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Dong Chenchen <dongchenchen2@huawei.com>
+Cc: <davem@davemloft.net>, <edumazet@google.com>, <pabeni@redhat.com>,
+ <horms@kernel.org>, <jiri@resnulli.us>, <oscmaes92@gmail.com>,
+ <linux@treblig.org>, <pedro.netdev@dondevamos.com>,
+ <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <yuehaibing@huawei.com>, <zhangchangzhong@huawei.com>
+Subject: Re: [PATCH net] net: vlan: fix VLAN 0 refcount imbalance of
+ toggling filtering during runtime
+Message-ID: <20250624174252.7fbd3dbe@kernel.org>
+In-Reply-To: <20250623113008.695446-1-dongchenchen2@huawei.com>
+References: <20250623113008.695446-1-dongchenchen2@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624143211.436045-3-maxime.belair@canonical.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Maxime,
+On Mon, 23 Jun 2025 19:30:08 +0800 Dong Chenchen wrote:
+> $ ip link add bond0 type bond mode 0
+> $ ip link add link bond0 name vlan0 type vlan id 0 protocol 802.1q
+> $ ethtool -K bond0 rx-vlan-filter off
+> $ ifconfig bond0 up
+> $ ethtool -K bond0 rx-vlan-filter on
+> $ ifconfig bond0 down
+> $ ifconfig bond0 up
+> $ ip link del vlan0
 
-kernel test robot noticed the following build warnings:
+Please try to figure out the reasonable combinations in which we can
+change the flags and bring the device up and down. Create a selftest
+in bash and add it under tools/testing/selftests/net
 
-[auto build test WARNING on 9c32cda43eb78f78c73aee4aa344b777714e259b]
+> diff --git a/net/8021q/vlan.c b/net/8021q/vlan.c
+> index 06908e37c3d9..6e01ece0a95c 100644
+> --- a/net/8021q/vlan.c
+> +++ b/net/8021q/vlan.c
+> @@ -504,12 +504,21 @@ static int vlan_device_event(struct notifier_block *unused, unsigned long event,
+>  		break;
+>  
+>  	case NETDEV_CVLAN_FILTER_PUSH_INFO:
+> +		flgs = dev_get_flags(dev);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Maxime-B-lair/Wire-up-lsm_config_self_policy-and-lsm_config_system_policy-syscalls/20250624-225008
-base:   9c32cda43eb78f78c73aee4aa344b777714e259b
-patch link:    https://lore.kernel.org/r/20250624143211.436045-3-maxime.belair%40canonical.com
-patch subject: [PATCH v3 2/3] lsm: introduce security_lsm_config_*_policy hooks
-config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20250625/202506250843.UnXrlnza-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250625/202506250843.UnXrlnza-lkp@intel.com/reproduce)
+Why call dev_get_flags()? You can test dev->flags & IFF_UP directly
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506250843.UnXrlnza-lkp@intel.com/
+> +		if (flgs & IFF_UP) {
+> +			pr_info("adding VLAN 0 to HW filter on device %s\n",
+> +				dev->name);
+> +			vlan_vid_add(dev, htons(ETH_P_8021Q), 0);
 
-All warnings (new ones prefixed by >>):
+Not sure if this works always, because if we have no vlan at all when
+the device comes up vlan_info will be NULL and we won't even get here.
 
-   In file included from include/linux/perf_event.h:62,
-                    from include/linux/trace_events.h:10,
-                    from include/trace/syscall.h:7,
-                    from include/linux/syscalls.h:94,
-                    from init/main.c:21:
->> include/linux/security.h:1618:12: warning: 'security_lsm_config_system_policy' defined but not used [-Wunused-function]
-    1618 | static int security_lsm_config_system_policy(u32 lsm_id, u32 op, void __user *buf,
-         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/security.h:1611:12: warning: 'security_lsm_config_self_policy' defined but not used [-Wunused-function]
-    1611 | static int security_lsm_config_self_policy(u32 lsm_id, u32 op, void __user *buf,
-         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+IIUC adding vlan 0 has to be handled early, where UP is handled.
 
-
-vim +/security_lsm_config_system_policy +1618 include/linux/security.h
-
-  1617	
-> 1618	static int security_lsm_config_system_policy(u32 lsm_id, u32 op, void __user *buf,
-  1619						     size_t size, u32 flags)
-  1620	{
-  1621	
-  1622		return -EOPNOTSUPP;
-  1623	}
-  1624	#endif	/* CONFIG_SECURITY */
-  1625	
-
+> +		}
+>  		err = vlan_filter_push_vids(vlan_info, htons(ETH_P_8021Q));
+>  		if (err)
+>  			return notifier_from_errno(err);
+>  		break;
+>  
+>  	case NETDEV_CVLAN_FILTER_DROP_INFO:
+> +		flgs = dev_get_flags(dev);
+> +		if (flgs & IFF_UP)
+> +			vlan_vid_del(dev, htons(ETH_P_8021Q), 0);
+>  		vlan_filter_drop_vids(vlan_info, htons(ETH_P_8021Q));
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+pw-bot: cr
