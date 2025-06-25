@@ -1,87 +1,95 @@
-Received: from sg-3-17.ptr.tlmpb.com (sg-3-17.ptr.tlmpb.com [101.45.255.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED84A2080C4
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=101.45.255.17
+Received: from outboundhk.mxmail.xiaomi.com (outboundhk.mxmail.xiaomi.com [118.143.206.90])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 175631F3B8A
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:49:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.143.206.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750834149; cv=none; b=b4AYeYZw0EuczOgN/SMJTRdQLZvw99lGLAlRKwEFB82it+fyHLh2kw8DvGpVTjzbkMnj820GfRGB9QwY3VFOuYgm7dVJC2dD/7zy6FLLZH7vzLx9FmBZS3KPxDT6XkpGPZhMg6m32fOZ6Nd1hnTiJiAqWBE8zasSOxWckOvqlCM=
+	t=1750834181; cv=none; b=uhpce6/4woBvju8caAWni+fh+cqQVdjD690ow2ziRCjjriSa+AwRN3neSxcAJVYOWTdpzIiq7wQHq8+S2kNqrmVTkyq4moSRAmeoutSCatRevprNBx+4sbRmToJ/wfD3iTaddQpYCaB4XfJx/ylM4Pry6n4kGm7ZxZwJT2Svlzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750834149; c=relaxed/simple;
-	bh=jwVptLLBAwfAJw/T1q4BqxPHevuRYF1SgKSqnOOBkgw=;
-	h=To:Content-Type:From:Mime-Version:Subject:In-Reply-To:Cc:Date:
-	 Message-Id:References; b=WtYiMUlSdP2YhgwqV/qHsIJZmKlF+yfWJWYBji1I0qcKcwf9pfZzcMgKbwITzeEdp7MLFWOtbrQAozb+YrbbB6OyPv5u/IqBfJ4OS+Kpf+XXRMRmXVwH89FH19rJu+HF5krQRVxqPDYJ6Q5BoDwW3cIX8iBaWOtiFsCq7GbJv6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com; spf=pass smtp.mailfrom=lanxincomputing.com; dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b=ZRmaBLso; arc=none smtp.client-ip=101.45.255.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lanxincomputing.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=lanxincomputing-com.20200927.dkim.feishu.cn header.i=@lanxincomputing-com.20200927.dkim.feishu.cn header.b="ZRmaBLso"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
- s=s1; d=lanxincomputing-com.20200927.dkim.feishu.cn; t=1750834135;
-  h=from:subject:mime-version:from:date:message-id:subject:to:cc:
- reply-to:content-type:mime-version:in-reply-to:message-id;
- bh=ZdyKk+Fy17cw6lY7tU2GyRG5lXYFtVObREE3n5Owp1c=;
- b=ZRmaBLsoa5fT3LhiTZLX+QT+5M+0CHX9SmRIWOxTDYA+vr7DlGO/tt1JxhGhAaB7nEDA+I
- W7+9Fak9aDRliKuut9Rg1z5MFRa2l2RqSZeNFNmAV8HW3xoE2Aak6JO7uAb5YlZSRLdZoV
- 43GBfWowPzSu5KZyPyCHjvVDFasuKYOuSuOetkIpPDvxnFGZTFD4BHAhufFsjr0EggIVRS
- Wj1dFyt5jWeKJNSHl09TVQl0yWiLs9UA7BXHZHHLu2995s8uFrWe/l71FrxesP/QiL1PZr
- OU5zoFNR5XfDc29Q4WdiaOac8Wd5I4ih2ORfHxEmed875M+LdIhXRQWz7vO3pQ==
-To: "Anup Patel" <apatel@ventanamicro.com>, 
-	"Atish Patra" <atish.patra@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-User-Agent: Mozilla Thunderbird
-X-Original-From: Nutty Liu <liujingqi@lanxincomputing.com>
-From: "Nutty Liu" <liujingqi@lanxincomputing.com>
+	s=arc-20240116; t=1750834181; c=relaxed/simple;
+	bh=g84O1o5hFU3l3xduZF6PY/IbjbIYklm6i3ld7YRDi8g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QOntm+Gy/t4zTPSGCY5SYo8KI/15zVJkf8TtWZ1x7cBZ5MNLdL06/NUY0Y0njzJjTc4kqpL+XXh+lRjbqtpUcAzSAYjGwn91YCBkk+SKsivwumjInIZJFljmVUJs7Xio8Bp/ioyxgm9IpHKzClkzc1knBrckUZCikSsCSTb0jR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com; spf=pass smtp.mailfrom=xiaomi.com; arc=none smtp.client-ip=118.143.206.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=xiaomi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=xiaomi.com
+X-CSE-ConnectionGUID: vX/1TlSMQvSPkzc97lpYvg==
+X-CSE-MsgGUID: hWu1/TpcR9mXYFu/+Y9UMA==
+X-IronPort-AV: E=Sophos;i="6.16,264,1744041600"; 
+   d="scan'208";a="118524165"
+From: Jianan Huang <huangjianan@xiaomi.com>
+To: <linux-f2fs-devel@lists.sourceforge.net>, <chao@kernel.org>,
+	<jaegeuk@kernel.org>
+CC: <wanghui33@xiaomi.com>, <linux-kernel@vger.kernel.org>, Jianan Huang
+	<huangjianan@xiaomi.com>, Sheng Yong <shengyong1@xiaomi.com>
+Subject: [PATCH v3] f2fs: avoid splitting bio when reading multiple pages
+Date: Wed, 25 Jun 2025 14:49:27 +0800
+Message-ID: <20250625064927.516586-1-huangjianan@xiaomi.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Received: from [127.0.0.1] ([139.226.59.215]) by smtp.feishu.cn with ESMTPS; Wed, 25 Jun 2025 14:48:52 +0800
-Subject: Re: [PATCH v3 01/12] RISC-V: KVM: Check kvm_riscv_vcpu_alloc_vector_context() return value
-Content-Transfer-Encoding: 7bit
-In-Reply-To: <20250618113532.471448-2-apatel@ventanamicro.com>
-Cc: "Palmer Dabbelt" <palmer@dabbelt.com>, 
-	"Paul Walmsley" <paul.walmsley@sifive.com>, 
-	"Alexandre Ghiti" <alex@ghiti.fr>, 
-	"Andrew Jones" <ajones@ventanamicro.com>, 
-	"Anup Patel" <anup@brainfault.org>, <kvm@vger.kernel.org>, 
-	<kvm-riscv@lists.infradead.org>, <linux-riscv@lists.infradead.org>, 
-	<linux-kernel@vger.kernel.org>
-Date: Wed, 25 Jun 2025 14:48:50 +0800
-Message-Id: <f8fecbf5-6c6b-4cc3-8694-356b17be8c70@lanxincomputing.com>
-X-Lms-Return-Path: <lba+2685b9bd5+cfd651+vger.kernel.org+liujingqi@lanxincomputing.com>
-References: <20250618113532.471448-1-apatel@ventanamicro.com> <20250618113532.471448-2-apatel@ventanamicro.com>
-Content-Language: en-US
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BJ-MBX04.mioffice.cn (10.237.8.124) To YZ-MBX05.mioffice.cn
+ (10.237.88.125)
 
-On 6/18/2025 7:35 PM, Anup Patel wrote:
-> The kvm_riscv_vcpu_alloc_vector_context() does return an error code
-> upon failure so don't ignore this in kvm_arch_vcpu_create().
->
-> Signed-off-by: Anup Patel <apatel@ventanamicro.com>
-> ---
->   arch/riscv/kvm/vcpu.c | 5 +++--
->   1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-> index 303aa0a8a5a1..b467dc1f4c7f 100644
-> --- a/arch/riscv/kvm/vcpu.c
-> +++ b/arch/riscv/kvm/vcpu.c
-> @@ -148,8 +148,9 @@ int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
->   
->   	spin_lock_init(&vcpu->arch.reset_state.lock);
->   
-> -	if (kvm_riscv_vcpu_alloc_vector_context(vcpu))
-> -		return -ENOMEM;
-> +	rc = kvm_riscv_vcpu_alloc_vector_context(vcpu);
-> +	if (rc)
-> +		return rc;
->   
->   	/* Setup VCPU timer */
->   	kvm_riscv_vcpu_timer_init(vcpu);
+When fewer pages are read, nr_pages may be smaller than nr_cpages. Due
+to the nr_vecs limit, the compressed pages will be split into multiple
+bios and then merged at the block level. In this case, nr_cpages should
+be used to pre-allocate bvecs.
+To handle this case, align max_nr_pages to cluster_size, which should be
+enough for all compressed pages.
 
-Reviewed-by: Nutty Liu<liujingqi@lanxincomputing.com>
+Signed-off-by: Jianan Huang <huangjianan@xiaomi.com>
+Signed-off-by: Sheng Yong <shengyong1@xiaomi.com>
+---
+Changes since v2:
+- Initialize index only for compressed files.
+Changes since v1:
+- Use aligned nr_pages instead of nr_cpages to pre-allocate bvecs.
 
-Thanks,
-Nutty
+ fs/f2fs/data.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 31e892842625..d071d9f6a811 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -2303,7 +2303,7 @@ int f2fs_read_multi_pages(struct compress_ctx *cc, struct bio **bio_ret,
+ 		}
+ 
+ 		if (!bio) {
+-			bio = f2fs_grab_read_bio(inode, blkaddr, nr_pages,
++			bio = f2fs_grab_read_bio(inode, blkaddr, nr_pages - i,
+ 					f2fs_ra_op_flags(rac),
+ 					folio->index, for_write);
+ 			if (IS_ERR(bio)) {
+@@ -2376,6 +2376,14 @@ static int f2fs_mpage_readpages(struct inode *inode,
+ 	unsigned max_nr_pages = nr_pages;
+ 	int ret = 0;
+ 
++#ifdef CONFIG_F2FS_FS_COMPRESSION
++	if (f2fs_compressed_file(inode)) {
++		index = rac ? readahead_index(rac) : folio->index;
++		max_nr_pages = round_up(index + nr_pages, cc.cluster_size) -
++				round_down(index, cc.cluster_size);
++	}
++#endif
++
+ 	map.m_pblk = 0;
+ 	map.m_lblk = 0;
+ 	map.m_len = 0;
+@@ -2385,7 +2393,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
+ 	map.m_seg_type = NO_CHECK_TYPE;
+ 	map.m_may_create = false;
+ 
+-	for (; nr_pages; nr_pages--) {
++	for (; nr_pages; nr_pages--, max_nr_pages--) {
+ 		if (rac) {
+ 			folio = readahead_folio(rac);
+ 			prefetchw(&folio->flags);
+-- 
+2.43.0
+
