@@ -1,29 +1,29 @@
-Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D66F314F104
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4D514F104
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750815624; cv=none; b=X6S+pbl0rUbKTgkNGuI6rYqQSw69LZx26zO65195ebD+AipC0Bo5u+ydtRsqiH4iH6SnbMiuDaHt3afEldpf4pYBCz15V0iAx60+iFuX37VNP+w9lDQHLNCbfk+O9UTl8v0txRbjz63vImo32uGF30dhtlQkqU1ZjKZeJ0k2VC8=
+	t=1750815630; cv=none; b=n21GFMsVJGISmTqJHobwfQ6buYl/X8kr1ItrqdIASmMhp5olCqamH+0cTT20eA1UWQoE7/L55+C7URvQAjKMtReXC9Nia8+Y7IjQa6zUfSPKRWrVPgV906BlqeoEbzONlc4lauwvb97BDd6HTBz4m3hW+oN2MoiGaHtTIazHKbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750815624; c=relaxed/simple;
-	bh=co0Q1y/rXSzimjkXG3Wp8fvQQPMKHvVoT8Ty+FMqMak=;
+	s=arc-20240116; t=1750815630; c=relaxed/simple;
+	bh=tu6Uo+sML5JLhviX2iNA/T/NYy2/LgiEEp34S6HBd6w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VZysIfVmSBUjIleODE43kz6ndhetLhJLPHkmNafd82gpQLE4Ea29vjSrzp3xuJECIJF0veJe+p1PdyedIe5CwqUSrPJpBC9Kf+r9QNVbOmVIdGU73TCAb4vYImCA/Z3gYj9zpVZVqIR1htUCbzSyjHTLkwUFEubWlWDPTXy4gWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=abiCJSWz; arc=none smtp.client-ip=115.124.30.100
+	 MIME-Version:Content-Type; b=sD7t1bhXpdJD0F6Ea7/nVMFFyK3QMoMSlT6NwWd7Jhw8SO1haTcbYg6PE7hGCzzVRCJaA3TCa3OHtYb0l0h0XfdJwx6NBeQ23cbS38EiEgn2jyBjektJGNAY+tlfRkblj2GFoUOZ2mCJr7cQjbbmvBy5y/N0yzFbb5LnSsm0DLo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=Dxi26+wi; arc=none smtp.client-ip=115.124.30.98
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="abiCJSWz"
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="Dxi26+wi"
 DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
 	d=linux.alibaba.com; s=default;
-	t=1750815618; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
-	bh=RR4yBaE/4iR6jBPOOmDgatZtsb6Rosbucf0MZffw3Vc=;
-	b=abiCJSWzvNlVMyBaJdUDJVeJNSu2YquKt+7k/3k+TxlufyGRPO3QDGLj7JKoDWhoJcO9ok3xt2VPsH0BEGbTKIDZvwRr49HxRcu8KUfcGfTR9t/6abLwoQzSeeBBY50a6CIDh8vUlU/o1Ht08585CRolArQpGVwYpvQQK4y0mQI=
-Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WeqMLhl_1750815617 cluster:ay36)
+	t=1750815619; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=GL9/OiTkXksGZXz7UtfDaxwwQxp+Wh0rcjedimt1h+Y=;
+	b=Dxi26+wiEg0rCBlO4WCZmvGJIuVrM1Ipxi/m+k8f523S/UAuWEEYd0nfcRkN19pdX9tMw+O4bYu6fdMSNN5FNMqhN5F1ez5pYlKC9wtD5r6I1prk0YJ8bDv8v2G9PugseSMYY62Nuji39uZiBAgzRQ61IND+tgiCeJkxs7we3Mg=
+Received: from localhost(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0WeqBlk4_1750815618 cluster:ay36)
           by smtp.aliyun-inc.com;
-          Wed, 25 Jun 2025 09:40:17 +0800
+          Wed, 25 Jun 2025 09:40:19 +0800
 From: Baolin Wang <baolin.wang@linux.alibaba.com>
 To: akpm@linux-foundation.org,
 	hughd@google.com,
@@ -38,9 +38,9 @@ Cc: ziy@nvidia.com,
 	baolin.wang@linux.alibaba.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 1/2] mm: huge_memory: disallow hugepages if the system-wide THP sysfs settings are disabled
-Date: Wed, 25 Jun 2025 09:40:09 +0800
-Message-ID: <25252834a20a2e8f611ba572d9fae98fb8d67982.1750815384.git.baolin.wang@linux.alibaba.com>
+Subject: [PATCH v4 2/2] mm: shmem: disallow hugepages if the system-wide shmem THP sysfs settings are disabled
+Date: Wed, 25 Jun 2025 09:40:10 +0800
+Message-ID: <dbcf049b097d6197978720ca89a22a693e1ff235.1750815384.git.baolin.wang@linux.alibaba.com>
 X-Mailer: git-send-email 2.43.5
 In-Reply-To: <cover.1750815384.git.baolin.wang@linux.alibaba.com>
 References: <cover.1750815384.git.baolin.wang@linux.alibaba.com>
@@ -53,146 +53,82 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-When invoking thp_vma_allowable_orders(), the TVA_ENFORCE_SYSFS flag is not
-specified, we will ignore the THP sysfs settings. Whilst it makes sense for the
-callers who do not specify this flag, it creates a odd and surprising situation
-where a sysadmin specifying 'never' for all THP sizes still observing THP pages
-being allocated and used on the system.
+When invoking thp_vma_allowable_orders(), if the TVA_ENFORCE_SYSFS flag is not
+specified, we will ignore the THP sysfs settings. And the MADV_COLLAPSE is an
+example of such a case.
 
-The motivating case for this is MADV_COLLAPSE. The MADV_COLLAPSE will ignore
-the system-wide Anon THP sysfs settings, which means that even though we have
-disabled the Anon THP configuration, MADV_COLLAPSE will still attempt to collapse
-into a Anon THP. This violates the rule we have agreed upon: never means never.
+The MADV_COLLAPSE will ignore the system-wide shmem THP sysfs settings, which
+means that even though we have disabled the shmem THP configuration, MADV_COLLAPSE
+will still attempt to collapse into a shmem THP. This violates the rule we have
+agreed upon: never means never.
 
-Currently, besides MADV_COLLAPSE not setting TVA_ENFORCE_SYSFS, there is only
-one other instance where TVA_ENFORCE_SYSFS is not set, which is in the
-collapse_pte_mapped_thp() function, but I believe this is reasonable from its
-comments.
+Another rule for madvise, referring to David's suggestion: “allowing for collapsing
+in a VM without VM_HUGEPAGE in the "madvise" mode would be fine".
 
-"
-/*
- * If we are here, we've succeeded in replacing all the native pages
- * in the page cache with a single hugepage. If a mm were to fault-in
- * this memory (mapped by a suitably aligned VMA), we'd get the hugepage
- * and map it by a PMD, regardless of sysfs THP settings. As such, let's
- * analogously elide sysfs THP settings here.
- */
-if (!thp_vma_allowable_order(vma, vma->vm_flags, 0, PMD_ORDER))
-"
+To fix the MADV_COLLAPSE issue for shmem, then the current strategy should be:
 
-Another rule for madvise, referring to David's suggestion: “allowing for
-collapsing in a VM without VM_HUGEPAGE in the "madvise" mode would be fine".
+For shmem, if none of ‘always’, ‘madvise’, ‘within_size’, and ‘inherit’ have enabled
+PMD-sized THP, then MADV_COLLAPSE will be prohibited from collapsing PMD-sized THP.
+Similarly, if 'deny' is set, it will also prohibit MADV_COLLAPSE.
 
-To address this issue, the current strategy should be:
+For tmpfs, if the mount option is set with the 'huge=never' parameter, then
+MADV_COLLAPSE will be prohibited from collapsing PMD-sized THP.
 
-If no hugepage modes are enabled for the desired orders, nor can we enable them
-by inheriting from a 'global' enabled setting - then it must be the case that
-all desired orders either specify or inherit 'NEVER' - and we must abort.
+Meanwhile, we should fix the khugepaged selftest for shmem MADV_COLLAPSE by enabling
+shmem THP like anonymous pages collapse.
 
-Meanwhile, we should fix the khugepaged selftest for MADV_COLLAPSE. Originally,
-we could prevent khugepaged by setting THP_MADVISE and removing MADV_HUGEPAGE
-setting, while madvise_collapse() can still perform THP collapse. However,
-this would cause some test cases to fail because some tests previously set
-MADV_NOHUGEPAGE, and now there is no other way to clear the MADV_NOHUGEPAGE
-flag except for setting MADV_HUGEPAGE. Therefore, it should be changed to
-THP_ALWAYS here to allow madvise_collapse() to perform THP collapse.
-
-Suggested-by: David Hildenbrand <david@redhat.com>
-Suggested-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Reviewed-by: Zi Yan <ziy@nvidia.com>
+Acked-by: Zi Yan <ziy@nvidia.com>
 Reviewed-by: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
 Signed-off-by: Baolin Wang <baolin.wang@linux.alibaba.com>
 ---
- include/linux/huge_mm.h                 | 51 ++++++++++++++++++-------
- tools/testing/selftests/mm/khugepaged.c |  6 +--
- 2 files changed, 39 insertions(+), 18 deletions(-)
+ mm/shmem.c                              | 6 +++---
+ tools/testing/selftests/mm/khugepaged.c | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index 4d5bb67dc4ec..ab70ca4e704b 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -267,6 +267,42 @@ unsigned long __thp_vma_allowable_orders(struct vm_area_struct *vma,
- 					 unsigned long tva_flags,
- 					 unsigned long orders);
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 2b19965d27df..e3f51fab2b7d 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -637,7 +637,7 @@ static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index
+ 		return 0;
+ 	if (shmem_huge == SHMEM_HUGE_DENY)
+ 		return 0;
+-	if (shmem_huge_force || shmem_huge == SHMEM_HUGE_FORCE)
++	if (shmem_huge == SHMEM_HUGE_FORCE)
+ 		return maybe_pmd_order;
  
-+/* Strictly mask requested anonymous orders according to sysfs settings. */
-+static inline unsigned long __thp_mask_anon_orders(unsigned long vm_flags,
-+		unsigned long tva_flags, unsigned long orders)
-+{
-+	const unsigned long always = READ_ONCE(huge_anon_orders_always);
-+	const unsigned long madvise = READ_ONCE(huge_anon_orders_madvise);
-+	const unsigned long inherit = READ_ONCE(huge_anon_orders_inherit);
-+	const unsigned long never = ~(always | madvise | inherit);
-+	const bool inherit_never = !hugepage_global_enabled();
-+
-+	/* Disallow orders that are set to NEVER directly ... */
-+	orders &= ~never;
-+
-+	/* ... or through inheritance (global == NEVER). */
-+	if (inherit_never)
-+		orders &= ~inherit;
-+
-+	/*
-+	 * Otherwise, we only enforce sysfs settings if asked. In addition,
-+	 * if the user sets a sysfs mode of madvise and if TVA_ENFORCE_SYSFS
-+	 * is not set, we don't bother checking whether the VMA has VM_HUGEPAGE
-+	 * set.
-+	 */
-+	if (!(tva_flags & TVA_ENFORCE_SYSFS))
-+		return orders;
-+
-+	/* We already excluded never inherit above. */
-+	if (vm_flags & VM_HUGEPAGE)
-+		return orders & (always | madvise | inherit);
-+
-+	if (hugepage_global_always())
-+		return orders & (always | inherit);
-+
-+	return orders & always;
-+}
-+
- /**
-  * thp_vma_allowable_orders - determine hugepage orders that are allowed for vma
-  * @vma:  the vm area to check
-@@ -289,19 +325,8 @@ unsigned long thp_vma_allowable_orders(struct vm_area_struct *vma,
- 				       unsigned long orders)
- {
- 	/* Optimization to check if required orders are enabled early. */
--	if ((tva_flags & TVA_ENFORCE_SYSFS) && vma_is_anonymous(vma)) {
--		unsigned long mask = READ_ONCE(huge_anon_orders_always);
--
+ 	/*
+@@ -672,7 +672,7 @@ static unsigned int shmem_huge_global_enabled(struct inode *inode, pgoff_t index
+ 
+ 		fallthrough;
+ 	case SHMEM_HUGE_ADVISE:
 -		if (vm_flags & VM_HUGEPAGE)
--			mask |= READ_ONCE(huge_anon_orders_madvise);
--		if (hugepage_global_always() ||
--		    ((vm_flags & VM_HUGEPAGE) && hugepage_global_enabled()))
--			mask |= READ_ONCE(huge_anon_orders_inherit);
--
--		orders &= mask;
--		if (!orders)
--			return 0;
--	}
-+	if (vma_is_anonymous(vma))
-+		orders = __thp_mask_anon_orders(vm_flags, tva_flags, orders);
++		if (shmem_huge_force || (vm_flags & VM_HUGEPAGE))
+ 			return maybe_pmd_order;
+ 		fallthrough;
+ 	default:
+@@ -1806,7 +1806,7 @@ unsigned long shmem_allowable_huge_orders(struct inode *inode,
+ 	/* Allow mTHP that will be fully within i_size. */
+ 	mask |= shmem_get_orders_within_size(inode, within_size_orders, index, 0);
  
- 	return __thp_vma_allowable_orders(vma, vm_flags, tva_flags, orders);
- }
+-	if (vm_flags & VM_HUGEPAGE)
++	if (shmem_huge_force || (vm_flags & VM_HUGEPAGE))
+ 		mask |= READ_ONCE(huge_shmem_orders_madvise);
+ 
+ 	if (global_orders > 0)
 diff --git a/tools/testing/selftests/mm/khugepaged.c b/tools/testing/selftests/mm/khugepaged.c
-index 4341ce6b3b38..85bfff53dba6 100644
+index 85bfff53dba6..9517ed99c382 100644
 --- a/tools/testing/selftests/mm/khugepaged.c
 +++ b/tools/testing/selftests/mm/khugepaged.c
-@@ -501,11 +501,7 @@ static void __madvise_collapse(const char *msg, char *p, int nr_hpages,
- 
+@@ -502,7 +502,7 @@ static void __madvise_collapse(const char *msg, char *p, int nr_hpages,
  	printf("%s...", msg);
  
--	/*
--	 * Prevent khugepaged interference and tests that MADV_COLLAPSE
--	 * ignores /sys/kernel/mm/transparent_hugepage/enabled
--	 */
--	settings.thp_enabled = THP_NEVER;
-+	settings.thp_enabled = THP_ALWAYS;
- 	settings.shmem_enabled = SHMEM_NEVER;
+ 	settings.thp_enabled = THP_ALWAYS;
+-	settings.shmem_enabled = SHMEM_NEVER;
++	settings.shmem_enabled = SHMEM_ALWAYS;
  	thp_push_settings(&settings);
  
+ 	/* Clear VM_NOHUGEPAGE */
 -- 
 2.43.5
 
