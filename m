@@ -1,79 +1,91 @@
-Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87379262FE9;
-	Wed, 25 Jun 2025 08:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from mail3-164.sinamail.sina.com.cn (mail3-164.sinamail.sina.com.cn [202.108.3.164])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2550A20B801
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:28:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.108.3.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750840077; cv=none; b=VNrRyCKTH6b7COQKgT5V+4VUw1drCD3p5AVg+AQjpoj5zMJy9F+qELDN+mAqrDhv4BlpHfI0B5pXPjyORj0QxdIlu7ogXnyacRdI0pIOOpEx0Fte9FWrGnTXOAtMy4lE/MGsL1NhcUg3bDr4biDGWgzZEVgtX8/fXsuwNhXqdFw=
+	t=1750840106; cv=none; b=abu0vdgXR6QILcGc0Wogg/RNLppSg/0FaKedlCaxuptF6JwR/PAL11jm5oQcTbxSL/jMd+NOkV09g4zTOzIstGJp4uISxTyjy/7CusRkGqhLq/HNi+OPD6/NtB6Grl8dElORIQYEhOw+v41JcNcIE4PpHhBSjWv4zeGzn7D3DF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750840077; c=relaxed/simple;
-	bh=tFRL6sdurF5C0oF05Wkk5ZCUtUZzrnnHgrfd/+IUM3E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hALoX9q5QIINoi60XdDductszu5kGdQOlz0dQRdZxyRV2nFSt/mQ7tMBYlGsGpq7MAIW4x9OcMQEY5XZd8JZWFeKoUr818HuOsKm04lFtoGjKVQDFiFUGBLpTUygEahje0KDe6i+FocqUMt2hIPT7kavIYubq/S45yWlNuJ68y4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=Bn1zpG0d; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="Bn1zpG0d"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 13E5A14C2D3;
-	Wed, 25 Jun 2025 10:27:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1750840068;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=M7MBda3ifyG4jp7mOkjP/Pm966Gi86mycz9M1yI2mNc=;
-	b=Bn1zpG0d0TEoLqEscnCtADjX6ukY5s8GVqwl1HB4lH7+XwbHkwitjyZxBR1+2MVTIgGkI5
-	a3EpquCcp8HsEEAfVmtGlEOoSfP6WQDMprf8YxNO3+aON98bMEnLTXDctDULMO4PvheqBk
-	RcGP0ZrFMWNt0ll1R7x3GZbYFjaoiX7JuuEVMifoVJzdJsBcgokzNKJNGdrUKe5OMn+60c
-	BIJ1rj728L+9ClIXX1wWAfujx1ydzEEhKcoaWNuUfmf6EbxKB1AEYNAoFj5Wfdol5+cJr8
-	AAPzP+TWiZVLyjKJvUy2REorrm+I/fpI487Hg+ko1bogTRHQ5zVw6vcrkCOQXQ==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 38d76608;
-	Wed, 25 Jun 2025 08:27:41 +0000 (UTC)
-Date: Wed, 25 Jun 2025 17:27:26 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 5.10 000/352] 5.10.239-rc2 review
-Message-ID: <aFuy7qm1rv3tAUka@codewreck.org>
-References: <20250624121412.352317604@linuxfoundation.org>
+	s=arc-20240116; t=1750840106; c=relaxed/simple;
+	bh=0mJDLkV40J2iXrp5WAHE30a4JDI+jvVCPsCvbKgtivs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=jdedxWqczR5IRx1x/6kQ2MGe8/eb+g6332Hgzr/rU/jfkhlXXHsSXDkiK4pRLGP+8yV+sKBSOA1Xco/A3pHmGjwyAujyMW+4a4x9CrvOywcs6nBxMnnC1/rw4VN17biLH7p1A29aLZG9O6r6V4TOdiv63Yus+QI510WzBCIy37Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com; spf=pass smtp.mailfrom=sina.com; arc=none smtp.client-ip=202.108.3.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sina.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sina.com
+X-SMAIL-HELO: localhost.localdomain
+Received: from unknown (HELO localhost.localdomain)([114.249.58.236])
+	by sina.com (10.54.253.32) with ESMTP
+	id 685BB2FD00001B07; Wed, 25 Jun 2025 16:27:42 +0800 (CST)
+X-Sender: hdanton@sina.com
+X-Auth-ID: hdanton@sina.com
+Authentication-Results: sina.com;
+	 spf=none smtp.mailfrom=hdanton@sina.com;
+	 dkim=none header.i=none;
+	 dmarc=none action=none header.from=hdanton@sina.com
+X-SMAIL-MID: 6631114457215
+X-SMAIL-UIID: FB1A6DCDB81F4C2CB0AFAA7B29045213-20250625-162742-1
+From: Hillf Danton <hdanton@sina.com>
+To: syzbot <syzbot+e04e2c007ba2c80476cb@syzkaller.appspotmail.com>
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [hams?] KASAN: slab-use-after-free Read in rose_get_neigh
+Date: Wed, 25 Jun 2025 16:27:30 +0800
+Message-ID: <20250625082730.1756-1-hdanton@sina.com>
+In-Reply-To: <6807019a.050a0220.380c13.0001.GAE@google.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250624121412.352317604@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
 
-Greg Kroah-Hartman wrote on Tue, Jun 24, 2025 at 01:28:53PM +0100:
-> This is the start of the stable review cycle for the 5.10.239 release.
-> There are 352 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Date: Mon, 21 Apr 2025 19:40:26 -0700
+> syzbot has found a reproducer for the following issue on:
 > 
-> Responses should be made by Thu, 26 Jun 2025 12:13:28 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.239-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
-> and the diffstat can be found below.
+> HEAD commit:    9d7a0577c9db gcc-15: disable '-Wunterminated-string-initia..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=139b5ccc580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=efa83f9a6dd67d67
+> dashboard link: https://syzkaller.appspot.com/bug?extid=e04e2c007ba2c80476cb
+> compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15652c70580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17676c70580000
 
-Tested 9dc843c66f6f ("Linux 5.10.239-rc2") on:
-- arm i.MX6ULL (Armadillo 640)
-- arm64 i.MX8MP (Armadillo G4)
+#syz test upstream master
 
-No obvious regression in dmesg or basic tests:
-Tested-by: Dominique Martinet <dominique.martinet@atmark-techno.com>
--- 
-Dominique Martinet
+--- x/net/rose/rose_route.c
++++ y/net/rose/rose_route.c
+@@ -500,8 +500,10 @@ void rose_rt_device_down(struct net_devi
+ 			for (i = 0; i < t->count; i++) {
+ 				if (t->neighbour[i] != s)
+ 					continue;
++				t->neighbour[i] = NULL;
+ 
+ 				t->count--;
++				continue;
+ 
+ 				switch (i) {
+ 				case 0:
+@@ -689,6 +691,8 @@ struct rose_neigh *rose_get_neigh(rose_a
+ 	for (node = rose_node_list; node != NULL; node = node->next) {
+ 		if (rosecmpm(addr, &node->address, node->mask) == 0) {
+ 			for (i = 0; i < node->count; i++) {
++				if (!node->neighbour[i])
++					continue;
+ 				if (node->neighbour[i]->restarted) {
+ 					res = node->neighbour[i];
+ 					goto out;
+@@ -700,6 +704,8 @@ struct rose_neigh *rose_get_neigh(rose_a
+ 		for (node = rose_node_list; node != NULL; node = node->next) {
+ 			if (rosecmpm(addr, &node->address, node->mask) == 0) {
+ 				for (i = 0; i < node->count; i++) {
++					if (!node->neighbour[i])
++						continue;
+ 					if (!rose_ftimer_running(node->neighbour[i])) {
+ 						res = node->neighbour[i];
+ 						goto out;
+--
