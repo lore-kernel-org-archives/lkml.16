@@ -1,46 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC29255E23;
-	Wed, 25 Jun 2025 11:38:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CCBA1917D6;
+	Wed, 25 Jun 2025 11:39:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750851483; cv=none; b=qN1fJld6q3I1OF9TIyqIn7oMwIxLVfDEIoZum8U36EuEwEDCUCBlv+TZElY61t//wGxli4x3c/nw25TuIs3j9gb9dLUsbeO/dvjiItYuZGOWtsVrbGlJ8Y0+vGkgUeeEnu68EYeQm6WWD1ISD7wV2SmW27tpUbF09nLaWRyxj/M=
+	t=1750851562; cv=none; b=igAtp2tGiTeptr25wFiWgisBMlv9KWOtttIanGdKEie898nkZwnUnO687xwsdj26TLhDBmJ16RS6bX7XzCj7IOF51rQQ1zF2YtJhetA7h5gb+Y56J/WGYuW428HAxt+MQVBpNuCG2R7CsrXk+vuqJRdko5ykODYB2QMFhUq6KYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750851483; c=relaxed/simple;
-	bh=BtRKAJIlcJxb927rW2Z7+ZRhdms+50Dftb4cK00J1ck=;
+	s=arc-20240116; t=1750851562; c=relaxed/simple;
+	bh=eptLojQxQdUlXAUBOA63ivw2KKLIPdsNfg2GH6X+zq8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=g95ixHwCumh0/GdUWCKxeOabjLg8UXz9bAt3LbYJhEN/EDRO2ptrhNSzuc/9oAEQ+6BysV2Tp0dkSwE6MzXQSvu3DkfECwI71kw20jnbuwNxxmAtXg8mOQCbG1T2AJ0BHtGFMKPMLYEFR1rQgn5QymKxXb/8R1NbYaCelywnBJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iPzpbQqo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DXrSCEpL5vFTzHbDBgYA43/0R6ezx5fH+hh+00TXYCoeUIHtZ4SzsxzjalaUcyEUiwPxYCVBY/TuXTfbwfDpk2cjIAHnoOsTBBo2Ri9G5VZf2fNw05GMl7uA5Ga1uqxcAby1XB0np1E1nMrKjzmr1z5xCFeHBkz/aMDpK8lHKwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RUgiRT1g; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iPzpbQqo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AA68C4CEEA;
-	Wed, 25 Jun 2025 11:38:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750851483;
-	bh=BtRKAJIlcJxb927rW2Z7+ZRhdms+50Dftb4cK00J1ck=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iPzpbQqojFsV3ivsfPREuSXlhf1PNbg7WIj2wuf4PxwPYTNeYAoEs8GxP6TrZz6Fv
-	 bQsVwdojSeei2yXiZz+V710lPeUwS5KoNRvooJfke0SYx9zZUQSVp5GXqh3P5+i+1r
-	 DCc1+gkyFMvE6WfgA9AwQmCTRoTYdk4D3ITLC3BIUaYj2tbHh+7st+jZeyd/aPKYQn
-	 TQF9xDOR8TKBagGbXNsqAdKTiodL35WPtGnkuc3kbMZOBJNUu2CiCkXKcL1vwn3v2M
-	 b6pcnt4XHQUc2Mqa7ZJuySk+2v71zk6z0SNIDAXvJypnCagOpd5CZRw30u2jlu0DLG
-	 lv+PW/2ECL6Ng==
-Date: Wed, 25 Jun 2025 14:37:56 +0300
-From: Leon Romanovsky <leon@kernel.org>
-To: Mark Bloch <mbloch@nvidia.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	Simon Horman <horms@kernel.org>, saeedm@nvidia.com, gal@nvidia.com,
-	tariqt@nvidia.com, Jonathan Corbet <corbet@lwn.net>,
-	netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/5] net/mlx5e: Add support for PCIe congestion
- events
-Message-ID: <20250625113756.GA727865@unreal>
-References: <20250619113721.60201-1-mbloch@nvidia.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RUgiRT1g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750851561; x=1782387561;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=eptLojQxQdUlXAUBOA63ivw2KKLIPdsNfg2GH6X+zq8=;
+  b=RUgiRT1ghCUzhIFGgatyiRmzDpCqNs1HfwJ3rUWdVTtmPkGbIqYHbIxv
+   0kTNAWiVw/sEVixa8YB1Xyxh3sVAz7bnP4lqwTCTsI15y0DQJ3onVhH7I
+   JqersncZoI7+XbM51IeW/+I2cOIDKl/h/6xS8JSykj+GOW2o57yLA59HI
+   jeGhjld82r9trjnuu1fklhOiD67j/S7V7SBBoaBkD2A6IKuhtFT0pGnO9
+   MkSd4bl29wN8lzYLu8vCMvgd3ifKmibJqBU3/XwQrJ3lndSX5oy2GATAD
+   9tTCZrVFdqv1WXrb2faYrqiW+p0NMdFFEC5M/dn+3aP5dvW5BIUwzbCGm
+   w==;
+X-CSE-ConnectionGUID: zOBMBvrLTOSLzq11dB55yA==
+X-CSE-MsgGUID: WgC5GiBkSL2/F7QTlaEGGg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52233307"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="52233307"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 04:39:18 -0700
+X-CSE-ConnectionGUID: rY3v5lSSQQWMoiXvJGZ0oQ==
+X-CSE-MsgGUID: DUCcOoA5RUGRChn8/fK7gQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="156590052"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 04:39:17 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1uUOTB-00000009kwz-3YOd;
+	Wed, 25 Jun 2025 14:39:13 +0300
+Date: Wed, 25 Jun 2025 14:39:13 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v16 1/2] math64.h: provide rounddown_u64 variant for
+ rounddown macro
+Message-ID: <aFvf4c6Jp-cgBssA@smile.fi.intel.com>
+References: <20250625000059.20040-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,22 +64,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250619113721.60201-1-mbloch@nvidia.com>
+In-Reply-To: <20250625000059.20040-1-ansuelsmth@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Thu, Jun 19, 2025 at 02:37:16PM +0300, Mark Bloch wrote:
-> PCIe congestion events are events generated by the firmware when the
-> device side has sustained PCIe inbound or outbound traffic above
-> certain thresholds. The high and low threshold are hysteresis thresholds
-> to prevent flapping: once the high threshold has been reached, a low
-> threshold event will be triggered only after the bandwidth usage went
-> below the low threshold.
+On Wed, Jun 25, 2025 at 02:00:38AM +0200, Christian Marangi wrote:
+> There is currently a problem with the usage of rounddown() macro with
+> u64 dividends. This causes compilation error on specific arch where
+> 64-bit division is done on 32-bit system.
+> 
+> To be more specific GCC try to optimize the function and replace it
+> with __umoddi3() but this is actually not compiled in the kernel.
+> 
+> Example:
+> pwm-airoha.c:(.text+0x8f8): undefined reference to `__umoddi3'
+> 
+> To better handle this, introduce a variant of rounddown() macro,
+> rounddown_u64() that can be used exactly for this scenario.
+> 
+> The new rounddown_u64() in math64.h uses do_div() to do the heavy work
+> of handling internally all the magic for the 64-bit division on 32-bit
+> (and indirectly fix the compilation error).
 
-<...>
+...
 
-> Dragos Tatulea (5):
->   net/mlx5: Small refactor for general object capabilities
->   net/mlx5: Add IFC bits for PCIe Congestion Event object
+> static inline u64 roundup_u64(u64 x, u32 y)
+>  {
+>  	return DIV_U64_ROUND_UP(x, y) * y;
+>  }
 
-Applied these patches to mlx5-next.
+...
 
-Thanks
+> +static inline u64 rounddown_u64(u64 x, u32 y)
+> +{
+> +	u64 tmp = x;
+> +	return x - do_div(tmp, y);
+> +}
+
+Can it be implemented as above?
+
+	return DIV_U64_ROUND_DOWN(x, y) * y;
+
+(yes, it seems we are missing the DIV_U64_ROUND_DOWN() implementation).
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
