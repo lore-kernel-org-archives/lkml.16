@@ -1,264 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53352284670
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:12:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFDFB7D3F4
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:14:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750871542; cv=none; b=oCS1vbAMgYKqhkQfdOhQiGT488yBTrj+XY8JHEHnrM8z2/r+cA5hk6VAcwONRfJSXySefPVluXzK6ZNYBGI1cNDqwOgceI6EeFxvIIkFnhkhmn3A2iWgLS+X+i3Av+WjnV4mBGNHWPo28D0cCAd1KdBN/aVCyU/+JZhHOdJKzYc=
+	t=1750871669; cv=none; b=rQ9QVqbdCQmyyVwoxbWQK9f+gVE6HMEIpfLK44pBIFcYnQF6VhLpSrEkM5sca3IKpgEcXgos72Z8EaLimx9XexRMSb9lTf7xg6O2ZjIZZ8rp1W6oCryiQHYl7N4Lu02qMjkZZwl9xU/pXkVnQcxya2riM79J5sVsuRZ9SqZc+Oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750871542; c=relaxed/simple;
-	bh=pqkIDhr4yYMMYnY/+fSGhDZ1uE7lj3oqlLUoR8xcxtw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B1Iv3N9WuE6gVJBM+/nHnXZYp2Jivp1sPqd46GZTS+ivihp4JZSBMh4Go2jDUj5cVaO98DflU1lPUgQQaE4h2PRsQGyhezjdaE8FbmmIiPnAcRmVpAuzHsm3MThw74Cn/zWpR+bGgEsgy3mmD9NOLEha3mtSpdSW2jZ2/NEUN0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bYQKCNnc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bYQKCNnc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750871539;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SpMWnzwEQrz5g7Z8QpxeuZOo0PQWHqBUbD3/9JCskzM=;
-	b=bYQKCNncpPqWJdHWTmSIeYuZ4PUqkTB24W4xXs8rwQoINWHr0p+K2pi0wmnWH85Wg9ed8J
-	93HljySfV/ATKlZJnWCzotcZJDFchoWVtU8XCV5/5Eo0ZqOPF92F2O0f+p2/INcLu5ccjA
-	r1h0dwHPVlhm482Zo6rv6jcL8aXoSCM=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-214-MgZJjIanMYCgjdmif61L6g-1; Wed, 25 Jun 2025 13:12:17 -0400
-X-MC-Unique: MgZJjIanMYCgjdmif61L6g-1
-X-Mimecast-MFC-AGG-ID: MgZJjIanMYCgjdmif61L6g_1750871537
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7d09bc05b77so10869985a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:12:17 -0700 (PDT)
+	s=arc-20240116; t=1750871669; c=relaxed/simple;
+	bh=YKkvkQ+DdOVsLHQyaBRqdlrsotAQLSDlyoY+RWNqYVA=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Cm+tYCuwU8DLAcL9TYhQfrG95FUSPiQnbt/wQaWCuA9zgNKrA3LJrtWDyUJVlvKqwQ3sj2hINZ64kVOxAFA3lJO5yGH1m3oPxCzaKzgpSfuigSWEdOAte0xqOzHsSWDCg3egeDXSWedkobcJZjGSF1xgG0sLjp3LZAcSI1FvxZk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddc5137992so937505ab.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:14:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750871537; x=1751476337;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SpMWnzwEQrz5g7Z8QpxeuZOo0PQWHqBUbD3/9JCskzM=;
-        b=Bai6uxdyIWkuUbvhtV2MIUbHpxqUN4OMv2hKtnK+BwWpORpDjNe9K4Lhoy/Bs1yhPY
-         XMkbIaS0Tn0h1BfgGQ5ahSrKiRbi51O+HPKXOBj1QSUzKoFz9RSGIv5eW04jjYGK/CCV
-         5bIu9VwFC6HflhrLCrYiIZO05HjMElfXXWbURosLe5k//ORzAi8gOY+ilWsEoFR4TQpm
-         zI06m+LaApE6Z+BcTxGyNbGXe4CuPn21AkhtbWpbR1epj+bwTv7eryRJdztOWYGyjfvn
-         UjlmnzFt/RzTss3ZQTEZB5oKjpjJmxH1TiCx/8u5T52Xb15lJjXi0t/JP1AalFngCiby
-         jVeg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9TTZWgU4E6gZceSU7S3+jskGoOh01bRepaUMb7/3iAcW//pBNZogs+SDCN1lBArVx7hna7ckd46L5V8o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuRDD5pMQbzwGhm1+UldBsCs32huPAG/k5ZUxalwnhOevtrp9m
-	cpep9ggC5E7s/9dg+ryKPv9yJrFtm6iRRJa7Lxk5WCTSRFP/Z0+2T5xpcSVXDc7sIyLJz7v5xGM
-	XQahF8A61lMQhzY/u2Dd1Ciio7WWjuUFG6/Yk4zB1RbuVqQE3f9CIpbUJ0AREEKrjZA==
-X-Gm-Gg: ASbGncuEw0XrSj7Y7lU06ywCGimMO1Psl2+7sxzZIcaEOEt7OZO9TtDmEJfcKS9X66P
-	dJ6VVDzF/VoRph+wV4ONJ8k2tEH9DTS/httzuWhsOGiPh3LzEE3koDb0eWvDE9pbZ7l1BD6m0Vp
-	xQ/V9makFH2PRpJecmRu09riXQHjUkANq33yk7RyUckYgWOIgnFam0ySiUPtiVfYPjJdCREXZia
-	lf9fLE32hW/NH1Fcrfs0MqOPe6rdx8jQ1PLUUKublDT+oe6aYuQnfJ1X8LQLcFTID2gc+fSfRWF
-	OzeCf7zGtAgC4g==
-X-Received: by 2002:a05:620a:4893:b0:7cc:aedc:d0c1 with SMTP id af79cd13be357-7d429679b10mr490569585a.5.1750871536981;
-        Wed, 25 Jun 2025 10:12:16 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHyrt+UA8j4eJN5Kl/iuZzYbNEyvfMEcAUbDYG7hfuDyGNjFN3bqqLY7ZZU1ZAyKHWHlsX1Fg==
-X-Received: by 2002:a05:620a:4893:b0:7cc:aedc:d0c1 with SMTP id af79cd13be357-7d429679b10mr490563685a.5.1750871536438;
-        Wed, 25 Jun 2025 10:12:16 -0700 (PDT)
-Received: from x1.local ([85.131.185.92])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d41d5ffcfcsm259507785a.68.2025.06.25.10.12.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 10:12:15 -0700 (PDT)
-Date: Wed, 25 Jun 2025 13:12:11 -0400
-From: Peter Xu <peterx@redhat.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-	kvm@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-	Alex Williamson <alex.williamson@redhat.com>,
-	Zi Yan <ziy@nvidia.com>, Alex Mastro <amastro@fb.com>,
-	David Hildenbrand <david@redhat.com>,
-	Nico Pache <npache@redhat.com>
-Subject: Re: [PATCH 5/5] vfio-pci: Best-effort huge pfnmaps with !MAP_FIXED
- mappings
-Message-ID: <aFwt6wjuDzbWM4_C@x1.local>
-References: <aFLvodROFN9QwvPp@x1.local>
- <20250618174641.GB1629589@nvidia.com>
- <aFMQZru7l2aKVsZm@x1.local>
- <20250619135852.GC1643312@nvidia.com>
- <aFQkxg08fs7jwXnJ@x1.local>
- <20250619184041.GA10191@nvidia.com>
- <aFsMhnejq4fq6L8N@x1.local>
- <20250624234032.GC167785@nvidia.com>
- <aFtHbXFO1ZpAsnV8@x1.local>
- <20250625130711.GH167785@nvidia.com>
+        d=1e100.net; s=20230601; t=1750871667; x=1751476467;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L/l8xFjBHoux/yvwL6aD3x2VUCTiy+iKK29WrV0pdFY=;
+        b=Hndga4Dk7PcLnvUbXz6qrBrn+krWEYz3d1O/mwJGValMedcRlZBpa1iTVFMzEV1Wsd
+         nZgWKBNgRyvPsXoKurx+lcvCzGpp86tWvwJNjInMwd+jJ2wtSwd1wj/mrXtgr2Fj9VDA
+         MaqmiKaHklBMrqzvAVcTuF6WEIpGdlt5Q4fm/bM5RpScg0ilAtG44n3kEjW5WupuikuV
+         nBWjRG1wbrhRDoRw685opJo+YlsupTghwz7qEMUb7y31udb3CJLjfw8hrBVlCkvVRoxr
+         DnY3BXYMgaSa3Q/XdnG3EtsjM+yAk6CLSApFjS3IwXtv+AfFaHlGPlVeR9SRR2Tjue//
+         COcg==
+X-Forwarded-Encrypted: i=1; AJvYcCUSh4W23nC0zvsWkDVm93Uw6wxD1mBgheBwM/iF0k1+XKITJo92Qmum6RW6iBhNbPiJ0aEy0+vxLN/DN1g=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdyIMZBRMTBW4UHg7QyheLWXcLitlovhbLokvRIbpu9aVlXbQk
+	7Ec3l9BhmdXJgyxBLo8c5NEfnllY5jHlttrgLesiJros3XC2kTLWiCcvcxehMA+I5vZGR+vVu6p
+	tLs273wBVFh99lPVRAmbUIYS9S9mwCwiF55hERx663eJ0a/q4VnMtKopl33s=
+X-Google-Smtp-Source: AGHT+IF4tP1NNueFUshXhU6NYNM5uEbLto+Lt8hRij3Xfkqi9ZOuPSh5aKmlJA6qZF1oxSHP+VCuV0Smkd6mHXvR22rrt5aSAQgc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250625130711.GH167785@nvidia.com>
+X-Received: by 2002:a05:6e02:218a:b0:3dd:b808:be59 with SMTP id
+ e9e14a558f8ab-3df3297dea6mr56177245ab.21.1750871667166; Wed, 25 Jun 2025
+ 10:14:27 -0700 (PDT)
+Date: Wed, 25 Jun 2025 10:14:27 -0700
+In-Reply-To: <66f6c6e7.050a0220.38ace9.0024.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685c2e73.050a0220.2303ee.004c.GAE@google.com>
+Subject: Re: [syzbot] [bluetooth?] BUG: corrupted list in _hci_cmd_sync_cancel_entry
+From: syzbot <syzbot+01fdb2cc3f0b4ddcfcf1@syzkaller.appspotmail.com>
+To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, luiz.dentz@gmail.com, marcel@holtmann.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Jun 25, 2025 at 10:07:11AM -0300, Jason Gunthorpe wrote:
-> On Tue, Jun 24, 2025 at 08:48:45PM -0400, Peter Xu wrote:
-> > > My feeling, and the reason I used the phrase "pgoff aligned address",
-> > > is that the owner of the file should already ensure that for the large
-> > > PTEs/folios:
-> > >  pgoff % 2**order == 0
-> > >  physical % 2**order == 0
-> > 
-> > IMHO there shouldn't really be any hard requirement in mm that pgoff and
-> > physical address space need to be aligned.. but I confess I don't have an
-> > example driver that didn't do that in the linux tree.
-> 
-> Well, maybe, but right now there does seem to be for
-> THP/hugetlbfs/etc. It is a nice simple solution that exposes the
-> alignment requirements to userspace if it wants to use MAP_FIXED.
-> 
-> > > To me this just keeps thing simpler. I guess if someone comes up with
-> > > a case where they really can't get a pgoff alignment and really need a
-> > > high order mapping then maybe we can add a new return field of some
-> > > kind (pgoff adjustment?) but that is so weird I'd leave it to the
-> > > future person to come and justfiy it.
-> > 
-> > When looking more, I also found some special cased get_unmapped_area() that
-> > may not be trivially converted into the new API even for CONFIG_MMU, namely:
-> > 
-> > - io_uring_get_unmapped_area
-> > - arena_get_unmapped_area (from bpf_map->ops->map_get_unmapped_area)
-> > 
-> > I'll need to have some closer look tomorrow.  If any of them cannot be 100%
-> > safely converted to the new API, I'd also think we should not introduce the
-> > new API, but reuse get_unmapped_area() until we know a way out.
-> 
-> Oh yuk. It is trying to avoid the dcache flush on some kernel paths
-> for virtually tagged cache systems.
-> 
-> Arguably this fixup should not be in io_uring, but conveying the right
-> information to the core code, and requesting a special flush
-> avoidance mapping is not so easy.
+syzbot has found a reproducer for the following issue on:
 
-IIUC it still makes sense to be with io_uring, because only io_uring
-subsystem knows what to align against.  I don't yet understand how generic
-mm can do this, after all generic mm doesn't know the address that io_uring
-is using (from io_region_get_ptr()).
+HEAD commit:    7595b66ae9de Merge tag 'selinux-pr-20250624' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10ed4f0c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=641bc01f4fbdccd4
+dashboard link: https://syzkaller.appspot.com/bug?extid=01fdb2cc3f0b4ddcfcf1
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14bc9b70580000
 
-> 
-> But again I suspect the pgoff is the right solution.
-> 
-> IIRC this is handled by forcing a few low virtual address bits to
-> always match across all user mappings (the colour) via the pgoff. This
-> way the userspace always uses the same cache tag and doesn't become
-> cache incoherent. ie:
-> 
->    user_addr % PAGE_SIZE*N == pgoff % PAGE_SIZE*N
-> 
-> The issue is now the kernel is using the direct map and we can't force
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/86576f060f6f/disk-7595b66a.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/051ad595d63b/vmlinux-7595b66a.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e72740ea313a/bzImage-7595b66a.xz
 
-After I read the two use cases, I mostly agree.  Just one trivial thing to
-mention, it may not be direct map but vmap() (see io_region_init_ptr()).
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+01fdb2cc3f0b4ddcfcf1@syzkaller.appspotmail.com
 
-> a random jumble of pages to have the right colours to match
-> userspace. So the kernel has all those dcache flushes sprinkled about
-> before it touches user mapped memory through the direct map as the
-> kernel will use a different colour and cache tag.
-> 
-> So.. if iouring selects a pgoff that automatically gives the right
-> colour for the userspace mapping to also match the kernel mapping's
-> colour then things should just work.
-> 
-> Frankly I'm shocked that someone invested time in trying to make this
-> work - the commit log says it was for parisc and only 2 years ago :(
-> 
-> d808459b2e31 ("io_uring: Adjust mapping wrt architecture aliasing requirements")
-> 
-> I thought such physically tagged cache systems were long ago dead and
-> buried..
+Bluetooth: hci4: command 0x0406 tx timeout
+ non-paged memory
+list_del corruption, ffff88802932b700->next is LIST_POISON1 (dead000000000100)
+------------[ cut here ]------------
+kernel BUG at lib/list_debug.c:56!
+Oops: invalid opcode: 0000 [#1] SMP KASAN NOPTI
+CPU: 1 UID: 0 PID: 51 Comm: kworker/u9:0 Not tainted 6.16.0-rc3-syzkaller-00044-g7595b66ae9de #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+Workqueue: hci4 hci_conn_timeout
+RIP: 0010:__list_del_entry_valid_or_report+0x121/0x200 lib/list_debug.c:56
+Code: 48 c7 c7 e0 7e 15 8c e8 1d 41 b9 fc 90 0f 0b 4c 89 e7 e8 02 f3 1d fd 4c 89 e2 48 89 de 48 c7 c7 40 7f 15 8c e8 00 41 b9 fc 90 <0f> 0b 48 89 ef e8 e5 f2 1d fd 48 89 ea 48 89 de 48 c7 c7 a0 7f 15
+RSP: 0018:ffffc90000bb7b78 EFLAGS: 00010282
+RAX: 000000000000004e RBX: ffff88802932b700 RCX: ffffffff819b00b9
+RDX: 0000000000000000 RSI: ffffffff819b7f46 RDI: 0000000000000005
+RBP: dead000000000122 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000080000000 R11: 0000000000000001 R12: dead000000000100
+R13: dffffc0000000000 R14: ffff88802f118618 R15: ffff88802932b700
+FS:  0000000000000000(0000) GS:ffff888124852000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000000c007642020 CR3: 000000007e2b4000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __list_del_entry_valid include/linux/list.h:124 [inline]
+ __list_del_entry include/linux/list.h:215 [inline]
+ list_del include/linux/list.h:229 [inline]
+ _hci_cmd_sync_cancel_entry.constprop.0+0x80/0x1d0 net/bluetooth/hci_sync.c:647
+ hci_cmd_sync_cancel_entry net/bluetooth/hci_sync.c:851 [inline]
+ hci_cmd_sync_dequeue_once net/bluetooth/hci_sync.c:870 [inline]
+ hci_cancel_connect_sync+0xfa/0x2b0 net/bluetooth/hci_sync.c:6903
+ hci_abort_conn+0x15a/0x340 net/bluetooth/hci_conn.c:2919
+ hci_conn_timeout+0x1a2/0x210 net/bluetooth/hci_conn.c:580
+ process_one_work+0x9cc/0x1b70 kernel/workqueue.c:3238
+ process_scheduled_works kernel/workqueue.c:3321 [inline]
+ worker_thread+0x6c8/0xf10 kernel/workqueue.c:3402
+ kthread+0x3c2/0x780 kernel/kthread.c:464
+ ret_from_fork+0x5d4/0x6f0 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:__list_del_entry_valid_or_report+0x121/0x200 lib/list_debug.c:56
+Code: 48 c7 c7 e0 7e 15 8c e8 1d 41 b9 fc 90 0f 0b 4c 89 e7 e8 02 f3 1d fd 4c 89 e2 48 89 de 48 c7 c7 40 7f 15 8c e8 00 41 b9 fc 90 <0f> 0b 48 89 ef e8 e5 f2 1d fd 48 89 ea 48 89 de 48 c7 c7 a0 7f 15
+RSP: 0018:ffffc90000bb7b78 EFLAGS: 00010282
+RAX: 000000000000004e RBX: ffff88802932b700 RCX: ffffffff819b00b9
+RDX: 0000000000000000 RSI: ffffffff819b7f46 RDI: 0000000000000005
+RBP: dead000000000122 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000080000000 R11: 0000000000000001 R12: dead000000000100
+R13: dffffc0000000000 R14: ffff88802f118618 R15: ffff88802932b700
+FS:  0000000000000000(0000) GS:ffff888124852000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fd6f9b7e2d8 CR3: 000000007b2b4000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
-Yeah.. internet says parisc stopped shipping since 2005.  Obviously
-there're still people running io_uring on parisc systems, more or less.
-This change seems to be required to make io_uring work on parisc or any
-vipt.
 
-> 
-> Shouldn't this entirely reject MAP_FIXED too?
-
-It already does, see (io_uring_get_unmapped_area(), of parisc):
-
-	/*
-	 * Do not allow to map to user-provided address to avoid breaking the
-	 * aliasing rules. Userspace is not able to guess the offset address of
-	 * kernel kmalloc()ed memory area.
-	 */
-	if (addr)
-		return -EINVAL;
-
-I do not know whoever would use MAP_FIXED but with addr=0.  So failing
-addr!=0 should literally stop almost all MAP_FIXED already.
-
-Side topic, but... logically speaking this should really be fine when
-!SHM_COLOUR.  This commit should break MAP_FIXED for everyone on io_uring,
-but I guess nobody really use MAP_FIXED for io_uring fds..
-
-It's also utterly confusing to set addr=ptr for parisc, fundamentally addr
-here must be a kernel va not user va, so it'll (AFAIU) 100% fail later with
-STACK_SIZE checks..  IMHO we should really change this to:
-
-diff --git a/io_uring/memmap.c b/io_uring/memmap.c
-index 725dc0bec24c..1225a9393dc5 100644
---- a/io_uring/memmap.c
-+++ b/io_uring/memmap.c
-@@ -380,12 +380,10 @@ unsigned long io_uring_get_unmapped_area(struct file *filp, unsigned long addr,
-         */
-        filp = NULL;
-        flags |= MAP_SHARED;
--       pgoff = 0;      /* has been translated to ptr above */
- #ifdef SHM_COLOUR
--       addr = (uintptr_t) ptr;
--       pgoff = addr >> PAGE_SHIFT;
-+       pgoff = (uintptr_t)ptr >> PAGE_SHIFT;
- #else
--       addr = 0UL;
-+       pgoff = 0;      /* has been translated to ptr above */
- #endif
-        return mm_get_unmapped_area(current->mm, filp, addr, len, pgoff, flags);
- }
-
-And avoid the confusing "addr=ptr" setup.  This might be too off-topic,
-though.
-
-Then I also looked at the other bpf arena use case, which doubled the len
-when requesting VA and does proper round ups for 4G:
-
-arena_get_unmapped_area():
-	ret = mm_get_unmapped_area(current->mm, filp, addr, len * 2, 0, flags);
-        ...
-	return round_up(ret, SZ_4G);
-
-AFAIU, this is buggy.. at least we should check "round_up(ret, SZ_4G)"
-still falls into the (ret, ret+2*len) region... or AFAIU we can return some
-address that might be used by other VMAs already..
-
-But in general that smells like a similar alignment issue, IIUC.  So might
-be applicable for the new API.
-
-Going back to the topic of this series - I think the new API would work for
-io_uring and parisc too if I can return phys_pgoff, here what parisc would
-need is:
-
-#ifdef SHM_COLOUR
-        *phys_pgoff = io_region_get_ptr(..) >> PAGE_SHIFT;
-#else
-        *phys_pgoff = pgoff;
-#endif
-
-Here *phys_pgoff (or a rename) would be required to fetch the kernel VA (no
-matter direct mapping or vmap()) offset, to avoid aliasing issue.
-
-Should I go and introduce the API with *phys_pgoff returned together, then?
-I'll still need to scratch my head on how to properly define it, but it at
-least will also get vfio use case decouple with spec dependency.
-
-Thanks,
-
--- 
-Peter Xu
-
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
