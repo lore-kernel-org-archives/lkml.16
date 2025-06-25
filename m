@@ -1,94 +1,151 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C49932F3627
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:27:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A06926D4C7;
+	Wed, 25 Jun 2025 22:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750890450; cv=none; b=EaLS2xE1CN+vbCO346+K9FWMdUDV52LLEoI9gBBr5+En0WQonaqXiIpKVmuKkhtRlyOiXgEv79nkgUSpUjZ5nmGT6KYyAqkgDJyl9tValNPNvw19yaOM6PL9qSuAXts1UNdeYjXMDTYbKLDfo5u8rPUrpklyaCI05yNkCCRnhx0=
+	t=1750890580; cv=none; b=Lt6TCjDZ/fz1fIBglRkmssHxUOHZR5HhDbWD1Q/SvodSN5ycjuW85c9CosYzaG1zoMq7QF0X0EW0ucp4rLdfzTrb1TsDrBaE7pR6G8VysS6bncmeSP4YOrzDIMiSq3WiduHh90zVh6aAGQ4Km/mrjV+BCEPL7hXaaIOA7hQ3L88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750890450; c=relaxed/simple;
-	bh=vWw3uexPmgGirIdC5hWdSreMJG5sOiwUXmIQy2pr1vo=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ajLaEDxD1OPfDkWG/l+lCd7Jnbnle50x6FoVVRlogHhH8skvUa3iVP1RGyJJnAu070/hcIAv5uXsMX3+9HjJToh5MLvKcVPPkcaVs4gm3xuYh4cEBBgv8e3NRQznf4+X0ljSs3MN+wdSumpmFBWZOcVbQWgB88IsqWXzbkRUNRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CM4i4c4U; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1750890580; c=relaxed/simple;
+	bh=65fugPI9FRJsqGGo3gHAxWmOr4BVEX8RKL5+9t0LBHk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=UfVkfiHZCI2pLhQB1RIs+aKwqnpEHIaAOQfu8B+ia1GiPF87ukX+MTRC3WO0lnnRF7vAVRXhL7ZYe1WyjlRBhNCASo10EHxeVFtbXAFzVBHs1gNrzBdz37gctpiilKw5FiLQNQTHFY9ihkhNteDSidrY2g0tiKZOxG8Nvlc8XrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Efw8FHVe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CM4i4c4U"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-315af0857f2so231790a91.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:27:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750890448; x=1751495248; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gYMiziqxx+dkKfmpL4cjtXaxzDCKbeuDEZS/eoFgwQc=;
-        b=CM4i4c4UOfx/X9HtfPPLdki+Kma9B4tXp0MeFq1+nntxw/HnKXp/09lPKoMXzhOTT6
-         ojO4KDtj+C8TJqRPCE6YDv42E2FX5Akh5Cm/jboDhFTduYMwmZGxbIIiJopwAokWKPtv
-         pjRYfS3Mzp/Of7BP7eyVseWO4vQYqWEhfE9PAUVUVFSxxXGt+EwM12wwcg//68pptA7i
-         V9GGXUfnSMNSVqFDfA6j4Jv6bkox27zfs8P3zB7i1EDmJl0e2YxbgIgzW03VBrVi/CGb
-         fqTG7l5n3KF/48gllfsyjYnAAqPfestUaE+OgGKR9FNiFri7I9u0WlxQMlfCvXJwLuSA
-         Q4AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750890448; x=1751495248;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gYMiziqxx+dkKfmpL4cjtXaxzDCKbeuDEZS/eoFgwQc=;
-        b=spndUaXVMYbIOXahTH0/3qr4GvVhwVLpJ27AAVPxogp9bjxt5dWXRC54eDm0yH3zC/
-         v63tBA+P/a4Gn8hayPxesOaa0In7BSQ/+2fxKgu0k2436QJaCT1QSVhle6w0O7Fi6JSA
-         08AK5BN7FiFr9y5AsAP6HlVZGuWzCmWbKweKZxxTFgreuEzhepeUaaCsx7CeocXhqyZ7
-         LNa3YXAPLiYfouWl4RocPS+LjE2lBbsbSNXt54z4m+RxEIDw8GF/ZH5SjB63bn8IlZCL
-         DVT4TPS3mhfbsqRFWX2V/MkZX6n74uCjtEhG6nl0W7uGlMkJqvnEBghaKYVKQIB0/ZdZ
-         4Ukg==
-X-Forwarded-Encrypted: i=1; AJvYcCWzWWpSmOYxNMmZwjscoZGN04vFVSSTH+PwJzbiWkce5tKVcPzn5TNk1N/d3OFIQgqwrnjK/hB2iFfqOjY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx/2ZaSe1qwooj21qkShF7IlLy3YTEqBqtAipKiUnE9YodBJy1w
-	w4jnEhZ03GfUBwQCSsmvHB9ydRPlKAa6HGk3uxJGO+WFRdYRoXSJyQ9DbJNqdd/o+G0MHn5IaEa
-	IAy4X4g==
-X-Google-Smtp-Source: AGHT+IHrWdsFl3J6w4HEzuAFNNbssKmcxXqloPX+MrQvOJXMAJjnDmWQLgmVsR7XTsscuW1aXJeG/K0ib/E=
-X-Received: from pjbnd12.prod.google.com ([2002:a17:90b:4ccc:b0:2e0:915d:d594])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:5690:b0:312:29e:9ec9
- with SMTP id 98e67ed59e1d1-315f268a5b0mr6819475a91.24.1750890448137; Wed, 25
- Jun 2025 15:27:28 -0700 (PDT)
-Date: Wed, 25 Jun 2025 15:25:45 -0700
-In-Reply-To: <20250611095158.19398-1-adrian.hunter@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Efw8FHVe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3D90C4CEEA;
+	Wed, 25 Jun 2025 22:29:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750890580;
+	bh=65fugPI9FRJsqGGo3gHAxWmOr4BVEX8RKL5+9t0LBHk=;
+	h=Date:To:Cc:Subject:From:References:In-Reply-To:From;
+	b=Efw8FHVeKi4IxhwYO1QOUPEuNL5FPNa0rLKLLBgiHc6QAnmK5295Vz0Aqf4bIlAAD
+	 sVVAxMyXpwoD2vO0+TCCZDATGQgh9k3bjFlqHVY2VPlppXbMPWy6dY9+PgV3p0Skzc
+	 fCLkifjGi2m9hZpZBDioTecqIA2QeuYKQJkll+mdrjZpQs9ejOMTOqgS8Smai/DdL8
+	 ozY6ye8PJiTx3QAMXR/MgZ7UsMuDmQJwXitMhULL9HVXCoMKb6JKauHpnHTDOAcGKr
+	 vTqj0eMOwREY/kINDUuxaiSejdHpvMeYF85KyoXNQOoh6bw74xtRG9lWC0Iwt1rILV
+	 RPyq71RZ0I9dA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250611095158.19398-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <175088949072.720373.4112758062004721516.b4-ty@google.com>
-Subject: Re: [PATCH V4 0/1] KVM: TDX: Decrease TDX VM shutdown time
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, pbonzini@redhat.com, 
-	Adrian Hunter <adrian.hunter@intel.com>
-Cc: kvm@vger.kernel.org, rick.p.edgecombe@intel.com, 
-	kirill.shutemov@linux.intel.com, kai.huang@intel.com, 
-	reinette.chatre@intel.com, xiaoyao.li@intel.com, 
-	tony.lindgren@linux.intel.com, binbin.wu@linux.intel.com, 
-	isaku.yamahata@intel.com, linux-kernel@vger.kernel.org, yan.y.zhao@intel.com, 
-	chao.gao@intel.com
-Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 26 Jun 2025 00:29:35 +0200
+Message-Id: <DAVYWQE2PYZE.3TRIT906A9BJM@kernel.org>
+To: "Shankari Anand" <shankari.ak0208@gmail.com>,
+ <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <patches@lists.linux.dev>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, "Roy Baron" <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Danilo Krummrich" <dakr@kernel.org>
+Subject: Re: [PATCH v2 1/2] rust: move ARef and AlwaysRefCounted to
+ sync::aref
+From: "Benno Lossin" <lossin@kernel.org>
+X-Mailer: aerc 0.20.1
+References: <20250625111133.698481-1-shankari.ak0208@gmail.com>
+In-Reply-To: <20250625111133.698481-1-shankari.ak0208@gmail.com>
 
-On Wed, 11 Jun 2025 12:51:57 +0300, Adrian Hunter wrote:
-> Changes in V4:
-> 
-> 	Drop TDX_FLUSHVP_NOT_DONE change.  It will be done separately.
-> 	Use KVM_BUG_ON() instead of WARN_ON().
-> 	Correct kvm_trylock_all_vcpus() return value.
-> 
-> Changes in V3:
-> 	Refer:
->             https://lore.kernel.org/r/aAL4dT1pWG5dDDeo@google.com
-> 
-> [...]
+On Wed Jun 25, 2025 at 1:11 PM CEST, Shankari Anand wrote:
+> diff --git a/rust/kernel/sync/aref.rs b/rust/kernel/sync/aref.rs
+> new file mode 100644
+> index 000000000000..93a23b493e21
+> --- /dev/null
+> +++ b/rust/kernel/sync/aref.rs
+> @@ -0,0 +1,170 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Atomic reference-counted pointer abstraction.
 
-Applied to kvm-x86 vmx, thanks!
+I'd say this module is about supporting objects with builtin reference
+counting.
 
-[1/1] KVM: TDX: Add sub-ioctl KVM_TDX_TERMINATE_VM
-      https://github.com/kvm-x86/linux/commit/111a7311a016
+> +//!
+> +//! This module provides [`ARef<T>`], an owned reference to a value that=
+ implements
+> +//! [`AlwaysRefCounted`] =E2=80=94 an unsafe trait for types that manage=
+ their own reference count.
 
---
-https://github.com/kvm-x86/kvm-unit-tests/tree/next
+I would lead with comparing `ARef<T>` to `Arc<T>` and only later mention
+`AlwaysRefCounted`.
+
+> +//!
+> +//! It is based on the Linux kernel's manual reference counting model an=
+d is typically used
+> +//! with C types that implement reference counting (e.g., via `refcount_=
+t` or `kref`).
+> +//!
+> +//! For Rust-managed objects, prefer using [`Arc`](crate::sync::Arc) ins=
+tead.
+> +
+> +use core::{
+> +    marker::PhantomData,
+> +    mem::ManuallyDrop,
+> +    ops::Deref,
+> +    ptr::NonNull,
+> +};
+> +
+> +/// Trait for types that are _always_ reference-counted.
+> +///
+> +/// This trait allows types to define custom reference increment and dec=
+rement logic.
+> +/// It enables safe conversion from a shared reference `&T` to an owned =
+[`ARef<T>`].
+> +///
+> +/// This is usually implemented by wrappers around C types with manual r=
+efcounting.
+> +///
+> +/// For purely Rust-managed memory, consider using [`Arc`](crate::sync::=
+Arc) instead.
+> +///
+> +/// # Safety
+> +///
+> +/// Implementers must ensure that:
+> +///
+> +/// - Calling [`AlwaysRefCounted::inc_ref`] keeps the object alive in me=
+mory until a matching [`AlwaysRefCounted::dec_ref`] is called.
+> +/// - The object is always managed by a reference count; it must never b=
+e stack-allocated or
+> +///   otherwise untracked.
+> +/// - When the count reaches zero in [`AlwaysRefCounted::dec_ref`], the =
+object is properly freed and no further
+> +///   access occurs.
+> +///
+> +/// Failure to follow these rules may lead to use-after-free or memory c=
+orruption.
+
+You also rephrased these docs, can you do that in a separate patch?
+
+> +
+
+Newline?
+
+---
+Cheers,
+Benno
+
+> +pub unsafe trait AlwaysRefCounted {
+> +    /// Increments the reference count on the object.
+> +    fn inc_ref(&self);
+> +
+> +    /// Decrements the reference count on the object.
+> +    ///
+> +    /// Frees the object when the count reaches zero.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// Callers must ensure that there was a previous matching increment=
+ to the reference count,
+> +    /// and that the object is no longer used after its reference count =
+is decremented (as it may
+> +    /// result in the object being freed), unless the caller owns anothe=
+r increment on the refcount
+> +    /// (e.g., it calls [`AlwaysRefCounted::inc_ref`] twice, then calls
+> +    /// [`AlwaysRefCounted::dec_ref`] once).
+> +    unsafe fn dec_ref(obj: NonNull<Self>);
+> +}
