@@ -1,77 +1,70 @@
-Received: from lahtoruutu.iki.fi (lahtoruutu.iki.fi [185.185.170.37])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18FD48F6E;
-	Wed, 25 Jun 2025 21:00:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=185.185.170.37
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750885219; cv=pass; b=GlSkHitpYbDA/9Y5E07NsiPtNVTIRITW45rw5VWjkFsLMxZBS7W/T5Sbv3DjMVdN6r4uDeXpy9ETViPFnR37mOsSCTw0e4xI/6FxPXSw34v//vFGvXxSsJEPFqtanI+H9ZLtwShM21203YL8B0xijJ+XhJtYEWFbkA0bbE/JG8I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750885219; c=relaxed/simple;
-	bh=Vz+VSeberudRnL4ulbMeTzd1Ndi0G+8Cy3z4R15v+Fs=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FE61FC0EF;
+	Wed, 25 Jun 2025 21:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750885221; cv=none; b=qQtpqfD3fk2GfFKBWZk3SFy1ghADZMS8I2IkvnW19ISu/HvxEdNMgLmEHh/ZF1LkUqaWsUTlwhLowAh58UymzbSiJE5F/mrGjTjFQyhU/Mv4H1X/ZKJ14mscneol5a4SwoiLUaWYjuM67YhS87lE+htZuRRgpHBcr7wwlCTEXvc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750885221; c=relaxed/simple;
+	bh=OfHpIqLcTHpXdRZRk0FudQdPhydGbCfNuVEN1gTGALc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OfnVOrdIflA5j+GMIfXVh1tutRvCS5XPkEwc7jXYjNcsHopCwKb0GG8XCmR0XKAprPdHLwlGgXVARe39N2HO7u+5cJrhxi8q91Xcs5Ija9QBqhHeKv56tqqaydE6BSfz5BR+r4MyHbCdDxRPF+DYECC9gQSJBXxoyizerHNKBrc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi; spf=pass smtp.mailfrom=iki.fi; dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b=UH1m5ui8; arc=pass smtp.client-ip=185.185.170.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iki.fi
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iki.fi
+	 Content-Type:Content-Disposition:In-Reply-To; b=FhiLBl7z5FJ6Q3QfEM5r3Iqukd1wexdz9B1TxGKeaC7xD8Wv0no3oFF50GR29p8ux2HUAPmddST1U3K2I3hIyNqk4duJxSGjjz2pUzQWXUDgQDjaX9e1g98uHYqrbN2+e++tviA6AMIZ54JkQ/znR/HuUyt+xdQwOWLXv8hCMXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I7MmOr7L; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iki.fi header.i=@iki.fi header.b="UH1m5ui8"
-Received: from hillosipuli.retiisi.eu (2a00-1190-d1dd-0-127c-61ff-fee2-b97e.v6.cust.suomicom.net [IPv6:2a00:1190:d1dd:0:127c:61ff:fee2:b97e])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: sailus)
-	by lahtoruutu.iki.fi (Postfix) with ESMTPSA id 4bSDjQ5nlMz49Pv9;
-	Thu, 26 Jun 2025 00:00:09 +0300 (EEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi; s=lahtoruutu;
-	t=1750885211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+j+QmnjtgrdPyuqA4YOcCmizdlMWGU7RjodSXECtW1w=;
-	b=UH1m5ui8lDi0c037PrcR1TIK9W54D7iRIc+LOirZnFGUx8Q46eb+c9cj0lKVR9pzhGBTD7
-	Jgn3/5GhWNW8xIid4CDV0bxCIq4fLHqWILP2sVYAUCPBkCkQBTT9Y2Q6pHmuIAYfZS4jIj
-	cSp3VwL2ENCpPnnLhvcfl3UAF72f5uxwfa7PnURXh7+KA/Qz0fO0DzQejYMiKrq8JzqBsy
-	TXs3EzLaJGkiHKnOyNFD/dzMMhQubVfcar7wserSD41yuqTz0LK3tDKR0SHqUV/EYukOwh
-	dj9UMgyFYCZpaXdcbvmAP4qKajp30RovxUU65TLCzM/NqKxGM1eKm0gsVcFlBQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=iki.fi;
-	s=lahtoruutu; t=1750885211;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+j+QmnjtgrdPyuqA4YOcCmizdlMWGU7RjodSXECtW1w=;
-	b=Ga40Y6R6d+fsRNcLOCsGtJMWE9dU62boKDumY4d5c9O5mVx+dbqgsfosa1puLpBPE9kn0y
-	UhX9m9JosgvGadVQiGcLq7At51SBNoVul1xD+dCG4MDX0x4P4+fm6jkbznoQtcqRG/abhv
-	5II7abvK4czxLZ3nMwPcpnmVl8cP0fycnifaGP7Q0JMrH7EgF8DxIhglsCTB+eDNWMS7fm
-	03ctkfgVRNty5OY4l4mTUFeokwDVKAUEVejRFNKB3iOTK29so2Zb14/FfaBy1nzdvRuv0T
-	4vERcXg8rFdXj2ZCHrd6bIfjIfmI5UYDFeT1CkrsW0BnqHrmaA50XVOlmPD30w==
-ARC-Authentication-Results: i=1;
-	ORIGINATING;
-	auth=pass smtp.auth=sailus smtp.mailfrom=sakari.ailus@iki.fi
-ARC-Seal: i=1; s=lahtoruutu; d=iki.fi; t=1750885211; a=rsa-sha256;
-	cv=none;
-	b=HLojqxwYRSa1bi2KbnJmgodfuh+fF4gg8Z11gVHeG1aWS27Ak/UCcLCEMvmafVqEqckFBQ
-	swtxQxAakM7qjVY+MtxATroDc9gGo2SC+xJyTX3mlH9HR1gL6F1w8DBtr2cUqMAJDpntD8
-	FB83TWLg32BDxEinBclVpEPcd4lzMgZcqB2azZq2qIe55XRpBojo4cPEAXVmxaKJoX15Qw
-	5FNYk0NKKnYWoigKKXvwRifzScVh0LAtp4gN5f3BudxvgOVOEAJr4mR8xvPd8I2dWM5XPE
-	/uDJSTgQ3TVLnzlbimyq48BTfs8Ng7Gsy20JlOVgQMzvFemnn6WSdvby5S3PzQ==
-Received: from valkosipuli.retiisi.eu (valkosipuli.local [192.168.4.2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by hillosipuli.retiisi.eu (Postfix) with ESMTPS id 24F20634C94;
-	Thu, 26 Jun 2025 00:00:09 +0300 (EEST)
-Date: Wed, 25 Jun 2025 21:00:08 +0000
-From: Sakari Ailus <sakari.ailus@iki.fi>
-To: Devarsh Thakkar <devarsht@ti.com>
-Cc: jai.luthra@linux.dev, mchehab@kernel.org, linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org, s-jain1@ti.com, r-donadkar@ti.com,
-	vigneshr@ti.com, praneeth@ti.com, tomi.valkeinen@ideasonboard.com,
-	y-abhilashchandra@ti.com
-Subject: Re: [PATCH] media: ti: j721e-csi2rx: Allow passing cache hints from
- user-space
-Message-ID: <aFxjWFFLekPp54a2@valkosipuli.retiisi.eu>
-References: <20250312112140.449765-1-devarsht@ti.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I7MmOr7L"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-ade3ce5a892so6543366b.3;
+        Wed, 25 Jun 2025 14:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750885218; x=1751490018; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xtDyYW716erUZTye2I7Yx5cC7l6zf3E0f6lveSci/PM=;
+        b=I7MmOr7LrhmaGFofK5WG8l1/mxPD7FsdO9jmO+FisDBdPQHfJ6wxC+00wC8PqzNymk
+         RR9TzQXAhHeTW+3APm48OGtymlIxwGQ1LIJBzwGq5goRKFqrITC0bW/tFMivtIeOv6Ti
+         ysT22tmUhR3Q1fpbwwztwmzloWCXYZ9bbNNVa6oLf1NW9Y5HcsShy05T4stn5AmshgiC
+         3wyv/j4LTGuXMnggaQf53E4K5sKcTclL0l9XEWsdB27WX0lzLsEj7zG6beZsqasiSyff
+         bExGURBMm7FKhFtx99F8mMVdSWTq1nld13BkxqJX+CnAn05TeUansLG5YuL0+EBKvprv
+         umxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750885218; x=1751490018;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xtDyYW716erUZTye2I7Yx5cC7l6zf3E0f6lveSci/PM=;
+        b=HpW2vFXFHDRjV+jlAp/OKJ5PZ53onjHUzShJrP8ILkLgphinbmn8JCaJR5XSGArrq7
+         Y51UWV89bBaSdk8+jIW5zSo8qEc/yWNUtQaCjrGh9XGEeudWrPShCsoqtKTfUb+oup0q
+         +iePI7yABvQGcggNAad+fsP/JbVeNG7Dm+8LJxU+swPXNYe0HzQwahurq3hKySC8Ba8/
+         Ib+at6N4IWzxNh/BKAR4ZLB8hzs8Mx9ZvFF94J34PTRobClq+nmDS6qwi9clkBIixm1n
+         N3wzMW5eDOFB8KRDke79fFb/1PY4peBJN1AMdWQJz5x60oSoLvqzJZzl1OilfHO3UZvr
+         jhLA==
+X-Forwarded-Encrypted: i=1; AJvYcCWFpsqWhSVjYQvJisjh1lpe1R3jS/Nj+Yw6B6TBGUtELqnSM8tlT/J7Uz6yM1hDpePU7WA0NBQKfgfYJnw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4cjItLE14zcFj11EvGXC5prjsAhKTR2KuyB8N4MwCA1DaF6eP
+	gVp8Dph56UL2MHeBrS1DwZ7IVdh1B57ptebk7clgUgEk2ec4GOW8ybdw
+X-Gm-Gg: ASbGncuYzMOVg1U1BiTUJg4MXZ3Je1it4vqFYV7kIhsK9fPPGwiz1By3P5c1yPRI9GQ
+	KCI6ztm5p42Agk9MS4E1raEAYzYblUyZcmPB9wDibG7iC+7s/tdWLqISRxAI8O+UIF3rwDGFagw
+	3zC3COrGWXZWp9aBl8p/yBs45ZAJ8sk3WmYQJg5mOd7teQkPO6IhP+C9PLotyHqEUy3vdBGTY3T
+	gib1K4PS0RwFLaLMtmuqbDTp3cRpZqjxaEk7mQacRPHR5ExFf3PCjVN4qE7B0wuWCed9ZwikoEy
+	AU3bhWXsa1YMOjhLmucVftnvmbxpNfaKcTfzpTPhu63d04+tjA==
+X-Google-Smtp-Source: AGHT+IHoXq4o4O1lxYBHsSHlr0waxrAX3plNIH8HYR58L9eywjGP/mbTDhqAD9j1ufTf9GCb/8sTSA==
+X-Received: by 2002:a17:906:318d:b0:ad2:23d0:cde3 with SMTP id a640c23a62f3a-ae0bef3d062mr123463466b.15.1750885218186;
+        Wed, 25 Jun 2025 14:00:18 -0700 (PDT)
+Received: from skbuf ([86.127.223.77])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0541bcec5sm1114461166b.143.2025.06.25.14.00.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 14:00:16 -0700 (PDT)
+Date: Thu, 26 Jun 2025 00:00:14 +0300
+From: Vladimir Oltean <olteanv@gmail.com>
+To: nathan.lynch@amd.com, Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] lib: packing: Include necessary headers
+Message-ID: <20250625210014.eqajfqiqkmycgoy4@skbuf>
+References: <20250624-packing-includes-v1-1-c23c81fab508@amd.com>
+ <20250624-packing-includes-v1-1-c23c81fab508@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -80,50 +73,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250312112140.449765-1-devarsht@ti.com>
+In-Reply-To: <20250624-packing-includes-v1-1-c23c81fab508@amd.com>
+ <20250624-packing-includes-v1-1-c23c81fab508@amd.com>
 
-Hi Devarsh,
-
-Thanks for the patch.
-
-On Wed, Mar 12, 2025 at 04:51:40PM +0530, Devarsh Thakkar wrote:
-> User-space can provide cache hints to enable software managed cache
-> operations or skip certain cache operations using memory flags
-> and buffer flags. This is useful for SoCs such as AM62px
-> which do not support hardware cache coherency.
+On Tue, Jun 24, 2025 at 08:50:44AM -0500, Nathan Lynch via B4 Relay wrote:
+> From: Nathan Lynch <nathan.lynch@amd.com>
 > 
-> This is tested on AM62px with yavta capture by passing
-> V4L2_MEMORY_FLAG_NON_COHERENT while using VIDIOC_REQBUFS
-> and V4L2_BUF_FLAG_NO_CACHE_CLEAN while using VIDIOC_QBUF
-> and ~5x reduction in memcpy time is seen for
-> copying captured frame to DDR as shared here [1].
-
-The lines may be up to 75 characters long here. Most editors can handle the
-wrapping for you, I've rewrapped the text in this case and edited it a
-little, as Jai suggested.
-
+> packing.h uses ARRAY_SIZE(), BUILD_BUG_ON_MSG(), min(), max(), and
+> sizeof_field() without including the headers where they are defined,
+> potentially causing build failures.
 > 
-> [1]:
-> Link: https://e2e.ti.com/support/processors-group/processors/f/processors-forum/1452545/am62p-the-ads6311-radar-camera-has-lost-frame-capture/5580472#5580472
-> Signed-off-by: Devarsh Thakkar <devarsht@ti.com>
+> Fix this in packing.h and sort the result.
+> 
+> Signed-off-by: Nathan Lynch <nathan.lynch@amd.com>
 > ---
->  drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c | 1 +
->  1 file changed, 1 insertion(+)
+>  include/linux/packing.h | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> index 6412a00be8ea..284d33b2a0ec 100644
-> --- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> +++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> @@ -895,6 +895,7 @@ static int ti_csi2rx_init_vb2q(struct ti_csi2rx_dev *csi)
->  	q->dev = dmaengine_get_dma_device(csi->dma.chan);
->  	q->lock = &csi->mutex;
->  	q->min_queued_buffers = 1;
-> +	q->allow_cache_hints = 1;
+> diff --git a/include/linux/packing.h b/include/linux/packing.h
+> index 0589d70bbe0434c418f41b842f92b3300a107762..20ae4d452c7bb4069eb625ba332d617c2a840193 100644
+> --- a/include/linux/packing.h
+> +++ b/include/linux/packing.h
+> @@ -5,8 +5,12 @@
+>  #ifndef _LINUX_PACKING_H
+>  #define _LINUX_PACKING_H
 >  
->  	ret = vb2_queue_init(q);
->  	if (ret)
+> -#include <linux/types.h>
+> +#include <linux/array_size.h>
+>  #include <linux/bitops.h>
+> +#include <linux/build_bug.h>
+> +#include <linux/minmax.h>
+> +#include <linux/stddef.h>
+> +#include <linux/types.h>
+>  
+>  #define GEN_PACKED_FIELD_STRUCT(__type) \
+>  	struct packed_field_ ## __type { \
+> 
+> ---
+> base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
+> change-id: 20250624-packing-includes-5d544b1efd86
+> 
+> Best regards,
+> -- 
+> Nathan Lynch <nathan.lynch@amd.com>
+> 
+> 
 
--- 
-Regards,
+Reviewed-by: Vladimir Oltean <olteanv@gmail.com>
 
-Sakari Ailus
+I assume this patch is not necessary for stable kernels, I haven't
+noticed any build breakage report in the packing integrations thus far.
+
+Netdev maintainers, can you pick this patch up via net-next? All past
+contributions to packing went through networking. Let me see if I can
+revive it in patchwork.
+
+pw-bot: under-review
+
+Nathan, if netdev maintainers don't respond within 24 hours, can you
+please post a v2 of this patch explicitly targeting the net-next tree,
+as per Documentation/process/maintainer-netdev.rst?
