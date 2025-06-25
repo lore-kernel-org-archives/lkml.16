@@ -1,161 +1,254 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0E872D878A
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C91628C87D
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 18:06:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750874783; cv=none; b=IymcIf+kN2kD+4aLnr23Rt8whw3RgoNdnQ+WDPlg2x+uoHjyTweTdaLGW/unzyt827xKbiFjr22GKd/4bt3emw+qwSTvALZGBVJ7edTztx+8sZwFBaCdllzmjKbxT+RbkYkBW3uqJRKsbMFXI3j2p+YNsdvDK+vpT8y6cv9T4eM=
+	t=1750874809; cv=none; b=KAqKEO+JgRC8176/Pvx6CM8M6Q9e4HoaHXrk1v5zBiiYjmk0vNU3hRJ6jIAvjeUUsBor0gfS7Q50MmLOhJRCMJcEedqLvDVhW+inlo4WLvNFrMl+XFfhnkUpWZClsK1cVURkP6hkg4DO0Ay4YzmbK0nzwtaetYybCzb7N8YKMdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750874783; c=relaxed/simple;
-	bh=LfO/WxqGhtgXAUrRxKDl23w6PUKiNJbkQGbfw22jWG0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iBSMTNOPAtj1YWyzPDVt54ieffZz00zKs3WougVlYirVOrw9iT488CK4k8BRy5TRoxLDLOQ3BK/oYcMPcyJpnlH6ez7fohWtfkM1c45AuoWrkwnaE7/tNRMVY1/bcRhLGvGIoArkTdilXaW+0LUDPD/kFR3lD8RndhZFHAxeiiU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mQ240GIC; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mQ240GIC"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-237f18108d2so21965ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:06:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750874781; x=1751479581; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=c3PNbssUoBeGFUceKDOa/ZUhofUS/o4RLNNr8Hnz3Kc=;
-        b=mQ240GICraOZrg5Fbs9p+m9Ku/Mz4wuxGcQs7YT8mUwPhx1/pwgiXAb4eQDEEUTmdV
-         M/qUieF4YKWv707ZORFsxPUt/RdV2gKqGrqobBjEIg7p752pOZnvlxIDR1gc52qxh+Iw
-         eSFihU2LChBnQclRaCC3mVLxzUtFW/Cu3OxboQoboLffjWq/IE+cEDVWIGPfVgtq4ei6
-         8Vnz2MMIZDbeg4aeGo8MoZcX9sCDVQAhOm7kh25ZvwpkotSlTb3ad8VQdMs3ZR0vwrcC
-         H3IIg6ljL9Vwp54vLmz1I8AC6EprAbXni3RRqbN7+ar64PJ3xJdcaXgNVBIRQjxflHgY
-         /34A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750874781; x=1751479581;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=c3PNbssUoBeGFUceKDOa/ZUhofUS/o4RLNNr8Hnz3Kc=;
-        b=Ct0JzfGuwVIlLpxWf/yNwbPs6Hk7tFEgsTpRlRsWftNzSlrwH7ZJMbYanHuOoFdNkh
-         OCb4J60/gi/6X0Fs0pjegF2/cV5HdrUgN2hmGAHGrY1R9POun5Jd/ITBKEAilMKprIs7
-         9jGTgjeqk9TFZmOknGw2YziK79z6g0Six6bd2EsS5pvjin/Op1HZnH8Rsu8PNa8L07ol
-         gNvBTICTsCDXaH73W1I+YMs3CrZ6QLrZBHTqtXjHJBR/YhKwsXDvBg89XSWdDKCLOFni
-         E5sLVxIS3XuB5ntuEo3UTyEpI6fT6DEO0B8v5OensD31kJREhHahD9OS/7YZ8HzIABAu
-         6R9A==
-X-Forwarded-Encrypted: i=1; AJvYcCXucj9f4Yvs5plafdcYhQ64aw/GzD2wc4awdLguE3KuLsujQNA6Wv1kgePxdlBNszjwyWdxYeqQQnIxiI0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6xFZo1WeCf/gG1/gEpnfe5+caSaIHfBL5BDQ83dA0Tc4d99Ts
-	na4CDgdb1hS+RQtAHOQmBdApYA9dsHFXCxhx4rnYVMS0f8eX9u3vDQZQPAObdi6XBOCSekwA/+Z
-	nSZXzSdzDL45/f6pOc0xUi8Um6dK/W/P5cazK1wzcQE1nOQcy+SL5W0h2iUc=
-X-Gm-Gg: ASbGncu87Biw2pWLZYbR9S84yRcVpt47RX7w4IBFJkA9oCl8x5dI7etuQBfgXT89lQn
-	cfgtQAd6E9YQ32vte0OmSamXGIg7H9NDaKfoXFX048MD03GDxgfjGpFQ1RWqBc0x52ekdKnnWVR
-	oztT1dcFQC52o8KwFDPx5r4k/lndXojvSq7gw7WUaCLI1ggNQIA6Llso5LWur0rm3LonUfDm1c
-X-Google-Smtp-Source: AGHT+IFghrvzPMv3+aYTxv0CDdYnxurWCNcPQl387UmznY2FxsIw81sFkdZ7P7wIweE0lrrI5CO0jXvBW9JyAAZz2ac=
-X-Received: by 2002:a17:903:1b2d:b0:22c:3cda:df11 with SMTP id
- d9443c01a7336-239785df083mr95235ad.10.1750874780917; Wed, 25 Jun 2025
- 11:06:20 -0700 (PDT)
+	s=arc-20240116; t=1750874809; c=relaxed/simple;
+	bh=yZ3bmJ5oFOTAfYkpkakXUT8e+YKqYTNbuX9Iu5rR8Pw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZrnxWXvMf7pR9uhQYHAAOYfiNBy4w3lJRLFnRx9DkTwKXS3tMvqsjNuvnE8hhATJyfRumGPLdKt3+Y2Z5RT8aQgJ3HF8fPwwwWAz9r8HcBwfr8UiZhmvS+/bJf4LYocx58bTnOOehFGEUe157BpzRQ4ZFTl+dvfIOpsyupZCRmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <l.stach@pengutronix.de>)
+	id 1uUUW2-0001i3-Nl; Wed, 25 Jun 2025 20:06:34 +0200
+Message-ID: <5a094e3b95f1219435056d87ca4f643398bcb1d3.camel@pengutronix.de>
+Subject: Re: [PATCH net-next v2 1/1] phy: micrel: add Signal Quality
+ Indicator (SQI) support for KSZ9477 switch PHYs
+From: Lucas Stach <l.stach@pengutronix.de>
+To: Oleksij Rempel <o.rempel@pengutronix.de>, Andrew Lunn <andrew@lunn.ch>, 
+ Heiner Kallweit <hkallweit1@gmail.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,  Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ kernel@pengutronix.de,  Russell King <linux@armlinux.org.uk>
+Date: Wed, 25 Jun 2025 20:06:32 +0200
+In-Reply-To: <20250625124127.4176960-1-o.rempel@pengutronix.de>
+References: <20250625124127.4176960-1-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250617205320.1580946-1-irogers@google.com> <51bc73ca-3b1f-4f1a-b75b-7bdeffd7a395@csgroup.eu>
-In-Reply-To: <51bc73ca-3b1f-4f1a-b75b-7bdeffd7a395@csgroup.eu>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 25 Jun 2025 11:06:08 -0700
-X-Gm-Features: AX0GCFu_4XjLCmXZDZRYMELR9OF9JFxkDcRYkMG9bF6Q2IsJKq4g0MuxY0MjGKg
-Message-ID: <CAP-5=fVoOJsk2DzG8zHLg_QxQnxsXNJ2c21T-JYOQeH5GoTMhg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Switch get/put unaligned to use memcpy
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Eric Biggers <ebiggers@google.com>, Yuzhuo Jing <yuzhuo@google.com>, 
-	Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
-	Vincenzo Frascino <vincenzo.frascino@arm.com>, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	Al Viro <viro@zeniv.linux.org.uk>, "Jason A. Donenfeld" <Jason@zx2c4.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-On Wed, Jun 18, 2025 at 4:42=E2=80=AFAM Christophe Leroy
-<christophe.leroy@csgroup.eu> wrote:
->
->
->
-> Le 17/06/2025 =C3=A0 22:53, Ian Rogers a =C3=A9crit :
-> > The existing type punning approach with packed structs requires
-> >   -fno-strict-aliasing to be passed to the compiler for
-> > correctness. This is true in the kernel tree but not in the tools
-> > directory resulting in this suggested patch from Eric Biggers
-> >   <ebiggers@google.com>:
-> > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flor=
-e.kernel.org%2Flkml%2F20250614044133.660848-2-ebiggers%40kernel.org%2F&data=
-=3D05%7C02%7Cchristophe.leroy%40csgroup.eu%7Cf05413010ecc40ad1bdf08ddade131=
-6a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638857904894967529%7CUnknow=
-n%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiI=
-sIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3D29QUBLnUowncZiTH4z74=
-Ec1olUlX0OTYnUNGDvWxX1o%3D&reserved=3D0
-> >
-> > Requiring -fno-strict-aliasing seems unfortunate and so this patch
-> > makes the unaligned code work via memcpy for type punning rather than
-> > the packed attribute.
-> >
-> > v2: switch memcpy to __builtin_memcpy to avoid potential/disallowed
-> >      memcpy calls in vdso caused by -fno-builtin. Reported by
-> >      Christophe Leroy <christophe.leroy@csgroup.eu>:
-> >      https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%=
-2Flore.kernel.org%2Flkml%2Fc57de5bf-d55c-48c5-9dfa-e2fb844dafe9%40csgroup.e=
-u%2F&data=3D05%7C02%7Cchristophe.leroy%40csgroup.eu%7Cf05413010ecc40ad1bdf0=
-8ddade1316a%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638857904894985987=
-%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOi=
-JXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=3Dl1LJP3XPKVu=
-hDpiHxxkfWBiNPMYaBT9YXGBFzs6wLpY%3D&reserved=3D0
-> >
+Hi Oleksij,
 
-So I think I can remove the _Generic block in unaligned.h by depending
-on the equivalent __unqual_scalar_typeof from
-include/linux/compiler_types.h. I think this is preferable and so I'll
-post a v3.
+Am Mittwoch, dem 25.06.2025 um 14:41 +0200 schrieb Oleksij Rempel:
+> Add support for the Signal Quality Index (SQI) feature on KSZ9477 family
+> switches. This feature provides a relative measure of receive signal
+> quality.
+>=20
+> The KSZ9477 PHY provides four separate SQI values for a 1000BASE-T link,
+> one for each differential pair (Channel A-D). Since the current get_sqi
+> UAPI only supports returning a single value per port, this
+> implementation reads the SQI from Channel A as a representative metric.
 
-> Does this new version also fixes the failures reported by the robots:
-> - arm64-randconfig with clang 21
+I wonder if it wouldn't be more useful to report the worst SQI from all
+the channels instead.
 
-The issue here was:
+> This can be extended to provide per-channel readings once the UAPI is
+> enhanced for multi-channel support.
+>=20
+> The hardware provides a raw 7-bit SQI value (0-127), where lower is
+> better. This raw value is converted to the standard 0-7 scale to provide
+> a usable, interoperable metric for userspace tools, abstracting away
+> hardware-specifics. The mapping to the standard 0-7 SQI scale was
+> determined empirically by injecting a 30MHz sine wave into the receive
+> pair with a signal generator. It was observed that the link becomes
+> unstable and drops when the raw SQI value reaches 8. This
+> implementation is based on these test results.
+>=20
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+> changes v2:
+> - Reword commit message
+> - Fix SQI value inversion
+> - Implement an empirically-derived, non-linear mapping to the standard
+>   0-7 SQI scale
+> ---
+>  drivers/net/phy/micrel.c | 124 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 124 insertions(+)
+>=20
+> diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+> index d0429dc8f561..6422d9a7c09f 100644
+> --- a/drivers/net/phy/micrel.c
+> +++ b/drivers/net/phy/micrel.c
+> @@ -2173,6 +2173,128 @@ static void kszphy_get_phy_stats(struct phy_devic=
+e *phydev,
+>  	stats->rx_errors =3D priv->phy_stats.rx_err_pkt_cnt;
+>  }
+> =20
+> +/* Base register for Signal Quality Indicator (SQI) - Channel A
+> + *
+> + * MMD Address: MDIO_MMD_PMAPMD (0x01)
+> + * Register:    0xAC (Channel A)
+> + * Each channel (pair) has its own register:
+> + *   Channel A: 0xAC
+> + *   Channel B: 0xAD
+> + *   Channel C: 0xAE
+> + *   Channel D: 0xAF
+> + */
+> +#define KSZ9477_MMD_SIGNAL_QUALITY_CHAN_A	0xAC
+> +
+> +/* SQI field mask for bits [14:8]
+> + *
+> + * SQI indicates relative quality of the signal.
+> + * A lower value indicates better signal quality.
+> + */
+> +#define KSZ9477_MMD_SQI_MASK			GENMASK(14, 8)
+> +
+> +#define KSZ9477_SQI_MAX				7
+> +
+> +/* Delay between consecutive SQI register reads in microseconds.
+> + *
+> + * Reference: KSZ9477S Datasheet DS00002392C, Section 4.1.11 (page 26)
+> + * The register is updated every 2 =C2=B5s. Use 3 =C2=B5s to avoid redun=
+dant reads.
+> + */
+> +#define KSZ9477_MMD_SQI_READ_DELAY_US		3
+> +
+> +/* Number of SQI samples to average for a stable result.
+> + *
+> + * Reference: KSZ9477S Datasheet DS00002392C, Section 4.1.11 (page 26)
+> + * For noisy environments, a minimum of 30=E2=80=9350 readings is recomm=
+ended.
+> + */
+> +#define KSZ9477_SQI_SAMPLE_COUNT		40
+> +
+> +/* The hardware SQI register provides a raw value from 0-127, where a lo=
+wer
+> + * value indicates better signal quality. However, empirical testing has
+> + * shown that only the 0-7 range is relevant for a functional link. A ra=
+w
+> + * value of 8 or higher was measured directly before link drop. This ali=
+gns
+> + * with the OPEN Alliance recommendation that SQI=3D0 should represent t=
+he
+> + * pre-failure state.
+> + *
+> + * This table provides a non-linear mapping from the useful raw hardware
+> + * values (0-7) to the standard 0-7 SQI scale, where higher is better.
+> + */
+> +static const u8 ksz_sqi_mapping[] =3D {
+> +	7, /* raw 0 -> SQI 7 */
+> +	7, /* raw 1 -> SQI 7 */
+> +	6, /* raw 2 -> SQI 6 */
+> +	5, /* raw 3 -> SQI 5 */
+> +	4, /* raw 4 -> SQI 4 */
+> +	3, /* raw 5 -> SQI 3 */
+> +	2, /* raw 6 -> SQI 2 */
+> +	1, /* raw 7 -> SQI 1 */
+> +};
+> +
+> +/**
+> + * kszphy_get_sqi - Read, average, and map Signal Quality Index (SQI)
+> + * @phydev: the PHY device
+> + *
+> + * This function reads and processes the raw Signal Quality Index from t=
+he
+> + * PHY. Based on empirical testing, a raw value of 8 or higher indicates=
+ a
+> + * pre-failure state and is mapped to SQI 0. Raw values from 0-7 are
+> + * mapped to the standard 0-7 SQI scale via a lookup table.
+> + *
+> + * Return: SQI value (0=E2=80=937), or a negative errno on failure.
+> + */
+> +static int kszphy_get_sqi(struct phy_device *phydev)
+> +{
+> +	int sum =3D 0;
+> +	int i, val, raw_sqi, avg_raw_sqi;
+> +	u8 channels;
+> +
+> +	/* Determine applicable channels based on link speed */
+> +	if (phydev->speed =3D=3D SPEED_1000)
+> +		/* TODO: current SQI API only supports 1 channel. */
+> +		channels =3D 1;
+> +	else if (phydev->speed =3D=3D SPEED_100)
+> +		channels =3D 1;
+> +	else
+> +		return -EOPNOTSUPP;
+> +
+> +	/*
+> +	 * Sample and accumulate SQI readings for each pair (currently only one=
+).
+> +	 *
+> +	 * Reference: KSZ9477S Datasheet DS00002392C, Section 4.1.11 (page 26)
+> +	 * - The SQI register is updated every 2 =C2=B5s.
+> +	 * - Values may fluctuate significantly, even in low-noise environments=
+.
+> +	 * - For reliable estimation, average a minimum of 30=E2=80=9350 sample=
+s
+> +	 *   (recommended for noisy environments)
+> +	 * - In noisy environments, individual readings are highly unreliable.
+> +	 *
+> +	 * We use 40 samples per pair with a delay of 3 =C2=B5s between each
+> +	 * read to ensure new values are captured (2 =C2=B5s update interval).
+> +	 */
+> +	for (i =3D 0; i < KSZ9477_SQI_SAMPLE_COUNT; i++) {
+> +		val =3D phy_read_mmd(phydev, MDIO_MMD_PMAPMD,
+> +				   KSZ9477_MMD_SIGNAL_QUALITY_CHAN_A);
+> +		if (val < 0)
+> +			return val;
+> +
+> +		raw_sqi =3D FIELD_GET(KSZ9477_MMD_SQI_MASK, val);
+> +		sum +=3D raw_sqi;
+> +
+> +		udelay(KSZ9477_MMD_SQI_READ_DELAY_US);
 
-  llvm-readelf: warning: 'arch/arm64/kernel/vdso/vdso.so.dbg': invalid
-PT_DYNAMIC size (0x118)
-  llvm-readelf: warning: 'arch/arm64/kernel/vdso/vdso.so.dbg':
-PT_DYNAMIC dynamic table is invalid: SHT_DYNAMIC will be used
+This ends up spending a sizable amount of time just spinning the CPU to
+collect the samples for the averaging. Given that only very low values
+seem to indicate a working link, I wonder how significant the
+fluctuations in reported link quality are in reality. Is it really
+worth spending 120us of CPU time to average those values?
 
-which the switch to __builtin_memcpy should have resolved.
+Maybe a running average updated with a new sample each time this
+function is called would be sufficient?
 
-> - i386-randconfig with gcc 12
+Regards,
+Lucas
 
-The reported error is in the unaligned code from sparse:
+> +	}
+> +
+> +	avg_raw_sqi =3D sum / KSZ9477_SQI_SAMPLE_COUNT;
+> +
+> +	/* Handle the pre-fail/failed state first. */
+> +	if (avg_raw_sqi >=3D ARRAY_SIZE(ksz_sqi_mapping))
+> +		return 0;
+> +
+> +	/* Use the lookup table for the good signal range. */
+> +	return ksz_sqi_mapping[avg_raw_sqi];
+> +}
+> +
+> +static int kszphy_get_sqi_max(struct phy_device *phydev)
+> +{
+> +	return KSZ9477_SQI_MAX;
+> +}
+> +
+>  static void kszphy_enable_clk(struct phy_device *phydev)
+>  {
+>  	struct kszphy_priv *priv =3D phydev->priv;
+> @@ -5801,6 +5923,8 @@ static struct phy_driver ksphy_driver[] =3D {
+>  	.update_stats	=3D kszphy_update_stats,
+>  	.cable_test_start	=3D ksz9x31_cable_test_start,
+>  	.cable_test_get_status	=3D ksz9x31_cable_test_get_status,
+> +	.get_sqi	=3D kszphy_get_sqi,
+> +	.get_sqi_max	=3D kszphy_get_sqi_max,
+>  } };
+> =20
+>  module_phy_driver(ksphy_driver);
 
-   drivers/scsi/megaraid/megaraid_sas_base.c:8438:32: sparse: sparse:
-Using plain integer as NULL pointer
-
-I believe this is because of the _Generic block with a pointer type,
-and so the use of __unqual_scalar_typeof in the next/v3 patch set
-should hopefully resolve it - or else we'll need to special case
-pointer types to assign NULL rather than 0, but I'd prefer not to
-special case every potential pointer type.
-
-Thanks,
-Ian
-
-> Christophe
->
-> > Ian Rogers (3):
-> >    vdso: Switch get/put unaligned from packed struct to memcpy
-> >    tools headers: Update the linux/unaligned.h copy with the kernel
-> >      sources
-> >    tools headers: Remove unneeded ignoring of warnings in unaligned.h
-> >
-> >   include/vdso/unaligned.h        | 48 ++++++++++++++++++++++++++++----=
--
-> >   tools/include/linux/unaligned.h |  4 ---
-> >   tools/include/vdso/unaligned.h  | 48 ++++++++++++++++++++++++++++----=
--
-> >   3 files changed, 84 insertions(+), 16 deletions(-)
-> >
->
