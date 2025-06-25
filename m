@@ -1,201 +1,184 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2072.outbound.protection.outlook.com [40.107.236.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D653211290
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750835598; cv=none; b=uWn0fcf+4Z+Bydhq8do4WVGWv82baTGaFlODawKbtNs3OisZu8gYoFh2iJCKoApklSdBvctLaufM1V/tHbSgDhpi71/7j5Eg5uL6f9TlXjKzdHNKixZcPURovJfTKfvdZWB/2hrD0/0AzFUgu1pn+Fcy6arZVnE7pNkbyYcPhD8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750835598; c=relaxed/simple;
-	bh=Ds7IUTDTvw2CV2lBhtiAyxq24lOIiiA5IpHwJwPyoJ4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N3VHSVcmauUr0jsb4dzs21ReLhZ1rkANYLmJQj+sgLX+Ipk6xHIKymbCnXwbtq6gKtrBvJdXN47WPR7LRNCbjk5wU4aIapmJKqL0w/y3tzOxwKVOB2RGgRIy6j5jfueOh5dDdcsNuO9dfolhqP6X63oU7NSHngIHXTxfPzUWuek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fidglaxO; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30CF1FC0EF;
+	Wed, 25 Jun 2025 07:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.72
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750835826; cv=fail; b=t62E3M2tyVS0gdd5vZ/rrkbDjVHJiVy6GNDajyoL4z16IxlK8KrNs/s3CMUOuWcK1W4xpH+Frq1kXRKOjjEmbueZn/NDJCrKQPeSEqPrpkGVggthHap3l5++45oif7irS2ClQ+49lN652iL7vnciNDWuCqkJlxw+NFKpAXSeOoQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750835826; c=relaxed/simple;
+	bh=6aMICP93uYHA8I0PUWz0RI693keLJMzI5nKFDESiUHE=;
+	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID:Date; b=J59K15Ch9mKRsa+oPAEYDH21X1yYXB8uxP4kWbYTGtYRowpJw8e1tSd7v6Tr5CzlIaGz7K0v3apkTwdQzUmhnA2mAlSs2v6o9qlic08+JUWdMgAzUNgZVXZ6dR5XtQCKZeWtKIo9zPYUBfl4bp1QAZoOHjSyChpxIZ0vw8EyXF0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=BUgvAhkr; arc=fail smtp.client-ip=40.107.236.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fidglaxO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750835593;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UvazZI9dix5Ccz8uQdaazIH2SdfSX8TXp65gCpdhwKo=;
-	b=fidglaxO8zgwVMEne/5d6CJuRbHesSAWTc3zRbvoVhVlYLNFsgtu71eH6YQI9tFGK7ViKU
-	E6x2DP7n94ga2sjB7aqXaSBU+zZaPVg0T8825/revwhe6MPoiLN9mt37aKboCkxZ+T6DsN
-	0M2QoVl7BJ9zV3gLnxM/md90UMUsBX4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-314-Fe5EUMpbN462kZ5hMWAkjw-1; Wed, 25 Jun 2025 03:13:08 -0400
-X-MC-Unique: Fe5EUMpbN462kZ5hMWAkjw-1
-X-Mimecast-MFC-AGG-ID: Fe5EUMpbN462kZ5hMWAkjw_1750835587
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-450d50eacafso8848655e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:13:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750835587; x=1751440387;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UvazZI9dix5Ccz8uQdaazIH2SdfSX8TXp65gCpdhwKo=;
-        b=cYIaf2rznvsypF6J/lSF3R92pBlDbX6SA/5kjfXickflqrChqth0jBxREYV8nr2toa
-         S8Y+s40sGKtC0rNjYkCKjcuepVgCTLNBYwl1G7tLtSZJbbyhZenfbtu1tnD86dL137nt
-         54nfTADaCdGyrIrRezUrJ7NzAZf9+jkhBKagLT5Cg7xuZa0lxEw/nADa2SA85SW+2HYa
-         AUhOfWNdbWz2YxFi9WxJd605a40zqdrELFkePB0CI53amRTy5bCXaY8vndvU6OvVN6Lc
-         8xuUqzSiz7QTxQq4xP8SuMb2trKYru8DbqJcQYo3Snw/6E/zd8XSsnWlrpGhr+lKy+hm
-         SMuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWadFIuO3c2Hu1DVIz4ZRreSULf5gAFWCYa+uLx5gzDDA7aH0MzeQvQwf3V9oXWX2NMOmCVN3XTjfXOozs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxDuRRCcjXD5XITjy4bCYUPagZEifjfKYXXV1709VRmpkhC15E
-	OrY6CMvzX3Twkev8TrV9vJ68vMINzrUDVAj+1IVx3PTv5WyABd2vtzlMQfkUQKvobfEKYJt5PbW
-	l3+c41P+1zpMlI20bmFnda5BqscL+jaIMUYpyovdTbs69IVA9EB0YUR463wLO8vxZiQ==
-X-Gm-Gg: ASbGncuXcxBuX6pt2ZKgakQNNQPjIH6/x6zb/K7VBeqUzQxJkhuv0c2I2XgUT8Caro0
-	kv4rfIw1yXyuPtfLoTuJ7COunJyvgWITQYmb1xbM6i+2ITZvZv1iIAQsjVcroJJGztfzMwAdSxf
-	zUUEZ1x9MNCpY9crH1kSu5g55T64T07YAJ2+C3KZpIMQXP5qsE61K7NOfA3WpWuL1X/J1FLtstv
-	KxRUP/LTMP3IChHNyEEQYenAnYQcwwlDH9pItxGTSf2/NbySlXga3A1y+EdoTdpbiFNISHxsGHt
-	ftG6uPUJq+KmrQJ5oKO719ivVcT1GgDtLyuNOU26eJfYeNsJLeQTjGFhOTA/RvYchsvjAA==
-X-Received: by 2002:a05:600c:c166:b0:453:2433:1c5b with SMTP id 5b1f17b1804b1-45381aeaf59mr16247375e9.5.1750835586442;
-        Wed, 25 Jun 2025 00:13:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF3iA3F1mdUK03DtATl2924qBuUv87aDvuUQRfj1Hbnrj8+86URjh4kC1Jl7WzPkyXWYI1Cug==
-X-Received: by 2002:a05:600c:c166:b0:453:2433:1c5b with SMTP id 5b1f17b1804b1-45381aeaf59mr16246855e9.5.1750835585911;
-        Wed, 25 Jun 2025 00:13:05 -0700 (PDT)
-Received: from ?IPV6:2a0d:3341:cc86:3510:2b4a:1654:ed63:3802? ([2a0d:3341:cc86:3510:2b4a:1654:ed63:3802])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8069534sm3692041f8f.44.2025.06.25.00.13.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 00:13:05 -0700 (PDT)
-Message-ID: <20159d14-7d6b-4c16-9f00-ae993cc16f90@redhat.com>
-Date: Wed, 25 Jun 2025 09:13:02 +0200
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="BUgvAhkr"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=icoFiR80Aac41c/yPDz9ixQL79pgJ+v3/ifsCXREW9/G3OG2BqXwxdXvrnNhb2aQ01m87ePbE8UxVlerYTPDimHpx4qPWC+TvxxFz1XkEnZqjeXJ0C/wquMgtAnRMOPD4amC7qol7YjEvGvUIISxaqZDIfqgxhaF/8R5RUec+IzISMlbBzrSND4pD9W+B8P1An78QeakTvCpBTQc0yQvtGlAg4iVtW54mfAXxZUm1gSzLtO56Tr6CKwBD21kA1hjpcOfwYY54BSfoNFo7BPfFxQdsjxuIquWC2GRTjIszj5s5/H2JsF4DDGkKvA9kYIcYVZw/o5fPSr34qkGxHlvkQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dxbdBPC18Wbbbq+mCFOefM8WeBnCL2o17f2UBok1aSY=;
+ b=h/Vge9gj1DEpn5z/nP5EVy3VygJy5jK1hhLM/97erW3Wx7WkMpHzOjC8AD72FlJUY7fFfXsb/e3j+5aXLUETqTG9taD/a96eZqlWMZfIRNIm8rW0J6HqHCRnUr6+QBszwdKgdwbwuIMfZ1ymf7/VLg+UXTVZKc8F24rg9aBSuBfEDA5lywFhnt3Urwm4A2hDepaI4FwZq7QZItt7i8yqf5czy+1eFK6KLdAGfaH4rNTnlKUSQrA9b8v5Q5gYi4lODvx3XfM04Cszcm/obeUPqzuwBt596J3QZs5fN2PrY4nfPg/YI8FYjbjkLCNJa9BwTYO2lFRdHGGWIeSBOzIKPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dxbdBPC18Wbbbq+mCFOefM8WeBnCL2o17f2UBok1aSY=;
+ b=BUgvAhkrG2wfeSzLMCZECartnJspsGpXhsgtAWBwFFJF2LiqlX4GGScmB/yYRd0au0Aw6nnEBmgWJ+Cosu6fq2dCSCQSCNZTD6hJtd2zt8+6ZuPCZgIaTsY2gTZwTEsQW8uI11R5YAQJ3eADQ//mJ7IZEnaiFUxwDORzkTjrQ5lRTzfvf7PmcsIAqmzalQna/FExsxCkRq3PQM50nkgB9aC8nfyPZ69UGerPiV6q8/fMbo2AsZTCwGWv0WFNsAm1gOCmBH4h7oIFiFIgyiV/f46i5Wm7x0yi0NA97CSIDCC1v/jF6FPOdX7eF/PZF4Pug95NpGTAKZj5fB/Qw0DlEQ==
+Received: from CH2PR02CA0030.namprd02.prod.outlook.com (2603:10b6:610:4e::40)
+ by IA1PR12MB6187.namprd12.prod.outlook.com (2603:10b6:208:3e5::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8835.29; Wed, 25 Jun
+ 2025 07:17:01 +0000
+Received: from CH3PEPF0000000C.namprd04.prod.outlook.com
+ (2603:10b6:610:4e:cafe::f9) by CH2PR02CA0030.outlook.office365.com
+ (2603:10b6:610:4e::40) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8857.30 via Frontend Transport; Wed,
+ 25 Jun 2025 07:17:01 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CH3PEPF0000000C.mail.protection.outlook.com (10.167.244.39) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8880.14 via Frontend Transport; Wed, 25 Jun 2025 07:17:00 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 25 Jun
+ 2025 00:16:49 -0700
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 25 Jun
+ 2025 00:16:49 -0700
+Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Wed, 25 Jun 2025 00:16:48 -0700
+From: Jon Hunter <jonathanh@nvidia.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
+	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
+	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
+	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.4 000/222] 5.4.295-rc1 review
+In-Reply-To: <20250623130611.896514667@linuxfoundation.org>
+References: <20250623130611.896514667@linuxfoundation.org>
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [net-next v13 04/11] net: mtip: The L2 switch driver for imx287
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>, davem@davemloft.net,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
- Sascha Hauer <s.hauer@pengutronix.de>,
- Pengutronix Kernel Team <kernel@pengutronix.de>,
- Fabio Estevam <festevam@gmail.com>,
- Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
- Stefan Wahren <wahrenst@gmx.net>, Simon Horman <horms@kernel.org>,
- Andrew Lunn <andrew@lunn.ch>
-References: <20250622093756.2895000-1-lukma@denx.de>
- <20250622093756.2895000-5-lukma@denx.de>
- <b31793de-e34f-438c-aa37-d68f3cb42b80@redhat.com>
- <20250624230437.1ede2bcb@wsk>
-Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250624230437.1ede2bcb@wsk>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Message-ID: <cf271495-270e-4a0a-a93e-fe8c44e4eabd@rnnvmail204.nvidia.com>
+Date: Wed, 25 Jun 2025 00:16:48 -0700
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH3PEPF0000000C:EE_|IA1PR12MB6187:EE_
+X-MS-Office365-Filtering-Correlation-Id: b5b1c2a7-3c2b-4dfc-de19-08ddb3b84777
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|36860700013|82310400026|7416014|376014|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?MUJ4V0l3cW9jR29CTzc1bW5lZzludUtnVEgwS2xUUDd0MVByb29DTUFsYkFF?=
+ =?utf-8?B?Yzk0TzJ1eXo0a0l2OUxHR0hSd3RMWDZQMGdYZ1k0Sml2WHJIUG44YU1ycURS?=
+ =?utf-8?B?Q29yK2VJaExCZUEwMjhsZjg2VkUxaEdDbmNPcFUzaHZQS1psbVc2cGxGdzhZ?=
+ =?utf-8?B?WGxWRHJzaXM3QkRqV3JJRFVndUNUeVJRWUVlVUhadTVVc0tTTVlFalAvRHFl?=
+ =?utf-8?B?cjlMQ2JTWWoybkZaRUxSZGJNS1B0elNFTnlZaEZZT29IcUpTdjhxTDlxYkIz?=
+ =?utf-8?B?MFFvUHJPd1k2R0NmWVFHNWRPU3B6ck9jSC8yNG9FWkNRZXRja0lCdlc3VElX?=
+ =?utf-8?B?TUNYOEU2b2U1aG4yWitSdHo5YW52TWtzcDEwdUJkOHhiMmhqa0hnc2tDZ3Uw?=
+ =?utf-8?B?Y0VLOGlFc0hBZDR2TTl5aTZteGw3VFpDcTF0MDlNY1Ura1ErNm1USXhDSWxQ?=
+ =?utf-8?B?eDZKcmFsU1lmUnMwTUhkOXJwbll5c3lMVHlHWlEyU0J4Rm9Qd3RrRDc0YVFG?=
+ =?utf-8?B?TjZXankrdWtPZjM1c1NzY2YvSXNSU0NwTUJaYVR5dWRzRzlMRitFUW4xUmtG?=
+ =?utf-8?B?WklFcUs1d2llTm9pZVlpR2hZN0Q0Q2x1WVBWMTFCTkhiZDl2UFFSMXo1ZVFT?=
+ =?utf-8?B?eXhTRXNqUzhJVGNmWDFzbFJvblI3NWZJR3RnSWlDelJ0QkpDZ2FmMDlUL1BO?=
+ =?utf-8?B?VGo1Zk5icFhjM1l0QkZrc00zbWthY29QeXFxSjF0Qk5ET0FRVkF4N3MyOFc0?=
+ =?utf-8?B?b3VaS2FBZmMyanhOVHNmcytuVXFBNE9BOHljUkk4TmRMa3Avd3JQTVd4S3lk?=
+ =?utf-8?B?L1lEc09Pcnk4Z3VHT1JOWGtmQXUyM255U3lLaTNtUDFoM1IxdkQ3eGorU0d6?=
+ =?utf-8?B?Y213ZHJ6NW5ndzB4SmdFMEVmb3ZRRjlpZERkOTRNNnhSVUljdzA4cE9MbjZX?=
+ =?utf-8?B?V0ZMcjRITm1lNkExengxTnM2NG1NOC9QMStoVzFpb0NIekZxeUx2akhaOHVj?=
+ =?utf-8?B?b1lFMjZESlA3MDA2RUZIRjlJNHh4bE94eFJ3MWJSUXFPVHFqdm1JalpVbzJK?=
+ =?utf-8?B?VERFNmFJM1FWOWpNUmg0VlZPRE5LczBLSVJEYjdRV1hzN3c4ZlNsbU85cHVG?=
+ =?utf-8?B?RTVmdVdqVUpqMDh5UHNZN3lLZWpWVU91K1VkOFgwWWFNaUxnNUxwdUpQRXZW?=
+ =?utf-8?B?ZmZxL2NlRHhCRUJhdmdpLzVMdEpaczVPcWNCQWVqS1ZTU3lzRm5hakMwZm50?=
+ =?utf-8?B?cFptTDd4ZkdSTnRmblNvYTNVOE45a1VCYkdZTUxFUDF2a1FtUkgzeXA2clVC?=
+ =?utf-8?B?cGlaYXlzWVJzOGNtVlZXaHQ5M1BiNXRBN01PTFJmN1BBL3I3OVp2dlA5N25V?=
+ =?utf-8?B?cG5BbVJrdWNKeXhuUmZsR2kzTHpNSDhzOUt6S1JhL3pXWWZpQXk1ZVlJYUd2?=
+ =?utf-8?B?TUdoQjFDdG4vTS9kYjhkenY2U3p6ZzFPWFd3S2tocjU0UkVGcy9yN25YSUpx?=
+ =?utf-8?B?NHVJOTNSOGxZV1FOSXduZ0RhcjR6Z0JJdlZCcWd6Tk04R0g3bHN6QVZkRlBw?=
+ =?utf-8?B?RG9mNGxhMmo1YzIrdEdyZE1jVlZtUzUyM3dkblF6YVZWK1JWajc4bDh0eDVT?=
+ =?utf-8?B?MngrUWROaThhc2NaT0MxbE43cEFIdU9RSDdCeGVjazdvZVB0d3BtMzlpMTJx?=
+ =?utf-8?B?MU42Qm4xREtIUnU0b0tEdkdMTzc1UzZnVm5nbmpGaXMvME9wYXhOTjlQNHN0?=
+ =?utf-8?B?WWI1SFdYVGNiNk5UczBRZ3V0Wk10VFdIUEo1Ym9oZlQ4dXB2VUZNcVM2WkVt?=
+ =?utf-8?B?WHRMbzIxY1o5OE11V1QwdU8wTmRZanZ1K1FvbWEvZEgwN0VJcm9leFFnTUxx?=
+ =?utf-8?B?ZFZXM3BQN2NkaTNaTWg4cUlvRDVIaCtvazNDMWY0aVpXbHlPby9JMXl5V1N3?=
+ =?utf-8?B?OUx3LzFMVnhtdzB3QUFBUnZuNUNuaHlZdjRsVzR5NUNSUWFobkI2ckIvY2g0?=
+ =?utf-8?B?N25wU2Zkb204VlNsRDVzbEIyZno3OGJuMG9EbUxxMk1UYjVmcU95T0RXL2Nz?=
+ =?utf-8?B?bStxbHl1MUwzK3dBTWVKcTdaLzdCZitFN09wdz09?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(82310400026)(7416014)(376014)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 07:17:00.9198
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b5b1c2a7-3c2b-4dfc-de19-08ddb3b84777
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CH3PEPF0000000C.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6187
 
-On 6/24/25 11:04 PM, Lukasz Majewski wrote:
->> On 6/22/25 11:37 AM, Lukasz Majewski wrote:
->>> +static void mtip_aging_timer(struct timer_list *t)
->>> +{
->>> +	struct switch_enet_private *fep = timer_container_of(fep,
->>> t,
->>> +
->>> timer_aging); +
->>> +	fep->curr_time = mtip_timeincrement(fep->curr_time);
->>> +
->>> +	mod_timer(&fep->timer_aging,
->>> +		  jiffies +
->>> msecs_to_jiffies(LEARNING_AGING_INTERVAL)); +}  
->>
->> It's unclear to me why you decided to maintain this function and timer
->> while you could/should have used a macro around jiffies instead.
+On Mon, 23 Jun 2025 15:05:35 +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.295 release.
+> There are 222 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> This is a bit more tricky than just getting value from jiffies.
+> Responses should be made by Wed, 25 Jun 2025 13:05:50 +0000.
+> Anything received after that time might be too late.
 > 
-> The current code provides a monotonic, starting from 0 time "base" for
-> learning and managing entries in internal routing tables for MTIP.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.295-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
 > 
-> To be more specific - the fep->curr_time is a value incremented after
-> each ~10ms.
+> thanks,
 > 
-> Simple masking of jiffies would not provide such features.
+> greg k-h
 
-I guess you can get the same effect storing computing the difference
-from an initial jiffies value and using jiffies_to_msecs(<delta>)/10.
+Failures detected for Tegra ...
 
->> [...]
->>> +static int mtip_sw_learning(void *arg)
->>> +{
->>> +	struct switch_enet_private *fep = arg;
->>> +
->>> +	while (!kthread_should_stop()) {
->>> +		set_current_state(TASK_INTERRUPTIBLE);
->>> +		/* check learning record valid */
->>> +		mtip_atable_dynamicms_learn_migration(fep,
->>> fep->curr_time,
->>> +						      NULL, NULL);
->>> +		schedule_timeout(HZ / 100);
->>> +	}
->>> +
->>> +	return 0;
->>> +}  
->>
->> Why are you using a full blown kernel thread here? 
-> 
-> The MTIP IP block requires the thread for learning. It is a HW based
-> switching accelerator, but the learning feature must be performed by
-> SW (by writing values to its registers).
-> 
->> Here a timer could
->> possibly make more sense.
-> 
-> Unfortunately, not - the code (in
-> mtip_atable_dynamicms_learn_migration() must be called). This function
-> has another role - it updates internal routing table with timestamps
-> (provided by timer mentioned above).
+Test results for stable-v5.4:
+    10 builds:	7 pass, 3 fail
+    18 boots:	18 pass, 0 fail
+    39 tests:	39 pass, 0 fail
 
-Why a periodic timer can't call such function?
+Linux version:	5.4.295-rc1-gca8c5417d1e6
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
 
-> 
->> Why are checking the table every 10ms, while
->> the learning intervall is 100ms? 
-> 
-> Yes, this is correct. In 10ms interval the internal routing table is
-> updated. 100 ms is for learning.
-> 
->> I guess you could/should align the
->> frequency here with such interval.
-> 
-> IMHO learning with 10ms interval would bring a lot of overhead.
-> 
-> Just to mention - the MTIP IP block can generate interrupt for
-> learning event. However, it has been advised (bu NXP support), that a
-> thread with 100ms interval shall be used to avoid too many interrupts.
+Builds failed:	arm+multi_v7
 
-FTR, my suggestion is to increase the
-mtip_atable_dynamicms_learn_migration's call period to 100ms
-
->> Side note: I think you should move the buffer management to a later
->> patch: this one is still IMHO too big.
-> 
-> And this is problematic - the most time I've spent for v13 to separate
-> the code - i.e. I exclude one function, then there are warnings that
-> other function is unused (and of course WARNINGS in a separate patches
-> are a legitimate reason to call for another patch set revision).
-
-A trick to break that kind of dependencies chain is to leave a function
-implementation empty.
-
-On the same topic, you could have left mtip_rx_napi() implementation
-empty up to patch 6 or you could have introduced napi initialization and
-cleanup only after such patch.
-
-In a similar way, you could introduce buffer managements in a later
-patch and add the relevant calls afterwards.
-
-/P
-
+Jon
