@@ -1,462 +1,212 @@
-Received: from mail-pg1-f201.google.com (mail-pg1-f201.google.com [209.85.215.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC663217707
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:54:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B57942882AF;
+	Wed, 25 Jun 2025 22:56:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750892088; cv=none; b=iEvhP9cyUU6JSWdr9KI3etnA7UA7SYoAByyfrajHrVHhUVMKRXsoggawc0KXokCyuI3+v8pbTpC+dLIsTN2ej5OA9VhUHEtMXu2iHHwsTkchZvWuetrWoabonIhBz5l94YdN7JZQn86z9VonIXBMtHPiLUBEEZ+iuIDW7WCSH2g=
+	t=1750892219; cv=none; b=f+GmGpDbGWIWc5rXY1Rd/bqdjq+T0rGn8pKgfMQMatq3+24nWVK0Fkcer5iiHvlbVQKTTHhBjcyx8a+vOA4csiyuwTYhKOVYXfbdq7ZZIxouxvgNubI586quufEu++fATcuJOOaXZbIE528bIRDUXWp6yKgdgMCKz1rBkMqkFhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750892088; c=relaxed/simple;
-	bh=HEfJPWdCSSFS+ASivH78C0lg7gqi/7RDBA+T2IZ3uo8=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=ugKlPGpTuTG6jxG/P0d2VhlCpj6rSa4SusLcF8RT9Je1zgNwyxBnZp21UCA9K5z4lSoI2m3x7FhyDC2Pg5Ncg2+AXrmxsAkXQ00Yzq6h5Xf37MX4UrAWOO6QmzMqtwWx/+t/k0NGxUwmIJdi3BhbEf1fw5tYcjHotM3iqjDx+Qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Yy1h14tB; arc=none smtp.client-ip=209.85.215.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yy1h14tB"
-Received: by mail-pg1-f201.google.com with SMTP id 41be03b00d2f7-b2c36d3f884so217748a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:54:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750892086; x=1751496886; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jVxFMBb/sntNrVg4iPMTgUrHj+NwKt88HjNTcpkE/WA=;
-        b=Yy1h14tBMsi+mv0AQVkX/wIFfsNoB1xWHE6KfPqKqXVGuA8gvtfPCuQsUhnHrs/h5J
-         7RyT/VJgw5p9SSXSX7FVceKHPUpunWbcD33p7rNIdT8hi/fWCW4S/T2D0nLii7dN9gth
-         dcyX5Ly+CRAT3U2hP9uZAsqb1aihdPEPhwz4BvRr8tkqRyPH18l2750xO6gLL0nC5R4u
-         ktHjVwQBwwGA4te+QkuawJYRc9z4lZ+FDmcU6+8OHPyoYCyw5K6q6d+2iSEQtslk8wBZ
-         MUDnN02rB3zdTpEIw433U/tJy38W6bfLIxMxxXegqijzRXWwuaMN7D3/7ew9lmg6fKFE
-         VLkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750892086; x=1751496886;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jVxFMBb/sntNrVg4iPMTgUrHj+NwKt88HjNTcpkE/WA=;
-        b=daKeyIcTGMKDinrbWyzCyO8fe3KwLoQMOhMhfjYPpX7WSLeRvRQe+i2FySuCDrltyN
-         nLM9VAjwxUT/0H1eya32qver3p8YKofUQUX9qZyRKGZYfCBKPwIJ29cD9NhFmhWIX3E4
-         +y/16nx8gejMef7jV/7AXY0xK+32ukp5Fs2ZYPqHNFzQTXqFgUQFitHA4kU2a0nt9KC5
-         TPS03qj1vEvVDIYTOigEhpDftNR7hPtx0/htOC7EQmQbrSIAOVFeiEolOK0m1/yTy38r
-         7G4yrBv5mxwelP8oD9igU8WgYSK2PXdzlADS1nCC7rGm0q7ALnLKiGe0tuzBQ/rq4c2S
-         94wg==
-X-Forwarded-Encrypted: i=1; AJvYcCVco2Il+a2tjrMA/p1POZvy8Y4oRB2/qstdSQrZ22lpJFf/C7S8IQZJMPb5L/TGM5wfvm/yK3BFDInVcU0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzFerkvHQZ9jvaVBcJbIxnKrALBuDWPH0UjFMbX9yuCqWBBGLk
-	td+W+0dYFxHyeRHg5v/TSPMLlHeRkdbltWFpIbgrA6NSn2KKDzfWcc8lzDMSgj36lQp+fXWHHHv
-	qCOz6GPTvX+C4uwoi3ziPC7f8rQ==
-X-Google-Smtp-Source: AGHT+IF0Vs1oph1wvu7WrIfD42vnAsw01GJuRYxL+r6kkTUnsEXAv69JKOmRzT9QMp88/AiomiMLd3SmuWFWtrX8PA==
-X-Received: from pfbdh9.prod.google.com ([2002:a05:6a00:4789:b0:747:abae:78e8])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a21:6b0a:b0:21f:86f1:e2dd with SMTP id adf61e73a8af0-2207f1c4c56mr6857359637.11.1750892086023;
- Wed, 25 Jun 2025 15:54:46 -0700 (PDT)
-Date: Wed, 25 Jun 2025 15:54:44 -0700
-In-Reply-To: <aFugbDVJJDrK4n9V@yzhao56-desk.sh.intel.com>
+	s=arc-20240116; t=1750892219; c=relaxed/simple;
+	bh=HXvEkZi/97sKfqnOc6lpR0Efbe/WMhMWQLkPhKqFGuM=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=rB9eYKo6IbtfsPf3bD3uMYOW/BHbSJeRCbaceOEAweyhwGsi3oJm6prUhEsH9pxpXgJHgMwEJTBNF2r1qHTbkUb/ftEtMBrTi2cPJ3utWQ/BUs1jfigzdFz2Ar3//N3IRTIVamzqKXwvJw8QSNJwRzkLI0gDCzGGGiNKwEzu1Vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
+Received: from omf11.hostedemail.com (a10.router.float.18 [10.200.18.1])
+	by unirelay09.hostedemail.com (Postfix) with ESMTP id 775118010C;
+	Wed, 25 Jun 2025 22:56:54 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf11.hostedemail.com (Postfix) with ESMTPA id 4C5DF2002C;
+	Wed, 25 Jun 2025 22:56:51 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.98.2)
+	(envelope-from <rostedt@goodmis.org>)
+	id 1uUZ3M-000000043hF-21rs;
+	Wed, 25 Jun 2025 18:57:16 -0400
+Message-ID: <20250625225716.341400245@goodmis.org>
+User-Agent: quilt/0.68
+Date: Wed, 25 Jun 2025 18:56:09 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: linux-kernel@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org,
+ bpf@vger.kernel.org,
+ x86@kernel.org
+Cc: Masami Hiramatsu <mhiramat@kernel.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Josh Poimboeuf <jpoimboe@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Thomas Gleixner <tglx@linutronix.de>,
+ Andrii Nakryiko <andrii@kernel.org>,
+ Indu Bhagat <indu.bhagat@oracle.com>,
+ "Jose E. Marchesi" <jemarch@gnu.org>,
+ Beau Belgrave <beaub@linux.microsoft.com>,
+ Jens Remus <jremus@linux.ibm.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH v11 09/14] unwind deferred: Use SRCU unwind_deferred_task_work()
+References: <20250625225600.555017347@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <9169a530e769dea32164c8eee5edb12696646dfb.camel@intel.com>
- <aFDHF51AjgtbG8Lz@yzhao56-desk.sh.intel.com> <6afbee726c4d8d95c0d093874fb37e6ce7fd752a.camel@intel.com>
- <aFIGFesluhuh2xAS@yzhao56-desk.sh.intel.com> <0072a5c0cf289b3ba4d209c9c36f54728041e12d.camel@intel.com>
- <aFkeBtuNBN1RrDAJ@yzhao56-desk.sh.intel.com> <draft-diqzh606mcz0.fsf@ackerleytng-ctop.c.googlers.com>
- <diqzy0tikran.fsf@ackerleytng-ctop.c.googlers.com> <c69ed125c25cd3b7f7400ed3ef9206cd56ebe3c9.camel@intel.com>
- <diqz34bolnta.fsf@ackerleytng-ctop.c.googlers.com> <aFugbDVJJDrK4n9V@yzhao56-desk.sh.intel.com>
-Message-ID: <diqzplerjutn.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH 08/21] KVM: TDX: Increase/decrease folio ref for huge pages
-From: Ackerley Tng <ackerleytng@google.com>
-To: Yan Zhao <yan.y.zhao@intel.com>
-Cc: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>, 
-	"quic_eberman@quicinc.com" <quic_eberman@quicinc.com>, "Li, Xiaoyao" <xiaoyao.li@intel.com>, 
-	"Du, Fan" <fan.du@intel.com>, "Hansen, Dave" <dave.hansen@intel.com>, 
-	"david@redhat.com" <david@redhat.com>, "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>, 
-	"tabba@google.com" <tabba@google.com>, "vbabka@suse.cz" <vbabka@suse.cz>, 
-	"Shutemov, Kirill" <kirill.shutemov@intel.com>, "michael.roth@amd.com" <michael.roth@amd.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "seanjc@google.com" <seanjc@google.com>, 
-	"pbonzini@redhat.com" <pbonzini@redhat.com>, 
-	"binbin.wu@linux.intel.com" <binbin.wu@linux.intel.com>, "Yamahata, Isaku" <isaku.yamahata@intel.com>, 
-	"Peng, Chao P" <chao.p.peng@intel.com>, "Weiny, Ira" <ira.weiny@intel.com>, 
-	"kvm@vger.kernel.org" <kvm@vger.kernel.org>, "Annapurve, Vishal" <vannapurve@google.com>, 
-	"jroedel@suse.de" <jroedel@suse.de>, "Miao, Jun" <jun.miao@intel.com>, 
-	"Li, Zhiquan1" <zhiquan1.li@intel.com>, "pgonda@google.com" <pgonda@google.com>, 
-	"x86@kernel.org" <x86@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Stat-Signature: 39idxpzbtkcrztswnqrcu35rmtb4jysy
+X-Rspamd-Server: rspamout03
+X-Rspamd-Queue-Id: 4C5DF2002C
+X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
+X-Session-ID: U2FsdGVkX1/gMXBM4G+9NArKOBUmCPwd4+hNKRlEev0=
+X-HE-Tag: 1750892211-882373
+X-HE-Meta: U2FsdGVkX18zrHOtnO+oITj5d/B9frk6jnyY9Qdz32NWkvm0sDFnuQPP6vNSLV3Yen+K7gc1Sq9TyaXpYpo6wCBUldCAkawyQViZCW3OtAOTAPmtXoYYNZM6XgSVTU/mlSenjQ/W13SdY/oyDbPbA4nOxgI+ygNH2QFuGG+rB3VrsopHI7JnjcERJQDYDsaKE+PWsgCgHqySkn3txDOL1PEqO7QoEY4O9H0gSJm66cp9l1JWQ9ZIWSi+XMM4cuYMOx6YDxy6Ji/WkqgwV7kYiZ3rPPyxcPXIupysYYq4PLtkunZd92Kv6kdR6HZa7YmkkxNt2RYut1giRTiaG1mrlzV3M8/nIxs03LpkDYEnGcmOvGRWN/kWm+j6VF31cNZbRHr81RkX+mt4i6pDw4WOgxOM1GIlnw5CKsN4x/3XYuVY6PnnzNLRyx3g7ecX4m8Nkay9t+7WWlkm5nPc6CTyuZ4eB1f049ZLa16EnR2OVE0=
 
-Yan Zhao <yan.y.zhao@intel.com> writes:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> On Tue, Jun 24, 2025 at 04:30:57PM -0700, Ackerley Tng wrote:
->> "Edgecombe, Rick P" <rick.p.edgecombe@intel.com> writes:
->>=20
->> > On Mon, 2025-06-23 at 15:48 -0700, Ackerley Tng wrote:
->> >> Let me try and summarize the current state of this discussion:
->> >>=20
->> >> Topic 1: Does TDX need to somehow indicate that it is using a page?
->> >>=20
->> >> This patch series uses refcounts to indicate that TDX is using a page=
-,
->> >> but that complicates private-to-shared conversions.
->> >>=20
->> >> During a private-to-shared conversion, guest_memfd assumes that
->> >> guest_memfd is trusted to manage private memory. TDX and other users
->> >> should trust guest_memfd to keep the memory around.
->> >>=20
->> >> Yan's position is that holding a refcount is in line with how IOMMU
->> >> takes a refcount when a page is mapped into the IOMMU [1].
->> >>=20
->> >> Yan had another suggestion, which is to indicate using a page flag [2=
-].
->> >>=20
->> >> I think we're in agreement that we don't want to have TDX hold a
->> >> refcount while the page is mapped into the Secure EPTs, but taking a
->> >> step back, do we really need to indicate (at all) that TDX is using a
->> >> page?
->> >>=20
->> >> In [3] Yan said
->> >>=20
->> >> > If TDX does not hold any refcount, guest_memfd has to know that whi=
-ch
->> >> > private
->> >> > page is still mapped. Otherwise, the page may be re-assigned to oth=
-er
->> >> > kernel
->> >> > components while it may still be mapped in the S-EPT.
->> >>=20
->> >> If the private page is mapped for regular VM use as private memory,
->> >> guest_memfd is managing that, and the same page will not be re-assign=
-ed
->> >> to any other kernel component. guest_memfd does hold refcounts in
->> >> guest_memfd's filemap.
->> >>=20
->> >> If the private page is still mapped because there was an unmapping
->> >> failure, we can discuss that separately under error handling in Topic=
- 2.
->> >>=20
->> >> With this, can I confirm that we are in agreement that TDX does not n=
-eed
->> >> to indicate that it is using a page, and can trust guest_memfd to kee=
-p
->> >> the page around for the VM?
->> >
->> > Minor correction here. Yan was concerned about *bugs* happening when f=
-reeing
->> > pages that are accidentally still mapped in the S-EPT. My opinion is t=
-hat this
->> > is not especially risky to happen here vs other similar places, but it=
- could be
->> > helpful if there was a way to catch such bugs. The page flag, or page_=
-ext
->> > direction came out of a discussion with Dave and Kirill. If it could r=
-un all the
->> > time that would be great, but if not a debug config could be sufficien=
-t. For
->> > example like CONFIG_PAGE_TABLE_CHECK. It doesn't need to support vmemm=
-ap
->> > optimizations because the debug checking doesn't need to run all the t=
-ime.
->> > Overhead for debug settings is very normal.
->> >
->>=20
->> I see, let's call debug checking Topic 3 then, to separate it from Topic
->> 1, which is TDX indicating that it is using a page for production
->> kernels.
->>=20
->> Topic 3: How should TDX indicate use of a page for debugging?
->>=20
->> I'm okay if for debugging, TDX uses anything other than refcounts for
->> checking, because refcounts will interfere with conversions.
->>=20
->> Rick's other email is correct. The correct link should be
->> https://lore.kernel.org/all/aFJjZFFhrMWEPjQG@yzhao56-desk.sh.intel.com/.
->>=20
->> [INTERFERE WITH CONVERSIONS]
->>=20
->> To summarize, if TDX uses refcounts to indicate that it is using a page,
->> or to indicate anything else, then we cannot easily split a page on
->> private to shared conversions.
->>=20
->> Specifically, consider the case where only the x-th subpage of a huge
->> folio is mapped into Secure-EPTs. When the guest requests to convert
->> some subpage to shared, the huge folio has to be split for
->> core-mm. Core-mm, which will use the shared page, must have split folios
->> to be able to accurately and separately track refcounts for subpages.
->>=20
->> During splitting, guest_memfd would see refcount of 512 (for 2M page
->> being in the filemap) + 1 (if TDX indicates that the x-th subpage is
->> mapped using a refcount), but would not be able to tell that the 513th
->> refcount belongs to the x-th subpage. guest_memfd can't split the huge
->> folio unless it knows how to distribute the 513th refcount.
-> In my POC, https://lore.kernel.org/all/aE%2Fq9VKkmaCcuwpU@yzhao56-desk.sh=
-.intel.com/
-> kvm_gmem_private_has_safe_refcount() was introduce to check the folio ref=
- count.
-> It rejects private-to-shared conversion after splitting and unmapping KVM=
-'s
-> secondary page tables if the refcount exceeds a valid threshold.
->
-> Though in
-> https://lore.kernel.org/all/aFJjZFFhrMWEPjQG@yzhao56-desk.sh.intel.com/, =
-we
-> agreed that "EAGAIN is not the right code in case of "extra" refcounts he=
-ld by
-> TDX", this does not imply that rejecting the conversion itself is incorre=
-ct.
->
-> This is why we are exploring alternative solutions instead of having TDX =
-hold
-> the page refcount.
->
-> So, either a per-page flag, per-folio flag or solutions e,f,g should be g=
-ood.
->
-> IMO, regardless of the final choice, guest_memfd needs to identify proble=
-matic
-> folios to:
-> - reject the private-to-shared conversion
-> - prevent further recycling after kvm_gmem_free_folio()
->
+Instead of using the callback_mutex to protect the link list of callbacks
+in unwind_deferred_task_work(), use SRCU instead. This gets called every
+time a task exits that has to record a stack trace that was requested.
+This can happen for many tasks on several CPUs at the same time. A mutex
+is a bottleneck and can cause a bit of contention and slow down performance.
 
-Agreed!
+As the callbacks themselves are allowed to sleep, regular RCU cannot be
+used to protect the list. Instead use SRCU, as that still allows the
+callbacks to sleep and the list can be read without needing to hold the
+callback_mutex.
 
->> One might say guest_memfd could clear all the refcounts that TDX is
->> holding on the huge folio by unmapping the entire huge folio from the
->> Secure-EPTs, but unmapping the entire huge folio for TDX means zeroing
->> the contents and requiring guest re-acceptance. Both of these would mess
->> up guest operation.
->>=20
->> Hence, guest_memfd's solution is to require that users of guest_memfd
->> for private memory trust guest_memfd to maintain the pages around and
->> not take any refcounts.
->>=20
->> So back to Topic 1, for production kernels, is it okay that TDX does not
->> need to indicate that it is using a page, and can trust guest_memfd to
->> keep the page around for the VM?
-> If the "TDX does not need to indicate that it is using a page" means "do =
-not
-> take page refcount", I'm ok.
->
+Link: https://lore.kernel.org/all/ca9bd83a-6c80-4ee0-a83c-224b9d60b755@efficios.com/
 
-Yes, I was trying to generalize "do not take page refcount" to "TDX does
-not need to indicate that it is using a page", but I guess TDX can
-indicate that it is using a page for debugging as long as it doesn't
-use refcounts or otherwise interfere with conversions. So I believe we
-are in agreement on Topic 1 :)
+Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v10: https://lore.kernel.org/20250611010429.274682576@goodmis.org
 
->> >>=20
->> >> Topic 2: How to handle unmapping/splitting errors arising from TDX?
->> >>=20
->> >> Previously I was in favor of having unmap() return an error (Rick
->> >> suggested doing a POC, and in a more recent email Rick asked for a
->> >> diffstat), but Vishal and I talked about this and now I agree having
->> >> unmapping return an error is not a good approach for these reasons.
->> >
->> > Ok, let's close this option then.
->> >
->> >>=20
->> >> 1. Unmapping takes a range, and within the range there could be more
->> >> =C2=A0=C2=A0 than one unmapping error. I was previously thinking that=
- unmap()
->> >> =C2=A0=C2=A0 could return 0 for success and the failed PFN on error. =
-Returning a
->> >> =C2=A0=C2=A0 single PFN on error is okay-ish but if there are more er=
-rors it could
->> >> =C2=A0=C2=A0 get complicated.
->> >>=20
->> >> =C2=A0=C2=A0 Another error return option could be to return the folio=
- where the
->> >> =C2=A0=C2=A0 unmapping/splitting issue happened, but that would not b=
-e
->> >> =C2=A0=C2=A0 sufficiently precise, since a folio could be larger than=
- 4K and we
->> >> =C2=A0=C2=A0 want to track errors as precisely as we can to reduce me=
-mory loss due
->> >> =C2=A0=C2=A0 to errors.
->> >>=20
->> >> 2. What I think Yan has been trying to say: unmap() returning an erro=
-r
->> >> =C2=A0=C2=A0 is non-standard in the kernel.
->> >>=20
->> >> I think (1) is the dealbreaker here and there's no need to do the
->> >> plumbing POC and diffstat.
->> >>=20
->> >> So I think we're all in support of indicating unmapping/splitting iss=
-ues
->> >> without returning anything from unmap(), and the discussed options ar=
-e
->> >>=20
->> >> a. Refcounts: won't work - mostly discussed in this (sub-)thread
->> >> =C2=A0=C2=A0 [3]. Using refcounts makes it impossible to distinguish =
-between
->> >> =C2=A0=C2=A0 transient refcounts and refcounts due to errors.
->> >>=20
->> >> b. Page flags: won't work with/can't benefit from HVO.
->> >
->> > As above, this was for the purpose of catching bugs, not for guestmemf=
-d to
->> > logically depend on it.
->> >
->> >>=20
->> >> Suggestions still in the running:
->> >>=20
->> >> c. Folio flags are not precise enough to indicate which page actually
->> >> =C2=A0=C2=A0 had an error, but this could be sufficient if we're will=
-ing to just
->> >> =C2=A0=C2=A0 waste the rest of the huge page on unmapping error.
->> >
->> > For a scenario of TDX module bug, it seems ok to me.
->> >
->> >>=20
->> >> d. Folio flags with folio splitting on error. This means that on
->> >> =C2=A0=C2=A0 unmapping/Secure EPT PTE splitting error, we have to spl=
-it the
->> >> =C2=A0=C2=A0 (larger than 4K) folio to 4K, and then set a flag on the=
- split folio.
->> >>=20
->> >> =C2=A0=C2=A0 The issue I see with this is that splitting pages with H=
-VO applied
->> >> =C2=A0=C2=A0 means doing allocations, and in an error scenario there =
-may not be
->> >> =C2=A0=C2=A0 memory left to split the pages.
->> >>=20
->> >> e. Some other data structure in guest_memfd, say, a linked list, and =
-a
->> >> =C2=A0=C2=A0 function like kvm_gmem_add_error_pfn(struct page *page) =
-that would
->> >> =C2=A0=C2=A0 look up the guest_memfd inode from the page and add the =
-page's pfn to
->> >> =C2=A0=C2=A0 the linked list.
->> >>=20
->> >> =C2=A0=C2=A0 Everywhere in guest_memfd that does unmapping/splitting =
-would then
->> >> =C2=A0=C2=A0 check this linked list to see if the unmapping/splitting
->> >> =C2=A0=C2=A0 succeeded.
->> >>=20
->> >> =C2=A0=C2=A0 Everywhere in guest_memfd that allocates pages will also=
- check this
->> >> =C2=A0=C2=A0 linked list to make sure the pages are functional.
->> >>=20
->> >> =C2=A0=C2=A0 When guest_memfd truncates, if the page being truncated =
-is on the
->> >> =C2=A0=C2=A0 list, retain the refcount on the page and leak that page=
-.
->> >
->> > I think this is a fine option.
->> >
->> >>=20
->> >> f. Combination of c and e, something similar to HugeTLB's
->> >> =C2=A0=C2=A0 folio_set_hugetlb_hwpoison(), which sets a flag AND adds=
- the pages in
->> >> =C2=A0=C2=A0 trouble to a linked list on the folio.
->> >>=20
->> >> g. Like f, but basically treat an unmapping error as hardware poisoni=
-ng.
->> >>=20
->> >> I'm kind of inclined towards g, to just treat unmapping errors as
->> >> HWPOISON and buying into all the HWPOISON handling requirements. What=
- do
->> >> yall think? Can a TDX unmapping error be considered as memory poisoni=
-ng?
->> >
->> > What does HWPOISON bring over refcounting the page/folio so that it ne=
-ver
->> > returns to the page allocator?
->>=20
->> For Topic 2 (handling TDX unmapping errors), HWPOISON is better than
->> refcounting because refcounting interferes with conversions (see
->> [INTERFERE WITH CONVERSIONS] above).
->>=20
->> > We are bugging the TD in these cases.
->>=20
->> Bugging the TD does not help to prevent future conversions from being
->> interfered with.
->>=20
->> 1. Conversions involves unmapping, so we could actually be in a
->>    conversion, the unmapping is performed and fails, and then we try to
->>    split and enter an infinite loop since private to shared conversions
->>    assumes guest_memfd holds the only refcounts on guest_memfd memory.
-> We should bail out conversion even with the HWPOISON.
-> e.g.,
-> 1. user triggers private-to-shared ioctl to convert 4K page A within a 2M=
-B folio
->    B to shared.
-> 2. kvm_gmem_convert_should_proceed() executes kvm_gmem_split_private() an=
-d
->    kvm_gmem_zap().
-> 3. kvm_gmem_convert_should_proceed() checks kvm_gmem_has_invalid_folio()
->    (Suppose TDX sets HWPOISON to page A or folio B after kvm_gmem_zap(), =
-then
->      kvm_gmem_has_invalid_folio() should return true).
-> 4. Return -EFAULT.
->
-> If we allow the actual conversion to proceed after step 3, folio B will b=
-e split
-> into 4KB folios, with page A being converted to a shared 4KB folio, which
-> becomes accessible by userspace.
->
-> This could cause a machine check (#MC) on certain platforms. We should av=
-oid
-> this scenario when possible.
->
->
+- Use "bit" that was acquired by READ_ONCE() in test_and_set_bit() in
+  unwind_deferred_request() instead of reading work->bit again.
 
-Thanks for pointing this out. This is a good point and will definitely
-have to be handled separately under "what to do when there was some
-issue on a page (possibly caused by unmapping)", or as Yan pointed out
-above, what to do when "handling problematic folios".
+ kernel/unwind/deferred.c | 35 ++++++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 9 deletions(-)
 
-Regarding handling errors, or recording errors, or communicating errors
-to guest_memfd, Yan seems in favor of some kind of page flag. I know
-Rick is suggesting option e. Can we do something between f and g? I'm
-thinking that the easiest page flag to use is the HWpoison flag, because
+diff --git a/kernel/unwind/deferred.c b/kernel/unwind/deferred.c
+index 6c558d00ff41..7309c9e0e57a 100644
+--- a/kernel/unwind/deferred.c
++++ b/kernel/unwind/deferred.c
+@@ -45,10 +45,11 @@ static inline u64 assign_timestamp(struct unwind_task_info *info,
+ #define UNWIND_MAX_ENTRIES					\
+ 	((SZ_4K - sizeof(struct unwind_cache)) / sizeof(long))
+ 
+-/* Guards adding to and reading the list of callbacks */
++/* Guards adding to or removing from the list of callbacks */
+ static DEFINE_MUTEX(callback_mutex);
+ static LIST_HEAD(callbacks);
+ static unsigned long unwind_mask;
++DEFINE_STATIC_SRCU(unwind_srcu);
+ 
+ /*
+  * Read the task context timestamp, if this is the first caller then
+@@ -134,6 +135,7 @@ static void unwind_deferred_task_work(struct callback_head *head)
+ 	struct unwind_stacktrace trace;
+ 	struct unwind_work *work;
+ 	u64 timestamp;
++	int idx;
+ 
+ 	if (WARN_ON_ONCE(!local_read(&info->pending)))
+ 		return;
+@@ -152,13 +154,15 @@ static void unwind_deferred_task_work(struct callback_head *head)
+ 
+ 	timestamp = local64_read(&info->timestamp);
+ 
+-	guard(mutex)(&callback_mutex);
+-	list_for_each_entry(work, &callbacks, list) {
++	idx = srcu_read_lock(&unwind_srcu);
++	list_for_each_entry_srcu(work, &callbacks, list,
++				 srcu_read_lock_held(&unwind_srcu)) {
+ 		if (test_bit(work->bit, &info->unwind_mask)) {
+ 			work->func(work, &trace, timestamp);
+ 			clear_bit(work->bit, &info->unwind_mask);
+ 		}
+ 	}
++	srcu_read_unlock(&unwind_srcu, idx);
+ }
+ 
+ /**
+@@ -193,6 +197,7 @@ int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
+ {
+ 	struct unwind_task_info *info = &current->unwind_info;
+ 	long pending;
++	int bit;
+ 	int ret;
+ 
+ 	*timestamp = 0;
+@@ -205,12 +210,17 @@ int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
+ 	if (!CAN_USE_IN_NMI && in_nmi())
+ 		return -EINVAL;
+ 
++	/* Do not allow cancelled works to request again */
++	bit = READ_ONCE(work->bit);
++	if (WARN_ON_ONCE(bit < 0))
++		return -EINVAL;
++
+ 	guard(irqsave)();
+ 
+ 	*timestamp = get_timestamp(info);
+ 
+ 	/* This is already queued */
+-	if (test_bit(work->bit, &info->unwind_mask))
++	if (test_bit(bit, &info->unwind_mask))
+ 		return 1;
+ 
+ 	/* callback already pending? */
+@@ -234,25 +244,32 @@ int unwind_deferred_request(struct unwind_work *work, u64 *timestamp)
+ 	}
+ 
+  out:
+-	return test_and_set_bit(work->bit, &info->unwind_mask);
++	return test_and_set_bit(bit, &info->unwind_mask);
+ }
+ 
+ void unwind_deferred_cancel(struct unwind_work *work)
+ {
+ 	struct task_struct *g, *t;
++	int bit;
+ 
+ 	if (!work)
+ 		return;
+ 
+ 	guard(mutex)(&callback_mutex);
+-	list_del(&work->list);
++	list_del_rcu(&work->list);
++	bit = work->bit;
++
++	/* Do not allow any more requests and prevent callbacks */
++	work->bit = -1;
++
++	__clear_bit(bit, &unwind_mask);
+ 
+-	__clear_bit(work->bit, &unwind_mask);
++	synchronize_srcu(&unwind_srcu);
+ 
+ 	guard(rcu)();
+ 	/* Clear this bit from all threads */
+ 	for_each_process_thread(g, t) {
+-		clear_bit(work->bit, &t->unwind_info.unwind_mask);
++		clear_bit(bit, &t->unwind_info.unwind_mask);
+ 	}
+ }
+ 
+@@ -269,7 +286,7 @@ int unwind_deferred_init(struct unwind_work *work, unwind_callback_t func)
+ 	work->bit = ffz(unwind_mask);
+ 	__set_bit(work->bit, &unwind_mask);
+ 
+-	list_add(&work->list, &callbacks);
++	list_add_rcu(&work->list, &callbacks);
+ 	work->func = func;
+ 	return 0;
+ }
+-- 
+2.47.2
 
-1. HWpoison checking is already part of guest_memfd, or should
-   be.
 
-   guest_memfd already checks HWpoison for kvm_gmem_get_pfn(), and
-   __do_fault() checks HWpoison for guest_memfd [5]. As Yan pointed out
-   above, it should definitely check and deal with HWpoison on
-   conversion. Perhaps on truncation it should look at HWpoison, or very
-   likely memory_failure() will need special handling for guest_memfd
-   folios. I'll look into this separately as part of HugeTLB support
-   patch series.
-
-2. HWpoison support (especially tracking of sub-folio HWpoison) in
-   folio_set_hugetlb_hwpoison() can hopefully be reused for guest_memfd.
-
-3. For now, no need to invent a new tracking mechanism or data structure
-   to support option e.
-
-4. HWpoison is kind of "part of guest_memfd" if you consider that
-   guest_memfd folios to be pretty much always owned by some guest_memfd
-   inode, and if the HWpoison flag is checked at the appropriate places.
-
-Could we (at least for the next RFC of this TDX huge page support for
-private memory series, or as a first cut), use HWpoison, and then if we
-identify that the concept of HWpoison is being overloaded/polluted, then
-try another flag/mechanism for tracking?
-
-I plan to work on HWpoison/kvm_gmem_error_folio() handling for HugeTLB
-soon and then I can keep the community updated if I find anything new or
-incompatible.
-
->> 2. The conversion ioctl is a guest_memfd ioctl, not a VM ioctl, and so
->>    there is no check that the VM is not dead. There shouldn't be any
->>    check on the VM, because shareability is a property of the memory and
->>    should be changeable independent of the associated VM.
->>=20
->> > Ohhh... Is
->> > this about the code to allow gmem fds to be handed to new VMs?
->>=20
->> Nope, it's not related to linking. The proposed KVM_LINK_GUEST_MEMFD
->> ioctl [4] also doesn't check if the source VM is dead. There shouldn't
->> be any check on the source VM, since the memory is from guest_memfd and
->> should be independently transferable to a new VM.
->>=20
->> [4] https://lore.kernel.org/lkml/cover.1747368092.git.afranji@google.com=
-/T/
-
-[5] https://lore.kernel.org/all/diqzv7ojjxyd.fsf@ackerleytng-ctop.c.googler=
-s.com/
