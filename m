@@ -1,122 +1,201 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF33286888
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:40:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2EE1917D6;
+	Wed, 25 Jun 2025 09:42:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750844443; cv=none; b=qMcBWSouQMneSvSiFQ3McWBf4NLDmzUlZUaR8WS231dK8b5K/tspEDC8WTCbOjcKpNtIdTvx6q2m+g3n1Fc0b/hmuTKksXQMS5d7DkmkprkFjk62TgG+neWWuL9knnumVYVxJLn1EOXCyJMtFRNYrFm3GP6KgdtOC3GbPFyOnJQ=
+	t=1750844542; cv=none; b=jqD69OHn5O6pkE858Vrijk9lhQbfX9yOBiqqPjliBGsGILxCKeZuBHGSSsYrktKcf1c2uQ2Ul1zuGUmll+FVGCCXxjI53DrCjut81pCUBH4LEaUHsPHrr547epKC8wQS2tE/Q5jZdRe1+UQlb3qanpMFJUqgjX4Lb9vMfpsUsQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750844443; c=relaxed/simple;
-	bh=tke04Hr1GWdS7lu0c+9LoPBNgUtdJPK/syvMJuc6KGg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eCJyPXB3fq+RGwG9RnpojUE6KpyRWc9/OYbYCcISpHNWBoT3CMdEhph1qzSSxdg8AvWKjRwnAOPC6/IE7u57/NAzNzufSTTGrKqNXkSPuWmMaCgvMCcF8nGj9yk3MF49KWxRvp7tsTG4aSPVCmxpNdM3csQs1U2MP6htpYtrR3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=GUHGt9bX; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
+	s=arc-20240116; t=1750844542; c=relaxed/simple;
+	bh=/UaD7L2Vb27H17GtHN5VEE3MuD/tl/8GVoHJYXhqnsI=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ViRSUbAc8B9uKQ3e7tZwwdjCsYQXMAZ71VoM37EcHo3meUjYWcaXgjrRrsQ8beeKoltAL+sIUP0oxJB3sb8Jhb1BN5KIMLxKvLb2lBrCAQk/H8kEeFEl7cYS3tomezIGNnHIdSD8HQEJOEfmCmHpZLC0rDR8UaBAx2EzKMizTek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=LoMOtRIf; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="GUHGt9bX"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3122368d7c4so1344765a91.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:40:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=futuring-girl.com; s=google; t=1750844441; x=1751449241; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1M0yLkQsKR0YiyFUjwpWUZCh7qwBerDpMZfoZtVAIXs=;
-        b=GUHGt9bXHaypfNmgOe/iJdQe22HewhbxGtO7V65BBbzbhxywqDpCaCFgHxwr8Ul7mk
-         5cdTxZjFcOyS3jCpOd0pixgubLze1Em3BE9nRDJs3L15HTr1NY5ivo8JjgK2RXy2mhlk
-         eIDQl9+HjgA/qca2DvVPQmsJQI7eGYOnyWwi16MeOD3fLupzx96G8CJeYKNL0zDCAfSk
-         sKj0IDV/Ik0y+3jNFHtAOOgQLz3vLEElQkwuh/nklrW8/o4nyy0yMUSbwGhrbkxTPmqi
-         xi3yB6hDisKgz2n72eIRpe/a9gnBdn79QSOeCx2u4dX207oJ4PxkE/6PgGmt9CsnGlcI
-         pXag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750844441; x=1751449241;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1M0yLkQsKR0YiyFUjwpWUZCh7qwBerDpMZfoZtVAIXs=;
-        b=dTx9FHns8C+SYxUWYfSu222QfvM5Y4MFSM4Bhm/R4hS128aF1idVO4nDyELTdIg3SY
-         2J2sTXGb21CMGB52vbTimtAVoqv34uHCIxZdBp/CKHAEUYX4nbUx1j+duwRe1abscV2Q
-         QtsKGXJdGJFF2rs7gfekN69VprzDUV3s7zDLXJGcr31JpwJ9agli9VCudKpLbwpFzyBo
-         ms1R4nhyOZw2Xi4utdAgjHjtG8XxqPkdGQ3sD/pfwaPNtqcL/7BZ1cy1rP6im6BTZMlH
-         Csq7Nt9MQsbjAzPfaHDhO0eDczTT1FFn8AdsdIxGMRsm2wbzPobauqmjjVFbk4Ws+AYV
-         vVIg==
-X-Forwarded-Encrypted: i=1; AJvYcCU3W0zcB2sqdxYCVT1VUCJGNQnmJ1+yvECuZj8UKTrnmYqbrMSPIAWSzhon81wAEJhtm18DEcETaKS7Qnc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzo9mq5+IDUDWXz2AtIdGmkfPcWJqqHTH92H1YdynsjmQ+Vu+dm
-	Bh3s/6k2CZPgqAU8pH08xumtmyk7tt+VJG1cOI8/Z8kjtHYsMIyAWWl0WdHIZgG+OHSNzkrZYB+
-	htVG5VmcP4R33U6dx+W7Dn3vlJbnuzcomC8/PJQeyNQ==
-X-Gm-Gg: ASbGncud+5ZlgQbgOKLsC2oKV6DaO9CSIFXH7nHEENsjrySGFZ9M+WajMj5ydnQZGet
-	haPgnyVSjeSweow7tHwYgNaO1C9FBEEWmjbuVqaZA0y1P5fTFmcAdMk8H77nMOHhiBVXmFgOL7h
-	en3tfb4/KFsHb5nOjnQ9yjIzuY7+33gqGSNEZXbLXAKWaJexQFmKVmgg==
-X-Google-Smtp-Source: AGHT+IG00K/kpm2hTa2fP8BKaxOCVSF0UfugUyd93dHVunRMl1Fz8O1C+j++doQt83NSid/RhkIlZIGfTM7Si0uMsa0=
-X-Received: by 2002:a17:90b:1c81:b0:2ee:6d08:7936 with SMTP id
- 98e67ed59e1d1-315f268a404mr3102280a91.20.1750844441510; Wed, 25 Jun 2025
- 02:40:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="LoMOtRIf"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P9d66Z002508;
+	Wed, 25 Jun 2025 11:42:06 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	oRoK+To3ECSWyMsKvQou69OpviNdWWWWDeXdSq5d7yw=; b=LoMOtRIfzKqfAGW5
+	lZH5rI4kT3gQJH4RP3zmHCqR7JvXRjJDEPDLq2RtVXOZTrCYimFIs1FBAe0wz4Q0
+	mRNSw2bUJIofhw/uDY8SxSWUfDBvpf2qzcDyq87aZ0GZxwRCeRPXufcD55vknxPj
+	LgBAxqd00U9x87e0toXc5gZRrKtQkvZut1dbbIrcQh0z5AVN0mNsHgyLnjeNEdcB
+	hDfCdJbRjVen8r3cgdUUbXBhODADRTTsuZ73S15FFt2Wx84Y5XSbInh7KZx9L6QG
+	BHW6bmSYo0ZwhLBrwSr0uabMwoJP1MXj2YbSaVY4O+4rAZDrzY0mhkMsUfFk6qnl
+	YTrRHA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47e7pped38-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 11:42:06 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id C0C8B4004A;
+	Wed, 25 Jun 2025 11:41:01 +0200 (CEST)
+Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1D4DB472035;
+	Wed, 25 Jun 2025 11:40:45 +0200 (CEST)
+Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
+ (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 25 Jun
+ 2025 11:40:44 +0200
+Received: from localhost (10.48.86.121) by SAFDAG1NODE1.st.com (10.75.90.17)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 25 Jun
+ 2025 11:40:44 +0200
+From: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier
+	<mathieu.poirier@linaro.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor Dooley" <conor+dt@kernel.org>
+CC: <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <op-tee@lists.trustedfirmware.org>, <devicetree@vger.kernel.org>,
+        Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+Subject: [PATCH v19 5/6] remoteproc: stm32: Create sub-functions to request shutdown and release
+Date: Wed, 25 Jun 2025 11:40:27 +0200
+Message-ID: <20250625094028.758016-6-arnaud.pouliquen@foss.st.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20250625094028.758016-1-arnaud.pouliquen@foss.st.com>
+References: <20250625094028.758016-1-arnaud.pouliquen@foss.st.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624121449.136416081@linuxfoundation.org>
-In-Reply-To: <20250624121449.136416081@linuxfoundation.org>
-From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
-Date: Wed, 25 Jun 2025 18:40:25 +0900
-X-Gm-Features: AX0GCFs0Ue24bpACExUeXXuPVoyD4JIFjJgBbT28iyUyE73zbAYOm3Ich6oFbxI
-Message-ID: <CAKL4bV7CD4udvk+-k9ia6GSKoWJB31Su3LbZG6k=9o7joTC4Pg@mail.gmail.com>
-Subject: Re: [PATCH 6.15 000/588] 6.15.4-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SAFDAG1NODE1.st.com
+ (10.75.90.17)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
 
-Hi Greg
+To prepare for the support of TEE remoteproc, create sub-functions
+that can be used in both cases, with and without remoteproc TEE support.
 
-On Tue, Jun 24, 2025 at 9:31=E2=80=AFPM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 6.15.4 release.
-> There are 588 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Thu, 26 Jun 2025 12:13:28 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.15.4-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.15.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
+---
+ drivers/remoteproc/stm32_rproc.c | 82 +++++++++++++++++++-------------
+ 1 file changed, 49 insertions(+), 33 deletions(-)
 
-6.15.4-rc2 tested.
+diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
+index 431648607d53..db82d4308376 100644
+--- a/drivers/remoteproc/stm32_rproc.c
++++ b/drivers/remoteproc/stm32_rproc.c
+@@ -209,6 +209,52 @@ static int stm32_rproc_mbox_idx(struct rproc *rproc, const unsigned char *name)
+ 	return -EINVAL;
+ }
+ 
++static void stm32_rproc_request_shutdown(struct rproc *rproc)
++{
++	struct stm32_rproc *ddata = rproc->priv;
++	int err, idx;
++
++	/* Request shutdown of the remote processor */
++	if (rproc->state != RPROC_OFFLINE && rproc->state != RPROC_CRASHED) {
++		idx = stm32_rproc_mbox_idx(rproc, STM32_MBX_SHUTDOWN);
++		if (idx >= 0 && ddata->mb[idx].chan) {
++			err = mbox_send_message(ddata->mb[idx].chan, "detach");
++			if (err < 0)
++				dev_warn(&rproc->dev, "warning: remote FW shutdown without ack\n");
++		}
++	}
++}
++
++static int stm32_rproc_release(struct rproc *rproc)
++{
++	struct stm32_rproc *ddata = rproc->priv;
++	unsigned int err = 0;
++
++	/* To allow platform Standby power mode, set remote proc Deep Sleep */
++	if (ddata->pdds.map) {
++		err = regmap_update_bits(ddata->pdds.map, ddata->pdds.reg,
++					 ddata->pdds.mask, 1);
++		if (err) {
++			dev_err(&rproc->dev, "failed to set pdds\n");
++			return err;
++		}
++	}
++
++	/* Update coprocessor state to OFF if available */
++	if (ddata->m4_state.map) {
++		err = regmap_update_bits(ddata->m4_state.map,
++					 ddata->m4_state.reg,
++					 ddata->m4_state.mask,
++					 M4_STATE_OFF);
++		if (err) {
++			dev_err(&rproc->dev, "failed to set copro state\n");
++			return err;
++		}
++	}
++
++	return 0;
++}
++
+ static int stm32_rproc_prepare(struct rproc *rproc)
+ {
+ 	struct device *dev = rproc->dev.parent;
+@@ -519,17 +565,9 @@ static int stm32_rproc_detach(struct rproc *rproc)
+ static int stm32_rproc_stop(struct rproc *rproc)
+ {
+ 	struct stm32_rproc *ddata = rproc->priv;
+-	int err, idx;
++	int err;
+ 
+-	/* request shutdown of the remote processor */
+-	if (rproc->state != RPROC_OFFLINE && rproc->state != RPROC_CRASHED) {
+-		idx = stm32_rproc_mbox_idx(rproc, STM32_MBX_SHUTDOWN);
+-		if (idx >= 0 && ddata->mb[idx].chan) {
+-			err = mbox_send_message(ddata->mb[idx].chan, "detach");
+-			if (err < 0)
+-				dev_warn(&rproc->dev, "warning: remote FW shutdown without ack\n");
+-		}
+-	}
++	stm32_rproc_request_shutdown(rproc);
+ 
+ 	err = stm32_rproc_set_hold_boot(rproc, true);
+ 	if (err)
+@@ -541,29 +579,7 @@ static int stm32_rproc_stop(struct rproc *rproc)
+ 		return err;
+ 	}
+ 
+-	/* to allow platform Standby power mode, set remote proc Deep Sleep */
+-	if (ddata->pdds.map) {
+-		err = regmap_update_bits(ddata->pdds.map, ddata->pdds.reg,
+-					 ddata->pdds.mask, 1);
+-		if (err) {
+-			dev_err(&rproc->dev, "failed to set pdds\n");
+-			return err;
+-		}
+-	}
+-
+-	/* update coprocessor state to OFF if available */
+-	if (ddata->m4_state.map) {
+-		err = regmap_update_bits(ddata->m4_state.map,
+-					 ddata->m4_state.reg,
+-					 ddata->m4_state.mask,
+-					 M4_STATE_OFF);
+-		if (err) {
+-			dev_err(&rproc->dev, "failed to set copro state\n");
+-			return err;
+-		}
+-	}
+-
+-	return 0;
++	return stm32_rproc_release(rproc);
+ }
+ 
+ static void stm32_rproc_kick(struct rproc *rproc, int vqid)
+-- 
+2.25.1
 
-Build successfully completed.
-Boot successfully completed.
-No dmesg regressions.
-Video output normal.
-Sound output normal.
-
-Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
-
-[    0.000000] Linux version 6.15.4-rc2rv-g0e4c88a0cd37
-(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 15.1.1 20250425, GNU ld (GNU
-Binutils) 2.44.0) #1 SMP PREEMPT_DYNAMIC Wed Jun 25 15:02:33 JST 2025
-
-Thanks
-
-Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
