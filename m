@@ -1,157 +1,240 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013053.outbound.protection.outlook.com [40.107.162.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DED32BEC33
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:17:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750868251; cv=none; b=gOSAWehpGeOuoEQOufWaMXRIsodnCiYyA11PhnLSDrjRMwhoChVPYmfr2Blb2h1VSRSn75sYRK5h0xTIfeEJQA/t84pd32ah6RDRKTb5sGR7/S1bcWipnWY+K3QWJLTp4e42kkzddrr1HujtzyPZ0meZJLMcSI475d6lbodPOdw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750868251; c=relaxed/simple;
-	bh=rWGPByoC/hnHkqwleO+GR+oyAAnuvdMd1IK36Oo/n1o=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LyQH7VXHqkQcTpmN4F29g1andfXyEOUQZFuITP2IuqNWcdDd/tg3/DH9OrHuCX2loaBJcSw6lLhKP/3VxSZQQtTh3o2ft8BMuDe513TqNnRR06321G+VKwWQmXVmzEdY0Ji/svGKyT+CQ7J9MLxvKmAHQODxBiUu7CZsrbLdTqY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=fUlQEqhI; arc=none smtp.client-ip=209.85.210.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBD702BEC2B;
+	Wed, 25 Jun 2025 16:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750868368; cv=fail; b=YqdqWm2VOEZVzokWq7Jp01puksinG/8dv3OuRC8ZplvTxDsqxgLP5YjZBP+7Edr3OClWICq8t/ODSCLHJHuA9UaHnR7uV8sOMGEJi5Az7/g4THWBeLe2E6Xlij+kdh0T+Cpux/704hOJ69Ex3QZGmAfmaIj9MdB6/5VMaGi5qjo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750868368; c=relaxed/simple;
+	bh=eIdkXZCp2GqF3hCBcQLGzUzVcFCHbOd8ErfGq2zta1k=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=rtSHLzg22xM/8c50IoNiSg+5PWgke8RU1SGewtj38f2/EpHy30Ozf/aO1jXxMFgqSCmyq4BPk+FKmcFyHxgvqeD8qJsicdoA6jM6uhGzYzcevjEDgHGlTAVvq9/BCs3AyWbTgRkQPzYNxoqVYwA5etLPCj/66O3P82gGIL7PXg4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=B4kEu/Hg; arc=fail smtp.client-ip=40.107.162.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="fUlQEqhI"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-7426c44e014so126302b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:17:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750868249; x=1751473049; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3ucgASzDHlxpA/1R6gfwSR+grfWmp0YH8y7SE+A0JJg=;
-        b=fUlQEqhIAik8xphtfPAkV6sMQMohGGTMfRlMfGmR2STCXFq3wLCXu7CpmObbkJmqqH
-         amcrkSxbKexR3znOkf+E/ZecAN0n0rsxjvUpKwbT5m7Ye49b0IK0EIPKYleX39ZxTEcC
-         sKy/n407HJGIy1y8PSuoFCWtzvV4gLZMNpYeTPleUDNcuNDBqWgpHRiRPGumQYHMPEzQ
-         5RutZtC3nhNiLb4CxhHDtGh06mgicFFzO7AH5J5x5kLDueU6d/5+XGf24M8qNdS1cx7e
-         C618flvENfjjiEc5ac1dSsNtCr8LOfhXiDR4m6KnRxiPDeQthdY8iDbIYHMltz4L0+4R
-         d1Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750868249; x=1751473049;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3ucgASzDHlxpA/1R6gfwSR+grfWmp0YH8y7SE+A0JJg=;
-        b=OwQKjALBR9CwvE6V7gCyJGSfTrv+IFGOHZ0/g490SnGh2OFVjUPEuTulHUmvx4KTqt
-         83j//7SfiJomsd94IycLJoMi5YDmLIwGqHsEv2SrEjD9pUo1Po3m3/IOqceI8hX/4ukC
-         guRnFxqWZ8huSS4+qee1WJUD/ntGM+NzNoOr0ZxgjiUI0Vb/mkU12IDQwaZ10GZwJjUP
-         v7dXmv5lH71JHGLukIvQJLH3l5A4ff0defeS24AcF2QR/ot74sKBlRtUN4voW+L6pbJi
-         lNED+kSA8q90euAXxsgr82ubdWUM0JhCqnvv8cjzgeT85DV87EY/DMS4SsksMSPqG/sW
-         wrxw==
-X-Forwarded-Encrypted: i=1; AJvYcCV5WLcuHTs9fan869GhcPyKB7b0YxI+H8FLrbQheOdbbnvTORwtdZih2Q5IEhEUKA+OpC0tZQrzlkU+s2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyo1W5GoTb2OccZSxNUzXYcEbyCLutF1jV0XbAVEFGltl4IlMXI
-	/X/EF1ozxHSoEM0Kd65e5wTw8Mz3d1T9asTeZrZj/4RfJACrvR2stTYr9M7WuE1cZ74=
-X-Gm-Gg: ASbGncvK4Ul4MbesAYOxE9sR/qVzw4tWe7xyM3SjXwHurY7bnUnUrmOHWb0p7Dgb1xK
-	lo3EQ9DLdWXHcvcTId6bdmxc4snpIl4GsTLsTGwbE/KVgzXwaighmNr0WybJ1U80p8ZAWB61ZgX
-	BLHbuQepZ3fQZr7tMcIJvGFeWIpuzVcUKqzMaaYs1kyYaC+Vz8g11om4LhVjPisNMlyN3VTqyR9
-	uIp0Npfm780Wi+j5fGB0RHU04Z7mLv/F8nH8NSUhq77kACSUdYafVnqUdubk8LjYVVqWg5v3ngi
-	HEWzPHIa/Ui6xHwLdeRv/5dObgN3NP2g6Ecq6FLR/kGB0Vj1lMOEIFEJGbSFcvGowLS1XNjJgUl
-	DvucrkplyprlNp40WXAePD5z2llq6sPzSyAMp
-X-Google-Smtp-Source: AGHT+IFpDcqx44HzncJdJNVAkQLG5gSRrOhDC4JGf2UMPexno4tsLpTKKz23ZIhlWN8/zRHxl5MEaw==
-X-Received: by 2002:a05:6a21:e96:b0:21f:4ecc:11ab with SMTP id adf61e73a8af0-2208c08a340mr673741637.9.1750868247253;
-        Wed, 25 Jun 2025 09:17:27 -0700 (PDT)
-Received: from anup-ubuntu-vm.localdomain ([103.97.166.196])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e217afsm5024436b3a.55.2025.06.25.09.17.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 09:17:26 -0700 (PDT)
-From: Anup Patel <apatel@ventanamicro.com>
-To: Jonathan Corbet <corbet@lwn.net>,
-	Thomas Gleixner <tglx@linutronix.de>
-Cc: Anup Patel <anup@brainfault.org>,
-	Atish Patra <atish.patra@linux.dev>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Alexandre Ghiti <alex@ghiti.fr>,
-	Andrew Jones <ajones@ventanamicro.com>,
-	linux-doc@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Anup Patel <apatel@ventanamicro.com>
-Subject: [PATCH] irqchip: riscv-imsic: Add kernel parameter to disable IPIs
-Date: Wed, 25 Jun 2025 21:47:15 +0530
-Message-ID: <20250625161715.1003948-1-apatel@ventanamicro.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="B4kEu/Hg"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Q6eJ0ZN5f/ScnpJsGOX8OeT1czO4gpzH1aNXM9p2MVAellgks0k7yzG9gEqp/sDiTgWm4EasRvrenxJ/GPjM3dGxaDm+hDRAjgHfpPlQG8u0RppMIpwFFu+XKABohnkXoOF/LYps6tl2VCJUWF99aFQOG63gA2q+T0vDHEEC8h0dZZd+XGUCIa50rJku6K/LakHBG8uL+wK3ji3c19udr6wqaObZ01ccZL7rR0EGYeZpu3jhoMiPSj8tH0SVvTAqcKpi7D9TP9kSu/CXMAQZIGaxoc1SFIkQwKZ4uFxMEudi2cWv4Yw1DI93B2DrWtyZDVWWRXuQzc3klh/64JRObg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1b5d7p5CJABVZyYvwxIcwh6gOqXHYtgClZ331IuOAak=;
+ b=VYWy8Zjuh8ctMHLT4h9KCYBvhzoZdLW81/qzim5HDnbBdK59M2lFd2o3AiHtFqHjC5qDk5CC9MNp3eWmiLp2eb6+MwCpvjLpLgS3WuEapH93+ZAOTh2lKuchCW4KJPLLdtRh04J4TeVD5++JGx6EFsOjDLykum9z0j15JXjPcn2+/7dgNLJKU/3e5NXj55V5/IPl//q/FhfFA9MbfGZO00kZzBuAz6khyFeCRPlvn2K6zoDpnL8HjE6EyGqqEg5tZ4gMW7KSQZvOXa9M/mIrGg1Kq49WN9noHcOQJeRlN1ttdvbnnuseDcJRqOe7W7blMZJbDnA68hSSSB3w9WBYIw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1b5d7p5CJABVZyYvwxIcwh6gOqXHYtgClZ331IuOAak=;
+ b=B4kEu/Hg47BNxQlyYKiIB6yNTZAdPbKbLY8El1WcRETN3humIXcjX3tXS1WuBGDa++JBZN86f7EuXUBRswD8w1vJ+cHJhXCOpXfZ3eUeZRKM+haDuG2d3cY4Q6t7VpmYHexyrdsBkmS6ozvIdhCwFlJmRSEJrhxVTp9Y1a4Kt2Bbo9hmDzKGAZ4jMA0dB6mJMbHR5cc3v0aTEaYARlvYS2bxdddaT5MOfwhf9OpLHZJkJ9g6i9hd0hwaF0SvgcYS0UvzWWVl7JpknC8eAuXmzeNdV9f59f7izPSUytEmoBdNYEIYagqo+tAlxmjQuzoU581tFxjcvDU1b2MRhv8DMA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com (2603:10a6:102:240::14)
+ by DUZPR04MB10037.eurprd04.prod.outlook.com (2603:10a6:10:4d8::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Wed, 25 Jun
+ 2025 16:19:22 +0000
+Received: from PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06]) by PAXPR04MB9642.eurprd04.prod.outlook.com
+ ([fe80::9126:a61e:341d:4b06%7]) with mapi id 15.20.8880.015; Wed, 25 Jun 2025
+ 16:19:22 +0000
+From: Frank Li <Frank.Li@nxp.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Vladimir Zapolskiy <vz@mleia.com>,
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+	linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM),
+	devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS),
+	linux-arm-kernel@lists.infradead.org (moderated list:ARM/LPC32XX SOC SUPPORT),
+	linux-kernel@vger.kernel.org (open list)
+Cc: imx@lists.linux.dev
+Subject: [PATCH v2 1/1] dt-bindings: pwm: convert lpc32xx-pwm.txt to yaml format
+Date: Wed, 25 Jun 2025 12:19:08 -0400
+Message-Id: <20250625161909.2541315-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: AM0PR10CA0111.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:e6::28) To PAXPR04MB9642.eurprd04.prod.outlook.com
+ (2603:10a6:102:240::14)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB9642:EE_|DUZPR04MB10037:EE_
+X-MS-Office365-Filtering-Correlation-Id: dc282399-58bb-409f-2414-08ddb4040b7a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|52116014|38350700014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?YqyNP9KnOGAw3FSUVShRHnwzNJo1YDeS/v7jTu+9DKY5iLAuJgCCO8vhYq/J?=
+ =?us-ascii?Q?SX2pRL6+CwGKETEifJcAbosMs3W0pWYTVmFkj20mQy2hkqKO+xyM6sqgNe1Q?=
+ =?us-ascii?Q?/IK6D7ho/nzeZnG39xvZy7y7l6pj18UVLpdUW7Glq8iNlzgpybI54e34XKDv?=
+ =?us-ascii?Q?Je5eUYzVuDhE7xKEmsYdhDhaXa2eSc6BVLHrqaILELEvA5cBjafjqoE5Ugv/?=
+ =?us-ascii?Q?Xg2W3Ta4goW9vNc7binmX9jEWKEwKvlmg9SCwBlJLP8fKdxzVImU0YAlz5G7?=
+ =?us-ascii?Q?o+G7wYt0SU3z5ePi+inwePgl7V1uJQYcuNa2MFTEOxxw0sCCjXQxDORuCncA?=
+ =?us-ascii?Q?YB2JEFx9guckOVARjm5ywqww35xyF8h32iE6E7kOEkpq6wvYwWZEzcn8w3IZ?=
+ =?us-ascii?Q?ZgHtK0PTmzngz8VE1mEtfrDr/kPE18gJZsFW/hUydVnH6cwuTm3kO3o9NYQn?=
+ =?us-ascii?Q?LX23TnJb3gi2fX5Hv5zn3gjjh3BhWQRSlkI1AZUpq456b+KU0uaZm3+Is9OU?=
+ =?us-ascii?Q?PFKd/EJvTsdfn3NiZ+NHnEQMP6fX7lV8yX93ftIejphPmrniMV7KMhTwtql0?=
+ =?us-ascii?Q?CMYJD5zv4ActyHln2vWLtYk514EYVH4eluKK3rchncxt1iqhozgdn+8jYNIw?=
+ =?us-ascii?Q?V4TvSLJNbGR7YRZfZsQV6BxOX3m3UZP4aF0ArJb1CP8eHmW0ZcOlZm3ZoeuO?=
+ =?us-ascii?Q?My++hwPgHi/XXIYUS6PbDEtGJmPsYlerql/bv0Zba8d93Jz3rV9Dw0RqjlqT?=
+ =?us-ascii?Q?NINxsS6AHYB0Bj8lgZJ+xhnmS4T2Rv+a+CCv/EJRMhHUSh6uDrGQRZcEeKTj?=
+ =?us-ascii?Q?RGD0DzXcJIxJoFBbHdcdYfdSIHAHnFtXihtJ59s5zip4b5VswtPYk/g12S6F?=
+ =?us-ascii?Q?F9zvrUE7hbWCqf1r7j6oZTKfWem/nq0Am2fzNLrLi+NDRRT9Pzpq04/D7/BG?=
+ =?us-ascii?Q?TqDfwSO+Cl1BeAoy2sL2Lt5mMUECmMF88r7JLPIEb0vhM1GpNWI9YA+Fp74A?=
+ =?us-ascii?Q?2ROV/um1yuc56XApiuXqJ2NIww/G0F+5aq+gww2oCnvRvGCCrLyJYYMTOJnz?=
+ =?us-ascii?Q?d8CMMBFn0anxrNcV/7+UprqPJfUOVw/f5vMOxLXfbt3DC91YUM9+QI56oM4j?=
+ =?us-ascii?Q?orkG/RdsaYTU029GtYmbKdmszEl9SEUKzY6uDaXTioXSKbKZaYsZfIIKPeU/?=
+ =?us-ascii?Q?Jo25uJZMZiIYp5fK+I0W27kD/rf/fvGanOAMWrI4mKQxUTbMV4He0WxEREHq?=
+ =?us-ascii?Q?XStyrMKIAEUViSjYKQ49iHFSQDKnhcLojWBR0eYGP1DKsCAf36YrPuolanox?=
+ =?us-ascii?Q?CLe+/zg5h/GwXCE/xqHEIwPOjNi/nyun1u2YTSscIYkZa0ABHNskGkHRWZNQ?=
+ =?us-ascii?Q?5zzejqs+VNhu/aDJoMBXvqoeysllLIz6OLWNEhnFAN1HBbhce/sLqFFqZ9Ry?=
+ =?us-ascii?Q?bXGK6ONUk90nsWJsSBkwbo8vFfCQf/4hFcMpwPdXCJEHJnrp0RfL8Q=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9642.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(52116014)(38350700014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?8Hm/nUwhtPo5E/v3EQzETGNYfyNBewtdE6xxmJ0eMb9YNu3CJ7ZWYzfMyiH5?=
+ =?us-ascii?Q?7DkYTMRWPmkJxFlFFOZZ5DhKtZ+8Tnhr2XJ8SAcoKcpNHmWoor282iyqrbtv?=
+ =?us-ascii?Q?HFc+uTq/S8rNlFkL0z8n5PbWzK0QPyii/ZlEuAuE4P0Xh+Lj9gntR8LW8EdB?=
+ =?us-ascii?Q?5qXUuu+prhqybF7u1riFFVng3Wawd78hz7SxeMn9hWEszfQ/sUNm/iPOVPqR?=
+ =?us-ascii?Q?157kRSlqGnmBlpBfiGKTAVdgr75TPDbpu36uovoXpkezaEY+ogZG55B6lOhY?=
+ =?us-ascii?Q?iMOjAjvZS2QeJv/YD3UVKrYCIyk5uGLHiI2UUCs6KMmavtSzVH33AB+laJ0o?=
+ =?us-ascii?Q?gBWjIlyFbKcR/UC27WouYTMiBHo73oiqwYA5hrFJ6ERLV/aVxE3qQJ5c7FL0?=
+ =?us-ascii?Q?AvJRpT6hRyI/ie7/gCUrjGl7TF4iiOHzHIMH54p/BGU8CxEGR9rgZ9UwF9M8?=
+ =?us-ascii?Q?snQm+YvwjCd2hrC/2HBMdZUhlaBIbNUnh5XnrA7HraYgjYWqz3tidxVah/Q8?=
+ =?us-ascii?Q?ZHrR+meQEJtk5CVGdX6abwdM3NHSaIEDZucfgWsH88a9d/Z3GzALNWPB+yJ3?=
+ =?us-ascii?Q?AZQccloRxb/RtrCDoRIPup3NfeHIbpDO6aMEBCJLnGMPxt13IcGvv0tZ+goS?=
+ =?us-ascii?Q?r/rfnuRM+yLAcMpCBeijFHqx+YJwvTkLVyb63Y3+6Qm3j01kuGfl5xM2K+/E?=
+ =?us-ascii?Q?TlZBfJLFKXUDM5ll9ar6hUKVYACyBP3NOA6RwH8od7LaKQOYnEnjSu+bt1Kv?=
+ =?us-ascii?Q?bv2GclOtNgW5Je1OCbORfXmnB8viNQVLJZ/pfajG2Zx612H+Z1w+7UhWp2AH?=
+ =?us-ascii?Q?1bxCA8UsQPcPvrVcCKv212VHS2g2imVSsvkjuMmYVXNpnqdSY2Snl18BQcj5?=
+ =?us-ascii?Q?dzGlTzXAT0aeDM7ZkpRk64Bk2hPjZBHZc0HaJJON376/b+GvsMCGhTZEab8n?=
+ =?us-ascii?Q?H2aVFxZJ3enPb8fWtTOOqolHSAaffcv0E9wkFTahLuFB9bAH0oH4rtfhBf95?=
+ =?us-ascii?Q?00FXDXGTQhcDN2+5uUtK+Nf8+9Dtwwc/eT71G+Icy/Z+NXRjTOgx32r1ziB5?=
+ =?us-ascii?Q?qvICt/mECACyuxq6IocmJU0GALkvIT/h4je7Oouxny6vm9gDwGjFTaZhBw/f?=
+ =?us-ascii?Q?x+4jSgKEzcd2tHo56deVQQpJ/HsIv2HSUvq+QJRwxUkyvueGyYVE08PCKClK?=
+ =?us-ascii?Q?iwxBAbzzLU7w/cN/1ob+ha57ULIIpogCzBT86OhsdQ0kVzv2Y8qsNgmbjY2p?=
+ =?us-ascii?Q?EQLXIiYWcK7ZukFWu3Uj6jNfLdiJ7VrdQKw4nj+zh680SfgRNnQuelgIFyyY?=
+ =?us-ascii?Q?vHMB5i/P+5dS3UeiMfedyzAU4UafcKVFcXUja02MiydJbSlYABNMiqykXhCt?=
+ =?us-ascii?Q?A6pzXeuUysDlEdFj0LVc+YIAz8r6aJ1tAUi2g2kFtA4MaHzm2E8zJcP9pRYn?=
+ =?us-ascii?Q?fLOQPPySCF2gu0RQV1pjfRAlokdf1Rwhdl8glprEO6bnCgmb4YTixqa+wvNg?=
+ =?us-ascii?Q?iV7t9zgucd1KBf+BurN8hP5NYVAtTohlHY1WOJesu31FqrUefiVZz9osLNGO?=
+ =?us-ascii?Q?VZxB90AkJc3JUJSMUNWmeZ+Mt1IpCTSGnJLdjVRO?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dc282399-58bb-409f-2414-08ddb4040b7a
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9642.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 16:19:22.4416
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jHzvnuw2Q3QRhzbD4Zl7sVFo45H11YMtrjQUhLaibZ9JgZEQYzDmuc6oNycg3V0lLEHzcuU8g1ztloNcCqUCyg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB10037
 
-When injecting IPIs to a set of harts, the IMSIC IPI support will
-do a separate MMIO write to SETIPNUM_LE register of each target
-hart. This means on a platform where IMSIC is trap-n-emulated,
-there will be N MMIO traps when injecting IPI to N target harts
-hence IPIs based on IMSIC software injected MSI is slow compared
-to the SBI IPI extension.
+Convert pc32xx-pwm.txt to yaml format.
 
-Add a kernel parameter to disable IPIs in IMSIC driver for platforms
-with trap-n-emulated IMSIC.
+Additional changes:
+- add ref to pwm.yaml
+- add clocks
+- restrict #pwm-cells to 3
 
-Signed-off-by: Anup Patel <apatel@ventanamicro.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  7 +++++++
- drivers/irqchip/irq-riscv-imsic-early.c         | 12 ++++++++++++
- 2 files changed, 19 insertions(+)
+change in v2
+- allow clocks, there are not clocks for nxp,lpc3220-motor-pwm, so not put
+into required.
+---
+ .../devicetree/bindings/pwm/lpc32xx-pwm.txt   | 17 -------
+ .../bindings/pwm/nxp,lpc3220-pwm.yaml         | 44 +++++++++++++++++++
+ 2 files changed, 44 insertions(+), 17 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index f1f2c0874da9..7f0e12d0d260 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2538,6 +2538,13 @@
- 			requires the kernel to be built with
- 			CONFIG_ARM64_PSEUDO_NMI.
- 
-+	irqchip.riscv_imsic_noipi
-+			[RISC-V,EARLY]
-+			Force the kernel to not use IMSIC software injected MSIs
-+			as IPIs. Intended for system where IMSIC is trap-n-emulated,
-+			and thus want to reduce MMIO traps when triggering IPIs
-+			to multiple harts.
+diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
+deleted file mode 100644
+index 74b5bc5dd19ac..0000000000000
+--- a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-LPC32XX PWM controller
+-
+-Required properties:
+-- compatible: should be "nxp,lpc3220-pwm"
+-- reg: physical base address and length of the controller's registers
+-
+-Examples:
+-
+-pwm@4005c000 {
+-	compatible = "nxp,lpc3220-pwm";
+-	reg = <0x4005c000 0x4>;
+-};
+-
+-pwm@4005c004 {
+-	compatible = "nxp,lpc3220-pwm";
+-	reg = <0x4005c004 0x4>;
+-};
+diff --git a/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
+new file mode 100644
+index 0000000000000..d8ebb0735c96e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/nxp,lpc3220-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
- 	irqfixup	[HW]
- 			When an interrupt is not handled search all handlers
- 			for it. Intended to get systems with badly broken
-diff --git a/drivers/irqchip/irq-riscv-imsic-early.c b/drivers/irqchip/irq-riscv-imsic-early.c
-index 1dbc41d7fe80..c6fba92dd5a9 100644
---- a/drivers/irqchip/irq-riscv-imsic-early.c
-+++ b/drivers/irqchip/irq-riscv-imsic-early.c
-@@ -9,6 +9,7 @@
- #include <linux/cpu.h>
- #include <linux/export.h>
- #include <linux/interrupt.h>
-+#include <linux/init.h>
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/irqchip.h>
-@@ -22,6 +23,14 @@
- #include "irq-riscv-imsic-state.h"
- 
- static int imsic_parent_irq;
-+static bool imsic_noipi;
++title: NXP LPC32XX PWM controller
 +
-+static int __init imsic_noipi_cfg(char *buf)
-+{
-+	imsic_noipi = true;
-+	return 0;
-+}
-+early_param("irqchip.riscv_imsic_noipi", imsic_noipi_cfg);
- 
- #ifdef CONFIG_SMP
- static void imsic_ipi_send(unsigned int cpu)
-@@ -47,6 +56,9 @@ static int __init imsic_ipi_domain_init(void)
- {
- 	int virq;
- 
-+	if (imsic_noipi)
-+		return 0;
++maintainers:
++  - Frank Li <Frank.Li@nxp.com>
 +
- 	/* Create IMSIC IPI multiplexing */
- 	virq = ipi_mux_create(IMSIC_NR_IPI, imsic_ipi_send);
- 	if (virq <= 0)
++properties:
++  compatible:
++    enum:
++      - nxp,lpc3220-pwm
++      - nxp,lpc3220-motor-pwm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  '#pwm-cells':
++    const: 3
++
++required:
++  - compatible
++  - reg
++  - '#pwm-cells'
++
++allOf:
++  - $ref: pwm.yaml#
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    pwm@4005c000 {
++        compatible = "nxp,lpc3220-pwm";
++        reg = <0x4005c000 0x4>;
++        #pwm-cells = <3>;
++    };
++
 -- 
-2.43.0
+2.34.1
 
