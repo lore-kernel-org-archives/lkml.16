@@ -1,162 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DC3B261594;
-	Wed, 25 Jun 2025 12:51:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAF9261390
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750855899; cv=none; b=ufKCStp3jfpeNjE4SEjZWeigYWhD96YEkkfx4nHazddJGqlfM7+gAwGsJzX0nriS+rSvae3kPHt2DzIQf3M663Fd/eKNM7fHz3rzCKdKKpPfNIVASQJHqOgwFddSTbsuvUtVsmYBGsfMlK424Hw6cjfvPUz2TlvQhwdmWZRYWew=
+	t=1750856009; cv=none; b=mOY26UxIXFhQIv2zt/AtpHckEPQKwpyTcAN50e653PTh31dx7jmo5Moh2Kggq661jONwEFe/ttTYAkPVAlGT+3F2v28bLYtP2+h+GdaHChciBButarzwh3qIGwd4N2E/er/agmhN0vP4OC1x1UBeXu1RqDLboPd9AjtGeQdBAeU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750855899; c=relaxed/simple;
-	bh=OjJNhJk2T736RflVUZxtae35YdvRzXSJjxBWWJGThLU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RKzvR3H8uGDW/m0cKlqWrZd7xxaR3T2WMFATczcq5U6geGdxt1fIAgpKi4J0tzlWhrDmDJvdiBVTK1KaU8F8G/mH08gU6uikB5UAybHc3w3h8Iflmb13QsDbyQnlpPcf2JSq1Hv3VzVql92qOGcOi+jQKqf+FdniGkw3yie4/hg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.helo=mgamail.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dLRmXaBW; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.helo=mgamail.intel.com
+	s=arc-20240116; t=1750856009; c=relaxed/simple;
+	bh=LyYQDcnXmGsVu73bpfzmTVDLBrEXLKs1lCcXT5WkdYU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ErfXmfHTdH1PGaGrZKAx0k+b2LXa3zZPepVKZgFmXk7KcnjB6sug5b8e90MUMrrrnm/oLyaUkHv7vIwP77EUDTwBtFSyu+B1SkR5zMhUngiIEOxYKqFOomFaeo7Fm+mINiV5dxpHcZh5XncZVtpUR0zloVsiyAy01oiC/QtBjlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OxtAGA5L; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dLRmXaBW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750855897; x=1782391897;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OjJNhJk2T736RflVUZxtae35YdvRzXSJjxBWWJGThLU=;
-  b=dLRmXaBWVFXNG3QpQ7GZ22PRK6h8tWOd8fC/s2214ebWcZ8sdUug4FWh
-   Ih8FD5wHd/1Y9WmHhmyZyTJHqUVAkAMFYOaCWNSO/tYHhx1jyIs0KQ1Ne
-   Vq3RXF7S1v4dc8G79DJe1mkVI8EcFVoRJZbBqM2yxHF9X+B00CAhdABsp
-   bGdY3w/l/ffDJm6gHrrhMnmi1tP6qGC6Wu4AQqPCsKQaCVMpigYf34eyR
-   BbrgiYPxpZytgUlZCgznBfstk4N4N1vbxkskkWJ1IGL++Iv4Atp5HW3FW
-   Zb7j4EB6x/Prq80pjhUyaDr+h2EInq92jP20u5GBcpdSM8gj2y8Lq368H
-   Q==;
-X-CSE-ConnectionGUID: Y0NKWOZ6RKe6XPc/zvoVlA==
-X-CSE-MsgGUID: DelkvT1LRyW82XR1hXU8og==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="53189698"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="53189698"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:51:36 -0700
-X-CSE-ConnectionGUID: CUdWr/0xSjGd09hE2d7u8A==
-X-CSE-MsgGUID: TFzgGhRYSzCwRkjbu0forw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="151830988"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa007.fm.intel.com with ESMTP; 25 Jun 2025 05:51:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 3E9DF825; Wed, 25 Jun 2025 15:51:13 +0300 (EEST)
-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-To: Andy Lutomirski <luto@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Xiongwei Song <xiongwei.song@windriver.com>,
-	Xin Li <xin3.li@intel.com>,
-	"Mike Rapoport (IBM)" <rppt@kernel.org>,
-	Brijesh Singh <brijesh.singh@amd.com>,
-	Michael Roth <michael.roth@amd.com>,
-	Tony Luck <tony.luck@intel.com>,
-	Alexey Kardashevskiy <aik@amd.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Sohil Mehta <sohil.mehta@intel.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-	Daniel Sneddon <daniel.sneddon@linux.intel.com>,
-	Kai Huang <kai.huang@intel.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Breno Leitao <leitao@debian.org>,
-	Rick Edgecombe <rick.p.edgecombe@intel.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Hou Tao <houtao1@huawei.com>,
-	Juergen Gross <jgross@suse.com>,
-	Vegard Nossum <vegard.nossum@oracle.com>,
-	Kees Cook <kees@kernel.org>,
-	Eric Biggers <ebiggers@google.com>,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Yuntao Wang <ytcoode@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Tejun Heo <tj@kernel.org>,
-	Changbin Du <changbin.du@huawei.com>,
-	Huang Shijie <shijie@os.amperecomputing.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-efi@vger.kernel.org,
-	linux-mm@kvack.org,
-	"Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCHv7 15/16] x86/cpu: Enable LASS during CPU initialization
-Date: Wed, 25 Jun 2025 15:51:08 +0300
-Message-ID: <20250625125112.3943745-17-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250625125112.3943745-1-kirill.shutemov@linux.intel.com>
-References: <20250625125112.3943745-1-kirill.shutemov@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OxtAGA5L"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2356ce55d33so25785695ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:53:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750856007; x=1751460807; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qm9UdCmx0AUjdXCDjy0dtaSU1yfF/6cv13NPsG0xoPg=;
+        b=OxtAGA5LpfPL2vRuPmjdvZ7zVnn59HhhsUiL8FIsXqJRLO9Cc5nrrTiy6F4g92OxJa
+         zVPdPo0f1m5O4Ix5vHfhg2brORVyqSNuRdtOd0zFMedqOpFo+yLRuVZIkUPKZSgpFLUX
+         9aUQs75xPjeBX+95fV1qwEYZ0KuuieKZ/m1u0pecY419oQM+rdi65CQlA9XtvLiuyGkU
+         H5Wtf9iLyjxLK9ZwPw8PFQAgIqOUqJjUowa9iFHaMcyfDFqrUo9KyEe7FojwSetAxYPX
+         HRXxKA7vxeFSiFIJPQtfvM+z8BnT1eBVidaKnHYwBs72SVHVJEQbzaDYSXHOTOTSmRl0
+         9Q7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750856007; x=1751460807;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qm9UdCmx0AUjdXCDjy0dtaSU1yfF/6cv13NPsG0xoPg=;
+        b=ViirWEfi83gY1p9ZPdUqMfRvEURAJnBbYBhgn0Ppx4+9mxW9neE2OnxSV5kv0aaiOd
+         cBI22XqO9qHER7GQqnSB89Q9b3SPQBw4I4VHONqWRIpSBWVQPfnFZl0S1iMNQaoWnk1J
+         +Ps0CCF2J0kbiXKpNP2CLF6lYMwVn5JEejnPWEp8H0PyqtvsFS+YzxQKNHs6F/LIMdpm
+         0JD2p/0l5FeCHAEz+psSeCW5tyyWcI6huQrY6Bjylq4blF5lMvRisVF3WkQxtkBhhVLH
+         DNgYGXukVbokNosTNgTDg9rhMEGshLClng2mWZMNrlWO5fyrYuwyQyBKzavd0ZBvXbz2
+         1akQ==
+X-Gm-Message-State: AOJu0Yzu2QT9U4iHkI1IANX4cDA1gHzk3hflZz2/uFcX9Pcgkz1CETpy
+	WLF9rDwESfNvzklmZTc/l7t61523KftDTug74hoY/UcTvSrIoibO9WF6Ph0j1KjzXywQmrtHUGl
+	EKe6xpw==
+X-Google-Smtp-Source: AGHT+IFkzNNA6kVoA+2D6FAE4AOHOnEwMQn/97TNwefolAE17lsZ+t6y3XTUeyFLF/Yx7w++6g2MSRnkPqg=
+X-Received: from plbmv13.prod.google.com ([2002:a17:903:b8d:b0:235:54f:4f12])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2bcc:b0:235:5a9:976f
+ with SMTP id d9443c01a7336-23824030ccdmr68655075ad.24.1750856007263; Wed, 25
+ Jun 2025 05:53:27 -0700 (PDT)
+Date: Wed, 25 Jun 2025 05:53:25 -0700
+In-Reply-To: <20250610175424.209796-2-Neeraj.Upadhyay@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250610175424.209796-1-Neeraj.Upadhyay@amd.com> <20250610175424.209796-2-Neeraj.Upadhyay@amd.com>
+Message-ID: <aFvxRctwWEtRde08@google.com>
+Subject: Re: [RFC PATCH v7 01/37] KVM: lapic: Remove __apic_test_and_{set|clear}_vector()
+From: Sean Christopherson <seanjc@google.com>
+To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+Cc: linux-kernel@vger.kernel.org, bp@alien8.de, tglx@linutronix.de, 
+	mingo@redhat.com, dave.hansen@linux.intel.com, Thomas.Lendacky@amd.com, 
+	nikunj@amd.com, Santosh.Shukla@amd.com, Vasant.Hegde@amd.com, 
+	Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com, x86@kernel.org, 
+	hpa@zytor.com, peterz@infradead.org, pbonzini@redhat.com, kvm@vger.kernel.org, 
+	kirill.shutemov@linux.intel.com, huibo.wang@amd.com, naveen.rao@amd.com, 
+	francescolavra.fl@gmail.com, tiala@microsoft.com
+Content-Type: text/plain; charset="us-ascii"
 
-From: Sohil Mehta <sohil.mehta@intel.com>
+"KVM: x86:" for the scope.  That goes for all of the relevant shortlogs.
 
-Being a security feature, enable LASS by default if the platform
-supports it.
+And for this one in particular, maybe something like:
 
-While at it, get rid of the comment above the SMAP/SMEP/UMIP/LASS setup
-instead of updating it to mention LASS as well, as the whole sequence is
-quite self-explanatory.
+  KVM: x86: Open code setting/clearing of bits in the ISR
 
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/kernel/cpu/common.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+because seeing "Remove" in the shortlog reads like it's a straight deletion of
+code.
 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 1552c7510380..97a228f917a9 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -401,6 +401,12 @@ static __always_inline void setup_umip(struct cpuinfo_x86 *c)
- 	cr4_clear_bits(X86_CR4_UMIP);
- }
- 
-+static __always_inline void setup_lass(struct cpuinfo_x86 *c)
-+{
-+	if (cpu_feature_enabled(X86_FEATURE_LASS))
-+		cr4_set_bits(X86_CR4_LASS);
-+}
-+
- /* These bits should not change their value after CPU init is finished. */
- static const unsigned long cr4_pinned_mask = X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP |
- 					     X86_CR4_FSGSBASE | X86_CR4_CET | X86_CR4_FRED |
-@@ -1975,10 +1981,10 @@ static void identify_cpu(struct cpuinfo_x86 *c)
- 	/* Disable the PN if appropriate */
- 	squash_the_stupid_serial_number(c);
- 
--	/* Set up SMEP/SMAP/UMIP */
- 	setup_smep(c);
- 	setup_smap(c);
- 	setup_umip(c);
-+	setup_lass(c);
- 
- 	/* Enable FSGSBASE instructions if available. */
- 	if (cpu_has(c, X86_FEATURE_FSGSBASE)) {
--- 
-2.47.2
+On Tue, Jun 10, 2025, Neeraj Upadhyay wrote:
+> Remove __apic_test_and_set_vector() and __apic_test_and_clear_vector(),
+> because the _only_ register that's safe to modify with a non-atomic
+> operation is ISR, because KVM isn't running the vCPU, i.e. hardware can't
+> service an IRQ or process an EOI for the relevant (virtual) APIC.
+> 
+> No functional change intended.
+> 
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> [Neeraj: Add "inline" for apic_vector_to_isr()]
+> Signed-off-by: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>
+> ---
+> Changes since v6:
+> 
+>  - New change.
+> 
+>  arch/x86/kvm/lapic.c | 19 +++++++------------
+>  1 file changed, 7 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 73418dc0ebb2..11e57f351ce5 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -125,16 +125,6 @@ bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector)
+>  		apic_test_vector(vector, apic->regs + APIC_IRR);
+>  }
+>  
+> -static inline int __apic_test_and_set_vector(int vec, void *bitmap)
+> -{
+> -	return __test_and_set_bit(VEC_POS(vec), (bitmap) + REG_POS(vec));
+> -}
+> -
+> -static inline int __apic_test_and_clear_vector(int vec, void *bitmap)
+> -{
+> -	return __test_and_clear_bit(VEC_POS(vec), (bitmap) + REG_POS(vec));
+> -}
+> -
+>  __read_mostly DEFINE_STATIC_KEY_FALSE(kvm_has_noapic_vcpu);
+>  EXPORT_SYMBOL_GPL(kvm_has_noapic_vcpu);
+>  
+> @@ -744,9 +734,14 @@ void kvm_apic_clear_irr(struct kvm_vcpu *vcpu, int vec)
+>  }
+>  EXPORT_SYMBOL_GPL(kvm_apic_clear_irr);
+>  
+> +static inline void *apic_vector_to_isr(int vec, struct kvm_lapic *apic)
 
+<formletter>
+
+Do not use "inline" for functions that are visible only to the local compilation
+unit.  "inline" is just a hint, and modern compilers are smart enough to inline
+functions when appropriate without a hint.
+
+A longer explanation/rant here: https://lore.kernel.org/all/ZAdfX+S323JVWNZC@google.com
+
+</formletter>
+
+Ignoring the existing code below, there's lots of crusty old code in KVM (that
+isn't "bad" per se, i.e. isn't worth fixing unless a prime opportunity arises).
+
+> +{
+> +	return apic->regs + APIC_ISR + REG_POS(vec);
+> +}
+> +
+>  static inline void apic_set_isr(int vec, struct kvm_lapic *apic)
+>  {
+> -	if (__apic_test_and_set_vector(vec, apic->regs + APIC_ISR))
+> +	if (__test_and_set_bit(VEC_POS(vec), apic_vector_to_isr(vec, apic)))
+>  		return;
+>  
+>  	/*
+> @@ -789,7 +784,7 @@ static inline int apic_find_highest_isr(struct kvm_lapic *apic)
+>  
+>  static inline void apic_clear_isr(int vec, struct kvm_lapic *apic)
+>  {
+> -	if (!__apic_test_and_clear_vector(vec, apic->regs + APIC_ISR))
+> +	if (!__test_and_clear_bit(VEC_POS(vec), apic_vector_to_isr(vec, apic)))
+>  		return;
+>  
+>  	/*
+> -- 
+> 2.34.1
+> 
