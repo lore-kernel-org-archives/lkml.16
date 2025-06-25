@@ -1,106 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF38329ACFA;
-	Wed, 25 Jun 2025 09:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DF33286888
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750844416; cv=none; b=rsSl/L4Hmlwl9auqiiRUz3Ha1kjv+x7cSmq2fgXDGSffDsYg9BflwFqPe3JtNBKkkwMF4TZHhJiJlgvP7BImu70MxIx4+VNfTVbBJm+h0MdWynttKuBdw+rPZIAxGl69BfvZsl4EiwcYpdUqykfmLoe6TmICTt0xp4zSE2QE8ns=
+	t=1750844443; cv=none; b=qMcBWSouQMneSvSiFQ3McWBf4NLDmzUlZUaR8WS231dK8b5K/tspEDC8WTCbOjcKpNtIdTvx6q2m+g3n1Fc0b/hmuTKksXQMS5d7DkmkprkFjk62TgG+neWWuL9knnumVYVxJLn1EOXCyJMtFRNYrFm3GP6KgdtOC3GbPFyOnJQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750844416; c=relaxed/simple;
-	bh=Dz/zi2vBTU9RAcB3YC2BaOA4M6ssvm3AVyFc4F415Bs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cVW1dha5u4rIi/zkc3MZc5BakfAAEi6KBGK+QxmBcWGaAlK8UuoqyLTQdoOAyChlX3qAyrhVY2odTcBbiz56nD3z00T56WF0NDowoDRkxFuim8JRND4qFYjhKeqDxPQVga30JelDeKtmTtyTtnWGdSnggz0NyH7QjLzqPGgDv8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mFqWk2Ed; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750844443; c=relaxed/simple;
+	bh=tke04Hr1GWdS7lu0c+9LoPBNgUtdJPK/syvMJuc6KGg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eCJyPXB3fq+RGwG9RnpojUE6KpyRWc9/OYbYCcISpHNWBoT3CMdEhph1qzSSxdg8AvWKjRwnAOPC6/IE7u57/NAzNzufSTTGrKqNXkSPuWmMaCgvMCcF8nGj9yk3MF49KWxRvp7tsTG4aSPVCmxpNdM3csQs1U2MP6htpYtrR3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=GUHGt9bX; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mFqWk2Ed"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E0EAC4CEEA;
-	Wed, 25 Jun 2025 09:40:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750844416;
-	bh=Dz/zi2vBTU9RAcB3YC2BaOA4M6ssvm3AVyFc4F415Bs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mFqWk2EdHJG0FIVnRH1+BUssUZak2X4ezgO8WnQ1exyCJk6rVpBOiUxU1jgCbjLsU
-	 wSKwDamV2ht7PkEYJxk3V77YQ68bk1jkeVPClCExZ/2evkqZ01rMLX2lO3hugV9yTZ
-	 Of+inbxwb8/FOT3AMXqIMRqXgKyF4JAR31/bU5fxlzPGxjRyzqvJQzSw9rG+wbK9st
-	 8RLJAUtDobLmUO8plCeVBCf86KEHicIt/zBdhDCcgeg24agCI4DjGNiriWdoyRtrgR
-	 USpm+uGVmhGa+cPX4sxLoeSI0N3GEw3ZuGa3Pdfgp+4eT1oZxwe3sMQEKzp3kv0imK
-	 naLSjrsW2PU8g==
-Date: Wed, 25 Jun 2025 10:40:13 +0100
-From: Simon Horman <horms@kernel.org>
-To: Thomas Fourier <fourier.thomas@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Chas Williams <3chas3@gmail.com>,
-	"moderated list:ATM" <linux-atm-general@lists.sourceforge.net>,
-	"open list:ATM" <netdev@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] atm: idt77252: Add missing `dma_map_error()`
-Message-ID: <20250625094013.GL1562@horms.kernel.org>
-References: <20250624064148.12815-3-fourier.thomas@gmail.com>
- <20250624165128.GA1562@horms.kernel.org>
- <4c6deafe-a6ec-40bf-873f-dc0df1a72dc4@gmail.com>
+	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="GUHGt9bX"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3122368d7c4so1344765a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:40:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=futuring-girl.com; s=google; t=1750844441; x=1751449241; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1M0yLkQsKR0YiyFUjwpWUZCh7qwBerDpMZfoZtVAIXs=;
+        b=GUHGt9bXHaypfNmgOe/iJdQe22HewhbxGtO7V65BBbzbhxywqDpCaCFgHxwr8Ul7mk
+         5cdTxZjFcOyS3jCpOd0pixgubLze1Em3BE9nRDJs3L15HTr1NY5ivo8JjgK2RXy2mhlk
+         eIDQl9+HjgA/qca2DvVPQmsJQI7eGYOnyWwi16MeOD3fLupzx96G8CJeYKNL0zDCAfSk
+         sKj0IDV/Ik0y+3jNFHtAOOgQLz3vLEElQkwuh/nklrW8/o4nyy0yMUSbwGhrbkxTPmqi
+         xi3yB6hDisKgz2n72eIRpe/a9gnBdn79QSOeCx2u4dX207oJ4PxkE/6PgGmt9CsnGlcI
+         pXag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750844441; x=1751449241;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1M0yLkQsKR0YiyFUjwpWUZCh7qwBerDpMZfoZtVAIXs=;
+        b=dTx9FHns8C+SYxUWYfSu222QfvM5Y4MFSM4Bhm/R4hS128aF1idVO4nDyELTdIg3SY
+         2J2sTXGb21CMGB52vbTimtAVoqv34uHCIxZdBp/CKHAEUYX4nbUx1j+duwRe1abscV2Q
+         QtsKGXJdGJFF2rs7gfekN69VprzDUV3s7zDLXJGcr31JpwJ9agli9VCudKpLbwpFzyBo
+         ms1R4nhyOZw2Xi4utdAgjHjtG8XxqPkdGQ3sD/pfwaPNtqcL/7BZ1cy1rP6im6BTZMlH
+         Csq7Nt9MQsbjAzPfaHDhO0eDczTT1FFn8AdsdIxGMRsm2wbzPobauqmjjVFbk4Ws+AYV
+         vVIg==
+X-Forwarded-Encrypted: i=1; AJvYcCU3W0zcB2sqdxYCVT1VUCJGNQnmJ1+yvECuZj8UKTrnmYqbrMSPIAWSzhon81wAEJhtm18DEcETaKS7Qnc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzo9mq5+IDUDWXz2AtIdGmkfPcWJqqHTH92H1YdynsjmQ+Vu+dm
+	Bh3s/6k2CZPgqAU8pH08xumtmyk7tt+VJG1cOI8/Z8kjtHYsMIyAWWl0WdHIZgG+OHSNzkrZYB+
+	htVG5VmcP4R33U6dx+W7Dn3vlJbnuzcomC8/PJQeyNQ==
+X-Gm-Gg: ASbGncud+5ZlgQbgOKLsC2oKV6DaO9CSIFXH7nHEENsjrySGFZ9M+WajMj5ydnQZGet
+	haPgnyVSjeSweow7tHwYgNaO1C9FBEEWmjbuVqaZA0y1P5fTFmcAdMk8H77nMOHhiBVXmFgOL7h
+	en3tfb4/KFsHb5nOjnQ9yjIzuY7+33gqGSNEZXbLXAKWaJexQFmKVmgg==
+X-Google-Smtp-Source: AGHT+IG00K/kpm2hTa2fP8BKaxOCVSF0UfugUyd93dHVunRMl1Fz8O1C+j++doQt83NSid/RhkIlZIGfTM7Si0uMsa0=
+X-Received: by 2002:a17:90b:1c81:b0:2ee:6d08:7936 with SMTP id
+ 98e67ed59e1d1-315f268a404mr3102280a91.20.1750844441510; Wed, 25 Jun 2025
+ 02:40:41 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4c6deafe-a6ec-40bf-873f-dc0df1a72dc4@gmail.com>
+References: <20250624121449.136416081@linuxfoundation.org>
+In-Reply-To: <20250624121449.136416081@linuxfoundation.org>
+From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+Date: Wed, 25 Jun 2025 18:40:25 +0900
+X-Gm-Features: AX0GCFs0Ue24bpACExUeXXuPVoyD4JIFjJgBbT28iyUyE73zbAYOm3Ich6oFbxI
+Message-ID: <CAKL4bV7CD4udvk+-k9ia6GSKoWJB31Su3LbZG6k=9o7joTC4Pg@mail.gmail.com>
+Subject: Re: [PATCH 6.15 000/588] 6.15.4-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 25, 2025 at 11:14:56AM +0200, Thomas Fourier wrote:
-> On 24/06/2025 18:51, Simon Horman wrote:
-> > On Tue, Jun 24, 2025 at 08:41:47AM +0200, Thomas Fourier wrote:
-> > > The DMA map functions can fail and should be tested for errors.
-> > > 
-> > > Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
-> > > ---
-> > >   drivers/atm/idt77252.c | 5 +++++
-> > >   1 file changed, 5 insertions(+)
-> > > 
-> > > diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
-> > > index 1206ab764ba9..f2e91b7d79f0 100644
-> > > --- a/drivers/atm/idt77252.c
-> > > +++ b/drivers/atm/idt77252.c
-> > > @@ -852,6 +852,8 @@ queue_skb(struct idt77252_dev *card, struct vc_map *vc,
-> > >   	IDT77252_PRV_PADDR(skb) = dma_map_single(&card->pcidev->dev, skb->data,
-> > >   						 skb->len, DMA_TO_DEVICE);
-> > > +	if (dma_mapping_error(&card->pcidev->dev, IDT77252_PRV_PADDR(skb)))
-> > > +		return -ENOMEM;
-> > >   	error = -EINVAL;
-> > > @@ -1857,6 +1859,8 @@ add_rx_skb(struct idt77252_dev *card, int queue,
-> > >   		paddr = dma_map_single(&card->pcidev->dev, skb->data,
-> > >   				       skb_end_pointer(skb) - skb->data,
-> > >   				       DMA_FROM_DEVICE);
-> > > +		if (dma_mapping_error(&card->pcidev->dev, paddr))
-> > > +			goto outpoolrm;
-> > >   		IDT77252_PRV_PADDR(skb) = paddr;
-> > >   		if (push_rx_skb(card, skb, queue)) {
-> > > @@ -1871,6 +1875,7 @@ add_rx_skb(struct idt77252_dev *card, int queue,
-> > >   	dma_unmap_single(&card->pcidev->dev, IDT77252_PRV_PADDR(skb),
-> > >   			 skb_end_pointer(skb) - skb->data, DMA_FROM_DEVICE);
-> > > +outpoolrm:
-> > >   	handle = IDT77252_PRV_POOL(skb);
-> > >   	card->sbpool[POOL_QUEUE(handle)].skb[POOL_INDEX(handle)] = NULL;
-> > Hi Thomas,
-> > 
-> > Can sb_pool_remove() be used here?
-> > It seems to be the converse of sb_pool_add().
-> > And safer than the code above.
-> > But perhaps I'm missing something.
-> 
-> 
-> Hi Simon,
-> 
-> I don't see any reason why this would be a problem,
-> 
-> though, I don't think it is related and the change should be in the same
-> patch.
+Hi Greg
 
-Yes, good point. In that case this patch looks good to me.
+On Tue, Jun 24, 2025 at 9:31=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.15.4 release.
+> There are 588 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 26 Jun 2025 12:13:28 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.15.4-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.15.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+6.15.4-rc2 tested.
 
-> Should I create another patch for that?
+Build successfully completed.
+Boot successfully completed.
+No dmesg regressions.
+Video output normal.
+Sound output normal.
 
-I think that would be nice. But let's wait for this patch to land first.
+Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
+
+[    0.000000] Linux version 6.15.4-rc2rv-g0e4c88a0cd37
+(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 15.1.1 20250425, GNU ld (GNU
+Binutils) 2.44.0) #1 SMP PREEMPT_DYNAMIC Wed Jun 25 15:02:33 JST 2025
+
+Thanks
+
+Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
