@@ -1,124 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE08A2BDC2E;
-	Wed, 25 Jun 2025 13:19:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAEB2627E9
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:20:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750857591; cv=none; b=Afv0ZbR6GXwnXSESyucFHjR9X/7B3WrwkVQFTdOOfy/4RJhdyVh9fxE8NTnLPdNtFiJW4GaJnmnkLk9m3O9xewZ5b7jDxhAjhj41e8EO/wbxO/oUKGHyZxNtMH76JNIVPXuJxfpistm+hnSf6YijLraE5TUA2RJR136U9S8wPl0=
+	t=1750857626; cv=none; b=Ds26yHe8VfqSwu6V0OGRknDsJuo3Mmtp11dY9PfFPFArf2Iwg+agqPsLjzBcEeU/QGkZEA6PXvypMYFERoXolNokzaU3jWB2md5zUGRX4Xgvz7ISwaQSQyXHe81ru5ga6SOkl0zzc0FTidS0QuRKBqWhnfoCeIoWyM1Cintbi/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750857591; c=relaxed/simple;
-	bh=EhfqM/D/gYgjuxfz5kh30ccEUkl+3JBKSIok1lR06Js=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=piMg7tiAduhp5M6s3puGX40EozLr3jATUQaJHXsS67JvqxsN2dJcsS11mVrtczVbYEAyBy3NThHcJaWc/5t9UTR/+iOfWVTd/pQl6l3v7DPdojg2x//BetFTp2BhSapkrjKNFKY8/4PbQiFqBbWaY24/MqZYmQOi2eTQvekVFgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GO7zj8pT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750857626; c=relaxed/simple;
+	bh=J32uwR5PG6Pj/fkgodkU8NToknBPtoDkFd1PmBMP74o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WL+EP4pFnl6kXXAZNcvx7iaDujf1g/vtksM0hUP6lUd9WPvmsb/a96wg5n3JwDx72hIzXO5vGFOGSiBD89KDe7zMjgCSl7+lWIZDkOVcB7pMrwh34Ja19Eu/78CmokBdR2zy53MYXuQBldbzLpQ01z51YsIEIfrMZkUNCd0Diog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WmEJCt+K; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GO7zj8pT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28477C4CEEA;
-	Wed, 25 Jun 2025 13:19:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750857590;
-	bh=EhfqM/D/gYgjuxfz5kh30ccEUkl+3JBKSIok1lR06Js=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GO7zj8pTqPb1zaEwV5fxDNnho6jTaP+HMJnZdU7SfWYEupNztVlDcMF4dMt4M5FzS
-	 X8Ucn6Ut74Ulz2JzvGUqCeuEQi7GHunAL/vyESY79xQ+pmPDy2MUbJJvSDmQ6NKggn
-	 E4GQUvbHOfpF9PIWlEE5HYbRbOLwaadcKo4eVmLuFp8nJr0QK31kWilTdlxDrpFvMl
-	 KbKvUCYPkMw9m49t3c8wnxzuHsfoHONCSQmzXoXl0wAaBy3wMkhDev/k9alIT1o+zV
-	 S1UTmvWc69dMkYqytBdnw4TBcc+crqsIL5+rKLwMtmQ6imeM+jRXDwaN940jPdPX8I
-	 Sq81jKm8uM4hA==
-From: Leon Romanovsky <leon@kernel.org>
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Leon Romanovsky <leonro@nvidia.com>,
-	Christoph Hellwig <hch@lst.de>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Nicholas Piggin <npiggin@gmail.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Joerg Roedel <joro@8bytes.org>,
-	Will Deacon <will@kernel.org>,
-	"Michael S. Tsirkin" <mst@redhat.com>,
-	Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	=?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
-	Alexander Potapenko <glider@google.com>,
-	Marco Elver <elver@google.com>,
-	Dmitry Vyukov <dvyukov@google.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	=?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	iommu@lists.linux.dev,
-	virtualization@lists.linux.dev,
-	kasan-dev@googlegroups.com,
-	linux-trace-kernel@vger.kernel.org,
-	linux-mm@kvack.org
-Subject: [PATCH 8/8] mm/hmm: migrate to physical address-based DMA mapping API
-Date: Wed, 25 Jun 2025 16:19:05 +0300
-Message-ID: <8a85f4450905fcb6b17d146cc86c11410d522de4.1750854543.git.leon@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750854543.git.leon@kernel.org>
-References: <cover.1750854543.git.leon@kernel.org>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WmEJCt+K"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PBwGEY020750
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:20:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	4Wc6gS//yAoCzSiP++Qy1pCvIWUQ0H5tM6n71zaADIw=; b=WmEJCt+KShHamXWM
+	DwQtRpdWj0ommS/ZUnTqMILSd46G8aIrPS2dHbUNg8QsD6ENqdrgsppZUkf1aqWv
+	/7tukxP4ubFmNP0/A1lgRMc/0m4HrWcMbQlwVrvomLcsaFw42o198fZP/biNGa2D
+	XFGsDnCLYsKEgBCn8DQ8CdnNciMy1R+AD/fCOtOQHAFPj+A8kJO32k+2vnP/YydC
+	H/s7Uymw7CFZtlbvmaLzFt8JiZCl3aPu9iufhwPQh3nw2F0y0pWkRShNJ+I3tsWI
+	JHP73zuL+ytXK9cJHa3k6RWj8+cQ0CuWYtvJsbnHWQLt+Keq6gHljgBeiayDY8lt
+	GycS6g==
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fdfwx9hh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:20:23 +0000 (GMT)
+Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4a6f59d5ac6so15032721cf.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:20:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750857623; x=1751462423;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Wc6gS//yAoCzSiP++Qy1pCvIWUQ0H5tM6n71zaADIw=;
+        b=qqNEL02cRsjN38o+FGxkJVKcPbhdbm/RZfD4A/cwVRQBB+5c/mqZpfyFb/1U1XbZWI
+         Dop0TFk4DXIpcl3nadp//acESEn7UzRV9nhHKtVxS23daI0KsepDEPqUqQbJq8JCQPin
+         2zpEWTxIzvVA6YNAEBHrAkuWUrwMUmFD6NmAbQhfhCr52RBBkJZqyXFCd6XGpvOhz4Ud
+         8L6lJGraUtZl4P9709eSquJRT/SzM93rUzP4pdosgCc72rN2pfWzZxj8gGSvBWgs7lcj
+         vaXG23V5gLj8uQTHw4p3KPXRwm2daz9wq4SkIJCz9xs0T4tFXE56apTFSWLGMJ2y5TKx
+         +FXw==
+X-Forwarded-Encrypted: i=1; AJvYcCVz80O3knXbSEJ5v35Y99bzKuGoJen/CAi8v3RtQBH/rvDgXJebvALaxowJLbLDFeOOKpMZo/+ZxJlGEug=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzugznVWmA8LE/WbuIde0BhraHh9NN13nIbH0CrnjiLTfOZfKoj
+	ma+7NNZkBCMGpprSprZEIlA6Uc4n9dG6J4tnwX0wyRih0ORMMESUULtPMh3vvdC5LqrPg8RYrRS
+	Lw/Hy9NFEWx3mH11FJTGhNJtwPCjKcaJkZ5wN7IP5KCQRuJN3Bmn1b0rWkAJ573zlkSU=
+X-Gm-Gg: ASbGncuJKKwONkrC7RoJxMbC335uGsV4SR2zTS+BIyHzulOXH+3uRC6x3CCqaMfwlhk
+	4ZkUyYRLorKIXpwZS/fg4yfH36N+dCY+1bwS6MHEAQC6RF4QCzxzWuwlJ+XhinPydCbzi1MD1OX
+	4zOne/ynHUmtcvZqwySoJwPOYuSzVl/REdSJ5grQtrEQGWQ2RU8iekd3w6KawrWktEVZPwHb706
+	KSp9J6xxkOl6dhVDriiAZhVuxF3idFjtNPqb6u16gpyWMWSEbUfkIU5KvICSFEbz4EPyl+rQDvA
+	Ax6s3wQIuatd0l3pYRjpwZWIYsG45fyFvV4dME3QTdeSck6PMyMKazntS2aiR51l2/zO0uWg1UN
+	FiYI=
+X-Received: by 2002:a05:620a:2552:b0:7d3:c69e:267 with SMTP id af79cd13be357-7d42976a0cemr149810485a.12.1750857622619;
+        Wed, 25 Jun 2025 06:20:22 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGhWy2dsS1LyGigZ4Dt8bnXgAs0PhlY9HNqrotGcZ/DU5sSn6FMsWkf7WES+YXghkiMky5/Bg==
+X-Received: by 2002:a05:620a:2552:b0:7d3:c69e:267 with SMTP id af79cd13be357-7d42976a0cemr149807385a.12.1750857622105;
+        Wed, 25 Jun 2025 06:20:22 -0700 (PDT)
+Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0a06ed21bsm373251666b.29.2025.06.25.06.20.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 06:20:21 -0700 (PDT)
+Message-ID: <bced42f0-bc9a-47e6-bbdf-c49657d2e18b@oss.qualcomm.com>
+Date: Wed, 25 Jun 2025 15:20:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: Add PMXR2230 PMIC
+To: Luca Weiss <luca.weiss@fairphone.com>, Lee Jones <lee@kernel.org>,
+        Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        Fenglin Wu <quic_fenglinw@quicinc.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250625-sm7635-pmxr2230-v1-0-25aa94305f31@fairphone.com>
+ <20250625-sm7635-pmxr2230-v1-3-25aa94305f31@fairphone.com>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <20250625-sm7635-pmxr2230-v1-3-25aa94305f31@fairphone.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-GUID: xjbrUIX-oEqTXjOeCyoZVH2LMiGl-yOn
+X-Proofpoint-ORIG-GUID: xjbrUIX-oEqTXjOeCyoZVH2LMiGl-yOn
+X-Authority-Analysis: v=2.4 cv=MtZS63ae c=1 sm=1 tr=0 ts=685bf797 cx=c_pps
+ a=JbAStetqSzwMeJznSMzCyw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=6H0WHjuAAAAA:8 a=EUspDBNiAAAA:8
+ a=1Wqoc7Fd06vDnn7CWGcA:9 a=QEXdDO2ut3YA:10 a=uxP6HrT_eTzRwkO_Te1X:22
+ a=Soq9LBFxuPC4vsCAQt-j:22
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA5OCBTYWx0ZWRfXyXgAcBaTCbuC
+ afZOF06r6X+hjirqlKN+vEKdKwlnqBIR5/6XOfa8JUJxDkjw4FBrE61Fl5DoLAm0yKbkOuJYqnn
+ l1rp5Zlh1x8+IULdv2ztQBXQuKJJzAz02YTfSGSYbTAw0AMdd/6aEshaJHMc5o1qBsdXXvNLnmH
+ TrFI+tvWW5cbOQSajy3cM/+Pujo1jTkwYkozUTn0pk3zsdueAGpDVktVjrkinwVK3hQfDHnZvUb
+ gYAjC+hfm+JscO88ZH3fOnRbXuoF5kc2Bb8zUfBF3RQV69lNhG3VcmQQ0HTpuiJtX6Djfw6/Pfu
+ v+AUPW71MNMOyNyAurjIsg7rhgpU22NWsqI+l/E9o4mvHk9wci7btWP1ftr+4agXiu+bEV1iuDG
+ Tu8z32TJUXgqzwrJyrNdfUYEIGql3OH1ZO6/7JVPCYRjSU93eyqtZWXEH4fkOcwSqJuDBYFI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_03,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0 phishscore=0
+ mlxlogscore=999 spamscore=0 malwarescore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1015 mlxscore=0 classifier=spam authscore=0
+ authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506250098
 
-From: Leon Romanovsky <leonro@nvidia.com>
+On 6/25/25 11:18 AM, Luca Weiss wrote:
+> Add a dts for the PMIC used e.g. with SM7635 devices.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+> ---
+>  arch/arm64/boot/dts/qcom/pmxr2230.dtsi | 63 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/pmxr2230.dtsi b/arch/arm64/boot/dts/qcom/pmxr2230.dtsi
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..a7650f3230c01422b76ef78e897e5e7ae2f20cc6
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/pmxr2230.dtsi
+> @@ -0,0 +1,63 @@
+> +// SPDX-License-Identifier: BSD-3-Clause
+> +/*
+> + * Copyright (c) 2025, Luca Weiss <luca.weiss@fairphone.com>
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/spmi/spmi.h>
+> +
+> +/ {
+> +	thermal-zones {
+> +		pmxr2230_thermal: pmxr2230-thermal {
+> +			polling-delay-passive = <100>;
+> +
+> +			thermal-sensors = <&pmxr2230_temp_alarm>;
+> +
+> +			trips {
+> +				pmxr2230_trip0: trip0 {
+> +					temperature = <95000>;
+> +					hysteresis = <0>;
+> +					type = "passive";
+> +				};
+> +
+> +				pmxr2230_crit: pmxr2230-crit {
 
-Convert HMM DMA operations from the legacy page-based API to the new
-physical address-based dma_map_phys() and dma_unmap_phys() functions.
-This demonstrates the preferred approach for new code that should use
-physical addresses directly rather than page+offset parameters.
+This name is "meh", please change to tripN
 
-The change replaces dma_map_page() and dma_unmap_page() calls with
-dma_map_phys() and dma_unmap_phys() respectively, using the physical
-address that was already available in the code. This eliminates the
-redundant page-to-physical address conversion and aligns with the
-DMA subsystem's move toward physical address-centric interfaces.
+> +					temperature = <115000>;
 
-This serves as an example of how new code should be written to leverage
-the more efficient physical address API, which provides cleaner interfaces
-for drivers that already have access to physical addresses.
+Unless there's some actual electrical/physical SKU differences,
+downstream lists 145C as critical for a PMIC carrying the same
+name
 
-Signed-off-by: Leon Romanovsky <leonro@nvidia.com>
----
- mm/hmm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+with that:
 
-diff --git a/mm/hmm.c b/mm/hmm.c
-index feac86196a65..9354fae3ae06 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -779,8 +779,8 @@ dma_addr_t hmm_dma_map_pfn(struct device *dev, struct hmm_dma_map *map,
- 		if (WARN_ON_ONCE(dma_need_unmap(dev) && !dma_addrs))
- 			goto error;
- 
--		dma_addr = dma_map_page(dev, page, 0, map->dma_entry_size,
--					DMA_BIDIRECTIONAL);
-+		dma_addr = dma_map_phys(dev, paddr, map->dma_entry_size,
-+					DMA_BIDIRECTIONAL, 0);
- 		if (dma_mapping_error(dev, dma_addr))
- 			goto error;
- 
-@@ -823,8 +823,8 @@ bool hmm_dma_unmap_pfn(struct device *dev, struct hmm_dma_map *map, size_t idx)
- 		dma_iova_unlink(dev, state, idx * map->dma_entry_size,
- 				map->dma_entry_size, DMA_BIDIRECTIONAL, attrs);
- 	} else if (dma_need_unmap(dev))
--		dma_unmap_page(dev, dma_addrs[idx], map->dma_entry_size,
--			       DMA_BIDIRECTIONAL);
-+		dma_unmap_phys(dev, dma_addrs[idx], map->dma_entry_size,
-+			       DMA_BIDIRECTIONAL, 0);
- 
- 	pfns[idx] &=
- 		~(HMM_PFN_DMA_MAPPED | HMM_PFN_P2PDMA | HMM_PFN_P2PDMA_BUS);
--- 
-2.49.0
+Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
+Konrad
