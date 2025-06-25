@@ -1,84 +1,88 @@
-Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F0D2F3627
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:25:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0B1C2F3627
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 22:25:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750890350; cv=none; b=TpYUUK5wudBXrJEfXS4dIsiaUpxZWZS4mR2jTDxCTiubheFq/fL0W3Uv1rbo3B3kZga5SvrrnVpbWZP8masq3+g7f94KClP1iXgBW6cF+bCFKW4ISTOzQgauTp1Gfjm7wwFnpbYPwgjwb5QrdMsDazQWa47qMihFU5Cqp6L3GMw=
+	t=1750890357; cv=none; b=f/c5TfsVu4cgyEQgiMFkvXgz6q0xa7AhQsvPysdYco2kyph4Da5fEKmJGG433nRZ5fkD5/mRSMN4RXPtC3gM4XOciNCbvrVo/OPN9QjzUa9Uthorl3obyg5uaUOXPHQaeGRQ1V8J2mymPiM5dERnr0L4sTH6faLdmeS0tHfaKaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750890350; c=relaxed/simple;
-	bh=ZcdoOQwxU3CyDjJeNeZEEN1pVlwH2SOB9r0ExNTnb5I=;
+	s=arc-20240116; t=1750890357; c=relaxed/simple;
+	bh=aTZyStIULyq/k4CCURzFNAKGPG43KZQBAiLQF+xYz7A=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=imy5lX6e45CBK9I9xzrmnDEP5rV9KcYRvfXzUIhdg/Q0+AtV+FWkGBjyQGWIPRe/13u18tZyvwWR6yjP7EEeYrYmsB7Is0Z+f1wLDYaM5419Kw2NUepWtfrmghsIfnXG73hqc5E0EUyKDkB+bc81pHlMcF7uV95GKLr67kmmV3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lXOLxEJB; arc=none smtp.client-ip=209.85.215.202
+	 To:Cc:Content-Type; b=W9In7cXhso6+o/+L3gXDHgpMxnWnue1JSLvA7U+fkJB8OV7q0Q3T/CtoMJ6XeHulhJ8kfJCuXA4fNog8KgsEir6a2prEZRlwy6ByZRxxV8yAg60Muw8FBejRWVf4wFlfkDrgFZpzgdUAAgUFNJEO/AASePAawEKZdb4qOVD7QI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=lI7Z1864; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lXOLxEJB"
-Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-b0e0c573531so158505a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:25:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="lI7Z1864"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-311e98ee3fcso1356294a91.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:25:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750890348; x=1751495148; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1750890355; x=1751495155; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5pLNzxxeBjc6JUZX/DPJvwEcneL7Rpxq1mf//0ev+Ok=;
-        b=lXOLxEJBQryHT4LNVSZsuTyaiDf91QoP7vGZvMbYfeHOMXWxuOpcFqUIU58e6rCf4A
-         N6SZF9gqfNH7t5hXBo7peWtQ9ss7pYxWx33jghYig9U4a3YnS95uM+wEbbiRHGjNLQw4
-         pJcYVBk9Xw6860dWIoONga/Fwui265U2UeD/3lkWAJ4rdKMUzYzO/NAOBxiZFPqM65xe
-         2FYUTpj9LCyKXlQHME8JscnCyJwhFcMzcYagdQi6e2ssHYjU3mFUXAxmXWpnEhNsMhlP
-         1RPGJe+ebpKOArgfu7J1hbv6ko2X3rFQ64gTIQQRWIhQUXyw/54RGgtSNBQl3YphYJ7O
-         PpkQ==
+        bh=By7Ee4P1ovSF9qlED+l1YG1EOLcFo+D0m9yIXku26cc=;
+        b=lI7Z1864X1KTr2RO2ag5Ozk6gcNAMeH+p3vX1EPMs2euOFWd7RtgkIVl89SZnAV8gr
+         XYzbe6RdbLLKeV9E1/VochgFaLeeXbYuBOlC+9rTubaeq0x0UJ47XilhZ7+YtDtE8I4s
+         pHaYeUx3sqMG91kNg5dJv0yLaSxkg1q0hLO06k70Qkczs3H3Vq0hjUzbc10k/jZOfOWe
+         oaC4o1BY23xFJuIYCWmUeGoyH9DVxUSekeAIFMGIaq6fpOrFWwsI0HRfiFm7JwQCPsQA
+         M75IE0+SNEo1aw3UGQpLChHn+RzAng+8yW9+XtAJwxNrT6Ou+xEXw50QGblI7qN89G0b
+         pzJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750890348; x=1751495148;
+        d=1e100.net; s=20230601; t=1750890355; x=1751495155;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5pLNzxxeBjc6JUZX/DPJvwEcneL7Rpxq1mf//0ev+Ok=;
-        b=sY71QCoF74VvQQ7k+7SEKV+8JTImJkc6ebBTQFZqKg4LFvOd5DdKS+JnuMBtGI28WL
-         wyDDkVst+HlE1WZUWOhx6x0Yz3LHqSIVryUHudJWjlB7IlW8hT5x/hpBGfSO43vB3U+b
-         Iutbfh0v67U4aN2o+DVEEAlPh5qnmXcBa5NztBuKL8bBzdtpDvPo4DBgxBU2pjXLVx47
-         nqOYYBQ1pojs98GJbViUCW3H77QnY0hq0OKrI9iZf38E21xM0JRv5Yco2gMfvDGGDBsT
-         iQyRCefLpfdmeRBZFufDifnwKevH9ECRnC4ZzbPOdpAhOx8rUSlw842lIl1H94geTDMy
-         dGEA==
-X-Forwarded-Encrypted: i=1; AJvYcCWgav3eD9hIa1eJACPi3rDmVVtdkQdhhaW5gL6liFltPJyH6RuGEkAkoAuqmUCzV+65fq2N6GVhid4Vt6A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YylKrGZ9O3Gz0JkB3bOxxXFP56ocDVwnhjPqMuvzMAoX3SjMwLC
-	L9hWM5nojaLX/ngiCd+c833JYef+VPYoNHybzWF1s1629wjI0rris9eyTcJAy2kN3N0cHlz5+gn
-	XK7zm1g==
-X-Google-Smtp-Source: AGHT+IGuZn7pr623L+iySvz0JPQq0RwUo97Ncwcpf9CRRSz7v1+SZ3zC/cCqj+R0ROv4T2ZbAMIBF8HWc+8=
-X-Received: from pjm11.prod.google.com ([2002:a17:90b:2fcb:b0:312:ea08:fa64])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:903:2ecd:b0:235:2e0:ab8
- with SMTP id d9443c01a7336-23823f879c7mr59561265ad.6.1750890348479; Wed, 25
- Jun 2025 15:25:48 -0700 (PDT)
-Date: Wed, 25 Jun 2025 15:25:23 -0700
-In-Reply-To: <20250625014829.82289-1-binbin.wu@linux.intel.com>
+        bh=By7Ee4P1ovSF9qlED+l1YG1EOLcFo+D0m9yIXku26cc=;
+        b=NOW02EwyZQhDoRHNgEhDOHP9jMfPoGdSjsyD20vU4YfKHVo0uf7WIHcqc5W5nGj10b
+         qgR6UE1kaUAlp6uC+176Ki8dHmCSaLUqlsStHJ1MrOPnndsepvIfSZjgD4xyMW0YI/yJ
+         2WbURvbYKGf4lsTbQuxYLUe/9xAI6DBnHWFRo06zEp20esXwfDaWrOg4K6NoeJ6h+FDg
+         kMrdQne7f/x1IR6ENoBOBoLACexGKPwRqcQOcrsb/8a3aUtfhGfHpepfcGCodcohty0V
+         Ldj/19cVhco9jEyMiqQXxllD9TvjUkyFutAyGJrMsvpBe1aNQ1Cxqv+1w9fPHEiEXY5m
+         D5zg==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ7gKrf56/SEvD3X2Iqoex4xfvhLvmxh7kwLv00mRX/GvpQ+sJlvsMzSNcvih2oTNmD/1rLqAsgLZBF3c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJd+Vs+V3IFEw5srjebcNES6sDNUAX0/XxbVWLE95ceFRbigfK
+	EOkXMYqJqeKxM/0acBRCNSNMXZ1QFhFxzNGS2MzkzVdmWfTwekQ+s6d4qDCaG++LS4X886PrQZI
+	kNryBMQ==
+X-Google-Smtp-Source: AGHT+IGJJMfDs7PhnTAVBUcg2mJZPoyVIwr1GuR5qMUdFS3Z6NJYkNozrq6DOaXmJRTPI5RUGTxx4q4Emio=
+X-Received: from pjbos13.prod.google.com ([2002:a17:90b:1ccd:b0:311:ff0f:6962])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:51c3:b0:315:f6d6:d29c
+ with SMTP id 98e67ed59e1d1-316edf2f690mr1755634a91.15.1750890354688; Wed, 25
+ Jun 2025 15:25:54 -0700 (PDT)
+Date: Wed, 25 Jun 2025 15:25:25 -0700
+In-Reply-To: <20250620062219.342930-1-chenyi.qiang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20250625014829.82289-1-binbin.wu@linux.intel.com>
+References: <20250620062219.342930-1-chenyi.qiang@intel.com>
 X-Mailer: git-send-email 2.50.0.727.gbf7dc18ff4-goog
-Message-ID: <175088967862.721202.10079126901672236105.b4-ty@google.com>
-Subject: Re: [PATCH] Documentation: KVM: Fix unexpected unindent warnings
+Message-ID: <175089019569.722981.11608669112741473168.b4-ty@google.com>
+Subject: Re: [PATCH] KVM: selftests: Add back the missing check of
+ MONITOR/MWAIT availability
 From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, pbonzini@redhat.com, kvm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Binbin Wu <binbin.wu@linux.intel.com>
-Cc: sfr@canb.auug.org.au, rick.p.edgecombe@intel.com, kai.huang@intel.com, 
-	adrian.hunter@intel.com, reinette.chatre@intel.com, xiaoyao.li@intel.com, 
-	tony.lindgren@intel.com, isaku.yamahata@intel.com, yan.y.zhao@intel.com
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Zide Chen <zide.chen@intel.com>, Chenyi Qiang <chenyi.qiang@intel.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Xuelian Guo <xuelian.guo@intel.com>
 Content-Type: text/plain; charset="utf-8"
 
-On Wed, 25 Jun 2025 09:48:29 +0800, Binbin Wu wrote:
-> Add proper indentations to bullet list items to resolve the warning:
-> "Bullet list ends without a blank line; unexpected unindent."
+On Fri, 20 Jun 2025 14:22:18 +0800, Chenyi Qiang wrote:
+> The revamp of monitor/mwait test missed the original check of feature
+> availability [*]. If MONITOR/MWAIT is not supported or is disabled by
+> IA32_MISC_ENABLE on the host, executing MONITOR or MWAIT instruction
+> from guest doesn't cause monitor/mwait VM exits, but a #UD.
 > 
-> Closes:https://lore.kernel.org/kvm/20250623162110.6e2f4241@canb.auug.org.au/
+> [*] https://lore.kernel.org/all/20240411210237.34646-1-zide.chen@intel.com/
+> 
+> [...]
 
 Applied to kvm-x86 fixes, thanks!
 
-[1/1] Documentation: KVM: Fix unexpected unindent warnings
-      https://github.com/kvm-x86/linux/commit/0c84b534047d
+[1/1] KVM: selftests: Add back the missing check of MONITOR/MWAIT availability
+      https://github.com/kvm-x86/linux/commit/0048ca5e9945
 
 --
 https://github.com/kvm-x86/kvm-unit-tests/tree/next
