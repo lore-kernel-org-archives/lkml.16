@@ -1,137 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2A682C60;
-	Wed, 25 Jun 2025 01:04:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7334830748D;
+	Wed, 25 Jun 2025 01:08:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750813471; cv=none; b=gj1LSJDqAhl18fD7ypAj0lfU2rs5iAnfe6BTO7Ms3gylmx6910a57czaHZK6E06EBOIHqZfu7nOuKRR5+J3BtN8/4Q222Y8lDuBUuuzdOF13i68BIfK9men+Pss3UIdbnyDXmgtkkSI3LXGgu1rWoQVbomFlqUfBLDPBWsLIGNY=
+	t=1750813708; cv=none; b=OS59aTmd+nWBpXQcllkTQxMLgAQ0oTwBVz0AG70mOAQddxl/FHsDSs4+FrSY5SJBm3/nlj5JJ1ICW1Ya/esumXdmVZ1p1Ejh3f4IABd4IktEYP/wEQdzsyTvgxoLrN20/YUj2u8UPklLTgc+NFkcJqSDtHDNc36pC1TiDVjeF5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750813471; c=relaxed/simple;
-	bh=6hP9g/yPzPgGn1ICzoLlczOoRz0hvkKReWDNrFsZrAM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Pt3gmNsrQ7rgM2CuS/tN3463BtkzybEc8P7TACODGgWfDsnmgRWRNaX5UQg42d+07SYfoNwWufOQZOCxNzGMDHgZnJ6IjUEhQJIK4D9Obhii7LGNV75s5rZ475dT2qKdsrzJNnt0fxVhXXf5kH1grQx8HhfoQ/1C5dnaYYYyJak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LufgD8Yq; arc=none smtp.client-ip=198.175.65.11
+	s=arc-20240116; t=1750813708; c=relaxed/simple;
+	bh=g38j/4XIxhvMU4YULtA2oALcpzRtTtzUsypbIXm1jnY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cMS7ZSvib5W1bP6Tc/xKHa/NuaTSY0ZEnfZnA7oHFzn6z99SS9DsMBGbJT5VB8Afy88mLXx1S/9xGwmWmtYqlxjUQWkpJiwER32JbQSqYC4kVJIWbCTAUHPZqphRUh79i1ITW431RW+lo/Uoygbr8V8zYBIQKkJ+kjYShT/FaFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gVjLfvLo; arc=none smtp.client-ip=192.198.163.17
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LufgD8Yq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gVjLfvLo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750813470; x=1782349470;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=6hP9g/yPzPgGn1ICzoLlczOoRz0hvkKReWDNrFsZrAM=;
-  b=LufgD8Yq4AIGilC0INuqt7jXBUktmEFDRB7BbwcFdgghGCWO3pR15AZE
-   KgzEyTQTWZguNn5aTBVhCnXvFMU6zK6E3JcpYFBS8TQi/GfVDBKfTh0EY
-   Ats+/6FF7gVwcZf8kyBd4VYpObyx/TZLUp2B4FwoVtHeJT/3/sn0BS5LP
-   qNXQEerao94hjLEM21OntUhATru+PgkO8MVRo5BEfkz2oZZtTN9la47O2
-   3bAEzVMTN1cZKY3EIp2W4zr6hwsMRpiUHimk/EbqF2wEJ4+q50EEkL15l
-   ipSCp9+F014rfAEpq8HvTPaT/TqasztYBVEfDrfPTOByMy+hcega0kKDN
+  t=1750813707; x=1782349707;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=g38j/4XIxhvMU4YULtA2oALcpzRtTtzUsypbIXm1jnY=;
+  b=gVjLfvLo4TUKc8+eNNu+y9NmxxNXufETaLD13ukh2mlFkKN3sQzD18ka
+   wNuU5KDedeIjEKzYI4+uz6eT76Md59nE8/2KuRXag13oHj8yyp5ky3Mm7
+   cKMDb5RLLlvWlVk90zHslmrgQo/SfvjFTH+5sm/uTtcegRSyqERcsNNxA
+   7fXGm+Wo0cnJKEkxC0t7SfO8zTNLuhUde0rd6ANcFdq6wTFTaMOFnxI5t
+   IdF0UCgFUNqmYW1PX2DwSJxfdYDsv41G4Qad6uFDBGQ6ht+L1maqTq/oa
+   sZ3xKrDhMT+3Fu/NGtPXoxYEHP3Fo3RVhGx8pWKWN43GeY51Wj8PShRtf
    A==;
-X-CSE-ConnectionGUID: D+drhdjLRSCe2OozohA33Q==
-X-CSE-MsgGUID: p5DT3fS1QhuDpoZE/6PO9w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="63330705"
+X-CSE-ConnectionGUID: 4qMMDlf4SeOE64VhrGxf7g==
+X-CSE-MsgGUID: 2v9oBnJgR9S/LD/ZPV2jSQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="53003633"
 X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="63330705"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 18:04:29 -0700
-X-CSE-ConnectionGUID: W28pzJC0RyCWznVy2OtPjg==
-X-CSE-MsgGUID: zn4fBWIAT2auDxJBmbvN7g==
+   d="scan'208";a="53003633"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 18:08:27 -0700
+X-CSE-ConnectionGUID: l2DpKkGLQ3qLb8Cvp7iUiw==
+X-CSE-MsgGUID: exIVeGLpTDy61zdnj6gJ3Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
-   d="scan'208";a="182948014"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 24 Jun 2025 18:04:28 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUEYq-000Se2-1N;
-	Wed, 25 Jun 2025 01:04:24 +0000
-Date: Wed, 25 Jun 2025 09:03:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vitaly Wool <vitaly.wool@konsulko.se>, linux-mm@kvack.org
-Cc: oe-kbuild-all@lists.linux.dev, akpm@linux-foundation.org,
-	linux-kernel@vger.kernel.org, Uladzislau Rezki <urezki@gmail.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org,
-	Vitaly Wool <vitaly.wool@konsulko.se>
-Subject: Re: [PATCH v2 1/2] mm/vmalloc: allow to set node and align in
- vrealloc
-Message-ID: <202506250832.Ixp27fE5-lkp@intel.com>
-References: <20250624123859.3258172-1-vitaly.wool@konsulko.se>
+   d="scan'208";a="156470218"
+Received: from rzhang1-mobl7.sh.intel.com ([10.238.6.124])
+  by orviesa003.jf.intel.com with ESMTP; 24 Jun 2025 18:08:23 -0700
+From: Zhang Rui <rui.zhang@intel.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ak@linux.intel.com,
+	kan.liang@linux.intel.com
+Subject: [PATCH 1/2] perf/x86/intel/cstate: Remove PC3 support from LunarLake
+Date: Wed, 25 Jun 2025 09:08:21 +0800
+Message-ID: <20250625010822.250826-1-rui.zhang@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624123859.3258172-1-vitaly.wool@konsulko.se>
+Content-Transfer-Encoding: 8bit
 
-Hi Vitaly,
+LunarLake doesn't support Package C3. Remove the PC3 residency counter
+support from LunarLake.
 
-kernel test robot noticed the following build errors:
+Fixes: 26579860fbd5 ("perf/x86/intel/cstate: Add Lunarlake support")
+Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+---
+ arch/x86/events/intel/cstate.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-[auto build test ERROR on akpm-mm/mm-everything]
-[also build test ERROR on rust/alloc-next rust/rust-next linus/master v6.16-rc3 next-20250624]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Vitaly-Wool/mm-vmalloc-allow-to-set-node-and-align-in-vrealloc/20250624-204140
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm.git mm-everything
-patch link:    https://lore.kernel.org/r/20250624123859.3258172-1-vitaly.wool%40konsulko.se
-patch subject: [PATCH v2 1/2] mm/vmalloc: allow to set node and align in vrealloc
-config: m68k-allnoconfig (https://download.01.org/0day-ci/archive/20250625/202506250832.Ixp27fE5-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250625/202506250832.Ixp27fE5-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506250832.Ixp27fE5-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from mm/nommu.c:28:
->> include/linux/vmalloc.h:202:68: error: expected declaration specifiers or '...' before numeric constant
-     202 | #define vrealloc_noprof(p, s, f)        vrealloc_node_noprof(p, s, 1, f, NUMA_NO_NODE)
-         |                                                                    ^
-   mm/nommu.c:122:7: note: in expansion of macro 'vrealloc_noprof'
-     122 | void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-         |       ^~~~~~~~~~~~~~~
-   In file included from include/linux/nodemask.h:93,
-                    from include/linux/numa.h:6,
-                    from include/linux/cpumask.h:17,
-                    from include/linux/smp.h:13,
-                    from include/linux/lockdep.h:14,
-                    from include/linux/spinlock.h:63,
-                    from include/linux/mmzone.h:8,
-                    from include/linux/gfp.h:7,
-                    from include/linux/mm.h:7,
-                    from mm/nommu.c:20:
->> include/linux/nodemask_types.h:15:25: error: expected declaration specifiers or '...' before '(' token
-      15 | #define NUMA_NO_NODE    (-1)
-         |                         ^
-   include/linux/vmalloc.h:202:74: note: in expansion of macro 'NUMA_NO_NODE'
-     202 | #define vrealloc_noprof(p, s, f)        vrealloc_node_noprof(p, s, 1, f, NUMA_NO_NODE)
-         |                                                                          ^~~~~~~~~~~~
-   mm/nommu.c:122:7: note: in expansion of macro 'vrealloc_noprof'
-     122 | void *vrealloc_noprof(const void *p, size_t size, gfp_t flags)
-         |       ^~~~~~~~~~~~~~~
-
-
-vim +202 include/linux/vmalloc.h
-
-   199	
-   200	void *__must_check vrealloc_node_noprof(const void *p, size_t size,
-   201			unsigned long align, gfp_t flags, int nid) __realloc_size(2);
- > 202	#define vrealloc_noprof(p, s, f)	vrealloc_node_noprof(p, s, 1, f, NUMA_NO_NODE)
-   203	#define vrealloc_node(...)		alloc_hooks(vrealloc_node_noprof(__VA_ARGS__))
-   204	#define vrealloc(...)			alloc_hooks(vrealloc_noprof(__VA_ARGS__))
-   205	
-
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index ec753e39b007..6f5286a99e0c 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -70,7 +70,7 @@
+  *			       perf code: 0x01
+  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,KNL,
+  *						GLM,CNL,KBL,CML,ICL,TGL,TNT,RKL,
+- *						ADL,RPL,MTL,ARL,LNL
++ *						ADL,RPL,MTL,ARL
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C6_RESIDENCY:  Package C6 Residency Counter.
+  *			       perf code: 0x02
+@@ -522,7 +522,6 @@ static const struct cstate_model lnl_cstates __initconst = {
+ 				  BIT(PERF_CSTATE_CORE_C7_RES),
+ 
+ 	.pkg_events		= BIT(PERF_CSTATE_PKG_C2_RES) |
+-				  BIT(PERF_CSTATE_PKG_C3_RES) |
+ 				  BIT(PERF_CSTATE_PKG_C6_RES) |
+ 				  BIT(PERF_CSTATE_PKG_C10_RES),
+ };
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.43.0
+
