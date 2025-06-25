@@ -1,428 +1,214 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52A8C2E06D1
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750883549; cv=none; b=T5N2SzN3IWyrS+ffdgrR/+zTkqgA5AdCglUmj+XeWnCAYK4pmn5gMOWfdQ4fIeU6HK+sQwNeXL11AgjrYxOuqyS6zZPY05r/5I4Wyu70urmgIa5LtMPZh1SP7vxxVGP0U3q4ReRPGNZ3o4mRMyZJGK1g1DjE/YuJT9eCmEKdMoA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750883549; c=relaxed/simple;
-	bh=V1H77vjIowyrgyx1L2sPlLCmDxVAVzKy9Ihe1IyUPb0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JXhrCvM9BQtnVZJ8x6U2NDd+YgJdJTkj07xvsthN0L7e0jQ6WEBHwW9aLCV7VT04GtQObskndSmF6T8+kbwdFJaFhLOaIEUqvgiGQhnwj2YDXNPfezBNEBoyOjBwdTjeoEIHvt7kc1uDUq67Pe4okp3dIVq6tpE064kIgBFoO3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VstkG157; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612E62DCC1D;
+	Wed, 25 Jun 2025 20:33:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750883596; cv=fail; b=TepdsCth66gLN4rdJfzGkaHAFSQH5lq4hZ2eStCAdOR3aRrVd33IpDZGeznHQRarWpDukbzZr96yMkwhcryi20FYVLO1In2Vxnd3q7uzcd5VnNWNnS+vtqIrzetcUJAlCqEuDKttTVXZ4upCYZArn9r9dzgk4zm8fIMlFlitlqo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750883596; c=relaxed/simple;
+	bh=4nMCByzHrMmkAUyG/HcimZ9+ff5DE0seZlddvgtm+0w=;
+	h=From:Date:To:CC:Message-ID:In-Reply-To:References:Subject:
+	 Content-Type:MIME-Version; b=aEqFX8X5DeZHT6jEiPEVTYccxNwjNIVI8lWRFV/XpTVp6gsPduyNBh4KBD/VCC8A7ysCLVk42MctVTA44C8ACQ13Xqhfde1WKUQSxQNDRWxU5s2oojQhR0HDbR77zurNnBH2QNlis7mL9MsHGIFsOPkRGQaKhhBzoo+lNH8vQ6E=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dAhek4ri; arc=fail smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VstkG157"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-714078015edso3230427b3.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:32:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750883546; x=1751488346; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SLFYUt98P2q0h/fZsXZ99NhjaWK3IxRzSYbzaWT17Y4=;
-        b=VstkG157LAHA7EvzkXxJZIBGTy3TF3CKXY8T7EpcieJSFnCXDZIOlq4Yz224celtcq
-         DZAVJFZhk5n69n7detolRa2LA1eqrHWnl+dnDFTFDjlBMUASNSUe4NYZO49WrNXkAk0G
-         S4xLAyM2AgitA5hGvVshkzlICdcEfa76FlvMVsobAoCClto/aMXx+h366dfnEgF8A5OJ
-         x0s/i1qdloZk/ETaNGDawu+qZJJj0Mv//5d/9j/6tLfNa2GsgQxoY9xusmzGpgNxi/8V
-         qbLFQgDV0ST4wmD7FmJwDlBeHWH4pp0h3XzB1kWMyexkVT0FNx5fhPlIvxh+Y1i3XUSQ
-         GjVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750883546; x=1751488346;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SLFYUt98P2q0h/fZsXZ99NhjaWK3IxRzSYbzaWT17Y4=;
-        b=dbBSf2BhgprrfxbPRQdRsbVa5eAaCmiUFAZovM4wwchJ4OexI1CZRWMi9xFmkLJN83
-         bOkCnOoITzbRjSa4QniCNggtUFcVXhDC9e6wSbtF4O0yqldK+ZaUt+u+9hJji3ln38vD
-         +153PLNkBrjzI2ee45ZRecHnE69P60ZpyV9ENdgm5KGM0E0psTIrkiYNXPcPCM5eKjWF
-         XeambGcrKyCmczm8YdVN11RAvoFlrtvdqR3LoXgCbbkJYxE+7X+/t4S+9iQ5s6mc1ck6
-         wa+Ot98y/Tz+PpMzNJs/mQi8RDUyxLOUnl1mOJvpu+/yHFYcvjcaM7RH0o6dJ5dz4z2p
-         jvFQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVL2YIK0Cvfgir9P6Pt5TSqN8nT4W96M/vArH0y9vTQ159ICteqxUsEq0Wkhix1cEIo5Fx/AFvkBoxTl6w=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz10kBVePBLHQlw5e4yOlI/XdnccsdoXHBsUMW5GtnNuYTkF0gN
-	JEuBhZLGNXk5KcbYrimyl2WRMiwlNoNkADW/+Pct3rOc4l8ax+t4CY6blFfVyo82mjiuqjf2AlR
-	qqmVhroR50N8auCrW3/u6lgNl0AJl74yUlXtOu790
-X-Gm-Gg: ASbGnctxCJHm2ynB7OhYG02vDpFvxgIdIthQqSrzkmTUFbRKClD0mUzrqGlkzHl8T8D
-	Eap9GLYJ5swktz7AGy/l7WbTBpsPJx8KytHSs7TjPrQZUsAmwhjGQGpU4695oBJbYV4oOVRWTD1
-	L9YXWzCqn8fMeMKfyrO6jrpnr1vTUD5VAfo0Pe5URMGxGBEcVavF8htpEMzJYaiGnmjxd5vQo6
-X-Google-Smtp-Source: AGHT+IHhfR6/VlJVSXraZCY/fQlZAWZbH/2E7bRPGkB0TTeVRkt1lIwuCEsaLSMizSmISjMwsYtat4LpSX+OYWyJJ70=
-X-Received: by 2002:a05:690c:85:b0:712:e2b5:e61b with SMTP id
- 00721157ae682-71406ca2e13mr70129327b3.13.1750883545165; Wed, 25 Jun 2025
- 13:32:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dAhek4ri"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750883595; x=1782419595;
+  h=from:date:to:cc:message-id:in-reply-to:references:
+   subject:content-transfer-encoding:mime-version;
+  bh=4nMCByzHrMmkAUyG/HcimZ9+ff5DE0seZlddvgtm+0w=;
+  b=dAhek4riDfQX/TuNG9v4khuRzvYATDN6gMQqWc1aZhY7MyJKKDmqv2EI
+   x4RtdRs+07JC7ANX6X9rBdrcAohwnNPDLwbbE2xecHbuep8LcCGCgh6mp
+   2KHYGl52LACl/l4ptPe+OcV0xuSxahzmx/dPZPLdk244bpTwFxAKVzdNY
+   KwKBZU3O/+9ObNJ8k36dbasryYbme5kAnilKDjrTtG7r/gMYUR1ONPsKY
+   iX/7t5ENFZaMAgP6bmFIDSZJYVa09KnrqMR09cZObjw5e8gAELbqUFVlo
+   F6JvSuLB6/imHCofs8WAAnlqqGJCfoqVzjRkw1FE64/9eOFJO3J0tVwc/
+   g==;
+X-CSE-ConnectionGUID: j+JhfyzTQX6KwEFJj8jOtQ==
+X-CSE-MsgGUID: 2Muck1twT8WOcWR4VMYYbg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="70601540"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="70601540"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 13:33:11 -0700
+X-CSE-ConnectionGUID: sagblUUxRuagYEx0TjH/Uw==
+X-CSE-MsgGUID: JjrAxyMdQx+XysohTsxrKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="152495932"
+Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
+  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 13:33:10 -0700
+Received: from ORSMSX902.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 25 Jun 2025 13:33:10 -0700
+Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
+ ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25 via Frontend Transport; Wed, 25 Jun 2025 13:33:10 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (40.107.220.57)
+ by edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.25; Wed, 25 Jun 2025 13:33:09 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=PDG4HYa6I4ri00afhTQggV+EDax7jDCks6pg9nfmSn/Yu2bMmK36U6tAo4VxAYZBKnwOtedy7KNURDdxTUstP/hvYXBUi5xC3ZxuExwrd+f8GfJ8Q656caMh2+vkY3rLcWYvCuJN9i8M/kNvXWvhYx8jX7whABlkgXMxL8Qkv0vpuVNGed5R1jMQzR5nmpThkrSCSWIC2hzMaITw4rOb1yqEcq8773gM9dswyXlbvHm4N12by2mfaXr9DkK9ml9nICWmjHoEWqXBVpnPWE99pZV7GRFDmwiDSduHwgKngL4ZqR+LOEzJoRxF9bblmQ6To8/0fzmpzunZa1/2pv3A1Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5F5E9viwCJhV8wkdqZsvkZlgN9Y4yZzg8zgtEHaONek=;
+ b=HGjTCkdYKssRpLokL8icj62Xv+SByqmPhcJ9Ac2xWFPB/X6u5u3CVhMWWsCbRPw0+wo62A5fHlE2qu2l6y2y9yPSz2GIJW5J3hFUkJRCTyrjZRsHoob6e2cZ5f8rXG/xPJvK9E6H9xTl9dQTN5+2/YYL0ksQFoqcEdtWjnTG/hyFkmVGIvAk8D3wRhGmoFCfubwSiT0ieu85HDLKcKwL5WA1l6cOk7QlqatdfSlXjIzvgMZnsONPdUrTH9AGxoWScIVQGX2qA6zVkggqDOCSKOE9e+bQSE71379a2YaZfpnvmYJ8o8OVNR6LGKzZ5RTzUcYLK32zH9oPxj8Fju663A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by PH0PR11MB5175.namprd11.prod.outlook.com (2603:10b6:510:3d::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Wed, 25 Jun
+ 2025 20:33:06 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%6]) with mapi id 15.20.8857.025; Wed, 25 Jun 2025
+ 20:33:06 +0000
+From: <dan.j.williams@intel.com>
+Date: Wed, 25 Jun 2025 13:33:04 -0700
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Kees Cook
+	<kees@kernel.org>, "Gustavo A. R. Silva" <gustavoars@kernel.org>
+CC: Dan Williams <dan.j.williams@intel.com>, Vishal Verma
+	<vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>, Ira Weiny
+	<ira.weiny@intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Len Brown
+	<lenb@kernel.org>, <nvdimm@lists.linux.dev>, <linux-acpi@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>
+Message-ID: <685c5d0062f2b_1608bd10051@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <e0adad17-5d4f-4309-9975-81971597da65@embeddedor.com>
+References: <aEneid7gdAZr1_kR@kspp>
+ <202506250950.31C8A58E@keescook>
+ <e0adad17-5d4f-4309-9975-81971597da65@embeddedor.com>
+Subject: Re: [PATCH v3][next] acpi: nfit: intel: avoid multiple
+ -Wflex-array-member-not-at-end warnings
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR21CA0001.namprd21.prod.outlook.com
+ (2603:10b6:a03:114::11) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250620190342.1780170-1-peterx@redhat.com> <20250620190342.1780170-5-peterx@redhat.com>
-In-Reply-To: <20250620190342.1780170-5-peterx@redhat.com>
-From: James Houghton <jthoughton@google.com>
-Date: Wed, 25 Jun 2025 13:31:49 -0700
-X-Gm-Features: Ac12FXzgcuNaEB-qFo3pCvx2b2klwV6rpJlAl6SRM316awXTv0oTOGmJj0ZOazg
-Message-ID: <CADrL8HVZccikHRZ+PP4EfKQBkgXZ0E9S3GFtwWVYLD2NMhg7EA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] mm: Apply vm_uffd_ops API to core mm
-To: Peter Xu <peterx@redhat.com>
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	Nikita Kalyazin <kalyazin@amazon.com>, Hugh Dickins <hughd@google.com>, 
-	Oscar Salvador <osalvador@suse.de>, Michal Hocko <mhocko@suse.com>, 
-	David Hildenbrand <david@redhat.com>, Muchun Song <muchun.song@linux.dev>, 
-	Andrea Arcangeli <aarcange@redhat.com>, Ujwal Kundur <ujwal.kundur@gmail.com>, 
-	Suren Baghdasaryan <surenb@google.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Vlastimil Babka <vbabka@suse.cz>, "Liam R . Howlett" <Liam.Howlett@oracle.com>, 
-	Mike Rapoport <rppt@kernel.org>, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
-	Axel Rasmussen <axelrasmussen@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|PH0PR11MB5175:EE_
+X-MS-Office365-Filtering-Correlation-Id: f7ee5328-b43e-414f-8be1-08ddb4277dba
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?UlN1UnpxYnp1RitzVUFtQng5VHZsTjVVZTR2VTYvUWxMQmZlWkJHVThzc1B1?=
+ =?utf-8?B?ZTBXc2Zyckw3enEvUm9BYTcwUWVJWk9DMStaRFhMK1czbUZGUEJkUUljSHM5?=
+ =?utf-8?B?dEtRc2ZjSUhzM1czMDVjSG1IdlRBKzVUYkQ0RWdSdUNoVWgyOU9YN2JoQ3pY?=
+ =?utf-8?B?dnBYNU5LWkdYQUIrUU9jczIrTVA3NEFzanhvUmZuTVBHendmMmcvQXE0am5K?=
+ =?utf-8?B?dFFWVDVLUjhNUURDZHhIZWExSmtQNlo4ZE9BZXM2bGdDNktXcTFkb1A1Z1ZQ?=
+ =?utf-8?B?VHRIcjh5TVdxS29lQ1VENFRGZHZ4RGpZZmY5YlU0TUswdFhOMTM2TmVURFhQ?=
+ =?utf-8?B?RHFDYlNPdXRNYytjQVJJSlBMTEtyVDVCNWtIT09RSVhBbUxNME4vVDNhc2NL?=
+ =?utf-8?B?QjZZSW9hQXZlWEpRVWtzdTAvWGFwUnJMRnZXRTdEL3oxUkZjRnY2TWwyblo5?=
+ =?utf-8?B?S2ltV3N4RkZnSERYczNhbDJBYWNXcjRBUWdkL2JCOWlpL3gxQVVtL3dXWVJp?=
+ =?utf-8?B?Y1RMYTdmTlBoRm1MOEVFbm0rRlVRb080OXZsdlFXNXY3N0x5WGdZZFUrQnNy?=
+ =?utf-8?B?dkVUNzQ4cmxGY0dQNDlKUzFSd0FaS3hnSVUybjNmcGttNmhsL0hER1JMZHEz?=
+ =?utf-8?B?aGFVd0JqM1pVRExLTCsvY05EeHBQZEJxMUpMNTVrazlPNFdaRTV5SEVpa1Rs?=
+ =?utf-8?B?RkROUzEySC9jV3pXZTRwa2thVTAzNGl0cW1udkxudGJIRTN1dG1ZejJBRlZl?=
+ =?utf-8?B?SS9LMTNwYll1QlNkTlZvYWRaKzUrUno4cFpoVzM0UzcvMlozN01qR2RPVzFx?=
+ =?utf-8?B?WTRpTGxDSG9Ec0xaUGt5Q0lDV1lob1VLb3NPY2JTQnRHRU9RRGRMSFBDc1VH?=
+ =?utf-8?B?UHR1SVZpcnVFRHVQazBOenlvN3lyL3d4RGdpU1VPRzdZeHZtTE44dHVBS0Ji?=
+ =?utf-8?B?TlRSV05vc2dWSEJQOE91bzRKQlR5RFM3OG1iVnhOaUtVUndTaDVOblF4SlBM?=
+ =?utf-8?B?c3dDMjJNRTErVkJQRXlFSGVXTXVVTlF2bk1SRmpSbU1OUnFKNUsyUkdPanN3?=
+ =?utf-8?B?dU9Wb0huUDg5NTVvR3R2ZjRLa2MvRUNqc3ExVlBuMFZmZjQvUThwTWlGODBU?=
+ =?utf-8?B?VFpUcjJ6L0RRc2pEY0QvNjFNWGNUOEcwd29Bd21kNDVKSXYyN25jQURSTndN?=
+ =?utf-8?B?MWNLQUJlWVlZd0ZoODhkdk1tTTcxanhPS3NYR0g5WHkrdGxJdXI4RzJxczNi?=
+ =?utf-8?B?Y21zcHJlSlE4Um9LTm9ySlJXbi9xM1hiRVlwdXdHejlrS2JWblRiTG42NWhN?=
+ =?utf-8?B?cEZEZkVUMFgxcUZzeXpTMnJXMCtJNTRpM3QwOUZVMjlhMndjbkpvMXlMVldp?=
+ =?utf-8?B?ZUd2QjN3Rkk5TjBuQ0doeWhudlNpM21vUWtWYnZnSHlaNnQxajd1WFBzelFT?=
+ =?utf-8?B?WkYyK2ppUEh5Q3R2Ui9TTDVUY2lnZXJoMndOeGozQ2NyOGZtb2h1anhwWC8y?=
+ =?utf-8?B?WlMrWEFvVGtKVFN1dGFORUFuUVY3d3FhcXlBTi9ZQUZwSjIyM3ZOdWZ5N2NX?=
+ =?utf-8?B?Y2k2YlFVb09BenhITldwbThRRlgrV3ZNMU1aL3FtaVk1N0xMK1p2aHJwU0xl?=
+ =?utf-8?B?enh1djdZeTFxTHpoOEM1akZGTUNlcHcwN0ZkbnJITWZ3N250a0krSmxkdkFD?=
+ =?utf-8?B?RHlIbWI3K2llT04vL0QxSG9Jcko0YXFXdWg1ODg1TnRraCtlUFRXeTRRL1Q1?=
+ =?utf-8?B?d1BDb2hkMVpoekwySDFsS2I1YTh2NkZsK0g5eVZhL1FrcFJTYnZubVFXZnQ4?=
+ =?utf-8?B?aFJ6V1ZVK0JFbkpWZzFwTXM3RW95MytSUUdyRWFTR05zMUVySDlBVVVaRDFJ?=
+ =?utf-8?B?ZUpCY3F1NnpNd052bEJFWFhGa3dDUjJJcjlXbUloZm1ZZnFMNy9BQktweGF0?=
+ =?utf-8?Q?odFv0wvAJx4=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?N0ppQUx3K1JhcUdESk43dmw0WUd6dkduVVRMdFRhclVydmZVSE9pVDhKS1JQ?=
+ =?utf-8?B?NUJEb1B2OVRKM3FJNVNRazBrc2ptRkZ3ZE8xNGJJeCtBY3RkcmtwMDVXdFlk?=
+ =?utf-8?B?azRlanlnNmQ0Z3k4c3RoaGNVdllyTmFhUVlrM2FLSUJzdEtwTUZ6a294VVkz?=
+ =?utf-8?B?RmhQbFdiRDZSU2tMc1hnNEM3V2p3WXR4eUhkRFMxempuRDRKaU5XU0FTTklU?=
+ =?utf-8?B?V1VRajZFdlh1Qm1mbWZSNmNYTVlUdXIyZnZLRHJuYWtNRW1ZNGJub25WaEdC?=
+ =?utf-8?B?V05FbFRENEg5WENWRWp4VzNCYzFPWnpna2hLeHFwbFQ5Mm91YnllRVhCcjZ0?=
+ =?utf-8?B?QmVsSW9lSmhmb3p6S1R5VkJtTmczUS92MDdMMzBvN3o0M0JnSWQ3TCtJYTVN?=
+ =?utf-8?B?ZmZFTnBPNXJaZHhWOGUyNXRleFZucVJ4RnpXbTRpSmhGS2ZqVTZHZmRoenlS?=
+ =?utf-8?B?U0xvZ2h0UmR3czJXMUZjNlpuSWp2M3dJZTNzV3lva3FiSEh3S0JYdUZaMWJq?=
+ =?utf-8?B?RDRBNTJNOHlBeTBtTU1ac051M0hPVnJpd002NS9saUVTTnJ5d1FnaVJIaHIz?=
+ =?utf-8?B?NWdrZWtLRENXNUpReWxTenRpVy9TSEFrZ3IzbE1YSzNieVI2N0o5akx6V1N1?=
+ =?utf-8?B?dzZkTXRRZG5pcE9QY2VXQWdjeC8zcGpiZFZHVFArc2J6eHFDMDczK0VqNUFt?=
+ =?utf-8?B?UEZjbVJFTXZrZlRzUEpWQlF0QnZBNW5zTWhWWFErbStwcnJYOURhQzlrY24y?=
+ =?utf-8?B?dUtpa2RDTXN5TkxZdVNlYVNwR2pCZ0pZdHZBMGFrZmErNTFFSlRsTDlsc05E?=
+ =?utf-8?B?RTZFeWEzei80QnZ4OUdJOWJUOVdrUllBVnFEcG5laHkxOEFEVVhSOUdpK2x3?=
+ =?utf-8?B?eXZqV0h1U3pPMHRTa0F6S2tOQ2VwODhCSkNNQ3FPdC9HMlVSbSt0eklNdFlm?=
+ =?utf-8?B?N0VjZUxlU1p3ZlZxOWx1dWovNSt2Y2k3T242d0dmY3BWcHg1bk9Hb1VBdis4?=
+ =?utf-8?B?YWJTNENyYmVEdFVCUzY2RkdmbzB5cnAwZjRpNTIzTkZadm43ajBMcEpEU3NG?=
+ =?utf-8?B?enJRdCtNODE5dWwvV3c1Ung2Q1dQWURCVTN2ZDlsclZRWUx3bFpQeTU0bWdS?=
+ =?utf-8?B?NkJEWVdnTThwRlU3OVdLdk9BWVlTRnB0UGt1SEpqVzI0ay91bHVZdUtPZDda?=
+ =?utf-8?B?VnhJQzZlckxkSUhWeHBHNy81T3pkRFJQZEZlRWphVUEraDVvUGxwdXpBa1RY?=
+ =?utf-8?B?UUxCR1hGUnNieU1WNjBTY0E5cnVubGc2YXNWQk9DWEdvU0U0VS8wN29uRUls?=
+ =?utf-8?B?KzdOd29SZXFkb2liUW5XKy81QkIyK3JyYmN2UFFvTnltd2w1RUV0bUl1OVhk?=
+ =?utf-8?B?SnVzODFibERlWEZDMWtCYlBjSWN5VnhIOEJyN1RZYjg2U1Y0cXo2OVk2ek1r?=
+ =?utf-8?B?NWpGSkdjNEl3ODdCSTZsQTBKaHF3cll2RzlJK0l1V2dwdG5sTWJ1NWtYM3FB?=
+ =?utf-8?B?TGI1Yzg5SXRUZ2tqN3cvOFJJcDY5cVpDRE1GNEJzbjY1Q0JqM1FLcDJ2QVhK?=
+ =?utf-8?B?U3QwRmZmZ0Y4Tk4vNE1zUTNJcDFGU3RSZHpNZ1dUOGl2M0IyNmZVc0tUeHVC?=
+ =?utf-8?B?OGZScVJJOGp4TXRzS1llTDdJYWV2N21scVlRNW5EdlVrRGROWmxtVmxtVzhy?=
+ =?utf-8?B?YkkwbzlzUi8xR2hNdTM5VndQY1RuckJYQUNzc0xpVGl2a2xxaThqMkdSS3Va?=
+ =?utf-8?B?N2U5TnpneUpGUGlzZENmek1OZm1RRng0RTF1ZTlYd0xiaDYyMG94Q2VjdytZ?=
+ =?utf-8?B?TmR5WEVtZm81VENmMWlMYjhwNVBkeWYrUXU4Z1g2K3BoajROYVlZZ3N2R043?=
+ =?utf-8?B?WHZmWE9xcjVBWVFpZURWVnVsOTZTUHJCa1ZiN2JoTFZDbkdUeUFTRitxL1RZ?=
+ =?utf-8?B?bFk4M2E0eHloejlLallHTDlwRXBjNjFacXQvc1QzRmJTdDNweVlYbEVpS3dH?=
+ =?utf-8?B?eHgwcVY4SDdZRWYxdG1KenZKbGlLMXovSHZoY3RKTFpqNDRCVzdlaStvUGtq?=
+ =?utf-8?B?YmdMVHk4NGt1M000UVdCanJYRWxFWnZ6NVJYL3M5eW50NW1TY2hDRmRjVms1?=
+ =?utf-8?B?anB4MmozYnhFN0tkZGpuUlorallQUEMvTzN1aGxvRXErMG5IOU5OTzZocWZZ?=
+ =?utf-8?B?bmc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7ee5328-b43e-414f-8be1-08ddb4277dba
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 20:33:06.4998
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: chtFQ45kS+rgy5KQ3NJ3r8vYDrQsDrOCMssHNWmB3bKh7uJhp9zqgHLVSVSu79yrIHIh3EN8bQwjNAeKz+Vxzs4EhFQ5dqxYuxHGou0b7ew=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5175
+X-OriginatorOrg: intel.com
 
-On Fri, Jun 20, 2025 at 12:04=E2=80=AFPM Peter Xu <peterx@redhat.com> wrote=
-:
->
-> This patch completely moves the old userfaultfd core to use the new
-> vm_uffd_ops API.  After this change, existing file systems will start to
-> use the new API for userfault operations.
->
-> When at it, moving vma_can_userfault() into mm/userfaultfd.c instead,
-> because it's getting too big.  It's only used in slow paths so it shouldn=
-'t
-> be an issue.
->
-> This will also remove quite some hard-coded checks for either shmem or
-> hugetlbfs.  Now all the old checks should still work but with vm_uffd_ops=
-.
->
-> Note that anonymous memory will still need to be processed separately
-> because it doesn't have vm_ops at all.
->
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  include/linux/shmem_fs.h      |  14 -----
->  include/linux/userfaultfd_k.h |  46 ++++----------
->  mm/shmem.c                    |   2 +-
->  mm/userfaultfd.c              | 115 +++++++++++++++++++++++++---------
->  4 files changed, 101 insertions(+), 76 deletions(-)
->
-> diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
-> index 6d0f9c599ff7..2f5b7b295cf6 100644
-> --- a/include/linux/shmem_fs.h
-> +++ b/include/linux/shmem_fs.h
-> @@ -195,20 +195,6 @@ static inline pgoff_t shmem_fallocend(struct inode *=
-inode, pgoff_t eof)
->  extern bool shmem_charge(struct inode *inode, long pages);
->  extern void shmem_uncharge(struct inode *inode, long pages);
->
-> -#ifdef CONFIG_USERFAULTFD
-> -#ifdef CONFIG_SHMEM
-> -extern int shmem_mfill_atomic_pte(pmd_t *dst_pmd,
-> -                                 struct vm_area_struct *dst_vma,
-> -                                 unsigned long dst_addr,
-> -                                 unsigned long src_addr,
-> -                                 uffd_flags_t flags,
-> -                                 struct folio **foliop);
-> -#else /* !CONFIG_SHMEM */
-> -#define shmem_mfill_atomic_pte(dst_pmd, dst_vma, dst_addr, \
-> -                              src_addr, flags, foliop) ({ BUG(); 0; })
-> -#endif /* CONFIG_SHMEM */
-> -#endif /* CONFIG_USERFAULTFD */
-> -
->  /*
->   * Used space is stored as unsigned 64-bit value in bytes but
->   * quota core supports only signed 64-bit values so use that
-> diff --git a/include/linux/userfaultfd_k.h b/include/linux/userfaultfd_k.=
-h
-> index e79c724b3b95..4e56ad423a4a 100644
-> --- a/include/linux/userfaultfd_k.h
-> +++ b/include/linux/userfaultfd_k.h
-> @@ -85,9 +85,14 @@ extern vm_fault_t handle_userfault(struct vm_fault *vm=
-f, unsigned long reason);
->  #define MFILL_ATOMIC_FLAG(nr) ((__force uffd_flags_t) MFILL_ATOMIC_BIT(n=
-r))
->  #define MFILL_ATOMIC_MODE_MASK ((__force uffd_flags_t) (MFILL_ATOMIC_BIT=
-(0) - 1))
->
-> +static inline enum mfill_atomic_mode uffd_flags_get_mode(uffd_flags_t fl=
-ags)
-> +{
-> +       return (enum mfill_atomic_mode)(flags & MFILL_ATOMIC_MODE_MASK);
-> +}
-> +
->  static inline bool uffd_flags_mode_is(uffd_flags_t flags, enum mfill_ato=
-mic_mode expected)
->  {
-> -       return (flags & MFILL_ATOMIC_MODE_MASK) =3D=3D ((__force uffd_fla=
-gs_t) expected);
-> +       return uffd_flags_get_mode(flags) =3D=3D expected;
->  }
->
->  static inline uffd_flags_t uffd_flags_set_mode(uffd_flags_t flags, enum =
-mfill_atomic_mode mode)
-> @@ -196,41 +201,16 @@ static inline bool userfaultfd_armed(struct vm_area=
-_struct *vma)
->         return vma->vm_flags & __VM_UFFD_FLAGS;
->  }
->
-> -static inline bool vma_can_userfault(struct vm_area_struct *vma,
-> -                                    unsigned long vm_flags,
-> -                                    bool wp_async)
-> +static inline const vm_uffd_ops *vma_get_uffd_ops(struct vm_area_struct =
-*vma)
->  {
-> -       vm_flags &=3D __VM_UFFD_FLAGS;
-> -
-> -       if (vma->vm_flags & VM_DROPPABLE)
-> -               return false;
-> -
-> -       if ((vm_flags & VM_UFFD_MINOR) &&
-> -           (!is_vm_hugetlb_page(vma) && !vma_is_shmem(vma)))
-> -               return false;
-> -
-> -       /*
-> -        * If wp async enabled, and WP is the only mode enabled, allow an=
-y
-> -        * memory type.
-> -        */
-> -       if (wp_async && (vm_flags =3D=3D VM_UFFD_WP))
-> -               return true;
-> -
-> -#ifndef CONFIG_PTE_MARKER_UFFD_WP
-> -       /*
-> -        * If user requested uffd-wp but not enabled pte markers for
-> -        * uffd-wp, then shmem & hugetlbfs are not supported but only
-> -        * anonymous.
-> -        */
-> -       if ((vm_flags & VM_UFFD_WP) && !vma_is_anonymous(vma))
-> -               return false;
-> -#endif
+Gustavo A. R. Silva wrote:
+[..]
+> > I think it would be a pretty small and direct replacement:
+> > 
+> > 	TRAILING_OVERLAP(struct nd_cmd_pkg, pkg, nd_payload,
+> > 			 struct nd_intel_get_security_state cmd;
+> > 	) nd_cmd = {
+> > 		...
+> 
+> Yes, this works. Hopefully, maintainers will comment on this and let us
+> know what they prefer. :)
 
-Hi Peter,
+Hey Gustavo, apologies for the latency here. I think TRAILING_OVERLAP()
+looks lovely for this if only because I can read that and have an idea
+what it means vs wondering what this _offset_to_fam is about and needing
+to read the comment.
 
-Thanks for this cleanup!
-
-It looks like the above two checks, the wp-async one and the PTE
-marker check, have been reordered in this patch. Does this result in a
-functional difference?
-
-The rest of this series looks fine to me. :)
-
-> -
-> -       /* By default, allow any of anon|shmem|hugetlb */
-> -       return vma_is_anonymous(vma) || is_vm_hugetlb_page(vma) ||
-> -           vma_is_shmem(vma);
-> +       if (vma->vm_ops && vma->vm_ops->userfaultfd_ops)
-> +               return vma->vm_ops->userfaultfd_ops;
-> +       return NULL;
->  }
->
-> +bool vma_can_userfault(struct vm_area_struct *vma,
-> +                      unsigned long vm_flags, bool wp_async);
-> +
->  static inline bool vma_has_uffd_without_event_remap(struct vm_area_struc=
-t *vma)
->  {
->         struct userfaultfd_ctx *uffd_ctx =3D vma->vm_userfaultfd_ctx.ctx;
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index bd0a29000318..4d71fc7be358 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -3158,7 +3158,7 @@ static int shmem_uffd_get_folio(struct inode *inode=
-, pgoff_t pgoff,
->         return shmem_get_folio(inode, pgoff, 0, folio, SGP_NOALLOC);
->  }
->
-> -int shmem_mfill_atomic_pte(pmd_t *dst_pmd,
-> +static int shmem_mfill_atomic_pte(pmd_t *dst_pmd,
->                            struct vm_area_struct *dst_vma,
->                            unsigned long dst_addr,
->                            unsigned long src_addr,
-> diff --git a/mm/userfaultfd.c b/mm/userfaultfd.c
-> index 879505c6996f..61783ff2d335 100644
-> --- a/mm/userfaultfd.c
-> +++ b/mm/userfaultfd.c
-> @@ -14,12 +14,48 @@
->  #include <linux/userfaultfd_k.h>
->  #include <linux/mmu_notifier.h>
->  #include <linux/hugetlb.h>
-> -#include <linux/shmem_fs.h>
->  #include <asm/tlbflush.h>
->  #include <asm/tlb.h>
->  #include "internal.h"
->  #include "swap.h"
->
-> +bool vma_can_userfault(struct vm_area_struct *vma,
-> +                      unsigned long vm_flags, bool wp_async)
-> +{
-> +       unsigned long supported;
-> +
-> +       if (vma->vm_flags & VM_DROPPABLE)
-> +               return false;
-> +
-> +       vm_flags &=3D __VM_UFFD_FLAGS;
-> +
-> +#ifndef CONFIG_PTE_MARKER_UFFD_WP
-> +       /*
-> +        * If user requested uffd-wp but not enabled pte markers for
-> +        * uffd-wp, then any file system (like shmem or hugetlbfs) are no=
-t
-> +        * supported but only anonymous.
-> +        */
-> +       if ((vm_flags & VM_UFFD_WP) && !vma_is_anonymous(vma))
-> +               return false;
-> +#endif
-> +       /*
-> +        * If wp async enabled, and WP is the only mode enabled, allow an=
-y
-> +        * memory type.
-> +        */
-> +       if (wp_async && (vm_flags =3D=3D VM_UFFD_WP))
-> +               return true;
-> +
-> +       if (vma_is_anonymous(vma))
-> +               /* Anonymous has no page cache, MINOR not supported */
-> +               supported =3D VM_UFFD_MISSING | VM_UFFD_WP;
-> +       else if (vma_get_uffd_ops(vma))
-> +               supported =3D vma_get_uffd_ops(vma)->uffd_features;
-> +       else
-> +               return false;
-> +
-> +       return !(vm_flags & (~supported));
-> +}
-> +
->  static __always_inline
->  bool validate_dst_vma(struct vm_area_struct *dst_vma, unsigned long dst_=
-end)
->  {
-> @@ -384,11 +420,15 @@ static int mfill_atomic_pte_continue(pmd_t *dst_pmd=
-,
->  {
->         struct inode *inode =3D file_inode(dst_vma->vm_file);
->         pgoff_t pgoff =3D linear_page_index(dst_vma, dst_addr);
-> +       const vm_uffd_ops *uffd_ops =3D vma_get_uffd_ops(dst_vma);
->         struct folio *folio;
->         struct page *page;
->         int ret;
->
-> -       ret =3D shmem_get_folio(inode, pgoff, 0, &folio, SGP_NOALLOC);
-> +       if (WARN_ON_ONCE(!uffd_ops || !uffd_ops->uffd_get_folio))
-> +               return -EINVAL;
-> +
-> +       ret =3D uffd_ops->uffd_get_folio(inode, pgoff, &folio);
->         /* Our caller expects us to return -EFAULT if we failed to find f=
-olio */
->         if (ret =3D=3D -ENOENT)
->                 ret =3D -EFAULT;
-> @@ -504,18 +544,6 @@ static __always_inline ssize_t mfill_atomic_hugetlb(
->         u32 hash;
->         struct address_space *mapping;
->
-> -       /*
-> -        * There is no default zero huge page for all huge page sizes as
-> -        * supported by hugetlb.  A PMD_SIZE huge pages may exist as used
-> -        * by THP.  Since we can not reliably insert a zero page, this
-> -        * feature is not supported.
-> -        */
-> -       if (uffd_flags_mode_is(flags, MFILL_ATOMIC_ZEROPAGE)) {
-> -               up_read(&ctx->map_changing_lock);
-> -               uffd_mfill_unlock(dst_vma);
-> -               return -EINVAL;
-> -       }
-> -
->         src_addr =3D src_start;
->         dst_addr =3D dst_start;
->         copied =3D 0;
-> @@ -686,14 +714,55 @@ static __always_inline ssize_t mfill_atomic_pte(pmd=
-_t *dst_pmd,
->                         err =3D mfill_atomic_pte_zeropage(dst_pmd,
->                                                  dst_vma, dst_addr);
->         } else {
-> -               err =3D shmem_mfill_atomic_pte(dst_pmd, dst_vma,
-> -                                            dst_addr, src_addr,
-> -                                            flags, foliop);
-> +               const vm_uffd_ops *uffd_ops =3D vma_get_uffd_ops(dst_vma)=
-;
-> +
-> +               if (WARN_ON_ONCE(!uffd_ops || !uffd_ops->uffd_copy)) {
-> +                       err =3D -EINVAL;
-> +               } else {
-> +                       err =3D uffd_ops->uffd_copy(dst_pmd, dst_vma,
-> +                                                 dst_addr, src_addr,
-> +                                                 flags, foliop);
-> +               }
->         }
->
->         return err;
->  }
->
-> +static inline bool
-> +vma_uffd_ops_supported(struct vm_area_struct *vma, uffd_flags_t flags)
-> +{
-> +       enum mfill_atomic_mode mode =3D uffd_flags_get_mode(flags);
-> +       const vm_uffd_ops *uffd_ops;
-> +       unsigned long uffd_ioctls;
-> +
-> +       if ((flags & MFILL_ATOMIC_WP) && !(vma->vm_flags & VM_UFFD_WP))
-> +               return false;
-> +
-> +       /* Anonymous supports everything except CONTINUE */
-> +       if (vma_is_anonymous(vma))
-> +               return mode !=3D MFILL_ATOMIC_CONTINUE;
-> +
-> +       uffd_ops =3D vma_get_uffd_ops(vma);
-> +       if (!uffd_ops)
-> +               return false;
-> +
-> +       uffd_ioctls =3D uffd_ops->uffd_ioctls;
-> +       switch (mode) {
-> +       case MFILL_ATOMIC_COPY:
-> +               return uffd_ioctls & BIT(_UFFDIO_COPY);
-> +       case MFILL_ATOMIC_ZEROPAGE:
-> +               return uffd_ioctls & BIT(_UFFDIO_ZEROPAGE);
-> +       case MFILL_ATOMIC_CONTINUE:
-> +               if (!(vma->vm_flags & VM_SHARED))
-> +                       return false;
-> +               return uffd_ioctls & BIT(_UFFDIO_CONTINUE);
-> +       case MFILL_ATOMIC_POISON:
-> +               return uffd_ioctls & BIT(_UFFDIO_POISON);
-> +       default:
-> +               return false;
-> +       }
-> +}
-> +
->  static __always_inline ssize_t mfill_atomic(struct userfaultfd_ctx *ctx,
->                                             unsigned long dst_start,
->                                             unsigned long src_start,
-> @@ -752,11 +821,7 @@ static __always_inline ssize_t mfill_atomic(struct u=
-serfaultfd_ctx *ctx,
->             dst_vma->vm_flags & VM_SHARED))
->                 goto out_unlock;
->
-> -       /*
-> -        * validate 'mode' now that we know the dst_vma: don't allow
-> -        * a wrprotect copy if the userfaultfd didn't register as WP.
-> -        */
-> -       if ((flags & MFILL_ATOMIC_WP) && !(dst_vma->vm_flags & VM_UFFD_WP=
-))
-> +       if (!vma_uffd_ops_supported(dst_vma, flags))
->                 goto out_unlock;
->
->         /*
-> @@ -766,12 +831,6 @@ static __always_inline ssize_t mfill_atomic(struct u=
-serfaultfd_ctx *ctx,
->                 return  mfill_atomic_hugetlb(ctx, dst_vma, dst_start,
->                                              src_start, len, flags);
->
-> -       if (!vma_is_anonymous(dst_vma) && !vma_is_shmem(dst_vma))
-> -               goto out_unlock;
-> -       if (!vma_is_shmem(dst_vma) &&
-> -           uffd_flags_mode_is(flags, MFILL_ATOMIC_CONTINUE))
-> -               goto out_unlock;
-> -
->         while (src_addr < src_start + len) {
->                 pmd_t dst_pmdval;
->
-> --
-> 2.49.0
->
+If you can get me that patch on top of the TRAILING_OVERLAP() branch I
+can test it out and ack it to let it do in through the KSPP tree.
