@@ -1,129 +1,104 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0858925EF9F;
-	Wed, 25 Jun 2025 13:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+Received: from mx-a.polytechnique.fr (mx-a.polytechnique.fr [129.104.30.14])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 345353FD4;
+	Wed, 25 Jun 2025 13:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.104.30.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750858039; cv=none; b=VuSFUjELSFk9PKQ675yGcW7NeGLHTY4qybC4KQDqsrHKo4olY+WYog2LluhvY3TQGAdNCt4gJLkLwR1rWjUJ8gW6GoZrGzrn8hfKDiJJyH9BYXck3Atg8RP2Y5ATb00m2hCseLUasvntIIUxdZq/VHXXHWjdgDdtT3BISxUzuQM=
+	t=1750858070; cv=none; b=AIIKpcb2X3/l9m4uGxy1aUvVw31FqOQoMB3sfiAweZA/DyqmrD2c5J/B0UXt6cNHF8IFYiFs3LsVSfJSaciJT55eXwIGFc0BUD1OPYvdMa8o9K4Ge46+kCbaDkbJXKGCJ1h4ffH6TbEZ9jvzrPiVfU2A4pF2np+600WyUnu7lRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750858039; c=relaxed/simple;
-	bh=7lc6PL/esVmnAjKv42ZkpEX3uq/hzV7pjfyrio9p1xA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QmBUOCCnGeq3j7G7S+5jp+fOn+aSmyi29AcJ97hxqs+FvgLpILIjdbd6x52OqSz88gRNfnBsxf8C3EohLfaWH0mEWFdzc+uc8AIQfoC4JWKj5ribgC0da9lg3W1+jSJr0dnL0lEYuPQ1HBJHkVle3fBHEdXcqtNM6FUfoNZImhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=p1NGoeSn; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="p1NGoeSn"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 6DD47439E9;
-	Wed, 25 Jun 2025 13:27:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750858027;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ouPAPbx09eWxp7PUk92hOFewj65V3U8yVItAwraE/Fg=;
-	b=p1NGoeSnvfoAYcZ0MgCeo+TOWfCjmrESkgv3TNO63lDkJJl0cBsD9Yo+pV4pBtqw/Sn7ri
-	X5/PvpQFIKXqoQWGdblsSZq2oDmQFmdKYSjYXJNCQb0n/0rzurNAft6o1T2IT6vylKwdZc
-	RxNPm4fb6KFAzhwSkpBuF/D1kY+tSbBzgKJi4psyBEek1Gm3BGOO4eO4PhKp1F/+Cmhzlj
-	nerWLJj1jU0b04e7afTMtvYzPMrfQuItE6NYPGlzja9Q7XEp+3ZvytCWkGdhTxXQw4BLab
-	80Rjb9BbkLF8oKbUm06rs2sLaK7tMKyrJSJG1cesK1vnVGYbdJX5NckxlndXHA==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Date: Wed, 25 Jun 2025 15:27:02 +0200
-Subject: [PATCH] MIPS: disable MMID if GINVT is not usable
+	s=arc-20240116; t=1750858070; c=relaxed/simple;
+	bh=EMkbJPlhS92NnKFcknBrZgOb5HHbn9iZHQITh76fRww=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=q/edovHEQyrH8f/bSN6j+qZq0LNrQo3tnior0aKGL3gmfkfyB1jWob9BWMS+bHmwmi3yzRVHK0ENpq/NsXprhsFDXesZR4qLZoTtWSkerNuAcv4xLg2cPkFGfPln5lLej8vsBZ5TKkqwlFPqJAqPze05wHG2tLkgTJIE5aou9Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=129.104.30.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from zimbra.polytechnique.fr (zimbra.polytechnique.fr [129.104.69.30])
+	by mx-a.polytechnique.fr (tbp 25.10.18/2.0.8) with ESMTP id 55PDRMMJ028279;
+	Wed, 25 Jun 2025 15:27:22 +0200
+Received: from localhost (localhost [127.0.0.1])
+	by zimbra.polytechnique.fr (Postfix) with ESMTP id F2EA2761598;
+	Wed, 25 Jun 2025 15:27:21 +0200 (CEST)
+X-Virus-Scanned: amavis at zimbra.polytechnique.fr
+Received: from zimbra.polytechnique.fr ([127.0.0.1])
+ by localhost (zimbra.polytechnique.fr [127.0.0.1]) (amavis, port 10026)
+ with ESMTP id 0lf2ssbOzyF4; Wed, 25 Jun 2025 15:27:21 +0200 (CEST)
+Received: from [129.88.52.32] (webmail-69.polytechnique.fr [129.104.69.39])
+	by zimbra.polytechnique.fr (Postfix) with ESMTPSA id 9980E761F83;
+	Wed, 25 Jun 2025 15:27:21 +0200 (CEST)
+Message-ID: <ace152fe-877b-4df9-ba22-3c928bffa253@gmail.com>
+Date: Wed, 25 Jun 2025 15:27:21 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] ethernet: cxgb4: Fix dma_unmap_sg() nents value
+To: Potnuri Bharat Teja <bharat@chelsio.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+        "David S. Miller"
+ <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250623122557.116906-2-fourier.thomas@gmail.com>
+ <aFrBED5rhHtrN0sv@chelsio.com>
+Content-Language: en-US, fr
+From: Thomas Fourier <fourier.thomas@gmail.com>
+In-Reply-To: <aFrBED5rhHtrN0sv@chelsio.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250625-mmid_disable_no_ginv_on_noc-v1-1-38a3902607a7@bootlin.com>
-X-B4-Tracking: v=1; b=H4sIACX5W2gC/x3MTQqAIBBA4avErBNK0n6uEiGWUw3UGAoSRHdP2
- r1v8x6IGAgjDMUDARNF8pxRlwUsu+UNBblskJVUlZZKnCc54yja+UDD3mzEyXjOuQjd6BZl3yn
- rOsiHK+BK938fp/f9ACpvVYxtAAAA
-X-Change-ID: 20250625-mmid_disable_no_ginv_on_noc-6467e2985ad8
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-mips@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvvdeklecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkffvvefosehtkeertdertdejnecuhfhrohhmpefirhgvghhorhihucevnffgoffgpffvuceoghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepvdehheejveelgefgleffgfejudfgudeludeutdfhleeiudevffegueelkeffudfhnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemkedvvdgtmehfiehfmedvlegsvgemvgduuddunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeekvddvtgemfheifhemvdelsggvmegvudduuddphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepkedprhgtphhtthhopehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhrtghpthhtohepthgrfihfihhkrdgsrgihohhukhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtohepthhssghoghgvn
- hgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvhhlrgguihhmihhrrdhkohhnughrrghtihgvvhesmhhosghilhgvhigvrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
-X-GND-Sasl: gregory.clement@bootlin.com
 
-If System-level Interconnect (aka Network on Chip) does not support
-the global invalidation, then MMID feature is not usable. Indeed the
-current implementation of MMID relies on the GINV* instruction.
+On 24/06/2025 17:17, Potnuri Bharat Teja wrote:
+> On Monday, June 06/23/25, 2025 at 14:25:55 +0200, Thomas Fourier wrote:
+>> The dma_unmap_sg() functions should be called with the same nents as the
+>> dma_map_sg(), not the value the map function returned.
+>>
+>> Fixes: 8b4e6b3ca2ed ("cxgb4: Add HMA support")
+>> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
+>> ---
+>>   drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+>> index 51395c96b2e9..73bb1f413761 100644
+>> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+>> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+>> @@ -3998,7 +3998,7 @@ static void adap_free_hma_mem(struct adapter *adapter)
+>>   
+>>   	if (adapter->hma.flags & HMA_DMA_MAPPED_FLAG) {
+>>   		dma_unmap_sg(adapter->pdev_dev, adapter->hma.sgt->sgl,
+>> -			     adapter->hma.sgt->nents, DMA_BIDIRECTIONAL);
+>> +			     adapter->hma.sgt->orig_nents, DMA_BIDIRECTIONAL);
+>>   		adapter->hma.flags &= ~HMA_DMA_MAPPED_FLAG;
+>>   	}
+> Thanks for the patch Thomas.
+> this fix needs below change as well:
+> --- a/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+> +++ b/drivers/net/ethernet/chelsio/cxgb4/cxgb4_main.c
+> @@ -4000,7 +4000,7 @@ static void adap_free_hma_mem(struct adapter *adapter)
+>          }
+>
+> 	for_each_sg(adapter->hma.sgt->sgl, iter,	
+> -                   adapter->hma.sgt->orig_nents, i) {
+> +                   adapter->hma.sgt->nents, i) {
+>                  page = sg_page(iter);
+> 		if (page)
+>                          __free_pages(page, HMA_PAGE_ORDER);		
+>   
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- arch/mips/Kconfig                    | 6 ++++++
- arch/mips/include/asm/cpu-features.h | 5 ++++-
- arch/mips/mobileye/Kconfig           | 2 ++
- 3 files changed, 12 insertions(+), 1 deletion(-)
+I don't think this change is correct since this loop iterates over all 
+the pages
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 1e48184ecf1ec8e29c0a25de6452ece5da835e30..05ce008459b89f03fa71d94429607feb9d06526f 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2575,6 +2575,12 @@ config WAR_R10000_LLSC
- config WAR_MIPS34K_MISSED_ITLB
- 	bool
- 
-+# Some I6500 based SoC do not support the global invalidation on their
-+# System-level Interconnect (aka Network on Chip), this have an
-+# influence on the MMID support.
-+config GINVT_UNSUPPORTED_NOC
-+	bool
-+
- #
- # - Highmem only makes sense for the 32-bit kernel.
- # - The current highmem code will only work properly on physically indexed
-diff --git a/arch/mips/include/asm/cpu-features.h b/arch/mips/include/asm/cpu-features.h
-index 404390bb87eaf5b3391b3d38be7cd3e43849dde2..03cf5f8e8371afe553a40739fd64909d68427764 100644
---- a/arch/mips/include/asm/cpu-features.h
-+++ b/arch/mips/include/asm/cpu-features.h
-@@ -642,9 +642,12 @@
-  * We only enable MMID support for configurations which natively support 64 bit
-  * atomics because getting good performance from the allocator relies upon
-  * efficient atomic64_*() functions.
-+ * If System-level Interconnect (aka Network on Chip) does not support
-+ * the global invalidation, then we also disable MMID support which
-+ * needs to use GINV*
-  */
- #ifndef cpu_has_mmid
--# ifdef CONFIG_GENERIC_ATOMIC64
-+# if defined(CONFIG_GENERIC_ATOMIC64) || defined(CONFIG_GINVT_UNSUPPORTED_NOC)
- #  define cpu_has_mmid		0
- # else
- #  define cpu_has_mmid		__isa_ge_and_opt(6, MIPS_CPU_MMID)
-diff --git a/arch/mips/mobileye/Kconfig b/arch/mips/mobileye/Kconfig
-index f9abb2d6e1787dbc5a173db48606ed5a02088e41..06ae5327ff657e0c86e2eb9c7fbd760be8ae0d99 100644
---- a/arch/mips/mobileye/Kconfig
-+++ b/arch/mips/mobileye/Kconfig
-@@ -12,6 +12,8 @@ choice
- 
- 	config MACH_EYEQ6H
- 		bool "Mobileye EyeQ6H SoC"
-+		select GINVT_UNSUPPORTED_NOC
-+
- endchoice
- 
- config FIT_IMAGE_FDT_EPM5
+allocated at line 4076, not over the dma mapped pages.
 
----
-base-commit: 86731a2a651e58953fc949573895f2fa6d456841
-change-id: 20250625-mmid_disable_no_ginv_on_noc-6467e2985ad8
+It also seems that when passing the dma addresses to hardware,
 
-Best regards,
--- 
-Grégory CLEMENT, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+the newpage assignment is not used line 4104 and that the dma mapping
 
+length is not given to hardware.  Is that correct?
+
+>> -- 
+>> 2.43.0
+>>
