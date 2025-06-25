@@ -1,129 +1,111 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05A263074A9
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322891F5827;
+	Wed, 25 Jun 2025 06:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750834094; cv=none; b=BenIVvYWI9FdS7bCMMT8akcu7ddhR1a0QOPXz/dCn2wguOTSouWi2mbzmpVReu/aG6MUVlCoDBYoMDyFntv1uwz6HHnv+J9ppMgvUs7aTC3uv7sWQI9s2qOSQyl5SmuX4JDbV/3kOzL8bgTUsLHcLCyaKAdvK6Waunsd+huRXhw=
+	t=1750834098; cv=none; b=Y+LVDBU3xEG67YmA9HniisiLovy5gagJEt/jZVcR9dhj1gKt9NcXLcyXZbEy1SdPQJdQSC5xs+oRe48+XO75iUrpibIbjQIV3VoHF/VVdrrbtGekVpPHEjb7kVFPBu8ZGz56NXCaGU5WjUwEsy0OMmYOjvwfiGpL6KpvwsSuPkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750834094; c=relaxed/simple;
-	bh=YRgTBG6ahEu12RrN56cHbtpyvTptKXyTAvXP+cLX6BA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iXGkz0ghmXGWgTkBLPjBAxUJhAgosmuTUFheB2BBGdLmlfb8HiONezzBdlSF2b/ISzu2CqFRqu9QmJI3fcsYLF4MsZGEiD8cwc+Qsu+egMKY5HI6GoV324dGlrEufHnNaNQ1I8e8AOfs6jNmhx1m+9gWWweB7jAYwfMRVrr+PLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WVwspn4w; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1750834098; c=relaxed/simple;
+	bh=1S+vYDbLA0s2WG1o/HuAVK1qLit0osUBrErElzDk2/0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=enVGC/coQJti9/eyAlf5Dl4h9kL850demvo2ZAsJXEQ9LBNpDOIKnM5Brl8XRCvPvkrr3iGX+e5UgcLSOsjCBaQk713WmKy/slDhzEyS7GzROcGeNquSXJC+THtzeNuCKgOQJi9c5jNgF5kSgtN2DLF21BPvGsRTkdA4C5qSphw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bs6+urbb; arc=none smtp.client-ip=209.85.167.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WVwspn4w"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-234f17910d8so13465915ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 23:48:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bs6+urbb"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553b544e7b4so6466304e87.3;
+        Tue, 24 Jun 2025 23:48:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750834092; x=1751438892; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vDntjPY9BcK8XP41EjKymaWC9cq9DzX53giAwjmriis=;
-        b=WVwspn4wdc8NE+qzOrIB4cGNHk/25C9omw8zmHyZUOzKgbCJwITwZzSTAW6LX91mXZ
-         8Jj0IwgWapTSgjD8qfXS/vcl1t2Yk5oMKls7cvYwp3lk8ybsCx14LTsB+2iohJ+R4IdU
-         PVvk2Uwaz4EG4qZ5I7Ul6w03EmAhIdbtblFz2i59kVyE/o1eqqgJfmqCu8Vvy2cTmzX1
-         mGMQGuJRWK0v2znsGDAxuuLmU3UIBp4+G1qjnfd0SdIqJ0uh02jj9Hs8y/zGjIfjqlK7
-         kjy4HC9YFi+k7NZw8O6YwuPIB4Wepam2elX0F5L9fzrA1/L3l6j0EebOFMrN//C42cfj
-         KLyg==
+        d=gmail.com; s=20230601; t=1750834095; x=1751438895; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=KjyRtilrvcm2L/AXtGRLJufhbX/zHrNcNL/3/DavrS8=;
+        b=bs6+urbbr+zrhrG9ZKr0aWzWAJlTRem4A8qO1Ufku1Kqx0MsnvHij6doprLfUDPYyx
+         cqy3nIzwgHp2f5NgawRMQ3woApP1Oi5EprBGdXkRNDUhFvZw+vFJ2C7dFVG17tLmPrm0
+         9FjwX0vB/5WXr86CfyrINDcddOj/Sca3dk+OSXmNGy4arulMoHjZSbvXs7Zl9flhmtnO
+         AVDZuQPL+qZuIf67GiCtQyYKV/uaRZZit+Oknd/zFxGCWgn0Z64iTWY3ursVW3t1SLyA
+         4V17paaDcAfkBvCvtR91IoFtnxrCW+g0/x53GTKmwoEUrAy/E+FauKuhsy6D6WLWMJlu
+         c6ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750834092; x=1751438892;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vDntjPY9BcK8XP41EjKymaWC9cq9DzX53giAwjmriis=;
-        b=PTgX3YBu1R2WwptrJBJSvMKNQ+Ud5Cq5HGcr85F1ZLh4pbqfBIpYt0RNY3vBUwQFfT
-         TXBdmO2/sftZ0eYY5AcTuV7H4vv/ir4hyy7RjU4j2Zh0MJXyXAk2Z0/vmqx+WMys3R9i
-         P9PqYyuDiaxtWcnT6MVXCQcb7dfiYAC04WxUv5ewSA8SgXY+eRbvTwlhnylvDjURSy0c
-         XpqbHguj/TDAtiIQCfCVMWbt0UOrTc2yfUzrjOM5GNVOvGWPmyYDxg4WylX7mo5gsD6e
-         El6rUNJXA2oHKkpmd6aBCv+spzCK6Zws5RnYJ2q0LV3KHceenB++MjPyurPWJoSilgrD
-         t0ow==
-X-Forwarded-Encrypted: i=1; AJvYcCUo6ih5hx6LTA5z9azAc39QPMlFamlQOgAu3VQ4HS1/FwRmEDEsfILhQL9hvz1PFg7kRlcB3/iVn0I3ybg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyyQLGi6Oq9P5fR3iNegXJQIEuKOrXHfvLTviI0prrrdMooCq5M
-	Pi47agnaUPVmUU9y7A9tNSXiTw19Qfrzyu+rsEX2LdMHl/2iIASF0r4BWYKEhElaTzE=
-X-Gm-Gg: ASbGncvce8xeHnbcyejCg8/v6vXfM7HyIOclGcOZUZRDUOZG2gK6j0Q7u5U75rg7mEP
-	LPW35JKOYJsL3N4gfYOT9ToFpThDi4GRW7PuqexKSQYlqT8wPtQwb8bRElAtdreyFHzbpooxByF
-	q96q6YOtoUSbXCYYZptvXZ7BOvc2b9Hpqcqz1uBO6XNZh45SxejzrZkj1pyHRYPqJw4YBgcXsei
-	/3Xv1zLXzXdw63lep2Z71RrJKVQwjKJ0QSPhDbg4vhFTSaxM9Agvyed1xLIbvC6VK/GUS6yN2Sr
-	8sl5/zMC+H+GQsAgFJP15wUXxz3h52t6NUZNqUpAQVkgayz1FPxlj6EMKa4fksfZe0jb9laGlRK
-	+
-X-Google-Smtp-Source: AGHT+IHHpkRLh4Fi55uEQqLaLiIKZWApjITR844g5L0jj94q2zh5jkCtC479Nj3Tmpcpwwt3a8pnNA==
-X-Received: by 2002:a17:902:d492:b0:234:8c64:7878 with SMTP id d9443c01a7336-2382409e007mr34322915ad.11.1750834092167;
-        Tue, 24 Jun 2025 23:48:12 -0700 (PDT)
-Received: from tiger.hygon.cn ([112.64.138.194])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d866b659sm127470495ad.168.2025.06.24.23.48.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 23:48:11 -0700 (PDT)
-From: YangWencheng <east.moutain.yang@gmail.com>
-To: east.moutain.yang@gmail.com
-Cc: joro@8bytes.org,
-	suravee.suthikulpanit@amd.com,
-	will@kernel.org,
-	robin.murphy@arm.com,
-	iommu@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] iommu/amd: clear SME flag for mmio pages
-Date: Wed, 25 Jun 2025 14:48:02 +0800
-Message-ID: <20250625064802.3640589-1-east.moutain.yang@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        d=1e100.net; s=20230601; t=1750834095; x=1751438895;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KjyRtilrvcm2L/AXtGRLJufhbX/zHrNcNL/3/DavrS8=;
+        b=XNxoRph0bNmXauXO8seXZXVzQVTKxIvFkA3Ilc7UfEI8w9Nt5k/p1yWvRuAfgxS/4u
+         ZCA1YA6P2ZuE9osfpVQEoDdPdVzZWD/LVCPTCo4OYJoBbC0vfj6pRy3zuLwxI5EKG6dW
+         lXhMDNv3bO+83ac4HwPphQL7yHm0CyRQ2kO4U6Pkbrpdr7jmS55KMZuMiTQSlCdWs+2h
+         lNvWsKNxdVgyZjJEHRZIwDg6v2t8eQ1HFC2siqyOLy17dK/MGzyEr03AtaUpQ6/MS4p6
+         Oyfly5UPZYYQ6EngOfDNGy+KtKh3zAoSQmBHHmmfaozq5sqQrMjLIubkM8iMNOVZ23Hy
+         Ur8g==
+X-Forwarded-Encrypted: i=1; AJvYcCUanFrLwCOhuMs9uOKvbnunH5JP9DNqpqtHoKLDNeSKzzq46rtmHK6OMtoiXw0yRQZHVwMr9NdEQpr925g=@vger.kernel.org, AJvYcCX9pIFK6oKPxi6Bu7Mv0gSqrWFIAjGZstNox3mSTA7j6hl7fkRrYZuE13ygH8gkQa8kZVNyWsfMOFu2PxQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzVoHtnzvyIoaiv3ESbnHsOhhAhnGZ4LW+b+WwnmQR2YtW3LyAj
+	p1nopjEqJuAkrRTUGXaWMnV2ndtyhLuIQK/9X1U/P3Wr58nYyOYhAZfT
+X-Gm-Gg: ASbGnctDZAePbf0uZ8YO5rr5+GHz6Z+8OKKUnVI+UarFZkynCVmAI5HLCj1zLT3KUGX
+	dU8ulI8f7++/VeQtpKt3MCFd/kstcDyRbW/NkOWdbAqgkjZMr+jDWlRgLquom1fZPkMRXpYftrc
+	XVf2k/xYFIaT8txCq7FLhqMtlYCGCdoWtTptqQgSKeQxnoxHrKQBtXri6xen1MvEyHrgE20jDbj
+	Y0asAjQMEog4b9S3qSM1AXbak8QGytlJyidOqrEjUKb98qap7GGhXgtcnU91pcdWLH2oU7RjdSY
+	Ut19+jOMFQQIw84cgJUd+3pmUoFMBiQ8fNKNLl+SlcbN/2l/n2gHmhh7Ai3DvEaxybXILxBaHOg
+	iJUGVng1FjYdnUzc+uEwyH+WsOV5nU7036MnCWFWO801USI1J09JvO6t0obLQwHGpxppg6wLeUB
+	5ds7d07T/gEGWdYdHukqZHPGGJfTyhVQEHmTk=
+X-Google-Smtp-Source: AGHT+IF/vlkFOWlLSTtvWsBVj8DxXv4ulk5QjgKHzBr4J5t5dfEhRd96ljhSekQ87pmkR0ybuy8Qrg==
+X-Received: by 2002:a05:6512:3e1f:b0:553:a60d:6898 with SMTP id 2adb3069b0e04-554fde5873fmr509004e87.45.1750834094964;
+        Tue, 24 Jun 2025 23:48:14 -0700 (PDT)
+Received: from ?IPV6:2001:14ba:6e:3100:5c31:3ecd:351c:36bc? (2001-14ba-6e-3100-5c31-3ecd-351c-36bc.rev.dnainternet.fi. [2001:14ba:6e:3100:5c31:3ecd:351c:36bc])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41bbc36sm2077343e87.94.2025.06.24.23.48.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 24 Jun 2025 23:48:13 -0700 (PDT)
+Message-ID: <88c6b6ad-d867-4db5-9893-0c8cb4a7eaee@gmail.com>
+Date: Wed, 25 Jun 2025 09:48:13 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/2] docs: Improve grammar, formatting in Video4Linux
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mchehab@kernel.org, hljunggr@cisco.com, ribalda@chromium.org,
+ hverkuil@xs4all.nl, skhan@linuxfoundation.org, linux-media@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
+References: <20250612172703.32293-1-hannelotta@gmail.com>
+ <20250612172703.32293-2-hannelotta@gmail.com>
+ <aFqKRyntONqsxJSs@valkosipuli.retiisi.eu>
+Content-Language: en-US
+From: =?UTF-8?B?SGFubmUtTG90dGEgTcOkZW5ww6TDpA==?= <hannelotta@gmail.com>
+In-Reply-To: <aFqKRyntONqsxJSs@valkosipuli.retiisi.eu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-If paddr is a mmio address, clear the SME flag. It makes no sense to
-set SME bit on MMIO address.
----
- drivers/iommu/amd/io_pgtable.c    | 6 ++++--
- drivers/iommu/amd/io_pgtable_v2.c | 6 +++++-
- 2 files changed, 9 insertions(+), 3 deletions(-)
+Hello,
 
-diff --git a/drivers/iommu/amd/io_pgtable.c b/drivers/iommu/amd/io_pgtable.c
-index 4d308c071134..88b204449c2c 100644
---- a/drivers/iommu/amd/io_pgtable.c
-+++ b/drivers/iommu/amd/io_pgtable.c
-@@ -352,15 +352,17 @@ static int iommu_v1_map_pages(struct io_pgtable_ops *ops, unsigned long iova,
- 			updated = true;
- 
- 		if (count > 1) {
--			__pte = PAGE_SIZE_PTE(__sme_set(paddr), pgsize);
-+			__pte = PAGE_SIZE_PTE(paddr, pgsize);
- 			__pte |= PM_LEVEL_ENC(7) | IOMMU_PTE_PR | IOMMU_PTE_FC;
- 		} else
--			__pte = __sme_set(paddr) | IOMMU_PTE_PR | IOMMU_PTE_FC;
-+			__pte = paddr | IOMMU_PTE_PR | IOMMU_PTE_FC;
- 
- 		if (prot & IOMMU_PROT_IR)
- 			__pte |= IOMMU_PTE_IR;
- 		if (prot & IOMMU_PROT_IW)
- 			__pte |= IOMMU_PTE_IW;
-+		if (pfn_valid(__phys_to_pfn(paddr)))
-+			__pte = __sme_set(__pte);
- 
- 		for (i = 0; i < count; ++i)
- 			pte[i] = __pte;
-diff --git a/drivers/iommu/amd/io_pgtable_v2.c b/drivers/iommu/amd/io_pgtable_v2.c
-index b47941353ccb..b301fb8e58fa 100644
---- a/drivers/iommu/amd/io_pgtable_v2.c
-+++ b/drivers/iommu/amd/io_pgtable_v2.c
-@@ -65,7 +65,11 @@ static u64 set_pte_attr(u64 paddr, u64 pg_size, int prot)
- {
- 	u64 pte;
- 
--	pte = __sme_set(paddr & PM_ADDR_MASK);
-+	if (pfn_valid(__phys_to_pfn(paddr)))
-+		pte = __sme_set(paddr & PM_ADDR_MASK);
-+	else
-+		pte = paddr & PM_ADDR_MASK;
-+
- 	pte |= IOMMU_PAGE_PRESENT | IOMMU_PAGE_USER;
- 	pte |= IOMMU_PAGE_ACCESS | IOMMU_PAGE_DIRTY;
- 
--- 
-2.43.0
+On 6/24/25 14:21, Sakari Ailus wrote:
+> Thanks for the patch. Documentation patches should have "Documentation: "
+> prefix, similarly all media tree patches should have "media: " prefix. Also
+> the lines may be up to 75 characters long.
+> 
+> The result is:
+> 
+> -----8<----------
+> media: Documentation: Improve grammar, formatting in Video4Linux
+> 
+> Fix typos, punctuation and improve grammar and formatting in documentation
+> for Video4Linux (V4L).
+> -----8<----------
+> 
+> I changed this while applying the patch.
+> 
+
+Great, thank you! And thank you for the guidance, I have updated my 
+notes for future reference.
+
+Best regards / Ystävällisin terveisin
+
+Hanne-Lotta Mäenpää
+
 
