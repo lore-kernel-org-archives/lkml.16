@@ -1,400 +1,201 @@
-Received: from out-179.mta0.migadu.com (out-179.mta0.migadu.com [91.218.175.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FBE92877F9
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C8B29AAF7
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:30:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750843775; cv=none; b=Uaq389SsjIWLt6AjKscfEFkdrPBB/kWkhzNrLdjk5nr3oso8iON4aHCaVaBR876aRxZJGwwqCBGDRYG8C6IKO+XaIyGTdll6xFLwzQKx5PclTJhiz2a67LLV+sdEojyXGXpEVV58IwbIoLw7pVPG0W+N0XUWZzJjLf3U7pEgJQo=
+	t=1750843806; cv=none; b=lSF6wbiEHXmTDkLTWQyx6q5ywbGUyUFReZuBWDL2ReIJauhgYu+BUMdc+4FeTfZAbuwE8mB5Y4+m3hNQnopWYTLPknQf43iZx5odKcHVitE/SZE0VsJJyb8LQJuSx15zDrXyUq1V3olE1iunB4pHpSSmhkdOOYdNHKrUB6SQfEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750843775; c=relaxed/simple;
-	bh=bh2roadnC8OnepH/S+46D6k7MIgXg7gYhiZQFo2MUOc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cUShE6XOHpUKXvdJ14k9f+2EK4gfRPFfEJe62S6SJpk15ne/ZVgO7g+TIPIeM2566tgTATooCYoorgJh+Jc7LlyIzJY1QurcSPTCJyaG1skMCjgVXfhdJ1tmKc9HIciqIZo9cIUrgZqR53Xwe05czWFRzKeWuUBCS6h9lcB7jFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=QfWaEPgL; arc=none smtp.client-ip=91.218.175.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1750843806; c=relaxed/simple;
+	bh=/gyIwejZq5RtXSV4ylcQYg6u7tsUkL75UBpjBDUoInQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=txn8whet619nxZByvYGgaDm5+i2cmi4eAsBSNm/PYZnlLmKoCQESLJq7jjQujqglPCaUy6eVA4cn/Ia91xylqGFTgE2ZIKFkGSAytoVWHvT0QpU3wd02XvdGsyo/eX9tDkdrUxbZ/7yHHgXCzXf5uBVz197Pv+59OXe4Fzx6wrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=I5HgFNg8; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="QfWaEPgL"
-Message-ID: <87f7a9fa-d66e-47ba-b511-a8ffb7e5e057@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1750843769;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=5+hfwvWC996r2MUYJpb8A4wnft6Q/V6aycecydJia7U=;
-	b=QfWaEPgLZqoluDZbnVOQJdlxb4l2AandwHyP8Yk+Wte6nX7+dMyPVvU1BClhpV3r9u2Sc0
-	DlxnnH3UZzTG8Vfv/zt1HhMMHicBQEj++Pi1SPk+EZyWL7x9PfMYuYwO+urQViqTihPKqk
-	g+4Fksb2sqRasmtmBRhkskN9SiZZiMk=
-Date: Wed, 25 Jun 2025 17:29:12 +0800
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="I5HgFNg8"
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-53169549df9so880761e0c.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:30:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1750843804; x=1751448604; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZgtCdD+dTJ1ZChVWAVtYLIcVpf/4Njhz6dfOU2XhO5U=;
+        b=I5HgFNg8dm5pHrkob11KOyVt2GilLEbej/ZGGkamxapdz8mA6xSn1LKdVcJQ7L3/Xi
+         kxoXS8tF+zawd4KWHV2geQhxlBOFXAJIuXnizKBiPmfvqyCCTHoCnrFDQXqA85qyvj+r
+         CH/vbZNzKuY+e9Z+4W7l+EsyHqbFWTrPSr86c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750843804; x=1751448604;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZgtCdD+dTJ1ZChVWAVtYLIcVpf/4Njhz6dfOU2XhO5U=;
+        b=LSWlssupQjoiFLm0/58Z6GWirOa5uzcuAW93ValOx77ItNxkVnevnTBy1gpOiONC7q
+         BKS9Znpsz6bL2oFSSudMuVfYnZ3jMB74Zv67rsAcbciHYygLW+Zv9ok4zqB8VKDY847t
+         +/b4q4anNM9dRwfQOKq0X/9xFYmAFZ1zNAR/HEIyDancS8kTusbHkoJ+iZ3hE3OgNBjN
+         UcO4Nv5RP99dFZVUb8aUqpKryTQ3vcLC8hJQ66KVeJwZN5QG2gAWgC5gPlMOe/sJjoxk
+         BYK8AR0hlUl304Hp4w9nhVD3SZF99BZOluV3hQP9T2oeEU7ILXDgFQp0jsi3u8E4j3sh
+         4Hwg==
+X-Forwarded-Encrypted: i=1; AJvYcCVii0Kj9qDY4baaLO+zoHJNfTusSAmO28QoFU7opVfQF22aFBJPF6b5dfUR3tlDnS6aGaTJMr8rtmU5ck8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyZcHcKG8VR1JYqPYrjTsITFPPEXQJXHx35JMHAUHhMx/yC1IHX
+	UkmnSeWhX5Btrp3k0K6RL8yL5mJiCMRBVTH1XgufPEkffVTtj7qgWo5UylqK4jRXZy/2yrnWXCf
+	x2w87bmSdjJedWagkGyFqcTbYRuViKIA4DJ/FjCrB
+X-Gm-Gg: ASbGnctoyCOKrYZ5GIhHE519QSwCBX4BStItNzNDH3XRUxULb44Fguvwo3jryIZuT8X
+	1y5IKcDslaf85X0zQKTPukD/iwRpmOQf2aXfnYYBaXfJln0vsTJQ09JKwHuAc9t7+XZazmBEFp8
+	USuz/37nmJuQv3D2QR43I6b+pOuMaxmDvZYHTc6MzO36xpUCFsc/E1UKo=
+X-Google-Smtp-Source: AGHT+IEHh+8qNXjrE7ZRMJFhl4gbryOZLhoC8UReKGbXzA7o8E/nT/8MoSYE44saX5qyS5H+WspT2U4lS8xCC6EfOvE=
+X-Received: by 2002:a05:6122:421b:b0:531:2906:7525 with SMTP id
+ 71dfb90a1353d-532ef6730fbmr1246458e0c.6.1750843804218; Wed, 25 Jun 2025
+ 02:30:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
- folios during reclamation
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Lance Yang <lance.yang@linux.dev>
-To: David Hildenbrand <david@redhat.com>
-Cc: 21cnbao@gmail.com, akpm@linux-foundation.org,
- baolin.wang@linux.alibaba.com, chrisl@kernel.org, kasong@tencent.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, linux-riscv@lists.infradead.org,
- lorenzo.stoakes@oracle.com, ryan.roberts@arm.com, v-songbaohua@oppo.com,
- x86@kernel.org, ying.huang@intel.com, zhengtangquan@oppo.com,
- Lance Yang <ioworker0@gmail.com>
-References: <a694398c-9f03-4737-81b9-7e49c857fcbe@redhat.com>
- <20250624152654.38145-1-ioworker0@gmail.com>
- <2c19a6cf-0b42-477b-a672-ed8c1edd4267@redhat.com>
- <bf9e4e2b-0c85-437a-880a-8ca6659c74e1@linux.dev>
-In-Reply-To: <bf9e4e2b-0c85-437a-880a-8ca6659c74e1@linux.dev>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20250618144743.843815-1-vikas.gupta@broadcom.com>
+ <20250618144743.843815-5-vikas.gupta@broadcom.com> <4bf20b00-19bd-48f3-9d0c-3c8bde56ec47@linux.dev>
+ <CAHLZf_u2e7Cm8-hkAy-bfcQ6QThwanYAFuRemi-FcNgh+rVprg@mail.gmail.com> <8d7d7d5b-c4f2-4063-81d6-8d17ec729c2c@linux.dev>
+In-Reply-To: <8d7d7d5b-c4f2-4063-81d6-8d17ec729c2c@linux.dev>
+From: Vikas Gupta <vikas.gupta@broadcom.com>
+Date: Wed, 25 Jun 2025 14:59:51 +0530
+X-Gm-Features: Ac12FXyud9WQgS17X3rxjQJce-KvSAuYxRXco1K59ein1Y-iP4T3Exs-DYd5kGY
+Message-ID: <CAHLZf_svEKdeQPpvXrKGt-uKXQ0Zo-d+E3UvGYzH9h6fXudpVA@mail.gmail.com>
+Subject: Re: [net-next, 04/10] bng_en: Add initial interaction with firmware
+To: Vadim Fedorenko <vadim.fedorenko@linux.dev>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	michael.chan@broadcom.com, pavan.chebbi@broadcom.com, 
+	vsrama-krishna.nemani@broadcom.com, 
+	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>, 
+	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
+	boundary="00000000000006f0ef06386217b1"
 
+--00000000000006f0ef06386217b1
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Vadim,
 
-On 2025/6/25 16:44, Lance Yang wrote:
-> 
-> 
-> On 2025/6/24 23:34, David Hildenbrand wrote:
->> On 24.06.25 17:26, Lance Yang wrote:
->>> On 2025/6/24 20:55, David Hildenbrand wrote:
->>>> On 14.02.25 10:30, Barry Song wrote:
->>>>> From: Barry Song <v-songbaohua@oppo.com>
->>> [...]
->>>>> diff --git a/mm/rmap.c b/mm/rmap.c
->>>>> index 89e51a7a9509..8786704bd466 100644
->>>>> --- a/mm/rmap.c
->>>>> +++ b/mm/rmap.c
->>>>> @@ -1781,6 +1781,25 @@ void folio_remove_rmap_pud(struct folio *folio,
->>>>> struct page *page,
->>>>>    #endif
->>>>>    }
->>>>> +/* We support batch unmapping of PTEs for lazyfree large folios */
->>>>> +static inline bool can_batch_unmap_folio_ptes(unsigned long addr,
->>>>> +            struct folio *folio, pte_t *ptep)
->>>>> +{
->>>>> +    const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->>>>> +    int max_nr = folio_nr_pages(folio);
->>>>
->>>> Let's assume we have the first page of a folio mapped at the last page
->>>> table entry in our page table.
->>>
->>> Good point. I'm curious if it is something we've seen in practice ;)
->>
->> I challenge you to write a reproducer :P I assume it might be doable 
->> through simple mremap().
-> 
-> Yes! The scenario is indeed reproducible from userspace ;p
-> 
-> First, I get a 64KB folio by allocating a large anonymous mapping and
-> advising the kernel with madvise(MADV_HUGEPAGE). After faulting in the
-> pages, /proc/self/pagemap confirms the PFNs are contiguous.
-> 
-> Then, the key is to use mremap() with MREMAP_FIXED to move the folio to
-> a virtual address that crosses a PMD boundary. Doing so ensures the
-> physically contiguous folio is mapped by PTEs from two different page
-> tables.
+> >>> +     req->year = cpu_to_le16(1900 + tm.tm_year);
+> >>> +     req->month = 1 + tm.tm_mon;
+> >>> +     req->day = tm.tm_mday;
+> >>> +     req->hour = tm.tm_hour;
+> >>> +     req->minute = tm.tm_min;
+> >>> +     req->second = tm.tm_sec;
+> >>> +     return hwrm_req_send(bd, req);
+> >>> +}
+> >>
+> >> This whole function looks like copy-paste from bnxt, did you consider
+> >> merging these parts?
+> >
+> > Both the bnxt and bnge drivers follow the same protocol to send the
+> > requests to  the firmware,
+> > so some functions may appear similar. However, we do not plan to share
+> > the code, as certain
+> >   fundamental data structures will differ.
+>
+> But at the same time some data structures are completely the same. Why
+> do you think code duplication will work better on long run?
 
-Forgot to add:
+In the long run, maintaining this driver for future hardware is more practical
+for us than integrating code into the BNXT driver.
+Nevertheless, we are making a concerted effort to minimize duplication
+wherever feasible.
+So currently, we share the HSI (bnxt_hsi.h) as the driver to firmware
+protocol remains largely unchanged.
+While data structures are currently identical, but not all, we
+recognize this is due to the fundamental
+architectural similarities between the new and previous chip generations.
+Newer chip features will definitely change the data structures and
+related implementations.
 
-The mTHP split counters didn't change during the mremap, which confirms
-the large folio was only remapped, not split.
+Does this clarify your concern?
 
 Thanks,
-Lance
+Vikas
 
-> 
-> The C reproducer is attached. It was tested on a system with 64KB mTHP
-> enabled (in madvise mode). Please correct me if I'm wrong ;)
-> 
-> 
-> ```
-> #define _GNU_SOURCE
-> #include <stdio.h>
-> #include <stdlib.h>
-> #include <string.h>
-> #include <stdint.h>
-> #include <unistd.h>
-> #include <fcntl.h>
-> #include <errno.h>
-> #include <sys/mman.h>
-> #include <stdbool.h>
-> 
-> #define PAGE_SIZE ((size_t)sysconf(_SC_PAGESIZE))
-> #define FOLIO_SIZE (64 * 1024)
-> #define NUM_PAGES_IN_FOLIO (FOLIO_SIZE / PAGE_SIZE)
-> #define PMD_SIZE (2 * 1024 * 1024)
-> 
-> int get_pagemap_entry(uint64_t *entry, int pagemap_fd, uintptr_t vaddr) {
->      size_t offset = (vaddr / PAGE_SIZE) * sizeof(uint64_t);
->      if (pread(pagemap_fd, entry, sizeof(uint64_t), offset) != 
-> sizeof(uint64_t)) {
->          perror("pread pagemap");
->          return -1;
->      }
->      return 0;
-> }
-> 
-> int is_page_present(uint64_t entry) { return (entry >> 63) & 1; }
-> uint64_t get_pfn(uint64_t entry) { return entry & ((1ULL << 55) - 1); }
-> 
-> bool verify_contiguity(int pagemap_fd, uintptr_t vaddr, size_t size, 
-> const char *label) {
->      printf("\n--- Verifying Contiguity for: %s at 0x%lx ---\n", label, 
-> vaddr);
->      printf("Page |      Virtual Address      | Present |   PFN 
-> (Physical)   | Contiguous?\n");
-> 
-> printf("-----+---------------------------+---------+-------------------- 
-> +-------------\n");
-> 
->      uint64_t first_pfn = 0;
->      bool is_contiguous = true;
->      int num_pages = size / PAGE_SIZE;
-> 
->      for (int i = 0; i < num_pages; ++i) {
->          uintptr_t current_vaddr = vaddr + i * PAGE_SIZE;
->          uint64_t pagemap_entry;
-> 
->          if (get_pagemap_entry(&pagemap_entry, pagemap_fd, 
-> current_vaddr) != 0) {
->              is_contiguous = false;
->              break;
->          }
-> 
->          if (!is_page_present(pagemap_entry)) {
->              printf(" %2d  | 0x%016lx |    No   |        N/A         | 
-> Error\n", i, current_vaddr);
->              is_contiguous = false;
->              continue;
->          }
-> 
->          uint64_t pfn = get_pfn(pagemap_entry);
->          char contiguous_str[4] = "Yes";
-> 
->          if (i == 0) {
->              first_pfn = pfn;
->          } else {
->              if (pfn != first_pfn + i) {
->                  strcpy(contiguous_str, "No!");
->                  is_contiguous = false;
->              }
->          }
-> 
->          printf(" %2d  | 0x%016lx |   Yes   | 0x%-16lx |     %s\n", i, 
-> current_vaddr, pfn, contiguous_str);
->      }
-> 
->      if (is_contiguous) {
->          printf("Verification PASSED: PFNs are contiguous for %s.\n", 
-> label);
->      } else {
->          printf("Verification FAILED: PFNs are NOT contiguous for %s. 
-> \n", label);
->      }
->      return is_contiguous;
-> }
-> 
-> 
-> int main(void) {
->      printf("--- Folio-across-PMD-boundary reproducer ---\n");
->      printf("Page size: %zu KB, Folio size: %zu KB, PMD coverage: %zu 
-> MB\n",
->             PAGE_SIZE / 1024, FOLIO_SIZE / 1024, PMD_SIZE / (1024 * 1024));
-> 
->      size_t source_size = 4 * 1024 * 1024;
->      void *source_addr = mmap(NULL, source_size, PROT_READ | PROT_WRITE,
->                               MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
->      if (source_addr == MAP_FAILED) {
->          perror("mmap source"); exit(EXIT_FAILURE);
->      }
->      printf("\n1. Source memory mapped at: %p\n", source_addr);
-> 
->      if (madvise(source_addr, source_size, MADV_HUGEPAGE) != 0) {
->          perror("madvise MADV_HUGEPAGE");
->      }
->      printf("2. Advised kernel to use large folios (MADV_HUGEPAGE).\n");
-> 
->      memset(source_addr, 'A', source_size);
->      printf("3. Faulted in source pages.\n");
-> 
->      int pagemap_fd = open("/proc/self/pagemap", O_RDONLY);
->      if (pagemap_fd < 0) {
->          perror("open /proc/self/pagemap");
->          exit(EXIT_FAILURE);
->      }
-> 
->      if (!verify_contiguity(pagemap_fd, (uintptr_t)source_addr, 
-> FOLIO_SIZE, "Source Address (pre-mremap)")) {
->          fprintf(stderr, "\nInitial folio allocation failed. Cannot 
-> proceed.\n");
->          close(pagemap_fd);
->          munmap(source_addr, source_size);
->          exit(EXIT_FAILURE);
->      }
-> 
->      uintptr_t search_base = 0x10000000000UL;
->      uintptr_t pmd_boundary = (search_base + PMD_SIZE) & ~(PMD_SIZE - 1);
->      uintptr_t target_vaddr = pmd_boundary - PAGE_SIZE;
->      printf("\n5. Calculated target address to be 0x%lx\n", target_vaddr);
-> 
->      munmap((void *)target_vaddr, FOLIO_SIZE);
->      void *new_addr = mremap(source_addr, FOLIO_SIZE, FOLIO_SIZE, 
-> MREMAP_MAYMOVE | MREMAP_FIXED, (void *)target_vaddr);
->      if (new_addr == MAP_FAILED) {
->          perror("mremap");
->          close(pagemap_fd);
->          exit(EXIT_FAILURE);
->      }
->      printf("6. Successfully mremap'd %zu KB to 0x%lx.\n", FOLIO_SIZE / 
-> 1024, (uintptr_t)new_addr);
-> 
->      bool final_success = verify_contiguity(pagemap_fd, 
-> (uintptr_t)new_addr, FOLIO_SIZE, "Target Address (post-mremap)");
-> 
->      printf("\n--- Final Conclusion ---\n");
->      if (final_success) {
->          printf("✅ SUCCESS: The folio's pages remained physically 
-> contiguous after remapping to a PMD-crossing virtual address.\n");
->          printf("   The reproducer successfully created the desired 
-> edge-case memory layout.\n");
->      } else {
->          printf("❌ UNEXPECTED FAILURE: The pages were not contiguous 
-> after mremap.\n");
->      }
-> 
->      close(pagemap_fd);
->      munmap(new_addr, FOLIO_SIZE);
-> 
->      return 0;
-> }
-> ```
-> 
-> $ a.out
-> 
-> ```
-> --- Folio-across-PMD-boundary reproducer ---
-> Page size: 4 KB, Folio size: 64 KB, PMD coverage: 2 MB
-> 
-> 1. Source memory mapped at: 0x7f2e41200000
-> 2. Advised kernel to use large folios (MADV_HUGEPAGE).
-> 3. Faulted in source pages.
-> 
-> --- Verifying Contiguity for: Source Address (pre-mremap) at 
-> 0x7f2e41200000 ---
-> Page |      Virtual Address      | Present |   PFN (Physical)   | 
-> Contiguous?
-> -----+---------------------------+---------+-------------------- 
-> +-------------
->    0  | 0x00007f2e41200000 |   Yes   | 0x113aa0           |     Yes
->    1  | 0x00007f2e41201000 |   Yes   | 0x113aa1           |     Yes
->    2  | 0x00007f2e41202000 |   Yes   | 0x113aa2           |     Yes
->    3  | 0x00007f2e41203000 |   Yes   | 0x113aa3           |     Yes
->    4  | 0x00007f2e41204000 |   Yes   | 0x113aa4           |     Yes
->    5  | 0x00007f2e41205000 |   Yes   | 0x113aa5           |     Yes
->    6  | 0x00007f2e41206000 |   Yes   | 0x113aa6           |     Yes
->    7  | 0x00007f2e41207000 |   Yes   | 0x113aa7           |     Yes
->    8  | 0x00007f2e41208000 |   Yes   | 0x113aa8           |     Yes
->    9  | 0x00007f2e41209000 |   Yes   | 0x113aa9           |     Yes
->   10  | 0x00007f2e4120a000 |   Yes   | 0x113aaa           |     Yes
->   11  | 0x00007f2e4120b000 |   Yes   | 0x113aab           |     Yes
->   12  | 0x00007f2e4120c000 |   Yes   | 0x113aac           |     Yes
->   13  | 0x00007f2e4120d000 |   Yes   | 0x113aad           |     Yes
->   14  | 0x00007f2e4120e000 |   Yes   | 0x113aae           |     Yes
->   15  | 0x00007f2e4120f000 |   Yes   | 0x113aaf           |     Yes
-> Verification PASSED: PFNs are contiguous for Source Address (pre-mremap).
-> 
-> 5. Calculated target address to be 0x100001ff000
-> 6. Successfully mremap'd 64 KB to 0x100001ff000.
-> 
-> --- Verifying Contiguity for: Target Address (post-mremap) at 
-> 0x100001ff000 ---
-> Page |      Virtual Address      | Present |   PFN (Physical)   | 
-> Contiguous?
-> -----+---------------------------+---------+-------------------- 
-> +-------------
->    0  | 0x00000100001ff000 |   Yes   | 0x113aa0           |     Yes
->    1  | 0x0000010000200000 |   Yes   | 0x113aa1           |     Yes
->    2  | 0x0000010000201000 |   Yes   | 0x113aa2           |     Yes
->    3  | 0x0000010000202000 |   Yes   | 0x113aa3           |     Yes
->    4  | 0x0000010000203000 |   Yes   | 0x113aa4           |     Yes
->    5  | 0x0000010000204000 |   Yes   | 0x113aa5           |     Yes
->    6  | 0x0000010000205000 |   Yes   | 0x113aa6           |     Yes
->    7  | 0x0000010000206000 |   Yes   | 0x113aa7           |     Yes
->    8  | 0x0000010000207000 |   Yes   | 0x113aa8           |     Yes
->    9  | 0x0000010000208000 |   Yes   | 0x113aa9           |     Yes
->   10  | 0x0000010000209000 |   Yes   | 0x113aaa           |     Yes
->   11  | 0x000001000020a000 |   Yes   | 0x113aab           |     Yes
->   12  | 0x000001000020b000 |   Yes   | 0x113aac           |     Yes
->   13  | 0x000001000020c000 |   Yes   | 0x113aad           |     Yes
->   14  | 0x000001000020d000 |   Yes   | 0x113aae           |     Yes
->   15  | 0x000001000020e000 |   Yes   | 0x113aaf           |     Yes
-> Verification PASSED: PFNs are contiguous for Target Address (post-mremap).
-> 
-> --- Final Conclusion ---
-> ✅ SUCCESS: The folio's pages remained physically contiguous after 
-> remapping to a PMD-crossing virtual address.
->     The reproducer successfully created the desired edge-case memory 
-> layout.
-> ```
-> Thanks,
-> Lance
-> 
->>
->>>
->>>>
->>>> What prevents folio_pte_batch() from reading outside the page table?
->>>
->>> Assuming such a scenario is possible, to prevent any chance of an
->>> out-of-bounds read, how about this change:
->>>
->>> diff --git a/mm/rmap.c b/mm/rmap.c
->>> index fb63d9256f09..9aeae811a38b 100644
->>> --- a/mm/rmap.c
->>> +++ b/mm/rmap.c
->>> @@ -1852,6 +1852,25 @@ static inline bool 
->>> can_batch_unmap_folio_ptes(unsigned long addr,
->>>       const fpb_t fpb_flags = FPB_IGNORE_DIRTY | FPB_IGNORE_SOFT_DIRTY;
->>>       int max_nr = folio_nr_pages(folio);
->>>       pte_t pte = ptep_get(ptep);
->>> +    unsigned long end_addr;
->>> +
->>> +    /*
->>> +     * To batch unmap, the entire folio's PTEs must be contiguous
->>> +     * and mapped within the same PTE page table, which corresponds to
->>> +     * a single PMD entry. Before calling folio_pte_batch(), which does
->>> +     * not perform boundary checks itself, we must verify that the
->>> +     * address range covered by the folio does not cross a PMD 
->>> boundary.
->>> +     */
->>> +    end_addr = addr + (max_nr * PAGE_SIZE) - 1;
->>> +
->>> +    /*
->>> +     * A fast way to check for a PMD boundary cross is to align both
->>> +     * the start and end addresses to the PMD boundary and see if they
->>> +     * are different. If they are, the range spans across at least two
->>> +     * different PMD-managed regions.
->>> +     */
->>> +    if ((addr & PMD_MASK) != (end_addr & PMD_MASK))
->>> +        return false;
->>
->> You should not be messing with max_nr = folio_nr_pages(folio) here at 
->> all. folio_pte_batch() takes care of that.
->>
->> Also, way too many comments ;)
->>
->> You may only batch within a single VMA and within a single page table.
->>
->> So simply align the addr up to the next PMD, and make sure it does not 
->> exceed the vma end.
->>
->> ALIGN and friends can help avoiding excessive comments.
->>
-> 
+--00000000000006f0ef06386217b1
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
 
+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
+1Z53HzleM75CAMHDl8NYGve9BgWmJRrMksHjn8TcXwOoXQ4QkkBXnMc3Gl+XSbAXXNw1oU96EW5r
+k0vJWVnbznBdI0eiFVP+mokagWcF65WhrJr1gzlBAgMBAAGjggHZMIIB1TAOBgNVHQ8BAf8EBAMC
+BaAwgaMGCCsGAQUFBwEBBIGWMIGTME4GCCsGAQUFBzAChkJodHRwOi8vc2VjdXJlLmdsb2JhbHNp
+Z24uY29tL2NhY2VydC9nc2djY3IzcGVyc29uYWxzaWduMmNhMjAyMC5jcnQwQQYIKwYBBQUHMAGG
+NWh0dHA6Ly9vY3NwLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwME0G
+A1UdIARGMEQwQgYKKwYBBAGgMgEoCjA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5nbG9iYWxz
+aWduLmNvbS9yZXBvc2l0b3J5LzAJBgNVHRMEAjAAMEkGA1UdHwRCMEAwPqA8oDqGOGh0dHA6Ly9j
+cmwuZ2xvYmFsc2lnbi5jb20vZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3JsMCMGA1UdEQQc
+MBqBGHZpa2FzLmd1cHRhQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggrBgEFBQcDBDAfBgNVHSME
+GDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUQUO4R8Bg/yLjD8B1Jr9JLitNMlIw
+DQYJKoZIhvcNAQELBQADggEBACj8NkM/SQOdFy4b+Kn9Q/IE8KHCkf/qubyurG45FhIIv8eUflaW
+ZkYiC3z+qo7iXxFvNJ4irfvMtG+idVVrOEFa56FKvixdXk2mlzsojV7lNPlVtn8X2mry47rVMq0G
+AQPU6HuihzH/SrKdypyxv+4QqSGpLs587FN3ydGrrw8J96rBt0qqzFMt65etOx73KyU/LylBqQ+6
+oCSF3t69LpmLmIwRkXxtqIrB7m9OjROeMnXWS9+b5krW8rnUbgqiJVvWldgtno3kiKdEwnOwVjY+
+gZdPq7+WE2Otw7O0i1ReJKwnmWksFwr/sT4LYfFlJwA0LlYRHmhR+lhz9jj0iXkxggJgMIICXAIB
+ATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMTEwLwYDVQQDEyhH
+bG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwMFhgQqM5emFpsS5wwDQYJ
+YIZIAWUDBAIBBQCggccwLwYJKoZIhvcNAQkEMSIEIBx6/N0X+TYx1OoFaV7I3CJjB/C48c75sBU3
+8s1kfNdyMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcNAQkFMQ8XDTI1MDYyNTA5
+MzAwNFowXAYJKoZIhvcNAQkPMU8wTTALBglghkgBZQMEASowCwYJYIZIAWUDBAEWMAsGCWCGSAFl
+AwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQcwCwYJYIZIAWUDBAIBMA0GCSqGSIb3DQEBAQUA
+BIIBAHAAbhk3bWjqcHyFUYShkU0pXoiOB7W4A5XPgdITozXD70XWJqpgywcziSf5/t+mrZgzBNHj
+7qJ10aZ+K6j2G1EODCzH+dXevz8zsafTBeIYafKHJlc3E1BUxjQonEqBowebW2/IY+BzfHijWI1W
+K/WSuePzPmS5gNqPv8W4/bG4/uKtIvDfy5osADIsUwulHaPHQbJKUrJ4LQQk8XS2THpZCACBR2Jp
+VCpz558nI9pnrNxU5LEjKnLrSrc+RpQXQDCDFzN44ywwI9prqS/NFQ1pG0BwA5O5x1xJKkwJHpz8
+JP1fhqiMQ1tkXsmRyBayTd1Xo0TOcrBKKrqCVW+fbYo=
+--00000000000006f0ef06386217b1--
