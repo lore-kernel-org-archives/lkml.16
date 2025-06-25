@@ -1,201 +1,235 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2B71FE474
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9243C26C3BF
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841277; cv=none; b=W8aI3h2SqwamRlmWjMdkwxixs7u7Cak7V9Io8baxOPMi3munIo3F1lDI7AEB0uuaSfLX8V2LQdlcKDhiPrwC6Ne/5wzJg57c3Jh1JfzK2WPqyYT8CFQT4NhlnpoGVEhUT9fAO0rI1Nd57+90JfjvTw144FOvUkeZCIvXNG8oIHU=
+	t=1750841302; cv=none; b=m7ATm7DG95kGIG20k7jt43+xjBRj2Q3IDSVKAjJwyDydLzsFBk4O+CU7dm0gRl3mXaw4M2V8zZFXpzn8Gwm1ZH85TiUUobV8vFAlu7M7U7mSno2WG17PBCZJjD1MWFcRoCZs+S9v7C30eCxu1PKx9p5+mieViRD7zUKWj1Xa5EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841277; c=relaxed/simple;
-	bh=+75bRSx55q7a3q51KmTmkCkt4z6ob3kNXIU1Sj5jtEU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nCoZFnmnfxpYNHj0u72NQ32DIubShSAigm427D9M0yQD8AuLAs80mKmSpZZKZKzH8S5rZKRtgtkJm/U7TKn/rM63WJy0QamPTd2o2WXpu8NY2o4u1RhiTLItgs7tNW8LToYRWxXsR3V1DgqGFfiZs1azxRTqtqwZUyy9pjn5GGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=K9OxsoaZ; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750841302; c=relaxed/simple;
+	bh=8CxCRl0Lj4fz10PG0ihHzNx5FOrMIdCEzi0JMM7ABYU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HY+/dZ6QC+9Fc03K3kzk+l2E8LGF7MXuYpnuQv/TFdaq3LVulb/AyE24q0mS3QF/C19uchZHhVYmWKsFmr7hAbQ15X2irn3IvTjZr+ACb1/gKtn87/kx/7/QEKIH/q04dqTEzVR3LCUu3EqByYMob+pAfDSpkF6q1qvQo+nU1uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kSpzmy7H; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K9OxsoaZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750841275;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=1xd9WPpFgl5LHUWhMgoti0ghzp6p9niA9oyQicHDlpo=;
-	b=K9OxsoaZNyxVvUpdt/wBxAkx74fR3EHXZxNM0U7sfQXIRuqbdTZFLUDu8093GqoLptMgi4
-	R1+uynDLAxggkHhmXEBQ0BwmhitsGiQWKs3o6vZx+ZhUKkQADVbShwDOtF6qcS0O+jWOPE
-	mQHu8CJivbsO1Zekjh6NcsyKlOdAidA=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-569-q9FpU3ZwOpWlQhiSF6M9Nw-1; Wed, 25 Jun 2025 04:47:54 -0400
-X-MC-Unique: q9FpU3ZwOpWlQhiSF6M9Nw-1
-X-Mimecast-MFC-AGG-ID: q9FpU3ZwOpWlQhiSF6M9Nw_1750841273
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4535ee06160so44271485e9.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:47:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750841273; x=1751446073;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=1xd9WPpFgl5LHUWhMgoti0ghzp6p9niA9oyQicHDlpo=;
-        b=M5LdA9GpCqrVoBSbt8w3ySEebrjAj6gCRpy+4oq1vvstT5/F70UfhmtP/zE9p7EJuJ
-         C4aiQz9Z8up+pDm3atOv/PWoWcu21h3X8Xp9gf+B9L37bkvcZ/i3Ot/MyAGgj2DF5qQD
-         cDEtxqRrN2LZnvCyFntRFPQg4t1eJr6qbP9BmFPjj7Y5IuyMa77nojlIedB6xBKycVp4
-         jP58bkv7t9JwPCws7bC0TJbOVM/FQ4AjITVBWjjTN4QHKz2BfqCBYB89uRSzUFaRTdxj
-         jWGDGAG/BEJpbA/97bt/iPv5PaTHno/H87YQE23Iqd2EGQy/fJhfaK+pXTcI7uEl2U6Y
-         77Vg==
-X-Gm-Message-State: AOJu0YyCs1RbHYI9TM7bc0LCtYXqTzE47rsT0Or1ZkxRvIL/0aWPhzrX
-	igICDGT1ZToacQtKvKbXz7NKOHnOfA44txADLQhnECauUGbSg4GTTz/Ki+sCzkjxb0Id1BpDUIe
-	Wc+SvO4PSy3LtBN6ix1VOxRaQNeLsLG5aKeaMUE8+sPrQzE4jPNXx76Fj1/1Hl6n4AJ32f+E72D
-	iMSRgTHnGDFglpC45DTn2bFK5MyD/x56Oipy419YD38BCwPg==
-X-Gm-Gg: ASbGncuwbebqkdlMWox6fgwrlM9bj3VONIF1M4pr98jOjlZ+tsfT+WlZoSDUzjODpkF
-	vJWv8sU27W+i/ZA7nSssRKRBDkaHbxVCQJU/qK3qi844g+zgiBmGRTeKS8/+U1wy005vvgsOCV0
-	SwdjjFOa950MnOlkpnm8qpTtwkmWjqwGmIrPHpNdxr0IW7PhK/GRgepKwrbxqYYf3JwLN1YWqvH
-	sFMKLSNCP5EJrKa2ZpVrA9AVc7FwwvOK0iDsFvK6HRpSjcF6HY0F1YPjvx49yQ933RU3Lln3KGf
-	uEWnH3beeU2hGtdPeMZI2KHXK5c76WLohtbI1qZKkzHOLkZ8YQFZVRSTidK2SWXipRuNK3bu5eQ
-	y/E5dmEDA/H3dJNbKumimV8RybJ8/tt7uTqMfihoi6jlw
-X-Received: by 2002:a05:600c:154e:b0:44a:b478:1387 with SMTP id 5b1f17b1804b1-45381ae3576mr22314255e9.17.1750841272842;
-        Wed, 25 Jun 2025 01:47:52 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFAYS0X8N7xEFzwTzklctg8lKH7oKBXzgFBqyrisxcav/ySIelpP/IwsIPf2LcVX8aOeVVltQ==
-X-Received: by 2002:a05:600c:154e:b0:44a:b478:1387 with SMTP id 5b1f17b1804b1-45381ae3576mr22313605e9.17.1750841272285;
-        Wed, 25 Jun 2025 01:47:52 -0700 (PDT)
-Received: from ?IPV6:2003:d8:2f12:1b00:5d6b:db26:e2b7:12? (p200300d82f121b005d6bdb26e2b70012.dip0.t-ipconnect.de. [2003:d8:2f12:1b00:5d6b:db26:e2b7:12])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453823b913esm12703805e9.33.2025.06.25.01.47.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 01:47:51 -0700 (PDT)
-Message-ID: <5f4c0a45-f219-4d95-b5d7-b4ca1bc9540b@redhat.com>
-Date: Wed, 25 Jun 2025 10:47:49 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kSpzmy7H"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750841301; x=1782377301;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8CxCRl0Lj4fz10PG0ihHzNx5FOrMIdCEzi0JMM7ABYU=;
+  b=kSpzmy7HQqSGgK3cpLdBAuotHO+jwyJDWpfPL1KMM1OMpSQ9KV1T8NGq
+   +UrzUT/NC6dLqPhTlWXR2SDmu+f6iEdx8teSTVAxGyGp5EpkyvJAy4l9+
+   fnmZ6yXxhJWWbEBTD92iRLZorq3H8+kg+2a/nm+PSYjGFLsxetfKqtVoA
+   dxR0p/N0oF8XuGXmlndfkH0lTaiBLPa0CXyuO/NW32Ao8BTuoRWqloLUU
+   WAPMobFa88wvGEP5c/h4+0T+H8Khn1asPIj6EQvftreFGNgBQQtMFnQIb
+   wye+kJ17KodxppZrI9XquKjWKE6IlGBx2ns3AJEX1qwhjClcSymHGE+W7
+   w==;
+X-CSE-ConnectionGUID: nyIxYoLsTIysqjwcV2gaCg==
+X-CSE-MsgGUID: HZHKDfJsSW6OI4hnTydNKw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="70674664"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="70674664"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 01:48:20 -0700
+X-CSE-ConnectionGUID: 0liW6ewcRDywxXsmdIrHnw==
+X-CSE-MsgGUID: Qy7hfrfOSu+xQ0N04iDCgQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="156557524"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
+  by orviesa003.jf.intel.com with ESMTP; 25 Jun 2025 01:48:17 -0700
+Date: Wed, 25 Jun 2025 16:40:40 +0800
+From: Xu Yilun <yilun.xu@linux.intel.com>
+To: "Aneesh Kumar K.V" <aneesh.kumar@kernel.org>
+Cc: jgg@nvidia.com, jgg@ziepe.ca, kevin.tian@intel.com, will@kernel.org,
+	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+	joro@8bytes.org, robin.murphy@arm.com, shuah@kernel.org,
+	nicolinc@nvidia.com, aik@amd.com, dan.j.williams@intel.com,
+	baolu.lu@linux.intel.com, yilun.xu@intel.com
+Subject: Re: [PATCH v2 1/4] iommufd: Add iommufd_object_tombstone_user()
+ helper
+Message-ID: <aFu2CKWt+IazDiiz@yilunxu-OptiPlex-7050>
+References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
+ <20250623094946.1714996-2-yilun.xu@linux.intel.com>
+ <yq5a4iw45pyk.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 11/14] mm: remove "horrible special case to handle
- copy-on-write behaviour"
-To: linux-kernel@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
- nvdimm@lists.linux.dev, Andrew Morton <akpm@linux-foundation.org>,
- Juergen Gross <jgross@suse.com>, Stefano Stabellini
- <sstabellini@kernel.org>,
- Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
- Dan Williams <dan.j.williams@intel.com>, Alistair Popple
- <apopple@nvidia.com>, Matthew Wilcox <willy@infradead.org>,
- Jan Kara <jack@suse.cz>, Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
- Baolin Wang <baolin.wang@linux.alibaba.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- "Liam R. Howlett" <Liam.Howlett@oracle.com>, Nico Pache <npache@redhat.com>,
- Ryan Roberts <ryan.roberts@arm.com>, Dev Jain <dev.jain@arm.com>,
- Barry Song <baohua@kernel.org>, Vlastimil Babka <vbabka@suse.cz>,
- Mike Rapoport <rppt@kernel.org>, Suren Baghdasaryan <surenb@google.com>,
- Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
- Pedro Falcato <pfalcato@suse.de>
-References: <20250617154345.2494405-1-david@redhat.com>
- <20250617154345.2494405-12-david@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250617154345.2494405-12-david@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <yq5a4iw45pyk.fsf@kernel.org>
 
-On 17.06.25 17:43, David Hildenbrand wrote:
-> Let's make the kernel a bit less horrible, by removing the
-> linearity requirement in CoW PFNMAP mappings with
-> !CONFIG_ARCH_HAS_PTE_SPECIAL. In particular, stop messing with
-> vma->vm_pgoff in weird ways.
+On Wed, Jun 25, 2025 at 11:21:15AM +0530, Aneesh Kumar K.V wrote:
+> Xu Yilun <yilun.xu@linux.intel.com> writes:
 > 
-> Simply lookup in applicable (i.e., CoW PFNMAP) mappings whether we
-> have an anon folio.
+> > Add the iommufd_object_tombstone_user() helper, which allows the caller
+> > to destroy an iommufd object created by userspace.
+> >
+> > This is useful on some destroy paths when the kernel caller finds the
+> > object should have been removed by userspace but is still alive. With
+> > this helper, the caller destroys the object but leave the object ID
+> > reserved (so called tombstone). The tombstone prevents repurposing the
+> > object ID without awareness from the original user.
+> >
+> > Since this happens for abnomal userspace behavior, for simplicity, the
+> > tombstoned object ID would be permanently leaked until
+> > iommufd_fops_release(). I.e. the original user gets an error when
+> > calling ioctl(IOMMU_DESTROY) on that ID.
+> >
+> > The first use case would be to ensure the iommufd_vdevice can't outlive
+> > the associated iommufd_device.
+> >
+> > Suggested-by: Jason Gunthorpe <jgg@nvidia.com>
+> > Signed-off-by: Xu Yilun <yilun.xu@linux.intel.com>
+> > ---
+> >  drivers/iommu/iommufd/iommufd_private.h | 23 +++++++++++++++++-
+> >  drivers/iommu/iommufd/main.c            | 31 ++++++++++++++++++-------
+> >  2 files changed, 45 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/iommu/iommufd/iommufd_private.h b/drivers/iommu/iommufd/iommufd_private.h
+> > index 9ccc83341f32..fbc9ef78d81f 100644
+> > --- a/drivers/iommu/iommufd/iommufd_private.h
+> > +++ b/drivers/iommu/iommufd/iommufd_private.h
+> > @@ -187,7 +187,8 @@ void iommufd_object_finalize(struct iommufd_ctx *ictx,
+> >  			     struct iommufd_object *obj);
+> >  
+> >  enum {
+> > -	REMOVE_WAIT_SHORTTERM = 1,
+> > +	REMOVE_WAIT_SHORTTERM	= BIT(0),
+> > +	REMOVE_OBJ_TOMBSTONE	= BIT(1),
+> >  };
+> >  int iommufd_object_remove(struct iommufd_ctx *ictx,
+> >  			  struct iommufd_object *to_destroy, u32 id,
+> > @@ -213,6 +214,26 @@ static inline void iommufd_object_destroy_user(struct iommufd_ctx *ictx,
+> >  	WARN_ON(ret);
+> >  }
+> >  
+> > +/*
+> > + * Similar to iommufd_object_destroy_user(), except that the object ID is left
+> > + * reserved/tombstoned.
+> > + */
+> > +static inline void iommufd_object_tombstone_user(struct iommufd_ctx *ictx,
+> > +						 struct iommufd_object *obj)
+> > +{
+> > +	int ret;
+> > +
+> > +	ret = iommufd_object_remove(ictx, obj, obj->id,
+> > +				    REMOVE_WAIT_SHORTTERM | REMOVE_OBJ_TOMBSTONE);
+> > +
+> > +	/*
+> > +	 * If there is a bug and we couldn't destroy the object then we did put
+> > +	 * back the caller's users refcount and will eventually try to free it
+> > +	 * again during close.
+> > +	 */
+> > +	WARN_ON(ret);
+> > +}
+> > +
+> >  /*
+> >   * The HWPT allocated by autodomains is used in possibly many devices and
+> >   * is automatically destroyed when its refcount reaches zero.
+> > diff --git a/drivers/iommu/iommufd/main.c b/drivers/iommu/iommufd/main.c
+> > index 3df468f64e7d..5fd75aba068b 100644
+> > --- a/drivers/iommu/iommufd/main.c
+> > +++ b/drivers/iommu/iommufd/main.c
+> > @@ -167,7 +167,7 @@ int iommufd_object_remove(struct iommufd_ctx *ictx,
+> >  		goto err_xa;
+> >  	}
+> >  
+> > -	xas_store(&xas, NULL);
+> > +	xas_store(&xas, (flags & REMOVE_OBJ_TOMBSTONE) ? XA_ZERO_ENTRY : NULL);
+> >  	if (ictx->vfio_ioas == container_of(obj, struct iommufd_ioas, obj))
+> >  		ictx->vfio_ioas = NULL;
+> >  	xa_unlock(&ictx->objects);
+> > @@ -238,6 +238,7 @@ static int iommufd_fops_release(struct inode *inode, struct file *filp)
+> >  	struct iommufd_ctx *ictx = filp->private_data;
+> >  	struct iommufd_sw_msi_map *next;
+> >  	struct iommufd_sw_msi_map *cur;
+> > +	XA_STATE(xas, &ictx->objects, 0);
+> >  	struct iommufd_object *obj;
+> >  
+> >  	/*
+> > @@ -251,16 +252,30 @@ static int iommufd_fops_release(struct inode *inode, struct file *filp)
+> >  	 */
+> >  	while (!xa_empty(&ictx->objects)) {
+> >  		unsigned int destroyed = 0;
+> > -		unsigned long index;
+> >  
+> > -		xa_for_each(&ictx->objects, index, obj) {
+> > -			if (!refcount_dec_if_one(&obj->users))
+> > -				continue;
+> > +		xas_set(&xas, 0);
+> > +		for (;;) {
+> > +			rcu_read_lock();
+> > +			obj = xas_find(&xas, ULONG_MAX);
+> > +			rcu_read_unlock();
+> >
 > 
-> Nobody should ever try mapping anon folios using PFNs, that just screams
-> for other possible issues. To be sure, let's sanity-check when inserting
-> PFNs. Are they really required? Probably not, but it's a good safety net
-> at least for now.
+> What is the need for the rcu_read_lock()? 
+
+To surpress rcu warning in xas_find().
+
 > 
-> The runtime overhead should be limited: there is nothing to do for !CoW
-> mappings (common case), and archs that care about performance
-> (i.e., GUP-fast) should be supporting CONFIG_ARCH_HAS_PTE_SPECIAL
-> either way.
+> > +
+> > +			if (!obj)
+> > +				break;
+> > +
+> > +			if (!xa_is_zero(obj)) {
+> > +				if (!refcount_dec_if_one(&obj->users))
+> > +					continue;
+> > +
+> > +				iommufd_object_ops[obj->type].destroy(obj);
+> > +				kfree(obj);
+> > +			}
+> > +
+> >  			destroyed++;
+> > -			xa_erase(&ictx->objects, index);
+> > -			iommufd_object_ops[obj->type].destroy(obj);
+> > -			kfree(obj);
+> > +			xas_lock(&xas);
+> > +			xas_store(&xas, NULL);
+> > +			xas_unlock(&xas);
 > 
-> Likely the sanity checks added in mm/huge_memory.c are not required for
-> now, because that code is probably only wired up with
-> CONFIG_ARCH_HAS_PTE_SPECIAL, but this way is certainly cleaner and
-> more consistent -- and doesn't really cost us anything in the cases we
-> really care about.
+> is that xas_lock needed?. we can't run a xarray update parallel to this
+> because neither iommufd ioctl not vfio cdev unbind can happen in parallel.
+
+That's true, but also to surpress warning in xas_store().
+
 > 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
+> I have this as an additonal comment added to the function in my change.
+> 
+> /*
+>  * We don't need additional locks because the iommufd_fops_release() function is
+>  * only triggered when the iommufd descriptor is released. At that point, no
+>  * other iommufd-based ioctl operations can be running concurrently.
+>  *
+>  * The destruction of the vdevice via idevice unbind is also safe:
+>  * iommufd_fops_release() can only be called after the idevice has been unbound.
+>  * The idevice bind operation takes a reference to the iommufd descriptor,
+>  * preventing early release.
+>  */
 
-I'm still thinking about this patch here, and will likely send out the 
-other patches first as a v1, and come back to this one later.
+That's good. But Jason has another suggestion that no need to clear
+tombstones on fops_release(), so we don't need these changes at all.
 
-Really, someone mapping random memory using /dev/mem, and then getting 
-anonymous memory in there is the (nasty) corner case I ignored.
+Thanks,
+Yilun
 
-There are rather nasty ways of trying to detect if an anon folio really 
-fits into a VMA, but I'd like to avoid that.
-
-What I am thinking about right now is that we could, for these special 
-architectures, simply disallow CoW faults on /dev/mem.
-
-So we would still allow MAP_PRIVATE mappings (e.g., random app opening 
-/dev/mem using MAP_PRIVATE but never actually writing to that memory), 
-but the actual CoW faults would fail without pte_special().
-
-Some more thinking to do ...
-
--- 
-Cheers,
-
-David / dhildenb
-
+> 
+> 
+> >  		}
+> > +
+> >  		/* Bug related to users refcount */
+> >  		if (WARN_ON(!destroyed))
+> >  			break;
+> > -- 
+> > 2.25.1
+> 
+> -aneesh
