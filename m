@@ -1,31 +1,31 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
+Received: from relay.hostedemail.com (smtprelay0014.hostedemail.com [216.40.44.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964F62F5487;
-	Wed, 25 Jun 2025 23:16:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 34AB4273D90;
+	Wed, 25 Jun 2025 23:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750893366; cv=none; b=TofZJ2RQfXuwKx5YbfBs9CvwmWUFalvBpmzqiJV6Xsv1Iy4hIl1FKqHVY3R82hkt8rdYGMrK0psXqJiLLhf9vXAawzN8UBP+Va6cbfNIKscPKuUkE4sWqP6txLGPTaManygBE6doNcdYY1zExVNmMiD0pxisxincgWYKo6tVRgA=
+	t=1750893366; cv=none; b=MjDaTG988dKtOjtUSAqRsa43cNmjthCFPzgRaZiAhgOP5BFGbZh0Bmlhn0aD4qP5oZwb4MesvGcyJz61wkDMrGpH4UHL2AnB8LCsE5KaqtOwcWd946QKS2yyIAftwm+8reMB7BB687zkgOMQKbJzm//t8zuFgHK9wFeSuQeaT7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750893366; c=relaxed/simple;
-	bh=drCltSOBO4qBH4U6qNMyzlad2FUcdSN/k1Ro7pr12Kk=;
+	bh=Ut+iVTIHMBQnU1pbZZ59ZgZri4xhPXiNg+APs2M5CUE=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=gTmgmHo8vy5xoCA/E9n9SwaswupXzWbSDLH0xoJDF8NMebv1ADCyDPII1xc53ch800SVsLT7Jo1oCPA3hv+wZOooSa21XvyYzBAVdIK1Ody95Riz8Dn++wt27nFxdUuahaXgUG8WhnyTUvI2s5bcO5XxJ3jr77YoTYDDAixCQHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.17
+	 Content-Type; b=nLFUsZ+2woJlLHFpIITa2CHMeX1/PcA5v9tyS+4pFeYJNTQtlDAF3ihMAXw8ZLKdKfryY4twE37qagFoEGmlkfuHC3aO4eYYr4sLAfgidT5CJAdjLs6igSU+whiqpZI1RSjzpTR0gvcyQlgkJB8dm6cgx9rnul+Ucqhkn21oOE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org; spf=pass smtp.mailfrom=goodmis.org; arc=none smtp.client-ip=216.40.44.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=goodmis.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=goodmis.org
 Received: from omf08.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay06.hostedemail.com (Postfix) with ESMTP id B329C104633;
-	Wed, 25 Jun 2025 23:16:00 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id 3B94420027;
+	by unirelay05.hostedemail.com (Postfix) with ESMTP id 1336B5B855;
+	Wed, 25 Jun 2025 23:16:01 +0000 (UTC)
+Received: from [HIDDEN] (Authenticated sender: nevets@goodmis.org) by omf08.hostedemail.com (Postfix) with ESMTPA id C7EB220028;
 	Wed, 25 Jun 2025 23:15:57 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98.2)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1uUZLq-000000044hG-238r;
-	Wed, 25 Jun 2025 19:16:22 -0400
-Message-ID: <20250625231622.343362222@goodmis.org>
+	id 1uUZLr-000000044jD-0g4U;
+	Wed, 25 Jun 2025 19:16:23 -0400
+Message-ID: <20250625231623.018727649@goodmis.org>
 User-Agent: quilt/0.68
-Date: Wed, 25 Jun 2025 19:15:45 -0400
+Date: Wed, 25 Jun 2025 19:15:49 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org,
@@ -47,7 +47,7 @@ Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Linus Torvalds <torvalds@linux-foundation.org>,
  Andrew Morton <akpm@linux-foundation.org>,
  Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH v11 04/11] perf: Simplify get_perf_callchain() user logic
+Subject: [PATCH v11 08/11] perf tools: Minimal CALLCHAIN_DEFERRED support
 References: <20250625231541.584226205@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -56,60 +56,232 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-X-Stat-Signature: ioxfkgkp4u84fkdqoq9aoibaoc1yxohx
-X-Rspamd-Server: rspamout08
-X-Rspamd-Queue-Id: 3B94420027
+X-Rspamd-Queue-Id: C7EB220028
+X-Stat-Signature: dxz5js7ff9fdfxrit79axsts15s41uje
+X-Rspamd-Server: rspamout06
 X-Session-Marker: 6E657665747340676F6F646D69732E6F7267
-X-Session-ID: U2FsdGVkX1+v6bVNBV1nT+MLEwJsv+erXAHuk0xxCWQ=
-X-HE-Tag: 1750893357-52064
-X-HE-Meta: U2FsdGVkX186/+oEjQVcyu3zxfgne3HlGeoaQPIRxXQM3YDaIHbhKHMas4dh6qbGQxxZRDJA+AEokzov/LeSc3vGKVFyZiNb97Q7YdNHABVOsfPqejDLaYojWEKHKH7jIcEnvWdhjO0Tz4oxkxS7Y0gcvLwzG+W+6hWjhK+XE+lz9lAaYg+Ne2eFqR4VUzrUYbNz0t0/MT/lhOk+bMTV6RHdtrogfePOIerem5LEszbxKfFChmGqebSqjtmJTlezT2G/MxfA3QYiAIKKtjIoHBByRfqpcG6GB4PuEVZYQwlfnw1Bqm3PblAvnf3pzrG3WMWR8G5ufQ89vOlseLdqulHXjK3Rx/a5p8dil4SZwcWYKDpLyHp/0ZBH5h76d3AYEaS9G0Kk1bSzk9zPZBv7TkaabT5y9dB5MOwF/I63xDQ=
+X-Session-ID: U2FsdGVkX18iwI9Ndu4RmDFFd18DrD7fIk052qylhuA=
+X-HE-Tag: 1750893357-619723
+X-HE-Meta: U2FsdGVkX18xhZI+J1BvY+zEkGVjqzRgCXDVPlw1aHD3NwXKfL/BaC0ZvDoJlr/D+FdtZCF09KzNF+ysYg9Hacp9jvI6xjKjM47MvGUs1DFUoj4yFkvaBxGSPCsHKeet2hyKM94GCuqdYZDxeoNx+3oYNMvtk6Qa83Uu0KnqF68U6E5X9FoX3erGhpfhwA/Sz8Y+R9JUSZm8vGOQlz2N0gaOebYntDIZryhTZVmUhgAeq6KKVmYk5d5NRg5Gffqv5uZ8KpY+iA2+VIRJsG52PmFnxdsagyFosUT0+jLac9AuuRjAChZXgnQY8qY2gqlKYxerEFdg/sz/juzfm5/vjGfRswNji57Obo4nsIkmejJl6PXYmZviC/2kSn5WKU7z2rkkvjaFmElcTY5rfrcIoIJ7DLTNpiK0cFXPbv29Dbg=
 
-From: Josh Poimboeuf <jpoimboe@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
 
-Simplify the get_perf_callchain() user logic a bit.  task_pt_regs()
-should never be NULL.
+Add a new event type for deferred callchains and a new callback for the
+struct perf_tool.  For now it doesn't actually handle the deferred
+callchains but it just marks the sample if it has the PERF_CONTEXT_
+USER_DEFFERED in the callchain array.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+At least, perf report can dump the raw data with this change.  Actually
+this requires the next commit to enable attr.defer_callchain, but if you
+already have a data file, it'll show the following result.
+
+  $ perf report -D
+  ...
+  0x5fe0@perf.data [0x40]: event: 22
+  .
+  . ... raw event: size 64 bytes
+  .  0000:  16 00 00 00 02 00 40 00 02 00 00 00 00 00 00 00  ......@.........
+  .  0010:  00 fe ff ff ff ff ff ff 4b d3 3f 25 45 7f 00 00  ........K.?%E...
+  .  0020:  21 03 00 00 21 03 00 00 43 02 12 ab 05 00 00 00  !...!...C.......
+  .  0030:  00 00 00 00 00 00 00 00 09 00 00 00 00 00 00 00  ................
+
+  0 24344920643 0x5fe0 [0x40]: PERF_RECORD_CALLCHAIN_DEFERRED(IP, 0x2): 801/801: 0
+  ... FP chain: nr:2
+  .....  0: fffffffffffffe00
+  .....  1: 00007f45253fd34b
+  : unhandled!
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/events/callchain.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
+ tools/lib/perf/include/perf/event.h       |  7 +++++++
+ tools/perf/util/event.c                   |  1 +
+ tools/perf/util/evsel.c                   | 15 +++++++++++++++
+ tools/perf/util/machine.c                 |  1 +
+ tools/perf/util/perf_event_attr_fprintf.c |  1 +
+ tools/perf/util/sample.h                  |  3 ++-
+ tools/perf/util/session.c                 | 17 +++++++++++++++++
+ tools/perf/util/tool.c                    |  1 +
+ tools/perf/util/tool.h                    |  3 ++-
+ 9 files changed, 47 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/callchain.c b/kernel/events/callchain.c
-index 42d21761cb4d..16eb68f31810 100644
---- a/kernel/events/callchain.c
-+++ b/kernel/events/callchain.c
-@@ -247,21 +247,19 @@ get_perf_callchain(struct pt_regs *regs, bool kernel, bool user,
- 	if (user && !crosstask) {
- 		if (!user_mode(regs)) {
- 			if (current->flags & PF_KTHREAD)
--				regs = NULL;
--			else
--				regs = task_pt_regs(current);
-+				goto exit_put;
-+			regs = task_pt_regs(current);
- 		}
+diff --git a/tools/lib/perf/include/perf/event.h b/tools/lib/perf/include/perf/event.h
+index 09b7c643ddac..4590d62ca913 100644
+--- a/tools/lib/perf/include/perf/event.h
++++ b/tools/lib/perf/include/perf/event.h
+@@ -151,6 +151,12 @@ struct perf_record_switch {
+ 	__u32			 next_prev_tid;
+ };
  
--		if (regs) {
--			if (add_mark)
--				perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
-+		if (add_mark)
-+			perf_callchain_store_context(&ctx, PERF_CONTEXT_USER);
++struct perf_record_callchain_deferred {
++	struct perf_event_header header;
++	__u64			 nr;
++	__u64			 ips[];
++};
++
+ struct perf_record_header_attr {
+ 	struct perf_event_header header;
+ 	struct perf_event_attr	 attr;
+@@ -505,6 +511,7 @@ union perf_event {
+ 	struct perf_record_read			read;
+ 	struct perf_record_throttle		throttle;
+ 	struct perf_record_sample		sample;
++	struct perf_record_callchain_deferred	callchain_deferred;
+ 	struct perf_record_bpf_event		bpf;
+ 	struct perf_record_ksymbol		ksymbol;
+ 	struct perf_record_text_poke_event	text_poke;
+diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
+index 7544a3104e21..720682fea9be 100644
+--- a/tools/perf/util/event.c
++++ b/tools/perf/util/event.c
+@@ -58,6 +58,7 @@ static const char *perf_event__names[] = {
+ 	[PERF_RECORD_CGROUP]			= "CGROUP",
+ 	[PERF_RECORD_TEXT_POKE]			= "TEXT_POKE",
+ 	[PERF_RECORD_AUX_OUTPUT_HW_ID]		= "AUX_OUTPUT_HW_ID",
++	[PERF_RECORD_CALLCHAIN_DEFERRED]	= "CALLCHAIN_DEFERRED",
+ 	[PERF_RECORD_HEADER_ATTR]		= "ATTR",
+ 	[PERF_RECORD_HEADER_EVENT_TYPE]		= "EVENT_TYPE",
+ 	[PERF_RECORD_HEADER_TRACING_DATA]	= "TRACING_DATA",
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index d55482f094bf..6176c31b57ea 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2978,6 +2978,18 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 	data->data_src = PERF_MEM_DATA_SRC_NONE;
+ 	data->vcpu = -1;
  
--			start_entry_idx = entry->nr;
--			perf_callchain_user(&ctx, regs);
--			fixup_uretprobe_trampoline_entries(entry, start_entry_idx);
--		}
-+		start_entry_idx = entry->nr;
-+		perf_callchain_user(&ctx, regs);
-+		fixup_uretprobe_trampoline_entries(entry, start_entry_idx);
++	if (event->header.type == PERF_RECORD_CALLCHAIN_DEFERRED) {
++		const u64 max_callchain_nr = UINT64_MAX / sizeof(u64);
++
++		data->callchain = (struct ip_callchain *)&event->callchain_deferred.nr;
++		if (data->callchain->nr > max_callchain_nr)
++			return -EFAULT;
++
++		if (evsel->core.attr.sample_id_all)
++			perf_evsel__parse_id_sample(evsel, event, data);
++		return 0;
++	}
++
+ 	if (event->header.type != PERF_RECORD_SAMPLE) {
+ 		if (!evsel->core.attr.sample_id_all)
+ 			return 0;
+@@ -3108,6 +3120,9 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+ 		if (data->callchain->nr > max_callchain_nr)
+ 			return -EFAULT;
+ 		sz = data->callchain->nr * sizeof(u64);
++		if (evsel->core.attr.defer_callchain && data->callchain->nr >= 1 &&
++		    data->callchain->ips[data->callchain->nr - 1] == PERF_CONTEXT_USER_DEFERRED)
++			data->deferred_callchain = true;
+ 		OVERFLOW_CHECK(array, sz, max_size);
+ 		array = (void *)array + sz;
  	}
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index 7ec12c207970..de6100366eee 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -2124,6 +2124,7 @@ static int add_callchain_ip(struct thread *thread,
+ 				*cpumode = PERF_RECORD_MISC_KERNEL;
+ 				break;
+ 			case PERF_CONTEXT_USER:
++			case PERF_CONTEXT_USER_DEFERRED:
+ 				*cpumode = PERF_RECORD_MISC_USER;
+ 				break;
+ 			default:
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index 66b666d9ce64..abfd9b9a718c 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -343,6 +343,7 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	PRINT_ATTRf(inherit_thread, p_unsigned);
+ 	PRINT_ATTRf(remove_on_exec, p_unsigned);
+ 	PRINT_ATTRf(sigtrap, p_unsigned);
++	PRINT_ATTRf(defer_callchain, p_unsigned);
  
-+exit_put:
- 	put_callchain_entry(rctx);
+ 	PRINT_ATTRn("{ wakeup_events, wakeup_watermark }", wakeup_events, p_unsigned, false);
+ 	PRINT_ATTRf(bp_type, p_unsigned);
+diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
+index 0e96240052e9..9d6e2f14551c 100644
+--- a/tools/perf/util/sample.h
++++ b/tools/perf/util/sample.h
+@@ -108,7 +108,8 @@ struct perf_sample {
+ 		u16 p_stage_cyc;
+ 		u16 retire_lat;
+ 	};
+-	bool no_hw_idx;		/* No hw_idx collected in branch_stack */
++	bool no_hw_idx;			/* No hw_idx collected in branch_stack */
++	bool deferred_callchain;	/* Has deferred user callchains */
+ 	char insn[MAX_INSN];
+ 	void *raw_data;
+ 	struct ip_callchain *callchain;
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index a320672c264e..e6be01459352 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -715,6 +715,7 @@ static perf_event__swap_op perf_event__swap_ops[] = {
+ 	[PERF_RECORD_CGROUP]		  = perf_event__cgroup_swap,
+ 	[PERF_RECORD_TEXT_POKE]		  = perf_event__text_poke_swap,
+ 	[PERF_RECORD_AUX_OUTPUT_HW_ID]	  = perf_event__all64_swap,
++	[PERF_RECORD_CALLCHAIN_DEFERRED]  = perf_event__all64_swap,
+ 	[PERF_RECORD_HEADER_ATTR]	  = perf_event__hdr_attr_swap,
+ 	[PERF_RECORD_HEADER_EVENT_TYPE]	  = perf_event__event_type_swap,
+ 	[PERF_RECORD_HEADER_TRACING_DATA] = perf_event__tracing_data_swap,
+@@ -1118,6 +1119,19 @@ static void dump_sample(struct evsel *evsel, union perf_event *event,
+ 		sample_read__printf(sample, evsel->core.attr.read_format);
+ }
  
- 	return entry;
++static void dump_deferred_callchain(struct evsel *evsel, union perf_event *event,
++				    struct perf_sample *sample)
++{
++	if (!dump_trace)
++		return;
++
++	printf("(IP, 0x%x): %d/%d: %#" PRIx64 "\n",
++	       event->header.misc, sample->pid, sample->tid, sample->ip);
++
++	if (evsel__has_callchain(evsel))
++		callchain__printf(evsel, sample);
++}
++
+ static void dump_read(struct evsel *evsel, union perf_event *event)
+ {
+ 	struct perf_record_read *read_event = &event->read;
+@@ -1348,6 +1362,9 @@ static int machines__deliver_event(struct machines *machines,
+ 		return tool->text_poke(tool, event, sample, machine);
+ 	case PERF_RECORD_AUX_OUTPUT_HW_ID:
+ 		return tool->aux_output_hw_id(tool, event, sample, machine);
++	case PERF_RECORD_CALLCHAIN_DEFERRED:
++		dump_deferred_callchain(evsel, event, sample);
++		return tool->callchain_deferred(tool, event, sample, evsel, machine);
+ 	default:
+ 		++evlist->stats.nr_unknown_events;
+ 		return -1;
+diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+index 37bd8ac63b01..e1d60abb4e41 100644
+--- a/tools/perf/util/tool.c
++++ b/tools/perf/util/tool.c
+@@ -266,6 +266,7 @@ void perf_tool__init(struct perf_tool *tool, bool ordered_events)
+ 	tool->read = process_event_sample_stub;
+ 	tool->throttle = process_event_stub;
+ 	tool->unthrottle = process_event_stub;
++	tool->callchain_deferred = process_event_sample_stub;
+ 	tool->attr = process_event_synth_attr_stub;
+ 	tool->event_update = process_event_synth_event_update_stub;
+ 	tool->tracing_data = process_event_synth_tracing_data_stub;
+diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+index db1c7642b0d1..9987bbde6d5e 100644
+--- a/tools/perf/util/tool.h
++++ b/tools/perf/util/tool.h
+@@ -42,7 +42,8 @@ enum show_feature_header {
+ 
+ struct perf_tool {
+ 	event_sample	sample,
+-			read;
++			read,
++			callchain_deferred;
+ 	event_op	mmap,
+ 			mmap2,
+ 			comm,
 -- 
 2.47.2
 
