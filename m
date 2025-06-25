@@ -1,469 +1,202 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from SEYPR02CU001.outbound.protection.outlook.com (mail-koreacentralazon11023135.outbound.protection.outlook.com [40.107.44.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD0526A0DB
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:26:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750839997; cv=none; b=gcGv4KIsyKW6pPT4BKeh8WnfhSiB8BDAWdwFAhC501wU8IbupuVZCYcUkewA1vNuaayROnwyh49EgFetoYLZO9taSY5YKlLcLXEvrQ/izp/rrCvSVS7pEX6W2txemcfTasZyt5baD5KRJ7NLg1w45XoSNv3wZGLNHuIhD0gGk04=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750839997; c=relaxed/simple;
-	bh=uwxC6wzaRtXGlq5OkgRl/B4WTJ+QiH/7MFiGW7Rjsik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R0qRKnp0Ae6WH+YLq9XHmQaKO32BwsDuUqf9rEVTFfz1UD5zqL2GKDAauBze7nCUqqhOX0QXoeb3VkAso9a7mETMNIUVJmt25qmlkYx7ySHKDUEKHmzTBCE3+IzYgDwMEk0X+H4MctRJpr+TS+al7IjK0dClIYV0GPReCG2tKFQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M/ynfPMo; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73E238634C;
+	Wed, 25 Jun 2025 08:27:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.44.135
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750840055; cv=fail; b=WFCFD1hFvsu+e3USgq6afdkvY3xdxGa6ATxAREImPj/Y7WNYJNUjJ6qq2KDNJe2qFfO99+86/+ux1wp5tVRjkyFcPwgAMtIEsss7vy5yGK3VUKWxx9iuuIScq24Dm3NdnQvI8tOwT3h8n1UtGENmukOtgpFxMoPAp87Y0fB/R/o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750840055; c=relaxed/simple;
+	bh=tAbHwFHUD0fczEesoLl2wC/N/HCbXp9vM1FUXTByOls=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=tSXpJeHAW1lXKktswMx7Cm5oVu+QjpQqySEkujEOYiES1f7le0zqV5zFsU++eR8jSXPkS6vJr44qNghAgpzs4bjgy6br2yl7485V+401J405otQbAk2nBaRemgEY+wKOFghf9QiLJto6LTmk7IoXiYBmzullDIfo+7LqX17FUpA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com; spf=pass smtp.mailfrom=aspeedtech.com; dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b=QtPwl24f; arc=fail smtp.client-ip=40.107.44.135
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=aspeedtech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aspeedtech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M/ynfPMo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750839994;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ntxAZIhOeQ85+Fm1QMO9HaVGqW4cWOXkvtu2aYEk1Go=;
-	b=M/ynfPMojXWKKCq970buzLsja0TRqqDC9REjrdUXy4jrt9Ldt94MSrhuQAC1/VH1bPAimN
-	uS5HoomMtMFe3DmHUz+pc4yvOBy2tnohHJ5wRH/zWb0S+ue6253pDMD7KZU7pWE32FxpNG
-	gTy18SAjaoPY4Lgqr9pb4wb0lzxlm9Y=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-649-hximBoO6N86Lp1xDDOtW6A-1; Wed, 25 Jun 2025 04:26:32 -0400
-X-MC-Unique: hximBoO6N86Lp1xDDOtW6A-1
-X-Mimecast-MFC-AGG-ID: hximBoO6N86Lp1xDDOtW6A_1750839991
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-4530ec2c87cso33236195e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:26:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750839991; x=1751444791;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ntxAZIhOeQ85+Fm1QMO9HaVGqW4cWOXkvtu2aYEk1Go=;
-        b=KXTKTkqx/Zq7+3AXJIFMDg6b19CdDXrxuztQ+TklUdkcGupbzlKmbQpN9XreUKn3uN
-         0+btEM8yJXbYF3wzMIEsxi5XLboRbLAYlxDRVzMg0A5DRVxtX3YWnKbEjy1ti4jUmJmq
-         /Bwk7KnOUtoqlRXoCuBgzcWAV4G2EXq7r6Cp8pjvYa+90/EeJsHpHqk3g/TJXI06bHUl
-         rmd6tg6jWwof53Xz5vRCx+8RhuAABRnT0IOBkZqofp45vjM8StdiwMqU2weK7dV3AQ/r
-         HY4ZxR4T+rQhDZ3WBganMWADoBsTrC4JExpt/FMbbFsKkeSbeTV4sB0F7UjY/P6EIcNE
-         vqHA==
-X-Forwarded-Encrypted: i=1; AJvYcCXI110IMEHIln64k6S2iUnV+8R05r++6RBZGjJ8W+dmlK6qX04U4VzVneqiXM5H1qbXZOlQmbqizYorCKE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhUG/EF9p3BWweWOQ7n9nLJv3WVLYyhGUZ2Mf3pbEj1LXuPudD
-	s8uw3XrGUhesEN7+1RLubr6oyUCLk2AoQA8lN/9NQBV6b0pt2hqccWSuTjz7eGX8L3snGFAUWFZ
-	UKM7uxomlaCqfjMGFKPASEXHVICxRUMIzYBbHPYXvVaw7pRCCaf7uOOCUcTLMJzNJrA==
-X-Gm-Gg: ASbGncsCLGo3jpFW6iyLmyH+fsdKWID11ztiTHGmnkD/u56k+jIVx9tWsrcLgNArUOK
-	3I8JUIca5jv2Lblu4kKXHIQUwAYFOojcuJt4VWuGF7D/xKuH6u5bZRikXm5Z2AjNCH4cVZ8UqIb
-	K1VQRx+6UuTNP2cM0LiwD1ryzyEU47jcuNbSHImW8KWbcgykH0MBSVyW7q1iAxqxrz88nOG1Jd2
-	2C95BgO5frh2y+Nw4SZhI06om+PLvuOd6ta+a5toDMKQNY2Og3TIV1RAZgyQfr42SlvQGRW6pPG
-	ZOYM/Xtaers4YFe0xYsgAtl3HM9c
-X-Received: by 2002:a05:6000:40df:b0:3a4:ef33:e60 with SMTP id ffacd0b85a97d-3a6ed6464e2mr1586642f8f.40.1750839991361;
-        Wed, 25 Jun 2025 01:26:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGu4pIyAr6BVQlZcvcPefGQNho0kG5su0pi0ecj1SFzUT30OIB09dU6dybGibl24it66ub+1g==
-X-Received: by 2002:a05:6000:40df:b0:3a4:ef33:e60 with SMTP id ffacd0b85a97d-3a6ed6464e2mr1586605f8f.40.1750839990644;
-        Wed, 25 Jun 2025 01:26:30 -0700 (PDT)
-Received: from sgarzare-redhat ([193.207.151.122])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e8051677sm3978711f8f.15.2025.06.25.01.26.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 01:26:30 -0700 (PDT)
-Date: Wed, 25 Jun 2025 10:26:26 +0200
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Luigi Leonardi <leonardi@redhat.com>
-Cc: Michal Luczaj <mhal@rbox.co>, virtualization@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Hyunwoo Kim <v4bel@theori.io>
-Subject: Re: [PATCH net-next v4] vsock/test: Add test for null ptr deref when
- transport changes
-Message-ID: <u2cvx4da63jzrtbqikbqaud5zjdpduoyrxzxgctvjkznt66k4h@gxr623ahkxxy>
-References: <20250624-test_vsock-v4-1-087c9c8e25a2@redhat.com>
+	dkim=pass (2048-bit key) header.d=aspeedtech.com header.i=@aspeedtech.com header.b="QtPwl24f"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=y2cTf0nCBYBlWGS9UMfJ0J4vgpebYEiBeR1yUG4XOXL7OaD6Q0dhgaMho1HE41RvJ8Jok/U5VaTWsFZL1ajqJVcrI+B5glQHpobHbXhcmNGR/j0nPy3rLBcj8Pkm2Bs6wNtOo6VjpYdYuuTHYzoz2njZSA4ouxn0+DWE/wC5mwDkYk95wlTX1FS91IHmMEIPSVt3OdmXm2oKlbKtlQqlcW0N7eLa1ZlcHjsaO7igX47Hvwk/3kkobrh90wKxvh3iFW2LrIWT3+uEyTRBkWj8OcbiOoxMfnhekjq+yUSuJNS6mbcml0t/0XXZAAmpTnU27X11zVRPoARTQNbRLd205Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tAbHwFHUD0fczEesoLl2wC/N/HCbXp9vM1FUXTByOls=;
+ b=XCxCg9+ZANRw3fKxkpPiQ7mituWyvgptRlwqVcgljMpQw4Gry5U0DzBqoxnmt8gBX/pN5M0VtQSVZ8VKpXmc6SKzVPOWtMHjCrFtUzRNOPoRusvwsp0nsucKoLSZwQYWkhMrtPlkmtareT4q6oUfCwNbOXRA6xrjJqIcyzd5VDgZh7ntk/CCQvL2rYnO39mBsztr58aM7AxvmgAPb5Y6GwP7yHMt1d15I+F6Y/Sb5oz4LBS4Taaye5DE5Xfcbk0CxvssgVP1p44FtQv9l+eG3xkfOqXjdx8bBKFw+DIEFgz/IxETl2zQJ3yRJbh2+YoA9VoaTXVfA0lDAsnK8og48w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tAbHwFHUD0fczEesoLl2wC/N/HCbXp9vM1FUXTByOls=;
+ b=QtPwl24ffYcLnh1/i5xKy953xyXeDXfOdYMumSngkWPHSdihz2n0n9gbC8AmRpHhesSh/IM5mdKPgvZBODiCz7BTrvElcJQtRIeR77aLxAc1FsDoqB/kSclc0xPApdkvl2XHnJfilf4yeKF+b4mIzX4O9StEOwDXQqiovJUByVxZFW/gcO/e+M95qwDihsU90KJ/5RkGgo4yW6uVfxaeEV20haCgUz+hMYOJjBMak2Hu2CoaAOPTMML3F5zdLlgwzA+6pMmYU1Y3Ioaybf5tFtUmqbWBqLBUmxswpZJkE2deV+oJXJ0d+3rHji2luBTEzhSr9FOhb8szG8+I0bAV9w==
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com (2603:1096:101:5a::12)
+ by TYZPR06MB6045.apcprd06.prod.outlook.com (2603:1096:400:33c::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.26; Wed, 25 Jun
+ 2025 08:27:27 +0000
+Received: from SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28]) by SEYPR06MB5134.apcprd06.prod.outlook.com
+ ([fe80::6b58:6014:be6e:2f28%5]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
+ 08:27:26 +0000
+From: Jacky Chou <jacky_chou@aspeedtech.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+CC: "bhelgaas@google.com" <bhelgaas@google.com>, "lpieralisi@kernel.org"
+	<lpieralisi@kernel.org>, "kwilczynski@kernel.org" <kwilczynski@kernel.org>,
+	"mani@kernel.org" <mani@kernel.org>, "robh@kernel.org" <robh@kernel.org>,
+	"krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+	<conor+dt@kernel.org>, "joel@jms.id.au" <joel@jms.id.au>,
+	"andrew@codeconstruct.com.au" <andrew@codeconstruct.com.au>,
+	"vkoul@kernel.org" <vkoul@kernel.org>, "kishon@kernel.org"
+	<kishon@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-phy@lists.infradead.org"
+	<linux-phy@lists.infradead.org>, "openbmc@lists.ozlabs.org"
+	<openbmc@lists.ozlabs.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "elbadrym@google.com" <elbadrym@google.com>,
+	"romlem@google.com" <romlem@google.com>, "anhphan@google.com"
+	<anhphan@google.com>, "wak@google.com" <wak@google.com>,
+	"yuxiaozhang@google.com" <yuxiaozhang@google.com>, BMC-SW
+	<BMC-SW@aspeedtech.com>
+Subject:
+ =?big5?B?pl7C0Dogpl7C0DogW1BBVENIIDUvN10gQVJNOiBkdHM6IGFzcGVlZC1nNjogQWRk?=
+ =?big5?Q?_PCIe_RC_node?=
+Thread-Topic:
+ =?big5?B?pl7C0DogW1BBVENIIDUvN10gQVJNOiBkdHM6IGFzcGVlZC1nNjogQWRkIFBDSWUg?=
+ =?big5?Q?RC_node?=
+Thread-Index: AQHb3BN5+/k5uKYPMUe/SI/Gdc6Yn7QBPt8AgApPrpCABvJ/AIABGqbA
+Date: Wed, 25 Jun 2025 08:27:26 +0000
+Message-ID:
+ <SEYPR06MB51346BC9292066243CB845699D7BA@SEYPR06MB5134.apcprd06.prod.outlook.com>
+References:
+ <SEYPR06MB51343F38D4F9C130A4CE3FED9D7CA@SEYPR06MB5134.apcprd06.prod.outlook.com>
+ <20250624152814.GA1477818@bhelgaas>
+In-Reply-To: <20250624152814.GA1477818@bhelgaas>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SEYPR06MB5134:EE_|TYZPR06MB6045:EE_
+x-ms-office365-filtering-correlation-id: 9acf0b4c-dee2-493e-edcd-08ddb3c21de1
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016|38070700018;
+x-microsoft-antispam-message-info:
+ =?big5?B?OEZ1NnpCT0hob3g3VUQ3aDM5aHBwUHN0QSthcDFsNitUajFVVDBIdzBiaXU0R2ZX?=
+ =?big5?B?RnYyYzF5dTNLeERPM3FRUFJqK2hNZm1OMXFHRjZaZVpFaVRVVVdiQWpUODE1djY1?=
+ =?big5?B?Sk9vNGM2YzFMc1hNOWNCa05TWlZpNW9kYkt2azdWNHU5SHBBL1JoV2gvQ1BsRmJV?=
+ =?big5?B?NEdRdUl6MWFxcFJOaDNrOVhaaUpTUWdOV3hiTXZYdWpYSnlMRks0T25ySS9LVitr?=
+ =?big5?B?c3M3UHRYaXgrZmRUYTR2c1gzZzg1cmhZYkV3cU1VYWZpTWNaeE13TVVoK1dtcWdI?=
+ =?big5?B?dklZZDVIaUJtdHRLMU15OWhlekw5dkhwWGR5V01zRThOVmZXU0twOGJHNXVVSXEw?=
+ =?big5?B?bmF4bU5xZkRBWjFBckkyQUJ2ZU01RUlES3dUTDFpTEFnUUozY0ZsTkJENzdSSGgr?=
+ =?big5?B?dUJGSXYzUzNGdmlKaU9DcjZSa1dzTGFMQjJpd3ZrNWcwRWsySFNHdG9qcXJhNHNY?=
+ =?big5?B?RGNONU8ycHBjQVJtTWpTeGxVSkt5UURxdzRtOHNvb1BiUWk2RWFSQ1AxRGhoVkVM?=
+ =?big5?B?MEEydjVEYlZpQTQ2RjdhOXZTeXp5N1JmU2g1eHZ3N2JPL0J4dU1idWRWVk42cG1V?=
+ =?big5?B?LzZ4ckw2eFB5c2lKcVJ6R3lsa1RiY3ZqSmRJQXdFZVpjblhjOWQ2Z3VFK2xxd0Ny?=
+ =?big5?B?ZEovRjdaUGpuNHJ3ek1LRUJPY09ORjFDWHpHU3VSRFQrbzFFY2Q5Y3ZHczFUY0hp?=
+ =?big5?B?VnBvQ3BHb3V4TTZoVEhKY0syNUpnbzhlSXEwdXo4M1k2OU1NSllacysxVEUvN3Ax?=
+ =?big5?B?ay9kODJDODJJY3VpbEdnTWZNeHQxSnowUTZUeUo1OXhTVW1kbUFaOEhLdXhtRTV4?=
+ =?big5?B?cmJ3OXJBL1N0T29icWw2YmlnUWpwOXkrenlGMndnOTE4Wk1PTTVEYVFDVXRGWERJ?=
+ =?big5?B?ZnpMbUdJTEc5bVlDUHBHcTJ1MWtYakt4WkRldkdTSmdPTGxDRGh5bm05K3RsMVZs?=
+ =?big5?B?NVRMem81WG95c1VUNkdTMHFHdFlOUzlBT2F1d3FjQ2JsenNxek9vUDhuZk1sVXhC?=
+ =?big5?B?OG5CNktGOS9LY2dqSHJsZ0lEbXJtdldzTDdCMWczQmFZRCthYmZ6ZkRLcjYwVU5H?=
+ =?big5?B?QVNydzlxMkdDTXd6TG5SNWN3TnQxT3VGWG9MNjNFR3FPcno1UUwrNnhKRHJxcjE2?=
+ =?big5?B?UjBmM2w2cThpQlBwenhFREh5ZnZQSW9SZ1JZU2tmVXN5V3pmdXlNNjNUeW8wUm5a?=
+ =?big5?B?YmFYMDBKNEk1a3g1YWV2WmZ3aVhwbVZ0NTY5L25uMXQ1WEJoOXFUMWs5YjJmNmkv?=
+ =?big5?B?N0E3SHlGUU8wUlNoRWJCU0JIRklyL3VxMHJXZEJ4c2dUelJpS3RVWXBRb24reDdl?=
+ =?big5?B?MmhmOUVqc2IxMmlxVjNGaE96RkROR2puRkh6MGxrOFl2VnY4UWtONjhwTklDRUdL?=
+ =?big5?B?Mi80ZmhVT2MwNndBWlcwNDZuUjY5Uko2QWFQaGJVOUhpUVNaYjdIeDQwbGdDK2Qx?=
+ =?big5?B?ZTJYa09nbCtUdjdIYTVKME91L1cxT0U0eURweTU3VlFkTG9OWE1vM3FycVp0VnVZ?=
+ =?big5?B?Rm9qV0h1REoyK0JtcjZ1djJCUmpZTEZyZGhod2dTYnFTRXZMRTZPc1M4dGE5U0cx?=
+ =?big5?B?OVJJQlVWMTRRNFR6b0tkdE5ndndISzM0QStLN09mSis0UHZCQnRKRTlDT21saHVQ?=
+ =?big5?B?aWt4STJWdU1HZGVVaTJwTENsdGJpVStWK3dKQ1ZPZFhUVGdKR2NMSDQ2U2RSNnBv?=
+ =?big5?B?OW1aMm1uUjIwL3ZhcXdHK3k5Q0RsdVVKbjZhblRUWUE4U2VIT2dUcDVONEJodXhu?=
+ =?big5?B?THFsQmZ1MFEzNVBFZ1Z5djRFNHdEMjVtZytETjJyaCtDMjF2ZzVVbGJGRWxBZzl4?=
+ =?big5?B?bUFNZjYvV3Mza0EyMCtwTzV3SFhhWHBNVXVsdXhaeXFkVDFGUnRoSEpmWVRlV1Zh?=
+ =?big5?B?NG5MbThBPT0=?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SEYPR06MB5134.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(38070700018);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?big5?B?SWlzaDBQM3NLWm1Hekk1WXFNMnJuaHFhemxycEtxc2NxSzd6Y1crSXZiQmRKVVFi?=
+ =?big5?B?OEJlZUMzOFlTZ1M2UEJDTldqdWh3b1o4WTJ4VUFUMGFyQkxDZWVoZHBPUGRZUFRS?=
+ =?big5?B?NHhrbUV1dXNkczF0YWF4WHNCU1FZRjRxQStLUmJ5VkgxcnI4cVpQbTVqRkkxdGxz?=
+ =?big5?B?bzk5cDEzNVBxVHdnN0RWaGlobXNSVWFiZlV4ZWJSNXpUdkZ4WnNKN09TNjFCanBi?=
+ =?big5?B?RlB0Z0FEK2pmQTRNZWFxcG0wVlJrQU9TVm1VLzRLeHlEOXlOWklBM3RmaVZBZHBB?=
+ =?big5?B?aCs3NkU1c3hUaGpKVnQvRkQ3eE9jdmhITUlWVnUvYytaaHNzMDBFcWh1MjJ1MWVO?=
+ =?big5?B?K2lTRjNUZERucmtpMzVHUkY3dERyR09kSTNXdnFHOVVuUjFVUUFKdVljRkVyY0pK?=
+ =?big5?B?OWZ2VC9TV0h3QlJRODI0ck5YUFFWK2NTcHRYZ2krK01QSGRRVC80Zm1EajRRQ25Y?=
+ =?big5?B?cFFTVlhSRkdiMzkvbXJGUi9iQTFzZ0YvMVl3WGMzU0lvak9RMXZLSnJyMmtjd3JV?=
+ =?big5?B?Ri85L1BBNXIwaEphcEpZU09DSW5VTFkyekd2d1krYVgrSEUyL0tJRmdkTFI5RlNt?=
+ =?big5?B?V0N2cEhHaGZ2c09HM1pGZ2dXNiszK1hidnJZUWozTmo5cWxUZ3lSSG1PeUcyYUk1?=
+ =?big5?B?VCtLY2JUYTBkbEN0cjRYZzBHS2ZCbUpRS3hIYjcyckpXN25aUzNMVzdOdXBzei9P?=
+ =?big5?B?YS8zODB0TlluVVA5OFJQWXRzR1lxQWtqbmpXdXVnWWZMYzlhNGxzb3ZpbEtoZXZh?=
+ =?big5?B?K0V6cC85WXE1UGplR2tRQzl3dDFITVc5YlJuYUJJQ09Wanp5WUJpNlJiY2RXZjR4?=
+ =?big5?B?SGNjcTBJbk1Dc3dGcTRDWlNSbno4UC9FYU9ZL0dPcHduVDZPemsxMkNTM2d3bUpw?=
+ =?big5?B?aDh6ZU9BMWovbm9nVEE3bnZOd3k3KysxMVpWYlp1ZTluUUJhNExpYlRmUW9lUTc2?=
+ =?big5?B?ZnRBSFlQLzB2enUyclNoenJ0ejJyaVEyYlNwTk9RcEQ4TXJwbWc4Y05kZlpFTkxU?=
+ =?big5?B?c2daUThjYzZIMEh2QmZOSHhzeXpiNm0rbjJtZGU2eWxkaXN6YlF5TVdVTmJVTWRT?=
+ =?big5?B?dVJOc0R5S2s5YkMrbUwvMFdCVDB2a294UzFpNElNSURWcHVqNjhSVEYrbkh2dU9L?=
+ =?big5?B?UHhXUzBJblNPbm5hOEgxWUVWN1o3dldtZms1aVA4R1NjamZKMkN2Mmx5eU9yV3B3?=
+ =?big5?B?N2plREwzaG1uZWdqekl5ZGMyS1hCLzhCZjR0bThXWjYrakt1MEtDVFdhMS9ycFVB?=
+ =?big5?B?WFZLVHhJNTVvYkFSV1NFZ0Rwdys5ZmdxREsydlBRa2tGTXIrSVZtRTZUVzhqVW1B?=
+ =?big5?B?cmxmTVFZbUFWalR1SFNlODM3QXk0VE1MdStFZDFyZ1hMcVhIMVRkMjhDNEtCZ1dk?=
+ =?big5?B?eWVJdVZkTjIvYWpZWGRNR1diTTlGL2FZOXFXNkdYWDloVS9mdlh5MURHZUZaZ01B?=
+ =?big5?B?UHROSVJuMEFvNkp6TmlHSHZBL1R6SzY2aHpOdk1zMDcyakkvWDIrY01KWkpsdWph?=
+ =?big5?B?VnJTN1dia2p6dGpyZTVCMXRIR3NadjFOZGpOMUVoNXUwSEQycDVqVE10SmhtSEJC?=
+ =?big5?B?bFlrRlhJK2JrelViNHdWclJiOGNaUEl4R0tOa1FEQjNsMHJ1b1J2ZlY5MzRjeG9J?=
+ =?big5?B?SElOV0llZUt4L2pkdi81MElZNDB4RmozSmtKNFBpUDdyRWtmMEdRWnNEb0VRSlNp?=
+ =?big5?B?MjJPYzVsWXBvOU96MU9lSitlbEdkaGYzU2x4cDJMNGdvRmdqTnlNSVYzUXVsSjdW?=
+ =?big5?B?Q2dhMmVJU3pnUERLeW1LclBrenorclpneGZkTTJEMWc0OENjU0YxT1VIYVlnQzQy?=
+ =?big5?B?T01nWXJXd1hOdjdjU09iUUxKenBuNkwxMFl5ZXJwZkNSSUtYeE5VRzhTUm1ML3RE?=
+ =?big5?B?N0dQeDdIOE9rWTFvR3R3ZHdvek1YYTJyVEVJZlYyemhYOERZS2xYaEJBUmVSeisy?=
+ =?big5?B?QkNJNFpsVHo1T3dlY0c5dU4yWWVTUnRqcUw1WUp3YmpBcnA5N05McDBXbmFyYmZJ?=
+ =?big5?Q?N3BoSvRtEKds9BLT?=
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250624-test_vsock-v4-1-087c9c8e25a2@redhat.com>
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SEYPR06MB5134.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9acf0b4c-dee2-493e-edcd-08ddb3c21de1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 25 Jun 2025 08:27:26.2282
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Yiupq+6v2FYrGYQsMM3BfstK3EE2H6lRPM90Z+xHbCCjt01PaLXse/39gbSuaZETbE0BxLiL882a8fhsBpGvOm3xjT1yYL5FUqC++gf+Cr0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR06MB6045
 
-On Tue, Jun 24, 2025 at 05:40:15PM +0200, Luigi Leonardi wrote:
->Add a new test to ensure that when the transport changes a null pointer
->dereference does not occur. The bug was reported upstream [1] and fixed
->with commit 2cb7c756f605 ("vsock/virtio: discard packets if the
->transport changes").
->
->KASAN: null-ptr-deref in range [0x0000000000000060-0x0000000000000067]
->CPU: 2 UID: 0 PID: 463 Comm: kworker/2:3 Not tainted
->Workqueue: vsock-loopback vsock_loopback_work
->RIP: 0010:vsock_stream_has_data+0x44/0x70
->Call Trace:
-> virtio_transport_do_close+0x68/0x1a0
-> virtio_transport_recv_pkt+0x1045/0x2ae4
-> vsock_loopback_work+0x27d/0x3f0
-> process_one_work+0x846/0x1420
-> worker_thread+0x5b3/0xf80
-> kthread+0x35a/0x700
-> ret_from_fork+0x2d/0x70
-> ret_from_fork_asm+0x1a/0x30
->
->Note that this test may not fail in a kernel without the fix, but it may
->hang on the client side if it triggers a kernel oops.
->
->This works by creating a socket, trying to connect to a server, and then
->executing a second connect operation on the same socket but to a
->different CID (0). This triggers a transport change. If the connect
->operation is interrupted by a signal, this could cause a null-ptr-deref.
->
->Since this bug is non-deterministic, we need to try several times. It
->is reasonable to assume that the bug will show up within the timeout
->period.
->
->If there is a G2H transport loaded in the system, the bug is not
->triggered and this test will always pass.
-
-Can you add the reason?
-
->
->[1]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/
->
->Suggested-by: Hyunwoo Kim <v4bel@theori.io>
->Suggested-by: Michal Luczaj <mhal@rbox.co>
->Signed-off-by: Luigi Leonardi <leonardi@redhat.com>
->---
->This series introduces a new test that checks for a null pointer
->dereference that may happen when there is a transport change[1]. This
->bug was fixed in [2].
->
->Note that this test *cannot* fail, it hangs if it triggers a kernel
->oops. The intended use-case is to run it and then check if there is any
->oops in the dmesg.
->
->This test is based on Hyunwoo Kim's[3] and Michal's python
->reproducers[4].
->
->[1]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/
->[2]https://lore.kernel.org/netdev/20250110083511.30419-1-sgarzare@redhat.com/
->[3]https://lore.kernel.org/netdev/Z2LvdTTQR7dBmPb5@v4bel-B760M-AORUS-ELITE-AX/#t
->[4]https://lore.kernel.org/netdev/2b3062e3-bdaa-4c94-a3c0-2930595b9670@rbox.co/
->---
->Changes in v4:
->- Addressed Stefano's comments:
->    - Minor style changes
->    - Use `get_transports()` to print a warning when a G2H transport is
->    loaded
->    - Removed check on second connect: Because the first connect is
->    interrupted, the socket is in an unspecified state (see man connect)
->    . This can cause strange and unexpected behaviors (connect returning
->    success on a non-existing CID).
->
->- Link to v3:
->https://lore.kernel.org/r/20250611-test_vsock-v3-1-8414a2d4df62@redhat.com
->
->Sorry, this took waaay longer than expected.
->
->Changes in v3:
->Addressed Stefano's and Michal's comments:
->    - Added the splat text to the commit commessage.
->    - Introduced commit hash that fixes the bug.
->    - Not using perror anymore on pthread_* functions.
->    - Listener is just created once.
->
->- Link to v2:
->https://lore.kernel.org/r/20250314-test_vsock-v2-1-3c0a1d878a6d@redhat.com
->
->Changes in v2:
->- Addressed Stefano's comments:
->    - Timeout is now using current_nsec()
->    - Check for return values
->    - Style issues
->- Added Hyunwoo Kim to Suggested-by
->- Link to v1:
->https://lore.kernel.org/r/20250306-test_vsock-v1-0-0320b5accf92@redhat.com
->---
-> tools/testing/vsock/Makefile     |   1 +
-> tools/testing/vsock/vsock_test.c | 178 +++++++++++++++++++++++++++++++++++++++
-> 2 files changed, 179 insertions(+)
->
->diff --git a/tools/testing/vsock/Makefile b/tools/testing/vsock/Makefile
->index 6e0b4e95e230500f99bb9c74350701a037ecd198..88211fd132d23ecdfd56ab0815580a237889e7f2 100644
->--- a/tools/testing/vsock/Makefile
->+++ b/tools/testing/vsock/Makefile
->@@ -5,6 +5,7 @@ vsock_test: vsock_test.o vsock_test_zerocopy.o timeout.o control.o util.o msg_ze
-> vsock_diag_test: vsock_diag_test.o timeout.o control.o util.o
-> vsock_perf: vsock_perf.o msg_zerocopy_common.o
->
->+vsock_test: LDLIBS = -lpthread
-> vsock_uring_test: LDLIBS = -luring
-> vsock_uring_test: control.o util.o vsock_uring_test.o timeout.o msg_zerocopy_common.o
->
->diff --git a/tools/testing/vsock/vsock_test.c b/tools/testing/vsock/vsock_test.c
->index eb6f54378667ac7ed324f4823e988ec9846e41a3..095705c7b53b7ad38ab3b8bc3cbe54a9eeb76d5c 100644
->--- a/tools/testing/vsock/vsock_test.c
->+++ b/tools/testing/vsock/vsock_test.c
->@@ -22,6 +22,8 @@
-> #include <signal.h>
-> #include <sys/ioctl.h>
-> #include <linux/time64.h>
->+#include <pthread.h>
->+#include <fcntl.h>
->
-> #include "vsock_test_zerocopy.h"
-> #include "timeout.h"
->@@ -1867,6 +1869,177 @@ static void test_stream_connect_retry_server(const struct test_opts *opts)
-> 	close(fd);
-> }
->
->+#define TRANSPORT_CHANGE_TIMEOUT 2 /* seconds */
->+
->+static void *test_stream_transport_change_thread(void *vargp)
->+{
->+	pid_t *pid = (pid_t *)vargp;
->+	int ret;
->+
->+	/* We want this thread to terminate as soon as possible */
->+	ret = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
->+	if (ret) {
->+		fprintf(stderr, "pthread_setcanceltype: %d\n", ret);
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	while (true) {
->+		if (kill(*pid, SIGUSR1) < 0) {
->+			perror("kill");
->+			exit(EXIT_FAILURE);
->+		}
->+	}
->+	return NULL;
->+}
->+
->+static void test_transport_change_signal_handler(int signal)
->+{
->+	/* We need a custom handler for SIGUSR1 as the default one terminates the process. */
->+}
->+
->+static void test_stream_transport_change_client(const struct test_opts *opts)
->+{
->+	__sighandler_t old_handler;
->+	pid_t pid = getpid();
->+	pthread_t thread_id;
->+	time_t tout;
->+	int ret, tr;
->+
->+	tr = get_transports();
-
-nit: add a blank line here
-
->+	/* Print a warning if there is a G2H transport loaded.
->+	 * This is on a best effort basis because VMCI can be either G2H and H2G, and there is
->+	 * no easy way to understand it.
->+	 * The bug is present in the loopback transport. However, it does not interfere
-
-nit: s/is/was
-
->+	 * if it is loaded.
-
-I don't understand this, if the bug was present in the loopback transport, our goal is to stress it, so have it loaded is great, why it should interfere?
-
->+	 * The bug we are testing only appears when G2H transports are not loaded.
-
-Please add the reason also here.
-
->+	 */
->+
-
-nit: remove the blank line here
-
->+	tr &= ~TRANSPORT_LOOPBACK;
->+	if (tr != 0 && tr != TRANSPORT_VHOST)
-
-Sorry, this is really hard to understand IMO, let's do a step back.
-Your goal is to check if there is a G2H transport loaded, right?
-
-I think we have 2 options:
-1. similar to your, just masking the other 2 transports
-
-	if (tr & ~(TRANSPORT_LOOPBACK | TRANSPORT_VHOST))
-
-    IMO this is much clear to understand, and should have the same effect.
-
-2. (my preference) define in util.h some macros that we can reuse:
-	#define TRANSPORTS_G2H   (TRANSPORT_VIRTIO | TRANSPORT_VMCI | TRANSPORT_HYPERV)
-	#define TRANSPORTS_H2G   (TRANSPORT_VHOST | TRANSPORT_VMCI)
-	#define TRANSPORTS_LOCAL (TRANSPORT_LOOPBACK)
-
-     and here you can just do:
-	if (tr & TRANSPORTS_G2H)
-
->+		fprintf(stderr, "G2H Transport detected. This test will not fail.\n");
->+
->+	old_handler = signal(SIGUSR1, test_transport_change_signal_handler);
->+	if (old_handler == SIG_ERR) {
->+		perror("signal");
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	ret = pthread_create(&thread_id, NULL, test_stream_transport_change_thread, &pid);
->+	if (ret) {
->+		fprintf(stderr, "pthread_create: %d\n", ret);
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	control_expectln("LISTENING");
->+
->+	tout = current_nsec() + TRANSPORT_CHANGE_TIMEOUT * NSEC_PER_SEC;
->+	do {
->+		struct sockaddr_vm sa = {
->+			.svm_family = AF_VSOCK,
->+			.svm_cid = opts->peer_cid,
->+			.svm_port = opts->peer_port,
->+		};
->+		int s;
->+
->+		s = socket(AF_VSOCK, SOCK_STREAM, 0);
->+		if (s < 0) {
->+			perror("socket");
->+			exit(EXIT_FAILURE);
->+		}
->+
->+		ret = connect(s, (struct sockaddr *)&sa, sizeof(sa));
->+		/* The connect can fail due to signals coming from the thread.
-
-. should be ,
-
->+		 * or because the receiver connection queue is full.
->+		 * Ignoring also the latter case because there is no way
->+		 * of synchronizing client's connect and server's accept 
->when
->+		 * connect(s) are constantly being interrupted by signals.
->+		 */
->+		if (ret == -1 && (errno != EINTR && errno != ECONNRESET)) {
->+			perror("connect");
->+			exit(EXIT_FAILURE);
->+		}
->+
->+		/* Set CID to 0 cause a transport change. */
->+		sa.svm_cid = 0;
-
-nit: add a blank line
-
->+		/* Here we ignore the connect return value because we cannot
->+		 * safely assume that it will *always* fail.
->+		 * This is because the previous connect was interrupted
->+		 * during the connection process. The socket state, as stated
->+		 * in `man connect`, is unspecified and can result in strange
->+		 * behaviors.
-
-Let's focus on the behaviour and try to be more concise. Something like
-this:
-
-		/* Ignore return value since it can fail or not.
-		 * If the previous connect is interrupted while the
-		 * connection request is already sent, the second
-		 * connect() will wait for the response.
-
->+		 */
->+		connect(s, (struct sockaddr *)&sa, sizeof(sa));
->+
->+		close(s);
->+
->+		control_writeulong(CONTROL_CONTINUE);
->+
->+	} while (current_nsec() < tout);
->+
->+	control_writeulong(CONTROL_DONE);
->+
->+	ret = pthread_cancel(thread_id);
->+	if (ret) {
->+		fprintf(stderr, "pthread_cancel: %d\n", ret);
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	/* Wait for the thread to terminate */
-
-useless comment
-
->+	ret = pthread_join(thread_id, NULL);
->+	if (ret) {
->+		fprintf(stderr, "pthread_join: %d\n", ret);
->+		exit(EXIT_FAILURE);
->+	}
->+
->+	/* Restore the old handler */
-
-ditto
-
->+	if (signal(SIGUSR1, old_handler) == SIG_ERR) {
->+		perror("signal");
->+		exit(EXIT_FAILURE);
->+	}
->+}
->+
->+static void test_stream_transport_change_server(const struct test_opts *opts)
->+{
->+	int s = vsock_stream_listen(VMADDR_CID_ANY, opts->peer_port);
->+
->+	/* Set the socket to be nonblocking because connects that have been interrupted
->+	 * (EINTR) can fill the receiver's accept queue anyway, leading to connect failure.
->+	 * As of today (6.15) in such situation there is no way to understand, from the
->+	 * client side, if the connection has been queued in the server or not.
->+	 */
->+	if (fcntl(s, F_SETFL, fcntl(s, F_GETFL, 0) | O_NONBLOCK) < 0) {
->+		perror("fcntl");
->+		exit(EXIT_FAILURE);
->+	}
->+	control_writeln("LISTENING");
->+
->+	while (control_readulong() == CONTROL_CONTINUE) {
->+		struct sockaddr_vm sa_client;
->+		socklen_t socklen_client = sizeof(sa_client);
->+
->+		/* Must accept the connection, otherwise the `listen`
->+		 * queue will fill up and new connections will fail.
->+		 * There can be more than one queued connection,
->+		 * clear them all.
->+		 */
->+		while (true) {
->+			int client = accept(s, (struct sockaddr *)&sa_client, &socklen_client);
-
-We don't use the client address, so IMO we can just pass NULL.
-
-Thanks,
-Stefano
-
->+
->+			if (client < 0) {
->+				if (errno == EAGAIN)
->+					break;
->+
->+				perror("accept");
->+				exit(EXIT_FAILURE);
->+			}
->+
->+			close(client);
->+		}
->+	}
->+
->+	close(s);
->+}
->+
-> static void test_stream_linger_client(const struct test_opts *opts)
-> {
-> 	int fd;
->@@ -2106,6 +2279,11 @@ static struct test_case test_cases[] = {
-> 		.run_client = test_stream_nolinger_client,
-> 		.run_server = test_stream_nolinger_server,
-> 	},
->+	{
->+		.name = "SOCK_STREAM transport change null-ptr-deref",
->+		.run_client = test_stream_transport_change_client,
->+		.run_server = test_stream_transport_change_server,
->+	},
-> 	{},
-> };
->
->
->---
->base-commit: 68d019aa14d97f8d57b0f8d203fd3b44db2ba0c7
->change-id: 20250306-test_vsock-3e77a9c7a245
->
->Best regards,
->-- 
->Luigi Leonardi <leonardi@redhat.com>
->
-
+PiA+ID4gPiArCQkJCXJlc2V0cyA9IDwmc3lzY29uIEFTUEVFRF9SRVNFVF9IMlg+LA0KPiA+ID4g
+PiArCQkJCQkgPCZzeXNjb24gQVNQRUVEX1JFU0VUX1BDSUVfUkNfTz47DQo+ID4gPiA+ICsJCQkJ
+cmVzZXQtbmFtZXMgPSAiaDJ4IiwgInBlcnN0IjsNCj4gPiA+DQo+ID4gPiBQRVJTVCMgaXMgY2xl
+YXJseSBhIHBlci1Sb290IFBvcnQgaXRlbSBzaW5jZSBpdCdzIGEgc2lnbmFsIG9uIHRoZQ0KPiA+
+ID4gUENJZSBjb25uZWN0b3IuICBDYW4geW91IHNlcGFyYXRlIHRoaXMgYW5kIGFueSBvdGhlciBw
+ZXItUm9vdCBQb3J0DQo+ID4gPiB0aGluZ3MgaW50byBhIFJvb3QgUG9ydCBzdGFuemEgdG8gbGVh
+dmUgb3BlbiB0aGUgcG9zc2liaWxpdHkgb2YNCj4gPiA+IGZ1dHVyZSBoYXJkd2FyZSB0aGF0IHN1
+cHBvcnRzIG11bHRpcGxlIFJvb3QgUG9ydHMgaW4gdGhlIFJDPw0KPiA+DQo+ID4gVGhlIFBDSWUg
+UkMgdGhhdCBkZXNpZ25lZCBieSB1cyBpcyBvbmx5IG9uZSByb290IHBvcnQuDQo+IA0KPiBZZXMu
+ICBCdXQgdGhpcyBkcml2ZXIgbWF5IGJlIHVzZWQgaW4gdGhlIGZ1dHVyZSBmb3Igb3RoZXIgUkNz
+IHRoYXQgaW5jbHVkZSBtb3JlDQo+IHRoYW4gb25lIFJvb3QgUG9ydCwgYW5kIGl0IHdvdWxkIGJl
+IGdvb2QgaWYgdGhhdCBkaWRuJ3QgcmVxdWlyZSBzdHJ1Y3R1cmFsDQo+IGNoYW5nZXMgdG8gdGhl
+IERULiAgQWxzbywgdGhlcmUgYXJlIFJDcyBmcm9tIG90aGVyIHZlbmRvcnMgdGhhdCBpbmNsdWRl
+IG1vcmUNCj4gdGhhbiBvbmUgUm9vdCBQb3J0LCBhbmQgSSdkIGxpa2UgYWxsIHRoZSBEVHMgYW5k
+IGRyaXZlcnMgdG8gaGF2ZSBzaW1pbGFyDQo+IHN0cnVjdHVyZS4NCg0KVGhhbmtzLg0KSXMgdGhl
+ICJwY2llYyIgbm9kZSBpbiBhcmNoL2FybS9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS0zODUuZHRz
+aSB3aGF0IHlvdSBzYWlkPw0KT3IgY291bGQgeW91IHByb3ZpZGUgc29tZSBleGFtcGxlcyBmb3Ig
+dXMgdG8gbW9kaWZ5IG91ciBwY2llIHJjIG5vZGU/DQoNClRoYW5rcywNCkphY2t5DQo=
