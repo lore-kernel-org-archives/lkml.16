@@ -1,383 +1,176 @@
-Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010001.outbound.protection.outlook.com [52.101.84.1])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFE1E263F52;
-	Wed, 25 Jun 2025 12:53:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.1
-ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750856023; cv=fail; b=rKxmrAugCNzcC45p47Bd6K2BpDJlayXzfA1QoVSyA3ckhD4j7yjo1K+Qy0TGEPGjnoypbjDX43AWwAMT3yM1LJivCZIknepoOIg6KHoyvZ8ORcAx3/z2Mg8+ByrjoT/Q49kutuB3k507irrLGTuh53nzTZFal7Br8M5Piee0AjM=
-ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750856023; c=relaxed/simple;
-	bh=7+0BD1apJUOkyEZS/+Luz8cYZHXfjVr7CchQMYWJGWA=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=WOg4PcpcH31NajpE2Fd0ATImkPhkuC2+FiWxetD68H9ZtEkKsB6RKUHHP7RIlL82iIrYqT92J7mydZiR1q5PZk9F/QO3EE+jWh0MLlQR93tibP+IBq5tvycSN4Q+J0ngBRXx7Btzve8A9frDjjHD/hZbfXf9Ik1csiZn3G9DC3g=
-ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=C2wPjzZ0; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=C2wPjzZ0; arc=fail smtp.client-ip=52.101.84.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BAA026462B
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:53:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750856035; cv=none; b=jL+p/XCatLmaxH6L8L9c+ZvkuQJeH4iottm8Q/0hPCTICDsI1CKUt2Mre5r1/5zq2R5QduVIVDKxGvdNsBF59Yp3y6AusWcolkt/uhhs/po2kZ9wC5Yx22ryhdcgZPXBApdxobeJjwITHl6uAN3nHjDWOY+mguG5qKQmJc80ceU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750856035; c=relaxed/simple;
+	bh=V5vRw37irrlS8OlidSqX3//zwRh1Kiq+TQw+3YvYvnA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=L+STnRDwbfuN5NqmDHO2hVwgapZCU/L8eGjHFsPTWOD3+xfma7/jPYSYln+VtsU2GYS2p2Zm3/1PL5y1y6uaKo6KTSwQv2mVbCfCtLnmWJQP9e7WYELduZaB/60llo9iGGrxAVq5zqKwUJw5ZRqxeq6nX/gNVNyxr7jNiF7EGAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=MqvdsWfu; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="C2wPjzZ0";
-	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="C2wPjzZ0"
-ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
- b=SXHau0ImWWFUHSRYutiRcB5CR8FD1q59ZOu43luKFeI9nKD4D3PN8sAEzxAEqUxbs7PRqadnGJ/9nHWItg7J06cNhEam0SkMhp1tpos7QohahEa8A2V8Wj6eXr/PbBY4Sah/by3StisDgiq9zxZYUPr4KYTllDbhzQuL6CEvX8fj9QK0fyp8H42pF95T3Fmn/50ndrZRNUJJgrJRT3y38ijYeYEcWvXbebpwEadFDD48RRzrEuVYA8O1qOJUNsqLW51cZrb9+m6utmnnLWWlQISaeTlXwp3KRqaoPXqKsyFK/KiVy4wY+sJG6BI/CXMRuka5CWCmzpL7Os96DvSrOw==
-ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rFKBbsxz1C3B9YivlNyUBqXB6NmRbQLfEBUtfT96eTY=;
- b=taznAvstj2C9zsvM8K/Pl7W8YW59fTTPobwWpl1A44PD+nucZNYuzzhoAwUjLZZYVq1J9utJjhIGSgGIGNKJE+e3xd4QZ61L6y4EAFemloHUdJRT/PtOxIhmM2TZYSFCT+Uw9BhgOoRgbJMfQqGA6Yl0EVk+TXp/bjp9V3heiwkkR+foRzrwiS6dOl6wOjT3ZSsnFxQb6SL7eCQtcCnzGfP5Mqty1SY43EjapnTBbkCAPuZTnl3YfvvfU+2xE5w4v95RPdH1loyMyHEL6qsyhXywT6e+8b5LxjXKUHkb2fvQ0NoA3Wd7lZN0hf4MDrJ8pGMOzHjUvFnoLIwCg2dECA==
-ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
- 4.158.2.129) smtp.rcpttodomain=linux.ibm.com smtp.mailfrom=arm.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
- dkim=pass (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
- spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
- dmarc=[1,1,header.from=arm.com])
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rFKBbsxz1C3B9YivlNyUBqXB6NmRbQLfEBUtfT96eTY=;
- b=C2wPjzZ0gQ5ofWDVteJfyexwWCwDGYR2i/XKO0hUEteatUL9/CeoSUzTwkoGuAJAVTzf1ALVIzoDqVAkk+vGkXyFaCpDCNVW4enc4MGuIKn+RphffkSTBU7Yt5TC8l1v0lb9x7dbGexxLOyymMhxkO0eaOzSCD0Ii3qanrQPctQ=
-Received: from DU6P191CA0018.EURP191.PROD.OUTLOOK.COM (2603:10a6:10:540::6) by
- GV1PR08MB10955.eurprd08.prod.outlook.com (2603:10a6:150:1f0::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Wed, 25 Jun
- 2025 12:53:35 +0000
-Received: from DU2PEPF0001E9BF.eurprd03.prod.outlook.com
- (2603:10a6:10:540:cafe::69) by DU6P191CA0018.outlook.office365.com
- (2603:10a6:10:540::6) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.17 via Frontend Transport; Wed,
- 25 Jun 2025 12:53:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=arm.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
- client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
-Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
- DU2PEPF0001E9BF.mail.protection.outlook.com (10.167.8.68) with Microsoft SMTP
- Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.14 via
- Frontend Transport; Wed, 25 Jun 2025 12:53:34 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XGNH7/1He5I4uFUhpgMBX3OZqcLF49Dkj/hVAueozo2YB6Y9KnyvBIBkmByYIcRewkeOhc4fCucoFR+ZHnsbJKpXb4usIhsvNDCsJV/UYFKWyqEQOxFwqRoMKsR++VAWvxKmV3sQ27wbxFtwr1XVSbYYEV6QzgpBkh+74cUlApY1oK73z9raIzX85/Mtbk+Gmtf2QTFMSmkG3bZ8nT8gGlvquhSJnndisiU3ycgQhN/Hs/0iZ8VSw79pvFp/gqsRDFV0opj1jnXT8M5p4TKYpXNo3rqYvnifwq40Vs8vuAdjQVxJeQsvoA0UgdjE4mhvkRG58mdUncto87km9jR2mw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=rFKBbsxz1C3B9YivlNyUBqXB6NmRbQLfEBUtfT96eTY=;
- b=MB+caPSX6HsU0O3aCBBrCOYj2U3+ixvrbhTOgI7d5fKPTobErEdBEE6uFbuSBPifoKJVFE6ZaHs2n1fuYAzNJTvbxBtb9XJHHE7kWplPDI0MGrEt4HnCj3rnpNGB9al6goJY8x+icZqBdw5C8Db6DRNiM1ITOD1ahTUgDLGJq5+4wAEMZPKrkNaEJ0eU2UessZN0OZEML/hSZ65Mi7K1ZJS4aMwB6Xih7K3tzV4ft/zoIKaKCI5MIDl27Bi0gkFyO2XJWbgfLW5iz+ADQpJG1PB46G1W/a1D1aL28628PgwwR6Yo9IGDxZ8fScEyW7sSmMjpw9nQhQfCA0y/1avhzg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rFKBbsxz1C3B9YivlNyUBqXB6NmRbQLfEBUtfT96eTY=;
- b=C2wPjzZ0gQ5ofWDVteJfyexwWCwDGYR2i/XKO0hUEteatUL9/CeoSUzTwkoGuAJAVTzf1ALVIzoDqVAkk+vGkXyFaCpDCNVW4enc4MGuIKn+RphffkSTBU7Yt5TC8l1v0lb9x7dbGexxLOyymMhxkO0eaOzSCD0Ii3qanrQPctQ=
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-Received: from DB9PR08MB7114.eurprd08.prod.outlook.com (2603:10a6:10:2c7::19)
- by DB9PR08MB7865.eurprd08.prod.outlook.com (2603:10a6:10:39c::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.16; Wed, 25 Jun
- 2025 12:53:01 +0000
-Received: from DB9PR08MB7114.eurprd08.prod.outlook.com
- ([fe80::515:9f73:5a61:fddb]) by DB9PR08MB7114.eurprd08.prod.outlook.com
- ([fe80::515:9f73:5a61:fddb%7]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
- 12:53:01 +0000
-Message-ID: <16fff6e9-98f5-4004-9906-feac49f0bbb4@arm.com>
-Date: Wed, 25 Jun 2025 18:22:53 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/6] mm/selftests: Fix virtual_address_range test issues.
-To: Donet Tom <donettom@linux.ibm.com>
-Cc: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Aboorva Devarajan <aboorvad@linux.ibm.com>, akpm@linux-foundation.org,
- Liam.Howlett@oracle.com, shuah@kernel.org, pfalcato@suse.de,
- david@redhat.com, ziy@nvidia.com, baolin.wang@linux.alibaba.com,
- npache@redhat.com, ryan.roberts@arm.com, baohua@kernel.org,
- linux-mm@kvack.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, ritesh.list@gmail.com
-References: <159f6939-e7c8-492c-8195-b7e8787a08f1@lucifer.local>
- <f8730d2d-41bf-407a-b44b-6cb9c1e5d4b3@arm.com>
- <79bdd993-0e9c-4d7d-b42c-4b5750eff140@lucifer.local>
- <aaddfd0b-216e-48fe-b48f-35c78eabcf9a@arm.com>
- <8e23c5d3-6ce3-4fe8-b6fe-69658d5d0727@lucifer.local>
- <fc5c8193-2642-49f7-9f2a-00ad33353773@arm.com>
- <c93110a4-19e4-4a1d-b044-6b7f521eaa0d@lucifer.local>
- <815793f1-6800-4b9a-852e-f13d6308f50f@arm.com>
- <2756fa2b-e8bf-4c66-bf9b-c85dc63dfc33@lucifer.local>
- <41d9a70d-9791-4212-af23-5b13d8e4a47d@arm.com>
- <aFPI_blZGhvKSbNJ@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
-Content-Language: en-US
-From: Dev Jain <dev.jain@arm.com>
-In-Reply-To: <aFPI_blZGhvKSbNJ@li-06431bcc-2712-11b2-a85c-a6fe68df28f9.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: MA0PR01CA0029.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:b8::11) To DB9PR08MB7114.eurprd08.prod.outlook.com
- (2603:10a6:10:2c7::19)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="MqvdsWfu"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250625125350euoutp01aeb6adeb173de81a1e9e64546aaf9725~MSkiRQQBS2094820948euoutp01C
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:53:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250625125350euoutp01aeb6adeb173de81a1e9e64546aaf9725~MSkiRQQBS2094820948euoutp01C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750856030;
+	bh=aHXPUrYiaWgQA8BN5Zf+BoDPK1tGYC0F+73wV5XjTXY=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=MqvdsWfuDOMUFFdpZ++uCNDRxIxCYkqgAv84879K/bIrv/0/5F8bSGtujVlCGo0Mi
+	 2TWRc/cy9lNQA6MawjAhJV+EChId0q2Qo+ybYx2viknaXnZ5ZFh++pV8cpExALdK+e
+	 AnqE2vKquHMcYIQjfNAMwsCUKOQJY7GIO+5WumIA=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250625125350eucas1p1dad14e84a8cc44516174ecc9053727b1~MSkhvbtf41252112521eucas1p14;
+	Wed, 25 Jun 2025 12:53:50 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250625125349eusmtip10a4e23d9061b04dad7c3aa6ff3064088~MSkgtbupw0720807208eusmtip1C;
+	Wed, 25 Jun 2025 12:53:48 +0000 (GMT)
+Message-ID: <0b3d2deb-7f27-4390-b43e-353d4ba17bd7@samsung.com>
+Date: Wed, 25 Jun 2025 14:53:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-TrafficTypeDiagnostic:
-	DB9PR08MB7114:EE_|DB9PR08MB7865:EE_|DU2PEPF0001E9BF:EE_|GV1PR08MB10955:EE_
-X-MS-Office365-Filtering-Correlation-Id: 407f453e-2301-46a4-6de5-08ddb3e74bf7
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted:
- BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info-Original:
- =?utf-8?B?L1F2ODYrNCt4bHVnc2toNGUrTkIrcDNYd0hhYm92VVVTcGJ0YUV2bUNZZlhr?=
- =?utf-8?B?TFpUUGNCNlkwTTBkMngvd29BT0RtcDE5THcyNGIvZ0c5aFRyUThTUWphWHZZ?=
- =?utf-8?B?VGVCZlVlNE9CTC9UYnBRbDRVbTJnUFZGVXFPNXc5Y1c1U0k4RFNBWm5HZEkz?=
- =?utf-8?B?dlV5M25qK0dhSVFhUXE2VFpVN1IxZzlGRTVsZlRwZ2h2N3NId21lUFE3QWlt?=
- =?utf-8?B?RTJpdGdpRTFaL2c3cmp0SXBMVkRZMzhYN0cyK1BPTUFtOUhRWUNudlh2NWZV?=
- =?utf-8?B?ZHdjQ0FPdldoWjZIMWlVTUV5Zllnc0YwcUsxd2xFY2NTbWVwenNWaDMvWjB4?=
- =?utf-8?B?RDkzQjBpOGlMQzhlRCttckMweUE2Ukl4bnlHZy9BV3NqdXZRR1dvV2dBcm9t?=
- =?utf-8?B?cjdFWDFQNzY3aWNjWVc2bytvZGNBdmlHZ0l6RFB5N3Q5Q0xmaUVnTGw5eUtL?=
- =?utf-8?B?TC9TMUpzU3YwY2lqcUhBb3R6ck5jbC9GLzJTSDBlTDhIZTh5aGcxanhBZVk5?=
- =?utf-8?B?K0lIYVJGUHlZK1djVklTb1NUdDBjdWtuL0dMTzNRYzczZXVEb0Y3TCt1Ymtu?=
- =?utf-8?B?c28zZEF5enJwTTMxTEN2a0ZSMXVKZUMrZVdDWENxdnhZVEtNTEYrQ1RlN2hR?=
- =?utf-8?B?Z29XbEFGS2NSU2pJcXQxQnFiaVFkTys4RGNBNGwzTFlONWZvSGV0MnV1d01y?=
- =?utf-8?B?cmxxZDJMOUZWQk9QNlJReEFMemVJd3RxdVJ6WXh5UnBQNkhkQWJFeEFNK2FX?=
- =?utf-8?B?TWJMZVBvNWVrZnBJUkh2UVJ3T1lGclhLVkhBajQzUWJCTnJjbGpEdTVTNUdF?=
- =?utf-8?B?dmFhYjMxa0NoN3VxT09IYysySHNjQlkvZ000R01iQjcwT3hyeXhiZjZQclc4?=
- =?utf-8?B?aDJra2FoTlRCSXRPcTA3Q2o5QU9oZ1V0R1NFVU9SbmhLVGlsYXhJbVRqdWdY?=
- =?utf-8?B?aS9yaXhhZExkckxUTndnemIxQXBRZWgwTVpWVTl4dGxpL2pGRm1ZaGFiSXBI?=
- =?utf-8?B?anl6clF3YkY1SFc2SjFlWUh4U2hsN2hEZDIrZXEvckdMN3JRQm9NK1F5NVRI?=
- =?utf-8?B?N1BzN3lqVmYrWmJVQ0hNNSthWHFadGU0dnBCKzNRaGNRNG01UW9hc0tiK1hW?=
- =?utf-8?B?Tkw3T0tjSForMzZFMkJHck9OSzhkUy9ENDJ1ZS9YRmloV0dwRnNXMW1EMFV3?=
- =?utf-8?B?c1UvZGQ2cHRCSTdpNVJEMTlsRmEzd3FKRnNINzMxMU1MaUcxdzAvWmd3V3pP?=
- =?utf-8?B?RHNGMjBJcWt1bzExaHcxK3docXpINE1sVUdHTTdWeVBTUW5JbWxzd1VGeEl6?=
- =?utf-8?B?RENsVlFKTWovcWxkTkcwSS9hWklreHVvOVRlZStaazUweFVYRHZJK3pCS3VH?=
- =?utf-8?B?TDlwbTNlaGxxT3pvdllIbThmTUlVL2ExWktaOWh4a0VqRHdsT3dqWDJGUkhz?=
- =?utf-8?B?THdueURmMkV2dGpYN0tkLzBjcW9SUUFZWFUxK08veUx0OVJxVGpkZ1ZqNXpl?=
- =?utf-8?B?QlpBMVlJYlhlQWp0MTAvTXBuT1FjVFZjU1FSMmkvdUhaTDRHTVptN1Z3Wm5w?=
- =?utf-8?B?UTlMM2JKa2V3YWh3dnpWRmE2alQrMXhDczc2cnltdlZRRUdZanR2dnU3Qk9D?=
- =?utf-8?B?ajJ5RWJUUk9pTldVbDA0b2pQV0tSMVJDTk5URTVTRlJLUWlHaTE4RndvdGFL?=
- =?utf-8?B?V2IxejM3aldPN0QycUl5RFoyNGF3SEFVbi9DYngrOWN2RkhmUFVrRDRtQkpR?=
- =?utf-8?B?M0J1L1JuZTh6ZGhjaUF2UXVrWXFtUGk2bFhScncrV29NdUVFYkpHR3FqWVhk?=
- =?utf-8?B?bWg2NU9BZGZsbUgrSlNBT2E4L2xod083U2NnNExyazhvdFJTZExjOWhaaWl0?=
- =?utf-8?B?M0tGOXEwREpLRlFIdzRSNENKUmNMd25sZTJ0T0xRdVNRSmUrUTZUdC9mZkl4?=
- =?utf-8?Q?hUEGQ2CSDcY=3D?=
-X-Forefront-Antispam-Report-Untrusted:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR08MB7114.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1101;
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR08MB7865
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped:
- DU2PEPF0001E9BF.eurprd03.prod.outlook.com
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id-Prvs:
-	e743d619-9b0c-4402-f048-08ddb3e737b2
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|7416014|36860700013|14060799003|35042699022;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bE5ENlo4WXpZOVRGMnFDOVF0UWxCdzVQVktGRjNyenlTZy8yeEJ4MnNrb2JF?=
- =?utf-8?B?d0xzcjFLeklqVFhQbENleW5DZzNkcldlWTdmYnh6L0xEb3FlcjFySmZrTlhu?=
- =?utf-8?B?b3RCQldkRWI2ajJKZHRKTkZ3azN6VDJsdkVxWWVYRmhMVWVnVDdDMitGYU04?=
- =?utf-8?B?ZmhvdUROZ0ROZi8rbU0vSXpKRDNZZ2d3QVMraHZqRk8xb2VXUmhDeVJLcDBv?=
- =?utf-8?B?cmpXY2JOaUV1dXBFNzhTeXBOcFp2RHNsd3FEV2praHZMYmhkemdoNWtxVWds?=
- =?utf-8?B?VkRkM1crbmp6c2I1R0xFclVoS0Nid3JVTXdDdDBCTkpTSk5EczBaQ1hEWWs2?=
- =?utf-8?B?YkhvVVk0UkNvUmZQa1RFbjdXcVNsampYUU93dnNoT0JaeURQZXRaTG5kVzA0?=
- =?utf-8?B?aDRub0p6MFQ1TGtjS1pzbWxicGZoY2tCOGt2dlZJSSswWW42cnptMmE5WllJ?=
- =?utf-8?B?bVVlUkdMYUpWYXRWWmJFak13aGE1QXprUWdQR2k2OVBGVXpic2s1L2JqR0lm?=
- =?utf-8?B?RFlKeUhhNHpmQXlnR3I2WmR6U0RzOCtpeGRTcFhoOE02cXgzdHN6aTlpY0FZ?=
- =?utf-8?B?VytjVXYrd0dWYTg0K2hYUVdQMitkUTdQUndjUVZuNnc3UnE4WXY2VXIxTElG?=
- =?utf-8?B?QW8wcmFGSnVjNHJVaDk2UXMyd3J2VmUyWTdUSkNLajd3S1Y5elF1NHpPOHFj?=
- =?utf-8?B?eDZCZ0hmK0U4Q3VoOGxZeG9IcS9NN1VsNXNZTG8yTEgzTFdlT2Nma0JPMngw?=
- =?utf-8?B?Y0tPU2c2UW5RWDJDc1o5Zm85M3FVM3VPTHhaT3ZzNVIxYU9KV2dIclpYbUtI?=
- =?utf-8?B?YjFYTVhmRnZzL1pQTUNqamc0YTdzUkh4eTBrYkVRQ3J0MFhwcE03OEZTZDB6?=
- =?utf-8?B?MlNMMjI5SElWQ3psdkRxc3hqdnFwSzZ5QXdjdG01V3l6aG8wb2ZyVVh6ZWJl?=
- =?utf-8?B?elNLdmgrQ0pIUjYvMFQ3UmVPK0gzNEo1QmhqQy9UT1poS2tsNnNWcWYvejJV?=
- =?utf-8?B?Zm9Rd0pxSlU4YnJRTXpaMlNqNVl4bkJCZHlTeVdad0Rad2o3aFhKQ0hwL2xK?=
- =?utf-8?B?dktGa3BwQUxyQ0M2K04wZGkvZGtiZm14eTdEY1FtanhYNWhNVFA1NWtabVln?=
- =?utf-8?B?MlFqMTNvTzh0YThQNi9reERNRWQ3eTkrcGN6MEpXbVUrblBrTkFmR2xJTGJx?=
- =?utf-8?B?dnZuOUN4SlhzU3FoTWpFRG9ja1JCN0dKS0pqbEUrbENPbUxzaDd2NXF1WGJS?=
- =?utf-8?B?YktmV20wQXZld3E4MUZXSC9WRXcvL1B6Zlo3a2JEbXpuVG80Ukp5NkFzSzU3?=
- =?utf-8?B?SEZDSkk4UXM1Z0twNU9YbDBFSEEvZHFBMFk5ZnFWdDgvaXRWSzNaQkN5R0c1?=
- =?utf-8?B?NVU5VGZDdzZHSVk1bmEwUjhPSmJ2MlR4Q1lNSEVsSHFwM2pCa2MxSFBQVCtp?=
- =?utf-8?B?VUQwWm80V1VKMThZUzVzazB6dmI4aHYyTUdZQnBmbG1Qbm5UWlc5bkgvU1hN?=
- =?utf-8?B?K1ZXR1RLWWZCb3JzYVJKLzM2OHR3TzdSdnlvQU9ySVNlckhNYmE2M0tybjlj?=
- =?utf-8?B?TUZ1S1RvQTJEZDNBb2c0ai8zZ012Nm81RVlQUk53eHhoS3NRM09HMTdtTXFK?=
- =?utf-8?B?Rk0zcUxzTFhiWE9BeW12K2xPQm91NzY4WVlMUmxtVEdqVnlFZGYrTXVsWGht?=
- =?utf-8?B?cXYweEVnRk9URTdWZUxpOHFIY1d2TkRONnFZdUdMU2hPVUxicGlab0F4OGp1?=
- =?utf-8?B?cHlCT2R6RmhRRFo0aXd4ditIVTJUWHNTSHlLQjlFVnYzZVl4bC9OV2ZjODhi?=
- =?utf-8?B?b09pcXM3N2FsVjJRRjRDOTlzZ0FRNEJPd3JpL2NoQkxad0tHVXBrU0lFRkhH?=
- =?utf-8?B?MGh2RVBoa0hBUWE4a285UHJBQSs4RVJ6OUp2STJzRjZqRFBsS2FSakpnRVpH?=
- =?utf-8?B?RGZlVWp6NFBjd29oelVOajFaUjE0T3lkOC9qYS9zMXFTTjZlS3AwYTFRL0VH?=
- =?utf-8?B?VnFqVzN6dWhmbU9hRENDcC80bnFKSFFaaHAwWFVoVW9lblRYSElKL2h0Yi91?=
- =?utf-8?Q?uTFGed?=
-X-Forefront-Antispam-Report:
-	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(7416014)(36860700013)(14060799003)(35042699022);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 12:53:34.8632
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 407f453e-2301-46a4-6de5-08ddb3e74bf7
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DU2PEPF0001E9BF.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR08MB10955
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 8/8] drm/imagination: Enable PowerVR driver for
+ RISC-V
+To: Matt Coster <Matt.Coster@imgtec.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bartosz
+	Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Frank
+	Binns <Frank.Binns@imgtec.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
+	Szyprowski <m.szyprowski@samsung.com>, Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <ff96ee1f-23ad-4e7f-9ac1-11f410e459e3@imgtec.com>
+Content-Transfer-Encoding: 7bit
+X-CMS-MailID: 20250625125350eucas1p1dad14e84a8cc44516174ecc9053727b1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250623114439eucas1p17e4405b95a5693a972bf40a3b3ecdc11
+X-EPHeader: CA
+X-CMS-RootMailID: 20250623114439eucas1p17e4405b95a5693a972bf40a3b3ecdc11
+References: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
+	<CGME20250623114439eucas1p17e4405b95a5693a972bf40a3b3ecdc11@eucas1p1.samsung.com>
+	<20250623-apr_14_for_sending-v6-8-6583ce0f6c25@samsung.com>
+	<ff96ee1f-23ad-4e7f-9ac1-11f410e459e3@imgtec.com>
 
 
-On 19/06/25 1:53 pm, Donet Tom wrote:
-> On Wed, Jun 18, 2025 at 08:13:54PM +0530, Dev Jain wrote:
->> On 18/06/25 8:05 pm, Lorenzo Stoakes wrote:
->>> On Wed, Jun 18, 2025 at 07:47:18PM +0530, Dev Jain wrote:
->>>> On 18/06/25 7:37 pm, Lorenzo Stoakes wrote:
->>>>> On Wed, Jun 18, 2025 at 07:28:16PM +0530, Dev Jain wrote:
->>>>>> On 18/06/25 5:27 pm, Lorenzo Stoakes wrote:
->>>>>>> On Wed, Jun 18, 2025 at 05:15:50PM +0530, Dev Jain wrote:
->>>>>>> Are you accounting for sys.max_map_count? If not, then you'll be hitting that
->>>>>>> first.
->>>>>> run_vmtests.sh will run the test in overcommit mode so that won't be an issue.
->>>>> Umm, what? You mean overcommit all mode, and that has no bearing on the max
->>>>> mapping count check.
->>>>>
->>>>> In do_mmap():
->>>>>
->>>>> 	/* Too many mappings? */
->>>>> 	if (mm->map_count > sysctl_max_map_count)
->>>>> 		return -ENOMEM;
->>>>>
->>>>>
->>>>> As well as numerous other checks in mm/vma.c.
->>>> Ah sorry, didn't look at the code properly just assumed that overcommit_always meant overriding
->>>> this.
->>> No problem! It's hard to be aware of everything in mm :)
->>>
->>>>> I'm not sure why an overcommit toggle is even necessary when you could use
->>>>> MAP_NORESERVE or simply map PROT_NONE to avoid the OVERCOMMIT_GUESS limits?
->>>>>
->>>>> I'm pretty confused as to what this test is really achieving honestly. This
->>>>> isn't a useful way of asserting mmap() behaviour as far as I can tell.
->>>> Well, seems like a useful way to me at least : ) Not sure if you are in the mood
->>>> to discuss that but if you'd like me to explain from start to end what the test
->>>> is doing, I can do that : )
->>>>
->>> I just don't have time right now, I guess I'll have to come back to it
->>> later... it's not the end of the world for it to be iffy in my view as long as
->>> it passes, but it might just not be of great value.
->>>
->>> Philosophically I'd rather we didn't assert internal implementation details like
->>> where we place mappings in userland memory. At no point do we promise to not
->>> leave larger gaps if we feel like it :)
->> You have a fair point. Anyhow a debate for another day.
+
+On 6/24/25 15:54, Matt Coster wrote:
+> On 23/06/2025 12:42, Michal Wilczynski wrote:
+>> Several RISC-V boards feature Imagination GPUs that are compatible with
+>> the PowerVR driver. An example is the IMG BXM-4-64 GPU on the Lichee Pi
+>> 4A board. This commit adjusts the driver's Kconfig dependencies to allow
+>> the PowerVR driver to be compiled on the RISC-V architecture.
 >>
->>> I'm guessing, reading more, the _real_ test here is some mathematical assertion
->>> about layout from HIGH_ADDR_SHIFT -> end of address space when using hints.
->>>
->>> But again I'm not sure that achieves much and again also is asserting internal
->>> implementation details.
->>>
->>> Correct behaviour of this kind of thing probably better belongs to tests in the
->>> userland VMA testing I'd say.
->>>
->>> Sorry I don't mean to do down work you've done before, just giving an honest
->>> technical appraisal!
->> Nah, it will be rather hilarious to see it all go down the drain xD
+>> By enabling compilation on RISC-V, we expand support for these GPUs,
+>> providing graphics acceleration capabilities and enhancing hardware
+>> compatibility on RISC-V platforms.
 >>
->>> Anyway don't let this block work to fix the test if it's failing. We can revisit
->>> this later.
->> Sure. @Aboorva and Donet, I still believe that the correct approach is to elide
->> the gap check at the crossing boundary. What do you think?
+>> Add a dependency on MMU to fix a build warning on RISC-V configurations
+>> without an MMU.
 >>
-> One problem I am seeing with this approach is that, since the hint address
-> is generated randomly, the VMAs are also being created at randomly based on
-> the hint address.So, for the VMAs created at high addresses, we cannot guarantee
-> that the gaps between them will be aligned to MAP_CHUNK_SIZE.
->
-> High address VMAs
-> -----------------
-> 1000000000000-1000040000000 r--p 00000000 00:00 0
-> 2000000000000-2000040000000 r--p 00000000 00:00 0
-> 4000000000000-4000040000000 r--p 00000000 00:00 0
-> 8000000000000-8000040000000 r--p 00000000 00:00 0
-> e80009d260000-fffff9d260000 r--p 00000000 00:00 0
->
-> I have a different approach to solve this issue.
->
->  From 0 to 128TB, we map memory directly without using any hint. For the range above
-> 256TB up to 512TB, we perform the mapping using hint addresses. In the current test,
-> we use random hint addresses, but I have modified it to generate hint addresses linearly
-> starting from 128TB.
->
-> With this change:
->
-> The 0–128TB range is mapped without hints and verified accordingly.
->
-> The 128TB–512TB range is mapped using linear hint addresses and then verified.
->
-> Below are the VMAs obtained with this approach:
->
-> 10000000-10010000 r-xp 00000000 fd:05 135019531
-> 10010000-10020000 r--p 00000000 fd:05 135019531
-> 10020000-10030000 rw-p 00010000 fd:05 135019531
-> 20000000-10020000000 r--p 00000000 00:00 0
-> 10020800000-10020830000 rw-p 00000000 00:00 0
-> 1004bcf0000-1004c000000 rw-p 00000000 00:00 0
-> 1004c000000-7fff8c000000 r--p 00000000 00:00 0
-> 7fff8c130000-7fff8c360000 r-xp 00000000 fd:00 792355
-> 7fff8c360000-7fff8c370000 r--p 00230000 fd:00 792355
-> 7fff8c370000-7fff8c380000 rw-p 00240000 fd:00 792355
-> 7fff8c380000-7fff8c460000 r-xp 00000000 fd:00 792358
-> 7fff8c460000-7fff8c470000 r--p 000d0000 fd:00 792358
-> 7fff8c470000-7fff8c480000 rw-p 000e0000 fd:00 792358
-> 7fff8c490000-7fff8c4d0000 r--p 00000000 00:00 0
-> 7fff8c4d0000-7fff8c4e0000 r-xp 00000000 00:00 0
-> 7fff8c4e0000-7fff8c530000 r-xp 00000000 fd:00 792351
-> 7fff8c530000-7fff8c540000 r--p 00040000 fd:00 792351
-> 7fff8c540000-7fff8c550000 rw-p 00050000 fd:00 792351
-> 7fff8d000000-7fffcd000000 r--p 00000000 00:00 0
-> 7fffe9c80000-7fffe9d90000 rw-p 00000000 00:00 0
-> 800000000000-2000000000000 r--p 00000000 00:00 0    -> High Address (128TB to 512TB)
->
-> diff --git a/tools/testing/selftests/mm/virtual_address_range.c b/tools/testing/selftests/mm/virtual_address_range.c
-> index 4c4c35eac15e..0be008cba4b0 100644
-> --- a/tools/testing/selftests/mm/virtual_address_range.c
-> +++ b/tools/testing/selftests/mm/virtual_address_range.c
-> @@ -56,21 +56,21 @@
->   
->   #ifdef __aarch64__
->   #define HIGH_ADDR_MARK  ADDR_MARK_256TB
-> -#define HIGH_ADDR_SHIFT 49
-> +#define HIGH_ADDR_SHIFT 48
->   #define NR_CHUNKS_LOW   NR_CHUNKS_256TB
->   #define NR_CHUNKS_HIGH  NR_CHUNKS_3840TB
->   #else
->   #define HIGH_ADDR_MARK  ADDR_MARK_128TB
-> -#define HIGH_ADDR_SHIFT 48
-> +#define HIGH_ADDR_SHIFT 47
->   #define NR_CHUNKS_LOW   NR_CHUNKS_128TB
->   #define NR_CHUNKS_HIGH  NR_CHUNKS_384TB
->   #endif
->   
-> -static char *hint_addr(void)
-> +static char *hint_addr(int hint)
->   {
-> -       int bits = HIGH_ADDR_SHIFT + rand() % (63 - HIGH_ADDR_SHIFT);
-> +       unsigned long addr = ((1UL << HIGH_ADDR_SHIFT) + (hint * MAP_CHUNK_SIZE));
->   
-> -       return (char *) (1UL << bits);
-> +       return (char *) (addr);
->   }
->   
->   static void validate_addr(char *ptr, int high_addr)
-> @@ -217,7 +217,7 @@ int main(int argc, char *argv[])
->          }
->   
->          for (i = 0; i < NR_CHUNKS_HIGH; i++) {
-> -               hint = hint_addr();
-> +               hint = hint_addr(i);
->                  hptr[i] = mmap(hint, MAP_CHUNK_SIZE, PROT_READ,
->                                 MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+>> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+>> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>> ---
+>>  drivers/gpu/drm/imagination/Kconfig | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/imagination/Kconfig b/drivers/gpu/drm/imagination/Kconfig
+>> index 5f9fff43d6baadc42ebf48d91729bfbf27e06caa..a7da858a5b301e8f088e3e22f5641feb2e078681 100644
+>> --- a/drivers/gpu/drm/imagination/Kconfig
+>> +++ b/drivers/gpu/drm/imagination/Kconfig
+>> @@ -3,9 +3,10 @@
+>>  
+>>  config DRM_POWERVR
+>>  	tristate "Imagination Technologies PowerVR (Series 6 and later) & IMG Graphics"
+>> -	depends on ARM64
+>> +	depends on (ARM64 || RISCV)
+> 
+> There were two issues you encountered when enabling COMPILE_TEST in v5,
+> both of which are somewhat simple to workaround but expose underlying
+> assumptions we made during early development.
+> 
+> The first [1] is due to us assuming a 64-bit platform, which was never a
+> problem with the ARM64 dependency, but may actually be a problem with
+> RISCV given this allows for 32-bit as well. You should probably make
+> this (RISCV && 64BIT) until the implicit 64-bit dependency can be worked
+> out.
 
-Ah you sent it here, thanks. This is fine really, but the mystery is
-something else.
+Yeah will incude that in next revision.
 
+> 
+> Somewhat related, we also assume a little-endian host. Technically ARM64
+> can also be big-endian, you just don't encounter that in the wild too
+> often so it's never been a "real" issue. I do wonder if swapping out
+> (ARM64 || RISCV) for (64BIT && CPU_LITTLE_ENDIAN) entirely would be a
+> reasonable change, perhaps for another day though...
+> 
+> The other [2] is slightly more subtle. To keep things straightforward,
+> we currently map CPU pages to GPU pages 1:1, meaning we use the CPU page
+> size to define the GPU page size. That GPU page size is configurable,
+> but does not support every possible size the CPU could support on any
+> architecture. The failing test there was sparc64 with an 8K page size
+> causing no GPU page size to be defined. See the #if/#elif ladder at the
+> top of pvr_mmu.c for the supported sizes and the doc comment above
+> PVR_DEVICE_PAGE_SIZE in pvr_mmu.h for the acknowledgement of the page
+> size restrictions.
+> 
+> The "proper" fix here would be for us to make these two sizes
+> independent, but that's not a trivial change. The "quick" fix I suppose
+> would be to depend on one of the supported page sizes, so maybe
+> (PAGE_SIZE_4KB || PAGE_SIZE_16KB || PAGE_SIZE_64KB || PAGE_SIZE_256KB)
+> since the larger page sizes appear unsupported (probably for good
+> reason).
 
->
->
-> Can we fix it this way?
->   
+Thanks for a great explanation !
+
+> 
+>>  	depends on DRM
+>>  	depends on PM
+>> +	depends on MMU
+> 
+> Nit: can you keep this alphabetical?
+> 
+> Cheers,
+> Matt
+> 
+> [1]: https://lore.kernel.org/r/202506191323.zD1fszQb-lkp@intel.com/
+> [2]: https://lore.kernel.org/r/202506201103.GX6DA9Gx-lkp@intel.com/
+> 
+>>  	select DRM_EXEC
+>>  	select DRM_GEM_SHMEM_HELPER
+>>  	select DRM_SCHED
+>>
+> 
+> 
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
