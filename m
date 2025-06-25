@@ -1,72 +1,61 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2419F3074BC;
-	Wed, 25 Jun 2025 05:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EFC01D6DB6;
+	Wed, 25 Jun 2025 05:04:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750827845; cv=none; b=FxmV57832W4FW5Fs6bF7pHqEuk6tL/0NSh1qEW7pmtg9JdZKjUFK/sb0NJ8qmEZbUJNGgxFSA4Ei7dgI0VvtPWMiycnpANKo1w2tf63q0ZqRVsjTc5kW6pCWlx5zJXDDVO0j62FyqcCQZn79uFIW+TgScTxtYVdmAelx/lt7IPQ=
+	t=1750827848; cv=none; b=XGoxIZIwmnI0vyg51f41Ed8AMwNsmutGKSkJMpywUEA+vB7FxXwUqA9S3tWi54i1iEaMsZ1Spl+Zv1UPcuSyAe8xnlPDrVxM7iGwjcX7XckpGPDHI2GLCO2TiBkWV152f+CBWogQ/Q/DX8UUJotqX/PCvvZEk+n/wzV1ulFlEjc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750827845; c=relaxed/simple;
-	bh=y5MCvutvHcvNX4Keb63b3B7N/mP9uFUORXHB07+l9GM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sByZT/n1Oyl9z5LL7pYSHXgxUlxjPQiuvAgcFN3Fh0XVd6c1T5lBMSbpqnCPVFX2Lr2mdujGYsheuvxYAxNeFcRyKwWJ/Ms+wnBAa86dDGOg80eGnSV0jzynF0kd+wHRzK8EpEZ2alrufPSRUhrTT9QUpiOLA/Vqg5PvYlR64YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=St5kISov; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750827848; c=relaxed/simple;
+	bh=VI1KQdVhT4iTCZzmMmQQUoZ5wVMsmhnujrwjoo8Ak2w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kAl91UzblkopJ522j3Ymc3kboXkyGQ8ZSRw85IYQVDcEUhzMzPHNaMOcqTgZWnwDvUjOL4y1pUY6RBy3Wv5QvW3+1FC9DgcJmoCZ6w2o7baRyXR4LZugm4VRluad5doAEMtGApBHwWoZwJHfzx1mNQr7AN6ZgRjBxoXXSH9Soog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F8gO54Vg; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="St5kISov"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6fac7147cb8so21438866d6.1;
-        Tue, 24 Jun 2025 22:04:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750827842; x=1751432642; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=vmXcK6k38h6eC0gVXkVzWpNIJ0ZgWlljLA2mlEbIcz8=;
-        b=St5kISovzHMHKVLvedc+QERpo9Bq/xgshfvECzlIcKFpUJuHHsO4A3r5xafQFZf80o
-         atxE0j9Z4nkEnRpPJe13eV+ItRNQ1SiFrTyDtC/B2mTZzDlAUVJmzLiGLAH3lmuqpHYr
-         NwTIFvBmxF2qIYy7qqg2lf5McR2yuApV/etj7BMGZXYO0hi2pZuPqlzM2fiqh5wD1pmP
-         O4YMKaeEyxGguset9orju1qPYCzA6q/YceKInlJwd4ZE0AFSD6/pbmPFPSQNQjVVzwFX
-         h7cgN19JzjUUy8EtdohY0yPccoOoRezUKjoeGqgwZKOYuROZMQ1ZdwDe4GDj2NVy4ZS2
-         lhwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750827842; x=1751432642;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vmXcK6k38h6eC0gVXkVzWpNIJ0ZgWlljLA2mlEbIcz8=;
-        b=BNttp1aL0jw4JH7qkJgMB6LZOTJY4XAY0Ik66cIMEarOIzjKKsOEn2pkhr5QfKW2Lz
-         r1yDMcCj2mlYq/mLWcZgqoALO+JT4YynTgV+jr2/Lv0m6BrQv2dd+2MuVZIraYrD1inm
-         1piFaqmx3tGNKWdacfyYjqiuz2ItOLPUhAf+OwNOEr4xVxBgyip6rLge+Vy4xZ4KQqTA
-         9/4yrp5NnCTppZzhfMtSLx56sxXBRN3nFMSLdwnRlBJRZCGBRdIk7jpNI/5qQThJxq0d
-         7UuyS9a9mboszMkdANIsxZhD8F7xby++lK1lY4kUnrMVKg1Hz/K0KM5SZygjj2oCM40d
-         yYFg==
-X-Forwarded-Encrypted: i=1; AJvYcCVa2c1FyRWpJktV3hbgCANSpJCVlovuDPWkYlG1GNfxVTs0Ny8uXgQsk7kdVJ2Iq9CMkhfXbyNSBlksvP4vRwg=@vger.kernel.org, AJvYcCXtCo/rO7jTXBYmEQlXCeLxq508HyxdNX4cjYEuPjuBVPOa/Qg+WOP7vfVA5xy9LIrGZ4dl6Zb0brHQIvSR@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZJ9ycfCny06oOBgGz0k3oKU37KtzqVlOMjbHGpbfI7bV/XS8/
-	QPVHYVovmYviFt3TlUPKK3dH3TvlN9KtlInUCmBO+f2WzG8BfBobv4UI
-X-Gm-Gg: ASbGncuaAIWUc8/0vLrgJxO4tpGx7otJmrYuqHm5lBNmTg1v4MXgczBZ9NgvUD4v+VK
-	lmzzD70IkMXxDfWDrDiNWgQULgvtB5XyJIypLPZ4hR7u8IuvuMDUzXIwWVbq3bE4SIP7Gy/kkWD
-	VUVeMsV4CYNwIh8wJ1798wpvgXf0PL/oQ0mQj/xFkEMPjmcEFwM3O8dtP6idiwCEqGeMGnRJkxm
-	Jppif9LonCbYmmtndl5zZ6MJKe76mASDqrCCa4ySeiLr+iUDwMll0PmM+SU5iAUoMrlJMF0BYEF
-	/WUao7QcdcXHysFl6Nej9DJqGq8Rf4uNf0LpyFY28r+DXYZbMbmLSI1b7xamaalyrf/ReEoMTD2
-	qB3ErYfLGFgflYKk3LXzbHjDNHx+x
-X-Google-Smtp-Source: AGHT+IHFiUnt/9yqS8qbgYpDfozkJ+jkoQIKcpL8XgHkZUa+KLljdHbvDsB/7fAE6hG29v5mnBYmww==
-X-Received: by 2002:a05:6214:20cb:b0:6e8:ddf6:d11e with SMTP id 6a1803df08f44-6fd5ef83852mr25510976d6.21.1750827841892;
-        Tue, 24 Jun 2025 22:04:01 -0700 (PDT)
-Received: from fyre-x-redhat96-client-2.fyre.ibm.com ([129.41.87.1])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd0959d85asm64173416d6.107.2025.06.24.22.04.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 22:04:01 -0700 (PDT)
-From: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-To: peterhuewe@gmx.de,
-	jarkko@kernel.org
-Cc: jgg@ziepe.ca,
-	linux-integrity@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F8gO54Vg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750827846; x=1782363846;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=VI1KQdVhT4iTCZzmMmQQUoZ5wVMsmhnujrwjoo8Ak2w=;
+  b=F8gO54Vgz7R+Txp7MrewmYXV9pL34suxfuUm5WoGrqcoEWDcriCB5VCp
+   suQh4oWH3aHnBZ95rMyXzh7FsXTdjTa0SFYeJ8neFx3iSjRDiksUToguW
+   SCfPqJVLA716Bw7ncpO+YFfWA1sypkBtxdF7icMvJxyo5YMwRGY3dgN0x
+   NAQpwwPTvNGglaTS+8mKOKraBDCZAS5LTmBs0OMp5lY64N8gbh/IyYqrm
+   PlCC7FGZaVYoyemlxUH9JExD1DjoyZvHWmCu128FlKNC06NRSPmojkFDP
+   S48CzUZ1N3ZL1AxHhEdE5J1UoVl59ckcY/rG3IRHP2cjkHKlk3DZzLAi8
+   w==;
+X-CSE-ConnectionGUID: UDawC76fRqac8+T+1wMIeQ==
+X-CSE-MsgGUID: FKnBCz3YQuKQ4ONr+oTBfg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="56760108"
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="56760108"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 22:04:06 -0700
+X-CSE-ConnectionGUID: 7VaUwAh5QjSfxzy5ZCq4Ew==
+X-CSE-MsgGUID: 4+/NXHdYSmWiUxLEDbYVpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="152284687"
+Received: from allen-box.sh.intel.com ([10.239.159.52])
+  by orviesa007.jf.intel.com with ESMTP; 24 Jun 2025 22:04:04 -0700
+From: Lu Baolu <baolu.lu@linux.intel.com>
+To: Joerg Roedel <joro@8bytes.org>,
+	Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Kevin Tian <kevin.tian@intel.com>,
+	Shuicheng Lin <shuicheng.lin@intel.com>
+Cc: iommu@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
-Subject: [PATCH v4] tpm: Replace scnprintf() with sysfs_emit() and sysfs_emit_at() in sysfs show functions
-Date: Tue, 24 Jun 2025 22:03:46 -0700
-Message-ID: <20250625050346.11500-1-chelsyratnawat2001@gmail.com>
-X-Mailer: git-send-email 2.47.1
+	Lu Baolu <baolu.lu@linux.intel.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2 1/1] iommu/vt-d: Assign devtlb cache tag on ATS enablement
+Date: Wed, 25 Jun 2025 13:01:35 +0800
+Message-ID: <20250625050135.3129955-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -75,129 +64,86 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Documentation/filesystems/sysfs.rst mentions that show() should only
-use sysfs_emit() or sysfs_emit_at() when formating the value to be
-returned to user space. So replace scnprintf() with sysfs_emit().
+Commit <4f1492efb495> ("iommu/vt-d: Revert ATS timing change to fix boot
+failure") placed the enabling of ATS in the probe_finalize callback. This
+occurs after the default domain attachment, which is when the ATS cache
+tag is assigned. Consequently, the device TLB cache tag is missed when the
+domain is attached, leading to the device TLB not being invalidated in the
+iommu_unmap paths.
 
-Signed-off-by: Chelsy Ratnawat <chelsyratnawat2001@gmail.com>
+Fix this by assigning the CACHE_TAG_DEVTLB cache tag when ATS is enabled.
+
+Fixes: 4f1492efb495 ("iommu/vt-d: Revert ATS timing change to fix boot failure")
+Cc: stable@vger.kernel.org
+Suggested-by: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Tested-by: Shuicheng Lin <shuicheng.lin@intel.com>
 ---
-Changes in v4: 
-- updated the commit message.
- 
- drivers/char/tpm/tpm_ppi.c | 48 ++++++++++++++++++--------------------
- 1 file changed, 23 insertions(+), 25 deletions(-)
+ drivers/iommu/intel/cache.c |  5 ++---
+ drivers/iommu/intel/iommu.c | 11 ++++++++++-
+ drivers/iommu/intel/iommu.h |  2 ++
+ 3 files changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/char/tpm/tpm_ppi.c b/drivers/char/tpm/tpm_ppi.c
-index bc7b1b4501b3..50f64d9b53c8 100644
---- a/drivers/char/tpm/tpm_ppi.c
-+++ b/drivers/char/tpm/tpm_ppi.c
-@@ -52,7 +52,7 @@ static ssize_t tpm_show_ppi_version(struct device *dev,
+Change log:
+v2:
+ - The v1 solution has a flaw: ATS will never be enabled for drivers with
+   driver_managed_dma enabled, as their devices are not expected to be
+   automatically attached to the default domain.
+
+v1: https://lore.kernel.org/linux-iommu/20250620060802.3036137-1-baolu.lu@linux.intel.com/
+
+diff --git a/drivers/iommu/intel/cache.c b/drivers/iommu/intel/cache.c
+index fc35cba59145..47692cbfaabd 100644
+--- a/drivers/iommu/intel/cache.c
++++ b/drivers/iommu/intel/cache.c
+@@ -40,9 +40,8 @@ static bool cache_tage_match(struct cache_tag *tag, u16 domain_id,
+ }
+ 
+ /* Assign a cache tag with specified type to domain. */
+-static int cache_tag_assign(struct dmar_domain *domain, u16 did,
+-			    struct device *dev, ioasid_t pasid,
+-			    enum cache_tag_type type)
++int cache_tag_assign(struct dmar_domain *domain, u16 did, struct device *dev,
++		     ioasid_t pasid, enum cache_tag_type type)
  {
- 	struct tpm_chip *chip = to_tpm_chip(dev);
+ 	struct device_domain_info *info = dev_iommu_priv_get(dev);
+ 	struct intel_iommu *iommu = info->iommu;
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 7aa3932251b2..148b944143b8 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -3780,8 +3780,17 @@ static void intel_iommu_probe_finalize(struct device *dev)
+ 	    !pci_enable_pasid(to_pci_dev(dev), info->pasid_supported & ~1))
+ 		info->pasid_enabled = 1;
  
--	return scnprintf(buf, PAGE_SIZE, "%s\n", chip->ppi_version);
-+	return sysfs_emit(buf, "%s\n", chip->ppi_version);
+-	if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev))
++	if (sm_supported(iommu) && !dev_is_real_dma_subdevice(dev)) {
+ 		iommu_enable_pci_ats(info);
++		/* Assign a DEVTLB cache tag to the default domain. */
++		if (info->ats_enabled && info->domain) {
++			u16 did = domain_id_iommu(info->domain, iommu);
++
++			if (cache_tag_assign(info->domain, did, dev,
++					     IOMMU_NO_PASID, CACHE_TAG_DEVTLB))
++				iommu_disable_pci_ats(info);
++		}
++	}
+ 	iommu_enable_pci_pri(info);
  }
  
- static ssize_t tpm_show_ppi_request(struct device *dev,
-@@ -87,12 +87,10 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
- 		else {
- 			req = obj->package.elements[1].integer.value;
- 			if (tpm_ppi_req_has_parameter(req))
--				size = scnprintf(buf, PAGE_SIZE,
--				    "%llu %llu\n", req,
-+				size = sysfs_emit(buf, "%llu %llu\n", req,
- 				    obj->package.elements[2].integer.value);
- 			else
--				size = scnprintf(buf, PAGE_SIZE,
--						"%llu\n", req);
-+				size = sysfs_emit(buf, "%llu\n", req);
- 		}
- 	} else if (obj->package.count == 2 &&
- 	    obj->package.elements[0].type == ACPI_TYPE_INTEGER &&
-@@ -100,7 +98,7 @@ static ssize_t tpm_show_ppi_request(struct device *dev,
- 		if (obj->package.elements[0].integer.value)
- 			size = -EFAULT;
- 		else
--			size = scnprintf(buf, PAGE_SIZE, "%llu\n",
-+			size = sysfs_emit(buf, "%llu\n",
- 				 obj->package.elements[1].integer.value);
- 	}
+diff --git a/drivers/iommu/intel/iommu.h b/drivers/iommu/intel/iommu.h
+index 3ddbcc603de2..2d1afab5eedc 100644
+--- a/drivers/iommu/intel/iommu.h
++++ b/drivers/iommu/intel/iommu.h
+@@ -1289,6 +1289,8 @@ struct cache_tag {
+ 	unsigned int users;
+ };
  
-@@ -211,10 +209,10 @@ static ssize_t tpm_show_ppi_transition_action(struct device *dev,
- 	}
- 
- 	if (ret < ARRAY_SIZE(info) - 1)
--		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret, info[ret]);
-+		status = sysfs_emit(buf, "%d: %s\n", ret, info[ret]);
- 	else
--		status = scnprintf(buf, PAGE_SIZE, "%d: %s\n", ret,
--				   info[ARRAY_SIZE(info)-1]);
-+		status = sysfs_emit(buf, "%d: %s\n", ret,
-+				    info[ARRAY_SIZE(info)-1]);
- 	return status;
- }
- 
-@@ -255,23 +253,23 @@ static ssize_t tpm_show_ppi_response(struct device *dev,
- 	res = ret_obj[2].integer.value;
- 	if (req) {
- 		if (res == 0)
--			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
--					   "0: Success");
-+			status = sysfs_emit(buf, "%llu %s\n", req,
-+					    "0: Success");
- 		else if (res == 0xFFFFFFF0)
--			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
--					   "0xFFFFFFF0: User Abort");
-+			status = sysfs_emit(buf, "%llu %s\n", req,
-+					    "0xFFFFFFF0: User Abort");
- 		else if (res == 0xFFFFFFF1)
--			status = scnprintf(buf, PAGE_SIZE, "%llu %s\n", req,
--					   "0xFFFFFFF1: BIOS Failure");
-+			status = sysfs_emit(buf, "%llu %s\n", req,
-+					    "0xFFFFFFF1: BIOS Failure");
- 		else if (res >= 1 && res <= 0x00000FFF)
--			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
--					   req, res, "Corresponding TPM error");
-+			status = sysfs_emit(buf, "%llu %llu: %s\n",
-+					    req, res, "Corresponding TPM error");
- 		else
--			status = scnprintf(buf, PAGE_SIZE, "%llu %llu: %s\n",
--					   req, res, "Error");
-+			status = sysfs_emit(buf, "%llu %llu: %s\n",
-+					    req, res, "Error");
- 	} else {
--		status = scnprintf(buf, PAGE_SIZE, "%llu: %s\n",
--				   req, "No Recent Request");
-+		status = sysfs_emit(buf, "%llu: %s\n",
-+				    req, "No Recent Request");
- 	}
- 
- cleanup:
-@@ -284,7 +282,7 @@ static ssize_t show_ppi_operations(acpi_handle dev_handle, char *buf, u32 start,
- {
- 	int i;
- 	u32 ret;
--	char *str = buf;
-+	int len = 0;
- 	union acpi_object *obj, tmp;
- 	union acpi_object argv = ACPI_INIT_DSM_ARGV4(1, &tmp);
- 
-@@ -314,11 +312,11 @@ static ssize_t show_ppi_operations(acpi_handle dev_handle, char *buf, u32 start,
- 		}
- 
- 		if (ret > 0 && ret < ARRAY_SIZE(info))
--			str += scnprintf(str, PAGE_SIZE, "%d %d: %s\n",
--					 i, ret, info[ret]);
-+			len += sysfs_emit_at(buf, len, "%d %d: %s\n",
-+					     i, ret, info[ret]);
- 	}
- 
--	return str - buf;
-+	return len;
- }
- 
- static ssize_t tpm_show_ppi_tcg_operations(struct device *dev,
++int cache_tag_assign(struct dmar_domain *domain, u16 did, struct device *dev,
++		     ioasid_t pasid, enum cache_tag_type type);
+ int cache_tag_assign_domain(struct dmar_domain *domain,
+ 			    struct device *dev, ioasid_t pasid);
+ void cache_tag_unassign_domain(struct dmar_domain *domain,
 -- 
-2.47.1
+2.43.0
 
