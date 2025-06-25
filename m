@@ -1,172 +1,227 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A0811EE7B7;
-	Wed, 25 Jun 2025 10:21:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F4E27FD74
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750846898; cv=none; b=Q2E4ino0fjE5yuD6t6KCGrk2xUQo4cOkNSiQYGmEwfpgVIRk8XnYFPHb8kHSoqq49ozwb0uzSorGSlkvC+POqeKc/hYnMRcVyUuK9sHZw637X0z9gVOTQxVDXHAsUqGL2iXHaX3PO9iZFUFsEsZMwT36T8DPs8qWvZDL4RE5Qt4=
+	t=1750847000; cv=none; b=MD8EOQL5ePCCfCpnpmQKcIL1JbaxpZhLJjHV/hm6UEs7cn3GZfFBp9z7Ef21hyk70/bm5E/o2h6nuure0wxjd6dWUHD49xryLa8BuEwDoUPV8nhN12ewPHfUlycW01yM8cWQEgGLBj+JSWaVkITTb63scCOftj1XCZfw+0AjCjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750846898; c=relaxed/simple;
-	bh=MOhEYC1cKOgyHi8EznYqnXZzLpwz8XMCahZZ5D2On4U=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=VIniTiDys0sQJA9zxabaqJHHx3iuD6UKXc5NM0vRaf5LveP5E16o59Bl7hnr+9VnStC1w8nkdHiYXXpD7qKn3i11CeJ6ujBjZQzOf/ud9uf9SdYy/mJqT6ZHU41mg7Y61+JAXfou1lg0Wwcu92p2koOR9zaIhDzUCXKn7EGQwfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=tzkHB94w; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1750847000; c=relaxed/simple;
+	bh=sLOlO6Ct98dqJEhk/xCShrWRV5yesUPYrAQDpxALhR8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RXWVNVROnzpfLQnLm+Sc3ffD169nhR7Hqooc8g0Est4izdQARcasfApJaf/B5kTQjLZlew+y4ahhUaZSUqpkTCKmRY1bILiGsVk+TD44f2PY0Pp2xE+FKx9fcY7An1SZBQnvo9Mv6r+t8guzlD/YNwbVIoltXkltsT93zQeUVng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xiGP9DgZ; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="tzkHB94w"
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P62V3v021991;
-	Wed, 25 Jun 2025 12:21:11 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	C4yzJ1noedDWVQEaOZSM94W1Wxwn8zZ9kpiO6XR9LxU=; b=tzkHB94wRKqAwx4c
-	0lvTUd/MYGBUx70suX7tiBjmz0UtKwRUjtVPIihur62TbMpXnmXpdcWmAcdp5xpW
-	pJhiDVqchowhT7pV99S6j6SU6rDAOWYXhkkVwFxxMyC4wjjDYTsf0eHmDBFfiURV
-	rU9kKk2Ce52GLRFVg3ZaOeyIaes040BDjPmJk81aWNwBTwCNso39GT/ejla9qTYW
-	PqSVpiw4Ed0mzE2VIisvjpYOTdwxw3RJNg0AR5LWINIBu6zV9J+fp3aNyf5Y4M+D
-	HRRQsYRdb9v8xpc3neYRQgJVZHr4su1XCjrpysVrcRguZdv2L4yM2cGfSe5ewNjS
-	3LpBlw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47dkmjryqn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 12:21:11 +0200 (MEST)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 04F1A40046;
-	Wed, 25 Jun 2025 12:19:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (shfdag1node3.st.com [10.75.129.71])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 12132AE5D21;
-	Wed, 25 Jun 2025 12:18:21 +0200 (CEST)
-Received: from [10.130.77.120] (10.130.77.120) by SHFDAG1NODE3.st.com
- (10.75.129.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 25 Jun
- 2025 12:18:20 +0200
-Message-ID: <01dbb6cf-3ab4-4922-b301-661464c9e56d@foss.st.com>
-Date: Wed, 25 Jun 2025 12:18:16 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xiGP9DgZ"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-313bb9b2f5bso1709136a91.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:23:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750846998; x=1751451798; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lov9+Zjt7YEZlzXRaxLC1dZ0shHTHM8AduhB9Li5azE=;
+        b=xiGP9DgZC2SU9JfhZYywZ1eNvzpqic6ftLKPCEFNO7uTNt9K9BAD7j4vc90tOHjId0
+         g35L5FOgQyC1v67IbBTqcsDbmCrirG9/E55NrlJ9WhtDGps96sK8UcC2J0ydvSOWeYCD
+         TIs5XVJDjVA/DKX7ThZw4vqYKg0VdXMt1aDBhxG/vdDqcvRrG6/AOQjUpegPF1fc+U1w
+         fHr6C3vSBrDkWg702Xi4SIzNKVlTtYdqGyk23FVPOtLioOEd1cKnhHIOF9v8eQm2WaWi
+         q6Tk0/Lh158M60g7ULZheL2c7oHs3Zd9owEOV/lZ0EaWBBLXrkL5T9JTkk5wPgd8Fvb4
+         MH+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750846998; x=1751451798;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lov9+Zjt7YEZlzXRaxLC1dZ0shHTHM8AduhB9Li5azE=;
+        b=MJxIOx6BsczeFwYp08yGc+SVeX9sCsRnZQaIxGuWvl+6+6lR++939S0WY7MQ2Zkgcz
+         9GBmr5Y0ObwobzILgxXWnVGJb0S/I8EbmpaS1cb7WllOf8yqkkfDV3eE/yhrncqJsOdx
+         oG/yLPA1ezeK/2EHo6Er0lEa4sZ37CGHubf3Rq7wRjnFU5/o1yB60Xnk8+8pThPaUupd
+         pZLtxB0HT6zo4U+VHaZ5cdjbZNYk1Wgn2yhWrMQgw6GIBqUHMB+ba1ox95h8yWP8CuQN
+         LMw2Q4PtxJzFCZCZsUVaVDsEA2Ql8AeSfrQt/woCe1+oIWq39o37wEGeNtyb+KbgLm+5
+         mDDw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMbueEvHu3OBKQrKEE5uRqGwKMgIqvrL042x7k87/VKiA6mrAojULYuwltCQw4yYqrSWXuJE7RK3t9ON4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfyFoLfJPoiRdu+e01Ruh/Sd4aVxJJqWzahkD9MjhzxKlHNt7p
+	KKhm4i+4KiHmhPi5j7G3r0Gcjx7wDBFKbA3RL8shqI8/qstL2Mr1lPFZuMdWfExOdyGWCV+U4fa
+	NoDkmP38cBIzg+vNDOuEb8Nxg6IDSh72X9pkL/FZ1gw==
+X-Gm-Gg: ASbGncvBuQcj3OKMm5crd9xtJmUrpQ6IS/LvBClAiU0ulcCELzc3lh4+KgBAnmU/MhW
+	2nUoqexJ82EAdf8d0t3XckTf9/1nytHCf1+2oVSIjWPgLhSbus7XijU8Nodt72fxsC1jpeJeFgO
+	jcelVGvR1HOW2znCqmS0ShUr/5alwByI3FB1xv9XVyrLDnnRAGgqoh5dSnIUq/2j3J7Xypg6Uyl
+	KYL
+X-Google-Smtp-Source: AGHT+IH8cFi7RC794dO0rUm/Wn+Xr5iwFFDk6akyxaGbFcCJoypTD1oROTeezbQ4/XAXXAvVlHuTWvMZwirdDT+JzDc=
+X-Received: by 2002:a17:90b:2c85:b0:30e:8c5d:8ed with SMTP id
+ 98e67ed59e1d1-315f2671f79mr3611427a91.19.1750846998623; Wed, 25 Jun 2025
+ 03:23:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Christian Bruel <christian.bruel@foss.st.com>
-Subject: Re: (subset) [PATCH v12 0/9] Add STM32MP25 PCIe drivers
-To: Manivannan Sadhasivam <mani@kernel.org>,
-        Bjorn Helgaas
-	<helgaas@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC: <lpieralisi@kernel.org>, <kwilczynski@kernel.org>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@foss.st.com>,
-        <p.zabel@pengutronix.de>, <johan+linaro@kernel.org>,
-        <cassel@kernel.org>, <shradha.t@samsung.com>,
-        <thippeswamy.havalige@amd.com>, <quic_schintav@quicinc.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <175068078778.15794.15418191733712827693.b4-ty@kernel.org>
- <20250624222206.GA1537968@bhelgaas>
- <3bmw76gzqjq2nmjvj7tb6gi5x233zzfrhv44uyjopl2lxyzbkh@zg5skeu62nbh>
-Content-Language: en-US
-In-Reply-To: <3bmw76gzqjq2nmjvj7tb6gi5x233zzfrhv44uyjopl2lxyzbkh@zg5skeu62nbh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE3.st.com
- (10.75.129.71)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
+References: <20250624121426.466976226@linuxfoundation.org>
+In-Reply-To: <20250624121426.466976226@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Wed, 25 Jun 2025 15:53:07 +0530
+X-Gm-Features: Ac12FXzbsG8H9f0gjBaNzcKx6GHqgVhEAS62P31OdpnQXr-HJ4E-WlndR7XAnXE
+Message-ID: <CA+G9fYuQBPF6C1oJLWrrcjvn6FNqjh0oxcJqJNxe85XtrDNSjA@mail.gmail.com>
+Subject: Re: [PATCH 6.12 000/413] 6.12.35-rc2 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, 24 Jun 2025 at 18:00, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.12.35 release.
+> There are 413 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 26 Jun 2025 12:13:28 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.12.35-rc2.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.12.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-On 6/25/25 06:00, Manivannan Sadhasivam wrote:
-> On Tue, Jun 24, 2025 at 05:22:06PM -0500, Bjorn Helgaas wrote:
->> On Mon, Jun 23, 2025 at 06:13:07AM -0600, Manivannan Sadhasivam wrote:
->>> On Tue, 10 Jun 2025 11:07:05 +0200, Christian Bruel wrote:
->>>> Changes in v12;
->>>>     Fix warning reported by kernel test robot <lkp@intel.com>
->>>>
->>>> Changes in v11;
->>>>     Address comments from Manivanna:
->>>>     - RC driver: Do not call pm_runtime_get_noresume in probe
->>>>                  More uses of dev_err_probe
->>>>     - EP driver: Use level triggered PERST# irq
->>>>
->>>> [...]
->>>
->>> Applied, thanks!
->>>
->>> [1/9] dt-bindings: PCI: Add STM32MP25 PCIe Root Complex bindings
->>>        commit: 41d5cfbdda7a61c5d646a54035b697205cff1cf0
->>> [2/9] PCI: stm32: Add PCIe host support for STM32MP25
->>>        commit: f6111bc2d8fe6ffc741661126a2174523124dc11
->>> [3/9] dt-bindings: PCI: Add STM32MP25 PCIe Endpoint bindings
->>>        commit: 203cfc4a23506ffb9c48d1300348c290dbf9368e
->>> [4/9] PCI: stm32: Add PCIe Endpoint support for STM32MP25
->>>        commit: 8869fb36a107a9ff18dab8c224de6afff1e81dec
->>> [5/9] MAINTAINERS: add entry for ST STM32MP25 PCIe drivers
->>>        commit: 003902ed7778d62083120253cd282a9112674986
->>
->> This doesn't build for me with the attached config:
->>
->>    $ make drivers/pci/controller/dwc/pcie-stm32.o
->>      CALL    scripts/checksyscalls.sh
->>      DESCEND objtool
->>      INSTALL libsubcmd_headers
->>      CC      drivers/pci/controller/dwc/pcie-stm32.o
->>    drivers/pci/controller/dwc/pcie-stm32.c: In function ‘stm32_pcie_suspend_noirq’:
->>    drivers/pci/controller/dwc/pcie-stm32.c:83:16: error: implicit declaration of function ‘pinctrl_pm_select_sleep_state’ [-Werror=implicit-function-declaration]
->>       83 |         return pinctrl_pm_select_sleep_state(dev);
->> 	|                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>    drivers/pci/controller/dwc/pcie-stm32.c: In function ‘stm32_pcie_resume_noirq’:
->>    drivers/pci/controller/dwc/pcie-stm32.c:96:24: error: ‘structdevice’ has no member named ‘pins’
->>       96 |         if (!IS_ERR(dev->pins->init_state))
->> 	|                        ^~
->>    drivers/pci/controller/dwc/pcie-stm32.c:97:23: error: implicit declaration of function ‘pinctrl_select_state’ [-Werror=implicit-function-declaration]
->>       97 |                 ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
->> 	|                       ^~~~~~~~~~~~~~~~~~~~
->>    drivers/pci/controller/dwc/pcie-stm32.c:97:47: error: ‘structdevice’ has no member named ‘pins’
->>       97 |                 ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
->> 	|                                               ^~
->>    drivers/pci/controller/dwc/pcie-stm32.c:97:61: error: ‘structdevice’ has no member named ‘pins’
->>       97 |                 ret = pinctrl_select_state(dev->pins->p, dev->pins->init_state);
->> 	|                                                             ^~
->>    drivers/pci/controller/dwc/pcie-stm32.c:99:23: error: implicit declaration of function ‘pinctrl_pm_select_default_state’ [-Werror=implicit-function-declaration]
->>       99 |                 ret = pinctrl_pm_select_default_state(dev);
->> 	|                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>
-> 
-> Hmm... I see two issues here. First is, wrong pinctrl header used. The correct
-> one is:
-> 
-> #include <linux/pinctrl/consumer.h>
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-ah yes, the missing pinctrl_pm_select_default_state() should indeed be 
-fixed by using the correct header.
+## Build
+* kernel: 6.12.35-rc2
+* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
+rc.git
+* git commit: 7ea56ae300ce5b67804c356ef4c7dbac6b00241b
+* git describe: v6.12.34-414-g7ea56ae300ce
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
+.34-414-g7ea56ae300ce
 
-> 
-> Second issue is the driver accessing "struct device::pins" directly. The "pins"
-> member won't be available if CONFIG_PINCTRL is not set (which is what your
-> .config has). So either the member should not be accessed directly or the
-> driver has to depend on CONFIG_PINCTRL. The latter one is not acceptable.It
-> also looks weird that only this driver is accessing the "pins" member directly
-> apart from the pinctrl core. So I think this part needs a revisit.
-> 
-> Christian?
-The pinctrl "init" and "default" configurations are managed effectively 
-by the probing code. The same approach is required in 
-stm32_pcie_resume_noirq().
+## Test Regressions (compared to v6.12.32-538-g519e0647630e)
 
-In this case, would introducing a new helper function, 
-pinctrl_pm_select_init_state(), be preferable, even if we are the only 
-consumer?
+## Metric Regressions (compared to v6.12.32-538-g519e0647630e)
 
-Thank you
+## Test Fixes (compared to v6.12.32-538-g519e0647630e)
 
+## Metric Fixes (compared to v6.12.32-538-g519e0647630e)
 
-> 
-> - Mani
-> 
+## Test result summary
+total: 218983, pass: 198252, fail: 5262, skip: 15116, xfail: 353
+
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 139 total, 134 passed, 2 failed, 3 skipped
+* arm64: 57 total, 46 passed, 0 failed, 11 skipped
+* i386: 18 total, 18 passed, 0 failed
+* mips: 34 total, 33 passed, 1 failed
+* parisc: 4 total, 4 passed, 0 failed
+* powerpc: 40 total, 40 passed, 0 failed
+* riscv: 25 total, 21 passed, 2 failed, 2 skipped
+* s390: 22 total, 21 passed, 1 failed
+* sh: 5 total, 5 passed, 0 failed
+* sparc: 4 total, 3 passed, 1 failed
+* x86_64: 49 total, 49 passed, 0 failed
+
+## Test suites summary
+* boot
+* commands
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-fpu
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-kcmp
+* kselftest-kvm
+* kselftest-livepatch
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-mincore
+* kselftest-mm
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-mptcp
+* kselftest-openat2
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-seccomp
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timers
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-x86
+* kunit
+* kvm-unit-tests
+* lava
+* libgpiod
+* libhugetlbfs
+* log-parser-boot
+* log-parser-build-clang
+* log-parser-build-gcc
+* log-parser-test
+* ltp-capability
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-hugetlb
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* modules
+* perf
+* rcutorture
+* rt-tests-cyclicdeadline
+* rt-tests-pi-stress
+* rt-tests-pmqtest
+* rt-tests-rt-migrate-test
+* rt-tests-signaltest
+
+--
+Linaro LKFT
+https://lkft.linaro.org
