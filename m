@@ -1,185 +1,125 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FB2E10785;
-	Wed, 25 Jun 2025 02:27:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58CE319F419
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750818455; cv=none; b=OyiDWLgg8UEIVfeBE9CkLKpbksBHDZnpJSj/oALHTFYbSvtoW0xnVblwCO1TSNfMapg99VpHn5Ixe1xBw/729dKt3WBtGBk+AfEUogtE3dGWOOvkwDiQVm85VFpc0zDc+/3N68suQ8MLM5NnGEOYv2eU4Q3/dXC8uniZpGtbEfc=
+	t=1750818592; cv=none; b=ITahdfFhiUU4Fv6yBq7HMMRrDV0e/Zthi7gxW4VR6eLnXjw8Ofsd8Sf7DCF0mIEY4K8+NjthmMZna2X6GIZbn4Z/sk0fFTC38TylQ46CooNh9haBsJkhsqkyGiXkRSUOaKosz2BW0VAK31dwNk817Z3aa2fYBSZuxZg0g/vhd20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750818455; c=relaxed/simple;
-	bh=xfLOCkWUstnGQK8VoH4yc1HuwRPQ8panlIf+Bwae70A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RC7VavMlZr9+daVeuv+xAZZH7rusdVUV336ScpnXqWq1/PuSkkJHUgzQ6fDl5OlXm2mZX6R4/gzcejXUkJbuyA/Ny5AMOyLvoxJN7xuvEEWUMStVDdmND9Xwru+E0aSx5JDzNZzG4q3jnJYGlROvoexeECSBuAAaIfSW4BBH+ls=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l22Z6Yyq; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750818592; c=relaxed/simple;
+	bh=Ackd6oL4QEZhNsdWFDsaCVzCrTRV/Pf/z7DouQ0Gs5M=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=PYz0a3XgsPFXtTzDL6mMrSn8vplruZP++fBwCBzlHZeq/TwIBS8i5Z/w8sBDgF7Ec/pkKvHGoMVJALp2lWVPeTVAUOrSkuZINv9+3/QQVEfaPva7A6jeAX4d78+K5IDG3JN5n19SotTP/b9tV7Pqs1chep6TlrkIsFJ4iN7nIPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=FaEtC4PR; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l22Z6Yyq"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5532a30ac45so435325e87.0;
-        Tue, 24 Jun 2025 19:27:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="FaEtC4PR"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7390d21bb1cso741533b3a.2
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 19:29:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750818452; x=1751423252; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=bytedance.com; s=google; t=1750818590; x=1751423390; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KMlWAo+QiozFk6BjxvZWUwjnbzKWgh6dn4hJEaOwCS0=;
-        b=l22Z6YyqA9AC5YpLDYrA3OuC32XX2wL7uGzerNjvqlZoHYfD8y7+MTYIV5VhjfqD69
-         vKAgw4R4OsfIrjgI2G6WKwk+RpHX31gBcPpIf7++iu4DHQr80fGaMGdkDrdGpdr1sghZ
-         bgAUXWCB282QAMqHYjg8OY64TVXL7cqpf65KK7nIRpEtr3JwPV6suddA9y8nIacOvvWj
-         LeJ6Q5bXynvgiu9X63tkik7gBM3qQeY52gsQupK75gOI5oCePlIGg6IehwOEzwMn2ToA
-         PvRrBR5bWfkS7p8srwmxBBcr4txJmC8+tO+qa7NgwOiNqqdm0dTewHlsIPOMnPasPd22
-         7WKQ==
+        bh=xRoBVr301Z32U1U+wNWEV8kI1I28cFbSqrPbaNR/5yE=;
+        b=FaEtC4PR0e/+kCEZrQqIngn7iPIeonQIqX4lHfs8Ia4lG4Fl4FJKylBFFHvynwJ26q
+         rrNZVbzMpcdkCTlMPFo/HlbEF36fytlifbMBut6luG0v0MW5dqFZr4hObsfLPN3Uoiyq
+         BpPJfm1LGX8eiyVZPM5i5VsoPuq2mKMDRNVZHSsIZAvFwUW0WAnI6ypPSv/j9C6NmkhO
+         jk7zMZaltA3c9AEVAn/eEHfsjfuYPIPJEUi7p769DohOEh/xkESlYyufb3qGwUp+Kiy4
+         fERTIZZcwJAlbaA6PElj4VjT58nS1cZE6+6iQq2VC+DXIwMUqQy+cZZr7rPg+RAv/z2r
+         H/5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750818452; x=1751423252;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750818590; x=1751423390;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KMlWAo+QiozFk6BjxvZWUwjnbzKWgh6dn4hJEaOwCS0=;
-        b=aQod1grwzGCdqkYsL5PahJ6SdNXF+P4rO15Y+Ng6ygKdYAfupvNEKmLVxDPrRAPCnZ
-         NRCI6gc6DxyHutTblKC4cG5IwAsoW1IeKC64Tu6AA5qPIHIfJfloZJexIvHyu728k9ZR
-         lHpr7zDc5cysrCMhx1G1fsyoFDoNv/cyKXjT36Jtbq0YTtjja3EIx4MBe+yOi9ZdAUZp
-         C0MxURFX/MXqL2c8Th/XRKLWv6Wq/wni1Fs1Jpy73nA8TDc+5WUFtcWd5xeMLYJ4OSJ3
-         hTs9e7hZcWVg7JEvZfcyZBM9Sadpgfdvh4dVeMdV3gBw6TeZxtHtDrSndOkc0tPez98C
-         VtKg==
-X-Forwarded-Encrypted: i=1; AJvYcCVJdgHgQJmqg4bfnPc4FDR5xSHVQEa9qWQdGR9AKcaLtuCrReOfe+t8fPy5v+zncA/u/LZCa6mM0LFBM7E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyJ3/CrgbcZI0izowhLuHTxHJEJe6mDbWD8hkEnqbjPjnLK3n0H
-	tEYKQl+oF6hUCKede7+aSPRofY/dWCkewrv3R2pXxu0EEA/YJ9wLhlS+VlD9HZJvgxpIkRiO+cV
-	JXJOI9xRUjVE8xOAIqTfIuMswYFn262Go3pH0seM=
-X-Gm-Gg: ASbGncuqmfnJ70Tdm0/x3ZpqrBXXpwxzAxaA5rHcKkSJxQJpNPNCs2mebVwSZKlDoAC
-	Iyotkcao6cahzpdG7fwDoGimnpbwYOmRzu0g4mUEQVm0rEonJ9/Y3H2T7iFpIiLGOJzkPkDaqvn
-	Os9WNA6sYcPEA2ONJTn5FpA6mUM3SXzYffieZviAJMRlHTc/dt9iPnIEp+PpQuutgymiEA//Glg
-	fGRfw==
-X-Google-Smtp-Source: AGHT+IHQc9/3iRv84jBYu+4kDSgCmEMuTsv+ZR1GYPSGZ8fNJa7ljtXss3KlGI3erKzQzKYyi146RThaGD8FY3QYty0=
-X-Received: by 2002:a05:6512:1281:b0:553:51a2:440a with SMTP id
- 2adb3069b0e04-554fdce6a6bmr278253e87.23.1750818451419; Tue, 24 Jun 2025
- 19:27:31 -0700 (PDT)
+        bh=xRoBVr301Z32U1U+wNWEV8kI1I28cFbSqrPbaNR/5yE=;
+        b=eqjANlTT2bLWSoeOrCo8oGqe18uhuB03P5Ab84UI+hQVusGmnGy1XTd9LeZzTAVwhg
+         2fn3jewILW4zjtPvQ9jkXJfEJwyMN3RZKvMsOoByrLaBHRMADlVRoTIwRxQ6F3g4UgFn
+         wfTXLqmeCGuOMflDG2aq70a2VDGM6gbZYVkMWpGHJACm6l3FKLQmXOzvh6RmDCiYYe00
+         R2QGyy60Izh3d5qu5wxvu6APrfqy4TGEoG2CfE5s1u70tnaPWIPtYWGY9fT9quAPxs6y
+         xQIGghESLBPUh0Tw2a3TDFlHnw8qgUImPsnYIahrdzC6iatN+Z+2BfXFUEYNLxbCyJb0
+         RyQg==
+X-Forwarded-Encrypted: i=1; AJvYcCWRXlewCYofjjxzW2qMgiwC8rlALDje2f15fF6KXDCmzzK5fMLGHbj1F3OZanmJrE8eqRThuGq4feESgFQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywv1TT8n684PzAVQjeiRnpKFg1gOzzaYp9V3vQ4AnN/Sme6kLOX
+	lzWLVzt8qzMWSxtDMGnboggPFIEByIx1VkGdboy7Akws3i0yUp/QB1pRe/CRbfv3FdAA3MGLWpr
+	ADR3v
+X-Gm-Gg: ASbGncvoFkDezQOairU8Onj5pgaEVoc/QHkyXRE9/TD2KX0cquoLf3g40RUMvEmTlQE
+	PEGIiMozpFY1UtVup52BgKtZfFLtB9tUZgVJihpopsDNs+qiL1dWphLxuCvVvvUlS3DX5uOtWpg
+	sYjbbwiEWTlafBLUa3aw35cXOOx+Tt7VXe8Y3oE2b9V09lm5QXuhblOpudGgx1X0lYle4piKnHu
+	DDi6BLv2UfFPOwGNCt6dH6sKKe0hbgGWBSXIx2a86sYqP0bfJYSm6tZkVu4Y1iNMC4RaKXgy45w
+	Xyj+CDTChc8fHjpOPw5ToOFkhN1Bj4JWA0YVSDfHGANXNWYNRZuhkVFL2ruzfCCuMKYF3sjkjSm
+	eXqiAK1YDqK9J
+X-Google-Smtp-Source: AGHT+IGDhzovgW8mfz1TgwEtDPLzMaEOkE7E5An9/EYwotB65YMux34Z99Rx+rpB+eyQKTmSPq1Cmg==
+X-Received: by 2002:a05:6a00:2290:b0:736:5e28:cfba with SMTP id d2e1a72fcca58-74ad44d861dmr2057195b3a.18.1750818589640;
+        Tue, 24 Jun 2025 19:29:49 -0700 (PDT)
+Received: from localhost.localdomain ([203.208.189.7])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749b5e08caesm3190947b3a.4.2025.06.24.19.29.46
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 24 Jun 2025 19:29:49 -0700 (PDT)
+From: lizhe.67@bytedance.com
+To: lkp@intel.com
+Cc: alex.williamson@redhat.com,
+	david@redhat.com,
+	jgg@ziepe.ca,
+	kvm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	lizhe.67@bytedance.com,
+	oe-kbuild-all@lists.linux.dev,
+	peterx@redhat.com
+Subject: Re: [PATCH v5 1/3] vfio/type1: batch vfio_find_vpfn() in function vfio_unpin_pages_remote()
+Date: Wed, 25 Jun 2025 10:29:42 +0800
+Message-ID: <20250625022942.76489-1-lizhe.67@bytedance.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <202506250037.VfdBAPP3-lkp@intel.com>
+References: <202506250037.VfdBAPP3-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <87tt44lwbd.fsf@logand.com>
-In-Reply-To: <87tt44lwbd.fsf@logand.com>
-From: Ryusuke Konishi <konishi.ryusuke@gmail.com>
-Date: Wed, 25 Jun 2025 11:27:14 +0900
-X-Gm-Features: Ac12FXyLfVYWAh_viBBHxCiUECUGP-Z82USg5Upqm_KDTBhATvsMlKd_d7i4tc8
-Message-ID: <CAKFNMo=GXQzR=19JxPvHaV2v_K7f2LiXr8h6Qx2GzjssC6tvLA@mail.gmail.com>
-Subject: Re: BUG: NILFS error (device dm-0): nilfs_bmap_lookup_contig: broken
- bmap (inode number=4023271)
-To: Tomas Hlavaty <tom@logand.com>
-Cc: linux-nilfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25, 2025 at 5:27=E2=80=AFAM Tomas Hlavaty wrote:
->
-> Hi Ryusuke,
->
-> I get the following error:
->
->    NILFS error (device dm-0): nilfs_bmap_lookup_contig:
->    broken bmap (inode number=3D4023271)
->
-> and the filesystem gets mounted read-only.
->
-> I can remount the filesystem read-write again manually, but after an
-> operation which touches the broken part of the filesystem, it gets
-> remounted read-only again.
->
-> I have identified the file of the inode:
-> sudo find / -inum 4023271
-> as
-> /root/.cache/mesa_shader_cache_db/index
-> but remounting rw and trying to
-> rm -r /root/.cache
-> puts the filesystem to ro mode again.
-> (not sure why there is .cache dir and mesa_shader_cache_db dir in the
-> /root dir, I never use root account for GUI)
->
-> I am in the process of upgrading the system from nixos24.11 to
-> nixos25.05 but this issue is preventing me from doing so.  Is there a
-> way to fix the filesystem so that it stays read-write?  Or do I have to
-> discard the whole filesystem?
->
-> Also I have noticed since long time ago, that reboot or shutdown says
-> something about nilfs discarding stuff, which seems strange and those
-> messages were not there a year or more ago.  Not sure if this is
-> related, but it should not be discarding anything I guess.  I see these
-> messages on many machines so it is not related to a particular hardware.
->
-> Log and stacktrace are bellow.
-> Please let me know if I can provide more info about the problem.
->
-> Any help would be appreciated.
->
-> Thank you,
+On Wed, 25 Jun 2025 00:23:03 +0800,
+kernel test robot <lkp@intel.com> wrote:
 
-Sorry for the inconvenience, and thank you for reporting the details
-of the problem.
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on awilliam-vfio/next]
+> [also build test ERROR on awilliam-vfio/for-linus linus/master v6.16-rc3 next-20250624]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/lizhe-67-bytedance-com/vfio-type1-batch-vfio_find_vpfn-in-function-vfio_unpin_pages_remote/20250620-112605
+> base:   https://github.com/awilliam/linux-vfio.git next
+> patch link:    https://lore.kernel.org/r/20250620032344.13382-2-lizhe.67%40bytedance.com
+> patch subject: [PATCH v5 1/3] vfio/type1: batch vfio_find_vpfn() in function vfio_unpin_pages_remote()
+> config: x86_64-rhel-9.4 (https://download.01.org/0day-ci/archive/20250625/202506250037.VfdBAPP3-lkp@intel.com/config)
+> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250625/202506250037.VfdBAPP3-lkp@intel.com/reproduce)
+> 
+> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202506250037.VfdBAPP3-lkp@intel.com/
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    drivers/vfio/vfio_iommu_type1.c: In function 'vfio_unpin_pages_remote':
+> >> drivers/vfio/vfio_iommu_type1.c:738:37: error: implicit declaration of function 'vpfn_pages'; did you mean 'vma_pages'? [-Werror=implicit-function-declaration]
+>      738 |         long unlocked = 0, locked = vpfn_pages(dma, iova, npage);
+>          |                                     ^~~~~~~~~~
+>          |                                     vma_pages
+>    cc1: some warnings being treated as errors
 
-The log suggests that the b-tree, which is the metadata of the file or
-directory with inode 4023271, is corrupted, making it impossible to
-read and, as a result, impossible to write.
+Perhaps we need to compile with this patch[1] included to avoid build
+errors.
 
-The /root/.cache/... directory is not created by nilfs, so it is
-probably an application directory.
+Thanks,
+Zhe
 
-If the problem is only partial, first mount it read-only,
-
-and then try copying it to another device while excluding the
-directory from access, for example, by specifying the option
-"--exclude /root/.cache" in rsync.
-
-As for in-place repair, the conclusion is that there is currently no
-way to do it. The only thing we can do is mount the filesystem
-read-only and salvage as much data as possible (without touching the
-damage). If you have a backup, it may be quicker to retrieve important
-data from there (in any case, nilfs is powerless against block device
-corruption, so please make backups as frequently as necessary).
-
-syzbot started reporting a large number of automatically detected bugs
-a few years ago, so we have been fixing a lot of serious bugs over the
-past few years, and have also strengthened the detection of abnormal
-file system states.
-
-That is probably why the abnormal message from a few years ago
-(probably a message about dropping to read-only and discarding dirty
-data) has become a problem now.
-
-If there were no messages with the old kernel and there were no
-problems, you could use it to rescue your data, but since there is a
-high possibility that there is some abnormality that was not detected
-in the past, this method is generally not recommended.
-
-I hope this helps a little.
-
-Regards,
-Ryusuke Konishi
-
->
-> Tomas
->
-> $ uname -a
-> Linux buta 6.6.87 #1-NixOS SMP PREEMPT_DYNAMIC Thu Apr 10 12:37:44 UTC 20=
-25 x86_64 GNU/Linux
->
-> $ sudo dmesg | grep nilfs
-> [    1.087780] stage-1-init: [Tue Jun 24 19:32:16 UTC 2025] loading modul=
-e nilfs2...
-> [   35.318251] NILFS error (device dm-0): nilfs_bmap_lookup_contig: broke=
-n bmap (inode number=3D4023271)
-> [   35.319235] NILFS error (device dm-0): nilfs_bmap_lookup_contig: broke=
-n bmap (inode number=3D4023271)
-> [...]
-> [   35.347872] NILFS error (device dm-0): nilfs_bmap_lookup_contig:
-> broken bmap (inode number=3D4023271)
-> [ 1733.401421]  nilfs_segctor_do_construct+0xdd/0x2630 [nilfs2]
-> [ 1733.401747]  ? nilfs_mdt_fetch_dirty+0x19/0x50 [nilfs2]
-> [ 1733.401899]  ? nilfs_test_metadata_dirty.isra.0+0x50/0xb0 [nilfs2]
-> [ 1733.402059]  nilfs_segctor_construct+0x170/0x2b0 [nilfs2]
-> [ 1733.402220]  nilfs_segctor_thread+0x155/0x3f0 [nilfs2]
-> [ 1733.402385]  ? __pfx_nilfs_segctor_thread+0x10/0x10 [nilfs2]
-> [ 1738.068626] NILFS error (device dm-0): nilfs_bmap_last_key: broken
-> bmap (inode number=3D4023271)
+[1]: https://lore.kernel.org/all/20250529064947.38433-1-lizhe.67@bytedance.com/
