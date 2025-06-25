@@ -1,104 +1,127 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA4D1DDC1E;
-	Wed, 25 Jun 2025 04:55:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045AA3074AE
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.154.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750827340; cv=none; b=iziWlpAK9jbdFsPrYDX3WhsZDzUDrPeEvIdHOwrVZTvlK5sxemPEH60IpSUNjF7I8Fn+TdQzcZGrZFfklgzp7CFLoTkf57mFqXL82oXwxSX2yH1JUar0/vMVSJmqxqdFt0uov0A+SAt9e5HvN3fHiUJ5bL7Pepwcs55Kid/2cvc=
+	t=1750827405; cv=none; b=DUJZIuelZXt/DRRrC0JEeqwiFcIOzgRlTmLf4Evsw4VOQfwFfgPZE71eh48hVp2pJEg9mJ/sQWRU8IGXKOgEyOLt460a+kk6DWfEw6a/i6y07X3EYk3SrDrug8clKkpm4f14x6m6oE/uh0WOHdlktKjUnUu2wAi4eqWscKKqPJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750827340; c=relaxed/simple;
-	bh=KSjhtsYtDPWq5P0JewRLIYDc5syrJxdWyOswWFMIj2U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dOI3cWeXV9Izmn0kCcnbHFjuMe1mCuIZvf2rhUqoM/YREX667UbIaTtYNxVeCPoDEY3A8OS8v40vq8NN40FyHQsCHFicPDEabVW6VrPGdP/8IzAAdq5//i2C83afSnQHg3VDdXmhjqMwzvaIsaaHBujtJozBg8ahZ9IIG+HEDVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UH3wQvUc; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750827405; c=relaxed/simple;
+	bh=6dOUqUTuyRASvj5897YXpzkg1jCDbmOY7e9W81q6TbE=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=IMBdjmYrb7x1KvD1oJNc8gWJgJ6d5AgmX+OM+UxoQsMkxK1x13elLJ4j8BplASR4E/vPHDBNqbSxr5WjBhdixettUCeE7fFkZrmLzvxijQLnvIzElm4W+3xGV0IIZglOBJPvOz4qEVMIeRXLgU4wJyie7wvzUzVG+UXIH5bHg4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=Yms0J38O; arc=none smtp.client-ip=68.232.154.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UH3wQvUc"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-742c3d06de3so7019335b3a.0;
-        Tue, 24 Jun 2025 21:55:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750827338; x=1751432138; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=UO6NTPCPP/dvAMAtqZiOjPibwhoAo2anGboFbitGK6M=;
-        b=UH3wQvUcpx2YmKFRBdBZdWOoe/iPC+nnEz9k2FiqXLRolvm0m+5oiCgKijahEWXizP
-         cnacAHno9gdreVH8FWSmKNrmfalol6UQaifE79kUk7MHEXJQpsXbFfdM75pC72hOdunt
-         XGyC2MZKW3wuxtEj08fctgW9l2u9MLKrnxIjGRCi7Q/zvnjeBU2hmyV/bVg4oGbLNXO3
-         ofXewI940dBESbokos7q7Pe345Mh8kM88bdLAPwiIQJlNs12UZpTRAyWNLG2J/Wt6CNy
-         76sz0WHnn0DOynLQ6oCwsarfq6fQBchrWrLXaFGR7Nmy6t8rWkadkUZK/Xfn9hCPaLP6
-         Nc9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750827338; x=1751432138;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UO6NTPCPP/dvAMAtqZiOjPibwhoAo2anGboFbitGK6M=;
-        b=GXb9eciq7ehaANlK1oxns1Zn37/oq/zWFyFmMgV9RCzuUW9esVld4vo6mbsoWUfLo9
-         aJPRurrqyiup64WjYMYOx84b4uKlPZ+saOS34hzwmU+7Rcw5IA9EpH45RkkUR+OPcQVH
-         yMQDok3EMS/I2bQFeaFGggsHh9QByJhDu/v42BbJuTJfKA4esyPRUKwsLm06eYtT8mVS
-         f0WY22JcI9My+GTWo8AyG5/HttSfyxQeLUUc74mfs8OrZ4xii0z3LQMTuM/2ZlnBmRuP
-         ekm4RHEBzsklVYbF+a2zuJjFyw39CziDKr0Mj0mimC+z1eeqkMnl9Sfswc39YI/llxDh
-         6kYw==
-X-Forwarded-Encrypted: i=1; AJvYcCVxRVCm4ievrwA867n2uo3VSrLx1ycUp6TQEmGBOOVyySc1E5hDH0R8+4KpV3AHjS0aSrD3aTLlk3zXNA==@vger.kernel.org, AJvYcCXtRmHYMubVn1nUvNHKu1wanrpduTTKWHjMY/ptLTuTMlZ/5C3ury/32R37wgwwg5jVfBZQYfnYu5lNqHxR@vger.kernel.org
-X-Gm-Message-State: AOJu0YwBwx5l2hieeRJlBTVCPB3BiSk57+Nyl7eKB44JhVrjVXOtZhA6
-	Y+n6H5iwYfXVvIc0xHE+GHqAKemyG7bHHYiD5q2Z9DdpNVi5tRn7NMa3
-X-Gm-Gg: ASbGncs2Fv091dWqWB+oD0V/p6KYJXlLhxIbj5JopTWhfxRmEfMuZwmNl8llnfNBIgE
-	7oiRXpItU7anpspEpe2lpkLxLkBCNO2aKcrfpRXz30hS5VaSsaIgDzMWvLVg/EwX6QFYklxoBxr
-	tuIjKVx6ciMhG9i7AsrJrdyd5pDOsrJFDFfD9fFXxZkrY1FC4ebRsRYrAbautK9OLeaCmSz3AkP
-	7WhzWrw9g3+Er1K9rq11njxY8ZGfp7R1jCNIyWs33Eyw0r2/OvJ9Ll6u3Ivv52UQPtk+D6x2sqX
-	f5sM9upr9u8PqroWPMLcWvDd13K6AA9QvL4ojovFPRv0oXkYp6MLSMtA52PijlJeEBz9Hp4AbOZ
-	mB+MUxZy6/rNtOGhzcA==
-X-Google-Smtp-Source: AGHT+IFLbqpz8txyiEyP4O5dWK2HN68bf3Px02AjjgY6ny0rLjNSLfBKIcKav5NxVJRGNqxZfpE+Uw==
-X-Received: by 2002:a05:6a00:2195:b0:736:2a73:6756 with SMTP id d2e1a72fcca58-74ad45e6b34mr2574345b3a.21.1750827337903;
-        Tue, 24 Jun 2025 21:55:37 -0700 (PDT)
-Received: from archlinux.worldlink.com.np ([2400:1a00:3b42:5d1:1d64:4a49:adde:630d])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-749b5e21120sm3610679b3a.43.2025.06.24.21.55.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 21:55:37 -0700 (PDT)
-From: Pratibimba Khadka <pratibimbakhadka@gmail.com>
-To: sudipm.mukherjee@gmail.com
-Cc: Pratibimba Khadka <pratibimbakhadka@gmail.com>,
-	Teddy Wang <teddy.wang@siliconmotion.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-fbdev@vger.kernel.org (open list:STAGING - SILICON MOTION SM750 FRAME BUFFER DRIVER),
-	linux-staging@lists.linux.dev (open list:STAGING SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] staging: sm750fb: Mark g_fbmode as a pointer to const pointer
-Date: Wed, 25 Jun 2025 10:40:26 +0545
-Message-ID: <20250625045526.82758-1-pratibimbakhadka@gmail.com>
-X-Mailer: git-send-email 2.50.0
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="Yms0J38O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1750827403; x=1782363403;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=6dOUqUTuyRASvj5897YXpzkg1jCDbmOY7e9W81q6TbE=;
+  b=Yms0J38OKMcdNCaVh3eQ2qzD+hi9Wy1yioYN3DQ+5ut27VH72t9vTiY7
+   nYMagbrXRhxL/F6ZfHZ8LsdWkK8hO+/nHP9Z1Cw6lxeEPjWIYUjjLaV+u
+   y8baYZwW4JRzzKXLJ54H963u0Qd/RDsQ5GItSFvgsEIxb0CSAYl1LhCKw
+   ZrTZQJxMU6M3D4WS/djjrp5a9TlhZVxvw7C7n9LBn4v1vUDkMwnw/BPB+
+   7DUGvldXlguDRnEy9mekLSIN5084bl9+/53ETyZXHAJCOkY6oTRGNzf6O
+   Ngkx+ysDXj/0rNuoDK18o9RNU9rtDp8Tgdmk9Xa2pZm/uWXMSx+sG1F37
+   Q==;
+X-CSE-ConnectionGUID: AhZgIOJERfil50n8LIfntw==
+X-CSE-MsgGUID: lAnqXKGeTei1fnuPZQu9VQ==
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="42713908"
+X-Amp-Result: SKIPPED(no attachment in message)
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 24 Jun 2025 21:56:36 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Tue, 24 Jun 2025 21:56:19 -0700
+Received: from [127.0.0.1] (10.10.85.11) by chn-vm-ex01.mchp-main.com
+ (10.10.85.143) with Microsoft SMTP Server id 15.1.2507.44 via Frontend
+ Transport; Tue, 24 Jun 2025 21:56:12 -0700
+From: Dharma Balasubiramani <dharma.b@microchip.com>
+Subject: [PATCH v5 0/4] drm/bridge: microchip-lvds: clean up and fix bus
+ formats
+Date: Wed, 25 Jun 2025 10:26:08 +0530
+Message-ID: <20250625-microchip-lvds-v5-0-624cf72b2651@microchip.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGiBW2gC/33MTQrCMBAF4KtI1kby39aV9xAX6WS0AbUlkaCU3
+ t20Cym2yjCL95j5ehIxeIxkv+lJwOSjb+856O2GQGPvF6Te5UwEE5oZXtKbh9BC4zt6TS7SuuC
+ au8qwSlmSn7qAZ/+cwOMp58bHRxtek5/42P6kEqd50KK24ApbisPnYAftjYxcEjNCyAUhMlEi1
+ LYGk1etEXJOqAUhMwESzJmjYpqbNUL9JxRltJKFU8IqwbD6JoZheAPIjMhHeQEAAA==
+To: Manikandan Muralidharan <manikandan.m@microchip.com>, Andrzej Hajda
+	<andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>,
+	"Robert Foss" <rfoss@kernel.org>, Laurent Pinchart
+	<Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, "Jernej
+ Skrabec" <jernej.skrabec@gmail.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+CC: <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>, "Dharma
+ Balasubiramani" <dharma.b@microchip.com>, Sandeep Sheriker M
+	<sandeep.sheriker@microchip.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750827371; l=1805;
+ i=dharma.b@microchip.com; s=20240209; h=from:subject:message-id;
+ bh=6dOUqUTuyRASvj5897YXpzkg1jCDbmOY7e9W81q6TbE=;
+ b=7bp9Zi1Ph4kmuHQpGXeTjdQq3BfJpu9j5tMLH1lOxG9wyJak0uz/bU+AgJ3/C27fyaUjin0F5
+ 929vib88ERmCXDpgPoPcxf1rab6z+yh5unw6r44qphSdxhEiLOitxaK
+X-Developer-Key: i=dharma.b@microchip.com; a=ed25519;
+ pk=kCq31LcpLAe9HDfIz9ZJ1U7T+osjOi7OZSbe0gqtyQ4=
 
-Fixes a checkpatch warning:
-WARNING: static const char * array should probably be static const char * const
+This patch series drops the unsed panel field, switches to atomic variants
+and adds support to select between the two supported formats (JEIDA and
+VESA) by the LVDSC.
 
-The array `g_fbmode` contains constant string pointers that are not supposed to be modified. By declaring it as `const char * const`, both the string literals and the pointers themselves are protected from accidental modification, which improves code safety and clarity.
-
-Signed-off-by: Pratibimba Khadka <pratibimbakhadka@gmail.com>
+Signed-off-by: Dharma Balasubiramani <dharma.b@microchip.com>
 ---
- drivers/staging/sm750fb/sm750.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v5:
+- Drop the redundant port node lookup.
+- Split the commits adding atomic bridge ops into 2.
+- Update commit messages accordingly.
+- Link to v4: https://lore.kernel.org/r/20250624-microchip-lvds-v4-0-937d42a420e9@microchip.com
 
-diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
-index 1d929aca3..d3bce107f 100644
---- a/drivers/staging/sm750fb/sm750.c
-+++ b/drivers/staging/sm750fb/sm750.c
-@@ -33,7 +33,7 @@
- static int g_hwcursor = 1;
- static int g_noaccel;
- static int g_nomtrr;
--static const char *g_fbmode[] = {NULL, NULL};
-+static const char *const g_fbmode[] = {NULL, NULL};
- static const char *g_def_fbmode = "1024x768-32@60";
- static char *g_settings;
- static int g_dualview;
+Changes in v4:
+- Split the commits into 3.
+- Drop <drm/drm_panel.h>
+- Link to v3: https://lore.kernel.org/r/20250624-microchip-lvds-v3-1-c3c6f1e40516@microchip.com
+
+Changes in v3:
+- Use BIT(0) instead of 1.
+- Drop the panel field of the mchp_lvds structure.
+- Drop the inner parentheses in write in serialiser_on().
+- Link to v2: https://lore.kernel.org/r/20250623-microchip-lvds-v2-1-8ecbabc6abc4@microchip.com
+
+Changes in v2:
+- Switch to atomic bridge functions
+- Drop custom connector creation
+- Use drm_atomic_get_new_connector_for_encoder()
+- Link to v1: https://lore.kernel.org/r/20250618-microchip-lvds-v1-1-1eae5acd7a82@microchip.com
+
+---
+Dharma Balasubiramani (4):
+      drm/bridge: microchip-lvds: Remove unused drm_panel and redundant port node lookup
+      drm/bridge: microchip-lvds: migrate to atomic bridge ops
+      drm/bridge: microchip-lvds: add atomic pre_enable() and post_disable()
+      drm/bridge: microchip-lvds: fix bus format mismatch with VESA displays
+
+ drivers/gpu/drm/bridge/microchip-lvds.c | 80 ++++++++++++++++++++++-----------
+ 1 file changed, 54 insertions(+), 26 deletions(-)
+---
+base-commit: 4325743c7e209ae7845293679a4de94b969f2bef
+change-id: 20250618-microchip-lvds-b7151d96094a
+
+Best regards,
 -- 
-2.50.0
+Dharma Balasubiramani <dharma.b@microchip.com>
 
