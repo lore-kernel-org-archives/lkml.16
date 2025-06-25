@@ -1,72 +1,72 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E65351DE4DC;
-	Wed, 25 Jun 2025 03:11:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70BE71E32BE;
+	Wed, 25 Jun 2025 03:11:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750821093; cv=none; b=IUWGbLh2DqUxDyNMusExQ75SYfp0zwj1C+fnWyeZLZ2HhklNmMvCE5oy8rnCmCOJeyRVeJ2Khfyd8Y95bQghmTHjSsTliu78Uh4EqqYfaVUoF386BjZwd/7g69IhOau12lPo7DESwKANrf/jYAYa8pIURCC9RIlUTowwHcO2tLE=
+	t=1750821095; cv=none; b=KvXPxAs7Sj1bjkBBpMhGL4XrShTRKohxa/Vn6Mr+bl6FHbznhNMzjEws7OxR5KuS1K8LBuM1TFDO+S2VdAuuWlkMax+RgGmZG4aiT1UPUfkCOBFhcXXR2INhf4MHiJVoJlFjd4SI6JJGyT69CE1JUPNBcNSdlFmRvrQuChBqo+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750821093; c=relaxed/simple;
-	bh=TZOtCUxplLpVZwlulyF2AdR7IutlsKFrx5aA44BpK6Q=;
+	s=arc-20240116; t=1750821095; c=relaxed/simple;
+	bh=JPcvKh/jQAHEETOG+k6olIvrMgI+nTXU1PIG0qFgfik=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NnnO8k0gxFQk+WdqHiCzjTvnrdUjzL/p434y5R856PBLYwsC6g7jq5HqbiqSUjXJqT6iUamwdleI7ouWtTszbD/wD+Le3JDgYHrJYCHBxQDzPlcocGgD5NSdjuPWXzV3BKVQzQ39kPNkj+ipve5oEvwBL9VJadz/BHXuRe3a5RI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QIJS0OfZ; arc=none smtp.client-ip=209.85.222.180
+	 MIME-Version; b=VCo5wcqXFiK5uyuVhrajnabFUq/ApHSZ4i6r+Tc2KpVOdHgsF7bx3medRV0JV3gOqRygY3F4rAbrILDas/urf067Xh8a2KnF2VEEmt2JCAa1M7qIlXnnvD78RVboB2cA5whdn+lt5NhDpwjtbCKx50kDEtbdT1HvR7VhA32TPeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HpSRA0v1; arc=none smtp.client-ip=209.85.160.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QIJS0OfZ"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7d3e5df4785so408181685a.0;
-        Tue, 24 Jun 2025 20:11:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HpSRA0v1"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-4a58d95ea53so5962521cf.0;
+        Tue, 24 Jun 2025 20:11:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750821090; x=1751425890; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750821092; x=1751425892; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=qhQXR4q/1FKoBNWknRJmtYgN/63wc+pb7z14qfrzMOI=;
-        b=QIJS0OfZeKYhj3IlYZFBGiCOB4LBouPxvd102+FS1UqnVFuWop6xkvtBRECGtR+FNz
-         E02GrMKJeFyclFseoZSwoyPbSjcFIx+SUciunYBwdeInLuJsFcaNGMOuGoxQ6VGknS5E
-         f31l8RTkpNKr7uwTBw66nNma6oJzb5rzTfLf/B9uTZsf7w6XkE6wfhqV+lJu/QF/ilXp
-         qhmIggKdCJmHG3T2UqwCC7JjPupu+9uh/iuJcm/YUPAUTAah4IqcWkUTR+e6IT61pbMm
-         jUbK2qpU9+imo6EUHYNKUZY02gsp+w+wP5rMyxnG8FTu6h0fBlfdmO1YIlywWTZCIUo8
-         aXzg==
+        bh=CPJydrkhnERanEDJeh8iKFAtkTK1x51r4pmOIL1PfXo=;
+        b=HpSRA0v19F9mUJnOXdepSt3nr9KiSJPHqh+KMuMeiu6vyC/ou3HAjGW6ag6nw+d8VB
+         BwgtjTwyibi9Dxe4ircFPB3Xdt+GjmAmYHAJeV18DESVSeCJc9orxxpWMbtHOAmrPiHV
+         4EPFvVtETjDdMiW/xsxMO6UqTxY9E3bqeL484w3QN5IEXG3wG3QirWuwiwN7LehRsl3i
+         l4utsRcduPSQT7mCuqE3cX89hS0DnvHTl5xb9qVF/HmpJeBdr1KHbhwQhIN5UHP7TL+3
+         O3R3kbrIbL4DS5HbQEwNdxa2hi8TTUKdbW3e0ctAsRatbeReNqRKrPycwJwfXx4F3xS8
+         WNVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750821090; x=1751425890;
+        d=1e100.net; s=20230601; t=1750821092; x=1751425892;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:feedback-id:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=qhQXR4q/1FKoBNWknRJmtYgN/63wc+pb7z14qfrzMOI=;
-        b=lgK5mKe5AvjuxSHoz8v4U718/6OjouaYTpMSrBHeXFOUJB4ogA1x5V0cxeb/r8edbR
-         yvr/JraBWWb0waUjHIAAZxBieK7nS/+KnV8aEb94wqFLO5Ik7HdlMd1GpTisJ5nkSJVN
-         CLzDvZQNdG4N7QvbPfS2K69OuT7gv7KKil4rT50GvJeGfGLL4suLtOE/CPyq0gObFYdI
-         iT+JZ8KbUVRsC/QSu0UC57LZf65FBbRAVL1ZgTo9usxWwtOYEaQEj0bhUSEwJ9VGFu1B
-         7M9xjHRWkyTuU9z0Cahp+mV0acLmlfV/Vk6i+6Fc516k4qIYP/IqmxDJO5aTdeppPgwG
-         kS5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUQIxhpUTp0EdkFnMSGEHucxRoBfrTugh9IJu1G4RVpGZbAqgpWmRCgX6zs05VuHSK6JH10GOM=@vger.kernel.org, AJvYcCWX7JUfd01GENW12pROpfpxLWcFi0PnBDNvJFh6Km3gZ0OqgJ9EDbx4T2m2c1Ms5kmDrjQf@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxl3X9pZd8pYtPMQg29nwELI/5wyqrinZkvv2CsKzb/btl4Ghog
-	Z0g6+obYO63ICAvC3CTlwr4fXIevyUHHgFQTR11VlMXQA6UAvLAQOix7
-X-Gm-Gg: ASbGnctNyF80pokmm3vGO4Agr/vJ1IclFZtsH2qx5GGmts9N3W3aXVcEsXnuzEju00x
-	P5BMsxGCmwyO43gX3phD1RNez8FhyWVbvP4O7TTr9hEU7/zWWSfKJHue24yUQUJITZS8nwe7qwS
-	hpNZ8O3/fTHg6LdzmPl9zOXi7peYaRbfrnN7cWah01ViAZYr44Qs7Sg5w6aaDoO+rElJ/HfrO/k
-	zvnYtHs7tY9uRKkXSFqAwcs+DzUEfw0N6le5pGfFeJUblvxO+odBLUFOetd4FhHEpeDVjuenC90
-	7mAuyd/8k5Rfc0KhnaG+++VQ+0oOwAnA7k50nrJNLcyMz8IWcWmDwvmFDrwUj4cjAmTAxaScopQ
-	xSdg4JC7x8pb8Kgh6ZVcO0iYL6wGiO520xjdM8trVKpeTdi6rXyRd
-X-Google-Smtp-Source: AGHT+IEcTWAIOOFSCQca6pLktm0oe2Iu3mQqxK8tubUlzRS0uHFLS6o5cXHt4DbBg4x47R2Z4s8MFw==
-X-Received: by 2002:a05:620a:6a14:b0:7d4:29ea:a9a7 with SMTP id af79cd13be357-7d429eaaaf9mr113733385a.49.1750821089756;
-        Tue, 24 Jun 2025 20:11:29 -0700 (PDT)
+        bh=CPJydrkhnERanEDJeh8iKFAtkTK1x51r4pmOIL1PfXo=;
+        b=u2PZzqla7FtZ8DbKju3KikB7YK0jc0pPLix+lXsARS+QmNvglEP1lf1lbHkU84Jxwu
+         lJDUAIpzPumUmDEidGlaEdGyDn13D69OqlF4pm1AvOyz5V+hs4Ji6+tMSuhBVo0UApRW
+         UCj9oYeVL2TkDmONwrLuk3R5MKouiclFJROPy8EGoSUmPr2gdQznc5DnTGgKW5FCXiAz
+         oyrCRQ9BfUQYMJZBHimty19krJqjKkz0JmAMCqtNRqNFNRzkWhQXOdIkIAgEFe4/97ZD
+         T2FTLUXrFhoHmxm1lCIolXkmqRpFKI1mo9NSPD80cjBGE24lUsCME7xX66BQ89vH7Pen
+         XfMw==
+X-Forwarded-Encrypted: i=1; AJvYcCUsDCa0Dp5d1zHItyVOW6duPOYB3NGoofukZTPPJBS5ZPkHLkxaXGJYCaS/kaWf4NazjI3E@vger.kernel.org, AJvYcCXU6BKp9DiKvmmmMQ5/ZBpn0WALTSSjxhVVGdojd/D0ZkNBxGP6sUZm8zMe5NxcijsKNuG4ZpI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQCFmmiNk62cozgS6xd/SxO5GXhmlvfCEUt4wTE2roq3Jf8Nxo
+	EmEDZmjfxckpEKt5ky+8ae33c7Fm7x0Bfc6Vzl0wswSdJykGmMjQUzC6
+X-Gm-Gg: ASbGncuOOhC1xuzcENGnQl+30ehszkZ3bJzy8CmGG+J2TC19IiGK0ogm9f/FmRPR/KZ
+	P7RUmL59gq5OGJ4PYtPn3L24kyMwsVl1ca+PdhbsL3HS7xNU1KCYO/yh68f08xkxKL53fV/fpbe
+	grCm/oDOzgRKIpoFKDYpfaHKb3CuX6DCK+3XKrcdG6eqLoRKKgFIq8uTT8aeNppkOuSEYw5ZCAl
+	VxtNaOv74EblBADdR/uf1Ck4iJTg14HwrK1jlwWmfQLCyp59taYPEabh7Kl+8O4vCnfjZ27G4tp
+	UD20nQE4rDkRIFvGDAaNZp/ic71xF1Uz4dhk3y8wbe5lSYOG9yVaB0NaGJd0NvIRFbLGQmJxcfG
+	3jRG0vAons0y+yjILHYJozZix9OMVutOm1gtk9wISmDls/MDzDPh0
+X-Google-Smtp-Source: AGHT+IGW0TiZzG9hPxpBHcORi1BL38UTs0PtOJHlHm1exg6B9dlOGYVh+aZvZ1C6ZdIypaz5HFXCZA==
+X-Received: by 2002:a05:622a:198c:b0:4a7:896:f2d3 with SMTP id d75a77b69052e-4a7c112d0a4mr23737041cf.0.1750821092305;
+        Tue, 24 Jun 2025 20:11:32 -0700 (PDT)
 Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f999a5a8sm566908585a.18.2025.06.24.20.11.28
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a79de8d57bsm30445411cf.72.2025.06.24.20.11.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 20:11:29 -0700 (PDT)
+        Tue, 24 Jun 2025 20:11:31 -0700 (PDT)
 Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id C0A4CF40066;
-	Tue, 24 Jun 2025 23:11:28 -0400 (EDT)
+	by mailfauth.phl.internal (Postfix) with ESMTP id 480CEF40066;
+	Tue, 24 Jun 2025 23:11:31 -0400 (EDT)
 Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Tue, 24 Jun 2025 23:11:28 -0400
-X-ME-Sender: <xms:4GhbaAshV837yyRgI5hdabuiYaKWvA_nvNFJmqlobWwl9tCokX65oQ>
-    <xme:4GhbaNcP4_0MOtrRqIOpydv_z6G1DehWZSwA_E7IyC_VU1rMh5P7fISi6SulWE1gL
-    C7oHH4DuKDtq8Ff1w>
-X-ME-Received: <xmr:4GhbaLxAfR0ZZalGGBpcGRV4qqXUHimwSKdWEhMQm3JywMO3OufFpHlLaw>
+  by phl-compute-06.internal (MEProxy); Tue, 24 Jun 2025 23:11:31 -0400
+X-ME-Sender: <xms:42hbaBhMrsLSSrKXGy2cqVaOA-TomG5qY0N0LZ0GBN6NpyAqq-b3rQ>
+    <xme:42hbaGASqrquj2Ce9HBs6_butqyLZ1VZpL6l2gTa8N1pxNlhwwCAZT-uKfS89fT9-
+    dZ1SfnO8xdGsddJ5A>
+X-ME-Received: <xmr:42hbaBFrzG7lqP739Fku6viILzTb57216pLJWTRl-WMthRz2gmchEMuYyQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvudeiiecutefuodetggdotefrod
     ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
     ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
@@ -84,14 +84,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvudeiiecutefuodetgg
     rhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghoqhhunh
     drfhgvnhhgsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhonhhgmhgrnhesrhgvughh
     rghtrdgtohhmpdhrtghpthhtohepuggrvhgvsehsthhgohhlrggsshdrnhgvth
-X-ME-Proxy: <xmx:4GhbaDPksBCZcfdzklDTbpZCJJfDMAodPdwNrA9nvfTPNMrgytKeAA>
-    <xmx:4GhbaA_Ant31p09B8hgfPf0aE9RYp-hJtzjb3JXqA1QcSfQkrCNuRw>
-    <xmx:4GhbaLXc341HcEi4epQd4K-xNuxskJhw1xwNpW_hlXmW-SzKcGhj1A>
-    <xmx:4GhbaJcoFWjVIYzOt-i0ZLYUK2hz0XxL6EEBVKPrSY1_wUXMhbkZ2g>
-    <xmx:4GhbaCe_XrlQZGP6mDaJ2vhS0NlJc_kteqtLcHRvcqiw4W34gkl9CZN1>
+X-ME-Proxy: <xmx:42hbaGRIyovSvjttgDxdfbsUKtTsdSLsy2bkpzFIgElwzm-YdmTf2Q>
+    <xmx:42hbaOxunvJBdATlcKJlKuc7Cs-2dGdO0ySX04nFqpNKg9SB8g6JRA>
+    <xmx:42hbaM7ekw8IxW8uGG9nieV4yJp4DSpEzwvqwb6jVoELd3nwBgXhUA>
+    <xmx:42hbaDyDqPhj36L404m3T_XYwrRPJ8gnpMJW7diV-MLKkmFr61rEmw>
+    <xmx:42hbaGiVqFHEUDsyecN6wRFPlcmFfdb_aGFnpSGK2A_7X7Ph3hqsdLWK>
 Feedback-ID: iad51458e:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Tue,
- 24 Jun 2025 23:11:28 -0400 (EDT)
+ 24 Jun 2025 23:11:30 -0400 (EDT)
 From: Boqun Feng <boqun.feng@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	rcu@vger.kernel.org,
@@ -119,9 +119,9 @@ Cc: Peter Zijlstra <peterz@infradead.org>,
 	jhs@mojatatu.com,
 	kernel-team@meta.com,
 	Erik Lundgren <elundgren@meta.com>
-Subject: [PATCH 3/8] shazptr: Add refscale test for wildcard
-Date: Tue, 24 Jun 2025 20:10:56 -0700
-Message-Id: <20250625031101.12555-4-boqun.feng@gmail.com>
+Subject: [PATCH 5/8] shazptr: Allow skip self scan in synchronize_shaptr()
+Date: Tue, 24 Jun 2025 20:10:58 -0700
+Message-Id: <20250625031101.12555-6-boqun.feng@gmail.com>
 X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 In-Reply-To: <20250625031101.12555-1-boqun.feng@gmail.com>
 References: <20250625031101.12555-1-boqun.feng@gmail.com>
@@ -133,73 +133,78 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the refscale test for shazptr, which starts another shazptr critical
-section inside an existing one to measure the reader side performance
-when wildcard logic is triggered.
+Add a module parameter for shazptr to allow skip the self scan in
+synchronize_shaptr(). This can force every synchronize_shaptr() to use
+shazptr scan kthread, and help testing the shazptr scan kthread.
+
+Another reason users may want to set this paramter is to reduce the self
+scan CPU cost in synchronize_shaptr().
 
 Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
 ---
- kernel/rcu/refscale.c | 40 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 39 insertions(+), 1 deletion(-)
+ kernel/locking/shazptr.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/rcu/refscale.c b/kernel/rcu/refscale.c
-index 154520e4ee4c..fdbb4a2c91fe 100644
---- a/kernel/rcu/refscale.c
-+++ b/kernel/rcu/refscale.c
-@@ -928,6 +928,44 @@ static const struct ref_scale_ops shazptr_ops = {
- 	.name		= "shazptr"
- };
+diff --git a/kernel/locking/shazptr.c b/kernel/locking/shazptr.c
+index a8559cb559f8..b3f7e8390eb2 100644
+--- a/kernel/locking/shazptr.c
++++ b/kernel/locking/shazptr.c
+@@ -14,11 +14,17 @@
+ #include <linux/completion.h>
+ #include <linux/kthread.h>
+ #include <linux/list.h>
++#include <linux/moduleparam.h>
+ #include <linux/mutex.h>
+ #include <linux/shazptr.h>
+ #include <linux/slab.h>
+ #include <linux/sort.h>
  
-+static void ref_shazptr_wc_read_section(const int nloops)
-+{
-+	int i;
++#ifdef MODULE_PARAM_PREFIX
++#undef MODULE_PARAM_PREFIX
++#endif
++#define MODULE_PARAM_PREFIX "shazptr."
 +
-+	for (i = nloops; i >= 0; i--) {
-+		preempt_disable();
-+		{
-+			guard(shazptr)(ref_shazptr_read_section);
-+			/* Trigger wildcard logic */
-+			guard(shazptr)(ref_shazptr_wc_read_section);
-+		}
-+		preempt_enable();
-+	}
-+}
+ DEFINE_PER_CPU_SHARED_ALIGNED(void *, shazptr_slots);
+ EXPORT_PER_CPU_SYMBOL_GPL(shazptr_slots);
+ 
+@@ -252,6 +258,10 @@ static void synchronize_shazptr_busywait(void *ptr)
+ 	}
+ }
+ 
++/* Disabled by default. */
++static int skip_synchronize_self_scan;
++module_param(skip_synchronize_self_scan, int, 0644);
 +
-+static void ref_shazptr_wc_delay_section(const int nloops, const int udl, const int ndl)
-+{
-+	int i;
-+
-+	for (i = nloops; i >= 0; i--) {
-+		preempt_disable();
-+		{
-+			guard(shazptr)(ref_shazptr_delay_section);
-+			/* Trigger wildcard logic */
-+			guard(shazptr)(ref_shazptr_wc_delay_section);
-+			un_delay(udl, ndl);
-+		}
-+		preempt_enable();
-+	}
-+}
-+
-+static const struct ref_scale_ops shazptr_wildcard_ops = {
-+	.init		= ref_shazptr_init,
-+	.readsection	= ref_shazptr_wc_read_section,
-+	.delaysection	= ref_shazptr_wc_delay_section,
-+	.name		= "shazptr_wildcard"
-+};
-+
- static void rcu_scale_one_reader(void)
+ static void synchronize_shazptr_normal(void *ptr)
  {
- 	if (readdelay <= 0)
-@@ -1235,7 +1273,7 @@ ref_scale_init(void)
- 		&refcnt_ops, &rwlock_ops, &rwsem_ops, &lock_ops, &lock_irq_ops,
- 		&acqrel_ops, &sched_clock_ops, &clock_ops, &jiffies_ops,
- 		&typesafe_ref_ops, &typesafe_lock_ops, &typesafe_seqlock_ops,
--		&shazptr_ops,
-+		&shazptr_ops, &shazptr_wildcard_ops,
- 	};
+ 	int cpu;
+@@ -259,15 +269,19 @@ static void synchronize_shazptr_normal(void *ptr)
  
- 	if (!torture_init_begin(scale_type, verbose))
+ 	smp_mb(); /* Synchronize with the smp_mb() in shazptr_acquire(). */
+ 
+-	for_each_possible_cpu(cpu) {
+-		void **slot = per_cpu_ptr(&shazptr_slots, cpu);
+-		void *val;
++	if (unlikely(skip_synchronize_self_scan)) {
++		blocking_grp_mask = ~0UL;
++	} else {
++		for_each_possible_cpu(cpu) {
++			void **slot = per_cpu_ptr(&shazptr_slots, cpu);
++			void *val;
+ 
+-		/* Pair with smp_store_release() in shazptr_clear(). */
+-		val = smp_load_acquire(slot);
++			/* Pair with smp_store_release() in shazptr_clear(). */
++			val = smp_load_acquire(slot);
+ 
+-		if (val == ptr || val == SHAZPTR_WILDCARD)
+-			blocking_grp_mask |= 1UL << (cpu / shazptr_scan.cpu_grp_size);
++			if (val == ptr || val == SHAZPTR_WILDCARD)
++				blocking_grp_mask |= 1UL << (cpu / shazptr_scan.cpu_grp_size);
++		}
+ 	}
+ 
+ 	/* Found blocking slots, prepare to wait. */
 -- 
 2.39.5 (Apple Git-154)
 
