@@ -1,56 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1512725A337;
-	Wed, 25 Jun 2025 13:03:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CE9223704;
+	Wed, 25 Jun 2025 13:03:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750856613; cv=none; b=JQ23E/FILDA9300KJosvdxdPh7eAxkM63GZ0uqir5idb2cud571kyGGsoHyO+A59KTAhWk1NlKKLML60TwrcB85c5KT44TuPHFgT+/5HV79odkAYFutPeuTn/OvSNdNr7268lVOnIO+BXb4MCh4D7OcsKr1J6qKn+wtRJhDpWt8=
+	t=1750856628; cv=none; b=PCPXeFpagNvhKF8HC33APi2i+uSsUEDK0DRgbmqAXYR2LzEPBxuEsYVvNI4o8QLF5eBT+AejT0oZ7mpnIx4WShxQAjjPpgFFQ+yrsrdNKN93hNIQvhWBcrYPD6q2m1PKBDZStyxY/Ho4OMpvMIBFONTJPm6VadnrlFmzVDIBxCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750856613; c=relaxed/simple;
-	bh=zJUtDDXZZsNgnHWXi945NdyeR509h7c3lPJubouFxcc=;
+	s=arc-20240116; t=1750856628; c=relaxed/simple;
+	bh=6U88q7TOKdSVgEqMDSSDTApj1e+MmNyr/LKmIeBvLt0=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mN99lk/es61OBd95JIVNW5f8VzkHTjN16Qm1OnDqT2Bzq8Zw7ry97C+fLM7luXbZiP3B5t6XF+PqbRGltuiksjT87PvcGKnoMwmarz497hDWHH43WSuHeE60E2KIohYCwexIRMonfOQqjC8PJFoAM35RXuSFB5Sf/2W/mtP3/j4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jk5bwxxn; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version:Content-Type; b=Qata8tXH1rkk0iNAqct593HnErCjE46W38xg2g/OKEQTUZ57Zp9x5SqhdagXywInKCdhhyG5Iqfg/3SV6Ycog1+dxjUjyL0JSUbKHDuNxmUAoFmdF+k3g4e1Vuo6Iuwpvfs3D/4E1by//a+lAjHMyDsPAcEkMRdp5W9rkkXH338=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aXqM0Hh2; arc=none smtp.client-ip=198.175.65.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jk5bwxxn"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aXqM0Hh2"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750856612; x=1782392612;
+  t=1750856627; x=1782392627;
   h=from:to:cc:in-reply-to:references:subject:message-id:
    date:mime-version:content-transfer-encoding;
-  bh=zJUtDDXZZsNgnHWXi945NdyeR509h7c3lPJubouFxcc=;
-  b=Jk5bwxxn94mudCy+ERzINrsupHW6af23tl9NMrfZSRvvRYGsL3KlL6jy
-   qGAuySWtf1i7Jd/HQFCsnfBKQmOmvWw6FPP8w22s4HrE9aKah2Ra0AMI4
-   sN2GBBx4mmj8KjdmbjzfmKhaq/nkMayOlrSjahdKJTPHYBGerFMHomrV5
-   LkjooLZWO/l3rawHs8KLtOUev1KJiHHNAdmiKegjmqc2T5gxDU47DWUf7
-   +t23usl0W5rSITed6rkgnyum4XoAJJb2PgCUIK0x7QDYhDHD4vIVCa/lL
-   +Oly3DzV/ewRsMh5/JTGKm8e0NRZO/WR3fk0E/yBdlQJF9xZIL56ypm9Y
-   w==;
-X-CSE-ConnectionGUID: MJSgloBcQ+qONk3+R6OcTw==
-X-CSE-MsgGUID: V51Q8rk7QeeLc9vtQkP4Rw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="56909532"
+  bh=6U88q7TOKdSVgEqMDSSDTApj1e+MmNyr/LKmIeBvLt0=;
+  b=aXqM0Hh2hCd5g8Src0H4+m3WWZSKNUfteJFHDyxXs9eTRUPr03cI681s
+   eJKYSEpMT+L5D80I4kQZP1dW8iISx0pMY4rrVa1mS+ZJRmKSeg+YgWH8s
+   5aSCkf2mAxWXnJ5lU7i0IrfC3DyAmJyHXIn4h0pnhNb96I6PaAnbG3PX7
+   1sozgn4BRZfhykCoH/gnp7Ff/BIDiw1P3IHF0h0gN1acCxJdXtFC89dSv
+   iL8KEuro6xyvUVGS7Gy1Be72qSmJbbAZ+Y0BpHvz1VHbXZyuGCCMDiAYU
+   GVAqDW5Q9QP9MbOv3w7xb0VhcokyfMGYLBhDJNshGVD6sy5yWRfuZcikD
+   g==;
+X-CSE-ConnectionGUID: o+tHfElVRay5KPJewcUAwA==
+X-CSE-MsgGUID: UncaI0ONT+mzVQdfAQiTAQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="64185296"
 X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="56909532"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:03:32 -0700
-X-CSE-ConnectionGUID: ZPQSt1bsQhC9r0sar1c0WQ==
-X-CSE-MsgGUID: YS/irz4ISkCMrptFHrQ8Hg==
+   d="scan'208";a="64185296"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:03:46 -0700
+X-CSE-ConnectionGUID: UHYkEejIRNqw1qeBhngccg==
+X-CSE-MsgGUID: TsnVDkPrTDm9joJJ+31IVw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="152922531"
+   d="scan'208";a="151633868"
 Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.13])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:03:30 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 06:03:43 -0700
 From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Hans de Goede <hansg@kernel.org>, Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250622080721.4661-1-pmenzel@molgen.mpg.de>
-References: <20250622080721.4661-1-pmenzel@molgen.mpg.de>
-Subject: Re: [PATCH] platform/x86: dell-lis3lv02d: Add Latitude 5500
-Message-Id: <175085660320.8098.14462069839144981994.b4-ty@linux.intel.com>
-Date: Wed, 25 Jun 2025 16:03:23 +0300
+To: Mark Pearson <mpearson-lenovo@squebb.ca>
+Cc: hmh@hmh.eng.br, ibm-acpi-devel@lists.sourceforge.net, 
+ platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Damjan Georgievski <gdamjan@gmail.com>, Hans de Goede <hansg@kernel.org>
+In-Reply-To: <20250620181119.2519546-1-mpearson-lenovo@squebb.ca>
+References: <mpearson-lenovo@squebb.ca>
+ <20250620181119.2519546-1-mpearson-lenovo@squebb.ca>
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: handle HKEY 0x1402 event
+Message-Id: <175085661917.8098.8803611578218025120.b4-ty@linux.intel.com>
+Date: Wed, 25 Jun 2025 16:03:39 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -58,43 +61,17 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
-On Sun, 22 Jun 2025 10:07:20 +0200, Paul Menzel wrote:
+On Fri, 20 Jun 2025 14:11:10 -0400, Mark Pearson wrote:
 
-> Add 0x29 as the accelerometer address for the Dell Latitude 5500 to
-> lis3lv02d_devices[].
+> 2025 Thinkpads F11 key launch the Intel Unison app on Windows,
+> which does some sort of smart sharing between laptop and phone.
 > 
-> The address was verified as below:
+> Map this key event to KEY_LINK_PHONE as the closest thing we have.
+> This prevents an error message being displayed on key press.
 > 
->     $ cd /sys/bus/pci/drivers/i801_smbus/0000:00:1f.4
->     $ ls -d i2c-?
->     i2c-2
->     $ sudo modprobe i2c-dev
->     $ sudo i2cdetect 2
->     WARNING! This program can confuse your I2C bus, cause data loss and worse!
->     I will probe file /dev/i2c-2.
->     I will probe address range 0x08-0x77.
->     Continue? [Y/n] Y
->          0  1  2  3  4  5  6  7  8  9  a  b  c  d  e  f
->     00:                         08 -- -- -- -- -- -- --
->     10: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->     20: -- -- -- -- -- -- -- -- -- 29 -- -- -- -- -- --
->     30: 30 -- -- -- -- 35 UU UU -- -- -- -- -- -- -- --
->     40: -- -- -- -- 44 -- -- -- -- -- -- -- -- -- -- --
->     50: UU -- 52 -- -- -- -- -- -- -- -- -- -- -- -- --
->     60: -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
->     70: -- -- -- -- -- -- -- --
->     $ echo lis3lv02d 0x29 | sudo tee /sys/bus/i2c/devices/i2c-2/new_device
->     lis3lv02d 0x29
->     $ sudo dmesg
->     [    0.000000] Linux version 6.12.32-amd64 (debian-kernel@lists.debian.org) (x86_64-linux-gnu-gcc-14 (Debian 14.2.0-19) 14.2.0, GNU ld (GNU Binutils for Debian) 2.44) #1 SMP PREEMPT_DYNAMIC Debian 6.12.32-1 (2025-06-07)
->     […]
->     [    0.000000] DMI: Dell Inc. Latitude 5500/0M14W7, BIOS 1.38.0 03/06/2025
->     […]
->     [  609.063488] i2c_dev: i2c /dev entries driver
->     [  639.135020] i2c i2c-2: new_device: Instantiated device lis3lv02d at 0x29
 > 
 > [...]
 
@@ -105,8 +82,8 @@ platform-drivers-x86/review-ilpo-fixes branch only once I've pushed my
 local branch there, which might take a while.
 
 The list of commits applied:
-[1/1] platform/x86: dell-lis3lv02d: Add Latitude 5500
-      commit: d0f8ee81a8fe63cd29d01b905eead72b88326ef2
+[1/1] platform/x86: thinkpad_acpi: handle HKEY 0x1402 event
+      commit: b511bbfe4242e14c27a4f80da95dabc4a99d73b2
 
 --
  i.
