@@ -1,150 +1,155 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 301C24C92;
-	Wed, 25 Jun 2025 15:16:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD4CB4C92;
+	Wed, 25 Jun 2025 15:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864616; cv=none; b=W4VUXOf/2MFWOSjJLiHG92hfY/TtirXXfrWSglvm4cbTr9Z+1CkedPbg7VMiKAXkc+fSP2pwFQNXHGMgGRF+2o41qhQcs1FO4F8nJBdGoX/DiIq2lsfUYeD9Xb1GXBKKW6vObbh5acBxFaNdbhQG5bRaxFMYVtW+0ku4uFNCAe0=
+	t=1750864658; cv=none; b=CQ0sQtxG2v/Kiu4sPO3zqaJ7pagYR4mTloU8DooanNwc/PCUI+TpKD09dCx6gIvHwscfIAAvCH3mQKG8KPhZjbhtukf+Bh49Ag9cssHaAr+d7F2EXyhzdete/4XhXlwzbpxh0DRurXSwqqC0uqvb8f0hd+BTV0kNhNZDIePPV1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864616; c=relaxed/simple;
-	bh=aC91EhIBP9Q2k/q5j/lTyvwBktXILvM8FcypRg/WJSI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t3uaiFa1OmkDD0CvZaJc9lTs1PpTrUWkzdk9vJcbM7HJwkvlmWVpryrPuvOM3N3gKUhhwXoi2hnHG82EKq1LILCQ6WMIyoPUWFJP/KD1fE/tAmlnFQoXLzPu8VDJPA9DoNi/lC2A6kiu7WHqLJuzape9zxAdUUuwUh/maux+/iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-72bc3987a05so15986a34.1;
-        Wed, 25 Jun 2025 08:16:53 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750864613; x=1751469413;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vUSrPdP6U4ZVmBBJkCBaWIz0r73N/ZlYRZqiR8xQJR4=;
-        b=rzgliFGqcrzyPDvQv2ZYywQUkunsniQG8fxbvYdkIYEEhUcjvCMjIlvBEauf+DgGZt
-         raB/Y6YmfDeARQn52gkb/8IQXbv8h1nmvhe2MqeEnoQQaZ6hy88QRI4XzAwvfBxB3p64
-         BaRRfaPC028LjpotkvvuXviFhvWzpalZfmFspdp55NR81fkzH88RBYRTTjbDE3099OAC
-         FijO05flqAa8k+/zlJeVt/Ms2SZm+NRd0IDtJOJKPVbM1GSE44xZmJZDgh1RlcgnI8H3
-         z4/7y35e58nsPbEO/zVPqEbUBd5LOX3SnQjlqJjIC1qIZyK7hBokuFMd0a7btb/Yxf4w
-         +lag==
-X-Forwarded-Encrypted: i=1; AJvYcCU3rUidmSzWYHU7tuRhXdV3A4SPULmN6SN5flEYf1jC2Uo/40g77+pMP0pShHEH2ZXGeIbzwSEJysgZ@vger.kernel.org, AJvYcCUEM3IVRnSdrogglh4IUS3Pq3EMuNDUR83RAmQkVzeTyg4ankHe6vJMfi6InIi5hsyiXbBA/50JhBN7@vger.kernel.org, AJvYcCUYTuCkAq160RzlJL2uC16Zj6GbSM8W9y1OwnsPdPvKwHKDAzc9qpsP6rPoImDgQaAZLTgk6hq2/ZlOBp/r@vger.kernel.org, AJvYcCVjiSO5k/WsuA3ynOx+Kc+P4norsLz1pTJ5it3aD2i8RNkzx5CZoKHyvo4eniZOm6wAJbx1LK6J@vger.kernel.org, AJvYcCXBln157d1A7BjV0bJa6r6WEfy9TlBBkJtfT7D/gjrXXx64vwZkygmkY3eddHBTb6fcsUnwxbL5oMHtAK9qqnJGNPI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzcw1j82VkRXlw5wN/2mdNd+io6oDvpMZPLMO2wLRl4V5DmVY44
-	Eh23FBIDal8ZlZZgQyH6sYC/Rw8fkB3am2frpFjHqY2jpcGPc7Cu2MXSIsK+YzOL
-X-Gm-Gg: ASbGncvm8I4mVsWc7YqqoZ+sn10YdgHVP/gVSQ87QJRy4o3lgIEnG3FwdCFptsgB6aT
-	GwamOh6cu/f/DsZeQnv1yqOvZeulVjkr+aS9+7PjRlIAhXMaoaHnItRJDtUUumDyIKZe7VLI38i
-	LlI8Nldpdonz541kJhB6OMYQcn1jXbd1ex3C/9YnFLYSNZwR8O9bfKEiRyIXI4nxfNXzNS6nAgJ
-	WZgnrusXiwkJopCLZVbpVjBnx0lH5CNuTFbgeHhGoOWmnHeMvqEySDtmJRN3BHK1Iyj+ijmITxZ
-	jo5mSWwE4a+3qgHC4hBuS9XRm1jNX+HGynuRi6M8GQmDYrmeNWSVOrRDJD80oSuNw8iu2R/WR3C
-	xVoZBZFj2Hb6Y1/WUvvmtKcfr
-X-Google-Smtp-Source: AGHT+IHuXLtIWOaJwXGV/ztLpzcozr9Sc91kdhR8HipSvYLmaY4KtGgBdo3upY/lQPoR4Layq5pcOg==
-X-Received: by 2002:a05:6830:6c87:b0:73a:a969:a42e with SMTP id 46e09a7af769-73acbf0b2b1mr4323576a34.14.1750864612540;
-        Wed, 25 Jun 2025 08:16:52 -0700 (PDT)
-Received: from mail-oo1-f41.google.com (mail-oo1-f41.google.com. [209.85.161.41])
-        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2eead8dc454sm2544674fac.42.2025.06.25.08.16.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 08:16:52 -0700 (PDT)
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-606668f8d51so22350eaf.0;
-        Wed, 25 Jun 2025 08:16:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUOGm42NreB4noYxs88efd8RLgc0vT6P0C+Mvu70oYLbV+/yNzGwITO59Q0IsyIrX8GmiHhzkPoi36p4MYZ@vger.kernel.org, AJvYcCUbsibKhR5DlQrOwT8JAGdfL6hxDAs2D/NB/xG/nHWmYQRfxsr0AzDTaQC6fuvQdD7Sy+2oV0bR4dWb@vger.kernel.org, AJvYcCV7D1ZBXIqQbMclChTbU1kvDjyRWAlMQup+zJBTaMiFQ2VK8wX7D/yl8UFHjg0hJSplSO4BkdFS@vger.kernel.org, AJvYcCVF7uwDjHzQMvXgHX3aAtZGy9kXazAXce2W7rtH62hPuNtrRbcXNMlDoy+RQNeIBLIL0sTrWRcJyUDI@vger.kernel.org, AJvYcCXKFdARBW5WibOX4ucCuw8TaWW3P/DHtsWPWQ3nNqhZ60EQwDvWHN1ZQtD3aEYHWuJhX9H3cNjtlyLUXKIb4NMY7wg=@vger.kernel.org
-X-Received: by 2002:a05:6808:16a8:b0:407:9d24:af03 with SMTP id
- 5614622812f47-40b06a5d677mr2449444b6e.14.1750864611838; Wed, 25 Jun 2025
- 08:16:51 -0700 (PDT)
+	s=arc-20240116; t=1750864658; c=relaxed/simple;
+	bh=VAIMJsEXUJBRtuANssi1i4L6RoyEQfqrRrxpCMh/jXU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YckCV6hcUjnwlbeGqJHQ3CAyMcvuDJ5Wdg/0KQMNVDbF585ucFcEbIo19fz0RAfWajPYyeHd9TuKBW9ysOLnXB9QqmDA+580dNeqKEckVtNl9+bWdbG4nk44bs316G1CLPy90kWjwY3djIy9xCpS46sOh4TXhxgZGmKopjlR1Zc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KVi3WHpC; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KVi3WHpC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750864657; x=1782400657;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=VAIMJsEXUJBRtuANssi1i4L6RoyEQfqrRrxpCMh/jXU=;
+  b=KVi3WHpCodDmZxN/gy0ab6i7kPX2yKaox7pDVYdXDIRoMOxupJa74wka
+   IicWmYTdY3UAR/E46CU2/EgEB7cRrUB0bZJ3v8ZgOM9FZCbBBx7rFfjXH
+   GjOxSkRstTX15atVm9Fysb2t8LZ4hOWO33Ya4//ZRr7TrOAiBIJYBaL5D
+   gqCsD/UzJxboCWTkxwNxcS+vpwQykofohTEgteWp7KSqPpG58n1jsrh5r
+   OuZj3EiRB7aXwHpfZuqFRZ9QadIZCw4gSMDv0GXsSxz+DRxpPLXNZnp0b
+   VvQaOEDwI4erXetHEOmHdiVHu5n3MZeIxm0kfEGu8SAQhFENbaC7dKVf8
+   A==;
+X-CSE-ConnectionGUID: 9Z0vX/8+Tt2sb2GggMjWNg==
+X-CSE-MsgGUID: A79YH8HETgePQQvM5JZdag==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53279580"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="53279580"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 08:17:35 -0700
+X-CSE-ConnectionGUID: DvVR5OVsTUiiXisDpTF6lg==
+X-CSE-MsgGUID: l+R2EqbSQtaauRITvfxcjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="152538509"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 08:17:32 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uURsP-00000009oYL-3XHe;
+	Wed, 25 Jun 2025 18:17:29 +0300
+Date: Wed, 25 Jun 2025 18:17:29 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>
+Subject: Re: [PATCH 2/2] Revert "Input: soc_button_array - debounce the
+ buttons"
+Message-ID: <aFwTCUXQydxRVEfk@smile.fi.intel.com>
+References: <20250624202211.1088738-1-superm1@kernel.org>
+ <20250624202211.1088738-3-superm1@kernel.org>
+ <4a4d577b-a085-46e8-97b9-6df27461c870@kernel.org>
+ <1f8c0262-b376-43cb-b2c5-5b60e8cbf678@kernel.org>
+ <92ab85ff-6314-4db0-ae12-9803ddde5037@kernel.org>
+ <625952d3-01e9-426e-9739-86fe5cdfeb35@kernel.org>
+ <7b2f02ef-0274-480b-aecc-bc1165d15fd7@amd.com>
+ <aFwRZO30wf8GxQea@smile.fi.intel.com>
+ <be57dcd1-a9ba-44f6-af9e-9b40f2b5c870@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623080405.355083-1-john.madieu.xa@bp.renesas.com> <20250623080405.355083-4-john.madieu.xa@bp.renesas.com>
-In-Reply-To: <20250623080405.355083-4-john.madieu.xa@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 25 Jun 2025 17:16:40 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdWtciRt+H3eQjwLw3O5T=NCG7Vqx8a=pGWBoHTJ2Q_G1Q@mail.gmail.com>
-X-Gm-Features: Ac12FXxYBhNRo2UWMqofKkmEF9Ij-68i63gUw7rsGP9Hb2xLeqaEwM1NGuspIyU
-Message-ID: <CAMuHMdWtciRt+H3eQjwLw3O5T=NCG7Vqx8a=pGWBoHTJ2Q_G1Q@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] arm64: dts: renesas: rzg3e-smarc-som: Enable
- eth{0-1} (GBETH) interfaces
-To: John Madieu <john.madieu.xa@bp.renesas.com>
-Cc: magnus.damm@gmail.com, robh@kernel.org, krzk+dt@kernel.org, 
-	conor+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, 
-	richardcochran@gmail.com, linux-renesas-soc@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, netdev@vger.kernel.org, biju.das.jz@bp.renesas.com, 
-	"Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <be57dcd1-a9ba-44f6-af9e-9b40f2b5c870@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Hi John,
+On Wed, Jun 25, 2025 at 03:14:40PM +0000, Limonciello, Mario wrote:
+> On 6/25/25 10:10 AM, Andy Shevchenko wrote:
+> > On Wed, Jun 25, 2025 at 03:02:18PM +0000, Limonciello, Mario wrote:
+> >> On 6/25/25 9:41 AM, Mario Limonciello wrote:
+> >>> On 6/25/25 9:31 AM, Hans de Goede wrote:
+> >>>> On 25-Jun-25 4:09 PM, Mario Limonciello wrote:
+> >>>>> On 6/25/25 4:09 AM, Hans de Goede wrote:
+> >>>>>> On 24-Jun-25 10:22 PM, Mario Limonciello wrote:
 
-On Mon, 23 Jun 2025 at 10:04, John Madieu <john.madieu.xa@bp.renesas.com> wrote:
-> Enable the Gigabit Ethernet Interfaces (GBETH) populated on the RZ/G3E SMARC EVK
->
-> Reviewed-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Tested-by: Biju Das <biju.das.jz@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Signed-off-by: John Madieu <john.madieu.xa@bp.renesas.com>
+...
 
-> v3:
-> Updates mdio separately, based on phandles instead of node redefinition
+> >>>> Ok, so specifically the gpiod_set_debounce() call with 50 ms
+> >>>> done by gpio_keys.c is the problem I guess?
+> >>>
+> >>> Yep.
+> >>>
+> >>>> So amd_gpio_set_debounce() does accept the 50 ms debounce
+> >>>> passed to it by gpio_keys.c as a valid value and then setting
+> >>>> that breaks the wake from suspend?
+> >>>
+> >>> That's right.
+> > 
+> >>>>> Also comparing the GPIO register in Windows (where things work)
+> >>>>> Windows never programs a debounce.
+> >>>>
+> >>>> So maybe the windows ACPI0011 driver always uses a software-
+> >>>> debounce for the buttons? Windows not debouncing the mechanical
+> >>>> switches at all seems unlikely.
+> >>>>
+> >>>> I think the best way to fix this might be to add a no-hw-debounce
+> >>>> flag to the data passed from soc_button_array.c to gpio_keys.c
+> >>>> and have gpio_keys.c not call gpiod_set_debounce()  when the
+> >>>> no-hw-debounce flag is set.
+> >>>>
+> >>>> I've checked and both on Bay Trail and Cherry Trail devices
+> >>>> where soc_button_array is used a lot hw-debouncing is already
+> >>>> unused. pinctrl-baytrail.c does not accept 50 ms as a valid
+> >>>> value and pinctrl-cherryview.c does not support hw debounce
+> >>>> at all.
+> >>>
+> >>> That sounds a like a generally good direction to me.
+> > 
+> > Thinking a bit more of this, perhaps the HW debounce support flag should be
+> > per-GPIO-descriptor thingy. In such cases we don't need to distinguish the
+> > platforms, the GPIO ACPI lib may simply set that flag based on 0 read from
+> > the ACPI tables. It will also give a clue to any driver that uses GPIOs
+> > (not only gpio-keys).
+> 
+> But 0 doesn't mean hardware debounce support is there, 0 means that 
+> hardware debounce is not required to be programmed for this GPIO.
+> 
+> That is - if another system had a non-zero value in the GpioInt entry I 
+> would expect this to be translated into the GPIO register.
 
-Thanks for the update!
+Correct. The question is only about 0. So the flow will look like
 
-> --- a/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/rzg3e-smarc-som.dtsi
+1) if the GPIO is defined with 0 debounce, set the flag;
+2) if the GPIO is defined with non-zero value, try to apply it;
+3) if the step 2) fails, warn and set the flag.
 
->  &pinctrl {
-> +       eth0_pins: eth0 {
-> +               pinmux = <RZG3E_PORT_PINMUX(A, 1, 1)>, /* MDC */
-> +                        <RZG3E_PORT_PINMUX(A, 0, 1)>, /* MDIO */
-> +                        <RZG3E_PORT_PINMUX(C, 2, 15)>, /* PHY_INTR (IRQ2) */
-> +                        <RZG3E_PORT_PINMUX(C, 1, 1)>, /* RXD3 */
-> +                        <RZG3E_PORT_PINMUX(C, 0, 1)>, /* RXD2 */
-> +                        <RZG3E_PORT_PINMUX(B, 7, 1)>, /* RXD1 */
-> +                        <RZG3E_PORT_PINMUX(B, 6, 1)>, /* RXD0 */
-> +                        <RZG3E_PORT_PINMUX(B, 0, 1)>, /* RXC */
-> +                        <RZG3E_PORT_PINMUX(A, 2, 1)>, /* RX_CTL */
-> +                        <RZG3E_PORT_PINMUX(B, 5, 1)>, /* TXD3 */
-> +                        <RZG3E_PORT_PINMUX(B, 4, 1)>, /* TXD2 */
-> +                        <RZG3E_PORT_PINMUX(B, 3, 1)>, /* TXD1 */
-> +                        <RZG3E_PORT_PINMUX(B, 2, 1)>, /* TXD0 */
-> +                        <RZG3E_PORT_PINMUX(B, 1, 1)>, /* TXC */
-> +                        <RZG3E_PORT_PINMUX(A, 3, 1)>; /* TX_CTL */
-> +       };
-> +
-> +       eth1_pins: eth1 {
-> +               pinmux = <RZG3E_PORT_PINMUX(D, 1, 1)>, /* MDC */
-> +                        <RZG3E_PORT_PINMUX(D, 0, 1)>, /* MDIO */
-> +                        <RZG3E_PORT_PINMUX(F, 2, 15)>, /* PHY_INTR (IRQ15) */
-> +                        <RZG3E_PORT_PINMUX(F, 1, 1)>, /* RXD3 */
-> +                        <RZG3E_PORT_PINMUX(F, 0, 1)>, /* RXD2 */
-> +                        <RZG3E_PORT_PINMUX(E, 7, 1)>, /* RXD1 */
-> +                        <RZG3E_PORT_PINMUX(E, 6, 1)>, /* RXD0 */
-> +                        <RZG3E_PORT_PINMUX(E, 0, 1)>, /* RXC */
-> +                        <RZG3E_PORT_PINMUX(D, 2, 1)>, /* RX_CTL */
-> +                        <RZG3E_PORT_PINMUX(E, 5, 1)>, /* TXD3 */
-> +                        <RZG3E_PORT_PINMUX(E, 4, 1)>, /* TXD2 */
-> +                        <RZG3E_PORT_PINMUX(E, 3, 1)>, /* TXD1 */
-> +                        <RZG3E_PORT_PINMUX(E, 2, 1)>, /* TXD0 */
-> +                        <RZG3E_PORT_PINMUX(E, 1, 1)>, /* TXC */
-> +                        <RZG3E_PORT_PINMUX(D, 3, 1)>; /* TX_CTL */
-> +       };
-> +
->         i2c2_pins: i2c {
->                 pinmux = <RZG3E_PORT_PINMUX(3, 4, 1)>, /* SCL2 */
->                          <RZG3E_PORT_PINMUX(3, 5, 1)>; /* SDA2 */
-
-Based on the feedback from Prabhakar on v2, I understand this needs to
-configure output-enable for the ET0_TXC_TXCLK and ET1_TXC_TXCLK pins,
-and to add support for that in the pin control driver first?
-
-[1] https://lore.kernel.org/all/CA+V-a8uizu5MCur_=g5vJyWbWSTSP2J6FkQ89JB8ges7GWdsjg@mail.gmail.com/
-Gr{oetje,eeting}s,
-
-                        Geert
+Would it make sense?
+Hans?
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+With Best Regards,
+Andy Shevchenko
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+
