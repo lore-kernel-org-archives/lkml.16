@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE642EACFB
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:56:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A952EACF4
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:56:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750870618; cv=none; b=FgZvpTRKqlv4CemKlZTWk+TvHtGosbJTqsYpKoLBlYKq4Rae55uRhoT0p5nizhKo/cDO0k/jgQrCfotw5sAFtmORXmTnYQTQ6wvhc8wZG5eOGVdjmaF4lzKKWnK5T4zBO11JOPsefePDu1T8dnTtNDU6B5sCqnM+Rndkh1rJEEo=
+	t=1750870620; cv=none; b=VgI7Q1lTWgEIZzd42cqM6q0yZrUJaUPNCD7CxFmme+1b95yYJwnx456F96vobeQea2CZpcorVf9n5E7RrVzepUhTXGaWfcQSymQN1pfDA20eFVA/GlD90vrV1pGAlJg+x6b/nmZA3B+13kFVVNDhZtzyfJTeP0FZepvj0PsOBz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750870618; c=relaxed/simple;
-	bh=E72XAmwLEXP/cIfDQ5XSxKLgy7353qIEmfUuR7ydBVY=;
+	s=arc-20240116; t=1750870620; c=relaxed/simple;
+	bh=KOQQsCoE0oqkeAm/Y0aoPQ+O5D3xfSmk4KxH6jeeGRY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=XXmY5bvkCDyobdfzsWyF2kTaUiB5B1skW6y/ftRYyTp9uq1sSWVBMNZoKOgz1VTSATnVeHvkw5KW/NfYhcytbk1DLCyE7AiBHJ5xBtlXi2dnnEruCSaNk5U7TK96Wby38/cnBbMHZ76LRpaq9+iwaq5Y/LvMhMp/VcI14QuW+GA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ewEYtxLU; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=BNAxUSyT2aixrpP4Ap2j3StmooqEkWkqkEbu1a89xQ+7ijWMydLiomLswSm7Yofpu54KjpfK/1DVktn6RCbutv95AhXddMcWig9Jd9rsGVMtCvLVztBTO3TWWvVmXSH96/l3KWiBc4bWzx0Xa8ZiHFhERX/rgkY3r/jAD7PShEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lEE6cOH3; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ewEYtxLU"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lEE6cOH3"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750870617; x=1782406617;
+  t=1750870619; x=1782406619;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=E72XAmwLEXP/cIfDQ5XSxKLgy7353qIEmfUuR7ydBVY=;
-  b=ewEYtxLUFy2VK8NYZEAu2K7vr6o7uWUbqKHRYH8jPvfNuBEzQyxPVHmd
-   tEHMFj7lvcV5CyDRcZZc4T1t/4brPlpGiGWY0AJqbx6FwXT/hsOFj+5r6
-   s58sH9P2vPVbQNAnffmoraZjvuq8t2KprdTrMNbKMwSW9CBDeKFUWqSd4
-   QgFsHbd8MuISR4Ylip2t6HlO7bNutzGyTkNXMNRYfU8vSWLqsJpKRHYzg
-   /PuW4tfpE9lTgmHy0xAxrn7klrANIr+YSZGNWqwpO5aNnV1uVN2c/cipW
-   bw085evX9gHs2rYjBh/jsTTb3l15o24Xl8/n2Q0B7c6UxUfORs/NMaDUa
+  bh=KOQQsCoE0oqkeAm/Y0aoPQ+O5D3xfSmk4KxH6jeeGRY=;
+  b=lEE6cOH3VtYlMZK8lCmPvrT2wxKKIOqnc1G0NKeKFBUCza8L8Dx2qop7
+   z2MfVs1JkMT8D6/ty5jFU0J9t/UeRwmZsCLlH4ZNiiO3vxPXiROJcSyee
+   BnGBUQBZv6MlkIM+Qflq/CIplqxp7/dWV9THVB5dSJcDKKVaDy1e1SqYj
+   be2LWvGQ5JdPDfrvWO7lQ48O+JSZfjfrsXg+pVjQ3ZyRqDgMu2LnocY8w
+   L7BK3w/zLC5cg5hpboSkM3x8eq7PI1jsbywR5tfMMtpcC1VDliP7aoro1
+   oOpYpE89Ywae7aqhUJPP+Tr4vOoo2Mk8W96k9YvX//xRJGPCagqsc1LyJ
    g==;
-X-CSE-ConnectionGUID: MSL2/gErTX+cBbA5FLS15w==
-X-CSE-MsgGUID: BbIyne4hRmuIRuN09tn5YA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53214453"
+X-CSE-ConnectionGUID: 4/UH5f2gR9+lUg1uyrriQw==
+X-CSE-MsgGUID: PkoeotfeTsO1oEcurrplgg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53214457"
 X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="53214453"
+   d="scan'208";a="53214457"
 Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 09:56:56 -0700
-X-CSE-ConnectionGUID: 3uBLudaDRKmk2vQH8jnnpw==
-X-CSE-MsgGUID: VC4Q+YAtSg+EZyqY7EcukA==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 09:56:59 -0700
+X-CSE-ConnectionGUID: 6xHZ9QIXS+aLcdDHtaz0pg==
+X-CSE-MsgGUID: gHz9xzKtR1CzDvLpoKgVnQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="151696699"
+   d="scan'208";a="151696709"
 Received: from unknown (HELO bnilawar-desk2.iind.intel.com) ([10.190.239.41])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 09:56:54 -0700
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 09:56:56 -0700
 From: Badal Nilawar <badal.nilawar@intel.com>
 To: intel-xe@lists.freedesktop.org,
 	dri-devel@lists.freedesktop.org,
@@ -52,9 +52,9 @@ Cc: anshuman.gupta@intel.com,
 	alexander.usyskin@intel.com,
 	gregkh@linuxfoundation.org,
 	daniele.ceraolospurio@intel.com
-Subject: [PATCH v4 06/10] drm/xe/xe_late_bind_fw: Reload late binding fw in rpm resume
-Date: Wed, 25 Jun 2025 22:30:11 +0530
-Message-Id: <20250625170015.33912-7-badal.nilawar@intel.com>
+Subject: [PATCH v4 07/10] drm/xe/xe_late_bind_fw: Reload late binding fw during system resume
+Date: Wed, 25 Jun 2025 22:30:12 +0530
+Message-Id: <20250625170015.33912-8-badal.nilawar@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20250625170015.33912-1-badal.nilawar@intel.com>
 References: <20250625170015.33912-1-badal.nilawar@intel.com>
@@ -66,72 +66,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Reload late binding fw during runtime resume.
+Reload late binding fw during resume from system suspend
 
-v2: Flush worker during runtime suspend
+v2:
+  - Unconditionally reload late binding fw (Rodrigo)
+  - Flush worker during system suspend
 
+Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
 Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
 ---
- drivers/gpu/drm/xe/xe_late_bind_fw.c | 2 +-
- drivers/gpu/drm/xe/xe_late_bind_fw.h | 1 +
- drivers/gpu/drm/xe/xe_pm.c           | 6 ++++++
- 3 files changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/xe/xe_pm.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.c b/drivers/gpu/drm/xe/xe_late_bind_fw.c
-index 52243063d98a..737780336000 100644
---- a/drivers/gpu/drm/xe/xe_late_bind_fw.c
-+++ b/drivers/gpu/drm/xe/xe_late_bind_fw.c
-@@ -82,7 +82,7 @@ static int xe_late_bind_fw_num_fans(struct xe_late_bind *late_bind)
- 		return 0;
- }
- 
--static void xe_late_bind_wait_for_worker_completion(struct xe_late_bind *late_bind)
-+void xe_late_bind_wait_for_worker_completion(struct xe_late_bind *late_bind)
- {
- 	struct xe_device *xe = late_bind_to_xe(late_bind);
- 	struct xe_late_bind_fw *lbfw;
-diff --git a/drivers/gpu/drm/xe/xe_late_bind_fw.h b/drivers/gpu/drm/xe/xe_late_bind_fw.h
-index 28d56ed2bfdc..07e437390539 100644
---- a/drivers/gpu/drm/xe/xe_late_bind_fw.h
-+++ b/drivers/gpu/drm/xe/xe_late_bind_fw.h
-@@ -12,5 +12,6 @@ struct xe_late_bind;
- 
- int xe_late_bind_init(struct xe_late_bind *late_bind);
- int xe_late_bind_fw_load(struct xe_late_bind *late_bind);
-+void xe_late_bind_wait_for_worker_completion(struct xe_late_bind *late_bind);
- 
- #endif
 diff --git a/drivers/gpu/drm/xe/xe_pm.c b/drivers/gpu/drm/xe/xe_pm.c
-index ff749edc005b..91923fd4af80 100644
+index 91923fd4af80..f49b7b6eab97 100644
 --- a/drivers/gpu/drm/xe/xe_pm.c
 +++ b/drivers/gpu/drm/xe/xe_pm.c
-@@ -20,6 +20,7 @@
- #include "xe_gt.h"
- #include "xe_guc.h"
- #include "xe_irq.h"
-+#include "xe_late_bind_fw.h"
- #include "xe_pcode.h"
- #include "xe_pxp.h"
- #include "xe_trace.h"
-@@ -460,6 +461,8 @@ int xe_pm_runtime_suspend(struct xe_device *xe)
+@@ -127,6 +127,8 @@ int xe_pm_suspend(struct xe_device *xe)
  	if (err)
- 		goto out;
+ 		goto err;
  
 +	xe_late_bind_wait_for_worker_completion(&xe->late_bind);
 +
- 	/*
- 	 * Applying lock for entire list op as xe_ttm_bo_destroy and xe_bo_move_notify
- 	 * also checks and deletes bo entry from user fault list.
-@@ -550,6 +553,9 @@ int xe_pm_runtime_resume(struct xe_device *xe)
+ 	for_each_gt(gt, xe, id)
+ 		xe_gt_suspend_prepare(gt);
+ 
+@@ -205,6 +207,8 @@ int xe_pm_resume(struct xe_device *xe)
  
  	xe_pxp_pm_resume(xe->pxp);
  
-+	if (xe->d3cold.allowed)
-+		xe_late_bind_fw_load(&xe->late_bind);
++	xe_late_bind_fw_load(&xe->late_bind);
 +
- out:
- 	xe_rpm_lockmap_release(xe);
- 	xe_pm_write_callback_task(xe, NULL);
+ 	drm_dbg(&xe->drm, "Device resumed\n");
+ 	return 0;
+ err:
 -- 
 2.34.1
 
