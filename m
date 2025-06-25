@@ -1,82 +1,157 @@
-Received: from invmail3.skhynix.com (exvmail3.skhynix.com [166.125.252.90])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E5183FD1
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.90
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB0030748D;
+	Wed, 25 Jun 2025 00:17:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750810455; cv=none; b=gAKc6JdQ0bQZYuaR1eA70nfb/WZsSqgDo/VpN60VyMH8aH0cn1GSUUxr7WXnvhQV52u2cJG/WbUAhXm9c73YFOtwCCdgoisQpHjuXB0MEyqZT8UeycCjki4UfAZRm2TEoj9x6d02UjnkCz7bMJO1v7pRvaO/bgOCWrUeD56YWuw=
+	t=1750810639; cv=none; b=u6zgqc9GKy7JHLaY/mjiNv5xdDAJCbxwSmjcuExpSJxyyGfK70NbYiaAwSf11iGGinRbtHzjgF7hPC+jsP+MT1l03mCsqaNR6Dgq4lPL6tlvYDSKFZ+53Bpidu4uefGufzaY7crPgnoc0cd8ldlR39lzxXDkhumMjMeVZPAJeiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750810455; c=relaxed/simple;
-	bh=I5hT9bSgM768qYEaX8cM5IKm62/bwzl9Nbnq/XIq7yQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qkSIwfKP2+n2ZNbScc0bTub9vAiuluvUWv6eRSPQSgSVHb223CznMMj79lJpxncJtZ/zMmMhhOCS5YDm5sj4NawRHDcMWhYHNdwhTCYHnZqB2d4m1C0Yc9uuzjrav7SFru7NvYAh04FhWx+8LzaIxjZUJLvjXS7btL0tJCs8JYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.90
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc59-057ff7000000aab6-9e-685b3f52cc9f
-From: "yohan.joung" <yohan.joung@sk.com>
-To: jaegeuk@kernel.org,
-	chao@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-f2fs-devel@lists.sourceforge.net,
-	pilhyun.kim@sk.com,
-	"yohan.joung" <yohan.joung@sk.com>
-Subject: [PATCH] f2fs: fix to check upper boundary for value of gc_boost_zoned_gc_percent
-Date: Wed, 25 Jun 2025 09:14:07 +0900
-Message-ID: <20250625001408.1961-1-yohan.joung@sk.com>
-X-Mailer: git-send-email 2.49.0.windows.1
+	s=arc-20240116; t=1750810639; c=relaxed/simple;
+	bh=8F+5VJe6FB70M4AQuQJYZ1+ifX1/9f77z7JvHI4bcog=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sFWuRhd097VBVeG8pSrf1UOPAWNRTRQSsF/ZFthoFJ7qZQZm1okb6hu9Hccs9HtkNgPTrudrHrKv02b135E2deh7O/VO/3A4dKVOsVjqSY+VhTR+gbqeVr76+FyWVOVSoDzhmz+NInpe9uz9i7YH67lv+13OnD+sC4BB+lbLvgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LibxaPiS; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LibxaPiS"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-742c3d06de3so6844208b3a.0;
+        Tue, 24 Jun 2025 17:17:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750810637; x=1751415437; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SMuWEhNS0QYEHfBsmjFKrwhF+mL6kz9BNUIZdfev/+U=;
+        b=LibxaPiSbH9gM/Q2z8ZANqaxEdfT9f2yKyrb0cdWtjmNq84nR8A8//D5AuIWN7exD5
+         WxzmWzfsW0OG2RjFLdntRv0yHq7XGKasZ311Eg0rXVpWs5ED8jzNB2Fsubokg4XHAnrV
+         4B8aOFamN1ScWEmtuUhwP75XKYZetVl9m5W0y68EQMU8jPQXww62Tm9V+zg9govlXXGn
+         8KY+Z38L4eC5LUdSrEG9HxZC5+csu59Gr7GeSIxAe4gaFNs/F6dFsalaJUEChVh0ueM9
+         ff0KzpYdrqvLtCaYKj+cfZS2+f7F++jUycYTKz0JOpOG0GYkF0OnJgf+TQcP4HSfEjDJ
+         f9Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750810637; x=1751415437;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SMuWEhNS0QYEHfBsmjFKrwhF+mL6kz9BNUIZdfev/+U=;
+        b=MN9bkPiOgzXgXpaKwrCWpdxexqrVXSGCuU9o/oPoQGe+TCJzLyGHP/YkZYDdVvJcRt
+         /lEI8h4gjTn3NcwPSxpne9C2D2POy2tkLShvD5GofvfibyXHLI3ubGJukH7/xatZqQka
+         kJ1ODaC24FdlK8XhY4iC6ezTNNLQdqQgXJJdln2LR/bLszkULS+LKda+ciujXukwYOj6
+         YLZMQBtElZhY4kkD0Fiikafiynrvd32/EwyLZzEhBEvUDJTU/DCY1BuZhCFFOz9NQxcR
+         pE0t0Zlp0Ghu8ReatfxKR7qRZVCs9lkgYI4BRrDGWQmFFQX6YLKaysEj6fAPsDY6Rx/p
+         zV9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUvLnioPS4cCgZpZVcUohOn6Y1LHwaCowEBmPk0q/HZBwrRmZ4+b8sD3ZykvfWYLUiamK7vMjDEnsHxL22T@vger.kernel.org, AJvYcCVPESUOwtLqbEtAog9Fs1jlL/MvR+zzDparsq46VxjiB3m9EENaq4lTWs4iLbrJBOZ0HPk5fCCjCjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3cOxULx4RV7S1tHtWPaguhGagQaEMFHXL84vgDeiLWjbwUMtJ
+	uw8KCBE/YyooJX6GSZcOMcU9AHBE3qKQF0O1a+hkjuo7EUwS/X368Oti
+X-Gm-Gg: ASbGncs2pckBdXFtQzpPg7w3Tc0wTseNU4OZmoBJY3IC/P2qzvw0WqNszTNpjbeikJA
+	DyGvFYk+4c7JtdtUDj8K6ERtsHZs/NOvNKjeVtIhj0T8LsbCX2tXPh5LdFXbwKMQy0PVHHU2iRo
+	Li7W5GImsEJZ46UyN7DXJYfpgVDTdDhH4E/qvyoIgJ0QjTldT0y3qKVc8JDhFvoaZVOuufAPwqc
+	jiYgggBToJMWXEDGjtsEPGniEVDYu4ET8wsGF3hbA/NfWYbAM2QG9+R9BJMHeiJy0XXSjWktCb3
+	9rxN+B3RP5Byb6nm191oU+O7UgvYvF6DnGnEm8xWz9rNwUisc50RBwtag7WA5L+XeQ==
+X-Google-Smtp-Source: AGHT+IGrnaMXw6owasaNuxUam8tvd0LaSbXuxrDukfAd4n+I/N8D50xe/q8P4mWxhhtFqkTPTOJ+zQ==
+X-Received: by 2002:a05:6a21:9991:b0:21c:fc27:aee6 with SMTP id adf61e73a8af0-2207f2b44ffmr1365642637.22.1750810636620;
+        Tue, 24 Jun 2025 17:17:16 -0700 (PDT)
+Received: from archlinux ([2804:14d:90a8:477c:f086:933f:4c16:eb28])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c882cd77sm2856632b3a.88.2025.06.24.17.17.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jun 2025 17:17:16 -0700 (PDT)
+Date: Tue, 24 Jun 2025 21:17:03 -0300
+From: Gustavo Silva <gustavograzs@gmail.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Alex Lanzano <lanzano.alex@gmail.com>, 
+	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Lothar Rubusch <l.rubusch@gmail.com>
+Subject: Re: [PATCH v3 3/3] iio: imu: bmi270: add support for motion events
+Message-ID: <d5kbjtjofknv4qkbak7ujr2lyckpio5kly55hpqlcrkajjzlzn@vr3c27deyumc>
+References: <20250616-bmi270-events-v3-0-16e37588604f@gmail.com>
+ <20250616-bmi270-events-v3-3-16e37588604f@gmail.com>
+ <20250622144240.02845c0a@jic23-huawei>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupjluLIzCtJLcpLzFFi42LhesuzUDfYPjrD4PUFZovTU88yWTxZP4vZ
-	4tIid4vLu+awObB4bFrVyeaxe8FnJo/Pm+QCmKO4bFJSczLLUov07RK4Mq6t3sNcsJ214s9K
-	9gbGLSxdjJwcEgImErd6HjDD2LP2NbGD2GwCGhJ/envB4iICmhJHOmcCxbk4mAXaGCXajzax
-	djFycAgLREocfFgMUsMioCpxb+tSsJm8AmYSy/c9Z4eYqSmx48t5Joi4oMTJmU/AapgF5CWa
-	t86G2nuXVeLkRU8IW1Li4IobLBMYeWchaZmFpGUBI9MqRpHMvLLcxMwcY73i7IzKvMwKveT8
-	3E2MwFBaVvsncgfjtwvBhxgFOBiVeHgNWqMyhFgTy4orcw8xSnAwK4nwTjMHCvGmJFZWpRbl
-	xxeV5qQWH2KU5mBREuc1+laeIiSQnliSmp2aWpBaBJNl4uCUamAsnKga0Veye9JW61kFr2x3
-	5lvPaN3L4Lfo9pxi06Q5Jt0pGjpvi+0XpfUW7YhnCQs1nPJh45ciu4v6EgZ3/p253n6mNYLJ
-	kdH+cKPr85DGI6uEGu3d1cusLCOZLDJS9czsamI/1Uw4FFnU5WGaPHVBvlv6Q5V75iomll1l
-	S1LMrGq+8jbOUmIpzkg01GIuKk4EAAOOVCAhAgAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrBJMWRmVeSWpSXmKPExsXCNUNljm6QfXSGwaFpVhanp55lsniyfhaz
-	xaVF7haXd81hs5gw9yqTxfut9xgd2Dw2repk89i94DOTx7fbHh6fN8kFsERx2aSk5mSWpRbp
-	2yVwZVxbvYe5YDtrxZ+V7A2MW1i6GDk5JARMJGbta2IHsdkENCT+9PYyg9giApoSRzpnAsW5
-	OJgF2hgl2o82sXYxcnAIC0RKHHxYDFLDIqAqcW/rUrA5vAJmEsv3PWeHmKkpsePLeSaIuKDE
-	yZlPwGqYBeQlmrfOZp7AyDULSWoWktQCRqZVjCKZeWW5iZk5ZnrF2RmVeZkVesn5uZsYgeGx
-	rPbPpB2M3y67H2IU4GBU4uGNWBGVIcSaWFZcmXuIUYKDWUmEd5o5UIg3JbGyKrUoP76oNCe1
-	+BCjNAeLkjivV3hqgpBAemJJanZqakFqEUyWiYNTChggN7J4FvqcjBWK2D+lP6wtSLfNf8Xu
-	J6JGs2UOr1r2UmKr65uegzYVIWdyxO+p3l5RmsdkxrL/2QO3uYdL2msmH5i0Tej4g6niOsK3
-	7hRkb/4vxxuSPH9C8+ZjFutVXYXmGTtPmPTgV9Xn/f/fLY85KhRjVpiw75k569bpsxYZ3WtJ
-	rU/+6H5SiaU4I9FQi7moOBEABodZnwsCAAA=
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250622144240.02845c0a@jic23-huawei>
 
-to check the upper boundary when setting gc_boost_zoned_gc_percent
+On Sun, Jun 22, 2025 at 02:42:40PM +0100, Jonathan Cameron wrote:
+> Hi Gustavo,
+> 
+> Main question in here is about the scaling of the motion threshold.
+> It seems to be based on units of g.  We use m/s^2 for IIO acceleration channels
+> and also the expectation is that threshold events match scaling of the main channels
+> (_scale applies to them).  Hence here we will need to do something a little
+> fiddly to maintain the threshold scale if the main channel scaling changes.
+>
+Hi Jonathan,
 
-Signed-off-by: yohan.joung <yohan.joung@sk.com>
----
- fs/f2fs/sysfs.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+Thanks for the review.
+> 
+> Jonathan
+> 
+> 
+> > @@ -114,6 +134,10 @@
+> >  #define BMI270_STEP_COUNTER_FACTOR			20
+> >  #define BMI270_STEP_COUNTER_MAX				20460
+> >  
+> > +#define BMI270_INT_MICRO_TO_RAW(val, val2, scale) ((val) * (scale) + \
+> > +						  ((val2) * (scale)) / MEGA)
+> > +#define BMI270_RAW_TO_MICRO(raw, scale) ((((raw) % (scale)) * MEGA) / scale)
+> 
+> I'm struggling a bit with what this is doing.  Perhaps a comment?
+> 
+These macros convert register values to the range defined in
+'in_accel_{period,value}_available' and vice versa.
+The same macros are defined in the bmi323 driver, so I used them here
+for the sake of consistency.
+> 
+> 
+> 
+> > @@ -827,6 +977,20 @@ static int bmi270_read_avail(struct iio_dev *indio_dev,
+> >  	}
+> >  }
+> >  
+> > +static IIO_CONST_ATTR(in_accel_value_available, "[0.0 0.00049 1.0]");
+> This aligns with below.  Scaling definitely shouldn't be in g and is likely more
+> complex because of the relationship expected with the overall channels scaling
+> controls.
+> 
+> > @@ -848,21 +1016,58 @@ static int bmi270_read_event_config(struct iio_dev *indio_dev,
+> >  				    enum iio_event_direction dir)
+> >  {
+> 
+> 
+> > +	switch (info) {
+> > +	case IIO_EV_INFO_VALUE:
+> > +		ret = bmi270_read_feature_reg(data, reg, &regval);
+> > +		if (ret)
+> > +			return ret;
+> > +
+> > +		raw = FIELD_GET(BMI270_FEAT_MOTION_THRESHOLD_MSK, regval);
+> > +		*val = raw / BMI270_MOTION_THRES_SCALE;
+> > +		*val2 = BMI270_RAW_TO_MICRO(raw, BMI270_MOTION_THRES_SCALE);
+> 
+> Why this particular scaling? Is effectively just dividing 1g / number of
+> values and hence providing a scaling to g?
+> 
+That's correct. In the bmi323 there's an actual scaling factor of 512 to
+the register value. In the bmi270 the register value is not scaled.
 
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index 51be7ffb38c5..2b5c35ce7b8c 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -628,6 +628,13 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
- 		return count;
- 	}
- 
-+	if (!strcmp(a->attr.name, "gc_boost_zoned_gc_percent")) {
-+		if (t > 100)
-+			return -EINVAL;
-+		*ui = (unsigned int)t;
-+		return count;
-+	}
-+
- #ifdef CONFIG_F2FS_IOSTAT
- 	if (!strcmp(a->attr.name, "iostat_enable")) {
- 		sbi->iostat_enable = !!t;
--- 
-2.33.0
-
+> Full scale is described as being 1G.
+> As this device is providing _RAW data for the relevant channels I'd
+> expect this to be scaled to match that. That will be a little fiddly here as
+> this is apparently always 0-1g whereas the scaling of the channel varies.
+> Thus irritatingly we'd need to adjust the scaling of this so it remains
+> consistent as the full scale changes.
+> 
+> The events ABI documentation is rather weak / wrong on this as it refers to
+> both _input_ and _raw_ thresholds whereas the true ABI just has one with
+> the scaling always being to match _raw if that is present. So _threshold * _scale
+> should be in the standards base units of m/s^2.
+> 
+Thanks for the clarification. I'll work on that in v4.
+> 
