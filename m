@@ -1,61 +1,77 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D37725BEEC;
-	Wed, 25 Jun 2025 11:40:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1545425E461
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:41:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750851649; cv=none; b=calkawZPrcEtgjheX+14ARxpvxJkoxnRjrNln/zKZvMD2fm15muAe69mSnLfF3h7/SylXuBAy6Hlc78Gm5qjM3v0VQ5+qVz/Q5gVhEZt9Vut6GRZirWK5sxCBkWCzAsuAgwt3iw+2yVduIcO2fvSOfuQcXGSKcXJb/mGhf0YkHs=
+	t=1750851663; cv=none; b=X9ZvK3FofIJQM3Pwf8M6BnuAGV8GapUC6vIeLZNbgbrGxWbAJvtozNmGLIiJi8J5ZSw+dClZdbLg97jce0XvaOgDlvhqA2FyAzrsb4FnjiUAJxCKXcVTldQyyrnAfBlYkQhAMZJCOwuH7fy0kALUFhBXhfZGB080rSGrpkeQKvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750851649; c=relaxed/simple;
-	bh=uY6RFzWQv+0n90gOzscfCZplXmNlWoXCFt0YTZXikzY=;
+	s=arc-20240116; t=1750851663; c=relaxed/simple;
+	bh=jJJlgaFEJ9g9K6Q8SrNlaqFfTep0VyaYLLhfj8cLj4M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h7r+9iQMuxXQNZDM4eVrHCZVdb3MR476iyZLUuIQmv+IPHXVt+Pa/cFNw+mpNguNsSAeoXtX2F9WXcWsqk2aM2sj2fSNFZOVlyo/89gf9BTl73GGbV0MHtTbd2JxVs8Xri7MDNyEDu89j7KxrYf9R8fG4X8dXyYyWdmywEYMsz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=QrYLXkTh; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=kzBbtzOgD1GVaEhP41Tyf9mw48ZIXatX5EP0TGnXUac+VFWMtqtvULE7JAIVmM/9QlesHVP/AuwrgBj9MgBNgx0hF2r29WtvPSiAS6qGddhKAMyYi6UDdJ4y/m+SDyZ6WOycaRf+HjUlZp2Y1RvxCFQRYH7GzuibMz2UtEEqylM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e4gy6egH; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QrYLXkTh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=u24hZkHf06T4OB4HIHNxmrjaJ9u6QgZP82b5qhOGNCI=; b=QrYLXkThNMY6yQ3TkhExUf5+NB
-	yf9eh1KtODMRX4Vt2EFoBmEEETBjIA0VheGJ3+KJEPv7NkJd9O6RqpRNXu3eIB27GddUZujfIvxav
-	XwRBocMvVtnlpA2beD4Qa1vgvmCih5MATkWYLoqc1RVlSabmxpImHuk3txEW1oYFUqq7o+eSET6BP
-	N9c1mbMSGjAetYY0hKUJnl8G3xmAtskFNu14ItRUsEjZeYGzjdaw+CzIu7CUfV3Rw2eRyAavlmlv4
-	v+bdRW31ABCqwRCJVZsaNsyCzAxLNs+IEatJAu6YQE5LdxjtlZ4iRx2UmgQ0YxZFgSqDkfxvA0bj9
-	YnIOaamQ==;
-Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
-	id 1uUOUZ-00000005prz-2L8O;
-	Wed, 25 Jun 2025 11:40:39 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E6A02308983; Wed, 25 Jun 2025 13:40:37 +0200 (CEST)
-Date: Wed, 25 Jun 2025 13:40:37 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Boqun Feng <boqun.feng@gmail.com>
-Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org, lkmm@lists.linux.dev,
-	Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>, Breno Leitao <leitao@debian.org>,
-	aeh@meta.com, netdev@vger.kernel.org, edumazet@google.com,
-	jhs@mojatatu.com, kernel-team@meta.com,
-	Erik Lundgren <elundgren@meta.com>
-Subject: Re: [PATCH 4/8] shazptr: Avoid synchronize_shaptr() busy waiting
-Message-ID: <20250625114037.GD1613376@noisy.programming.kicks-ass.net>
-References: <20250625031101.12555-1-boqun.feng@gmail.com>
- <20250625031101.12555-5-boqun.feng@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e4gy6egH"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ae0a0cd709bso171913166b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750851660; x=1751456460; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dG7kxxjRLtrO7B9/s+bXTu7SCYb/AqhokTFr9duMWFo=;
+        b=e4gy6egH+LiY5h7RVXdwd3u409F+zYI1f+AvOgELDFBGaLEsfQy0rrdcSrO/frS1kq
+         pDfZstmLHf6fc3fgZR7DAOZZOX9PgR+AQybJbsxSEa+Sh8RJTXX6zoirERV6NAqZnUOA
+         9ZvRlgKLvWquE9MlKb5Axc6fJnBaxN+uw8zwaunT8AuMfhubz2ClQ3uOCI4IvFEwkNsv
+         qHheN+Qsij2lxy4GBnSxjnav86I0kyr5XuQMkg2OVgMkLOeY5RAVz1o1XROPQw7jS/t+
+         DvTjst0cYJgzerIsBOkCX6jhWeuj2tj5mJ8tTJK9yoHEnStJgzwWYobSU0RSbYDuBuBl
+         16ZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750851660; x=1751456460;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dG7kxxjRLtrO7B9/s+bXTu7SCYb/AqhokTFr9duMWFo=;
+        b=j+zH8FcAotpLh2b1KYOAuIZxgBpS6tS90cIX7dveFXiPuoz5wO2fY74yLUoTHBhNV9
+         UVyGHQIGD7Go3FJdd6Rbue4xwsFqq/vJ5yHAqRwXx6wLvEHWjTB7fW6Wtb7EK7+TeBRx
+         6+EWCL/A0I9JmDtmnmF+H/AYHwu1pvaheRDeNmNos5+jvDl7dkZrx8+uXzx151J8Rns2
+         cAYnUCNgXYqsYqXRVaayYaOBvWSEmz2AS5zitLohrW6YtfSNqksKic+eD4v0docoPVsl
+         ZwamULWBnBRvO55i+BEfXC9bRRRSdFk9rBCwpqqGN5/fkKXHn0oaTYuySgpNo1XspFnO
+         KxrA==
+X-Forwarded-Encrypted: i=1; AJvYcCVefzBPd2J3GyL5+zJBhCDsy1bhYKOkr4frzl3GR7s91J5cQR+tJlAuHgaJQhO3hmtNLuAAtyGEnNWFurs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyrpu5lZrsh5iZpKpWHrkYkeKnHNGPlqkOtNXWrr6Db4T04jIGu
+	4vFi62B+rIkFhPUKVoyM/SicZNG8TSsiMWdE2SnErJHGv++y2gl+017g/o0GhcoWSTg=
+X-Gm-Gg: ASbGnctlghXJC2Hd2tj79v+vXmBYnoCapc2Pk9SjfEhbXGojGxh/m2U4dtCPFDuC/ec
+	g2cG3cfqjz2SB0e/g9JaE9CPdYtdYA5QXkwctbl5NX9cKWENpC9T6J4XiEPdCCEJqkXIAbuZ6ZO
+	QU7P/TFL7xV5eC6P9Hj0tmQMR305B6pR4klGecsEi3YYms0Bgeca/RSaYlbgWluTUlLhx0qG0LJ
+	SR53IS2kWFV3cvey80zeK7T2cmpc452VXqnw6sg2sZJg65j4qITL6HBiLkCyKiE2P41JRarvBEe
+	aKwodZTu4Xxk/jt2EZzfDy2PW3dQTbkBkD/6DSRAOo0H2zFPZ3v4REAyijA=
+X-Google-Smtp-Source: AGHT+IFpDm4RRxvmymupPNfGTqlfEfo8Mbg7duMyL1/t+lekqFEkI+Q3G0VP+nEz3h7kTBtla3r67g==
+X-Received: by 2002:a17:906:6a0e:b0:ad8:942b:1d53 with SMTP id a640c23a62f3a-ae0a7473535mr648229366b.27.1750851660394;
+        Wed, 25 Jun 2025 04:41:00 -0700 (PDT)
+Received: from linaro.org ([82.79.186.23])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0b618251bsm197805866b.55.2025.06.25.04.40.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 04:40:59 -0700 (PDT)
+Date: Wed, 25 Jun 2025 14:40:58 +0300
+From: Abel Vesa <abel.vesa@linaro.org>
+To: Luca Weiss <luca.weiss@fairphone.com>
+Cc: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] phy: qualcomm: phy-qcom-eusb2-repeater: Support
+ tune-res-fsdif prop
+Message-ID: <aFvgSjkCNueASD7D@linaro.org>
+References: <20250625-sm7635-eusb-repeater-v1-0-19d85541eb4c@fairphone.com>
+ <20250625-sm7635-eusb-repeater-v1-2-19d85541eb4c@fairphone.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,54 +80,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625031101.12555-5-boqun.feng@gmail.com>
+In-Reply-To: <20250625-sm7635-eusb-repeater-v1-2-19d85541eb4c@fairphone.com>
 
-On Tue, Jun 24, 2025 at 08:10:57PM -0700, Boqun Feng wrote:
+On 25-06-25 11:14:57, Luca Weiss wrote:
+> Support reading the FS Differential TX Output Resistance Tuning from
+> devicetree and writing the register, as required on some boards.
+> 
+> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 
-> +/* Scan structure for synchronize_shazptr(). */
-> +struct shazptr_scan {
-> +	/* The scan kthread */
-> +	struct task_struct *thread;
-> +
-> +	/* Wait queue for the scan kthread */
-> +	struct swait_queue_head wq;
-> +
-> +	/* Whether the scan kthread has been scheduled to scan */
-> +	bool scheduled;
-> +
-> +	/* The lock protecting ->queued and ->scheduled */
-> +	struct mutex lock;
-> +
-> +	/* List of queued synchronize_shazptr() request. */
-> +	struct list_head queued;
-> +
-> +	int cpu_grp_size;
-> +
-> +	/* List of scanning synchronize_shazptr() request. */
-> +	struct list_head scanning;
-> +
-> +	/* Buffer used for hazptr slot scan, nr_cpu_ids slots*/
-> +	struct shazptr_snapshot* snaps;
-> +};
-
-I find this style very hard to read, also the order of things is weird.
-
-struct shazptr_scan {
-	struct task_struct	*thread;
-	struct swait_queue_head wq;
-	struct list_head	scanning;
-
-	struct mutex		lock;
-	struct list_head	queued;    /* __guarded_by(lock) */
-	bool			scheduled; /* __guarded_by(lock) */
-
-	struct shazptr_snapshot snaps[0] __counted_by(nr_cpu_ids);
-};
-
-(the __guarded_by() thing will come with Thread-Safety support that
-Google is still cooking in clang)
-
-> +static struct shazptr_scan shazptr_scan;
-
-And then make this a pointer, and allocate the whole thing as a single
-data structure with however much snaps data you need.
+Reviewed-by: Abel Vesa <abel.vesa@linaro.org>
