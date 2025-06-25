@@ -1,111 +1,95 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322891F5827;
-	Wed, 25 Jun 2025 06:48:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AF21E834E
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:48:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750834098; cv=none; b=Y+LVDBU3xEG67YmA9HniisiLovy5gagJEt/jZVcR9dhj1gKt9NcXLcyXZbEy1SdPQJdQSC5xs+oRe48+XO75iUrpibIbjQIV3VoHF/VVdrrbtGekVpPHEjb7kVFPBu8ZGz56NXCaGU5WjUwEsy0OMmYOjvwfiGpL6KpvwsSuPkw=
+	t=1750834128; cv=none; b=cDRsuC1b5dUc7tkuKcfmVLfEhwXdp4JtY5Hu49uQSC1RtisZUlismmwARjJ6lUmRHVFen4fxPgJdY96Fp6FjyX4rOEuU59UWZQP3l7fqbR8n8+ySxr3YpmtfTsO2qdfAVY3ywSViL3Qbh819VWChcZ2JivnNkEVfDzsnmFYn8bY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750834098; c=relaxed/simple;
-	bh=1S+vYDbLA0s2WG1o/HuAVK1qLit0osUBrErElzDk2/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=enVGC/coQJti9/eyAlf5Dl4h9kL850demvo2ZAsJXEQ9LBNpDOIKnM5Brl8XRCvPvkrr3iGX+e5UgcLSOsjCBaQk713WmKy/slDhzEyS7GzROcGeNquSXJC+THtzeNuCKgOQJi9c5jNgF5kSgtN2DLF21BPvGsRTkdA4C5qSphw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bs6+urbb; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750834128; c=relaxed/simple;
+	bh=mnHiCoeOkHxSowu4uwieuqANpZ5X2UYKIGE3kSysyVc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=a4GZJrr7zlVJfxoLyfrPFGhlC8A1QDk4emCYWyoIBnX/9y+6+OEphk5sr7BmC4PWfdDNEJlSt5ym/rShYEj/8VfHpohJhMFPYzSof9Z/T5x3lI/4yf4QKeeZSlfy6Qwjoez4xcEpQkiJR7qzi5bq1qR4ImUwVNPMQHprxE3+0do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mvypccSN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bs6+urbb"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-553b544e7b4so6466304e87.3;
-        Tue, 24 Jun 2025 23:48:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750834095; x=1751438895; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KjyRtilrvcm2L/AXtGRLJufhbX/zHrNcNL/3/DavrS8=;
-        b=bs6+urbbr+zrhrG9ZKr0aWzWAJlTRem4A8qO1Ufku1Kqx0MsnvHij6doprLfUDPYyx
-         cqy3nIzwgHp2f5NgawRMQ3woApP1Oi5EprBGdXkRNDUhFvZw+vFJ2C7dFVG17tLmPrm0
-         9FjwX0vB/5WXr86CfyrINDcddOj/Sca3dk+OSXmNGy4arulMoHjZSbvXs7Zl9flhmtnO
-         AVDZuQPL+qZuIf67GiCtQyYKV/uaRZZit+Oknd/zFxGCWgn0Z64iTWY3ursVW3t1SLyA
-         4V17paaDcAfkBvCvtR91IoFtnxrCW+g0/x53GTKmwoEUrAy/E+FauKuhsy6D6WLWMJlu
-         c6ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750834095; x=1751438895;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KjyRtilrvcm2L/AXtGRLJufhbX/zHrNcNL/3/DavrS8=;
-        b=XNxoRph0bNmXauXO8seXZXVzQVTKxIvFkA3Ilc7UfEI8w9Nt5k/p1yWvRuAfgxS/4u
-         ZCA1YA6P2ZuE9osfpVQEoDdPdVzZWD/LVCPTCo4OYJoBbC0vfj6pRy3zuLwxI5EKG6dW
-         lXhMDNv3bO+83ac4HwPphQL7yHm0CyRQ2kO4U6Pkbrpdr7jmS55KMZuMiTQSlCdWs+2h
-         lNvWsKNxdVgyZjJEHRZIwDg6v2t8eQ1HFC2siqyOLy17dK/MGzyEr03AtaUpQ6/MS4p6
-         Oyfly5UPZYYQ6EngOfDNGy+KtKh3zAoSQmBHHmmfaozq5sqQrMjLIubkM8iMNOVZ23Hy
-         Ur8g==
-X-Forwarded-Encrypted: i=1; AJvYcCUanFrLwCOhuMs9uOKvbnunH5JP9DNqpqtHoKLDNeSKzzq46rtmHK6OMtoiXw0yRQZHVwMr9NdEQpr925g=@vger.kernel.org, AJvYcCX9pIFK6oKPxi6Bu7Mv0gSqrWFIAjGZstNox3mSTA7j6hl7fkRrYZuE13ygH8gkQa8kZVNyWsfMOFu2PxQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzVoHtnzvyIoaiv3ESbnHsOhhAhnGZ4LW+b+WwnmQR2YtW3LyAj
-	p1nopjEqJuAkrRTUGXaWMnV2ndtyhLuIQK/9X1U/P3Wr58nYyOYhAZfT
-X-Gm-Gg: ASbGnctDZAePbf0uZ8YO5rr5+GHz6Z+8OKKUnVI+UarFZkynCVmAI5HLCj1zLT3KUGX
-	dU8ulI8f7++/VeQtpKt3MCFd/kstcDyRbW/NkOWdbAqgkjZMr+jDWlRgLquom1fZPkMRXpYftrc
-	XVf2k/xYFIaT8txCq7FLhqMtlYCGCdoWtTptqQgSKeQxnoxHrKQBtXri6xen1MvEyHrgE20jDbj
-	Y0asAjQMEog4b9S3qSM1AXbak8QGytlJyidOqrEjUKb98qap7GGhXgtcnU91pcdWLH2oU7RjdSY
-	Ut19+jOMFQQIw84cgJUd+3pmUoFMBiQ8fNKNLl+SlcbN/2l/n2gHmhh7Ai3DvEaxybXILxBaHOg
-	iJUGVng1FjYdnUzc+uEwyH+WsOV5nU7036MnCWFWO801USI1J09JvO6t0obLQwHGpxppg6wLeUB
-	5ds7d07T/gEGWdYdHukqZHPGGJfTyhVQEHmTk=
-X-Google-Smtp-Source: AGHT+IF/vlkFOWlLSTtvWsBVj8DxXv4ulk5QjgKHzBr4J5t5dfEhRd96ljhSekQ87pmkR0ybuy8Qrg==
-X-Received: by 2002:a05:6512:3e1f:b0:553:a60d:6898 with SMTP id 2adb3069b0e04-554fde5873fmr509004e87.45.1750834094964;
-        Tue, 24 Jun 2025 23:48:14 -0700 (PDT)
-Received: from ?IPV6:2001:14ba:6e:3100:5c31:3ecd:351c:36bc? (2001-14ba-6e-3100-5c31-3ecd-351c-36bc.rev.dnainternet.fi. [2001:14ba:6e:3100:5c31:3ecd:351c:36bc])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-553e41bbc36sm2077343e87.94.2025.06.24.23.48.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jun 2025 23:48:13 -0700 (PDT)
-Message-ID: <88c6b6ad-d867-4db5-9893-0c8cb4a7eaee@gmail.com>
-Date: Wed, 25 Jun 2025 09:48:13 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mvypccSN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0B78C4CEEA;
+	Wed, 25 Jun 2025 06:48:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750834127;
+	bh=mnHiCoeOkHxSowu4uwieuqANpZ5X2UYKIGE3kSysyVc=;
+	h=From:Subject:Date:To:Cc:From;
+	b=mvypccSNI/8j4QTjjK6T+luyXYzxmTwrRROr4OeKCmyR3s6GK1Rjzy02u1DUhOcAW
+	 5pA6adL6eCuKsn0m9LUsSTkgqfE3xee/ZM0IAtcMTWUbIkjhVf6ONOGSX6lbmsLLIk
+	 sTcHXbWeSkPHJJ+bTRP0Lcfh3FplOKPO+cDK7/0jDzrmta3KpzGZ0/Jkn306vgwGTa
+	 bmSkmD6WC7aRKrSq5qyZK54XssnV9PN4WH3wcgQWT2+okxUqLGi1vpCL52kzdXVdz+
+	 zjG8RKEzahRPMqBOTLGSz1f89/DDFtTDpDu64xE8WkjbXTUhXLxZZ8xDyxrDCxhSp3
+	 6xQx/9U5ZUhoQ==
+From: Maxime Ripard <mripard@kernel.org>
+Subject: [PATCH 0/5] drm/panel: panel-simple: Fix panel-dpi probe error
+Date: Wed, 25 Jun 2025 08:48:37 +0200
+Message-Id: <20250625-drm-panel-simple-fixes-v1-0-c428494a86b8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] docs: Improve grammar, formatting in Video4Linux
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mchehab@kernel.org, hljunggr@cisco.com, ribalda@chromium.org,
- hverkuil@xs4all.nl, skhan@linuxfoundation.org, linux-media@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev
-References: <20250612172703.32293-1-hannelotta@gmail.com>
- <20250612172703.32293-2-hannelotta@gmail.com>
- <aFqKRyntONqsxJSs@valkosipuli.retiisi.eu>
-Content-Language: en-US
-From: =?UTF-8?B?SGFubmUtTG90dGEgTcOkZW5ww6TDpA==?= <hannelotta@gmail.com>
-In-Reply-To: <aFqKRyntONqsxJSs@valkosipuli.retiisi.eu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMWbW2gC/x3LSwqAMAwA0atI1ga0/qpXERfVRg1oLQ2IIL27x
+ eVjmBeEApPAkL0Q6GbhyyWUeQbLbtxGyDYZVKGaolU12nCiN44OFD79QbjyQ4LGdqvWc28qpSH
+ NPtAf0jtOMX48ivjfaAAAAA==
+X-Change-ID: 20250624-drm-panel-simple-fixes-ad7f88b9a328
+To: Neil Armstrong <neil.armstrong@linaro.org>, 
+ Jessica Zhang <quic_jesszhan@quicinc.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+ Anusha Srivatsa <asrivats@redhat.com>, 
+ Francesco Dolcini <francesco@dolcini.it>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1120; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=mnHiCoeOkHxSowu4uwieuqANpZ5X2UYKIGE3kSysyVc=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDBnRs0/yCNRoLzu1t6jMieUCq/TiT+mT+hsZH969GOe/j
+ 2tKMl9yx1QWBmFOBlkxRZYnMmGnl7cvrnKwX/kDZg4rE8gQBi5OAZiISiljw/Ge6ao79pqfFHvr
+ 7thox8w41+8V904u43bXJ3l3Igrdfs8J2mY+66rhysm7/mT1W5RNZaxT+nlAdSVD2FZ+DsHU6Jc
+ by2w2JJjdqdX5PjlDa84LPZFFBvGTOe5ur/lqmJ/nE8W+3AYA
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-Hello,
+Hi,
 
-On 6/24/25 14:21, Sakari Ailus wrote:
-> Thanks for the patch. Documentation patches should have "Documentation: "
-> prefix, similarly all media tree patches should have "media: " prefix. Also
-> the lines may be up to 75 characters long.
-> 
-> The result is:
-> 
-> -----8<----------
-> media: Documentation: Improve grammar, formatting in Video4Linux
-> 
-> Fix typos, punctuation and improve grammar and formatting in documentation
-> for Video4Linux (V4L).
-> -----8<----------
-> 
-> I changed this while applying the patch.
-> 
+Here's a series fixing (hopefully) the panel-simple regression for
+panels with a panel-dpi compatible.
 
-Great, thank you! And thank you for the guidance, I have updated my 
-notes for future reference.
+It's only build tested, so if you could give that series a try
+Francesco, I'd really appreciate it.
 
-Best regards / Ystävällisin terveisin
+Thanks!
+Maxime 
 
-Hanne-Lotta Mäenpää
+Link: https://lore.kernel.org/dri-devel/20250612081834.GA248237@francesco-nb/
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+Maxime Ripard (5):
+      drm/mipi-dsi: Add dev_is_mipi_dsi function
+      drm/panel: panel-simple: make panel_dpi_probe return a panel_desc
+      drm/panel: panel-simple: Make panel_simple_probe return its panel
+      drm/panel: panel-simple: Add function to look panel data up
+      drm/panel: panel-simple: get rid of panel_dpi hack
 
+ drivers/gpu/drm/drm_mipi_dsi.c       |   3 +-
+ drivers/gpu/drm/panel/panel-simple.c | 131 ++++++++++++++++++++++-------------
+ include/drm/drm_mipi_dsi.h           |   3 +
+ 3 files changed, 86 insertions(+), 51 deletions(-)
+---
+base-commit: e04c78d86a9699d136910cfc0bdcf01087e3267e
+change-id: 20250624-drm-panel-simple-fixes-ad7f88b9a328
+
+Best regards,
+-- 
+Maxime Ripard <mripard@kernel.org>
 
