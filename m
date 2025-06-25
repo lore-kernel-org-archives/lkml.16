@@ -1,242 +1,179 @@
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BC928935D
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:12:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE71429A9FE;
+	Wed, 25 Jun 2025 09:12:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750842735; cv=none; b=lBdM6rkBz9LyHnwr2qG5/PP+Y1JSpBmjqAxNE81I6FjX9oIeFQUjiMXtupqDy8oC2aZUvaScgv9ONnBEHbBLnuLkFWws5DoI56duKSa1rah83Vd8bBnR6b+mzhDxx4DuN+jCQMCe2S/LfEG2x33vl5nj4H6ErRgwpPujRjP+y/g=
+	t=1750842746; cv=none; b=HDvqEOWjsItnd1mqZ40jpQIh9JAaMf5mau18klSZLGEO+YwaQ3KEMOOz7JkJZBTpigGTvb67i0JINVDJG97w6MBfjHT25ZxIK0Ckj8mNrvR2A4MV8r5gwUHD8V75nBzQZlhP6Xqi5qWfYLtDkPTTPdSQyxbsJ/3fEYAAtiio1Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750842735; c=relaxed/simple;
-	bh=RaRzw6dXCJL2a9k5hvxU0+bR/+k0pdf+af8dr1rsdY0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dSycXsJ4eZ/f1CTiKhNFio5N7t55UpZMdKmISPnAoyT5p0FSrmqkAs6kpUWpZC6oQwaRfZs8RjayOrbOs3gOMnWNN49wkaot4MFRlvG5sVNjS2EzAyhIJg9OnYGzBTjBk7aWvX3FsH+FqBRyKGS12EeyxWXuP/TqGfCSMLIrwPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=C0h0TO/N; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1750842746; c=relaxed/simple;
+	bh=Ku1JP3VucsE7gqGwrbjDhzOU4k9tMt5YcgLvazIy0lg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=bKaT/+Xr347j8c8MVxeUt9pq58o/WTKO8m7wBPhfvJZo3a/okHnWrMMUgSAJx/D1znPW+ZGXVJyYwKIN+wsVA3kLAB7aX4cubxCdjegN4mNNsz8NJrTCLvAK8jM8ywhXaZEZ5/KtJVoDLY0YMc43X/VV0qQY+iX2wxgEYGMfCy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=Vwf8UUn5; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="C0h0TO/N"
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-ade4679fba7so239124266b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:12:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1750842732; x=1751447532; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EhGXOCwUIIm3q7C4tiBl1iPL61L8WtrCPnBevMSMH/k=;
-        b=C0h0TO/NSnGYHx6oVRFGx96zMRCTNAX8+rovFPOjimSGNFu6OH1gxBRRJp+rX4lzro
-         9DgpY0aupnWSKi9/BihpzPa+JPqa48KLsF95Pc+muYF6CmygF/OLj2aHiCXAsbLBeoxY
-         7TQwfHTXRoRLl9GG2v+ihgqzFrALYN5kozM5zd5FPgBoopabO6mdctDYS3WABNqvsYok
-         b6AZt8juIMzfpqvO5pNpd5jv6vzFq3GupSry4Suz30iS803hpnhK+CBm8N1bj95j5j25
-         XZcQ+3BX8RG5sSrA+TiVXxsLV+2JivWsAoPyzhsXQMxa1ECyA6C4pj4yOSCrJJivmM0F
-         toqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750842732; x=1751447532;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EhGXOCwUIIm3q7C4tiBl1iPL61L8WtrCPnBevMSMH/k=;
-        b=ecFxbTjnfUtSomkdcZqcQpzovAbFDhUNcXsBNb0tdc3ikGHjLuWi3owOta6/nNPrPw
-         Rz5+GQWbyc8RB5WfvxTFTCBZZb3zjruGIfA7YZ9n8wxLCWi9/xAqU8v/3OzTOC/vIAXE
-         1LGzgdk1hrQ4LJAvQu5D4flUTh+ytUavUxs6h5yn/X5XxG1Pjw9HM6TTDdW+RBKCQM5/
-         zi+PVyjC9SwbfcMD/i6uOmkfetKpbyypuXhRxnMtpoAhVVUnTUGqggohDdZP4DP2lAue
-         bInuPap9ycyJYPbFhZks6u71RuSmbqzFqnSbC5MLZCJSIUMBWgsDn6OJ46i50aHAOcQZ
-         3nnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUC9JSpkdgOcLaP56TFt+VgJ9JWNuKA5DPGm4TGDQa2ZkKYYFtnU7amzD9RZrrvvBBXnXOYEACMC9Q3nCQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzdx+ZzwRBUAqJ3Ql0MB8NpfzVhFN/hBo82+Df0h3813iwWQ7PT
-	aG5VYfVmXLqgN3A4JXpxmed3SJ6Es3bvZOHgSEtY5ZNlUUvzhKmjG4Vyr4VC2Your/w=
-X-Gm-Gg: ASbGncujlHki8LJ5HTF5xgGx7lufHCoAeVOcimfAZJuJPwPrWyWIdkTECCR+iBK4y83
-	7cPt94qQmbcMH+IlcB06DD75otpIqG0JTYIJWAahqx/n6ZJdRPDy5B3+3XaLsEhrFi6cxqtR2Xl
-	OOdHtdgfLgsSh+gJ8fXXwdT+0k9zfiEzmuICke8X+/1d91Be1zoc3tLOfb4f4Wm1osi5vt7Qyxv
-	MAYKDDuh+CwrpRRpM6HoO0PSoA8RSAyGffMXUS30kU2AzuGar1WZLQ6EaiqlduBgksdyHUlkvEx
-	5i0OpN55wAnmsLqvUkSvnyGslr9rtETDPlmr8Z3QrlxC68MjQ5myBNKjDjEWBeDK2BfQclK6hAj
-	RSGzOLo0egpYTP67QaiMqR7+bTF6C8dAF
-X-Google-Smtp-Source: AGHT+IE1oWXGY4HO8JEBpv+rAFTtTGib8QOzMGNtx07dFqJ84auma6a3uiljCpQCQ6UGKmu0qGojxA==
-X-Received: by 2002:a17:906:13d6:b0:ad5:5302:4023 with SMTP id a640c23a62f3a-ae0bf1b4672mr183241266b.44.1750842731622;
-        Wed, 25 Jun 2025 02:12:11 -0700 (PDT)
-Received: from otso.local (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0cab0ed04sm11076666b.135.2025.06.25.02.12.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 02:12:11 -0700 (PDT)
-From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Wed, 25 Jun 2025 11:12:01 +0200
-Subject: [PATCH 1/2] dt-bindings: pinctrl: document the SM7635 Top Level
- Mode Multiplexer
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="Vwf8UUn5"
+Received: from pps.filterd (m0369458.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P510l9032381;
+	Wed, 25 Jun 2025 11:12:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	7ONVBi6t27yoHOLom4q+9fNttcSqpjkl1fBEaeAnNkw=; b=Vwf8UUn5XqH75K2i
+	fscZ6KsiCvCjx7WJPqQv23IzCGzpmhbdb1xkGE7uHQA9PyER1EFSCXUkQPBiHlW+
+	4uwmJYQWpOhdd6Xqb43cGBt89mdGyI4ppGLqD0yH1sy3yZx/kSdVbeJbpm7/B+03
+	Z9f1dnJinZdTX1NVip71mTOSvnuabKIaG0/CX1WLLaIsmVKwNQzNqUc9OI0pJPJR
+	+iV48oYu9RNwLmIxPb3rBTaniPK+oj3phiUfDazp0779JUqdQ6+GrWs/PsBHyMyh
+	9Jjsu1AigmntTDkS0pGejX+t7nZFk2GI47Nkl0M9/6Pv5QZ3GQ6LWYth0Mh1SWTm
+	kubHIA==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 47e6a6pxh5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 11:12:05 +0200 (MEST)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id B9BB140045;
+	Wed, 25 Jun 2025 11:10:18 +0200 (CEST)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 4176DB29C43;
+	Wed, 25 Jun 2025 11:09:07 +0200 (CEST)
+Received: from [10.48.86.185] (10.48.86.185) by SHFDAG1NODE2.st.com
+ (10.75.129.70) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 25 Jun
+ 2025 11:09:06 +0200
+Message-ID: <dabecbc6-967e-4912-8297-4d53fd2d9cc1@foss.st.com>
+Date: Wed, 25 Jun 2025 11:09:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-sm7635-pinctrl-v1-1-ebfa9e886594@fairphone.com>
-References: <20250625-sm7635-pinctrl-v1-0-ebfa9e886594@fairphone.com>
-In-Reply-To: <20250625-sm7635-pinctrl-v1-0-ebfa9e886594@fairphone.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luca Weiss <luca.weiss@fairphone.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750842730; l=5132;
- i=luca.weiss@fairphone.com; s=20250611; h=from:subject:message-id;
- bh=RaRzw6dXCJL2a9k5hvxU0+bR/+k0pdf+af8dr1rsdY0=;
- b=Hw4UUO+Dq6YorSBTgZPlUoorQaQ2mlwSLSDO9Ph86H3s4P6a7+aH/XwyLuYm33n1h9EJeLjX/
- 33d+KDe+oPPCv4aX03HOvAG+DecuEwnEvzFgih8PKN1UrGiuLj/vOHX
-X-Developer-Key: i=luca.weiss@fairphone.com; a=ed25519;
- pk=O1aw+AAust5lEmgrNJ1Bs7PTY0fEsJm+mdkjExA69q8=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/13] perf: stm32: introduce DDRPERFM driver
+To: Krzysztof Kozlowski <krzk@kernel.org>, Will Deacon <will@kernel.org>,
+        Mark
+ Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>,
+        Krzysztof
+ Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue
+	<alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Gatien Chevallier
+	<gatien.chevallier@foss.st.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Gabriel Fernandez
+	<gabriel.fernandez@foss.st.com>
+CC: <linux-arm-kernel@lists.infradead.org>, <linux-perf-users@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>
+References: <20250623-ddrperfm-upstream-v1-0-7dffff168090@foss.st.com>
+ <20250623-ddrperfm-upstream-v1-6-7dffff168090@foss.st.com>
+ <9cb1575e-ae27-4a78-adb7-8a9e7072375e@kernel.org>
+ <5044c733-8836-43bd-85d7-0f552b000fb1@foss.st.com>
+ <49483568-b287-45ca-a66c-1e0ad0490225@kernel.org>
+ <e2400615-f21e-40bf-84f8-384242632193@foss.st.com>
+ <a6440cbf-f7b5-4bce-8e2b-8aa3ec4d2342@kernel.org>
+Content-Language: en-US
+From: Clement LE GOFFIC <clement.legoffic@foss.st.com>
+In-Reply-To: <a6440cbf-f7b5-4bce-8e2b-8aa3ec4d2342@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
 
-Document the Top Level Mode Multiplexer on the SM7635 Platform.
+On 6/25/25 10:48, Krzysztof Kozlowski wrote:
+> On 25/06/2025 10:33, Clement LE GOFFIC wrote:
+>> On 6/25/25 08:35, Krzysztof Kozlowski wrote:
+>>> On 24/06/2025 12:43, Clement LE GOFFIC wrote:
+>>>> On 6/23/25 11:45, Krzysztof Kozlowski wrote:
+>>>> [...]
+>>>>
+>>>> Hi Krzysztof,
+>>>>
+>>>> Sorry I forgot to address comments below.
+>>>>
+>>>>>> +
+>>>>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp1 = {
+>>>>>> +	.regs = &stm32_ddr_pmu_regspec_mp1,
+>>>>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp1,
+>>>>>> +	.counters_nb = MP1_CNT_NB,
+>>>>>> +	.evt_counters_nb = MP1_CNT_NB - 1, /* Time counter is not an event counter */
+>>>>>> +	.time_cnt_idx = MP1_TIME_CNT_IDX,
+>>>>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp1,
+>>>>>> +};
+>>>>>> +
+>>>>>> +static const struct stm32_ddr_pmu_cfg stm32_ddr_pmu_cfg_mp2 = {
+>>>>>> +	.regs = &stm32_ddr_pmu_regspec_mp2,
+>>>>>> +	.attribute = stm32_ddr_pmu_attr_groups_mp2,
+>>>>>> +	.counters_nb = MP2_CNT_NB,
+>>>>>> +	.evt_counters_nb = MP2_CNT_NB - 1, /* Time counter is an event counter */
+>>>>>> +	.time_cnt_idx = MP2_TIME_CNT_IDX,
+>>>>>> +	.get_counter = stm32_ddr_pmu_get_event_counter_mp2,
+>>>>>> +};
+>>>>>> +
+>>>>>> +static const struct dev_pm_ops stm32_ddr_pmu_pm_ops = {
+>>>>>> +	SET_SYSTEM_SLEEP_PM_OPS(NULL, stm32_ddr_pmu_device_resume)
+>>>>>> +};
+>>>>>> +
+>>>>>> +static const struct of_device_id stm32_ddr_pmu_of_match[] = {
+>>>>>> +	{
+>>>>>> +		.compatible = "st,stm32mp131-ddr-pmu",
+>>>>>> +		.data = &stm32_ddr_pmu_cfg_mp1
+>>>>>> +	},
+>>>>>> +	{
+>>>>>> +		.compatible = "st,stm32mp151-ddr-pmu",
+>>>>>> +		.data = &stm32_ddr_pmu_cfg_mp1
+>>>>>
+>>>>> So devices are compatible, thus express it correctly and drop this.
+>>>>
+>>>> Ok so I assume this comes with your comment in the bindings and
+>>>> basically don't get you point here.
+>>>> Can you please be more precise ?
+>>>
+>>> Express compatibility in the bindings, like 90% of SoCs are doing, so
+>>> with proper fallback and drop this entry in the table. My comment was
+>>> pretty precise, because this is completely standard pattern, also used
+>>> already in stm32.
+>>>
+>>
+>> Ok I remember your discussion with Alex in my V1 of pinctrl-hdp :
+>> https://lore.kernel.org/all/1de58672-5355-4b75-99f4-c48687017d2f@kernel.org/
+>>
+>> Does it suits you :
+>> In the SoC DT:
+>> MP13: compatible = "st,stm32mp131-ddr-pmu", "st,stm32mp1-ddr-pmu";
+>> MP15: compatible = "st,stm32mp151-ddr-pmu", "st,stm32mp1-ddr-pmu";
+> 
+> No, because I did not say to change other entry in the table. Please
+> read again what I asked: drop this. "This" means ONLY this entry. "Drop
+> this" does not mean "change something else". Do not change other entries
+> by introducing some generic compatible. That's not the pattern ever
+> endorsed by DT maintainers. Add front compatible and you are done,
+> smallest amount of changes, most obvious code.
+>
 
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
- .../bindings/pinctrl/qcom,sm7635-tlmm.yaml         | 133 +++++++++++++++++++++
- 1 file changed, 133 insertions(+)
+Ok so in the SoC DT I'll keep:
+MP13: compatible = "st,stm32mp131-ddr-pmu";
+MP15: compatible = "st,stm32mp151-ddr-pmu", "st,stm32mp131-ddr-pmu";
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm7635-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm7635-tlmm.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..3f49239efb6e866015b40e3477a8bd0edd21b1fc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm7635-tlmm.yaml
-@@ -0,0 +1,133 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/qcom,sm7635-tlmm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Technologies, Inc. SM7635 TLMM block
-+
-+maintainers:
-+  - Luca Weiss <luca.weiss@fairphone.com>
-+
-+description:
-+  Top Level Mode Multiplexer pin controller in Qualcomm SM7635 SoC.
-+
-+allOf:
-+  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
-+
-+properties:
-+  compatible:
-+    const: qcom,sm7635-tlmm
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  gpio-reserved-ranges:
-+    minItems: 1
-+    maxItems: 84
-+
-+  gpio-line-names:
-+    maxItems: 167
-+
-+patternProperties:
-+  "-state$":
-+    oneOf:
-+      - $ref: "#/$defs/qcom-sm7635-tlmm-state"
-+      - patternProperties:
-+          "-pins$":
-+            $ref: "#/$defs/qcom-sm7635-tlmm-state"
-+        additionalProperties: false
-+
-+$defs:
-+  qcom-sm7635-tlmm-state:
-+    type: object
-+    description:
-+      Pinctrl node's client devices use subnodes for desired pin configuration.
-+      Client device subnodes use below standard properties.
-+    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
-+    unevaluatedProperties: false
-+
-+    properties:
-+      pins:
-+        description:
-+          List of gpio pins affected by the properties specified in this
-+          subnode.
-+        items:
-+          oneOf:
-+            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-5][0-9]|16[0-7])$"
-+            - enum: [ ufs_reset, sdc2_clk, sdc2_cmd, sdc2_data ]
-+        minItems: 1
-+        maxItems: 36
-+
-+      function:
-+        description:
-+          Specify the alternative function to be configured for the specified
-+          pins.
-+        enum: [ gpio, aoss_cti, atest_char, atest_usb, audio_ext_mclk0,
-+                audio_ext_mclk1, audio_ref_clk, cam_mclk, cci_async_in0,
-+                cci_i2c_scl, cci_i2c_sda, cci_timer, coex_uart1_rx,
-+                coex_uart1_tx, dbg_out_clk, ddr_bist_complete, ddr_bist_fail,
-+                ddr_bist_start, ddr_bist_stop, ddr_pxi0, ddr_pxi1, dp0_hot,
-+                egpio, gcc_gp1, gcc_gp2, gcc_gp3, host2wlan_sol, i2s0_data0,
-+                i2s0_data1, i2s0_sck, i2s0_ws, ibi_i3c, jitter_bist, mdp_vsync,
-+                mdp_vsync0_out, mdp_vsync1_out, mdp_vsync2_out, mdp_vsync3_out,
-+                mdp_vsync_e, nav_gpio0, nav_gpio1, nav_gpio2, pcie0_clk_req_n,
-+                pcie1_clk_req_n, phase_flag, pll_bist_sync, pll_clk_aux,
-+                prng_rosc0, prng_rosc1, prng_rosc2, prng_rosc3, qdss_cti,
-+                qdss_gpio, qlink0_enable, qlink0_request, qlink0_wmss,
-+                qlink1_enable, qlink1_request, qlink1_wmss, qspi0, qup0_se0,
-+                qup0_se1, qup0_se2, qup0_se3, qup0_se4, qup0_se5, qup0_se6,
-+                qup1_se0, qup1_se1, qup1_se2, qup1_se3, qup1_se4, qup1_se5,
-+                qup1_se6, resout_gpio_n, sd_write_protect, sdc1_clk, sdc1_cmd,
-+                sdc1_data, sdc1_rclk, sdc2_clk, sdc2_cmd, sdc2_data,
-+                sdc2_fb_clk, tb_trig_sdc1, tb_trig_sdc2, tgu_ch0_trigout,
-+                tgu_ch1_trigout, tmess_prng0, tmess_prng1, tmess_prng2,
-+                tmess_prng3, tsense_pwm1, tsense_pwm2, uim0_clk, uim0_data,
-+                uim0_present, uim0_reset, uim1_clk_mira, uim1_clk_mirb,
-+                uim1_data_mira, uim1_data_mirb, uim1_present_mira,
-+                uim1_present_mirb, uim1_reset_mira, uim1_reset_mirb, usb0_hs,
-+                usb0_phy_ps, vfr_0, vfr_1, vsense_trigger_mirnat, wcn_sw,
-+                wcn_sw_ctrl ]
-+
-+    required:
-+      - pins
-+
-+required:
-+  - compatible
-+  - reg
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    tlmm: pinctrl@f100000 {
-+        compatible = "qcom,sm7635-tlmm";
-+        reg = <0x0f100000 0x300000>;
-+
-+        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-+
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+
-+        gpio-ranges = <&tlmm 0 0 168>;
-+
-+        gpio-wo-state {
-+            pins = "gpio1";
-+            function = "gpio";
-+        };
-+
-+        qup-uart5-default-state {
-+            pins = "gpio25", "gpio26";
-+            function = "qup0_se5";
-+            drive-strength = <2>;
-+            bias-disable;
-+        };
-+    };
-+...
+Thanks for clarifying.
 
--- 
-2.50.0
+Best regards,
+Clément
+
+> Best regards,
+> Krzysztof
 
