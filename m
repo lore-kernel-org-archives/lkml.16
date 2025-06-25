@@ -1,105 +1,101 @@
-Received: from mx-a.polytechnique.fr (mx-a.polytechnique.fr [129.104.30.14])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6070252906;
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F349273F9;
 	Wed, 25 Jun 2025 09:22:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.104.30.14
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.148.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750843367; cv=none; b=X57JH6hN+So72DGVQebtzaodA8ZKKSceqDKJOde4r2bVX0oL6qfUn606UtAh83S9YRE+GZJVtbDHS0Bs/Lwukaaqn6B6obO/nxvrrA4difFusdkmLiqnhsIq1FRhXduzU2DsP9h4Tdv0em0Ck78tQfwfM0LWm8dr7jbLVHPsHbs=
+	t=1750843368; cv=none; b=qoMjWB2F4dLEumuWe/OkeO3JXz9pNRiS7vwC5EYnClb5r/7QUMy5fJFlb5T/me06qYFLatJzqEuUkRiYa6UZS7oU1zbfN4jtfKVeY5yA1VixeCjuynlEA8njUL2MOt0by6wDWpDPa42YS9XM3AdiewcIK6gbU9SnKkhd171czMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750843367; c=relaxed/simple;
-	bh=qqM24CG38I0YgdVs6wHu9lNFb6fYyDWo79Ns61wNk2U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=huTWsuma7Gpq8ikxn4DO/PR6wd1jLogj1rvPUitv/01AirQq/31RqwyZI8NVJrKVYpzXC+6Rq7FOL2cXOirwegGzdqL1tQ0Si93cRpbjby7fvlR1MseGpR6hh+5wWp0AoB4FMHQKXeQvGiaa4q2q6LO/ocsO5leMiJjokCnLz34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=129.104.30.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from zimbra.polytechnique.fr (zimbra.polytechnique.fr [129.104.69.30])
-	by mx-a.polytechnique.fr (tbp 25.10.18/2.0.8) with ESMTP id 55P9EwnY023896;
-	Wed, 25 Jun 2025 11:14:58 +0200
-Received: from localhost (localhost [127.0.0.1])
-	by zimbra.polytechnique.fr (Postfix) with ESMTP id 8EA3B761E58;
-	Wed, 25 Jun 2025 11:14:58 +0200 (CEST)
-X-Virus-Scanned: amavis at zimbra.polytechnique.fr
-Received: from zimbra.polytechnique.fr ([127.0.0.1])
- by localhost (zimbra.polytechnique.fr [127.0.0.1]) (amavis, port 10026)
- with ESMTP id 0ewgABPHqW04; Wed, 25 Jun 2025 11:14:58 +0200 (CEST)
-Received: from [130.190.109.159] (webmail-69.polytechnique.fr [129.104.69.39])
-	by zimbra.polytechnique.fr (Postfix) with ESMTPSA id 181BE761F7F;
-	Wed, 25 Jun 2025 11:14:58 +0200 (CEST)
-Message-ID: <4c6deafe-a6ec-40bf-873f-dc0df1a72dc4@gmail.com>
-Date: Wed, 25 Jun 2025 11:14:56 +0200
+	s=arc-20240116; t=1750843368; c=relaxed/simple;
+	bh=BXTwXG/QzO6u1XNLD87/IzNVSJyF6sBtIFpnTngt3Yk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NRnNIsZ1RJdU/qU9QZBjsvcfrPOEAlFYLJmFF9aZDRRLbZtEh0QmGyAmrGawnelcgxGqzCqbk4y6rQemQ7koSOt1Jjlf1jey+u8zVGOzM4hXJfNFi4XXTvPH91HmihZ+vWH6xCu1MD7GjyrMxv/9T7I3lFJTGRUNmYU4FHKCFHw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com; spf=pass smtp.mailfrom=marvell.com; dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b=Czhzmarc; arc=none smtp.client-ip=67.231.148.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=marvell.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=marvell.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Czhzmarc"
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+	by mx0a-0016f401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P6jEwu017602;
+	Wed, 25 Jun 2025 02:21:18 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=pfpt0220; bh=yM1XFNaBNgpqbCZ5K8XLwlM
+	71AV44uTsxqGf72BIZl8=; b=CzhzmarcZp1VZY1vHQo1taA2kl1GZwKh7N1pUjq
+	cGEqiiivcOqV17gL3HPiwxVbwgQWmpkYku2vdwjNXrVf3DsUYfwmA6PWMI+XsqTG
+	5SQZ/iVoi9OLwusRrf+bqfPNzOO1pW4ISw6q70hw0ZICTGKAHsewW/f+CPJsFUjQ
+	erZDZbhk+I8iQ75vKpgMtovAf00aoEon5eavh4Hd2uo53iURh4aR4tbKBSrHu76y
+	sKJM93o1U5air+Izy9+zJagLCqtu8pgNs08SxxldMkuE61VNyS97wdykpHyHEmU+
+	2Q1wqhGk97BZ5xger5BXqNLVf17SAAV0gLIiFB6bDGiBMVA==
+Received: from dc6wp-exch02.marvell.com ([4.21.29.225])
+	by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 47gc3kgad5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 02:21:17 -0700 (PDT)
+Received: from DC6WP-EXCH02.marvell.com (10.76.176.209) by
+ DC6WP-EXCH02.marvell.com (10.76.176.209) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.4; Wed, 25 Jun 2025 02:21:16 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC6WP-EXCH02.marvell.com
+ (10.76.176.209) with Microsoft SMTP Server id 15.2.1544.4 via Frontend
+ Transport; Wed, 25 Jun 2025 02:21:16 -0700
+Received: from test-OptiPlex-Tower-Plus-7010.marvell.com (unknown [10.29.37.157])
+	by maili.marvell.com (Postfix) with ESMTP id C05813F704F;
+	Wed, 25 Jun 2025 02:21:08 -0700 (PDT)
+From: Hariprasad Kelam <hkelam@marvell.com>
+To: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <kuba@kernel.org>, <davem@davemloft.net>, <sgoutham@marvell.com>,
+        <gakula@marvell.com>, <jerinj@marvell.com>, <lcherian@marvell.com>,
+        <sbhatta@marvell.com>, <hkelam@marvell.com>, <naveenm@marvell.com>,
+        <edumazet@google.com>, <pabeni@redhat.com>, <andrew+netdev@lunn.ch>,
+        <bbhushan2@marvell.com>
+Subject: [net-next 0/3] Octeontx2-pf: extend link modes support
+Date: Wed, 25 Jun 2025 14:51:04 +0530
+Message-ID: <20250625092107.9746-1-hkelam@marvell.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] atm: idt77252: Add missing `dma_map_error()`
-To: Simon Horman <horms@kernel.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Chas Williams <3chas3@gmail.com>,
-        "moderated list:ATM" <linux-atm-general@lists.sourceforge.net>,
-        "open list:ATM" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20250624064148.12815-3-fourier.thomas@gmail.com>
- <20250624165128.GA1562@horms.kernel.org>
-Content-Language: en-US, fr
-From: Thomas Fourier <fourier.thomas@gmail.com>
-In-Reply-To: <20250624165128.GA1562@horms.kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: ZOiaDZqfK0UXBYuDfJIqg4j285MC_8jT
+X-Proofpoint-ORIG-GUID: ZOiaDZqfK0UXBYuDfJIqg4j285MC_8jT
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA2OSBTYWx0ZWRfX434TGp3hrFVe FMzRWgxCqZq+LG+GIKD1klh4CdWQGDUZaCYkjg+zuJ1szwOVvTEspWzNvpe3gNn3luAc6wbl27m 7Mooq5pSTMiI+8dYU0kYFZkd1wT/JIC6HWdP7bzvdnpJYKwxSTdTQDMa65kzCtJdXRYaCMo/LqF
+ qN12c1SOLvlabE24tIgn5LBq5/z1mm+2wvP9i9EzN/soHVZ24wkqHjoBlmw8XQGGTiXjI+qfwcg RS12LtkDy8gZ1Ni2Bxe5jaYHGHwtrZogmlFYtzmdcuz21iFrV8d6C7cDAliuTZ/GZXtejLw147D Bi1AVmvFDwl0q0flutuBNxg8KtZF2KupX3IwllZv/Uie4NJwzYb3p6bECGvrZ1wdHXMgkwZignB
+ e7WSlKaDhb966QZEP2yAacjz2ReAMdnGvlwkaatlLtYEqs0HUO2KKyiy2l3d/KfHEMz4k9Pd
+X-Authority-Analysis: v=2.4 cv=D4ZHKuRj c=1 sm=1 tr=0 ts=685bbf8d cx=c_pps a=gIfcoYsirJbf48DBMSPrZA==:117 a=gIfcoYsirJbf48DBMSPrZA==:17 a=6IFa9wvqVegA:10 a=xG7LojJKveJkHGXijn4A:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
 
-On 24/06/2025 18:51, Simon Horman wrote:
-> On Tue, Jun 24, 2025 at 08:41:47AM +0200, Thomas Fourier wrote:
->> The DMA map functions can fail and should be tested for errors.
->>
->> Signed-off-by: Thomas Fourier <fourier.thomas@gmail.com>
->> ---
->>   drivers/atm/idt77252.c | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
->> index 1206ab764ba9..f2e91b7d79f0 100644
->> --- a/drivers/atm/idt77252.c
->> +++ b/drivers/atm/idt77252.c
->> @@ -852,6 +852,8 @@ queue_skb(struct idt77252_dev *card, struct vc_map *vc,
->>   
->>   	IDT77252_PRV_PADDR(skb) = dma_map_single(&card->pcidev->dev, skb->data,
->>   						 skb->len, DMA_TO_DEVICE);
->> +	if (dma_mapping_error(&card->pcidev->dev, IDT77252_PRV_PADDR(skb)))
->> +		return -ENOMEM;
->>   
->>   	error = -EINVAL;
->>   
->> @@ -1857,6 +1859,8 @@ add_rx_skb(struct idt77252_dev *card, int queue,
->>   		paddr = dma_map_single(&card->pcidev->dev, skb->data,
->>   				       skb_end_pointer(skb) - skb->data,
->>   				       DMA_FROM_DEVICE);
->> +		if (dma_mapping_error(&card->pcidev->dev, paddr))
->> +			goto outpoolrm;
->>   		IDT77252_PRV_PADDR(skb) = paddr;
->>   
->>   		if (push_rx_skb(card, skb, queue)) {
->> @@ -1871,6 +1875,7 @@ add_rx_skb(struct idt77252_dev *card, int queue,
->>   	dma_unmap_single(&card->pcidev->dev, IDT77252_PRV_PADDR(skb),
->>   			 skb_end_pointer(skb) - skb->data, DMA_FROM_DEVICE);
->>   
->> +outpoolrm:
->>   	handle = IDT77252_PRV_POOL(skb);
->>   	card->sbpool[POOL_QUEUE(handle)].skb[POOL_INDEX(handle)] = NULL;
-> Hi Thomas,
->
-> Can sb_pool_remove() be used here?
-> It seems to be the converse of sb_pool_add().
-> And safer than the code above.
-> But perhaps I'm missing something.
+This series of patches adds multi advertise mode support along with
+other improvements in link mode management code flow.
 
+Patch1: Currently all SGMII modes 10/100/1000baseT are mapped with
+        single firmware mode. This patch updates these link modes
+        with corresponding firmware modes.
 
-Hi Simon,
+Patch2: Due to limitation in current kernel <-> firmware communication,
+        link modes are divided into multiple groups, and identified
+        with their group index.
 
-I don't see any reason why this would be a problem,
+Patch3: Adds support for multi advertise mode.
 
-though, I don't think it is related and the change should be in the same 
-patch.
+Hariprasad Kelam (3):
+  Octeontx-pf: Update SGMII mode mapping
+  Octeontx2-af: Introduce mode group index
+  Octeontx2-pf: ethtool: support multi advertise mode
 
-Should I create another patch for that?
+ .../net/ethernet/marvell/octeontx2/af/cgx.c   | 55 ++++++++++------
+ .../net/ethernet/marvell/octeontx2/af/cgx.h   |  1 +
+ .../ethernet/marvell/octeontx2/af/cgx_fw_if.h | 33 +++++++++-
+ .../net/ethernet/marvell/octeontx2/af/mbox.h  |  9 ++-
+ .../ethernet/marvell/octeontx2/af/rvu_cgx.c   |  9 ++-
+ .../marvell/octeontx2/nic/otx2_ethtool.c      | 62 +++++++++----------
+ 6 files changed, 113 insertions(+), 56 deletions(-)
+
+-- 
+2.34.1
 
