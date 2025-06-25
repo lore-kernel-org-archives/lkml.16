@@ -1,136 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCAA263F40;
-	Wed, 25 Jun 2025 15:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E36726A0D0;
+	Wed, 25 Jun 2025 15:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750864238; cv=none; b=m+Z+LHRCEujUvk2PCom3RKY1hXfmfsrpekxrC7poogxySgldSlhAmElFfCOTTpTn5iEirY+G11U5q3mgubrBWoBxnGQ1H6Dwx5nJL/kTi1crLzZi2/3RDMDAhWQQuO3kt8+8GZuS9AO4TGCiReK4LaU/cXLQuyXKqtxe1J0iZ84=
+	t=1750864278; cv=none; b=oYBa35RZkxxhnNmjy6wQAOSPUIV8wxONd1/Jm6aQRUsWZHWDMw1MVBw2PaO2RahmMyFyOnI1F7k/YoCJqVWSYlgq6KyQYKADIWxEekx6Agb4mUl9Afh6lDWqYlJyd1XPqoi2OGQ3j2lCwVOA+ksn8qNCEdGXnPwtwd0qD4bMAUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750864238; c=relaxed/simple;
-	bh=2vYg8CGu9BAqmlZuYpCFtNSeJb0sljjiAyb9B6pMNPM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RlBSWxChr1SsvQgp4gGawLuL2HVhh+xnOaQvvjALBhkreCMGMHI/hadMLZlM6CPfYvXjMVSD0KLnUYc1lc/6nLruAEO8lVoxUqVYqA0K2RZjU14zzSWQr3JLHTKinnapsyzKoWRA44JFWQFKfDTU+ylKLs6aZ4uMRMgwXq/yFjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IBWyN1jp; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750864278; c=relaxed/simple;
+	bh=sQWzXMpttU3Q4RdTkLeDK11omHBR555qHYPgdiuh080=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r1gNwNnWczsTdtWBjRDjo2TrX5Kf/DwzwMu4QV+IEH32hRMa1ExMOnW89lg/yFWiwdzw6vwML79xONQqEXKGghYi7stekvpN3da8/kv8p/BY+UY/hVwYCjrdGTsVjLOzFukKmO8hnIzYQzI+bkuGq4iKrT0RM3UJwE1Nv2l93dM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RMyx0lNt; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IBWyN1jp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750864236; x=1782400236;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=2vYg8CGu9BAqmlZuYpCFtNSeJb0sljjiAyb9B6pMNPM=;
-  b=IBWyN1jpG5aGB1YxaC/45ayPe3CDHzlZTT/1KaGXisAknt+JQU0T4UZm
-   L9bdHIrNWEDjgFDOCROsDPBE1+lpKR1CYzo4mfJF8tK6808XHRQut8tUz
-   KLAOXRAkNqBmfx0KHtvTughjeZ1LAvctq6527bSSiGKaaccvPXfHVxSyb
-   doHSw6DmVMooRsCs8NM/HiEqchexlVtte9TU/RRDv9diJC8uFJ0UIuIo3
-   AafyeI5XbhgfqwQfwJXdFpzhVllNBjB9/m47BSDPeKuSpK8dLCkP/5Hbu
-   xATq+PO9nBaPHpdl3U9ZnJ/t8RirXYhhpsKqXjoIOwxcobgZr3CwLll1V
-   w==;
-X-CSE-ConnectionGUID: 8ZIgltamR1Cc/0jLIBe7CQ==
-X-CSE-MsgGUID: WDK5Z55NTLieJrA1NLn+0g==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53074329"
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="53074329"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 08:10:35 -0700
-X-CSE-ConnectionGUID: vz/s4aTuQoaXCf0RhIfy1Q==
-X-CSE-MsgGUID: hnpThCZdRQKZftIn4Ys6Mg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
-   d="scan'208";a="152014619"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 08:10:32 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uURld-00000009oSY-08xw;
-	Wed, 25 Jun 2025 18:10:29 +0300
-Date: Wed, 25 Jun 2025 18:10:28 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc: Mario Limonciello <superm1@kernel.org>,
-	Hans de Goede <hansg@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
-	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>
-Subject: Re: [PATCH 2/2] Revert "Input: soc_button_array - debounce the
- buttons"
-Message-ID: <aFwRZO30wf8GxQea@smile.fi.intel.com>
-References: <20250624202211.1088738-1-superm1@kernel.org>
- <20250624202211.1088738-3-superm1@kernel.org>
- <4a4d577b-a085-46e8-97b9-6df27461c870@kernel.org>
- <1f8c0262-b376-43cb-b2c5-5b60e8cbf678@kernel.org>
- <92ab85ff-6314-4db0-ae12-9803ddde5037@kernel.org>
- <625952d3-01e9-426e-9739-86fe5cdfeb35@kernel.org>
- <7b2f02ef-0274-480b-aecc-bc1165d15fd7@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RMyx0lNt"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ad572ba1347so1082598566b.1;
+        Wed, 25 Jun 2025 08:11:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750864275; x=1751469075; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=73ypKXXgUqafYwYORXlEImzIyHG0DLPjWMG5BzkdwL0=;
+        b=RMyx0lNt7NrHiF7IsQsWJfs2RykQjbgheqF4xRQwVAwv89ZM86MNPbLpv43RrWrcw3
+         etYxHUJN9JKsX4pnhaNCovk0ZQo4tJmGOloNmWuZXqUoDyfKNpjUQFyWZf576pEly5MJ
+         fKeGNoAnKAScbXJERIMjc+wsrRn61zRJRMK/C9s1dM7pMkSbv7OFoWW8k2bX80+S3vLL
+         Gi0mCSG9A7+0XwsCGfUBy4HtsKADanImyo06LK1uoCxhrsjzqAO52Yphitof5gJdTzyG
+         FWzkI7yhPUKw29Pjk0hqVaJjSCSyQj84FO4Qb/w0trRynkyA6EgfjIYYsKRSh3LlD3Xu
+         TFfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750864275; x=1751469075;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=73ypKXXgUqafYwYORXlEImzIyHG0DLPjWMG5BzkdwL0=;
+        b=mA6CPCXAgvWxBFtXAxhAb/T5CYfIE+5wy6Swi8tt7fFRjMR9PV7mlvQDUKG5jPXz66
+         iSQ1oV9idJ7S+rF6xSjg5lwXp9EpovRKHt+GxwpxgPYOTbQe5MwA9LaXXxhQBw97G44R
+         seTwPRBOo9G2Is6JxIreckBWa70qTZFh2De94wkNxblRo+BRgRJlux0UBlT14q3HSo1A
+         zKwYYVwARAl5BK2xwIxeYzmai/OJs1seIBdapGVdBFnW0eW+M9D2qjUudhCyonBJ7KV1
+         Eip7uaKPFOt/ZYe6+IpScplCR6YB8AWdCE3JhTrrlSFYDYgSO74nVRxJ4mnUyHnlwtKV
+         NFhA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSrGiriUY/tM1SUm9VWfs4TTNcGl8SoSGxI18ThyvpXm1KvgDOl1Ys2FXyuUuE5YnxdBJpFbZQNCyP3iRo7Wwt2slQ@vger.kernel.org, AJvYcCW/NK8UKdBcReMvzuN2+UCbd4Tr1QMVR27zLKoW41FiCVjO8anfRp9P271b7OYhxjLS8cXpNG+L/mZAIEzc@vger.kernel.org, AJvYcCXO4pzSi5Q/IZFHOBNoOMtqAGQ/6Fw+WkRnY9ZrwqA8Aovhqp0PLpDeQbjfYVd3yE/Ro7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzR9ylazOMMYXkOr0qK3Qns1U7c53Rda6QmAKi0vz5d2aP+l1Lk
+	ncVzU0jaQIPVhCqLYNJQQICBkBZ2Ew9CTLTjM5jpl7puuzQ8/PklInxV
+X-Gm-Gg: ASbGncsfhTzHqmZvSW/k2KjkGA6seOCp6nO3VkzvZvVwQYI+en5Lf+JIdgOEWdv51Zi
+	l6R70CtRaMjHTDDu9c+vXJSZzPfE6il/UA1su1IgkjddjW/YaFnbD87TszL5QnWvlKnnh+paxZ8
+	G7JSQRlCDNcdqE5ZguYOabOkJtP4bu7PGIrkdvDTCLIVWAZ3FfTjWq8Bq2ZP23E7BkAmTFcxzLE
+	81eSC+6+W6EK4uq/LkocHagysAPyNaw1njHpg7DeW5nb7shDRFrzoZOxg97jH3s9/ItJT/ksYPr
+	DtI69KkNKFo3s+KDZcD/oafq0jKmJJx+J3qvJ5pcA3Z8vCLJKQ==
+X-Google-Smtp-Source: AGHT+IHR73kNjkLY6I6z8/OKPl7imSBMI/aYV5GL05PY9WoiLG/9bgiLimAwHJf6yVTIF1PIfqYUzA==
+X-Received: by 2002:a17:907:26c2:b0:ae0:cca0:e6af with SMTP id a640c23a62f3a-ae0cca0ebf1mr95706966b.1.1750864272815;
+        Wed, 25 Jun 2025 08:11:12 -0700 (PDT)
+Received: from krava ([176.74.159.170])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0543421e9sm1059851066b.185.2025.06.25.08.11.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 08:11:11 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 25 Jun 2025 17:11:09 +0200
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org, Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@aculab.com>,
+	Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas@t-8ch.de>,
+	Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv3 perf/core 07/22] uprobes: Add do_ref_ctr argument to
+ uprobe_write function
+Message-ID: <aFwRjTkluiE-g-Ab@krava>
+References: <20250605132350.1488129-1-jolsa@kernel.org>
+ <20250605132350.1488129-8-jolsa@kernel.org>
+ <20250625154259.4a092f0213739404a0e9b210@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7b2f02ef-0274-480b-aecc-bc1165d15fd7@amd.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+In-Reply-To: <20250625154259.4a092f0213739404a0e9b210@kernel.org>
 
-On Wed, Jun 25, 2025 at 03:02:18PM +0000, Limonciello, Mario wrote:
-> On 6/25/25 9:41 AM, Mario Limonciello wrote:
-> > On 6/25/25 9:31 AM, Hans de Goede wrote:
-> >> On 25-Jun-25 4:09 PM, Mario Limonciello wrote:
-> >>> On 6/25/25 4:09 AM, Hans de Goede wrote:
-> >>>> On 24-Jun-25 10:22 PM, Mario Limonciello wrote:
-
-...
-
-> >> Ok, so specifically the gpiod_set_debounce() call with 50 ms
-> >> done by gpio_keys.c is the problem I guess?
+On Wed, Jun 25, 2025 at 03:42:59PM +0900, Masami Hiramatsu wrote:
+> On Thu,  5 Jun 2025 15:23:34 +0200
+> Jiri Olsa <jolsa@kernel.org> wrote:
+> 
+> > Making update_ref_ctr call in uprobe_write conditional based
+> > on do_ref_ctr argument. This way we can use uprobe_write for
+> > instruction update without doing ref_ctr_offset update.
 > > 
-> > Yep.
+> 
+> Can we just decouple this update from uprobe_write()?
+> If we do this exclusively, I think we can do something like;
+> 
+> lock()
+> update_ref_ctr(uprobe, mm, +1);
+> ...
+> ret = uprobe_write();
+> ...
+> if (ret < 0)
+>   update_ref_ctr(uprobe, mm, -1);
+> unlock()
+> 
+> Thank you,
+
+it was the intention in the v1 but as Oleg pointed out [1] it won't
+work, because the set_orig_refctr part of this change does not know
+if the refctr should be really updated or not
+
+while inside uprobe_write it happens right after verify callback and
+we make sure to update refctr only if the instruction was updated
+
+thanks,
+jirka
+
+
+[1] https://lore.kernel.org/bpf/20250427141335.GA9350@redhat.com/
+
+> 
+> 
+> > Acked-by: Oleg Nesterov <oleg@redhat.com>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  include/linux/uprobes.h | 2 +-
+> >  kernel/events/uprobes.c | 8 ++++----
+> >  2 files changed, 5 insertions(+), 5 deletions(-)
 > > 
-> >> So amd_gpio_set_debounce() does accept the 50 ms debounce
-> >> passed to it by gpio_keys.c as a valid value and then setting
-> >> that breaks the wake from suspend?
+> > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> > index 518b26756469..5080619560d4 100644
+> > --- a/include/linux/uprobes.h
+> > +++ b/include/linux/uprobes.h
+> > @@ -200,7 +200,7 @@ extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
+> >  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t,
+> >  			       bool is_register);
+> >  extern int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma, const unsigned long opcode_vaddr,
+> > -			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register);
+> > +			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr);
+> >  extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+> >  extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
+> >  extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 1e5dc3b30707..6795b8d82b9c 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -492,12 +492,12 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> >  		bool is_register)
+> >  {
+> >  	return uprobe_write(auprobe, vma, opcode_vaddr, &opcode, UPROBE_SWBP_INSN_SIZE,
+> > -			    verify_opcode, is_register);
+> > +			    verify_opcode, is_register, true /* do_update_ref_ctr */);
+> >  }
+> >  
+> >  int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> >  		 const unsigned long insn_vaddr, uprobe_opcode_t *insn, int nbytes,
+> > -		 uprobe_write_verify_t verify, bool is_register)
+> > +		 uprobe_write_verify_t verify, bool is_register, bool do_update_ref_ctr)
+> >  {
+> >  	const unsigned long vaddr = insn_vaddr & PAGE_MASK;
+> >  	struct mm_struct *mm = vma->vm_mm;
+> > @@ -538,7 +538,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> >  	}
+> >  
+> >  	/* We are going to replace instruction, update ref_ctr. */
+> > -	if (!ref_ctr_updated && uprobe->ref_ctr_offset) {
+> > +	if (do_update_ref_ctr && !ref_ctr_updated && uprobe->ref_ctr_offset) {
+> >  		ret = update_ref_ctr(uprobe, mm, is_register ? 1 : -1);
+> >  		if (ret) {
+> >  			folio_put(folio);
+> > @@ -590,7 +590,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> >  
+> >  out:
+> >  	/* Revert back reference counter if instruction update failed. */
+> > -	if (ret < 0 && ref_ctr_updated)
+> > +	if (do_update_ref_ctr && ret < 0 && ref_ctr_updated)
+> >  		update_ref_ctr(uprobe, mm, is_register ? -1 : 1);
+> >  
+> >  	/* try collapse pmd for compound page */
+> > -- 
+> > 2.49.0
 > > 
-> > That's right.
-
-> >>> Also comparing the GPIO register in Windows (where things work) 
-> >>> Windows never programs a debounce.
-> >>
-> >> So maybe the windows ACPI0011 driver always uses a software-
-> >> debounce for the buttons? Windows not debouncing the mechanical
-> >> switches at all seems unlikely.
-> >>
-> >> I think the best way to fix this might be to add a no-hw-debounce
-> >> flag to the data passed from soc_button_array.c to gpio_keys.c
-> >> and have gpio_keys.c not call gpiod_set_debounce()  when the
-> >> no-hw-debounce flag is set.
-> >>
-> >> I've checked and both on Bay Trail and Cherry Trail devices
-> >> where soc_button_array is used a lot hw-debouncing is already
-> >> unused. pinctrl-baytrail.c does not accept 50 ms as a valid
-> >> value and pinctrl-cherryview.c does not support hw debounce
-> >> at all.
-> > 
-> > That sounds a like a generally good direction to me.
-
-Thinking a bit more of this, perhaps the HW debounce support flag should be
-per-GPIO-descriptor thingy. In such cases we don't need to distinguish the
-platforms, the GPIO ACPI lib may simply set that flag based on 0 read from
-the ACPI tables. It will also give a clue to any driver that uses GPIOs
-(not only gpio-keys).
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 
+> 
+> -- 
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
