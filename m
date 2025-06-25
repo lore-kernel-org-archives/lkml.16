@@ -1,62 +1,62 @@
-Received: from mail-oi1-f171.google.com (mail-oi1-f171.google.com [209.85.167.171])
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37EFE2DECB7
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:19:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8992DFA58
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 20:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750882755; cv=none; b=dMEzCKtKRCGZBX4RL9OnTsnTLok4ialYJNbL7CFkrcHRV9GNRNn5Ti61HC/3ywmOPT8PkGh7ZOBleWSFYpB0AwPT/HKgD2YlvbvuvmSThw5n1rVLbuwW1B/bmulmqJUehC7KUZSnm60UgoJ4MEJ8BXUcB9cF/GKISlW8KX3Dyfk=
+	t=1750882757; cv=none; b=R0v+knV4fRtgls2b2JX6UyQq6LMzTOocJrEYeyyJ5B0vPNh3Z6N/a7HR5KLzR8zZCDcIGhN81qTMW4o9oQukemKPMOcG+fA2BPW5PrZJdgdjLAzDYx7ZFueQwE+hancV+DTcxJDr1k8a+KUuWp8peTDSWbSozV7G+82wbNtuwW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750882755; c=relaxed/simple;
-	bh=x3K6oL6zDAKX3oSlTP1PWuUNMB8dHUYGjU9fGTdea7Q=;
+	s=arc-20240116; t=1750882757; c=relaxed/simple;
+	bh=UghlVNqiIgpdScPnDJwUCgMkfLA9c8dgrWlNZ4F4kJI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=osbjaOkqkrE8ZT1RIe0MuuSyRdKU42uuE+HwretmRxirzRn9oSefNZN1Wa1sojennB0MgeRlJlxtUoXNFdR4L3v/IQRhceNKQF1BSq7tZlC41akSXrJw5NfQfy2k4HQ/gjkzzBI+0/Kqqi21dZ0Q1eDn3OyPx7FBB6F3NLu2RnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g2eLKVCM; arc=none smtp.client-ip=209.85.167.171
+	 MIME-Version; b=On2f8ZNqQ1R59dDhAHOwJGLvG9r+V5tgdhMdwIuVihGsTApwcqe7wh7Hhvf8dKJbcvulyi+HqQf09GO3M44++Y81SRDauQRCtkzI4IrgTa80lrX8aSqEDttGbUb5UrbLUeXwruFQu0BHjIRYdKR7w5Uq4g8k//rWSmaKZUA0V7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WzgU+FC6; arc=none smtp.client-ip=209.85.167.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2eLKVCM"
-Received: by mail-oi1-f171.google.com with SMTP id 5614622812f47-40abe6f8f08so211913b6e.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:19:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WzgU+FC6"
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-40a4de175a3so218420b6e.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:19:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750882752; x=1751487552; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1750882755; x=1751487555; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=f60N3EWufzAACjrb2TEVwWx0frS0X8r/okvyufls31E=;
-        b=g2eLKVCMYjIT8ebCAgS09wYZaXeVcN/hVB8Wo1BpkVf7xAOxPCEUPBSjBsX03hveJ+
-         uhfCauBzITG89CgkgpfwRtuMeiBsZzh5EUlrAojh9IlgBklejlpszYnDe2xdTi/bO4RW
-         gpV46QeCI8giOE4tCdU1JCvIn8xjzZv8g+MkUf9/L0lmgqB6657Qi1ppVLi+Lp+YFaYz
-         WBM27uolc3SiULd9JDJp8ECFmaUVqz4O5MpS6HRfiGe/8s/W2L0FvPAZS0+aRuCdIpfz
-         kcKTCQvY5W9IxzPhDxL/NpKeXtyX7i+V3u96g4oK+q8u8i4YSWfuCMSHaTwRVrmVh+yZ
-         Wh0A==
+        bh=u+kL5Owd/b/uNVufMn9kQ7uWapXNIP2yBqmENsKSMRw=;
+        b=WzgU+FC6DdUkuBpN/NERAF7SKWjYrA8E4lrdWUPljUkSSM0YWeQppIKDRq9Bihbvkh
+         WBGjpKNcpm0rWkFJNOiCR90B+i4algKh88m4v9Vk0642oAFkIWJMmFfwf3r1viOuFk53
+         uf5SZF8CAWJd2a7Zb9GDGEyGsnXfoVrlgX+QdRspskJNdJY0jQ35COonVIxM+JkZJh88
+         1J/NF1ZW1mUAJhN91huTqm2jrjiRugsTBHyc3BWU321vtRKAmjsO1XymgHpGFIp/LJ7i
+         fbO7oOHJdzgKhCjjlsomM8OrN6A850Hj/OqlgazUO0UxTokf8pKshsqVYrvLmcepo6f6
+         57ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750882752; x=1751487552;
+        d=1e100.net; s=20230601; t=1750882755; x=1751487555;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f60N3EWufzAACjrb2TEVwWx0frS0X8r/okvyufls31E=;
-        b=O8Bw42tCmP6XpxN/QdWIEsb0aAgmMZYZDmGRtNOQTrSHDcym3rlgkyTex1BC8Z3cpN
-         D0R/MQzMH6m2ACLoEhQ9wJ19ecy/HBS93FIKyO7MDBZP6ojlDgDVurGsTZoaINOGeapy
-         U7PsKPrzVLk5WxxtvBKVgwIih72tdopcWghj7VslJm5zS1y3N0/+utagV/sR5eeJIoJ4
-         zYW0JkSQiUzGeQG9WuWn/pT4sBmg/bLJT25GqkavtYZ+8cR75N5WZPomwgklIuyGFhHO
-         bVqkXxOKykJlN178i34TBSc5GHucwmwvvz0KYyqB+OQZrfNKcb65b5oHDSjheGEHW6pD
-         Tb6Q==
-X-Gm-Message-State: AOJu0YyqAEwdbZbUGR6/liMHek9P0+rhRxPHcyuyfB594q0gNY2lk5d5
-	iVKS3cZ1pr2sddit6pgmuP2Kd+v5sWw7sTKepUdDp5KSmDe87ge5Dzq7wZYtZ5AO
-X-Gm-Gg: ASbGncvf/uDCPo/aU7bcE4xh0gF52V+zte2tX5MPcWY6Y1Q1gEYGH1RD2kEKOacN/06
-	w4xGfE5qcx82Jvwo88sCffIsmbRkS3t+FdgJ94IAcPJLymrSjFfeTuJTSVzkUFsu7TxFzPq4I+r
-	rsy7nj80R6UCjQkUHLy4zbBJ+N8Njj5uK3UTpQ/8vVW1+Hnz6mGkIEAgG20EbCu35fz3Ko9/AZl
-	71Rb52rqxUho8lOKnbd2WJlqrmd5X2R6sXaYTr6l9DChYgUjHE51LTTa5+YBm93+SYcCPdnrORG
-	znAbAjuTbx2ncwmI97m3rgWA4Cc8Fwe24I9+dd94s2/oSXEcY7fei+Pa3suLSEhRdU97q7T6lHu
-	RyAmE0+8=
-X-Google-Smtp-Source: AGHT+IE1GiyMI3FcPixO8wBehxm6oIdPGjQDw2GVFgAwIwdC14AZtTmqP0n8EzwJ7ZQqJDCh44hL0g==
-X-Received: by 2002:a05:6808:150f:b0:40a:a633:b1f8 with SMTP id 5614622812f47-40b05a81997mr3795477b6e.9.1750882752169;
-        Wed, 25 Jun 2025 13:19:12 -0700 (PDT)
+        bh=u+kL5Owd/b/uNVufMn9kQ7uWapXNIP2yBqmENsKSMRw=;
+        b=NgwHwvJGMP1uTBzyIbhEuGcOsatlhuVNZOibOEZNboZ2IMOKivVDjqj2dpLfvt9rNp
+         aiAicf6qruyrQCnLOnaoFui1ubH56lv4n0LFHbysIdJXEKoIwMO22N9UeLu31b1SHP3B
+         iyXhfQYQrey4b/oCffBfusbZLMG5y87fkIyuHOi1diX50Q2kLJSWhQjbXL0PEPNLs7qQ
+         yv1mTolqzkWC7FEb6cyX33sAu/nuz9MouxU2vWo6k8k0TYyMxNoO7UJFvNI3zZt9x119
+         TduqlmERjAdOiR2w/R3wckCZ98QTzn7T/1puHRIMMsGnZGxhXv1dCxpb4Ww4AxElUbPD
+         Dahg==
+X-Gm-Message-State: AOJu0YwbEXFz9dJptQzIAYNnzFnsq22TT1Oo40PwyBVPPIQXpcFSPYrQ
+	PE/aQ0KSFmkF8xUql0oyVPQaV1zOlOusghhRrGx3eYMB9YiTO3RsyTtOIPE+j9W6
+X-Gm-Gg: ASbGncvUrjifjx53g6oZEqxMGzu10RtWcbJ9Wpli4y6JEn7L/+kw7+Csq2VdyuCvsy+
+	x4lQgkQZjOVgWhwPgPW0rItCpyotRqoHnOLSU5lyXu2a4Jxxd5FbILFOFF7lQoXR18OEOk11LyX
+	PKfXY1FaAGwiqRT2RnURkSbTMiLhMANbV7XzcKKEpeghBkuDwiXxxVlfJg2ZI+2hkRNyqnh/afJ
+	4w5LyyP58pIUzqH9KeOwTZp8sHLHaaHYrI81Cy+lX41vJU5xLxfL3pNHLRgF+vOsMY7hfyS1WAM
+	v67Jb2pAwTshLuNaJvY2lafypBodd9jkcFWBZAwwSAqGUM57hT73eut6Z5jxkCJc+UFjKSqpAQW
+	5YUZu0ec=
+X-Google-Smtp-Source: AGHT+IErlKTN6Obe2eJ+hIRHlWBHfaYeu4HODg60y4Vj953Lq/di1qxS4riYzV3zaqb0HmNNI5o1iQ==
+X-Received: by 2002:a05:6808:14d1:b0:40a:57cc:d9f0 with SMTP id 5614622812f47-40b057d76f4mr3175226b6e.25.1750882755168;
+        Wed, 25 Jun 2025 13:19:15 -0700 (PDT)
 Received: from localhost.localdomain ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40ac6d22c23sm2319188b6e.42.2025.06.25.13.19.11
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-40ac6d22c23sm2319188b6e.42.2025.06.25.13.19.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 13:19:11 -0700 (PDT)
+        Wed, 25 Jun 2025 13:19:14 -0700 (PDT)
 From: Stuart Hayes <stuart.w.hayes@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -76,9 +76,9 @@ To: linux-kernel@vger.kernel.org,
 	Jan Kiszka <jan.kiszka@seimens.com>,
 	Bert Karwatzki <spasswolf@web.de>
 Cc: Stuart Hayes <stuart.w.hayes@gmail.com>
-Subject: [PATCH v10 3/5] driver core: separate function to shutdown one device
-Date: Wed, 25 Jun 2025 15:18:51 -0500
-Message-Id: <20250625201853.84062-4-stuart.w.hayes@gmail.com>
+Subject: [PATCH v10 5/5] nvme-pci: Make driver prefer asynchronous shutdown
+Date: Wed, 25 Jun 2025 15:18:53 -0500
+Message-Id: <20250625201853.84062-6-stuart.w.hayes@gmail.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20250625201853.84062-1-stuart.w.hayes@gmail.com>
 References: <20250625201853.84062-1-stuart.w.hayes@gmail.com>
@@ -90,100 +90,26 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Make a separate function for the part of device_shutdown() that does the
-shutown for a single device. This is in preparation for making device
-shutdown asynchronous.
+Set the driver default to enable asynchronous shutdown.
 
 Signed-off-by: Stuart Hayes <stuart.w.hayes@gmail.com>
 Signed-off-by: David Jeffery <djeffery@redhat.com>
 ---
- drivers/base/core.c | 66 ++++++++++++++++++++++++---------------------
- 1 file changed, 36 insertions(+), 30 deletions(-)
+ drivers/nvme/host/pci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 58c772785606..39502621e88e 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -4786,6 +4786,41 @@ int device_change_owner(struct device *dev, kuid_t kuid, kgid_t kgid)
- }
- EXPORT_SYMBOL_GPL(device_change_owner);
- 
-+static void shutdown_one_device(struct device *dev)
-+{
-+	/* hold lock to avoid race with probe/release */
-+	if (dev->parent && dev->bus && dev->bus->need_parent_lock)
-+		device_lock(dev->parent);
-+	device_lock(dev);
-+
-+	/* Don't allow any more runtime suspends */
-+	pm_runtime_get_noresume(dev);
-+	pm_runtime_barrier(dev);
-+
-+	if (dev->class && dev->class->shutdown_pre) {
-+		if (initcall_debug)
-+			dev_info(dev, "shutdown_pre\n");
-+		dev->class->shutdown_pre(dev);
-+	}
-+	if (dev->bus && dev->bus->shutdown) {
-+		if (initcall_debug)
-+			dev_info(dev, "shutdown\n");
-+		dev->bus->shutdown(dev);
-+	} else if (dev->driver && dev->driver->shutdown) {
-+		if (initcall_debug)
-+			dev_info(dev, "shutdown\n");
-+		dev->driver->shutdown(dev);
-+	}
-+
-+	device_unlock(dev);
-+	if (dev->parent && dev->bus && dev->bus->need_parent_lock)
-+		device_unlock(dev->parent);
-+
-+	if (dev->parent)
-+		put_device(dev->parent);
-+	put_device(dev);
-+}
-+
- /**
-  * device_shutdown - call ->shutdown() on each device to shutdown.
-  */
-@@ -4822,36 +4857,7 @@ void device_shutdown(void)
- 		list_del_init(&dev->kobj.entry);
- 		spin_unlock(&devices_kset->list_lock);
- 
--		/* hold lock to avoid race with probe/release */
--		if (parent && dev->bus && dev->bus->need_parent_lock)
--			device_lock(parent);
--		device_lock(dev);
--
--		/* Don't allow any more runtime suspends */
--		pm_runtime_get_noresume(dev);
--		pm_runtime_barrier(dev);
--
--		if (dev->class && dev->class->shutdown_pre) {
--			if (initcall_debug)
--				dev_info(dev, "shutdown_pre\n");
--			dev->class->shutdown_pre(dev);
--		}
--		if (dev->bus && dev->bus->shutdown) {
--			if (initcall_debug)
--				dev_info(dev, "shutdown\n");
--			dev->bus->shutdown(dev);
--		} else if (dev->driver && dev->driver->shutdown) {
--			if (initcall_debug)
--				dev_info(dev, "shutdown\n");
--			dev->driver->shutdown(dev);
--		}
--
--		device_unlock(dev);
--		if (parent && dev->bus && dev->bus->need_parent_lock)
--			device_unlock(parent);
--
--		put_device(dev);
--		put_device(parent);
-+		shutdown_one_device(dev);
- 
- 		spin_lock(&devices_kset->list_lock);
- 	}
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 8ff12e415cb5..727527ef3896 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -3831,6 +3831,7 @@ static struct pci_driver nvme_driver = {
+ 	.shutdown	= nvme_shutdown,
+ 	.driver		= {
+ 		.probe_type	= PROBE_PREFER_ASYNCHRONOUS,
++		.async_shutdown_enable	= true,
+ #ifdef CONFIG_PM_SLEEP
+ 		.pm		= &nvme_dev_pm_ops,
+ #endif
 -- 
 2.39.3
 
