@@ -1,143 +1,126 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E582529B768
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:13:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA331B042E;
+	Wed, 25 Jun 2025 16:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750868037; cv=none; b=M6pHu+EZXaUPL5YWKa6UglVD2K+es72WMVqormTEPR33ZhCJnzhzXWe4dAPotjN3BUZLjnzX4+jqd04Taaj4bJyg+hGEYjquXLuRVyN/kNiBURjIVue59arjs6ifWLqMOMvtBUlmLDMl7LdBfPcl+dw6w99dqyjDoIG8+WZvOwo=
+	t=1750868159; cv=none; b=O8bBoKrDbALt9iDM1qFlB3PhcWAf1uF295lbpfyqQyTt5wLD8COomTIUQsUKIhGBVBzlU7Q1ON0Bah4TBtjeX4XKdga0Z8tTxHjLlL4LvQmiOpBEmlNhlOfrCNU/qmwq0+FhnmZ3jEYWcW5mAF5ixumoEMO0DulrDpTpvtgaA5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750868037; c=relaxed/simple;
-	bh=4QNLkEkuI4EdTUnOIb2grO6q4rrhmfxNLIwjC1OPtDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fNa5emNWX0A+HMxSBZPM6rEi3WJtA7tdqzduyqU0RlkDV5USQlKvCINWJuPLZSdI1txhfYmOYHsQlB1Q5LbQiRmnnQgaJ3QQz/JkZQA41fmH+iVa+w0TghlpSR23knee903XZOvQR6i5f1iArRqDiiRFc3TxB3Y6meRl/oupeJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=baVx0Gzn; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750868159; c=relaxed/simple;
+	bh=S9G4uE4WzaqwY1rpSP3VMiH37x9vdt9iuBEGxkYSpVM=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=bq88uA9g6eoJzdECEqVMgebt1ZacvlKWdfb38F00dkqj0OCMkBdxH3bcjOY5roVsx5a8Cx9RXpA5wW8NB6WZooXsA0k7O2cpSMT3SFdt0i/Lt5/wtF3FRdZQ54D0yjuwLtDb0ZAX9plXx/sc4z3xvfunT3KR541LNMbpTuPuosI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=BCivYQv7; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ArnlDkv5; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="baVx0Gzn"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-748da522e79so85504b3a.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:13:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750868035; x=1751472835; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vCD23FijRiGDMDI+6SLBJ6sq7ACBPYUWzeLA8BmQJ3k=;
-        b=baVx0Gznwd0r88DchaN7RIfItLtoO0CfPZoLUZg6nuzG19L5tXdUj2/Et2NQ5BH0/p
-         tvjFLK1pMiRQnTwofbYvRVHhyDe7u/qp6orgLFOSMu/KmUvChbdXxJr/ly+L4sFOsFkN
-         bhfHVO1theAZQDk711odr0eVfekOPQCIs7oHmraSyDSHnNdyq4F7Ob+JS6q8RoGIOWzi
-         8LkES5LctGCT4aoFNBCVA6YMFB03k8lXmHnNO/9Rijt2Z1e6Ld/e7PHJ7KZxNxaNoo6O
-         ryAAA/ChFNWb7G22eCsN7x+efn5wI7eIDFS9kdvP1L/7sGFMneb1ebqMEDgK2TRLcpk/
-         UJTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750868035; x=1751472835;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vCD23FijRiGDMDI+6SLBJ6sq7ACBPYUWzeLA8BmQJ3k=;
-        b=MbYilgiBAHvxqyfb5wzyHEqJRKlcnW5ZYz6hoA5LnlmZogOPUnj2TqSJCJy5neyfzu
-         S9P3GThEgo+H+5q43RHKDnsdxn1UB8q243wWNac/ePIdiaTPdXIVPYZGxaNKP95zkHac
-         tkD6jQoAB0a1cNTqW1FXke6Sej4Q6b0smWoDyLWtE1wLo59OGC7YBY4g78lfpxyMg+pM
-         0ZmzoBnlh98NC0EYDYxKbJnVy9lYwR4FHj/wQRsmiS5sM1Uzwi7aZVqPWbLj11DHjmsd
-         RR8xtoCbqJ2QmDmpacYLYQSOgJ2vuwOvppT0QiH5DNhtiOuo3mpaJRAdn8c4ySAQ1CZc
-         UgwA==
-X-Forwarded-Encrypted: i=1; AJvYcCXwk/4hpUmhE2vte6BhiaGPHB8kcl6Ot55TGMLzVGPZvhSWKXFUOA/58SlLv526kgECZBfXJRHECps/9G4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy94W58sFt7XKq6vxXUtgENIgt2dQpsn8IsLCMqO2mmIRJJvZh0
-	eA3v4DhLeiUWft/pSYQHjvjdT2WDgRv0Sxd+Hbl93BrekPEeizlV7YLtWiPVtD4RH14=
-X-Gm-Gg: ASbGncsRAPa7zGPyIJp3Hr+JLkJV2kZg7DaqcteEbivjYN0QmOy6IC/A2KXax5oTx4D
-	FMzhKhX2xoq/IrFaCQh8y2ynSD8CsQ8Jczs+fcYC3sMsvpF9Wyh7bSNleKK43ACQ83vStFLbdJR
-	CWbW8wEBBrmTOssuuqgr/nLh15FlEWf26PLgeMB37PHJ5UNT/EaeiPDbUc8k/qjx8rS7rbPFsoV
-	fo44vhob7c9Gj443zHkxSPHK1R9hvyQCzdmIwrdTCn5sjKXslq9KOaohCzzLlMO1yBBRCSxruRx
-	9p0LNi1MXQfY72W5nn3OiIVcfZpNJwwmVeFN1R86Ykes6CRgZ0hrG3ymRLSEAvl9mQ==
-X-Google-Smtp-Source: AGHT+IEaq7judiTDhY4LEdwCxHhEeJO96l2aFLRZebjujuoodpXvyb7qOhHSrHTIPCIkDRJZva9x1g==
-X-Received: by 2002:a17:90b:2709:b0:311:ff02:3fcc with SMTP id 98e67ed59e1d1-315f26265a6mr5857836a91.14.1750868035161;
-        Wed, 25 Jun 2025 09:13:55 -0700 (PDT)
-Received: from p14s ([2604:3d09:148c:c800:2ed4:4c68:6e76:7d6f])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f53d94b1sm2124536a91.33.2025.06.25.09.13.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 09:13:54 -0700 (PDT)
-Date: Wed, 25 Jun 2025 10:13:52 -0600
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-To: Andrew Davis <afd@ti.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Hari Nagalla <hnagalla@ti.com>,
-	Beleswar Padhi <b-padhi@ti.com>, linux-remoteproc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] rpmsg: char: Export alias for RPMSG ID rpmsg-raw from
- table
-Message-ID: <aFwgQJ8B7EcjM1q7@p14s>
-References: <20250619205722.133827-1-afd@ti.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="BCivYQv7";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ArnlDkv5"
+Date: Wed, 25 Jun 2025 16:15:55 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750868156;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=87tC2vKSttM87WL045LNXUb5mncoJsQXGoxqcGhk7rg=;
+	b=BCivYQv78w3PANLkNe4WeaCGM7h81s9A/3qItO8CeAxNXZ1Cvw0bnahG7ypOaSKf7bJ5dY
+	KWn+/hlo4Z85Hn/S7ZpZbt/b/hLGXUKyx5YVbomkq/Dpht4fuegLqgyHvj92S9sVci5l9k
+	iBV5K55IPUuQIVBGcwVvwLX/wIMjZYgY5fWVpJiuGik2ezkS+GJAJzQD70Di4yLIqXe3rY
+	Ieth6afZGWsFIKmNGUu9Aaw7QshxQPNSNiqqBMU1dnzvk1LyNWghnAKY6MJEeRq5NiqXTZ
+	nsSGJO4yqcLOHaW7pjba2SWi+OE267I6cCbat6Cp1sdWNlpgCGbkIKVzVJkJyw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750868156;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=87tC2vKSttM87WL045LNXUb5mncoJsQXGoxqcGhk7rg=;
+	b=ArnlDkv5uMxFc38IIOR4m5ARVghyf+T1iBn3T/K1pAMfVMJQtvHiKiVtLcGB+12QlVPU6C
+	pbU8n/NY70w4PnDQ==
+From: "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/ptp] timekeeping: Add AUX offset to struct timekeeper
+Cc: Thomas Gleixner <tglx@linutronix.de>, John Stultz <jstultz@google.com>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250519083026.533486349@linutronix.de>
+References: <20250519083026.533486349@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250619205722.133827-1-afd@ti.com>
+Message-ID: <175086815506.406.14977690170514086926.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-Good day,
+The following commit has been merged into the timers/ptp branch of tip:
 
-On Thu, Jun 19, 2025 at 03:57:22PM -0500, Andrew Davis wrote:
-> Module aliases are used by userspace to identify the correct module to
-> load for a detected hardware. The currently supported RPMSG device IDs for
-> this module include "rpmsg-raw", but the module alias is "rpmsg_chrdev".
-> 
-> Use the helper macro MODULE_DEVICE_TABLE(rpmsg) to export the correct
-> supported IDs. And while here, to keep backwards compatibility we also add
-> the other ID "rpmsg_chrdev" so that it is also still exported as an alias.
-> 
-> This has the side benefit of adding support for some legacy firmware
-> which still uses the original "rpmsg_chrdev" ID. This was the ID used for
-> this driver before it was upstreamed (as reflected by the module alias).
+Commit-ID:     180d8b4ce91fe0cf7a9cb236bb01f14587ba4bf0
+Gitweb:        https://git.kernel.org/tip/180d8b4ce91fe0cf7a9cb236bb01f14587ba4bf0
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Mon, 19 May 2025 10:33:32 +02:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Thu, 19 Jun 2025 14:28:24 +02:00
 
-I was surprised to receive this patch - my question from almost a year back is
-still pending.
+timekeeping: Add AUX offset to struct timekeeper
 
-> 
-> Signed-off-by: Andrew Davis <afd@ti.com>
-> Acked-by: Hari Nagalla <hnagalla@ti.com>
-> Tested-by: Hari Nagalla <hnagalla@ti.com>
-> ---
-> 
-> Changes for v2:
->  - Rebased on v6.16-rc1
->  - Added Acked/Tested-by
-> 
-> [v1] https://www.spinics.net/lists/linux-remoteproc/msg18959.html
-> 
->  drivers/rpmsg/rpmsg_char.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
-> index eec7642d26863..96fcdd2d7093c 100644
-> --- a/drivers/rpmsg/rpmsg_char.c
-> +++ b/drivers/rpmsg/rpmsg_char.c
-> @@ -522,8 +522,10 @@ static void rpmsg_chrdev_remove(struct rpmsg_device *rpdev)
->  
->  static struct rpmsg_device_id rpmsg_chrdev_id_table[] = {
->  	{ .name	= "rpmsg-raw" },
-> +	{ .name	= "rpmsg_chrdev" },
->  	{ },
->  };
-> +MODULE_DEVICE_TABLE(rpmsg, rpmsg_chrdev_id_table);
+This offset will be used in the time getters of auxiliary clocks. It is
+added to the "monotonic" clock readout.
 
-... and I still don't understand why this patch is needed.  What is broken that
-this patch fixes?
+As auxiliary clocks do not utilize the offset fields of the core time
+keeper, this is just an alias for offs_tai, so that the cache line layout
+stays the same.
 
-Thanks,
-Mathieu
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: John Stultz <jstultz@google.com>
+Link: https://lore.kernel.org/all/20250519083026.533486349@linutronix.de
 
->  
->  static struct rpmsg_driver rpmsg_chrdev_driver = {
->  	.probe = rpmsg_chrdev_probe,
-> @@ -565,6 +567,5 @@ static void rpmsg_chrdev_exit(void)
->  }
->  module_exit(rpmsg_chrdev_exit);
->  
-> -MODULE_ALIAS("rpmsg:rpmsg_chrdev");
->  MODULE_DESCRIPTION("RPMSG device interface");
->  MODULE_LICENSE("GPL v2");
-> -- 
-> 2.39.2
-> 
+---
+ include/linux/timekeeper_internal.h |  9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/timekeeper_internal.h b/include/linux/timekeeper_internal.h
+index 1690eda..ca79938 100644
+--- a/include/linux/timekeeper_internal.h
++++ b/include/linux/timekeeper_internal.h
+@@ -67,6 +67,7 @@ struct tk_read_base {
+  * @offs_real:			Offset clock monotonic -> clock realtime
+  * @offs_boot:			Offset clock monotonic -> clock boottime
+  * @offs_tai:			Offset clock monotonic -> clock tai
++ * @offs_aux:			Offset clock monotonic -> clock AUX
+  * @coarse_nsec:		The nanoseconds part for coarse time getters
+  * @id:				The timekeeper ID
+  * @tkr_raw:			The readout base structure for CLOCK_MONOTONIC_RAW
+@@ -113,6 +114,9 @@ struct tk_read_base {
+  * @monotonic_to_boottime is a timespec64 representation of @offs_boot to
+  * accelerate the VDSO update for CLOCK_BOOTTIME.
+  *
++ * @offs_aux is used by the auxiliary timekeepers which do not utilize any
++ * of the regular timekeeper offset fields.
++ *
+  * The cacheline ordering of the structure is optimized for in kernel usage of
+  * the ktime_get() and ktime_get_ts64() family of time accessors. Struct
+  * timekeeper is prepended in the core timekeeping code with a sequence count,
+@@ -139,7 +143,10 @@ struct timekeeper {
+ 	struct timespec64	wall_to_monotonic;
+ 	ktime_t			offs_real;
+ 	ktime_t			offs_boot;
+-	ktime_t			offs_tai;
++	union {
++		ktime_t		offs_tai;
++		ktime_t		offs_aux;
++	};
+ 	u32			coarse_nsec;
+ 	enum timekeeper_ids	id;
+ 
