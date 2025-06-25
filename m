@@ -1,133 +1,129 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159C82D29AA
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:13:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B37682BE7D6
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:13:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750868000; cv=none; b=u9nwi3bGxGbGKpuw528Fo6hQ/2Rnn2CId6+sGUg33hcLWE82Fy2EKrakWL4Fp+s1V0C/80sPdmN3ZbFslwwwpGm7MwvdqtjeKGaPTxC2tEmaAueitPRBbemY8zVfp7OgITR1CwdiutMEEgUH+CZ2Ogbok6PrvIPOpCm2mpnVDfE=
+	t=1750868009; cv=none; b=i5XOCYhylmwUzo7b0yQ7/G8F7ZMvHdFx7PyW48ej56Waxj5jsOkVTdN160aJ3x0piq412G+oTuVfKVNiVBKUyNQcSfi7odmn5BwJZ/Kz+JSiGxihhE8f8E7AUnywCTsNiGor3odQ8t8n4UCGlGUpIFywD69IgtuxhKBeCbNF9fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750868000; c=relaxed/simple;
-	bh=NWTU9KjLztibLwJOI0I2c5PwZ/pOAGxqqconYH3Cu6w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SR/8dWu3hjsNSA7lSQQMv5K4IOoB/wNR2sFUrT9dj8tn62Na4XgxujhXYYnNaVnhfKzMAmK5jJNFJ2z77Jl8InFO6s+/9wYIvvD5P7dpgkakFSbkcC6hx/OVxgkjzbknu/ZmnuD48s8LeDJJj+K2aDSzcj0tiXq+/wM+dT1qI6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=d18ef1gJ; arc=none smtp.client-ip=209.85.167.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d18ef1gJ"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-553644b8f56so24546e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:13:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750867997; x=1751472797; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NWTU9KjLztibLwJOI0I2c5PwZ/pOAGxqqconYH3Cu6w=;
-        b=d18ef1gJJayIhzCC0CNsLd/2Qze/q+j7hLkQfhBdhiTcZxM4uT4NNZdj0Girdi1acT
-         VJZcaWyHkcpcF/kntSP2kOG6J4Tp/0sXDN1fNfFYjqZJnC72A8HRShyPval3ElEYtkuP
-         5vlTmAI7zxhkcXNG8YYfB23poAKIYZEmTK91f75wv0pLI6i6v6UNjpMUof6HjQTBvuOO
-         SEceLBeWkkxksXbuMxm33yC2raH+GsGPpWqAoPvnIAdysjh/3aZ/X4ad+qO/JKvoaxDW
-         31Et4fd25h+fzq23RJ1WKxGWlxxiRTgQVfSu3WN3rFqkCUSkYS0WVvWGd4+G1qUeXe91
-         hFuw==
+	s=arc-20240116; t=1750868009; c=relaxed/simple;
+	bh=WT7ivMV9qqeQwMyuD6mdADCPzfCCXz2Dy8zS7veJoMs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=rmESF45Ghl6EIr/JpB6XdT8QNGWHgxn1XE1oCtHO7/CpJiX/TZ2homFoGhcEf91wXx2PGo4OGp0JSmDVg4aFjsJn7hbU3I3b94U9JfbGODP6PVZky9P3kKshMNwPwNf/VhbjKEqfE+BKmTMvmUpe0wXt723WBwX1BMrIXZ2dzLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3df33d97436so8744035ab.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:13:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750867997; x=1751472797;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NWTU9KjLztibLwJOI0I2c5PwZ/pOAGxqqconYH3Cu6w=;
-        b=AmXua82/IzC10vxvGnH0C7md2vzetR8xcudr8Zt4J2ZC/epzpncB/TIoYTL4O78kVC
-         FOVlI2bBMRK3xLdl/S745deWo04Me09busCeifrDtpzwyo/htPXYYdv1PVNwxC1F7i7C
-         hoiriGGGtBiqQTTUOqeVoO/ahG5Tlj9sGq2FZ8Du/o/jzeyADeUf+bJrHQmrc6EP0CyY
-         8ISSDAiS4v6Z7w98Ixvd5GEC4Ekjc72BQ/9+Xluu4hg6Nan+9d/wCcDheLk1++x1HQGj
-         ZaPTBvcS5cvtMo6RaicNoGkbh9I5xB7JJSR4KKYgJhvYie5WGGnAvHDyffe6Dpwvgp94
-         o+JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXFR5D3fNoEwCRdUewYKCeMD+MuZTP3ZcBxOxerJaMfnVKB01YBE/mPyots/663W1YyEvStMbIET3jkwq0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyZM6FrBkyyiVSClb2AZ3dTjkaWGTh5yYTCo0CH9lORBUddhNDz
-	PgB03xMI3kVx+FqkdkciBHd71Ur6kuUdD100eQrY7friAWoIl+TOZUEsrDfoSxWDXnrC479W1n4
-	GYixZfPDjuzWpKMzDeAZBoBWHmIobXTleTzcalZxG
-X-Gm-Gg: ASbGncuhqAGvPO1LYJqNviz6s1sQPRqt+YvNRH2OK2/faTwOL8EBjC+wReEmeCgTK8w
-	12+ISDxGI6+AkX5qfpKiRELApBhhiaoLUrTHr3XuBXIPSCrdcuHhoGTZJlYs7SHOInNIq2hdiQr
-	2kYCug3wupcFad09F7rIkPPa2YwrYedFOQonuocPDEN7Q=
-X-Google-Smtp-Source: AGHT+IEmyNKuINV9suiw750iH+/qWaKx6g6apKTMylHrEHA2ab9ubUUotR8hKdCWlG9C6/ymBT3mjUvzDbJ2PDC7/J0=
-X-Received: by 2002:a05:6512:132a:b0:553:ac33:ff24 with SMTP id
- 2adb3069b0e04-554fdfbcef6mr1162599e87.55.1750867996478; Wed, 25 Jun 2025
- 09:13:16 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1750868007; x=1751472807;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=skryBwueoVvpqeh7d4a3noBeWswe7fbsQ/e6Mb6+Dhg=;
+        b=Smn/O6ZM9WQEZ9dkeq6KQVNtZuR1J8Ddc66dBHqMyvs/IqWYgZhxNKyoMhLQ1gU3hW
+         91t4YLz9g1inXHkYjQoFqnUWfRnjZQL06dhPWleo1TZQSo7Jh2AUkDHIlswrkJlXaoqh
+         YJXGhKHRjpjsN4eOjc4Dccwkm72XKrlaLVUhavneby2tXQydljcc2Txkews6YgydBdKd
+         Vor5gInCTBWweVy6pAXZbQucWj7ciL5EmYMokezUdCfFmlM4IMzYRaBVjpgGS2hGn2O9
+         swlGi+C5jAzmpGl8dJX3nF2jGg9gJhK0oyoOVYFUDU9UFsa3KcVdSgTsjbvMkVcCsG3p
+         VjjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUAbvdlvroW+SdM30TrENAVsBCYI5gPZiQlvywiaflPuT1DFPsU+Y+l0dNDrcdMuE1UoeW0KBjSCsIdoso=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxMD8yFqvQOPsHDlUTGtiFCmDftHCK8sqfh53lZl1knAunVnyoN
+	6v5xlQ85EtU0mNRmnyae0zfrmL+7+T1+7Nfpie7st6qzpwoi4EYmKWfvRCu9APfpxVR6SPTi45/
+	8rS3pFF4MNhqEm0sWOTnSEs72jO8mxWPbsykxOHnF9kmOoPXcO7024wFrMIk=
+X-Google-Smtp-Source: AGHT+IHEz0cNg0RdHPrZ5I5pzxpMHNh8tbp3gQEx4kycm9WGHRLb0EAHML2SkO+hC86Kl93MyXmubTW2rKIIYeVrG3p/J+gYps7h
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250515182322.117840-1-pasha.tatashin@soleen.com>
- <20250515182322.117840-11-pasha.tatashin@soleen.com> <20250624-akzeptabel-angreifbar-9095f4717ca4@brauner>
- <CA+CK2bBu4ex9O5kPcR7++DVg3RM8ZWg3BCpcc6CboJ=aG8mVmQ@mail.gmail.com> <20250625-akrobatisch-libellen-352997eb08ef@brauner>
-In-Reply-To: <20250625-akrobatisch-libellen-352997eb08ef@brauner>
-From: David Matlack <dmatlack@google.com>
-Date: Wed, 25 Jun 2025 09:12:48 -0700
-X-Gm-Features: Ac12FXzsaTglwRDvyxmqrDF18P44C8borysbshJSxnL6KDEw4fT_csftD9wd1t8
-Message-ID: <CALzav=d+XgS1bUs-v7+ws5nYU9y=4uc1c8oVLHrJ16qLpnUi9Q@mail.gmail.com>
-Subject: Re: [RFC v2 10/16] luo: luo_ioctl: add ioctl interface
-To: Christian Brauner <brauner@kernel.org>
-Cc: Pasha Tatashin <pasha.tatashin@soleen.com>, pratyush@kernel.org, jasonmiu@google.com, 
-	graf@amazon.com, changyuanl@google.com, rppt@kernel.org, rientjes@google.com, 
-	corbet@lwn.net, rdunlap@infradead.org, ilpo.jarvinen@linux.intel.com, 
-	kanie@linux.alibaba.com, ojeda@kernel.org, aliceryhl@google.com, 
-	masahiroy@kernel.org, akpm@linux-foundation.org, tj@kernel.org, 
-	yoann.congal@smile.fr, mmaurer@google.com, roman.gushchin@linux.dev, 
-	chenridong@huawei.com, axboe@kernel.dk, mark.rutland@arm.com, 
-	jannh@google.com, vincent.guittot@linaro.org, hannes@cmpxchg.org, 
-	dan.j.williams@intel.com, david@redhat.com, joel.granados@kernel.org, 
-	rostedt@goodmis.org, anna.schumaker@oracle.com, song@kernel.org, 
-	zhangguopeng@kylinos.cn, linux@weissschuh.net, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-mm@kvack.org, gregkh@linuxfoundation.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, rafael@kernel.org, 
-	dakr@kernel.org, bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
-	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, ptyadav@amazon.de
+X-Received: by 2002:a05:6e02:1889:b0:3dc:7b3d:6a45 with SMTP id
+ e9e14a558f8ab-3df3e0b23dbmr3533975ab.0.1750868006912; Wed, 25 Jun 2025
+ 09:13:26 -0700 (PDT)
+Date: Wed, 25 Jun 2025 09:13:26 -0700
+In-Reply-To: <683265d3.a70a0220.253bc2.0079.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685c2026.a00a0220.34b642.00c6.GAE@google.com>
+Subject: Re: [syzbot] [net?] WARNING in ah6_output
+From: syzbot <syzbot+01b0667934cdceb4451c@syzkaller.appspotmail.com>
+To: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
+	herbert@gondor.apana.org.au, horms@kernel.org, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, pabeni@redhat.com, 
+	steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 25, 2025 at 2:36=E2=80=AFAM Christian Brauner <brauner@kernel.o=
-rg> wrote:
-> >
-> > While I agree that a filesystem offers superior introspection and
-> > integration with standard tools, building this complex, stateful
-> > orchestration logic on top of VFS seemed to be forcing a square peg
-> > into a round hole. The ioctl interface, while more opaque, provides a
-> > direct and explicit way to command the state machine and manage these
-> > complex lifecycle and dependency rules.
->
-> I'm not going to argue that you have to switch to this kexecfs idea
-> but...
->
-> You're using a character device that's tied to devmptfs. In other words,
-> you're already using a filesystem interface. Literally the whole code
-> here is built on top of filesystem APIs. So this argument is just very
-> wrong imho. If you can built it on top of a character device using VFS
-> interfaces you can do it as a minimal filesystem.
->
-> You're free to define the filesystem interface any way you like it. We
-> have a ton of examples there. All your ioctls would just be tied to the
-> fileystem instance instead of the /dev/somethingsomething character
-> device. The state machine could just be implemented the same way.
->
-> One of my points is that with an fs interface you can have easy state
-> seralization on a per-service level. IOW, you have a bunch of virtual
-> machines running as services or some networking services or whatever.
-> You could just bind-mount an instance of kexecfs into the service and
-> the service can persist state into the instance and easily recover it
-> after kexec.
+syzbot has found a reproducer for the following issue on:
 
-This approach sounds worth exploring more. It would avoid the need for
-a centralized daemon to mediate the preservation and restoration of
-all file descriptors.
+HEAD commit:    9caca6ac0e26 bnxt: properly flush XDP redirect lists
+git tree:       net
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=16254f0c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=d11f52d3049c3790
+dashboard link: https://syzkaller.appspot.com/bug?extid=01b0667934cdceb4451c
+compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1252bdd4580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1715d182580000
 
-I'm not sure that we can get rid of the machine-wide state machine
-though, as there is some kernel state that will necessarily cross
-these kexecfs domains (e.g. IOMMU driver state). So we still might
-need /dev/liveupdate for that.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/b5b575608bd0/disk-9caca6ac.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/5c5f5f06115c/vmlinux-9caca6ac.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/d833e4fd921e/bzImage-9caca6ac.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+01b0667934cdceb4451c@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+memcpy: detected field-spanning write (size 40) of single field "&top_iph->saddr" at net/ipv6/ah6.c:439 (size 16)
+WARNING: CPU: 0 PID: 5841 at net/ipv6/ah6.c:439 ah6_output+0xece/0x1510 net/ipv6/ah6.c:439
+Modules linked in:
+CPU: 0 UID: 0 PID: 5841 Comm: syz-executor125 Not tainted 6.16.0-rc2-syzkaller-00179-g9caca6ac0e26 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:ah6_output+0xece/0x1510 net/ipv6/ah6.c:439
+Code: ff e8 e6 09 91 f7 c6 05 d6 c0 5b 05 01 90 b9 10 00 00 00 48 c7 c7 60 64 a0 8c 4c 89 f6 48 c7 c2 c0 66 a0 8c e8 73 b4 54 f7 90 <0f> 0b 90 90 e9 ab fe ff ff e8 c4 14 37 01 48 8b 4c 24 28 80 e1 07
+RSP: 0018:ffffc900041a70a0 EFLAGS: 00010246
+RAX: 6316bcc3c9618000 RBX: ffff888030ed5808 RCX: ffff888079c1da00
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000002
+RBP: ffffc900041a7230 R08: 0000000000000003 R09: 0000000000000004
+R10: dffffc0000000000 R11: fffffbfff1bfa9ec R12: dffffc0000000000
+R13: 1ffff92000834e34 R14: 0000000000000028 R15: 0000000000000030
+FS:  000055556d6c9380(0000) GS:ffff888125c51000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fe027d09e9c CR3: 0000000074d90000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ xfrm_output_one net/xfrm/xfrm_output.c:555 [inline]
+ xfrm_output_resume+0x2c55/0x6170 net/xfrm/xfrm_output.c:590
+ __xfrm6_output+0x2eb/0x1070 net/ipv6/xfrm6_output.c:103
+ NF_HOOK_COND include/linux/netfilter.h:306 [inline]
+ xfrm6_output+0x1c6/0x4f0 net/ipv6/xfrm6_output.c:108
+ ip6_send_skb+0x1d5/0x390 net/ipv6/ip6_output.c:1982
+ l2tp_ip6_sendmsg+0x12ee/0x17c0 net/l2tp/l2tp_ip6.c:661
+ sock_sendmsg_nosec net/socket.c:712 [inline]
+ __sock_sendmsg+0x19c/0x270 net/socket.c:727
+ ____sys_sendmsg+0x505/0x830 net/socket.c:2566
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2620
+ __sys_sendmsg net/socket.c:2652 [inline]
+ __do_sys_sendmsg net/socket.c:2657 [inline]
+ __se_sys_sendmsg net/socket.c:2655 [inline]
+ __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2655
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f1b7b30bc79
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 c1 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007ffdde4e6fd8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f1b7b30bc79
+RDX: 0000000000000800 RSI: 0000200000000540 RDI: 0000000000000005
+RBP: 0000000000000000 R08: 0000000000000006 R09: 0000000000000006
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+
+
+---
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
