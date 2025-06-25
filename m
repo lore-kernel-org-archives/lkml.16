@@ -1,121 +1,112 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFDDE1E531
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:16:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31CD93074B2;
+	Wed, 25 Jun 2025 14:17:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750861009; cv=none; b=i+N+w1Jkty47tDKigdyEIvQEPO7fAGgnKDViOPbCnxEWNSrG2ImbO7jd34j+Fd4bjNfO3OhNbR4H06sS91iU4p5AinScIxcw1GQRmJY7SeOjsVoH+muqfAX3nrCBukVU068r2wR/VND6m/gGYj1FHQb/7g8r6ZBbv3CQ59vevm8=
+	t=1750861037; cv=none; b=r6lSausBl4XapX2MP3YAWpMWjsYX/r+8NWOmO5qlESoYO7VxystMpzfvczag+eGqSahG0NFvW2pRjSUafNKIgt94p8AwtYvGNwscL6c2EkkvMFgCiAj0zYiSyHMD0+8Vok4F+82QhYH0zv8U36cd0ni4Pjl/H9tn860JyPLhOWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750861009; c=relaxed/simple;
-	bh=qK+i+U+6rzfemAyvripjb73RvpT/DUf/CWO5dfpdbds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qpqqui3VxEFWIWU8KOHCXwUq6QB+l7azoB0hqbNPs1jERRz/Vy9kKbvOMnm7QDQTH24IF5Su4OHQEW2V89lA5DAguonLBNBBFi8bVI2tqEgy8qdEdZum0m3AE8oVyNV0mYldbQkm6PsdYTRLOk7sdFdxuX+gJ6tOHbKBlN0ar1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C842B106F;
-	Wed, 25 Jun 2025 07:16:28 -0700 (PDT)
-Received: from [10.57.84.221] (unknown [10.57.84.221])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E7E9B3F66E;
-	Wed, 25 Jun 2025 07:16:42 -0700 (PDT)
-Message-ID: <40c6e847-3be1-4d12-ab23-6ac5e0f1bd4a@arm.com>
-Date: Wed, 25 Jun 2025 15:16:41 +0100
+	s=arc-20240116; t=1750861037; c=relaxed/simple;
+	bh=GV9uWjbzpWJCJyDvrD6zIb1pM7E+jGJAWzF8bUumGbg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QqUJouICw6GDzl2JXXpse5r1Ohs1xRegIlxCDtE4aE4BIWM6YiApMrQocqrT4ZvrgA+Icc9CfbzrQsjjN5oK99BZSFtuDV5xvhgmpZZv9xhgb/hlxQJccoQC+RJCes0PuRWrXtbt/gQxkE3mJVsBdZyPT8DY+Y5glLl7s8hIjUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IEGBNrni; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEGBNrni"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3a6e2d85705so1025253f8f.0;
+        Wed, 25 Jun 2025 07:17:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750861034; x=1751465834; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hzWONQZPXuRc902CvudcvoWg6dHSIsx+hHKLfoZbGj8=;
+        b=IEGBNrniat6ImG2pVTMEnT87hb0axifk/og1vZzOTyoNbOU5wqFB3rjV3z+aTfIPid
+         4HviuSQp5EJB0vbafVV38+DJofKBPuQp/KScJq7RWQpBF3ewB+at7gK6ObQ82qTtMY3H
+         lFt4MdBHr8fDPGoe+9t2S9zmSN1PyAFLIkgGhsjCnoJBkG9pj502az56K5lM9PcNc5M9
+         zl3gqtVJ2ytOfV3cj2lcGSHnRqW/1P+XvS3GWn7YBZVgBbVxEqvgSD5n7T7l7t6Z2Hsh
+         j7l3nk6MC8fNzMwPpYoiqvsI12BimtpyCYbmHK1CSVmtkXDxltiiU3NJjlFBnL0AjrG6
+         LeWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750861034; x=1751465834;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hzWONQZPXuRc902CvudcvoWg6dHSIsx+hHKLfoZbGj8=;
+        b=ErVw3QZbdzt4YY2mxrgnzR9t1nAzd+By0JwyJd3CqpbkKRbKUB1rANP9kR5wqzSM5W
+         dsEuYJWdrb9p4uK+SYlHaIuRk9zL587zb9MqhvZPGbfcKZ8NckieJQoCMZsAYwzfQWbn
+         KjQ55tUCg8ah5CRjLhqIJJFz0Nqf4Nh6mw743Y4GmzkfspZsxU2D7G1aaVrSmsgqdgni
+         V+TDPVFuKZPFDRBeXF6tQYJhic+FlCoXvQbiNrZJACvH8PdqtEhcloxzdfvJQ9ecDRQB
+         tnWrbqYrADMBcIP1XD18ok7AbaXa6WsMFSQcHpIGySP7uZgEajlml9MgVbbOELP0z2Ri
+         smIQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUgsHcUmW8ZF1WLX0DNBO50Z1lk13XuNxq6U3qSTKuBi73co5PlpS4uNw6o1tU80YXn9scSizURB9Fz@vger.kernel.org, AJvYcCUxMpEAQ6kizCebPpn/wykwnKx4uCpXg9YRCz9i2UlKDh7UySKA5FQjHbb9xm2JNfuCcZ3dr7y0QYaS@vger.kernel.org, AJvYcCWzuNdGjpk2DLvSMSnbqlQvOsLDgpw6Cj6P5SHU8BtrZ0lQwgWMsDOo1pvtYlb6cCguPV6n0GoZzu+Uv+SB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxZVaahzVP+94muQue3k68ys9/9ZXWZAPC9NKZxg+IKZKF+fNar
+	f9xyPc0O998EkBs7HxS+EKcOlg1lH+z2FNmXa3VF4Ssws04DbN/j7kt8
+X-Gm-Gg: ASbGncsAfQXTFBOIA7wtY275miBvq9zSsz0p3jnGAuEEJF3Cf91vs413vH2anuqCe+6
+	rm/6MJI7s429WC5l13PIuOXacSlYJ1zbuTSAj6VE7MadLaE1jWvGJ/nLMzmMPeRk64PBDZaamMD
+	CoGNmqxGZG08OlvUQkFQ3JmYm/Rq44EHqAksa/CkbUXDCZpon322DTzNMJ5Px+JQ7jAK521i97t
+	qjtiP1EauUN1QgpST1o+IpWD2oLNjylBrPkJvsVEb2nHaKhiHWAZXA1AI4S/VTCKYLZKgUDJUWk
+	xR6XkNoA+YKc5KqajaJaXRn9SsMXLxGCMwy17tPCb/FcOZqWaODsGXcBBafpFQreUHkcrV5FG6S
+	7W1PyoLdRRBAafvY4Q7im
+X-Google-Smtp-Source: AGHT+IFqL/Byj5Ij3RIfbtTO5X27JLBRaBJXXCIyMhsgGEwX+Qu3f/dQZ2M2hi2yjh6Qc/50fSxkBA==
+X-Received: by 2002:a05:6000:2385:b0:3a3:67bb:8f3f with SMTP id ffacd0b85a97d-3a6ed66b1bbmr2725869f8f.53.1750861034025;
+        Wed, 25 Jun 2025 07:17:14 -0700 (PDT)
+Received: from iku.example.org ([2a06:5906:61b:2d00:c47e:d783:f875:2c7c])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4538235a85bsm21609425e9.23.2025.06.25.07.17.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 07:17:12 -0700 (PDT)
+From: Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	Prabhakar <prabhakar.csengg@gmail.com>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/3] clk: renesas: Add SDHI and RIIC clock support for RZ/T2H and RZ/N2H
+Date: Wed, 25 Jun 2025 15:17:02 +0100
+Message-ID: <20250625141705.151383-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 4/4] arm64/mm: Elide tlbi in contpte_convert() under
- BBML2
-Content-Language: en-GB
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Catalin Marinas <catalin.marinas@arm.com>,
- =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>,
- yang@os.amperecomputing.com, will@kernel.org, jean-philippe@linaro.org,
- robin.murphy@arm.com, joro@8bytes.org, maz@kernel.org,
- oliver.upton@linux.dev, joey.gouly@arm.com, james.morse@arm.com,
- broonie@kernel.org, ardb@kernel.org, baohua@kernel.org,
- suzuki.poulose@arm.com, david@redhat.com, nicolinc@nvidia.com,
- jsnitsel@redhat.com, mshavit@google.com, kevin.tian@intel.com,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- iommu@lists.linux.dev
-References: <20250617095104.6772-1-miko.lenczewski@arm.com>
- <20250617095104.6772-5-miko.lenczewski@arm.com> <aFRlDSZ2PPnHixjc@arm.com>
- <7105112f-b0bb-4191-b3c9-93522162319c@arm.com>
- <636c8901-6e05-479f-ae06-ee391d4d36e8@arm.com>
- <20250625133735.GB213144@ziepe.ca>
-From: Ryan Roberts <ryan.roberts@arm.com>
-In-Reply-To: <20250625133735.GB213144@ziepe.ca>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 25/06/2025 14:37, Jason Gunthorpe wrote:
-> On Wed, Jun 25, 2025 at 02:07:23PM +0100, Ryan Roberts wrote:
->> I think what you are saying is that despite going via invalid, the HW may see
->> this direct transition:
->>
->> +----+----+----+----+
->> |RO,n|RO,n|RO,n|RW,n|
->> +----+----+----+----+
->> to:
->> +----+----+----+----+
->> |RO,c|RO,c|RO,c|RO,c|
->> +----+----+----+----+
->>
->> There are 2 logical operations here. The first is changing the permissions of
->> the last entry. The second is changing the size of the entry.
->>
->> As I understand it, it's permissible in the architecture to update the
->> permissions of the a PTE without break-before-make and without issuing a tlbi
->> afterwards; in that case the HW may apply either the old permissions or the new
->> permissions up until a future tlbi (after which the new permissions are
->> guarranteed). That's the first logical operation.
->>
->> The second logical operation is permitted by FEAT_BBM level 2.
->>
->> So both logical operations are permitted and the Arm ARM doesn't mention any
->> requirement to "separate" these operations with a tlbi or anything else, as far
->> as I can see.
->>
->> So I would interpret that combining these 2 in the way we have should be safe.
->> RNGLXZ and RJQQTC give further insight into the spirit of the spec. But I agree
->> this isn't spelled out super clearly.
->>
->> Perhaps we can move forwards based on this understanding, and I will seek some
->> clarifying words to be added to the Arm ARM?
-> 
-> FWIW this matches my understanding as well.
-> 
-> AFAIK the actual physical issue for BBM < 2 is the TLB lookup HW
-> cannot tolerate having two entries that overlap in address because of
-> different sizes. Every lookup must return exactly one result. If more
-> results are returned the HW fails in some way.
-> 
-> For BBM 2 if the HW lookup gets more than one result the HW selects
-> one unpredictably and uses that.
-> 
-> Permissions shouldn't have any impact because they do not effect how
-> the lookup is performed, they are the result of the lookup.
+From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Totally agree with all of this! But ideally we want the Arm ARM to be
-unambiguous so that we can implement against that rather than against our
-understanding of the HW issues and what the Arm ARM "almost certainly intended".
+Hi All,
 
-> 
-> I've been looking at implementing BBM 2 support on the iommu side and
-> I didn't see anything that said we cannot do arbitary transformations
-> under BBM 2? For instance when degrading from a contiguous range of
-> block descriptors down to single page descriptors I'm expecting to go
-> like:
->     16x2M -> 2M -> 4k -> FLUSH
+This patch series adds clock support for SDHI and RIIC peripherals on
+the Renesas RZ/T2H (R9A09G077) and RZ/N2H (R9A09G087) SoCs. It introduces
+the necessary clock ID definitions and updates the R9A09G077 clock driver
+to support the relevant clock sources and module clocks.
 
-If this is just changing sizes, it's definitely, explcitly safe in the Arm ARM
-(I haven't read the equivalent SMMU text). And there isn't a requirement to
-flush at the end. You only need to flush the (sub-)ranges where permissions or
-whatever have changed.
+Cheers,
+Prabhakar
 
-> 
-> Jason
+Lad Prabhakar (3):
+  dt-bindings: clock: renesas,r9a09g077/87: Add SDHI_CLKHS clock ID
+  clk: renesas: r9a09g077-cpg: Add PLL2 and SDHI clock support
+  clk: renesas: r9a09g077-cpg: Add RIIC module clocks
+
+ drivers/clk/renesas/r9a09g077-cpg.c               | 15 ++++++++++++++-
+ .../clock/renesas,r9a09g077-cpg-mssr.h            |  1 +
+ .../clock/renesas,r9a09g087-cpg-mssr.h            |  1 +
+ 3 files changed, 16 insertions(+), 1 deletion(-)
+
+-- 
+2.49.0
 
