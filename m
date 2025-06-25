@@ -1,331 +1,229 @@
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2068.outbound.protection.outlook.com [40.107.237.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1CBA2620E4;
-	Wed, 25 Jun 2025 14:42:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750862562; cv=none; b=KtOPihd4FMSM1W2bfAfZlg8YcL9I6gzN5iEA2Gub50wCNCsHMhnuzK48iGQpO4PdSlsrkA3wgNw5gW6cG4gh2FwMm3tbRqNof45hXbBP1d1vPFwu4f/fAPRmyjwi2TG1ivVRCLCfnwixLw4q1BOeidC3eCdeAnpvWqBm+eDm7sw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750862562; c=relaxed/simple;
-	bh=W80ljPaPqQctC4oI5kMx0wXtZhe8dcM9TJmvhSwq0wM=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=aSr2XYsv9U5eE/X2d1cJAugcgxdM3QOcAzQNCo6epnjwFS0oKwn4bn7GzOplrHJ3KlSJQRP6TC1jMgNCz/ih9OlHAFn4NLMT9cXlGJHxmybuXFPBHlGXSEH3b6J5/gl9yh54E21wV6QMzZmocobZBTTYuze8PpogAaWHVBKODAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P7jZIyiS; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECF826981C;
+	Wed, 25 Jun 2025 14:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750862592; cv=fail; b=KrS1Le//mIjQau5+qauTZr8RCfjhIWzBrbcbr6RsWv5rMqn2TEeed8QCDHQK9TAy87/Z14dk5dSCoIMLT3saiGvEAXRBYsm+DxSiTj3DX7F9IgTAaMvd6Ks/8MPpVVhN7QCN974HcpPunWwc8trGbWUiDDkv5ZP/G5GAf7klVV0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750862592; c=relaxed/simple;
+	bh=UBcOAexD8GU2u011BXyevYiRFhUg2baWzAWBJEhQFQ8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=qcODFfafOl5kIdaGVTGn6gXs8s7Ld0gd4TpeqptHxphiiEVHIR5/QoHN+e3zTE4qyYr591yD6NYi3d5nVH5ugaKUbtVi4bis9wqlm4Lw+mI/YCaQC7rNdgN+jl854HYYjxNYD+eGIWxc1MVE/oLLVN82fdryqLWXeZjc23wPm9k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=q2k0CE4v; arc=fail smtp.client-ip=40.107.237.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P7jZIyiS"
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-e7569ccf04cso5241641276.0;
-        Wed, 25 Jun 2025 07:42:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750862560; x=1751467360; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ddYWH9idNgu4DGvbxEp1Q2l88P/xM1NI5OwRZU4th6I=;
-        b=P7jZIyiSA6A7sIaD1shUrSGTO/7/VHrJSl/l6W79n1V2EVDZ3IXbOcGAXtyWUwknH3
-         YqhpTfDbF32JEUuo8u+P5SsjyzLFKpLlvtEcAxTO/xqwfqnQNoI60oVM+01489smocmr
-         2L0q5lTNKP2FY1iM1I4h+j4UcF+3wkb+KpHePzKzmc061dOirM6M5Ps3/Fid8WIexL4+
-         rabnJ2x8JJkYYR7ddx486yVk7TreaYmDydWVkdA7NchfiiuoFuNuIr29Px3OlHzgnJRq
-         dnEqhv/zbW8fTTqz9/JRqJKFYNku/IM4Y5p85Kf4t28phkjNAWDF2aikBftMYNm9kjtJ
-         AhFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750862560; x=1751467360;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ddYWH9idNgu4DGvbxEp1Q2l88P/xM1NI5OwRZU4th6I=;
-        b=NBQXU2/BfZ2V6Ecs/IHd9tbY/Yo5yE8zoJTb8JV1T3utMe9m30hygiK80j+3ppIqw4
-         OxZnEgaiAk5YxLeQTHJf5sDdqb/rUdjPnUjJ/KuPBeua2lDaSvb79gUTGo6DkU57FpYj
-         2kRh05EmtseAGDwQOWFqss7TP27CTCgOUrla54V0faUdNW3Klkdqh+TznsrUulQUIw39
-         U8427gWAOy/8xPiQuJrFP22SO2KKMYGAbPilkz4K9T25p7dTcftdQpMU4Y+JPziTF1h0
-         Bgo+2SNHHPdIvnwLiCwXEDT1LAhFTX1L6UujmbvvhgzBCmtMCt/M1j7rut81sLN/wzri
-         508w==
-X-Forwarded-Encrypted: i=1; AJvYcCVHKe/Yit7pBQW+Fx3zLf3Cn7RsG+SSKWr4fmxNPfDYFRtVWOx1720hPGNC6SkooGijeYohOVXYlPuOkLc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywkwps5Akn2ZfzX9VYP52RanEzmLDK2SUn+O9Dj/Lq4OJbQDSjJ
-	eWDKHeLtR1B8+7wRNfBIV9e2k2eyZxGqePaZXExcf6vRGDbrF5r+iNQNcC5TWBXVbFtOPF4UoYw
-	yY4ucntLEyqhcpBjHr+U5aAIA/ClNEzk=
-X-Gm-Gg: ASbGncu2DD/7uRXjeX+asaujswP+/3v0IjTn/Jh4CXUVzcTlT5W/7ERa2G8Ygpd7rCu
-	C9AKDMxx7DO1C1jHjeOrJ2iXpX0pVLpPZEC8YbQV5f4CuKvujjK3MSx+g6to7QPbH7Auf7hCNMy
-	h64BIxKCd1eVMecZ/VUTTEWTRq8IyVoBLcCjBGjKSTxh4VEQ==
-X-Google-Smtp-Source: AGHT+IHDfaFTDJeF4pwfQSzYMR5hsAauHPrLJNhtUB9X9Ekif8Ycgmi9qDylxn1kRL5aCHgF7ANh4KrVmnVIVI1mk+Q=
-X-Received: by 2002:a05:6902:1609:b0:e84:2cb4:7feb with SMTP id
- 3f1490d57ef6-e86016f93aamr3956266276.15.1750862559503; Wed, 25 Jun 2025
- 07:42:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="q2k0CE4v"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=C72Y/wfbNuObHE3zE3T5NUCF6x2gtdV3pvLID+xps/Cvp8FKhLpmpvYu7gCj01W5/5tPZhtXby5az/2glYQsU1k8NaOrTDfiU1kgYECjRZU4fbIDb17lxM2GevYcTH4CB37yz1ZjYW95hE0ObUVtFiW2geooRfkTN3v7tyJLLehL9fWLixawEC1VJrH5+qDMjCVuPWcoTU/Knu1KXrq96n9sa9YCp2az9q0jHEE4RpU+b+V9zkIeSOHcKxhETpSshVr3JsOn8m+qpwnPNVe2HzK7txlqTaJ0rZAYjZoNB9wVSf+p9u9iI0cVHEwjMiilZbOnxR73Ty8Q03XsLEU5zw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WDGLYaw/hFf8VNRieJ4PjG45QEHKCCONCeQLlY5mcXE=;
+ b=FyHSn62JBjDUmtGKpuPzZ6dy+jCveAwLDfAvO0a7zXVvu+3XeQ6EYFBCyNlvifmZCWp8VqYUx0v1wmOhbHkMWFxZf236l2P4BukzV0ssKwFZt4g4rGT3TgESdn3padwqNnzSW8bdQEviBhj2D3F3L8wxPdK+OllappQNGebh0EXqSVmuayY+HmCrtYI208uJ2s6g8/EByRgOVrC3L3saDsxXH+lNsipF4Lam/WCZ2eHLJtwWEj3LI362tNOQqQD9cT2Do1WegZLJCazRYbujxFU7PsWTXSNnYfLfdLUTfShHmnO9UYsHKhlAJEjpEWsP4IS1tfP8panyD5bdR6cxbQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WDGLYaw/hFf8VNRieJ4PjG45QEHKCCONCeQLlY5mcXE=;
+ b=q2k0CE4v6vlE0fYrh+IauWfgHIomn5CDOL6W81d7HdbwAzRqzLw1iAVbdTf6ixn4YUKwDR99iRxpUi/XzdCGQ6S/eRqPEszBFRzGqRZNWl3A/XOxr1b+uYqvOxmvWtDpdBDEZ9ncCnRAtxSiBf3FpDAP2xyWsLOdA7Sk63MpPz/seVbeP1Q7QI7jvQoxLyyMTUB5zYlEB+V2cQT1kEydif8Kc0TC3NHlR0PaTwAtLSV6xbmASkji+q8JeY86n+D9kYaYD3MVp9C3lWZPJCOdzIuUeth2XWDRXRnb0632D8CFwDWsXop2b4SHFeRaiXSEWakNzP6n4JBMHyXuO1B/iQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from IA0PR12MB7722.namprd12.prod.outlook.com (2603:10b6:208:432::7)
+ by DS0PR12MB7928.namprd12.prod.outlook.com (2603:10b6:8:14c::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Wed, 25 Jun
+ 2025 14:43:06 +0000
+Received: from IA0PR12MB7722.namprd12.prod.outlook.com
+ ([fe80::48cf:f618:fb6a:6b43]) by IA0PR12MB7722.namprd12.prod.outlook.com
+ ([fe80::48cf:f618:fb6a:6b43%4]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
+ 14:43:06 +0000
+Message-ID: <594a3f22-57c6-4f97-9464-40ed0e3fcec9@nvidia.com>
+Date: Wed, 25 Jun 2025 17:42:58 +0300
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 7/8] net/mlx5: HWS, Shrink empty matchers
+To: Jakub Kicinski <kuba@kernel.org>, Mark Bloch <mbloch@nvidia.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>,
+ Eric Dumazet <edumazet@google.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Simon Horman <horms@kernel.org>, saeedm@nvidia.com, gal@nvidia.com,
+ leonro@nvidia.com, tariqt@nvidia.com, Leon Romanovsky <leon@kernel.org>,
+ netdev@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-kernel@vger.kernel.org, moshe@nvidia.com,
+ Vlad Dogaru <vdogaru@nvidia.com>
+References: <20250622172226.4174-1-mbloch@nvidia.com>
+ <20250622172226.4174-8-mbloch@nvidia.com>
+ <20250624170809.2aac2c69@kernel.org>
+Content-Language: en-US
+From: Yevgeny Kliteynik <kliteyn@nvidia.com>
+In-Reply-To: <20250624170809.2aac2c69@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: TL2P290CA0009.ISRP290.PROD.OUTLOOK.COM
+ (2603:1096:950:2::10) To IA0PR12MB7722.namprd12.prod.outlook.com
+ (2603:10b6:208:432::7)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: cen zhang <zzzccc427@gmail.com>
-Date: Wed, 25 Jun 2025 22:42:28 +0800
-X-Gm-Features: Ac12FXxdUngfyVQYdeUBcB-B3yC8MKNkGU5cNDgcsvJwpuAtNJ-l2iuWaPh_dKc
-Message-ID: <CAFRLqsXspKwcVUA7cet-k5_oXb8aejT8rZJJOqyKqza+b_2x5w@mail.gmail.com>
-Subject: 
-To: clm@fb.com, josef@toxicpanda.com, dsterba@suse.com
-Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	baijiaju1990@gmail.com, zhenghaoran154@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: IA0PR12MB7722:EE_|DS0PR12MB7928:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5aba6edf-440d-48c2-e8c2-08ddb3f698d8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|366016|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?OEJNSTMzMDQ1aW1MZ2lSYzdCS1hRcU9HbGgyelBXWUtHSTVUS0VFKzgxVnBH?=
+ =?utf-8?B?QnNCK0hsSkxtaGV4N2JadWJOSDVuWG1Dc29EZHN2eERaaTUzL29ZUGlYNXpp?=
+ =?utf-8?B?NGZtU3d3NTIzbG9neUlUS0ppT0k4b3lFSGxKM1VmVVo0NUVhV3ZCc0w2dGFz?=
+ =?utf-8?B?UDc4UzhBbWZTekN2TThKdWZqY2p3WGNHY0pTb2tQZEJ2S2NaeDlSYmVmZ3Rn?=
+ =?utf-8?B?VUhZMWl0L1FaSkdmUEoxcW90MW1jSXIzb2FJUktTNzdCTERlNGZ4NGNsVlMz?=
+ =?utf-8?B?UmdWazRVWU5vSkN5VFlmSmoreFRVLzlNNjBYd0pET0NIdWx2UTErcFpxMmZv?=
+ =?utf-8?B?SUpVck5OWDVrS281TExOQzdMS1RuR2t3V0JXU0FuTU9laUM5Q2ZFOTYwSlRr?=
+ =?utf-8?B?N2xGekRIUnZsUEJib25vR2hPV3lOTUR1VW1MaFhGM0M3djlBcjlzb2xaV3Fn?=
+ =?utf-8?B?QnhDZWxLQ1BPemdPUnpPNm9Ua0xob29KcTJMbWZ4dWlsMVNFcGJtTzI5UjE3?=
+ =?utf-8?B?cy9UQnRKVFJ2YzlNc0k3TDk2M016SzB1dUpEc2FOTVlPamNiZDVvVFphc1dj?=
+ =?utf-8?B?bm5IUUhEc1praTdTYXA3UnEvNVNUbkRLTkFvVG1RcER5bXdrNFVSdlF0bUMx?=
+ =?utf-8?B?dkh6eFIxWGc0ZE40YittendXeHpXTWFScFlEL2hOc2IybHRuRzg0dFpCb1lo?=
+ =?utf-8?B?YldIVTRSTXJ1OWJnNE91NlJTN0E1eU4yd045VkZuOWhXaWlpMnRSNlRqTHRU?=
+ =?utf-8?B?Sm5jaTlRTWZzM0RVd3FqU1ZFVHdhckFhaXlDT2ViK0FOQ2pCc0ZiUTdsWTZ1?=
+ =?utf-8?B?R0YwNThWVDREZWFGRlFQenVCeXR5cGk1czhPaWw3M3Vya010V3BSekJnbDQz?=
+ =?utf-8?B?RitRM0FHdjgraUh2MWVmZ3k2U0o4T01vY1ZXVnJyKzVvS3BNeGZRdldCWTZ0?=
+ =?utf-8?B?aGFERW1MMElXeVJnaVVhTk1DYlhEUnUwRzB4NGl3bEhBaXZnd3RwRXdFSzQ4?=
+ =?utf-8?B?NTZnMW5iNVIwcEpoOHVOeHFudlJFRTVNVTR4Nm9kTDdZZDNEZ1FUMU52SW9q?=
+ =?utf-8?B?aitsU2dXcEloTmlLTjNZd0Vsejg0bVhUZGQyZEIvWFNtZW1rbEJnQnZhVVh3?=
+ =?utf-8?B?enhWNkpnOU1FYUdqSFNRVUJldzE3SUZ1enRabG51NjZPNVBiQ0tEQkVQdEdX?=
+ =?utf-8?B?VkZWTkd6QTAvcmdyWisxd0NXeE9YdXhBYk13QjBlVkNhTU9rdFhJN21tTTdp?=
+ =?utf-8?B?ODQxdXZPWXdNb2lMdHhkKzcvb21oeUJaeG5WQWxUaDQyaGV6OEhiQy9QaHE4?=
+ =?utf-8?B?cmd0WXdORzBqWFBacTI3SXFXYzZXU3VLSmU1UnBYc0VleHpxZG9RQkl0cis2?=
+ =?utf-8?B?Y3h4bGp5NHBkUGxBbHNmd0ZnY0lRTjY4OHkwMFJRbTBFaFhOVWtXSXY5aWI0?=
+ =?utf-8?B?M1BaZ1FHVDFEUlFGN0NJd1IrMDlBRmtvYytPSGt2K1QyK1ZyRHZhZmhJeEQ2?=
+ =?utf-8?B?T09zVUFlUzFCdFRHS25LSDI2dmFXd2Z2TVdmeXlzS29sL3E2TVRhWU1XUzUx?=
+ =?utf-8?B?cDlzLzNVUG5xZndDUGFjeVFHNUtnS002RkorczM2YUZyMWxPWERTMDc2ZUdW?=
+ =?utf-8?B?SUxTSkxvOGJmQTdkZG5raGlIMWZ1SXZjMzd3VVdyakRmVWNsSVhWTGlHeHU5?=
+ =?utf-8?B?cW55ZVBTc1o1ODNLQzJ0TE1oWEYySnB6QjdhT3B0dG9LVEIzSHoxeS9ISjJ1?=
+ =?utf-8?B?WXp1czNJTzZZRGJMNVliSjJMOTB1d2NBZVdMd0Q3S0M2dm1YMmUzZ1ZGOG1C?=
+ =?utf-8?B?eXpsTGgzYlhDcVhXV3A4d2pNQW1qMy9iam93bExKWlcwcHord1orWEVwWXp1?=
+ =?utf-8?B?VGN4T2tURjNuS0cyUVVWd3dnQ2Z5RnVseWRlMFhNNmdQT0E9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:IA0PR12MB7722.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(366016)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?WTh3enlNT0RNVDdKcWJkRkFrK1JxMm8vY1F3bnR4ak9BRUk5YlBNTnBBMUVN?=
+ =?utf-8?B?cyt3L1Y3bFlGNi9VM3lrem5pRDNIWVErN2V2bHM5WDJNM2JYTFc2M1hZZzUz?=
+ =?utf-8?B?Ym5HZjU3QzNHRzYwdStaWVc0Vk1XRFZrRitTRFZORldqcTNiZ2tKWDU1QTZQ?=
+ =?utf-8?B?NVo5L2FnWC9LTCtLQ1Y0YmJKV1hVR29MNEpvQXJxWjcvRGltZDdYa2RBTkt2?=
+ =?utf-8?B?QlNnNTRydyswVWhNcDkxYnFjNkptblMrQmpoNS8yOGtjMm9kSmVESFhhd3JC?=
+ =?utf-8?B?d2NWMi9GRkNNMGluM3ZoOUpUYW9oOStRZUowdE5MWXA4aVk2SFlvM2V1NEVQ?=
+ =?utf-8?B?ejhNcStHeHhCK0JJc3g3eTYvQlEvdS9nRENQRjh2alZKY2t4QnFKb3k3cWZj?=
+ =?utf-8?B?enpkSWRmd00vc0RWTkpVbC9XY2NGRk1jZTJCbjh1Y1BYSDY2RmZXbmpiZzNy?=
+ =?utf-8?B?dVcrU2lxek9mZUlnaXBFSU1wNmNGRVJVV080RS9QZk5RamdBY2NlRzRaSENR?=
+ =?utf-8?B?UGw4RXpxbHlnSlZmaTVCWU5DcnR1WHoySXBIL3NiRktEVldzVEtLSEUvYkhQ?=
+ =?utf-8?B?eXY3VUpvZ3pGY0J6eWJ6YnNsK2xUU3VIWWRtME1pdllOSHhEMUlrZVpTT3By?=
+ =?utf-8?B?R0hJdXJuL3FZYzdjZGx6bXQrSW10WDViUDAxUzcwU1RWNVM3cmxvSHlvN0RW?=
+ =?utf-8?B?WGcvcXdUNjBiZlFDWjA2eVgxdGtIOHRSMTc5eGVRRVJ6Mk1CV1l2NTJGOC9R?=
+ =?utf-8?B?WFFoTVpLK2kwaktvSDZqOUpNTmZjTTdaOVlTK21YaVlFMjI3NVRSZzAzWlk4?=
+ =?utf-8?B?MkJBc041cnQ0RTRDTjBPNU9UbXlDVUR6N1BkN01jM1dHT0pnbVZockd1MWdF?=
+ =?utf-8?B?L0NxOHpVeElTYXpRaCt0YU1LMWw5K09Lc0VpUU1IVGg3cTNOOGFaZWhYcEt1?=
+ =?utf-8?B?V2IzOTdjcVcydEk1NC9tVmpYdllMOHJKcUpPaytiZHJRY1lwQSs5dmtiSk96?=
+ =?utf-8?B?bHJNQ2puWVk5bm9qZmFJY3FvckRGYS9PVHZ0U2JRWHVvZi9vV3VIZWxBRSsy?=
+ =?utf-8?B?c2FZRFdHZlFsNWFvY0Z1blNNOTM5dTZFemJRT2k4aVQ1dXZrc1h4Ry9SNkhY?=
+ =?utf-8?B?cjdOYk8yWHNYZVdlNDlOV3hMdVlTYUJmWEdYM012eWptbmF4Q2lZeE9PMzJR?=
+ =?utf-8?B?cUFseDBRaWdxZzRuSitBVGJueHZzcWtiVjRTbFBIc1JrNzVBbFNuTkExTXM4?=
+ =?utf-8?B?ZHVSUktPWUEzeGlPcmhlUThzWmFOVThkZ3FyajBYR3BLK0MySm42clZPc2dS?=
+ =?utf-8?B?eHRXelZVZmk1d0I0LzBDNC8vVlBUZ2VwZEtJQjBnTDhMcHpkSGZPbnlZSFA5?=
+ =?utf-8?B?REEvMUNjWThoUXd4QzdCQWl2SFUwOGt3YXZxMFdlbHZ0bFpBWmU2RWd0ZW93?=
+ =?utf-8?B?WHBVbFdOK3ROMjEzRGdpN0g3T1JtTjE2R2ZFYXZ2TXlRZi9yRFRhcEtXYmw5?=
+ =?utf-8?B?N202R3VTR2hQUk12eitHR3BIOWN2K2dhc2JicUc3bGhHdEJZUXRiSjVzV0tZ?=
+ =?utf-8?B?UzhTTm50OHNjYWtQSmgxNVNZWGRCaFVkbnlLQkdlNVB6YzkvQ2hIRldEcGht?=
+ =?utf-8?B?RThXYlV4KzViWk1mNkZOQ00zdkt3Y2taYzVyRGtKQXZyQzVyR2ZDekZjM0RQ?=
+ =?utf-8?B?bERRRFlGa25WclFpdEpaTTF3dmZ6aUxQOWR0RWpOcHQxaGpIc1FiQUd1N1Qv?=
+ =?utf-8?B?cEFkY1pIWHYrYWJTSEZqdG9ibm9iU3JPRzc1ZGZlRnZVRXd2R0hWbHltbDlP?=
+ =?utf-8?B?R2psdGVSNWhOd2hUQi9GYzZMSUNVd3hMTnRVOURybnMrSjN0bk5VVVZqbjYv?=
+ =?utf-8?B?T080bitWYmlETUl4cEVSMFpwLzdQZXlScmU2d29hckZqMmFSdWNCdjRmMHFF?=
+ =?utf-8?B?NThpbWYrSWpIVlpmeVB1OHZQU28yVXY5TGpkbHZ6UE43Zy9ROWw3QkwxNkZT?=
+ =?utf-8?B?N0VGVUl1Tml5TWI1bXJhcXM1ZDZ2L3NrWFZ3NXhxL3ROenQvQXU0bHRyQ2tV?=
+ =?utf-8?B?U1d1Qm5DMUpkSDFCa05MS1lLWVZsRW9TSlIyZWMybE84dUgzd0xjL2JrK2NQ?=
+ =?utf-8?Q?e8N2UhupESEiRRlr4G7r+JJAo?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5aba6edf-440d-48c2-e8c2-08ddb3f698d8
+X-MS-Exchange-CrossTenant-AuthSource: IA0PR12MB7722.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 14:43:06.6829
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uYtzRO0HMqKhv1UjKD8450WbnxKJrBgFKjfFsGHk1XqNrTHVYfghHyRqplSBGfFY/8YTHMAWyOZutERsM057gg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7928
 
-Hello Btrfs maintainers,
 
-I would like to report a kernel panic in the Btrfs qgroup subsystem,
-found using syzkaller.
+On 25-Jun-25 03:08, Jakub Kicinski wrote:
+> On Sun, 22 Jun 2025 20:22:25 +0300 Mark Bloch wrote:
+>> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c
+>> index 0a7903cf75e8..b7098c7d2112 100644
+>> --- a/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c
+>> +++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/hws/bwc.c
+>> @@ -3,6 +3,8 @@
+>>   
+>>   #include "internal.h"
+>>   
+>> +static int hws_bwc_matcher_move(struct mlx5hws_bwc_matcher *bwc_matcher);
+> 
+> Is there a circular dependency? Normally we recommend that people
+> reorder code rather that add forward declarations.
 
-It appears to be a slab-use-after-free caused by a race condition.
-Based on the KASAN report, the race occurs between a thread disabling
-quotas (which frees qgroup-related memory) and a background rescan
-worker (qgroup_rescan_zero_tracking) which subsequently attempts to
-use that freed memory.
+Sure, I can rearrange the code. It would, however, mean moving a lot
+of code... I think I'll do it in a separate refactoring patch before
+this functional one.
 
-Here are the details:
+>> +static int hws_bwc_rule_cnt_dec_with_shrink(struct mlx5hws_bwc_rule *bwc_rule,
+>> +					    u16 bwc_queue_idx)
+>> +{
+>> +	struct mlx5hws_bwc_matcher *bwc_matcher = bwc_rule->bwc_matcher;
+>> +	struct mlx5hws_context *ctx = bwc_matcher->matcher->tbl->ctx;
+>> +	struct mutex *queue_lock; /* Protect the queue */
+>> +	int ret;
+>> +
+>> +	hws_bwc_rule_cnt_dec(bwc_rule);
+>> +
+>> +	if (atomic_read(&bwc_matcher->rx_size.num_of_rules) ||
+>> +	    atomic_read(&bwc_matcher->tx_size.num_of_rules))
+>> +		return 0;
+>> +
+>> +	/* Matcher has no more rules - shrink it to save ICM. */
+>> +
+>> +	queue_lock = hws_bwc_get_queue_lock(ctx, bwc_queue_idx);
+>> +	mutex_unlock(queue_lock);
+>> +
+>> +	hws_bwc_lock_all_queues(ctx);
+>> +	ret = hws_bwc_matcher_rehash_shrink(bwc_matcher);
+>> +	hws_bwc_unlock_all_queues(ctx);
+>> +
+>> +	mutex_lock(queue_lock);
+> 
+> Dropping and re-taking caller-held locks is a bad code smell.
+> Please refactor - presumably you want some portion of the condition
+> to be under the lock with the dec? return true / false based on that.
+> let the caller drop the lock and do the shrink if true was returned
+> (directly or with another helper)
 
-==================================================================
-BUG: KASAN: slab-use-after-free in __list_add include/linux/list.h:153 [inline]
-BUG: KASAN: slab-use-after-free in list_add include/linux/list.h:169 [inline]
-BUG: KASAN: slab-use-after-free in qgroup_dirty fs/btrfs/qgroup.c:1434 [inline]
-BUG: KASAN: slab-use-after-free in
-qgroup_rescan_zero_tracking+0x280/0x5f0 fs/btrfs/qgroup.c:4005
-Write of size 8 at addr ffff88813e2c2490 by task syz-executor.2/12500
+There are multiple queues that can function in parallel. Each rule
+selects a random queue and immediately locks it. All the further
+processing of this rule is done when this lock is held.
+Sometimes there is need to do operation that requires full ownership
+of the matcher. That is, this rule has to be the only rule that is
+being processed. In such case, all the locks should be acquired,
+which means that we're facing the 'dining philosophers' scenario.
+All the locks should be acquired in the same order: the lock is
+freed, and then all the locks are acquired in an orderly manner.
+To have all this logic in the same function that acquires the first
+lock would mean really complicating the code and breaking the simple
+logical flow of the functions.
 
-CPU: 3 UID: 0 PID: 12500 Comm: syz-executor.2 Not tainted
-6.16.0-rc1-g7f6432600434-dirty #51 PREEMPT(voluntary)
-Hardware name: QEMU Ubuntu 24.04 PC (i440FX + PIIX, 1996), BIOS
-1.16.3-debian-1.16.3-2 04/01/2014
-Call Trace:
- <TASK>
- __dump_stack lib/dump_stack.c:94 [inline]
- dump_stack_lvl+0x108/0x150 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0x191/0x5b0 mm/kasan/report.c:521
- kasan_report+0x139/0x170 mm/kasan/report.c:634
- __list_add include/linux/list.h:153 [inline]
- list_add include/linux/list.h:169 [inline]
- qgroup_dirty fs/btrfs/qgroup.c:1434 [inline]
- qgroup_rescan_zero_tracking+0x280/0x5f0 fs/btrfs/qgroup.c:4005
- btrfs_quota_enable+0x3062/0x5d10 fs/btrfs/qgroup.c:1248
- btrfs_ioctl_quota_ctl+0x36c/0x4e0 fs/btrfs/ioctl.c:3673
- btrfs_ioctl+0xb3f/0x1480 fs/btrfs/ioctl.c:5323
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xd1/0x130 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcf/0x240 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f77e26da35d
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48
-89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d
-01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f77e1a4e0a8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007f77e282c050 RCX: 00007f77e26da35d
-RDX: 0000000020006900 RSI: 00000000c0109428 RDI: 0000000000000003
-RBP: 00007f77e274b4b1 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: ffffffffffffffb8 R14: 00007f77e282c050 R15: 00007ffd0f15f770
- </TASK>
-
-Allocated by task 12375:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x82/0x90 mm/kasan/common.c:394
- kmalloc_noprof include/linux/slab.h:905 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- btrfs_quota_enable+0x2d07/0x5d10 fs/btrfs/qgroup.c:1201
- btrfs_ioctl_quota_ctl+0x36c/0x4e0 fs/btrfs/ioctl.c:3673
- btrfs_ioctl+0xb3f/0x1480 fs/btrfs/ioctl.c:5323
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xd1/0x130 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcf/0x240 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 12446:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x36/0x50 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2388 [inline]
- slab_free mm/slub.c:4670 [inline]
- kfree+0xfd/0x340 mm/slub.c:4869
- btrfs_free_qgroup_config+0xcd/0x2b0 fs/btrfs/qgroup.c:647
-BTRFS info (device sdb): balance: paused
- btrfs_quota_disable+0x826/0x25e0 fs/btrfs/qgroup.c:1393
- btrfs_ioctl_quota_ctl+0x3b3/0x4e0 fs/btrfs/ioctl.c:3703
- btrfs_ioctl+0xb3f/0x1480 fs/btrfs/ioctl.c:5323
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xd1/0x130 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcf/0x240 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff88813e2c2400
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 144 bytes inside of
- freed 512-byte region [ffff88813e2c2400, ffff88813e2c2600)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000
-index:0xffff88813e2c2800 pfn:0x13e2c0
-head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-anon flags: 0x200000000000040(head|node=0|zone=2)
-page_type: f5(slab)
-raw: 0200000000000040 ffff888100042c80 ffffea0004ce0100 0000000000000003
-raw: ffff88813e2c2800 000000000010000f 00000000f5000000 0000000000000000
-head: 0200000000000040 ffff888100042c80 ffffea0004ce0100 0000000000000003
-head: ffff88813e2c2800 000000000010000f 00000000f5000000 0000000000000000
-head: 0200000000000002 ffffea0004f8b001 00000000ffffffff 00000000ffffffff
-head: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88813e2c2380: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88813e2c2400: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88813e2c2480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                         ^
- ffff88813e2c2500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88813e2c2580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-Oops: general protection fault, probably for non-canonical address
-0xff7aaf8000000004: 0000 [#1] SMP KASAN NOPTI
-KASAN: maybe wild-memory-access in range [0xfbd59c0000000020-0xfbd59c0000000027]
-CPU: 0 UID: 0 PID: 56 Comm: kworker/u16:3 Tainted: G    B
- 6.16.0-rc1-g7f6432600434-dirty #51 PREEMPT(voluntary)
-Tainted: [B]=BAD_PAGE
-Hardware name: QEMU Ubuntu 24.04 PC (i440FX + PIIX, 1996), BIOS
-1.16.3-debian-1.16.3-2 04/01/2014
-Workqueue: btrfs-qgroup-rescan btrfs_work_helper
-RIP: 0010:__list_del include/linux/list.h:195 [inline]
-RIP: 0010:__list_del_entry include/linux/list.h:218 [inline]
-RIP: 0010:list_del_init include/linux/list.h:287 [inline]
-RIP: 0010:btrfs_run_qgroups+0x4a8/0x1ec0 fs/btrfs/qgroup.c:3132
-Code: 89 df e8 0b 30 23 ff 4c 8b 3b 4d 8d 67 08 4c 89 e3 48 c1 eb 03
-48 b9 00 00 00 00 00 fc ff df 4c 8d 34 0b 4c 89 f0 48 c1 e8 03 <0f> b6
-04 08 84 c0 0f 85 0c 0f 00 00 41 80 3e 00 74 22 e8 91 82 f1
-RSP: 0018:ffff888119bcf388 EFLAGS: 00010212
-RAX: 1f7ab38000000004 RBX: 1bd5a00000000021 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88813e2c2488
-RBP: 1ffff11027c58491 R08: ffff888119bcf347 R09: 1ffff11023379e68
-R10: dffffc0000000000 R11: ffffed1023379e69 R12: dead000000000108
-R13: ffff88813c4409c0 R14: fbd59c0000000021 R15: dead000000000100
-FS:  0000000000000000(0000) GS:ffff8883fbf1b000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fb4485380c0 CR3: 0000000166ff6000 CR4: 00000000000006f0
-Call Trace:
- <TASK>
- commit_cowonly_roots+0x67c/0x1c10 fs/btrfs/transaction.c:1354
- btrfs_commit_transaction+0x2a5b/0xc800 fs/btrfs/transaction.c:2457
- btrfs_qgroup_rescan_worker+0xa23/0x4220 fs/btrfs/qgroup.c:3852
- btrfs_work_helper+0x7ea/0x2a80 fs/btrfs/async-thread.c:312
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0x720/0xf10 kernel/workqueue.c:3321
- worker_thread+0xb66/0x11a0 kernel/workqueue.c:3402
- kthread+0x351/0x780 kernel/kthread.c:464
- ret_from_fork+0x10e/0x1c0 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-Modules linked in:
----[ end trace 0000000000000000 ]---
-RIP: 0010:__list_del include/linux/list.h:195 [inline]
-RIP: 0010:__list_del_entry include/linux/list.h:218 [inline]
-RIP: 0010:list_del_init include/linux/list.h:287 [inline]
-RIP: 0010:btrfs_run_qgroups+0x4a8/0x1ec0 fs/btrfs/qgroup.c:3132
-Code: 89 df e8 0b 30 23 ff 4c 8b 3b 4d 8d 67 08 4c 89 e3 48 c1 eb 03
-48 b9 00 00 00 00 00 fc ff df 4c 8d 34 0b 4c 89 f0 48 c1 e8 03 <0f> b6
-04 08 84 c0 0f 85 0c 0f 00 00 41 80 3e 00 74 22 e8 91 82 f1
-RSP: 0018:ffff888119bcf388 EFLAGS: 00010212
-RAX: 1f7ab38000000004 RBX: 1bd5a00000000021 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000008 RDI: ffff88813e2c2488
-RBP: 1ffff11027c58491 R08: ffff888119bcf347 R09: 1ffff11023379e68
-R10: dffffc0000000000 R11: ffffed1023379e69 R12: dead000000000108
-R13: ffff88813c4409c0 R14: fbd59c0000000021 R15: dead000000000100
-FS:  0000000000000000(0000) GS:ffff8883fbf1b000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fb4485380c0 CR3: 0000000166ff6000 CR4: 00000000000006f0
-note: kworker/u16:3[56] exited with preempt_count 1
-kworker/u16:3 (56) used greatest stack depth: 20080 bytes left
-BTRFS warning (device sdb): get dev_stats failed, device not found
-----------------
-Code disassembly (best guess):
-   0: 89 df                mov    %ebx,%edi
-   2: e8 0b 30 23 ff        call   0xff233012
-   7: 4c 8b 3b              mov    (%rbx),%r15
-   a: 4d 8d 67 08          lea    0x8(%r15),%r12
-   e: 4c 89 e3              mov    %r12,%rbx
-  11: 48 c1 eb 03          shr    $0x3,%rbx
-  15: 48 b9 00 00 00 00 00 movabs $0xdffffc0000000000,%rcx
-  1c: fc ff df
-  1f: 4c 8d 34 0b          lea    (%rbx,%rcx,1),%r14
-  23: 4c 89 f0              mov    %r14,%rax
-  26: 48 c1 e8 03          shr    $0x3,%rax
-* 2a: 0f b6 04 08          movzbl (%rax,%rcx,1),%eax <-- trapping instruction
-  2e: 84 c0                test   %al,%al
-  30: 0f 85 0c 0f 00 00    jne    0xf42
-  36: 41 80 3e 00          cmpb   $0x0,(%r14)
-  3a: 74 22                je     0x5e
-  3c: e8                    .byte 0xe8
-  3d: 91                    xchg   %eax,%ecx
-  3e: 82                    (bad)
-  3f: f1                    int1
-==================================================================
-
-Here is the machineinfo:
---------------------------------------------------------------------------------
-QEMU emulator version 8.2.2 (Debian 1:8.2.2+ds-0ubuntu1.4)
-qemu-system-x86_64 ["-m" "16384" "-smp" "4" "-chardev"
-"socket,id=SOCKSYZ,server=on,wait=off,host=localhost,port=24018"
-"-mon" "chardev=SOCKSYZ,mode=control" "-display" "none" "-serial"
-"stdio" "-no-reboot" "-name" "VM-1" "-device" "virtio-rng-pci"
-"-enable-kvm" "-hdb"
-"/home/zzzccc/go-work/syzkaller-old/syzkaller/test/btrfs/disk.qcow2"
-"-device" "e1000,netdev=net0" "-netdev"
-"user,id=net0,restrict=on,hostfwd=tcp:127.0.0.1:55563-:22,hostfwd=tcp::6680-:6060"
-"-hda" "/home/zzzccc/go-work/syzkaller-old/syzkaller/test/btrfs/bookworm.img"
-"-snapshot" "-kernel" "/home/zzzccc/linux-DDRD/arch/x86/boot/bzImage"
-"-append" "root=/dev/sda console=ttyS0 "]
-
-[CPU Info]
-processor           : 0, 1, 2, 3
-vendor_id           : AuthenticAMD
-cpu family          : 15
-model               : 107
-model name          : QEMU Virtual CPU version 2.5+
-stepping            : 1
-microcode           : 0x1000065
-cpu MHz             : 3593.248
-cache size          : 512 KB
-physical id         : 0
-siblings            : 4
-core id             : 0, 1, 2, 3
-cpu cores           : 4
-apicid              : 0, 1, 2, 3
-initial apicid      : 0, 1, 2, 3
-fpu                 : yes
-fpu_exception       : yes
-cpuid level         : 13
-wp                  : yes
-flags               : fpu de pse tsc msr pae mce cx8 apic sep mtrr pge
-mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx lm rep_good
-nopl cpuid extd_apicid tsc_known_freq pni cx16 x2apic hypervisor
-lahf_lm cmp_legacy svm 3dnowprefetch vmmcall
-bugs                : fxsave_leak sysret_ss_attrs null_seg
-swapgs_fence amd_e400 spectre_v1 spectre_v2 spectre_v2_user
-bogomips            : 7186.49
-TLB size            : 1024 4K pages
-clflush size        : 64
-cache_alignment     : 64
-address sizes       : 40 bits physical, 48 bits virtual
-power management    :
-
---------------------------------------------------------------------------------
-
-Here is the log of this
-bug:https://github.com/zzzcccyyyggg/Syzkaller-log/blob/main/19a8b3667b7262d7802158f7df18cdd003dbd029/log0
-
-Thank you for your attention to this matter.
-
-Best regards,
-Cen Zhang
+Thanks for the review!
