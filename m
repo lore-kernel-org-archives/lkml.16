@@ -1,261 +1,147 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1530F26A08D;
-	Wed, 25 Jun 2025 15:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F512641E7
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750866236; cv=none; b=Vyaa7QAD5OGIvA41uK05VcPl2cVIMVuDbewFXBuaVrlAaLbaaxRfQoyLdjCc9BlG3J7In5S3CxsZdaGa9v6XNC4ZRWRknIFoK7OVz86onop/SF/MzJGR0W+EwUeUFVqqQjwtxuyW8xRxV4sb06hFzQ42bpAZoFfXLi1BgGBFrJg=
+	t=1750866341; cv=none; b=YHsE8yYJDSmVdiDcxcehxvqJJZe4QgnaeMNU2KZfqJ738sEV1AQ3dKfD1g2MBueGiEM6DoAzVbM2aiiTL+qCNV9z1iC0ZN45V6FqXqdKsqV9wl27/ecoxapU6wwpUNaDGXELTLl/QeBdZyKKACnc+M1fNB+tSvQ0AguPKLI8JcI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750866236; c=relaxed/simple;
-	bh=YC8xCXCQvhRvw7UfBSmZrmTpgNm5p4gRUHfAxCi3uBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S/vTl/dSHqESBPt6fKhC0XCyHkdCrGHyKoRg9nfy6NQIqW12AYuSZUtQ6jUmmvKhutM7ZOD0MEa4v7OOpTVC+KT8skHYqPJPN/lZ5NbY6cDtsjMwCMBGKBqqseiRPDeK+1SkLq/UZNmYM1OXro7iGk8qFiuaoLg9KLHHGOs8Eog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q8CEsXkI; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750866341; c=relaxed/simple;
+	bh=9QaQxPfz7YtVzxDvH1uws5oTMHeE7hhnnyiamaFtpCw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JjFDTK9tIDT51I0lE/AUi+VP3ld/Fgb2OSib/7ylr9VUwr2CI1liycSGJgsG2NLvq9sRbvkVt6MNsDC5J5YKdgCSMYczncQ9W76Ph0LjjEcgsjUWDyTVCH8Mrl9jWNi9ESMeqvKflQkrTcwGKPGPElP+6E5F5mp9rhd70z2YRwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=QDEbcA5d; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=eaStM0lD; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=B/UY3fxb; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=et7QAs/e; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q8CEsXkI"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2363616a1a6so100245ad.3;
-        Wed, 25 Jun 2025 08:43:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750866234; x=1751471034; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zCwVhyi7LrS0Mr9IkZPeUKS3dkG/nZ+Hto/3dQfFA64=;
-        b=Q8CEsXkITgWhva8EjoUtmOrszAOVx/UYmUQdSjLgqA758Fceq2w6/EBUe13mniBWAX
-         1sdvAtFogd94ymaBmejkOwpz6xyKfkmL7WR3X7Sg/EMp0LPmF0K+44SrySkzPxqtImFv
-         J4WCwHUAhOA9z6kgBW6BfgpaXxpzxZRlTQoorHAgKYME3WIhOviqYZl3KLqu82qSLl3m
-         6I5HwVK61mf+GV7Rfvj9TFQSv450J3YnAtnloyhUE11sB7sEH4hU4tsR8pMxYjSX7J3W
-         BhaBZxgOt1n4fT9IFrrTglfePCYCX7T8P3VFkHMJQW2kPGLMAueYRApZ/r+VM2PexdP5
-         vDTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750866234; x=1751471034;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zCwVhyi7LrS0Mr9IkZPeUKS3dkG/nZ+Hto/3dQfFA64=;
-        b=cbzy7pujqJprXyr5Hj/9QFlZtKk5bA1IVM71cTzPbrU7+XHJryXb1iSC7lK9vy1HHT
-         zoUce9z2aoYJL7Ov+K0u+N/ZgYV7pa09WTTdJ4G1blH9HvFmyf2pRlQMt/+uJDTKRRMs
-         bdUAAeQKeXgxmWxRm7e1gMt0bFg+DPG0gKxFV8YoHYz7rJUnZJiICqH21KVeB4aY68yh
-         pVIhHuygfkxMPY0O52y+liL+gqUne0sXQALsDCQ7XRXJH1dZ5uaP69en4eFkg/N0Apl3
-         BMW4qSXK3iCkcfLfuVPncw0qnPs16edb1A9hnH/JL6NT+f4OJp2CvJPUrQji2eTjzbIM
-         1O5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUiem6FC8J0r8zV14gBT5A2QHvwzm13Wc26PCgwLEdYElDvVpXCQPTuROf7oRbtR63NuDjTQG8H/V+WKJLR@vger.kernel.org, AJvYcCWHf8tAj9mRzkxyc4iiBt0rJgQPK2trINEHwPpB+lKjj8H2lqzQAiaQUGQozJy1ed9dh4WsRjmjnh7c@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7AiAz7ZJ3Dd0fDo2CzHHTur3W4dyGcxE4y+QiSC6U9oq13kR1
-	wV9l/a3IqK5n8g1HeqXuTMYNDVabeD01K8mAhiP4daM2KRuwLlvGiPI4
-X-Gm-Gg: ASbGncuvaP+aXpi5CLC27r4D7jjrkfmBTb7lEJZyd68z5hav6G0J15lJEurQ3VrzhBX
-	duAKsFF/aR/kh4TrszU8LJH69VsZ//Yp1gYOYx+9Dor/vIBDd6s6EoaNEp7w+Gtpbs7J8/fa3wl
-	u09HTHnhDHFe4umiHLZ32V3DnbUZgtseczbVDLMM0ZCVloo5sq4rZRfG5fXVUOnRjtCQaEvRapN
-	rKrl9RSGnvqTwrq/27TVdzBdawPaYlZdG4o4Z4ou37sO55KXH+4Ap/c8mv3SIETpGBbqfhsocdr
-	ElZxJy3VAdXCNm+Rt2DooySSZbOP/zTyVKd+yGmAMfEr6XdoDlrQs/aAYOMKDuH+kg==
-X-Google-Smtp-Source: AGHT+IHN92Qo+dvAQ+28gXK4ziIoW7+YAMLhjXmIJg8gQMeMAzSdi5uWrQ0PalJRetFQ24Rbp1Pf8A==
-X-Received: by 2002:a17:902:e881:b0:234:909b:3dba with SMTP id d9443c01a7336-23823fe1503mr62865065ad.20.1750866234331;
-        Wed, 25 Jun 2025 08:43:54 -0700 (PDT)
-Received: from ubu24.. ([2400:2410:dfca:c200:951d:3a1e:f612:1525])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d86628ffsm134229795ad.156.2025.06.25.08.43.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 08:43:51 -0700 (PDT)
-From: Taishi Shimizu <s.taishi14142@gmail.com>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hauke Mehrtens <hauke@hauke-m.de>,
-	Rafal Milecki <zajec5@gmail.com>,
-	Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Taishi Shimizu <s.taishi14142@gmail.com>
-Subject: [PATCH 2/2] ARM: dts: BCM5301X: Add support for Buffalo WXR-1750DHP
-Date: Thu, 26 Jun 2025 00:43:15 +0900
-Message-ID: <20250625154315.114139-2-s.taishi14142@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250625154315.114139-1-s.taishi14142@gmail.com>
-References: <20250625154315.114139-1-s.taishi14142@gmail.com>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="QDEbcA5d";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="eaStM0lD";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="B/UY3fxb";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="et7QAs/e"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 597861F74B;
+	Wed, 25 Jun 2025 15:45:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750866338; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l6G+QEWcOCRYuQZL6MIP/s7Tu+0w9i2dxb4kc/e2U6c=;
+	b=QDEbcA5d3IEtsqCnlnNfpX9BlI1fdioYeFIJEpi03MIwNm5Vly4D5uQkStIJs4S7CZEfb0
+	cct920cx/R0Wy9zhOBNWfpPD9a0+H7vvyjuXqSPJp0NcJ02q2ZGyWQvsH617MmegYuVeiS
+	eYj1ucTWcCxSoUMBZXKyXIfNhCRBKO8=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750866338;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l6G+QEWcOCRYuQZL6MIP/s7Tu+0w9i2dxb4kc/e2U6c=;
+	b=eaStM0lDAu2AmIhDr33BvYN/Y2wN8tKTAFKhp7KgEgjDN3RtarJLSus+b8P4qp1nCSfInI
+	TlhOGFGuJE4f1yBw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1750866337; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l6G+QEWcOCRYuQZL6MIP/s7Tu+0w9i2dxb4kc/e2U6c=;
+	b=B/UY3fxbAwDG4cliNylU3F38jw3MhdKrfL4M643tAEbhWSAFkyGZ42MgNuMMVkmiuEzhqk
+	nKBR7JDNeGbVVifF1oAqOahz7WVyKQNh+PLQ6cwZvn2YUWbfRPmfzSFAnibT/dPwZtaV+L
+	lKW5hbhdHUyaSNn9+k4yhnSKrc9/G4c=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1750866337;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=l6G+QEWcOCRYuQZL6MIP/s7Tu+0w9i2dxb4kc/e2U6c=;
+	b=et7QAs/eFKEX/mu/ll3GBJG7zQ6/OA/YmfMEubYvyYUeIB3ROVJPZqeazU+X975cQGkLa1
+	Ots/vpHOFrvIZeBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3E42813301;
+	Wed, 25 Jun 2025 15:45:37 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id jPAnDaEZXGgbLwAAD6G6ig
+	(envelope-from <chrubis@suse.cz>); Wed, 25 Jun 2025 15:45:37 +0000
+Date: Wed, 25 Jun 2025 17:46:17 +0200
+From: Cyril Hrubis <chrubis@suse.cz>
+To: Dmitry Vyukov <dvyukov@google.com>
+Cc: Sasha Levin <sashal@kernel.org>, kees@kernel.org, elver@google.com,
+	linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+	tools@kernel.org, workflows@vger.kernel.org
+Subject: Re: [RFC 00/19] Kernel API Specification Framework
+Message-ID: <aFwZye8vJtcoLDKy@yuki.lan>
+References: <aFNYQkbEctT6N0Hb@lappy>
+ <20250623132803.26760-1-dvyukov@google.com>
+ <aFsE0ogdbKupvt7o@lappy>
+ <CACT4Y+Y04JC359J3DnLzLzhMRPNLem11oj+u04GoEazhpmzWTw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACT4Y+Y04JC359J3DnLzLzhMRPNLem11oj+u04GoEazhpmzWTw@mail.gmail.com>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.cz:email]
+X-Spam-Level: 
 
-Add initial device tree support for the Buffalo WXR-1750DHP, a consumer Wi-Fi
-router based on the Broadcom BCM4708A0 SoC.
+Hi!
+> > >6. What's the goal of validation of the input arguments?
+> > >Kernel code must do this validation anyway, right.
+> > >Any non-trivial validation is hard, e.g. even for open the validation function
+> > >for file name would need to have access to flags and check file precense for
+> > >some flags combinations. That may add significant amount of non-trivial code
+> > >that duplicates main syscall logic, and that logic may also have bugs and
+> > >memory leaks.
+> >
+> > Mostly to catch divergence from the spec: think of a scenario where
+> > someone added a new param/flag/etc but forgot to update the spec - this
+> > will help catch it.
+> 
+> How exactly is this supposed to work?
+> Even if we run with a unit test suite, a test suite may include some
+> incorrect inputs to check for error conditions. The framework will
+> report violations on these incorrect inputs. These are not bugs in the
+> API specifications, nor in the test suite (read false positives).
 
-Hardware specifications:
-* Processor: Broadcom BCM4708A0 dual-core @ 800 MHz
-* RAM: DDR3 256 MB
-* Ethernet Switch: Broadcom BCM53011 integrated via SRAB
-* NAND Flash: 128 MB (8-bit ECC)
-* SPI Flash: None
-* Ports: 4 LAN Ports, 1 WAN Port
-* USB: 1x USB 3.0 Type-A port
+This is what I tried to respond to but I guess that it didn't go well.
+Let me try to reiterate. I my opinion you shouldn't really put this part
+into the kernel, but rather than that include more type and semantic
+information into the data so that tests can be generated and executed in
+userspace. I do not see how can we validate that we get proper errors
+from a syscall if one of the input parameters is invalid other than
+generating and running a C test in userspace. For that part the syscall
+description does not need to be build into the kernel either, it may be
+just a build artifact that gets installed with the kernel image.
 
-Signed-off-by: Taishi Shimizu <s.taishi14142@gmail.com>
----
- arch/arm/boot/dts/broadcom/Makefile           |   1 +
- .../broadcom/bcm4708-buffalo-wxr-1750dhp.dts  | 134 ++++++++++++++++++
- 2 files changed, 135 insertions(+)
- create mode 100644 arch/arm/boot/dts/broadcom/bcm4708-buffalo-wxr-1750dhp.dts
-
-diff --git a/arch/arm/boot/dts/broadcom/Makefile b/arch/arm/boot/dts/broadcom/Makefile
-index 71062ff9adbe..2552e11b5e31 100644
---- a/arch/arm/boot/dts/broadcom/Makefile
-+++ b/arch/arm/boot/dts/broadcom/Makefile
-@@ -51,6 +51,7 @@ dtb-$(CONFIG_ARCH_BCMBCA) += \
- dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm4708-asus-rt-ac56u.dtb \
- 	bcm4708-asus-rt-ac68u.dtb \
-+	bcm4708-buffalo-wxr-1750dhp.dtb \
- 	bcm4708-buffalo-wzr-1750dhp.dtb \
- 	bcm4708-buffalo-wzr-1166dhp.dtb \
- 	bcm4708-buffalo-wzr-1166dhp2.dtb \
-diff --git a/arch/arm/boot/dts/broadcom/bcm4708-buffalo-wxr-1750dhp.dts b/arch/arm/boot/dts/broadcom/bcm4708-buffalo-wxr-1750dhp.dts
-new file mode 100644
-index 000000000000..43a4a8e58b40
---- /dev/null
-+++ b/arch/arm/boot/dts/broadcom/bcm4708-buffalo-wxr-1750dhp.dts
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later OR MIT
-+/*
-+ * Author: Taishi Shimizu <s.taishi14142@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "bcm4708.dtsi"
-+#include "bcm5301x-nand-cs0-bch8.dtsi"
-+
-+/ {
-+	compatible = "buffalo,wxr-1750dhp", "brcm,bcm4708";
-+	model = "Buffalo WXR-1750DHP";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200";
-+	};
-+
-+	memory@0 {
-+		reg = <0x00000000 0x08000000>,
-+		      <0x88000000 0x08000000>;
-+		device_type = "memory";
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		button-aoss {
-+			label = "AOSS";
-+			linux,code = <KEY_WPS_BUTTON>;
-+			gpios = <&chipcommon 2 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		/* GPIO 8 and 9 are a tri-state switch button with
-+		 * ROUTER / AP / WB.
-+		 */
-+		button-bridge {
-+			label = "WB";
-+			linux,code = <BTN_2>;
-+			linux,input-type = <EV_SW>;
-+			gpios = <&chipcommon 8 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		/* GPIO 3 is a switch button with AUTO / MANUAL. */
-+		button-manual {
-+			label = "MANUAL";
-+			linux,code = <BTN_0>;
-+			linux,input-type = <EV_SW>;
-+			gpios = <&chipcommon 3 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		button-restart {
-+			label = "Reset";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&chipcommon 11 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		button-router {
-+			label = "ROUTER";
-+			linux,code = <BTN_1>;
-+			linux,input-type = <EV_SW>;
-+			gpios = <&chipcommon 9 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		led-power0 {
-+			label = "bcm53xx:white:power";
-+			linux,default-trigger = "default-on";
-+			gpios = <&chipcommon 5 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-power1 {
-+			label = "bcm53xx:amber:power";
-+			gpios = <&chipcommon 6 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-router0 {
-+			label = "bcm53xx:amber:router";
-+			gpios = <&chipcommon 14 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-router1 {
-+			label = "bcm53xx:white:router";
-+			gpios = <&chipcommon 15 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-usb {
-+			label = "bcm53xx:green:usb";
-+			gpios = <&chipcommon 4 GPIO_ACTIVE_HIGH>;
-+		};
-+
-+		led-wan {
-+			label = "bcm53xx:white:wan";
-+			gpios = <&chipcommon 7 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
-+
-+&srab {
-+	status = "okay";
-+
-+	ports {
-+		port@0 {
-+			label = "wan";
-+		};
-+
-+		port@1 {
-+			label = "lan4";
-+		};
-+
-+		port@2 {
-+			label = "lan3";
-+		};
-+
-+		port@3 {
-+			label = "lan2";
-+		};
-+
-+		port@4 {
-+			label = "lan1";
-+		};
-+	};
-+};
-+
-+&usb3 {
-+	vcc-gpio = <&chipcommon 10 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&usb3_phy {
-+	status = "okay";
-+};
 -- 
-2.43.0
-
+Cyril Hrubis
+chrubis@suse.cz
