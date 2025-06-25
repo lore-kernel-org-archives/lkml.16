@@ -1,225 +1,474 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2064.outbound.protection.outlook.com [40.107.93.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F53528466D;
-	Wed, 25 Jun 2025 16:53:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750870413; cv=fail; b=lo1/De9mYUgPNklLAeTfPMZMERgYcRI0HBNQb8IsRrSQDP3BwFYu2HGotl+pYKCp0mhnP1GX9fkBSInm2tI1Ge37lYi7cmvhLJSijmCbS6SXSD0eGkXH7NX8LrDm+WC/uYccbLI1PU7PJ8ULdeR6CUw4py0LHCjYesNO5zvpqWw=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750870413; c=relaxed/simple;
-	bh=Kotv7tupl9MJ5SEhqxAXhbncz/FVlPGkt6TiZ61AP6M=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=l6hJpzD7Cx3A4NJbhCbY8CPUhnJK5JjqW+3Lwpl9IF2NdpAkVe4N1GjcLcHiGW0PtNNcuFZmqnHtKxSDSJG5feIjxIwVCIfSiDBEkFPaqXxvsAMRVmfuz87J2QzX+yvz5I9cS6rNyARfpvN1/DuvoxFctIdnAoPqJYCt2t+DduQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=suQEa2lq; arc=fail smtp.client-ip=40.107.93.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5882D6608;
+	Wed, 25 Jun 2025 16:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750870458; cv=none; b=lCe676Vfp9bpHiXN6gGVbMFwYVSnuFP7lqUnoGmJvkr0S4rfLjxq46NHXhKf6zdnRHEtiuWKSR9Yf73vJuc5Y6CEzJC07sjn+lS+MD2A/CB7ZJYPi3kzKVw9fJ9xSnEFK61pfOywEAx3B1elAYSTv/i6m/cECZ2Ttxa8Vu2HRXM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750870458; c=relaxed/simple;
+	bh=aPxjxJWGiCb0ED+Q6lL0luiCScS2iIlBYHdBk7QF9os=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LvjDLVNYQYrzfVdi1vAsVVb2CLQ+FSmiHiXAyODisxNe960WSrz5ndpPeCfJ0EiJnUbTaI7LZImPm9LCTtmwQvl8cmq8Pqzr5i0mvAHD33MYZ21FEj88QdMX76UNMj0Gxd853mAG3NgNBpWQWZyWzQ1VsSLIo0K2w5t1fSz8TXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FV0JBA1s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="suQEa2lq"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Onix4myR9R/akMvSz36TJKOt5ANw8iD97X0u8bYPYV40ZRaTwwxEJ/xVjeimwnf+FM5HJ6CMBE/PBnUN40Y1GQKhqgikP6KWrOGHGl8UmGjBo2Ld/Krza8AZHXGqU3y+5Ktl2lLPWjsQoy0fs/b0YcaYFciK1Og0DiFHSJgzzqnb5IE+BT+YZVOeOdjJV/O1fhXy+eZpOfuLK5rwIdIETlqopxFsvMoZGiFnk12Epjdnt1moeSE9ynUg5/BarTlqWpPkGtEGMhftmLPubMg42yl9FzsRsdogELa7Cka82TRsuXjqvDRYj6m6gQiLOHTnvN5au8ISI7upOfyN47gG8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iQVkiG6g3dQ5QhtlDrNSpHJWgxf57sxNcRL/R9POUds=;
- b=U+uOKyWQkYHlXjSXwpWX7FgvT7eSNOQphihnDwJj8GGwajf9jJL9FLY8t1AIU7KbYFYryd+xEFsHeEMW1WvA+Lx5jjxBmXuHavda+xxw5WwpHOvJo53v/P1khJk6i1OPhMWNnba7seWGJ5H6tl2WT2c61eVVyuAY86BMsRbDQyp0Aj7wS8c+DCzgfC8LrBA58Mziy+Jk+WrpZUjEjmPLQtTscCh0iddwwmJaUeIjEoPSmV3ygulEvYdtn2Nje7y01N+IqCa9Kd05wCnDdaeW1BPz2JYI1gmCc6+G0wslkubxZ0AM3i+izhLhEkut5K3lHVt4+90owDNtl7RKwkTsQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iQVkiG6g3dQ5QhtlDrNSpHJWgxf57sxNcRL/R9POUds=;
- b=suQEa2lqzOOpM4WJaAxBHbykVLQrcSjT6OBYHPEd8jU0BK5sBbHlrXOXCLtrlzHRvWD4vEDadnsaiCf1eXzBJYFd6ik08lGsS/AuWZoeMe9IPWbfOs16dBPs/zCwLKqGijsDoXbLaTY6OnezW8KLQeix8TqSI4NTE8BQ9fEq8xc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com (2603:10b6:303:2c::19)
- by DS7PR12MB9527.namprd12.prod.outlook.com (2603:10b6:8:251::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Wed, 25 Jun
- 2025 16:53:28 +0000
-Received: from MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87]) by MW3PR12MB4553.namprd12.prod.outlook.com
- ([fe80::b0ef:2936:fec1:3a87%7]) with mapi id 15.20.8857.026; Wed, 25 Jun 2025
- 16:53:28 +0000
-Message-ID: <6484f9c4-894d-40f3-937c-ccbd6adef61b@amd.com>
-Date: Wed, 25 Jun 2025 11:53:24 -0500
-User-Agent: Mozilla Thunderbird
-Reply-To: babu.moger@amd.com
-Subject: Re: [PATCH v14 08/32] x86,fs/resctrl: Consolidate monitoring related
- data from rdt_resource
-To: Reinette Chatre <reinette.chatre@intel.com>, corbet@lwn.net,
- tony.luck@intel.com, Dave.Martin@arm.com, james.morse@arm.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com
-Cc: x86@kernel.org, hpa@zytor.com, akpm@linux-foundation.org,
- rostedt@goodmis.org, paulmck@kernel.org, thuth@redhat.com, ardb@kernel.org,
- gregkh@linuxfoundation.org, seanjc@google.com, thomas.lendacky@amd.com,
- pawan.kumar.gupta@linux.intel.com, manali.shukla@amd.com,
- perry.yuan@amd.com, kai.huang@intel.com, peterz@infradead.org,
- xiaoyao.li@intel.com, kan.liang@linux.intel.com, mario.limonciello@amd.com,
- xin3.li@intel.com, gautham.shenoy@amd.com, xin@zytor.com,
- chang.seok.bae@intel.com, fenghuay@nvidia.com, peternewman@google.com,
- maciej.wieczor-retman@intel.com, eranian@google.com,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1749848714.git.babu.moger@amd.com>
- <f6d15921bff2d698d0cc0b2a35d2361c846203e6.1749848715.git.babu.moger@amd.com>
- <356a213e-d8a4-420c-adc1-1f58b4feef1d@intel.com>
-Content-Language: en-US
-From: "Moger, Babu" <babu.moger@amd.com>
-In-Reply-To: <356a213e-d8a4-420c-adc1-1f58b4feef1d@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SN6PR08CA0027.namprd08.prod.outlook.com
- (2603:10b6:805:66::40) To MW3PR12MB4553.namprd12.prod.outlook.com
- (2603:10b6:303:2c::19)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FV0JBA1s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3728C4CEEA;
+	Wed, 25 Jun 2025 16:54:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750870458;
+	bh=aPxjxJWGiCb0ED+Q6lL0luiCScS2iIlBYHdBk7QF9os=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FV0JBA1suI0PwfbGzPhet3TxCWgxxoSVq2m4XKNTM4Yn7G5fQzMMnrY9sXLZbnMoj
+	 N8YUYS7pwKe/GYayCce8y7XJLSkTGvtoGa8kimdPB746Rj6OK4B6OLTU5TQpz+F4Av
+	 GtzCd0AsxnyB+4GK+bJOWqil30eHQtag3Sr6bFjjhCTPmnsVyhpefbyQWXEEMqj3KN
+	 DHMdjfDxx6JuJe4oRX/FMyKzdbKER5AKpQkyd4/CyS0AjQUMQdaP99yzIL39692V8y
+	 4yWDAj2q9kH2IGS6alPWJvGK9rJElq305PSxsF1wUozi8ZXjYDZDlblLldduy6vpvz
+	 v+cFOZ6rt6nmA==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1uUTO3-009y7S-8p;
+	Wed, 25 Jun 2025 17:54:15 +0100
+Date: Wed, 25 Jun 2025 17:54:13 +0100
+Message-ID: <8634bndaoa.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Will Deacon <will@kernel.org>
+Cc: Xueqi Zhang <xueqi.zhang@mediatek.com>,
+	Yong Wu <yong.wu@mediatek.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Joerg Roedel <joro@8bytes.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Project_Global_Chrome_Upstream_Group@mediatek.com,
+	Ning li <ning.li@mediatek.com>,
+	linux-mediatek@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	iommu@lists.linux.dev
+Subject: Re: [RFC PATCH 6/8] iommu/arm-smmu-v3: mediatek: Add wrapper handle for IRQ
+In-Reply-To: <aFqKWAqC0o8yzVIq@willie-the-truck>
+References: <20250616025628.25454-1-xueqi.zhang@mediatek.com>
+	<20250616025628.25454-7-xueqi.zhang@mediatek.com>
+	<aFqKWAqC0o8yzVIq@willie-the-truck>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/30.1
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4553:EE_|DS7PR12MB9527:EE_
-X-MS-Office365-Filtering-Correlation-Id: f4b6fa5c-ad12-49c3-7f4e-08ddb408cf11
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?b3VlWnhtY1RxK0QvTktXRlpYWFlBRTZya1U3TlU0N09XRmdBdnY0UGNBZ1lv?=
- =?utf-8?B?VDFBVGw1eDRLbklCbm9Yd3Nick81enZSR0E4L1A2NTZHdjdvdW44R0N1aW5T?=
- =?utf-8?B?YUpnLyswZ25GMC9iczZlSlJXTmJzdFJtcE9OSWhFNlNLZVZFNTZxV0htUjFj?=
- =?utf-8?B?TUNIcE5JeXYrUUhTTzU1WFIwYzlTQkVuRjdJeFNHTkJjWmRwL3A5TlJRaVpp?=
- =?utf-8?B?OEkzU2RvV2xhNEM3QXAzS3FJZmMzbUNaSFlpTFViQ2ZTbHk4TFJCWVFmY0Z4?=
- =?utf-8?B?MmlCenhaMWloZGJjNEtHQTNBMTVCYTdBVUFrMlN4Q2xQVGRsN1U4enE0dEcw?=
- =?utf-8?B?NkVOTDhpQ1NIUUllUEo5N05kRXZ3cnFlWnBaL1NudUM4b0pyZDlpbFI3dmZI?=
- =?utf-8?B?UVppZEIyVThlOVBBd2I2UzUzRk5aa0I0WE5sZjgyRm1Cd3ZYbWE3RU9RYnRD?=
- =?utf-8?B?cGx4c1NFZG9qTmtZRk13NVhEaUVGYkkvNW1tZ2FRc0Z5ZHZwWFBtSTY5czBC?=
- =?utf-8?B?b1FwNHJZcDR2bmZMbHc4U2FQVk1YbGVEc0NPenFxUG9VVithUnQyeVBMcWdt?=
- =?utf-8?B?ZlpsbE5zaFdSZmpNMW1IamhjcGxsZS84QnkxNFRlWm92b0tXdlVKZzhaSzU5?=
- =?utf-8?B?R20zU2dFUlpyWTk1T2phSDNxdTdDRHd4bWFMeStxZTZQUHRTQVhUeUhrL0Rq?=
- =?utf-8?B?eUVQNVh5UHdVSnVmOHlIZUErK3dDaSsyWW9obVVNc2xmeGNmUFYyK01mc3N1?=
- =?utf-8?B?MGJqbVUvaEpOU25ybWhvazRNam9rUjBjZHNNZk04SllmQlhPZXVjL0E1bTd2?=
- =?utf-8?B?QmtrdWpRckxRM3NWdm0wZmo3NTd5RCs3RWJmc3EvdDgvTzRrSjVxY3VRMGVQ?=
- =?utf-8?B?N2p6MU91R015a3RZcnVQVGpOMU1sb3FrRDJOS0ZCUFdjVFpmbjh5TnpHUkVw?=
- =?utf-8?B?UzczN2t5djl3NEs4TnptUVlJcEI5V2NQTElMT3FOYXloWmNyUlB4ZDl0ZnhB?=
- =?utf-8?B?VEQzSnMyZXZ2dUZaM05RYUR4M1FoU2JSN3NZWUlwMWR3NGJMYkdWUkN3Y1R0?=
- =?utf-8?B?SVg0aFBDRmIxVDlhUVV1aWUyTFBFNmkrdy93SURSN0JnQ3lqUnJ3aTJUSEpG?=
- =?utf-8?B?bFpEbTMxeGlnQ1N0RTVjeVJ0cFpJMTZWTlpYVEZHY3EzT3NCcTdhbXJvd2Q0?=
- =?utf-8?B?QWZJODhQSjh4dGx3NFpjN2N2bkQ3bWtaWHdERXJ3UzYrSHZjZElHUG9WZzJz?=
- =?utf-8?B?djNUZTRqZkJNNllUQXpidXVhWElFbE9CL0taWEFjMFpJSTVXZDNyTXUvREta?=
- =?utf-8?B?TXgxNUYzWVhyTEJ5REZhaEozTUFGNDVFSmMwQ3JXZGhEVDhIR3kxU1FUdHUv?=
- =?utf-8?B?aUFrK0dCeDdRSHpKQTgrUjM1M01SRFJ4N0dza2djUzE4RDJ5RllndE1UclFS?=
- =?utf-8?B?OFpOSENDUmhZVGIzSzd6bUM4NzlQSDBhV2xNSVo3VHRGNFNHZDdLeDhmQXM2?=
- =?utf-8?B?VjFERDlwZUtEdG9xcEVFOXJmRVVrVzhmdmt1VVhrQml6WWNCZHZ3UHU2VzBq?=
- =?utf-8?B?QUVPRXcvRzB5ZS9TazVYVERmYmt4YTJRZ1RJTkpWN1FPZkIrUHk1Qk90dS84?=
- =?utf-8?B?L3hVbVJJN1B6U21mRUNydVpHSmFkMlFtUjBnQlE0M3Qvb2gxZ1RVL1NRSU00?=
- =?utf-8?B?c25MNVoremh6amtPUzVtalFFUmxpUXk1eDlnWVNFa0c3RW53TWZRS2huanVT?=
- =?utf-8?B?MWtwR2JlUkN4anNFVHJpWVRTUzRreDNUZUdseHZvdm02ckY4N21kZDdJOVlX?=
- =?utf-8?B?RmxvSUcrVUhJTmFjSTJSSVZVemZHRVRrU0JBVEJ5L0RkK2lBeXpxZzhsUDJH?=
- =?utf-8?B?NytqTU0reXBMUHVwWS9lNFJMa1pwbUkrd3pWM1ljTlZwc0xvSGhjVzR0Wk53?=
- =?utf-8?Q?BWDqCJWobSY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4553.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?QVJENFhiMWxZM0o1b090cDRTYnozZTB3WWtoTVRzbmZUM2lOSkxObmRkUU5x?=
- =?utf-8?B?Sml5OU1rV1NoM2ErRlBUeGowTzM0QXlBd1psR0tEb28zSVlqQXNGdGU5a3lp?=
- =?utf-8?B?dEVhaFlONkxiaCtOcXFRUzFLZkpUWjRrYytPcUxLQ2x2aXhFMlY3RFRXWjFa?=
- =?utf-8?B?OU1qRHlvWGQ5TWplQWhHRUVrMmxIRnBvVVdHdklXVEdvQXBlVHYzMFZiWjJz?=
- =?utf-8?B?dGVWeEd1UGVONW1uYVpWbzNFMTNSanRXQ3hINTBkK1N1WDlsU1NyUk5UT09D?=
- =?utf-8?B?ZXlscFVXdEdVSHBvQXdZNTd6Ykh6TmVVc0RaUk13NlRvK0VaaEdLK2x1YjIz?=
- =?utf-8?B?VlhOQlNiTWNId0ZsYzMrdkdTMXJkVUwrTXJTdy9adXFjSGFyaTE4TFlmeWhC?=
- =?utf-8?B?UWJIaGFBanFnQkJqWkRwdkNRTFE5WWprUVRiVnBFWkgwZUwzcTJIcjhDNFVv?=
- =?utf-8?B?Q3BaUWt4dGJUNmhqckhJeGlyQnRRRVpVblhHN3R0d1FCcWwyRjNSdmZ2eG9k?=
- =?utf-8?B?UC9UVHNxcHJEVEFOeVZIWEJNMjFXL3dYb3JQLzU0K21pNVJsVzVBT0RlTVdK?=
- =?utf-8?B?V3ptcVd3ZVRrb2dmY2VwVlBiQW9QRTN0dkV0RHN6OGxoS3lYbXFCTko4d1ZB?=
- =?utf-8?B?aHFLVUlhcVN6VFBYWExUYWRzbWo3dFNNdUJYajk0RXVuSjVTNU1WeGtGSjd4?=
- =?utf-8?B?NkM4czhnbGhNb1dxQlVpclk4NVc2SXROdEhBSkRNWWRZQzZOaXB5dHFPek0z?=
- =?utf-8?B?ZHZpUGl4R0NZbG9nSUo0RG9rOGZxcGFqTGlkaDgyV2NJdlFxeWdlYVduTVlI?=
- =?utf-8?B?RFd6bUJwZmRqL210RFIxWCtjV2IrcTNXRk5ZcVRCUEVEd20rMzcvT0o0dnky?=
- =?utf-8?B?YXBvNFZxSXozc3g4RDVCa0VrbWNpbzRrWnFuYm9iczU4UFlMWGFXOWswUkxT?=
- =?utf-8?B?QkwwS0V1NEhHNzNVSU5RVncwWFVyb3hkUm9IQ2dUKy9aMDYxSk1lNDc5UEVj?=
- =?utf-8?B?dUFjRTliU3N5bUJ0Sk5TMUJjeWszTm5hMVE2dHpvdEQzUkI5VEcwaVJZUGor?=
- =?utf-8?B?RFhFTXh1VERjOUtFdHhvU0UwTkV3SlpZU0pJOC81Rm1HQkdyV1lJb1hQd0Vl?=
- =?utf-8?B?WnFZOGJxNEhiV1F6ME5ERFlXTWRQUVVScDJFKzVnN09JN1JicyswNVl3bHBO?=
- =?utf-8?B?Zy83OSs4b0kxUUxLenU1cVN0SUh1MGI2Tzg3YTVQbTFJcS9pclpaN1hUc3cy?=
- =?utf-8?B?Rm9YMHNoam42S0Q1V2Jvb1A2K2NKOEdyeFJBaTRldFRPLzYrTG1oRmJYUWlT?=
- =?utf-8?B?RjVtYThieWhLSlIxaXpvRzM1b3c4NFl1dUVUV3BXczNKdEFEdjREQnlvT0pX?=
- =?utf-8?B?Qjd5YXYrbmxmMjJKY2tsTmRTelNWM2UvWkxMemZPczdqMzBHWEVxOFNyZ0cx?=
- =?utf-8?B?NWxHVnhwanBnanlVamxnRFNRbnBneDlSbnl2VzJxdW9jOUF1a0twTUE5SzA4?=
- =?utf-8?B?bjkwNXdvVTBCczVNeHBTZXlvaTVPTUlQWFJLUjBsRTBUekdTY2ZHS2VleEpP?=
- =?utf-8?B?VmxiS3lLRzljQ2tuMnhKaEF2TlFrUUV3TmVyNjRFRjNhdFB3TEJYRU1nZWpH?=
- =?utf-8?B?UlhIREZnTmhzaUhUVW11cy9KVnhPWFZYeU1xMkcrcGlJd1h5RXZzOCtnTlVG?=
- =?utf-8?B?VXhzTk04ZVdHaGpvZWp4SHhydEZPc21EcXB1MXpjRmg2YlEwSU81MWlOalA0?=
- =?utf-8?B?V2xjSFJnY2NoSENmM0h2NzgzZnRaYUc0WGNDNFNsdGkwT3JBcHdLdlEvbTNk?=
- =?utf-8?B?OGZGQkZnSVZMNVhSa2VaaGwvOUM0bnJUK0Z5ZU5Hejl2Ny8vTFNWS2wyaTJx?=
- =?utf-8?B?MEdaa2dTOEJYTTFwSVlTdi8rODE3cFdqb1FqOFppbmI3YXc0R3ZwdzcxRnB0?=
- =?utf-8?B?SFR4ZUN5YnN2TXNsQ2h6bHE5S3NsQ1RQMitTaDVHdHZmOGdPd3JTOXg0MHZV?=
- =?utf-8?B?UUtFSVRMaS9YdjNQcXVaVTkyMWVONnJlSkpoZHRER1g5cXQ2RGhFd3BPZG9R?=
- =?utf-8?B?eGdjcjluNkxEVVRhMGNZWGI0WVFNQlFuYmZHYnRTY3pUOUJUTjJHakw2anJN?=
- =?utf-8?Q?ZY5w=3D?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f4b6fa5c-ad12-49c3-7f4e-08ddb408cf11
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4553.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 16:53:28.5639
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: x4LDLKrigsGeaEwChrih5JY3NnvVDtLdMJiELYWlJKb390E3lB+4ae8C/5+hxoxM
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9527
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: will@kernel.org, xueqi.zhang@mediatek.com, yong.wu@mediatek.com, robin.murphy@arm.com, joro@8bytes.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, Project_Global_Chrome_Upstream_Group@mediatek.com, ning.li@mediatek.com, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, iommu@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-Hi Reinette,
-
-On 6/24/25 16:32, Reinette Chatre wrote:
-> Hi Babu,
+On Tue, 24 Jun 2025 12:22:00 +0100,
+Will Deacon <will@kernel.org> wrote:
 > 
-> On 6/13/25 2:04 PM, Babu Moger wrote:
+> [+Marc for irqchip question at the end]
 > 
-> ...
+> On Mon, Jun 16, 2025 at 10:56:12AM +0800, Xueqi Zhang wrote:
+> > Mediatek SMMU interrupt is low level active rather than the standard
+> > edge.Process Mediatek SMMU wrapper interrupt and dump detailed
+> > information when a translation fault occurs.
+> > 
+> > Signed-off-by: Xueqi Zhang <xueqi.zhang@mediatek.com>
+> > ---
+> >  .../arm/arm-smmu-v3/arm-smmu-v3-mediatek.c    | 349 +++++++++++++++++-
+> >  1 file changed, 347 insertions(+), 2 deletions(-)
 > 
->> diff --git a/include/linux/resctrl.h b/include/linux/resctrl.h
->> index bbe57eff962b..22766b8b670b 100644
->> --- a/include/linux/resctrl.h
->> +++ b/include/linux/resctrl.h
->> @@ -255,38 +255,46 @@ enum resctrl_schema_fmt {
->>  	RESCTRL_SCHEMA_RANGE,
->>  };
->>  
->> +/**
->> + * struct resctrl_mon - Monitoring related data of a resctrl resource.
->> + * @num_rmid:		Number of RMIDs available.
->> + * @mbm_cfg_mask:	Memory transactions that can be tracked when bandwidth
->> + *			monitoring events are configured.
+> I think this probably needs splitting in two parts so that the low-level
+> IRQ handling is separate from the fault diagnostic reporting.
 > 
-> "are configured" -> "can be configured" (like it was before). This is a property
-> that is discovered from hardware. The feature need not be in use for the property
-> to be valid.
-
-Sure.
-
-
-> Also, this version switches "Bandwidth sources" -> "Memory transactions". I think this
-> is a good change but it may be unexpected. Perhaps a snippet in changelog to
-> point out the motivation for this change: "Also switch "bandwidth sources" term
-> to "memory transactions" to use consistent term within resctrl for related monitoring
-> features". Please feel free to improve.
+> > diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-mediatek.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-mediatek.c
+> > index 48290366e596..448166c1ca64 100644
+> > --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-mediatek.c
+> > +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3-mediatek.c
+> > @@ -14,7 +14,122 @@
+> >  
+> >  #include "arm-smmu-v3.h"
+> >  
+> > +#include <linux/soc/mediatek/mtk_sip_svc.h>
+> > +#include <linux/arm-smccc.h>
+> > +
+> > +#define SMMUWP_GLB_CTL0			(0x0)
+> > +#define CTL0_STD_AXI_MODE_DIS		BIT(0)
+> > +#define CTL0_MON_DIS			BIT(1)
+> > +#define CTL0_DCM_EN			BIT(2)
+> > +#define CTL0_WRAPPER_CK_AOEN		BIT(3)
+> > +#define CTL0_AUTO_AXDOMAIN_EN		BIT(4)
+> > +#define CTL0_IRQ_BUSY_EN		BIT(5)
+> > +#define CTL0_ABT_CNT_CLR		BIT(6)
+> > +#define CTL0_LEGACY_AXCACHE		BIT(7)
+> > +#define CTL0_COMMIT_DIS			BIT(8)
+> > +#define CTL0_AUTO_SLP_DIS		BIT(9)
+> > +#define CTL0_STTSL_DIS			BIT(10)
+> > +#define CTL0_CFG_TAB_DCM_EN		BIT(11)
+> > +#define CTL0_CPU_PARTID_DIS		BIT(14)
+> > +/* New bits of SMMU wrapper extension */
+> > +#define CTL0_TCU2SLC_DCM_EN		BIT(18)
+> > +#define CTL0_APB_DCM_EN			BIT(19)
+> > +#define CTL0_DVM_DCM_EN			BIT(20)
+> > +#define CTL0_CPU_TBU_PARTID_DIS		BIT(21)
+> > +
+> > +#define SMMUWP_IRQ_STA			(0x80)
+> > +#define STA_TCU_GLB_INTR		BIT(0)
+> > +#define STA_TCU_CMD_SYNC_INTR		BIT(1)
+> > +#define STA_TCU_EVTQ_INTR		BIT(2)
+> > +#define STA_TCU_PRI_INTR		BIT(3)
+> > +#define STA_TCU_PMU_INTR		BIT(4)
+> > +#define STA_TCU_RAS_CRI			BIT(5)
+> > +#define STA_TCU_RAS_ERI			BIT(6)
+> > +#define STA_TCU_RAS_FHI			BIT(7)
+> > +
+> > +#define SMMUWP_IRQ_ACK			(0x84)
+> > +
+> > +#define SMMUWP_IRQ_ACK_CNT		(0x88)
+> > +#define IRQ_ACK_CNT_MSK			GENMASK(7, 0)
+> > +
+> > +/* SMMU non-secure interrupt pending count register, count 20 */
+> > +#define SMMUWP_IRQ_CNTx(cnt)		(0x100 + 0x4 * (cnt))
+> > +
+> > +#define SMMU_TCU_CTL1_AXSLC		(0x204)
+> > +#define AXSLC_BIT_FIELD			GENMASK(8, 4)
+> > +#define AXSLC_CACHE			BIT(5)
+> > +#define AXSLC_ALLOCATE			BIT(6)
+> > +#define AXSLC_SPECULATIVE		BIT(7)
+> > +#define AXSLC_SET			(AXSLC_CACHE | AXSLC_ALLOCATE | AXSLC_SPECULATIVE)
+> > +#define SLC_SB_ONLY_EN			BIT(1)
+> > +
+> > +/* SMMU TBUx read translation fault monitor0 */
+> > +#define SMMUWP_TBUx_RTFM0(tbu)		(0x380 + 0x100 * (tbu))
+> > +#define RTFM0_FAULT_AXI_ID		GENMASK_ULL(19, 0)
+> > +#define RTFM0_FAULT_DET			BIT(31)
+> > +
+> > +/* SMMU TBUx read translation fault monitor1 */
+> > +#define SMMUWP_TBUx_RTFM1(tbu)		(0x384 + 0x100 * (tbu))
+> > +#define RTFM1_FAULT_VA_35_32		GENMASK_ULL(3, 0)
+> > +#define RTFM1_FAULT_VA_31_12		GENMASK_ULL(31, 12)
+> > +
+> > +/* SMMU TBUx read translation fault monitor2 */
+> > +#define SMMUWP_TBUx_RTFM2(tbu)		(0x388 + 0x100 * (tbu))
+> > +#define RTFM2_FAULT_SID			GENMASK_ULL(7, 0)
+> > +#define RTFM2_FAULT_SSID		GENMASK_ULL(15, 8)
+> > +#define RTFM2_FAULT_SSIDV		BIT(16)
+> > +#define RTFM2_FAULT_SECSID		BIT(17)
+> > +
+> > +/* SMMU TBUx write translation fault monitor0 */
+> > +#define SMMUWP_TBUx_WTFM0(tbu)		(0x390 + 0x100 * (tbu))
+> > +#define WTFM0_FAULT_AXI_ID		GENMASK_ULL(19, 0)
+> > +#define WTFM0_FAULT_DET			BIT(31)
+> > +
+> > +/* SMMU TBUx write translation fault monitor1 */
+> > +#define SMMUWP_TBUx_WTFM1(tbu)		(0x394 + 0x100 * (tbu))
+> > +#define WTFM1_FAULT_VA_35_32		GENMASK_ULL(3, 0)
+> > +#define WTFM1_FAULT_VA_31_12		GENMASK_ULL(31, 12)
+> > +
+> > +/* SMMU TBUx write translation fault monitor2 */
+> > +#define SMMUWP_TBUx_WTFM2(tbu)		(0x398 + 0x100 * (tbu))
+> > +#define WTFM2_FAULT_SID			GENMASK_ULL(7, 0)
+> > +#define WTFM2_FAULT_SSID		GENMASK_ULL(15, 8)
+> > +#define WTFM2_FAULT_SSIDV		BIT(16)
+> > +#define WTFM2_FAULT_SECSID		BIT(17)
+> > +
+> > +/* SMMU TBU Manual OG Control High Register0 */
+> > +#define SMMUWP_TBU0_MOGH0		(0x3b4)
+> > +#define MOGH_EN				BIT(29)
+> > +#define MOGH_RW				BIT(28)
+> > +
+> > +/* SMMU translation fault TBUx */
+> > +#define SMMUWP_TF_TBU_MSK		GENMASK(26, 24)
+> > +#define SMMUWP_TF_TBU(tbu)		FIELD_PREP(SMMUWP_TF_TBU_MSK, tbu)
+> > +
+> > +#define SMMU_FAULT_RS_INTERVAL		DEFAULT_RATELIMIT_INTERVAL
+> > +#define SMMU_FAULT_RS_BURST		(1)
+> > +
+> > +#define STRSEC(sec)			((sec) ? "SECURE" : "NORMAL")
+> > +
+> > +#define WP_OFFSET_MT8196		0x1e0000
+> > +
+> >  #define MTK_SMMU_COMP_STR_LEN		64
+> > +
+> > +#define MTK_SMMU_FAULT_IOVA(low, high) ((low) | (((u64)(high) & 0xf) << 32))
+> > +
+> > +#define SMMU_SUCCESS			(0)
+> > +#define SMMU_ID_ERR			(1)
+> > +#define SMMU_CMD_ERR			(2)
+> > +#define SMMU_PARA_INVALID		(3)
+> > +#define SMMU_NEED			(4)
+> > +#define SMMU_NONEED			(5)
+> > +
+> > +/* plat flags: */
+> > +#define SMMU_SKIP_PM_CLK		BIT(0)
+> > +#define SMMU_CLK_AO_EN			BIT(1)
+> > +#define SMMU_AXSLC_EN			BIT(2)
+> > +#define SMMU_DIS_CPU_PARTID		BIT(3)
+> > +#define SMMU_DIS_CPU_TBU_PARTID		BIT(4)
+> >  #define SMMU_REQUIRE_PARENT		BIT(5)
+> >  #define MTK_SMMU_HAS_FLAG(pdata, _x)    (!!(((pdata)->flags) & (_x)))
+> >  
+> > @@ -25,22 +140,30 @@ enum mtk_smmu_type {
+> >  };
+> >  
+> >  struct mtk_smmu_v3_plat {
+> > +	u32			wp_offset;
+> > +	unsigned int		tbu_cnt;
+> >  	enum mtk_smmu_type	smmu_type;
+> >  	u32			flags;
+> >  };
+> >  
+> >  struct mtk_smmu_v3 {
+> >  	struct arm_smmu_device	smmu;
+> > +	void __iomem			*wp_base;
+> >  	const struct mtk_smmu_v3_plat *plat_data;
+> >  };
+> >  
+> >  static const struct mtk_smmu_v3_plat mt8196_data_mm = {
+> > +	.wp_offset		= WP_OFFSET_MT8196,
+> > +	.tbu_cnt		= 3,
+> >  	.smmu_type		= MTK_SMMU_MM,
+> > +	.flags			= SMMU_AXSLC_EN,
+> >  };
+> >  
+> >  static const struct mtk_smmu_v3_plat mt8196_data_apu = {
+> > +	.wp_offset		= WP_OFFSET_MT8196,
+> > +	.tbu_cnt		= 3,
+> >  	.smmu_type		= MTK_SMMU_APU,
+> > -	.flags			= SMMU_REQUIRE_PARENT,
+> > +	.flags			= SMMU_AXSLC_EN | SMMU_REQUIRE_PARENT,
+> >  };
+> >  
+> >  struct mtk_smmu_v3_of_device_data {
+> > @@ -70,17 +193,228 @@ static const struct mtk_smmu_v3_plat *mtk_smmu_v3_get_plat_data(const struct dev
+> >  	return NULL;
+> >  }
+> >  
+> > +static inline void smmu_write_field(void __iomem *base,
+> > +				    unsigned int reg,
+> > +				    unsigned int mask,
+> > +				    unsigned int val)
+> > +{
+> > +	unsigned int regval;
+> > +
+> > +	regval = readl_relaxed(base + reg);
+> > +	regval = (regval & (~mask)) | val;
+> > +	writel_relaxed(regval, base + reg);
+> > +}
+> > +
+> > +static void smmu_init_wpcfg(struct arm_smmu_device *smmu)
+> > +{
+> > +	struct mtk_smmu_v3 *mtk_smmu_v3 = to_mtk_smmu_v3(smmu);
+> > +	void __iomem *wp_base = mtk_smmu_v3->wp_base;
+> > +
+> > +	/* DCM basic setting */
+> > +	smmu_write_field(wp_base, SMMUWP_GLB_CTL0, CTL0_DCM_EN, CTL0_DCM_EN);
+> > +	smmu_write_field(wp_base, SMMUWP_GLB_CTL0, CTL0_CFG_TAB_DCM_EN,
+> > +			 CTL0_CFG_TAB_DCM_EN);
+> > +
+> > +	smmu_write_field(wp_base, SMMUWP_GLB_CTL0,
+> > +			 CTL0_TCU2SLC_DCM_EN | CTL0_APB_DCM_EN |
+> > +			 CTL0_DVM_DCM_EN,
+> > +			 CTL0_TCU2SLC_DCM_EN | CTL0_APB_DCM_EN |
+> > +			 CTL0_DVM_DCM_EN);
+> > +
+> > +	if (MTK_SMMU_HAS_FLAG(mtk_smmu_v3->plat_data, SMMU_DIS_CPU_PARTID))
+> > +		smmu_write_field(wp_base, SMMUWP_GLB_CTL0, CTL0_CPU_PARTID_DIS,
+> > +				 CTL0_CPU_PARTID_DIS);
+> > +	if (MTK_SMMU_HAS_FLAG(mtk_smmu_v3->plat_data, SMMU_DIS_CPU_TBU_PARTID))
+> > +		smmu_write_field(wp_base, SMMUWP_GLB_CTL0,
+> > +				 CTL0_CPU_TBU_PARTID_DIS, CTL0_CPU_TBU_PARTID_DIS);
+> > +
+> > +	/* Used for MM_SMMMU read command overtaking */
+> > +	if (mtk_smmu_v3->plat_data->smmu_type == MTK_SMMU_MM)
+> > +		smmu_write_field(wp_base, SMMUWP_GLB_CTL0, CTL0_STD_AXI_MODE_DIS,
+> > +				 CTL0_STD_AXI_MODE_DIS);
+> > +
+> > +	/* Set AXSLC */
+> > +	if (MTK_SMMU_HAS_FLAG(mtk_smmu_v3->plat_data, SMMU_AXSLC_EN)) {
+> > +		smmu_write_field(wp_base, SMMUWP_GLB_CTL0,
+> > +				 CTL0_STD_AXI_MODE_DIS, CTL0_STD_AXI_MODE_DIS);
+> > +		smmu_write_field(wp_base, SMMU_TCU_CTL1_AXSLC, AXSLC_BIT_FIELD,
+> > +				 AXSLC_SET);
+> > +		smmu_write_field(wp_base, SMMU_TCU_CTL1_AXSLC, SLC_SB_ONLY_EN,
+> > +				 SLC_SB_ONLY_EN);
+> > +	}
+> > +}
+> > +
+> > +/* Consume SMMU wrapper interrupt bit */
+> > +static unsigned int
+> > +smmuwp_consume_intr(void __iomem *wp_base, unsigned int irq_bit)
+> > +{
+> > +	unsigned int pend_cnt;
+> > +
+> > +	pend_cnt = readl_relaxed(wp_base + SMMUWP_IRQ_CNTx(__ffs(irq_bit)));
+> > +	smmu_write_field(wp_base, SMMUWP_IRQ_ACK_CNT, IRQ_ACK_CNT_MSK, pend_cnt);
+> > +	writel_relaxed(irq_bit, wp_base + SMMUWP_IRQ_ACK);
+> > +
+> > +	return pend_cnt;
+> > +}
+> > +
+> > +/* clear translation fault mark */
+> > +static void smmuwp_clear_tf(void __iomem *wp_base)
+> > +{
+> > +	smmu_write_field(wp_base, SMMUWP_GLB_CTL0, CTL0_ABT_CNT_CLR, CTL0_ABT_CNT_CLR);
+> > +	smmu_write_field(wp_base, SMMUWP_GLB_CTL0, CTL0_ABT_CNT_CLR, 0);
+> > +}
+> > +
+> > +static u32 smmuwp_fault_id(u32 axi_id, u32 tbu_id)
+> > +{
+> > +	u32 fault_id = (axi_id & ~SMMUWP_TF_TBU_MSK) | (SMMUWP_TF_TBU(tbu_id));
+> > +
+> > +	return fault_id;
+> > +}
+> > +
+> > +/* Process TBU translation fault Monitor */
+> > +static bool smmuwp_process_tf(struct arm_smmu_device *smmu)
+> > +{
+> > +	struct mtk_smmu_v3 *mtk_smmu_v3 = to_mtk_smmu_v3(smmu);
+> > +	void __iomem *wp_base = mtk_smmu_v3->wp_base;
+> > +	unsigned int sid, ssid, secsidv, ssidv;
+> > +	u32 i, regval, va35_32, axiid, fault_id;
+> > +	u64 fault_iova;
+> > +	bool tf_det = false;
+> > +
+> > +	for (i = 0; i < mtk_smmu_v3->plat_data->tbu_cnt; i++) {
+> > +		regval = readl_relaxed(wp_base + SMMUWP_TBUx_RTFM0(i));
+> > +		if (!(regval & RTFM0_FAULT_DET))
+> > +			goto write;
+> > +
+> > +		tf_det = true;
+> > +		axiid = FIELD_GET(RTFM0_FAULT_AXI_ID, regval);
+> > +		fault_id = smmuwp_fault_id(axiid, i);
+> > +
+> > +		regval = readl_relaxed(wp_base + SMMUWP_TBUx_RTFM1(i));
+> > +		va35_32 = FIELD_GET(RTFM1_FAULT_VA_35_32, regval);
+> > +		fault_iova = MTK_SMMU_FAULT_IOVA(regval & RTFM1_FAULT_VA_31_12, va35_32);
+> > +
+> > +		regval = readl_relaxed(wp_base + SMMUWP_TBUx_RTFM2(i));
+> > +		sid = FIELD_GET(RTFM2_FAULT_SID, regval);
+> > +		ssid = FIELD_GET(RTFM2_FAULT_SSID, regval);
 > 
+> We already print a bunch of this stuff in arm_smmu_dump_event() now that
+> Pranjal has improved the logic. I don't see the value in printing the
+> same information twice, so we should trim down the extra diagnostics here
+> so that (a) the information is distinct from that provided by the core
+> driuver code and (b) it's relevant to Linux (e.g. there's no need to
+> print information about secure transactions).
+> 
+> The core driver code should also print some delimiters around the
+> implementation-defined data as well. Out of curiosity, is the TBU
+> monitor part of Arm's IP or is this additional hardware from MTK?
+> 
+> > +		ssidv = FIELD_GET(RTFM2_FAULT_SSIDV, regval);
+> > +		secsidv = FIELD_GET(RTFM2_FAULT_SECSID, regval);
+> > +		dev_err_ratelimited(smmu->dev, "TF read in %s world, TBU_id-%d-fault_id:0x%x(0x%x)\n",
+> > +				    STRSEC(secsidv), i, fault_id, axiid);
+> > +		dev_err_ratelimited(smmu->dev,
+> > +				    "iova:0x%llx, sid:%d, ssid:%d, ssidv:%d, secsidv:%d\n",
+> > +				    fault_iova, sid, ssid, ssidv, secsidv);
+> > +
+> > +write:
+> > +		regval = readl_relaxed(wp_base + SMMUWP_TBUx_WTFM0(i));
+> > +		if (!(regval & WTFM0_FAULT_DET))
+> > +			continue;
+> > +
+> > +		tf_det = true;
+> > +		axiid = FIELD_GET(WTFM0_FAULT_AXI_ID, regval);
+> > +		fault_id = smmuwp_fault_id(axiid, i);
+> > +
+> > +		regval = readl_relaxed(wp_base + SMMUWP_TBUx_WTFM1(i));
+> > +		va35_32 = FIELD_GET(WTFM1_FAULT_VA_35_32, regval);
+> > +		fault_iova = MTK_SMMU_FAULT_IOVA(regval & RTFM1_FAULT_VA_31_12, va35_32);
+> > +
+> > +		regval = readl_relaxed(wp_base + SMMUWP_TBUx_WTFM2(i));
+> > +		sid = FIELD_GET(WTFM2_FAULT_SID, regval);
+> > +		ssid = FIELD_GET(WTFM2_FAULT_SSID, regval);
+> > +		ssidv = FIELD_GET(WTFM2_FAULT_SSIDV, regval);
+> > +		secsidv = FIELD_GET(WTFM2_FAULT_SECSID, regval);
+> > +		dev_err_ratelimited(smmu->dev, "TF write in %s world, TBU_id-%d-fault_id:0x%x(0x%x)\n",
+> > +				    STRSEC(secsidv), i, fault_id, axiid);
+> > +		dev_err_ratelimited(smmu->dev,
+> > +				    "iova:0x%llx, sid:%d, ssid:%d, ssidv:%d, secsidv:%d\n",
+> > +				    fault_iova, sid, ssid, ssidv, secsidv);
+> 
+> nit: but I don't think we should use the _ratelimited() prints here as it
+> could end up with random lines being dropped.
+> 
+> > +/* Process SMMU wrapper interrupt */
+> > +static int mtk_smmu_v3_smmuwp_irq_handler(int irq, struct arm_smmu_device *smmu)
+> > +{
+> > +	struct mtk_smmu_v3 *mtk_smmuv3 = to_mtk_smmu_v3(smmu);
+> > +	void __iomem *wp_base = mtk_smmuv3->wp_base;
+> > +	unsigned int irq_sta, pend_cnt;
+> > +
+> > +	irq_sta = readl_relaxed(wp_base + SMMUWP_IRQ_STA);
+> > +	if (irq_sta == 0)
+> > +		return 0;
+> > +
+> > +	if (irq_sta & STA_TCU_GLB_INTR) {
+> > +		pend_cnt = smmuwp_consume_intr(wp_base, STA_TCU_GLB_INTR);
+> > +		dev_dbg(smmu->dev,
+> > +			"IRQ_STA:0x%x, Non-secure TCU global interrupt detected pending_cnt: %d\n",
+> > +			irq_sta, pend_cnt);
+> > +	}
+> > +
+> > +	if (irq_sta & STA_TCU_CMD_SYNC_INTR) {
+> > +		pend_cnt = smmuwp_consume_intr(wp_base, STA_TCU_CMD_SYNC_INTR);
+> > +		dev_dbg(smmu->dev,
+> > +			"IRQ_STA:0x%x, Non-secure TCU CMD_SYNC interrupt detected pending_cnt: %d\n",
+> > +			irq_sta, pend_cnt);
+> > +	}
+> > +
+> > +	if (irq_sta & STA_TCU_EVTQ_INTR) {
+> > +		pend_cnt = smmuwp_consume_intr(wp_base, STA_TCU_EVTQ_INTR);
+> > +		dev_dbg(smmu->dev,
+> > +			"IRQ_STA:0x%x, Non-secure TCU EVTQ interrupt detected pending_cnt: %d\n",
+> > +			irq_sta, pend_cnt);
+> > +	}
+> > +
+> > +	if (irq_sta & STA_TCU_PRI_INTR) {
+> > +		pend_cnt = smmuwp_consume_intr(wp_base, STA_TCU_PRI_INTR);
+> > +		dev_dbg(smmu->dev, "IRQ_STA:0x%x, TCU PRI interrupt detected pending_cnt: %d\n",
+> > +			irq_sta, pend_cnt);
+> > +	}
+> > +
+> > +	if (irq_sta & STA_TCU_PMU_INTR) {
+> > +		pend_cnt = smmuwp_consume_intr(wp_base, STA_TCU_PMU_INTR);
+> > +		dev_dbg(smmu->dev, "IRQ_STA:0x%x, TCU PMU interrupt detected pending_cnt: %d\n",
+> > +			irq_sta, pend_cnt);
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> 
+> Hrm. I wonder whether this would be better off treated as a chained irqchip
+> rather than hiding the logic inside the SMMU driver? It effectively looks
+> like a demuxer to me.
 
-Sure. This is how it looks now.
+Yeah, that's effectively what this is.
 
-"The cache allocation and memory bandwidth allocation feature properties
-are consolidated into struct resctrl_cache and struct resctrl_membw
-respectively.
+However, it isn't clear this has the basic mask/unmask logic that we'd
+expect for an irqchip, and I doubt you'd want the irqchip to pry into
+the SMMU code for that to mask/unmask the individual interrupt
+sources.
 
-In preparation for more monitoring properties that will clobber the
-existing resource struct more, re-organize the monitoring specific
-properties to also be in a separate structure.
+The other thing is that I don't see any actual handling here.
+smmuwp_consume_intr() ACKs the interrupt, and that's it. I'm not even
+sure why this code exists at all (but I haven't read the series, TBH).
 
-Also switch "bandwidth sources" term to "memory transactions" to use
-consistent term within resctrl for related monitoring features."
+Thanks,
+
+	M.
 
 -- 
-Thanks
-Babu Moger
+Without deviation from the norm, progress is not possible.
