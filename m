@@ -1,300 +1,168 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C00C1AF0BB
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:55:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E40072C08A5;
+	Wed, 25 Jun 2025 17:56:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750874151; cv=none; b=WdeQS8EY9VgkDB8bzQS+gDV5/xcOaT4Ct3e97DHHFsPnJ2eX7JgAO7H9FCQ+kwRUHL2Zbk1KGZj26OXnRfAF79GL+Ff6jM5b0HH8PMfOKFujj/XSy+hbNxFJW9UW4mK6Nqp5+ArL23fRi/7Nh5x0SpUWqnzTcJJE8iSauMsUklc=
+	t=1750874166; cv=none; b=tcVVwtvtucfdjWoYmpap45Ul369l4c7fxU29OVUEH3ytQaxrtyakaL9M7TLd8IGMyg1E6ptPDLjX0KmCk7R+d5pNVkoz4Nl4fwkHRmWGfiwuVYXXi65PSiOqm0s140l41lJxToqf/M7RRLwxmDOQlyWhmAS0RBcgG/NILA+INTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750874151; c=relaxed/simple;
-	bh=aCS4w1p/m9vmvmXRKmRbwkoccBqVIla1N5bIJ8vNO48=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=gVr+TrJtO+xvyJcnCZOkPTvUyX55XgaAB94191HnTLmmzZEO/gwX/eCV3EurDjK9MTrNqQNsjWcJUle+byhREpBPLn90B4boVnBrGvaAy4JZ6K5u1zWkkxQUZG6Eg2ybn0AN0LAaqv06m2LFL6xRLfWvTvFmaHP1zVK/1iPn/ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gIIY/e1v; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750874166; c=relaxed/simple;
+	bh=bu5iQw1CLF7QIZG9KbNG3IwzNGML3JMs21WuLSzDcl4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tdo8+1TXoxpdM1875zOYHWPeEtE/WxQdvvz7ZTWfBqxcfqcLqjmaeJCXvqJHsc1WMrgxk7u56/f2YhOxegUmN0CvH11aH2IPnLvqASu6lgVXtXPACQ9d8QdSIMwb04JpZQZx/FbdhF1dmEX8C4+R6ih5AXUEPCwMLgGRG9acA3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lLLjwv2V; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gIIY/e1v"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750874147;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RUOylqOVWor4uhe+5G+Td0bk7o0Xqga9derNiT+GMEo=;
-	b=gIIY/e1vFl5DuNvLcxx9Y6wAYv7rT6bLdk/cWofb4tqrIL43Y/2e78V04e52pP64l5ul21
-	gb/3ShNl2Pu7lq31lo9W24ZJmpvYNxs16Dvp9YJcciuBlbsJpgVN28yYauB+bf5TEd1LkX
-	y/no+I0BCnKRhlyJbZlyInxMuL1KgDE=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-508-tarC-zOmOh6BfV6hTK0Rkw-1; Wed,
- 25 Jun 2025 13:55:44 -0400
-X-MC-Unique: tarC-zOmOh6BfV6hTK0Rkw-1
-X-Mimecast-MFC-AGG-ID: tarC-zOmOh6BfV6hTK0Rkw_1750874141
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A637D180047F;
-	Wed, 25 Jun 2025 17:55:40 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.81])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A4A8A19560A3;
-	Wed, 25 Jun 2025 17:55:36 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <658c6f4f-468b-4233-b49a-4c39a7ab03ab@samba.org>
-References: <658c6f4f-468b-4233-b49a-4c39a7ab03ab@samba.org> <20250625164213.1408754-1-dhowells@redhat.com> <20250625164213.1408754-13-dhowells@redhat.com>
-To: Stefan Metzmacher <metze@samba.org>
-Cc: dhowells@redhat.com, Christian Brauner <christian@brauner.io>,
-    Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>,
-    netfs@lists.linux.dev, linux-afs@lists.infradead.org,
-    linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-    ceph-devel@vger.kernel.org, v9fs@lists.linux.dev,
-    linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-    Steve French <stfrench@microsoft.com>, Tom Talpey <tom@talpey.com>,
-    Matthew Wilcox <willy@infradead.org>
-Subject: [PATCH v3 12/16] cifs: Fix reading into an ITER_FOLIOQ from the smbdirect code
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lLLjwv2V"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750874164; x=1782410164;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=bu5iQw1CLF7QIZG9KbNG3IwzNGML3JMs21WuLSzDcl4=;
+  b=lLLjwv2V9xPdALogVSO5wosN4WhCYOSSS7FdxJALrCU+OEnIHmsJwq57
+   B5rAKC+OeUHBE1wJ0h+4/h4Tf4ZtreF9XUGaTvIz4uWc//AahGf6j4GjD
+   Bwy3kVI6/zFiQrpeiakTsxU0hVmWnwgy/Ck5+KqHPjt+T7HCpx8bgLeSU
+   uVTyAnXMyXylX8R3tYzfVp0jEqNl1PBor1hZlHS3nO/pprNlgzHso7PYy
+   qzsK+t8CFl3GKvtxc4G8I8/X0PLx2fQ4lANwoNRME+Yr/rNbYU565kOhJ
+   OCV6Dr0kMg9+SrbaHMfzUoMyoFGComwNLeDizVJQpeJOUdLgVALB17Oa+
+   A==;
+X-CSE-ConnectionGUID: I/OkDkXNRm+CJXnhfJEZzw==
+X-CSE-MsgGUID: bARxgZxGRAWx0Wt5XzISqg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53221513"
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="53221513"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 10:54:25 -0700
+X-CSE-ConnectionGUID: 3eHJrar+STCeBVkm+snsYg==
+X-CSE-MsgGUID: 6iXZVSoVRI2XMG/GMgKgNg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,265,1744095600"; 
+   d="scan'208";a="152774431"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 10:54:22 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uUUKB-00000009vzU-0jqb;
+	Wed, 25 Jun 2025 20:54:19 +0300
+Date: Wed, 25 Jun 2025 20:54:18 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Limonciello, Mario" <Mario.Limonciello@amd.com>
+Cc: Mario Limonciello <superm1@kernel.org>,
+	Hans de Goede <hansg@kernel.org>,
+	Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>
+Subject: Re: [PATCH 2/2] Revert "Input: soc_button_array - debounce the
+ buttons"
+Message-ID: <aFw3yhVUkdtNnWXT@smile.fi.intel.com>
+References: <20250624202211.1088738-3-superm1@kernel.org>
+ <4a4d577b-a085-46e8-97b9-6df27461c870@kernel.org>
+ <1f8c0262-b376-43cb-b2c5-5b60e8cbf678@kernel.org>
+ <92ab85ff-6314-4db0-ae12-9803ddde5037@kernel.org>
+ <625952d3-01e9-426e-9739-86fe5cdfeb35@kernel.org>
+ <7b2f02ef-0274-480b-aecc-bc1165d15fd7@amd.com>
+ <aFwRZO30wf8GxQea@smile.fi.intel.com>
+ <be57dcd1-a9ba-44f6-af9e-9b40f2b5c870@amd.com>
+ <aFwTCUXQydxRVEfk@smile.fi.intel.com>
+ <6c0514e5-0ea6-4f66-9bc0-4230d7ef0d4b@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1422740.1750874135.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 25 Jun 2025 18:55:35 +0100
-Message-ID: <1422741.1750874135@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6c0514e5-0ea6-4f66-9bc0-4230d7ef0d4b@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-Stefan Metzmacher <metze@samba.org> wrote:
+On Wed, Jun 25, 2025 at 03:34:55PM +0000, Limonciello, Mario wrote:
+> On 6/25/25 10:17 AM, Andy Shevchenko wrote:
+> > On Wed, Jun 25, 2025 at 03:14:40PM +0000, Limonciello, Mario wrote:
+> >> On 6/25/25 10:10 AM, Andy Shevchenko wrote:
+> >>> On Wed, Jun 25, 2025 at 03:02:18PM +0000, Limonciello, Mario wrote:
+> >>>> On 6/25/25 9:41 AM, Mario Limonciello wrote:
+> >>>>> On 6/25/25 9:31 AM, Hans de Goede wrote:
+> >>>>>> On 25-Jun-25 4:09 PM, Mario Limonciello wrote:
+> >>>>>>> On 6/25/25 4:09 AM, Hans de Goede wrote:
+> >>>>>>>> On 24-Jun-25 10:22 PM, Mario Limonciello wrote:
 
-> >   read_rfc1002_done:
-> > +		/* SMBDirect will read it all or nothing */
-> > +		msg->msg_iter.count =3D 0;
->
-> I think we should be remove this.
-> =
+...
 
-> And I think this patch should come after the
-> CONFIG_HARDENED_USERCOPY change otherwise a bisect will trigger the prob=
-lem.
+> >>>>>> Ok, so specifically the gpiod_set_debounce() call with 50 ms
+> >>>>>> done by gpio_keys.c is the problem I guess?
+> >>>>>
+> >>>>> Yep.
+> >>>>>
+> >>>>>> So amd_gpio_set_debounce() does accept the 50 ms debounce
+> >>>>>> passed to it by gpio_keys.c as a valid value and then setting
+> >>>>>> that breaks the wake from suspend?
+> >>>>>
+> >>>>> That's right.
+> >>>
+> >>>>>>> Also comparing the GPIO register in Windows (where things work)
+> >>>>>>> Windows never programs a debounce.
+> >>>>>>
+> >>>>>> So maybe the windows ACPI0011 driver always uses a software-
+> >>>>>> debounce for the buttons? Windows not debouncing the mechanical
+> >>>>>> switches at all seems unlikely.
+> >>>>>>
+> >>>>>> I think the best way to fix this might be to add a no-hw-debounce
+> >>>>>> flag to the data passed from soc_button_array.c to gpio_keys.c
+> >>>>>> and have gpio_keys.c not call gpiod_set_debounce()  when the
+> >>>>>> no-hw-debounce flag is set.
+> >>>>>>
+> >>>>>> I've checked and both on Bay Trail and Cherry Trail devices
+> >>>>>> where soc_button_array is used a lot hw-debouncing is already
+> >>>>>> unused. pinctrl-baytrail.c does not accept 50 ms as a valid
+> >>>>>> value and pinctrl-cherryview.c does not support hw debounce
+> >>>>>> at all.
+> >>>>>
+> >>>>> That sounds a like a generally good direction to me.
+> >>>
+> >>> Thinking a bit more of this, perhaps the HW debounce support flag should be
+> >>> per-GPIO-descriptor thingy. In such cases we don't need to distinguish the
+> >>> platforms, the GPIO ACPI lib may simply set that flag based on 0 read from
+> >>> the ACPI tables. It will also give a clue to any driver that uses GPIOs
+> >>> (not only gpio-keys).
+> >>
+> >> But 0 doesn't mean hardware debounce support is there, 0 means that
+> >> hardware debounce is not required to be programmed for this GPIO.
+> >>
+> >> That is - if another system had a non-zero value in the GpioInt entry I
+> >> would expect this to be translated into the GPIO register.
+> > 
+> > Correct. The question is only about 0. So the flow will look like
+> > 
+> > 1) if the GPIO is defined with 0 debounce, set the flag;
+> > 2) if the GPIO is defined with non-zero value, try to apply it;
+> > 3) if the step 2) fails, warn and set the flag.
+> > 
+> > Would it make sense?
+> > Hans?
+> 
+> But so on these problematic BYT/CYT tablets which "layer" should be 
+> setting the 50ms debounce?
+> That should still be a quirk at the soc_button_array layer, right?
+> 
+> Because gpio_keys_setup_key() will already fallback to software 
+> debounce, and the goal here is that both of those only use the 50ms 
+> specifically with software debouncing.
 
-Okay, done.  I've attached the revised version here.  I've also pushed it =
-to
-my git branch and switched patches 12 & 13 there.
+Probably gpiod_set_debounce() should become a no-op in this case?
 
-David
----
-cifs: Fix reading into an ITER_FOLIOQ from the smbdirect code
+-- 
+With Best Regards,
+Andy Shevchenko
 
-When performing a file read from RDMA, smbd_recv() prints an "Invalid msg
-type 4" error and fails the I/O.  This is due to the switch-statement ther=
-e
-not handling the ITER_FOLIOQ handed down from netfslib.
-
-Fix this by collapsing smbd_recv_buf() and smbd_recv_page() into
-smbd_recv() and just using copy_to_iter() instead of memcpy().  This
-future-proofs the function too, in case more ITER_* types are added.
-
-Fixes: ee4cdf7ba857 ("netfs: Speed up buffered reading")
-Reported-by: Stefan Metzmacher <metze@samba.org>
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Steve French <stfrench@microsoft.com>
-cc: Tom Talpey <tom@talpey.com>
-cc: Paulo Alcantara (Red Hat) <pc@manguebit.com>
-cc: Matthew Wilcox <willy@infradead.org>
-cc: linux-cifs@vger.kernel.org
-cc: netfs@lists.linux.dev
-cc: linux-fsdevel@vger.kernel.org
----
- fs/smb/client/smbdirect.c |  112 ++++++----------------------------------=
-------
- 1 file changed, 17 insertions(+), 95 deletions(-)
-
-diff --git a/fs/smb/client/smbdirect.c b/fs/smb/client/smbdirect.c
-index 0a9fd6c399f6..754e94a0e07f 100644
---- a/fs/smb/client/smbdirect.c
-+++ b/fs/smb/client/smbdirect.c
-@@ -1778,35 +1778,39 @@ struct smbd_connection *smbd_get_connection(
- }
- =
-
- /*
-- * Receive data from receive reassembly queue
-+ * Receive data from the transport's receive reassembly queue
-  * All the incoming data packets are placed in reassembly queue
-- * buf: the buffer to read data into
-+ * iter: the buffer to read data into
-  * size: the length of data to read
-  * return value: actual data read
-- * Note: this implementation copies the data from reassebmly queue to rec=
-eive
-+ *
-+ * Note: this implementation copies the data from reassembly queue to rec=
-eive
-  * buffers used by upper layer. This is not the optimal code path. A bett=
-er way
-  * to do it is to not have upper layer allocate its receive buffers but r=
-ather
-  * borrow the buffer from reassembly queue, and return it after data is
-  * consumed. But this will require more changes to upper layer code, and =
-also
-  * need to consider packet boundaries while they still being reassembled.
-  */
--static int smbd_recv_buf(struct smbd_connection *info, char *buf,
--		unsigned int size)
-+int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
- {
- 	struct smbdirect_socket *sc =3D &info->socket;
- 	struct smbd_response *response;
- 	struct smbdirect_data_transfer *data_transfer;
-+	size_t size =3D iov_iter_count(&msg->msg_iter);
- 	int to_copy, to_read, data_read, offset;
- 	u32 data_length, remaining_data_length, data_offset;
- 	int rc;
- =
-
-+	if (WARN_ON_ONCE(iov_iter_rw(&msg->msg_iter) =3D=3D WRITE))
-+		return -EINVAL; /* It's a bug in upper layer to get there */
-+
- again:
- 	/*
- 	 * No need to hold the reassembly queue lock all the time as we are
- 	 * the only one reading from the front of the queue. The transport
- 	 * may add more entries to the back of the queue at the same time
- 	 */
--	log_read(INFO, "size=3D%d info->reassembly_data_length=3D%d\n", size,
-+	log_read(INFO, "size=3D%zd info->reassembly_data_length=3D%d\n", size,
- 		info->reassembly_data_length);
- 	if (info->reassembly_data_length >=3D size) {
- 		int queue_length;
-@@ -1844,7 +1848,10 @@ static int smbd_recv_buf(struct smbd_connection *in=
-fo, char *buf,
- 			if (response->first_segment && size =3D=3D 4) {
- 				unsigned int rfc1002_len =3D
- 					data_length + remaining_data_length;
--				*((__be32 *)buf) =3D cpu_to_be32(rfc1002_len);
-+				__be32 rfc1002_hdr =3D cpu_to_be32(rfc1002_len);
-+				if (copy_to_iter(&rfc1002_hdr, sizeof(rfc1002_hdr),
-+						 &msg->msg_iter) !=3D sizeof(rfc1002_hdr))
-+					return -EFAULT;
- 				data_read =3D 4;
- 				response->first_segment =3D false;
- 				log_read(INFO, "returning rfc1002 length %d\n",
-@@ -1853,10 +1860,9 @@ static int smbd_recv_buf(struct smbd_connection *in=
-fo, char *buf,
- 			}
- =
-
- 			to_copy =3D min_t(int, data_length - offset, to_read);
--			memcpy(
--				buf + data_read,
--				(char *)data_transfer + data_offset + offset,
--				to_copy);
-+			if (copy_to_iter((char *)data_transfer + data_offset + offset,
-+					 to_copy, &msg->msg_iter) !=3D to_copy)
-+				return -EFAULT;
- =
-
- 			/* move on to the next buffer? */
- 			if (to_copy =3D=3D data_length - offset) {
-@@ -1921,90 +1927,6 @@ static int smbd_recv_buf(struct smbd_connection *in=
-fo, char *buf,
- 	goto again;
- }
- =
-
--/*
-- * Receive a page from receive reassembly queue
-- * page: the page to read data into
-- * to_read: the length of data to read
-- * return value: actual data read
-- */
--static int smbd_recv_page(struct smbd_connection *info,
--		struct page *page, unsigned int page_offset,
--		unsigned int to_read)
--{
--	struct smbdirect_socket *sc =3D &info->socket;
--	int ret;
--	char *to_address;
--	void *page_address;
--
--	/* make sure we have the page ready for read */
--	ret =3D wait_event_interruptible(
--		info->wait_reassembly_queue,
--		info->reassembly_data_length >=3D to_read ||
--			sc->status !=3D SMBDIRECT_SOCKET_CONNECTED);
--	if (ret)
--		return ret;
--
--	/* now we can read from reassembly queue and not sleep */
--	page_address =3D kmap_atomic(page);
--	to_address =3D (char *) page_address + page_offset;
--
--	log_read(INFO, "reading from page=3D%p address=3D%p to_read=3D%d\n",
--		page, to_address, to_read);
--
--	ret =3D smbd_recv_buf(info, to_address, to_read);
--	kunmap_atomic(page_address);
--
--	return ret;
--}
--
--/*
-- * Receive data from transport
-- * msg: a msghdr point to the buffer, can be ITER_KVEC or ITER_BVEC
-- * return: total bytes read, or 0. SMB Direct will not do partial read.
-- */
--int smbd_recv(struct smbd_connection *info, struct msghdr *msg)
--{
--	char *buf;
--	struct page *page;
--	unsigned int to_read, page_offset;
--	int rc;
--
--	if (iov_iter_rw(&msg->msg_iter) =3D=3D WRITE) {
--		/* It's a bug in upper layer to get there */
--		cifs_dbg(VFS, "Invalid msg iter dir %u\n",
--			 iov_iter_rw(&msg->msg_iter));
--		rc =3D -EINVAL;
--		goto out;
--	}
--
--	switch (iov_iter_type(&msg->msg_iter)) {
--	case ITER_KVEC:
--		buf =3D msg->msg_iter.kvec->iov_base;
--		to_read =3D msg->msg_iter.kvec->iov_len;
--		rc =3D smbd_recv_buf(info, buf, to_read);
--		break;
--
--	case ITER_BVEC:
--		page =3D msg->msg_iter.bvec->bv_page;
--		page_offset =3D msg->msg_iter.bvec->bv_offset;
--		to_read =3D msg->msg_iter.bvec->bv_len;
--		rc =3D smbd_recv_page(info, page, page_offset, to_read);
--		break;
--
--	default:
--		/* It's a bug in upper layer to get there */
--		cifs_dbg(VFS, "Invalid msg type %d\n",
--			 iov_iter_type(&msg->msg_iter));
--		rc =3D -EINVAL;
--	}
--
--out:
--	/* SMBDirect will read it all or nothing */
--	if (rc > 0)
--		msg->msg_iter.count =3D 0;
--	return rc;
--}
--
- /*
-  * Send data to transport
-  * Each rqst is transported as a SMBDirect payload
 
