@@ -1,227 +1,145 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F4E27FD74
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:23:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C29BD28EA69
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:23:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750847000; cv=none; b=MD8EOQL5ePCCfCpnpmQKcIL1JbaxpZhLJjHV/hm6UEs7cn3GZfFBp9z7Ef21hyk70/bm5E/o2h6nuure0wxjd6dWUHD49xryLa8BuEwDoUPV8nhN12ewPHfUlycW01yM8cWQEgGLBj+JSWaVkITTb63scCOftj1XCZfw+0AjCjE=
+	t=1750847014; cv=none; b=Lurg+vm9aBMOliOT+eoXmv820Sy025LAc4D+BKtDrxAcWu1+S8paFjFg0K2Cy92MfKesWBb87cHkjdQodDaI/epMz3rETmXvjrHYj67kEzs9tdd8rUER1cnmWVhxCQ6OzeUsz2195HRUWkrHFt5ajD+CJxcOZkV8lfk3dbwEeFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750847000; c=relaxed/simple;
-	bh=sLOlO6Ct98dqJEhk/xCShrWRV5yesUPYrAQDpxALhR8=;
+	s=arc-20240116; t=1750847014; c=relaxed/simple;
+	bh=1sh8kXgYTvfKaZBBuJeUkf6bmJ4SWj3nocH76LTnKq8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RXWVNVROnzpfLQnLm+Sc3ffD169nhR7Hqooc8g0Est4izdQARcasfApJaf/B5kTQjLZlew+y4ahhUaZSUqpkTCKmRY1bILiGsVk+TD44f2PY0Pp2xE+FKx9fcY7An1SZBQnvo9Mv6r+t8guzlD/YNwbVIoltXkltsT93zQeUVng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xiGP9DgZ; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 To:Cc:Content-Type; b=g0PadTFn+H2ky0H99owbl5cpnoSh7Srt8IBxLtVi5wKtK/HtumnWSH0VD3Yz4En0NTKPdnjWhNs5togsTukUU+FuF5ECXdChIpd7ugKOfY72gvk+1ia3GghdRU3M3aJgbJBKw/bV0boEcLQQMl0F1quwP5AqFpLGcRDk+KYwG+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=yql8mRcJ; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xiGP9DgZ"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-313bb9b2f5bso1709136a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:23:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="yql8mRcJ"
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-54d98aa5981so8565261e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 03:23:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750846998; x=1751451798; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750847011; x=1751451811; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lov9+Zjt7YEZlzXRaxLC1dZ0shHTHM8AduhB9Li5azE=;
-        b=xiGP9DgZC2SU9JfhZYywZ1eNvzpqic6ftLKPCEFNO7uTNt9K9BAD7j4vc90tOHjId0
-         g35L5FOgQyC1v67IbBTqcsDbmCrirG9/E55NrlJ9WhtDGps96sK8UcC2J0ydvSOWeYCD
-         TIs5XVJDjVA/DKX7ThZw4vqYKg0VdXMt1aDBhxG/vdDqcvRrG6/AOQjUpegPF1fc+U1w
-         fHr6C3vSBrDkWg702Xi4SIzNKVlTtYdqGyk23FVPOtLioOEd1cKnhHIOF9v8eQm2WaWi
-         q6Tk0/Lh158M60g7ULZheL2c7oHs3Zd9owEOV/lZ0EaWBBLXrkL5T9JTkk5wPgd8Fvb4
-         MH+w==
+        bh=1sh8kXgYTvfKaZBBuJeUkf6bmJ4SWj3nocH76LTnKq8=;
+        b=yql8mRcJwY3Y+rpSX1P+5fEjBetyrNxrIdbhFbzNCk2GD8YOJx59m8VsX9Up8/iuBf
+         0IelKbwsl9AmB1NV6ixUXOq5hR1/henSkC4DnH30xjPeMB+xZp4uUxuirWaXYU8pai4u
+         9Qa0vPobbA9FD/xHeeH+39qAPa7W7355CkLNP1ky2BUagUWqf4Tl5TIE/AeyiUXAhzco
+         yXPULIHe4ThtB/teMQPtnhStMvv90R3+1m9iYtipHTM/GAjSH586btyjarUTm5jOaP5z
+         Da+TkCuEqauiZHhyTVxY01qzsyOIEkHttW5nC6UukEVALWS8GuVXpTBzyMH3GcG3jc0/
+         s6Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750846998; x=1751451798;
+        d=1e100.net; s=20230601; t=1750847011; x=1751451811;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lov9+Zjt7YEZlzXRaxLC1dZ0shHTHM8AduhB9Li5azE=;
-        b=MJxIOx6BsczeFwYp08yGc+SVeX9sCsRnZQaIxGuWvl+6+6lR++939S0WY7MQ2Zkgcz
-         9GBmr5Y0ObwobzILgxXWnVGJb0S/I8EbmpaS1cb7WllOf8yqkkfDV3eE/yhrncqJsOdx
-         oG/yLPA1ezeK/2EHo6Er0lEa4sZ37CGHubf3Rq7wRjnFU5/o1yB60Xnk8+8pThPaUupd
-         pZLtxB0HT6zo4U+VHaZ5cdjbZNYk1Wgn2yhWrMQgw6GIBqUHMB+ba1ox95h8yWP8CuQN
-         LMw2Q4PtxJzFCZCZsUVaVDsEA2Ql8AeSfrQt/woCe1+oIWq39o37wEGeNtyb+KbgLm+5
-         mDDw==
-X-Forwarded-Encrypted: i=1; AJvYcCWMbueEvHu3OBKQrKEE5uRqGwKMgIqvrL042x7k87/VKiA6mrAojULYuwltCQw4yYqrSWXuJE7RK3t9ON4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfyFoLfJPoiRdu+e01Ruh/Sd4aVxJJqWzahkD9MjhzxKlHNt7p
-	KKhm4i+4KiHmhPi5j7G3r0Gcjx7wDBFKbA3RL8shqI8/qstL2Mr1lPFZuMdWfExOdyGWCV+U4fa
-	NoDkmP38cBIzg+vNDOuEb8Nxg6IDSh72X9pkL/FZ1gw==
-X-Gm-Gg: ASbGncvBuQcj3OKMm5crd9xtJmUrpQ6IS/LvBClAiU0ulcCELzc3lh4+KgBAnmU/MhW
-	2nUoqexJ82EAdf8d0t3XckTf9/1nytHCf1+2oVSIjWPgLhSbus7XijU8Nodt72fxsC1jpeJeFgO
-	jcelVGvR1HOW2znCqmS0ShUr/5alwByI3FB1xv9XVyrLDnnRAGgqoh5dSnIUq/2j3J7Xypg6Uyl
-	KYL
-X-Google-Smtp-Source: AGHT+IH8cFi7RC794dO0rUm/Wn+Xr5iwFFDk6akyxaGbFcCJoypTD1oROTeezbQ4/XAXXAvVlHuTWvMZwirdDT+JzDc=
-X-Received: by 2002:a17:90b:2c85:b0:30e:8c5d:8ed with SMTP id
- 98e67ed59e1d1-315f2671f79mr3611427a91.19.1750846998623; Wed, 25 Jun 2025
- 03:23:18 -0700 (PDT)
+        bh=1sh8kXgYTvfKaZBBuJeUkf6bmJ4SWj3nocH76LTnKq8=;
+        b=IOOUdu5wp5R0hl66S5JHio/X2xMX+oMZBRs8FWmd5BPafibEOcaTeFZTcxuLaIsQrk
+         fwfeARD+fsrE0jRGXVNMbvxEomcClZG2GBqJxquHpusPtbXqcQCesorFmdlqJh2N7yUA
+         JfuHWFdOK6EI7yjmeNYVhcctXZ9sRfX5KXobAHQTniYATwZPtS3HDjwE7/7eCAHtLc+f
+         wjdbhD30RLUNJ45L4kjvv/1mGlQybQQe/MyntfYx/lJvsMsd3beW6ZJSpHZxau0OQbaN
+         ZtyoxBrrzmeanhafbWYoBt0iTkUteL14oijD3vIR4ZtbsHNwQwRKBtMxTwfNKmKco7Fh
+         uc/A==
+X-Forwarded-Encrypted: i=1; AJvYcCVxsMQBRokK/m6de3M5Y3a2/FPxAUzadvkib0J71qcXuJv4kHWeJ/RrDrjkkxXeMXxMK/Zk+ZFKmE888A0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5q2m0RXnQG0b51NadOj+BvRGgBcwdnLDu7Truas7h6B3wbRIY
+	dl0ELcpoa2VEjkrNsCFEv+jv+yTJfyPueeGTKYE6PK5fmUXF9hYVued1tQEcuII5oBk607PSO+Z
+	o9UJu5BJjPkbty+Yu9pWiKIJg/RhjwHo7pj31QrUYOUmj4evZNwzrBnJ1nA==
+X-Gm-Gg: ASbGnctPBGh4z7buGshKLAhUv1BuAim74c/UIeSzVZeguQLcRvJ3RV06cfrQYCsoKLO
+	V/lUfxjaq37UdDWg6xamNFLZB4QkR0a/fmUIkWBuVy+aTAI0g3UIKUXl+vy6DNUck2PJwrGHB/U
+	q04uMBATvHKIlPwymEtQauFvLM24UoJFTsQBwjvxKKfe6bRYsBW9t7/2g9OMgSDlGR/fD6AGBV8
+	dcbn9kg5TP8bA==
+X-Google-Smtp-Source: AGHT+IFsA01oZJysyFytGEZV1KUrxfeUbLuJrVHSkxducs0fyVngJr8hucT3oo65yMfEXJOqTlQNr2rbLXOC/gXoNDY=
+X-Received: by 2002:a05:6512:3d21:b0:553:65bc:4231 with SMTP id
+ 2adb3069b0e04-554fdce2db8mr788175e87.21.1750847010701; Wed, 25 Jun 2025
+ 03:23:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250624121426.466976226@linuxfoundation.org>
-In-Reply-To: <20250624121426.466976226@linuxfoundation.org>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 25 Jun 2025 15:53:07 +0530
-X-Gm-Features: Ac12FXzbsG8H9f0gjBaNzcKx6GHqgVhEAS62P31OdpnQXr-HJ4E-WlndR7XAnXE
-Message-ID: <CA+G9fYuQBPF6C1oJLWrrcjvn6FNqjh0oxcJqJNxe85XtrDNSjA@mail.gmail.com>
-Subject: Re: [PATCH 6.12 000/413] 6.12.35-rc2 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
-	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
-	broonie@kernel.org
+References: <20250624-gpio-mmio-pdata-v1-0-a58c72eb556a@linaro.org>
+ <20250624-gpio-mmio-pdata-v1-2-a58c72eb556a@linaro.org> <CACRpkdavsQJTfiwn-F+ML5MK6ADtr-31bBxLA4gV7MTAYR0YGQ@mail.gmail.com>
+ <CACMJSestPPEvsUrWaqz7yZ8OxZTMEOBY7htE7c8BV-VBumj1Lw@mail.gmail.com> <6c64751d-67f6-4c30-a312-af289d9f432e@kernel.org>
+In-Reply-To: <6c64751d-67f6-4c30-a312-af289d9f432e@kernel.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 25 Jun 2025 12:23:19 +0200
+X-Gm-Features: AX0GCFuLFVrQAKskpbSfd1dqDb1DXrhBttUu-cs1kru6ZNBZYnVnFCLPa9cHjd8
+Message-ID: <CAMRc=MdEZkjoDR83JFg5OPP07_DkAfeZixN9C+uxhkqkxaKypg@mail.gmail.com>
+Subject: Re: [PATCH RFT 2/6] gpio: mmio: get chip label and GPIO base from
+ device properties
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Lee Jones <lee@kernel.org>, 
+	Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>, Tony Lindgren <tony@atomide.com>, 
+	Russell King <linux@armlinux.org.uk>, Alim Akhtar <alim.akhtar@samsung.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+	patches@opensource.cirrus.com, linux-samsung-soc@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, 24 Jun 2025 at 18:00, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Wed, Jun 25, 2025 at 10:54=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.o=
+rg> wrote:
 >
-> This is the start of the stable review cycle for the 6.12.35 release.
-> There are 413 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> On 25/06/2025 09:35, Bartosz Golaszewski wrote:
+> > On Tue, 24 Jun 2025 at 21:44, Linus Walleij <linus.walleij@linaro.org> =
+wrote:
+> >>
+> >> On Tue, Jun 24, 2025 at 3:19=E2=80=AFPM Bartosz Golaszewski <brgl@bgde=
+v.pl> wrote:
+> >>
+> >>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>>
+> >>> Ahead of removing struct bgpio_pdata support from the gpio-mmio gener=
+ic
+> >>> module, let's add support for getting the relevant values from generi=
+c
+> >>> device properties. "label" is a semi-standardized property in some GP=
+IO
+> >>> drivers so let's go with it. There's no standard "base" property, so
+> >>> let's use the name "gpio-mmio,base" to tie it to this driver
+> >>> specifically. The number of GPIOs will be retrieved using
+> >>> gpiochip_get_ngpios() so there's no need to look it up in the softwar=
+e
+> >>> node.
+> >>>
+> >>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >>
+> >> This works for me.
+> >> I wouldn't be stoked to see device trees abusing the "gpio-mmio,base"
+> >> property all of a sudden just because it now exists as a device
+> >> property though... I kind of wish we had a way to opt out of exposing
+> >> this to all the sub-property paths. But it seems tiresome, so:
+> >>
+> >> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> >>
+> >> Yours,
+> >> Linus Walleij
+> >
+> > That's not a problem - this property is not in any DT bindings and as
+> > such is not an allowed property in DT sources. For out-of-tree DTs? We
+> > don't care about those.
+> That's not true, we do care about implied ABI. Try changing/breaking
+> this later, when users complain their out of tree DTS is affected, and
+> explaining this all to Greg.
 >
-> Responses should be made by Thu, 26 Jun 2025 12:13:28 +0000.
-> Anything received after that time might be too late.
+
+Wait, seriously? I thought that the upstream bindings are the source
+of truth for device-tree sources...
+
+> Rob was/is working on tools checking this for such implied ABI, I think.
+> For of_xxx() calls it is obvious, for device_xxx() or fwnode_xxx() it is
+> not, therefore please add a comment that this is not allowed to be used
+> by Devicetree platforms (or that this is only for
+> ACPI/platform_data/whatever). I don't have any other guideline/solution
+> other than a comment.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
-6.12.35-rc2.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Ok.
 
-Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-## Build
-* kernel: 6.12.35-rc2
-* git: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-=
-rc.git
-* git commit: 7ea56ae300ce5b67804c356ef4c7dbac6b00241b
-* git describe: v6.12.34-414-g7ea56ae300ce
-* test details:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.12.y/build/v6.12=
-.34-414-g7ea56ae300ce
-
-## Test Regressions (compared to v6.12.32-538-g519e0647630e)
-
-## Metric Regressions (compared to v6.12.32-538-g519e0647630e)
-
-## Test Fixes (compared to v6.12.32-538-g519e0647630e)
-
-## Metric Fixes (compared to v6.12.32-538-g519e0647630e)
-
-## Test result summary
-total: 218983, pass: 198252, fail: 5262, skip: 15116, xfail: 353
-
-## Build Summary
-* arc: 5 total, 5 passed, 0 failed
-* arm: 139 total, 134 passed, 2 failed, 3 skipped
-* arm64: 57 total, 46 passed, 0 failed, 11 skipped
-* i386: 18 total, 18 passed, 0 failed
-* mips: 34 total, 33 passed, 1 failed
-* parisc: 4 total, 4 passed, 0 failed
-* powerpc: 40 total, 40 passed, 0 failed
-* riscv: 25 total, 21 passed, 2 failed, 2 skipped
-* s390: 22 total, 21 passed, 1 failed
-* sh: 5 total, 5 passed, 0 failed
-* sparc: 4 total, 3 passed, 1 failed
-* x86_64: 49 total, 49 passed, 0 failed
-
-## Test suites summary
-* boot
-* commands
-* kselftest-arm64
-* kselftest-breakpoints
-* kselftest-capabilities
-* kselftest-cgroup
-* kselftest-clone3
-* kselftest-core
-* kselftest-cpu-hotplug
-* kselftest-cpufreq
-* kselftest-efivarfs
-* kselftest-exec
-* kselftest-fpu
-* kselftest-futex
-* kselftest-gpio
-* kselftest-intel_pstate
-* kselftest-ipc
-* kselftest-kcmp
-* kselftest-kvm
-* kselftest-livepatch
-* kselftest-membarrier
-* kselftest-memfd
-* kselftest-mincore
-* kselftest-mm
-* kselftest-mqueue
-* kselftest-net
-* kselftest-net-mptcp
-* kselftest-openat2
-* kselftest-ptrace
-* kselftest-rseq
-* kselftest-rtc
-* kselftest-seccomp
-* kselftest-sigaltstack
-* kselftest-size
-* kselftest-tc-testing
-* kselftest-timers
-* kselftest-tmpfs
-* kselftest-tpm2
-* kselftest-user_events
-* kselftest-vDSO
-* kselftest-x86
-* kunit
-* kvm-unit-tests
-* lava
-* libgpiod
-* libhugetlbfs
-* log-parser-boot
-* log-parser-build-clang
-* log-parser-build-gcc
-* log-parser-test
-* ltp-capability
-* ltp-commands
-* ltp-containers
-* ltp-controllers
-* ltp-cpuhotplug
-* ltp-crypto
-* ltp-cve
-* ltp-dio
-* ltp-fcntl-locktests
-* ltp-fs
-* ltp-fs_bind
-* ltp-fs_perms_simple
-* ltp-hugetlb
-* ltp-math
-* ltp-mm
-* ltp-nptl
-* ltp-pty
-* ltp-sched
-* ltp-smoke
-* ltp-syscalls
-* ltp-tracing
-* modules
-* perf
-* rcutorture
-* rt-tests-cyclicdeadline
-* rt-tests-pi-stress
-* rt-tests-pmqtest
-* rt-tests-rt-migrate-test
-* rt-tests-signaltest
-
---
-Linaro LKFT
-https://lkft.linaro.org
+Bart
