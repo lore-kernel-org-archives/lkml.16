@@ -1,165 +1,199 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57498262FDB
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D2AD1E4AE
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:58:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750856197; cv=none; b=HtufNprjiJBajb75IP4DTNJ5tmdrlHADQ3uVqJlZCHW6XGLtTR5SfRo/9rvQ8/FvZl0GgH4lncaz7jeIMSgp9CXQhBov76Dyy0sJJmxFxUmK8UoHm0tOEtqLL21hvqYT0Tlp6tpjY7c6xBGDeeuwUixvVh4DKJ0ufEI/K2y4VUg=
+	t=1750856316; cv=none; b=a2Z2GKUgf3NKZAxuPkH4qvWQ/17KYq0tNT2au71AkaXM3/vYpiTPUSAEOp2cdK+i6W7wBiVt+qCDibk5VHxUCCalRgo1U3VRVingzAW9LhsQpCPMylZHYN0snl5agwRll0SEF6S5OjFzg8eES67jnwLcOCi7PfkHARfthodL7RY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750856197; c=relaxed/simple;
-	bh=kiJkhbD887D7E5HxOxF/kiBhYYzNxATNFuZWHOcOG8A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kWYEr3kP2doKGrJYFNla7EoXK+SHKw4E0iFCJbZsXhw18Bhiju9GM+SNTBJ5TmkId+RwYQOjj1VJQ6Y+NB0/VbTHBIeq7wpsStOCrpuuUGm5Q/j+vMX6h008FOxNUi1ipOeUlIRb1ml+iDCz4xBuSv0yOK+ZSggpYQxJYWFEWcY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XPMJ2x0S; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750856316; c=relaxed/simple;
+	bh=2hoCCCvo0qokdy2neXBSaKGM9DPi8z7fbQliqN7ob/o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=UDUsykw51nYTR8vD0Ul5C3nmt+yeK44RrjBR0fcaXvAcabvYNSPz72J4t35bcos8YNcNH79kVGeonM+N2UEo028OZClvtyF6oCwygdA62UtdtLHm4rZjsvG+wtI1okXZeIPA/NOQr4p4EG0MscKvwfTslucqxo0EnzVfXEI4LJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H0RQVztb; arc=none smtp.client-ip=95.215.58.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XPMJ2x0S"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750856194;
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H0RQVztb"
+Message-ID: <f1ee8679-88b4-4712-b2ed-c3eec179b430@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1750856311;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=yUkvyC2Z5d27PXdLFK+gO49jin43XWbaxtmm6zdhbUA=;
-	b=XPMJ2x0S8P5DYQCKFDru13uNfnQu3TUxvNnq/GO1ed1s5LKYWUPPTjdvHHxLxV22kB7Ip/
-	J9HsF1jhwx3xdMRauOBunHvwc48HxYmnjlj3gBkEkoTq8HSK4uzrMhsicZ5/U2tglU9w/G
-	eT670EmHxJRqVpQ5Yes0bwCQTxGyEkU=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-251-pRoR9FiSM22PKQWs8yqh5g-1; Wed, 25 Jun 2025 08:56:32 -0400
-X-MC-Unique: pRoR9FiSM22PKQWs8yqh5g-1
-X-Mimecast-MFC-AGG-ID: pRoR9FiSM22PKQWs8yqh5g_1750856191
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f7ebfd00so884903f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 05:56:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750856191; x=1751460991;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yUkvyC2Z5d27PXdLFK+gO49jin43XWbaxtmm6zdhbUA=;
-        b=EsQkIaVWL0PW29eMdJVuNNWJrOqzHbEQEkDQ7jb38Jz/IcAcxfkZrM5QjVScW+GkPC
-         igvQQR43Tz30fulTNQr3O/xfvzj/ec5eC0RwVy46VkLdamT2YMWAfcG8W2c4WOPB6lRQ
-         T2oOOkLgKweeUdsFpdDAwzE9BoTn7Z3JQPE68LKwLSMJ0bcqhMWFxYp3LoGdTjZ4vSkR
-         jO+DTXSHuVbwcrruSYJ59ZNJEcGN1BXv8xxhgRI9+RD1HMDDEIYLs7Esdgd9/2H3GVxb
-         HLf5fnI7EEdo4EYoDEUwgXPIEq2z8XHyE3xiJKqA6YNBFzGGl1s8FzlnwMHAMV3XKmQs
-         3AoA==
-X-Gm-Message-State: AOJu0Ywf+YW2jt/qk7fzpZ7RfK4sPD8mbiRT46nn1YADcaW9HPgx1LXq
-	a03aUB2hGp+4t4ZLFXwAefN766B4fsyafa2DgPC1n6zc/+o6/DxopDrtuHzUdA0tlwyJyYpEzIL
-	Kx7QC3r+bFc9jqKahwn1IgknGggOkwKjj4ewz12NYDhHf5hspTeZoknfz6K+aCtHBwQ==
-X-Gm-Gg: ASbGncuFViRAuqTJKgKTyRlNvY+kjVelr73ne9UIz7a9nW5bQEYo+radqsBsUzDc07Q
-	F0/f8tW/j/5giXjmREH4VonhKdmtmANilBGVZpygpgUEPxSiWJA38fUKxsLQbFWjK4w/2yIlwkP
-	GjxuRH5qyIBmIRGzGltc7QbmzBOgzgFWUsyjKUH8Px+LGFkflzD5Ta8HlNM56oh5RollTzdVeUu
-	N7i0QWpOHGOSbTFUd8XjfzL1K2ffDUvfhbTZxLy7pDFSo8PFUR4uTBWtqeZWecUHCX64+Ymda1g
-	TWp1o09bj3FDbQg74dIYQDhprnKKr6gYElEht3okx6fpNPWFUzlH
-X-Received: by 2002:a5d:5847:0:b0:3a3:7593:818b with SMTP id ffacd0b85a97d-3a6ed62eb62mr2384430f8f.21.1750856191418;
-        Wed, 25 Jun 2025 05:56:31 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHtKoxtt02GMNCN32sG8EO2q8gJ0Qg3a2QadOwIyW/8s+055cKB+IjLXH3hR/alWyyYb8NDsw==
-X-Received: by 2002:a5d:5847:0:b0:3a3:7593:818b with SMTP id ffacd0b85a97d-3a6ed62eb62mr2384399f8f.21.1750856190875;
-        Wed, 25 Jun 2025 05:56:30 -0700 (PDT)
-Received: from jlelli-thinkpadt14gen4.remote.csb ([176.206.11.85])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805d5f4sm4429336f8f.27.2025.06.25.05.56.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 05:56:29 -0700 (PDT)
-Date: Wed, 25 Jun 2025 14:56:27 +0200
-From: Juri Lelli <juri.lelli@redhat.com>
-To: Joel Fernandes <joelagnelf@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-	Valentin Schneider <vschneid@redhat.com>, Tejun Heo <tj@kernel.org>,
-	David Vernet <void@manifault.com>, Andrea Righi <arighi@nvidia.com>,
-	Changwoo Min <changwoo@igalia.com>
-Subject: Re: [PATCH v5 04/14] sched/deadline: Prevent setting server as
- started if params couldn't be applied
-Message-ID: <aFvx-z7Dd_0mYMeg@jlelli-thinkpadt14gen4.remote.csb>
-References: <20250620203234.3349930-1-joelagnelf@nvidia.com>
- <20250620203234.3349930-5-joelagnelf@nvidia.com>
+	bh=lY4C+H8rjCf0tB+LlRLUjdQXLKGrHdCeK+5aYVx8K34=;
+	b=H0RQVztbREsh2CeBNzfiHRG3ArsNptNh9e4vAD7piCsogyawFZAZ0h7oX5wxSxKudfeOx8
+	zmgi8lKBBJDJyX+yA3Bd/pjb8f4zMM6qXYyQr+ccBk4iLesagodds3gfB2bKoUezfMEyH5
+	9KebcsTF3oF2ez4v96G72qSVlbShipA=
+Date: Wed, 25 Jun 2025 20:58:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250620203234.3349930-5-joelagnelf@nvidia.com>
+Subject: Re: [PATCH v4 3/4] mm: Support batched unmap for lazyfree large
+ folios during reclamation
+Content-Language: en-US
+To: David Hildenbrand <david@redhat.com>, Barry Song <21cnbao@gmail.com>
+Cc: akpm@linux-foundation.org, baolin.wang@linux.alibaba.com,
+ chrisl@kernel.org, kasong@tencent.com, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ linux-riscv@lists.infradead.org, lorenzo.stoakes@oracle.com,
+ ryan.roberts@arm.com, v-songbaohua@oppo.com, x86@kernel.org,
+ ying.huang@intel.com, zhengtangquan@oppo.com,
+ Lance Yang <ioworker0@gmail.com>
+References: <2c19a6cf-0b42-477b-a672-ed8c1edd4267@redhat.com>
+ <20250624162503.78957-1-ioworker0@gmail.com>
+ <27d174e0-c209-4851-825a-0baeb56df86f@redhat.com>
+ <938c4726-b93e-46df-bceb-65c7574714a6@linux.dev>
+ <CAGsJ_4y1GObH-C7R=FQL=UWe3kF6qhKoRqPxNPYx0k7uwocc+g@mail.gmail.com>
+ <5ba95609-302b-456a-a863-2bd5df51baf2@redhat.com>
+ <CAGsJ_4zSGT05GjxM1H6JwSa5MhgtxaiYVa1Wtvm8+SmYkm=jmQ@mail.gmail.com>
+ <6179dd30-5351-4a79-b0d6-f0e85650a926@redhat.com>
+ <CAGsJ_4yTH5ngM++e=c+P7g0fXs-QQsOk2oxd1RWa3Qww97Knrw@mail.gmail.com>
+ <5db6fb4c-079d-4237-80b3-637565457f39@redhat.com>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Lance Yang <lance.yang@linux.dev>
+In-Reply-To: <5db6fb4c-079d-4237-80b3-637565457f39@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Joel,
 
-On 20/06/25 16:32, Joel Fernandes wrote:
-> The following call trace fails to set dl_server_apply_params() as
-> dl_bw_cpus() is 0 during CPU onlining.
+
+On 2025/6/25 20:09, David Hildenbrand wrote:
+> On 25.06.25 13:42, Barry Song wrote:
+>> On Wed, Jun 25, 2025 at 11:27 PM David Hildenbrand <david@redhat.com> 
+>> wrote:
+>>>
+>>> On 25.06.25 13:15, Barry Song wrote:
+>>>> On Wed, Jun 25, 2025 at 11:01 PM David Hildenbrand 
+>>>> <david@redhat.com> wrote:
+>>>>>
+>>>>> On 25.06.25 12:57, Barry Song wrote:
+>>>>>>>>
+>>>>>>>> Note that I don't quite understand why we have to batch the 
+>>>>>>>> whole thing
+>>>>>>>> or fallback to
+>>>>>>>> individual pages. Why can't we perform other batches that span 
+>>>>>>>> only some
+>>>>>>>> PTEs? What's special
+>>>>>>>> about 1 PTE vs. 2 PTEs vs. all PTEs?
+>>>>>>>
+>>>>>>> That's a good point about the "all-or-nothing" batching logic ;)
+>>>>>>>
+>>>>>>> It seems the "all-or-nothing" approach is specific to the 
+>>>>>>> lazyfree use
+>>>>>>> case, which needs to unmap the entire folio for reclamation. If 
+>>>>>>> that's
+>>>>>>> not possible, it falls back to the single-page slow path.
+>>>>>>
+>>>>>> Other cases advance the PTE themselves, while try_to_unmap_one() 
+>>>>>> relies
+>>>>>> on page_vma_mapped_walk() to advance the PTE. Unless we want to 
+>>>>>> manually
+>>>>>> modify pvmw.pte and pvmw.address outside of 
+>>>>>> page_vma_mapped_walk(), which
+>>>>>> to me seems like a violation of layers. :-)
+>>>>>
+>>>>> Please explain to me why the following is not clearer and better:
+>>>>
+>>>> This part is much clearer, but that doesn’t necessarily improve the 
+>>>> overall
+>>>> picture. The main challenge is how to exit the iteration of
+>>>> while (page_vma_mapped_walk(&pvmw)).
+>>>
+>>> Okay, I get what you mean now.
+>>>
+>>>>
+>>>> Right now, we have it laid out quite straightforwardly:
+>>>>                   /* We have already batched the entire folio */
+>>>>                   if (nr_pages > 1)
+>>>>                           goto walk_done;
+>>>
+>>>
+>>> Given that the comment is completely confusing whens seeing the 
+>>> check ... :)
+>>>
+>>> /*
+>>>    * If we are sure that we batched the entire folio and cleared all 
+>>> PTEs,
+>>>    * we can just optimize and stop right here.
+>>>    */
+>>> if (nr_pages == folio_nr_pages(folio))
+>>>          goto walk_done;
+>>>
+>>> would make the comment match.
+>>
+>> Yes, that clarifies it.
+>>
+>>>
+>>>>
+>>>> with any nr between 1 and folio_nr_pages(), we have to consider two 
+>>>> issues:
+>>>> 1. How to skip PTE checks inside page_vma_mapped_walk for entries that
+>>>> were already handled in the previous batch;
+>>>
+>>> They are cleared if we reach that point. So the pte_none() checks will
+>>> simply skip them?
+>>>
+>>>> 2. How to break the iteration when this batch has arrived at the end.
+>>>
+>>> page_vma_mapped_walk() should be doing that?
+>>
+>> It seems you might have missed the part in my reply that says:
+>> "Of course, we could avoid both, but that would mean performing 
+>> unnecessary
+>> checks inside page_vma_mapped_walk()."
+>  > > That’s true for both. But I’m wondering why we’re still doing the 
+> check,
+>> even when we’re fairly sure they’ve already been cleared or we’ve reached
+>> the end :-)
 > 
-> [   11.878356] ------------[ cut here ]------------
-> [   11.882592]  <TASK>
-> [   11.882685]  enqueue_task_scx+0x190/0x280
-> [   11.882802]  ttwu_do_activate+0xaa/0x2a0
-> [   11.882925]  try_to_wake_up+0x371/0x600
-> [   11.883047]  cpuhp_bringup_ap+0xd6/0x170
-> [   11.883172]  cpuhp_invoke_callback+0x142/0x540
-> [   11.883327]  _cpu_up+0x15b/0x270
-> [   11.883450]  cpu_up+0x52/0xb0
-> [   11.883576]  cpu_subsys_online+0x32/0x120
-> [   11.883704]  online_store+0x98/0x130
-> [   11.883824]  kernfs_fop_write_iter+0xeb/0x170
-> [   11.883972]  vfs_write+0x2c7/0x430
-> [   11.884091]  ksys_write+0x70/0xe0
-> [   11.884209]  do_syscall_64+0xd6/0x250
-> [   11.884327]  ? clear_bhb_loop+0x40/0x90
-> [   11.884443]  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> :)
 > 
-> It is too early to start the server. Simply defer the starting of the
-> server to the next enqueue if dl_server_apply_params() returns an error.
-> In any case, we should not pretend like the server started and it does
-> seem to mess up with the sched_ext CPU hotplug test.
+>>
+>> Somehow, I feel we could combine your cleanup code—which handles a batch
+>> size of "nr" between 1 and nr_pages—with the
+>> "if (nr_pages == folio_nr_pages(folio)) goto walk_done" check.
 > 
-> With this, the sched_ext hotplug test reliably passes.
+> Yeah, that's what I was suggesting. It would have to be part of the 
+> cleanup I think.
 > 
-> Signed-off-by: Joel Fernandes <joelagnelf@nvidia.com>
-> ---
->  kernel/sched/deadline.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> I'm still wondering if there is a case where
 > 
-> diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-> index ae15ec6294cf..d2eb31b45ba9 100644
-> --- a/kernel/sched/deadline.c
-> +++ b/kernel/sched/deadline.c
-> @@ -1656,8 +1656,8 @@ void dl_server_start(struct sched_dl_entity *dl_se)
->  		u64 runtime =  50 * NSEC_PER_MSEC;
->  		u64 period = 1000 * NSEC_PER_MSEC;
->  
-> -		dl_server_apply_params(dl_se, runtime, period, 1);
-> -
-> +		if (dl_server_apply_params(dl_se, runtime, period, 1))
-> +			return;
->  		dl_se->dl_server = 1;
->  		dl_se->dl_defer = 1;
->  		setup_new_dl_entity(dl_se);
-> @@ -1674,7 +1674,7 @@ void dl_server_start(struct sched_dl_entity *dl_se)
+> if (nr_pages == folio_nr_pages(folio))
+>      goto walk_done;
+> 
+> would be wrong when dealing with small folios.
 
-I wonder if the above will still be needed if we move dl-servers init
-further down (later) the boot process as I am trying to do to fix issues
-reported at [1]. Also, failing to apply parameters at boot is not very
-nice I am thinking. Wondering if we should WARN or do something about
-it.
+We can make the check more explicit to avoid any future trouble ;)
 
->  void dl_server_stop(struct sched_dl_entity *dl_se)
->  {
-> -	if (!dl_se->dl_runtime)
-> +	if (!dl_se->dl_runtime || !dl_se->dl_server_active)
->  		return;
->  
->  	dequeue_dl_entity(dl_se, DEQUEUE_SLEEP);
+if (nr_pages > 1 && nr_pages == folio_nr_pages(folio))
+     goto walk_done;
 
-Yeah, I ended up adding the same check as a fixup in my WIP fix series.
-:-)
+It should be safe for small folios.
 
-https://github.com/jlelli/linux/commits/upstream/fix-grub/
+Thanks,
+Lance
 
-1 - https://lore.kernel.org/lkml/aFvLYv0xSXxoyZZ8@jlelli-thinkpadt14gen4.remote.csb/
+> 
+>> In practice, this would let us skip almost all unnecessary checks,
+>> except for a few rare corner cases.
+>>
+>> For those corner cases where "nr" truly falls between 1 and nr_pages,
+>> we can just leave them as-is—performing the redundant check inside
+>> page_vma_mapped_walk().
+> 
+> I mean, batching mapcount+refcount updates etc. is always a win. If we 
+> end up doing some unnecessary pte_none() checks, that might be 
+> suboptimal but mostly noise in contrast to the other stuff we will 
+> optimize out :)
+> 
+> Agreed that if we can easily avoid these pte_none() checks, we should do 
+> that. Optimizing that for "nr_pages == folio_nr_pages(folio)" makes sense.
+> 
 
