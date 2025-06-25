@@ -1,146 +1,101 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE4BA25F78A
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 12:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87BBC1E4AB;
+	Wed, 25 Jun 2025 12:32:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750854693; cv=none; b=rwB8uMNsxr4GMU/5heJAMJnZpfpuhctvev6r13efDjTxZAhiL8a7vZX1ZaM/LASrBsyoW3snXsSbsKI2tq6y3af4NKRPZmGGZb/6AB6CFzpCssZbtGlgORBNKrJc8QCy7qdasfqS0XL6oa6cHpkRzO3yplz57TrY1N0y0SQx+Fk=
+	t=1750854743; cv=none; b=ks1tFL30HE3gU9hyRRZ1j1uI9Keva2MtvUJHwwu3AiW3zm5ss8cqZvQuRU9bcTWdpua0VrZcHIEodvyteQvA/pRlaccwmWxTUzLwRbkcTeoomJm+n1sFxc06rIqkXGiLH6AuwWnkLEQtNA13bEANbpbpqsAiUdeiZDfQRdTfgv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750854693; c=relaxed/simple;
-	bh=nGFTrLM1x130MEmLW9Uo5hqoBt/joa/UbPRhWusf7dY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=auzdjiBu42BBqfm+1mrkxhywcH07x0w0RABeAqUASqNGfJKydp6GWxA8LjKs9b5BUBC6ePiD5rjWgRQFhF161bIQm46eVCMOumtrG9Vh0QCzOsIdy0DQgsvxXhN98Hjky+PkAVRdbkwIRXjyy8slmagAusZ1e6YX4xqobeBjFH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=a7fCQE2H; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="a7fCQE2H"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=mu+JBFMxFcmkWvemWRejcBfCpbK0S9r03CkeNyEZeTc=;
-	t=1750854692; x=1752064292; b=a7fCQE2HTlaIXmHlF3RvkDEshiiZaqeCmMCGMXhQ8Qsc0nP
-	nQBI/qfCSsrGhG536bTawfuIQNjku6UUB2RCjDGY0HdB0wDEQgdXwy2A7Wgnud5iZklDtoGSiphtS
-	NPXfo55T8eeTDBfTbiXEMSAZjbxzuM7TUA6A+9vx4KEcDWVlozyV3gGX+9ib/8LxyFgM6wtwUhFAE
-	o4IPFhlwkQ8WRF/62USMLvVkrgy5JVNrdO14k1M8SP329xzWuxyxSL+ULMs94aMLh6qluOXv07cwS
-	SlSAy3Vy8vzU/nWFF3fos4PB7++dDwv3j3NnRHBk/61fK0G1plm3doa/GhKB/LgA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98.2)
-	(envelope-from <benjamin@sipsolutions.net>)
-	id 1uUPHh-00000009yMk-3tw7;
-	Wed, 25 Jun 2025 14:31:26 +0200
-Message-ID: <0e5eeb22a56e92ff377fcfb0cc0e768d71ed4ae9.camel@sipsolutions.net>
-Subject: Re: [PATCH RFC] um: time: fix userspace detection during tick
- accounting
-From: Benjamin Berg <benjamin@sipsolutions.net>
-To: Thomas =?ISO-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>, 
- Richard Weinberger	 <richard@nod.at>, Anton Ivanov
- <anton.ivanov@cambridgegreys.com>, Johannes Berg	
- <johannes@sipsolutions.net>
-Cc: linux-um@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Meyer
-	 <thomas@m3y3r.de>, Anton Ivanov <aivanov@brocade.com>
-Date: Wed, 25 Jun 2025 14:31:24 +0200
-In-Reply-To: <20250617-uml-tick-timer-v1-1-01aab312f56b@linutronix.de>
-References: <20250617-uml-tick-timer-v1-1-01aab312f56b@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1750854743; c=relaxed/simple;
+	bh=lVxVt6Tzp8eXMjAWiBYR4oAuo/0N6cIdJecyIzgeHiY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tTtFEBOKSueK0jhoZeAK+lo45up9GzHQIp4y5N8TQto7c1hjjxZSsXN4J6IQs/j/2UkS09VPc/5C1d1Vhykd7xPeUWCkzEYGYGnXqyIhQXC0j9xYYsvIOECx+Cajg60cRRiLdoAKmTzxKA8RIpUafYxCIGqRcg6vn+vXBzpkKqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.160.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qt1-f178.google.com with SMTP id d75a77b69052e-4a4323fe8caso40996931cf.2;
+        Wed, 25 Jun 2025 05:32:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750854738; x=1751459538;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=B8p2OpGo8CDaPQfPclMnd2uTE+ODzAt+oveKwlFe1wI=;
+        b=pu0KoRyOm9GsRN44jdGxMyKjfKynoRLfB/SBcc/8+/rqTJdPrzY0qduosSTG7LqoQg
+         lW/3GBiTt1c3vEr2sEg4TQJvOUlVMc7ONEY5qDQKna/3HkyvDYpCrhM2ln5tUbsiae1I
+         Zebobi5OsPQqnBxAaYod91eSEtAXnbRpynCjahl/+OWVAGE51V6aFRT6+wtr5rpQFg/G
+         Zmt6txBRPYyJm2BxWpOvdtDP8EPZOZmY9NV9NVHJ2uZFTFMT6bdjMLcD1vePI1GwFQwI
+         ffdngnnnAyyV05ZEklxCU9aEgEjeUCLDv23cpoj/nEsaUIvX1C59GmZQccBEMsRcd27X
+         0q1g==
+X-Forwarded-Encrypted: i=1; AJvYcCVUf4zpTHLz/quR7u9lYIQ8jlhxZ13q5LL0Dt0+j6k6D8r+Hk/UEBub7lkNMpYW2Uao/58VRiew6O9E@vger.kernel.org, AJvYcCVl1Vx15lBdHYo7omzQHdzvv2RWONKYTQg58gSRvb1janDKXsKag4WQ/vz4DQwyJ5xyiH1tFEQ1MaxgrL4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxR0SpxtKHsC1Svt77fRDX5e8GBbQZ2vSBkZuth7WM0JeM6kmiN
+	IT0biwXh0+9nNhvk7ZSpRkePhonTQY4nVxDwdHt/VpJaGRYDO2S0IvIwXlqGlK1n
+X-Gm-Gg: ASbGncsw/I3Yju16i+DRn28HwZi8vPmQc78kHqcze1OI4g/mKUfmOa94TlpLbtmIFQi
+	vyWJyO2l5Umh8V7jVRQyjgMRvixQLI6Axk5dHZ7OC8Colx3BT3GWiTuTezXb+kcS2ibH+e8aGMo
+	h0EpN/TJTnAHzdFJaC4gu9DwW5Xnh7wwE5qgfQfV3QM3ImiE3Ljxrzx+NIvZkPfWgqRsTYb7Uan
+	VwfwA+eZ6S2VGK1LGbLf7DD7k7OLTVqJNf5rOayO6z3tHep8Kp1h+v/Sl+0MKroUI3PnYzXetsi
+	ykR0iyHK42c3/O2TZMTg2fJt/mBTI7BZPqdvan69OOB09EvwDLZNmejHKyvp6xVmMwh3KCxBINe
+	9VuFpHj8DqGQt43zSERC4OWmxtFvy065+FTE=
+X-Google-Smtp-Source: AGHT+IHBGnaM6Vvkq/mYAUdnI2UPzC0G9O9hrH5Qp92ibx8/IDugKUXsOlWB84rO7CFtW2NthjOfDQ==
+X-Received: by 2002:a05:622a:90:b0:4a7:24b4:8c21 with SMTP id d75a77b69052e-4a7c07d4eb7mr40913491cf.29.1750854737774;
+        Wed, 25 Jun 2025 05:32:17 -0700 (PDT)
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com. [209.85.219.52])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7d3f9a06e61sm600164685a.105.2025.06.25.05.32.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 05:32:17 -0700 (PDT)
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6fad4e6d949so37495566d6.0;
+        Wed, 25 Jun 2025 05:32:17 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVPRwW3g9psMGI0uxC2kBDNArdg/RTKJpH5m96tPXiROgHWG0rAUz1RA8sv+mgCyBtsdF1NV/zKd2WI0YA=@vger.kernel.org, AJvYcCVYF/Etwig+BC3L+MG/+SMz2nwNHS5S/31oUt3q9orI5qAsYQhDeGfCH3uO1/DDfqF1QJn9kbSkrJt9@vger.kernel.org
+X-Received: by 2002:a05:620a:198b:b0:7d0:9ed4:d269 with SMTP id
+ af79cd13be357-7d429710333mr334230485a.2.1750854737237; Wed, 25 Jun 2025
+ 05:32:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+References: <20250625111806.4153773-1-maz@kernel.org> <20250625111806.4153773-3-maz@kernel.org>
+In-Reply-To: <20250625111806.4153773-3-maz@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 25 Jun 2025 14:32:05 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdVQLEQziPueu64ueCrkhh9PtZeGWGVR-yHkbKBUTPfFyw@mail.gmail.com>
+X-Gm-Features: Ac12FXyYeQYex53YhZaoUKJ8ttY42d8BJ7oEfG35VrnSztAFwUMET7EHu4gB7r8
+Message-ID: <CAMuHMdVQLEQziPueu64ueCrkhh9PtZeGWGVR-yHkbKBUTPfFyw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] PCI: apple: Add tracking of probed root ports
+To: Marc Zyngier <maz@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+	Rob Herring <robh@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
+	Janne Grunau <j@jannau.net>, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+On Wed, 25 Jun 2025 at 13:18, Marc Zyngier <maz@kernel.org> wrote:
+> The apple driver relies on being able to directly find the matching
+> root port structure from the platform device that represents this
+> port.
+>
+> A previous hack stashed a pointer to the root port structure in
+> the config window private pointer, but that ended up relying on
+> assumptions that break other drivers.
+>
+> Instead, bite the bullet and track the association as part of the
+> driver itself as a list of probed root ports.
+>
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
 
-On Tue, 2025-06-17 at 15:52 +0200, Thomas Wei=C3=9Fschuh wrote:
-> The cpu usage timekeeping triggered by the tick credits passed time to
-> either the kernel or the currently running userspace process.
-> On UML, tick interrupts firing while userspace is running are not marked
-> correctly so this bookkeeping is broken and always credits the idle task.
->=20
-> The rootcause is the following callchain always passing user_tick=3Dfalse
-> to account_process_tick():
->=20
-> um_timer()
-> =C2=A0 -> handle_irq_event()
-> =C2=A0=C2=A0=C2=A0 -> tick_handle_periodic()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -> tick_periodic()
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -> update_process_times(user_t=
-ick=3Duser_mode(get_irq_regs()))
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -> account_process=
-_tick(task, user_tick=3Dfalse)
->=20
-> As a result CPUCLOCK_VIRT does not advance,
-> breaking for example signal(SIGVTALRM).
->=20
-> The issue can be reproduced easily with the selftest
-> tools/testing/selftests/timers/posix_timers.c,
-> which hangs in the ITIMER_VIRTUAL/SIGVTALRM testcase.
->=20
-> Fix up the IRQ regs by correctly setting is_user in the IRQ registers.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-So, in principle, this looks like the right thing.
+Gr{oetje,eeting}s,
 
-What I am not sure about is accounting if the userspace task is
-currently executing a syscall inside the kernel thread. The current
-code will incorrectly interrupt the userspace process in that case and
-you are now adding CPU time accounting on top of the same logic that is
-already not quite right.
+                        Geert
 
-Said differently, need to think about it a bit more. I suspect we might
-need to set/clear a flag in the userspace function for this.
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Benjamin
-
->=20
-> Fixes: 2eb5f31bc4ea ("um: Switch clocksource to hrtimers")
-> Signed-off-by: Thomas Wei=C3=9Fschuh <thomas.weissschuh@linutronix.de>
-> ---
-> I'm not familiar with UML, so this is probably not the right fix.
-> Feel free to treat it as a bugreport instead.
-> ---
-> =C2=A0arch/um/kernel/time.c | 7 ++++++-
-> =C2=A01 file changed, 6 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/um/kernel/time.c b/arch/um/kernel/time.c
-> index ae0fa2173778f43273fd0550f77fc99bbb1c3e3a..a6c17302403aeb3170a110411=
-7c4e713e3afdfe0 100644
-> --- a/arch/um/kernel/time.c
-> +++ b/arch/um/kernel/time.c
-> @@ -856,6 +856,7 @@ static struct clock_event_device timer_clockevent =3D=
- {
-> =C2=A0
-> =C2=A0static irqreturn_t um_timer(int irq, void *dev)
-> =C2=A0{
-> +	struct pt_regs *regs;
-> =C2=A0	/*
-> =C2=A0	 * Interrupt the (possibly) running userspace process, technically=
- this
-> =C2=A0	 * should only happen if userspace is currently executing.
-> @@ -864,9 +865,13 @@ static irqreturn_t um_timer(int irq, void *dev)
-> =C2=A0	 */
-> =C2=A0	if (time_travel_mode !=3D TT_MODE_INFCPU &&
-> =C2=A0	=C2=A0=C2=A0=C2=A0 time_travel_mode !=3D TT_MODE_EXTERNAL &&
-> -	=C2=A0=C2=A0=C2=A0 get_current()->mm)
-> +	=C2=A0=C2=A0=C2=A0 get_current()->mm) {
-> =C2=A0		os_alarm_process(get_current()->mm->context.id.pid);
-> =C2=A0
-> +		regs =3D get_irq_regs();
-> +		regs->regs.is_user =3D true;
-> +	}
-> +
-> =C2=A0	(*timer_clockevent.event_handler)(&timer_clockevent);
-> =C2=A0
-> =C2=A0	return IRQ_HANDLED;
->=20
-> ---
-> base-commit: 9afe652958c3ee88f24df1e4a97f298afce89407
-> change-id: 20250617-uml-tick-timer-82ea89495cc6
->=20
-> Best regards,
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
