@@ -1,182 +1,133 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EED015A86B
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5584A1C84AB;
+	Wed, 25 Jun 2025 04:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750826017; cv=none; b=M4VND+DqfOOqQmRW4NV6Jl6upRWnkHJDXYTFyQbZtE2qxUsnVa9Vriu+JBWx9DKhHvDx7kx2OMQoZ3BRqqsSR55RCVuT5tJ+Pd9WOk1LgIevITjAB2WefVsiem1urJPvBSB7MJmVe6XZKp8jwWU1CdJGP4matSeR3CcQXfjh8W4=
+	t=1750826046; cv=none; b=S0B/qTF18i+O5s8sXtNl8TN0o0s55NG4d4hRdoUxCUGJdvkD2et/cO/iCUAObVT/wEwC4Av1W14mTUjZ+aSOEUviug7bDGkGYWeLkl6JU6Hpdtf8xFv6TnaAeKlmhAjTNLuZWjwwhAAcRommSrGsFMJ/9/PMfqw7QEw8xuzvl3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750826017; c=relaxed/simple;
-	bh=suGpKOxJrw/x+Qw34YH9Wq5C5aeu6ITuVv0x3tIR8QU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=BqkB4JVvTyvpIRFlEsTm4wf5MneTA7iswx0f2HmTqHOzHVn1NThji30e+us2W7gSUxsDj4dgQLOcWu18j8utCh7+apgx5/XgvYwgAS5MkMVO/mhgmDJRiDUYzwqHWzlYhYUCGtpj6JsqGqkldStInhd6F2WQYJs1eHbJx/Pgaz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wkphe7Gt; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wkphe7Gt"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-234c5b57557so67596535ad.3
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 21:33:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750826014; x=1751430814; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=+gxLtLJHJekP2m5RDJO4GtXWgXu8wxWquk/PnbuibIg=;
-        b=wkphe7GtVKXlZEf4dSRQ6JoNnkFUNGpSRmwQZzciM0mL9BsFQIwloPQgPuvyRnCy8h
-         706+QFk2DWUHzeDqb+PbEgHGi6HhHzabyXif2IjGVba1HRBi9GDaBBW43/6IWUX4VsFH
-         Fg1wlkL93rEe8+vAlU/KQP6f2UzQvT2uMM5hp7OII0f2L/BzwpS2/UsnrfOm3ATCRdr1
-         LdmqqWBOUISQDoN9Ng+aG9jyPAt67U+S0syDqFFfoa/iC4vY+Hp07H/cQgOoqMXuTIoF
-         ARMlUckqHcsqcQwXQvywXj3428KP0lBhMe5Jeqbs1zT9gNp+jqXalZeJ6/KB+KSDvByk
-         14MA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750826014; x=1751430814;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=+gxLtLJHJekP2m5RDJO4GtXWgXu8wxWquk/PnbuibIg=;
-        b=GIoRyz00HuejjqbEi/LtPo5Og6IQAA1nbtSEeMWSW5bo6ycUfhRbG5faPEqbf4c1MQ
-         PJfyjNN/juJEHzUJstUk7LMmsd2fZlls9XzLwbDcgkN6UY00qiGWFW1WYSIEjTJ0sizS
-         8Qqv8T75kHQlQu8Nsg6W1PRvgtx8Ef+AQo9xMEPPEMSqNUKU+BUrPlHcbYvPAAcMwE2J
-         ynw2Jfhdd2NYEr2O22hHoBXyNVKItT2zib0WzLb2jf1LVzWBjLg7gkzuY3AcLybBjE28
-         ErjzeAdYylIMvyzEITJfrKHG8GOWgElG+CejCv3DwSHjpwf/lNjzKcYqdner9yr4HG8A
-         AAfw==
-X-Forwarded-Encrypted: i=1; AJvYcCWcfVDbxTYHEK6vPJ87REE1qlyBbDC3peOdFTY8x/PLxU4Yub8MpdCffd9pdcQRA9TperyCcpOXT+QsSrQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz4Y/+GSBcSbmAVHAdoHhu6rLGYFvzA2N17jKilzKkvlQ/hsLdr
-	/dv7JEtytutripG9KkPkV0+hfGkA7ut36rs3T8ZjZDAFf2lzK8WGaH8hcnKtu9VUgh7WS9SFvIJ
-	xfhZBVpfVdtfn0sr50hitSj4p6dow1R4XeNDB7S5ABw==
-X-Gm-Gg: ASbGncvLOHDR6PzkQAuMeBPXN9qzt1isF/piy3j6ANEQJL98LoVGbWckH7/oAxnANcX
-	53NbcweADbEmTer7O11fAbTMtz2jYu2Pk0xIOpTJNoOz6mVP6RNj5hhPLqxqhg/mL8qXnfWSZI0
-	4SojjKJwXOPn3M0q/lOA+LiLzoJ7oM6Dp54mvqG2D+U8LvL3wZRZyIV9MSTUKVSQ9wgEk2Qcwwh
-	sPp
-X-Google-Smtp-Source: AGHT+IGtaQJcYYKVhLp/50lPmuB48IV2mPVXAbLY+hiIPV/anQZIZHdY1a23C23NRxSz7f54xc9tE/nROguaPMm8/Tw=
-X-Received: by 2002:a17:902:ec91:b0:235:7c6:ebbf with SMTP id
- d9443c01a7336-23824047541mr35763975ad.35.1750826014327; Tue, 24 Jun 2025
- 21:33:34 -0700 (PDT)
+	s=arc-20240116; t=1750826046; c=relaxed/simple;
+	bh=FCU2au8iHfUYB8PBqpHcG2nvW+BbkUt3p1rBU4AB4NA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NV1obVSKta4nld71L8lUsHqzreXMZJzzm9C/FYotB72D0VwOl6X5jRiBWIy2+T6K54NylVKPzldhA2SsWncsue3t4ixDqXJccLEQKN9nlLCst+l4OCEFHSclyMYaIf/zlYsZ9OSpVnuHb5a+JaMFiFEfY8606P8dohNcyrnuSbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-669ff7000002311f-12-685b7c397362
+From: Byungchul Park <byungchul@sk.com>
+To: willy@infradead.org,
+	netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel_team@skhynix.com,
+	kuba@kernel.org,
+	almasrymina@google.com,
+	ilias.apalodimas@linaro.org,
+	harry.yoo@oracle.com,
+	hawk@kernel.org,
+	akpm@linux-foundation.org,
+	davem@davemloft.net,
+	john.fastabend@gmail.com,
+	andrew+netdev@lunn.ch,
+	asml.silence@gmail.com,
+	toke@redhat.com,
+	tariqt@nvidia.com,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	saeedm@nvidia.com,
+	leon@kernel.org,
+	ast@kernel.org,
+	daniel@iogearbox.net,
+	david@redhat.com,
+	lorenzo.stoakes@oracle.com,
+	Liam.Howlett@oracle.com,
+	vbabka@suse.cz,
+	rppt@kernel.org,
+	surenb@google.com,
+	mhocko@suse.com,
+	horms@kernel.org,
+	linux-rdma@vger.kernel.org,
+	bpf@vger.kernel.org,
+	vishal.moola@gmail.com,
+	hannes@cmpxchg.org,
+	ziy@nvidia.com,
+	jackmanb@google.com
+Subject: [PATCH net-next v7 5/7] netmem: use _Generic to cover const casting for page_to_netmem()
+Date: Wed, 25 Jun 2025 13:33:48 +0900
+Message-Id: <20250625043350.7939-6-byungchul@sk.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20250625043350.7939-1-byungchul@sk.com>
+References: <20250625043350.7939-1-byungchul@sk.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250623130611.896514667@linuxfoundation.org> <CA+G9fYvpJjhNDS1Knh0YLeZSXawx-F4LPM-0fMrPiVkyE=yjFw@mail.gmail.com>
- <2025062425-waggle-jaybird-ef83@gregkh>
-In-Reply-To: <2025062425-waggle-jaybird-ef83@gregkh>
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Wed, 25 Jun 2025 10:03:22 +0530
-X-Gm-Features: Ac12FXyd0V9F7KS0Td9Q-UYWV_cQw3EQwUvR1Vc5-PgNTQkt74Bhnhzxgl5WlkY
-Message-ID: <CA+G9fYvNTO2kObFG9RcOOAkGrRa7rgTw+5P3gmbfzuodVj6owQ@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/222] 5.4.295-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
-	kvmarm@lists.cs.columbia.edu, akpm@linux-foundation.org, linux@roeck-us.net, 
-	shuah@kernel.org, patches@kernelci.org, lkft-triage@lists.linaro.org, 
-	pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, 
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org, 
-	Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>, 
-	Julien Thierry <julien.thierry.kdev@gmail.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Russell King <linux@armlinux.org.uk>, Linux ARM <linux-arm-kernel@lists.infradead.org>, 
-	Andy Gross <agross@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRzGefe+O+c4XB3X7ZhBsa4EpUbhP5DoQ9FbEARBH7of26kt3ZRp
+	pqEx07RWWnRZNlfN7GKbsVqWM0rK1BKjwlitm9q8RBeT1MxLUDtJ1LeH5/88v+fLn8OaYuVk
+	zmBKk8wmMUnLqIiqO/z8vMVZG/QxpW4eHJ4KBtyDGXC5zacEh+sWgv6hNyz01T1koKx0AIPj
+	aR6B755hDJ0NQRbc3tXQeqmLwJ2CKgzBI48YKMwbwXB36CsL+3zlCnh2q0gJJ4YvYqiytLHw
+	/LaDgZaKX0roqi0k0Gi/QqC1aCk0OCfCQNMXBHWeKgUMHD7DwPFmJwPtea0Imh8ECZTkFCHw
+	1ASUMDIYYpTUt7BLZ9AHX3owrbzySkGr7e9Y6vTuojfK51JroBlTr+sgQ729x1j69sUdhj4q
+	HiG02tenoIW5Xxn6rfM1oT01foZ6Kv2EPnbWsWsi1qvidVKSIV0yRy/ZqtJfL7uvTCkLy7DV
+	nyIW1MVaURgn8AuFzzebkBVxf/SToiWyzfCzhUBgCMt6PB8r9AUfEitScZi/ygh1FW9YOT+O
+	FwVLZ5qcIfxMob36JSNrtYz51IFG8VMF97V7fzhh/CLBEcwlstaEMvtf5ODRfITQeLqDyEgc
+	2vWc1cg2DlVzb5ZgeVbgKzkh392pGGVGCvfLA+Qo4u3/1e3/6vb/6k6EXUhjMKUbRUPSwvn6
+	TJMhY/62ZKMXhf7lUvbPDT7U+2xtLeI5pA1Xx+xfr9coxfTUTGMtEjisHa+2xYUstU7M3COZ
+	k7eYdyVJqbUoiiPaSeoFA7t1Gn6HmCYlSlKKZP57VXBhky1IF+dPUBiRd5PpUH7PBVvLyWjG
+	2Z1tVfMTEmzh2/eumCnmR3yc0njg4NQ5T1fZPhojv72bHtP/4Ydy8XJTumuwIGFn/1l/rGCp
+	cfkc/visyJXnW+vPZRvoshFdxaHyuMH33sRA9wJ9StRwotu+cV1XsWv52JQxlZGzcmI3T/M/
+	l7QkVS/GzsXmVPE3+fNa8isDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe/Y8u7tbrW5L6mIfpJEJYrYi6URhRh98CIqiIjAob3Vpo6mx
+	mWhkzNSkkcuXKJszrJGpM1bLcrMMU9MkqJioKzNtvvRC2YsmvkFtRuS3P//zO7/z5bBYNUVC
+	WV1yqmhIFvRqRkEUOzdlr954+oBWc6NQAjZnDQOOiXS41e+Wgq36AYKxyR4ZjLa0MWC/Po7B
+	9jKHwC/nFIahVr8MHK4d0FcxTOBRXh0G/8VnDOTnTGNomByRwVl3pQSay9ql8OqBRQqXpm5i
+	qDP1y6Cj3sbAu5rfUhhuyifQbq0i0GeJg9bypTD+/AuCFmedBMYvlDFQ7C1nYCCnD4G32U+g
+	NMuCwPnYJ4XpiYCj9Ok7WVw4bf7yDdPaqtcS6rH2ymi56yS9VxlJzT4vpq7q8wx1/SyS0bdd
+	jxj6rGSaUI97VELzs0cY+mPoDaHfHncy1P7xu4Q6azvJLlWCYvNRUa9LEw1rYhMV2rv2J9IT
+	dnn65adXiAkNy8yIZXluPf/CEmtGcpbhInifbxIHcwi3lh/1txEzUrCYu83wLTU9s/wSTuBN
+	Q6lBhnDh/ICnmwlmZVDzeRAFM8+F8Y47jbMeORfD2/zZJJhVASa3Kwv/5Rfz7VcHSVCJA3ed
+	11TBGgdWs++X4gKktM6hrP8p6xyqHOFqFKJLTksSdPqYaONxbUayLj36SEqSCwU+oiJzptCN
+	xjrimxDHIvUCpSY3QauSCmnGjKQmxLNYHaK8vCFQKY8KGadEQ8ohw0m9aGxCy1miXqbcvl9M
+	VHHHhFTxuCieEA3/phJWHmpCOvsH+7q71ZoiR++uc3ktnocL23aXOQe/JnKFCZn9lRqyT/O+
+	J2I+igqvbxyg3ZaGmPmrYEtUxUyD/Ozh9Z744ghkI8LBsM7UMykl11f0zft9acz9qihl3p76
+	jtNLntywj4SuRLfDCrPy3p9Bpq29hkWRBTN7mZjMja1eu2XbJzUxaoW1kdhgFP4AWDEA9A0D
+	AAA=
+X-CFilter-Loop: Reflected
 
-On Tue, 24 Jun 2025 at 15:55, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Jun 24, 2025 at 12:46:15AM +0530, Naresh Kamboju wrote:
-> > On Mon, 23 Jun 2025 at 18:40, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > This is the start of the stable review cycle for the 5.4.295 release.
-> > > There are 222 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > >
-> > > Responses should be made by Wed, 25 Jun 2025 13:05:50 +0000.
-> > > Anything received after that time might be too late.
-> > >
-> > > The whole patch series can be found in one patch at:
-> > >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.295-rc1.gz
-> > > or in the git tree and branch at:
-> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
-> > > and the diffstat can be found below.
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> >
-> > Regressions on arm defconfig builds with gcc-12 and clang failed on
-> > the Linux stable-rc 5.4.295-rc1.
-> >
-> > Regressions found on arm
-> > * arm, build
-> >   - clang-20-axm55xx_defconfig
-> >   - clang-20-defconfig
-> >   - clang-20-lkftconfig
-> >   - clang-20-lkftconfig-no-kselftest-frag
-> >   - clang-nightly-axm55xx_defconfig
-> >   - clang-nightly-defconfig
-> >   - clang-nightly-lkftconfig
-> >   - gcc-12-axm55xx_defconfig
-> >   - gcc-12-defconfig
-> >   - gcc-12-lkftconfig
-> >   - gcc-12-lkftconfig-debug
-> >   - gcc-12-lkftconfig-kasan
-> >   - gcc-12-lkftconfig-kunit
-> >   - gcc-12-lkftconfig-libgpiod
-> >   - gcc-12-lkftconfig-no-kselftest-frag
-> >   - gcc-12-lkftconfig-perf
-> >   - gcc-12-lkftconfig-rcutorture
-> >   - gcc-8-axm55xx_defconfig
-> >   - gcc-8-defconfig
-> >
-> > Regression Analysis:
-> >  - New regression? Yes
-> >  - Reproducibility? Yes
-> >
-> > Build regression: stable-rc 5.4.295-rc1 arm kvm init.S Error selected
-> > processor does not support `eret' in ARM mode
-> >
-> > Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >
-> >
-> > ## Build errors
-> > arch/arm/kvm/init.S: Assembler messages:
-> > arch/arm/kvm/init.S:109: Error: selected processor does not support
-> > `eret' in ARM mode
-> > arch/arm/kvm/init.S:116: Error: Banked registers are not available
-> > with this architecture. -- `msr ELR_hyp,r1'
-> > arch/arm/kvm/init.S:145: Error: selected processor does not support
-> > `eret' in ARM mode
-> > arch/arm/kvm/init.S:149: Error: selected processor does not support
-> > `eret' in ARM mode
-> > make[2]: *** [scripts/Makefile.build:345: arch/arm/kvm/init.o] Error 1
-> >
-> > and
-> > /tmp/cc0RDxs9.s: Assembler messages:
-> > /tmp/cc0RDxs9.s:45: Error: selected processor does not support `smc
-> > #0' in ARM mode
-> > /tmp/cc0RDxs9.s:94: Error: selected processor does not support `smc
-> > #0' in ARM mode
-> > /tmp/cc0RDxs9.s:160: Error: selected processor does not support `smc
-> > #0' in ARM mode
-> > /tmp/cc0RDxs9.s:296: Error: selected processor does not support `smc
-> > #0' in ARM mode
-> > make[3]: *** [/builds/linux/scripts/Makefile.build:262:
-> > drivers/firmware/qcom_scm-32.o] Error 1
->
-> That's odd, both clang and gcc don't like this?  Any chance you can do
-> 'git bisect' to track down the offending commit?
+The current page_to_netmem() doesn't cover const casting resulting in
+trying to cast const struct page * to const netmem_ref fails.
 
-The git bisection pointing to,
+To cover the case, change page_to_netmem() to use macro and _Generic.
 
-  kbuild: Update assembler calls to use proper flags and language target
-  commit d5c8d6e0fa61401a729e9eb6a9c7077b2d3aebb0 upstream.
+Signed-off-by: Byungchul Park <byungchul@sk.com>
+Reviewed-by: Mina Almasry <almasrymina@google.com>
+Reviewed-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ include/net/netmem.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-- Naresh
+diff --git a/include/net/netmem.h b/include/net/netmem.h
+index e9eee8f680d5..535cf17b9134 100644
+--- a/include/net/netmem.h
++++ b/include/net/netmem.h
+@@ -213,10 +213,9 @@ static inline netmem_ref net_iov_to_netmem(struct net_iov *niov)
+ 	return (__force netmem_ref)((unsigned long)niov | NET_IOV);
+ }
+ 
+-static inline netmem_ref page_to_netmem(const struct page *page)
+-{
+-	return (__force netmem_ref)page;
+-}
++#define page_to_netmem(p)	(_Generic((p),			\
++	const struct page * :	(__force const netmem_ref)(p),	\
++	struct page * :		(__force netmem_ref)(p)))
+ 
+ /**
+  * virt_to_netmem - convert virtual memory pointer to a netmem reference
+-- 
+2.17.1
 
->
-> thanks,
->
-> greg k-h
