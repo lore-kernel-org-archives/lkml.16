@@ -1,42 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26DED2D5C61;
-	Wed, 25 Jun 2025 17:39:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351A12D6624;
+	Wed, 25 Jun 2025 17:39:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750873192; cv=none; b=KT6M0/zRjN6upad9YKxJVSrysldR2dlLbqhThTgfIqRdtvlIiZoFANwMttAZ6zE8g83jYpxUML/g/WuAWUz6lqCivuzYZrB9hiCTz6QZCnJjMc1nAC4gFzGDOGJsQM+oi168tf8iuVOyIQ54EX0oXdI6+ooDjBDvb4B26iOWsnM=
+	t=1750873195; cv=none; b=Z9nGToI717w15ZA1DHGNk0ak7fXNldh81nMe0zXL13LdaOunvdYzCRYbGws/4+rueWMeN/chvs1b4aHvS88xWQ3DRL+FbdhkuJWDyNzOUBm2DdVgiOuQAcKtPU7pAlmlZuqC91fmQtjZ7eahlUG0NaVUDuI+0PJGMtaPNA48wKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750873192; c=relaxed/simple;
-	bh=sgy+eEdqBTswrmiw04uEhyyF2liVZpJAHgLHdaFZt8s=;
+	s=arc-20240116; t=1750873195; c=relaxed/simple;
+	bh=ExdVo+xqNNHCrzpD1GLmq96PFFu7gyIf98fc4flcU+o=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=JslXijYwwelqcqaWMm7W9RRZSU9xwZYgcg4LWDkVgqMIPj+Oi6DnUqfBJqLGJxJFQ7CWWO/m6QeA6ZDn0ANcuInLRTLF2TQr48BaE+x6jCu0w7WAoFTAU4PsYyNUPfIrO5hSjEmv6F8OdB3Sk49+n/dA1KIA4Q3G41kaB26xoA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=khUVif9O; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ZXdkBA5NoTcJDpUvFsoY7iAVV4VeCPw5FQJtW5y6XSQQ8vNGNp0S5VKTA5Wl+T0/WhYcKplfAJLh4M4zEJT5iZgkKejw78V5MIUhNYAhTDqZYW8najQcG9LyVpaif52lRDwyOA2g19cfqRqofX84CcF6AJQRqVyPHIOG3JtoPqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HCq2UUXm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="khUVif9O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9D5CC4CEEA;
-	Wed, 25 Jun 2025 17:39:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HCq2UUXm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D1FBC4CEEE;
+	Wed, 25 Jun 2025 17:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750873191;
-	bh=sgy+eEdqBTswrmiw04uEhyyF2liVZpJAHgLHdaFZt8s=;
+	s=k20201202; t=1750873194;
+	bh=ExdVo+xqNNHCrzpD1GLmq96PFFu7gyIf98fc4flcU+o=;
 	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=khUVif9OAr1tXZGo/dEidNSJVHaRdht2eCMbiQbUCvxyYPFrRg1Fn4f9MgxurrkgJ
-	 sb12AJ3hr9R5uMWSL92mwXKJ6SSDNcHVv6S/OIfy1icoV40Lzys7rQ5WccrVXr3/N8
-	 hSqBApQ1wG6qT5UUQC6PDdmKrI+JX+Rth6ueZiQ3VOS4dcLo+usdgB0CytmWJJbIm0
-	 EdwkdxRuHJ/7r8BCItKiq3/wM/l9xZiYZAWkUYNMFry73OXTc/k5/FYx+pGMPsWLkl
-	 WvdZAx7dOgRQxzHJyqiqcJIY0HM8AvrbmOmfbOfIuqUpcaJTl17jNiq+yHmV7E1aRu
-	 ck0iUhl/3lsnw==
+	b=HCq2UUXmnpJnMHOp1LKjbUbMqcUjFgHFhgjCtrtXmiqEa3Tu7sLNtf0c/LOaacRZu
+	 LcKlDFNNKyM9kbtofh5TiHAb2GdfMZ1FeKqaUVCFjV/0PzQpkwfyGZDPHYE1cNBfFy
+	 8Yb5bi6gsNyEN3iU0Kui9N6y6FTvQqxOEyFx4IIqbhtox2BX2ozbj574tJuBa100lT
+	 28ZYUz1bz9Aoj18kSMGkKgb78QoNOrEkUTqKxl/YGNHRZFKILpv8h13FdKrQf+JJYK
+	 6RVFu2C4HzcBw05TXyY3Gc/abUBDD6tjJoDwVL/2lveyJR+2Lm0uY41cMu60Ete9Ui
+	 ycYADo8bFTeQQ==
 From: Mark Brown <broonie@kernel.org>
-To: Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250616-asoc-wcd93xx-enum-v1-0-a20a1b538509@linaro.org>
-References: <20250616-asoc-wcd93xx-enum-v1-0-a20a1b538509@linaro.org>
-Subject: Re: [PATCH 0/4] ASoC: codecs: wcd93xx: Drop enums for chipid
- values (minor cleanup)
-Message-Id: <175087318970.198995.7502242059805940864.b4-ty@kernel.org>
-Date: Wed, 25 Jun 2025 18:39:49 +0100
+To: Vijendar Mukunda <Vijendar.Mukunda@amd.com>
+Cc: alsa-devel@alsa-project.org, lgirdwood@gmail.com, 
+ yung-chuan.liao@linux.intel.com, pierre-louis.bossart@linux.dev, 
+ perex@perex.cz, tiwai@suse.com, Basavaraj.Hiregoudar@amd.com, 
+ Sunil-kumar.Dommati@amd.com, venkataprasad.potturu@amd.com, 
+ mario.limonciello@amd.com, linux-sound@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, sound-open-firmware@alsa-project.org
+In-Reply-To: <20250620120942.1168827-1-Vijendar.Mukunda@amd.com>
+References: <20250620120942.1168827-1-Vijendar.Mukunda@amd.com>
+Subject: Re: [PATCH 0/2] Add SoundWire machines for ACP7.0/ACP7.1 sof stack
+Message-Id: <175087319206.198995.12597800532047615959.b4-ty@kernel.org>
+Date: Wed, 25 Jun 2025 18:39:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,13 +49,16 @@ Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.15-dev-08c49
 
-On Mon, 16 Jun 2025 13:54:07 +0200, Krzysztof Kozlowski wrote:
-> Minor cleanup while preparing for adding WCD9378 support: do not use
-> enum for values which are not an enumeration.
+On Fri, 20 Jun 2025 17:38:41 +0530, Vijendar Mukunda wrote:
+> Add SoundWire machines as alternate machines for ACP7.0 & ACP7.1
+> platforms with the below machine configuration.
+> Link 0: RT722 codec with three endpoints: Headset, Speaker, and DMIC.
 > 
-> Best regards,
-> Krzysztof
+> Vijendar Mukunda (2):
+>   ASoC: amd: acp: add soundwire machine for ACP7.0 and ACP7.1 sof stack
+>   ASoC: SOF: amd: add alternate machines for ACP7.0 and ACP7.1 platforms
 > 
+> [...]
 
 Applied to
 
@@ -61,14 +66,10 @@ Applied to
 
 Thanks!
 
-[1/4] ASoC: codecs: wcd937x: Use simple defines for chipid register value
-      commit: 2f6ff1e615cd4f8a86c9d0e4e778db9ae44d5481
-[2/4] ASoC: codecs: wcd938x: Use simple defines for chipid register value
-      commit: 100877df34b00257c9ed6d279b06b3ed1da5e2c1
-[3/4] ASoC: codecs: wcd939x: Use simple defines for chipid register value
-      commit: 5d3ccd356e2ce510bdbd4b0c389f2fe3deb41a45
-[4/4] ASoC: codecs: wcd939x: Add defines for major/minor version decoding
-      commit: a48352921f0b15b1f7eff83f5b5613d6ae2350d3
+[1/2] ASoC: amd: acp: add soundwire machine for ACP7.0 and ACP7.1 sof stack
+      commit: 8b04b766714e93ca5a8021ff3408c9ef89d9eb85
+[2/2] ASoC: SOF: amd: add alternate machines for ACP7.0 and ACP7.1 platforms
+      commit: 59566923d955b69bfb1e1163f07dff437dde8c9c
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
