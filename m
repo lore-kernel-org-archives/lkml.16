@@ -1,154 +1,191 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D963B264608;
-	Wed, 25 Jun 2025 14:18:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5623E17333F
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:18:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750861111; cv=none; b=FI1QCTuCjfwRji6IlcSMtEcJbVOWZThcDgLM1D0LRBOKt75GsTxbmkQom0TP/sauCiS/w6gDMXs9xlZWv5Vt/5P+JBob2b+Yc+LqquPbQeBP15uuBuO6dw5lwMtUCyH4TxjFmAi6amCukGYcp7NqXi0DaNfFlDb1GLJTd0dVnE4=
+	t=1750861140; cv=none; b=U+blrT3XxTr9FXcqc7c6rC8VoN0pkcnH0pf0o/JdrH8Hv1wkAoEknpSUZl+fCiSCE/HhKB8VCJHXBd5BmzT9tjqIz5abum0NPQPD4rrl9C3/azEsby10DNODoJ9OjoK+dqIT7Fbz0ModLE0OnOJ9xzmZT3Lb3wWsy9YbFTQOYuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750861111; c=relaxed/simple;
-	bh=v8kTdUhjATpjI9S/z2ca5IIHJ3LI0Gt3dbKmgjAwh4s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HS5KPbUK2htVqIteOfp4GbQAAzE968WkA/doO+KQ653PVpIk77/eTWSzFWfT5N7u/Ot3A1uZzICQtsa5S/Dtvay/WJg0+RN4MxS6xKdYH20TfY+liUf5/rZx0zirhYe65ndMBSW6jYpsq12CPdS4lU5p29ECO/UsN3uN6kpCKdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JmMKYV47; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750861140; c=relaxed/simple;
+	bh=qFJmevTRkhOJj67gAfw4bXMqkBpsxt7ZANAMwvYuQ/8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=OmhGHT0tmxRRnY7zywY1UoURSo8jOF90WB40uapWNsb9/S9VgE0mIQ9G8/jZpZBxCe4HX1MlQgm9qlKEs39GVhDdAWTCl8Lhx9Fz+nOOu1spL2kolOn3Zk7RQmg+60YA2uZnLhjZjE7LwdBJw8a1CK0PmpB+CEFyYIcmrop9wQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=XcHRTdLb; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JmMKYV47"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-4a4bb155edeso18152401cf.2;
-        Wed, 25 Jun 2025 07:18:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750861109; x=1751465909; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SApv73wV95/PW1AcOp5ta6WUGd2OuNz5QHUzFSvdal8=;
-        b=JmMKYV47ed4AWxrmUKDs/1avnvPKTizPxumU+JqjleIPBWtlMcPafNz5vN9QmT4B+Q
-         VbhXVewIwgNGRw9/Kr2yiTcI7hZYS/i4s9CVeb/mJ4NDDVbSFCfnjszposqGS05hXK0d
-         31tc39+XAF+dlsTvgz01wV2eCuV5t/JtgQFkHjGCw8zmrUc2DMgR8d3QRNB2xFde7RGj
-         LHk/toFnVFgpNpMnGVWY4nOXLGChMqPj5vnp2jjeuLh+aeWcPDZuPljmZj7+oBFfU/D+
-         4Kdw264YCpTyeX6G4TLhA0AObxE7sz8cBD1fDMgh7pHtld0Vqnp2JO5yEubEh6GjfFvl
-         0DQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750861109; x=1751465909;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SApv73wV95/PW1AcOp5ta6WUGd2OuNz5QHUzFSvdal8=;
-        b=Cu3fL+2JL6F+aFIKTuJEr9AOlxgctMiz/77S3zF86Fk8awWH5j6XaP73sHpl8z110e
-         YkFscrdRlnDEsmSAfYB77XkbSfEmOyrw2yCfuyNfFXTUEdmHberpQVqHTGw2JgY6bQ/h
-         536LO1Tja1F3G+S9Eyo8o81/TWkau299Mk8pxCnvQTsg/4vd4tkmUjrr6NyWI958TmZe
-         F0IlnjNpUc1cihFNP2u0sA9ZcuKCFrcNHWFt0ViQSiwM+sFJT7C0KvgQ8233vUIU/POz
-         oZ0bl7y4ZlBT2Xxec2WPqBumu8fr1IHmYdjle/6Pgy2UOCpa4zNuBWtMhvzTGmpf8EkG
-         GJAw==
-X-Forwarded-Encrypted: i=1; AJvYcCU+ahJHXSGP2+Rxx4w3tkcAlBdKzZdrLoUCrBPyNrYQzIAL6CNZGUmtQI3vBMAnZg+A7v+g@vger.kernel.org, AJvYcCWt9mlFDDh+oXZYLKGlPhqbjfUolkO0wAVWOC0OmFTfhb3Sw7WQyGRhRVByZXaw1WnFLgdYT6A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyCnupIEI7QPAfZrzUaKVLyRjEqgQI9FxUAE3qHhtQIgK7EvRH5
-	keSFMMccCMVZSyD4wWKJZNTQBjsIlMJCF8fhF2hw/YW/ti5zebgYfl9A
-X-Gm-Gg: ASbGncuYeEZJyxo1wZ+REBiaSvFwT8fNqsgZZRBvn+U/y1vcaOYanp9/ZT3kv1yO6E2
-	zF/e1DCJAdSWM7lgI0RLbKLl+GIa+Gn83WbuQUb5LTKp3P9H+33h3JpeehCUf+5rPakvwiYrOaa
-	oFr9k5zA9K9erBxjrdqFGE88l3BNOPKoKv16ohp0SfeZWvJsHGyQ7892CaYoyZHeLnAaYE4FPke
-	e2g9oxPhKqxVrdOAJm33tiYsZYpQp7Ii51Wq1M5I43T/6jdG4Ht1woVHAMV9FF9dvGqad3i187n
-	WOl2oG4sULyO2E+G2epncv/DYT4cdHJ9JvO/c5tFrRh6JVc+VpcJkdA8S5khh5RlYf9cSBxTG1M
-	CgoVjiF0EBzVqFzHbN0XIOIOr4yjEYdywm7lZuQlImflns/4bc+sjYYj5ZDNmp/o=
-X-Google-Smtp-Source: AGHT+IFajQmaBSIi950oGCwkkGhdcIDigDTu+52BcWLWhXdTGrL+WmNf84aM6QjCMYIHqOhD0NhhMg==
-X-Received: by 2002:a05:622a:506:b0:494:f1e7:65ef with SMTP id d75a77b69052e-4a7c08452d9mr53303541cf.44.1750861108315;
-        Wed, 25 Jun 2025 07:18:28 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a779e5d262sm59894161cf.50.2025.06.25.07.18.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 07:18:27 -0700 (PDT)
-Received: from phl-compute-11.internal (phl-compute-11.phl.internal [10.202.2.51])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 21392F40067;
-	Wed, 25 Jun 2025 10:18:27 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-11.internal (MEProxy); Wed, 25 Jun 2025 10:18:27 -0400
-X-ME-Sender: <xms:MgVcaOwCVCagevnS9sW-PJ7ylYPYtdu6iXaUdfYmg2HNwWYMt8UPMw>
-    <xme:MgVcaKRi623tvmF9P0BvaTyMyAvAcocMsiFXhFMwHt-3WicPtos_Ah6cAKtW5mJV_
-    XMWv-KLXacVdLQ1Gw>
-X-ME-Received: <xmr:MgVcaAWwaGbiUqOhNRJq1dJuqpKzsYsUstJI_7KFdqlU7_4N1XX-Iat9HQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvvdellecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
-    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
-    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
-    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
-    hrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveeiudffiedv
-    necuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqh
-    hunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddu
-    jeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvg
-    drnhgrmhgvpdhnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtghp
-    thhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinh
-    hugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhgt
-    uhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlkhhmmheslhhishhtsh
-    drlhhinhhugidruggvvhdprhgtphhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdp
-    rhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhonhhgmh
-    grnhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepuggrvhgvsehsthhgohhlrggsshdr
-    nhgvthdprhgtphhtthhopehprghulhhmtghksehkvghrnhgvlhdrohhrgh
-X-ME-Proxy: <xmx:MwVcaEjcNogxlCJElq5Ale1bJ6pJZUTJdaXABNsyrKdceAsKRxft7Q>
-    <xmx:MwVcaAA_6AfgxN3VXiJPIlFf5fAKOd1ovbVo0vsoEOvkLjTAj515Sw>
-    <xmx:MwVcaFJvY5vFTAcHAX_cpzwNn-nVmedOU6MB4Aoenx3yRVhBiB8WMQ>
-    <xmx:MwVcaHCjj62N_PPcE_CoPkoZG03OBmd1OkYqSXajhjwJ_k_GNAZO2w>
-    <xmx:MwVcaIwD8Mb8OCae105Kdepdt-LxOuJmSd7xTQiTc0SL56i1uNop8Lmq>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 25 Jun 2025 10:18:26 -0400 (EDT)
-Date: Wed, 25 Jun 2025 07:18:25 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org, lkmm@lists.linux.dev,
-	Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Josh Triplett <josh@joshtriplett.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
-	Joel Fernandes <joelagnelf@nvidia.com>,
-	Uladzislau Rezki <urezki@gmail.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Lai Jiangshan <jiangshanlai@gmail.com>,
-	Zqiang <qiang.zhang@linux.dev>, Breno Leitao <leitao@debian.org>,
-	aeh@meta.com, netdev@vger.kernel.org, edumazet@google.com,
-	jhs@mojatatu.com, kernel-team@meta.com,
-	Erik Lundgren <elundgren@meta.com>
-Subject: Re: [PATCH 8/8] locking/lockdep: Use shazptr to protect the key
- hashlist
-Message-ID: <aFwFMf3K_hBygBED@Mac.home>
-References: <20250625031101.12555-1-boqun.feng@gmail.com>
- <20250625031101.12555-9-boqun.feng@gmail.com>
- <20250625115929.GF1613376@noisy.programming.kicks-ass.net>
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="XcHRTdLb"
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250625141856euoutp01e70e9fa0141b6d9739a17c36d77408f8~MTu1edOCT2451624516euoutp01D
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:18:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250625141856euoutp01e70e9fa0141b6d9739a17c36d77408f8~MTu1edOCT2451624516euoutp01D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1750861136;
+	bh=wR56TfR1MrnOoOQITo0mciNv5ZtTtuKRzNtl8gwqSX0=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=XcHRTdLbKaso4zpzre+8DiVdHGUTcpphgnhci53QhO8NFzmo6rnu3exvXs4th0k3A
+	 hG4UDIWlxuHq7ZNMwBUBQYgQtby9/ZitRt1E+J1/OSBVfiEXv7uHS6r2dg7IwcL7xv
+	 xydJN8aAc97HLGY2fRlTUjg0fmvScczh2GOoleQE=
+Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250625141855eucas1p2d817ba3aa087d78130ac2fa293d18ba0~MTu0wMw5m0434904349eucas1p2z;
+	Wed, 25 Jun 2025 14:18:55 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20250625141854eusmtip271ddb5cec99f21f63cc1bf8c27cf6418~MTuzjrIvR0996109961eusmtip2H;
+	Wed, 25 Jun 2025 14:18:54 +0000 (GMT)
+Message-ID: <d12fd4fb-0adb-40c4-8a0a-c685cd6327b3@samsung.com>
+Date: Wed, 25 Jun 2025 16:18:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625115929.GF1613376@noisy.programming.kicks-ass.net>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 5/8] dt-bindings: gpu: img,powervr-rogue: Add TH1520
+ GPU compatible
+To: Krzysztof Kozlowski <krzk@kernel.org>, Matt Coster
+	<Matt.Coster@imgtec.com>
+Cc: Drew Fustini <drew@pdp7.com>, Guo Ren <guoren@kernel.org>, Fu Wei
+	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Bartosz
+	Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Frank
+	Binns <Frank.Binns@imgtec.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
+	Alexandre Ghiti <alex@ghiti.fr>, Ulf Hansson <ulf.hansson@linaro.org>, Marek
+	Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>, Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>, "linux-riscv@lists.infradead.org"
+	<linux-riscv@lists.infradead.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org"
+	<linux-pm@vger.kernel.org>, "dri-devel@lists.freedesktop.org"
+	<dri-devel@lists.freedesktop.org>
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <e1a3d854-93bc-4771-9b8e-1639ca57b687@kernel.org>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250625141855eucas1p2d817ba3aa087d78130ac2fa293d18ba0
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250623114436eucas1p1ab8455b32937a472f5f656086e38f428
+X-EPHeader: CA
+X-CMS-RootMailID: 20250623114436eucas1p1ab8455b32937a472f5f656086e38f428
+References: <20250623-apr_14_for_sending-v6-0-6583ce0f6c25@samsung.com>
+	<CGME20250623114436eucas1p1ab8455b32937a472f5f656086e38f428@eucas1p1.samsung.com>
+	<20250623-apr_14_for_sending-v6-5-6583ce0f6c25@samsung.com>
+	<9c82a6bc-c6ff-4656-8f60-9d5fa499b61a@imgtec.com>
+	<d154d2d0-3d59-4176-a8fb-3cb754cf2734@samsung.com>
+	<e1a3d854-93bc-4771-9b8e-1639ca57b687@kernel.org>
 
-On Wed, Jun 25, 2025 at 01:59:29PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 24, 2025 at 08:11:01PM -0700, Boqun Feng wrote:
+
+
+On 6/25/25 15:55, Krzysztof Kozlowski wrote:
+> On 25/06/2025 14:45, Michal Wilczynski wrote:
+>>
+>>
+>> On 6/24/25 15:53, Matt Coster wrote:
+>>> On 23/06/2025 12:42, Michal Wilczynski wrote:
+>>>> Update the img,powervr-rogue.yaml to include the T-HEAD TH1520 SoC's
+>>>> specific GPU compatible string.
+>>>>
+>>>> The thead,th1520-gpu compatible, along with its full chain
+>>>> img,img-bxm-4-64, and img,img-rogue, is added to the
+>>>> list of recognized GPU types.
+>>>>
+>>>> The power-domains property requirement for img,img-bxm-4-64 is also
+>>>> ensured by adding it to the relevant allOf condition.
+>>>>
+>>>> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+>>>> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>>>> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml | 9 ++++++++-
+>>>>  1 file changed, 8 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+>>>> index 4450e2e73b3ccf74d29f0e31e2e6687d7cbe5d65..9b241a0c1f5941dc58a1e23970f6d3773d427c22 100644
+>>>> --- a/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+>>>> +++ b/Documentation/devicetree/bindings/gpu/img,powervr-rogue.yaml
+>>>> @@ -21,6 +21,11 @@ properties:
+>>>>            # work with newer dts.
+>>>>            - const: img,img-axe
+>>>>            - const: img,img-rogue
+>>>> +      - items:
+>>>> +          - enum:
+>>>> +              - thead,th1520-gpu
+>>>> +          - const: img,img-bxm-4-64
+>>>> +          - const: img,img-rogue
+>>>>        - items:
+>>>>            - enum:
+>>>>                - ti,j721s2-gpu
+>>>> @@ -93,7 +98,9 @@ allOf:
+>>>>        properties:
+>>>>          compatible:
+>>>>            contains:
+>>>> -            const: img,img-axe-1-16m
+>>>> +            enum:
+>>>> +              - img,img-axe-1-16m
+>>>> +              - img,img-bxm-4-64
+>>>
+>>> This isn't right – BXM-4-64 has two power domains like BXS-4-64. I don't
+>>> really know what the right way to handle that in devicetree is given the
+>>> TH1520 appears to expose only a top-level domain for the entire GPU, but
+>>> there are definitely two separate domains underneath that as far as the
+>>> GPU is concerned (see the attached snippet from integration guide).
+>>>
+>>> Since power nodes are ref-counted anyway, do we just use the same node
+>>> for both domains and let the driver up/down-count it twice?
+>>
+>> Hi Matt,
+>>
+>> Thanks for the very helpful insight. That's a great point, it seems the
+>> SoC's design presents a tricky case for the bindings.
+>>
+>> I see what you mean about potentially using the same power domain node
+>> twice. My only hesitation is that it might be a bit unclear for someone
+>> reading the devicetree later. Perhaps another option could be to relax
+>> the constraint for this compatible?
+>>
+>> Krzysztof, we'd be grateful for your thoughts on how to best model this
+>> situation.
 > 
-> > +	/* Need preemption disable for using shazptr. */
-> > +	guard(preempt)();
-> > +
-> > +	/* Protect the list search with shazptr. */
-> > +	guard(shazptr)(hash_head);
 > 
-> OK, this is the end of the series, and so far every single user is doing
-> both a preempt and a shazptr guard. Why can't we simplify this and have
-> the shazptr guard imply preempt-disable?
+> It's your hardware, you should tell us, not me. I don't know how many
+> power domains you have there, but for sure it is not one AND two domains
+> the same time. It is either one or two, because power domains are not
+> the same as regulator supplies.
 
-You're right. The background story is that in the beginning, the hazard
-pointer protection was placed at the callsites of is_dynamic_key(): one
-in register_lock_class() and one in lockdep_init_map_type(), and in
-register_lock_class() I could use the fact that it's called with irq
-disabled to save the preempt-disable.
+Hi Krzysztof, Matt,
 
-So given the current users, it makes sense to fold the preempt disabling
-into shazptr guard.
+The img,bxm-4-64 GPU IP itself is designed with two separate power
+domains. The TH1520 SoC, which integrates this GPU, wires both of these
+to a single OS controllable power gate (controlled via mailbox and E902
+co-processor).
 
-Regards,
-Boqun
+This means a devicetree for the TH1520 can only ever provide one power
+domain for the GPU. However, a generic binding for img,bxm-4-64 should
+account for a future SoC that might implement both power domains.
+
+That's why I proposed to relax the constraints on the img,bmx-4-64 GPU.
+
+This makes the binding accurately represent the GPU's full capabilities
+while remaining compatible with SoCs like the TH1520 that have a limited
+implementation.
+
+Does this seem like the correct and robust approach to you?
+
+> 
+> Best regards,
+> Krzysztof
+> 
+
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
