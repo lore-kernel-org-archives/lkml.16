@@ -1,191 +1,172 @@
-Received: from AS8PR03CU001.outbound.protection.outlook.com (mail-westeuropeazon11012006.outbound.protection.outlook.com [52.101.71.6])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B9A62627F9;
-	Wed, 25 Jun 2025 13:09:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.71.6
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750856998; cv=fail; b=hvfErK9cHwxJqGqJYtamTrvtYzmJkQ7gUvDSlfo15/60iNuAn7xXYkHk1p12KucIihEDT/LID1guGSp25buUFDnXCZisxLKDz15iQwT4//b5wsYL3CFh6Z36stVXZ67nBrWYihGbvwIwdH8fz02VLmDKkbLb+wuR0e/r+DKjWgo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750856998; c=relaxed/simple;
-	bh=yJPD012M5Bp5Z+czjGXnyv9T1lLSrHhlIfP6hd4YJgM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ouTrsiBRTdcLxWGxpcmXUjNFHFnkOUb/7rH9dHG1UoQ05tVbUsumDC21ziPFz1XVvweqvFizfjtB9pb6ZQhau3cCQ1VUTPSCC+DmO0X7KwbmqZ/tApgPlLLPyfC6cXW21yOX+Av5o1iv9ei2LQ+tZ8gkUaKg5DUU/1PPbDVdKYI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arri.de; spf=pass smtp.mailfrom=arri.de; dkim=pass (1024-bit key) header.d=arri.de header.i=@arri.de header.b=SqrHmMeE; arc=fail smtp.client-ip=52.101.71.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arri.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arri.de
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE73C2620CB;
+	Wed, 25 Jun 2025 13:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750857021; cv=none; b=S2Ak27ppgRk1pq4H5bjHckC4wShRZxW6byAHiXjX3dubfCLmlI3+g0ZAY8jBzsuS0T3wUhr2Rn8BWrzoinFiJuWbqPjO9oq8Wc48Sefo4w0iGJUwAIVnzh3Ahcf/U1SgQGxgeaE8UKNBHNWYSzthVwm6QT5W8xhLZ30eZHG9I70=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750857021; c=relaxed/simple;
+	bh=B3Jr4MdA4tDfAIG3Jnrg1O1yont+DgK8qgQw4KUNncQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qevdqeNoM6iu4S23A2fqrCVF2jNDODTQjqthIF3mPkvEJUxAVgzY8MeOozTyFvkJInGrfFjw/qt9rSYecYzo8AjGN0IyCqY+qj5opXYxT8i/QV6ewvPEZxQLWMmlTP4FaRRuYbxuXhy4ITNXjld7bmA7gXCxfc3TQCkXOtQYGj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uTYIzGpM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=arri.de header.i=@arri.de header.b="SqrHmMeE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=fuxVqjXi4B7fgPFsYDhVr3IRIGPEDjPJMTjs8LLrFIO8YomSdj8GoeatPeIavHZwhb/31nQuDxnYdyyNI8bYUy5l9ze0DoMbQmODBVrke8LN203DoRDdl7ARQV9JGwQyp03ah88YySZMKTA6wsHA1eQ9sUhYCzO32pl4SkdSNqz7AZYdaeqA1fB0KGJGiYx28Z3bo+9CGOMu3+rOhlPHEuB0JXrVuNf7wqqngi1d6Q4a0IB/q+YNXFf9GhzTohUfC+ogT9ZH4k0lxqFbvkXAJGHg+epGxPQaLAu0V5Ytnihw6nwU0bujKpqxS9rYE8+3eaRTa+Ku5pjIotOp6TAnww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eEFiO+LAZROdF8129wLUjHCyu4hw2KpL5o7HrJiD1/Y=;
- b=koIKPdn3UtXqF4FdJq1TcnNIM3mB04maBnSmoPIfuBeq5pBtAW1byxTkVR1/MyJZeS9fh1leWvxbJrAVct0D3iJrh0yt8kSvXgBcAR06PWc7LygqGqqB1q0SzBnSKOU7s3uBL5VxAIHZZ2x/+7l8Dy1eSI2y23AA5fsjyFOoGHBAjr0TP91RrJvHR8sX4lf/YXX2srMte4sF84qPqdbTMg+ev31GDvkuYOQy3ZzB4NnBQJ8cgAyOteOJ917Qh/VoK4tzKQzHrXK9RkCGGM4ytRI6mM1paIhcYzWD6/ofYAaf7UCevWoUhRDePSxXKUYiPMWbk88ICUMau1Nh4l9qTQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 217.111.95.7) smtp.rcpttodomain=holtmann.org smtp.mailfrom=arri.de;
- dmarc=fail (p=none sp=none pct=100) action=none header.from=arri.de;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arri.de; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eEFiO+LAZROdF8129wLUjHCyu4hw2KpL5o7HrJiD1/Y=;
- b=SqrHmMeEQIUyQnHE1pKEHe2C1BUM1i3ysDIrRZYKwO6JRuUpQuIesnpN3L/YDhCPSY5e1W0NHw81ciPBMApEU6VGRXWyWD0DaXjljqvQQ6UtxenKB6h/dKroXV+DYDvKdHARbUFzfolhyXqbY1LZ495qYgU3qTWF0Qxr6KWPboc=
-Received: from AS4P191CA0037.EURP191.PROD.OUTLOOK.COM (2603:10a6:20b:657::16)
- by VI1PR03MB6223.eurprd03.prod.outlook.com (2603:10a6:800:132::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.30; Wed, 25 Jun
- 2025 13:09:48 +0000
-Received: from AMS0EPF000001A4.eurprd05.prod.outlook.com
- (2603:10a6:20b:657:cafe::2a) by AS4P191CA0037.outlook.office365.com
- (2603:10a6:20b:657::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.17 via Frontend Transport; Wed,
- 25 Jun 2025 13:09:48 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 217.111.95.7)
- smtp.mailfrom=arri.de; dkim=none (message not signed)
- header.d=none;dmarc=fail action=none header.from=arri.de;
-Received-SPF: Fail (protection.outlook.com: domain of arri.de does not
- designate 217.111.95.7 as permitted sender) receiver=protection.outlook.com;
- client-ip=217.111.95.7; helo=mta.arri.de;
-Received: from mta.arri.de (217.111.95.7) by
- AMS0EPF000001A4.mail.protection.outlook.com (10.167.16.229) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8880.14 via Frontend Transport; Wed, 25 Jun 2025 13:09:47 +0000
-Received: from N9W6SW14.arri.de (10.30.5.30) by mta.arri.de (10.10.18.5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.38; Wed, 25 Jun
- 2025 15:09:47 +0200
-From: Christian Eggers <ceggers@arri.de>
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
-	<johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Brian Gix <brian.gix@intel.com>, Inga Stotland <inga.stotland@gmail.com>
-CC: <linux-bluetooth@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Christian Eggers <ceggers@arri.de>, <stable@vger.kernel.org>
-Subject: [PATCH 1/3] Bluetooth: hci_sync: revert some mesh modifications
-Date: Wed, 25 Jun 2025 15:09:29 +0200
-Message-ID: <20250625130931.19064-1-ceggers@arri.de>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uTYIzGpM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D2CDC4CEEA;
+	Wed, 25 Jun 2025 13:10:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750857019;
+	bh=B3Jr4MdA4tDfAIG3Jnrg1O1yont+DgK8qgQw4KUNncQ=;
+	h=From:Subject:Date:To:Cc:From;
+	b=uTYIzGpM8dxD81AJZtxOEhpN3awLLjwXUzBQjpZ/p0+1aD4D/6sqObYc+m6Z+Stzc
+	 3AFPl/ivSLGULXVt2cTGul4XAmHIxQJ84sz5uqXqXBpGxh8UBrlARSgtb6XsjBNVcp
+	 KWVIMXSadOsnCGXEIiOgJX3jqqQImbPcV80hITs6VfnBq71nH3N2bCVlH0p8DUPn3u
+	 leJ/1CQwY+7l2bXRXDvq6oq4fn58oPjksDxhCm3tlxwseWZOZDogzdRSE86I8dGbQ5
+	 VMDKG3OazKWgrbI13TbxlpMA1p4oCQQuR+/7yN0hdcmZSJ6IfnCAWWTlRm2gbeNKe9
+	 iPnj9BUXcmjDg==
+From: Konrad Dybcio <konradybcio@kernel.org>
+Subject: [PATCH v5 00/14] Add a single source of truth for UBWC
+ configuration data
+Date: Wed, 25 Jun 2025 15:10:08 +0200
+Message-Id: <20250625-topic-ubwc_central-v5-0-e256d18219e2@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF000001A4:EE_|VI1PR03MB6223:EE_
-X-MS-Office365-Filtering-Correlation-Id: faf5921f-5e19-46ed-d4a4-08ddb3e98fc6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?CZK3fKV4IRweUxGakdM0dpFYysFk5jvql2GOV75MPBoeRMInPi4ezAwtRmw8?=
- =?us-ascii?Q?kehUSp0LmCL4KpZVoiU4fkb1gM1jxEUmGoQXJ1PFImHfJEoGqho/mm3Pxah/?=
- =?us-ascii?Q?WeEnDabEwy5ZItx1g71BOOX6fI9S+D6kkoKGzWWwTYaER6l34aDVATRA3UH9?=
- =?us-ascii?Q?Y36UU4y9q+2sTqtv1WUWtX6oPtiwhHSMAGwqMMo+ATpm9CtTyOh2kT7nb0j3?=
- =?us-ascii?Q?bUMBnHDI+TNbj3y4BuMX0xwXAFliUZHel5w/yemXgNH1NR7lQrZtup1+TszR?=
- =?us-ascii?Q?lf0v3U3b3Sv8R7nnUbZc+OuHy1+pKw8hbsnFdE1TnL+YBtM8jd4urX6P6PPy?=
- =?us-ascii?Q?/cdiJY7Ol1hgxFrkk9mJl5cck2aVrTeeNzJn8hIsQDwbuovIOdpkn4hJxkaC?=
- =?us-ascii?Q?deVFZxcMhlCRMIy3jneO5atKw0REhXVyFLmjX8/LNjfaIgb8Fpv+oHxk4tJ4?=
- =?us-ascii?Q?ii7JVmo/QVCjDLNInJP2Va6pvBhXy0bkWJ+CWnqxVD0xN41HMwGXAPUOAFxl?=
- =?us-ascii?Q?6wAHxj5p6YgAp+0TgMXct/tAFMAvfuFs5fiMtCHty9i/jRI/idYCPYeIDUUh?=
- =?us-ascii?Q?sCQ8AWeJt5tYSUtHa3E1GpXB7KaRP7DCRrdiJ/r+/LpZd0G+Qzh1Sq2QTKWw?=
- =?us-ascii?Q?hodfog78AfjbbLeINdF5edgbLs4lzNk1io3u87Q2iSzu1mcyPOjKvbPFFJ/D?=
- =?us-ascii?Q?dm1fcp/RACcHi4aSe+8RzlJOXcvyma7RZivSC/JSfHpFVMBYUt/MbPz3j35D?=
- =?us-ascii?Q?yS7ueseHd/h1NMbCtd5y6EMoRuDWnL4eEK+Vp/qSHUL1V4sJzoog/hvv6BQO?=
- =?us-ascii?Q?qOjb0mzSth4Escd9BUAkbj90hRJPMrZozeAQspbGP0naevFRq32FP7ro6RC+?=
- =?us-ascii?Q?hkXl16Bp7h4K8xryxGWNL2zz/xwJwVeALUD45tQMyj+VmFFIxOkqx8ZMNL5O?=
- =?us-ascii?Q?glk0XtX0GWyalX1zNMLdVbGqq9+DUoQZntyO2Jvj8eIdfdn0juglF6wEGRmw?=
- =?us-ascii?Q?P3RUnuZVTOB5wlh6lyMXdYB4nBq8h4hyVoan/RN0JCtLSBOt16eRSLiwMkrx?=
- =?us-ascii?Q?9LXMXIrHG2Hke2BIzFW39gwOXDhF96HqIyXd+7M2AP+5h/X+Rjh0+nvb68iv?=
- =?us-ascii?Q?V6yul2VycEqag4rqa2/dVJvlELjul+hmsOAv5Wdz+9B3PwSzAdC8s0uXxJMY?=
- =?us-ascii?Q?6kcql8qfqCQlWnhiGTkJs0yy/Cz+2+F08niHUunWeJ1dB6JJUnsVSyS+UNKv?=
- =?us-ascii?Q?l6jSbZXZsySalNnW+AaEwv2ErKB4krz475MqTZEUFPGLjXvwsdegevLFWM6e?=
- =?us-ascii?Q?SrYozHPFHDxA9pSQ63rMFiRFVA+VmceabvdWa6zPJl5BO1l4Bp7+s69akisx?=
- =?us-ascii?Q?2s18V5vzKpAAKgcP4Mte55U4UYe9ip2Z4z9snAq+Ff8pb4Tyw/FtS4J5C09V?=
- =?us-ascii?Q?tTWtXnb/CLPmTrcu6DT6d1prj8DVFCrlR1toWWt4uiWp8Wzp+DWqhYMRVlW1?=
- =?us-ascii?Q?VpT9dv8udpCwQH40E3ApHncWtlN73/77IJ8z?=
-X-Forefront-Antispam-Report:
-	CIP:217.111.95.7;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mta.arri.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arri.de
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jun 2025 13:09:47.7026
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: faf5921f-5e19-46ed-d4a4-08ddb3e98fc6
-X-MS-Exchange-CrossTenant-Id: e6a73a5a-614d-4c51-b3e3-53b660a9433a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e6a73a5a-614d-4c51-b3e3-53b660a9433a;Ip=[217.111.95.7];Helo=[mta.arri.de]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF000001A4.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR03MB6223
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADD1W2gC/3XQz2rDMAwG8FcpPs9F/qMs7WnvMcZwVGU1tHFrJ
+ 95GybvPaQ/Lwb0IPoF+H+gmEkfPSew3NxE5++TDUAK+bAQd3fDF0h9KFho0gjUgx3DxJKfumz6
+ JhzG6k0RDaKEHtWMU5fASufc/d/T945EjX6dij//Lo09jiL/34qyW7aMDoa11ZCVBgkGyhNQxw
+ ltIaXud3InC+bwtQyxq1itJ2aqkF2nH1BE4QOInkllLr1XJFMlQaxvEBvu2eSLZlaSrH8y2SNr
+ ZRh2M1sa6ijTP8x+Q6eRorgEAAA==
+X-Change-ID: 20250430-topic-ubwc_central-53c540f019e5
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Abhinav Kumar <quic_abhinavk@quicinc.com>, 
+ Dmitry Baryshkov <lumag@kernel.org>, Sean Paul <sean@poorly.run>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Clark <robin.clark@oss.qualcomm.com>, 
+ Abhinav Kumar <abhinav.kumar@linux.dev>, 
+ Jessica Zhang <jessica.zhang@oss.qualcomm.com>, 
+ Rob Clark <robin.clark@oss.qualcomm.com>, 
+ Akhil P Oommen <akhilpo@oss.qualcomm.com>
+Cc: Marijn Suijten <marijn.suijten@somainline.org>, 
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750857014; l=4769;
+ i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
+ bh=B3Jr4MdA4tDfAIG3Jnrg1O1yont+DgK8qgQw4KUNncQ=;
+ b=SMXmVx2mN0GqCCPH4lAtanDdyaCXL7z8ZAmZY+URvEGO3maWYNpfA0KAdlv+3UkMcF89ryQCv
+ wE+uX3Zw9kADM8w0QzuqwkBS1Svbb3Ns+yhvqI89U7DAc4mk0QQ6vcZ
+X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
+ pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
 
-This reverts minor parts of the changes made in commit b338d91703fa
-("Bluetooth: Implement support for Mesh"). It looks like these changes
-were only made for development purposes but shouldn't have been part of
-the commit.
+As discussed a lot in the past, the UBWC config must be coherent across
+a number of IP blocks (currently display and GPU, but it also may/will
+concern camera/video as the drivers evolve).
 
-Fixes: b338d91703fa ("Bluetooth: Implement support for Mesh")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christian Eggers <ceggers@arri.de>
+So far, we've been trying to keep the values reasonable in each of the
+two drivers separately, but it really make sense to do so, especially
+given certain fields (see [1]) may need to be gathered dynamically.
+
+This series introduces a Single Source of Truth (SSOT) database to be
+consumed by multimedia drivers as needed.
+
+[1] https://lore.kernel.org/linux-arm-msm/20250410-topic-smem_dramc-v2-0-dead15264714@oss.qualcomm.com/
+
+Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 ---
- net/bluetooth/hci_sync.c | 16 ++++------------
- 1 file changed, 4 insertions(+), 12 deletions(-)
+Changes in v5:
+- Drop 'RFT'
+- Rebase on 8750 addition
+- Pick up additional rb on patch 4
+- Link to v4: https://lore.kernel.org/r/20250520-topic-ubwc_central-v4-0-2a461d32234a@oss.qualcomm.com
 
-diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
-index 6687f2a4d1eb..1f8806dfa556 100644
---- a/net/bluetooth/hci_sync.c
-+++ b/net/bluetooth/hci_sync.c
-@@ -1970,13 +1970,10 @@ static int hci_clear_adv_sets_sync(struct hci_dev *hdev, struct sock *sk)
- static int hci_clear_adv_sync(struct hci_dev *hdev, struct sock *sk, bool force)
- {
- 	struct adv_info *adv, *n;
--	int err = 0;
- 
- 	if (ext_adv_capable(hdev))
- 		/* Remove all existing sets */
--		err = hci_clear_adv_sets_sync(hdev, sk);
--	if (ext_adv_capable(hdev))
--		return err;
-+		return hci_clear_adv_sets_sync(hdev, sk);
- 
- 	/* This is safe as long as there is no command send while the lock is
- 	 * held.
-@@ -2004,13 +2001,11 @@ static int hci_clear_adv_sync(struct hci_dev *hdev, struct sock *sk, bool force)
- static int hci_remove_adv_sync(struct hci_dev *hdev, u8 instance,
- 			       struct sock *sk)
- {
--	int err = 0;
-+	int err;
- 
- 	/* If we use extended advertising, instance has to be removed first. */
- 	if (ext_adv_capable(hdev))
--		err = hci_remove_ext_adv_instance_sync(hdev, instance, sk);
--	if (ext_adv_capable(hdev))
--		return err;
-+		return hci_remove_ext_adv_instance_sync(hdev, instance, sk);
- 
- 	/* This is safe as long as there is no command send while the lock is
- 	 * held.
-@@ -2109,16 +2104,13 @@ int hci_read_tx_power_sync(struct hci_dev *hdev, __le16 handle, u8 type)
- int hci_disable_advertising_sync(struct hci_dev *hdev)
- {
- 	u8 enable = 0x00;
--	int err = 0;
- 
- 	/* If controller is not advertising we are done. */
- 	if (!hci_dev_test_flag(hdev, HCI_LE_ADV))
- 		return 0;
- 
- 	if (ext_adv_capable(hdev))
--		err = hci_disable_ext_adv_instance_sync(hdev, 0x00);
--	if (ext_adv_capable(hdev))
--		return err;
-+		return hci_disable_ext_adv_instance_sync(hdev, 0x00);
- 
- 	return __hci_cmd_sync_status(hdev, HCI_OP_LE_SET_ADV_ENABLE,
- 				     sizeof(enable), &enable, HCI_CMD_TIMEOUT);
+Changes in v4:
+- Stub out qcom_ubwc_config_get_data()
+- Move the select for QCOM_UBWC_CONFIG to DRM_MSM
+- Use a define for UBWC_SWIZZLE_ENABLE_LVL2 in a6xx_gpu.c
+- Pick up tags
+- Link to v3: https://lore.kernel.org/r/20250517-topic-ubwc_central-v3-0-3c8465565f86@oss.qualcomm.com
+
+Changes in v3:
+- Rearrange some patches some more (Dmitry and I talked off-list,
+  hopefully this version is reasonably sane)
+- Throw the error returned by qcom_ubwc_config_get_data(), don't always
+  assume it's -EINVAL (so that we can EPROBE_DEFER in the future if the
+  SMEM driver that provides DDR info decides not to come up..)
+- Scream if ubwc_swizzle doesn't match
+- Drop dropping the ubwc_swizzle override (needs some testing in the wild)
+- Move long statements out of declaration space
+- explicitly define UBWC swizzling levels
+- Fix the SAR2130P omission
+- Pardon the funny ordering, but since it's intended to all go through
+  drm, I attempted to strike a balance between clear, separate
+  changes/fixes and logical succession
+- Link to v2: https://lore.kernel.org/r/20250514-topic-ubwc_central-v2-0-09ecbc0a05ce@oss.qualcomm.com
+
+Changes in v2:
+- Rearrange some patches
+- Don't zeroalloc a copy of ubwc_config, store a full struct inside
+  adreno_gpu instead (temporary solution until we trust the central db
+  on the HBB value)
+- Improve some commit messages
+- Fix up SM6125's config
+- Don't break userspace abi (hbb value)
+- Don't keep mdss_reg_bus_bw in ubwc_config
+- Add the last patch warning if there are inconsistencies (I don't
+  insist on it getting merged, but I think it's a good idea for the
+  time being)
+- Link to v1: https://lore.kernel.org/r/20250508-topic-ubwc_central-v1-0-035c4c5cbe50@oss.qualcomm.com
+
+---
+Konrad Dybcio (14):
+      soc: qcom: Add UBWC config provider
+      drm/msm: Offset MDSS HBB value by 13
+      drm/msm: Use the central UBWC config database
+      drm/msm/a6xx: Get a handle to the common UBWC config
+      drm/msm/a6xx: Resolve the meaning of AMSBC
+      drm/msm/a6xx: Simplify uavflagprd_inv detection
+      drm/msm/a6xx: Resolve the meaning of UBWC_MODE
+      drm/msm/a6xx: Replace '2' with BIT(1) in level2_swizzling_dis calc
+      drm/msm/a6xx: Resolve the meaning of rgb565_predicator
+      drm/msm/a6xx: Simplify min_acc_len calculation
+      soc: qcom: ubwc: Fix SM6125's ubwc_swizzle value
+      soc: qcom: ubwc: Add #defines for UBWC swizzle bits
+      soc: qcom: ubwc: Fill in UBWC swizzle cfg for platforms that lack one
+      drm/msm/adreno: Switch to the common UBWC config struct
+
+ drivers/gpu/drm/msm/Kconfig                 |   1 +
+ drivers/gpu/drm/msm/adreno/a5xx_gpu.c       |  20 +-
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c       | 138 +++++------
+ drivers/gpu/drm/msm/adreno/adreno_gpu.c     |   6 +-
+ drivers/gpu/drm/msm/adreno/adreno_gpu.h     |  46 +---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.c |   6 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_sspp.h |   4 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c     |   7 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h     |   2 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c   |   3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_rm.c      |   2 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_rm.h      |   2 +-
+ drivers/gpu/drm/msm/msm_mdss.c              | 344 +++++-----------------------
+ drivers/gpu/drm/msm/msm_mdss.h              |  29 ---
+ drivers/soc/qcom/Kconfig                    |   8 +
+ drivers/soc/qcom/Makefile                   |   1 +
+ drivers/soc/qcom/ubwc_config.c              | 278 ++++++++++++++++++++++
+ include/linux/soc/qcom/ubwc.h               |  75 ++++++
+ 18 files changed, 531 insertions(+), 441 deletions(-)
+---
+base-commit: 2ae2aaafb21454f4781c30734959cf223ab486ef
+change-id: 20250430-topic-ubwc_central-53c540f019e5
+
+Best regards,
 -- 
-2.43.0
+Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
