@@ -1,116 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1F5915ADB4;
-	Wed, 25 Jun 2025 17:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DACA2877CD;
+	Wed, 25 Jun 2025 17:02:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750870915; cv=none; b=iYqNDf4HcrgT0U9b4FrVLNJ3X2TZEXUMUhhxP1F9nI9U5UcxOI17JdIC1Gzh/QB1yq4HhZnSPRCM4EGu/CTHuIa6UcWNIaH1fcOB+IMyUFGoDmp+g8YBzvoszIa+aqxmBHbfb8J2BnZ9YwXBcvvAaoP9DBkz+8jTKdHHoZWOx80=
+	t=1750870954; cv=none; b=Yno0TrB5OqVp3PYb98G939eggLw+vC0CblWGRU/xxQagPLfSaQjEiDesvnqF8FTx1S7+pI3Azhhelijostm2AVwOUi6ggy7ptj87cZhQx6+rETKU2Ad5zvWS4V1TYbDJD71I0DUU22jPZN99kpLBQuV1cgIpryktcAVrT65+/TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750870915; c=relaxed/simple;
-	bh=eALn9anayFEUy5QoMrVPaobWyJA2W/W/5mmJqhg2eeY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RArOVNVs1RWrk9h1ca5Lhh4oHvXsDRh9zciOHSkCKILU5RkPpXvGuwMbE4P2OcwRXGgrcBZFl8+g5ufVRTcaxNnaf1ahzdkxRQFsC6NXYpAfof5QXKlgE6hKtT8U/YpUAXmAab4u7ie94D4QPR7zueEQ6g3wTtl+e9caFo9BS1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YHYkKZdj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750870954; c=relaxed/simple;
+	bh=khscqqJradz4nhQ0yEyM8taDMs1UnvFJVIztRC52SI0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CkprsFhj7kF0PIDB6+3g/5N+5lh4jgrElxulDqAefSd/9sO8NkGO/0pOssiE5bFqTVP3biKZHm7XlUuAj6KhvDZWQi3rTa2gfiXvEj6sUsPX/taL42IKxpHDRpS6A2dnqhmtwZtnbAspVQS0M+dGXZqZC1t9syf5LpHnbLrwM0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SC4pTVQY; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YHYkKZdj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE9E0C4CEEA;
-	Wed, 25 Jun 2025 17:01:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750870915;
-	bh=eALn9anayFEUy5QoMrVPaobWyJA2W/W/5mmJqhg2eeY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YHYkKZdjYC4HV3b95BXhVaBQ9s+cmAywC5izCrtUMIZf1ZosFbgoewL5l91JXINjg
-	 kcTtTEengp7ZpcB2mvHxoxfnoFydbYlTyyqTZLw/5s6S4ubK6LzxE3iYXMO+NTHNG+
-	 /YGOlzi/g08ShWET1btNYKDuYi9ebTXY6JK/xv50U1gniwk8CJyf1oygZqsZT16Wzn
-	 IaIiT0lbJ3N++5bn1j0w2X0tm/jD1/ot8BF7sfzvKrxbXyQJYjI4S9IO+cj1AXB8Qm
-	 gA44VwxNEKcUDsnRheIO9FL06KloUdflmdcIo7SI+VVvg5M97UcycFzKKmjNqAr4aK
-	 BRu3t/NkbfREg==
-Date: Wed, 25 Jun 2025 20:01:51 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Yeoreum Yun <yeoreum.yun@arm.com>
-Cc: sudeep.holla@arm.com, peterhuewe@gmx.de, jgg@ziepe.ca,
-	stuart.yoder@arm.com, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org
-Subject: Re: [PATCH v4 0/2] generate boot_aggregate log in IMA with TPM using
- CRB over FF-A
-Message-ID: <aFwrf1HnsilrASzX@kernel.org>
-References: <20250618102302.2379029-1-yeoreum.yun@arm.com>
- <aFs0of3uZdoMEJXc@kernel.org>
- <aFvRI5OwSLLKz300@e129823.arm.com>
- <aFwrBU4H0w9AXyQM@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SC4pTVQY"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-adb2bb25124so2471966b.1;
+        Wed, 25 Jun 2025 10:02:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750870951; x=1751475751; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LUcw6tqkXAGg4kfEd6zI2DgoXo0mXCRnCqCpiS51750=;
+        b=SC4pTVQYWLXl4LJt3oADmh1Y0F3iq3GQn1/hFWYZxU7FjZ/g01OXkc0fs31+gFyNZe
+         lY5MaamalvmOjZgVaANZyGhLrQeEpG7jt7hieMbatUfln96CFvMhVvVUByd4gYYjMi7J
+         oqNmSGSA20Tc5Zwcmq9CiZQamEcKFW7xXZo2xDTIQItSICGKfxIIWEvg9UmzABHcaOTa
+         Q/wYYTKvVO4fArVTE+za1mQngJsGxgp14reU+USEIdNxN+Xu4BZ5X8F4eN+CYIGmSIO4
+         BYZ+CPF39uVTu2WOn8+NInzqbAxDNejwyfwqMFgZES09uYTRMOLAgwrqxFmffmERk8lJ
+         aBrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750870951; x=1751475751;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LUcw6tqkXAGg4kfEd6zI2DgoXo0mXCRnCqCpiS51750=;
+        b=kJcR7FXSqr6XzeKAxgKaCcMcrQA8j03QpDXroBLwW+OFru8okanG6y1dMMxZ9EVVC0
+         qVColORzcqeHFxCoqDAKY52KhE4mdDINeo7G7tchzVVpIZ8Ec5yjAVNqJ05hufFxaZ6t
+         WMzVM2L+QTogBbyR9b3Rq/zXFeoLWsbvrzKB5lAYhMtVkx6C+CPABrhKu9jfLETkghrP
+         TDGVDZcJ0IMjciIYTWoQsI+BClBgwOQFHrb56Na7tac4I/xjb4W0ZHI7qM1tZdATxS8o
+         PdBlH9arejC9ADkR77gAigefLQXbGU38RTma7toO0Wr1CoKhC1rL/3SUC5yeHZly6Lug
+         o65w==
+X-Forwarded-Encrypted: i=1; AJvYcCWCDXzIZ71gR3c09cLvOsUI2ewgG2np0xprtgUxC8t9EM3OsdLfzPkYFcIFiK0Cn+q4ePG83/qxjdxccHU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzRz76DEoyxq5tDpSxIDJ4xY2FOHe6UUsnuu3xvK79/sXH6cpWf
+	fHqdPH18rMBy+kIewwMOr5XAD4tEoSOxufnaJQNeGVNd0uBUkm7B44Qs
+X-Gm-Gg: ASbGncu+TonMw3ZPQX0A0U5YkeKjwWSA30EB+VXh77WqCo27p8y5bNLjQ+vghZR1dtO
+	rSkMNX7h3eEpML5r5Y0frLbLDthNmhrwH8ZJa3HtHqHByHEAAAHWkXO0SD77Y/rm+V+rf+L0nOT
+	BtGZ7zlbbWWqCJyYZctzICVUvsPSN2yhsJiWLFOS9Ase/qgRqvU56mz7v5lqIbuZ3dOtwi3DCk8
+	+B1OmlBfFqUc/VvhoFw7hPIwsLyAM8AwT8asQG6F5OcO0ARQdqOKO85pu+bSOYYZ5ohdTnDX/sx
+	TJgzLuMNo8gu5zoBT/GmtAJxQxno4CknyGj/n3VmGd1DAqA4eDUDDCEqDGVaHlqBV3iHvkRx9HJ
+	xIOKtAPbLokx9zGrzbgOKIvz5jTNRRmQX
+X-Google-Smtp-Source: AGHT+IEnJFUloNus4XSLlG5TNZkgdP8zIdePN0zuhU9JG6MGun8pTC9DkBCPxNDgdW/TGZyK/hkMGg==
+X-Received: by 2002:a17:906:9c82:b0:ade:902e:7b4b with SMTP id a640c23a62f3a-ae0bec50615mr107921466b.7.1750870949591;
+        Wed, 25 Jun 2025 10:02:29 -0700 (PDT)
+Received: from localhost.localdomain (84-72-156-211.dclient.hispeed.ch. [84.72.156.211])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0cb358618sm69249766b.102.2025.06.25.10.02.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 10:02:29 -0700 (PDT)
+From: Lothar Rubusch <l.rubusch@gmail.com>
+To: mazziesaccount@gmail.com,
+	jic23@kernel.org,
+	dlechner@baylibre.com,
+	nuno.sa@analog.com,
+	andy@kernel.org
+Cc: linux-iio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	l.rubusch@gmail.com
+Subject: [PATCH v1 0/2] iio: adc: ti-adc128s052: add support for TI's ADC121s021
+Date: Wed, 25 Jun 2025 17:02:16 +0000
+Message-Id: <20250625170218.545654-1-l.rubusch@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aFwrBU4H0w9AXyQM@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 25, 2025 at 07:59:53PM +0300, Jarkko Sakkinen wrote:
-> On Wed, Jun 25, 2025 at 11:36:19AM +0100, Yeoreum Yun wrote:
-> > Hi Jarkko,
-> > 
-> > > On Wed, Jun 18, 2025 at 11:23:00AM +0100, Yeoreum Yun wrote:
-> > > > To ensure the TPM device operating over the FF-A protocol with
-> > > > the CRB interface is probed before IMA initialization,
-> > > > the following conditions must be met:
-> > > >
-> > > >    1. The corresponding ffa_device must be registered,
-> > > >       which is done via ffa_init().
-> > > >
-> > > >    2. The tpm_crb_driver must successfully probe this device via
-> > > >       tpm_crb_ffa_init().
-> > > >
-> > > >    3. The tpm_crb driver using CRB over FF-A can then
-> > > >       be probed successfully. (See crb_acpi_add() and
-> > > >       tpm_crb_ffa_init() for reference.)
-> > > >
-> > > > Unfortunately, ffa_init(), tpm_crb_ffa_init(), and crb_acpi_driver_init() are
-> > > > all registered with device_initcall, which means crb_acpi_driver_init() may
-> > > > be invoked before ffa_init() and tpm_crb_ffa_init() are completed.
-> > >
-> > > I get the ffa_init() part i.e, moving it earlier. However for
-> > > tpm_crb_ffa_init() and crb_acpi_driver_init(), modules.dep
-> > > takes care that they are loaded in order.
-> > > For IMA you will need the driver as built-in but that should
-> > > be handled via kernel config, not via code changes.
-> > 
-> > In the case of "module" built, it's true.
-> > However what I tell here is when "tpm_crb" and "tpm_crb_ffa" is built
-> > as "built-in" in this case, it couldn't make a "dependency" between
-> > the same initcall level: here is the case of this.
-> > 
-> > 0000000000000888 l       .initcall6.init>-------0000000000000000 crb_acpi_driver_init
-> > 000000000000088c l       .initcall6.init>-------0000000000000000 tpm_crb_ffa_driver_init
-> > 
-> > in this case, wihtout code change, the crb_acpi_driver_init()
-> > is failed since tpm_crb_ffa_driver_init() is called later.
-> > 
-> > and this couldn't be solved with kconfig --
-> > ARM_FFA_TRANSPORT=y && CONFIG_TCG_CRB=y && CONFIG_TCG_CRB_FFA=y.
-> > 
-> > The Patch #2 is to proing the tpm_crb_ffa as part of
-> > crb_acpi_driver_init() when TPM uses method ARM-FFA.
-> > 
-> > If there's another suggestion, let me know please.
-> 
-> Hmm.. I actually got what you mean now. I was looking this from
-> wrong angle. I think we can pick these patches!
-> 
-> Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> 
-> > 
-> > Thanks
-> > 
-> > --
-> > Sincerely,
-> > Yeoreum Yun
-> 
-> BR, Jarkko
+- Add support for ADC121s021 and related (single channel).
 
-Applied.
+This adds support for the 1-channel variants ADC121s021/051/101.
 
-BR, Jarkko
+I'm not certain whether this patch is truly necessary, or if there's a
+more general solution for single-channel ADCs that would make this patch
+obsolete. If such a solution exists, please let me know. Hence, this is
+perhaps more of a question than a formal request to accept the patch.
+
+Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+---
+Lothar Rubusch (2):
+  iio: adc: ti-adc128s052: add support for adc121s021
+  iio: adc: ti-adc128s052: replace literal by unit expression
+
+ drivers/iio/adc/ti-adc128s052.c | 20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
+
+
+base-commit: b57cb7c47e31244bef6612f271c5dc390f761e17
+-- 
+2.39.5
+
