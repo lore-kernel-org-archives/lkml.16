@@ -1,281 +1,234 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6335A262FDB
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70F3C29E115
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 15:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750866719; cv=none; b=NSFV1bR8kNmvTD8tFBR9TSbNOSyMhRu7hi+PoW4+g8rfGwfxa5yHZUY5jhT2F2OX50GoaZy2kfTVGP6udYjSK2obva8P13OoBS2hbTbeW1eJIlTJ9+31SYA0OsVLsnuv/6VoybUydf1SlLypyCenizrD2qbuWXaL57hivJBb/b8=
+	t=1750866737; cv=none; b=Zt5r3SawkwETfGmyxArZokxvPJmGwukPFf7L/zmUJoRFFGZfYvPyMu30VUBjUoypJrEH49+qxV6DtQVRPT4jJNXGejGit2dXteoZ2v5mBmjzEHsfJ1WVjjclDM57GV5/fO7fIdnL6O0b0gotpOYtANKdWoVWWMY1fojw25y2Ak8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750866719; c=relaxed/simple;
-	bh=t8USNlJXF4U9plUczuyiMuPRiapOt9YbAVBerRDdDM8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZV0Rwdxj6nJUTH0aKsfqDtqybd5i6FuKUnM9OE53Nm07Oe76nREnsAv8YCFWtNGTdvpg/92KYv7SIsuRokjf2XGQJlCrptrs2A9K92hWHdCUmVP0ewnindl29pUmNXp7uwLXqjJlW+yfqMFCPKZNTNRtfAX2am2HSJfELo8A33U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Bslke0Kx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=piMT3Cft; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=Bslke0Kx; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=piMT3Cft; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1750866737; c=relaxed/simple;
+	bh=2dEZxA9znoi4/j5ZU/wsEM4CqiVDW+cT8z82gn8Ynjg=;
+	h=From:Message-ID:Date:MIME-Version:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=Hbz/xY05LpjpJPMHFEDfoPNnDV+HoUdza97Od5PEujzskuqDf4N8RGYOiRn6DtIEnZm2GEdL0n01tp3WWo/SemczUHjsA21IrfEjl3ANJ2QeajamKv1KAe+90jBXZtCuuZt8V/Nid9F+re/9++8Yb+hW0Tiv5RiJyP9Xk1xd1R8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YQ7j0L7b; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Bslke0Kx";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="piMT3Cft";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="Bslke0Kx";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="piMT3Cft"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 62E922118D;
-	Wed, 25 Jun 2025 15:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750866715; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=v8nQknDS6pmpLWfs+ArFdioX0s6CDoohu6KF7xdiMMw=;
-	b=Bslke0KxoWYmAwuQsgr63B43hSdaD6vOJUqVFX8B6iMS7j0MCm/poCtLli6H8FlQ1qpd1n
-	rpRpzywhC9BM6JUtsEK3To3T8m91bAcCzd4k83zImiQJn8DmpBdNBL+jjGmHLUuvzt/mRk
-	jeRZWfP/AIDBBDRwYrgrWpZbvsTvs4U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750866715;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=v8nQknDS6pmpLWfs+ArFdioX0s6CDoohu6KF7xdiMMw=;
-	b=piMT3Cfty2+bthrCf+5fvhIuDbq1swXPjGZrZYfe3/autzx76SM2iJ+L3aREPnnT64cBFC
-	gcCQTR7GCuhLL7Bg==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=Bslke0Kx;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=piMT3Cft
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1750866715; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=v8nQknDS6pmpLWfs+ArFdioX0s6CDoohu6KF7xdiMMw=;
-	b=Bslke0KxoWYmAwuQsgr63B43hSdaD6vOJUqVFX8B6iMS7j0MCm/poCtLli6H8FlQ1qpd1n
-	rpRpzywhC9BM6JUtsEK3To3T8m91bAcCzd4k83zImiQJn8DmpBdNBL+jjGmHLUuvzt/mRk
-	jeRZWfP/AIDBBDRwYrgrWpZbvsTvs4U=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1750866715;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=v8nQknDS6pmpLWfs+ArFdioX0s6CDoohu6KF7xdiMMw=;
-	b=piMT3Cfty2+bthrCf+5fvhIuDbq1swXPjGZrZYfe3/autzx76SM2iJ+L3aREPnnT64cBFC
-	gcCQTR7GCuhLL7Bg==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 36BC813301;
-	Wed, 25 Jun 2025 15:51:55 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id i2AJDRsbXGjnMAAAD6G6ig
-	(envelope-from <vbabka@suse.cz>); Wed, 25 Jun 2025 15:51:55 +0000
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Wed, 25 Jun 2025 17:51:52 +0200
-Subject: [PATCH] mm, vmstat: remove the NR_WRITEBACK_TEMP node_stat_item
- counter
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YQ7j0L7b"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750866734;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UprNKi29neeOtDuoBhXpguAmiHeVIiz0UMx6QLlk6uM=;
+	b=YQ7j0L7b1ulUgjcyrspFipMTFJleTbAa80l3DsGCYvnA/Bt1FAqoeyA+M/vMgrfqHt1sql
+	/emDf1VJcKmNtfKlSQvyg8bLvws3Q1CN2SnnRwW38hXIipysorPgAP/tsw2BGyl/I5HG2J
+	kv7JKe26Wdh1zGWd4SN8g+gKvPc8uYs=
+Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
+ [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-186-BGOi_mIoOfmPUAMFk8NzsQ-1; Wed, 25 Jun 2025 11:52:12 -0400
+X-MC-Unique: BGOi_mIoOfmPUAMFk8NzsQ-1
+X-Mimecast-MFC-AGG-ID: BGOi_mIoOfmPUAMFk8NzsQ_1750866730
+Received: by mail-pj1-f71.google.com with SMTP id 98e67ed59e1d1-3132e7266d3so6368939a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:52:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750866727; x=1751471527;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:user-agent:mime-version:date:message-id:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=UprNKi29neeOtDuoBhXpguAmiHeVIiz0UMx6QLlk6uM=;
+        b=b/evZQEIAG51eXhxoh86wqpVrAKYVl7w6a0uRKx3xAYKkrc+kPQVENRDilXMi9fvzg
+         zIhWrKTzjdu62o+95mZnYDPdS6ZZpYeAoAJXG4+OedoTEc6xlPpcKlfFeX54CpQqXaNP
+         bv5lD5fQCFzjayNLr4u5lOAI/l8oLR/s5wnZY1Oqj8Fq6GKc2Ugj+5H4u6YR/utjZqnF
+         R0Z/81sp+v3ZXd8ZTNQm9P6bHqob48Ojo+MLIDUDMJPPVZ5FT2r+yZ5yX0Snqw/VD4b1
+         EZj27fTlUyoAtec/WjLUrxK3+wCenSXo0AknFmROV54avqP0Wj+f+Vx7pY2MYpzFdiAL
+         ApOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVhvDzU5xhxPHIR146qfb8Zfn7Dx42T2/NeUaE61NJKF4OapEVlqoiIL9WschdtShSTD69g4OYo/RN2KdY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxzST5niFq5V5kvE5aHo2Fz98HmlUI14nWNQncGcS2jvjvXotBA
+	SgPlJQ9N1EapXpthhw76tVfuv0v1pbt+8QRYzpAxN99/rcMyQNBWFjEraAk8KX5N/9HLZ9lL0RZ
+	k0SKRB8khlNpfugCshskHaF4RM/xsEqexZ0LDjg1o2NsB3uwg2o+r0HovR9upU7m6HOWP0t3xUQ
+	Ie
+X-Gm-Gg: ASbGncsHL+Rc5025y/DeiO46XrFE4H5Og5UB0+cVbqnt4M/xmb1M/WWdiJkZ6sSTPH1
+	6sBNs4Gou0xoo7TF12ToDxGGuLzQAZDACYOFqFhKzackOI2lY50gx4BMd8dauVLlH2JN1FYmu6/
+	fWO0WXQ451wSvWutTk3ydA1jk89YHoqZHpxSZpLqGLxSqlbU4f0NVNn5jKqxZI1VOfssrxDWKF1
+	1J+2uBoYNLkCwD++Q8KCZjrsOvdzkgRlj7H72Cwf6R6K+scQw43PkXjZRSnvE6UtRNsraE6EY1H
+	SYT7P28qDOoNMqVekoRikn6c5qvRTwTPqy97IZMf7iESczwj/eRPl+/MQOJsFcN6v0yk
+X-Received: by 2002:a17:90b:1fce:b0:312:e731:5a6b with SMTP id 98e67ed59e1d1-315f269fa68mr4355050a91.32.1750866727502;
+        Wed, 25 Jun 2025 08:52:07 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGglaSDui+roskZocwG9xuSyfP0Kpa0z0xiQ8gfEl8NwUolpzM/PIXW3EJfCfspj5HFPWW0bw==
+X-Received: by 2002:a17:90b:1fce:b0:312:e731:5a6b with SMTP id 98e67ed59e1d1-315f269fa68mr4355024a91.32.1750866727029;
+        Wed, 25 Jun 2025 08:52:07 -0700 (PDT)
+Received: from ?IPV6:2601:600:947f:f020:85dc:d2b2:c5ee:e3c4? ([2601:600:947f:f020:85dc:d2b2:c5ee:e3c4])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f53ea827sm2146576a91.41.2025.06.25.08.52.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 08:52:05 -0700 (PDT)
+From: Waiman Long <llong@redhat.com>
+X-Google-Original-From: Waiman Long <longman@redhat.com>
+Message-ID: <c649c8ec-6c1b-41a3-90c5-43c0feed7803@redhat.com>
+Date: Wed, 25 Jun 2025 11:52:04 -0400
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/8] Introduce simple hazard pointers
+To: Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
+ rcu@vger.kernel.org, lkmm@lists.linux.dev
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ Will Deacon <will@kernel.org>, Davidlohr Bueso <dave@stgolabs.net>,
+ "Paul E. McKenney" <paulmck@kernel.org>,
+ Josh Triplett <josh@joshtriplett.org>,
+ Frederic Weisbecker <frederic@kernel.org>,
+ Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+ Joel Fernandes <joelagnelf@nvidia.com>, Uladzislau Rezki <urezki@gmail.com>,
+ Steven Rostedt <rostedt@goodmis.org>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ Lai Jiangshan <jiangshanlai@gmail.com>, Zqiang <qiang.zhang@linux.dev>,
+ Breno Leitao <leitao@debian.org>, aeh@meta.com, netdev@vger.kernel.org,
+ edumazet@google.com, jhs@mojatatu.com, kernel-team@meta.com,
+ Erik Lundgren <elundgren@meta.com>
+References: <20250625031101.12555-1-boqun.feng@gmail.com>
+ <20250625031101.12555-2-boqun.feng@gmail.com>
+Content-Language: en-US
+In-Reply-To: <20250625031101.12555-2-boqun.feng@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250625-nr_writeback_removal-v1-1-7f2a0df70faa@suse.cz>
-X-B4-Tracking: v=1; b=H4sIABcbXGgC/x3M3QpAQBBA4VfRXNta66d4FUljDSYszQol725z+
- V2c84AnYfJQRQ8Inex5cwFJHIGd0I2kuA8Go02uC5MrJ+0lfFCHdm6F1u3ERWVkMUlLO+gSIaS
- 70MD3v62b9/0A+LRK2GYAAAA=
-X-Change-ID: 20250625-nr_writeback_removal-4eca139cf09a
-To: Andrew Morton <akpm@linux-foundation.org>, 
- "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Tejun Heo <tj@kernel.org>, Maxim Patlasov <mpatlasov@parallels.com>, 
- Jan Kara <jack@suse.cz>, Zach O'Keefe <zokeefe@google.com>, 
- Jonathan Corbet <corbet@lwn.net>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
- Suren Baghdasaryan <surenb@google.com>, Michal Hocko <mhocko@suse.com>, 
- "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>, 
- Brendan Jackman <jackmanb@google.com>, Johannes Weiner <hannes@cmpxchg.org>, 
- Zi Yan <ziy@nvidia.com>, Joanne Koong <joannelkoong@gmail.com>, 
- Jingbo Xu <jefflexu@linux.alibaba.com>, Jeff Layton <jlayton@kernel.org>, 
- Miklos Szeredi <mszeredi@redhat.com>, linux-kernel@vger.kernel.org, 
- linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-mm@kvack.org, Jens Axboe <axboe@kernel.dk>, 
- Vlastimil Babka <vbabka@suse.cz>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5950; i=vbabka@suse.cz;
- h=from:subject:message-id; bh=t8USNlJXF4U9plUczuyiMuPRiapOt9YbAVBerRDdDM8=;
- b=owEBbQGS/pANAwAIAbvgsHXSRYiaAcsmYgBoXBsY1YOFpjfas7/tInAngabuIgbw3W2JzIjSC
- zsedRZJ2lGJATMEAAEIAB0WIQR7u8hBFZkjSJZITfG74LB10kWImgUCaFwbGAAKCRC74LB10kWI
- mu70CACIdu4YQxdhrRCyDP5/xfNaJ5Tlelej6t1lOpU7kQsvm3MChRKj+FItRPDsMpDfKNdUtoU
- 1WE7Yutm8ytFuaH1gfu2uyhn9hP5tXfcyo8Ge8hvySG3Jsy2D+dBP3dSUWh6LrCOl+l+vWCyT8o
- 03dEWe0GRRnJA2HOJISipZf87tAKT9rYOBtWzEFh8zvKo4PhzTRQpI3tQS5dIhHGALTw/iBkN0S
- dCOU48Pc53/5Hq3e42mtth6cFbFBiukMGDlxuYiMej6iV6ThK8zC2kt7f3mMeMIswxQ0IYlykvJ
- xK9rvuRHkTSKmaXZJOL0xCfKyrHb2Q1+MJSntcUD4l/cDynW
-X-Developer-Key: i=vbabka@suse.cz; a=openpgp;
- fpr=A940D434992C2E8E99103D50224FA7E7CC82A664
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	FREEMAIL_CC(0.00)[kernel.org,parallels.com,suse.cz,google.com,lwn.net,linuxfoundation.org,suse.com,linux.intel.com,cmpxchg.org,nvidia.com,gmail.com,linux.alibaba.com,redhat.com,vger.kernel.org,kvack.org,kernel.dk];
-	RCVD_TLS_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	R_RATELIMIT(0.00)[to_ip_from(RLduzbn1medsdpg3i8igc4rk67)];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.cz:dkim,suse.cz:mid,suse.cz:email,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Spam-Level: 
-X-Spam-Flag: NO
-X-Rspamd-Queue-Id: 62E922118D
-X-Rspamd-Action: no action
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
-X-Spam-Score: -4.51
 
-The only user of the counter (FUSE) was removed in commit 0c58a97f919c
-("fuse: remove tmp folio for writebacks and internal rb tree") so follow
-the established pattern of removing the counter and hardcoding 0 in
-meminfo output, as done recently with NR_BOUNCE. Update documentation
-for procfs, including for the value for Bounce that was missed when
-removing its counter.
 
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
-The removal of the counter is straightforward. The reason for the large
-Cc list is that there is a comment in mm/page-writeback.c function
-wb_position_ratio() that mentions NR_WRITEBACK_TEMP, and just deleting
-the sentence feels to me it could be the wrong thing to do - maybe the
-strictlimit feature itself is now obsolete? It sure does mention FUSE
-as the main reason to exist, but commit 5a53748568f79 that introduced it
-also mentions slow USB sticks as a possibile scenario. Has that
-happened? I'm not familiar enough with this so I'd rather highlight this
-and ask for input here than make "git grep NR_WRITEBACK_TEMP" return
-nothing.
----
- Documentation/filesystems/proc.rst | 8 +++++---
- drivers/base/node.c                | 2 +-
- fs/proc/meminfo.c                  | 3 +--
- include/linux/mmzone.h             | 1 -
- mm/show_mem.c                      | 2 --
- mm/vmstat.c                        | 1 -
- 6 files changed, 7 insertions(+), 10 deletions(-)
+On 6/24/25 11:10 PM, Boqun Feng wrote:
+> As its name suggests, simple hazard pointers (shazptr) is a
+> simplification of hazard pointers [1]: it has only one hazard pointer
+> slot per-CPU and is targeted for simple use cases where the read-side
+> already has preemption disabled. It's a trade-off between full features
+> of a normal hazard pointer implementation (multiple slots, dynamic slot
+> allocation, etc.) and the simple use scenario.
+>
+> Since there's only one slot per-CPU, so shazptr read-side critical
+> section nesting is a problem that needs to be resolved, because at very
+> least, interrupts and NMI can introduce nested shazptr read-side
+> critical sections. A SHAZPTR_WILDCARD is introduced to resolve this:
+> SHAZPTR_WILDCARD is a special address value that blocks *all* shazptr
+> waiters. In an interrupt-causing shazptr read-side critical section
+> nesting case (i.e. an interrupt happens while the per-CPU hazard pointer
+> slot being used and tries to acquire a hazard pointer itself), the inner
+> critical section will switch the value of the hazard pointer slot into
+> SHAZPTR_WILDCARD, and let the outer critical section eventually zero the
+> slot. The SHAZPTR_WILDCARD still provide the correct protection because
+> it blocks all the waiters.
+>
+> It's true that once the wildcard mechanism is activated, shazptr
+> mechanism may be downgrade to something similar to RCU (and probably
+> with a worse implementation), which generally has longer wait time and
+> larger memory footprint compared to a typical hazard pointer
+> implementation. However, that can only happen with a lot of users using
+> hazard pointers, and then it's reasonable to introduce the
+> fully-featured hazard pointer implementation [2] and switch users to it.
+>
+> Note that shazptr_protect() may be added later, the current potential
+> usage doesn't require it, and a shazptr_acquire(), which installs the
+> protected value to hazard pointer slot and proves the smp_mb(), is
+> enough for now.
+>
+> [1]: M. M. Michael, "Hazard pointers: safe memory reclamation for
+>       lock-free objects," in IEEE Transactions on Parallel and
+>       Distributed Systems, vol. 15, no. 6, pp. 491-504, June 2004
+>
+> Link: https://lore.kernel.org/lkml/20240917143402.930114-1-boqun.feng@gmail.com/ [2]
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> ---
+>   include/linux/shazptr.h  | 73 ++++++++++++++++++++++++++++++++++++++++
+>   kernel/locking/Makefile  |  2 +-
+>   kernel/locking/shazptr.c | 29 ++++++++++++++++
+>   3 files changed, 103 insertions(+), 1 deletion(-)
+>   create mode 100644 include/linux/shazptr.h
+>   create mode 100644 kernel/locking/shazptr.c
+>
+> diff --git a/include/linux/shazptr.h b/include/linux/shazptr.h
+> new file mode 100644
+> index 000000000000..287cd04b4be9
+> --- /dev/null
+> +++ b/include/linux/shazptr.h
+> @@ -0,0 +1,73 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Simple hazard pointers
+> + *
+> + * Copyright (c) 2025, Microsoft Corporation.
+> + *
+> + * Author: Boqun Feng <boqun.feng@gmail.com>
+> + *
+> + * A simple variant of hazard pointers, the users must ensure the preemption
+> + * is already disabled when calling a shazptr_acquire() to protect an address.
+> + * If one shazptr_acquire() is called after another shazptr_acquire() has been
+> + * called without the corresponding shazptr_clear() has been called, the later
+> + * shazptr_acquire() must be cleared first.
+> + *
+> + * The most suitable usage is when only one address need to be protected in a
+> + * preemption disabled critical section.
+> + */
+> +
+> +#ifndef _LINUX_SHAZPTR_H
+> +#define _LINUX_SHAZPTR_H
+> +
+> +#include <linux/cleanup.h>
+> +#include <linux/percpu.h>
+> +
+> +/* Make ULONG_MAX the wildcard value */
+> +#define SHAZPTR_WILDCARD ((void *)(ULONG_MAX))
+> +
+> +DECLARE_PER_CPU_SHARED_ALIGNED(void *, shazptr_slots);
+> +
+> +/* Represent a held hazard pointer slot */
+> +struct shazptr_guard {
+> +	void **slot;
+> +	bool use_wildcard;
+> +};
+> +
+> +/*
+> + * Acquire a hazptr slot and begin the hazard pointer critical section.
+> + *
+> + * Must be called with preemption disabled, and preemption must remain disabled
+> + * until shazptr_clear().
+> + */
+> +static inline struct shazptr_guard shazptr_acquire(void *ptr)
+> +{
+> +	struct shazptr_guard guard = {
+> +		/* Preemption is disabled. */
+> +		.slot = this_cpu_ptr(&shazptr_slots),
+> +		.use_wildcard = false,
+> +	};
+> +
+> +	if (likely(!READ_ONCE(*guard.slot))) {
+> +		WRITE_ONCE(*guard.slot, ptr);
+> +	} else {
+> +		guard.use_wildcard = true;
+> +		WRITE_ONCE(*guard.slot, SHAZPTR_WILDCARD);
+> +	}
+Is it correct to assume that shazptr cannot be used in a mixed context 
+environment on the same CPU like a task context and an interrupt context 
+trying to acquire it simultaneously because the current check isn't 
+atomic with respect to that?
+> +
+> +	smp_mb(); /* Synchronize with smp_mb() at synchronize_shazptr(). */
+> +
+> +	return guard;
+> +}
+> +
+> +static inline void shazptr_clear(struct shazptr_guard guard)
+> +{
+> +	/* Only clear the slot when the outermost guard is released */
+> +	if (likely(!guard.use_wildcard))
+> +		smp_store_release(guard.slot, NULL); /* Pair with ACQUIRE at synchronize_shazptr() */
+> +}
 
-diff --git a/Documentation/filesystems/proc.rst b/Documentation/filesystems/proc.rst
-index 5236cb52e357dcd00496b26be8578e1dec0a345e..2971551b7235345c9a7ec3c84a87a16adcda5901 100644
---- a/Documentation/filesystems/proc.rst
-+++ b/Documentation/filesystems/proc.rst
-@@ -1196,12 +1196,14 @@ SecPageTables
-               Memory consumed by secondary page tables, this currently includes
-               KVM mmu and IOMMU allocations on x86 and arm64.
- NFS_Unstable
--              Always zero. Previous counted pages which had been written to
-+              Always zero. Previously counted pages which had been written to
-               the server, but has not been committed to stable storage.
- Bounce
--              Memory used for block device "bounce buffers"
-+              Always zero. Previously memory used for block device
-+              "bounce buffers".
- WritebackTmp
--              Memory used by FUSE for temporary writeback buffers
-+              Always zero. Previously memory used by FUSE for temporary
-+              writeback buffers.
- CommitLimit
-               Based on the overcommit ratio ('vm.overcommit_ratio'),
-               this is the total amount of  memory currently available to
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 6d66382dae6533a0c8481f72ad67c35021e331d3..e434cb260e6182468e0d617b559134c6fbe128f4 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -500,7 +500,7 @@ static ssize_t node_read_meminfo(struct device *dev,
- 			     nid, K(node_page_state(pgdat, NR_SECONDARY_PAGETABLE)),
- 			     nid, 0UL,
- 			     nid, 0UL,
--			     nid, K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
-+			     nid, 0UL,
- 			     nid, K(sreclaimable +
- 				    node_page_state(pgdat, NR_KERNEL_MISC_RECLAIMABLE)),
- 			     nid, K(sreclaimable + sunreclaimable),
-diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
-index bc2bc60c36ccc1dab8913913056f5ff20b448490..a458f1e112fdbc63019239a79ce39c5576b5f963 100644
---- a/fs/proc/meminfo.c
-+++ b/fs/proc/meminfo.c
-@@ -121,8 +121,7 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
- 
- 	show_val_kb(m, "NFS_Unstable:   ", 0);
- 	show_val_kb(m, "Bounce:         ", 0);
--	show_val_kb(m, "WritebackTmp:   ",
--		    global_node_page_state(NR_WRITEBACK_TEMP));
-+	show_val_kb(m, "WritebackTmp:   ", 0);
- 	show_val_kb(m, "CommitLimit:    ", vm_commit_limit());
- 	show_val_kb(m, "Committed_AS:   ", committed);
- 	seq_printf(m, "VmallocTotal:   %8lu kB\n",
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 1d1bb2b7f40d25b430932c9ef9096d97bf1c29de..0c5da9141983b795018c0aa2457b065507416564 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -206,7 +206,6 @@ enum node_stat_item {
- 	NR_FILE_PAGES,
- 	NR_FILE_DIRTY,
- 	NR_WRITEBACK,
--	NR_WRITEBACK_TEMP,	/* Writeback using temporary buffers */
- 	NR_SHMEM,		/* shmem pages (included tmpfs/GEM pages) */
- 	NR_SHMEM_THPS,
- 	NR_SHMEM_PMDMAPPED,
-diff --git a/mm/show_mem.c b/mm/show_mem.c
-index 0cf8bf5d832d6b339b4c9a6c7b8b3ab41683bcfe..41999e94a56d623726ea92f3f38785e8b218afe5 100644
---- a/mm/show_mem.c
-+++ b/mm/show_mem.c
-@@ -246,7 +246,6 @@ static void show_free_areas(unsigned int filter, nodemask_t *nodemask, int max_z
- 			" shmem_pmdmapped:%lukB"
- 			" anon_thp:%lukB"
- #endif
--			" writeback_tmp:%lukB"
- 			" kernel_stack:%lukB"
- #ifdef CONFIG_SHADOW_CALL_STACK
- 			" shadow_call_stack:%lukB"
-@@ -273,7 +272,6 @@ static void show_free_areas(unsigned int filter, nodemask_t *nodemask, int max_z
- 			K(node_page_state(pgdat, NR_SHMEM_PMDMAPPED)),
- 			K(node_page_state(pgdat, NR_ANON_THPS)),
- #endif
--			K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
- 			node_page_state(pgdat, NR_KERNEL_STACK_KB),
- #ifdef CONFIG_SHADOW_CALL_STACK
- 			node_page_state(pgdat, NR_KERNEL_SCS_KB),
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index c3114b8826e4c3b6969fd4af4b0cd32173c42d7b..e0fcd9057f344170b2dc5c82beafea4ec18359bb 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1251,7 +1251,6 @@ const char * const vmstat_text[] = {
- 	[I(NR_FILE_PAGES)]			= "nr_file_pages",
- 	[I(NR_FILE_DIRTY)]			= "nr_dirty",
- 	[I(NR_WRITEBACK)]			= "nr_writeback",
--	[I(NR_WRITEBACK_TEMP)]			= "nr_writeback_temp",
- 	[I(NR_SHMEM)]				= "nr_shmem",
- 	[I(NR_SHMEM_THPS)]			= "nr_shmem_hugepages",
- 	[I(NR_SHMEM_PMDMAPPED)]			= "nr_shmem_pmdmapped",
+Is it better to name it shazptr_release() to be conformant with our 
+current locking convention?
 
----
-base-commit: 4216fd45fc9156da0ee33fcb25cc0a5265049e32
-change-id: 20250625-nr_writeback_removal-4eca139cf09a
-
-Best regards,
--- 
-Vlastimil Babka <vbabka@suse.cz>
+Cheers,
+Longman
 
