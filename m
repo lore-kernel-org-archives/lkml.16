@@ -1,186 +1,115 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375131F3BAC
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:15:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA99520E023;
+	Wed, 25 Jun 2025 08:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750839329; cv=none; b=YfgxpPKqoapYbvO+oSpVwJm1IqPUw5j0XDv5q13Jq+7RQtSIu4kZwIrZ0O4N/6+Wy3JSSkyZR00l+y3jh3Zi8jpBhXdKTKI2znpc/cOej7mxer+TQ728VcgcmjCuTV2rjQVt/mBcOwBsv4IbLvtVv+VdyepdGSQIvlpwDKRw2DQ=
+	t=1750839360; cv=none; b=Z5CjNxzXaSuNlrH/AzjA5WToAEDlHxNNTx6EztdF1POTL3JnSk+jw324/wag4Ws0Huzh7uzR58midDcLAQeS3D51XEtrUqa+Jo8CyK4QuwtIO1Wqltd/OeoAWz5oCqZbE6mOx6VoQtnkwT2XV4mjYb9Lr2Po8c73CjPrX0BjRDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750839329; c=relaxed/simple;
-	bh=+PaCCUmw1ybpR45z4pBl88rg+ZMhAu6ODh9EN99oOTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ruMfPUmfZYDoyu/1eIUl0FW/0wdjgX++1hQN0HNjOUVEYiB7YaYcYi1eo+9hOY1NHVAVr5Eo+YWrRI4XXobRKz2DwtIRm+Bs1iW/2j0MAzFco2mi0hYdBzDitde6Ze3V8JJCOB+lL/vAs7EKRzs0PImopmn1nVwb7cL3KH1q2Qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ugXBAMjf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OR3gvBYA; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ugXBAMjf; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OR3gvBYA; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1750839360; c=relaxed/simple;
+	bh=B9FQ/xDTdaPFjALjUp4dGIQ/na1i4R5MHemjyoJtJVw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=taXzEPL5XcnhlY2U059LjRQACH0k66byaOP6r29AnDRfJy9dCgeaPVRW0qdcmBXV2LxqWiChMCBILxtIV/tnfrnSo5sxsRTKA9Ws3TRtuLNCAvk7nVmArZaVLWKUByiq9tVvBFsswiwc5paRc+LEDopPTLbJVr77GS78a5ocZ1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OjAjNowm; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ugXBAMjf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OR3gvBYA";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ugXBAMjf";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OR3gvBYA"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 2B4CD1F441;
-	Wed, 25 Jun 2025 08:15:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750839325; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6BqRuDfyym3GMLPKIzCqnQ5WuIIDbXNkO7EJ8+AjpXY=;
-	b=ugXBAMjf1CuR3YYZVcVdgSE+DpTi3ti3pqBby1QyvaTXUU6iozh/xxrTBb3XI7NTH4ZSLB
-	hypsOfNQXPAY6zIFKsSKbggW+4ASPy+2+Mvpc1yz0rcmZBlfktxkuRB8iUnDdIolQRJBR/
-	lFSAot5RjOw4+1RDSPCbOKindeoQzPw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750839325;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6BqRuDfyym3GMLPKIzCqnQ5WuIIDbXNkO7EJ8+AjpXY=;
-	b=OR3gvBYAwe31U8phnHX5Z9yJtmLm4I5pEFZTjXPl9dhBMToX2wWxVDYYGGji59QL8pDU/u
-	mbggJRf4r9X2Y5DA==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ugXBAMjf;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=OR3gvBYA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1750839325; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6BqRuDfyym3GMLPKIzCqnQ5WuIIDbXNkO7EJ8+AjpXY=;
-	b=ugXBAMjf1CuR3YYZVcVdgSE+DpTi3ti3pqBby1QyvaTXUU6iozh/xxrTBb3XI7NTH4ZSLB
-	hypsOfNQXPAY6zIFKsSKbggW+4ASPy+2+Mvpc1yz0rcmZBlfktxkuRB8iUnDdIolQRJBR/
-	lFSAot5RjOw4+1RDSPCbOKindeoQzPw=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1750839325;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6BqRuDfyym3GMLPKIzCqnQ5WuIIDbXNkO7EJ8+AjpXY=;
-	b=OR3gvBYAwe31U8phnHX5Z9yJtmLm4I5pEFZTjXPl9dhBMToX2wWxVDYYGGji59QL8pDU/u
-	mbggJRf4r9X2Y5DA==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id AD9EC13301;
-	Wed, 25 Jun 2025 08:15:23 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id u4CpJxuwW2iOGQAAD6G6ig
-	(envelope-from <osalvador@suse.de>); Wed, 25 Jun 2025 08:15:23 +0000
-Date: Wed, 25 Jun 2025 10:15:22 +0200
-From: Oscar Salvador <osalvador@suse.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	linux-mm@kvack.org, nvdimm@lists.linux.dev,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
-	Baolin Wang <baolin.wang@linux.alibaba.com>,
-	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
-	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
-	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
-	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
-	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
-	Suren Baghdasaryan <surenb@google.com>,
-	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
-	Pedro Falcato <pfalcato@suse.de>
-Subject: Re: [PATCH RFC 06/14] mm/huge_memory: support huge zero folio in
- vmf_insert_folio_pmd()
-Message-ID: <aFuwGmM0Ebl1IRGl@localhost.localdomain>
-References: <20250617154345.2494405-1-david@redhat.com>
- <20250617154345.2494405-7-david@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OjAjNowm"
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-70834f92aaeso4462537b3.3;
+        Wed, 25 Jun 2025 01:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750839358; x=1751444158; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B9FQ/xDTdaPFjALjUp4dGIQ/na1i4R5MHemjyoJtJVw=;
+        b=OjAjNowm7EI8tLuGe/AvOhuTVpO4QPXaz/Xat3mG7KIEF7MCyhRnfEyJhuHC58O1ih
+         PzkuaVTu2SsMMZRcIQwHdRL+wFrAsS4kZ7g+J9UZl+xmc25cbuqzr0Uw3/hh2JFurxyY
+         wgTa2zj9x33OJaAoBVrDGiiqzZRCwbWDfBblVDA+e6FjS6H360IvY6EV+/Nj5pyTxucZ
+         afuwiaowF+9+CdmEiWiAAL4s30vQ8oE912rRb1zlo9PcDAqwUr/63fF1iddidnJPbOP1
+         RIbWxPdyMaD985+KQOtoBxj58XUKk9uO275utoehg9IvkofABtPxuUtDHXgxlDHjbuHU
+         w8/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750839358; x=1751444158;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B9FQ/xDTdaPFjALjUp4dGIQ/na1i4R5MHemjyoJtJVw=;
+        b=ccaPnN3sFCpOoqPJ5QXQPiZARzwJCYUUcpBb8dtNoZ7mi5i16iLUNtbb9zhF4DldWc
+         k3m0x8YlkxQyXiypA1ZYO8cLeE1ZbQvvLzB76z5W4P20L1+ffA+b+rvP8RPGyPIpGHdh
+         4jjj0vZuBkFJmHfK4G1GOTjrfbtrFGj3UtA0ugHybmeJa/OWxbk5wshTIE/Nd5lnodMp
+         kKzRkRdA+1EPlt47Nmu7JfOPGdkowwe51SP40Pqfv6zCZIytGFu6JVcXbTcSmMTu57td
+         ULBrsWyM4OkcnC5v6GzfttqhkutCAKi7LFU7MgGy79QDVtAo54nEoszop5BdovN8celm
+         PCug==
+X-Forwarded-Encrypted: i=1; AJvYcCUrohKJl3Hod0lTojJkuovjSxoAGZIp0gydAx+TM0f6teFTx8kST1VXbd7QAxsvLe0MhHeSOoIjuMEg@vger.kernel.org, AJvYcCXWLnrgCdw40h9HiWwJaviVPi5oZBTOTKoooi/fxV0lDjev0ytqHhRSSIPPQmcvMZnXjmheQR7A9wo=@vger.kernel.org, AJvYcCXZZ2H5gjgy0egYi2cDF7XWf9KIwC1SOOTmuJx/4N/Ds3jcGn10iq4BVjpb28IdWiyPWJ+XXp34YKDCrxdC@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgTy1xMkSBMc/jjgbEAi0fxFDiJ27uft9N9IF1SZt9B6TxeGsq
+	dSA9/uLi260xXRJUWsQOBQ+M6gkAmS/S5TX8MODEbz5Ffvaos0H3Wj81jsgwziWIjyHxPYvXkPt
+	RUL2qYyiloeBGGIJgQ24JXcT30vFdBqM=
+X-Gm-Gg: ASbGncuuDWqSqq4jTxn5NuGW7pkoVsaEFV5qGC0BQr7KFSsNlU3DZgjrTGh5ril9LDD
+	xo75jEe2iwOHF0RnlmC2u6E814k8wcpC28LznviYjMbRYg5T3HPgp8xHCN0bAOQRA3SSFDvCuDa
+	vIXARxFGBnu/xLK+xSE5J+Z8qLEH+zrvk4SoY2uI/XpyE=
+X-Google-Smtp-Source: AGHT+IErRBRd4ZEkZGGTpdiXkJHmurXTIOpZXK+xDiiziUhNlaNMwGpOR9VoKLkPFm/JlC7M4GtcD6m2pcR3WADrueM=
+X-Received: by 2002:a05:690c:7483:b0:712:c5f7:1f02 with SMTP id
+ 00721157ae682-71406c84c64mr12648157b3.1.1750839357660; Wed, 25 Jun 2025
+ 01:15:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250617154345.2494405-7-david@redhat.com>
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Queue-Id: 2B4CD1F441
-X-Rspamd-Action: no action
-X-Spam-Flag: NO
-X-Spamd-Result: default: False [-4.51 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	ARC_NA(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	MIME_TRACE(0.00)[0:+];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_COUNT_TWO(0.00)[2];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	MISSING_XM_UA(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	R_RATELIMIT(0.00)[to_ip_from(RL88oxspsx4bg3gu1yybyqiqt4)];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[localhost.localdomain:mid,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim]
-X-Spam-Score: -4.51
-X-Spam-Level: 
+References: <20250615222258.117771-1-l.rubusch@gmail.com> <aFDBWztZT67hUF6I@archie.me>
+In-Reply-To: <aFDBWztZT67hUF6I@archie.me>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Wed, 25 Jun 2025 10:15:21 +0200
+X-Gm-Features: AX0GCFsCKhxXsO9vDHgBQ6201WxKb_UPKCWTu4wT49puBY3PnYFj9m7uKV-mBTY
+Message-ID: <CAFXKEHaZ8aGw=WZiSDZhsrviATTNK5omRBOhNLd1xAsjxDAPmQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/8] iio: accel: adxl313: add power-save on activity/inactivity
+To: Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com, 
+	andy@kernel.org, corbet@lwn.net, lucas.p.stankus@gmail.com, lars@metafoo.de, 
+	Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 17, 2025 at 05:43:37PM +0200, David Hildenbrand wrote:
-> Just like we do for vmf_insert_page_mkwrite() -> ... ->
-> insert_page_into_pte_locked(), support the huge zero folio.
-> 
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+Hi Bagas Sanjaya
 
-insert_page_into_pte_locked() creates a special pte in case it finds the
-zero folio while insert_pmd() doesn't.
-I know that we didn't want to create special mappings for normal refcount folios
-but this seems inconsistent? I'm pretty sure there's a reason but could you
-elaborate on that?
+Sry, for the late reply.
 
-> ---
->  mm/huge_memory.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 1ea23900b5adb..92400f3baa9ff 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -1418,9 +1418,11 @@ static vm_fault_t insert_pmd(struct vm_area_struct *vma, unsigned long addr,
->  	if (fop.is_folio) {
->  		entry = folio_mk_pmd(fop.folio, vma->vm_page_prot);
->  
-> -		folio_get(fop.folio);
-> -		folio_add_file_rmap_pmd(fop.folio, &fop.folio->page, vma);
-> -		add_mm_counter(mm, mm_counter_file(fop.folio), HPAGE_PMD_NR);
-> +		if (!is_huge_zero_folio(fop.folio)) {
-> +			folio_get(fop.folio);
-> +			folio_add_file_rmap_pmd(fop.folio, &fop.folio->page, vma);
-> +			add_mm_counter(mm, mm_counter_file(fop.folio), HPAGE_PMD_NR);
-> +		}
->  	} else {
->  		entry = pmd_mkhuge(pfn_pmd(fop.pfn, prot));
->  		entry = pmd_mkspecial(entry);
-> -- 
-> 2.49.0
-> 
-> 
+On Tue, Jun 17, 2025 at 3:14=E2=80=AFAM Bagas Sanjaya <bagasdotme@gmail.com=
+> wrote:
+>
+> On Sun, Jun 15, 2025 at 10:22:50PM +0000, Lothar Rubusch wrote:
+> > base-commit: 7461179e080df770240850a126cc7dbffad195c8
+> > prerequisite-patch-id: 263cdbf28524f1edc96717db1461d7a4be2319c2
+>
+> What prerequisite patch?
+>
+> Confused...
+>
 
--- 
-Oscar Salvador
-SUSE Labs
+Interesting, tbh I'm not sure about the "prerequisite-patch-id",
+either. AFAIK there is some git command to verify and use it as rather
+an ID of the patch (series), as far as I can see in the documentation
+for format-patch:
+https://git-scm.com/docs/git-format-patch#_base_tree_information
+
+As mentioned the series is based on this fork and branch:
+https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/log/?h=3Dtest=
+ing
+
+Actually, the base commit should be possible to identify (at least I
+could identify it in tig). AFAIK - or, as I needed to learn myself in
+the past - usually they check the series automatically first to rule
+out such things. E.g. they execute checkpatch, smatch, in case DT
+check,... on it. If anything fails here, I guess I would have received
+feedback within about 24h. Since there was no feedback, I assume there
+should not be an issue.
+
+Best regards,
+Lothar
+
+> --
+> An old man doll... just what I always wanted! - Clara
