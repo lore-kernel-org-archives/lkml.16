@@ -1,83 +1,112 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EC9D262FE4
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A84048615A;
+	Wed, 25 Jun 2025 14:16:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750860930; cv=none; b=JEkmhjxnvRH+IbCfcP1G0nl9ScK9g0DcfcNwjE9eO4+tjEW6O1NTnqpw2K503qLSXPtq3g4Oz6Fbm+VmqxOCmbbw2/hjNorEeG1JyWN0k795YvJxGrXFQeohQcp6Xe9qmgtV1vjvoKIBVgmPUEdPwM2+1MGgFHgvD2b6t13TU38=
+	t=1750860966; cv=none; b=atmpQS10Uvs4TUDZxjPs23Ey70jw2RBOALcpX/gsuXY6NIsq5uRITpkEudy30UX4ZZ8bNVzi+xM/3recJcG/T7EJKzjGXoVfSH+yHbtK6zA15X/H7zs2Ks3QaECS/q/f4bZxzFUzgnF3ZMN94dkZ/lwobpksf+gGJfNM2LcHPPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750860930; c=relaxed/simple;
-	bh=+JuP94E+xnI7Vs9bx0Yg0sizMRQ02R9RzaTYaHIgy1I=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PMNR71/WRJa8s/OQBC0Y07ib97U9KUd2K/2rdTiyNq7QytGZ3Y0pmywH19LmFf3hiTraHOHhqZ06vhe4kcweONiYwmj/W8GjSjDzSMfouuPZQs7Qr0GSp/4XWklJct+61++HAZvT7HfS4FGmSDV04PaeMB0FssbuujzOtbQhp0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3ddb9c3b6edso81777685ab.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:15:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750860928; x=1751465728;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+	s=arc-20240116; t=1750860966; c=relaxed/simple;
+	bh=q5l8N7mNoykdeb46JX3+RuM69RfL20fvFf4iNZvpLRM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HPY6cZO4/CjnkGsPvA9IX6fcIk6eg4tUvut1Rw5vkjZeTmwQa/dPFnFqwFmftvOHGQdcM49/wK/hFd8poxWDFdEPqFzM9rirCJ2m6nnmicbSWu5i4ND4JrxQrsek8ALmIQ9bT6Wr/9sRSLHL77T4cgAjNBx1Bhy/a7SlPa3DkDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zn9iRuC5; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zn9iRuC5"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-234fcadde3eso93880625ad.0;
+        Wed, 25 Jun 2025 07:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750860964; x=1751465764; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=NCIcDbKondlW8ppRnkwn6db9TfBmjbxFdq4ebWTNKY8=;
-        b=d6msgS4LQTvHaYplSIb2WtwmsRNCCUpUw43f6DYuYBInyml/blg593Pg2X/TzXGvSi
-         T3GmFus/4hNYlmAtsqwsDahymOLClhn6Kd4zkwJNwNYw7doTl9W7sT71a9co9dNU3N3f
-         uZYwap7UNTSTqh2iEpjRnqdfHcitCn4qht5YV5YQ0OG4M/2N/Lhzp4ZZ7TErCiqhyPtS
-         p24frfW1ybl+BCFS8xRgK3XdZw6dZC5xg8iEKhgQHRIHnSGUmTzgofZQe/s/KpqeCWDw
-         EYcQPBP52yLYa3beY6wMHDno6d3VLZdg5ijHMmWQmuFgDvCy+d1lHaHOapQU8GzGGrty
-         WV7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWLZOgS9awYZ4yk9X6VlpY4YTkrGZs6j/wKlEyhQry++pCA6EqkYNAKI7UJqLwUm/17IB1YNrqScs3zqnQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzldld32LMvg3n7aoEK3Z1gPbz2pfHZoMMHVdAaTNC9j40sj3Cy
-	C2wzmlB+gmoeLuZfYkTnFN/HtMeWEF4vb/c4RRhPJastNT10unZ8CQWPUoTYw0SB+e1vWKgOvFN
-	OmGEJUss+lyJywZYAIvbdxSbHfFuju0NKnZk2S/TI1F+kIJ5k+AF27iDnW7A=
-X-Google-Smtp-Source: AGHT+IF0N5izkvk2XRTDSQ1nt3hmCUFxXeFtrzu3SDrAbpiwcqO/JR3izt0dnHOOXUODNUiEjGPszdTVWnA8/qOaA9nhSo4Za8+O
+        bh=IATOgKBnU0rqMJpw/Pp6SRkvAhMjr6+YJ8sC6/2yZO0=;
+        b=Zn9iRuC5/+q756ugMDpGE6DVo00Gjr2drp+E2Nplo9cQcEbwEtT2za7cWRaaPb43sb
+         slLOoC/SrSBBkUE/7QN07jBa5fMkN2kVu8ovyk/GnRoZP7lWklKzGbHCvJDG0Lazplik
+         lg1LCHEdJ3ZgN4eQT8ztYQ7C/ZuFcrZcF9y/94QjKhcG3gC7/FhkvTsgF0E66vGci8+2
+         +ablljhC9c0OtGzHSCmUSXCVlzt2xqyzKsnyiDMBF08qhzbiQj4O639kPEeJWIFh3r58
+         +jpwZTjXFK5KEhVTiJfmJlDgUB2YSM89PNwDzp3ZzLGlnFhsCFPeebIcz6QhYNvHx8EJ
+         Neyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750860964; x=1751465764;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IATOgKBnU0rqMJpw/Pp6SRkvAhMjr6+YJ8sC6/2yZO0=;
+        b=FAowX3aBXh6YRfeLkEtTicxeyUCYB7AuqtVDDh3mUDJWpFfPnPhrH08dptOqsSf23a
+         zngiH7Z3DmNRG8RZNxjo/6m1FwDk/gkk5OJnmn7rWSsw0J4o/gZXLDlqgmujHGVUas7K
+         H+CwPLE0e3XqvwXLEYRhwB8QcWAkEbmGcZ7GiO7dcRT2cmj3Am9TUsjuVMX3v5na82uf
+         iE7tAkTBwfEEnXzMVYfG+TH3Begas3EDbfHj4aV4v663k/jCZAJWZdY0gzXunmwTMUZB
+         dxVmZljAZGoaUpQOGQjTA+wG7pYK8LcUbyxZGEfWpu98riEzUfBRGBdhBpBpDsl1LmxP
+         xBww==
+X-Forwarded-Encrypted: i=1; AJvYcCUIz2sVyQ0yrNiEKzR7W6nCJaj6LmBAFE8oU5cbJxGRB1WVW+ntUExhy2yND4zZUekKh6E=@vger.kernel.org, AJvYcCUhxzXHcHKRawTwJimMaRbviOeBb13wuOXaR4Nvj4M0AcBaWfvxnYIg3LWaQeIvB8lDZypPDbl1lTaY@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPgFwGRg0vFDsm1APgTF1egvZ21XqbDUVB39hlTWFe0dSc/cPP
+	2Jhm6apfjjPng31S4oKKvPjg0vOIvzgc/rF3hlvcJy5ZI2EVAnYi8tVyysY98A==
+X-Gm-Gg: ASbGncuAsNfmqfDk2OA7lpfOcbsM1d8zeH/UBeXeCfkvw7WUk/I/XTRoKfJYoxJkUnq
+	tCX2XGz7Cmy4KYHDdWEseMMs3dxZvr4svnRdPiralloG2YCXz7MhPHfGQRHMPwJl93KyCLZR4ic
+	0gtIsScz+9l7yOeNQooAVX2mtElDxUOSU5KeswzFEXSxrsF6JPIXLlTm2NCTh3Y8PZhpA3s4xlD
+	CZoA26wHcp0++MSqmi5fO5k5F1CqmLrex29RI03jYKiZG+W/s1oc2dKHNo8f9ouMFA7Pn01tZi5
+	38RsEvkNyUtGKPZfcYp9Q/5+nKxD+frEr7SW7wRYJ1HqF3qGHv3DCELlGgaAnPYYsXCxuQ==
+X-Google-Smtp-Source: AGHT+IF01k5X3tfD6ac+31sVKKfqdSwqu8UG8v9p3+32QVuls+7tDiWMOiI+DOT3TgOZ8agA0i6O3A==
+X-Received: by 2002:a17:903:2352:b0:235:c781:c305 with SMTP id d9443c01a7336-2382404eb53mr66919025ad.24.1750860963561;
+        Wed, 25 Jun 2025 07:16:03 -0700 (PDT)
+Received: from [192.168.0.150] ([103.124.138.155])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-237d8676123sm132988735ad.173.2025.06.25.07.16.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 07:16:02 -0700 (PDT)
+Message-ID: <832d69ce-d409-4ea4-a4d6-89cc9222e1d1@gmail.com>
+Date: Wed, 25 Jun 2025 21:15:58 +0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2167:b0:3dd:dd41:d3dc with SMTP id
- e9e14a558f8ab-3df32912c24mr37718555ab.1.1750860928288; Wed, 25 Jun 2025
- 07:15:28 -0700 (PDT)
-Date: Wed, 25 Jun 2025 07:15:28 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685c0480.a00a0220.2e5631.00d1.GAE@google.com>
-Subject: [syzbot] Monthly xfs report (Jun 2025)
-From: syzbot <syzbot+list9c999283c4df605d8e03@syzkaller.appspotmail.com>
-To: cem@kernel.org, linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH next] Documentation: KVM: fix reference for
+ kvm_ppc_resize_hpt and various typos
+To: ALOK TIWARI <alok.a.tiwari@oracle.com>, pbonzini@redhat.com,
+ corbet@lwn.net, kvm@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+References: <20250623191152.44118-1-alok.a.tiwari@oracle.com>
+ <aFniQYHCyi4BKVcs@archie.me>
+ <18e6c0d1-0ee5-40fb-b445-504751df10de@oracle.com>
+Content-Language: en-US
+From: Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <18e6c0d1-0ee5-40fb-b445-504751df10de@oracle.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hello xfs maintainers/developers,
+On 6/25/25 21:00, ALOK TIWARI wrote:
+> 
+> 
+> On 6/24/2025 4:54 AM, Bagas Sanjaya wrote:
+>>> -This capability indicates that KVM supports that accesses to user 
+>>> defined MSRs
+>>> +This capability indicates that KVM supports accesses to user defined 
+>>> MSRs
+>>>   may be rejected. With this capability exposed, KVM exports new VM 
+>>> ioctl
+>>>   KVM_X86_SET_MSR_FILTER which user space can call to specify bitmaps 
+>>> of MSR
+>>>   ranges that KVM should deny access to.
+>> Do you mean accesses to user defined MSRs*that* may be rejected?
+> 
+> Do you want me to undo this change and go back to the earlier one?
+> 
 
-This is a 31-day syzbot report for the xfs subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/xfs
+Nope but I need clarification.
 
-During the period, 1 new issues were detected and 0 were fixed.
-In total, 17 issues are still open and 27 have already been fixed.
+>>
+>> Thanks.
+> 
+> Do I need to send a new patch?
+> 
 
-Some of the still happening issues:
+Maybe.
 
-Ref Crashes Repro Title
-<1> 242     Yes   BUG: Bad page state in iomap_write_begin
-                  https://syzkaller.appspot.com/bug?extid=c317c107c68f8bc257d9
-<2> 198     Yes   KASAN: slab-use-after-free Read in xfs_inode_item_push
-                  https://syzkaller.appspot.com/bug?extid=1a28995e12fd13faa44e
-<3> 14      Yes   INFO: task hung in vfs_setxattr (7)
-                  https://syzkaller.appspot.com/bug?extid=3d0a18cd22695979a7c6
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
+-- 
+An old man doll... just what I always wanted! - Clara
