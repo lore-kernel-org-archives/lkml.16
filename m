@@ -1,211 +1,98 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287D213A41F
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD6A13A41F;
+	Wed, 25 Jun 2025 16:01:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750867257; cv=none; b=Y2CBQYFXxWaS0Bq89k2XugSbSr7ve0M0QWriu7r5wDqtLWieHpPrJfxv3P8tyhrZdFaQ53/GoxmLUWUri+P4D5IT3E6KclYNUnpGNaGao7yqc+SjSRPkUKKRdDz/N4WKxVLfI89s5q9EQgdsTWZ/Fdi2m8sgZnqxxFFhIbWydkw=
+	t=1750867272; cv=none; b=qqsQjTybwVanLlvqTQ/YYf2NwZO0vpw1jS+M1cE9g2QV4hwWi+pH2ZvWMErL9JUGWJE3RcC40fdESFPlwTCILwb83SFoNYtVs0dfHKsUNqg5tlkmYiPVrdL0W6lDcVU2tYyhHqeb1JdZM0tpSOfMaFY1FGGnbo1X8uX94QRBXHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750867257; c=relaxed/simple;
-	bh=FQFAU8J92YBJOIwviIOuWy+syYqT13CticcqgFA8fNQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pd4WDaYCEESHgdvguJ02HnKs2DGVubzmkEWMtGk93/f3dRgC7SQQRQsmit15ESywqYn6NdbJSjOamB0Ni6uBGbB117e0qEdtRNvm4WcjmLbulKu0iysgPjMjZyqLoLvmSuQ8hgWwNnuHiXeCPGPL1eMB+EXi8aAGetTbpkHMYfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a7B3pRNo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750867272; c=relaxed/simple;
+	bh=/D5rIUSTwuJl0dxAecZEAjFt2HT9/QBw7u1edislyBc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cD1IqsTvb4k9kgX1oT3gWUIJjt9bVanYxAtAYnCk4MDsK3T6/8FhNkYHsRj2GUYyDGPgMPjhfBGWrpa9U/S0g+H3zQxecmUsHca4Y3ORoN8tKgqxqRtd1ebbFUMzI7yzT4yRmHuiqvCC7kh7HQ4R1Jvsi37ozIg3lzlavkFaKK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TycmM7vT; arc=none smtp.client-ip=209.85.221.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a7B3pRNo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750867254;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fVPSomnM/XHJegYDF8a486UxXjZV1B4u2XNVJqXqkPE=;
-	b=a7B3pRNojcHM5XoOdE8P3HySAH5o6sqaC++BP18mt2N6n2Khw9orKHmyIQ89UyyINKy1UZ
-	MN3YTHpi5kPfk6AiriaKhoFl8dGIWcP9tR4QBa9MMJVLCQxU4BC323HHkg7Yl18Nomy7Ua
-	O0ZPW06dtEAWCWE5AOQKzAFc4XS0jV0=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-442-H3qHQWxOOQWP5X8_nEJlKQ-1; Wed, 25 Jun 2025 12:00:51 -0400
-X-MC-Unique: H3qHQWxOOQWP5X8_nEJlKQ-1
-X-Mimecast-MFC-AGG-ID: H3qHQWxOOQWP5X8_nEJlKQ_1750867250
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f85f31d9so875366f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:00:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TycmM7vT"
+Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-3a6d77b43c9so4076563f8f.3;
+        Wed, 25 Jun 2025 09:01:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750867268; x=1751472068; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6JTEGaZTnsE+6V5g7hZ/rNVi0M0+RdUO5nDCrZs9OBI=;
+        b=TycmM7vTrZi7uFy6FqS1ZYyLQ66+qV2Z6A1sXieHkUf0kmXBphNfApLyJdinoArvlp
+         jDudtiz+bMziCShhYvDjUk1MQoYfwtYehK2i4EifzSTk6rTe2X1+JEMKq8cXo+s7YLgn
+         YcNiIj2Bx5ppiyBReq4uzpoJqKgJG3VGJERDRhdYvmlAkNQ1ukanUvnGSDmGD3CNdS/D
+         ib6SuizCFOGr1edS5BAoVgjkiBL7SPfMGoqt3Iz/FY2mYyFnQeHyHcIx/1I+2vqAse7f
+         Wbc28CcKAAB2GJw7uey5Jl+32veu0IetkZ6z931SyIi2929q0XytJPujekwGgQkkP6Pz
+         /u6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750867250; x=1751472050;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fVPSomnM/XHJegYDF8a486UxXjZV1B4u2XNVJqXqkPE=;
-        b=ILOBRRQq+FuLeDoR6J2wYgJZXdYYT21zmM3pY1oMlrJn7tdw8Yujxg1kjREat64h2S
-         yHgTgAwTXocTaC8F8otfw+O0xtHCOpqHuAkeZ/BaWTJ3zILeiqCdliJEy1pmZ/OoWm9m
-         ++JgXlGB++V6ZDo2rY7G6D6LcFBvf5jQWVSk9Kq95mpDAU+Lrqlagg/3L7GvVGkBouFP
-         hgtVR+SbijHPprhUUQC7JE5A9poM2lYuaXFZkLgW81E3iF+dAWnHgecjOT+lbnR8iK4v
-         91f7GoSJcJd8FbaKjCrZiuzuI0PN2GLKz1a+xE8/00tf1qybkBVV85r6jTedXDwn+bpw
-         G+Aw==
-X-Forwarded-Encrypted: i=1; AJvYcCUq0xPQPfmVkdmtxhioIGzrUaRYk2jSzqJk5u/QsshBMVObhKaZ3upVtpHBzVMzhcUko5LWbmhzWQ5++RU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxN2WG9D3NWRenPbMlgprZzTagtCXo2JO9NowRkV5ysQmqFxGsV
-	YU44ZBO+UPHrhhl/zIlA7N9NCCceZu1NhxNKcnPlEzFyNUkhARNqN4kjpsAxdMUqpNFOC7IYQn+
-	QmhZhOxSDjVc2Xry8IwQ58yyZ1Jpk9I8p5GrJZ4ypri6Wp8PK8IHKLcKifPpvj5Ur8A==
-X-Gm-Gg: ASbGnctfbbiY7mg/+x/wGVnAmrqg+xdwlS2F8kCUDIXfhe7CQJyfNTlNfnbE8va5KbZ
-	YE1A9nOnOhSo7B9z51i+ceSdB/KJRbe3EKJ0SZR4OH98vauuGiCdCmLpFsKuHUc1S5NOSMxT/37
-	t6+Cn9aOn2jrKfSDHndgsIOCgqvsIBgmHr81z4O9gov/nSEjeux+wwFB7C3E69VH2t1ymHQBDsr
-	jsJqUbO7gNBD8yRsQZqzSweRrkSaakMjty27YPxgtt7uUxAd0l7Gxot7DEmSJ84D9gNEifvZPI5
-	JtrhIG4Iy0RVWcysYQ==
-X-Received: by 2002:a05:6000:200d:b0:3a6:d95c:5e8 with SMTP id ffacd0b85a97d-3a6ed66464dmr3440595f8f.35.1750867249888;
-        Wed, 25 Jun 2025 09:00:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEx8ud9+gtyW7duD6Uk77aUjb1DTQPtQAWhhJNwbC5QYNwTl1QD0WHHRtck+a2LtJywDfOJBg==
-X-Received: by 2002:a05:6000:200d:b0:3a6:d95c:5e8 with SMTP id ffacd0b85a97d-3a6ed66464dmr3440529f8f.35.1750867249336;
-        Wed, 25 Jun 2025 09:00:49 -0700 (PDT)
-Received: from fedora (g3.ign.cz. [91.219.240.17])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805dc00sm5135456f8f.31.2025.06.25.09.00.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 09:00:48 -0700 (PDT)
-From: Vitaly Kuznetsov <vkuznets@redhat.com>
-To: Manuel Andreas <manuel.andreas@tum.de>, kvm@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: Sean Christopherson <seanjc@google.com>, pbonzini@redhat.com
-Subject: Re: [PATCH] x86/hyper-v: Filter non-canonical addresses passed via
- HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST(_EX)
-In-Reply-To: <c090efb3-ef82-499f-a5e0-360fc8420fb7@tum.de>
-References: <c090efb3-ef82-499f-a5e0-360fc8420fb7@tum.de>
-Date: Wed, 25 Jun 2025 18:00:47 +0200
-Message-ID: <87plerolow.fsf@redhat.com>
+        d=1e100.net; s=20230601; t=1750867268; x=1751472068;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6JTEGaZTnsE+6V5g7hZ/rNVi0M0+RdUO5nDCrZs9OBI=;
+        b=hsLCCkc/o2I3/BvuyOlQZluCBhWPK66A+DRJindZ1teeFd0BFdTf/INyYuCeu4Vvdc
+         1ELiDPw932pJRkUpN/qXXfX0hb+jIggSaS4kF8jePNYPS828zI9Pvzp/GovLlrZMnIwc
+         G3PiX8hvgG+ZmapftmwBnDrxE9pnPh5RoF+dS1azr4hiiS3RhUu/+PtEPHn4dISyTmVe
+         tTOOO1UnSZa6g6gJghtcAHzza6jhIH8UIsrCR3s3uRCsdW5eeMAwwXR3zinTQBFiXZ0Y
+         ZVEw3xL++Ibjjh6jIReeYUzn1qTdl95RS9YOVxVbmsFFUraWS2Rh0xM+flCTznMtW1cR
+         jiIA==
+X-Forwarded-Encrypted: i=1; AJvYcCUG+LOS/o1JEpbIz8Kw86XHAOrLHgRpe8Sx2X/vKAB/0Xr07ZEPPRWvoOo5X3/5BMXfRAtO98VnIhaTAYc=@vger.kernel.org, AJvYcCVb4bWQ6L+X6I5Etqb0MU2Jx+fbx58hkEQ5HRH0ZCVHchaxXtVEc1EBzjGHWjUZ0oK3/d68H7DfDqGqruVsmaU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0QxFU15MDthxQz/5FKynO7YDRimiqYP6KqO2cGlRzCNxAj49S
+	FTzj8tGeEs/nITdVqUSVPyTB9vPAfEk7sFxME7llYch5w1e/gNKWygG9
+X-Gm-Gg: ASbGncsOGlIlYi0rvuiNFEdlSLp9sqoc0JGBGbH+16u/d/w3Awhtgm6U9Y0TCs7Bmfn
+	Vr3dm/3Wr+2+HdA/E0GmB6+3NkK2uNVh1KBvgo6Q7yfwXu6PaRpZFGswwHHQzoebp9qq75tEsp6
+	Cmm1EWYq6w1RikQsSZ9HGkcBwTiG9gqjCk7bfMKgptemNokwkBeO4ebtIYQJqIHnerSpd1hFn0M
+	NszaPY3RsC6AGQMWYn0cPj2PWx39U61voucH9zd6AWxqZOwzC07c4WOR0neYx6TNw8P7+LPz2n/
+	e+oZ+CGjC0jUFlP5cCpGphC1IcVtapHBdLTtrjs8/Uq2fGMWjNscsSCDRXcNHXle7c+B0w==
+X-Google-Smtp-Source: AGHT+IFZPzUhJC0Qx+9U9jniWlrLEFsNlaQX47WmvD0WV9aIs2PghBG71nuQG7tIO6aueQgt18LGJw==
+X-Received: by 2002:a5d:5848:0:b0:3a4:cf40:ff37 with SMTP id ffacd0b85a97d-3a6ed5b87d9mr3011034f8f.6.1750867267506;
+        Wed, 25 Jun 2025 09:01:07 -0700 (PDT)
+Received: from [192.168.0.50] ([79.119.240.16])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e80695efsm4816504f8f.40.2025.06.25.09.01.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 09:01:06 -0700 (PDT)
+Message-ID: <bde434a6-68b8-4c5f-8ec0-6c41dd1b6558@gmail.com>
+Date: Wed, 25 Jun 2025 19:01:04 +0300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: rtl8xxxu: toggle P2P for supported devices
+To: Martin Rodriguez Reboredo <yakoyoku@gmail.com>,
+ linux-wireless@vger.kernel.org
+Cc: Jes Sorensen <Jes.Sorensen@gmail.com>, Ping-Ke Shih <pkshih@realtek.com>,
+ linux-kernel@vger.kernel.org
+References: <20250625142541.44795-1-yakoyoku@gmail.com>
+Content-Language: en-US
+From: Bitterblue Smith <rtl8821cerfe2@gmail.com>
+In-Reply-To: <20250625142541.44795-1-yakoyoku@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Manuel Andreas <manuel.andreas@tum.de> writes:
+On 25/06/2025 17:25, Martin Rodriguez Reboredo wrote:
+> This is a MR to see if rtl8xxxu can be made to support P2P.
+> 
+> Theoretically this should be handled by mac80211 but it seems that
+> drivers may have to take some extra steps depending on which device we
+> are talking about. I know that this patch is so basic that it might be
+> missing some H2C commands or similar for this to work on Realtek chips
+> but I don't have the required knowledge for me to implement it, so if
+> you know a place to read about I'll be glad to hear.
+> 
+> As of now only rtl8192ex devices have their P2P_CLIENT and P2P_GO wiphy
+> interface modes ensured because those are the only ones I can test on
+> my rtl8192eu card. The rest of chips have them set from what I've seen
+> in a cursory Internet search, they might or might not work.
+> 
+> Signed-off-by: Martin Rodriguez Reboredo <yakoyoku@gmail.com>
 
-> In KVM guests with Hyper-V hypercalls enabled, the hypercalls 
-> HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST and HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX 
-> allow a guest to request invalidation of portions of a virtual TLB.
-> For this, the hypercall parameter includes a list of GVAs that are supposed 
-> to be invalidated.
->
-> However, when non-canonical GVAs are passed, there is currently no 
-> filtering in place and they are eventually passed to checked invocations of 
-> INVVPID on Intel / INVLPGA on AMD.
-> While the AMD variant (INVLPGA) will silently ignore the non-canonical 
-> address and perform a no-op, the Intel variant (INVVPID) will fail and end 
-> up in invvpid_error, where a WARN_ONCE is triggered:
->
-> invvpid failed: ext=0x0 vpid=1 gva=0xaaaaaaaaaaaaa000
-> WARNING: CPU: 6 PID: 326 at arch/x86/kvm/vmx/vmx.c:482 
-> invvpid_error+0x91/0xa0 [kvm_intel]
-> Modules linked in: kvm_intel kvm 9pnet_virtio irqbypass fuse
-> CPU: 6 UID: 0 PID: 326 Comm: kvm-vm Not tainted 6.15.0 #14 PREEMPT(voluntary)
-> RIP: 0010:invvpid_error+0x91/0xa0 [kvm_intel]
-> Call Trace:
->   <TASK>
->   vmx_flush_tlb_gva+0x320/0x490 [kvm_intel]
->   ? __pfx_vmx_flush_tlb_gva+0x10/0x10 [kvm_intel]
->   ? kfifo_copy_out+0xcf/0x120
->   kvm_hv_vcpu_flush_tlb+0x24f/0x4f0 [kvm]
->   ? __pfx_kvm_hv_vcpu_flush_tlb+0x10/0x10 [kvm]
->   ? kvm_pmu_is_valid_msr+0x6e/0x80 [kvm]
->   ? kvm_get_msr_common+0x219/0x20f0 [kvm]
->   kvm_arch_vcpu_ioctl_run+0x3013/0x5810 [kvm]
->   /* ... */
->
-> Hyper-V documents that invalid GVAs (those that are beyond a partition's 
-> GVA space) are to be ignored. While not completely clear whether this 
-> ruling also applies to non-canonical GVAs, it is likely fine to make that 
-> assumption.
-
-I wrote a simple test and ran it on Azure. Unless I screwed up, the
-result confirms this assumption. The test was:
-
-#include <linux/module.h>	/* Needed by all modules */
-#include <linux/kernel.h>	/* Needed for KERN_INFO */
-
-struct hv_tlb_flush {    /* HV_INPUT_FLUSH_VIRTUAL_ADDRESS_LIST */
-        u64 address_space;
-        u64 flags;
-        u64 processor_mask;
-        u64 gva_list[];
-} __packed;
-
-static inline u64 __hyperv_hypercall(u64 control, u64 input_address,
-                                     u64 output_address)
-{
-	u64 res;
-
-        asm volatile("mov %[output_address], %%r8\n\t"
-                     "vmcall"
-                     : "=a" (res),
-                       "+c" (control), "+d" (input_address)
-                     : [output_address] "r"(output_address)
-                     : "cc", "memory", "r8", "r9", "r10", "r11");
-
-	return res;
-}
-
-int init_module(void)
-{
-	u64 rcx = 0x0003UL | 1UL << 32; /* 1 rep */
-	u64 status;
-	struct hv_tlb_flush *flush = (struct hv_tlb_flush *)kzalloc(4096, GFP_KERNEL);
-	void *out = kzalloc(4096, GFP_KERNEL);
-
-	flush->flags = 0x3; /* all CPUS all address spaces */
-	flush->processor_mask = 0x1;
-	flush->gva_list[0] = 0xaaaaaaaaaaaaa000;
-
-	status = __hyperv_hypercall(rcx, __pa(flush), __pa(out));
-
-	printk("Flush result: %llx\n", status);
-
-	kfree(flush);
-	kfree(out);
-
-	return -1;
-}
-
-void cleanup_module(void)
-{
-}
-
-MODULE_LICENSE("GPL");
-
-And the result of loading this module is:
-
-[ 4228.888451] Flush result: 100000000
-
-(1 in bit 32 means 1 rep completed, lower 16 bits == 0 indicate
-HV_STATUS_SUCCESS).
-
->
-> The following patch addresses the issue by skipping non-canonical GVAs 
-> before calling the architecture-specific invalidation primitive.
-> I've validated it against a PoC and the issue seems to be fixed.
->
-> Signed-off-by: Manuel Andreas <manuel.andreas@tum.de>
-> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
->   arch/x86/kvm/hyperv.c | 3 +++
->   1 file changed, 3 insertions(+)
->
-> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
-> index 24f0318c50d7..644a7aae6dab 100644
-> --- a/arch/x86/kvm/hyperv.c
-> +++ b/arch/x86/kvm/hyperv.c
-> @@ -1979,6 +1979,9 @@ int kvm_hv_vcpu_flush_tlb(struct kvm_vcpu *vcpu)
->   		if (entries[i] == KVM_HV_TLB_FLUSHALL_ENTRY)
->   			goto out_flush_all;
->
-> +                if (is_noncanonical_invlpg_address(entries[i], vcpu))
-> +                        continue;
-> +
->   		/*
->   		 * Lower 12 bits of 'address' encode the number of additional
->   		 * pages to flush.
-
--- 
-Vitaly
-
+So... does it work with your chip? How do we test?
