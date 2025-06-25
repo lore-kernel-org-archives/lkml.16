@@ -1,48 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65BA32DCC10;
-	Wed, 25 Jun 2025 09:34:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0E727FB27
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750844052; cv=none; b=pDdLXbwVxhD/oVd8ugVqzWnZcT6pXDiXUiaZz0mIY/PP7GJWGPvnoTurnTn7aixCsnLfxQevFIrCflLCS6Un/JM7w9sdcZfqprl/Q13DXZuPmGJ5+xHBvDUiclourGFIs5Lu8Yn8U9Q64HqegpEFD5pPls7KFi5vCfM+mLl4r6A=
+	t=1750844104; cv=none; b=BTHJ72TiBKPNeQuLgxPEroPt2wN/CDpn3L2IAbhAoIp43UHeUsZQJktN+n2u2HAsDWtCRiI9ob//DFUnOKlxfYjruz+Nkib0ho7hXo0vFZFocpK3FWimlWH55JSUCuIN0mUojxYbUZPCfUM0xurJGBrfPtyivdVDOA7ec1ZQp6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750844052; c=relaxed/simple;
-	bh=0/e6LfauK0af41XU2bytum4b2Y0CVYm09/82M2rDCw8=;
+	s=arc-20240116; t=1750844104; c=relaxed/simple;
+	bh=E7ejp8P8YsbKJJK/1FBGYKpEgGrI2RIqByFQgAvsWjc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EJFLutCPNISSBlK4eNOiTWzKp1bYAchvNIkSeUqFZLez+yU/+b3JdPxORe3prKb/Li8WYtnnjjYFw9heYVz+T/b7TOJh6Rc2GQgO7zu05+tU/CnYi02c9444DdTYGlg9ma6a0YDHBqYWVwqklnKN/3esUCELnGSEkdh/hdkIAy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jPmh68vn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oxWxSDMS6AGv8TqZbxwKWzLDQBoDubLh7rrjWW4G9NqTQAssV6n36EGlTAl9ijcpCJjRXkCGHxYMzmkruG5YC/UhcLgOcJ7SlzAKMDOusmOftumxzWImXgYURh/+RWXLS5n6+zBPdcdmw/MpN1tOWDL3DrKq8SQRUMgZGdN1mhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GPnNP10/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aWa40d3L; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=GPnNP10/; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=aWa40d3L; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jPmh68vn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBE93C4CEEA;
-	Wed, 25 Jun 2025 09:34:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750844051;
-	bh=0/e6LfauK0af41XU2bytum4b2Y0CVYm09/82M2rDCw8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jPmh68vn27DxyA8uVhf+aO8kwJDiumL6JUbvKDVxUKb6+JovY+T8mRPi6v7EduP1n
-	 6ifjZP7ERDt/hBpHsLODXoPvD66mMys0fsLCeshhe8WFDcXl8CbNCm4QsbLIofT3H/
-	 ivHuWk6VjA/sbr3aCrFSBRCN23fVVL8x0HmkHvtfVNWONUUb4HlhQ1K24Z2PJtrPT1
-	 eHby9thPS0Mr3feclGr56JfLchNgnFhpznASqWqz2lUJIPoH7f7cWwJwwYgHHEcgUw
-	 +0Dd5RPFaEqmmUpubP6OUCsxQ6HGFZ9N/03FfWQ9YYrIGYMpKVsESfpe3pTff5y0Jy
-	 LUSgtuWaw5iew==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uUMWA-000000000LN-3gtA;
-	Wed, 25 Jun 2025 11:34:10 +0200
-Date: Wed, 25 Jun 2025 11:34:10 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Baochen Qiang <quic_bqiang@quicinc.com>
-Cc: Johan Hovold <johan+linaro@kernel.org>,
-	Jeff Johnson <jjohnson@kernel.org>,
-	Miaoqing Pan <quic_miaoqing@quicinc.com>,
-	linux-wireless@vger.kernel.org, ath11k@lists.infradead.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/3] wifi: ath11k: fix dest ring-buffer corruption
-Message-ID: <aFvCkiJCRmwtqhWt@hovoldconsulting.com>
-References: <20250526114803.2122-1-johan+linaro@kernel.org>
- <20250526114803.2122-2-johan+linaro@kernel.org>
- <70b25ff3-b366-4e2d-a52a-0b2d50ce88c4@quicinc.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GPnNP10/";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aWa40d3L";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="GPnNP10/";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="aWa40d3L"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id D18E51F441;
+	Wed, 25 Jun 2025 09:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750844100; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D9yD9bDvc4ttPN1JbIa1TTy9wP5vivopfbZOV9iRQ4o=;
+	b=GPnNP10/8VxFC0xTPvnzcEmlYxnOcsmX+aAqnKYNgYu2cjsDWyMDW9Bs2Dx5hqdJRSzlPJ
+	Yvq22aBwLZwTIeEuRO/rgPREPzOrW8UMGEYvP8USIsYJQRuXqrkyfmVsCsAhjDQhp7yyxd
+	9/mK7HUm/59/9/8BgnfhuFhHwLK0SsU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750844100;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D9yD9bDvc4ttPN1JbIa1TTy9wP5vivopfbZOV9iRQ4o=;
+	b=aWa40d3L6ijqeA3155PROSbkBuA67JPZ2t4v0J9mFBwaqwu+0GbN8u6iE6pVjMcPyhPbF5
+	kvvblYRcQ/qKcMCw==
+Authentication-Results: smtp-out2.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750844100; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D9yD9bDvc4ttPN1JbIa1TTy9wP5vivopfbZOV9iRQ4o=;
+	b=GPnNP10/8VxFC0xTPvnzcEmlYxnOcsmX+aAqnKYNgYu2cjsDWyMDW9Bs2Dx5hqdJRSzlPJ
+	Yvq22aBwLZwTIeEuRO/rgPREPzOrW8UMGEYvP8USIsYJQRuXqrkyfmVsCsAhjDQhp7yyxd
+	9/mK7HUm/59/9/8BgnfhuFhHwLK0SsU=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750844100;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=D9yD9bDvc4ttPN1JbIa1TTy9wP5vivopfbZOV9iRQ4o=;
+	b=aWa40d3L6ijqeA3155PROSbkBuA67JPZ2t4v0J9mFBwaqwu+0GbN8u6iE6pVjMcPyhPbF5
+	kvvblYRcQ/qKcMCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 3EE7B13485;
+	Wed, 25 Jun 2025 09:34:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id SemZDMPCW2gENQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 25 Jun 2025 09:34:59 +0000
+Date: Wed, 25 Jun 2025 11:34:57 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, nvdimm@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>,
+	David Vrabel <david.vrabel@citrix.com>
+Subject: Re: [PATCH RFC 14/14] mm: rename vm_ops->find_special_page() to
+ vm_ops->find_normal_page()
+Message-ID: <aFvCwYDzEOQfpu0G@localhost.localdomain>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-15-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,40 +106,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <70b25ff3-b366-4e2d-a52a-0b2d50ce88c4@quicinc.com>
+In-Reply-To: <20250617154345.2494405-15-david@redhat.com>
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MISSING_XM_UA(0.00)[];
+	ARC_NA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_SOME(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RLhwqoz3wsm4df3nfubx4grhps)];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,localhost.localdomain:mid]
+X-Spam-Level: 
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
 
-On Wed, Jun 25, 2025 at 10:06:21AM +0800, Baochen Qiang wrote:
-> On 5/26/2025 7:48 PM, Johan Hovold wrote:
-> > Add the missing memory barriers to make sure that destination ring
-> > descriptors are read after the head pointers to avoid using stale data
-> > on weakly ordered architectures like aarch64.
-> > 
-> > Tested-on: WCN6855 hw2.1 WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
-> > 
-> > Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
-> > Cc: stable@vger.kernel.org	# 5.6
-> > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-
-> > diff --git a/drivers/net/wireless/ath/ath11k/dp_tx.c b/drivers/net/wireless/ath/ath11k/dp_tx.c
-> > index 8522c67baabf..549d17d90503 100644
-> > --- a/drivers/net/wireless/ath/ath11k/dp_tx.c
-> > +++ b/drivers/net/wireless/ath/ath11k/dp_tx.c
-> > @@ -700,6 +700,9 @@ void ath11k_dp_tx_completion_handler(struct ath11k_base *ab, int ring_id)
-> >  
-> >  	ath11k_hal_srng_access_begin(ab, status_ring);
-> >  
-> > +	/* Make sure descriptor is read after the head pointer. */
-> > +	dma_rmb();
-> > +
-> >  	while ((ATH11K_TX_COMPL_NEXT(tx_ring->tx_status_head) !=
-> >  		tx_ring->tx_status_tail) &&
-> >  	       (desc = ath11k_hal_srng_dst_get_next_entry(ab, status_ring))) {
+On Tue, Jun 17, 2025 at 05:43:45PM +0200, David Hildenbrand wrote:
+> ... and hide it behind a kconfig option. There is really no need for
+> any !xen code to perform this check.
 > 
-> Johan, dma_rmb() is put inside _srng_access_begin() for ath12k, but here inside each
-> caller. Can we achieve consistency between two drivers?
+> The naming is a bit off: we want to find the "normal" page when a PTE
+> was marked "special". So it's really not "finding a special" page.
+> 
+> Improve the documentation, and add a comment in the code where XEN ends
+> up performing the pte_mkspecial() through a hypercall. More details can
+> be found in commit 923b2919e2c3 ("xen/gntdev: mark userspace PTEs as
+> special on x86 PV guests").
 
-I moved into into the helper also for ath11k in v2:
+Looks good to me.
+Since this seems a "mistake" from the past we don't want to repeat, I wonder
+whether we could seal FIND_NORMAL_PAGE somehow, and scream if someone
+tries to enable it on !XEN environments.
 
-	https://lore.kernel.org/lkml/20250604143457.26032-2-johan+linaro@kernel.org/
 
-Johan
+
+-- 
+Oscar Salvador
+SUSE Labs
