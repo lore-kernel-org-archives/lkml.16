@@ -1,106 +1,133 @@
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91892D5C60
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6821AF0BB
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 17:52:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750873791; cv=none; b=L12DcZ7+ukZsSsjER8Ex3TLKP+da3aP22K9lCv5t6eU4vTcwZllEczATqptbgS9Wo+Lgig52diuFmXStYrfhAOxuYU//SfndHXmFpJvKErcr21l6sd6t+6FodxRjn9QPzh869ipbyNCSQvEeJUh/kuc9wcGsqGd4P4HCRi82u+k=
+	t=1750873944; cv=none; b=XCukiBmJldzbLMQh43eNe1wc89A/dTjfZE03ZbcmXnWbtXPzt5rB3n6watj2cmlrqcT3lYYcd07ixqyHtScTL4pCYd3IF6oe6AIlGseAiwrUCVQyx9hpiU+5pdXrft5Atf5X3TCNg764YI4hSvUime93z3aoVfsWRYplQ+lPRoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750873791; c=relaxed/simple;
-	bh=uTW7gs8kvA6nVolSFxs/7DSjkSEwH+EY5b1Idlv0EC4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TLADs2hCm4yEcyrYD0NERYFDd6wnkI01TkjJl6s/MSclG70ZTCvEGezuAlZrds1Pz86LSRddtl9KydS36wZHDtA6qmyhu+y3Dglf61/tPPXwbjeSNYSbm6EIf1BnmRpnTpTc6CC8EflCVRbRtnVoHer8JmWchlKpgTdZZVblkWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jaqc9mGN; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1750873944; c=relaxed/simple;
+	bh=6eVnPygdGvcbyBklcxFdynuh820nikOauMfnNutbGV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tQVdCqIkxcQMWiaActP+IRDG9rwliDbQJA92upHQGc4rf4bUG4zcpMW3ZUFVDNSHIcWjzdwdhwv+esyxYgxTQ3ets6HWPQXX8VO09AxGWmdWaPyoIGM2F2++XU7Cbl5OMDNCSy91YTeDn+M1YB5PUb+4Q+uZFHxCyjeKHv35iBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hfl5uXtV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GEec/7xo; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=hfl5uXtV; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=GEec/7xo; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jaqc9mGN"
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-747e41d5469so267398b3a.3
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 10:49:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1750873789; x=1751478589; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=R8ReRc6UFydYH9gtSn+f80zTiGgWBcsSXK6ZsJcWtV4=;
-        b=jaqc9mGN8HYERqBgRbgQrP4CqUspvLD2OqY4tM1vgph2pjHpYucn1snHPS0ms8l1Ip
-         NP0bUlIuOO/BU0VcZZg3ok7LGVaovRNx4Wyp/ywOdcHf7eFMU3+qrunOHR8rKuvRQsa9
-         +HilTkcTeYjCOo9NYjFcgwDjwSBbSLc+gLqr9x7WfGsGY9S+qxt98/G3goWjosxaFUzL
-         YZVOgS4xKp5yUWJa0bTg1jgZU+xzNtQr6IyyxelivEbEJkNlwKbr2IaPNiliVuAOjJbe
-         wCqpjfmPSSkwcyKEE9OkUhxP/D8XosGKIPTUpLbyduaJCbW13iwU0cdMr3CckaHxYlQF
-         7g9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750873789; x=1751478589;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=R8ReRc6UFydYH9gtSn+f80zTiGgWBcsSXK6ZsJcWtV4=;
-        b=SJJjrX089mBIFZUCyelYXGeMIiUrXSEQWG+Ewo04R+NJ6O5tK4MA0oY5ngL/V5/quz
-         BkXSIpSa3mqq6+31bTP9NurOfryJZ6VFl9rLBb0/LFVOXPZ3EWsuUp616L/eIi6qiN8e
-         3mIMFaABe8nzmNvynSFd0RgHDOqNTlGoikjuGJnDphqnASCc6EVmPuvxuSkw84SIfN6x
-         Gs7ATCbJHwsc5D42loZkBXE/G962qUQbtwTCX8bwKWOtnrkByGg3inpBo90huKdSJQxz
-         fnsSR+Sy0sfQHSmi6s0j6QP+EKpHuBTsMsyfdhYtgbSHWDX8kB1gyr9tPsW3XWZkyZBl
-         Wrtg==
-X-Gm-Message-State: AOJu0YzY3zzOA6vuBd3qlRFUUalcpHEXzY+gOa1pkwidCGe7jZzFqDfw
-	BSgDHcn7bNDyI03Bm2xjEOI1J9ZrCMxG7y+TlYEjEBQ8RWq2vRUQ1D12YyKX87iZ
-X-Gm-Gg: ASbGnctKxgfennO8EUaqmGWaVrGmQPFG4s38M32x3xNL+HEoA4IZXHb7NUlthWWC2n8
-	Eei7DmAachzhER3mYq+xzt5iqERKkRs8UeCAHEeVmsUx6dggYN/gkluQeNqbT+ViI9jOB1dEvQA
-	i1kgEnOaS/zAOjpK5CXIDonLVSKTkXKCFMhSaQBtAOVnUCPdAGMT9UQq7zxmjcjGg0zKLUCtl7g
-	pQS+ENF2NXLIpt/KSithSxsuyolfhfPZS9ZjL3E4ZRiCsWcOBBwZYHK02BXqFRlujA2GqPdLAt6
-	1cJ4lkFeOAL8LINH/iTRmQtQ8MsyaAlBbT8OvmOtPUwvWw3YqNyUCQyiKD7ok8Bq9Kb0L48b52Y
-	yKH328bk5U3hSf7szJiYy
-X-Google-Smtp-Source: AGHT+IGS7kz5uX1FDITaZRBZY3QMqayTuas64co39YoDcp/ViK2Vwt6D23GmpoPp4sqoII7r3Sgngg==
-X-Received: by 2002:a05:6a20:158d:b0:218:59b:b2f4 with SMTP id adf61e73a8af0-2207f31ce05mr6229096637.42.1750873788931;
-        Wed, 25 Jun 2025 10:49:48 -0700 (PDT)
-Received: from fedora.. (c-67-164-59-41.hsd1.ca.comcast.net. [67.164.59.41])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-749b5e23879sm4944869b3a.57.2025.06.25.10.49.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 10:49:48 -0700 (PDT)
-From: "Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	"Matthew Wilcox (Oracle)" <willy@infradead.org>,
-	David Hildenbrand <david@redhat.com>,
-	Jordan Rome <linux@jordanrome.com>,
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hfl5uXtV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GEec/7xo";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="hfl5uXtV";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="GEec/7xo"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9EE3F2116C;
+	Wed, 25 Jun 2025 17:52:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750873939; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x/hssygHw+m37RmPXPWJbRXpFWFXQ2itxK9rSA/a6JA=;
+	b=hfl5uXtVMJzn7ovOErbWUON+Hmntvg/ajAIFBchjl8ReCEflhjFcDbD4V1NRkwLI1SB3UH
+	zKetR3sw7N0/8y2ICGQ1pI1xYw9WFl03u6EmRC0PuoMZu8SY41YNYib1q+gEuTXGk9lsPu
+	f1YkL6YVE2YSl/WOUYoexJyq+ifdRvQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750873939;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x/hssygHw+m37RmPXPWJbRXpFWFXQ2itxK9rSA/a6JA=;
+	b=GEec/7xopnmhhPUqeK7gzwE5fRSXtecBMpSycdNr4kqhBc5jUIg1jJtJCesJFz6RFetCZn
+	LRnvdgR9GPPwNyAg==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750873939; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x/hssygHw+m37RmPXPWJbRXpFWFXQ2itxK9rSA/a6JA=;
+	b=hfl5uXtVMJzn7ovOErbWUON+Hmntvg/ajAIFBchjl8ReCEflhjFcDbD4V1NRkwLI1SB3UH
+	zKetR3sw7N0/8y2ICGQ1pI1xYw9WFl03u6EmRC0PuoMZu8SY41YNYib1q+gEuTXGk9lsPu
+	f1YkL6YVE2YSl/WOUYoexJyq+ifdRvQ=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750873939;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=x/hssygHw+m37RmPXPWJbRXpFWFXQ2itxK9rSA/a6JA=;
+	b=GEec/7xopnmhhPUqeK7gzwE5fRSXtecBMpSycdNr4kqhBc5jUIg1jJtJCesJFz6RFetCZn
+	LRnvdgR9GPPwNyAg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 210CB13301;
+	Wed, 25 Jun 2025 17:52:19 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id L+WPBVM3XGhMUQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 25 Jun 2025 17:52:19 +0000
+Date: Wed, 25 Jun 2025 19:52:17 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: David Hildenbrand <david@redhat.com>,
 	Andrew Morton <akpm@linux-foundation.org>,
-	"Vishal Moola (Oracle)" <vishal.moola@gmail.com>
-Subject: [RFC PATCH 3/3] mm: Remove unmap_and_put_page()
-Date: Wed, 25 Jun 2025 10:48:41 -0700
-Message-ID: <20250625174841.1094510-4-vishal.moola@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250625174841.1094510-1-vishal.moola@gmail.com>
-References: <20250625174841.1094510-1-vishal.moola@gmail.com>
+	Harry Yoo <harry.yoo@oracle.com>, Vlastimil Babka <vbabka@suse.cz>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH v2 next] mm,memory_hotplug: set failure reason in
+ offline_pages()
+Message-ID: <aFw3UQpDoYKavFBg@localhost.localdomain>
+References: <be4fd31b-7d09-46b0-8329-6d0464ffa7a5@sabinyo.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <be4fd31b-7d09-46b0-8329-6d0464ffa7a5@sabinyo.mountain>
+X-Spam-Flag: NO
+X-Spam-Score: -4.30
+X-Spamd-Result: default: False [-4.30 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	ARC_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FROM_EQ_ENVFROM(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linaro.org:email,suse.de:email]
+X-Spam-Level: 
 
-There are no callers of unmap_and_put_page() left. Remove it.
+On Wed, Jun 25, 2025 at 10:32:04AM -0500, Dan Carpenter wrote:
+> The "reason" variable is uninitialized on this error path.  It's supposed
+> to explain why the function failed.
+> 
+> Fixes: e4e2806b639c ("mm,memory_hotplug: implement numa node notifier")
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-Signed-off-by: Vishal Moola (Oracle) <vishal.moola@gmail.com>
----
- include/linux/highmem.h | 6 ------
- 1 file changed, 6 deletions(-)
+Thanks Dan!
 
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index a30526cc53a7..6234f316468c 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -682,10 +682,4 @@ static inline void folio_release_kmap(struct folio *folio, void *addr)
- 	kunmap_local(addr);
- 	folio_put(folio);
- }
--
--static inline void unmap_and_put_page(struct page *page, void *addr)
--{
--	folio_release_kmap(page_folio(page), addr);
--}
--
- #endif /* _LINUX_HIGHMEM_H */
+Acked-by: Oscar Salvador <osalvador@suse.de>
+
+Although.. we might be in time to squash it, right?
+
+ 
+
 -- 
-2.49.0
-
+Oscar Salvador
+SUSE Labs
