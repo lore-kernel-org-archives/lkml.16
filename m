@@ -1,106 +1,98 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F321D1FDA
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:10:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88933BA4A
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 00:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750810254; cv=none; b=QDWkVXsb7ALAQ9BHWiBCPeGuTtdqF6i2YR402VGVDR7VAI2YcJ6O+NiGh+Kh2VZVVu4jyNP8Kas1L+5JJpSbwCMsS9pesGp2MGawSgVtYEsxVJdthN0EKTRCilTjV+uqNbAOEAp/DVl9PtO+BqwuMJfKurh3Wt+1kYjOV9yjmxk=
+	t=1750810329; cv=none; b=XFcM4K83T9kBeuyYb3ig65TUhPoot8nSwS2Yo7k86x8JdG6WvlPMzdw7rC3iyQ/J5eVwYGYWhWwRH3zIWty1RuQkgR2ZR/bEHMfjYW1+7n2p6sBVNuhuUJGF3IVwY5A6wTC5b+sibHhdcgjjJYJxFa5sxy9eSMvzvkSUrQWcApE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750810254; c=relaxed/simple;
-	bh=9ivD5AaMhRDnIDnklljlK+k1JVxliQvvRwvsCgoM9ck=;
-	h=Date:Message-ID:From:To:Cc:Subject; b=pu8f0M+kPhqd6mzE72lxPH186d9x/WeLpKFYJyfh31PDKQNcBFL5xZ0Ii+YtC42pvYUaKAETkuBPkF4swRhiQN4OGDYwX0IgfHM7b+pyOtn9Sav6E5C1N4/GEbgBDXpzWPnnVprDmvE2Ew5pfDw/DvH72V74mYR4QM39CZpW4Gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=TqG2G9Tm; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
+	s=arc-20240116; t=1750810329; c=relaxed/simple;
+	bh=4eoSUaocYmaWsmbo5jnksZ2C3rx/pVjA9dIc1SBhIag=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=a4bvDzAC0FHdhbJgFKixB5wp8YUayoRlR5j5lAf2jMilZyvlni1Hm/s3k7tkreXAmvdOvEvg9Hbko1ETYfCEfrqCHejMcIKSZofo1ohaC9MqvHXD0jy5IfUr4s6qSwVPu0ggc6mRArQBkvswfIerSoSo1tuk9bnZWHq0JPhEHeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=us+62I+r; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="TqG2G9Tm"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d0976776dcso690155585a.2
-        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 17:10:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="us+62I+r"
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-609b169834cso5332a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 24 Jun 2025 17:12:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore.com; s=google; t=1750810252; x=1751415052; darn=vger.kernel.org;
-        h=subject:cc:to:from:message-id:date:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1750810326; x=1751415126; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zL28Tc4w5+Q9+lcS6siAOTOvpsM1FGjQwIS4zdqxK/Y=;
-        b=TqG2G9TmsT9W73nwV065TYKqyDZr540bCvd78cgAbDNcyt+VkmQidpBM/aXHlkUBrw
-         BScrnBJktJj9q64n0RnxMRJkv2hSA9z3kB31gGbnB7APCpyfm9p5qf20U0rgkvhzkVqe
-         2X7fzK1fIIRhuNH70P08WDm8LLWxDlNRjVAjqVNkzlKf/4043NFgeU9djry35qQFxEta
-         QG675alk+W2bSgqK3JYCSPytVS+rfuUE6HmE7Imi6yHzRpAJcQOEKFvpnlvIGpUPdn0y
-         pcCf2WppCQRpHA7uAidxYgHSuKoUjp9Y9JBkfr+AoCi8sALC6AbOf1Usyk9+v602464T
-         3xaQ==
+        bh=xhThPHLsvNen0jbqs0BDq7omrwoGam4W7cLnmLsm00Q=;
+        b=us+62I+r8r9eueggNzLoXt9ykNlfbtLFELP6jjljSUz/GkWLOswVq+AX7b4szSztip
+         bBi8QzapgzEBjdSKDB8ivtX+LhDoTi1+n7eckpr/b+PLZFDUS7mU6E0lTy0a4Hl/Dl5h
+         cMQ+blbv1q5gWI/Rsq7I+j2lvdPDTdiO2Wj9ZQ9cfJnwCDjhAytIaiC5Xy7/BEY6yWNF
+         mQQPguZsqN+1+fxCuGWc3FU1iBqkaXl+8DWR8wk9AFec0wfzlf52mbKL7kTTQp/KjTuz
+         oZWiPm5kPrHKd8SjnLtLIQGVDYQpxVCab7HJRggCiiJ/oQVQ3R8w44+8pO52AAC1+0PV
+         l9RQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750810252; x=1751415052;
-        h=subject:cc:to:from:message-id:date:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1750810326; x=1751415126;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zL28Tc4w5+Q9+lcS6siAOTOvpsM1FGjQwIS4zdqxK/Y=;
-        b=mtQdr9Hnvc2214aiW3u4gy5s8/2tTD9k8aoPfevSBt5WH3HZJxEU57MjcyB65EJz3C
-         PARvyzCP7FbwghqnrmwUghQZegflaR6yrwIwDe5V8XCg2XVxIfLNaHuShZWrEZCd1Uc4
-         Z+0fy0M1LBkXK0GRs6a1YS8Ho13XSb95VLZrxTcBAYBd4Ypb5VZbz8zpezKw0SPyjlVk
-         gqBPMs/ni3LEEHkx+Xi5LMSkBPS+gRwBCjf/IQL+UjHz6hVN7CTktaHpxXddtgW7n3rD
-         scK8+HuIux9p8Xpvhs3rNEZTtfQexSXBH0fZFIKESutVO9f/8ujr30je0jqAo23y2vrL
-         nrIw==
-X-Forwarded-Encrypted: i=1; AJvYcCVY/7GJbHhgCxPyfuLCeOlveBdtxPjXnGq2aM0jG8poera03y602beW7DNy91KWM3ypd9T60I/xgxulcIk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzLFHraDTQ6xQg7m8D3gt6oh8xL8oURu+kp8nlemUy40xs+hvaB
-	4E8HQYvwGf48QbzSGiA76N6t0V/vQtCzI5Bf4FsXZmIl+38piGrOyhuW8fglY8CxDw==
-X-Gm-Gg: ASbGnctaSpnkCKjHlIYIAVLx5dJ7LmfcZQc+hYMVHHkvYTT32Fzn4w3ZnqwMiFHViwn
-	Gzw8zWLJ8mBnWoiKxCYBH6ueDguRCfN+jBA9DuYydqFI5/dunaLMwiqyrxo1BHvSt/W9Ohg0RN2
-	0ts+s6d3wVlY2pqCVwzegCRkQ2K7BUfYdlQZMNA8SteTJHCkxhUw/6rX2j/RgkD7C9VgITnJYJ1
-	IQ08jRrGF3l5+JlKK1wEj6CGkoUOafUg1tBJC008+co9c6zeGZCn0JDPAar2Y4YvKXtyBEGAzql
-	Y6crfgBQeiIVEoNH9SFstm0fAU/4NOhDBCu6gLP0G6ChqbPk9Kgfo3sMdZE1KQpxfRpQa3pZ8TD
-	rH7MfCOubJj/sWzAV1bonHPG0NajISFI=
-X-Google-Smtp-Source: AGHT+IFL+HjknXTXoFRm3XUtKW87TK5WTKCaVLsRbT3brEr6WmdayurdNBDLXUWYy5PXbZrC8PQy/g==
-X-Received: by 2002:a05:620a:370c:b0:7d2:18a1:ce0 with SMTP id af79cd13be357-7d42974ba31mr151411285a.49.1750810251876;
-        Tue, 24 Jun 2025 17:10:51 -0700 (PDT)
-Received: from localhost (pool-71-126-255-178.bstnma.fios.verizon.net. [71.126.255.178])
-        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6fd09442d14sm62087126d6.34.2025.06.24.17.10.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Jun 2025 17:10:51 -0700 (PDT)
-Date: Tue, 24 Jun 2025 20:10:50 -0400
-Message-ID: <190ee36309adb0efa27e3b39a1a93de3@paul-moore.com>
-From: Paul Moore <paul@paul-moore.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: selinux@vger.kernel.org, linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] selinux/selinux-pr-20250624
+        bh=xhThPHLsvNen0jbqs0BDq7omrwoGam4W7cLnmLsm00Q=;
+        b=hJxbAeD53KdET05jvvxn3Q7eh6fs4C/ldVQxYP/wsDngAtm1XGaBC8QgoeAtIjIeqj
+         yOwO8rn/ekq60vCeiHG8E2l+TZPkrUCrzHiT1y6ybmFMyN8zT7mZvCe4dgsoxar6yB7P
+         IA/RL7Fex8Fn/u2JFfULx71+PsUFs4nZJUJXRRfOIN1m1CGGcp3NBWq/ptc0PGaK185B
+         LNStRETm1RidCEE5FRCgSoFbw5BZ53NeWLFlk3hBZGQ0eJLaqMQnKw6vzzOQmiN+/Nhd
+         ycRrMVTvrmXqbJnWmCyf4xxtW5cVU7+qyGj/WnkEbQNPrRQ4beuvI6U2xqCGQ14KKEG7
+         uvNQ==
+X-Gm-Message-State: AOJu0YzQEIo06ZmCZcOwVgNuQR6i4EH+YYwPbR+F8qR2Ao5toEXTxnXA
+	cXrEnfe5G1wwGeMvToAPe/LpDiHwm6ykdEuwf3k8PKPoPLXYmvzoTQ5dS9K8PoZCldme4Wz25Se
+	Jul7x8QNQsaS0w64xpgWxaP2NCD3Y9YZlN1b+R/9bs5QVIQ5fjIesGcSo
+X-Gm-Gg: ASbGncs3YGEAkx7tUTJM0jlADDuS+9J4YLl2EUMmCM2ANfvK5AyhqEg0soQ3LFwNgpy
+	sFUuYahPpg2pyVHBYjjejgtEJ6gSDFboGXAM7/HqMFOmRSCA7pkcEq/ZUUB/HP6+2+WlNyF8sYK
+	I8MR0FmZllTCNrY1inCXUYXx9QyrF9kkjm7+uctZHbZP3loSxVJj+vbg==
+X-Google-Smtp-Source: AGHT+IFSOFiLAN3ICey2GAdu0RNYWTKLxB7jGvanJwTfeh4aRq0sUq04sobGMGS0G2nqBQj2terPEeZjtQHCwiw0uro=
+X-Received: by 2002:a05:6402:4408:b0:601:f23b:a377 with SMTP id
+ 4fb4d7f45d1cf-60c4fba5fe9mr11095a12.6.1750810325709; Tue, 24 Jun 2025
+ 17:12:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20250530185239.2335185-1-jmattson@google.com> <20250530185239.2335185-3-jmattson@google.com>
+ <aFs1OL8QybDRUQkF@google.com>
+In-Reply-To: <aFs1OL8QybDRUQkF@google.com>
+From: Jim Mattson <jmattson@google.com>
+Date: Tue, 24 Jun 2025 17:11:53 -0700
+X-Gm-Features: Ac12FXyF4HyLSGZZxKYDwfWReaDHVxBdd4mVp7eJRLyg4tWKSRBXXXXKbx-1nzI
+Message-ID: <CALMp9eTi_8T3Yyz6NYqqmKsgTLYKVz++9qt=2gdoxty40Od5Lw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] KVM: x86: Provide a capability to disable
+ APERF/MPERF read intercepts
+To: Sean Christopherson <seanjc@google.com>
+Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Linus,
+On Tue, Jun 24, 2025 at 4:31=E2=80=AFPM Sean Christopherson <seanjc@google.=
+com> wrote:
+>
+> Question: what do we want to do about nested?  Due to differences between=
+ SVM
+> and VMX at the time you posted your patches, this series _as posted_ will=
+ do
+> nested passthrough for SVM, but not VMX (before the MSR rework, SVM auto-=
+merged
+> bitmaps for all MSRs in svm_direct_access_msrs).
+>
+> As I've got it locally applied, neither SVM nor VMX will do passthrough t=
+o L2.
+> I'm leaning toward allowing full passthrough, because (a) it's easy, (b) =
+I can't
+> think of any reason not to, and (c) SVM's semi-auto-merging logic means w=
+e could
+> *unintentinally* do full passthrough in the future, in the unlikely event=
+ that
+> KVM added passthrough support for an MSR in the same chunk as APERF and M=
+PERF.
 
-Another small SELinux patch to fix a problem seen by the dracut-ng folks
-during early boot when SELinux is enabled, but the policy has yet to be
-loaded.
-
--Paul
-
---
-The following changes since commit 86c8db86af43f52f682e53a0f2f0828683be1e52:
-
-  selinux: fix selinux_xfrm_alloc_user() to set correct ctx_len
-    (2025-06-16 19:02:22 -0400)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
-    tags/selinux-pr-20250624
-
-for you to fetch changes up to fde46f60f6c5138ee422087addbc5bf5b4968bf1:
-
-  selinux: change security_compute_sid to return the ssid or tsid on match
-    (2025-06-19 16:13:16 -0400)
-
-----------------------------------------------------------------
-selinux/stable-6.16 PR 20250624
-----------------------------------------------------------------
-
-Stephen Smalley (1):
-      selinux: change security_compute_sid to return the ssid or tsid on
-         match
-
- security/selinux/ss/services.c |   16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
-
---
-paul-moore.com
+I think full passthrough makes sense.
