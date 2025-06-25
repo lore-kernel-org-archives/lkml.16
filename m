@@ -1,143 +1,143 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78E4E2BDC10;
-	Wed, 25 Jun 2025 16:13:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E582529B768
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750868009; cv=none; b=rObygPMJCJ11LJGm5Q9JxSxoSTYxIjTXGpgT5R6hTVWRf/aTsaHxV6B6U08q6iRRBj/cyOMcaPNZXYXiAOfpGa9KiJMHNBkRA2an/8x2JVis7ZuWZScdnT4Iwl1J96d87KOa9JGz3ZzRfPVr1pxs2dEE+wDUkjW5XYKP3V7T/iQ=
+	t=1750868037; cv=none; b=M6pHu+EZXaUPL5YWKa6UglVD2K+es72WMVqormTEPR33ZhCJnzhzXWe4dAPotjN3BUZLjnzX4+jqd04Taaj4bJyg+hGEYjquXLuRVyN/kNiBURjIVue59arjs6ifWLqMOMvtBUlmLDMl7LdBfPcl+dw6w99dqyjDoIG8+WZvOwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750868009; c=relaxed/simple;
-	bh=IIQljKBsNRMZzyX/Rtn6xxA6HrVZM41HmNzZGjrS+bc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=opnDqhT1A6ZXMIih7ZjIOanMrecagirnSRu4tEkppNs7yggkfF6Y/1OqopCQp7JyzCKVNeHCRPCTnRw9A7RCbXT3WnUlRp8A63sKvQIRggH3iMSZ9w4Rmf4vQ8frecGqd5giIKRptw8cfSLqm6XvCtfpyo+E8fmGNeipcMEMceE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=afqgb50X; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750868037; c=relaxed/simple;
+	bh=4QNLkEkuI4EdTUnOIb2grO6q4rrhmfxNLIwjC1OPtDA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fNa5emNWX0A+HMxSBZPM6rEi3WJtA7tdqzduyqU0RlkDV5USQlKvCINWJuPLZSdI1txhfYmOYHsQlB1Q5LbQiRmnnQgaJ3QQz/JkZQA41fmH+iVa+w0TghlpSR23knee903XZOvQR6i5f1iArRqDiiRFc3TxB3Y6meRl/oupeJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=baVx0Gzn; arc=none smtp.client-ip=209.85.210.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="afqgb50X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750868004;
-	bh=IIQljKBsNRMZzyX/Rtn6xxA6HrVZM41HmNzZGjrS+bc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=afqgb50Xmd4fpACfmLcinWsRLQN09kVBJtwqMJ2v7rl+t/yH8DTDpSLQISRJz70zA
-	 eSZiVO3RJlgLJP6qPscVt912gxR7zny4IGv0kkqowCLJ7eiMHL5tyYYFVzFY2D24WL
-	 GgeY64UmAlz8Njb1MRa70lKlVBeGIs4yCy/u0Jw+o/tda3C4+zBzo0vJkU227jwyXR
-	 XrgpbpbUhc9BTRgcWUDADkFDDsq49zTA9J33rfwqvancfDIIYMcFbwzFJg9xzE6CaM
-	 NLgiwAdPO172FCMjCL3DXA25DQKYhqTJ2y/3W4el37bIqkKpWolv3i6aQdWmEn3Zp6
-	 G63fs6uKBWK1w==
-Received: from [IPv6:2606:6d00:17:b699::bad] (unknown [IPv6:2606:6d00:17:b699::bad])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1286C17E0202;
-	Wed, 25 Jun 2025 18:13:22 +0200 (CEST)
-Message-ID: <6ac8b8db02190da7d2edc9ce4abe5e7a7cab70d6.camel@collabora.com>
-Subject: Re: [PATCH] media: rkvdec: Fix a NULL vs IS_ERR() bug in probe()
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>, Ezequiel Garcia
-	 <ezequiel@vanguardiasur.com.ar>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Greg Kroah-Hartman
-	 <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil@xs4all.nl>, Detlev
- Casanova <detlev.casanova@collabora.com>, linux-media@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-staging@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Date: Wed, 25 Jun 2025 12:13:20 -0400
-In-Reply-To: <696219e9-a1c7-4c87-b15c-1ffd42c95d58@sabinyo.mountain>
-References: <696219e9-a1c7-4c87-b15c-1ffd42c95d58@sabinyo.mountain>
-Autocrypt: addr=nicolas.dufresne@collabora.com; prefer-encrypt=mutual;
- keydata=mQGiBEUQN0MRBACQYceNSezSdMjx7sx6gwKkMghrrODgl3B0eXBTgNp6c431IfOOEsdvk
- oOh1kwoYcQgbg4MXw6beOltysX4e8fFWsiRkc2nvvRW9ir9kHDm49MkBLqaDjTqOkYKNMiurFW+go
- zpr/lUW15QqT6v68RYe0zRdtwGZqeLzX2LVuukGwCg4AISzswrrYHNV7vQLcbaUhPgIl0D+gILYT9
- TJgAEK4YHW+bFRcY+cgUFoLQqQayECMlctKoLOE69nIYOc/hDr9uih1wxrQ/yL0NJvQCohSPyoyLF
- 9b2EuIGhQVp05XP7FzlTxhYvGO/DtO08ec85+bTfVBMV6eeY4MS3ZU+1z7ObD7Pf29YjyTehN2Dan
- 6w1g2rBk5MoA/9nDocSlk4pbFpsYSFmVHsDiAOFje3+iY4ftVDKunKYWMhwRVBjAREOByBagmRau0
- cLEcElpf4hX5f978GoxSGIsiKoDAlXX+ICDOWC1/EXhEEmBR1gL0QJgiVviNyLfGJlZWnPjw6xhhm
- tHYWTDxBOP5peztyc2PqeKsLsLWzAr7QnTmljb2xhcyBEdWZyZXNuZSA8bmljb2xhc0BuZHVmcmVz
- bmUuY2E+iGIEExECACIFAlXA3CACGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFTAi2sB
- qgcJngAnRDBTr8bhzuH0KQwFP1nEYtfgpKdAKCrQ/sJfuG/8zsd7J8wVl7y3e8ARbRDTmljb2xhcy
- BEdWZyZXNuZSAoQi4gU2MuIEluZm9ybWF0aXF1ZSkgPG5pY29sYXMuZHVmcmVzbmVAZ21haWwuY29
- tPohgBBMRAgAgBQJFlCyOAhsDBgsJCAcDAgQVAggDBBYCAwECHgECF4AACgkQcVMCLawGqBwhLQCg
- zYlrLBj6KIAZ4gmsfjXD6ZtddT8AoIeGDicVq5WvMHNWign6ApQcZUihtElOaWNvbGFzIER1ZnJlc
- 25lIChCLiBTYy4gSW5mb3JtYXRpcXVlKSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY28udW
- s+iGIEExECACIFAkuzca8CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFTAi2sBqgcQX8
- An2By6LDEeMxi4B9hUbpvRnzaaeNqAJ9Rox8rfqHZnSErw9bCHiBwvwJZ77QxTmljb2xhcyBEdWZy
- ZXNuZSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY29tPohiBBMRAgAiBQJNzZzPAhsDBgsJC
- AcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBxUwItrAaoHLlxAKCYAGf4JL7DYDLs/188CPMGuwLypw
- CfWKc9DorA9f5pyYlD5pQo6SgSoiC0R05pY29sYXMgRHVmcmVzbmUgKEIgU2MuIEluZm9ybWF0aXF
- 1ZSkgPG5pY29sYXMuZHVmcmVzbmVAdXNoZXJicm9va2UuY2E+iGAEExECACAFAkUQN0MCGwMGCwkI
- BwMCBBUCCAMEFgIDAQIeAQIXgAAKCRBxUwItrAaoHPTnAJ0WGgJJVspoctAvEcI00mtp5WAFGgCgr
- +E7ItOqZEHAs+xabBgknYZIFPU=
-Organization: Collabora Canada
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-Yg+9RAryTT3i1Yp4yaC4"
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="baVx0Gzn"
+Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-748da522e79so85504b3a.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:13:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750868035; x=1751472835; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vCD23FijRiGDMDI+6SLBJ6sq7ACBPYUWzeLA8BmQJ3k=;
+        b=baVx0Gznwd0r88DchaN7RIfItLtoO0CfPZoLUZg6nuzG19L5tXdUj2/Et2NQ5BH0/p
+         tvjFLK1pMiRQnTwofbYvRVHhyDe7u/qp6orgLFOSMu/KmUvChbdXxJr/ly+L4sFOsFkN
+         bhfHVO1theAZQDk711odr0eVfekOPQCIs7oHmraSyDSHnNdyq4F7Ob+JS6q8RoGIOWzi
+         8LkES5LctGCT4aoFNBCVA6YMFB03k8lXmHnNO/9Rijt2Z1e6Ld/e7PHJ7KZxNxaNoo6O
+         ryAAA/ChFNWb7G22eCsN7x+efn5wI7eIDFS9kdvP1L/7sGFMneb1ebqMEDgK2TRLcpk/
+         UJTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750868035; x=1751472835;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vCD23FijRiGDMDI+6SLBJ6sq7ACBPYUWzeLA8BmQJ3k=;
+        b=MbYilgiBAHvxqyfb5wzyHEqJRKlcnW5ZYz6hoA5LnlmZogOPUnj2TqSJCJy5neyfzu
+         S9P3GThEgo+H+5q43RHKDnsdxn1UB8q243wWNac/ePIdiaTPdXIVPYZGxaNKP95zkHac
+         tkD6jQoAB0a1cNTqW1FXke6Sej4Q6b0smWoDyLWtE1wLo59OGC7YBY4g78lfpxyMg+pM
+         0ZmzoBnlh98NC0EYDYxKbJnVy9lYwR4FHj/wQRsmiS5sM1Uzwi7aZVqPWbLj11DHjmsd
+         RR8xtoCbqJ2QmDmpacYLYQSOgJ2vuwOvppT0QiH5DNhtiOuo3mpaJRAdn8c4ySAQ1CZc
+         UgwA==
+X-Forwarded-Encrypted: i=1; AJvYcCXwk/4hpUmhE2vte6BhiaGPHB8kcl6Ot55TGMLzVGPZvhSWKXFUOA/58SlLv526kgECZBfXJRHECps/9G4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy94W58sFt7XKq6vxXUtgENIgt2dQpsn8IsLCMqO2mmIRJJvZh0
+	eA3v4DhLeiUWft/pSYQHjvjdT2WDgRv0Sxd+Hbl93BrekPEeizlV7YLtWiPVtD4RH14=
+X-Gm-Gg: ASbGncsRAPa7zGPyIJp3Hr+JLkJV2kZg7DaqcteEbivjYN0QmOy6IC/A2KXax5oTx4D
+	FMzhKhX2xoq/IrFaCQh8y2ynSD8CsQ8Jczs+fcYC3sMsvpF9Wyh7bSNleKK43ACQ83vStFLbdJR
+	CWbW8wEBBrmTOssuuqgr/nLh15FlEWf26PLgeMB37PHJ5UNT/EaeiPDbUc8k/qjx8rS7rbPFsoV
+	fo44vhob7c9Gj443zHkxSPHK1R9hvyQCzdmIwrdTCn5sjKXslq9KOaohCzzLlMO1yBBRCSxruRx
+	9p0LNi1MXQfY72W5nn3OiIVcfZpNJwwmVeFN1R86Ykes6CRgZ0hrG3ymRLSEAvl9mQ==
+X-Google-Smtp-Source: AGHT+IEaq7judiTDhY4LEdwCxHhEeJO96l2aFLRZebjujuoodpXvyb7qOhHSrHTIPCIkDRJZva9x1g==
+X-Received: by 2002:a17:90b:2709:b0:311:ff02:3fcc with SMTP id 98e67ed59e1d1-315f26265a6mr5857836a91.14.1750868035161;
+        Wed, 25 Jun 2025 09:13:55 -0700 (PDT)
+Received: from p14s ([2604:3d09:148c:c800:2ed4:4c68:6e76:7d6f])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-315f53d94b1sm2124536a91.33.2025.06.25.09.13.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 09:13:54 -0700 (PDT)
+Date: Wed, 25 Jun 2025 10:13:52 -0600
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+To: Andrew Davis <afd@ti.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Hari Nagalla <hnagalla@ti.com>,
+	Beleswar Padhi <b-padhi@ti.com>, linux-remoteproc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] rpmsg: char: Export alias for RPMSG ID rpmsg-raw from
+ table
+Message-ID: <aFwgQJ8B7EcjM1q7@p14s>
+References: <20250619205722.133827-1-afd@ti.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250619205722.133827-1-afd@ti.com>
 
+Good day,
 
---=-Yg+9RAryTT3i1Yp4yaC4
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 19, 2025 at 03:57:22PM -0500, Andrew Davis wrote:
+> Module aliases are used by userspace to identify the correct module to
+> load for a detected hardware. The currently supported RPMSG device IDs for
+> this module include "rpmsg-raw", but the module alias is "rpmsg_chrdev".
+> 
+> Use the helper macro MODULE_DEVICE_TABLE(rpmsg) to export the correct
+> supported IDs. And while here, to keep backwards compatibility we also add
+> the other ID "rpmsg_chrdev" so that it is also still exported as an alias.
+> 
+> This has the side benefit of adding support for some legacy firmware
+> which still uses the original "rpmsg_chrdev" ID. This was the ID used for
+> this driver before it was upstreamed (as reflected by the module alias).
 
-Hi,
+I was surprised to receive this patch - my question from almost a year back is
+still pending.
 
-Le mercredi 25 juin 2025 =C3=A0 10:23 -0500, Dan Carpenter a =C3=A9crit=C2=
-=A0:
-> The iommu_paging_domain_alloc() function doesn't return NULL on error it
-> returns error pointers.=C2=A0 Update the check and then set ->empty_domai=
-n to
-> NULL because the rest of the driver assumes it can be NULL.
->
-> Fixes: ff8c5622f9f7 ("media: rkvdec: Restore iommu addresses on errors")
-
-Oh, sorry about that, I'll will test your patch this week, but otherwise
-looks good to me, fixing yet one more error path. I'll take the time
-to test dropping the iommu node from the DT while at it, as I simply
-don't remember if that was re-tested after that change.
-
-regards,
-Nicolas
-
-> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> 
+> Signed-off-by: Andrew Davis <afd@ti.com>
+> Acked-by: Hari Nagalla <hnagalla@ti.com>
+> Tested-by: Hari Nagalla <hnagalla@ti.com>
 > ---
-> =C2=A0drivers/staging/media/rkvdec/rkvdec.c | 4 +++-
-> =C2=A01 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/staging/media/rkvdec/rkvdec.c b/drivers/staging/medi=
-a/rkvdec/rkvdec.c
-> index d707088ec0dc..1b7f27e4d961 100644
-> --- a/drivers/staging/media/rkvdec/rkvdec.c
-> +++ b/drivers/staging/media/rkvdec/rkvdec.c
-> @@ -1162,8 +1162,10 @@ static int rkvdec_probe(struct platform_device *pd=
-ev)
-> =C2=A0	if (iommu_get_domain_for_dev(&pdev->dev)) {
-> =C2=A0		rkvdec->empty_domain =3D iommu_paging_domain_alloc(rkvdec->dev);
-> =C2=A0
-> -		if (!rkvdec->empty_domain)
-> +		if (IS_ERR(rkvdec->empty_domain)) {
-> +			rkvdec->empty_domain =3D NULL;
-> =C2=A0			dev_warn(rkvdec->dev, "cannot alloc new empty domain\n");
-> +		}
-> =C2=A0	}
-> =C2=A0
-> =C2=A0	vb2_dma_contig_set_max_seg_size(&pdev->dev, DMA_BIT_MASK(32));
+> 
+> Changes for v2:
+>  - Rebased on v6.16-rc1
+>  - Added Acked/Tested-by
+> 
+> [v1] https://www.spinics.net/lists/linux-remoteproc/msg18959.html
+> 
+>  drivers/rpmsg/rpmsg_char.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/rpmsg/rpmsg_char.c b/drivers/rpmsg/rpmsg_char.c
+> index eec7642d26863..96fcdd2d7093c 100644
+> --- a/drivers/rpmsg/rpmsg_char.c
+> +++ b/drivers/rpmsg/rpmsg_char.c
+> @@ -522,8 +522,10 @@ static void rpmsg_chrdev_remove(struct rpmsg_device *rpdev)
+>  
+>  static struct rpmsg_device_id rpmsg_chrdev_id_table[] = {
+>  	{ .name	= "rpmsg-raw" },
+> +	{ .name	= "rpmsg_chrdev" },
+>  	{ },
+>  };
+> +MODULE_DEVICE_TABLE(rpmsg, rpmsg_chrdev_id_table);
 
---=-Yg+9RAryTT3i1Yp4yaC4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+... and I still don't understand why this patch is needed.  What is broken that
+this patch fixes?
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Mathieu
 
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCaFwgIAAKCRBxUwItrAao
-HJNoAKCHiY+S3IyVE4XjQknVwTjwtJf1vACgqDbhVHBrZ4XhiuSSP0h7rE8sanI=
-=F7Kw
------END PGP SIGNATURE-----
-
---=-Yg+9RAryTT3i1Yp4yaC4--
+>  
+>  static struct rpmsg_driver rpmsg_chrdev_driver = {
+>  	.probe = rpmsg_chrdev_probe,
+> @@ -565,6 +567,5 @@ static void rpmsg_chrdev_exit(void)
+>  }
+>  module_exit(rpmsg_chrdev_exit);
+>  
+> -MODULE_ALIAS("rpmsg:rpmsg_chrdev");
+>  MODULE_DESCRIPTION("RPMSG device interface");
+>  MODULE_LICENSE("GPL v2");
+> -- 
+> 2.39.2
+> 
