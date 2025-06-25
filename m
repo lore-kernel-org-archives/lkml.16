@@ -1,111 +1,353 @@
-Received: from forward500b.mail.yandex.net (forward500b.mail.yandex.net [178.154.239.144])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A5A285C95;
-	Wed, 25 Jun 2025 08:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37D7F1DF247;
+	Wed, 25 Jun 2025 08:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750841018; cv=none; b=SX6ThaRyWbr4FKSEgO8D/de2HDM33IQPFuHlAoh1ZfzRRzXjnCGnm7izJaGVtyC6Id07Mm49SOCqARQW8MHO4OZTQaOtDLx3jy1WKDg+4YaRYiz4qj1uB1S7bdl6xirgMNggxNcV+eNZekAeJnf3NDUMUxoCjQwDuu0k1tOWKLk=
+	t=1750841061; cv=none; b=oEwV8+fgxOWCpNLQ76oUIm6S+VTruvdcT9tdDIADwIMyt08sTjW09lTSjxezum5i2MFf+RZZ46l+LGCe27M33UtCciVOAuNGzs5a49D6QuggzsJ/GdjcF4+TAvYybV/D8dnpm0MOyarSaXozvtdrcuAZBzPqQGDqc+hXlF6fz6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750841018; c=relaxed/simple;
-	bh=Kmjw/sEqs7FMYsHa4Eb74upYl9Drag+iPdh6H3DgEKw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nSZtHo9WBOJCaXXj1FOqelL+A5p/dD6keIqrKbXrjZkZCWVAFmmbnfEgA3QT9MrQMdrTaP6w3rbZePmK0qjfp0WVhFcN8QFl20NzpmXDs0kxi9m8ZkzR5It6+ffdfiiW1wVJto9s/Wzk9PAuqfO2+XoscsgZBoB3fGYjtYIbyCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev; spf=pass smtp.mailfrom=onurozkan.dev; dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b=S9yRZF4s; arc=none smtp.client-ip=178.154.239.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=onurozkan.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=onurozkan.dev
+	s=arc-20240116; t=1750841061; c=relaxed/simple;
+	bh=RP1SCe23A6ubPmDnlSwR40v3qDMdUtqrQd3omt0OMh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=EtYKPiMfOhETJaxIdnCkVn3ZrrRh4zH9+PORO39WEN5b6Wg8/XIipR42hZXieUog0oUidzpBJ/BUrr4Pyd+eGuPFIZ58vjc7es5htIKwIKxHd+nZj+mw5+8GP5kSNkiaWQzXKttGR/ZtdQButeNj/kkLZcxIcX8Z22givmU9oyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=lNVrJck7; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=onurozkan.dev header.i=@onurozkan.dev header.b="S9yRZF4s"
-Received: from mail-nwsmtp-smtp-production-canary-88.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-canary-88.sas.yp-c.yandex.net [IPv6:2a02:6b8:c23:23c6:0:640:5e87:0])
-	by forward500b.mail.yandex.net (Yandex) with ESMTPS id E74A6619F2;
-	Wed, 25 Jun 2025 11:36:08 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-canary-88.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 4aPD9A1LaGk0-i5mfQuPq;
-	Wed, 25 Jun 2025 11:36:07 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=onurozkan.dev;
-	s=mail; t=1750840568;
-	bh=eiH/JiqtJBziHS6aXO1G2AAC4szfxmuQl4LgCpv/bVM=;
-	h=Cc:Message-ID:Subject:Date:References:To:From:In-Reply-To;
-	b=S9yRZF4sw2RvUCoMxIiH39YP2HsOD7+6usSiXuZ00Oh1aMZqt+dNZLuiuQsqdcVAi
-	 +0gvobYfHG4sKEfHm2TCJz25n2NMmsZkcd+qx6WB9r48xym4gwF955MZh0PcH0Iwep
-	 MCz00s+/kuCX6BkXeM0FfyyVWtI30XCDb+mwfqX0=
-Authentication-Results: mail-nwsmtp-smtp-production-canary-88.sas.yp-c.yandex.net; dkim=pass header.i=@onurozkan.dev
-Date: Wed, 25 Jun 2025 11:36:04 +0300
-From: Onur <work@onurozkan.dev>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
- gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
- alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
- bjorn3_gh@protonmail.com, lossin@kernel.org, a.hindborg@kernel.org,
- aliceryhl@google.com, tmgross@umich.edu
-Subject: Re: [PATCH] rust: simplify `Adapter::id_info`
-Message-ID: <20250625113604.21a6ec4a@nimda>
-In-Reply-To: <aFux2MUDAGEYY49I@pollux>
-References: <20250625043630.7677-1-work@onurozkan.dev>
-	<aFux2MUDAGEYY49I@pollux>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.49; x86_64-unknown-linux-gnu)
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="lNVrJck7"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P0hSbO007242;
+	Wed, 25 Jun 2025 08:44:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fCyBUr31GwUjVNOw1JrfARK8nDg07jSUAIW9Q3UeD0o=; b=lNVrJck7DOALz4sW
+	vI/tnFzd5X4QBkRD0XkDItdDHmtqWyHyqqQLtOGzl+Kj3KDNqfgkwffswvb2i4NQ
+	Bu5W4Rtx75aW3D/pyxDFeH+37JD8CIWiakNijQDB4wGhhcdAXYz80wx2smOXoVpH
+	Hj0IM8ndqO8BMpyTfmQ2l4u14Sw/k+01gD85ToRA2qBSJ1Z688gpOQ18PIFOvhK2
+	q+oblWuRY3qNFX5BFN6aYkCwSfN2F43hhGRA3OmPSNQMmHmabmArCgCcmhb0AhA/
+	aLWNpFLW8xlLX3FxW0dZF9rkeg8IqGluqmXbBwbExh8q9KZ9iluw2a+UK/ckVzWQ
+	zSA4fg==
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec269cn2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 08:44:02 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55P8i1fT020356
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 25 Jun 2025 08:44:01 GMT
+Received: from [10.253.74.126] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Wed, 25 Jun
+ 2025 01:43:57 -0700
+Message-ID: <326bbd02-f414-48e3-a396-4b94f19054f7@quicinc.com>
+Date: Wed, 25 Jun 2025 16:43:55 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 01/38] drm/msm/dp: split msm_dp_panel_read_sink_caps()
+ into two parts and drop panel drm_edid
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+CC: Rob Clark <robin.clark@oss.qualcomm.com>,
+        Abhinav Kumar
+	<abhinav.kumar@linux.dev>,
+        Jessica Zhang <jessica.zhang@oss.qualcomm.com>,
+        Sean Paul <sean@poorly.run>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        <linux-arm-msm@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        <freedreno@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Abhinav
+ Kumar" <quic_abhinavk@quicinc.com>
+References: <20250609-msm-dp-mst-v2-0-a54d8902a23d@quicinc.com>
+ <20250609-msm-dp-mst-v2-1-a54d8902a23d@quicinc.com>
+ <g6wqvbszbrw6gnvxz7cjmhx4rc53kyulcr5wjekfjaisontikl@723odzngtlnd>
+Content-Language: en-US
+From: Yongxing Mou <quic_yongmou@quicinc.com>
+In-Reply-To: <g6wqvbszbrw6gnvxz7cjmhx4rc53kyulcr5wjekfjaisontikl@723odzngtlnd>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA2NCBTYWx0ZWRfX3jWNZbWVTxVL
+ ly/niwpImwcHTNjrDrrmCGew0lcbqsUWYeqIU6nDNuyG8o0nCEPh8oz707XZNaxy7LZ69ClUrvg
+ 2s4F2mQhlCIoAXhuZEYn0VyvChIdPE7a5BL28132ov/9cyTEtH5sh/rS8kvIcl/db8u1X+6ql0h
+ taLKVqSJR3IiuMwiQUHXcspv9G5BPZwfvtfTQzncO7ivV5Nzjz9Xgkq5u9wyPsZxCwD/ve1LB0n
+ 4090Hl9GcShE9k75UseuVN9LT7CfrZEIj1T8j9aGxe4WawprSI2ikQd1zusTuJfgQHCUsE9e+ad
+ haYJ9AuAvU6+UjC+Mgs7N1GIweA2SEFoefYbFGFtLNVghXGV50QRUEdhG8WKRdEABIQeojUjzt5
+ 90Qwi+O8uYHdMQYRhXm1OyFwGwphtjJofwYIpZWbHQlb7PpYcDylziqxZjiLPsGZ4+NMNPaR
+X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685bb6d2 cx=c_pps
+ a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
+ a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=COk6AnOGAAAA:8
+ a=TqKEzCPVLb6d4rQsPy4A:9 a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: qVRLKYIYnueoOfiKRFMl2R8OqstgcvBU
+X-Proofpoint-ORIG-GUID: qVRLKYIYnueoOfiKRFMl2R8OqstgcvBU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ lowpriorityscore=0 impostorscore=0 clxscore=1015 suspectscore=0 mlxscore=0
+ spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
+ priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506250064
 
-On Wed, 25 Jun 2025 10:22:48 +0200
-Danilo Krummrich <dakr@kernel.org> wrote:
 
-> On Wed, Jun 25, 2025 at 07:36:30AM +0300, Onur =C3=96zkan wrote:
-> > It was obviously unnecessary to check if `id` is `Some`.
-> >=20
-> > Signed-off-by: Onur =C3=96zkan <work@onurozkan.dev>
-> > ---
-> >  rust/kernel/driver.rs | 7 +------
-> >  1 file changed, 1 insertion(+), 6 deletions(-)
-> >=20
-> > diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-> > index ec9166cedfa7..1036755cb27d 100644
-> > --- a/rust/kernel/driver.rs
-> > +++ b/rust/kernel/driver.rs
-> > @@ -178,11 +178,6 @@ fn of_id_info(_dev: &device::Device) ->
-> > Option<&'static Self::IdInfo> { /// If this returns `None`, it
-> > means that there is no match in any of the ID tables directly ///
-> > associated with a [`device::Device`]. fn id_info(dev:
-> > &device::Device) -> Option<&'static Self::IdInfo> {
-> > -        let id =3D Self::of_id_info(dev);
-> > -        if id.is_some() {
-> > -            return id;
-> > -        }
-> > -
-> > -        None
->=20
-> This was intentional, since I anticipated we'll get [1] eventually. :)
->=20
-> [1]
-> https://lore.kernel.org/lkml/20250620153914.295679-1-igor.korotin.linux@g=
-mail.com/
->=20
-> > +        Self::of_id_info(dev)
-> >      }
-> >  }
-> > --
-> > 2.50.0
-> >=20
 
-Even with that, it can be something like this:
+On 2025/6/9 20:41, Dmitry Baryshkov wrote:
+> On Mon, Jun 09, 2025 at 08:21:20PM +0800, Yongxing Mou wrote:
+>> From: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>>
+>> In preparation of DP MST where link caps are read for the
+>> immediate downstream device and the edid is read through
+> 
+> EDID, not edid. Please review all your patches for up/down case.
+> 
+Got it. Thanks~
+>> sideband messaging, split the msm_dp_panel_read_sink_caps() into
+>> two parts which read the link parameters and the edid parts
+>> respectively. Also drop the panel drm_edid cached as we actually
+>> don't need it.
+> 
+> Also => separate change.
+> 
+Got it.
+>>
+>> Signed-off-by: Abhinav Kumar <quic_abhinavk@quicinc.com>
+>> Signed-off-by: Yongxing Mou <quic_yongmou@quicinc.com>
+>> ---
+>>   drivers/gpu/drm/msm/dp/dp_display.c | 13 +++++----
+>>   drivers/gpu/drm/msm/dp/dp_panel.c   | 55 ++++++++++++++++++++-----------------
+>>   drivers/gpu/drm/msm/dp/dp_panel.h   |  6 ++--
+>>   3 files changed, 40 insertions(+), 34 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_display.c b/drivers/gpu/drm/msm/dp/dp_display.c
+>> index 6f05a939ce9e648e9601597155999b6f85adfcff..4a9b65647cdef1ed6c3bb851f93df0db8be977af 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_display.c
+>> +++ b/drivers/gpu/drm/msm/dp/dp_display.c
+>> @@ -389,7 +389,11 @@ static int msm_dp_display_process_hpd_high(struct msm_dp_display_private *dp)
+>>   
+>>   	dp->link->lttpr_count = msm_dp_display_lttpr_init(dp, dpcd);
+>>   
+>> -	rc = msm_dp_panel_read_sink_caps(dp->panel, connector);
+>> +	rc = msm_dp_panel_read_link_caps(dp->panel);
+>> +	if (rc)
+>> +		goto end;
+>> +
+>> +	rc = msm_dp_panel_read_edid(dp->panel, connector);
+>>   	if (rc)
+>>   		goto end;
+>>   
+>> @@ -720,7 +724,6 @@ static int msm_dp_irq_hpd_handle(struct msm_dp_display_private *dp, u32 data)
+>>   static void msm_dp_display_deinit_sub_modules(struct msm_dp_display_private *dp)
+>>   {
+>>   	msm_dp_audio_put(dp->audio);
+>> -	msm_dp_panel_put(dp->panel);
+>>   	msm_dp_aux_put(dp->aux);
+>>   }
+>>   
+>> @@ -783,7 +786,7 @@ static int msm_dp_init_sub_modules(struct msm_dp_display_private *dp)
+>>   		rc = PTR_ERR(dp->ctrl);
+>>   		DRM_ERROR("failed to initialize ctrl, rc = %d\n", rc);
+>>   		dp->ctrl = NULL;
+>> -		goto error_ctrl;
+>> +		goto error_link;
+>>   	}
+>>   
+>>   	dp->audio = msm_dp_audio_get(dp->msm_dp_display.pdev, dp->catalog);
+>> @@ -791,13 +794,11 @@ static int msm_dp_init_sub_modules(struct msm_dp_display_private *dp)
+>>   		rc = PTR_ERR(dp->audio);
+>>   		pr_err("failed to initialize audio, rc = %d\n", rc);
+>>   		dp->audio = NULL;
+>> -		goto error_ctrl;
+>> +		goto error_link;
+>>   	}
+>>   
+>>   	return rc;
+>>   
+>> -error_ctrl:
+>> -	msm_dp_panel_put(dp->panel);
+>>   error_link:
+>>   	msm_dp_aux_put(dp->aux);
+>>   error:
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_panel.c b/drivers/gpu/drm/msm/dp/dp_panel.c
+>> index 4e8ab75c771b1e3a2d62f75e9993e1062118482b..d9041e235104a74b3cc50ff2e307eae0c4301ef3 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_panel.c
+>> +++ b/drivers/gpu/drm/msm/dp/dp_panel.c
+>> @@ -118,14 +118,13 @@ static u32 msm_dp_panel_get_supported_bpp(struct msm_dp_panel *msm_dp_panel,
+>>   	return min_supported_bpp;
+>>   }
+>>   
+>> -int msm_dp_panel_read_sink_caps(struct msm_dp_panel *msm_dp_panel,
+>> -	struct drm_connector *connector)
+>> +int msm_dp_panel_read_link_caps(struct msm_dp_panel *msm_dp_panel)
+>>   {
+>>   	int rc, bw_code;
+>>   	int count;
+>>   	struct msm_dp_panel_private *panel;
+>>   
+>> -	if (!msm_dp_panel || !connector) {
+>> +	if (!msm_dp_panel) {
+>>   		DRM_ERROR("invalid input\n");
+>>   		return -EINVAL;
+>>   	}
+>> @@ -160,26 +159,29 @@ int msm_dp_panel_read_sink_caps(struct msm_dp_panel *msm_dp_panel,
+>>   
+>>   	rc = drm_dp_read_downstream_info(panel->aux, msm_dp_panel->dpcd,
+>>   					 msm_dp_panel->downstream_ports);
+>> -	if (rc)
+>> -		return rc;
+>> +	return rc;
+>> +}
+>>   
+>> -	drm_edid_free(msm_dp_panel->drm_edid);
+>> +int msm_dp_panel_read_edid(struct msm_dp_panel *msm_dp_panel, struct drm_connector *connector)
+>> +{
+>> +	struct msm_dp_panel_private *panel;
+>> +	const struct drm_edid *drm_edid;
+>> +
+>> +	panel = container_of(msm_dp_panel, struct msm_dp_panel_private, msm_dp_panel);
+>>   
+>> -	msm_dp_panel->drm_edid = drm_edid_read_ddc(connector, &panel->aux->ddc);
+>> +	drm_edid = drm_edid_read_ddc(connector, &panel->aux->ddc);
+>>   
+>> -	drm_edid_connector_update(connector, msm_dp_panel->drm_edid);
+>> +	drm_edid_connector_update(connector, drm_edid);
+>>   
+>> -	if (!msm_dp_panel->drm_edid) {
+>> +	if (!drm_edid) {
+>>   		DRM_ERROR("panel edid read failed\n");
+>>   		/* check edid read fail is due to unplug */
+>>   		if (!msm_dp_catalog_link_is_connected(panel->catalog)) {
+>> -			rc = -ETIMEDOUT;
+>> -			goto end;
+>> +			return -ETIMEDOUT;
+>>   		}
+>>   	}
+>>   
+>> -end:
+>> -	return rc;
+>> +	return 0;
+>>   }
+>>   
+>>   u32 msm_dp_panel_get_mode_bpp(struct msm_dp_panel *msm_dp_panel,
+>> @@ -208,15 +210,20 @@ u32 msm_dp_panel_get_mode_bpp(struct msm_dp_panel *msm_dp_panel,
+>>   int msm_dp_panel_get_modes(struct msm_dp_panel *msm_dp_panel,
+>>   	struct drm_connector *connector)
+>>   {
+>> +	struct msm_dp_panel_private *panel;
+>> +	const struct drm_edid *drm_edid;
+>> +
+>>   	if (!msm_dp_panel) {
+>>   		DRM_ERROR("invalid input\n");
+>>   		return -EINVAL;
+>>   	}
+>>   
+>> -	if (msm_dp_panel->drm_edid)
+>> -		return drm_edid_connector_add_modes(connector);
+>> +	panel = container_of(msm_dp_panel, struct msm_dp_panel_private, msm_dp_panel);
+>> +
+>> +	drm_edid = drm_edid_read_ddc(connector, &panel->aux->ddc);
+>> +	drm_edid_connector_update(connector, drm_edid);
+> 
+> If EDID has been read and processed after HPD high event, why do we need
+> to re-read it again? Are we expecting that EDID will change?
+> 
+Here we indeed don't need to read the EDID again, so we can directly 
+call drm_edid_connector_add_modes. Thanks.
+>>   
+>> -	return 0;
+>> +	return drm_edid_connector_add_modes(connector);
+>>   }
+>>   
+>>   static u8 msm_dp_panel_get_edid_checksum(const struct edid *edid)
+>> @@ -229,6 +236,7 @@ static u8 msm_dp_panel_get_edid_checksum(const struct edid *edid)
+>>   void msm_dp_panel_handle_sink_request(struct msm_dp_panel *msm_dp_panel)
+>>   {
+>>   	struct msm_dp_panel_private *panel;
+>> +	const struct drm_edid *drm_edid;
+>>   
+>>   	if (!msm_dp_panel) {
+>>   		DRM_ERROR("invalid input\n");
+>> @@ -238,8 +246,13 @@ void msm_dp_panel_handle_sink_request(struct msm_dp_panel *msm_dp_panel)
+>>   	panel = container_of(msm_dp_panel, struct msm_dp_panel_private, msm_dp_panel);
+>>   
+>>   	if (panel->link->sink_request & DP_TEST_LINK_EDID_READ) {
+>> +		drm_edid = drm_edid_read_ddc(msm_dp_panel->connector, &panel->aux->ddc);
+> 
+> And again....
+> 
+Here we need the struct edid,since we drop the cached drm_edid, so we 
+need to read it again. Or we can return the drm_edid from 
+msm_dp_panel_read_edid and pass it to msm_dp_panel_handle_sink_request, 
+then we don't need to read drm_edid here. Emm, I'm still a bit curious 
+why we can't cache the drm_edid? It would help us to access it when 
+needed. Emm, i see other drivers also cache it.
+>> +
+>> +		if (!drm_edid)
+>> +			return;
+>> +
+>>   		/* FIXME: get rid of drm_edid_raw() */
+>> -		const struct edid *edid = drm_edid_raw(msm_dp_panel->drm_edid);
+>> +		const struct edid *edid = drm_edid_raw(drm_edid);
+>>   		u8 checksum;
+>>   
+>>   		if (edid)
+>> @@ -515,11 +528,3 @@ struct msm_dp_panel *msm_dp_panel_get(struct device *dev, struct drm_dp_aux *aux
+>>   
+>>   	return msm_dp_panel;
+>>   }
+>> -
+>> -void msm_dp_panel_put(struct msm_dp_panel *msm_dp_panel)
+>> -{
+>> -	if (!msm_dp_panel)
+>> -		return;
+>> -
+>> -	drm_edid_free(msm_dp_panel->drm_edid);
+>> -}
+> 
+> Too many changes to be stuffed under the hood of "Also perform foo"
+> 
+Got it, thanks , will split  this patch and refactor the commit msg.
+>> diff --git a/drivers/gpu/drm/msm/dp/dp_panel.h b/drivers/gpu/drm/msm/dp/dp_panel.h
+>> index 4906f4f09f2451cfed3c1007f38b4db7dfdb1d90..7f139478e1012d5b8f1f745f0de5fc3943745428 100644
+>> --- a/drivers/gpu/drm/msm/dp/dp_panel.h
+>> +++ b/drivers/gpu/drm/msm/dp/dp_panel.h
+>> @@ -32,7 +32,6 @@ struct msm_dp_panel {
+>>   	u8 downstream_ports[DP_MAX_DOWNSTREAM_PORTS];
+>>   
+>>   	struct msm_dp_link_info link_info;
+>> -	const struct drm_edid *drm_edid;
+>>   	struct drm_connector *connector;
+>>   	struct msm_dp_display_mode msm_dp_mode;
+>>   	struct msm_dp_panel_psr psr_cap;
+>> @@ -51,7 +50,9 @@ int msm_dp_panel_timing_cfg(struct msm_dp_panel *msm_dp_panel);
+>>   int msm_dp_panel_read_sink_caps(struct msm_dp_panel *msm_dp_panel,
+>>   		struct drm_connector *connector);
+>>   u32 msm_dp_panel_get_mode_bpp(struct msm_dp_panel *msm_dp_panel, u32 mode_max_bpp,
+>> -			u32 mode_pclk_khz);
+>> +			      u32 mode_pclk_khz);
+>> +int msm_dp_panel_read_link_caps(struct msm_dp_panel *dp_panel);
+>> +int msm_dp_panel_read_edid(struct msm_dp_panel *dp_panel, struct drm_connector *connector);
+>>   int msm_dp_panel_get_modes(struct msm_dp_panel *msm_dp_panel,
+>>   		struct drm_connector *connector);
+>>   void msm_dp_panel_handle_sink_request(struct msm_dp_panel *msm_dp_panel);
+>> @@ -86,5 +87,4 @@ static inline bool is_lane_count_valid(u32 lane_count)
+>>   
+>>   struct msm_dp_panel *msm_dp_panel_get(struct device *dev, struct drm_dp_aux *aux,
+>>   			      struct msm_dp_link *link, struct msm_dp_catalog *catalog);
+>> -void msm_dp_panel_put(struct msm_dp_panel *msm_dp_panel);
+>>   #endif /* _DP_PANEL_H_ */
+>>
+>> -- 
+>> 2.34.1
+>>
+> 
 
-fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
-    let id =3D Self::acpi_id_info(dev);
-    if id.is_some() {
-        return id;
-    }
-
-    Self::of_id_info(dev)
-}
-
-or maybe even this:
-
-fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
-    Self::acpi_id_info(dev).or_else(|| Self::of_id_info(dev))
-}
