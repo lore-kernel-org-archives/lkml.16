@@ -1,47 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CA3522ACEF;
-	Wed, 25 Jun 2025 12:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5832147EF;
+	Wed, 25 Jun 2025 12:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750853978; cv=none; b=F5y94eMIAma05nSdINRqk7CPrlgMhn+jDHtNAC/+8cAcNAS+RaYx3XKxL4ildLhlVl+bOhqOOhoq5QI6W10BT5KabQY9xZuxS4SSneSdhJE8t7YLqjVqfUCHorgAH8RxGpQa1lZoikMrpl4aoEsoWYeHfYNvTQwhmWTlr4E9/vY=
+	t=1750853980; cv=none; b=Tk+EKLBLZYIcaTGoFU52Pwl552UDHODCTl2rLCb2duNBnNIUHLJPsBaJCrEnWcr2xOPz4sWa5qm4Pfqt8DWBD/BY8C1FMWeNpP6YmAhV5HRriyQVf/89ZOpih7Vo+5fW2InfrQRaniDSXEnzu6MF4WNdEBg+PV52kniintXEh9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750853978; c=relaxed/simple;
-	bh=d3hbjcTYZBHF9JdqXaMJzsaAqNIFdJ1GVA4EtXfbBgQ=;
+	s=arc-20240116; t=1750853980; c=relaxed/simple;
+	bh=Jf/WnBQXn6g8/WrK555BMqtkJLwU4/g0UWPzaefHEqs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KwI49KnBrNLYTpGX/52jpBHXH9VzMH0PhhWF5xfIInZCtX4cuLltme93m4esiJrV6JPMLfeMKRL0bES+X7JmUEOJWfFHhdoErzNKrMBRbzUx8qC+rvkHdtNvpqKIdGbz7h7pjQU/TJbuupi6VfoTWaa9XJe5WLGpddL70totJy8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HN8bGoMs; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=OF69ivKcc4udjsk8m8JPzPuj2wq2utyik9+aD1pe1XmgQVl3vT9GRQnBnC7UoZxhPrdHd2NwrAr3t0kgm1wVU1iCZBzDCMzi9kjjLxpT/jGGz1TxoGWkMEvpP0DNhr6egaX+eyIEqcrV7Z1TN5WLjPbYXAX7xT4CHQlrgekV6qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YCQMnHHN; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HN8bGoMs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBC8DC4CEEA;
-	Wed, 25 Jun 2025 12:19:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750853976;
-	bh=d3hbjcTYZBHF9JdqXaMJzsaAqNIFdJ1GVA4EtXfbBgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HN8bGoMsKzd/xuQcs7r8vd48xPW98SCfE5ZrcTZ2rNmeQHATmVlLUMI6exKSbZ7sV
-	 lQ6ls+h+LPIWl62qfsdXwl1dNkrgSPj8bHsxLzYam/42u1Up2DKqMjtSBy1TYtxKem
-	 PdNJ6YekDw7uXoa04zqYIlDEeJHAhf+p5oYOEm5BsiVdtifv20cg5KSzy9BC9tJCDz
-	 Y7Vnc0okIzpdxh/oNCgiyPmpqGfGuS6D5pLyauAkwMRPaKDiwDl4/FC1Qdq3IjL5gV
-	 ruJwA6+lNKJcoUPoJRJvWmjuW5vEWEZNdUGsDhB5rswgk9UThn1+KqDjH8eoRRoVkU
-	 qNGO0oc6VXZtQ==
-Date: Wed, 25 Jun 2025 13:19:32 +0100
-From: Simon Horman <horms@kernel.org>
-To: Jacek Kowalski <jacek@jacekk.info>
-Cc: Tony Nguyen <anthony.l.nguyen@intel.com>,
-	Przemek Kitszel <przemyslaw.kitszel@intel.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] e1000: drop checksum constant cast to u16 in
- comparisons
-Message-ID: <20250625121932.GC1562@horms.kernel.org>
-References: <46b2b70d-bf53-4b0a-a9f3-dfd8493295b9@jacekk.info>
- <20250625121828.GB1562@horms.kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YCQMnHHN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750853978; x=1782389978;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Jf/WnBQXn6g8/WrK555BMqtkJLwU4/g0UWPzaefHEqs=;
+  b=YCQMnHHNS1ilzb2t7WaM8R0QnnATMXfVyEustUpVAIlVWz/DK7Me7rt7
+   ASqfLxCJ50Xpyo45R0a2GmtVoV4n7CJwb3HraOOwdfR4JJGz30ES1HCvv
+   7ETFlPy2H8ZoL791E8j9FEkCZfSOaAEnc4E0GGKl0eDC1Nx7dSwdl+XRy
+   WODbUNUuP83xQ2JqLnIauWWeVy2awM0TbNvQAtU5aeV6cLo4sGpQc42wG
+   fEnneNODOB4pVc4htvsEOnLn7eFlGGkoHZ3hRMG73PRTygquqWzkKwT92
+   +YlEzOhrlpz79ovRkER+O2hP18KtC6ZWW8DDSmZ2eYvcXDygElhDeVo9U
+   g==;
+X-CSE-ConnectionGUID: NPqn4hzxSaCnDGo6EpilmQ==
+X-CSE-MsgGUID: TiJCOOdLTA+buWFsrnyj1g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52350417"
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="52350417"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:19:35 -0700
+X-CSE-ConnectionGUID: YHRZb4YNSGqs4tk5oznBGA==
+X-CSE-MsgGUID: QyAipQ2oTx2fWr6ehkzPvg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
+   d="scan'208";a="157970991"
+Received: from smile.fi.intel.com ([10.237.72.52])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 05:19:31 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uUP68-00000009lRF-3sCx;
+	Wed, 25 Jun 2025 15:19:28 +0300
+Date: Wed, 25 Jun 2025 15:19:28 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
+	Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH 1/2] gpiolib: acpi: Program debounce when finding GPIO
+Message-ID: <aFvpUBM0xSdM76xz@smile.fi.intel.com>
+References: <20250624202211.1088738-1-superm1@kernel.org>
+ <20250624202211.1088738-2-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,73 +71,29 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250625121828.GB1562@horms.kernel.org>
+In-Reply-To: <20250624202211.1088738-2-superm1@kernel.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Wed, Jun 25, 2025 at 01:18:28PM +0100, Simon Horman wrote:
-> On Tue, Jun 24, 2025 at 09:29:43PM +0200, Jacek Kowalski wrote:
+On Tue, Jun 24, 2025 at 03:22:10PM -0500, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
 > 
-> Hi Jacek,
+> When soc-button-array looks up the GPIO to use it calls acpi_find_gpio()
+> which will parse _CRS.
 > 
-> Thanks for the patchset.
+> acpi_find_gpio.cold (drivers/gpio/gpiolib-acpi-core.c:953)
+> gpiod_find_and_request (drivers/gpio/gpiolib.c:4598 drivers/gpio/gpiolib.c:4625)
+> gpiod_get_index (drivers/gpio/gpiolib.c:4877)
 > 
-> Some feedback at a high level:
-> 
-> 1. It's normal for patch-sets, to have a cover letter.
->    That provides a handy place for high level comments,
->    perhaps ironically, such as this one.
-> 
-> 2. Please provide some text in the patch description.
->    I know these changes are trivial. But we'd like to have something there.
->    E.g.
-> 
->    Remove unnecessary cast of constants to u16,
->    allowing the C type system to do it's thing.
-> 
->    No behavioural change intended.
->    Compile tested only.
-> 
-> 3. This patchset should probably be targeted at iwl-next, like this:
-> 
-> 	Subject: [PATCH iwl-next] ...
-> 
-> 4. Please make sure the patchset applies cleanly to it's target tree.
->    It seems that in it's current form the patchset doesn't
->    apply to iwl-next or net-next.
-> 
-> 5. It's up to you. But in general there is no need
->    to CC linux-kernel@vger.kernel.org on Networking patches
-> 
-> > Signed-off-by: Jacek Kowalski <Jacek@jacekk.info>
-> > Suggested-by: Simon Horman <horms@kernel.org>
-> 
-> As for this patch itself, it looks good to me.
-> But I think you missed two.
-> 
-> diff --git a/drivers/net/ethernet/intel/e1000/e1000_hw.c b/drivers/net/ethernet/intel/e1000/e1000_hw.c
-> index b5a31e8d84f4..0e5de52b1067 100644
-> --- a/drivers/net/ethernet/intel/e1000/e1000_hw.c
-> +++ b/drivers/net/ethernet/intel/e1000/e1000_hw.c
-> @@ -3997,7 +3997,7 @@ s32 e1000_update_eeprom_checksum(struct e1000_hw *hw)
->  		}
->  		checksum += eeprom_data;
->  	}
-> -	checksum = (u16)EEPROM_SUM - checksum;
-> +	checksum = EEPROM_SUM - checksum;
->  	if (e1000_write_eeprom(hw, EEPROM_CHECKSUM_REG, 1, &checksum) < 0) {
->  		e_dbg("EEPROM Write Error\n");
->  		return -E1000_ERR_EEPROM;
-> diff --git a/drivers/net/ethernet/intel/e1000e/nvm.c b/drivers/net/ethernet/intel/e1000e/nvm.c
-> index 1c9071396b3c..556dbefdcef9 100644
-> --- a/drivers/net/ethernet/intel/e1000e/nvm.c
-> +++ b/drivers/net/ethernet/intel/e1000e/nvm.c
-> @@ -588,7 +588,7 @@ s32 e1000e_update_nvm_checksum_generic(struct e1000_hw *hw)
->  		}
->  		checksum += nvm_data;
->  	}
-> -	checksum = (u16)NVM_SUM - checksum;
-> +	checksum = NVM_SUM - checksum;
->  	ret_val = e1000_write_nvm(hw, NVM_CHECKSUM_REG, 1, &checksum);
->  	if (ret_val)
->  		e_dbg("NVM Write Error while updating checksum.\n");
+> The GPIO is setup basically, but the debounce information is discarded.
+> The platform will assert what debounce should be in _CRS, so program it
+> at the time it's available.
 
-Sorry, I now see that the 2nd of the two hunks above is for patch 2/4.
+If this will be needed we can factor out acpi_gpio_set_debounce() with
+the warning and use it in both cases.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
