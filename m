@@ -1,48 +1,50 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DFF70813;
-	Wed, 25 Jun 2025 01:54:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E469F70813
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:57:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750816492; cv=none; b=rGr+R1X1gMEt4IculZ5e8NBgCTj8AGs3QOsm85RH8QKvU13O0uoGvRu8TqGOw6sLSqMsW5w6DNs3lm1qytQIPLC9w239clXqgvmztSg7fjNEBR4+PUZovyoTBoY8Tw2FZFz4FmKtVu5TlpPirZmBWuG3LquIqAQZg61ssA0IddU=
+	t=1750816627; cv=none; b=dlp3/Ul4B9X3+mg6I11hhvDpeXlCAdyP0EidJg1qqTXk1vgIEPWnhIyx9FnCZnxqAwnAJcl/u8I0491j/jZbPD/jqMXrNz5i+IkV5SKOzyAXrBmy/k4FUF4gYvoI6XsDPraWUyBc8LIApCOgYeCEyTBehZ0GIwKyxnRFkUzSxwA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750816492; c=relaxed/simple;
-	bh=B7I8JEHf3lGoRCj0HUbRwbAqbw30uuDOEl/TpV2GTMA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=uBvLMfyTFgEDg1BLQ2y46XUn0qzGm+8nWawjYTB7QQySMjXmsZKMJNxCsHvirXdTnkD7s6HJ7fduwyUuB8+VMIjl8yEQFL2rIRKj0qwqSStGYfcs6G4GTG/AF8sjtayQZBB1lWFinTKyKbsR8P7zo0NUGNJTB9kWjuQqgUdixY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=W9jTFjmz; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750816627; c=relaxed/simple;
+	bh=32U2wOAlMtIyO75Asy250dWcqCGf5UC5QID2tausaWQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=O55nhPtR7MGAJIatY2ULSvV7N3Yel+cINl2ZhsbZPw3ysmyiSsde+e1cE72o5d+aizy5odHqisTFiYFVMpSIEpaX1DZufCKg6NibbgfsRG7nsPX8/KsFHh/G+/z8GIg63ugBiN+9NA90z0rd3Pmn/b5lUhyVfQEXgIEBS3BKdTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GmeD0fSK; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="W9jTFjmz"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55OFUYXJ014481;
-	Wed, 25 Jun 2025 01:54:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	fMeP4JMT5RRHOVfYF2hWyxK4pUekVhBHFBicBsTy5Cg=; b=W9jTFjmzfljaD9d4
-	dfrPZ7Kbr8Stzy4xrLjEyp/Q54WiWkYSrmBxeUfQSSSGA+/mVEi9rxMAGRjwD4nQ
-	YZhqcp6gpaMYXmi19bhnIdc2uKOULQ/UlDMJQxnHIZy+xgOnrhUifHwWsTP7i7vK
-	PHe3ZZwRVD11OCEgzRVYtgJ6CdfIcKqzBaacT26cQtFZYGi30X+LV888A6IVxyhZ
-	CYBltXK6NHG7eDBGq/ceLTlib1ZgLqdmvuT6Jffa/Kj0PtVYpYsZEkpvL7BjyoNm
-	qin8PZ+OoyGW9BoAZ60YUJqDVbCHg9hs0JWv4Eh/FnJ96OgfTuyuIuJglq9WEU/J
-	Q++DUw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47evc5q7vr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 01:54:43 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55P1sgO9010190
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 01:54:42 GMT
-Received: from [10.231.195.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 24 Jun
- 2025 18:54:40 -0700
-Message-ID: <2012077d-5da4-4805-a0e1-3c56b40a9b1b@quicinc.com>
-Date: Wed, 25 Jun 2025 09:54:38 +0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GmeD0fSK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750816626; x=1782352626;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=32U2wOAlMtIyO75Asy250dWcqCGf5UC5QID2tausaWQ=;
+  b=GmeD0fSKGvklJBWqxXmUIGeH+EOgYEOnV7BAriYbf9+2B4h4N3FK8Ftg
+   U5SnHWb54styrusHn8WMJgfDwiF04Dk7zkIZs2uoPUbNieUMFln7Lgc3s
+   HuYSw/eABq0XN51Bm6zRnPw97eaas1L/WCU5KzApocatGz25cYuzruPA/
+   jGNF/pS7dLucTKZE85+GCcyTRaygCEr7gOR+WNrLEnicB3zyXBS685SOs
+   EJ833dczLivRCDX+BSnxe3Y7C8dTtmze4G7sq+CoR0TowNK4DRm17L8sv
+   XTaU2NBlOePcR5SeG3XXGEVAtV2yPW5nhROp7Sp8LdfzJWHOXjhlGNtPz
+   w==;
+X-CSE-ConnectionGUID: YHqFDPKDQj2sFnuFbcw4vA==
+X-CSE-MsgGUID: BF3G/nfhRF60uABuvefhpg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="56748950"
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="56748950"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 18:57:05 -0700
+X-CSE-ConnectionGUID: WxY9OlOoQcCBuk7WUwHnzw==
+X-CSE-MsgGUID: wSio0s/UQe2fUPImjc7KTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,263,1744095600"; 
+   d="scan'208";a="156364357"
+Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
+  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 18:57:02 -0700
+Message-ID: <e8977169-e1f6-4ba4-931b-9bebffc1469f@linux.intel.com>
+Date: Wed, 25 Jun 2025 09:55:47 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,102 +52,58 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] wifi: ath12k: fix dest ring-buffer corruption when
- ring is full
-To: Johan Hovold <johan+linaro@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
-CC: Miaoqing Pan <quic_miaoqing@quicinc.com>,
-        Remi Pommarel
-	<repk@triplefau.lt>, <linux-wireless@vger.kernel.org>,
-        <ath12k@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-References: <20250617084402.14475-1-johan+linaro@kernel.org>
- <20250617084402.14475-5-johan+linaro@kernel.org>
+Subject: Re: [PATCH v2 3/4] iommufd: Destroy vdevice on idevice destroy
+To: "Tian, Kevin" <kevin.tian@intel.com>, Xu Yilun
+ <yilun.xu@linux.intel.com>, "jgg@nvidia.com" <jgg@nvidia.com>,
+ "jgg@ziepe.ca" <jgg@ziepe.ca>, "will@kernel.org" <will@kernel.org>,
+ "aneesh.kumar@kernel.org" <aneesh.kumar@kernel.org>
+Cc: "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "joro@8bytes.org" <joro@8bytes.org>,
+ "robin.murphy@arm.com" <robin.murphy@arm.com>,
+ "shuah@kernel.org" <shuah@kernel.org>,
+ "nicolinc@nvidia.com" <nicolinc@nvidia.com>, "aik@amd.com" <aik@amd.com>,
+ "Williams, Dan J" <dan.j.williams@intel.com>, "Xu, Yilun"
+ <yilun.xu@intel.com>
+References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
+ <20250623094946.1714996-4-yilun.xu@linux.intel.com>
+ <a2fddab4-bc85-46f6-9008-57a26e099698@linux.intel.com>
+ <BN9PR11MB52763649BE32A38A60866D518C78A@BN9PR11MB5276.namprd11.prod.outlook.com>
 Content-Language: en-US
-From: Baochen Qiang <quic_bqiang@quicinc.com>
-In-Reply-To: <20250617084402.14475-5-johan+linaro@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+From: Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <BN9PR11MB52763649BE32A38A60866D518C78A@BN9PR11MB5276.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: BdPMhkEJTPpPpwbGmhdR4FQBFfn_PBf2
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDAxMyBTYWx0ZWRfX1XQplLuMN2yH
- /vw3oHTiT85PjC00l0TDL2tohadAG1Gc6CZzS4rS+Qpz3uvBM8e07SJ2FE3pFVnq4MdKdMgsR2w
- OIppEyAb/ugFnGdbCr6Kt9PdRD/GX+aDozkGqPrlkFuFy/CmGgAsIISXUJYDE9QnJQdlnxfgYt9
- BYOF7PLnwLZvxTUqyMV8hahzfjL6CX6w1oB3Bssr9WugJUkYX2MZVj/JYLcCeyjpUgSUkSRJRSa
- BTpIS2YujVWDRvr6I6S9ebbBIvGTr9eFhLJzgU1pHNiIRm2uFg7iAmNled9erUacsXGjuaSISdT
- ZTJSfDymtDayluTYnhRq/K04Wmmz2p4BT7l+dc6eNm+Y7MC0mHkPHW+YO6NT7+MXhj5emODhk5P
- OxI2fbLkatKhgfz1+r9HWgQx3arxJ2s+rhcbL8pi5sJFTeGrML5ZEkv26GuUaeSrHGE8H7Xd
-X-Authority-Analysis: v=2.4 cv=caHSrmDM c=1 sm=1 tr=0 ts=685b56e3 cx=c_pps
- a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17
- a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=3Go43yyQdFlCKqBfqAEA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: BdPMhkEJTPpPpwbGmhdR4FQBFfn_PBf2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-24_06,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxlogscore=702 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
- malwarescore=0 phishscore=0 clxscore=1015 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506250013
 
-
-
-On 6/17/2025 4:44 PM, Johan Hovold wrote:
-> Add the missing memory barriers to make sure that destination ring
-> descriptors are read before updating the tail pointer (and passing
-> ownership to the device) to avoid memory corruption on weakly ordered
-> architectures like aarch64 when the ring is full.
+On 6/24/25 16:12, Tian, Kevin wrote:
+>> From: Baolu Lu <baolu.lu@linux.intel.com>
+>> Sent: Tuesday, June 24, 2025 11:32 AM
+>>
+>> On 6/23/25 17:49, Xu Yilun wrote:
+>>> Destroy iommufd_vdevice(vdev) on iommufd_idevice(idev) destroy so that
+>>> vdev can't outlive idev.
+>>>
+>>> iommufd_device(idev) represents the physical device bound to iommufd,
+>>> while the iommufd_vdevice(vdev) represents the virtual instance of the
+>>> physical device in the VM. The lifecycle of the vdev should not be
+>>> longer than idev. This doesn't cause real problem on existing use cases
+>>> cause vdev doesn't impact the physical device, only provides
+>>> virtualization information. But to extend vdev for Confidential
+>>> Computing(CC), there are needs to do secure configuration for the vdev,
+>>> e.g. TSM Bind/Unbind. These configurations should be rolled back on idev
+>>> destroy, or the external driver(VFIO) functionality may be impact.
+>>>
+>>> Building the association between idev & vdev requires the two objects
+>>> pointing each other, but not referencing each other.
+>>
+>> Does this mean each idevice can have at most a single vdevice? Is it
+>> possible that different PASIDs of a physical device are assigned to
+>> userspace for different purposes, such that there is a need for multiple
+>> vdevices per idevice?
+>>
 > 
-> Tested-on: WCN7850 hw2.0 WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
-> 
-> Fixes: d889913205cf ("wifi: ath12k: driver for Qualcomm Wi-Fi 7 devices")
-> Cc: stable@vger.kernel.org      # 6.3
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
-> ---
->  drivers/net/wireless/ath/ath12k/hal.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/wireless/ath/ath12k/hal.c b/drivers/net/wireless/ath/ath12k/hal.c
-> index d8193d9577bb..6406fcf5d69f 100644
-> --- a/drivers/net/wireless/ath/ath12k/hal.c
-> +++ b/drivers/net/wireless/ath/ath12k/hal.c
-> @@ -2170,7 +2170,6 @@ void ath12k_hal_srng_access_end(struct ath12k_base *ab, struct hal_srng *srng)
->  {
->  	lockdep_assert_held(&srng->lock);
->  
-> -	/* TODO: See if we need a write memory barrier here */
->  	if (srng->flags & HAL_SRNG_FLAGS_LMAC_RING) {
->  		/* For LMAC rings, ring pointer updates are done through FW and
->  		 * hence written to a shared memory location that is read by FW
-> @@ -2185,7 +2184,11 @@ void ath12k_hal_srng_access_end(struct ath12k_base *ab, struct hal_srng *srng)
->  			WRITE_ONCE(*srng->u.src_ring.hp_addr, srng->u.src_ring.hp);
->  		} else {
->  			srng->u.dst_ring.last_hp = *srng->u.dst_ring.hp_addr;
-> -			*srng->u.dst_ring.tp_addr = srng->u.dst_ring.tp;
-> +			/* Make sure descriptor is read before updating the
-> +			 * tail pointer.
-> +			 */
-> +			dma_mb();
-> +			WRITE_ONCE(*srng->u.dst_ring.tp_addr, srng->u.dst_ring.tp);
->  		}
->  	} else {
->  		if (srng->ring_dir == HAL_SRNG_DIR_SRC) {
-> @@ -2201,6 +2204,10 @@ void ath12k_hal_srng_access_end(struct ath12k_base *ab, struct hal_srng *srng)
->  					   srng->u.src_ring.hp);
->  		} else {
->  			srng->u.dst_ring.last_hp = *srng->u.dst_ring.hp_addr;
-> +			/* Make sure descriptor is read before updating the
-> +			 * tail pointer.
-> +			 */
-> +			mb();
->  			ath12k_hif_write32(ab,
->  					   (unsigned long)srng->u.dst_ring.tp_addr -
->  					   (unsigned long)ab->mem,
+> PASID is a resource of physical device. If it's reported to a VM then
+> it becomes the resource of virtual device. 1:1 association makes
+> sense here.
 
-Reviewed-by: Baochen Qiang <quic_bqiang@quicinc.com>
-
+Okay, make sense.
