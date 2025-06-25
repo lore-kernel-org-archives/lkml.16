@@ -1,104 +1,163 @@
-Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C009261573
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:29:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B706D25D1ED;
+	Wed, 25 Jun 2025 13:29:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750858174; cv=none; b=RqCzbudY9H7F0w/LVBuBDA7Vw62XVhJr9nE+9ANvRv7k4S2sWzikIkWBQYzqY+Y75w9LGuR3tost4cF46dojQjyd+/CHd7PCQVHmbUlth6EG/Pi9G0isc7R7y4jqcug9EvrSl7kFQkpMtWOxMtfephUOOkdzF/rPMtoH5hsMrdU=
+	t=1750858192; cv=none; b=tJzglMGzi3gm5OzqE+MCvt4oWJMQKa6VEyd8TzPysNHA0xjfELiKLfnNGx/sju7YnqO+3DCjevEoqSI/vmQTRCiYlW0r1IHvDkJbJwy8bbAbp/l+TB3w1ElkeslMyMqjSMXUZ4+GX77mvrcX3+VV3HNe7X8u6Wk+hUjgV7nbAJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750858174; c=relaxed/simple;
-	bh=HI9la2QsxuOizkMwcoaS1bXXDpyUXSLfDzTpd/RFD+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FHJVkaPvEmVnd6SWJp98/WPY2FNu67rst1Tfe3Q1hkpxzC3vK58kOW2Pn8r1sTDaZFxacafAum76OSXn3+N1CgLjVnQGBA/IXNpu+t2HCs/L2zzHkXMwst1JuJzT1tFQ3Fr8zRNHa8lCOyc1eU2znlI6kDbTfU6NN64TCNxHpYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org; spf=pass smtp.mailfrom=linuxtx.org; dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b=WN+eRMrG; arc=none smtp.client-ip=209.85.167.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=fedoraproject.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxtx.org
+	s=arc-20240116; t=1750858192; c=relaxed/simple;
+	bh=VfXy1sSzFunuddiHtM+uLU9xQdYDLn8lHfOI5lG9CX8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QnUMfyzsl9HReKsKyQSLAPjXdnwP8fuWNClE5keMUURrx8YeYnJMvsxWAIY2GxBJSwCvENEP/8VJW04b8+0PqGWv8AODktXuTY1Uqy00Hz0jM3ZF/p0Vz3TMliziy5gkoR5k1BZtDfJH5zfe4kJ+CBPPB8P/bdD8k3vChsLGDM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ay5NlWkn; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxtx.org header.i=@linuxtx.org header.b="WN+eRMrG"
-Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-40a4de175a3so4444000b6e.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:29:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxtx.org; s=google; t=1750858171; x=1751462971; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=yeGY/v5lQOSYimAG1TJEUl7+krFvp4WYJspcjdIjkl8=;
-        b=WN+eRMrGwwCcIAydMuFPIFjXEl9mkWdRzyB31DIdtiZNHiFVHS36+Z5Tx659Bz/Vaf
-         qlOKXtU8O3U0sD0dMCBSGGVo9QdsB1B69PSGfvNB2G03f+A3aWnoyGJxzYd3q/MQEcmR
-         hH3/QIB5ShkRQ81mA4ZSEXWcDxLXAOabee0Jk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750858171; x=1751462971;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yeGY/v5lQOSYimAG1TJEUl7+krFvp4WYJspcjdIjkl8=;
-        b=a8bABOYeDe1ocLIHdfuYluM0vLSRuF4+klQWpC/+UFKbNGF109Ycd0F6LJjPPuLUV4
-         HijQCpPSWIGuWS4+3ZX4kgurtwtpf/GbfE0hXPwSbqP4ihNRa32df4ch95KMNNCF415r
-         EdAr67v5lT2NTzmvmo4ScfjXSbaX4NIi9xJfHLAw33Du+M1F5xs8oqSzVxW3ROrhspDE
-         VAH1jkNmlo3a8gHDo/KnrjcVjYmUSwTkkp48il8cFw6WuHBzZjkxtHXTKeBNxsGgHRVQ
-         mzf+Y92e/75q6lmJMloIgJUKp4XUOLHBT31PLAYRp7aeFdIDdX8H4b5oionI2VFOKovD
-         C4Lw==
-X-Forwarded-Encrypted: i=1; AJvYcCUmosJTKHhcfVMSXQMHs5xhdIJXxZja1oJAkI1ebdoypUPv6nJ8aEje6DhIIWcyMIbxQJahkJR9ITHf8hM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7MPhQbZrGNb7umOiflUFJYUGX4UuADMcLXTCYi3swvxI7oLVL
-	zHvyuHLWi1j2C4ECgK27JaFqUfmL1E0vKMxg3v56sz8P4uWhRfZzMPnqOVvRk+khdA==
-X-Gm-Gg: ASbGncsO2B5kYAbX7LJf6GOwJHJBLI+pDCYvsFDAjkGvxAw2qQ80db7aQW06uqC6Mmq
-	qOfYlSBCx3sbJNGnghWBNqsMztLEGCYDIsvYarvde91hTrno916xBMmSIZFTPK1qgMb276Ny41i
-	fPz29sITK1xXD47f5BYqXVhvulB8Lei8X73JX6P2AVTYSLHoGzJrIFUATy13bXx/MLsY7XxMlnV
-	8o5lQsN9oYxJ8xJ3zgvCfNDOruXgPG+A9YLLMMa68907D2mv8HyBuRKv8yvDCAv5+zfD9fbhuU3
-	zN088uqwOHrsFoXDdAzJB9XKsKqvzsQLNl08mvXVLJG/NNOyHU3snsLOCotDE8sPJCPwhAwk065
-	SG+o=
-X-Google-Smtp-Source: AGHT+IG2FI1jDRFQ8TbABRF9Bhv3qaEH5qecJjomLNpJZJ+9FLbz0XOtMMk41w+LNPolSsQ/Q935Kg==
-X-Received: by 2002:a05:6808:640f:b0:401:e8b5:4e4a with SMTP id 5614622812f47-40b0572241cmr2882440b6e.1.1750858171060;
-        Wed, 25 Jun 2025 06:29:31 -0700 (PDT)
-Received: from fedora64.linuxtx.org ([72.42.103.70])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40ac6c13330sm2150599b6e.4.2025.06.25.06.29.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jun 2025 06:29:30 -0700 (PDT)
-Sender: Justin Forbes <jmforbes@linuxtx.org>
-Date: Wed, 25 Jun 2025 07:29:28 -0600
-From: Justin Forbes <jforbes@fedoraproject.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, patches@lists.linux.dev,
-	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de,
-	jonathanh@nvidia.com, f.fainelli@gmail.com,
-	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de,
-	conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-Subject: Re: [PATCH 6.15 000/588] 6.15.4-rc2 review
-Message-ID: <aFv5uPHCceTAbx9I@fedora64.linuxtx.org>
-References: <20250624121449.136416081@linuxfoundation.org>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ay5NlWkn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1750858188;
+	bh=VfXy1sSzFunuddiHtM+uLU9xQdYDLn8lHfOI5lG9CX8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ay5NlWknYmbxfUNMTCn2HwLL3f2bys3CsMz/fE6gTs4BL02RAjzY1dc+wa8Zlv8tN
+	 rmAn9zLzGZHzpdmK+IPMgiJAdU8IFvV1sgTtNaexjHB9VyTqjtAvJNyGw1q9L0PLhw
+	 +JI3qniO5tV6R/2VfDvXxK5rJNgbbSMqq6om7XiCXw4uogKZSrW3sHQAU9GLAYOyKd
+	 iLeQDZpXQ3zBTo5iLBCM3zgzHSmRc/WFcy8dVvXWrqSbMFaduwebS84xoMSalyfpEM
+	 aHglPIB0GyhRFbBBVly56RfEh1q3qqsUY91pA38V2/swHnoWhxf6bOj9YDdWCL7ZNv
+	 QPr36ygolnnGg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id EE09A17E1465;
+	Wed, 25 Jun 2025 15:29:47 +0200 (CEST)
+Message-ID: <1b173e16-f681-4256-8dd2-92db2e90ca73@collabora.com>
+Date: Wed, 25 Jun 2025 15:29:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250624121449.136416081@linuxfoundation.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 4/5] iio: adc: mt6359: Add support for MediaTek MT6363
+ PMIC AUXADC
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
+ andy@kernel.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ matthias.bgg@gmail.com, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ kernel@collabora.com
+References: <20250623120028.108809-1-angelogioacchino.delregno@collabora.com>
+ <20250623120028.108809-5-angelogioacchino.delregno@collabora.com>
+ <aFlk-l5LhgO8dnXK@smile.fi.intel.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <aFlk-l5LhgO8dnXK@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 24, 2025 at 01:30:06PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.15.4 release.
-> There are 588 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+Il 23/06/25 16:30, Andy Shevchenko ha scritto:
+> On Mon, Jun 23, 2025 at 02:00:27PM +0200, AngeloGioacchino Del Regno wrote:
+>> MediaTek MT6363 is a PMIC found on MT8196/MT6991 board designs
+>> and communicates with the SoC over SPMI.
+>>
+>> This PMIC integrates an Auxiliary ADC (AUXADC) which has a grand
+>> total of 54 ADC channels: 49 PMIC-internal channels, 2 external
+>> NTC thermistor channels and 2 generic ADC channels (mapped to 7
+>> PMIC ADC external inputs).
+>>
+>> To use a generic ADC channel it is necessary to enable one of
+>> the PMIC ADC inputs at a time and only then start the reading,
+>> so in this case it is possible to read only one external input
+>> for each generic ADC channel.
+>>
+>> Due to the lack of documentation, this implementation supports
+>> using only one generic ADC channel, hence supports reading only
+>> one external input at a time.
 > 
-> Responses should be made by Thu, 26 Jun 2025 12:13:28 +0000.
-> Anything received after that time might be too late.
+>> +#define MT6363_EXT_CHAN_MASK		GENMASK(2, 0)
+>> +#define MT6363_EXT_PURES_MASK		GENMASK(4, 3)
+>> + #define MT6363_PULLUP_RES_100K		0
+>> + #define MT6363_PULLUP_RES_OPEN		3
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.15.4-rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.15.y
-> and the diffstat can be found below.
+> I would rather expect the two spaces after #define. This most likely will break
+> syntax highlighting in (some of) the editors.
 > 
-> thanks,
-> 
-> greg k-h
 
-Tested rc2 against the Fedora build system (aarch64, ppc64le, s390x,
-x86_64), and boot tested x86_64. No regressions noted.
+I can change that no problem (or if this can be changed while applying, that'd
+buy me some time and I'd appreciate that a lot)
 
-Tested-by: Justin M. Forbes <jforbes@fedoraproject.org>
+> ...
+> 
+>> +#define MTK_PMIC_ADC_EXT_CHAN(_ch_idx, _req_idx, _req_bit, _rdy_idx, _rdy_bit,	\
+>> +			      _ext_sel_idx, _ext_sel_ch, _ext_sel_pu,		\
+>> +			      _samples, _rnum, _rdiv)				\
+> 
+> Wondering, and it's out of scope here, if we can go to use a macro for
+> initialization of struct *_fract.
+> 
+>>   	[PMIC_AUXADC_CHAN_##_ch_idx] = {					\
+>>   		.req_idx = _req_idx,						\
+>>   		.req_mask = BIT(_req_bit),					\
+>>   		.rdy_idx = _rdy_idx,						\
+>>   		.rdy_mask = BIT(_rdy_bit),					\
+>> +		.ext_sel_idx = _ext_sel_idx,					\
+>> +		.ext_sel_ch = _ext_sel_ch,					\
+>> +		.ext_sel_pu = _ext_sel_pu,					\
+>>   		.num_samples = _samples,					\
+>>   		.r_ratio = { _rnum, _rdiv }					\
+>>   	}
+> 
+> Perhaps something in math.h as
+> 
+> #define INIT_STRUCT_FRACT_UXX(n, d) ...
+
+Not sure... honestly, at a first glance it looks like a macro would only make
+a longer line and nothing else...
+
+...but - effectively - I can see a benefit for a INIT_CONST_STRUCT_FRACT_Uxx(n, d)
+where we could perform a build-time check for division by zero.
+
+I'm not sure how many users would there be of such a macro, ideas?
+
+> 
+> ...
+> 
+>> +	if (MTK_AUXADC_HAS_FLAG(cinfo, IS_SPMI)) {
+>> +		/* If the previous read succeeded, this can't fail */
+>> +		regmap_read(regmap, reg - 1, &lval);
+> 
+> No error check? lval may contain garbage here, right?
+> 
+
+No, because if the previous read succeeded, this can't fail, and also cannot ever
+possibly contain garbage (and if it does, - but again, that can't happen - there is
+no way to validate that because valid values are [0x00..0xff] anyway).
+
+>> +		val = (val << 8) | lval;
+> 
+> Is it guaranteed that lval is always less than 256 (if unsigned)?
+> 
+
+Yes, with SPMI that is guaranteed.
+
+>> +	}
+> 
+> ...
+> 
+>> +		regmap_update_bits(regmap, cinfo->regs[desc->ext_sel_idx],
+>> +				   MT6363_EXT_PURES_MASK, ext_sel);
+> 
+> No  error check?
+> 
+
+No, because if the previous reads and/or writes succeeded, it is impossible for
+this to fail :-)
+
+Cheers,
+Angelo
+
