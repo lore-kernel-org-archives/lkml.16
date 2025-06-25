@@ -1,377 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726CC13D891;
-	Wed, 25 Jun 2025 12:00:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 854AC219E0;
+	Wed, 25 Jun 2025 12:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750852847; cv=none; b=m7WEBFvRD33TrB7SlM9FojOgdQMtmbbtBp+/GIt1s9OjZ2ayEKoIMQR1N/pm34e+7Y/WfdduthBDLtAY/gSruIdiYpLbrLcVNo2kKDAlb30m2fyOAt7xhxgV+D4tRQv9RDnAjZERB0rNEuJJmMqYaXEYbtTBYylkMO+SRbzp1No=
+	t=1750852873; cv=none; b=gvmM0Gll3A4KKLwj1kQ5y9jovSqg1VPt4UiiiqCjg7PeV4W6H1keQWLyHf8Hgwv4HB4CamKatOvTw0GeMe4zarEs+5CGoP6z8fjXFWhDp3gSsTGgugUbH0mktOYO1hDpRdF8v/nq0/1IfxhBWc/9LlF8spWm+sazGBrYSbPUACQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750852847; c=relaxed/simple;
-	bh=7cF0aqI5PDJFuNWM4kmz3p/XUvk+A7U3EDN3Y5STsVY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ds8ym2VSyRQ9y374L8Luu/t90QBKxmP0RLet6r3keXAg9ckLDWLUUwo/49BOdCnpCGDaGulp82chDz6ZBGcGjPuFA5/3RHHFUMb4066eRXNY4pclYmn34HIsZOyAvjYPHOzROg7R+/Ci1c9py/Bv/acLw10M6Hi0FiPyjM521RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ffIejZJv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750852873; c=relaxed/simple;
+	bh=CXmSqwBl+ntCnLk7LlQAQLO3lA9jG4t5fgoxlUF/UQg=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZI/zey+dfDmPSq4R5TQqzA7zgPDUmhtKeYxCYghlb2So/Z1PoHEl1wgUvWg3gSazMUQDzB0COleYsqQzfPqgkqpmpClPjiL5oeu5RKku/kja7svF4vDznXHwsADbTKL/SVq/wG6yC2QTDSNakULFB2tmBy28628Ekr5lJI2ZSCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TvpaHKve; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffIejZJv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E0BFC4CEEA;
-	Wed, 25 Jun 2025 12:00:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750852846;
-	bh=7cF0aqI5PDJFuNWM4kmz3p/XUvk+A7U3EDN3Y5STsVY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ffIejZJvgDJCbY6NXCizv6KCYNqTbc5XfpHc4XFmq6oncQ8xrOF+FWLhOg3vbH95E
-	 ohksqaGPq2celn26sKIzAe3f8YSUuESEsDAF75BqQCiPxczkSBoSQmEAnj+EtkLkgi
-	 st4laob1MWmC3vbYiYdhzf5KjI/0i/nVRX9ewqAhTVjmnd4oXkzHQtB+SBaYizNWEI
-	 0Q9uVvK8bHbsDlBQEAgsjoPetP/C78nXX8qsZaddANBVKc0G9WK/9yMJfeHVAY7Lcq
-	 xcT+TgIK9yDcTHKTyUX9ejefk6Wk/bWYjoElTqGJjkyHnEXn8Yt42Zwz0Qqq67g0oH
-	 GTBamnvEE4bTg==
-Date: Wed, 25 Jun 2025 15:00:43 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	Nicolas Ferre <nicolas.ferre@microchip.com>,
-	Naveen N Rao <naveen@kernel.org>,
-	Sumit Garg <sumit.garg@kernel.org>, linux-integrity@vger.kernel.org,
-	Peter Huewe <peterhuewe@gmx.de>,
-	Jens Wiklander <jens.wiklander@linaro.org>,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Nicholas Piggin <npiggin@gmail.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Michael Ellerman <mpe@ellerman.id.au>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
-	Madhavan Srinivasan <maddy@linux.ibm.com>
-Subject: Re: [PATCH v6 1/4] tpm: add bufsiz parameter in the .send callback
-Message-ID: <aFvk67ZGNFezJ8Vr@kernel.org>
-References: <20250620130810.99069-1-sgarzare@redhat.com>
- <20250620130810.99069-2-sgarzare@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TvpaHKve"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-450ce671a08so41323375e9.3;
+        Wed, 25 Jun 2025 05:01:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750852870; x=1751457670; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yHefIg2+8X/i5cCCS+NNBXYEiweXVKRtTurM+edGkHs=;
+        b=TvpaHKvegtO7W0rHhMZtW449+K/EV1lhH91S6caoSvD3rGiIdBjNQx6PRnKxPmxACB
+         9zxWe2dzuAbjlQ2+a3GaTFEm6uZaCeiW7po0G/pXL7YTS6OMxszdcINKgqnPnuaNO4tr
+         MpT28ErcPGa2Mpw0RLAcC73fhJwO9pqEHdCM+bG2F012YqI6l7N9DUYWnEoOytmI2wTy
+         hDK9U2hlMwr36JaxgGR4WTZrVFQBLy5OsP5JOJaXN7FY4cTFgEPRNUEnN75e5nsSP0/o
+         SiyzZvUsqelbIlxs0+ozObWjZ+nat/4jDLVKMBZc0ZYASTYd+dO1zOyqTAF1vSllR/6E
+         EXpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750852870; x=1751457670;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yHefIg2+8X/i5cCCS+NNBXYEiweXVKRtTurM+edGkHs=;
+        b=fmh2Hi77qcidzEaEEt4D5FYss5vHG8VzRsd8/RrS7ebz657pabhWky8aONHW+F6vMc
+         4qWKUp7APrRvsm8p+0xozYZ4G44w8UpI2cMlUMN6JerdGi3WPBxzhcEwZgSG7R9PoB1R
+         GmdvZ1/DWBH83mTAHa7bwyB3KeONKlRTWPhwujfCVwrkefXLvMlFropuZolTRw1VyNnF
+         bQImO7fgTETmEagktM33EcCeQ+wIl2r1AiZTdMItYXgSv00jZCLw8fDbPdBK0ZZ2Ud7S
+         lXyOEzCjQXcWp+9RxJx8ChgA8/v52iMnXhsSHQ5rukyvpStdUa+fc+EJrx8/fF2eEtFW
+         MWAg==
+X-Forwarded-Encrypted: i=1; AJvYcCVb7KFHlGhqJc7jBVy3386Gh3kVy5NxBi5UvGNBF4kHNQipu3saLNjQKfMxj9EI1OP2xVtdtDMMUTb6@vger.kernel.org, AJvYcCXbkZgWmOqaeGl62X6QwyqOQwXGHBZdupDXEaUhkgTn54+L3mgcsryaChI/0FjXyv1qUmmqGhLdMtctPYQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwOMQsAjMV4ySDkLtJuhgyalblDSdddzSlgNMyEk6HXD0cwtPBC
+	GHu91WrNwQ7/tVNPG9dMR+iVT4oBmPRD3le0cfNTMjc9E2+5DOViNPvZ
+X-Gm-Gg: ASbGncuk5TcubK6nPbPvm4NLf0M04EThs8AaaBFg4wdZQ4iFKYe90o1QWIEc67rEqmi
+	r4RsA3aLdLXJ1hDcZHTa/x9Q4v+EJg1p6PoOOC/JoeSqxp93zYo+KcDfTPhrwGgdO9hzRnYJWoq
+	Q9LfFlCqk62/jCWbAMQqEd5BxKI9qxRZoXP95D9xp3Mz9j5tMCTXUQqBiq9CuCrAnJp7mZ8Oir7
+	zoLM8WX7+Y9mYiHOlo31LunflqVkWEGymewBo7BWuRXC8VwAYYCxJVK3PE3eHQx3hYjpbaEdF2Z
+	vPqLJMBc4O8+lT/OHN5bDpmRWvBgUWoBaeWvYtdY1RmipdytPjxPeV1MAgn1rIkNfBrmpkgZpfT
+	AgXop6nryRP923Wc0bQ==
+X-Google-Smtp-Source: AGHT+IFTWlrNcKJ5mnN361DuQVQviW6Cwd7jiDuBvnqI/hGGoBQlP2Vju7DwNXUSJ9DFLMJsKmUovA==
+X-Received: by 2002:a05:6000:3c7:b0:3a4:e609:dc63 with SMTP id ffacd0b85a97d-3a6ed631bafmr1718435f8f.20.1750852869462;
+        Wed, 25 Jun 2025 05:01:09 -0700 (PDT)
+Received: from Ansuel-XPS. (93-34-88-225.ip49.fastwebnet.it. [93.34.88.225])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805eeffsm4437090f8f.34.2025.06.25.05.01.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 05:01:08 -0700 (PDT)
+Message-ID: <685be504.050a0220.1095cd.0c7f@mx.google.com>
+X-Google-Original-Message-ID: <aFvlAjNbUwuB7Cy8@Ansuel-XPS.>
+Date: Wed, 25 Jun 2025 14:01:06 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: [PATCH v16 2/2] pwm: airoha: Add support for EN7581 SoC
+References: <20250625000059.20040-1-ansuelsmth@gmail.com>
+ <20250625000059.20040-2-ansuelsmth@gmail.com>
+ <dehsalp2za4i6jgod6ej6gqhestljo7qost66jzmql52n2zecp@imtgipg24lv5>
+ <685ba7d9.df0a0220.e1b22.e6c2@mx.google.com>
+ <aFvbDdVdoroASlM6@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250620130810.99069-2-sgarzare@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aFvbDdVdoroASlM6@smile.fi.intel.com>
 
-On Fri, Jun 20, 2025 at 03:08:07PM +0200, Stefano Garzarella wrote:
-> From: Stefano Garzarella <sgarzare@redhat.com>
+On Wed, Jun 25, 2025 at 02:18:37PM +0300, Andy Shevchenko wrote:
+> On Wed, Jun 25, 2025 at 09:40:07AM +0200, Christian Marangi wrote:
+> > On Wed, Jun 25, 2025 at 09:24:33AM +0200, Uwe Kleine-König wrote:
+> > > On Wed, Jun 25, 2025 at 02:00:39AM +0200, Christian Marangi wrote:
 > 
-> Add a new `bufsiz` parameter to the `.send` callback in `tpm_class_ops`.
-> This parameter will allow drivers to differentiate between the actual
-> command length to send and the total buffer size. Currently `bufsiz` is
-> not used, but it will be used to implement devices with synchronous send()
-> to send the command and receive the response on the same buffer.
+> ...
 > 
-> Also rename the previous parameter `len` to `cmd_len` in the declaration
-> to make it clear that it contains the length in bytes of the command
-> stored in the buffer. The semantics don't change and it can be used as
-> before by drivers. This is an optimization since the drivers could get it
-> from the header, but let's avoid duplicating code.
+> > > > +	/*
+> > > > +	 * Period goes at 4ns step, normalize it to check if we can
+> > > > +	 * share a generator.
+> > > > +	 */
+> > > > +	period_ns = rounddown_u64(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
+> > > 
+> > > I don't understand why you need that. If you clamp to
+> > > AIROHA_PWM_PERIOD_MAX_NS first, you don't need the (expensive) 64-bit
+> > > operation. If you compare using ticks instead of ns you don't even need
+> > > to round down, but just do the division that you end up doing anyhow.
+> > 
+> > Correct me if I'm wrong but 
+> > 
+> > #define NSEC_PER_SEC	1000000000L
+> > #define AIROHA_PWM_PERIOD_MAX_NS       (1 * NSEC_PER_SEC)
+> > 
+> > doesn't fit u32 so an u64 is needed.
 > 
-> While we are here, resolve a checkpatch warning:
->   WARNING: Unnecessary space before function pointer arguments
->   #66: FILE: include/linux/tpm.h:90:
->   +	int (*send) (struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> 
-> Suggested-by: Jarkko Sakkinen <jarkko@kernel.org>
-> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
-> ---
-> v5:
-> - changed order and parameter names to match tpm_try_transmit() [Jarkko]
-> v4:
-> - rework the commit description [Jarkko]
-> ---
->  include/linux/tpm.h                  | 3 ++-
->  drivers/char/tpm/st33zp24/st33zp24.c | 2 +-
->  drivers/char/tpm/tpm-interface.c     | 2 +-
->  drivers/char/tpm/tpm_atmel.c         | 3 ++-
->  drivers/char/tpm/tpm_crb.c           | 2 +-
->  drivers/char/tpm/tpm_ftpm_tee.c      | 4 +++-
->  drivers/char/tpm/tpm_i2c_atmel.c     | 3 ++-
->  drivers/char/tpm/tpm_i2c_infineon.c  | 3 ++-
->  drivers/char/tpm/tpm_i2c_nuvoton.c   | 3 ++-
->  drivers/char/tpm/tpm_ibmvtpm.c       | 6 ++++--
->  drivers/char/tpm/tpm_infineon.c      | 3 ++-
->  drivers/char/tpm/tpm_nsc.c           | 3 ++-
->  drivers/char/tpm/tpm_svsm.c          | 3 ++-
->  drivers/char/tpm/tpm_tis_core.c      | 3 ++-
->  drivers/char/tpm/tpm_tis_i2c_cr50.c  | 6 ++++--
->  drivers/char/tpm/tpm_vtpm_proxy.c    | 4 +++-
->  drivers/char/tpm/xen-tpmfront.c      | 3 ++-
->  17 files changed, 37 insertions(+), 19 deletions(-)
-> 
-> diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> index a3d8305e88a5..cafe8c283e88 100644
-> --- a/include/linux/tpm.h
-> +++ b/include/linux/tpm.h
-> @@ -87,7 +87,8 @@ struct tpm_class_ops {
->  	const u8 req_complete_val;
->  	bool (*req_canceled)(struct tpm_chip *chip, u8 status);
->  	int (*recv) (struct tpm_chip *chip, u8 *buf, size_t len);
-> -	int (*send) (struct tpm_chip *chip, u8 *buf, size_t len);
-> +	int (*send)(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +		    size_t cmd_len);
->  	void (*cancel) (struct tpm_chip *chip);
->  	u8 (*status) (struct tpm_chip *chip);
->  	void (*update_timeouts)(struct tpm_chip *chip,
-> diff --git a/drivers/char/tpm/st33zp24/st33zp24.c b/drivers/char/tpm/st33zp24/st33zp24.c
-> index c0771980bc2f..2ed7815e4899 100644
-> --- a/drivers/char/tpm/st33zp24/st33zp24.c
-> +++ b/drivers/char/tpm/st33zp24/st33zp24.c
-> @@ -300,7 +300,7 @@ static irqreturn_t tpm_ioserirq_handler(int irq, void *dev_id)
->   * send TPM commands through the I2C bus.
->   */
->  static int st33zp24_send(struct tpm_chip *chip, unsigned char *buf,
-> -			 size_t len)
-> +			 size_t bufsiz, size_t len)
->  {
->  	struct st33zp24_dev *tpm_dev = dev_get_drvdata(&chip->dev);
->  	u32 status, i, size, ordinal;
-> diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
-> index 8d7e4da6ed53..816b7c690bc9 100644
-> --- a/drivers/char/tpm/tpm-interface.c
-> +++ b/drivers/char/tpm/tpm-interface.c
-> @@ -106,7 +106,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
->  		return -E2BIG;
->  	}
->  
-> -	rc = chip->ops->send(chip, buf, count);
-> +	rc = chip->ops->send(chip, buf, bufsiz, count);
->  	if (rc < 0) {
->  		if (rc != -EPIPE)
->  			dev_err(&chip->dev,
-> diff --git a/drivers/char/tpm/tpm_atmel.c b/drivers/char/tpm/tpm_atmel.c
-> index 54a0360a3c95..f25faf468bba 100644
-> --- a/drivers/char/tpm/tpm_atmel.c
-> +++ b/drivers/char/tpm/tpm_atmel.c
-> @@ -148,7 +148,8 @@ static int tpm_atml_recv(struct tpm_chip *chip, u8 *buf, size_t count)
->  	return size;
->  }
->  
-> -static int tpm_atml_send(struct tpm_chip *chip, u8 *buf, size_t count)
-> +static int tpm_atml_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +			 size_t count)
->  {
->  	struct tpm_atmel_priv *priv = dev_get_drvdata(&chip->dev);
->  	int i;
-> diff --git a/drivers/char/tpm/tpm_crb.c b/drivers/char/tpm/tpm_crb.c
-> index 876edf2705ab..ed97344f2324 100644
-> --- a/drivers/char/tpm/tpm_crb.c
-> +++ b/drivers/char/tpm/tpm_crb.c
-> @@ -426,7 +426,7 @@ static int tpm_crb_smc_start(struct device *dev, unsigned long func_id)
->  }
->  #endif
->  
-> -static int crb_send(struct tpm_chip *chip, u8 *buf, size_t len)
-> +static int crb_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz, size_t len)
->  {
->  	struct crb_priv *priv = dev_get_drvdata(&chip->dev);
->  	int rc = 0;
-> diff --git a/drivers/char/tpm/tpm_ftpm_tee.c b/drivers/char/tpm/tpm_ftpm_tee.c
-> index 53ba28ccd5d3..dbad83bf798e 100644
-> --- a/drivers/char/tpm/tpm_ftpm_tee.c
-> +++ b/drivers/char/tpm/tpm_ftpm_tee.c
-> @@ -63,13 +63,15 @@ static int ftpm_tee_tpm_op_recv(struct tpm_chip *chip, u8 *buf, size_t count)
->   * ftpm_tee_tpm_op_send() - send TPM commands through the TEE shared memory.
->   * @chip:	the tpm_chip description as specified in driver/char/tpm/tpm.h
->   * @buf:	the buffer to send.
-> + * @bufsiz:	the size of the buffer.
->   * @len:	the number of bytes to send.
->   *
->   * Return:
->   *	In case of success, returns 0.
->   *	On failure, -errno
->   */
-> -static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t len)
-> +static int ftpm_tee_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +				size_t len)
->  {
->  	struct ftpm_tee_private *pvt_data = dev_get_drvdata(chip->dev.parent);
->  	size_t resp_len;
-> diff --git a/drivers/char/tpm/tpm_i2c_atmel.c b/drivers/char/tpm/tpm_i2c_atmel.c
-> index d1d27fdfe523..4f229656a8e2 100644
-> --- a/drivers/char/tpm/tpm_i2c_atmel.c
-> +++ b/drivers/char/tpm/tpm_i2c_atmel.c
-> @@ -37,7 +37,8 @@ struct priv_data {
->  	u8 buffer[sizeof(struct tpm_header) + 25];
->  };
->  
-> -static int i2c_atmel_send(struct tpm_chip *chip, u8 *buf, size_t len)
-> +static int i2c_atmel_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +			  size_t len)
->  {
->  	struct priv_data *priv = dev_get_drvdata(&chip->dev);
->  	struct i2c_client *client = to_i2c_client(chip->dev.parent);
-> diff --git a/drivers/char/tpm/tpm_i2c_infineon.c b/drivers/char/tpm/tpm_i2c_infineon.c
-> index 81d8a78dc655..bdf1f329a679 100644
-> --- a/drivers/char/tpm/tpm_i2c_infineon.c
-> +++ b/drivers/char/tpm/tpm_i2c_infineon.c
-> @@ -514,7 +514,8 @@ static int tpm_tis_i2c_recv(struct tpm_chip *chip, u8 *buf, size_t count)
->  	return size;
->  }
->  
-> -static int tpm_tis_i2c_send(struct tpm_chip *chip, u8 *buf, size_t len)
-> +static int tpm_tis_i2c_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +			    size_t len)
->  {
->  	int rc, status;
->  	ssize_t burstcnt;
-> diff --git a/drivers/char/tpm/tpm_i2c_nuvoton.c b/drivers/char/tpm/tpm_i2c_nuvoton.c
-> index 3c3ee5f551db..d44903b29929 100644
-> --- a/drivers/char/tpm/tpm_i2c_nuvoton.c
-> +++ b/drivers/char/tpm/tpm_i2c_nuvoton.c
-> @@ -350,7 +350,8 @@ static int i2c_nuvoton_recv(struct tpm_chip *chip, u8 *buf, size_t count)
->   * tpm.c can skip polling for the data to be available as the interrupt is
->   * waited for here
->   */
-> -static int i2c_nuvoton_send(struct tpm_chip *chip, u8 *buf, size_t len)
-> +static int i2c_nuvoton_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +			    size_t len)
->  {
->  	struct priv_data *priv = dev_get_drvdata(&chip->dev);
->  	struct device *dev = chip->dev.parent;
-> diff --git a/drivers/char/tpm/tpm_ibmvtpm.c b/drivers/char/tpm/tpm_ibmvtpm.c
-> index 76d048f63d55..4734a69406ce 100644
-> --- a/drivers/char/tpm/tpm_ibmvtpm.c
-> +++ b/drivers/char/tpm/tpm_ibmvtpm.c
-> @@ -191,13 +191,15 @@ static int tpm_ibmvtpm_resume(struct device *dev)
->   * tpm_ibmvtpm_send() - Send a TPM command
->   * @chip:	tpm chip struct
->   * @buf:	buffer contains data to send
-> - * @count:	size of buffer
-> + * @bufsiz:	size of the buffer
-> + * @count:	length of the command
->   *
->   * Return:
->   *   0 on success,
->   *   -errno on error
->   */
-> -static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
-> +static int tpm_ibmvtpm_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +			    size_t count)
->  {
->  	struct ibmvtpm_dev *ibmvtpm = dev_get_drvdata(&chip->dev);
->  	bool retry = true;
-> diff --git a/drivers/char/tpm/tpm_infineon.c b/drivers/char/tpm/tpm_infineon.c
-> index 2d2ae37153ba..7638b65b851b 100644
-> --- a/drivers/char/tpm/tpm_infineon.c
-> +++ b/drivers/char/tpm/tpm_infineon.c
-> @@ -312,7 +312,8 @@ static int tpm_inf_recv(struct tpm_chip *chip, u8 * buf, size_t count)
->  	return -EIO;
->  }
->  
-> -static int tpm_inf_send(struct tpm_chip *chip, u8 * buf, size_t count)
-> +static int tpm_inf_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +			size_t count)
->  {
->  	int i;
->  	int ret;
-> diff --git a/drivers/char/tpm/tpm_nsc.c b/drivers/char/tpm/tpm_nsc.c
-> index 0f62bbc940da..879ac88f5783 100644
-> --- a/drivers/char/tpm/tpm_nsc.c
-> +++ b/drivers/char/tpm/tpm_nsc.c
-> @@ -178,7 +178,8 @@ static int tpm_nsc_recv(struct tpm_chip *chip, u8 * buf, size_t count)
->  	return size;
->  }
->  
-> -static int tpm_nsc_send(struct tpm_chip *chip, u8 * buf, size_t count)
-> +static int tpm_nsc_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +			size_t count)
->  {
->  	struct tpm_nsc_priv *priv = dev_get_drvdata(&chip->dev);
->  	u8 data;
-> diff --git a/drivers/char/tpm/tpm_svsm.c b/drivers/char/tpm/tpm_svsm.c
-> index 4280edf427d6..0847cbf450b4 100644
-> --- a/drivers/char/tpm/tpm_svsm.c
-> +++ b/drivers/char/tpm/tpm_svsm.c
-> @@ -25,7 +25,8 @@ struct tpm_svsm_priv {
->  	void *buffer;
->  };
->  
-> -static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t len)
-> +static int tpm_svsm_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +			 size_t len)
->  {
->  	struct tpm_svsm_priv *priv = dev_get_drvdata(&chip->dev);
->  	int ret;
-> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
-> index ed0d3d8449b3..4b12c4b9da8b 100644
-> --- a/drivers/char/tpm/tpm_tis_core.c
-> +++ b/drivers/char/tpm/tpm_tis_core.c
-> @@ -580,7 +580,8 @@ static int tpm_tis_send_main(struct tpm_chip *chip, const u8 *buf, size_t len)
->  	return rc;
->  }
->  
-> -static int tpm_tis_send(struct tpm_chip *chip, u8 *buf, size_t len)
-> +static int tpm_tis_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +			size_t len)
->  {
->  	int rc, irq;
->  	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
-> diff --git a/drivers/char/tpm/tpm_tis_i2c_cr50.c b/drivers/char/tpm/tpm_tis_i2c_cr50.c
-> index 3b55a7b05c46..fc6891a0b693 100644
-> --- a/drivers/char/tpm/tpm_tis_i2c_cr50.c
-> +++ b/drivers/char/tpm/tpm_tis_i2c_cr50.c
-> @@ -546,13 +546,15 @@ static int tpm_cr50_i2c_tis_recv(struct tpm_chip *chip, u8 *buf, size_t buf_len)
->   * tpm_cr50_i2c_tis_send() - TPM transmission callback.
->   * @chip:	A TPM chip.
->   * @buf:	Buffer to send.
-> - * @len:	Buffer length.
-> + * @bufsiz:	Buffer size.
-> + * @len:	Command length.
->   *
->   * Return:
->   * - 0:		Success.
->   * - -errno:	A POSIX error code.
->   */
-> -static int tpm_cr50_i2c_tis_send(struct tpm_chip *chip, u8 *buf, size_t len)
-> +static int tpm_cr50_i2c_tis_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +				 size_t len)
->  {
->  	size_t burstcnt, limit, sent = 0;
->  	u8 tpm_go[4] = { TPM_STS_GO };
-> diff --git a/drivers/char/tpm/tpm_vtpm_proxy.c b/drivers/char/tpm/tpm_vtpm_proxy.c
-> index 8fe4a01eea12..0818bb517805 100644
-> --- a/drivers/char/tpm/tpm_vtpm_proxy.c
-> +++ b/drivers/char/tpm/tpm_vtpm_proxy.c
-> @@ -321,12 +321,14 @@ static int vtpm_proxy_is_driver_command(struct tpm_chip *chip,
->   *
->   * @chip: tpm chip to use
->   * @buf: send buffer
-> + * @bufsiz: size of the buffer
->   * @count: bytes to send
->   *
->   * Return:
->   *      0 in case of success, negative error value otherwise.
->   */
-> -static int vtpm_proxy_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t count)
-> +static int vtpm_proxy_tpm_op_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +				  size_t count)
->  {
->  	struct proxy_dev *proxy_dev = dev_get_drvdata(&chip->dev);
->  
-> diff --git a/drivers/char/tpm/xen-tpmfront.c b/drivers/char/tpm/xen-tpmfront.c
-> index 80cca3b83b22..556bf2256716 100644
-> --- a/drivers/char/tpm/xen-tpmfront.c
-> +++ b/drivers/char/tpm/xen-tpmfront.c
-> @@ -131,7 +131,8 @@ static size_t shr_data_offset(struct vtpm_shared_page *shr)
->  	return struct_size(shr, extra_pages, shr->nr_extra_pages);
->  }
->  
-> -static int vtpm_send(struct tpm_chip *chip, u8 *buf, size_t count)
-> +static int vtpm_send(struct tpm_chip *chip, u8 *buf, size_t bufsiz,
-> +		     size_t count)
->  {
->  	struct tpm_private *priv = dev_get_drvdata(&chip->dev);
->  	struct vtpm_shared_page *shr = priv->shr;
-> -- 
-> 2.49.0
+> I'm not sure what was the exact question, but u32 can hold up to 4*10^9,
+> this is just 1*10^9.
 > 
 
-Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Ok feeling stupid... was treating 1000000000 as 0x1000000000 :D
 
-BR, Jarkko
+-- 
+	Ansuel
