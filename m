@@ -1,133 +1,200 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC822307498;
-	Wed, 25 Jun 2025 06:10:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30802307498
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750831813; cv=none; b=ev1N62trm3C70nsgcdEGst5USo+VRqle3a8t2keH3uIk1f6C55CFSswYzuGKfiz8JnCppj3FtWgpUZL8X3YSq5WjTiJ4RagjhM3wn+OrncM0hoQjSnLAmLbJjv205d+E6nit4sTdMSlN1mxTBv8ZC7mMVtVbXbmlitMRCi73aDI=
+	t=1750831902; cv=none; b=FRUFjpcldfj78zpzB2QV80LQN4Ya8uKYRBix9sCIQ2TQSnA1FqXusk93YC4KGqpdJQSoLlE7NJA0YRKY8JW1o7xw1gfNFXfvmXLMgCZ8eZwSFD2EWgnm0t8QK/zw5jOX5PYfP3WUIvTd3zP7DKCC/8J9FNZINCEtyy9p+6fRvZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750831813; c=relaxed/simple;
-	bh=TEf+0zBo4DYSNOvhVuH60cDQ+vbZMzygF71dL+Jh798=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dLEcULn9nFlbC9/VAV6UGZsvcoLv40AGFcdV5YMxdwBIRWLVvzYRvJPh3Ge+E8jvYWgFBGdOnMmxtOtrvCIbsWy4mKaL4UZ9DHSL0ej/PkHYEgaSOf2i0WaBEhJrAMVTBgJYj6oEgM+ixSqPYMYkqJ0KjeSQBjT/37eSx5kCeF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YHt7DH9H; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750831902; c=relaxed/simple;
+	bh=66IhicLmquIrT8WLtYhnwtaZzHKT0a9JlXmR82CzU6g=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=OkxYp6K4pLe4ZuKa5RRpkLYVCr/8rRO4r2f+jYCdBIeTCaztbg9WzL2OpIsPpLTfmmDhUYs4LC+RngcebRS4YxruRwjjo0QdRTA8W1C8G5Uqh6StO692uX2Ysfp8bzoiGfP+daO282Tkue0WEKxIcyVgDgrBicD4mOUdMwInqwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=V0NAbayk; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YHt7DH9H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 889EAC4CEEA;
-	Wed, 25 Jun 2025 06:10:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750831813;
-	bh=TEf+0zBo4DYSNOvhVuH60cDQ+vbZMzygF71dL+Jh798=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YHt7DH9HLA5kBMzdtXsLfXrnOhUdtHDP4wZC/HNvVcwcIAn+kqlRrPXMZk/Trh2QJ
-	 oQ/YvsxqF8mGocksilcrPtZgaEmeXWDo7lrvXCG1dJ9OjyOo1BgEhZ9gIt3E5y7ZP1
-	 YI8Z+06o7onSqrN9VUIuQ1PAR1HdvZU/I4LLULSx991gQ8ZlSNfxMJCUBueVY+v+4m
-	 ldMMqaTZnEKxw8T0pQllV7ZrLNEoPfWHWlMINdGN2lUe7qUMn/qFkZ1zVKmVT7bLVh
-	 lsJOmzEFc2CGOSO8AjAiduJRTDDwuUOSMPiUm6aAH2PNjwaheLw/d7xxLlZDJu1/4o
-	 3lPOZV/1BQYEA==
-Message-ID: <22d911a2-3bf1-45ee-9037-c6d8cbd686fa@kernel.org>
-Date: Wed, 25 Jun 2025 08:10:04 +0200
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="V0NAbayk"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1750831895; h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	bh=76DnGSmj2vkYfuP0EwAnTPcRa1vP+wuz/cSNTM/iBy8=;
+	b=V0NAbayk2W5GH7/2EIFZf+Li+JrQnbDn2CqAiT4ymuQB6BL1dRngKWz00KgvEEsJ7/fgnYcBYqWtU2kr5Nihf5yUgufP56TD4hJdM8kKdzY5oNVVgM8zz8cvdv4RIrEyIx7M9k1IfdGJ2bu2pIob6McbdoY3C3nYM8x7QE4bJ6A=
+Received: from DESKTOP-5N7EMDA(mailfrom:ying.huang@linux.alibaba.com fp:SMTPD_---0WetkeAe_1750831892 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Wed, 25 Jun 2025 14:11:33 +0800
+From: "Huang, Ying" <ying.huang@linux.alibaba.com>
+To: Li Zhijian <lizhijian@fujitsu.com>
+Cc: linux-mm@kvack.org,  akpm@linux-foundation.org,
+  linux-kernel@vger.kernel.org,  y-goto@fujitsu.com,  Ingo Molnar
+ <mingo@redhat.com>,  Peter Zijlstra <peterz@infradead.org>,  Juri Lelli
+ <juri.lelli@redhat.com>,  Vincent Guittot <vincent.guittot@linaro.org>,
+  Dietmar Eggemann <dietmar.eggemann@arm.com>,  Steven Rostedt
+ <rostedt@goodmis.org>,  Ben Segall <bsegall@google.com>,  Mel Gorman
+ <mgorman@suse.de>,  Valentin Schneider <vschneid@redhat.com>,
+  lkp@intel.com
+Subject: Re: [PATCH RFC v2] mm: memory-tiering: Fix PGPROMOTE_CANDIDATE
+ accounting
+In-Reply-To: <20250625021352.2291544-1-lizhijian@fujitsu.com> (Li Zhijian's
+	message of "Wed, 25 Jun 2025 10:13:52 +0800")
+References: <20250625021352.2291544-1-lizhijian@fujitsu.com>
+Date: Wed, 25 Jun 2025 14:11:32 +0800
+Message-ID: <877c10mju3.fsf@DESKTOP-5N7EMDA>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 2/9] dt-bindings: soc: imx-blk-ctrl: add i.MX91
- blk-ctrl compatible
-To: Frank Li <Frank.li@nxp.com>
-Cc: Joy Zou <joy.zou@nxp.com>, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
- catalin.marinas@arm.com, will@kernel.org, andrew+netdev@lunn.ch,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com,
- ulf.hansson@linaro.org, richardcochran@gmail.com, kernel@pengutronix.de,
- festevam@gmail.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, imx@lists.linux.dev,
- linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-pm@vger.kernel.or,
- ye.li@nxp.com, ping.bai@nxp.com, aisheng.dong@nxp.com
-References: <20250623095732.2139853-1-joy.zou@nxp.com>
- <20250623095732.2139853-3-joy.zou@nxp.com>
- <urgfsmkl25woqy5emucfkqs52qu624po6rd532hpusg3fdnyg3@s5iwmhnfsi26>
- <aFq7WJ3Fqe9p0EhA@lizhi-Precision-Tower-5810>
- <e32c3a47-e32e-4f93-becb-ebad31065b73@kernel.org>
- <aFr3yExb6vObn5W4@lizhi-Precision-Tower-5810>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <aFr3yExb6vObn5W4@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 
-On 24/06/2025 21:08, Frank Li wrote:
->>>>> +        clock-names:
->>>>> +          items:
->>>>> +            - const: apb
->>>>> +            - const: axi
->>>>> +            - const: nic
->>>>> +            - const: disp
->>>>> +            - const: cam
->>>>> +            - const: lcdif
->>>>> +            - const: isi
->>>>> +            - const: csi
->>>>
->>>> No, look at other bindings how they share clock lists.
->>>
->>> Sorry, this method is what I suggested. becuase there are pxp between cam
->>> and lcdif, can't use simple minItems/maxItems to limit list.
->>
->> The point is to put new items, so pxp, at the end.
-> 
-> There are already a list for imx93. If change list order, it will break
-> ABI. This was rejected at other binding doc review.
-I see, I mixed the SoCs. It is a pity you upstream that way and do not
-try to make the list common. Anyway names indeed need to be constrained
-per variant, but the rest of the comments stay.
+Li Zhijian <lizhijian@fujitsu.com> writes:
 
-Best regards,
-Krzysztof
+> Goto-san reported confusing pgpromote statistics where
+> the pgpromote_success count significantly exceeded pgpromote_candidate.
+>
+> On a system with three nodes (nodes 0-1: DRAM 4GB, node 2: NVDIMM 4GB):
+>  # Enable demotion only
+>  echo 1 > /sys/kernel/mm/numa/demotion_enabled
+>  numactl -m 0-1 memhog -r200 3500M >/dev/null &
+>  pid=$!
+>  sleep 2
+>  numactl memhog -r100 2500M >/dev/null &
+>  sleep 10
+>  kill -9 $pid # terminate the 1st memhog
+>  # Enable promotion
+>  echo 2 > /proc/sys/kernel/numa_balancing
+>
+> After a few seconds, we observeed `pgpromote_candidate < pgpromote_success`
+> $ grep -e pgpromote /proc/vmstat
+> pgpromote_success 2579
+> pgpromote_candidate 0
+>
+> In this scenario, after terminating the first memhog, the conditions for
+> pgdat_free_space_enough() are quickly met, triggering promotion.
+> However, these migrated pages are only accounted for in PGPROMOTE_SUCCESS,
+> not in PGPROMOTE_CANDIDATE.
+>
+> This update increments PGPROMOTE_CANDIDATE within the free space branch
+> when a promotion decision is made, which may alter the mechanism of the
+> rate limit. Consequently, it becomes easier to reach the rate limit than
+> it was previously.
+>
+> For example:
+> Rate Limit = 100 pages/sec
+> Scenario:
+>   T0: 90 free-space migrations
+>   T0+100ms: 20-page migration request
+>
+> Before:
+>   Rate limit is *not* reached: 0 + 20 = 20 < 100
+>   PGPROMOTE_CANDIDATE: 20
+> After:
+>   Rate limit is reached: 90 + 20 = 110 > 100
+>   PGPROMOTE_CANDIDATE: 110
+>
+> Due to the fact that the rate limit mechanism recalculates every second,
+> theoretically, only within that one second can the transition from
+> pgdat_free_space_enough() to !pgdat_free_space_enough() in top-tier
+> remaining memory be affected.
+>
+> Moreover, previously, within this one-second span, promotions caused by
+> pgdat_free_space_enough() are not restricted by rate limits.
+> This theoretically makes it easier to cause application latency.
+>
+> The current modification can better control the rate limit in cases of
+> transition from pgdat_free_space_enough() to !pgdat_free_space_enough()
+> within one second.
+>
+> Cc: Huang Ying <ying.huang@linux.alibaba.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Valentin Schneider <vschneid@redhat.com>
+> Reported-by: Yasunori Gotou (Fujitsu) <y-goto@fujitsu.com>
+> Signed-off-by: Li Zhijian <lizhijian@fujitsu.com>
+> ---
+> V2:
+> Fix compiling error # Reported by LKP
+>
+> As Ying suggested, we need to assess whether this change causes regression.
+> However, considering the stringent conditions this patch involves,
+> properly evaluating it may be challenging, as the outcomes depend on your
+> perspective. Much like in a zero-sum game, if someone benefits, another
+> might lose.
+>
+> If there are subsequent results, I will update them here.
+
+I understand that it's hard to identify all possible regressions.
+However, at least done some test to check some common use cases?
+
+> Cc: lkp@intel.com
+> Here, I hope to leverage the existing LKP benchmark to evaluate the
+> potential impacts. The ideal evaluation conditions are:
+> 1. Installed with DRAM + NVDIMM (which can be simulated).
+> 2. NVDIMM is used as system RAM (configurable via daxctl).
+> 3. Promotion is enabled (`echo 2 > /proc/sys/kernel/numa_balancing`).
+>
+> Alternative:
+> We can indeed eliminate the potential impact within
+> pgdat_free_space_enough(), so that the rate limit behavior remains as
+> before.
+>
+> For instance, consider the following change:
+>                 if (pgdat_free_space_enough(pgdat)) {
+>                         /* workload changed, reset hot threshold */
+>                         pgdat->nbp_threshold = 0;
+> +                        pgdat->nbp_rl_nr_cand += nr;
+>                         mod_node_page_state(pgdat, PGPROMOTE_CANDIDATE, nr);
+>                         return true;
+>                 }
+>
+> RFC:
+> I am uncertain whether we originally intended for this discrepancy or if
+> it was overlooked.
+>
+> However, the current situation where pgpromote_candidate < pgpromote_success
+> is indeed confusing when interpreted literally.
+> ---
+>  kernel/sched/fair.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 7a14da5396fb..505b40f8897a 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -1940,11 +1940,13 @@ bool should_numa_migrate_memory(struct task_struct *p, struct folio *folio,
+>  		struct pglist_data *pgdat;
+>  		unsigned long rate_limit;
+>  		unsigned int latency, th, def_th;
+> +		long nr = folio_nr_pages(folio);
+>  
+>  		pgdat = NODE_DATA(dst_nid);
+>  		if (pgdat_free_space_enough(pgdat)) {
+>  			/* workload changed, reset hot threshold */
+>  			pgdat->nbp_threshold = 0;
+> +			mod_node_page_state(pgdat, PGPROMOTE_CANDIDATE, nr);
+>  			return true;
+>  		}
+>  
+> @@ -1958,8 +1960,7 @@ bool should_numa_migrate_memory(struct task_struct *p, struct folio *folio,
+>  		if (latency >= th)
+>  			return false;
+>  
+> -		return !numa_promotion_rate_limit(pgdat, rate_limit,
+> -						  folio_nr_pages(folio));
+> +		return !numa_promotion_rate_limit(pgdat, rate_limit, nr);
+>  	}
+>  
+>  	this_cpupid = cpu_pid_to_cpupid(dst_cpu, current->pid);
+
+---
+Best Regards,
+Huang, Ying
