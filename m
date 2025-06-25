@@ -1,152 +1,148 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f73.google.com (mail-wm1-f73.google.com [209.85.128.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA98427FB27
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:52:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AC4270557
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:52:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750845148; cv=none; b=i5uTSNt6F9AtXu239WpxlF1PzpFG96ricRJ9OgvO/zq2/NsVfl8qpOw59f7zTZxU05lWYEn55467Kr6GR8QzufAxCWciS+5MiTGktrJxQKUTLkTR824RiIzrlwR04WPHnoB899b6E2ct+8wEn0FxdKgIb3yuYxmdQjgkvgl0k/k=
+	t=1750845159; cv=none; b=J2Aeh0J7VvG/CqqNcBVPw/hwj5tEt0dv5+m8kJoQbu053d8w2j4/zQUTBBj664bje8isUFV3uFN7/hcMzMs2ahSs/kYO0HKlxr/Mkcc/ytvCgPY4VbFk/5uZI0byYjWjvKa4NsHZ2EiZjYO03oh6jo73ujcNSTDzTNGm3cVAcE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750845148; c=relaxed/simple;
-	bh=MrRga72y9s3IG9s+3PWdhvyFhlYCAnz1dBzKqnRtsvw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UtATED/xLbbDDLaAp5IwJVPKUiCT5aaUmPEc3Igy3Cp5hSNAPHL5HyrQ2PKSb4aSnEXCm3iZzLPUBAKGFcEReMwCeJrMO7zVSLCF8FOdvT8bXQspSpwCthFqIuXPDNlJevOYGgLKnImubwreWQHYcBVpp5Bu8Fwhm8OSHTDMOz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z+N3SKJF; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750845159; c=relaxed/simple;
+	bh=1Y8QJ+oRfOtSdRhQbvBmTw9lQq+2E+h8tGLHlYsZDv4=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=KBOiuBJxed2XNXq+edDj+imDiN/rTpu9l6R25EzKJD7hFol/Fz0O/SeZ/ka5wJ2chckAduZ4QgTXygd3FA2jKSZRMRsrKmJ5uVPSF87fnJIyQlcUnnD2iitZcCCLXoXzKSLZKOUd2rfhda5Ublw4W1UcXtPwGPMpS9vRO8Tw6HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--gprocida.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WyKyMbmw; arc=none smtp.client-ip=209.85.128.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--gprocida.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z+N3SKJF"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4537fdec33bso9052085e9.1
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:52:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WyKyMbmw"
+Received: by mail-wm1-f73.google.com with SMTP id 5b1f17b1804b1-45311704cdbso42686665e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 02:52:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750845145; x=1751449945; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gvynr5GPXAD7xF14LG7ABlRKJ5SF08nktafK/D9Sp4o=;
-        b=Z+N3SKJFuiPHaejrVN9ql6f/eYo9opFv/34l4t2kNyVuZJoBMnnz2r80ZfEdoA7aGF
-         DIptkYPQkY6kZN0bdSZ7qmNxmL39a/iO4moJUt+f+vTQYU74Au060W+0sd3pYH12oA7L
-         WqbiDn2SACu1YYwbIkJ/tvlju7kWkm/bqnXrTfhXD3HoRUD23mW/PXhZREFK5dSg1yxp
-         10oajCPwXJBUR45kT2ut/FjQYbCCrx68A4utXijV2vWube1lMdXXwCxknADrZiYoQZMh
-         LVBjhtH0FMZsY1nDewk2b0yoV+jpgSM5C/Meek/+ZTe52ohRptW+qk0xEAg+cZpzVFra
-         lt5A==
+        d=google.com; s=20230601; t=1750845156; x=1751449956; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FPaFg8skY6SjMOJvVYfiFB9uK0FraGFCMhdVa+qk2JA=;
+        b=WyKyMbmwIXF3ash5OeLSACPYQ/WJ89qeH0r52vZ3uL+xxHhEXTkN4y6nwa0o3EX5k+
+         G/2/bV0pUNQOxnc459Qr10gtGzFTNO8i68e3OEABtUkt3i8mcX1wEUEu6TOWrPpkXynm
+         1jBAvcuIjdvWPK2AoCEtSy9oK3FMdiVY6SnW1FtsaY9EsHidjJHhMit4qcDsGhURHLgG
+         w+myr3NeThC45QWvXJa4jX4k3NMbDezXN0a1NO/6SQPZHIRCr6wXaNKCIW61+l+FfCqc
+         QQ6fH8gIrC7TDhnuuDZeOC1DNE+5uMbKY/N21ePMnOQJ1AIN3Vya2akPm15TEKXQRn37
+         MT7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750845145; x=1751449945;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gvynr5GPXAD7xF14LG7ABlRKJ5SF08nktafK/D9Sp4o=;
-        b=PyoUVyvz9TgHgTJM8XYtHa9rHbnk7Lz6tVxh4scPuaI/bbtCuSIUu/RP0Qqus+kYMQ
-         4fk0U0gTicacQFhEq9myyWlY4W9KeRgqvQPd0WEDvY5d1c9yypjHBs6Qnr1+Nv/zAx2n
-         frRMC4b8nlz6a/4lIDZLUjecUW8NQfewtFnn35+xqwddsvp11M8BYCzALaJuDnt0MGUQ
-         cExprEvQX6fPvWZz31gUebofra4fWRFjeAwek3W6Zx8fyEM4RxTSUFwPjXHaN47gEBO3
-         dKGv5afb7qVVxdOpuOsYvfndJ6b/VKhw545Pz2eXEgoIgJGwVutWdUWD2jBxMK3o1TM0
-         1YmA==
-X-Forwarded-Encrypted: i=1; AJvYcCVV43X/qAxVq695XFmRJk6X/nxxMzEosT3/9934NRTcnUmNFNeHXbvnXUYq2Bf6nDTpn1kQe2nVN/bFIW8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUoL3Yt2sHUGeekonkslP49N1IzjJHHX9LTZ29RwdRGdYD9AiJ
-	SsXnZB8/vqqb5oKfV85ToV32N63mFywSEmUzehI11W7399/b76g8/GOx3zcyKTmLFOY=
-X-Gm-Gg: ASbGncuBFh56Z1bhtmBktv4iXtiLsLR7cEUANw50J/UlCnO1NsLDMSsyucnkDeZIMhU
-	tMcaaaGs7g5AQqyxxav33H8qczUJaw+N0wRuztGT9Rl79Y6+BpxWsMA1Wnf9PMwLnMghXVmPfuN
-	8JCl3DGcpHFBwo8dgmECqF+bIsFqEb1/6ztYlCFR2qNiKELrYoyu1lKTTAwDmPvOYot4yLmOoAF
-	vPCMQk232+pam2XxBcihV+9I/WM7MB5LTIlP78U6Lijpvefti/ylP0UOl4JikME4RhlW5CPuKQG
-	Apz7/tcVm2aSecxhezse9Pu6J3oqPd1/mn6rx74FhQkQLGWtu2f8mAEiVJjJ8TKQNBQ=
-X-Google-Smtp-Source: AGHT+IGWhnH2ozWlkqt9r0oHgwgVkhzmM8aFffesqO/fLKJ2oKRNU+kDEm/CqDK4ln1Y/aAeqeYL2g==
-X-Received: by 2002:a05:600c:8b70:b0:442:cab1:e092 with SMTP id 5b1f17b1804b1-45381ab1724mr20000025e9.11.1750845144979;
-        Wed, 25 Jun 2025 02:52:24 -0700 (PDT)
-Received: from [192.168.1.3] ([37.18.136.128])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-453822c3084sm15607705e9.0.2025.06.25.02.52.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 02:52:24 -0700 (PDT)
-Message-ID: <3eddec49-f41a-4b59-972f-92693677bb7c@linaro.org>
-Date: Wed, 25 Jun 2025 10:52:23 +0100
+        d=1e100.net; s=20230601; t=1750845156; x=1751449956;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FPaFg8skY6SjMOJvVYfiFB9uK0FraGFCMhdVa+qk2JA=;
+        b=ZHY9/HbKkjaWQXU7ihbZDXkzXdSv4eVrXxuh7XWcpRMfIg+eUVLwfQt3vA+KQcpb1r
+         VWS85IYtxHqx/c4p87Hsf2cfFWIW1itGHJeyddY4ArSfjiM24r+GkudASNsSyEN0BYAW
+         Z4Uj5IW1lo9FzLl1Bz7+SaCyZNLdRwtEIM0EuRpVvmX26WnGUkIpnrdEM2M+sg91YXJX
+         fMqp8XJfTF2rC5pzlEmgo8arWvfQMiYWxgDcJ/nFpEgLbPim9RG1N68hhz/0Ynaz25tq
+         4gqkGv019jcwBzswI0v4+CiFfKa+rk1CatpxxUaNQUSv6cZmW2QDHqfvAQW3G0hBaSal
+         iIiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXEWX4BDOmnLDS8/x1Zcjzs8zksRW+qZWcwn7dtLqcsJefep6MFHtdjW1D7JMYRmTnwjOpmP1/NMrrokOk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIsmGeltw1UeoE2jKyP1pqZgiJEWhnBx9UOIES3TbQn8hlXUn3
+	mJ0Tw7oxML2T10mUf+RGSLXNHdBz1c8BrbpQU6nCtLz0fOgMD3o2c6LvHyTWjBGb1fanWEdNeHu
+	Xm7b114kd9ScVIw==
+X-Google-Smtp-Source: AGHT+IH9NSYt2O7TMUJiMIjZArM9uvyETHRaUeq8opq8u7NG97Qu9jaiO6QvaVXjIAI5VY4zW+Mj5w0AJLfVFw==
+X-Received: from wmbfa15.prod.google.com ([2002:a05:600c:518f:b0:43d:5828:13ee])
+ (user=gprocida job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:600c:3e11:b0:450:d61f:dd45 with SMTP id 5b1f17b1804b1-45381aa54ecmr21075505e9.4.1750845156283;
+ Wed, 25 Jun 2025 02:52:36 -0700 (PDT)
+Date: Wed, 25 Jun 2025 10:52:08 +0100
+In-Reply-To: <20250623092350.3261118-2-gprocida@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/6] spi: spi-fsl-dspi: Clear completion counter before
- initiating transfer
-To: Frank Li <Frank.li@nxp.com>
-Cc: Vladimir Oltean <olteanv@gmail.com>, Mark Brown <broonie@kernel.org>,
- Vladimir Oltean <vladimir.oltean@nxp.com>, Arnd Bergmann <arnd@arndb.de>,
- Larisa Grigore <larisa.grigore@nxp.com>, Christoph Hellwig <hch@lst.de>,
- linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <20250624-james-nxp-spi-dma-v3-0-e7d574f5f62c@linaro.org>
- <20250624-james-nxp-spi-dma-v3-1-e7d574f5f62c@linaro.org>
- <aFrLMCq6hRJj5FjI@lizhi-Precision-Tower-5810>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <aFrLMCq6hRJj5FjI@lizhi-Precision-Tower-5810>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+References: <20250623092350.3261118-2-gprocida@google.com>
+X-Mailer: git-send-email 2.50.0.714.g196bf9f422-goog
+Message-ID: <20250625095215.4027938-1-gprocida@google.com>
+Subject: [PATCH] gendwarfksyms: order -T symtypes output by name
+From: Giuliano Procida <gprocida@google.com>
+To: Sami Tolvanen <samitolvanen@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Giuliano Procida <gprocida@google.com>, linux-modules@vger.kernel.org, 
+	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+When writing symtypes information, we iterate through the entire hash
+table containing type expansions. The key order varies unpredictably
+as new entries are added, making it harder to compare symtypes between
+builds.
 
+Resolve this by sorting the type expansions by name before output.
 
-On 24/06/2025 4:58 pm, Frank Li wrote:
-> On Tue, Jun 24, 2025 at 11:35:31AM +0100, James Clark wrote:
->> In target mode, extra interrupts can be received between the end of a
->> transfer and halting the module if the host continues sending more data.
->> If the interrupt from this occurs after the reinit_completion() then the
->> completion counter is left at a non-zero value. The next unrelated
->> transfer initiated by userspace will then complete immediately without
->> waiting for the interrupt or writing to the RX buffer.
->>
->> Fix it by resetting the counter before the transfer so that lingering
->> values are cleared. This is done after clearing the FIFOs and the
->> status register but before the transfer is initiated, so no interrupts
->> should be received at this point resulting in other race conditions.
->>
->> Fixes: 4f5ee75ea171 ("spi: spi-fsl-dspi: Replace interruptible wait queue with a simple completion")
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->>   drivers/spi/spi-fsl-dspi.c | 10 +++++++++-
->>   1 file changed, 9 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
->> index 04c88d090c4d..744dfc561db2 100644
->> --- a/drivers/spi/spi-fsl-dspi.c
->> +++ b/drivers/spi/spi-fsl-dspi.c
->> @@ -1122,11 +1122,19 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
->>   		if (dspi->devtype_data->trans_mode == DSPI_DMA_MODE) {
->>   			status = dspi_dma_xfer(dspi);
->>   		} else {
->> +			/*
->> +			 * Reset completion counter to clear any extra
->> +			 * complete()s from spurious interrupts that may have
->> +			 * happened after the last message's completion but
->> +			 * before the module was fully in stop mode.
->> +			 */
-> 
-> I think you change is correct. reinit_completion() should be called before
-> dspi_fifo_write().
-> 
-> comments is quite confused. how about below comments?
-> 
-> /*
->   * Reinitialize the completion before transferring data to avoid the case where
->   * it might remain in the done state due to a spurious interrupt from a previous
->   * transfer. This could falsely signal that the current transfer has completed.
->   */
-> 
-> Frank
+Signed-off-by: Giuliano Procida <gprocida@google.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Sami Tolvanen <samitolvanen@google.com>
+---
+ scripts/gendwarfksyms/types.c | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-Will do
+[Adjusted the first line of the description. Added reviewer tags.
+ Added missing CC to linux-modules.]
 
->> +			if (dspi->irq)
->> +				reinit_completion(&dspi->xfer_done);
->> +
->>   			dspi_fifo_write(dspi);
->>
->>   			if (dspi->irq) {
->>   				wait_for_completion(&dspi->xfer_done);
->> -				reinit_completion(&dspi->xfer_done);
->>   			} else {
->>   				do {
->>   					status = dspi_poll(dspi);
->>
->> --
->> 2.34.1
->>
+diff --git a/scripts/gendwarfksyms/types.c b/scripts/gendwarfksyms/types.c
+index 7bd459ea6c59..51c1471e8684 100644
+--- a/scripts/gendwarfksyms/types.c
++++ b/scripts/gendwarfksyms/types.c
+@@ -6,6 +6,8 @@
+ #define _GNU_SOURCE
+ #include <inttypes.h>
+ #include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
+ #include <zlib.h>
+ 
+ #include "gendwarfksyms.h"
+@@ -179,20 +181,41 @@ static int type_map_get(const char *name, struct type_expansion **res)
+ 	return -1;
+ }
+ 
++static int cmp_expansion_name(const void *p1, const void *p2)
++{
++	struct type_expansion *const *e1 = p1;
++	struct type_expansion *const *e2 = p2;
++
++	return strcmp((*e1)->name, (*e2)->name);
++}
++
+ static void type_map_write(FILE *file)
+ {
+ 	struct type_expansion *e;
+ 	struct hlist_node *tmp;
++	struct type_expansion **es;
++	size_t count = 0;
++	size_t i = 0;
+ 
+ 	if (!file)
+ 		return;
+ 
+-	hash_for_each_safe(type_map, e, tmp, hash) {
+-		checkp(fputs(e->name, file));
++	hash_for_each_safe(type_map, e, tmp, hash)
++		++count;
++	es = xmalloc(count * sizeof(struct type_expansion *));
++	hash_for_each_safe(type_map, e, tmp, hash)
++		es[i++] = e;
++
++	qsort(es, count, sizeof(struct type_expansion *), cmp_expansion_name);
++
++	for (i = 0; i < count; ++i) {
++		checkp(fputs(es[i]->name, file));
+ 		checkp(fputs(" ", file));
+-		type_list_write(&e->expanded, file);
++		type_list_write(&es[i]->expanded, file);
+ 		checkp(fputs("\n", file));
+ 	}
++
++	free(es);
+ }
+ 
+ static void type_map_free(void)
+-- 
+2.50.0.714.g196bf9f422-goog
 
