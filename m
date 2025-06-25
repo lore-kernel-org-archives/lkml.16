@@ -1,184 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D1F1D5165;
-	Wed, 25 Jun 2025 14:53:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D5AF17BEBF
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750863209; cv=none; b=kU4zPKBm8njAFWmdB2XmLsZyVnDL64sEsZxyfZZONdNCOP+884WlIyUS1DpXY+2YdN7THbmsxabFVj3eV92/K/gQkJWEhZouk7iLCp+4zUPFt67K1Nta41DuogIXy/S7ZKTWN9ZOItIZczy6vWHo58kR5AMO9hykH0lxsokxsK0=
+	t=1750863356; cv=none; b=IReM/OwOEo/4uw4MUM0tHTZ5B0C/2+eKg9E5cgbyVwR7chxTacskhKsOJSPTxA5/GmNb9eBqPgEn5AbyJNokJM1BnGESuk4+Ils62+t6Ikcs7SjIKtKAppboFa7KD2CqGt0hVYsm0ha4BZj2kKhD+7IqDemFsxM6JqyQSM97XJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750863209; c=relaxed/simple;
-	bh=IJe6mOkdno5hFkqOuZzP6lWj3MzgBpaudeFCugaeW5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nAt1tjPIzZkIJoIYkr0k3ztq16seMjP5OlFLwx5w6umNWdUV9k5Ks5ogMJWUTHt8beFoObIk1koseH25F2THMP2hqTb2m0V2ukh0WTZvtrdgqs3nWzP068ylvqTKb0036VMZg2aN7V23ciQOH1RtEjaY1k/a7J2ClgAslOUnkqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vEVPBNft; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750863356; c=relaxed/simple;
+	bh=jrBtoywouXF/4yYfXz6f2gT+dZfD6qO0490nSXgTbM0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IQIEgKsCg5N1MOa/AmczIT1Ps7LYu9DsoX+tQGqKWArUGfFjQTD1S8O35QqT1zS4sefL/Xo5NT+R2FXLj1uysc9AObbgQpOoyCIZqo7CdHzzcKxlHFrdNsA2401/IlObKgAoddzhjH1SNkJlB8DxxULHOSm/phiinkXQ+t1V6s8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3USGO9Cx; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vEVPBNft"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4ECC9C4CEEA;
-	Wed, 25 Jun 2025 14:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750863208;
-	bh=IJe6mOkdno5hFkqOuZzP6lWj3MzgBpaudeFCugaeW5w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=vEVPBNft67yFnyq10OuAhQPYNrznG7vdFztn5fo09zOvfI1ukOyexva0fcqBcgH1+
-	 Poc+Rb0Q5wYPAF/RBKgwIjSfT2BhCBTKF+H8lEqIVVYj1XhQ6eqImEr0zIkf9KMqw7
-	 wiDedspcBMpswvzBkjaXn7mWBDM8TOacEww3P7XsmLAiB3sIDsxxwTjSwKOjvnR7Q1
-	 1NxF/XUkzI+5ZbrxOPPItZejLHz6Wxesu97Cz+s5IctHQ6Mtt4IqKBjldDxRny3SM9
-	 0ysMFTmtKsCs2h7HEwnIh6QfiPwtGQI/kkcruqpQN+baPGTpL/7UmgHyPI+QBY9a7o
-	 2QdK6TZwf1GhQ==
-Date: Wed, 25 Jun 2025 15:53:21 +0100
-From: Lee Jones <lee@kernel.org>
-To: Ming Yu <a0282524688@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andi.shyti@kernel.org,
-	mkl@pengutronix.de, mailhol.vincent@wanadoo.fr,
-	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, wim@linux-watchdog.org,
-	linux@roeck-us.net, jdelvare@suse.com,
-	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-can@vger.kernel.org, netdev@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org,
-	linux-rtc@vger.kernel.org, linux-usb@vger.kernel.org,
-	Ming Yu <tmyu0@nuvoton.com>
-Subject: Re: [PATCH v12 1/7] mfd: Add core driver for Nuvoton NCT6694
-Message-ID: <20250625145321.GZ795775@google.com>
-References: <20250613131133.GR381401@google.com>
- <CAOoeyxXftk9QX_REgeQhuXSc9rEguzXkKVKDQdawU=NzGbo9oA@mail.gmail.com>
- <20250619115345.GL587864@google.com>
- <CAOoeyxXSTeypv2qQjcK1cSPtjch=gJGYzqoMsLQ-LJZ8Kwgd=w@mail.gmail.com>
- <20250619152814.GK795775@google.com>
- <CAOoeyxU7eQneBuxbBqepta29q_OHPzrkN4SKmj6RX72L3Euw5A@mail.gmail.com>
- <20250625090133.GP795775@google.com>
- <CAOoeyxWoxC-n3JjjFe8Ruq_VydXk=jev=mopKfL5B7gsaSg=Ag@mail.gmail.com>
- <20250625134634.GY795775@google.com>
- <CAOoeyxVuu-kKoQa84mGOX=thAc0hnzQU8L=MnycoRRhzoZMnNw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3USGO9Cx"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-55351af2fc6so6864108e87.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:55:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1750863353; x=1751468153; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jrBtoywouXF/4yYfXz6f2gT+dZfD6qO0490nSXgTbM0=;
+        b=3USGO9CxYLwVCIgGOXUk8Xy6OtQJ5adXMT+EBIbjhWERKO2uu1V+R55zS5iP+qFi8+
+         NK+nvZHlTHZxr9xYe2LBAIgMXH40zR/8rTUgbLNIWY+AnU6zwvI95ty3yXyXkXQD3VSW
+         Pv9ZzPU7uLHKZzU411ISuf7tWJk+3qRSCVDjFAU1GR17T7FRUzcY6DRek7eANiv03KRa
+         6KHnVewXrFAXXttVY83h7UiHaazMKQMQs7s/szhSKLjOq+E/4DY59Y9ewQcs296z099M
+         BRcgpVE97GNy2bL2bCvuKQtNpoIihJ6fOaVsbxPNp2XY7QVush3pqB6d9R3Cejjl4sjs
+         bZtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750863353; x=1751468153;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jrBtoywouXF/4yYfXz6f2gT+dZfD6qO0490nSXgTbM0=;
+        b=JwxqjmDHQUCt0frfp0OvbxmO7pbuGTmGgodlcL/aY4cJGrqvqvJ8gC1cuOwZSxG4r8
+         v4vlKYvMMMh2u5qirG6GYPTrpZg11e0JiUtnkzmoYemWRyyxZRgkhTeCHtr9VW5S8z8a
+         +MDU0odcasG3py1MJuN1cml0mCYH1xsbudK4ZUZpuLPmlzFYzuEuoweLOhcgKP9Tj7RN
+         umHMA+4eRgqNgXFdDmvDzWd7ZwCGlNQIzCRMK7UHlXaasz2fCp+V5Q/WBaUmiU2MabW8
+         yolG7KQ171atTRAGmRJeuF+fqLStPxgmbzLpMtfQ1fXaicWGSme/AG+837i4l4siMkuP
+         u15Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUcYK48c0pAwEG/XarSVYqjITs/FnsIeheq3bXDZhOYegeB0VdFXLZ7uaItakAh8mfXe9IqdL0XOFsIt9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNixndKqYgXtAdGWYeey3vpCR21le5+vCs3EGRImRk2XFMRbtG
+	x6/bob4jLOZOsuQ1k6kOS+MkVuzSiVlGItq4gpZ21aEjxAL/DVk4vLpBg+7rDri0qFXSkKwH5Sw
+	NYo9pqP2y2ttDyeJtO3GuorRcS6hOfe7qGSF3zpVVQg==
+X-Gm-Gg: ASbGncvVVzl7VOt3sIqBiIqmcsDMjGYiyqlnLLB1clIZ/ClFPULofe9FlvTmFv7f8ie
+	lJLezttjxxp2Jsk8IZl01tTWboVFoMdHolFPcPSMrZhKp9ZqSs096QVWOpIR2ZkTue+0FI7Xag8
+	jqxjJ0qAxBckFm3cbvFDjea90OOW+XniHAdFOS98ypl5Lk27v5Lnme7bux+Go8TZQCLUtpoDIk1
+	ng=
+X-Google-Smtp-Source: AGHT+IGAUq5gFTw7qUZjZn3rHuNNjUzgrTHXn3aPE83EdUFWdbkV7VelOsQBi1h7nliNA6yx9WJxaL/S6b9yacsmTDQ=
+X-Received: by 2002:a05:6512:1591:b0:553:abe6:e3e7 with SMTP id
+ 2adb3069b0e04-554fdf5cefbmr1084123e87.47.1750863352960; Wed, 25 Jun 2025
+ 07:55:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAOoeyxVuu-kKoQa84mGOX=thAc0hnzQU8L=MnycoRRhzoZMnNw@mail.gmail.com>
+References: <20250625-qcom-scm-race-v1-0-45601e1f248b@linaro.org>
+ <20250625-qcom-scm-race-v1-3-45601e1f248b@linaro.org> <efbe6c4d-cbf2-4749-8a3f-a69b2e4b726c@oss.qualcomm.com>
+In-Reply-To: <efbe6c4d-cbf2-4749-8a3f-a69b2e4b726c@oss.qualcomm.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 25 Jun 2025 16:55:42 +0200
+X-Gm-Features: Ac12FXwpw1VlRY373Rr5D8HNLBzbb_Agr5ioNTABVgBeHneEchkZKiZDcld1xlY
+Message-ID: <CAMRc=McS2MceSr6OmZc4stVAmKd0=gAYUH4qCzZUDYQEYVFnFw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] firmware: qcom: scm: initialize tzmem before marking
+ SCM as available
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-[...]
-
-> > > > > > In the code above you register 6 I2C devices.  Each device will be
-> > > > > > assigned a platform ID 0 through 5. The .probe() function in the I2C
-> > > > > > driver will be executed 6 times.  In each of those calls to .probe(),
-> > > > > > instead of pre-allocating a contiguous assignment of IDs here, you
-> > > > > > should be able to use IDA in .probe() to allocate those same device IDs
-> > > > > > 0 through 5.
-> > > > > >
-> > > > > > What am I missing here?
-> > > > > >
-> > > > >
-> > > > > You're absolutely right in the scenario where a single NCT6694 device
-> > > > > is present. However, I’m wondering how we should handle the case where
-> > > > > a second or even third NCT6694 device is bound to the same MFD driver.
-> > > > > In that situation, the sub-drivers using a static IDA will continue
-> > > > > allocating increasing IDs, rather than restarting from 0 for each
-> > > > > device. How should this be handled?
-> > > >
-> > > > I'd like to see the implementation of this before advising.
-> > > >
-> > > > In such a case, I assume there would be a differentiating factor between
-> > > > the two (or three) devices.  You would then use that to decide which IDA
-> > > > would need to be incremented.
-> > > >
-> > > > However, Greg is correct.  Hard-coding look-ups for userspace to use
-> > > > sounds like a terrible idea.
-> > > >
-> > >
-> > > I understand.
-> > > Do you think it would be better to pass the index via platform_data
-> > > and use PLATFORM_DEVID_AUTO together with mfd_add_hotplug_devices()
-> > > instead?
-> > > For example:
-> > > struct nct6694_platform_data {
-> > >     int index;
-> > > };
-> > >
-> > > static struct nct6694_platform_data i2c_data[] = {
-> > >     { .index = 0 }, { .index = 1 }, { .index = 2 }, { .index = 3 }, {
-> > > .index = 4 }, { .index = 5 },
-> > > };
-> > >
-> > > static const struct mfd_cell nct6694_devs[] = {
-> > >     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[0], sizeof(struct
-> > > nct6694_platform_data), 0),
-> > >     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[1], sizeof(struct
-> > > nct6694_platform_data), 0),
-> > >     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[2], sizeof(struct
-> > > nct6694_platform_data), 0),
-> > >     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[3], sizeof(struct
-> > > nct6694_platform_data), 0),
-> > >     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[4], sizeof(struct
-> > > nct6694_platform_data), 0),
-> > >     MFD_CELL_BASIC("nct6694-i2c", NULL, &i2c_data[5], sizeof(struct
-> > > nct6694_platform_data), 0),
-> > > };
-> > > ...
-> > > mfd_add_hotplug_devices(dev, nct6694_devs, ARRAY_SIZE(nct6694_devs));
-> > > ...
+On Wed, Jun 25, 2025 at 4:47=E2=80=AFPM Konrad Dybcio
+<konrad.dybcio@oss.qualcomm.com> wrote:
+>
+> On 6/25/25 10:14 AM, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
-> > No, that's clearly way worse.  =:-)
+> > Now that qcom_scm_shm_bridge_enable() uses the struct device passed to
+> > it as argument to make the QCOM_SCM_MP_SHM_BRIDGE_ENABLE SCM call, we
+> > can move the TZMem initialization before the assignment of the __scm
+> > pointer in the SCM driver (which marks SCM as ready to users) thus
+> > fixing the potential race between consumer calls and the memory pool
+> > initialization.
 > >
-> > The clean-up that this provides is probably not worth all of this
-> > discussion.  I _still_ think this enumeration should be done in the
-> > driver.  But if you really can't make it work, I'll accept the .id
-> > patch.
-> >
-> 
-> Okay, I would like to ask for your advice regarding the implementation of IDA.
-> 
-> Using a global IDA in the sub-driver like this:
-> (in i2c-nct6694.c)
-> static DEFINE_IDA(nct6694_i2c_ida);
-> 
-> static int nct6694_i2c_probe(struct platform_device *pdev)
-> {
->     ida_alloc(&nct6694_i2c_ida, GFP_KERNEL);
->     ...
-> }
-> 
-> causes IDs to be globally incremented across all devices. For example,
-> the first NCT6694 device gets probed 6 times and receives IDs 0–5, but
-> when a second NCT6694 device is added, it receives IDs starting from
-> 6, rather than starting again from 0. This makes per-device ID mapping
-> unreliable.
-> 
-> To solve this, I believe the right approach is to have each NCT6694
-> instance maintain its own IDA, managed by the MFD driver's private
-> data. As mentioned earlier, for example:
-> (in nct6694.c)
-> struct nct6694 {
->     struct device *dev;
->     struct ida i2c_ida;
-> };
-> 
-> static int nct6694_probe(struct platform_device *pdev)
-> {
->     ...
->     ida_init(&nct6694->i2c_ida);
->     ...
-> }
-> 
-> (in i2c-nct6694.c)
-> static int nct6694_i2c_probe(struct platform_device *pdev)
-> {
->     id = ida_alloc(&nct6694->i2c_ida, GFP_KERNEL);
-> }
-> 
-> This way, each device allocates IDs independently, and each set of
-> I2C/GPIO instances gets predictable IDs starting from 0 per device. I
-> think this resolves the original issue without relying on hardcoded
-> platform IDs.
-> Please let me know if this implementation aligns with what you had in mind.
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > ---
+>
+> I'm not sure any user of tzmem ever checks qcom_scm_is_available()
+>
 
-This sounds like an acceptable way forward.
+Well, they all should, right? At least the ICE and fastrpc drivers do
+check this from a quick glance. Also: every call that has more than 4
+arguments will be an implicit user of tzmem.
 
--- 
-Lee Jones [李琼斯]
+Bartosz
