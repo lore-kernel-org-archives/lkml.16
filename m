@@ -1,62 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BAB26B973
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:37:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6638420C488
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 08:38:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750840667; cv=none; b=cnY+2APVlAocza9QJh2RxqZo/ejn0R6FTF9CCB+QsBqKJ4gebv3sGiSrYjc5dyj/3ufm9HMX2A5IBGwvSkhYQneM9XTfCJ/FFvAWcdOKabBHT3Uh1AF8woIVCHIASbh80HaMKYL+3P16mX0lKOAOBcydtfuyq8dDS30gEWA69/A=
+	t=1750840684; cv=none; b=HqQH/A2IpE+3BjKBAMdoL0ofHM5MTNSxYmmmKo5PuFTOWF3jv1ugkFeDSd7a8QJi2xosG3pbCnPpcAc3Gp5Zr47ecN4EaXSg/Hc4xHS9oo4OWbhQuyaBgDdrg2dhbS4asAaDRw7OOEGh2l4PqHlf+Eqkqu7whSe5HEicR2B/Zfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750840667; c=relaxed/simple;
-	bh=EwvPZo7oTwprahWbVv9CKBqzmPZmEw39Hs2j42qQ/og=;
+	s=arc-20240116; t=1750840684; c=relaxed/simple;
+	bh=lEdGWdlGbPEO8ml2cohhIltylKHkmLl4yH78m08JaGA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E1M8yk4r6Sp05fMzNcgLpt5CRMZlyyJsINeL5tjOAaMce+AoON/ShKtqQo14I5FixWy+5I+fl4La0VUvnpjRrPKMI965h8BUPWKLpXYckiU8LeXDmbPzmz4p/SsVhfy/nSow31S4pFOPAUfwS+ytUMb/q2vUv8nIeqApZeSqo5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NH02XYi7; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Io2uYRse5abClRN/ctThoyhGRCgcERkQRCw14ENA+szufIJOu3fCG4IyliD7sSOu5Ia2qoo5Kr5fMCl2adgzx85PY74Z/uaGAYq02q9cW5onX/xB6P2LxEG1HLj1L9LmFRSiiKHB2KsnN46NBRLFXEA12rbLbQ/7590x5JFOyVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OLYJZMAt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OMwI9gql; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=OLYJZMAt; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=OMwI9gql; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NH02XYi7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750840667; x=1782376667;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EwvPZo7oTwprahWbVv9CKBqzmPZmEw39Hs2j42qQ/og=;
-  b=NH02XYi769r1+YHwfSulY1PSz9hXh+MDin5jWDeTln+cNwBlR/uq6Fiu
-   3PTexSS7kAiV7CC+bXqyLJ4iaaK8FycV1OSyNlE54oWfV9y72n9M/pwlN
-   N5UaWIOGn1RDcFHAo179jQdpIrqEhBbJMS7G5q4Kf9/R92RUtbOnSAXLL
-   /Lc+2z7SNqsiPaVZu+jLumonIz9w9BafQoL8rRe16Ddzwp92axnEVtcSR
-   M74DMjJn/84UZ1/vLYTlY0t4FxB2Ltq7V7zgffSyIyEi5Wdc0/rCchDYm
-   NRGBYpmahgkuX0A9YViAD+p/D1yUThRTLuH6IT8julytpNXiqfhZx3UH7
-   Q==;
-X-CSE-ConnectionGUID: 1jbn6YWOSLCGFVZwKrLRiQ==
-X-CSE-MsgGUID: rIJFN/HTRWiDD8oyylzvPA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52973198"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="52973198"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 01:37:39 -0700
-X-CSE-ConnectionGUID: whELoIkaQLOb2fMkjiX5Eg==
-X-CSE-MsgGUID: WWOHAobDSV6gRb7pT1MS+w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="156186620"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by fmviesa003.fm.intel.com with ESMTP; 25 Jun 2025 01:37:36 -0700
-Date: Wed, 25 Jun 2025 16:29:59 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: kevin.tian@intel.com, will@kernel.org, aneesh.kumar@kernel.org,
-	iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
-	joro@8bytes.org, robin.murphy@arm.com, shuah@kernel.org,
-	nicolinc@nvidia.com, aik@amd.com, dan.j.williams@intel.com,
-	baolu.lu@linux.intel.com, yilun.xu@intel.com
-Subject: Re: [PATCH v2 4/4] iommufd/selftest: Add coverage for vdevice
- tombstone
-Message-ID: <aFuzh4OPmjfemD8I@yilunxu-OptiPlex-7050>
-References: <20250623094946.1714996-1-yilun.xu@linux.intel.com>
- <20250623094946.1714996-5-yilun.xu@linux.intel.com>
- <20250624134145.GB150753@nvidia.com>
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OLYJZMAt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OMwI9gql";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="OLYJZMAt";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="OMwI9gql"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 9131C21225;
+	Wed, 25 Jun 2025 08:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750840681; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HcMPAZexUY6msdIP55rf1vEz6oztuzPcCv+1Pw4Atj4=;
+	b=OLYJZMAtygudvD/CIE0cZOWTk4461lHZrUEj0dGC2I73EjfPfHwnJVJ977L8C3VOZ4I/E5
+	SSP3u3KALqeCXon9fk3gOxk1u0ZyINCSk0tYrnSP8uEU94+610t/koqQMPhkliDTI3qiqZ
+	VTUjhBWy9ry6fWFKTwEVLSbCYC5m63Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750840681;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HcMPAZexUY6msdIP55rf1vEz6oztuzPcCv+1Pw4Atj4=;
+	b=OMwI9gqlawaozmCo7wuNr/HhbhsxL2uRuAVg5AQOYBnUHVku7VmAoHYifwH+OThLFI+5I/
+	S0kxmlSauUjnzpBg==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=OLYJZMAt;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=OMwI9gql
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1750840681; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HcMPAZexUY6msdIP55rf1vEz6oztuzPcCv+1Pw4Atj4=;
+	b=OLYJZMAtygudvD/CIE0cZOWTk4461lHZrUEj0dGC2I73EjfPfHwnJVJ977L8C3VOZ4I/E5
+	SSP3u3KALqeCXon9fk3gOxk1u0ZyINCSk0tYrnSP8uEU94+610t/koqQMPhkliDTI3qiqZ
+	VTUjhBWy9ry6fWFKTwEVLSbCYC5m63Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1750840681;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HcMPAZexUY6msdIP55rf1vEz6oztuzPcCv+1Pw4Atj4=;
+	b=OMwI9gqlawaozmCo7wuNr/HhbhsxL2uRuAVg5AQOYBnUHVku7VmAoHYifwH+OThLFI+5I/
+	S0kxmlSauUjnzpBg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 0A4D913485;
+	Wed, 25 Jun 2025 08:37:59 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id YZNuO2e1W2iWIQAAD6G6ig
+	(envelope-from <osalvador@suse.de>); Wed, 25 Jun 2025 08:37:59 +0000
+Date: Wed, 25 Jun 2025 10:37:58 +0200
+From: Oscar Salvador <osalvador@suse.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, nvdimm@lists.linux.dev,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Zi Yan <ziy@nvidia.com>,
+	Baolin Wang <baolin.wang@linux.alibaba.com>,
+	Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>,
+	Nico Pache <npache@redhat.com>, Ryan Roberts <ryan.roberts@arm.com>,
+	Dev Jain <dev.jain@arm.com>, Barry Song <baohua@kernel.org>,
+	Vlastimil Babka <vbabka@suse.cz>, Mike Rapoport <rppt@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Michal Hocko <mhocko@suse.com>, Jann Horn <jannh@google.com>,
+	Pedro Falcato <pfalcato@suse.de>
+Subject: Re: [PATCH RFC 09/14] mm/memory: introduce is_huge_zero_pfn() and
+ use it in vm_normal_page_pmd()
+Message-ID: <aFu1Zoy0i4n0QkG0@localhost.localdomain>
+References: <20250617154345.2494405-1-david@redhat.com>
+ <20250617154345.2494405-10-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -65,51 +106,51 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250624134145.GB150753@nvidia.com>
+In-Reply-To: <20250617154345.2494405-10-david@redhat.com>
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Queue-Id: 9131C21225
+X-Rspamd-Action: no action
+X-Spam-Flag: NO
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	MISSING_XM_UA(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	R_RATELIMIT(0.00)[to_ip_from(RL88oxspsx4bg3gu1yybyqiqt4)];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DNSWL_BLOCKED(0.00)[2a07:de40:b281:106:10:150:64:167:received,2a07:de40:b281:104:10:150:64:97:from];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Spam-Score: -4.51
+X-Spam-Level: 
 
-On Tue, Jun 24, 2025 at 10:41:45AM -0300, Jason Gunthorpe wrote:
-> On Mon, Jun 23, 2025 at 05:49:46PM +0800, Xu Yilun wrote:
-> > diff --git a/tools/testing/selftests/iommu/iommufd.c b/tools/testing/selftests/iommu/iommufd.c
-> > index 1a8e85afe9aa..092e1344447e 100644
-> > --- a/tools/testing/selftests/iommu/iommufd.c
-> > +++ b/tools/testing/selftests/iommu/iommufd.c
-> > @@ -3014,6 +3014,19 @@ TEST_F(iommufd_viommu, vdevice_cache)
-> >  	}
-> >  }
-> >  
-> > +TEST_F(iommufd_viommu, vdevice_tombstone)
-> > +{
-> > +	uint32_t viommu_id = self->viommu_id;
-> > +	uint32_t dev_id = self->device_id;
-> > +	uint32_t vdev_id = 0;
-> > +
-> > +	if (dev_id) {
+On Tue, Jun 17, 2025 at 05:43:40PM +0200, David Hildenbrand wrote:
+> Let's avoid working with the PMD when not required. If
+> vm_normal_page_pmd() would be called on something that is not a present
+> pmd, it would already be a bug (pfn possibly garbage).
 > 
-> Why the if? The test should work or skip, not silently skip.
+> While at it, let's support passing in any pfn covered by the huge zero
+> folio by masking off PFN bits -- which should be rather cheap.
 > 
-> self->device_id is setup by the fixture, it can't be absent.
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-It can, when the variant no_viommu.
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
 
-I agree this should not be silently skipped, see below changes:
-Should also apply to viommu_alloc_nested_iopf, vdevice_cache.
 
-+TEST_F(iommufd_viommu, vdevice_tombstone)
-+{
-+       uint32_t viommu_id = self->viommu_id;
-+       uint32_t dev_id = self->device_id;
-+       uint32_t vdev_id = 0;
-+
-+       if (!dev_id)
-+               SKIP(return, "Skipping test for variant no_viommu");
-+
-+       test_cmd_vdevice_alloc(viommu_id, dev_id, 0x99, &vdev_id);
-+       test_ioctl_destroy(self->stdev_id);
-+       EXPECT_ERRNO(ENOENT, _test_ioctl_destroy(self->fd, vdev_id));
-+}
-
-Thanks,
-Yilun
-
-> 
-> Jason
+-- 
+Oscar Salvador
+SUSE Labs
