@@ -1,172 +1,289 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCAEB2627E9
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC48262FD5;
+	Wed, 25 Jun 2025 13:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750857626; cv=none; b=Ds26yHe8VfqSwu6V0OGRknDsJuo3Mmtp11dY9PfFPFArf2Iwg+agqPsLjzBcEeU/QGkZEA6PXvypMYFERoXolNokzaU3jWB2md5zUGRX4Xgvz7ISwaQSQyXHe81ru5ga6SOkl0zzc0FTidS0QuRKBqWhnfoCeIoWyM1Cintbi/M=
+	t=1750857690; cv=none; b=R10BihsJ+F08FGRV0/CXD5iZRva7JmMTzUTNZpad3Scr8krP5hfxEIJUt7lMdc8OeQKk2DHWZ8No+YDQAXNPmSo0gN3nUKyBhqJItefdq1m2rxggprrFgp9BS6XAgZjLJeuBlMu5mQ8MWEqc1kRtONJOfalVw7/6Qr9pVpH7Fy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750857626; c=relaxed/simple;
-	bh=J32uwR5PG6Pj/fkgodkU8NToknBPtoDkFd1PmBMP74o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WL+EP4pFnl6kXXAZNcvx7iaDujf1g/vtksM0hUP6lUd9WPvmsb/a96wg5n3JwDx72hIzXO5vGFOGSiBD89KDe7zMjgCSl7+lWIZDkOVcB7pMrwh34Ja19Eu/78CmokBdR2zy53MYXuQBldbzLpQ01z51YsIEIfrMZkUNCd0Diog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=WmEJCt+K; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750857690; c=relaxed/simple;
+	bh=GAEC5JAbv76V4rnofejgP3gfdLFXFlB4ZYSwW4mIU6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JPH/lkcQkT5wFMM/Eo3tU6rzGxDr70n2c3pmCPXCRfG1x9YYJElJwu9D7Z7l2tDBrWwF68Kcyv9jNPwEB4OvAWQI8MEqUorKiEOC0q62CkMAL1ZqCOI85s8NGV0tXjxRhqAvPeWVbNi4fPDSPsXULMN4XQ/GoG7BSFml/vk/yuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B803vfmd; arc=none smtp.client-ip=209.85.219.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="WmEJCt+K"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55PBwGEY020750
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:20:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	4Wc6gS//yAoCzSiP++Qy1pCvIWUQ0H5tM6n71zaADIw=; b=WmEJCt+KShHamXWM
-	DwQtRpdWj0ommS/ZUnTqMILSd46G8aIrPS2dHbUNg8QsD6ENqdrgsppZUkf1aqWv
-	/7tukxP4ubFmNP0/A1lgRMc/0m4HrWcMbQlwVrvomLcsaFw42o198fZP/biNGa2D
-	XFGsDnCLYsKEgBCn8DQ8CdnNciMy1R+AD/fCOtOQHAFPj+A8kJO32k+2vnP/YydC
-	H/s7Uymw7CFZtlbvmaLzFt8JiZCl3aPu9iufhwPQh3nw2F0y0pWkRShNJ+I3tsWI
-	JHP73zuL+ytXK9cJHa3k6RWj8+cQ0CuWYtvJsbnHWQLt+Keq6gHljgBeiayDY8lt
-	GycS6g==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47fdfwx9hh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 13:20:23 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4a6f59d5ac6so15032721cf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 06:20:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B803vfmd"
+Received: by mail-qv1-f42.google.com with SMTP id 6a1803df08f44-6face367320so56590246d6.3;
+        Wed, 25 Jun 2025 06:21:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750857687; x=1751462487; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7fCWPIJ+7Y4/b6HqoL/ZgFJTBhhAZWhRIDbaWoCQ/7s=;
+        b=B803vfmdHF82XunEKA2NqZFhCDbsia/7JrFdNCllB9YEpKNf4i4DNxY/8qImtYwDOe
+         AjN5MRdRKmDX6wleu62mf3jiOUA65hsPNS+ANm18YoPOXyjZeR9yD1lU6DuUAP0OMeEd
+         DKcyWE5Z8wu/0YgNUyDt12FlC+0QJLJj/a2N4SLG2LNz0mq7W1SdHgjy+Irt7/8cLMYN
+         YEcNmuRdETyBMinoTl4A9s/E8xFmWZFsU+IHzWeK0YrsPySlovkG9s5oK65Q6DaknGyk
+         7kx32CXYp/Tf5b4HtCjCFgpCailHeOkdhU1jexfvxhpjWw1qcMuKjTJ8Ir2KpkjQoJ1H
+         kWZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750857623; x=1751462423;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Wc6gS//yAoCzSiP++Qy1pCvIWUQ0H5tM6n71zaADIw=;
-        b=qqNEL02cRsjN38o+FGxkJVKcPbhdbm/RZfD4A/cwVRQBB+5c/mqZpfyFb/1U1XbZWI
-         Dop0TFk4DXIpcl3nadp//acESEn7UzRV9nhHKtVxS23daI0KsepDEPqUqQbJq8JCQPin
-         2zpEWTxIzvVA6YNAEBHrAkuWUrwMUmFD6NmAbQhfhCr52RBBkJZqyXFCd6XGpvOhz4Ud
-         8L6lJGraUtZl4P9709eSquJRT/SzM93rUzP4pdosgCc72rN2pfWzZxj8gGSvBWgs7lcj
-         vaXG23V5gLj8uQTHw4p3KPXRwm2daz9wq4SkIJCz9xs0T4tFXE56apTFSWLGMJ2y5TKx
-         +FXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVz80O3knXbSEJ5v35Y99bzKuGoJen/CAi8v3RtQBH/rvDgXJebvALaxowJLbLDFeOOKpMZo/+ZxJlGEug=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzugznVWmA8LE/WbuIde0BhraHh9NN13nIbH0CrnjiLTfOZfKoj
-	ma+7NNZkBCMGpprSprZEIlA6Uc4n9dG6J4tnwX0wyRih0ORMMESUULtPMh3vvdC5LqrPg8RYrRS
-	Lw/Hy9NFEWx3mH11FJTGhNJtwPCjKcaJkZ5wN7IP5KCQRuJN3Bmn1b0rWkAJ573zlkSU=
-X-Gm-Gg: ASbGncuJKKwONkrC7RoJxMbC335uGsV4SR2zTS+BIyHzulOXH+3uRC6x3CCqaMfwlhk
-	4ZkUyYRLorKIXpwZS/fg4yfH36N+dCY+1bwS6MHEAQC6RF4QCzxzWuwlJ+XhinPydCbzi1MD1OX
-	4zOne/ynHUmtcvZqwySoJwPOYuSzVl/REdSJ5grQtrEQGWQ2RU8iekd3w6KawrWktEVZPwHb706
-	KSp9J6xxkOl6dhVDriiAZhVuxF3idFjtNPqb6u16gpyWMWSEbUfkIU5KvICSFEbz4EPyl+rQDvA
-	Ax6s3wQIuatd0l3pYRjpwZWIYsG45fyFvV4dME3QTdeSck6PMyMKazntS2aiR51l2/zO0uWg1UN
-	FiYI=
-X-Received: by 2002:a05:620a:2552:b0:7d3:c69e:267 with SMTP id af79cd13be357-7d42976a0cemr149810485a.12.1750857622619;
-        Wed, 25 Jun 2025 06:20:22 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGhWy2dsS1LyGigZ4Dt8bnXgAs0PhlY9HNqrotGcZ/DU5sSn6FMsWkf7WES+YXghkiMky5/Bg==
-X-Received: by 2002:a05:620a:2552:b0:7d3:c69e:267 with SMTP id af79cd13be357-7d42976a0cemr149807385a.12.1750857622105;
-        Wed, 25 Jun 2025 06:20:22 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0a06ed21bsm373251666b.29.2025.06.25.06.20.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 25 Jun 2025 06:20:21 -0700 (PDT)
-Message-ID: <bced42f0-bc9a-47e6-bbdf-c49657d2e18b@oss.qualcomm.com>
-Date: Wed, 25 Jun 2025 15:20:18 +0200
+        d=1e100.net; s=20230601; t=1750857687; x=1751462487;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7fCWPIJ+7Y4/b6HqoL/ZgFJTBhhAZWhRIDbaWoCQ/7s=;
+        b=CMK9XM8+e/wPqd6pDa8tm51S7ofO05X8DXbZzyapCBvv5Xv2042JdbemaXZQDbF5K2
+         zP4TdFxxENLewqLn7kBg8KE5xsKMAAcoQR+hvA/NE5Ke8Ek6rsKe4XTt0T/9xd9hcU35
+         MY22YCGWsZZqmLH7+z+jgxex+y+VEo/WpUv9ek9Avcb+vcgVVtLHxAwz4erqnqyMmhRQ
+         XZV+SGdtsclXphSQBe+qSpeQJ9qrbkQI26LeznyO/jSCVWw3bxPkARx+Kclg2u4yh0ux
+         43nzwjRMpLKjyrFVhgacymwTmL/c0yHjAFmuZQpS6xdO8mQZweSSt01/JsesmUpBXc+A
+         9DYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvl32mv7qX13tDB0Oy7a1OOXJGfVFeL7Fz/mQ/YevE3yslopsNJ6tR0+r8478QAJ8Ipl0u8BA=@vger.kernel.org, AJvYcCXBF+sm3I78THlZSK58UlaEADWYyXx1zonPb9bG2z873Naep19AE/+y2/WWb82GYAs6AM2i@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhuhQrkyDtZKUsZ9kFty0P7KsqXRpuNquW8BP53a549aINZPLy
+	ff/hTDPBKNfo8Q4FhLnFkirv0kJrtpJcg4yXymuINeK/NMQyM+2Pgk12
+X-Gm-Gg: ASbGncsPIjjOE2ANd/YEpcHTgSkgBU4rTICn82kbXcm2Dz+pxs/QTqrVmsUxkW3o6te
+	N8/3RiumF1S/Bygb4NMI8w3A6ayPsXa2ByF8va7hzJw69CVfhKhuPSxl2jWUT20t5u1MGioPnHb
+	+o8aOsLex0xUM3+KGJz++rRY1iZln65e29Ue88u9I3CNI6w7sknyzKHY+NnMcnVLHS5DolxNch1
+	+CcPFi3bz+F+2gqukqzqtwRqpp3DV6/6NDcziu8MrKxxtDi51IEU9/RLtfed7p5VEXy23cXMeZf
+	YdfMVT+49lM07/jU/hg82fhqo21pyqhYUMfnxROeaM91VzeW8bf9+WtgAZFzs9PKZvKzcrtXJf2
+	UCOJPmFQd2IyHZuIPyWiqjInzSGx/mSlUqAgWSWPHa3/kiGQxg07x
+X-Google-Smtp-Source: AGHT+IGWa78rZe7hP11kX4tGSZPXXyEeGNZdduIvVkpG6xyitBEuKT+Hmejr8J48TfDfYZ8Uy0jRsw==
+X-Received: by 2002:a05:6214:2b8a:b0:6fa:c81a:6231 with SMTP id 6a1803df08f44-6fd5ef59fd6mr50345136d6.8.1750857686686;
+        Wed, 25 Jun 2025 06:21:26 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd1af36b87sm49456556d6.66.2025.06.25.06.21.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 06:21:26 -0700 (PDT)
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 8EBBBF40066;
+	Wed, 25 Jun 2025 09:21:25 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-10.internal (MEProxy); Wed, 25 Jun 2025 09:21:25 -0400
+X-ME-Sender: <xms:1fdbaB5JJSJsz-MR0UqTwxfOHGbZE23tusmM0D5MjUvyFrjctf-_ig>
+    <xme:1fdbaO4xL70h49HgONRzI7dX153e-82_UMxc-dTh5jkrrrBeoxdr-yopzNbEoLfw0
+    XVVvsQcVz07f-30WA>
+X-ME-Received: <xmr:1fdbaIduvFZfSSw1ZexJSm2-L-M7sNi0S9VKtREpo7QLWbLHF7Z-FI9Byw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtddvgddvvdekjecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpuffrtefokffrpgfnqfghnecuuegr
+    ihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjug
+    hrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhnucfh
+    vghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrfgrthhtvg
+    hrnhepjeegieeuteejveeuuedujeeuvedvffeuteefhfeiheegjeekffehffelkefgheev
+    necuffhomhgrihhnpehkvghrnhgvlhdrohhrghdpvghffhhitghiohhsrdgtohhmnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdo
+    mhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejke
+    ehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgr
+    mhgvpdhnsggprhgtphhtthhopedviedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
+    epmhgrthhhihgvuhdruggvshhnohihvghrshesvghffhhitghiohhsrdgtohhmpdhrtghp
+    thhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtg
+    hpthhtoheprhgtuhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlkhhm
+    mheslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehpvghtvghriiesihhnfh
+    hrrgguvggrugdrohhrghdprhgtphhtthhopehmihhnghhosehkvghrnhgvlhdrohhrghdp
+    rhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhonhhgmh
+    grnhesrhgvughhrghtrdgtohhmpdhrtghpthhtohepuggrvhgvsehsthhgohhlrggsshdr
+    nhgvth
+X-ME-Proxy: <xmx:1fdbaKLF33RIclEjUCDrWbW5Ob0ps3waTjcMSolhiluoUlZ-yald6A>
+    <xmx:1fdbaFJ2cri9a5daaIVhJpOdMz-53HXYqePYRC6mnKwJI0uBCMeJ9w>
+    <xmx:1fdbaDypiA_OR5t8vXzVObszVgxCYXi3_t6Pw1ejSvsxRE3hNWBAVg>
+    <xmx:1fdbaBKIKePJ-c_tHe1W54d-T7B4mKrmZ295Yva4XLEzF29RnimO1w>
+    <xmx:1fdbaIboNx55d3cfPtiNusz-Pa8aTGWMrXUwhuBm_UQ-iddfHdatecWT>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 25 Jun 2025 09:21:25 -0400 (EDT)
+Date: Wed, 25 Jun 2025 06:21:24 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: linux-kernel@vger.kernel.org, rcu@vger.kernel.org, lkmm@lists.linux.dev,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	Davidlohr Bueso <dave@stgolabs.net>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Josh Triplett <josh@joshtriplett.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Neeraj Upadhyay <neeraj.upadhyay@kernel.org>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Lai Jiangshan <jiangshanlai@gmail.com>,
+	Zqiang <qiang.zhang@linux.dev>, Breno Leitao <leitao@debian.org>,
+	aeh@meta.com, netdev@vger.kernel.org, edumazet@google.com,
+	jhs@mojatatu.com, kernel-team@meta.com,
+	Erik Lundgren <elundgren@meta.com>
+Subject: Re: [PATCH 0/8] Introduce simple hazard pointers for lockdep
+Message-ID: <aFv31IIAS0fiYci5@Mac.home>
+References: <20250625031101.12555-1-boqun.feng@gmail.com>
+ <d9c75e7c-48e2-4398-a830-9d41e7a74cc3@efficios.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: Add PMXR2230 PMIC
-To: Luca Weiss <luca.weiss@fairphone.com>, Lee Jones <lee@kernel.org>,
-        Pavel Machek <pavel@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>,
-        Fenglin Wu <quic_fenglinw@quicinc.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250625-sm7635-pmxr2230-v1-0-25aa94305f31@fairphone.com>
- <20250625-sm7635-pmxr2230-v1-3-25aa94305f31@fairphone.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250625-sm7635-pmxr2230-v1-3-25aa94305f31@fairphone.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: xjbrUIX-oEqTXjOeCyoZVH2LMiGl-yOn
-X-Proofpoint-ORIG-GUID: xjbrUIX-oEqTXjOeCyoZVH2LMiGl-yOn
-X-Authority-Analysis: v=2.4 cv=MtZS63ae c=1 sm=1 tr=0 ts=685bf797 cx=c_pps
- a=JbAStetqSzwMeJznSMzCyw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=6H0WHjuAAAAA:8 a=EUspDBNiAAAA:8
- a=1Wqoc7Fd06vDnn7CWGcA:9 a=QEXdDO2ut3YA:10 a=uxP6HrT_eTzRwkO_Te1X:22
- a=Soq9LBFxuPC4vsCAQt-j:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA5OCBTYWx0ZWRfXyXgAcBaTCbuC
- afZOF06r6X+hjirqlKN+vEKdKwlnqBIR5/6XOfa8JUJxDkjw4FBrE61Fl5DoLAm0yKbkOuJYqnn
- l1rp5Zlh1x8+IULdv2ztQBXQuKJJzAz02YTfSGSYbTAw0AMdd/6aEshaJHMc5o1qBsdXXvNLnmH
- TrFI+tvWW5cbOQSajy3cM/+Pujo1jTkwYkozUTn0pk3zsdueAGpDVktVjrkinwVK3hQfDHnZvUb
- gYAjC+hfm+JscO88ZH3fOnRbXuoF5kc2Bb8zUfBF3RQV69lNhG3VcmQQ0HTpuiJtX6Djfw6/Pfu
- v+AUPW71MNMOyNyAurjIsg7rhgpU22NWsqI+l/E9o4mvHk9wci7btWP1ftr+4agXiu+bEV1iuDG
- Tu8z32TJUXgqzwrJyrNdfUYEIGql3OH1ZO6/7JVPCYRjSU93eyqtZWXEH4fkOcwSqJuDBYFI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_03,2025-06-25_01,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0 phishscore=0
- mlxlogscore=999 spamscore=0 malwarescore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 mlxscore=0 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506250098
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d9c75e7c-48e2-4398-a830-9d41e7a74cc3@efficios.com>
 
-On 6/25/25 11:18 AM, Luca Weiss wrote:
-> Add a dts for the PMIC used e.g. with SM7635 devices.
+On Wed, Jun 25, 2025 at 08:25:52AM -0400, Mathieu Desnoyers wrote:
+> On 2025-06-24 23:10, Boqun Feng wrote:
+> > Hi,
+> > 
+> > This is the official first version of simple hazard pointers following
+> > the RFC:
+> > 
+> > 	https://lore.kernel.org/lkml/20250414060055.341516-1-boqun.feng@gmail.com/
+> > 
+> > I rebase it onto v6.16-rc3 and hope to get more feedback this time.
+> > 
+> > Thanks a lot for Breno Leitao to try the RFC out and share the numbers.
+> > 
+> > I did an extra comparison this time, between the shazptr solution and
+> > the synchronize_rcu_expedited() solution. In my test, during a 100 times
+> > "tc qdisc replace" run:
+> > 
+> > * IPI rate with the shazptr solution: ~14 per second per core.
+> > * IPI rate with synchronize_rcu_expedited(): ~140 per second per core.
+> > 
+> > (IPI results were from the 'CAL' line in /proc/interrupt)
+> > 
+> > This shows that while both solutions have the similar speedup, shazptr
+> > solution avoids the introduce of high IPI rate compared to
+> > synchronize_rcu_expedited().
+> > 
+> > Feedback is welcome and please let know if there is any concern or
+> > suggestion. Thanks!
 > 
-> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
-> ---
->  arch/arm64/boot/dts/qcom/pmxr2230.dtsi | 63 ++++++++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
+> Hi Boqun,
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/pmxr2230.dtsi b/arch/arm64/boot/dts/qcom/pmxr2230.dtsi
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..a7650f3230c01422b76ef78e897e5e7ae2f20cc6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/qcom/pmxr2230.dtsi
-> @@ -0,0 +1,63 @@
-> +// SPDX-License-Identifier: BSD-3-Clause
-> +/*
-> + * Copyright (c) 2025, Luca Weiss <luca.weiss@fairphone.com>
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/spmi/spmi.h>
-> +
-> +/ {
-> +	thermal-zones {
-> +		pmxr2230_thermal: pmxr2230-thermal {
-> +			polling-delay-passive = <100>;
-> +
-> +			thermal-sensors = <&pmxr2230_temp_alarm>;
-> +
-> +			trips {
-> +				pmxr2230_trip0: trip0 {
-> +					temperature = <95000>;
-> +					hysteresis = <0>;
-> +					type = "passive";
-> +				};
-> +
-> +				pmxr2230_crit: pmxr2230-crit {
+> What is unclear to me is what is the delta wrt:
+> 
+> https://lore.kernel.org/lkml/20241008135034.1982519-4-mathieu.desnoyers@efficios.com/
+> 
 
-This name is "meh", please change to tripN
+shazptr is more close to the general hazptr I proposed earlier:
 
-> +					temperature = <115000>;
+	https://lore.kernel.org/lkml/20240917143402.930114-1-boqun.feng@gmail.com/
 
-Unless there's some actual electrical/physical SKU differences,
-downstream lists 145C as critical for a PMIC carrying the same
-name
+, it's aimed as a global facility therefore no hazptr_domain is needed,
+plus it supports non-busy waiting synchronize_shazptr() at the
+beginning.
 
-with that:
+> and whether this helper against compiler optimizations would still be needed here:
+> 
+> https://lore.kernel.org/lkml/20241008135034.1982519-2-mathieu.desnoyers@efficios.com/
+> 
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+For the current user, no, but eventually we are going to need it.
 
-Konrad
+Regards,
+Boqun
+
+> Thanks,
+> 
+> Mathieu
+> 
+> > 
+> > Regards,
+> > Boqun
+> > 
+> > --------------------------------------
+> > Please find the old performance below:
+> > 
+> > On my system (a 96-cpu VMs), the results of:
+> > 
+> > 	time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1: mq
+> > 
+> > are (with lockdep enabled):
+> > 
+> > 	(without the patchset)
+> > 	real    0m1.039s
+> > 	user    0m0.001s
+> > 	sys     0m0.069s
+> > 
+> > 	(with the patchset)
+> > 	real    0m0.053s
+> > 	user    0m0.000s
+> > 	sys     0m0.051s
+> > 
+> > i.e. almost 20x speed-up.
+> > 
+> > Other comparisons between RCU and shazptr, the rcuscale results (using
+> > default configuration from
+> > tools/testing/selftests/rcutorture/bin/kvm.sh):
+> > 
+> > RCU:
+> > 
+> > 	Average grace-period duration: 7470.02 microseconds
+> > 	Minimum grace-period duration: 3981.6
+> > 	50th percentile grace-period duration: 6002.73
+> > 	90th percentile grace-period duration: 7008.93
+> > 	99th percentile grace-period duration: 10015
+> > 	Maximum grace-period duration: 142228
+> > 
+> > shazptr:
+> > 
+> > 	Average grace-period duration: 0.845825 microseconds
+> > 	Minimum grace-period duration: 0.199
+> > 	50th percentile grace-period duration: 0.585
+> > 	90th percentile grace-period duration: 1.656
+> > 	99th percentile grace-period duration: 3.872
+> > 	Maximum grace-period duration: 3049.05
+> > 
+> > shazptr (skip_synchronize_self_scan=1, i.e. always let scan kthread to
+> > wakeup):
+> > 
+> > 	Average grace-period duration: 467.861 microseconds
+> > 	Minimum grace-period duration: 92.913
+> > 	50th percentile grace-period duration: 440.691
+> > 	90th percentile grace-period duration: 460.623
+> > 	99th percentile grace-period duration: 650.068
+> > 	Maximum grace-period duration: 5775.46
+> > 
+> > shazptr_wildcard (i.e. readers always use SHAZPTR_WILDCARD):
+> > 
+> > 	Average grace-period duration: 599.569 microseconds
+> > 	Minimum grace-period duration: 1.432
+> > 	50th percentile grace-period duration: 582.631
+> > 	90th percentile grace-period duration: 781.704
+> > 	99th percentile grace-period duration: 1160.26
+> > 	Maximum grace-period duration: 6727.53
+> > 
+> > shazptr_wildcard (skip_synchronize_self_scan=1):
+> > 
+> > 	Average grace-period duration: 460.466 microseconds
+> > 	Minimum grace-period duration: 303.546
+> > 	50th percentile grace-period duration: 424.334
+> > 	90th percentile grace-period duration: 482.637
+> > 	99th percentile grace-period duration: 600.214
+> > 	Maximum grace-period duration: 4126.94
+> > 
+> > Boqun Feng (8):
+> >    Introduce simple hazard pointers
+> >    shazptr: Add refscale test
+> >    shazptr: Add refscale test for wildcard
+> >    shazptr: Avoid synchronize_shaptr() busy waiting
+> >    shazptr: Allow skip self scan in synchronize_shaptr()
+> >    rcuscale: Allow rcu_scale_ops::get_gp_seq to be NULL
+> >    rcuscale: Add tests for simple hazard pointers
+> >    locking/lockdep: Use shazptr to protect the key hashlist
+> > 
+> >   include/linux/shazptr.h  |  73 +++++++++
+> >   kernel/locking/Makefile  |   2 +-
+> >   kernel/locking/lockdep.c |  11 +-
+> >   kernel/locking/shazptr.c | 318 +++++++++++++++++++++++++++++++++++++++
+> >   kernel/rcu/rcuscale.c    |  60 +++++++-
+> >   kernel/rcu/refscale.c    |  77 ++++++++++
+> >   6 files changed, 534 insertions(+), 7 deletions(-)
+> >   create mode 100644 include/linux/shazptr.h
+> >   create mode 100644 kernel/locking/shazptr.c
+> > 
+> 
+> 
+> -- 
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> https://www.efficios.com
