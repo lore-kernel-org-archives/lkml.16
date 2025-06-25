@@ -1,135 +1,165 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703E4307498;
-	Wed, 25 Jun 2025 06:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB471E1DEC;
+	Wed, 25 Jun 2025 06:12:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750831908; cv=none; b=BTmNuxeoF+Ujur5N2bWX75OyNNL+6C6fOZEHtrhSUuThAZ/UGcNif8B1Sx0Trb/xLYVAHS2/DKOjpbc0hPppT7Bo8KjIDsUaHCMK7gZ/3tWw3p7ftpcmBy3/Ewj/POvukXCX/SbPdUECvB3w3c+FeiXnYmdFsRidXl94oDl6VNE=
+	t=1750831953; cv=none; b=AZqSi1qIqxH/8iO1mm6Vgd9k3E+/zfhc/4jP3INgPj6jTJxqWPEUVBEbRBa2+cIpYf8YlX+LNYdwqDa+u4u8hw2S9oiCHXUN9Mfq5EBm7hv51HKhJ1mW87HnuWb7dUYCDkQE7JtWZF7q9DOFoAcAMOV9x7+7MdYyTTDW5fzjumQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750831908; c=relaxed/simple;
-	bh=BLRL/tfRl0xXr0I6Dv0V4j/7kZhCaRjPCxscsQX+91I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q875+fGSdwArwUad5T8YxHOXrCcSupBBMbJdc90Ux3fwS8hHuZwB1NRqsbc5EbnVHPEN/dUNVwhq3Fy2/B04dVyuG9lvfVzuY5zbT+mNmMAhO/1srwRuB5c3kAG37l7K9r2zd0gWp3MpqHNORJSf04tOmz0eOMAaUGVue5qT7VA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W1Eqvrpf; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750831953; c=relaxed/simple;
+	bh=WCjFzatrX19NYcsnTaDdkH0qAtyIin0QHtX5HV2H+cw=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=WaR0mrOUZQM2Osi3rkuLMDC2kHzeg+iMLo78KRVMZ5kcg2IEJxDgZ7ipPMF+oTDQDy4njuOmWSJwagcAVlC2Z/0qCDrtggGr+ubMc1OMIDb4XTJPHZvKQa+zDHVX6zub8aHg46VErjxIR7lNVIvEufQycuyo+pUMdOMYi+G6/qk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PWVuzxJJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W1Eqvrpf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750831906; x=1782367906;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=BLRL/tfRl0xXr0I6Dv0V4j/7kZhCaRjPCxscsQX+91I=;
-  b=W1EqvrpfD02qMiTw5zZBXuzrYdptBfMoV1Gff9hNiLSqr/IvV4g7Q9s2
-   rNYfJ5jhoUbNSBeYX66lGjiWp0eBoNJ+BjoG3mz4LWfvVRFOggHujJhrY
-   qRtqEkgSK0PjX9Qu+IIBmnVWEp/JuHdeEk2ZJdtM/89gIwKr3bDL94Cqy
-   aVEdGVJq2fC/nxo6onGH1nm9D1UfAIeQyZEavGjrIWhoEJrPAh9xbrtKq
-   OiFSFE8vgznDEZl2Xq7sg5aoCzAiRmEXD+U6A2XiJSf9ulGZmOaToV/L5
-   PzMDKaXeMJkTN5y+IpuXsnVwXlD/JtZB57/NIPUFW01aewmOA6qHhs1Ua
-   A==;
-X-CSE-ConnectionGUID: Y3kqi7PnSKGl7khX6OR3JQ==
-X-CSE-MsgGUID: wh30H9s4RviyPp6D9DNAXA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11474"; a="52203458"
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="52203458"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 23:11:45 -0700
-X-CSE-ConnectionGUID: fhAeAE6jRWev4DSNMcxAng==
-X-CSE-MsgGUID: aGWvhxcmSt6GuB2BuoM4Tw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,264,1744095600"; 
-   d="scan'208";a="152298025"
-Received: from klitkey1-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.245.155])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2025 23:11:41 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id BA76F11FAB3;
-	Wed, 25 Jun 2025 09:11:37 +0300 (EEST)
-Date: Wed, 25 Jun 2025 06:11:37 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Mehdi Djait <mehdi.djait@linux.intel.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	"Nirujogi, Pratap" <pnirujog@amd.com>,
-	Pratap Nirujogi <pratap.nirujogi@amd.com>, mchehab@kernel.org,
-	hverkuil@xs4all.nl, bryan.odonoghue@linaro.org, krzk@kernel.org,
-	dave.stevenson@raspberrypi.com, hdegoede@redhat.com,
-	jai.luthra@ideasonboard.com, tomi.valkeinen@ideasonboard.com,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-	benjamin.chan@amd.com, bin.du@amd.com, grosikop@amd.com,
-	king.li@amd.com, dantony@amd.com, vengutta@amd.com,
-	Svetoslav.Stoilov@amd.com, Yana.Zheleva@amd.com
-Subject: Re: [PATCH v3 RESEND] media: i2c: Add OV05C10 camera sensor driver
-Message-ID: <aFuTGe1MnXNyvP3u@kekkonen.localdomain>
-References: <53674c5f-6b68-49e7-bbb0-fd06fff344c3@amd.com>
- <8b16675a-c6ac-4619-aabe-ad2a4be6c964@amd.com>
- <20250623220503.GA15951@pendragon.ideasonboard.com>
- <425j7c6xvbbatdhxgjgjawzwfnjmjetg6rpnwfudbtg6qz6nay@dy5ldbuhtbvv>
- <aFp7tuXkU1jayPum@kekkonen.localdomain>
- <aFp78tqHhe_IhV6d@kekkonen.localdomain>
- <20250624102745.GG15951@pendragon.ideasonboard.com>
- <nixg4efp3zkdpd6h7kp6wkvam63batpoknov2nkgu36voks6bk@gzuackzl3l5g>
- <aFqQEwdzSY123xps@kekkonen.localdomain>
- <aslodzamkbjm6n6oherakch2nyltl6mnncl4mzr4o774oolr4t@hpegah7dq72g>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PWVuzxJJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90B72C4CEEA;
+	Wed, 25 Jun 2025 06:12:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750831952;
+	bh=WCjFzatrX19NYcsnTaDdkH0qAtyIin0QHtX5HV2H+cw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=PWVuzxJJAfOYhXBqCIrYu9xfnRB6JcrYEbwWlFfcHWK2apJie/uX9ISChmq4zwbHA
+	 TUZxXxbWe9XnSn8viuKpn7p/Bi4Zbn5ZJ4TPR0mYI1E8paJZuQiQFJCvTuOkjTcSW5
+	 +2rHJHLv1n0EWkMWf4lA+imHe1mL2/9JpgF7exwjHAUy18h6BepQexCaciZkBFEydS
+	 EyO+ntm+92ES4cPOqBbjQJoIZv4QUcvDDeG84+IZ7T77eRRzduP4gw9bcf6DmP3qXk
+	 h5VW0rPPHsSX1ge2kfjIRYtiB0qQU9+Fe033OmWLH/4gjexoFoOvwO6g6O69Hu2oni
+	 wDRP+mJj4f5uQ==
+Date: Wed, 25 Jun 2025 15:12:29 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Jiri Olsa <jolsa@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Andrii Nakryiko <andrii@kernel.org>, bpf@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+ x86@kernel.org, Song Liu <songliubraving@fb.com>, Yonghong Song
+ <yhs@fb.com>, John Fastabend <john.fastabend@gmail.com>, Hao Luo
+ <haoluo@google.com>, Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu
+ <mhiramat@kernel.org>, Alan Maguire <alan.maguire@oracle.com>, David Laight
+ <David.Laight@ACULAB.COM>, Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?=
+ <thomas@t-8ch.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCHv3 perf/core 04/22] uprobes: Add uprobe_write function
+Message-Id: <20250625151229.d3f11622884fd6f4f09c4f62@kernel.org>
+In-Reply-To: <20250605132350.1488129-5-jolsa@kernel.org>
+References: <20250605132350.1488129-1-jolsa@kernel.org>
+	<20250605132350.1488129-5-jolsa@kernel.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aslodzamkbjm6n6oherakch2nyltl6mnncl4mzr4o774oolr4t@hpegah7dq72g>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Mehdi,
+On Thu,  5 Jun 2025 15:23:31 +0200
+Jiri Olsa <jolsa@kernel.org> wrote:
 
-On Tue, Jun 24, 2025 at 06:34:51PM +0200, Mehdi Djait wrote:
-> Hi Sakari,
+> Adding uprobe_write function that does what uprobe_write_opcode did
+> so far, but allows to pass verify callback function that checks the
+> memory location before writing the opcode.
 > 
-> On Tue, Jun 24, 2025 at 11:46:27AM +0000, Sakari Ailus wrote:
+> It will be used in following changes to implement specific checking
+> logic for instruction update.
 > 
-> [...]
+> The uprobe_write_opcode now calls uprobe_write with verify_opcode as
+> the verify callback.
 > 
-> > 
-> > I'm in favour of the latter but both should be workable.
-> > 
-> > Speaking of return values, devm_clk_get_optional() may also return
-> > -EPROBE_DEFER. That needs to be handled.
-> > 
-> 
-> Ack.
-> 
-> > And further on -EPROBE_DEFER, I think the helper should return
-> > -EPROBE_DEFER if the "clock-frequency" property doesn't exist on non-OF
-> > nodes. That signals the required software nodes required on Intel Windows
-> > definitions/ipu-bridge or AMD systems aren't in place yet so really probing
-> > should be deferred. This would allow removing the hacks that return
-> > -EPROBE_DEFER in sensor drivers when no graph endpoint is found.
-> 
-> device_property_read_u32() returns the following:
-> 
->  * Return: number of values if @val was %NULL,
->  *         %0 if the property was found (success),
->  *	   %-EINVAL if given arguments are not valid,
->  *	   %-ENODATA if the property does not have a value,
->  *	   %-EPROTO if the property is not an array of numbers,
->  *	   %-EOVERFLOW if the size of the property is not as expected.
->  *	   %-ENXIO if no suitable firmware interface is present.
-> 
-> 
-> Do you mean something like this in the helper:
-> 
-> if (ret == -ENODATA && !of_node)
-> 	return ERR_PTR(-EPROBE_DEFER);
 
-I think -EINVAL is returned if a property doesn't exist on ACPI, same on
-software nodes. On software nodes you could also have -ENODATA if the
-property has no value. So test both of these?
+Looks good to me.
 
-I'd also test !of_node first.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+> Acked-by: Oleg Nesterov <oleg@redhat.com>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  include/linux/uprobes.h |  5 +++++
+>  kernel/events/uprobes.c | 14 ++++++++++----
+>  2 files changed, 15 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index 7447e15559b8..e13382054435 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -187,6 +187,9 @@ struct uprobes_state {
+>  	struct xol_area		*xol_area;
+>  };
+>  
+> +typedef int (*uprobe_write_verify_t)(struct page *page, unsigned long vaddr,
+> +				     uprobe_opcode_t *opcode);
+> +
+>  extern void __init uprobes_init(void);
+>  extern int set_swbp(struct arch_uprobe *aup, struct vm_area_struct *vma, unsigned long vaddr);
+>  extern int set_orig_insn(struct arch_uprobe *aup, struct vm_area_struct *vma, unsigned long vaddr);
+> @@ -195,6 +198,8 @@ extern bool is_trap_insn(uprobe_opcode_t *insn);
+>  extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
+>  extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
+>  extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma, unsigned long vaddr, uprobe_opcode_t);
+> +extern int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma, const unsigned long opcode_vaddr,
+> +			uprobe_opcode_t opcode, uprobe_write_verify_t verify);
+>  extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+>  extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
+>  extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 37d3a3f6e48a..777de9b95dd7 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -399,7 +399,7 @@ static bool orig_page_is_identical(struct vm_area_struct *vma,
+>  	return identical;
+>  }
+>  
+> -static int __uprobe_write_opcode(struct vm_area_struct *vma,
+> +static int __uprobe_write(struct vm_area_struct *vma,
+>  		struct folio_walk *fw, struct folio *folio,
+>  		unsigned long opcode_vaddr, uprobe_opcode_t opcode)
+>  {
+> @@ -488,6 +488,12 @@ static int __uprobe_write_opcode(struct vm_area_struct *vma,
+>   */
+>  int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  		const unsigned long opcode_vaddr, uprobe_opcode_t opcode)
+> +{
+> +	return uprobe_write(auprobe, vma, opcode_vaddr, opcode, verify_opcode);
+> +}
+> +
+> +int uprobe_write(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+> +		 const unsigned long opcode_vaddr, uprobe_opcode_t opcode, uprobe_write_verify_t verify)
+>  {
+>  	const unsigned long vaddr = opcode_vaddr & PAGE_MASK;
+>  	struct mm_struct *mm = vma->vm_mm;
+> @@ -510,7 +516,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  	 * page that we can safely modify. Use FOLL_WRITE to trigger a write
+>  	 * fault if required. When unregistering, we might be lucky and the
+>  	 * anon page is already gone. So defer write faults until really
+> -	 * required. Use FOLL_SPLIT_PMD, because __uprobe_write_opcode()
+> +	 * required. Use FOLL_SPLIT_PMD, because __uprobe_write()
+>  	 * cannot deal with PMDs yet.
+>  	 */
+>  	if (is_register)
+> @@ -522,7 +528,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  		goto out;
+>  	folio = page_folio(page);
+>  
+> -	ret = verify_opcode(page, opcode_vaddr, &opcode);
+> +	ret = verify(page, opcode_vaddr, &opcode);
+>  	if (ret <= 0) {
+>  		folio_put(folio);
+>  		goto out;
+> @@ -561,7 +567,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct vm_area_struct *vma,
+>  	/* Walk the page tables again, to perform the actual update. */
+>  	if (folio_walk_start(&fw, vma, vaddr, 0)) {
+>  		if (fw.page == page)
+> -			ret = __uprobe_write_opcode(vma, &fw, folio, opcode_vaddr, opcode);
+> +			ret = __uprobe_write(vma, &fw, folio, opcode_vaddr, opcode);
+>  		folio_walk_end(&fw, vma);
+>  	}
+>  
+> -- 
+> 2.49.0
+> 
+
 
 -- 
-Regards,
-
-Sakari Ailus
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
