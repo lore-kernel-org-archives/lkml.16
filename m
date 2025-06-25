@@ -1,119 +1,125 @@
-Received: from mta-03.yadro.com (mta-03.yadro.com [89.207.88.253])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26B1E25DAFF;
-	Wed, 25 Jun 2025 11:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.207.88.253
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCF3C262D27
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 11:55:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750852500; cv=none; b=UdjOTLiYzUCE8wyiwXAhOcSax4DyPlf4iamXduM0N5sv1Sj84P1G6FNQ9cJDv5PKFUSBBOn4qn/f3nc3Y6gKqOYSSQhwTiTT8ztjkSOKczZDe5VDacaRQJgFbLr/cI7pAujg+VYoXl/jc/ITOSUQzAUMVukLx6LQNr+3C+DkpfQ=
+	t=1750852530; cv=none; b=nLvExIFxLzT/ADfLWThLqgjcZfdTQoViRZZOYu/CsF7jfB+WCUasPLPQ02iP3Zbtl1ox3nneCR79opaImPjVYYNAOkHkZrwNt7SN0VVSh+EJ3d3R1N+TwucInQ2hEcMHqcAWmz7NEW16G4XbqLYoQmAeF6YvF1qNPgSgJ8/dgAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750852500; c=relaxed/simple;
-	bh=jiudyTm6de+eb570mlyoWFRyNxgO4jOMKOdAxyojKDw=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UmjenSU1eTB8xOTKl0OYx2Jn/sq1V4tkKcngAq6wU1P6jjB1ZkGkaM9llgxE0Xr99Z9i+iOACJSyvdhVnq3aLw87oQZf042F/DgM6569A8i7YecMLQVxuUirEBmVSdGV2x7Mi4NoQt86yL2LCnBYh4dJ3Juyl6Vt1AKxA3YbRSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yadro.com; spf=pass smtp.mailfrom=yadro.com; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=quS6p1z9; dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b=bp4AjYu9; arc=none smtp.client-ip=89.207.88.253
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=yadro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yadro.com
+	s=arc-20240116; t=1750852530; c=relaxed/simple;
+	bh=Ele4kC/bFjkVABuTlMtPoVal/q9sn4Mx7Xjke1CK0u4=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=gUgcIe7SaHTJhzt+t7zUp+oPxT7R5WQAnvLblG+h3VknkA/1DX9Q2fNaO+zGD5yw4UPDugXll3euvcvchShwqizUsgWroqMnFybt9zDG16YBHLGin2PpoRUdaWHwqpZ2qUwL8lbApO+VUVNryIUjKp59CtuN7LSAPubjZLqZcdk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=qs5YSOO0; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="quS6p1z9";
-	dkim=pass (2048-bit key) header.d=yadro.com header.i=@yadro.com header.b="bp4AjYu9"
-Received: from mta-03.yadro.com (localhost [127.0.0.1])
-	by mta-03.yadro.com (Postfix) with ESMTP id D538BE000A;
-	Wed, 25 Jun 2025 14:45:50 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mta-03.yadro.com D538BE000A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-04;
-	t=1750851950; bh=qPYba+iSHjLpzCbKcEcctCJst/76kJf0E4zmJ6khlis=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=quS6p1z9nzv2AI795fRB+i2jcuVO/J6gkA+U2SR9Cr0PWgDrSs263CWnZ0EV00hLS
-	 4e7DbkZ3/lghLuit6VhQlH/c9OYVso4Go7D2xchnk0kuaIk5von4WX2JqwLb9QaTpG
-	 C6lzRtPGE2zydzBbjNp8VnfcCOyw1mXzjnEGqzKpGI5W/+1WY7oHwHMl6mf9jVOZ+h
-	 HKimiK8XWcyh2HpLX6myW8f4+FYyZJmMTGz9fzRYeDhpbUa/AkixCyvj4VhBio/f0i
-	 c234wrsovJwQMaVDfNjALD/5qCI2c6SjpMN0frJ7+iZh4lHFd1W7BTC2lk9RitNzLb
-	 Dcugq4l8DtcuA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; s=mta-03;
-	t=1750851950; bh=qPYba+iSHjLpzCbKcEcctCJst/76kJf0E4zmJ6khlis=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=bp4AjYu9Cts8L+B6z093nYPksiTjJlUjxOFu0MYG5ymyv37WkdCryvznK6VfqXIm1
-	 PZo5j47ThNNUCmez2NCOxqdNMu4m3koTUveHqystqDxNeacb/jfa5KYom1/PCPh+lY
-	 W/72P2J/lAAj97YP/5w+6UCFThhrogxfX+td/fRXMIKUpiQD0NlVtcCTJz4Rvkugsj
-	 m9OScW59evQVoGaV9FxA20oLv587O9WpgMw+yC6iDJKDZSmk7ufgdWFGFj4gOij61I
-	 th6aPzVFtRKsZBuxXEuCoD2oiL0j9yUw/0hDC2tga71ddoRV+0l5uoxngewgQjFTaL
-	 QcfdA1ukor8Wg==
-Received: from T-EXCH-10.corp.yadro.com (T-EXCH-10.corp.yadro.com [172.17.11.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mta-03.yadro.com (Postfix) with ESMTPS;
-	Wed, 25 Jun 2025 14:45:49 +0300 (MSK)
-Received: from T-EXCH-12.corp.yadro.com (172.17.11.143) by
- T-EXCH-10.corp.yadro.com (172.17.11.60) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.9; Wed, 25 Jun 2025 14:45:48 +0300
-Received: from NB-591.corp.yadro.com (172.17.34.54) by
- T-EXCH-12.corp.yadro.com (172.17.11.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.12; Wed, 25 Jun 2025 14:45:48 +0300
-From: Dmitry Bogdanov <d.bogdanov@yadro.com>
-To: Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Chaitanya Kulkarni <kch@nvidia.com>, <linux-nvme@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <linux@yadro.com>, Dmitry Bogdanov <d.bogdanov@yadro.com>,
-	<stable@vger.kernel.org>
-Subject: [PATCH] nvmet: fix memory leak of bio integrity
-Date: Wed, 25 Jun 2025 14:45:33 +0300
-Message-ID: <20250625114533.24041-1-d.bogdanov@yadro.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="qs5YSOO0"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ad89c32a7b5so270812866b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 04:55:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fairphone.com; s=fair; t=1750852526; x=1751457326; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ele4kC/bFjkVABuTlMtPoVal/q9sn4Mx7Xjke1CK0u4=;
+        b=qs5YSOO0LLGQ3vi6rgHcweeS/ep1QgOkxBFP9k0ma2vtkXALRY3UA/PIvNQtFlCrgA
+         +s597SFYgiVvq1zi+seQXmRMiQO/JC+kKqEKG5wONMcnjRl3w9F6Ot6VqXM6x/DDuFl/
+         5N8IETSyMMYnbOSnO1rkJTyc2c/5W4dYFJx/6uu+ceGGpeHa66CgYZ/19MZnGegDcs6y
+         Rr6ijT6wXL4nzef8MaP0nEGRBsG0dINE5pQRZ8Exz4pnfgNKAY4isZbTtXAfeMPm3KXD
+         P3ESbmKN04yIlKkbzpmFSNyGEWv+l36Z6YQaYn/EP9iZlmB+2wjs0XFhEmB8o95IvsPI
+         6PAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750852526; x=1751457326;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ele4kC/bFjkVABuTlMtPoVal/q9sn4Mx7Xjke1CK0u4=;
+        b=OwcLMST7bsfkYJVWj/4SRRRvkFwXHR3a6DC1qpJjLIR10ccVUKWCWUY5L0uScmYkY8
+         BT5z+Pzc2W2Q39ElweDNBH+tYZs8IZBrZMqn4kb2dnL7wx1jAtfGv8aT8zOLPnAJgz+X
+         9UOiIS8aKn4vJK7EOS2c4CCVT0piJ80mUyw0EXtqJHHMOQNya7ufB60tRKGnBfNAvgQG
+         AzMYwW2fn8VPHqrWo5jgdE4y6Ft4loJ0nGBgWYaoCRuQXi3zGPNQ5K+k2NothHkvV8XI
+         1Fkpo7HPspGDURwm50FM1+zsPaCi3rg3zX0ZagjMNXQlxE4t8YeZqLpCJ6ZrsC6cr3Lg
+         EBYQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUhWJmJR37Yj/77J331qYdkyY+opZPxB/vqRQ7hOqM3jGJlrUN4HNQH0BRIzZelCPGB+O/tlxdvFvyERI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc7VWMvgUFTmxhw5ZufnlHxIbJ6px2rOqZuvMFQUNhrVKbokAU
+	DbS0Jz3nd1C5tsYVRQ4qCmQd15c75+DxBKzTMbyRYdkUqvci4+PYKf6RdvLm3FFzzKs=
+X-Gm-Gg: ASbGncuFsqmLFeH/+7NgwHIyRH7PRCRoYXY+d+y2IGCt/uVN2liHl137t4+WI2Dw6I0
+	E9SH352hA27AJ239lytGPWgd5BuArTNdqZQi2Obsp0jpdujMQP3quxGkHyzVBG/UBN4UZoyEOuO
+	jvotbgH+mEGMcfWwB6vgzo3U5RH7oxtLgGopunMnV+8TM6lKJxNhfhSiZcE+bMbgSb4UVuuIjG+
+	wgtWwGGDkoJ4HGiuLLES3YB3goXDphNaFhuihPDymQoLN87XfaCYqzUmP3zbJhhgPHbcWwXy2qt
+	asxkjgfpNXKbFkNJZgsMjzoaRKS0BntVswhvldd9+MG/kvz5yWmUqNdXdIpii/Ao4qr7D1V0qhk
+	RqjVZBnR72bCjvsbduBKPrsmabUYcnx8=
+X-Google-Smtp-Source: AGHT+IGHwtU2WcLOLeMlMlhviB+W5ro/PgSmY8OoYgsUjPuqlDw7Eu44hCDzY1aMqXqaPDEZvGOrnQ==
+X-Received: by 2002:a17:906:d92:b0:adb:4917:3c10 with SMTP id a640c23a62f3a-ae0befc3ac1mr209592966b.60.1750852525989;
+        Wed, 25 Jun 2025 04:55:25 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae0cb358618sm29256266b.102.2025.06.25.04.55.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 04:55:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: RTM-EXCH-03.corp.yadro.com (10.34.9.203) To
- T-EXCH-12.corp.yadro.com (172.17.11.143)
-X-KSMG-AntiPhishing: not scanned, disabled by settings
-X-KSMG-AntiSpam-Interceptor-Info: not scanned
-X-KSMG-AntiSpam-Status: not scanned, disabled by settings
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2025/06/25 10:41:00 #27589862
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-KATA-Status: Not Scanned
-X-KSMG-LinksScanning: NotDetected, bases: 2025/06/25 11:16:00
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 5
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 25 Jun 2025 13:55:24 +0200
+Message-Id: <DAVLF5WB0IZU.3EZCARZSQO050@fairphone.com>
+Cc: <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
+ <linux-arm-msm@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-phy@lists.infradead.org>
+Subject: Re: [PATCH 3/4] phy: qcom: phy-qcom-snps-eusb2: Add missing write
+ from init sequence
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+To: "Konrad Dybcio" <konrad.dybcio@oss.qualcomm.com>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rob Herring" <robh@kernel.org>, "Krzysztof
+ Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Wesley Cheng" <quic_wcheng@quicinc.com>, "Vinod Koul" <vkoul@kernel.org>,
+ "Kishon Vijay Abraham I" <kishon@kernel.org>, "Abel Vesa"
+ <abel.vesa@linaro.org>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a-dirty
+References: <20250625-sm7635-eusb-phy-v1-0-94d76e0667c1@fairphone.com>
+ <20250625-sm7635-eusb-phy-v1-3-94d76e0667c1@fairphone.com>
+ <4d215791-35da-4139-9cc8-33da5d46469e@oss.qualcomm.com>
+In-Reply-To: <4d215791-35da-4139-9cc8-33da5d46469e@oss.qualcomm.com>
 
-If nvmet receives commands with metadata there is a continuous memory leak
-of kmalloc-128 slab or more precisely bio->bi_integrity.
+On Wed Jun 25, 2025 at 1:51 PM CEST, Konrad Dybcio wrote:
+> On 6/25/25 11:14 AM, Luca Weiss wrote:
+>> As per a commit from Qualcomm's downstream 6.1 kernel[0], the init
+>> sequence is missing writing 0x00 to USB_PHY_CFG0 at the end, as per the
+>> 'latest' HPG revision (as of November 2023).
+>>=20
+>> [0] https://git.codelinaro.org/clo/la/kernel/qcom/-/commit/b77774a89e3fd=
+a3246e09dd39e16e2ab43cd1329
+>>=20
+>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>> ---
+>
+> Both the original and your commit messages are slightly misleading, the
+> HPG (and the code which is indeed in sync with it after the change is
+> made) only sets the value of 0 to BIT(1), a.k.a. CMN_CTRL_OVERRIDE_EN.
+> You most definitely don't want to set the entire register to 0.
 
-Since that [1] patch series the integrity is not get free at bio_end_io
-for submitter owned integrity. It has to free explicitly.
+After reading your message twice I think I've got it.
 
-After commit bf4c89fc8797  ("block: don't call bio_uninit from bio_endio")
-each user of bio_init has to use bio_uninit as well. Otherwise the bio
-integrity is not getting free. Nvmet uses bio_init for inline bios.
+Code is correct, but commit message is wrong (it's saying writing 0x00
+but it's not actually doing this in the code, just setting the bit to 0).
 
-Uninit the inline bio to complete deallocation of integrity in bio.
+>
+> With that fixed:
+>
+> Fixes: 80090810f5d3 ("phy: qcom: Add QCOM SNPS eUSB2 driver")
+> Reviewed-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
 
-[1] https://lore.kernel.org/all/20240702151047.1746127-1-hch@lst.de/
+Thanks for taking a look!
 
-Cc: stable@vger.kernel.org # 6.11
-Signed-off-by: Dmitry Bogdanov <d.bogdanov@yadro.com>
----
- drivers/nvme/target/nvmet.h | 2 ++
- 1 file changed, 2 insertions(+)
+Regards
+Luca
 
-diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
-index df69a9dee71c..51df72f5e89b 100644
---- a/drivers/nvme/target/nvmet.h
-+++ b/drivers/nvme/target/nvmet.h
-@@ -867,6 +867,8 @@ static inline void nvmet_req_bio_put(struct nvmet_req *req, struct bio *bio)
- {
- 	if (bio != &req->b.inline_bio)
- 		bio_put(bio);
-+	else
-+		bio_uninit(bio);
- }
- 
- #ifdef CONFIG_NVME_TARGET_TCP_TLS
--- 
-2.25.1
+>
+> Konrad
 
