@@ -1,118 +1,99 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F014B263F22;
-	Wed, 25 Jun 2025 14:05:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E448A263F22
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:05:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750860326; cv=none; b=bf6Kt2sKFOzPMyppQbM+tEX+Sdg93ert8dnci2kbswFGcZWlP+vKgmNwGTGqetK1SXawIiX+GzdgUpzF7xQ5jdsoYclekPDEZ9uZ1DIv8LQkEuXPt8oAUTSouho0t3NqqRrLgNPMKVWcWK0YPSBl8+q1az0zLE4ZHMTtqu1N9Pk=
+	t=1750860335; cv=none; b=Aioq2PZ3HNE2A1aKASzG/yq9Wjo6u/R3KpOMOomSmb6l3rtT7M+iFzwz/xtHi3WLOjtD5Zdx88A0FyRq9bgnmQPFUbSPAJddxmX0dnqUhHg4K/bKeEfenaPoZRB+TT7XXF9cy+jssQgiOsfoaJjpvvc8yFgNkoVO5ALpeOTNx08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750860326; c=relaxed/simple;
-	bh=riLdd5+MDpL2DCfxQ37cyxD+TU6nR3iPtqrq+d4xA5E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fmGA1RlVm/CzQC7YPH3i+8kFhGoMTsZotGU1UX1sXhoG0DcMpvhQyM25cqvjKTBILGUbWHx4HhihF5XUHNVeVUolEOfpXBs7agsF4fyFvO/1iJxW7Ct5BvsLDy6SfnLlmb6oeLZgw20KLH0L4raNLhtUZj5XqlKTysy9T2IL/fQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hHMxm2Zb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750860335; c=relaxed/simple;
+	bh=k4HVyaqjM3pqT9Wr2KUojiGSkbVMogoZWDuBaEa4Xu0=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=BW5YQ0vifEoOXHRkQ1pIH7tc8lB4GwgYHbz4omC7JrteWmcjIkvziyQX3QmVzf4Czhks1UkPR9frJG03aHRjJRBqNyKudGkpUa4J8jcLlCrE1neqbimh4gka/PJsx7V+kRq96xumoM6xY4Xw7IH4zF3vkRCz/+kZosbBF5JfsUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4b8aoftD; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hHMxm2Zb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 388CAC4CEEA;
-	Wed, 25 Jun 2025 14:05:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750860325;
-	bh=riLdd5+MDpL2DCfxQ37cyxD+TU6nR3iPtqrq+d4xA5E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hHMxm2ZbQ4XkvYV1DsPM4VqmwWiIZGuZ7nDPTNJfx1brZQJRa25WRirGPmqjk+1bI
-	 i1i+cDBLFmTXxdlhWEaxlb3C03ot2jiWBrZ+HDboPZrNmhmCZywE2zjLgTa1cLwZ53
-	 dyg22/GtZBR7Fv2ZXNyDDjqhGlXdUHvM2SDHcWlt7Ab1k4Mo+OsHt1zysaikSR8Fa5
-	 C6NbZjSCuHz1ilnTEOt9Gvnvcss7ZR2A5sB8/LAHsZGDxclM0W2gMrig9f6yeVsbHL
-	 TgWD3EqLFRFAOE6xMaCvHs69/PWPxspv8cp+T/pKCyrNsMim0VcM1NoJkQ3xB3D80c
-	 Gdk0trZ9gM50A==
-Date: Wed, 25 Jun 2025 16:05:22 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	Andy Shevchenko <andriy.shevchenko@intel.com>, Benjamin Larsson <benjamin.larsson@genexis.eu>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v16 2/2] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <ucygzs2tom6ukfaqg5gujt2uiluawhfccaxjrxyisxuut2u4zi@rlhjecrfwkyz>
-References: <20250625000059.20040-1-ansuelsmth@gmail.com>
- <20250625000059.20040-2-ansuelsmth@gmail.com>
- <dehsalp2za4i6jgod6ej6gqhestljo7qost66jzmql52n2zecp@imtgipg24lv5>
- <685ba7d9.df0a0220.e1b22.e6c2@mx.google.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4b8aoftD"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-31218e2d5b0so10875579a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:05:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1750860333; x=1751465133; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5LiZuxU0X4stkx25S4vH5DV1hISN4p0EdhdVeAOMiJ8=;
+        b=4b8aoftDFSGR3pcQ+cIT9nFWqLmt0s1sUOZvXuS6s6lm95/kYP0jQRVIRHsU1wnwjA
+         STkR19ph0lRf29UNFHW7sRm1PZfvpcq7SGMIfFgYWBHYAqfpK65rsEhtMn2fJpjfdVue
+         0J4UMdgefLJ2WntOWmvbOcAzApi4+vGUj9Iqyl0tj1MzJm34NJd5I3N+khfrZY0emvhM
+         Hjr6QlBj+JqXn1hVperIdEXzolt2FIxIjoxca9Fa48l2Tq7fSwUO64gNhrUDHIaMMWDw
+         YQCb/JPQnGrJBwrbwDPoy521wlz8AvEYmkoFoeSlhlAJ8C/8cZe8d+YEUJGqYdI4W6yr
+         5dlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750860333; x=1751465133;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5LiZuxU0X4stkx25S4vH5DV1hISN4p0EdhdVeAOMiJ8=;
+        b=BdBBq/gBN3xRA2eFNrNaagSVDNrhmliiYRkEiRfdxTSGYOrUMUe0CfD+22SYJi+FOI
+         IIBsI8KsDqs+zftSVwo9hPhDhXmqGcNapJz+Liz3spw7sf3YBbLaXhz/S9iBhhjq2ewx
+         LpYk+lKwrdJW+L9GbNVpWrj4BpR7MkX1Pl9y4MysHQIL1BECz70r3gA+rSsrMVmvgb/J
+         WAcARwO3aCylUZKpZ0nTqffSy++1nXMLZXq3pQjibJ7YsKu9pm8pkKhu5etBQjX+QA73
+         rzjdKU9ltKHAnRzyjCJzfZmqdM5a4/bqY+Rd9sZ8gAdAEotkDezxDdQ/JYj+humyZwp2
+         L0KA==
+X-Gm-Message-State: AOJu0YzO6J6qBazqmr87IWuHq59FHzfPlMSPsQjEinWzSPlMA7kN47KA
+	cux0whbTOul5Lzt1G/hBbjALGqxeKG8xd+y0eRuFDY/FxMoDzbhbahTofS80IxukGGVv5hls1dN
+	fB/0mmA==
+X-Google-Smtp-Source: AGHT+IGckEOfVl/RfPz4QxWmjhV4cTi9NaNXbPxlrvg9sKJy9zwdKZPKfKQ2WqXnR/25QNts35bfKQ1MbcY=
+X-Received: from pjboe18.prod.google.com ([2002:a17:90b:3952:b0:312:f88d:25f6])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2ed0:b0:311:9e59:7aba
+ with SMTP id 98e67ed59e1d1-315f25ca4e3mr4777982a91.2.1750860333261; Wed, 25
+ Jun 2025 07:05:33 -0700 (PDT)
+Date: Wed, 25 Jun 2025 07:05:31 -0700
+In-Reply-To: <2f4603f4c74ba21776ad6beff5f5b98025c99973.camel@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jjitsmuq2jnwbm6s"
-Content-Disposition: inline
-In-Reply-To: <685ba7d9.df0a0220.e1b22.e6c2@mx.google.com>
+Mime-Version: 1.0
+References: <20250610175424.209796-1-Neeraj.Upadhyay@amd.com>
+ <20250610175424.209796-19-Neeraj.Upadhyay@amd.com> <2f4603f4c74ba21776ad6beff5f5b98025c99973.camel@intel.com>
+Message-ID: <aFwCK3g-dDv5ZJQR@google.com>
+Subject: Re: [RFC PATCH v7 18/37] x86/apic: Simplify bitwise operations on
+ apic bitmap
+From: Sean Christopherson <seanjc@google.com>
+To: Kai Huang <kai.huang@intel.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"Neeraj.Upadhyay@amd.com" <Neeraj.Upadhyay@amd.com>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"tiala@microsoft.com" <tiala@microsoft.com>, "Vasant.Hegde@amd.com" <Vasant.Hegde@amd.com>, 
+	"Suravee.Suthikulpanit@amd.com" <Suravee.Suthikulpanit@amd.com>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, 
+	"Thomas.Lendacky@amd.com" <Thomas.Lendacky@amd.com>, 
+	"kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>, "mingo@redhat.com" <mingo@redhat.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, "tglx@linutronix.de" <tglx@linutronix.de>, 
+	"huibo.wang@amd.com" <huibo.wang@amd.com>, "Santosh.Shukla@amd.com" <Santosh.Shukla@amd.com>, 
+	"nikunj@amd.com" <nikunj@amd.com>, "hpa@zytor.com" <hpa@zytor.com>, 
+	"peterz@infradead.org" <peterz@infradead.org>, "bp@alien8.de" <bp@alien8.de>, 
+	"francescolavra.fl@gmail.com" <francescolavra.fl@gmail.com>, "naveen.rao@amd.com" <naveen.rao@amd.com>, 
+	"David.Kaplan@amd.com" <David.Kaplan@amd.com>, "x86@kernel.org" <x86@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
 
+On Tue, Jun 24, 2025, Kai Huang wrote:
+> On Tue, 2025-06-10 at 23:24 +0530, Neeraj Upadhyay wrote:
+> > Use 'regs' as a contiguous linear bitmap in  apic_{set|
+> 					      ^
+> 					      double whitespace here
+> 
+> > clear|test}_vector() while doing bitwise operations.
+> > This makes the code simpler by eliminating the need to
+> > determine the offset of the 32-bit register and the vector
+> > bit location within that register prior to performing
+> > bitwise operations.
+> > 
+> > This change results in slight increase in generated code
+> > size for gcc-14.2.
+> 
+> Seems the text wrap here is different from other patches, i.e., the
+> 'textwidth' seems much smaller.
 
---jjitsmuq2jnwbm6s
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v16 2/2] pwm: airoha: Add support for EN7581 SoC
-MIME-Version: 1.0
-
-Hello Christian,
-
-On Wed, Jun 25, 2025 at 09:40:07AM +0200, Christian Marangi wrote:
-> On Wed, Jun 25, 2025 at 09:24:33AM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Wed, Jun 25, 2025 at 02:00:39AM +0200, Christian Marangi wrote:
-> > > +	/*
-> > > +	 * Period goes at 4ns step, normalize it to check if we can
-> > > +	 * share a generator.
-> > > +	 */
-> > > +	period_ns =3D rounddown_u64(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
-> >=20
-> > I don't understand why you need that. If you clamp to
-> > AIROHA_PWM_PERIOD_MAX_NS first, you don't need the (expensive) 64-bit
-> > operation. If you compare using ticks instead of ns you don't even need
-> > to round down, but just do the division that you end up doing anyhow.
->=20
-> Correct me if I'm wrong but=20
-
-I will :-)
-=20
-> #define NSEC_PER_SEC	1000000000L
-> #define AIROHA_PWM_PERIOD_MAX_NS       (1 * NSEC_PER_SEC)
->=20
-> doesn't fit u32 so an u64 is needed.
-
-1000000000 =3D 0x3b9aca00, that are 30 bits.
-=20
-> And using ns until the apply process is handy for bucket sharing. I can
-> change it to reference ticks but I think the round is necessary.
-
-It's only handy as you track ns for the buckets. Changing that to
-ticks, too, makes this all naturally fit again.
-=20
-> You want to change everything to reference tick? (honestly this is a
-> good chance to introduce this missing API, since I feel also other might
-> benefits from this)
-
-I don't understand that, but I think yes. Doing the bucket selection in
-ticks sounds right.
-
-Best regards
-Uwe
-
---jjitsmuq2jnwbm6s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhcAiAACgkQj4D7WH0S
-/k7vzgf8Dqo863izCP0slue3JHgjxuqX8V0NBopvhm0vd2/N30HzS+H/VqgZDf8N
-kkcjndkpBrDzfZLQHqt6ixP3CFQH+3sFuHNTC0EA7bX8BOzxtVI7AdyNsfEx6Yvp
-a8REle1vUuxH9YX4a9Qg7yEMB8hiCPt+OO/NGmK4ijRfOt8rJDmG4mXg4rYK6vf0
-k76qOtxX3sZZwrIUQRoTeptnOgfnp5cADmHPBUO0zR3DXavw6eOxXK3biLYchiT2
-VOOxu1zFBhjlScjMP/YLKOpAnma5AL+kzLLACdarwYqjTi9tnANGh5GVytag3j/Z
-m2HfF0w5y+9OfEXvKGSXDPvXxhGyxA==
-=eQt8
------END PGP SIGNATURE-----
-
---jjitsmuq2jnwbm6s--
+Yeah, wrap closer to ~75 chars.
