@@ -1,71 +1,90 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8506B72626;
-	Wed, 25 Jun 2025 08:11:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91F33074AD;
+	Wed, 25 Jun 2025 08:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750839101; cv=none; b=Fc8oDOXApKM5mFuml/Acp36lusTwWi6odDhJTZZaSfCqIEmjlMVYFintGG6U0SaXSzEr2bX+sQbouBmA38an3Mdd3Xqgu41eykOgTlyPgu1v3d8aI5QXwx0/409HsUrm/VEbCCGRetFmi9UDhc38fCrpztXrs8iwbA8AG8efgDM=
+	t=1750839132; cv=none; b=hdinZmYWRJ/HAAy9HRbdfUBjNJDczTvso1V1UFh+1QSTm3uPsPlfN/WNALtgwYflrZ+r4Dfu1s7UBjVAureYC+3S6u3xKCbUv29nYEXU3mQ6FLoIjXBM1gL8Wyq6Rm5tPQrwinPfXfhvH2fqsJJJk4KC+YWTTP1mAGkBhkqVzOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750839101; c=relaxed/simple;
-	bh=jVuJDCIwDzf3NFdcFh/CU7NRT8EoqQ7c9r4TyfsvxxI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TU536EIO4klH4Vsv2TJpF0BZQ4eHhamXfhUjN1xEOtwFZR5uMApfaIqVX0F1olo6GE+3WWdjJHbTZpcJQWRZe7svmIyfCNxwh8OQ5jc/v6iETM6BgeS6yh38M+hIC42bn+VTUb+IzhdE9gdm2jf1JgCOO66rDYwJULimNg8m+78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=ZqOItU6W; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1750839132; c=relaxed/simple;
+	bh=RPthNI2C/lrp89NRWEZYlwKMiNVazZ5c0wzeDk1uOYg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OqGN7cL30GCcdDueXiHr2m2C4+8h/W2g2yxY/J3M1i21Lb5oE9GjmnoBtNHi5RW115RNmvclENMl3dF2BwRgFRhRJuuhphaVgQk/0WIcq7+ct9ubZJlLb4EdXTZpriJw/NOAWbTj/Jz+msU5wT2T0uiXq8ZAqscnfCSkds+nQBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LU8EiHFP; arc=none smtp.client-ip=209.85.215.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ZqOItU6W"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=5ttrqB6Re8Lm6BJNJnP255dFExkdnIWrJLmm7SAWYcs=; b=ZqOItU6WkrfEMyogqc4WxVgWWn
-	PeLARWQH5cvUgc9h4rXSpXSdvEjSA3CAoVUBBkatTDvamDq+DGHYYVJHpQgZbss9jxboLU02mvtBI
-	8uoUqDafdWFmQvDdGQOmxYKKBn6KXn7ZM8p0KGbZQ5rUNNnR62gNNQATb7u+p+N362Gk=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1uULEF-00Gt2t-5K; Wed, 25 Jun 2025 10:11:35 +0200
-Date: Wed, 25 Jun 2025 10:11:35 +0200
-From: Andrew Lunn <andrew@lunn.ch>
-To: Qingfang Deng <dqfext@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	linux-ppp@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Guillaume Nault <gnault@redhat.com>
-Subject: Re: [PATCH net-next 1/3] ppp: convert rlock to rwlock to improve RX
- concurrency
-Message-ID: <224c4c68-6e6e-4109-9933-2ab1bdb5eedd@lunn.ch>
-References: <20250625034021.3650359-1-dqfext@gmail.com>
- <20250625034021.3650359-2-dqfext@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LU8EiHFP"
+Received: by mail-pg1-f179.google.com with SMTP id 41be03b00d2f7-b31aecc78a3so948602a12.1;
+        Wed, 25 Jun 2025 01:12:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750839130; x=1751443930; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RPthNI2C/lrp89NRWEZYlwKMiNVazZ5c0wzeDk1uOYg=;
+        b=LU8EiHFPLwCzJ48Q9lYWkkM1p+cicj5werslgxisopFBmSL2T65ig/8Sqzq0llQXzR
+         x7svrTcUn0+0GwiR4ZrBRr0Y3iigO2MaDggpHx0hV9tRnktzZmoX7kGGIOS3C0521nQh
+         gm6ZSQrbTwl3aEuo1C6cq0IRYGzxVWswBtE1b9mxd2nJbuproXAREmwCbFnt471UgjGU
+         r2AbqCD1Nbi8YH2tf75IIWX0nhYGVBKSdAFKpzIaAQOY7//4y9SfKjN1uFi80/M5jsTA
+         9hIrvXwS+WiQt8zCOHkYnM4WiEwvcFzSsrYl5EOFvw5+dKGMI5qkqXiEn2rOtOHXxck6
+         nt9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750839130; x=1751443930;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RPthNI2C/lrp89NRWEZYlwKMiNVazZ5c0wzeDk1uOYg=;
+        b=VQBYxATzzOP7G2dN6Zz8pAuIZW13XWQYAke1CPBI03xpjqsKlpH/plefcuNNEIpW5E
+         DAW8BpckYN/2r7UHKvKCCGk+KhXGzJ3ev3XlVUX5fnbHP/ZUsrAmVW3RBPdLyNififL8
+         7r314IyR4dlrgpQUpJdBPTjq7m2WCml+HkWjZhSa4zgDcgf94jXWFZuBoZ/b67R7kYv+
+         3LYdu13vtUv8qxBDbv2zdBdbQ3GaRGsmRSkWsrSCRQQXE91Rz7CzlsF+qiXyU2al6uJg
+         g28PMnhmxSl0gWyO+niX0c7PlypMU0Zh8SZPcEmPgrnjEhI+0pDYpF7JuQ2Vty+PVVIr
+         /vsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVnx+H+qf3xADb6o5iWWdQaZe9KAfwVVBBSo3NeIR+hCQM3fuaj6213z9qwtP97iPvatwNEIttdCFAPo18=@vger.kernel.org, AJvYcCWE9qnMgeuwoE/+9IpsbmjvTFgGXdbzcTo4c1usN4UXK39T2UgiZX4FOKzB8g3Bgp0RPbG4AvXLT09jdT33ey8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxpE/At3/2J0l/Eoeu5zOWSGl80j42h1YV285dg3yuRhMKkPehz
+	03lQTsQoUT8PBHHfCOGUrOpTA7c/0v9DVwkhPOZvXsde1MREDdF9VO4nEnpV/8vUq19PIxvhYGV
+	Kd636eBtDf7HtmhaS8+QrIEgIDFV//3U=
+X-Gm-Gg: ASbGncudaIOxcQr1ZLGbrU0BnzRZFHKZ7UxM2VgtzOZaLgeysPYCGgce5yaAjHNBzgu
+	ucYyMA+tWJ1cWEmj2lP0oGgDZRj2bMDnM59aLHlHJtzYOZDIbzIuNz6LAKhkGpA31WtQpKnNU9e
+	ItOPx7xCzmiwxlip0G3nj09wIMu6J/wV7nnOx4Pna2lU8=
+X-Google-Smtp-Source: AGHT+IHONdZBleDNPC2jvtYGuDshMDyt73BVAEWCwRyahLfzKy/0ntQud6He2dbe+DQhe/sU9IVl4x1t2EppyxPT4P8=
+X-Received: by 2002:a17:90b:55ce:b0:312:25dd:1c8b with SMTP id
+ 98e67ed59e1d1-315f25caa86mr1162469a91.2.1750839129974; Wed, 25 Jun 2025
+ 01:12:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625034021.3650359-2-dqfext@gmail.com>
+References: <CANiq72nwaxszEbn6O3xZi6H9P+U=5N0ugK1n9qBRteQwKXQSaw@mail.gmail.com>
+ <87wm912sjg.fsf@kernel.org> <CANiq72kHocyULzwqxS51XeSEhsJpccfNFc+QYE67yvfvS8BApw@mail.gmail.com>
+ <20250625.083037.1910124819838055415.fujita.tomonori@gmail.com>
+In-Reply-To: <20250625.083037.1910124819838055415.fujita.tomonori@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Wed, 25 Jun 2025 10:11:56 +0200
+X-Gm-Features: Ac12FXxywKqxxuGlkGsX4oKRETARJzoIWQl7FowBwzTAGrNUxsxTt2rM6e7aCYE
+Message-ID: <CANiq72mTKTh+GSWUW5aZwkqpdMFZ5VwA6djwubtsVn2KOy362Q@mail.gmail.com>
+Subject: Re: [PATCH v3 0/5] rust: time: Convert hrtimer to use Instant and Delta
+To: FUJITA Tomonori <fujita.tomonori@gmail.com>
+Cc: a.hindborg@kernel.org, alex.gaynor@gmail.com, ojeda@kernel.org, 
+	aliceryhl@google.com, anna-maria@linutronix.de, bjorn3_gh@protonmail.com, 
+	boqun.feng@gmail.com, dakr@kernel.org, frederic@kernel.org, gary@garyguo.net, 
+	jstultz@google.com, linux-kernel@vger.kernel.org, lossin@kernel.org, 
+	lyude@redhat.com, rust-for-linux@vger.kernel.org, sboyd@kernel.org, 
+	tglx@linutronix.de, tmgross@umich.edu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->  #define ppp_xmit_lock(ppp)	spin_lock_bh(&(ppp)->wlock)
->  #define ppp_xmit_unlock(ppp)	spin_unlock_bh(&(ppp)->wlock)
-> -#define ppp_recv_lock(ppp)	spin_lock_bh(&(ppp)->rlock)
-> -#define ppp_recv_unlock(ppp)	spin_unlock_bh(&(ppp)->rlock)
-> +#define ppp_recv_lock(ppp)	write_lock_bh(&(ppp)->rlock)
-> +#define ppp_recv_unlock(ppp)	write_unlock_bh(&(ppp)->rlock)
->  #define ppp_lock(ppp)		do { ppp_xmit_lock(ppp); \
->  				     ppp_recv_lock(ppp); } while (0)
->  #define ppp_unlock(ppp)		do { ppp_recv_unlock(ppp); \
->  				     ppp_xmit_unlock(ppp); } while (0)
-> +#define ppp_recv_read_lock(ppp)		read_lock_bh(&(ppp)->rlock)
-> +#define ppp_recv_read_unlock(ppp)	read_unlock_bh(&(ppp)->rlock)
+On Wed, Jun 25, 2025 at 1:30=E2=80=AFAM FUJITA Tomonori
+<fujita.tomonori@gmail.com> wrote:
+>
+> Just to clarify, Delta implements Copy:
 
-Given the _read_ in ppp_recv_read_lock(), maybe ppp_recv_lock() should
-be ppp_recv_write_lock()? Makes it symmetrical, and clearer there is a
-read/write lock.
+Sorry, that was a typo: I meant it is `Copy` (the table says `into_*`
+is for non`-`Copy` types).
 
-	Andrew
+Cheers,
+Miguel
