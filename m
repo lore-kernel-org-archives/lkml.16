@@ -1,79 +1,86 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6747D07D;
-	Wed, 25 Jun 2025 01:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8484228E0F
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 01:21:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750814380; cv=none; b=h0Y4W3l5WHjBnlfg3nohX80ZYQvq8A2B6919S5EXymE8rTqdBBXNsGqmXpCCbM2XvtuJEAn9p11zLbU42c5Xh3X+CRXwFrs7fCWXxHk7V4UsJoRZQcrstxQAshk5WI5E5wutfz/ohgnuwbO+oxn903zkf33OpLGmXdwpiwbkwFU=
+	t=1750814472; cv=none; b=UE+lEmawyZFcX3dROw6vyV6HyUsvo71xRLaXvnK/hIoc7jwO1hYs9UNYsu2LslNDkaifRSreXos8nPrBEZwFEbJL1Em5Yx4FIqlTKgSamncjmGjykDclOX/oDue7jfOBkF+xpZ3lQ+nar/TRz3KarDz4OOWdOLtZNn2ePiYBE9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750814380; c=relaxed/simple;
-	bh=ZZpsGWbOpD7WESphcM99JbXk8HbeWzvARFtH/vuKhN0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=gmOlMNoSB5Av+prdiMVR3yG2GplNYxKeaTizyavrYZTz+qPpr4QKrye9EFcTTmGa+luyxehKb/UX7e9G9avyUfqrHvXv9gE1g9ieyp2sjF+AAYmMWJ/nDQlDXtg5Wts7AlW9shSW+AlcLBekwz871UU8vJoGqpS/DRfYn3CP1j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I0Al0brl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I0Al0brl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 017B1C4CEE3;
-	Wed, 25 Jun 2025 01:19:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750814380;
-	bh=ZZpsGWbOpD7WESphcM99JbXk8HbeWzvARFtH/vuKhN0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=I0Al0brlBqf41dLwop2rFptO4UbjKFq70OE8lHSZ9yLbuijSpw2nvLSyTxMCV9IWo
-	 Y6zTrT6ppD2GOter0dx8krnwznO80xFTUf6DHxkXT3L2Sxz0vqvhekFTGkqaN80eX1
-	 Dpq7JgpB5qliGIf1LQqYtYfN2x2o5Sb2fqXubdm9ukJTeju8KJxUwn11L8hLEonUF4
-	 8eNYlL2upxOjBDW6/nRGav6L42H1P5PDm14NT8MczCys1qjbvqBL1s2dx2W+gta7js
-	 QXc6oqS26M3rjdbArmmy2JcRFjrcImUHwBVIcbCFvo5ZVq1KgHAXtMfbki0lXM6j90
-	 b87KEbttVHzAA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD9739FEB73;
-	Wed, 25 Jun 2025 01:20:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1750814472; c=relaxed/simple;
+	bh=LINdDpNksnnx/f6tpqoh7uinTypzMUkZ0HdOvwoyNr8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=InXJwY0Nya6tVgE/psum1o5YunVb8R2VUsPJhvDlIfZw3uVHqXmjeNnd6y4ojfYWdiaECEy1tbxwnRvAWHoJwTwfmmQHYqptzUmoDw6LCBXHJXNqg0/qU7s3hjxK52T8mJYoMrhEEwIrLcYqZpuVjIqM8UO60GqMPyapM0wwlt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55P1L8Kq015816;
+	Wed, 25 Jun 2025 10:21:08 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+	(authenticated bits=0)
+	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55P1L7LF015812
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+	Wed, 25 Jun 2025 10:21:08 +0900 (JST)
+	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
+Message-ID: <5313b937-304a-4f2a-8563-3ad1ea194cb9@I-love.SAKURA.ne.jp>
+Date: Wed, 25 Jun 2025 10:21:06 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] AppArmor: add support for lsm_config_self_policy
+ and lsm_config_system_policy
+To: =?UTF-8?Q?Maxime_B=C3=A9lair?= <maxime.belair@canonical.com>,
+        linux-security-module@vger.kernel.org
+Cc: john.johansen@canonical.com, paul@paul-moore.com, jmorris@namei.org,
+        serge@hallyn.com, mic@digikod.net, kees@kernel.org,
+        stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
+        takedakn@nttdata.co.jp, song@kernel.org, rdunlap@infraread.org,
+        linux-api@vger.kernel.org, apparmor@lists.ubuntu.com,
+        linux-kernel@vger.kernel.org
+References: <20250624143211.436045-1-maxime.belair@canonical.com>
+ <20250624143211.436045-4-maxime.belair@canonical.com>
+Content-Language: en-US
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+In-Reply-To: <20250624143211.436045-4-maxime.belair@canonical.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Subject: Re: [RESEND][PATCH 0/1] Enable FLEXCOMs and GMAC for SAMA7D65 SoC
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <175081440675.4094974.16233310616580116141.git-patchwork-notify@kernel.org>
-Date: Wed, 25 Jun 2025 01:20:06 +0000
-References: <cover.1750694691.git.Ryan.Wanner@microchip.com>
-In-Reply-To: <cover.1750694691.git.Ryan.Wanner@microchip.com>
-To: Ryan Wanner <Ryan.Wanner@microchip.com>
-Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, nicolas.ferre@microchip.com, claudiu.beznea@tuxon.dev,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
+X-Anti-Virus-Server: fsav403.rs.sakura.ne.jp
+X-Virus-Status: clean
 
-Hello:
+On 2025/06/24 23:30, Maxime Bélair wrote:
+> +static int apparmor_lsm_config_self_policy(u32 lsm_id, u32 op, void __user *buf,
+> +				      size_t size, u32 flags)
+> +{
+> +	char *name = kvmalloc(size, GFP_KERNEL);
+> +	long name_size;
+> +	int ret;
+> +
+> +	if (!name)
+> +		return -ENOMEM;
+> +
+> +	if (op != LSM_POLICY_LOAD || flags)
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Huge memory leak.
 
-On Mon, 23 Jun 2025 09:11:07 -0700 you wrote:
-> From: Ryan Wanner <Ryan.Wanner@microchip.com>
-> 
-> This patch set adds all the supported FLEXCOMs for the SAMA7D65 SoC.
-> This also adds the GMAC interfaces and enables GMAC0 interface for the SAMA7D65 SoC.
-> 
-> With the FLEXCOMs added to the SoC the MCP16502 and the MAC address
-> EEPROM are both added to flexcom10.
-> 
-> [...]
+> +		return -EOPNOTSUPP;
+> +
+> +	name_size = strncpy_from_user(name, buf, size);
+> +	if (name_size < 0)
 
-Here is the summary with links:
-  - [RESEND,1/1] dt-bindings: net: cdns,macb: add sama7d65 ethernet interface
-    https://git.kernel.org/netdev/net-next/c/8dacfd92dbef
+Here too. :-)
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+> +		return name_size;
+> +
+> +	ret = aa_change_profile(name, AA_CHANGE_STACK);
+> +
+> +	kvfree(name);
+> +
+> +	return ret;
+> +}
 
