@@ -1,184 +1,182 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 860301C69D;
-	Wed, 25 Jun 2025 00:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30C931C69D;
+	Wed, 25 Jun 2025 00:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750812691; cv=none; b=SyhY5/LakgIaTE4Gsk6ZP5/JioklfxwNW1HcIrNvD1+BqfK+dWumnEpybkCB/g5Y/XqKvzAktnBuTzTKhl2UjxmOM/zgzbMSBeMzmBw6tGxUNNu0H4ZIBWcW9eBN1HizHTOWq0HWQuXFnYeU/k5B8RayyJ2QwPy0vcbgx2xUZHU=
+	t=1750812772; cv=none; b=ebLWaRFRuA1pDfKDSEH2WuYZdwD8cnpbrCvHxwV00U06A23daRxMNLcs6yNHA6QjxUePT47gRcoqlcs5vVBhHZxz69lF9MO83bAOV9FxuEFRY0St1ahB9oNC+8/pIJwtOuYb4CvopECw9qe/Kp8iDGHzKwZIU6vUXdGNNy1X7Rw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750812691; c=relaxed/simple;
-	bh=rdyW583uKp4K8gHxquDp6eEZG0Zkfp097JbY8E5eFzU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N28QzK+HsBWR79OU7zYD8DJONfxvUlrsgCjZrdYdYj1pLfbbB8WdZrw75vxtLQALphNu1Mlss9MKvoTgS7yW6vc81QzxbnD6wf0BqNmSkryXKOdD49I7MYgbT+ISfh87yY736Ta/6AtM9OsoFiKXHHuq9wYIyG3/jGqIrhnyAXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VeOt/Pz+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750812772; c=relaxed/simple;
+	bh=Yaa6J9Xo1LF9vDjaSziuMWuGSbbNeCc3vVAAA+tc3/0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Wn2aPjko7w9kOCZHLhCv4gviiO0N/kHYzD1DKZQPOC1m85l+zbLS/hClPUjmxiA/1icq4GmGtdu1m9gf65xxyEWG1KKlVXRaEb2+hMRqjhcyHKG2gvUYmLroA3SWeoeEWOaTnOZ21cyGjgKoGCfnqjPje5cXlOa7eDtx2ilHOVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=Z7my6fe6; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VeOt/Pz+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0696FC4CEE3;
-	Wed, 25 Jun 2025 00:51:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750812691;
-	bh=rdyW583uKp4K8gHxquDp6eEZG0Zkfp097JbY8E5eFzU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=VeOt/Pz+GybkKWK2kmcAbCiazoM8877vyJM6SUCcAislZ47f7V1+fbHBTWYDBzQPz
-	 Zd7xi+UX/cbmwB9N1I8clWHo5byqh8ECa/iVW8Y+m8MFqGPf7mLGf4MR1nl6bXZ5M4
-	 rBOHQlBME4j45JBp8KxbstPmit9Hvl0XK0vixC79x27tWCxVry83Zljkhg+oFw5tcn
-	 tUM4GWxa+7ylJ0Kk9Vw3XRZG/tfvpCo8rejuXFv6aGftAuV64wnMk+9bG0gcITr3Pj
-	 xzPrC/1n6dtTtV/4uiFuURBJ4UV1kS4B0YCUDv8EpkhorsXQnHUX1U1YPug8W/RR6b
-	 oBJy7Z6wq5SDA==
-Date: Tue, 24 Jun 2025 19:51:30 -0500
-From: Rob Herring <robh@kernel.org>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: lee@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	matthias.bgg@gmail.com, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, kernel@collabora.com
-Subject: Re: [PATCH v1 1/2] dt-bindings: mfd: Add binding for MediaTek MT6363
- series SPMI PMIC
-Message-ID: <20250625005130.GA2106374-robh@kernel.org>
-References: <20250623120038.108891-1-angelogioacchino.delregno@collabora.com>
- <20250623120038.108891-2-angelogioacchino.delregno@collabora.com>
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="Z7my6fe6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=codeconstruct.com.au; s=2022a; t=1750812769;
+	bh=Yaa6J9Xo1LF9vDjaSziuMWuGSbbNeCc3vVAAA+tc3/0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=Z7my6fe67uUQHlcdoxvWTGQAabGIEH/Ebhj5XfmNgFAQec/LSMJnoBHLecNYaze+m
+	 KqGzJF/Srmn0zlt3pZuX64mf1tgoHmkm5Q1Kqc6ggBIRAB9CbXuuDzpkkwSEIwYxs9
+	 RTcmj2fkkvUpRjqTVHLiby0Bel4iSB/TaHCwaomPbf+isg1Dj16rsQA5nwC0xPJ0dn
+	 WEQx6V9oF3R8QMUaYvzXpxE+5a1suknbONPG6tOck94CQYx9rZXn3XPckhP/pd/Yjo
+	 OPIZdQHF8l3dFbB7CibzD9nFfVTwPVq3EAKdHXjYeen6+/RZ1ww+trwu8FGZFy9olZ
+	 /uO3iV7YPfASQ==
+Received: from [192.168.68.112] (unknown [180.150.112.166])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 41C20640A1;
+	Wed, 25 Jun 2025 08:52:48 +0800 (AWST)
+Message-ID: <9c748fef6be89c3bb1fe833108b2191faa25ab33.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v4 1/2] dt-bindings: mailbox: Add ASPEED AST2700 series
+ SoC
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Jammy Huang <jammy_huang@aspeedtech.com>, "jassisinghbrar@gmail.com"
+ <jassisinghbrar@gmail.com>, "robh@kernel.org" <robh@kernel.org>, 
+ "krzk+dt@kernel.org" <krzk+dt@kernel.org>, "conor+dt@kernel.org"
+ <conor+dt@kernel.org>,  "joel@jms.id.au" <joel@jms.id.au>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org"
+ <linux-aspeed@lists.ozlabs.org>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Date: Wed, 25 Jun 2025 10:22:47 +0930
+In-Reply-To: <TYZPR06MB656893C53B13B2D288BCDEA1F17BA@TYZPR06MB6568.apcprd06.prod.outlook.com>
+References: <20250623024456.2068370-1-jammy_huang@aspeedtech.com>
+	 <20250623024456.2068370-2-jammy_huang@aspeedtech.com>
+	 <0ba565ac9444503be954161a8d79fa0476bd78a0.camel@codeconstruct.com.au>
+	 <TYZPR06MB656893C53B13B2D288BCDEA1F17BA@TYZPR06MB6568.apcprd06.prod.outlook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250623120038.108891-2-angelogioacchino.delregno@collabora.com>
 
-On Mon, Jun 23, 2025 at 02:00:37PM +0200, AngeloGioacchino Del Regno wrote:
-> Add a binding for the MediaTek MT6363/6373 (and similar) multi
-> function PMICs connected over SPMI.
-> 
-> These PMICs are found on board designs using newer MediaTek SoCs,
-> such as the Dimensity 9400 Smartphone chip, or the Chromebook
-> MT8196 chip.
-> 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> ---
->  .../bindings/mfd/mediatek,mt6363.yaml         | 98 +++++++++++++++++++
->  1 file changed, 98 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/mediatek,mt6363.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/mediatek,mt6363.yaml b/Documentation/devicetree/bindings/mfd/mediatek,mt6363.yaml
-> new file mode 100644
-> index 000000000000..2ce57e659d12
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/mediatek,mt6363.yaml
-> @@ -0,0 +1,98 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/mfd/mediatek,mt6363.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: MediaTek MT6363 series SPMI PMICs multi-function device
-> +
-> +maintainers:
-> +  - AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-> +
-> +description: |
-> +  Some MediaTek Power Management ICs (PMICs) found in board designs with
-> +  the Helio, Dimensity and/or Kompanio series of SoCs are interfaced to
-> +  the chip via the System Power Management Interface (SPMI) bus.
-> +
-> +  These PMICs are multi-function devices with various sub modules.
-> +  For example, those may include one, or more of the following:
-> +  - Auxiliary ADC Controller
-> +  - Clock Controller
-> +  - eFuses
-> +  - GPIO Controller
-> +  - Interrupt Controller
-> +  - Keys
-> +  - LEDs Controller
-> +  - Regulators
-> +  - RTC
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - mediatek,mt6363
-> +          - mediatek,mt6373
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 0
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 3
-> +
-> +  adc:
-> +    type: object
-> +    $ref: /schemas/iio/adc/mediatek,mt6359-auxadc.yaml#
-> +    unevaluatedProperties: false
-> +
-> +  regulators:
-> +    type: object
-> +    oneOf:
-> +      - $ref: /schemas/regulator/mediatek,mt6363-regulator.yaml#
-> +      - $ref: /schemas/regulator/mediatek,mt6373-regulator.yaml#
+On Wed, 2025-06-25 at 00:34 +0000, Jammy Huang wrote:
+> >=20
+> > On Mon, 2025-06-23 at 10:44 +0800, Jammy Huang wrote:
+> > > Introduce the mailbox module for AST27XX series SoC, which is
+> > > responsible for interchanging messages between asymmetric processors.
+> > >=20
+> > > Signed-off-by: Jammy Huang <jammy_huang@aspeedtech.com>
+> > > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > > ---
+> > > =C2=A0.../mailbox/aspeed,ast2700-mailbox.yaml=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 57
+> > > +++++++++++++++++++
+> > > =C2=A01 file changed, 57 insertions(+)
+> > > =C2=A0create mode 100644
+> > > Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.yaml
+> > >=20
+> > > diff --git
+> > > a/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.ya=
+m
+> > > l
+> > > b/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbox.ya=
+m
+> > > l
+> > > new file mode 100644
+> > > index 000000000000..9c5d7028e116
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mailbox/aspeed,ast2700-mailbo=
+x
+> > > +++ .yaml
+> > > @@ -0,0 +1,57 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause) %YAML 1.2
+> > > +---
+> > > +$id:
+> > > +http://devicetree.org/schemas/mailbox/aspeed,ast2700-mailbox.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: ASPEED AST2700 mailbox controller
+> > > +
+> > > +maintainers:
+> > > +=C2=A0 - Jammy Huang <jammy_huang@aspeedtech.com>
+> > > +
+> > > +description:
+> > > +=C2=A0 ASPEED AST2700 has multiple processors that need to communica=
+te
+> > > +with each
+> > > +=C2=A0 other. The mailbox controller provides a way for these proces=
+sors
+> > > +to send
+> > > +=C2=A0 messages to each other. It is a hardware-based inter-processo=
+r
+> > > +communication
+> > > +=C2=A0 mechanism that allows processors to send and receive messages
+> > > +through
+> > > +=C2=A0 dedicated channels.
+> > > +=C2=A0 The mailbox's tx/rx are independent, meaning that one process=
+or can
+> > > +send a
+> > > +=C2=A0 message while another processor is receiving a message simult=
+aneously.
+> > > +=C2=A0 There are 4 channels available for both tx and rx operations.=
+ Each
+> > > +channel
+> > > +=C2=A0 has a FIFO buffer that can hold messages of a fixed size (32 =
+bytes
+> > > +in this
+> > > +=C2=A0 case).
+> > > +=C2=A0 The mailbox controller also supports interrupt generation, al=
+lowing
+> > > +=C2=A0 processors to notify each other when a message is available o=
+r when
+> > > +an event
+> > > +=C2=A0 occurs.
+> > > +
+> > > +properties:
+> > > +=C2=A0 compatible:
+> > > +=C2=A0=C2=A0=C2=A0 const: aspeed,ast2700-mailbox
+> > > +
+> > > +=C2=A0 reg:
+> > > +=C2=A0=C2=A0=C2=A0 maxItems: 1
+> > > +
+> > > +=C2=A0 interrupts:
+> > > +=C2=A0=C2=A0=C2=A0 maxItems: 1
+> > > +
+> > > +=C2=A0 "#mbox-cells":
+> > > +=C2=A0=C2=A0=C2=A0 const: 1
+> > > +
+> > > +required:
+> > > +=C2=A0 - compatible
+> > > +=C2=A0 - reg
+> > > +=C2=A0 - interrupts
+> > > +=C2=A0 - "#mbox-cells"
+> > > +
+> > > +additionalProperties: false
+> > > +
+> > > +examples:
+> > > +=C2=A0 - |
+> > > +=C2=A0=C2=A0=C2=A0 #include <dt-bindings/interrupt-controller/arm-gi=
+c.h>
+> > > +
+> > > +=C2=A0=C2=A0=C2=A0 mailbox@12c1c200 {
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "aspeed,as=
+t2700-mailbox";
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 reg =3D <0x12c1c200 0x200=
+>;
+> >=20
+> > I realise this is just an example, but with respect to the datasheet, s=
+houldn't
+> > this be sized as 0x100?
+> >=20
+> I use 0x200 here because I want to include tx/rx together in one mailbox =
+controller
+> instance.
+> Ex. 0x12c1c200 is a IPC whose TX is NS-CA35 and RX is SSP.
+> 0x12c1c300 is a IPC whose TX is SSP and RX is NS-CA35.
 
-This causes the schemas to be applied 4 times (2 each). Better if you 
-do:
+What do you think of instead requiring two reg items? One for the TX
+block and another for RX. I feel that aligns better with the way the
+blocks are desribed in the datasheet, even if TX and RX happen to be
+contiguous for a given remote side in the current design.
 
-properties:
-  compatible:
-    contains:
-      enum: [ the compatibles in those schemas ]
-
-
-> +    additionalProperties: true
-> +
-> +  keys:
-> +    type: object
-> +    $ref: /schemas/input/mediatek,pmic-keys.yaml
-> +    unevaluatedProperties: false
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - '#address-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/spmi/spmi.h>
-> +
-> +    spmi {
-> +      #address-cells = <2>;
-> +      #size-cells = <0>;
-> +
-> +      pmic@4 {
-> +        compatible = "mediatek,mt6363";
-> +        reg = <0x4 SPMI_USID>;
-> +        interrupts = <4 64 IRQ_TYPE_LEVEL_HIGH>;
-> +        interrupt-controller;
-> +        #address-cells = <0>;
-> +        #interrupt-cells = <3>;
-> +
-> +        regulators {
-> +            compatible = "mediatek,mt6363-regulator";
-> +        };
-
-Make the example complete. with adc and keys nodes.
-
-> +      };
-> +    };
-> -- 
-> 2.49.0
-> 
+Andrew
