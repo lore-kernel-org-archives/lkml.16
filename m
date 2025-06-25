@@ -1,419 +1,211 @@
-Received: from mail-10629.protonmail.ch (mail-10629.protonmail.ch [79.135.106.29])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FF932BF01D
-	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:00:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.29
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 287D213A41F
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 16:00:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750867204; cv=none; b=hVFH5aa0Pv9Sa3VAgypZ4EsurKpkscHpoM+SqiGA+reeV1jGyomfqTqWTQZRZwGEQYa7P3Md6n3wvR/1hwOC1iXfKMT9mrSQhsb2OTdPure8qEB0RVKjWCnlyTrTIIyzAZfk3toJ0yHV11R6iDlfEIqfxonuOQk5n6p2OXEKN0o=
+	t=1750867257; cv=none; b=Y2CBQYFXxWaS0Bq89k2XugSbSr7ve0M0QWriu7r5wDqtLWieHpPrJfxv3P8tyhrZdFaQ53/GoxmLUWUri+P4D5IT3E6KclYNUnpGNaGao7yqc+SjSRPkUKKRdDz/N4WKxVLfI89s5q9EQgdsTWZ/Fdi2m8sgZnqxxFFhIbWydkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750867204; c=relaxed/simple;
-	bh=su17sUPbTTihtoANSksi5gs2STqWqgFLZmEBIWrX+M0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=G3Nn1QOR7JhWZVYfxtz/C6jXWtVdmYFqspmqqzIGLhl7ATAV2Hb5Sd4Fek85fea9OuLrIo3/9VLbnHfyo5U0XqCPk9JLx6B4Sx77C8m+jxUZ9dD+AF2TTKeX243jAs1/7QTgLMJboZxY0Q1dgslWPKJ5blmvozVZnmyo+Xx33e8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com; spf=pass smtp.mailfrom=protonmail.com; dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b=mdHQ3UiX; arc=none smtp.client-ip=79.135.106.29
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=protonmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=protonmail.com
+	s=arc-20240116; t=1750867257; c=relaxed/simple;
+	bh=FQFAU8J92YBJOIwviIOuWy+syYqT13CticcqgFA8fNQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=pd4WDaYCEESHgdvguJ02HnKs2DGVubzmkEWMtGk93/f3dRgC7SQQRQsmit15ESywqYn6NdbJSjOamB0Ni6uBGbB117e0qEdtRNvm4WcjmLbulKu0iysgPjMjZyqLoLvmSuQ8hgWwNnuHiXeCPGPL1eMB+EXi8aAGetTbpkHMYfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a7B3pRNo; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="mdHQ3UiX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
-	s=protonmail3; t=1750867198; x=1751126398;
-	bh=shNZn9CXmtdijSV5B2iTzGkyqE9PqryKjvvVU2SZBJ0=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=mdHQ3UiXY6BBi7o7lhPhdQmYS1xVa7BKUue0t3kQx83eso4VAJem0MGLcTvlcy+kT
-	 zZYTopNtwQC3vzUL3nGGi3h6wqNCv38VohFQf7WA34eV5H8WVIbjEG8iZGhPLe6ASP
-	 o7wivKGO/ViKyvX64RkIMTZLyoVcvO0SibsMnREMGdYuIfri7Bs+g0BE07RP1nxduc
-	 p+V0Py6yS4LVCARlZqvVL3uH+vSMC74maH5n6JxkjRIlVxTrtMAV36bqWtyA1skn6H
-	 piurlqgf6FpdK6diJjfWgym2SkI6HakqFVQunSlSxor95rZY8MGHcJkpWXOgK1D2m3
-	 S42mD3avKxy2g==
-Date: Wed, 25 Jun 2025 15:59:52 +0000
-To: Armin Wolf <W_Armin@gmx.de>, ilpo.jarvinen@linux.intel.com, hdegoede@redhat.com, chumuzero@gmail.com, corbet@lwn.net, cs@tuxedo.de, wse@tuxedocomputers.com, ggo@tuxedocomputers.com
-From: =?utf-8?Q?P=C5=91cze_Barnab=C3=A1s?= <pobrn@protonmail.com>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
-Subject: Re: [RFC PATCH 2/3] platform/x86: Add Uniwill laptop driver
-Message-ID: <7a58972f-5256-4598-b729-224f20f3ecd2@protonmail.com>
-In-Reply-To: <7b0243fd-15c6-42da-8570-9ad9cd5163af@gmx.de>
-References: <20250615175957.9781-1-W_Armin@gmx.de> <20250615175957.9781-3-W_Armin@gmx.de> <1b79a3c3-c493-471b-aa37-92458b356e8d@protonmail.com> <7b0243fd-15c6-42da-8570-9ad9cd5163af@gmx.de>
-Feedback-ID: 20568564:user:proton
-X-Pm-Message-ID: 08a42992ce2590e2577a89a797fe321dddbfa117
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a7B3pRNo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750867254;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fVPSomnM/XHJegYDF8a486UxXjZV1B4u2XNVJqXqkPE=;
+	b=a7B3pRNojcHM5XoOdE8P3HySAH5o6sqaC++BP18mt2N6n2Khw9orKHmyIQ89UyyINKy1UZ
+	MN3YTHpi5kPfk6AiriaKhoFl8dGIWcP9tR4QBa9MMJVLCQxU4BC323HHkg7Yl18Nomy7Ua
+	O0ZPW06dtEAWCWE5AOQKzAFc4XS0jV0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-442-H3qHQWxOOQWP5X8_nEJlKQ-1; Wed, 25 Jun 2025 12:00:51 -0400
+X-MC-Unique: H3qHQWxOOQWP5X8_nEJlKQ-1
+X-Mimecast-MFC-AGG-ID: H3qHQWxOOQWP5X8_nEJlKQ_1750867250
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f85f31d9so875366f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 09:00:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750867250; x=1751472050;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fVPSomnM/XHJegYDF8a486UxXjZV1B4u2XNVJqXqkPE=;
+        b=ILOBRRQq+FuLeDoR6J2wYgJZXdYYT21zmM3pY1oMlrJn7tdw8Yujxg1kjREat64h2S
+         yHgTgAwTXocTaC8F8otfw+O0xtHCOpqHuAkeZ/BaWTJ3zILeiqCdliJEy1pmZ/OoWm9m
+         ++JgXlGB++V6ZDo2rY7G6D6LcFBvf5jQWVSk9Kq95mpDAU+Lrqlagg/3L7GvVGkBouFP
+         hgtVR+SbijHPprhUUQC7JE5A9poM2lYuaXFZkLgW81E3iF+dAWnHgecjOT+lbnR8iK4v
+         91f7GoSJcJd8FbaKjCrZiuzuI0PN2GLKz1a+xE8/00tf1qybkBVV85r6jTedXDwn+bpw
+         G+Aw==
+X-Forwarded-Encrypted: i=1; AJvYcCUq0xPQPfmVkdmtxhioIGzrUaRYk2jSzqJk5u/QsshBMVObhKaZ3upVtpHBzVMzhcUko5LWbmhzWQ5++RU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN2WG9D3NWRenPbMlgprZzTagtCXo2JO9NowRkV5ysQmqFxGsV
+	YU44ZBO+UPHrhhl/zIlA7N9NCCceZu1NhxNKcnPlEzFyNUkhARNqN4kjpsAxdMUqpNFOC7IYQn+
+	QmhZhOxSDjVc2Xry8IwQ58yyZ1Jpk9I8p5GrJZ4ypri6Wp8PK8IHKLcKifPpvj5Ur8A==
+X-Gm-Gg: ASbGnctfbbiY7mg/+x/wGVnAmrqg+xdwlS2F8kCUDIXfhe7CQJyfNTlNfnbE8va5KbZ
+	YE1A9nOnOhSo7B9z51i+ceSdB/KJRbe3EKJ0SZR4OH98vauuGiCdCmLpFsKuHUc1S5NOSMxT/37
+	t6+Cn9aOn2jrKfSDHndgsIOCgqvsIBgmHr81z4O9gov/nSEjeux+wwFB7C3E69VH2t1ymHQBDsr
+	jsJqUbO7gNBD8yRsQZqzSweRrkSaakMjty27YPxgtt7uUxAd0l7Gxot7DEmSJ84D9gNEifvZPI5
+	JtrhIG4Iy0RVWcysYQ==
+X-Received: by 2002:a05:6000:200d:b0:3a6:d95c:5e8 with SMTP id ffacd0b85a97d-3a6ed66464dmr3440595f8f.35.1750867249888;
+        Wed, 25 Jun 2025 09:00:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEx8ud9+gtyW7duD6Uk77aUjb1DTQPtQAWhhJNwbC5QYNwTl1QD0WHHRtck+a2LtJywDfOJBg==
+X-Received: by 2002:a05:6000:200d:b0:3a6:d95c:5e8 with SMTP id ffacd0b85a97d-3a6ed66464dmr3440529f8f.35.1750867249336;
+        Wed, 25 Jun 2025 09:00:49 -0700 (PDT)
+Received: from fedora (g3.ign.cz. [91.219.240.17])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6e805dc00sm5135456f8f.31.2025.06.25.09.00.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Jun 2025 09:00:48 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+To: Manuel Andreas <manuel.andreas@tum.de>, kvm@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Cc: Sean Christopherson <seanjc@google.com>, pbonzini@redhat.com
+Subject: Re: [PATCH] x86/hyper-v: Filter non-canonical addresses passed via
+ HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST(_EX)
+In-Reply-To: <c090efb3-ef82-499f-a5e0-360fc8420fb7@tum.de>
+References: <c090efb3-ef82-499f-a5e0-360fc8420fb7@tum.de>
+Date: Wed, 25 Jun 2025 18:00:47 +0200
+Message-ID: <87plerolow.fsf@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-Hi
+Manuel Andreas <manuel.andreas@tum.de> writes:
 
-2025. 06. 23. 0:36 keltez=C3=A9ssel, Armin Wolf =C3=ADrta:
-> Am 22.06.25 um 23:37 schrieb P=C5=91cze Barnab=C3=A1s:
->=20
->> Hi
->>
->>
->> 2025. 06. 15. 19:59 keltez=C3=A9ssel, Armin Wolf =C3=ADrta:
->>> Add a new driver for Uniwill laptops. The driver uses a ACPI WMI
->>> interface to talk with the embedded controller, but relies on a
->>> DMI whitelist for autoloading since Uniwill just copied the WMI
->>> GUID from the Windows driver example.
->>>
->>> The driver is reverse-engineered based on the following information:
->>> - OEM software from intel
->>> - https://github.com/pobrn/qc71_laptop
->> Oh... I suppose an end of an era for me...
->=20
-> I now remember that we interacted on the mailing lists before, sorry for =
-not CCing
-> you on this patch series.
->=20
-> Do you want a Co-developed-by tag on those patches?
+> In KVM guests with Hyper-V hypercalls enabled, the hypercalls 
+> HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST and HVCALL_FLUSH_VIRTUAL_ADDRESS_LIST_EX 
+> allow a guest to request invalidation of portions of a virtual TLB.
+> For this, the hypercall parameter includes a list of GVAs that are supposed 
+> to be invalidated.
+>
+> However, when non-canonical GVAs are passed, there is currently no 
+> filtering in place and they are eventually passed to checked invocations of 
+> INVVPID on Intel / INVLPGA on AMD.
+> While the AMD variant (INVLPGA) will silently ignore the non-canonical 
+> address and perform a no-op, the Intel variant (INVVPID) will fail and end 
+> up in invvpid_error, where a WARN_ONCE is triggered:
+>
+> invvpid failed: ext=0x0 vpid=1 gva=0xaaaaaaaaaaaaa000
+> WARNING: CPU: 6 PID: 326 at arch/x86/kvm/vmx/vmx.c:482 
+> invvpid_error+0x91/0xa0 [kvm_intel]
+> Modules linked in: kvm_intel kvm 9pnet_virtio irqbypass fuse
+> CPU: 6 UID: 0 PID: 326 Comm: kvm-vm Not tainted 6.15.0 #14 PREEMPT(voluntary)
+> RIP: 0010:invvpid_error+0x91/0xa0 [kvm_intel]
+> Call Trace:
+>   <TASK>
+>   vmx_flush_tlb_gva+0x320/0x490 [kvm_intel]
+>   ? __pfx_vmx_flush_tlb_gva+0x10/0x10 [kvm_intel]
+>   ? kfifo_copy_out+0xcf/0x120
+>   kvm_hv_vcpu_flush_tlb+0x24f/0x4f0 [kvm]
+>   ? __pfx_kvm_hv_vcpu_flush_tlb+0x10/0x10 [kvm]
+>   ? kvm_pmu_is_valid_msr+0x6e/0x80 [kvm]
+>   ? kvm_get_msr_common+0x219/0x20f0 [kvm]
+>   kvm_arch_vcpu_ioctl_run+0x3013/0x5810 [kvm]
+>   /* ... */
+>
+> Hyper-V documents that invalid GVAs (those that are beyond a partition's 
+> GVA space) are to be ignored. While not completely clear whether this 
+> ruling also applies to non-canonical GVAs, it is likely fine to make that 
+> assumption.
 
-I'll leave it up to you.
+I wrote a simple test and ran it on Azure. Unless I screwed up, the
+result confirms this assumption. The test was:
 
+#include <linux/module.h>	/* Needed by all modules */
+#include <linux/kernel.h>	/* Needed for KERN_INFO */
 
->=20
->>> - https://github.com/tuxedocomputers/tuxedo-drivers
->>> - https://github.com/tuxedocomputers/tuxedo-control-center
->>>
->>> The underlying EC supports various features, including hwmon sensors,
->>> battery charge limiting, a RGB lightbar and keyboard-related controls.
->>>
->>> Reported-by: cyear <chumuzero@gmail.com>
->>> Closes: https://github.com/lm-sensors/lm-sensors/issues/508
->>> Closes: https://github.com/Wer-Wolf/uniwill-laptop/issues/3
->>> Signed-off-by: Armin Wolf <W_Armin@gmx.de>
->>> ---
->>>     .../ABI/testing/sysfs-driver-uniwill-laptop   |   53 +
->>>     Documentation/wmi/devices/uniwill-laptop.rst  |  109 ++
->>>     MAINTAINERS                                   |    8 +
->>>     drivers/platform/x86/uniwill/Kconfig          |   17 +
->>>     drivers/platform/x86/uniwill/Makefile         |    1 +
->>>     drivers/platform/x86/uniwill/uniwill-laptop.c | 1477 ++++++++++++++=
-+++
->>>     drivers/platform/x86/uniwill/uniwill-wmi.c    |    3 +-
->>>     7 files changed, 1667 insertions(+), 1 deletion(-)
->>>     create mode 100644 Documentation/ABI/testing/sysfs-driver-uniwill-l=
-aptop
->>>     create mode 100644 Documentation/wmi/devices/uniwill-laptop.rst
->>>     create mode 100644 drivers/platform/x86/uniwill/uniwill-laptop.c
->>>
-> [...]
->>> +
->>> +static const unsigned int uniwill_led_channel_to_bat_reg[LED_CHANNELS]=
- =3D {
->>> +=09EC_ADDR_LIGHTBAR_BAT_RED,
->>> +=09EC_ADDR_LIGHTBAR_BAT_GREEN,
->>> +=09EC_ADDR_LIGHTBAR_BAT_BLUE,
->>> +};
->>> +
->>> +static const unsigned int uniwill_led_channel_to_ac_reg[LED_CHANNELS] =
-=3D {
->>> +=09EC_ADDR_LIGHTBAR_AC_RED,
->>> +=09EC_ADDR_LIGHTBAR_AC_GREEN,
->>> +=09EC_ADDR_LIGHTBAR_AC_BLUE,
->>> +};
->>> +
->>> +static int uniwill_led_brightness_set(struct led_classdev *led_cdev, e=
-num led_brightness brightness)
->>> +{
->>> +=09struct led_classdev_mc *led_mc_cdev =3D lcdev_to_mccdev(led_cdev);
->>> +=09struct uniwill_data *data =3D container_of(led_mc_cdev, struct uniw=
-ill_data, led_mc_cdev);
->>> +=09unsigned int value;
->>> +=09int ret;
->>> +
->>> +=09ret =3D led_mc_calc_color_components(led_mc_cdev, brightness);
->>> +=09if (ret < 0)
->>> +=09=09return ret;
->>> +
->>> +=09for (int i =3D 0; i < LED_CHANNELS; i++) {
->>> +=09=09/* Prevent the brightness values from overflowing */
->>> +=09=09value =3D min(LED_MAX_BRIGHTNESS, data->led_mc_subled_info[i].br=
-ightness);
->>> +=09=09ret =3D regmap_write(data->regmap, uniwill_led_channel_to_ac_reg=
-[i], value);
->> This is interesting. I am not sure which "control center" application yo=
-u have looked at,
->> but I found many lookup tables based on the exact model, etc. For exampl=
-e, on my laptop
->> any value larger than 36 will simply turn that color component off. Have=
- you seen
->> anything like that?
->=20
-> I was using the Intel NUC studio software application during reverse-engi=
-neering and had a user
-> test the resulting code on a Intel NUC notebook. AFAIK the OEM software d=
-id not use a lookup table.
->=20
-> If we extend this driver in the future then we might indeed use the quirk=
- system to change the max.
-> LED brightness depending on the model.
+struct hv_tlb_flush {    /* HV_INPUT_FLUSH_VIRTUAL_ADDRESS_LIST */
+        u64 address_space;
+        u64 flags;
+        u64 processor_mask;
+        u64 gva_list[];
+} __packed;
 
-I see. So everything up to 200 works. And after that do you know if it turn=
-s off or what happens?
+static inline u64 __hyperv_hypercall(u64 control, u64 input_address,
+                                     u64 output_address)
+{
+	u64 res;
 
+        asm volatile("mov %[output_address], %%r8\n\t"
+                     "vmcall"
+                     : "=a" (res),
+                       "+c" (control), "+d" (input_address)
+                     : [output_address] "r"(output_address)
+                     : "cc", "memory", "r8", "r9", "r10", "r11");
 
+	return res;
+}
 
->=20
->>> +=09=09if (ret < 0)
->>> +=09=09=09return ret;
->>> +
->>> +=09=09ret =3D regmap_write(data->regmap, uniwill_led_channel_to_bat_re=
-g[i], value);
->>> +=09=09if (ret < 0)
->>> +=09=09=09return ret;
->>> +=09}
->>> +
->>> +=09if (brightness)
->>> +=09=09value =3D 0;
->>> +=09else
->>> +=09=09value =3D LIGHTBAR_S0_OFF;
->>> +
->>> +=09ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, =
-LIGHTBAR_S0_OFF, value);
->>> +=09if (ret < 0)
->>> +=09=09return ret;
->>> +
->>> +=09return regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL, =
-LIGHTBAR_S0_OFF, value);
->>> +}
->>> +
->>> +#define LIGHTBAR_MASK=09(LIGHTBAR_APP_EXISTS | LIGHTBAR_S0_OFF | LIGHT=
-BAR_S3_OFF | LIGHTBAR_WELCOME)
->>> +
->>> +static int uniwill_led_init(struct uniwill_data *data)
->>> +{
->>> +=09struct led_init_data init_data =3D {
->>> +=09=09.devicename =3D DRIVER_NAME,
->>> +=09=09.default_label =3D "multicolor:" LED_FUNCTION_STATUS,
->>> +=09=09.devname_mandatory =3D true,
->>> +=09};
->>> +=09unsigned int color_indices[3] =3D {
->>> +=09=09LED_COLOR_ID_RED,
->>> +=09=09LED_COLOR_ID_GREEN,
->>> +=09=09LED_COLOR_ID_BLUE,
->>> +=09};
->>> +=09unsigned int value;
->>> +=09int ret;
->>> +
->>> +=09if (!(supported_features & UNIWILL_FEATURE_LIGHTBAR))
->>> +=09=09return 0;
->>> +
->>> +=09/*
->>> +=09 * The EC has separate lightbar settings for AC and battery mode,
->>> +=09 * so we have to ensure that both settings are the same.
->>> +=09 */
->>> +=09ret =3D regmap_read(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, &value)=
-;
->>> +=09if (ret < 0)
->>> +=09=09return ret;
->>> +
->>> +=09value |=3D LIGHTBAR_APP_EXISTS;
->>> +=09ret =3D regmap_write(data->regmap, EC_ADDR_LIGHTBAR_AC_CTRL, value)=
-;
->>> +=09if (ret < 0)
->>> +=09=09return ret;
->>> +
->>> +=09/*
->>> +=09 * The breathing animation during suspend is not supported when
->>> +=09 * running on battery power.
->>> +=09 */
->>> +=09value |=3D LIGHTBAR_S3_OFF;
->>> +=09ret =3D regmap_update_bits(data->regmap, EC_ADDR_LIGHTBAR_BAT_CTRL,=
- LIGHTBAR_MASK, value);
->>> +=09if (ret < 0)
->>> +=09=09return ret;
->>> +
->>> +=09data->led_mc_cdev.led_cdev.color =3D LED_COLOR_ID_MULTI;
->>> +=09data->led_mc_cdev.led_cdev.max_brightness =3D LED_MAX_BRIGHTNESS;
->>> +=09data->led_mc_cdev.led_cdev.flags =3D LED_REJECT_NAME_CONFLICT;
->>> +=09data->led_mc_cdev.led_cdev.brightness_set_blocking =3D uniwill_led_=
-brightness_set;
->>> +
->>> +=09if (value & LIGHTBAR_S0_OFF)
->>> +=09=09data->led_mc_cdev.led_cdev.brightness =3D 0;
->>> +=09else
->>> +=09=09data->led_mc_cdev.led_cdev.brightness =3D LED_MAX_BRIGHTNESS;
->>> +
->>> +=09for (int i =3D 0; i < LED_CHANNELS; i++) {
->>> +=09=09data->led_mc_subled_info[i].color_index =3D color_indices[i];
->>> +
->>> +=09=09ret =3D regmap_read(data->regmap, uniwill_led_channel_to_ac_reg[=
-i], &value);
->>> +=09=09if (ret < 0)
->>> +=09=09=09return ret;
->>> +
->>> +=09=09/*
->>> +=09=09 * Make sure that the initial intensity value is not greater tha=
-n
->>> +=09=09 * the maximum brightness.
->>> +=09=09 */
->>> +=09=09value =3D min(LED_MAX_BRIGHTNESS, value);
->>> +=09=09ret =3D regmap_write(data->regmap, uniwill_led_channel_to_ac_reg=
-[i], value);
->>> +=09=09if (ret < 0)
->>> +=09=09=09return ret;
->>> +
->>> +=09=09ret =3D regmap_write(data->regmap, uniwill_led_channel_to_bat_re=
-g[i], value);
->>> +=09=09if (ret < 0)
->>> +=09=09=09return ret;
->>> +
->>> +=09=09data->led_mc_subled_info[i].intensity =3D value;
->>> +=09=09data->led_mc_subled_info[i].channel =3D i;
->>> +=09}
->>> +
->>> +=09data->led_mc_cdev.subled_info =3D data->led_mc_subled_info;
->>> +=09data->led_mc_cdev.num_colors =3D LED_CHANNELS;
->>> +
->>> +=09return devm_led_classdev_multicolor_register_ext(&data->wdev->dev, =
-&data->led_mc_cdev,
->>> +=09=09=09=09=09=09=09 &init_data);
->>> +}
->>> [...]
->>> +static const enum power_supply_property uniwill_properties[] =3D {
->>> +=09POWER_SUPPLY_PROP_HEALTH,
->>> +=09POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
->>> +};
->>> +
->>> +static const struct power_supply_ext uniwill_extension =3D {
->>> +=09.name =3D DRIVER_NAME,
->>> +=09.properties =3D uniwill_properties,
->>> +=09.num_properties =3D ARRAY_SIZE(uniwill_properties),
->>> +=09.get_property =3D uniwill_get_property,
->>> +=09.set_property =3D uniwill_set_property,
->>> +=09.property_is_writeable =3D uniwill_property_is_writeable,
->>> +};
->>> +
->>> +static int uniwill_add_battery(struct power_supply *battery, struct ac=
-pi_battery_hook *hook)
->> What is the motivation for supporting multiple batteries?
->> There is still just a single parameter in the EC/etc.
->=20
-> I simply assume that devices using this EC interface will only ever suppo=
-rt a single battery anyway,
-> as the EC will be unable to handle more than that.
+int init_module(void)
+{
+	u64 rcx = 0x0003UL | 1UL << 32; /* 1 rep */
+	u64 status;
+	struct hv_tlb_flush *flush = (struct hv_tlb_flush *)kzalloc(4096, GFP_KERNEL);
+	void *out = kzalloc(4096, GFP_KERNEL);
 
-I see, I was just wondering if all this code is needed. But I suppose
-you can't remove much more.
+	flush->flags = 0x3; /* all CPUS all address spaces */
+	flush->processor_mask = 0x1;
+	flush->gva_list[0] = 0xaaaaaaaaaaaaa000;
 
+	status = __hyperv_hypercall(rcx, __pa(flush), __pa(out));
 
->=20
->>> +{
->>> +=09struct uniwill_data *data =3D container_of(hook, struct uniwill_dat=
-a, hook);
->>> +=09struct uniwill_battery_entry *entry;
->>> +=09int ret;
->>> +
->>> +=09entry =3D kzalloc(sizeof(*entry), GFP_KERNEL);
->>> +=09if (!entry)
->>> +=09=09return -ENOMEM;
->>> +
->>> +=09ret =3D power_supply_register_extension(battery, &uniwill_extension=
-, &data->wdev->dev, data);
->>> +=09if (ret < 0) {
->>> +=09=09kfree(entry);
->>> +=09=09return ret;
->>> +=09}
->>> +
->>> +=09scoped_guard(mutex, &data->battery_lock) {
->>> +=09=09entry->battery =3D battery;
->>> +=09=09list_add(&entry->head, &data->batteries);
->>> +=09}
->>> +
->>> +=09return 0;
->>> +}
->>> [...]
->>> +static int uniwill_ec_init(struct uniwill_data *data)
->>> +{
->>> +=09unsigned int value;
->>> +=09int ret;
->>> +
->>> +=09ret =3D regmap_read(data->regmap, EC_ADDR_PROJECT_ID, &value);
->>> +=09if (ret < 0)
->>> +=09=09return ret;
->>> +
->>> +=09dev_dbg(&data->wdev->dev, "Project ID: %u\n", value);
->>> +
->>> +=09ret =3D regmap_set_bits(data->regmap, EC_ADDR_AP_OEM, ENABLE_MANUAL=
-_CTRL);
->> I think this might turn out to be problematic. If this is enabled, then =
-multiple
->> things are not handled automatically. For example, keyboard backlight is=
- not handled
->> and as far as I can see, no `KEY_KBDILLUM{DOWN,UP}` are sent (events 0xb=
-1, 0xb2). The
->> other thing is the "performance mode" button (event 0xb0). I don't see t=
-hat these two
->> things would be handled in the driver.
->=20
-> On the intel NUC notebooks the keyboard backlight is controlled by a sepa=
-rate USB device,
-> so the driver only has to forward the KEY_KBDILLUMTOGGLE event to userspa=
-ce (the
-> KEY_KBDILLUM{DOWN,UP} events are not supported on those devices). This ha=
-ppens inside the
-> uniwill-wmi driver.
+	printk("Flush result: %llx\n", status);
 
-An USB HID device controls the keyboard backlight on my laptop as well, but=
- the brightness
-up/down requests arrive via this WMI mechanism.
+	kfree(flush);
+	kfree(out);
 
+	return -1;
+}
 
->=20
-> Once we add support for devices where the EC also controls the keyboard b=
-acklight i will
-> add support for those events. I am also planning to add support for the p=
-erformance mode
-> event later. Currently the EC does not change the performance mode itself=
- even when in
-> automatic mode (at least on intel NUC notebooks).
+void cleanup_module(void)
+{
+}
 
-Interesting, it does on mine...
+MODULE_LICENSE("GPL");
 
+And the result of loading this module is:
 
->=20
-> Since this driver relies on a DMI whitelist i think that we can safely ad=
-d support for those
-> feature later when new devices are added to those list.
->=20
->>> +=09if (ret < 0)
->>> +=09=09return ret;
->>> +
->>> +=09return devm_add_action_or_reset(&data->wdev->dev, uniwill_disable_m=
-anual_control, data);
->>> +}
->>> +
-> [...]
->>> +static int uniwill_suspend_battery(struct uniwill_data *data)
->>> +{
->>> +=09if (!(supported_features & UNIWILL_FEATURE_BATTERY))
->>> +=09=09return 0;
->>> +
->>> +=09/*
->>> +=09 * Save the current charge limit in order to restore it during resu=
-me.
->>> +=09 * We cannot use the regmap code for that since this register needs=
- to
->>> +=09 * be declared as volatile due to CHARGE_CTRL_REACHED.
->>> +=09 */
->> What is the motivation for this? I found that this is not needed, I foun=
-d that
->> the value is persistent.
->=20
-> The OEM application i reverse-engineered did restore this value after a r=
-esume, so
-> i decided to replicate this behavior.
+[ 4228.888451] Flush result: 100000000
 
-I suppose it can't hurt.
+(1 in bit 32 means 1 rep completed, lower 16 bits == 0 indicate
+HV_STATUS_SUCCESS).
 
+>
+> The following patch addresses the issue by skipping non-canonical GVAs 
+> before calling the architecture-specific invalidation primitive.
+> I've validated it against a PoC and the issue seems to be fixed.
+>
+> Signed-off-by: Manuel Andreas <manuel.andreas@tum.de>
+> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>   arch/x86/kvm/hyperv.c | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/arch/x86/kvm/hyperv.c b/arch/x86/kvm/hyperv.c
+> index 24f0318c50d7..644a7aae6dab 100644
+> --- a/arch/x86/kvm/hyperv.c
+> +++ b/arch/x86/kvm/hyperv.c
+> @@ -1979,6 +1979,9 @@ int kvm_hv_vcpu_flush_tlb(struct kvm_vcpu *vcpu)
+>   		if (entries[i] == KVM_HV_TLB_FLUSHALL_ENTRY)
+>   			goto out_flush_all;
+>
+> +                if (is_noncanonical_invlpg_address(entries[i], vcpu))
+> +                        continue;
+> +
+>   		/*
+>   		 * Lower 12 bits of 'address' encode the number of additional
+>   		 * pages to flush.
 
-> [...]
-
-Regards,
-Barnab=C3=A1s P=C5=91cze
+-- 
+Vitaly
 
