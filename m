@@ -1,146 +1,103 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5186529E0F4;
-	Wed, 25 Jun 2025 10:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4D629E0EB;
+	Wed, 25 Jun 2025 10:36:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750847746; cv=none; b=Ne4gZU41UHZ2z+Vof714UfIWdz0KwwQpMfHuoA45jbuPyG+haHCSPPkR5yiLf4SjDWljBQ15f87fDEuurgP/zkEhQy5ZzWbk6Tti5CB7S73LS8RTtvuwgEJ6DhcuHVMnT5xWB77qjIabtmqWBl8DwTnmZ5eE+YnaL/IqCJaXS08=
+	t=1750847795; cv=none; b=KopDiGvI7XXJAx4AyX1aJYQfrklOhcGBUjKfcCp6/qR8FUHDvNvtfdJkze+WEn5zH9vTx6yaENWx4Q+kvWkPEnQ8zFHg3ElB6bqCaTDjKGah0eHlfCw9yl20nLulFdkvhx1IHYR/KiIJBFA+tG5ELBC2I/ejRDbjxIZHn0dG2TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750847746; c=relaxed/simple;
-	bh=QF2/nTzgTNewJqtTDSDCBUv+MKs2/0U6B8wr3E4jhpQ=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d5Vmca7my0JBsw/XfexJN6e+f6lDZ4KDIMZBNR3dQnzkvntPyxKR4fK//OqphgSGEt0mE5h3+2YsDODwbL3nHrX6iySQ9GTt649nB38jLdiQTofY6cPjXaThxu/WmuofyYGkpPYf6kAOI6Kf9ZheALST9oZecmOc6UnZagW/Q5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=gEKgZYyL; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1750847795; c=relaxed/simple;
+	bh=dYa6eaAh9xr3b6d7BvHXBDGX1jqkzejh0NVHRhQAUl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VzlnoA5CvTRTxIUwlGQVRXFiMqKFo4kUimBOSBsaV8Vkr/03gCFoTEDcjgKXeg+pgH7U7oech49YwG10K4EY6izLj8FfxMvGh52NAdj0dM3mUNUWobg+5zCgh0vNRA1keauqnUbr/ss+SXF3+OccsDb9RWTvUicBzhk+/Wru6eY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qjLDR6zA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="gEKgZYyL"
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55P5Ntnj032017;
-	Wed, 25 Jun 2025 10:35:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=uiZBvkEuqcSuz312Gn4jCPAi
-	lFFf4Ltnui1EyIcPcTU=; b=gEKgZYyLYERXnWLUlW3qSXlViRGVq7jUfgjfZjDX
-	jQdnQUo0bjhLiUs6ShJLBJTVHFjGul8oI+VNMRv/YrlqRd5HmVB22P5Pjo0s0tda
-	d8sJIxpnJRcswlWAdEvdVinOTl3a4lM4YX387P0ze95IjioZSxLiAksP0b0q9ymc
-	sRY+n5oaJfbTD/GTt9DqgcFQNmVLeu5aXhmR0upmTMKbj2qlhEndH7qZ8cGgnl0J
-	10yYqp2qQxdk1a2ohw9PyMKgZB77M0HL+vyc3gkd8sWWZxWGaOiXm6X0540cj0FE
-	xlu5yw9jPs+/QYRmK9QtgWun9H3VsHrZbLYy8lUUxIHp0g==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47esa4rrcs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 10:35:42 +0000 (GMT)
-Received: from nasanex01b.na.qualcomm.com (nasanex01b.na.qualcomm.com [10.46.141.250])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 55PAZgZ8011283
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 25 Jun 2025 10:35:42 GMT
-Received: from hu-varada-blr.qualcomm.com (10.80.80.8) by
- nasanex01b.na.qualcomm.com (10.46.141.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Wed, 25 Jun 2025 03:35:38 -0700
-Date: Wed, 25 Jun 2025 16:05:35 +0530
-From: Varadarajan Narayanan <quic_varada@quicinc.com>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, <andersson@kernel.org>,
-        <konradybcio@kernel.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-        <conor+dt@kernel.org>, <lumag@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64: dts: qcom: ipq9574: Fix 'l2' regulator min/max
- voltages
-Message-ID: <aFvQ96h+BdRf5ma3@hu-varada-blr.qualcomm.com>
-References: <20250623113227.1754156-1-quic_varada@quicinc.com>
- <465751c4-a45a-41ce-ab65-ebddb71dd916@oss.qualcomm.com>
- <aFpA4mk2L/sxlpO1@hu-varada-blr.qualcomm.com>
- <qbet26mwfas4ymyy3ozl6f3a5yhgcd2e3euvrn6m3gdvnyvugh@c6yl2u2pcshz>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qjLDR6zA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A9ACC4CEEA;
+	Wed, 25 Jun 2025 10:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750847795;
+	bh=dYa6eaAh9xr3b6d7BvHXBDGX1jqkzejh0NVHRhQAUl0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qjLDR6zAewrVmIxYAFyfkU06WV+hoYuFSttPwwSfo9am/d1q8xZ8/jNKWlYoZW7ol
+	 9/WnutbkwCL6jeYUlLE4HUw9/v0dTld6Wdi0/uXl9AlFywsowiRwMkQO6zJBfEbWTf
+	 FFVFHablPxONy22hN6RuJUiSHHyt+Lswwrgj3X8+E70RrOg0TW2iCv3NvpoVBlaJCl
+	 rI18N/635aMguicwp7yzGIvZzOIM7h/k9McJ98Khsf4ca2QW6YSZV2fDnAUzdQoSAI
+	 CTOIgRxc/powotA/ZOR+H5ukQGsjy+QmQGQrvHW17Ysas+pTFA5jvSQNzEDI92ThXE
+	 xuFdMzlr6bGlQ==
+Date: Wed, 25 Jun 2025 11:36:31 +0100
+From: Lee Jones <lee@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Arnd Bergmann <arnd@kernel.org>, Pavel Machek <pavel@kernel.org>,
+	Hans de Goede <hansg@kernel.org>, linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] leds: trigger: ledtrig-cpu:: enforce NR_CPUS limit in
+ Kconfig
+Message-ID: <20250625103631.GU795775@google.com>
+References: <20250620110820.3364008-1-arnd@kernel.org>
+ <20250625092450.GT795775@google.com>
+ <59044fff-6531-4425-8ccb-e21e17664f26@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <qbet26mwfas4ymyy3ozl6f3a5yhgcd2e3euvrn6m3gdvnyvugh@c6yl2u2pcshz>
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01b.na.qualcomm.com (10.46.141.250)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=eLYTjGp1 c=1 sm=1 tr=0 ts=685bd0fe cx=c_pps
- a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17
- a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=6IFa9wvqVegA:10 a=VwQbUJbxAAAA:8
- a=COk6AnOGAAAA:8 a=YFLLylPM97RZD3lBE-IA:9 a=CjuIK1q_8ugA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: PQgyuCRGNZuIwCzVm-4yHqaNJrD3yAXj
-X-Proofpoint-ORIG-GUID: PQgyuCRGNZuIwCzVm-4yHqaNJrD3yAXj
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI1MDA3OSBTYWx0ZWRfX1czRz9YB9xQC
- zNXN5b1B8MDXBtKencCxbnws5+aLs4fJ1LgLnyX4EyZ4g6VsHewqWJDO9vL6IevcVaLzGbbq+li
- KcYgzSRdG1TN3dU+YZMUWF1hkv6BWmrJMBfxq//hpdcstqWWGK8+itydynwezXBi5kDRnKJ8pDX
- GRMwV+v/lFArSz9dEcs/1UKx499zHkIAYbbBw6sM2Ajut1JeyGae7it77fYpAR6BJtM31HEBhYa
- 7CSVFHTf3aHowu5BNr7vd05xe7ZLbe5iljxLwRrZD3ej44yPnqfOyy4oIqZutYa8eRKcsABo3iC
- YyBJp+fPsAkPNpju0DoGRBWzfuerT7DK5lfw0XS4HClId3GAwrrUfiVnp7NWA8HG1lAS3K8Rx69
- 2ajCTGxKdBu6RNQpbln/A6VlKSZBFtsx00z+4TSJVqXvyST0Wb3VgcetDkV/292lRgvPeZQu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-25_02,2025-06-23_07,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 priorityscore=1501 mlxscore=0 clxscore=1015 mlxlogscore=364
- suspectscore=0 bulkscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
- adultscore=0 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2505280000
- definitions=main-2506250079
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <59044fff-6531-4425-8ccb-e21e17664f26@app.fastmail.com>
 
-On Wed, Jun 25, 2025 at 04:26:29AM +0300, Dmitry Baryshkov wrote:
-> On Tue, Jun 24, 2025 at 11:38:34AM +0530, Varadarajan Narayanan wrote:
-> > On Mon, Jun 23, 2025 at 01:34:22PM +0200, Konrad Dybcio wrote:
-> > > On 6/23/25 1:32 PM, Varadarajan Narayanan wrote:
-> > > > The min and max voltages on l2 regulator is 850000uV. This was
-> > > > incorrectly set at 1800000uV earlier and that affected the
-> > > > stability of the networking subsystem.
-> > > >
-> > > > Fixes: d5506524d9d9 ("arm64: dts: qcom: ipq9574: Add LDO regulator node")
-> > > > Signed-off-by: Varadarajan Narayanan <quic_varada@quicinc.com>
-> > > > ---
-> > >
-> > > Shouldn't there be a consumer for it, instead of it being always-on?
+On Wed, 25 Jun 2025, Arnd Bergmann wrote:
+
+> On Wed, Jun 25, 2025, at 11:24, Lee Jones wrote:
+> > On Fri, 20 Jun 2025, Arnd Bergmann wrote:
+> >> 
+> >> Enforce this limit in Kconfig instead to avoid the build failure.
 > >
-> > The uniphy block is the consumer of this voltage. The PMIC configures it
-> > to 850000uV based on OTP settings and s/w doesn't change it as uniphy
-> > doesn't do scaling.
->
-> Please express this in DT terms, specifying the regulator as a supplier
-> to the uniphy and then making the uniphy driver use that supply.
+> > I have so many questions!
+> >
+> > - This number seems arbitrary - what is the limiting factor?
+> >   - Character size for printing?
+> 
+> That is my best guess, yes. The original commit 8f88731d052d
+> ("led-triggers: create a trigger for CPU activity") already
+> had this, plus
+> 
+> #define MAX_NAME_LEN 8
+> snprintf(trig->name, MAX_NAME_LEN, "cpu%d", cpu);
+> 
+> which comes out to 10000 cpus (0 through 9999) in a NUL-terminated
+> string. Obviously we could have a higher limit here but would
+> technically still need to check that.
+> 
+> > - What platform did you test this on to blow through that number?
+> 
+> I was only compile-testing with a crazy number of CPUs, to see
+> what would break, in particular when there are per-cpu structures
+> or cpumask_t variables on the stack. I sent fixes for the ones
+> that broke the build, but don't expect anything to actually
+> need this at runtime. Some of the fixes I sent also address
+> possible stack overflows that happen with a more realistic
+> number of CPUs.
+> 
+> > - What if we really do want 10000+ CPUs?
+> >   - And what will that LED array look like to support them all?
+> 
+> abcc131292aa ("ledtrig-cpu: Limit to 8 CPUs") actually added a
+> runtime limit to eight CPUS, which is probably more reasonable.
+> 
+> > - If we're enforcing here, is the BUILD_BUG_ON() now superfluous?
+> 
+> Yes, but it documents the requirement better than just the
+> Kconfig dependency. Since there is a runtime limit, we could
+> probably just drop the compile-time check and not add the
+> Kconfig check.
 
-Sure, we will update UNIPHY patch series [1] to enable this voltage supplier.
+Your call.  I trust your judgement.
 
-Thanks
-Varada
+All of this was just a thought experiment.
 
-1 - https://lore.kernel.org/linux-arm-msm/20250207-ipq_pcs_6-14_rc1-v5-0-be2ebec32921@quicinc.com/
-
-> > > >  arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi | 4 ++--
-> > > >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi b/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
-> > > > index bdb396afb992..21b04a2c629d 100644
-> > > > --- a/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
-> > > > +++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp-common.dtsi
-> > > > @@ -106,8 +106,8 @@ ipq9574_s1: s1 {
-> > > >  		};
-> > > >
-> > > >  		mp5496_l2: l2 {
-> > > > -			regulator-min-microvolt = <1800000>;
-> > > > -			regulator-max-microvolt = <1800000>;
-> > > > +			regulator-min-microvolt = <850000>;
-> > > > +			regulator-max-microvolt = <850000>;
-> > > >  			regulator-always-on;
-> > > >  			regulator-boot-on;
-> > > >  		};
-> > > >
-> > > > base-commit: 5d4809e25903ab8e74034c1f23c787fd26d52934
->
-> --
-> With best wishes
-> Dmitry
+-- 
+Lee Jones [李琼斯]
