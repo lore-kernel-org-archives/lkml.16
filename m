@@ -1,147 +1,82 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 533171DE4E1;
-	Wed, 25 Jun 2025 14:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4307517BA5;
+	Wed, 25 Jun 2025 14:04:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750860249; cv=none; b=XNl0j+QMqAmBt1vC4l+2Nhtr5StYLDGsHsrwKQ15CgUxDmubCClVwCnvzIMy+UYZtGtWpLnVx5Zbyx0HVjFE/gwGVS3huTcuKiXi6nXMHZuTGLFUzbmVXFRVmWvxgkw6/1awltT0nkhfBi1Pf9avup/FmW1hBgD/RPhlZKTmCZ4=
+	t=1750860262; cv=none; b=tM7s3HlpYfDm4DO+tO8lsea7lsFwizm327qKV94RzYgh3OjGb3Sflju7HX8pOFlAxGpnlA13bqnrnPqa4EIRvqtT6fzz10H56kqPz7S9S8DKM0tw0E6TpDRiz0ywIsH89WltRKI+n/sLrLFGt1z9iZKF6YZ+XbgrBrWdNPYvi3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750860249; c=relaxed/simple;
-	bh=73FhgEBtwPy6gR7FbpYwI5Qv0zgA5QgEZGXPwZLoqJg=;
+	s=arc-20240116; t=1750860262; c=relaxed/simple;
+	bh=Oclaq5KSTIMdOvivlfwASFPr+uNxgLxtjUsBMBK4gYY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JuoEw8lC/mR8YilwHOfUASVoS8bCmdel+AhloOclj8b2Zhh8Ix6yXPBuIP85/+BgjgxaZcA3Q+966hHbtTY1/0NZ/VqpILWB0NSEXor7AeGrke0FcJ5eCjvu9ik0LeIsCKyzmVMnoBErHfmlfkAXYzAFRL4Vz+qFUiU81eH+OMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53FE7106F;
-	Wed, 25 Jun 2025 07:03:48 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A4E893F66E;
-	Wed, 25 Jun 2025 07:04:03 -0700 (PDT)
-Date: Wed, 25 Jun 2025 15:04:00 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
-	james.quinlan@broadcom.com, f.fainelli@gmail.com,
-	vincent.guittot@linaro.org, etienne.carriere@st.com,
-	peng.fan@oss.nxp.com, michal.simek@amd.com, quic_sibis@quicinc.com,
-	d-gole@ti.com, souvik.chakravarty@arm.com
-Subject: Re: [RFC PATCH 3/7] firmware: arm_scmi: Add Telemetry protocol
- support
-Message-ID: <aFwB0Ok90aoSxPe5@pluto>
-References: <20250620192813.2463367-1-cristian.marussi@arm.com>
- <20250620192813.2463367-4-cristian.marussi@arm.com>
- <0c71e182-9aac-426d-b58b-41f118b9a8f2@suswa.mountain>
+	 Content-Type:Content-Disposition:In-Reply-To; b=EZM8+YS6I7QQqhqeYUqg6hMujCZzgnlap4/TwyNVIdRkcKMQiDFMsjXlZ8VsLhPjU2OSqJFX3S5F03WoETGxiIAbqVZsHXlrGQuYJiDJdCBU/DQRpVZOd5w3X6o0WAdqHrt8J8xcdsKlLLVyLPDeNcHkXMk3qmukqeitwwwKBcw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E1hiwVpo; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E1hiwVpo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A68C6C4CEEA;
+	Wed, 25 Jun 2025 14:04:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750860261;
+	bh=Oclaq5KSTIMdOvivlfwASFPr+uNxgLxtjUsBMBK4gYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E1hiwVpoAEwHem/PxGb9ThwTASwSC48Br/IttA5+Q4MbMorLB+BoNO4MU46dl0mOM
+	 4xGVBx49eFetvt0rSzE45PJAs0XPWUMPUxnlOtRxZt1Bq5P9rk8o0sF1UkTMp36W/R
+	 lslTkdb8SZvDbz8zcddmtrtVU1unAM6n5oSqCCdz2tD3zrxykyArAbNhopkIDqHlJU
+	 MJR6t+KPohEBN6Oja+tRn0lhnUpJPAv1Wqx4NGzzR3HPQRSaQ1V2JnsF1/Zt9GELhF
+	 rnGco7KZCjLF5n6U/2iWdDf0rvjlB+Lybi2xkPs68G1zZUsvLuM45SRUTHZhvhLStq
+	 R5Il8OMou8K9A==
+Date: Wed, 25 Jun 2025 15:04:16 +0100
+From: Mark Brown <broonie@kernel.org>
+To: linux@treblig.org
+Cc: arnd@arndb.de, lee@kernel.org, mchehab@kernel.org, lgirdwood@gmail.com,
+	perex@perex.cz, tiwai@suse.com, linux-media@vger.kernel.org,
+	linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] ASoC: wl1273: Remove
+Message-ID: <97bfa9fc-c973-444c-9b37-fce557391886@sirena.org.uk>
+References: <20250625133258.78133-1-linux@treblig.org>
+ <20250625133258.78133-3-linux@treblig.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="aUhqz5H9dpAnc3uh"
+Content-Disposition: inline
+In-Reply-To: <20250625133258.78133-3-linux@treblig.org>
+X-Cookie: He who hates vices hates mankind.
+
+
+--aUhqz5H9dpAnc3uh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0c71e182-9aac-426d-b58b-41f118b9a8f2@suswa.mountain>
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2025 at 11:46:15PM +0300, Dan Carpenter wrote:
-> On Fri, Jun 20, 2025 at 08:28:09PM +0100, Cristian Marussi wrote:
-> > +static int
-> > +scmi_telemetry_protocol_attributes_get(const struct scmi_protocol_handle *ph,
-> > +				       struct telemetry_info *ti)
-> > +{
+On Wed, Jun 25, 2025 at 02:32:56PM +0100, linux@treblig.org wrote:
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+>=20
+> The wl1273 FM radio is on Arnd's unused driver list:
+>   https://lore.kernel.org/lkml/a15bb180-401d-49ad-a212-0c81d613fbc8@app.f=
+astmail.com/
+> Remove the codec component.
 
-... and also...
+Acked-by: Mark Brown <broonie@kernel.org>
 
-> > +	int ret;
-> > +	struct scmi_xfer *t;
-> > +	struct scmi_msg_resp_telemetry_protocol_attributes *resp;
-> > +
-> > +	ret = ph->xops->xfer_get_init(ph, PROTOCOL_ATTRIBUTES,
-> > +				      0, sizeof(*resp), &t);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	resp = t->rx.buf;
-> > +	ret = ph->xops->do_xfer(ph, t);
-> > +	if (!ret) {
-> > +		__le32 attr = resp->attributes;
-> > +
-> > +		ti->info.num_de = le32_to_cpu(resp->de_num);
-> > +		ti->info.num_groups = le32_to_cpu(resp->groups_num);
-> > +		for (int i = 0; i < SCMI_TLM_MAX_DWORD; i++)
-> > +			ti->info.de_impl_version[i] =
-> > +				le32_to_cpu(resp->de_implementation_rev_dword[i]);
-> > +		ti->info.single_read_support = SUPPORTS_SINGLE_READ(attr);
-> > +		ti->info.continuos_update_support = SUPPORTS_CONTINUOS_UPDATE(attr);
-> > +		ti->info.per_group_config_support = SUPPORTS_PER_GROUP_CONFIG(attr);
-> > +		ti->info.reset_support = SUPPORTS_RESET(attr);
-> > +		ti->info.fc_support = SUPPORTS_FC(attr);
-> > +		ti->num_shmti = le32_get_bits(attr, GENMASK(15, 0));
-> > +		/* Allocate DEs descriptors */
-> > +		ti->info.des = devm_kcalloc(ph->dev, ti->info.num_de,
-> > +					    sizeof(*ti->info.des), GFP_KERNEL);
-> > +		if (!ti->info.des)
-> > +			ret = -ENOMEM;
-> > +
-> > +		/* Allocate DE GROUPS descriptors */
-> > +		ti->info.des_groups = devm_kcalloc(ph->dev, ti->info.num_groups,
-> > +						   sizeof(*ti->info.des_groups),
-> > +						   GFP_KERNEL);
-> > +		if (!ti->info.des_groups)
-> > +			ret = -ENOMEM;
-> 
-> It the allocation fails we need to jump to the ->xfer_put
-> 
-> > +
-> > +		for (int i = 0; i < ti->info.num_groups; i++)
-> > +			ti->info.des_groups[i].id = i;
-> 
-> otherwise it leads to a NULL dereference.
-> 
-> > +	}
-> > +
-> > +	ph->xops->xfer_put(ph, t);
-> > +
-> > +	return ret;
-> > +}
-> 
-> [ snip ]
-> 
-> > +static int iter_shmti_process_response(const struct scmi_protocol_handle *ph,
-> > +				       const void *response,
-> > +				       struct scmi_iterator_state *st,
-> > +				       void *priv)
-> > +{
-> > +	const struct scmi_msg_resp_telemetry_shmti_list *r = response;
-> > +	struct telemetry_info *ti = priv;
-> > +	struct telemetry_shmti *shmti;
-> > +	const struct scmi_shmti_desc *desc;
-> > +	void __iomem *addr;
-> > +	u64 phys_addr;
-> > +	u32 len;
-> > +
-> > +	desc = &r->desc[st->loop_idx];
-> > +	shmti = &ti->shmti[st->desc_index + st->loop_idx];
-> > +
-> > +	shmti->id = le32_to_cpu(desc->id);
-> > +	phys_addr = le32_to_cpu(desc->addr_low);
-> > +	phys_addr |= (u64)le32_to_cpu(desc->addr_high) << 32;
-> > +
-> > +	len = le32_to_cpu(desc->length);
-> > +	addr = devm_ioremap(ph->dev, phys_addr, len);
-> > +	if (!addr)
-> > +		return -EADDRNOTAVAIL;
-> > +
-> > +	shmti->base = addr;
-> > +	shmti->len = len;
-> 
-> There is some code later which assumes ->len is at least
-> TDCF_EPLG_SZ and de->data_sz.  This is probably where we should
-> check if (len < TDCF_EPLG_SZ) return -EINVAL; and the de->data_sz
-> would be checked later.
+--aUhqz5H9dpAnc3uh
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I will add proper checks
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Cristian
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmhcAeAACgkQJNaLcl1U
+h9DEvQf+IW+1Z568IJeN2jBNMUoN3s10Gwps6y3Y0mEZsZ6mx9agZaC0u0KG3jAy
+G++QX5afTH9iTKTIjThrPGWBuPbr7q6VD+lgLerxT8nAafTnCT1KTh0QfCvBuwvd
+Vqrwpgu3E9/TlQb2zt2MPP2QhPKCCC7zMHvvKdZwYtHyMs/sacY2oxvc/xN2nY/f
+XNhk+QzjA2TLJDbzOUfVVN6/R5/LUrvzP6tz8+WBRc3TlQRwgEPWXODLMBcp6hbC
+z/kc+c4CDd8NuHQ5L5rmY3I+6vS63fBTY6yyGP9myTfA+J/q5oNX1hEy69joBAMF
+zs5wDfaUUcfOMWRdIM07KfJ5VU+yVg==
+=jmKt
+-----END PGP SIGNATURE-----
+
+--aUhqz5H9dpAnc3uh--
