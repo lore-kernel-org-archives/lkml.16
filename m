@@ -1,69 +1,83 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DF6F25C80E;
-	Wed, 25 Jun 2025 14:14:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03B217333F
+	for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 14:15:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750860895; cv=none; b=GfuimOlj1fSdQ1aDw4Wq7UQsOfSJ6iPHdT31qvbO6CoSRtVyxDe4+61TtluI26FnUlgd3VjkaYc1Mc1YnzGTevt7q4h0s/QMsmvNfCuUKDbE9hBSSN1g4K1D1KB9jPCsBYrT0Hrmf3ejNAOiRo5Lu815OUhJf3vjDldsmQZDR6A=
+	t=1750860930; cv=none; b=OIkPbGuMBtXBoe6ql57K+mMQqjzQGEHLE86hRZfJlO0jSsJMmjMH9Bx4Odq3qGJgNIWAqLwux0dd+2sfTF+7pBUzR7yyW4xP8jre5dxxszzJbbBSAsnX5MTYFX6KR69otuxZ/s0SPrOInAp3K7cMLY5mK7nJOLUssFNB6oA+ZwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750860895; c=relaxed/simple;
-	bh=I2zJDKU5W/bmaCKJNDCv5hygIu1go9DnuppVM0Mj54Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GE+9TTELbWNSldEApeyX7cwHjf93f1N4W23QXpPim0J/ifW8tRZwB445mpd2LLPVdNSkhBEVhPDvBn+i+p7EmUkWZebuqnYdJmrpD/nLH1O0ENkMphNeCe54i0yqQQ7i96BKrwSe7awCn+HOQilMLtD8SBfwUiR7/HHhhZXvzig=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4972A1007;
-	Wed, 25 Jun 2025 07:14:35 -0700 (PDT)
-Received: from pluto (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B047F3F66E;
-	Wed, 25 Jun 2025 07:14:50 -0700 (PDT)
-Date: Wed, 25 Jun 2025 15:14:47 +0100
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Cristian Marussi <cristian.marussi@arm.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	arm-scmi@vger.kernel.org, sudeep.holla@arm.com,
-	james.quinlan@broadcom.com, f.fainelli@gmail.com,
-	vincent.guittot@linaro.org, etienne.carriere@st.com,
-	peng.fan@oss.nxp.com, michal.simek@amd.com, quic_sibis@quicinc.com,
-	d-gole@ti.com, souvik.chakravarty@arm.com
-Subject: Re: [RFC PATCH 5/7] firmware: arm_scmi: Add System Telemetry
- chardev/ioctls API
-Message-ID: <aFwEV6zK8KU_FP19@pluto>
-References: <20250620192813.2463367-1-cristian.marussi@arm.com>
- <20250620192813.2463367-6-cristian.marussi@arm.com>
- <6fa26a61-1f61-4ab0-8b7d-caeae7eb801e@suswa.mountain>
+	s=arc-20240116; t=1750860930; c=relaxed/simple;
+	bh=htkrJrR5CZT5OOui0gtS3RttV+j+vFcqYMYuKAHYOCY=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=qzV22nJ6xFrsfsp+Ly/Ps3+WzoL1GEL8Pg/ATMlZtgYV9QZKDe5Eb714XfidYwSCZTii84s4a4xOfduCmsSCsWpE3nEpr+ouGcOGRliqwneVhl9zFodT82Kb8MapvAQatdPOjcLRPLM/iW9SYfwSfhUFsCr6s0srKPjoyIVnTyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddc147611fso144365215ab.3
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 07:15:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750860928; x=1751465728;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4MEin4t/ziIjLNPi47j67uD/WUkbw/RxekKaFXQiDx0=;
+        b=b9FFrXsMolLRpb85bV20n2JO9yggKiRqJkJFlLcNcs8FaW/o+/S939gheGlH8wPTji
+         ygTIo3uK1DXftViJjs1Ga3kPehWzOHAZQNpZvSL1t76z8nlH61QmFym39EY6Gvl8VQJb
+         arZqiWvNMslc8xKK4M6fyEz+AiUgYcsOMOFEHn5w931l3gnPz4bPmbLTGkWbaUmH3cyw
+         U5Zg6wKYegSJfR/DkRplz0AQuDBTa9OUEFYE5gd3iWapjQFfpd+fDAAM8eMzHeA3PI25
+         aFi0ItYsiaX63OivJqGOcqFJX1YMGg8bFESL2C7Y1cpl73w/wzHx/Uu2PUa6m+IIIwxn
+         HTVw==
+X-Forwarded-Encrypted: i=1; AJvYcCWtA/mneCBhaW08vfO8qXEyCEOJSfXocYw6NRClG7ReUtIfJikOv/PLLge4UN9UQrlqIM5+lqI9hLtZ78U=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw85abNXT+W3Jboc0Q6Z1qmqNIzTiXk1uTL91wCOJXVMWujIwdb
+	Mp/jAnU8RqgvBDoOGox3JTeBhCTHJSSr4kc78fNOSiIAa7nobxmE9YwbluU0FNcf/vuJ7dzDIrB
+	/NhVSPtOKiuF1sKgJEZxfWKPe6BBO8m5ATTkRU/Cmw2y3dDoHf5kxRCJRtVI=
+X-Google-Smtp-Source: AGHT+IGlbAs8Qgq0kF4FQvO4dHFusdSL2Bk35rEbfP8CSA6+6jXl842u4d6OyaVp3mQ6hXDQFXkrbKHFfVNZwsHvhPw8m5fqJ0oe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6fa26a61-1f61-4ab0-8b7d-caeae7eb801e@suswa.mountain>
+X-Received: by 2002:a05:6e02:2181:b0:3de:1244:e7bc with SMTP id
+ e9e14a558f8ab-3df32922375mr42246435ab.3.1750860927957; Wed, 25 Jun 2025
+ 07:15:27 -0700 (PDT)
+Date: Wed, 25 Jun 2025 07:15:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685c047f.a00a0220.2e5631.00d0.GAE@google.com>
+Subject: [syzbot] Monthly integrity report (Jun 2025)
+From: syzbot <syzbot+listfc8d7b7995dd788237fc@syzkaller.appspotmail.com>
+To: linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Sat, Jun 21, 2025 at 12:51:12AM +0300, Dan Carpenter wrote:
-> On Fri, Jun 20, 2025 at 08:28:11PM +0100, Cristian Marussi wrote:
-> > +static long scmi_tlm_des_read_ioctl(struct scmi_tlm_instance *ti,
-> > +				    unsigned long arg, bool single)
-> > +{
-> > +	void * __user uptr = (void * __user)arg;
-> > +	struct scmi_tlm_setup *tsp = ti->tsp;
-> > +	struct scmi_tlm_bulk_read bulk, *bulk_ptr;
-> > +	int ret;
-> > +
-> > +	if (copy_from_user(&bulk, uptr, sizeof(bulk)))
-> > +		return -EFAULT;
-> > +
-> > +	bulk_ptr = kzalloc(sizeof(*bulk_ptr) +
-> > +			     bulk.num_samples * sizeof(bulk_ptr->samples[0]),
-> 
-> This should be struct_size(bulk_ptr, samples, bulk.num_samples) to
-> avoid an integer overflow on 32bit systems.
-> 
-I will fix.
+Hello integrity maintainers/developers,
 
-Thanks,
-Cristian
+This is a 31-day syzbot report for the integrity subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/integrity
+
+During the period, 0 new issues were detected and 0 were fixed.
+In total, 4 issues are still open and 10 have already been fixed.
+
+Some of the still happening issues:
+
+Ref Crashes Repro Title
+<1> 11      Yes   INFO: task hung in process_measurement (3)
+                  https://syzkaller.appspot.com/bug?extid=cb9e66807bcb882cd0c5
+<2> 7       Yes   INFO: task hung in ima_file_free (4)
+                  https://syzkaller.appspot.com/bug?extid=8036326eebe7d0140944
+<3> 5       No    possible deadlock in process_measurement (5)
+                  https://syzkaller.appspot.com/bug?extid=6529afa25091aee8536c
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
