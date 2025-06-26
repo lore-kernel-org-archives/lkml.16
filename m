@@ -1,249 +1,131 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86EFD2EF66D
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 19:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA8B32CCA9;
+	Thu, 26 Jun 2025 19:15:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750965289; cv=none; b=PDwBJoN83Py7hp062sfSR1OandPUjci3nxuCvmTDoZKNFHKYZl9PnM6CQ61UmdT1QRRh1/3qdRWG7m+v+z7eXNgyUHFNaLLXeROWQAvmAv3o6+F5192UEdoqjYaRGsSERGvS9fv1uFdDFNE8j1oAnigSLmaHy/08sZSCqIQKL2s=
+	t=1750965333; cv=none; b=K7nzbksOEzXns53iYKQoAILyuZxrfF0rxGExriPMljKUUP50e5JueWW4ja7BxqOj2OvzjtLZ7BGPiJWqL825itFZzCaSd8z/1rG3E91otqwnXx5Tj84H+erA6OJ+RkLbpNVfdU/U7+h48xiBdl1mJ4u4UwARrbZHxlkgWqf4Ih8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750965289; c=relaxed/simple;
-	bh=gqmT11iHH/hY9qDqQMx4+Kz2ypnqGc3/6sNjexCpCtA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Vfev1cDrcfvqakwOdyAR4l+wxMKpqLlAeTNf7rnzXaQGkO4irnn1YQmq5rSUcfZTjzXSsOD/yAb4QaLx7EaunTBCUKIQMkT/nTQN79LiKVl4BD+iOccq3HJFW5Amm4Zdro3lcWwlXi3oMapAN2Ph0O+p9PdxNKtcKcE9PU4AYtw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dCX/15+H; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750965333; c=relaxed/simple;
+	bh=GVTVZKAcmUFrxnDCM5D1GDi3JRVk55utZxoEDR6QU+8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nbooe41m8NeGu5hOkAQd1uUQZSqPwM9nYhHW+ySzxkCZ1oV5R1v/Vuq46JJ7g/kSxRJjcy3MeRtY+yQAakQjCQhZPXepxiknYGq2tv6i0NeXeJ31xbfaiRADdUxElpmJtcz9Jau7DPnINkwGUy9dm0UoV8WUvDtxFgzgePuDdK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BdeRN5Hl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dCX/15+H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750965286;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Brpulx3UE0Do2+9EzrBbzVKTCmn4CwWx8OE8MS5L6Ck=;
-	b=dCX/15+Hl0HfGK14I6SR3SMIhaV4R8Lbevqf/czZ5/O3ra+iECR6SXG0UT8f2iuNMuy3Y2
-	biW+0BV9zpzsn4y/iYJRU3cfGFN3jPdBRNU01+8qWkbaKdKgabNT0APYbXCY+eqWO72Q1m
-	rj/YtgZlq2MChye1DM6mhfem2jnrmbk=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-304-ptBPDtpPO6Su0ZFsHOJcwA-1; Thu, 26 Jun 2025 15:14:45 -0400
-X-MC-Unique: ptBPDtpPO6Su0ZFsHOJcwA-1
-X-Mimecast-MFC-AGG-ID: ptBPDtpPO6Su0ZFsHOJcwA_1750965285
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4a587a96f0aso50237991cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:14:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750965285; x=1751570085;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Brpulx3UE0Do2+9EzrBbzVKTCmn4CwWx8OE8MS5L6Ck=;
-        b=LaCwj6EPZd4aIPPjZQpIWEPSZ9OWJSi0BRGVUQMZ2Xq+44VnHf0MYPvbuZZZEz9J5Z
-         Ww/5NGzew5PQwoOQKOM3qcAUfEXjq7biT0EObjsruqzTZixpL6viF0LNjTm1X+F7Upbk
-         +R78jZNB29P9m9JgbZ/ZqmwiFl3qc6jSsg1tD/6rc08/sNWKVZIqGCwyC7h9dlaNOiKs
-         WF+u7QEfkuXpbkA6cppj0sPmfDc1yy8s2btLVYeS9DVL0AiBmPOnplLssTH5oWalXE1T
-         QmHb+KenmtEvIlsZpMT5aR7jye2i4PMzdfR6psbNd9oJZ0mXrfiNYsxoN/f4sXuKZDa3
-         zfeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUoPW5dq1JKe6ddEaj9cEeseXeLL5MmGfBDHEpHBGEbs+TEEsz6HkaH19LUEIkfsHMX9D2V3CGWcj3ly+o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRZ4mfxJ0ipXO4D7WObkviTYxOeAGKoj8cfAky0btqHbAE+0YM
-	K29WAoP8+XCZh+HumyGW3XAcdr/G3hGo+192LEhhHfXxzL1zAEIaPoPO/2fYNNC27ffEk3o8USo
-	ON+TZYlZN1BvsNv5lYyNHHJ0SfxI7pdGpNqZ0gYWpuBJKixjqLLhzn8I0Us/oeSAXdA==
-X-Gm-Gg: ASbGncuZ6zRm8ZY/ZxqlsopXFjPjmz5ZfQf+Rb7M4pXKMqUMhhPtqFDSrU3LKKDj7rS
-	iqXYpulG8zc8yIKeX8CcaYgjGp0n4A6gSMGGq9LfmVDjtB7Q6emQmnhY7E30ioI/CUbFMKPaUZ0
-	HxbgzSSDSPk2nFY8b3ZdWQwAKssITtok42s3Dpw0DaiRvlR1QTvuViyIJffhm9pWsOIfSFwg4XV
-	kV7uCuhPoANfbbWbCwez/MixuE3hKy94RLavAYuHbKrWbUB18Y/dqqAn25hzqImutmCs0auSkcp
-	U4Y5Dzkjh1WnndF388TGS+DQnU+iWCsqEGIQaIpH7Y9snhvLRdjI/8np6Uh42b36Mlxqqw==
-X-Received: by 2002:a05:622a:1101:b0:477:6f6d:607a with SMTP id d75a77b69052e-4a7fc9cad46mr11225871cf.7.1750965284430;
-        Thu, 26 Jun 2025 12:14:44 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG+41CtLCXg5JSeVQqDV1ofydgdzJ+UqKT4sICPvsUklMuWrbMfCKHiJrAuIDKnNtQjCM/YTw==
-X-Received: by 2002:a05:622a:1101:b0:477:6f6d:607a with SMTP id d75a77b69052e-4a7fc9cad46mr11225361cf.7.1750965283947;
-        Thu, 26 Jun 2025 12:14:43 -0700 (PDT)
-Received: from ?IPv6:2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38? ([2607:fea8:fc01:8d8d:5c3d:ce6:f389:cd38])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4a7fc1061c7sm2765181cf.4.2025.06.26.12.14.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 12:14:43 -0700 (PDT)
-Message-ID: <4ae9c25e0ef8ce3fdd993a9b396183f3953c3de7.camel@redhat.com>
-Subject: Re: [EARLY RFC] KVM: SVM: Enable AVIC by default from Zen 4
-From: mlevitsk@redhat.com
-To: Sean Christopherson <seanjc@google.com>
-Cc: "Naveen N Rao (AMD)" <naveen@kernel.org>, Paolo Bonzini
- <pbonzini@redhat.com>, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Vasant Hegde <vasant.hegde@amd.com>, Suravee Suthikulpanit
- <suravee.suthikulpanit@amd.com>
-Date: Thu, 26 Jun 2025 15:14:42 -0400
-In-Reply-To: <aF2VCQyeXULVEl7b@google.com>
-References: <20250626145122.2228258-1-naveen@kernel.org>
-	 <66bab47847aa378216c39f46e072d1b2039c3e0e.camel@redhat.com>
-	 <aF2VCQyeXULVEl7b@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BdeRN5Hl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86560C4AF09;
+	Thu, 26 Jun 2025 19:15:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750965332;
+	bh=GVTVZKAcmUFrxnDCM5D1GDi3JRVk55utZxoEDR6QU+8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=BdeRN5Hl8XOH+v0XpP96wSL+JU4vbDSfi0H1r3RDkvdoC6WAB+/pUvVt94HnLJ9dP
+	 MDTs4oYtq4/76SEN3QF5RSfRt2O3XuwcJkO3eX6PezWoAvTTK5LtKv59oiu4gbU3Bg
+	 OD4I9rKo1/EoEP4ZjGY5a2yZHi8pMH75nQlwVjzbm4pP4SRXmePRPPCyUfI1shHmYG
+	 N8BdqTadbVA+aIrB6WyzpBltNRNLKKjHn3oAJOZYid7WxIlyPjs16uAios+mBTUnOF
+	 QvZYpvqgG1meoGDjJygywTuM5/WPNeaXMsxXruS5qWcLqCLNPj1RNesgyurK6GvFO7
+	 KH4PP6RIi78WA==
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2d09d495c6cso379891fac.3;
+        Thu, 26 Jun 2025 12:15:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU+D/1cnWS6T93Hrld5Us1G3No86VNLz4Dmm5h0Arz6ccroahPcfKKKS3GSqdp6HTEw9wa+JuUA6b/y9kc=@vger.kernel.org, AJvYcCVEZXGhPyKcDArH6QPtdO0+PoEqUnaUcSiKVpxtv9/Bgp6YoeQzQEG/g6XyEaQKeucE4/zvUrz8@vger.kernel.org, AJvYcCW9HBTRkhrobq5xFpO5CXkWByjj/7Pi/qIxS7a4jEhESjGpajHrHvK/AjeRYpDNHvUiqR/hMZbj+qw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwNbT7EvJerfgsthntmExK7JJMB0yPlKR4YN5yI+LLTFxEQsm/0
+	X/sPK+q8FtttefbXKso1v/6cf1zFhrENlXw7A+dusmIYXX6pJ+lvDGaCehQkIjqia7YdIawsYAi
+	0HndHKtHefwAHOu8XvUDp2fZC/VPGdx8=
+X-Google-Smtp-Source: AGHT+IHF9pqM5Ydclvi+iFU8TmSmeOmdqu4oVPUqgHbDY7h2PY1K/BE4yM1Tsg43GYzwGgNnIRIujkcAM4w7hZ2UsvQ=
+X-Received: by 2002:a05:6870:3511:b0:2cc:3d66:b6ea with SMTP id
+ 586e51a60fabf-2efed795392mr158783fac.34.1750965331752; Thu, 26 Jun 2025
+ 12:15:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250619071340.384782-1-rui.zhang@intel.com>
+In-Reply-To: <20250619071340.384782-1-rui.zhang@intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Thu, 26 Jun 2025 21:15:19 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0hfO6eSbwYo2iD4JuqHth0AUQY3cG2109Yhyz-=RNaVWQ@mail.gmail.com>
+X-Gm-Features: Ac12FXzJ7BuhzTdUQAYlDXdtcJzEQvwlFR3N2p_d41kJUWcGANG9wZIpsJco93c
+Message-ID: <CAJZ5v0hfO6eSbwYo2iD4JuqHth0AUQY3cG2109Yhyz-=RNaVWQ@mail.gmail.com>
+Subject: Re: [PATCH V2] powercap: intel_rapl: Do not change CLAMPING bit if
+ ENABLE bit cannot be changed
+To: Zhang Rui <rui.zhang@intel.com>
+Cc: rafael.j.wysocki@intel.com, linux-kernel@vger.kernel.org, 
+	linux-pm@vger.kernel.org, stable@vger.kernel.org, 
+	srinivas.pandruvada@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 2025-06-26 at 11:44 -0700, Sean Christopherson wrote:
-> On Thu, Jun 26, 2025, mlevitsk@redhat.com=C2=A0wrote:
-> > On Thu, 2025-06-26 at 20:21 +0530, Naveen N Rao (AMD) wrote:
-> > > This is early RFC to understand if there are any concerns with enabli=
-ng
-> > > AVIC by default from Zen 4. There are a few issues related to irq win=
-dow
-> > > inhibits (*) that will need to be addressed before we can enable AVIC=
-,
-> > > but I wanted to understand if there are other issues that I may not b=
-e
-> > > aware of. I will split up the changes and turn this into a proper pat=
-ch
-> > > series once there is agreement on how to proceed.
-> > >=20
-> > > AVIC (and x2AVIC) is fully functional since Zen 4, and has so far bee=
-n
-> > > working well in our tests across various workloads. So, enable AVIC b=
-y
-> > > default from Zen 4.
-> > >=20
-> > > CPUs prior to Zen 4 are affected by hardware errata related to AVIC a=
-nd
-> > > workaround for those (erratum #1235) is only just landing upstream. S=
-o,
-> > > it is unlikely that anyone was using AVIC on those CPUs. Start requir=
-ing
-> > > users on those CPUs to pass force_avic=3D1 to explicitly enable AVIC =
-going
-> > > forward. This helps convey that AVIC isn't fully enabled (so users ar=
-e
-> > > aware of what they are signing up for), while allowing us to make
-> > > kvm_amd module parameter 'avic' as an alias for 'enable_apicv'
-> > > simplifying the code.=C2=A0 The only downside is that force_avic tain=
-ts the
-> > > kernel, but if this is otherwise agreeable, the taint can be restrict=
-ed
-> > > to the AVIC feature bit not being enabled.
-> > >=20
-> > > Finally, stop complaining that x2AVIC CPUID feature bit is present
-> > > without basic AVIC feature bit, since that looks to be the way AVIC i=
-s
-> > > being disabled on certain systems and enabling AVIC by default will
-> > > start printing this warning on systems that have AVIC disabled.
-> > >=20
-> >=20
-> > Hi,
-> >=20
-> >=20
-> > IMHO making AVIC default on on Zen4 is a good idea.
-> >=20
-> > About older systems, I don't know if I fully support the idea of hiding
-> > the support under force_avic, because AFAIK, other that errata #1235
-> > there are no other significant issues with AVIC.
->=20
-> Agreed, force_avic should be reserved specifically for the case where AVI=
-C exists
-> in hardware, but is not enumerated in CPUID.
->=20
-> > In fact errata #1235 is not present on Zen3, and I won't be surprised t=
-hat
-> > AVIC was soft-disabled on Zen3 wrongly.
->=20
-> FWIW, the Zen3 systems I have access to don't support AVIC / APIC virtual=
-ization
-> in the IOMMU, so it's not just AVIC being soft-disabled in the CPU.
-
-Yes, I mentioned that, but still practically speaking AVIC on Zen2 is equiv=
-alent
-to APICv on Intel CPUs of the same generation, and on Zen3 AVIC is equavale=
-nt to
-many Intel client systems which do have APICv but not posted interrupts, li=
-ke my
-laptop (I hate this).
-
->=20
-> > IMHO the cleanest way is probably:
-> >=20
-> > On Zen2 - enable_apicv off by default, when forced to 1, activate
-> > the workaround for it. AFAIK with my workaround, there really should
-> > not be any issues, but since hardware is quite old, I am OK to keep it =
-disabled.
-> >=20
-> > On Zen3, AFAIK the errata #1235 is not present, so its likely that AVIC=
- is
-> > fully functional as well, except that it is also disabled in IOMMU,
-> > and that one AFAIK can't be force-enabled.
-> >=20
-> > I won't object if we remove force_avic altogether and just let the user=
- also explicitly=C2=A0
-> > enable avic with enable_apicv=3D1 on Zen3 as well.
->=20
-> I'm not comfortable ignoring lack of enumerated support without tainting =
-the
-> kernel.
-
-The kernel can still be tainted in this case, just that it is technically p=
-ossible to drop=C2=A0
-force_avic, and instead just allow user to pass avic=3D1 instead, since it =
-is
-not on by default and KVM can still print the same warning and taint the ke=
-rnel
-when user passes avic=3D1 on Zen3.
-
-Back when I implemented this, I just wanted to be a bit safer, a bit more e=
-xplicit that
-this uses an undocumented feature.
-
-It doesn't matter much though.
-
->=20
-> I don't see any reason to do major surgery, just give "avic" auto -1/0/1 =
-behavior:
-
->=20
-> diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-> index ab11d1d0ec51..4aa5bec0b1e7 100644
-> --- a/arch/x86/kvm/svm/svm.c
-> +++ b/arch/x86/kvm/svm/svm.c
-> @@ -158,12 +158,9 @@ module_param(lbrv, int, 0444);
-> =C2=A0static int tsc_scaling =3D true;
-> =C2=A0module_param(tsc_scaling, int, 0444);
-> =C2=A0
-> -/*
-> - * enable / disable AVIC.=C2=A0 Because the defaults differ for APICv
-> - * support between VMX and SVM we cannot use module_param_named.
-> - */
-> -static bool avic;
-> -module_param(avic, bool, 0444);
-> +/* Enable AVIC by default only for Zen4+ (negative value =3D default/aut=
-o). */
-> +static int avic =3D -1;
-> +module_param(avic, int, 0444);
-> =C2=A0module_param(enable_ipiv, bool, 0444);
-> =C2=A0
-> =C2=A0module_param(enable_device_posted_irqs, bool, 0444);
-> @@ -5404,6 +5401,9 @@ static __init int svm_hardware_setup(void)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 goto err=
-;
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
-> =C2=A0
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (avic < 0)
-> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 avic =3D boot_cpu_data.x86 > 0x19 || boot_cpu_has(X86_FEATURE_=
-ZEN4);
+On Thu, Jun 19, 2025 at 9:13=E2=80=AFAM Zhang Rui <rui.zhang@intel.com> wro=
+te:
+>
+> PL1 cannot be disabled on some platforms. The ENABLE bit is still set
+> after software clears it. This behavior leads to a scenario where, upon
+> user request to disable the Power Limit through the powercap sysfs, the
+> ENABLE bit remains set while the CLAMPING bit is inadvertently cleared.
+>
+> According to the Intel Software Developer's Manual, the CLAMPING bit,
+> "When set, allows the processor to go below the OS requested P states in
+> order to maintain the power below specified Platform Power Limit value."
+>
+> Thus this means the system may operate at higher power levels than
+> intended on such platforms.
+>
+> Enhance the code to check ENABLE bit after writing to it, and stop
+> further processing if ENABLE bit cannot be changed.
+>
+> Cc: stable@vger.kernel.org
+> Reported-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+> Fixes: 2d281d8196e3 ("PowerCap: Introduce Intel RAPL power capping driver=
+")
+> Signed-off-by: Zhang Rui <rui.zhang@intel.com>
+> ---
+> Changes since V1:
+> - Add Fixes tag
+> - CC stable kernel
+> ---
+>  drivers/powercap/intel_rapl_common.c | 17 ++++++++++++++++-
+>  1 file changed, 16 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/inte=
+l_rapl_common.c
+> index e3be40adc0d7..602f540cbe15 100644
+> --- a/drivers/powercap/intel_rapl_common.c
+> +++ b/drivers/powercap/intel_rapl_common.c
+> @@ -341,12 +341,27 @@ static int set_domain_enable(struct powercap_zone *=
+power_zone, bool mode)
+>  {
+>         struct rapl_domain *rd =3D power_zone_to_rapl_domain(power_zone);
+>         struct rapl_defaults *defaults =3D get_defaults(rd->rp);
+> +       u64 val;
+>         int ret;
+>
+>         cpus_read_lock();
+>         ret =3D rapl_write_pl_data(rd, POWER_LIMIT1, PL_ENABLE, mode);
+> -       if (!ret && defaults->set_floor_freq)
+> +       if (ret)
+> +               goto end;
 > +
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 enable_apicv =3D avic =3D avic=
- && avic_hardware_setup();
-> =C2=A0
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!enable_apicv) {
->=20
+> +       ret =3D rapl_read_pl_data(rd, POWER_LIMIT1, PL_ENABLE, false, &va=
+l);
+> +       if (ret)
+> +               goto end;
+> +
+> +       if (mode !=3D val) {
+> +               pr_debug("%s cannot be %s\n", power_zone->name, mode ? "e=
+nabled" : "disabled");
+> +               goto end;
+> +       }
+> +
+> +       if (defaults->set_floor_freq)
+>                 defaults->set_floor_freq(rd, mode);
+> +
+> +end:
+>         cpus_read_unlock();
+>
+>         return ret;
+> --
 
-I also have nothing against this to be honest, its OK to keep it as is IMHO=
-.
-
-Best regards,
-	Maxim Levitsky
-
-
+Applied as 6.16-rc material, thanks!
