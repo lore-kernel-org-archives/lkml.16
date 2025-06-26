@@ -1,127 +1,137 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F33922248B0
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:09:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACDE12236F8;
+	Thu, 26 Jun 2025 23:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750979345; cv=none; b=rvOkiYroSToP/7PBa7FjzYGQW2X3tOjAvimzhvx2gatorBpo84pWTUPodLvuvwXl/PkuRiTcCN9EG9LHVSeOzBI+jXqyLYb10Fk4XPdJlUOTv5Ap5X6HVSLnv/CcbRvsllgaGrSAOfubdvoh47ZHthUdRBbJC26Vl1BDzcUMstU=
+	t=1750979354; cv=none; b=BA/a4081JoVoEl2k9QSFoyxa1dC64OEHf/D0LaW0QqZS2suekyaXoMtLbWNphIfzLmXoM06OAebLfyg40YaHiifHKbCqpSCoORndu7Ee/9rXIqZcX0uE0Q5grb6RW/nUJSLOt9oW+dx2uAhiky658fuBpBWIxbroy9w5y8Qj5oQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750979345; c=relaxed/simple;
-	bh=SaiMvf0QIsnsjPYNJJlgOig5FOT8xxYY+A0eHMeBf7s=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=ZEFbF7p5LrSQ2T/8I7ldvc+6y1qQoOyFiULjmM0rwYlBTn59t1Vm259wmaaopXESBJMDZb17G8mo2FzaiSz064zCs3rN9H3rfxxZxZ5lZ3Jri53gFFON/kQr/HMDebyx7WI70D+XBPR6DIkDqeTXOvvHWkZo2dA3Vl3Tqd0CFQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddafe52d04so37235795ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:09:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750979343; x=1751584143;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6XgX3w4+dt/shPHb/cqrupX6BHtHSMszwKNRKm1TVO4=;
-        b=LG/S+T2fOArNyxlBTXhkOIE4fNuSS7xg8MqoZEVWS5AJrslASPfQ7y0Ix1498MrS4R
-         8iA52CHRAs9o+xOlrR7XjLrM95Scq1eTHfdyfV99m8xGOd+xcuRPCgbIhgNhIZJ5Hnpx
-         AnQRIkRE7ln7610GXyVbuq+ZbtAeiZsopDSmqDPoFJOffpA3dp0NqAUlOz3t3DteUpEK
-         HbpShgYIOzjfFW4uY5ACjdxYJg1hDYtHYsJqVdbnIv3i8lB02W7rHKR/5wRGg84lO26q
-         PNvOoa2EsKnH1AjniVgA0XiJhz8VtpEctKxtBDJ1/hxC7/kxF0Uw1aAAbqJNkzISozp2
-         /o5w==
-X-Forwarded-Encrypted: i=1; AJvYcCUqnMxgQQ6Q/JZha0yYBDrZIN+6DBH0mhYL9+R13AK2sXti6b0PNNqdY8NMe+UasO2QI8xq3jxh6tYU1AA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyE8VHYPcL45RWc4jHArqfktdGGJHHX3upTrP6RpUSjkUTdgCzI
-	pMzviZNtZxw8OJFH3kOfkNNka2Fs6Dg2u0MkcSh9I2qlZVh8XcgyUk8f06JFxMicoWBSjkJrzvV
-	Rjhw2lqXi9QasjiK3NE2kKLfbll5cN/vlK6zeFOrYkywO7p9LcLf0mF/n2YE=
-X-Google-Smtp-Source: AGHT+IFyWjwoTS+TP+icDo+mFvUezoIYSka9m5lFmfsgpu49z8rnX0MJlzzLOrgIpaoiUKf+tlCIBY5DQtC6/F1sdCl63KOwQIB9
+	s=arc-20240116; t=1750979354; c=relaxed/simple;
+	bh=NldmZOZLq6IiyJ7LGJYUM4TN7NywgseMK5R0ow1fO/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LQTc5TVwKzv93wHmj7mpqtHq0FleC7fnDLBrTt9wP2IhS4X75NI9SpCOkHQEpYB4WU8/sa/Uf8/gV9RXS/x4fxZa24nFozYiMTGlWC0FDjgb6H1/wiSH3LK9Aov22VlLQzTRex5kdXLGpIlsjE4IK/GbFQZ4sbWdtBKs1j1qzmE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E6HSjCRP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E6HSjCRP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ADE8C4CEEB;
+	Thu, 26 Jun 2025 23:09:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750979354;
+	bh=NldmZOZLq6IiyJ7LGJYUM4TN7NywgseMK5R0ow1fO/8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=E6HSjCRPb3tBYcmnXFW9/p22GYEtwy21hP711lYkpkPd4mwOBVxRGjnHQ3R0KjkjH
+	 SEYaHKTFRmOrsANeVQbR/0gO0lyVdUySyGuN/rY0tc7d2HYUz/nPff/5x5H/IaCFpy
+	 fnE8s17wbZRpNTjj6dQ0BNJEnU68NHfABTerdjf+qRrS/oPTDeR+tWonZQsbATzqMI
+	 JT6yYp1vKUSvDC1luTlH51pdNzV3zoUnDoGheZ2voD4CZw+O5WGtv8WQisUrxEM0ew
+	 G7tnTvIhhICfW6iAUzzKrc5B3go9Hu8Kaz39mIX5GklyOJQKnMReDZIaMdXQe75dNU
+	 SEebhsihP8elA==
+Date: Thu, 26 Jun 2025 18:09:13 -0500
+From: Rob Herring <robh@kernel.org>
+To: Prabhakar <prabhakar.csengg@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Magnus Damm <magnus.damm@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH v12 1/7] dt-bindings: serial: Added secondary clock for
+ RZ/T2H RSCI
+Message-ID: <20250626230913.GA1338561-robh@kernel.org>
+References: <20250617134504.126313-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20250617134504.126313-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:2589:b0:3df:460a:ec3c with SMTP id
- e9e14a558f8ab-3df4acc520fmr18776735ab.22.1750979343102; Thu, 26 Jun 2025
- 16:09:03 -0700 (PDT)
-Date: Thu, 26 Jun 2025 16:09:03 -0700
-In-Reply-To: <20250626225210.1924-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685dd30f.a00a0220.2e5631.0390.GAE@google.com>
-Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
-From: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>
-To: hdanton@sina.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250617134504.126313-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-Hello,
+On Tue, Jun 17, 2025 at 02:44:58PM +0100, Prabhakar wrote:
+> From: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> 
+> At boot, the default clock is the PCLKM core clock (synchronous
+> clock, which is enabled by the bootloader).
+> For different baudrates, the asynchronous clock input must be used.
+> Clock selection is made by an internal register of RCSI.
+> 
+> Add the optional "sck", external clock input.
+> 
+> Also remove the unneeded serial0 alias from the dts example.
+> 
+> Signed-off-by: Thierry Bultel <thierry.bultel.yh@bp.renesas.com>
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Hi Rob,
+> As mentioned in the thread [1] below there are no users of the RSCI binding
+> hence this change doesn not break any ABI.
+> 
+> [1] https://lore.kernel.org/all/CAMuHMdUThuWxxznhjvcn5cOFCWOkb5u-fRYwTOoenDRY=4H6FA@mail.gmail.com/
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING in rxe_skb_tx_dtor
+Please state this in the commit message. If you want to break the ABI 
+you have to say that you are and why it is okay.
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1038 at drivers/infiniband/sw/rxe/rxe_net.c:357 rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
-Modules linked in:
-CPU: 0 UID: 0 PID: 1038 Comm: kworker/u4:6 Not tainted 6.16.0-rc3-syzkaller-gf02769e7f272-dirty #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: rxe_wq do_work
-RIP: 0010:rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
-Code: 80 3c 20 00 74 08 4c 89 ff e8 d1 64 81 f9 4d 8b 37 44 89 f6 83 e6 01 31 ff e8 e1 e5 1d f9 41 f6 c6 01 75 0e e8 f6 e0 1d f9 90 <0f> 0b 90 e9 b4 01 00 00 4c 89 ff e8 35 94 fd 01 48 89 c7 be 0e 00
-RSP: 0018:ffffc900000079e8 EFLAGS: 00010246
-RAX: ffffffff88a26d7a RBX: ffff888055e923c0 RCX: ffff8880330c2440
-RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff887bc1c4
-R10: dffffc0000000000 R11: ffffffff88a26cf0 R12: dffffc0000000000
-R13: 1ffff1100abd2483 R14: 0000000000025820 R15: ffff888033808000
-FS:  0000000000000000(0000) GS:ffff88808d250000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f08899dcfc8 CR3: 0000000032fcf000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- skb_release_head_state+0xfe/0x250 net/core/skbuff.c:1139
- napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
- e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
- e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
- e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
- __napi_poll+0xc4/0x480 net/core/dev.c:7414
- napi_poll net/core/dev.c:7478 [inline]
- net_rx_action+0x707/0xe30 net/core/dev.c:7605
- handle_softirqs+0x286/0x870 kernel/softirq.c:579
- do_softirq+0xec/0x180 kernel/softirq.c:480
- </IRQ>
- <TASK>
- __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- __neigh_event_send+0x9b/0x1560 net/core/neighbour.c:1194
- neigh_event_send_probe include/net/neighbour.h:463 [inline]
- neigh_event_send include/net/neighbour.h:469 [inline]
- neigh_resolve_output+0x198/0x750 net/core/neighbour.c:1496
- neigh_output include/net/neighbour.h:539 [inline]
- ip6_finish_output2+0x11fe/0x16a0 net/ipv6/ip6_output.c:141
- __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
- ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
- rxe_send drivers/infiniband/sw/rxe/rxe_net.c:391 [inline]
- rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:450
- rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
- rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
- do_task drivers/infiniband/sw/rxe/rxe_task.c:127 [inline]
- do_work+0x1b1/0x6c0 drivers/infiniband/sw/rxe/rxe_task.c:187
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xae1/0x17b0 kernel/workqueue.c:3321
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3402
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x3fc/0x770 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
-
-
-Tested on:
-
-commit:         f02769e7 Merge tag 'devicetree-fixes-for-6.16-1' of gi..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1693008c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79da270cec5ffd65
-dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=13283b70580000
-
+> 
+> Cheers, Prabhakar
+> ---
+>  .../bindings/serial/renesas,rsci.yaml           | 17 +++++++++--------
+>  1 file changed, 9 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> index ea879db5f485..1bf255407df0 100644
+> --- a/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> +++ b/Documentation/devicetree/bindings/serial/renesas,rsci.yaml
+> @@ -35,10 +35,15 @@ properties:
+>        - const: tei
+>  
+>    clocks:
+> -    maxItems: 1
+> +    minItems: 2
+> +    maxItems: 3
+>  
+>    clock-names:
+> -    const: fck # UART functional clock
+> +    minItems: 2
+> +    items:
+> +      - const: operation
+> +      - const: bus
+> +      - const: sck # optional external clock input
+>  
+>    power-domains:
+>      maxItems: 1
+> @@ -60,10 +65,6 @@ examples:
+>      #include <dt-bindings/interrupt-controller/arm-gic.h>
+>      #include <dt-bindings/clock/renesas-cpg-mssr.h>
+>  
+> -    aliases {
+> -        serial0 = &sci0;
+> -    };
+> -
+>      sci0: serial@80005000 {
+>          compatible = "renesas,r9a09g077-rsci";
+>          reg = <0x80005000 0x400>;
+> @@ -72,7 +73,7 @@ examples:
+>                       <GIC_SPI 592 IRQ_TYPE_EDGE_RISING>,
+>                       <GIC_SPI 593 IRQ_TYPE_LEVEL_HIGH>;
+>          interrupt-names = "eri", "rxi", "txi", "tei";
+> -        clocks = <&cpg CPG_MOD 108>;
+> -        clock-names = "fck";
+> +        clocks = <&cpg CPG_MOD 8>, <&cpg CPG_CORE 13>;
+> +        clock-names = "operation", "bus";
+>          power-domains = <&cpg>;
+>      };
+> -- 
+> 2.49.0
+> 
