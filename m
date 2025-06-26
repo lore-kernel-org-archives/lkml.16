@@ -1,76 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1254025B1D8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F6B25B2E8;
 	Thu, 26 Jun 2025 10:49:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750934992; cv=none; b=P7SlfkkXQ3eXfxchiGUHlnW4ecbvMmcODNZ8KX6wSslXOyrQ7ysCHJQadiY1uVath2tUS222vY/Kd6gLGYoArrO62YcKUR9N7Q+n2K8nbP5NMtI3KCOPz0cvJGjB2FZk0KfOsag/9vvJirasipaRDUgixunIbrhHS2cT4n9mysA=
+	t=1750934993; cv=none; b=e0ETD26JmPAmfSyaZmiENiLRU1FsvEs81T4XckDZV0D3qlrChWTypBGQjPyqbrynNRPXCQ10yLppKz1G5t0XtEvtBmCvx17gm6QPOVHJsysYbY2PkV/MA9fdGt/Yg3TlIliqgXAguqzF9rT8zWgqJDaiJ++BzWDW9BcN7CdVPoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750934992; c=relaxed/simple;
-	bh=nPbD5l0rheNy1UTotpL0AJxsu5rm2GIdag3PA3QGeXQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UQTdkBfsSziLU3GnRXRr/Gvvu4dXjJpKmsZJAZoBUk8CPLv1bLkwvlSRr1Y6uGzMzAQeJ8Kgbem1XCIVMfgfvH+zy8DdZAgZtc6FGTevu21p9dATSz/KfUdqEaW3QJEHipd5sYStjCKuEnihqLxDj2sywYklfix02j8EjqW4bBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d5FVc7lI; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750934993; c=relaxed/simple;
+	bh=kYqY3ltFAk7XmlICA8MnZqcWspwPD7e9MENExTqOgIg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=JQUBjvorUmOjlGfcHWbDqswdyVsZ6KW/XLWkVdmSI6LhuelX6MS37DqjZJshCsYDspwdmxxRkjseNVDXou/g8bWSQZ3yRnWR2xyKuj8MJuKdhkmjTTv8VhgJjKECCZM5OBTNURHQ8wq2WcF9/LHq1JIFahKS4f6mmU4gCgmTD4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=b2Vw1DZB; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d5FVc7lI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750934991; x=1782470991;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=nPbD5l0rheNy1UTotpL0AJxsu5rm2GIdag3PA3QGeXQ=;
-  b=d5FVc7lIxhAbGcOkfVR99JJY3vBV8yOstcm2bSyr5KsR0ACuIOUxVtXT
-   DefKvTFHzCDiQyaSUsMdMNzAwk2UnfLd/8S0peEjYfdUPVLVjj71DtdUU
-   e0zuliWWjVgrCXnV2m3wqrPFcGWZLqzmoM3hTdbJWuBhJSktzhJ8NEkoF
-   s2iWOzbHxqnfUv7/dp+j9mfbTlYzAYUkAoEioYA5bLpoR+UDVviCTXQlc
-   9BU+5RXZKflgJptQHmja/qLPgnQoPhYSLhGatFdZcMTI/nPFXS48MqKyk
-   cs9Mr/58NAsN6loH586+Oo4eqGH5DPMatZ2DVUF0jf571UNJ8aVWVXgHr
-   Q==;
-X-CSE-ConnectionGUID: h1KvSoQ/RfmVPzYTQVwiuA==
-X-CSE-MsgGUID: RAyLy1jTTPilwIjrS6y0Kw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="70655823"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="70655823"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 03:49:51 -0700
-X-CSE-ConnectionGUID: /poxqECsTbun26tn5RyVJg==
-X-CSE-MsgGUID: Sf5k0uyIQaK7ejY2Lfy0YQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="152784355"
-Received: from jairdeje-mobl1.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.124.220.86])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 03:49:46 -0700
-From: Kai Huang <kai.huang@intel.com>
-To: dave.hansen@intel.com,
-	bp@alien8.de,
-	tglx@linutronix.de,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	hpa@zytor.com,
-	thomas.lendacky@amd.com
-Cc: x86@kernel.org,
-	kirill.shutemov@linux.intel.com,
-	rick.p.edgecombe@intel.com,
-	linux-kernel@vger.kernel.org,
-	pbonzini@redhat.com,
-	seanjc@google.com,
-	kvm@vger.kernel.org,
-	reinette.chatre@intel.com,
-	isaku.yamahata@intel.com,
-	dan.j.williams@intel.com,
-	ashish.kalra@amd.com,
-	nik.borisov@suse.com,
-	sagis@google.com,
-	Farrah Chen <farrah.chen@intel.com>
-Subject: [PATCH v3 5/6] x86/virt/tdx: Update the kexec section in the TDX documentation
-Date: Thu, 26 Jun 2025 22:48:51 +1200
-Message-ID: <f885089aadd485fb07fb9d18e3654ba4ef40f55d.1750934177.git.kai.huang@intel.com>
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="b2Vw1DZB"
+Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q8h3C3016775;
+	Thu, 26 Jun 2025 06:49:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=+Aq7skARuQhh51B4mkRgzuSzgEb
+	qBtwQONWz935ZXnQ=; b=b2Vw1DZBFN01GknLr3OGeqMmlzit8ZMJaITR2T0Me+W
+	V1u8lmVKPVEk5Oa7CXqB6i+Wz7Sisq0RVEWSGYFCq+jtlyeFFGtouGpp0VUH2U1P
+	1jKudDGO1jOWfUP2vHF12yOr6qPLA2B/12Scir4SAxir0EQCvHJm7e0RdA1dndYr
+	wk7phLCf7yXeTdA1haBHPUCDVlTUikPIQ7FkvGL3uG5npwoMi7V7zIIyZXF8ZboZ
+	0/fK84hlg79FVhKkWTfepz8Y5LatEydag7rtxLgTpelrgKRG0cej/fqxkLvfcrO2
+	4eVcZim/bDKNYFSzZWuvs77BN2h0m3vR9U7pXCgjdug==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 47h2xcgkfa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 06:49:49 -0400 (EDT)
+Received: from ASHBMBX8.ad.analog.com (ASHBMBX8.ad.analog.com [10.64.17.5])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 55QAnmUd047054
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Thu, 26 Jun 2025 06:49:48 -0400
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.10; Thu, 26 Jun
+ 2025 06:49:48 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.2.1748.10 via Frontend
+ Transport; Thu, 26 Jun 2025 06:49:48 -0400
+Received: from amiclaus-VirtualBox.ad.analog.com (AMICLAUS-L02.ad.analog.com [10.48.65.167])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 55QAnclu000419;
+	Thu, 26 Jun 2025 06:49:40 -0400
+From: Antoniu Miclaus <antoniu.miclaus@analog.com>
+To: <jic23@kernel.org>, <robh@kernel.org>, <conor+dt@kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: Antoniu Miclaus <antoniu.miclaus@analog.com>
+Subject: [PATCH 1/2] dt-bindings: iio: adc: ad4851: add spi-3wire
+Date: Thu, 26 Jun 2025 13:40:23 +0300
+Message-ID: <20250626104024.8645-1-antoniu.miclaus@analog.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <cover.1750934177.git.kai.huang@intel.com>
-References: <cover.1750934177.git.kai.huang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,51 +61,49 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Proofpoint-ORIG-GUID: OZP6VjL2_jMNtBGTpMHVnvJBNWLmgZYL
+X-Proofpoint-GUID: OZP6VjL2_jMNtBGTpMHVnvJBNWLmgZYL
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA5MCBTYWx0ZWRfX49Iz5Ngss7G3
+ omQ+KF7O/JVkEHAhm6IOj8mdev+8rz9D+2KnZIF7e+Q/tsiaUnQ+il3ZUepDVIYph5EVMUWvTnO
+ 8PTcy7v0oaQQRm5XgT50mnBTtCNamqA9tWiTlzJ7FA+yk1BP+icMAJWWnzPzy/HyF9DGCQV4P7o
+ hUaVgL/TBeOqqTID3h2D8S8p7X7P0hmJO0KfSLZ4LyCm0r4+PBIzmrWOAZCzjtkbE78lcXKXvBI
+ 0/KFEGDM7ms6GAuLQ3wcPZicV6SUN4jSL14OeaGA3YhWs7fbeHyiReUnCQsL955GH18MA0sfxMa
+ 5eLaMFc1AkBuAxq4hrALDZAdHEbTLjzyK5eRuX/8IPbE+3I39FpgjFSLRz2aUctre4nD6VEvVIX
+ igqwjDtjqCoLSeXqhR7ElzYwUrsqEKkMCvL8ah4Zry8tShnE6fUrrrIaMXBsoW8GRXn5WDF8
+X-Authority-Analysis: v=2.4 cv=OoRPyz/t c=1 sm=1 tr=0 ts=685d25cd cx=c_pps
+ a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
+ a=6IFa9wvqVegA:10 a=gAnH3GRIAAAA:8 a=S76Hmel1X9esiIvpTsQA:9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_05,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ spamscore=0 impostorscore=0 clxscore=1015 priorityscore=1501 mlxscore=0
+ mlxlogscore=987 bulkscore=0 suspectscore=0 malwarescore=0 adultscore=0
+ lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506260090
 
-TDX host kernel now supports kexec/kdump.  Update the documentation to
-reflect that.
+Add devicetree support for spi 3-wire configuration.
 
-Opportunistically, remove the parentheses in "Kexec()" and move this
-section under the "Erratum" section because the updated "Kexec" section
-now refers to that erratum.
-
-Signed-off-by: Kai Huang <kai.huang@intel.com>
-Tested-by: Farrah Chen <farrah.chen@intel.com>
+Signed-off-by: Antoniu Miclaus <antoniu.miclaus@analog.com>
 ---
- Documentation/arch/x86/tdx.rst | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/arch/x86/tdx.rst b/Documentation/arch/x86/tdx.rst
-index 719043cd8b46..61670e7df2f7 100644
---- a/Documentation/arch/x86/tdx.rst
-+++ b/Documentation/arch/x86/tdx.rst
-@@ -142,13 +142,6 @@ but depends on the BIOS to behave correctly.
- Note TDX works with CPU logical online/offline, thus the kernel still
- allows to offline logical CPU and online it again.
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
+index c6676d91b4e6..b107322e0ea3 100644
+--- a/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4851.yaml
+@@ -69,6 +69,8 @@ properties:
+   spi-max-frequency:
+     maximum: 25000000
  
--Kexec()
--~~~~~~~
--
--TDX host support currently lacks the ability to handle kexec.  For
--simplicity only one of them can be enabled in the Kconfig.  This will be
--fixed in the future.
--
- Erratum
- ~~~~~~~
- 
-@@ -171,6 +164,13 @@ If the platform has such erratum, the kernel prints additional message in
- machine check handler to tell user the machine check may be caused by
- kernel bug on TDX private memory.
- 
-+Kexec
-+~~~~~~~
++  spi-3wire: true
 +
-+Currently kexec doesn't work on the TDX platforms with the aforementioned
-+erratum.  It fails when loading the kexec kernel image.  Otherwise it
-+works normally.
-+
- Interaction vs S3 and deeper states
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   '#address-cells':
+     const: 1
  
 -- 
 2.49.0
