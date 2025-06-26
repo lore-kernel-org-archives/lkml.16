@@ -1,107 +1,117 @@
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6525425C712
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 08:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F52025BF1F;
+	Thu, 26 Jun 2025 08:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750926019; cv=none; b=J0fUgoms9QkOU336MLU3qx/K5V1qa3OwaAp6VbWU+b0Z6yLAbC0xp5oY6OXM12yvGOcbR7yawQ5UEEhpR8is5WzHjSjJOvhmWEHWawHPeMlSSvdHxOvrYJGNOcn5PGKzd2oJCCXqOKu6V4tn/Kyvj0dV15SOi9nBAOu/EDQCZBg=
+	t=1750926028; cv=none; b=ilRLLQTyqGfnWIC9V0bro5UgPBEgWQcWE7xMGWAwFEyJz8u1fBwjetWDQwjiobq+29xsQdSvVoUMOxr6DNMW54JtdpKTcvIA11tEKLhhyi0tH7dkgZlh2krmwzLtE6Crj0eR80yZ9j+2iAmbdTkFtSdAV4CA/VPopJZ0Df70EA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750926019; c=relaxed/simple;
-	bh=XqIcxV9tYYGK5WIxG83oeOFYBxW9iRFFIB/DMui79tA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=XM+cUUd4qA0JEqs20xts4C0V8pJeJMRyoGQwtHggT6FZq7IGsq0Me9tkmVq0iyvvJbDrkIl/lslVveF6S33TkzaltPGqUFg3iK4gkrJ9auuIRSErK3u97xtNDgAd+BGSXu87VtV8SiwPOzkhyZW88CKiWKF3wlZ2cjV9I0RQzqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: 6ZYuhy3MSd+Ep4z1BFAuLA==
-X-CSE-MsgGUID: Wwn/6KNFTY+z1Bqzxt6wNA==
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 26 Jun 2025 17:20:16 +0900
-Received: from REE-DUD04480.adwin.renesas.com (unknown [10.226.78.19])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 61CC241A0D72;
-	Thu, 26 Jun 2025 17:20:14 +0900 (JST)
-From: Michael Dege <michael.dege@renesas.com>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Michael Dege <michael.dege@renesas.com>,
-	Uwe Kleine-Koenig <u.kleine-koenig@baylibre.com>,
-	linux-phy@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] phy: renesas: r8a779f0-ether-serdes: add new step added to latest datasheet
-Date: Thu, 26 Jun 2025 10:19:55 +0200
-Message-Id: <20250626081955.1924861-1-michael.dege@renesas.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1750926028; c=relaxed/simple;
+	bh=ALIZ1pJr5k/RzBFhUWBQWpSyvKsVrE4l4KazGh9wArI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GEiKSHhxZo/Vr0hYmAPw+IsJOwrA6INMsVN7fQ1TuYPDw3sEx94U1/YQUv9NhbO4E/Lph70FZnM7xjwGqvdl1hVAkokAMbSHSMbkotdwkAE1pBjL4EMkv41EMoapWTCwmI3oNRPvXOUQzaoW5gtu7BfdrBOhMG+AKiU8HmqQM1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMkCf+DE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMkCf+DE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C508CC4CEEB;
+	Thu, 26 Jun 2025 08:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750926027;
+	bh=ALIZ1pJr5k/RzBFhUWBQWpSyvKsVrE4l4KazGh9wArI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GMkCf+DE09SfeoFseP/++MSgoDjHAMDKK8294mJN5gBkMc7yGuBlkU0Le+E8NyAFP
+	 i7JpadX729QXtkPS7klBphIorXF38qjX2RDQD6wq6k3uV+dsiQoATQgk7NmWm5M6Ks
+	 aQpHIOXx5ggqME5vJFZv8P3jAzBw/aLs/rJcyTgmUk2i1SD/cssA3BqWraxniNzqsx
+	 Yd65FZ5AkH+ea3kngqDuluC5H6aLfLCtGLMwqopj3dZ2fPs4hEUI5K22sFJ9REAmX/
+	 eKjZpJXOf46uRMzH4Q4Enl3ftzCe28PrTKZia3abFUvvqVEZRMVjcVw5dYLJbOSmCg
+	 MNnMMgwXmpILQ==
+Date: Thu, 26 Jun 2025 09:20:24 +0100
+From: Conor Dooley <conor@kernel.org>
+To: Xose Vazquez Perez <xose.vazquez@gmail.com>
+Cc: Jonathan Corbet <corbet@lwn.net>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	DOC ML <linux-doc@vger.kernel.org>,
+	KERNEL ML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: standardize git.kernel.org URLs
+Message-ID: <20250626-badland-carefully-f0b5f285c93f@spud>
+References: <20250625142017.237949-1-xose.vazquez@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="vekMi3Ef6bOeFUHu"
+Content-Disposition: inline
+In-Reply-To: <20250625142017.237949-1-xose.vazquez@gmail.com>
 
-R-Car S4-8 datasheet Rev.1.20 describes some additional register
-settings at the end of the initialization.
 
-- update after failed CI test:
-  Replace wrong macro with R8A779F0_ETH_SERDES_BANK_SELECT
+--vekMi3Ef6bOeFUHu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Michael Dege <michael.dege@renesas.com>
----
- drivers/phy/renesas/r8a779f0-ether-serdes.c | 28 +++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+On Wed, Jun 25, 2025 at 04:20:16PM +0200, Xose Vazquez Perez wrote:
+> replace https: with git:, delete trailing /, and identify repos as "git"
+>=20
+> Cc: Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: DOC ML <linux-doc@vger.kernel.org> (open list:DOCUMENTATION)
+> Cc: KERNEL ML <linux-kernel@vger.kernel.org> (open list)
+> Signed-off-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
 
-diff --git a/drivers/phy/renesas/r8a779f0-ether-serdes.c b/drivers/phy/renesas/r8a779f0-ether-serdes.c
-index ed83c46f6d00..8a6b6f366fe3 100644
---- a/drivers/phy/renesas/r8a779f0-ether-serdes.c
-+++ b/drivers/phy/renesas/r8a779f0-ether-serdes.c
-@@ -49,6 +49,13 @@ static void r8a779f0_eth_serdes_write32(void __iomem *addr, u32 offs, u32 bank,
- 	iowrite32(data, addr + offs);
- }
- 
-+static u32 r8a779f0_eth_serdes_read32(void __iomem *addr, u32 offs,  u32 bank)
-+{
-+	iowrite32(bank, addr + R8A779F0_ETH_SERDES_BANK_SELECT);
-+
-+	return ioread32(addr + offs);
-+}
-+
- static int
- r8a779f0_eth_serdes_reg_wait(struct r8a779f0_eth_serdes_channel *channel,
- 			     u32 offs, u32 bank, u32 mask, u32 expected)
-@@ -319,6 +326,7 @@ static int r8a779f0_eth_serdes_hw_init_late(struct r8a779f0_eth_serdes_channel
- *channel)
- {
- 	int ret;
-+	u32 val;
- 
- 	ret = r8a779f0_eth_serdes_chan_setting(channel);
- 	if (ret)
-@@ -332,6 +340,26 @@ static int r8a779f0_eth_serdes_hw_init_late(struct r8a779f0_eth_serdes_channel
- 
- 	r8a779f0_eth_serdes_write32(channel->addr, 0x03d0, 0x380, 0x0000);
- 
-+	val = r8a779f0_eth_serdes_read32(channel->addr, 0x00c0, 0x180);
-+	r8a779f0_eth_serdes_write32(channel->addr, 0x00c0, 0x180, val | BIT(8));
-+	ret = r8a779f0_eth_serdes_reg_wait(channel, 0x0100, 0x180, BIT(0), 1);
-+	if (ret)
-+		return ret;
-+	r8a779f0_eth_serdes_write32(channel->addr, 0x00c0, 0x180, val & ~BIT(8));
-+	ret = r8a779f0_eth_serdes_reg_wait(channel, 0x0100, 0x180, BIT(0), 0);
-+	if (ret)
-+		return ret;
-+
-+	val = r8a779f0_eth_serdes_read32(channel->addr, 0x0144, 0x180);
-+	r8a779f0_eth_serdes_write32(channel->addr, 0x0144, 0x180, val | BIT(4));
-+	ret = r8a779f0_eth_serdes_reg_wait(channel, 0x0180, 0x180, BIT(0), 1);
-+	if (ret)
-+		return ret;
-+	r8a779f0_eth_serdes_write32(channel->addr, 0x0144, 0x180, val & ~BIT(4));
-+	ret = r8a779f0_eth_serdes_reg_wait(channel, 0x0180, 0x180, BIT(0), 0);
-+	if (ret)
-+		return ret;
-+
- 	return r8a779f0_eth_serdes_monitor_linkup(channel);
- }
- 
--- 
-2.25.1
+>  MICROCHIP SOC DRIVERS
+>  M:	Conor Dooley <conor@kernel.org>
+>  S:	Supported
+> -T:	git https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git
+>  F:	Documentation/devicetree/bindings/soc/microchip/
+>  F:	drivers/soc/microchip/
 
+> @@ -21360,7 +21360,7 @@ M:	Conor Dooley <conor@kernel.org>
+>  L:	linux-riscv@lists.infradead.org
+>  S:	Maintained
+>  Q:	https://patchwork.kernel.org/project/linux-riscv/list/
+> -T:	git https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git
+>  F:	arch/riscv/boot/dts/canaan/
+>  F:	arch/riscv/boot/dts/microchip/
+>  F:	arch/riscv/boot/dts/sifive/
+
+>  STANDALONE CACHE CONTROLLER DRIVERS
+>  M:	Conor Dooley <conor@kernel.org>
+>  S:	Maintained
+> -T:	git https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git
+>  F:	Documentation/devicetree/bindings/cache/
+>  F:	drivers/cache
+> =20
+>  STARFIVE SOC DRIVERS
+>  M:	Conor Dooley <conor@kernel.org>
+>  S:	Maintained
+> -T:	git https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/
+> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git
+>  F:	Documentation/devicetree/bindings/soc/starfive/
+
+No rationale provided, NAK.
+On the other hand, https links are clickable on docs.kernel.org's copy
+of the maintainers file.
+I'd appreciate being CCed if/when you touch my entries here again.
+
+Cheers,
+Conor.
+
+--vekMi3Ef6bOeFUHu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaF0CqwAKCRB4tDGHoIJi
+0jlsAQCHlSlyfw6RZS0OuHi/PIEJAPewe1LMKCoYjRuiBHa13QEAn//Yqcqm1jUz
+aCcQlQTSwTkcCdUD9WLIJnuw6fYRkA4=
+=Id93
+-----END PGP SIGNATURE-----
+
+--vekMi3Ef6bOeFUHu--
