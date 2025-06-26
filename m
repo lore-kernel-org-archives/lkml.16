@@ -1,59 +1,70 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010010.outbound.protection.outlook.com [52.101.84.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 171BD275AF0
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 11:52:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750938736; cv=none; b=ELRtki57/SU1lxtZmKA0Az7vbTNyeBBPFeOyaFlTUC2XtCo7+T89nKF9LBx0dKhc9aCvMwrUJE3haxn4xk+r6ZScSM5Gh4FE2Ra3VIAy2HT9vkZATZqJfB0fkWvx3ywCpl2ovW3rFpwrXDIVy8+wn4HuqB2GFN4S12Dzr16OJs0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750938736; c=relaxed/simple;
-	bh=dCwo9dQ+Vr20/e1KAsSbtEmLD13qNZhteBWJeJeYPoU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UKX37vcGZ65InwAgTjnse/4423lwlJKx6JJ0/dQPXNF/pxiCC9/71rLIWwV66MQyrYN3kcmMs5C/31igbug0cNwjLVgH//xMRMcoebrITsLchNH2e3ImMthRoQlSwoyIl3gj7sSLw+Nj0Gj1vHQAvBvYgDwuB7doEuN1sGwphJE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YK6XLa7U; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBE54C81;
+	Thu, 26 Jun 2025 11:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750938758; cv=fail; b=Wwl0ee+6DGyTfJ+T4j86z9YUfSqJALRnY/zeBdaYgi4zCPi0eObBg3dULP/kAlLdzgqOXA0wfgn+PI/PT6Hrtd4lvWtYZeaA+sMAuH/mnZay4n+rNlctbyoxpbpW6cmJ8tDiq9XIWjR05sFFSxCgig/D3gWS1snsv6IITLE+Fxw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750938758; c=relaxed/simple;
+	bh=v60pAHgQF9p8BwK4KxOcttdB+fkOUn2RWM1ZxYuJBF0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eIdCMT+z+kKTHC249KxaEpkQE0cuU3VPRX1kDb5gEuH79Dm6rbNqmT0KiO8Xd6d1E5UsmEv1oB4QJPaUNgKTtvbNZk7dDUrAWIbiKad6lgkoMcyp8TgvcTN9bf7SzC7c6PQYLpapUH2opf95weD1+2l4BiPXQeaqYmnREU54TPI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arri.de; spf=pass smtp.mailfrom=arri.de; dkim=pass (1024-bit key) header.d=arri.de header.i=@arri.de header.b=utXnEQnO; arc=fail smtp.client-ip=52.101.84.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arri.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arri.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YK6XLa7U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750938734;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YxW6jSTb/V87JFd4N+HT8acceFkg7nuwQOVqiGyMICA=;
-	b=YK6XLa7UuKx5xu8sN1ELAKjiCXy/PG5vIEdXSnbErINm7eClHyuaw7cLUlQmPk27Fh/wXX
-	NYH/ikkZ/qS2nMvNsisIE5cAFQuMxvTRVRjchQvWiTA4obux1gJmiBDw0ZVn5lGNoFUP7P
-	YaH35NR0NlpZgxReIwzO50Zx8Ow3sPM=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-223-mBAs2qz8NaKID1fM14R3Hw-1; Thu,
- 26 Jun 2025 07:52:12 -0400
-X-MC-Unique: mBAs2qz8NaKID1fM14R3Hw-1
-X-Mimecast-MFC-AGG-ID: mBAs2qz8NaKID1fM14R3Hw_1750938731
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B4DD21809C85;
-	Thu, 26 Jun 2025 11:52:11 +0000 (UTC)
-Received: from gmonaco-thinkpadt14gen3.rmtit.com (unknown [10.45.226.174])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 4125730002C0;
-	Thu, 26 Jun 2025 11:52:08 +0000 (UTC)
-From: Gabriele Monaco <gmonaco@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	Anna-Maria Behnsen <anna-maria@linutronix.de>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Waiman Long <longman@redhat.com>
-Cc: Gabriele Monaco <gmonaco@redhat.com>
-Subject: [PATCH v7 7/7] timers: Exclude isolated cpus from timer migration
-Date: Thu, 26 Jun 2025 13:49:00 +0200
-Message-ID: <20250626114900.106061-8-gmonaco@redhat.com>
-In-Reply-To: <20250626114900.106061-1-gmonaco@redhat.com>
-References: <20250626114900.106061-1-gmonaco@redhat.com>
+	dkim=pass (1024-bit key) header.d=arri.de header.i=@arri.de header.b="utXnEQnO"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nH6JWDmwj5/RCtJ72xyufBvqoNZxNHY2TYDJXtvPHj1yC8kFzpzSs4G75eef+PfU4j4A7wQZwFwi51kavmqndz5ALz25+0maUALlVo44W84fdpqsrqJz90GJVeM/6Ujfwfirvg00p2HhCr9XF3GgqVFZKRNz/D5+ZqfKDIAttiAm5WfQGi7TtQmOuwO72bauLKsjXeG4xJNwoXz98YWVHKwG6QvdEcZxkK8fI4lhj1Ka4dXakC1BRvJRjp2wPCKpBnlWTvA9waiXELzmakwuKyidxoVXhh/PVDaHR+XLVor5amedHZXuRwEYSnRTpJJYNAJs28eOuI1MWLFSzsKFlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=88wpuiJEIZFceLk091o/GhGyAD3IYNyqpPsypgndQ0g=;
+ b=VNiTzdC52mDkAtPNuz4ts9JPcayYJKBAh3pjjv+D7zskOa8ZKpiHz9qMbqgbdqfprFTeD9XRgfkaePnnS3ug0vjIjsTY94R7bZjaJvgdeth5QdzNCaBTR510Jl0VestGlcdmNaTmOARzCRx5exMO8Y6c1xo/5G7v2ZVd508ECUfWEmvqGdDmVPDZeTMUC0LD58M/XiDYFqPsFkGa+EGHVikS02SpNvdNHN689jKjyWlKfb+oH1z3wktlIGwSvWmlq44QXopUGMdyTpwXoCdFzFFvwUTKGEmBsHgEVVdnf5MuYjav/j2BXKU6x8RrGjGxsjb/m+HHUnhhpRGf1lijUQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 217.111.95.7) smtp.rcpttodomain=holtmann.org smtp.mailfrom=arri.de;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=arri.de;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arri.de; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=88wpuiJEIZFceLk091o/GhGyAD3IYNyqpPsypgndQ0g=;
+ b=utXnEQnOhN3qBZ58gOPBlG00moO+gqnS+8jR9i+BB1p62u7Y2i+EZMgkOYXau/EOjZC5BzIjN9p8fokgD7vgAf8g5ZFTQNRhsuNqdXaN/z7TbVqLoZrkqVRSNETwTRUu4JF2D1p8zzo2q6KsPXZFlC1zt2OPbTW/0kBF6GSjE0w=
+Received: from AM0PR02CA0193.eurprd02.prod.outlook.com (2603:10a6:20b:28e::30)
+ by GV1PR03MB8688.eurprd03.prod.outlook.com (2603:10a6:150:90::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8880.18; Thu, 26 Jun
+ 2025 11:52:29 +0000
+Received: from AMS0EPF00000196.eurprd05.prod.outlook.com
+ (2603:10a6:20b:28e:cafe::cc) by AM0PR02CA0193.outlook.office365.com
+ (2603:10a6:20b:28e::30) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.17 via Frontend Transport; Thu,
+ 26 Jun 2025 11:52:29 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 217.111.95.7)
+ smtp.mailfrom=arri.de; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=arri.de;
+Received-SPF: Fail (protection.outlook.com: domain of arri.de does not
+ designate 217.111.95.7 as permitted sender) receiver=protection.outlook.com;
+ client-ip=217.111.95.7; helo=mta.arri.de;
+Received: from mta.arri.de (217.111.95.7) by
+ AMS0EPF00000196.mail.protection.outlook.com (10.167.16.217) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8880.14 via Frontend Transport; Thu, 26 Jun 2025 11:52:28 +0000
+Received: from N9W6SW14.arri.de (10.30.5.30) by mta.arri.de (10.10.18.5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.38; Thu, 26 Jun
+ 2025 13:52:28 +0200
+From: Christian Eggers <ceggers@arri.de>
+To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg
+	<johan.hedberg@gmail.com>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Jaganath Kanakkassery <jaganath.k.os@gmail.com>
+CC: <linux-bluetooth@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, Christian Eggers <ceggers@arri.de>,
+	<stable@vger.kernel.org>
+Subject: [PATCH v2] Bluetooth: HCI: Set extended advertising data synchronously
+Date: Thu, 26 Jun 2025 13:52:08 +0200
+Message-ID: <20250626115209.17839-1-ceggers@arri.de>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -61,237 +72,401 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AMS0EPF00000196:EE_|GV1PR03MB8688:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8504c419-f96f-4d22-6663-08ddb4a7ed22
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|376014|1800799024|36860700013;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?VTPEIFspmamzt5ZJS+WGxTkTBuuHZiZwxFtoeV7On3Qnobis/h5mDKAfcIz1?=
+ =?us-ascii?Q?TvlagH2XAtdz9WugZNvCflYDuaWYYqmlhmfCOQYMEJ6cMKyst5wVnbd1YPbh?=
+ =?us-ascii?Q?2QoKbz3R4CoqQUQEik7ZCLRmabeaVFu8iV5Y20aN7bKW5gJ0YQ+uS3bMBORw?=
+ =?us-ascii?Q?KaTwB7b/eVde3S/YVSMAEW0fW0uebJ703W3/343EcK5V9pH4tYtaG5NBlpM3?=
+ =?us-ascii?Q?WDpGNcWbsTuXVd/TkOMYvte/D3IE97FRBuKaC7yHnuAUFiENFrJ3lHgTyooo?=
+ =?us-ascii?Q?dAUnNpFFy10DWJ4rVE6MB56fttKhKYc4kBOJQ5Vckbw8d7mFqlHhOxuFDNSz?=
+ =?us-ascii?Q?VBt+q2Gamd93GxryixpfeIv2XjH+quBH1q1tcWyHuLfaFq0yATB6ieam/byw?=
+ =?us-ascii?Q?4vxkVfxOV6Fvstyg30qgnDf1xeRpLi6cZV2jrX1nTzB6AgaXkYkUL8+f5Saj?=
+ =?us-ascii?Q?BXrmx6lm4C/mtSkMaGvQI0pouEka8WUVwzLBgDnKmm2gJKgQT6Q+m3tKDlNP?=
+ =?us-ascii?Q?Cnkg7hQszn9GtxcWwwhoyoe/n1lhvab3OSnXcBxm+nxYFiR3BOry9bdTKuzI?=
+ =?us-ascii?Q?4tTMJxbqsCHLw5d3/TNEsyiWu7MYyTNAOtLIJkd0zsIV4tTenDh9HXitxFN+?=
+ =?us-ascii?Q?rXQBF9XM/Hwqkjnor4PkKvl5NndCNLF5yLspeAngvoXnAHld/B4lGv+5vDoE?=
+ =?us-ascii?Q?OQcbrIYlw0NGL7S4kDs57jaJnEMWcXSSylxzEHPN7pEojy+U6vU6rpA//dGu?=
+ =?us-ascii?Q?njPCE3IqA8YHeF/9OMVSsiRTmby8L2g76DTRKGsswWVSY92hMDvSkmokkZFz?=
+ =?us-ascii?Q?gf2DExIIJoQ43pZ1TuZjUGTsgMKXr4rI+AO4h0wdr2YwASXwBssaxhnyFx4Y?=
+ =?us-ascii?Q?/BVYgwyTAmqfeOFD30XksS7whIJ0w5ucoqEjEIFTZWgcdqsJ7LJEJP2SvJ7Z?=
+ =?us-ascii?Q?QssckBXlz2dBDvE10SYxlzwabfaCju6YvXyS0ELKP2koIcAIA59qnjLHclUK?=
+ =?us-ascii?Q?+9F1KbqXV8t0DOPC85GUbc7+fjumTSBTW0Xq97ZS0Iq2VoMyNt4NKGDnUfUn?=
+ =?us-ascii?Q?02MBIoXC6DVAE9vpQjBZd3bC0nC9h4/inu57/IXulDgCTdj4Dv6WT1p66YRc?=
+ =?us-ascii?Q?WlrLOEqFg61u3BZuAWDxnSKPfSjK9fX+JYozsH2XLBUkwQrXIt6986REDj3X?=
+ =?us-ascii?Q?5XflcXhz+a8/zXsKp4o2Eu0n3/ghqBSvyvaptdW5hN0x2epC2Eb5+5OtTc6U?=
+ =?us-ascii?Q?AQ8C0sEyt9jVxNvaVsT7BZ4BKVXlbhDsyMAyCVqcnj/cpGiWFSGdJ5kQRZEN?=
+ =?us-ascii?Q?vu7O2KhmDPdmdWpbtCsfEe3x/XKbsG6xtTJZEhvCtWdXY5sH85xNdMEc7RWe?=
+ =?us-ascii?Q?bBvmt9S7EP64aWB82ZITsv11GenpY7In5MxnYuHG3W8QzicQLGzNuKtP6Sku?=
+ =?us-ascii?Q?4Yc1bUxRfJN3iY4f4KT7ZiLc9dgybFoyvHa7ulSLN7SviGBJTYGCwuFjp07h?=
+ =?us-ascii?Q?w8f+fhm/qWPV9P38J9Pmwyw+vOxcwFd5FfR6jfQMAiHRNzkCwnRvpvg+gw?=
+ =?us-ascii?Q?=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:217.111.95.7;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mta.arri.de;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(376014)(1800799024)(36860700013);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arri.de
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 11:52:28.7096
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8504c419-f96f-4d22-6663-08ddb4a7ed22
+X-MS-Exchange-CrossTenant-Id: e6a73a5a-614d-4c51-b3e3-53b660a9433a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e6a73a5a-614d-4c51-b3e3-53b660a9433a;Ip=[217.111.95.7];Helo=[mta.arri.de]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AMS0EPF00000196.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: GV1PR03MB8688
 
-The timer migration mechanism allows active CPUs to pull timers from
-idle ones to improve the overall idle time. This is however undesired
-when CPU intensive workloads run on isolated cores, as the algorithm
-would move the timers from housekeeping to isolated cores, negatively
-affecting the isolation.
+Currently, for controllers with extended advertising, the advertising
+data is set in the asynchronous response handler for extended
+adverstising params. As most advertising settings are performed in a
+synchronous context, the (asynchronous) setting of the advertising data
+is done too late (after enabling the advertising).
 
-Exclude isolated cores from the timer migration algorithm, extend the
-concept of unavailable cores, currently used for offline ones, to
-isolated ones:
-* A core is unavailable if isolated or offline;
-* A core is available if isolated and offline;
+Move setting of adverstising data from asynchronous response handler
+into synchronous context to fix ordering of HCI commands.
 
-A core is considered unavailable as isolated if it belongs to:
-* the isolcpus (domain) list
-* an isolated cpuset
-Except if it is:
-* in the nohz_full list (already idle for the hierarchy)
-* the nohz timekeeper core (must be available to handle global timers)
-
-All online CPUs are added to the hierarchy during early boot, isolated
-CPUs are removed during late boot if configured or whenever the cpuset
-isolation changes.
-
-Due to how the timer migration algorithm works, any CPU part of the
-hierarchy can have their global timers pulled by remote CPUs and have to
-pull remote timers, only skipping pulling remote timers would break the
-logic.
-For this reason, prevent isolated CPUs from pulling remote global
-timers, but also the other way around: any global timer started on an
-isolated CPU will run there. This does not break the concept of
-isolation (global timers don't come from outside the CPU) and, if
-considered inappropriate, can usually be mitigated with other isolation
-techniques (e.g. IRQ pinning).
-
-This effect was noticed on a 128 cores machine running oslat on the
-isolated cores (1-31,33-63,65-95,97-127). The tool monopolises CPUs,
-and the CPU with lowest count in a timer migration hierarchy (here 1
-and 65) appears as always active and continuously pulls global timers,
-from the housekeeping CPUs. This ends up moving driver work (e.g.
-delayed work) to isolated CPUs and causes latency spikes:
-
-before the change:
-
- # oslat -c 1-31,33-63,65-95,97-127 -D 62s
- ...
-  Maximum:     1203 10 3 4 ... 5 (us)
-
-after the change:
-
- # oslat -c 1-31,33-63,65-95,97-127 -D 62s
- ...
-  Maximum:      10 4 3 4 3 ... 5 (us)
-
-Signed-off-by: Gabriele Monaco <gmonaco@redhat.com>
+Signed-off-by: Christian Eggers <ceggers@arri.de>
+Fixes: a0fb3726ba55 ("Bluetooth: Use Set ext adv/scan rsp data if controller supports")
+Cc: stable@vger.kernel.org
+v1: https://lore.kernel.org/linux-bluetooth/20250625130510.18382-1-ceggers@arri.de/
 ---
- include/linux/timer.h         |  9 ++++
- kernel/cgroup/cpuset.c        |  3 ++
- kernel/time/timer_migration.c | 86 +++++++++++++++++++++++++++++++++++
- 3 files changed, 98 insertions(+)
+v2: convert setting of adv data into synchronous context (rather than moving
+more methods into asynchronous response handlers).
+- hci_set_ext_adv_params_sync: new method
+- hci_set_ext_adv_data_sync: move within source file (no changes)
+- hci_set_adv_data_sync: dito
+- hci_update_adv_data_sync: dito
+- hci_cc_set_ext_adv_param: remove (performed synchronously now)
 
-diff --git a/include/linux/timer.h b/include/linux/timer.h
-index 0414d9e6b4fcd..62e1cea711257 100644
---- a/include/linux/timer.h
-+++ b/include/linux/timer.h
-@@ -188,4 +188,13 @@ int timers_dead_cpu(unsigned int cpu);
- #define timers_dead_cpu		NULL
- #endif
- 
-+#if defined(CONFIG_SMP) && defined(CONFIG_NO_HZ_COMMON)
-+extern int tmigr_isolated_exclude_cpumask(struct cpumask *exclude_cpumask);
-+#else
-+static inline int tmigr_isolated_exclude_cpumask(struct cpumask *exclude_cpumask)
-+{
-+	return 0;
-+}
-+#endif
-+
- #endif
-diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
-index a946d85ce954a..ff5b66abd0474 100644
---- a/kernel/cgroup/cpuset.c
-+++ b/kernel/cgroup/cpuset.c
-@@ -1392,6 +1392,9 @@ static void update_exclusion_cpumasks(bool isolcpus_updated)
- 
- 	ret = workqueue_unbound_exclude_cpumask(isolated_cpus);
- 	WARN_ON_ONCE(ret < 0);
-+
-+	ret = tmigr_isolated_exclude_cpumask(isolated_cpus);
-+	WARN_ON_ONCE(ret < 0);
+On Wednesday, 25 June 2025, 15:26:58 CEST, Luiz Augusto von Dentz wrote:
+> That said for the likes of MGMT_OP_ADD_EXT_ADV_DATA you will still
+> need to detect if the instance has already been enabled then do
+> disable/re-enable logic if the quirk is set.
+
+The critical opcode (HCI_OP_LE_SET_EXT_ADV_DATA) is only used in
+hci_set_ext_adv_data_sync(). Two of the callers already ensure that
+the advertising instance is disabled, so only hci_update_adv_data_sync()
+may need a quirk. I suggest doing this in a separate patch.
+
+regards,
+Christian
+
+ net/bluetooth/hci_event.c |  36 -------
+ net/bluetooth/hci_sync.c  | 209 ++++++++++++++++++++++++--------------
+ 2 files changed, 132 insertions(+), 113 deletions(-)
+
+diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+index 66052d6aaa1d..4d5ace9d245d 100644
+--- a/net/bluetooth/hci_event.c
++++ b/net/bluetooth/hci_event.c
+@@ -2150,40 +2150,6 @@ static u8 hci_cc_set_adv_param(struct hci_dev *hdev, void *data,
+ 	return rp->status;
  }
  
- /**
-diff --git a/kernel/time/timer_migration.c b/kernel/time/timer_migration.c
-index a51af4acc5e3c..2bae64a34f05f 100644
---- a/kernel/time/timer_migration.c
-+++ b/kernel/time/timer_migration.c
-@@ -10,6 +10,7 @@
- #include <linux/spinlock.h>
- #include <linux/timerqueue.h>
- #include <trace/events/ipi.h>
-+#include <linux/sched/isolation.h>
- 
- #include "timer_migration.h"
- #include "tick-internal.h"
-@@ -425,6 +426,9 @@ static DEFINE_PER_CPU(struct tmigr_cpu, tmigr_cpu);
- /* CPUs available for timer migration */
- static cpumask_var_t tmigr_available_cpumask;
- 
-+/* Enabled during late initcall */
-+static bool tmigr_exclude_isolated __read_mostly;
-+
- #define TMIGR_NONE	0xFF
- #define BIT_CNT		8
- 
-@@ -433,6 +437,24 @@ static inline bool tmigr_is_not_available(struct tmigr_cpu *tmc)
- 	return !(tmc->tmgroup && tmc->available);
- }
- 
-+/*
-+ * Returns true if @cpu should be excluded from the hierarchy as isolated.
-+ * Domain isolated CPUs don't participate in timer migration, nohz_full
-+ * CPUs are still part of the hierarchy but are always considered idle.
-+ * This behaviour depends on the value of tmigr_exclude_isolated, which is
-+ * normally disabled during early boot.
-+ * This check is necessary, for instance, to prevent offline isolated CPU from
-+ * being incorrectly marked as available once getting back online.
-+ */
-+static inline bool tmigr_is_isolated(int cpu)
-+{
-+	if (!tmigr_exclude_isolated)
-+		return false;
-+	return (!housekeeping_cpu(cpu, HK_TYPE_DOMAIN) ||
-+		cpuset_cpu_is_isolated(cpu)) &&
-+	       housekeeping_cpu(cpu, HK_TYPE_KERNEL_NOISE);
-+}
-+
- /*
-  * Returns true, when @childmask corresponds to the group migrator or when the
-  * group is not active - so no migrator is set.
-@@ -1450,6 +1472,8 @@ static int tmigr_clear_cpu_available(unsigned int cpu)
- 	u64 firstexp;
- 
- 	scoped_guard(raw_spinlock_irq, &tmc->lock) {
-+		if (!tmc->available)
-+			return 0;
- 		tmc->available = false;
- 		WRITE_ONCE(tmc->wakeup, KTIME_MAX);
- 		cpumask_clear_cpu(cpu, tmigr_available_cpumask);
-@@ -1478,7 +1502,11 @@ static int tmigr_set_cpu_available(unsigned int cpu)
- 	if (WARN_ON_ONCE(!tmc->tmgroup))
- 		return -EINVAL;
- 
-+	if (tmigr_is_isolated(cpu))
-+		return 0;
- 	scoped_guard(raw_spinlock_irq, &tmc->lock) {
-+		if (tmc->available)
-+			return 0;
- 		trace_tmigr_cpu_available(tmc);
- 		tmc->idle = timer_base_is_idle();
- 		if (!tmc->idle)
-@@ -1489,6 +1517,63 @@ static int tmigr_set_cpu_available(unsigned int cpu)
- 	return 0;
- }
- 
-+static void tmigr_cpu_isolate(void *ignored)
-+{
-+	/*
-+	 * The tick CPU can be marked as isolated by the cpuset code, however
-+	 * we cannot mark it as unavailable to avoid having no global migrator
-+	 * for the nohz_full CPUs.
-+	 */
-+	if (!tick_nohz_cpu_hotpluggable(smp_processor_id()))
-+		return;
-+	tmigr_clear_cpu_available(smp_processor_id());
-+}
-+
-+static void tmigr_cpu_unisolate(void *ignored)
-+{
-+	tmigr_set_cpu_available(smp_processor_id());
-+}
-+
-+int tmigr_isolated_exclude_cpumask(struct cpumask *exclude_cpumask)
-+{
-+	cpumask_var_t cpumask;
-+
-+	lockdep_assert_cpus_held();
-+
-+	if (!alloc_cpumask_var(&cpumask, GFP_KERNEL))
-+		return -ENOMEM;
-+
-+	cpumask_and(cpumask, exclude_cpumask, tmigr_available_cpumask);
-+	cpumask_and(cpumask, cpumask, housekeeping_cpumask(HK_TYPE_KERNEL_NOISE));
-+	on_each_cpu_mask(cpumask, tmigr_cpu_isolate, NULL, 1);
-+
-+	cpumask_andnot(cpumask, cpu_online_mask, exclude_cpumask);
-+	cpumask_andnot(cpumask, cpumask, tmigr_available_cpumask);
-+	on_each_cpu_mask(cpumask, tmigr_cpu_unisolate, NULL, 1);
-+
-+	free_cpumask_var(cpumask);
-+	return 0;
-+}
-+
-+static int __init tmigr_init_isolation(void)
-+{
-+	cpumask_var_t cpumask;
-+
-+	if (!housekeeping_enabled(HK_TYPE_DOMAIN))
-+		return 0;
-+	if (!alloc_cpumask_var(&cpumask, GFP_KERNEL))
-+		return -ENOMEM;
-+	cpumask_andnot(cpumask, tmigr_available_cpumask,
-+		       housekeeping_cpumask(HK_TYPE_DOMAIN));
-+	cpumask_and(cpumask, cpumask, housekeeping_cpumask(HK_TYPE_KERNEL_NOISE));
-+	on_each_cpu_mask(cpumask, tmigr_cpu_isolate, NULL, 1);
-+
-+	tmigr_exclude_isolated = true;
-+
-+	free_cpumask_var(cpumask);
-+	return 0;
-+}
-+
- static void tmigr_init_group(struct tmigr_group *group, unsigned int lvl,
- 			     int node)
+-static u8 hci_cc_set_ext_adv_param(struct hci_dev *hdev, void *data,
+-				   struct sk_buff *skb)
+-{
+-	struct hci_rp_le_set_ext_adv_params *rp = data;
+-	struct hci_cp_le_set_ext_adv_params *cp;
+-	struct adv_info *adv_instance;
+-
+-	bt_dev_dbg(hdev, "status 0x%2.2x", rp->status);
+-
+-	if (rp->status)
+-		return rp->status;
+-
+-	cp = hci_sent_cmd_data(hdev, HCI_OP_LE_SET_EXT_ADV_PARAMS);
+-	if (!cp)
+-		return rp->status;
+-
+-	hci_dev_lock(hdev);
+-	hdev->adv_addr_type = cp->own_addr_type;
+-	if (!cp->handle) {
+-		/* Store in hdev for instance 0 */
+-		hdev->adv_tx_power = rp->tx_power;
+-	} else {
+-		adv_instance = hci_find_adv_instance(hdev, cp->handle);
+-		if (adv_instance)
+-			adv_instance->tx_power = rp->tx_power;
+-	}
+-	/* Update adv data as tx power is known now */
+-	hci_update_adv_data(hdev, cp->handle);
+-
+-	hci_dev_unlock(hdev);
+-
+-	return rp->status;
+-}
+-
+ static u8 hci_cc_read_rssi(struct hci_dev *hdev, void *data,
+ 			   struct sk_buff *skb)
  {
-@@ -1871,3 +1956,4 @@ static int __init tmigr_init(void)
- 	return ret;
+@@ -4164,8 +4130,6 @@ static const struct hci_cc {
+ 	HCI_CC(HCI_OP_LE_READ_NUM_SUPPORTED_ADV_SETS,
+ 	       hci_cc_le_read_num_adv_sets,
+ 	       sizeof(struct hci_rp_le_read_num_supported_adv_sets)),
+-	HCI_CC(HCI_OP_LE_SET_EXT_ADV_PARAMS, hci_cc_set_ext_adv_param,
+-	       sizeof(struct hci_rp_le_set_ext_adv_params)),
+ 	HCI_CC_STATUS(HCI_OP_LE_SET_EXT_ADV_ENABLE,
+ 		      hci_cc_le_set_ext_adv_enable),
+ 	HCI_CC_STATUS(HCI_OP_LE_SET_ADV_SET_RAND_ADDR,
+diff --git a/net/bluetooth/hci_sync.c b/net/bluetooth/hci_sync.c
+index 1f8806dfa556..2a09b2cb983e 100644
+--- a/net/bluetooth/hci_sync.c
++++ b/net/bluetooth/hci_sync.c
+@@ -1205,9 +1205,116 @@ static int hci_set_adv_set_random_addr_sync(struct hci_dev *hdev, u8 instance,
+ 				     sizeof(cp), &cp, HCI_CMD_TIMEOUT);
  }
- early_initcall(tmigr_init);
-+late_initcall(tmigr_init_isolation);
+ 
++static int
++hci_set_ext_adv_params_sync(struct hci_dev *hdev,
++			    const struct hci_cp_le_set_ext_adv_params *cp,
++			    struct hci_rp_le_set_ext_adv_params *rp)
++{
++	struct sk_buff *skb;
++
++	skb = __hci_cmd_sync(hdev, HCI_OP_LE_SET_EXT_ADV_PARAMS, sizeof(*cp),
++			     cp, HCI_CMD_TIMEOUT);
++
++	/* If command return a status event, skb will be set to -ENODATA */
++	if (skb == ERR_PTR(-ENODATA))
++		return 0;
++
++	if (IS_ERR(skb)) {
++		bt_dev_err(hdev, "Opcode 0x%4.4x failed: %ld",
++			   HCI_OP_LE_SET_EXT_ADV_PARAMS, PTR_ERR(skb));
++		return PTR_ERR(skb);
++	}
++
++	if (skb->len != sizeof(*rp)) {
++		bt_dev_err(hdev, "Invalid response length for "
++			   "HCI_OP_LE_SET_EXT_ADV_PARAMS: %u", skb->len);
++		kfree_skb(skb);
++		return -EIO;
++	}
++
++	memcpy(rp, skb->data, sizeof(*rp));
++	kfree_skb(skb);
++
++	return rp->status;
++}
++
++static int hci_set_ext_adv_data_sync(struct hci_dev *hdev, u8 instance)
++{
++	DEFINE_FLEX(struct hci_cp_le_set_ext_adv_data, pdu, data, length,
++		    HCI_MAX_EXT_AD_LENGTH);
++	u8 len;
++	struct adv_info *adv = NULL;
++	int err;
++
++	if (instance) {
++		adv = hci_find_adv_instance(hdev, instance);
++		if (!adv || !adv->adv_data_changed)
++			return 0;
++	}
++
++	len = eir_create_adv_data(hdev, instance, pdu->data,
++				  HCI_MAX_EXT_AD_LENGTH);
++
++	pdu->length = len;
++	pdu->handle = adv ? adv->handle : instance;
++	pdu->operation = LE_SET_ADV_DATA_OP_COMPLETE;
++	pdu->frag_pref = LE_SET_ADV_DATA_NO_FRAG;
++
++	err = __hci_cmd_sync_status(hdev, HCI_OP_LE_SET_EXT_ADV_DATA,
++				    struct_size(pdu, data, len), pdu,
++				    HCI_CMD_TIMEOUT);
++	if (err)
++		return err;
++
++	/* Update data if the command succeed */
++	if (adv) {
++		adv->adv_data_changed = false;
++	} else {
++		memcpy(hdev->adv_data, pdu->data, len);
++		hdev->adv_data_len = len;
++	}
++
++	return 0;
++}
++
++static int hci_set_adv_data_sync(struct hci_dev *hdev, u8 instance)
++{
++	struct hci_cp_le_set_adv_data cp;
++	u8 len;
++
++	memset(&cp, 0, sizeof(cp));
++
++	len = eir_create_adv_data(hdev, instance, cp.data, sizeof(cp.data));
++
++	/* There's nothing to do if the data hasn't changed */
++	if (hdev->adv_data_len == len &&
++	    memcmp(cp.data, hdev->adv_data, len) == 0)
++		return 0;
++
++	memcpy(hdev->adv_data, cp.data, sizeof(cp.data));
++	hdev->adv_data_len = len;
++
++	cp.length = len;
++
++	return __hci_cmd_sync_status(hdev, HCI_OP_LE_SET_ADV_DATA,
++				     sizeof(cp), &cp, HCI_CMD_TIMEOUT);
++}
++
++int hci_update_adv_data_sync(struct hci_dev *hdev, u8 instance)
++{
++	if (!hci_dev_test_flag(hdev, HCI_LE_ENABLED))
++		return 0;
++
++	if (ext_adv_capable(hdev))
++		return hci_set_ext_adv_data_sync(hdev, instance);
++
++	return hci_set_adv_data_sync(hdev, instance);
++}
++
+ int hci_setup_ext_adv_instance_sync(struct hci_dev *hdev, u8 instance)
+ {
+ 	struct hci_cp_le_set_ext_adv_params cp;
++	struct hci_rp_le_set_ext_adv_params rp;
+ 	bool connectable;
+ 	u32 flags;
+ 	bdaddr_t random_addr;
+@@ -1316,8 +1423,20 @@ int hci_setup_ext_adv_instance_sync(struct hci_dev *hdev, u8 instance)
+ 		cp.secondary_phy = HCI_ADV_PHY_1M;
+ 	}
+ 
+-	err = __hci_cmd_sync_status(hdev, HCI_OP_LE_SET_EXT_ADV_PARAMS,
+-				    sizeof(cp), &cp, HCI_CMD_TIMEOUT);
++	err = hci_set_ext_adv_params_sync(hdev, &cp, &rp);
++	if (err)
++		return err;
++
++	hdev->adv_addr_type = own_addr_type;
++	if (!cp.handle) {
++		/* Store in hdev for instance 0 */
++		hdev->adv_tx_power = rp.tx_power;
++	} else if (adv) {
++		adv->tx_power = rp.tx_power;
++	}
++
++	/* Update adv data as tx power is known now */
++	err = hci_set_ext_adv_data_sync(hdev, cp.handle);
+ 	if (err)
+ 		return err;
+ 
+@@ -1822,79 +1941,6 @@ int hci_le_terminate_big_sync(struct hci_dev *hdev, u8 handle, u8 reason)
+ 				     sizeof(cp), &cp, HCI_CMD_TIMEOUT);
+ }
+ 
+-static int hci_set_ext_adv_data_sync(struct hci_dev *hdev, u8 instance)
+-{
+-	DEFINE_FLEX(struct hci_cp_le_set_ext_adv_data, pdu, data, length,
+-		    HCI_MAX_EXT_AD_LENGTH);
+-	u8 len;
+-	struct adv_info *adv = NULL;
+-	int err;
+-
+-	if (instance) {
+-		adv = hci_find_adv_instance(hdev, instance);
+-		if (!adv || !adv->adv_data_changed)
+-			return 0;
+-	}
+-
+-	len = eir_create_adv_data(hdev, instance, pdu->data,
+-				  HCI_MAX_EXT_AD_LENGTH);
+-
+-	pdu->length = len;
+-	pdu->handle = adv ? adv->handle : instance;
+-	pdu->operation = LE_SET_ADV_DATA_OP_COMPLETE;
+-	pdu->frag_pref = LE_SET_ADV_DATA_NO_FRAG;
+-
+-	err = __hci_cmd_sync_status(hdev, HCI_OP_LE_SET_EXT_ADV_DATA,
+-				    struct_size(pdu, data, len), pdu,
+-				    HCI_CMD_TIMEOUT);
+-	if (err)
+-		return err;
+-
+-	/* Update data if the command succeed */
+-	if (adv) {
+-		adv->adv_data_changed = false;
+-	} else {
+-		memcpy(hdev->adv_data, pdu->data, len);
+-		hdev->adv_data_len = len;
+-	}
+-
+-	return 0;
+-}
+-
+-static int hci_set_adv_data_sync(struct hci_dev *hdev, u8 instance)
+-{
+-	struct hci_cp_le_set_adv_data cp;
+-	u8 len;
+-
+-	memset(&cp, 0, sizeof(cp));
+-
+-	len = eir_create_adv_data(hdev, instance, cp.data, sizeof(cp.data));
+-
+-	/* There's nothing to do if the data hasn't changed */
+-	if (hdev->adv_data_len == len &&
+-	    memcmp(cp.data, hdev->adv_data, len) == 0)
+-		return 0;
+-
+-	memcpy(hdev->adv_data, cp.data, sizeof(cp.data));
+-	hdev->adv_data_len = len;
+-
+-	cp.length = len;
+-
+-	return __hci_cmd_sync_status(hdev, HCI_OP_LE_SET_ADV_DATA,
+-				     sizeof(cp), &cp, HCI_CMD_TIMEOUT);
+-}
+-
+-int hci_update_adv_data_sync(struct hci_dev *hdev, u8 instance)
+-{
+-	if (!hci_dev_test_flag(hdev, HCI_LE_ENABLED))
+-		return 0;
+-
+-	if (ext_adv_capable(hdev))
+-		return hci_set_ext_adv_data_sync(hdev, instance);
+-
+-	return hci_set_adv_data_sync(hdev, instance);
+-}
+-
+ int hci_schedule_adv_instance_sync(struct hci_dev *hdev, u8 instance,
+ 				   bool force)
+ {
+@@ -6269,6 +6315,7 @@ static int hci_le_ext_directed_advertising_sync(struct hci_dev *hdev,
+ 						struct hci_conn *conn)
+ {
+ 	struct hci_cp_le_set_ext_adv_params cp;
++	struct hci_rp_le_set_ext_adv_params rp;
+ 	int err;
+ 	bdaddr_t random_addr;
+ 	u8 own_addr_type;
+@@ -6310,8 +6357,16 @@ static int hci_le_ext_directed_advertising_sync(struct hci_dev *hdev,
+ 	if (err)
+ 		return err;
+ 
+-	err = __hci_cmd_sync_status(hdev, HCI_OP_LE_SET_EXT_ADV_PARAMS,
+-				    sizeof(cp), &cp, HCI_CMD_TIMEOUT);
++	err = hci_set_ext_adv_params_sync(hdev, &cp, &rp);
++	if (err)
++		return err;
++
++	hdev->adv_addr_type = own_addr_type;
++	/* Store in hdev for instance 0 */
++	hdev->adv_tx_power = rp.tx_power;
++
++	/* Update adv data as tx power is known now */
++	err = hci_set_ext_adv_data_sync(hdev, cp.handle);
+ 	if (err)
+ 		return err;
+ 
 -- 
-2.49.0
+2.44.1
 
