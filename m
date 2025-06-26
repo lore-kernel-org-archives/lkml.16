@@ -1,46 +1,46 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9602624DCEB;
-	Thu, 26 Jun 2025 06:10:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 147F325E461;
+	Thu, 26 Jun 2025 06:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750918226; cv=none; b=gDSlAsIkFWBQUpTZeKDJugLyn1FCfxvnFKZC3RFj0GInTOLtWpK8Vvj87GIE3Fq7beMYb25hEA3OyJjDqgcee9BzWOa8vOSlFVfMghLEV/rOyVoASnFd+d2/wbU5BQQRl+nD8ZjmOsdcQU7RXUcfDP2Gse2KccJPX/fzhz57958=
+	t=1750918229; cv=none; b=Eh043zChRNXgufBZatWMlhW5m5GbG2yUsJKoPNDNn7gFEmxIqQ0cDzNWxVfyr5eC5OTpi/pKNKC6RZWzuYqQij5/GixLWyYVP+R6FqWDy6PG3cID8w6lypFVkUDOSMQVRW6QyBPeYGE5a5rI2/KgwfYRw+ZBTHjDNC+0QB4MhIk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750918226; c=relaxed/simple;
-	bh=BgHglaR4DzzW2IPxgThAlx+/qqcc0TXML7OsBM4NoBo=;
+	s=arc-20240116; t=1750918229; c=relaxed/simple;
+	bh=zShZPUvddV04nP7ePLLt+JfO552xNTacDebxpq2ayPk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DEeS9Ot1mfV/VPKIlzuF5P3JWwQHYgXf2S8M1BDYatDbGe5/YMM79ZRLKHJmbj8+8fS1MFMj3NfYKR3zgO4fu1rsRnB8Isc5me3B6LmBIbBYQYkyyCfwJvztHW9xa6y9O244GqQPFLjrODk37XSWBRGPrbK4ueGGXWhljTmdJW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nMjS1CG/; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sxu+ql+R; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=Sd6KTCHAwrz44OXfaKL92K1UcTWpFgmsNnaqGAsLer8txbeRfqw5eFL4AgyUQFDOnWtI+bX9shA1jxEoRYp0m7aQX8y/jDksAIdlQeMdkqS6UtswvcawbiFaAOqJNrLH9l6kc4CpaXD0lXDVg+XJXjv3hFb0nwLMUcxi9wNH17E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NwnELFMT; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NljzIya3; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nMjS1CG/";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sxu+ql+R"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NwnELFMT";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NljzIya3"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750918222;
+	s=2020; t=1750918224;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WKirMxHE1YxM9ynO9swFUkpubSglCQdgwJmIoDy+YxU=;
-	b=nMjS1CG/yxTUVbWKorw/3bOw365XOLYS0ASXjiL6d4n+MPkGmJWi/xsW7AxXB52lfl0teo
-	1PTskggqq3jfSVE0SwLS7UtoeFmRPKA04+WaL12t/ixW/f3vJuGR6Hlj/6N/pnqshmfoXm
-	B+RtxE7cY5rCK455Zf1t/5VzFlAeFp8BXet061DAYKJjXjfKyGpTX7GLsZsu99S5ORps6T
-	1dl0iD6MBwj6lEik8hlYXu/wDp8vogij6NffOuCHizJpvY8pU8PVQJ/FkGavE52lseYDfs
-	79/e84NCkURPDoNjZ8fPLPqHRNu2JjG//fhrvAATGG8cXLKwLKLtvvdszlJdYw==
+	bh=nqEciMN5D1yrpF8pzbxqPFErBTdvvekVDOGyFqtNWdk=;
+	b=NwnELFMTLd09ua8co1MShJVkTu7deYuOOcKmawcoBjF4BDE64CWixas+6ZQnMfn5EnOCmg
+	e0WvA4OM+pQ1RNp35Ug2TZrO88/Gpm1m1QVu/0FcjUWx95k3XPyJilAis2f6Iok7EDcelu
+	Yll5CxqBorEuMI6dT5/BbLFO7V+eEU+MTye/eTng4rfKNzVWZoAfV4rOvf6z+65ZCmw18L
+	5mkIABq2sjRD8fs//QfeK9kLltiK3qCqt/DtdMxd3ENTk/Dm2PIedkYUKL1p5C2/Lfnz6O
+	vGtpjy12pSNVIgO3WqB2Hvz8WCARiP/mKSJcuXWAkudZxxl1Ldky/ItJtAB/uA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750918222;
+	s=2020e; t=1750918224;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=WKirMxHE1YxM9ynO9swFUkpubSglCQdgwJmIoDy+YxU=;
-	b=sxu+ql+RMtIFHfreNZ6cS4cM4zTqlNz2TZb9DgZOr8uXj9jIbnqc1k/ZmrZWk5BprTOvEL
-	ekRjqfZkjP2IiQCQ==
-Date: Thu, 26 Jun 2025 08:10:17 +0200
-Subject: [PATCH v4 09/15] kunit: tool: Parse skipped tests from kselftest.h
+	bh=nqEciMN5D1yrpF8pzbxqPFErBTdvvekVDOGyFqtNWdk=;
+	b=NljzIya3lvX5KxYMIRyiveDbqLyuMTkYirHvFIt5ODhCM541bWLQl/twTpO34OyPn5gIel
+	sYRtqNAIr1YwcjAA==
+Date: Thu, 26 Jun 2025 08:10:19 +0200
+Subject: [PATCH v4 11/15] kunit: qemu_configs: loongarch: Enable LSX/LSAX
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +49,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250626-kunit-kselftests-v4-9-48760534fef5@linutronix.de>
+Message-Id: <20250626-kunit-kselftests-v4-11-48760534fef5@linutronix.de>
 References: <20250626-kunit-kselftests-v4-0-48760534fef5@linutronix.de>
 In-Reply-To: <20250626-kunit-kselftests-v4-0-48760534fef5@linutronix.de>
 To: Masahiro Yamada <masahiroy@kernel.org>, 
@@ -65,80 +65,38 @@ Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
  linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
  linux-doc@vger.kernel.org, workflows@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750918216; l=2831;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750918216; l=994;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=BgHglaR4DzzW2IPxgThAlx+/qqcc0TXML7OsBM4NoBo=;
- b=oXs6ENKi5E7FMsucpJTgQ1z8dJdZNVeEliXEubYDgG+sDqIhXI7MdrecBaS2cUZBpr2L3KozY
- br+7LQg1UPcA8mX4rIyqgmXWpLSiUSd55E77S2Xd0zCCplacX/WFi0k
+ bh=zShZPUvddV04nP7ePLLt+JfO552xNTacDebxpq2ayPk=;
+ b=zy7JI9OBbmKHVmTKVnWN5D+eAwUIwzJMor3MP3kYnjtE9qfoeMBVikE1fsvrO0omyL5AihCmI
+ 2U1jHW7CtA6Cx+nlT8XSDuZVmFViFDA/S/1DkcNGAg+mbXNp+1HLSxo
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Skipped tests reported by kselftest.h use a different format than KTAP,
-there is no explicit test name. Normally the test name is part of the
-free-form string after the SKIP keyword:
+The upcoming kunit UAPI framework will run userspace executables as part of
+kunit. These may use the LSX or LASX instructions.
 
-	ok 3 # SKIP test: some reason
-
-Extend the parser to handle those correctly. Use the free-form string as
-test name instead.
+Make sure the kunit kernel can handle these instructions.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 Reviewed-by: David Gow <davidgow@google.com>
 ---
- tools/testing/kunit/kunit_parser.py                             | 8 +++++---
- tools/testing/kunit/test_data/test_is_test_passed-kselftest.log | 3 ++-
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ tools/testing/kunit/qemu_configs/loongarch.py | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/kunit/kunit_parser.py b/tools/testing/kunit/kunit_parser.py
-index 2478beb28fc3db825855ad46200340e884da7df1..4599d23c79b79f0e219d655c7053c8c3b34f8152 100644
---- a/tools/testing/kunit/kunit_parser.py
-+++ b/tools/testing/kunit/kunit_parser.py
-@@ -352,9 +352,9 @@ def parse_test_plan(lines: LineStream, test: Test) -> bool:
- 	lines.pop()
- 	return True
- 
--TEST_RESULT = re.compile(r'^\s*(ok|not ok) ([0-9]+) (- )?([^#]*)( # .*)?$')
-+TEST_RESULT = re.compile(r'^\s*(ok|not ok) ([0-9]+)? ?(- )?([^#]*)( # .*)?$')
- 
--TEST_RESULT_SKIP = re.compile(r'^\s*(ok|not ok) ([0-9]+) (- )?(.*) # SKIP(.*)$')
-+TEST_RESULT_SKIP = re.compile(r'^\s*(ok|not ok) ([0-9]+)? ?(- )?(.*) # SKIP ?(.*)$')
- 
- def peek_test_name_match(lines: LineStream, test: Test) -> bool:
- 	"""
-@@ -379,6 +379,8 @@ def peek_test_name_match(lines: LineStream, test: Test) -> bool:
- 	if not match:
- 		return False
- 	name = match.group(4)
-+	if not name:
-+		return False
- 	return name == test.name
- 
- def parse_test_result(lines: LineStream, test: Test,
-@@ -416,7 +418,7 @@ def parse_test_result(lines: LineStream, test: Test,
- 
- 	# Set name of test object
- 	if skip_match:
--		test.name = skip_match.group(4)
-+		test.name = skip_match.group(4) or skip_match.group(5)
- 	else:
- 		test.name = match.group(4)
- 
-diff --git a/tools/testing/kunit/test_data/test_is_test_passed-kselftest.log b/tools/testing/kunit/test_data/test_is_test_passed-kselftest.log
-index 65d3f27feaf22a3f47ed831c4c24f6f11c625a92..30d9ef18bcec177067288d5242771236f29b7d56 100644
---- a/tools/testing/kunit/test_data/test_is_test_passed-kselftest.log
-+++ b/tools/testing/kunit/test_data/test_is_test_passed-kselftest.log
-@@ -1,5 +1,5 @@
- TAP version 13
--1..2
-+1..3
- # selftests: membarrier: membarrier_test_single_thread
- # TAP version 13
- # 1..2
-@@ -12,3 +12,4 @@ ok 1 selftests: membarrier: membarrier_test_single_thread
- # ok 1 sys_membarrier available
- # ok 2 sys membarrier invalid command test: command = -1, flags = 0, errno = 22. Failed as expected
- ok 2 selftests: membarrier: membarrier_test_multi_thread
-+ok 3 # SKIP selftests: membarrier: membarrier_test_multi_thread
+diff --git a/tools/testing/kunit/qemu_configs/loongarch.py b/tools/testing/kunit/qemu_configs/loongarch.py
+index a92422967d1da9f1658ef1e80d0d7365ddbae307..1dba755284f11ffc94d8946105b0cfa49cb6f604 100644
+--- a/tools/testing/kunit/qemu_configs/loongarch.py
++++ b/tools/testing/kunit/qemu_configs/loongarch.py
+@@ -11,6 +11,8 @@ CONFIG_PVPANIC_PCI=y
+ CONFIG_SERIAL_8250=y
+ CONFIG_SERIAL_8250_CONSOLE=y
+ CONFIG_SERIAL_OF_PLATFORM=y
++CONFIG_CPU_HAS_LSX=y
++CONFIG_CPU_HAS_LASX=y
+ ''',
+ 			   qemu_arch='loongarch64',
+ 			   kernel_path='arch/loongarch/boot/vmlinux.elf',
 
 -- 
 2.50.0
