@@ -1,122 +1,368 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94C4B2CCC0
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15DB12CCC0;
+	Thu, 26 Jun 2025 16:38:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750955901; cv=none; b=rXTs41V+MwVNfExOuRfome01fA5BeE/BnzDfSdqFL/PRr5xgE5/0vm2DjdcuOW7/2xDY3rvi8S495ha8o7Ta4NMWKkunWJXLYN/nFdBqc38U3bVPkSzxdrsULsmjkvOqDnwH3DxngTconj6rwyd6ovuXONxj7LtQ9+PyL5BTaWY=
+	t=1750955911; cv=none; b=bk+wRh5R/wtXb3qxpAMht4H4GIYHrIGOiWgQbyJoNvyEszea44efvmUAmbeQx3ZwX1KQrjys3uiYwku7yEBTB+7Kf1HWt2lec4nIydQtWbV5+jjoAKtbSwdk8P13ojHfZS16j8XmACw443uQ0J82lDXneHDU4iRaQ6Cv48QPvPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750955901; c=relaxed/simple;
-	bh=otmGiPyRcsaRheCI210PDw5jFdN/YH8ewWhEyPAqHN8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mWxm5i5rGjjRWMpp6i3kqpnTWLoEZ0A9TAJPkPRzLMchR554qhOjew6+vKeuoAESxN6Z7Ve73R6ueZTi6ryNAB0ZN6vOAEll7pwjKbJWO0OeNoqlaS9hGsbZ4iEkHYZJVb1BEHSiYOK8BNZB6CRNPMwS9mzljj20QFPoOL0qwjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CxtsjcMA; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750955911; c=relaxed/simple;
+	bh=fbq5l2uaTOLxUk/YzB+CLQA+z/dACanNWFulxm/rV6s=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=BQl8pF6iABJkveTc8nc3vd3hUUSyJUU668cJb6p6iLq4AAOnBtVRaCVG4sPmVMsCjKrgRixErJNkiNCOTFAYb9ZzWnBkUc9OgFcHqpjy/DQMkaJFr7RPyOWhEtdIGZ3ehxWjM/R/ffxYS3b1FiX4iMpiTpZXcIP780JvE9eZJeQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dMV0l/1z; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CxtsjcMA"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q9nIa4019071
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:38:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	+ds5OIBbeNrEMt6KG9DFB3gNzCj+lz0ilvqEPiQA344=; b=CxtsjcMAZ006oS80
-	533AEL//NhGDYWiQFz+DwVSvXZ2NRcM4DbBX5KhjKD8atNKwTTw/88uDrqkrDQFq
-	CSRyzMfeiYRKQfJzhEGgqxPR3XJDACPMaXdCN/dAQ2Ofj4WWwJCD8P49lM2vyaNp
-	wH87FM3YdqpNDe+dn4ZlVIqLygRGdcRT57qzEC8OKaj1wBtuyYrsLLm2KEIPFjMQ
-	h8yOP72lw3VXNpDGYMhKhje0essOJkkLSqw/WP5D/rfM6fGARwnhJuyE/4wsAuAJ
-	DXIqfMHytujXUYPNbEmFOSdt8zKS6VGnUwBr49i3LelR7qQCkcLek7gz7zqSjSQR
-	ISeGFQ==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47ec26ec4k-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:38:18 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-237e6963f70so17105875ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:38:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750955898; x=1751560698;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+ds5OIBbeNrEMt6KG9DFB3gNzCj+lz0ilvqEPiQA344=;
-        b=Bmqg8GoS6nZZWh9mfuhhJOBigh6mvuqs1cKXzSpDgyI/qzd0YX2H0I+ijUIaOgvz91
-         2klcQg1oK0bp1wMHPF8v8Qdv8DWmC2Og2Gq5vvmUQpJ/ZT9MuMJVojtPc9BWIaUSbDAl
-         uoIcKPmj6TXbsgB2CcUSvTZwXiDdUmbDxkZezOwPxkiH9udDraSdcp2lT/atgbdqGecJ
-         SD1J8P60PiKSKt0LBt96mkDWoA+xvtPJTenVKbDPLWoyNk3+2kAj1Bn/yGjc2nKzCIGZ
-         BFfnQi/94vtaogkwp8xiO6NyY+AbYluo2dFMYLlosR2Qd7xkj8kIrqQPZJruB5+HjBpt
-         yuzg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZC8TrO9obdGnur/J0Gizpl7/w5AG7UaZSb3xyt2fyrrNW1U8IMeHILKjw3m3WmRT3KToloI7/tlO/KGg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCJMOWM5eegu9Hk1y9WzqNHY4iAI9PDxcrbhMIY4pkIH9XOZR1
-	2HQNJCPBzski1E2ChqboDYZwyugwEC3q2wV5MJXLsYDxBCbHWhh/iXgb7J9gWKBU43TQ8Yi34tv
-	ap46XK5hUdUN2MxKg5ki8mFu4pvI3HL4yrN2AJj5dSyfkJ6F607hR/GYy9eO+ksSvluA=
-X-Gm-Gg: ASbGncsgjKmDSeTVmhofndhrjQXPd3AS6wTSUtYxO4azUDB7vcKgY5s07dJLL9rs1M7
-	uCTqWPtOkERP3OLeytTDD5srOr7IVghFy5+0dhI7dZ3PTj/T4JVRQV9egToEQpchXRzEK0dVgYM
-	xxUh6Sk1la1WxtDU9xZUrNAhL6htl110/NwQAPPPRdqmqDV7YZ9pl/vW8S+K7l2DOeypx6gTwCk
-	rgTzB9WIizniFO0Fxb6wZge6zmYiN/NCRYCk/wXvAtHNb1atFxAcLc3BscH8ulGEYphliFNQbLL
-	xwmxtSoWQFZ77f6LGNxs478hIA9V4e+j8Zfe+i4c8Srw6oSgJ/MSXCnA+K49EYFkPNt6rwI=
-X-Received: by 2002:a17:903:2985:b0:224:24d3:6103 with SMTP id d9443c01a7336-23abe462f3bmr5850485ad.35.1750955897887;
-        Thu, 26 Jun 2025 09:38:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEHTg5bU2RCynjfPOJov4HiYgc9/oR7gcvFmbmqvfPAlowElQPIS12aIx/PZTAcUpaQOcITUA==
-X-Received: by 2002:a17:903:2985:b0:224:24d3:6103 with SMTP id d9443c01a7336-23abe462f3bmr5850115ad.35.1750955897475;
-        Thu, 26 Jun 2025 09:38:17 -0700 (PDT)
-Received: from [192.168.225.142] ([157.49.255.122])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23abe3daf4csm2003995ad.112.2025.06.26.09.38.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 09:38:17 -0700 (PDT)
-Message-ID: <8625ddf5-d362-cffa-efd0-0ada8e547700@oss.qualcomm.com>
-Date: Thu, 26 Jun 2025 22:08:12 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dMV0l/1z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750955910; x=1782491910;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=fbq5l2uaTOLxUk/YzB+CLQA+z/dACanNWFulxm/rV6s=;
+  b=dMV0l/1z5tn98U0AftJe9fQElMt4LCIirVaxsiPdd2aPnV5BvrHokRuF
+   MPzWxI04364KKrqC1Lcf4eIvIsIaofmu1qk4z7atuKVOD6vdqE2rpqJnf
+   ISYcXCrAuDhXu5R6sccq5cTA0biA28RcEHLWAUjWr2bjW7CY9qPYLGgjd
+   3kQEudV33Yyp7I+AdjW1lyNdaSZDkaYtSLxNzhj3mMCW254XYt3CCt1pR
+   DOPcU5Xpd6+84X5mt6C/IR32e4+EDgzzZAlE4MlMEz5psIH6iW6J5cbsC
+   OV4tSxP3BZdsKInPKTJPEYhuPpn2W6W/iFrJqaUOH+HjxAxXexq7M9Wyk
+   A==;
+X-CSE-ConnectionGUID: lAphZBrNQHieScwLsva0og==
+X-CSE-MsgGUID: wOu9cCf1TsOcfKPdAv01ww==
+X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="64615174"
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="64615174"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:38:29 -0700
+X-CSE-ConnectionGUID: sWMr28zQRnGSHe/S+AS7cA==
+X-CSE-MsgGUID: qoy8WyjdTuuMYgvhC6bAIg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
+   d="scan'208";a="152740197"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.144])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 09:38:26 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Thu, 26 Jun 2025 19:38:22 +0300 (EEST)
+To: Xi Pardee <xi.pardee@linux.intel.com>
+cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com, 
+    Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org, 
+    LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2 4/5] platform/x86:intel/pmc: Show substate requirement
+ for S0ix blockers
+In-Reply-To: <20250625063145.624585-5-xi.pardee@linux.intel.com>
+Message-ID: <6f43709c-dfcb-059e-758a-be6a56538724@linux.intel.com>
+References: <20250625063145.624585-1-xi.pardee@linux.intel.com> <20250625063145.624585-5-xi.pardee@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH][next] wifi: ath11k: Make read-only const array svc_id
- static const
-Content-Language: en-US
-To: Colin Ian King <colin.i.king@gmail.com>,
-        Jeff Johnson <jjohnson@kernel.org>, linux-wireless@vger.kernel.org,
-        ath11k@lists.infradead.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250619082010.1834109-1-colin.i.king@gmail.com>
-From: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
-In-Reply-To: <20250619082010.1834109-1-colin.i.king@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDE0MSBTYWx0ZWRfX/EsTw24Cpf5i
- LJdWyU8Jdulv/fXUir5S+y39V64dXUu+gaZ8w3k5x7WuUL72snBfQIeOFQ3OxC6F2QZzopL/cd6
- kp959giCy9wf6lTmyGTIu5urll50eePThvpSFwInde4sqTf0rHwgXhM23tkMETAXRDjxhwfXMwM
- KDHC8DDCoAt4L7rBfOs4S1lpwJ7qBd1LPCca7xxl4jTEuP1/fdWNwerXMIoovBQhYQ92ubXxITs
- E5PDWs4xWyR5RkUara+Sm9HVSTWkJPN4ve501mQDJ0IEVb8n7VbLyn7EQyT6pkBLFkofVFypRri
- GTtLfCrq9ZA0TfCXhhyeoMEhIegjm8WfgRskfljX+JEtclulxLHkdV5XnvkDHuVMiyTkZMboKyd
- +8NdVjuGugpiITsCIrNgxgZ/NS8EqTIMS4r8AMMgjzo2+5uMEnAoCInIJHB/CDeVAHnSm7mQ
-X-Authority-Analysis: v=2.4 cv=XPQwSRhE c=1 sm=1 tr=0 ts=685d777a cx=c_pps
- a=cmESyDAEBpBGqyK7t0alAg==:117 a=/xG1ZwzdjF5UbGEDupzz2A==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8
- a=8b412UgErZc1wa3ZSjAA:9 a=QEXdDO2ut3YA:10 a=LXDWoPVop_EA:10
- a=1OuFwYUASf3TG4hYMiVC:22
-X-Proofpoint-GUID: RtrzpZmGs1XJQSC8xcXBOqWQzMhxnDWm
-X-Proofpoint-ORIG-GUID: RtrzpZmGs1XJQSC8xcXBOqWQzMhxnDWm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_06,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 suspectscore=0 mlxscore=0
- spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=802 bulkscore=0
- priorityscore=1501 adultscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506260141
+Content-Type: text/plain; charset=US-ASCII
 
+On Tue, 24 Jun 2025, Xi Pardee wrote:
 
+> Add support to read and show S0ix blocker substate requirements.
+> Starting from Panther Lake, substate requirement data is provided
+> based on S0ix blockers instead of all low power mode requirements.
+> For platforms that support this new feature, add support to display
+> substate requirements based on S0ix blockers.
 
-On 6/19/2025 1:50 PM, Colin Ian King wrote:
-> Don't populate the read-only array svc_id on the stack at run time,
-> instead make it static const.
+Empty line.
+
+> Change the "substate_requirements" attribute of Intel PMC Core
+> driver to show the substate requirements for each S0ix blocker
+> and the corresponding S0ix blocker value.
 > 
-> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
+> ---
+>  drivers/platform/x86/intel/pmc/arl.c  |   2 +
+>  drivers/platform/x86/intel/pmc/core.c | 111 ++++++++++++++++++++++++--
+>  drivers/platform/x86/intel/pmc/core.h |  12 +++
+>  drivers/platform/x86/intel/pmc/lnl.c  |   1 +
+>  drivers/platform/x86/intel/pmc/mtl.c  |   1 +
+>  5 files changed, 121 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel/pmc/arl.c b/drivers/platform/x86/intel/pmc/arl.c
+> index 9d66d65e75779..1852876be234f 100644
+> --- a/drivers/platform/x86/intel/pmc/arl.c
+> +++ b/drivers/platform/x86/intel/pmc/arl.c
+> @@ -722,6 +722,7 @@ static int arl_h_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_
+>  
+>  struct pmc_dev_info arl_pmc_dev = {
+>  	.pci_func = 0,
+> +	.telem_info = SUB_REQ_LPM,
+>  	.dmu_guid = ARL_PMT_DMU_GUID,
+>  	.regmap_list = arl_pmc_info_list,
+>  	.map = &arl_socs_reg_map,
+> @@ -732,6 +733,7 @@ struct pmc_dev_info arl_pmc_dev = {
+>  
+>  struct pmc_dev_info arl_h_pmc_dev = {
+>  	.pci_func = 2,
+> +	.telem_info = SUB_REQ_LPM,
+>  	.dmu_guid = ARL_PMT_DMU_GUID,
+>  	.regmap_list = arl_pmc_info_list,
+>  	.map = &mtl_socm_reg_map,
+> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
+> index 47cc5120e7dd6..e9d281b064462 100644
+> --- a/drivers/platform/x86/intel/pmc/core.c
+> +++ b/drivers/platform/x86/intel/pmc/core.c
+> @@ -844,6 +844,56 @@ static void pmc_core_substate_req_header_show(struct seq_file *s, int pmc_index,
+>  		seq_printf(s, " %9s |\n", name);
+>  }
+>  
+> +static int pmc_core_substate_blk_req_show(struct seq_file *s, void *unused)
+> +{
+> +	struct pmc_dev *pmcdev = s->private;
+> +	unsigned int pmc_index;
+> +	u32 *blk_sub_req_regs;
 
-Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+Why is this here and the other variable in the inner block?
+
+> +
+> +	for (pmc_index = 0; pmc_index < ARRAY_SIZE(pmcdev->pmcs); pmc_index++) {
+> +		const struct pmc_bit_map **maps;
+> +		unsigned int arr_size, r_idx;
+> +		u32 offset, counter;
+> +		struct pmc *pmc;
+> +
+> +		pmc = pmcdev->pmcs[pmc_index];
+> +		if (!pmc || !pmc->blk_sub_req_regs)
+> +			continue;
+> +
+> +		blk_sub_req_regs = pmc->blk_sub_req_regs;
+> +		maps = pmc->map->s0ix_blocker_maps;
+> +		offset = pmc->map->s0ix_blocker_offset;
+> +		arr_size = pmc_core_lpm_get_arr_size(maps);
+> +
+> +		/* Display the header */
+> +		pmc_core_substate_req_header_show(s, pmc_index, "Value");
+> +
+> +		for (r_idx = 0; r_idx < arr_size; r_idx++) {
+> +			const struct pmc_bit_map *map;
+> +
+> +			for (map = maps[r_idx]; map->name; map++) {
+> +				int mode;
+> +
+> +				if (!map->blk)
+> +					continue;
+> +
+> +				counter = pmc_core_reg_read(pmc, offset);
+> +				seq_printf(s, "pmc%d: %34s |", pmc_index, map->name);
+> +				pmc_for_each_mode(mode, pmcdev) {
+> +					bool required = *blk_sub_req_regs & BIT(mode);
+> +
+> +					seq_printf(s, " %9s |", required ? "Required" : " ");
+> +				}
+> +				seq_printf(s, " %9d |\n", counter);
+> +				offset += map->blk * S0IX_BLK_SIZE;
+> +				blk_sub_req_regs++;
+> +			}
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(pmc_core_substate_blk_req);
+> +
+>  static int pmc_core_substate_req_regs_show(struct seq_file *s, void *unused)
+>  {
+>  	struct pmc_dev *pmcdev = s->private;
+> @@ -1335,7 +1385,10 @@ static void pmc_core_dbgfs_register(struct pmc_dev *pmcdev)
+>  		debugfs_create_file("substate_requirements", 0444,
+>  				    pmcdev->dbgfs_dir, pmcdev,
+>  				    &pmc_core_substate_req_regs_fops);
+> -	}
+> +	} else if (primary_pmc->blk_sub_req_regs)
+> +		debugfs_create_file("substate_requirements", 0444,
+> +				    pmcdev->dbgfs_dir, pmcdev,
+> +				    &pmc_core_substate_blk_req_fops);
+>
+>  	if (primary_pmc->map->pson_residency_offset && pmc_core_is_pson_residency_enabled(pmcdev)) {
+>  		debugfs_create_file("pson_residency_usec", 0444,
+> @@ -1441,7 +1494,38 @@ static int pmc_core_pmt_get_lpm_req(struct pmc_dev *pmcdev, struct pmc *pmc,
+>  	return ret;
+>  }
+>  
+> -static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func)
+> +static int pmc_core_pmt_get_blk_sub_req(struct pmc_dev *pmcdev, struct pmc *pmc,
+> +					struct telem_endpoint *ep)
+> +{
+> +	u32 num_blocker, sample_id;
+> +	unsigned int index;
+> +	u32 *req_offset;
+> +	int ret;
+> +
+> +	num_blocker = pmc->map->num_s0ix_blocker;
+> +	sample_id = pmc->map->blocker_req_offset;
+> +
+> +	pmc->blk_sub_req_regs = devm_kcalloc(&pmcdev->pdev->dev,
+> +					 num_blocker, sizeof(u32),
+> +					 GFP_KERNEL);
+
+Correct alignment.
+
+I guess you want to keep those two args on the same line as this would fit 
+on 2 lines.
+
+> +	if (!pmc->blk_sub_req_regs)
+> +		return -ENOMEM;
+> +
+> +	req_offset = pmc->blk_sub_req_regs;
+> +	for (index = 0; index < num_blocker; index++) {
+> +		ret = pmt_telem_read32(ep, sample_id, req_offset, 1);
+> +		if (ret) {
+> +			dev_err(&pmcdev->pdev->dev,
+> +				"couldn't read Low Power Mode requirements: %d\n", ret);
+> +			return ret;
+> +		}
+> +		sample_id++;
+> +		req_offset++;
+> +	}
+> +	return 0;
+> +}
+> +
+> +static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func, unsigned int telem_info)
+>  {
+>  	struct pci_dev *pcidev __free(pci_dev_put) = NULL;
+>  	struct telem_endpoint *ep;
+> @@ -1470,13 +1554,26 @@ static int pmc_core_get_telem_info(struct pmc_dev *pmcdev, int func)
+>  			return -EPROBE_DEFER;
+>  		}
+>  
+> -		ret = pmc_core_pmt_get_lpm_req(pmcdev, pmc, ep);
+> +		if (telem_info & SUB_REQ_LPM) {
+> +			ret = pmc_core_pmt_get_lpm_req(pmcdev, pmc, ep);
+> +			if (ret)
+> +				goto unregister_ep;
+> +		}
+> +
+> +		if (telem_info & SUB_REQ_BLK) {
+
+These two are mutually exclusive? I'm really wondering cuold pointers be 
+used instead to avoid these ifs here and in debugfs fops selection.
+
+> +			ret = pmc_core_pmt_get_blk_sub_req(pmcdev, pmc, ep);
+> +			if (ret)
+> +				goto unregister_ep;
+> +		}
+> +
+>  		pmt_telem_unregister_endpoint(ep);
+> -		if (ret)
+> -			return ret;
+>  	}
+>  
+>  	return 0;
+> +
+> +unregister_ep:
+> +	pmt_telem_unregister_endpoint(ep);
+> +	return ret;
+>  }
+>  
+>  static const struct pmc_reg_map *pmc_core_find_regmap(struct pmc_info *list, u16 devid)
+> @@ -1585,7 +1682,9 @@ int generic_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_info)
+>  		pmc_core_punit_pmt_init(pmcdev, pmc_dev_info->dmu_guid);
+>  
+>  	if (ssram) {
+> -		ret = pmc_core_get_telem_info(pmcdev, pmc_dev_info->pci_func);
+> +		ret = pmc_core_get_telem_info(pmcdev,
+> +					      pmc_dev_info->pci_func,
+> +					      pmc_dev_info->telem_info);
+>  		if (ret)
+>  			goto unmap_regbase;
+>  	}
+> diff --git a/drivers/platform/x86/intel/pmc/core.h b/drivers/platform/x86/intel/pmc/core.h
+> index 4a94a4ee031e6..d8c7b28493055 100644
+> --- a/drivers/platform/x86/intel/pmc/core.h
+> +++ b/drivers/platform/x86/intel/pmc/core.h
+> @@ -29,6 +29,10 @@ struct telem_endpoint;
+>  #define LPM_REG_COUNT		28
+>  #define LPM_MODE_OFFSET		1
+>  
+> +/* Telemetry Endpoint Info bits */
+> +#define SUB_REQ_LPM		0x01	/* Substate requirement for low power mode requirements */
+> +#define SUB_REQ_BLK		0x02	/* Substate requirement for S0ix blockers */
+> +
+>  /* Sunrise Point Power Management Controller PCI Device ID */
+>  #define SPT_PMC_PCI_DEVICE_ID			0x9d21
+>  #define SPT_PMC_BASE_ADDR_OFFSET		0x48
+> @@ -344,6 +348,8 @@ struct pmc_bit_map {
+>   * @pm_read_disable_bit: Bit index to read PMC_READ_DISABLE
+>   * @slps0_dbg_offset:	PWRMBASE offset to SLP_S0_DEBUG_REG*
+>   * @s0ix_blocker_offset PWRMBASE offset to S0ix blocker counter
+> + * @num_s0ix_blocker:	Number of S0ix blockers
+> + * @blocker_req_offset:	Telemetry offset to S0ix blocker low power mode substate requirement table
+>   *
+>   * Each PCH has unique set of register offsets and bit indexes. This structure
+>   * captures them to have a common implementation.
+> @@ -369,6 +375,8 @@ struct pmc_reg_map {
+>  	const u32 ltr_ignore_max;
+>  	const u32 pm_vric1_offset;
+>  	const u32 s0ix_blocker_offset;
+> +	const u32 num_s0ix_blocker;
+> +	const u32 blocker_req_offset;
+>  	/* Low Power Mode registers */
+>  	const int lpm_num_maps;
+>  	const int lpm_num_modes;
+> @@ -404,6 +412,7 @@ struct pmc_info {
+>   * @map:		pointer to pmc_reg_map struct that contains platform
+>   *			specific attributes
+>   * @lpm_req_regs:	List of substate requirements
+> + * @blk_sub_req_reqs:	List of registers showing substate requirements for S0ix blockers
+>   * @ltr_ign:		Holds LTR ignore data while suspended
+>   *
+>   * pmc contains info about one power management controller device.
+> @@ -413,6 +422,7 @@ struct pmc {
+>  	void __iomem *regbase;
+>  	const struct pmc_reg_map *map;
+>  	u32 *lpm_req_regs;
+> +	u32 *blk_sub_req_regs;
+>  	u32 ltr_ign;
+>  };
+>  
+> @@ -468,6 +478,7 @@ enum pmc_index {
+>  /**
+>   * struct pmc_dev_info - Structure to keep PMC device info
+>   * @pci_func:		Function number of the primary PMC
+> + * @telem_info:		Bitmask to indicate which telemetry info is available
+>   * @dmu_guid:		Die Management Unit GUID
+>   * @regmap_list:	Pointer to a list of pmc_info structure that could be
+>   *			available for the platform. When set, this field implies
+> @@ -480,6 +491,7 @@ enum pmc_index {
+>   */
+>  struct pmc_dev_info {
+>  	u8 pci_func;
+> +	u8 telem_info;
+>  	u32 dmu_guid;
+>  	struct pmc_info *regmap_list;
+>  	const struct pmc_reg_map *map;
+> diff --git a/drivers/platform/x86/intel/pmc/lnl.c b/drivers/platform/x86/intel/pmc/lnl.c
+> index e08a77c778c2c..ec9e79f6cd913 100644
+> --- a/drivers/platform/x86/intel/pmc/lnl.c
+> +++ b/drivers/platform/x86/intel/pmc/lnl.c
+> @@ -572,6 +572,7 @@ static int lnl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_in
+>  
+>  struct pmc_dev_info lnl_pmc_dev = {
+>  	.pci_func = 2,
+> +	.telem_info = SUB_REQ_LPM,
+>  	.regmap_list = lnl_pmc_info_list,
+>  	.map = &lnl_socm_reg_map,
+>  	.suspend = cnl_suspend,
+> diff --git a/drivers/platform/x86/intel/pmc/mtl.c b/drivers/platform/x86/intel/pmc/mtl.c
+> index faa13a7ee688f..c58a871e2e0df 100644
+> --- a/drivers/platform/x86/intel/pmc/mtl.c
+> +++ b/drivers/platform/x86/intel/pmc/mtl.c
+> @@ -994,6 +994,7 @@ static int mtl_core_init(struct pmc_dev *pmcdev, struct pmc_dev_info *pmc_dev_in
+>  
+>  struct pmc_dev_info mtl_pmc_dev = {
+>  	.pci_func = 2,
+> +	.telem_info = SUB_REQ_LPM,
+>  	.dmu_guid = MTL_PMT_DMU_GUID,
+>  	.regmap_list = mtl_pmc_info_list,
+>  	.map = &mtl_socm_reg_map,
+> 
+
+-- 
+ i.
+
