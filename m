@@ -1,39 +1,67 @@
-Received: from pegase1.c-s.fr (pegase1.c-s.fr [93.17.236.30])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65171218599;
-	Thu, 26 Jun 2025 06:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.236.30
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AC7E84D08;
+	Thu, 26 Jun 2025 06:22:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750918842; cv=none; b=LyMNtIqXkD1URTwnEanUvhQTrgavtahRD+Gx8C4n97L4fI9FOVxxyVENg13bdd34RET/k+Z+kNJx7jsiVZuf1gqnIQEp/eE/9ifrb2oiaJYLpQATm+cM5DQc3lD2tnQ99RfiSyTrTnESvGQZ7awQllbibXViH3YOoGahEzNwIXE=
+	t=1750918950; cv=none; b=hfv/xOaZr4duHbRLXbhV0OE56A9ari6exGNv3q582p3A++ocDeVy1U2nB3zlBPA02cmSIOIfu+blqDw07V/eSemFd11y5/BPbkQOO5ihOY3mC11sABhXsd9bi8hTkRp77aVoPX2N3zi/hL2+QDE3NYXHuh7GKYogyJNxWocCNUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750918842; c=relaxed/simple;
-	bh=kmajPGloApxRKFaKW/UmyqYJ+75L1kgD7xbg9kNYje8=;
+	s=arc-20240116; t=1750918950; c=relaxed/simple;
+	bh=WkPZPo3daUaXRErnYhHy9ValI38EN3AVQHNhMtFZnbY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eP6Q2QAqqHi55ktRZmVSitmrsNs1JhtIOc5s+AnUUaVA+QL2ax88BnudWfb0K0Mi3lFGzrWD8pmWkXh6laO+MiYL/Geeyqq+qMIP0CayOiWPd/AIk1EHLHGJMozHSprOlXVKsIAPeBsAY+YjjiaCahHG0P2bUmtfika2r3gSmYI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.236.30
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [192.168.12.233])
-	by localhost (Postfix) with ESMTP id 4bSSbw1jqdz9vG4;
-	Thu, 26 Jun 2025 07:56:12 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-	by localhost (pegase1.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id q0xrpHJGhTt6; Thu, 26 Jun 2025 07:56:12 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase1.c-s.fr (Postfix) with ESMTP id 4bSSbw0vypz9vFr;
-	Thu, 26 Jun 2025 07:56:12 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 157358B7B7;
-	Thu, 26 Jun 2025 07:56:12 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id KbYfiNafM5QK; Thu, 26 Jun 2025 07:56:11 +0200 (CEST)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 13B658B7A7;
-	Thu, 26 Jun 2025 07:56:11 +0200 (CEST)
-Message-ID: <83fb5685-a206-477c-bff3-03e0ebf4c40c@csgroup.eu>
-Date: Thu, 26 Jun 2025 07:56:10 +0200
+	 In-Reply-To:Content-Type; b=Um3tAI4YrKIzrhhKIlo+SCRaVKFf6zAcEhaXvLv6zt/8qCsqldGXmTPy+RAf8K2msEUMMzhl/I0OVmKmQR7oTbsYEqPjMFd9bNsma56QXTeRE+9pjMIldM33d9O/Cttm/PoITZE7vXgDiujTjXoQL0wNOaNnFssHezCvOVOcsg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=M2WqySIx; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="M2WqySIx"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q4B5bm031140;
+	Thu, 26 Jun 2025 06:22:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=Wdfnoc
+	0htXViaYtOXgTxlOPt/zSW2VKAxS55sMD+Oc8=; b=M2WqySIxQCyN+8AM1iOsir
+	rmiQYCH+MBdOD0lQmIiNwope5LukSXncFje/ej0GeL2TWK+QkG7Ajh9dZVnikJSF
+	D06iSH5jZiYjUEfB9RYIckGEWdY9VfiuTIvc2zYOxrihlNNFM3XXIyWHl6S3cDYq
+	0Iw1mBbXcq3vX2Mf7D5mQ+xQ2eKwbQjxkaQ2fw1Mi5IOE0VQP6e/AnFs/62hPZpS
+	DQzIhUUIeORWKPN7lSj6IepB9nkkKD4zXnFQ5UxSfuP1Wp6HTcVmRW9eICuCDCWW
+	D2p8PAJw3VakiBCnu2A8cuPERpyUrUPilixWQGIA+lO6GARcIRWD9FA1SL7YK8hg
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dk6446ph-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 06:22:15 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 55Q6LDOm025786;
+	Thu, 26 Jun 2025 06:22:15 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 47dk6446pd-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 06:22:14 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q3Z0v2014988;
+	Thu, 26 Jun 2025 06:22:14 GMT
+Received: from smtprelay07.wdc07v.mail.ibm.com ([172.16.1.74])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 47e72twpc0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 26 Jun 2025 06:22:14 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay07.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 55Q6MD5Q29360894
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 26 Jun 2025 06:22:13 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E76935820B;
+	Thu, 26 Jun 2025 06:22:12 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1360F581FE;
+	Thu, 26 Jun 2025 06:22:09 +0000 (GMT)
+Received: from [9.204.205.94] (unknown [9.204.205.94])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 26 Jun 2025 06:22:08 +0000 (GMT)
+Message-ID: <cb93bc0a-5412-46fd-8fe1-3e13b5b08cca@linux.ibm.com>
+Date: Thu, 26 Jun 2025 11:52:07 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,141 +69,185 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/5] powerpc: Implement masked user access
-To: David Laight <david.laight.linux@gmail.com>,
- Segher Boessenkool <segher@kernel.crashing.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin
- <npiggin@gmail.com>, Naveen N Rao <naveen@kernel.org>,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Alexander Viro <viro@zeniv.linux.org.uk>,
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
- Davidlohr Bueso <dave@stgolabs.net>, Andre Almeida <andrealmeid@igalia.com>,
- Andrew Morton <akpm@linux-foundation.org>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
-References: <cover.1750585239.git.christophe.leroy@csgroup.eu>
- <20250622172043.3fb0e54c@pumpkin>
- <ff2662ca-3b86-425b-97f8-3883f1018e83@csgroup.eu>
- <20250624131714.GG17294@gate.crashing.org> <20250624175001.148a768f@pumpkin>
- <20250624182505.GH17294@gate.crashing.org> <20250624220816.078f960d@pumpkin>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250624220816.078f960d@pumpkin>
+Subject: Re: [PATCH] coredump: reduce stack usage in vfs_coredump()
+Content-Language: en-GB
+To: Arnd Bergmann <arnd@arndb.de>,
+        Marek Szyprowski
+ <m.szyprowski@samsung.com>,
+        Arnd Bergmann <arnd@kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>
+Cc: Jan Kara <jack@suse.cz>, Alexander Mikhalitsyn <alexander@mihalicyn.com>,
+        Jann Horn <jannh@google.com>, Luca Boccassi <luca.boccassi@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Roman Kisel <romank@linux.microsoft.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250620112105.3396149-1-arnd@kernel.org>
+ <404dfe9a-1f4f-4776-863a-d8bbe08335e2@samsung.com>
+ <CGME20250625115426eucas1p17398cfcd215befcd3eafe0cac44b33a7@eucas1p1.samsung.com>
+ <8f080dc3-ef13-4d9a-8964-0c2b3395072e@samsung.com>
+ <cb0c926f-15be-4400-a9b9-0122a6238fea@app.fastmail.com>
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+In-Reply-To: <cb0c926f-15be-4400-a9b9-0122a6238fea@app.fastmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA0OSBTYWx0ZWRfX2FZfc54LZBce 4XnnaQHK19tgKjD6W6SVblrKemCIEZN4C5gp0h4TfntSUxD2Tq9H2Bnt95BNvpUiKvQ+ycdfyVZ yO/ro61tqytKs1ZOHVKBe0xadcrUxQWlNj8WzlP4LCmybY7PJ7WTAHpZ40yeAGye9kQUbtZMGsR
+ QIxurCSs3rF2bq13qK1JSuNtrGg2agQp3Pjs+0AOJfi+cUo6CysJaQ0lAVZIggmftwTTg6f42Fn x6jAWu3BbS2Jb9gpfGjQyX/Mg5/olqxF4mSU5rNFRj/aspJMlE8nCccqo6+cao3ZSuttSAZiUw/ FL8Z6/Y/1XU8hxwx7KoXcqLr5SAavoiuNYHUEwkDWkyvSLcxsKs+0zzg4ecNsUD39QVHFDTI1kY
+ YWWOiTRA2hhuT6Daf9bFxGPnU/QExJJzvy+tNjc2Y3aTs3nNI4sykPSHK1T9vVW9koglkEWN
+X-Proofpoint-ORIG-GUID: bUcB70Q8gqodglWC38c8gomlNFJWYJrW
+X-Proofpoint-GUID: t9d9wTEmMFnHZVLxTPySLD3U5-kjZE5u
+X-Authority-Analysis: v=2.4 cv=BfvY0qt2 c=1 sm=1 tr=0 ts=685ce717 cx=c_pps a=bLidbwmWQ0KltjZqbj+ezA==:117 a=bLidbwmWQ0KltjZqbj+ezA==:17 a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=VnNF1IyMAAAA:8 a=oBfdlqT_uavYyDoXnq8A:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_03,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1011 suspectscore=0 adultscore=0 spamscore=0
+ impostorscore=0 mlxlogscore=585 malwarescore=0 phishscore=0 bulkscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2505280000
+ definitions=main-2506260049
 
 
-
-Le 24/06/2025 à 23:08, David Laight a écrit :
-> On Tue, 24 Jun 2025 13:25:05 -0500
-> Segher Boessenkool <segher@kernel.crashing.org> wrote:
-> 
->>>> isel (which is base PowerPC, not something "e500" only) is a
->>>> computational instruction, it copies one of two registers to a third,
->>>> which of the two is decided by any bit in the condition register.
->>>
->>> Does that mean it could be used for all the ppc cpu variants?
+On 25/06/25 6:59 pm, Arnd Bergmann wrote:
+> On Wed, Jun 25, 2025, at 13:54, Marek Szyprowski wrote:
+>> On 25.06.2025 13:41, Marek Szyprowski wrote:
+>>> This change appears in today's linux-next (next-20250625) as commit
+>>> fb82645d3f72 ("coredump: reduce stack usage in vfs_coredump()"). In my
+>>> tests I found that it causes a kernel oops on some of my ARM 32bit
+>>> Exynos based boards. This is really strange, because I don't see any
+>>> obvious problem in this patch. Reverting $subject on top of linux-next
+>>> hides/fixes the oops. I suspect some kind of use-after-free issue, but
+>>> I cannot point anything related. Here is the kernel log from one of
+>>> the affected boards (I've intentionally kept the register and stack
+>>> dumps):
+>> I've just checked once again and found the source of the issue.
+>> vfs_coredump() calls coredump_cleanup(), which calls coredump_finish(),
+>> which performs the following dereference:
 >>
->> No, only things that implement architecture version of 2.03 or later.
->> That is from 2006, so essentially everything that is still made
->> implements it :-)
+>> next = current->signal->core_state->dumper.next
 >>
->> But ancient things do not.  Both 970 (Apple G5) and Cell BE do not yet
->> have it (they are ISA 2.01 and 2.02 respectively).  And the older p5's
->> do not have it yet either, but the newer ones do.
-
-For book3s64, GCC only use isel with -mcpu=power9 or -mcpu=power10
-
->>
->> And all classic PowerPC is ISA 1.xx of course.  Medieval CPUs :-)
-> 
-> That make more sense than the list in patch 5/5.
-
-Sorry for the ambiguity. In patch 5/5 I was addressing only powerpc/32, 
-and as far as I know the only powerpc/32 supported by Linux that has 
-isel is the 85xx which has an e500 core.
-
-For powerpc/64 we have less constraint than on powerpc32:
-- Kernel memory starts at 0xc000000000000000
-- User memory stops at 0x0010000000000000
-
-So we can easily use 0x8000000000000000 as demarcation line, which 
-allows a 3 instructions sequence:
-
-	sradi	r9,r3,63   => shirt right algebric: r9 = 0 when r3 >= 0; r9 = -1 
-when r3 < 0
-	andc	r3,r3,r9   => and with complement: r3 unchanged when r9 = 0, r3 = 
-0 when r9 = -1
-	rldimi	r3,r9,0,1  => Rotate left and mask insert: Insert highest bit of 
-r9 into r3
-
-Whereas using isel requires a 4 instructions sequence:
-
-	li	r9, 1		=> load immediate: r9 = 1
-	rotldi	r9, r9, 63	=> rotate left: r9 = 0x8000000000000000
-	cmpld	r3, r9		=> compare logically
-	iselgt	r3, r9, r3	=> integer select greater than: select r3 when result 
-of above compare is <= ; select r9 when result of compare is >
-
-> 
->>
->>>> But sure, seen from very far off both isel and cmove can be used to
->>>> implement the ternary operator ("?:"), are similar in that way :-)
->>>
->>> Which is exactly what you want to avoid speculation.
->>
->> There are cheaper / simpler / more effective / better ways to get that,
->> but sure, everything is better than a conditional branch, always :-)
-> 
-> Everything except a TLB miss :-)
-> 
-> And for access_ok() avoiding the conditional is a good enough reason
-> to use a 'conditional move' instruction.
-> Avoiding speculation is actually free.
-> 
-
-And on CPUs that are not affected by Spectre and Meltdown like powerpc 
-8xx or powerpc 603, masking the pointer is still worth it as it 
-generates better code, even if the masking involves branching.
-
-That's the reason why I did:
-- e500 (affected by Spectre v1) ==> Use isel ==> 3 instructions sequence:
-
-	lis	r9, TASK_SIZE@h	=> load immediate shifted => r9 = (TASK_SIZE >> 16) 
-<< 16
-	cmplw	r3, r9		=> compare addr with TASK_SIZE
-	iselgt	r3, r9, r3	=> addr = TASK_SIZE when addr > TASK_SIZE; addr = 
-addr when <= TASK_SIZE
-
-For others:
-- If TASK_SIZE <= 0x80000000 and kernel >= 0x80000000 ==> 3 instructions 
-sequence similar to the 64 bits one above:
-
-	srawi	r9,r3,63
-	andc	r3,r3,r9
-	rlwimi	r3,r9,0,0,0
-
-- Otherwise, if speculation mitigation is required (e600), use the 
-6-instructions masking sequence (r3 contains the address to mask)
-
-	srwi	r9,r3,17	=> shift right: shift r3 by 17 to keep 15 bits (positive 
-16 bits)
-	subfic	r9,r9,22527	=> sub from immediate: r9 = (TASK_SIZE >> 17) - r9 
-=> r9 < 0 when r3 is greater
-	srawi	r9,r9,31	=> shift right algebric: r9 = 0 when r9 >= 0; r9 = -1 
-when r9 < 0
-	andis.	r10,r9,45056	=> and immediat shifted: r10 = r9 and upper part of 
-TASK_SIZE => r10 = TASK_SIZE when r3 > TASK_SIZE, r10 = 0 otherwise
-	andc	r3,r3,r9	=> and with complement: r3 is unchanged when r9 = 0 so 
-when r3 <= TASK_SIZE, r3 is cleared when r9 = -1 so when r3 > TASK_SIZE
-	or	r3,r3,r10	=> r3 = r3 | r10
+>> of the core_state assigned in zap_threads() called from coredump_wait().
+>> It looks that core_state cannot be moved into coredump_wait() without
+>> refactoring/cleaning this first.
 
 
-- If no speculation mitigation is required, let GCC do as it wants
+IBM CI has also reported the similar crash, while running ./check 
+tests/generic/228 from xfstests. This issue is observed on both xfs and 
+ext4.
 
-List of affected CPUs is available here: 
-https://docs.nxp.com/bundle/GUID-805CC0EA-4001-47AD-86CD-4F340751F6B7/page/GUID-17B5D04F-6471-4EC6-BEB9-DE4D0AFA034A.html
+
+Traces:
+
+
+[28956.438544] run fstests generic/228 at 2025-06-26 01:02:28
+[28956.806452] coredump: 4746(sysctl): Unsafe core_pattern used with 
+fs.suid_dumpable=2: pipe handler or fully qualified core dump path 
+required. Set kernel.core_pattern before fs.suid_dumpable.
+[28956.809279] BUG: Unable to handle kernel data access at 
+0x3437342e65727d2f
+[28956.809287] Faulting instruction address: 0xc0000000010fe718
+[28956.809292] Oops: Kernel access of bad area, sig: 11 [#1]
+[28956.809297] LE PAGE_SIZE=64K MMU=Hash  SMP NR_CPUS=8192 NUMA pSeries
+[28956.809303] Modules linked in: loop nft_fib_inet nft_fib_ipv4 
+nft_fib_ipv6 nft_fib nft_reject_inet nf_reject_ipv4 nf_reject_ipv6 
+nft_reject nft_ct nft_chain_nat nf_nat bonding nf_conntrack 
+nf_defrag_ipv6 tls nf_defrag_ipv4 rfkill ip_set nf_tables nfnetlink 
+pseries_rng vmx_crypto xfs sr_mod cdrom sd_mod sg ibmvscsi ibmveth 
+scsi_transport_srp fuse
+[28956.809347] CPU: 25 UID: 0 PID: 4748 Comm: xfs_io Kdump: loaded Not 
+tainted 6.16.0-rc3-next-20250625 #1 VOLUNTARY
+[28956.809355] Hardware name: IBM,8375-42A POWER9 (architected) 0x4e0202 
+0xf000005 of:IBM,FW950.80 (VL950_131) hv:phyp pSeries
+[28956.809360] NIP:  c0000000010fe718 LR: c0000000001d0d20 CTR: 
+0000000000000000
+[28956.809365] REGS: c00000009a80f720 TRAP: 0380   Not tainted 
+(6.16.0-rc3-next-20250625)
+[28956.809370] MSR:  800000000280b033 <SF,VEC,VSX,EE,FP,ME,IR,DR,RI,LE>  
+CR: 88008844  XER: 20040000
+[28956.809385] CFAR: c0000000001d0d1c IRQMASK: 1
+[28956.809385] GPR00: c0000000001d0d20 c00000009a80f9c0 c000000001648100 
+3437342e65727d2f
+[28956.809385] GPR04: 0000000000000003 0000000000000000 0000000000000000 
+fffffffffffe0000
+[28956.809385] GPR08: c0000000c97baa00 0000000000000033 c0000000b9039000 
+0000000000008000
+[28956.809385] GPR12: c0000000001dd158 c000000017f91300 0000000000000000 
+0000000000000000
+[28956.809385] GPR16: 0000000000000000 0000000000000018 c0000000b9039000 
+c0000000b9039d60
+[28956.809385] GPR20: c0000000b9039080 c0000000b9039d48 0000000000040100 
+0000000000000001
+[28956.809385] GPR24: 0000000008430000 c00000009a80fd30 c0000000c97baa00 
+c000000002baf820
+[28956.809385] GPR28: 3437342e65727d2f 0000000000000000 0000000000000003 
+0000000000000000
+[28956.809444] NIP [c0000000010fe718] _raw_spin_lock_irqsave+0x34/0xb0
+[28956.809452] LR [c0000000001d0d20] try_to_wake_up+0x6c/0x828
+[28956.809459] Call Trace:
+[28956.809462] [c00000009a80f9c0] [c00000009a80fa10] 0xc00000009a80fa10 
+(unreliable)
+[28956.809469] [c00000009a80f9f0] [0000000000000000] 0x0
+[28956.809474] [c00000009a80fa80] [c0000000006f1958] 
+vfs_coredump+0x254/0x5c8
+[28956.809481] [c00000009a80fbf0] [c00000000018cf3c] get_signal+0x454/0xb64
+[28956.809488] [c00000009a80fcf0] [c00000000002188c] do_signal+0x7c/0x324
+[28956.809496] [c00000009a80fd90] [c000000000022a00] 
+do_notify_resume+0xb0/0x13c
+[28956.809502] [c00000009a80fdc0] [c000000000032508] 
+interrupt_exit_user_prepare_main+0x1ac/0x264
+[28956.809510] [c00000009a80fe20] [c000000000032710] 
+syscall_exit_prepare+0x150/0x178
+[28956.809516] [c00000009a80fe50] [c00000000000d068] 
+system_call_vectored_common+0x168/0x2ec
+[28956.809525] ---- interrupt: 3000 at 0x7fff82b24bf4
+[28956.809529] NIP:  00007fff82b24bf4 LR: 00007fff82b24bf4 CTR: 
+0000000000000000
+[28956.809534] REGS: c00000009a80fe80 TRAP: 3000   Not tainted 
+(6.16.0-rc3-next-20250625)
+[28956.809538] MSR:  800000000280f033 
+<SF,VEC,VSX,EE,PR,FP,ME,IR,DR,RI,LE>  CR: 48004802  XER: 00000000
+[28956.809554] IRQMASK: 0
+[28956.809554] GPR00: 0000000000000135 00007ffffe2ecf50 00007fff82c37200 
+ffffffffffffffe5
+[28956.809554] GPR04: 0000000000000000 0000000000000000 0000000006500000 
+00007fff82e3e120
+[28956.809554] GPR08: 00007fff82e369e8 0000000000000000 0000000000000000 
+0000000000000000
+[28956.809554] GPR12: 0000000000000000 00007fff82e3e120 0000000000000000 
+0000000000000000
+[28956.809554] GPR16: 0000000000000000 0000000000000000 0000000000000000 
+0000000000000000
+[28956.809554] GPR20: 0000000000000000 0000000000000000 0000000000000000 
+0000000000000001
+[28956.809554] GPR24: 0000010009812f10 0000000000000000 0000000000000001 
+0000000123099fe8
+[28956.809554] GPR28: 0000000000000000 0000000000000003 0000000000000000 
+0000000006500000
+[28956.809610] NIP [00007fff82b24bf4] 0x7fff82b24bf4
+[28956.809614] LR [00007fff82b24bf4] 0x7fff82b24bf4
+[28956.809618] ---- interrupt: 3000
+[28956.809621] Code: 38429a1c 7c0802a6 60000000 fbe1fff8 f821ffd1 
+8bed0932 63e90001 992d0932 a12d0008 3ce0fffe 5529083c 61290001 
+<7d001829> 7d063879 40c20018 7d063838
+[28956.809641] ---[ end trace 0000000000000000 ]---
+[28956.812734] pstore: backend (nvram) writing error (-1)
+
+
+If you happen to fix this, please add below tag.
+
+
+Reported-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+
+
+Regards,
+
+Venkat.
+
+> Thanks for the analysis, I agree that this can't work and my patch
+> just needs to be dropped. The 'noinline_for_stack' change on
+> its own is probably sufficient to avoid the warning, and I can
+> respin a new version after more build testing.
+>
+>       Arnd
+>
