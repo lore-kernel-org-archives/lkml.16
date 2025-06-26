@@ -1,169 +1,87 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2031B4F0A;
-	Thu, 26 Jun 2025 12:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5195B1B4F0A;
+	Thu, 26 Jun 2025 12:59:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750942753; cv=none; b=QY+j6ap7BdwwWnINR/2FPdyzreuhg+wiKsjReGpWYXO4BXWGKyVfFHOGmE3/HzrEeUEPKqBOGMX6e6J/36oUjn//SacoM+Duo4j/tJgJ7c2N1WNKe4gJj/r6QlaKf9LQOv1BSQ8BYXUY6CTXLKEVVYAwd+ilrWuhg+A4L6Ad2jQ=
+	t=1750942784; cv=none; b=ur1AWeBA0NkOiyk0kAGztF2Cw//mDAZCACSbyl2zDPd5cz47jSWDFrwWjbUoifRlERs6aIaVNcyhzfGE3jKQzFdZE6lU9Fjl0NB8kfe0lG8w1l6RLpokHYlv/ofaPh4zdhMiOWum05wJV5ALPiv8dJeXFfrQY+B+yYpcaKEuhBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750942753; c=relaxed/simple;
-	bh=vWZsTWEYyiseXKnsMjc+Ej2o40AytKq/Q/YXshCELco=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sP9SCgUlMROyrzUfKyB3Q8yghv0YaUbfnyfbad42mgLRTmFjBkG6e/d8XCuTi9DiZqqKOReRVFAMDloqTnNxLboyy3S4YflnQyDnquM07j/Uu5gOb6P+eIt/nRrgD5+xapKHtnYYm7vc6jvxHdzWWvTCgwsAD33/HoQSL1zLENs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=IfPIAzkK; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1750942784; c=relaxed/simple;
+	bh=IAXNpebqwGnH811nNw8L01SUPSZ3BgHcGCCaxklgrRE=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Z1/6Ej9KCyl7+JZLtAaN3whUYSO6uHolu/ra2xZdNOmHjA2GP52mDFlPZvvJg89yoSBP6W+phzpzHZoqbTmeOGG4AqZZ7sMl6MHEBoDYgGkLjtAxu9eOKJxSFl5euppD0waGjeaK44/nW23eciiHw3zw6pYP/jAHdykO9GF24P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d/qqZ7dy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="IfPIAzkK"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1750942744;
-	bh=vWZsTWEYyiseXKnsMjc+Ej2o40AytKq/Q/YXshCELco=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IfPIAzkK86cNlx+joISzT0lktX9hNc8EHL1j8sYgfT91UH2B8ieIqND/amayYoZlr
-	 U1jN7EmjoV5/8m0QoRD3mROCe575iaaBG0R0VIBkBjNQI89CRsIdvRzXnESHwrn44d
-	 eWWPxpl2Xu2Iyau8GRBjNavwHPvQUd8FfBXxCtDJ/RRiGNxiJhky2vVK/dROtlURzC
-	 SANE/sgQzSbGVIN7o8LMbb/PxWEMMXNgsH+FHHVQrPQkr0iN6uPCn6b1frmA82dAW/
-	 +X451FKvQFP2OZattOXR/odGYNmA/JIxHZcg0YulqMkXNjmzc3ff52VUuKYfZE0yxc
-	 +u6+Qct1yCeHA==
-Received: from [IPv6:2606:6d00:17:b699::bad] (unknown [IPv6:2606:6d00:17:b699::bad])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: nicolas)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 7CF0017E04EE;
-	Thu, 26 Jun 2025 14:59:03 +0200 (CEST)
-Message-ID: <dc841d1e6b12c46388aec8ebcd0b002f56d30d1c.camel@collabora.com>
-Subject: Re: [PATCH] media: verisilicon: Export only needed pixels formats.
-From: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To: Benjamin Gaignard <benjamin.gaignard@collabora.com>, 
-	p.zabel@pengutronix.de, mchehab@kernel.org, hverkuil@xs4all.nl
-Cc: linux-media@vger.kernel.org, linux-rockchip@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, kernel@collabora.com
-Date: Thu, 26 Jun 2025 08:59:00 -0400
-In-Reply-To: <20250624122938.62004-1-benjamin.gaignard@collabora.com>
-References: <20250624122938.62004-1-benjamin.gaignard@collabora.com>
-Autocrypt: addr=nicolas.dufresne@collabora.com; prefer-encrypt=mutual;
- keydata=mQGiBEUQN0MRBACQYceNSezSdMjx7sx6gwKkMghrrODgl3B0eXBTgNp6c431IfOOEsdvk
- oOh1kwoYcQgbg4MXw6beOltysX4e8fFWsiRkc2nvvRW9ir9kHDm49MkBLqaDjTqOkYKNMiurFW+go
- zpr/lUW15QqT6v68RYe0zRdtwGZqeLzX2LVuukGwCg4AISzswrrYHNV7vQLcbaUhPgIl0D+gILYT9
- TJgAEK4YHW+bFRcY+cgUFoLQqQayECMlctKoLOE69nIYOc/hDr9uih1wxrQ/yL0NJvQCohSPyoyLF
- 9b2EuIGhQVp05XP7FzlTxhYvGO/DtO08ec85+bTfVBMV6eeY4MS3ZU+1z7ObD7Pf29YjyTehN2Dan
- 6w1g2rBk5MoA/9nDocSlk4pbFpsYSFmVHsDiAOFje3+iY4ftVDKunKYWMhwRVBjAREOByBagmRau0
- cLEcElpf4hX5f978GoxSGIsiKoDAlXX+ICDOWC1/EXhEEmBR1gL0QJgiVviNyLfGJlZWnPjw6xhhm
- tHYWTDxBOP5peztyc2PqeKsLsLWzAr7QnTmljb2xhcyBEdWZyZXNuZSA8bmljb2xhc0BuZHVmcmVz
- bmUuY2E+iGIEExECACIFAlXA3CACGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFTAi2sB
- qgcJngAnRDBTr8bhzuH0KQwFP1nEYtfgpKdAKCrQ/sJfuG/8zsd7J8wVl7y3e8ARbRDTmljb2xhcy
- BEdWZyZXNuZSAoQi4gU2MuIEluZm9ybWF0aXF1ZSkgPG5pY29sYXMuZHVmcmVzbmVAZ21haWwuY29
- tPohgBBMRAgAgBQJFlCyOAhsDBgsJCAcDAgQVAggDBBYCAwECHgECF4AACgkQcVMCLawGqBwhLQCg
- zYlrLBj6KIAZ4gmsfjXD6ZtddT8AoIeGDicVq5WvMHNWign6ApQcZUihtElOaWNvbGFzIER1ZnJlc
- 25lIChCLiBTYy4gSW5mb3JtYXRpcXVlKSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY28udW
- s+iGIEExECACIFAkuzca8CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFTAi2sBqgcQX8
- An2By6LDEeMxi4B9hUbpvRnzaaeNqAJ9Rox8rfqHZnSErw9bCHiBwvwJZ77QxTmljb2xhcyBEdWZy
- ZXNuZSA8bmljb2xhcy5kdWZyZXNuZUBjb2xsYWJvcmEuY29tPohiBBMRAgAiBQJNzZzPAhsDBgsJC
- AcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRBxUwItrAaoHLlxAKCYAGf4JL7DYDLs/188CPMGuwLypw
- CfWKc9DorA9f5pyYlD5pQo6SgSoiC0R05pY29sYXMgRHVmcmVzbmUgKEIgU2MuIEluZm9ybWF0aXF
- 1ZSkgPG5pY29sYXMuZHVmcmVzbmVAdXNoZXJicm9va2UuY2E+iGAEExECACAFAkUQN0MCGwMGCwkI
- BwMCBBUCCAMEFgIDAQIeAQIXgAAKCRBxUwItrAaoHPTnAJ0WGgJJVspoctAvEcI00mtp5WAFGgCgr
- +E7ItOqZEHAs+xabBgknYZIFPU=
-Organization: Collabora Canada
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-sB3Sk195f1XnVNw57mvc"
-User-Agent: Evolution 3.56.2 (3.56.2-1.fc42) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d/qqZ7dy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7669C4CEEB;
+	Thu, 26 Jun 2025 12:59:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750942783;
+	bh=IAXNpebqwGnH811nNw8L01SUPSZ3BgHcGCCaxklgrRE=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=d/qqZ7dyCecxQKoEp5C35mf0tY4Xei9auWHqGsR+F9UrbkKr69tVvLudUDG4XxJ09
+	 a5j1CYSj1xHNmcd0LbVblPMIKgRvy8tfKOy0xJzN9cHuat4mwXLEYVGZA1ISN1xecQ
+	 s9SabDo+LhrpJg1ySV25ND1qwaGJD8hXKTTgELIBRjG0aVXT5MAr1w6j9TwHLbj3z8
+	 M7E777DhFQny545XpEmMRd5hWi4lKZYEaUjq9AJrh8u4znu+tDflQ6+VXnHsKS7G/M
+	 A6zti8w8PaQTBbMDTp9zckisrJcRDg6P1p7qDekkFhJNofeAkWFb1Do96sC2iIDzCY
+	 VRQHpRth77i4w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70D883A40FCB;
+	Thu, 26 Jun 2025 13:00:11 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2 0/3] Follow-up to RGMII mode clarification:
+ am65-cpsw fix + checkpatch
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <175094281025.1193227.2852193769422273929.git-patchwork-notify@kernel.org>
+Date: Thu, 26 Jun 2025 13:00:10 +0000
+References: <cover.1750756583.git.matthias.schiffer@ew.tq-group.com>
+In-Reply-To: <cover.1750756583.git.matthias.schiffer@ew.tq-group.com>
+To: Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, apw@canonical.com, dwaipayanray1@gmail.com,
+ lukas.bulwahn@gmail.com, joe@perches.com, corbet@lwn.net, nm@ti.com,
+ vigneshr@ti.com, s-vadapalli@ti.com, rogerq@kernel.org, kristo@kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux@ew.tq-group.com
+
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Tue, 24 Jun 2025 12:53:31 +0200 you wrote:
+> Following previous discussion [1] and the documentation update by
+> Andrew [2]:
+> 
+> Fix up the mode to account for the fixed TX delay on the AM65 CPSW
+> Ethernet controllers, similar to the way the icssg-prueth does it. For
+> backwards compatibility, the "impossible" modes that claim to have a
+> delay on the PCB are still accepted, but trigger a warning message.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,v2,1/3] dt-bindings: net: ti: k3-am654-cpsw-nuss: update phy-mode in example
+    https://git.kernel.org/netdev/net-next/c/9b357ea52523
+  - [net-next,v2,2/3] net: ethernet: ti: am65-cpsw: fixup PHY mode for fixed RGMII TX delay
+    https://git.kernel.org/netdev/net-next/c/ca13b249f291
+  - [net-next,v2,3/3] checkpatch: check for comment explaining rgmii(|-rxid|-txid) PHY modes
+    https://git.kernel.org/netdev/net-next/c/e02adac7c84b
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
---=-sB3Sk195f1XnVNw57mvc
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-Hi Benjamin,
-
-Le mardi 24 juin 2025 =C3=A0 14:29 +0200, Benjamin Gaignard a =C3=A9crit=C2=
-=A0:
-> When enumerating the pixels formats check if the context
-> request to only export post-processed pixels formats.
-> The exception is when V4L2_FMTDESC_FLAG_ENUM_ALL is set, we
-> need to export all pixels formats.
-
-The change looks good. The explanation could perhaps be improved. Perhaps
-something along this instead ?
-
-	Some pixel formats can only be produced if the decoder outputs=C2=A0
-	reference=C2=A0pictures directly. In some cases, such as AV1 film-grain,
-	the use of the post-processor is strictly required. In this case,
-	only enumerate the post-processor supported formats. The exception is
-	when V4L2_FMTDESC_FLAG_ENUM_ALL is set, in this case, we enumerate
-	everything regardless of the state.
-
-Perhaps long term we should rename need_postproc by force_postproc. I think=
- this
-would help reading the code.
-
->=20
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@collabora.com>
-> Fixes: bcd4f091cf1e ("media: verisilicon: Use V4L2_FMTDESC_FLAG_ENUM_ALL =
-flag")
-
-Reviewed-by: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-
-> ---
-> =C2=A0drivers/media/platform/verisilicon/hantro_v4l2.c | 6 +++++-
-> =C2=A01 file changed, 5 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/media/platform/verisilicon/hantro_v4l2.c b/drivers/m=
-edia/platform/verisilicon/hantro_v4l2.c
-> index 7c3515cf7d64..7869faf921f4 100644
-> --- a/drivers/media/platform/verisilicon/hantro_v4l2.c
-> +++ b/drivers/media/platform/verisilicon/hantro_v4l2.c
-> @@ -222,6 +222,7 @@ static int vidioc_enum_fmt(struct file *file, void *p=
-riv,
-> =C2=A0	unsigned int num_fmts, i, j =3D 0;
-> =C2=A0	bool skip_mode_none, enum_all_formats;
-> =C2=A0	u32 index =3D f->index & ~V4L2_FMTDESC_FLAG_ENUM_ALL;
-> +	bool need_postproc =3D ctx->need_postproc;
-> =C2=A0
-> =C2=A0	/*
-> =C2=A0	 * If the V4L2_FMTDESC_FLAG_ENUM_ALL flag is set, we want to enume=
-rate all
-> @@ -230,6 +231,9 @@ static int vidioc_enum_fmt(struct file *file, void *p=
-riv,
-> =C2=A0	enum_all_formats =3D !!(f->index & V4L2_FMTDESC_FLAG_ENUM_ALL);
-> =C2=A0	f->index =3D index;
-> =C2=A0
-> +	if (enum_all_formats)
-> +		need_postproc =3D HANTRO_AUTO_POSTPROC;
-> +
-> =C2=A0	/*
-> =C2=A0	 * When dealing with an encoder:
-> =C2=A0	 *=C2=A0 - on the capture side we want to filter out all MODE_NONE=
- formats.
-> @@ -242,7 +246,7 @@ static int vidioc_enum_fmt(struct file *file, void *p=
-riv,
-> =C2=A0	 */
-> =C2=A0	skip_mode_none =3D capture =3D=3D ctx->is_encoder;
-> =C2=A0
-> -	formats =3D hantro_get_formats(ctx, &num_fmts, HANTRO_AUTO_POSTPROC);
-> +	formats =3D hantro_get_formats(ctx, &num_fmts, need_postproc);
-> =C2=A0	for (i =3D 0; i < num_fmts; i++) {
-> =C2=A0		bool mode_none =3D formats[i].codec_mode =3D=3D HANTRO_MODE_NONE;
-> =C2=A0		fmt =3D &formats[i];
-
---=-sB3Sk195f1XnVNw57mvc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCaF1EFQAKCRBxUwItrAao
-HN+uAKDZJpOTbi3XRGHgmRHEOJte9UVyBACbBmNozfzUgXXYoUEvfUr4S4lMT6k=
-=WH3I
------END PGP SIGNATURE-----
-
---=-sB3Sk195f1XnVNw57mvc--
