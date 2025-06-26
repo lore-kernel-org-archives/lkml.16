@@ -1,125 +1,159 @@
-Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB4219DF48
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 22:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED9751917FB;
+	Thu, 26 Jun 2025 22:56:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750978446; cv=none; b=Df0REytCkYs6dAmERd4IKMrKrp/HSWVc3i5QxG3r44xb5vzSnc6ZQQErWclBSoNOvhREBn87A5X7MjEwnEDKmbpLRBykWB4P6Iim73e2ft0b9IAwGDSNsLSUwG9Xia3zYDWM98abK+npfOBxREHRDAwIUkiqKlorxPnVHgRcdUE=
+	t=1750978612; cv=none; b=l2cmK7Rmdrxosgp6o2SrOjWzYdhxgH/B3Je3QKzem3QSrIf2pq8YAYcmJ0OJaB4maFayNpr2nlbWx1N0yPQgeEFHd9XMWcr9zOIA8QGhW9f8UyP9cIIkAmAlmSy3tcX58lM8rJi1KxnscO9vnlRIncfWuZ6OumK2D62gbSWyE9I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750978446; c=relaxed/simple;
-	bh=QlETPmLKJ5wuuOZ0mip2MITO1Lvw1vGgGhJsAXrwaoM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=B/nA/tDWycxdLBtcDs5MvZsqnIefJa+Rx8CNVQjmn0GDKTjVbKGgPlk6aTbOUzH5ir50BQjMzorhNoU71sFbb8k4j2L1ppgkOuO0B1wmmJxExz63nu8W0PgABfs+mHteNonkKMS2WAHwejNj6dERBxkQIMr9tY1KQZwNaC1r0Tg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-3ddcfea00afso27381825ab.0
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:54:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750978444; x=1751583244;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cNpfT6ibDRY0Y1o29N5gMsrBI9DUrvOGsxJBMGuBz4c=;
-        b=YIYtKmTztddnsPPdDQ2IP+9mqyjryGxzzryCaJvUWjtpUfAhW1XYdjn+dJmqVX+ki2
-         pRsBKOhjbCgSKjeut4T9cYh+IREW1Hsbw/xiAJC3u+Pt4bmbypvkjYKyUfLHPx/hi044
-         +qfSu2EGq8j6RvyXtOhT8jvkVPIt6vK3J2GOpMGKlQTOYYjmhxIE2yjAeyGnHD1leM+V
-         uFImWWQHttM+eeBmXW8aNYo3cxO8Os3k3zDi2BtzHRpBzV7XEtXLoTdg6oKBLwLzuX2k
-         dJjkwHHFkwAr5OWgBujwvKCHz39ZHC28vih63ti/54cRLu+v0iKeQb541c0Z2sQvAEDq
-         OAiA==
-X-Forwarded-Encrypted: i=1; AJvYcCWZqzJaEUdzyd701D69Gi/zgCLjZtVZlnZZdfIswEEGc6xXkFGG8ZSiBKGp3x36bfWFI9cLvYsBn6gsaLI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YydiXcJMqmt/gyfortycpXEYYiAtay8HFgliRYC/6uybmjPubpB
-	+iFU2eq19/ySBZAm622bL9GfFOo92Sb9Yk2TI4LCsqx5bywc3hAs921JNWmQJn1AC1BCI5cqqCx
-	N0rjlif9vLAMF0JYed1iUQuPuL8WIPPmxYoWRd6B0/VC/ZupDxiO1hBoG6Ac=
-X-Google-Smtp-Source: AGHT+IHxGXrwL2GZPqC8dWhafW/ishAVfJhDvJUIN+TmKhFXbzw1bS/15W/YG6sDtN3g8OxoavAn3JYsyw81O4zqJXNf3MXhckEM
+	s=arc-20240116; t=1750978612; c=relaxed/simple;
+	bh=rY9MgvPQZ1cSs/gQeTWTYk5o89/XmmWpdB/pAB/WmNE=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=AH/6W1PLlf3G6WV3M8Lu8XHS3qmhjZ/r7qagGNqlTHnXsBX2lDRaXgGXY7mEm+A0leqoWsHwbjOI7zjCHBUWMPRzm7xOCCPG4P2Cs9wa9UlDsKdIwO2rXeCFbRNOujfpx0VGBMB5BJWJCvw1vVkHJxpsZ3LyBXdkyRpKvjoihDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WuiuV7xz; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WeSirK8m; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WuiuV7xz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WeSirK8m"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750978608;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y4An1iWghZea7Hv/U4xil7KqA0XVAzlvEupnwSQQsnU=;
+	b=WuiuV7xz1jwjEHGPpC9LfaD2dh5uYdIugcoWWxCI9Q1ZFtjDsh/5weLVjGv+ZSuEyUiOWJ
+	9L25OUVOiJy3e7PxHWbqYpH9pB/WtjBKkBR4RWX+aB1uEXEKnMB2/gJPfYKpB375QHOq8y
+	I+QmftPkTqs4aItgl9EGsNmPP61gk/cOYM95Tg9BW3hjCNWPNVQ/YwAo59+z1G/Tzj86Bt
+	qh8ngRYjlB5iYJJKjnNMMzqlLcgYjzml8GR7XGHKT4LOYt1RzcsNnQqZxCcbpRwAtDysMe
+	Mpvdr5T0pWWoNBbvbpCN7czbTmLUWSvUV65Ns0FZcyrz+BvsXH0vuZ6sybLbIA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750978608;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y4An1iWghZea7Hv/U4xil7KqA0XVAzlvEupnwSQQsnU=;
+	b=WeSirK8m2R0UAfMHlUR3iaXBaYwP9cvWn0yQGxTwvD0WQhNrzFwQC/3lZGeJK1qBQ1aCmf
+	PYKScdEunGGxu0CA==
+To: =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@igalia.com>, Ingo Molnar
+ <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, Shuah Khan <shuah@kernel.org>, Arnd
+ Bergmann <arnd@arndb.de>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Waiman Long <longman@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-api@vger.kernel.org, kernel-dev@igalia.com, =?utf-8?Q?Andr=C3=A9?=
+ Almeida
+ <andrealmeid@igalia.com>
+Subject: Re: [PATCH v5 3/7] futex: Use explicit sizes for
+ compat_exit_robust_list
+In-Reply-To: <20250626-tonyk-robust_futex-v5-3-179194dbde8f@igalia.com>
+References: <20250626-tonyk-robust_futex-v5-0-179194dbde8f@igalia.com>
+ <20250626-tonyk-robust_futex-v5-3-179194dbde8f@igalia.com>
+Date: Fri, 27 Jun 2025 00:56:47 +0200
+Message-ID: <875xgip0wg.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c2a:b0:3dd:b523:7abe with SMTP id
- e9e14a558f8ab-3df4abafbe6mr18925865ab.18.1750978444108; Thu, 26 Jun 2025
- 15:54:04 -0700 (PDT)
-Date: Thu, 26 Jun 2025 15:54:04 -0700
-In-Reply-To: <f59b4048-a4e3-4d7d-8aa9-5a3ad42db8b7@linux.dev>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685dcf8c.a00a0220.2e5631.038a.GAE@google.com>
-Subject: Re: [syzbot] [rdma?] WARNING in rxe_skb_tx_dtor
-From: syzbot <syzbot+8425ccfb599521edb153@syzkaller.appspotmail.com>
-To: jgg@ziepe.ca, leon@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, syzkaller-bugs@googlegroups.com, 
-	yanjun.zhu@linux.dev, zyjzyj2000@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, Jun 26 2025 at 14:11, Andr=C3=A9 Almeida wrote:
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-WARNING in rxe_skb_tx_dtor
+$subject lacks a () function notation ....
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 1093 at drivers/infiniband/sw/rxe/rxe_net.c:357 rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
-Modules linked in:
-CPU: 0 UID: 0 PID: 1093 Comm: kworker/u4:9 Not tainted 6.15.0-rc4-syzkaller-00150-ge382eacdcc20 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-Workqueue: rxe_wq do_work
-RIP: 0010:rxe_skb_tx_dtor+0x8b/0x2a0 drivers/infiniband/sw/rxe/rxe_net.c:357
-Code: 80 3c 20 00 74 08 4c 89 ff e8 91 fd 89 f9 4d 8b 37 44 89 f6 83 e6 01 31 ff e8 61 41 27 f9 41 f6 c6 01 75 0e e8 76 3c 27 f9 90 <0f> 0b 90 e9 b4 01 00 00 4c 89 ff e8 85 0d fb 01 48 89 c7 be 0e 00
-RSP: 0018:ffffc90000007a08 EFLAGS: 00010246
-RAX: ffffffff8898ce3a RBX: ffff888043ae33c0 RCX: ffff88803513a440
-RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: ffffffff88723ee4 R12: dffffc0000000000
-R13: 1ffff1100875c683 R14: 0000000000025820 R15: ffff888035198000
-FS:  0000000000000000(0000) GS:ffff88808d6b1000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f31350a7fc8 CR3: 0000000059b8c000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- skb_release_head_state+0xfe/0x250 net/core/skbuff.c:1149
- napi_consume_skb+0xd2/0x1e0 net/core/skbuff.c:-1
- e1000_unmap_and_free_tx_resource drivers/net/ethernet/intel/e1000/e1000_main.c:1972 [inline]
- e1000_clean_tx_irq drivers/net/ethernet/intel/e1000/e1000_main.c:3864 [inline]
- e1000_clean+0x49d/0x2b00 drivers/net/ethernet/intel/e1000/e1000_main.c:3805
- __napi_poll+0xc4/0x480 net/core/dev.c:7324
- napi_poll net/core/dev.c:7388 [inline]
- net_rx_action+0x6ea/0xdf0 net/core/dev.c:7510
- handle_softirqs+0x283/0x870 kernel/softirq.c:579
- do_softirq+0xec/0x180 kernel/softirq.c:480
- </IRQ>
- <TASK>
- __local_bh_enable_ip+0x17d/0x1c0 kernel/softirq.c:407
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- rcu_read_unlock_bh include/linux/rcupdate.h:910 [inline]
- __dev_queue_xmit+0x1cd7/0x3a70 net/core/dev.c:4656
- neigh_output include/net/neighbour.h:539 [inline]
- ip6_finish_output2+0x11fb/0x16a0 net/ipv6/ip6_output.c:141
- __ip6_finish_output net/ipv6/ip6_output.c:-1 [inline]
- ip6_finish_output+0x234/0x7d0 net/ipv6/ip6_output.c:226
- rxe_send drivers/infiniband/sw/rxe/rxe_net.c:391 [inline]
- rxe_xmit_packet+0x79e/0xa30 drivers/infiniband/sw/rxe/rxe_net.c:450
- rxe_requester+0x1fea/0x3d20 drivers/infiniband/sw/rxe/rxe_req.c:805
- rxe_sender+0x16/0x50 drivers/infiniband/sw/rxe/rxe_req.c:839
- do_task+0x1ad/0x6b0 drivers/infiniband/sw/rxe/rxe_task.c:127
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xadb/0x17a0 kernel/workqueue.c:3319
- worker_thread+0x8a0/0xda0 kernel/workqueue.c:3400
- kthread+0x70e/0x8a0 kernel/kthread.c:464
- ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:153
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:245
- </TASK>
+> There are two functions for handling robust lists during the task
 
+during a tasks exit
 
-Tested on:
+> exit: exit_robust_list() and compat_exit_robust_list(). The first one
+> handles either 64bit or 32bit lists, depending if it's a 64bit or 32bit
+> kernel. The compat_exit_robust_list() only exists in 64bit kernels that
 
-commit:         e382eacd RDNA/rxe: Fix rxe_skb_tx_dtor problem
-git tree:       https://github.com/zhuyj/linux.git linux-6.15-rc4-fix-rxe_skb_tx_dtor
-console output: https://syzkaller.appspot.com/x/log.txt?x=14a83b70580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bf156ad608427e4b
-dashboard link: https://syzkaller.appspot.com/bug?extid=8425ccfb599521edb153
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+s/The//
 
-Note: no patches were applied.
+> supports 32bit syscalls, and handles 32bit lists.
+
+32-bit 64-bit all over the place
+
+> For the new syscall set_robust_list2(), 64bit kernels need to be able to
+> handle 32bit lists despite having or not support for 32bit syscalls, so
+> make compat_exit_robust_list() exist regardless of compat_ config.
+
+What new syscall and what are the requirements here? You really want to
+add some rationale and background here.
+
+> Also, use explicitly sizing, otherwise in a 32bit kernel both
+> exit_robust_list() and compat_exit_robust_list() would be the exactly
+> same function, with none of them dealing with 64bit robust lists.
+
+Explicit sizing of what? The changelog should give information which
+allows me to verify the implementation and not some blurb which makes me
+to oracle the meaning of the changelog out of the actual implementation.
+
+What is the actual gist of this patch? The subject says:
+
+     Use explicit sizes for compat_exit_robust_list
+
+Now you say 'Also,' which means aside of the above actual statement to
+make compat_exit_robust_list() unconditional this is now a side effect
+or what?
+
+The subject line is misleading because the real purpose of this patch is
+to make compat_exit_robust_list() unconditionally available independent
+of bitness.
+
+Now the obvious question is why this patch isn't split into two pieces:
+
+    1) The patch matching the above subject line and does the
+       struct/argument rename
+
+    2) A subsequent patch which makes the function unconditionally
+       available
+
+That's not done because obfuscating changes makes everyones life easier,
+right?
+
+> +++ b/include/linux/compat.h
+> @@ -385,16 +385,6 @@ struct compat_ifconf {
+>  	compat_caddr_t  ifcbuf;
+>  };
+>=20=20
+> -struct compat_robust_list {
+> -	compat_uptr_t			next;
+> -};
+> -
+> -struct compat_robust_list_head {
+> -	struct compat_robust_list	list;
+> -	compat_long_t			futex_offset;
+> -	compat_uptr_t			list_op_pending;
+> -};
+> -
+>  #ifdef CONFIG_COMPAT_OLD_SIGACTION
+>  struct compat_old_sigaction {
+>  	compat_uptr_t			sa_handler;
+> @@ -672,7 +662,7 @@ asmlinkage long compat_sys_waitid(int, compat_pid_t,
+>  		struct compat_siginfo __user *, int,
+>  		struct compat_rusage __user *);
+>  asmlinkage long
+> -compat_sys_set_robust_list(struct compat_robust_list_head __user *head,
+> +compat_sys_set_robust_list(struct robust_list_head32 __user *head,
+>  			   compat_size_t len);
+
+How does this even survive a full kernel build without a forward
+declaration of struct robust_list_head32?
+
+Not everything which includes compat.h includes futex.h first. There is
+a reason why the structs were define here. Sure you can move them, but
+not without a forward declaration.
+
+Thanks,
+
+        tglx
