@@ -1,175 +1,165 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.5])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40FBA239E79;
-	Thu, 26 Jun 2025 09:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.5
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCC8239E79
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750931410; cv=none; b=hMOFPEzSfNNK3zIBSDISABGe2tAYK80RqdwUXJHwC9QtkEker2eGLzmtMOCPPNHTOUH60SwOpnXBAWhajcqgwXHDDGihI8ryJ3dC7bdEgPZuakIKOiDmOP81dRVstXzsxuHSQmSMLVgOLRWPoIE2qwxkQcb0Q5BduXlqnDnSjm4=
+	t=1750931575; cv=none; b=NnylIdauwLY2fJQ2Ubh0/tpKwfmZMzdkD4RwjZy3nxCVakKsxpHVu+bIbuNUfQMnISAwfeOuZnnYm4me4MqmzJsXIUcnHsOLKamk4o30LIbb/L+eCWNiSw3eSiJLlKt7zwZkTyg3Iuv50ifJ2WY96djyjhSjMYyxgHv/HCd6Q9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750931410; c=relaxed/simple;
-	bh=vcWGpVMuhqblfQVIDtKaB7bHc4bnBgf3xJHNKt77nhw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LyoWtjgmin80gWLbS/1ROoQGLsV/Yv/psUp0Aq4ud/cjoRcqMUFqOqh9OvGMjNtEUbGBgr4dA784KCfwTGtqIAhoyacTVVoqnSw3eKTL9rTfvyHzYLbKFitfW4iasuoDW1OKdnib5p2N4+4Ga672AZSSKgumz2CvW+y13UwBryk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=ADiTCeqc; arc=none smtp.client-ip=117.135.210.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1750931575; c=relaxed/simple;
+	bh=2AIE+LkdiujG5ji7loxoRS9NHD2gQlKzMyQaLL826Kk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P6UMBax4Re+0rRKLtTWYzJScHnhm3I2zWbcQ8iXWTa0HMIQ5t04cIL7sV0QPdAPC1DXjOfbki7RriRpc8e4c42fbUNwTgHdis26FoxzJ0ogkYzSx4Y6eKS0VTppqBHcDVodnjyCFpfnIxkSUMC4tDNH4WFGvW0U5zTWZPdP3k0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BB+VHb9g; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ADiTCeqc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:To:Subject:Date:Message-Id:MIME-Version; bh=/c
-	ma2AZin+wigRX09ym9Wqnf3KjaHR7/DQn0xw0S5oo=; b=ADiTCeqcicQQ3C8GDb
-	JO1sgLE1xIMQchA/n9pQE9/LBPht7e6yZbgI9IiGoz7BKbXnwaWtZewzq+KGnbPJ
-	kWVKE8ZZPMGtTE8HWCHxchFrbisedB7ZYO6nG4AQ2P4xAw4ZwmxbUNN2JGBl4d5a
-	9MrXMKLdC+IOYWDunKMVKPkY4=
-Received: from localhost.localdomain (unknown [])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wDnj8KzF11odA7IAg--.18394S2;
-	Thu, 26 Jun 2025 17:49:40 +0800 (CST)
-From: oushixiong1025@163.com
-To: Helge Deller <deller@gmx.de>
-Cc: Peter Jones <pjones@redhat.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	Shixiong Ou <oushixiong@kylinos.cn>
-Subject: [PATCH] fbdev: efifb: do not load efifb if PCI BAR has changed but not fixuped
-Date: Thu, 26 Jun 2025 17:49:37 +0800
-Message-Id: <20250626094937.515552-1-oushixiong1025@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BB+VHb9g"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1750931572;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=maigbIGpFa40uB5iR2z3omILy1pW0Pv0zv0NfF/hTkQ=;
+	b=BB+VHb9g/Gqd6cUpbViUIXRg3C4ikHW92Ji/sx8K/DPBJ+agHVHif9wpUGFxDmo9cR0PNp
+	HBOrU38jPmcf1VdlQSzg5LwV5LB+pwEs/JbYKBDDMR7Ta3PlyXY/QJ4/AoqNSYPKVN0D9C
+	+wL8DZL8dhJuekd3BDvTAHq+nampYw4=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-211-LeF5gsmwOrK0kvTK3vRPQA-1; Thu,
+ 26 Jun 2025 05:52:48 -0400
+X-MC-Unique: LeF5gsmwOrK0kvTK3vRPQA-1
+X-Mimecast-MFC-AGG-ID: LeF5gsmwOrK0kvTK3vRPQA_1750931567
+Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2FCD118DA5C2;
+	Thu, 26 Jun 2025 09:52:47 +0000 (UTC)
+Received: from gshan-thinkpadx1nanogen2.rmtau.csb (unknown [10.64.136.50])
+	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 971D630002C0;
+	Thu, 26 Jun 2025 09:52:43 +0000 (UTC)
+From: Gavin Shan <gshan@redhat.com>
+To: linux-kernel@vger.kernel.org
+Cc: james.morse@arm.com,
+	sdonthineni@nvidia.com,
+	rohit.mathew@arm.com,
+	carl@os.amperecomputing.com,
+	gshan@redhat.com,
+	shan.gavin@gmail.com
+Subject: [PATCH MPAM 6.16.rc1] arm_mpam: Enforce to recalculate mbw_min on configuration
+Date: Thu, 26 Jun 2025 19:52:08 +1000
+Message-ID: <20250626095208.1008871-1-gshan@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnj8KzF11odA7IAg--.18394S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxWw1rur1xWF4DXry5tr1fJFb_yoWrZFyDpF
-	4fGFyfCF48Xrn3Gws8G3WDJr1fWr4kuFyqkFZIkw1rAry3JryYvrnruryDury5ZrWkJr1x
-	tr4Utw12kF15uaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jzBT5UUUUU=
-X-CM-SenderInfo: xrxvxxx0lr0wirqskqqrwthudrp/1tbiXQt4D2hdEMSbzAAAsX
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
 
-From: Shixiong Ou <oushixiong@kylinos.cn>
+mpam_feat_mbw_max is exposed to user by resctrlfs, but mpam_feat_mbw_min
+should be recalculated based on the maximal memory bandwidth in every
+configuration, which has been missed unfortunately. When a new group is
+created, the default and maximal memory bandwidth percentage (100%) is
+configured, the configuration instance (struct mpam_config) on the stack
+is updated, including the minimal and maximal memory bandwidth. It's
+copied to the domain's configuration instance. On next time when user
+tries to configure by writing 'schemata', the minimal memory bandwidth
+isn't never recalculated because mpam_feat_mbw_min has been seen in the
+configuration, which inherits from the domain's instance.
 
-[WHY]
-On an ARM machine, the following log is present:
-[    0.900884] efifb: framebuffer at 0x1020000000, using 3072k, total 3072k
-[    2.297884] amdgpu 0000:04:00.0: remove_conflicting_pci_framebuffers: bar 0: 0x1000000000 -> 0x100fffffff
-[    2.297886] amdgpu 0000:04:00.0: remove_conflicting_pci_framebuffers: bar 2: 0x1010000000 -> 0x10101fffff
-[    2.297888] amdgpu 0000:04:00.0: remove_conflicting_pci_framebuffers: bar 5: 0x58200000 -> 0x5823ffff
+For example, the value of register MPAMCFG_MBW_MIN is never changed no
+matter what configuration is set.
 
-It show that the efifb framebuffer base is out of PCI BAR, and this
-results in both efi-framebuffer and amdgpudrmfb co-existing.
+  # uname -r
+  6.16.0-rc1-gavin
+  # mount -tresctrl none /sys/fs/resctrl
+  # mkdir -p /sys/fs/resctrl/test
+  # cd /sys/fs/resctrl/test
+  # echo "MB:1=2" > schemata
+  MAPMF_MBW_IDR               00000c07
+  MPAMCFG_MBW_MAX             000005ff
+  MPAMCFG_MBW_MIN             0000f000
+  # echo "MB:1=100" > schemata
+  MAPMF_MBW_IDR               00000c07
+  MPAMCFG_MBW_MAX             0000ffff
+  MPAMCFG_MBW_MIN             0000f000
 
-The fbcon will be bound to efi-framebuffer by default and cannot be used.
+Fix the issue by enforcing the calculation of the minimal memory bandwidth
+in very configuration. With this applied, The register MPAMCFG_MBW_MIN
+is updated with the expected value in every configuration.
 
-[HOW]
-Do not load efifb driver if PCI BAR has changed but not fixuped.
-In the following cases:
-	1. screen_info_lfb_pdev is NULL.
-	2. __screen_info_relocation_is_valid return false.
+  # cd /sys/fs/resctrl/test
+  # echo "MB:1=2" > schemata
+  MAPMF_MBW_IDR               00000c07
+  MPAMCFG_MBW_MAX             000005ff
+  MPAMCFG_MBW_MIN             00000200
+  # echo "MB:1=100" > schemata
+  MAPMF_MBW_IDR               00000c07
+  MPAMCFG_MBW_MAX             0000ffff
+  MPAMCFG_MBW_MIN             0000f000
 
-Signed-off-by: Shixiong Ou <oushixiong@kylinos.cn>
+Fixes: 75f4101bb338 ("arm_mpam: Generate a configuration for min controls")
+Signed-off-by: Gavin Shan <gshan@redhat.com>
 ---
- drivers/video/fbdev/efifb.c     |  4 ++++
- drivers/video/screen_info_pci.c | 24 ++++++++++++++++++++++++
- include/linux/screen_info.h     |  5 +++++
- 3 files changed, 33 insertions(+)
+Appliable to James Morse's latest MPAM branch
+https://git.kernel.org/pub/scm/linux/kernel/git/morse/linux.git
+(branch: mpam/snapshot/v6.16-rc1)
+---
+ drivers/platform/arm64/mpam/mpam_devices.c | 27 ++++++++++------------
+ 1 file changed, 12 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/video/fbdev/efifb.c b/drivers/video/fbdev/efifb.c
-index 0e1bd3dba255..de8d016c9a66 100644
---- a/drivers/video/fbdev/efifb.c
-+++ b/drivers/video/fbdev/efifb.c
-@@ -303,6 +303,10 @@ static void efifb_setup(struct screen_info *si, char *options)
+diff --git a/drivers/platform/arm64/mpam/mpam_devices.c b/drivers/platform/arm64/mpam/mpam_devices.c
+index df8730491de2..4845dcb8e601 100644
+--- a/drivers/platform/arm64/mpam/mpam_devices.c
++++ b/drivers/platform/arm64/mpam/mpam_devices.c
+@@ -3192,6 +3192,9 @@ static void mpam_extend_config(struct mpam_class *class, struct mpam_config *cfg
+ 	u16 min, min_hw_granule, delta;
+ 	u16 max_hw_value, res0_bits;
  
- static inline bool fb_base_is_valid(struct screen_info *si)
- {
-+	/* check whether fb_base has changed but not fixuped */
-+	if (!screen_info_is_useful())
-+		return false;
++	if (!mpam_has_feature(mpam_feat_mbw_max, cfg))
++		return;
 +
- 	if (si->lfb_base)
- 		return true;
+ 	/*
+ 	 * Calculate the values the 'min' control can hold.
+ 	 * e.g. on a platform with bwa_wd = 8, min_hw_granule is 0x00ff because
+@@ -3211,23 +3214,17 @@ static void mpam_extend_config(struct mpam_class *class, struct mpam_config *cfg
+ 	 *
+ 	 * Resctrl can only configure the MAX.
+ 	 */
+-	if (mpam_has_feature(mpam_feat_mbw_max, cfg) &&
+-	    !mpam_has_feature(mpam_feat_mbw_min, cfg)) {
+-		delta = ((5 * MPAMCFG_MBW_MAX_MAX) / 100) - 1;
+-		if (cfg->mbw_max > delta)
+-			min = cfg->mbw_max - delta;
+-		else
+-			min = 0;
++	delta = ((5 * MPAMCFG_MBW_MAX_MAX) / 100) - 1;
++	if (cfg->mbw_max > delta)
++		min = cfg->mbw_max - delta;
++	else
++		min = 0;
  
-diff --git a/drivers/video/screen_info_pci.c b/drivers/video/screen_info_pci.c
-index 66bfc1d0a6dc..ac57dcaf0cac 100644
---- a/drivers/video/screen_info_pci.c
-+++ b/drivers/video/screen_info_pci.c
-@@ -9,6 +9,8 @@ static struct pci_dev *screen_info_lfb_pdev;
- static size_t screen_info_lfb_bar;
- static resource_size_t screen_info_lfb_res_start; // original start of resource
- static resource_size_t screen_info_lfb_offset; // framebuffer offset within resource
-+static bool screen_info_changed;
-+static bool screen_info_fixuped;
+-		cfg->mbw_min = max(min, min_hw_granule);
+-		mpam_set_feature(mpam_feat_mbw_min, cfg);
+-	}
++	cfg->mbw_min = max(min, min_hw_granule);
++	mpam_set_feature(mpam_feat_mbw_min, cfg);
++	if (mpam_has_quirk(T241_FORCE_MBW_MIN_TO_ONE, class))
++		cfg->mbw_min = max(cfg->mbw_min, min_hw_granule + 1);
  
- static bool __screen_info_relocation_is_valid(const struct screen_info *si, struct resource *pr)
- {
-@@ -24,6 +26,24 @@ static bool __screen_info_relocation_is_valid(const struct screen_info *si, stru
- 	return true;
+-	if (mpam_has_quirk(T241_FORCE_MBW_MIN_TO_ONE, class) &&
+-	    cfg->mbw_min <= min_hw_granule) {
+-		cfg->mbw_min = min_hw_granule + 1;
+-		mpam_set_feature(mpam_feat_mbw_min, cfg);
+-	}
  }
  
-+bool screen_info_is_useful(void)
-+{
-+	unsigned int type;
-+	const struct screen_info *si = &screen_info;
-+
-+	type = screen_info_video_type(si);
-+	if (type != VIDEO_TYPE_EFI)
-+		return true;
-+
-+	if (screen_info_changed && !screen_info_fixuped) {
-+		pr_warn("The screen_info has changed but not fixuped");
-+		return false;
-+	}
-+
-+	pr_info("The screen_info is useful");
-+	return true;
-+}
-+
- void screen_info_apply_fixups(void)
- {
- 	struct screen_info *si = &screen_info;
-@@ -32,18 +52,22 @@ void screen_info_apply_fixups(void)
- 		struct resource *pr = &screen_info_lfb_pdev->resource[screen_info_lfb_bar];
- 
- 		if (pr->start != screen_info_lfb_res_start) {
-+			screen_info_changed = true;
- 			if (__screen_info_relocation_is_valid(si, pr)) {
- 				/*
- 				 * Only update base if we have an actual
- 				 * relocation to a valid I/O range.
- 				 */
- 				__screen_info_set_lfb_base(si, pr->start + screen_info_lfb_offset);
-+				screen_info_fixuped = true;
- 				pr_info("Relocating firmware framebuffer to offset %pa[d] within %pr\n",
- 					&screen_info_lfb_offset, pr);
- 			} else {
- 				pr_warn("Invalid relocating, disabling firmware framebuffer\n");
- 			}
- 		}
-+	} else {
-+		screen_info_changed = true;
- 	}
- }
- 
-diff --git a/include/linux/screen_info.h b/include/linux/screen_info.h
-index 923d68e07679..632cdbb1adbe 100644
---- a/include/linux/screen_info.h
-+++ b/include/linux/screen_info.h
-@@ -138,9 +138,14 @@ ssize_t screen_info_resources(const struct screen_info *si, struct resource *r,
- u32 __screen_info_lfb_bits_per_pixel(const struct screen_info *si);
- 
- #if defined(CONFIG_PCI)
-+bool screen_info_is_useful(void);
- void screen_info_apply_fixups(void);
- struct pci_dev *screen_info_pci_dev(const struct screen_info *si);
- #else
-+bool screen_info_is_useful(void)
-+{
-+	return true;
-+}
- static inline void screen_info_apply_fixups(void)
- { }
- static inline struct pci_dev *screen_info_pci_dev(const struct screen_info *si)
+ /* TODO: split into write_config/sync_config */
 -- 
-2.25.1
+2.49.0
 
