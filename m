@@ -1,110 +1,102 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E6E5239E79;
-	Thu, 26 Jun 2025 15:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFAD2EBBB7;
+	Thu, 26 Jun 2025 15:49:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750952985; cv=none; b=HXDm5hcbS1coWuPwPOSMKWAg1dCaIoK/aWOWXDIC529GoWOlmoKrMQMwg2UEoSKD8vGGEBp3uD2s6W15Wb1Uaqe+1tNNpBf8EjquFfY5AzIfustcB0J4fYk2MS/8ql3nA7gP27fwy1hR0RNrYezxyYM5q8onzwMQy1VZASUaqT4=
+	t=1750953001; cv=none; b=TNVWjX+TvILBaegfei6t7N2QD5eVFUrkIpHgpLvss2ng0lFgnQwtWNLfZTiv8PwQUW3B7CvZEWBdpzcRAc8oc7AiqL35jZFlnVtftvKyryMhsl0k8GoJhZZU+R38BtgUHSb3zR3ERQemjmEvs7h27hJEvHuJP8+XLguQ4arvuuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750952985; c=relaxed/simple;
-	bh=wUoxo5fF103mDusSsZddTzXvkhswDVmVoqAhVlekVxY=;
+	s=arc-20240116; t=1750953001; c=relaxed/simple;
+	bh=Mpi5liKjyiDncbXlQSUN5m41aQloT3tVm9OabwEOvYg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=G3H4m4GH2eyMi0hQIsJCerWXZ2RMmKIYKFQqmzpkdY60QfvWaSRQCXcyht05H9Nw3yuGYDaJsJ+H+7KXInJnTgd85D9JPJ1Yo30Khtl7HmnY1VtrNSqO13S+6otXl3rAXLvlKbYPlEyQG+bzYv7lKL8K2JN9+LrEUZW01uWihBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C674oxU8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=K79BoxzgtpjmZXmg0Ox82FqPpX73HuakOfdx+aBmA0YvWrkswnMHOFR4eRPuNLb3UBHuE+AiBSxj1pNmtweOAogRSUxGXjms0Xf9JCRmVHdRP1SKaYuQ5VLDgqVNI1m1mUn9AzETIOX0e1v2dUlEqxL8lMgk87hahtCpFpt01kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=YkCVOwiW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L1+HqzXN; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C674oxU8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E87EEC4CEEB;
-	Thu, 26 Jun 2025 15:49:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750952984;
-	bh=wUoxo5fF103mDusSsZddTzXvkhswDVmVoqAhVlekVxY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=C674oxU81gzaEQ7Q9DbJlCIPeEVFqscjKGsNq603qP/2wpJ68jIiyAPqFqOs5mw4a
-	 XYn9S9/TAGYFnPouO49k8OWF6XJNxhCE7cL2B7qBGe/f8II3QymJY+IuNYBRVboq9M
-	 nlfd1/KPDaBVOY26vE7qOWAPeqjk7n8wxHyrTl9hyTjL0APKoXs8PZQiSckEEsCr4W
-	 /WGJ8CQkvIyvCYcEQljCJKG82pObP0y9Os412QJTCR8IfMv0fW6K04CdQCGRhp+sKD
-	 NeFQ1YJmSKbcesZxXpKI8FPiZ4Ne0JhaSMIuDPqGW3h3t4RDrwhDiVhKpHNMvJVhv5
-	 Vg9RFq8E/+cRg==
-Date: Thu, 26 Jun 2025 17:49:38 +0200
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <lossin@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
-	aliceryhl@google.com, tmgross@umich.edu, david.m.ertman@intel.com,
-	ira.weiny@intel.com, leon@kernel.org, kwilczynski@kernel.org,
-	bhelgaas@google.com, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 4/4] rust: devres: implement register_release()
-Message-ID: <aF1sEnxdJaVeBZ3x@cassiopeiae>
-References: <20250624215600.221167-1-dakr@kernel.org>
- <20250624215600.221167-5-dakr@kernel.org>
- <DAWED7BIC32G.338MXRHK4NSJG@kernel.org>
- <aF0rzzlKgwopOVHV@pollux>
- <aF1TEuotIIwcKODM@cassiopeiae>
- <DAWJL7B9577H.3HY4CULLAHGCU@kernel.org>
- <aF1oA8jYZGjTs9U4@cassiopeiae>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YkCVOwiW";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L1+HqzXN"
+Date: Thu, 26 Jun 2025 17:49:54 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1750952996;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SZA23onas5n4B09dCvBkdk+b6pfrOmlq+EopDm/BmP0=;
+	b=YkCVOwiWQSz/zQsWs8NjbsXOY4f36xUq/3yuKyRYBF7mthALXB1sTb+OqMvEZYQo2F/NHv
+	v3RYujSu5+03ArJGLSSQIbn7ZtzKOHus/j879dVfNiFVDo+ExtLiRYZj+eYfv2sgc4n0p4
+	BKsG87GRClfb1NdRBfjXCyJRCR7dYn62Xjnt6cuA4Nb3uEivkxspTucqGWsc2iJOT3FMFN
+	L7ZQJMZ8lQRxIw/xsDqvokCSJqJp0TpLAcIiUEzhrrOs//RbAANi7vD44QhTZpxcckxxOT
+	77oif/ku8R6GBghxw8pWwQaQRGLjyE8ySjKgt+MN3s7RVox/f/ztalWYb4fKUQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1750952996;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=SZA23onas5n4B09dCvBkdk+b6pfrOmlq+EopDm/BmP0=;
+	b=L1+HqzXNd+Bj8avf6MduLQ8qq7mxtyC+oQmhlzi+om4KOidY7K/whfDEQ3Ihv82ZGiIyhq
+	yGZR1jmzlOTgt5Cw==
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Nam Cao <namcao@linutronix.de>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-rt-devel@lists.linux.dev,
+	linux-rt-users@vger.kernel.org, Joe Damato <jdamato@fastly.com>,
+	Martin Karsten <mkarsten@uwaterloo.ca>,
+	Jens Axboe <axboe@kernel.dk>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Valentin Schneider <vschneid@redhat.com>
+Subject: Re: [PATCH v3] eventpoll: Fix priority inversion problem
+Message-ID: <20250626154954.NH9L0mtz@linutronix.de>
+References: <20250527090836.1290532-1-namcao@linutronix.de>
+ <841pr6msql.fsf@jogness.linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aF1oA8jYZGjTs9U4@cassiopeiae>
+In-Reply-To: <841pr6msql.fsf@jogness.linutronix.de>
 
-On Thu, Jun 26, 2025 at 05:32:25PM +0200, Danilo Krummrich wrote:
-> On Thu, Jun 26, 2025 at 04:41:55PM +0200, Benno Lossin wrote:
-> > On Thu Jun 26, 2025 at 4:02 PM CEST, Danilo Krummrich wrote:
-> > > On Thu, Jun 26, 2025 at 01:15:34PM +0200, Danilo Krummrich wrote:
-> > >> On Thu, Jun 26, 2025 at 12:36:23PM +0200, Benno Lossin wrote:
-> > >> > Or, we could change `Release` to be:
-> > >> > 
-> > >> >     pub trait Release {
-> > >> >         type Ptr: ForeignOwnable;
-> > >> > 
-> > >> >         fn release(this: Self::Ptr);
-> > >> >     }
-> > >> > 
-> > >> > and then `register_release` is:
-> > >> > 
-> > >> >     pub fn register_release<T: Release>(dev: &Device<Bound>, data: T::Ptr) -> Result
-> > >> > 
-> > >> > This way, one can store a `Box<T>` and get access to the `T` at the end.
-> > >> 
-> > >> I think this was also the case before? Well, it was P::Borrowed instead.
-> > >> 
-> > >> > Or if they store the value in an `Arc<T>`, they have the option to clone
-> > >> > it and give it to somewhere else.
-> > >> 
-> > >> Anyways, I really like this proposal of implementing the Release trait.
-> > >
-> > > One downside seems to be that the compiler cannot infer T anymore with this
-> > > function signature.
-> > 
-> > Yeah... That's a bit annoying.
-> > 
-> > We might be able to add an associated type to `ForeignOwnable` like
-> > `Target` or `Inner` or whatever.
+On 2025-06-26 17:29:46 [+0206], John Ogness wrote:
+> > @@ -361,10 +348,14 @@ static inline int ep_cmp_ffd(struct epoll_filefd *p1,
+> >  	        (p1->file < p2->file ? -1 : p1->fd - p2->fd));
+> >  }
+> >  
+> > -/* Tells us if the item is currently linked */
+> > -static inline int ep_is_linked(struct epitem *epi)
+> > +/*
+> > + * Add the item to its container eventpoll's rdllist; do nothing if the item is already on rdllist.
+> > + */
+> > +static void epitem_ready(struct epitem *epi)
+> >  {
+> > -	return !list_empty(&epi->rdllink);
+> > +	if (&epi->rdllink == cmpxchg(&epi->rdllink.next, &epi->rdllink, NULL))
 > 
-> I think we already have `PointedTo` [1]? But I remember that I've seen a patch
-> to remove it again [2].
-
-Well, not exactly, I think. Arc, for instance, defines PointedTo as ArcInner<T>.
-So, I think we indeed want something different.
-
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/rust/kernel/types.rs#n32
-> [2] https://lore.kernel.org/all/20250612-pointed-to-v3-1-b009006d86a1@kernel.org/
+> Perhaps:
 > 
-> > Then we could do:
-> > 
-> >     pub fn register_release<P>(dev: &Device<Bound>, data: P) -> Result
-> >     where
-> >         P: ForeignOwnable,
-> >         P::Inner: Release<Ptr = P>,
-> > 
-> > ---
-> > Cheers,
-> > Benno
+> 	if (try_cmpxchg(&epi->rdllink.next, &epi->rdllink, NULL))
+
+Not sure this is the same.
+This will write back the current value of epi->rdllink.next to
+epi->rdllink if epi->rdllink.next is not &epi->rdllink.
+
+The intention is to check if epi->rdllink.next is set to &epi->rdllink
+(pointing to itself) and if so set it NULL just to avoid to ensure
+further cmpxchg() will fail here.
+
+> > +		llist_add(&epi->rdllink, &epi->ep->rdllist);
+> > +
+> >  }
+> >  
+> >  static inline struct eppoll_entry *ep_pwq_from_wait(wait_queue_entry_t *p)
+> 
+> John Ogness
+
+Sebastian
