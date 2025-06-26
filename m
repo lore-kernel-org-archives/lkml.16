@@ -1,91 +1,88 @@
-Received: from www262.sakura.ne.jp (www262.sakura.ne.jp [202.181.97.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C98A186E2E;
-	Thu, 26 Jun 2025 02:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.181.97.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6E154BC6
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 02:17:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750904153; cv=none; b=RoqtVM47JNzuSmrSErEoBBpwwiwcCjT8MHth5xqw86fZSDWTSBTgsHD5qs6+MIMBQgiVnnTosBXAkN9uAjB143ydwI4Dwek4BusGKi6KNNvaQiHrlzlJ8Zx4xEX3nNeFk1EgU7remvXQQxP9ZwzpbPWNIa+IFUnSZMN40x1SBmo=
+	t=1750904242; cv=none; b=qVlqWheD+6IWvMMLLNuYBJlaKw0Gc/z6GT0+QMLsFC9TPsqFAgQlqrLQeKhs57Zr37GdCJBx3m1zbfMOL0qPru8SWvrU1ySaZQ7od8FJEMhMrs1tieACVobDBO+p6oJfStF8PLexExA8Vgz0yep2sDWR6jtL6hpFLLM2MUWodho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750904153; c=relaxed/simple;
-	bh=+dRX2AVflqAwHDhDktn+4p4n+goMhVeeIqK/XjI75m0=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=DOJuugS/r2Cm6ceogTGgmwaMijEkA8wyRK31zyexgoMG1cHNidPHScLipLFH3UHpSfmk1OdBExsP3ooP9/fdd2gP16Rs7xfPJ2ZJlo3UY1BJ3luPzR/8kto2w3o+q5Yh938gXkfxGtAu0XmL3SOz2bwPKf9NqvIj+YeMZK9zS7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp; arc=none smtp.client-ip=202.181.97.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=I-love.SAKURA.ne.jp
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=I-love.SAKURA.ne.jp
-Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 55Q2F2Mc028149;
-	Thu, 26 Jun 2025 11:15:02 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Received: from [192.168.1.6] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-	(authenticated bits=0)
-	by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 55Q2F0Cq028142
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-	Thu, 26 Jun 2025 11:15:00 +0900 (JST)
-	(envelope-from penguin-kernel@I-love.SAKURA.ne.jp)
-Message-ID: <d689279f-03ed-4f9b-8fde-713b2431f303@I-love.SAKURA.ne.jp>
-Date: Thu, 26 Jun 2025 11:14:59 +0900
+	s=arc-20240116; t=1750904242; c=relaxed/simple;
+	bh=7Qa+GklDAGzasOIuJhZ4fL4OS5E5tGU9W5R/ZqD/GT8=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=J1Xvx+1I3ZCifLc8xVQQxKzbed2ACOWFzO3t7mwzVrbhXobzdlfD5RjGIrjjLFJaeUYOppFoV9w/xZTwRGQo0nB0uJUdxMQFHBuTsCUXUOALFoofLbPd9+/0A8VYIeN91I8W+lBrdJnOtMJLDaYH7DdkkchNgehTCklM8ciwo4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ddce213201so5755565ab.0
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 19:17:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750904239; x=1751509039;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5YOODeU58lx9eP+f5RxFcGZApGO2XvIds84h6dWULXk=;
+        b=TevCGWZmAE1fMTkuOIx71jojGLBR+ML7gwcqULjit1No7W5CfcVaXr/rZRc26qYrC6
+         mkFEXWNnrHfy/9IHlEI7NF8ATeK/K1R+ASnwlrbVeLF9stmNUXGsNvavi2K6PO7MBrwv
+         itwZt0nz14460DJuGlHaOFQqv9tO8x55Md7lFqBGSKBLEWFZ3yoS06ZwDGsTfJSs6b5j
+         dGQFVgf1Ub4clEDtj9WfiwpIWZmsDPTmlln8JpclknEMseKqzzS5X6qghGq7gq8Axnl8
+         y/EDFnqpcxdtEXNG7Ak2BK5jq9/FRCs3mxBHTdnHtw1FyPBRBE/tEnD8zGAyIbVnLbv9
+         W0EA==
+X-Gm-Message-State: AOJu0YzhuLejASfKATE0brB2dRe4DDr2pBRstwPSiXayZ2WBB105PfAn
+	KVCJCkXTlbYA/nOxL7fU3Z7dYIQneRCNQzBz9KdZtMHBchJXYIwpHHMLSqh6j3ngHyiG3vdmZ67
+	iO6CXCNK0oR7wU6Z2V7CPQ6VslqxeqP62bnafcPGmBYzXmv3t/iQd/sjkQQs=
+X-Google-Smtp-Source: AGHT+IEqJPbq78DvJjusv6DjZ5y6MBRPFRjUnDoesiSaryCBB+ao+x55+4purie5Edvtp6f+rmQ45RwWIt0FnGZ8gON0/AljjEcN
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: Mark Fasheh <mark@fasheh.com>, Joel Becker <jlbec@evilplan.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Richard Weinberger
- <richard@nod.at>,
-        Al Viro <viro@zeniv.linux.org.uk>, ocfs2-devel@lists.linux.dev,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [PATCH] ocfs2: update d_splice_alias() return code checking
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Anti-Virus-Server: fsav101.rs.sakura.ne.jp
-X-Virus-Status: clean
+X-Received: by 2002:a05:6e02:1889:b0:3dc:7b3d:6a45 with SMTP id
+ e9e14a558f8ab-3df3e0b23dbmr29444345ab.0.1750904239504; Wed, 25 Jun 2025
+ 19:17:19 -0700 (PDT)
+Date: Wed, 25 Jun 2025 19:17:19 -0700
+In-Reply-To: <6854a3e6.a00a0220.137b3.0022.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <685cadaf.a00a0220.2e5631.01cf.GAE@google.com>
+Subject: Re: [syzbot] Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in
+ vmci_host_unlocked_ioctl (3)
+From: syzbot <syzbot+9b9124ae9b12d5af5d95@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-When commit d3556babd7fa ("ocfs2: fix d_splice_alias() return code
-checking") was merged into v3.18-rc3, d_splice_alias() was returning
-one of a valid dentry, NULL or an ERR_PTR.
+For archival purposes, forwarding an incoming command email to
+linux-kernel@vger.kernel.org.
 
-But when commit b5ae6b15bd73 ("merge d_materialise_unique() into
-d_splice_alias()") was merged into v3.19-rc1, d_splice_alias() started
-returning -ELOOP as one of ERR_PTR values.
+***
 
-As a result, when syzkaller mounts a crafted ocfs2 filesystem image that
-hits d_splice_alias() == -ELOOP case from ocfs2_lookup(), ocfs2_lookup()
-fails to handle -ELOOP case and generic_shutdown_super() hits "VFS: Busy
-inodes after unmount" message.
+Subject: Re: [syzbot] [kernel?] KMSAN: kernel-infoleak in vmci_host_unlocked_ioctl (3)
+Author: lizhi.xu@windriver.com
 
-Don't call ocfs2_dentry_attach_lock() nor ocfs2_dentry_attach_gen()
-when d_splice_alias() returned -ELOOP.
+#syz test
 
-Reported-by: syzbot <syzbot+1134d3a5b062e9665a7a@syzkaller.appspotmail.com>
-Closes: https://syzkaller.appspot.com/bug?extid=1134d3a5b062e9665a7a
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
-This patch wants review from maintainers. I'm not familiar with this change.
-
- fs/ocfs2/namei.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/ocfs2/namei.c b/fs/ocfs2/namei.c
-index 99278c8f0e24..4ccb39f43bc6 100644
---- a/fs/ocfs2/namei.c
-+++ b/fs/ocfs2/namei.c
-@@ -142,6 +142,8 @@ static struct dentry *ocfs2_lookup(struct inode *dir, struct dentry *dentry,
+diff --git a/drivers/misc/vmw_vmci/vmci_host.c b/drivers/misc/vmw_vmci/vmci_host.c
+index b64944367ac5..8bca943b9f4b 100644
+--- a/drivers/misc/vmw_vmci/vmci_host.c
++++ b/drivers/misc/vmw_vmci/vmci_host.c
+@@ -91,7 +91,7 @@ struct vmci_host_dev {
+ static struct vmci_ctx *host_context;
+ static bool vmci_host_device_initialized;
+ static atomic_t vmci_host_active_users = ATOMIC_INIT(0);
+-
++static atomic_t vmci_host_dev_open = ATOMIC_INIT(0);
+ /*
+  * Determines whether the VMCI host personality is
+  * available. Since the core functionality of the host driver is
+@@ -120,6 +120,11 @@ static int vmci_host_open(struct inode *inode, struct file *filp)
+ {
+ 	struct vmci_host_dev *vmci_host_dev;
  
- bail_add:
- 	ret = d_splice_alias(inode, dentry);
-+	if (ret == ERR_PTR(-ELOOP))
-+		goto bail_unlock;
- 
- 	if (inode) {
- 		/*
--- 
-2.49.0
-
++	if (atomic_inc_return(&vmci_host_dev_open) > 1) {
++		atomic_dec(&vmci_host_dev_open);
++		return -EBUSY;
++	}
++
+ 	vmci_host_dev = kzalloc(sizeof(struct vmci_host_dev), GFP_KERNEL);
+ 	if (vmci_host_dev == NULL)
+ 		return -ENOMEM;
