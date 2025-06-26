@@ -1,258 +1,154 @@
-Received: from mail-il1-f207.google.com (mail-il1-f207.google.com [209.85.166.207])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6229020D4F2
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 17:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7112ECD21;
+	Thu, 26 Jun 2025 17:35:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750959337; cv=none; b=Zfn+S42soN2cxr4JzhzIIdw6K9ndK+ivTS/nHqXuxgu2xp3vKxBmUQfWYasUkMrQpktg6g9Ho5qBLTEfgn9qN7W6W7odp2EswNwcoj1E+EScTEMc0TBBSbWO945bdZY9sgG1iEEPns5l4kGnHy4PUohDEGcav6EZIXyIZsMn9so=
+	t=1750959340; cv=none; b=tEGy+mcQE0dIJ6IWC+tnKVT3dRjDRjl91S2MGjhGlTDWla3GHC9s3atrZQ5ydlTfRs7G3JgOerJt7+iW5515Au8sPvDv5yfAzA99zPjNwHvzwQmHKgK/+HelSEKeMU8chpOGDnoW9bhD2jniuf4ptSbpDXvo1MyvDtiGorfcUPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750959337; c=relaxed/simple;
-	bh=XRpgJZJaDbblfzAjOZsZowY+pQiRxQMyHq67oRlYGLo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=PsHrAZ270iCT8jfKh0a3+RZxmCl4g/43+mFtniRyoGBNZi7KNMO0lgo75kwsRSxsmBY/sGbHwjG4rfneCmkHxM9I6jqcZ7D41UibocV9ym0Id0jDThrTR658d+KZXX1HYwy76/E1Ty0raT8XgCwv5J7gTxYWT7xaJfwTgA2drwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f207.google.com with SMTP id e9e14a558f8ab-3ddd5311fd3so11193035ab.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:35:35 -0700 (PDT)
+	s=arc-20240116; t=1750959340; c=relaxed/simple;
+	bh=LRec7XG15yYVqYXD4V+rr6o+ySekVyH57ZR0Z7yirGE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dGkzhbiViVBkYw8DcOpMv+fc9VdCyOPPwNc4f20HLXHAVvdK3Yydyr4tlZ17jKmVmBH++/X5EIc7iQf6ea2Dxij55WHMCIOOzNMYSptCe6qw1RdAOojUeTEPRDnQOjSaxOW2r70aNnVGOSw0NAyo0VOLrbnUOZgEebZtvB2Yu1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lC9+4I/l; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lC9+4I/l"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-4538bc1cffdso7608525e9.0;
+        Thu, 26 Jun 2025 10:35:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750959337; x=1751564137; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=d4IQo3oY1NUbU13/kHA6jBPwbWfvABXBa/vUplEI8Dw=;
+        b=lC9+4I/lKk3+XliXGiQwFEZ3YiFLSijru5LH72jj3gHowan4/5cigOxCfpnvIf43eW
+         0vjFACmGR+gBT1Eh0o7xECDZlh8AeQFemxRd9dA6jh229qsdZcAIFw7ty1iB8aLooUjb
+         eW8InxET50RCK4GeobPuls9PmpGYCUdBl1vCbnHk2SIZ4i9xZDsja4PzrKl6zyjO3I3s
+         doJFpfuBNsyJc4gBpbUTQK2KeghztLF6phHS72bRFT6hthoih6io3V5aSUULzm3D7PkL
+         0kzxoZNzhg+vgfIlpvVPh6aSUxdcI3HQtnEIS19vmwyGL7RHqm9d9ZgggyIrLa3wGhRH
+         vKHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750959334; x=1751564134;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TU197a3JfH+4pS4vtdq7wZCi16xhDkdjrNkV8+wYE64=;
-        b=ej2SmlXLw0C+DyVliDRkXgJ1M3GeMPSg5rIeGpSbf3SU6c0QYjILo9RpxkYUcidTxq
-         OLEXObMGu06JsUqcKa4h9s5+GsH9wp9oIm9Mi2ETOGxPkqyny4XZ93DDq0AQkOew8fz8
-         tgol4/gutf/FsGhTHN8R2Egblb1I1HrHpgMfPN15+1FlnwABBvpHkeybWN50CON2YhWo
-         bcvK8ssccBclcvFwjZAxuxRlog7zjQYaij9jpZGkmAEtrnHIJ7VIzjkR5WsxZnrhreB3
-         s8fq0xo6WPCcPAHlesSo7vbCRnM+EUL+fxlpEm+Jpis7OmHCeqgejwAWxg+Wqy05/7td
-         zPJw==
-X-Forwarded-Encrypted: i=1; AJvYcCWAcPTE5sA7gEBtt4cMMdYb8IDMXVW2jQb4LzRNY9X6Gonqf9fTo6fXOz8z2ZYhbTcngaGgTKlO3tmjBqk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmTg6sjumhyJmsgtzZZdXt/hzXQwIn3EF9EumV0JlV9cdMPsiF
-	NLjFKy3/dxQDtp4dD3NzIhvG9h41LLxC9RUSsgfi1XtnP3OE1HL7bsS8quhxc1zpcdbVuSMZWl8
-	CyURDhQZxNVk69qPJcdAUmVWCMWXBb1yw/mKfDEnXx59tUyqtGULkE7s4jnI=
-X-Google-Smtp-Source: AGHT+IFODPi3tMIWSSJBeVS5eH3z6jHwUwrvgQptMdeT6s7HrAaMEpvfN+AackGuVMOdcNPixcMjbVX3yW3LGo0r2u8pfwdI19g4
+        d=1e100.net; s=20230601; t=1750959337; x=1751564137;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=d4IQo3oY1NUbU13/kHA6jBPwbWfvABXBa/vUplEI8Dw=;
+        b=cbPE/KLMpVKtHuzyhXELhCL2l3tSFd+06OWp7QfzxumWcLM1guTJyEEaP2Ou/MUYuQ
+         MA1GyzfsagNkJ/L/SNOL6SFdfCHnifRAsZ759xhHLoZ3J4TggdGBb13mtr20IkUB3PEN
+         E/mSJ/CEQ+QuUPKY2qIfEveQwlUxMsJjm2xUTQqgH8wiekhlxG+pMp9306K7dJsnHRx+
+         4sjXt4weZyGwStYred3dpsMrNdDzCNgvm6GO5kJueONYX1vH1jVy9VWMAqJvJkwHAamV
+         13RyogdtgTng0Ye3j9Kb2xHxj+yw7egr+e8EaARGP4bZZmBKR4U1BU71KOBPjP5NbcqJ
+         l46Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWohAsBiF/9vjStSWQIll2FeZ8Yk+zg743S+4dJldQzfbT3DFOIZ5rgh1ypbmmc6b+hGjEBRTn6dJw=@vger.kernel.org, AJvYcCXOt8ZzECiXERa96eSxj+m2YNd5CVcJSZCjBGfJrtbs0NGrW5DnkNKnNCG4WWbaR4UM1qm6b8HCgGF+/LValx4=@vger.kernel.org, AJvYcCXXQEgBn/volgbFKnmYFGDmAhi1/Hegt02BFuBQlv/xSmVOO1UdfmDiAGP66zeEOrI334ohGkYGM7Gw350/@vger.kernel.org
+X-Gm-Message-State: AOJu0YxH/oMT1K9ljl3e4NPleShxrny5EILDSnONgCyznRiRh881bzok
+	HamggzGu11+FBmzKhtW6CK3bW7FDib7sQty17gwngBAX/tnX2Kt2cRUX
+X-Gm-Gg: ASbGncuT2MK1M8ZdAFj/RUvH4EAtCDC47y/IXyxLJr9UcbPptuOAedp4Eppjb1Iuny2
+	lHH15YDzRLXvC6ME9auD1Wx1NNb6hboAdW1OJzSsxVjM33Ot35m9iHgdMhrXKNCmNNZ8aLMCk7e
+	niWcxB+Q9IsoqhX6Wchowduak2V4vY6/y7l94dTFcBZD8DcUqoBUhhMFqFZbNM0vy7C1pgc17E/
+	vT72iYmvUujzHNUa5rWjenxoED4u8CI2296jQJ6W7GtRtNwSmHgiFWfFC+57F9++JIUJupY8QYH
+	ZsWb8AUWAohS+P3WrLJG4MSDwdxLYhMJZZA0UeQYi+oTKrFAZAXHMCfKuI9H64SyEzaD6gsbjn8
+	wxqWYLh1d07GzdbPH0nfTLlXPZp+GOcf+X1FeJRDcfK4QAQE=
+X-Google-Smtp-Source: AGHT+IGqs1dKVsAQOBkG0uJKKW00BG6gEADd0HuE55Je6HtpWaL4l7R+DN33oTHYLVPnIixxTCjkUQ==
+X-Received: by 2002:a05:600c:3e8e:b0:442:e9ec:4654 with SMTP id 5b1f17b1804b1-4538ee5ce0cmr2085345e9.8.1750959336485;
+        Thu, 26 Jun 2025 10:35:36 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e52af3sm460609f8f.50.2025.06.26.10.35.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 10:35:36 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Asahi Lina <lina+kernel@asahilina.net>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: [PATCH v1 0/4] rust: Add basic I2C driver abstractions
+Date: Thu, 26 Jun 2025 18:33:33 +0100
+Message-ID: <20250626173333.897333-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
+References: <20250620150914.276272-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:b49:b0:3df:3a07:a208 with SMTP id
- e9e14a558f8ab-3df4ab2b877mr4185535ab.4.1750959334450; Thu, 26 Jun 2025
- 10:35:34 -0700 (PDT)
-Date: Thu, 26 Jun 2025 10:35:34 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685d84e6.a00a0220.2e5631.02e4.GAE@google.com>
-Subject: [syzbot] [btrfs?] KASAN: slab-use-after-free Read in close_fs_devices
-From: syzbot <syzbot+772bdfe41846e057fa83@syzkaller.appspotmail.com>
-To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+This patch series introduces basic Rust I2C driver abstractions 
+and optional ACPI match-table support and provides a sample driver 
+demonstrating both OF and ACPI binding
 
-syzbot found the following issue on:
+Currently Rust I2C abstractions support only Open Firmware OF device 
+matching. This series splits the work into four patches so that the 
+core abstractions and sample driver can land immediately while ACPI 
+integration may be reviewed once the ACPI macros are upstream
 
-HEAD commit:    ecb259c4f70d Add linux-next specific files for 20250626
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11147182580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=f0c48ed70f20d0d2
-dashboard link: https://syzkaller.appspot.com/bug?extid=772bdfe41846e057fa83
-compiler:       Debian clang version 20.1.6 (++20250514063057+1e4d39e07757-1~exp1~20250514183223.118), Debian LLD 20.1.6
+Changes include
+ - core I2C abstractions `i2c::Device` `i2c::Driver` `i2c::Adapter` 
+   built on `struct i2c_client` and `struct i2c_driver`
+ - a standalone Rust sample driver exercising Legacy I2C ID and OF ID
+   matching
+ - optional ACPI ID-table support in the `i2c::Driver` abstraction
+ - ACPI-enabled sample driver showing `kernel::acpi_device_table!` 
+   usage
 
-Unfortunately, I don't have any reproducer for this issue yet.
+This separation lets maintainers review and merge the non-ACPI portions
+immediately while patches 3 and 4 both depending on the ACPI 
+infrastructure can be queued once the ACPI macros are upstream
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/a6a71f1563ce/disk-ecb259c4.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/914a0673e6a0/vmlinux-ecb259c4.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/87f7194e2a0e/bzImage-ecb259c4.xz
+Patch series:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+772bdfe41846e057fa83@syzkaller.appspotmail.com
+1 rust: i2c: add basic I2C device and driver abstractions
+2 samples: rust: add I2C sample driver (OF only)
+3 rust: i2c: support ACPI match-table in driver abstractions
+Depends-on: 20250620152425.285683-1-igor.korotin.linux@gmail.com
+4 samples: rust: show ACPI ID-table in I2C sample driver
+Depends-on: 20250620152425.285683-1-igor.korotin.linux@gmail.com
 
-BTRFS: device fsid a6a605fc-d5f1-4e66-8595-3726e2b761d6 devid 1 transid 8 /dev/loop4 (7:4) scanned by syz.4.616 (8589)
-==================================================================
-BUG: KASAN: slab-use-after-free in close_fs_devices+0x81f/0x870 fs/btrfs/volumes.c:1182
-Read of size 4 at addr ffff88802fe14930 by task syz.4.616/8589
+Igor Korotin (4):
+  rust: i2c: add basic I2C device and driver abstractions
+  samples: rust: add Rust I2C sample driver
+  rust: i2c: ACPI ID-table support for I2C abstractions
+  samples: rust: show ACPI ID-table in I2C sample driver
 
-CPU: 0 UID: 0 PID: 8589 Comm: syz.4.616 Not tainted 6.16.0-rc3-next-20250626-syzkaller #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-Call Trace:
- <TASK>
- dump_stack_lvl+0x189/0x250 lib/dump_stack.c:120
- print_address_description mm/kasan/report.c:408 [inline]
- print_report+0xd2/0x2b0 mm/kasan/report.c:521
- kasan_report+0x118/0x150 mm/kasan/report.c:634
- close_fs_devices+0x81f/0x870 fs/btrfs/volumes.c:1182
- btrfs_close_devices+0xc5/0x560 fs/btrfs/volumes.c:1201
- btrfs_free_fs_info+0x4f/0x3c0 fs/btrfs/disk-io.c:1250
- deactivate_locked_super+0xbc/0x130 fs/super.c:474
- btrfs_get_tree_super fs/btrfs/super.c:-1 [inline]
- btrfs_get_tree_subvol fs/btrfs/super.c:2073 [inline]
- btrfs_get_tree+0xd1e/0x17f0 fs/btrfs/super.c:2107
- vfs_get_tree+0x92/0x2b0 fs/super.c:1804
- do_new_mount+0x24a/0xa40 fs/namespace.c:3902
- do_mount fs/namespace.c:4239 [inline]
- __do_sys_mount fs/namespace.c:4450 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4427
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fedccd900ca
-Code: d8 64 89 02 48 c7 c0 ff ff ff ff eb a6 e8 de 1a 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fedcdc28e68 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007fedcdc28ef0 RCX: 00007fedccd900ca
-RDX: 00002000000055c0 RSI: 0000200000005600 RDI: 00007fedcdc28eb0
-RBP: 00002000000055c0 R08: 00007fedcdc28ef0 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000200000005600
-R13: 00007fedcdc28eb0 R14: 000000000000559d R15: 0000200000000440
- </TASK>
-
-Allocated by task 8589:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
- __kasan_kmalloc+0x93/0xb0 mm/kasan/common.c:394
- kasan_kmalloc include/linux/kasan.h:260 [inline]
- __kmalloc_cache_noprof+0x230/0x3d0 mm/slub.c:4396
- kmalloc_noprof include/linux/slab.h:905 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- alloc_fs_devices+0x4f/0x1d0 fs/btrfs/volumes.c:384
- device_list_add+0x6b7/0x20b0 fs/btrfs/volumes.c:813
- btrfs_scan_one_device+0x3fd/0x5b0 fs/btrfs/volumes.c:1487
- btrfs_get_tree_super fs/btrfs/super.c:1856 [inline]
- btrfs_get_tree_subvol fs/btrfs/super.c:2073 [inline]
- btrfs_get_tree+0x433/0x17f0 fs/btrfs/super.c:2107
- vfs_get_tree+0x92/0x2b0 fs/super.c:1804
- do_new_mount+0x24a/0xa40 fs/namespace.c:3902
- do_mount fs/namespace.c:4239 [inline]
- __do_sys_mount fs/namespace.c:4450 [inline]
- __se_sys_mount+0x317/0x410 fs/namespace.c:4427
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Freed by task 7454:
- kasan_save_stack mm/kasan/common.c:47 [inline]
- kasan_save_track+0x3e/0x80 mm/kasan/common.c:68
- kasan_save_free_info+0x46/0x50 mm/kasan/generic.c:576
- poison_slab_object mm/kasan/common.c:247 [inline]
- __kasan_slab_free+0x62/0x70 mm/kasan/common.c:264
- kasan_slab_free include/linux/kasan.h:233 [inline]
- slab_free_hook mm/slub.c:2417 [inline]
- slab_free mm/slub.c:4680 [inline]
- kfree+0x18e/0x440 mm/slub.c:4879
- btrfs_free_stale_devices+0x61c/0x6b0 fs/btrfs/volumes.c:564
- btrfs_scan_one_device+0x3d5/0x5b0 fs/btrfs/volumes.c:1481
- btrfs_control_ioctl+0x11f/0x360 fs/btrfs/super.c:2256
- vfs_ioctl fs/ioctl.c:51 [inline]
- __do_sys_ioctl fs/ioctl.c:907 [inline]
- __se_sys_ioctl+0xf9/0x170 fs/ioctl.c:893
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-The buggy address belongs to the object at ffff88802fe14800
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 304 bytes inside of
- freed 512-byte region [ffff88802fe14800, ffff88802fe14a00)
-
-The buggy address belongs to the physical page:
-page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x2fe14
-head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-anon flags: 0xfff00000000040(head|node=0|zone=1|lastcpupid=0x7ff)
-page_type: f5(slab)
-raw: 00fff00000000040 ffff88801a441c80 0000000000000000 dead000000000001
-raw: 0000000000000000 0000000000100010 00000000f5000000 0000000000000000
-head: 00fff00000000040 ffff88801a441c80 0000000000000000 dead000000000001
-head: 0000000000000000 0000000000100010 00000000f5000000 0000000000000000
-head: 00fff00000000002 ffffea0000bf8501 00000000ffffffff 00000000ffffffff
-head: ffffffffffffffff 0000000000000000 00000000ffffffff 0000000000000004
-page dumped because: kasan: bad access detected
-page_owner tracks the page as allocated
-page last allocated via order 2, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 5205, tgid 5205 (udevadm), ts 34630804861, free_ts 34502396580
- set_page_owner include/linux/page_owner.h:32 [inline]
- post_alloc_hook+0x240/0x2a0 mm/page_alloc.c:1848
- prep_new_page mm/page_alloc.c:1856 [inline]
- get_page_from_freelist+0x21e4/0x22c0 mm/page_alloc.c:3855
- __alloc_frozen_pages_noprof+0x181/0x370 mm/page_alloc.c:5145
- alloc_pages_mpol+0x232/0x4a0 mm/mempolicy.c:2419
- alloc_slab_page mm/slub.c:2487 [inline]
- allocate_slab+0x8a/0x370 mm/slub.c:2655
- new_slab mm/slub.c:2709 [inline]
- ___slab_alloc+0xbeb/0x1410 mm/slub.c:3891
- __slab_alloc mm/slub.c:3981 [inline]
- __slab_alloc_node mm/slub.c:4056 [inline]
- slab_alloc_node mm/slub.c:4217 [inline]
- __kmalloc_cache_noprof+0x296/0x3d0 mm/slub.c:4391
- kmalloc_noprof include/linux/slab.h:905 [inline]
- kzalloc_noprof include/linux/slab.h:1039 [inline]
- kernfs_fop_open+0x397/0xca0 fs/kernfs/file.c:623
- do_dentry_open+0xdf3/0x1970 fs/open.c:964
- vfs_open+0x3b/0x340 fs/open.c:1094
- do_open fs/namei.c:3887 [inline]
- path_openat+0x2ee5/0x3830 fs/namei.c:4046
- do_filp_open+0x1fa/0x410 fs/namei.c:4073
- do_sys_openat2+0x121/0x1c0 fs/open.c:1434
- do_sys_open fs/open.c:1449 [inline]
- __do_sys_openat fs/open.c:1465 [inline]
- __se_sys_openat fs/open.c:1460 [inline]
- __x64_sys_openat+0x138/0x170 fs/open.c:1460
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-page last free pid 5205 tgid 5205 stack trace:
- reset_page_owner include/linux/page_owner.h:25 [inline]
- free_pages_prepare mm/page_alloc.c:1392 [inline]
- __free_frozen_pages+0xb80/0xd80 mm/page_alloc.c:2892
- __slab_free+0x303/0x3c0 mm/slub.c:4591
- qlink_free mm/kasan/quarantine.c:163 [inline]
- qlist_free_all+0x97/0x140 mm/kasan/quarantine.c:179
- kasan_quarantine_reduce+0x148/0x160 mm/kasan/quarantine.c:286
- __kasan_slab_alloc+0x22/0x80 mm/kasan/common.c:329
- kasan_slab_alloc include/linux/kasan.h:250 [inline]
- slab_post_alloc_hook mm/slub.c:4180 [inline]
- slab_alloc_node mm/slub.c:4229 [inline]
- __do_kmalloc_node mm/slub.c:4364 [inline]
- __kmalloc_noprof+0x224/0x4f0 mm/slub.c:4377
- kmalloc_noprof include/linux/slab.h:909 [inline]
- kernfs_fop_write_iter+0x158/0x4f0 fs/kernfs/file.c:311
- new_sync_write fs/read_write.c:593 [inline]
- vfs_write+0x54b/0xa90 fs/read_write.c:686
- ksys_write+0x145/0x250 fs/read_write.c:738
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-Memory state around the buggy address:
- ffff88802fe14800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88802fe14880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88802fe14900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                     ^
- ffff88802fe14980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88802fe14a00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
+ MAINTAINERS                     |   3 +
+ rust/bindings/bindings_helper.h |   1 +
+ rust/helpers/helpers.c          |   1 +
+ rust/helpers/i2c.c              |  15 ++
+ rust/kernel/i2c.rs              | 386 ++++++++++++++++++++++++++++++++
+ rust/kernel/lib.rs              |   2 +
+ samples/rust/Kconfig            |  11 +
+ samples/rust/Makefile           |   1 +
+ samples/rust/rust_driver_i2c.rs |  69 ++++++
+ 9 files changed, 489 insertions(+)
+ create mode 100644 rust/helpers/i2c.c
+ create mode 100644 rust/kernel/i2c.rs
+ create mode 100644 samples/rust/rust_driver_i2c.rs
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+base-commit: 63dafeb392139b893a73b6331f347613f0929702
+-- 
+2.43.0
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
