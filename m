@@ -1,101 +1,129 @@
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490BC1D5170
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 18:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80D5B2ED853
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 18:05:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750961112; cv=none; b=ofO3nDb66+eHFuAe0+/F/rRYTHcwj0S148upf3BdTWrilmy4ik8dnxo6C5Tt+XLqGUeesPzfxnCSAIRIwuaoUNqg6das6wzHH/qJgABgTdsB8kUYaF9xQOkYHwlQqNQ2bKulzqVoRKQrb6mNj0IcXvXLpokfc6629vgD+T3ibjU=
+	t=1750961115; cv=none; b=S+xIR+GEqQGs1djiNS0dwy2zRmmZz0xBC5J904SVDiB0ilr8LzrIIL33KRzOhtXpecloHUYpMt5oyW89MWU+ailu+oW0hJUgWpx+HLpIsbDoPqjVqaQBAH2DfxemlYw9kjMS9T4qNuogemrdsEYo7kWMyZD0jeYbkcQ333xBa9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750961112; c=relaxed/simple;
-	bh=KaT6NFipBaP+7uuCJdfAzl9+3V9on+Bs/E7nEI3V674=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PRr+I1NYHqWkPU5I7mf+WrfpARdoPjiB5uG92L7iQJbqJ2bLmN0qKAf2Y1X3f1hdp96uofWoeAhOh123aTHvTB1EsMehDZ6sbqLTDEIhO2V2rHFFaFAaDTxa1ySkHQkS0cRZT7gzOxZRU1TivmbcIrrSg9X1SXi97pXN4q4Bu+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=He6Wjpwj; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1750961115; c=relaxed/simple;
+	bh=HT1PZrDkhp6DI0bsi07qe2ZDkBoSKcXmqoFHOkEVHss=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hh9D5CS9TcJ3y/I3sU9CWZ+r6f/BDzg9uIzOLbbyANhHFqbB7WABWaJNtu/pbRizyAV8ytFXV9+QIHnLBNVqZ+ZEG2a3T0AHborUAG0PwDLUsgluKKTthhOZpcGyJ9D6zlwXryyNNvpafrNXDwiW3bSYT+iQvG9z3UAxCgrFHVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cjSKrhN9; arc=none smtp.client-ip=209.85.219.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="He6Wjpwj"
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-40791b6969bso937416b6e.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 11:05:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cjSKrhN9"
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6fadb9a0325so12650896d6.2
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 11:05:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1750961108; x=1751565908; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2jdIp3t/JcnvNgV/EvawInKAMJ+vsXxeF/1Rq9fXb34=;
-        b=He6WjpwjTmx2Wu6zSo+tO7GQ776ElNtRtih3OV2DqD3WUZjSXs3W4VNr0JUZiCiTF8
-         8ZdYj9hGOxwtZ9PpFfZz0qkkQD63//CI9+7iTrjkT6plOf/rZVmu8TROHdoVSKPHn84i
-         j+E++rV/7JFLMZCmMS4OW8B7aoFY79RQ27EedBBkJ4GGAHrq7ppe7a5trdC0oN8vZyY8
-         BqvOXMR2YKTr1uHEJCu20XD6ukm4Z/nq1U3AuG4OiTtXF/tF8pLMGQRXsj4KhIjreXcu
-         TrrlGFwQA7SDsE3dw2w2vcmvtIHAJupS+ot5VknBGgZ1eQi0g/P4OUp/4L1fVqf7fVlE
-         c++w==
+        d=gmail.com; s=20230601; t=1750961112; x=1751565912; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QiZwuPd0AoWibuQALk3DmH+qz68nVTZ0UFoYX05f/uk=;
+        b=cjSKrhN9i55CUBkiyawY16YeZ32z1ZbKIEHysAUDgdG3OjTTQxNoh7nV/xgWHZToPh
+         q4mljyeq9MvIzCuymj3ZaNmLS+2lE4yxDGEyzQNGzRa6PZ4hReiB/FohTTjLZ7qCT/5C
+         NWxyd62SMS2oLgqfGKw2UczbCIbdbRMKdLpjE9v7sy9Fx97OcUmYZWY4C8yAG9QqonNL
+         5LUqTepr/sjwDt31BtF5Mfb+uTkA8FqPdscZP/NEbmhUlj27XeNBH+aN9rbPa1TRNjSV
+         W0vSf914mBLeP9Qagn3NLxwwNQfjXkdGEg2XpR2NbtahWFCsCWPXgYjjII+JC2ALZ9Mv
+         mRew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750961108; x=1751565908;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2jdIp3t/JcnvNgV/EvawInKAMJ+vsXxeF/1Rq9fXb34=;
-        b=sB3GLs/h/l7AreMFO4cgOqaf2qpdxkShcI/hk1ockvFUeVeHBgg1UQMpSoD3OhgqFY
-         e74SLi30xAqmHisDdo2g+/nA1gEpToQ2vKdaSUk/yUgdEN2fSSbpotH4oVxM4z8qjuVU
-         CNhTI7pOrx0Xc1kyxSnLEbu6avwqeM6RiUJqKAJg7OO8KtUZ/DS8wdVJdO7REnHfN65R
-         13UI2FTM4NlrVcvErxRsOKs4WXt47Sf5EIXr+lc0W26TKXL408+3y41lyfCPC6poDuB8
-         UZC6OmFDEcEmy9kxDGvbrXZQYvUPsKbkS001qlVbcfMDA7wKH7Glkd4X6loXNtDuGO5K
-         0I0A==
-X-Forwarded-Encrypted: i=1; AJvYcCWn+1RgLbaePiQS+Gu/U3ZLwJOYsJP3o8xvAfC1b1AhsCV8XZZD1Z3J90rIkzJreHR0b0bHHmqN3KbrhO0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe55103U1CTct89qbj2O+cYDIuzVW0X2pOIOt3Dx0mnGroVyo+
-	39UdRvV8HZEWZnnqC/WkXcllj0fMcl5NzSG+3E5SF7tam6VJOkzFVGUeC0Oqo9y78hk=
-X-Gm-Gg: ASbGncs/Yp6CJRES8xn9j3yE5E+y75mRsN0WbvUzVJs5NvhIjBOyxL58Eg+jnB3kCIK
-	sChXKL3A9Z50395SQ5b4aiRu0Hp4Uuv+OVw2KudKfjdR7sL6d6+U80NWEAh/RG/Hu1ASRYUkMPV
-	x2uz5ue2IO958NvVed54hAgwOFZlVTd+fTCXq9h/Pd3nulvxmG8HW48j5pZEYU2flWMVjplBxRP
-	ISpBXNFJ0VB6jj+Bf+rbPDJYfjmRz1sXih1Jez50mKviIXk6EW6x3JHhBeFa3bCNDzg3EDjgMzd
-	F+6Fzr+U2R0dUmgmC7gasq7B1jzvFnYRTGz9Pi7BEZmQIVVObmLe5GOKbj1N93+AGngL
-X-Google-Smtp-Source: AGHT+IEL45qBZ2uXaEhapcM+NgWFI00UFnRWP4NW8+AeUpc2hiUpniAGVTq3f++FmGqy7GeXB2NfPQ==
-X-Received: by 2002:a05:6808:17a4:b0:406:7186:5100 with SMTP id 5614622812f47-40b33e18292mr142490b6e.22.1750961108418;
-        Thu, 26 Jun 2025 11:05:08 -0700 (PDT)
-Received: from localhost ([2603:8080:b800:f700:154:5a01:d5a1:16d6])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-40b32438b5bsm49071b6e.44.2025.06.26.11.05.07
+        d=1e100.net; s=20230601; t=1750961112; x=1751565912;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QiZwuPd0AoWibuQALk3DmH+qz68nVTZ0UFoYX05f/uk=;
+        b=eNskp7w4j/ZB8edo7IC8WYYl/FVhu7FuFRr4QgNYDDpBwqaCHV0sHB5lRz1D6kMhku
+         EVfBHOJJMnN0ZWIeg7U1LDsvMg1QvDK6OZ6QC4zSQqQ9v55IPQS4JAdDWLqkVpyJT3QM
+         ZuJmmkT6sWpR8As5Qwt8DJA8CH0B50ymnvhlNDlUIE6oVuBx1VslcNAfPSeXvyrx+5nw
+         wQpQQ5b3e7BoeUPfee7wJvaVDZjCM7gLhEYAtNhswuoZKdJj51CBr1CGWD9LVxXIv+z3
+         bYI6nT3b5bNpce+UkRn74a+TvpoA9OSMjJiWffcR0leFhESqr7GdkYnpV0qnG+xTC4K4
+         YgDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuxTy74ueq36NDCrL04Fr6Ij0zWWQyRkqt42cVPwfUYAJ4HTfrJr5AqJNDAkH0befRSXFqF9DN/7xKPEo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVGgHiJ1BTwXPu4heDnHGO9vdt8pK/89GII15NrcRQxMDi3Biz
+	mR0EYRQxPpHrGk26nPHglT6zQvMhjpR4yCautY5G67qfqLo6z1F/jlW/GM5Q4w==
+X-Gm-Gg: ASbGncttbrOU1S3EKiu2sbtFQDMWmNtGx9Z9c4X+D+/E/VEzLG3soHpGlZ2DnciPvWr
+	lCUoSpUQn/hyLDZcZ0jX+b4O9cYEZrMOxZe8yE5y9FWwcov3sGM2mM9aj2fPc8YJd1XTVENCDDv
+	MJpLgnJLIoyycT2Wu6Dhh5dJhCTACa9AaP986fEGcXAAhqdmarXAeqBoKYE5qNHIOWHS5RZ9/7q
+	XCfnlD7VKMODAFL95VkNysOnXHqzwcGPSE4kkG8IZPUuTYCY0Yu8vVQNs5W93sOyr3nkZxo+nKG
+	vv75PwJFmFaP6lVKLInWVGTKQVqNhvKrjmcfqbIyQPPpwthx6LxR
+X-Google-Smtp-Source: AGHT+IFgwg9byY7wnJjSTsjkRMLnfpRN05Qu3TUP7ur9Y/iw0TPz2j48zy3H+eunzSHMiSdxwVpIsA==
+X-Received: by 2002:a05:6214:460a:b0:6fb:23:4812 with SMTP id 6a1803df08f44-700037a5989mr7609226d6.26.1750961112038;
+        Thu, 26 Jun 2025 11:05:12 -0700 (PDT)
+Received: from fushigibana ([2601:405:4a00:186f::50e])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fd7718d340sm10275906d6.4.2025.06.26.11.05.10
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 11:05:08 -0700 (PDT)
-Date: Thu, 26 Jun 2025 21:05:05 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Pratibimba Khadka <pratibimbakhadka@gmail.com>
-Cc: mchehab@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Al Viro <viro@zeniv.linux.org.uk>,
-	"open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)" <linux-media@vger.kernel.org>,
-	"open list:STAGING SUBSYSTEM" <linux-staging@lists.linux.dev>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] staging: av7110: Replace msleep() with usleep_range() in
- tuner function
-Message-ID: <4520c798-9372-4aa8-b6cc-f919b0c2dc59@suswa.mountain>
-References: <20250626160853.8772-1-pratibimbakhadka@gmail.com>
+        Thu, 26 Jun 2025 11:05:11 -0700 (PDT)
+Received: from pnariyoshi (uid 1000)
+	(envelope-from pedro.nariyoshi@gmail.com)
+	id c5e35
+	by fushigibana (DragonFly Mail Agent v0.14 on fushigibana);
+	Thu, 26 Jun 2025 14:05:10 -0400
+From: Pedro Nariyoshi <pedro.nariyoshi@gmail.com>
+To: Hans Verkuil <hverkuil@xs4all.nl>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>,
+	linux-media@vger.kernel.org,
+	chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	MrChromebox <mrchromebox@gmail.com>
+Cc: Pedro Nariyoshi <pedro.nariyoshi@gmail.com>
+Subject: [PATCH] media : cros-ec-cec: Add Fizz board variants, so driver can detect them
+Date: Thu, 26 Jun 2025 14:03:41 -0400
+Message-ID: <20250626180429.463420-1-pedro.nariyoshi@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626160853.8772-1-pratibimbakhadka@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26, 2025 at 09:53:50PM +0545, Pratibimba Khadka wrote:
-> Replace msleep(10) with usleep_range(10000, 12000) in the PLL lock
-> waiting loop of nexusca_stv0297_tuner_set_params().
-> 
-> usleep_range() is preferred over msleep() for short delays (< 20ms) as
-> it provides better accuracy and allows the scheduler flexibility for
-> power management optimizations. The 10-12ms range maintains the same
-> timing behavior while giving the kernel scheduler room to optimize.
-> 
-> This change improves timing precision during the PLL lock detection
-> phase without affecting the overall functionality of the tuner
-> configuration process.
-> 
-> Signed-off-by: Pratibimba Khadka <pratibimbakhadka@gmail.com>
+I recently reflashed a Chromebox (Wukong variant of the Fizz board) with
+coreboot and I noticed that the cec driver refused to load with a bit of
+tinkering, I realized that the dmi_match_table was expecting the product
+name to be Fizz, but `dmidecode` reports `Wukong` as the product name. I
+am not sure if this is the best approach, but adding this patch lets me
+load the driver and it works properly.
 
-Sorry, these msleep() need to be tested on real hardware for us to
-accept them.
+Alternatively, we could instead match the DMI_PRODUCT_FAMILY, instead of
+DMI_SYS_VENDOR and DMI_PRODUCT_NAME. In my board at least, that says
+"Google_Fizz".
 
-regards,
-dan carpenter
+I am open to suggestions for alternative solutions and I hope I did't
+break any rules (this is my first kernel patch). (And sorry for the
+previous error in the subject line)
+
+Signed-off-by: Pedro Nariyoshi <pedro.nariyoshi@gmail.com>
+---
+ drivers/media/cec/platform/cros-ec/cros-ec-cec.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+index 419b9a7abcce..a26473c3cd84 100644
+--- a/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
++++ b/drivers/media/cec/platform/cros-ec/cros-ec-cec.c
+@@ -302,8 +302,15 @@ static const char *const port_ab_conns[] = { "Port A", "Port B", NULL };
+ static const char *const port_d_conns[] = { "Port D", NULL };
+ 
+ static const struct cec_dmi_match cec_dmi_match_table[] = {
+-	/* Google Fizz */
++	/* Google Fizz and variants*/
+ 	{ "Google", "Fizz", "0000:00:02.0", port_b_conns },
++	{ "Google", "Bleemo", "0000:00:02.0", port_b_conns },
++	{ "Google", "Excelsior", "0000:00:02.0", port_b_conns },
++	{ "Google", "Jax", "0000:00:02.0", port_b_conns },
++	{ "Google", "Kench", "0000:00:02.0", port_b_conns },
++	{ "Google", "Sion", "0000:00:02.0", port_b_conns },
++	{ "Google", "Teemo", "0000:00:02.0", port_b_conns },
++	{ "Google", "Wukong", "0000:00:02.0", port_b_conns },
+ 	/* Google Brask */
+ 	{ "Google", "Brask", "0000:00:02.0", port_b_conns },
+ 	/* Google Moli */
+-- 
+2.49.0
 
