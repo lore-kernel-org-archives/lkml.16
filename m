@@ -1,57 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35A3E20127B
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 17:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6F0F20E315;
+	Thu, 26 Jun 2025 17:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750958638; cv=none; b=O6CNNpM8+ctTmQYDFuh/dlo4UcCncajU3IeyyTODtLSw0YhCu1w5Z6hfqfHY7AJZgy86aWb0fjxzzmaYtA5vARiB+/IxSJkd3afuWen13l1pS/k+I0pZc7Qm31GIxyqzISgxJAToGLIcDD4FpRlTC+C77khgkSLBz7PRhPlW5ME=
+	t=1750958671; cv=none; b=tihLT0KaayAik3KPR8J5dGt96sR2z20h1ikK+djc2U/G5zu38bt+f1uTZ42iLNpOrs1craJPE9Q1GwpGEUv60hM7Q0Dse64BTzEtdwdA/xCLBgzqqMhj/KUNUlMIL0WkLSeF3VIBiKCKzkOCLMdmOVCu466R2psfbi1cahnyugY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750958638; c=relaxed/simple;
-	bh=kVSLceRpYBij/by0D8xxXHAgukzMQXLQRvK+pxse7H4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=C+iVK9eh637O+QWhcDqjV5O8Et9KS5TBH77aOwbnYy/teIrf0WLz+sdBCIcRRvRSEXG5ltc8Hxl/a3OLbisrIb+i/kvgCwx+1bnvppIJSAHAYFyoQCi9W6abDADXUG97AtIxjzpJ4hMxkHYdI9h//WwC5y7sHv4hvkKwl/S1ihg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GBNg0FYu; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750958671; c=relaxed/simple;
+	bh=KdQnwApMJiZhnf712Xc+Slm3O5Udnt89NCUlEf/erRg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lkzJdASTt78+HfoBuDXcYxpwyQIrfudrNodFYFRictQtkkX71/U/WfNE8k0tGASu/emnsN6RFXW6YhoEFWbh+GT3UzbMIuJ7l1XQimXzlRSYC6MijciCgn+AcFKnSMe4sNGzJfZso08U+r+PQjkjsLG7VsI+jBW9b4rtp/dquBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mzaBjX7H; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GBNg0FYu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750958637; x=1782494637;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=kVSLceRpYBij/by0D8xxXHAgukzMQXLQRvK+pxse7H4=;
-  b=GBNg0FYu6kvNSWVEIsGqjnNnvU7ub9QBsniAmZGJDOeDqcBLuN6WJqy5
-   /8+BUEAWiFr+h+TXjHDqE4KBjjYy+Z5JB21cbp4j9xkut/DCgUT5nw52K
-   03Phf+P/Lx8Bs4IHpq9vX//uQO9rRWedg49Kcr6u9GwLTDRXgGvm8aV/E
-   JaDL7ma8Kx+OpWOV8aQ4eogYgAfmEgYqHnSkNR8eaWj7ODY4OdIAm5ozS
-   dI2HUOIj3WlE+i15dEnM1AZyig1Lath1BOStos9L+PxVsHi0LZicnU9Z0
-   Gsdcz5vtgv1rkJyceIJopO/Zvfte46XdGvsD0uf/QUETusPBx6ceZKcqJ
-   w==;
-X-CSE-ConnectionGUID: Qo95Udy6TXOdbe1kpyXc2A==
-X-CSE-MsgGUID: 36hTSPbWQfK72o2OygHVUA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="40882441"
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="40882441"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 10:23:57 -0700
-X-CSE-ConnectionGUID: kk77XfOzT2qdnbP/01bXEA==
-X-CSE-MsgGUID: TnrUiKOIRCuETUiU3ZHKGQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="156865698"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa005.fm.intel.com with ESMTP; 26 Jun 2025 10:23:56 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 5F7122AD; Thu, 26 Jun 2025 20:23:54 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [resend, PATCH v1 1/1] logic_pio: Use RESOURCE_SIZE_MAX definition
-Date: Thu, 26 Jun 2025 20:23:28 +0300
-Message-ID: <20250626172348.329297-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mzaBjX7H"
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-7494999de5cso932741b3a.3;
+        Thu, 26 Jun 2025 10:24:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750958669; x=1751563469; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GKksa35feXB36GHTT9Qp1/4Jr24P78lzzDtaWWGcnqU=;
+        b=mzaBjX7H/mh7ZSWPCK7+kEZfVJG+wCkmBU+WhnrQfNfhnvygrRUsTM78fnYRHgB4D1
+         +IjQ+jb3S2jXXaG43wFljzSdqIaWE09CFSY2d5zxaJjzeBcRYGS2IOAYaWhG2NTVHAuQ
+         5NWHx+PRcnDjj1xJ8Pw8PLXZEV8BIk33UkehOV9VzIXQdU31fG4ZHcYajkwhZOwRlBVU
+         qlk+Sf9rEXYhl95Uz22NSdCLbWmP2phXtwWtiH8o6DvGnYNIx9sS2zZQO3JoCBjrEYB2
+         uQHQVLxf4mUTOodmZQUVSM6R63IIe7X8QyddZ0KeBbwh2sNB80c73L5PeQ/1P7c41TJN
+         3Ong==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750958669; x=1751563469;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GKksa35feXB36GHTT9Qp1/4Jr24P78lzzDtaWWGcnqU=;
+        b=uhUNcxYHx0RKdjcFZ7D+M7jnfJIBzDinVVGq9s8scNJJClYt9RXpOfipycdU9c+nb7
+         xZs3KM89MKEk6VURinh8DZozTP4hPcJYiR3aVYlAkwX45Tgt3QCR/LHNNRxkDRS2D/eo
+         WJpLO2RIXA2auidqzgcFIRo6p5c8BjdopEvFlWbgDYZ6R+9OTzQSy1MBatv5z1xVfvK0
+         YsIWZEY/pOHbx1lzXdhX2LGPtpgMeG8uUrL7A0HiK+fCPLbveE3hag0V02qzsZKuI5bE
+         q3roYsEqe7nbwmbvomka9ufpWez14FBsXLxc/qlLXF9YoXGVYxrWGJ7JFfqB8XFpmVvF
+         hm9g==
+X-Forwarded-Encrypted: i=1; AJvYcCV1EjkzXVXoBwHvVLeZF1cAbVwVmScJ61DS2R7Ci2PvjdUPSRBlJ14UKJvawcZOi0ef3IXLk4odGxAJrg==@vger.kernel.org, AJvYcCXBBVD8Wzj6+oLRv4JFXyvkVj2qIksKaMfXCdBHlvE603qyCSOWdPh+vcgk05J08YDfxu7RTKHaU54f8Ur4@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb/QWPplkkA+Rt9Fmcxjy6YSWZh5MvacHJNgPx1XP9s78iqgEA
+	Oe4/HV5kjWA+cEYRwR+naPqbHV5JW1AQALZWFl/Ry6DqbSUz3KB+LEQ75cqzCQ==
+X-Gm-Gg: ASbGnctotifMaW9RXyhbJ++qUM8lL8c37M9Ja9C3NTOPEgbkUilM2oKW9slk28bdgeH
+	wfSR/iLQ6dCIteB9FSVgHts9qnvk6vFltLz1Vy8Knbff8vz+GSKu+5LZfmBoIrHOUacpuhB7rtA
+	UepnvgFdr40GB60MkbV8BnQcdFnjFYYe/7igGZm9cz7FUbSEPgCvWs0laJzNm2KJf0FLZsigDHg
+	2TXhgF9gRxFCiF4BgOzE0W2aVzzXpnXIfmATUWcMB/q/cWi3/Lz4cwKPueFpd6tfRUg+oK4dnle
+	b8eMiKjYZevaQDCjELefVAFEJLFcgALWzldXO/1Y6P1GV6j3Tr8teYcBWb1NIgKOviD8dvWf35n
+	osA==
+X-Google-Smtp-Source: AGHT+IGpNrxWVlvz9yO0sPnp3SvG03DYr98IGTzu1iXn9pp/JkN8N+6B43mNyV1Djnpa3TrKJLV9Eg==
+X-Received: by 2002:a05:6a00:846:b0:736:a8db:93bb with SMTP id d2e1a72fcca58-74af6e66354mr59436b3a.5.1750958669114;
+        Thu, 26 Jun 2025 10:24:29 -0700 (PDT)
+Received: from localhost.localdomain ([49.37.221.186])
+        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-74af541be9fsm229670b3a.50.2025.06.26.10.24.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 10:24:28 -0700 (PDT)
+From: Abdun Nihaal <abdun.nihaal@gmail.com>
+To: andy@kernel.org
+Cc: Abdun Nihaal <abdun.nihaal@gmail.com>,
+	gregkh@linuxfoundation.org,
+	lorenzo.stoakes@oracle.com,
+	tzimmermann@suse.de,
+	riyandhiman14@gmail.com,
+	willy@infradead.org,
+	notro@tronnes.org,
+	thomas.petazzoni@free-electrons.com,
+	dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org,
+	linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: fbtft: fix potential memory leak in fbtft_framebuffer_alloc()
+Date: Thu, 26 Jun 2025 22:54:10 +0530
+Message-ID: <20250626172412.18355-1-abdun.nihaal@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -60,26 +82,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Use a predefined limit instead of hardcoding it.
+In the error paths after fb_info structure is successfully allocated,
+the memory allocated in fb_deferred_io_init() for info->pagerefs is not
+freed. Fix that by adding the cleanup function on the error path.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: c296d5f9957c ("staging: fbtft: core support")
+Signed-off-by: Abdun Nihaal <abdun.nihaal@gmail.com>
 ---
- lib/logic_pio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch is compile tested only. Not tested on real hardware.
+Bug was found using our prototype static analysis tool.
 
-diff --git a/lib/logic_pio.c b/lib/logic_pio.c
-index e29496a38d06..6d6a7498dbe5 100644
---- a/lib/logic_pio.c
-+++ b/lib/logic_pio.c
-@@ -175,7 +175,7 @@ resource_size_t logic_pio_to_hwaddr(unsigned long pio)
- 	if (range)
- 		return range->hw_start + pio - range->io_start;
+ drivers/staging/fbtft/fbtft-core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/staging/fbtft/fbtft-core.c b/drivers/staging/fbtft/fbtft-core.c
+index da9c64152a60..39bced400065 100644
+--- a/drivers/staging/fbtft/fbtft-core.c
++++ b/drivers/staging/fbtft/fbtft-core.c
+@@ -692,6 +692,7 @@ struct fb_info *fbtft_framebuffer_alloc(struct fbtft_display *display,
+ 	return info;
  
--	return (resource_size_t)~0;
-+	return RESOURCE_SIZE_MAX;
- }
+ release_framebuf:
++	fb_deferred_io_cleanup(info);
+ 	framebuffer_release(info);
  
- /**
+ alloc_fail:
 -- 
-2.47.2
+2.43.0
 
