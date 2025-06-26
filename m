@@ -1,103 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from layka.disroot.org (layka.disroot.org [178.21.23.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143312F0C57;
-	Thu, 26 Jun 2025 19:37:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBA127510C;
+	Thu, 26 Jun 2025 19:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.21.23.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750966675; cv=none; b=X7kwiikSreuaTyAyIvg1XL/ZBYA4y4Gi0CzuXyEzy/CYje5Jk29UESNGAQfuqVYf3gfSbP2Fg1VVDUMUwWRGJyUSsjKykFt8M03R85zmJbvwqD7PzEJxIhnweSpZWzWCzSi96TlPHiFB+iB6Xop8vwIrMv3Z5P++Xr5M9RcwmrE=
+	t=1750966754; cv=none; b=Zd9Vyv1MCdEhda/jcvC3UkWdSWcHVkU2Wyz2W1FCGi0v97SR6Z+gPdm+F4GTSYeV5mtQO2zP2PBCq+OPi9aazXFJV3JTIBcCDaV7qoIMUucbgovRUWNvXHkBRnhJqky68odpMgdLolKYNlwXOrb8sXlzfwzwBtx0ngmWk27gsqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750966675; c=relaxed/simple;
-	bh=/l8zD1E5pieTO6zRx0WY8HgKTDqPjhK81dadYrxqSEI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NNBGfNBtR1E738uJjBTjOhOHv3AwyCgeKfUlVvZw+30w4UT7xiaLoxfhgee3PPHhup1G6Dn/FA7/KNnHspBVaZg30P5YCWPNRsecZWA/OONruJ4WiF/sB1DpLoD/bH07dV6olWgRNcJu5ApAXB7AgMOVypV/1im8J8Bf3nXPoCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FUW7W0U5; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750966754; c=relaxed/simple;
+	bh=zxNeykMCVsQL9yo26mI9JxjmjAGRyfaJ2CumE34l/70=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ABjaIz9Qp1XW/Bd/P4ftjCXFKMkAbtV4uPsrJMU4U0cDIUu2JI/eyQKBVn41JRpJNxlAmA2LvpLevoq8rWXzppsYR6awN6lFkx2WSlkV2yBXZWCKRt4pss3KOEp0x1KJ+2+IzxcNdp3l17oqHHGSiA12fLOmfUBKUoDrl00IZsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org; spf=pass smtp.mailfrom=disroot.org; dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b=MVXt5OEn; arc=none smtp.client-ip=178.21.23.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=disroot.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=disroot.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FUW7W0U5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750966675; x=1782502675;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/l8zD1E5pieTO6zRx0WY8HgKTDqPjhK81dadYrxqSEI=;
-  b=FUW7W0U5JsJvE51hhzEWPMwKAznhgsOzXLtNQoCfXX2SmWiN5ApeQio/
-   7udqbvtq9O+DyhsEMJ5y3pq3qN86wWT55zy90k1y7jpCWLj99KOni2Vaq
-   DOGFIIvFSfel8K8ccxagoy6hcq6TBWEcjt7LqYSGc0mfevqO3yEMH8F92
-   8RVLxNqpqawCPvOG89hXXGWwXySyHBYKHeNdl7D7+5WQ9gohp80JbSh4o
-   iLoTFK+tk93gWjBQWrdt0xcSmRY8Ida5oCuZ2QDrJIQyNW2rXgdjLucRT
-   jTnOb/b8RRNM/h8g1uVlluIuBCF5WM9oKyIssxmcs943VlNesqR8nsaZ0
-   A==;
-X-CSE-ConnectionGUID: C318PTx0SaOCngelqo2n1A==
-X-CSE-MsgGUID: xpsUYR2cSjaW9F6OWZxEnw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53241251"
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="53241251"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 12:37:54 -0700
-X-CSE-ConnectionGUID: cxiJiHnNR96mlENndFKEQg==
-X-CSE-MsgGUID: Mx4Ck3xcTuWHMQ+1TSGLPw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="158346011"
-Received: from smile.fi.intel.com ([10.237.72.52])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 12:37:51 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uUsPr-0000000AGs2-3YEo;
-	Thu, 26 Jun 2025 22:37:47 +0300
-Date: Thu, 26 Jun 2025 22:37:47 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mario Limonciello <superm1@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Hans de Goede <hansg@kernel.org>,
-	Mika Westerberg <westeri@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	"open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
-	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
-	open list <linux-kernel@vger.kernel.org>,
-	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>,
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-Message-ID: <aF2hi1q2QK6LAKIW@smile.fi.intel.com>
-References: <20250625215813.3477840-1-superm1@kernel.org>
- <20250625215813.3477840-5-superm1@kernel.org>
- <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
- <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
- <rn2kp5tog2agvswva2ipqq2ytiqdcgccnocudsg6ckwfh4roei@provk2g6dita>
- <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org>
- <nxticocp26r5mmpkttritw76h5igw7bdpus6zaf5krkso2h5xy@wna6m2quekfi>
- <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
- <obpakvzyludc4jskqzyxf65dhqds7ie3jkbfsqdve32ouuaili@xvogkmwvbmbf>
- <bf97081a-e766-405e-9385-3657135b8c0f@kernel.org>
+	dkim=pass (2048-bit key) header.d=disroot.org header.i=@disroot.org header.b="MVXt5OEn"
+Received: from mail01.disroot.lan (localhost [127.0.0.1])
+	by disroot.org (Postfix) with ESMTP id A8CED25AFA;
+	Thu, 26 Jun 2025 21:39:10 +0200 (CEST)
+X-Virus-Scanned: SPAM Filter at disroot.org
+Received: from layka.disroot.org ([127.0.0.1])
+ by localhost (disroot.org [127.0.0.1]) (amavis, port 10024) with ESMTP
+ id 3H0ggFo7uRMP; Thu, 26 Jun 2025 21:39:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=disroot.org; s=mail;
+	t=1750966749; bh=zxNeykMCVsQL9yo26mI9JxjmjAGRyfaJ2CumE34l/70=;
+	h=From:Subject:Date:To:Cc;
+	b=MVXt5OEnu7jbyXJ3UpjIBENx14KAqgtmQmaU+TamH36rvJpaIQiQo+8NFUqZi/p0f
+	 zE1r0VPdJwD2+sAA74H/GVjp/CuTh8BmToPYNEr/cH3i+Yyf/8wfiGKoLbRtaNmevL
+	 +sP79OfdAwHauQMsHcEvhHcExx+w/t5Olf3gXkOmBb8aDdVVD81dY08YyWpHvJ6RMh
+	 PEv3nQKCcqZA9QfLckI2WZZvIPtzrE8sRDWW28gFJegVzULInSl1GZQ3c1KLfFAySN
+	 zG8uLmJ03k6bBJQRhNIvoR6Odg19e8zSQE4fiteJ8p8SOhrWESP4wHcGcX8SVYmbZg
+	 74XdTDYil227g==
+From: Kaustabh Chakraborty <kauschluss@disroot.org>
+Subject: [PATCH v2 00/13] Support for Exynos7870 DSIM bridge
+Date: Fri, 27 Jun 2025 01:08:49 +0530
+Message-Id: <20250627-exynos7870-dsim-v2-0-1433b67378d3@disroot.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bf97081a-e766-405e-9385-3657135b8c0f@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMmhXWgC/2WNOw6DMBAFr4K2jiN7Eb9UuUdE4eA1bBEceZEFQ
+ tw9DilTzkhv3g5CkUngVuwQKbFwmDPgpYBhsvNIil1mQI2VrrBUtG5zkKZttHLCL+WxczVZP9g
+ KIa/ekTyvZ/HRZ55YlhC38yCZr/21aoN/rWSUVsaWpX4Otu2cvzuWGMJyDXGE/jiODz2lotmwA
+ AAA
+X-Change-ID: 20250523-exynos7870-dsim-f29d6eafca52
+To: Inki Dae <inki.dae@samsung.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Seung-Woo Kim <sw0312.kim@samsung.com>, 
+ Kyungmin Park <kyungmin.park@samsung.com>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Alim Akhtar <alim.akhtar@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-samsung-soc@vger.kernel.org, 
+ Kaustabh Chakraborty <kauschluss@disroot.org>
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750966738; l=2348;
+ i=kauschluss@disroot.org; s=20250202; h=from:subject:message-id;
+ bh=zxNeykMCVsQL9yo26mI9JxjmjAGRyfaJ2CumE34l/70=;
+ b=ZHhes87ocrYxF2VsFJm2KKHstyoR/9FavFvLc3C3qp3ZRWk5Rf7ws+ppeLl+J37J0O5IodIQi
+ Mp5UnS9CbjBCyG2Nlt5Tp1a49gcp8WjjWQD52G+xbAUTj+m+GSOUKSA
+X-Developer-Key: i=kauschluss@disroot.org; a=ed25519;
+ pk=h2xeR+V2I1+GrfDPAhZa3M+NWA0Cnbdkkq1bH3ct1hE=
 
-On Thu, Jun 26, 2025 at 01:55:29PM -0500, Mario Limonciello wrote:
+This patch series introduces a lot of changes to the existing DSIM
+bridge driver, by introdcing new registers and making register offsets
+configurable for different SoCs. These preliminary changes are followed
+by the introduction of support for Exynos7870's DSIM IP block.
 
-Mario, I see that this discussion takes longer than expected, however I agree
-that adding debounce call in GPIO ACPI lib is right thing to do independently
-on the outcome of this discussion. So, I have looked into the code and think
-that the patches do not need to be squashed. I have some tweaks and I would
-like to take your patches as two separate entities and add my code on top.
-I will cook something tomorrow and send out based on this version of yours.
+Work is heavily inspired and only possible due to Samsung's vendor
+kernel sources. Testing has been done with Samsung Galaxy J7 Prime
+(samsung-on7xelte), Samsung Galaxy A2 Core (samsung-a2corelte), and
+Samsung Galaxy J6 (samsung-j6lte), all with DSI video mode panels.
 
-P.S. TWIMC, It's only about the code that touches gpiolib-acpi.
+Signed-off-by: Kaustabh Chakraborty <kauschluss@disroot.org>
+---
+Changes in v2:
+- added commit to isolate clock names for each variant
+- replaced clock names with generic ones
+- added maxItems to clocks property in dtschema
+- Link to v1: https://lore.kernel.org/r/20250612-exynos7870-dsim-v1-0-1a330bca89df@disroot.org
 
+---
+Kaustabh Chakraborty (13):
+      drm/bridge: samsung-dsim: separate LINK and DPHY status registers
+      drm/bridge: samsung-dsim: add SFRCTRL register
+      drm/bridge: samsung-dsim: add flag to control header FIFO wait
+      drm/bridge: samsung-dsim: allow configuring bits and offsets of CLKCTRL register
+      drm/bridge: samsung-dsim: allow configuring the MAIN_VSA offset
+      drm/bridge: samsung-dsim: allow configuring the VIDEO_MODE bit
+      drm/bridge: samsung-dsim: allow configuring PLL_M and PLL_S offsets
+      drm/bridge: samsung-dsim: allow configuring the PLL_STABLE bit
+      drm/bridge: samsung-dsim: increase timeout value for PLL_STABLE
+      drm/bridge: samsung-dsim: add ability to define clock names for every variant
+      dt-bindings: samsung,mipi-dsim: document exynos7870 DSIM compatible
+      drm/bridge: samsung-dsim: add driver support for exynos7870 DSIM bridge
+      drm/exynos: dsi: add support for exynos7870
+
+ .../bindings/display/bridge/samsung,mipi-dsim.yaml |  27 ++
+ drivers/gpu/drm/bridge/samsung-dsim.c              | 346 +++++++++++++++------
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c            |   9 +
+ include/drm/bridge/samsung-dsim.h                  |  15 +-
+ 4 files changed, 307 insertions(+), 90 deletions(-)
+---
+base-commit: 1b152eeca84a02bdb648f16b82ef3394007a9dcf
+change-id: 20250523-exynos7870-dsim-f29d6eafca52
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Kaustabh Chakraborty <kauschluss@disroot.org>
 
