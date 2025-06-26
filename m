@@ -1,167 +1,112 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51F026B2A9
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 10:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE7F825B1D8;
+	Thu, 26 Jun 2025 10:49:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750934982; cv=none; b=ulNAAD8JS823hRzQmrxgzZ9Bot8NxhUN0yJ0Ax17sq2E2kQtxQefi/FoS8elKwClOUji+JLvJ2r9vZ8i0hcHs1f2sD49blxEezmV3PIyuDCOjHyFwaDDLLxX8CUQ8sWWAPPh7svDuAk0nvPFkm0ez0atmzXa7n84Na2UXTrEewI=
+	t=1750934987; cv=none; b=qJ5DUXtnDBibZUg3Ry9nrOwS6onip9Y9kTgqbm8JnmF1cRR1fumFCaJkDPI1fpiz0PA1juFd9QCJupc5rovzh3z7Qjlh0kIZNYrfsNVuRIKEYRYFabARyGuUUaW826tOrGsRCpUClS31ZuLikOX8up5dMJ8mXcSzLTDBuAUFjMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750934982; c=relaxed/simple;
-	bh=rBGBxF+i3sBjEDYBJzXyfsL97dNuu5H4YUuYuuclALQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rA+q9CVvjKO+/oHYczuj4bUgk70NsFZUoKPoQT6bESveNmHCYmKqXpim1W0rqW340Y3ht6lPW+VFj8nQQJ+cFh6QtUXYRDXWYMHzm64xfAdoSkC7AQJHcezC36tSW5+qkBXW7VtkE0O2eILPSt+NtR6qJ/L3D87Ao7SgSCt3WN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=g/qC2zeH; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1750934987; c=relaxed/simple;
+	bh=UnEPQjbST0yIQL5kAKbK+dXltux/87JOeue/+D47lnw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ffqFOinaW9fupjMljv+Wn4TXyZyhAVTkvbk5KWYHySSXOoJ0T+GCVTbEDXSJtCnbXQRKu2tDjU6sCDgUIxF40KXiLZ+QIQtKOG9H1PZyKhjb05FebQbicMogAjS44R5kF3HMCYqlEn2+zbBHCwjBmJzGEBNQAq6xVvNTrKyN48I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FQScZq+x; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="g/qC2zeH"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3a5123c1533so431326f8f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 03:49:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1750934979; x=1751539779; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1a0bjQkrE0lXOwbpfOZiZMnL8XuL0L+bDp2YasyQuLw=;
-        b=g/qC2zeH57dA3Ddn2gBt06KrRw5rhOs/KrOwGt5DINU95mZqhr06obNUacy9cV+p5A
-         DkE92d60c4gDQGnhO+CGFGzW53ioXrpTr6HnuWHdi4UnDFQzAKvPk0RjSdQqw+aVgITa
-         ZyT0LT1n1amgAVYFYuv0b5fl+3xIBz5Vqf91wD14ojgXD3qyOORIJWH90WtMnkvqjnfZ
-         wc1p1Q/dh+qGKr3a+ESg5QBXmrD5IyQCqt3j3cRZVWEL90bZBuFvn0Nb2fxaHTsQKIH6
-         NSmUD9PQEZEOzzzi3WV6KhXNQKKwUtt7V70JJilpBtA2xLL4p+iboVRooAhwo9nJZDoa
-         LVrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750934979; x=1751539779;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1a0bjQkrE0lXOwbpfOZiZMnL8XuL0L+bDp2YasyQuLw=;
-        b=jkFTQX5oXE12c9vdzvlhg+OpQBGQX9PCRsJTYZ2zqh/J+tvLb+HUDUVFooVmNHqE8d
-         gXJPLhbeEg70CPDWMD/y45hD6HiCBBsJLp924XwzGD4iz91reFe+4sP/Y6NGIJApJhaL
-         c7BY7W4j1TurV8x3/m4ForioECiFKiOkwE9r9rKf5vHX8RlyBjDHQ41Fqz1SH1rF+M/e
-         HfJCslu4HN83CXRDPfkf3jLypaimhdx6MKaVcX77+2MQo32LTjQ5JJcGHgokDSr/y/1e
-         7F692/tIZpkm3phnrAap+g9m7vr81R2dGGUOYxr+YY8aiAeZhR/9uiyGL89iUddZLqMd
-         NaJw==
-X-Forwarded-Encrypted: i=1; AJvYcCXX4AVvzHjdzg/1aQhyCNN4MIpq9wHqMGpXJG6rHGEeRHCAm67xLIVhm34iuf6Z7zgKIibWZn2ODiNOvlw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxfsSULEQUSbtuhflcSxfZiHxWfSKOmmIRB5d4yewtlX0Za4oKp
-	AK4HZncWiA8JIMsmMnci+yw04rPT01dOJpehxe4mpyxd4AkOqxWwzj31wvyCv6leneo=
-X-Gm-Gg: ASbGncviQyTgcYDM1q6pEu1Inuxgz+Hhk1fHgyvbMJRoywipt3FS4cPsx9WstTuua1I
-	+WdYiNgii8abSvggHQe/E7BM95H/KkT35YMIXhntNWqkHgWo/XDsM5lFWNGTHs15n4CuKRwCwfT
-	IHKqpiTMEcEBGqQQtj5psxiLCJ7OjN6PgBktxV9c9fxO4G6Ou7xDGxtdD5kFNdyuF9EPtpTvgJT
-	WmL/TzCOs3wJTwff81a3euP4Q3ZSddtysgvAo2WBnU/J1SeAwWjl4hT1jXCBe68StA+JzX1ULbj
-	MuautFD+UVrsLvbUy5/zaeW2pY5tlOa8bf4T4G5SwhLQ5DpNebTF98QBletQ
-X-Google-Smtp-Source: AGHT+IHq/vFRkJj/oJMZi+3J+q9S/bpmTny3iypeXTqCnR6Swc4ofLBoKTbFvUTAYU6DIEK0HRcCDQ==
-X-Received: by 2002:a5d:64e1:0:b0:3a6:d92d:9f7c with SMTP id ffacd0b85a97d-3a6ed5e9c5bmr5333270f8f.9.1750934978974;
-        Thu, 26 Jun 2025 03:49:38 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::5485])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a6f3a79377sm1808780f8f.20.2025.06.26.03.49.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jun 2025 03:49:38 -0700 (PDT)
-Date: Thu, 26 Jun 2025 12:49:37 +0200
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Aleksa Paunovic via B4 Relay <devnull+aleksa.paunovic.htecgroup.com@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
-	Jonathan Corbet <corbet@lwn.net>, Palmer Dabbelt <palmer@sifive.com>, 
-	Conor Dooley <conor@kernel.org>, devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
-	Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
-Subject: Re: [PATCH v4 6/7] riscv: Add tools support for xmipsexectl
-Message-ID: <20250626-af013235ad8d22421b2fe5b1@orel>
-References: <20250625-p8700-pause-v4-0-6c7dd7f85756@htecgroup.com>
- <20250625-p8700-pause-v4-6-6c7dd7f85756@htecgroup.com>
- <20250626-a1aca9887bbf5410741e17c4@orel>
- <20250626-0186dfe9df28f9bb72a91426@orel>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FQScZq+x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750934986; x=1782470986;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=UnEPQjbST0yIQL5kAKbK+dXltux/87JOeue/+D47lnw=;
+  b=FQScZq+xjQGi/LzB3IvO0/YC41ibu39Gf7+4HPS6wxHuYjEYLCKREu3f
+   I3PujXCkjOwp/2FcZA4e5ay9wfWJfPxK+nccRLIdfVqboiO66jCmnvbnI
+   39Vn4Feqq7co5pw3FWLb9Hp9s0FHEpdLiEhHLdtEGhQCxXThlGotmAPYt
+   didiK6wWZVIE22Qmr/SUtgZQtU4E0Vr/WN/LcbWXv6Yw0sci6xpnuga1Y
+   vzMhu3fIC8pSpDcniJZjZUAG9Gdd+QICu3rTFhX/+KYBqXQ74ENXN28sC
+   E/DxbOfYbPTKIqQ7o8+Fp7xSOluMNyiqZowEeIHy2VhhEhN996SB2hpAt
+   A==;
+X-CSE-ConnectionGUID: XTaqbdbXTYusNGI9eYP7cw==
+X-CSE-MsgGUID: F07V3iv2RI6NgELoI03TTg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="70655804"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="70655804"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 03:49:46 -0700
+X-CSE-ConnectionGUID: q7IeTlpFRre97LBms66Sbg==
+X-CSE-MsgGUID: CVI+DdBOSdK+R73pK4IYCQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="152784343"
+Received: from jairdeje-mobl1.amr.corp.intel.com (HELO khuang2-desk.gar.corp.intel.com) ([10.124.220.86])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 03:49:41 -0700
+From: Kai Huang <kai.huang@intel.com>
+To: dave.hansen@intel.com,
+	bp@alien8.de,
+	tglx@linutronix.de,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	hpa@zytor.com,
+	thomas.lendacky@amd.com
+Cc: x86@kernel.org,
+	kirill.shutemov@linux.intel.com,
+	rick.p.edgecombe@intel.com,
+	linux-kernel@vger.kernel.org,
+	pbonzini@redhat.com,
+	seanjc@google.com,
+	kvm@vger.kernel.org,
+	reinette.chatre@intel.com,
+	isaku.yamahata@intel.com,
+	dan.j.williams@intel.com,
+	ashish.kalra@amd.com,
+	nik.borisov@suse.com,
+	sagis@google.com,
+	Farrah Chen <farrah.chen@intel.com>
+Subject: [PATCH v3 4/6] x86/virt/tdx: Remove the !KEXEC_CORE dependency
+Date: Thu, 26 Jun 2025 22:48:50 +1200
+Message-ID: <a80915684a5eaec7a27ac1900dc5125a36b330ab.1750934177.git.kai.huang@intel.com>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <cover.1750934177.git.kai.huang@intel.com>
+References: <cover.1750934177.git.kai.huang@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250626-0186dfe9df28f9bb72a91426@orel>
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 26, 2025 at 11:34:21AM +0200, Andrew Jones wrote:
-> On Thu, Jun 26, 2025 at 11:21:10AM +0200, Andrew Jones wrote:
-> > On Wed, Jun 25, 2025 at 04:21:01PM +0200, Aleksa Paunovic via B4 Relay wrote:
-> > > From: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
-> > > 
-> > > Use the hwprobe syscall to decide which PAUSE instruction to execute in
-> > > userspace code.
-> > > 
-> > > Signed-off-by: Aleksa Paunovic <aleksa.paunovic@htecgroup.com>
-> > > ---
-> > >  tools/arch/riscv/include/asm/vdso/processor.h | 27 +++++++++++++++++----------
-> > >  1 file changed, 17 insertions(+), 10 deletions(-)
-> > > 
-> > > diff --git a/tools/arch/riscv/include/asm/vdso/processor.h b/tools/arch/riscv/include/asm/vdso/processor.h
-> > > index 662aca03984817f9c69186658b19e9dad9e4771c..027219a486b7b93814888190f8224af29498707c 100644
-> > > --- a/tools/arch/riscv/include/asm/vdso/processor.h
-> > > +++ b/tools/arch/riscv/include/asm/vdso/processor.h
-> > > @@ -4,26 +4,33 @@
-> > >  
-> > >  #ifndef __ASSEMBLY__
-> > >  
-> > > +#include <asm/hwprobe.h>
-> > > +#include <sys/hwprobe.h>
-> > > +#include <asm/vendor/mips.h>
-> > >  #include <asm-generic/barrier.h>
-> > >  
-> > >  static inline void cpu_relax(void)
-> > >  {
-> > > +	struct riscv_hwprobe pair;
-> > > +	bool has_mipspause;
-> > >  #ifdef __riscv_muldiv
-> > >  	int dummy;
-> > >  	/* In lieu of a halt instruction, induce a long-latency stall. */
-> > >  	__asm__ __volatile__ ("div %0, %0, zero" : "=r" (dummy));
-> > >  #endif
-> > >  
-> > > -#ifdef CONFIG_TOOLCHAIN_HAS_ZIHINTPAUSE
-> > > -	/*
-> > > -	 * Reduce instruction retirement.
-> > > -	 * This assumes the PC changes.
-> > > -	 */
-> > > -	__asm__ __volatile__ ("pause");
-> > > -#else
-> > > -	/* Encoding of the pause instruction */
-> > > -	__asm__ __volatile__ (".4byte 0x100000F");
-> > > -#endif
-> > > +	pair.key = RISCV_HWPROBE_KEY_VENDOR_EXT_MIPS_0;
-> > > +	__riscv_hwprobe(&pair, 1, 0, NULL, 0);
-> > > +	has_mipspause = pair.value & RISCV_HWPROBE_VENDOR_EXT_XMIPSEXECTL;
-> > > +
-> > > +	if (has_mipspause) {
-> > > +		/* Encoding of the mips pause instruction */
-> > > +		__asm__ __volatile__(".4byte 0x00501013");
-> > > +	} else {
-> > > +		/* Encoding of the pause instruction */
-> > > +		__asm__ __volatile__(".4byte 0x100000F");
-> > > +	}
-> > > +
-> > 
-> > cpu_relax() is used in places where we cannot afford the overhead nor call
-> > arbitrary functions which may take locks, etc. We've even had trouble
-> > using a static key here in the past since this is inlined and it bloated
-> > the size too much. You'll need to use ALTERNATIVE().
-> 
-> Oh, I see now that the next patch is handling the kernel cpu_relax with
-> ALTERNATIVE and this was just the tools cpu_relax. We don't want to make
-> a syscall inside cpu_relax though either, since it gets called in loops.
+During kexec it is now guaranteed that all dirty cachelines of TDX
+private memory are flushed before jumping to the new kernel.  The TDX
+private memory from the old kernel will remain as TDX private memory in
+the new kernel, but it is OK because kernel read/write to TDX private
+memory will never cause machine check, except on the platforms with the
+TDX partial write erratum, which has already been handled.
 
-(Another follow up to myself...)
+It is safe to allow kexec to work together with TDX now.  Remove the
+!KEXEC_CORE dependency.
 
-I guess with the vdso cached result it should only be a handful of
-instructions, but it still seems odd to embed a call in cpu_relax.
+Signed-off-by: Kai Huang <kai.huang@intel.com>
+Tested-by: Farrah Chen <farrah.chen@intel.com>
+---
+ arch/x86/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-Thanks,
-drew
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 71019b3b54ea..ca1c9f9e59be 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1899,7 +1899,6 @@ config INTEL_TDX_HOST
+ 	depends on X86_X2APIC
+ 	select ARCH_KEEP_MEMBLOCK
+ 	depends on CONTIG_ALLOC
+-	depends on !KEXEC_CORE
+ 	depends on X86_MCE
+ 	help
+ 	  Intel Trust Domain Extensions (TDX) protects guest VMs from malicious
+-- 
+2.49.0
 
-> It'd be better to just call the standard pause (0x100000F) even if it
-> does nothing. Or maybe there's some define that can be added/used to
-> select the correct instruction?
-> 
-> Thanks,
-> drew
