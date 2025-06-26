@@ -1,46 +1,47 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11B2E239E61;
-	Thu, 26 Jun 2025 06:10:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B2DB23ABAD;
+	Thu, 26 Jun 2025 06:10:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750918225; cv=none; b=nRcRO8lj0Rlblc5JUbTiKis+4x9ZxGuPJnVtOuMupK0eNdZSAsPSiRKbOm4X0ky8stjAwGG3BlxxG/IXga1e4GQmT8TfKkQCglXDPKvZCz3NddXxU7TUohFOb/pdHOtksVeUu0OtviecPXdIxNu0Wm8U96AHdIshNL3lQRoir/w=
+	t=1750918225; cv=none; b=aUaVtj1jJlLloSb4M7i78vYJa0+SIs2+2sfI1eS7LDzSJqIMbA2LoNQhkLyUNjcDMc4uildwDzDTUrJieLdNqNUG/aujM88CxK76HtFKAvhjrMEyCTtAv2vB4iBFVSbIu78jJW0Eg5dtc5QcKvU3dOsxitGvlGpkJYH3Of9joO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750918225; c=relaxed/simple;
-	bh=j9q82O0F5uqiebw3qSo3efXgJ6wyxTkXdWeLSTmjF+4=;
+	bh=2KF4ki0EfgQ+uZ9vsc2VGfGL3iFmSYhOLH35Bex68pw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NewQ8iE1JIwVF2RzpA6UZXj6jaPMdu/oixzygCZDccYPTqbO4Ky6Q1Ad6TeUQ2Sralu0u2lSaAauqYNXfdIIctvC4XV2Hmruc1J0gLjGd9jsjWg9H+tNSB8+2tdhI88QnEsiLjqd87KCr6QNYxhjcXdi9JK2cnoZHUiyeOewkH0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UnFTasB0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GHZ7tSqJ; arc=none smtp.client-ip=193.142.43.55
+	 In-Reply-To:To:Cc; b=FPitscsW+oNNyM7Vzqsfo6mvWqRpw6VbZBeUQqKukwTBacqZCOU4JoUskSk0sBMSpqh7jlYMGh7dyWjQIUvpx7SYMJ1/Pg4a4K+Qgc2r1tLDaq+1R8TC5fHqcQWinIDPSxnvLaEerxhFiWERKIXqvB4AJPJhGm4futlaQcOH3zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=wC/+91rk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=p6vH5Aol; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UnFTasB0";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GHZ7tSqJ"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="wC/+91rk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="p6vH5Aol"
 From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750918220;
+	s=2020; t=1750918221;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3O+ksBPgEqQWeSBbfJQ4cCno/OA75lx66SsnvePtQs0=;
-	b=UnFTasB0/XzuKmoSBgZsKt6ICGZsdHovMrtJyYOZC83R2IPHPlQdzRSWoqu5aB2xq7rq+e
-	Cmb4Uvx41bZpD8m5qOGmG5sotv04WpHwrQPVonozKmGyg4e9lo8jm15yiP/vGXGbBaEL9t
-	0+FBvvzoXtZ+q6Tjq3sA+Jv3oYJO+wnKLDhVveY7vVLhHnDBQrp697bqdJO7gdXNoNayiB
-	x0JXQllnwecDZbiaZU7Eove5kKIVr1Pdj3+xyLeZJqhOIMbDTGpExbAgTdQAB0CFnmBEkI
-	eg8LU8DE5SRqDKyHoNREsW8WGscckc3xBzQWktWSdbCeDC5e+hDiOIh5mABR8Q==
+	bh=3ky4pl9zyr5S0rAJVm9feSkr8uxE1/z4/7grpknYGBQ=;
+	b=wC/+91rkBgxesWjzSUFrn1aaHrE5XlH3Js+rClZCE1ZGnLWooFFEKbUlYKETTB7a+7d0u6
+	Vta22cR6rmyxiTluRlSFOJ/vDw+8O+xvpHMP/3KD90QCAkt0EB7CQWLaSNMk2tNL+iHXym
+	Lkgva7xz/YfbCEfYBBqgdnkHw8MojZFe8Py6hphXadmFNJ89FOOXtHyzZgjWq3Gu0E6I4w
+	SunArvd1uYYGKUh93G2LdQ0vPgW+FTFijiMOj2mpYIFXnm5lq2E42i4MwbfeBmTvlbXXDs
+	w471WqX0Ky0qmz70GRZdG9BUkRFlWeP7VWi+9xwtsFq7uovartr6K1WqklpYHA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750918220;
+	s=2020e; t=1750918221;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3O+ksBPgEqQWeSBbfJQ4cCno/OA75lx66SsnvePtQs0=;
-	b=GHZ7tSqJxdvwsS8Thi8N5mTLO7DqmX49KwjTiB4mSEpXa2z/pxNC9ILS0e3moKBItpTJBR
-	o16/VXQuTdtXaPBg==
-Date: Thu, 26 Jun 2025 08:10:13 +0200
-Subject: [PATCH v4 05/15] init: add nolibc build support
+	bh=3ky4pl9zyr5S0rAJVm9feSkr8uxE1/z4/7grpknYGBQ=;
+	b=p6vH5AolL4dgHysWePGcjdNFUhvaIRtWfNGavbj+nbGTm28Mb+fKOz7HKocCaZ6MBRqoVh
+	2kUoiQ6bPkE5uyCA==
+Date: Thu, 26 Jun 2025 08:10:15 +0200
+Subject: [PATCH v4 07/15] kunit: tool: Add test for nested test result
+ reporting
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,7 +50,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250626-kunit-kselftests-v4-5-48760534fef5@linutronix.de>
+Message-Id: <20250626-kunit-kselftests-v4-7-48760534fef5@linutronix.de>
 References: <20250626-kunit-kselftests-v4-0-48760534fef5@linutronix.de>
 In-Reply-To: <20250626-kunit-kselftests-v4-0-48760534fef5@linutronix.de>
 To: Masahiro Yamada <masahiroy@kernel.org>, 
@@ -65,96 +66,59 @@ Cc: Christophe Leroy <christophe.leroy@csgroup.eu>,
  linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com, 
  linux-doc@vger.kernel.org, workflows@vger.kernel.org, 
  =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750918216; l=3139;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1750918216; l=2214;
  i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=j9q82O0F5uqiebw3qSo3efXgJ6wyxTkXdWeLSTmjF+4=;
- b=+8fwcErVHN9PH59sxOwSP7c7yoRgu4HhMTtG4/nA25VU0z93np1aLXGf288gIwCkzknfs6fGy
- 1EUjQM+/aWRDrGYr314HS7UzBnptH0lRg/vobyZwcu89gEveB4vJjW7
+ bh=2KF4ki0EfgQ+uZ9vsc2VGfGL3iFmSYhOLH35Bex68pw=;
+ b=95Sids2Fk1QJA76lqNzLJEg412tXs/th72tnsd/qvhZ488+ELoUdj/hSVtxGXdRZSjfHG0N5F
+ KQ4EJaMGUplB8aMrI+ibw3NkyijpWLDgpfwD0LHnsOHxOITO3pfXT/u
 X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
  pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
 
-Building userspace applications through the kbuild "userprogs" framework
-requires a libc. Kernel toolchains often do not contain a libc.
-In this case it is useful to use the nolibc library from the kernel tree.
-Nolibc does not support all architectures and requires compiler flags.
-
-Add a kconfig option, so users can know where it is available and provide a
-variable for common options.
+Currently there is no test validating the result reporting from nested
+tests. Add one, it will also be used to validate upcoming changes to the
+nested test parsing.
 
 Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
+Reviewed-by: David Gow <davidgow@google.com>
 ---
- MAINTAINERS          |  2 ++
- init/Kconfig         |  2 ++
- init/Kconfig.nolibc  | 15 +++++++++++++++
- init/Makefile.nolibc | 13 +++++++++++++
- 4 files changed, 32 insertions(+)
+ tools/testing/kunit/kunit_tool_test.py                         | 10 ++++++++++
+ .../kunit/test_data/test_is_test_passed-failure-nested.log     |  7 +++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index a92290fffa163f9fe8fe3f04bf66426f9a894409..e806158cc6798cf97a4aab58c038fb5351d469aa 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17702,6 +17702,8 @@ M:	Willy Tarreau <w@1wt.eu>
- M:	Thomas Weißschuh <linux@weissschuh.net>
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/nolibc/linux-nolibc.git
-+F:	init/Kconfig.nolibc
-+F:	init/Makefile.nolibc
- F:	tools/include/nolibc/
- F:	tools/testing/selftests/nolibc/
+diff --git a/tools/testing/kunit/kunit_tool_test.py b/tools/testing/kunit/kunit_tool_test.py
+index bbba921e0eacb18663abfcabb2bccf330d8666f5..b74dc05fc2fe5b3ff629172fc7aafeb5c3d29fb3 100755
+--- a/tools/testing/kunit/kunit_tool_test.py
++++ b/tools/testing/kunit/kunit_tool_test.py
+@@ -165,6 +165,16 @@ class KUnitParserTest(unittest.TestCase):
+ 		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.status)
+ 		self.assertEqual(result.counts.errors, 0)
  
-diff --git a/init/Kconfig b/init/Kconfig
-index 26cafbad4f1560fb56b4bef31ae29baf54175661..0af62f135192e0470e16eb6bb2fbb45ac38f4b81 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -92,6 +92,8 @@ config CC_CAN_LINK_STATIC
- 	default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) $(CLANG_FLAGS) $(USERCFLAGS) $(USERLDFLAGS) $(m64-flag) -static) if 64BIT
- 	default $(success,$(srctree)/scripts/cc-can-link.sh $(CC) $(CLANG_FLAGS) $(USERCFLAGS) $(USERLDFLAGS) $(m32-flag) -static)
- 
-+source "init/Kconfig.nolibc"
++	def test_parse_failed_nested_tests_log(self):
++		nested_log = test_data_path('test_is_test_passed-failure-nested.log')
++		with open(nested_log) as file:
++			result = kunit_parser.parse_run_tests(file.readlines(), stdout)
++		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.status)
++		self.assertEqual(result.counts.failed, 2)
++		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.subtests[0].status)
++		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.subtests[1].status)
++		self.assertEqual(kunit_parser.TestStatus.FAILURE, result.subtests[1].subtests[0].status)
 +
- # Fixed in GCC 14, 13.3, 12.4 and 11.5
- # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113921
- config GCC_ASM_GOTO_OUTPUT_BROKEN
-diff --git a/init/Kconfig.nolibc b/init/Kconfig.nolibc
+ 	def test_no_header(self):
+ 		empty_log = test_data_path('test_is_test_passed-no_tests_run_no_header.log')
+ 		with open(empty_log) as file:
+diff --git a/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log b/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log
 new file mode 100644
-index 0000000000000000000000000000000000000000..29cbc5437e70cbc5e256f00b74d0ab4801b40de7
+index 0000000000000000000000000000000000000000..2e528da39ab5b2be0fca6cf9160c10929fba3c9e
 --- /dev/null
-+++ b/init/Kconfig.nolibc
-@@ -0,0 +1,15 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+config ARCH_HAS_NOLIBC
-+	bool
-+	default y if ARM
-+	default y if ARM64
-+	default y if LOONGARCH
-+	default y if M68K
-+	default y if MIPS
-+	default y if PPC
-+	default y if RISCV
-+	default y if S390
-+	default y if SPARC
-+	default y if UML_X86
-+	default y if X86
-diff --git a/init/Makefile.nolibc b/init/Makefile.nolibc
-new file mode 100644
-index 0000000000000000000000000000000000000000..a8a193f78e34e0c4a6004e871bc206e06925f88a
---- /dev/null
-+++ b/init/Makefile.nolibc
-@@ -0,0 +1,13 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Compiler flags, which are necessary to build userspace applications with the
-+# in-kernel libc "nolibc".
-+
-+ifeq ($(and $(CONFIG_ARCH_HAS_NOLIBC),$(CONFIG_HEADERS_INSTALL)),y)
-+
-+NOLIBC_USERCFLAGS := -nostdlib -nostdinc -static -ffreestanding \
-+		     -fno-asynchronous-unwind-tables -fno-stack-protector \
-+		     -isystem $(objtree)/usr/include -isystem $(srctree)/tools/include/nolibc/
-+
-+NOLIBC_USERLDFLAGS := -nostdlib -nostdinc -static
-+
-+endif # CONFIG_ARCH_HAS_NOLIBC && CONFIG_HEADERS_INSTALL
++++ b/tools/testing/kunit/test_data/test_is_test_passed-failure-nested.log
+@@ -0,0 +1,7 @@
++KTAP version 1
++1..2
++not ok 1 subtest 1
++    KTAP version 1
++    1..1
++        not ok 1 subsubtest 1
++not ok 2 subtest 2
 
 -- 
 2.50.0
