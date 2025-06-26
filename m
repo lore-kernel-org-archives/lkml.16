@@ -1,152 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2536A2264CA;
-	Thu, 26 Jun 2025 08:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97F3825B30F;
+	Thu, 26 Jun 2025 08:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750927664; cv=none; b=WTRSZZF9IwHUu4oJu9NOf5+PKGuxfJyigqnvh5iJdBHxiaJZ7Wb6LZzL3ue/vzkkXXVwSC9FdmQNyUEJJrOzyNghBqbOqd04gFRBzP00OOs8E2oCejwNVkkM30yNbBdqAEcpnPRjzxRS9FStwx+fQnMlVE/b0bx2vXNLc+KuPd0=
+	t=1750927736; cv=none; b=OuyUKYxsf7rh8fnJWVw9fIC6LvU5hREOCYiJDqyN3GMnf2q2qPbwrpVYFe3akNxbFKFHaM4P/C7rDVuz7EZ/sXLuvqzlCc6SHV5L/1y9KJSw+P7nsjrICrpIo9v9VgHCP6ampNKjb6em5z/WJf2+K/JHko8TCKgjzWoWZmLPJ5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750927664; c=relaxed/simple;
-	bh=9U5EJmrGekA99glFhmw1yFwAVYppR9L38j/mg1yJuPw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uz4w1iWj/cr1I7nLuwrjXMllo6BW3fO1ssfJ6ACagixmWdT9CF/FKnVrWeHVh/AMXqqHQAT2Om/nt9ZiJKhBefDCDEjC3AoJgObSHub0yfepmhtYPByTNaII4cV7CXmQSQPWg5j5bYTI4zaWtGI3VjXCJka/e+4FhOFcnOUssys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JMRfvtOA; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750927736; c=relaxed/simple;
+	bh=Uwt3NsX0GNfYi5o7KvMJmNAuuFirfChPcaC6V4I9kis=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EeU9RsgnQ58VDD+n7O6tv0UUTYh7LMEVrxRWzmVa3Urea7InjoxFl4O64l3NevmQpnBs9f8111day2YMmtq+sgAETLM/FsokfxkAuAmfUpjrN/XdKaSzT57hmM3TocsCgvLzz+EPXSufmZLwmrdXgroEqHY2WEyy3V34LJ13xys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QfVPpkIX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JMRfvtOA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750927663; x=1782463663;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9U5EJmrGekA99glFhmw1yFwAVYppR9L38j/mg1yJuPw=;
-  b=JMRfvtOAOK3I/bh6R/TJvazUUhPIhAHISun6Qmc1hNxdPOQ6bg4rFqrf
-   h7f5NwWKbNZBgCYiNmHT1zBhYzev6v2B+GFXnjrzKTw2l2hBaxAC4RE1B
-   NdObq84Z4rTZVnHEvnjjRGnWpCDz5PleMhuyIEoOX2N+8EHJ+dEJUvfRd
-   fv6XBApjaAsBQrnsrfWWhsdvgD3qGJmqGexsDUkiQQ6fNnwwMRFH1Cq4J
-   Dbe9QYBNWsKk+6rExREm1O9Uvxx2lfiBkGdjY7RjqApdJljv8msiQouof
-   VC3sRvqAuhnoaw/ieuY7Z2uVkrk8sKXTVTgdaSGxV0PdLz5ZNgNlOVa+j
-   A==;
-X-CSE-ConnectionGUID: MCRTK1owQCWWHr4j0tGstQ==
-X-CSE-MsgGUID: 4xj+5SZXTzupyQ4WgYcRkA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64275846"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="64275846"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 01:47:42 -0700
-X-CSE-ConnectionGUID: yntKr3jvRbe5ZE7vwaljQg==
-X-CSE-MsgGUID: vu6V/rAoSI+a7Oip97YJTA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="176119027"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa002.fm.intel.com with ESMTP; 26 Jun 2025 01:47:39 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUiGf-000Ttq-08;
-	Thu, 26 Jun 2025 08:47:37 +0000
-Date: Thu, 26 Jun 2025 16:47:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: Vikas Gupta <vikas.gupta@broadcom.com>, davem@davemloft.net,
-	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-	andrew+netdev@lunn.ch, horms@kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, michael.chan@broadcom.com,
-	pavan.chebbi@broadcom.com, vsrama-krishna.nemani@broadcom.com,
-	Vikas Gupta <vikas.gupta@broadcom.com>,
-	Bhargava Chenna Marreddy <bhargava.marreddy@broadcom.com>,
-	Rajashekar Hudumula <rajashekar.hudumula@broadcom.com>
-Subject: Re: [net-next, 09/10] bng_en: Initialize default configuration
-Message-ID: <202506261600.oLXe1N0I-lkp@intel.com>
-References: <20250618144743.843815-10-vikas.gupta@broadcom.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QfVPpkIX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE2C3C4CEF1;
+	Thu, 26 Jun 2025 08:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750927736;
+	bh=Uwt3NsX0GNfYi5o7KvMJmNAuuFirfChPcaC6V4I9kis=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QfVPpkIX+jWUbuSczOWZ9NquDlgSzicGyHu84P5TiIWRYK43fK2fCiQ0YD/8dchij
+	 2RG4mqh3aUQVg571PhDWOQD/Ct7Mdw3MxJagG0/wzVlzOjxc+3gcMIpOv4u2m0qjRC
+	 E/IH4GtjIRSHHmzyC/CxOpJTzHkr+NrdCP/boNCsIs4qlx66SvO7Fp3U98/u3kEahA
+	 u6I0VE/78chhSv3zqKB2ftZcUwW9pykj/BkeUeQBhNgr38j4LwDYeqq2fakt10pisc
+	 s6i+mEW49MAiRZVVwfm0ioQTVWqOS1um15eHVqcddUtqoDOr/aQpAI/NXjOpYy2ju3
+	 0rFy1oDVdoZmA==
+Message-ID: <eb5cdcb6-7e40-4ed2-9cc6-6eff43da353d@kernel.org>
+Date: Thu, 26 Jun 2025 10:48:48 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250618144743.843815-10-vikas.gupta@broadcom.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/3] dt-bindings: mfd: qcom,spmi-pmic: add pm4125 audio
+ codec
+To: Alexey Klimov <alexey.klimov@linaro.org>,
+ Srinivas Kandagatla <srini@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: Lee Jones <lee@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, linux-arm-msm@vger.kernel.org,
+ linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+ Srinivas Kandagatla <srinivas.kandagatla@oss.qualcomm.com>
+References: <20250626-pm4125_audio_codec_v1-v1-0-e52933c429a0@linaro.org>
+ <20250626-pm4125_audio_codec_v1-v1-2-e52933c429a0@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 a/A=
+In-Reply-To: <20250626-pm4125_audio_codec_v1-v1-2-e52933c429a0@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Vikas,
+On 26/06/2025 01:50, Alexey Klimov wrote:
+> PM4125 has audio codec hardware block. Add pattern for respecive node
+> so the devicetree for those blocks can be validated properly.
+> 
+> Signed-off-by: Alexey Klimov <alexey.klimov@linaro.org>
 
-kernel test robot noticed the following build warnings:
+Remember to ALWAYS explain the dependencies between patches (merging
+strategy), because this now creates impression is independent patch. It
+is not and should be squashed into previous.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.16-rc3 next-20250625]
-[cannot apply to horms-ipvs/master]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Vikas-Gupta/bng_en-Add-PCI-interface/20250618-173130
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250618144743.843815-10-vikas.gupta%40broadcom.com
-patch subject: [net-next, 09/10] bng_en: Initialize default configuration
-config: parisc-randconfig-r073-20250619 (https://download.01.org/0day-ci/archive/20250626/202506261600.oLXe1N0I-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 8.5.0
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506261600.oLXe1N0I-lkp@intel.com/
-
-New smatch warnings:
-drivers/net/ethernet/broadcom/bnge/bnge_resc.c:533 bnge_net_init_dflt_rings() warn: always true condition '(rc != -19) => (0-u16max != (-19))'
-
-Old smatch warnings:
-drivers/net/ethernet/broadcom/bnge/bnge_resc.c:372 bnge_alloc_irqs() warn: unsigned 'irqs_demand' is never less than zero.
-drivers/net/ethernet/broadcom/bnge/bnge_resc.c:542 bnge_net_init_dflt_rings() warn: always true condition '(rc != -19) => (0-u16max != (-19))'
-
-vim +533 drivers/net/ethernet/broadcom/bnge/bnge_resc.c
-
-   511	
-   512	static int bnge_net_init_dflt_rings(struct bnge_dev *bd, bool sh)
-   513	{
-   514		u16 dflt_rings, max_rx_rings, max_tx_rings, rc;
-   515	
-   516		if (sh)
-   517			bd->flags |= BNGE_EN_SHARED_CHNL;
-   518	
-   519		dflt_rings = netif_get_num_default_rss_queues();
-   520	
-   521		rc = bnge_get_dflt_rings(bd, &max_rx_rings, &max_tx_rings, sh);
-   522		if (rc)
-   523			return rc;
-   524		bd->rx_nr_rings = min_t(u16, dflt_rings, max_rx_rings);
-   525		bd->tx_nr_rings_per_tc = min_t(u16, dflt_rings, max_tx_rings);
-   526		if (sh)
-   527			bnge_trim_dflt_sh_rings(bd);
-   528		else
-   529			bd->nq_nr_rings = bd->tx_nr_rings_per_tc + bd->rx_nr_rings;
-   530		bd->tx_nr_rings = bd->tx_nr_rings_per_tc;
-   531	
-   532		rc = bnge_reserve_rings(bd);
- > 533		if (rc && rc != -ENODEV)
-   534			dev_warn(bd->dev, "Unable to reserve tx rings\n");
-   535		bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
-   536		if (sh)
-   537			bnge_trim_dflt_sh_rings(bd);
-   538	
-   539		/* Rings may have been reduced, re-reserve them again */
-   540		if (bnge_need_reserve_rings(bd)) {
-   541			rc = bnge_reserve_rings(bd);
-   542			if (rc && rc != -ENODEV)
-   543				dev_warn(bd->dev, "Fewer rings reservation failed\n");
-   544			bd->tx_nr_rings_per_tc = bd->tx_nr_rings;
-   545		}
-   546		if (rc) {
-   547			bd->tx_nr_rings = 0;
-   548			bd->rx_nr_rings = 0;
-   549		}
-   550	
-   551		return rc;
-   552	}
-   553	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best regards,
+Krzysztof
