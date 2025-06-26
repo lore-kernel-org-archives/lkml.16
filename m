@@ -1,672 +1,304 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from OSPPR02CU001.outbound.protection.outlook.com (mail-norwayeastazon11013046.outbound.protection.outlook.com [40.107.159.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD1743159
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 03:50:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750909813; cv=fail; b=lVrNiRsFPHPXF14gFgO9q8XwIvrwfyP74VqcBlXGyx97IPhZVJa6cbzp1ISbBY/SyoObVxqlMH7qqr2C2v/Y3DWTyXpQ5HtjVVe3rj1xWiLplfmcyQl1vF3sLLh1sWiMjHIz7Id9Sr0xdNmKh/ltcmwqd3s+lg+ZqedrbrJh/Mk=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750909813; c=relaxed/simple;
-	bh=13FSA1tJcfAW4r61tjxcAKxzvGVLsmSkzzTUfB5vZZE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ftnWZwh2eAeJnj1NF2ilCnF2nnjkzdLJ04VNx7QtCHN0GsICS5ENH2jtC0yElwS/r/8lk2fXGEDD/kuaQzaMHQS5xG5PML+QG0btc0P/q5NDupky+lWr54L7JnrR4O7LlnDxQJRee880qoKIERbgQwcovLaEaOG+YbmW7s9AQhw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PkopIbdG; arc=fail smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87AAC43159
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 03:53:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.159.46
+ARC-Seal:i=3; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750909994; cv=fail; b=HUoLNya34Nt/7Z0nbA+l0Ec10h6n2tUiMBVP4GoOnk7keg551lRK1Qm2G3T/9CQIoF8PsqT285yvU6fF/jooMoEIvBn8fiwWep30qYmCVCwiu+xGf505Ul0GQ/8C58q393I64J5GI4puJWTnS7Fhd4xT65s3w91ZqPbI72DfG74=
+ARC-Message-Signature:i=3; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750909994; c=relaxed/simple;
+	bh=V+wHANlCdEo2fhGKA4B0OGcH+ksLUoqP5CvWawxNHd4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dFWe5EcBzNa03+eTvPyPxDDFa0mS0m/EYbK3delXR3H9CeygfRw8ljx0L5tKBe/I1e/YZUrsT+mjvcdg1Fjzwd5GR1wbiHNlUdKOBbsFd/FQ0FaGLvywryIug3pHkE3sJbehf5nKXv/rCTWj8ObU6SgUbFhhMENvAXHiFTJiwDs=
+ARC-Authentication-Results:i=3; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Qqjcv5dk; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=Qqjcv5dk; arc=fail smtp.client-ip=40.107.159.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PkopIbdG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750909811; x=1782445811;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=13FSA1tJcfAW4r61tjxcAKxzvGVLsmSkzzTUfB5vZZE=;
-  b=PkopIbdGkdlMvwkWeYixcCzCX20RtfdYLJ5/pKCnsoW2mGiV/NDni6ed
-   pXeEcpcpgpbS5uYMUVnQ9Ep9xX7LeUH9r97XgVIBbM7mVRKTnKAn0hoaR
-   nKePvtI7MF+QAtb218U7R1H23jczAASaFSTJua38YIC+VCPcs9NlH3oj4
-   gEMemJPM6eV1BbxtsMB5Cvd0/E6IPyRgiIp2WpbKfvQKnu83hLCLwgTWk
-   Dm1D3Yce3lfkQahXTrdVNSFTEoLJy9ucRrhCd2dHBMnqtdBo/JCxiyxat
-   RTXogEyTi80SCl5c/3HztMltNCsKOW3f5lTd+jQ3GR6UToSKlOK2k9ltu
-   A==;
-X-CSE-ConnectionGUID: IsQ143tATDqrprv9hHk2yA==
-X-CSE-MsgGUID: 37KeIsCXQFyUOk0Kclx3xw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53264814"
-X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
-   d="scan'208";a="53264814"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 20:50:09 -0700
-X-CSE-ConnectionGUID: CVxb29VZRiu8Y3X+z6ZWqQ==
-X-CSE-MsgGUID: 7+vQpwyPRUy9vpfSkrcGGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
-   d="scan'208";a="152894628"
-Received: from orsmsx902.amr.corp.intel.com ([10.22.229.24])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 20:50:09 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX902.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 25 Jun 2025 20:50:09 -0700
-Received: from ORSEDG901.ED.cps.intel.com (10.7.248.11) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25 via Frontend Transport; Wed, 25 Jun 2025 20:50:09 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (40.107.96.44) by
- edgegateway.intel.com (134.134.137.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.25; Wed, 25 Jun 2025 20:50:08 -0700
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Qqjcv5dk";
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="Qqjcv5dk"
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=pass;
+ b=m2gDNVbMCUqO0rsSUKKO/Rkb1mJq3+FVvZTbW8QxUICcLi2C5PNIc+gK/q9siletn/rkSxgPvwXHA6JoJsPxIK2oL9j9wtJN2oU7lh0nluVH1AyPmhGVZSHwQGLJuQCs0W06Duql0yOsBFrM3bBZfjfsOYFoZ8rnvQOq66XtJvI0HbzpsBDztbzrpwI3/dvJScB2KSqzcfExjgVSvRHDPgNh6HqLgPSD18Tux9gO13CYSkX1j/o7kx5CCV9zSh5cJ7PojiqWFRKchtGMGTk2722bKEQV2hxkW1pP7PrpTO4oZ0RvpRAaNjYNUE6yf+DxtdQned0mrgcKNreXE6OmnQ==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=q5eVAKPfJPyXLpg+bHUTCaLdYDdIQJw0O7vtqR2sBew=;
+ b=u61UZH3hMhyaTJGGD2irPGke8uJBA4kw4xjryZ3gFViOko1I9NTPmU9Y3torkIhFQlT97EYUDo5AzxngBQ+pC23FpPckOfp3wdce3LOZ/d6F3jzw4p5/dF1TuiYlyk+Wvcit1IHNWhagRG4o9eMzirIwPxKg0sjZGl+ee+KIuocLiOYMc+gIuz/HZjPUTPAnRpiXRw6HXrIfB3T6OseeK4ug+sQPxhJHQzT57tm6r9CHXhg6hwlbPNElbKxcMAV6yXuL4APu4JtLiF+P9zgVAT2SOF2W/Vadq2yqX7SBJWqGtDPn1afq4fD5IDKBdudaZaGmUHstQNgAMq8NGskjYQ==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 4.158.2.129) smtp.rcpttodomain=oracle.com smtp.mailfrom=arm.com; dmarc=pass
+ (p=none sp=none pct=100) action=none header.from=arm.com; dkim=pass
+ (signature was verified) header.d=arm.com; arc=pass (0 oda=1 ltdi=1
+ spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q5eVAKPfJPyXLpg+bHUTCaLdYDdIQJw0O7vtqR2sBew=;
+ b=Qqjcv5dkZGMSy38BQqtfps6/6SenlKUG/EmCgHaXji75kMQ0/LkM3gBFFbxLp77XSZyhYmIFXJoMpek7RXZE8/d6HYZmwJKidLrv3ynDEfJI80gRbXDNFQ7CSGHHnJSDL0z76dJ6lAsm3rotIdtwEGDx0zgXiGW1XzbJJ/sr+wE=
+Received: from AM6PR10CA0015.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:209:89::28)
+ by DBBPR08MB6283.eurprd08.prod.outlook.com (2603:10a6:10:1f7::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.29; Thu, 26 Jun
+ 2025 03:53:07 +0000
+Received: from AM2PEPF0001C708.eurprd05.prod.outlook.com
+ (2603:10a6:209:89:cafe::1a) by AM6PR10CA0015.outlook.office365.com
+ (2603:10a6:209:89::28) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.20 via Frontend Transport; Thu,
+ 26 Jun 2025 03:53:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 4.158.2.129)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=arm.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 4.158.2.129 as permitted sender) receiver=protection.outlook.com;
+ client-ip=4.158.2.129; helo=outbound-uk1.az.dlp.m.darktrace.com; pr=C
+Received: from outbound-uk1.az.dlp.m.darktrace.com (4.158.2.129) by
+ AM2PEPF0001C708.mail.protection.outlook.com (10.167.16.196) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8880.14
+ via Frontend Transport; Thu, 26 Jun 2025 03:53:05 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e2Ns6aa2jKkGkefbz+ugcvWNXcAGZjfbzvhdHGAw5r6tQXJ4q4s1y80ESyBCahyhxU8GzI01W/jYu1Z+o7j+XywPpvYk0//56tPa+Jz05JFmbW4K90tMIzsDlN3WAKy04KOsbhq/NkwqQ1Bdbnm/14U8Lwqnnq/72tO3V/T0mHVBFZ8+8lnCzn7M8/5RKpZANjiUZaSBFzxdk21I5bOSYcpgZr9NMJ7v3MOB4Znyql4S/K8lCu/92oPsd0sSqOnPteoJmsMJhQO633QbVrlFRrw74uXDWd0gBhzk/tzeX6Qb5BBYZRpqa6Kca2182r8QWzYIZkgNUKwHwjmkm7gfBQ==
+ b=LlwuR8oI6/RSE8DfLvxF/J5yO8XBiNXA19yauBtraIsxfAUiXUjyoW/wiBrZ6CLEELrEWtqk5YO74zF9YMJR9OIRrdoGn8m8O+TtR39pMEsdU26M0Vyfe23kWKExYhPk/EuQ/EWSGyTHsyX0M9bCXnKJZq6+wtdFJdmK3J6yr9fzOjI1cORaaL/0YWyPQR0Tp3O8VeE8MCafzbw2RvMRYtmiKbnzwzxXB+za12K0CsFdov9JPCiNP85/EK7r9oSLYnPLse7fY1W5ywOYpmiD3v4V0u0GiGXtTQh7V3SOhRD+++gZMthtWHWqGHU1P6L6dx+t5cQtJnZLwG3rCl2aXw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QSFEhLyjZ7MIxIdbunIdyiwWaCc30gfwDpyZbw9nioQ=;
- b=U7Dna7NHutijnXJ840dqzbmxImbxXtm/4qzFxG6JMaMgbkptjCH55uAO5oCiuz2tmzJDFrlA11A3CZ6uyBG3sxjvZ5TPB83b36NcMLteV8dL/mYXm5J9+fJkqsepCm7N+9jQhCVz3mPbd4Z+MHC98fiMJEc/YV+ukFZRAU1ztz9qTsQdAkMQvtA7jgyQ6VrXJzFKleotwsE3WbcPRIYXhNpf9kRmW0rf84Enu9GHRedS6ByBOs4h1JoyH2YRwpzAhiRsWwxAK4KPzYP2L4oc1d6ulYPZh+q98pvRVUwe4RcbAxCdSQ2IdC+aoPBbfUrv4o4AR6uvcPU1HE/JQZRsAw==
+ bh=q5eVAKPfJPyXLpg+bHUTCaLdYDdIQJw0O7vtqR2sBew=;
+ b=SZZg2E2fHqtqxh7eqm9RUjAlNp8I6j2q9rmIHOXoyuQetu4A64clGbrTcC1Ai8TxHJY5chwOVmgZeoI6m6aZ4GdBAIjgfxPJods9pb9OJ3e3Tt8uJ40EXv7WUcq3JHq8aGcGnF20vr1xS36a1mHuIawuy4qrJ2Eyysw7YZzs+CGV2ZrcFHTgzC10csphDf5MnwADqIswzhZgqvQcUaCF3uA9veDgt1NLQEnNDKyfENBzNsafZRV4l4F1GKD5nlkwtgC1eDriBjynp9X6ZBqoXEz6Pye5F856l6vJ3jof9N9YgU1SVbklJlOkLKsFGWwW0qLJXLEBn8/NFwB1EIhl9Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CY5PR11MB6211.namprd11.prod.outlook.com (2603:10b6:930:25::6)
- by MN6PR11MB8104.namprd11.prod.outlook.com (2603:10b6:208:46c::15) with
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arm.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=q5eVAKPfJPyXLpg+bHUTCaLdYDdIQJw0O7vtqR2sBew=;
+ b=Qqjcv5dkZGMSy38BQqtfps6/6SenlKUG/EmCgHaXji75kMQ0/LkM3gBFFbxLp77XSZyhYmIFXJoMpek7RXZE8/d6HYZmwJKidLrv3ynDEfJI80gRbXDNFQ7CSGHHnJSDL0z76dJ6lAsm3rotIdtwEGDx0zgXiGW1XzbJJ/sr+wE=
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+Received: from AM9PR08MB7120.eurprd08.prod.outlook.com (2603:10a6:20b:3dc::22)
+ by AS8PR08MB6005.eurprd08.prod.outlook.com (2603:10a6:20b:298::23) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8857.28; Thu, 26 Jun
- 2025 03:50:06 +0000
-Received: from CY5PR11MB6211.namprd11.prod.outlook.com
- ([fe80::df5a:a32c:8904:15f1]) by CY5PR11MB6211.namprd11.prod.outlook.com
- ([fe80::df5a:a32c:8904:15f1%4]) with mapi id 15.20.8857.026; Thu, 26 Jun 2025
- 03:50:06 +0000
-From: "Gupta, Anshuman" <anshuman.gupta@intel.com>
-To: "Nilawar, Badal" <badal.nilawar@intel.com>,
-	"intel-xe@lists.freedesktop.org" <intel-xe@lists.freedesktop.org>,
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC: "Vivi, Rodrigo" <rodrigo.vivi@intel.com>, "Usyskin, Alexander"
-	<alexander.usyskin@intel.com>, "gregkh@linuxfoundation.org"
-	<gregkh@linuxfoundation.org>, "Ceraolo Spurio, Daniele"
-	<daniele.ceraolospurio@intel.com>
-Subject: RE: [PATCH v4 02/10] mei: late_bind: add late binding component
- driver
-Thread-Topic: [PATCH v4 02/10] mei: late_bind: add late binding component
- driver
-Thread-Index: AQHb5fIndpRBhJ5fPkCmN63maa21qbQUwi8Q
-Date: Thu, 26 Jun 2025 03:50:06 +0000
-Message-ID: <CY5PR11MB6211FB957C9078592ABB49C6957AA@CY5PR11MB6211.namprd11.prod.outlook.com>
-References: <20250625170015.33912-1-badal.nilawar@intel.com>
- <20250625170015.33912-3-badal.nilawar@intel.com>
-In-Reply-To: <20250625170015.33912-3-badal.nilawar@intel.com>
-Accept-Language: en-US
+ 2025 03:52:33 +0000
+Received: from AM9PR08MB7120.eurprd08.prod.outlook.com
+ ([fe80::2933:29aa:2693:d12e]) by AM9PR08MB7120.eurprd08.prod.outlook.com
+ ([fe80::2933:29aa:2693:d12e%3]) with mapi id 15.20.8880.015; Thu, 26 Jun 2025
+ 03:52:33 +0000
+Message-ID: <6989406d-dfdf-4be5-b467-bb3b0d32d384@arm.com>
+Date: Thu, 26 Jun 2025 09:22:28 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] khugepaged: Reduce race probability between
+ migration and khugepaged
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: akpm@linux-foundation.org, david@redhat.com, ziy@nvidia.com,
+ baolin.wang@linux.alibaba.com, Liam.Howlett@oracle.com, npache@redhat.com,
+ ryan.roberts@arm.com, baohua@kernel.org, linux-mm@kvack.org,
+ linux-kernel@vger.kernel.org
+References: <20250625055806.82645-1-dev.jain@arm.com>
+ <20250625055806.82645-4-dev.jain@arm.com>
+ <e94c3460-144d-4243-98a3-fbced10feefe@lucifer.local>
 Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CY5PR11MB6211:EE_|MN6PR11MB8104:EE_
-x-ms-office365-filtering-correlation-id: b20ef4b2-8dd3-48e5-43d0-08ddb4648a5e
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7053199007|38070700018;
-x-microsoft-antispam-message-info: =?us-ascii?Q?rDEB/5qtJgWRvqeFJKqY/eBQK397y3eMPgDaGqmvwve5SIFYvwGwAyZCIqdP?=
- =?us-ascii?Q?TwbmvVDPDmNt9DJdRsEicZGjbpI6ZR96S0JKOiwDGsINwf4mfZL/joubeoZU?=
- =?us-ascii?Q?mTqjsWyP/uMenRtp7zh0DzmSeUL7rQxEsFTuLgnUF7xDdzF/PpZRmEhnJXII?=
- =?us-ascii?Q?LphswwOHQxdDnwyrfrqBMFREME7K8Y5ozzIJ6FwRCfPujXoSdbb6kdr44rwY?=
- =?us-ascii?Q?JMka5/KDXolJK+GwUc8gpijbbE4uT/gnSQmpK0h+dmrot/vcF798mu6/GKIu?=
- =?us-ascii?Q?bLUajvrkvtF/5yJCYCbRTKwxFqtFJHUrymW442fUIjZQsXn29vYKlaWG8Dlg?=
- =?us-ascii?Q?np2Ir2KG5aM6W/VgLOVnnUkG0t+M7AApRQBWULl585n5dy+XoODNbDkfcEIa?=
- =?us-ascii?Q?+04K1ml9VG0Kj8qqaJWp8oVO369Q2zXrFNNMBrxZBiIL7qM/wJSInjl8E/YW?=
- =?us-ascii?Q?r+dlw05+7W29vEnsnS6WCQx5M30pqpuFl4PZ5Gis2YgEJH5FXVJDkq7SjEN0?=
- =?us-ascii?Q?zUXR+iD7MVYUBTEnFFKttGuMHl1kF/7f5MiEXvqBJ/x/twNSdaF2HDzhywU5?=
- =?us-ascii?Q?K59bsrtV+ZIZzjus9TVA87NS8okwDRywSE6EdMyheaAOTAEnS0eSuqbqRh5x?=
- =?us-ascii?Q?CvuTYJN/uUKzvfsTK5DS3p6TIXeDWJEzkgUpfR5J4xGz5P8VPgxHXeQN7Lmh?=
- =?us-ascii?Q?di40Xe/29VvKKmENSsQ7aGJPJyLvgs4VBvGYTN21j7blSIBgF8uoad4kzx4x?=
- =?us-ascii?Q?fNDSchACqlhhvMd5kbJOCZF5/0wbO3S+oIV1BPAlNmLAC+chWjmkTtIZ8g1b?=
- =?us-ascii?Q?BFq7OA410ERkcDSEviIjG9wl2mUMzSHLCZXdeJh/YkphQoncl2RP3mdvemO1?=
- =?us-ascii?Q?HtdeUoEva6wbxtV3DLW9rotlGUtVZY9il4oh5/GkwM5QHFeA7pqwnjzgadTj?=
- =?us-ascii?Q?T2kZuL7lC/4TsWIEIHsGEqeTXfMy2MWOqnZujyDKcndj89g9Wjxr4ADSmcGg?=
- =?us-ascii?Q?JoMRn/7VzXmNgjEl2t+/tCvVuwNq2Cu3HiIm/YJ8Ef1/JDWgAKomjdJp83JJ?=
- =?us-ascii?Q?TD4gnIiMZpEcMfZwv8w8vFHu5KQ93IF201sxrUb/piW0yssqyBJiIqiVfBjn?=
- =?us-ascii?Q?Az55VUv9qT6Tj3jScWcz+Xk2dYLcxUO2Jji8cBfu02i1tPWuWHTWcQnq3129?=
- =?us-ascii?Q?Zq+/XjVCGgmJdwPMZxMUHWnEx0a1m4zKJYihuorOU9jUr9traNnEdw4/9z8a?=
- =?us-ascii?Q?ODK7dpNTAEl8faNOhOsQuMywa8nw4qC7y/wXK0301tdjkCcYqyE+DWivQ4/r?=
- =?us-ascii?Q?HBzInJ9ZKFCFDyHV7SBz8D+nlLrOOMsVsvp7kapwjB8YUXDKZ3FDLfnRJ8t1?=
- =?us-ascii?Q?52r4VKkHJgsWdj0cv0AlN16vrXt5bKBDvHnIcP6QxNsE4T2GfS25yBhnvCCx?=
- =?us-ascii?Q?JaJKPz9fSvEVoueQaVxjB8BdEP4I1QW2h+OZPTN8hBLNib7eMN7yoV+HGcsp?=
- =?us-ascii?Q?44VUV2k7EcXh1H0=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6211.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7053199007)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?YNQ9maKw0tKoE+V6u6lglx0A4/XjpQk2nyLMvwRtXO0TAXR3h0r7tEmenWSI?=
- =?us-ascii?Q?N2OncVqk+RmjV0a/gHUBebmZA9tOKARPGOfKXVxjRANEkqWIkIfsUxXTODYU?=
- =?us-ascii?Q?ImCb/28+lW1c4uZSeZ8Au9EjFAaqbpgDK0e564tcHlwtnw7XSJ4PuZIfRXMF?=
- =?us-ascii?Q?Lmkv71slgI6knCMU+NfEIV8ImXS3txqQZR3eDqEH5IehkMkmpM3cGlx0YEjw?=
- =?us-ascii?Q?OQ9MLcUsd6EaERGjSwrbh5JMK2sg1wt0mW0+BXqkhFzJsO3zQALTzqZQj9l+?=
- =?us-ascii?Q?UT1pSbrqP7Vxcss7O4ewnd1LC+b9qa+EorCU6bfNAZ7x4RBl7OUQbYIKR3nV?=
- =?us-ascii?Q?bCnXTAZNqA0YKJ07iY+OhdxQDFRkDx7UqT0Hqp1LNkPetUSuCIZ+pcXxboax?=
- =?us-ascii?Q?LGKduKeH8Qd2YUv9rsFaaHaWd6yXAmNVectHd5nzTg4K5q1aNIgx+UixVxOF?=
- =?us-ascii?Q?BjDYtiYQN5MsyVn+MG+AW1cdZ9y0og9E+ZKmmatNBN0fOD6bS4v2NQFm7+LC?=
- =?us-ascii?Q?6bFoqt6qxtRtYBIM48K0Ytn1FzV/r4V6wLGGWI0Abdh2eNngUrThMzrXZEWQ?=
- =?us-ascii?Q?ubwiBexNhfoyBN8icylFRVX5WeoepXyDmAqr2SLgrL03GUCAipjIHjNjY1vd?=
- =?us-ascii?Q?if7hDigiYufTcVnHSXWXEFZeGnWZGtC3JK3M4uYKd9WhYh4f8W373HCncL/2?=
- =?us-ascii?Q?bnKLv4kFWjXIkSMURgtiyszrLOsYE+JO7N2KgWmjORaCFVOe5trvi42m2qpG?=
- =?us-ascii?Q?2VNSUzZvuPR1EfSceRwBZBqGlTkZ1aErg0NieoyBY68hEi0ud2FftbpqhekI?=
- =?us-ascii?Q?TqZEiUHgxpNOTijN0yV8RnhEVcqjF1AD/qEF07SYvyADwpFl4rLgr3pTnTbI?=
- =?us-ascii?Q?/CjAZV5Aq7FxgAdzBFNbwgzJ+fvJ9x2MrawR97qwscGD6LDF96PlwJ4wIKTJ?=
- =?us-ascii?Q?0MbuGYmV8mGYAy3CeyXN+SVGukycZmTvrNwMiegGfSS3N/MO6Ohu2ynPEGak?=
- =?us-ascii?Q?OZBTJ3H8uZyyAb0CCYhir2oSLCXsF9C8BWif91HVsUR46yVsvbE+ne2vTafo?=
- =?us-ascii?Q?6pQvPb/rGarbPefpnv1uZ8EhChtMrmDAIrPwGwuTEHh9iI9vIlyf+7eRcCln?=
- =?us-ascii?Q?26zxhDrPBRf9ZSaTbxpQM+ZBvXezKcG5tQY4zSaHWCpxsfdBP6pxJh3U6Q1D?=
- =?us-ascii?Q?HIATRgb3/VOJ3N4NzahH6quS503wx6oKIy1SH92wBJnrUjzRri2EspSkJ/6z?=
- =?us-ascii?Q?g1/dMX++Ob4sQNtXgVPkSL413HYuESI5lsO4p+VKif+VafpJu0XVmU+J3+U4?=
- =?us-ascii?Q?DxetosoRGpzjzMY0Rl5TpgWI8k5SsEOcccySaWOfa28IwJEz3yYNXCHmTPUN?=
- =?us-ascii?Q?LcMvwskenPeOkGzKMlpnVw5++ORDxfkQeZnEHYh5IAs9HLQR6lxpNah15f99?=
- =?us-ascii?Q?UAj8EsiFDQldzvyuLEZvlsT1UAkvwAfpFlFa4i9hFG2rGsSw1z3PsVuoHvRL?=
- =?us-ascii?Q?54PUm+h63s73F1RfQCRn1FPkV4o+li+75OM7FN1I6Fs+hfFswsb7VIkMCT/J?=
- =?us-ascii?Q?FsUbl0gE99OrA+TOUHaO/YeC1qY6WRBavUKuYd2F?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+From: Dev Jain <dev.jain@arm.com>
+In-Reply-To: <e94c3460-144d-4243-98a3-fbced10feefe@lucifer.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA1P287CA0007.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a00:35::24) To AM9PR08MB7120.eurprd08.prod.outlook.com
+ (2603:10a6:20b:3dc::22)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6211.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b20ef4b2-8dd3-48e5-43d0-08ddb4648a5e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jun 2025 03:50:06.7479
+X-MS-TrafficTypeDiagnostic:
+	AM9PR08MB7120:EE_|AS8PR08MB6005:EE_|AM2PEPF0001C708:EE_|DBBPR08MB6283:EE_
+X-MS-Office365-Filtering-Correlation-Id: 22259c31-bc01-4832-83b5-08ddb464f4cc
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted:
+ BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
+X-Microsoft-Antispam-Message-Info-Original:
+ =?utf-8?B?TEwrSHJYdGk0ckVMK1JxYnhicXJrdk9SNFV1OUpDUG9tVEIzaFdmcCtNYm43?=
+ =?utf-8?B?bm1iRjFXT2ZJUmR5MG5xVStNaWpnMjFBWUFGNXpzR1EvRmc2Mng5N1E4cXE5?=
+ =?utf-8?B?b3NNbTB3NVNldU8yN0J3YnZ6RkxjeDNqVk80K1RRTVBwU205dUZEakh5K3J6?=
+ =?utf-8?B?cWFGeWhhK0M2MnBmZjVlUTEwQzAwTWNhNDViVk5uMU1PL3hyRFBUaHlEUTRU?=
+ =?utf-8?B?d0gzUFFjd0dBS2FzS3hyWHRsbzNadUdDNVF0T2I0R092VnFYZ0NldjZBTXRh?=
+ =?utf-8?B?RTh4M0FjU0JPUHlTYkJRM282QS9hRmVLSjhvdmVvd24rM2NoZGg3aGcvSlo3?=
+ =?utf-8?B?MU9hRlJPQ201amdISlJ1am1maFlQLzM4QjM3cDRyYndOSk92QnhNQjhmVlRs?=
+ =?utf-8?B?NkJlNVFmWWRXQkh6UDRUNVZ0dkNybm5yTm1SV1UyZk92TTZxeW1admZnR09E?=
+ =?utf-8?B?STU2bXF6S1RFZjZTSkYvNDhqNUZZRHJyK1h2QXoyRnRQKzZyczJwK2p4RzVi?=
+ =?utf-8?B?ZDRiZEsyRVlqcFdPcFg5T0RHUlZYVVIyVTRzZ1RySGVISVkzZ1N5NnNPREhr?=
+ =?utf-8?B?UzNid0drK3VQZ0NwOWJTdUduOWpCKzdBRGo1bnVhOUFEVGd5MEhVTjVLVTFZ?=
+ =?utf-8?B?dGFKbkNhVzRSTm9WQ29PVUNvejlzRXBHZ2MybjBqRTFGZ21KY2JiOENERzV3?=
+ =?utf-8?B?ZzBCdUw5VkZpc2taY0kzYmNFazlvRFhKNW4yditvelIvaDV4RFZYSjR4STk0?=
+ =?utf-8?B?RFl5aEpYOTZaZGZZSllONlJnejRUV2xyMlRLYWZRTU4yMHh4d2lPVE05Q0JW?=
+ =?utf-8?B?ZEtFbDluRTUwN3JPWkpQV0s4UXA1YjZMdUhuZlhXc1RvcW5jM0RnYUZxc2Vy?=
+ =?utf-8?B?YkdZRGdzZDExVkVZLzZMTEhGbW90SEhGb2JqMXVSL2dLdkt2RTc0eXVacFBp?=
+ =?utf-8?B?L2dXdWRFMlE1TGltbytXbVprTllXRmFwNGJnalpqRGVjNFF1N1ptTUxxWFp0?=
+ =?utf-8?B?ZXFERkNTV3hqY01mUm42VjJpTUg1K0RvdVdiUkcwbDRHN3F5dTBjWnpvNEsy?=
+ =?utf-8?B?V0JHZS9pbmI0aWp4RnZzN2xJaEdwQjUxQVJNNFJkdTBLYm10UGkxSXNhdmM5?=
+ =?utf-8?B?Z0Y0VFpTaUtsZjU0aEh4TlRaMWZIcUJKMjRFUk10MU9URnJTWFJlWThZK0ZR?=
+ =?utf-8?B?M25tTlNzemtUZGF5Um9GN3o0OXZ0WGJCcE9ucmZiSHFPaVlTRFRMRXFuaUhE?=
+ =?utf-8?B?T3BPREcvYWpNZFVnenZDQ1BXZ3R2S3hBZWZaVlhaNkNLcnhITEF6NXRKeHNE?=
+ =?utf-8?B?RW45Q05zZWlrVEtlOFdPQTgwSWg3OGFremJQSE1FNDdML1FZQVRmZmVHOXFI?=
+ =?utf-8?B?QktDaFI2NWgyU2pWVkEyVlJqMFNkSDVBQTNWQmkvM2ZkMjdBZVhMdFlPWEtN?=
+ =?utf-8?B?a2tRbmJtVDluTmFyNWY5bm43VUhLblREUDhyZXFHbzR5NENsMjdwYTRtczlP?=
+ =?utf-8?B?NmgzbU9vL0FrK3lwMm12TXoxaDNUM3ZUVWE3SUxFdjRPUjVaU3BqUU53bE9V?=
+ =?utf-8?B?cXAxYWhFZEk0M3l6TTcxS09tUlVJNEVXa0JqNzhlVncyUUNIcUtQbkpkdkxV?=
+ =?utf-8?B?UklKYVhxQnRNVjN5OFo2MTgrMHcvV3FMRkJDdDV3L3ZiN29UQkVqWktQeldh?=
+ =?utf-8?B?Y1RmaFJVZXVUbm5VZGc4cnZvcDN6ZVVSUUk3alhSZTJ6SHlacnMxTCtjK05U?=
+ =?utf-8?B?YkpWQmZVdE1Ud3RNYzVJNWE0RGhaSEFiZ3U2bjhObkYyR09IRXdJYWRhT1Bz?=
+ =?utf-8?B?K0lhc05xRTRJUlFxM2Q1VHpVc2JPVDdydXR3dGJvMld1cnJLcHE1eFAvMVJJ?=
+ =?utf-8?B?dmxoVnMwN0pIenVxUDZCUFBrUzJLc3ZOOGZhbC91UHlJYTFna1hLVWpYV3h5?=
+ =?utf-8?Q?AnxT86CVl8k=3D?=
+X-Forefront-Antispam-Report-Untrusted:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM9PR08MB7120.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6005
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped:
+ AM2PEPF0001C708.eurprd05.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs:
+	e551a26a-3c9e-4c54-8b09-08ddb464e192
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|35042699022|376014|14060799003|7416014|82310400026|36860700013|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UWpEYnkxRldvOWJrdjQxbVVvMDlja1JiakYrOEloSkZ1dmNFajRNKzN3WDAx?=
+ =?utf-8?B?Z1dvUktGSTU1S3NCWUxnQkI0b21uOEFjb0p6VTcvZm8zaVBuWmx2RVg5aE1S?=
+ =?utf-8?B?c25kZDRIUWFpQjM2Q0s1RDVvZnN6YWQvbEpMc3MxZ05hYWNqMmlKdDJhUUg4?=
+ =?utf-8?B?MHMwZ1dJWGFTaDZPYzBvVVRadUtqdklDTkhjeFQ4aVloWTQ3SWY2a2ZwcEVy?=
+ =?utf-8?B?Y3J5eEJ1TlloR2E3U2pFMEwwNVdtS2dkWjRQNmdtTnIya1BXb0RYQlVvcUZN?=
+ =?utf-8?B?OGIrM2hNN2w0NVJ3VXBNdDMzVXY2ekg4RTU3dENnRmZaR3VGTExnS1d5bTNU?=
+ =?utf-8?B?bFYwY04vMGNvOHdXeWhFbTBwZTFEL3g3dTZNSWd5Y0NVai9xMHcxUllGdHA3?=
+ =?utf-8?B?UlN2RnM2TFVERnl5WHVRUjBtNDI4RGZCZjE2eGUrUTdQUkdwN0xDdk1UMGpy?=
+ =?utf-8?B?aENZRm45R1lhM2lSQ3hJWmRIeDFBalBBQ3oyZEdPVjVwT2FXK2dEUnBHblI3?=
+ =?utf-8?B?RTNTNzRMd09tWGM3dWFFazdaNWxEVjRGQ2ZmZ3lBcTN0ZWJIazVzWVdTalJi?=
+ =?utf-8?B?VmQwM1p6c2lpd1hEMkI4b2F1aFFyankrcjVzRHBTbGY2MjREUkk3eDJ3OU5V?=
+ =?utf-8?B?Q0ZSSGNCZkZIN0NkalY0WkJDeFkrcnZHMnF4V1VxViswUThHMGpZaFlZbGhH?=
+ =?utf-8?B?NWJLdnhQaEhyTlVYeWVYeWkrTlN0bEJ1WVVRN1N2Y0M0L0RXaXRZYnhKa1N5?=
+ =?utf-8?B?YnljQzBMWjNESGkyUFFVTis3VG1QZFRPUXJ6eGM5QU9DdDdPSGJtb1MwS0gx?=
+ =?utf-8?B?MEp0cStwV05PeW53TTRRczh0SEM3MFJnVk1wRSt5YjRQVjZQZGtISGNLL0JZ?=
+ =?utf-8?B?K2pKY1gwNGEreHc1bWd5VG1YRVhWUE5TbFF5aGlFb1Zla3ovaU10Q3FnRlNG?=
+ =?utf-8?B?S1VyZzdGb3prUlhhMlpMbUtmSmFmZ25rNmVKSHpiblh6WStZT3VES0JNcWV1?=
+ =?utf-8?B?Tmd6SXNuZHNYNTlxMFVFcDlOV3ArTHF2OGhYeFlUWklMTzl6RWtLbFArYmcx?=
+ =?utf-8?B?cVlxNlNPUS9FYlUvdm41d2ZybGpOK01nbXZOam1ZN3FLSGxYSnNQOEg0cVZV?=
+ =?utf-8?B?QzF6TGN6d1NiNk92clJ2VU5ka1FHZzVxeUxuMkxjTHA5eUVUMDdoMWpxZ1dN?=
+ =?utf-8?B?UnZsYS9DQzdKeG5CbTd4QndKMURhd3lsTWRVSVFOK2E4WVVscUxscEJpaW9i?=
+ =?utf-8?B?elJSME5IWEFJb2YzVHNkVEwzSUQ0TFFSODRwbDY2b3F3SFMydEUyS0RVS2JU?=
+ =?utf-8?B?M1ZKVHlaY1ZqcllJM3g5Ukl3a2sxVDhVd3NDUUQyc2hPY2J5ZU5rM01YK2hi?=
+ =?utf-8?B?cFl4b0VZV2lxVmx0Nm9Qa05QTXd5R3JacjBGRjlEZjdMTkk4aHlPZ1pzZm0v?=
+ =?utf-8?B?ZmRyWjhXWjE3R0xNdzFrOHlCM21CWlFtU1FzbHlnUG5Ua1oxRUUyNGs2Z0lD?=
+ =?utf-8?B?UXdPV3MyKzExVnBHV1JtSW81d2VtRk9COXRhcFduWW9uMFBlMVpvV0s4S2tX?=
+ =?utf-8?B?NlQ4L1dkbW4vMklUU2FxdkVySU5qUVhZaFFMY0x6S1FyUUo2Q0hqcmZnSmNm?=
+ =?utf-8?B?ZTViRGNKQStzVzZKaDRSWE42S3dvKzBUUHBCR0MwRGpaU0psejE4a3loOVRp?=
+ =?utf-8?B?RXorVEhBblRkK0tVeStkelBON1FCTnJKZG1xTUs4UWN0SGRwNHM0N1E2UjJX?=
+ =?utf-8?B?bnBybUV6QmJhVmRkVTBuV1ZBeDd4RWMvRFRoR3dmM1EyRm9UN29wRkx1N1B6?=
+ =?utf-8?B?OEpHUkRDeXlwT2pvVjB3TGhmR3VvMmFDWU9zdVJKUXEyUFNDaFkvazZWempL?=
+ =?utf-8?B?TzdwY08yVnpUUFhoRVJXQzJwQ1R3dlBHYll1VGxhZzA3TE1QNG9ZYVBvSlRK?=
+ =?utf-8?B?a3hQUVJLSk9JVk9zU0JnMUppUTVxWDRpd1hXdHlsU2lXeWdSNURPYlZLcHVk?=
+ =?utf-8?B?NVQ0QTBGcUxHRmNDTS9lakIxVjh2bzlpbVRyQitrOWhUSEdtK2dUYjd4STc5?=
+ =?utf-8?B?ZUFOVjhVR0hnSTNKaGVBMXdmOENjM1VEQ2hvZz09?=
+X-Forefront-Antispam-Report:
+	CIP:4.158.2.129;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:outbound-uk1.az.dlp.m.darktrace.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(35042699022)(376014)(14060799003)(7416014)(82310400026)(36860700013)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 03:53:05.2346
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: p8pEf5SdZCPxGVvxNHCwjJK8rQ0E0zm5JWW0Wtu9cf+CVqjn9eFwr9f7kOdgP8gxnNLVhSn0HxxCMudotMQt1SABcuRtkX8Z10yicYm8F8w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN6PR11MB8104
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 22259c31-bc01-4832-83b5-08ddb464f4cc
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[4.158.2.129];Helo=[outbound-uk1.az.dlp.m.darktrace.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	AM2PEPF0001C708.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB6283
 
 
+On 25/06/25 6:58 pm, Lorenzo Stoakes wrote:
+> On Wed, Jun 25, 2025 at 11:28:06AM +0530, Dev Jain wrote:
+>> Suppose a folio is under migration, and khugepaged is also trying to
+>> collapse it. collapse_pte_mapped_thp() will retrieve the folio from the
+>> page cache via filemap_lock_folio(), thus taking a reference on the folio
+>> and sleeping on the folio lock, since the lock is held by the migration
+>> path. Migration will then fail in
+>> __folio_migrate_mapping -> folio_ref_freeze. Reduce the probability of
+>> such a race happening (leading to migration failure) by bailing out
+>> if we detect a PMD is marked with a migration entry.
+>>
+>> This fixes the migration-shared-anon-thp testcase failure on Apple M3.
+> Hm is this related to the series at all? Seems somewhat unrelated?
 
-> -----Original Message-----
-> From: Nilawar, Badal <badal.nilawar@intel.com>
-> Sent: Wednesday, June 25, 2025 10:30 PM
-> To: intel-xe@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linu=
-x-
-> kernel@vger.kernel.org
-> Cc: Gupta, Anshuman <anshuman.gupta@intel.com>; Vivi, Rodrigo
-> <rodrigo.vivi@intel.com>; Usyskin, Alexander <alexander.usyskin@intel.com=
->;
-> gregkh@linuxfoundation.org; Ceraolo Spurio, Daniele
-> <daniele.ceraolospurio@intel.com>
-> Subject: [PATCH v4 02/10] mei: late_bind: add late binding component driv=
-er
->=20
-> From: Alexander Usyskin <alexander.usyskin@intel.com>
->=20
-> Add late binding component driver.
-> It allows pushing the late binding configuration from, for example, the X=
-e
-> graphics driver to the Intel discrete graphics card's CSE device.
->=20
-> Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-> Signed-off-by: Badal Nilawar <badal.nilawar@intel.com>
-> ---
-> v2:
->  - Use generic naming (Jani)
->  - Drop xe_late_bind_component struct to move to xe code (Daniele/Sasha)
-> v3:
->  - Updated kconfig description
->  - Move CSC late binding specific flags/defines to late_bind_mei_interfac=
-e.h
-> (Daniele)
-> v4:
->  - Add match for PCI_CLASS_DISPLAY_OTHER to support headless cards
-> (Anshuman)
-> v5:
->  - Add fixes in push_config (Sasha)
->  - Use INTEL_ prefix for component, refine doc,
->    add status enum to headerlate_bind_mei_interface.h (Anshuman)
-> ---
->  drivers/misc/mei/Kconfig                    |   1 +
->  drivers/misc/mei/Makefile                   |   1 +
->  drivers/misc/mei/late_bind/Kconfig          |  13 +
->  drivers/misc/mei/late_bind/Makefile         |   9 +
->  drivers/misc/mei/late_bind/mei_late_bind.c  | 281 ++++++++++++++++++++
->  include/drm/intel/i915_component.h          |   1 +
->  include/drm/intel/late_bind_mei_interface.h |  64 +++++
->  7 files changed, 370 insertions(+)
->  create mode 100644 drivers/misc/mei/late_bind/Kconfig
->  create mode 100644 drivers/misc/mei/late_bind/Makefile
->  create mode 100644 drivers/misc/mei/late_bind/mei_late_bind.c
->  create mode 100644 include/drm/intel/late_bind_mei_interface.h
->=20
-> diff --git a/drivers/misc/mei/Kconfig b/drivers/misc/mei/Kconfig index
-> 7575fee96cc6..771becc68095 100644
-> --- a/drivers/misc/mei/Kconfig
-> +++ b/drivers/misc/mei/Kconfig
-> @@ -84,5 +84,6 @@ config INTEL_MEI_VSC
->  source "drivers/misc/mei/hdcp/Kconfig"
->  source "drivers/misc/mei/pxp/Kconfig"
->  source "drivers/misc/mei/gsc_proxy/Kconfig"
-> +source "drivers/misc/mei/late_bind/Kconfig"
->=20
->  endif
-> diff --git a/drivers/misc/mei/Makefile b/drivers/misc/mei/Makefile index
-> 6f9fdbf1a495..84bfde888d81 100644
-> --- a/drivers/misc/mei/Makefile
-> +++ b/drivers/misc/mei/Makefile
-> @@ -31,6 +31,7 @@ CFLAGS_mei-trace.o =3D -I$(src)
->  obj-$(CONFIG_INTEL_MEI_HDCP) +=3D hdcp/
->  obj-$(CONFIG_INTEL_MEI_PXP) +=3D pxp/
->  obj-$(CONFIG_INTEL_MEI_GSC_PROXY) +=3D gsc_proxy/
-> +obj-$(CONFIG_INTEL_MEI_LATE_BIND) +=3D late_bind/
->=20
->  obj-$(CONFIG_INTEL_MEI_VSC_HW) +=3D mei-vsc-hw.o  mei-vsc-hw-y :=3D vsc-
-> tp.o diff --git a/drivers/misc/mei/late_bind/Kconfig
-> b/drivers/misc/mei/late_bind/Kconfig
-> new file mode 100644
-> index 000000000000..65c7180c5678
-> --- /dev/null
-> +++ b/drivers/misc/mei/late_bind/Kconfig
-> @@ -0,0 +1,13 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +# Copyright (c) 2025, Intel Corporation. All rights reserved.
-> +#
-> +config INTEL_MEI_LATE_BIND
-> +	tristate "Intel late binding support on ME Interface"
-> +	select INTEL_MEI_ME
-> +	depends on DRM_XE
-> +	help
-> +	  MEI Support for Late Binding for Intel graphics card.
-> +
-> +	  Enables the ME FW interfaces for Late Binding feature,
-> +	  allowing loading of firmware for the devices like Fan
-> +	  Controller during by Intel Xe driver.
-> diff --git a/drivers/misc/mei/late_bind/Makefile
-> b/drivers/misc/mei/late_bind/Makefile
-> new file mode 100644
-> index 000000000000..a0aeda5853f0
-> --- /dev/null
-> +++ b/drivers/misc/mei/late_bind/Makefile
-> @@ -0,0 +1,9 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +#
-> +# Copyright (c) 2025, Intel Corporation. All rights reserved.
-> +#
-> +# Makefile - Late Binding client driver for Intel MEI Bus Driver.
-> +
-> +subdir-ccflags-y +=3D -I$(srctree)/drivers/misc/mei/
-> +
-> +obj-$(CONFIG_INTEL_MEI_LATE_BIND) +=3D mei_late_bind.o
-> diff --git a/drivers/misc/mei/late_bind/mei_late_bind.c
-> b/drivers/misc/mei/late_bind/mei_late_bind.c
-> new file mode 100644
-> index 000000000000..ffb89ccdfbb1
-> --- /dev/null
-> +++ b/drivers/misc/mei/late_bind/mei_late_bind.c
-> @@ -0,0 +1,281 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2025 Intel Corporation  */ #include
-> +<drm/intel/i915_component.h> #include
-> +<drm/intel/late_bind_mei_interface.h>
-> +#include <linux/component.h>
-> +#include <linux/pci.h>
-> +#include <linux/mei_cl_bus.h>
-> +#include <linux/module.h>
-> +#include <linux/overflow.h>
-> +#include <linux/slab.h>
-> +#include <linux/uuid.h>
-> +
-> +#include "mkhi.h"
-> +
-> +#define GFX_SRV_MKHI_LATE_BINDING_CMD 0x12 #define
-> +GFX_SRV_MKHI_LATE_BINDING_RSP (GFX_SRV_MKHI_LATE_BINDING_CMD
-> | 0x80)
-> +
-> +#define LATE_BIND_SEND_TIMEOUT_MSEC 3000 #define
-> +LATE_BIND_RECV_TIMEOUT_MSEC 3000
-> +
-> +/**
-> + * struct csc_heci_late_bind_req - late binding request
-> + * @header: @ref mkhi_msg_hdr
-> + * @type: type of the late binding payload
-> + * @flags: flags to be passed to the firmware
-> + * @reserved: reserved field
-> + * @payload_size: size of the payload data in bytes
-> + * @payload: data to be sent to the firmware  */ struct
-> +csc_heci_late_bind_req {
-> +	struct mkhi_msg_hdr header;
-> +	u32 type;
-> +	u32 flags;
-> +	u32 reserved[2];
-> +	u32 payload_size;
-> +	u8  payload[] __counted_by(payload_size); } __packed;
-> +
-> +/**
-> + * struct csc_heci_late_bind_rsp - late binding response
-> + * @header: @ref mkhi_msg_hdr
-> + * @type: type of the late binding payload
-> + * @reserved: reserved field
-> + * @status: status of the late binding command execution by firmware
-> +*/ struct csc_heci_late_bind_rsp {
-> +	struct mkhi_msg_hdr header;
-> +	u32 type;
-> +	u32 reserved[2];
-> +	u32 status;
-> +} __packed;
-> +
-> +static int mei_late_bind_check_response(const struct device *dev, const
-> +struct mkhi_msg_hdr *hdr) {
-> +	if (hdr->group_id !=3D MKHI_GROUP_ID_GFX) {
-> +		dev_err(dev, "Mismatch group id: 0x%x instead of 0x%x\n",
-> +			hdr->group_id, MKHI_GROUP_ID_GFX);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (hdr->command !=3D GFX_SRV_MKHI_LATE_BINDING_RSP) {
-> +		dev_err(dev, "Mismatch command: 0x%x instead of 0x%x\n",
-> +			hdr->command,
-> GFX_SRV_MKHI_LATE_BINDING_RSP);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (hdr->result) {
-> +		dev_err(dev, "Error in result: 0x%x\n", hdr->result);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * mei_late_bind_push_config - Sends a config to the firmware.
-> + * @dev: device struct corresponding to the mei device
-> + * @type: payload type
-> + * @flags: payload flags
-> + * @payload: payload buffer
-> + * @payload_size: payload buffer size
-> + *
-> + * Return: 0 success, negative errno value on transport failure,
-> + *         positive status returned by FW
-> + */
-> +static int mei_late_bind_push_config(struct device *dev, u32 type, u32 f=
-lags,
-> +				     const void *payload, size_t payload_size) {
-> +	struct mei_cl_device *cldev;
-> +	struct csc_heci_late_bind_req *req =3D NULL;
-> +	struct csc_heci_late_bind_rsp rsp;
-> +	size_t req_size;
-> +	ssize_t ret;
-> +
-> +	if (!dev || !payload || !payload_size)
-> +		return -EINVAL;
-> +
-> +	cldev =3D to_mei_cl_device(dev);
-> +
-> +	ret =3D mei_cldev_enable(cldev);
-> +	if (ret < 0) {
-> +		dev_dbg(dev, "mei_cldev_enable failed. %zd\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	req_size =3D struct_size(req, payload, payload_size);
-> +	if (req_size > mei_cldev_mtu(cldev)) {
-> +		dev_err(dev, "Payload is too big %zu\n", payload_size);
-> +		ret =3D -EMSGSIZE;
-> +		goto end;
-> +	}
-> +
-> +	req =3D kmalloc(req_size, GFP_KERNEL);
-> +	if (!req) {
-> +		ret =3D -ENOMEM;
-> +		goto end;
-> +	}
-> +
-> +	req->header.group_id =3D MKHI_GROUP_ID_GFX;
-> +	req->header.command =3D GFX_SRV_MKHI_LATE_BINDING_CMD;
-> +	req->type =3D type;
-> +	req->flags =3D flags;
-> +	req->reserved[0] =3D 0;
-> +	req->reserved[1] =3D 0;
-> +	req->payload_size =3D payload_size;
-> +	memcpy(req->payload, payload, payload_size);
-> +
-> +	ret =3D mei_cldev_send_timeout(cldev, (void *)req, req_size,
-> LATE_BIND_SEND_TIMEOUT_MSEC);
-> +	if (ret < 0) {
-> +		dev_err(dev, "mei_cldev_send failed. %zd\n", ret);
-> +		goto end;
-> +	}
-> +
-> +	ret =3D mei_cldev_recv_timeout(cldev, (void *)&rsp, sizeof(rsp),
-> LATE_BIND_RECV_TIMEOUT_MSEC);
-> +	if (ret < 0) {
-> +		dev_err(dev, "mei_cldev_recv failed. %zd\n", ret);
-> +		goto end;
-> +	}
-> +	if (ret < sizeof(rsp.header)) {
-> +		dev_err(dev, "bad response header from the firmware: size
-> %zd < %zu\n",
-> +			ret, sizeof(rsp.header));
-> +		goto end;
-> +	}
-> +	if (ret < sizeof(rsp)) {
-> +		dev_err(dev, "bad response from the firmware: size %zd <
-> %zu\n",
-> +			ret, sizeof(rsp));
-> +		goto end;
-> +	}
-> +
-> +	ret =3D mei_late_bind_check_response(dev, &rsp.header);
-> +	if (ret) {
-> +		dev_err(dev, "bad result response from the firmware:
-> 0x%x\n",
-> +			*(uint32_t *)&rsp.header);
-> +		goto end;
-> +	}
-> +
-> +	ret =3D (int)rsp.status;
-> +	dev_dbg(dev, "%s status =3D %zd\n", __func__, ret);
-> +
-> +end:
-> +	mei_cldev_disable(cldev);
-> +	kfree(req);
-> +	return ret;
-> +}
-> +
-> +static const struct late_bind_component_ops mei_late_bind_ops =3D {
-> +	.owner =3D THIS_MODULE,
-> +	.push_config =3D mei_late_bind_push_config, };
-> +
-> +static int mei_component_master_bind(struct device *dev) {
-> +	return component_bind_all(dev, (void *)&mei_late_bind_ops); }
-> +
-> +static void mei_component_master_unbind(struct device *dev) {
-> +	component_unbind_all(dev, (void *)&mei_late_bind_ops); }
-> +
-> +static const struct component_master_ops mei_component_master_ops =3D {
-> +	.bind =3D mei_component_master_bind,
-> +	.unbind =3D mei_component_master_unbind, };
-> +
-> +/**
-> + * mei_late_bind_component_match - compare function for matching mei
-> late bind.
-> + *
-> + *    The function checks if requester is Intel PCI_CLASS_DISPLAY_VGA or
-> + *    PCI_CLASS_DISPLAY_OTHER device, and checks if the parent of reques=
-ter
-DOC is still wrong dev is requester here, you are checking base =3D=3D dev.
-With fixing of that.
-Reviewed-by: Anshuman Gupta <anshuman.gupta@intel.com>
+Not related.
 
-Thanks,
-Anshuman=20
-> + *    and the grand parent of mei_if are the same device
-> + *
-> + * @dev: master device
-> + * @subcomponent: subcomponent to match
-> (INTEL_COMPONENT_LATE_BIND)
-> + * @data: compare data (late_bind mei device on mei bus)
-> + *
-> + * Return:
-> + * * 1 - if components match
-> + * * 0 - otherwise
-> + */
-> +static int mei_late_bind_component_match(struct device *dev, int
-> subcomponent,
-> +					 void *data)
-> +{
-> +	struct device *base =3D data;
-> +	struct pci_dev *pdev;
-> +
-> +	if (!dev)
-> +		return 0;
-> +
-> +	if (!dev_is_pci(dev))
-> +		return 0;
-> +
-> +	pdev =3D to_pci_dev(dev);
-> +
-> +	if (pdev->vendor !=3D PCI_VENDOR_ID_INTEL)
-> +		return 0;
-> +
-> +	if (pdev->class !=3D (PCI_CLASS_DISPLAY_VGA << 8) &&
-> +	    pdev->class !=3D (PCI_CLASS_DISPLAY_OTHER << 8))
-> +		return 0;
-> +
-> +	if (subcomponent !=3D INTEL_COMPONENT_LATE_BIND)
-> +		return 0;
-> +
-> +	base =3D base->parent;
-> +	if (!base) /* mei device */
-> +		return 0;
-> +
-> +	base =3D base->parent; /* pci device */
-> +
-> +	return !!base && dev =3D=3D base;
-> +}
-> +
-> +static int mei_late_bind_probe(struct mei_cl_device *cldev,
-> +			       const struct mei_cl_device_id *id) {
-> +	struct component_match *master_match =3D NULL;
-> +	int ret;
-> +
-> +	component_match_add_typed(&cldev->dev, &master_match,
-> +				  mei_late_bind_component_match, &cldev-
-> >dev);
-> +	if (IS_ERR_OR_NULL(master_match))
-> +		return -ENOMEM;
-> +
-> +	ret =3D component_master_add_with_match(&cldev->dev,
-> +					      &mei_component_master_ops,
-> +					      master_match);
-> +	if (ret < 0)
-> +		dev_err(&cldev->dev, "Master comp add failed %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +
-> +static void mei_late_bind_remove(struct mei_cl_device *cldev) {
-> +	component_master_del(&cldev->dev,
-> &mei_component_master_ops); }
-> +
-> +#define MEI_GUID_MKHI UUID_LE(0xe2c2afa2, 0x3817, 0x4d19, \
-> +			      0x9d, 0x95, 0x6, 0xb1, 0x6b, 0x58, 0x8a, 0x5d)
-> +
-> +static struct mei_cl_device_id mei_late_bind_tbl[] =3D {
-> +	{ .uuid =3D MEI_GUID_MKHI, .version =3D MEI_CL_VERSION_ANY },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(mei, mei_late_bind_tbl);
-> +
-> +static struct mei_cl_driver mei_late_bind_driver =3D {
-> +	.id_table =3D mei_late_bind_tbl,
-> +	.name =3D KBUILD_MODNAME,
-> +	.probe =3D mei_late_bind_probe,
-> +	.remove	=3D mei_late_bind_remove,
-> +};
-> +
-> +module_mei_cl_driver(mei_late_bind_driver);
-> +
-> +MODULE_AUTHOR("Intel Corporation");
-> +MODULE_LICENSE("GPL");
-> +MODULE_DESCRIPTION("MEI Late Binding");
-> diff --git a/include/drm/intel/i915_component.h
-> b/include/drm/intel/i915_component.h
-> index 4ea3b17aa143..456849a97d75 100644
-> --- a/include/drm/intel/i915_component.h
-> +++ b/include/drm/intel/i915_component.h
-> @@ -31,6 +31,7 @@ enum i915_component_type {
->  	I915_COMPONENT_HDCP,
->  	I915_COMPONENT_PXP,
->  	I915_COMPONENT_GSC_PROXY,
-> +	INTEL_COMPONENT_LATE_BIND,
->  };
->=20
->  /* MAX_PORT is the number of port
-> diff --git a/include/drm/intel/late_bind_mei_interface.h
-> b/include/drm/intel/late_bind_mei_interface.h
-> new file mode 100644
-> index 000000000000..ec58ef1ab4e8
-> --- /dev/null
-> +++ b/include/drm/intel/late_bind_mei_interface.h
-> @@ -0,0 +1,64 @@
-> +/* SPDX-License-Identifier: MIT */
-> +/*
-> + * Copyright (c) 2025 Intel Corporation  */
-> +
-> +#ifndef _LATE_BIND_MEI_INTERFACE_H_
-> +#define _LATE_BIND_MEI_INTERFACE_H_
-> +
-> +#include <linux/types.h>
-> +
-> +struct device;
-> +struct module;
-> +
-> +/**
-> + * Late Binding flags
-> + * Persistent across warm reset
-> + */
-> +#define CSC_LATE_BINDING_FLAGS_IS_PERSISTENT	BIT(0)
-> +
-> +/**
-> + * xe_late_bind_fw_type - enum to determine late binding fw type  */
-> +enum late_bind_type {
-> +	CSC_LATE_BINDING_TYPE_FAN_CONTROL =3D 1, };
-> +
-> +/**
-> + * Late Binding payload status
-> + */
-> +enum csc_late_binding_status {
-> +	CSC_LATE_BINDING_STATUS_SUCCESS           =3D 0,
-> +	CSC_LATE_BINDING_STATUS_4ID_MISMATCH      =3D 1,
-> +	CSC_LATE_BINDING_STATUS_ARB_FAILURE       =3D 2,
-> +	CSC_LATE_BINDING_STATUS_GENERAL_ERROR     =3D 3,
-> +	CSC_LATE_BINDING_STATUS_INVALID_PARAMS    =3D 4,
-> +	CSC_LATE_BINDING_STATUS_INVALID_SIGNATURE =3D 5,
-> +	CSC_LATE_BINDING_STATUS_INVALID_PAYLOAD   =3D 6,
-> +	CSC_LATE_BINDING_STATUS_TIMEOUT           =3D 7,
-> +};
-> +
-> +/**
-> + * struct late_bind_component_ops - ops for Late Binding services.
-> + * @owner: Module providing the ops
-> + * @push_config: Sends a config to FW.
-> + */
-> +struct late_bind_component_ops {
-> +	struct module *owner;
-> +
-> +	/**
-> +	 * @push_config: Sends a config to FW.
-> +	 * @dev: device struct corresponding to the mei device
-> +	 * @type: payload type
-> +	 * @flags: payload flags
-> +	 * @payload: payload buffer
-> +	 * @payload_size: payload buffer size
-> +	 *
-> +	 * Return: 0 success, negative errno value on transport failure,
-> +	 *         positive status returned by FW
-> +	 */
-> +	int (*push_config)(struct device *dev, u32 type, u32 flags,
-> +			   const void *payload, size_t payload_size); };
-> +
-> +#endif /* _LATE_BIND_MEI_INTERFACE_H_ */
-> --
-> 2.34.1
+>
+> Is there a Fixes, Closes, etc.? Do we need something in stable?
 
+We don't need anything. This is an "expected race" in the sense that
+both migration and khugepaged collapse are best effort algorithms.
+I am just seeing a test failure on my system because my system hits
+the race more often. So this patch reduces the window for the race.
+
+For some previous context, you may look at:
+
+https://lore.kernel.org/all/20240801081657.1386743-1-dev.jain@arm.com/
+and
+https://lore.kernel.org/all/20240830051609.4037834-1-dev.jain@arm.com/
+
+>
+>> Signed-off-by: Dev Jain <dev.jain@arm.com>
+>> ---
+>>   mm/khugepaged.c | 12 ++++++++++--
+>>   1 file changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+>> index 4c8d33abfbd8..bc8774f62e86 100644
+>> --- a/mm/khugepaged.c
+>> +++ b/mm/khugepaged.c
+>> @@ -31,6 +31,7 @@ enum scan_result {
+>>   	SCAN_FAIL,
+>>   	SCAN_SUCCEED,
+>>   	SCAN_PMD_NULL,
+>> +	SCAN_PMD_MIGRATION,
+>>   	SCAN_PMD_NONE,
+>>   	SCAN_PMD_MAPPED,
+>>   	SCAN_EXCEED_NONE_PTE,
+>> @@ -956,6 +957,8 @@ static inline int check_pmd_state(pmd_t *pmd)
+>>
+>>   	if (pmd_none(pmde))
+>>   		return SCAN_PMD_NONE;
+>> +	if (is_pmd_migration_entry(pmde))
+>> +		return SCAN_PMD_MIGRATION;
+>>   	if (!pmd_present(pmde))
+>>   		return SCAN_PMD_NULL;
+>>   	if (pmd_trans_huge(pmde))
+>> @@ -1518,9 +1521,12 @@ int collapse_pte_mapped_thp(struct mm_struct *mm, unsigned long addr,
+>>   	    !range_in_vma(vma, haddr, haddr + HPAGE_PMD_SIZE))
+>>   		return SCAN_VMA_CHECK;
+>>
+>> -	/* Fast check before locking page if already PMD-mapped */
+>> +	/*
+>> +	 * Fast check before locking folio if already PMD-mapped, or if the
+>> +	 * folio is under migration
+>> +	 */
+>>   	result = find_pmd_or_thp_or_none(mm, haddr, &pmd);
+>> -	if (result == SCAN_PMD_MAPPED)
+>> +	if (result == SCAN_PMD_MAPPED || result == SCAN_PMD_MIGRATION)
+>>   		return result;
+>>
+>>   	/*
+>> @@ -2745,6 +2751,7 @@ static int madvise_collapse_errno(enum scan_result r)
+>>   	case SCAN_PAGE_LRU:
+>>   	case SCAN_DEL_PAGE_LRU:
+>>   	case SCAN_PAGE_FILLED:
+>> +	case SCAN_PMD_MIGRATION:
+>>   		return -EAGAIN;
+>>   	/*
+>>   	 * Other: Trying again likely not to succeed / error intrinsic to
+>> @@ -2834,6 +2841,7 @@ int madvise_collapse(struct vm_area_struct *vma, struct vm_area_struct **prev,
+>>   			goto handle_result;
+>>   		/* Whitelisted set of results where continuing OK */
+>>   		case SCAN_PMD_NULL:
+>> +		case SCAN_PMD_MIGRATION:
+>>   		case SCAN_PTE_NON_PRESENT:
+>>   		case SCAN_PTE_UFFD_WP:
+>>   		case SCAN_PAGE_RO:
+>> --
+>> 2.30.2
+>>
