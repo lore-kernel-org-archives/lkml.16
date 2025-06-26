@@ -1,64 +1,73 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378B2202990;
-	Thu, 26 Jun 2025 21:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E09EA24503B
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 21:32:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750973332; cv=none; b=umk7iE9rnM+P+fCFUkNF/w0udhp38qq4rkgpCGf4WNatziNzPYjWYuF2vsJNMif0JYF/NqLRUy/pqhUUqwZCq+YnkH72WECKRuajgOKAtxR80ljr9PgVNAABTCKd+t+gyp3jiKLqDTu8c7k3oA9vuZnnNQMXlBhEloHUfb6bhvU=
+	t=1750973537; cv=none; b=TTra+4fMDf6DFuaklRDMqvG5V5Q1d8aeCUoKJqhHPhN6Yb9bN+LI5LOWdOkwINelAj4Ypm5liMZmCPyFGQL6XzjXw4oiV9KlvZBXTJhVk1mZzU5XFer097YfT/5DsfbYYmxdZBwz1lY6zcLTmng++jaMTG+q3+ShLgkzF+KnrY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750973332; c=relaxed/simple;
-	bh=PLZzAdX+5PzAgrtD7ATf2kU/OYqwm6guag3uzHDX384=;
+	s=arc-20240116; t=1750973537; c=relaxed/simple;
+	bh=Vg+bsnBCAYgGaA8Ef8XIx7/sg+GRsIjqsHyzMhcM+Qc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mc0KWk0TeTkqisyDtiQtHbbHnECaMvo01VKB/p96tIhTdAA7mAdiu2p5mEILVDlUedBfVYZ8YPcTpRO00s+2H3kDc7tn9Tz/6MnJsmi689x7JmV+c58kkXmM04SdsBkhXX77lyWJO7Qk+wn5CpuDSTh8dg2tMXLuASU6/ltFr5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OVH0+HGa; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=nMM3TycK/lAxLJCopZzLi+/QMbmujd7h2tWN1A0UvAy4khOstbm45K0r9ytFLxQSNlvW68ZvElgUmvyzX+KJ2hSD60AkOwiZzeg0bLpGemH5Z/UbZCory2q2OyEaPlwjigcUJbv5pdLq7o301r4HzJrk3NraOKL6qCrJhK+MhHo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p54jb+Sa; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OVH0+HGa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750973331; x=1782509331;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PLZzAdX+5PzAgrtD7ATf2kU/OYqwm6guag3uzHDX384=;
-  b=OVH0+HGaFJbdI515+Ix3IhEXRqlZGLFJokikQhBO0rJ3p1HarwGJZ8ZE
-   UhQ1jTsZ9B5q+4oxw68A/h7sb6RQZwmqnBS0RzW/H3PzxiTPrEWPuSiXI
-   VoEegrhH4OP2k9zTmnOvT16506GU1BmvpTpHy70nxbrvj2DaHHHpb2iha
-   jGNmIINNkNBmL4YK6Xgj9TytF2T/mVX4COGqwPOwQNXSeBEMw5Jr0V1vv
-   SsmtRyN3QAWJyqm/7KLtAKNe5tBoF+3zGSIporSvyTk9XdIOfiMuT22EO
-   degbxGCKlZEX/lP7u94g/ADLG7ishPCf9cAlNJT5dnXWGo0lMQ9oUUY9S
-   w==;
-X-CSE-ConnectionGUID: 3UHk18woTXGILQ7BHzyrZA==
-X-CSE-MsgGUID: yyk1VmJ7QVahZilUvr1XOg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53008181"
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="53008181"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 14:28:51 -0700
-X-CSE-ConnectionGUID: dA2POMMHSBGcOFw3AQerzw==
-X-CSE-MsgGUID: 8Nwjcn/pS7iKXdke8f6K5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="153149425"
-Received: from lkp-server01.sh.intel.com (HELO e8142ee1dce2) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 26 Jun 2025 14:28:48 -0700
-Received: from kbuild by e8142ee1dce2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uUu9G-000VYE-0p;
-	Thu, 26 Jun 2025 21:28:46 +0000
-Date: Fri, 27 Jun 2025 05:27:55 +0800
-From: kernel test robot <lkp@intel.com>
-To: oushixiong1025@163.com, Helge Deller <deller@gmx.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	Peter Jones <pjones@redhat.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org, Shixiong Ou <oushixiong@kylinos.cn>
-Subject: Re: [PATCH] fbdev: efifb: do not load efifb if PCI BAR has changed
- but not fixuped
-Message-ID: <202506270558.awnEnyeN-lkp@intel.com>
-References: <20250626094937.515552-1-oushixiong1025@163.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p54jb+Sa"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2efb0b03e40so279600fac.0
+        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 14:32:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1750973535; x=1751578335; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xw6mnndRYOAvK0RCLzt9VBUYGf36cfO8dHKbt/kftME=;
+        b=p54jb+Sa7NiFZa/s1HGZnff7XTyBQKiDmjMHCzO3gh8H/Rd5bNZEh3f9CicALQlY0B
+         lbyD/tdJEUAluZy4kGozLVMPrj8LnjMw0Vqa+/nr33JAsiYjZTWpCnTLd+TFIpcSo3pZ
+         w4z0YHGpH++6nJPVH98Tdwo7mTQWz4KgPNTi01FcpSNFSWA81Ifblr/PNUn6RHttOpIK
+         rCNyVfrXzYZpZKsgFHF6NWT5nJivX9zysULfcA2JNPhl4hHJwOGsiZuhb90XTw2SPN2i
+         9LtwMveyecb0+/HBmB5ilMdgCfuR52jI8iguNLxlwdQOtnaRZZOYnQRLYIBOl4t9Zzs6
+         Kc4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750973535; x=1751578335;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xw6mnndRYOAvK0RCLzt9VBUYGf36cfO8dHKbt/kftME=;
+        b=cpgM/DhdpyiBH9ln7vZC7x7Shhz8XJhh2d5WCUR9pyGSUsjwfp0Jelrk2CdpzvbM2R
+         ehQtQP0AcA8chOrrW3EPbNR39+g2gxtM8PeAYElm25arSYUFGtUWaW4//YohWr/gwQrn
+         HouMrjQZyGXE3J5fh0tStWkZjj8qgLQG0Xqx3UOvY+elcKBoIoEUt/eQaIS5I16BxmsN
+         6gPS2NikUrd25M/vEoTp4Jr6a+9uchFW9xSDWpGHEGG68qaWsxx13g2WelWgbi3WhlZ0
+         5R8HrzYn1peUmecLd4DxigaSd5sx13PkYd+vRv5/H+5k1pGvPp4n21pP3TPz1pUK5N7i
+         /kOQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU70qbknPo3iTJpjZ3+G5mRNZEHX2P/bzCrl/hZJFBjkQA3vqIO61dmXxXn28oDLHiBpO30+GTwX/JycV8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdYfE/1joyXo5dQTWol5uLpN46pN0wvvsaKTCdq7G0ZDwih9aX
+	++ZWTozpgT2iA4J+eLivJ31qePLAqpOZLWnlJwZHo5VhsZfMoX02a23TIgSLvAdY6j0=
+X-Gm-Gg: ASbGncuXKAhD5nlHCbOCV8M/8ZDTkoLPKhkc7boaNnTTaYOMmsyxUC4sxkCMWierS7n
+	sTQF+ByHaDIk4o1o15fipsKG0IqOOz32lL8KaEhixSptgUkb1prhB1w93TqWdgQO0c/O8enozmm
+	TUPo2UTK50irvMtCLVb7cJgJJA1X+Qk6NNqESUoGNuOwwuD2FwwOwe3YC/coNCcWCIFBNbzhpZ4
+	ztMDoExd7zKwxSdHBg6cRE0HmFdCODrVNc9K4SJBmNS2j4IwRDibilirbj/fhFZJ1GXwZ2NV3b5
+	SiU+hd1ztwOHwFQMFdV8zK3O+AIXeUB18ctXjYBvVOL0RYVMlvSfs2UeIH6RAv7N9KX4
+X-Google-Smtp-Source: AGHT+IH2nzUMv//M5Dg3a808pERB9UcVAPf9zLq+udw6Z4J+VVriEvR2PRmVpGe3ReP9rQZlc72UBg==
+X-Received: by 2002:a05:6870:b488:b0:2ea:1e5d:8ad3 with SMTP id 586e51a60fabf-2efed6782cbmr417990fac.22.1750973534993;
+        Thu, 26 Jun 2025 14:32:14 -0700 (PDT)
+Received: from localhost ([2603:8080:b800:f700:154:5a01:d5a1:16d6])
+        by smtp.gmail.com with ESMTPSA id 586e51a60fabf-2efd512f0cdsm547789fac.46.2025.06.26.14.32.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 14:32:14 -0700 (PDT)
+Date: Fri, 27 Jun 2025 00:32:12 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Abdelrahman Fekry <abdelrahmanfekry375@gmail.com>
+Cc: andy@kernel.org, hdegoede@redhat.com, mchehab@kernel.org,
+	sakari.ailus@linux.intel.com, gregkh@linuxfoundation.org,
+	linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+	linux-staging@lists.linux.dev, skhan@linuxfoundation.org,
+	linux-kernel-mentees@lists.linux.dev
+Subject: Re: [PATCH v3] staging: media: atomisp: remove debug sysfs
+ attributes active_bo and free_bo
+Message-ID: <fdaedc62-2beb-4f18-9e4f-f60ef35e1b38@suswa.mountain>
+References: <20250624170746.47188-1-abdelrahmanfekry375@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,67 +76,13 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250626094937.515552-1-oushixiong1025@163.com>
+In-Reply-To: <20250624170746.47188-1-abdelrahmanfekry375@gmail.com>
 
-Hi,
+Resend this patch with the changes Andy asked for and I'll Ack it.
 
-kernel test robot noticed the following build warnings:
+The other things we discussed can be done separately.  It's also fine
+to never do them.  I'm not your boss.  ;)
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v6.16-rc3 next-20250626]
-[cannot apply to drm-misc/drm-misc-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+regards,
+dan carpenter
 
-url:    https://github.com/intel-lab-lkp/linux/commits/oushixiong1025-163-com/fbdev-efifb-do-not-load-efifb-if-PCI-BAR-has-changed-but-not-fixuped/20250626-175111
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20250626094937.515552-1-oushixiong1025%40163.com
-patch subject: [PATCH] fbdev: efifb: do not load efifb if PCI BAR has changed but not fixuped
-config: arm-allnoconfig (https://download.01.org/0day-ci/archive/20250627/202506270558.awnEnyeN-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project e04c938cc08a90ae60440ce22d072ebc69d67ee8)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250627/202506270558.awnEnyeN-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506270558.awnEnyeN-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from init/main.c:110:
-   In file included from arch/arm/include/asm/setup.h:14:
->> include/linux/screen_info.h:145:6: warning: no previous prototype for function 'screen_info_is_useful' [-Wmissing-prototypes]
-     145 | bool screen_info_is_useful(void)
-         |      ^
-   include/linux/screen_info.h:145:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-     145 | bool screen_info_is_useful(void)
-         | ^
-         | static 
-   1 warning generated.
-
-
-vim +/screen_info_is_useful +145 include/linux/screen_info.h
-
-   139	
-   140	#if defined(CONFIG_PCI)
-   141	bool screen_info_is_useful(void);
-   142	void screen_info_apply_fixups(void);
-   143	struct pci_dev *screen_info_pci_dev(const struct screen_info *si);
-   144	#else
- > 145	bool screen_info_is_useful(void)
-   146	{
-   147		return true;
-   148	}
-   149	static inline void screen_info_apply_fixups(void)
-   150	{ }
-   151	static inline struct pci_dev *screen_info_pci_dev(const struct screen_info *si)
-   152	{
-   153		return NULL;
-   154	}
-   155	#endif
-   156	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
