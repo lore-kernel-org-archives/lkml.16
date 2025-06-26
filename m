@@ -1,221 +1,163 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2362B1A0BF1;
-	Thu, 26 Jun 2025 06:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0711A0BF1
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:03:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750917768; cv=none; b=bAIsQsMnR5N4jbxcoCmMdG3aqGbVpVOe/4MERk/FWFOLQZcvQ+6lAkawsUNQZAwxI+vHjySnE8rKaKTcG/2QA/hrD71U9+0WkCfyDlk1S7UNVZchwFcbnZ0n7v4LTMsgPvEBFgYcUiZuN7NfhXyjPPKjmvIibLiimKSy2l9Q2eo=
+	t=1750917790; cv=none; b=dwp03j9lNXJufET06zQZxaxUf0KynZ8xZM8IbBLI+hC/IZPuGoVN0SCcstjoQcrtPeh/y1Weqm8wgG+gn+Lta5Ad0T3rjyeDYKCLNaJtajggeU+XUJ8yx5ZHLj2S4S8DtFnuhcctPBBNLFtitJlrxGeLUWaLEbbP2k/N/qgDIBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750917768; c=relaxed/simple;
-	bh=CsenkKlokXJTud0BpIjQPSJm8Cd41IelU7DxRhuZOh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ejX9D8TCidX7Ny+UTdXJk3kSUZngYBruqwE0b1ZIyla6pWTu8ugSm9tKsmqXjPZ2qbZkk0R9mUr48+61GIv4AT6uoYh5yoj4aJAtE7UKraX7C/yDmBx0/jwzfNQA2Mp22YTRu3jgBqQG2HXKTWqjvHSrJhEuLsnpMPZZil1E69s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YDUWdzJA; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750917790; c=relaxed/simple;
+	bh=tVi2SsHlzn6vFv17wmI5jfnTyqTKr1vf8vYFkxc8eBk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TT7JDOiEJ9j+6V0zuxDI2I60VizjBLIefEnv+W3sR6kDUlt2fRy2MMDErtuR8ZLAERcSnMpQTOLahQFxLtSHdrrQHwgZ1PYAsgyQhwKr6k7BThIeXCXut4Hzi0KjH07nb4RXgR1RotcPHxVhFWXFYzYYv0r0N4Ypo9KtDc0t1Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=UoYQ+N4T; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YDUWdzJA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750917767; x=1782453767;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=CsenkKlokXJTud0BpIjQPSJm8Cd41IelU7DxRhuZOh0=;
-  b=YDUWdzJASJ0dSosvaX6mOI+ipXpMhyqhzmn/tsqpfhAT6NqRVi99NQgV
-   pTuesMwtNcDmaJ3xlTV4mrHAmy5IGGuxxlf7XFVsXK+XxZwBcFT6ZahKc
-   ZYwL1OoK7Y2sBG2Nez/18MPd+zN7okLTCjG9JxpslDWHlzW7VY+ZDgICC
-   UUjGuFPtOp6PocKZo5K/ALyVwaZ/VaB6jTPHdgVxVwx57awqr2BIHHM4M
-   MNF7Ez2rexf0VRcE0fn9L9+zdkwKt/bfKdzmShnZjIR7i0iO7kPRikY6N
-   Ccm6SOrpGb1Ov2wUdjGkFm4IA9jSi9EdQQHWMB2ADZ+cx1wshKcr86JJt
-   g==;
-X-CSE-ConnectionGUID: P/wwox4rTt2UZ0BH8LYR1w==
-X-CSE-MsgGUID: bKlKQpTwRLKwV2b0jKHfzw==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="53138908"
-X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
-   d="scan'208";a="53138908"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 23:02:45 -0700
-X-CSE-ConnectionGUID: 3hv6Xl6XR3qLyx6aGfr4zw==
-X-CSE-MsgGUID: ideqBmC+SxOBU4THttvNCg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
-   d="scan'208";a="152720171"
-Received: from dhhellew-desk2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.122])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 23:02:43 -0700
-Received: from kekkonen.localdomain (localhost [127.0.0.1])
-	by kekkonen.fi.intel.com (Postfix) with SMTP id 04B8011FB5F;
-	Thu, 26 Jun 2025 09:02:40 +0300 (EEST)
-Date: Thu, 26 Jun 2025 06:02:39 +0000
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-To: Jai Luthra <jai.luthra@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Devarsh Thakkar <devarsht@ti.com>,
-	Rishikesh Donadkar <r-donadkar@ti.com>,
-	Vaishnav Achath <vaishnav.a@ti.com>,
-	Changhuang Liang <changhuang.liang@starfivetech.com>,
-	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 6/6] media: ti: j721e-csi2rx: Support multiple pixels
- per clock
-Message-ID: <aFzif59lHvNz-p-0@kekkonen.localdomain>
-References: <20250410-probe_fixes-v2-0-801bc6eebdea@ideasonboard.com>
- <20250410-probe_fixes-v2-6-801bc6eebdea@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="UoYQ+N4T"
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55Q0DoLP015352
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:03:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	zAw+vF31/8AdiO+erYtJscx3H3Rf6Jrg7lXaQ6w2fXA=; b=UoYQ+N4TKzXDaRem
+	ZxZW0TxsMD9344z+kUc8ZkP0k18npFkuT2dYTehR+fNxXtqMpneI8vmBbCqsjrA6
+	Hw8zMw/iJjT/WqvrejniApryT2kyC4CZHSM+1geMpG8wukZ/WJ/x/GemMHtV9xhY
+	a68qfrVfSjDoAojM031WMduv7B3StNzThj5ZpEAGg+ZWoTjIuUeLK1SMnZVkk2JY
+	NVh7LcJ4mjdAypZg3dHQ1hvK+4113I+ILIzgs6+HImL02aW9g9RwAA+/hADrIDG4
+	UvPvJPxhMpi6l0bvRQWJn7bwVzAf63lHPFZ+nbyvaIlheXc889ncPlXXdqR5SjO4
+	d3fIQw==
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47g88fbw6c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:03:07 +0000 (GMT)
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-b3183193374so521274a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 25 Jun 2025 23:03:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750917786; x=1751522586;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=zAw+vF31/8AdiO+erYtJscx3H3Rf6Jrg7lXaQ6w2fXA=;
+        b=F7Fol4lesQg/WboGjn1tbK6dsUkArOeSzbY94pXKJcZLcaiDTqLMkwWAUgXz/80+zI
+         AfG9YOHidrpqqqXlxqTPQLo0k00wgHVs1mgf+80Ll3V4GUFbXDG+aJDroJUC+lQ1z3+V
+         b86PcrqqRG3aF1gl6NxzVVw9TQKHLN4P9BbO84ao+rIYoy2s3IT8PwaHKWZ6OneHpjEB
+         KZENmdutHxkRk9MiXZ79VlyaWkOukNCxelmsYdH5C1jgzZP+/oaSUEHcZC9YO+mT9KoM
+         kwtXw6dpSTNfymS8//tW/qrvjDrap36md2sEvrcwd722LjrS7nA4qHSCoQ+Z8Pd/FMEX
+         O/lQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWQX+pPjp2NxaMGA7Qvoa0roLKEFb2Am5QcnvmxDjtu8zTKYDTHy/FJ1n8e+0IeHiE/tCY8zDBFlD+1kI0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQNku/N/zTbqEKB4ng/w0nF33zBP5fLJv0S9n7BLJ9PgKnSk4i
+	ASiVFDfnKuV4B6CPrODsMwjZNCtWWcLmejsTclZksU74+vUKwMT+M/L70m2RNb5Wdsm5hHd4DDf
+	fNhM2QTlhWIZZL6ecTO0+RPu3fBz0Ptt/M/CHL2sfYZUrziNUgcPPJJnGVB3n2i/BmMU=
+X-Gm-Gg: ASbGncvSpuADq1Zl6D4JIWWNl9jzgZIpVFNrONjDCkMrk23OFUPBOGcjK3mCPZcy+Lp
+	oGxGVIERH6jIg7nE5EnFOrIpoU06t26OSxQf3HwQOigZMBWJSOzzCbL8ppnvwaQYIY4MESQakXe
+	VSsaltDRI6ds/l43oyJ981qFCHrQP6ywZut4K6cHD/iMWAv7vDIhMJhAInWKEjyFtj4QMLnGU6n
+	PnG1xPepYN7F4Z/1rEiF/pO9KrClL95rdhHVruKsobsMCJ4Kv95ZyQUtypZ/J5YdzCe9KKPVK8t
+	hFRAJ/UsH5wd6Q+oLLeVXW6zvV1nndxR7P/BtSiIQJ5voBwH
+X-Received: by 2002:a05:6a21:6185:b0:218:bb70:bd23 with SMTP id adf61e73a8af0-2207f35cfccmr9126436637.42.1750917785755;
+        Wed, 25 Jun 2025 23:03:05 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEAZY2KhB8bCl/WbYS2FoCo2Ms0rCSvnA7RI6r9DuVu8+cXGdo4K/PTAhGks9c7EvtK428CXA==
+X-Received: by 2002:a05:6a21:6185:b0:218:bb70:bd23 with SMTP id adf61e73a8af0-2207f35cfccmr9126395637.42.1750917785321;
+        Wed, 25 Jun 2025 23:03:05 -0700 (PDT)
+Received: from [10.204.65.175] ([202.46.23.25])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-749c882f5b8sm6388591b3a.95.2025.06.25.23.03.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 25 Jun 2025 23:03:04 -0700 (PDT)
+Message-ID: <245d602f-3037-4ae3-9af9-d98f37258aae@oss.qualcomm.com>
+Date: Thu, 26 Jun 2025 11:33:00 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250410-probe_fixes-v2-6-801bc6eebdea@ideasonboard.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] misc: fastrpc: Fix channel resource access in
+ device_open
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
+        Greg KH <gregkh@linuxfoundation.org>
+Cc: srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
+        quic_bkumar@quicinc.com, linux-kernel@vger.kernel.org,
+        quic_chennak@quicinc.com, dri-devel@lists.freedesktop.org,
+        arnd@arndb.de, stable@kernel.org
+References: <20250619051026.984361-1-ekansh.gupta@oss.qualcomm.com>
+ <kk3jvlwjdzy2mfs6bip7dadrnsoxwksyp2odi3rfxkv4crmwtn@x5qyn4sp2gck>
+ <2025062424-dizziness-theft-0502@gregkh>
+ <2025062434-reviving-grumble-1e53@gregkh>
+ <golcrcr6voafr3fqsnihyjyut36sii55vzws4josfhkjjg3nie@ur43qq2kvlsv>
+Content-Language: en-US
+From: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
+In-Reply-To: <golcrcr6voafr3fqsnihyjyut36sii55vzws4josfhkjjg3nie@ur43qq2kvlsv>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDA0NiBTYWx0ZWRfXxlIAv7MSg7Mr
+ 7iup89ZTQIKTZAxZal85dV9nWW1U1yiZUi6xD9CK40HQzfI1VZiZ+wtLb4La2fYt1iv2NtFz3hZ
+ Paphq9H5dlmCfyLqD2yu0PsIoVzX8/sKnEStB8N89bj7QTBmEwNTr+PbvItWVTzbTkC183myze1
+ 4RQe+fVBqgqFaIBouejecoVz1Bef0NF/zKHupCYhCKkHCgu8T7WZjEcgxtrX/6n1ADjooUXmjas
+ 0YrwhbXbwyepFZwIakMgJNEOMbGY2cVTcjQdrMdRxYNFEDqcylZlM51EIR4fP7bTStfm+3GuBRq
+ B4l9zWr9QFyNWxJOTjM9bn2QfYWkrmjZocY8NvRazGNQt/38ILKcxrqauZ6TCd/fNbVvpQizFP4
+ 1nec4oggpDmTMhjmGNYoX1fDCC4HNWiSnf1Saj1X1tbalVNdMag+kW7qvomdNnkyc12pfBeh
+X-Proofpoint-ORIG-GUID: qPR-oAAK6xm8TZw266FDXOwMgTVN_yUp
+X-Proofpoint-GUID: qPR-oAAK6xm8TZw266FDXOwMgTVN_yUp
+X-Authority-Analysis: v=2.4 cv=LNNmQIW9 c=1 sm=1 tr=0 ts=685ce29b cx=c_pps
+ a=oF/VQ+ItUULfLr/lQ2/icg==:117 a=ZePRamnt/+rB5gQjfz0u9A==:17
+ a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=A2EB1aqQ-V8H35JDescA:9
+ a=QEXdDO2ut3YA:10 a=3WC7DwWrALyhR5TkjVHa:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
+ definitions=2025-06-26_03,2025-06-25_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ malwarescore=0 suspectscore=0 spamscore=0 bulkscore=0 mlxlogscore=971
+ impostorscore=0 mlxscore=0 clxscore=1015 adultscore=0 priorityscore=1501
+ lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2505280000 definitions=main-2506260046
 
-Hi Jai,
 
-On Thu, Apr 10, 2025 at 12:19:04PM +0530, Jai Luthra wrote:
-> Add support for negotiating the highest possible pixel mode (from
-> single, dual, quad) with the Cadence CSI2RX bridge. This is required to
-> drain the Cadence stream FIFOs without overflowing when the source is
-> operating at a high link-frequency [1].
-> 
-> Also, update the Kconfig as this introduces a hard build-time dependency
-> on the Cadence CSI2RX driver, even for a COMPILE_TEST.
-> 
-> [1] Section 12.6.1.4.8.14 CSI_RX_IF Programming Restrictions of AM62 TRM
-> 
-> Link: https://www.ti.com/lit/pdf/spruj16
-> Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
 
-This creates a dependency between the two drivers.
+On 6/25/2025 5:15 AM, Dmitry Baryshkov wrote:
+> On Tue, Jun 24, 2025 at 04:38:25PM +0100, Greg KH wrote:
+>> On Tue, Jun 24, 2025 at 04:36:35PM +0100, Greg KH wrote:
+>>> On Tue, Jun 24, 2025 at 04:27:21PM +0300, Dmitry Baryshkov wrote:
+>>>> On Thu, Jun 19, 2025 at 10:40:26AM +0530, Ekansh Gupta wrote:
+>>>>> During rpmsg_probe, fastrpc device nodes are created first, then
+>>>>> channel specific resources are initialized, followed by
+>>>>> of_platform_populate, which triggers context bank probing. This
+>>>>> sequence can cause issues as applications might open the device
+>>>>> node before channel resources are initialized or the session is
+>>>>> available, leading to problems. For example, spin_lock is initialized
+>>>>> after the device node creation, but it is used in device_open,
+>>>>> potentially before initialization. Move device registration after
+>>>>> channel resource initialization in fastrpc_rpmsg_probe.
+>>>> You've moved device init, however there is still a possibility for the
+>>>> context devices to be created, but not bound to the driver (because all
+>>>> the probings are async). I think instead we should drop the extra
+>>>> platform driver layer and create and set up corresponding devices
+>>>> manually. For example, see how it is handled in
+>>>> host1x_memory_context_list_init(). That function uses iommu-maps, but we
+>>>> can use OF nodes and iommus instead.
+>>> Is this a real platform device?  If so, why do you need a second
+>>> platform driver, what makes this so unique?  If this isn't a platform
+>>> device, then why not just use the faux bus instead?
+>>>
+>>> It seems that "number of sessions" is a DT property, is that something
+>>> that is really defined by the hardware?  Or is it just a virtual thing
+>>> that people are abusing in the DT?
+> Purely software value.
+>
+>>> And if you really have all these sessions, why not make them real
+>>> devices, wouldn't that make things simpler?
+>> Oh wait, these are "fake" platform devices under the parent (i.e. real)
+>> platform device.  That's not good, please don't do that, use the faux
+>> bus code now instead to properly handle this.  Attempting to create a
+>> device when open() is called is really really odd...
+> The driver doesn't created devices during open(). It creates them
+> earlier, then another driver probes an populates the data. I suggest to
+> follow Tegra approach, remove the sub-driver completely and instead of
+> calling of_platform_populate() create necessary devices manually and set
+> corresponding IOMMU configuration from the main driver's probe path.
+Thanks for the suggestions. I'm checking this approach.
+>
 
-Can you confirm that the TI device only exists in conjunction with the
-cadence HW block?
-
-> ---
->  drivers/media/platform/ti/Kconfig                  |  3 +-
->  .../media/platform/ti/j721e-csi2rx/j721e-csi2rx.c  | 38 ++++++++++++++++++++--
->  2 files changed, 37 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/media/platform/ti/Kconfig b/drivers/media/platform/ti/Kconfig
-> index bab998c4179aca3b07372782b9be7de340cb8d45..3bc4aa35887e6edc9fa8749d9956a67714c59001 100644
-> --- a/drivers/media/platform/ti/Kconfig
-> +++ b/drivers/media/platform/ti/Kconfig
-> @@ -67,7 +67,8 @@ config VIDEO_TI_J721E_CSI2RX
->  	tristate "TI J721E CSI2RX wrapper layer driver"
->  	depends on VIDEO_DEV && VIDEO_V4L2_SUBDEV_API
->  	depends on MEDIA_SUPPORT && MEDIA_CONTROLLER
-> -	depends on (PHY_CADENCE_DPHY_RX && VIDEO_CADENCE_CSI2RX) || COMPILE_TEST
-> +	depends on VIDEO_CADENCE_CSI2RX
-> +	depends on PHY_CADENCE_DPHY_RX || COMPILE_TEST
->  	depends on ARCH_K3 || COMPILE_TEST
->  	select VIDEOBUF2_DMA_CONTIG
->  	select V4L2_FWNODE
-> diff --git a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> index ad51d033b6725426550578bdac1bae8443458f13..425324c3d6802cfda79d116d3967b61a2e7a015a 100644
-> --- a/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> +++ b/drivers/media/platform/ti/j721e-csi2rx/j721e-csi2rx.c
-> @@ -21,6 +21,8 @@
->  #include <media/v4l2-mc.h>
->  #include <media/videobuf2-dma-contig.h>
->  
-> +#include "../../cadence/cdns-csi2rx.h"
-> +
->  #define TI_CSI2RX_MODULE_NAME		"j721e-csi2rx"
->  
->  #define SHIM_CNTL			0x10
-> @@ -29,6 +31,7 @@
->  #define SHIM_DMACNTX			0x20
->  #define SHIM_DMACNTX_EN			BIT(31)
->  #define SHIM_DMACNTX_YUV422		GENMASK(27, 26)
-> +#define SHIM_DMACNTX_DUAL_PCK_CFG	BIT(24)
->  #define SHIM_DMACNTX_SIZE		GENMASK(21, 20)
->  #define SHIM_DMACNTX_FMT		GENMASK(5, 0)
->  #define SHIM_DMACNTX_YUV422_MODE_11	3
-> @@ -40,6 +43,7 @@
->  #define SHIM_PSI_CFG0_SRC_TAG		GENMASK(15, 0)
->  #define SHIM_PSI_CFG0_DST_TAG		GENMASK(31, 16)
->  
-> +#define TI_CSI2RX_MAX_PIX_PER_CLK	4
->  #define PSIL_WORD_SIZE_BYTES		16
->  /*
->   * There are no hard limits on the width or height. The DMA engine can handle
-> @@ -110,6 +114,7 @@ struct ti_csi2rx_dev {
->  	struct v4l2_format		v_fmt;
->  	struct ti_csi2rx_dma		dma;
->  	u32				sequence;
-> +	u8				pix_per_clk;
->  };
->  
->  static const struct ti_csi2rx_fmt ti_csi2rx_formats[] = {
-> @@ -485,6 +490,26 @@ static int ti_csi2rx_notifier_register(struct ti_csi2rx_dev *csi)
->  	return 0;
->  }
->  
-> +/* Request maximum possible pixels per clock from the bridge */
-> +static void ti_csi2rx_request_max_ppc(struct ti_csi2rx_dev *csi)
-> +{
-> +	struct media_pad *pad;
-> +	int ret;
-> +	u8 ppc = TI_CSI2RX_MAX_PIX_PER_CLK;
-
-Could you make this look like a reverse Christmas tree?
-
-> +
-> +	pad = media_entity_remote_source_pad_unique(&csi->vdev.entity);
-> +	if (!pad)
-> +		return;
-> +
-> +	ret = cdns_csi2rx_negotiate_ppc(csi->source, pad->index, &ppc);
-> +	if (ret) {
-> +		dev_warn(csi->dev, "NUM_PIXELS negotiation failed: %d\n", ret);
-> +		csi->pix_per_clk = 1;
-> +	} else {
-> +		csi->pix_per_clk = ppc;
-> +	}
-> +}
-> +
->  static void ti_csi2rx_setup_shim(struct ti_csi2rx_dev *csi)
->  {
->  	const struct ti_csi2rx_fmt *fmt;
-> @@ -496,6 +521,9 @@ static void ti_csi2rx_setup_shim(struct ti_csi2rx_dev *csi)
->  	reg = SHIM_CNTL_PIX_RST;
->  	writel(reg, csi->shim + SHIM_CNTL);
->  
-> +	/* Negotiate pixel count from the source */
-> +	ti_csi2rx_request_max_ppc(csi);
-> +
->  	reg = SHIM_DMACNTX_EN;
->  	reg |= FIELD_PREP(SHIM_DMACNTX_FMT, fmt->csi_dt);
->  
-> @@ -524,14 +552,18 @@ static void ti_csi2rx_setup_shim(struct ti_csi2rx_dev *csi)
->  	case V4L2_PIX_FMT_YVYU:
->  		reg |= FIELD_PREP(SHIM_DMACNTX_YUV422,
->  				  SHIM_DMACNTX_YUV422_MODE_11);
-> +		/* Multiple pixels are handled differently for packed YUV */
-> +		if (csi->pix_per_clk == 2)
-> +			reg |= SHIM_DMACNTX_DUAL_PCK_CFG;
-> +		reg |= FIELD_PREP(SHIM_DMACNTX_SIZE, fmt->size);
->  		break;
->  	default:
-> -		/* Ignore if not YUV 4:2:2 */
-> +		/* By default we change the shift size for multiple pixels */
-> +		reg |= FIELD_PREP(SHIM_DMACNTX_SIZE,
-> +				  fmt->size + (csi->pix_per_clk >> 1));
->  		break;
->  	}
->  
-> -	reg |= FIELD_PREP(SHIM_DMACNTX_SIZE, fmt->size);
-> -
->  	writel(reg, csi->shim + SHIM_DMACNTX);
->  
->  	reg = FIELD_PREP(SHIM_PSI_CFG0_SRC_TAG, 0) |
-> 
-
--- 
-Regards,
-
-Sakari Ailus
