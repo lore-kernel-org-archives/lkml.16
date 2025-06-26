@@ -1,107 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56FD82063F3
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 15:59:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8169A2ECD1C;
+	Thu, 26 Jun 2025 15:59:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750953597; cv=none; b=qxlvAfw7o3GKanKves1+AiteElhn7aac2/N15+ZeMwFlq0o8vD2ZsxNxjVShOIZhgclrPXeLT5JzavwHzGKK+ojBxBRviAesMXzsIGLRF1F7KxzOl80gqr1L7RJpCxMKmkyVBh+sJCmXNJY2WXrw8dFsuZyZniktyxnXw5nrObA=
+	t=1750953598; cv=none; b=oCIiPJLCUmnWy5sYMC2gD7UDYpmx833tymC3G8EvhzHRZFjynR26bqt35qrPRa1BfrYjnb0Rw2YuyaVDSpknlkv2xc8R1DLfodv3WekFocd5zmkByfjGFk23iubum3gy1tch93bcCISUjkLzqdNKapRnzWS4kDvt1mICvouciUw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750953597; c=relaxed/simple;
-	bh=i+PnXgZHUy1dh1KadTWyaeBxUpB76/YggpM37ia6WM0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ERa/gX2u47FYVNfqf1O8T3ivD/YgYp2rtoiM9tba3cTQnToVT5seTG4Gz0hrCLXobbhpt6WFEtAE8Dav/bCpy5DX+Ai2QYycUM0MonV2Oc0qRILOdVgH58pfJ2LiPfCb1T90++X7z0nLKQL4Q9HIbPWAUpvth0WDP1znYb7/4KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bhS463ZI; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1750953598; c=relaxed/simple;
+	bh=5OCKpyq0EAO0vvvI0lknTAQgHsWoLfl+8GdLvH4xgMs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OJBuMkLPzRgFljYVIRr68/125PgMT1I1+OdLQjD/7NhBi4Yd4Q3dFesKEMrb0xEgC8iKc8duB3j2D0UjfaTdtlixdidFdvQQU7/KoaPHkNxE4JG4N7CeaP86FEXsBd+PbLK4U17iGoL8ZP5Oz4VewVnYrIgG7xf9g5vMqJ8pcaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SzQQcA9L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bhS463ZI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750953596; x=1782489596;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=i+PnXgZHUy1dh1KadTWyaeBxUpB76/YggpM37ia6WM0=;
-  b=bhS463ZIU1o0RW6bjWEk1BxN7zNgiOwTDC/If+khoU+tSPq2/po/vY5N
-   /FcnFSPGVD/gJ4YWrTjl5HYs9y9K5i+Ni6ufH/mR7nyIgD8kvb1psllK+
-   7vLg33fwq9+qcNv0u+jRCYlgYhpdoQJufL7C0uQxBS71pDdeXMlJ1og6o
-   jFVOOVTw6tPmR7P5akpARZo/Qnjcxr/hw/0nsjjdzzmHF9/9gsR/tcO2X
-   kUnDNbEyTuyI62oQ0u4AmrbsLp/50viVHYaZPLFOcIELNVzuQIo6h7+Lj
-   KPRecV86GuyMR7YI/4DRMIBinxP17025smQriVrUbJmYOYB4ruvxgoaas
-   A==;
-X-CSE-ConnectionGUID: g8vIj1AiS1uIqEHvmGiftw==
-X-CSE-MsgGUID: DzGXy/mtRsOWfOOJDjAfnA==
-X-IronPort-AV: E=McAfee;i="6800,10657,11476"; a="53223989"
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="53223989"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 08:59:55 -0700
-X-CSE-ConnectionGUID: 4E1GHJ0jQYWWetKCp+/kvg==
-X-CSE-MsgGUID: yQxunmKhR+G6Wh/r9mabLA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,268,1744095600"; 
-   d="scan'208";a="176218889"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa002.fm.intel.com with ESMTP; 26 Jun 2025 08:59:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 656852AD; Thu, 26 Jun 2025 18:59:52 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	patches@opensource.cirrus.com,
-	linux-kernel@vger.kernel.org
-Cc: Lee Jones <lee@kernel.org>
-Subject: [PATCH v1 1/1] mfd: wm8350-core: Don't use "proxy" headers
-Date: Thu, 26 Jun 2025 18:59:51 +0300
-Message-ID: <20250626155951.325683-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SzQQcA9L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD162C4CEED;
+	Thu, 26 Jun 2025 15:59:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750953598;
+	bh=5OCKpyq0EAO0vvvI0lknTAQgHsWoLfl+8GdLvH4xgMs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SzQQcA9Lr8xm8+u0v5svVsXtegfdpIsXzKef6ujyM3dO49Vo5FFIRPviIQrRb/yty
+	 g6mHCY5bKGGcmNQtc/tdb8S5Io4sRAwjrhp3de1MoL+LhWYsIPnR9SG2MZbW0W/2hR
+	 wSnUpXC0e9Klu9KOYcIgUt6ONVD/VrqFxaw4psUFXTwKGNPnOeihPpPh8lZ4ZyTonF
+	 nniY8fpbr/R22QUMdVXoEUtIBLvBpiEPN/rUBMBz9tGvjonSIlkhPO23YNZF1OmF79
+	 zAXe1MRupTAg2h5nGhduPzON6h1vte+SdiPE3830eNdWIscSCskmAVGMPRm9NwFsNT
+	 WVbrnQXNi7Vdg==
+Message-ID: <6fe93457-4d41-4610-ac0e-e3341783f891@kernel.org>
+Date: Thu, 26 Jun 2025 10:59:55 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/4] Fix soc-button-array debounce
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+ "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
+ "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
+ open list <linux-kernel@vger.kernel.org>,
+ "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
+ <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+References: <20250625215813.3477840-1-superm1@kernel.org>
+ <aF1anq07UAkHCfPO@smile.fi.intel.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <aF1anq07UAkHCfPO@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Update header inclusions to follow IWYU (Include What You Use)
-principle.
+On 6/26/2025 9:35 AM, Andy Shevchenko wrote:
+> On Wed, Jun 25, 2025 at 04:58:09PM -0500, Mario Limonciello wrote:
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> I have some hardware in front of me that uses the soc-button-array
+>> driver but the power button doesn't work.
+>>
+>> Digging into it, it's because the ASL prescribes a debounce of 0 for
+>> the power button, but the soc-button-array driver hardcodes 50ms.
+>>
+>> Hardcoding it to what the ASL expects the power button works.
+>>
+>> I looked at the callpath into the GPIO core and I believe it's
+>> because the debounce value from _CRS is never programmed to the
+>> hardware the way that the GPIO gets setup.
+>>
+>> This series add that programming path and then sets the hardcoded
+>> value on on some quirked systems.  Hopefully Hans can confirm this
+>> continues to work on the hardware that he originally developed the
+>> hardcoding for.
+> 
+> There is no a note about routing the patch in upstream. My proposal to take
+> GPIO ACPI library patch and provide and immutable tag for others.
+> 
 
-Note that kernel.h is discouraged to be included as it's written
-at the top of that file.
-
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/mfd/wm8350/core.h | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/mfd/wm8350/core.h b/include/linux/mfd/wm8350/core.h
-index a3241e4d7548..5f70d3b5d1b1 100644
---- a/include/linux/mfd/wm8350/core.h
-+++ b/include/linux/mfd/wm8350/core.h
-@@ -8,11 +8,12 @@
- #ifndef __LINUX_MFD_WM8350_CORE_H_
- #define __LINUX_MFD_WM8350_CORE_H_
- 
--#include <linux/kernel.h>
--#include <linux/mutex.h>
--#include <linux/interrupt.h>
- #include <linux/completion.h>
-+#include <linux/errno.h>
-+#include <linux/interrupt.h>
-+#include <linux/mutex.h>
- #include <linux/regmap.h>
-+#include <linux/types.h>
- 
- #include <linux/mfd/wm8350/audio.h>
- #include <linux/mfd/wm8350/gpio.h>
-@@ -21,6 +22,9 @@
- #include <linux/mfd/wm8350/supply.h>
- #include <linux/mfd/wm8350/wdt.h>
- 
-+struct device;
-+struct platform_device;
-+
- /*
-  * Register values.
-  */
--- 
-2.47.2
-
+Sure.  I don't feel strongly on how this needs to go, fine by me.  I'll 
+add a note in cover letter for this for v4.
