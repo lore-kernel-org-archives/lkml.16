@@ -1,43 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDF3235063;
-	Thu, 26 Jun 2025 22:48:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87112356BE;
+	Thu, 26 Jun 2025 22:48:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750978091; cv=none; b=IgO15kRdccO0Ce/ZlbNc+lkfllfr2NtjmeL/fuYrF/99KNtOhsTyD2ZrQ1kaZGASe16lIN4xQY57E1dza/nMXeqXD1UJGzFdexK6nbJEcdEFU2ocvCiqP1N952OB3JJb0I1DkQrAJJioeJYF8isOlpQv+AR9IsFeVWHgwFrN+Zw=
+	t=1750978091; cv=none; b=PgwoVURBlDswAFWeJvsRT3IgK5GDiT7KAY23S0BQR1/5MmuQxdigu0DHCNTUqBo/IL9i/4Twlt6oKsNUSE0b9po/aoQxXnsPD1axKMLj3gSNbSI6+pt5Mt0eXvl6pY+Aih+yAgNfEpV6g2KOGTeOLZxlcABlt3e8oTqv5yNAIbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750978091; c=relaxed/simple;
-	bh=zdGBKNeJ+/hIA/7fUPuQSM9f0Yxq0CNLnRS5QR9roZo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Xpui0WuXTmmT99pS/qsO8ZwqNDZou6oKc0fG+EcNpcNaqzXX+KAd06QKcrg5w4idQy0IJ/2ahaGgSVhtBcJ61aSOA9ZQ52jc8dy/MrnNYIUus9dQghUQy82b4RJe1nNURBeW/dq7530d+MVbtxvw8P4gkfIBx5jyaV1OfxC0jcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ETqRs/Lf; arc=none smtp.client-ip=10.30.226.201
+	bh=3fBhKy1+utiVAQDLVFIyeUDSkV8JwRYwEjiojfvti6Q=;
+	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=WQ6ew6v6zYnIu5fSgrb39J2CNngTTvRXTPxRbxGVLuApgsdNwttxEP0gOrAzn6n4f1hbocqNZHQI4L635yG4j0XTSuOUMpTMuQbUaMEvoE+MtW2aoenrAzEv9fcJHXfDVUSt9UcS9GVSSUnfO1j9btUqDbUQiteqcZJQV96fdrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vENZzbPY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ETqRs/Lf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7705AC4CEF5;
-	Thu, 26 Jun 2025 22:48:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vENZzbPY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B905C4CEF0;
+	Thu, 26 Jun 2025 22:48:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750978090;
-	bh=zdGBKNeJ+/hIA/7fUPuQSM9f0Yxq0CNLnRS5QR9roZo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ETqRs/LfxAGzcr2doFDOsju23P+1XbtUv1kZEW/AK2uj5m1+pzwg+p6p9SDQ8J1Hd
-	 U/+bnsgfeUy3HCliTruFnhN+xH/IShiu5Jlu/yOmcinka0ImvxW3d6iyHeBFhjXu7L
-	 71fZWIwCi52VCQleDtfKHamUG5ocgBnEGOuAE2loi9sO7AkMVF2i4c4DlPLfV9e+ni
-	 utCtxka8eO2lYmq5zi0HBV3GVUi774bvRhC74SyblyzsGdKDGxaEAIcqZF65LopS7k
-	 4JVTPk9RfLI587jy5sYFyYFTUp4JvfzZ+gRXnQcO5l/OHt0FWYUyPWcB3lLrh+R8bK
-	 Uym29+EBU63XQ==
+	s=k20201202; t=1750978091;
+	bh=3fBhKy1+utiVAQDLVFIyeUDSkV8JwRYwEjiojfvti6Q=;
+	h=From:To:In-Reply-To:References:Subject:Date:From;
+	b=vENZzbPYOzKpFGAiu3tEUky6wFCydYGu6rV4Cj+c6LEQUH73/Bbuu4osbwtk+8g22
+	 6tBE+hgRV4R093Qdxf1gvfvRr8SHb4Wg2RzAivQiNnEwUdMW3tOEfa0JGf6SR0Yl7q
+	 RzpZcsZ5qW6N4aTLipM/5wbsLCC/G78CywvsuW17ZQCmnRXDAxTFl79yXprOxzPPqI
+	 Hi/DX5TcQuXm8YsqF1pPV0SKP/uuaYj3/xsUKdCYdHFnhfh9k8VAFQVDEOTb3jnA6X
+	 i/gA1xiYqEj3iJXNjG4/oPjSHwuPbIa9o1LZ1RWT65o77ie5ZYts3LuTFol0VdJJ+s
+	 oja1NoeidNCQA==
 From: Vinod Koul <vkoul@kernel.org>
-To: Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>, 
- Frank Li <Frank.Li@nxp.com>, Rob Herring <robh@kernel.org>, 
- Manivannan Sadhasivam <mani@kernel.org>, 
+To: Peter Ujfalusi <peter.ujfalusi@gmail.com>, dmaengine@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, 
  Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org
-In-Reply-To: <20250525-dma-fixes-v1-0-89d06dac9bcb@linaro.org>
-References: <20250525-dma-fixes-v1-0-89d06dac9bcb@linaro.org>
-Subject: Re: [PATCH 0/5] dmaengine: Minor fixes and cleanups
-Message-Id: <175097809044.79884.11756443958851138870.b4-ty@kernel.org>
-Date: Thu, 26 Jun 2025 15:48:10 -0700
+In-Reply-To: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
+References: <20250404122114.359087-1-krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH 1/2] dmaengine: sh: Do not enable SH_DMAE_BASE by
+ default during compile testing
+Message-Id: <175097809125.79884.17167867217631386949.b4-ty@kernel.org>
+Date: Thu, 26 Jun 2025 15:48:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,26 +47,18 @@ Content-Transfer-Encoding: 7bit
 X-Mailer: b4 0.13.0
 
 
-On Sun, 25 May 2025 21:26:00 +0200, Krzysztof Kozlowski wrote:
-> Just few cleanups and fixes.  Funny thing that the reported cast error
-> I fix the second time.
+On Fri, 04 Apr 2025 14:21:13 +0200, Krzysztof Kozlowski wrote:
+> Enabling the compile test should not cause automatic enabling of all
+> drivers.
 > 
-> Best regards,
-> Krzysztof
 > 
 
 Applied, thanks!
 
-[1/5] dmaengine: dw-edma: Drop unused dchan2dev() and chan2dev()
-      commit: 06b80ad4ffa5e614e89f04dffc44b85377c7ee24
-[2/5] dmaengine: fsl-dpaa2-qdma: Drop unused mc_enc()
-      commit: f0368c23caba175e07062a3f24e58a2b4ec5bb1c
-[3/5] dmaengine: qcom: gpi: Drop unused gpi_write_reg_field()
-      commit: 24c13df655ca1fad5fc6fa4fbacb828f4a6d4f2b
-[4/5] dmaengine: fsl-qdma: Add missing fsl_qdma_format kerneldoc
-      commit: 85a4ca2902c1d3b8ccea03837b10e178405192c5
-[5/5] dmaengine: mmp: Fix again Wvoid-pointer-to-enum-cast warning
-      commit: a0b1589b62e2fcfb112996e0f4d5593bd2edf069
+[1/2] dmaengine: sh: Do not enable SH_DMAE_BASE by default during compile testing
+      commit: 587dd30449fb10121fc8a319bb825dc6152b8dd5
+[2/2] dmaengine: ti: Do not enable by default during compile testing
+      commit: ddf16e16346a36ec6616e5282f675f2e3cdc826f
 
 Best regards,
 -- 
