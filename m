@@ -1,90 +1,108 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D192F22
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EF0F2F1FD0
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 13:17:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750943814; cv=none; b=kEu5QsHIUDSCmzwvKIgiQ2uVrk9PhPv3csV10sq80A96jlVh7PD68ch3YjuMRki0PiVn30g5+pTu/KhB6f9D0WEIVUWhfJarV+9oi0hxorq28HXlplFVaQvO/SrbTAOZbZiYPuda2SvqdvuGJJJb81Fxba+SK1mSDAjjdsBMsJw=
+	t=1750943840; cv=none; b=BlMlYAL9F54WKUg5Wqck95AKaODxvhiPoOBl9o5A1LK422/PWDmxB9NJPSqL/oQXPCYeOlk2xYr+7Z0R8n8jsGpT2zf0iVnNFPo44vC1Z+WaYQzTK1txW2VJAYDhNmFlulbkycscyvGekVp6Nvenkk30NF0b4tk/rzHNr4pHReE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750943814; c=relaxed/simple;
-	bh=QWYFdbl31RNNqN4BYH4W28hZj+1QkgI/0osIe1dfg9o=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=IC1gaMcIPYUTLR9SCzrUTdNhWeQPjtW1FFVBqWIV9kqwX0A4L0fVyuAFY7yubRv05Dvfh4JuPLUYaI4N4L+5+H8w1V5sKIrsF+9unxjsRbffigCrs46X55PnkHN6ARwM9+JbqE+QkMo+apAUZ2a0rdpgoKgh/BUjAKKnU86evi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=GEih9Gdy; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1750943840; c=relaxed/simple;
+	bh=DxFH7mE6oVx/rOp8/DYfbqrIm7Gg4eBMdrveQcs3f9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CAPowR7f1aqmUs64cJWS5AuVvcI2mn14Z98ql6YTymS3hCfOgy9cOXHXNaq/iJXShvfoZ0NTmrK6NvYk80olCawattxaSEf0b0x9J22dN42Os5zXaqacoNcjkj11USAi4RkRGAnseQk5HCXM2QszFWphWlTWYKwwrsPE+hsX29g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=rvxbgMaB; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="GEih9Gdy"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 694CF4328B;
-	Thu, 26 Jun 2025 13:16:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1750943803;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2XW1OiuVPxHk8xSFmbkEI9HJCd0atEf9LZcxsJXMXXg=;
-	b=GEih9GdykJqHCq7xodj1C/h32QsB1NudjAuihW0486nGmk1HcD7GGxF4qELCXd08LmYU5O
-	KtB9sd7bGK5Al+7AYZc7B3dfmLGbVT3v4LexVavqcbNOiPvopSWYCPdd1UDF2sM81RKKdi
-	/DF7KqM47wlB/Ph2O/X+jmvnsucJD0OLlYbgymCshwp4Ykj2/uiw3OVaM4+CKDSGQjH/zn
-	J78P7tQogolm6H23aC+l2h9W//rizgj0BUYrz8tXgdMwSd/+brxV9UYuB2j/hfwNCeiAYv
-	Z/gmBxf7DWoajZKD3FsL9R2gZQe8bqTJ3fyUJ0BpJzQkFsndTjuM9uARIvjLAA==
-From: Luca Ceresoli <luca.ceresoli@bootlin.com>
-To: Andrzej Hajda <andrzej.hajda@intel.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Luca Ceresoli <luca.ceresoli@bootlin.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- Anusha Srivatsa <asrivats@redhat.com>, dri-devel@lists.freedesktop.org, 
- linux-kernel@vger.kernel.org, Hui Pu <Hui.Pu@gehealthcare.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-In-Reply-To: <20250620-drm-bridge-alloc-getput-drm-bridge-c-v9-0-ca53372c9a84@bootlin.com>
-References: <20250620-drm-bridge-alloc-getput-drm-bridge-c-v9-0-ca53372c9a84@bootlin.com>
-Subject: Re: [PATCH v9 0/3] drm/bridge: get/put the bridge reference in
- drm_bridge.c, warn on old alloc pattern
-Message-Id: <175094380131.1106580.10747660115585340028.b4-ty@bootlin.com>
-Date: Thu, 26 Jun 2025 15:16:41 +0200
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="rvxbgMaB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=QOVim0uAJgFhCWS+fN9f0DwP4nltYAI58xXEOtMh1UU=; b=rvxbgMaB46WHwgiX84Vsn6RyYn
+	fsYo8oBlWhB2tWiPDHicCNEer2EY9vg5WKqO+iihiMtp2wtAhw6kSQ8GmriCWg8lyUDqS3BdJt57N
+	KdtyMS+6KmdQe7y6lhyP24DBorXgRNRoV7lXJ3jzEAx+HYLXxQPdVhcCTAQDSA6BXbxOm7MlZ6HZ2
+	qWx494pN9nO3LiA2PA3QBNq25QnmSnQv4sYThfVacPyWKX0qnvzjr6FrQ7Epoy+RKthOyoxiSMGdt
+	2KDOR6luhZIq9C3taDzYDA+k3e8Ct2PbkqQTh/3vfdqSsEQ5Mj8OP3CIdY5jzX0hOWZlGeL1iA1rl
+	EYCyj+OA==;
+Received: from 77-249-17-252.cable.dynamic.v4.ziggo.nl ([77.249.17.252] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.98.2 #2 (Red Hat Linux))
+	id 1uUmTc-0000000BhZA-0ReZ;
+	Thu, 26 Jun 2025 13:17:16 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 99DD830BDDA; Thu, 26 Jun 2025 15:17:15 +0200 (CEST)
+Date: Thu, 26 Jun 2025 15:17:15 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Chris Mason <clm@meta.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: futex performance regression from "futex: Allow automatic
+ allocation of process wide futex hash"
+Message-ID: <20250626131715.GI1613200@noisy.programming.kicks-ass.net>
+References: <3ad05298-351e-4d61-9972-ca45a0a50e33@meta.com>
+ <20250604092815.UtG-oi0v@linutronix.de>
+ <372d8277-7edb-4f78-99bd-6d23b8f94984@meta.com>
+ <20250604200808.hqaWJdCo@linutronix.de>
+ <aa6154d1-726c-4da1-a27b-69d2e8b449c6@meta.com>
+ <20250606070638.2Wk45AMk@linutronix.de>
+ <20250624190118.GB1490279@noisy.programming.kicks-ass.net>
+ <71ea52f2-f6bf-4a55-84ba-d1442d13bc82@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.14.2
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgddvjecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephffvvegjfhfukfffgggtgffosehtjeertdertdejnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepieefvdehvedvgeeftedugeetudevuedvffekhedvfeetkeduleelgeevudffieeinecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedrjeehngdpmhgrihhlfhhrohhmpehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedukedprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepughmihhtrhihrdgsrghrhihshhhkohhvsehoshhsrdhquhgrlhgtohhmmhdrtghomhdprhgtphhtthhopegrnhgurhiivghjrdhhrghjuggrsehin
- hhtvghlrdgtohhmpdhrtghpthhtohepnfgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehjohhnrghssehkfihisghoohdrshgvpdhrtghpthhtohepthiiihhmmhgvrhhmrghnnhesshhushgvrdguvgdprhgtphhtthhopehmrggrrhhtvghnrdhlrghnkhhhohhrshhtsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
-X-GND-Sasl: luca.ceresoli@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <71ea52f2-f6bf-4a55-84ba-d1442d13bc82@meta.com>
 
-
-On Fri, 20 Jun 2025 17:59:52 +0200, Luca Ceresoli wrote:
-> This small series adds drm_bridge_get/put() calls where applicable in the
-> bridge core code, and adds a warning when the old allocation patter is
-> used.
+On Thu, Jun 26, 2025 at 07:01:23AM -0400, Chris Mason wrote:
+> On 6/24/25 3:01 PM, Peter Zijlstra wrote:
+> > On Fri, Jun 06, 2025 at 09:06:38AM +0200, Sebastian Andrzej Siewior wrote:
+> >> On 2025-06-05 20:55:27 [-0400], Chris Mason wrote:
+> >>>>> We've got large systems that are basically dedicated to single
+> >>>>> workloads, and those will probably miss the larger global hash table,
+> >>>>> regressing like schbench did.  Then we have large systems spread over
+> >>>>> multiple big workloads that will love the private tables.
+> >>>>>
+> >>>>> In either case, I think growing the hash table as a multiple of thread
+> >>>>> count instead of cpu count will probably better reflect the crazy things
+> >>>>> multi-threaded applications do?  At any rate, I don't think we want
+> >>>>> applications to need prctl to get back to the performance they had on
+> >>>>> older kernels.
+> >>>>
+> >>>> This is only an issue if all you CPUs spend their time in the kernel
+> >>>> using the hash buckets at the same time.
+> >>>> This was the case in every benchmark I've seen so far. Your thing might
+> >>>> be closer to an actual workload.
+> >>>>
+> >>>
+> >>> I didn't spend a ton of time looking at the perf profiles of the slower
+> >>> kernel, was the bottleneck in the hash chain length or in contention for
+> >>> the buckets?
+> >>
+> >> Every futex operation does a rcuref_get() (which is an atomic inc) on
+> >> the private hash. This is before anything else happens. If you have two
+> >> threads, on two CPUs, which simultaneously do a futex() operation then
+> >> both do this rcuref_get(). That atomic inc ensures that the cacheline
+> >> bounces from one CPU to the other. On the exit of the syscall there is a
+> >> matching rcuref_put().
+> > 
+> > How about something like this (very lightly tested)...
+> > 
+> > the TL;DR is that it turns all those refcounts into per-cpu ops when
+> > there is no hash replacement pending (eg. the normal case), and only
+> > folds the lot into an atomic when we really care about it.
+> > 
+> > There's some sharp corners still.. but it boots and survives the
+> > (slightly modified) selftest.
 > 
-> This is part of the work towards removal of bridges from a still existing
-> DRM pipeline without use-after-free.
+> I can get some benchmarks going of this, thanks.  For 6.16, is the goal
+> to put something like this in, or default to the global hash table until
+> we've nailed it down?
 > 
-> [...]
+> I'd vote for defaulting to global for one more release.
 
-Applied, thanks!
-
-[1/3] drm/bridge: get/put the bridge reference in drm_bridge_add/remove()
-      commit: a7748dd127ea8d9cd2d9d942ef21c85e5569bb73
-[2/3] drm/bridge: get/put the bridge reference in drm_bridge_attach/detach()
-      commit: 94d50c1a2ca31d80f12d9c2bdbc41437751e320c
-[3/3] drm/bridge: add warning for bridges not using devm_drm_bridge_alloc()
-      commit: e6565e76e977422cb9e51fe872a2bcfdbc321b7b
-
-Best regards,
--- 
-Luca Ceresoli <luca.ceresoli@bootlin.com>
-
+Probably best to do that; means we don't have to rush crazy code :-)
