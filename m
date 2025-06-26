@@ -1,114 +1,92 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DC8918C332;
-	Thu, 26 Jun 2025 09:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA1A18C332
+	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:25:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750929839; cv=none; b=a3ZKyeXOXdKF1lXKBF+xDXH4EA9oF+Jalcg/3GkH6Wc2lUSpdjSD4RxgWzD38wU/O8E60HHcz1vXLNzYyIrsygTUzM7rDiL6G6AsUoN3ipR5nT3iuR3lzLUir7wGFiCbCZxp5cyJosqlCNE95XJu7UyGgoIYeW9nA1mzNlYkRHM=
+	t=1750929929; cv=none; b=K08nU80+oZyOPSF1xc/Gyagpk4a5KkCgCRByFIgrw8q4gtzSn4ht9J67Bqfcx9qDmROr+Mp88Q1cB8LGuJvo+sZ+8uHgdyxAeED/caIjNBxnYOAbkPaeGBYQ+XJNMOUV5QmhNJ+QOFwrR2DSj3z2wbl8LUqS04rCfU4JR5QKPtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750929839; c=relaxed/simple;
-	bh=qefygG19a70dJv46vYC1EnTIxHXTAsx2nrgYvCYxMKw=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rHKMmOK1tsSQwtet4FI4f3qUjk0tl/6qochdNI5/o0WIpu4aL3/N+Dmt6x7CrKTHgE9RL95c4UwrlFK9iL8BfoSenDeM4Ux5bXkuwau+1vEqJHTx1PdEDaJV1Qicvd4pUyxFaQYe5OCgZ1YL8MzYVxvf2/NgaoN/eTwroPAAJG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=DBHynQYO; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=F2PDavr/; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1750929929; c=relaxed/simple;
+	bh=Erpy+GznfU3VNLbN8ho+JUSJoOvRCq/2b7GmnCXbbWE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dzs6TDWY2426Gm4nLes/7zQi4JUMVhU2AvaCSx8tbTXfv4O8o+uEHwZ+Q6EYpYtn+krq5G8qV6RZVAYn7rUzUzpNa4Gcam8W333e3TEWQ20ypbTOMgZ8DQxO0oLn/xNoi5UgfGT07+dhBqUVy5OXQeN+mO1XBgnv/kN5IHr8NQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=HE9EmomO; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DBHynQYO";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="F2PDavr/"
-From: =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1750929836;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=i4K0WCp7W/aJOeJ11xc56lmM+3AvDScAzbW1dYGjQv4=;
-	b=DBHynQYOgmbyzFJw3/d0crd9G6Cppsucge9a7YDgcaK3PAHWheWDZJT40J5RHdih2BfGX/
-	4Fk2aMhWMcoWndnQ9j/WZqhxMVabbIx/+bBI8OCagM2Ur3bvHEvumPCmg/QMIuzR9FBVsy
-	w+s2lb+l7TJLTwPnaatOOg2+Zv2gyJKTVjFBhp4dqWpfW/YyWTTXZ+fOMUy+/x6V/oeGo7
-	9ysPbZkN5RXaI1coDXetX6AZcFStVxqbSKGDQwQ4otflfyvKAbuhIRmT5AnL2vOrkqCzV5
-	e55i2k0OE0ROoIb1h24fza2rfNLlj4nLAfGD2i+Ws4D2W/dX/v9vCahXrfrRsg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1750929836;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=i4K0WCp7W/aJOeJ11xc56lmM+3AvDScAzbW1dYGjQv4=;
-	b=F2PDavr/2DO4WuKMtVrvoPzFllySlcGjC7XBKrOhveUAwBGQWQaGuVKKBncIYK/p1lWBvv
-	Y5RpWfRPKzhUzzBQ==
-Date: Thu, 26 Jun 2025 11:23:44 +0200
-Subject: [PATCH v2] sched: Fix preemption string of preempt_dynamic_none
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="HE9EmomO"
+Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 640301F967;
+	Thu, 26 Jun 2025 11:25:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1750929925;
+	bh=oQiL2nk762kw5hgZ/7yLoXi+yV+vsX0JHtdeUc0YXFY=;
+	h=Received:From:To:Subject;
+	b=HE9EmomOlz2739bN8MLQHMe8DK71hV/EWB3nf7vOcyRuATfWdfu9hsBvYqfS9lYtL
+	 2pip2Jrqz+es1fSzAjzqB4m3VfZmUDS3n/Dx6LCFuw+Kb9hlUlDU3B1leS1xEqJJjc
+	 9B7lfga9jODnJ6PLNanjpUR75gFAX/NLgnOM+2jHnNVJ5uKZGu+7k6FEBp6OwN0Gg1
+	 O1TTeHq33HMEIaenHxycMCz4Oa0gXRVX9O0sRA9qauH8j/CyCxLyD+UIbfIq2YMC7S
+	 sYzoN82zfMxVCqY2IWzTtBmP8dAUYeRzPgSemmVF9HmbypI9kS8151s3sfg9aWk7/E
+	 hC/qtLWxiwaJA==
+Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
+	id 08CEA7F9CF; Thu, 26 Jun 2025 11:25:25 +0200 (CEST)
+Date: Thu, 26 Jun 2025 11:25:24 +0200
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Maxime Ripard <mripard@kernel.org>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jessica Zhang <quic_jesszhan@quicinc.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Anusha Srivatsa <asrivats@redhat.com>,
+	Francesco Dolcini <francesco@dolcini.it>,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] drm/panel: panel-simple: Fix panel-dpi probe error
+Message-ID: <aF0SBNGmTpgtBTC3@gaggiata.pivistrello.it>
+References: <20250625-drm-panel-simple-fixes-v1-0-c428494a86b8@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250626-preempt-str-none-v2-1-526213b70a89@linutronix.de>
-X-B4-Tracking: v=1; b=H4sIAJ8RXWgC/32NQQrCMBBFr1Jm7UgyrcW68h7ShSQTO6BJSWKol
- N7d2AO4fJ//318hcRROcGlWiFwkSfAV6NCAme7+wSi2MpCik+pVi3Nkfs0ZU47og2e0pKnVxhC
- 1Z6izWnCy7MrbWHmSlEP87A9F/9I/sqJRo1M8DLq3xnXd9Sn+nWPwshwtw7ht2xcTUv+jtAAAA
- A==
-X-Change-ID: 20250603-preempt-str-none-d21231cc2238
-To: Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, 
- Juri Lelli <juri.lelli@redhat.com>, 
- Vincent Guittot <vincent.guittot@linaro.org>, 
- Dietmar Eggemann <dietmar.eggemann@arm.com>, 
- Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
- Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, 
- Shrikanth Hegde <sshegde@linux.ibm.com>, 
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- =?utf-8?q?Thomas_Wei=C3=9Fschuh?= <thomas.weissschuh@linutronix.de>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1750929834; l=1533;
- i=thomas.weissschuh@linutronix.de; s=20240209; h=from:subject:message-id;
- bh=qefygG19a70dJv46vYC1EnTIxHXTAsx2nrgYvCYxMKw=;
- b=vv12BvyU6bPTM7lClHQ5+r1baolvyX+1iC4MnCv7bmn0Rrkb1PNk1QB1TO9KfA/eCPDHjtJVZ
- lxhIM5clwGIB6wdNYd6ZqGxhV3zIwvdZIeVrHqNSjWhvmPSDws7lK+B
-X-Developer-Key: i=thomas.weissschuh@linutronix.de; a=ed25519;
- pk=pfvxvpFUDJV2h2nY0FidLUml22uGLSjByFbM6aqQQws=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250625-drm-panel-simple-fixes-v1-0-c428494a86b8@kernel.org>
 
-Zero is a valid value for "preempt_dynamic_mode", namely
-"preempt_dynamic_none".
+Hello Maxime,
+thanks for the patch
 
-Fix the off-by-one in preempt_model_str(), so that "preempty_dynamic_none"
-is correctly formatted as PREEMPT(none) instead of PREEMPT(undef).
+On Wed, Jun 25, 2025 at 08:48:37AM +0200, Maxime Ripard wrote:
+> Here's a series fixing (hopefully) the panel-simple regression for
+> panels with a panel-dpi compatible.
+> 
+> It's only build tested, so if you could give that series a try
+> Francesco, I'd really appreciate it.
 
-Fixes: 8bdc5daaa01e ("sched: Add a generic function to return the preemption string")
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Weißschuh <thomas.weissschuh@linutronix.de>
-Tested-by: Shrikanth Hegde <sshegde@linux.ibm.com>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
-Changes in v2:
-- Pick up Reviewed-by and Tested-by
-- Rebase on v6.16-rc1
-- Link to v1: https://lore.kernel.org/r/20250603-preempt-str-none-v1-1-f0e9916dcf44@linutronix.de
----
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It does not build for me, applied on top of commit ee88bddf7f2f ("Merge tag
+'bpf-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf")
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index dce50fa57471dffc4311b9d393ae300a43d38d20..021b0a703d094b3386c5ba50e0e111e3a7c2b3df 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7663,7 +7663,7 @@ const char *preempt_model_str(void)
- 
- 		if (IS_ENABLED(CONFIG_PREEMPT_DYNAMIC)) {
- 			seq_buf_printf(&s, "(%s)%s",
--				       preempt_dynamic_mode > 0 ?
-+				       preempt_dynamic_mode >= 0 ?
- 				       preempt_modes[preempt_dynamic_mode] : "undef",
- 				       brace ? "}" : "");
- 			return seq_buf_str(&s);
+  SYNC    include/config/auto.conf.cmd
+  CALL    scripts/checksyscalls.sh
+  CC      drivers/gpu/drm/drm_of.o
+  CC [M]  drivers/gpu/drm/panel/panel-simple.o
+  AR      drivers/gpu/drm/built-in.a
+  AR      drivers/gpu/built-in.a
+  AR      drivers/built-in.a
+  AR      built-in.a
+  AR      vmlinux.a
+  LD      vmlinux.o
+  OBJCOPY modules.builtin.modinfo
+  GEN     modules.builtin
+  GEN     .vmlinux.objs
+  MODPOST Module.symvers
+ERROR: modpost: "mipi_dsi_bus_type" [drivers/gpu/drm/panel/panel-simple.ko] undefined!
+make[2]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
+make[1]: *** [/home/francesco/Toradex/sources/linux/Makefile:1953: modpost] Error 2
+make: *** [Makefile:248: __sub-make] Error 2
+[Exit 2]
 
----
-base-commit: 19272b37aa4f83ca52bdf9c16d5d81bdd1354494
-change-id: 20250603-preempt-str-none-d21231cc2238
-
-Best regards,
--- 
-Thomas Weißschuh <thomas.weissschuh@linutronix.de>
 
