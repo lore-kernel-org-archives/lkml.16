@@ -1,87 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1672526A1A8;
-	Thu, 26 Jun 2025 10:54:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8731126B2DC;
+	Thu, 26 Jun 2025 10:54:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750935250; cv=none; b=a9wjE2MRsXl354B19yn5nBL1xpTXcfkQ0j2vKRmyaEJKLPxXXqrV0Vh4tpgMV6y7CpSCE4IEpxTldVlAoOAZKpS2u5vxFehQqprLeA2Oiz6swgzUNejGOSku8H+NhUunutwEbIiTELyHdgKhRjtBJ4Zx3rh9x04xmTaG3XiyKt8=
+	t=1750935256; cv=none; b=qPWVgC95UQ1FrBmfAt/GeqQ7MShY8y9yuOKDxNUC5IKLBKNvW3hgquntbZkbKFSPc80X7xYQuuCjdp5YkBP675FYLKKz1yKpmCDRNaP/tGJ7yfrDi1RAySM+1Cyzm2P2yjc1z1+nxbkqqGAvOjhDKr5rXx7v8tGboRIeQZr4bxk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750935250; c=relaxed/simple;
-	bh=2alW063fqcncvoGsWJi8mp6fYnWIf8n8jT9pOQvyy7M=;
+	s=arc-20240116; t=1750935256; c=relaxed/simple;
+	bh=u4FAkkOPIZ9Sb0kPH8gkTxSqGIvSB0tKE6FdM9MQkpc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NQuPgHnybj3E+mKov7QCpUNxEb4dQ3ACiIvB/wuUSUTrYthG1J0jo+4xqFJvT2HvRZwAcdq5mFHZ45u1i/SZ6cLQ8dKjBiCwVhAYg8UuFISdDN/H0m/mi7A5UR9bYs/8c1JNLNzxTTSaNIj6iPYfDKumHMtWpcOgDLaVzC/ArrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kENJSi+D; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BqGqJNVe8t4RrxVfQMQEr5Rdniq4KsI0fOcyGX3Ycyoj+ZIvnDwyYV4rI8MVaMrhMxn1fVFjCyQ7itVXG/FTuiKULCtNtWgt6AkLEaapD1NcBSbNMQd71qpdUG8XvBBxQf9ggtrIiqWMXK+zLVGNdOB1ur1TPnJx5+RI4XFr4hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=NS2N6ibF; arc=none smtp.client-ip=159.69.126.157
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kENJSi+D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86CCDC4CEEB;
-	Thu, 26 Jun 2025 10:54:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750935249;
-	bh=2alW063fqcncvoGsWJi8mp6fYnWIf8n8jT9pOQvyy7M=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=kENJSi+DyWexL7G/srvmIQIGrzXjmH1qt4UWKh11Cp2TYw5GEVRF9p1Zo1MZ4qhT4
-	 9mvnfzkkd9EG68mpZ4SvhAowkGnGezH0OK0ufJrTIdPi5youZ22Belx1ml4W9aD4Tq
-	 a3+oHXR2VbK7ZTx4N+RI/wWFOAL4z1ritp5vS9h9RqzM4xkVkJ4QYRLgckZmMNzuRK
-	 SoLVvsQolZ+xWmCH/CV+RifkQ6BGT30uwegcF4BZ2o96qvIw9axLSh8+Lav978u8fm
-	 2kkWQ57XgfZt4RLSbX3n97xL4TXJgPLgVeXHhHG+uxnAsYfHLPfgMRMzt9wx6MQPx1
-	 +BMsMyH5kefPA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id 6DD30CE0B76; Thu, 26 Jun 2025 03:54:06 -0700 (PDT)
-Date: Thu, 26 Jun 2025 03:54:06 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: rcu@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@meta.com,
-	rostedt@goodmis.org
-Subject: Re: [PATCH 1/5] torture: Remove support for SRCU-lite
-Message-ID: <167ab1f0-ea85-4a0f-8a19-1d74e2fa7439@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <e5dd6af2-fdbf-4773-9732-13b84ca13a12@paulmck-laptop>
- <20250624161400.867880-1-paulmck@kernel.org>
- <aFvmG2lT65Ido1fq@infradead.org>
+	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="NS2N6ibF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
+	s=mail; t=1750935252;
+	bh=u4FAkkOPIZ9Sb0kPH8gkTxSqGIvSB0tKE6FdM9MQkpc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NS2N6ibFj6oaTIBo24pnT+DGukdYkKlOAu/TnzAIu1YBEqkEpeVCSTO97Pq3w53W5
+	 JqhjmLcHJi93Q2c+73u8qJFk3AB8W4zk+IW4rQu9lHqEl7+CwilozoAO7niKWlqTU1
+	 rmZwNIob/4UwUMMBt6Hs5PZM6ABZmdYixpfoDhaU=
+Date: Thu, 26 Jun 2025 12:54:11 +0200
+From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
+To: Lee Jones <lee@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Waiman Long <longman@redhat.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Vicentiu Galanopulo <vicentiu.galanopulo@remote-tech.co.uk>, Will Deacon <will@kernel.org>, Han Xu <han.xu@nxp.com>, 
+	Haibo Chen <haibo.chen@nxp.com>, Yogesh Gaur <yogeshgaur.83@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, Pavel Machek <pavel@kernel.org>, Andrew Davis <afd@ti.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	linux-spi@vger.kernel.org, imx@lists.linux.dev, linux-leds@vger.kernel.org
+Subject: Re: (subset) [PATCH v7 2/3] leds: lp8860: Check return value of
+ devm_mutex_init()
+Message-ID: <e340b32d-8839-43b0-8662-edef1729ad6e@t-8ch.de>
+References: <20250617-must_check-devm_mutex_init-v7-2-d9e449f4d224@weissschuh.net>
+ <175033649656.801367.11888454651585197053.b4-ty@kernel.org>
+ <f1cc8959-d420-4ba3-922f-ed7c6f054f22@t-8ch.de>
+ <20250625090439.GQ795775@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <aFvmG2lT65Ido1fq@infradead.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250625090439.GQ795775@google.com>
 
-On Wed, Jun 25, 2025 at 05:05:47AM -0700, Christoph Hellwig wrote:
-> On Tue, Jun 24, 2025 at 09:13:56AM -0700, Paul E. McKenney wrote:
-> > Because SRCU-lite is being replaced by SRCU-fast, this commit removes
-> > support for SRCU-lite from refscale.c.
+On 2025-06-25 10:04:39+0100, Lee Jones wrote:
+> On Thu, 19 Jun 2025, Thomas Weißschuh wrote:
+> > On 2025-06-19 13:34:56+0100, Lee Jones wrote:
+> > > On Tue, 17 Jun 2025 19:08:13 +0200, Thomas Weißschuh wrote:
+> > > > devm_mutex_init() can fail. With CONFIG_DEBUG_MUTEXES=y the mutex will be
+> > > > marked as unusable and trigger errors on usage.
+> > > > 
+> > > > Add the missed check.
+> > > 
+> > > Applied, thanks!
+> > > 
+> > > [2/3] leds: lp8860: Check return value of devm_mutex_init()
+> > >       commit: 426e0c8e8eed26b67bbbd138483bb5973724adae
+> > 
+> > Thanks, but (as mentioned in the cover letter) these patches should go
+> > together through the mutex/locking tree.
+> > Could you drop it on your side and give an Ack instead?
 > 
-> Please explain how they different and why one is a good enough (or
-> even better?) replacement for the other.
+> There has to be good reasons to do this.
+>
+> I didn't see any dependents or dependencies in this patch.
 
-Ah, good point, thank you!
+Patch 3 depends on patch 1 and 2.
 
-How about if I add this to the cover letter?
+It will break the build for each instance of an ignored return value
+of devm_mutex_init(). Therefore all such instances need to be resolved
+before the patch can be applied.
+So the patches can't go through different trees.
 
-	Both SRCU-lite and SRCU-fast provide faster readers by dropping
-	the smp_mb() call from their lock and unlock primitives.
-	The price of this is a pair of added RCU grace periods during
-	the SRCU grace period.
+In theory we could fix the drivers in this cycle and then change
+devm_mutex_init() in the next one. But new regressions are introduced
+over and over. This patch is already in the third cycle...
 
-	SRCU-fast also adds NMI safety for architectures that have
-	NMIs but do not have NMI-safe per-CPU operations.  In addition,
-	srcu_read_lock_fast() returns a per-CPU pointer rather than an
-	integer, which provides a further speedup compared to SRCU-lite
-	by getting rid of array-index calculations.
 
-	There is a trivial mapping from the SRCU-lite API to that
-	of SRCU-fast, so we do not expect any transition issues.
-	In addition, while SRCU-lite remains in the kernel, checkpatch.pl
-	will warn about added SRCU-lite use cases.
-
-	Further read-side speedups are possible, but they amount to only
-	about half a nanosecond out of about two nanoseconds (measured on
-	my x86 laptop), and they might require some changes to existing
-	SRCU code.  These changes are trivial, but we need to see a
-	solid need for the additional performance before inconveniencing
-	existing users.
-
-							Thanx, Paul
+Thomas
