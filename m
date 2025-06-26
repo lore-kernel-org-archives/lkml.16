@@ -1,98 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532F81AC88B
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 06:08:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 394351A0BF1;
+	Thu, 26 Jun 2025 06:09:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750918135; cv=none; b=GFggTIaLqmiVom2ct7JEyD2Ds/+tHA1lZXVMgdZfGmP3GJaRk0Xl6RR4XQSw6WUAa3c/szRRGqwiMDIcoKpTpbKKTpMRwnxgp3Z6x9Ecf860/pwHwaDlF8PBcbyG9gTeqxbLzbYCazI+N6YRYdyKvv6lopS+Tx2ZQYdeGSPmYzg=
+	t=1750918188; cv=none; b=rOsYywfgZjwAP/nkpKs9JfwdbTst1+ove21kLO9wiXya6FL0yMDXRA4AbGd6GKbLP1beS8wiAS6ytFA0/5HZ3hKbAZYbLH138Vr7EpuLrbBh7CZNvn9YtvHSG1YM9fU9J5J5BZ/y/04e6e3UnvcSMrWS78S1oKTBXaH3LnL45oU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750918135; c=relaxed/simple;
-	bh=r93OQAL+O+DGIdysH+atzMrXTR4OgqwgoeNHguqSrRk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RRLgINUz7z3fBQXcFp2hZA0Rz0GpVGZ2Lh6QIpdcNDFKT5dnqwCOEj4dMXOEnAcSJ8oQL5OHNASIbU6SPm2zwXc3lxQdEGQIqBkFyGj7+6EgjzHN3AsG8LOUS7bb7W0H8WVpp2vJ0h1jyLHgqe188oNpHleFZr6GvjqP5Y9XRsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XeIr12IW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1750918188; c=relaxed/simple;
+	bh=5qQEo4cstz0NAMzDg6iNcA9J6qcGf1V6m+4GipjIBAg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pZKCwX5cHWPGy30U6rkIWdqpBEQg/Mc3ZxTk8wmBn9T8otCo82kB96rMk5G6R+a/1Zd8ay9y+CZNTEs/bbDZOVDnfnviGgDIymnxr4Qqw0DBkuYpsEx5vmC+3c8p5W24WuSLOKLoSY7Qi3aAHXyWS4iDg0ZmyeQ6wDeMy3hsNVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VFJlowYK; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XeIr12IW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750918133;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Aq9GfmifFmUJTHzOzR3uh/CPBzOh0qHNI3h7c2rC8V0=;
-	b=XeIr12IWvyedwSuZ/MJ/ch9GHxF0B8r5irU2nP7I5+3xIF1WrMjovmv+M51/2MzsH2PkLS
-	EquOQVz5wMsHoYhftAXx27LxFpmAFRIsCZmZp9Sj3OtFfSaB3wOZpcyH0V+CgwANHZQq4a
-	OJJJPqTGoBwEKs+tyIUiy0cim9Zg0ns=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-624-q8cV0XtkMoSL30qGC5mQog-1; Thu,
- 26 Jun 2025 02:08:47 -0400
-X-MC-Unique: q8cV0XtkMoSL30qGC5mQog-1
-X-Mimecast-MFC-AGG-ID: q8cV0XtkMoSL30qGC5mQog_1750918125
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A2C7E180120E;
-	Thu, 26 Jun 2025 06:08:44 +0000 (UTC)
-Received: from vmalik-fedora.brq.redhat.com (unknown [10.43.17.39])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2E31D195607A;
-	Thu, 26 Jun 2025 06:08:39 +0000 (UTC)
-From: Viktor Malik <vmalik@redhat.com>
-To: bpf@vger.kernel.org
-Cc: Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@fomichev.me>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VFJlowYK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750918188; x=1782454188;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=5qQEo4cstz0NAMzDg6iNcA9J6qcGf1V6m+4GipjIBAg=;
+  b=VFJlowYKfrrmza3xvtTdgb4tkiu0S9bpozMkLA9yd9473uDzXH1BEi3T
+   JUoCRfWoyIf/qh5mqLIPuEG+mQuwwdMkielGgtkkplq9Qu1nw09XNH+UA
+   2xDWb9CrrJoFQke+tBuPUjic52D7272rT8C1aV0Th8FUnTfrduNhVtLkw
+   SKMbDyO+nOrr59S2ZG3+I42cExbz1RyyNg0vl+VboTmqZ6Wd1eDz3140B
+   lD01szJ6AL2b137LCA33MeJchsV4jVK/m7B9reRkbfobeLh+/sqk0rMPZ
+   37oe7K5OIde9o9l41JAS0VnvtOON9lECsc+KH/KsCgaPgzAFz4ec30k9d
+   Q==;
+X-CSE-ConnectionGUID: q8eK2wXMRJme+dpll0HrQA==
+X-CSE-MsgGUID: wfln1RDfQv+a1a3ny0CjWA==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64635353"
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="64635353"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 23:09:47 -0700
+X-CSE-ConnectionGUID: eXoEqP4iSxmN34FnAMWdFw==
+X-CSE-MsgGUID: llWzoQSQS9yFC0nFDMokyQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="152542072"
+Received: from yungchua-desk.itwn.intel.com ([10.227.8.136])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 23:09:45 -0700
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
+To: linux-sound@vger.kernel.org,
+	vkoul@kernel.org
+Cc: vinod.koul@linaro.org,
 	linux-kernel@vger.kernel.org,
-	Viktor Malik <vmalik@redhat.com>
-Subject: [PATCH bpf-next v8 1/4] uaccess: Define pagefault lock guard
-Date: Thu, 26 Jun 2025 08:08:28 +0200
-Message-ID: <8a01beb0b671923976f08297d81242bb2129881d.1750917800.git.vmalik@redhat.com>
-In-Reply-To: <cover.1750917800.git.vmalik@redhat.com>
-References: <cover.1750917800.git.vmalik@redhat.com>
+	pierre-louis.bossart@linux.dev,
+	bard.liao@intel.com
+Subject: [PATCH] soundwire: intel_auxdevice: add rt721 codec to wake_capable_list
+Date: Thu, 26 Jun 2025 14:09:37 +0800
+Message-ID: <20250626060937.405978-1-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Define a pagefault lock guard which allows to simplify functions that
-need to disable page faults.
+From: Naveen Manohar <naveen.m@intel.com>
 
-Signed-off-by: Viktor Malik <vmalik@redhat.com>
+rt721 has wake capability. Add it to the wake_capable_list.
+
+Signed-off-by: Naveen Manohar <naveen.m@intel.com>
+Reviewed-by: Péter Ujfalusi <peter.ujfalusi@linux.intel.com>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 ---
- include/linux/uaccess.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/soundwire/intel_auxdevice.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-index 7c06f4795670..1beb5b395d81 100644
---- a/include/linux/uaccess.h
-+++ b/include/linux/uaccess.h
-@@ -296,6 +296,8 @@ static inline bool pagefault_disabled(void)
-  */
- #define faulthandler_disabled() (pagefault_disabled() || in_atomic())
+diff --git a/drivers/soundwire/intel_auxdevice.c b/drivers/soundwire/intel_auxdevice.c
+index 10a602d4843a..6df2601fff90 100644
+--- a/drivers/soundwire/intel_auxdevice.c
++++ b/drivers/soundwire/intel_auxdevice.c
+@@ -65,6 +65,7 @@ static struct wake_capable_part wake_capable_list[] = {
+ 	{0x025d, 0x715},
+ 	{0x025d, 0x716},
+ 	{0x025d, 0x717},
++	{0x025d, 0x721},
+ 	{0x025d, 0x722},
+ };
  
-+DEFINE_LOCK_GUARD_0(pagefault, pagefault_disable(), pagefault_enable())
-+
- #ifndef CONFIG_ARCH_HAS_SUBPAGE_FAULTS
- 
- /**
 -- 
-2.49.0
+2.43.0
 
