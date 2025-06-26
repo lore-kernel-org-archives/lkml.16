@@ -1,139 +1,95 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55B24A33;
-	Thu, 26 Jun 2025 08:59:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0CE62877E2;
+	Thu, 26 Jun 2025 08:59:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750928350; cv=none; b=CLZy//o9T+Man48Tb860FLRRSObbiTHcwR3m4sXk+HQpnxzv3h0O2Z3XrJaJff/aga1r/AEoEPz47XA13my+fxswQcxkcCTklfRNWwtr3R7nP7oALM479lD+gHvI77rBkbZy4RkxdaxhQnBpjhlQOziFmsJUs5zsKsrxkuD9itg=
+	t=1750928369; cv=none; b=EtBYmRuzNzuw9KYMH0o+GNRHY8x9n+WEfNib44jyxzlYpOr8eLmoARp7mh7PDp0stkX37pV3WFOLeNWrVProTEStJ/4RMSanuB4qv9sDQRuA41eWs9QlKSlGb+oCZa8p8RPBpjjp1d54XXeHCmhcvbRK5sMdAp9xwu1REMXLxMg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750928350; c=relaxed/simple;
-	bh=vz8yrG7TsUr+PK7JlGaU9k8zdE+Zt3hQF4t9uML7Scs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ror/VajWSG0VGTlTtbl3IkvhcBKeXz7lOopNKkgM7dQhZaBa+NFAQk/zSaXWkpqoe/qlu8qnXSGDf6YNNqwKf7tYXhteo2SvtAb981B+M6tAjrp5USJuwE2TaJoy/3BvFTgf2Z9nHxmmYaaahHElHvFPqdQPhBoa4JEnriWso50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iJhUcXn6; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1750928369; c=relaxed/simple;
+	bh=UZyC//Zur0wxTN4s368OZ/a2eZQvDDDVt+WdXVio6ho=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=vFvtXNyIQSG4B87q4H3bPCcEA6X6XyC8yaGQFiySqN3uE9tcv2v8wepQ2z4mkXbCfCJXqQeGFkKDypoupVqPx0yVzBc5X93VHjrCfx/2Zz3BrrGNMHLSCqrW9ZAejcVGHCvf3B6n7YzpRaKdj7UdVBQGF1bcKWNyGq/2KA3nW6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=O1RiN5oE; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iJhUcXn6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750928348; x=1782464348;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vz8yrG7TsUr+PK7JlGaU9k8zdE+Zt3hQF4t9uML7Scs=;
-  b=iJhUcXn6nGwDWEBHZTIjWu0ece+aBVTNpIDw5Q5K0UTu0jxeWp6HEgtf
-   6I1iOY2xfsEvWLK/e40jTKz5Wgq5+Bm7sgza0uHlqBEpS828sgw1nciDc
-   mZXCnrFYT/omJRfIv10rpRIeLJ88QHQgiDCS0NmJtN8XvSRZb+zDkW0fh
-   E7UvPgrHoUC1SbH7/q18IiYi8wQgU9LbdJxU+O8CKxXeyAqYjMPx0tcz2
-   hHmAjyEwi/O4YdZbIjFNO9crcMREAtwFGWgOPhwnbIsnTWwf9OXCkhDUo
-   J9eYAlWQv4Rks6bLz6E5WdpwkMYIXEpcYfJ6hJVV6Vj60EyTTvC2VgOAd
-   A==;
-X-CSE-ConnectionGUID: BuUJ1mjNRVCXsxW93Fn34w==
-X-CSE-MsgGUID: X73oQGbSTF2/vMbPt60n6A==
-X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64649966"
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="64649966"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 01:59:08 -0700
-X-CSE-ConnectionGUID: PSt5q9rgRv23Z+qWHnxY4g==
-X-CSE-MsgGUID: 1ZRIWUhETUuNPdnq4pMsGA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
-   d="scan'208";a="152632462"
-Received: from xiaoyaol-hp-g830.ccr.corp.intel.com (HELO [10.124.247.1]) ([10.124.247.1])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 01:59:05 -0700
-Message-ID: <bc7aea45-f254-4cbc-8dc0-5435417d8577@intel.com>
-Date: Thu, 26 Jun 2025 16:59:00 +0800
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="O1RiN5oE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=8VawFUixkHnSJmGNCGpBOVPOUv/TJd/cOow2tp10MGQ=; b=O1RiN5oEaSsxBnLWa8pS7py4U4
+	l3rM/+lk5UFDbid+Q2VZ46JoDsOp58pc+2SO1KAVLC4VWe38cw7QfGQEInWW5R8i/GUmkK1yxwNSS
+	ZNvZXlZvKCY//Feaxt1vRx/NOcOnYGHwBsBCzN2aipMq4eDvxtYRUx4WDGbEaY18e/d4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1uUiS5-00H1iX-AK; Thu, 26 Jun 2025 10:59:25 +0200
+Date: Thu, 26 Jun 2025 10:59:25 +0200
+From: Andrew Lunn <andrew@lunn.ch>
+To: Jonas Rebmann <jre@pengutronix.de>
+Cc: Wei Fang <wei.fang@nxp.com>,
+	"imx@lists.linux.dev" <imx@lists.linux.dev>,
+	"netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	Shenwei Wang <shenwei.wang@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH] net: fec: allow disable coalescing
+Message-ID: <551d7f29-d791-4703-8ce9-dec5baadd383@lunn.ch>
+References: <20250625-fec_deactivate_coalescing-v1-1-57a1e41a45d3@pengutronix.de>
+ <PAXPR04MB8510C17E1980D456FD9F094F887AA@PAXPR04MB8510.eurprd04.prod.outlook.com>
+ <d60808b3-eb20-40ab-b952-d9cd8d8d68a7@lunn.ch>
+ <f2647407-3de0-4afd-bc79-5b58e13f10aa@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/5] KVM: x86: Provide a capability to disable
- APERF/MPERF read intercepts
-To: Sean Christopherson <seanjc@google.com>,
- Paolo Bonzini <pbonzini@redhat.com>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>
-Cc: kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
- Jim Mattson <jmattson@google.com>
-References: <20250626001225.744268-1-seanjc@google.com>
- <20250626001225.744268-3-seanjc@google.com>
-Content-Language: en-US
-From: Xiaoyao Li <xiaoyao.li@intel.com>
-In-Reply-To: <20250626001225.744268-3-seanjc@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f2647407-3de0-4afd-bc79-5b58e13f10aa@pengutronix.de>
 
-On 6/26/2025 8:12 AM, Sean Christopherson wrote:
-> From: Jim Mattson <jmattson@google.com>
+On Thu, Jun 26, 2025 at 10:33:51AM +0200, Jonas Rebmann wrote:
+> Hi Andrew,
 > 
-> Allow a guest to read the physical IA32_APERF and IA32_MPERF MSRs
-> without interception.
+> On 2025-06-26 10:12, Andrew Lunn wrote:
+> > On Thu, Jun 26, 2025 at 02:36:37AM +0000, Wei Fang wrote:
+> > > > 
+> > > > -       /* Must be greater than zero to avoid unpredictable behavior */
+> > > > -       if (!fep->rx_time_itr || !fep->rx_pkts_itr ||
+> > > > -           !fep->tx_time_itr || !fep->tx_pkts_itr)
+> > > > -               return;
+> > 
+> > Hi Wei
+> > 
+> > When i see a comment like this being removed, i wounder if there is
+> > any danger of side effects? Do you know what is being done here is
+> > actually safe, for all the different versions of the FEC which support
+> > coalescence?
 > 
-> The IA32_APERF and IA32_MPERF MSRs are not virtualized. Writes are not
-> handled at all. The MSR values are not zeroed on vCPU creation, saved
-> on suspend, or restored on resume. No accommodation is made for
-> processor migration or for sharing a logical processor with other
-> tasks. No adjustments are made for non-unit TSC multipliers. The MSRs
-> do not account for time the same way as the comparable PMU events,
-> whether the PMU is virtualized by the traditional emulation method or
-> the new mediated pass-through approach.
+> For reference, this comment is taken in plain from section 11.6.4.1.16.3
+> in the i.MX 8M Plus Applications Processor Reference Manual (and is the
+> same for the 6UL).
 > 
-> Nonetheless, in a properly constrained environment, this capability
-> can be combined with a guest CPUID table that advertises support for
-> CPUID.6:ECX.APERFMPERF[bit 0] to induce a Linux guest to report the
-> effective physical CPU frequency in /proc/cpuinfo. Moreover, there is
-> no performance cost for this capability.
+> I was also worried about this so I made sure that in any case where
+> either of those is zero, the coalescing enable bit (FEC_ITR_EN) is
+> explicitly disabled.
 > 
-> Signed-off-by: Jim Mattson <jmattson@google.com>
-> Link: https://lore.kernel.org/r/20250530185239.2335185-3-jmattson@google.com
-> Signed-off-by: Sean Christopherson <seanjc@google.com>
-> ---
->   Documentation/virt/kvm/api.rst | 23 +++++++++++++++++++++++
->   arch/x86/kvm/svm/nested.c      |  4 +++-
->   arch/x86/kvm/svm/svm.c         |  5 +++++
->   arch/x86/kvm/vmx/nested.c      |  6 ++++++
->   arch/x86/kvm/vmx/vmx.c         |  4 ++++
->   arch/x86/kvm/x86.c             |  6 +++++-
->   arch/x86/kvm/x86.h             |  5 +++++
->   include/uapi/linux/kvm.h       |  1 +
->   tools/include/uapi/linux/kvm.h |  1 +
->   9 files changed, 53 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 43ed57e048a8..27ced3ee2b53 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -7844,6 +7844,7 @@ Valid bits in args[0] are::
->     #define KVM_X86_DISABLE_EXITS_HLT              (1 << 1)
->     #define KVM_X86_DISABLE_EXITS_PAUSE            (1 << 2)
->     #define KVM_X86_DISABLE_EXITS_CSTATE           (1 << 3)
-> +  #define KVM_X86_DISABLE_EXITS_APERFMPERF       (1 << 4)
->   
->   Enabling this capability on a VM provides userspace with a way to no
->   longer intercept some instructions for improved latency in some
-> @@ -7854,6 +7855,28 @@ all such vmexits.
->   
->   Do not enable KVM_FEATURE_PV_UNHALT if you disable HLT exits.
->   
-> +Virtualizing the ``IA32_APERF`` and ``IA32_MPERF`` MSRs requires more
-> +than just disabling APERF/MPERF exits. While both Intel and AMD
-> +document strict usage conditions for these MSRs--emphasizing that only
-> +the ratio of their deltas over a time interval (T0 to T1) is
-> +architecturally defined--simply passing through the MSRs can still
-> +produce an incorrect ratio.
-> +
-> +This erroneous ratio can occur if, between T0 and T1:
-> +
-> +1. The vCPU thread migrates between logical processors.
-> +2. Live migration or suspend/resume operations take place.
-> +3. Another task shares the vCPU's logical processor.
-> +4. C-states lower thean C0 are emulated (e.g., via HLT interception).
+> fec_enet_itr_coal_set is only ever called if FEC_QUIRK_HAS_COALESCE is
+> set and for those models, we expect disabling coalescing via FEC_ITR_EN
+> -- and consequently also setting the parameters to zero -- to be
+> unproblematic. This is also the reset default.
 
-s/thean/than/
+Thanks for the additional details. You could mention this in the
+commit message. The commit message allows you to answer reviewers
+questions before they ask them...
 
-Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+	Andrew
