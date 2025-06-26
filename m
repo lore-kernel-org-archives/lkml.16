@@ -1,332 +1,297 @@
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2064.outbound.protection.outlook.com [40.107.212.64])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9619421FF44
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 05:58:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.212.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750917493; cv=fail; b=Ns6MD+fd0zSnfQSMATt91glboo0p9iwczOa8UAurpe+KDVnHnyrvP2NQBSTqzRqsl96DFsW8XS4RSfHCjHDasD2tjqVR8y6h7l52jmin8XaoPsaMBBLy5WgqEi2Aq5Fy/d037w5yPRfEGMtV2/ykoArgipHg6BqR9fcISEgEbh4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750917493; c=relaxed/simple;
-	bh=vedkQLonmz4LT4KU3/GqU23uDBE0Q3Lvu1mSFBJFJC4=;
-	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=EOumMENNKmkuw24KR0g9+2SUVnOBZxoDysb3OrY4yD3sWdH6PBLTWd2gjCkG4aa590JjfpiboXKoZHWv2RGCmVzJlAWRz7I9tUNAx5e5LN46Gz+gakg3ebtztoi88AKIW+VhOzoD9zAi9p+AFODWa6DdXmftBFrrf5Zp46nJxLU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=pj60bLTN; arc=fail smtp.client-ip=40.107.212.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 176CF1A0BF1;
+	Thu, 26 Jun 2025 06:00:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1750917631; cv=none; b=V2wUmA8uMUPxZm9q8cRYKWv0t/VoXk9dQJ1xl4on4h0IpPydwoa6pkO13hp05x6nnU6xakKPHe8hf57sGGzVQ7jOu0PuTz+8x4S5KXwNE2dxeCxcC3jpYehNt8YAGggk/LRzyxZnBwrZHBW+K3xZ/rNqc56FnpMK9FXfrke3Nm4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1750917631; c=relaxed/simple;
+	bh=1IC3NED1WmJ6zM0ZcQYiI5Mq35crc/Becc3EighbXJI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E43gz8bGJtE3rBFY2OYQTKHcHKHBIEHrgcaI8HbsIYVfms73bAxAvC0cs3K6S9/8jRpNmW0+AXPaVO4Pspa1Y70zH2R0T50JBL3mWgikZXGT0hg5NOdhQmMjN1aS3HXWM9gOrNA1aDbWUkWusD3hY1j2XF4czQdRFEYxnpUhv70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T48MoJZd; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="pj60bLTN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BmPLvnVV/GoHxhDfurJCvZdQr7qhiVE5ZaJ1HDhGCqcLhWNeYWN15Zc7xBcDtG8nPP+ccMysfBv2isd9ImOeBDbhCi6mulmrSNqJB9wHXR1MGGTHmnIZ6jWNdf51zVXzXyHX01jmT4D4oelb+dFpBH+VTYxCpIZNF+UfQEh0oioqTimeTmJuTdH4mI5pKoSwr1LggrdD2wGeySfvCprWMooCHKVIBbiDCFUJwUw3H9s/h8wwHj3RpeIa68lGYPlnFzBPnxQzMMTLjzG/brKxJZjPbH7H3xKTXDmsfVjqGXPaspiVZsWmuk/5L2IXqRTm1i+seIPvCq6g7Fxqdt0hsQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ULzzbaMqFvhAJeffd4JS3zeec6HXiwUjp6uqe34XlWI=;
- b=uBI39Doa/F1+qmGHHTiNDpcz57NPajx8x+jQkS5bjihGQqT9HYXwXVIXgoLU3SQI5HipaHDqiAFsF/yOacKrvOx+lq/PKL8T9CTH7hXIBj7K4MTom7YD96o/fbIVHl2zmCcPmG4yvIuIwlJ81KLp6K0Kr45cTuiy7GlATR1txB5AkJjXUxlzTNKdi+8/A6SlSsuyr677BgM4wbkiN23uQnGkjyrvmVJV9JFNC+W5idoKz1H90Qsad8DP7pJIWs113l/7puQ/dZVha8xxAiHns8JTYka6xzKFATOvhrpZowJ3xTGCZnlSclbigfWdUwQNVf/H6Z6li3KO42869TSOPg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ULzzbaMqFvhAJeffd4JS3zeec6HXiwUjp6uqe34XlWI=;
- b=pj60bLTNkMxlojT+MUsXb7ZN3xLN0VG2SdNr+/tv/rqPAAu27D4iakbESZlGBjZapWA/UuftvUTx2+daw9x+mIMi5TB8vSI1/v2zoUm7PYGHkfkubV8+H3AL33dPb8Bsa/tTTLdEJ9JZ2TMdgRkR7O/jSt2FYPVthsxXJQbMVpQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from CH0PR12MB5154.namprd12.prod.outlook.com (2603:10b6:610:b9::17)
- by SJ5PPFD525C5379.namprd12.prod.outlook.com (2603:10b6:a0f:fc02::9a3) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8699.19; Thu, 26 Jun
- 2025 05:58:07 +0000
-Received: from CH0PR12MB5154.namprd12.prod.outlook.com
- ([fe80::9661:1085:5841:67a4]) by CH0PR12MB5154.namprd12.prod.outlook.com
- ([fe80::9661:1085:5841:67a4%7]) with mapi id 15.20.8835.032; Thu, 26 Jun 2025
- 05:58:06 +0000
-Message-ID: <dbec455c-74a0-4f91-8b8c-7b995c6e3e9c@amd.com>
-Date: Thu, 26 Jun 2025 11:27:54 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 0/8] Introduce debugfs support in IOMMU
-To: joro@8bytes.org, suravee.suthikulpanit@amd.com, will@kernel.org,
- robin.murphy@arm.com, linux-kernel@vger.kernel.org, iommu@lists.linux.dev,
- Vasant.Hegde@amd.com
-References: <20250604163647.1439-1-dheerajkumar.srivastava@amd.com>
-Content-Language: en-US
-From: Dheeraj Kumar Srivastava <dheerajkumar.srivastava@amd.com>
-In-Reply-To: <20250604163647.1439-1-dheerajkumar.srivastava@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN4PR01CA0067.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:26c::6) To CH0PR12MB5154.namprd12.prod.outlook.com
- (2603:10b6:610:b9::17)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T48MoJZd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750917629; x=1782453629;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=1IC3NED1WmJ6zM0ZcQYiI5Mq35crc/Becc3EighbXJI=;
+  b=T48MoJZdm4k8RkurSrNf+cB1PHChVcddCBczkyq8NDzRSAZG6p5UER1v
+   5Ak5iaQm7BHadJjquKWJb1NxjB7IZgGth+zNqHgW3+ITQjF/J7RjyZXk+
+   od8SSN5p2xtEAaH5I1gVZQp9PBVAAdMHub28I0U8v+67df4kbdyRbWCiE
+   wXHRiuZW/On0XjNmXSi2jo8llcvwzlglNveVaZiWPIxMOA8j0DYBNRm0/
+   kj4xdus/sRKvzUmJsiBDqSXlUPoOfQ2+I7Lq4saBHiu4zQM8j1HX1spTi
+   tP7kOnBzJbizMyEv5iSEZtEDencwTQR8ue7nsQjD+/yMdWZJGNutQKI8D
+   w==;
+X-CSE-ConnectionGUID: 6fZpEDDaSzySxhvf3TPtIg==
+X-CSE-MsgGUID: qYfUIelFTZm8/jnYY2RD5w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="64634368"
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="64634368"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 23:00:29 -0700
+X-CSE-ConnectionGUID: pD4mn+nNQvqXmeMi+AqS5Q==
+X-CSE-MsgGUID: tlO3YhIzTKOYRk+fD2DkRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,266,1744095600"; 
+   d="scan'208";a="152540140"
+Received: from dhhellew-desk2.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.245.244.122])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2025 23:00:25 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id CC73911FB5F;
+	Thu, 26 Jun 2025 09:00:22 +0300 (EEST)
+Date: Thu, 26 Jun 2025 06:00:22 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6 krs, Bertel Jungin Aukio 5, 02600 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Jai Luthra <jai.luthra@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Devarsh Thakkar <devarsht@ti.com>,
+	Rishikesh Donadkar <r-donadkar@ti.com>,
+	Vaishnav Achath <vaishnav.a@ti.com>,
+	Changhuang Liang <changhuang.liang@starfivetech.com>,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 5/6] media: cadence: cdns-csi2rx: Support multiple
+ pixels per clock cycle
+Message-ID: <aFzh9jF0ZgODThJF@kekkonen.localdomain>
+References: <20250410-probe_fixes-v2-0-801bc6eebdea@ideasonboard.com>
+ <20250410-probe_fixes-v2-5-801bc6eebdea@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CH0PR12MB5154:EE_|SJ5PPFD525C5379:EE_
-X-MS-Office365-Filtering-Correlation-Id: dbb1dea4-4595-402b-90d6-08ddb4766b60
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZVJQZ2pnNlNUQnJsS0ZjYUthMnU3Uy9Cd040ZWpIbDgxV25USGphSW4rR3pt?=
- =?utf-8?B?dkNEU2FKcHZNTEtTS1kvZ1NsenQ1VUZlWHdiZVdTOTlSclF6WTFQYXlpY1RC?=
- =?utf-8?B?a1FMb1JnVEs0L2VjUTR0cEtRNTgvcFZLUzVoaVM0UWpkRWNxNHM5QnBCRGJE?=
- =?utf-8?B?YUZIcmhaVWNHSjVuZGVwZzk4TC9aYkJFSnV4UFlycEJ0Wkk2dUVqRjdRUjhn?=
- =?utf-8?B?UGxWSklEMlJHcCtzUy9rQWFuRjU1U000dmJLWW1hSWgzM243RDJya0dpZml6?=
- =?utf-8?B?Vk1zck5EZ1dVaGFOSWJJb1I4WWVOTHZNRUNpbDVVM0Uxd3JTTFdveCtnVGZ5?=
- =?utf-8?B?dE9mMUxPY2E5czFINmt2VTgrQ1l6YnBmL2RCbEdtVnBXUnltekRZa1Z2T3BP?=
- =?utf-8?B?N3VYMmJNcDJtSUlSNWZ6VEMzbG9RU1ZXdFJZRGh6Nm52SWVaSGFRWGNPdFVH?=
- =?utf-8?B?clYyYktMNFlDZjZGVFJkaUVlZzFEVUtQaVIrbDl0UCtUbUhVWTdoeUVFVkRS?=
- =?utf-8?B?b1g1VUhLM3BtOTdvb09WT3dsYTZzeC9yaDg4aWhQMndSQnZ2dXFlYUMvSEwr?=
- =?utf-8?B?dVpGUVJoY1RyQ0dpb254d3ArUndqY1RzT1FJVVZ6NFo1bU4rNk1WR3dsckNh?=
- =?utf-8?B?ZEkwOS9Lc0Q4c09pOXBsazBSYkFCOS8rRVFRT01XRTdXRGxVcmtNY2VvZW9w?=
- =?utf-8?B?aEg1S0FpaUZVYzVpTStnWkFldHNKK3BEYUdlaW85bVZxRmp2N2M4Ykp3UTZO?=
- =?utf-8?B?SVE1NjBKcUtXcDg0TndZVEp2WnhuNzdDRXBRK2R0RU1qb2JBUXVSUkpia2Jk?=
- =?utf-8?B?MG1DU0FLb2xLMUVtMEdNL3ZsTmpjR0VZemhTMldqQ1lWRGRtNWRrSmRnbkk2?=
- =?utf-8?B?QUJ1dWtJcEZtSVgxMG9JeGJTSHhsbWR5ZFZTZGliLzlOWTJ5c0pvSDRpSG02?=
- =?utf-8?B?ZjFpNmtwSmhFVHdyYUcxZWdVd3p1cXVpSVRRNE5IUm1TckUvRmdjNjBLaldN?=
- =?utf-8?B?d2hNbDJMUElEZ0F3dUxqa1NsTkw2Rm8vWEoxOE9GYTQ5dXFPeCs3RGgrd0N2?=
- =?utf-8?B?VzVEQnpOTVVyS0MwVXdEQTMrUTRkdDhyQU5JcXVNTkdNUTBQWmN4TnN6NVVy?=
- =?utf-8?B?bEdzUGFwNjRIb3NsdGxNT01UU2xSZG1KT09TV2tHTExXZnBSQ3UvM1NYa1Fy?=
- =?utf-8?B?Q3FrMFJtc3FZUE5pZ0dHUlczMURJdVJqdlRFTll0R0ZDak9KemNLaHBVa2tF?=
- =?utf-8?B?OS9jS2dWUUZJZUpOMGtUZXpYSG84ajVnQnI0a1FRamp6V1BYUERNTlZxaXhs?=
- =?utf-8?B?aXFaeXI1emdXS3hVRHRsVm9td2NvcTdmc2xUSFdxdUZKQXNEKzB3MjNOeXdW?=
- =?utf-8?B?T1g0R3o3OHA5RG1GdXA3anNRcGZ6NmtCQlY3QnRKZDJydTV1Q0gwQnB6QjFK?=
- =?utf-8?B?a2RTOXlENnpZZE5HM283azBsZ2hRdEo1cWpXeG5qWUMycjRnbW0rQ0N6WDF5?=
- =?utf-8?B?eXlLVXZ5UG5JaGxoZjdLZ2VFMm5nVGc1NktkUGNhNkprUDl1TXhiWEhhYkQ3?=
- =?utf-8?B?WEpxaEwwN2RIaUlFYm50ZEx0bUQxSHFMcWpiTUMxdk5icG5FRXljZi9TVUpJ?=
- =?utf-8?B?QlloQXlOR0U3VmpqNVU2cEJjeFYzSVAxcW5aNjU0bmZtVi9LbXdCdEdFZElO?=
- =?utf-8?B?S1g2N254OWF1eGh0cVBxSWNuME4vM1A2eUk4QjJSK3lpQ0VEU051TFFDNHBG?=
- =?utf-8?B?SzJXbVFHVi9GM2EwT3B5eDVCRXRsZDltVlpjbzFvWlovVWJMR2ltalBrRjZG?=
- =?utf-8?B?RkI1cDROYzYrdTlzWE1BODlFeWVkRVpVQ29LWFVFSlVCSHNaN3prQjJLQXZs?=
- =?utf-8?B?eVhNMlN4akt3TzZ0V3NnRG1yd1NSVklReEVBU2czZUtPTU5sUU1UNXFpcHJ0?=
- =?utf-8?Q?L0NleQTxDtU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH0PR12MB5154.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MzBaOVRNQmt4d0RZZ0Q5cWE1TldRQ1hFeDBOOHVxcUhWNEl6S2NTQzBiY1RF?=
- =?utf-8?B?V0dna0piU1FIbWc1cDRuamtrUS9vWTZNZGJEL1YwVUtUTkZPem40K2k5ek9T?=
- =?utf-8?B?UHh5bjFUMXFNM2tLMWpKanBVZmxqdkdZRlkxUS9iR2p2bmhuN2pobHNOZUVO?=
- =?utf-8?B?ZGp5QlROaHBkWXAyd2pYRDZpMEVYN1BrK3QyelVHMzFNYWdUeUx2a1pEUFhk?=
- =?utf-8?B?MUdNMmhtMHNkaU52S2JLMmo3Rk5UMDRqUGg0cmg5MVorWWI1cDUyZ0ZKZGYy?=
- =?utf-8?B?YWU5T01iaWxuY0tqaDUvWVVCbjN1N1hPTjBUaTdsTGVEc1RGbExUNzNYMzN3?=
- =?utf-8?B?MVdsSUlxdzJYaHA0c2ZpL2NyZkFHUHZMRE56MVVYK3kyL1dMazJMTFhyeVVS?=
- =?utf-8?B?aUpSVW1NTnJCaStFdGQyZHAzMWZKMWJUajRJZzg0Ti9PV0tYTy9Odk9TWER2?=
- =?utf-8?B?dUdZQUJBUnVBbVdtRXJWcTlvT2lIK2QvSDgva2xGZkxURG1sZk5qWlZ6bHBp?=
- =?utf-8?B?QzhRa0pJUFVrSHhldWhHSmREcVNqbldMZ05LWGFCL2hXejhxemFnYloydDRM?=
- =?utf-8?B?YUIvQlNlVVZxZUUvRUJPYUxvMm9pcm5QOFJmdHF3VGNHcEFuLzFxR0N5K2NE?=
- =?utf-8?B?c1BiWGRTdmxaZ2doQjlnd3pkV0lOVFMzSmViV3dTRXhLSTh4UEZMUU5idVI3?=
- =?utf-8?B?eHl1VUM0QlZ0U3F6Sm9ONzhmbjNZbzAxWFJYZzg5YW8xTWZkYkFDUFo5Rnlx?=
- =?utf-8?B?aWJIU3NhS3llZC9YS1VKRU5VdlYxcFZaMGhQZEFlbGdvcEtaaHRIRkJzMU10?=
- =?utf-8?B?SU1LYXRVcmREUm15WFhxSEIrZWpLVkhNSkFpc3V6bHFCTFYzS0hOTlVXWVhi?=
- =?utf-8?B?S0dLZEpNbDNFS3dyTVo1VURsOHRHNWFDSEFSbGVYdjRKRHZuN01qTm5jUTFi?=
- =?utf-8?B?a3B6SWtpeUVwNVA2YXhrSW5LUlRWV0lzdDB0T2lhT0RSVEEybjdqN0hkNG5D?=
- =?utf-8?B?cnR3YUd4U2FHZVJ2bWdxb1FGSGFkWHg5d3E3QnA5VEJkL0MycTU5R2xTVjJm?=
- =?utf-8?B?TTl4eVhWV1ZIOFJHRGVQWVZldVVYNlROMlRSVzVTOFl2dXRLbmlYbVJmc0cw?=
- =?utf-8?B?R2VZeFVkM281SUxFeHhyRmo5bEdlZENaYzJvN2kzU2Y4Ym45Z2hUb0R1a3kw?=
- =?utf-8?B?VkZiQ0oyeEZNZmxXWkhKbGZQc1N0NDZsRThqRVd1MlF3eWRzQlVvMG1PRW0r?=
- =?utf-8?B?Rm9uT2grWkJHaEQxK04ydHhXckVhY2NpQmt1MmNEcnpXdURKeStDNEVFR0ZW?=
- =?utf-8?B?TWYyOUdpQ1lrY1VFcmU3SjFORnEvNlA4blFiOWRINldscGpKeGxPMnBZNjhW?=
- =?utf-8?B?RkExL0lsWThQaFdmQThmS2phWWdnbkppblpNeExpem02MDBGUjBxZXQ2ck51?=
- =?utf-8?B?TW5iR1llazJRbS9mMXFBZFBBclhOaGk1eVVmQ3NLU2p5a1VFdDZXRUlZSVlk?=
- =?utf-8?B?UllxY0tVVWpWbGlGTFRwamtSODI0OWlkaHVwV214dDkxWDcwbEFQekIyYU1V?=
- =?utf-8?B?T29qTmNNd1o5Y2tzeGFUczNyMHh3SXhmRDRkYUx1Nk1QNzhnelR0S0JtRTk2?=
- =?utf-8?B?Ulc2UlhGci9aYXJlSXljRFdBeTRNSUlIUGNwczhaTVRrOVdWTlpra01TLzJz?=
- =?utf-8?B?aTJZRmRvVFhsdjRSOW1pSVhKYnYyVVNDTWxWZG4wTnR2dEVCZC9ENjlBRmk0?=
- =?utf-8?B?SWViNXJSSTMrSDFMLzZQOEhUK0lOOVFVM1lWWUhkK3VHOVBrdUpTdk9QRUl2?=
- =?utf-8?B?VTkxUkhOenlnNzlYaXRFMFB0L2tmVzlEM2tCTS9FZnFXUzdZeHljUE43SXMv?=
- =?utf-8?B?Y2dJdkhvSStIZjFDYUFVQlNkYWJuM2VJRllUK1crKytwbzF5U1RBTFdYR1N2?=
- =?utf-8?B?bCtnS1Vka200bW5pSXBKY1pBU0g2RWJUclhVVllicThKc1RYdjlTaU9FOG5S?=
- =?utf-8?B?OTFmQnY3ZXI2aW9nMFpYRlN1cURjNTc4VHlsS3I2WlIrNllrT3JqeENZdFFH?=
- =?utf-8?B?TnJsMFdIaUV3WnN3SlltK2hzVkwyTFJtamNPeGh0MDNGdzdaMHlQNklqbGxB?=
- =?utf-8?Q?UCrmJR1r2Gg8VPMHgOQTjI+rG?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dbb1dea4-4595-402b-90d6-08ddb4766b60
-X-MS-Exchange-CrossTenant-AuthSource: CH0PR12MB5154.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2025 05:58:05.9161
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zL4i6DKmNHufmd9sAy6ClxOEVc21bYCFK9B2NwuqweDxfQPNB5OJLCgk7od6P/OVJw4w1dSTA3JsJu1gTWXmMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPFD525C5379
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250410-probe_fixes-v2-5-801bc6eebdea@ideasonboard.com>
 
-Hi,
+Hi Jai,
 
-Just a friendly reminder to review the patch series. Your valuable 
-feedback would be greatly appreciated to help us move forward.
+Thanks for the patchset.
 
-Thanks
-Dheeraj
+On Thu, Apr 10, 2025 at 12:19:03PM +0530, Jai Luthra wrote:
+> The output pixel interface is a parallel bus (32 bits), which
+> supports sending multiple pixels (1, 2 or 4) per clock cycle for
+> smaller pixel widths like RAW8-RAW16.
+> 
+> Dual-pixel and Quad-pixel modes can be a requirement if the export rate
+> of the Cadence IP in Single-pixel mode maxes out before the maximum
+> supported DPHY-RX frequency, which is the case with TI's integration of
+> this IP [1].
+> 
+> So, we export a function that lets the downstream hardware block request
+> a higher pixel-per-clock on a particular output pad.
+> 
+> We check if we can support the requested pixels per clock given the
+> known maximum for the currently configured format. If not, we set it
+> to the highest feasible value and return this value to the caller.
+> 
+> [1] Section 12.6.1.4.8.14 CSI_RX_IF Programming Restrictions of AM62 TRM
+> 
+> Link: https://www.ti.com/lit/pdf/spruj16
+> Signed-off-by: Jai Luthra <jai.luthra@ideasonboard.com>
+> ---
+>  drivers/media/platform/cadence/cdns-csi2rx.c | 75 +++++++++++++++++++++-------
+>  drivers/media/platform/cadence/cdns-csi2rx.h | 19 +++++++
+>  2 files changed, 76 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/media/platform/cadence/cdns-csi2rx.c b/drivers/media/platform/cadence/cdns-csi2rx.c
+> index 608298c72462031515d9ad01c6b267bf7375a5bf..154eaacc39ad294db0524e88be888bd0929af071 100644
+> --- a/drivers/media/platform/cadence/cdns-csi2rx.c
+> +++ b/drivers/media/platform/cadence/cdns-csi2rx.c
+> @@ -5,6 +5,7 @@
+>   * Copyright (C) 2017 Cadence Design Systems Inc.
+>   */
+>  
+> +#include <linux/bitfield.h>
+>  #include <linux/clk.h>
+>  #include <linux/delay.h>
+>  #include <linux/io.h>
+> @@ -22,6 +23,8 @@
+>  #include <media/v4l2-fwnode.h>
+>  #include <media/v4l2-subdev.h>
+>  
+> +#include "cdns-csi2rx.h"
+> +
+>  #define CSI2RX_DEVICE_CFG_REG			0x000
+>  
+>  #define CSI2RX_SOFT_RESET_REG			0x004
+> @@ -53,6 +56,8 @@
+>  
+>  #define CSI2RX_STREAM_CFG_REG(n)		(CSI2RX_STREAM_BASE(n) + 0x00c)
+>  #define CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF		(1 << 8)
 
-On 6/4/2025 10:06 PM, Dheeraj Kumar Srivastava wrote:
-> Introducing debugfs support in AMD/IOMMU driver that will allow
-> userspace to dump below IOMMU information
-> 1) MMIO and Capability register per IOMMU
-> 2) Command buffer
-> 3) Device table entry
-> 4) Interrupt remapping table entry
-> 
-> Analyzing contents of IOMMU data structures helps in understanding IOMMU
-> capabilities and behavior and debug issues faster.
-> 
-> 1. MMIO and Capability registers - Add support to dump MMIO and Capability
->     registers per IOMMU.
-> 
->     Example:
->     a. Write MMIO register offset to dump it
->        $ echo 0x18 > /sys/kernel/debug/iommu/amd/iommu00/mmio
->        $ cat /sys/kernel/debug/iommu/amd/iommu00/mmio
-> 
->        Output:
->        $ Offset:0x18 Value:0x000c22000003f48d
-> 
->      b. Write capability register offset to dump it
->         $ echo 0x10 > /sys/kernel/debug/iommu/amd/iommu00/capability
->         $ cat /sys/kernel/debug/iommu/amd/iommu00/capability
-> 
->         Output:
->         $ Offset:0x10 Value:0x00203040
-> 
-> 2. Command buffer - Add support to dump per IOMMU command buffer.
-> 
->     Example:
->     a. cat /sys/kernel/debug/iommu/amd/iommu00/cmdbuf
-> 
->     Output:
->     CMD Buffer Head Offset:339 Tail Offset:339
->       0: 00835001 10000001 00009900 00000000
->       1: 00000000 30000005 fffff003 7fffffff
->       2: 00835001 10000001 00009901 00000000
->       3: 00000000 30000005 fffff003 7fffffff
->       4: 00835001 10000001 00009902 00000000
->     ........................................
->     ........................................
->     ........................................
-> 
-> 3. Device table - Add support to dump device table per IOMMU.
-> 
->     Example:
->     a. Write device id to dump device table entry for that device
->        $ echo 0000:01:00.0 > /sys/kernel/debug/iommu/amd/devid
->        $ cat /sys/kernel/debug/iommu/amd/devid
-> 
->        Output:
->        0000:01:00.0
-> 
->        Dump the device table entry for the input given
->        $ cat /sys/kernel/debug/iommu/amd/devtbl
-> 
->        Output:
->        DeviceId             QWORD[3]         QWORD[2]         QWORD[1]         QWORD[0] iommu
->        0000:01:00.0 0000000000000000 20000001373b8013 0000000000000038 6000000114d7b603 iommu3
-> 
->      b. Write device id to dump device table entry for that device
->        $ echo 01:00.0 > /sys/kernel/debug/iommu/amd/devid
->        $ cat /sys/kernel/debug/iommu/amd/devid
-> 
->        Output:
->        0000:01:00.0
-> 
->        Dump the device table entry for the input given
->        $ cat /sys/kernel/debug/iommu/amd/devtbl
-> 
->        Output:
->        DeviceId             QWORD[3]         QWORD[2]         QWORD[1]         QWORD[0] iommu
->        0000:01:00.0 0000000000000000 20000001373b8013 0000000000000038 6000000114d7b603 iommu3
-> 
-> 4. Interrupt remapping table - Add support to dump IRT table valid entries in
->     "iommu_irqtbl" file. This supports user input to dump IRT entry for a
->     specific pci device.
-> 
->     Example:
->     a. Write device id to dump device table entry for that device
->        $ echo 0000:01:00.0 > /sys/kernel/debug/iommu/amd/devid
->        $ cat /sys/kernel/debug/iommu/amd/devid
-> 
->        Output:
->        0000:01:00.0
-> 
->        Dump the device table entry for the input given
->        $ cat /sys/kernel/debug/iommu/amd/irtbl
-> 
->        Output:
->        DeviceId 0000:01:00.0
->        IRT[0000] 0000000000000020 0000000000000241
->        IRT[0001] 0000000000000020 0000000000000841
->        IRT[0002] 0000000000000020 0000000000002041
->        IRT[0003] 0000000000000020 0000000000008041
->        IRT[0004] 0000000000000020 0000000000020041
->        ..........................................
->        ..........................................
->        ..........................................
-> 
->     b. Write device id to dump device table entry for that device
->        $ echo 01:00.0 > /sys/kernel/debug/iommu/amd/devid
->        $ cat /sys/kernel/debug/iommu/amd/devid
-> 
->        Output:
->        0000:01:00.0
-> 
->        Dump the device table entry for the input given
->        $ cat /sys/kernel/debug/iommu/amd/irttbl
-> 
->        Output:
->        Device 0000:01:00.0
->        IRT[0000] 0000000000000020 0000000000000241
->        IRT[0001] 0000000000000020 0000000000000841
->        IRT[0002] 0000000000000020 0000000000002041
->        IRT[0003] 0000000000000020 0000000000008041
->        IRT[0004] 0000000000000020 0000000000020041
->        ..........................................
->        ..........................................
->        ..........................................
-> 
-> Changes since v5:
-> -> Patch 7/8: Use macros to fetch IRT table length for DTE.
-> 
-> Changes since v4:
-> -> Maintain per IOMMU variable for mmio_offset and capability_offset.
-> -> Get intrrupt table length from DTE instead of using MAX_IRQS_PER_TABLE.
-> 
-> Changes since v3:
-> -> Patch 2/8: Print 64 bits instead of 32 bits for MMIO registers dump. Since most of
->     the MMIO registers are 64 bits.
-> -> Patch 5/8: Update commit message with the need to add support for device_id input.
-> -> Patch 3/8: Throw error message mentioning valid capability offset range if user capability
->     offset's input is not in valid range and input fails.
-> 
-> Changes since v2:
-> -> Patch 2/8 and 3/8: Use single file mmio and capability for input and output registers
->     offset and register's dump respctively.
-> -> Patch 8/8: Correct path for files "irqtbl" and "devtbl" in Documentation
-> 
-> Changes since v1:
-> -> Patch 2/8 and 3/8: Use kstrtou32_from_user() instead of memdup_user_nul() --> kstrtou32()
-> -> Patch 4/8: Dump command buffer head and tail offset instead of head and tail pointer registers.
-> -> Patch 8/8: Fix bot reported warning on v1 patch series.
-> 
-> Dheeraj Kumar Srivastava (8):
->    iommu/amd: Refactor AMD IOMMU debugfs initial setup
->    iommu/amd: Add debugfs support to dump IOMMU MMIO registers
->    iommu/amd: Add debugfs support to dump IOMMU Capability registers
->    iommu/amd: Add debugfs support to dump IOMMU command buffer
->    iommu/amd: Add support for device id user input
->    iommu/amd: Add debugfs support to dump device table
->    iommu/amd: Add debugfs support to dump IRT Table
->    iommu/amd: Add documentation for AMD IOMMU debugfs support
-> 
->   Documentation/ABI/testing/debugfs-amd-iommu | 114 ++++++
->   drivers/iommu/amd/amd_iommu.h               |   4 +-
->   drivers/iommu/amd/amd_iommu_types.h         |   9 +
->   drivers/iommu/amd/debugfs.c                 | 377 +++++++++++++++++++-
->   drivers/iommu/amd/init.c                    |   5 +-
->   drivers/iommu/amd/iommu.c                   |   7 -
->   6 files changed, 495 insertions(+), 21 deletions(-)
->   create mode 100644 Documentation/ABI/testing/debugfs-amd-iommu
+Not a fault of this patch but this should use BIT(). Or at the very least
+(1U << 8). I.e. this isn't a bug but the pattern is bad. It'd be nice to
+fix this in a separate patch.
+
+> +#define CSI2RX_STREAM_CFG_NUM_PIXELS_MASK		GENMASK(5, 4)
+> +#define CSI2RX_STREAM_CFG_NUM_PIXELS(n)			((n) >> 1)
+>  
+>  #define CSI2RX_LANES_MAX	4
+>  #define CSI2RX_STREAMS_MAX	4
+> @@ -68,7 +73,10 @@ enum csi2rx_pads {
+>  
+>  struct csi2rx_fmt {
+>  	u32				code;
+> +	/* width of a single pixel on CSI-2 bus */
+>  	u8				bpp;
+> +	/* max pixels per clock supported on output bus */
+> +	u8				max_pixels;
+>  };
+>  
+>  struct csi2rx_priv {
+> @@ -90,6 +98,7 @@ struct csi2rx_priv {
+>  	struct reset_control		*pixel_rst[CSI2RX_STREAMS_MAX];
+>  	struct phy			*dphy;
+>  
+> +	u8				num_pixels[CSI2RX_STREAMS_MAX];
+>  	u8				lanes[CSI2RX_LANES_MAX];
+>  	u8				num_lanes;
+>  	u8				max_lanes;
+> @@ -106,22 +115,22 @@ struct csi2rx_priv {
+>  };
+>  
+>  static const struct csi2rx_fmt formats[] = {
+> -	{ .code	= MEDIA_BUS_FMT_YUYV8_1X16, .bpp = 16, },
+> -	{ .code	= MEDIA_BUS_FMT_UYVY8_1X16, .bpp = 16, },
+> -	{ .code	= MEDIA_BUS_FMT_YVYU8_1X16, .bpp = 16, },
+> -	{ .code	= MEDIA_BUS_FMT_VYUY8_1X16, .bpp = 16, },
+> -	{ .code	= MEDIA_BUS_FMT_SBGGR8_1X8, .bpp = 8, },
+> -	{ .code	= MEDIA_BUS_FMT_SGBRG8_1X8, .bpp = 8, },
+> -	{ .code	= MEDIA_BUS_FMT_SGRBG8_1X8, .bpp = 8, },
+> -	{ .code	= MEDIA_BUS_FMT_SRGGB8_1X8, .bpp = 8, },
+> -	{ .code	= MEDIA_BUS_FMT_Y8_1X8,     .bpp = 8, },
+> -	{ .code	= MEDIA_BUS_FMT_SBGGR10_1X10, .bpp = 10, },
+> -	{ .code	= MEDIA_BUS_FMT_SGBRG10_1X10, .bpp = 10, },
+> -	{ .code	= MEDIA_BUS_FMT_SGRBG10_1X10, .bpp = 10, },
+> -	{ .code	= MEDIA_BUS_FMT_SRGGB10_1X10, .bpp = 10, },
+> -	{ .code	= MEDIA_BUS_FMT_RGB565_1X16,  .bpp = 16, },
+> -	{ .code	= MEDIA_BUS_FMT_RGB888_1X24,  .bpp = 24, },
+> -	{ .code	= MEDIA_BUS_FMT_BGR888_1X24,  .bpp = 24, },
+> +	{ .code	= MEDIA_BUS_FMT_YUYV8_1X16, .bpp = 16, .max_pixels = 2, },
+> +	{ .code	= MEDIA_BUS_FMT_UYVY8_1X16, .bpp = 16, .max_pixels = 2, },
+> +	{ .code	= MEDIA_BUS_FMT_YVYU8_1X16, .bpp = 16, .max_pixels = 2, },
+> +	{ .code	= MEDIA_BUS_FMT_VYUY8_1X16, .bpp = 16, .max_pixels = 2, },
+> +	{ .code	= MEDIA_BUS_FMT_SBGGR8_1X8, .bpp = 8, .max_pixels = 4, },
+> +	{ .code	= MEDIA_BUS_FMT_SGBRG8_1X8, .bpp = 8, .max_pixels = 4, },
+> +	{ .code	= MEDIA_BUS_FMT_SGRBG8_1X8, .bpp = 8, .max_pixels = 4, },
+> +	{ .code	= MEDIA_BUS_FMT_SRGGB8_1X8, .bpp = 8, .max_pixels = 4, },
+> +	{ .code	= MEDIA_BUS_FMT_Y8_1X8,     .bpp = 8, .max_pixels = 4, },
+> +	{ .code	= MEDIA_BUS_FMT_SBGGR10_1X10, .bpp = 10, .max_pixels = 2, },
+> +	{ .code	= MEDIA_BUS_FMT_SGBRG10_1X10, .bpp = 10, .max_pixels = 2, },
+> +	{ .code	= MEDIA_BUS_FMT_SGRBG10_1X10, .bpp = 10, .max_pixels = 2, },
+> +	{ .code	= MEDIA_BUS_FMT_SRGGB10_1X10, .bpp = 10, .max_pixels = 2, },
+> +	{ .code	= MEDIA_BUS_FMT_RGB565_1X16,  .bpp = 16, .max_pixels = 1, },
+> +	{ .code	= MEDIA_BUS_FMT_RGB888_1X24,  .bpp = 24, .max_pixels = 1, },
+> +	{ .code	= MEDIA_BUS_FMT_BGR888_1X24,  .bpp = 24, .max_pixels = 1, },
+>  };
+>  
+>  static const struct csi2rx_fmt *csi2rx_get_fmt_by_code(u32 code)
+> @@ -276,8 +285,10 @@ static int csi2rx_start(struct csi2rx_priv *csi2rx)
+>  
+>  		reset_control_deassert(csi2rx->pixel_rst[i]);
+>  
+> -		writel(CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF,
+> -		       csi2rx->base + CSI2RX_STREAM_CFG_REG(i));
+> +		reg = CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF;
+> +		reg |= FIELD_PREP(CSI2RX_STREAM_CFG_NUM_PIXELS_MASK,
+> +				  csi2rx->num_pixels[i]);
+> +		writel(reg, csi2rx->base + CSI2RX_STREAM_CFG_REG(i));
+
+I'd write this as:
+
+		writel(CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF |
+		       FIELD_PREP(CSI2RX_STREAM_CFG_NUM_PIXELS_MASK,
+				  csi2rx->num_pixels[i]),
+		       csi2rx->base + CSI2RX_STREAM_CFG_REG(i));
+
+But up to you.
+
+>  
+>  		/*
+>  		 * Enable one virtual channel. When multiple virtual channels
+> @@ -458,6 +469,34 @@ static int csi2rx_init_state(struct v4l2_subdev *subdev,
+>  	return csi2rx_set_fmt(subdev, state, &format);
+>  }
+>  
+> +int cdns_csi2rx_negotiate_ppc(struct v4l2_subdev *subdev, unsigned int pad,
+> +			      u8 *ppc)
+> +{
+> +	struct csi2rx_priv *csi2rx = v4l2_subdev_to_csi2rx(subdev);
+> +	const struct csi2rx_fmt *csi_fmt;
+> +	struct v4l2_subdev_state *state;
+> +	struct v4l2_mbus_framefmt *fmt;
+> +	int ret = 0;
+
+ret is redundant.
+
+> +
+> +	if (!ppc || pad < CSI2RX_PAD_SOURCE_STREAM0 || pad >= CSI2RX_PAD_MAX)
+> +		return -EINVAL;
+> +
+> +	state = v4l2_subdev_lock_and_get_active_state(subdev);
+> +	fmt = v4l2_subdev_state_get_format(state, pad);
+> +	csi_fmt = csi2rx_get_fmt_by_code(fmt->code);
+> +
+> +	/* Reduce requested PPC if it is too high */
+> +	*ppc = min(*ppc, csi_fmt->max_pixels);
+> +
+> +	v4l2_subdev_unlock_state(state);
+> +
+> +	csi2rx->num_pixels[pad - CSI2RX_PAD_SOURCE_STREAM0] =
+> +		CSI2RX_STREAM_CFG_NUM_PIXELS(*ppc);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(cdns_csi2rx_negotiate_ppc);
+
+EXPORT_SYMBOL_GPL(). Or maybe use a namespace?
+
+> +
+>  static const struct v4l2_subdev_pad_ops csi2rx_pad_ops = {
+>  	.enum_mbus_code	= csi2rx_enum_mbus_code,
+>  	.get_fmt	= v4l2_subdev_get_fmt,
+> diff --git a/drivers/media/platform/cadence/cdns-csi2rx.h b/drivers/media/platform/cadence/cdns-csi2rx.h
+
+I wonder if it'd be better to put this under include/media.
+
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..128d47e8513c99c083f49e249e876be6d19389f6
+> --- /dev/null
+> +++ b/drivers/media/platform/cadence/cdns-csi2rx.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +#ifndef CDNS_CSI2RX_H
+> +#define CDNS_CSI2RX_H
+> +
+> +#include <media/v4l2-subdev.h>
+> +
+> +/**
+> + * cdns_csi2rx_negotiate_ppc - Negotiate pixel-per-clock on output interface
+> + *
+> + * @subdev: point to &struct v4l2_subdev
+> + * @pad: pad number of the source pad
+> + * @ppc: pointer to requested pixel-per-clock value
+> + *
+> + * Returns 0 on success, negative error code otherwise.
+> + */
+> +int cdns_csi2rx_negotiate_ppc(struct v4l2_subdev *subdev, unsigned int pad,
+> +			      u8 *ppc);
+> +
+> +#endif
 > 
 
+-- 
+Regards,
+
+Sakari Ailus
