@@ -1,92 +1,119 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA1A18C332
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 09:25:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2952E18C332;
+	Thu, 26 Jun 2025 09:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750929929; cv=none; b=K08nU80+oZyOPSF1xc/Gyagpk4a5KkCgCRByFIgrw8q4gtzSn4ht9J67Bqfcx9qDmROr+Mp88Q1cB8LGuJvo+sZ+8uHgdyxAeED/caIjNBxnYOAbkPaeGBYQ+XJNMOUV5QmhNJ+QOFwrR2DSj3z2wbl8LUqS04rCfU4JR5QKPtw=
+	t=1750929939; cv=none; b=ST2IXytfz+jWLQ2CpQSOymz5OYQa/No+EpEwBlpVCfnw69eBCJVryPqvB1mKPpJWUfK87WvnpnVrle1TDWo44qu+RzmC6hKWgqIx2liSGWK5t5LI7ZBcAKvbiUlE9qyZHv/LhhcVgWmF2DfLtSMvX2IX8SxlPv22jyBwGESdnVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750929929; c=relaxed/simple;
-	bh=Erpy+GznfU3VNLbN8ho+JUSJoOvRCq/2b7GmnCXbbWE=;
+	s=arc-20240116; t=1750929939; c=relaxed/simple;
+	bh=xVxhsp9WJPwQPCXZFwvJKu5uUvkY6LGeigTfbmZtgn0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dzs6TDWY2426Gm4nLes/7zQi4JUMVhU2AvaCSx8tbTXfv4O8o+uEHwZ+Q6EYpYtn+krq5G8qV6RZVAYn7rUzUzpNa4Gcam8W333e3TEWQ20ypbTOMgZ8DQxO0oLn/xNoi5UgfGT07+dhBqUVy5OXQeN+mO1XBgnv/kN5IHr8NQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=HE9EmomO; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	 Content-Type:Content-Disposition:In-Reply-To; b=RSKs2m/FkruP7YQcLNPeRYjajS+5OmpqpwZDDKJsIJCnN+sfCB1WFnD44q419a4G/R2QaflM1qZgQR+CXPCzQok80QoFOqyVSnhtwZZVmZ014tqM92VAcCMLrAXWN7/YaKGaaEa7b0llHncPGXKQvr/ZpYJKNhKtMziZsDhWpF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hg205bmN; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="HE9EmomO"
-Received: from gaggiata.pivistrello.it (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 640301F967;
-	Thu, 26 Jun 2025 11:25:25 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1750929925;
-	bh=oQiL2nk762kw5hgZ/7yLoXi+yV+vsX0JHtdeUc0YXFY=;
-	h=Received:From:To:Subject;
-	b=HE9EmomOlz2739bN8MLQHMe8DK71hV/EWB3nf7vOcyRuATfWdfu9hsBvYqfS9lYtL
-	 2pip2Jrqz+es1fSzAjzqB4m3VfZmUDS3n/Dx6LCFuw+Kb9hlUlDU3B1leS1xEqJJjc
-	 9B7lfga9jODnJ6PLNanjpUR75gFAX/NLgnOM+2jHnNVJ5uKZGu+7k6FEBp6OwN0Gg1
-	 O1TTeHq33HMEIaenHxycMCz4Oa0gXRVX9O0sRA9qauH8j/CyCxLyD+UIbfIq2YMC7S
-	 sYzoN82zfMxVCqY2IWzTtBmP8dAUYeRzPgSemmVF9HmbypI9kS8151s3sfg9aWk7/E
-	 hC/qtLWxiwaJA==
-Received: by gaggiata.pivistrello.it (Postfix, from userid 1000)
-	id 08CEA7F9CF; Thu, 26 Jun 2025 11:25:25 +0200 (CEST)
-Date: Thu, 26 Jun 2025 11:25:24 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Maxime Ripard <mripard@kernel.org>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>,
-	Jessica Zhang <quic_jesszhan@quicinc.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Anusha Srivatsa <asrivats@redhat.com>,
-	Francesco Dolcini <francesco@dolcini.it>,
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] drm/panel: panel-simple: Fix panel-dpi probe error
-Message-ID: <aF0SBNGmTpgtBTC3@gaggiata.pivistrello.it>
-References: <20250625-drm-panel-simple-fixes-v1-0-c428494a86b8@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hg205bmN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1750929937; x=1782465937;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=xVxhsp9WJPwQPCXZFwvJKu5uUvkY6LGeigTfbmZtgn0=;
+  b=Hg205bmN7kdu7OJtFny9cVHrS/NlKUu/A2E6bp1hyQef3FlKq9FzSaqD
+   iqHut4QvS7U5meYNJ6NHfnIUfyRj5RLwavFMqWQiARqIALs+qSuYJV6iH
+   z/kCHju5gsm5/IysDJscCOpXFOoN4zXee8vw+DQUygJ1PAM9grlcR3e5c
+   xAE+oO+2Ut7O1cHGPxlu0hoXtesurA26Lq8R6Qr2Ybq2aTqWYEPlHkKOo
+   FKEkK5isSgSV7B+qjQIZEJAZxR/rI71EPd9G+PH0PX0o7f8Bn2kPpOMbm
+   RfOmQi5b/iTuc5BZwpFbJxe6GxIqN48DFoAKM4cSzlU2B/Rlh6c0n/b6l
+   g==;
+X-CSE-ConnectionGUID: smBY5ltDStW6sE8zSi/iQg==
+X-CSE-MsgGUID: +//fv9XRQ9Sm65w8FoGnvQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11475"; a="52942027"
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="52942027"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2025 02:25:37 -0700
+X-CSE-ConnectionGUID: LBzYSVR0SY+K2h1P+OlghQ==
+X-CSE-MsgGUID: eNqeFQRPSR2gVgy1xtUziw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.16,267,1744095600"; 
+   d="scan'208";a="152980614"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa008.fm.intel.com with ESMTP; 26 Jun 2025 02:25:33 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 9586721E; Thu, 26 Jun 2025 12:25:31 +0300 (EEST)
+Date: Thu, 26 Jun 2025 12:25:31 +0300
+From: "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>
+To: Sean Christopherson <seanjc@google.com>
+Cc: Rick P Edgecombe <rick.p.edgecombe@intel.com>, 
+	"pbonzini@redhat.com" <pbonzini@redhat.com>, Dave Hansen <dave.hansen@intel.com>, 
+	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>, Chao Gao <chao.gao@intel.com>, "bp@alien8.de" <bp@alien8.de>, 
+	Kai Huang <kai.huang@intel.com>, "x86@kernel.org" <x86@kernel.org>, 
+	"mingo@redhat.com" <mingo@redhat.com>, Yan Y Zhao <yan.y.zhao@intel.com>, 
+	"tglx@linutronix.de" <tglx@linutronix.de>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
+	"linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>, Isaku Yamahata <isaku.yamahata@intel.com>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv2 01/12] x86/tdx: Consolidate TDX error handling
+Message-ID: <vgk3ql5kcpmpsoxfw25hjcw4knyugszdaeqnzur6xl4qll73xy@xi7ttxlxot2r>
+References: <20250609191340.2051741-1-kirill.shutemov@linux.intel.com>
+ <20250609191340.2051741-2-kirill.shutemov@linux.intel.com>
+ <5cfb2e09-7ecb-4144-9122-c11152b18b5e@intel.com>
+ <d897ab70d48be4508a8a9086de1ff3953041e063.camel@intel.com>
+ <aFxpuRLYA2L6Qfsi@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250625-drm-panel-simple-fixes-v1-0-c428494a86b8@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aFxpuRLYA2L6Qfsi@google.com>
 
-Hello Maxime,
-thanks for the patch
-
-On Wed, Jun 25, 2025 at 08:48:37AM +0200, Maxime Ripard wrote:
-> Here's a series fixing (hopefully) the panel-simple regression for
-> panels with a panel-dpi compatible.
+On Wed, Jun 25, 2025 at 02:27:21PM -0700, Sean Christopherson wrote:
+> On Wed, Jun 25, 2025, Rick P Edgecombe wrote:
+> > On Wed, 2025-06-25 at 10:58 -0700, Dave Hansen wrote:
+> > > > --- a/arch/x86/kvm/vmx/tdx.c
+> > > > +++ b/arch/x86/kvm/vmx/tdx.c
+> > > > @@ -202,12 +202,6 @@ static DEFINE_MUTEX(tdx_lock);
+> > > >   
+> > > >   static atomic_t nr_configured_hkid;
+> > > >   
+> > > > -static bool tdx_operand_busy(u64 err)
+> > > > -{
+> > > > -	return (err & TDX_SEAMCALL_STATUS_MASK) == TDX_OPERAND_BUSY;
+> > > > -}
+> > > > -
+> > > > -
+> > > 
+> > > Isaku, this one was yours (along with the whitespace damage). What do
+> > > you think of this patch?
+> > 
+> > I think this actually got added by Paolo, suggested by Binbin. I like these
+> > added helpers a lot. KVM code is often open coded for bitwise stuff, but since
+> > Paolo added tdx_operand_busy(), I like the idea of following the pattern more
+> > broadly. I'm on the fence about tdx_status() though.
 > 
-> It's only build tested, so if you could give that series a try
-> Francesco, I'd really appreciate it.
+> Can we turn them into macros that make it super obvious they are checking if the
+> error code *is* xyz?  E.g.
+> 
+> #define IS_TDX_ERR_OPERAND_BUSY
+> #define IS_TDX_ERR_OPERAND_INVALID
+> #define IS_TDX_ERR_NO_ENTROPY
+> #define IS_TDX_ERR_SW_ERROR
+> 
+> As is, it's not at all clear that things like tdx_success() are simply checks,
+> as opposed to commands.
 
-It does not build for me, applied on top of commit ee88bddf7f2f ("Merge tag
-'bpf-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf")
+I remember Dave explicitly asked for inline functions over macros where
+possible.
 
-  SYNC    include/config/auto.conf.cmd
-  CALL    scripts/checksyscalls.sh
-  CC      drivers/gpu/drm/drm_of.o
-  CC [M]  drivers/gpu/drm/panel/panel-simple.o
-  AR      drivers/gpu/drm/built-in.a
-  AR      drivers/gpu/built-in.a
-  AR      drivers/built-in.a
-  AR      built-in.a
-  AR      vmlinux.a
-  LD      vmlinux.o
-  OBJCOPY modules.builtin.modinfo
-  GEN     modules.builtin
-  GEN     .vmlinux.objs
-  MODPOST Module.symvers
-ERROR: modpost: "mipi_dsi_bus_type" [drivers/gpu/drm/panel/panel-simple.ko] undefined!
-make[2]: *** [scripts/Makefile.modpost:147: Module.symvers] Error 1
-make[1]: *** [/home/francesco/Toradex/sources/linux/Makefile:1953: modpost] Error 2
-make: *** [Makefile:248: __sub-make] Error 2
-[Exit 2]
+Can we keep them as functions, but give the naming scheme you proposing
+(but lowercase)?
 
-
+-- 
+  Kiryl Shutsemau / Kirill A. Shutemov
