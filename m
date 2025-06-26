@@ -1,173 +1,91 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393CB15990C
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 23:19:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6644415990C;
+	Thu, 26 Jun 2025 23:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750979994; cv=none; b=rNuuOtszEf2yqMuWUK6mNp5OVq1x1xviiAZHf0uWZYhnYikV3eJ5Zq3nQ/IkcndzRUQt0wIYTC0SCgxgVsMs5jeKoCWxCOelwuyeJbnKDi7WrGwcvf/IXFKYtu0fOwxyzAjcKLYP4xoUEJGWEX9Ee0Ndxmb7KlgqHKMxvVPx1xc=
+	t=1750980000; cv=none; b=DdfuzpLrwdZoTobVMgUguczOgK7XVEGAniNz7FXt0KfgQcCuL4R/4X7LZeN4NQPhmplzoxxD+oSDcRdnWaydE/6ROXnrUzJ4xZenIuaMCw/JYVJJmYsTWnThmoBYo0mBdaz6TV5fUvl2P7bYGquWAGrUeHWKkOwaAkKbBYv7GCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750979994; c=relaxed/simple;
-	bh=8oJqu7vh1nKhO7zqxOlFH5GbqzDZRsYHZ4hsK1zb2tg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=BOMu6RzpEe1nPJGdPGOvPRlDjInPmzPz/7vM6kgXdoTI8W1JhZtnRN/LZ5a6Ku7sM7EeZPf3YmXOy3dmyMpSAi07GWuBNcp5mMUvbU9TpkPl3EF6jivItaatX0veidUfi0HvPpvjx581EyUb7irICBLzeLvNcGP/3Y/iLmehdWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vfseSFfi; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--ackerleytng.bounces.google.com
+	s=arc-20240116; t=1750980000; c=relaxed/simple;
+	bh=z3+6X/6kDgnhdF5uoFmXZehMXMvOdnvxsXCMWsI66A0=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=cJ84NhIS8CWBAslZPA+vlkLlBscWtiwPVAp2Ooik8xYbhoGI2C+3dP0ohFCgdhhsBByapNq8M5BCGqljELOUypVDOkAUEEVo04P3ps/9R2l4GalaKW3QEXTy26BLkJT3V4kI9skruUBf9IoxI4cMlNgwF365N4NGlQIunr93tn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZsNi3yTz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vfseSFfi"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-3138f5e8ff5so1548264a91.3
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 16:19:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1750979992; x=1751584792; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VCztHCMZgaWSxSkof1MA9Ntkv2jeWGBUS2MVA37PA/U=;
-        b=vfseSFfir3wQ8mXax2Zac7nN/foVcJ8Ls6FmMKkokjrWYavVvTml8no+F8g8msvH71
-         IV/GHxlRiyFqvFicMzcbJtB4y0KGvHSK07X0UEscWoTVhMuPLbCM/Sq9a3V/s0kupUkv
-         tw61ojGKyXfT+8sbyyNWJ6chfsYf2JeqzQ2u+WYTUFGXSWdqZusmYePYdyD0GQkMiCTp
-         G6+nC6j+u7IzzGfkuA+SOc+SLvdLixyqbEMYmkWXTULGKHx/Xdguw46EXl1JIkUtW2Ou
-         UiUBuSQ15Zbl+ViIiCyBkgnp6E1wQR37VvtSCGUUw+FsjkTJMMj8IFcIxjdRe80u7Gcr
-         UIlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750979992; x=1751584792;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VCztHCMZgaWSxSkof1MA9Ntkv2jeWGBUS2MVA37PA/U=;
-        b=P4n75H35VDIYMJflJUaTj9HxreGo1CLDsFX6GRjR37LQROaxv+gdJjDQ2juQzCuUNi
-         mPJEbHrJ4giV9zJkLYmgD60wQWFYHffxi4mM1X5SDtiLRtDSDaIZhaUkx+U6n7Yynv4f
-         RWUylNFOVrkWlyZ0Ox5BcnNRXVX5Zybz5eTD5DQ9XDlastCF4xgzawDLVNmlx9ncqd7A
-         LdWmIqSgYZyRdNgfFnzoFnyi4hRqppoEWNzY4cT77CbjIDqWoTZ229LJy9lT40W55Fcl
-         Kw6eq4k3+zDLdvsI2aGN/o2LqvLIcxNJBmdh4SC9VgxtqyDaRuHbAYTlBWQuxs4f+qhv
-         Y35A==
-X-Forwarded-Encrypted: i=1; AJvYcCVTgXy4SsG2E6Z4rPJV/sjWgMHtTBUVRuWcGKMRTdQFfdBkcI1i/1PrZgX6v7ZYeDbITxS5AK3zHHigJ/0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw65MkK1ZjHkwWbL82+Brn1T3fKDIIiB/EHSQKx0raLsKaG/XD7
-	SvbfOtZISm/GGEaHAstLhp2pa7SYtlKz9NzFZXKj24hAWp/AwAKdTHVv6fzADHN8oi2YZCmwo0b
-	nin1lhJ8sSfwU61IUOdqcVOvO8g==
-X-Google-Smtp-Source: AGHT+IFPZByzyXdjiwV8jKmY40Cj3sanVuekYnCn7YFFgb7gotLW0eqU5EvmJr9Dd5Hb/clw6m1dn9YOJk/nOy9NWw==
-X-Received: from pjbpv13.prod.google.com ([2002:a17:90b:3c8d:b0:312:1af5:98c9])
- (user=ackerleytng job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:5108:b0:313:283e:e881 with SMTP id 98e67ed59e1d1-318c922f2c7mr1105843a91.11.1750979992473;
- Thu, 26 Jun 2025 16:19:52 -0700 (PDT)
-Date: Thu, 26 Jun 2025 16:19:51 -0700
-In-Reply-To: <cover.1747264138.git.ackerleytng@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsNi3yTz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFE74C4CEEF;
+	Thu, 26 Jun 2025 23:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750979999;
+	bh=z3+6X/6kDgnhdF5uoFmXZehMXMvOdnvxsXCMWsI66A0=;
+	h=Date:Cc:Subject:From:To:References:In-Reply-To:From;
+	b=ZsNi3yTzdyk5zwyp3gEiWV8KUnFUpTLPdXiRy+To3mWmqhBnZ3R0ldRNKKUzRMoPR
+	 JdQ5C/eGzeyQi+fTWkoVoW5Wca03KXfFIX2xobuYySyS8iyz0jAjvQvyUUb57Irgkj
+	 GZWtL5apLLX8WpXSLh0LjUdgtUO/z+dcjgxvsVyqhntOF6u/ZSjjiPvaVwUWyk71y6
+	 uqRuAtNCT9E0oUI8d0wp6iFL8omhoWqMrTIVKGG9Qrfyauc4H93mtax6oFmJP5GAkz
+	 QFRKm1IW95YUedefkFvpqMlTQJt+TO3mHrJbNM3BowQcuqRH4bF4OzuZAjwFiX2pOy
+	 KfcnxrNqsdLBA==
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <cover.1747264138.git.ackerleytng@google.com>
-Message-ID: <diqzh602jdk8.fsf@ackerleytng-ctop.c.googlers.com>
-Subject: Re: [RFC PATCH v2 00/51] 1G page support for guest_memfd
-From: Ackerley Tng <ackerleytng@google.com>
-To: kvm@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
-	x86@kernel.org, linux-fsdevel@vger.kernel.org
-Cc: aik@amd.com, ajones@ventanamicro.com, akpm@linux-foundation.org, 
-	amoorthy@google.com, anthony.yznaga@oracle.com, anup@brainfault.org, 
-	aou@eecs.berkeley.edu, bfoster@redhat.com, binbin.wu@linux.intel.com, 
-	brauner@kernel.org, catalin.marinas@arm.com, chao.p.peng@intel.com, 
-	chenhuacai@kernel.org, dave.hansen@intel.com, david@redhat.com, 
-	dmatlack@google.com, dwmw@amazon.co.uk, erdemaktas@google.com, 
-	fan.du@intel.com, fvdl@google.com, graf@amazon.com, haibo1.xu@intel.com, 
-	hch@infradead.org, hughd@google.com, ira.weiny@intel.com, 
-	isaku.yamahata@intel.com, jack@suse.cz, james.morse@arm.com, 
-	jarkko@kernel.org, jgg@ziepe.ca, jgowans@amazon.com, jhubbard@nvidia.com, 
-	jroedel@suse.de, jthoughton@google.com, jun.miao@intel.com, 
-	kai.huang@intel.com, keirf@google.com, kent.overstreet@linux.dev, 
-	kirill.shutemov@intel.com, liam.merwick@oracle.com, 
-	maciej.wieczor-retman@intel.com, mail@maciej.szmigiero.name, maz@kernel.org, 
-	mic@digikod.net, michael.roth@amd.com, mpe@ellerman.id.au, 
-	muchun.song@linux.dev, nikunj@amd.com, nsaenz@amazon.es, 
-	oliver.upton@linux.dev, palmer@dabbelt.com, pankaj.gupta@amd.com, 
-	paul.walmsley@sifive.com, pbonzini@redhat.com, pdurrant@amazon.co.uk, 
-	peterx@redhat.com, pgonda@google.com, pvorel@suse.cz, qperret@google.com, 
-	quic_cvanscha@quicinc.com, quic_eberman@quicinc.com, 
-	quic_mnalajal@quicinc.com, quic_pderrin@quicinc.com, quic_pheragu@quicinc.com, 
-	quic_svaddagi@quicinc.com, quic_tsoni@quicinc.com, richard.weiyang@gmail.com, 
-	rick.p.edgecombe@intel.com, rientjes@google.com, roypat@amazon.co.uk, 
-	rppt@kernel.org, seanjc@google.com, shuah@kernel.org, steven.price@arm.com, 
-	steven.sistare@oracle.com, suzuki.poulose@arm.com, tabba@google.com, 
-	thomas.lendacky@amd.com, usama.arif@bytedance.com, vannapurve@google.com, 
-	vbabka@suse.cz, viro@zeniv.linux.org.uk, vkuznets@redhat.com, 
-	wei.w.wang@intel.com, will@kernel.org, willy@infradead.org, 
-	xiaoyao.li@intel.com, yan.y.zhao@intel.com, yilun.xu@intel.com, 
-	yuzenghui@huawei.com, zhiquan1.li@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 27 Jun 2025 01:19:53 +0200
+Message-Id: <DAWULS8SIOXS.1O4PLL2WCLX74@kernel.org>
+Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
+ <alex.gaynor@gmail.com>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
+ <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
+ <kwilczynski@kernel.org>, <bhelgaas@google.com>,
+ <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 5/5] rust: devres: implement register_release()
+From: "Benno Lossin" <lossin@kernel.org>
+To: "Danilo Krummrich" <dakr@kernel.org>, "Boqun Feng"
+ <boqun.feng@gmail.com>
+X-Mailer: aerc 0.20.1
+References: <20250626200054.243480-1-dakr@kernel.org>
+ <20250626200054.243480-6-dakr@kernel.org> <aF2vgthQlNA3BsCD@tardis.local>
+ <aF2yA9TbeIrTg-XG@cassiopeiae>
+In-Reply-To: <aF2yA9TbeIrTg-XG@cassiopeiae>
 
-Ackerley Tng <ackerleytng@google.com> writes:
-
-> Hello,
+On Thu Jun 26, 2025 at 10:48 PM CEST, Danilo Krummrich wrote:
+> On Thu, Jun 26, 2025 at 01:37:22PM -0700, Boqun Feng wrote:
+>> On Thu, Jun 26, 2025 at 10:00:43PM +0200, Danilo Krummrich wrote:
+>> > +/// [`Devres`]-releaseable resource.
+>> > +///
+>> > +/// Register an object implementing this trait with [`register_releas=
+e`]. Its `release`
+>> > +/// function will be called once the device is being unbound.
+>> > +pub trait Release {
+>> > +    /// The [`ForeignOwnable`] pointer type consumed by [`register_re=
+lease`].
+>> > +    type Ptr: ForeignOwnable;
+>> > +
+>> > +    /// Called once the [`Device`] given to [`register_release`] is u=
+nbound.
+>> > +    fn release(this: Self::Ptr);
+>> > +}
+>> > +
+>>=20
+>> I would like to point out the limitation of this design, say you have a
+>> `Foo` that can ipml `Release`, with this, I think you could only support
+>> either `Arc<Foo>` or `KBox<Foo>`. You cannot support both as the input
+>> for `register_release()`. Maybe we want:
+>>=20
+>>     pub trait Release<Ptr: ForeignOwnable> {
+>>         fn release(this: Ptr);
+>>     }
 >
-> This patchset builds upon discussion at LPC 2024 and many guest_memfd
-> upstream calls to provide 1G page support for guest_memfd by taking
-> pages from HugeTLB.
->
-> [...]
+> Good catch! I think this wasn't possible without ForeignOwnable::Target.
 
-At the guest_memfd upstream call today (2025-06-26), we talked about
-when to merge folios with respect to conversions.
+Hmm do we really need that? Normally you either store a type in a shared
+or a non-shared manner and not both...
 
-Just want to call out that in this RFCv2, we managed to get conversions
-working with merges happening as soon as possible.
-
-"As soon as possible" means merges happen as long as shareability is all
-private (or all meaningless) within an aligned hugepage range. We try to
-merge after every conversion request and on truncation. On truncation,
-shareability becomes meaningless.
-
-On explicit truncation (e.g. fallocate(PUNCH_HOLE)), truncation can fail
-if there are unexpected refcounts (because we can't merge with
-unexpected refcounts). Explicit truncation will succeed only if
-refcounts are expected, and merge is performed before finally removing
-from filemap.
-
-On truncation caused by file close or inode release, guest_memfd may not
-hold the last refcount on the folio. Only in this case, we defer merging
-to the folio_put() callback, and because the callback can be called from
-atomic context, the merge is further deferred to be performed by a
-kernel worker.
-
-Deferment of merging is already minimized so that most of the
-restructuring is synchronous with some userspace-initiated action
-(conversion or explicit truncation). The only deferred merge is when the
-file is closed, and in that case there's no way to reject/fail this file
-close.
-
-(There are possible optimizations here - Yan suggested [1] checking if
-the folio_put() was called from interrupt context - I have not tried
-implementing that yet)
-
-
-I did propose an explicit guest_memfd merge ioctl, but since RFCv2
-works, I was thinking to to have the merge ioctl be a separate
-optimization/project/patch series if it turns out that merging
-as-soon-as-possible is an inefficient strategy, or if some VM use cases
-prefer to have an explicit merge ioctl.
-
-
-During the call, Michael also brought up that SNP adds some constraints
-with respect to guest accepting pages/levels.
-
-Could you please expand on that? Suppose for an SNP guest,
-
-1. Guest accepted a page at 2M level
-2. Guest converts a 4K sub page to shared
-3. guest_memfd requests unmapping of the guest-requested 4K range
-   (the rest of the 2M remains mapped into stage 2 page tables)
-4. guest_memfd splits the huge page to 4K pages (the 4K is set to
-   SHAREABILITY_ALL, the rest of the 2M is still SHAREABILITY_GUEST)
-
-Can the SNP guest continue to use the rest of the 2M page or must it
-re-accept all the pages at 4K?
-
-And for the reverse:
-
-1. Guest accepted a 2M range at 4K
-2. guest_memfd merges the full 2M range to a single 2M page
-
-Must the SNP guest re-accept at 2M for the guest to continue
-functioning, or will the SNP guest continue to work (just with poorer
-performance than if the memory was accepted at 2M)?
-
-[1] https://lore.kernel.org/all/aDfT35EsYP%2FByf7Z@yzhao56-desk.sh.intel.com/
+---
+Cheers,
+Benno
