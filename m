@@ -1,112 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C393528FFEE;
-	Thu, 26 Jun 2025 14:07:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4352E718A;
+	Thu, 26 Jun 2025 14:08:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750946849; cv=none; b=S1d6DdRa+mDCwkGqK9W3N1kokNxKkBmKKNcPlafMNLAdzSw4ArVICEi/C4q6bCqgPNgj1N/H4f3MdOkq26xvUaxDePGKtUMWygYkKsI0S92+tutZYunJnE8RP4Rs0NHi6DKQBc/Z0hwagqwS06hpjWUKZA2LfTJD82LEK66HN0Q=
+	t=1750946883; cv=none; b=h2WTSb+bCmt4hlHgxom/xzhqD8bf+X1WfU2K7c6an8eALHmFXnxpI8ZB4SUAGDcO5xNU2cfSbhkd0kHAJ5vo/J3GYYLPYtVH1LTwBVC+qfXp0r0Io0CxF33pKQR7Q9mRz2g+mnu9lfMIFOSZesBoQZjItwiZElIVSVUXSZKb9W8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750946849; c=relaxed/simple;
-	bh=vugaHxaDRymq5bGUndV2NZe9c92WDn2WbR2/fd0HKo8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cUsOaLz1vytqtCfVJdK7LnfUS4WDFinYCe/IRhjNRX07bzlx4kTvnSRb792ba4cpootsk1CqikRGTcZ2fTM9xIwtr3ckZB3x2eclVzXIfNpvkN44wgqGeSWuBPUXlmTwCzoyF/CPX3dIdjTtr0dUsHfxCftsgDuqx7azAxOOE6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ev7ClxtP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750946883; c=relaxed/simple;
+	bh=W9tHbxHnKeRQE5geeibzijql5KBQit7N4QCOc9dhrsg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gtA+rsiQCVoGFQSA2sh//KEpVr587oQBrGglAIUhglMhkUda67Ah6fj0R/Kz5kTrDZt8JehWSsyl1wiq57W5y/KpigR7mKuPt2Jfpo4DZ7m85hCO3fXye5zcBJYiVWzbY8wSjA/lGIPlFky4wYenRzDM3q7RiQITrvlC2N/UHqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XB2dRBTJ; arc=none smtp.client-ip=209.85.219.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ev7ClxtP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54761C4CEEB;
-	Thu, 26 Jun 2025 14:07:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750946849;
-	bh=vugaHxaDRymq5bGUndV2NZe9c92WDn2WbR2/fd0HKo8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ev7ClxtPUxDc9ERIfEOIyw12j3/zH5Q1JaydKwalSzMY6sdqNBrcHZZ2Qfa6pUBll
-	 HvNxhoe8Cbcl0HRyIoj82k+8C/jdA1V7uXtW/DcYPBKWhZ5TKm6R+rsUXhZDwtOHQa
-	 QusVKn2JFySU43L1KYD5rwBPDx2H4KNrSY/jT5Wtc1Det3FUOzsbvW1y5+XiQJFejO
-	 /ual5H8nQw+vlXYTITxHkDRxtWxGZOeDTv1fJVkl9U+rN9psAwdbv/633mFUHn32EK
-	 WkrXHWONaqRVkOy/3NeAm/GXle2Frs9ByI4zDlKhHuOwllNppr+RN9NVH7A1+KcUKc
-	 /YQT2UVGow8uA==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan@kernel.org>)
-	id 1uUnGD-000000003ap-3QXW;
-	Thu, 26 Jun 2025 16:07:29 +0200
-Date: Thu, 26 Jun 2025 16:07:29 +0200
-From: Johan Hovold <johan@kernel.org>
-To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Maximilian Luz <luzmaximilian@gmail.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] firmware: qcom: uefisecapp: add support for R/O
- UEFI vars
-Message-ID: <aF1UIcrNC5PULiqg@hovoldconsulting.com>
-References: <20250621-more-qseecom-v2-0-6e8f635640c5@oss.qualcomm.com>
- <20250621-more-qseecom-v2-2-6e8f635640c5@oss.qualcomm.com>
- <aFloifxONXnQbVg6@hovoldconsulting.com>
- <aFlps9iUcD42vN4w@hovoldconsulting.com>
- <diarijcqernpm4v5s6u22jep3gzdrzy7o4dtw5wzmlec75og6y@wlbyjbtvnv3s>
- <aF0WGmnN_8rvI9n1@hovoldconsulting.com>
- <zufyvg4hoxxz4i45pynzta3gyglqvecrmeslnpphsgwmtujivl@t2zbdtejt3x4>
- <aF1Hhs0JAS747SVi@hovoldconsulting.com>
- <cae5bfbe-9537-4b9d-b026-170063054b35@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XB2dRBTJ"
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6facacf521eso11084106d6.3;
+        Thu, 26 Jun 2025 07:08:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750946881; x=1751551681; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2AFJAJWMJoLX2aT06uj/U15KdrwYtiZtVOwqSV/4SzY=;
+        b=XB2dRBTJ+ygUGFOj7los26+P0cji2fWIPiNCpQY3mh/lVJrpDOHDIXSj8Mg5X4ueLx
+         fob76pCmDQn2SdB/wBOy2hsnDLoBmd9MxwsMjXW1BgdDv5KwwvCZl+MtMsbkapOJcEdz
+         3e0DA/Wnwj4wy8S096vVW9PVGp/COsvCXF3YYzkGNBfod0Iij4uPrNI+YoUlZagz+udY
+         D8IopIOfVSUpXnGA7iVa2Opuw6zGkcIVCpSq0IC4G1HvJIh9sQ/FZH1Z1n0A6dNc4O7+
+         NLbEtVlAYmtu0E9DN0m9ATecRxpJmb+aG+vz1f7Rhm48kf2CWzPzATQwnTD04KOXk6fG
+         1fBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750946881; x=1751551681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2AFJAJWMJoLX2aT06uj/U15KdrwYtiZtVOwqSV/4SzY=;
+        b=nzLEOwd33isGqHadQfsdUyq6xELNHjQs5hP6wry0nwco4FJ4+Z90FMGT5cFuUSmKSC
+         p61+LkWNsmf0udHGvEcs8J57lg2jY1tM4EgZvOFnNWR32bHrk8NjuewDTo8t6Wxst8Ov
+         AGCnyx0CjuWN1tNwNweaIwYeC9ccAPBz2bzBV/TRYVbaOEIhhFVfUrrI3kX0lyPi5kT6
+         /WJ5YLb4mjrIKSkHZYjcFwKBYvVMcKRKVrl55i/K4joiZeu5IrAgvBcmiFFToYb/MBqG
+         JAiQOU5eeG0ET7NUwdK9eHspvNEg0D3s786VZzpUT733q0xiUe4rvlznyIGy4svgR+hv
+         hoxw==
+X-Forwarded-Encrypted: i=1; AJvYcCU0GU2mpS/bxbTZ9vHMsCu5XJVSJNAaoNNY2X8tYtSnLrOkWmEJ1ga9Qoy3+hNlH7UH1BLFxDiKgm/Z7qto@vger.kernel.org, AJvYcCWL+utsJ+rCdNBCgIqiC11dmTAxGUhPLaLOP3XBVywHoOlRMENAaEpL8BHrZiMDXZkBbWAkPkLDyz8k@vger.kernel.org, AJvYcCXx+AMy9KRZJrxOLkMsIYnxKv11VzWj0k6GbsoFo1YFW/AzH70E/QYm/vLRJQsy3c1d+N/AO0EWuaa0HhwbIQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxh06X0QtPpswWY2wxI9dsaMPbkux9B8NyFlbD9rddyYntMGp0F
+	LqxlnAOpB/ANU+AJvT/0fLBH7tE5FNoP/NwtKp9wLJ80SkLmJDS3iYZIM0QlvTRbhpl0fpcaH11
+	efrCxfbZmgwwtLjqTUQfoxu5lXc+pW+w=
+X-Gm-Gg: ASbGncvjB4FwYJDJPUkIGfpZ81ZA1q4sCqdvG/pqzbciu8z02MkminKKTfwR8kRbFj1
+	PG+Kk5vzmNiqzaaQUDtRcei112uH2w3zFEhD+L55P8SB+WXFO8FDIFI/7jc2JYuibfnukr66Kja
+	LP2jZMnBw++PVPW0r5BnYXftIJiquw/tvKVw24q8HNlVCItVVzBx7hrplCramwrBWkm+sdOlMk0
+	If8sA==
+X-Google-Smtp-Source: AGHT+IFuTBd/k6VUgHv/Tqnp8nePZb+/XSJ00N/ywtLL9ZMOQqvkiEoIBt16EJ8iSVWekrkdSUFODlbllPETtxHu3oE=
+X-Received: by 2002:a05:6214:5bc2:b0:6f8:f1a5:e6a4 with SMTP id
+ 6a1803df08f44-6fd5efac2c6mr119139766d6.22.1750946881068; Thu, 26 Jun 2025
+ 07:08:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cae5bfbe-9537-4b9d-b026-170063054b35@oss.qualcomm.com>
+References: <1576470.1750941177@warthog.procyon.org.uk> <dd1b01babe2b5023e9e26c56a2f2b458@manguebit.org>
+In-Reply-To: <dd1b01babe2b5023e9e26c56a2f2b458@manguebit.org>
+From: Steve French <smfrench@gmail.com>
+Date: Thu, 26 Jun 2025 09:07:49 -0500
+X-Gm-Features: Ac12FXyyhbfNlNMpQYe9aZUeZ4JpjPV4v5OkXG2uBhjAE4kIr6iaVInUeAOolnI
+Message-ID: <CAH2r5mus-f5y+p16hkaYZWA=fCAiMGT1vpMawbVCZ2EC0K5Pxg@mail.gmail.com>
+Subject: Re: [PATCH] netfs: Fix i_size updating
+To: Paulo Alcantara <pc@manguebit.org>
+Cc: David Howells <dhowells@redhat.com>, Christian Brauner <brauner@kernel.org>, 
+	Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org, netfs@lists.linux.dev, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 26, 2025 at 03:49:32PM +0200, Konrad Dybcio wrote:
-> On 6/26/25 3:13 PM, Johan Hovold wrote:
-> > On Thu, Jun 26, 2025 at 02:15:26PM +0300, Dmitry Baryshkov wrote:
-> >> On Thu, Jun 26, 2025 at 11:42:50AM +0200, Johan Hovold wrote:
-> >>> On Tue, Jun 24, 2025 at 04:13:34AM +0300, Dmitry Baryshkov wrote:
-> >>>> On Mon, Jun 23, 2025 at 04:50:27PM +0200, Johan Hovold wrote:
-> >>>>> On Mon, Jun 23, 2025 at 04:45:30PM +0200, Johan Hovold wrote:
-> >>>
-> >>>>>> Also not sure how useful it is to only be able to read variables,
-> >>>>>> including for the RTC where you'll end up with an RTC that's always
-> >>>>>> slightly off due to drift (even if you can set it when booting into
-> >>>>>> Windows or possibly from the UEFI setup).
-> >>>>>>
-> >>>>>> Don't you have any SDAM blocks in the PMICs that you can use instead for
-> >>>>>> a proper functioning RTC on these machines?
-> >>>>
-> >>>> I'd rather not poke into an SDAM, especially since we don't have docs
-> >>>> which SDAM blocks are used and which are not.
-> >>>
-> >>> You're with Qualcomm now so you should be able to dig up this
-> >>> information like we did for the X13s (even if I'm quite aware that it
-> >>> may still be easier said than done).
-> >>
-> >> I'd rather try to find information on how to update UEFI vars on the
-> >> storage.
-> > 
-> > You can do both, especially if it turns out you won't be able to have
-> > persistent variables on these machines.
-> 
-> The danger here is that we only know what Qualcomm uses these cells
-> for, not necessarily what the vendors with a similar idea could
-> have come up with.
+added to for-next pending testing
 
-Hmm. Good point.
+On Thu, Jun 26, 2025 at 8:39=E2=80=AFAM Paulo Alcantara <pc@manguebit.org> =
+wrote:
+>
+> David Howells <dhowells@redhat.com> writes:
+>
+> > Fix the updating of i_size, particularly in regard to the completion of=
+ DIO
+> > writes and especially async DIO writes by using a lock.
+> >
+> > The bug is triggered occasionally by the generic/207 xfstest as it chuc=
+ks a
+> > bunch of AIO DIO writes at the filesystem and then checks that fstat()
+> > returns a reasonable st_size as each completes.
+> >
+> > The problem is that netfs is trying to do "if new_size > inode->i_size,
+> > update inode->i_size" sort of thing but without a lock around it.
+> >
+> > This can be seen with cifs, but shouldn't be seen with kafs because kaf=
+s
+> > serialises modification ops on the client whereas cifs sends the reques=
+ts
+> > to the server as they're generated and lets the server order them.
+> >
+> > Fixes: 153a9961b551 ("netfs: Implement unbuffered/DIO write support")
+> > Signed-off-by: David Howells <dhowells@redhat.com>
+> > cc: Steve French <sfrench@samba.org>
+> > cc: Paulo Alcantara <pc@manguebit.org>
+> > cc: linux-cifs@vger.kernel.org
+> > cc: netfs@lists.linux.dev
+> > cc: linux-fsdevel@vger.kernel.org
+> > ---
+> >  fs/netfs/buffered_write.c |    2 ++
+> >  fs/netfs/direct_write.c   |    8 ++++++--
+> >  2 files changed, 8 insertions(+), 2 deletions(-)
+>
+> Reviewed-by: Paulo Alcantara (Red Hat) <pc@manguebit.org>
+>
 
-But at least the address we used on sc8280xp appears to be cleared on
-hard reset (holding down the power button) so it can't be used for
-anything that useful it seems.
 
-> This is especially important since (unfortunately without going into
-> detail), you *really* don't want to mess up some existing values in
-> there.
+--=20
+Thanks,
 
-Yeah, I wouldn't pick a random address without getting an ack from
-Qualcomm first.
-
-Johan
+Steve
