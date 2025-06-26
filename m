@@ -1,47 +1,46 @@
 Received: from cloudserver094114.home.pl (cloudserver094114.home.pl [79.96.170.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C00C1B0416;
-	Thu, 26 Jun 2025 18:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C3D201004;
+	Thu, 26 Jun 2025 18:15:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.96.170.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750961748; cv=none; b=hXQFyRGA3+o9R4FmrFcLlAuE5nOXb1YI5xOtxhd9pXL0pQJDO5sg+Ia/x4MREUM+nVYTwbiganaCWoHJJxpt9POoLBce2uUKwYHs4J/NN2sIiVVrTSL+jKkQYhm5qgOSU6T6H6tXvq3uKzfn4FQPrHFWm3yx2rmBBXDH3I8jNqM=
+	t=1750961748; cv=none; b=T1IGRA6mxj2SMzdNIjbWuCsIPMEuUJ+MyLD+6aEV72p4gVYH4m2cr0o+//NHwYaBJAtl3gIRIEzLj4zhOrg9BSoYGs57nnP5pKvqWK/1b6gvXdtEHAgQmD5ORVtOg2KrJewU99J9TJHOBLTEGMA2TGglBM/jjEdkh97vwMl+Y7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750961748; c=relaxed/simple;
-	bh=0XdUY00XXilqMp4xm15/3+Vzfk9D595eI9rqaslHETA=;
+	bh=780/ATOXshjqm/EGKAazcJERmd1ciKlnGfoV4PmGGjM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A3UGbf68qARErqBzaqt1MhJQJQs2r3uCrTIFWoH62IlJxrt0YAlvDIDRgxpvSZcmYYVWZ9kGz8djYekjEWEXQzHr1cRO8NfZS3fm7EVOgxuMQEJOluKff7s2iE3NG3F7sUF4gjOJsTwtqXIqeTJqEHQTOtQDTefAuiNXsb54KMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=cg+euGfT; arc=none smtp.client-ip=79.96.170.134
+	 MIME-Version:Content-Type; b=I/AW2YDntzqZl3DFTVvbQ8sXnLXJIZynX4lJDTR29bQY8MSXsc+QPL0D9/Ll0EvNqhWvkQPObsHZEMxohz9mkfKxzzPy5B6xljagTyzAYp1OSL7FrMQdQH5n56UuqRMhoC1btef3OfYybOWPdTXf9GAGCmwSVdvFbHVO+JKaBAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net; spf=pass smtp.mailfrom=rjwysocki.net; dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b=oYRgjITf; arc=none smtp.client-ip=79.96.170.134
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rjwysocki.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="cg+euGfT"
+	dkim=pass (2048-bit key) header.d=rjwysocki.net header.i=@rjwysocki.net header.b="oYRgjITf"
 Received: from kreacher.localnet (unknown [5.63.189.50])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 03BD866E999;
-	Thu, 26 Jun 2025 20:15:43 +0200 (CEST)
+	by cloudserver094114.home.pl (Postfix) with ESMTPSA id 1AD1D66E9B3;
+	Thu, 26 Jun 2025 20:15:45 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=rjwysocki.net;
-	s=dkim; t=1750961743;
-	bh=0XdUY00XXilqMp4xm15/3+Vzfk9D595eI9rqaslHETA=;
+	s=dkim; t=1750961745;
+	bh=780/ATOXshjqm/EGKAazcJERmd1ciKlnGfoV4PmGGjM=;
 	h=From:Subject:Date;
-	b=cg+euGfTZRYoslNudGwMs0Zn2+C7vWQRqavHakEwQ8qRsxRlwcNawUSoa42GrDbC3
-	 4MZP7RoJRMjtgM5/y0JGCyKcFbKd56j5Un3+sCKmoHwvmBtelop1WqKeOkAoLCV+0X
-	 TQ2U+eaqKg9/UjnIK4s2+6hPFSfdlNkiuxH8kpDHZv91wyHs9ssj6Bq0HHb/Yd8pdu
-	 dXROqX3LSUvBsIBIXu9J1IPPcx89Rxzc2w3aq3RTIEd2FR8gpxoa8xAxCRUyaZnMZN
-	 ZXbI/e2boOHfvMTO17QFc7WH5DcggdVfX6u1GKVVn/DuzbVhhznsDziHL3bpBO133M
-	 TL8Luw7wgRkfw==
+	b=oYRgjITfRq9mvyoioCNBvAgPq+QLsH0fEEX8+nbbVdA5uzfs+ZK/PsVzGmyBupuyU
+	 6894igS+6rSkm7f0OrY4d+GdqzgmpFPWmpRfuBV2RdKlWbe4Kx+shGc4wI287N78kt
+	 WLM91s6QDaJWxyzYQX56FBPM2aSRhCW6d6mut2rrXQBRoWZQ0A3pm3lOSafBRQhOdO
+	 OnqapfqYX+HA+WW/aPlT2L2FItV2hmiRTZoM8yGGwAYWglYnmJsJcxxYYAwMUmffeZ
+	 k0IWu8MFAdQbOSsqJP/1PY9hBO2vPqABi1hg+jnm2okNxuXSsMpz2IjvmpPnuy1Vt9
+	 XodTNEpZMVEWQ==
 From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To: Linux PM <linux-pm@vger.kernel.org>
 Cc: LKML <linux-kernel@vger.kernel.org>,
  Linux ACPI <linux-acpi@vger.kernel.org>,
  Linux PCI <linux-pci@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>,
  Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject:
- [PATCH v2 8/9] ACPI: PM: Set/clear power.strict_midlayer in prepare/complete
-Date: Thu, 26 Jun 2025 20:12:25 +0200
-Message-ID: <8609825.NyiUUSuA9g@rjwysocki.net>
+Subject: [PATCH v2 6/9] PM: runtime: Introduce __rpm_get_driver_callback()
+Date: Thu, 26 Jun 2025 20:06:27 +0200
+Message-ID: <3909078.kQq0lBPeGt@rjwysocki.net>
 In-Reply-To: <5015172.GXAFRqVoOG@rjwysocki.net>
 References: <5015172.GXAFRqVoOG@rjwysocki.net>
 Precedence: bulk
@@ -55,51 +54,78 @@ Content-Type: text/plain; charset="UTF-8"
 X-CLIENT-IP: 5.63.189.50
 X-CLIENT-HOSTNAME: 5.63.189.50
 X-VADE-SPAMSTATE: clean
-X-VADE-SPAMCAUSE: dmFkZTF716g97GLxl5r0PfOIWPAhDchnkSWDAqwBHc32sD+HpU8yKJB8xV8olL9lC0SzkWwWofqH3VgYdVRji5cIw9ZbUY7WKZiWjf3xKrF5n/kFXPdAEOzPBCDRv7/dwAHJIQ0XttMc6iSOqO8REJ6/sQbblDgpzZ3yfiPesShmkNx66bo1AYj8VcmdJw/BBHB050Zj303Yb/wm5mvAwXKjtlQwzCdkCdX+5402uydNZLICOp4E4D8MElAkMJkSAvvY8Q7l6VyWrFK73NizhJc5WdxP07GoEdKSjFDXh87nwem3gX8mTgRruroBzE94AJIHpV56uBgDMbkYtmhRhrGWknT+UUwxneTHO3/zeqpaau2gLrXfogGojBOc7L9hAUX0LG8Oj0LMQC1PamxCkdOdQYAdrYli+cva424A8EniF6Pj5N+fQT5S1KIyV28ZCqhYAmMWRc5fJlEzWKA1DoWSbo0XGqhKn/u9p+YMHybb4GrXkuAuYZxpubdA/IL74BWo6VhCztSvLtG/RqSBsSfxZG7yQw56SKz8M0dfpy0S6XcNuAWJE6z7sqQ1W19INBC0ehQ6nPrpAPg5+T5U8FKPnY/uWjMr0q+5e4TO2P7xNelWZZbepJ9wEFGkbRwwHsJRfchK9q377c4fyI+ejbxLL1xUWe5QkV834i5OdDtuW+alyA
+X-VADE-SPAMCAUSE: dmFkZTELtlwpycCpv0Vcuy8QanEK65EXpXLDYHJklsvPFyrHxl+avjRHDMJ7Pn1w8r8jjwxdARbdK2l6HvrQpU6gOIgHwqnc6mWfuAcVkm0fjKgXKtQhSdxCxnuVXrmGsTXIoZNtqbmO2vNuBJTcPUJZcz8R30PgE7bGEL3PWfdNzVLoVYs7Qoda0OTfmBJ3NatDBgLvJuvPlRG2dcl26WhHZbi4RyoYzmp2r7+bO7YpOn26wkYi1BZUkbAIVk0I3hYwmbSrEOMnYl/hve4oRCJ1F8R5clMEE2pVXAf8o49/YUaNEHtTh2A9QXrvEf9flQXInm5SNV3s2dtsBWqHjVykY5tzr+eZlEvGR2rJ4NAHkTlU7MkNb/hZ+aZy7+rUSjO0gb231iYX4nbwEswu+ow9ldNkrKuBEj7TI5+4F6nIB5XBLygo4qQKmWkvtwRyfT8AysDe05oBmIBOlKMTvN3Qn+3H3RjvFextnBFtDaTY5gQtxsy1I7f8c+rh22wOLCkGwVa4uMwqQ3L+y1h4QpSxh+DIoCxcL0lxyzznJyq+491mY9rA0CNE7udK9TSA04MrmOi9wkdcWPxrgHswZdOG/LdnRkovpXOImkZ8nGEPAGE57p9y9mOyDVEqP7kRQXw+xFjvSQ17U884xPy9h6OS9ZFE5KxGfbPIL5p3h2Gv9CWoRw
 X-DCC--Metrics: v370.home.net.pl 1024; Body=6 Fuz1=6 Fuz2=6
 
 From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-The ACPI general PM domain and the LPSS PM domain do not expect their
-mid-layer runtime PM callbacks to be invoked at any point during
-system-wide suspend and resume, so make acpi_subsys_prepare() set
-power.strict_midlayer for the given device to express that expectation
-and make acpi_subsys_complete() clear it.
+Add a special function for computing the address of the runtime PM
+callback given by an offset relative to the start of the device
+driver's struct dev_pm_ops and use it to obtain the driver callback
+in __rpm_get_callback().
+
+Also put the shared part of the callback address computation into a
+separate helper function to avoid code duplication and explicit
+pointer type casts.
+
+The new __rpm_get_driver_callback() will be used subsequently for
+implementing callback lookup in pm_runtime_force_suspend/resume().
+
+No intentional functional impact.
 
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
 
-v1 -> v2:
-   * Set and clear the new flag in "prepare" and "complete" instead of
-     "attach" and "detach", respectively, to (1) cover the LPSS PM domain as
-     well as the general ACPI PM domain and (2) allow pm_runtime_force_suspend()
-     invoked from driver remove callbacks to work.
-   * Update subject and changelog.
+v1 -> v2: New patch (not actually posted in v1 by mistake)
 
 ---
- drivers/acpi/device_pm.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/base/power/runtime.c |   24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -1119,6 +1119,8 @@
+--- a/drivers/base/power/runtime.c
++++ b/drivers/base/power/runtime.c
+@@ -19,10 +19,24 @@
+ 
+ typedef int (*pm_callback_t)(struct device *);
+ 
++static inline pm_callback_t get_callback_ptr(const void *start, size_t offset)
++{
++	return *(pm_callback_t *)(start + offset);
++}
++
++static pm_callback_t __rpm_get_driver_callback(struct device *dev,
++					       size_t cb_offset)
++{
++	if (dev->driver && dev->driver->pm)
++		return get_callback_ptr(dev->driver->pm, cb_offset);
++
++	return NULL;
++}
++
+ static pm_callback_t __rpm_get_callback(struct device *dev, size_t cb_offset)
  {
- 	struct acpi_device *adev = ACPI_COMPANION(dev);
+-	pm_callback_t cb;
+ 	const struct dev_pm_ops *ops;
++	pm_callback_t cb = NULL;
  
-+	dev_pm_set_strict_midlayer(dev, true);
-+
- 	if (dev->driver && dev->driver->pm && dev->driver->pm->prepare) {
- 		int ret = dev->driver->pm->prepare(dev);
+ 	if (dev->pm_domain)
+ 		ops = &dev->pm_domain->ops;
+@@ -36,12 +50,10 @@
+ 		ops = NULL;
  
-@@ -1147,6 +1149,8 @@
- 	 */
- 	if (pm_runtime_suspended(dev) && pm_resume_via_firmware())
- 		pm_request_resume(dev);
-+
-+	dev_pm_set_strict_midlayer(dev, false);
+ 	if (ops)
+-		cb = *(pm_callback_t *)((void *)ops + cb_offset);
+-	else
+-		cb = NULL;
++		cb = get_callback_ptr(ops, cb_offset);
+ 
+-	if (!cb && dev->driver && dev->driver->pm)
+-		cb = *(pm_callback_t *)((void *)dev->driver->pm + cb_offset);
++	if (!cb)
++		cb = __rpm_get_driver_callback(dev, cb_offset);
+ 
+ 	return cb;
  }
- EXPORT_SYMBOL_GPL(acpi_subsys_complete);
- 
 
 
 
