@@ -1,147 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F764A33;
-	Thu, 26 Jun 2025 17:53:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4725D2ECD3B;
+	Thu, 26 Jun 2025 17:53:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750960384; cv=none; b=c7N18iKkLNG1Ekidj16gnH7OjYXxlbjdxk+SeeoBNP9+oWI/UUncHoEwvrXt44eDzJCJpyQmjAwcV35L9TPsRsGzQCqGuSW47Tdj3eS+QA7ODHCVmpYWi3OJFrvVy4gGjkulmjC1papY525qSmk/Pkri0rjMB727Ou/F3gCvv+o=
+	t=1750960404; cv=none; b=dN8/kw7vyWEM13aoyKyYm4S5r9Z4vCfXFvaio8bf2uzj3D7FyGSK522B7C3wATBPL6SwtxutzNuS5G7jyRgW0+jM0XBkqmEzy/4lWsWTwzsrHX3inGNg4IZTPh4n9ZlKjh/ZObLR1RJ+JNtUKkFq9xGr/rnehfrAH4cjmc9qig8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750960384; c=relaxed/simple;
-	bh=E0rS6SSRQcFeqZsjLLphUkxpuY6vBPqEjlJeAgWEWaM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cHzINtXV/qT2GLNGAtUc55ilSFy6reEULBFTJIsC8LC4zsu7gppmEK5O7IBAmvjA7RtW9fHteGB/lH1J/425qQl5TOMC/AinlFV0/fYjo2MnUVzbuFGriAW8xGqYhGH1Vzg8nViEwlcq80rZFlM9f5t6k1/ZQ295lmomYv3Z6l8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ryfEdexV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750960404; c=relaxed/simple;
+	bh=NQGCH21Cr3TGgbGw7hzS5ZmYtxDnvykL1nv8YPps/uw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Ymd4IUzQuqGiIq4NMDlqOrGWzkSyF1suHcYQbNHgyF/DR2aAvElhFup+ci+aYs7YM6FiPOzgQk4cWfYHDGVTI55th6fkK/KY/hq701wHHTUwhwq7bo0prB7uEQM0mCjcPrP5WRK78Hrc6goou7XqneAu3GaD5kfzJPaoMHP0p2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fYe+84dF; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ryfEdexV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D08BAC4CEEB;
-	Thu, 26 Jun 2025 17:53:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750960383;
-	bh=E0rS6SSRQcFeqZsjLLphUkxpuY6vBPqEjlJeAgWEWaM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ryfEdexVPwVNBYdRyOeE0OWrFa3oIvkoivmQbDkUYyEXCP1oBNgJXe9HHG2ABGVXs
-	 jf/FAb6escBquCpi+11hwATqd/Y5bDtoMJuMoJb7H8gTkTWEkfPVYsybOXVFhlDFyx
-	 mQC2Rczo6A61Wvx0uNpN6N7AfKSKUH4DmuUpyoRIvJL+JVBEcJXqUtBcso+mHQAzkj
-	 KaPQ0co3SPhXdT9u2AqHmU2y9So3EE+dsalo05NjCnZT9eRYIZDku+0PbLdtP9PTnK
-	 yirO3g53W2FXw9IWws0MSR1Cze0d3H3x2HZ96Hh4G1VdmeE81iyukntsLPLi1p7Y8W
-	 TxK+4B6M/eC2w==
-Message-ID: <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org>
-Date: Thu, 26 Jun 2025 12:53:02 -0500
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fYe+84dF"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4538bc1cffdso7745955e9.0;
+        Thu, 26 Jun 2025 10:53:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750960400; x=1751565200; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ORxdFmBgJBVNfDZeWld7nnhWsBM7PFaTDPy5u2ssuGg=;
+        b=fYe+84dFwY25M1qxXAkhqq4Fqw7kfDpuCtbcjX9TFs/ENW7u5VC2ISqvFhXbAnCq6T
+         WkEO2tRAJy/criqEpcWfu5P/2Rt78O1YhvFjN1DfsZfYkO2m6NrNXJw4YO3xUjyFpgra
+         ep+HBdWsWI9C4Zq51mJzt/WYBiKRrICSquGcu3lOVliSxy2pVAWHkr0hBC6HfDXcxKES
+         G+BWDG4UdCkJASbsCcibwnD9ohP47S1VJ9SixD5YTvnCa1PYmMV0a0RRDCfCa7KO2ose
+         +ilyD9lAtRgPNvKZkusovu3xPwtMj3ZTfs5Qod7D53isgyV9sBj1rrFm01l8ptKiofWf
+         ZrWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1750960400; x=1751565200;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:sender:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ORxdFmBgJBVNfDZeWld7nnhWsBM7PFaTDPy5u2ssuGg=;
+        b=CJD6fnPlVeQKxnLwMiwNW2BqR4JeY2vZVSFEWtdZ4f97pUDzCTxxmbS1c+9xl85CWN
+         NBt7X5PBVzIjDnQToSJzaEA7Ni249gSYu0I0JOY6gWQK1b7J6YoWMwkMUIOO0VP9EQxI
+         OiW01QKqnNb2gBy1vSW1qVUt9sJrs7Bkm8HB9aEbtoW4cLpZ2cV4lcVd4BwshQ9/7K5A
+         DWjhZt9UYjpSdxcg2LeLF4WSvMm7mKAgwGg4KHhpg4ubg4vE4UOQJDf7IpPBWCcshzU7
+         N3ATU+4++4aZekZpXqkHANyw/Bz8sT5TrYCIqOZsFJNUKYxISLbCDkjSg55x7ilCOquv
+         BLkg==
+X-Forwarded-Encrypted: i=1; AJvYcCWA0PmeFMzGhCI8e0YsPL+l4VqKZA7yXNuE/99mPbs0gabaJdth/YKrPFIXWRB9NvETQXYRU/1NIX45e9NYphU=@vger.kernel.org, AJvYcCWEIi7COrmclFgvzHkRVY6hLJ0k7Ewy0HvKqRdGekiXQUkJ0T4xLaYkHkiPB5naYBbUND2+BigOJimvHT7G@vger.kernel.org, AJvYcCXfYCXIUp2xN2OGPlmW0kRe0uh40vT9WfOuz9mcA9CyWw0JzCYt09ylVSWr233VMHFwzwzGyRklDeU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym+5ksAVQa0WGEvwR2cJD/HnErlm+Wt3pCF/BhJOaZZc4HtchJ
+	TR9oFwajwwDf61opGcYM7GjvEl5gWfxeAGkhYcJ9RcDB/JLxlvCcvshW
+X-Gm-Gg: ASbGncvmchU4AAjnm/TNnzyvEaNP7F8/F4Zr3mSHi8F6cG+FRLeCuIWGLvMSaT1n7Ya
+	ftiDIsfumKOmrMf0zYwGEkdx7P3HmF0alPj5N1flDuo0zYXUbMpQYRszyRdJz4rKf2NyILcg0JQ
+	JAiuxF5cDnCk8v3tH6LuhwC+3hF7WcjGfvLmfc3uYw31Sbb9UFSw7RczWXmG5Fpi6uNgLX/YosI
+	+LMQ1ZzFZPhxc0QmqknGakskCwqL5NHG+jk1Em4WbLFNCU1rZ2iF53dob7HEdSRO4PSE2MvQ/nj
+	ncy0qBGw+yGCXFearYtZtV6yITvUt8VGF5aciG0605KK0CbhT1BhqLOrEHRvDAlkm2qiXkK+5dv
+	nWh7pr7aEvh+25+YOUn4Da8lqer92tZOrs3Ya
+X-Google-Smtp-Source: AGHT+IEmOlq90hh0Tao5zeGkk5g+LoHlubiwo3zM4KNNDyLJweA8fdHr5wHeWASnKc06/3KhQ4do+A==
+X-Received: by 2002:a05:600c:4f12:b0:450:c20d:64c3 with SMTP id 5b1f17b1804b1-4538ee835a4mr2612385e9.18.1750960400346;
+        Thu, 26 Jun 2025 10:53:20 -0700 (PDT)
+Received: from igor-korotin-Precision-Tower-3620.airspan.com ([188.39.32.4])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a892e6280bsm487731f8f.94.2025.06.26.10.53.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 10:53:19 -0700 (PDT)
+Sender: Igor Korotin <igorkor.3vium@gmail.com>
+From: Igor Korotin <igor.korotin.linux@gmail.com>
+To: Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Asahi Lina <lina+kernel@asahilina.net>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Alex Hung <alex.hung@amd.com>,
+	Tamir Duberstein <tamird@gmail.com>,
+	Xiangfei Ding <dingxiangfei2009@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: [PATCH v1 2/4] samples: rust: add Rust I2C sample driver
+Date: Thu, 26 Jun 2025 18:51:17 +0100
+Message-ID: <20250626175117.906567-1-igor.korotin.linux@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250626174623.904917-1-igor.korotin.linux@gmail.com>
+References: <20250626174623.904917-1-igor.korotin.linux@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
- system
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>,
- "open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..."
- <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-References: <20250625215813.3477840-1-superm1@kernel.org>
- <20250625215813.3477840-5-superm1@kernel.org>
- <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
- <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
- <rn2kp5tog2agvswva2ipqq2ytiqdcgccnocudsg6ckwfh4roei@provk2g6dita>
-Content-Language: en-US
-From: Mario Limonciello <superm1@kernel.org>
-In-Reply-To: <rn2kp5tog2agvswva2ipqq2ytiqdcgccnocudsg6ckwfh4roei@provk2g6dita>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Add a new `rust_driver_i2c` sample, showing how to bind an I2C client
+in Rust via legacy I2C-ID or OF compatible tables.
 
+Signed-off-by: Igor Korotin <igor.korotin.linux@gmail.com>
+---
+ MAINTAINERS                     |  1 +
+ samples/rust/Kconfig            | 11 ++++++
+ samples/rust/Makefile           |  1 +
+ samples/rust/rust_driver_i2c.rs | 61 +++++++++++++++++++++++++++++++++
+ 4 files changed, 74 insertions(+)
+ create mode 100644 samples/rust/rust_driver_i2c.rs
 
-On 6/26/25 12:44 PM, Dmitry Torokhov wrote:
-> Hi Mario,
-> 
-> On Thu, Jun 26, 2025 at 06:33:08AM -0500, Mario Limonciello wrote:
->>
->>
->> On 6/26/25 3:35 AM, Hans de Goede wrote:
->>> Hi Mario,
->>>
->>> On 25-Jun-25 23:58, Mario Limonciello wrote:
->>>> From: Mario Limonciello <mario.limonciello@amd.com>
->>>>
->>>> Sending an input event to wake a system does wake it, but userspace picks
->>>> up the keypress and processes it.  This isn't the intended behavior as it
->>>> causes a suspended system to wake up and then potentially turn off if
->>>> userspace is configured to turn off on power button presses.
->>>>
->>>> Instead send a PM wakeup event for the PM core to handle waking the system.
->>>>
->>>> Cc: Hans de Goede <hansg@kernel.org>
->>>> Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
->>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
->>>> ---
->>>>    drivers/input/keyboard/gpio_keys.c | 7 +------
->>>>    1 file changed, 1 insertion(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
->>>> index 773aa5294d269..4c6876b099c43 100644
->>>> --- a/drivers/input/keyboard/gpio_keys.c
->>>> +++ b/drivers/input/keyboard/gpio_keys.c
->>>> @@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
->>>>    		pm_stay_awake(bdata->input->dev.parent);
->>>>    		if (bdata->suspended  &&
->>>>    		    (button->type == 0 || button->type == EV_KEY)) {
->>>> -			/*
->>>> -			 * Simulate wakeup key press in case the key has
->>>> -			 * already released by the time we got interrupt
->>>> -			 * handler to run.
->>>> -			 */
->>>> -			input_report_key(bdata->input, button->code, 1);
->>>> +			pm_wakeup_event(bdata->input->dev.parent, 0);
-> 
-> There is already pm_stay_awake() above.
-
-But that doesn't help with the fact that userspace gets KEY_POWER from 
-this and reacts to it.
-
-> 
->>>>    		}
->>>>    	}
->>>
->>> Hmm, we have the same problem on many Bay Trail / Cherry Trail
->>> windows 8 / win10 tablets, so  this has been discussed before and e.g.
->>> Android userspace actually needs the button-press (evdev) event to not
->>> immediately go back to sleep, so a similar patch has been nacked in
->>> the past.
->>>
->>> At least for GNOME this has been fixed in userspace by ignoring
->>> power-button events the first few seconds after a resume from suspend.
->>>
->>
->> The default behavior for logind is:
->>
->> HandlePowerKey=poweroff
->>
->> Can you share more about what version of GNOME has a workaround?
->> This was actually GNOME (on Ubuntu 24.04) that I found this issue.
->>
->> Nonetheless if this is dependent on an Android userspace problem could we
->> perhaps conditionalize it on CONFIG_ANDROID_BINDER_DEVICES?
-> 
-> No it is not only Android, other userspace may want to distinguish
-> between normal and "dark" resume based on keyboard or other user
-> activity.
-> 
-> Thanks.
-> 
-In this specific case does the key passed up to satisfy this userspace 
-requirement and keep it awake need to specifically be a fabricated 
-KEY_POWER?
-
-Or could we find a key that doesn't require some userspace to ignore 
-KEY_POWER?
-
-Maybe something like KEY_RESERVED, KEY_FN, or KEY_POWER2?
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2b7a24586c19..a64570dda05e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11364,6 +11364,7 @@ F:	include/uapi/linux/i2c-*.h
+ F:	include/uapi/linux/i2c.h
+ F:	rust/helpers/i2c.c
+ F:	rust/kernel/i2c.rs
++F:	samples/rust/rust_driver_i2c.rs
+ 
+ I2C SUBSYSTEM HOST DRIVERS
+ M:	Andi Shyti <andi.shyti@kernel.org>
+diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
+index 7f7371a004ee..55aeb12cd7f7 100644
+--- a/samples/rust/Kconfig
++++ b/samples/rust/Kconfig
+@@ -62,6 +62,17 @@ config SAMPLE_RUST_DMA
+ 
+ 	  If unsure, say N.
+ 
++config SAMPLE_RUST_DRIVER_I2C
++	tristate "I2C Driver"
++	depends on I2C
++	help
++	  This option builds the Rust I2C driver sample.
++
++	  To compile this as a module, choose M here:
++	  the module will be called rust_driver_i2c.
++
++	  If unsure, say N.
++
+ config SAMPLE_RUST_DRIVER_PCI
+ 	tristate "PCI Driver"
+ 	depends on PCI
+diff --git a/samples/rust/Makefile b/samples/rust/Makefile
+index bd2faad63b4f..141d8f078248 100644
+--- a/samples/rust/Makefile
++++ b/samples/rust/Makefile
+@@ -5,6 +5,7 @@ obj-$(CONFIG_SAMPLE_RUST_MINIMAL)		+= rust_minimal.o
+ obj-$(CONFIG_SAMPLE_RUST_MISC_DEVICE)		+= rust_misc_device.o
+ obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
+ obj-$(CONFIG_SAMPLE_RUST_DMA)			+= rust_dma.o
++obj-$(CONFIG_SAMPLE_RUST_DRIVER_I2C)		+= rust_driver_i2c.o
+ obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
+ obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
+ obj-$(CONFIG_SAMPLE_RUST_DRIVER_FAUX)		+= rust_driver_faux.o
+diff --git a/samples/rust/rust_driver_i2c.rs b/samples/rust/rust_driver_i2c.rs
+new file mode 100644
+index 000000000000..7c5def930fe0
+--- /dev/null
++++ b/samples/rust/rust_driver_i2c.rs
+@@ -0,0 +1,61 @@
++// SPDX-License-Identifier: GPL-2.0
++
++//! Rust I2C driver sample.
++
++use kernel::{c_str, device::Core, i2c, of, prelude::*, types::ARef};
++
++struct SampleDriver {
++    pdev: ARef<i2c::Device>,
++}
++
++kernel::i2c_device_table! {
++    I2C_TABLE,
++    MODULE_I2C_TABLE,
++    <SampleDriver as i2c::Driver>::IdInfo,
++    [(i2c::DeviceId::new(b"rust_driver_i2c"), 0)]
++}
++
++kernel::of_device_table! {
++    OF_TABLE,
++    MODULE_OF_TABLE,
++    <SampleDriver as i2c::Driver>::IdInfo,
++    [(of::DeviceId::new(c_str!("test,rust_driver_i2c")), 0)]
++}
++
++impl i2c::Driver for SampleDriver {
++    type IdInfo = u32;
++
++    const I2C_ID_TABLE: Option<i2c::IdTable<Self::IdInfo>> = Some(&I2C_TABLE);
++    const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
++
++    fn probe(pdev: &i2c::Device<Core>, info: Option<&Self::IdInfo>) -> Result<Pin<KBox<Self>>> {
++        let dev = pdev.as_ref();
++
++        dev_dbg!(dev, "Probe Rust I2C driver sample.\n");
++
++        if let Some(info) = info {
++            dev_info!(dev, "Probed with info: '{}'.\n", info);
++        }
++
++        let drvdata = KBox::new(Self { pdev: pdev.into() }, GFP_KERNEL)?;
++
++        Ok(drvdata.into())
++    }
++    fn shutdown(pdev: &i2c::Device<Core>) {
++        dev_dbg!(pdev.as_ref(), "Shutdown Rust I2C driver sample.\n");
++    }
++}
++
++impl Drop for SampleDriver {
++    fn drop(&mut self) {
++        dev_dbg!(self.pdev.as_ref(), "Remove Rust I2C driver sample.\n");
++    }
++}
++
++kernel::module_i2c_driver! {
++    type: SampleDriver,
++    name: "rust_driver_i2c",
++    authors: ["Igor Korotin"],
++    description: "Rust I2C driver",
++    license: "GPL v2",
++}
+-- 
+2.43.0
 
