@@ -1,107 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailtransmit04.runbox.com (mailtransmit04.runbox.com [185.226.149.37])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E4B41A254E;
-	Thu, 26 Jun 2025 08:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E32E1A254E;
+	Thu, 26 Jun 2025 08:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.226.149.37
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750926791; cv=none; b=uTLHb9pwxZSmnkz6cNHbz5N3p1KF7IKJD1EZ9sxVG4Cvz1n1Z9jjlBvzw4uWRrmSh3I7aKGtxQ2TE+L9tQ4jEKDmk+oqxIBcfmqAvMAzowap0bAgrPfwuw343dI9XcHe/7kF5q0+3kZSFor3h52sClWDEWlcJyuiHmqjEPR0PHg=
+	t=1750926857; cv=none; b=oamwLHI6bXVi2NFXqnBo0LZ1mnVVWlfSjyKYlkxzSNkz3sEmcFed0ZvpGq07j3SYH8GIeg/zgj5DrHVdQnbaPHFYuQ6Kdl02Vb5MMAqk/wrzxR6yGwvF0iAkI1qc/KWOtXOSi8kSgXdNqt3t3ln7jLNfkFVeSANy8nyN1vdvRBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750926791; c=relaxed/simple;
-	bh=4aGL9WPbA5W/z9AUctL3gQOUzTjLraWh2A6DZhAKLpU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nCtNXPI0a93Dlx5u3JF/wnrc9o5rVyfrs2PBymC/GzRE0oa4GGsQj5XZdLEYVBnVFWgp+LP7cUzyaD9euU3g7AuUQHyfLJo8daooHAIUM8w1RoeGZV1vwcfgYPvRO/bO8DDEzIE1kZBsRBdnviUDQDbdPzYt+e8EU2P+SmNPJMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jECo95zw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750926857; c=relaxed/simple;
+	bh=fhLUUYVAyb1uDBHiiFLUBKdkZ0mPXVVyAvNzmr4SGO0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=R5XRjaBF7trPAyLlS+brv56uLA7QLIEYbi2nHPV9uWUwpTlV8CRw+T0w+xQmVOLoD0ZuWsW/i+vkof6AuI2Vblni4pH7lcvJRXw5oafqybAAIxBEc1kvcFtHNGOjm6InCZcM/ymYtfMcgC7KJxyxlHc01wncP01tlMJ+5aUGaO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co; spf=pass smtp.mailfrom=rbox.co; dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b=up9is5AR; arc=none smtp.client-ip=185.226.149.37
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=rbox.co
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rbox.co
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jECo95zw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6815CC4CEEB;
-	Thu, 26 Jun 2025 08:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750926790;
-	bh=4aGL9WPbA5W/z9AUctL3gQOUzTjLraWh2A6DZhAKLpU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jECo95zwkP7nfTECBN7B2V5BpdXc+1D8COVANmKLxmlsPGy/9o5e4NM+ronkZFHfo
-	 iQHLAcf+UHHZBtWzshpBu4oeaB5/9cdLgnVzvjJVxBygiJTIebUWayIzuU/g67Bk6P
-	 obytzePRDTbIdIU2QkrZHpUwINwYLp1NMBX7JA/4jgavdLsTMTNZzxk0EvgbJa5TQY
-	 MEWAzzFy5pEIAmWOJ5M55+JMipsLrWqrW5JntYec105IgrV0NbJQXaRkG4ZMspUBZ9
-	 ihIFOytSfL2DJvUmTrfCvp+susThpPIuFHneI7ytGzIY74NO+an3E0HX3N4OUnrj2h
-	 woRS7KwwTYl3g==
-Date: Thu, 26 Jun 2025 10:33:05 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, x86@kernel.org,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Andrii Nakryiko <andrii@kernel.org>,
-	Indu Bhagat <indu.bhagat@oracle.com>,
-	"Jose E. Marchesi" <jemarch@gnu.org>,
-	Beau Belgrave <beaub@linux.microsoft.com>,
-	Jens Remus <jremus@linux.ibm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH v11 14/14] unwind_user/x86: Enable compat mode frame
- pointer unwinding on x86
-Message-ID: <aF0FwYq1ECJV5Fdi@gmail.com>
-References: <20250625225600.555017347@goodmis.org>
- <20250625225717.187191105@goodmis.org>
+	dkim=pass (2048-bit key) header.d=rbox.co header.i=@rbox.co header.b="up9is5AR"
+Received: from mailtransmit03.runbox ([10.9.9.163] helo=aibo.runbox.com)
+	by mailtransmit04.runbox.com with esmtps  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.93)
+	(envelope-from <mhal@rbox.co>)
+	id 1uUi3X-00GFhb-OU; Thu, 26 Jun 2025 10:34:03 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=rbox.co;
+	s=selector2; h=Cc:To:In-Reply-To:References:Message-Id:
+	Content-Transfer-Encoding:Content-Type:MIME-Version:Subject:Date:From;
+	bh=k/l0z57m3ZEaN2DhDCC8Xr3psOdIVksIU8zRLih/bxY=; b=up9is5ARxksILixaAI6Lh3hlTr
+	wbDXGEfPUcS0QfVyR+qXwyD7LrDfZD6gC4sAmbL4cF95uwGIQaN4s65AXkrfisnhZhFw98qIMCLCJ
+	HPajsm3Hh8NdZLPRZlsSvbEe2MnKA+Prgla4oz1LxUbPDz54OEEcbnQkH79ZkUiOcRjhnqasdeZSb
+	ZCWPCR7sAUseSSUCQfhYMmm2zkDK3g6uA1h6upzsBeOrb/QuKFqRX1RQFeOmU7Ts0UcHvTqUWI8JJ
+	agxBtXvcc6PNMbZWVgRzCTXGz5XC5AWlL4dm3+6k6yZYAbl0BwWG7I8ixLNgNBTbYXUHwVigLvdKi
+	n999ofUA==;
+Received: from [10.9.9.73] (helo=submission02.runbox)
+	by mailtransmit03.runbox with esmtp (Exim 4.86_2)
+	(envelope-from <mhal@rbox.co>)
+	id 1uUi3W-0004pt-2f; Thu, 26 Jun 2025 10:34:02 +0200
+Received: by submission02.runbox with esmtpsa  [Authenticated ID (604044)]  (TLS1.2:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.93)
+	id 1uUi3O-009Fh5-9n; Thu, 26 Jun 2025 10:33:54 +0200
+From: Michal Luczaj <mhal@rbox.co>
+Date: Thu, 26 Jun 2025 10:33:37 +0200
+Subject: [PATCH net-next v2 4/9] af_unix: Drop
+ unix_stream_read_state::splice_flags
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250625225717.187191105@goodmis.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250626-splice-drop-unused-v2-4-3268fac1af89@rbox.co>
+References: <20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co>
+In-Reply-To: <20250626-splice-drop-unused-v2-0-3268fac1af89@rbox.co>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@google.com>, 
+ David Ahern <dsahern@kernel.org>, Boris Pismenny <borisp@nvidia.com>, 
+ John Fastabend <john.fastabend@gmail.com>, 
+ Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, 
+ "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, 
+ Wen Gu <guwen@linux.alibaba.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-rdma@vger.kernel.org, linux-s390@vger.kernel.org, 
+ Michal Luczaj <mhal@rbox.co>
+X-Mailer: b4 0.14.2
 
+Since skb_splice_bits() does not accept the @flags argument anymore,
+struct's field became unused. Remove it.
 
-* Steven Rostedt <rostedt@goodmis.org> wrote:
+No functional change indented.
 
-> diff --git a/arch/x86/include/asm/unwind_user_types.h b/arch/x86/include/asm/unwind_user_types.h
-> new file mode 100644
-> index 000000000000..d7074dc5f0ce
-> --- /dev/null
-> +++ b/arch/x86/include/asm/unwind_user_types.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _ASM_UNWIND_USER_TYPES_H
-> +#define _ASM_UNWIND_USER_TYPES_H
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Michal Luczaj <mhal@rbox.co>
+---
+ net/unix/af_unix.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-This is not the standard x86 header guard pattern ...
+diff --git a/net/unix/af_unix.c b/net/unix/af_unix.c
+index 235319a045a1238cf27791dfefa9e61b4a593551..1e3a4db1a96a57c84c199e30c164f66409b04be4 100644
+--- a/net/unix/af_unix.c
++++ b/net/unix/af_unix.c
+@@ -2674,7 +2674,6 @@ struct unix_stream_read_state {
+ 	struct pipe_inode_info *pipe;
+ 	size_t size;
+ 	int flags;
+-	unsigned int splice_flags;
+ };
+ 
+ #if IS_ENABLED(CONFIG_AF_UNIX_OOB)
+@@ -3082,7 +3081,6 @@ static ssize_t unix_stream_splice_read(struct socket *sock,  loff_t *ppos,
+ 		.socket = sock,
+ 		.pipe = pipe,
+ 		.size = size,
+-		.splice_flags = flags,
+ 	};
+ 
+ 	if (unlikely(*ppos))
 
-> +
-> +#ifdef CONFIG_IA32_EMULATION
-> +
-> +struct arch_unwind_user_state {
-> +	unsigned long ss_base;
-> +	unsigned long cs_base;
-> +};
-> +#define arch_unwind_user_state arch_unwind_user_state
+-- 
+2.49.0
 
-Ran out of newlines? ;-)
-
-> +/*
-> + * If an architecture needs to initialize the state for a specific
-> + * reason, for example, it may need to do something different
-> + * in compat mode, it can define arch_unwind_user_init to a
-> + * function that will perform this initialization.
-
-Please use 'func()' when referring to functions in comments.
-
-> +/*
-> + * If an architecture requires some more updates to the state between
-> + * stack frames, it can define arch_unwind_user_next to a function
-> + * that will update the state between reading stack frames during
-> + * the user space stack walk.
-
-Ditto.
-
-Thanks,
-
-	Ingo
