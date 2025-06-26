@@ -1,172 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836FD275AE0
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 11:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3035275115;
+	Thu, 26 Jun 2025 11:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750938030; cv=none; b=TTOUtPoGzV8PeVDU3fpKJs22H9AMx3i+eoJo3Pc1xLsSpWSXJSo6MGd+Vp6DtmrNHUQvdybY3QxPn+e5+IBLKmggXm9HIpdhltYHgMsmqSiycjfuJjjy0e/KRkKQYm3gpSUBFH0DQZh20T1Mgd01MFALM5o6WNYg4k9b0ELfKBY=
+	t=1750938030; cv=none; b=doH6R6t0FPAe1bB0JyoSwT8J4yPoIKK3H1AmS6cmY95nr9NwEeZ+VXGYvs/LIouVElPp9BAFqiscsr2pVCWf70jh4ZcA8EPo4Y86PQFWSdzkVhCbqEKenkod3HdzBjbiJoVb13a3Vso6xqXR0sdzhKYeJ6iSXKpHjlleedgkgiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1750938030; c=relaxed/simple;
-	bh=gF7Dll6taOeDsbH4ksRfAoJl5VhEo+av+s5fHVt7tJo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NSajNZ8aYMyfWG4qLMu/sxVI4OllQKtzGpZclRsJzhUQ3Ht7qf+uUxqn7KZqo3CFSVfcdCuDi/0v6FKcBZqWqEsDfDUeaeBpIWk96OpWRPPvcozJ9FuYXoQkp1UvwsaGNZHMQeshEdgBxas+qfWfKsFxzyDojMPfYwKIzsalP3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gJq0Wu5p; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	bh=vpkGbqYUMukz6V9t3VsChBVMYanG+RJ4SeL/y9Rrtjc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fsEQC9h6Xgbmli1f5wiu9e2JwUnms4ulRqrgT5h6MGKINVUW/ESVSk22dR5IoU6/YEJotw9Do2sHWar5ktu6nHZsAWQSSack+8YKtTtguqBsio/RqdYHFaXPnh6cKq/iHz07XHtDR+YHcG5DJWCaBaI6N9q/0dXeL4uOwDdkFtM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/yoG0oj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gJq0Wu5p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1750938027;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JNkDX/QAcHMyJfzVyRcdpNBLgVVHagtHqZ1jRyb0YuQ=;
-	b=gJq0Wu5pO+uY6l6ogRzbKg3w/cBC1/+1Yh+lLuBpozIhug5laX0zqmSn2rhc0DO+Py6dNI
-	YbO/01ySERZ61B6v7tNjpXQPO1qJGjknGbLGHcmLnf/cb/9vAhSRD2sCbEhuKLYvSyreQL
-	cbmjpdeAt/CV/TRCM+HJJQM4xY6UCPY=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-686-AWXqvFvjNfGXPPfo_GJD0w-1; Thu,
- 26 Jun 2025 07:40:24 -0400
-X-MC-Unique: AWXqvFvjNfGXPPfo_GJD0w-1
-X-Mimecast-MFC-AGG-ID: AWXqvFvjNfGXPPfo_GJD0w_1750938022
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 83F6E1800268;
-	Thu, 26 Jun 2025 11:40:22 +0000 (UTC)
-Received: from sirius.home.kraxel.org (unknown [10.44.32.244])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7A5FD19560B3;
-	Thu, 26 Jun 2025 11:40:21 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-	id A4C77180090C; Thu, 26 Jun 2025 13:40:15 +0200 (CEST)
-From: Gerd Hoffmann <kraxel@redhat.com>
-To: linux-coco@lists.linux.dev,
-	kvm@vger.kernel.org
-Cc: Gerd Hoffmann <kraxel@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	linux-efi@vger.kernel.org (open list:EXTENSIBLE FIRMWARE INTERFACE (EFI))
-Subject: [PATCH v4 3/3] x86/sev: Let sev_es_efi_map_ghcbs() map the caa pages too
-Date: Thu, 26 Jun 2025 13:40:13 +0200
-Message-ID: <20250626114014.373748-4-kraxel@redhat.com>
-In-Reply-To: <20250626114014.373748-1-kraxel@redhat.com>
-References: <20250626114014.373748-1-kraxel@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/yoG0oj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B645C4CEEB;
+	Thu, 26 Jun 2025 11:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750938030;
+	bh=vpkGbqYUMukz6V9t3VsChBVMYanG+RJ4SeL/y9Rrtjc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p/yoG0ojiYgvEaGMNpNsb81K5Qz7AtbdguTR/DY2uPDtibazqksDcGmDtscTLuP4G
+	 RpPicBuoMjJkSjkYf5kJfRJULHQbZp1gskeV8rc2JQniEmSIXPMPdyYINVsGMQYWcm
+	 1XHvS1QwlhB3i3aAnucJSkwP4nZGhOxNh76lqEYDkI5SGKGXCtYtBm0qyUMxwGOJSS
+	 g/4mBZpHKGdsk/4pvxhGEqShUIHT6AJvAwDAJSlcxV9gOKL7GbYIt4wCSeXbBaN3Bt
+	 ZGNtOYjZmOCwgkSwL3KemD9H65PuC9q66VglZp/eGQnYqtLGyyc36YVYfQAWiVnTDt
+	 n3GWOlX0MB98w==
+Date: Thu, 26 Jun 2025 13:40:23 +0200
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <lossin@kernel.org>
+Cc: Boqun Feng <boqun.feng@gmail.com>, gregkh@linuxfoundation.org,
+	rafael@kernel.org, ojeda@kernel.org, alex.gaynor@gmail.com,
+	gary@garyguo.net, bjorn3_gh@protonmail.com, a.hindborg@kernel.org,
+	aliceryhl@google.com, tmgross@umich.edu, david.m.ertman@intel.com,
+	ira.weiny@intel.com, leon@kernel.org, kwilczynski@kernel.org,
+	bhelgaas@google.com, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] rust: devres: get rid of Devres' inner Arc
+Message-ID: <aF0xp4ZKP_a7cJsc@pollux>
+References: <20250624215600.221167-1-dakr@kernel.org>
+ <20250624215600.221167-4-dakr@kernel.org>
+ <aFzI5L__OcB9hqdG@Mac.home>
+ <aF0aiHhCuHjLFIij@pollux>
+ <DAWE690DWP9A.10I5FIJSZDSR6@kernel.org>
+ <aF0p5vIcL_4PBJCG@pollux>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aF0p5vIcL_4PBJCG@pollux>
 
-OVMF EFI firmware needs access to the CAA page to do SVSM protocol calls. For
-example, when the SVSM implements an EFI variable store, such calls will be
-necessary.
+On Thu, Jun 26, 2025 at 01:07:25PM +0200, Danilo Krummrich wrote:
+> On Thu, Jun 26, 2025 at 12:27:18PM +0200, Benno Lossin wrote:
+> > On Thu Jun 26, 2025 at 12:01 PM CEST, Danilo Krummrich wrote:
+> > > On Wed, Jun 25, 2025 at 09:13:24PM -0700, Boqun Feng wrote:
+> > >> On Tue, Jun 24, 2025 at 11:54:01PM +0200, Danilo Krummrich wrote:
+> > >> [...]
+> > >> > +#[pin_data(PinnedDrop)]
+> > >> > +pub struct Devres<T> {
+> > >> 
+> > >> It makes me realize: I think we need to make `T` being `Send`? Because
+> > >> the devm callback can happen on a different thread other than
+> > >> `Devres::new()` and the callback may drop `T` because of revoke(), so we
+> > >> are essientially sending `T`. Alternatively we can make `Devres::new()`
+> > >> and its friend require `T` being `Send`.
+> > >> 
+> > >> If it's true, we need a separate patch that "Fixes" this.
+> > >
+> > > Indeed, that needs a fix.
+> > 
+> > Oh and we have no `'static` bound on `T` either... We should require
+> > that as well.
+> 
+> I don't think we actually need that, The Devres instance can't out-live a &T
+> passed into it. And the &T can't out-live the &Device<Bound>, hence we're
+> guaranteed that devres_callback() is never called because Devres::drop() will be
+> able successfully unregister the callback given that we're still in the
+> &Device<Bound> scope.
+> 
+> The only thing that could technically out-live the &Device<Bound> would be
+> &'static T, but that would obviously be fine.
+> 
+> Do I miss anything?
 
-So add that to sev_es_efi_map_ghcbs() and also rename the function to reflect
-the additional job it is doing now.
+Thinking a bit more about it, a similar argumentation is true for not needing
+T: Send. The only way to leave the &Device<Bound> scope and hence the thread
+would be to stuff the Devres into a ForeignOwnable container, no?
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- arch/x86/include/asm/sev.h     |  4 ++--
- arch/x86/coco/sev/core.c       | 17 +++++++++++++++--
- arch/x86/platform/efi/efi_64.c |  4 ++--
- 3 files changed, 19 insertions(+), 6 deletions(-)
+Analogous to Benno asking for ForeignOwnable: 'static, should we also require
+ForeignOwnable: Send + Sync?
 
-diff --git a/arch/x86/include/asm/sev.h b/arch/x86/include/asm/sev.h
-index 58e028d42e41..6e0ef192f23b 100644
---- a/arch/x86/include/asm/sev.h
-+++ b/arch/x86/include/asm/sev.h
-@@ -445,7 +445,7 @@ static __always_inline void sev_es_nmi_complete(void)
- 	    cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
- 		__sev_es_nmi_complete();
- }
--extern int __init sev_es_efi_map_ghcbs(pgd_t *pgd);
-+extern int __init sev_es_efi_map_ghcbs_caas(pgd_t *pgd);
- extern void sev_enable(struct boot_params *bp);
- 
- /*
-@@ -556,7 +556,7 @@ static inline void sev_es_ist_enter(struct pt_regs *regs) { }
- static inline void sev_es_ist_exit(void) { }
- static inline int sev_es_setup_ap_jump_table(struct real_mode_header *rmh) { return 0; }
- static inline void sev_es_nmi_complete(void) { }
--static inline int sev_es_efi_map_ghcbs(pgd_t *pgd) { return 0; }
-+static inline int sev_es_efi_map_ghcbs_caas(pgd_t *pgd) { return 0; }
- static inline void sev_enable(struct boot_params *bp) { }
- static inline int pvalidate(unsigned long vaddr, bool rmp_psize, bool validate) { return 0; }
- static inline int rmpadjust(unsigned long vaddr, bool rmp_psize, unsigned long attrs) { return 0; }
-diff --git a/arch/x86/coco/sev/core.c b/arch/x86/coco/sev/core.c
-index 3de8c3d2b55d..26b96e19f5e1 100644
---- a/arch/x86/coco/sev/core.c
-+++ b/arch/x86/coco/sev/core.c
-@@ -1045,11 +1045,13 @@ int __init sev_es_setup_ap_jump_table(struct real_mode_header *rmh)
-  * This is needed by the OVMF UEFI firmware which will use whatever it finds in
-  * the GHCB MSR as its GHCB to talk to the hypervisor. So make sure the per-cpu
-  * runtime GHCBs used by the kernel are also mapped in the EFI page-table.
-+ *
-+ * When running under SVSM the CCA page is needed too, so map it as well.
-  */
--int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
-+int __init sev_es_efi_map_ghcbs_caas(pgd_t *pgd)
- {
- 	struct sev_es_runtime_data *data;
--	unsigned long address, pflags;
-+	unsigned long address, pflags, pflags_enc;
- 	int retval;
- 	int cpu;
- 	u64 pfn;
-@@ -1058,6 +1060,7 @@ int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
- 		return 0;
- 
- 	pflags = _PAGE_NX | _PAGE_RW;
-+	pflags_enc = cc_mkenc(pflags);
- 
- 	for_each_possible_cpu(cpu) {
- 		data = per_cpu(runtime_data, cpu);
-@@ -1068,6 +1071,16 @@ int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
- 		retval = kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags);
- 		if (retval != 0)
- 			return retval;
-+
-+		if (snp_vmpl) {
-+			address = per_cpu(svsm_caa_pa, cpu);
-+			if (!address)
-+				return 1;
-+
-+			pfn = address >> PAGE_SHIFT;
-+			if (kernel_map_pages_in_pgd(pgd, pfn, address, 1, pflags_enc))
-+				return 1;
-+		}
- 	}
- 
- 	return 0;
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index e7e8f77f77f8..97e8032db45d 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -216,8 +216,8 @@ int __init efi_setup_page_tables(unsigned long pa_memmap, unsigned num_pages)
- 	 * When SEV-ES is active, the GHCB as set by the kernel will be used
- 	 * by firmware. Create a 1:1 unencrypted mapping for each GHCB.
- 	 */
--	if (sev_es_efi_map_ghcbs(pgd)) {
--		pr_err("Failed to create 1:1 mapping for the GHCBs!\n");
-+	if (sev_es_efi_map_ghcbs_caas(pgd)) {
-+		pr_err("Failed to create 1:1 mapping for the GHCBs and CAAs!\n");
- 		return 1;
- 	}
- 
--- 
-2.50.0
-
+Alternatively, the safety requirements of ForeignOwnable:::from_foreign() and
+ForeignOwnable::borrow() would need to cover this, which they currently they
+are not.
