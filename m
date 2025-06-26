@@ -1,135 +1,281 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 400D721348
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 19:06:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01C732EE60F;
+	Thu, 26 Jun 2025 19:06:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750964762; cv=none; b=CO/1TkofYgjTmKBJUPAEi5/cBAUkZvx2X66TmjpxOxDQFdyv1HEmwVnE6hlmQQYkHyIA8n4BM7XFohOsfUCC6I/An9NEw8L6LOG0a/hIu74GjKZpT8RbRCsugnLxstWqIIRPLRVd4nPI+jPSLBN9oyQcDpE9A0vAFYUSF7n1J8M=
+	t=1750964776; cv=none; b=QQ2+NDYU0eyXOKR8nRnDqcs0QOHdDfbYdwxnFUVTUPjgAmTXWHC7H3gzblDjfdw/7lZ5m9Ywmy75wmRLdDGQoZpfNgFX8pLiXA4TbbPZpgXH+SzrlGGad00+2TGb/zH+anPybkMacXGsjlQiF1Ve/Pv4rrMq1LmmGL/5uerpn3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750964762; c=relaxed/simple;
-	bh=hzWSJSh9ZjdKk+l3TLWOpD9SQ8gWkmCymR4OspvLhfo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SorqOle/bDSjH/0TpSlmuxKuOtmO8G0P+QAb3PoYDENl+UdHxIwkltaT4BpFacpER7FuBk3IJoRwLJj5q4Jlub5lSJ6JAmt5niCO3X+fgNeD4ng2A2/T1PRqNUfeB8l9ZfokjhOsGpp8ArnwnHdIGW4b5YO2/LGNa3u62J46rlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=P6jtoCF7; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1750964776; c=relaxed/simple;
+	bh=gIobQwobxCQrjdnRCr0mJeQ17a/MXlGg/ieJ/QdsAuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=utB63ESP9Wg2HFv9b7EbKih/5yb+bt4lbPXKigDyIubJ/lsNy17MyrBARwnG56ZEHFsMQnJhNq9ySqD0E6EPVdYL3oOBPXf09ELIQuHeFgajtPeJHCNadjJYqfzw6tAKpi0cHWjXAbagZPwVTl5sUwWD4gVPJrdNH4yZpGTTBik=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kjqeD0QA; arc=none smtp.client-ip=209.85.215.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="P6jtoCF7"
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 55QJ3FDb026634
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 19:06:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Kff1UkLbIixnPa65vM8m196vhjIFkw4/no9zeyyQcKk=; b=P6jtoCF7Mjx1xcQd
-	ZE7nTkYUwVgkvWEwqHneYaqxGop6RhO4FNLYPfyy9b1eHxzs2QEzJnLPV5dwX92/
-	INMT+LbzNNFCU736ixn80YhmoVNQn/4N0Q3rNPhAeEMObna6UneyFSYGW7i4zjFj
-	G1kYHN6vDYp/9YgekBJPQwQXJM+dgcjbX8sv3a94h/B+UObVy1ND6bB0XczBsf8A
-	GZoTasrdnbacvtTb0IN4gnkmN3rX5hK/RKEgtqEgOl89FlRfSJFvVg9MvXsEMEN2
-	MBAPItYzfEv9vW/G/XTNBwJCtpxFVK1VKM9aI4GU5KxrpVpJNEV0cGpxYZg/e1Lr
-	O/klkQ==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 47evc5wj3u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 19:06:00 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7d09b74dc4bso27753885a.2
-        for <linux-kernel@vger.kernel.org>; Thu, 26 Jun 2025 12:06:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kjqeD0QA"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-b170c99aa49so1038557a12.1;
+        Thu, 26 Jun 2025 12:06:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1750964774; x=1751569574; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9Mz5PxV5u4URRxls1DxehZVlzWnepIHlLrU8BSZeUK0=;
+        b=kjqeD0QAa/8DT6M4Q0NBqkk3GA4DgInCj2sB3j/9+r5Tq9NHi5oqkzSEect608PEUs
+         HWpFw9i5ybQV3maargKAmBXPLOnSXU3Gtmon4QprXpQjKynVHpIkxh8LMfE5+j9yLtzG
+         L9DWMVpPbj5FJS2RjdYn80Y7RDV3EftSbGHPK4WkIW8TTjH9P0SAG+xl0UNENbt2Cyo8
+         cO8fMDTISdFXe643455E6D31UFvwfjoemwI3YHaI86L+acpf8fHTn7f3ZQ/HA23+yGPC
+         YvfWRqfrTG2FUX8HqTcjxm2j6JMqTYj5M4TTa0mGD+F57V8KeobRT1++Dm7Dg+ndxq9I
+         qrrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750964759; x=1751569559;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Kff1UkLbIixnPa65vM8m196vhjIFkw4/no9zeyyQcKk=;
-        b=pZx7SGFmSpdwBfv4d1wRV8HIQkf0jXFK5+DQI1verX50wjEoA2+vpVbb7sNsDozz2d
-         2KWMjdfDQDDwtlxcja1dkV83c3VQ/FOZXuL/DbLOrKdRBWnXHIGqKUpFbnvt0dNKrukv
-         VTrEQHz3N1WEUuSL84XwsNTc/Ri4P+qTyhjBpYexYd/5YLi6zIsaPZzJCEu6038W7SUj
-         rxDD+su0F9hGGFhtG26Tzo4mYAgO5Eu52GT/uVU9TQnFJa38o2k8B9Xv6RoWq8OPMQKd
-         lqOiIsybqVa31atQH6W+yD753BaTgwMbNj34W81VOMjS9jJEidSyclShuV/2vf2wL6Nn
-         mrmw==
-X-Forwarded-Encrypted: i=1; AJvYcCXrgWamQENJiB5Uf02d9WcLOosAZJono02CNjziRmgvaqyAZbxyJHy+5pp1+U4PUOiqwrv26XLTiJBPDBQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzQ64wNCMbVwkhO/bdBWBlsN+xe3BLJTweBYS3QgjwSARQ3sjX7
-	+OU5e14Z8HGC/F/yRGMe4TiRC2zoMK0T9e1w6pgFE35e7cbSt4qF6EzsEC7KOF7WaqD/oQidZPO
-	t3cEIFbs/nL0fgMNK8T1WRR0P3LKdW/IjjOYYJw1p0HOE7DR4woeSr0LEEZzVQl/hLeg=
-X-Gm-Gg: ASbGncsJsbYWfO4U9B5fUYyqaZ2qAKlKSrrlmqPMfmR3R7IVVc/rhMq8oHJVBsLrJKV
-	FZPOh2Tgkp9nRqhHfT40BlWfoYc0bebXcpvIAFL5YxHsjMoWs5GVoHdHyVlIOHe64UW6eY/BxE7
-	tqdCdLgYACtJXSGgxi7i6v38jni+EmawkTn+5qhAPzcZDJvqtwB+TVyHgP/Hq4Yq7rg8JuNofj2
-	tYVZ8+tF1GHNBUwzx153F79LqmtjWM1N4NzlHBAndrvuQgpeC3BC6z7iJPL/fIOnoaqZRj3oSs6
-	g3bDIqeGB6gs1u2QwPsf5ZVmgeY1YEwXB/scpP++B1NZZQbRuxQWpg5+5WnHANdec4feE76A7bl
-	EegQ=
-X-Received: by 2002:a05:620a:318c:b0:7c3:e399:328f with SMTP id af79cd13be357-7d44397240fmr34374985a.11.1750964758872;
-        Thu, 26 Jun 2025 12:05:58 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEdvfCTQdfFP0SCpdMbBKY095dyxBl7NMLUmqNDaDx9nn2uN6YU/442hwfaXLvkQ2HJfXqedg==
-X-Received: by 2002:a05:620a:318c:b0:7c3:e399:328f with SMTP id af79cd13be357-7d44397240fmr34372885a.11.1750964758406;
-        Thu, 26 Jun 2025 12:05:58 -0700 (PDT)
-Received: from [192.168.143.225] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ae2143d949csm39521766b.81.2025.06.26.12.05.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jun 2025 12:05:57 -0700 (PDT)
-Message-ID: <d92e7c52-eab5-4759-af3f-16b24254bff6@oss.qualcomm.com>
-Date: Thu, 26 Jun 2025 21:05:56 +0200
+        d=1e100.net; s=20230601; t=1750964774; x=1751569574;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9Mz5PxV5u4URRxls1DxehZVlzWnepIHlLrU8BSZeUK0=;
+        b=LGZRE5c/b7vZ48YLF6XV4RrTKvNvoxfbVW//EpVENL+u4CRwDJW2T3Q8tcjaiBw30h
+         VGL4pmJy5T6JXFXmMl2paW2rWRX/roubK+C2gZmxqjkomsrA3LrwSuOPcBzWLnbHVTVp
+         Cc7BJ5wbxU67KkE775cfry4vudelxAniS71SYm6/rIPPm1/JDPjwuzx/NHRcSJk3i0gI
+         XVVCu4vInmNQZwWquEqtEAbg3lb4IY3gbDgM16vXC5IjEpqva5vN2L9vCS9HUv/qg5Ub
+         IsKOaj3UklSfxFVZGdxLGVeep2IQqH19TbmDnqA3b4BNKW9kVP92vQDJ+vFRgSWomNNR
+         MMZw==
+X-Forwarded-Encrypted: i=1; AJvYcCVp2rrUhtiRzriOFYwQoVrbkWvRw8PV+x1EXBjc4HxFSI1c99r18c2RZEuOsd31MSd0xN+Hb7vgwOQTKQ==@vger.kernel.org, AJvYcCW4EkqpMGQo08YAe/EpJn96+zqjZScezMZZMvOmVPc7+QiVmbUttnjO15YOw1g+93JEWsOX3m4iiug7@vger.kernel.org, AJvYcCWUZC2jq8dN8105+sp1L+OJ4AZun40NJXrwW8E6pAm/TxpDox0tUkQB6kRc5/+T/HJujGgB8qGgJj4bAkIh@vger.kernel.org, AJvYcCWwDZR398Z3diNFEeQb0WBb6a2xJvu6BEKHzIbZllZbrXYSed7GCW/tR7xdBl0gI6sz9bz0ArmquKjgeAE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxe+3GgXVUwfNVswqHU6umKY94O/Bs4hHd6fSkOXKKBIMbqmGOP
+	l90GUfxnPS003sxgIyQ4OX4cKSZuOWTF1Jl1/7MM7UUsLcNC4jmCWZi3
+X-Gm-Gg: ASbGncvEkvZUKKlZjLMlovVwwU0doWcKS0Dv17K56qxyCiXCpzWIL3Vsw1Nx7rZqha2
+	yB/8LjPCKMGwlA4QhLcNkdeVIKdklChTmWsejfMyK4sglwLmI1nxpANHOfDoM01/dW/GksnBHe9
+	5vxh8Zggpsmr5eZ+R6O6d4k1Sj3Nq+OJAVwsTIcovcjjcGY9nMxU4027b92nxrSelCVKnuDvARs
+	84MSaxPDRH7LVfPA5b34+K/nTZ8Dd9/HHLs2NTdY3jE9YogfTxLn3545O/EtxIkzQ76k6gt9MH7
+	+jR6hhpi04KM7Q1/1JZYyj067y1LIJrRrIPAOWJGQgLx0BiFX4dhWhEeQqSZLbU=
+X-Google-Smtp-Source: AGHT+IF6v+aQi4C/ZoF4wjQEyR5F2FYOvK31F3S49E4J2kT/le4rr/P7+VpQ2FEZvE7fjkxg3rEj2A==
+X-Received: by 2002:a05:6a21:392:b0:21f:ed74:7068 with SMTP id adf61e73a8af0-220a169c7f9mr182097637.23.1750964774015;
+        Thu, 26 Jun 2025 12:06:14 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:9c8f:acd3:efcb:bc3d])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74af540b443sm386171b3a.15.2025.06.26.12.06.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Jun 2025 12:06:13 -0700 (PDT)
+Date: Thu, 26 Jun 2025 12:06:11 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Mario Limonciello <superm1@kernel.org>
+Cc: Hans de Goede <hansg@kernel.org>, Mika Westerberg <westeri@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, "open list:GPIO ACPI SUPPORT" <linux-gpio@vger.kernel.org>, 
+	"open list:GPIO ACPI SUPPORT" <linux-acpi@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, 
+	"open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." <linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
+Subject: Re: [PATCH v3 4/4] Input: Don't send fake button presses to wake
+ system
+Message-ID: <tpetaw6qdwojt46fcmzlmy2hdegbuwcjnbah7uebj6ilegfk4y@5uo6a7ediaw2>
+References: <20250625215813.3477840-1-superm1@kernel.org>
+ <20250625215813.3477840-5-superm1@kernel.org>
+ <710f7c04-0099-4611-b2ea-4dd4219ad5e2@kernel.org>
+ <23f30094-68cc-47fe-86e0-5289cb41e940@kernel.org>
+ <rn2kp5tog2agvswva2ipqq2ytiqdcgccnocudsg6ckwfh4roei@provk2g6dita>
+ <363c2b92-4bfc-4537-9fca-025eef09526f@kernel.org>
+ <nxticocp26r5mmpkttritw76h5igw7bdpus6zaf5krkso2h5xy@wna6m2quekfi>
+ <cbbf0caf-82ce-4427-9844-b11e0f5cacdb@kernel.org>
+ <obpakvzyludc4jskqzyxf65dhqds7ie3jkbfsqdve32ouuaili@xvogkmwvbmbf>
+ <bf97081a-e766-405e-9385-3657135b8c0f@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC/RFT] pinctrl: qcom: make the pinmuxing strict
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-References: <20250625153711.194208-1-brgl@bgdev.pl>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20250625153711.194208-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: GCyqT9QP1lPpM763PsdgqEKd_6MBR_ct
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNjI2MDE2MyBTYWx0ZWRfX/qH4fo1Aba1U
- Gi2opXuijd+zt/Lz1kMr8D7il08ekX3Mdz8pboWdEotbi0wyUTgGt824WGYDfZooc6nn2izJAMP
- qJleJQbxZv6WFNHh2WGISjTCATuY84sk63/6c+FPCxfq0+k4NMvTNZFU7QHDjjtdDnQlO9zfWEH
- aPxOE3pz+zmi1tzotPumrTNGpMlTpCvfeAB1X7HdzYuF83+TrKcyuBGVxTo//0sIcbtCqYKFmFx
- LcJQsTwT1C1vCSiWiuMWP6+PxRxYNYd2/OZcLjoZ9pbBab6Oy+49AXL05QeOxgOJ6hyfLX9NpLm
- Xe/DQCBtvLxwKDvfa+MS5qRfKxQnRUw6ygAiJqSkTDqzJA2ZP9QF6KDIldvD5Za6XSEl/TqkRVj
- iCtZERyUSDuWgHyGpuBqa4kMnR+/ZvFxnmgIekQ9kVLC0lFlgi2TsPI5C5hP32DMyDyPybF8
-X-Authority-Analysis: v=2.4 cv=caHSrmDM c=1 sm=1 tr=0 ts=685d9a18 cx=c_pps
- a=qKBjSQ1v91RyAK45QCPf5w==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6IFa9wvqVegA:10 a=KKAkSRfTAAAA:8 a=sOBEMjS50dyNa0exkEgA:9
- a=QEXdDO2ut3YA:10 a=ZXulRonScM0A:10 a=NFOGd7dJGGMPyQGDc5-O:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-ORIG-GUID: GCyqT9QP1lPpM763PsdgqEKd_6MBR_ct
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.1.7,FMLib:17.12.80.40
- definitions=2025-06-26_06,2025-06-26_05,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- impostorscore=0 mlxlogscore=901 suspectscore=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
- malwarescore=0 phishscore=0 clxscore=1015 classifier=spam authscore=0
- authtc=n/a authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2505280000 definitions=main-2506260163
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bf97081a-e766-405e-9385-3657135b8c0f@kernel.org>
 
-On 6/25/25 5:37 PM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Jun 26, 2025 at 01:55:29PM -0500, Mario Limonciello wrote:
+> On 6/26/2025 1:48 PM, Dmitry Torokhov wrote:
+> > On Thu, Jun 26, 2025 at 01:20:54PM -0500, Mario Limonciello wrote:
+> > > On 6/26/2025 1:07 PM, Dmitry Torokhov wrote:
+> > > > On Thu, Jun 26, 2025 at 12:53:02PM -0500, Mario Limonciello wrote:
+> > > > > 
+> > > > > 
+> > > > > On 6/26/25 12:44 PM, Dmitry Torokhov wrote:
+> > > > > > Hi Mario,
+> > > > > > 
+> > > > > > On Thu, Jun 26, 2025 at 06:33:08AM -0500, Mario Limonciello wrote:
+> > > > > > > 
+> > > > > > > 
+> > > > > > > On 6/26/25 3:35 AM, Hans de Goede wrote:
+> > > > > > > > Hi Mario,
+> > > > > > > > 
+> > > > > > > > On 25-Jun-25 23:58, Mario Limonciello wrote:
+> > > > > > > > > From: Mario Limonciello <mario.limonciello@amd.com>
+> > > > > > > > > 
+> > > > > > > > > Sending an input event to wake a system does wake it, but userspace picks
+> > > > > > > > > up the keypress and processes it.  This isn't the intended behavior as it
+> > > > > > > > > causes a suspended system to wake up and then potentially turn off if
+> > > > > > > > > userspace is configured to turn off on power button presses.
+> > > > > > > > > 
+> > > > > > > > > Instead send a PM wakeup event for the PM core to handle waking the system.
+> > > > > > > > > 
+> > > > > > > > > Cc: Hans de Goede <hansg@kernel.org>
+> > > > > > > > > Fixes: 0f107573da417 ("Input: gpio_keys - handle the missing key press event in resume phase")
+> > > > > > > > > Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> > > > > > > > > ---
+> > > > > > > > >      drivers/input/keyboard/gpio_keys.c | 7 +------
+> > > > > > > > >      1 file changed, 1 insertion(+), 6 deletions(-)
+> > > > > > > > > 
+> > > > > > > > > diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+> > > > > > > > > index 773aa5294d269..4c6876b099c43 100644
+> > > > > > > > > --- a/drivers/input/keyboard/gpio_keys.c
+> > > > > > > > > +++ b/drivers/input/keyboard/gpio_keys.c
+> > > > > > > > > @@ -420,12 +420,7 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void *dev_id)
+> > > > > > > > >      		pm_stay_awake(bdata->input->dev.parent);
+> > > > > > > > >      		if (bdata->suspended  &&
+> > > > > > > > >      		    (button->type == 0 || button->type == EV_KEY)) {
+> > > > > > > > > -			/*
+> > > > > > > > > -			 * Simulate wakeup key press in case the key has
+> > > > > > > > > -			 * already released by the time we got interrupt
+> > > > > > > > > -			 * handler to run.
+> > > > > > > > > -			 */
+> > > > > > > > > -			input_report_key(bdata->input, button->code, 1);
+> > > > > > > > > +			pm_wakeup_event(bdata->input->dev.parent, 0);
+> > > > > > 
+> > > > > > There is already pm_stay_awake() above.
+> > > > > 
+> > > > > But that doesn't help with the fact that userspace gets KEY_POWER from this
+> > > > > and reacts to it.
+> > > > > 
+> > > > > > 
+> > > > > > > > >      		}
+> > > > > > > > >      	}
+> > > > > > > > 
+> > > > > > > > Hmm, we have the same problem on many Bay Trail / Cherry Trail
+> > > > > > > > windows 8 / win10 tablets, so  this has been discussed before and e.g.
+> > > > > > > > Android userspace actually needs the button-press (evdev) event to not
+> > > > > > > > immediately go back to sleep, so a similar patch has been nacked in
+> > > > > > > > the past.
+> > > > > > > > 
+> > > > > > > > At least for GNOME this has been fixed in userspace by ignoring
+> > > > > > > > power-button events the first few seconds after a resume from suspend.
+> > > > > > > > 
+> > > > > > > 
+> > > > > > > The default behavior for logind is:
+> > > > > > > 
+> > > > > > > HandlePowerKey=poweroff
+> > > > > > > 
+> > > > > > > Can you share more about what version of GNOME has a workaround?
+> > > > > > > This was actually GNOME (on Ubuntu 24.04) that I found this issue.
+> > > > > > > 
+> > > > > > > Nonetheless if this is dependent on an Android userspace problem could we
+> > > > > > > perhaps conditionalize it on CONFIG_ANDROID_BINDER_DEVICES?
+> > > > > > 
+> > > > > > No it is not only Android, other userspace may want to distinguish
+> > > > > > between normal and "dark" resume based on keyboard or other user
+> > > > > > activity.
+> > > > > > 
+> > > > > > Thanks.
+> > > > > > 
+> > > > > In this specific case does the key passed up to satisfy this userspace
+> > > > > requirement and keep it awake need to specifically be a fabricated
+> > > > > KEY_POWER?
+> > > > > 
+> > > > > Or could we find a key that doesn't require some userspace to ignore
+> > > > > KEY_POWER?
+> > > > > 
+> > > > > Maybe something like KEY_RESERVED, KEY_FN, or KEY_POWER2?
+> > > > 
+> > > > The code makes no distinction between KEY_POWER and KEY_A or KEY_B, etc.
+> > > > It simply passes event to userspace for processing.
+> > > 
+> > > Right.  I don't expect a problem with most keys, but my proposal is to
+> > > special case KEY_POWER while suspended.  If a key press event must be sent
+> > > to keep Android and other userspace happy I suggest sending something
+> > > different just for that situation.
+> > 
+> > I do not know if userspace specifically looks for KEY_POWER or if it
+> > looks for user input in general, and I'd rather be on safe side and not
+> > mangle user input.
+> > 
+> > As Hans mentioned, at least some userspace already prepared to deal with
+> > this issue. And again, this only works if by the time ISR/debounce
+> > runs the key is already released. What if it is still pressed? You still
+> > going to observe KEY_POWER and need to suppress turning off the screen.
+> > 
+> > > 
+> > > Like this:
+> > > 
+> > > diff --git a/drivers/input/keyboard/gpio_keys.c
+> > > b/drivers/input/keyboard/gpio_keys.c
+> > > index 773aa5294d269..66e788d381956 100644
+> > > --- a/drivers/input/keyboard/gpio_keys.c
+> > > +++ b/drivers/input/keyboard/gpio_keys.c
+> > > @@ -425,7 +425,10 @@ static irqreturn_t gpio_keys_gpio_isr(int irq, void
+> > > *dev_id)
+> > >                           * already released by the time we got interrupt
+> > >                           * handler to run.
+> > >                           */
+> > > -                       input_report_key(bdata->input, button->code, 1);
+> > > +                       if (button->code == KEY_POWER)
+> > > +                               input_report_key(bdata->input, KEY_WAKEUP,
+> > > 1);
+> > 
+> > Just FYI: Here your KEY_WAKEUP is stuck forever.
 > 
-> The strict flag in struct pinmux_ops disallows the usage of the same pin
-> as a GPIO and for another function. Without it, a rouge user-space
-> process with enough privileges (or even a buggy driver) can request a
-> used pin as GPIO and drive it, potentially confusing devices or even
-> crashing the system. Set it globally for all pinctrl-msm users.
+> Thanks.
 > 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
+> > 
+> > > +                       else
+> > > +                               input_report_key(bdata->input, button->code,
+> > > 1);
+> > >                  }
+> > >          }
+> > > 
+> > > 
+> > > 
+> > > > 
+> > > > You need to fix your userspace. Even with your tweak it is possible for
+> > > > userspace to get a normal key event "too early" and turn off the screen
+> > > > again, so you still need to handle this situation.
+> > > > 
+> > > > Thanks.
+> > > > 
+> > > 
+> > > I want to note this driver works quite differently than how ACPI power
+> > > button does.
+> > > 
+_> > > You can see in acpi_button_notify() that the "keypress" is only forwarded
+> > > when not suspended [1].  Otherwise it's just wakeup event (which is what my
+> > > patch was modeling).
+> > > 
+> > > https://github.com/torvalds/linux/blob/v6.16-rc3/drivers/acpi/button.c#L461
+> > > [1]
+> > 
+> > If you check acpi_button_resume() you will see that the events are sent
+> > from there. Except that for some reason they chose to use KEY_WAKEUP and
+> > not KEY_POWER, oh well. Unlike acpi button driver gpio_keys is used on
+> > multiple other platforms.
+> > 
+> > Thanks.
+> > 
+> 
+> Well that would explain the difference, and git blame gives the history [1].
+> 
+> It's from enablement for Android with ACPI power button.  That commit also
+> mentions that Android can handle both POWER and WAKEUP from input device to
+> wakeup the system.  Non-Android userspace doesn't do anything with
+> KEY_WAKEUP today.
 
-SC8280XP CRD breaks with this.. looks like there's a conflict between
-regulator-fixed accessing the pin with gpiod APIs and setting a pinmux:
+*All* non-Android userspace?
 
-[    5.095688] sc8280xp-tlmm f100000.pinctrl: pin GPIO_25 already requested by regulator-edp-3p3; cannot claim for f100000.pinctrl:570
-[    5.107822] sc8280xp-tlmm f100000.pinctrl: error -EINVAL: pin-25 (f100000.pinctrl:570)
+> 
+> So this has me thinking the proposal I had above to special case KEY_POWER
+> and translate to KEY_WAKEUP is the right way forward, just making sure to
+> release the key as you rightfully pointed out.
 
+You keep ignoring the fact that it does not solve your issue when the
+key/button is pressed just a tad longer.
 
-Konrad
+There are a ton of drivers that report KEY_POWER and do not convert it
+to anything else on resume. I will not accept patches that mangle input
+events in the gpio_keys driver, sorry.
+
+Thanks.
+
+-- 
+Dmitry
