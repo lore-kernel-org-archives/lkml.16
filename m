@@ -1,117 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F52025BF1F;
-	Thu, 26 Jun 2025 08:20:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D61C52356C0;
+	Thu, 26 Jun 2025 08:21:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750926028; cv=none; b=ilRLLQTyqGfnWIC9V0bro5UgPBEgWQcWE7xMGWAwFEyJz8u1fBwjetWDQwjiobq+29xsQdSvVoUMOxr6DNMW54JtdpKTcvIA11tEKLhhyi0tH7dkgZlh2krmwzLtE6Crj0eR80yZ9j+2iAmbdTkFtSdAV4CA/VPopJZ0Df70EA8=
+	t=1750926079; cv=none; b=mnqtx0y6nBPdNupfIBACbYxSBmKNBpRiKoQDvQOdpId9aBctv1imXG+utSauoUiSb09jcoukEn7aeU1aypNZmnEtfR9lxn+MlzBUl1PT5pYKTe4NWHlwb9rBU0UEhyc+UAhyu63xAZitp/G3Tdis+PfJYAu+13LbwVSOo/FLSIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750926028; c=relaxed/simple;
-	bh=ALIZ1pJr5k/RzBFhUWBQWpSyvKsVrE4l4KazGh9wArI=;
+	s=arc-20240116; t=1750926079; c=relaxed/simple;
+	bh=mS2rnH3fTEDroz6sbYHUy5zTCOw1PaG3HCJiJL66aVc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GEiKSHhxZo/Vr0hYmAPw+IsJOwrA6INMsVN7fQ1TuYPDw3sEx94U1/YQUv9NhbO4E/Lph70FZnM7xjwGqvdl1hVAkokAMbSHSMbkotdwkAE1pBjL4EMkv41EMoapWTCwmI3oNRPvXOUQzaoW5gtu7BfdrBOhMG+AKiU8HmqQM1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMkCf+DE; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=EsnRm268kqN1aGzoCz5KKJKonI7Z+wmYqhDMKXLbuv38L+9j3dGvj1FYLYcfwWSjL2a8llXpUsMStDKbnFW2s/W9WmZbTReStQ4uqszG4uYoDN0NqPoyp/3dMtvJnELacsid5xovHGsoIqRlQuevIvZT6jV5nyFbR5NyommLgSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GVFekQ6f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMkCf+DE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C508CC4CEEB;
-	Thu, 26 Jun 2025 08:20:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GVFekQ6f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F93AC4CEEB;
+	Thu, 26 Jun 2025 08:21:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750926027;
-	bh=ALIZ1pJr5k/RzBFhUWBQWpSyvKsVrE4l4KazGh9wArI=;
+	s=k20201202; t=1750926079;
+	bh=mS2rnH3fTEDroz6sbYHUy5zTCOw1PaG3HCJiJL66aVc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GMkCf+DE09SfeoFseP/++MSgoDjHAMDKK8294mJN5gBkMc7yGuBlkU0Le+E8NyAFP
-	 i7JpadX729QXtkPS7klBphIorXF38qjX2RDQD6wq6k3uV+dsiQoATQgk7NmWm5M6Ks
-	 aQpHIOXx5ggqME5vJFZv8P3jAzBw/aLs/rJcyTgmUk2i1SD/cssA3BqWraxniNzqsx
-	 Yd65FZ5AkH+ea3kngqDuluC5H6aLfLCtGLMwqopj3dZ2fPs4hEUI5K22sFJ9REAmX/
-	 eKjZpJXOf46uRMzH4Q4Enl3ftzCe28PrTKZia3abFUvvqVEZRMVjcVw5dYLJbOSmCg
-	 MNnMMgwXmpILQ==
-Date: Thu, 26 Jun 2025 09:20:24 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Xose Vazquez Perez <xose.vazquez@gmail.com>
-Cc: Jonathan Corbet <corbet@lwn.net>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	DOC ML <linux-doc@vger.kernel.org>,
-	KERNEL ML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: standardize git.kernel.org URLs
-Message-ID: <20250626-badland-carefully-f0b5f285c93f@spud>
-References: <20250625142017.237949-1-xose.vazquez@gmail.com>
+	b=GVFekQ6fGGRKvBKRNsCKK583D6A4cf6LjZ/xjYdaItUFnpA582ppkz2/t01OkedVy
+	 tVdFBeAQztmQVF8mPZf0gCA7u6opaErBo20kT0U7jqIq/XloOVLX7gcraZYP/0Jvfk
+	 WN0kqb8tc9LmceFmCTmvKi+xA86EOlePwQHMiIXveQsMI2ZkJuZszm4leFofSj1SE7
+	 FGi3Cg96HpNGuHle8as1DK2ACot4PzZ6i93DRK1YZX0038nuBhCeNaStOdtxKnBWqs
+	 Cs0r4fzPkrPpzJlBKYDxC3T3Boeo+flJc85jq8h/9Ir2IuvSOj1sErud6wwjrnbPK2
+	 GcyMCr/PZz8yg==
+Date: Thu, 26 Jun 2025 10:21:15 +0200
+From: Ingo Molnar <mingo@kernel.org>
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: linux-coco@lists.linux.dev, kvm@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] x86/sev/vc: fix efi runtime instruction emulation
+Message-ID: <aF0C-wVwXWxFjgud@gmail.com>
+References: <20250626074236.307848-1-kraxel@redhat.com>
+ <20250626074236.307848-2-kraxel@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vekMi3Ef6bOeFUHu"
-Content-Disposition: inline
-In-Reply-To: <20250625142017.237949-1-xose.vazquez@gmail.com>
-
-
---vekMi3Ef6bOeFUHu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20250626074236.307848-2-kraxel@redhat.com>
 
-On Wed, Jun 25, 2025 at 04:20:16PM +0200, Xose Vazquez Perez wrote:
-> replace https: with git:, delete trailing /, and identify repos as "git"
->=20
-> Cc: Jonathan Corbet <corbet@lwn.net> (maintainer:DOCUMENTATION)
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: DOC ML <linux-doc@vger.kernel.org> (open list:DOCUMENTATION)
-> Cc: KERNEL ML <linux-kernel@vger.kernel.org> (open list)
-> Signed-off-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
 
->  MICROCHIP SOC DRIVERS
->  M:	Conor Dooley <conor@kernel.org>
->  S:	Supported
-> -T:	git https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git
->  F:	Documentation/devicetree/bindings/soc/microchip/
->  F:	drivers/soc/microchip/
+* Gerd Hoffmann <kraxel@redhat.com> wrote:
 
-> @@ -21360,7 +21360,7 @@ M:	Conor Dooley <conor@kernel.org>
->  L:	linux-riscv@lists.infradead.org
->  S:	Maintained
->  Q:	https://patchwork.kernel.org/project/linux-riscv/list/
-> -T:	git https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git
->  F:	arch/riscv/boot/dts/canaan/
->  F:	arch/riscv/boot/dts/microchip/
->  F:	arch/riscv/boot/dts/sifive/
+> In case efi_mm is active go use the userspace instruction decoder which
+> supports fetching instructions from active_mm.  This is needed to make
+> instruction emulation work for EFI runtime code, so it can use cpuid
+> and rdmsr.
+> 
+> EFI runtime code uses the cpuid instruction to gather information about
+> the environment it is running in, such as SEV being enabled or not, and
+> choose (if needed) the SEV code path for ioport access.
+> 
+> EFI runtime code uses the rdmsr instruction to get the location of the
+> CAA page (see SVSM spec, section 4.2 - "Post Boot").
+> 
+> The big picture behind this is that the kernel needs to be able to
+> properly handle #VC exceptions that come from EFI runtime services.
+> Since EFI runtime services have a special page table mapping for the EFI
+> virtual address space, the efi_mm context must be used when decoding
+> instructions during #VC handling.
+> 
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  arch/x86/coco/sev/vc-handle.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/coco/sev/vc-handle.c b/arch/x86/coco/sev/vc-handle.c
+> index 0989d98da130..e498a8965939 100644
+> --- a/arch/x86/coco/sev/vc-handle.c
+> +++ b/arch/x86/coco/sev/vc-handle.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/mm.h>
+>  #include <linux/io.h>
+>  #include <linux/psp-sev.h>
+> +#include <linux/efi.h>
+>  #include <uapi/linux/sev-guest.h>
+>  
+>  #include <asm/init.h>
+> @@ -178,9 +179,14 @@ static enum es_result __vc_decode_kern_insn(struct es_em_ctxt *ctxt)
+>  		return ES_OK;
+>  }
+>  
+> +/*
+> + * User instruction decoding is also required for the EFI runtime. Even though
+> + * EFI runtime is running in kernel mode, it uses special EFI virtual address
 
->  STANDALONE CACHE CONTROLLER DRIVERS
->  M:	Conor Dooley <conor@kernel.org>
->  S:	Maintained
-> -T:	git https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git
->  F:	Documentation/devicetree/bindings/cache/
->  F:	drivers/cache
-> =20
->  STARFIVE SOC DRIVERS
->  M:	Conor Dooley <conor@kernel.org>
->  S:	Maintained
-> -T:	git https://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git/
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/conor/linux.git
->  F:	Documentation/devicetree/bindings/soc/starfive/
+s/Even though EFI runtime
+ /Even though the EFI runtime
 
-No rationale provided, NAK.
-On the other hand, https links are clickable on docs.kernel.org's copy
-of the maintainers file.
-I'd appreciate being CCed if/when you touch my entries here again.
+> + * mappings that require the use of efi_mm to properly address and decode.
+> + */
+>  static enum es_result vc_decode_insn(struct es_em_ctxt *ctxt)
+>  {
+> -	if (user_mode(ctxt->regs))
+> +	if (user_mode(ctxt->regs) || current->active_mm == &efi_mm)
 
-Cheers,
-Conor.
+Instead of open-coding that condition, we have mm_is_efi() for that.
 
---vekMi3Ef6bOeFUHu
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaF0CqwAKCRB4tDGHoIJi
-0jlsAQCHlSlyfw6RZS0OuHi/PIEJAPewe1LMKCoYjRuiBHa13QEAn//Yqcqm1jUz
-aCcQlQTSwTkcCdUD9WLIJnuw6fYRkA4=
-=Id93
------END PGP SIGNATURE-----
-
---vekMi3Ef6bOeFUHu--
+	Ingo
